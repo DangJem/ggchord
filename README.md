@@ -1,23 +1,24 @@
 # ggchord: Chord Diagram for BLAST Alignment Visualization  
 
-A ggplot2-based R function to visualize pairwise sequence alignment results from BLAST as intuitive chord diagrams, highlighting homologous regions between query and subject sequences.  
+A ggplot2-based R function to visualize pairwise sequence alignment results from BLAST as intuitive chord diagrams, supporting both **arc** and **line** modes for flexible representation of homologous regions between query and subject sequences.  
 
 
 ## Overview  
-`ggchord` transforms BLASTN outfmt6 format results into clear chord diagrams, where:  
-- The upper semicircle represents the query sequence  
-- The lower semicircle represents the subject sequence  
-- Colored ribbons connect aligned intervals, making it easy to identify homologous regions  
+`ggchord` transforms BLASTN outfmt6 format results into clear chord diagrams, with two visualization modes:  
+- **Arc Mode** (default): Sequences mapped to semi-circular arcs, ideal for circular genomes (e.g., plasmids, phages).  
+- **Line Mode**: Sequences displayed as horizontal lines, suitable for linear genomes or simplified comparisons.  
 
 This tool is designed for researchers in bioinformatics, genomics, or molecular biology to quickly visualize sequence homology and structural relationships.  
 
 
 ## Features  
-- Parses BLASTN outfmt6 results directly, requiring minimal data preprocessing  
-- Maps sequence lengths proportionally to circular arcs for accurate scaling  
-- Filters alignments by minimum length to focus on meaningful regions  
-- Customizable aesthetics (ribbon color, radii, gap size, title)  
-- Outputs a ggplot2 object for further styling or export  
+- **Dual Visual Modes**: Switch between arc and line modes via `arc_mode`.  
+- **Adjustable Curvature**: Control arc smoothness with `curvature` (0–1).  
+- **Precision Ribbon Alignment**: Ensures ribbons connect exact sequence coordinates in arc mode.  
+- **Customizable Gaps**: Adjust horizontal gaps in arc mode (`gap_frac_arc`) or vertical gaps in line mode (`line_gap_frac`).  
+- **Filtering**: Focus on meaningful alignments with `min_len` parameter.  
+- **Aesthetic Customization**: Modify ribbon color, arc radii, and plot title.  
+- **ggplot2 Compatibility**: Outputs a ggplot2 object for further styling or export.  
 
 
 ## Installation  
@@ -66,21 +67,32 @@ colnames(blast_df) <- c(
   "qlen", "slen"  # Ensure these columns exist
 )
 
-# Generate chord diagram
-p <- ggchord(
+# Generate chord diagram in arc mode (default)
+p_arc <- ggchord(
   blast_df = blast_df,
   min_len = 500,          # Filter alignments shorter than 500 bp
-  title = "Query vs Subject Alignment",
-  ribbon_col = "darkorange",  # Custom ribbon color
-  r_query = 1.2,          # Radius for query arc
-  r_subject = 0.9         # Radius for subject arc
+  title = "Arc Mode: Query vs Subject",
+  arc_mode = TRUE,        # Arc mode
+  curvature = 1.0,        # Full circular arc
+  gap_frac_arc = 0.02     # Small gap between arcs
 )
 
-# Display the plot
-print(p)
+# Generate chord diagram in line mode
+p_line <- ggchord(
+  blast_df = blast_df,
+  min_len = 500,          # Filter alignments shorter than 500 bp
+  title = "Line Mode: Query vs Subject",
+  arc_mode = FALSE,       # Line mode
+  line_gap_frac = 0.5     # Vertical gap between lines
+)
+
+# Display the plots
+print(p_arc)
+print(p_line)
 
 # Save to file
-ggsave("blast_chord.png", plot = p, width = 8, height = 8, dpi = 300)
+ggsave("blast_chord_arc.png", plot = p_arc, width = 8, height = 8, dpi = 300)
+ggsave("blast_chord_line.png", plot = p_line, width = 8, height = 8, dpi = 300)
 ```
 
 
@@ -95,7 +107,7 @@ Use this bash script to perform pairwise alignments between all sequences in you
 
 ```bash
 # Define your sequence IDs (match FASTA filenames without .fna)
-seqs=("vB_AbaM_CP14" "PQ859668.1" "another_seq")  # Add/remove sequences as needed
+seqs=("vB_AbaM_CP14" "PQ859668.1" "your_other_seq" "another_seq")  # Add/remove sequences as needed
 
 # Get the number of sequences
 seqsNum=${#seqs[@]}
@@ -136,15 +148,25 @@ done
 | `min_len`      | numeric | 100             | Minimum alignment length to include (shorter alignments are filtered out)   |
 | `title`        | string  | "BLAST Chord Diagram" | Plot title                                                                 |
 | `ribbon_col`   | string  | "steelblue"     | Fill color for alignment ribbons                                             |
-| `gap_frac`     | numeric | 0.02            | Fraction of the circle allocated to gaps between query and subject arcs     |
-| `r_query`      | numeric | 1.0             | Radius of the query sequence arc                                            |
-| `r_subject`    | numeric | 0.8             | Radius of the subject sequence arc                                         |
+| `arc_mode`     | logical | TRUE            | TRUE for arc mode, FALSE for line mode                                      |
+| `curvature`    | numeric | 1.0             | Curvature of arcs in arc mode [0,1]: 0=polyline, 1=full arc                |
+| `gap_frac_arc` | numeric | 0.02            | Horizontal gap fraction between sequence arcs in arc mode                    |
+| `line_gap_frac`| numeric | 0.5             | Vertical gap fraction between sequence lines in line mode                    |
+| `r_query`      | numeric | 1.0             | Radius for query arc (arc mode) or ignored in line mode                     |
+| `r_subject`    | numeric | 0.8             | Radius for subject arc (arc mode) or ignored in line mode                  |
 
 
 ## Plot Interpretation  
-- **Arcs**: The upper arc (0~π) represents the query sequence; the lower arc (π~2π) represents the subject sequence. Arc length is proportional to sequence length.  
+
+### Arc Mode  
+- **Arcs**: The upper arc (0~π) represents the query sequence; the lower arc (π~2π) represents the subject sequence.  
 - **Ribbons**: Translucent polygons connecting arcs represent alignment intervals, indicating homologous regions.  
-- **Gaps**: The blank space between arcs (controlled by `gap_frac`) prevents overlap.  
+- **Curvature**: Adjusts arc smoothness (`curvature = 1` for full arcs, `0` for segmented lines).  
+
+### Line Mode  
+- **Lines**: Horizontal lines represent query (top) and subject (bottom) sequences.  
+- **Ribbons**: Rectangles connecting lines show alignment intervals.  
+- **Line Gap**: Controlled by `line_gap_frac` for vertical spacing.  
 
 
 ## Example File  
@@ -159,12 +181,18 @@ blast_df <- read.table(
   stringsAsFactors = FALSE
 )
 
-# Rename columns and generate plot (as shown in the basic example)
-colnames(blast_df) <- c("qseqid","sseqid","pident","length","mismatch","gapopen",
+# Rename columns and generate plots
+colnames(blast_df) <- c("qaccver","saccver","pident","length","mismatch","gapopen",
                         "qstart","qend","sstart","send","evalue","bitscore",
-                        "%qcov_per_subject","qlen","slen","strand","title")
-p <- ggchord(blast_df, min_len=500, title="Demo: vB_AbaM_CP14 vs PQ859668")
-print(p)
+                        "qcovs","qlen","slen","sstrand","stitle")
+
+# Arc mode with full curvature
+p_arc <- ggchord(blast_df, min_len=5000, title="Arc Mode", arc_mode=TRUE, curvature=1)
+print(p_arc)
+
+# Line mode with custom gap
+p_line <- ggchord(blast_df, min_len=5000, title="Line Mode", arc_mode=FALSE, line_gap_frac=0.3)
+print(p_line)
 ```  
 
 
@@ -173,7 +201,7 @@ print(p)
 - If no alignments meet `min_len`, the function will stop with a warning.  
 - The output is a ggplot2 object, so you can customize it further (e.g., add themes, adjust labels):  
   ```r
-  p + theme(plot.title = element_text(hjust = 0.5))  # Center the title
+  p_arc + theme(plot.title = element_text(hjust = 0.5))  # Center the title
   ```  
 
 
@@ -190,9 +218,17 @@ Issues, bug reports, and pull requests are welcome! Feel free to open an issue i
 
 
 ## Release Notes  
+### v0.0.2 (2025-07-01)  
+- Added dual visualization modes (arc and line) for flexible sequence representation.  
+- Implemented adjustable curvature for arcs in arc mode.  
+- Enhanced ribbon alignment precision in arc mode.  
+- Added gap control parameters for both visualization modes.  
+- Improved computational efficiency.  
+
 ### v0.0.1 (Initial Release)  
-- Core functionality for generating BLAST chord diagrams  
-- Support for pairwise sequence alignments  
-- Customizable plot aesthetics  
-- Example dataset (`vB_AbaM_CP14__PQ859668.1.o7`) for quick testing  
-- BLASTN script for generating compatible input files  
+- Core functionality for generating BLAST chord diagrams.  
+- Support for pairwise sequence alignments.  
+- Customizable plot aesthetics.  
+- Example dataset (`vB_AbaM_CP14__PQ859668.1.o7`) for quick testing.  
+- BLASTN script for generating compatible input files.  
+
