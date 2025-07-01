@@ -30,10 +30,6 @@ This tool is designed for researchers in bioinformatics, genomics, or molecular 
 ```r
 # Install dependencies
 if (!require("ggplot2")) install.packages("ggplot2")
-
-# Install ggchord (using devtools)
-if (!require("devtools")) install.packages("devtools")
-devtools::install_github("your_username/ggchord")  # Replace with your GitHub repo path
 ```
 
 
