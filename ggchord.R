@@ -103,15 +103,3 @@ ggchord <- function(
   }
   return(p)
 }
-
-# Complete example script
-blast_df <- read.table("vB_AbaM_CP14__PQ859668.1.o7", header=FALSE, comment.char="#", stringsAsFactors=FALSE)
-colnames(blast_df) <- c("qaccver","saccver","pident","length","mismatch","gapopen",
-                        "qstart","qend","sstart","send","evalue","bitscore",
-                        "qcovs","qlen","slen","sstrand","stitle")
-# Arc mode example
-p_arc <- ggchord(blast_df, min_len=5000, title="Arc Mode", arc_mode=TRUE, curvature=1, gap_frac_arc=0, r_query=1, r_subject=1)
-print(p_arc)
-# Line mode example
-p_line <- ggchord(blast_df, min_len=5000, title="Line Mode", arc_mode=FALSE, line_gap_frac=0, r_query=1, r_subject=1)
-print(p_line)
