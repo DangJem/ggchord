@@ -43,9 +43,9 @@
 #' @param ribbon_ctrl_point 数值向量或列表，可选，贝塞尔控制点，长度2或list(c1,c2,..)，默认NULL（圆心）
 #' @param ribbon_gap 数值或向量，序列圆弧与连接带之间的径向距离，默认0.1
 #' @param axis_gap 数值或向量，坐标轴与序列圆弧之间径向距离，支持负值，默认0.05
-#' @param axis_tick_major 整数或向量，每条序列主刻度数，默认5
+#' @param axis_tick_major_number 整数或向量，每条序列主刻度数，默认5
 #' @param axis_tick_major_length 数值或向量，主刻度线长度比例，默认0.02
-#' @param axis_tick_minor 整数或向量，每两个主刻度之间的次刻度数，默认4
+#' @param axis_tick_minor_number 整数或向量，每两个主刻度之间的次刻度数，默认4
 #' @param axis_tick_minor_length 数值或向量，次刻度线长度比例，默认0.01
 #' @param axis_label_size 数值或向量，坐标轴刻度文字大小，默认3
 #' @param axis_label_offset 数值或向量，基于默认标签位置（1.5倍刻度长度）的偏移量，0时为原位置，正值向外，负值向内，默认0
@@ -228,9 +228,9 @@ ggchord <- function(
     ribbon_ctrl_point      = NULL,
     ribbon_gap             = 0.1,
     axis_gap               = 0.05,
-    axis_tick_major        = 5,
+    axis_tick_major_number        = 5,
     axis_tick_major_length = 0.02,
-    axis_tick_minor        = 4,
+    axis_tick_minor_number        = 4,
     axis_tick_minor_length = 0.01,
     axis_label_size        = 3,
     axis_label_offset      = 0.1,
@@ -296,9 +296,9 @@ ggchord <- function(
   # 处理基因偏移参数（新逻辑）
   geneGap         <- process_gene_offset(gene_offset, seqs, default = 0.03)
   geneWidth       <- process_sequence_param(gene_width, seqs, "gene_width", default_value = 0.1)
-  axisMaj         <- process_sequence_param(axis_tick_major, seqs, "axis_tick_major", default_value = 5)
+  axisMaj         <- process_sequence_param(axis_tick_major_number, seqs, "axis_tick_major_number", default_value = 5)
   axisMajLen      <- process_sequence_param(axis_tick_major_length, seqs, "axis_tick_major_length", default_value = 0.02)
-  axisMin         <- process_sequence_param(axis_tick_minor, seqs, "axis_tick_minor", default_value = 4)
+  axisMin         <- process_sequence_param(axis_tick_minor_number, seqs, "axis_tick_minor_number", default_value = 4)
   axisMinLen      <- process_sequence_param(axis_tick_minor_length, seqs, "axis_tick_minor_length", default_value = 0.01)
   labelSize       <- process_sequence_param(axis_label_size, seqs, "axis_label_size", default_value = 3)
   labelOffset     <- process_sequence_param(axis_label_offset, seqs, "axis_label_offset", default_value = 0)
@@ -764,17 +764,6 @@ ggchord <- function(
         color = NA
       )
     } +
-    # 绘制基因箭头（旧版，用于标签）
-    { if (nrow(gene_arrows) > 0 && gene_label_show)
-      geom_segment(
-        data = gene_arrows,
-        aes(x = x_start, y = y_start, xend = x_end, yend = y_end),
-        arrow = arrow(length = unit(0.1, "inches"), type = "closed"),
-        color = "red",
-        linewidth = 0.5,
-        inherit.aes = FALSE
-      )
-    } +
     # 绘制基因标签
     { if (nrow(gene_arrows) > 0 && gene_label_show)
       geom_text(
@@ -850,3 +839,54 @@ ggchord <- function(
   
   return(p)
 }
+
+
+# 示例使用方法
+# 1. 读取数据
+#读取序列长度数据
+seq_data <- read.delim("seq_track.tsv", sep = "\t", stringsAsFactors = FALSE)
+
+# 读取基因注释数据
+gene_track <- read.delim("gene_track.tsv", sep = "\t", stringsAsFactors = FALSE)
+
+# 读取并处理BLAST数据
+read_blast <- function(file) {
+  df <- read.delim(file, sep = "\t", header = FALSE, stringsAsFactors = FALSE, comment.char = "#")
+  colnames(df) <- c("qaccver","saccver","pident","length","mismatches","gapopen",
+                    "qstart","qend","sstart","send","evalue","bitscore",
+                    "qcovs","qlen","slen","sstrand","stitle")
+  df
+}
+blast_files <- list.files(path = ".", pattern = "*.o7", full.names = TRUE)
+all_blast <- do.call(rbind, lapply(blast_files, read_blast))
+ribbon_data <- subset(all_blast, length >= 100)
+
+## 2. 调用ggchord函数（示例）
+p_final <- ggchord(
+  seq_data = seq_data,
+  ribbon_data = ribbon_data,
+  gene_track = gene_track,  # 传入基因注释数据
+  title = "Multi-sequence Chord Diagram with Gene Annotations",
+  seq_gap = .03,
+  seq_radius = c(4,3,2,1),
+  seq_orientation = c(-1, 1, -1, -1),
+  gene_offset = list(.3, 
+                     .25, 
+                     .4, 
+                     c("+"=.3,"-"=-.1)),
+  gene_width  = .08,
+  gene_label_show = F,
+  ribbon_gap = 0.2,
+  ribbon_color_scheme = "pident",
+  axis_gap = .1,
+  axis_tick_major_number = 5,
+  axis_tick_major_length = 0.03,
+  axis_tick_minor_number = 5,
+  axis_tick_minor_length = 0.01,
+  axis_label_size = 2,
+  axis_label_offset = .1,
+  rotation = 15,
+  debug = TRUE
+)
+print(p_final)
+
