@@ -1,4 +1,5 @@
-🌐 Language Switch: 【[现代汉语](README-Hans.md)  】
+🌐 Language Switch: 【[现代汉语](README-Hans.md) 】
+
 
 
 # ggchord: Multi-Sequence BLAST Alignment Chord Diagram Visualization Tool  
