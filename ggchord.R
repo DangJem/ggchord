@@ -1,105 +1,524 @@
-## ggchord: A chord diagram function for pairwise sequences based on BLAST alignments (arc/line mode switch with precise ribbon alignment)
-#' ggchord: Draw a chord diagram for two sequences and their BLAST alignment intervals
+#' ggchord: 多序列弦图（带可定制坐标轴与整体旋转）
 #'
-#' This function reads BLASTN outfmt6 format results:
-#' - Supports switching between "arc mode" and "line mode":
-#'   - Arc mode: Trajectories are semi-circles or interpolated arcs, with curvature adjustable by `curvature`;
-#'     Ribbon endpoints are strictly extracted from main arc point sets to ensure alignment;
-#'   - Line mode: Trajectories are horizontal lines, with vertical distance between sequences adjustable by `line_gap_frac`;
+#' 绘制多序列间的BLAST比对弦图，直接接受处理好的序列数据和比对数据，支持丰富的样式参数。
 #'
-#' @param blast_df Data frame containing columns: qstart, qend, sstart, send, qlen, slen, length
-#' @param min_len Minimum alignment length filter, default 100
-#' @param title Plot title, default "BLAST Chord Diagram"
-#' @param ribbon_col Color for the connecting ribbons, default "steelblue"
-#' @param arc_mode Logical, TRUE for arc mode, FALSE for line mode, default TRUE
-#' @param curvature Curvature of arcs in arc mode [0,1], 0=polyline (semi-circle polyline), 1=full arc, default 1
-#' @param gap_frac_arc Horizontal gap fraction between sequence arcs in arc mode, default 0.02
-#' @param line_gap_frac Vertical gap fraction between sequence lines in line mode, default 0.5
-#' @param r_query Radius for query arc (arc mode) or Y-coordinate (ignored in line mode), default 1.0
-#' @param r_subject Radius for subject arc (arc mode) or Y-coordinate (ignored in line mode), default 0.8
-#' @return A ggplot2 object
+#' @param seq_data data.frame/tibble，包含序列信息，必须包含列：
+#'   - seq_id: 序列唯一标识
+#'   - length: 序列长度
+#' @param ribbon_data data.frame/tibble，包含BLAST比对结果，必须包含列：
+#'   - qaccver: 查询序列ID
+#'   - saccver: 目标序列ID
+#'   - length: 比对长度
+#'   - pident: 序列相似度百分比
+#'   - qstart: 查询序列起始位置
+#'   - qend: 查询序列结束位置
+#'   - sstart: 目标序列起始位置
+#'   - send: 目标序列结束位置
+#' @param title 字符串，图形主标题，默认 "Multi-sequence Chord Diagram"
+#' @param seq_order 字符向量，可选，指定序列绘制顺序；若为NULL则使用 seq_data 中的顺序
+#' @param seq_labels 字符向量或命名向量，可选，序列标签；若为NULL则使用 seq_id
+#' @param seq_orientation 数值向量或单值，可选，每条序列的方向：1（正向）或 -1（反向）；默认正向
+#' @param seq_gap 数值或向量，长度与序列数一致，定义每条序列头部到下一条序列尾部的弧度比例 [0,0.5)，默认0.05
+#' @param seq_radius 数值或向量，序列圆弧半径，支持单值或与序列数相同的向量，默认1.0
+#' @param seq_colors 颜色向量或命名向量，定义各序列圆弧颜色；若为NULL则基于 RColorBrewer Set1 自动生成
+#' @param ribbon_color_scheme 字符，连接带配色方案，可选 "single"、"query" 或 "pident"，默认"single"
+#' @param ribbon_colors 连接带颜色参数：
+#'   - single: 单一颜色（单值或向量取第一个）
+#'   - query: 按查询序列映射颜色（命名或非命名向量或单值）
+#'   - pident: 渐变色阶向量，用于按相似度百分比生成渐变
+#' @param ribbon_alpha 数值，连接带透明度 [0,1]，默认0.6
+#' @param ribbon_ctrl_point 数值向量或列表，可选，贝塞尔控制点，长度2或list(c1,c2,..)，默认NULL（圆心）
+#' @param ribbon_gap 数值或向量，序列圆弧与连接带之间的径向距离，默认0.1
+#' @param axis_gap 数值或向量，坐标轴与序列圆弧之间径向距离，支持负值，默认0.05
+#' @param axis_tick_major 整数或向量，每条序列主刻度数，默认5
+#' @param axis_tick_major_length 数值或向量，主刻度线长度比例，默认0.02
+#' @param axis_tick_minor 整数或向量，每两个主刻度之间的次刻度数，默认4
+#' @param axis_tick_minor_length 数值或向量，次刻度线长度比例，默认0.01
+#' @param axis_label_size 数值或向量，坐标轴刻度文字大小，默认3
+#' @param axis_label_offset 数值或向量，基于默认标签位置（1.5倍刻度长度）的偏移量，0时为原位置，正值向外，负值向内，默认0
+#' @param rotation 数值，整体图形绕原点旋转角度（度，逆时针为正），默认0
+#' @param show_legend 逻辑值，是否显示图例，默认TRUE
+#' @param debug 逻辑值，是否打印调试信息，默认FALSE
+#' @return 返回一个 ggplot2 对象
 #' @import ggplot2
+#' @import RColorBrewer
+#' @import grDevices
 #' @export
-ggchord <- function(
-    blast_df,
-    min_len        = 100,
-    title          = "BLAST Chord Diagram",
-    ribbon_col     = "steelblue",
-    arc_mode       = TRUE,
-    curvature      = 1.0,
-    gap_frac_arc   = 0.02,
-    line_gap_frac  = 0.5,
-    r_query        = 1.0,
-    r_subject      = 0.8
-) {
-  library(ggplot2)
-  df <- subset(blast_df, length >= min_len)
-  if (nrow(df)==0) stop("No alignments meet the minimum length requirement")
-  qlen <- unique(df$qlen); slen <- unique(df$slen)
-  if (length(qlen)!=1||length(slen)!=1) stop("qlen/slen should be constant values")
+
+# 加载所需包
+library(ggplot2)
+library(RColorBrewer)
+library(grDevices)
+
+# 辅助函数：生成坐标轴主刻度断点
+breakPointsFunc <- function(max_value, n = 5, tol = 0.5) {
+  if (max_value <= 0) return(c(0, max_value))
   
-  if (arc_mode) {
-    # Arc mode...
-    total_circle <- 2*pi
-    total_gap    <- total_circle * gap_frac_arc
-    gap_each     <- total_gap/2
-    usable       <- total_circle - total_gap
-    total_len    <- qlen + slen
-    theta_q_len  <- usable * qlen/total_len
-    theta_s_len  <- usable * slen/total_len
-    th_q0 <- gap_each; th_q1 <- th_q0 + theta_q_len
-    th_s0 <- th_q1 + gap_each; th_s1 <- th_s0 + theta_s_len
-    nseg <- 500; u <- seq(0,1,length.out=nseg)
-    # Generate main arcs
-    gen_main <- function(theta0, theta1, radius) {
-      ang <- seq(theta0, theta1, length.out=nseg)
-      arc_xy  <- cbind(x=radius*cos(ang), y=radius*sin(ang))
-      p0 <- c(radius*cos(theta0), radius*sin(theta0)); p1 <- c(radius*cos(theta1), radius*sin(theta1))
-      lin_xy <- cbind((1-u)*p0[1]+u*p1[1], (1-u)*p0[2]+u*p1[2])
-      main_xy <- (1-curvature)*lin_xy + curvature*arc_xy
-      return(main_xy)
+  # 1. 用 pretty() 生成大致 n 个刻度
+  ticks <- pretty(c(0, max_value), n = n)
+  ticks <- ticks[ticks >= 0 & ticks <= max_value]
+  ticks <- sort(unique(c(0, ticks, max_value)))
+  
+  # 2. 如果最后一段太小（小于其他分段中位数 * tol），就去掉 penultimate
+  if (length(ticks) >= 3) {
+    d <- diff(ticks)
+    # 其它分段（不含最后一段）的中位数
+    med <- median(d[-length(d)])
+    # 如果最后一段过小，就剔除 penultimate 点
+    if (d[length(d)] < med * tol) {
+      ticks <- ticks[-(length(ticks) - 1)]
     }
-    arc_q <- gen_main(th_q0, th_q1, r_query)
-    arc_s <- gen_main(th_s0, th_s1, r_subject)
-    # Index mapping for precise alignment
-    idx_map <- function(angle, theta0, theta_len) {
-      idx <- round((angle-theta0)/theta_len*(nseg-1))+1
-      idx <- pmin(pmax(idx,1), nseg)
-      return(idx)
-    }
-    ribbon_list <- lapply(seq_len(nrow(df)), function(i) {
-      q0a <- th_q0 + (df$qstart[i]-1)/qlen*theta_q_len
-      q1a <- th_q0 + (df$qend[i]  -1)/qlen*theta_q_len
-      s0a <- th_s0 + (df$sstart[i]-1)/slen*theta_s_len
-      s1a <- th_s0 + (df$send[i]  -1)/slen*theta_s_len
-      i0q <- idx_map(q0a, th_q0, theta_q_len); i1q <- idx_map(q1a, th_q0, theta_q_len)
-      i0s <- idx_map(s0a, th_s0, theta_s_len); i1s <- idx_map(s1a, th_s0, theta_s_len)
-      seg_q <- arc_q[i0q:i1q,]; seg_s <- arc_s[i0s:i1s,]
-      data.frame(x=c(seg_q[,1], rev(seg_s[,1])), y=c(seg_q[,2], rev(seg_s[,2])), group=i)
-    })
-    ribbons <- do.call(rbind, ribbon_list)
-    p <- ggplot() +
-      geom_path(data=data.frame(x=arc_q[,1],y=arc_q[,2]), aes(x,y), size=1) +
-      geom_path(data=data.frame(x=arc_s[,1],y=arc_s[,2]), aes(x,y), size=1) +
-      geom_polygon(data=ribbons, aes(x,y,group=group), fill=ribbon_col, alpha=0.6) +
-      theme_void() + ggtitle(title)
-  } else {
-    # Line mode: Set two horizontal lines at y=+d/2 and y=-d/2
-    sep <- line_gap_frac * (r_query + r_subject)
-    yq <- sep/2; ys <- -sep/2
-    arc_q <- data.frame(x=c(0, qlen), y=rep(yq,2))
-    arc_s <- data.frame(x=c(0, slen), y=rep(ys,2))
-    ribbon_list <- lapply(seq_len(nrow(df)), function(i) {
-      xq0 <- df$qstart[i]-1; xq1 <- df$qend[i]-1
-      xs0 <- df$sstart[i]-1; xs1 <- df$send[i]-1
-      data.frame(x=c(xq0,xq1,xs1,xs0), y=c(rep(yq,2), rep(ys,2)), group=i)
-    })
-    ribbons <- do.call(rbind, ribbon_list)
-    p <- ggplot() +
-      geom_path(data=arc_q, aes(x,y), size=1) +
-      geom_path(data=arc_s, aes(x,y), size=1) +
-      geom_polygon(data=ribbons, aes(x,y,group=group), fill=ribbon_col, alpha=0.6) +
-      theme_void() + ggtitle(title)
   }
+  
+  return(ticks)
+}
+
+# 辅助函数：线性映射到角度索引
+map_idx <- function(r, angles) {
+  r <- pmin(1, pmax(0, ifelse(is.na(r), 0, r)))
+  tgt <- angles[1] + r * (angles[length(angles)] - angles[1])
+  which.min(abs(angles - tgt))
+}
+
+# 辅助函数：生成贝塞尔曲线点
+bezier_pts <- function(p0, p3, c1, c2, n = 100) {
+  t <- seq(0, 1, length.out = n)
+  bx <- (1 - t)^3*p0[1] + 3*(1 - t)^2*t*c1[1] + 3*(1 - t)*t^2*c2[1] + t^3*p3[1]
+  by <- (1 - t)^3*p0[2] + 3*(1 - t)^2*t*c1[2] + 3*(1 - t)*t^2*c2[2] + t^3*p3[2]
+  data.frame(x=bx, y=by)
+}
+
+# 通用参数处理（序列参数）
+process_sequence_param <- function(param, seqs, param_name, default_value = NULL, allow_null = FALSE) {
+  n <- length(seqs)
+  if (is.null(param)) {
+    if (allow_null) return(NULL)
+    if (!is.null(default_value)) return(setNames(rep(default_value, n), seqs))
+    stop(paste0(param_name, " 不能为空且未指定默认值"))
+  }
+  if (length(param) == 1) return(setNames(rep(param, n), seqs))
+  if (length(param) == n && is.null(names(param))) return(setNames(param, seqs))
+  if (!is.null(names(param))) {
+    if (!all(names(param) %in% seqs)) stop(paste0(param_name, " 包含未知序列ID: ",
+                                                  paste(setdiff(names(param), seqs), collapse=", ")))
+    return(param[seqs])
+  }
+  stop(paste0("无法处理的", param_name, "格式，请提供单值、命名向量或与序列数相同的非命名向量"))
+}
+
+# 主函数：绘制多序列弦图
+ggchord <- function(
+    seq_data,
+    ribbon_data,
+    title                  = "Multi-sequence Chord Diagram",
+    seq_order              = NULL,
+    seq_labels             = NULL,
+    seq_orientation        = NULL,
+    seq_gap                = 0.05,
+    seq_radius             = 1.0,
+    seq_colors             = NULL,
+    ribbon_color_scheme    = c("single","query","pident"),
+    ribbon_colors          = NULL,
+    ribbon_alpha           = 0.6,
+    ribbon_ctrl_point      = NULL,
+    ribbon_gap             = 0.1,
+    axis_gap               = 0.05,
+    axis_tick_major        = 5,
+    axis_tick_major_length = 0.02,
+    axis_tick_minor        = 4,
+    axis_tick_minor_length = 0.01,
+    axis_label_size        = 3,
+    axis_label_offset      = 0.1,
+    rotation               = 45,
+    show_legend            = TRUE,
+    debug                  = FALSE
+) {
+  # 检查必要的包是否安装
+  if (!"ggplot2" %in% installed.packages()) stop("需要安装 ggplot2 包")
+  if (!"RColorBrewer" %in% installed.packages()) stop("需要安装 RColorBrewer 包")
+  if (!"grDevices" %in% installed.packages()) stop("需要安装 grDevices 包")
+  
+  ribbon_color_scheme <- match.arg(ribbon_color_scheme)
+  
+  # 1. 验证输入数据格式
+  # 验证序列数据
+  required_seq_cols <- c("seq_id", "length")
+  if (!all(required_seq_cols %in% colnames(seq_data))) {
+    stop("seq_data 必须包含以下列: ", paste(required_seq_cols, collapse = ", "))
+  }
+  if (any(seq_data$length <= 0)) {
+    stop("seq_data 中的 length 必须为正数")
+  }
+  
+  # 验证BLAST数据
+  required_ribbon_cols <- c("qaccver", "saccver", "length", "pident", 
+                           "qstart", "qend", "sstart", "send")
+  if (!all(required_ribbon_cols %in% colnames(ribbon_data))) {
+    stop("ribbon_data 必须包含以下列: ", paste(required_ribbon_cols, collapse = ", "))
+  }
+  fb_all <- ribbon_data  # 直接使用传入的已处理比对数据
+  if (nrow(fb_all) == 0) stop("ribbon_data 中没有有效比对数据")
+  if (debug) cat("使用的比对数据行数:", nrow(fb_all), "\n")
+  
+  # 2. 处理序列信息
+  seqs <- seq_data$seq_id
+  lens <- setNames(seq_data$length, seqs)
+  if (length(seqs) < 2) stop("seq_data 中至少需要包含2条序列")
+  
+  # 处理序列顺序
+  if (!is.null(seq_order)) {
+    if (!all(seq_order %in% seqs)) {
+      stop("seq_order 包含未知序列ID: ", paste(setdiff(seq_order, seqs), collapse = ", "))
+    }
+    seqs <- seq_order
+    lens <- lens[seqs]  # 按新顺序重新排列长度
+  }
+  n <- length(seqs)  # 序列数量
+  
+  # 3. 处理序列相关参数
+  seq_labels      <- process_sequence_param(seq_labels, seqs, "seq_labels", default_value = seqs)
+  seqRadius       <- process_sequence_param(seq_radius, seqs, "seq_radius", default_value = 1.0)
+  ribbonGap       <- process_sequence_param(ribbon_gap, seqs, "ribbon_gap", default_value = 0.1)
+  axisGap         <- process_sequence_param(axis_gap, seqs, "axis_gap", default_value = 0.05)
+  axisMaj         <- process_sequence_param(axis_tick_major, seqs, "axis_tick_major", default_value = 5)
+  axisMajLen      <- process_sequence_param(axis_tick_major_length, seqs, "axis_tick_major_length", default_value = 0.02)
+  axisMin         <- process_sequence_param(axis_tick_minor, seqs, "axis_tick_minor", default_value = 4)
+  axisMinLen      <- process_sequence_param(axis_tick_minor_length, seqs, "axis_tick_minor_length", default_value = 0.01)
+  labelSize       <- process_sequence_param(axis_label_size, seqs, "axis_label_size", default_value = 3)
+  labelOffset     <- process_sequence_param(axis_label_offset, seqs, "axis_label_offset", default_value = 0)
+  orientation     <- process_sequence_param(seq_orientation, seqs, "seq_orientation", default_value = 1)
+  rot_rad <- rotation * pi / 180  # 转换为弧度
+  
+  # 处理序列间隙参数
+  seq_gap <- process_sequence_param(seq_gap, seqs, "seq_gap")
+  if (any(seq_gap < 0 | seq_gap >= 0.5)) {
+    stop("seq_gap 必须在 [0, 0.5) 范围内")
+  }
+  
+  # 处理序列颜色
+  if (is.null(seq_colors)) {
+    pal <- if (length(seqs) <= 9) {
+      brewer.pal(length(seqs), "Set1")
+    } else {
+      colorRampPalette(brewer.pal(9, "Set1"))(length(seqs))
+    }
+    seq_colors <- setNames(pal, seqs)
+  } else {
+    seq_colors <- process_sequence_param(seq_colors, seqs, "seq_colors")
+  }
+  
+  # 4. 处理连接带颜色参数
+  if (is.null(ribbon_colors)) {
+    ribbon_colors <- switch(ribbon_color_scheme,
+                            single = "steelblue",
+                            query = {
+                              # 浅色系版本的 seq_colors（与白色按 mix 比例混合）
+                              mix <- 0.5  
+                              sapply(seq_colors, function(col) {
+                                cols <- col2rgb(col)
+                                light_cols <- cols + (255 - cols) * mix
+                                rgb(light_cols[1,], light_cols[2,], light_cols[3,], maxColorValue = 255)
+                              })
+                            },
+                            pident = c(
+                              "#440154FF","#482878FF","#3E4A89FF","#31688EFF","#26828EFF",
+                              "#1F9E89FF","#35B779FF","#6DCD59FF","#B4DE2CFF","#FDE725FF"
+                            )
+    )
+  }
+  
+  # 验证连接带颜色参数
+  if (ribbon_color_scheme == "single") {
+    singleCol <- if (length(ribbon_colors) > 1) ribbon_colors[[1]] else ribbon_colors
+  } else if (ribbon_color_scheme == "query") {
+    queryCols <- process_sequence_param(ribbon_colors, seqs, "ribbon_colors")
+  } else if (ribbon_color_scheme == "pident") {
+    if (length(ribbon_colors) < 2) {
+      stop("pident 模式需指定至少两个颜色用作渐变色阶")
+    }
+    rampFunc <- colorRampPalette(ribbon_colors)
+  }
+  
+  # 5. 计算序列弧度和间隙弧度
+  total_circ <- 2 * pi  # 总圆周弧度
+  total_gap_prop <- sum(seq_gap)  # 总间隙比例
+  
+  if (total_gap_prop >= 1) {
+    stop("seq_gap 总和不能超过1（无法容纳所有序列）")
+  }
+  
+  seq_total_prop <- 1 - total_gap_prop  # 序列总占比
+  sum_lens <- sum(lens)
+  theta <- (lens / sum_lens) * total_circ * seq_total_prop  # 每个序列的弧度
+  gap_rads <- total_circ * seq_gap  # 每个间隙的弧度（实际角度）
+  
+  # 6. 计算序列起始和结束角度
+  starts <- numeric(n)
+  starts[1] <- 0  # 第一个序列从0开始
+  
+  if (n > 1) {
+    for (i in 2:n) {
+      starts[i] <- starts[i-1] + theta[i-1] + gap_rads[i-1]
+    }
+  }
+  
+  ends <- starts + theta
+  names(starts) <- names(ends) <- seqs
+  
+  # 7. 准备序列外层和内层坐标
+  nSeg <- 500  # 每个序列的分段数（控制平滑度）
+  seqArcs <- lapply(seqs, function(id) {
+    angs <- seq(starts[id], ends[id], length.out = nSeg)
+    if (orientation[id] == -1) angs <- rev(angs)  # 反向序列
+    data.frame(x = seqRadius[id] * cos(angs), 
+               y = seqRadius[id] * sin(angs), 
+               seq_id = id)
+  })
+  
+  innerArcs <- lapply(seqs, function(id) {
+    angs <- seq(starts[id], ends[id], length.out = nSeg)
+    if (orientation[id] == -1) angs <- rev(angs)
+    r <- seqRadius[id] - ribbonGap[id]  # 内层半径（连接带起始位置）
+    data.frame(x = r * cos(angs), y = r * sin(angs))
+  })
+  names(innerArcs) <- seqs
+  
+  # 8. 生成坐标轴刻度和线
+  axisTicks <- do.call(rbind, lapply(seqs, function(id) {
+    majors <- breakPointsFunc(lens[id], axisMaj[id])
+    minors <- unlist(lapply(seq_len(length(majors)-1), function(i) {
+      seq(majors[i], majors[i+1], length.out = axisMin[id] + 2)[-c(1, axisMin[id] + 2)]
+    }))
+    pts <- c(majors, minors)
+    do.call(rbind, lapply(pts, function(v) {
+      frac <- v / lens[id]  # 相对位置比例
+      # 计算角度（考虑方向）
+      ang <- if (orientation[id] == 1) {
+        starts[id] + frac * (ends[id] - starts[id])
+      } else {
+        ends[id] - frac * (ends[id] - starts[id])
+      }
+      # 基准半径（序列半径 + 坐标轴间隙）
+      base_r <- seqRadius[id] + axisGap[id]
+      # 刻度长度（根据主/次刻度区分）
+      tick_len <- if (v %in% majors) axisMajLen[id] else axisMinLen[id]
+      # 方向（axis_gap >=0 向外，否则向内）
+      dir <- if (axisGap[id] >= 0) 1 else -1
+      end_r <- base_r + tick_len * dir
+      # 标签位置
+      lab_r <- base_r + (1.5 + labelOffset[id]) * tick_len * dir
+      
+      data.frame(
+        x0 = base_r * cos(ang), y0 = base_r * sin(ang),
+        x1 = end_r * cos(ang), y1 = end_r * sin(ang),
+        label = if (v %in% majors) as.character(v) else NA,
+        label_x = lab_r * cos(ang), 
+        label_y = lab_r * sin(ang),
+        size = labelSize[id], 
+        seq_id = id
+      )
+    }))
+  }))
+  
+  # 坐标轴连接线
+  axisLines <- do.call(rbind, lapply(seqs, function(id) {
+    angs <- seq(starts[id], ends[id], length.out = nSeg)
+    if (orientation[id] == -1) angs <- rev(angs)
+    r <- seqRadius[id] + axisGap[id]
+    data.frame(x = r * cos(angs), y = r * sin(angs), seq_id = id)
+  }))
+  
+  # 9. 生成连接带数据
+  ribbons <- list()
+  cntValid <- cntInvalid <- 0
+  for (i in seq_len(nrow(fb_all))) {
+    row <- fb_all[i,]
+    q <- row$qaccver
+    s <- row$saccver
+    if (q == s) {  # 跳过自身比对
+      cntInvalid <- cntInvalid + 1
+      next
+    }
+    if (!q %in% seqs || !s %in% seqs) {  # 跳过不在序列表中的比对
+      cntInvalid <- cntInvalid + 1
+      next
+    }
+    
+    # 获取序列的内层弧线数据
+    qr <- innerArcs[[q]]
+    sr <- innerArcs[[s]]
+    
+    # 计算比对位置在弧线上的索引
+    qi0 <- map_idx((row$qstart - 1)/lens[q], seq(starts[q], ends[q], length.out = nSeg))
+    qi1 <- map_idx((row$qend - 1)/lens[q], seq(starts[q], ends[q], length.out = nSeg))
+    si0 <- map_idx((row$sstart - 1)/lens[s], seq(starts[s], ends[s], length.out = nSeg))
+    si1 <- map_idx((row$send - 1)/lens[s], seq(starts[s], ends[s], length.out = nSeg))
+    
+    # 过滤过短的比对
+    if (abs(qi1 - qi0) < 1 || abs(si1 - si0) < 1) {
+      cntInvalid <- cntInvalid + 1
+      next
+    }
+    
+    # 提取比对片段
+    segQ <- qr[qi0:qi1, , drop = FALSE]
+    segS <- sr[si0:si1, , drop = FALSE]
+    
+    # 确定贝塞尔曲线控制点
+    if (!is.null(ribbon_ctrl_point)) {
+      if (is.list(ribbon_ctrl_point)) {
+        cp <- ribbon_ctrl_point[[i]]
+        c1 <- cp[[1]]
+        c2 <- cp[[2]]
+      } else {
+        c1 <- ribbon_ctrl_point
+        c2 <- ribbon_ctrl_point
+      }
+    } else {
+      c1 <- c2 <- c(0, 0)  # 默认控制点为圆心
+    }
+    
+    # 生成贝塞尔曲线
+    b1 <- bezier_pts(as.numeric(segQ[1, ]), as.numeric(segS[1, ]), c1, c1)  # 起点曲线（查询起点→目标起点）
+    b2 <- bezier_pts(as.numeric(segQ[nrow(segQ), ]), as.numeric(segS[nrow(segS), ]), c2, c2)  # 终点曲线（查询终点→目标终点）
+    
+    # 构建闭合多边形
+    poly <- rbind(
+      segQ,                   # 1. 查询序列片段：查询起点 → 查询终点（正向）
+      b2,                     # 2. 终点贝塞尔曲线：查询终点 → 目标终点（正向）
+      segS[nrow(segS):1, ],   # 3. 目标序列片段：目标终点 → 目标起点（反向，与b2终点衔接）
+      b1[nrow(b1):1, ]        # 4. 起点贝塞尔曲线：目标起点 → 查询起点（反向，闭合回到起点）
+    )
+    
+    # 设置填充色
+    if (ribbon_color_scheme == "pident") {
+      poly$pident <- row$pident  # 保留相似度值用于渐变
+    } else {
+      poly$fill <- switch(ribbon_color_scheme,
+                          single = singleCol,
+                          query  = queryCols[q])
+    }
+    poly$group <- i  # 分组标识
+    ribbons[[length(ribbons) + 1]] <- poly
+    cntValid <- cntValid + 1
+  }
+  
+  if (debug) {
+    cat("有效连接带:", cntValid, "无效连接带:", cntInvalid, "\n")
+  }
+  if (cntValid == 0) {
+    stop("没有有效连接带可绘制，请检查输入数据或参数")
+  }
+  allRibbon <- do.call(rbind, ribbons)
+  
+  # 定义旋转函数
+  rotate_df <- function(df) {
+    # 对 (x,y)
+    if (all(c("x","y") %in% names(df))) {
+      x0 <- df$x; y0 <- df$y
+      df$x <-  x0 * cos(rot_rad) - y0 * sin(rot_rad)
+      df$y <-  x0 * sin(rot_rad) + y0 * cos(rot_rad)
+    }
+    # 对 (x0,y0) 和 (x1,y1)
+    if (all(c("x0","y0") %in% names(df))) {
+      X <- df$x0; Y <- df$y0
+      df$x0 <-  X * cos(rot_rad) - Y * sin(rot_rad)
+      df$y0 <-  X * sin(rot_rad) + Y * cos(rot_rad)
+      X1 <- df$x1; Y1 <- df$y1
+      df$x1 <-  X1 * cos(rot_rad) - Y1 * sin(rot_rad)
+      df$y1 <-  X1 * sin(rot_rad) + Y1 * cos(rot_rad)
+    }
+    # 对标签位置 (label_x,label_y)
+    if (all(c("label_x","label_y") %in% names(df))) {
+      LX <- df$label_x; LY <- df$label_y
+      df$label_x <-  LX * cos(rot_rad) - LY * sin(rot_rad)
+      df$label_y <-  LX * sin(rot_rad) + LY * cos(rot_rad)
+    }
+    df
+  }
+  
+  # 应用旋转
+  seqArcs   <- lapply(seqArcs,   rotate_df)
+  innerArcs <- lapply(innerArcs, rotate_df)
+  axisLines <- rotate_df(axisLines)
+  axisTicks <- rotate_df(axisTicks)
+  allRibbon <- rotate_df(allRibbon)
+  
+  
+  # 10. 绘制图形
+  p <- ggplot() +
+    # 绘制连接带
+    geom_polygon(
+      data = allRibbon,
+      aes(
+        x, y, group = group,
+        fill = if (ribbon_color_scheme == "pident") pident else fill
+      ),
+      alpha = ribbon_alpha, 
+      color = "grey", 
+      linewidth = 0.2
+    ) +
+    # 绘制序列弧线
+    geom_path(
+      data = do.call(rbind, seqArcs),
+      aes(x, y, group = seq_id, color = seq_id),
+      linewidth = 1.2,
+      arrow = arrow(angle = 25, length = unit(2, "mm"), type = "closed")
+    ) +
+    # 绘制坐标轴连接线
+    geom_path(
+      data = axisLines,
+      aes(x, y, group = seq_id),
+      color = "black",
+      linewidth = 0.3,
+      inherit.aes = FALSE
+    ) +
+    # 绘制刻度线
+    geom_segment(
+      data = axisTicks,
+      aes(x = x0, y = y0, xend = x1, yend = y1),
+      color = "black",
+      linewidth = 0.3,
+      inherit.aes = FALSE
+    ) +
+    # 绘制刻度标签
+    geom_text(
+      data = subset(axisTicks, !is.na(label)),
+      aes(x = label_x, y = label_y, label = label, size = size),
+      inherit.aes = FALSE,
+      color = "black"
+    ) +
+    # 统一设置大小尺度
+    scale_size_identity() +
+    # 序列颜色
+    scale_color_manual(
+      name = "序列",
+      values = seq_colors,
+      labels = seq_labels
+    ) +
+    # 连接带颜色设置
+    {
+      if (ribbon_color_scheme == "pident") {
+        scale_fill_gradientn(
+          name = "相似度（%）",
+          colours = ribbon_colors,
+          limits = c(0, 100),
+          labels = function(x) paste0(x, "%")
+        )
+      } else {
+        scale_fill_identity(guide = "none")
+      }
+    } +
+    # 主题设置
+    theme_void() +
+    coord_equal(clip = "off") +  # 等比例坐标，避免剪切标签
+    ggtitle(title) +
+    theme(
+      plot.title = element_text(hjust = 0.5, size = 14),
+      legend.position = if (show_legend) "right" else "none",
+      legend.text = element_text(face = "bold", size = 10),
+      legend.title = element_text(size = 12)
+    )
+  
   return(p)
 }
