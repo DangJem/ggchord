@@ -1,4 +1,4 @@
-🌐 Language Switch: 【[现代汉语](README-Hans.md) 】
+🌐 Language Switch: 【[现代汉语](README-Hans.md)】
 
 
 
@@ -146,6 +146,7 @@ print(p)
 # Save as high-resolution image
 ggsave("multi_sequence_chord.png", plot = p, width = 10, height = 10, dpi = 300)
 ```  
+![plot](/examples/plots/v0.1.0/multi_sequence_chord.png)
 
 
 ## Parameter Details  
