@@ -1,267 +1,267 @@
-seq_id	start	end	anno
-MT108731.1	13064	14554	hypothetical protein
-MT108731.1	22920	23705	hypothetical protein
-MT108731.1	23894	24814	hypothetical protein
-MT108731.1	27115	28053	hypothetical protein
-MT108731.1	48053	49111	hypothetical protein
-MT108731.1	49101	50831	hypothetical protein
-MT108731.1	57550	59490	hypothetical protein
-MT108731.1	60709	63087	hypothetical protein
-MT118296.1	160	405	hypothetical protein
-MT118296.1	458	700	hypothetical protein
-MT118296.1	827	1030	hypothetical protein
-MT118296.1	1107	1400	hypothetical protein
-MT118296.1	1499	2359	hypothetical protein
-MT118296.1	2439	2702	hypothetical protein
-MT118296.1	2771	2986	hypothetical protein
-MT118296.1	2998	3243	hypothetical protein
-MT118296.1	3200	3406	hypothetical protein
-MT118296.1	3484	3648	hypothetical protein
-MT118296.1	3773	4558	hypothetical protein
-MT118296.1	4747	5667	major capsid protein
-MT118296.1	5750	6199	hypothetical protein
-MT118296.1	6211	6753	hypothetical protein
-MT118296.1	6755	7114	hypothetical protein
-MT118296.1	7114	7512	hypothetical protein
-MT118296.1	7512	7922	hypothetical protein
-MT118296.1	7935	8873	hypothetical protein
-MT118296.1	8873	9310	hypothetical protein
-MT118296.1	9367	9609	hypothetical protein
-MT118296.1	9575	12046	hypothetical protein
-MT118296.1	12056	13612	virion structural protein
-MT118296.1	13622	14626	virion structural protein
-MT118296.1	14628	16301	virion structural protein
-MT118296.1	16298	17107	hypothetical protein
-MT118296.1	17118	17351	hypothetical protein
-MT118296.1	17372	17545	hypothetical protein
-MT118296.1	17538	19745	hypothetical protein
-MT118296.1	19746	20486	fiber protein
-MT118296.1	20488	20736	hypothetical protein
-MT118296.1	20744	21703	tail assembly protein
-MT118296.1	21706	22179	hypothetical protein
-MT118296.1	22243	22821	hypothetical protein
-MT118296.1	22827	23231	hypothetical protein
-MT118296.1	23228	23659	hypothetical protein
-MT118296.1	24027	25601	hypothetical protein
-MT118296.1	25594	25971	hypothetical protein
-MT118296.1	26035	26589	hypothetical protein
-MT118296.1	26712	27551	hypothetical protein
-MT118296.1	27615	28811	5' to 3' DNA helicase-like protein
-MT118296.1	28873	29931	hypothetical protein
-MT118296.1	29921	31651	hypothetical protein
-MT118296.1	31776	31982	hypothetical protein
-OQ646790.1	472	987	putative terminase small subunit
-OQ646790.1	984	2474	putative large terminase
-OQ646790.1	2530	4026	portal protein
-OQ646790.1	4026	5273	morphogenesis protein
-OQ646790.1	5321	6022	putative PhoH-like protein
-OQ646790.1	6038	6247	hypothetical protein
-OQ646790.1	6278	6601	hypothetical protein
-OQ646790.1	6731	6895	hypothetical protein
-OQ646790.1	7017	7805	hypothetical protein
-OQ646790.1	7946	8866	major structural protein
-OQ646790.1	9005	9448	hypothetical protein
-OQ646790.1	9452	9682	virion structural protein
-OQ646790.1	9688	10218	putative virion structural protein
-OQ646790.1	10220	10609	virion structural protein
-OQ646790.1	10611	11009	putative virion structural protein
-OQ646790.1	11006	11416	putative tail terminator protein
-OQ646790.1	11452	12366	major tail structural protein
-OQ646790.1	12366	12803	hypothetical protein
-OQ646790.1	12809	13108	hypothetical protein
-OQ646790.1	13194	15551	tail tape measure protein
-OQ646790.1	15562	17091	virion structural protein
-OQ646790.1	17103	18104	putative virion structural protein
-OQ646790.1	18105	19766	putative virion structural protein
-OQ646790.1	19763	20572	virion structural protein
-OQ646790.1	20585	20818	putative virion structural protein
-OQ646790.1	20815	21021	hypothetical protein
-OQ646790.1	21005	23179	virion structural protein
-OQ646790.1	23254	23535	virion structural protein
-OQ646790.1	23602	24078	putative membrane protein
-OQ646790.1	24075	24581	putative endolysin
-OQ646790.1	24625	24843	putative membrane protein
-OQ646790.1	24827	25369	hypothetical protein
-OQ646790.1	25877	27451	putative helicase
-OQ646790.1	27444	27806	hypothetical protein
-OQ646790.1	27895	28446	hypothetical protein
-OQ646790.1	28554	29393	hypothetical protein
-OQ646790.1	29469	30656	hypothetical protein
-OQ646790.1	30720	31781	putative ribonucleotide reductase small subunit
-OQ646790.1	31762	33468	ribonucleotide reductase%2C large subunit
-OQ646790.1	33718	34227	hypothetical protein
-OQ646790.1	34283	35140	hypothetical protein
-OQ646790.1	35137	36000	putative FAD dependent oxidoreductase
-OQ646790.1	35997	36422	putative acetyltransferase
-OQ646790.1	36426	36995	hypothetical protein
-OQ646790.1	36992	37882	hypothetical protein
-OQ646790.1	37886	38932	putative thymidylate synthase
-OQ646790.1	38945	39535	putative HD domain-containing protein
-OQ646790.1	39537	39977	hypothetical protein
-OQ646790.1	40034	40588	hypothetical protein
-OQ646790.1	40588	42528	DNA polymerase I
-OQ646790.1	42525	43061	putative dCMP deaminase
-OQ646790.1	43054	43479	hypothetical protein
-OQ646790.1	43533	43778	hypothetical protein
-OQ646790.1	43765	46140	integrase
-OQ646790.1	46140	46346	hypothetical protein
-OQ646790.1	46436	46552	hypothetical protein
-OQ646790.1	46578	46886	hypothetical protein
-OQ646790.1	46936	47622	phosphoribosyl-ATP diphosphatase
-OQ646790.1	47615	47995	hypothetical protein
-OQ646790.1	48006	48398	hypothetical protein
-OQ646790.1	48391	48966	hypothetical protein
-OQ646790.1	49002	49247	hypothetical protein
-OQ646790.1	49346	49945	hypothetical protein
-OQ646790.1	49996	50613	hypothetical protein
-OQ646790.1	50700	51605	putative DNA ligase
-OQ646790.1	51682	51900	hypothetical protein
-OQ646790.1	51928	53019	hypothetical protein
-OQ646790.1	53148	53396	hypothetical protein
-OQ646790.1	53393	53821	hypothetical protein
-OQ646790.1	53841	54392	putative nucleotide triphosphate hydrolase
-OQ646790.1	54389	54646	hypothetical protein
-OQ646790.1	54797	55003	hypothetical protein
-OQ646790.1	55047	55736	putative exonuclease
-OQ646790.1	55733	56017	hypothetical protein
-OQ646790.1	56014	56409	hypothetical protein
-OQ646790.1	56406	56675	hypothetical protein
-OQ646790.1	56662	56940	hypothetical protein
-OR222515.1	1	133	hypothetical protein
-OR222515.1	181	612	hypothetical protein
-OR222515.1	612	866	hypothetical protein
-OR222515.1	948	1235	hypothetical protein
-OR222515.1	1277	1462	gp83 protein
-OR222515.1	1459	2100	hypothetical protein
-OR222515.1	2299	2544	hypothetical protein
-OR222515.1	2624	4195	hypothetical protein
-OR222515.1	4298	4408	hypothetical protein
-OR222515.1	4409	4594	hypothetical protein
-OR222515.1	4579	5301	hypothetical protein
-OR222515.1	5282	5560	hypothetical protein
-OR222515.1	5557	5790	gp38 protein
-OR222515.1	5787	6134	hypothetical protein
-OR222515.1	6131	6394	hypothetical protein
-OR222515.1	6391	6783	hypothetical protein
-OR222515.1	6777	6971	hypothetical protein
-OR222515.1	6971	7354	hypothetical protein
-OR222515.1	7381	7566	hypothetical protein
-OR222515.1	7563	7961	hypothetical protein
-OR222515.1	7958	8356	gp095 protein
-OR222515.1	8380	8586	hypothetical protein
-OR222515.1	8625	9068	hypothetical protein
-OR222515.1	9061	9423	hypothetical protein
-OR222515.1	9420	9809	hypothetical protein
-OR222515.1	9809	10027	hypothetical protein
-OR222515.1	10020	10208	hypothetical protein
-OR222515.1	10256	10738	hypothetical protein
-OR222515.1	10738	10953	hypothetical protein
-OR222515.1	10950	11093	hypothetical protein
-OR222515.1	11096	11296	hypothetical protein
-OR222515.1	11300	11926	hypothetical protein
-OR222515.1	11923	12261	hypothetical protein
-OR222515.1	12265	12564	hypothetical protein
-OR222515.1	12561	12911	hypothetical protein
-OR222515.1	12911	13183	hypothetical protein
-OR222515.1	13212	13355	hypothetical protein
-OR222515.1	13355	13567	hypothetical protein
-OR222515.1	13578	13850	hypothetical protein
-OR222515.1	13844	14464	hypothetical protein
-OR222515.1	14461	14694	hypothetical protein
-OR222515.1	14691	14888	hypothetical protein
-OR222515.1	14885	15169	hypothetical protein
-OR222515.1	15194	15592	hypothetical protein
-OR222515.1	15596	15814	hypothetical protein
-OR222515.1	15844	16476	putative antirestriction protein
-OR222515.1	16476	16565	hypothetical protein
-OR222515.1	16559	16729	hypothetical protein
-OR222515.1	16726	16974	hypothetical protein
-OR222515.1	17105	17461	hypothetical protein
-OR222515.1	17515	18309	conserved phage protein
-OR222515.1	18313	18525	hypothetical protein
-OR222515.1	18561	18788	hypothetical protein
-OR222515.1	18861	19055	hypothetical protein
-OR222515.1	19052	19249	hypothetical protein
-OR222515.1	19246	20523	Int
-OR222515.1	20543	20806	hypothetical protein
-OR222515.1	20791	20961	hypothetical protein
-OR222515.1	20970	21233	cadmium efflux system accessory protein
-OR222515.1	21368	22006	hypothetical protein
-OR222515.1	22118	22324	putative regulator protein Arc-like DNA binding domain
-OR222515.1	22334	22642	hypothetical protein
-OR222515.1	22635	22973	hypothetical protein
-OR222515.1	23096	24403	Dda DNA helicase
-OR222515.1	24433	24678	hypothetical protein
-OR222515.1	24686	27547	hypothetical protein
-OR222515.1	27592	27819	hypothetical protein
-OR222515.1	27803	29437	ATP-dependent DNA helicase uvsW
-OR222515.1	29451	29552	hypothetical protein
-OR222515.1	29549	30373	hypothetical protein
-OR222515.1	30460	31191	thymidylate synthase
-OR222515.1	31239	32249	hypothetical protein
-OR222515.1	32239	33969	hypothetical protein
-OR222515.1	34030	37653	hypothetical protein
-OR222515.1	37650	37907	maturation protein
-OR222515.1	37907	38614	hypothetical protein
-OR222515.1	38737	39150	hypothetical protein
-OR222515.1	39180	39668	hypothetical protein
-OR222515.1	39700	40842	DNA ligase
-OR222515.1	40839	40988	hypothetical protein
-OR222515.1	40985	41083	hypothetical protein
-OR222515.1	41080	42114	recombination endonuclease subunit
-OR222515.1	42111	42257	hypothetical protein
-OR222515.1	42254	42532	hypothetical protein
-OR222515.1	42532	42903	hypothetical protein
-OR222515.1	42900	43064	hypothetical protein
-OR222515.1	43061	45265	recombination endonuclease subunit
-OR222515.1	45268	45714	dCTP deaminase
-OR222515.1	45711	45917	hypothetical protein
-OR222515.1	45914	46087	hypothetical protein
-OR222515.1	46047	46169	hypothetical protein
-OR222515.1	46270	46584	hypothetical protein
-OR222515.1	46581	47042	hypothetical protein
-OR222515.1	47026	47340	hypothetical protein
-OR222515.1	47310	47651	bacteriocin UviB precursor
-OR222515.1	47721	51095	putative phage tail protein
-OR222515.1	51088	52005	tail fiber protein
-OR222515.1	52009	52845	hypothetical protein
-OR222515.1	52854	53249	hypothetical protein
-OR222515.1	53249	56803	tail fiber protein
-OR222515.1	56796	57110	tail assembly protein
-OR222515.1	57190	57384	hypothetical protein
-OR222515.1	57374	58063	minor tail protein
-OR222515.1	58092	58796	minor tail protein
-OR222515.1	58859	59209	hypothetical protein
-OR222515.1	59209	64491	hypothetical protein
-OR222515.1	64495	64830	hypothetical protein
-OR222515.1	64860	65282	hypothetical protein
-OR222515.1	65359	66393	putative major tail tube protein
-OR222515.1	66398	66832	hypothetical protein
-OR222515.1	66832	67350	hypothetical protein
-OR222515.1	67350	68252	hypothetical protein
-OR222515.1	68242	68730	hypothetical protein
-OR222515.1	68734	69018	hypothetical protein
-OR222515.1	69065	70246	gp4 protein
-OR222515.1	70311	70766	hypothetical protein
-OR222515.1	70782	72179	hypothetical protein
-OR222515.1	72244	73701	hypothetical protein
-OR222515.1	73823	74065	hypothetical protein
-OR222515.1	74151	75887	hypothetical protein
-OR222515.1	75903	76115	hypothetical protein
-OR222515.1	76329	76724	hypothetical protein
-OR222515.1	76862	77518	hypothetical protein
-OR222515.1	77722	77871	hypothetical protein
-OR222515.1	77932	78213	integration host factor
-OR222515.1	78210	78428	hypothetical protein
-OR222515.1	78468	78566	hypothetical protein
-OR222515.1	78655	78837	hypothetical protein
-OR222515.1	78880	79911	hypothetical protein
-OR222515.1	79908	80084	HNH endonuclease
-OR222515.1	80123	80365	hypothetical protein
-OR222515.1	80374	80523	hypothetical protein
-OR222515.1	80597	80917	hypothetical protein
-OR222515.1	80965	81396	hypothetical protein
-OR222515.1	81396	81650	hypothetical protein
-OR222515.1	81732	82019	hypothetical protein
-OR222515.1	82061	82246	gp83 protein
-OR222515.1	82243	82884	hypothetical protein
+seq_id	start	end	strand	anno
+MT108731.1	13064	14554	+	hypothetical protein
+MT108731.1	22920	23705	+	hypothetical protein
+MT108731.1	23894	24814	+	hypothetical protein
+MT108731.1	27115	28053	+	hypothetical protein
+MT108731.1	48053	49111	+	hypothetical protein
+MT108731.1	49101	50831	+	hypothetical protein
+MT108731.1	57550	59490	+	hypothetical protein
+MT108731.1	60709	63087	+	hypothetical protein
+MT118296.1	160	405	+	hypothetical protein
+MT118296.1	458	700	+	hypothetical protein
+MT118296.1	827	1030	+	hypothetical protein
+MT118296.1	1107	1400	+	hypothetical protein
+MT118296.1	1499	2359	+	hypothetical protein
+MT118296.1	2439	2702	+	hypothetical protein
+MT118296.1	2771	2986	+	hypothetical protein
+MT118296.1	2998	3243	+	hypothetical protein
+MT118296.1	3200	3406	+	hypothetical protein
+MT118296.1	3484	3648	+	hypothetical protein
+MT118296.1	3773	4558	+	hypothetical protein
+MT118296.1	4747	5667	+	major capsid protein
+MT118296.1	5750	6199	+	hypothetical protein
+MT118296.1	6211	6753	+	hypothetical protein
+MT118296.1	6755	7114	+	hypothetical protein
+MT118296.1	7114	7512	+	hypothetical protein
+MT118296.1	7512	7922	+	hypothetical protein
+MT118296.1	7935	8873	+	hypothetical protein
+MT118296.1	8873	9310	+	hypothetical protein
+MT118296.1	9367	9609	+	hypothetical protein
+MT118296.1	9575	12046	+	hypothetical protein
+MT118296.1	12056	13612	+	virion structural protein
+MT118296.1	13622	14626	+	virion structural protein
+MT118296.1	14628	16301	+	virion structural protein
+MT118296.1	16298	17107	+	hypothetical protein
+MT118296.1	17118	17351	+	hypothetical protein
+MT118296.1	17372	17545	+	hypothetical protein
+MT118296.1	17538	19745	+	hypothetical protein
+MT118296.1	19746	20486	+	fiber protein
+MT118296.1	20488	20736	+	hypothetical protein
+MT118296.1	20744	21703	+	tail assembly protein
+MT118296.1	21706	22179	+	hypothetical protein
+MT118296.1	22243	22821	+	hypothetical protein
+MT118296.1	22827	23231	+	hypothetical protein
+MT118296.1	23228	23659	+	hypothetical protein
+MT118296.1	24027	25601	+	hypothetical protein
+MT118296.1	25594	25971	+	hypothetical protein
+MT118296.1	26035	26589	+	hypothetical protein
+MT118296.1	26712	27551	+	hypothetical protein
+MT118296.1	27615	28811	+	5' to 3' DNA helicase-like protein
+MT118296.1	28873	29931	+	hypothetical protein
+MT118296.1	29921	31651	+	hypothetical protein
+MT118296.1	31776	31982	+	hypothetical protein
+OQ646790.1	472	987	+	putative terminase small subunit
+OQ646790.1	984	2474	+	putative large terminase
+OQ646790.1	2530	4026	+	portal protein
+OQ646790.1	4026	5273	+	morphogenesis protein
+OQ646790.1	5321	6022	+	putative PhoH-like protein
+OQ646790.1	6038	6247	+	hypothetical protein
+OQ646790.1	6278	6601	+	hypothetical protein
+OQ646790.1	6731	6895	+	hypothetical protein
+OQ646790.1	7017	7805	+	hypothetical protein
+OQ646790.1	7946	8866	+	major structural protein
+OQ646790.1	9005	9448	+	hypothetical protein
+OQ646790.1	9452	9682	+	virion structural protein
+OQ646790.1	9688	10218	+	putative virion structural protein
+OQ646790.1	10220	10609	+	virion structural protein
+OQ646790.1	10611	11009	+	putative virion structural protein
+OQ646790.1	11006	11416	+	putative tail terminator protein
+OQ646790.1	11452	12366	+	major tail structural protein
+OQ646790.1	12366	12803	+	hypothetical protein
+OQ646790.1	12809	13108	+	hypothetical protein
+OQ646790.1	13194	15551	+	tail tape measure protein
+OQ646790.1	15562	17091	+	virion structural protein
+OQ646790.1	17103	18104	+	putative virion structural protein
+OQ646790.1	18105	19766	+	putative virion structural protein
+OQ646790.1	19763	20572	+	virion structural protein
+OQ646790.1	20585	20818	+	putative virion structural protein
+OQ646790.1	20815	21021	+	hypothetical protein
+OQ646790.1	21005	23179	+	virion structural protein
+OQ646790.1	23254	23535	+	virion structural protein
+OQ646790.1	23602	24078	+	putative membrane protein
+OQ646790.1	24075	24581	+	putative endolysin
+OQ646790.1	24625	24843	+	putative membrane protein
+OQ646790.1	24827	25369	+	hypothetical protein
+OQ646790.1	25877	27451	+	putative helicase
+OQ646790.1	27444	27806	+	hypothetical protein
+OQ646790.1	27895	28446	+	hypothetical protein
+OQ646790.1	28554	29393	+	hypothetical protein
+OQ646790.1	29469	30656	+	hypothetical protein
+OQ646790.1	30720	31781	+	putative ribonucleotide reductase small subunit
+OQ646790.1	31762	33468	+	ribonucleotide reductase%2C large subunit
+OQ646790.1	33718	34227	+	hypothetical protein
+OQ646790.1	34283	35140	+	hypothetical protein
+OQ646790.1	35137	36000	+	putative FAD dependent oxidoreductase
+OQ646790.1	35997	36422	+	putative acetyltransferase
+OQ646790.1	36426	36995	+	hypothetical protein
+OQ646790.1	36992	37882	+	hypothetical protein
+OQ646790.1	37886	38932	+	putative thymidylate synthase
+OQ646790.1	38945	39535	+	putative HD domain-containing protein
+OQ646790.1	39537	39977	+	hypothetical protein
+OQ646790.1	40034	40588	+	hypothetical protein
+OQ646790.1	40588	42528	+	DNA polymerase I
+OQ646790.1	42525	43061	+	putative dCMP deaminase
+OQ646790.1	43054	43479	+	hypothetical protein
+OQ646790.1	43533	43778	+	hypothetical protein
+OQ646790.1	43765	46140	+	integrase
+OQ646790.1	46140	46346	+	hypothetical protein
+OQ646790.1	46436	46552	+	hypothetical protein
+OQ646790.1	46578	46886	+	hypothetical protein
+OQ646790.1	46936	47622	+	phosphoribosyl-ATP diphosphatase
+OQ646790.1	47615	47995	+	hypothetical protein
+OQ646790.1	48006	48398	+	hypothetical protein
+OQ646790.1	48391	48966	+	hypothetical protein
+OQ646790.1	49002	49247	+	hypothetical protein
+OQ646790.1	49346	49945	+	hypothetical protein
+OQ646790.1	49996	50613	+	hypothetical protein
+OQ646790.1	50700	51605	+	putative DNA ligase
+OQ646790.1	51682	51900	+	hypothetical protein
+OQ646790.1	51928	53019	+	hypothetical protein
+OQ646790.1	53148	53396	+	hypothetical protein
+OQ646790.1	53393	53821	+	hypothetical protein
+OQ646790.1	53841	54392	+	putative nucleotide triphosphate hydrolase
+OQ646790.1	54389	54646	+	hypothetical protein
+OQ646790.1	54797	55003	-	hypothetical protein
+OQ646790.1	55047	55736	+	putative exonuclease
+OQ646790.1	55733	56017	+	hypothetical protein
+OQ646790.1	56014	56409	+	hypothetical protein
+OQ646790.1	56406	56675	+	hypothetical protein
+OQ646790.1	56662	56940	+	hypothetical protein
+OR222515.1	1	133	+	hypothetical protein
+OR222515.1	181	612	+	hypothetical protein
+OR222515.1	612	866	+	hypothetical protein
+OR222515.1	948	1235	+	hypothetical protein
+OR222515.1	1277	1462	+	gp83 protein
+OR222515.1	1459	2100	+	hypothetical protein
+OR222515.1	2299	2544	+	hypothetical protein
+OR222515.1	2624	4195	+	hypothetical protein
+OR222515.1	4298	4408	+	hypothetical protein
+OR222515.1	4409	4594	+	hypothetical protein
+OR222515.1	4579	5301	+	hypothetical protein
+OR222515.1	5282	5560	+	hypothetical protein
+OR222515.1	5557	5790	+	gp38 protein
+OR222515.1	5787	6134	+	hypothetical protein
+OR222515.1	6131	6394	+	hypothetical protein
+OR222515.1	6391	6783	+	hypothetical protein
+OR222515.1	6777	6971	+	hypothetical protein
+OR222515.1	6971	7354	+	hypothetical protein
+OR222515.1	7381	7566	+	hypothetical protein
+OR222515.1	7563	7961	+	hypothetical protein
+OR222515.1	7958	8356	+	gp095 protein
+OR222515.1	8380	8586	+	hypothetical protein
+OR222515.1	8625	9068	+	hypothetical protein
+OR222515.1	9061	9423	+	hypothetical protein
+OR222515.1	9420	9809	+	hypothetical protein
+OR222515.1	9809	10027	+	hypothetical protein
+OR222515.1	10020	10208	+	hypothetical protein
+OR222515.1	10256	10738	+	hypothetical protein
+OR222515.1	10738	10953	+	hypothetical protein
+OR222515.1	10950	11093	+	hypothetical protein
+OR222515.1	11096	11296	+	hypothetical protein
+OR222515.1	11300	11926	+	hypothetical protein
+OR222515.1	11923	12261	+	hypothetical protein
+OR222515.1	12265	12564	+	hypothetical protein
+OR222515.1	12561	12911	+	hypothetical protein
+OR222515.1	12911	13183	+	hypothetical protein
+OR222515.1	13212	13355	+	hypothetical protein
+OR222515.1	13355	13567	+	hypothetical protein
+OR222515.1	13578	13850	+	hypothetical protein
+OR222515.1	13844	14464	+	hypothetical protein
+OR222515.1	14461	14694	+	hypothetical protein
+OR222515.1	14691	14888	+	hypothetical protein
+OR222515.1	14885	15169	+	hypothetical protein
+OR222515.1	15194	15592	+	hypothetical protein
+OR222515.1	15596	15814	+	hypothetical protein
+OR222515.1	15844	16476	+	putative antirestriction protein
+OR222515.1	16476	16565	+	hypothetical protein
+OR222515.1	16559	16729	+	hypothetical protein
+OR222515.1	16726	16974	+	hypothetical protein
+OR222515.1	17105	17461	+	hypothetical protein
+OR222515.1	17515	18309	+	conserved phage protein
+OR222515.1	18313	18525	+	hypothetical protein
+OR222515.1	18561	18788	+	hypothetical protein
+OR222515.1	18861	19055	+	hypothetical protein
+OR222515.1	19052	19249	+	hypothetical protein
+OR222515.1	19246	20523	-	Int
+OR222515.1	20543	20806	+	hypothetical protein
+OR222515.1	20791	20961	+	hypothetical protein
+OR222515.1	20970	21233	+	cadmium efflux system accessory protein
+OR222515.1	21368	22006	+	hypothetical protein
+OR222515.1	22118	22324	+	putative regulator protein Arc-like DNA binding domain
+OR222515.1	22334	22642	+	hypothetical protein
+OR222515.1	22635	22973	+	hypothetical protein
+OR222515.1	23096	24403	+	Dda DNA helicase
+OR222515.1	24433	24678	+	hypothetical protein
+OR222515.1	24686	27547	+	hypothetical protein
+OR222515.1	27592	27819	+	hypothetical protein
+OR222515.1	27803	29437	+	ATP-dependent DNA helicase uvsW
+OR222515.1	29451	29552	+	hypothetical protein
+OR222515.1	29549	30373	+	hypothetical protein
+OR222515.1	30460	31191	+	thymidylate synthase
+OR222515.1	31239	32249	+	hypothetical protein
+OR222515.1	32239	33969	+	hypothetical protein
+OR222515.1	34030	37653	+	hypothetical protein
+OR222515.1	37650	37907	+	maturation protein
+OR222515.1	37907	38614	+	hypothetical protein
+OR222515.1	38737	39150	+	hypothetical protein
+OR222515.1	39180	39668	+	hypothetical protein
+OR222515.1	39700	40842	+	DNA ligase
+OR222515.1	40839	40988	+	hypothetical protein
+OR222515.1	40985	41083	+	hypothetical protein
+OR222515.1	41080	42114	+	recombination endonuclease subunit
+OR222515.1	42111	42257	+	hypothetical protein
+OR222515.1	42254	42532	+	hypothetical protein
+OR222515.1	42532	42903	+	hypothetical protein
+OR222515.1	42900	43064	+	hypothetical protein
+OR222515.1	43061	45265	+	recombination endonuclease subunit
+OR222515.1	45268	45714	+	dCTP deaminase
+OR222515.1	45711	45917	+	hypothetical protein
+OR222515.1	45914	46087	-	hypothetical protein
+OR222515.1	46047	46169	-	hypothetical protein
+OR222515.1	46270	46584	-	hypothetical protein
+OR222515.1	46581	47042	-	hypothetical protein
+OR222515.1	47026	47340	-	hypothetical protein
+OR222515.1	47310	47651	-	bacteriocin UviB precursor
+OR222515.1	47721	51095	-	putative phage tail protein
+OR222515.1	51088	52005	-	tail fiber protein
+OR222515.1	52009	52845	-	hypothetical protein
+OR222515.1	52854	53249	-	hypothetical protein
+OR222515.1	53249	56803	-	tail fiber protein
+OR222515.1	56796	57110	-	tail assembly protein
+OR222515.1	57190	57384	-	hypothetical protein
+OR222515.1	57374	58063	-	minor tail protein
+OR222515.1	58092	58796	-	minor tail protein
+OR222515.1	58859	59209	-	hypothetical protein
+OR222515.1	59209	64491	-	hypothetical protein
+OR222515.1	64495	64830	-	hypothetical protein
+OR222515.1	64860	65282	-	hypothetical protein
+OR222515.1	65359	66393	-	putative major tail tube protein
+OR222515.1	66398	66832	-	hypothetical protein
+OR222515.1	66832	67350	-	hypothetical protein
+OR222515.1	67350	68252	-	hypothetical protein
+OR222515.1	68242	68730	-	hypothetical protein
+OR222515.1	68734	69018	-	hypothetical protein
+OR222515.1	69065	70246	-	gp4 protein
+OR222515.1	70311	70766	-	hypothetical protein
+OR222515.1	70782	72179	-	hypothetical protein
+OR222515.1	72244	73701	-	hypothetical protein
+OR222515.1	73823	74065	-	hypothetical protein
+OR222515.1	74151	75887	-	hypothetical protein
+OR222515.1	75903	76115	-	hypothetical protein
+OR222515.1	76329	76724	-	hypothetical protein
+OR222515.1	76862	77518	-	hypothetical protein
+OR222515.1	77722	77871	-	hypothetical protein
+OR222515.1	77932	78213	-	integration host factor
+OR222515.1	78210	78428	-	hypothetical protein
+OR222515.1	78468	78566	-	hypothetical protein
+OR222515.1	78655	78837	-	hypothetical protein
+OR222515.1	78880	79911	+	hypothetical protein
+OR222515.1	79908	80084	+	HNH endonuclease
+OR222515.1	80123	80365	+	hypothetical protein
+OR222515.1	80374	80523	+	hypothetical protein
+OR222515.1	80597	80917	+	hypothetical protein
+OR222515.1	80965	81396	+	hypothetical protein
+OR222515.1	81396	81650	+	hypothetical protein
+OR222515.1	81732	82019	+	hypothetical protein
+OR222515.1	82061	82246	+	gp83 protein
+OR222515.1	82243	82884	+	hypothetical protein
