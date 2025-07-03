@@ -1,4 +1,5 @@
-🌐 Language Switch: [现代汉语](README-Hans.md)  
+🌐 Language Switch: 【[现代汉语](README-Hans.md)  】
+
 
 # ggchord: Multi-Sequence BLAST Alignment Chord Diagram Visualization Tool  
 
@@ -42,10 +43,6 @@ Ideal for comparative genomics, pan-genome analysis, phage-host sequence relatio
 # Install dependencies
 if (!require("ggplot2")) install.packages("ggplot2")
 if (!require("RColorBrewer")) install.packages("RColorBrewer")
-
-# Install from GitHub (replace with your repository URL)
-if (!require("devtools")) install.packages("devtools")
-devtools::install_github("your_username/ggchord@v0.1.0")
 ```
 
 
