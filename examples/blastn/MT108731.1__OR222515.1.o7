@@ -1,0 +1,7 @@
+# BLASTN 2.16.0+
+# Query: MT108731.1 Pseudomonas phage Epa43, complete genome
+# Database: User specified sequence set (Input: OR222515.1.fna)
+# Fields: query acc.ver, subject acc.ver, % identity, alignment length, mismatches, gap opens, q. start, q. end, s. start, s. end, evalue, bit score, % query coverage per subject, query length, subject length, subject strand, subject title
+# 1 hits found
+MT108731.1	OR222515.1	78.194	2747	553	42	48107	50830	31245	33968	0.0	1712	4	64323	83080	plus	N/A
+# BLAST processed 1 queries

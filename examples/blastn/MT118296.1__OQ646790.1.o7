@@ -1,0 +1,12 @@
+# BLASTN 2.16.0+
+# Query: MT118296.1 Pseudomonas phage Epa19, complete genome
+# Database: User specified sequence set (Input: OQ646790.1.fna)
+# Fields: query acc.ver, subject acc.ver, % identity, alignment length, mismatches, gap opens, q. start, q. end, s. start, s. end, evalue, bit score, % query coverage per subject, query length, subject length, subject strand, subject title
+# 6 hits found
+MT118296.1	OQ646790.1	78.589	5628	1033	128	26098	31659	27955	33476	0.0	3559	38	32090	57367	plus	N/A
+MT118296.1	OQ646790.1	76.991	2499	525	46	7922	10392	11415	13891	0.0	1384	38	32090	57367	plus	N/A
+MT118296.1	OQ646790.1	78.371	1891	364	40	24042	25911	25892	27758	0.0	1184	38	32090	57367	plus	N/A
+MT118296.1	OQ646790.1	85.130	1076	139	17	3464	4527	6711	7777	0.0	1081	38	32090	57367	plus	N/A
+MT118296.1	OQ646790.1	85.030	1002	136	10	4647	5642	7848	8841	0.0	1007	38	32090	57367	plus	N/A
+MT118296.1	OQ646790.1	82.407	108	14	5	23677	23781	25517	25622	1.75e-18	89.8	38	32090	57367	plus	N/A
+# BLAST processed 1 queries

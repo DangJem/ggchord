@@ -1,0 +1,145 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
+##sequence-region OR222515.1 1 83080
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=2832643
+OR222515.1	Genbank	region	1	83080	.	+	.	ID=OR222515.1:1..83080;Dbxref=taxon:2832643;country=Nigeria: Offa;environmental-sample=true;gbkey=Src;isolate=MSP0432;isolation-source=wood;metagenome-source=wood metagenome;metagenomic=true;mol_type=genomic DNA
+OR222515.1	Genbank	CDS	1	133	.	+	1	ID=cds-XOR78130.1;Dbxref=NCBI_GP:XOR78130.1;Name=XOR78130.1;Note=MSP0432_1;gbkey=CDS;partial=true;product=hypothetical protein;protein_id=XOR78130.1;start_range=.,1;transl_table=11
+OR222515.1	Genbank	CDS	181	612	.	+	0	ID=cds-XOR78131.1;Dbxref=NCBI_GP:XOR78131.1;Name=XOR78131.1;Note=MSP0432_2;gbkey=CDS;product=hypothetical protein;protein_id=XOR78131.1;transl_table=11
+OR222515.1	Genbank	CDS	612	866	.	+	0	ID=cds-XOR78132.1;Dbxref=NCBI_GP:XOR78132.1;Name=XOR78132.1;Note=MSP0432_3;gbkey=CDS;product=hypothetical protein;protein_id=XOR78132.1;transl_table=11
+OR222515.1	Genbank	CDS	948	1235	.	+	0	ID=cds-XOR78133.1;Dbxref=NCBI_GP:XOR78133.1;Name=XOR78133.1;Note=MSP0432_4;gbkey=CDS;product=hypothetical protein;protein_id=XOR78133.1;transl_table=11
+OR222515.1	Genbank	CDS	1277	1462	.	+	0	ID=cds-XOR78134.1;Dbxref=NCBI_GP:XOR78134.1;Name=XOR78134.1;Note=MSP0432_5;gbkey=CDS;product=gp83 protein;protein_id=XOR78134.1;transl_table=11
+OR222515.1	Genbank	CDS	1459	2100	.	+	0	ID=cds-XOR78135.1;Dbxref=NCBI_GP:XOR78135.1;Name=XOR78135.1;Note=MSP0432_6;gbkey=CDS;product=hypothetical protein;protein_id=XOR78135.1;transl_table=11
+OR222515.1	Genbank	CDS	2299	2544	.	+	0	ID=cds-XOR78136.1;Dbxref=NCBI_GP:XOR78136.1;Name=XOR78136.1;Note=MSP0432_7;gbkey=CDS;product=hypothetical protein;protein_id=XOR78136.1;transl_table=11
+OR222515.1	Genbank	CDS	2624	4195	.	+	0	ID=cds-XOR78137.1;Dbxref=NCBI_GP:XOR78137.1;Name=XOR78137.1;Note=MSP0432_8;gbkey=CDS;product=hypothetical protein;protein_id=XOR78137.1;transl_table=11
+OR222515.1	Genbank	CDS	4298	4408	.	+	0	ID=cds-XOR78138.1;Dbxref=NCBI_GP:XOR78138.1;Name=XOR78138.1;Note=MSP0432_9;gbkey=CDS;product=hypothetical protein;protein_id=XOR78138.1;transl_table=11
+OR222515.1	Genbank	CDS	4409	4594	.	+	0	ID=cds-XOR78139.1;Dbxref=NCBI_GP:XOR78139.1;Name=XOR78139.1;Note=MSP0432_10;gbkey=CDS;product=hypothetical protein;protein_id=XOR78139.1;transl_table=11
+OR222515.1	Genbank	CDS	4579	5301	.	+	0	ID=cds-XOR78140.1;Dbxref=NCBI_GP:XOR78140.1;Name=XOR78140.1;Note=MSP0432_11;gbkey=CDS;product=hypothetical protein;protein_id=XOR78140.1;transl_table=11
+OR222515.1	Genbank	CDS	5282	5560	.	+	0	ID=cds-XOR78141.1;Dbxref=NCBI_GP:XOR78141.1;Name=XOR78141.1;Note=MSP0432_12;gbkey=CDS;product=hypothetical protein;protein_id=XOR78141.1;transl_table=11
+OR222515.1	Genbank	CDS	5557	5790	.	+	0	ID=cds-XOR78142.1;Dbxref=NCBI_GP:XOR78142.1;Name=XOR78142.1;Note=MSP0432_13;gbkey=CDS;product=gp38 protein;protein_id=XOR78142.1;transl_table=11
+OR222515.1	Genbank	CDS	5787	6134	.	+	0	ID=cds-XOR78143.1;Dbxref=NCBI_GP:XOR78143.1;Name=XOR78143.1;Note=MSP0432_14;gbkey=CDS;product=hypothetical protein;protein_id=XOR78143.1;transl_table=11
+OR222515.1	Genbank	CDS	6131	6394	.	+	0	ID=cds-XOR78144.1;Dbxref=NCBI_GP:XOR78144.1;Name=XOR78144.1;Note=MSP0432_15;gbkey=CDS;product=hypothetical protein;protein_id=XOR78144.1;transl_table=11
+OR222515.1	Genbank	CDS	6391	6783	.	+	0	ID=cds-XOR78145.1;Dbxref=NCBI_GP:XOR78145.1;Name=XOR78145.1;Note=MSP0432_16;gbkey=CDS;product=hypothetical protein;protein_id=XOR78145.1;transl_table=11
+OR222515.1	Genbank	CDS	6777	6971	.	+	0	ID=cds-XOR78146.1;Dbxref=NCBI_GP:XOR78146.1;Name=XOR78146.1;Note=MSP0432_17;gbkey=CDS;product=hypothetical protein;protein_id=XOR78146.1;transl_table=11
+OR222515.1	Genbank	CDS	6971	7354	.	+	0	ID=cds-XOR78147.1;Dbxref=NCBI_GP:XOR78147.1;Name=XOR78147.1;Note=MSP0432_18;gbkey=CDS;product=hypothetical protein;protein_id=XOR78147.1;transl_table=11
+OR222515.1	Genbank	CDS	7381	7566	.	+	0	ID=cds-XOR78148.1;Dbxref=NCBI_GP:XOR78148.1;Name=XOR78148.1;Note=MSP0432_19;gbkey=CDS;product=hypothetical protein;protein_id=XOR78148.1;transl_table=11
+OR222515.1	Genbank	CDS	7563	7961	.	+	0	ID=cds-XOR78149.1;Dbxref=NCBI_GP:XOR78149.1;Name=XOR78149.1;Note=MSP0432_20;gbkey=CDS;product=hypothetical protein;protein_id=XOR78149.1;transl_table=11
+OR222515.1	Genbank	CDS	7958	8356	.	+	0	ID=cds-XOR78150.1;Dbxref=NCBI_GP:XOR78150.1;Name=XOR78150.1;Note=MSP0432_21;gbkey=CDS;product=gp095 protein;protein_id=XOR78150.1;transl_table=11
+OR222515.1	Genbank	CDS	8380	8586	.	+	0	ID=cds-XOR78151.1;Dbxref=NCBI_GP:XOR78151.1;Name=XOR78151.1;Note=MSP0432_22;gbkey=CDS;product=hypothetical protein;protein_id=XOR78151.1;transl_table=11
+OR222515.1	Genbank	CDS	8625	9068	.	+	0	ID=cds-XOR78152.1;Dbxref=NCBI_GP:XOR78152.1;Name=XOR78152.1;Note=MSP0432_23;gbkey=CDS;product=hypothetical protein;protein_id=XOR78152.1;transl_table=11
+OR222515.1	Genbank	CDS	9061	9423	.	+	0	ID=cds-XOR78153.1;Dbxref=NCBI_GP:XOR78153.1;Name=XOR78153.1;Note=MSP0432_24;gbkey=CDS;product=hypothetical protein;protein_id=XOR78153.1;transl_table=11
+OR222515.1	Genbank	CDS	9420	9809	.	+	0	ID=cds-XOR78154.1;Dbxref=NCBI_GP:XOR78154.1;Name=XOR78154.1;Note=MSP0432_25;gbkey=CDS;product=hypothetical protein;protein_id=XOR78154.1;transl_table=11
+OR222515.1	Genbank	CDS	9809	10027	.	+	0	ID=cds-XOR78155.1;Dbxref=NCBI_GP:XOR78155.1;Name=XOR78155.1;Note=MSP0432_26;gbkey=CDS;product=hypothetical protein;protein_id=XOR78155.1;transl_table=11
+OR222515.1	Genbank	CDS	10020	10208	.	+	0	ID=cds-XOR78156.1;Dbxref=NCBI_GP:XOR78156.1;Name=XOR78156.1;Note=MSP0432_27;gbkey=CDS;product=hypothetical protein;protein_id=XOR78156.1;transl_table=11
+OR222515.1	Genbank	CDS	10256	10738	.	+	0	ID=cds-XOR78157.1;Dbxref=NCBI_GP:XOR78157.1;Name=XOR78157.1;Note=MSP0432_28;gbkey=CDS;product=hypothetical protein;protein_id=XOR78157.1;transl_table=11
+OR222515.1	Genbank	CDS	10738	10953	.	+	0	ID=cds-XOR78158.1;Dbxref=NCBI_GP:XOR78158.1;Name=XOR78158.1;Note=MSP0432_29;gbkey=CDS;product=hypothetical protein;protein_id=XOR78158.1;transl_table=11
+OR222515.1	Genbank	CDS	10950	11093	.	+	0	ID=cds-XOR78159.1;Dbxref=NCBI_GP:XOR78159.1;Name=XOR78159.1;Note=MSP0432_30;gbkey=CDS;product=hypothetical protein;protein_id=XOR78159.1;transl_table=11
+OR222515.1	Genbank	CDS	11096	11296	.	+	0	ID=cds-XOR78160.1;Dbxref=NCBI_GP:XOR78160.1;Name=XOR78160.1;Note=MSP0432_31;gbkey=CDS;product=hypothetical protein;protein_id=XOR78160.1;transl_table=11
+OR222515.1	Genbank	CDS	11300	11926	.	+	0	ID=cds-XOR78161.1;Dbxref=NCBI_GP:XOR78161.1;Name=XOR78161.1;Note=MSP0432_32;gbkey=CDS;product=hypothetical protein;protein_id=XOR78161.1;transl_table=11
+OR222515.1	Genbank	CDS	11923	12261	.	+	0	ID=cds-XOR78162.1;Dbxref=NCBI_GP:XOR78162.1;Name=XOR78162.1;Note=MSP0432_33;gbkey=CDS;product=hypothetical protein;protein_id=XOR78162.1;transl_table=11
+OR222515.1	Genbank	CDS	12265	12564	.	+	0	ID=cds-XOR78163.1;Dbxref=NCBI_GP:XOR78163.1;Name=XOR78163.1;Note=MSP0432_34;gbkey=CDS;product=hypothetical protein;protein_id=XOR78163.1;transl_table=11
+OR222515.1	Genbank	CDS	12561	12911	.	+	0	ID=cds-XOR78164.1;Dbxref=NCBI_GP:XOR78164.1;Name=XOR78164.1;Note=MSP0432_35;gbkey=CDS;product=hypothetical protein;protein_id=XOR78164.1;transl_table=11
+OR222515.1	Genbank	CDS	12911	13183	.	+	0	ID=cds-XOR78165.1;Dbxref=NCBI_GP:XOR78165.1;Name=XOR78165.1;Note=MSP0432_36;gbkey=CDS;product=hypothetical protein;protein_id=XOR78165.1;transl_table=11
+OR222515.1	Genbank	CDS	13212	13355	.	+	0	ID=cds-XOR78166.1;Dbxref=NCBI_GP:XOR78166.1;Name=XOR78166.1;Note=MSP0432_37;gbkey=CDS;product=hypothetical protein;protein_id=XOR78166.1;transl_table=11
+OR222515.1	Genbank	CDS	13355	13567	.	+	0	ID=cds-XOR78167.1;Dbxref=NCBI_GP:XOR78167.1;Name=XOR78167.1;Note=MSP0432_38;gbkey=CDS;product=hypothetical protein;protein_id=XOR78167.1;transl_table=11
+OR222515.1	Genbank	CDS	13578	13850	.	+	0	ID=cds-XOR78168.1;Dbxref=NCBI_GP:XOR78168.1;Name=XOR78168.1;Note=MSP0432_39;gbkey=CDS;product=hypothetical protein;protein_id=XOR78168.1;transl_table=11
+OR222515.1	Genbank	CDS	13844	14464	.	+	0	ID=cds-XOR78169.1;Dbxref=NCBI_GP:XOR78169.1;Name=XOR78169.1;Note=MSP0432_40;gbkey=CDS;product=hypothetical protein;protein_id=XOR78169.1;transl_table=11
+OR222515.1	Genbank	CDS	14461	14694	.	+	0	ID=cds-XOR78170.1;Dbxref=NCBI_GP:XOR78170.1;Name=XOR78170.1;Note=MSP0432_41;gbkey=CDS;product=hypothetical protein;protein_id=XOR78170.1;transl_table=11
+OR222515.1	Genbank	CDS	14691	14888	.	+	0	ID=cds-XOR78171.1;Dbxref=NCBI_GP:XOR78171.1;Name=XOR78171.1;Note=MSP0432_42;gbkey=CDS;product=hypothetical protein;protein_id=XOR78171.1;transl_table=11
+OR222515.1	Genbank	CDS	14885	15169	.	+	0	ID=cds-XOR78172.1;Dbxref=NCBI_GP:XOR78172.1;Name=XOR78172.1;Note=MSP0432_43;gbkey=CDS;product=hypothetical protein;protein_id=XOR78172.1;transl_table=11
+OR222515.1	Genbank	CDS	15194	15592	.	+	0	ID=cds-XOR78173.1;Dbxref=NCBI_GP:XOR78173.1;Name=XOR78173.1;Note=MSP0432_44;gbkey=CDS;product=hypothetical protein;protein_id=XOR78173.1;transl_table=11
+OR222515.1	Genbank	CDS	15596	15814	.	+	0	ID=cds-XOR78174.1;Dbxref=NCBI_GP:XOR78174.1;Name=XOR78174.1;Note=MSP0432_45;gbkey=CDS;product=hypothetical protein;protein_id=XOR78174.1;transl_table=11
+OR222515.1	Genbank	CDS	15844	16476	.	+	0	ID=cds-XOR78175.1;Dbxref=NCBI_GP:XOR78175.1;Name=XOR78175.1;Note=MSP0432_46;gbkey=CDS;product=putative antirestriction protein;protein_id=XOR78175.1;transl_table=11
+OR222515.1	Genbank	CDS	16476	16565	.	+	0	ID=cds-XOR78176.1;Dbxref=NCBI_GP:XOR78176.1;Name=XOR78176.1;Note=MSP0432_47;gbkey=CDS;product=hypothetical protein;protein_id=XOR78176.1;transl_table=11
+OR222515.1	Genbank	CDS	16559	16729	.	+	0	ID=cds-XOR78177.1;Dbxref=NCBI_GP:XOR78177.1;Name=XOR78177.1;Note=MSP0432_48;gbkey=CDS;product=hypothetical protein;protein_id=XOR78177.1;transl_table=11
+OR222515.1	Genbank	CDS	16726	16974	.	+	0	ID=cds-XOR78178.1;Dbxref=NCBI_GP:XOR78178.1;Name=XOR78178.1;Note=MSP0432_49;gbkey=CDS;product=hypothetical protein;protein_id=XOR78178.1;transl_table=11
+OR222515.1	Genbank	CDS	17105	17461	.	+	0	ID=cds-XOR78179.1;Dbxref=NCBI_GP:XOR78179.1;Name=XOR78179.1;Note=MSP0432_50;gbkey=CDS;product=hypothetical protein;protein_id=XOR78179.1;transl_table=11
+OR222515.1	Genbank	CDS	17515	18309	.	+	0	ID=cds-XOR78180.1;Dbxref=NCBI_GP:XOR78180.1;Name=XOR78180.1;Note=MSP0432_51;gbkey=CDS;product=conserved phage protein;protein_id=XOR78180.1;transl_table=11
+OR222515.1	Genbank	CDS	18313	18525	.	+	0	ID=cds-XOR78181.1;Dbxref=NCBI_GP:XOR78181.1;Name=XOR78181.1;Note=MSP0432_52;gbkey=CDS;product=hypothetical protein;protein_id=XOR78181.1;transl_table=11
+OR222515.1	Genbank	CDS	18561	18788	.	+	0	ID=cds-XOR78182.1;Dbxref=NCBI_GP:XOR78182.1;Name=XOR78182.1;Note=MSP0432_53;gbkey=CDS;product=hypothetical protein;protein_id=XOR78182.1;transl_table=11
+OR222515.1	Genbank	CDS	18861	19055	.	+	0	ID=cds-XOR78183.1;Dbxref=NCBI_GP:XOR78183.1;Name=XOR78183.1;Note=MSP0432_54;gbkey=CDS;product=hypothetical protein;protein_id=XOR78183.1;transl_table=11
+OR222515.1	Genbank	CDS	19052	19249	.	+	0	ID=cds-XOR78184.1;Dbxref=NCBI_GP:XOR78184.1;Name=XOR78184.1;Note=MSP0432_55;gbkey=CDS;product=hypothetical protein;protein_id=XOR78184.1;transl_table=11
+OR222515.1	Genbank	CDS	19246	20523	.	-	0	ID=cds-XOR78185.1;Dbxref=NCBI_GP:XOR78185.1;Name=XOR78185.1;Note=MSP0432_56;gbkey=CDS;product=Int;protein_id=XOR78185.1;transl_table=11
+OR222515.1	Genbank	CDS	20543	20806	.	+	0	ID=cds-XOR78186.1;Dbxref=NCBI_GP:XOR78186.1;Name=XOR78186.1;Note=MSP0432_57;gbkey=CDS;product=hypothetical protein;protein_id=XOR78186.1;transl_table=11
+OR222515.1	Genbank	CDS	20791	20961	.	+	0	ID=cds-XOR78187.1;Dbxref=NCBI_GP:XOR78187.1;Name=XOR78187.1;Note=MSP0432_58;gbkey=CDS;product=hypothetical protein;protein_id=XOR78187.1;transl_table=11
+OR222515.1	Genbank	CDS	20970	21233	.	+	0	ID=cds-XOR78188.1;Dbxref=NCBI_GP:XOR78188.1;Name=XOR78188.1;Note=MSP0432_59;gbkey=CDS;product=cadmium efflux system accessory protein;protein_id=XOR78188.1;transl_table=11
+OR222515.1	Genbank	CDS	21368	22006	.	+	0	ID=cds-XOR78189.1;Dbxref=NCBI_GP:XOR78189.1;Name=XOR78189.1;Note=MSP0432_60;gbkey=CDS;product=hypothetical protein;protein_id=XOR78189.1;transl_table=11
+OR222515.1	Genbank	CDS	22118	22324	.	+	0	ID=cds-XOR78190.1;Dbxref=NCBI_GP:XOR78190.1;Name=XOR78190.1;Note=MSP0432_61;gbkey=CDS;product=putative regulator protein Arc-like DNA binding domain;protein_id=XOR78190.1;transl_table=11
+OR222515.1	Genbank	CDS	22334	22642	.	+	0	ID=cds-XOR78191.1;Dbxref=NCBI_GP:XOR78191.1;Name=XOR78191.1;Note=MSP0432_62;gbkey=CDS;product=hypothetical protein;protein_id=XOR78191.1;transl_table=11
+OR222515.1	Genbank	CDS	22635	22973	.	+	0	ID=cds-XOR78192.1;Dbxref=NCBI_GP:XOR78192.1;Name=XOR78192.1;Note=MSP0432_63;gbkey=CDS;product=hypothetical protein;protein_id=XOR78192.1;transl_table=11
+OR222515.1	Genbank	CDS	23096	24403	.	+	0	ID=cds-XOR78193.1;Dbxref=NCBI_GP:XOR78193.1;Name=XOR78193.1;Note=MSP0432_64;gbkey=CDS;product=Dda DNA helicase;protein_id=XOR78193.1;transl_table=11
+OR222515.1	Genbank	CDS	24433	24678	.	+	0	ID=cds-XOR78194.1;Dbxref=NCBI_GP:XOR78194.1;Name=XOR78194.1;Note=MSP0432_65;gbkey=CDS;product=hypothetical protein;protein_id=XOR78194.1;transl_table=11
+OR222515.1	Genbank	CDS	24686	27547	.	+	0	ID=cds-XOR78195.1;Dbxref=NCBI_GP:XOR78195.1;Name=XOR78195.1;Note=MSP0432_66;gbkey=CDS;product=hypothetical protein;protein_id=XOR78195.1;transl_table=11
+OR222515.1	Genbank	CDS	27592	27819	.	+	0	ID=cds-XOR78196.1;Dbxref=NCBI_GP:XOR78196.1;Name=XOR78196.1;Note=MSP0432_67;gbkey=CDS;product=hypothetical protein;protein_id=XOR78196.1;transl_table=11
+OR222515.1	Genbank	CDS	27803	29437	.	+	0	ID=cds-XOR78197.1;Dbxref=NCBI_GP:XOR78197.1;Name=XOR78197.1;Note=MSP0432_68;gbkey=CDS;product=ATP-dependent DNA helicase uvsW;protein_id=XOR78197.1;transl_table=11
+OR222515.1	Genbank	CDS	29451	29552	.	+	0	ID=cds-XOR78198.1;Dbxref=NCBI_GP:XOR78198.1;Name=XOR78198.1;Note=MSP0432_69;gbkey=CDS;product=hypothetical protein;protein_id=XOR78198.1;transl_table=11
+OR222515.1	Genbank	CDS	29549	30373	.	+	0	ID=cds-XOR78199.1;Dbxref=NCBI_GP:XOR78199.1;Name=XOR78199.1;Note=MSP0432_70;gbkey=CDS;product=hypothetical protein;protein_id=XOR78199.1;transl_table=11
+OR222515.1	Genbank	CDS	30460	31191	.	+	0	ID=cds-XOR78200.1;Dbxref=NCBI_GP:XOR78200.1;Name=XOR78200.1;Note=MSP0432_71;gbkey=CDS;product=thymidylate synthase;protein_id=XOR78200.1;transl_table=11
+OR222515.1	Genbank	CDS	31239	32249	.	+	0	ID=cds-XOR78201.1;Dbxref=NCBI_GP:XOR78201.1;Name=XOR78201.1;Note=MSP0432_72;gbkey=CDS;product=hypothetical protein;protein_id=XOR78201.1;transl_table=11
+OR222515.1	Genbank	CDS	32239	33969	.	+	0	ID=cds-XOR78202.1;Dbxref=NCBI_GP:XOR78202.1;Name=XOR78202.1;Note=MSP0432_73;gbkey=CDS;product=hypothetical protein;protein_id=XOR78202.1;transl_table=11
+OR222515.1	Genbank	CDS	34030	37653	.	+	0	ID=cds-XOR78203.1;Dbxref=NCBI_GP:XOR78203.1;Name=XOR78203.1;Note=MSP0432_74;gbkey=CDS;product=hypothetical protein;protein_id=XOR78203.1;transl_table=11
+OR222515.1	Genbank	CDS	37650	37907	.	+	0	ID=cds-XOR78204.1;Dbxref=NCBI_GP:XOR78204.1;Name=XOR78204.1;Note=MSP0432_75;gbkey=CDS;product=maturation protein;protein_id=XOR78204.1;transl_table=11
+OR222515.1	Genbank	CDS	37907	38614	.	+	0	ID=cds-XOR78205.1;Dbxref=NCBI_GP:XOR78205.1;Name=XOR78205.1;Note=MSP0432_76;gbkey=CDS;product=hypothetical protein;protein_id=XOR78205.1;transl_table=11
+OR222515.1	Genbank	CDS	38737	39150	.	+	0	ID=cds-XOR78206.1;Dbxref=NCBI_GP:XOR78206.1;Name=XOR78206.1;Note=MSP0432_77;gbkey=CDS;product=hypothetical protein;protein_id=XOR78206.1;transl_table=11
+OR222515.1	Genbank	CDS	39180	39668	.	+	0	ID=cds-XOR78207.1;Dbxref=NCBI_GP:XOR78207.1;Name=XOR78207.1;Note=MSP0432_78;gbkey=CDS;product=hypothetical protein;protein_id=XOR78207.1;transl_table=11
+OR222515.1	Genbank	CDS	39700	40842	.	+	0	ID=cds-XOR78208.1;Dbxref=NCBI_GP:XOR78208.1;Name=XOR78208.1;Note=MSP0432_79;gbkey=CDS;product=DNA ligase;protein_id=XOR78208.1;transl_table=11
+OR222515.1	Genbank	CDS	40839	40988	.	+	0	ID=cds-XOR78209.1;Dbxref=NCBI_GP:XOR78209.1;Name=XOR78209.1;Note=MSP0432_80;gbkey=CDS;product=hypothetical protein;protein_id=XOR78209.1;transl_table=11
+OR222515.1	Genbank	CDS	40985	41083	.	+	0	ID=cds-XOR78210.1;Dbxref=NCBI_GP:XOR78210.1;Name=XOR78210.1;Note=MSP0432_81;gbkey=CDS;product=hypothetical protein;protein_id=XOR78210.1;transl_table=11
+OR222515.1	Genbank	CDS	41080	42114	.	+	0	ID=cds-XOR78211.1;Dbxref=NCBI_GP:XOR78211.1;Name=XOR78211.1;Note=MSP0432_82;gbkey=CDS;product=recombination endonuclease subunit;protein_id=XOR78211.1;transl_table=11
+OR222515.1	Genbank	CDS	42111	42257	.	+	0	ID=cds-XOR78212.1;Dbxref=NCBI_GP:XOR78212.1;Name=XOR78212.1;Note=MSP0432_83;gbkey=CDS;product=hypothetical protein;protein_id=XOR78212.1;transl_table=11
+OR222515.1	Genbank	CDS	42254	42532	.	+	0	ID=cds-XOR78213.1;Dbxref=NCBI_GP:XOR78213.1;Name=XOR78213.1;Note=MSP0432_84;gbkey=CDS;product=hypothetical protein;protein_id=XOR78213.1;transl_table=11
+OR222515.1	Genbank	CDS	42532	42903	.	+	0	ID=cds-XOR78214.1;Dbxref=NCBI_GP:XOR78214.1;Name=XOR78214.1;Note=MSP0432_85;gbkey=CDS;product=hypothetical protein;protein_id=XOR78214.1;transl_table=11
+OR222515.1	Genbank	CDS	42900	43064	.	+	0	ID=cds-XOR78215.1;Dbxref=NCBI_GP:XOR78215.1;Name=XOR78215.1;Note=MSP0432_86;gbkey=CDS;product=hypothetical protein;protein_id=XOR78215.1;transl_table=11
+OR222515.1	Genbank	CDS	43061	45265	.	+	0	ID=cds-XOR78216.1;Dbxref=NCBI_GP:XOR78216.1;Name=XOR78216.1;Note=MSP0432_87;gbkey=CDS;product=recombination endonuclease subunit;protein_id=XOR78216.1;transl_table=11
+OR222515.1	Genbank	CDS	45268	45714	.	+	0	ID=cds-XOR78217.1;Dbxref=NCBI_GP:XOR78217.1;Name=XOR78217.1;Note=MSP0432_88;gbkey=CDS;product=dCTP deaminase;protein_id=XOR78217.1;transl_table=11
+OR222515.1	Genbank	CDS	45711	45917	.	+	0	ID=cds-XOR78218.1;Dbxref=NCBI_GP:XOR78218.1;Name=XOR78218.1;Note=MSP0432_89;gbkey=CDS;product=hypothetical protein;protein_id=XOR78218.1;transl_table=11
+OR222515.1	Genbank	CDS	45914	46087	.	-	0	ID=cds-XOR78219.1;Dbxref=NCBI_GP:XOR78219.1;Name=XOR78219.1;Note=MSP0432_90;gbkey=CDS;product=hypothetical protein;protein_id=XOR78219.1;transl_table=11
+OR222515.1	Genbank	CDS	46047	46169	.	-	0	ID=cds-XOR78220.1;Dbxref=NCBI_GP:XOR78220.1;Name=XOR78220.1;Note=MSP0432_91;gbkey=CDS;product=hypothetical protein;protein_id=XOR78220.1;transl_table=11
+OR222515.1	Genbank	CDS	46270	46584	.	-	0	ID=cds-XOR78221.1;Dbxref=NCBI_GP:XOR78221.1;Name=XOR78221.1;Note=MSP0432_92;gbkey=CDS;product=hypothetical protein;protein_id=XOR78221.1;transl_table=11
+OR222515.1	Genbank	CDS	46581	47042	.	-	0	ID=cds-XOR78222.1;Dbxref=NCBI_GP:XOR78222.1;Name=XOR78222.1;Note=MSP0432_93;gbkey=CDS;product=hypothetical protein;protein_id=XOR78222.1;transl_table=11
+OR222515.1	Genbank	CDS	47026	47340	.	-	0	ID=cds-XOR78223.1;Dbxref=NCBI_GP:XOR78223.1;Name=XOR78223.1;Note=MSP0432_94;gbkey=CDS;product=hypothetical protein;protein_id=XOR78223.1;transl_table=11
+OR222515.1	Genbank	CDS	47310	47651	.	-	0	ID=cds-XOR78224.1;Dbxref=NCBI_GP:XOR78224.1;Name=XOR78224.1;Note=MSP0432_95;gbkey=CDS;product=bacteriocin UviB precursor;protein_id=XOR78224.1;transl_table=11
+OR222515.1	Genbank	CDS	47721	51095	.	-	0	ID=cds-XOR78225.1;Dbxref=NCBI_GP:XOR78225.1;Name=XOR78225.1;Note=MSP0432_96;gbkey=CDS;product=putative phage tail protein;protein_id=XOR78225.1;transl_table=11
+OR222515.1	Genbank	CDS	51088	52005	.	-	0	ID=cds-XOR78226.1;Dbxref=NCBI_GP:XOR78226.1;Name=XOR78226.1;Note=MSP0432_97;gbkey=CDS;product=tail fiber protein;protein_id=XOR78226.1;transl_table=11
+OR222515.1	Genbank	CDS	52009	52845	.	-	0	ID=cds-XOR78227.1;Dbxref=NCBI_GP:XOR78227.1;Name=XOR78227.1;Note=MSP0432_98;gbkey=CDS;product=hypothetical protein;protein_id=XOR78227.1;transl_table=11
+OR222515.1	Genbank	CDS	52854	53249	.	-	0	ID=cds-XOR78228.1;Dbxref=NCBI_GP:XOR78228.1;Name=XOR78228.1;Note=MSP0432_99;gbkey=CDS;product=hypothetical protein;protein_id=XOR78228.1;transl_table=11
+OR222515.1	Genbank	CDS	53249	56803	.	-	0	ID=cds-XOR78229.1;Dbxref=NCBI_GP:XOR78229.1;Name=XOR78229.1;Note=MSP0432_100;gbkey=CDS;product=tail fiber protein;protein_id=XOR78229.1;transl_table=11
+OR222515.1	Genbank	CDS	56796	57110	.	-	0	ID=cds-XOR78230.1;Dbxref=NCBI_GP:XOR78230.1;Name=XOR78230.1;Note=MSP0432_101;gbkey=CDS;product=tail assembly protein;protein_id=XOR78230.1;transl_table=11
+OR222515.1	Genbank	CDS	57190	57384	.	-	0	ID=cds-XOR78231.1;Dbxref=NCBI_GP:XOR78231.1;Name=XOR78231.1;Note=MSP0432_102;gbkey=CDS;product=hypothetical protein;protein_id=XOR78231.1;transl_table=11
+OR222515.1	Genbank	CDS	57374	58063	.	-	0	ID=cds-XOR78232.1;Dbxref=NCBI_GP:XOR78232.1;Name=XOR78232.1;Note=MSP0432_103;gbkey=CDS;product=minor tail protein;protein_id=XOR78232.1;transl_table=11
+OR222515.1	Genbank	CDS	58092	58796	.	-	0	ID=cds-XOR78233.1;Dbxref=NCBI_GP:XOR78233.1;Name=XOR78233.1;Note=MSP0432_104;gbkey=CDS;product=minor tail protein;protein_id=XOR78233.1;transl_table=11
+OR222515.1	Genbank	CDS	58859	59209	.	-	0	ID=cds-XOR78234.1;Dbxref=NCBI_GP:XOR78234.1;Name=XOR78234.1;Note=MSP0432_105;gbkey=CDS;product=hypothetical protein;protein_id=XOR78234.1;transl_table=11
+OR222515.1	Genbank	CDS	59209	64491	.	-	0	ID=cds-XOR78235.1;Dbxref=NCBI_GP:XOR78235.1;Name=XOR78235.1;Note=MSP0432_106;gbkey=CDS;product=hypothetical protein;protein_id=XOR78235.1;transl_table=11
+OR222515.1	Genbank	CDS	64495	64830	.	-	0	ID=cds-XOR78236.1;Dbxref=NCBI_GP:XOR78236.1;Name=XOR78236.1;Note=MSP0432_107;gbkey=CDS;product=hypothetical protein;protein_id=XOR78236.1;transl_table=11
+OR222515.1	Genbank	CDS	64860	65282	.	-	0	ID=cds-XOR78237.1;Dbxref=NCBI_GP:XOR78237.1;Name=XOR78237.1;Note=MSP0432_108;gbkey=CDS;product=hypothetical protein;protein_id=XOR78237.1;transl_table=11
+OR222515.1	Genbank	CDS	65359	66393	.	-	0	ID=cds-XOR78238.1;Dbxref=NCBI_GP:XOR78238.1;Name=XOR78238.1;Note=MSP0432_109;gbkey=CDS;product=putative major tail tube protein;protein_id=XOR78238.1;transl_table=11
+OR222515.1	Genbank	CDS	66398	66832	.	-	0	ID=cds-XOR78239.1;Dbxref=NCBI_GP:XOR78239.1;Name=XOR78239.1;Note=MSP0432_110;gbkey=CDS;product=hypothetical protein;protein_id=XOR78239.1;transl_table=11
+OR222515.1	Genbank	CDS	66832	67350	.	-	0	ID=cds-XOR78240.1;Dbxref=NCBI_GP:XOR78240.1;Name=XOR78240.1;Note=MSP0432_111;gbkey=CDS;product=hypothetical protein;protein_id=XOR78240.1;transl_table=11
+OR222515.1	Genbank	CDS	67350	68252	.	-	0	ID=cds-XOR78241.1;Dbxref=NCBI_GP:XOR78241.1;Name=XOR78241.1;Note=MSP0432_112;gbkey=CDS;product=hypothetical protein;protein_id=XOR78241.1;transl_table=11
+OR222515.1	Genbank	CDS	68242	68730	.	-	0	ID=cds-XOR78242.1;Dbxref=NCBI_GP:XOR78242.1;Name=XOR78242.1;Note=MSP0432_113;gbkey=CDS;product=hypothetical protein;protein_id=XOR78242.1;transl_table=11
+OR222515.1	Genbank	CDS	68734	69018	.	-	0	ID=cds-XOR78243.1;Dbxref=NCBI_GP:XOR78243.1;Name=XOR78243.1;Note=MSP0432_114;gbkey=CDS;product=hypothetical protein;protein_id=XOR78243.1;transl_table=11
+OR222515.1	Genbank	CDS	69065	70246	.	-	0	ID=cds-XOR78244.1;Dbxref=NCBI_GP:XOR78244.1;Name=XOR78244.1;Note=MSP0432_115;gbkey=CDS;product=gp4 protein;protein_id=XOR78244.1;transl_table=11
+OR222515.1	Genbank	CDS	70311	70766	.	-	0	ID=cds-XOR78245.1;Dbxref=NCBI_GP:XOR78245.1;Name=XOR78245.1;Note=MSP0432_116;gbkey=CDS;product=hypothetical protein;protein_id=XOR78245.1;transl_table=11
+OR222515.1	Genbank	CDS	70782	72179	.	-	0	ID=cds-XOR78246.1;Dbxref=NCBI_GP:XOR78246.1;Name=XOR78246.1;Note=MSP0432_117;gbkey=CDS;product=hypothetical protein;protein_id=XOR78246.1;transl_table=11
+OR222515.1	Genbank	CDS	72244	73701	.	-	0	ID=cds-XOR78247.1;Dbxref=NCBI_GP:XOR78247.1;Name=XOR78247.1;Note=MSP0432_118;gbkey=CDS;product=hypothetical protein;protein_id=XOR78247.1;transl_table=11
+OR222515.1	Genbank	CDS	73823	74065	.	-	0	ID=cds-XOR78248.1;Dbxref=NCBI_GP:XOR78248.1;Name=XOR78248.1;Note=MSP0432_119;gbkey=CDS;product=hypothetical protein;protein_id=XOR78248.1;transl_table=11
+OR222515.1	Genbank	CDS	74151	75887	.	-	0	ID=cds-XOR78249.1;Dbxref=NCBI_GP:XOR78249.1;Name=XOR78249.1;Note=MSP0432_120;gbkey=CDS;product=hypothetical protein;protein_id=XOR78249.1;transl_table=11
+OR222515.1	Genbank	CDS	75903	76115	.	-	0	ID=cds-XOR78250.1;Dbxref=NCBI_GP:XOR78250.1;Name=XOR78250.1;Note=MSP0432_121;gbkey=CDS;product=hypothetical protein;protein_id=XOR78250.1;transl_table=11
+OR222515.1	Genbank	CDS	76329	76724	.	-	0	ID=cds-XOR78251.1;Dbxref=NCBI_GP:XOR78251.1;Name=XOR78251.1;Note=MSP0432_122;gbkey=CDS;product=hypothetical protein;protein_id=XOR78251.1;transl_table=11
+OR222515.1	Genbank	CDS	76862	77518	.	-	0	ID=cds-XOR78252.1;Dbxref=NCBI_GP:XOR78252.1;Name=XOR78252.1;Note=MSP0432_123;gbkey=CDS;product=hypothetical protein;protein_id=XOR78252.1;transl_table=11
+OR222515.1	Genbank	CDS	77722	77871	.	-	0	ID=cds-XOR78253.1;Dbxref=NCBI_GP:XOR78253.1;Name=XOR78253.1;Note=MSP0432_124;gbkey=CDS;product=hypothetical protein;protein_id=XOR78253.1;transl_table=11
+OR222515.1	Genbank	CDS	77932	78213	.	-	0	ID=cds-XOR78254.1;Dbxref=NCBI_GP:XOR78254.1;Name=XOR78254.1;Note=MSP0432_125;gbkey=CDS;product=integration host factor;protein_id=XOR78254.1;transl_table=11
+OR222515.1	Genbank	CDS	78210	78428	.	-	0	ID=cds-XOR78255.1;Dbxref=NCBI_GP:XOR78255.1;Name=XOR78255.1;Note=MSP0432_126;gbkey=CDS;product=hypothetical protein;protein_id=XOR78255.1;transl_table=11
+OR222515.1	Genbank	CDS	78468	78566	.	-	0	ID=cds-XOR78256.1;Dbxref=NCBI_GP:XOR78256.1;Name=XOR78256.1;Note=MSP0432_127;gbkey=CDS;product=hypothetical protein;protein_id=XOR78256.1;transl_table=11
+OR222515.1	Genbank	CDS	78655	78837	.	-	0	ID=cds-XOR78257.1;Dbxref=NCBI_GP:XOR78257.1;Name=XOR78257.1;Note=MSP0432_128;gbkey=CDS;product=hypothetical protein;protein_id=XOR78257.1;transl_table=11
+OR222515.1	Genbank	CDS	78880	79911	.	+	0	ID=cds-XOR78258.1;Dbxref=NCBI_GP:XOR78258.1;Name=XOR78258.1;Note=MSP0432_129;gbkey=CDS;product=hypothetical protein;protein_id=XOR78258.1;transl_table=11
+OR222515.1	Genbank	CDS	79908	80084	.	+	0	ID=cds-XOR78259.1;Dbxref=NCBI_GP:XOR78259.1;Name=XOR78259.1;Note=MSP0432_130;gbkey=CDS;product=HNH endonuclease;protein_id=XOR78259.1;transl_table=11
+OR222515.1	Genbank	CDS	80123	80365	.	+	0	ID=cds-XOR78260.1;Dbxref=NCBI_GP:XOR78260.1;Name=XOR78260.1;Note=MSP0432_131;gbkey=CDS;product=hypothetical protein;protein_id=XOR78260.1;transl_table=11
+OR222515.1	Genbank	CDS	80374	80523	.	+	0	ID=cds-XOR78261.1;Dbxref=NCBI_GP:XOR78261.1;Name=XOR78261.1;Note=MSP0432_132;gbkey=CDS;product=hypothetical protein;protein_id=XOR78261.1;transl_table=11
+OR222515.1	Genbank	CDS	80597	80917	.	+	0	ID=cds-XOR78262.1;Dbxref=NCBI_GP:XOR78262.1;Name=XOR78262.1;Note=MSP0432_133;gbkey=CDS;product=hypothetical protein;protein_id=XOR78262.1;transl_table=11
+OR222515.1	Genbank	CDS	80965	81396	.	+	0	ID=cds-XOR78263.1;Dbxref=NCBI_GP:XOR78263.1;Name=XOR78263.1;Note=MSP0432_134;gbkey=CDS;product=hypothetical protein;protein_id=XOR78263.1;transl_table=11
+OR222515.1	Genbank	CDS	81396	81650	.	+	0	ID=cds-XOR78264.1;Dbxref=NCBI_GP:XOR78264.1;Name=XOR78264.1;Note=MSP0432_135;gbkey=CDS;product=hypothetical protein;protein_id=XOR78264.1;transl_table=11
+OR222515.1	Genbank	CDS	81732	82019	.	+	0	ID=cds-XOR78265.1;Dbxref=NCBI_GP:XOR78265.1;Name=XOR78265.1;Note=MSP0432_136;gbkey=CDS;product=hypothetical protein;protein_id=XOR78265.1;transl_table=11
+OR222515.1	Genbank	CDS	82061	82246	.	+	0	ID=cds-XOR78266.1;Dbxref=NCBI_GP:XOR78266.1;Name=XOR78266.1;Note=MSP0432_137;gbkey=CDS;product=gp83 protein;protein_id=XOR78266.1;transl_table=11
+OR222515.1	Genbank	CDS	82243	82884	.	+	0	ID=cds-XOR78267.1;Dbxref=NCBI_GP:XOR78267.1;Name=XOR78267.1;Note=MSP0432_138;gbkey=CDS;product=hypothetical protein;protein_id=XOR78267.1;transl_table=11
+

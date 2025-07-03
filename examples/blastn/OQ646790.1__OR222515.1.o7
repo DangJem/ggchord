@@ -1,0 +1,8 @@
+# BLASTN 2.16.0+
+# Query: OQ646790.1 Pseudomonas phage PA_LZ03, complete genome
+# Database: User specified sequence set (Input: OR222515.1.fna)
+# Fields: query acc.ver, subject acc.ver, % identity, alignment length, mismatches, gap opens, q. start, q. end, s. start, s. end, evalue, bit score, % query coverage per subject, query length, subject length, subject strand, subject title
+# 2 hits found
+OQ646790.1	OR222515.1	78.764	1634	319	26	31842	33461	32343	33962	0.0	1070	5	57367	83080	plus	N/A
+OQ646790.1	OR222515.1	77.495	982	193	26	30765	31732	31242	32209	6.20e-161	564	5	57367	83080	plus	N/A
+# BLAST processed 1 queries

@@ -1,0 +1,84 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
+##sequence-region OQ646790.1 1 57367
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=3041206
+OQ646790.1	Genbank	region	1	57367	.	+	.	ID=OQ646790.1:1..57367;Dbxref=taxon:3041206;gbkey=Src;genome=genomic;mol_type=genomic DNA;nat-host=Pseudomonas aeruginosa PA14
+OQ646790.1	Genbank	CDS	472	987	.	+	0	ID=cds-WGH15536.1;Dbxref=NCBI_GP:WGH15536.1;Name=WGH15536.1;gbkey=CDS;product=putative terminase small subunit;protein_id=WGH15536.1;transl_table=11
+OQ646790.1	Genbank	CDS	984	2474	.	+	0	ID=cds-WGH15537.1;Dbxref=NCBI_GP:WGH15537.1;Name=WGH15537.1;gbkey=CDS;product=putative large terminase;protein_id=WGH15537.1;transl_table=11
+OQ646790.1	Genbank	CDS	2530	4026	.	+	0	ID=cds-WGH15538.1;Dbxref=NCBI_GP:WGH15538.1;Name=WGH15538.1;gbkey=CDS;product=portal protein;protein_id=WGH15538.1;transl_table=11
+OQ646790.1	Genbank	CDS	4026	5273	.	+	0	ID=cds-WGH15539.1;Dbxref=NCBI_GP:WGH15539.1;Name=WGH15539.1;gbkey=CDS;product=morphogenesis protein;protein_id=WGH15539.1;transl_table=11
+OQ646790.1	Genbank	CDS	5321	6022	.	+	0	ID=cds-WGH15540.1;Dbxref=NCBI_GP:WGH15540.1;Name=WGH15540.1;gbkey=CDS;product=putative PhoH-like protein;protein_id=WGH15540.1;transl_table=11
+OQ646790.1	Genbank	CDS	6038	6247	.	+	0	ID=cds-WGH15541.1;Dbxref=NCBI_GP:WGH15541.1;Name=WGH15541.1;Note=hypothetical protein PaMx11_06;gbkey=CDS;product=hypothetical protein;protein_id=WGH15541.1;transl_table=11
+OQ646790.1	Genbank	CDS	6278	6601	.	+	0	ID=cds-WGH15542.1;Dbxref=NCBI_GP:WGH15542.1;Name=WGH15542.1;Note=hypothetical protein PaMx11_11;gbkey=CDS;product=hypothetical protein;protein_id=WGH15542.1;transl_table=11
+OQ646790.1	Genbank	CDS	6731	6895	.	+	0	ID=cds-WGH15543.1;Dbxref=NCBI_GP:WGH15543.1;Name=WGH15543.1;gbkey=CDS;product=hypothetical protein;protein_id=WGH15543.1;transl_table=11
+OQ646790.1	Genbank	CDS	7017	7805	.	+	0	ID=cds-WGH15544.1;Dbxref=NCBI_GP:WGH15544.1;Name=WGH15544.1;Note=hypothetical protein LKO4_0055;gbkey=CDS;product=hypothetical protein;protein_id=WGH15544.1;transl_table=11
+OQ646790.1	Genbank	CDS	7946	8866	.	+	0	ID=cds-WGH15545.1;Dbxref=NCBI_GP:WGH15545.1;Name=WGH15545.1;gbkey=CDS;product=major structural protein;protein_id=WGH15545.1;transl_table=11
+OQ646790.1	Genbank	CDS	9005	9448	.	+	0	ID=cds-WGH15546.1;Dbxref=NCBI_GP:WGH15546.1;Name=WGH15546.1;Note=hypothetical protein PaMx11_16;gbkey=CDS;product=hypothetical protein;protein_id=WGH15546.1;transl_table=11
+OQ646790.1	Genbank	CDS	9452	9682	.	+	0	ID=cds-WGH15547.1;Dbxref=NCBI_GP:WGH15547.1;Name=WGH15547.1;gbkey=CDS;product=virion structural protein;protein_id=WGH15547.1;transl_table=11
+OQ646790.1	Genbank	CDS	9688	10218	.	+	0	ID=cds-WGH15548.1;Dbxref=NCBI_GP:WGH15548.1;Name=WGH15548.1;gbkey=CDS;product=putative virion structural protein;protein_id=WGH15548.1;transl_table=11
+OQ646790.1	Genbank	CDS	10220	10609	.	+	0	ID=cds-WGH15549.1;Dbxref=NCBI_GP:WGH15549.1;Name=WGH15549.1;gbkey=CDS;product=virion structural protein;protein_id=WGH15549.1;transl_table=11
+OQ646790.1	Genbank	CDS	10611	11009	.	+	0	ID=cds-WGH15550.1;Dbxref=NCBI_GP:WGH15550.1;Name=WGH15550.1;gbkey=CDS;product=putative virion structural protein;protein_id=WGH15550.1;transl_table=11
+OQ646790.1	Genbank	CDS	11006	11416	.	+	0	ID=cds-WGH15551.1;Dbxref=NCBI_GP:WGH15551.1;Name=WGH15551.1;gbkey=CDS;product=putative tail terminator protein;protein_id=WGH15551.1;transl_table=11
+OQ646790.1	Genbank	CDS	11452	12366	.	+	0	ID=cds-WGH15552.1;Dbxref=NCBI_GP:WGH15552.1;Name=WGH15552.1;gbkey=CDS;product=major tail structural protein;protein_id=WGH15552.1;transl_table=11
+OQ646790.1	Genbank	CDS	12366	12803	.	+	0	ID=cds-WGH15553.1;Dbxref=NCBI_GP:WGH15553.1;Name=WGH15553.1;Note=hypothetical protein PaMx74_27;gbkey=CDS;product=hypothetical protein;protein_id=WGH15553.1;transl_table=11
+OQ646790.1	Genbank	CDS	12809	13108	.	+	0	ID=cds-WGH15554.1;Dbxref=NCBI_GP:WGH15554.1;Name=WGH15554.1;Note=hypothetical protein PaMx28_27;gbkey=CDS;product=hypothetical protein;protein_id=WGH15554.1;transl_table=11
+OQ646790.1	Genbank	CDS	13194	15551	.	+	0	ID=cds-WGH15555.1;Dbxref=NCBI_GP:WGH15555.1;Name=WGH15555.1;gbkey=CDS;product=tail tape measure protein;protein_id=WGH15555.1;transl_table=11
+OQ646790.1	Genbank	CDS	15562	17091	.	+	0	ID=cds-WGH15556.1;Dbxref=NCBI_GP:WGH15556.1;Name=WGH15556.1;gbkey=CDS;product=virion structural protein;protein_id=WGH15556.1;transl_table=11
+OQ646790.1	Genbank	CDS	17103	18104	.	+	0	ID=cds-WGH15557.1;Dbxref=NCBI_GP:WGH15557.1;Name=WGH15557.1;gbkey=CDS;product=putative virion structural protein;protein_id=WGH15557.1;transl_table=11
+OQ646790.1	Genbank	CDS	18105	19766	.	+	0	ID=cds-WGH15558.1;Dbxref=NCBI_GP:WGH15558.1;Name=WGH15558.1;gbkey=CDS;product=putative virion structural protein;protein_id=WGH15558.1;transl_table=11
+OQ646790.1	Genbank	CDS	19763	20572	.	+	0	ID=cds-WGH15559.1;Dbxref=NCBI_GP:WGH15559.1;Name=WGH15559.1;gbkey=CDS;product=virion structural protein;protein_id=WGH15559.1;transl_table=11
+OQ646790.1	Genbank	CDS	20585	20818	.	+	0	ID=cds-WGH15560.1;Dbxref=NCBI_GP:WGH15560.1;Name=WGH15560.1;gbkey=CDS;product=putative virion structural protein;protein_id=WGH15560.1;transl_table=11
+OQ646790.1	Genbank	CDS	20815	21021	.	+	0	ID=cds-WGH15561.1;Dbxref=NCBI_GP:WGH15561.1;Name=WGH15561.1;Note=hypothetical protein PaMx25_27;gbkey=CDS;product=hypothetical protein;protein_id=WGH15561.1;transl_table=11
+OQ646790.1	Genbank	CDS	21005	23179	.	+	0	ID=cds-WGH15562.1;Dbxref=NCBI_GP:WGH15562.1;Name=WGH15562.1;gbkey=CDS;product=virion structural protein;protein_id=WGH15562.1;transl_table=11
+OQ646790.1	Genbank	CDS	23254	23535	.	+	0	ID=cds-WGH15563.1;Dbxref=NCBI_GP:WGH15563.1;Name=WGH15563.1;gbkey=CDS;product=virion structural protein;protein_id=WGH15563.1;transl_table=11
+OQ646790.1	Genbank	CDS	23602	24078	.	+	0	ID=cds-WGH15564.1;Dbxref=NCBI_GP:WGH15564.1;Name=WGH15564.1;gbkey=CDS;product=putative membrane protein;protein_id=WGH15564.1;transl_table=11
+OQ646790.1	Genbank	CDS	24075	24581	.	+	0	ID=cds-WGH15565.1;Dbxref=NCBI_GP:WGH15565.1;Name=WGH15565.1;gbkey=CDS;product=putative endolysin;protein_id=WGH15565.1;transl_table=11
+OQ646790.1	Genbank	CDS	24625	24843	.	+	0	ID=cds-WGH15566.1;Dbxref=NCBI_GP:WGH15566.1;Name=WGH15566.1;gbkey=CDS;product=putative membrane protein;protein_id=WGH15566.1;transl_table=11
+OQ646790.1	Genbank	CDS	24827	25369	.	+	0	ID=cds-WGH15567.1;Dbxref=NCBI_GP:WGH15567.1;Name=WGH15567.1;Note=hypothetical protein PaMx11_37;gbkey=CDS;product=hypothetical protein;protein_id=WGH15567.1;transl_table=11
+OQ646790.1	Genbank	CDS	25877	27451	.	+	0	ID=cds-WGH15568.1;Dbxref=NCBI_GP:WGH15568.1;Name=WGH15568.1;gbkey=CDS;product=putative helicase;protein_id=WGH15568.1;transl_table=11
+OQ646790.1	Genbank	CDS	27444	27806	.	+	0	ID=cds-WGH15569.1;Dbxref=NCBI_GP:WGH15569.1;Name=WGH15569.1;Note=hypothetical protein ORF042;gbkey=CDS;product=hypothetical protein;protein_id=WGH15569.1;transl_table=11
+OQ646790.1	Genbank	CDS	27895	28446	.	+	0	ID=cds-WGH15570.1;Dbxref=NCBI_GP:WGH15570.1;Name=WGH15570.1;Note=hypothetical protein ORF043;gbkey=CDS;product=hypothetical protein;protein_id=WGH15570.1;transl_table=11
+OQ646790.1	Genbank	CDS	28554	29393	.	+	0	ID=cds-WGH15571.1;Dbxref=NCBI_GP:WGH15571.1;Name=WGH15571.1;Note=hypothetical protein ORF044;gbkey=CDS;product=hypothetical protein;protein_id=WGH15571.1;transl_table=11
+OQ646790.1	Genbank	CDS	29469	30656	.	+	0	ID=cds-WGH15572.1;Dbxref=NCBI_GP:WGH15572.1;Name=WGH15572.1;Note=hypothetical protein ORF045;gbkey=CDS;product=hypothetical protein;protein_id=WGH15572.1;transl_table=11
+OQ646790.1	Genbank	CDS	30720	31781	.	+	0	ID=cds-WGH15573.1;Dbxref=NCBI_GP:WGH15573.1;Name=WGH15573.1;gbkey=CDS;product=putative ribonucleotide reductase small subunit;protein_id=WGH15573.1;transl_table=11
+OQ646790.1	Genbank	CDS	31762	33468	.	+	0	ID=cds-WGH15574.1;Dbxref=NCBI_GP:WGH15574.1;Name=WGH15574.1;gbkey=CDS;product=ribonucleotide reductase%2C large subunit;protein_id=WGH15574.1;transl_table=11
+OQ646790.1	Genbank	CDS	33718	34227	.	+	0	ID=cds-WGH15575.1;Dbxref=NCBI_GP:WGH15575.1;Name=WGH15575.1;Note=hypothetical protein PaMx11_45;gbkey=CDS;product=hypothetical protein;protein_id=WGH15575.1;transl_table=11
+OQ646790.1	Genbank	CDS	34283	35140	.	+	0	ID=cds-WGH15576.1;Dbxref=NCBI_GP:WGH15576.1;Name=WGH15576.1;Note=hypothetical protein PaMx11_46;gbkey=CDS;product=hypothetical protein;protein_id=WGH15576.1;transl_table=11
+OQ646790.1	Genbank	CDS	35137	36000	.	+	0	ID=cds-WGH15577.1;Dbxref=NCBI_GP:WGH15577.1;Name=WGH15577.1;gbkey=CDS;product=putative FAD dependent oxidoreductase;protein_id=WGH15577.1;transl_table=11
+OQ646790.1	Genbank	CDS	35997	36422	.	+	0	ID=cds-WGH15578.1;Dbxref=NCBI_GP:WGH15578.1;Name=WGH15578.1;gbkey=CDS;product=putative acetyltransferase;protein_id=WGH15578.1;transl_table=11
+OQ646790.1	Genbank	CDS	36426	36995	.	+	0	ID=cds-WGH15579.1;Dbxref=NCBI_GP:WGH15579.1;Name=WGH15579.1;Note=hypothetical protein PaMx11_49;gbkey=CDS;product=hypothetical protein;protein_id=WGH15579.1;transl_table=11
+OQ646790.1	Genbank	CDS	36992	37882	.	+	0	ID=cds-WGH15580.1;Dbxref=NCBI_GP:WGH15580.1;Name=WGH15580.1;Note=hypothetical protein PaMx11_50;gbkey=CDS;product=hypothetical protein;protein_id=WGH15580.1;transl_table=11
+OQ646790.1	Genbank	CDS	37886	38932	.	+	0	ID=cds-WGH15581.1;Dbxref=NCBI_GP:WGH15581.1;Name=WGH15581.1;gbkey=CDS;product=putative thymidylate synthase;protein_id=WGH15581.1;transl_table=11
+OQ646790.1	Genbank	CDS	38945	39535	.	+	0	ID=cds-WGH15582.1;Dbxref=NCBI_GP:WGH15582.1;Name=WGH15582.1;gbkey=CDS;product=putative HD domain-containing protein;protein_id=WGH15582.1;transl_table=11
+OQ646790.1	Genbank	CDS	39537	39977	.	+	0	ID=cds-WGH15583.1;Dbxref=NCBI_GP:WGH15583.1;Name=WGH15583.1;Note=hypothetical protein PaMx11_53;gbkey=CDS;product=hypothetical protein;protein_id=WGH15583.1;transl_table=11
+OQ646790.1	Genbank	CDS	40034	40588	.	+	0	ID=cds-WGH15584.1;Dbxref=NCBI_GP:WGH15584.1;Name=WGH15584.1;gbkey=CDS;product=hypothetical protein;protein_id=WGH15584.1;transl_table=11
+OQ646790.1	Genbank	CDS	40588	42528	.	+	0	ID=cds-WGH15585.1;Dbxref=NCBI_GP:WGH15585.1;Name=WGH15585.1;gbkey=CDS;product=DNA polymerase I;protein_id=WGH15585.1;transl_table=11
+OQ646790.1	Genbank	CDS	42525	43061	.	+	0	ID=cds-WGH15586.1;Dbxref=NCBI_GP:WGH15586.1;Name=WGH15586.1;gbkey=CDS;product=putative dCMP deaminase;protein_id=WGH15586.1;transl_table=11
+OQ646790.1	Genbank	CDS	43054	43479	.	+	0	ID=cds-WGH15587.1;Dbxref=NCBI_GP:WGH15587.1;Name=WGH15587.1;Note=hypothetical protein PaMx11_57;gbkey=CDS;product=hypothetical protein;protein_id=WGH15587.1;transl_table=11
+OQ646790.1	Genbank	CDS	43533	43778	.	+	0	ID=cds-WGH15588.1;Dbxref=NCBI_GP:WGH15588.1;Name=WGH15588.1;Note=hypothetical protein PaMx11_58;gbkey=CDS;product=hypothetical protein;protein_id=WGH15588.1;transl_table=11
+OQ646790.1	Genbank	CDS	43765	46140	.	+	0	ID=cds-WGH15589.1;Dbxref=NCBI_GP:WGH15589.1;Name=WGH15589.1;gbkey=CDS;product=integrase;protein_id=WGH15589.1;transl_table=11
+OQ646790.1	Genbank	CDS	46140	46346	.	+	0	ID=cds-WGH15590.1;Dbxref=NCBI_GP:WGH15590.1;Name=WGH15590.1;Note=hypothetical protein PaMx11_60;gbkey=CDS;product=hypothetical protein;protein_id=WGH15590.1;transl_table=11
+OQ646790.1	Genbank	CDS	46436	46552	.	+	0	ID=cds-WGH15591.1;Dbxref=NCBI_GP:WGH15591.1;Name=WGH15591.1;Note=hypothetical protein PaMx11_61;gbkey=CDS;product=hypothetical protein;protein_id=WGH15591.1;transl_table=11
+OQ646790.1	Genbank	CDS	46578	46886	.	+	0	ID=cds-WGH15592.1;Dbxref=NCBI_GP:WGH15592.1;Name=WGH15592.1;Note=hypothetical protein PaMx11_61;gbkey=CDS;product=hypothetical protein;protein_id=WGH15592.1;transl_table=11
+OQ646790.1	Genbank	CDS	46936	47622	.	+	0	ID=cds-WGH15593.1;Dbxref=NCBI_GP:WGH15593.1;Name=WGH15593.1;gbkey=CDS;product=phosphoribosyl-ATP diphosphatase;protein_id=WGH15593.1;transl_table=11
+OQ646790.1	Genbank	CDS	47615	47995	.	+	0	ID=cds-WGH15594.1;Dbxref=NCBI_GP:WGH15594.1;Name=WGH15594.1;Note=hypothetical protein PaMx11_63;gbkey=CDS;product=hypothetical protein;protein_id=WGH15594.1;transl_table=11
+OQ646790.1	Genbank	CDS	48006	48398	.	+	0	ID=cds-WGH15595.1;Dbxref=NCBI_GP:WGH15595.1;Name=WGH15595.1;Note=hypothetical protein PaMx11_64;gbkey=CDS;product=hypothetical protein;protein_id=WGH15595.1;transl_table=11
+OQ646790.1	Genbank	CDS	48391	48966	.	+	0	ID=cds-WGH15596.1;Dbxref=NCBI_GP:WGH15596.1;Name=WGH15596.1;Note=hypothetical protein PaMx11_65;gbkey=CDS;product=hypothetical protein;protein_id=WGH15596.1;transl_table=11
+OQ646790.1	Genbank	CDS	49002	49247	.	+	0	ID=cds-WGH15597.1;Dbxref=NCBI_GP:WGH15597.1;Name=WGH15597.1;Note=hypothetical protein PaMx11_66;gbkey=CDS;product=hypothetical protein;protein_id=WGH15597.1;transl_table=11
+OQ646790.1	Genbank	CDS	49346	49945	.	+	0	ID=cds-WGH15598.1;Dbxref=NCBI_GP:WGH15598.1;Name=WGH15598.1;Note=hypothetical protein MP1412_42;gbkey=CDS;product=hypothetical protein;protein_id=WGH15598.1;transl_table=11
+OQ646790.1	Genbank	CDS	49996	50613	.	+	0	ID=cds-WGH15599.1;Dbxref=NCBI_GP:WGH15599.1;Name=WGH15599.1;Note=hypothetical protein PaMx11_68;gbkey=CDS;product=hypothetical protein;protein_id=WGH15599.1;transl_table=11
+OQ646790.1	Genbank	CDS	50700	51605	.	+	0	ID=cds-WGH15600.1;Dbxref=NCBI_GP:WGH15600.1;Name=WGH15600.1;gbkey=CDS;product=putative DNA ligase;protein_id=WGH15600.1;transl_table=11
+OQ646790.1	Genbank	CDS	51682	51900	.	+	0	ID=cds-WGH15601.1;Dbxref=NCBI_GP:WGH15601.1;Name=WGH15601.1;gbkey=CDS;product=hypothetical protein;protein_id=WGH15601.1;transl_table=11
+OQ646790.1	Genbank	CDS	51928	53019	.	+	0	ID=cds-WGH15602.1;Dbxref=NCBI_GP:WGH15602.1;Name=WGH15602.1;Note=hypothetical protein PaMx11_71;gbkey=CDS;product=hypothetical protein;protein_id=WGH15602.1;transl_table=11
+OQ646790.1	Genbank	CDS	53148	53396	.	+	0	ID=cds-WGH15603.1;Dbxref=NCBI_GP:WGH15603.1;Name=WGH15603.1;Note=hypothetical protein PaMx11_72;gbkey=CDS;product=hypothetical protein;protein_id=WGH15603.1;transl_table=11
+OQ646790.1	Genbank	CDS	53393	53821	.	+	0	ID=cds-WGH15604.1;Dbxref=NCBI_GP:WGH15604.1;Name=WGH15604.1;Note=hypothetical protein PaMx25_65;gbkey=CDS;product=hypothetical protein;protein_id=WGH15604.1;transl_table=11
+OQ646790.1	Genbank	CDS	53841	54392	.	+	0	ID=cds-WGH15605.1;Dbxref=NCBI_GP:WGH15605.1;Name=WGH15605.1;gbkey=CDS;product=putative nucleotide triphosphate hydrolase;protein_id=WGH15605.1;transl_table=11
+OQ646790.1	Genbank	CDS	54389	54646	.	+	0	ID=cds-WGH15606.1;Dbxref=NCBI_GP:WGH15606.1;Name=WGH15606.1;Note=hypothetical protein PaMx11_75;gbkey=CDS;product=hypothetical protein;protein_id=WGH15606.1;transl_table=11
+OQ646790.1	Genbank	CDS	54797	55003	.	-	0	ID=cds-WGH15607.1;Dbxref=NCBI_GP:WGH15607.1;Name=WGH15607.1;gbkey=CDS;product=hypothetical protein;protein_id=WGH15607.1;transl_table=11
+OQ646790.1	Genbank	CDS	55047	55736	.	+	0	ID=cds-WGH15608.1;Dbxref=NCBI_GP:WGH15608.1;Name=WGH15608.1;gbkey=CDS;product=putative exonuclease;protein_id=WGH15608.1;transl_table=11
+OQ646790.1	Genbank	CDS	55733	56017	.	+	0	ID=cds-WGH15609.1;Dbxref=NCBI_GP:WGH15609.1;Name=WGH15609.1;gbkey=CDS;product=hypothetical protein;protein_id=WGH15609.1;transl_table=11
+OQ646790.1	Genbank	CDS	56014	56409	.	+	0	ID=cds-WGH15610.1;Dbxref=NCBI_GP:WGH15610.1;Name=WGH15610.1;gbkey=CDS;product=hypothetical protein;protein_id=WGH15610.1;transl_table=11
+OQ646790.1	Genbank	CDS	56406	56675	.	+	0	ID=cds-WGH15611.1;Dbxref=NCBI_GP:WGH15611.1;Name=WGH15611.1;Note=hypothetical protein ORF009;gbkey=CDS;product=hypothetical protein;protein_id=WGH15611.1;transl_table=11
+OQ646790.1	Genbank	CDS	56662	56940	.	+	0	ID=cds-WGH15612.1;Dbxref=NCBI_GP:WGH15612.1;Name=WGH15612.1;Note=hypothetical protein PaMx11_81;gbkey=CDS;product=hypothetical protein;protein_id=WGH15612.1;transl_table=11
+
