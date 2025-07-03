@@ -23,10 +23,9 @@ Ideal for comparative genomics, pan-genome analysis, phage-host sequence relatio
 - **Fine-tuned Axes**:  
   - Each sequence has independent axes with major/minor ticks, clearly labeling length and positions.  
   - Adjust tick lengths, label sizes, and offsets to balance readability and aesthetics.  
-  - Radial distance between axes and sequence arcs (`axis_gap`) is adjustable, including support for negative values (inward indentation).  
 - **Flexible Ribbon Styling**:  
   - 3 coloring schemes: `single` (uniform color), `query` (by query sequence), and `pident` (gradient by similarity).  
-  - Adjustable radial gap between ribbons and sequences; supports custom Bézier curve control points for smoothness.  
+  - Adjustable gap between ribbons and sequences; supports custom Bézier curve control points for smoothness.  
 - **Layout Optimization**: Global rotation of the entire plot to adapt to different display needs.  
 - **Debug Mode**: Assists in troubleshooting data issues by showing counts of valid/invalid alignments.  
 
@@ -44,7 +43,7 @@ Ideal for comparative genomics, pan-genome analysis, phage-host sequence relatio
 if (!require("ggplot2")) install.packages("ggplot2")
 if (!require("RColorBrewer")) install.packages("RColorBrewer")
 
-# Install from GitHub (replace with your repository path)
+# Install from GitHub (replace with your repository URL)
 if (!require("devtools")) install.packages("devtools")
 devtools::install_github("your_username/ggchord@v0.1.0")
 ```
@@ -57,25 +56,34 @@ Two types of input data are required:
 
 1. **Sequence Information Data (`seq_data`)**  
    A data frame containing basic sequence information, with mandatory columns:  
-   - `seq_id`: Unique identifier for the sequence (e.g., gene name, accession number).  
-   - `length`: Length of the sequence (positive value).  
+   - `seq_id`: Unique sequence identifier (e.g., gene name, accession number)  
+   - `length`: Sequence length (positive value)  
 
    Example:  
    ```r
-   seq_data <- data.frame(
-     seq_id = c("seqA", "seqB", "seqC"),
-     length = c(5000, 8000, 6500)  # Sequence lengths
-   )
+   seq_data <- read.delim("seq_track.tsv", sep = "\t", stringsAsFactors = FALSE)
+   ```  
+   where the `seq_track.tsv` file has the following format (example):  
+   ```
+   seq_id	length
+   MT108731.1	64323
+   MT118296.1	32090
+   OQ646790.1	57367
+   OR222515.1	83080
+   ```  
+   You can automatically generate this table from FASTA files using:  
+   ```bash
+   seqkit fx2tab -nil *fna | sed '1i seq_id\tlength' > seq_track.tsv
    ```  
 
 2. **Alignment Data (`ribbon_data`)**  
    A data frame containing BLAST alignment results (convertible from `outfmt6` or `outfmt7` formats), with mandatory columns:  
-   - `qaccver`: Query sequence ID (must exist in `seq_data$seq_id`).  
-   - `saccver`: Subject sequence ID (must exist in `seq_data$seq_id`).  
-   - `length`: Length of the alignment.  
-   - `pident`: Percentage sequence identity.  
-   - `qstart`/`qend`: Start/end positions on the query sequence.  
-   - `sstart`/`send`: Start/end positions on the subject sequence.  
+   - `qaccver`: Query sequence ID (must exist in `seq_data$seq_id`)  
+   - `saccver`: Subject sequence ID (must exist in `seq_data$seq_id`)  
+   - `length`: Alignment length  
+   - `pident`: Percentage sequence identity  
+   - `qstart`/`qend`: Start/end positions on the query sequence  
+   - `sstart`/`send`: Start/end positions on the subject sequence  
 
    Example: Generating from BLAST result files:  
    ```r
@@ -94,6 +102,24 @@ Two types of input data are required:
    ribbon_data <- subset(all_blast, length >= 100)  # Filter short alignments (optional)
    ```  
 
+   You can use the following script to perform BLAST alignments on the example sequences:  
+   ```bash
+   # Script to run BLAST alignments using example FASTA files
+   seqs=("MT108731.1" "MT118296.1" "OQ646790.1" "OR222515.1")
+   seqsNum=${#seqs[@]}
+   ext="fna"
+   for ((i=0; i<seqsNum-1; i++)); do
+     for ((j=i+1; j<seqsNum; j++)); do
+       echo -e "Running BLASTN: ${seqs[$i]} vs ${seqs[$j]}"
+       blastn \
+         -outfmt '7 qaccver saccver pident length mismatch gapopen qstart qend sstart send evalue bitscore qcovs qlen slen sstrand stitle' \
+         -query "${seqs[$i]}.${ext}" \
+         -subject "${seqs[$j]}.${ext}" \
+         -out "${seqs[$i]}__${seqs[$j]}.o7"
+     done
+   done
+   ```  
+
 
 ### Basic Usage Example  
 ```r
@@ -105,10 +131,10 @@ library(ggplot2)
 p <- ggchord(
   seq_data = seq_data,                # Sequence information
   ribbon_data = ribbon_data,          # Alignment data
-  title = "Multi-sequence Alignment Chord Diagram",  # Plot title
-  seq_order = c("seqA", "seqB", "seqC"),  # Custom sequence order
+  title = "Multi-Sequence Alignment Chord Diagram",  # Plot title
+  seq_order = c("MT108731.1", "MT118296.1", "OQ646790.1", "OR222515.1"),  # Custom sequence order
   seq_gap = 0.03,                     # Gap proportion between sequences
-  seq_orientation = c(1, -1, 1),      # Sequence orientation (1=forward, -1=reverse)
+  seq_orientation = c(1, -1, 1, -1),  # Sequence orientation (1=forward, -1=reverse)
   ribbon_color_scheme = "pident",     # Color by sequence identity
   ribbon_alpha = 0.7,                 # Ribbon transparency
   axis_gap = 0.1,                     # Distance between axes and sequences
