@@ -40,10 +40,6 @@
 # 安装依赖
 if (!require("ggplot2")) install.packages("ggplot2")
 if (!require("RColorBrewer")) install.packages("RColorBrewer")
-
-# 从GitHub安装（替换为实际仓库路径）
-if (!require("devtools")) install.packages("devtools")
-devtools::install_github("your_username/ggchord@v0.1.0")
 ```
 
 
@@ -59,10 +55,19 @@ devtools::install_github("your_username/ggchord@v0.1.0")
 
    示例：  
    ```r
-   seq_data <- data.frame(
-     seq_id = c("seqA", "seqB", "seqC"),
-     length = c(5000, 8000, 6500)  # 序列长度
-   )
+   seq_data <- read.delim("seq_track.tsv", sep = "\t", stringsAsFactors = FALSE)
+   ```  
+   其中，`seq_track.tsv` 文件格式如下（示例）：  
+   ```
+   seq_id	length
+   MT108731.1	64323
+   MT118296.1	32090
+   OQ646790.1	57367
+   OR222515.1	83080
+   ```  
+   你可以使用以下命令从FASTA文件自动生成该表格：  
+   ```bash
+   seqkit fx2tab -nil *fna | sed '1i seq_id\tlength' > seq_track.tsv
    ```  
 
 2. **比对数据（ribbon_data）**  
@@ -91,6 +96,24 @@ devtools::install_github("your_username/ggchord@v0.1.0")
    ribbon_data <- subset(all_blast, length >= 100)  # 过滤短比对（可选）
    ```  
 
+   你可以使用以下脚本对示例序列进行BLAST比对：  
+   ```bash
+   # 使用示例样本的fasta文件进行blast比对的脚本
+   seqs=("MT108731.1" "MT118296.1" "OQ646790.1" "OR222515.1")
+   seqsNum=${#seqs[@]}
+   ext="fna"
+   for ((i=0; i<seqsNum-1; i++)); do
+     for ((j=i+1; j<seqsNum; j++)); do
+       echo -e "Running BLASTN: ${seqs[$i]} vs ${seqs[$j]}"
+       blastn \
+         -outfmt '7 qaccver saccver pident length mismatch gapopen qstart qend sstart send evalue bitscore qcovs qlen slen sstrand stitle' \
+         -query "${seqs[$i]}.${ext}" \
+         -subject "${seqs[$j]}.${ext}" \
+         -out "${seqs[$i]}__${seqs[$j]}.o7"
+     done
+   done
+   ```  
+
 
 ### 基础使用示例  
 ```r
@@ -103,9 +126,9 @@ p <- ggchord(
   seq_data = seq_data,                # 序列信息
   ribbon_data = ribbon_data,          # 比对数据
   title = "多序列比对弦图",           # 标题
-  seq_order = c("seqA", "seqB", "seqC"),  # 自定义序列顺序
+  seq_order = c("MT108731.1", "MT118296.1", "OQ646790.1", "OR222515.1"),  # 自定义序列顺序
   seq_gap = 0.03,                     # 序列间间隙比例
-  seq_orientation = c(1, -1, 1),      # 序列方向（1正向，-1反向）
+  seq_orientation = c(1, -1, 1, -1),  # 序列方向（1正向，-1反向）
   ribbon_color_scheme = "pident",     # 按相似度着色
   ribbon_alpha = 0.7,                 # 连接带透明度
   axis_gap = 0.1,                     # 坐标轴与序列的距离
