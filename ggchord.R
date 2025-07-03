@@ -1,11 +1,12 @@
 #' ggchord: 多序列弦图（带基因注释箭头）
 #'
-#' 绘制多序列间的BLAST比对弦图，并在序列上用箭头显示基因注释，箭头方向由strand决定
+#' 该函数用于绘制包含多个序列的弦图，可展示序列间的比对关系和基因注释信息。
+#' 支持自定义序列排列、颜色、连接带样式等多种参数，适合用于基因组比对可视化。
 #'
 #' @param seq_data data.frame/tibble，包含序列信息，必须包含列：
 #'   - seq_id: 序列唯一标识
 #'   - length: 序列长度
-#' @param ribbon_data data.frame/tibble，包含BLAST比对结果，必须包含列：
+#' @param ribbon_data data.frame/tibble，包含BLAST比对结果，可选，若提供则必须包含列：
 #'   - qaccver: 查询序列ID
 #'   - saccver: 目标序列ID
 #'   - length: 比对长度
@@ -14,7 +15,7 @@
 #'   - qend: 查询序列结束位置
 #'   - sstart: 目标序列起始位置
 #'   - send: 目标序列结束位置
-#' @param gene_track data.frame/tibble，包含基因注释信息，必须包含列：
+#' @param gene_track data.frame/tibble，包含基因注释信息，可选，若提供则必须包含列：
 #'   - seq_id: 序列唯一标识
 #'   - start: 基因起始位置
 #'   - end: 基因结束位置
@@ -34,12 +35,17 @@
 #' @param gene_width 数值或向量，基因箭头宽度，默认0.1
 #' @param gene_label_show 逻辑值，是否显示基因标签，默认FALSE
 #' @param gene_label_size 数值，基因注释文字大小，默认2.5
+#' @param gene_color_scheme 字符，指定基因颜色方案，可选"strand"（按链方向）或"manual"（手动指定），默认"strand"
+#' @param gene_colors 颜色向量，用于指定基因箭头的填充色，具体行为取决于gene_color_scheme：
+#'   - "strand"模式：支持命名向量（仅"+"/"-"）、非命名向量（先"+"后"-"）或单值（正负链同色），缺省则"+"为红色、"-"为蓝色
+#'   - "manual"模式：支持命名向量（对应anno）、非命名向量（截断多余，补齐不足），缺省则使用原始anno颜色
+#' @param gene_order 字符向量，可选，指定基因在图例中的显示顺序；若为NULL则使用基因在数据中出现的顺序
 #' @param ribbon_color_scheme 字符，连接带配色方案，可选 "single"、"query" 或 "pident"，默认"single"
 #' @param ribbon_colors 连接带颜色参数：
 #'   - single: 单一颜色（单值或向量取第一个）
 #'   - query: 按查询序列映射颜色（命名或非命名向量或单值）
 #'   - pident: 渐变色阶向量，用于按相似度百分比生成渐变
-#' @param ribbon_alpha 数值，连接带透明度 [0,1]，默认0.6
+#' @param ribbon_alpha 数值，连接带透明度 [0,1]，默认0.4
 #' @param ribbon_ctrl_point 数值向量或列表，可选，贝塞尔控制点，长度2或list(c1,c2,..)，默认NULL（圆心）
 #' @param ribbon_gap 数值或向量，序列圆弧与连接带之间的径向距离，默认0.1
 #' @param axis_gap 数值或向量，坐标轴与序列圆弧之间径向距离，支持负值，默认0.05
@@ -51,35 +57,32 @@
 #' @param axis_label_offset 数值或向量，基于默认标签位置（1.5倍刻度长度）的偏移量，0时为原位置，正值向外，负值向内，默认0
 #' @param rotation 数值，整体图形绕原点旋转角度（度，逆时针为正），默认0
 #' @param show_legend 逻辑值，是否显示图例，默认TRUE
+#' @param show_axis 逻辑值，是否显示坐标轴，默认TRUE
 #' @param debug 逻辑值，是否打印调试信息，默认FALSE
 #' @return 返回一个 ggplot2 对象
 #' @import ggplot2
 #' @import RColorBrewer
 #' @import grDevices
-#' @import ggnewscale  # 新增ggnewscale依赖
+#' @import ggnewscale
 #' @export
 
 # 加载所需包
 library(ggplot2)
 library(RColorBrewer)
 library(grDevices)
-library(ggnewscale)  # 加载ggnewscale包
+library(ggnewscale)
 
 # 辅助函数：生成坐标轴主刻度断点
 breakPointsFunc <- function(max_value, n = 5, tol = 0.5) {
   if (max_value <= 0) return(c(0, max_value))
   
-  # 1. 用 pretty() 生成大致 n 个刻度
   ticks <- pretty(c(0, max_value), n = n)
   ticks <- ticks[ticks >= 0 & ticks <= max_value]
   ticks <- sort(unique(c(0, ticks, max_value)))
   
-  # 2. 如果最后一段太小（小于其他分段中位数 * tol），就去掉 penultimate
   if (length(ticks) >= 3) {
     d <- diff(ticks)
-    # 其它分段（不含最后一段）的中位数
     med <- median(d[-length(d)])
-    # 如果最后一段过小，就剔除 penultimate 点
     if (d[length(d)] < med * tol) {
       ticks <- ticks[-(length(ticks) - 1)]
     }
@@ -124,23 +127,19 @@ process_sequence_param <- function(param, seqs, param_name, default_value = NULL
 # 处理gene_offset参数的辅助函数
 process_gene_offset <- function(gene_offset, seqs, default = 0.03) {
   n <- length(seqs)
-  # 初始化结果列表，默认值为default的正负链
   result <- setNames(lapply(seqs, function(id) c("+" = default, "-" = default)), seqs)
   
   if (is.null(gene_offset)) {
     return(result)
   }
   
-  # 处理单值情况
   if (length(gene_offset) == 1 && !is.list(gene_offset) && is.numeric(gene_offset)) {
     val <- gene_offset
     return(setNames(lapply(seqs, function(id) c("+" = val, "-" = val)), seqs))
   }
   
-  # 处理向量情况（长度与序列数相同）
   if (is.vector(gene_offset) && !is.list(gene_offset) && length(gene_offset) == n) {
     if (!is.null(names(gene_offset))) {
-      # 命名向量，按名称匹配
       for (id in seqs) {
         if (id %in% names(gene_offset)) {
           val <- gene_offset[id]
@@ -148,7 +147,6 @@ process_gene_offset <- function(gene_offset, seqs, default = 0.03) {
         }
       }
     } else {
-      # 非命名向量，按顺序匹配
       for (i in seq_along(seqs)) {
         val <- gene_offset[i]
         result[[seqs[i]]] <- c("+" = val, "-" = val)
@@ -157,24 +155,18 @@ process_gene_offset <- function(gene_offset, seqs, default = 0.03) {
     return(result)
   }
   
-  # 处理列表情况
   if (is.list(gene_offset)) {
-    # 检查列表中的名称
     list_names <- names(gene_offset)
     if (is.null(list_names)) {
-      # 非命名列表，按顺序匹配序列
       if (length(gene_offset) != n) {
         stop("gene_offset 列表长度与序列数不匹配，且未命名")
       }
       for (i in seq_along(seqs)) {
         elem <- gene_offset[[i]]
-        # 处理每个元素
         if (length(elem) == 1 && is.numeric(elem)) {
-          # 单值，正负链相同
           result[[seqs[i]]] <- c("+" = elem, "-" = elem)
         } else if (is.vector(elem) && all(names(elem) %in% c("+", "-"))) {
-          # 命名向量，包含+/-
-          current <- result[[seqs[i]]] # 初始为默认
+          current <- result[[seqs[i]]]
           if ("+" %in% names(elem)) current["+"] <- elem["+"]
           if ("-" %in% names(elem)) current["-"] <- elem["-"]
           result[[seqs[i]]] <- current
@@ -183,13 +175,12 @@ process_gene_offset <- function(gene_offset, seqs, default = 0.03) {
         }
       }
     } else {
-      # 命名列表，按名称匹配
       for (id in list_names) {
         if (!id %in% seqs) {
           stop(paste("gene_offset 列表包含未知序列ID:", id))
         }
         elem <- gene_offset[[id]]
-        current <- result[[id]] # 初始为默认
+        current <- result[[id]]
         if (length(elem) == 1 && is.numeric(elem)) {
           current <- c("+" = elem, "-" = elem)
         } else if (is.vector(elem) && all(names(elem) %in% c("+", "-"))) {
@@ -204,15 +195,86 @@ process_gene_offset <- function(gene_offset, seqs, default = 0.03) {
     return(result)
   }
   
-  # 无法处理的格式
   stop("gene_offset 格式错误，请提供单值、向量或列表")
+}
+
+# 处理gene_colors参数的辅助函数（strand模式）
+process_strand_colors <- function(gene_colors) {
+  default <- c("+" = "#E41A1C", "-" = "#377EB8")
+  if (is.null(gene_colors)) {
+    return(default)
+  }
+  if (!is.null(names(gene_colors))) {
+    if (!all(names(gene_colors) %in% c("+", "-"))) {
+      stop("'strand'模式下，gene_colors命名向量只能包含'+'和'-'")
+    }
+    res <- default
+    res[names(gene_colors)] <- gene_colors
+    return(res)
+  } else {
+    len <- length(gene_colors)
+    if (len == 1) {
+      return(c("+" = gene_colors[1], "-" = gene_colors[1]))
+    } else if (len == 2) {
+      return(c("+" = gene_colors[1], "-" = gene_colors[2]))
+    } else {
+      stop("'strand'模式下，非命名gene_colors长度必须为1或2")
+    }
+  }
+}
+
+# 处理gene_colors参数的辅助函数（manual模式）
+process_manual_colors <- function(gene_colors, unique_anno, gene_order) {
+  if (!is.null(gene_order)) {
+    unknown <- setdiff(gene_order, unique_anno)
+    if (length(unknown) > 0) {
+      stop("'gene_order' 包含未知基因注释: ", paste(unknown, collapse = ","))
+    }
+    final_order <- c(gene_order, setdiff(unique_anno, gene_order))
+  } else {
+    final_order <- unique_anno
+  }
+  n_anno <- length(final_order)
+  
+  if (n_anno <= 9) {
+    default_pal <- brewer.pal(n_anno, "Set1")
+  } else {
+    default_pal <- colorRampPalette(brewer.pal(9, "Set1"))(n_anno)
+  }
+  names(default_pal) <- final_order
+  
+  if (is.null(gene_colors)) {
+    return(default_pal)
+  }
+  
+  if (!is.null(names(gene_colors))) {
+    unknown <- setdiff(names(gene_colors), unique_anno)
+    if (length(unknown) > 0) {
+      warning("'manual'模式下，gene_colors包含未知注释: ", paste(unknown, collapse = ","))
+    }
+    res <- default_pal
+    common_names <- intersect(names(gene_colors), final_order)
+    res[common_names] <- gene_colors[common_names]
+    return(res)
+  } else {
+    len <- length(gene_colors)
+    res <- character(n_anno)
+    if (len >= 1) {
+      res[1:min(len, n_anno)] <- gene_colors[1:min(len, n_anno)]
+    }
+    if (len < n_anno) {
+      res[(len + 1):n_anno] <- default_pal[(len + 1):n_anno]
+    }
+    names(res) <- final_order
+    return(res)
+  }
 }
 
 # 主函数：绘制多序列弦图
 ggchord <- function(
     seq_data,
-    ribbon_data,
-    gene_track,
+    ribbon_data            = NULL,
+    gene_track             = NULL,
     title                  = "Multi-sequence Chord Diagram with Gene Annotations",
     seq_order              = NULL,
     seq_labels             = NULL,
@@ -224,9 +286,12 @@ ggchord <- function(
     gene_width             = 0.1,
     gene_label_show        = FALSE,
     gene_label_size        = 2.5,
+    gene_color_scheme      = c("strand", "manual"),
+    gene_colors            = NULL,
+    gene_order             = NULL,
     ribbon_color_scheme    = c("single","query","pident"),
     ribbon_colors          = NULL,
-    ribbon_alpha           = 0.6,
+    ribbon_alpha           = 0.4,
     ribbon_ctrl_point      = NULL,
     ribbon_gap             = 0.1,
     axis_gap               = 0.05,
@@ -238,8 +303,12 @@ ggchord <- function(
     axis_label_offset      = 0.1,
     rotation               = 45,
     show_legend            = TRUE,
+    show_axis              = TRUE,
     debug                  = FALSE
 ) {
+  # 调试信息：函数开始
+  if (debug) cat("[DEBUG] 开始执行ggchord函数\n")
+  
   # 检查必要的包是否安装
   if (!"ggplot2" %in% installed.packages()) stop("需要安装 ggplot2 包")
   if (!"RColorBrewer" %in% installed.packages()) stop("需要安装 RColorBrewer 包")
@@ -247,9 +316,12 @@ ggchord <- function(
   if (!"ggnewscale" %in% installed.packages()) stop("需要安装 ggnewscale 包以支持多填充色映射")
   
   ribbon_color_scheme <- match.arg(ribbon_color_scheme)
+  gene_color_scheme <- match.arg(gene_color_scheme)
   
   # 1. 验证输入数据格式
-  # 验证序列数据
+  if (debug) cat("[DEBUG] 开始验证输入数据格式\n")
+  
+  # 验证序列数据（必选）
   required_seq_cols <- c("seq_id", "length")
   if (!all(required_seq_cols %in% colnames(seq_data))) {
     stop("seq_data 必须包含以下列: ", paste(required_seq_cols, collapse = ", "))
@@ -257,29 +329,61 @@ ggchord <- function(
   if (any(seq_data$length <= 0)) {
     stop("seq_data 中的 length 必须为正数")
   }
-  
-  # 验证BLAST数据
-  required_ribbon_cols <- c("qaccver", "saccver", "length", "pident", 
-                            "qstart", "qend", "sstart", "send")
-  if (!all(required_ribbon_cols %in% colnames(ribbon_data))) {
-    stop("ribbon_data 必须包含以下列: ", paste(required_ribbon_cols, collapse = ", "))
+  if (debug) {
+    cat("[DEBUG] 序列数据验证通过，包含", nrow(seq_data), "条序列\n")
+    print(data.frame(seq_id = seq_data$seq_id, length = seq_data$length))
   }
-  fb_all <- ribbon_data  # 直接使用传入的已处理比对数据
-  if (nrow(fb_all) == 0) stop("ribbon_data 中没有有效比对数据")
-  if (debug) cat("使用的比对数据行数:", nrow(fb_all), "\n")
   
-  # 验证基因注释数据
-  required_gene_cols <- c("seq_id", "start", "end", "strand", "anno")
-  if (!all(required_gene_cols %in% colnames(gene_track))) {
-    stop("gene_track 必须包含以下列: ", paste(required_gene_cols, collapse = ", "))
+  # 验证BLAST数据（可选）
+  fb_all <- NULL
+  if (!is.null(ribbon_data)) {
+    required_ribbon_cols <- c("qaccver", "saccver", "length", "pident", 
+                              "qstart", "qend", "sstart", "send")
+    if (!all(required_ribbon_cols %in% colnames(ribbon_data))) {
+      stop("ribbon_data 必须包含以下列: ", paste(required_ribbon_cols, collapse = ", "))
+    }
+    fb_all <- ribbon_data
+    if (nrow(fb_all) == 0) warning("ribbon_data 中没有有效比对数据")
+    if (debug) {
+      cat("[DEBUG] 比对数据验证通过，共", nrow(fb_all), "行\n")
+      cat("[DEBUG] 比对数据包含的查询序列ID:", paste(unique(fb_all$qaccver), collapse = ", "), "\n")
+      cat("[DEBUG] 比对数据包含的目标序列ID:", paste(unique(fb_all$saccver), collapse = ", "), "\n")
+    }
+  } else if (debug) {
+    cat("[DEBUG] 未提供ribbon_data，不绘制连接带\n")
   }
-  if (nrow(gene_track) == 0) warning("gene_track 中没有有效基因注释数据")
-  if (debug) cat("使用的基因注释数据行数:", nrow(gene_track), "\n")
+  
+  # 验证基因注释数据（可选）
+  if (!is.null(gene_track)) {
+    required_gene_cols <- c("seq_id", "start", "end", "strand", "anno")
+    if (!all(required_gene_cols %in% colnames(gene_track))) {
+      stop("gene_track 必须包含以下列: ", paste(required_gene_cols, collapse = ", "))
+    }
+    if (nrow(gene_track) == 0) warning("gene_track 中没有有效基因注释数据")
+    if (debug) {
+      cat("[DEBUG] 基因数据验证通过，共", nrow(gene_track), "个基因\n")
+      cat("[DEBUG] 基因涉及的序列ID:", paste(unique(gene_track$seq_id), collapse = ", "), "\n")
+      cat("[DEBUG] 基因注释类别:", paste(unique(gene_track$anno), collapse = ", "), "\n")
+    }
+    
+    if (!is.null(gene_order)) {
+      unknown_genes <- setdiff(gene_order, unique(gene_track$anno))
+      if (length(unknown_genes) > 0) {
+        stop("gene_order 包含未知基因注释: ", paste(unknown_genes, collapse = ", "))
+      } else if (debug) {
+        cat("[DEBUG] gene_order验证通过，包含已知基因注释\n")
+      }
+    }
+  } else if (debug) {
+    cat("[DEBUG] 未提供gene_track，不绘制基因注释\n")
+  }
   
   # 2. 处理序列信息
+  if (debug) cat("[DEBUG] 开始处理序列信息\n")
+  
   seqs <- seq_data$seq_id
   lens <- setNames(seq_data$length, seqs)
-  if (length(seqs) < 2) stop("seq_data 中至少需要包含2条序列")
+  if (length(seqs) < 1) stop("seq_data 中至少需要包含1条序列")
   
   # 处理序列顺序
   if (!is.null(seq_order)) {
@@ -287,31 +391,61 @@ ggchord <- function(
       stop("seq_order 包含未知序列ID: ", paste(setdiff(seq_order, seqs), collapse = ", "))
     }
     seqs <- seq_order
-    lens <- lens[seqs]  # 按新顺序重新排列长度
+    lens <- lens[seqs]
+    if (debug) cat("[DEBUG] 已按seq_order调整序列顺序为:", paste(seqs, collapse = ", "), "\n")
+  } else if (debug) {
+    cat("[DEBUG] 未指定seq_order，使用seq_data中的顺序:", paste(seqs, collapse = ", "), "\n")
   }
-  n <- length(seqs)  # 序列数量
+  n <- length(seqs)
   
   # 3. 处理序列相关参数
-  seq_labels      <- process_sequence_param(seq_labels, seqs, "seq_labels", default_value = seqs)
-  seqRadius       <- process_sequence_param(seq_radius, seqs, "seq_radius", default_value = 1.0)
-  ribbonGap       <- process_sequence_param(ribbon_gap, seqs, "ribbon_gap", default_value = 0.1)
-  axisGap         <- process_sequence_param(axis_gap, seqs, "axis_gap", default_value = 0.05)
-  # 处理基因偏移参数（新逻辑）
-  geneGap         <- process_gene_offset(gene_offset, seqs, default = 0.03)
-  geneWidth       <- process_sequence_param(gene_width, seqs, "gene_width", default_value = 0.1)
-  axisMaj         <- process_sequence_param(axis_tick_major_number, seqs, "axis_tick_major_number", default_value = 5)
-  axisMajLen      <- process_sequence_param(axis_tick_major_length, seqs, "axis_tick_major_length", default_value = 0.02)
-  axisMin         <- process_sequence_param(axis_tick_minor_number, seqs, "axis_tick_minor_number", default_value = 4)
-  axisMinLen      <- process_sequence_param(axis_tick_minor_length, seqs, "axis_tick_minor_length", default_value = 0.01)
-  labelSize       <- process_sequence_param(axis_label_size, seqs, "axis_label_size", default_value = 3)
-  labelOffset     <- process_sequence_param(axis_label_offset, seqs, "axis_label_offset", default_value = 0)
-  orientation     <- process_sequence_param(seq_orientation, seqs, "seq_orientation", default_value = 1)
-  rot_rad <- rotation * pi / 180  # 转换为弧度
+  if (debug) cat("[DEBUG] 开始处理序列相关参数\n")
+  
+  seq_labels <- process_sequence_param(seq_labels, seqs, "seq_labels", default_value = seqs)
+  if (debug) {
+    cat("[DEBUG] 处理后的seq_labels:\n")
+    print(seq_labels)
+  }
+  
+  seqRadius <- process_sequence_param(seq_radius, seqs, "seq_radius", default_value = 1.0)
+  if (debug) {
+    cat("[DEBUG] 处理后的seq_radius:\n")
+    print(seqRadius)
+  }
+  
+  ribbonGap <- process_sequence_param(ribbon_gap, seqs, "ribbon_gap", default_value = 0.1)
+  axisGap <- process_sequence_param(axis_gap, seqs, "axis_gap", default_value = 0.05)
+  geneGap <- process_gene_offset(gene_offset, seqs, default = 0.03)
+  if (debug) {
+    cat("[DEBUG] 处理后的gene_offset（按序列和链）:\n")
+    print(geneGap)
+  }
+  
+  geneWidth <- process_sequence_param(gene_width, seqs, "gene_width", default_value = 0.1)
+  axisMaj <- process_sequence_param(axis_tick_major_number, seqs, "axis_tick_major_number", default_value = 5)
+  axisMajLen <- process_sequence_param(axis_tick_major_length, seqs, "axis_tick_major_length", default_value = 0.02)
+  axisMin <- process_sequence_param(axis_tick_minor_number, seqs, "axis_tick_minor_number", default_value = 4)
+  axisMinLen <- process_sequence_param(axis_tick_minor_length, seqs, "axis_tick_minor_length", default_value = 0.01)
+  labelSize <- process_sequence_param(axis_label_size, seqs, "axis_label_size", default_value = 3)
+  labelOffset <- process_sequence_param(axis_label_offset, seqs, "axis_label_offset", default_value = 0)
+  
+  orientation <- process_sequence_param(seq_orientation, seqs, "seq_orientation", default_value = 1)
+  if (debug) {
+    cat("[DEBUG] 处理后的seq_orientation（1=正向，-1=反向）:\n")
+    print(orientation)
+  }
+  
+  rot_rad <- rotation * pi / 180
+  if (debug) cat("[DEBUG] 图形整体旋转角度:", rotation, "度（", rot_rad, "弧度）\n")
   
   # 处理序列间隙参数
   seq_gap <- process_sequence_param(seq_gap, seqs, "seq_gap")
   if (any(seq_gap < 0 | seq_gap >= 0.5)) {
     stop("seq_gap 必须在 [0, 0.5) 范围内")
+  }
+  if (debug) {
+    cat("[DEBUG] 处理后的seq_gap（弧度比例）:\n")
+    print(seq_gap)
   }
   
   # 处理序列颜色
@@ -325,70 +459,115 @@ ggchord <- function(
   } else {
     seq_colors <- process_sequence_param(seq_colors, seqs, "seq_colors")
   }
+  if (debug) {
+    cat("[DEBUG] 序列颜色分配:\n")
+    print(seq_colors)
+  }
   
   # 4. 处理连接带颜色参数
-  if (is.null(ribbon_colors)) {
-    ribbon_colors <- switch(ribbon_color_scheme,
-                            single = "steelblue",
-                            query = {
-                              # 浅色系版本的 seq_colors（与白色按 mix 比例混合）
-                              mix <- 0.5  
-                              sapply(seq_colors, function(col) {
-                                cols <- col2rgb(col)
-                                light_cols <- cols + (255 - cols) * mix
-                                rgb(light_cols[1,], light_cols[2,], light_cols[3,], maxColorValue = 255)
-                              })
-                            },
-                            pident = c(
-                              "#440154FF","#482878FF","#3E4A89FF","#31688EFF","#26828EFF",
-                              "#1F9E89FF","#35B779FF","#6DCD59FF","#B4DE2CFF","#FDE725FF"
-                            )
-    )
-  }
-  
-  # 验证连接带颜色参数
-  if (ribbon_color_scheme == "single") {
-    singleCol <- if (length(ribbon_colors) > 1) ribbon_colors[[1]] else ribbon_colors
-  } else if (ribbon_color_scheme == "query") {
-    queryCols <- process_sequence_param(ribbon_colors, seqs, "ribbon_colors")
-  } else if (ribbon_color_scheme == "pident") {
-    if (length(ribbon_colors) < 2) {
-      stop("pident 模式需指定至少两个颜色用作渐变色阶")
+  if (!is.null(ribbon_data)) {
+    if (debug) cat("[DEBUG] 开始处理连接带颜色参数（scheme:", ribbon_color_scheme, "）\n")
+    
+    if (is.null(ribbon_colors)) {
+      ribbon_colors <- switch(ribbon_color_scheme,
+                              single = "steelblue",
+                              query = {
+                                mix <- 0.5  
+                                sapply(seq_colors, function(col) {
+                                  cols <- col2rgb(col)
+                                  light_cols <- cols + (255 - cols) * mix
+                                  rgb(light_cols[1,], light_cols[2,], light_cols[3,], maxColorValue = 255)
+                                })
+                              },
+                              pident = c(
+                                "#440154FF","#482878FF","#3E4A89FF","#31688EFF","#26828EFF",
+                                "#1F9E89FF","#35B779FF","#6DCD59FF","#B4DE2CFF","#FDE725FF"
+                              )
+      )
     }
-    rampFunc <- colorRampPalette(ribbon_colors)
+    
+    if (ribbon_color_scheme == "single") {
+      singleCol <- if (length(ribbon_colors) > 1) ribbon_colors[[1]] else ribbon_colors
+      if (debug) cat("[DEBUG] 连接带单一颜色:", singleCol, "\n")
+    } else if (ribbon_color_scheme == "query") {
+      queryCols <- process_sequence_param(ribbon_colors, seqs, "ribbon_colors")
+      if (debug) {
+        cat("[DEBUG] 连接带按查询序列着色:\n")
+        print(queryCols)
+      }
+    } else if (ribbon_color_scheme == "pident") {
+      if (length(ribbon_colors) < 2) {
+        stop("pident 模式需指定至少两个颜色用作渐变色阶")
+      }
+      rampFunc <- colorRampPalette(ribbon_colors)
+      if (debug) {
+        cat("[DEBUG] 连接带按相似度着色，渐变色阶:", paste(ribbon_colors, collapse = " → "), "\n")
+      }
+    }
   }
   
-  # 5. 计算基因箭头颜色（基于anno列）
-  if (nrow(gene_track) > 0) {
+  # 5. 计算基因颜色
+  gene_pal <- NULL
+  final_gene_order <- NULL
+  if (!is.null(gene_track) && nrow(gene_track) > 0) {
+    if (debug) cat("[DEBUG] 开始处理基因颜色参数（scheme:", gene_color_scheme, "）\n")
+    
     valid_genes <- gene_track[gene_track$seq_id %in% seqs, ]
-    unique_anno <- unique(valid_genes$anno)  # 获取所有唯一的注释值
-    # 生成与注释数量匹配的颜色
-    if (length(unique_anno) <= 9) {
-      gene_pal <- brewer.pal(length(unique_anno), "Set1")
-    } else {
-      gene_pal <- colorRampPalette(brewer.pal(9, "Set1"))(length(unique_anno))
+    if (nrow(valid_genes) > 0) {
+      unique_anno <- unique(valid_genes$anno)
+      if (!is.null(gene_order)) {
+        final_order <- c(gene_order, setdiff(unique_anno, gene_order))
+      } else {
+        final_order <- unique_anno
+      }
+      final_gene_order <- final_order
+      
+      if (gene_color_scheme == "strand") {
+        gene_pal <- process_strand_colors(gene_colors)
+        if (debug) {
+          cat("[DEBUG] 基因按链着色（+/-）:\n")
+          print(gene_pal)
+        }
+      } else if (gene_color_scheme == "manual") {
+        gene_pal <- process_manual_colors(gene_colors, unique_anno, gene_order)
+        if (debug) {
+          cat("[DEBUG] 基因按注释手动着色:\n")
+          print(gene_pal)
+        }
+      }
+    } else if (debug) {
+      cat("[DEBUG] 基因数据中无有效序列ID匹配，不绘制基因箭头\n")
     }
-    names(gene_pal) <- unique_anno  # 命名颜色向量，键为注释值
-  } else {
-    gene_pal <- NULL
   }
   
   # 6. 计算序列弧度和间隙弧度
-  total_circ <- 2 * pi  # 总圆周弧度
-  total_gap_prop <- sum(seq_gap)  # 总间隙比例
+  if (debug) cat("[DEBUG] 开始计算序列弧度和间隙\n")
+  
+  total_circ <- 2 * pi
+  total_gap_prop <- sum(seq_gap)
   
   if (total_gap_prop >= 1) {
     stop("seq_gap 总和不能超过1（无法容纳所有序列）")
   }
+  if (debug) {
+    cat("[DEBUG] 总间隙比例:", total_gap_prop, "（小于1，有效）\n")
+  }
   
-  seq_total_prop <- 1 - total_gap_prop  # 序列总占比
+  seq_total_prop <- 1 - total_gap_prop
   sum_lens <- sum(lens)
   theta <- (lens / sum_lens) * total_circ * seq_total_prop  # 每个序列的弧度
-  gap_rads <- total_circ * seq_gap  # 每个间隙的弧度（实际角度）
+  gap_rads <- total_circ * seq_gap  # 每个间隙的实际弧度
+  
+  if (debug) {
+    cat("[DEBUG] 各序列弧度（theta）:\n")
+    print(theta)
+    cat("[DEBUG] 各间隙弧度（gap_rads）:\n")
+    print(gap_rads)
+  }
   
   # 7. 计算序列起始和结束角度
   starts <- numeric(n)
-  starts[1] <- 0  # 第一个序列从0开始
+  starts[1] <- 0
   
   if (n > 1) {
     for (i in 2:n) {
@@ -399,11 +578,20 @@ ggchord <- function(
   ends <- starts + theta
   names(starts) <- names(ends) <- seqs
   
-  # 8. 准备序列外层和内层坐标
-  nSeg <- 500  # 每个序列的分段数（控制平滑度）
+  if (debug) {
+    cat("[DEBUG] 序列起始角度（starts，弧度）:\n")
+    print(starts)
+    cat("[DEBUG] 序列结束角度（ends，弧度）:\n")
+    print(ends)
+  }
+  
+  # 8. 准备序列外层和内层坐标（略过详细输出，避免冗余）
+  if (debug) cat("[DEBUG] 生成序列弧线坐标（外层和内层）\n")
+  
+  nSeg <- 500
   seqArcs <- lapply(seqs, function(id) {
     angs <- seq(starts[id], ends[id], length.out = nSeg)
-    if (orientation[id] == -1) angs <- rev(angs)  # 反向序列
+    if (orientation[id] == -1) angs <- rev(angs)
     data.frame(x = seqRadius[id] * cos(angs), 
                y = seqRadius[id] * sin(angs), 
                seq_id = id)
@@ -412,34 +600,34 @@ ggchord <- function(
   innerArcs <- lapply(seqs, function(id) {
     angs <- seq(starts[id], ends[id], length.out = nSeg)
     if (orientation[id] == -1) angs <- rev(angs)
-    r <- seqRadius[id] - ribbonGap[id]  # 内层半径（连接带起始位置）
+    r <- seqRadius[id] - ribbonGap[id]
     data.frame(x = r * cos(angs), y = r * sin(angs))
   })
   names(innerArcs) <- seqs
   
-  # 9. 生成坐标轴刻度和线
+  # 9. 生成坐标轴刻度和线（输出刻度断点示例）
+  if (debug) cat("[DEBUG] 生成坐标轴刻度数据\n")
+  
   axisTicks <- do.call(rbind, lapply(seqs, function(id) {
     majors <- breakPointsFunc(lens[id], axisMaj[id])
+    if (debug && id == seqs[1]) {  # 仅输出第一个序列的刻度示例
+      cat("[DEBUG] 序列", id, "的主刻度断点:", paste(majors, collapse = ", "), "\n")
+    }
     minors <- unlist(lapply(seq_len(length(majors)-1), function(i) {
       seq(majors[i], majors[i+1], length.out = axisMin[id] + 2)[-c(1, axisMin[id] + 2)]
     }))
     pts <- c(majors, minors)
     do.call(rbind, lapply(pts, function(v) {
-      frac <- v / lens[id]  # 相对位置比例
-      # 计算角度（考虑方向）
+      frac <- v / lens[id]
       ang <- if (orientation[id] == 1) {
         starts[id] + frac * (ends[id] - starts[id])
       } else {
         ends[id] - frac * (ends[id] - starts[id])
       }
-      # 基准半径（序列半径 + 坐标轴间隙）
       base_r <- seqRadius[id] + axisGap[id]
-      # 刻度长度（根据主/次刻度区分）
       tick_len <- if (v %in% majors) axisMajLen[id] else axisMinLen[id]
-      # 方向（axis_gap >=0 向外，否则向内）
       dir <- if (axisGap[id] >= 0) 1 else -1
       end_r <- base_r + tick_len * dir
-      # 标签位置
       lab_r <- base_r + (1.5 + labelOffset[id]) * tick_len * dir
       
       data.frame(
@@ -454,7 +642,6 @@ ggchord <- function(
     }))
   }))
   
-  # 坐标轴连接线
   axisLines <- do.call(rbind, lapply(seqs, function(id) {
     angs <- seq(starts[id], ends[id], length.out = nSeg)
     if (orientation[id] == -1) angs <- rev(angs)
@@ -463,170 +650,201 @@ ggchord <- function(
   }))
   
   # 10. 生成连接带数据
-  ribbons <- list()
-  cntValid <- cntInvalid <- 0
-  for (i in seq_len(nrow(fb_all))) {
-    row <- fb_all[i,]
-    q <- row$qaccver
-    s <- row$saccver
-    if (q == s) {  # 跳过自身比对
-      cntInvalid <- cntInvalid + 1
-      next
-    }
-    if (!q %in% seqs || !s %in% seqs) {  # 跳过不在序列表中的比对
-      cntInvalid <- cntInvalid + 1
-      next
-    }
+  allRibbon <- NULL
+  if (!is.null(ribbon_data) && !is.null(fb_all) && nrow(fb_all) > 0) {
+    if (debug) cat("[DEBUG] 开始生成连接带数据\n")
     
-    # 获取序列的内层弧线数据
-    qr <- innerArcs[[q]]
-    sr <- innerArcs[[s]]
+    ribbons <- list()
+    cntValid <- cntInvalid <- 0
+    invalidReasons <- list(self = 0, noSeq = 0, tooShort = 0)  # 分类统计无效原因
     
-    # 计算比对位置在弧线上的索引
-    qi0 <- map_idx((row$qstart - 1)/lens[q], seq(starts[q], ends[q], length.out = nSeg))
-    qi1 <- map_idx((row$qend - 1)/lens[q], seq(starts[q], ends[q], length.out = nSeg))
-    si0 <- map_idx((row$sstart - 1)/lens[s], seq(starts[s], ends[s], length.out = nSeg))
-    si1 <- map_idx((row$send - 1)/lens[s], seq(starts[s], ends[s], length.out = nSeg))
-    
-    # 过滤过短的比对
-    if (abs(qi1 - qi0) < 1 || abs(si1 - si0) < 1) {
-      cntInvalid <- cntInvalid + 1
-      next
-    }
-    
-    # 提取比对片段
-    segQ <- qr[qi0:qi1, , drop = FALSE]
-    segS <- sr[si0:si1, , drop = FALSE]
-    
-    # 确定贝塞尔曲线控制点
-    if (!is.null(ribbon_ctrl_point)) {
-      if (is.list(ribbon_ctrl_point)) {
-        cp <- ribbon_ctrl_point[[i]]
-        c1 <- cp[[1]]
-        c2 <- cp[[2]]
-      } else {
-        c1 <- ribbon_ctrl_point
-        c2 <- ribbon_ctrl_point
+    for (i in seq_len(nrow(fb_all))) {
+      row <- fb_all[i,]
+      q <- row$qaccver
+      s <- row$saccver
+      
+      # 分类统计无效原因
+      if (q == s) {
+        invalidReasons$self <- invalidReasons$self + 1
+        cntInvalid <- cntInvalid + 1
+        next
       }
-    } else {
-      c1 <- c2 <- c(0, 0)  # 默认控制点为圆心
+      if (!q %in% seqs || !s %in% seqs) {
+        invalidReasons$noSeq <- invalidReasons$noSeq + 1
+        cntInvalid <- cntInvalid + 1
+        next
+      }
+      
+      # 获取序列的内层弧线数据
+      qr <- innerArcs[[q]]
+      sr <- innerArcs[[s]]
+      
+      qi0 <- map_idx((row$qstart - 1)/lens[q], seq(starts[q], ends[q], length.out = nSeg))
+      qi1 <- map_idx((row$qend - 1)/lens[q], seq(starts[q], ends[q], length.out = nSeg))
+      si0 <- map_idx((row$sstart - 1)/lens[s], seq(starts[s], ends[s], length.out = nSeg))
+      si1 <- map_idx((row$send - 1)/lens[s], seq(starts[s], ends[s], length.out = nSeg))
+      
+      if (abs(qi1 - qi0) < 1 || abs(si1 - si0) < 1) {
+        invalidReasons$tooShort <- invalidReasons$tooShort + 1
+        cntInvalid <- cntInvalid + 1
+        next
+      }
+      
+      segQ <- qr[qi0:qi1, , drop = FALSE]
+      segS <- sr[si0:si1, , drop = FALSE]
+      
+      if (!is.null(ribbon_ctrl_point)) {
+        if (is.list(ribbon_ctrl_point)) {
+          cp <- ribbon_ctrl_point[[i]]
+          c1 <- cp[[1]]
+          c2 <- cp[[2]]
+        } else {
+          c1 <- c2 <- c(0, 0)
+        }
+      } else {
+        c1 <- c2 <- c(0, 0)
+      }
+      
+      b1 <- bezier_pts(as.numeric(segQ[1, ]), as.numeric(segS[1, ]), c1, c1)
+      b2 <- bezier_pts(as.numeric(segQ[nrow(segQ), ]), as.numeric(segS[nrow(segS), ]), c2, c2)
+      
+      poly <- rbind(segQ, b2, segS[nrow(segS):1, ], b1[nrow(b1):1, ])
+      if (ribbon_color_scheme == "pident") {
+        poly$pident <- row$pident
+      } else {
+        poly$fill <- switch(ribbon_color_scheme, single = singleCol, query = queryCols[q])
+      }
+      poly$group <- i
+      ribbons[[length(ribbons) + 1]] <- poly
+      cntValid <- cntValid + 1
     }
     
-    # 生成贝塞尔曲线
-    b1 <- bezier_pts(as.numeric(segQ[1, ]), as.numeric(segS[1, ]), c1, c1)  # 起点曲线（查询起点→目标起点）
-    b2 <- bezier_pts(as.numeric(segQ[nrow(segQ), ]), as.numeric(segS[nrow(segS), ]), c2, c2)  # 终点曲线（查询终点→目标终点）
-    
-    # 构建闭合多边形
-    poly <- rbind(
-      segQ,                   # 1. 查询序列片段：查询起点 → 查询终点（正向）
-      b2,                     # 2. 终点贝塞尔曲线：查询终点 → 目标终点（正向）
-      segS[nrow(segS):1, ],   # 3. 目标序列片段：目标终点 → 目标起点（反向，与b2终点衔接）
-      b1[nrow(b1):1, ]        # 4. 起点贝塞尔曲线：目标起点 → 查询起点（反向，闭合回到起点）
-    )
-    
-    # 设置填充色
-    if (ribbon_color_scheme == "pident") {
-      poly$pident <- row$pident
-    } else {
-      poly$fill <- switch(ribbon_color_scheme,
-                          single = singleCol,
-                          query  = queryCols[q])
+    if (debug) {
+      cat("[DEBUG] 连接带统计: 有效=", cntValid, ", 无效=", cntInvalid, "\n")
+      cat("[DEBUG] 无效原因: 自身比对=", invalidReasons$self, 
+          ", 序列不匹配=", invalidReasons$noSeq, 
+          ", 比对过短=", invalidReasons$tooShort, "\n")
     }
-    poly$group <- i  # 分组标识
-    ribbons[[length(ribbons) + 1]] <- poly
-    cntValid <- cntValid + 1
+    if (cntValid > 0) {
+      allRibbon <- do.call(rbind, ribbons)
+    } else {
+      allRibbon <- NULL
+      warning("没有有效连接带可绘制")
+    }
   }
   
-  if (debug) {
-    cat("有效连接带:", cntValid, "无效连接带:", cntInvalid, "\n")
-  }
-  if (cntValid == 0) {
-    stop("没有有效连接带可绘制，请检查输入数据或参数")
-  }
-  allRibbon <- do.call(rbind, ribbons)
-  
-  # 11. 处理基因注释箭头（曲边三角头箭头）并携带anno信息
+  # 11. 处理基因注释箭头
   gene_polys <- data.frame()
-  if (nrow(gene_track) > 0) {
+  if (!is.null(gene_track) && nrow(gene_track) > 0) {
     valid_genes <- gene_track[gene_track$seq_id %in% seqs, ]
-    for (i in seq_len(nrow(valid_genes))) {
-      gene   <- valid_genes[i, ]
-      sid    <- gene$seq_id
-      strand <- gene$strand
-      anno   <- gene$anno  # 提取当前基因的注释值
+    if (nrow(valid_genes) > 0) {
+      if (debug) cat("[DEBUG] 开始生成基因箭头数据，共", nrow(valid_genes), "个有效基因\n")
       
-      # 计算角度（已兼顾序列方向和链方向）
-      st_rel <- min(gene$start, gene$end) / lens[sid]
-      en_rel <- max(gene$start, gene$end) / lens[sid]
-      if (orientation[sid] == 1) {
-        a_s <- starts[sid] + st_rel*(ends[sid]-starts[sid])
-        a_e <- starts[sid] + en_rel*(ends[sid]-starts[sid])
-      } else {
-        a_s <- ends[sid] - st_rel*(ends[sid]-starts[sid])
-        a_e <- ends[sid] - en_rel*(ends[sid]-starts[sid])
+      for (i in seq_len(nrow(valid_genes))) {
+        gene   <- valid_genes[i, ]
+        sid    <- gene$seq_id
+        strand <- gene$strand
+        anno   <- gene$anno
+        
+        st_rel <- min(gene$start, gene$end) / lens[sid]
+        en_rel <- max(gene$start, gene$end) / lens[sid]
+        if (orientation[sid] == 1) {
+          a_s <- starts[sid] + st_rel*(ends[sid]-starts[sid])
+          a_e <- starts[sid] + en_rel*(ends[sid]-starts[sid])
+        } else {
+          a_s <- ends[sid] - st_rel*(ends[sid]-starts[sid])
+          a_e <- ends[sid] - en_rel*(ends[sid]-starts[sid])
+        }
+        if (strand == "-") {
+          tmp <- a_s; a_s <- a_e; a_e <- tmp
+        }
+        
+        if (debug && i <= 3) {  # 输出前3个基因的角度信息
+          cat("[DEBUG] 基因", i, "（", anno, "）: 序列=", sid, ", 链=", strand, 
+              ", 起始角度=", a_s, ", 结束角度=", a_e, "\n")
+        }
+        
+        r0        <- seqRadius[sid] + geneGap[[sid]][strand]
+        width     <- geneWidth[sid]
+        r_out     <- r0 + width/2
+        r_in      <- r0 - width/2
+        head_frac <- 0.3
+        a_break   <- a_s + (1-head_frac)*(a_e - a_s)
+        
+        n_body <- 40
+        ang_body <- seq(a_s, a_break, length.out = n_body)
+        body_out <- data.frame(
+          x = r_out * cos(ang_body),
+          y = r_out * sin(ang_body),
+          group = i, ord = seq_len(n_body),
+          anno = anno,
+          strand = strand
+        )
+        body_in <- data.frame(
+          x = r_in * cos(rev(ang_body)),
+          y = r_in * sin(rev(ang_body)),
+          group = i, ord = seq_len(n_body) + 3*n_body,
+          anno = anno,
+          strand = strand
+        )
+        
+        n_head <- 40
+        t_seq  <- seq(0, 1, length.out = n_head)
+        ang_out <- a_break + t_seq*(a_e - a_break)
+        r_out_edge <- r_out + t_seq*(r0 - r_out)
+        edge_out <- data.frame(
+          x = r_out_edge * cos(ang_out),
+          y = r_out_edge * sin(ang_out),
+          group = i, ord = seq_len(n_head) + n_body,
+          anno = anno,
+          strand = strand
+        )
+        ang_in <- a_break + (1 - t_seq)*(a_e - a_break)
+        r_in_edge <- r_in + (1 - t_seq)*(r0 - r_in)
+        edge_in <- data.frame(
+          x = r_in_edge * cos(ang_in),
+          y = r_in_edge * sin(ang_in),
+          group = i, ord = seq_len(n_head) + 2*n_body,
+          anno = anno,
+          strand = strand
+        )
+        
+        gene_polys <- rbind(gene_polys, body_out, edge_out, edge_in, body_in)
       }
-      if (strand == "-") {
-        tmp <- a_s; a_s <- a_e; a_e <- tmp
-      }
-      
-      # 半径 & 参数（根据链方向获取偏移值）
-      r0        <- seqRadius[sid] + geneGap[[sid]][strand]
-      width     <- geneWidth[sid]
-      r_out     <- r0 + width/2
-      r_in      <- r0 - width/2
-      head_frac <- 0.3
-      a_break   <- a_s + (1-head_frac)*(a_e - a_s)
-      
-      # 构造 body 部分
-      n_body <- 40
-      ang_body <- seq(a_s, a_break, length.out = n_body)
-      body_out <- data.frame(
-        x = r_out * cos(ang_body),
-        y = r_out * sin(ang_body),
-        group = i, ord = seq_len(n_body),
-        anno = anno  # 携带anno信息用于颜色映射
-      )
-      body_in <- data.frame(
-        x = r_in * cos(rev(ang_body)),
-        y = r_in * sin(rev(ang_body)),
-        group = i, ord = seq_len(n_body) + 3*n_body,
-        anno = anno  # 携带anno信息用于颜色映射
-      )
-      
-      # 构造 head 边
-      n_head <- 40
-      t_seq  <- seq(0, 1, length.out = n_head)
-      # 外侧头边
-      ang_out <- a_break + t_seq*(a_e - a_break)
-      r_out_edge <- r_out + t_seq*(r0 - r_out)
-      edge_out <- data.frame(
-        x = r_out_edge * cos(ang_out),
-        y = r_out_edge * sin(ang_out),
-        group = i, ord = seq_len(n_head) + n_body,
-        anno = anno  # 携带anno信息用于颜色映射
-      )
-      # 内侧头边
-      ang_in <- a_break + (1 - t_seq)*(a_e - a_break)
-      r_in_edge <- r_in + (1 - t_seq)*(r0 - r_in)
-      edge_in <- data.frame(
-        x = r_in_edge * cos(ang_in),
-        y = r_in_edge * sin(ang_in),
-        group = i, ord = seq_len(n_head) + 2*n_body,
-        anno = anno  # 携带anno信息用于颜色映射
-      )
-      
-      gene_polys <- rbind(gene_polys, body_out, edge_out, edge_in, body_in)
+    } else if (debug) {
+      cat("[DEBUG] 无有效基因可绘制（基因序列ID与主序列不匹配）\n")
     }
   }
   
-  # 12. 处理基因标签（旧版箭头逻辑，仅用于标签显示）
+  # 12. 处理基因标签
   gene_arrows <- data.frame()
-  if (nrow(gene_track) > 0 && gene_label_show) {
+  if (!is.null(gene_track) && nrow(gene_track) > 0 && gene_label_show) {
     valid_genes <- gene_track[gene_track$seq_id %in% seqs, ]
     if (nrow(valid_genes) > 0) {
       gene_arrows <- do.call(rbind, lapply(1:nrow(valid_genes), function(i) {
         gene <- valid_genes[i, ]
-        # （省略与基因标签位置计算相关的代码，与之前保持一致）
+        sid <- gene$seq_id
+        mid_pos <- (gene$start + gene$end) / 2
+        mid_rel <- mid_pos / lens[sid]
+        if (orientation[sid] == 1) {
+          mid_ang <- starts[sid] + mid_rel * (ends[sid] - starts[sid])
+        } else {
+          mid_ang <- ends[sid] - mid_rel * (ends[sid] - starts[sid])
+        }
+        if (debug && i <= 3) {
+          cat("[DEBUG] 基因", i, "标签位置角度:", mid_ang, "弧度\n")
+        }
+        
+        r0 <- seqRadius[sid] + geneGap[[sid]][gene$strand]
+        label_r <- r0 + ifelse(gene$strand == "+", 0.1, -0.1)
+        x_start <- r0 * cos(mid_ang)
+        y_start <- r0 * sin(mid_ang)
+        x_end <- (r0 + 0.05) * cos(mid_ang)
+        y_end <- (r0 + 0.05) * sin(mid_ang)
+        text_x <- label_r * cos(mid_ang)
+        text_y <- label_r * sin(mid_ang)
+        text_angle <- mid_ang * 180 / pi
+        
         data.frame(
           x_start = x_start, y_start = y_start, x_end = x_end, y_end = y_end,
           text = gene$anno, text_x = text_x, text_y = text_y, 
@@ -636,7 +854,7 @@ ggchord <- function(
     }
   }
   
-  # 定义旋转函数
+  # 应用旋转
   rotate_df <- function(df) {
     if (all(c("x","y") %in% names(df))) {
       x0 <- df$x; y0 <- df$y
@@ -673,12 +891,14 @@ ggchord <- function(
     df
   }
   
-  # 应用旋转
+  if (debug) cat("[DEBUG] 应用图形旋转（", rotation, "度）\n")
   seqArcs   <- lapply(seqArcs,   rotate_df)
   innerArcs <- lapply(innerArcs, rotate_df)
   axisLines <- rotate_df(axisLines)
   axisTicks <- rotate_df(axisTicks)
-  allRibbon <- rotate_df(allRibbon)
+  if (!is.null(allRibbon)) {
+    allRibbon <- rotate_df(allRibbon)
+  }
   if (nrow(gene_arrows) > 0) {
     gene_arrows <- rotate_df(gene_arrows)
   }
@@ -687,65 +907,59 @@ ggchord <- function(
     gene_polys <- gene_polys[with(gene_polys, order(group, ord)), ]
   }
   
-  # 13. 绘制图形（使用ggnewscale实现双fill映射）
+  # 13. 绘制图形
+  if (debug) cat("[DEBUG] 开始构建ggplot图形对象\n")
+  
   p <- ggplot() +
-    # 1. 绘制连接带并设置第一个fill尺度
-    geom_polygon(
-      data = allRibbon,
-      aes(
-        x, y, group = group,
-        fill = if (ribbon_color_scheme == "pident") pident else fill
-      ),
-      alpha = ribbon_alpha, 
-      color = "grey", 
-      linewidth = 0.2
-    ) +
-    # 连接带颜色尺度
-    {
+    { if (!is.null(allRibbon))
+      geom_polygon(
+        data = allRibbon,
+        aes(
+          x, y, group = group,
+          fill = if (ribbon_color_scheme == "pident") pident else fill
+        ),
+        alpha = ribbon_alpha, 
+        color = "grey40", 
+        linewidth = 0.2
+      )
+    } +
+    { if (!is.null(allRibbon)) {
       if (ribbon_color_scheme == "pident") {
         scale_fill_stepsn(
           name = "Identity(%)",
           colours = ribbon_colors,
           limits = c(0, 100), 
           breaks = c(0,50,80,90,95,100),
-          guide = guide_colorbar(theme = theme(legend.title.position = "top",
-                                               legend.key.height = unit(90,"mm")),
-                                 order = 1)
+          guide = if (show_legend) guide_colorbar(theme = theme(legend.title.position = "top",legend.key.height = unit(90,"mm")),order = 1,position = "left") else "none"
         )
       } else {
         scale_fill_identity(guide = "none")
       }
+    }
     } +
-    
-    # 2. 重置fill尺度（核心：使用ggnewscale）
     { if (nrow(gene_polys) > 0) new_scale_fill() } +
-    
-    # 3. 绘制基因箭头并设置第二个fill尺度（映射到anno）
     { if (nrow(gene_polys) > 0)
       geom_polygon(
         data  = gene_polys,
-        aes(x = x, y = y, group = group, fill = anno),  # 映射到anno列
-        color = NA
+        aes(x = x, y = y, group = group, 
+            fill = if (gene_color_scheme == "strand") strand else anno),
+        color = "black"
       )
     } +
-    # 基因箭头颜色尺度
     { if (nrow(gene_polys) > 0)
       scale_fill_manual(
-        name = "Gene Annotation",  # 图例名称
-        values = gene_pal,          # 使用基于anno的颜色向量
-        guide = if (show_legend) guide_legend(order = 2) else "none"
+        name = if (gene_color_scheme == "strand") "Strand" else "Gene Annotation",
+        breaks = if (gene_color_scheme == "strand") c("+","-") else final_gene_order,
+        values = gene_pal,
+        guide = if (show_legend) guide_legend(order = 3) else "none"
       )
     } +
-    
-    # 4. 绘制其他元素
-    # 序列弧线
     geom_path(
       data = do.call(rbind, seqArcs),
       aes(x, y, group = seq_id, color = seq_id),
       linewidth = 1.2,
       arrow = arrow(angle = 25, length = unit(2, "mm"), type = "closed")
     ) +
-    # 基因标签
     { if (nrow(gene_arrows) > 0 && gene_label_show)
       geom_text(
         data = gene_arrows,
@@ -755,40 +969,39 @@ ggchord <- function(
         inherit.aes = FALSE
       )
     } +
-    # 坐标轴线
-    geom_path(
-      data = axisLines,
-      aes(x, y, group = seq_id),
-      color = "black",
-      linewidth = 0.3,
-      inherit.aes = FALSE
-    ) +
-    # 刻度线
-    geom_segment(
-      data = axisTicks,
-      aes(x = x0, y = y0, xend = x1, yend = y1),
-      color = "black",
-      linewidth = 0.3,
-      inherit.aes = FALSE
-    ) +
-    # 刻度标签
-    geom_text(
-      data = subset(axisTicks, !is.na(label)),
-      aes(x = label_x, y = label_y, label = label, size = size),
-      inherit.aes = FALSE,
-      color = "black"
-    ) +
-    
-    # 统一设置尺度
+    { if (show_axis)
+      geom_path(
+        data = axisLines,
+        aes(x, y, group = seq_id),
+        color = "black",
+        linewidth = 0.3,
+        inherit.aes = FALSE
+      )
+    } +
+    { if (show_axis)
+      geom_segment(
+        data = axisTicks,
+        aes(x = x0, y = y0, xend = x1, yend = y1),
+        color = "black",
+        linewidth = 0.3,
+        inherit.aes = FALSE
+      )
+    } +
+    { if (show_axis)
+      geom_text(
+        data = subset(axisTicks, !is.na(label)),
+        aes(x = label_x, y = label_y, label = label, size = size),
+        inherit.aes = FALSE,
+        color = "black"
+      )
+    } +
     scale_size_identity() +
     scale_color_manual(
       name = "Seq ID",
       values = seq_colors,
       labels = seq_labels,
-      guide = if (show_legend) guide_legend(order = 3) else "none"
+      guide = if (show_legend) guide_legend(order = 2) else "none"
     ) +
-    
-    # 主题设置
     theme_void() +
     coord_equal(clip = "off") +
     ggtitle(title) +
@@ -797,13 +1010,14 @@ ggchord <- function(
       plot.margin = margin(t = 0,r = 0,b = 0,l = 0),
       legend.box.spacing = unit(10,"mm"),
       legend.spacing = unit(5,"mm"),
-      legend.position = if (show_legend) "right" else "none",
       legend.text = element_text(size = 8),
-      legend.title = element_text(size = 10, face = "bold")
+      legend.title = element_text(size = 12, face = "bold"),  
     )
   
+  if (debug) cat("[DEBUG] ggchord函数执行完成，返回ggplot对象\n")
   return(p)
 }
+
 
 
 # 示例使用方法
@@ -832,18 +1046,18 @@ p_final <- ggchord(
   ribbon_data = ribbon_data,
   gene_track = gene_track,  # 传入基因注释数据
   title = "Multi-sequence Chord Diagram with Gene Annotations",
-  seq_gap = .03,
+  seq_gap = c(.1,.05,.03,.09),
   seq_radius = c(4,3,2,1),
   seq_orientation = c(-1, 1, -1, -1),
-  gene_offset = list(.3, 
+  gene_offset = list(.15, 
                      .25, 
                      .4, 
                      c("+"=.3,"-"=-.1)),
   gene_width  = .08,
   gene_label_show = F,
-  ribbon_gap = 0.2,
-  ribbon_color_scheme = "query",
-  axis_gap = .1,
+  ribbon_gap = c(.4,.2,.2,.2),
+  ribbon_color_scheme = "pident",
+  axis_gap = c(-.1,.1,.1,.1),
   axis_tick_major_number = 5,
   axis_tick_major_length = 0.03,
   axis_tick_minor_number = 5,
@@ -854,4 +1068,3 @@ p_final <- ggchord(
   debug = TRUE
 )
 print(p_final)
-
