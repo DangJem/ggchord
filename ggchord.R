@@ -134,7 +134,7 @@ process_gene_offset <- function(gene_offset, seqs, default = 0.03) {
   if (is.list(gene_offset)) {
     gene_offset <- lapply(gene_offset, \(x)-x)
   } else {
-    gene_offset <- unlist(lapply(c(-.1,1), \(x)-x))
+    gene_offset <- unlist(lapply(gene_offset, \(x)-x))
   }
   
   n <- length(seqs)
@@ -226,28 +226,28 @@ process_gene_offset <- function(gene_offset, seqs, default = 0.03) {
 process_strand_colors <- function(gene_colors) {
   # 默认值
   default <- c("+" = "#E41A1C", "-" = "#377EB8")
-if (is.null(gene_colors)) {
-  return(default)
-}
-# 命名向量处理
-if (!is.null(names(gene_colors))) {
-  if (!all(names(gene_colors) %in% c("+", "-"))) {
-    stop("'strand'模式下，gene_colors命名向量只能包含'+'和'-'")
+  if (is.null(gene_colors)) {
+    return(default)
   }
-  res <- default
-  res[names(gene_colors)] <- gene_colors
-  return(res)
-} else {
-  # 非命名向量处理
-  len <- length(gene_colors)
-  if (len == 1) {
-    return(c("+" = gene_colors[1], "-" = gene_colors[1]))
-  } else if (len == 2) {
-    return(c("+" = gene_colors[1], "-" = gene_colors[2]))
+  # 命名向量处理
+  if (!is.null(names(gene_colors))) {
+    if (!all(names(gene_colors) %in% c("+", "-"))) {
+      stop("'strand'模式下，gene_colors命名向量只能包含'+'和'-'")
+    }
+    res <- default
+    res[names(gene_colors)] <- gene_colors
+    return(res)
   } else {
-    stop("'strand'模式下，非命名gene_colors长度必须为1或2")
+    # 非命名向量处理
+    len <- length(gene_colors)
+    if (len == 1) {
+      return(c("+" = gene_colors[1], "-" = gene_colors[1]))
+    } else if (len == 2) {
+      return(c("+" = gene_colors[1], "-" = gene_colors[2]))
+    } else {
+      stop("'strand'模式下，非命名gene_colors长度必须为1或2")
+    }
   }
-}
 }
 
 # 处理gene_colors参数的辅助函数（manual模式）
@@ -393,7 +393,7 @@ ggchord <- function(
     ribbon_color_scheme = c("single","query","pident"),
     ribbon_colors = NULL,
     ribbon_alpha = 0.35,
-    ribbon_ctrl_point = NULL,
+    ribbon_ctrl_point = c(0,0),
     ribbon_gap = 0,
     axis_gap = 0,
     axis_tick_major_number = 5,
@@ -476,7 +476,7 @@ ggchord <- function(
   seq_labels <- process_sequence_param(seq_labels, seqs, "seq_labels", default_value = seqs)
   seqRadius <- process_sequence_param(seq_radius, seqs, "seq_radius", default_value = 1.0)
   ribbonGap <- process_sequence_param(ribbon_gap, seqs, "ribbon_gap", default_value = 0.1)
-  axisGap <- process_sequence_param(-axis_gap, seqs, "axis_gap", default_value = 0.05)
+  axisGap <- process_sequence_param(axis_gap, seqs, "axis_gap", default_value = 0.05)
   # 处理基因偏移参数
   geneGap <- process_gene_offset(gene_offset, seqs, default = 0.03)
   geneWidth <- process_sequence_param(gene_width, seqs, "gene_width", default_value = 0.1)
@@ -661,7 +661,7 @@ ggchord <- function(
   axisTicks <- do.call(rbind, lapply(seqs, function(id) {
     ref <- seq_refs[[id]]
     # 基准半径：序列半径 + axisGap
-    r0 <- ref$r0 + axisGap[id]
+    r0 <- ref$r0 - axisGap[id]
     
     # 主次刻度位置
     majors <- breakPointsFunc(lens[id], axisMaj[id])
@@ -671,29 +671,28 @@ ggchord <- function(
     pts <- data.frame(pos = c(majors, minors),
                       is_major = c(rep(TRUE, length(majors)), rep(FALSE, length(minors))))
     
-    # 每个刻度点都做映射
-    do.call(rbind, lapply(seq_len(nrow(pts)), function(j) {
-      p <- pts[j,]
-      frac <- if (orientation[id] == 1) p$pos / lens[id] else 1 - p$pos / lens[id]
-      angle <- starts[id] + frac * (ends[id] - starts[id])
-      
-      # 基准点、刻度头点、标签点
-      base <- map_to_curve(angle, r0, ref)
-      dir  <- if (axisGap[id] >= 0) -1 else 1
-      len  <- if (p$is_major) axisMajLen[id] else axisMinLen[id]
-      tip  <- map_to_curve(angle, r0 + len * dir, ref)
-      lbl  <- map_to_curve(angle, r0 + len * (1.5 + labelOffset[id]) * dir, ref)
-      
-      data.frame(
-        # 直接用位置索引，避免名字干扰
-        x0 = base[1], y0 = base[2],
-        x1 = tip[1],  y1 = tip[2],
-        label   = if (p$is_major) as.character(p$pos) else NA,
-        label_x = lbl[1], label_y = lbl[2],
-        size    = labelSize[id],
-        seq_id  = id
-      )
-    }))
+# 每个刻度点都做映射
+do.call(rbind, lapply(seq_len(nrow(pts)), function(j) {
+  p <- pts[j,]
+  frac <- if (orientation[id] == 1) p$pos / lens[id] else 1 - p$pos / lens[id]
+  angle <- starts[id] + frac * (ends[id] - starts[id])
+  
+  # 基准点、刻度头点、标签点
+  base <- map_to_curve(angle, r0, ref)
+  dir  <- if (axisGap[id] >= 0) -1 else 1
+  len  <- if (p$is_major) axisMajLen[id] else axisMinLen[id]
+  tip  <- map_to_curve(angle, r0 + len * dir, ref)
+  lbl  <- map_to_curve(angle, r0 + len * (1.5 + labelOffset[id]) * dir, ref)
+  
+  data.frame(
+    x0 = base[1], y0 = base[2],
+    x1 = tip[1],  y1 = tip[2],
+    label   = if (p$is_major) as.character(p$pos) else NA,
+    label_x = lbl[1], label_y = lbl[2],
+    size    = labelSize[id],
+    seq_id  = id
+  )
+}))
   }))
   
   
@@ -701,7 +700,7 @@ ggchord <- function(
   axisLines <- do.call(rbind, lapply(seqs, function(id) {
     ref <- seq_refs[[id]]
     # 基准半径：序列半径 + axisGap
-    r0 <- ref$r0 + axisGap[id]
+    r0 <- ref$r0 - axisGap[id]
     # 把整个角度区间分成 nSeg 段
     angles <- seq(starts[id], ends[id], length.out = nSeg)
     # 对每个角度都做映射
@@ -736,42 +735,93 @@ ggchord <- function(
       qr <- innerArcs[[q]]
       sr <- innerArcs[[s]]
       
-      # 计算比对位置在弧线上的索引
-      qi0 <- map_idx((row$qstart - 1)/lens[q], seq(starts[q], ends[q], length.out = nSeg))
-      qi1 <- map_idx((row$qend - 1)/lens[q], seq(starts[q], ends[q], length.out = nSeg))
-      si0 <- map_idx((row$sstart - 1)/lens[s], seq(starts[s], ends[s], length.out = nSeg))
-      si1 <- map_idx((row$send - 1)/lens[s], seq(starts[s], ends[s], length.out = nSeg))
+      # 新增代码：计算查询序列的起点和终点坐标
+      q_ref <- seq_refs[[q]]
+      q_frac_start <- if (orientation[q] == 1) (row$qstart - 1)/lens[q] else 1 - (row$qstart - 1)/lens[q]
+      q_angle_start <- starts[q] + q_frac_start * (ends[q] - starts[q])
+      q_start_coord <- map_to_curve(q_angle_start, seqRadius[q] - ribbonGap[q], q_ref)
       
-      # 过滤过短的比对
-      if (abs(qi1 - qi0) < 1 || abs(si1 - si0) < 1) {
-        cntInvalid <- cntInvalid + 1
-        next
-      }
+      q_frac_end <- if (orientation[q] == 1) (row$qend - 1)/lens[q] else 1 - (row$qend - 1)/lens[q]
+      q_angle_end <- starts[q] + q_frac_end * (ends[q] - starts[q])
+      q_end_coord <- map_to_curve(q_angle_end, seqRadius[q] - ribbonGap[q], q_ref)
       
-      # 提取比对片段
-      segQ <- qr[qi0:qi1, , drop = FALSE]
-      segS <- sr[si0:si1, , drop = FALSE]
+      # 生成查询序列的比对片段（弯曲路径）
+      q_angles <- seq(q_angle_start, q_angle_end, length.out = 50)
+      q_coords <- do.call(rbind, lapply(q_angles, function(angle) {
+        map_to_curve(angle, seqRadius[q] - ribbonGap[q], q_ref)
+      }))
+      segQ <- data.frame(x = q_coords[,1], y = q_coords[,2])
       
-      # 确定贝塞尔曲线控制点（考虑序列弯曲）
+      # 新增代码：计算目标序列的起点和终点坐标
+      s_ref <- seq_refs[[s]]
+      s_frac_start <- if (orientation[s] == 1) (row$sstart - 1)/lens[s] else 1 - (row$sstart - 1)/lens[s]
+      s_angle_start <- starts[s] + s_frac_start * (ends[s] - starts[s])
+      s_start_coord <- map_to_curve(s_angle_start, seqRadius[s] - ribbonGap[s], s_ref)
+      
+      s_frac_end <- if (orientation[s] == 1) (row$send - 1)/lens[s] else 1 - (row$send - 1)/lens[s]
+      s_angle_end <- starts[s] + s_frac_end * (ends[s] - starts[s])
+      s_end_coord <- map_to_curve(s_angle_end, seqRadius[s] - ribbonGap[s], s_ref)
+      
+      # 生成目标序列的比对片段（弯曲路径）
+      s_angles <- seq(s_angle_start, s_angle_end, length.out = 50)
+      s_coords <- do.call(rbind, lapply(s_angles, function(angle) {
+        map_to_curve(angle, seqRadius[s] - ribbonGap[s], s_ref)
+      }))
+      segS <- data.frame(x = s_coords[,1], y = s_coords[,2])
+      
+      # 确定贝塞尔曲线控制点（修复ribbon_ctrl_point参数处理）
       if (!is.null(ribbon_ctrl_point)) {
+        # 处理列表形式：每个元素对应一个连接带的两个控制点(c1, c2)
         if (is.list(ribbon_ctrl_point)) {
-          cp <- ribbon_ctrl_point[[i]]
-          c1 <- cp[[1]]
-          c2 <- cp[[2]]
+          # 确保列表索引不越界
+          cp_idx <- ifelse(i > length(ribbon_ctrl_point), length(ribbon_ctrl_point), i)
+          cp <- ribbon_ctrl_point[[cp_idx]]
+          # 确保每个控制点元素包含两个点
+          if (length(cp) >= 2) {
+            c1 <- cp[[1]]  # 起点曲线控制点
+            c2 <- cp[[2]]  # 终点曲线控制点
+          } else {
+            # 如果元素不足，用第一个点作为默认
+            c1 <- c2 <- if (length(cp) == 1) cp[[1]] else c(0, 0)
+          }
         } else {
-          # 控制点位置也随序列弯曲程度调整
-          c_factor <- (seq_curvature[q] + seq_curvature[s]) / 2
-          c1 <- c2 <- c(0, 0) * c_factor # 默认控制点为圆心，受弯曲程度影响
+          # 处理向量形式：长度为2时表示单个点，长度为4时表示两个点(c1x,c1y,c2x,c2y)
+          if (length(ribbon_ctrl_point) == 2) {
+            # 单个控制点应用于所有曲线
+            c1 <- c2 <- ribbon_ctrl_point
+          } else if (length(ribbon_ctrl_point) == 4) {
+            # 分别指定起点和终点控制点
+            c1 <- ribbon_ctrl_point[1:2]
+            c2 <- ribbon_ctrl_point[3:4]
+          } else {
+            # 无效长度时使用默认（圆心）
+            warning("ribbon_ctrl_point向量长度必须为2或4，已使用默认值")
+            c1 <- c2 <- c(0, 0)
+          }
         }
       } else {
-        # 控制点位置也随序列弯曲程度调整
-        c_factor <- (seq_curvature[q] + seq_curvature[s]) / 2
-        c1 <- c2 <- c(0, 0) * c_factor # 默认控制点为圆心，受弯曲程度影响
+        # 自动计算适合曲率的控制点（原始逻辑保留）
+        mid_angle_q <- (q_angle_start + q_angle_end) / 2
+        mid_angle_s <- (s_angle_start + s_angle_end) / 2
+        mid_point_q <- map_to_curve(mid_angle_q, seqRadius[q] - ribbonGap[q] * 0.5, q_ref)
+        mid_point_s <- map_to_curve(mid_angle_s, seqRadius[s] - ribbonGap[s] * 0.5, s_ref)
+        c1 <- colMeans(rbind(mid_point_q, mid_point_s))
+        c2 <- c1
       }
       
-      # 生成贝塞尔曲线
-      b1 <- bezier_pts(as.numeric(segQ[1, ]), as.numeric(segS[1, ]), c1, c1) # 起点曲线（查询起点→目标起点）
-      b2 <- bezier_pts(as.numeric(segQ[nrow(segQ), ]), as.numeric(segS[nrow(segS), ]), c2, c2) # 终点曲线（查询终点→目标终点）
+      # 生成贝塞尔曲线（使用修复后的c1和c2）
+      b1 <- bezier_pts(
+        as.numeric(segQ[1, ]),       # 起点曲线起点（查询序列起点）
+        as.numeric(segS[1, ]),       # 起点曲线终点（目标序列起点）
+        c1, c1,                      # 使用起点控制点c1
+        n = 50
+      ) 
+      b2 <- bezier_pts(
+        as.numeric(segQ[nrow(segQ), ]),  # 终点曲线起点（查询序列终点）
+        as.numeric(segS[nrow(segS), ]),  # 终点曲线终点（目标序列终点）
+        c2, c2,                          # 使用终点控制点c2
+        n = 50
+      )
       
       # 构建闭合多边形
       poly <- rbind(
@@ -1082,7 +1132,6 @@ ggchord <- function(
     ) +
     
     # 主题设置
-    theme_void() +
     coord_equal(clip = "off") +
     ggtitle(title) +
     theme(
@@ -1091,7 +1140,12 @@ ggchord <- function(
       legend.box.spacing = unit(10,"mm"),
       legend.spacing = unit(5,"mm"),
       legend.text = element_text(size = 8),
-      legend.title = element_text(size = 10, face = "bold"),  
+      legend.title = element_text(size = 10, face = "bold"),
+      axis.title = element_blank(),
+      axis.line = element_blank(),
+      axis.ticks = element_blank(),
+      axis.text = element_blank(),
+      panel.background = element_blank()
     )
   
   return(p)
@@ -1124,19 +1178,16 @@ p_final <- ggchord(
   ribbon_data = ribbon_data,
   gene_track = gene_track, # 传入基因注释数据
   title = "Multi-sequence Chord Diagram with Gene Annotations",
-  seq_gap = .02,
+  seq_gap = .03,
   seq_radius = 1,
   seq_orientation = c(-1, 1, -1, -1),
-  gene_offset = list(.3, 
-                     .25, 
-                     .4, 
-                     c("+"=.5,"-"=-.5)),
+  gene_offset = .1,
   gene_width = .08,
   gene_label_show = F,
   gene_color_scheme = "strand",
-  ribbon_gap = .3,
+  ribbon_gap = c(.1,.2,-.1,-.2),
   ribbon_color_scheme = "pident",
-  axis_gap = c(.2,0,-.2,.5),
+  axis_gap = c(.1,.2,-.1,-.2),
   axis_tick_major_number = 5,
   axis_tick_major_length = 0.03,
   axis_tick_minor_number = 5,
@@ -1144,6 +1195,6 @@ p_final <- ggchord(
   axis_label_size = 2,
   axis_label_offset = .1,
   rotation = 45,
-  debug = TRUE,seq_curvature = c(0,1,-1,1.5)
+  debug = TRUE,seq_curvature = c(0,1,-1,1.5),ribbon_ctrl_point = c(0,0)
 )
 print(p_final)
