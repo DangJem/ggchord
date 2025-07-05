@@ -55,22 +55,85 @@
 #' @param axis_tick_minor_length 数值或向量，次刻度线长度比例，默认0.01
 #' @param axis_label_size 数值或向量，坐标轴刻度文字大小，默认3
 #' @param axis_label_offset 数值或向量，基于默认标签位置（1.5倍刻度长度）的偏移量，0时为原位置，正值向外，负值向内，默认0
-#' @param rotation 数值，整体图形绕原点旋转角度（度，逆时针为正），默认0
-#' @param show_legend 逻辑值，是否显示图例，默认TRUE
-#' @param show_axis 逻辑值，是否显示坐标轴，默认TRUE
-#' @param debug 逻辑值，是否打印调试信息，默认FALSE
-#' @return 返回一个 ggplot2 对象
-#' @import ggplot2
-#' @import RColorBrewer
-#' @import grDevices
-#' @import ggnewscale # 新增ggnewscale依赖
-#' @export
+
 
 # 加载所需包
 library(ggplot2)
 library(RColorBrewer)
 library(grDevices)
-library(ggnewscale) # 加载ggnewscale包
+library(ggnewscale)
+library(grid)
+
+# 获取图像四边极点
+get_plot_extremes <- function(allRibbon=NULL, seqArcs=NULL, axisLines=NULL, axisTicks=NULL, gene_arrows=NULL, gene_polys = NULL) {
+  # 初始化存储x和y坐标的向量
+  x_coords <- numeric(0)
+  y_coords <- numeric(0)
+  
+  # 1. 处理连接带（allRibbon）
+  if (!is.null(allRibbon) && nrow(allRibbon) > 0) {
+    x_coords <- c(x_coords, allRibbon$x)
+    y_coords <- c(y_coords, allRibbon$y)
+  }
+  # 2. 处理序列弧线（seqArcs，列表转数据框）
+  if (!is.null(seqArcs) && length(seqArcs) > 0) {
+    seq_df <- do.call(rbind, seqArcs)
+    if (nrow(seq_df) > 0) {
+      x_coords <- c(x_coords, seq_df$x)
+      y_coords <- c(y_coords, seq_df$y)
+    }
+  }
+  # 3. 处理基因标签（gene_arrows）
+  if (!is.null(gene_arrows) && nrow(gene_arrows) > 0) {
+    x_coords <- c(x_coords, gene_arrows$text_x)
+    y_coords <- c(y_coords, gene_arrows$text_y)
+  }
+  # 4. 处理轴线（axisLines）
+  if (!is.null(axisLines) && nrow(axisLines) > 0) {
+    x_coords <- c(x_coords, axisLines$x)
+    y_coords <- c(y_coords, axisLines$y)
+  }
+  # 5. 处理刻度（axisTicks）
+  if (!is.null(axisTicks) && nrow(axisTicks) > 0) {
+    # x坐标：x0、x1、label_x
+    x_coords <- c(x_coords, axisTicks$x0, axisTicks$x1, axisTicks$label_x)
+    # y坐标：y0、y1、label_y
+    y_coords <- c(y_coords, axisTicks$y0, axisTicks$y1, axisTicks$label_y)
+  }
+  # 6. 处理基因箭头多边形（gene_polys）：包含x、y坐标（多边形顶点）
+  if (!is.null(gene_polys) && nrow(gene_polys) > 0) {
+    x_coords <- c(x_coords, gene_polys$x)
+    y_coords <- c(y_coords, gene_polys$y)
+  }
+  
+  # 过滤缺失值（NA）
+  x_coords <- x_coords[!is.na(x_coords)]
+  y_coords <- y_coords[!is.na(y_coords)]
+  
+  # 计算极值（返回列表，包含上下左右极值）
+  list(
+    x_min = min(x_coords), # 左极值
+    x_max = max(x_coords), # 右极值
+    y_min = min(y_coords), # 下极值
+    y_max = max(y_coords) # 上极值
+  )
+}
+
+# 定义自定义的 key 绘制函数
+draw_key_gene_arrow <- function(data, params, size) {
+  # 五个顶点：矩形左下、矩形左上、矩形右上、箭头尖、矩形右下
+  x_pts <- unit(c(0.1, 0.1, 0.6, 0.9, 0.6), "npc")
+  y_pts <- unit(c(0.2, 0.8, 0.8, 0.5, 0.2), "npc")
+  
+  polygonGrob(
+    x = x_pts, y = y_pts,
+    gp = gpar(
+      fill = alpha(data$fill %||% "grey", data$alpha %||% 1),
+      col = data$colour %||% "black",
+      lwd = data$size %||% 0.5 * .pt
+    )
+  )
+}
 
 # 辅助函数：生成坐标轴主刻度断点
 breakPointsFunc <- function(max_value, n = 5, tol = 0.5) {
@@ -128,15 +191,8 @@ process_sequence_param <- function(param, seqs, param_name, default_value = NULL
   stop(paste0("无法处理的", param_name, "格式，请提供单值、命名向量或与序列数相同的非命名向量"))
 }
 
-# 处理gene_offset参数的辅助函数
+# 修改辅助函数以支持基因标签偏移参数的处理
 process_gene_offset <- function(gene_offset, seqs, default = 0.03) {
-  
-  if (is.list(gene_offset)) {
-    gene_offset <- lapply(gene_offset, \(x)-x)
-  } else {
-    gene_offset <- unlist(lapply(gene_offset, \(x)-x))
-  }
-  
   n <- length(seqs)
   # 初始化结果列表，默认值为default的正负链
   result <- setNames(lapply(seqs, function(id) c("+" = default, "-" = default)), seqs)
@@ -165,7 +221,7 @@ process_gene_offset <- function(gene_offset, seqs, default = 0.03) {
       # 非命名向量，按顺序匹配
       for (i in seq_along(seqs)) {
         val <- gene_offset[i]
-        result[[seqs[i]]] <- c("+" = val, "-" = val)
+        result[[i]] <- c("+" = val, "-" = val)
       }
     }
     return(result)
@@ -387,6 +443,7 @@ ggchord <- function(
     gene_width = 0.1,
     gene_label_show = FALSE,
     gene_label_size = 2.5,
+    gene_label_offset = 0,
     gene_color_scheme = c("strand", "manual"),
     gene_colors = NULL,
     gene_order = NULL,
@@ -403,6 +460,7 @@ ggchord <- function(
     axis_label_size = 3,
     axis_label_offset = 1.5,
     rotation = 45,
+    panel_margin = list("r"=0,"l"=0,"t"=0,"b"=0),
     show_legend = TRUE,
     show_axis = TRUE,
     debug = FALSE
@@ -488,6 +546,8 @@ ggchord <- function(
   labelOffset <- process_sequence_param(axis_label_offset, seqs, "axis_label_offset", default_value = 0)
   orientation <- process_sequence_param(seq_orientation, seqs, "seq_orientation", default_value = 1)
   rot_rad <- rotation * pi / 180 # 转换为弧度
+  # 处理基因标签偏移参数
+  geneLabelOffset <- process_gene_offset(gene_label_offset, seqs, default = 0)
   
   # 处理序列间隙参数
   seq_gap <- process_sequence_param(seq_gap, seqs, "seq_gap")
@@ -671,28 +731,28 @@ ggchord <- function(
     pts <- data.frame(pos = c(majors, minors),
                       is_major = c(rep(TRUE, length(majors)), rep(FALSE, length(minors))))
     
-# 每个刻度点都做映射
-do.call(rbind, lapply(seq_len(nrow(pts)), function(j) {
-  p <- pts[j,]
-  frac <- if (orientation[id] == 1) p$pos / lens[id] else 1 - p$pos / lens[id]
-  angle <- starts[id] + frac * (ends[id] - starts[id])
-  
-  # 基准点、刻度头点、标签点
-  base <- map_to_curve(angle, r0, ref)
-  dir  <- if (axisGap[id] >= 0) -1 else 1
-  len  <- if (p$is_major) axisMajLen[id] else axisMinLen[id]
-  tip  <- map_to_curve(angle, r0 + len * dir, ref)
-  lbl  <- map_to_curve(angle, r0 + len * (1.5 + labelOffset[id]) * dir, ref)
-  
-  data.frame(
-    x0 = base[1], y0 = base[2],
-    x1 = tip[1],  y1 = tip[2],
-    label   = if (p$is_major) as.character(p$pos) else NA,
-    label_x = lbl[1], label_y = lbl[2],
-    size    = labelSize[id],
-    seq_id  = id
-  )
-}))
+    # 每个刻度点都做映射
+    do.call(rbind, lapply(seq_len(nrow(pts)), function(j) {
+      p <- pts[j,]
+      frac <- if (orientation[id] == 1) p$pos / lens[id] else 1 - p$pos / lens[id]
+      angle <- starts[id] + frac * (ends[id] - starts[id])
+      
+      # 基准点、刻度头点、标签点
+      base <- map_to_curve(angle, r0, ref)
+      dir <- if (axisGap[id] >= 0) -1 else 1
+      len <- if (p$is_major) axisMajLen[id] else axisMinLen[id]
+      tip <- map_to_curve(angle, r0 + len * dir, ref)
+      lbl <- map_to_curve(angle, r0 + len * (1.5 + labelOffset[id]) * dir, ref)
+      
+      data.frame(
+        x0 = base[1], y0 = base[2],
+        x1 = tip[1], y1 = tip[2],
+        label = if (p$is_major) as.character(p$pos) else NA,
+        label_x = lbl[1], label_y = lbl[2],
+        size = labelSize[id],
+        seq_id = id
+      )
+    }))
   }))
   
   
@@ -778,8 +838,8 @@ do.call(rbind, lapply(seq_len(nrow(pts)), function(j) {
           cp <- ribbon_ctrl_point[[cp_idx]]
           # 确保每个控制点元素包含两个点
           if (length(cp) >= 2) {
-            c1 <- cp[[1]]  # 起点曲线控制点
-            c2 <- cp[[2]]  # 终点曲线控制点
+            c1 <- cp[[1]] # 起点曲线控制点
+            c2 <- cp[[2]] # 终点曲线控制点
           } else {
             # 如果元素不足，用第一个点作为默认
             c1 <- c2 <- if (length(cp) == 1) cp[[1]] else c(0, 0)
@@ -811,15 +871,15 @@ do.call(rbind, lapply(seq_len(nrow(pts)), function(j) {
       
       # 生成贝塞尔曲线（使用修复后的c1和c2）
       b1 <- bezier_pts(
-        as.numeric(segQ[1, ]),       # 起点曲线起点（查询序列起点）
-        as.numeric(segS[1, ]),       # 起点曲线终点（目标序列起点）
-        c1, c1,                      # 使用起点控制点c1
+        as.numeric(segQ[1, ]), # 起点曲线起点（查询序列起点）
+        as.numeric(segS[1, ]), # 起点曲线终点（目标序列起点）
+        c1, c1, # 使用起点控制点c1
         n = 50
       ) 
       b2 <- bezier_pts(
-        as.numeric(segQ[nrow(segQ), ]),  # 终点曲线起点（查询序列终点）
-        as.numeric(segS[nrow(segS), ]),  # 终点曲线终点（目标序列终点）
-        c2, c2,                          # 使用终点控制点c2
+        as.numeric(segQ[nrow(segQ), ]), # 终点曲线起点（查询序列终点）
+        as.numeric(segS[nrow(segS), ]), # 终点曲线终点（目标序列终点）
+        c2, c2, # 使用终点控制点c2
         n = 50
       )
       
@@ -856,17 +916,16 @@ do.call(rbind, lapply(seq_len(nrow(pts)), function(j) {
   }
   
   
-  
   # 11. 处理基因注释箭头 —— 用 mapply + rbind 保证逐点映射
   gene_polys <- data.frame()
   if (!is.null(gene_track) && nrow(gene_track) > 0) {
     valid_genes <- gene_track[gene_track$seq_id %in% seqs, ]
     if (nrow(valid_genes) > 0) {
       for (i in seq_len(nrow(valid_genes))) {
-        gene   <- valid_genes[i, ]
-        sid    <- gene$seq_id
+        gene <- valid_genes[i, ]
+        sid <- gene$seq_id
         strand <- gene$strand
-        anno   <- gene$anno
+        anno <- gene$anno
         
         # 校验宽度
         width <- geneWidth[sid]
@@ -879,25 +938,25 @@ do.call(rbind, lapply(seq_len(nrow(pts)), function(j) {
         frac_sp <- if (orientation[sid]==1) sp/seq_len else 1-sp/seq_len
         frac_ep <- if (orientation[sid]==1) ep/seq_len else 1-ep/seq_len
         a_start <- starts[sid] + frac_sp*(ends[sid]-starts[sid])
-        a_end   <- starts[sid] + frac_ep*(ends[sid]-starts[sid])
+        a_end <- starts[sid] + frac_ep*(ends[sid]-starts[sid])
         if (strand == "-") { tmp <- a_start; a_start <- a_end; a_end <- tmp }
         
         # 生成角度向量和宽度因子
         n_body <- 30; n_head <- 15
         body_ang <- seq(a_start, a_start + 0.6*(a_end - a_start), length.out = n_body)
         head_ang <- seq(tail(body_ang,1), a_end, length.out = n_head)
-        angs     <- c(body_ang, head_ang)
+        angs <- c(body_ang, head_ang)
         total_pt <- length(angs)
-        widths   <- c(rep(1, n_body), seq(1, 0, length.out = n_head))
+        widths <- c(rep(1, n_body), seq(1, 0, length.out = n_head))
         
         # 基准半径
-        r0      <- seqRadius[sid] + geneGap[[sid]][strand]
+        r0 <- seqRadius[sid] - geneGap[[sid]][strand]
         outer_r <- r0 + (width/2)*widths
         inner_r <- r0 - (width/2)*widths
         
         # 原始极坐标表
-        orig_ang  <- c(angs, rev(angs))
-        orig_rad  <- c(outer_r, rev(inner_r))
+        orig_ang <- c(angs, rev(angs))
+        orig_rad <- c(outer_r, rev(inner_r))
         
         # 映射每一点
         ref <- seq_refs[[sid]]
@@ -910,12 +969,12 @@ do.call(rbind, lapply(seq_len(nrow(pts)), function(j) {
         
         # 构建多边形
         gene_poly <- data.frame(
-          x      = mapped[,1],
-          y      = mapped[,2],
-          group  = i,
-          anno   = anno,
+          x = mapped[,1],
+          y = mapped[,2],
+          group = i,
+          anno = anno,
           strand = strand,
-          ord    = seq_len(2 * total_pt)
+          ord = seq_len(2 * total_pt)
         )
         
         gene_polys <- rbind(gene_polys, gene_poly)
@@ -924,49 +983,100 @@ do.call(rbind, lapply(seq_len(nrow(pts)), function(j) {
   }
   
   
-  
-  
-  
-  # 12. 处理基因标签
+  # 12. 处理基因标签，修正对齐点逻辑：正向箭头第一个字符对齐，反向箭头最后一个字符对齐
   gene_arrows <- data.frame()
   if (!is.null(gene_track) && nrow(gene_track) > 0 && gene_label_show) {
     valid_genes <- gene_track[gene_track$seq_id %in% seqs, ]
     if (nrow(valid_genes) > 0) {
-      gene_arrows <- do.call(rbind, lapply(1:nrow(valid_genes), function(i) {
+      gene_arrows <- do.call(rbind, lapply(seq_len(nrow(valid_genes)), function(i) {
         gene <- valid_genes[i, ]
         sid <- gene$seq_id
         strand <- gene$strand
+        seq_len<- lens[sid]
+        ref <- seq_refs[[sid]]
+        orient <- orientation[sid] # 获取序列方向（1或-1）
         
-        # 计算基因中间位置角度
-        mid_pos <- (gene$start + gene$end) / 2
-        mid_rel <- mid_pos / lens[sid]
-        if (orientation[sid] == 1) {
-          mid_ang <- starts[sid] + mid_rel * (ends[sid] - starts[sid])
+        # 1. 计算基因中点相对位置
+        sp <- min(gene$start, gene$end); ep <- max(gene$start, gene$end)
+        frac_mid <- (sp + ep) / (2 * seq_len)
+        if (orient != 1) frac_mid <- 1 - frac_mid # 反向序列调整中点位置
+        frac_mid <- pmin(1, pmax(0, frac_mid))
+        
+        # 2. 找参考路径索引及切线向量(dx,dy)
+        ref_n <- length(ref$angles)
+        idx <- round(frac_mid * (ref_n - 1)) + 1
+        idx <- pmin(ref_n, pmax(1, idx))
+        if (idx < ref_n) {
+          dx <- ref$path$x[idx + 1] - ref$path$x[idx]
+          dy <- ref$path$y[idx + 1] - ref$path$y[idx]
         } else {
-          mid_ang <- ends[sid] - mid_rel * (ends[sid] - starts[sid])
+          dx <- ref$path$x[idx] - ref$path$x[idx - 1]
+          dy <- ref$path$y[idx] - ref$path$y[idx - 1]
+        }
+        dx <- dx * orient # 根据序列方向修正切线方向
+        dy <- dy * orient
+        
+        # 3. 计算箭头边缘坐标（标签点的基准位置）
+        r0 <- seqRadius[sid] - geneGap[[sid]][strand] # 基因箭头基准半径
+        width <- geneWidth[sid]
+        edge_r <- if (strand == "+") r0 + width/2 else r0 - width/2 # 箭头边缘半径
+        edge_pt<- map_to_curve(angle = ref$angles[idx], radius = edge_r, ref = ref)
+        
+        # 4. 计算法线向量（指向箭头外侧）
+        normal_x <- -dy # 基础法线方向（垂直切线）
+        normal_y <- dx
+        nl <- sqrt(normal_x^2 + normal_y^2)
+        if (nl > 0) {
+          normal_x <- normal_x / nl
+          normal_y <- normal_y / nl
+        }
+        if (strand == "-") { # 根据链方向调整法线
+          normal_x <- -normal_x
+          normal_y <- -normal_y
         }
         
-        # 计算标签位置（基于基因箭头的偏移）
-        r0 <- seqRadius[sid] + geneGap[[sid]][strand]
-        label_r <- r0 + ifelse(strand == "+", 0.1, -0.1) # 基于链方向调整标签位置
+        # 5. 计算标签位置（沿法线方向偏移）
+        offset_base <- 0.05 # 基础偏移距离
+        offset <- offset_base + geneLabelOffset[[sid]][strand] # 加上用户指定偏移
+        text_x <- edge_pt[1] + normal_x * offset
+        text_y <- edge_pt[2] + normal_y * offset
         
-        # 计算箭头和标签位置
-        x_start <- r0 * cos(mid_ang)
-        y_start <- r0 * sin(mid_ang)
-        x_end <- (r0 + 0.05) * cos(mid_ang)
-        y_end <- (r0 + 0.05) * sin(mid_ang)
-        text_x <- label_r * cos(mid_ang)
-        text_y <- label_r * sin(mid_ang)
-        text_angle <- mid_ang * 180 / pi # 转换为角度
+        # 6. 计算文本角度（沿切线方向）
+        base_angle <- atan2(dy, dx) * 180 / pi # 基于修正后的切线方向
+        text_angle <- base_angle + 90 # 文本垂直于切线
+        
+        # 7. 关键修复：对齐点逻辑
+        # 正向箭头：hjust=0（第一个字符对齐标签点）
+        # 反向箭头：hjust=1（最后一个字符对齐标签点）
+        if (strand == "+") {
+          hjust <- 0 # 正向箭头：第一个字符作为对齐起点
+        } else {
+          hjust <- 1 # 反向箭头：最后一个字符作为对齐起点
+        }
+        
+        # 8. 调整文本角度使其可读（超过180度时翻转）
+        text_angle <- (text_angle + 360) %% 360 # 标准化到0-360度
+        if (text_angle > 90 && text_angle < 270) {
+          text_angle <- text_angle + 180 # 翻转180度
+          hjust <- 1 - hjust # 同步翻转对齐方式
+        }
+        text_angle <- text_angle %% 360
         
         data.frame(
-          x_start = x_start, y_start = y_start, x_end = x_end, y_end = y_end,
-          text = gene$anno, text_x = text_x, text_y = text_y, 
-          text_angle = text_angle, seq_id = gene$seq_id, group = i
+          text = gene$anno,
+          text_x = text_x,
+          text_y = text_y,
+          text_angle = text_angle,
+          hjust = hjust,
+          vjust = 0.5,
+          seq_id = sid,
+          group = i,
+          stringsAsFactors = FALSE
         )
       }))
     }
   }
+  
   
   # 定义旋转函数
   rotate_df <- function(df) {
@@ -1021,6 +1131,15 @@ do.call(rbind, lapply(seq_len(nrow(pts)), function(j) {
     gene_polys <- gene_polys[with(gene_polys, order(group, ord)), ]
   }
   
+  extremes <- get_plot_extremes(
+    allRibbon = allRibbon,
+    seqArcs = seqArcs,
+    axisLines = axisLines,
+    axisTicks = axisTicks,
+    gene_polys = gene_polys,
+    gene_arrows = NULL
+  )
+  
   # 13. 绘制图形（使用ggnewscale实现双fill映射）
   p <- ggplot() +
     
@@ -1052,7 +1171,6 @@ do.call(rbind, lapply(seq_len(nrow(pts)), function(j) {
       }
     }
     } +
-    
     # 2. 重置fill尺度（核心：使用ggnewscale，仅当有基因数据时）
     { if (nrow(gene_polys) > 0) new_scale_fill() } +
     
@@ -1062,7 +1180,7 @@ do.call(rbind, lapply(seq_len(nrow(pts)), function(j) {
         data = gene_polys,
         aes(x = x, y = y, group = group, 
             fill = if (gene_color_scheme == "strand") strand else anno), # 动态映射填充变量
-        color = "black"
+        color = "black", key_glyph = draw_key_gene_arrow 
       )
     } +
     # 基因箭头颜色尺度（仅当有基因数据时）
@@ -1074,7 +1192,6 @@ do.call(rbind, lapply(seq_len(nrow(pts)), function(j) {
         guide = if (show_legend) guide_legend(order = 3) else "none"
       )
     } +
-    
     # 4. 绘制其他元素
     # 序列弧线
     geom_path(
@@ -1085,9 +1202,20 @@ do.call(rbind, lapply(seq_len(nrow(pts)), function(j) {
     ) +
     # 基因标签（仅当需要显示且有基因数据时）
     { if (nrow(gene_arrows) > 0 && gene_label_show)
+      geom_point(
+        data = gene_arrows,
+        aes(x = text_x, y = text_y),
+        size = gene_label_size,
+        color = "black",
+        inherit.aes = FALSE
+      )
+    } +
+    # 基因标签（仅当需要显示且有基因数据时）
+    { if (nrow(gene_arrows) > 0 && gene_label_show)
       geom_text(
         data = gene_arrows,
-        aes(x = text_x, y = text_y, label = text, angle = text_angle),
+        aes(x = text_x, y = text_y, label = text, angle = text_angle, 
+            hjust = hjust, vjust = vjust), # 使用计算好的对齐参数
         size = gene_label_size,
         color = "black",
         inherit.aes = FALSE
@@ -1132,11 +1260,12 @@ do.call(rbind, lapply(seq_len(nrow(pts)), function(j) {
     ) +
     
     # 主题设置
-    coord_equal(clip = "off") +
+    coord_equal(clip = "off",xlim = c(extremes$x_min - panel_margin$l, extremes$x_max + panel_margin$r), ylim = c(extremes$y_min - panel_margin$b, extremes$y_max + panel_margin$t)) +
     ggtitle(title) +
     theme(
       plot.title = element_text(hjust = 0.5, size = 14),
       plot.margin = margin(t = 0,r = 0,b = 0,l = 0),
+      legend.background = element_blank(),
       legend.box.spacing = unit(10,"mm"),
       legend.spacing = unit(5,"mm"),
       legend.text = element_text(size = 8),
@@ -1150,6 +1279,11 @@ do.call(rbind, lapply(seq_len(nrow(pts)), function(j) {
   
   return(p)
 }
+
+
+
+
+
 
 
 # 示例使用方法
@@ -1180,10 +1314,14 @@ p_final <- ggchord(
   title = "Multi-sequence Chord Diagram with Gene Annotations",
   seq_gap = .03,
   seq_radius = 1,
-  seq_orientation = c(-1, 1, -1, -1),
-  gene_offset = .1,
+  seq_orientation = c(-1, -1, -1, -1),
+  gene_offset = list(c("+"=.2,"-"=-.2), 
+                     c("+"=.2,"-"=-.2), 
+                     c("+"=.2,"-"=-.2), 
+                     c("+"=.2,"-"=-.2)),
+  gene_label_offset = c(0,.2,-.2,1),
   gene_width = .08,
-  gene_label_show = F,
+  gene_label_show = T,
   gene_color_scheme = "strand",
   ribbon_gap = c(.1,.2,-.1,-.2),
   ribbon_color_scheme = "pident",
@@ -1198,3 +1336,30 @@ p_final <- ggchord(
   debug = TRUE,seq_curvature = c(0,1,-1,1.5),ribbon_ctrl_point = c(0,0)
 )
 print(p_final)
+
+
+# p_final <- ggchord(
+# seq_data = seq_data,
+# ribbon_data = ribbon_data,
+# gene_track = gene_track, # 传入基因注释数据
+# title = "Multi-sequence Chord Diagram with Gene Annotations",
+# seq_gap = 0,
+# seq_radius = 1,
+# seq_orientation = c(-1, 1, 1, -1),
+# gene_offset = 0,
+# gene_width = .08,
+# gene_label_show = T,
+# gene_color_scheme = "strand",
+# ribbon_gap = 0,
+# ribbon_color_scheme = "pident",
+# axis_gap = 0,
+# axis_tick_major_number = 5,
+# axis_tick_major_length = 0.03,
+# axis_tick_minor_number = 5,
+# axis_tick_minor_length = 0.01,
+# axis_label_size = 2,
+# axis_label_offset = .1,
+# rotation = 45,
+# debug = TRUE,seq_curvature = 1
+# )
+# print(p_final)
