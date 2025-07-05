@@ -226,28 +226,28 @@ process_gene_offset <- function(gene_offset, seqs, default = 0.03) {
 process_strand_colors <- function(gene_colors) {
   # 默认值
   default <- c("+" = "#E41A1C", "-" = "#377EB8")
-  if (is.null(gene_colors)) {
-    return(default)
+if (is.null(gene_colors)) {
+  return(default)
+}
+# 命名向量处理
+if (!is.null(names(gene_colors))) {
+  if (!all(names(gene_colors) %in% c("+", "-"))) {
+    stop("'strand'模式下，gene_colors命名向量只能包含'+'和'-'")
   }
-  # 命名向量处理
-  if (!is.null(names(gene_colors))) {
-    if (!all(names(gene_colors) %in% c("+", "-"))) {
-      stop("'strand'模式下，gene_colors命名向量只能包含'+'和'-'")
-    }
-    res <- default
-    res[names(gene_colors)] <- gene_colors
-    return(res)
+  res <- default
+  res[names(gene_colors)] <- gene_colors
+  return(res)
+} else {
+  # 非命名向量处理
+  len <- length(gene_colors)
+  if (len == 1) {
+    return(c("+" = gene_colors[1], "-" = gene_colors[1]))
+  } else if (len == 2) {
+    return(c("+" = gene_colors[1], "-" = gene_colors[2]))
   } else {
-    # 非命名向量处理
-    len <- length(gene_colors)
-    if (len == 1) {
-      return(c("+" = gene_colors[1], "-" = gene_colors[1]))
-    } else if (len == 2) {
-      return(c("+" = gene_colors[1], "-" = gene_colors[2]))
-    } else {
-      stop("'strand'模式下，非命名gene_colors长度必须为1或2")
-    }
+    stop("'strand'模式下，非命名gene_colors长度必须为1或2")
   }
+}
 }
 
 # 处理gene_colors参数的辅助函数（manual模式）
