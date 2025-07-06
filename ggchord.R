@@ -1,7 +1,7 @@
-#' ggchord: 多序列弦图（带基因注释箭头）
+#' ggchord: 基于ggplot2的多序列比对弦图工具
 #'
 #' 该函数用于绘制包含多个序列的弦图，可展示序列间的比对关系和基因注释信息。
-#' 支持自定义序列排列、颜色、连接带样式等多种参数，适合用于基因组比对可视化。
+#' 支持自定义序列排列、颜色、连接带样式、基因箭头样式等多种参数，适合用于基因组比对可视化。
 #'
 #' @param seq_data data.frame/tibble，包含序列信息，必须包含列：
 #' - seq_id: 序列唯一标识
@@ -21,12 +21,13 @@
 #' - end: 基因结束位置
 #' - strand: 链方向（+或-）
 #' - anno: 基因注释
-#' @param title 字符串，图形主标题，默认 "Multi-sequence Chord Diagram with Gene Annotations"
+#' @param title 字符串，图形主标题，默认NULL
 #' @param seq_order 字符向量，可选，指定序列绘制顺序；若为NULL则使用 seq_data 中的顺序
 #' @param seq_labels 字符向量或命名向量，可选，序列标签；若为NULL则使用 seq_id
 #' @param seq_orientation 数值向量或单值，可选，每条序列的方向：1（正向）或 -1（反向）；默认正向
-#' @param seq_gap 数值或向量，长度与序列数一致，定义每条序列头部到下一条序列尾部的弧度比例 [0,0.5)，默认0.05
+#' @param seq_gap 数值或向量，长度与序列数一致，定义每条序列头部到下一条序列尾部的弧度比例 [0,0.5)，默认0.03
 #' @param seq_radius 数值或向量，序列圆弧半径，支持单值或与序列数相同的向量，默认1.0
+#' @param seq_curvature 数值或向量，序列圆弧的弯曲程度：1为标准圆弧，0为直线，>1更弯曲，默认1.0
 #' @param seq_colors 颜色向量或命名向量，定义各序列圆弧颜色；若为NULL则基于 RColorBrewer Set1 自动生成
 #' @param gene_offset 数值、向量或列表，基因箭头与序列圆弧之间的径向偏移距离。支持：
 #' - 单值：所有序列的所有链使用相同偏移
@@ -34,27 +35,43 @@
 #' - 列表：命名列表，每个元素对应一个序列，元素可为单值（该序列所有链）或包含"+"和"-"的命名向量（区分链），默认0.03
 #' @param gene_width 数值或向量，基因箭头宽度，默认0.1
 #' @param gene_label_show 逻辑值，是否显示基因标签，默认FALSE
+#' @param gene_label_rotation 数值、向量或列表，基因标签的旋转角度（度），支持与gene_offset相同的参数格式，默认0
 #' @param gene_label_size 数值，基因注释文字大小，默认2.5
+#' @param gene_label_radial_offset 数值、向量或列表，基因标签相对于箭头的径向偏移（正值向外，负值向内），支持与gene_offset相同的参数格式，默认0
+#' @param gene_label_circum_offset 数值、向量或列表，基因标签沿序列周向的偏移比例（相对于基因长度），支持与gene_offset相同的参数格式，默认0
+#' @param gene_label_circum_limit 逻辑值、向量或列表，是否限制周向偏移不超过基因长度的一半，支持与gene_offset相同的参数格式，默认TRUE
 #' @param gene_color_scheme 字符，指定基因颜色方案，可选"strand"（按链方向）或"manual"（手动指定），默认"strand"
 #' @param gene_colors 颜色向量，用于指定基因箭头的填充色，具体行为取决于gene_color_scheme：
 #' - "strand"模式：支持命名向量（仅"+"/"-"）、非命名向量（先"+"后"-"）或单值（正负链同色），缺省则"+"为红色、"-"为蓝色
-#' - "manual"模式：支持命名向量（对应anno）、非命名向量（截断多余，补齐不足），缺省则使用原始anno颜色
+#' - "manual"模式：支持命名向量（对应anno）、非命名向量（截断多余，补齐不足），缺省则使用自动生成颜色
 #' @param gene_order 字符向量，可选，指定基因在图例中的显示顺序；若为NULL则使用基因在数据中出现的顺序
-#' @param ribbon_color_scheme 字符，连接带配色方案，可选 "single"、"query" 或 "pident"，默认"single"
+#' @param ribbon_color_scheme 字符，连接带配色方案，可选 "single"、"query" 或 "pident"，默认"pident"
 #' @param ribbon_colors 连接带颜色参数：
 #' - single: 单一颜色（单值或向量取第一个）
 #' - query: 按查询序列映射颜色（命名或非命名向量或单值）
-#' - pident: 渐变色阶向量，用于按相似度百分比生成渐变
-#' @param ribbon_alpha 数值，连接带透明度 [0,1]，默认0.4
-#' @param ribbon_ctrl_point 数值向量或列表，可选，贝塞尔控制点，长度2或list(c1,c2,..)，默认NULL（圆心）
-#' @param ribbon_gap 数值或向量，序列圆弧与连接带之间的径向距离，默认0.1
-#' @param axis_gap 数值或向量，坐标轴与序列圆弧之间径向距离，支持负值，默认0.05
+#' - pident: 渐变色阶向量，用于按相似度百分比生成渐变，默认使用蓝到黄的渐变色
+#' @param ribbon_alpha 数值，连接带透明度 [0,1]，默认0.35
+#' @param ribbon_ctrl_point 向量或列表，贝塞尔控制点，用于调整连接带形状：
+#' - 向量：长度为2（单控制点）或4（c1x,c1y,c2x,c2y，双控制点）
+#' - 列表：每个元素为包含1-2个控制点的子列表，默认自动计算
+#' @param ribbon_gap 数值或向量，序列圆弧与连接带之间的径向距离，默认0.15
+#' @param axis_gap 数值或向量，坐标轴与序列圆弧之间径向距离，支持负值，默认0.04
 #' @param axis_tick_major_number 整数或向量，每条序列主刻度数，默认5
 #' @param axis_tick_major_length 数值或向量，主刻度线长度比例，默认0.02
 #' @param axis_tick_minor_number 整数或向量，每两个主刻度之间的次刻度数，默认4
 #' @param axis_tick_minor_length 数值或向量，次刻度线长度比例，默认0.01
 #' @param axis_label_size 数值或向量，坐标轴刻度文字大小，默认3
-#' @param axis_label_offset 数值或向量，基于默认标签位置（1.5倍刻度长度）的偏移量，0时为原位置，正值向外，负值向内，默认0
+#' @param axis_label_offset 数值或向量，坐标轴标签相对于刻度线的偏移比例，默认0
+#' @param axis_label_orientation 字符、数值或向量，坐标轴标签方向：
+#' - "horizontal"：水平方向
+#' - 数值：旋转角度（度）
+#' - 向量：长度与序列数一致或命名向量，默认"horizontal"
+#' @param rotation 数值，整个图形的旋转角度（度），默认45
+#' @param panel_margin 列表，图形边缘留白（t=上, r=右, b=下, l=左），默认list(t=0,r=0,b=0,l=0)
+#' @param show_legend 逻辑值，是否显示图例，默认TRUE
+#' @param show_axis 逻辑值，是否显示坐标轴及刻度，默认TRUE
+#' @param debug 逻辑值，是否输出调试信息，默认FALSE
+#' @return ggplot2图形对象，可进一步使用ggplot2函数调整样式
 
 
 # 加载所需包
@@ -65,9 +82,75 @@ library(ggnewscale)
 library(grid)
 
 
+# 处理缺失值
 `%||%` <- function (x, y) 
 {
   if (is.null(x)) y else x
+}
+
+process_panel_margin <- function(arg_list) {
+  # 初始化结果列表，设置默认值为0
+  result <- list(t = 0, r = 0, b = 0, l = 0)
+  
+  # 检查输入是否为列表
+  if (!is.list(arg_list)) {
+    # 处理单值输入的情况
+    if (is.numeric(arg_list) && length(arg_list) == 1) {
+      value <- arg_list
+      result <- list(t = value, r = value, b = value, l = value)
+      return(result)
+    } else {
+      warning("输入不是有效列表或单个数值，将使用默认值")
+      return(result)
+    }
+  }
+  
+  # 处理空列表
+  if (length(arg_list) == 0) {
+    return(result)
+  }
+  
+  # 处理命名列表
+  if (!is.null(names(arg_list)) && all(names(arg_list) != "")) {
+    valid_names <- c("t", "r", "b", "l")
+    
+    # 遍历输入列表的每个元素
+    for (name in names(arg_list)) {
+      if (name %in% valid_names) {
+        # 检查值是否为数值
+        if (is.numeric(arg_list[[name]]) && length(arg_list[[name]]) == 1) {
+          result[[name]] <- arg_list[[name]]
+        } else {
+          warning(paste("参数", name, "不是单个数值，将使用默认值0"))
+        }
+      } else {
+        warning(paste("未知参数", name, "将被忽略"))
+      }
+    }
+  } 
+  # 处理非命名列表
+  else {
+    param_order <- c("t", "r", "b", "l")
+    num_args <- length(arg_list)
+    
+    # 处理单元素非命名列表的情况
+    if (num_args == 1 && is.numeric(arg_list[[1]])) {
+      value <- arg_list[[1]]
+      result <- list(t = value, r = value, b = value, l = value)
+      return(result)
+    }
+    
+    # 按新顺序分配值
+    for (i in 1:min(num_args, length(param_order))) {
+      if (is.numeric(arg_list[[i]]) && length(arg_list[[i]]) == 1) {
+        result[[param_order[i]]] <- arg_list[[i]]
+      } else {
+        warning(paste("位置", i, "的参数不是单个数值，将使用默认值0"))
+      }
+    }
+  }
+  
+  return(result)
 }
 
 # 获取图像四边极点
@@ -552,22 +635,161 @@ generate_curvature_path <- function(start_angle, end_angle, radius, curvature, n
   data.frame(x = x, y = y)
 }
 
+# ggplot2绘图函数
+chordPlotFunc <- function(allRibbon,ribbon_alpha,ribbon_color_scheme,ribbon_colors,show_legend,gene_polys,gene_pal,gene_color_scheme,seqArcs,gene_arrows,show_axis,axisLines,axisTicks,axisLabelOrientation,seq_colors,seq_labels,extremes,panel_margin,title) {
+  ggplot() +
+    # 1. 绘制连接带并设置第一个fill尺度（仅当有有效连接带数据时）
+    { if (!is.null(allRibbon))
+      geom_polygon(
+        data = allRibbon,
+        aes(
+          x, y, group = group,
+          fill = if (ribbon_color_scheme == "pident") pident else fill
+        ),
+        alpha = ribbon_alpha, 
+        color = "grey40", 
+        linewidth = 0.2
+      )
+    } +
+    # 连接带颜色尺度（仅当有有效连接带数据时）
+    { if (!is.null(allRibbon)) {
+      if (ribbon_color_scheme == "pident") {
+        scale_fill_stepsn(
+          name = "Identity(%)",
+          colours = ribbon_colors,
+          limits = c(0, 100), 
+          breaks = c(0,50,80,90,95,100),
+          guide = if (show_legend) guide_colorbar(theme = theme(legend.title.position = "top",legend.key.height = unit(120,"mm")),order = 1,position = "left") else "none"
+        )
+      } else {
+        scale_fill_identity(guide = "none")
+      }
+    }
+    } +
+    # 2. 重置fill尺度（核心：使用ggnewscale，仅当有基因数据时）
+    { if (nrow(gene_polys) > 0) new_scale_fill() } +
+    
+    # 3. 绘制基因箭头并设置第二个fill尺度（根据模式映射strand或anno）
+    { if (nrow(gene_polys) > 0)
+      geom_polygon(
+        data = gene_polys,
+        aes(x = x, y = y, group = group, 
+            fill = if (gene_color_scheme == "strand") strand else anno), # 动态映射填充变量
+        color = "black", key_glyph = draw_key_gene_arrow 
+      )
+    } +
+    # 基因箭头颜色尺度（仅当有基因数据时）
+    { if (nrow(gene_polys) > 0)
+      scale_fill_manual(
+        name = if (gene_color_scheme == "strand") "Strand" else "Gene Annotation",
+        breaks = if (gene_color_scheme == "strand") c("+","-") else final_gene_order,
+        values = gene_pal,
+        guide = if (show_legend) guide_legend(order = 3) else "none"
+      )
+    } +
+    # 4. 绘制其他元素
+    # 序列弧线
+    geom_path(
+      data = do.call(rbind, seqArcs),
+      aes(x, y, group = seq_id, color = seq_id),
+      linewidth = 1.2,
+      arrow = arrow(angle = 25, length = unit(2, "mm"), type = "closed")
+    ) +
+    # 基因标签（仅当需要显示且有基因数据时）
+    { if (nrow(gene_arrows) > 0 && gene_label_show)
+      geom_text(
+        data = gene_arrows,
+        aes(x = text_x, y = text_y, label = text, angle = text_angle, 
+            hjust = hjust, vjust = vjust), # 使用计算好的对齐参数
+        size = gene_label_size,
+        color = "black",
+        inherit.aes = FALSE
+      )
+    } +
+    # 坐标轴线（仅当show_axis为TRUE时绘制）
+    { if (show_axis)
+      geom_path(
+        data = axisLines,
+        aes(x, y, group = seq_id),
+        color = "black",
+        linewidth = 0.3,
+        inherit.aes = FALSE
+      )
+    } +
+    # 刻度线（仅当show_axis为TRUE时绘制）
+    { if (show_axis)
+      geom_segment(
+        data = axisTicks,
+        aes(x = x0, y = y0, xend = x1, yend = y1),
+        color = "black",
+        linewidth = 0.3,
+        inherit.aes = FALSE
+      )
+    } +
+    # 刻度标签（仅当show_axis为TRUE时绘制）
+    { if (show_axis) {
+      # 先创建有标签的刻度数据子集
+      label_data <- subset(axisTicks, !is.na(label))
+      # 计算每个标签的角度，确保长度匹配
+      label_angles <- ifelse(
+        axisLabelOrientation[label_data$seq_id] == "horizontal",
+        0,
+        atan2(label_data$label_y - label_data$y0, label_data$label_x - label_data$x0) * 180 / pi + 90 +
+          as.numeric(axisLabelOrientation[label_data$seq_id])
+      )
+      
+      geom_text(
+        data = label_data,
+        aes(x = label_x, y = label_y, label = label, size = size, group = seq_id),
+        inherit.aes = FALSE,
+        color = "black",
+        angle = label_angles # 使用与数据长度匹配的角度向量
+      )
+    }
+    } +
+    scale_size_identity() +
+    # 序列颜色
+    scale_color_manual(
+      name = "Seq ID",
+      values = seq_colors,
+      labels = seq_labels,
+      guide = if (show_legend) guide_legend(order = 2) else "none"
+    ) +
+    
+    # 主题设置
+    coord_equal(clip = "off",xlim = c(extremes$x_min - process_panel_margin(panel_margin)$l, extremes$x_max + process_panel_margin(panel_margin)$r), ylim = c(extremes$y_min - process_panel_margin(panel_margin)$b, extremes$y_max + process_panel_margin(panel_margin)$t)) +
+    ggtitle(title) +
+    theme(
+      plot.title = element_text(hjust = .5, size = 20, face = "bold"),
+      plot.margin = margin(t = 0,r = 0,b = 0,l = 0),
+      legend.background = element_blank(),
+      legend.box.spacing = unit(10,"mm"),
+      legend.spacing = unit(5,"mm"),
+      legend.text = element_text(size = 8),
+      legend.title = element_text(size = 10, face = "bold"),
+      axis.title = element_blank(),
+      axis.line = element_blank(),
+      axis.ticks = element_blank(),
+      axis.text = element_blank(),
+      panel.background = element_blank()
+    )
+}
 
 # 主函数：绘制多序列弦图
 ggchord <- function(
     seq_data,
     ribbon_data = NULL,
     gene_track = NULL,
-    title = "Multi-sequence Chord Diagram with Gene Annotations",
+    title = NULL,
     seq_order = NULL,
     seq_labels = NULL,
     seq_orientation = NULL,
-    seq_gap = 0,
+    seq_gap = .03,
     seq_radius = 1.0,
     seq_colors = NULL,
     seq_curvature = 1.0,
-    gene_offset = 0,
-    gene_width = 0.1,
+    gene_offset = .1,
+    gene_width = 0.05,
     gene_label_show = FALSE,
     gene_label_rotation = 0,
     gene_label_size = 2.5,
@@ -577,12 +799,12 @@ ggchord <- function(
     gene_color_scheme = c("strand", "manual"),
     gene_colors = NULL,
     gene_order = NULL,
-    ribbon_color_scheme = c("single","query","pident"),
+    ribbon_color_scheme = c("pident", "query", "single"),
     ribbon_colors = NULL,
     ribbon_alpha = 0.35,
     ribbon_ctrl_point = c(0,0),
-    ribbon_gap = 0,
-    axis_gap = 0,
+    ribbon_gap = .15,
+    axis_gap = .04,
     axis_tick_major_number = 5,
     axis_tick_major_length = 0.02,
     axis_tick_minor_number = 4,
@@ -591,7 +813,7 @@ ggchord <- function(
     axis_label_offset = 1.5,
     axis_label_orientation = "horizontal",
     rotation = 45,
-    panel_margin = list("r"=0,"l"=0,"t"=0,"b"=0),
+    panel_margin = 0,
     show_legend = TRUE,
     show_axis = TRUE,
     debug = FALSE
@@ -1332,147 +1554,10 @@ ggchord <- function(
   )
   
   # 13. 绘制图形（使用ggnewscale实现双fill映射）
-  p <- ggplot() +
-    
-    # 1. 绘制连接带并设置第一个fill尺度（仅当有有效连接带数据时）
-    { if (!is.null(allRibbon))
-      geom_polygon(
-        data = allRibbon,
-        aes(
-          x, y, group = group,
-          fill = if (ribbon_color_scheme == "pident") pident else fill
-        ),
-        alpha = ribbon_alpha, 
-        color = "grey40", 
-        linewidth = 0.2
-      )
-    } +
-    # 连接带颜色尺度（仅当有有效连接带数据时）
-    { if (!is.null(allRibbon)) {
-      if (ribbon_color_scheme == "pident") {
-        scale_fill_stepsn(
-          name = "Identity(%)",
-          colours = ribbon_colors,
-          limits = c(0, 100), 
-          breaks = c(0,50,80,90,95,100),
-          guide = if (show_legend) guide_colorbar(theme = theme(legend.title.position = "top",legend.key.height = unit(120,"mm")),order = 1,position = "left") else "none"
-        )
-      } else {
-        scale_fill_identity(guide = "none")
-      }
-    }
-    } +
-    # 2. 重置fill尺度（核心：使用ggnewscale，仅当有基因数据时）
-    { if (nrow(gene_polys) > 0) new_scale_fill() } +
-    
-    # 3. 绘制基因箭头并设置第二个fill尺度（根据模式映射strand或anno）
-    { if (nrow(gene_polys) > 0)
-      geom_polygon(
-        data = gene_polys,
-        aes(x = x, y = y, group = group, 
-            fill = if (gene_color_scheme == "strand") strand else anno), # 动态映射填充变量
-        color = "black", key_glyph = draw_key_gene_arrow 
-      )
-    } +
-    # 基因箭头颜色尺度（仅当有基因数据时）
-    { if (nrow(gene_polys) > 0)
-      scale_fill_manual(
-        name = if (gene_color_scheme == "strand") "Strand" else "Gene Annotation",
-        breaks = if (gene_color_scheme == "strand") c("+","-") else final_gene_order,
-        values = gene_pal,
-        guide = if (show_legend) guide_legend(order = 3) else "none"
-      )
-    } +
-    # 4. 绘制其他元素
-    # 序列弧线
-    geom_path(
-      data = do.call(rbind, seqArcs),
-      aes(x, y, group = seq_id, color = seq_id),
-      linewidth = 1.2,
-      arrow = arrow(angle = 25, length = unit(2, "mm"), type = "closed")
-    ) +
-    # 基因标签（仅当需要显示且有基因数据时）
-    { if (nrow(gene_arrows) > 0 && gene_label_show)
-      geom_text(
-        data = gene_arrows,
-        aes(x = text_x, y = text_y, label = text, angle = text_angle, 
-            hjust = hjust, vjust = vjust), # 使用计算好的对齐参数
-        size = gene_label_size,
-        color = "black",
-        inherit.aes = FALSE
-      )
-    } +
-    # 坐标轴线（仅当show_axis为TRUE时绘制）
-    { if (show_axis)
-      geom_path(
-        data = axisLines,
-        aes(x, y, group = seq_id),
-        color = "black",
-        linewidth = 0.3,
-        inherit.aes = FALSE
-      )
-    } +
-    # 刻度线（仅当show_axis为TRUE时绘制）
-    { if (show_axis)
-      geom_segment(
-        data = axisTicks,
-        aes(x = x0, y = y0, xend = x1, yend = y1),
-        color = "black",
-        linewidth = 0.3,
-        inherit.aes = FALSE
-      )
-    } +
-    # 刻度标签（仅当show_axis为TRUE时绘制）
-    { if (show_axis) {
-      # 先创建有标签的刻度数据子集
-      label_data <- subset(axisTicks, !is.na(label))
-      # 计算每个标签的角度，确保长度匹配
-      label_angles <- ifelse(
-        axisLabelOrientation[label_data$seq_id] == "horizontal",
-        0,
-        atan2(label_data$label_y - label_data$y0, label_data$label_x - label_data$x0) * 180 / pi + 90 +
-          as.numeric(axisLabelOrientation[label_data$seq_id])
-      )
-      
-      geom_text(
-        data = label_data,
-        aes(x = label_x, y = label_y, label = label, size = size, group = seq_id),
-        inherit.aes = FALSE,
-        color = "black",
-        angle = label_angles # 使用与数据长度匹配的角度向量
-      )
-    }
-    } +
-    scale_size_identity() +
-    # 序列颜色
-    scale_color_manual(
-      name = "Seq ID",
-      values = seq_colors,
-      labels = seq_labels,
-      guide = if (show_legend) guide_legend(order = 2) else "none"
-    ) +
-    
-    # 主题设置
-    coord_equal(clip = "off",xlim = c(extremes$x_min - panel_margin$l, extremes$x_max + panel_margin$r), ylim = c(extremes$y_min - panel_margin$b, extremes$y_max + panel_margin$t)) +
-    ggtitle(title) +
-    theme(
-      plot.title = element_text(hjust = 0.5, size = 14),
-      plot.margin = margin(t = 0,r = 0,b = 0,l = 0),
-      legend.background = element_blank(),
-      legend.box.spacing = unit(10,"mm"),
-      legend.spacing = unit(5,"mm"),
-      legend.text = element_text(size = 8),
-      legend.title = element_text(size = 10, face = "bold"),
-      axis.title = element_blank(),
-      axis.line = element_blank(),
-      axis.ticks = element_blank(),
-      axis.text = element_blank(),
-      panel.background = element_blank()
-    )
+  chordPlot <- chordPlotFunc(allRibbon,ribbon_alpha,ribbon_color_scheme,ribbon_colors,show_legend,gene_polys,gene_pal,gene_color_scheme,seqArcs,gene_arrows,show_axis,axisLines,axisTicks,axisLabelOrientation,seq_colors,seq_labels,extremes,panel_margin,title)
   
-  return(p)
+  return(chordPlot)
 }
-
 
 
 # 示例使用方法
@@ -1502,30 +1587,11 @@ ribbon_data <- subset(all_blast, length >= 100)
 p_final <- ggchord(
   seq_data = seq_data,
   ribbon_data = ribbon_data,
-  gene_track = gene_track, # 传入基因注释数据
-  title = "Multi-sequence Chord Diagram with Gene Annotations",
-  seq_gap = .03,
-  seq_radius = 1,
-  seq_orientation = c(-1, 1, 1, -1),
-  gene_offset = .2,
-  gene_label_rotation = 0,
-  gene_label_radial_offset = .1,
-  gene_label_circum_offset = c(1, 0, 0, 0),
-  gene_label_circum_limit = c(T,T,T,T),
-  gene_width = .15,
-  gene_label_show = T,
-  gene_color_scheme = "strand",
-  ribbon_gap = .1,
-  ribbon_color_scheme = "pident",
-  axis_label_orientation = "horizontal",
-  axis_gap = .03,
-  axis_tick_major_number = 5,
-  axis_tick_major_length = 0.02,
-  axis_tick_minor_number = 5,
-  axis_tick_minor_length = 0.01,
-  axis_label_size = 2,
-  axis_label_offset = .5,
-  rotation = 45, show_axis = T,
-  debug = TRUE,seq_curvature = 1,ribbon_ctrl_point = c(0,0)
+  #gene_track = gene_track,
+  #title = "Multi-sequence Chord Diagram with Gene Annotations"
+  
 )
-print(p_final)
+
+ggview::ggview(p_final, width = 12, height = 12)
+
+
