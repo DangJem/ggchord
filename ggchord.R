@@ -175,7 +175,6 @@ bezier_pts <- function(p0, p3, c1, c2, n = 100) {
 }
 
 # 处理坐标轴文字方向参数
-# 处理坐标轴文字方向参数
 process_axis_orientation <- function(param, seqs) {
   n <- length(seqs)
   
@@ -1073,7 +1072,7 @@ ggchord <- function(
   }
   
   
-  # 11. 处理基因注释箭头 —— 用 mapply + rbind 保证逐点映射
+  # 11. 处理基因注释箭头 —— 关键修改基因偏移方向的部分
   gene_polys <- data.frame()
   if (!is.null(gene_track) && nrow(gene_track) > 0) {
     valid_genes <- gene_track[gene_track$seq_id %in% seqs, ]
@@ -1088,7 +1087,7 @@ ggchord <- function(
         width <- geneWidth[[sid]][ strand ]
         if (!is.numeric(width) || width <= 0) width <- 0.1
         
-        # 计算起/终角度
+        # 计算起/终角度（保持不变）
         seq_len <- lens[sid]
         sp <- min(gene$start, gene$end); ep <- max(gene$start, gene$end)
         if (ep <= sp) next
@@ -1098,7 +1097,7 @@ ggchord <- function(
         a_end <- starts[sid] + frac_ep*(ends[sid]-starts[sid])
         if (strand == "-") { tmp <- a_start; a_start <- a_end; a_end <- tmp }
         
-        # 生成角度向量和宽度因子
+        # 生成角度向量和宽度因子（保持不变）
         n_body <- 30; n_head <- 15
         body_ang <- seq(a_start, a_start + 0.6*(a_end - a_start), length.out = n_body)
         head_ang <- seq(tail(body_ang,1), a_end, length.out = n_head)
@@ -1106,25 +1105,32 @@ ggchord <- function(
         total_pt <- length(angs)
         widths <- c(rep(1, n_body), seq(1, 0, length.out = n_head))
         
-        # 基准半径
-        r0 <- seqRadius[sid] - geneGap[[sid]][strand]
+        # 基准半径计算 —— 核心修改：根据链方向反转gene_offset的作用方向
+        # 正向链(+): gene_offset>0时向外偏移（seqRadius - offset）
+        # 负向链(-): gene_offset>0时向内偏移（seqRadius + offset）
+        if (strand == "+") {
+          r0 <- seqRadius[sid] - geneGap[[sid]][strand] # 正向链：减号保持向外
+        } else {
+          r0 <- seqRadius[sid] + geneGap[[sid]][strand] # 负向链：加号实现向内
+        }
+        
+        # 计算内外半径（保持不变）
         outer_r <- r0 + (width/2)*widths
         inner_r <- r0 - (width/2)*widths
         
-        # 原始极坐标表
+        # 原始极坐标表（保持不变）
         orig_ang <- c(angs, rev(angs))
         orig_rad <- c(outer_r, rev(inner_r))
         
-        # 映射每一点
+        # 映射每一点（保持不变）
         ref <- seq_refs[[sid]]
         pts_list <- mapply(function(ang, rad) {
           map_to_curve(ang, rad, ref)
         }, orig_ang, orig_rad, SIMPLIFY = FALSE)
         
         mapped <- do.call(rbind, pts_list)
-        # mapped 是 N×2 矩阵，每行一个 (x,y)
         
-        # 构建多边形
+        # 构建多边形（保持不变）
         gene_poly <- data.frame(
           x = mapped[,1],
           y = mapped[,2],
@@ -1140,7 +1146,7 @@ ggchord <- function(
   }
   
   
-  # 12. 处理基因标签，修正周向偏移限制逻辑
+  # 12. 处理基因标签，确保与箭头偏移同步
   gene_arrows <- data.frame()
   if (!is.null(gene_track) && nrow(gene_track) > 0 && gene_label_show) {
     valid_genes <- gene_track[gene_track$seq_id %in% seqs, ]
@@ -1151,13 +1157,13 @@ ggchord <- function(
         strand <- gene$strand
         seq_len <- lens[sid]
         ref <- seq_refs[[sid]]
-        orient <- orientation[sid] # 序列方向（1或-1）
+        orient <- orientation[sid] # 1=正向，-1=反向
         
-        # 1. 计算基因中点相对位置（保持不变）
+        # 1. 计算基因中点相对位置（不变）
         sp <- min(gene$start, gene$end); ep <- max(gene$start, gene$end)
         frac_mid <- (sp + ep) / (2 * seq_len)
         
-        # 应用周向偏移（保持不变）
+        # 应用周向偏移（不变）
         circum_ratio <- geneLabelCircumOffset[[sid]][strand]
         if (geneLabelCircumLimit[[sid]][strand]) {
           gene_length_ratio <- (ep - sp) / seq_len
@@ -1167,10 +1173,10 @@ ggchord <- function(
         frac_mid <- frac_mid + circum_ratio
         frac_mid <- pmin(1, pmax(0, frac_mid))
         
-        # 反向序列调整中点位置（保持不变）
+        # 反向序列调整中点位置（不变）
         if (orient != 1) frac_mid <- 1 - frac_mid
         
-        # 2. 找参考路径索引及切线向量(dx,dy)（保持不变）
+        # 2. 找参考路径索引及切线向量(dx,dy)（不变）
         ref_n <- length(ref$angles)
         idx <- round(frac_mid * (ref_n - 1)) + 1
         idx <- pmin(ref_n, pmax(1, idx))
@@ -1184,38 +1190,45 @@ ggchord <- function(
         dx <- dx * orient # 根据序列方向修正切线方向
         dy <- dy * orient
         
-        # 3. 计算箭头边缘坐标（保持不变）
-        r0 <- seqRadius[sid] - geneGap[[sid]][strand]
+        # 3. 计算箭头中心点（核心修改：与箭头使用相同的基准半径逻辑）
         width <- geneWidth[[sid]][ strand ]
-        edge_r <- if (strand == "+") r0 + width/2 else r0 - width/2
-        edge_pt <- map_to_curve(angle = ref$angles[idx], radius = edge_r, ref = ref)
         
-        # 4. 计算法线向量（核心修复：结合序列方向和链方向）
+        # 与箭头保持一致的基准半径计算
+        if (strand == "+") {
+          r0 <- seqRadius[sid] - geneGap[[sid]][strand] # 正向链：向外偏移
+        } else {
+          r0 <- seqRadius[sid] + geneGap[[sid]][strand] # 负向链：向内偏移
+        }
+        
+        # 计算箭头中心点半径（基于箭头的内外半径中间）
+        center_r <- r0 # 箭头中心点就是基准半径
+        
+        # 计算中心点坐标
+        center_pt <- map_to_curve(angle = ref$angles[idx], radius = center_r, ref = ref)
+        
+        # 4. 计算法线向量（确保与箭头偏移方向一致）
         normal_x <- -dy # 基础法线方向（垂直切线）
         normal_y <- dx
         nl <- sqrt(normal_x^2 + normal_y^2)
         if (nl > 0) {
-          normal_x <- normal_x / nl
+          normal_x <- normal_x / nl # 归一化
           normal_y <- normal_y / nl
         }
         
-        # 关键修复：根据链方向和序列方向的组合调整法线
-        # 当序列方向为1（正向）时，负链反转法线；当序列方向为-1（反向）时，负链不反转
-        if (strand == "-") {
-          normal_x <- normal_x * orient 
-          normal_y <- normal_y * orient
-        }
+        # 根据链方向和序列方向调整法线方向
+        direction_factor <- ifelse(strand == "+", 1, -1) * orient
+        normal_x <- normal_x * direction_factor
+        normal_y <- normal_y * direction_factor
         
-        # 5. 计算标签位置（保持不变）
-        offset_base <- 0.05
-        offset <- offset_base + geneLabelRadialOffset[[sid]][strand]
-        text_x <- edge_pt[1] + normal_x * offset
-        text_y <- if (strand == "+" && orient == 1) edge_pt[2] - normal_y * offset else edge_pt[2] + normal_y * offset
+        # 5. 计算标签位置（与箭头偏移同步）
+        text_x <- center_pt[1] - normal_x * geneLabelRadialOffset[[sid]][strand]
+        text_y <- center_pt[2] - normal_y * geneLabelRadialOffset[[sid]][strand]
         
-        # 6. 计算文本角度及对齐方式（保持不变）
+        # 6. 计算文本角度及对齐方式（不变）
         base_angle <- atan2(dy, dx) * 180 / pi
-        text_angle <- base_angle + 90 + geneLabelRotation[[sid]][strand] # 添加旋转角度
+        text_angle <- base_angle + 90 + geneLabelRotation[[sid]][strand]
         
+        # 自动对齐逻辑（根据方向调整左/右对齐）
         if (strand == "+" && orient == 1) {
           hjust <- 1
         } else if (strand == "+" && orient != 1) {
@@ -1226,7 +1239,8 @@ ggchord <- function(
           hjust <- 1
         }
         
-        text_angle <- (text_angle + 360) %% 360 # 确保角度在0-360范围内
+        # 确保文本方向正确（不颠倒）
+        text_angle <- (text_angle + 360) %% 360
         if (text_angle > 90 && text_angle < 270) {
           text_angle <- text_angle + 180
           hjust <- 1 - hjust
@@ -1374,16 +1388,6 @@ ggchord <- function(
     ) +
     # 基因标签（仅当需要显示且有基因数据时）
     { if (nrow(gene_arrows) > 0 && gene_label_show)
-      geom_point(
-        data = gene_arrows,
-        aes(x = text_x, y = text_y),
-        size = gene_label_size,
-        color = "black",
-        inherit.aes = FALSE
-      )
-    } +
-    # 基因标签（仅当需要显示且有基因数据时）
-    { if (nrow(gene_arrows) > 0 && gene_label_show)
       geom_text(
         data = gene_arrows,
         aes(x = text_x, y = text_y, label = text, angle = text_angle, 
@@ -1414,7 +1418,6 @@ ggchord <- function(
       )
     } +
     # 刻度标签（仅当show_axis为TRUE时绘制）
-    # 在绘制刻度标签部分，替换为以下代码
     { if (show_axis) {
       # 先创建有标签的刻度数据子集
       label_data <- subset(axisTicks, !is.na(label))
@@ -1466,13 +1469,16 @@ ggchord <- function(
 }
 
 
+
 # 示例使用方法
 # 1. 读取数据
 #读取序列长度数据
 seq_data <- read.delim("seq_track.tsv", sep = "\t", stringsAsFactors = FALSE)
 
+
 # 读取基因注释数据
 gene_track <- read.delim("gene_track.tsv", sep = "\t", stringsAsFactors = FALSE) |> dplyr::slice_max(order_by = end-start, n = 5, by = seq_id)
+
 
 # 读取并处理BLAST数据
 read_blast <- function(file) {
@@ -1486,38 +1492,35 @@ blast_files <- list.files(path = ".", pattern = "*.o7", full.names = TRUE)
 all_blast <- do.call(rbind, lapply(blast_files, read_blast))
 ribbon_data <- subset(all_blast, length >= 100)
 
+
 ## 2. 调用ggchord函数（示例）
 p_final <- ggchord(
   seq_data = seq_data,
   ribbon_data = ribbon_data,
   gene_track = gene_track, # 传入基因注释数据
   title = "Multi-sequence Chord Diagram with Gene Annotations",
-  seq_gap = 0,
+  seq_gap = .03,
   seq_radius = 1,
-  seq_orientation = c(-1, -1, -1, 1),
-  gene_offset = list(c("+"=.2,"-"=-.2), 
-                     c("+"=.2,"-"=-.2), 
-                     c("+"=.2,"-"=-.2), 
-                     c("+"=.6,"-"=-.2)),
-  gene_label_rotation = 45,
-  gene_label_radial_offset = c(0,0,0,0),
-  gene_label_circum_offset = c(1, 0, -2, 0),
+  seq_orientation = c(-1, 1, 1, -1),
+  gene_offset = .2,
+  gene_label_rotation = 0,
+  gene_label_radial_offset = .1,
+  gene_label_circum_offset = c(1, 0, 0, 0),
   gene_label_circum_limit = c(T,T,T,T),
-  gene_width = .3,
+  gene_width = .15,
   gene_label_show = T,
   gene_color_scheme = "strand",
   ribbon_gap = .1,
   ribbon_color_scheme = "pident",
-  axis_label_orientation = c(0,45,80,130),  
-  axis_gap = 0,
+  axis_label_orientation = "horizontal",
+  axis_gap = .03,
   axis_tick_major_number = 5,
-  axis_tick_major_length = 0.03,
+  axis_tick_major_length = 0.02,
   axis_tick_minor_number = 5,
   axis_tick_minor_length = 0.01,
   axis_label_size = 2,
-  axis_label_offset = 2,
+  axis_label_offset = .5,
   rotation = 45, show_axis = T,
   debug = TRUE,seq_curvature = 1,ribbon_ctrl_point = c(0,0)
 )
 print(p_final)
-
