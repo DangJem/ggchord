@@ -324,18 +324,58 @@ process_axis_orientation <- function(param, seqs) {
 # 通用参数处理（序列参数）
 process_sequence_param <- function(param, seqs, param_name, default_value = NULL, allow_null = FALSE) {
   n <- length(seqs)
+  
+  # 处理参数为NULL的情况
   if (is.null(param)) {
     if (allow_null) return(NULL)
-    if (!is.null(default_value)) return(setNames(rep(default_value, n), seqs))
+    
+    # 确保默认值是单个值或与序列长度匹配的向量
+    if (!is.null(default_value)) {
+      if (length(default_value) == 1) {
+        return(setNames(rep(default_value, n), seqs))
+      } else if (length(default_value) == n) {
+        # 确保默认值向量的命名正确
+        if (is.null(names(default_value))) {
+          return(setNames(default_value, seqs))
+        } else {
+          # 检查命名是否匹配序列ID
+          if (all(names(default_value) %in% seqs)) {
+            return(default_value[seqs])
+          } else {
+            warning(paste0("默认", param_name, "的命名与序列ID不完全匹配，使用位置匹配"))
+            return(setNames(default_value, seqs))
+          }
+        }
+      } else {
+        stop(paste0("默认", param_name, "的长度必须为1或与序列数(", n, ")相同"))
+      }
+    }
+    
     stop(paste0(param_name, " 不能为空且未指定默认值"))
   }
-  if (length(param) == 1) return(setNames(rep(param, n), seqs))
-  if (length(param) == n && is.null(names(param))) return(setNames(param, seqs))
+  
+  # 处理参数为单个值的情况
+  if (length(param) == 1) {
+    return(setNames(rep(param, n), seqs))
+  }
+  
+  # 处理参数为未命名向量且长度与序列数相同的情况
+  if (length(param) == n && is.null(names(param))) {
+    return(setNames(param, seqs))
+  }
+  
+  # 处理命名向量的情况
   if (!is.null(names(param))) {
-    if (!all(names(param) %in% seqs)) stop(paste0(param_name, " 包含未知序列ID: ",
-                                                  paste(setdiff(names(param), seqs), collapse=", ")))
+    # 检查是否所有命名都在序列ID中
+    if (!all(names(param) %in% seqs)) {
+      stop(paste0(param_name, " 包含未知序列ID: ",
+                  paste(setdiff(names(param), seqs), collapse=", ")))
+    }
+    
+    # 按序列ID顺序返回参数值
     return(param[seqs])
   }
+  
   stop(paste0("无法处理的", param_name, "格式，请提供单值、命名向量或与序列数相同的非命名向量"))
 }
 
@@ -636,7 +676,7 @@ generate_curvature_path <- function(start_angle, end_angle, radius, curvature, n
 }
 
 # ggplot2绘图函数
-chordPlotFunc <- function(allRibbon,ribbon_alpha,ribbon_color_scheme,ribbon_colors,show_legend,gene_polys,gene_pal,gene_color_scheme,seqArcs,gene_arrows,show_axis,axisLines,axisTicks,axisLabelOrientation,seq_colors,seq_labels,extremes,panel_margin,title) {
+chordPlotFunc <- function(allRibbon,ribbon_alpha,ribbon_color_scheme,ribbon_colors,show_legend,gene_polys,gene_pal,gene_color_scheme,seqArcs,gene_arrows,show_axis,axisLines,axisTicks,axisLabelOrientation,seq_colors,seq_labels,seqs,extremes,panel_margin,title) {
   ggplot() +
     # 1. 绘制连接带并设置第一个fill尺度（仅当有有效连接带数据时）
     { if (!is.null(allRibbon))
@@ -753,6 +793,7 @@ chordPlotFunc <- function(allRibbon,ribbon_alpha,ribbon_color_scheme,ribbon_colo
       name = "Seq ID",
       values = seq_colors,
       labels = seq_labels,
+      breaks = seqs,
       guide = if (show_legend) guide_legend(order = 2) else "none"
     ) +
     
@@ -1554,7 +1595,7 @@ ggchord <- function(
   )
   
   # 13. 绘制图形（使用ggnewscale实现双fill映射）
-  chordPlot <- chordPlotFunc(allRibbon,ribbon_alpha,ribbon_color_scheme,ribbon_colors,show_legend,gene_polys,gene_pal,gene_color_scheme,seqArcs,gene_arrows,show_axis,axisLines,axisTicks,axisLabelOrientation,seq_colors,seq_labels,extremes,panel_margin,title)
+  chordPlot <- chordPlotFunc(allRibbon,ribbon_alpha,ribbon_color_scheme,ribbon_colors,show_legend,gene_polys,gene_pal,gene_color_scheme,seqArcs,gene_arrows,show_axis,axisLines,axisTicks,axisLabelOrientation,seq_colors,seq_labels,seqs,extremes,panel_margin,title)
   
   return(chordPlot)
 }
@@ -1587,9 +1628,8 @@ ribbon_data <- subset(all_blast, length >= 100)
 p_final <- ggchord(
   seq_data = seq_data,
   ribbon_data = ribbon_data,
-  #gene_track = gene_track,
+  gene_track = gene_track,
   #title = "Multi-sequence Chord Diagram with Gene Annotations"
-  
 )
 
 ggview::ggview(p_final, width = 12, height = 12)
