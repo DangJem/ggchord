@@ -63,7 +63,12 @@ library(RColorBrewer)
 library(grDevices)
 library(ggnewscale)
 library(grid)
-library(rlang)
+
+
+`%||%` <- function (x, y) 
+{
+  if (is.null(x)) y else x
+}
 
 # 获取图像四边极点
 get_plot_extremes <- function(allRibbon=NULL, seqArcs=NULL, axisLines=NULL, axisTicks=NULL, gene_arrows=NULL, gene_polys = NULL, show_axis = F) {
