@@ -26,17 +26,24 @@
 - **调试模式**：辅助排查数据问题，显示有效/无效比对数量。
 
 ## 安装
-### 依赖包
+### 依赖环境
 - R (≥ 3.6.0)
 - ggplot2 (≥ 3.3.0)
-- RColorBrewer (≥ 1.1 - 3)
-- grDevices (内置包)
+- ggnewscale (≥ 0.5.0)
+- RColorBrewer
 
-### 安装步骤
 ```r
-# 安装依赖
-if (!require("ggplot2")) install.packages("ggplot2")
-if (!require("RColorBrewer")) install.packages("RColorBrewer")
+install.packages("ggplot2")
+install.packages("ggnewscale")
+install.packages("RColorBrewer")
+```
+
+### 如何安装ggchord？
+```r
+# 从CRAN上下载
+install.packages("ggchord")
+# 从GitHub上下载
+devtools::install_github("DangJem/ggchord")
 ```
 
 ## 使用说明
