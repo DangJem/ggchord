@@ -15,7 +15,7 @@
 #' - qend: 查询序列结束位置
 #' - sstart: 目标序列起始位置
 #' - send: 目标序列结束位置
-#' @param gene_track data.frame/tibble，包含基因注释信息，可选，若提供则必须包含列：
+#' @param gene_data data.frame/tibble，包含基因注释信息，可选，若提供则必须包含列：
 #' - seq_id: 序列唯一标识
 #' - start: 基因起始位置
 #' - end: 基因结束位置
@@ -820,7 +820,7 @@ chordPlotFunc <- function(allRibbon,ribbon_alpha,ribbon_color_scheme,ribbon_colo
 ggchord <- function(
     seq_data,
     ribbon_data = NULL,
-    gene_track = NULL,
+    gene_data = NULL,
     title = NULL,
     seq_order = NULL,
     seq_labels = NULL,
@@ -892,17 +892,17 @@ ggchord <- function(
   }
   
   # 验证基因注释数据（可选）
-  if (!is.null(gene_track)) {
+  if (!is.null(gene_data)) {
     required_gene_cols <- c("seq_id", "start", "end", "strand", "anno")
-    if (!all(required_gene_cols %in% colnames(gene_track))) {
-      stop("gene_track 必须包含以下列: ", paste(required_gene_cols, collapse = ", "))
+    if (!all(required_gene_cols %in% colnames(gene_data))) {
+      stop("gene_data 必须包含以下列: ", paste(required_gene_cols, collapse = ", "))
     }
-    if (nrow(gene_track) == 0) warning("gene_track 中没有有效基因注释数据")
-    if (debug) cat("使用的基因注释数据行数:", nrow(gene_track), "\n")
+    if (nrow(gene_data) == 0) warning("gene_data 中没有有效基因注释数据")
+    if (debug) cat("使用的基因注释数据行数:", nrow(gene_data), "\n")
     
     # 验证gene_order参数
     if (!is.null(gene_order)) {
-      unknown_genes <- setdiff(gene_order, unique(gene_track$anno))
+      unknown_genes <- setdiff(gene_order, unique(gene_data$anno))
       if (length(unknown_genes) > 0) {
         stop("gene_order 包含未知基因注释: ", paste(unknown_genes, collapse = ", "))
       }
@@ -1042,8 +1042,8 @@ ggchord <- function(
   # 5. 计算基因颜色（基于gene_color_scheme）
   gene_pal <- NULL
   final_gene_order <- NULL
-  if (!is.null(gene_track) && nrow(gene_track) > 0) {
-    valid_genes <- gene_track[gene_track$seq_id %in% seqs, ]
+  if (!is.null(gene_data) && nrow(gene_data) > 0) {
+    valid_genes <- gene_data[gene_data$seq_id %in% seqs, ]
     if (nrow(valid_genes) > 0) {
       # 获取唯一的基因注释
       unique_anno <- unique(valid_genes$anno)
@@ -1090,7 +1090,7 @@ ggchord <- function(
   ends <- starts + theta
   names(starts) <- names(ends) <- seqs
   
-  # 8. 准备序列外层和内层坐标（修正innerArcs的半径计算）
+  # 8. 准备序列外层和内层坐标
   nSeg <- 500 # 每个序列的分段数（控制平滑度）
   seqArcs <- lapply(seqs, function(id) {
     # 序列外层圆弧（不变）
@@ -1118,7 +1118,7 @@ ggchord <- function(
   names(innerArcs) <- seqs
   
   
-  # —— 新增：对每条序列生成高分辨率参考路径 —— 
+  # 每条序列生成高分辨率参考路径 
   seq_refs <- lapply(seqs, function(id) {
     ref_n <- 2000
     # 基准半径取最外层：序列半径
@@ -1129,7 +1129,7 @@ ggchord <- function(
   })
   names(seq_refs) <- seqs
   
-  # —— 新增：通用映射函数 —— 
+  # 用映射函数 
   map_to_curve <- function(angle, radius, ref) {
     # 找到最接近角度的参考点
     idx <- which.min(abs(ref$angles - angle))
@@ -1151,7 +1151,7 @@ ggchord <- function(
   }
   
   
-  # —— 新增：利用 map_to_curve 生成刻度线和标签坐标 —— 
+  # 用 map_to_curve 生成刻度线和标签坐标 
   axisTicks <- do.call(rbind, lapply(seqs, function(id) {
     ref <- seq_refs[[id]]
     # 基准半径：序列半径 + axisGap
@@ -1190,7 +1190,7 @@ ggchord <- function(
   }))
   
   
-  # —— 新增：利用 map_to_curve 生成坐标轴整条线 —— 
+  # 用 map_to_curve 生成坐标轴整条线 
   axisLines <- do.call(rbind, lapply(seqs, function(id) {
     ref <- seq_refs[[id]]
     # 基准半径：序列半径 + axisGap
@@ -1342,8 +1342,8 @@ ggchord <- function(
   
   # 11. 处理基因注释箭头 —— 关键修改基因偏移方向的部分
   gene_polys <- data.frame()
-  if (!is.null(gene_track) && nrow(gene_track) > 0) {
-    valid_genes <- gene_track[gene_track$seq_id %in% seqs, ]
+  if (!is.null(gene_data) && nrow(gene_data) > 0) {
+    valid_genes <- gene_data[gene_data$seq_id %in% seqs, ]
     if (nrow(valid_genes) > 0) {
       for (i in seq_len(nrow(valid_genes))) {
         gene <- valid_genes[i, ]
@@ -1416,8 +1416,8 @@ ggchord <- function(
   
   # 12. 处理基因标签，确保与箭头偏移同步
   gene_arrows <- data.frame()
-  if (!is.null(gene_track) && nrow(gene_track) > 0 && gene_label_show) {
-    valid_genes <- gene_track[gene_track$seq_id %in% seqs, ]
+  if (!is.null(gene_data) && nrow(gene_data) > 0 && gene_label_show) {
+    valid_genes <- gene_data[gene_data$seq_id %in% seqs, ]
     if (nrow(valid_genes) > 0) {
       gene_arrows <- do.call(rbind, lapply(seq_len(nrow(valid_genes)), function(i) {
         gene <- valid_genes[i, ]
@@ -1600,38 +1600,5 @@ ggchord <- function(
   return(chordPlot)
 }
 
-
-# 示例使用方法
-# 1. 读取数据
-#读取序列长度数据
-seq_data <- read.delim("seq_track.tsv", sep = "\t", stringsAsFactors = FALSE)
-
-
-# 读取基因注释数据
-gene_track <- read.delim("gene_track.tsv", sep = "\t", stringsAsFactors = FALSE) |> dplyr::slice_max(order_by = end-start, n = 5, by = seq_id)
-
-
-# 读取并处理BLAST数据
-read_blast <- function(file) {
-  df <- read.delim(file, sep = "\t", header = FALSE, stringsAsFactors = FALSE, comment.char = "#")
-  colnames(df) <- c("qaccver","saccver","pident","length","mismatches","gapopen",
-                    "qstart","qend","sstart","send","evalue","bitscore",
-                    "qcovs","qlen","slen","sstrand","stitle")
-  df
-}
-blast_files <- list.files(path = ".", pattern = "*.o7", full.names = TRUE)
-all_blast <- do.call(rbind, lapply(blast_files, read_blast))
-ribbon_data <- subset(all_blast, length >= 100)
-
-
-## 2. 调用ggchord函数（示例）
-p_final <- ggchord(
-  seq_data = seq_data,
-  ribbon_data = ribbon_data,
-  gene_track = gene_track,
-  #title = "Multi-sequence Chord Diagram with Gene Annotations"
-)
-
-ggview::ggview(p_final, width = 12, height = 12)
 
 
