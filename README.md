@@ -40,10 +40,11 @@ install.packages("RColorBrewer")
 
 ### How to install ggchord？
 Install the stable version of gggenes from CRAN:
+
 `install.packages("ggchord")`
 
-
 If you want the development version, install it from GitHub:
+
 `devtools::install_github("DangJem/ggchord")`
 
 
