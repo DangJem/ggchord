@@ -1,4 +1,4 @@
-🌐 Language Switch: 【[现代汉语](README-Hans.md) | [英文](README.md)】
+🌐 语言切换: 【[现代汉语（Han）](README-Hans.md) | [英文（English）](README.md)】
 
 # ggchord：多序列BLAST比对弦图可视化工具
 
