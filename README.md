@@ -29,15 +29,21 @@ It is suitable for research in comparative genomics, pan-genome analysis, phage-
 ### Dependencies
 - R (≥ 3.6.0)
 - ggplot2 (≥ 3.3.0)
-- RColorBrewer (≥ 1.1-3)
-- grDevices (built-in package)
+- ggnewscale (≥ 0.5.0)
+- RColorBrewer
 
-### Installation Steps
 ```r
-# Install dependencies
-if (!require("ggplot2")) install.packages("ggplot2")
-if (!require("RColorBrewer")) install.packages("RColorBrewer")
+install.packages("ggplot2")
+install.packages("ggnewscale")
+install.packages("RColorBrewer")
 ```
+
+### How to install ggchord？
+Install the stable version of gggenes from CRAN:
+`install.packages("ggchord")`
+If you want the development version, install it from GitHub:
+`devtools::install_github("DangJem/ggchord")`
+
 
 ## Usage Instructions
 ### Preliminary Data Preparation
