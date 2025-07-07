@@ -307,7 +307,7 @@ part4_2 <- ggchord(
 ```
 ![plot](/examples/plots/v1.0.0/part4_2.jpg)
 
-However, this is still an early version of the software, and there are many不完善 aspects or even bugs. These issues are expected to be resolved in future versions.
+However, this is still an early version of the software, and there are many imperfect aspects or even bugs. These issues are expected to be resolved in future versions.
 
 
 ## Parameter Details
