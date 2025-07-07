@@ -676,7 +676,7 @@ generate_curvature_path <- function(start_angle, end_angle, radius, curvature, n
 }
 
 # ggplot2绘图函数
-chordPlotFunc <- function(allRibbon,ribbon_alpha,ribbon_color_scheme,ribbon_colors,show_legend,gene_polys,gene_pal,gene_color_scheme,seqArcs,gene_arrows,show_axis,axisLines,axisTicks,axisLabelOrientation,seq_colors,seq_labels,seqs,extremes,panel_margin,title) {
+chordPlotFunc <- function(allRibbon,ribbon_alpha,ribbon_color_scheme,ribbon_colors,show_legend,gene_polys,gene_pal,gene_color_scheme,final_gene_order,seqArcs,gene_arrows,show_axis,axisLines,axisTicks,axisLabelOrientation,seq_colors,seq_labels,seqs,extremes,panel_margin,title) {
   ggplot() +
     # 1. 绘制连接带并设置第一个fill尺度（仅当有有效连接带数据时）
     { if (!is.null(allRibbon))
@@ -1595,7 +1595,7 @@ ggchord <- function(
   )
   
   # 13. 绘制图形（使用ggnewscale实现双fill映射）
-  chordPlot <- chordPlotFunc(allRibbon,ribbon_alpha,ribbon_color_scheme,ribbon_colors,show_legend,gene_polys,gene_pal,gene_color_scheme,seqArcs,gene_arrows,show_axis,axisLines,axisTicks,axisLabelOrientation,seq_colors,seq_labels,seqs,extremes,panel_margin,title)
+  chordPlot <- chordPlotFunc(allRibbon,ribbon_alpha,ribbon_color_scheme,ribbon_colors,show_legend,gene_polys,gene_pal,gene_color_scheme,final_gene_order,seqArcs,gene_arrows,show_axis,axisLines,axisTicks,axisLabelOrientation,seq_colors,seq_labels,seqs,extremes,panel_margin,title)
   
   return(chordPlot)
 }
