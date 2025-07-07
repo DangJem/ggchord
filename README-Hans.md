@@ -39,12 +39,13 @@ install.packages("RColorBrewer")
 ```
 
 ### 如何安装ggchord？
-```r
-# 从CRAN上下载
-install.packages("ggchord")
-# 从GitHub上下载
-devtools::install_github("DangJem/ggchord")
-```
+从CRAN安装gggenes的稳定版本：
+
+`install.packages("ggchord")`
+
+如果你想要开发版本，请从GitHub安装：
+
+`devtools::install_github("DangJem/ggchord")`
 
 ## 使用说明
 ### 前期数据准备
