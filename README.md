@@ -362,7 +362,7 @@ However, this is still an early version of the software, and there are many impe
 - **Axes**: Ticks and numbers outside each sequence arc, labeling sequence positions (units match sequence length) for easy localization of alignment regions.
 
 ## Version History
-### v0.2.0
+### v0.2.0 (Latest)
 - **Advanced Arc and Line Mode Optimization**:
   - Through enhanced curve-fitting algorithms, "arc mode" and "line mode" in pairwise sequence visualization achieve smoother transitions between different alignment regions. For example, when visualizing two closely related sequences with multiple short alignments, arcs or lines can now connect these regions more elegantly, reducing visual clutter.
   - Ensures more accurate representation of alignment data. In previous versions, there might have been slight distortions in visualization, especially for long-distance alignments. Now, the lengths and positions of arcs and lines more accurately match actual alignment coordinates, providing a more realistic view of sequence relationships.
@@ -372,7 +372,7 @@ However, this is still an early version of the software, and there are many impe
 - **Enhanced Color Customization**:
   - Version 0.2.0 offers a wider range of color palettes for sequences and ribbons. In addition to existing default color schemes, users can now choose from various predefined palettes optimized for different types of data visualization. For example, there are palettes designed to highlight high-contrast regions and those for creating more subtle and aesthetically pleasing visualizations.
   - When using the `pident` color scheme for ribbons, users can now customize gradient colors. This allows for more personalized visualization, better representing the distribution of sequence similarity. For example, users can choose a heatmap-like gradient to clearly show the range of similarity values from low to high.
-### v0.1.0 (Latest)
+### v0.1.0
 - Supports separate management of sequence, alignment, and gene data via `seq_data`, `ribbon_data`, and `gene_data`.
 - Added sequence orientation control, custom order, gap, and radius adjustment.
 - Implemented customizable axes (major/minor ticks, label positions).
