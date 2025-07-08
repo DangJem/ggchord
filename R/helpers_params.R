@@ -69,7 +69,7 @@ process_sequence_param <- function(param, seqs, param_name, default_value = NULL
 
 #' Process gene-related parameters
 #'
-#' Standardizes gene parameters (e.g., offset, width) from various input formats (single value/vector/list) into a list区分d by sequence and strand
+#' Standardizes gene parameters (e.g., offset, width) from various input formats (single value/vector/list) into a list seperated by sequence and strand
 #'
 #' @param param Input parameter (can be NULL, single value, vector, list)
 #' @param seqs Character vector, list of sequence IDs

@@ -1,24 +1,21 @@
 Package: ggchord
 Title: Multi-Sequence BLAST Alignment Chord Diagram Visualization Tool
 Version: 0.2.0
-Authors@R: person(given = "Jem", family = "Dang", email = "dangjem@example.com", role = c("aut", "cre"))
-Description: ggchord is an R function built on ggplot2 that visualizes pairwise BLASTN alignment results as chord diagrams, intuitively displaying homologous regions between query and subject sequences.
+Authors@R: person(given = "Jem", family = "Dang", email = "dangjem0730@gmail.com", role = c("aut", "cre"))
+Description: An R function built on ggplot2 that visualizes pairwise BLASTN alignment results as chord diagrams, intuitively displaying homologous regions between query and subject sequences.
 License: MIT + file LICENSE
 Depends: R (>= 3.6.0)
-Imports: 
-  ggplot2 (>= 3.3.0),
-  ggnewscale (>= 0.5.0),
-  RColorBrewer,
-  grDevices,
-  grid
+Imports: ggplot2 (>= 3.3.0), ggnewscale (>= 0.5.0), RColorBrewer,
+        grDevices, grid
 VignetteBuilder: knitr
-Suggests: 
-    knitr,
-    rmarkdown,
-    qpdf,
-    dplyr,
-    testthat (>= 3.0.0)
+Suggests: knitr, rmarkdown, qpdf, dplyr, testthat (>= 3.0.0)
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.3.2
 Config/testthat/edition: 3
+URL: https://github.com/DangJem/ggchord
+BugReports: https://github.com/DangJem/ggchord/issues
+NeedsCompilation: no
+Packaged: 2025-07-08 05:21:57 UTC; 92330
+Author: Jem Dang [aut, cre]
+Maintainer: Jem Dang <dangjem0730@gmail.com>

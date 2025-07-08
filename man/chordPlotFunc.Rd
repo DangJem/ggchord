@@ -76,8 +76,6 @@ chordPlotFunc(
 \item{panel_margin}{Panel margins}
 
 \item{title}{Plot title}
-
-\item{process_panel_margin}{Function to process panel margins (internal)}
 }
 \value{
 ggplot2 object

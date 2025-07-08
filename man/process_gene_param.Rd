@@ -21,6 +21,6 @@ process_gene_param(param, seqs, param_name, default_value, is_logical = FALSE)
 List (named by seq_id), where each element is a vector with "+"/"-" (parameter values for positive/negative strands)
 }
 \description{
-Standardizes gene parameters (e.g., offset, width) from various input formats (single value/vector/list) into a list区分d by sequence and strand
+Standardizes gene parameters (e.g., offset, width) from various input formats (single value/vector/list) into a list seperated by sequence and strand
 }
 \keyword{internal}

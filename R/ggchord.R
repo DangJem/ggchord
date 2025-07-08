@@ -28,7 +28,7 @@ globalVariables(c(
 #' @param seq_order Character vector, optional. Specifies the drawing order of sequences (must be a subset of seq_id), default follows the order in seq_data
 #' @param seq_labels Character vector/named vector, optional. Sequence labels (length matching the number of sequences or named to match seq_id), default uses seq_id
 #' @param seq_orientation Numeric (1 or -1), optional. Sequence direction (1 = forward, -1 = reverse), supports single value/vector/named vector, default 1
-#' @param seq_gap Numeric (0 ≤ x < 0.5), optional. Proportion of gap between sequences, supports single value/vector/named vector, default 0.03
+#' @param seq_gap Numeric (0 <= x < 0.5), optional. Proportion of gap between sequences, supports single value/vector/named vector, default 0.03
 #' @param seq_radius Numeric (> 0), optional. Radius of sequence arcs, supports single value/vector/named vector, default 1.0
 #' @param seq_curvature Numeric, optional. Curvature of sequence arcs (0 = straight line, 1 = standard arc, > 1 = more curved), default 1.0
 #' @param seq_colors Color vector/named vector, optional. Colors of sequence arcs, default auto-generated based on RColorBrewer Set1

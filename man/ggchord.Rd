@@ -74,7 +74,7 @@ ggchord(
 
 \item{seq_orientation}{Numeric (1 or -1), optional. Sequence direction (1 = forward, -1 = reverse), supports single value/vector/named vector, default 1}
 
-\item{seq_gap}{Numeric (0 ≤ x < 0.5), optional. Proportion of gap between sequences, supports single value/vector/named vector, default 0.03}
+\item{seq_gap}{Numeric (0 <= x < 0.5), optional. Proportion of gap between sequences, supports single value/vector/named vector, default 0.03}
 
 \item{seq_radius}{Numeric (> 0), optional. Radius of sequence arcs, supports single value/vector/named vector, default 1.0}
 

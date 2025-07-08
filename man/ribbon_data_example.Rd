@@ -11,6 +11,6 @@ A data frame containing standard BLAST columns (qaccver, saccver, pident, etc.)
 ribbon_data_example
 }
 \description{
-BLAST alignment data for ggchord demonstration (length ≥ 100)
+BLAST alignment data for ggchord demonstration (length >= 100)
 }
 \keyword{datasets}

@@ -29,7 +29,6 @@
 #' @param extremes Plot extrema (min/max coordinates)
 #' @param panel_margin Panel margins
 #' @param title Plot title
-#' @param process_panel_margin Function to process panel margins (internal)
 #' @return ggplot2 object
 #' @keywords internal
 chordPlotFunc <- function(allRibbon, ribbon_alpha, ribbon_color_scheme, ribbon_colors, show_legend, gene_polys, gene_pal, gene_color_scheme, final_gene_order, seqArcs, gene_arrows, gene_label_show, gene_label_size, show_axis, axisLines, axisTicks, axisLabelOrientation, seq_colors, seq_labels, seqs, extremes, panel_margin, title) {
