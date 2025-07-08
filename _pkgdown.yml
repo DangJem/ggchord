@@ -1,0 +1,8 @@
+url: https://dangjem.github.io/ggchord
+navbar:
+  title: "ggchord"
+  left:
+    - text: "Tutorial"
+      href: "articles/ggchord_vignette.html"
+    - text: "Functions"
+      href: "reference/index.html"
