@@ -1,0 +1,9 @@
+pandoc: '3.4'
+pkgdown: 2.1.3
+pkgdown_sha: ~
+articles:
+  ggchord_vignette: ggchord_vignette.html
+last_built: 2025-07-08T08:52Z
+urls:
+  reference: https://dangjem.github.io/ggchord/reference
+  article: https://dangjem.github.io/ggchord/articles
