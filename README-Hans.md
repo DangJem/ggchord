@@ -158,11 +158,11 @@ gene_data <- read.delim("gene_track.tsv", sep = "\t", stringsAsFactors = FALSE) 
 
 ### 只传入必要的seq_data
 对于ggchord来说，序列数据是最重要的、不可或缺的。默认情况下，序列将按你所传入的seq_data顺序，以逆时针来排列。当然这些都是可以修改的
-```
+```R
 part1_1 <- ggchord(
   seq_data = seq_data,
 )
-```R
+```
 ![plot](/examples/plots/v1.0.0/part1_1.jpg)
 
 
