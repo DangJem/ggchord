@@ -39,7 +39,7 @@ install.packages("RColorBrewer")
 ```
 
 ### 如何安装ggchord？
-从CRAN安装gggenes的稳定版本：
+从CRAN安装ggchord的稳定版本：
 
 `install.packages("ggchord")`
 
