@@ -50,7 +50,7 @@ If you want the development version, install it from GitHub:
 
 ## Usage Instructions
 ### Preliminary Data Preparation
-Two types of input data need to be prepared:
+Three types of input data need to be prepared:
 
 #### 【Required】Sequence Information Data (`seq_data`)
 A TSV (Tab-Separated Values) file containing basic sequence information, must include the following columns:
