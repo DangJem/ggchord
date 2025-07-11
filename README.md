@@ -45,7 +45,7 @@ Install the stable version of ggchord from CRAN:
 
 If you want the development version, install it from GitHub:
 
-`devtools::install_github("DangJem/ggchord")`
+`devtools::install_github("DangJem/ggchord")` or `install.packages("ggchord_0.2.0.tar.gz")`
 
 
 ## Usage Instructions
