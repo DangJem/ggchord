@@ -1,0 +1,8 @@
+pkgdown/
+docs/
+examples/
+README-Hans.md
+_pkgdown.yml
+LICENSE.md
+^doc$
+^Meta$

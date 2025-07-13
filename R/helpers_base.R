@@ -98,7 +98,7 @@ process_panel_margin <- function(arg_list) {
 #' @param show_axis Logical, whether to include extreme value calculation for axis-related elements, default FALSE
 #' @return List containing x_min (minimum x), x_max (maximum x), y_min (minimum y), y_max (maximum y)
 #' @keywords internal
-get_plot_extremes <- function(allRibbon=NULL, seqArcs=NULL, axisLines=NULL, axisTicks=NULL, gene_arrows=NULL, gene_polys = NULL, show_axis = F) {
+get_plot_extremes <- function(allRibbon=NULL, seqArcs=NULL, axisLines=NULL, axisTicks=NULL, gene_arrows=NULL, gene_polys = NULL, show_axis = FALSE) {
   # Initialize vectors to store x and y coordinates
   x_coords <- numeric(0)
   y_coords <- numeric(0)

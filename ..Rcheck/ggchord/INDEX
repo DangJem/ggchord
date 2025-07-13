@@ -1,0 +1,5 @@
+gene_data_example       Example gene annotation data
+ggchord                 ggchord: A ggplot2-based tool for
+                        multi-sequence alignment chord plots
+ribbon_data_example     Example alignment data
+seq_data_example        Example sequence data

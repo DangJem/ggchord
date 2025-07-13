@@ -9,7 +9,7 @@ knitr::opts_chunk$set(
 
 ## ----install, eval=FALSE------------------------------------------------------
 #  # Install from local
-#  devtools::install_local("path/to/ggchord_0.1.0.tar.gz")
+#  devtools::install_local("path/to/ggchord_0.2.0.tar.gz")
 #  
 #  # Load the package
 #  library(ggchord)

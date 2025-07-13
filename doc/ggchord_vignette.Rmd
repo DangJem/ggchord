@@ -1,5 +1,5 @@
 ---
-title: "Plotting Multiple Sequence Alignment Chord Diagrams with ggchord"
+title: "Plotting Multiple Sequence Alignment Chord Diagrams with 'ggchord'"
 author: "DangJem"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
@@ -29,7 +29,7 @@ First, install and load the `ggchord` package (if not yet published on CRAN, ins
 
 ```{r install, eval=FALSE}
 # Install from local
-devtools::install_local("path/to/ggchord_0.1.0.tar.gz")
+devtools::install_local("path/to/ggchord_0.2.0.tar.gz")
 
 # Load the package
 library(ggchord)

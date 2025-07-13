@@ -1,5 +1,5 @@
 ---
-title: "Plotting Multiple Sequence Alignment Chord Diagrams with ggchord"
+title: "Plotting Multiple Sequence Alignment Chord Diagrams with 'ggchord'"
 author: "DangJem"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette

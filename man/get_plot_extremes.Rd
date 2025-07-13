@@ -11,7 +11,7 @@ get_plot_extremes(
   axisTicks = NULL,
   gene_arrows = NULL,
   gene_polys = NULL,
-  show_axis = F
+  show_axis = FALSE
 )
 }
 \arguments{

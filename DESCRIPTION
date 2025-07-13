@@ -1,8 +1,8 @@
 Package: ggchord
-Title: Multi-Sequence BLAST Alignment Chord Diagram Visualization Tool
+Title: Multi-Sequence 'BLAST' Alignment Chord Diagram Visualization Tool
 Version: 0.2.0
 Authors@R: person(given = "Jem", family = "Dang", email = "dangjem0730@gmail.com", role = c("aut", "cre"))
-Description: An R function built on ggplot2 that visualizes pairwise BLASTN alignment results as chord diagrams, intuitively displaying homologous regions between query and subject sequences.
+Description: A function built on 'ggplot2' that visualizes pairwise 'BLASTN' alignment results as chord diagrams, intuitively displaying homologous regions between query and subject sequences.
 License: MIT + file LICENSE
 Depends: R (>= 3.6.0)
 Imports: ggplot2 (>= 3.3.0), ggnewscale (>= 0.5.0), RColorBrewer,

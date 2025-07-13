@@ -159,18 +159,16 @@ ggchord(
 A ggplot2 graph object, which can be further adjusted with ggplot2 functions
 }
 \description{
-This function is used to draw chord plots containing multiple sequences, which can display alignment relationships between sequences and gene annotation information.
-It supports customizing various parameters such as sequence arrangement, colors, ribbon styles, and gene arrow styles, making it suitable for genome alignment visualization.
+ggchord is used to draw chord plots containing multiple sequences, which can display alignment relationships between sequences and gene annotation information.
+ggchord supports customizing various parameters such as sequence arrangement, colors, ribbon styles, and gene arrow styles, making it suitable for genome alignment visualization.
 }
 \examples{
 # Example code
-\dontrun{
 p <- ggchord(
   seq_data = seq_data_example,
   ribbon_data = ribbon_data_example,
   gene_data = gene_data_example
 )
 print(p)
-}
 
 }

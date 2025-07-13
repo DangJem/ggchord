@@ -6,8 +6,8 @@ globalVariables(c(
 
 #' ggchord: A ggplot2-based tool for multi-sequence alignment chord plots
 #'
-#' This function is used to draw chord plots containing multiple sequences, which can display alignment relationships between sequences and gene annotation information.
-#' It supports customizing various parameters such as sequence arrangement, colors, ribbon styles, and gene arrow styles, making it suitable for genome alignment visualization.
+#' ggchord is used to draw chord plots containing multiple sequences, which can display alignment relationships between sequences and gene annotation information.
+#' ggchord supports customizing various parameters such as sequence arrangement, colors, ribbon styles, and gene arrow styles, making it suitable for genome alignment visualization.
 #'
 #' @param seq_data data.frame/tibble, required. A data frame containing basic sequence information, must include columns:
 #'   - seq_id: Unique sequence identifier (character)
@@ -81,14 +81,12 @@ globalVariables(c(
 #' @export
 #' @examples
 #' # Example code
-#' \dontrun{
 #' p <- ggchord(
 #'   seq_data = seq_data_example,
 #'   ribbon_data = ribbon_data_example,
 #'   gene_data = gene_data_example
 #' )
 #' print(p)
-#' }
 #'
 #' @import ggplot2
 #' @import ggnewscale
@@ -105,11 +103,11 @@ ggchord <- function(
     seq_order = NULL,
     seq_labels = NULL,
     seq_orientation = NULL,
-    seq_gap = .03,
+    seq_gap = 0.03,
     seq_radius = 1.0,
     seq_colors = NULL,
     seq_curvature = 1.0,
-    gene_offset = .1,
+    gene_offset = 0.1,
     gene_width = 0.05,
     gene_label_show = FALSE,
     gene_label_rotation = 0,
@@ -124,8 +122,8 @@ ggchord <- function(
     ribbon_colors = NULL,
     ribbon_alpha = 0.35,
     ribbon_ctrl_point = c(0,0),
-    ribbon_gap = .15,
-    axis_gap = .04,
+    ribbon_gap = 0.15,
+    axis_gap = 0.04,
     axis_tick_major_number = 5,
     axis_tick_major_length = 0.02,
     axis_tick_minor_number = 4,

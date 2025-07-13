@@ -1,0 +1,115 @@
+* using log directory 'D:/Data/OneDrive/R语言/ggchord/..Rcheck'
+* using R version 4.3.2 (2023-10-31 ucrt)
+* using platform: x86_64-w64-mingw32 (64-bit)
+* R was compiled by
+    gcc.exe (GCC) 12.3.0
+    GNU Fortran (GCC) 12.3.0
+* running under: Windows 11 x64 (build 26100)
+* using session charset: UTF-8
+* using option '--as-cran'
+* checking for file './DESCRIPTION' ... OK
+* this is package 'ggchord' version '0.2.0'
+* package encoding: UTF-8
+* checking CRAN incoming feasibility ... [298s] NOTE
+Maintainer: 'Jem Dang <dangjem0730@gmail.com>'
+
+Package has a VignetteBuilder field but no prebuilt vignette index.
+
+Found the following (possibly) invalid URLs:
+  URL: https://github.com/DangJem/ggchord
+    From: DESCRIPTION
+    Status: Error
+    Message: libcurl error code 28:
+      	Operation timed out after 60013 milliseconds with 0 bytes received
+  URL: https://github.com/DangJem/ggchord/issues
+    From: DESCRIPTION
+    Status: Error
+    Message: libcurl error code 56:
+      	Recv failure: Connection was aborted
+* checking package namespace information ... OK
+* checking package dependencies ... OK
+* checking if this is a source package ... OK
+* checking if there is a namespace ... OK
+* checking for executable files ... OK
+* checking for hidden files and directories ... NOTE
+Found the following hidden files and directories:
+  .gitignore
+  ..Rcheck
+  .git
+These were most likely included in error. See section 'Package
+structure' in the 'Writing R Extensions' manual.
+
+CRAN-pack does not know about
+  ..Rcheck
+  .git
+* checking for portable file names ... OK
+* checking whether package 'ggchord' can be installed ... OK
+* checking installed package size ... OK
+* checking package directory ... OK
+* checking for future file timestamps ... NOTE
+unable to verify current time
+* checking DESCRIPTION meta-information ... OK
+* checking top-level files ... NOTE
+Non-standard files/directories found at top level:
+  'LICENSE.md' 'Meta' 'README-Hans.md' '_pkgdown.yml' 'doc' 'docs'
+  'examples' 'pkgdown'
+* checking for left-over files ... OK
+* checking index information ... OK
+* checking package subdirectories ... WARNING
+Found the following directory with the name of a check directory:
+  ./..Rcheck
+Most likely, these were included erroneously.
+Found the following directory with the name of a version control directory:
+  ./.git
+These should not be in a package tarball.
+* checking R files for non-ASCII characters ... OK
+* checking R files for syntax errors ... OK
+* checking whether the package can be loaded ... OK
+* checking whether the package can be loaded with stated dependencies ... OK
+* checking whether the package can be unloaded cleanly ... OK
+* checking whether the namespace can be loaded with stated dependencies ... OK
+* checking whether the namespace can be unloaded cleanly ... OK
+* checking use of S3 registration ... OK
+* checking dependencies in R code ... OK
+* checking S3 generic/method consistency ... OK
+* checking replacement functions ... OK
+* checking foreign function calls ... OK
+* checking R code for possible problems ... OK
+* checking Rd files ... OK
+* checking Rd metadata ... OK
+* checking Rd line widths ... OK
+* checking Rd cross-references ... OK
+* checking for missing documentation entries ... OK
+* checking for code/documentation mismatches ... OK
+* checking Rd \usage sections ... OK
+* checking Rd contents ... OK
+* checking for unstated dependencies in examples ... OK
+* checking contents of 'data' directory ... OK
+* checking data for non-ASCII characters ... OK
+* checking LazyData ... OK
+* checking data for ASCII and uncompressed saves ... OK
+* checking files in 'vignettes' ... WARNING
+Files in the 'vignettes' directory but no files in 'inst/doc':
+  'ggchord_vignette.Rmd'
+* checking examples ... OK
+* checking for unstated dependencies in 'tests' ... OK
+* checking tests ... OK
+  Running 'testthat.R'
+* checking for unstated dependencies in vignettes ... OK
+* checking package vignettes in 'inst/doc' ... WARNING
+Directory 'inst/doc' does not exist.
+Package vignette without corresponding single PDF/HTML:
+  'ggchord_vignette.Rmd'
+* checking re-building of vignette outputs ... OK
+* checking PDF version of manual ... ERROR
+Rd conversion errors:
+Converting Rd files to LaTeX ...
+  -h(
+Warning in file(con, "r") :
+  cannot open file 'D:/Data/OneDrive/Rh/-h(': No such file or directory
+Error in file(con, "r") : cannot open the connection
+* checking HTML version of manual ... OK
+* checking for non-standard things in the check directory ... OK
+* checking for detritus in the temp directory ... OK
+* DONE
+Status: 1 ERROR, 3 WARNINGs, 4 NOTEs
