@@ -39,7 +39,7 @@ install.packages("RColorBrewer")
 ```
 
 ### How to install ggchord？
-【Under review, temporarily unavailable】Install the stable version of ggchord from CRAN:
+Install the stable version of ggchord from CRAN:
 
 `install.packages("ggchord")`
 
