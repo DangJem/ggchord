@@ -113,7 +113,7 @@ test_that("print renders the full chord diagram", {
   data(ribbon_data_example)
   data(gene_data_example)
 
-  # pident also works correctly in a real ggnewscale environment
+  # pident works correctly together with the gene fill scale
   p <- ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
     geom_seq() +
     geom_ribbon(ribbon_color_scheme = "query") +

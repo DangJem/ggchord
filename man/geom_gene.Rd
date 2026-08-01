@@ -64,6 +64,6 @@ A list of ggplot2 layers
 }
 \description{
 Draws gene annotation arrows on the chord diagram. Gene layout parameters (offset, width, color scheme, etc.) are specified here.
-When the \code{ggnewscale} package is available, \code{new_scale_fill()} is used automatically to ensure
-that the fill scale is independent from the ribbon's fill scale.
+The gene fill scale is kept independent from the ribbon's fill scale via a
+separate internal aesthetic used by the ribbon layer.
 }

@@ -5,8 +5,8 @@
 #' Add a gene arrow layer
 #'
 #' Draws gene annotation arrows on the chord diagram. Gene layout parameters (offset, width, color scheme, etc.) are specified here.
-#' When the \code{ggnewscale} package is available, \code{new_scale_fill()} is used automatically to ensure
-#' that the fill scale is independent from the ribbon's fill scale.
+#' The gene fill scale is kept independent from the ribbon's fill scale via a
+#' separate internal aesthetic used by the ribbon layer.
 #'
 #' @param mapping Default NULL (uses pre-computed data)
 #' @param data Default NULL (retrieved automatically from the layout)
@@ -61,11 +61,6 @@ geom_gene <- function(mapping = NULL, data = NULL,
   ))
 
   layers <- list()
-
-  # new_scale_fill ensures the fill scale is independent from the ribbon's
-  if (requireNamespace("ggnewscale", quietly = TRUE)) {
-    layers[[1]] <- ggnewscale::new_scale_fill()
-  }
 
   # Manual colors map by annotation; default colors map by strand.
   gene_scheme <- gene_color_scheme %||% "strand"

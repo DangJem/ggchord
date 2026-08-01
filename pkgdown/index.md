@@ -27,12 +27,10 @@ It is suitable for research in comparative genomics, pan-genome analysis, phage-
 ### Dependencies
 - R (≥ 3.6.0)
 - ggplot2 (≥ 3.3.0)
-- ggnewscale (≥ 0.5.0)
 - RColorBrewer
 
 ```r
 install.packages("ggplot2")
-install.packages("ggnewscale")
 install.packages("RColorBrewer")
 ```
 

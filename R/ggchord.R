@@ -47,7 +47,6 @@ globalVariables(c(
 #' print(p)
 #'
 #' @import ggplot2
-#' @import ggnewscale
 #' @import RColorBrewer
 #' @import grDevices
 #' @import grid
@@ -391,9 +390,9 @@ print.ggchord <- function(x, ...) {
           axis_line_indices <- c(axis_line_indices, i)
         }
       }
-    } else if (gname %in% c("GeomPolygon", "NewGeomPolygon")) {
-      # ggnewscale renames the ribbon geom to NewGeomPolygon.  The gene
-      # placeholder is distinguished reliably by its strand column.
+    } else if (gname %in% c("GeomPolygon", "NewGeomPolygon", "GeomChordPolygon")) {
+      # The gene placeholder is distinguished from the ribbon placeholder
+      # by its strand column (both use GeomPolygon).
       if ("strand" %in% data_names) {
         gene_poly_indices <- c(gene_poly_indices, i)
       } else {
@@ -471,9 +470,9 @@ print.ggchord <- function(x, ...) {
 
   # Ribbon fill scale
   # Note: when the gene layer and the ribbon share the fill aesthetic, the
-  # ggnewscale::new_scale_fill() called during geom_gene() composition creates a
-  # placeholder fill scale (aesthetic like fill_ggnewscale_N). We replace that
-  # placeholder in place with the ribbon's real color scale so the gene scale
+  # ribbon layer's fill mapping is renamed to the internal aesthetic
+  # "fill_ggnewscale_1" below so the gene scale does not overwrite the ribbon
+  # scale.
   ribbon_fill_scale <- NULL
   if (!is.null(layout$ribbon_polys)) {
     if (layout$ribbon_color_scheme == "pident") {
@@ -514,23 +513,12 @@ print.ggchord <- function(x, ...) {
   # Merge the two fill scales:
   # - ribbon only: add the ribbon scale directly (aesthetic = fill)
   # - gene only: add the gene scale directly (aesthetic = fill)
-  # - both: the ribbon layer was already renamed by ggnewscale during
-  #   geom_gene() composition to fill_ggnewscale_N, so we put the ribbon scale
-  #   into that aesthetic slot and the gene scale uses fill; neither overwrites the other.
+  # - both: ggplot2 allows only one scale per aesthetic, so the ribbon layers'
+  #   fill mapping is renamed to the internal aesthetic "fill_ggnewscale_1" and
+  #   the ribbon scale is attached to it; the gene scale keeps the plain "fill"
+  #   aesthetic. The two scales therefore do not overwrite each other.
   if (!is.null(ribbon_fill_scale) && !is.null(gene_fill_scale)) {
-    # The ribbon layer was already renamed by ggnewscale during geom_gene()
-    # composition to fill_ggnewscale_N; put the ribbon scale into that aesthetic slot.
-    gns_idx <- which(vapply(x$scales$scales, function(s) {
-      any(grepl("^fill_ggnewscale_\\d+$", s$aesthetics))
-    }, logical(1)))
-    gns_aes <- if (length(gns_idx) > 0) {
-      x$scales$scales[[gns_idx[1]]]$aesthetics
-    } else {
-      "fill_ggnewscale_1"
-    }
-    # If the ribbon layer is added after geom_gene() (layer order gene -> ribbon),
-    # ggnewscale did not rename its fill mapping; synchronize it manually to gns_aes
-    # so both layer orders correctly separate the ribbon and gene fill scales.
+    gns_aes <- "fill_ggnewscale_1"
     for (r_idx in ribbon_indices) {
       lyr <- x$layers[[r_idx]]
       if (!is.null(lyr$mapping)) {
@@ -542,7 +530,7 @@ print.ggchord <- function(x, ...) {
     s <- ribbon_fill_scale
     s$aesthetics <- gns_aes
     # guide_colorbar's available_aes only recognizes fill by default; after the
-    # aesthetic rename it must be synchronized, otherwise the
+    # aesthetic rename it must be synchronized, otherwise the colorbar is dropped.
     if (inherits(s$guide, "Guide")) {
       s$guide$available_aes <- gsub("^fill$", gns_aes, s$guide$available_aes)
       if (!is.null(s$guide$params$override.aes)) {
@@ -550,11 +538,7 @@ print.ggchord <- function(x, ...) {
           gsub("^fill$", gns_aes, names(s$guide$params$override.aes))
       }
     }
-    if (length(gns_idx) > 0) {
-      x$scales$scales[[gns_idx[1]]] <- s
-    } else {
-      x <- x + s
-    }
+    x <- x + s
     # The gene layer uses the fill aesthetic, so add the gene scale directly (no conflict)
     x <- x + gene_fill_scale
   } else if (!is.null(ribbon_fill_scale)) {
@@ -603,8 +587,6 @@ print.ggchord <- function(x, ...) {
 ggplot_build.ggchord <- function(plot, ...) {
   # The layout is computed lazily by print.ggchord(). A direct ggplot_build()
   # call on a fresh plot therefore has no layout yet; warn in that case.
-  # The internal build triggered by ggnewscale's new_scale_fill() while layers
-  # are being composed must not warn.
   try_layout <- tryCatch(get_chord_layout(), error = function(e) NULL)
   if (is.null(try_layout)) {
     calls <- sys.calls()
