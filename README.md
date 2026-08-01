@@ -21,6 +21,8 @@ Suitable for comparative genomics, pan-genome analysis, phage-host sequence rela
 - **Flexible Ribbon Styles**: 3 coloring schemes, Bézier control points — parameters belong in `geom_ribbon()`.
 - **Gene Arrow Layer**: Color by strand or annotation category, with labels — parameters belong in `geom_gene()`.
 - **Refined Axes**: Major/minor ticks, label size and orientation — parameters belong in `geom_axis()`.
+- **Sequence Labels**: Labels can be placed on/outside each sequence arc via `geom_seq_label()`.
+- **Flexible Integration**: Plot objects are self-contained and work with `ggsave()`, `ggplot_build()` and `ggplotly()`; themes and scales can be added with `+`.
 
 ## Installation
 ### Dependencies
@@ -424,11 +426,21 @@ ggchord(
 | `linewidth` | numeric | 1.2 | Arc line width |
 | `show_legend` | logical | TRUE | Show legend |
 
+### geom_seq_label() Parameters
+
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
+| `seq_label_radius` | numeric/vector | 1.15 | Radial position of labels as a multiplier of the arc radius (1 = on the arc) |
+| `seq_label_rotation` | numeric/vector | 0 | Additional label rotation (degrees) |
+| `seq_label_size` | numeric/vector | 3 | Label font size |
+| `seq_labels` | character vector | NULL | Override label texts (defaults to the sequence labels from `geom_seq()`) |
+| `show_legend` | logical | FALSE | Show legend |
+
 ### geom_ribbon() Parameters
 
 | Parameter | Type | Default | Description |
 | --- | --- | --- | --- |
-| `ribbon_color_scheme` | character | "pident" | Scheme: `"pident"`, `"query"`, `"single"` |
+| `ribbon_color_scheme` | character | "pident" | Scheme: `"pident"`, `"query"`, `"subject"`, `"single"` |
 | `ribbon_colors` | color vector | auto | Ribbon color parameters |
 | `ribbon_alpha` | numeric (0-1) | 0.35 | Ribbon transparency |
 | `ribbon_ctrl_point` | vector/list | c(0,0) | Bézier control points |
@@ -486,7 +498,11 @@ ggchord(
 ## Version History
 ### v0.6.0 (Latest)
 - **Self-contained plot objects**: data and parameters are stored on the plot itself, so multiple plots can coexist and plots survive `saveRDS()`/`readRDS()`.
-- **Build-time layout**: the layout is now computed by `ggplot_build()` instead of `print()`, so `print()`, `ggsave()` and `ggplot_build()` all work; the user's plot object is no longer modified when rendering.
+- **Build-time layout**: the layout is now computed by `ggplot_build()` instead of `print()`, so `print()`, `ggsave()`, `ggplot_build()` (and `ggplotly()`) all work; the user's plot object is no longer modified when rendering.
+- **New layer `geom_seq_label()`**: place sequence labels on/outside the arcs (`seq_label_radius`, `seq_label_rotation`, `seq_label_size`).
+- **New ribbon color scheme `"subject"`**: color ribbons by the subject sequence.
+- **Exported `get_chord_layout()`**: access the computed layout for custom layers.
+- **Themes/scales via `+`**: `theme()` and user-supplied scales are respected.
 - **Data validation**: `ggchord()` now warns about out-of-range or reversed alignment/gene coordinates and unknown sequence IDs.
 - **Performance**: faster angle lookup in the layout mapping (binary search instead of a linear scan).
 - **Dependencies**: declares `ggplot2 (>= 4.0.0)` and `R (>= 4.1.0)` to match the implementation.

@@ -36,6 +36,9 @@ compute_chord_layout <- function(
     geneLabelCircumLimit, geneLabelRotation,
     gene_label_show, gene_label_size,
     gene_color_scheme, gene_colors, gene_order,
+    # Sequence label parameters
+    seq_label_text = NULL, seq_label_radius = NULL,
+    seq_label_rotation = NULL, seq_label_size = NULL,
     # Axis parameters
     axisGap, axisMaj, axisMajLen, axisMin, axisMinLen,
     labelSize, labelOffset, axisLabelOrientation,
@@ -213,7 +216,7 @@ compute_chord_layout <- function(
 
     if (ribbon_color_scheme == "single") {
       singleCol <- if (length(ribbon_colors) > 1) ribbon_colors[[1]] else ribbon_colors
-    } else if (ribbon_color_scheme == "query") {
+    } else if (ribbon_color_scheme %in% c("query", "subject")) {
       queryCols <- ribbon_colors
     } else if (ribbon_color_scheme == "pident") {
       rampFunc <- colorRampPalette(ribbon_colors)
@@ -318,7 +321,8 @@ compute_chord_layout <- function(
       } else {
         poly$fill <- switch(ribbon_color_scheme,
                             single = singleCol,
-                            query = queryCols[q])
+                            query = queryCols[q],
+                            subject = queryCols[s])
       }
       poly$group <- cntValid + 1
       poly$alpha <- ribbon_alpha
@@ -532,6 +536,43 @@ compute_chord_layout <- function(
   }
 
   # ====================================================================
+  # Step 7b: generate sequence labels (if requested)
+  # ====================================================================
+  seq_labels_df <- data.frame()
+  if (!is.null(seq_label_text)) {
+    seq_labels_df <- do.call(rbind, lapply(seqs, function(id) {
+      ref <- seq_refs[[id]]
+      mid_angle <- (starts[id] + ends[id]) / 2
+      r <- seqRadius[id] * seq_label_radius[id]
+      pt <- map_to_curve(mid_angle, r, ref)
+      # Tangent angle at the midpoint, used to orient the label along the arc.
+      idx <- which.min(abs(ref$angles - mid_angle))
+      if (idx < length(ref$angles)) {
+        dx <- ref$path$x[idx + 1] - ref$path$x[idx]
+        dy <- ref$path$y[idx + 1] - ref$path$y[idx]
+      } else {
+        dx <- ref$path$x[idx] - ref$path$x[idx - 1]
+        dy <- ref$path$y[idx] - ref$path$y[idx - 1]
+      }
+      text_angle <- atan2(dy, dx) * 180 / pi + 90 + seq_label_rotation[id]
+      text_angle <- (text_angle + 360) %% 360
+      if (text_angle > 90 && text_angle < 270) {
+        text_angle <- text_angle + 180
+      }
+      text_angle <- text_angle %% 360
+      data.frame(
+        text_x = pt[1], text_y = pt[2],
+        label = seq_label_text[id],
+        text_angle = text_angle,
+        size = seq_label_size[id],
+        hjust = 0.5, vjust = 0.5,
+        seq_id = id,
+        stringsAsFactors = FALSE
+      )
+    }))
+  }
+
+  # ====================================================================
   # Step 8: rotate all elements uniformly
   # ====================================================================
   rotate_df <- function(df) {
@@ -570,6 +611,7 @@ compute_chord_layout <- function(
   if (nrow(axis_ticks) > 0) axis_ticks <- rotate_df(axis_ticks)
   if (!is.null(ribbon_polys)) ribbon_polys <- rotate_df(ribbon_polys)
   if (nrow(gene_labels) > 0) gene_labels <- rotate_df(gene_labels)
+  if (nrow(seq_labels_df) > 0) seq_labels_df <- rotate_df(seq_labels_df)
   if (nrow(gene_polys) > 0) {
     gene_polys <- rotate_df(gene_polys)
     gene_polys <- gene_polys[with(gene_polys, order(group, ord)), ]
@@ -585,6 +627,7 @@ compute_chord_layout <- function(
     axisTicks = axis_ticks,
     gene_polys = gene_polys,
     gene_arrows = gene_labels,
+    seq_labels = seq_labels_df,
     show_axis = show_axis
   )
 
@@ -597,6 +640,7 @@ compute_chord_layout <- function(
     ribbon_polys   = ribbon_polys,
     gene_polys     = gene_polys,
     gene_labels    = gene_labels,
+    seq_labels_df  = seq_labels_df,
     axis_lines     = axis_lines,
     axis_ticks     = axis_ticks,
 

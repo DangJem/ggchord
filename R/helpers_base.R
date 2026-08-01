@@ -122,7 +122,7 @@ process_panel_margin <- function(arg_list) {
 #' @param show_axis Logical, whether to include extreme value calculation for axis-related elements, default FALSE
 #' @return List containing x_min (minimum x), x_max (maximum x), y_min (minimum y), y_max (maximum y)
 #' @keywords internal
-get_plot_extremes <- function(allRibbon=NULL, seqArcs=NULL, axisLines=NULL, axisTicks=NULL, gene_arrows=NULL, gene_polys = NULL, show_axis = FALSE) {
+get_plot_extremes <- function(allRibbon=NULL, seqArcs=NULL, axisLines=NULL, axisTicks=NULL, gene_arrows=NULL, gene_polys = NULL, seq_labels = NULL, show_axis = FALSE) {
   # Initialize vectors to store x and y coordinates
   x_coords <- numeric(0)
   y_coords <- numeric(0)
@@ -161,6 +161,11 @@ get_plot_extremes <- function(allRibbon=NULL, seqArcs=NULL, axisLines=NULL, axis
   if (!is.null(gene_polys) && nrow(gene_polys) > 0) {
     x_coords <- c(x_coords, gene_polys$x)
     y_coords <- c(y_coords, gene_polys$y)
+  }
+  # 7. Process sequence labels (seq_labels): contains text_x/text_y
+  if (!is.null(seq_labels) && nrow(seq_labels) > 0) {
+    x_coords <- c(x_coords, seq_labels$text_x)
+    y_coords <- c(y_coords, seq_labels$text_y)
   }
 
   # Filter missing values (NA)

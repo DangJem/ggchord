@@ -6,7 +6,12 @@
 \usage{
 get_chord_layout()
 }
-\description{
-Get the chord layout from the package environment
+\value{
+A chord layout list containing the computed geometry (sequence
+  arcs, ribbon polygons, gene arrows, axis elements, extremes, colors, etc.)
 }
-\keyword{internal}
+\description{
+Returns the most recently computed chord layout (after the plot was built,
+e.g. via \code{print()} or \code{ggplot_build()}). This is useful for
+building custom layers or annotations on top of the chord geometry.
+}

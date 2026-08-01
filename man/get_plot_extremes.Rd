@@ -11,6 +11,7 @@ get_plot_extremes(
   axisTicks = NULL,
   gene_arrows = NULL,
   gene_polys = NULL,
+  seq_labels = NULL,
   show_axis = FALSE
 )
 }

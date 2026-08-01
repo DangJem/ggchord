@@ -8,8 +8,23 @@
 
 * The layout is now computed by `ggplot_build()` rather than by a custom
   `print()` method. As a result `print()`, `ggsave()`, `ggplot_build()` and
-  other standard ggplot2 workflows all work directly on ggchord plots, and
-  rendering no longer modifies the user's plot object.
+  other standard ggplot2 workflows (e.g. `plotly::ggplotly()`) all work
+  directly on ggchord plots, and rendering no longer modifies the user's plot
+  object.
+
+* New layer `geom_seq_label()`: places sequence labels at the midpoint of each
+  sequence arc with control over radial offset (`seq_label_radius`), rotation
+  (`seq_label_rotation`) and font size (`seq_label_size`).
+
+* New ribbon color scheme `"subject"`: colors ribbons by the subject sequence
+  (`saccver`), complementing the existing `"query"` scheme.
+
+* The layout accessor `get_chord_layout()` is now exported, making the computed
+  geometry available for custom layers and annotations.
+
+* Themes, scales and other ggplot2 objects can now be added with `+` (e.g.
+  `p + theme(legend.position = "bottom")`), and user-supplied colour/fill
+  scales are respected instead of being overwritten.
 
 * `ggchord()` now warns about suspicious input data: reversed or out-of-range
   alignment/gene coordinates, `pident` outside [0, 100], and sequence IDs that

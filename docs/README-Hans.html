@@ -63,6 +63,8 @@
 <li><strong>灵活的连接带样式</strong>：3 种配色方案，支持贝塞尔曲线控制点——参数放在 <code>geom_ribbon()</code>。</li>
 <li><strong>基因箭头图层</strong>：按链方向或注释类别着色，支持标签——参数放在 <code>geom_gene()</code>。</li>
 <li><strong>精细化坐标轴</strong>：主/次刻度、标签大小与方向——参数放在 <code>geom_axis()</code>。</li>
+<li><strong>序列标签</strong>：可通过 <code>geom_seq_label()</code> 将标签放在每条序列弧线上/外侧。</li>
+<li><strong>灵活集成</strong>：绘图对象自包含，支持 <code>ggsave()</code>、<code>ggplot_build()</code> 与 <code>ggplotly()</code>；<code>theme()</code> 与自定义 scale 可用 <code>+</code> 叠加。</li>
 </ul>
 <h2>安装</h2>
 <h3>依赖环境</h3>
@@ -691,6 +693,49 @@ ggchord(
 </tr>
 </tbody>
 </table>
+<h3>geom_seq_label() 参数</h3>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>默认值</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>seq_label_radius</code></td>
+<td>数值/向量</td>
+<td>1.15</td>
+<td>标签径向位置（以弧线半径的倍数为单位，1 = 在弧线上）</td>
+</tr>
+<tr>
+<td><code>seq_label_rotation</code></td>
+<td>数值/向量</td>
+<td>0</td>
+<td>标签附加旋转角度（度）</td>
+</tr>
+<tr>
+<td><code>seq_label_size</code></td>
+<td>数值/向量</td>
+<td>3</td>
+<td>标签字号</td>
+</tr>
+<tr>
+<td><code>seq_labels</code></td>
+<td>字符向量</td>
+<td>NULL</td>
+<td>覆盖标签文本（默认使用 <code>geom_seq()</code> 的序列标签）</td>
+</tr>
+<tr>
+<td><code>show_legend</code></td>
+<td>逻辑值</td>
+<td>FALSE</td>
+<td>是否显示图例</td>
+</tr>
+</tbody>
+</table>
 <h3>geom_ribbon() 参数</h3>
 <table>
 <thead>
@@ -706,7 +751,7 @@ ggchord(
 <td><code>ribbon_color_scheme</code></td>
 <td>字符</td>
 <td>&quot;pident&quot;</td>
-<td>配色方案：<code>&quot;pident&quot;</code>、<code>&quot;query&quot;</code>、<code>&quot;single&quot;</code></td>
+<td>配色方案：<code>&quot;pident&quot;</code>、<code>&quot;query&quot;</code>、<code>&quot;subject&quot;</code>、<code>&quot;single&quot;</code></td>
 </tr>
 <tr>
 <td><code>ribbon_colors</code></td>
@@ -947,7 +992,11 @@ ggchord(
 <h3>v0.6.0（最新）</h3>
 <ul>
 <li><strong>绘图对象自包含</strong>：数据与参数直接存储在绘图对象上，多个图可并存，且对象可经 <code>saveRDS()</code>/<code>readRDS()</code> 保存与恢复。</li>
-<li><strong>构建时布局</strong>：布局改由 <code>ggplot_build()</code> 计算（而非 <code>print()</code>），因此 <code>print()</code>、<code>ggsave()</code> 与 <code>ggplot_build()</code> 均可用；渲染不再修改用户绘图对象。</li>
+<li><strong>构建时布局</strong>：布局改由 <code>ggplot_build()</code> 计算（而非 <code>print()</code>），因此 <code>print()</code>、<code>ggsave()</code>、<code>ggplot_build()</code>（及 <code>ggplotly()</code>）均可用；渲染不再修改用户绘图对象。</li>
+<li><strong>新图层 <code>geom_seq_label()</code></strong>：在弧线上/外侧放置序列标签（<code>seq_label_radius</code>、<code>seq_label_rotation</code>、<code>seq_label_size</code>）。</li>
+<li><strong>新配色方案 <code>&quot;subject&quot;</code></strong>：按目标序列为连接带着色。</li>
+<li><strong>导出 <code>get_chord_layout()</code></strong>：获取计算后的布局，便于自定义图层。</li>
+<li><strong><code>+</code> 叠加 <code>theme()</code>/scale</strong>：支持 <code>theme()</code> 与用户自定义 scale。</li>
 <li><strong>数据校验</strong>：<code>ggchord()</code> 会对越界或反向的比对/基因坐标、未知序列 ID 给出警告。</li>
 <li><strong>性能</strong>：布局坐标映射改用二分查找，替代线性扫描。</li>
 <li><strong>依赖声明</strong>：与实现一致地声明 <code>ggplot2 (&gt;= 4.0.0)</code> 与 <code>R (&gt;= 4.1.0)</code>。</li>

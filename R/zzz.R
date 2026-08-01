@@ -22,7 +22,14 @@ set_chord_layout <- function(layout) {
 }
 
 #' Get the chord layout from the package environment
-#' @keywords internal
+#'
+#' Returns the most recently computed chord layout (after the plot was built,
+#' e.g. via \code{print()} or \code{ggplot_build()}). This is useful for
+#' building custom layers or annotations on top of the chord geometry.
+#'
+#' @return A chord layout list containing the computed geometry (sequence
+#'   arcs, ribbon polygons, gene arrows, axis elements, extremes, colors, etc.)
+#' @export
 get_chord_layout <- function() {
   layout <- .chord_env$layout
   if (is.null(layout)) {

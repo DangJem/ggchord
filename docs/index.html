@@ -85,6 +85,8 @@
 <li><strong>Flexible Ribbon Styles</strong>: 3 coloring schemes, Bézier control points — parameters belong in <code>geom_ribbon()</code>.</li>
 <li><strong>Gene Arrow Layer</strong>: Color by strand or annotation category, with labels — parameters belong in <code>geom_gene()</code>.</li>
 <li><strong>Refined Axes</strong>: Major/minor ticks, label size and orientation — parameters belong in <code>geom_axis()</code>.</li>
+<li><strong>Sequence Labels</strong>: Labels can be placed on/outside each sequence arc via <code>geom_seq_label()</code>.</li>
+<li><strong>Flexible Integration</strong>: Plot objects are self-contained and work with <code>ggsave()</code>, <code>ggplot_build()</code> and <code>ggplotly()</code>; themes and scales can be added with <code>+</code>.</li>
 </ul>
 <h2>Installation</h2>
 <h3>Dependencies</h3>
@@ -712,6 +714,49 @@ ggchord(
 </tr>
 </tbody>
 </table>
+<h3>geom_seq_label() Parameters</h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>seq_label_radius</code></td>
+<td>numeric/vector</td>
+<td>1.15</td>
+<td>Radial position of labels as a multiplier of the arc radius (1 = on the arc)</td>
+</tr>
+<tr>
+<td><code>seq_label_rotation</code></td>
+<td>numeric/vector</td>
+<td>0</td>
+<td>Additional label rotation (degrees)</td>
+</tr>
+<tr>
+<td><code>seq_label_size</code></td>
+<td>numeric/vector</td>
+<td>3</td>
+<td>Label font size</td>
+</tr>
+<tr>
+<td><code>seq_labels</code></td>
+<td>character vector</td>
+<td>NULL</td>
+<td>Override label texts (defaults to the sequence labels from <code>geom_seq()</code>)</td>
+</tr>
+<tr>
+<td><code>show_legend</code></td>
+<td>logical</td>
+<td>FALSE</td>
+<td>Show legend</td>
+</tr>
+</tbody>
+</table>
 <h3>geom_ribbon() Parameters</h3>
 <table>
 <thead>
@@ -727,7 +772,7 @@ ggchord(
 <td><code>ribbon_color_scheme</code></td>
 <td>character</td>
 <td>&quot;pident&quot;</td>
-<td>Scheme: <code>&quot;pident&quot;</code>, <code>&quot;query&quot;</code>, <code>&quot;single&quot;</code></td>
+<td>Scheme: <code>&quot;pident&quot;</code>, <code>&quot;query&quot;</code>, <code>&quot;subject&quot;</code>, <code>&quot;single&quot;</code></td>
 </tr>
 <tr>
 <td><code>ribbon_colors</code></td>
@@ -968,7 +1013,11 @@ ggchord(
 <h3>v0.6.0 (Latest)</h3>
 <ul>
 <li><strong>Self-contained plot objects</strong>: data and parameters are stored on the plot itself, so multiple plots can coexist and plots survive <code>saveRDS()</code>/<code>readRDS()</code>.</li>
-<li><strong>Build-time layout</strong>: the layout is now computed by <code>ggplot_build()</code> instead of <code>print()</code>, so <code>print()</code>, <code>ggsave()</code> and <code>ggplot_build()</code> all work; the user's plot object is no longer modified when rendering.</li>
+<li><strong>Build-time layout</strong>: the layout is now computed by <code>ggplot_build()</code> instead of <code>print()</code>, so <code>print()</code>, <code>ggsave()</code>, <code>ggplot_build()</code> (and <code>ggplotly()</code>) all work; the user's plot object is no longer modified when rendering.</li>
+<li><strong>New layer <code>geom_seq_label()</code></strong>: place sequence labels on/outside the arcs (<code>seq_label_radius</code>, <code>seq_label_rotation</code>, <code>seq_label_size</code>).</li>
+<li><strong>New ribbon color scheme <code>&quot;subject&quot;</code></strong>: color ribbons by the subject sequence.</li>
+<li><strong>Exported <code>get_chord_layout()</code></strong>: access the computed layout for custom layers.</li>
+<li><strong>Themes/scales via <code>+</code></strong>: <code>theme()</code> and user-supplied scales are respected.</li>
 <li><strong>Data validation</strong>: <code>ggchord()</code> now warns about out-of-range or reversed alignment/gene coordinates and unknown sequence IDs.</li>
 <li><strong>Performance</strong>: faster angle lookup in the layout mapping (binary search instead of a linear scan).</li>
 <li><strong>Dependencies</strong>: declares <code>ggplot2 (&gt;= 4.0.0)</code> and <code>R (&gt;= 4.1.0)</code> to match the implementation.</li>

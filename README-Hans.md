@@ -21,6 +21,8 @@
 - **灵活的连接带样式**：3 种配色方案，支持贝塞尔曲线控制点——参数放在 `geom_ribbon()`。
 - **基因箭头图层**：按链方向或注释类别着色，支持标签——参数放在 `geom_gene()`。
 - **精细化坐标轴**：主/次刻度、标签大小与方向——参数放在 `geom_axis()`。
+- **序列标签**：可通过 `geom_seq_label()` 将标签放在每条序列弧线上/外侧。
+- **灵活集成**：绘图对象自包含，支持 `ggsave()`、`ggplot_build()` 与 `ggplotly()`；`theme()` 与自定义 scale 可用 `+` 叠加。
 
 ## 安装
 ### 依赖环境
@@ -417,11 +419,21 @@ ggchord(
 | `linewidth` | 数值 | 1.2 | 弧线宽度 |
 | `show_legend` | 逻辑值 | TRUE | 是否显示图例 |
 
+### geom_seq_label() 参数
+
+| 参数 | 类型 | 默认值 | 描述 |
+| --- | --- | --- | --- |
+| `seq_label_radius` | 数值/向量 | 1.15 | 标签径向位置（以弧线半径的倍数为单位，1 = 在弧线上） |
+| `seq_label_rotation` | 数值/向量 | 0 | 标签附加旋转角度（度） |
+| `seq_label_size` | 数值/向量 | 3 | 标签字号 |
+| `seq_labels` | 字符向量 | NULL | 覆盖标签文本（默认使用 `geom_seq()` 的序列标签） |
+| `show_legend` | 逻辑值 | FALSE | 是否显示图例 |
+
 ### geom_ribbon() 参数
 
 | 参数 | 类型 | 默认值 | 描述 |
 | --- | --- | --- | --- |
-| `ribbon_color_scheme` | 字符 | "pident" | 配色方案：`"pident"`、`"query"`、`"single"` |
+| `ribbon_color_scheme` | 字符 | "pident" | 配色方案：`"pident"`、`"query"`、`"subject"`、`"single"` |
 | `ribbon_colors` | 颜色向量 | 自动 | 连接带颜色参数 |
 | `ribbon_alpha` | 数值 (0-1) | 0.35 | 连接带透明度 |
 | `ribbon_ctrl_point` | 向量/列表 | c(0,0) | 贝塞尔曲线控制点 |
@@ -479,7 +491,11 @@ ggchord(
 ## 版本更新记录
 ### v0.6.0（最新）
 - **绘图对象自包含**：数据与参数直接存储在绘图对象上，多个图可并存，且对象可经 `saveRDS()`/`readRDS()` 保存与恢复。
-- **构建时布局**：布局改由 `ggplot_build()` 计算（而非 `print()`），因此 `print()`、`ggsave()` 与 `ggplot_build()` 均可用；渲染不再修改用户绘图对象。
+- **构建时布局**：布局改由 `ggplot_build()` 计算（而非 `print()`），因此 `print()`、`ggsave()`、`ggplot_build()`（及 `ggplotly()`）均可用；渲染不再修改用户绘图对象。
+- **新图层 `geom_seq_label()`**：在弧线上/外侧放置序列标签（`seq_label_radius`、`seq_label_rotation`、`seq_label_size`）。
+- **新配色方案 `"subject"`**：按目标序列为连接带着色。
+- **导出 `get_chord_layout()`**：获取计算后的布局，便于自定义图层。
+- **`+` 叠加 `theme()`/scale**：支持 `theme()` 与用户自定义 scale。
 - **数据校验**：`ggchord()` 会对越界或反向的比对/基因坐标、未知序列 ID 给出警告。
 - **性能**：布局坐标映射改用二分查找，替代线性扫描。
 - **依赖声明**：与实现一致地声明 `ggplot2 (>= 4.0.0)` 与 `R (>= 4.1.0)`。

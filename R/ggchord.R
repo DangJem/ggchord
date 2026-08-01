@@ -196,7 +196,12 @@ ggchord <- function(
 #' @return A ggchord object
 #' @export
 `+.ggchord` <- function(e1, e2) {
-  if (is.list(e2) && !inherits(e2, "ggplot") && !inherits(e2, "LayerInstance")) {
+  # Our geom_* functions return plain lists of layers; flatten them.  Other
+  # list-like objects (e.g. themes) must be handled by the standard ggplot2
+  # `+` method instead.
+  is_layer_list <- is.list(e2) && !inherits(e2, "theme") &&
+    length(e2) > 0 && all(vapply(e2, function(el) inherits(el, "LayerInstance"), logical(1)))
+  if (is_layer_list) {
     p <- e1
     for (elem in e2) {
       p <- p + elem
@@ -235,16 +240,18 @@ ggplot_build.ggchord <- function(plot, ...) {
   ribbon_params <- list()
   gene_params   <- list()
   axis_params   <- list()
+  seq_label_params <- list()
   seq_layer_requested <- FALSE
 
   for (i in seq_along(plot$layers)) {
     pp <- plot$layers[[i]]$ggchord_params
     if (is.null(pp)) next
     switch(pp$type,
-      seq    = { seq_params <- pp; seq_layer_requested <- TRUE },
-      ribbon = ribbon_params <- pp,
-      gene   = gene_params <- pp,
-      axis   = axis_params <- pp
+      seq       = { seq_params <- pp; seq_layer_requested <- TRUE },
+      ribbon    = ribbon_params <- pp,
+      gene      = gene_params <- pp,
+      axis      = axis_params <- pp,
+      seq_label = seq_label_params <- pp
     )
   }
 
@@ -296,8 +303,8 @@ ggplot_build.ggchord <- function(plot, ...) {
   ribbon_ctrl_pt  <- ribbon_params$ribbon_ctrl_point %||% c(0, 0)
 
   ribbon_colors <- ribbon_params$ribbon_colors
-  if (!ribbon_color_scheme %in% c("pident", "query", "single")) {
-    stop("ribbon_color_scheme must be 'pident', 'query', or 'single'")
+  if (!ribbon_color_scheme %in% c("pident", "query", "subject", "single")) {
+    stop("ribbon_color_scheme must be 'pident', 'query', 'subject', or 'single'")
   }
   if (!is.numeric(ribbon_alpha) || length(ribbon_alpha) != 1 ||
       ribbon_alpha < 0 || ribbon_alpha > 1) {
@@ -321,11 +328,20 @@ ggplot_build.ggchord <- function(plot, ...) {
                 maxColorValue = 255)
           })
         },
+        subject = {
+          mix <- 0.5
+          sapply(seq_colors, function(col) {
+            cols <- col2rgb(col)
+            light_cols <- cols + (255 - cols) * mix
+            rgb(light_cols[1,], light_cols[2,], light_cols[3,],
+                maxColorValue = 255)
+          })
+        },
         pident = c("#440154FF","#482878FF","#3E4A89FF","#31688EFF",
                     "#26828EFF","#1F9E89FF","#35B779FF","#6DCD59FF",
                     "#B4DE2CFF","#FDE725FF"))
     }
-    if (ribbon_color_scheme == "query") {
+    if (ribbon_color_scheme %in% c("query", "subject")) {
       ribbon_colors <- process_sequence_param(ribbon_colors, seqs,
                                               "ribbon_colors")
     } else if (ribbon_color_scheme == "pident" && length(ribbon_colors) < 2) {
@@ -386,6 +402,21 @@ ggplot_build.ggchord <- function(plot, ...) {
     axis_params$axis_label_orientation %||% "horizontal", seqs
   )
 
+  # --- Process sequence labels ---
+  seq_label_text <- NULL
+  seq_label_radius <- NULL
+  seq_label_rotation <- NULL
+  seq_label_size <- NULL
+  if (length(seq_label_params) > 0) {
+    seq_label_text <- seq_label_params$seq_labels %||% seq_labels
+    seq_label_radius <- process_sequence_param(
+      seq_label_params$seq_label_radius, seqs, "seq_label_radius", 1.15)
+    seq_label_rotation <- process_sequence_param(
+      seq_label_params$seq_label_rotation, seqs, "seq_label_rotation", 0)
+    seq_label_size <- process_sequence_param(
+      seq_label_params$seq_label_size, seqs, "seq_label_size", 3)
+  }
+
   # ====================================================================
   # Step 2: compute the layout
   # ====================================================================
@@ -407,6 +438,10 @@ ggplot_build.ggchord <- function(plot, ...) {
     gene_label_show = gene_ls, gene_label_size = gene_lsz,
     gene_color_scheme = gene_cs, gene_colors = gene_cols,
     gene_order = gene_ord,
+    seq_label_text = seq_label_text,
+    seq_label_radius = seq_label_radius,
+    seq_label_rotation = seq_label_rotation,
+    seq_label_size = seq_label_size,
     axisGap = axisGap, axisMaj = axisMaj, axisMajLen = axisMajLen,
     axisMin = axisMin, axisMinLen = axisMinLen,
     labelSize = labelSize, labelOffset = labelOffset,
@@ -429,6 +464,7 @@ ggplot_build.ggchord <- function(plot, ...) {
   axis_line_indices <- integer(0)
   axis_seg_indices  <- integer(0)
   axis_text_indices <- integer(0)
+  seq_label_indices <- integer(0)
 
   seq_path_assigned <- FALSE
   for (i in seq_along(plot$layers)) {
@@ -459,8 +495,11 @@ ggplot_build.ggchord <- function(plot, ...) {
     } else if (gname == "GeomSegment") {
       axis_seg_indices <- c(axis_seg_indices, i)
     } else if (gname == "GeomText") {
-      # Gene labels use text_x/text_y; axis labels use label_x/label_y.
-      if ("text_x" %in% data_names) {
+      # Sequence labels are marked with a "seq_label" column; gene labels use
+      # text_x/text_y; axis labels use label_x/label_y.
+      if ("seq_label" %in% data_names) {
+        seq_label_indices <- c(seq_label_indices, i)
+      } else if ("text_x" %in% data_names) {
         gene_text_indices <- c(gene_text_indices, i)
       } else {
         axis_text_indices <- c(axis_text_indices, i)
@@ -522,12 +561,18 @@ ggplot_build.ggchord <- function(plot, ...) {
     for (idx in axis_text_indices) new_layers[[idx]] <- reconstruct_layer(plot$layers[[idx]], label_data)
   }
 
+  if (length(seq_label_indices) > 0 && nrow(layout$seq_labels_df) > 0) {
+    for (idx in seq_label_indices) {
+      new_layers[[idx]] <- reconstruct_layer(plot$layers[[idx]], layout$seq_labels_df)
+    }
+  }
+
   plot$layers <- new_layers
 
   # ====================================================================
   # Step 4: build and attach scales
   # ====================================================================
-  if (length(seq_indices) > 0) {
+  if (length(seq_indices) > 0 && !plot$scales$has_scale("colour")) {
     plot$scales$add(scale_color_manual(
       name   = "Seq ID",
       values = layout$seq_colors,
@@ -577,6 +622,11 @@ ggplot_build.ggchord <- function(plot, ...) {
   # internal aesthetic "fill_ribbon" and the ribbon scale is attached to it;
   # the gene scale keeps the plain "fill" aesthetic, so the two scales do not
   # overwrite each other.
+  # Respect user-supplied fill scales (added via `+`): only add the gene scale
+  # when the plot has no "fill" scale yet.
+  if (!is.null(gene_fill_scale) && plot$scales$has_scale("fill")) {
+    gene_fill_scale <- NULL
+  }
   if (!is.null(ribbon_fill_scale) && !is.null(gene_fill_scale)) {
     ribbon_aes <- "fill_ribbon"
     for (idx in ribbon_indices) {

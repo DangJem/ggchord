@@ -230,6 +230,50 @@ test_that("ribbon data sanity checks warn on bad input", {
   expect_warning(ggchord(seq_data_example, bad_ribbon), "start > end")
 })
 
+test_that("geom_seq_label places sequence labels", {
+  data(seq_data_example)
+  p <- ggchord(seq_data_example) +
+    geom_seq() +
+    geom_seq_label(seq_label_radius = 1.25, seq_label_size = 3.5)
+  pdf(tempfile(fileext = ".pdf"), 8, 8)
+  expect_no_error(suppressWarnings(print(p)))
+  dev.off()
+  layout <- ggchord:::get_chord_layout()
+  expect_gt(nrow(layout$seq_labels_df), 0)
+  expect_true(all(c("text_x", "text_y", "label") %in% names(layout$seq_labels_df)))
+})
+
+test_that("ribbon subject color scheme works", {
+  data(seq_data_example)
+  data(ribbon_data_example)
+  p <- ggchord(seq_data_example, ribbon_data_example) +
+    geom_seq() +
+    geom_ribbon(ribbon_color_scheme = "subject")
+  pdf(tempfile(fileext = ".pdf"), 8, 8)
+  expect_no_error(suppressWarnings(print(p)))
+  dev.off()
+})
+
+test_that("theme customization via + works", {
+  data(seq_data_example)
+  p <- ggchord(seq_data_example) + geom_seq() +
+    ggplot2::theme(legend.position = "bottom")
+  pdf(tempfile(fileext = ".pdf"), 8, 8)
+  expect_no_error(suppressWarnings(print(p)))
+  dev.off()
+})
+
+test_that("get_chord_layout is exported after building", {
+  data(seq_data_example)
+  p <- ggchord(seq_data_example) + geom_seq()
+  pdf(tempfile(fileext = ".pdf"), 8, 8)
+  print(p)
+  dev.off()
+  layout <- get_chord_layout()
+  expect_true(inherits(layout, "chord_layout"))
+  expect_gt(length(layout$seq_arcs), 0)
+})
+
 test_that("documented data and parameter values are validated", {
   expect_error(
     ggchord(data.frame(seq_id = c("a", "a"), length = c(1, 2))),
