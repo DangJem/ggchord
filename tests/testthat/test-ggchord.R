@@ -150,6 +150,31 @@ test_that("README color, label override, and transparency parameters take effect
   expect_true(file.exists("/tmp/ggchord_readme_params.pdf"))
 })
 
+test_that("ribbon outline parameters work with sensible defaults", {
+  data(seq_data_example)
+  data(ribbon_data_example)
+  # Defaults: black outline, width 0.05, solid line
+  p <- ggchord(seq_data_example, ribbon_data_example) + geom_seq() + geom_ribbon()
+  l <- p$layers[[2]]
+  expect_equal(l$aes_params$colour, "black")
+  expect_equal(l$aes_params$linewidth, 0.05)
+  expect_equal(l$aes_params$linetype, 1)
+
+  # Custom values
+  p2 <- ggchord(seq_data_example, ribbon_data_example) +
+    geom_seq() +
+    geom_ribbon(ribbon_outline_color = "red", ribbon_outline_width = 0.8,
+                ribbon_outline_linetype = "dashed")
+  l2 <- p2$layers[[2]]
+  expect_equal(l2$aes_params$colour, "red")
+  expect_equal(l2$aes_params$linewidth, 0.8)
+  expect_equal(l2$aes_params$linetype, "dashed")
+
+  pdf(tempfile(fileext = ".pdf"), 8, 8)
+  expect_no_error(suppressWarnings(print(p2)))
+  dev.off()
+})
+
 test_that("documented data and parameter values are validated", {
   expect_error(
     ggchord(data.frame(seq_id = c("a", "a"), length = c(1, 2))),

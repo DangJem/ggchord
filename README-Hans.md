@@ -249,7 +249,11 @@ gene_data <- read.delim("gene_track.tsv", sep = "\t",
 ```r
 # 默认：序列按 seq_data 顺序逆时针排列
 ggchord(seq_data = seq_data) + geom_seq()
+```
 
+![序列弦图（默认参数）](examples/plots/seq_only_default.png)
+
+```r
 # 自定义序列参数
 ggchord(seq_data = seq_data) +
   geom_seq(
@@ -260,23 +264,35 @@ ggchord(seq_data = seq_data) +
   )
 ```
 
+![序列弦图（自定义布局）](examples/plots/seq_only_custom.png)
+
 ### 加入比对数据
 
 ```r
 # 默认：按相似度（pident）着色
 ggchord(seq_data = seq_data, ribbon_data = ribbon_data) +
   geom_seq() + geom_ribbon()
+```
 
+![按相似度着色的连接带](examples/plots/ribbon_pident.png)
+
+```r
 # 按查询序列着色
 ggchord(seq_data = seq_data, ribbon_data = ribbon_data) +
   geom_seq() +
   geom_ribbon(ribbon_color_scheme = "query")
+```
 
+![按查询序列着色的连接带](examples/plots/ribbon_query.png)
+
+```r
 # 单色模式
 ggchord(seq_data = seq_data, ribbon_data = ribbon_data) +
   geom_seq() +
   geom_ribbon(ribbon_color_scheme = "single", ribbon_colors = "orange")
 ```
+
+![单色连接带](examples/plots/ribbon_single.png)
 
 ### 加入基因注释
 
@@ -284,7 +300,11 @@ ggchord(seq_data = seq_data, ribbon_data = ribbon_data) +
 # 按链方向着色
 ggchord(seq_data = seq_data, gene_data = gene_data) +
   geom_seq() + geom_gene()
+```
 
+![按链方向着色的基因箭头](examples/plots/gene_strand.png)
+
+```r
 # 按注释类别着色 + 显示标签
 ggchord(seq_data = seq_data, gene_data = gene_data) +
   geom_seq() +
@@ -296,13 +316,19 @@ ggchord(seq_data = seq_data, gene_data = gene_data) +
   )
 ```
 
+![按注释类别着色并显示标签的基因箭头](examples/plots/gene_manual_label.png)
+
 ### 综合示例
 
 ```r
 # 全默认组合
 ggchord(seq_data, ribbon_data, gene_data) +
   geom_seq() + geom_ribbon() + geom_gene() + geom_axis()
+```
 
+![全默认参数的综合弦图](examples/plots/combined_default.png)
+
+```r
 # v0.4.0 精细参数控制——所有布局参数分布在对应的 geom 中
 ggchord(
   seq_data = seq_data,
@@ -344,6 +370,8 @@ ggchord(
     axis_label_orientation = c(0, 45, 80, 130)
   )
 ```
+
+![精细参数控制的综合弦图](examples/plots/combined_fine.png)
 
 > 序列级参数（`seq_radius`、`seq_gap` 等）均支持单值、无命名向量、命名向量三种格式。基因级参数额外支持按链（`+`/`-`）区分的列表格式。
 
@@ -399,6 +427,9 @@ ggchord(
 | `ribbon_ctrl_point` | 向量/列表 | c(0,0) | 贝塞尔曲线控制点 |
 | `ribbon_gap` | 数值/向量 | 0.15 | 序列与连接带的径向间距 |
 | `alpha` | 数值 | 0.35 | 透明度（可覆盖 ribbon_alpha） |
+| `ribbon_outline_color` | 字符 | "black" | 连接带轮廓（边框）颜色 |
+| `ribbon_outline_width` | 数值 | 0.05 | 连接带轮廓线宽 |
+| `ribbon_outline_linetype` | 数值/字符 | 1 | 连接带轮廓线型（1 = 实线） |
 | `show_legend` | 逻辑值 | TRUE | 是否显示图例 |
 
 ### geom_gene() 参数

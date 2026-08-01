@@ -50,6 +50,9 @@ ribbon_geom <- rename_fill_geom()
 #' @param ribbon_ctrl_point Optional vector/list. Bezier control points, default c(0,0)
 #' @param ribbon_gap Optional numeric/vector. Spacing between sequences and ribbons, default 0.15
 #' @param alpha Ribbon transparency (overrides ribbon_alpha), defaults to the value used in the layout
+#' @param ribbon_outline_color Character. Color of the ribbon outline (border), default "black"
+#' @param ribbon_outline_width Numeric. Line width of the ribbon outline, default 0.05
+#' @param ribbon_outline_linetype Numeric or character. Line type of the ribbon outline, default 1 (solid); see \code{linetype} in ggplot2 for options
 #' @param show_legend Whether to show the legend, default TRUE
 #' @param ... Additional arguments passed to \code{geom_polygon()}
 #'
@@ -62,6 +65,9 @@ geom_ribbon <- function(mapping = NULL, data = NULL,
                         ribbon_ctrl_point = NULL,
                         ribbon_gap = NULL,
                         alpha = NULL,
+                        ribbon_outline_color = "black",
+                        ribbon_outline_width = 0.05,
+                        ribbon_outline_linetype = 1,
                         show_legend = TRUE,
                         ...) {
   set_ribbon_params(list(
@@ -94,6 +100,13 @@ geom_ribbon <- function(mapping = NULL, data = NULL,
     fill_aes <- aes(x = x, y = y, group = group, fill = fill, alpha = alpha)
   }
 
+  # Ribbon outline (border) styling: passed as fixed colour/linewidth
+  # aesthetics of the polygon layer when the user provides them.
+  outline_params <- list()
+  if (!is.null(ribbon_outline_color)) outline_params$colour <- ribbon_outline_color
+  if (!is.null(ribbon_outline_width)) outline_params$linewidth <- ribbon_outline_width
+  if (!is.null(ribbon_outline_linetype)) outline_params$linetype <- ribbon_outline_linetype
+
   list(
     ggplot2::layer(
       data        = empty_polys,
@@ -107,7 +120,7 @@ geom_ribbon <- function(mapping = NULL, data = NULL,
       inherit.aes = FALSE,
       check.aes   = FALSE,
       key_glyph   = key_glyph_ribbon,
-      params      = list(...)
+      params      = c(list(...), outline_params)
     )
   )
 }

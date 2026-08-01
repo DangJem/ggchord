@@ -13,6 +13,9 @@ geom_ribbon(
   ribbon_ctrl_point = NULL,
   ribbon_gap = NULL,
   alpha = NULL,
+  ribbon_outline_color = "black",
+  ribbon_outline_width = 0.05,
+  ribbon_outline_linetype = 1,
   show_legend = TRUE,
   ...
 )
@@ -33,6 +36,12 @@ geom_ribbon(
 \item{ribbon_gap}{Optional numeric/vector. Spacing between sequences and ribbons, default 0.15}
 
 \item{alpha}{Ribbon transparency (overrides ribbon_alpha), defaults to the value used in the layout}
+
+\item{ribbon_outline_color}{Character. Color of the ribbon outline (border), default "black"}
+
+\item{ribbon_outline_width}{Numeric. Line width of the ribbon outline, default 0.05}
+
+\item{ribbon_outline_linetype}{Numeric or character. Line type of the ribbon outline, default 1 (solid); see \code{linetype} in ggplot2 for options}
 
 \item{show_legend}{Whether to show the legend, default TRUE}
 

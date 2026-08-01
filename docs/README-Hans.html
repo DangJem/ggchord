@@ -430,8 +430,9 @@ gene_data &lt;- read.delim(&quot;gene_track.tsv&quot;, sep = &quot;\t&quot;,
 <h3>仅序列数据</h3>
 <pre><code class="language-r"># 默认：序列按 seq_data 顺序逆时针排列
 ggchord(seq_data = seq_data) + geom_seq()
-
-# 自定义序列参数
+</code></pre>
+<p><img src="examples/plots/seq_only_default.png" alt="序列弦图（默认参数）" /></p>
+<pre><code class="language-r"># 自定义序列参数
 ggchord(seq_data = seq_data) +
   geom_seq(
     seq_order = c(&quot;MT118296.1&quot;, &quot;OR222515.1&quot;, &quot;MT108731.1&quot;, &quot;OQ646790.1&quot;),
@@ -440,27 +441,32 @@ ggchord(seq_data = seq_data) +
     seq_colors = c(&quot;steelblue&quot;, &quot;orange&quot;, &quot;pink&quot;, &quot;yellow&quot;)
   )
 </code></pre>
+<p><img src="examples/plots/seq_only_custom.png" alt="序列弦图（自定义布局）" /></p>
 <h3>加入比对数据</h3>
 <pre><code class="language-r"># 默认：按相似度（pident）着色
 ggchord(seq_data = seq_data, ribbon_data = ribbon_data) +
   geom_seq() + geom_ribbon()
-
-# 按查询序列着色
+</code></pre>
+<p><img src="examples/plots/ribbon_pident.png" alt="按相似度着色的连接带" /></p>
+<pre><code class="language-r"># 按查询序列着色
 ggchord(seq_data = seq_data, ribbon_data = ribbon_data) +
   geom_seq() +
   geom_ribbon(ribbon_color_scheme = &quot;query&quot;)
-
-# 单色模式
+</code></pre>
+<p><img src="examples/plots/ribbon_query.png" alt="按查询序列着色的连接带" /></p>
+<pre><code class="language-r"># 单色模式
 ggchord(seq_data = seq_data, ribbon_data = ribbon_data) +
   geom_seq() +
   geom_ribbon(ribbon_color_scheme = &quot;single&quot;, ribbon_colors = &quot;orange&quot;)
 </code></pre>
+<p><img src="examples/plots/ribbon_single.png" alt="单色连接带" /></p>
 <h3>加入基因注释</h3>
 <pre><code class="language-r"># 按链方向着色
 ggchord(seq_data = seq_data, gene_data = gene_data) +
   geom_seq() + geom_gene()
-
-# 按注释类别着色 + 显示标签
+</code></pre>
+<p><img src="examples/plots/gene_strand.png" alt="按链方向着色的基因箭头" /></p>
+<pre><code class="language-r"># 按注释类别着色 + 显示标签
 ggchord(seq_data = seq_data, gene_data = gene_data) +
   geom_seq() +
   geom_gene(
@@ -470,12 +476,14 @@ ggchord(seq_data = seq_data, gene_data = gene_data) +
     gene_label_radial_offset = 0.1
   )
 </code></pre>
+<p><img src="examples/plots/gene_manual_label.png" alt="按注释类别着色并显示标签的基因箭头" /></p>
 <h3>综合示例</h3>
 <pre><code class="language-r"># 全默认组合
 ggchord(seq_data, ribbon_data, gene_data) +
   geom_seq() + geom_ribbon() + geom_gene() + geom_axis()
-
-# v0.4.0 精细参数控制——所有布局参数分布在对应的 geom 中
+</code></pre>
+<p><img src="examples/plots/combined_default.png" alt="全默认参数的综合弦图" /></p>
+<pre><code class="language-r"># v0.4.0 精细参数控制——所有布局参数分布在对应的 geom 中
 ggchord(
   seq_data = seq_data,
   ribbon_data = ribbon_data,
@@ -516,6 +524,7 @@ ggchord(
     axis_label_orientation = c(0, 45, 80, 130)
   )
 </code></pre>
+<p><img src="examples/plots/combined_fine.png" alt="精细参数控制的综合弦图" /></p>
 <blockquote>
 <p>序列级参数（<code>seq_radius</code>、<code>seq_gap</code> 等）均支持单值、无命名向量、命名向量三种格式。基因级参数额外支持按链（<code>+</code>/<code>-</code>）区分的列表格式。</p>
 </blockquote>
@@ -728,6 +737,24 @@ ggchord(
 <td>数值</td>
 <td>0.35</td>
 <td>透明度（可覆盖 ribbon_alpha）</td>
+</tr>
+<tr>
+<td><code>ribbon_outline_color</code></td>
+<td>字符</td>
+<td>&quot;black&quot;</td>
+<td>连接带轮廓（边框）颜色</td>
+</tr>
+<tr>
+<td><code>ribbon_outline_width</code></td>
+<td>数值</td>
+<td>0.05</td>
+<td>连接带轮廓线宽</td>
+</tr>
+<tr>
+<td><code>ribbon_outline_linetype</code></td>
+<td>数值/字符</td>
+<td>1</td>
+<td>连接带轮廓线型（1 = 实线）</td>
 </tr>
 <tr>
 <td><code>show_legend</code></td>

@@ -229,6 +229,7 @@ write_tsv(geneTrackTable, "gene_track.tsv")
 ## Usage Examples
 
 ### Reading Data
+
 ```r
 seq_data <- read.delim("seq_track.tsv", sep = "\t", stringsAsFactors = FALSE)
 
@@ -241,7 +242,7 @@ read_blast <- function(file) {
                     "sstrand", "stitle")
   df
 }
-blast_files <- list.files(path = ".", pattern = "*.o7", full.names = TRUE)
+blast_files <- list.files(path = ".", pattern = "\\.o7$", full.names = TRUE)
 all_blast <- do.call(rbind, lapply(blast_files, read_blast))
 ribbon_data <- subset(all_blast, length >= 100)
 
@@ -255,7 +256,11 @@ gene_data <- read.delim("gene_track.tsv", sep = "\t",
 ```r
 # Default: counterclockwise in seq_data order
 ggchord(seq_data = seq_data) + geom_seq()
+```
 
+![Sequence chord diagram (default)](examples/plots/seq_only_default.png)
+
+```r
 # Custom sequence layout
 ggchord(seq_data = seq_data) +
   geom_seq(
@@ -266,23 +271,35 @@ ggchord(seq_data = seq_data) +
   )
 ```
 
+![Sequence chord diagram (custom layout)](examples/plots/seq_only_custom.png)
+
 ### Adding Alignment Ribbons
 
 ```r
 # Default: colored by percent identity
 ggchord(seq_data = seq_data, ribbon_data = ribbon_data) +
   geom_seq() + geom_ribbon()
+```
 
+![Alignment ribbons colored by percent identity](examples/plots/ribbon_pident.png)
+
+```r
 # Color by query sequence
 ggchord(seq_data = seq_data, ribbon_data = ribbon_data) +
   geom_seq() +
   geom_ribbon(ribbon_color_scheme = "query")
+```
 
+![Alignment ribbons colored by query sequence](examples/plots/ribbon_query.png)
+
+```r
 # Single color
 ggchord(seq_data = seq_data, ribbon_data = ribbon_data) +
   geom_seq() +
   geom_ribbon(ribbon_color_scheme = "single", ribbon_colors = "orange")
 ```
+
+![Alignment ribbons in a single color](examples/plots/ribbon_single.png)
 
 ### Adding Gene Annotations
 
@@ -290,7 +307,11 @@ ggchord(seq_data = seq_data, ribbon_data = ribbon_data) +
 # Color by strand
 ggchord(seq_data = seq_data, gene_data = gene_data) +
   geom_seq() + geom_gene()
+```
 
+![Gene arrows colored by strand](examples/plots/gene_strand.png)
+
+```r
 # Color by annotation + show labels
 ggchord(seq_data = seq_data, gene_data = gene_data) +
   geom_seq() +
@@ -302,13 +323,19 @@ ggchord(seq_data = seq_data, gene_data = gene_data) +
   )
 ```
 
+![Gene arrows colored by annotation with labels](examples/plots/gene_manual_label.png)
+
 ### Full Example
 
 ```r
 # All defaults
 ggchord(seq_data, ribbon_data, gene_data) +
   geom_seq() + geom_ribbon() + geom_gene() + geom_axis()
+```
 
+![Full chord diagram with all default parameters](examples/plots/combined_default.png)
+
+```r
 # v0.4.0: fine-grained control with parameters distributed across geom layers
 ggchord(
   seq_data = seq_data,
@@ -350,6 +377,8 @@ ggchord(
     axis_label_orientation = c(0, 45, 80, 130)
   )
 ```
+
+![Full chord diagram with fine-grained control](examples/plots/combined_fine.png)
 
 > Sequence-level parameters (e.g., `seq_radius`, `seq_gap`) support single value, unnamed vector, and named vector formats. Gene-level parameters additionally support per-strand (`+`/`-`) list formats.
 
@@ -405,6 +434,9 @@ ggchord(
 | `ribbon_ctrl_point` | vector/list | c(0,0) | Bézier control points |
 | `ribbon_gap` | numeric/vector | 0.15 | Radial gap between sequences and ribbons |
 | `alpha` | numeric | 0.35 | Transparency (overrides ribbon_alpha) |
+| `ribbon_outline_color` | character | "black" | Ribbon outline (border) color |
+| `ribbon_outline_width` | numeric | 0.05 | Ribbon outline line width |
+| `ribbon_outline_linetype` | numeric/character | 1 | Ribbon outline line type (1 = solid) |
 | `show_legend` | logical | TRUE | Show legend |
 
 ### geom_gene() Parameters

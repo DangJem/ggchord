@@ -440,7 +440,7 @@ read_blast &lt;- function(file) {
                     &quot;sstrand&quot;, &quot;stitle&quot;)
   df
 }
-blast_files &lt;- list.files(path = &quot;.&quot;, pattern = &quot;*.o7&quot;, full.names = TRUE)
+blast_files &lt;- list.files(path = &quot;.&quot;, pattern = &quot;\\.o7$&quot;, full.names = TRUE)
 all_blast &lt;- do.call(rbind, lapply(blast_files, read_blast))
 ribbon_data &lt;- subset(all_blast, length &gt;= 100)
 
@@ -451,8 +451,9 @@ gene_data &lt;- read.delim(&quot;gene_track.tsv&quot;, sep = &quot;\t&quot;,
 <h3>Sequences Only</h3>
 <pre><code class="language-r"># Default: counterclockwise in seq_data order
 ggchord(seq_data = seq_data) + geom_seq()
-
-# Custom sequence layout
+</code></pre>
+<p><img src="examples/plots/seq_only_default.png" alt="Sequence chord diagram (default)" /></p>
+<pre><code class="language-r"># Custom sequence layout
 ggchord(seq_data = seq_data) +
   geom_seq(
     seq_order = c(&quot;MT118296.1&quot;, &quot;OR222515.1&quot;, &quot;MT108731.1&quot;, &quot;OQ646790.1&quot;),
@@ -461,27 +462,32 @@ ggchord(seq_data = seq_data) +
     seq_colors = c(&quot;steelblue&quot;, &quot;orange&quot;, &quot;pink&quot;, &quot;yellow&quot;)
   )
 </code></pre>
+<p><img src="examples/plots/seq_only_custom.png" alt="Sequence chord diagram (custom layout)" /></p>
 <h3>Adding Alignment Ribbons</h3>
 <pre><code class="language-r"># Default: colored by percent identity
 ggchord(seq_data = seq_data, ribbon_data = ribbon_data) +
   geom_seq() + geom_ribbon()
-
-# Color by query sequence
+</code></pre>
+<p><img src="examples/plots/ribbon_pident.png" alt="Alignment ribbons colored by percent identity" /></p>
+<pre><code class="language-r"># Color by query sequence
 ggchord(seq_data = seq_data, ribbon_data = ribbon_data) +
   geom_seq() +
   geom_ribbon(ribbon_color_scheme = &quot;query&quot;)
-
-# Single color
+</code></pre>
+<p><img src="examples/plots/ribbon_query.png" alt="Alignment ribbons colored by query sequence" /></p>
+<pre><code class="language-r"># Single color
 ggchord(seq_data = seq_data, ribbon_data = ribbon_data) +
   geom_seq() +
   geom_ribbon(ribbon_color_scheme = &quot;single&quot;, ribbon_colors = &quot;orange&quot;)
 </code></pre>
+<p><img src="examples/plots/ribbon_single.png" alt="Alignment ribbons in a single color" /></p>
 <h3>Adding Gene Annotations</h3>
 <pre><code class="language-r"># Color by strand
 ggchord(seq_data = seq_data, gene_data = gene_data) +
   geom_seq() + geom_gene()
-
-# Color by annotation + show labels
+</code></pre>
+<p><img src="examples/plots/gene_strand.png" alt="Gene arrows colored by strand" /></p>
+<pre><code class="language-r"># Color by annotation + show labels
 ggchord(seq_data = seq_data, gene_data = gene_data) +
   geom_seq() +
   geom_gene(
@@ -491,12 +497,14 @@ ggchord(seq_data = seq_data, gene_data = gene_data) +
     gene_label_radial_offset = 0.1
   )
 </code></pre>
+<p><img src="examples/plots/gene_manual_label.png" alt="Gene arrows colored by annotation with labels" /></p>
 <h3>Full Example</h3>
 <pre><code class="language-r"># All defaults
 ggchord(seq_data, ribbon_data, gene_data) +
   geom_seq() + geom_ribbon() + geom_gene() + geom_axis()
-
-# v0.4.0: fine-grained control with parameters distributed across geom layers
+</code></pre>
+<p><img src="examples/plots/combined_default.png" alt="Full chord diagram with all default parameters" /></p>
+<pre><code class="language-r"># v0.4.0: fine-grained control with parameters distributed across geom layers
 ggchord(
   seq_data = seq_data,
   ribbon_data = ribbon_data,
@@ -537,6 +545,7 @@ ggchord(
     axis_label_orientation = c(0, 45, 80, 130)
   )
 </code></pre>
+<p><img src="examples/plots/combined_fine.png" alt="Full chord diagram with fine-grained control" /></p>
 <blockquote>
 <p>Sequence-level parameters (e.g., <code>seq_radius</code>, <code>seq_gap</code>) support single value, unnamed vector, and named vector formats. Gene-level parameters additionally support per-strand (<code>+</code>/<code>-</code>) list formats.</p>
 </blockquote>
@@ -749,6 +758,24 @@ ggchord(
 <td>numeric</td>
 <td>0.35</td>
 <td>Transparency (overrides ribbon_alpha)</td>
+</tr>
+<tr>
+<td><code>ribbon_outline_color</code></td>
+<td>character</td>
+<td>&quot;black&quot;</td>
+<td>Ribbon outline (border) color</td>
+</tr>
+<tr>
+<td><code>ribbon_outline_width</code></td>
+<td>numeric</td>
+<td>0.05</td>
+<td>Ribbon outline line width</td>
+</tr>
+<tr>
+<td><code>ribbon_outline_linetype</code></td>
+<td>numeric/character</td>
+<td>1</td>
+<td>Ribbon outline line type (1 = solid)</td>
 </tr>
 <tr>
 <td><code>show_legend</code></td>
