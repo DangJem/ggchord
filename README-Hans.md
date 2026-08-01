@@ -49,7 +49,9 @@ devtools::install_github("DangJem/ggchord")
 
 ## 快速开始
 
-### 分层构建弦图
+### 构建你的第一张弦图
+
+包内置了示例数据集，你可以直接运行下面的代码：
 
 ```r
 library(ggchord)
@@ -59,60 +61,23 @@ data(seq_data_example)
 data(ribbon_data_example)
 data(gene_data_example)
 
-# 最简单用法：全部默认参数
+# 像 ggplot2 一样通过叠加图层来构建弦图
 p <- ggchord(
   seq_data = seq_data_example,
   ribbon_data = ribbon_data_example,
   gene_data = gene_data_example
 ) +
-  geom_seq() +
-  geom_ribbon() +
-  geom_gene() +
-  geom_axis()
+  geom_seq() +      # 序列弧线
+  geom_ribbon() +   # 比对连接带
+  geom_gene() +     # 基因注释
+  geom_axis()       # 位置坐标轴
 
 print(p)
 ```
 
-### 参数下沉到图层（v0.4.0 新特性）
+![全默认参数的基础弦图](examples/plots/combined_default.png)
 
-```r
-# 类似 ggplot2 的风格：谁的数据，谁的参数就放在谁那里
-ggchord(seq_data_example, ribbon_data_example, gene_data_example,
-        title = "精细参数控制", rotation = 30) +
-  geom_seq(
-    seq_radius = c(3, 2, 2, 1),
-    seq_curvature = c(0, 1, -1, 1.5),
-    seq_orientation = c(-1, -1, -1, 1)
-  ) +
-  geom_ribbon(
-    ribbon_color_scheme = "pident",
-    ribbon_gap = 0.1
-  ) +
-  geom_gene(
-    gene_offset = list(
-      c("+" = 0.2, "-" = -0.2),
-      c("+" = 0.2, "-" = -0.2),
-      c("+" = 0.2, "-" = 0),
-      c("+" = 0.2, "-" = 0.1)
-    ),
-    gene_width = 0.08,
-    gene_label_show = TRUE,
-    gene_label_rotation = list(
-      c("+" = 45, "-" = -45),
-      c("+" = 0.2, "-" = -0.2),
-      c("+" = 0.2, "-" = 0),
-      c("+" = 0.2, "-" = 0.1)
-    )
-  ) +
-  geom_axis(
-    axis_label_orientation = c(0, 45, 80, 130),
-    axis_gap = 0,
-    axis_tick_major_length = 0.03,
-    axis_label_size = 2
-  )
-```
-
-> 所有参数均有合理默认值。你可以只写 `geom_seq()` 而不传任何参数，也可以像上面这样精细控制每层的每一个细节。
+`ggchord()` 只接收数据和全局参数；每个 `geom_*` 图层都有合理的默认值，因此上图无需任何参数即可绘制。想要自定义每个图层，请继续阅读下面的分步示例。
 
 ---
 
@@ -224,40 +189,32 @@ write_tsv(geneTrackTable, "gene_track.tsv")
 
 ## 使用示例
 
-### 数据读取
+下面的示例全部使用内置数据集，可以直接运行：
+
 ```r
-seq_data <- read.delim("seq_track.tsv", sep = "\t", stringsAsFactors = FALSE)
+library(ggchord)
 
-read_blast <- function(file) {
-  df <- read.delim(file, sep = "\t", header = FALSE,
-                   stringsAsFactors = FALSE, comment.char = "#")
-  colnames(df) <- c("qaccver", "saccver", "pident", "length", "mismatches",
-                    "gapopen", "qstart", "qend", "sstart", "send",
-                    "evalue", "bitscore", "qcovs", "qlen", "slen",
-                    "sstrand", "stitle")
-  df
-}
-blast_files <- list.files(path = ".", pattern = "\\.o7$", full.names = TRUE)
-all_blast <- do.call(rbind, lapply(blast_files, read_blast))
-ribbon_data <- subset(all_blast, length >= 100)
-
-gene_data <- read.delim("gene_track.tsv", sep = "\t",
-  stringsAsFactors = FALSE) |>
-  dplyr::slice_max(order_by = end - start, n = 5, by = seq_id)
+data(seq_data_example)
+data(ribbon_data_example)
+data(gene_data_example)
 ```
 
-### 仅序列数据
+如果你想使用自己的数据，请参考上面的[前期数据准备](#前期数据准备)，了解所需的数据格式以及如何从常见文件读取。
+
+### 第 1 步：绘制序列弧线
+
+最简单的图只需要 `seq_data`——每条序列绘制为一条彩色弧线，长度与序列长度成比例：
 
 ```r
-# 默认：序列按 seq_data 顺序逆时针排列
-ggchord(seq_data = seq_data) + geom_seq()
+ggchord(seq_data = seq_data_example) + geom_seq()
 ```
 
-![序列弦图（默认参数）](examples/plots/seq_only_default.png)
+![默认参数的序列弦图](examples/plots/seq_only_default.png)
+
+自定义序列布局——顺序、方向、曲率与颜色都属于 `geom_seq()`：
 
 ```r
-# 自定义序列参数
-ggchord(seq_data = seq_data) +
+ggchord(seq_data = seq_data_example) +
   geom_seq(
     seq_order = c("MT118296.1", "OR222515.1", "MT108731.1", "OQ646790.1"),
     seq_orientation = c(1, -1, 1, -1),
@@ -266,49 +223,61 @@ ggchord(seq_data = seq_data) +
   )
 ```
 
-![序列弦图（自定义布局）](examples/plots/seq_only_custom.png)
+![自定义布局的序列弦图](examples/plots/seq_only_custom.png)
 
-### 加入比对数据
+### 第 2 步：加入比对连接带
+
+提供 `ribbon_data` 后即可在序列之间绘制连接带。默认按相似度（`pident`，即 `"pident"` 方案）着色：
 
 ```r
-# 默认：按相似度（pident）着色
-ggchord(seq_data = seq_data, ribbon_data = ribbon_data) +
+ggchord(seq_data_example, ribbon_data_example) +
   geom_seq() + geom_ribbon()
 ```
 
 ![按相似度着色的连接带](examples/plots/ribbon_pident.png)
 
+`geom_ribbon()` 还提供其他配色方案：
+
 ```r
 # 按查询序列着色
-ggchord(seq_data = seq_data, ribbon_data = ribbon_data) +
-  geom_seq() +
-  geom_ribbon(ribbon_color_scheme = "query")
+ggchord(seq_data_example, ribbon_data_example) +
+  geom_seq() + geom_ribbon(ribbon_color_scheme = "query")
 ```
 
 ![按查询序列着色的连接带](examples/plots/ribbon_query.png)
 
 ```r
-# 单色模式
-ggchord(seq_data = seq_data, ribbon_data = ribbon_data) +
+# 按目标序列着色
+ggchord(seq_data_example, ribbon_data_example) +
+  geom_seq() + geom_ribbon(ribbon_color_scheme = "subject")
+```
+
+![按目标序列着色的连接带](examples/plots/ribbon_subject.png)
+
+```r
+# 全部连接带使用单一颜色
+ggchord(seq_data_example, ribbon_data_example) +
   geom_seq() +
   geom_ribbon(ribbon_color_scheme = "single", ribbon_colors = "orange")
 ```
 
 ![单色连接带](examples/plots/ribbon_single.png)
 
-### 加入基因注释
+### 第 3 步：加入基因注释
+
+提供 `gene_data` 后即可在序列上绘制基因箭头。默认按链方向（`+` / `-`）着色：
 
 ```r
-# 按链方向着色
-ggchord(seq_data = seq_data, gene_data = gene_data) +
+ggchord(seq_data_example, gene_data = gene_data_example) +
   geom_seq() + geom_gene()
 ```
 
 ![按链方向着色的基因箭头](examples/plots/gene_strand.png)
 
+按注释类别着色并显示基因标签：
+
 ```r
-# 按注释类别着色 + 显示标签
-ggchord(seq_data = seq_data, gene_data = gene_data) +
+ggchord(seq_data_example, gene_data = gene_data_example) +
   geom_seq() +
   geom_gene(
     gene_color_scheme = "manual",
@@ -320,22 +289,32 @@ ggchord(seq_data = seq_data, gene_data = gene_data) +
 
 ![按注释类别着色并显示标签的基因箭头](examples/plots/gene_manual_label.png)
 
-### 综合示例
+### 第 4 步：加入坐标轴与序列标签
+
+坐标轴用主/次刻度标注序列位置，`geom_seq_label()` 可将标签放在弧线上或外侧：
 
 ```r
-# 全默认组合
-ggchord(seq_data, ribbon_data, gene_data) +
-  geom_seq() + geom_ribbon() + geom_gene() + geom_axis()
+ggchord(seq_data_example) +
+  geom_seq() +
+  geom_axis(
+    axis_tick_major_length = 0.03,
+    axis_tick_minor_length = 0.015,
+    axis_label_size = 2.5
+  ) +
+  geom_seq_label(seq_label_radius = 1.2)
 ```
 
-![全默认参数的综合弦图](examples/plots/combined_default.png)
+![坐标轴与序列标签](examples/plots/axis_seq_label.png)
+
+### 第 5 步：组合所有图层并精细控制
+
+组合所有图层，并把精细参数分发到使用它的图层中：
 
 ```r
-# v0.4.0 精细参数控制——所有布局参数分布在对应的 geom 中
 ggchord(
-  seq_data = seq_data,
-  ribbon_data = ribbon_data,
-  gene_data = gene_data,
+  seq_data = seq_data_example,
+  ribbon_data = ribbon_data_example,
+  gene_data = gene_data_example,
   title = "Multi-sequence Chord Diagram with Gene Annotations",
   rotation = 45
 ) +
@@ -360,24 +339,54 @@ ggchord(
     gene_label_show = TRUE,
     gene_label_rotation = list(
       c("+" = 45, "-" = -45),
-      c("+" = 0.2, "-" = -0.2),
-      c("+" = 0.2, "-" = 0),
-      c("+" = 0.2, "-" = 0.1)
+      c("+" = 30, "-" = -30),
+      c("+" = 15, "-" = -15),
+      c("+" = 0, "-" = 0)
     )
   ) +
   geom_axis(
     axis_gap = 0,
     axis_tick_major_length = 0.03,
-    axis_label_size = 2,
-    axis_label_orientation = c(0, 45, 80, 130)
+    axis_label_size = 2
   )
 ```
 
 ![精细参数控制的综合弦图](examples/plots/combined_fine.png)
 
-> 序列级参数（`seq_radius`、`seq_gap` 等）均支持单值、无命名向量、命名向量三种格式。基因级参数额外支持按链（`+`/`-`）区分的列表格式。
+### 第 6 步：用 `+` 添加主题与 scale
 
----
+ggchord 绘图对象是真正的 ggplot2 对象，因此可以像 ggplot2 一样用 `+` 叠加主题与 scale：
+
+```r
+ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
+  geom_seq() + geom_ribbon() + geom_gene() + geom_axis() +
+  theme(
+    legend.position = "bottom",
+    legend.box = "horizontal",
+    panel.background = element_rect(fill = "grey95")
+  ) +
+  scale_color_manual(
+    values = c("MT108731.1" = "#E41A1C",
+               "MT118296.1" = "#377EB8",
+               "OQ646790.1" = "#4DAF4A",
+               "OR222515.1" = "#984EA3")
+  )
+```
+
+![自定义主题与 scale 的弦图](examples/plots/theme_custom.png)
+
+### 第 7 步：用 plotly 生成交互图表
+
+ggchord 绘图对象可通过 `plotly::ggplotly()` 转换为交互式图表（需安装 `plotly` 包），连接带、基因箭头、坐标轴以及 Seq ID / Strand / Identity 图例都会保留：
+
+```r
+p <- ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
+  geom_seq() + geom_ribbon() + geom_gene() + geom_axis()
+
+plotly::ggplotly(p)
+```
+
+> **参数格式**：序列级参数（`seq_radius`、`seq_gap` 等）支持单值、无命名向量、命名向量三种格式。基因级参数额外支持按链（`+`/`-`）区分的列表格式，例如 `gene_offset = list(c("+" = 0.2, "-" = -0.2), ...)`。
 
 ## 图层参考
 
@@ -387,8 +396,7 @@ ggchord(
 | 比对连接带 | `geom_ribbon()` | 绘制比对结果的彩色 ribbon |
 | 基因箭头 | `geom_gene()` | 绘制基因注释的箭头多边形和标签 |
 | 坐标轴 | `geom_axis()` | 绘制轴线、主/次刻度线和刻度标签 |
-
----
+| 序列标签 | `geom_seq_label()` | 在序列弧线上或外侧放置标签 |
 
 ## 参数详情
 
