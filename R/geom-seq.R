@@ -1,26 +1,26 @@
-# geom-seq.R — 序列弧线图层
-# 从包级环境获取预计算的序列弧线数据，用 geom_path 渲染
-# 序列布局参数在此层指定，存入环境供 print 时使用
+# geom-seq.R - sequence arc layer
+# Fetches pre-computed sequence arc data from the package environment and renders it with geom_path
+# Sequence layout parameters are specified in this layer and stored for use at print time
 
-#' 添加序列弧线图层
+#' Add a sequence arc layer
 #'
-#' 绘制弦图中表示序列的弧线（或直线，取决于曲率设置）。
-#' 序列布局参数（顺序、方向、半径、曲率、颜色等）在此指定。
+#' Draws arcs (or straight lines, depending on the curvature setting) representing sequences in the chord diagram.
+#' Sequence layout parameters (order, orientation, radius, curvature, colors, etc.) are specified here.
 #'
-#' @param mapping 默认 NULL（使用预计算数据）
-#' @param data 默认 NULL（从布局中自动获取）
-#' @param seq_order 字符型向量，可选。指定序列的绘制顺序
-#' @param seq_labels 字符型向量/命名向量，可选。序列标签
-#' @param seq_orientation 数值型 (1 或 -1)，可选。序列方向，默认 1
-#' @param seq_gap 数值型，可选。序列间空白比例，默认 0.03
-#' @param seq_radius 数值型 (> 0)，可选。序列弧线半径，默认 1.0
-#' @param seq_curvature 数值型，可选。弧线曲率 (0=直线, 1=标准弧, >1=更弯)，默认 1.0
-#' @param seq_colors 颜色向量/命名向量，可选。序列颜色
-#' @param linewidth 弧线宽度，默认 1.2
-#' @param show_legend 是否显示该图层的图例，默认 TRUE
-#' @param ... 传递给 \code{geom_path()} 的其他参数
+#' @param mapping Default NULL (uses pre-computed data)
+#' @param data Default NULL (retrieved automatically from the layout)
+#' @param seq_order Optional character vector. Specifies the drawing order of sequences
+#' @param seq_labels Optional character vector or named vector. Sequence labels
+#' @param seq_orientation Optional numeric (1 or -1). Sequence orientation, default 1
+#' @param seq_gap Optional numeric. Gap proportion between sequences, default 0.03
+#' @param seq_radius Optional numeric (> 0). Sequence arc radius, default 1.0
+#' @param seq_curvature Optional numeric. Arc curvature (0=straight, 1=standard arc, >1=more curved), default 1.0
+#' @param seq_colors Optional color vector or named vector. Sequence colors
+#' @param linewidth Arc line width, default 1.2
+#' @param show_legend Whether to show the legend for this layer, default TRUE
+#' @param ... Additional arguments passed to \code{geom_path()}
 #'
-#' @return ggplot2 layer 列表
+#' @return A list of ggplot2 layers
 #' @export
 geom_seq <- function(mapping = NULL, data = NULL,
                      seq_order = NULL,
@@ -43,7 +43,7 @@ geom_seq <- function(mapping = NULL, data = NULL,
     seq_colors     = seq_colors
   ))
 
-  # 仅返回 layer（scale 由 print.ggchord 统一设置）
+  # Only return the layer (scales are set uniformly by print.ggchord)
   list(
     ggplot2::layer(
       data        = data.frame(x = numeric(0), y = numeric(0),
@@ -52,8 +52,11 @@ geom_seq <- function(mapping = NULL, data = NULL,
       stat        = "identity",
       geom        = GeomPath,
       position    = "identity",
-      show.legend = show_legend,
+      show.legend = if (identical(show_legend, TRUE)) {
+                      c(colour = TRUE, fill = FALSE)
+                    } else show_legend,
       inherit.aes = FALSE,
+      key_glyph   = key_glyph_seq,
       params      = list(
         linewidth = linewidth,
         arrow = grid::arrow(type = "closed", length = grid::unit(3, "mm")),

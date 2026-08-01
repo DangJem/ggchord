@@ -1,60 +1,58 @@
-# layout.R — 弦图布局计算核心
-# 负责从标准化参数中预计算所有几何元素的 (x, y) 笛卡尔坐标，
-# 供各 geom_* 图层直接使用
+# layout.R - core chord layout computation
+# Pre-computes Cartesian (x, y) coordinates for all geometric elements from standardized parameters,
+# for direct use by the geom_* layers
 
-#' 计算弦图布局
+#' Compute the chord layout
 #'
-#' 将所有几何元素（序列弧线、ribbon、基因箭头、坐标轴等）的坐标
-#' 预计算为笛卡尔坐标系中的 (x, y) 坐标，存入布局列表。
+#' Pre-computes the coordinates of all geometric elements (sequence arcs, ribbons, gene arrows, axes, etc.)
+#' into Cartesian (x, y) coordinates and stores them in a layout list.
 #'
-#' @param seqs 序列 ID 向量（顺序已处理）
-#' @param lens 命名向量，序列长度（名 = seq_id）
-#' @param seq_labels 命名向量，序列标签
-#' @param seqRadius 命名向量，序列半径
-#' @param seq_curvature 命名向量，序列曲率
-#' @param orientation 命名向量，序列方向（1 或 -1）
-#' @param seq_gap 命名向量，序列间隙比例
-#' @param ribbonGap 命名向量，ribbon 间隙
-#' @param axis* 各类坐标轴参数
-#' @param ribbon_data 比对数据（已校验）
-#' @param gene_data 基因数据（已校验）
-#' @param geneGap/geneWidth/... 基因相关参数
-#' @param rotation 全局旋转角度（度）
-#' @param debug 是否输出调试信息
+#' @param seqs Vector of sequence IDs (order already processed)
+#' @param lens Named vector of sequence lengths (names = seq_id)
+#' @param seq_labels Named vector of sequence labels
+#' @param seqRadius Named vector of sequence radii
+#' @param seq_curvature Named vector of sequence curvatures
+#' @param orientation Named vector of sequence orientations (1 or -1)
+#' @param seq_gap Named vector of sequence gap proportions
+#' @param ribbonGap Named vector of ribbon gaps
+#' @param ribbon_data Alignment data (already validated)
+#' @param gene_data Gene data (already validated)
+#' @param rotation Global rotation angle (degrees)
+#' @param debug Whether to output debug information
 #'
-#' @return 弦图布局列表
+#' @return A chord layout list
 #' @keywords internal
 compute_chord_layout <- function(
     seqs, lens, seq_labels, seq_colors,
     seqRadius, seq_curvature, orientation, seq_gap,
-    # Ribbon 参数
+    # Ribbon parameters
     ribbon_data = NULL, ribbonGap,
     ribbon_color_scheme, ribbon_colors, ribbon_alpha,
     ribbon_ctrl_point,
-    # 基因参数
+    # Gene parameters
     gene_data = NULL,
     geneGap, geneWidth,
     geneLabelRadialOffset, geneLabelCircumOffset,
     geneLabelCircumLimit, geneLabelRotation,
     gene_label_show, gene_label_size,
     gene_color_scheme, gene_colors, gene_order,
-    # 坐标轴参数
+    # Axis parameters
     axisGap, axisMaj, axisMajLen, axisMin, axisMinLen,
     labelSize, labelOffset, axisLabelOrientation,
     show_axis,
-    # 全局参数
+    # Global parameters
     rotation, debug = FALSE
 ) {
   n <- length(seqs)
 
   # ====================================================================
-  # 第 1 步：计算角度分配
+  # Step 1: compute angle allocation
   # ====================================================================
   total_circ <- 2 * pi
   total_gap_prop <- sum(seq_gap)
 
   if (total_gap_prop >= 1) {
-    stop("seq_gap 之和不能超过 1（序列没有可用空间）")
+    stop("The sum of seq_gap cannot exceed 1 (no space left for sequences)")
   }
 
   seq_total_prop <- 1 - total_gap_prop
@@ -62,7 +60,7 @@ compute_chord_layout <- function(
   theta <- (lens / sum_lens) * total_circ * seq_total_prop
   gap_rads <- total_circ * seq_gap
 
-  # 计算每条序列的起止角度
+  # Compute the start and end angles of each sequence
   starts <- numeric(n)
   names(starts) <- seqs
   starts[1] <- 0
@@ -76,17 +74,17 @@ compute_chord_layout <- function(
   names(ends) <- seqs
 
   # ====================================================================
-  # 第 2 步：转弧度
+  # Step 2: convert to radians
   # ====================================================================
   rot_rad <- rotation * pi / 180
 
   # ====================================================================
-  # 第 3 步：生成参考路径和 map_to_curve
+  # Step 3: generate reference paths and map_to_curve
   # ====================================================================
   nSeg <- 500
   nRef <- 2000
 
-  # 每条序列的高分辨率参考路径
+  # High-resolution reference path for each sequence
   seq_refs <- lapply(seqs, function(id) {
     path <- generate_curvature_path(
       starts[id], ends[id], seqRadius[id], seq_curvature[id], n_points = nRef
@@ -96,7 +94,7 @@ compute_chord_layout <- function(
   })
   names(seq_refs) <- seqs
 
-  # 曲线坐标映射函数
+  # Curve coordinate mapping function
   map_to_curve <- function(angle, radius, ref) {
     idx <- which.min(abs(ref$angles - angle))
     base <- ref$path[idx, ]
@@ -116,7 +114,7 @@ compute_chord_layout <- function(
   }
 
   # ====================================================================
-  # 第 4 步：生成序列弧线（外层）
+  # Step 4: generate sequence arcs (outer layer)
   # ====================================================================
   seq_arcs <- lapply(seqs, function(id) {
     path_data <- generate_curvature_path(
@@ -130,13 +128,20 @@ compute_chord_layout <- function(
   })
 
   # ====================================================================
-  # 第 5 步：生成坐标轴（轴线、刻度、标签）
+  # Step 5: generate axes (lines, ticks, labels)
   # ====================================================================
-  axis_lines <- data.frame()
-  axis_ticks <- data.frame()
+  axis_lines <- data.frame(x = numeric(0), y = numeric(0),
+                            seq_id = character(0),
+                            stringsAsFactors = FALSE)
+  axis_ticks <- data.frame(x0 = numeric(0), y0 = numeric(0),
+                           x1 = numeric(0), y1 = numeric(0),
+                           label = character(0), label_x = numeric(0),
+                           label_y = numeric(0), size = numeric(0),
+                           seq_id = character(0),
+                           stringsAsFactors = FALSE)
 
   if (show_axis) {
-    # 轴线
+    # Axis lines
     axis_lines <- do.call(rbind, lapply(seqs, function(id) {
       ref <- seq_refs[[id]]
       r0 <- ref$r0 - axisGap[id]
@@ -147,7 +152,7 @@ compute_chord_layout <- function(
       data.frame(x = pts[, 1], y = pts[, 2], seq_id = id, stringsAsFactors = FALSE)
     }))
 
-    # 刻度线
+    # Tick marks
     axis_ticks <- do.call(rbind, lapply(seqs, function(id) {
       ref <- seq_refs[[id]]
       r0 <- ref$r0 - axisGap[id]
@@ -186,7 +191,7 @@ compute_chord_layout <- function(
   }
 
   # ====================================================================
-  # 第 6 步：生成 ribbon 多边形
+  # Step 6: generate ribbon polygons
   # ====================================================================
   ribbon_polys <- NULL
   ribbon_color_info <- list(scheme = ribbon_color_scheme)
@@ -196,7 +201,7 @@ compute_chord_layout <- function(
     cntValid <- 0
     cntInvalid <- 0
 
-    # 预处理 ribbon 颜色
+    # Pre-process ribbon colors
     singleCol <- NULL
     queryCols <- NULL
     rampFunc <- NULL
@@ -218,7 +223,7 @@ compute_chord_layout <- function(
         next
       }
 
-      # 查询序列坐标
+      # Query sequence coordinates
       q_ref <- seq_refs[[q]]
       q_frac_start <- if (orientation[q] == 1) (row$qstart - 1) / lens[q] else 1 - (row$qstart - 1) / lens[q]
       q_angle_start <- starts[q] + q_frac_start * (ends[q] - starts[q])
@@ -234,7 +239,7 @@ compute_chord_layout <- function(
       }))
       segQ <- data.frame(x = q_coords[, 1], y = q_coords[, 2])
 
-      # 目标序列坐标
+      # Subject sequence coordinates
       s_ref <- seq_refs[[s]]
       s_frac_start <- if (orientation[s] == 1) (row$sstart - 1) / lens[s] else 1 - (row$sstart - 1) / lens[s]
       s_angle_start <- starts[s] + s_frac_start * (ends[s] - starts[s])
@@ -250,7 +255,7 @@ compute_chord_layout <- function(
       }))
       segS <- data.frame(x = s_coords[, 1], y = s_coords[, 2])
 
-      # 贝塞尔控制点
+      # Bezier control points
       if (!is.null(ribbon_ctrl_point)) {
         if (is.list(ribbon_ctrl_point)) {
           cp_idx <- ifelse(i > length(ribbon_ctrl_point), length(ribbon_ctrl_point), i)
@@ -268,7 +273,7 @@ compute_chord_layout <- function(
             c1 <- ribbon_ctrl_point[1:2]
             c2 <- ribbon_ctrl_point[3:4]
           } else {
-            warning("ribbon_ctrl_point 向量必须长度为 2 或 4；使用默认值")
+            warning("ribbon_ctrl_point vector must have length 2 or 4; using default values")
             c1 <- c2 <- c(0, 0)
           }
         }
@@ -281,7 +286,7 @@ compute_chord_layout <- function(
         c2 <- c1
       }
 
-      # 生成贝塞尔曲线
+      # Generate Bezier curves
       b1 <- bezier_pts(
         as.numeric(segQ[1, ]),
         as.numeric(segS[1, ]),
@@ -295,7 +300,7 @@ compute_chord_layout <- function(
         n = 50
       )
 
-      # 闭合多边形
+      # Close the polygon
       poly <- rbind(
         segQ,
         b2,
@@ -317,18 +322,18 @@ compute_chord_layout <- function(
     }
 
     if (debug) {
-      cat("有效 ribbon:", cntValid, "无效 ribbon:", cntInvalid, "\n")
+      cat("Valid ribbons:", cntValid, "invalid ribbons:", cntInvalid, "\n")
     }
 
     if (cntValid > 0) {
       ribbon_polys <- do.call(rbind, ribbons)
     } else {
-      warning("没有有效的比对数据可用于绘图")
+      warning("No valid alignment data available for plotting")
     }
   }
 
   # ====================================================================
-  # 第 7 步：生成基因箭头多边形
+  # Step 7: generate gene arrow polygons
   # ====================================================================
   gene_polys <- data.frame()
   gene_labels <- data.frame()
@@ -336,7 +341,7 @@ compute_chord_layout <- function(
   if (!is.null(gene_data) && nrow(gene_data) > 0) {
     valid_genes <- gene_data[gene_data$seq_id %in% seqs, ]
 
-    # 处理基因配色
+    # Process gene colors
     gene_pal <- NULL
     final_gene_order <- NULL
     if (nrow(valid_genes) > 0) {
@@ -358,7 +363,7 @@ compute_chord_layout <- function(
       final_gene_order <- character(0)
     }
 
-    # 生成箭头多边形
+    # Generate arrow polygons
     for (i in seq_len(nrow(valid_genes))) {
       gene <- valid_genes[i, ]
       sid <- gene$seq_id
@@ -418,7 +423,7 @@ compute_chord_layout <- function(
       gene_polys <- rbind(gene_polys, gene_poly)
     }
 
-    # 生成基因标签
+    # Generate gene labels
     if (gene_label_show && nrow(valid_genes) > 0) {
       gene_labels <- do.call(rbind, lapply(seq_len(nrow(valid_genes)), function(i) {
         gene <- valid_genes[i, ]
@@ -522,7 +527,7 @@ compute_chord_layout <- function(
   }
 
   # ====================================================================
-  # 第 8 步：统一旋转所有元素
+  # Step 8: rotate all elements uniformly
   # ====================================================================
   rotate_df <- function(df) {
     if (is.null(df) || (is.data.frame(df) && nrow(df) == 0)) return(df)
@@ -554,7 +559,7 @@ compute_chord_layout <- function(
     df
   }
 
-  # 应用到所有几何元素（尽量不深拷贝: 直接修改原对象的列）
+  # Apply to all geometric elements (avoid deep copies: modify the original object's columns in place)
   seq_arcs <- lapply(seq_arcs, rotate_df)
   if (nrow(axis_lines) > 0) axis_lines <- rotate_df(axis_lines)
   if (nrow(axis_ticks) > 0) axis_ticks <- rotate_df(axis_ticks)
@@ -566,7 +571,7 @@ compute_chord_layout <- function(
   }
 
   # ====================================================================
-  # 第 9 步：计算绘图极值
+  # Step 9: compute plot extremes
   # ====================================================================
   extremes <- get_plot_extremes(
     allRibbon = ribbon_polys,
@@ -579,10 +584,10 @@ compute_chord_layout <- function(
   )
 
   # ====================================================================
-  # 第 10 步：组装并返回布局对象
+  # Step 10: assemble and return the layout object
   # ====================================================================
   layout <- list(
-    # 几何数据
+    # Geometric data
     seq_arcs       = seq_arcs,
     ribbon_polys   = ribbon_polys,
     gene_polys     = gene_polys,
@@ -590,32 +595,32 @@ compute_chord_layout <- function(
     axis_lines     = axis_lines,
     axis_ticks     = axis_ticks,
 
-    # 极值
+    # Extremes
     extremes       = extremes,
 
-    # 颜色和标签
+    # Colors and labels
     seq_colors     = seq_colors,
     seq_labels     = seq_labels,
     seqs           = seqs,
     seqRadius      = seqRadius,
 
-    # Ribbon 相关
+    # Ribbon-related
     ribbon_color_scheme = ribbon_color_scheme,
     ribbon_colors  = ribbon_colors,
     ribbon_alpha   = ribbon_alpha,
 
-    # 基因相关
+    # Gene-related
     gene_pal           = gene_pal,
     gene_color_scheme  = gene_color_scheme,
     final_gene_order   = final_gene_order,
     gene_label_show    = gene_label_show,
     gene_label_size    = gene_label_size,
 
-    # 坐标轴
+    # Axis-related
     show_axis           = show_axis,
     axisLabelOrientation = axisLabelOrientation,
 
-    # 元数据
+    # Metadata
     rotation        = rotation,
     n_sequences     = n
   )

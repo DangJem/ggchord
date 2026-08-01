@@ -1,32 +1,32 @@
-# ggchord.R — 构造函数
-# 弦图 ggplot2 分层 API 的入口点
-# v0.4.0: ggchord() 仅保留数据参数和全局样式参数，
-# 布局参数移至各 geom_* 图层，坐标计算延迟到 print 阶段
+# ggchord.R - constructor
+# Entry point of the layered ggplot2 API for chord diagrams
+# v0.4.0: ggchord() keeps only data arguments and global style parameters,
+# layout parameters moved to the geom_* layers, and coordinate computation is deferred to print time
 
-# 全局变量声明（避免 R CMD check 的 NOTE）
+# Global variable declarations (to avoid R CMD check NOTEs)
 globalVariables(c(
   "x", "y", "group", "pident", "fill", "strand", "anno", "seq_id",
   "text_x", "text_y", "text", "text_angle", "hjust", "vjust",
   "x0", "y0", "x1", "y1", "label", "label_x", "label_y", "size"
 ))
 
-#' ggchord: ggplot2 分层的多序列比对弦图
+#' ggchord: layered multi-sequence alignment chord diagrams for ggplot2
 #'
-#' ggchord 采用 ggplot2 分层语法可视化多序列 BLAST 比对结果。
-#' \code{ggchord()} 构造函数负责数据校验和全局设置；
-#' 各 \code{geom_*} 图层按需叠加，各自负责布局参数和视觉渲染。
-#' 布局在 \code{print()} 时延迟计算。
+#' ggchord visualizes multi-sequence BLAST alignment results using ggplot2's layered grammar.
+#' The \code{ggchord()} constructor handles data validation and global settings;
+#' the \code{geom_*} layers are stacked as needed, each responsible for its own layout parameters and visual rendering.
+#' The layout is computed lazily at \code{print()} time.
 #'
-#' @param seq_data data.frame/tibble，必需。序列基本信息
-#' @param ribbon_data data.frame/tibble，可选。BLAST 比对结果
-#' @param gene_data data.frame/tibble，可选。基因注释数据
-#' @param title 字符型。图表主标题，默认 NULL
-#' @param rotation 数值型。全局旋转角度（度），默认 45
-#' @param panel_margin 数值型/列表，可选。面板边距，默认 0
-#' @param show_legend 逻辑型。是否显示图例，默认 TRUE
-#' @param debug 逻辑型。是否输出调试信息，默认 FALSE
+#' @param seq_data data.frame/tibble, required. Basic sequence information
+#' @param ribbon_data data.frame/tibble, optional. BLAST alignment results
+#' @param gene_data data.frame/tibble, optional. Gene annotation data
+#' @param title Character. Main title of the plot, default NULL
+#' @param rotation Numeric. Global rotation angle (degrees), default 45
+#' @param panel_margin Optional numeric/list. Panel margin, default 0
+#' @param show_legend Logical. Whether to show legends, default TRUE
+#' @param debug Logical. Whether to output debug information, default FALSE
 #'
-#' @return ggchord 对象（继承 ggplot），可通过 + 叠加 geom_* 图层
+#' @return A ggchord object (inherits from ggplot) to which geom_* layers can be added with +
 #' @export
 #'
 #' @examples
@@ -61,49 +61,49 @@ ggchord <- function(
     show_legend = TRUE,
     debug = FALSE
 ) {
-  # 清空上一轮的参数
+  # Clear parameters from the previous run
   clear_chord_env()
 
   # ====================================================================
-  # 1. 校验数据
+  # 1. Validate data
   # ====================================================================
   required_seq_cols <- c("seq_id", "length")
   if (!all(required_seq_cols %in% colnames(seq_data))) {
-    stop("seq_data 必须包含以下列：", paste(required_seq_cols, collapse = ", "))
+    stop("seq_data must contain the following columns: ", paste(required_seq_cols, collapse = ", "))
   }
   if (any(seq_data$length <= 0)) {
-    stop("seq_data 中的 'length' 值必须为正数")
+    stop("The 'length' values in seq_data must be positive")
   }
   if (anyDuplicated(seq_data$seq_id)) {
-    stop("seq_data 中的 'seq_id' 必须唯一")
+    stop("The 'seq_id' values in seq_data must be unique")
   }
 
   if (!is.null(ribbon_data)) {
     required_ribbon_cols <- c("qaccver", "saccver", "length", "pident",
                               "qstart", "qend", "sstart", "send")
     if (!all(required_ribbon_cols %in% colnames(ribbon_data))) {
-      stop("ribbon_data 必须包含以下列：",
+      stop("ribbon_data must contain the following columns: ",
            paste(required_ribbon_cols, collapse = ", "))
     }
-    if (nrow(ribbon_data) == 0) warning("ribbon_data 中没有有效比对数据")
-    if (debug) cat("比对数据行数：", nrow(ribbon_data), "\n")
+    if (nrow(ribbon_data) == 0) warning("No valid alignment data in ribbon_data")
+    if (debug) cat("Number of alignment data rows: ", nrow(ribbon_data), "\n")
   }
 
   if (!is.null(gene_data)) {
     required_gene_cols <- c("seq_id", "start", "end", "strand", "anno")
     if (!all(required_gene_cols %in% colnames(gene_data))) {
-      stop("gene_data 必须包含以下列：",
+      stop("gene_data must contain the following columns: ",
            paste(required_gene_cols, collapse = ", "))
     }
-    if (nrow(gene_data) == 0) warning("gene_data 中没有有效基因注释数据")
+    if (nrow(gene_data) == 0) warning("No valid gene annotation data in gene_data")
     if (any(!gene_data$strand %in% c("+", "-"))) {
-      stop("gene_data 中的 'strand' 只能是 '+' 或 '-'")
+      stop("The 'strand' values in gene_data can only be '+' or '-'")
     }
-    if (debug) cat("基因注释数据行数：", nrow(gene_data), "\n")
+    if (debug) cat("Number of gene annotation rows: ", nrow(gene_data), "\n")
   }
 
   # ====================================================================
-  # 2. 存储原始数据 + 全局参数
+  # 2. Store raw data and global parameters
   # ====================================================================
   set_chord_data(seq_data, ribbon_data, gene_data)
 
@@ -115,7 +115,7 @@ ggchord <- function(
   ))
 
   # ====================================================================
-  # 3. 构建基础 ggplot 对象（coord 在 print 时被替换为正确范围）
+  # 3. Build the base ggplot object (the coord is replaced with the correct range at print time)
   # ====================================================================
   margin_vals <- process_panel_margin(panel_margin)
 
@@ -144,9 +144,17 @@ ggchord <- function(
 }
 
 # ====================================================================
-# +.ggchord 方法
+# +.ggchord method
 # ====================================================================
 
+#' Combine a ggchord plot with ggplot2 objects
+#'
+#' Supports stacking ggplot2 layers, lists of layers, scales, and themes
+#' onto a ggchord plot using the \code{+} operator.
+#'
+#' @param e1 A ggchord object
+#' @param e2 A ggplot2 layer, a list of layers, a scale, or a theme
+#' @return A ggchord object
 #' @export
 `+.ggchord` <- function(e1, e2) {
   if (is.list(e2) && !inherits(e2, "ggplot") && !inherits(e2, "LayerInstance")) {
@@ -162,12 +170,12 @@ ggchord <- function(
 }
 
 # ====================================================================
-# print.ggchord：延迟计算布局 + 注入数据到 layer + 渲染
+# print.ggchord: lazily compute the layout, inject data into layers, and render
 # ====================================================================
 
 #' @export
 print.ggchord <- function(x, ...) {
-  # 第一步：收集所有参数
+  # Step 1: collect all parameters
   global <- get_global_params()
   data_list <- get_chord_data()
 
@@ -176,16 +184,17 @@ print.ggchord <- function(x, ...) {
   gene_params   <- get_gene_params()
   axis_params   <- get_axis_params()
 
+  seq_layer_requested <- !is.null(seq_params)
   if (is.null(seq_params)) seq_params <- list()
 
-  # --- 处理序列 ---
+  # --- Process sequences ---
   seq_data <- data_list$seq_data
   seqs     <- seq_data$seq_id
   lens     <- setNames(seq_data$length, seqs)
 
   if (!is.null(seq_params$seq_order)) {
     if (!all(seq_params$seq_order %in% seqs)) {
-      stop("seq_order 包含未知序列 ID")
+      stop("seq_order contains unknown sequence IDs")
     }
     seqs <- seq_params$seq_order
     lens <- lens[seqs]
@@ -203,23 +212,27 @@ print.ggchord <- function(x, ...) {
   seq_curvature <- process_sequence_param(seq_params$seq_curvature, seqs,
                                           "seq_curvature", 1.0)
 
-  if (any(seqRadius <= 0)) stop("seq_radius 必须为正数")
+  if (any(seqRadius <= 0)) stop("seq_radius must be positive")
   if (any(!orientation %in% c(-1, 1))) {
-    stop("seq_orientation 只能取 1 或 -1")
+    stop("seq_orientation can only be 1 or -1")
   }
   if (any(seq_gap < 0 | seq_gap >= 0.5)) {
-    stop("seq_gap 必须位于 [0, 0.5) 区间")
+    stop("seq_gap must be in the [0, 0.5) range")
   }
 
   if (!is.null(seq_params$seq_colors)) {
     seq_colors <- process_sequence_param(seq_params$seq_colors, seqs, "seq_colors")
   } else {
-    pal <- if (n <= 9) brewer.pal(n, "Set1")
-           else colorRampPalette(brewer.pal(9, "Set1"))(n)
+    pal <- if (n <= 9) {
+             # brewer.pal(n<3) errors/warns; take the first n colors
+             brewer.pal(max(n, 3), "Set1")[seq_len(n)]
+           } else {
+             colorRampPalette(brewer.pal(9, "Set1"))(n)
+           }
     seq_colors <- setNames(pal, seqs)
   }
 
-  # --- 处理 Ribbon ---
+  # --- Process ribbons ---
   ribbonGap  <- process_sequence_param(ribbon_params$ribbon_gap %||% 0.15,
                                        seqs, "ribbon_gap", 0.15)
   ribbon_color_scheme <- ribbon_params$ribbon_color_scheme %||% "pident"
@@ -228,14 +241,14 @@ print.ggchord <- function(x, ...) {
 
   ribbon_colors <- ribbon_params$ribbon_colors
   if (!ribbon_color_scheme %in% c("pident", "query", "single")) {
-    stop("ribbon_color_scheme 必须是 'pident'、'query' 或 'single'")
+    stop("ribbon_color_scheme must be 'pident', 'query', or 'single'")
   }
   if (!is.numeric(ribbon_alpha) || length(ribbon_alpha) != 1 ||
       ribbon_alpha < 0 || ribbon_alpha > 1) {
-    stop("ribbon_alpha 必须位于 [0, 1] 区间")
+    stop("ribbon_alpha must be in the [0, 1] range")
   }
 
-  # ribbon_colors 校验只在实际有 ribbon_data 时执行
+  # ribbon_colors validation only runs when ribbon_data is actually present
   has_ribbon_data <- !is.null(data_list$ribbon_data) &&
                      nrow(data_list$ribbon_data) > 0
 
@@ -260,13 +273,13 @@ print.ggchord <- function(x, ...) {
       ribbon_colors <- process_sequence_param(ribbon_colors, seqs,
                                               "ribbon_colors")
     } else if (ribbon_color_scheme == "pident" && length(ribbon_colors) < 2) {
-      stop("'pident' 配色至少需要两个 ribbon_colors")
+      stop("The 'pident' scheme requires at least two ribbon_colors")
     } else if (ribbon_color_scheme == "single" && length(ribbon_colors) < 1) {
-      stop("'single' 配色需要至少一个 ribbon_colors")
+      stop("The 'single' scheme requires at least one ribbon_colors")
     }
   }
 
-  # --- 处理基因 ---
+  # --- Process genes ---
   gene_off  <- gene_params$gene_offset %||% 0.1
   gene_w    <- gene_params$gene_width %||% 0.05
   gene_cs   <- gene_params$gene_color_scheme %||% "strand"
@@ -283,7 +296,7 @@ print.ggchord <- function(x, ...) {
                else gene_params$gene_label_circum_limit
 
   if (!gene_cs %in% c("strand", "manual")) {
-    stop("gene_color_scheme 必须是 'strand' 或 'manual'")
+    stop("gene_color_scheme must be 'strand' or 'manual'")
   }
 
   geneGap    <- process_gene_param(gene_off, seqs, "gene_offset", 0.1, FALSE)
@@ -297,7 +310,7 @@ print.ggchord <- function(x, ...) {
   geneLabelRotation     <- process_gene_param(gene_lr, seqs,
                                               "gene_label_rotation", 0, FALSE)
 
-  # --- 处理坐标轴 ---
+  # --- Process axes ---
   show_axis  <- axis_params$show_axis %||% TRUE
   axisGap    <- process_sequence_param(axis_params$axis_gap %||% 0.04,
                                        seqs, "axis_gap", 0.04)
@@ -318,7 +331,7 @@ print.ggchord <- function(x, ...) {
   )
 
   # ====================================================================
-  # 第二步：计算布局
+  # Step 2: compute the layout
   # ====================================================================
   layout <- compute_chord_layout(
     seqs = seqs, lens = lens, seq_labels = seq_labels,
@@ -349,9 +362,9 @@ print.ggchord <- function(x, ...) {
   set_chord_layout(layout)
 
   # ====================================================================
-  # 第三步：注入数据到 layers
+  # Step 3: inject data into layers
   # ====================================================================
-  # 按 geom 类型区分 layer 归属
+  # Classify layers by geom type
   seq_indices    <- integer(0)
   ribbon_indices <- integer(0)
   gene_poly_indices <- integer(0)
@@ -371,7 +384,7 @@ print.ggchord <- function(x, ...) {
       if ("seq_id" %in% data_names) {
         # geom_seq(), when present, is the first such path.  A plot containing
         # only geom_axis() must retain its axis path as an axis path.
-        if (!seq_path_assigned && !is.null(seq_params)) {
+        if (!seq_path_assigned && seq_layer_requested) {
           seq_indices <- c(seq_indices, i)
           seq_path_assigned <- TRUE
         } else {
@@ -398,110 +411,171 @@ print.ggchord <- function(x, ...) {
     }
   }
 
-  # 注入序列弧线数据
+  # Inject sequence arc data
   if (length(seq_indices) > 0 && length(layout$seq_arcs) > 0) {
     arc_df <- do.call(rbind, layout$seq_arcs)
     for (idx in seq_indices) x$layers[[idx]]$data <- arc_df
   }
 
-  # 注入 ribbon 数据
+  # Inject ribbon data
   if (length(ribbon_indices) > 0 && !is.null(layout$ribbon_polys)) {
     for (idx in ribbon_indices) x$layers[[idx]]$data <- layout$ribbon_polys
   }
 
-  # 注入基因数据
+  # Inject gene data
   if (length(gene_poly_indices) > 0 && nrow(layout$gene_polys) > 0) {
     for (idx in gene_poly_indices) x$layers[[idx]]$data <- layout$gene_polys
   }
 
-  # 注入基因标签
+  # Inject gene labels
   if (length(gene_text_indices) > 0 && nrow(layout$gene_labels) > 0) {
     for (idx in gene_text_indices) x$layers[[idx]]$data <- layout$gene_labels
   }
 
-  # 注入轴线数据
+  # Inject axis line data
   if (length(axis_line_indices) > 0 && nrow(layout$axis_lines) > 0) {
     for (idx in axis_line_indices) x$layers[[idx]]$data <- layout$axis_lines
   }
 
-  # 注入刻度线数据
+  # Inject tick data
   if (length(axis_seg_indices) > 0 && nrow(layout$axis_ticks) > 0) {
     for (idx in axis_seg_indices) x$layers[[idx]]$data <- layout$axis_ticks
   }
 
-  # 注入刻度标签数据
-  label_data <- subset(layout$axis_ticks, !is.na(label))
+  # Inject tick label data
+  label_data <- if (nrow(layout$axis_ticks) > 0) {
+    subset(layout$axis_ticks, !is.na(label))
+  } else {
+    layout$axis_ticks
+  }
   if (length(axis_text_indices) > 0 && nrow(label_data) > 0) {
     for (idx in axis_text_indices) x$layers[[idx]]$data <- label_data
   }
 
   # ====================================================================
-  # 第四步：动态设置 scales
-  # 注意：需要临时移除 ggchord class，否则 +.ggchord 和 +.gg 方法冲突
+  # Step 4: dynamically set up scales
+  # Note: temporarily remove the ggchord class, otherwise +.ggchord conflicts with the +.gg method
   # ====================================================================
   cls <- class(x)
   class(x) <- setdiff(cls, "ggchord")
 
-  # 序列颜色 scale
-  x <- x + scale_color_manual(
-    name   = "Seq ID",
-    values = layout$seq_colors,
-    labels = layout$seq_labels,
-    breaks = layout$seqs
-  )
+  # Sequence color scale (only added when a sequence arc layer exists, to avoid warnings with no colour data)
+  if (length(seq_indices) > 0) {
+    x <- x + scale_color_manual(
+      name   = "Seq ID",
+      values = layout$seq_colors,
+      labels = layout$seq_labels,
+      breaks = layout$seqs
+    )
+  }
 
   # Ribbon fill scale
+  # Note: when the gene layer and the ribbon share the fill aesthetic, the
+  # ggnewscale::new_scale_fill() called during geom_gene() composition creates a
+  # placeholder fill scale (aesthetic like fill_ggnewscale_N). We replace that
+  # placeholder in place with the ribbon's real color scale so the gene scale
+  ribbon_fill_scale <- NULL
   if (!is.null(layout$ribbon_polys)) {
     if (layout$ribbon_color_scheme == "pident") {
-      x <- x + scale_fill_stepsn(
+      ribbon_fill_scale <- scale_fill_stepsn(
         name    = "Identity(%)",
         colours = layout$ribbon_colors,
         limits  = c(0, 100),
         breaks  = c(0, 50, 80, 90, 95, 100),
         guide   = guide_colorbar(
           theme = theme(legend.title.position = "top",
-                        legend.key.height = unit(8, "mm")),
+                        legend.key.height = unit(1, "null")),
           order = 1, position = "left"
         )
       )
     } else {
-      x <- x + scale_fill_identity()
+      ribbon_fill_scale <- scale_fill_identity()
     }
   }
 
-  # 基因 fill scale
+  # Gene fill scale
+  gene_fill_scale <- NULL
   if (nrow(layout$gene_polys) > 0) {
-    # 如果 ggnewscale 不可用且 ribbon 也用了 fill scale，跳过基因 fill scale
-    # 避免 "Continuous value supplied to discrete scale" 冲突
-    ggnewscale_ok <- requireNamespace("ggnewscale", quietly = TRUE)
-    ribbon_uses_fill <- !is.null(layout$ribbon_polys)
-    if (!ggnewscale_ok && ribbon_uses_fill) {
-      # 无 ggnewscale 时无法隔离两个 fill scale，跳过基因着色
+    if (layout$gene_color_scheme == "strand") {
+      gene_fill_scale <- scale_fill_manual(
+        name   = "Strand",
+        breaks = c("+", "-"),
+        values = layout$gene_pal
+      )
     } else {
-      if (layout$gene_color_scheme == "strand") {
-        x <- x + scale_fill_manual(
-          name   = "Strand",
-          breaks = c("+", "-"),
-          values = layout$gene_pal
-        )
-      } else {
-        x <- x + scale_fill_manual(
-          name   = "Gene Annotation",
-          breaks = layout$final_gene_order,
-          values = layout$gene_pal
-        )
+      gene_fill_scale <- scale_fill_manual(
+        name   = "Gene Annotation",
+        breaks = layout$final_gene_order,
+        values = layout$gene_pal
+      )
+    }
+  }
+
+  # Merge the two fill scales:
+  # - ribbon only: add the ribbon scale directly (aesthetic = fill)
+  # - gene only: add the gene scale directly (aesthetic = fill)
+  # - both: the ribbon layer was already renamed by ggnewscale during
+  #   geom_gene() composition to fill_ggnewscale_N, so we put the ribbon scale
+  #   into that aesthetic slot and the gene scale uses fill; neither overwrites the other.
+  if (!is.null(ribbon_fill_scale) && !is.null(gene_fill_scale)) {
+    # The ribbon layer was already renamed by ggnewscale during geom_gene()
+    # composition to fill_ggnewscale_N; put the ribbon scale into that aesthetic slot.
+    gns_idx <- which(vapply(x$scales$scales, function(s) {
+      any(grepl("^fill_ggnewscale_\\d+$", s$aesthetics))
+    }, logical(1)))
+    gns_aes <- if (length(gns_idx) > 0) {
+      x$scales$scales[[gns_idx[1]]]$aesthetics
+    } else {
+      "fill_ggnewscale_1"
+    }
+    # If the ribbon layer is added after geom_gene() (layer order gene -> ribbon),
+    # ggnewscale did not rename its fill mapping; synchronize it manually to gns_aes
+    # so both layer orders correctly separate the ribbon and gene fill scales.
+    for (r_idx in ribbon_indices) {
+      lyr <- x$layers[[r_idx]]
+      if (!is.null(lyr$mapping)) {
+        mp_names <- names(lyr$mapping)
+        mp_names[mp_names == "fill"] <- gns_aes
+        names(lyr$mapping) <- mp_names
       }
     }
+    s <- ribbon_fill_scale
+    s$aesthetics <- gns_aes
+    # guide_colorbar's available_aes only recognizes fill by default; after the
+    # aesthetic rename it must be synchronized, otherwise the
+    if (inherits(s$guide, "Guide")) {
+      s$guide$available_aes <- gsub("^fill$", gns_aes, s$guide$available_aes)
+      if (!is.null(s$guide$params$override.aes)) {
+        names(s$guide$params$override.aes) <-
+          gsub("^fill$", gns_aes, names(s$guide$params$override.aes))
+      }
+    }
+    if (length(gns_idx) > 0) {
+      x$scales$scales[[gns_idx[1]]] <- s
+    } else {
+      x <- x + s
+    }
+    # The gene layer uses the fill aesthetic, so add the gene scale directly (no conflict)
+    x <- x + gene_fill_scale
+  } else if (!is.null(ribbon_fill_scale)) {
+    x <- x + ribbon_fill_scale
+  } else if (!is.null(gene_fill_scale)) {
+    x <- x + gene_fill_scale
   }
 
-  # 坐标轴文本 size scale
+  # Ribbon alpha is a preset value; use an identity scale so it renders as specified
+  if (!is.null(layout$ribbon_polys)) {
+    x <- x + scale_alpha_identity()
+  }
+
+  # Axis text size scale
   x <- x + scale_size_identity()
 
-  # 恢复 ggchord class
+  # Restore the ggchord class
   class(x) <- unique(c("ggchord", class(x)))
 
   # ====================================================================
-  # 第五步：更新 coord 范围
+  # Step 5: update the coord range
   # ====================================================================
   ext <- layout$extremes
   pad <- 0.05 * max(ext$x_max - ext$x_min, ext$y_max - ext$y_min, 1)
@@ -513,7 +587,7 @@ print.ggchord <- function(x, ...) {
   )
 
   # ====================================================================
-  # 第六步：渲染
+  # Step 6: render
   # ====================================================================
   cls <- class(x)
   class(x) <- setdiff(cls, c("ggchord"))
@@ -526,10 +600,20 @@ print.ggchord <- function(x, ...) {
 # ====================================================================
 
 #' @export
-ggplot_build.ggchord <- function(plot) {
+ggplot_build.ggchord <- function(plot, ...) {
+  # The layout is computed lazily by print.ggchord(). A direct ggplot_build()
+  # call on a fresh plot therefore has no layout yet; warn in that case.
+  # The internal build triggered by ggnewscale's new_scale_fill() while layers
+  # are being composed must not warn.
   try_layout <- tryCatch(get_chord_layout(), error = function(e) NULL)
   if (is.null(try_layout)) {
-    warning("布局尚未计算，请通过 print() 渲染。")
+    calls <- sys.calls()
+    internal_build <- any(vapply(calls, function(cl) {
+      grepl("ggplot_add|new_aes", deparse(cl)[1])
+    }, logical(1)))
+    if (!internal_build) {
+      warning("Layout has not been computed; please render via print().")
+    }
   }
   NextMethod()
 }

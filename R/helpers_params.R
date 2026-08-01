@@ -255,10 +255,11 @@ process_axis_orientation <- function(param, seqs) {
       val <- param[i]
       seq_id <- seqs[i]
 
+      num_val <- suppressWarnings(as.numeric(val))
       if (is.character(val) && tolower(val) == "horizontal") {
         result[seq_id] <- "horizontal"
-      } else if (is.numeric(val)) {
-        result[seq_id] <- as.character(val)
+      } else if (is.numeric(val) || (!is.na(num_val) && num_val == val)) {
+        result[seq_id] <- as.character(num_val)
       } else {
         stop(paste("Element", i, "of axis_label_orientation has incorrect format; must be numeric or 'horizontal'"))
       }
@@ -272,10 +273,11 @@ process_axis_orientation <- function(param, seqs) {
     result <- setNames(rep("0", n), seqs)
     for (id in names(param)) {
       val <- param[id]
+      num_val <- suppressWarnings(as.numeric(val))
       if (is.character(val) && tolower(val) == "horizontal") {
         result[id] <- "horizontal"
-      } else if (is.numeric(val)) {
-        result[id] <- as.character(val)
+      } else if (is.numeric(val) || (!is.na(num_val) && num_val == val)) {
+        result[id] <- as.character(num_val)
       } else {
         stop(paste("Format of", id, "in axis_label_orientation is incorrect; must be numeric or 'horizontal'"))
       }
@@ -351,7 +353,8 @@ process_manual_colors <- function(gene_colors, unique_anno, gene_order) {
 
   # Generate default colors (for supplementation)
   if (n_anno <= 9) {
-    default_pal <- brewer.pal(n_anno, "Set1")
+    # brewer.pal(n<3) errors/warns; take the first n_anno colors
+    default_pal <- brewer.pal(max(n_anno, 3), "Set1")[seq_len(n_anno)]
   } else {
     default_pal <- colorRampPalette(brewer.pal(9, "Set1"))(n_anno)
   }

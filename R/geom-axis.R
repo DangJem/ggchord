@@ -1,27 +1,27 @@
-# geom-axis.R — 坐标轴图层
-# 从包级环境获取预计算的轴线、刻度线和标签数据
-# 坐标轴参数在此层指定，存入环境供 print 时使用
+# geom-axis.R - axis layer
+# Fetches pre-computed axis lines, tick marks, and label data from the package environment
+# Axis parameters are specified in this layer and stored for use at print time
 
-#' 添加坐标轴图层
+#' Add an axis layer
 #'
-#' 绘制弦图中每条序列的坐标轴（含轴线、主/次刻度线和标签）。
-#' 坐标轴参数（间距、刻度数量/长度、标签大小/方向等）在此指定。
+#' Draws axes for each sequence in the chord diagram (including axis lines, major/minor ticks, and labels).
+#' Axis parameters (spacing, tick count/length, label size/orientation, etc.) are specified here.
 #'
-#' @param mapping 默认 NULL（使用预计算数据）
-#' @param data 默认 NULL（从布局中自动获取）
-#' @param show_axis 逻辑型。是否显示坐标轴，默认 TRUE
-#' @param axis_gap 数值型/向量，可选。序列与坐标轴间距，默认 0.04
-#' @param axis_tick_major_number 整数型/向量，可选。主刻度数量，默认 5
-#' @param axis_tick_major_length 数值型/向量，可选。主刻度长度比例，默认 0.02
-#' @param axis_tick_minor_number 整数型/向量，可选。次刻度数量，默认 4
-#' @param axis_tick_minor_length 数值型/向量，可选。次刻度长度比例，默认 0.01
-#' @param axis_label_size 数值型/向量，可选。刻度标签字号，默认 3
-#' @param axis_label_offset 数值型/向量，可选。标签偏移比例，默认 1.5
-#' @param axis_label_orientation 字符/数值/向量，可选。标签方向，默认 "horizontal"
-#' @param show_legend 是否显示图例，默认 FALSE（坐标轴不参与图例）
-#' @param ... 传递给 geom_path/geom_segment/geom_text 的其他参数
+#' @param mapping Default NULL (uses pre-computed data)
+#' @param data Default NULL (retrieved automatically from the layout)
+#' @param show_axis Logical. Whether to show the axis, default TRUE
+#' @param axis_gap Optional numeric/vector. Spacing between sequence and axis, default 0.04
+#' @param axis_tick_major_number Optional integer/vector. Number of major ticks, default 5
+#' @param axis_tick_major_length Optional numeric/vector. Major tick length ratio, default 0.02
+#' @param axis_tick_minor_number Optional integer/vector. Number of minor ticks, default 4
+#' @param axis_tick_minor_length Optional numeric/vector. Minor tick length ratio, default 0.01
+#' @param axis_label_size Optional numeric/vector. Tick label font size, default 3
+#' @param axis_label_offset Optional numeric/vector. Label offset ratio, default 1.5
+#' @param axis_label_orientation Optional character/numeric/vector. Label orientation, default "horizontal"
+#' @param show_legend Whether to show the legend, default FALSE (axes do not participate in legends)
+#' @param ... Additional arguments passed to geom_path/geom_segment/geom_text
 #'
-#' @return ggplot2 layer 列表
+#' @return A list of ggplot2 layers
 #' @export
 geom_axis <- function(mapping = NULL, data = NULL,
                       show_axis = NULL,

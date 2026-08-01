@@ -1,20 +1,20 @@
-# testthat 测试文件 - v0.4.0 分层 API
+# testthat test file - v0.4.0 layered API
 
-test_that("ggchord 仅使用 seq_data 能返回 ggchord 对象", {
+test_that("ggchord with only seq_data returns a ggchord object", {
   data(seq_data_example)
   p <- ggchord(seq_data = seq_data_example)
   expect_s3_class(p, "ggchord")
   expect_s3_class(p, "ggplot")
 })
 
-test_that("ggchord + geom_seq 能生成序列弧线图层", {
+test_that("ggchord + geom_seq creates a sequence arc layer", {
   data(seq_data_example)
   p <- ggchord(seq_data = seq_data_example) + geom_seq()
   expect_s3_class(p, "ggchord")
   expect_true(length(p$layers) >= 1)
 })
 
-test_that("ggchord + geom_seq + geom_ribbon 正确处理比对数据", {
+test_that("ggchord + geom_seq + geom_ribbon handles alignment data correctly", {
   data(seq_data_example)
   data(ribbon_data_example)
   p <- ggchord(
@@ -27,7 +27,7 @@ test_that("ggchord + geom_seq + geom_ribbon 正确处理比对数据", {
   expect_true(length(p$layers) >= 1)
 })
 
-test_that("ggchord + geom_gene 正确处理基因数据", {
+test_that("ggchord + geom_gene handles gene data correctly", {
   data(seq_data_example)
   data(gene_data_example)
   p <- ggchord(
@@ -39,7 +39,7 @@ test_that("ggchord + geom_gene 正确处理基因数据", {
   expect_s3_class(p, "ggchord")
 })
 
-test_that("ggchord + geom_axis 能添加坐标轴", {
+test_that("ggchord + geom_axis can add an axis", {
   data(seq_data_example)
   p <- ggchord(seq_data = seq_data_example) +
     geom_seq() +
@@ -47,7 +47,7 @@ test_that("ggchord + geom_axis 能添加坐标轴", {
   expect_s3_class(p, "ggchord")
 })
 
-test_that("参数可分布在各个 geom 中", {
+test_that("parameters can be distributed across geoms", {
   data(seq_data_example)
   data(ribbon_data_example)
   data(gene_data_example)
@@ -80,7 +80,7 @@ test_that("参数可分布在各个 geom 中", {
   expect_s3_class(p, "ggchord")
 })
 
-test_that("seq_data 缺少必须列时报错", {
+test_that("seq_data missing required columns errors", {
   bad_data <- data.frame(id = c("a", "b"), len = c(100, 200))
   expect_error(
     ggchord(seq_data = bad_data),
@@ -88,46 +88,46 @@ test_that("seq_data 缺少必须列时报错", {
   )
 })
 
-test_that("seq_data 长度非正时报错", {
+test_that("seq_data with non-positive lengths errors", {
   bad_data <- data.frame(seq_id = c("a", "b"), length = c(0, 200))
   expect_error(
     ggchord(seq_data = bad_data),
-    "正数"
+    "positive"
   )
 })
 
-test_that("debug 模式输出调试信息", {
+test_that("debug mode outputs debug information", {
   data(seq_data_example)
   p <- ggchord(seq_data = seq_data_example, debug = TRUE)
   expect_s3_class(p, "ggchord")
 })
 
-test_that("ggchord 全局参数正确传递", {
+test_that("ggchord global parameters are passed correctly", {
   data(seq_data_example)
   p <- ggchord(seq_data = seq_data_example, title = "Hello", rotation = 90)
   expect_s3_class(p, "ggchord")
 })
 
-test_that("print 时能渲染完整弦图", {
+test_that("print renders the full chord diagram", {
   data(seq_data_example)
   data(ribbon_data_example)
   data(gene_data_example)
 
-  # 在真实 ggnewscale 环境中 pident 也可以正常工作
+  # pident also works correctly in a real ggnewscale environment
   p <- ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
     geom_seq() +
     geom_ribbon(ribbon_color_scheme = "query") +
     geom_gene() +
     geom_axis()
 
-  # 渲染到 PDF
+  # Render to PDF
   pdf("/tmp/ggchord_test_print.pdf", 8, 8)
   suppressMessages(suppressWarnings(print(p)))
   dev.off()
   expect_true(file.exists("/tmp/ggchord_test_print.pdf"))
 })
 
-test_that("README 中的配色、标签覆盖与透明度参数生效", {
+test_that("README color, label override, and transparency parameters take effect", {
   data(seq_data_example)
   data(ribbon_data_example)
   data(gene_data_example)
@@ -150,15 +150,15 @@ test_that("README 中的配色、标签覆盖与透明度参数生效", {
   expect_true(file.exists("/tmp/ggchord_readme_params.pdf"))
 })
 
-test_that("文档限定的数据和参数值会被校验", {
+test_that("documented data and parameter values are validated", {
   expect_error(
     ggchord(data.frame(seq_id = c("a", "a"), length = c(1, 2))),
-    "唯一"
+    "unique"
   )
 
   data(seq_data_example)
   expect_error({
     p <- ggchord(seq_data_example) + geom_seq(seq_orientation = 0)
     pdf(tempfile(fileext = ".pdf")); print(p); dev.off()
-  }, "1 或 -1")
+  }, "1 or -1")
 })

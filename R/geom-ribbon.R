@@ -1,23 +1,23 @@
-# geom-ribbon.R — 比对 ribbon 图层
-# 从包级环境获取预计算的 ribbon 多边形数据，用 geom_polygon 渲染
-# Ribbon 参数在此层指定，存入环境供 print 时使用
+# geom-ribbon.R - alignment ribbon layer
+# Fetches pre-computed ribbon polygon data from the package environment and renders it with geom_polygon
+# Ribbon parameters are specified in this layer and stored for use at print time
 
-#' 添加比对 ribbon 图层
+#' Add an alignment ribbon layer
 #'
-#' 绘制 BLAST 比对结果对应的彩色 ribbon。配色方案和间距参数在此指定。
+#' Draws colored ribbons corresponding to BLAST alignment results. Color scheme and spacing parameters are specified here.
 #'
-#' @param mapping 默认 NULL（使用预计算数据）
-#' @param data 默认 NULL（从布局中自动获取）
-#' @param ribbon_color_scheme 字符型。配色方案 "pident"、"query"、"single"，默认 "pident"
-#' @param ribbon_colors 颜色向量，可选。ribbon 颜色参数
-#' @param ribbon_alpha 数值型 (0-1)。ribbon 透明度，默认 0.35
-#' @param ribbon_ctrl_point 向量/列表，可选。贝塞尔控制点，默认 c(0,0)
-#' @param ribbon_gap 数值型/向量，可选。序列与 ribbon 间距，默认 0.15
-#' @param alpha ribbon 透明度（可覆盖 ribbon_alpha），默认使用布局中的值
-#' @param show_legend 是否显示图例，默认 TRUE
-#' @param ... 传递给 \code{geom_polygon()} 的其他参数
+#' @param mapping Default NULL (uses pre-computed data)
+#' @param data Default NULL (retrieved automatically from the layout)
+#' @param ribbon_color_scheme Character. Color scheme "pident", "query" or "single", default "pident"
+#' @param ribbon_colors Optional color vector. Ribbon color parameters
+#' @param ribbon_alpha Numeric (0-1). Ribbon transparency, default 0.35
+#' @param ribbon_ctrl_point Optional vector/list. Bezier control points, default c(0,0)
+#' @param ribbon_gap Optional numeric/vector. Spacing between sequences and ribbons, default 0.15
+#' @param alpha Ribbon transparency (overrides ribbon_alpha), defaults to the value used in the layout
+#' @param show_legend Whether to show the legend, default TRUE
+#' @param ... Additional arguments passed to \code{geom_polygon()}
 #'
-#' @return ggplot2 layer 列表
+#' @return A list of ggplot2 layers
 #' @export
 geom_ribbon <- function(mapping = NULL, data = NULL,
                         ribbon_color_scheme = NULL,
@@ -36,7 +36,7 @@ geom_ribbon <- function(mapping = NULL, data = NULL,
     ribbon_gap          = ribbon_gap
   ))
 
-  # 占位数据
+  # Placeholder data
   empty_polys <- data.frame(
     x = numeric(0), y = numeric(0),
     group = integer(0),
@@ -49,8 +49,8 @@ geom_ribbon <- function(mapping = NULL, data = NULL,
     stringsAsFactors = FALSE
   )
 
-  # 检测 ribbon_color_scheme 来决定 fill 映射变量
-  # 但 print 时会注入真实数据并替换 fill 列
+  # Detect ribbon_color_scheme to decide the fill mapping variable
+  # The real data is injected at print time and the fill column is replaced
   scheme <- ribbon_color_scheme %||% "pident"
 
   if (scheme == "pident") {
@@ -66,8 +66,11 @@ geom_ribbon <- function(mapping = NULL, data = NULL,
       stat        = "identity",
       geom        = GeomPolygon,
       position    = "identity",
-      show.legend = show_legend,
+      show.legend = if (identical(show_legend, TRUE)) {
+                      c(fill = TRUE, colour = FALSE)
+                    } else show_legend,
       inherit.aes = FALSE,
+      key_glyph   = key_glyph_ribbon,
       params      = list(...)
     )
   )

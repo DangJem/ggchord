@@ -42,7 +42,7 @@ generate_curvature_path <- function(start_angle, end_angle, radius, curvature, n
     x <- radius * cos(angles)
     y <- radius * sin(angles)
   } else {
-    # Use Bézier curve for smooth curvature, ensuring fixed start and end points
+    # Use Bezier curve for smooth curvature, ensuring fixed start and end points
     # Control point position adjusted based on curvature
     mid_angle <- center_angle
     mid_radius_factor <- 1 + (curvature - 1) * 0.3  # Reduce curvature's impact on control points
@@ -52,14 +52,14 @@ generate_curvature_path <- function(start_angle, end_angle, radius, curvature, n
     control_x <- mid_radius * cos(mid_angle)
     control_y <- mid_radius * sin(mid_angle)
 
-    # Calculate path points using Bézier curve
+    # Calculate path points using Bezier curve
     x <- numeric(n_points)
     y <- numeric(n_points)
 
     for (i in 1:n_points) {
       t <- (i - 1) / (n_points - 1)
 
-      # Quadratic Bézier curve formula
+      # Quadratic Bezier curve formula
       x[i] <- (1 - t)^2 * fixed_start_x + 2 * (1 - t) * t * control_x + t^2 * fixed_end_x
       y[i] <- (1 - t)^2 * fixed_start_y + 2 * (1 - t) * t * control_y + t^2 * fixed_end_y
     }
@@ -73,16 +73,16 @@ generate_curvature_path <- function(start_angle, end_angle, radius, curvature, n
 }
 
 
-#' Generate Bézier curve points
+#' Generate Bezier curve points
 #'
-#' Generates points on a Bézier curve based on start point, end point, and control points (for smooth ribbons)
+#' Generates points on a Bezier curve based on start point, end point, and control points (for smooth ribbons)
 #'
 #' @param p0 Numeric vector (length 2), start point coordinates (x, y)
 #' @param p3 Numeric vector (length 2), end point coordinates (x, y)
 #' @param c1 Numeric vector (length 2), first control point coordinates (x, y)
 #' @param c2 Numeric vector (length 2), second control point coordinates (x, y)
 #' @param n Integer, number of curve points (controls smoothness), default 100
-#' @return data.frame containing columns x, y (coordinates of points on the Bézier curve)
+#' @return data.frame containing columns x, y (coordinates of points on the Bezier curve)
 #' @keywords internal
 bezier_pts <- function(p0, p3, c1, c2, n = 100) {
   t <- seq(0, 1, length.out = n)
@@ -146,4 +146,32 @@ draw_key_gene_arrow <- function(data, params, size) {
       lwd = if_null_else(data$size, 0.5) * .pt
     )
   )
+}
+
+#' Key glyph for sequence legends
+#'
+#' Draws the path symbol only when the key data contains colour; otherwise returns a blank (prevents ggplot2 4.x
+#' from mixing unrelated layers into other legends with default grey/black symbols).
+#' @keywords internal
+key_glyph_seq <- function(data, params, size) {
+  if (is.null(data$colour)) return(zeroGrob())
+  draw_key_path(data, params, size)
+}
+
+#' Key glyph for ribbon legends
+#'
+#' Draws the polygon symbol only when the key data contains fill; otherwise returns a blank.
+#' @keywords internal
+key_glyph_ribbon <- function(data, params, size) {
+  if (is.null(data$fill)) return(zeroGrob())
+  draw_key_polygon(data, params, size)
+}
+
+#' Key glyph for gene arrow legends
+#'
+#' Draws the gene arrow only when the key data contains fill; otherwise returns a blank.
+#' @keywords internal
+key_glyph_gene <- function(data, params, size) {
+  if (is.null(data$fill)) return(zeroGrob())
+  draw_key_gene_arrow(data, params, size)
 }

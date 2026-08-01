@@ -1,18 +1,18 @@
-# coord-chord.R — 轻量弦图坐标系统
-# 使用 ggplot2 内置的 coord_fixed
-# print.ggchord 阶段会动态替换 coord，此函数仅提供初始占位
+# coord-chord.R - lightweight chord diagram coordinate system
+# Uses ggplot2's built-in coord_fixed
+# print.ggchord replaces the coord dynamically; this function only provides an initial placeholder
 
-#' 弦图坐标系统
+#' Chord diagram coordinate system
 #'
-#' 轻量 Coord。在 \code{ggchord()} 中创建占位坐标，
-#' 打印阶段根据布局计算的实际极值替换为合适的范围。
+#' A lightweight Coord. It creates placeholder coordinates in \code{ggchord()},
+#' which are replaced at print time with the actual extents computed from the layout.
 #'
-#' @param layout 弦图布局对象（由 ggchord() 内部传入，可 NULL）
+#' @param layout Chord layout object (passed internally by ggchord(), may be NULL)
 #'
-#' @return Coord 对象，用于 ggplot2 的 \code{+} 叠加
+#' @return A Coord object for ggplot2 \code{+} composition
 #' @export
 coord_chord <- function(layout = NULL) {
-  # 初始占位范围，打印时会被 print.ggchord 替换
+  # Initial placeholder range; replaced by print.ggchord at print time
   coord_fixed(
     ratio = 1,
     xlim  = c(-5, 5),

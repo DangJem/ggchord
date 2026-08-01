@@ -1,4 +1,4 @@
-🌐 Language Switch: 【[简体中文（Hans）](README-Hans.md) | [English](README.md)】
+🌐 Language Switch: 【[现代汉语（Hans）](README-Hans.md) | [English](README.md)】
 
 # ggchord: Multi-Sequence BLAST Alignment Chord Diagram Visualization Tool
 

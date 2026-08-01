@@ -2,7 +2,7 @@
 % Please edit documentation in R/helpers_elements.R
 \name{bezier_pts}
 \alias{bezier_pts}
-\title{Generate Bézier curve points}
+\title{Generate Bezier curve points}
 \usage{
 bezier_pts(p0, p3, c1, c2, n = 100)
 }
@@ -18,9 +18,9 @@ bezier_pts(p0, p3, c1, c2, n = 100)
 \item{n}{Integer, number of curve points (controls smoothness), default 100}
 }
 \value{
-data.frame containing columns x, y (coordinates of points on the Bézier curve)
+data.frame containing columns x, y (coordinates of points on the Bezier curve)
 }
 \description{
-Generates points on a Bézier curve based on start point, end point, and control points (for smooth ribbons)
+Generates points on a Bezier curve based on start point, end point, and control points (for smooth ribbons)
 }
 \keyword{internal}
