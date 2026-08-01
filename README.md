@@ -3,7 +3,7 @@
 # ggchord: Multi-Sequence Alignment Chord Diagram Visualization Tool
 
 ## Overview
-`ggchord` is an R package built on `ggplot2` that visualizes multi-sequence alignment results as intuitive chord diagrams using layered grammar of graphics. Version 0.4.0 moved layout parameters from `ggchord()` into individual `geom_*` layers, aligning closely with `ggplot2`'s design philosophy — each layer manages its own style. The latest v0.5.0 release removes the `ggnewscale`/`RColorBrewer` dependencies, adds ribbon outline customization, and ships updated documentation and example plots.
+`ggchord` is an R package built on `ggplot2` that visualizes multi-sequence alignment results as intuitive chord diagrams using layered grammar of graphics. Version 0.4.0 moved layout parameters from `ggchord()` into individual `geom_*` layers, aligning closely with `ggplot2`'s design philosophy — each layer manages its own style. v0.5.0 removed the `ggnewscale`/`RColorBrewer` dependencies and added ribbon outline customization. The latest v0.6.0 release makes plot objects fully self-contained (layout is computed at build time), adds `ggsave()`/`ggplot_build()` support, strengthens data validation, and adds CI.
 
 - Each sequence is presented as an arc with length proportionally mapped.
 - Colored ribbons represent alignment regions between sequences, supporting coloring by similarity or source.
@@ -15,7 +15,7 @@ Suitable for comparative genomics, pan-genome analysis, phage-host sequence rela
 
 ## Key Features
 - **Genuine `ggplot2` Layered Style**: `ggchord()` only takes data and global parameters; each `geom_*` receives its own layout parameters, just like `ggplot2`.
-- **Deferred Computation Model**: Layout is computed at `print()` time, so parameters specified across `geom`s are all collected and applied during rendering.
+- **Deferred Computation Model**: Layout is computed when the plot is built (via `print()`, `ggsave()`, or `ggplot_build()`), so parameters specified across `geom`s are all collected and applied during rendering.
 - **Multi-sequence Support**: Display alignment relationships of two or more sequences simultaneously.
 - **Sequence-level Customization**: Order, orientation, gaps, radius, and curvature — parameters belong in `geom_seq()`.
 - **Flexible Ribbon Styles**: 3 coloring schemes, Bézier control points — parameters belong in `geom_ribbon()`.
@@ -484,7 +484,15 @@ ggchord(
 ---
 
 ## Version History
-### v0.5.0 (Latest)
+### v0.6.0 (Latest)
+- **Self-contained plot objects**: data and parameters are stored on the plot itself, so multiple plots can coexist and plots survive `saveRDS()`/`readRDS()`.
+- **Build-time layout**: the layout is now computed by `ggplot_build()` instead of `print()`, so `print()`, `ggsave()` and `ggplot_build()` all work; the user's plot object is no longer modified when rendering.
+- **Data validation**: `ggchord()` now warns about out-of-range or reversed alignment/gene coordinates and unknown sequence IDs.
+- **Performance**: faster angle lookup in the layout mapping (binary search instead of a linear scan).
+- **Dependencies**: declares `ggplot2 (>= 4.0.0)` and `R (>= 4.1.0)` to match the implementation.
+- **CI**: GitHub Actions `R CMD check` workflow on macOS, Windows and Linux.
+
+### v0.5.0
 - **Ribbon outline customization**: `geom_ribbon()` gains `ribbon_outline_color` (default `"black"`), `ribbon_outline_width` (default `0.05`) and `ribbon_outline_linetype` (default `1`, solid).
 - **Dependencies removed**: dropped `ggnewscale` (ribbon/gene fill scales are now separated internally) and `RColorBrewer` (Set1 palette built in).
 - **Bug fixes**: ribbon fill scale overwritten by the gene fill scale; `ribbon_alpha` rendered at the wrong opacity; `geom_axis(show_axis = FALSE)` error; mixed `axis_label_orientation` vectors; `brewer.pal()` warnings for <3 items; `geom_gene()` added before `geom_ribbon()`; axis-only plots; S3 method registration.

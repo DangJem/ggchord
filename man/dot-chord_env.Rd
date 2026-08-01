@@ -7,6 +7,6 @@
 .chord_env
 }
 \description{
-Internal environment that stores the chord diagram's raw data, geom parameters, and the lazily computed layout result.
+Internal environment that caches the most recently computed chord layout.
 }
 \keyword{internal}

@@ -3,7 +3,7 @@
 # ggchord：多序列比对弦图可视化工具
 
 ## 概述
-`ggchord` 是一个基于 `ggplot2` 的 R 语言包，采用分层图形语法将多序列比对结果可视化为直观的弦图。v0.4.0 实现了布局参数从 `ggchord()` 向各 `geom_*` 图层的下沉，靠近 `ggplot2` 的设计哲学——每个图层管自己的样式。最新 v0.5.0 移除了 `ggnewscale`/`RColorBrewer` 依赖，新增连接带轮廓定制，并更新了文档与示例图。
+`ggchord` 是一个基于 `ggplot2` 的 R 语言包，采用分层图形语法将多序列比对结果可视化为直观的弦图。v0.4.0 实现了布局参数从 `ggchord()` 向各 `geom_*` 图层的下沉，靠近 `ggplot2` 的设计哲学——每个图层管自己的样式。v0.5.0 移除了 `ggnewscale`/`RColorBrewer` 依赖并新增连接带轮廓定制。最新 v0.6.0 使绘图对象完全自包含（布局在构建时计算），支持 `ggsave()`/`ggplot_build()`，加强数据校验并加入 CI。
 
 - 每条序列以圆弧呈现，按比例映射长度。
 - 彩色连接带（ribbon）表示序列间的比对区域，支持按相似度或来源着色。
@@ -15,7 +15,7 @@
 
 ## 主要功能
 - **真正的 ggplot2 分层风格**：`ggchord()` 仅接收数据和全局参数，各 `geom_*` 接收自己的布局参数，像 `ggplot2` 一样自然。
-- **延迟计算模型**：布局在 `print()` 时才计算，因此 `geom` 中指定的参数和之前叠加的参数都会在渲染时汇总生效。
+- **延迟计算模型**：布局在绘图构建时（`print()`、`ggsave()` 或 `ggplot_build()`）计算，因此 `geom` 中指定的参数和之前叠加的参数都会在渲染时汇总生效。
 - **多序列支持**：同时展示 2 条及以上序列的比对关系。
 - **序列级定制**：自定义序列顺序、方向、间隙、半径与曲率——参数放在 `geom_seq()`。
 - **灵活的连接带样式**：3 种配色方案，支持贝塞尔曲线控制点——参数放在 `geom_ribbon()`。
@@ -477,7 +477,15 @@ ggchord(
 ---
 
 ## 版本更新记录
-### v0.5.0（最新）
+### v0.6.0（最新）
+- **绘图对象自包含**：数据与参数直接存储在绘图对象上，多个图可并存，且对象可经 `saveRDS()`/`readRDS()` 保存与恢复。
+- **构建时布局**：布局改由 `ggplot_build()` 计算（而非 `print()`），因此 `print()`、`ggsave()` 与 `ggplot_build()` 均可用；渲染不再修改用户绘图对象。
+- **数据校验**：`ggchord()` 会对越界或反向的比对/基因坐标、未知序列 ID 给出警告。
+- **性能**：布局坐标映射改用二分查找，替代线性扫描。
+- **依赖声明**：与实现一致地声明 `ggplot2 (>= 4.0.0)` 与 `R (>= 4.1.0)`。
+- **CI**：新增 GitHub Actions `R CMD check` 工作流（macOS / Windows / Linux）。
+
+### v0.5.0
 - **连接带轮廓定制**：`geom_ribbon()` 新增 `ribbon_outline_color`（默认 `"black"`）、`ribbon_outline_width`（默认 `0.05`）与 `ribbon_outline_linetype`（默认 `1`，实线）。
 - **移除依赖**：去掉 `ggnewscale`（连接带与基因 fill scale 改为内部机制分离）与 `RColorBrewer`（Set1 调色板内置）。
 - **Bug 修复**：连接带 fill scale 被基因 scale 覆盖；`ribbon_alpha` 透明度渲染错误；`geom_axis(show_axis = FALSE)` 报错；混合 `axis_label_orientation` 向量报错；少于 3 项时 `brewer.pal()` 警告；`geom_gene()` 先于 `geom_ribbon()` 报错；仅含 axis 的绘图；S3 方法注册。

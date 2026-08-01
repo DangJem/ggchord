@@ -9,7 +9,7 @@
 # "fill" aesthetic).  This replicates what the ggnewscale package used to do.
 # ---------------------------------------------------------------------------
 rename_fill_geom <- function(geom = GeomPolygon, old_aes = "fill",
-                             new_aes = "fill_ggnewscale_1") {
+                             new_aes = "fill_ribbon") {
   new_geom <- ggplot2::ggproto(
     paste0("GeomChord", sub("^Geom", "", class(geom)[1])), geom
   )
@@ -35,7 +35,7 @@ rename_fill_geom <- function(geom = GeomPolygon, old_aes = "fill",
   new_geom
 }
 
-# The geom used by the ribbon layer; its fill aesthetic is "fill_ggnewscale_1".
+# The geom used by the ribbon layer; its fill aesthetic is "fill_ribbon".
 ribbon_geom <- rename_fill_geom()
 
 #' Add an alignment ribbon layer
@@ -70,13 +70,7 @@ geom_ribbon <- function(mapping = NULL, data = NULL,
                         ribbon_outline_linetype = 1,
                         show_legend = TRUE,
                         ...) {
-  set_ribbon_params(list(
-    ribbon_color_scheme = ribbon_color_scheme,
-    ribbon_colors       = ribbon_colors,
-    ribbon_alpha        = alpha %||% ribbon_alpha,
-    ribbon_ctrl_point   = ribbon_ctrl_point,
-    ribbon_gap          = ribbon_gap
-  ))
+  ribbon_alpha <- alpha %||% ribbon_alpha
 
   # Placeholder data
   empty_polys <- data.frame(
@@ -107,20 +101,30 @@ geom_ribbon <- function(mapping = NULL, data = NULL,
   if (!is.null(ribbon_outline_width)) outline_params$linewidth <- ribbon_outline_width
   if (!is.null(ribbon_outline_linetype)) outline_params$linetype <- ribbon_outline_linetype
 
-  list(
-    ggplot2::layer(
-      data        = empty_polys,
-      mapping     = fill_aes,
-      stat        = "identity",
-      geom        = ribbon_geom,
-      position    = "identity",
-      show.legend = if (identical(show_legend, TRUE)) {
-                      c(fill = TRUE, colour = FALSE)
-                    } else show_legend,
-      inherit.aes = FALSE,
-      check.aes   = FALSE,
-      key_glyph   = key_glyph_ribbon,
-      params      = c(list(...), outline_params)
-    )
+  lyr <- ggplot2::layer(
+    data        = empty_polys,
+    mapping     = fill_aes,
+    stat        = "identity",
+    geom        = ribbon_geom,
+    position    = "identity",
+    show.legend = if (identical(show_legend, TRUE)) {
+                    c(fill = TRUE, colour = FALSE)
+                  } else show_legend,
+    inherit.aes = FALSE,
+    check.aes   = FALSE,
+    key_glyph   = key_glyph_ribbon,
+    params      = c(list(...), outline_params)
   )
+  lyr$ggchord_params <- list(
+    type                    = "ribbon",
+    ribbon_color_scheme     = ribbon_color_scheme,
+    ribbon_colors           = ribbon_colors,
+    ribbon_alpha            = ribbon_alpha,
+    ribbon_ctrl_point       = ribbon_ctrl_point,
+    ribbon_gap              = ribbon_gap,
+    ribbon_outline_color    = ribbon_outline_color,
+    ribbon_outline_width    = ribbon_outline_width,
+    ribbon_outline_linetype = ribbon_outline_linetype
+  )
+  list(lyr)
 }

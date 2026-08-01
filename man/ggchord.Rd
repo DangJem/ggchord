@@ -39,7 +39,8 @@ A ggchord object (inherits from ggplot) to which geom_* layers can be added with
 ggchord visualizes multi-sequence alignment results using ggplot2's layered grammar.
 The \code{ggchord()} constructor handles data validation and global settings;
 the \code{geom_*} layers are stacked as needed, each responsible for its own layout parameters and visual rendering.
-The layout is computed lazily at \code{print()} time.
+The layout is computed lazily when the plot is built (e.g. via \code{print()},
+\code{ggsave()}, or \code{ggplot_build()}).
 }
 \examples{
 library(ggchord)

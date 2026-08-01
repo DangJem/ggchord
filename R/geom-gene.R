@@ -44,22 +44,6 @@ geom_gene <- function(mapping = NULL, data = NULL,
                       show_label = NULL,
                       label_size = NULL,
                       ...) {
-  set_gene_params(list(
-    gene_offset               = gene_offset,
-    gene_width                = gene_width,
-    gene_color_scheme         = gene_color_scheme,
-    gene_colors               = gene_colors,
-    gene_order                = gene_order,
-    gene_label_show           = gene_label_show,
-    gene_label_size           = gene_label_size,
-    gene_label_rotation       = gene_label_rotation,
-    gene_label_radial_offset  = gene_label_radial_offset,
-    gene_label_circum_offset  = gene_label_circum_offset,
-    gene_label_circum_limit   = gene_label_circum_limit,
-    show_label_override       = show_label,
-    label_size_override       = label_size
-  ))
-
   layers <- list()
 
   # Manual colors map by annotation; default colors map by strand.
@@ -70,8 +54,9 @@ geom_gene <- function(mapping = NULL, data = NULL,
     aes(x = x, y = y, group = group, fill = strand)
   }
 
-  # Only return the layer; do not create a scale (scales are set uniformly by print.ggchord)
-  layers[[length(layers) + 1]] <- ggplot2::layer(
+  # The polygon layer carries the gene parameters so that the plot object is
+  # self-contained (scales are added at build time by ggplot_build.ggchord).
+  poly_layer <- ggplot2::layer(
     data        = data.frame(x = numeric(0), y = numeric(0),
                              group = integer(0),
                              strand = factor(character(0), levels = c("+", "-")),
@@ -87,6 +72,23 @@ geom_gene <- function(mapping = NULL, data = NULL,
     key_glyph   = key_glyph_gene,
     params      = list(color = "black", ...)
   )
+  poly_layer$ggchord_params <- list(
+    type                      = "gene",
+    gene_offset               = gene_offset,
+    gene_width                = gene_width,
+    gene_color_scheme         = gene_color_scheme,
+    gene_colors               = gene_colors,
+    gene_order                = gene_order,
+    gene_label_show           = gene_label_show,
+    gene_label_size           = gene_label_size,
+    gene_label_rotation       = gene_label_rotation,
+    gene_label_radial_offset  = gene_label_radial_offset,
+    gene_label_circum_offset  = gene_label_circum_offset,
+    gene_label_circum_limit   = gene_label_circum_limit,
+    show_label_override       = show_label,
+    label_size_override       = label_size
+  )
+  layers[[length(layers) + 1]] <- poly_layer
 
   # Placeholder Text layer (for gene label injection; real data is injected at print time)
   layers[[length(layers) + 1]] <- geom_text(

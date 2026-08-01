@@ -1,7 +1,8 @@
 # ggchord.R - constructor
 # Entry point of the layered ggplot2 API for chord diagrams
-# v0.4.0: ggchord() keeps only data arguments and global style parameters,
-# layout parameters moved to the geom_* layers, and coordinate computation is deferred to print time
+# v0.6.0: plot objects are self-contained. Data and parameters are stored on
+# the plot object itself, and the layout is computed at build time so that
+# print(), ggsave(), ggplot_build() and other ggplot2 workflows all work.
 
 # Global variable declarations (to avoid R CMD check NOTEs)
 globalVariables(c(
@@ -15,7 +16,8 @@ globalVariables(c(
 #' ggchord visualizes multi-sequence alignment results using ggplot2's layered grammar.
 #' The \code{ggchord()} constructor handles data validation and global settings;
 #' the \code{geom_*} layers are stacked as needed, each responsible for its own layout parameters and visual rendering.
-#' The layout is computed lazily at \code{print()} time.
+#' The layout is computed lazily when the plot is built (e.g. via \code{print()},
+#' \code{ggsave()}, or \code{ggplot_build()}).
 #'
 #' @param seq_data data.frame/tibble, required. Basic sequence information
 #' @param ribbon_data data.frame/tibble, optional. Alignment results
@@ -59,9 +61,6 @@ ggchord <- function(
     show_legend = TRUE,
     debug = FALSE
 ) {
-  # Clear parameters from the previous run
-  clear_chord_env()
-
   # ====================================================================
   # 1. Validate data
   # ====================================================================
@@ -76,6 +75,8 @@ ggchord <- function(
     stop("The 'seq_id' values in seq_data must be unique")
   }
 
+  seq_lens <- setNames(seq_data$length, seq_data$seq_id)
+
   if (!is.null(ribbon_data)) {
     required_ribbon_cols <- c("qaccver", "saccver", "length", "pident",
                               "qstart", "qend", "sstart", "send")
@@ -84,6 +85,32 @@ ggchord <- function(
            paste(required_ribbon_cols, collapse = ", "))
     }
     if (nrow(ribbon_data) == 0) warning("No valid alignment data in ribbon_data")
+    if (nrow(ribbon_data) > 0) {
+      unknown <- setdiff(unique(c(ribbon_data$qaccver, ribbon_data$saccver)),
+                         seq_data$seq_id)
+      if (length(unknown) > 0) {
+        warning("ribbon_data contains sequence IDs not present in seq_data: ",
+                paste(unknown, collapse = ", "))
+      }
+      if (any(ribbon_data$qstart > ribbon_data$qend |
+              ribbon_data$sstart > ribbon_data$send, na.rm = TRUE)) {
+        warning("ribbon_data contains rows where start > end; these may render abnormally")
+      }
+      both_known <- ribbon_data$qaccver %in% seq_data$seq_id &
+                    ribbon_data$saccver %in% seq_data$seq_id
+      if (any(both_known)) {
+        out_of_range <- (ribbon_data$qstart[both_known] < 1 |
+                         ribbon_data$qend[both_known] > seq_lens[ribbon_data$qaccver[both_known]] |
+                         ribbon_data$sstart[both_known] < 1 |
+                         ribbon_data$send[both_known] > seq_lens[ribbon_data$saccver[both_known]])
+        if (any(out_of_range, na.rm = TRUE)) {
+          warning("ribbon_data contains alignment positions outside the sequence length")
+        }
+      }
+      if (any(ribbon_data$pident < 0 | ribbon_data$pident > 100, na.rm = TRUE)) {
+        warning("ribbon_data contains pident values outside [0, 100]")
+      }
+    }
     if (debug) cat("Number of alignment data rows: ", nrow(ribbon_data), "\n")
   }
 
@@ -97,23 +124,30 @@ ggchord <- function(
     if (any(!gene_data$strand %in% c("+", "-"))) {
       stop("The 'strand' values in gene_data can only be '+' or '-'")
     }
+    if (nrow(gene_data) > 0) {
+      unknown <- setdiff(unique(gene_data$seq_id), seq_data$seq_id)
+      if (length(unknown) > 0) {
+        warning("gene_data contains sequence IDs not present in seq_data: ",
+                paste(unknown, collapse = ", "))
+      }
+      known <- gene_data$seq_id %in% seq_data$seq_id
+      if (any(known)) {
+        if (any(gene_data$start[known] > gene_data$end[known])) {
+          warning("gene_data contains rows where start > end")
+        }
+        out_of_range <- gene_data$start[known] < 1 |
+                        gene_data$end[known] > seq_lens[gene_data$seq_id[known]]
+        if (any(out_of_range, na.rm = TRUE)) {
+          warning("gene_data contains positions outside the sequence length")
+        }
+      }
+    }
     if (debug) cat("Number of gene annotation rows: ", nrow(gene_data), "\n")
   }
 
   # ====================================================================
-  # 2. Store raw data and global parameters
-  # ====================================================================
-  set_chord_data(seq_data, ribbon_data, gene_data)
-
-  set_global_params(list(
-    rotation     = rotation,
-    panel_margin = panel_margin,
-    show_legend  = show_legend,
-    debug        = debug
-  ))
-
-  # ====================================================================
-  # 3. Build the base ggplot object (the coord is replaced with the correct range at print time)
+  # 2. Build the base ggplot object and store data + global parameters
+  #    on the plot itself so the object is fully self-contained.
   # ====================================================================
   margin_vals <- process_panel_margin(panel_margin)
 
@@ -136,6 +170,13 @@ ggchord <- function(
       panel.background    = element_blank(),
       legend.position     = if (isTRUE(show_legend)) "right" else "none"
     )
+
+  p$ggchord <- list(
+    data   = list(seq_data = seq_data, ribbon_data = ribbon_data,
+                  gene_data = gene_data),
+    global = list(rotation = rotation, panel_margin = panel_margin,
+                  show_legend = show_legend, debug = debug)
+  )
 
   class(p) <- c("ggchord", class(p))
   p
@@ -168,22 +209,44 @@ ggchord <- function(
 }
 
 # ====================================================================
-# print.ggchord: lazily compute the layout, inject data into layers, and render
+# ggplot_build.ggchord: compute the layout, inject data into cloned
+# layers, add scales, and set the coordinate system.  Everything is
+# driven by the plot object itself, so the plot can be printed, saved
+# with ggsave(), or built with ggplot_build() any number of times and
+# in any order, without cross-talk between plots.
 # ====================================================================
 
 #' @export
-print.ggchord <- function(x, ...) {
-  # Step 1: collect all parameters
-  global <- get_global_params()
-  data_list <- get_chord_data()
+ggplot_build.ggchord <- function(plot, ...) {
+  # Step 1: collect data and parameters from the plot object
+  chord <- plot$ggchord
+  if (is.null(chord)) {
+    stop("Not a valid ggchord object: no data stored on the plot. ",
+         "Please build the plot with ggchord().")
+  }
+  data_list <- chord$data
+  global    <- chord$global
 
-  seq_params    <- get_seq_params()
-  ribbon_params <- get_ribbon_params()
-  gene_params   <- get_gene_params()
-  axis_params   <- get_axis_params()
+  # Work on a copy so the user's plot object is never modified: the scales are
+  # cloned because scales are added in place below.
+  plot$scales <- plot$scales$clone()
 
-  seq_layer_requested <- !is.null(seq_params)
-  if (is.null(seq_params)) seq_params <- list()
+  seq_params    <- list()
+  ribbon_params <- list()
+  gene_params   <- list()
+  axis_params   <- list()
+  seq_layer_requested <- FALSE
+
+  for (i in seq_along(plot$layers)) {
+    pp <- plot$layers[[i]]$ggchord_params
+    if (is.null(pp)) next
+    switch(pp$type,
+      seq    = { seq_params <- pp; seq_layer_requested <- TRUE },
+      ribbon = ribbon_params <- pp,
+      gene   = gene_params <- pp,
+      axis   = axis_params <- pp
+    )
+  }
 
   # --- Process sequences ---
   seq_data <- data_list$seq_data
@@ -352,12 +415,13 @@ print.ggchord <- function(x, ...) {
     rotation = global$rotation, debug = global$debug
   )
 
+  # Cache the layout so the get_chord_layout() accessor can inspect it.
   set_chord_layout(layout)
 
   # ====================================================================
-  # Step 3: inject data into layers
+  # Step 3: classify layers and inject data into CLONED layers
+  # (cloning keeps the user's plot object untouched)
   # ====================================================================
-  # Classify layers by geom type
   seq_indices    <- integer(0)
   ribbon_indices <- integer(0)
   gene_poly_indices <- integer(0)
@@ -367,8 +431,8 @@ print.ggchord <- function(x, ...) {
   axis_text_indices <- integer(0)
 
   seq_path_assigned <- FALSE
-  for (i in seq_along(x$layers)) {
-    lyr <- x$layers[[i]]
+  for (i in seq_along(plot$layers)) {
+    lyr <- plot$layers[[i]]
     gname <- class(lyr$geom)[1]
     data_names <- names(lyr$data)
 
@@ -386,7 +450,7 @@ print.ggchord <- function(x, ...) {
       }
     } else if (gname %in% c("GeomPolygon", "NewGeomPolygon", "GeomChordPolygon")) {
       # The gene placeholder is distinguished from the ribbon placeholder
-      # by its strand column (both use GeomPolygon).
+      # by its strand column (both use polygon geoms).
       if ("strand" %in% data_names) {
         gene_poly_indices <- c(gene_poly_indices, i)
       } else {
@@ -404,69 +468,74 @@ print.ggchord <- function(x, ...) {
     }
   }
 
-  # Inject sequence arc data
+  # Reconstruct a layer with the given data (and optional remapped mapping).
+  # LayerInstance objects cannot be cloned with ggproto(NULL, .), so the layer
+  # is rebuilt through layer() with the same geom/stat/mapping/params.
+  reconstruct_layer <- function(lyr, data, mapping = NULL) {
+    params <- c(lyr$geom_params, lyr$stat_params, lyr$aes_params)
+    params <- params[!duplicated(names(params))]
+    ggplot2::layer(
+      geom = lyr$geom, stat = lyr$stat, data = data,
+      mapping = mapping %||% lyr$mapping, position = lyr$position,
+      params = params,
+      inherit.aes = lyr$inherit.aes,
+      show.legend = lyr$show.legend,
+      check.aes = FALSE
+    )
+  }
+
+  new_layers <- plot$layers
+
   if (length(seq_indices) > 0 && length(layout$seq_arcs) > 0) {
     arc_df <- do.call(rbind, layout$seq_arcs)
-    for (idx in seq_indices) x$layers[[idx]]$data <- arc_df
+    for (idx in seq_indices) new_layers[[idx]] <- reconstruct_layer(plot$layers[[idx]], arc_df)
   }
 
-  # Inject ribbon data
   if (length(ribbon_indices) > 0 && !is.null(layout$ribbon_polys)) {
-    for (idx in ribbon_indices) x$layers[[idx]]$data <- layout$ribbon_polys
+    for (idx in ribbon_indices) {
+      new_layers[[idx]] <- reconstruct_layer(plot$layers[[idx]], layout$ribbon_polys)
+    }
   }
 
-  # Inject gene data
   if (length(gene_poly_indices) > 0 && nrow(layout$gene_polys) > 0) {
-    for (idx in gene_poly_indices) x$layers[[idx]]$data <- layout$gene_polys
+    for (idx in gene_poly_indices) new_layers[[idx]] <- reconstruct_layer(plot$layers[[idx]], layout$gene_polys)
   }
 
-  # Inject gene labels
   if (length(gene_text_indices) > 0 && nrow(layout$gene_labels) > 0) {
-    for (idx in gene_text_indices) x$layers[[idx]]$data <- layout$gene_labels
+    for (idx in gene_text_indices) new_layers[[idx]] <- reconstruct_layer(plot$layers[[idx]], layout$gene_labels)
   }
 
-  # Inject axis line data
   if (length(axis_line_indices) > 0 && nrow(layout$axis_lines) > 0) {
-    for (idx in axis_line_indices) x$layers[[idx]]$data <- layout$axis_lines
+    for (idx in axis_line_indices) new_layers[[idx]] <- reconstruct_layer(plot$layers[[idx]], layout$axis_lines)
   }
 
-  # Inject tick data
   if (length(axis_seg_indices) > 0 && nrow(layout$axis_ticks) > 0) {
-    for (idx in axis_seg_indices) x$layers[[idx]]$data <- layout$axis_ticks
+    for (idx in axis_seg_indices) new_layers[[idx]] <- reconstruct_layer(plot$layers[[idx]], layout$axis_ticks)
   }
 
-  # Inject tick label data
   label_data <- if (nrow(layout$axis_ticks) > 0) {
     subset(layout$axis_ticks, !is.na(label))
   } else {
     layout$axis_ticks
   }
   if (length(axis_text_indices) > 0 && nrow(label_data) > 0) {
-    for (idx in axis_text_indices) x$layers[[idx]]$data <- label_data
+    for (idx in axis_text_indices) new_layers[[idx]] <- reconstruct_layer(plot$layers[[idx]], label_data)
   }
 
-  # ====================================================================
-  # Step 4: dynamically set up scales
-  # Note: temporarily remove the ggchord class, otherwise +.ggchord conflicts with the +.gg method
-  # ====================================================================
-  cls <- class(x)
-  class(x) <- setdiff(cls, "ggchord")
+  plot$layers <- new_layers
 
-  # Sequence color scale (only added when a sequence arc layer exists, to avoid warnings with no colour data)
+  # ====================================================================
+  # Step 4: build and attach scales
+  # ====================================================================
   if (length(seq_indices) > 0) {
-    x <- x + scale_color_manual(
+    plot$scales$add(scale_color_manual(
       name   = "Seq ID",
       values = layout$seq_colors,
       labels = layout$seq_labels,
       breaks = layout$seqs
-    )
+    ))
   }
 
-  # Ribbon fill scale
-  # Note: when the gene layer and the ribbon share the fill aesthetic, the
-  # ribbon layer's fill mapping is renamed to the internal aesthetic
-  # "fill_ggnewscale_1" below so the gene scale does not overwrite the ribbon
-  # scale.
   ribbon_fill_scale <- NULL
   if (!is.null(layout$ribbon_polys)) {
     if (layout$ribbon_color_scheme == "pident") {
@@ -486,7 +555,6 @@ print.ggchord <- function(x, ...) {
     }
   }
 
-  # Gene fill scale
   gene_fill_scale <- NULL
   if (nrow(layout$gene_polys) > 0) {
     if (layout$gene_color_scheme == "strand") {
@@ -504,92 +572,63 @@ print.ggchord <- function(x, ...) {
     }
   }
 
-  # Merge the two fill scales:
-  # - ribbon only: add the ribbon scale directly (aesthetic = fill)
-  # - gene only: add the gene scale directly (aesthetic = fill)
-  # - both: ggplot2 allows only one scale per aesthetic, so the ribbon layers'
-  #   fill mapping is renamed to the internal aesthetic "fill_ggnewscale_1" and
-  #   the ribbon scale is attached to it; the gene scale keeps the plain "fill"
-  #   aesthetic. The two scales therefore do not overwrite each other.
+  # ggplot2 allows only one scale per aesthetic. When both the ribbon and the
+  # gene layers are present, the ribbon layers' fill mapping is renamed to the
+  # internal aesthetic "fill_ribbon" and the ribbon scale is attached to it;
+  # the gene scale keeps the plain "fill" aesthetic, so the two scales do not
+  # overwrite each other.
   if (!is.null(ribbon_fill_scale) && !is.null(gene_fill_scale)) {
-    gns_aes <- "fill_ggnewscale_1"
-    for (r_idx in ribbon_indices) {
-      lyr <- x$layers[[r_idx]]
-      if (!is.null(lyr$mapping)) {
-        mp_names <- names(lyr$mapping)
-        mp_names[mp_names == "fill"] <- gns_aes
-        names(lyr$mapping) <- mp_names
-      }
+    ribbon_aes <- "fill_ribbon"
+    for (idx in ribbon_indices) {
+      lyr <- plot$layers[[idx]]
+      mp <- lyr$mapping
+      mp_names <- names(mp)
+      mp_names[mp_names == "fill"] <- ribbon_aes
+      names(mp) <- mp_names
+      plot$layers[[idx]] <- reconstruct_layer(lyr, layout$ribbon_polys, mapping = mp)
     }
     s <- ribbon_fill_scale
-    s$aesthetics <- gns_aes
+    s$aesthetics <- ribbon_aes
     # guide_colorbar's available_aes only recognizes fill by default; after the
     # aesthetic rename it must be synchronized, otherwise the colorbar is dropped.
     if (inherits(s$guide, "Guide")) {
-      s$guide$available_aes <- gsub("^fill$", gns_aes, s$guide$available_aes)
+      s$guide$available_aes <- gsub("^fill$", ribbon_aes, s$guide$available_aes)
       if (!is.null(s$guide$params$override.aes)) {
         names(s$guide$params$override.aes) <-
-          gsub("^fill$", gns_aes, names(s$guide$params$override.aes))
+          gsub("^fill$", ribbon_aes, names(s$guide$params$override.aes))
       }
     }
-    x <- x + s
-    # The gene layer uses the fill aesthetic, so add the gene scale directly (no conflict)
-    x <- x + gene_fill_scale
+    plot$scales$add(s)
+    plot$scales$add(gene_fill_scale)
   } else if (!is.null(ribbon_fill_scale)) {
-    x <- x + ribbon_fill_scale
+    plot$scales$add(ribbon_fill_scale)
   } else if (!is.null(gene_fill_scale)) {
-    x <- x + gene_fill_scale
+    plot$scales$add(gene_fill_scale)
   }
 
   # Ribbon alpha is a preset value; use an identity scale so it renders as specified
   if (!is.null(layout$ribbon_polys)) {
-    x <- x + scale_alpha_identity()
+    plot$scales$add(scale_alpha_identity())
   }
 
   # Axis text size scale
-  x <- x + scale_size_identity()
-
-  # Restore the ggchord class
-  class(x) <- unique(c("ggchord", class(x)))
+  plot$scales$add(scale_size_identity())
 
   # ====================================================================
   # Step 5: update the coord range
   # ====================================================================
   ext <- layout$extremes
   pad <- 0.05 * max(ext$x_max - ext$x_min, ext$y_max - ext$y_min, 1)
-  x$coordinates <- coord_fixed(
+  plot$coordinates <- coord_fixed(
     ratio = 1,
     xlim  = c(ext$x_min - pad, ext$x_max + pad),
     ylim  = c(ext$y_min - pad, ext$y_max + pad),
     clip  = "off"
   )
 
-  # ====================================================================
-  # Step 6: render
-  # ====================================================================
-  cls <- class(x)
-  class(x) <- setdiff(cls, c("ggchord"))
-  print(x)
-  invisible()
-}
-
-# ====================================================================
-# ggplot_build.ggchord
-# ====================================================================
-
-#' @export
-ggplot_build.ggchord <- function(plot, ...) {
-  # The layout is computed lazily by print.ggchord(). A direct ggplot_build()
-  # call on a fresh plot therefore has no layout yet; warn in that case.
-  try_layout <- tryCatch(get_chord_layout(), error = function(e) NULL)
-  if (is.null(try_layout)) {
-    calls <- sys.calls()
-    internal_build <- any(vapply(calls, function(cl) {
-      grepl("ggplot_add|new_aes", deparse(cl)[1])
-    }, logical(1)))
-    if (!internal_build) {
-      warning("Layout has not been computed; please render via print().")
-    }
-  }
-  NextMethod()
+  # Run the standard ggplot2 build on the prepared plot.  The ggchord class is
+  # removed first so that dispatch proceeds to the base ggplot2 method instead
+  # of recursing into this method.
+  class(plot) <- setdiff(class(plot), "ggchord")
+  ggplot_build(plot)
 }

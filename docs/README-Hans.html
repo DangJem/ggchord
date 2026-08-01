@@ -42,193 +42,222 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-    <div class="page-header">
-      <h1>ggchord：多序列比对弦图可视化工具</h1>
-    </div>
-
-
-<p>🌐 语言切换: 【<a href="README-Hans.html">现代汉语（Han）</a> | <a href="README.html">英文（English）</a>】</p>
-<div id="ggchord多序列比对弦图可视化工具" class="section level1">
-
-<div class="section level2">
-<h2 id="概述">概述<a class="anchor" aria-label="anchor" href="#%E6%A6%82%E8%BF%B0"></a></h2>
-<p><code>ggchord</code> 是一个基于 <code>ggplot2</code> 的 R 语言包，采用分层图形语法将多序列比对结果可视化为直观的弦图。v0.4.0 实现了布局参数从 <code><a href="reference/ggchord.html">ggchord()</a></code> 向各 <code>geom_*</code> 图层的下沉，靠近 <code>ggplot2</code> 的设计哲学——每个图层管自己的样式。最新 v0.5.0 移除了 <code>ggnewscale</code>/<code>RColorBrewer</code> 依赖，新增连接带轮廓定制，并更新了文档与示例图。</p>
-<ul><li>每条序列以圆弧呈现，按比例映射长度。</li>
+<p>🌐 语言切换: 【<a href="README-Hans.md">现代汉语（Han）</a> | <a href="README.md">英文（English）</a>】</p>
+<h1>ggchord：多序列比对弦图可视化工具</h1>
+<h2>概述</h2>
+<p><code>ggchord</code> 是一个基于 <code>ggplot2</code> 的 R 语言包，采用分层图形语法将多序列比对结果可视化为直观的弦图。v0.4.0 实现了布局参数从 <code>ggchord()</code> 向各 <code>geom_*</code> 图层的下沉，靠近 <code>ggplot2</code> 的设计哲学——每个图层管自己的样式。v0.5.0 移除了 <code>ggnewscale</code>/<code>RColorBrewer</code> 依赖并新增连接带轮廓定制。最新 v0.6.0 使绘图对象完全自包含（布局在构建时计算），支持 <code>ggsave()</code>/<code>ggplot_build()</code>，加强数据校验并加入 CI。</p>
+<ul>
+<li>每条序列以圆弧呈现，按比例映射长度。</li>
 <li>彩色连接带（ribbon）表示序列间的比对区域，支持按相似度或来源着色。</li>
 <li>基因注释以箭头形式叠加，支持按链方向或功能类别着色。</li>
 <li>配备可定制的坐标轴，精准标注序列位置与长度。</li>
 <li>布局参数可分散到对应 <code>geom_*</code> 图层中指定，也可省略使用默认值。</li>
-</ul><p>适用于比较基因组学、泛基因组分析、噬菌体-宿主序列关系等研究。</p>
-</div>
-<div class="section level2">
-<h2 id="主要功能">主要功能<a class="anchor" aria-label="anchor" href="#%E4%B8%BB%E8%A6%81%E5%8A%9F%E8%83%BD"></a></h2>
-<ul><li>
-<strong>真正的 ggplot2 分层风格</strong>：<code><a href="reference/ggchord.html">ggchord()</a></code> 仅接收数据和全局参数，各 <code>geom_*</code> 接收自己的布局参数，像 <code>ggplot2</code> 一样自然。</li>
-<li>
-<strong>延迟计算模型</strong>：布局在 <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> 时才计算，因此 <code>geom</code> 中指定的参数和之前叠加的参数都会在渲染时汇总生效。</li>
-<li>
-<strong>多序列支持</strong>：同时展示 2 条及以上序列的比对关系。</li>
-<li>
-<strong>序列级定制</strong>：自定义序列顺序、方向、间隙、半径与曲率——参数放在 <code><a href="reference/geom_seq.html">geom_seq()</a></code>。</li>
-<li>
-<strong>灵活的连接带样式</strong>：3 种配色方案，支持贝塞尔曲线控制点——参数放在 <code><a href="reference/geom_ribbon.html">geom_ribbon()</a></code>。</li>
-<li>
-<strong>基因箭头图层</strong>：按链方向或注释类别着色，支持标签——参数放在 <code><a href="reference/geom_gene.html">geom_gene()</a></code>。</li>
-<li>
-<strong>精细化坐标轴</strong>：主/次刻度、标签大小与方向——参数放在 <code><a href="reference/geom_axis.html">geom_axis()</a></code>。</li>
-</ul></div>
-<div class="section level2">
-<h2 id="安装">安装<a class="anchor" aria-label="anchor" href="#%E5%AE%89%E8%A3%85"></a></h2>
-<div class="section level3">
-<h3 id="依赖环境">依赖环境<a class="anchor" aria-label="anchor" href="#%E4%BE%9D%E8%B5%96%E7%8E%AF%E5%A2%83"></a></h3>
-<ul><li>R (≥ 3.6.0)</li>
+</ul>
+<p>适用于比较基因组学、泛基因组分析、噬菌体-宿主序列关系等研究。</p>
+<h2>主要功能</h2>
+<ul>
+<li><strong>真正的 ggplot2 分层风格</strong>：<code>ggchord()</code> 仅接收数据和全局参数，各 <code>geom_*</code> 接收自己的布局参数，像 <code>ggplot2</code> 一样自然。</li>
+<li><strong>延迟计算模型</strong>：布局在绘图构建时（<code>print()</code>、<code>ggsave()</code> 或 <code>ggplot_build()</code>）计算，因此 <code>geom</code> 中指定的参数和之前叠加的参数都会在渲染时汇总生效。</li>
+<li><strong>多序列支持</strong>：同时展示 2 条及以上序列的比对关系。</li>
+<li><strong>序列级定制</strong>：自定义序列顺序、方向、间隙、半径与曲率——参数放在 <code>geom_seq()</code>。</li>
+<li><strong>灵活的连接带样式</strong>：3 种配色方案，支持贝塞尔曲线控制点——参数放在 <code>geom_ribbon()</code>。</li>
+<li><strong>基因箭头图层</strong>：按链方向或注释类别着色，支持标签——参数放在 <code>geom_gene()</code>。</li>
+<li><strong>精细化坐标轴</strong>：主/次刻度、标签大小与方向——参数放在 <code>geom_axis()</code>。</li>
+</ul>
+<h2>安装</h2>
+<h3>依赖环境</h3>
+<ul>
+<li>R (≥ 3.6.0)</li>
 <li>ggplot2 (≥ 3.3.0)</li>
-</ul><div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"ggplot2"</span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="如何安装-ggchord">如何安装 ggchord？<a class="anchor" aria-label="anchor" href="#%E5%A6%82%E4%BD%95%E5%AE%89%E8%A3%85-ggchord"></a></h3>
+</ul>
+<pre><code class="language-r">install.packages(&quot;ggplot2&quot;)
+</code></pre>
+<h3>如何安装 ggchord？</h3>
 <p>从 CRAN 安装稳定版本：</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"ggchord"</span><span class="op">)</span></span></code></pre></div>
+<pre><code class="language-r">install.packages(&quot;ggchord&quot;)
+</code></pre>
 <p>从 GitHub 安装开发版本：</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/install-deprecated.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"DangJem/ggchord"</span><span class="op">)</span></span></code></pre></div>
-</div>
-</div>
-<div class="section level2">
-<h2 id="快速开始">快速开始<a class="anchor" aria-label="anchor" href="#%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8B"></a></h2>
-<div class="section level3">
-<h3 id="分层构建弦图">分层构建弦图<a class="anchor" aria-label="anchor" href="#%E5%88%86%E5%B1%82%E6%9E%84%E5%BB%BA%E5%BC%A6%E5%9B%BE"></a></h3>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/DangJem/ggchord" class="external-link">ggchord</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># 加载内置示例数据</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">seq_data_example</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">ribbon_data_example</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">gene_data_example</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># 最简单用法：全部默认参数</span></span>
-<span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/ggchord.html">ggchord</a></span><span class="op">(</span></span>
-<span>  seq_data <span class="op">=</span> <span class="va">seq_data_example</span>,</span>
-<span>  ribbon_data <span class="op">=</span> <span class="va">ribbon_data_example</span>,</span>
-<span>  gene_data <span class="op">=</span> <span class="va">gene_data_example</span></span>
-<span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="reference/geom_seq.html">geom_seq</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="reference/geom_ribbon.html">geom_ribbon</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="reference/geom_gene.html">geom_gene</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="reference/geom_axis.html">geom_axis</a></span><span class="op">(</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="参数下沉到图层v040-新特性">参数下沉到图层（v0.4.0 新特性）<a class="anchor" aria-label="anchor" href="#%E5%8F%82%E6%95%B0%E4%B8%8B%E6%B2%89%E5%88%B0%E5%9B%BE%E5%B1%82v040-%E6%96%B0%E7%89%B9%E6%80%A7"></a></h3>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># 类似 ggplot2 的风格：谁的数据，谁的参数就放在谁那里</span></span>
-<span><span class="fu"><a href="reference/ggchord.html">ggchord</a></span><span class="op">(</span><span class="va">seq_data_example</span>, <span class="va">ribbon_data_example</span>, <span class="va">gene_data_example</span>,</span>
-<span>        title <span class="op">=</span> <span class="st">"精细参数控制"</span>, rotation <span class="op">=</span> <span class="fl">30</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="reference/geom_seq.html">geom_seq</a></span><span class="op">(</span></span>
-<span>    seq_radius <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">2</span>, <span class="fl">2</span>, <span class="fl">1</span><span class="op">)</span>,</span>
-<span>    seq_curvature <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="op">-</span><span class="fl">1</span>, <span class="fl">1.5</span><span class="op">)</span>,</span>
-<span>    seq_orientation <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="op">-</span><span class="fl">1</span>, <span class="op">-</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span></span>
-<span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="reference/geom_ribbon.html">geom_ribbon</a></span><span class="op">(</span></span>
-<span>    ribbon_color_scheme <span class="op">=</span> <span class="st">"pident"</span>,</span>
-<span>    ribbon_gap <span class="op">=</span> <span class="fl">0.1</span></span>
-<span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="reference/geom_gene.html">geom_gene</a></span><span class="op">(</span></span>
-<span>    gene_offset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>      <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"+"</span> <span class="op">=</span> <span class="fl">0.2</span>, <span class="st">"-"</span> <span class="op">=</span> <span class="op">-</span><span class="fl">0.2</span><span class="op">)</span>,</span>
-<span>      <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"+"</span> <span class="op">=</span> <span class="fl">0.2</span>, <span class="st">"-"</span> <span class="op">=</span> <span class="op">-</span><span class="fl">0.2</span><span class="op">)</span>,</span>
-<span>      <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"+"</span> <span class="op">=</span> <span class="fl">0.2</span>, <span class="st">"-"</span> <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>,</span>
-<span>      <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"+"</span> <span class="op">=</span> <span class="fl">0.2</span>, <span class="st">"-"</span> <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span></span>
-<span>    <span class="op">)</span>,</span>
-<span>    gene_width <span class="op">=</span> <span class="fl">0.08</span>,</span>
-<span>    gene_label_show <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>    gene_label_rotation <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>      <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"+"</span> <span class="op">=</span> <span class="fl">45</span>, <span class="st">"-"</span> <span class="op">=</span> <span class="op">-</span><span class="fl">45</span><span class="op">)</span>,</span>
-<span>      <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"+"</span> <span class="op">=</span> <span class="fl">0.2</span>, <span class="st">"-"</span> <span class="op">=</span> <span class="op">-</span><span class="fl">0.2</span><span class="op">)</span>,</span>
-<span>      <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"+"</span> <span class="op">=</span> <span class="fl">0.2</span>, <span class="st">"-"</span> <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>,</span>
-<span>      <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"+"</span> <span class="op">=</span> <span class="fl">0.2</span>, <span class="st">"-"</span> <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span></span>
-<span>    <span class="op">)</span></span>
-<span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="reference/geom_axis.html">geom_axis</a></span><span class="op">(</span></span>
-<span>    axis_label_orientation <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">45</span>, <span class="fl">80</span>, <span class="fl">130</span><span class="op">)</span>,</span>
-<span>    axis_gap <span class="op">=</span> <span class="fl">0</span>,</span>
-<span>    axis_tick_major_length <span class="op">=</span> <span class="fl">0.03</span>,</span>
-<span>    axis_label_size <span class="op">=</span> <span class="fl">2</span></span>
-<span>  <span class="op">)</span></span></code></pre></div>
+<pre><code class="language-r">devtools::install_github(&quot;DangJem/ggchord&quot;)
+</code></pre>
+<h2>快速开始</h2>
+<h3>分层构建弦图</h3>
+<pre><code class="language-r">library(ggchord)
+
+# 加载内置示例数据
+data(seq_data_example)
+data(ribbon_data_example)
+data(gene_data_example)
+
+# 最简单用法：全部默认参数
+p &lt;- ggchord(
+  seq_data = seq_data_example,
+  ribbon_data = ribbon_data_example,
+  gene_data = gene_data_example
+) +
+  geom_seq() +
+  geom_ribbon() +
+  geom_gene() +
+  geom_axis()
+
+print(p)
+</code></pre>
+<h3>参数下沉到图层（v0.4.0 新特性）</h3>
+<pre><code class="language-r"># 类似 ggplot2 的风格：谁的数据，谁的参数就放在谁那里
+ggchord(seq_data_example, ribbon_data_example, gene_data_example,
+        title = &quot;精细参数控制&quot;, rotation = 30) +
+  geom_seq(
+    seq_radius = c(3, 2, 2, 1),
+    seq_curvature = c(0, 1, -1, 1.5),
+    seq_orientation = c(-1, -1, -1, 1)
+  ) +
+  geom_ribbon(
+    ribbon_color_scheme = &quot;pident&quot;,
+    ribbon_gap = 0.1
+  ) +
+  geom_gene(
+    gene_offset = list(
+      c(&quot;+&quot; = 0.2, &quot;-&quot; = -0.2),
+      c(&quot;+&quot; = 0.2, &quot;-&quot; = -0.2),
+      c(&quot;+&quot; = 0.2, &quot;-&quot; = 0),
+      c(&quot;+&quot; = 0.2, &quot;-&quot; = 0.1)
+    ),
+    gene_width = 0.08,
+    gene_label_show = TRUE,
+    gene_label_rotation = list(
+      c(&quot;+&quot; = 45, &quot;-&quot; = -45),
+      c(&quot;+&quot; = 0.2, &quot;-&quot; = -0.2),
+      c(&quot;+&quot; = 0.2, &quot;-&quot; = 0),
+      c(&quot;+&quot; = 0.2, &quot;-&quot; = 0.1)
+    )
+  ) +
+  geom_axis(
+    axis_label_orientation = c(0, 45, 80, 130),
+    axis_gap = 0,
+    axis_tick_major_length = 0.03,
+    axis_label_size = 2
+  )
+</code></pre>
 <blockquote>
-<p>所有参数均有合理默认值。你可以只写 <code><a href="reference/geom_seq.html">geom_seq()</a></code> 而不传任何参数，也可以像上面这样精细控制每层的每一个细节。</p>
+<p>所有参数均有合理默认值。你可以只写 <code>geom_seq()</code> 而不传任何参数，也可以像上面这样精细控制每层的每一个细节。</p>
 </blockquote>
-<hr></div>
-</div>
-<div class="section level2">
-<h2 id="使用说明">使用说明<a class="anchor" aria-label="anchor" href="#%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E"></a></h2>
-<div class="section level3">
-<h3 id="前期数据准备">前期数据准备<a class="anchor" aria-label="anchor" href="#%E5%89%8D%E6%9C%9F%E6%95%B0%E6%8D%AE%E5%87%86%E5%A4%87"></a></h3>
+<hr />
+<h2>使用说明</h2>
+<h3>前期数据准备</h3>
 <p>需准备三类输入数据：</p>
-<div class="section level4">
-<h4 id="必须序列信息数据seq_data">【必须】序列信息数据（<code>seq_data</code>）<a class="anchor" aria-label="anchor" href="#%E5%BF%85%E9%A1%BB%E5%BA%8F%E5%88%97%E4%BF%A1%E6%81%AF%E6%95%B0%E6%8D%AEseq_data"></a></h4>
+<h4>【必须】序列信息数据（<code>seq_data</code>）</h4>
 <p>描述待绘制序列的数据框，必须包含以下列：</p>
-<table class="table"><thead><tr><th>列名</th>
+<table>
+<thead>
+<tr>
+<th>列名</th>
 <th>类型</th>
 <th>含义</th>
-</tr></thead><tbody><tr><td><code>seq_id</code></td>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>seq_id</code></td>
 <td>字符</td>
 <td>序列唯一标识</td>
-</tr><tr><td><code>length</code></td>
+</tr>
+<tr>
+<td><code>length</code></td>
 <td>整数</td>
 <td>序列长度（正数）</td>
-</tr></tbody></table><p>示例：</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">seq_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.delim</a></span><span class="op">(</span><span class="st">"seq_track.tsv"</span>, sep <span class="op">=</span> <span class="st">"\t"</span>, stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+</tr>
+</tbody>
+</table>
+<p>示例：</p>
+<pre><code class="language-r">seq_data &lt;- read.delim(&quot;seq_track.tsv&quot;, sep = &quot;\t&quot;, stringsAsFactors = FALSE)
+</code></pre>
 <p>其中 <code>seq_track.tsv</code> 格式如下：</p>
-<table class="table"><thead><tr><th>seq_id</th>
+<table>
+<thead>
+<tr>
+<th>seq_id</th>
 <th>length</th>
-</tr></thead><tbody><tr><td>MT108731.1</td>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MT108731.1</td>
 <td>64323</td>
-</tr><tr><td>MT118296.1</td>
+</tr>
+<tr>
+<td>MT118296.1</td>
 <td>32090</td>
-</tr><tr><td>OQ646790.1</td>
+</tr>
+<tr>
+<td>OQ646790.1</td>
 <td>57367</td>
-</tr><tr><td>OR222515.1</td>
+</tr>
+<tr>
+<td>OR222515.1</td>
 <td>83080</td>
-</tr></tbody></table><p>从 FASTA 自动生成：</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="ex">seqkit</span> fx2tab <span class="at">-nil</span> <span class="pp">*</span>fna <span class="kw">|</span> <span class="fu">sed</span> <span class="st">'1i seq_id\tlength'</span> <span class="op">&gt;</span> seq_track.tsv</span></code></pre></div>
-</div>
-<div class="section level4">
-<h4 id="可选比对数据ribbon_data">【可选】比对数据（<code>ribbon_data</code>）<a class="anchor" aria-label="anchor" href="#%E5%8F%AF%E9%80%89%E6%AF%94%E5%AF%B9%E6%95%B0%E6%8D%AEribbon_data"></a></h4>
+</tr>
+</tbody>
+</table>
+<p>从 FASTA 自动生成：</p>
+<pre><code class="language-bash">seqkit fx2tab -nil *fna | sed '1i seq_id\tlength' &gt; seq_track.tsv
+</code></pre>
+<h4>【可选】比对数据（<code>ribbon_data</code>）</h4>
 <p>逐条记录两条序列之间一个比对区间的数据框，必须包含以下列（列名沿用常见比对工具输出约定，如 BLAST）：</p>
-<table class="table"><thead><tr><th>列名</th>
+<table>
+<thead>
+<tr>
+<th>列名</th>
 <th>类型</th>
 <th>含义</th>
-</tr></thead><tbody><tr><td><code>qaccver</code></td>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>qaccver</code></td>
 <td>字符</td>
 <td>查询序列 ID</td>
-</tr><tr><td><code>saccver</code></td>
+</tr>
+<tr>
+<td><code>saccver</code></td>
 <td>字符</td>
 <td>目标序列 ID</td>
-</tr><tr><td><code>length</code></td>
+</tr>
+<tr>
+<td><code>length</code></td>
 <td>整数</td>
 <td>比对长度（bp）</td>
-</tr><tr><td><code>pident</code></td>
+</tr>
+<tr>
+<td><code>pident</code></td>
 <td>数值</td>
 <td>相似度百分比（0-100）</td>
-</tr><tr><td><code>qstart</code></td>
+</tr>
+<tr>
+<td><code>qstart</code></td>
 <td>整数</td>
 <td>比对区间在查询序列上的起始位置</td>
-</tr><tr><td><code>qend</code></td>
+</tr>
+<tr>
+<td><code>qend</code></td>
 <td>整数</td>
 <td>比对区间在查询序列上的结束位置</td>
-</tr><tr><td><code>sstart</code></td>
+</tr>
+<tr>
+<td><code>sstart</code></td>
 <td>整数</td>
 <td>比对区间在目标序列上的起始位置</td>
-</tr><tr><td><code>send</code></td>
+</tr>
+<tr>
+<td><code>send</code></td>
 <td>整数</td>
 <td>比对区间在目标序列上的结束位置</td>
-</tr></tbody></table><p>示例数据行：</p>
-<table class="table"><colgroup><col width="12%"><col width="12%"><col width="12%"><col width="12%"><col width="12%"><col width="12%"><col width="12%"><col width="12%"></colgroup><thead><tr><th>qaccver</th>
+</tr>
+</tbody>
+</table>
+<p>示例数据行：</p>
+<table>
+<thead>
+<tr>
+<th>qaccver</th>
 <th>saccver</th>
 <th>length</th>
 <th>pident</th>
@@ -236,7 +265,11 @@
 <th>qend</th>
 <th>sstart</th>
 <th>send</th>
-</tr></thead><tbody><tr><td>MT108731.1</td>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MT108731.1</td>
 <td>MT118296.1</td>
 <td>24856</td>
 <td>98.612</td>
@@ -244,7 +277,9 @@
 <td>51139</td>
 <td>7121</td>
 <td>31959</td>
-</tr><tr><td>MT108731.1</td>
+</tr>
+<tr>
+<td>MT108731.1</td>
 <td>MT118296.1</td>
 <td>4412</td>
 <td>97.031</td>
@@ -252,7 +287,9 @@
 <td>25922</td>
 <td>2365</td>
 <td>6772</td>
-</tr><tr><td>MT108731.1</td>
+</tr>
+<tr>
+<td>MT108731.1</td>
 <td>MT118296.1</td>
 <td>464</td>
 <td>94.181</td>
@@ -260,569 +297,707 @@
 <td>21146</td>
 <td>1032</td>
 <td>1495</td>
-</tr></tbody></table><p>例如，批量 BLAST 的输出可直接解析为该表格：</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="va">seqs</span><span class="op">=</span><span class="va">(</span><span class="st">"MT108731.1"</span> <span class="st">"MT118296.1"</span> <span class="st">"OQ646790.1"</span> <span class="st">"OR222515.1"</span><span class="va">)</span></span>
-<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="va">ext</span><span class="op">=</span><span class="st">"fna"</span></span>
-<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="cf">for</span> <span class="kw">((</span><span class="va">i</span><span class="op">=</span><span class="dv">0</span><span class="kw">;</span> <span class="va">i</span><span class="op">&lt;</span><span class="va">${</span><span class="op">#</span><span class="va">seqs</span><span class="op">[@]</span><span class="va">}</span><span class="op">-</span><span class="dv">1</span><span class="kw">;</span> <span class="va">i</span><span class="op">++</span><span class="kw">));</span> <span class="cf">do</span></span>
-<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>  <span class="cf">for</span> <span class="kw">((</span><span class="va">j</span><span class="op">=</span><span class="va">i</span><span class="op">+</span><span class="dv">1</span><span class="kw">;</span> <span class="va">j</span><span class="op">&lt;</span><span class="va">${</span><span class="op">#</span><span class="va">seqs</span><span class="op">[@]</span><span class="va">}</span><span class="kw">;</span> <span class="va">j</span><span class="op">++</span><span class="kw">));</span> <span class="cf">do</span></span>
-<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>    <span class="ex">blastn</span> <span class="dt">\</span></span>
-<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a>      <span class="at">-outfmt</span> <span class="st">'7 qaccver saccver pident length mismatch gapopen qstart qend sstart send evalue bitscore qcovs qlen slen sstrand stitle'</span> <span class="dt">\</span></span>
-<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a>      <span class="at">-query</span> <span class="st">"</span><span class="va">${seqs</span><span class="op">[</span><span class="va">$i</span><span class="op">]</span><span class="va">}</span><span class="st">.</span><span class="va">${ext}</span><span class="st">"</span> <span class="dt">\</span></span>
-<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a>      <span class="at">-subject</span> <span class="st">"</span><span class="va">${seqs</span><span class="op">[</span><span class="va">$j</span><span class="op">]</span><span class="va">}</span><span class="st">.</span><span class="va">${ext}</span><span class="st">"</span> <span class="dt">\</span></span>
-<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a>      <span class="at">-out</span> <span class="st">"</span><span class="va">${seqs</span><span class="op">[</span><span class="va">$i</span><span class="op">]</span><span class="va">}</span><span class="st">__</span><span class="va">${seqs</span><span class="op">[</span><span class="va">$j</span><span class="op">]</span><span class="va">}</span><span class="st">.o7"</span></span>
-<span id="cb8-10"><a href="#cb8-10" tabindex="-1"></a>  <span class="cf">done</span></span>
-<span id="cb8-11"><a href="#cb8-11" tabindex="-1"></a><span class="cf">done</span></span></code></pre></div>
-</div>
-<div class="section level4">
-<h4 id="可选基因数据gene_data">【可选】基因数据（<code>gene_data</code>）<a class="anchor" aria-label="anchor" href="#%E5%8F%AF%E9%80%89%E5%9F%BA%E5%9B%A0%E6%95%B0%E6%8D%AEgene_data"></a></h4>
+</tr>
+</tbody>
+</table>
+<p>例如，批量 BLAST 的输出可直接解析为该表格：</p>
+<pre><code class="language-bash">seqs=(&quot;MT108731.1&quot; &quot;MT118296.1&quot; &quot;OQ646790.1&quot; &quot;OR222515.1&quot;)
+ext=&quot;fna&quot;
+for ((i=0; i&lt;${#seqs[@]}-1; i++)); do
+  for ((j=i+1; j&lt;${#seqs[@]}; j++)); do
+    blastn \
+      -outfmt '7 qaccver saccver pident length mismatch gapopen qstart qend sstart send evalue bitscore qcovs qlen slen sstrand stitle' \
+      -query &quot;${seqs[$i]}.${ext}&quot; \
+      -subject &quot;${seqs[$j]}.${ext}&quot; \
+      -out &quot;${seqs[$i]}__${seqs[$j]}.o7&quot;
+  done
+done
+</code></pre>
+<h4>【可选】基因数据（<code>gene_data</code>）</h4>
 <p>在序列上标注基因（或其他特征）的数据框，必须包含以下列：</p>
-<table class="table"><thead><tr><th>列名</th>
+<table>
+<thead>
+<tr>
+<th>列名</th>
 <th>类型</th>
 <th>含义</th>
-</tr></thead><tbody><tr><td><code>seq_id</code></td>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>seq_id</code></td>
 <td>字符</td>
 <td>基因所属序列 ID</td>
-</tr><tr><td><code>start</code></td>
+</tr>
+<tr>
+<td><code>start</code></td>
 <td>整数</td>
 <td>基因起始位置</td>
-</tr><tr><td><code>end</code></td>
+</tr>
+<tr>
+<td><code>end</code></td>
 <td>整数</td>
 <td>基因结束位置</td>
-</tr><tr><td><code>strand</code></td>
+</tr>
+<tr>
+<td><code>strand</code></td>
 <td>字符</td>
 <td>链方向（<code>+</code> 或 <code>-</code>）</td>
-</tr><tr><td><code>anno</code></td>
+</tr>
+<tr>
+<td><code>anno</code></td>
 <td>字符</td>
 <td>基因注释 / 功能类别</td>
-</tr></tbody></table><p>示例数据行：</p>
-<table class="table"><thead><tr><th>seq_id</th>
+</tr>
+</tbody>
+</table>
+<p>示例数据行：</p>
+<table>
+<thead>
+<tr>
+<th>seq_id</th>
 <th>start</th>
 <th>end</th>
 <th>strand</th>
 <th>anno</th>
-</tr></thead><tbody><tr><td>MT108731.1</td>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MT108731.1</td>
 <td>60709</td>
 <td>63087</td>
 <td>+</td>
 <td>hypothetical protein</td>
-</tr><tr><td>MT118296.1</td>
+</tr>
+<tr>
+<td>MT118296.1</td>
 <td>14628</td>
 <td>16301</td>
 <td>+</td>
 <td>virion structural protein</td>
-</tr><tr><td>OQ646790.1</td>
+</tr>
+<tr>
+<td>OQ646790.1</td>
 <td>43765</td>
 <td>46140</td>
 <td>+</td>
 <td>integrase</td>
-</tr><tr><td>OQ646790.1</td>
+</tr>
+<tr>
+<td>OQ646790.1</td>
 <td>13194</td>
 <td>15551</td>
 <td>+</td>
 <td>tail tape measure protein</td>
-</tr></tbody></table><p>例如，可由 GFF3 文件转换得到：</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span></span>
-<span><span class="va">gff3FilesPath</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span>path <span class="op">=</span> <span class="st">"."</span>, pattern <span class="op">=</span> <span class="st">"*.gff3"</span><span class="op">)</span></span>
-<span><span class="va">gff3Table</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map_dfr.html" class="external-link">map_df</a></span><span class="op">(</span><span class="va">gff3FilesPath</span>, <span class="op">~</span><span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html" class="external-link">read_tsv</a></span><span class="op">(</span><span class="va">.x</span>, show_col_types <span class="op">=</span> <span class="cn">F</span>, comment <span class="op">=</span> <span class="st">"#"</span>,</span>
-<span>  col_names <span class="op">=</span> <span class="cn">F</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rlang.r-lib.org/reference/set_names.html" class="external-link">set_names</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"seq_id"</span>, <span class="st">"source"</span>, <span class="st">"type"</span>, <span class="st">"start"</span>, <span class="st">"end"</span>,</span>
-<span>  <span class="st">"score"</span>, <span class="st">"strand"</span>, <span class="st">"phase"</span>, <span class="st">"attributes"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">geneTrackTable</span> <span class="op">&lt;-</span> <span class="va">gff3Table</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">type</span> <span class="op">==</span> <span class="st">"CDS"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>anno <span class="op">=</span> <span class="fu"><a href="https://stringr.tidyverse.org/reference/str_extract.html" class="external-link">str_extract</a></span><span class="op">(</span><span class="va">attributes</span>, <span class="st">"(?&lt;=product=)[^;]+(?=;)"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">seq_id</span>, <span class="va">start</span>, <span class="va">end</span>, <span class="va">strand</span>, <span class="va">anno</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://readr.tidyverse.org/reference/write_delim.html" class="external-link">write_tsv</a></span><span class="op">(</span><span class="va">geneTrackTable</span>, <span class="st">"gene_track.tsv"</span><span class="op">)</span></span></code></pre></div>
-<hr></div>
-</div>
-</div>
-<div class="section level2">
-<h2 id="使用示例">使用示例<a class="anchor" aria-label="anchor" href="#%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B"></a></h2>
-<div class="section level3">
-<h3 id="数据读取">数据读取<a class="anchor" aria-label="anchor" href="#%E6%95%B0%E6%8D%AE%E8%AF%BB%E5%8F%96"></a></h3>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">seq_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.delim</a></span><span class="op">(</span><span class="st">"seq_track.tsv"</span>, sep <span class="op">=</span> <span class="st">"\t"</span>, stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">read_blast</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">file</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.delim</a></span><span class="op">(</span><span class="va">file</span>, sep <span class="op">=</span> <span class="st">"\t"</span>, header <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>                   stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span>, comment.char <span class="op">=</span> <span class="st">"#"</span><span class="op">)</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"qaccver"</span>, <span class="st">"saccver"</span>, <span class="st">"pident"</span>, <span class="st">"length"</span>, <span class="st">"mismatches"</span>,</span>
-<span>                    <span class="st">"gapopen"</span>, <span class="st">"qstart"</span>, <span class="st">"qend"</span>, <span class="st">"sstart"</span>, <span class="st">"send"</span>,</span>
-<span>                    <span class="st">"evalue"</span>, <span class="st">"bitscore"</span>, <span class="st">"qcovs"</span>, <span class="st">"qlen"</span>, <span class="st">"slen"</span>,</span>
-<span>                    <span class="st">"sstrand"</span>, <span class="st">"stitle"</span><span class="op">)</span></span>
-<span>  <span class="va">df</span></span>
-<span><span class="op">}</span></span>
-<span><span class="va">blast_files</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span>path <span class="op">=</span> <span class="st">"."</span>, pattern <span class="op">=</span> <span class="st">"\\.o7$"</span>, full.names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="va">all_blast</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">rbind</span>, <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">blast_files</span>, <span class="va">read_blast</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">ribbon_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">all_blast</span>, <span class="va">length</span> <span class="op">&gt;=</span> <span class="fl">100</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">gene_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.delim</a></span><span class="op">(</span><span class="st">"gene_track.tsv"</span>, sep <span class="op">=</span> <span class="st">"\t"</span>,</span>
-<span>  stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice_max</a></span><span class="op">(</span>order_by <span class="op">=</span> <span class="va">end</span> <span class="op">-</span> <span class="va">start</span>, n <span class="op">=</span> <span class="fl">5</span>, by <span class="op">=</span> <span class="va">seq_id</span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="仅序列数据">仅序列数据<a class="anchor" aria-label="anchor" href="#%E4%BB%85%E5%BA%8F%E5%88%97%E6%95%B0%E6%8D%AE"></a></h3>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># 默认：序列按 seq_data 顺序逆时针排列</span></span>
-<span><span class="fu"><a href="reference/ggchord.html">ggchord</a></span><span class="op">(</span>seq_data <span class="op">=</span> <span class="va">seq_data</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="reference/geom_seq.html">geom_seq</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<div class="float">
-<img src="examples/plots/seq_only_default.png" alt="序列弦图（默认参数）"><div class="figcaption">序列弦图（默认参数）</div>
-</div>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># 自定义序列参数</span></span>
-<span><span class="fu"><a href="reference/ggchord.html">ggchord</a></span><span class="op">(</span>seq_data <span class="op">=</span> <span class="va">seq_data</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="reference/geom_seq.html">geom_seq</a></span><span class="op">(</span></span>
-<span>    seq_order <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"MT118296.1"</span>, <span class="st">"OR222515.1"</span>, <span class="st">"MT108731.1"</span>, <span class="st">"OQ646790.1"</span><span class="op">)</span>,</span>
-<span>    seq_orientation <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="op">-</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="op">-</span><span class="fl">1</span><span class="op">)</span>,</span>
-<span>    seq_curvature <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">2</span>, <span class="op">-</span><span class="fl">2</span>, <span class="fl">6</span><span class="op">)</span>,</span>
-<span>    seq_colors <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"steelblue"</span>, <span class="st">"orange"</span>, <span class="st">"pink"</span>, <span class="st">"yellow"</span><span class="op">)</span></span>
-<span>  <span class="op">)</span></span></code></pre></div>
-<div class="float">
-<img src="examples/plots/seq_only_custom.png" alt="序列弦图（自定义布局）"><div class="figcaption">序列弦图（自定义布局）</div>
-</div>
-</div>
-<div class="section level3">
-<h3 id="加入比对数据">加入比对数据<a class="anchor" aria-label="anchor" href="#%E5%8A%A0%E5%85%A5%E6%AF%94%E5%AF%B9%E6%95%B0%E6%8D%AE"></a></h3>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># 默认：按相似度（pident）着色</span></span>
-<span><span class="fu"><a href="reference/ggchord.html">ggchord</a></span><span class="op">(</span>seq_data <span class="op">=</span> <span class="va">seq_data</span>, ribbon_data <span class="op">=</span> <span class="va">ribbon_data</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="reference/geom_seq.html">geom_seq</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="reference/geom_ribbon.html">geom_ribbon</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<div class="float">
-<img src="examples/plots/ribbon_pident.png" alt="按相似度着色的连接带"><div class="figcaption">按相似度着色的连接带</div>
-</div>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># 按查询序列着色</span></span>
-<span><span class="fu"><a href="reference/ggchord.html">ggchord</a></span><span class="op">(</span>seq_data <span class="op">=</span> <span class="va">seq_data</span>, ribbon_data <span class="op">=</span> <span class="va">ribbon_data</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="reference/geom_seq.html">geom_seq</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="reference/geom_ribbon.html">geom_ribbon</a></span><span class="op">(</span>ribbon_color_scheme <span class="op">=</span> <span class="st">"query"</span><span class="op">)</span></span></code></pre></div>
-<div class="float">
-<img src="examples/plots/ribbon_query.png" alt="按查询序列着色的连接带"><div class="figcaption">按查询序列着色的连接带</div>
-</div>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># 单色模式</span></span>
-<span><span class="fu"><a href="reference/ggchord.html">ggchord</a></span><span class="op">(</span>seq_data <span class="op">=</span> <span class="va">seq_data</span>, ribbon_data <span class="op">=</span> <span class="va">ribbon_data</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="reference/geom_seq.html">geom_seq</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="reference/geom_ribbon.html">geom_ribbon</a></span><span class="op">(</span>ribbon_color_scheme <span class="op">=</span> <span class="st">"single"</span>, ribbon_colors <span class="op">=</span> <span class="st">"orange"</span><span class="op">)</span></span></code></pre></div>
-<div class="float">
-<img src="examples/plots/ribbon_single.png" alt="单色连接带"><div class="figcaption">单色连接带</div>
-</div>
-</div>
-<div class="section level3">
-<h3 id="加入基因注释">加入基因注释<a class="anchor" aria-label="anchor" href="#%E5%8A%A0%E5%85%A5%E5%9F%BA%E5%9B%A0%E6%B3%A8%E9%87%8A"></a></h3>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># 按链方向着色</span></span>
-<span><span class="fu"><a href="reference/ggchord.html">ggchord</a></span><span class="op">(</span>seq_data <span class="op">=</span> <span class="va">seq_data</span>, gene_data <span class="op">=</span> <span class="va">gene_data</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="reference/geom_seq.html">geom_seq</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="reference/geom_gene.html">geom_gene</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<div class="float">
-<img src="examples/plots/gene_strand.png" alt="按链方向着色的基因箭头"><div class="figcaption">按链方向着色的基因箭头</div>
-</div>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># 按注释类别着色 + 显示标签</span></span>
-<span><span class="fu"><a href="reference/ggchord.html">ggchord</a></span><span class="op">(</span>seq_data <span class="op">=</span> <span class="va">seq_data</span>, gene_data <span class="op">=</span> <span class="va">gene_data</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="reference/geom_seq.html">geom_seq</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="reference/geom_gene.html">geom_gene</a></span><span class="op">(</span></span>
-<span>    gene_color_scheme <span class="op">=</span> <span class="st">"manual"</span>,</span>
-<span>    gene_label_show <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>    gene_label_rotation <span class="op">=</span> <span class="fl">45</span>,</span>
-<span>    gene_label_radial_offset <span class="op">=</span> <span class="fl">0.1</span></span>
-<span>  <span class="op">)</span></span></code></pre></div>
-<div class="float">
-<img src="examples/plots/gene_manual_label.png" alt="按注释类别着色并显示标签的基因箭头"><div class="figcaption">按注释类别着色并显示标签的基因箭头</div>
-</div>
-</div>
-<div class="section level3">
-<h3 id="综合示例">综合示例<a class="anchor" aria-label="anchor" href="#%E7%BB%BC%E5%90%88%E7%A4%BA%E4%BE%8B"></a></h3>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># 全默认组合</span></span>
-<span><span class="fu"><a href="reference/ggchord.html">ggchord</a></span><span class="op">(</span><span class="va">seq_data</span>, <span class="va">ribbon_data</span>, <span class="va">gene_data</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="reference/geom_seq.html">geom_seq</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="reference/geom_ribbon.html">geom_ribbon</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="reference/geom_gene.html">geom_gene</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="reference/geom_axis.html">geom_axis</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<div class="float">
-<img src="examples/plots/combined_default.png" alt="全默认参数的综合弦图"><div class="figcaption">全默认参数的综合弦图</div>
-</div>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># v0.4.0 精细参数控制——所有布局参数分布在对应的 geom 中</span></span>
-<span><span class="fu"><a href="reference/ggchord.html">ggchord</a></span><span class="op">(</span></span>
-<span>  seq_data <span class="op">=</span> <span class="va">seq_data</span>,</span>
-<span>  ribbon_data <span class="op">=</span> <span class="va">ribbon_data</span>,</span>
-<span>  gene_data <span class="op">=</span> <span class="va">gene_data</span>,</span>
-<span>  title <span class="op">=</span> <span class="st">"Multi-sequence Chord Diagram with Gene Annotations"</span>,</span>
-<span>  rotation <span class="op">=</span> <span class="fl">45</span></span>
-<span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="reference/geom_seq.html">geom_seq</a></span><span class="op">(</span></span>
-<span>    seq_radius <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">2</span>, <span class="fl">2</span>, <span class="fl">1</span><span class="op">)</span>,</span>
-<span>    seq_orientation <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="op">-</span><span class="fl">1</span>, <span class="op">-</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>,</span>
-<span>    seq_curvature <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="op">-</span><span class="fl">1</span>, <span class="fl">1.5</span><span class="op">)</span>,</span>
-<span>    seq_gap <span class="op">=</span> <span class="fl">0.03</span></span>
-<span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="reference/geom_ribbon.html">geom_ribbon</a></span><span class="op">(</span></span>
-<span>    ribbon_color_scheme <span class="op">=</span> <span class="st">"pident"</span>,</span>
-<span>    ribbon_gap <span class="op">=</span> <span class="fl">0.1</span></span>
-<span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="reference/geom_gene.html">geom_gene</a></span><span class="op">(</span></span>
-<span>    gene_offset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>      <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"+"</span> <span class="op">=</span> <span class="fl">0.2</span>, <span class="st">"-"</span> <span class="op">=</span> <span class="op">-</span><span class="fl">0.2</span><span class="op">)</span>,</span>
-<span>      <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"+"</span> <span class="op">=</span> <span class="fl">0.2</span>, <span class="st">"-"</span> <span class="op">=</span> <span class="op">-</span><span class="fl">0.2</span><span class="op">)</span>,</span>
-<span>      <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"+"</span> <span class="op">=</span> <span class="fl">0.2</span>, <span class="st">"-"</span> <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>,</span>
-<span>      <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"+"</span> <span class="op">=</span> <span class="fl">0.2</span>, <span class="st">"-"</span> <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span></span>
-<span>    <span class="op">)</span>,</span>
-<span>    gene_width <span class="op">=</span> <span class="fl">0.08</span>,</span>
-<span>    gene_label_show <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>    gene_label_rotation <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>      <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"+"</span> <span class="op">=</span> <span class="fl">45</span>, <span class="st">"-"</span> <span class="op">=</span> <span class="op">-</span><span class="fl">45</span><span class="op">)</span>,</span>
-<span>      <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"+"</span> <span class="op">=</span> <span class="fl">0.2</span>, <span class="st">"-"</span> <span class="op">=</span> <span class="op">-</span><span class="fl">0.2</span><span class="op">)</span>,</span>
-<span>      <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"+"</span> <span class="op">=</span> <span class="fl">0.2</span>, <span class="st">"-"</span> <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>,</span>
-<span>      <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"+"</span> <span class="op">=</span> <span class="fl">0.2</span>, <span class="st">"-"</span> <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span></span>
-<span>    <span class="op">)</span></span>
-<span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="reference/geom_axis.html">geom_axis</a></span><span class="op">(</span></span>
-<span>    axis_gap <span class="op">=</span> <span class="fl">0</span>,</span>
-<span>    axis_tick_major_length <span class="op">=</span> <span class="fl">0.03</span>,</span>
-<span>    axis_label_size <span class="op">=</span> <span class="fl">2</span>,</span>
-<span>    axis_label_orientation <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">45</span>, <span class="fl">80</span>, <span class="fl">130</span><span class="op">)</span></span>
-<span>  <span class="op">)</span></span></code></pre></div>
-<div class="float">
-<img src="examples/plots/combined_fine.png" alt="精细参数控制的综合弦图"><div class="figcaption">精细参数控制的综合弦图</div>
-</div>
+</tr>
+</tbody>
+</table>
+<p>例如，可由 GFF3 文件转换得到：</p>
+<pre><code class="language-r">library(tidyverse)
+gff3FilesPath &lt;- list.files(path = &quot;.&quot;, pattern = &quot;*.gff3&quot;)
+gff3Table &lt;- map_df(gff3FilesPath, ~read_tsv(.x, show_col_types = F, comment = &quot;#&quot;,
+  col_names = F) %&gt;% set_names(c(&quot;seq_id&quot;, &quot;source&quot;, &quot;type&quot;, &quot;start&quot;, &quot;end&quot;,
+  &quot;score&quot;, &quot;strand&quot;, &quot;phase&quot;, &quot;attributes&quot;)))
+geneTrackTable &lt;- gff3Table %&gt;%
+  filter(type == &quot;CDS&quot;) %&gt;%
+  mutate(anno = str_extract(attributes, &quot;(?&lt;=product=)[^;]+(?=;)&quot;)) %&gt;%
+  select(seq_id, start, end, strand, anno)
+write_tsv(geneTrackTable, &quot;gene_track.tsv&quot;)
+</code></pre>
+<hr />
+<h2>使用示例</h2>
+<h3>数据读取</h3>
+<pre><code class="language-r">seq_data &lt;- read.delim(&quot;seq_track.tsv&quot;, sep = &quot;\t&quot;, stringsAsFactors = FALSE)
+
+read_blast &lt;- function(file) {
+  df &lt;- read.delim(file, sep = &quot;\t&quot;, header = FALSE,
+                   stringsAsFactors = FALSE, comment.char = &quot;#&quot;)
+  colnames(df) &lt;- c(&quot;qaccver&quot;, &quot;saccver&quot;, &quot;pident&quot;, &quot;length&quot;, &quot;mismatches&quot;,
+                    &quot;gapopen&quot;, &quot;qstart&quot;, &quot;qend&quot;, &quot;sstart&quot;, &quot;send&quot;,
+                    &quot;evalue&quot;, &quot;bitscore&quot;, &quot;qcovs&quot;, &quot;qlen&quot;, &quot;slen&quot;,
+                    &quot;sstrand&quot;, &quot;stitle&quot;)
+  df
+}
+blast_files &lt;- list.files(path = &quot;.&quot;, pattern = &quot;\\.o7$&quot;, full.names = TRUE)
+all_blast &lt;- do.call(rbind, lapply(blast_files, read_blast))
+ribbon_data &lt;- subset(all_blast, length &gt;= 100)
+
+gene_data &lt;- read.delim(&quot;gene_track.tsv&quot;, sep = &quot;\t&quot;,
+  stringsAsFactors = FALSE) |&gt;
+  dplyr::slice_max(order_by = end - start, n = 5, by = seq_id)
+</code></pre>
+<h3>仅序列数据</h3>
+<pre><code class="language-r"># 默认：序列按 seq_data 顺序逆时针排列
+ggchord(seq_data = seq_data) + geom_seq()
+</code></pre>
+<p><img src="examples/plots/seq_only_default.png" alt="序列弦图（默认参数）" /></p>
+<pre><code class="language-r"># 自定义序列参数
+ggchord(seq_data = seq_data) +
+  geom_seq(
+    seq_order = c(&quot;MT118296.1&quot;, &quot;OR222515.1&quot;, &quot;MT108731.1&quot;, &quot;OQ646790.1&quot;),
+    seq_orientation = c(1, -1, 1, -1),
+    seq_curvature = c(0, 2, -2, 6),
+    seq_colors = c(&quot;steelblue&quot;, &quot;orange&quot;, &quot;pink&quot;, &quot;yellow&quot;)
+  )
+</code></pre>
+<p><img src="examples/plots/seq_only_custom.png" alt="序列弦图（自定义布局）" /></p>
+<h3>加入比对数据</h3>
+<pre><code class="language-r"># 默认：按相似度（pident）着色
+ggchord(seq_data = seq_data, ribbon_data = ribbon_data) +
+  geom_seq() + geom_ribbon()
+</code></pre>
+<p><img src="examples/plots/ribbon_pident.png" alt="按相似度着色的连接带" /></p>
+<pre><code class="language-r"># 按查询序列着色
+ggchord(seq_data = seq_data, ribbon_data = ribbon_data) +
+  geom_seq() +
+  geom_ribbon(ribbon_color_scheme = &quot;query&quot;)
+</code></pre>
+<p><img src="examples/plots/ribbon_query.png" alt="按查询序列着色的连接带" /></p>
+<pre><code class="language-r"># 单色模式
+ggchord(seq_data = seq_data, ribbon_data = ribbon_data) +
+  geom_seq() +
+  geom_ribbon(ribbon_color_scheme = &quot;single&quot;, ribbon_colors = &quot;orange&quot;)
+</code></pre>
+<p><img src="examples/plots/ribbon_single.png" alt="单色连接带" /></p>
+<h3>加入基因注释</h3>
+<pre><code class="language-r"># 按链方向着色
+ggchord(seq_data = seq_data, gene_data = gene_data) +
+  geom_seq() + geom_gene()
+</code></pre>
+<p><img src="examples/plots/gene_strand.png" alt="按链方向着色的基因箭头" /></p>
+<pre><code class="language-r"># 按注释类别着色 + 显示标签
+ggchord(seq_data = seq_data, gene_data = gene_data) +
+  geom_seq() +
+  geom_gene(
+    gene_color_scheme = &quot;manual&quot;,
+    gene_label_show = TRUE,
+    gene_label_rotation = 45,
+    gene_label_radial_offset = 0.1
+  )
+</code></pre>
+<p><img src="examples/plots/gene_manual_label.png" alt="按注释类别着色并显示标签的基因箭头" /></p>
+<h3>综合示例</h3>
+<pre><code class="language-r"># 全默认组合
+ggchord(seq_data, ribbon_data, gene_data) +
+  geom_seq() + geom_ribbon() + geom_gene() + geom_axis()
+</code></pre>
+<p><img src="examples/plots/combined_default.png" alt="全默认参数的综合弦图" /></p>
+<pre><code class="language-r"># v0.4.0 精细参数控制——所有布局参数分布在对应的 geom 中
+ggchord(
+  seq_data = seq_data,
+  ribbon_data = ribbon_data,
+  gene_data = gene_data,
+  title = &quot;Multi-sequence Chord Diagram with Gene Annotations&quot;,
+  rotation = 45
+) +
+  geom_seq(
+    seq_radius = c(3, 2, 2, 1),
+    seq_orientation = c(-1, -1, -1, 1),
+    seq_curvature = c(0, 1, -1, 1.5),
+    seq_gap = 0.03
+  ) +
+  geom_ribbon(
+    ribbon_color_scheme = &quot;pident&quot;,
+    ribbon_gap = 0.1
+  ) +
+  geom_gene(
+    gene_offset = list(
+      c(&quot;+&quot; = 0.2, &quot;-&quot; = -0.2),
+      c(&quot;+&quot; = 0.2, &quot;-&quot; = -0.2),
+      c(&quot;+&quot; = 0.2, &quot;-&quot; = 0),
+      c(&quot;+&quot; = 0.2, &quot;-&quot; = 0.1)
+    ),
+    gene_width = 0.08,
+    gene_label_show = TRUE,
+    gene_label_rotation = list(
+      c(&quot;+&quot; = 45, &quot;-&quot; = -45),
+      c(&quot;+&quot; = 0.2, &quot;-&quot; = -0.2),
+      c(&quot;+&quot; = 0.2, &quot;-&quot; = 0),
+      c(&quot;+&quot; = 0.2, &quot;-&quot; = 0.1)
+    )
+  ) +
+  geom_axis(
+    axis_gap = 0,
+    axis_tick_major_length = 0.03,
+    axis_label_size = 2,
+    axis_label_orientation = c(0, 45, 80, 130)
+  )
+</code></pre>
+<p><img src="examples/plots/combined_fine.png" alt="精细参数控制的综合弦图" /></p>
 <blockquote>
 <p>序列级参数（<code>seq_radius</code>、<code>seq_gap</code> 等）均支持单值、无命名向量、命名向量三种格式。基因级参数额外支持按链（<code>+</code>/<code>-</code>）区分的列表格式。</p>
 </blockquote>
-<hr></div>
-</div>
-<div class="section level2">
-<h2 id="图层参考">图层参考<a class="anchor" aria-label="anchor" href="#%E5%9B%BE%E5%B1%82%E5%8F%82%E8%80%83"></a></h2>
-<table class="table"><thead><tr><th>图层</th>
+<hr />
+<h2>图层参考</h2>
+<table>
+<thead>
+<tr>
+<th>图层</th>
 <th>函数</th>
 <th>描述</th>
-</tr></thead><tbody><tr><td>序列弧线</td>
-<td><code><a href="reference/geom_seq.html">geom_seq()</a></code></td>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>序列弧线</td>
+<td><code>geom_seq()</code></td>
 <td>绘制每条序列的弧线（或直线），带方向箭头</td>
-</tr><tr><td>比对连接带</td>
-<td><code><a href="reference/geom_ribbon.html">geom_ribbon()</a></code></td>
+</tr>
+<tr>
+<td>比对连接带</td>
+<td><code>geom_ribbon()</code></td>
 <td>绘制比对结果的彩色 ribbon</td>
-</tr><tr><td>基因箭头</td>
-<td><code><a href="reference/geom_gene.html">geom_gene()</a></code></td>
+</tr>
+<tr>
+<td>基因箭头</td>
+<td><code>geom_gene()</code></td>
 <td>绘制基因注释的箭头多边形和标签</td>
-</tr><tr><td>坐标轴</td>
-<td><code><a href="reference/geom_axis.html">geom_axis()</a></code></td>
+</tr>
+<tr>
+<td>坐标轴</td>
+<td><code>geom_axis()</code></td>
 <td>绘制轴线、主/次刻度线和刻度标签</td>
-</tr></tbody></table><hr></div>
-<div class="section level2">
-<h2 id="参数详情">参数详情<a class="anchor" aria-label="anchor" href="#%E5%8F%82%E6%95%B0%E8%AF%A6%E6%83%85"></a></h2>
-<div class="section level3">
-<h3 id="ggchord-参数">ggchord() 参数<a class="anchor" aria-label="anchor" href="#ggchord-%E5%8F%82%E6%95%B0"></a></h3>
-<table class="table"><thead><tr><th>参数</th>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>参数详情</h2>
+<h3>ggchord() 参数</h3>
+<table>
+<thead>
+<tr>
+<th>参数</th>
 <th>类型</th>
 <th>默认值</th>
 <th>描述</th>
-</tr></thead><tbody><tr><td><code>seq_data</code></td>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>seq_data</code></td>
 <td>data.frame</td>
 <td>-</td>
-<td>序列信息，必须包含 <code>seq_id</code>、<code>length</code>
-</td>
-</tr><tr><td><code>ribbon_data</code></td>
+<td>序列信息，必须包含 <code>seq_id</code>、<code>length</code></td>
+</tr>
+<tr>
+<td><code>ribbon_data</code></td>
 <td>data.frame</td>
 <td>NULL</td>
 <td>比对结果（如 BLAST 输出）</td>
-</tr><tr><td><code>gene_data</code></td>
+</tr>
+<tr>
+<td><code>gene_data</code></td>
 <td>data.frame</td>
 <td>NULL</td>
 <td>基因注释数据</td>
-</tr><tr><td><code>title</code></td>
+</tr>
+<tr>
+<td><code>title</code></td>
 <td>字符</td>
 <td>NULL</td>
 <td>图形主标题</td>
-</tr><tr><td><code>rotation</code></td>
+</tr>
+<tr>
+<td><code>rotation</code></td>
 <td>数值</td>
 <td>45</td>
 <td>全局旋转角度（度）</td>
-</tr><tr><td><code>panel_margin</code></td>
+</tr>
+<tr>
+<td><code>panel_margin</code></td>
 <td>数值/列表</td>
 <td>0</td>
 <td>面板边距</td>
-</tr><tr><td><code>show_legend</code></td>
+</tr>
+<tr>
+<td><code>show_legend</code></td>
 <td>逻辑值</td>
 <td>TRUE</td>
 <td>是否显示图例</td>
-</tr><tr><td><code>debug</code></td>
+</tr>
+<tr>
+<td><code>debug</code></td>
 <td>逻辑值</td>
 <td>FALSE</td>
 <td>是否输出调试信息</td>
-</tr></tbody></table></div>
-<div class="section level3">
-<h3 id="geom_seq-参数">geom_seq() 参数<a class="anchor" aria-label="anchor" href="#geom_seq-%E5%8F%82%E6%95%B0"></a></h3>
-<table class="table"><thead><tr><th>参数</th>
+</tr>
+</tbody>
+</table>
+<h3>geom_seq() 参数</h3>
+<table>
+<thead>
+<tr>
+<th>参数</th>
 <th>类型</th>
 <th>默认值</th>
 <th>描述</th>
-</tr></thead><tbody><tr><td><code>seq_order</code></td>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>seq_order</code></td>
 <td>字符向量</td>
 <td>NULL</td>
 <td>序列绘制顺序</td>
-</tr><tr><td><code>seq_labels</code></td>
+</tr>
+<tr>
+<td><code>seq_labels</code></td>
 <td>字符向量</td>
 <td>NULL</td>
 <td>序列标签</td>
-</tr><tr><td><code>seq_orientation</code></td>
+</tr>
+<tr>
+<td><code>seq_orientation</code></td>
 <td>数值 (1/-1)</td>
 <td>1</td>
 <td>序列方向</td>
-</tr><tr><td><code>seq_gap</code></td>
+</tr>
+<tr>
+<td><code>seq_gap</code></td>
 <td>数值 [0, 0.5)</td>
 <td>0.03</td>
 <td>序列间空白比例</td>
-</tr><tr><td><code>seq_radius</code></td>
+</tr>
+<tr>
+<td><code>seq_radius</code></td>
 <td>数值 (&gt; 0)</td>
 <td>1.0</td>
 <td>序列弧线半径</td>
-</tr><tr><td><code>seq_curvature</code></td>
+</tr>
+<tr>
+<td><code>seq_curvature</code></td>
 <td>数值</td>
 <td>1.0</td>
 <td>曲率：0=直线, 1=标准弧, &gt;1=更弯</td>
-</tr><tr><td><code>seq_colors</code></td>
+</tr>
+<tr>
+<td><code>seq_colors</code></td>
 <td>颜色向量</td>
 <td>Set1</td>
 <td>序列弧线颜色</td>
-</tr><tr><td><code>linewidth</code></td>
+</tr>
+<tr>
+<td><code>linewidth</code></td>
 <td>数值</td>
 <td>1.2</td>
 <td>弧线宽度</td>
-</tr><tr><td><code>show_legend</code></td>
+</tr>
+<tr>
+<td><code>show_legend</code></td>
 <td>逻辑值</td>
 <td>TRUE</td>
 <td>是否显示图例</td>
-</tr></tbody></table></div>
-<div class="section level3">
-<h3 id="geom_ribbon-参数">geom_ribbon() 参数<a class="anchor" aria-label="anchor" href="#geom_ribbon-%E5%8F%82%E6%95%B0"></a></h3>
-<table class="table"><colgroup><col width="25%"><col width="25%"><col width="25%"><col width="25%"></colgroup><thead><tr><th>参数</th>
+</tr>
+</tbody>
+</table>
+<h3>geom_ribbon() 参数</h3>
+<table>
+<thead>
+<tr>
+<th>参数</th>
 <th>类型</th>
 <th>默认值</th>
 <th>描述</th>
-</tr></thead><tbody><tr><td><code>ribbon_color_scheme</code></td>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ribbon_color_scheme</code></td>
 <td>字符</td>
-<td>“pident”</td>
-<td>配色方案：<code>"pident"</code>、<code>"query"</code>、<code>"single"</code>
-</td>
-</tr><tr><td><code>ribbon_colors</code></td>
+<td>&quot;pident&quot;</td>
+<td>配色方案：<code>&quot;pident&quot;</code>、<code>&quot;query&quot;</code>、<code>&quot;single&quot;</code></td>
+</tr>
+<tr>
+<td><code>ribbon_colors</code></td>
 <td>颜色向量</td>
 <td>自动</td>
 <td>连接带颜色参数</td>
-</tr><tr><td><code>ribbon_alpha</code></td>
+</tr>
+<tr>
+<td><code>ribbon_alpha</code></td>
 <td>数值 (0-1)</td>
 <td>0.35</td>
 <td>连接带透明度</td>
-</tr><tr><td><code>ribbon_ctrl_point</code></td>
+</tr>
+<tr>
+<td><code>ribbon_ctrl_point</code></td>
 <td>向量/列表</td>
 <td>c(0,0)</td>
 <td>贝塞尔曲线控制点</td>
-</tr><tr><td><code>ribbon_gap</code></td>
+</tr>
+<tr>
+<td><code>ribbon_gap</code></td>
 <td>数值/向量</td>
 <td>0.15</td>
 <td>序列与连接带的径向间距</td>
-</tr><tr><td><code>alpha</code></td>
+</tr>
+<tr>
+<td><code>alpha</code></td>
 <td>数值</td>
 <td>0.35</td>
 <td>透明度（可覆盖 ribbon_alpha）</td>
-</tr><tr><td><code>ribbon_outline_color</code></td>
+</tr>
+<tr>
+<td><code>ribbon_outline_color</code></td>
 <td>字符</td>
-<td>“black”</td>
+<td>&quot;black&quot;</td>
 <td>连接带轮廓（边框）颜色</td>
-</tr><tr><td><code>ribbon_outline_width</code></td>
+</tr>
+<tr>
+<td><code>ribbon_outline_width</code></td>
 <td>数值</td>
 <td>0.05</td>
 <td>连接带轮廓线宽</td>
-</tr><tr><td><code>ribbon_outline_linetype</code></td>
+</tr>
+<tr>
+<td><code>ribbon_outline_linetype</code></td>
 <td>数值/字符</td>
 <td>1</td>
 <td>连接带轮廓线型（1 = 实线）</td>
-</tr><tr><td><code>show_legend</code></td>
+</tr>
+<tr>
+<td><code>show_legend</code></td>
 <td>逻辑值</td>
 <td>TRUE</td>
 <td>是否显示图例</td>
-</tr></tbody></table></div>
-<div class="section level3">
-<h3 id="geom_gene-参数">geom_gene() 参数<a class="anchor" aria-label="anchor" href="#geom_gene-%E5%8F%82%E6%95%B0"></a></h3>
-<table class="table"><colgroup><col width="25%"><col width="25%"><col width="25%"><col width="25%"></colgroup><thead><tr><th>参数</th>
+</tr>
+</tbody>
+</table>
+<h3>geom_gene() 参数</h3>
+<table>
+<thead>
+<tr>
+<th>参数</th>
 <th>类型</th>
 <th>默认值</th>
 <th>描述</th>
-</tr></thead><tbody><tr><td><code>gene_offset</code></td>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>gene_offset</code></td>
 <td>数值/向量/列表</td>
 <td>0.1</td>
 <td>基因箭头径向偏移</td>
-</tr><tr><td><code>gene_width</code></td>
+</tr>
+<tr>
+<td><code>gene_width</code></td>
 <td>数值/向量/列表</td>
 <td>0.05</td>
 <td>基因箭头宽度</td>
-</tr><tr><td><code>gene_color_scheme</code></td>
+</tr>
+<tr>
+<td><code>gene_color_scheme</code></td>
 <td>字符</td>
-<td>“strand”</td>
-<td>配色方案：<code>"strand"</code> 或 <code>"manual"</code>
-</td>
-</tr><tr><td><code>gene_colors</code></td>
+<td>&quot;strand&quot;</td>
+<td>配色方案：<code>&quot;strand&quot;</code> 或 <code>&quot;manual&quot;</code></td>
+</tr>
+<tr>
+<td><code>gene_colors</code></td>
 <td>颜色向量</td>
 <td>自动</td>
 <td>基因箭头填充色</td>
-</tr><tr><td><code>gene_order</code></td>
+</tr>
+<tr>
+<td><code>gene_order</code></td>
 <td>字符向量</td>
 <td>NULL</td>
 <td>基因在图例中的显示顺序</td>
-</tr><tr><td><code>gene_label_show</code></td>
+</tr>
+<tr>
+<td><code>gene_label_show</code></td>
 <td>逻辑值</td>
 <td>FALSE</td>
 <td>是否显示基因标签</td>
-</tr><tr><td><code>gene_label_size</code></td>
+</tr>
+<tr>
+<td><code>gene_label_size</code></td>
 <td>数值</td>
 <td>2.5</td>
 <td>标签字号</td>
-</tr><tr><td><code>gene_label_rotation</code></td>
+</tr>
+<tr>
+<td><code>gene_label_rotation</code></td>
 <td>数值/向量/列表</td>
 <td>0</td>
 <td>标签旋转角度</td>
-</tr><tr><td><code>gene_label_radial_offset</code></td>
+</tr>
+<tr>
+<td><code>gene_label_radial_offset</code></td>
 <td>数值/向量/列表</td>
 <td>0</td>
 <td>标签径向偏移</td>
-</tr><tr><td><code>gene_label_circum_offset</code></td>
+</tr>
+<tr>
+<td><code>gene_label_circum_offset</code></td>
 <td>数值/向量/列表</td>
 <td>0</td>
 <td>标签周向偏移比例</td>
-</tr><tr><td><code>gene_label_circum_limit</code></td>
+</tr>
+<tr>
+<td><code>gene_label_circum_limit</code></td>
 <td>逻辑值/向量/列表</td>
 <td>TRUE</td>
 <td>是否限制周向偏移</td>
-</tr><tr><td><code>show_legend</code></td>
+</tr>
+<tr>
+<td><code>show_legend</code></td>
 <td>逻辑值</td>
 <td>TRUE</td>
 <td>是否显示图例</td>
-</tr><tr><td><code>show_label</code></td>
+</tr>
+<tr>
+<td><code>show_label</code></td>
 <td>逻辑值</td>
 <td>NULL</td>
 <td>覆盖 gene_label_show</td>
-</tr><tr><td><code>label_size</code></td>
+</tr>
+<tr>
+<td><code>label_size</code></td>
 <td>数值</td>
 <td>NULL</td>
 <td>覆盖 gene_label_size</td>
-</tr></tbody></table></div>
-<div class="section level3">
-<h3 id="geom_axis-参数">geom_axis() 参数<a class="anchor" aria-label="anchor" href="#geom_axis-%E5%8F%82%E6%95%B0"></a></h3>
-<table class="table"><thead><tr><th>参数</th>
+</tr>
+</tbody>
+</table>
+<h3>geom_axis() 参数</h3>
+<table>
+<thead>
+<tr>
+<th>参数</th>
 <th>类型</th>
 <th>默认值</th>
 <th>描述</th>
-</tr></thead><tbody><tr><td><code>show_axis</code></td>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>show_axis</code></td>
 <td>逻辑值</td>
 <td>TRUE</td>
 <td>是否显示坐标轴</td>
-</tr><tr><td><code>axis_gap</code></td>
+</tr>
+<tr>
+<td><code>axis_gap</code></td>
 <td>数值/向量</td>
 <td>0.04</td>
 <td>序列与坐标轴的径向间距</td>
-</tr><tr><td><code>axis_tick_major_number</code></td>
+</tr>
+<tr>
+<td><code>axis_tick_major_number</code></td>
 <td>整数/向量</td>
 <td>5</td>
 <td>主刻度数量</td>
-</tr><tr><td><code>axis_tick_major_length</code></td>
+</tr>
+<tr>
+<td><code>axis_tick_major_length</code></td>
 <td>数值/向量</td>
 <td>0.02</td>
 <td>主刻度长度比例</td>
-</tr><tr><td><code>axis_tick_minor_number</code></td>
+</tr>
+<tr>
+<td><code>axis_tick_minor_number</code></td>
 <td>整数/向量</td>
 <td>4</td>
 <td>次刻度数量</td>
-</tr><tr><td><code>axis_tick_minor_length</code></td>
+</tr>
+<tr>
+<td><code>axis_tick_minor_length</code></td>
 <td>数值/向量</td>
 <td>0.01</td>
 <td>次刻度长度比例</td>
-</tr><tr><td><code>axis_label_size</code></td>
+</tr>
+<tr>
+<td><code>axis_label_size</code></td>
 <td>数值/向量</td>
 <td>3</td>
 <td>刻度标签字号</td>
-</tr><tr><td><code>axis_label_offset</code></td>
+</tr>
+<tr>
+<td><code>axis_label_offset</code></td>
 <td>数值/向量</td>
 <td>1.5</td>
 <td>标签偏移比例</td>
-</tr><tr><td><code>axis_label_orientation</code></td>
+</tr>
+<tr>
+<td><code>axis_label_orientation</code></td>
 <td>字符/数值/向量</td>
-<td>“horizontal”</td>
+<td>&quot;horizontal&quot;</td>
 <td>标签方向</td>
-</tr><tr><td><code>show_legend</code></td>
+</tr>
+<tr>
+<td><code>show_legend</code></td>
 <td>逻辑值</td>
 <td>FALSE</td>
 <td>是否显示图例</td>
-</tr></tbody></table><hr></div>
-</div>
-<div class="section level2">
-<h2 id="图形解读">图形解读<a class="anchor" aria-label="anchor" href="#%E5%9B%BE%E5%BD%A2%E8%A7%A3%E8%AF%BB"></a></h2>
-<ul><li>
-<strong>序列弧线</strong>：每条彩色弧线代表一条序列，长度按比例映射，箭头指示方向。</li>
-<li>
-<strong>连接带</strong>：连接不同序列的彩色区域，代表比对区间。</li>
-<li>
-<strong>基因箭头</strong>：标注在序列上的箭头多边形，可选配文字标签。</li>
-<li>
-<strong>坐标轴</strong>：每条序列外侧的刻度线与数字，标注序列位置。</li>
-</ul><hr></div>
-<div class="section level2">
-<h2 id="版本更新记录">版本更新记录<a class="anchor" aria-label="anchor" href="#%E7%89%88%E6%9C%AC%E6%9B%B4%E6%96%B0%E8%AE%B0%E5%BD%95"></a></h2>
-<div class="section level3">
-<h3 id="v050最新">v0.5.0（最新）<a class="anchor" aria-label="anchor" href="#v050%E6%9C%80%E6%96%B0"></a></h3>
-<ul><li>
-<strong>连接带轮廓定制</strong>：<code><a href="reference/geom_ribbon.html">geom_ribbon()</a></code> 新增 <code>ribbon_outline_color</code>（默认 <code>"black"</code>）、<code>ribbon_outline_width</code>（默认 <code>0.05</code>）与 <code>ribbon_outline_linetype</code>（默认 <code>1</code>，实线）。</li>
-<li>
-<strong>移除依赖</strong>：去掉 <code>ggnewscale</code>（连接带与基因 fill scale 改为内部机制分离）与 <code>RColorBrewer</code>（Set1 调色板内置）。</li>
-<li>
-<strong>Bug 修复</strong>：连接带 fill scale 被基因 scale 覆盖；<code>ribbon_alpha</code> 透明度渲染错误；<code>geom_axis(show_axis = FALSE)</code> 报错；混合 <code>axis_label_orientation</code> 向量报错；少于 3 项时 <code>brewer.pal()</code> 警告；<code><a href="reference/geom_gene.html">geom_gene()</a></code> 先于 <code><a href="reference/geom_ribbon.html">geom_ribbon()</a></code> 报错；仅含 axis 的绘图；S3 方法注册。</li>
-<li>
-<strong>文档</strong>：注释与提示信息英文化；新增函数帮助页；数据准备列含义表与示例数据；渲染示例图；弱化 BLAST 定位；vignette 按分层 API 重写。</li>
-</ul></div>
-<div class="section level3">
-<h3 id="v040">v0.4.0<a class="anchor" aria-label="anchor" href="#v040"></a></h3>
-<ul><li>
-<strong>参数下沉</strong>：布局参数从 <code><a href="reference/ggchord.html">ggchord()</a></code> 移至各 <code>geom_*</code> 图层。<code><a href="reference/ggchord.html">ggchord()</a></code> 仅保留数据校验和全局样式参数（<code>title</code>、<code>rotation</code>、<code>panel_margin</code>、<code>show_legend</code>、<code>debug</code>）。</li>
-<li>
-<strong>延迟计算模型</strong>：坐标布局在 <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> 阶段计算，各图层指定的参数在渲染时汇总。</li>
-<li>
-<strong>自定义 <code>print.ggchord()</code> 方法</strong>：合并所有参数 → 计算布局 → 注入各 layer 数据 → 渲染。</li>
-<li>
-<strong>新增 15 个单元测试</strong>。</li>
-</ul></div>
-<div class="section level3">
-<h3 id="v030">v0.3.0<a class="anchor" aria-label="anchor" href="#v030"></a></h3>
-<ul><li>分层 API 重构：从单体函数拆分为 <code>ggchord() + geom_seq() + geom_ribbon() + geom_gene() + geom_axis()</code>。</li>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>图形解读</h2>
+<ul>
+<li><strong>序列弧线</strong>：每条彩色弧线代表一条序列，长度按比例映射，箭头指示方向。</li>
+<li><strong>连接带</strong>：连接不同序列的彩色区域，代表比对区间。</li>
+<li><strong>基因箭头</strong>：标注在序列上的箭头多边形，可选配文字标签。</li>
+<li><strong>坐标轴</strong>：每条序列外侧的刻度线与数字，标注序列位置。</li>
+</ul>
+<hr />
+<h2>版本更新记录</h2>
+<h3>v0.6.0（最新）</h3>
+<ul>
+<li><strong>绘图对象自包含</strong>：数据与参数直接存储在绘图对象上，多个图可并存，且对象可经 <code>saveRDS()</code>/<code>readRDS()</code> 保存与恢复。</li>
+<li><strong>构建时布局</strong>：布局改由 <code>ggplot_build()</code> 计算（而非 <code>print()</code>），因此 <code>print()</code>、<code>ggsave()</code> 与 <code>ggplot_build()</code> 均可用；渲染不再修改用户绘图对象。</li>
+<li><strong>数据校验</strong>：<code>ggchord()</code> 会对越界或反向的比对/基因坐标、未知序列 ID 给出警告。</li>
+<li><strong>性能</strong>：布局坐标映射改用二分查找，替代线性扫描。</li>
+<li><strong>依赖声明</strong>：与实现一致地声明 <code>ggplot2 (&gt;= 4.0.0)</code> 与 <code>R (&gt;= 4.1.0)</code>。</li>
+<li><strong>CI</strong>：新增 GitHub Actions <code>R CMD check</code> 工作流（macOS / Windows / Linux）。</li>
+</ul>
+<h3>v0.5.0</h3>
+<ul>
+<li><strong>连接带轮廓定制</strong>：<code>geom_ribbon()</code> 新增 <code>ribbon_outline_color</code>（默认 <code>&quot;black&quot;</code>）、<code>ribbon_outline_width</code>（默认 <code>0.05</code>）与 <code>ribbon_outline_linetype</code>（默认 <code>1</code>，实线）。</li>
+<li><strong>移除依赖</strong>：去掉 <code>ggnewscale</code>（连接带与基因 fill scale 改为内部机制分离）与 <code>RColorBrewer</code>（Set1 调色板内置）。</li>
+<li><strong>Bug 修复</strong>：连接带 fill scale 被基因 scale 覆盖；<code>ribbon_alpha</code> 透明度渲染错误；<code>geom_axis(show_axis = FALSE)</code> 报错；混合 <code>axis_label_orientation</code> 向量报错；少于 3 项时 <code>brewer.pal()</code> 警告；<code>geom_gene()</code> 先于 <code>geom_ribbon()</code> 报错；仅含 axis 的绘图；S3 方法注册。</li>
+<li><strong>文档</strong>：注释与提示信息英文化；新增函数帮助页；数据准备列含义表与示例数据；渲染示例图；弱化 BLAST 定位；vignette 按分层 API 重写。</li>
+</ul>
+<h3>v0.4.0</h3>
+<ul>
+<li><strong>参数下沉</strong>：布局参数从 <code>ggchord()</code> 移至各 <code>geom_*</code> 图层。<code>ggchord()</code> 仅保留数据校验和全局样式参数（<code>title</code>、<code>rotation</code>、<code>panel_margin</code>、<code>show_legend</code>、<code>debug</code>）。</li>
+<li><strong>延迟计算模型</strong>：坐标布局在 <code>print()</code> 阶段计算，各图层指定的参数在渲染时汇总。</li>
+<li><strong>自定义 <code>print.ggchord()</code> 方法</strong>：合并所有参数 → 计算布局 → 注入各 layer 数据 → 渲染。</li>
+<li><strong>新增 15 个单元测试</strong>。</li>
+</ul>
+<h3>v0.3.0</h3>
+<ul>
+<li>分层 API 重构：从单体函数拆分为 <code>ggchord() + geom_seq() + geom_ribbon() + geom_gene() + geom_axis()</code>。</li>
 <li>自定义 <code>+.ggchord</code> 方法，支持图层列表自动展平。</li>
-<li>轻量 <code><a href="reference/coord_chord.html">coord_chord()</a></code> 坐标系统。</li>
-</ul></div>
-<div class="section level3">
-<h3 id="v020">v0.2.0<a class="anchor" aria-label="anchor" href="#v020"></a></h3>
-<ul><li>高级弧线和直线模式优化，增强曲线拟合。</li>
+<li>轻量 <code>coord_chord()</code> 坐标系统。</li>
+</ul>
+<h3>v0.2.0</h3>
+<ul>
+<li>高级弧线和直线模式优化，增强曲线拟合。</li>
 <li>精确的曲率和间隙控制。</li>
 <li>增强的颜色定制。</li>
-</ul></div>
-<div class="section level3">
-<h3 id="v010">v0.1.0<a class="anchor" aria-label="anchor" href="#v010"></a></h3>
-<ul><li>分离管理序列、比对与基因数据。</li>
+</ul>
+<h3>v0.1.0</h3>
+<ul>
+<li>分离管理序列、比对与基因数据。</li>
 <li>序列方向控制、自定义顺序、间隙与半径调整。</li>
 <li>可定制坐标轴。连接带支持 3 种配色方案。</li>
-</ul></div>
-<div class="section level3">
-<h3 id="v002">v0.0.2<a class="anchor" aria-label="anchor" href="#v002"></a></h3>
-<ul><li>多序列展示，弧线/直线模式切换。</li>
-</ul></div>
-<div class="section level3">
-<h3 id="v001">v0.0.1<a class="anchor" aria-label="anchor" href="#v001"></a></h3>
-<ul><li>初始版本，双序列 BLAST 比对弦图。</li>
-</ul><hr></div>
-</div>
-<div class="section level2">
-<h2 id="贡献与反馈">贡献与反馈<a class="anchor" aria-label="anchor" href="#%E8%B4%A1%E7%8C%AE%E4%B8%8E%E5%8F%8D%E9%A6%88"></a></h2>
+</ul>
+<h3>v0.0.2</h3>
+<ul>
+<li>多序列展示，弧线/直线模式切换。</li>
+</ul>
+<h3>v0.0.1</h3>
+<ul>
+<li>初始版本，双序列 BLAST 比对弦图。</li>
+</ul>
+<hr />
+<h2>贡献与反馈</h2>
 <p>欢迎提交 issue 报告 bug 或建议新功能，也可通过 Pull Request 参与开发。</p>
-</div>
-<div class="section level2">
-<h2 id="许可证">许可证<a class="anchor" aria-label="anchor" href="#%E8%AE%B8%E5%8F%AF%E8%AF%81"></a></h2>
+<h2>许可证</h2>
 <p>本项目采用 MIT 许可证，详情见 <a href="LICENSE">LICENSE</a> 文件。</p>
-</div>
-</div>
-
-
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

@@ -33,35 +33,36 @@ geom_seq <- function(mapping = NULL, data = NULL,
                      linewidth = 1.2,
                      show_legend = TRUE,
                      ...) {
-  set_seq_params(list(
-    seq_order      = seq_order,
-    seq_labels     = seq_labels,
-    seq_orientation = seq_orientation,
-    seq_gap        = seq_gap,
-    seq_radius     = seq_radius,
-    seq_curvature  = seq_curvature,
-    seq_colors     = seq_colors
-  ))
-
-  # Only return the layer (scales are set uniformly by print.ggchord)
-  list(
-    ggplot2::layer(
-      data        = data.frame(x = numeric(0), y = numeric(0),
-                               seq_id = character(0)),
-      mapping     = aes(x = x, y = y, group = seq_id, color = seq_id),
-      stat        = "identity",
-      geom        = GeomPath,
-      position    = "identity",
-      show.legend = if (identical(show_legend, TRUE)) {
-                      c(colour = TRUE, fill = FALSE)
-                    } else show_legend,
-      inherit.aes = FALSE,
-      key_glyph   = key_glyph_seq,
-      params      = list(
-        linewidth = linewidth,
-        arrow = grid::arrow(type = "closed", length = grid::unit(3, "mm")),
-        ...
-      )
+  # The layout is computed at build time (ggplot_build.ggchord). The
+  # parameters are attached to the layer itself so that the plot object is
+  # fully self-contained.
+  lyr <- ggplot2::layer(
+    data        = data.frame(x = numeric(0), y = numeric(0),
+                             seq_id = character(0)),
+    mapping     = aes(x = x, y = y, group = seq_id, color = seq_id),
+    stat        = "identity",
+    geom        = GeomPath,
+    position    = "identity",
+    show.legend = if (identical(show_legend, TRUE)) {
+                    c(colour = TRUE, fill = FALSE)
+                  } else show_legend,
+    inherit.aes = FALSE,
+    key_glyph   = key_glyph_seq,
+    params      = list(
+      linewidth = linewidth,
+      arrow = grid::arrow(type = "closed", length = grid::unit(3, "mm")),
+      ...
     )
   )
+  lyr$ggchord_params <- list(
+    type            = "seq",
+    seq_order       = seq_order,
+    seq_labels      = seq_labels,
+    seq_orientation = seq_orientation,
+    seq_gap         = seq_gap,
+    seq_radius      = seq_radius,
+    seq_curvature   = seq_curvature,
+    seq_colors      = seq_colors
+  )
+  list(lyr)
 }

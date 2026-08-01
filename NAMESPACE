@@ -2,7 +2,6 @@
 
 S3method("+",ggchord)
 S3method(ggplot_build,ggchord)
-S3method(print,ggchord)
 export(coord_chord)
 export(geom_axis)
 export(geom_gene)

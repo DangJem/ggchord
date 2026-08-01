@@ -1,4 +1,35 @@
+# ggchord 0.6.0
+
+## New features
+* Plot objects are now fully self-contained: data and parameters are stored on
+  the plot itself instead of in a package-wide environment. Multiple plots can
+  be created and built independently in the same session, and plots survive
+  `saveRDS()` / `readRDS()`.
+
+* The layout is now computed by `ggplot_build()` rather than by a custom
+  `print()` method. As a result `print()`, `ggsave()`, `ggplot_build()` and
+  other standard ggplot2 workflows all work directly on ggchord plots, and
+  rendering no longer modifies the user's plot object.
+
+* `ggchord()` now warns about suspicious input data: reversed or out-of-range
+  alignment/gene coordinates, `pident` outside [0, 100], and sequence IDs that
+  are not present in `seq_data`.
+
+## Performance
+* Replaced the linear angle lookup in the layout mapping with a binary search
+  (`findInterval`), speeding up layout computation for large plots.
+
+## Dependency changes
+* Declares `ggplot2 (>= 4.0.0)` and `R (>= 4.1.0)` to match the implementation
+  (the package relies on ggplot2 4.x internals).
+
+## Infrastructure
+* Added a GitHub Actions `R CMD check` workflow (macOS, Windows, Linux).
+* Removed the internal legacy `fill_ggnewscale_1` aesthetic name in favour of
+  `fill_ribbon`.
+
 # ggchord 0.5.0
+
 
 ## New features
 * Added ribbon outline customization to `geom_ribbon()`:

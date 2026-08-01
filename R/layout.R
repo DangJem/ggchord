@@ -96,7 +96,12 @@ compute_chord_layout <- function(
 
   # Curve coordinate mapping function
   map_to_curve <- function(angle, radius, ref) {
-    idx <- which.min(abs(ref$angles - angle))
+    # ref$angles is sorted, so use findInterval (O(log n)) instead of a
+    # full linear scan to locate the nearest reference angle.
+    fi <- findInterval(angle, ref$angles)
+    if (fi < 1) fi <- 1
+    if (fi >= length(ref$angles)) fi <- length(ref$angles) - 1
+    idx <- if (abs(ref$angles[fi] - angle) <= abs(ref$angles[fi + 1] - angle)) fi else fi + 1
     base <- ref$path[idx, ]
     if (idx < nrow(ref$path)) {
       dx <- ref$path$x[idx + 1] - base$x

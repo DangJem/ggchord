@@ -175,6 +175,61 @@ test_that("ribbon outline parameters work with sensible defaults", {
   dev.off()
 })
 
+test_that("plot objects are self-contained (no cross-talk between plots)", {
+  data(seq_data_example)
+  p1 <- ggchord(seq_data_example) + geom_seq(seq_radius = 5)
+  p2 <- ggchord(seq_data_example) + geom_seq()
+  expect_equal(p1$layers[[1]]$ggchord_params$seq_radius, 5)
+  expect_null(p2$layers[[1]]$ggchord_params$seq_radius)
+  # both build independently
+  expect_s3_class(ggplot_build(p1), "ggplot_built")
+  expect_s3_class(ggplot_build(p2), "ggplot_built")
+})
+
+test_that("plots survive saveRDS/readRDS and render", {
+  data(seq_data_example)
+  p <- ggchord(seq_data_example) + geom_seq(seq_radius = 5)
+  f <- tempfile(fileext = ".rds")
+  saveRDS(p, f)
+  p2 <- readRDS(f)
+  pdf(tempfile(fileext = ".pdf"), 8, 8)
+  expect_no_error(suppressWarnings(print(p2)))
+  dev.off()
+  expect_equal(p2$layers[[1]]$ggchord_params$seq_radius, 5)
+})
+
+test_that("ggsave works directly on a ggchord plot", {
+  data(seq_data_example)
+  data(ribbon_data_example)
+  p <- ggchord(seq_data_example, ribbon_data_example) + geom_seq() + geom_ribbon()
+  f <- tempfile(fileext = ".png")
+  expect_no_error(ggsave(f, p, width = 6, height = 6, dpi = 72))
+  expect_true(file.exists(f))
+})
+
+test_that("user plot object is not polluted by building", {
+  data(seq_data_example)
+  data(ribbon_data_example)
+  data(gene_data_example)
+  p <- ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
+    geom_seq() + geom_ribbon() + geom_gene() + geom_axis()
+  ggplot_build(p)
+  expect_length(p$scales$scales, 0)
+  expect_false(is.null(p$layers[[1]]$ggchord_params))
+})
+
+test_that("ribbon data sanity checks warn on bad input", {
+  data(seq_data_example)
+  bad_ribbon <- data.frame(
+    qaccver = c("MT108731.1", "MT108731.1"),
+    saccver = c("MT118296.1", "MT118296.1"),
+    length = c(100, 100), pident = c(90, 90),
+    qstart = c(50000, 100), qend = c(40000, 200),   # qstart > qend
+    sstart = c(1, 1), send = c(100, 100)
+  )
+  expect_warning(ggchord(seq_data_example, bad_ribbon), "start > end")
+})
+
 test_that("documented data and parameter values are validated", {
   expect_error(
     ggchord(data.frame(seq_id = c("a", "a"), length = c(1, 2))),

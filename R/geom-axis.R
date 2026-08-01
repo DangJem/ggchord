@@ -35,18 +35,6 @@ geom_axis <- function(mapping = NULL, data = NULL,
                       axis_label_orientation = NULL,
                       show_legend = FALSE,
                       ...) {
-  set_axis_params(list(
-    show_axis                = show_axis,
-    axis_gap                 = axis_gap,
-    axis_tick_major_number   = axis_tick_major_number,
-    axis_tick_major_length   = axis_tick_major_length,
-    axis_tick_minor_number   = axis_tick_minor_number,
-    axis_tick_minor_length   = axis_tick_minor_length,
-    axis_label_size          = axis_label_size,
-    axis_label_offset        = axis_label_offset,
-    axis_label_orientation   = axis_label_orientation
-  ))
-
   empty_id <- data.frame(x = numeric(0), y = numeric(0),
                          seq_id = character(0))
   empty_seg <- data.frame(x0 = numeric(0), y0 = numeric(0),
@@ -55,11 +43,25 @@ geom_axis <- function(mapping = NULL, data = NULL,
                           label_y = numeric(0), size = numeric(0),
                           seq_id = character(0))
 
+  path_layer <- geom_path(data = empty_id,
+                          mapping = aes(x = x, y = y, group = seq_id),
+                          color = "black", linewidth = 0.3,
+                          inherit.aes = FALSE, show.legend = show_legend, ...)
+  path_layer$ggchord_params <- list(
+    type                    = "axis",
+    show_axis               = show_axis,
+    axis_gap                = axis_gap,
+    axis_tick_major_number  = axis_tick_major_number,
+    axis_tick_major_length  = axis_tick_major_length,
+    axis_tick_minor_number  = axis_tick_minor_number,
+    axis_tick_minor_length  = axis_tick_minor_length,
+    axis_label_size         = axis_label_size,
+    axis_label_offset       = axis_label_offset,
+    axis_label_orientation  = axis_label_orientation
+  )
+
   list(
-    geom_path(data = empty_id,
-              mapping = aes(x = x, y = y, group = seq_id),
-              color = "black", linewidth = 0.3,
-              inherit.aes = FALSE, show.legend = show_legend, ...),
+    path_layer,
     geom_segment(data = empty_seg,
                  mapping = aes(x = x0, y = y0,
                                xend = x1, yend = y1),
