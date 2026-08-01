@@ -5,12 +5,12 @@
 \alias{ribbon_data_example}
 \title{Example alignment data}
 \format{
-A data frame containing standard BLAST columns (qaccver, saccver, pident, etc.)
+A data frame containing standard alignment columns (qaccver, saccver, pident, etc.)
 }
 \usage{
 ribbon_data_example
 }
 \description{
-BLAST alignment data for ggchord demonstration (length >= 100)
+Alignment data for ggchord demonstration (length >= 100)
 }
 \keyword{datasets}

@@ -1,27 +1,24 @@
-# ggchord: Multi-Sequence BLAST Alignment Chord Diagram Visualization Tool
+# ggchord: Multi-Sequence Alignment Chord Diagram Visualization Tool
 
 ## Overview
-`ggchord` is an R function based on `ggplot2` for visualizing BLAST alignment results of multiple sequences as intuitive chord diagrams. It supports extensive style customization, making it easy to display homologous regions and structural relationships between sequences. Version 0.1.0 of `ggchord` represents a breakthrough upgrade from simple multi-sequence chord diagrams to **more feature-rich** multi-sequence chord diagrams, capable of simultaneously showing alignment relationships between multiple sequences:
-- Each sequence is presented as an arc or custom track, with length proportionally mapped.
-- Colored ribbons represent alignment regions between sequences, supporting coloring by similarity or source.
-- Equipped with customizable axes for precise annotation of sequence positions and lengths.
-- Supports layout optimizations such as global rotation and sequence orientation adjustment to adapt to different analysis scenarios.
+`ggchord` is an R package built on `ggplot2` that visualizes multi-sequence alignment results as intuitive chord diagrams using layered grammar of graphics. Version 0.4.0 moves layout parameters from `ggchord()` into individual `geom_*` layers, aligning closely with `ggplot2`'s design philosophy — each layer manages its own style.
 
-It is suitable for research in comparative genomics, pan-genome analysis, phage-host sequence relationship studies, etc., helping researchers quickly identify homologous patterns between sequences.
+- Each sequence is presented as an arc with length proportionally mapped.
+- Colored ribbons represent alignment regions between sequences, supporting coloring by similarity or source.
+- Gene annotations are overlaid as arrows, colorable by strand direction or functional category.
+- Customizable axes provide precise annotation of sequence positions and lengths.
+- Layout parameters can be distributed across the corresponding `geom_*` layers, or omitted to use sensible defaults.
+
+Suitable for comparative genomics, pan-genome analysis, phage-host sequence relationship studies, and more.
 
 ## Key Features
-- **Multi-sequence Support**: Simultaneously display alignment relationships of 2 or more sequences, no longer limited to pairwise comparisons.
-- **Sequence-level Customization**:
-  - Customize sequence order, orientation (forward/reverse), gaps, and radii.
-  - Automatically or manually specify sequence colors and labels to improve readability.
-- **Refined Axes**:
-  - Each sequence has independent axes with major/minor ticks, clearly labeling length positions.
-  - Adjust tick lengths, label sizes, and offsets to balance aesthetics and information density.
-- **Flexible Ribbon Styles**:
-  - 3 coloring schemes (single color, by query sequence, gradient by similarity).
-  - Adjustable gap between ribbons and sequences; supports customization of Bézier curve control points for smoothness.
-- **Layout Optimization**: The entire graph can be rotated to meet different display needs.
-- **Debug Mode**: Assists in troubleshooting data issues by displaying counts of valid/invalid alignments.
+- **Genuine `ggplot2` Layered Style**: `ggchord()` only takes data and global parameters; each `geom_*` receives its own layout parameters, just like `ggplot2`.
+- **Deferred Computation Model**: Layout is computed at `print()` time, so parameters specified across `geom`s are all collected and applied during rendering.
+- **Multi-sequence Support**: Display alignment relationships of two or more sequences simultaneously.
+- **Sequence-level Customization**: Order, orientation, gaps, radius, and curvature — parameters belong in `geom_seq()`.
+- **Flexible Ribbon Styles**: 3 coloring schemes, Bézier control points — parameters belong in `geom_ribbon()`.
+- **Gene Arrow Layer**: Color by strand or annotation category, with labels — parameters belong in `geom_gene()`.
+- **Refined Axes**: Major/minor ticks, label size and orientation — parameters belong in `geom_axis()`.
 
 ## Installation
 ### Dependencies
@@ -32,64 +29,458 @@ It is suitable for research in comparative genomics, pan-genome analysis, phage-
 install.packages("ggplot2")
 ```
 
-### How to install ggchord？
-Install the stable version of gggenes from CRAN:
+### Installing ggchord
 
-`install.packages("ggchord")`
+From CRAN:
 
-If you want the development version, install it from GitHub:
+```r
+install.packages("ggchord")
+```
 
-`devtools::install_github("DangJem/ggchord")`
+From GitHub:
 
+```r
+devtools::install_github("DangJem/ggchord")
+```
 
-## Parameter Details
-| Parameter Category | Parameter Name | Type | Default Value | Description |
+## Quick Start
+
+### Building a Chord Diagram
+
+```r
+library(ggchord)
+
+data(seq_data_example)
+data(ribbon_data_example)
+data(gene_data_example)
+
+# Simplest: all default parameters
+p <- ggchord(
+  seq_data = seq_data_example,
+  ribbon_data = ribbon_data_example,
+  gene_data = gene_data_example
+) +
+  geom_seq() +
+  geom_ribbon() +
+  geom_gene() +
+  geom_axis()
+
+print(p)
+```
+
+### Parameters in Geom Layers (v0.4.0)
+
+```r
+# Just like ggplot2: parameters go with the layer that uses them
+ggchord(seq_data_example, ribbon_data_example, gene_data_example,
+        title = "Fine Parameter Control", rotation = 30) +
+  geom_seq(
+    seq_radius = c(3, 2, 2, 1),
+    seq_curvature = c(0, 1, -1, 1.5),
+    seq_orientation = c(-1, -1, -1, 1)
+  ) +
+  geom_ribbon(
+    ribbon_color_scheme = "pident",
+    ribbon_gap = 0.1
+  ) +
+  geom_gene(
+    gene_offset = list(
+      c("+" = 0.2, "-" = -0.2),
+      c("+" = 0.2, "-" = -0.2),
+      c("+" = 0.2, "-" = 0),
+      c("+" = 0.2, "-" = 0.1)
+    ),
+    gene_width = 0.08,
+    gene_label_show = TRUE,
+    gene_label_rotation = list(
+      c("+" = 45, "-" = -45),
+      c("+" = 0.2, "-" = -0.2),
+      c("+" = 0.2, "-" = 0),
+      c("+" = 0.2, "-" = 0.1)
+    )
+  ) +
+  geom_axis(
+    axis_label_orientation = c(0, 45, 80, 130),
+    axis_gap = 0,
+    axis_tick_major_length = 0.03,
+    axis_label_size = 2
+  )
+```
+
+> All parameters have sensible defaults. You can write `geom_seq()` with no arguments, or fine-tune each detail as shown above.
+
+---
+
+## Usage Instructions
+
+### Data Preparation
+
+Three types of input data are expected:
+
+#### [Required] Sequence Data (`seq_data`)
+
+A data frame describing the sequences to draw. It must contain the following columns:
+
+| Column | Type | Description |
+| --- | --- | --- |
+| `seq_id` | character | Unique sequence identifier |
+| `length` | integer | Sequence length (positive) |
+
+Example:
+
+```r
+seq_data <- read.delim("seq_track.tsv", sep = "\t", stringsAsFactors = FALSE)
+```
+
+Where `seq_track.tsv` looks like:
+
+| seq_id | length |
+| --- | --- |
+| MT108731.1 | 64323 |
+| MT118296.1 | 32090 |
+| OQ646790.1 | 57367 |
+| OR222515.1 | 83080 |
+
+Auto-generate from FASTA files:
+
+```bash
+seqkit fx2tab -nil *fna | sed '1i seq_id\tlength' > seq_track.tsv
+```
+
+#### [Optional] Alignment Data (`ribbon_data`)
+
+A data frame with one row per pairwise alignment block between two sequences. It must contain the following columns (named after common alignment-tool output conventions, e.g., BLAST):
+
+| Column | Type | Description |
+| --- | --- | --- |
+| `qaccver` | character | Query sequence ID |
+| `saccver` | character | Subject sequence ID |
+| `length` | integer | Alignment length (bp) |
+| `pident` | numeric | Percent identity (0-100) |
+| `qstart` | integer | Start position on the query sequence |
+| `qend` | integer | End position on the query sequence |
+| `sstart` | integer | Start position on the subject sequence |
+| `send` | integer | End position on the subject sequence |
+
+Example rows:
+
+| qaccver | saccver | length | pident | qstart | qend | sstart | send |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| MT108731.1 | MT118296.1 | 24856 | 98.612 | 26298 | 51139 | 7121 | 31959 |
+| MT108731.1 | MT118296.1 | 4412 | 97.031 | 21513 | 25922 | 2365 | 6772 |
+| MT108731.1 | MT118296.1 | 464 | 94.181 | 20691 | 21146 | 1032 | 1495 |
+
+For example, the output of a batch BLAST run can be parsed into this table directly:
+
+```bash
+seqs=("MT108731.1" "MT118296.1" "OQ646790.1" "OR222515.1")
+ext="fna"
+for ((i=0; i<${#seqs[@]}-1; i++)); do
+  for ((j=i+1; j<${#seqs[@]}; j++)); do
+    blastn \
+      -outfmt '7 qaccver saccver pident length mismatch gapopen qstart qend sstart send evalue bitscore qcovs qlen slen sstrand stitle' \
+      -query "${seqs[$i]}.${ext}" \
+      -subject "${seqs[$j]}.${ext}" \
+      -out "${seqs[$i]}__${seqs[$j]}.o7"
+  done
+done
+```
+
+#### [Optional] Gene Data (`gene_data`)
+
+A data frame annotating genes (or other features) on the sequences. It must contain the following columns:
+
+| Column | Type | Description |
+| --- | --- | --- |
+| `seq_id` | character | Sequence ID the gene belongs to |
+| `start` | integer | Gene start position |
+| `end` | integer | Gene end position |
+| `strand` | character | Strand direction (`+` or `-`) |
+| `anno` | character | Gene annotation / functional category |
+
+Example rows:
+
+| seq_id | start | end | strand | anno |
 | --- | --- | --- | --- | --- |
-| **Core Data** | `seq_data` | data.frame/tibble | - | Data frame containing sequence information, must include columns:<br> - `seq_id`: Unique sequence identifier<br> - `length`: Sequence length |
-|  | `ribbon_data` | data.frame/tibble | - | Data frame containing BLAST alignment results, optional. If provided, must include columns:<br> - `qaccver`: Query sequence ID<br> - `saccver`: Subject sequence ID<br> - `length`: Alignment length<br> - `pident`: Percentage of sequence identity<br> - `qstart`: Query sequence start position<br> - `qend`: Query sequence end position<br> - `sstart`: Subject sequence start position<br> - `send`: Subject sequence end position |
-|  | `gene_data` | data.frame/tibble | - | Data frame containing gene annotation information, optional. If provided, must include columns:<br> - `seq_id`: Unique sequence identifier<br> - `start`: Gene start position<br> - `end`: Gene end position<br> - `strand`: Strand direction (+ or -)<br> - `anno`: Gene annotation |
-| **Basic Style** | `title` | Character | NULL | Main title of the graph |
-| **Sequence Layout** | `seq_order` | Character vector | NULL | Specify the drawing order of sequences; if NULL, uses the order in `seq_data` |
-|  | `seq_labels` | Character vector or named vector | NULL | Labels for sequences; if NULL, uses `seq_id` |
-|  | `seq_orientation` | Numeric vector or single value | 1 | Orientation of each sequence: 1 (forward) or -1 (reverse); default is forward |
-|  | `seq_gap` | Numeric or vector | 0.03 | Length consistent with the number of sequences, defining the arc proportion [0,0.5) from the head of one sequence to the tail of the next |
-|  | `seq_radius` | Numeric or vector | 1.0 | Radius of sequence arcs, supports single value or vector with length equal to the number of sequences |
-|  | `seq_curvature` | Numeric or vector | 1.0 | Curvature of sequence arcs: 1 for standard arc, 0 for straight line, >1 for more curved |
-|  | `seq_colors` | Color vector or named vector | NULL | Define colors for each sequence arc; if NULL, automatically generated based on the built-in Set1 palette |
-| **Gene Style** | `gene_offset` | Numeric, vector, or list | 0.03 | Radial offset distance between gene arrows and sequence arcs. Supports:<br> - Single value: same offset for all strands of all sequences<br> - Vector: length consistent with the number of sequences, same offset for all strands of each sequence<br> - List: named list where each element corresponds to a sequence; elements can be a single value (all strands of the sequence) or a named vector containing "+" and "-" (strand-specific) |
-|  | `gene_width` | Numeric or vector | 0.1 | Width of gene arrows |
-|  | `gene_label_show` | Logical | FALSE | Whether to display gene labels |
-|  | `gene_label_rotation` | Numeric, vector, or list | 0 | Rotation angle (degrees) of gene labels, supports the same parameter format as `gene_offset` |
-|  | `gene_label_size` | Numeric | 2.5 | Font size of gene annotations |
-|  | `gene_label_radial_offset` | Numeric, vector, or list | 0 | Radial offset of gene labels relative to arrows (positive values outward, negative values inward), supports the same parameter format as `gene_offset` |
-|  | `gene_label_circum_offset` | Numeric, vector, or list | 0 | Circumferential offset proportion of gene labels along the sequence (relative to gene length), supports the same parameter format as `gene_offset` |
-|  | `gene_label_circum_limit` | Logical, vector, or list | TRUE | Whether to limit circumferential offset to no more than half the gene length, supports the same parameter format as `gene_offset` |
-|  | `gene_color_scheme` | Character | "strand" | Specify gene color scheme, optional "strand" (by strand direction) or "manual" (manual specification) |
-|  | `gene_colors` | Color vector | - | Fill colors for gene arrows, behavior depends on `gene_color_scheme`:<br> - "strand" mode: supports named vectors (only "+"/"-"), unnamed vectors (first "+" then "-"), or single value (same color for both strands); defaults to red for "+" and blue for "-"<br> - "manual" mode: supports named vectors (corresponding to `anno`), unnamed vectors (truncate excess, pad insufficiency); defaults to automatically generated colors |
-|  | `gene_order` | Character vector | NULL | Specify the display order of genes in the legend; if NULL, uses the order of genes in the data |
-| **Ribbon Style** | `ribbon_color_scheme` | Character | "pident" | Coloring scheme for ribbons, optional "single", "query", or "pident" |
-|  | `ribbon_colors` | - | - | Color parameters for ribbons:<br> - single: single color (single value or first element of vector)<br> - query: map colors by query sequence (named/unnamed vector or single value)<br> - pident: gradient color scale vector for generating gradients by similarity percentage, defaults to blue-to-yellow gradient |
-|  | `ribbon_alpha` | Numeric | 0.35 | Transparency of ribbons [0,1] |
-|  | `ribbon_ctrl_point` | Vector or list | - | Bézier control points for adjusting ribbon shape:<br> - Vector: length 2 (single control point) or 4 (c1x,c1y,c2x,c2y, dual control points)<br> - List: each element is a sublist containing 1-2 control points, defaults to automatic calculation |
-|  | `ribbon_gap` | Numeric or vector | 0.15 | Radial distance between sequence arcs and ribbons |
-| **Axis Settings** | `axis_gap` | Numeric or vector | 0.04 | Radial distance between axes and sequence arcs, supports negative values |
-|  | `axis_tick_major_number` | Integer or vector | 5 | Number of major ticks per sequence |
-|  | `axis_tick_major_length` | Numeric or vector | 0.02 | Length proportion of major ticks |
-|  | `axis_tick_minor_number` | Integer or vector | 4 | Number of minor ticks between two major ticks |
-|  | `axis_tick_minor_length` | Numeric or vector | 0.01 | Length proportion of minor ticks |
-|  | `axis_label_size` | Numeric or vector | 3 | Font size of axis tick labels |
-|  | `axis_label_offset` | Numeric or vector | 0 | Offset proportion of axis labels relative to ticks |
-|  | `axis_label_orientation` | Character, numeric, or vector | "horizontal" | Orientation of axis labels:<br> - "horizontal": horizontal direction<br> - Numeric: rotation angle (degrees)<br> - Vector: length consistent with the number of sequences or named vector |
-| **Layout Settings** | `rotation` | Numeric | 45 | Rotation angle (degrees) of the entire graph |
-|  | `panel_margin` | List | list(t=0,r=0,b=0,l=0) | Margins around the graph (t=top, r=right, b=bottom, l=left) |
-| **Legend & Debug** | `show_legend` | Logical | TRUE | Whether to display the legend |
-|  | `show_axis` | Logical | TRUE | Whether to display axes and ticks |
-|  | `debug` | Logical | FALSE | Whether to output debug information | 
+| MT108731.1 | 60709 | 63087 | + | hypothetical protein |
+| MT118296.1 | 14628 | 16301 | + | virion structural protein |
+| OQ646790.1 | 43765 | 46140 | + | integrase |
+| OQ646790.1 | 13194 | 15551 | + | tail tape measure protein |
+
+For example, this table can be converted from a GFF3 file:
+
+```r
+library(tidyverse)
+gff3FilesPath <- list.files(path = ".", pattern = "*.gff3")
+gff3Table <- map_df(gff3FilesPath, ~read_tsv(.x, show_col_types = F, comment = "#",
+  col_names = F) %>% set_names(c("seq_id", "source", "type", "start", "end",
+  "score", "strand", "phase", "attributes")))
+geneTrackTable <- gff3Table %>%
+  filter(type == "CDS") %>%
+  mutate(anno = str_extract(attributes, "(?<=product=)[^;]+(?=;)")) %>%
+  select(seq_id, start, end, strand, anno)
+write_tsv(geneTrackTable, "gene_track.tsv")
+```
+
+---
+
+## Usage Examples
+
+### Reading Data
+```r
+seq_data <- read.delim("seq_track.tsv", sep = "\t", stringsAsFactors = FALSE)
+
+read_blast <- function(file) {
+  df <- read.delim(file, sep = "\t", header = FALSE,
+                   stringsAsFactors = FALSE, comment.char = "#")
+  colnames(df) <- c("qaccver", "saccver", "pident", "length", "mismatches",
+                    "gapopen", "qstart", "qend", "sstart", "send",
+                    "evalue", "bitscore", "qcovs", "qlen", "slen",
+                    "sstrand", "stitle")
+  df
+}
+blast_files <- list.files(path = ".", pattern = "*.o7", full.names = TRUE)
+all_blast <- do.call(rbind, lapply(blast_files, read_blast))
+ribbon_data <- subset(all_blast, length >= 100)
+
+gene_data <- read.delim("gene_track.tsv", sep = "\t",
+  stringsAsFactors = FALSE) |>
+  dplyr::slice_max(order_by = end - start, n = 5, by = seq_id)
+```
+
+### Sequences Only
+
+```r
+# Default: counterclockwise in seq_data order
+ggchord(seq_data = seq_data) + geom_seq()
+
+# Custom sequence layout
+ggchord(seq_data = seq_data) +
+  geom_seq(
+    seq_order = c("MT118296.1", "OR222515.1", "MT108731.1", "OQ646790.1"),
+    seq_orientation = c(1, -1, 1, -1),
+    seq_curvature = c(0, 2, -2, 6),
+    seq_colors = c("steelblue", "orange", "pink", "yellow")
+  )
+```
+
+### Adding Alignment Ribbons
+
+```r
+# Default: colored by percent identity
+ggchord(seq_data = seq_data, ribbon_data = ribbon_data) +
+  geom_seq() + geom_ribbon()
+
+# Color by query sequence
+ggchord(seq_data = seq_data, ribbon_data = ribbon_data) +
+  geom_seq() +
+  geom_ribbon(ribbon_color_scheme = "query")
+
+# Single color
+ggchord(seq_data = seq_data, ribbon_data = ribbon_data) +
+  geom_seq() +
+  geom_ribbon(ribbon_color_scheme = "single", ribbon_colors = "orange")
+```
+
+### Adding Gene Annotations
+
+```r
+# Color by strand
+ggchord(seq_data = seq_data, gene_data = gene_data) +
+  geom_seq() + geom_gene()
+
+# Color by annotation + show labels
+ggchord(seq_data = seq_data, gene_data = gene_data) +
+  geom_seq() +
+  geom_gene(
+    gene_color_scheme = "manual",
+    gene_label_show = TRUE,
+    gene_label_rotation = 45,
+    gene_label_radial_offset = 0.1
+  )
+```
+
+### Full Example
+
+```r
+# All defaults
+ggchord(seq_data, ribbon_data, gene_data) +
+  geom_seq() + geom_ribbon() + geom_gene() + geom_axis()
+
+# v0.4.0: fine-grained control with parameters distributed across geom layers
+ggchord(
+  seq_data = seq_data,
+  ribbon_data = ribbon_data,
+  gene_data = gene_data,
+  title = "Multi-sequence Chord Diagram with Gene Annotations",
+  rotation = 45
+) +
+  geom_seq(
+    seq_radius = c(3, 2, 2, 1),
+    seq_orientation = c(-1, -1, -1, 1),
+    seq_curvature = c(0, 1, -1, 1.5),
+    seq_gap = 0.03
+  ) +
+  geom_ribbon(
+    ribbon_color_scheme = "pident",
+    ribbon_gap = 0.1
+  ) +
+  geom_gene(
+    gene_offset = list(
+      c("+" = 0.2, "-" = -0.2),
+      c("+" = 0.2, "-" = -0.2),
+      c("+" = 0.2, "-" = 0),
+      c("+" = 0.2, "-" = 0.1)
+    ),
+    gene_width = 0.08,
+    gene_label_show = TRUE,
+    gene_label_rotation = list(
+      c("+" = 45, "-" = -45),
+      c("+" = 0.2, "-" = -0.2),
+      c("+" = 0.2, "-" = 0),
+      c("+" = 0.2, "-" = 0.1)
+    )
+  ) +
+  geom_axis(
+    axis_gap = 0,
+    axis_tick_major_length = 0.03,
+    axis_label_size = 2,
+    axis_label_orientation = c(0, 45, 80, 130)
+  )
+```
+
+> Sequence-level parameters (e.g., `seq_radius`, `seq_gap`) support single value, unnamed vector, and named vector formats. Gene-level parameters additionally support per-strand (`+`/`-`) list formats.
+
+---
+
+## Layer Reference
+
+| Layer | Function | Description |
+| --- | --- | --- |
+| Sequence Arcs | `geom_seq()` | Draws arcs (or lines) for each sequence, with directional arrows |
+| Alignment Ribbons | `geom_ribbon()` | Draws colored ribbons from alignment results |
+| Gene Arrows | `geom_gene()` | Draws gene annotation arrow polygons and labels |
+| Axes | `geom_axis()` | Draws axis lines, major/minor ticks, and tick labels |
+
+---
+
+## Parameter Reference
+
+### ggchord() Parameters
+
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
+| `seq_data` | data.frame | - | Sequence info; must include `seq_id`, `length` |
+| `ribbon_data` | data.frame | NULL | Alignment results (e.g., BLAST output) |
+| `gene_data` | data.frame | NULL | Gene annotation data |
+| `title` | character | NULL | Plot title |
+| `rotation` | numeric | 45 | Global rotation angle (degrees) |
+| `panel_margin` | numeric/list | 0 | Panel margins |
+| `show_legend` | logical | TRUE | Display legend |
+| `debug` | logical | FALSE | Output debug info |
+
+### geom_seq() Parameters
+
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
+| `seq_order` | character vector | NULL | Drawing order of sequences |
+| `seq_labels` | character vector | NULL | Sequence labels |
+| `seq_orientation` | numeric (1/-1) | 1 | Sequence direction |
+| `seq_gap` | numeric [0, 0.5) | 0.03 | Gap proportion between sequences |
+| `seq_radius` | numeric (> 0) | 1.0 | Sequence arc radius |
+| `seq_curvature` | numeric | 1.0 | Curvature: 0=straight, 1=standard, >1=more curved |
+| `seq_colors` | color vector | Set1 | Sequence arc colors |
+| `linewidth` | numeric | 1.2 | Arc line width |
+| `show_legend` | logical | TRUE | Show legend |
+
+### geom_ribbon() Parameters
+
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
+| `ribbon_color_scheme` | character | "pident" | Scheme: `"pident"`, `"query"`, `"single"` |
+| `ribbon_colors` | color vector | auto | Ribbon color parameters |
+| `ribbon_alpha` | numeric (0-1) | 0.35 | Ribbon transparency |
+| `ribbon_ctrl_point` | vector/list | c(0,0) | Bézier control points |
+| `ribbon_gap` | numeric/vector | 0.15 | Radial gap between sequences and ribbons |
+| `alpha` | numeric | 0.35 | Transparency (overrides ribbon_alpha) |
+| `show_legend` | logical | TRUE | Show legend |
+
+### geom_gene() Parameters
+
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
+| `gene_offset` | numeric/vector/list | 0.1 | Radial offset of gene arrows |
+| `gene_width` | numeric/vector/list | 0.05 | Gene arrow width |
+| `gene_color_scheme` | character | "strand" | Scheme: `"strand"` or `"manual"` |
+| `gene_colors` | color vector | auto | Gene arrow fill colors |
+| `gene_order` | character vector | NULL | Gene display order in legend |
+| `gene_label_show` | logical | FALSE | Display gene labels |
+| `gene_label_size` | numeric | 2.5 | Label font size |
+| `gene_label_rotation` | numeric/vector/list | 0 | Label rotation angle |
+| `gene_label_radial_offset` | numeric/vector/list | 0 | Radial offset of labels |
+| `gene_label_circum_offset` | numeric/vector/list | 0 | Circumferential offset |
+| `gene_label_circum_limit` | logical/vector/list | TRUE | Limit circumferential offset |
+| `show_legend` | logical | TRUE | Show legend |
+| `show_label` | logical | NULL | Override gene_label_show |
+| `label_size` | numeric | NULL | Override gene_label_size |
+
+### geom_axis() Parameters
+
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
+| `show_axis` | logical | TRUE | Display axes |
+| `axis_gap` | numeric/vector | 0.04 | Radial gap to sequences |
+| `axis_tick_major_number` | integer/vector | 5 | Number of major ticks |
+| `axis_tick_major_length` | numeric/vector | 0.02 | Major tick length proportion |
+| `axis_tick_minor_number` | integer/vector | 4 | Number of minor ticks |
+| `axis_tick_minor_length` | numeric/vector | 0.01 | Minor tick length proportion |
+| `axis_label_size` | numeric/vector | 3 | Tick label font size |
+| `axis_label_offset` | numeric/vector | 1.5 | Label offset proportion |
+| `axis_label_orientation` | character/numeric/vector | "horizontal" | Label orientation |
+| `show_legend` | logical | FALSE | Show legend |
+
+---
 
 ## Plot Interpretation
-- **Sequence Arcs**: Each colored arc represents a sequence, with length proportionally mapped. Arrows indicate direction (forward/reverse).
-- **Ribbons**: Colored regions connecting different sequences, representing alignment intervals:
-  - When colored by similarity, the color gradient reflects sequence identity (e.g., from blue to red indicates increasing similarity).
-  - When colored by query sequence, ribbons of the same color originate from the same query sequence.
-- **Axes**: Ticks and numbers outside each sequence arc, labeling sequence positions (units match sequence length) for easy localization of alignment regions.
+- **Sequence Arcs**: Each colored arc represents a sequence, proportionally mapped by length, with arrows indicating direction.
+- **Ribbons**: Colored regions connecting different sequences represent alignment intervals.
+- **Gene Arrows**: Arrow polygons annotated on sequences, colored by strand or functional category, with optional labels.
+- **Axes**: Ticks and numbers outside each sequence arc, labeling sequence positions.
 
+---
+
+## Version History
+### v0.4.0 (Latest)
+- **Parameter Redistribution**: Layout parameters moved from `ggchord()` to individual `geom_*` layers. `ggchord()` now only handles data validation and global style (`title`, `rotation`, `panel_margin`, `show_legend`, `debug`).
+- **Deferred Computation**: Coordinate layout computed at `print()` time. Parameters from all `geom`s are collected and applied during rendering.
+- **Custom `print.ggchord()` Method**: Merge parameters → compute layout → inject data into layers → render.
+- **15 unit tests** added.
+
+### v0.3.0
+- Layered API refactoring: split from monolithic function to `ggchord() + geom_seq() + geom_ribbon() + geom_gene() + geom_axis()`.
+- Custom `+.ggchord` method for automatic list flattening.
+- Lightweight `coord_chord()` coordinate system.
+
+### v0.2.0
+- Enhanced arc and line mode optimization.
+- Precise curvature and gap control.
+- Enhanced color customization.
+
+### v0.1.0
+- Separate management of sequence, alignment, and gene data.
+- Sequence orientation, custom order, gap and radius adjustment.
+- Customizable axes. Ribbons support 3 coloring schemes.
+
+### v0.0.2
+- Multi-sequence support. Arc/line mode switching.
+
+### v0.0.1
+- Initial release. Pairwise BLAST alignment chord diagram visualization.
+
+---
+
+## Contributions & Feedback
+Bug reports and feature requests are welcome via GitHub issues. Pull requests are also appreciated.
+
+## License
+This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.

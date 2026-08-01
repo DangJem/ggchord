@@ -18,7 +18,7 @@ ggchord(
 \arguments{
 \item{seq_data}{data.frame/tibble, required. Basic sequence information}
 
-\item{ribbon_data}{data.frame/tibble, optional. BLAST alignment results}
+\item{ribbon_data}{data.frame/tibble, optional. Alignment results}
 
 \item{gene_data}{data.frame/tibble, optional. Gene annotation data}
 
@@ -36,7 +36,7 @@ ggchord(
 A ggchord object (inherits from ggplot) to which geom_* layers can be added with +
 }
 \description{
-ggchord visualizes multi-sequence BLAST alignment results using ggplot2's layered grammar.
+ggchord visualizes multi-sequence alignment results using ggplot2's layered grammar.
 The \code{ggchord()} constructor handles data validation and global settings;
 the \code{geom_*} layers are stacked as needed, each responsible for its own layout parameters and visual rendering.
 The layout is computed lazily at \code{print()} time.

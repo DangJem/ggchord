@@ -1,9 +1,9 @@
 🌐 语言切换: 【[现代汉语（Han）](README-Hans.md) | [英文（English）](README.md)】
 
-# ggchord：多序列BLAST比对弦图可视化工具
+# ggchord：多序列比对弦图可视化工具
 
 ## 概述
-`ggchord` 是一个基于 `ggplot2` 的 R 语言包，采用分层图形语法将多序列 BLAST 比对结果可视化为直观的弦图。v0.4.0 实现了布局参数从 `ggchord()` 向各 `geom_*` 图层的下沉，靠近 `ggplot2` 的设计哲学——每个图层管自己的样式。
+`ggchord` 是一个基于 `ggplot2` 的 R 语言包，采用分层图形语法将多序列比对结果可视化为直观的弦图。v0.4.0 实现了布局参数从 `ggchord()` 向各 `geom_*` 图层的下沉，靠近 `ggplot2` 的设计哲学——每个图层管自己的样式。
 
 - 每条序列以圆弧呈现，按比例映射长度。
 - 彩色连接带（ribbon）表示序列间的比对区域，支持按相似度或来源着色。
@@ -120,29 +120,55 @@ ggchord(seq_data_example, ribbon_data_example, gene_data_example,
 需准备三类输入数据：
 
 #### 【必须】序列信息数据（`seq_data`）
-数据框，必须包含列 `seq_id`（序列唯一标识）和 `length`（序列长度，正数）。
+描述待绘制序列的数据框，必须包含以下列：
+
+| 列名 | 类型 | 含义 |
+| --- | --- | --- |
+| `seq_id` | 字符 | 序列唯一标识 |
+| `length` | 整数 | 序列长度（正数） |
 
 示例：
 ```r
 seq_data <- read.delim("seq_track.tsv", sep = "\t", stringsAsFactors = FALSE)
 ```
 其中 `seq_track.tsv` 格式如下：
-```txt
-seq_id	length
-MT108731.1	64323
-MT118296.1	32090
-OQ646790.1	57367
-OR222515.1	83080
-```
+
+| seq_id | length |
+| --- | --- |
+| MT108731.1 | 64323 |
+| MT118296.1 | 32090 |
+| OQ646790.1 | 57367 |
+| OR222515.1 | 83080 |
+
 从 FASTA 自动生成：
 ```bash
 seqkit fx2tab -nil *fna | sed '1i seq_id\tlength' > seq_track.tsv
 ```
 
 #### 【可选】比对数据（`ribbon_data`）
-数据框，必须包含列 `qaccver`、`saccver`、`length`、`pident`、`qstart`、`qend`、`sstart`、`send`。
+逐条记录两条序列之间一个比对区间的数据框，必须包含以下列（列名沿用常见比对工具输出约定，如 BLAST）：
 
-批量 BLAST 脚本：
+| 列名 | 类型 | 含义 |
+| --- | --- | --- |
+| `qaccver` | 字符 | 查询序列 ID |
+| `saccver` | 字符 | 目标序列 ID |
+| `length` | 整数 | 比对长度（bp） |
+| `pident` | 数值 | 相似度百分比（0-100） |
+| `qstart` | 整数 | 比对区间在查询序列上的起始位置 |
+| `qend` | 整数 | 比对区间在查询序列上的结束位置 |
+| `sstart` | 整数 | 比对区间在目标序列上的起始位置 |
+| `send` | 整数 | 比对区间在目标序列上的结束位置 |
+
+示例数据行：
+
+| qaccver | saccver | length | pident | qstart | qend | sstart | send |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| MT108731.1 | MT118296.1 | 24856 | 98.612 | 26298 | 51139 | 7121 | 31959 |
+| MT108731.1 | MT118296.1 | 4412 | 97.031 | 21513 | 25922 | 2365 | 6772 |
+| MT108731.1 | MT118296.1 | 464 | 94.181 | 20691 | 21146 | 1032 | 1495 |
+
+例如，批量 BLAST 的输出可直接解析为该表格：
+
 ```bash
 seqs=("MT108731.1" "MT118296.1" "OQ646790.1" "OR222515.1")
 ext="fna"
@@ -158,9 +184,27 @@ done
 ```
 
 #### 【可选】基因数据（`gene_data`）
-数据框，必须包含列 `seq_id`、`start`、`end`、`strand`（`+` 或 `-`）、`anno`。
+在序列上标注基因（或其他特征）的数据框，必须包含以下列：
 
-GFF3 转 gene_track 脚本：
+| 列名 | 类型 | 含义 |
+| --- | --- | --- |
+| `seq_id` | 字符 | 基因所属序列 ID |
+| `start` | 整数 | 基因起始位置 |
+| `end` | 整数 | 基因结束位置 |
+| `strand` | 字符 | 链方向（`+` 或 `-`） |
+| `anno` | 字符 | 基因注释 / 功能类别 |
+
+示例数据行：
+
+| seq_id | start | end | strand | anno |
+| --- | --- | --- | --- | --- |
+| MT108731.1 | 60709 | 63087 | + | hypothetical protein |
+| MT118296.1 | 14628 | 16301 | + | virion structural protein |
+| OQ646790.1 | 43765 | 46140 | + | integrase |
+| OQ646790.1 | 13194 | 15551 | + | tail tape measure protein |
+
+例如，可由 GFF3 文件转换得到：
+
 ```r
 library(tidyverse)
 gff3FilesPath <- list.files(path = ".", pattern = "*.gff3")
@@ -310,7 +354,7 @@ ggchord(
 | 图层 | 函数 | 描述 |
 | --- | --- | --- |
 | 序列弧线 | `geom_seq()` | 绘制每条序列的弧线（或直线），带方向箭头 |
-| 比对连接带 | `geom_ribbon()` | 绘制 BLAST 比对结果的彩色 ribbon |
+| 比对连接带 | `geom_ribbon()` | 绘制比对结果的彩色 ribbon |
 | 基因箭头 | `geom_gene()` | 绘制基因注释的箭头多边形和标签 |
 | 坐标轴 | `geom_axis()` | 绘制轴线、主/次刻度线和刻度标签 |
 
@@ -323,7 +367,7 @@ ggchord(
 | 参数 | 类型 | 默认值 | 描述 |
 | --- | --- | --- | --- |
 | `seq_data` | data.frame | - | 序列信息，必须包含 `seq_id`、`length` |
-| `ribbon_data` | data.frame | NULL | BLAST 比对结果 |
+| `ribbon_data` | data.frame | NULL | 比对结果（如 BLAST 输出） |
 | `gene_data` | data.frame | NULL | 基因注释数据 |
 | `title` | 字符 | NULL | 图形主标题 |
 | `rotation` | 数值 | 45 | 全局旋转角度（度） |

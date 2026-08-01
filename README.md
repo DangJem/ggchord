@@ -1,9 +1,9 @@
 🌐 Language Switch: 【[现代汉语（Hans）](README-Hans.md) | [English](README.md)】
 
-# ggchord: Multi-Sequence BLAST Alignment Chord Diagram Visualization Tool
+# ggchord: Multi-Sequence Alignment Chord Diagram Visualization Tool
 
 ## Overview
-`ggchord` is an R package built on `ggplot2` that visualizes multi-sequence BLAST alignment results as intuitive chord diagrams using layered grammar of graphics. Version 0.4.0 moves layout parameters from `ggchord()` into individual `geom_*` layers, aligning closely with `ggplot2`'s design philosophy — each layer manages its own style.
+`ggchord` is an R package built on `ggplot2` that visualizes multi-sequence alignment results as intuitive chord diagrams using layered grammar of graphics. Version 0.4.0 moves layout parameters from `ggchord()` into individual `geom_*` layers, aligning closely with `ggplot2`'s design philosophy — each layer manages its own style.
 
 - Each sequence is presented as an arc with length proportionally mapped.
 - Colored ribbons represent alignment regions between sequences, supporting coloring by similarity or source.
@@ -120,29 +120,60 @@ ggchord(seq_data_example, ribbon_data_example, gene_data_example,
 Three types of input data are expected:
 
 #### [Required] Sequence Data (`seq_data`)
-A data frame with columns `seq_id` (unique identifier) and `length` (positive numeric).
+
+A data frame describing the sequences to draw. It must contain the following columns:
+
+| Column | Type | Description |
+| --- | --- | --- |
+| `seq_id` | character | Unique sequence identifier |
+| `length` | integer | Sequence length (positive) |
 
 Example:
+
 ```r
 seq_data <- read.delim("seq_track.tsv", sep = "\t", stringsAsFactors = FALSE)
 ```
-Where `seq_track.tsv`:
-```txt
-seq_id	length
-MT108731.1	64323
-MT118296.1	32090
-OQ646790.1	57367
-OR222515.1	83080
-```
-Auto-generate from FASTA:
+
+Where `seq_track.tsv` looks like:
+
+| seq_id | length |
+| --- | --- |
+| MT108731.1 | 64323 |
+| MT118296.1 | 32090 |
+| OQ646790.1 | 57367 |
+| OR222515.1 | 83080 |
+
+Auto-generate from FASTA files:
+
 ```bash
 seqkit fx2tab -nil *fna | sed '1i seq_id\tlength' > seq_track.tsv
 ```
 
 #### [Optional] Alignment Data (`ribbon_data`)
-A data frame with columns `qaccver`, `saccver`, `length`, `pident`, `qstart`, `qend`, `sstart`, `send`.
 
-Batch BLAST script:
+A data frame with one row per pairwise alignment block between two sequences. It must contain the following columns (named after common alignment-tool output conventions, e.g., BLAST):
+
+| Column | Type | Description |
+| --- | --- | --- |
+| `qaccver` | character | Query sequence ID |
+| `saccver` | character | Subject sequence ID |
+| `length` | integer | Alignment length (bp) |
+| `pident` | numeric | Percent identity (0-100) |
+| `qstart` | integer | Start position on the query sequence |
+| `qend` | integer | End position on the query sequence |
+| `sstart` | integer | Start position on the subject sequence |
+| `send` | integer | End position on the subject sequence |
+
+Example rows:
+
+| qaccver | saccver | length | pident | qstart | qend | sstart | send |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| MT108731.1 | MT118296.1 | 24856 | 98.612 | 26298 | 51139 | 7121 | 31959 |
+| MT108731.1 | MT118296.1 | 4412 | 97.031 | 21513 | 25922 | 2365 | 6772 |
+| MT108731.1 | MT118296.1 | 464 | 94.181 | 20691 | 21146 | 1032 | 1495 |
+
+For example, the output of a batch BLAST run can be parsed into this table directly:
+
 ```bash
 seqs=("MT108731.1" "MT118296.1" "OQ646790.1" "OR222515.1")
 ext="fna"
@@ -158,9 +189,28 @@ done
 ```
 
 #### [Optional] Gene Data (`gene_data`)
-A data frame with columns `seq_id`, `start`, `end`, `strand` (`+` or `-`), `anno`.
 
-GFF3 to gene_track conversion:
+A data frame annotating genes (or other features) on the sequences. It must contain the following columns:
+
+| Column | Type | Description |
+| --- | --- | --- |
+| `seq_id` | character | Sequence ID the gene belongs to |
+| `start` | integer | Gene start position |
+| `end` | integer | Gene end position |
+| `strand` | character | Strand direction (`+` or `-`) |
+| `anno` | character | Gene annotation / functional category |
+
+Example rows:
+
+| seq_id | start | end | strand | anno |
+| --- | --- | --- | --- | --- |
+| MT108731.1 | 60709 | 63087 | + | hypothetical protein |
+| MT118296.1 | 14628 | 16301 | + | virion structural protein |
+| OQ646790.1 | 43765 | 46140 | + | integrase |
+| OQ646790.1 | 13194 | 15551 | + | tail tape measure protein |
+
+For example, this table can be converted from a GFF3 file:
+
 ```r
 library(tidyverse)
 gff3FilesPath <- list.files(path = ".", pattern = "*.gff3")
@@ -310,7 +360,7 @@ ggchord(
 | Layer | Function | Description |
 | --- | --- | --- |
 | Sequence Arcs | `geom_seq()` | Draws arcs (or lines) for each sequence, with directional arrows |
-| Alignment Ribbons | `geom_ribbon()` | Draws colored ribbons from BLAST alignment results |
+| Alignment Ribbons | `geom_ribbon()` | Draws colored ribbons from alignment results |
 | Gene Arrows | `geom_gene()` | Draws gene annotation arrow polygons and labels |
 | Axes | `geom_axis()` | Draws axis lines, major/minor ticks, and tick labels |
 
@@ -323,7 +373,7 @@ ggchord(
 | Parameter | Type | Default | Description |
 | --- | --- | --- | --- |
 | `seq_data` | data.frame | - | Sequence info; must include `seq_id`, `length` |
-| `ribbon_data` | data.frame | NULL | BLAST alignment results |
+| `ribbon_data` | data.frame | NULL | Alignment results (e.g., BLAST output) |
 | `gene_data` | data.frame | NULL | Gene annotation data |
 | `title` | character | NULL | Plot title |
 | `rotation` | numeric | 45 | Global rotation angle (degrees) |

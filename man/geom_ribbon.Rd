@@ -42,5 +42,5 @@ geom_ribbon(
 A list of ggplot2 layers
 }
 \description{
-Draws colored ribbons corresponding to BLAST alignment results. Color scheme and spacing parameters are specified here.
+Draws colored ribbons corresponding to alignment results. Color scheme and spacing parameters are specified here.
 }

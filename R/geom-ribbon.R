@@ -40,7 +40,7 @@ ribbon_geom <- rename_fill_geom()
 
 #' Add an alignment ribbon layer
 #'
-#' Draws colored ribbons corresponding to BLAST alignment results. Color scheme and spacing parameters are specified here.
+#' Draws colored ribbons corresponding to alignment results. Color scheme and spacing parameters are specified here.
 #'
 #' @param mapping Default NULL (uses pre-computed data)
 #' @param data Default NULL (retrieved automatically from the layout)
