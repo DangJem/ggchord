@@ -1,7 +1,7 @@
 # ggchord: Multi-Sequence Alignment Chord Diagram Visualization Tool
 
 ## Overview
-`ggchord` is an R package built on `ggplot2` that visualizes multi-sequence alignment results as intuitive chord diagrams using layered grammar of graphics. Version 0.4.0 moves layout parameters from `ggchord()` into individual `geom_*` layers, aligning closely with `ggplot2`'s design philosophy — each layer manages its own style.
+`ggchord` is an R package built on `ggplot2` that visualizes multi-sequence alignment results as intuitive chord diagrams using layered grammar of graphics. Version 0.4.0 moved layout parameters from `ggchord()` into individual `geom_*` layers, aligning closely with `ggplot2`'s design philosophy — each layer manages its own style. The latest v0.5.0 release removes the `ggnewscale`/`RColorBrewer` dependencies, adds ribbon outline customization, and ships updated documentation and example plots.
 
 - Each sequence is presented as an arc with length proportionally mapped.
 - Colored ribbons represent alignment regions between sequences, supporting coloring by similarity or source.
@@ -482,7 +482,13 @@ ggchord(
 ---
 
 ## Version History
-### v0.4.0 (Latest)
+### v0.5.0 (Latest)
+- **Ribbon outline customization**: `geom_ribbon()` gains `ribbon_outline_color` (default `"black"`), `ribbon_outline_width` (default `0.05`) and `ribbon_outline_linetype` (default `1`, solid).
+- **Dependencies removed**: dropped `ggnewscale` (ribbon/gene fill scales are now separated internally) and `RColorBrewer` (Set1 palette built in).
+- **Bug fixes**: ribbon fill scale overwritten by the gene fill scale; `ribbon_alpha` rendered at the wrong opacity; `geom_axis(show_axis = FALSE)` error; mixed `axis_label_orientation` vectors; `brewer.pal()` warnings for <3 items; `geom_gene()` added before `geom_ribbon()`; axis-only plots; S3 method registration.
+- **Documentation**: comments/messages in English; new man pages; data-preparation tables with example rows; rendered example plots; BLAST de-emphasized; vignette rewritten for the layered API.
+
+### v0.4.0
 - **Parameter Redistribution**: Layout parameters moved from `ggchord()` to individual `geom_*` layers. `ggchord()` now only handles data validation and global style (`title`, `rotation`, `panel_margin`, `show_legend`, `debug`).
 - **Deferred Computation**: Coordinate layout computed at `print()` time. Parameters from all `geom`s are collected and applied during rendering.
 - **Custom `print.ggchord()` Method**: Merge parameters → compute layout → inject data into layers → render.

@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">ggchord</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.4.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.5.0</span>
       </span>
     </div>
 
@@ -45,7 +45,7 @@
 <p>🌐 语言切换: 【<a href="README-Hans.md">现代汉语（Han）</a> | <a href="README.md">英文（English）</a>】</p>
 <h1>ggchord：多序列比对弦图可视化工具</h1>
 <h2>概述</h2>
-<p><code>ggchord</code> 是一个基于 <code>ggplot2</code> 的 R 语言包，采用分层图形语法将多序列比对结果可视化为直观的弦图。v0.4.0 实现了布局参数从 <code>ggchord()</code> 向各 <code>geom_*</code> 图层的下沉，靠近 <code>ggplot2</code> 的设计哲学——每个图层管自己的样式。</p>
+<p><code>ggchord</code> 是一个基于 <code>ggplot2</code> 的 R 语言包，采用分层图形语法将多序列比对结果可视化为直观的弦图。v0.4.0 实现了布局参数从 <code>ggchord()</code> 向各 <code>geom_*</code> 图层的下沉，靠近 <code>ggplot2</code> 的设计哲学——每个图层管自己的样式。最新 v0.5.0 移除了 <code>ggnewscale</code>/<code>RColorBrewer</code> 依赖，新增连接带轮廓定制，并更新了文档与示例图。</p>
 <ul>
 <li>每条序列以圆弧呈现，按比例映射长度。</li>
 <li>彩色连接带（ribbon）表示序列间的比对区域，支持按相似度或来源着色。</li>
@@ -944,7 +944,14 @@ ggchord(
 </ul>
 <hr />
 <h2>版本更新记录</h2>
-<h3>v0.4.0（最新）</h3>
+<h3>v0.5.0（最新）</h3>
+<ul>
+<li><strong>连接带轮廓定制</strong>：<code>geom_ribbon()</code> 新增 <code>ribbon_outline_color</code>（默认 <code>&quot;black&quot;</code>）、<code>ribbon_outline_width</code>（默认 <code>0.05</code>）与 <code>ribbon_outline_linetype</code>（默认 <code>1</code>，实线）。</li>
+<li><strong>移除依赖</strong>：去掉 <code>ggnewscale</code>（连接带与基因 fill scale 改为内部机制分离）与 <code>RColorBrewer</code>（Set1 调色板内置）。</li>
+<li><strong>Bug 修复</strong>：连接带 fill scale 被基因 scale 覆盖；<code>ribbon_alpha</code> 透明度渲染错误；<code>geom_axis(show_axis = FALSE)</code> 报错；混合 <code>axis_label_orientation</code> 向量报错；少于 3 项时 <code>brewer.pal()</code> 警告；<code>geom_gene()</code> 先于 <code>geom_ribbon()</code> 报错；仅含 axis 的绘图；S3 方法注册。</li>
+<li><strong>文档</strong>：注释与提示信息英文化；新增函数帮助页；数据准备列含义表与示例数据；渲染示例图；弱化 BLAST 定位；vignette 按分层 API 重写。</li>
+</ul>
+<h3>v0.4.0</h3>
 <ul>
 <li><strong>参数下沉</strong>：布局参数从 <code>ggchord()</code> 移至各 <code>geom_*</code> 图层。<code>ggchord()</code> 仅保留数据校验和全局样式参数（<code>title</code>、<code>rotation</code>、<code>panel_margin</code>、<code>show_legend</code>、<code>debug</code>）。</li>
 <li><strong>延迟计算模型</strong>：坐标布局在 <code>print()</code> 阶段计算，各图层指定的参数在渲染时汇总。</li>

@@ -3,7 +3,7 @@
 # ggchord：多序列比对弦图可视化工具
 
 ## 概述
-`ggchord` 是一个基于 `ggplot2` 的 R 语言包，采用分层图形语法将多序列比对结果可视化为直观的弦图。v0.4.0 实现了布局参数从 `ggchord()` 向各 `geom_*` 图层的下沉，靠近 `ggplot2` 的设计哲学——每个图层管自己的样式。
+`ggchord` 是一个基于 `ggplot2` 的 R 语言包，采用分层图形语法将多序列比对结果可视化为直观的弦图。v0.4.0 实现了布局参数从 `ggchord()` 向各 `geom_*` 图层的下沉，靠近 `ggplot2` 的设计哲学——每个图层管自己的样式。最新 v0.5.0 移除了 `ggnewscale`/`RColorBrewer` 依赖，新增连接带轮廓定制，并更新了文档与示例图。
 
 - 每条序列以圆弧呈现，按比例映射长度。
 - 彩色连接带（ribbon）表示序列间的比对区域，支持按相似度或来源着色。
@@ -477,7 +477,13 @@ ggchord(
 ---
 
 ## 版本更新记录
-### v0.4.0（最新）
+### v0.5.0（最新）
+- **连接带轮廓定制**：`geom_ribbon()` 新增 `ribbon_outline_color`（默认 `"black"`）、`ribbon_outline_width`（默认 `0.05`）与 `ribbon_outline_linetype`（默认 `1`，实线）。
+- **移除依赖**：去掉 `ggnewscale`（连接带与基因 fill scale 改为内部机制分离）与 `RColorBrewer`（Set1 调色板内置）。
+- **Bug 修复**：连接带 fill scale 被基因 scale 覆盖；`ribbon_alpha` 透明度渲染错误；`geom_axis(show_axis = FALSE)` 报错；混合 `axis_label_orientation` 向量报错；少于 3 项时 `brewer.pal()` 警告；`geom_gene()` 先于 `geom_ribbon()` 报错；仅含 axis 的绘图；S3 方法注册。
+- **文档**：注释与提示信息英文化；新增函数帮助页；数据准备列含义表与示例数据；渲染示例图；弱化 BLAST 定位；vignette 按分层 API 重写。
+
+### v0.4.0
 - **参数下沉**：布局参数从 `ggchord()` 移至各 `geom_*` 图层。`ggchord()` 仅保留数据校验和全局样式参数（`title`、`rotation`、`panel_margin`、`show_legend`、`debug`）。
 - **延迟计算模型**：坐标布局在 `print()` 阶段计算，各图层指定的参数在渲染时汇总。
 - **自定义 `print.ggchord()` 方法**：合并所有参数 → 计算布局 → 注入各 layer 数据 → 渲染。

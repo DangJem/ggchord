@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">ggchord</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.4.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.5.0</span>
       </span>
     </div>
 
@@ -67,7 +67,7 @@
   <div class="contents col-md-9">
 <h1>ggchord: Multi-Sequence Alignment Chord Diagram Visualization Tool</h1>
 <h2>Overview</h2>
-<p><code>ggchord</code> is an R package built on <code>ggplot2</code> that visualizes multi-sequence alignment results as intuitive chord diagrams using layered grammar of graphics. Version 0.4.0 moves layout parameters from <code>ggchord()</code> into individual <code>geom_*</code> layers, aligning closely with <code>ggplot2</code>'s design philosophy — each layer manages its own style.</p>
+<p><code>ggchord</code> is an R package built on <code>ggplot2</code> that visualizes multi-sequence alignment results as intuitive chord diagrams using layered grammar of graphics. Version 0.4.0 moved layout parameters from <code>ggchord()</code> into individual <code>geom_*</code> layers, aligning closely with <code>ggplot2</code>'s design philosophy — each layer manages its own style. The latest v0.5.0 release removes the <code>ggnewscale</code>/<code>RColorBrewer</code> dependencies, adds ribbon outline customization, and ships updated documentation and example plots.</p>
 <ul>
 <li>Each sequence is presented as an arc with length proportionally mapped.</li>
 <li>Colored ribbons represent alignment regions between sequences, supporting coloring by similarity or source.</li>
@@ -965,7 +965,14 @@ ggchord(
 </ul>
 <hr />
 <h2>Version History</h2>
-<h3>v0.4.0 (Latest)</h3>
+<h3>v0.5.0 (Latest)</h3>
+<ul>
+<li><strong>Ribbon outline customization</strong>: <code>geom_ribbon()</code> gains <code>ribbon_outline_color</code> (default <code>&quot;black&quot;</code>), <code>ribbon_outline_width</code> (default <code>0.05</code>) and <code>ribbon_outline_linetype</code> (default <code>1</code>, solid).</li>
+<li><strong>Dependencies removed</strong>: dropped <code>ggnewscale</code> (ribbon/gene fill scales are now separated internally) and <code>RColorBrewer</code> (Set1 palette built in).</li>
+<li><strong>Bug fixes</strong>: ribbon fill scale overwritten by the gene fill scale; <code>ribbon_alpha</code> rendered at the wrong opacity; <code>geom_axis(show_axis = FALSE)</code> error; mixed <code>axis_label_orientation</code> vectors; <code>brewer.pal()</code> warnings for &lt;3 items; <code>geom_gene()</code> added before <code>geom_ribbon()</code>; axis-only plots; S3 method registration.</li>
+<li><strong>Documentation</strong>: comments/messages in English; new man pages; data-preparation tables with example rows; rendered example plots; BLAST de-emphasized; vignette rewritten for the layered API.</li>
+</ul>
+<h3>v0.4.0</h3>
 <ul>
 <li><strong>Parameter Redistribution</strong>: Layout parameters moved from <code>ggchord()</code> to individual <code>geom_*</code> layers. <code>ggchord()</code> now only handles data validation and global style (<code>title</code>, <code>rotation</code>, <code>panel_margin</code>, <code>show_legend</code>, <code>debug</code>).</li>
 <li><strong>Deferred Computation</strong>: Coordinate layout computed at <code>print()</code> time. Parameters from all <code>geom</code>s are collected and applied during rendering.</li>

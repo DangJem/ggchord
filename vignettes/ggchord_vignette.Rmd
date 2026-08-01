@@ -34,7 +34,7 @@ Install the development version from GitHub (or install a local tarball), then l
 # devtools::install_github("DangJem/ggchord")
 
 # Or install from a local source tarball
-# devtools::install_local("path/to/ggchord_0.4.0.tar.gz")
+# devtools::install_local("path/to/ggchord_0.5.0.tar.gz")
 
 # Load the package
 library(ggchord)
