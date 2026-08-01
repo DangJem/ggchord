@@ -26,6 +26,11 @@
   `p + theme(legend.position = "bottom")`), and user-supplied colour/fill
   scales are respected instead of being overwritten.
 
+* `plotly::ggplotly()` now works on any ggchord plot, including plots that
+  combine the ribbon and gene layers (previously this raised a scale error).
+  A dedicated `ggplotly.ggchord()` method converts the computed geometry to a
+  plotly-friendly plot and restores the Seq ID / Strand / Identity legends.
+
 * `ggchord()` now warns about suspicious input data: reversed or out-of-range
   alignment/gene coordinates, `pident` outside [0, 100], and sequence IDs that
   are not present in `seq_data`.

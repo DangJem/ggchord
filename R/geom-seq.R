@@ -47,6 +47,7 @@ geom_seq <- function(mapping = NULL, data = NULL,
                     c(colour = TRUE, fill = FALSE)
                   } else show_legend,
     inherit.aes = FALSE,
+    check.param = FALSE,
     key_glyph   = key_glyph_seq,
     params      = list(
       linewidth = linewidth,
@@ -54,6 +55,7 @@ geom_seq <- function(mapping = NULL, data = NULL,
       ...
     )
   )
+  lyr$ggchord_type <- "seq"
   lyr$ggchord_params <- list(
     type            = "seq",
     seq_order       = seq_order,

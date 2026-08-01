@@ -69,9 +69,11 @@ geom_gene <- function(mapping = NULL, data = NULL,
                     c(fill = TRUE, colour = FALSE)
                   } else show_legend,
     inherit.aes = FALSE,
+    check.param = FALSE,
     key_glyph   = key_glyph_gene,
     params      = list(color = "black", ...)
   )
+  poly_layer$ggchord_type <- "gene_poly"
   poly_layer$ggchord_params <- list(
     type                      = "gene",
     gene_offset               = gene_offset,
@@ -91,7 +93,7 @@ geom_gene <- function(mapping = NULL, data = NULL,
   layers[[length(layers) + 1]] <- poly_layer
 
   # Placeholder Text layer (for gene label injection; real data is injected at print time)
-  layers[[length(layers) + 1]] <- geom_text(
+  text_layer <- geom_text(
     data        = data.frame(x = numeric(0), y = numeric(0),
                              text_x = numeric(0), text_y = numeric(0),
                              text = character(0), text_angle = numeric(0),
@@ -101,6 +103,8 @@ geom_gene <- function(mapping = NULL, data = NULL,
     inherit.aes = FALSE,
     show.legend = FALSE
   )
+  text_layer$ggchord_type <- "gene_text"
+  layers[[length(layers) + 1]] <- text_layer
 
   layers
 }

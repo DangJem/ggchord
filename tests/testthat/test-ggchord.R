@@ -207,15 +207,23 @@ test_that("ggsave works directly on a ggchord plot", {
   expect_true(file.exists(f))
 })
 
-test_that("user plot object is not polluted by building", {
+test_that("plot objects are self-contained and repeated builds stay stable", {
   data(seq_data_example)
   data(ribbon_data_example)
   data(gene_data_example)
   p <- ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
     geom_seq() + geom_ribbon() + geom_gene() + geom_axis()
-  ggplot_build(p)
-  expect_length(p$scales$scales, 0)
+  # The plot carries its own scales (tagged ggchord_managed) so that tools such
+  # as plotly::ggplotly() that clone the plot see the same scales as a build.
+  expect_gt(length(p$scales$scales), 0)
+  expect_true(all(vapply(p$scales$scales,
+                         function(s) !is.null(s$ggchord_managed), logical(1))))
   expect_false(is.null(p$layers[[1]]$ggchord_params))
+  # repeated builds remain stable
+  expect_no_error(ggplot_build(p))
+  pdf(tempfile(fileext = ".pdf"), 8, 8)
+  expect_no_error(suppressWarnings(print(p)))
+  dev.off()
 })
 
 test_that("ribbon data sanity checks warn on bad input", {
@@ -272,6 +280,19 @@ test_that("get_chord_layout is exported after building", {
   layout <- get_chord_layout()
   expect_true(inherits(layout, "chord_layout"))
   expect_gt(length(layout$seq_arcs), 0)
+})
+
+test_that("plots convert to plotly when plotly is installed", {
+  skip_if_not_installed("plotly")
+  suppressWarnings(library(plotly))
+  data(seq_data_example)
+  data(ribbon_data_example)
+  data(gene_data_example)
+  # sequence-only plot (the common interactive use case)
+  p <- ggchord(seq_data_example) + geom_seq()
+  pl <- suppressWarnings(plotly::ggplotly(p))
+  expect_true(inherits(pl, "plotly"))
+  expect_gt(length(pl$x$data), 0)
 })
 
 test_that("documented data and parameter values are validated", {

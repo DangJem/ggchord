@@ -47,6 +47,7 @@ geom_axis <- function(mapping = NULL, data = NULL,
                           mapping = aes(x = x, y = y, group = seq_id),
                           color = "black", linewidth = 0.3,
                           inherit.aes = FALSE, show.legend = show_legend, ...)
+  path_layer$ggchord_type <- "axis_line"
   path_layer$ggchord_params <- list(
     type                    = "axis",
     show_axis               = show_axis,
@@ -60,17 +61,19 @@ geom_axis <- function(mapping = NULL, data = NULL,
     axis_label_orientation  = axis_label_orientation
   )
 
-  list(
-    path_layer,
-    geom_segment(data = empty_seg,
-                 mapping = aes(x = x0, y = y0,
-                               xend = x1, yend = y1),
-                 color = "black", linewidth = 0.3,
-                 inherit.aes = FALSE, show.legend = show_legend, ...),
-    geom_text(data = empty_seg[integer(0), ],
-              mapping = aes(x = label_x, y = label_y,
-                            label = label, size = size),
-              inherit.aes = FALSE, color = "black",
-              angle = 0, show.legend = show_legend, ...)
-  )
+  seg_layer <- geom_segment(data = empty_seg,
+                           mapping = aes(x = x0, y = y0,
+                                         xend = x1, yend = y1),
+                           color = "black", linewidth = 0.3,
+                           inherit.aes = FALSE, show.legend = show_legend, ...)
+  seg_layer$ggchord_type <- "axis_seg"
+
+  text_layer <- geom_text(data = empty_seg[integer(0), ],
+                          mapping = aes(x = label_x, y = label_y,
+                                        label = label, size = size),
+                          inherit.aes = FALSE, color = "black",
+                          angle = 0, show.legend = show_legend, ...)
+  text_layer$ggchord_type <- "axis_text"
+
+  list(path_layer, seg_layer, text_layer)
 }

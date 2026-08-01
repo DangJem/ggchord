@@ -8,7 +8,8 @@
 globalVariables(c(
   "x", "y", "group", "pident", "fill", "strand", "anno", "seq_id",
   "text_x", "text_y", "text", "text_angle", "hjust", "vjust",
-  "x0", "y0", "x1", "y1", "label", "label_x", "label_y", "size"
+  "x0", "y0", "x1", "y1", "label", "label_x", "label_y", "size",
+  "fill_col", "alpha"
 ))
 
 #' ggchord: layered multi-sequence alignment chord diagrams for ggplot2
@@ -175,8 +176,13 @@ ggchord <- function(
     data   = list(seq_data = seq_data, ribbon_data = ribbon_data,
                   gene_data = gene_data),
     global = list(rotation = rotation, panel_margin = panel_margin,
-                  show_legend = show_legend, debug = debug)
+                  show_legend = show_legend, debug = debug),
+    # Shared reference environment: layers use it to reach the (latest) plot
+    # and to lazily fetch their computed geometry (e.g. for plotly::ggplotly).
+    ref    = new.env(),
+    layout = NULL
   )
+  p$ggchord$ref$plot <- p
 
   class(p) <- c("ggchord", class(p))
   p
@@ -204,11 +210,22 @@ ggchord <- function(
   if (is_layer_list) {
     p <- e1
     for (elem in e2) {
+      wire_ggchord_layer(elem, e1)
       p <- p + elem
+    }
+    # Eagerly prepare the plot so that it is self-contained (layout, scales and
+    # coordinates attached) even before it is built.  Tools such as
+    # plotly::ggplotly() clone the plot before building, so the plot must
+    # already carry its scales.
+    if (!is.null(p$ggchord$ref)) {
+      p <- tryCatch(prepare_ggchord_plot(p), error = function(e) p)
     }
   } else {
     p <- NextMethod()
   }
+  # Keep the shared reference pointing at the latest plot so that lazy layer
+  # data (used by plotly::ggplotly and friends) sees the complete plot.
+  if (!is.null(e1$ggchord$ref)) e1$ggchord$ref$plot <- p
   class(p) <- unique(c("ggchord", class(p)))
   p
 }
@@ -221,8 +238,7 @@ ggchord <- function(
 # in any order, without cross-talk between plots.
 # ====================================================================
 
-#' @export
-ggplot_build.ggchord <- function(plot, ...) {
+compute_chord_geometry <- function(plot) {
   # Step 1: collect data and parameters from the plot object
   chord <- plot$ggchord
   if (is.null(chord)) {
@@ -231,10 +247,6 @@ ggplot_build.ggchord <- function(plot, ...) {
   }
   data_list <- chord$data
   global    <- chord$global
-
-  # Work on a copy so the user's plot object is never modified: the scales are
-  # cloned because scales are added in place below.
-  plot$scales <- plot$scales$clone()
 
   seq_params    <- list()
   ribbon_params <- list()
@@ -450,135 +462,72 @@ ggplot_build.ggchord <- function(plot, ...) {
     rotation = global$rotation, debug = global$debug
   )
 
-  # Cache the layout so the get_chord_layout() accessor can inspect it.
+  # Cache the layout so the get_chord_layout() accessor can inspect it and so
+  # layers can lazily fetch their geometry (e.g. for plotly::ggplotly).  The
+  # shared reference environment is used because it is shared by the plot and
+  # all of its layers.
   set_chord_layout(layout)
+  if (!is.null(plot$ggchord$ref)) plot$ggchord$ref$layout <- layout
+  plot$ggchord$layout <- layout
+  layout
+}
 
-  # ====================================================================
-  # Step 3: classify layers and inject data into CLONED layers
-  # (cloning keeps the user's plot object untouched)
-  # ====================================================================
-  seq_indices    <- integer(0)
-  ribbon_indices <- integer(0)
-  gene_poly_indices <- integer(0)
-  gene_text_indices <- integer(0)
-  axis_line_indices <- integer(0)
-  axis_seg_indices  <- integer(0)
-  axis_text_indices <- integer(0)
-  seq_label_indices <- integer(0)
 
-  seq_path_assigned <- FALSE
+# ====================================================================
+# Shared helpers used by both ggplot_build.ggchord() and the lazy layer
+# data path (so that plotly::ggplotly() sees the same scales and geometry).
+# ====================================================================
+
+#' Reconstruct a layer with the given data (and optional remapped mapping).
+#'
+#' LayerInstance objects cannot be cloned with \code{ggproto(NULL, .)}, so the
+#' layer is rebuilt through \code{layer()} with the same geom/stat/mapping/params.
+#' @keywords internal
+reconstruct_layer <- function(lyr, data, mapping = NULL) {
+  params <- c(lyr$geom_params, lyr$stat_params, lyr$aes_params)
+  params <- params[!duplicated(names(params))]
+  new <- ggplot2::layer(
+    geom = lyr$geom, stat = lyr$stat, data = data,
+    mapping = mapping %||% lyr$mapping, position = lyr$position,
+    params = params,
+    inherit.aes = lyr$inherit.aes,
+    show.legend = lyr$show.legend,
+    check.aes = FALSE
+  )
+  # Preserve the ggchord custom fields on the reconstructed layer
+  for (fld in c("ggchord_type", "ggchord_params", "ggchord_placeholder", "ggchord_ref")) {
+    if (!is.null(lyr[[fld]])) new[[fld]] <- lyr[[fld]]
+  }
+  new
+}
+
+#' Classify the ggchord layers of a plot by their ggchord_type marker
+#' @keywords internal
+classify_ggchord_layers <- function(plot) {
+  idx <- list(seq = integer(0), ribbon = integer(0), gene_poly = integer(0),
+              gene_text = integer(0), axis_line = integer(0),
+              axis_seg = integer(0), axis_text = integer(0),
+              seq_label = integer(0))
   for (i in seq_along(plot$layers)) {
     lyr <- plot$layers[[i]]
-    gname <- class(lyr$geom)[1]
-    data_names <- names(lyr$data)
-
-    if (gname == "GeomPath") {
-      # Sequence and axis paths share a geom; their placeholder columns do not.
-      if ("seq_id" %in% data_names) {
-        # geom_seq(), when present, is the first such path.  A plot containing
-        # only geom_axis() must retain its axis path as an axis path.
-        if (!seq_path_assigned && seq_layer_requested) {
-          seq_indices <- c(seq_indices, i)
-          seq_path_assigned <- TRUE
-        } else {
-          axis_line_indices <- c(axis_line_indices, i)
-        }
-      }
-    } else if (gname %in% c("GeomPolygon", "NewGeomPolygon", "GeomChordPolygon")) {
-      # The gene placeholder is distinguished from the ribbon placeholder
-      # by its strand column (both use polygon geoms).
-      if ("strand" %in% data_names) {
-        gene_poly_indices <- c(gene_poly_indices, i)
-      } else {
-        ribbon_indices <- c(ribbon_indices, i)
-      }
-    } else if (gname == "GeomSegment") {
-      axis_seg_indices <- c(axis_seg_indices, i)
-    } else if (gname == "GeomText") {
-      # Sequence labels are marked with a "seq_label" column; gene labels use
-      # text_x/text_y; axis labels use label_x/label_y.
-      if ("seq_label" %in% data_names) {
-        seq_label_indices <- c(seq_label_indices, i)
-      } else if ("text_x" %in% data_names) {
-        gene_text_indices <- c(gene_text_indices, i)
-      } else {
-        axis_text_indices <- c(axis_text_indices, i)
-      }
-    }
+    type <- lyr$ggchord_type %||% ""
+    if (type %in% names(idx)) idx[[type]] <- c(idx[[type]], i)
   }
+  idx
+}
 
-  # Reconstruct a layer with the given data (and optional remapped mapping).
-  # LayerInstance objects cannot be cloned with ggproto(NULL, .), so the layer
-  # is rebuilt through layer() with the same geom/stat/mapping/params.
-  reconstruct_layer <- function(lyr, data, mapping = NULL) {
-    params <- c(lyr$geom_params, lyr$stat_params, lyr$aes_params)
-    params <- params[!duplicated(names(params))]
-    ggplot2::layer(
-      geom = lyr$geom, stat = lyr$stat, data = data,
-      mapping = mapping %||% lyr$mapping, position = lyr$position,
-      params = params,
-      inherit.aes = lyr$inherit.aes,
-      show.legend = lyr$show.legend,
-      check.aes = FALSE
-    )
-  }
+#' Build the list of scales for a computed layout
+#' @keywords internal
+make_ggchord_scales <- function(layout, has_seq = FALSE, has_gene = FALSE) {
+  scales <- list()
 
-  new_layers <- plot$layers
-
-  if (length(seq_indices) > 0 && length(layout$seq_arcs) > 0) {
-    arc_df <- do.call(rbind, layout$seq_arcs)
-    for (idx in seq_indices) new_layers[[idx]] <- reconstruct_layer(plot$layers[[idx]], arc_df)
-  }
-
-  if (length(ribbon_indices) > 0 && !is.null(layout$ribbon_polys)) {
-    for (idx in ribbon_indices) {
-      new_layers[[idx]] <- reconstruct_layer(plot$layers[[idx]], layout$ribbon_polys)
-    }
-  }
-
-  if (length(gene_poly_indices) > 0 && nrow(layout$gene_polys) > 0) {
-    for (idx in gene_poly_indices) new_layers[[idx]] <- reconstruct_layer(plot$layers[[idx]], layout$gene_polys)
-  }
-
-  if (length(gene_text_indices) > 0 && nrow(layout$gene_labels) > 0) {
-    for (idx in gene_text_indices) new_layers[[idx]] <- reconstruct_layer(plot$layers[[idx]], layout$gene_labels)
-  }
-
-  if (length(axis_line_indices) > 0 && nrow(layout$axis_lines) > 0) {
-    for (idx in axis_line_indices) new_layers[[idx]] <- reconstruct_layer(plot$layers[[idx]], layout$axis_lines)
-  }
-
-  if (length(axis_seg_indices) > 0 && nrow(layout$axis_ticks) > 0) {
-    for (idx in axis_seg_indices) new_layers[[idx]] <- reconstruct_layer(plot$layers[[idx]], layout$axis_ticks)
-  }
-
-  label_data <- if (nrow(layout$axis_ticks) > 0) {
-    subset(layout$axis_ticks, !is.na(label))
-  } else {
-    layout$axis_ticks
-  }
-  if (length(axis_text_indices) > 0 && nrow(label_data) > 0) {
-    for (idx in axis_text_indices) new_layers[[idx]] <- reconstruct_layer(plot$layers[[idx]], label_data)
-  }
-
-  if (length(seq_label_indices) > 0 && nrow(layout$seq_labels_df) > 0) {
-    for (idx in seq_label_indices) {
-      new_layers[[idx]] <- reconstruct_layer(plot$layers[[idx]], layout$seq_labels_df)
-    }
-  }
-
-  plot$layers <- new_layers
-
-  # ====================================================================
-  # Step 4: build and attach scales
-  # ====================================================================
-  if (length(seq_indices) > 0 && !plot$scales$has_scale("colour")) {
-    plot$scales$add(scale_color_manual(
+  if (has_seq) {
+    scales[[length(scales) + 1]] <- scale_color_manual(
       name   = "Seq ID",
       values = layout$seq_colors,
       labels = layout$seq_labels,
       breaks = layout$seqs
-    ))
+    )
   }
 
   ribbon_fill_scale <- NULL
@@ -601,7 +550,7 @@ ggplot_build.ggchord <- function(plot, ...) {
   }
 
   gene_fill_scale <- NULL
-  if (nrow(layout$gene_polys) > 0) {
+  if (has_gene) {
     if (layout$gene_color_scheme == "strand") {
       gene_fill_scale <- scale_fill_manual(
         name   = "Strand",
@@ -618,17 +567,57 @@ ggplot_build.ggchord <- function(plot, ...) {
   }
 
   # ggplot2 allows only one scale per aesthetic. When both the ribbon and the
-  # gene layers are present, the ribbon layers' fill mapping is renamed to the
-  # internal aesthetic "fill_ribbon" and the ribbon scale is attached to it;
-  # the gene scale keeps the plain "fill" aesthetic, so the two scales do not
+  # gene layers are present, the ribbon scale is attached to the internal
+  # aesthetic "fill_ribbon" and the gene scale keeps "fill", so they do not
   # overwrite each other.
-  # Respect user-supplied fill scales (added via `+`): only add the gene scale
-  # when the plot has no "fill" scale yet.
-  if (!is.null(gene_fill_scale) && plot$scales$has_scale("fill")) {
-    gene_fill_scale <- NULL
-  }
+  ribbon_aes <- "fill"
   if (!is.null(ribbon_fill_scale) && !is.null(gene_fill_scale)) {
-    ribbon_aes <- "fill_ribbon"
+    ribbon_aes <- "zfill"
+    s <- ribbon_fill_scale
+    s$aesthetics <- ribbon_aes
+    if (inherits(s$guide, "Guide")) {
+      s$guide$available_aes <- gsub("^fill$", ribbon_aes, s$guide$available_aes)
+      if (!is.null(s$guide$params$override.aes)) {
+        names(s$guide$params$override.aes) <-
+          gsub("^fill$", ribbon_aes, names(s$guide$params$override.aes))
+      }
+    }
+    scales[[length(scales) + 1]] <- s
+    scales[[length(scales) + 1]] <- gene_fill_scale
+  } else if (!is.null(ribbon_fill_scale)) {
+    scales[[length(scales) + 1]] <- ribbon_fill_scale
+  } else if (!is.null(gene_fill_scale)) {
+    scales[[length(scales) + 1]] <- gene_fill_scale
+  }
+
+  # Ribbon alpha is a preset value; use an identity scale so it renders as specified
+  if (!is.null(layout$ribbon_polys)) {
+    scales[[length(scales) + 1]] <- scale_alpha_identity()
+  }
+  # Axis text size scale
+  scales[[length(scales) + 1]] <- scale_size_identity()
+
+  list(scales = scales, ribbon_aes = ribbon_aes)
+}
+
+#' Add scales to a plot, respecting user-supplied scales
+#' @keywords internal
+attach_ggchord_scales <- function(plot, scales) {
+  for (s in scales) {
+    aes <- s$aesthetics[1]
+    if (!is.null(aes) && !plot$scales$has_scale(aes)) {
+      s$ggchord_managed <- TRUE
+      plot$scales$add(s)
+    }
+  }
+  plot
+}
+
+#' Rename the ribbon layers' fill mapping to the internal ribbon aesthetic
+#' @keywords internal
+rename_ribbon_layers <- function(plot, ribbon_indices, ribbon_aes, layout) {
+  if (ribbon_aes != "fill" && length(ribbon_indices) > 0 &&
+      !is.null(layout$ribbon_polys)) {
     for (idx in ribbon_indices) {
       lyr <- plot$layers[[idx]]
       mp <- lyr$mapping
@@ -637,36 +626,13 @@ ggplot_build.ggchord <- function(plot, ...) {
       names(mp) <- mp_names
       plot$layers[[idx]] <- reconstruct_layer(lyr, layout$ribbon_polys, mapping = mp)
     }
-    s <- ribbon_fill_scale
-    s$aesthetics <- ribbon_aes
-    # guide_colorbar's available_aes only recognizes fill by default; after the
-    # aesthetic rename it must be synchronized, otherwise the colorbar is dropped.
-    if (inherits(s$guide, "Guide")) {
-      s$guide$available_aes <- gsub("^fill$", ribbon_aes, s$guide$available_aes)
-      if (!is.null(s$guide$params$override.aes)) {
-        names(s$guide$params$override.aes) <-
-          gsub("^fill$", ribbon_aes, names(s$guide$params$override.aes))
-      }
-    }
-    plot$scales$add(s)
-    plot$scales$add(gene_fill_scale)
-  } else if (!is.null(ribbon_fill_scale)) {
-    plot$scales$add(ribbon_fill_scale)
-  } else if (!is.null(gene_fill_scale)) {
-    plot$scales$add(gene_fill_scale)
   }
+  plot
+}
 
-  # Ribbon alpha is a preset value; use an identity scale so it renders as specified
-  if (!is.null(layout$ribbon_polys)) {
-    plot$scales$add(scale_alpha_identity())
-  }
-
-  # Axis text size scale
-  plot$scales$add(scale_size_identity())
-
-  # ====================================================================
-  # Step 5: update the coord range
-  # ====================================================================
+#' Set the fixed coordinate system from the layout extremes
+#' @keywords internal
+set_ggchord_coord <- function(plot, layout) {
   ext <- layout$extremes
   pad <- 0.05 * max(ext$x_max - ext$x_min, ext$y_max - ext$y_min, 1)
   plot$coordinates <- coord_fixed(
@@ -675,6 +641,99 @@ ggplot_build.ggchord <- function(plot, ...) {
     ylim  = c(ext$y_min - pad, ext$y_max + pad),
     clip  = "off"
   )
+  plot
+}
+
+#' Fully prepare a ggchord plot and return it (compute layout, rename ribbon
+#' mappings, attach scales, set coordinates). The layout is cached on the plot
+#' (and on the shared reference environment) during preparation. Used by the
+#' lazy layer data path so that plotly::ggplotly() sees the same state as a
+#' normal build.
+#' @keywords internal
+prepare_ggchord_plot <- function(plot) {
+  plot$scales$scales <- Filter(function(s) is.null(s$ggchord_managed),
+                               plot$scales$scales)
+  layout <- compute_chord_geometry(plot)
+  cls <- classify_ggchord_layers(plot)
+  sc <- make_ggchord_scales(layout,
+                            has_seq = length(cls$seq) > 0,
+                            has_gene = nrow(layout$gene_polys) > 0)
+  plot <- rename_ribbon_layers(plot, cls$ribbon, sc$ribbon_aes, layout)
+  plot <- attach_ggchord_scales(plot, sc$scales)
+  plot <- set_ggchord_coord(plot, layout)
+  plot
+}
+
+#' @export
+ggplot_build.ggchord <- function(plot, ...) {
+  chord <- plot$ggchord
+  if (is.null(chord)) {
+    stop("Not a valid ggchord object: no data stored on the plot. ",
+         "Please build the plot with ggchord().")
+  }
+  # The plot object is self-contained: it carries its own scales (tagged with
+  # ggchord_managed) so that tools such as plotly::ggplotly() that clone the
+  # plot before building see the correct scales.  ggchord-managed scales are
+  # refreshed on every build (user-supplied scales are kept).
+  plot$scales$scales <- Filter(function(s) is.null(s$ggchord_managed),
+                               plot$scales$scales)
+
+  layout <- compute_chord_geometry(plot)
+
+  # ====================================================================
+  # Step 3: classify layers and inject data into CLONED layers
+  # (cloning keeps the user's plot object untouched)
+  # ====================================================================
+  seq_indices    <- integer(0)
+  ribbon_indices <- integer(0)
+  gene_poly_indices <- integer(0)
+  gene_text_indices <- integer(0)
+  axis_line_indices <- integer(0)
+  axis_seg_indices  <- integer(0)
+  axis_text_indices <- integer(0)
+  seq_label_indices <- integer(0)
+
+  # Layers are tagged with a ggchord_type marker at creation, so they can be
+  # classified even before their (lazily computed) data exists.
+  for (i in seq_along(plot$layers)) {
+    lyr <- plot$layers[[i]]
+    switch(lyr$ggchord_type %||% "",
+      seq       = seq_indices <- c(seq_indices, i),
+      ribbon    = ribbon_indices <- c(ribbon_indices, i),
+      gene_poly = gene_poly_indices <- c(gene_poly_indices, i),
+      gene_text = gene_text_indices <- c(gene_text_indices, i),
+      axis_line = axis_line_indices <- c(axis_line_indices, i),
+      axis_seg  = axis_seg_indices <- c(axis_seg_indices, i),
+      axis_text = axis_text_indices <- c(axis_text_indices, i),
+      seq_label = seq_label_indices <- c(seq_label_indices, i)
+    )
+  }
+
+  # Reconstruct every ggchord layer with its computed geometry (or its
+  # placeholder data when the geometry is empty).  This replaces the lazy data
+  # functions so that a normal build leaves the plot fully concrete.
+  new_layers <- plot$layers
+  for (i in seq_along(plot$layers)) {
+    lyr <- plot$layers[[i]]
+    if (is.null(lyr$ggchord_type)) next
+    new_layers[[i]] <- reconstruct_layer(lyr, extract_ggchord_layer_data(lyr, layout))
+  }
+  plot$layers <- new_layers
+
+
+  # ====================================================================
+  # Step 4: build and attach scales
+  # ====================================================================
+  sc <- make_ggchord_scales(layout,
+                            has_seq = length(seq_indices) > 0,
+                            has_gene = nrow(layout$gene_polys) > 0)
+  plot <- rename_ribbon_layers(plot, ribbon_indices, sc$ribbon_aes, layout)
+  plot <- attach_ggchord_scales(plot, sc$scales)
+
+  # ====================================================================
+  # Step 5: update the coord range
+  # ====================================================================
+  plot <- set_ggchord_coord(plot, layout)
 
   # Run the standard ggplot2 build on the prepared plot.  The ggchord class is
   # removed first so that dispatch proceeds to the base ggplot2 method instead

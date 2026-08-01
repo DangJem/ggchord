@@ -42,6 +42,7 @@ geom_seq_label <- function(mapping = NULL, data = NULL,
     show.legend = show_legend,
     ...
   )
+  lyr$ggchord_type <- "seq_label"
   lyr$ggchord_params <- list(
     type              = "seq_label",
     seq_label_radius  = seq_label_radius,

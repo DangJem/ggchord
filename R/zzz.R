@@ -52,6 +52,68 @@ clear_chord_env <- function() {
 }
 
 # ====================================================================
+# Lazy layer data (plotly::ggplotly and other tools call layer$layer_data()
+# directly, bypassing ggplot_build()).  Each ggchord layer is tagged with a
+# ggchord_type and given a lazy data function that computes (on demand) and
+# returns the geometry for that layer.
+# ====================================================================
+
+#' Attach the shared plot reference and a lazy data function to a ggchord layer
+#' @keywords internal
+wire_ggchord_layer <- function(lyr, plot) {
+  if (!inherits(lyr, "LayerInstance") || is.null(lyr$ggchord_type)) return(lyr)
+  if (is.null(lyr$ggchord_ref) && !is.null(plot$ggchord$ref)) {
+    lyr$ggchord_placeholder <- lyr$data
+    lyr$ggchord_ref <- plot$ggchord$ref
+    lyr$data <- make_ggchord_lazy_data(lyr)
+  }
+  lyr
+}
+
+#' Build a lazy data function for a ggchord layer
+#' @keywords internal
+make_ggchord_lazy_data <- function(lyr) {
+  force(lyr)
+  function(plot_data) ggchord_layer_data(lyr)
+}
+
+#' Return the computed geometry for a ggchord layer, computing the layout on
+#' demand if it has not been computed yet.
+#' @keywords internal
+ggchord_layer_data <- function(lyr) {
+  ref <- lyr$ggchord_ref
+  plot <- ref$plot
+  layout <- ref$layout
+  if (is.null(layout)) {
+    # Compute the layout (and, for tools such as plotly::ggplotly() that read
+    # layer data directly, attach scales and coordinates to the plot in place).
+    plot <- prepare_ggchord_plot(plot)
+    layout <- plot$ggchord$layout
+  }
+  extract_ggchord_layer_data(lyr, layout)
+}
+
+#' Extract the geometry for one layer from a computed layout
+#' @keywords internal
+extract_ggchord_layer_data <- function(lyr, layout) {
+  fallback <- lyr$ggchord_placeholder
+  switch(lyr$ggchord_type %||% "",
+    seq       = if (length(layout$seq_arcs) > 0) do.call(rbind, layout$seq_arcs) else fallback,
+    ribbon    = if (!is.null(layout$ribbon_polys)) layout$ribbon_polys else fallback,
+    gene_poly = if (nrow(layout$gene_polys) > 0) layout$gene_polys else fallback,
+    gene_text = if (nrow(layout$gene_labels) > 0) layout$gene_labels else fallback,
+    seq_label = if (nrow(layout$seq_labels_df) > 0) layout$seq_labels_df else fallback,
+    axis_line = if (nrow(layout$axis_lines) > 0) layout$axis_lines else fallback,
+    axis_seg  = if (nrow(layout$axis_ticks) > 0) layout$axis_ticks else fallback,
+    axis_text = {
+      d <- layout$axis_ticks
+      if (nrow(d) > 0) d[!is.na(d$label), , drop = FALSE] else fallback
+    },
+    fallback
+  )
+}
+
+# ====================================================================
 # Helper operators
 # ====================================================================
 

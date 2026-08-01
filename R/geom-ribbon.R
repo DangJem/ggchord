@@ -9,7 +9,7 @@
 # "fill" aesthetic).  This replicates what the ggnewscale package used to do.
 # ---------------------------------------------------------------------------
 rename_fill_geom <- function(geom = GeomPolygon, old_aes = "fill",
-                             new_aes = "fill_ribbon") {
+                             new_aes = "zfill") {
   new_geom <- ggplot2::ggproto(
     paste0("GeomChord", sub("^Geom", "", class(geom)[1])), geom
   )
@@ -112,9 +112,11 @@ geom_ribbon <- function(mapping = NULL, data = NULL,
                   } else show_legend,
     inherit.aes = FALSE,
     check.aes   = FALSE,
+    check.param = FALSE,
     key_glyph   = key_glyph_ribbon,
     params      = c(list(...), outline_params)
   )
+  lyr$ggchord_type <- "ribbon"
   lyr$ggchord_params <- list(
     type                    = "ribbon",
     ribbon_color_scheme     = ribbon_color_scheme,

@@ -7,7 +7,7 @@ License: MIT + file LICENSE
 Depends: R (>= 4.1.0)
 Imports: ggplot2 (>= 4.0.0), grDevices, grid
 VignetteBuilder: knitr
-Suggests: knitr, rmarkdown, qpdf, dplyr, testthat (>= 3.0.0)
+Suggests: knitr, rmarkdown, qpdf, dplyr, plotly, testthat (>= 3.0.0)
 Encoding: UTF-8
 LazyData: true
 URL: https://github.com/DangJem/ggchord
