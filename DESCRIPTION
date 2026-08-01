@@ -5,8 +5,7 @@ Authors@R: person(given = "Jem", family = "Dang", email = "dangjem0730@gmail.com
 Description: A 'ggplot2'-based R package that visualizes pairwise 'BLAST' alignment results as chord diagrams using layered grammar of graphics. Users build chord plots by stacking geom layers (geom_seq, geom_ribbon, geom_gene, geom_axis). Layout parameters are specified within each geom layer, following 'ggplot2' conventions. Homologous regions between query and subject sequences are intuitively displayed.
 License: MIT + file LICENSE
 Depends: R (>= 3.6.0)
-Imports: ggplot2 (>= 3.3.0), RColorBrewer,
-        grDevices, grid
+Imports: ggplot2 (>= 3.3.0), grDevices, grid
 VignetteBuilder: knitr
 Suggests: knitr, rmarkdown, qpdf, dplyr, testthat (>= 3.0.0)
 Encoding: UTF-8

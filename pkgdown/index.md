@@ -27,11 +27,9 @@ It is suitable for research in comparative genomics, pan-genome analysis, phage-
 ### Dependencies
 - R (≥ 3.6.0)
 - ggplot2 (≥ 3.3.0)
-- RColorBrewer
 
 ```r
 install.packages("ggplot2")
-install.packages("RColorBrewer")
 ```
 
 ### How to install ggchord？
@@ -57,7 +55,7 @@ If you want the development version, install it from GitHub:
 |  | `seq_gap` | Numeric or vector | 0.03 | Length consistent with the number of sequences, defining the arc proportion [0,0.5) from the head of one sequence to the tail of the next |
 |  | `seq_radius` | Numeric or vector | 1.0 | Radius of sequence arcs, supports single value or vector with length equal to the number of sequences |
 |  | `seq_curvature` | Numeric or vector | 1.0 | Curvature of sequence arcs: 1 for standard arc, 0 for straight line, >1 for more curved |
-|  | `seq_colors` | Color vector or named vector | NULL | Define colors for each sequence arc; if NULL, automatically generated based on RColorBrewer Set1 |
+|  | `seq_colors` | Color vector or named vector | NULL | Define colors for each sequence arc; if NULL, automatically generated based on the built-in Set1 palette |
 | **Gene Style** | `gene_offset` | Numeric, vector, or list | 0.03 | Radial offset distance between gene arrows and sequence arcs. Supports:<br> - Single value: same offset for all strands of all sequences<br> - Vector: length consistent with the number of sequences, same offset for all strands of each sequence<br> - List: named list where each element corresponds to a sequence; elements can be a single value (all strands of the sequence) or a named vector containing "+" and "-" (strand-specific) |
 |  | `gene_width` | Numeric or vector | 0.1 | Width of gene arrows |
 |  | `gene_label_show` | Logical | FALSE | Whether to display gene labels |

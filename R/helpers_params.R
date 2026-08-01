@@ -334,7 +334,7 @@ process_strand_colors <- function(gene_colors) {
 #' @param gene_colors Color vector (can be NULL, single value, vector, named vector with gene annotations)
 #' @param unique_anno Character vector, unique gene annotation names
 #' @param gene_order Character vector, display order of genes in the legend, default NULL (order of appearance)
-#' @return Named vector (names are gene annotations), standardized color values (default uses RColorBrewer Set1)
+#' @return Named vector (names are gene annotations), standardized color values (default uses the built-in Set1 palette)
 #' @keywords internal
 process_manual_colors <- function(gene_colors, unique_anno, gene_order) {
   # Determine final gene order
@@ -352,12 +352,7 @@ process_manual_colors <- function(gene_colors, unique_anno, gene_order) {
   n_anno <- length(final_order)
 
   # Generate default colors (for supplementation)
-  if (n_anno <= 9) {
-    # brewer.pal(n<3) errors/warns; take the first n_anno colors
-    default_pal <- brewer.pal(max(n_anno, 3), "Set1")[seq_len(n_anno)]
-  } else {
-    default_pal <- colorRampPalette(brewer.pal(9, "Set1"))(n_anno)
-  }
+  default_pal <- chord_default_palette(n_anno)
   names(default_pal) <- final_order
 
   if (is.null(gene_colors)) {

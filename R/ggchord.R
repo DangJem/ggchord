@@ -47,7 +47,6 @@ globalVariables(c(
 #' print(p)
 #'
 #' @import ggplot2
-#' @import RColorBrewer
 #' @import grDevices
 #' @import grid
 ggchord <- function(
@@ -222,12 +221,7 @@ print.ggchord <- function(x, ...) {
   if (!is.null(seq_params$seq_colors)) {
     seq_colors <- process_sequence_param(seq_params$seq_colors, seqs, "seq_colors")
   } else {
-    pal <- if (n <= 9) {
-             # brewer.pal(n<3) errors/warns; take the first n colors
-             brewer.pal(max(n, 3), "Set1")[seq_len(n)]
-           } else {
-             colorRampPalette(brewer.pal(9, "Set1"))(n)
-           }
+    pal <- chord_default_palette(n)
     seq_colors <- setNames(pal, seqs)
   }
 

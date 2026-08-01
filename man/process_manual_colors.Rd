@@ -14,7 +14,7 @@ process_manual_colors(gene_colors, unique_anno, gene_order)
 \item{gene_order}{Character vector, display order of genes in the legend, default NULL (order of appearance)}
 }
 \value{
-Named vector (names are gene annotations), standardized color values (default uses RColorBrewer Set1)
+Named vector (names are gene annotations), standardized color values (default uses the built-in Set1 palette)
 }
 \description{
 Standardizes gene color parameters in manual mode (color by gene annotation) into a vector named by gene annotation

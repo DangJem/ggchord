@@ -26,11 +26,9 @@
 ### 依赖环境
 - R (≥ 3.6.0)
 - ggplot2 (≥ 3.3.0)
-- RColorBrewer
 
 ```r
 install.packages("ggplot2")
-install.packages("RColorBrewer")
 ```
 
 ### 如何安装 ggchord？

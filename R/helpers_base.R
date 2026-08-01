@@ -1,3 +1,27 @@
+#' Default categorical palette (Set1)
+#'
+#' The nine Set1 colors (previously obtained from the RColorBrewer package),
+#' hardcoded so the package has no dependency on RColorBrewer. The colors are
+#' identical to RColorBrewer's Set1 palette.
+#' @keywords internal
+chord_palette_set1 <- c("#E41A1C", "#377EB8", "#4DAF4A", "#984EA3",
+                        "#FF7F00", "#FFFF33", "#A65628", "#F781BF", "#999999")
+
+#' Generate a default categorical palette
+#'
+#' Returns the first \code{n} Set1 colors, interpolating with
+#' \code{colorRampPalette()} when \code{n} exceeds 9.
+#' @param n Number of colors requested
+#' @return A character vector of \code{n} colors
+#' @keywords internal
+chord_default_palette <- function(n) {
+  if (n <= 9) {
+    chord_palette_set1[seq_len(n)]
+  } else {
+    colorRampPalette(chord_palette_set1)(n)
+  }
+}
+
 #' Missing value handling operator
 #'
 #' Used to safely handle NULL values: returns y if x is NULL, otherwise returns x
