@@ -116,7 +116,7 @@ ggchord_plotly_ggplot <- function(p) {
       std <- std + ggplot2::geom_segment(
         data = layout$gene_label_segments,
         mapping = ggplot2::aes(x = x0, y = y0, xend = x1, yend = y1,
-                               group = group),
+                               group = group, linetype = I(linetype)),
         inherit.aes = FALSE,
         colour = "grey50",
         linewidth = 0.3

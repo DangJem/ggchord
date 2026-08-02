@@ -9,7 +9,8 @@ globalVariables(c(
   "x", "y", "group", "pident", "fill", "strand", "anno", "seq_id",
   "text_x", "text_y", "text", "text_angle", "hjust", "vjust",
   "x0", "y0", "x1", "y1", "label", "label_x", "label_y", "size",
-  "fill_col", "alpha", "label_hjust", "label_vjust", "label_angle"
+  "fill_col", "alpha", "label_hjust", "label_vjust", "label_angle",
+  "linetype"
 ))
 
 #' ggchord: layered multi-sequence alignment chord diagrams for ggplot2
@@ -421,6 +422,8 @@ compute_chord_geometry <- function(plot) {
   gene_lrepel_seed  <- gene_repel_params$seed %||% 123
   gene_lrepel_orient <- gene_repel_params$gene_label_orientation %||% "arc"
   gene_lrepel_seg    <- gene_repel_params$gene_label_segment %||% "line"
+  gene_lrepel_side   <- gene_repel_params$gene_label_side %||% "auto"
+  gene_lrepel_ltype  <- gene_repel_params$gene_label_segment_linetype %||% "auto"
 
   if (!gene_cs %in% c("strand", "manual")) {
     stop("gene_color_scheme must be 'strand' or 'manual'")
@@ -509,6 +512,8 @@ compute_chord_geometry <- function(plot) {
     gene_label_repel_seed = gene_lrepel_seed,
     gene_label_orientation = gene_lrepel_orient,
     gene_label_segment = gene_lrepel_seg,
+    gene_label_side = gene_lrepel_side,
+    gene_label_segment_linetype = gene_lrepel_ltype,
     gene_color_scheme = gene_cs, gene_colors = gene_cols,
     gene_order = gene_ord,
     seq_label_text = seq_label_text,

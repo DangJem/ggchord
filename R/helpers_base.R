@@ -284,14 +284,24 @@ ggchord_repel_labels <- function(gl, units_per_inch = 0.35,
                                             cex = sizes / 12)) *
     n_lines * units_per_inch
 
-  # Anchors are the original (fixed) label positions; labels start there.
-  ax <- gl$text_x
-  ay <- gl$text_y
+  # Anchors are the original (fixed) label positions next to the genes and are
+  # used as the leader-line origins; labels start at their text positions.
+  # When a label was moved to the other side of its arc (gene_label_side),
+  # `anchor_x`/`anchor_y` keep the gene-side position so the leader line still
+  # starts at the gene, while `text_x`/`text_y` hold the mirrored starting
+  # position used by the repulsion.
+  if ("anchor_x" %in% names(gl)) {
+    ax <- gl$anchor_x
+    ay <- gl$anchor_y
+  } else {
+    ax <- gl$text_x
+    ay <- gl$text_y
+  }
   # Start from a small, seed-dependent jitter around the anchor so that
   # different seeds lead to different (but reproducible) layouts, as in
   # ggrepel. The jitter is a fraction of the widest label box.
-  x <- ax + stats::runif(n, -0.5, 0.5) * 0.08 * max(w)
-  y <- ay + stats::runif(n, -0.5, 0.5) * 0.08 * max(w)
+  x <- gl$text_x + stats::runif(n, -0.5, 0.5) * 0.08 * max(w)
+  y <- gl$text_y + stats::runif(n, -0.5, 0.5) * 0.08 * max(w)
 
   # Optional obstacle points (sequence arcs, gene arrows, axes) that the labels
   # should avoid.
@@ -360,9 +370,12 @@ ggchord_repel_labels <- function(gl, units_per_inch = 0.35,
         }
       }
     }
-    # 3) spring back toward the own anchor (keeps the label associated)
-    x <- x + (ax - x) * 0.18 + fx * 0.5
-    y <- y + (ay - y) * 0.18 + fy * 0.5
+    # 3) spring back toward the label's own starting position (keeps the
+    # label associated). For labels moved to the other side of their arc the
+    # starting position is the mirrored (outer) position, so the spring keeps
+    # them on that side while the leader line still starts at the gene.
+    x <- x + (gl$text_x - x) * 0.18 + fx * 0.5
+    y <- y + (gl$text_y - y) * 0.18 + fy * 0.5
     # 4) clamp inside the region
     x <- pmin(pmax(x, x_lim[1]), x_lim[2])
     y <- pmin(pmax(y, y_lim[1]), y_lim[2])
@@ -401,6 +414,24 @@ ggchord_repel_labels <- function(gl, units_per_inch = 0.35,
   gl$text_x <- x
   gl$text_y <- y
   list(labels = gl, segments = segments)
+}
+
+#' Validate the gene leader-line linetype argument
+#'
+#' `gene_label_segment_linetype` accepts the special value `"auto"` (solid
+#' lines, except dashed for labels moved to the other side of their arc) or
+#' any valid ggplot2 linetype (character name or numeric dash pattern).
+#' @keywords internal
+validate_gene_segment_linetype <- function(lt) {
+  if (is.null(lt)) return("auto")
+  if (identical(lt, "auto")) return("auto")
+  if (is.numeric(lt) && length(lt) >= 1 && all(is.finite(lt))) return(lt)
+  ok <- c("blank", "solid", "dashed", "dotted",
+          "dotdash", "longdash", "twodash")
+  if (is.character(lt) && length(lt) >= 1 && all(lt %in% ok)) return(lt)
+  stop("gene_label_segment_linetype must be 'auto' or a valid ggplot2 ",
+       "linetype (e.g. 'solid', 'dashed', 'dotted', or a numeric dash ",
+       "pattern)", call. = FALSE)
 }
 
 #' Sample the plot content as repulsive points for label repulsion

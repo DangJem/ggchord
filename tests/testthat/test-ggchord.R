@@ -656,6 +656,105 @@ test_that("horizontal repelled labels sit on the far side of the leader line", {
   }
 })
 
+test_that("gene_label_side moves labels to the requested arc side", {
+  data(seq_data_example)
+  data(gene_data_example)
+  for (side in c("outside", "inside")) {
+    p <- ggchord(seq_data_example, gene_data = gene_data_example) +
+      geom_seq() + geom_gene() +
+      geom_gene_label_repel(
+        seed = 1,
+        gene_label_side = side,
+        gene_label_orientation = "horizontal",
+        gene_label_segment = "elbow"
+      )
+    ggplot_build(p)
+    l <- get_chord_layout()
+    gl <- l$gene_labels
+    seg <- l$gene_label_segments
+    expect_true("side_flipped" %in% names(gl))
+    expect_true(any(gl$side_flipped))
+    # every label sits on the requested side of its sequence arc
+    arc_r <- vapply(l$seq_arcs, function(a) {
+      median(sqrt(a$x^2 + a$y^2))
+    }, numeric(1))
+    names(arc_r) <- vapply(l$seq_arcs, function(a) {
+      unique(a$seq_id)[1]
+    }, character(1))
+    label_delta <- sqrt(gl$text_x^2 + gl$text_y^2) - arc_r[gl$seq_id]
+    if (side == "outside") {
+      expect_true(all(label_delta > -0.02))
+    } else {
+      expect_true(all(label_delta < 0.02))
+    }
+    # leader lines: flipped labels get dashed, the others stay solid
+    expect_true(nrow(seg) > 0)
+    flipped <- gl$side_flipped[match(seg$group, seq_len(nrow(gl)))]
+    expect_equal(unique(seg$linetype[flipped]), "dashed")
+    expect_equal(unique(seg$linetype[!flipped]), "solid")
+  }
+})
+
+test_that("gene_label_segment_linetype overrides the auto dash behaviour", {
+  data(seq_data_example)
+  data(gene_data_example)
+  build_lt <- function(...) {
+    p <- ggchord(seq_data_example, gene_data = gene_data_example) +
+      geom_seq() + geom_gene() +
+      geom_gene_label_repel(seed = 1, gene_label_side = "outside", ...)
+    ggplot_build(p)
+    get_chord_layout()$gene_label_segments$linetype
+  }
+  # a forced linetype applies to every leader line, flipped or not
+  expect_equal(unique(build_lt(gene_label_segment_linetype = "dotted")), "dotted")
+  expect_equal(unique(build_lt(gene_label_segment_linetype = "solid")), "solid")
+  expect_equal(unique(build_lt(gene_label_segment_linetype = 2)), 2)
+  # invalid linetypes are rejected at layer creation
+  expect_error(
+    geom_gene_label_repel(gene_label_segment_linetype = "zigzag"),
+    "linetype"
+  )
+  # default "auto" stays solid when nothing was moved to the other side
+  p0 <- ggchord(seq_data_example, gene_data = gene_data_example) +
+    geom_seq() + geom_gene() + geom_gene_label_repel(seed = 1)
+  ggplot_build(p0)
+  expect_equal(unique(get_chord_layout()$gene_label_segments$linetype), "solid")
+})
+
+test_that("elbow leader lines adapt their segment lengths per label", {
+  data(seq_data_example)
+  data(gene_data_example)
+  p <- ggchord(seq_data_example, gene_data = gene_data_example) +
+    geom_seq() + geom_gene() +
+    geom_gene_label_repel(
+      seed = 1,
+      gene_label_side = "outside",
+      gene_label_orientation = "horizontal",
+      gene_label_segment = "elbow"
+    )
+  ggplot_build(p)
+  seg <- get_chord_layout()$gene_label_segments
+  expect_true(nrow(seg) >= 4)
+  groups <- unique(seg$group)
+  stub_len <- vapply(groups, function(g) {
+    rows <- seg[seg$group == g, ]
+    abs(rows$x1[2] - rows$x0[2])
+  }, numeric(1))
+  # stubs scale with each label's position instead of being one fixed length
+  expect_gt(length(unique(round(stub_len, 4))), 1)
+  expect_true(all(stub_len >= 0.02 - 1e-6))
+  # the bend never lands beyond the gene anchor (no doubled-back elbows)
+  for (g in groups) {
+    rows <- seg[seg$group == g, ]
+    expect_true(
+      sign(rows$x1[1] - rows$x0[1]) == 0 ||
+        sign(rows$x1[2] - rows$x0[2]) == 0 ||
+        sign(rows$x1[1] - rows$x0[1]) == sign(rows$x1[2] - rows$x0[2]),
+      info = paste("elbow for label group", g, "doubles back")
+    )
+  }
+})
+
 test_that("axis labels are aligned outward and can be hidden on overlap", {
   data(seq_data_example)
   p <- ggchord(seq_data_example) + geom_seq() + geom_axis()

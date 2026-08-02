@@ -17,6 +17,12 @@
 #' @param ribbonGap Named vector of ribbon gaps
 #' @param ribbon_data Alignment data (already validated)
 #' @param gene_data Gene data (already validated)
+#' @param gene_label_side Character, default "auto". Which side of the arc the
+#'   labels sit on: "auto" (strand-based placement), "inside" (toward the chord
+#'   center) or "outside" (away from the center, avoiding ribbon overlap).
+#' @param gene_label_segment_linetype Character or numeric, default "auto".
+#'   Leader-line linetype; "auto" uses solid lines except for labels moved to
+#'   the other side of their arc, which use dashed lines.
 #' @param rotation Global rotation angle (degrees)
 #' @param debug Whether to output debug information
 #'
@@ -45,6 +51,8 @@ compute_chord_layout <- function(
     gene_label_repel_seed = 123,
     gene_label_orientation = "arc",
     gene_label_segment = "line",
+    gene_label_side = "auto",
+    gene_label_segment_linetype = "auto",
     gene_color_scheme, gene_colors, gene_order,
     # Sequence label parameters
     seq_label_text = NULL, seq_label_radius = NULL,
@@ -549,6 +557,29 @@ compute_chord_layout <- function(
 
         text_x <- center_pt[1] - normal_x * geneLabelRadialOffset[[sid]][strand]
         text_y <- center_pt[2] - normal_y * geneLabelRadialOffset[[sid]][strand]
+        # Leader-line origin: the fixed label position next to the gene. When
+        # the label is moved to the other side of its arc, the line still
+        # starts here (at the gene) and only the repelled text position moves.
+        anchor_x <- text_x
+        anchor_y <- text_y
+
+        # Optional side flip: mirror labels across their sequence arc (e.g.
+        # inner labels to the outside so they do not overlap the ribbons).
+        # map_to_curve() uses a radius parameter R where R < seqRadius places
+        # points outside the chord and R > seqRadius inside; reflecting across
+        # the arc means R' = 2 * seqRadius - R, which preserves the label's
+        # distance from the arc.
+        side_flipped <- FALSE
+        R_label <- r0 - direction_factor * geneLabelRadialOffset[[sid]][strand]
+        if ((identical(gene_label_side, "outside") && R_label > seqRadius[sid]) ||
+            (identical(gene_label_side, "inside") && R_label < seqRadius[sid])) {
+          dR <- 2 * seqRadius[sid] - 2 * R_label
+          # text = base + norm * (R - r0) with norm the direction-adjusted
+          # normal; the unadjusted normal is normal / direction_factor.
+          text_x <- text_x + (normal_x / direction_factor) * dR
+          text_y <- text_y + (normal_y / direction_factor) * dR
+          side_flipped <- TRUE
+        }
 
         base_angle <- atan2(dy, dx) * 180 / pi
         text_angle <- base_angle + 90 + geneLabelRotation[[sid]][strand]
@@ -580,6 +611,9 @@ compute_chord_layout <- function(
           size = gene_label_size,
           seq_id = sid,
           group = i,
+          anchor_x = anchor_x,
+          anchor_y = anchor_y,
+          side_flipped = side_flipped,
           stringsAsFactors = FALSE
         )
       }))
@@ -662,6 +696,11 @@ compute_chord_layout <- function(
       df$text_y <- TX * sin(rot_rad) + TY * cos(rot_rad)
       df$text_angle <- df$text_angle + rotation
     }
+    if (all(c("anchor_x", "anchor_y") %in% names(df))) {
+      AX <- df$anchor_x; AY <- df$anchor_y
+      df$anchor_x <- AX * cos(rot_rad) - AY * sin(rot_rad)
+      df$anchor_y <- AX * sin(rot_rad) + AY * cos(rot_rad)
+    }
     df
   }
 
@@ -724,6 +763,7 @@ compute_chord_layout <- function(
   gene_label_segments <- data.frame(x0 = numeric(0), y0 = numeric(0),
                                     x1 = numeric(0), y1 = numeric(0),
                                     group = integer(0),
+                                    linetype = character(0),
                                     stringsAsFactors = FALSE)
   if (nrow(gene_labels) > 0) {
     if (!is.null(gene_label_wrap)) {
@@ -752,6 +792,63 @@ compute_chord_layout <- function(
       )
       gene_labels <- res$labels
       gene_label_segments <- res$segments
+      # Side-flipped labels must end up on the requested side: if the
+      # repulsion pushed them back across their arc, mirror them across the
+      # arc again (keeping their distance from the arc) and update the
+      # leader-line endpoints.
+      if (any(gene_labels$side_flipped %in% TRUE)) {
+        cs <- cos(rot_rad)
+        sn <- sin(rot_rad)
+        for (i in which(gene_labels$side_flipped)) {
+          sid <- gene_labels$seq_id[i]
+          ref <- seq_refs[[sid]]
+          px <- gene_labels$text_x[i]
+          py <- gene_labels$text_y[i]
+          # label's angle in the un-rotated frame (the reference paths are
+          # stored pre-rotation)
+          ang <- (atan2(py, px) - rot_rad) %% (2 * pi)
+          fi <- findInterval(ang, ref$angles)
+          if (fi < 1) fi <- 1
+          if (fi >= length(ref$angles)) fi <- length(ref$angles) - 1
+          idx <- if (abs(ref$angles[fi] - ang) <=
+                      abs(ref$angles[fi + 1] - ang)) fi else fi + 1
+          bx <- ref$path$x[idx]
+          by <- ref$path$y[idx]
+          if (idx < nrow(ref$path)) {
+            dx <- ref$path$x[idx + 1] - bx
+            dy <- ref$path$y[idx + 1] - by
+          } else {
+            dx <- bx - ref$path$x[idx - 1]
+            dy <- by - ref$path$y[idx - 1]
+          }
+          # inward normal (same convention as map_to_curve)
+          nx <- -dy
+          ny <- dx
+          nl <- sqrt(nx^2 + ny^2)
+          if (nl > 0) {
+            nx <- nx / nl
+            ny <- ny / nl
+          }
+          # rotate base point and normal into the plotted frame
+          bxr <- bx * cs - by * sn
+          byr <- bx * sn + by * cs
+          nxr <- nx * cs - ny * sn
+          nyr <- nx * sn + ny * cs
+          s <- (px - bxr) * nxr + (py - byr) * nyr
+          want_inside <- identical(gene_label_side, "inside")
+          if ((s > 0) != want_inside) {
+            gene_labels$text_x[i] <- px - 2 * s * nxr
+            gene_labels$text_y[i] <- py - 2 * s * nyr
+          }
+        }
+        if (nrow(gene_label_segments) > 0) {
+          upd <- gene_label_segments$group %in% which(gene_labels$side_flipped)
+          idx_lbl <- match(gene_label_segments$group[upd],
+                           seq_len(nrow(gene_labels)))
+          gene_label_segments$x1[upd] <- gene_labels$text_x[idx_lbl]
+          gene_label_segments$y1[upd] <- gene_labels$text_y[idx_lbl]
+        }
+      }
       # Horizontal text: reset the rotation angle and justify the text on the
       # far side of the leader line (i.e. the text extends away from the gene
       # anchor). Otherwise a label whose text is justified towards the line
@@ -770,7 +867,11 @@ compute_chord_layout <- function(
       if (identical(gene_label_segment, "elbow") &&
           nrow(gene_label_segments) > 0) {
         seg <- gene_label_segments
-        # stub length relative to the label box width
+        # Adaptive stub length: scale with the label's text width, but also
+        # with the horizontal space actually available between the gene and
+        # the label. Labels sitting close to their gene get a short stub and
+        # far labels a longer one, so the elbow adapts to each label's final
+        # position instead of forcing all segments to equal lengths.
         pdf(NULL)
         on.exit(grDevices::dev.off())
         sizes <- gene_labels$size %||% rep(2.5, nrow(gene_labels))
@@ -778,8 +879,10 @@ compute_chord_layout <- function(
                                                      units = "inches",
                                                      cex = sizes / 12)) *
           max(1, diff(range(c(seg$x0, seg$x1)))) / 6
-        stub_len <- pmax(0.08, 0.3 * widths[match(seg$group,
-                                                    seq_len(nrow(gene_labels)))])
+        wl <- widths[match(seg$group, seq_len(nrow(gene_labels)))]
+        horiz <- abs(seg$x1 - seg$x0)
+        stub_len <- pmin(pmax(0.02, 0.3 * horiz),
+                         pmax(0.3 * wl, 0.04))
         # Approach the label from the empty side of the text (hjust == 0 means
         # the text extends rightwards, so the stub comes from the left).
         hj <- gene_labels$hjust[match(seg$group, seq_len(nrow(gene_labels)))]
@@ -799,6 +902,20 @@ compute_chord_layout <- function(
           stringsAsFactors = FALSE
         )
         gene_label_segments <- elbow
+      }
+      # Per-label leader-line linetype. "auto" means solid, except for labels
+      # that were moved to the other side of their arc (dashed); any other
+      # value is used for every leader line.
+      if (nrow(gene_label_segments) > 0) {
+        if (identical(gene_label_segment_linetype, "auto")) {
+          flipped <- gene_labels$side_flipped[
+            match(gene_label_segments$group, seq_len(nrow(gene_labels)))
+          ]
+          gene_label_segments$linetype <- ifelse(flipped, "dashed", "solid")
+        } else {
+          gene_label_segments$linetype <- rep(gene_label_segment_linetype,
+                                              length.out = nrow(gene_label_segments))
+        }
       }
     } else {
       # Legacy gentle de-overlap for fixed labels

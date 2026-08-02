@@ -209,7 +209,19 @@ geom_gene_label <- function(mapping = NULL, data = NULL,
 #' @param gene_label_segment Character, default "line". Leader line style: a
 #'   straight \code{"line"} from the gene to the label, or an L-shaped
 #'   \code{"elbow"} (a short segment outward, then a horizontal segment to the
-#'   label).
+#'   label). Elbow segment lengths adapt to each label's position and text
+#'   width, so labels can be placed freely.
+#' @param gene_label_side Character, default "auto". Which side of the arc the
+#'   labels sit on. \code{"auto"} keeps the strand-based placement
+#'   (same as before); \code{"outside"} moves labels that would be inside the
+#'   chord (where they can overlap the ribbons) to the outside of their arc;
+#'   \code{"inside"} does the opposite. Labels moved to the other side are
+#'   connected with a dashed leader line (see \code{gene_label_segment_linetype}).
+#' @param gene_label_segment_linetype Character or numeric, default "auto".
+#'   Leader-line linetype. \code{"auto"} draws solid lines, except for labels
+#'   that were moved to the other side of their arc, which are drawn dashed.
+#'   Any other valid ggplot2 linetype (e.g. \code{"solid"}, \code{"dashed"},
+#'   \code{"dotted"}, or a numeric dash pattern) is used for all leader lines.
 #' @param show_legend Whether to show the legend, default FALSE
 #' @param ... Additional arguments passed to \code{geom_text()}
 #'
@@ -230,19 +242,27 @@ geom_gene_label_repel <- function(mapping = NULL, data = NULL,
                                   seed = 123,
                                   gene_label_orientation = "arc",
                                   gene_label_segment = "line",
+                                  gene_label_side = "auto",
+                                  gene_label_segment_linetype = "auto",
                                   show_legend = FALSE,
                                   ...) {
   gene_label_orientation <- match.arg(gene_label_orientation,
                                       c("arc", "horizontal"))
   gene_label_segment <- match.arg(gene_label_segment, c("line", "elbow"))
+  gene_label_side <- match.arg(gene_label_side, c("auto", "inside", "outside"))
+  gene_label_segment_linetype <- validate_gene_segment_linetype(
+    gene_label_segment_linetype
+  )
   layers <- list()
 
   # Leader line layer (from the anchor to the repelled label position)
   seg_layer <- geom_segment(
     data        = data.frame(x0 = numeric(0), y0 = numeric(0),
                              x1 = numeric(0), y1 = numeric(0),
-                             group = integer(0)),
-    mapping     = aes(x = x0, y = y0, xend = x1, yend = y1, group = group),
+                             group = integer(0),
+                             linetype = character(0)),
+    mapping     = aes(x = x0, y = y0, xend = x1, yend = y1, group = group,
+                      linetype = I(linetype)),
     inherit.aes = FALSE,
     show.legend = FALSE,
     colour      = "grey50",
@@ -282,7 +302,9 @@ geom_gene_label_repel <- function(mapping = NULL, data = NULL,
     force                    = force,
     seed                     = seed,
     gene_label_orientation   = gene_label_orientation,
-    gene_label_segment       = gene_label_segment
+    gene_label_segment       = gene_label_segment,
+    gene_label_side          = gene_label_side,
+    gene_label_segment_linetype = gene_label_segment_linetype
   )
   layers[[length(layers) + 1]] <- text_layer
 

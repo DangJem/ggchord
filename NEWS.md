@@ -1,3 +1,32 @@
+# ggchord 0.7.0
+
+## New features
+
+* `geom_gene_label_repel()` gains `gene_label_side = "auto" | "inside" |
+  "outside"`. With `"outside"`, labels that would sit inside the chord (where
+  they can overlap the ribbons) are mirrored to the outside of their sequence
+  arc, keeping the same radial distance from the arc.
+
+* New `gene_label_segment_linetype` argument controls the leader-line linetype.
+  The default `"auto"` draws solid lines, except for labels that were moved to
+  the other side of their arc (`gene_label_side`), which are drawn dashed. Any
+  other valid ggplot2 linetype (e.g. `"dotted"` or a numeric dash pattern) is
+  applied to all leader lines.
+
+## Improvements
+
+* Elbow leader lines no longer force fixed segment lengths: the stub scales
+  with each label's text width and the horizontal space available between the
+  gene and the label, so labels can be placed more flexibly without
+  degenerate (near-zero) stubs.
+
+## Bug fixes
+
+* The repulsion spring now pulls labels toward their own starting position
+  rather than the leader-line anchor, which keeps labels moved with
+  `gene_label_side = "outside"` on the outside while their leader line still
+  starts at the gene.
+
 # ggchord 0.6.0
 
 ## New features

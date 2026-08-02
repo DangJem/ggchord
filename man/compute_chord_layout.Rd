@@ -38,6 +38,8 @@ compute_chord_layout(
   gene_label_repel_seed = 123,
   gene_label_orientation = "arc",
   gene_label_segment = "line",
+  gene_label_side = "auto",
+  gene_label_segment_linetype = "auto",
   gene_color_scheme,
   gene_colors,
   gene_order,
@@ -79,6 +81,14 @@ compute_chord_layout(
 \item{ribbonGap}{Named vector of ribbon gaps}
 
 \item{gene_data}{Gene data (already validated)}
+
+\item{gene_label_side}{Character, default "auto". Which side of the arc the
+labels sit on: "auto" (strand-based placement), "inside" (toward the chord
+center) or "outside" (away from the center, avoiding ribbon overlap).}
+
+\item{gene_label_segment_linetype}{Character or numeric, default "auto".
+Leader-line linetype; "auto" uses solid lines except for labels moved to
+the other side of their arc, which use dashed lines.}
 
 \item{rotation}{Global rotation angle (degrees)}
 
