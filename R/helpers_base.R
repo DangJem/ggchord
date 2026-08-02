@@ -442,12 +442,26 @@ ggchord_repel_points <- function(seq_arcs, gene_polys, axis_lines, axis_ticks,
 #'
 #' Estimates each label box (using the measured text size) and sets
 #' \code{label} to NA when the box overlaps the given content points or another
-#' label box.
+#' label box. The first and last label of each sequence (axis start/end) are
+#' always kept.
 #' @keywords internal
 ggchord_hide_text_overlaps <- function(df, content_pts,
                                        units_per_inch = 0.35) {
   idx <- which(!is.na(df$label))
   if (length(idx) < 1) return(df)
+  # keep the axis start/end labels of every sequence visible
+  protect <- logical(length(idx))
+  if ("seq_id" %in% names(df) && length(idx) > 1) {
+    for (sid in unique(df$seq_id[idx])) {
+      rows <- idx[df$seq_id[idx] == sid]
+      if (length(rows) > 1) {
+        protect[match(min(rows), idx)] <- TRUE
+        protect[match(max(rows), idx)] <- TRUE
+      } else if (length(rows) == 1) {
+        protect[match(rows, idx)] <- TRUE
+      }
+    }
+  }
   if (nrow(content_pts) == 0) {
     content_pts <- data.frame(x = numeric(0), y = numeric(0))
   }
@@ -482,6 +496,7 @@ ggchord_hide_text_overlaps <- function(df, content_pts,
       }
     }
   }
+  hide <- hide & !protect
   df$label[idx[hide]] <- NA
   df
 }

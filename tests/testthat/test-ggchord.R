@@ -547,11 +547,16 @@ test_that("gene_label_orientation and gene_label_segment work", {
   seg <- p$ggchord$ref$layout$gene_label_segments
   expect_true(all(gl$text_angle == 0))
   expect_gt(nrow(seg), 0)
-  # each elbow is two rows: (x0,y0)->(x0,y1) then (x0,y1)->(x1,y1)
+  # each elbow is two rows: an oblique segment from the gene to the label's
+  # horizontal level, then a short horizontal stub into the label
   expect_equal(nrow(seg) %% 2, 0)
   idx <- which(seg$group == seg$group[1])
+  # the two segments meet at the bend point
   expect_equal(seg$x0[idx[2]], seg$x1[idx[1]])
   expect_equal(seg$y0[idx[2]], seg$y1[idx[1]])
+  # the stub is horizontal and short
+  expect_equal(seg$y0[idx[2]], seg$y1[idx[2]])
+  expect_lt(abs(seg$x1[idx[2]] - seg$x0[idx[2]]), 0.2)
   pdf(tempfile(fileext = ".pdf"), 8, 8)
   expect_no_error(print(p))
   dev.off()

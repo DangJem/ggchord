@@ -2,7 +2,8 @@
 
 Estimates each label box (using the measured text size) and sets `label`
 to NA when the box overlaps the given content points or another label
-box.
+box. The first and last label of each sequence (axis start/end) are
+always kept.
 
 ## Usage
 

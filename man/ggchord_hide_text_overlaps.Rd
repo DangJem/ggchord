@@ -9,6 +9,7 @@ ggchord_hide_text_overlaps(df, content_pts, units_per_inch = 0.35)
 \description{
 Estimates each label box (using the measured text size) and sets
 \code{label} to NA when the box overlaps the given content points or another
-label box.
+label box. The first and last label of each sequence (axis start/end) are
+always kept.
 }
 \keyword{internal}

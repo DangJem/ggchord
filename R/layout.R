@@ -676,14 +676,28 @@ compute_chord_layout <- function(
       if (identical(gene_label_orientation, "horizontal")) {
         gene_labels$text_angle <- 0
       }
-      # elbow leader lines: anchor -> (anchor.x, label.y) -> label
+      # elbow leader lines: an oblique segment from the gene to the label's
+      # horizontal level, then a short horizontal stub into the label
       if (identical(gene_label_segment, "elbow") &&
           nrow(gene_label_segments) > 0) {
         seg <- gene_label_segments
+        # stub length relative to the label box width
+        pdf(NULL)
+        on.exit(grDevices::dev.off())
+        sizes <- gene_labels$size %||% rep(2.5, nrow(gene_labels))
+        widths <- suppressWarnings(graphics::strwidth(gene_labels$text,
+                                                     units = "inches",
+                                                     cex = sizes / 12)) *
+          max(1, diff(range(c(seg$x0, seg$x1)))) / 6
+        stub_len <- pmax(0.08, 0.3 * widths[match(seg$group,
+                                                    seq_len(nrow(gene_labels)))])
+        dir <- sign(seg$x1 - seg$x0)
+        dir[dir == 0] <- 1
+        bx <- seg$x1 - dir * stub_len
         elbow <- data.frame(
-          x0 = c(seg$x0, seg$x0),
+          x0 = c(seg$x0, bx),
           y0 = c(seg$y0, seg$y1),
-          x1 = c(seg$x0, seg$x1),
+          x1 = c(bx, seg$x1),
           y1 = c(seg$y1, seg$y1),
           group = c(seg$group, seg$group),
           stringsAsFactors = FALSE
