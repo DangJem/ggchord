@@ -524,6 +524,7 @@ compute_chord_layout <- function(
           text_angle = text_angle,
           hjust = hjust,
           vjust = 0.5,
+          size = gene_label_size,
           seq_id = sid,
           group = i,
           stringsAsFactors = FALSE

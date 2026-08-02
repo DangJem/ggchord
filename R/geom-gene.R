@@ -104,9 +104,11 @@ geom_gene <- function(mapping = NULL, data = NULL,
     data        = data.frame(x = numeric(0), y = numeric(0),
                              text_x = numeric(0), text_y = numeric(0),
                              text = character(0), text_angle = numeric(0),
-                             hjust = numeric(0), vjust = numeric(0)),
+                             hjust = numeric(0), vjust = numeric(0),
+                             size = numeric(0)),
     mapping     = aes(x = text_x, y = text_y, label = text,
-                      angle = text_angle, hjust = hjust, vjust = vjust),
+                      angle = text_angle, hjust = hjust, vjust = vjust,
+                      size = size),
     inherit.aes = FALSE,
     show.legend = FALSE
   )

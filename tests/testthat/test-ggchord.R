@@ -477,6 +477,27 @@ test_that("no spurious fill-scale warning when gene data is present without a ge
   expect_false(any(grepl("No shared levels", warns)))
 })
 
+test_that("gene_label_size is applied to the gene text layer", {
+  data(seq_data_example)
+  data(gene_data_example)
+  p <- ggchord(seq_data_example, gene_data = gene_data_example) +
+    geom_seq() + geom_gene(gene_label_show = TRUE)
+  layout <- p$ggchord$ref$layout
+  # the layout carries the (default 2.5) label size
+  expect_true(all(layout$gene_labels$size == 2.5))
+  # the gene text layer maps the size aesthetic
+  text_layer <- NULL
+  for (lyr in p$layers) {
+    if (!is.null(lyr$ggchord_type) && identical(lyr$ggchord_type, "gene_text")) text_layer <- lyr
+  }
+  expect_false(is.null(text_layer))
+  expect_true("size" %in% names(text_layer$mapping))
+  # a custom size flows through
+  p2 <- ggchord(seq_data_example, gene_data = gene_data_example) +
+    geom_seq() + geom_gene(gene_label_show = TRUE, gene_label_size = 4)
+  expect_true(all(p2$ggchord$ref$layout$gene_labels$size == 4))
+})
+
 test_that("documented data and parameter values are validated", {
   expect_error(
     ggchord(data.frame(seq_id = c("a", "a"), length = c(1, 2))),

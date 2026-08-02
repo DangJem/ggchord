@@ -709,6 +709,9 @@ rename_ribbon_layers <- function(plot, ribbon_indices, ribbon_aes, layout) {
 set_ggchord_coord <- function(plot, layout) {
   ext <- layout$extremes
   pad <- 0.05 * max(ext$x_max - ext$x_min, ext$y_max - ext$y_min, 1)
+  # Reserve extra space for text labels (gene labels and sequence labels) so
+  # that they are not clipped at the edge of the figure.
+  pad <- pad + ggchord_label_pad(layout)
   plot$coordinates <- coord_fixed(
     ratio = 1,
     xlim  = c(ext$x_min - pad, ext$x_max + pad),
@@ -716,6 +719,32 @@ set_ggchord_coord <- function(plot, layout) {
     clip  = "off"
   )
   plot
+}
+
+#' Estimate the coordinate margin (in data units) needed so that the text
+#' labels rendered by the gene/sequence label layers stay inside the figure.
+#'
+#' The measured text width (inches) is converted to data units with a
+#' calibration factor calibrated for square figures (the standard ggchord
+#' layout); the value is intentionally slightly conservative.
+#' @keywords internal
+ggchord_label_pad <- function(layout) {
+  texts <- character(0)
+  sizes <- numeric(0)
+  if (nrow(layout$gene_labels) > 0) {
+    texts <- c(texts, layout$gene_labels$text)
+    sizes <- c(sizes, rep(3.88, nrow(layout$gene_labels)))
+  }
+  if (nrow(layout$seq_labels_df) > 0) {
+    texts <- c(texts, layout$seq_labels_df$label)
+    sizes <- c(sizes, layout$seq_labels_df$size)
+  }
+  if (length(texts) == 0) return(0)
+  grDevices::pdf(NULL)
+  on.exit(grDevices::dev.off())
+  widths <- suppressWarnings(graphics::strwidth(texts, units = "inches",
+                                                cex = sizes / 12))
+  max(widths, na.rm = TRUE) * 0.5
 }
 
 #' Fully prepare a ggchord plot and return it (compute layout, rename ribbon
