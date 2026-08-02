@@ -53,6 +53,7 @@
 <span>  ribbon_outline_linetype <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  show_legend <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  legend_position <span class="op">=</span> <span class="st">"left"</span>,</span>
+<span>  legend_key_length <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -113,8 +114,16 @@
 <dd><p>Position of this layer's legend (the Identity(<!-- %) -->
 colourbar): one of "left", "right", "top", "bottom" or "inside", default
 "left". Pass NULL to let the legend follow
-<code>theme(legend.position = ...)</code> together with the other legends. Can also be set with
-<code>theme(legend.position.ribbon = ...)</code>.</p></dd>
+<code>theme(legend.position = ...)</code> together with the other legends.</p></dd>
+
+
+<dt id="arg-legend-key-length">legend_key_length<a class="anchor" aria-label="anchor" href="#arg-legend-key-length"></a></dt>
+<dd><p>Optional length of the Identity(<!-- %) colourbar (the -->
+long dimension: its height when placed on the left/right, its width when
+placed on the top/bottom). Accepts a grid unit, e.g.
+<code>unit(5, "cm")</code>, or a number interpreted as centimetres. Default
+NULL lets the vertical bar fill the available height (and the horizontal
+bar default to 4 cm).</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>

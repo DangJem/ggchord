@@ -9,7 +9,7 @@ globalVariables(c(
   "x", "y", "group", "pident", "fill", "strand", "anno", "seq_id",
   "text_x", "text_y", "text", "text_angle", "hjust", "vjust",
   "x0", "y0", "x1", "y1", "label", "label_x", "label_y", "size",
-  "fill_col", "alpha", "label_hjust", "label_vjust"
+  "fill_col", "alpha", "label_hjust", "label_vjust", "label_angle"
 ))
 
 #' ggchord: layered multi-sequence alignment chord diagrams for ggplot2
@@ -441,8 +441,8 @@ compute_chord_geometry <- function(plot) {
   show_axis  <- axis_params$show_axis %||% TRUE
   axisGap    <- process_sequence_param(axis_params$axis_gap %||% 0.05,
                                        seqs, "axis_gap", 0.04)
-  axisMaj    <- process_sequence_param(axis_params$axis_tick_major_number %||% 5,
-                                       seqs, "axis_tick_major_number", 5)
+  axisMaj    <- process_sequence_param(axis_params$axis_tick_major_number %||% 3,
+                                       seqs, "axis_tick_major_number", 3)
   axisMajLen <- process_sequence_param(axis_params$axis_tick_major_length %||% 0.02,
                                        seqs, "axis_tick_major_length", 0.02)
   axisMin    <- process_sequence_param(axis_params$axis_tick_minor_number %||% 4,
@@ -455,7 +455,7 @@ compute_chord_geometry <- function(plot) {
                                         seqs, "axis_label_offset", 2)
   axisLabelHide <- isTRUE(axis_params$axis_label_hide_overlaps)
   axisLabelOri <- process_axis_orientation(
-    axis_params$axis_label_orientation %||% "horizontal", seqs
+    axis_params$axis_label_orientation %||% "parallel", seqs
   )
 
   # --- Process sequence labels ---
@@ -593,6 +593,18 @@ ggchord_legend_positions <- function(plot) {
   pos
 }
 
+#' Read the ribbon layer's legend_key_length (colourbar length) if set
+#' @keywords internal
+ggchord_ribbon_key_length <- function(plot) {
+  for (lyr in plot$layers) {
+    pp <- lyr$ggchord_params
+    if (!is.null(pp) && identical(pp$type, "ribbon")) {
+      return(pp$legend_key_length)
+    }
+  }
+  NULL
+}
+
 #' Build the list of scales for a computed layout
 #'
 #' @param legend_position The plot theme's `legend.position` (character).
@@ -609,7 +621,7 @@ ggchord_legend_positions <- function(plot) {
 #' @keywords internal
 make_ggchord_scales <- function(layout, has_seq = FALSE, has_gene = FALSE,
                                 legend_position = NULL, legend_box = NULL,
-                                positions = list()) {
+                                positions = list(), legend_key_length = NULL) {
   scales <- list()
 
   if (has_seq) {
@@ -633,6 +645,11 @@ make_ggchord_scales <- function(layout, has_seq = FALSE, has_gene = FALSE,
       ribbon_pos <- positions$ribbon %||% legend_position %||% "right"
       horizontal_legend <- ribbon_pos %in% c("top", "bottom") ||
         identical(legend_box, "horizontal")
+      # legend_key_length controls the long dimension of the colourbar (its
+      # height when vertical, its width when horizontal); a number is treated
+      # as centimetres.
+      key_len <- legend_key_length
+      if (!is.null(key_len) && !is.unit(key_len)) key_len <- unit(key_len, "cm")
       ribbon_fill_scale <- scale_fill_stepsn(
         name    = "Identity(%)",
         colours = layout$ribbon_colors,
@@ -645,11 +662,11 @@ make_ggchord_scales <- function(layout, has_seq = FALSE, has_gene = FALSE,
             legend.key.height = if (horizontal_legend) {
               unit(1.5, "cm")
             } else {
-              unit(1, "null")
+              key_len %||% unit(1, "null")
             },
             # A horizontal colorbar needs a longer key; the vertical bar keeps
             # the default key width.
-            legend.key.width = if (horizontal_legend) unit(4, "cm") else NULL
+            legend.key.width = if (horizontal_legend) key_len %||% unit(4, "cm") else NULL
           ),
           order = 2
         )
@@ -805,7 +822,8 @@ prepare_ggchord_plot <- function(plot) {
                             has_gene = length(cls$gene_poly) > 0,
                             legend_position = plot$theme$legend.position,
                             legend_box = plot$theme$legend.box,
-                            positions = ggchord_legend_positions(plot))
+                            positions = ggchord_legend_positions(plot),
+                            legend_key_length = ggchord_ribbon_key_length(plot))
   plot <- rename_ribbon_layers(plot, cls$ribbon, sc$ribbon_aes, layout)
   plot <- attach_ggchord_scales(plot, sc$scales)
   plot <- set_ggchord_coord(plot, layout)
@@ -881,7 +899,8 @@ ggplot_build.ggchord <- function(plot, ...) {
                             has_gene = length(gene_poly_indices) > 0,
                             legend_position = plot$theme$legend.position,
                             legend_box = plot$theme$legend.box,
-                            positions = ggchord_legend_positions(plot))
+                            positions = ggchord_legend_positions(plot),
+                            legend_key_length = ggchord_ribbon_key_length(plot))
   plot <- rename_ribbon_layers(plot, ribbon_indices, sc$ribbon_aes, layout)
   plot <- attach_ggchord_scales(plot, sc$scales)
 

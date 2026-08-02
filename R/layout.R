@@ -156,6 +156,8 @@ compute_chord_layout <- function(
                            x1 = numeric(0), y1 = numeric(0),
                            label = character(0), label_x = numeric(0),
                            label_y = numeric(0), size = numeric(0),
+                           label_angle = numeric(0),
+                           label_angle_relative = logical(0),
                            seq_id = character(0),
                            stringsAsFactors = FALSE)
 
@@ -185,10 +187,48 @@ compute_chord_layout <- function(
         is_major = c(rep(TRUE, length(majors)), rep(FALSE, length(minors)))
       )
 
+      # Label orientation for this sequence. "horizontal" keeps the text
+      # horizontal in the rendered plot; "parallel" aligns the text with the
+      # axis (tangent direction); "perpendicular" aligns it with the radial
+      # direction; numeric values are absolute angles in degrees (ggplot2
+      # convention: counter-clockwise from horizontal).
+      orient_val <- axisLabelOrientation[[id]]
+      relative_angle <- is.character(orient_val) &&
+        tolower(orient_val) %in% c("parallel", "perpendicular")
+
       do.call(rbind, lapply(seq_len(nrow(pts)), function(j) {
         p <- pts[j, ]
         frac <- if (orientation[id] == 1) p$pos / lens[id] else 1 - p$pos / lens[id]
         angle <- starts[id] + frac * (ends[id] - starts[id])
+
+        # Tangent direction at this tick position (used for "parallel" and
+        # "perpendicular" orientations).
+        fi <- findInterval(angle, ref$angles)
+        if (fi < 1) fi <- 1
+        if (fi >= length(ref$angles)) fi <- length(ref$angles) - 1
+        idx <- if (abs(ref$angles[fi] - angle) <=
+                    abs(ref$angles[fi + 1] - angle)) fi else fi + 1
+        if (idx < nrow(ref$path)) {
+          dx_t <- ref$path$x[idx + 1] - ref$path$x[idx]
+          dy_t <- ref$path$y[idx + 1] - ref$path$y[idx]
+        } else {
+          dx_t <- ref$path$x[idx] - ref$path$x[idx - 1]
+          dy_t <- ref$path$y[idx] - ref$path$y[idx - 1]
+        }
+        base_angle <- atan2(dy_t, dx_t) * 180 / pi
+
+        if (is.character(orient_val) && tolower(orient_val) == "horizontal") {
+          label_angle <- 0
+        } else if (is.character(orient_val) &&
+                   tolower(orient_val) == "parallel") {
+          label_angle <- base_angle
+        } else if (is.character(orient_val) &&
+                   tolower(orient_val) == "perpendicular") {
+          label_angle <- base_angle + 90
+        } else {
+          label_angle <- suppressWarnings(as.numeric(orient_val))
+          if (is.na(label_angle)) label_angle <- 0
+        }
 
         base <- map_to_curve(angle, r0, ref)
         dir <- if (axisGap[id] >= 0) -1 else 1
@@ -202,6 +242,8 @@ compute_chord_layout <- function(
           label = if (p$is_major) as.character(p$pos) else NA,
           label_x = lbl[1], label_y = lbl[2],
           size = labelSize[id],
+          label_angle = label_angle,
+          label_angle_relative = relative_angle,
           seq_id = id,
           stringsAsFactors = FALSE
         )
@@ -608,6 +650,12 @@ compute_chord_layout <- function(
       df$label_x <- LX * cos(rot_rad) - LY * sin(rot_rad)
       df$label_y <- LX * sin(rot_rad) + LY * cos(rot_rad)
     }
+    # Geometry-relative label angles ("parallel"/"perpendicular") follow the
+    # rotated geometry; absolute angles ("horizontal"/numeric) stay fixed.
+    if (all(c("label_angle", "label_angle_relative") %in% names(df))) {
+      rel <- !is.na(df$label_angle_relative) & df$label_angle_relative
+      df$label_angle[rel] <- df$label_angle[rel] + rotation
+    }
     if (all(c("text_x", "text_y") %in% names(df))) {
       TX <- df$text_x; TY <- df$text_y
       df$text_x <- TX * cos(rot_rad) - TY * sin(rot_rad)
@@ -622,13 +670,45 @@ compute_chord_layout <- function(
   if (nrow(axis_lines) > 0) axis_lines <- rotate_df(axis_lines)
   if (nrow(axis_ticks) > 0) {
     axis_ticks <- rotate_df(axis_ticks)
-    # Align horizontal labels outward (away from the chord) so they do not
-    # overlap the axis lines / ticks.
+    # Flip geometry-relative labels that would read upside-down so that the
+    # text always reads outward (text whose reading direction points left is
+    # rotated by 180 degrees).
+    rel <- !is.na(axis_ticks$label_angle_relative) &
+      axis_ticks$label_angle_relative
+    if (any(rel)) {
+      ta <- (axis_ticks$label_angle + 360) %% 360
+      flip <- rel & ta > 90 & ta < 270
+      axis_ticks$label_angle[flip] <- ta[flip] + 180
+    }
+    # Align labels outward (away from the chord) so they do not overlap the
+    # axis lines / ticks. Horizontal labels use simple quadrant-based
+    # justification; rotated labels are justified in the text's local frame so
+    # that the text still extends away from the chord center.
     eps <- 1e-3
-    axis_ticks$label_hjust <- ifelse(axis_ticks$label_x > eps, 0,
-                                     ifelse(axis_ticks$label_x < -eps, 1, 0.5))
-    axis_ticks$label_vjust <- ifelse(axis_ticks$label_y > eps, 1,
-                                     ifelse(axis_ticks$label_y < -eps, 0, 0.5))
+    horiz <- (axis_ticks$label_angle %% 360) < 0.5
+    axis_ticks$label_hjust <- ifelse(
+      horiz,
+      ifelse(axis_ticks$label_x > eps, 0,
+             ifelse(axis_ticks$label_x < -eps, 1, 0.5)),
+      0.5
+    )
+    axis_ticks$label_vjust <- ifelse(
+      horiz,
+      ifelse(axis_ticks$label_y > eps, 1,
+             ifelse(axis_ticks$label_y < -eps, 0, 0.5)),
+      0.5
+    )
+    if (any(!horiz)) {
+      phi <- atan2(axis_ticks$label_y, axis_ticks$label_x) * 180 / pi
+      alpha <- (phi - axis_ticks$label_angle) * pi / 180
+      ca <- cos(alpha)
+      sa <- sin(alpha)
+      idx <- !horiz
+      axis_ticks$label_hjust[idx] <- ifelse(ca[idx] > 0.05, 0,
+                                            ifelse(ca[idx] < -0.05, 1, 0.5))
+      axis_ticks$label_vjust[idx] <- ifelse(sa[idx] > 0.05, 0,
+                                            ifelse(sa[idx] < -0.05, 1, 0.5))
+    }
   }
   if (!is.null(ribbon_polys)) ribbon_polys <- rotate_df(ribbon_polys)
   if (nrow(gene_labels) > 0) gene_labels <- rotate_df(gene_labels)

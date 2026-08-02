@@ -20,6 +20,7 @@ geom_ribbon(
   ribbon_outline_linetype = 1,
   show_legend = TRUE,
   legend_position = "left",
+  legend_key_length = NULL,
   ...
 )
 ```
@@ -83,8 +84,15 @@ geom_ribbon(
   Position of this layer's legend (the Identity( colourbar): one of
   "left", "right", "top", "bottom" or "inside", default "left". Pass
   NULL to let the legend follow `theme(legend.position = ...)` together
-  with the other legends. Can also be set with
-  `theme(legend.position.ribbon = ...)`.
+  with the other legends.
+
+- legend_key_length:
+
+  Optional length of the Identity( long dimension: its height when
+  placed on the left/right, its width when placed on the top/bottom).
+  Accepts a grid unit, e.g. `unit(5, "cm")`, or a number interpreted as
+  centimetres. Default NULL lets the vertical bar fill the available
+  height (and the horizontal bar default to 4 cm).
 
 - ...:
 

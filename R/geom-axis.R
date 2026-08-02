@@ -11,13 +11,20 @@
 #' @param data Default NULL (retrieved automatically from the layout)
 #' @param show_axis Logical. Whether to show the axis, default TRUE
 #' @param axis_gap Optional numeric/vector. Spacing between sequence and axis, default 0.05
-#' @param axis_tick_major_number Optional integer/vector. Number of major ticks, default 5
+#' @param axis_tick_major_number Optional integer/vector. Number of major ticks, default 3
 #' @param axis_tick_major_length Optional numeric/vector. Major tick length ratio, default 0.02
 #' @param axis_tick_minor_number Optional integer/vector. Number of minor ticks, default 4
 #' @param axis_tick_minor_length Optional numeric/vector. Minor tick length ratio, default 0.01
 #' @param axis_label_size Optional numeric/vector. Tick label font size, default 3
 #' @param axis_label_offset Optional numeric/vector. Label offset ratio, default 2
-#' @param axis_label_orientation Optional character/numeric/vector. Label orientation, default "horizontal"
+#' @param axis_label_orientation Optional character/numeric/vector. Label
+#'   orientation, default "parallel". Accepted values: "horizontal" (text stays
+#'   horizontal), "parallel" (text runs parallel to the axis, i.e. along the
+#'   arc), "perpendicular" (text runs perpendicular to the axis, i.e. along the
+#'   radial direction), or a numeric angle in degrees (ggplot2 convention:
+#'   counter-clockwise from horizontal, in the final rendered plot space). A
+#'   vector or named vector can be used to specify a different orientation per
+#'   sequence.
 #' @param axis_label_hide_overlaps Logical, default FALSE. When TRUE, axis
 #'   labels whose boxes would overlap the plot content (sequence arcs, genes,
 #'   ribbons) or other axis labels are automatically hidden.
@@ -46,6 +53,7 @@ geom_axis <- function(mapping = NULL, data = NULL,
                           label = character(0), label_x = numeric(0),
                           label_y = numeric(0), size = numeric(0),
                           label_hjust = numeric(0), label_vjust = numeric(0),
+                          label_angle = numeric(0),
                           seq_id = character(0))
 
   path_layer <- geom_path(data = empty_id,
@@ -78,9 +86,10 @@ geom_axis <- function(mapping = NULL, data = NULL,
                           mapping = aes(x = label_x, y = label_y,
                                         label = label, size = size,
                                         hjust = label_hjust,
-                                        vjust = label_vjust),
+                                        vjust = label_vjust,
+                                        angle = label_angle),
                           inherit.aes = FALSE, color = "black",
-                          angle = 0, show.legend = show_legend, ...)
+                          show.legend = show_legend, ...)
   text_layer$ggchord_type <- "axis_text"
 
   list(path_layer, seg_layer, text_layer)

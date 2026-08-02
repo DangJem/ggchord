@@ -46,7 +46,7 @@ geom_axis(
 
 - axis_tick_major_number:
 
-  Optional integer/vector. Number of major ticks, default 5
+  Optional integer/vector. Number of major ticks, default 3
 
 - axis_tick_major_length:
 
@@ -71,7 +71,13 @@ geom_axis(
 - axis_label_orientation:
 
   Optional character/numeric/vector. Label orientation, default
-  "horizontal"
+  "parallel". Accepted values: "horizontal" (text stays horizontal),
+  "parallel" (text runs parallel to the axis, i.e. along the arc),
+  "perpendicular" (text runs perpendicular to the axis, i.e. along the
+  radial direction), or a numeric angle in degrees (ggplot2 convention:
+  counter-clockwise from horizontal, in the final rendered plot space).
+  A vector or named vector can be used to specify a different
+  orientation per sequence.
 
 - axis_label_hide_overlaps:
 

@@ -166,10 +166,11 @@ ggchord_plotly_ggplot <- function(p) {
       std <- std + ggplot2::geom_text(
         data = axis_lbl,
         mapping = ggplot2::aes(x = label_x, y = label_y,
-                               label = label, size = size),
+                               label = label, size = size,
+                               hjust = label_hjust, vjust = label_vjust,
+                               angle = label_angle),
         inherit.aes = FALSE,
-        colour = "black",
-        angle = 0
+        colour = "black"
       )
     }
   }

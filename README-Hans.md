@@ -537,6 +537,7 @@ gene_label_rotation = list(20)                            # 单元素列表自�
 | `ribbon_outline_linetype` | 数值/字符 | 1 | 连接带轮廓线型（1 = 实线） |
 | `show_legend` | 逻辑值 | TRUE | 是否显示图例 |
 | `legend_position` | 字符 | "left" | Identity(%) 色条的位置："left"、"right"、"top"、"bottom" 或 "inside"（NULL = 跟随 `theme(legend.position = ...)`） |
+| `legend_key_length` | unit/数值 | NULL | Identity(%) 色条的长度（竖直时为其高度、水平时为其宽度）；数值按厘米计，如 `legend_key_length = 5` 或 `unit(5, "cm")` |
 
 ### geom_gene() 参数
 
@@ -583,13 +584,13 @@ gene_label_rotation = list(20)                            # 单元素列表自�
 | --- | --- | --- | --- |
 | `show_axis` | 逻辑值 | TRUE | 是否显示坐标轴 |
 | `axis_gap` | 数值/向量 | 0.05 | 序列与坐标轴的径向间距 |
-| `axis_tick_major_number` | 整数/向量 | 5 | 主刻度数量 |
+| `axis_tick_major_number` | 整数/向量 | 3 | 主刻度数量 |
 | `axis_tick_major_length` | 数值/向量 | 0.02 | 主刻度长度比例 |
 | `axis_tick_minor_number` | 整数/向量 | 4 | 次刻度数量 |
 | `axis_tick_minor_length` | 数值/向量 | 0.01 | 次刻度长度比例 |
 | `axis_label_size` | 数值/向量 | 3 | 刻度标签字号 |
 | `axis_label_offset` | 数值/向量 | 2 | 标签偏移比例 |
-| `axis_label_orientation` | 字符/数值/向量 | "horizontal" | 标签方向 |
+| `axis_label_orientation` | 字符/数值/向量 | "parallel" | 标签方向：`"parallel"`（文字平行于坐标轴）、`"perpendicular"`（文字垂直于坐标轴）、`"horizontal"`（文字保持水平），或数值角度（逆时针，如 `45`、`90`、`c(0, 45, 80, 130)`）；向量/命名向量可分别为每条序列指定方向 |
 | `axis_label_hide_overlaps` | 逻辑值 | FALSE | 自动隐藏与绘图内容或其他标签重叠的坐标轴标签 |
 | `show_legend` | 逻辑值 | FALSE | 是否显示图例 |
 

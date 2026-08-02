@@ -30,7 +30,7 @@ geom_axis(
 
 \item{axis_gap}{Optional numeric/vector. Spacing between sequence and axis, default 0.05}
 
-\item{axis_tick_major_number}{Optional integer/vector. Number of major ticks, default 5}
+\item{axis_tick_major_number}{Optional integer/vector. Number of major ticks, default 3}
 
 \item{axis_tick_major_length}{Optional numeric/vector. Major tick length ratio, default 0.02}
 
@@ -42,7 +42,14 @@ geom_axis(
 
 \item{axis_label_offset}{Optional numeric/vector. Label offset ratio, default 2}
 
-\item{axis_label_orientation}{Optional character/numeric/vector. Label orientation, default "horizontal"}
+\item{axis_label_orientation}{Optional character/numeric/vector. Label
+orientation, default "parallel". Accepted values: "horizontal" (text stays
+horizontal), "parallel" (text runs parallel to the axis, i.e. along the
+arc), "perpendicular" (text runs perpendicular to the axis, i.e. along the
+radial direction), or a numeric angle in degrees (ggplot2 convention:
+counter-clockwise from horizontal, in the final rendered plot space). A
+vector or named vector can be used to specify a different orientation per
+sequence.}
 
 \item{axis_label_hide_overlaps}{Logical, default FALSE. When TRUE, axis
 labels whose boxes would overlap the plot content (sequence arcs, genes,

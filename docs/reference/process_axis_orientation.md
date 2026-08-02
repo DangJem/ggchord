@@ -13,8 +13,9 @@ process_axis_orientation(param, seqs)
 
 - param:
 
-  Character ("horizontal"), numeric (angle), vector (length matches
-  number of sequences), or named vector, label orientation parameter
+  Character ("horizontal", "parallel" or "perpendicular"), numeric
+  (angle), vector (length matches number of sequences), or named vector,
+  label orientation parameter
 
 - seqs:
 
@@ -22,5 +23,5 @@ process_axis_orientation(param, seqs)
 
 ## Value
 
-Named vector (names are seq_id), values are "horizontal" or numeric
-angles
+Named vector (names are seq_id), values are "horizontal", "parallel",
+"perpendicular" or numeric angles

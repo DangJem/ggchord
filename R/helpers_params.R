@@ -309,16 +309,23 @@ process_gene_param <- function(param, seqs, param_name, default_value, is_logica
 #'
 #' Standardizes axis label orientation parameters in various formats (character/numeric/vector) into a named vector (mapped by sequence ID)
 #'
-#' @param param Character ("horizontal"), numeric (angle), vector (length matches number of sequences), or named vector, label orientation parameter
+#' @param param Character ("horizontal", "parallel" or "perpendicular"),
+#'   numeric (angle), vector (length matches number of sequences), or named
+#'   vector, label orientation parameter
 #' @param seqs Character vector, list of sequence IDs
-#' @return Named vector (names are seq_id), values are "horizontal" or numeric angles
+#' @return Named vector (names are seq_id), values are "horizontal",
+#'   "parallel", "perpendicular" or numeric angles
 #' @keywords internal
 process_axis_orientation <- function(param, seqs) {
   n <- length(seqs)
 
-  # Handle single value "horizontal"
-  if (is.character(param) && length(param) == 1 && tolower(param) == "horizontal") {
-    return(setNames(rep("horizontal", n), seqs))
+  is_keyword <- function(x) {
+    is.character(x) && tolower(x) %in% c("horizontal", "parallel", "perpendicular")
+  }
+
+  # Handle a single keyword ("horizontal", "parallel" or "perpendicular")
+  if (is.character(param) && length(param) == 1 && is_keyword(param)) {
+    return(setNames(rep(tolower(param), n), seqs))
   }
 
   # Handle single numeric value
@@ -336,12 +343,12 @@ process_axis_orientation <- function(param, seqs) {
       seq_id <- seqs[i]
 
       num_val <- suppressWarnings(as.numeric(val))
-      if (is.character(val) && tolower(val) == "horizontal") {
-        result[seq_id] <- "horizontal"
+      if (is_keyword(val)) {
+        result[seq_id] <- tolower(val)
       } else if (is.numeric(val) || (!is.na(num_val) && num_val == val)) {
         result[seq_id] <- as.character(num_val)
       } else {
-        stop(paste("Element", i, "of axis_label_orientation has incorrect format; must be numeric or 'horizontal'"))
+        stop(paste("Element", i, "of axis_label_orientation has incorrect format; must be numeric, 'horizontal', 'parallel' or 'perpendicular'"))
       }
     }
 
@@ -354,21 +361,21 @@ process_axis_orientation <- function(param, seqs) {
     for (id in names(param)) {
       val <- param[id]
       num_val <- suppressWarnings(as.numeric(val))
-      if (is.character(val) && tolower(val) == "horizontal") {
-        result[id] <- "horizontal"
+      if (is_keyword(val)) {
+        result[id] <- tolower(val)
       } else if (is.numeric(val) || (!is.na(num_val) && num_val == val)) {
         result[id] <- as.character(num_val)
       } else {
-        stop(paste("Format of", id, "in axis_label_orientation is incorrect; must be numeric or 'horizontal'"))
+        stop(paste("Format of", id, "in axis_label_orientation is incorrect; must be numeric, 'horizontal', 'parallel' or 'perpendicular'"))
       }
     }
     return(result)
   }
 
   stop("Incorrect format for axis_label_orientation parameter. Please provide:\n",
-       "- 'horizontal' (default)\n",
+       "- A keyword: 'horizontal', 'parallel' (default, parallel to the axis) or 'perpendicular'\n",
        "- A single numeric value\n",
-       "- A vector with length matching the number of sequences (can mix numeric values and 'horizontal')\n",
+       "- A vector with length matching the number of sequences (can mix keywords and numeric values)\n",
        "- A named vector (names correspond to sequence IDs)")
 }
 

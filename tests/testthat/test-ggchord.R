@@ -567,15 +567,93 @@ test_that("axis labels are aligned outward and can be hidden on overlap", {
   p <- ggchord(seq_data_example) + geom_seq() + geom_axis()
   layout <- p$ggchord$ref$layout
   at <- layout$axis_ticks
-  # labels carry outward hjust/vjust
-  expect_true(all(at$label_hjust[!is.na(at$label)] %in% c(0, 1)))
-  expect_true(all(at$label_vjust[!is.na(at$label)] %in% c(0, 1)))
+  # labels carry outward hjust/vjust (rotated labels may be centered on one axis)
+  expect_true(all(at$label_hjust[!is.na(at$label)] %in% c(0, 0.5, 1)))
+  expect_true(all(at$label_vjust[!is.na(at$label)] %in% c(0, 0.5, 1)))
   # hide-overlaps option renders without error
   p2 <- ggchord(seq_data_example) + geom_seq() +
     geom_axis(axis_label_hide_overlaps = TRUE)
   pdf(tempfile(fileext = ".pdf"), 8, 8)
   expect_no_error(print(p2))
   dev.off()
+})
+
+test_that("axis_label_orientation rotates axis labels", {
+  data(seq_data_example)
+  built_angles <- function(p) {
+    b <- ggplot_build(p)
+    unlist(lapply(b$data, function(d) {
+      if (!is.null(d) && "label" %in% names(d) && any(!is.na(d$label))) d$angle else NULL
+    }))
+  }
+
+  # default: parallel to the axis (text direction follows the arc)
+  p0 <- ggchord(seq_data_example) + geom_seq() + geom_axis()
+  angles0 <- built_angles(p0)
+  expect_true(all(angles0 != 0))  # parallel labels are not horizontal
+
+  # numeric vector: one angle per sequence
+  p1 <- ggchord(seq_data_example) + geom_seq() +
+    geom_axis(axis_label_orientation = c(0, 45, 80, 130))
+  angles1 <- built_angles(p1)
+  expect_setequal(angles1, c(0, 45, 80, 130))
+
+  # named vector mixes numeric angles and "horizontal"
+  p2 <- ggchord(seq_data_example) + geom_seq() +
+    geom_axis(axis_label_orientation = c("MT108731.1" = 90, "MT118296.1" = "horizontal"))
+  angles2 <- built_angles(p2)
+  expect_setequal(angles2, c(0, 90))
+
+  # "horizontal" keeps the text horizontal (angle 0)
+  p3 <- ggchord(seq_data_example) + geom_seq() +
+    geom_axis(axis_label_orientation = "horizontal")
+  expect_equal(unique(built_angles(p3)), 0)
+
+  # "parallel" and "perpendicular" align with / normal to the axis direction
+  l4 <- get_chord_layout()
+  align_dev <- function(mode, expected) {
+    p4 <- ggchord(seq_data_example) + geom_seq() +
+      geom_axis(axis_label_orientation = mode)
+    ggplot_build(p4)
+    tl <- get_chord_layout()$axis_ticks
+    tl <- tl[!is.na(tl$label), ]
+    al <- get_chord_layout()$axis_lines
+    d2 <- outer(al$x, tl$label_x, function(a, b) (a - b)^2) +
+      outer(al$y, tl$label_y, function(a, b) (a - b)^2)
+    k <- apply(d2, 2, which.min)
+    k2 <- ifelse(k < nrow(al), k + 1, k - 1)
+    seg_ang <- atan2(al$y[k2] - al$y[k], al$x[k2] - al$x[k]) * 180 / pi
+    dev <- abs(tl$label_angle %% 180 - seg_ang %% 180)
+    dev <- ifelse(dev > 90, 180 - dev, dev)
+    max(abs(dev - expected))
+  }
+  expect_lt(align_dev("parallel", 0), 10)
+  expect_lt(align_dev("perpendicular", 90), 10)
+
+  # rotated labels carry outward justification in the layout
+  rot <- l4$axis_ticks[!is.na(l4$axis_ticks$label), ]
+  expect_true(all(rot$label_hjust %in% c(0, 0.5, 1)))
+  expect_true(all(rot$label_vjust %in% c(0, 0.5, 1)))
+})
+
+test_that("legend_key_length controls the Identity colourbar length", {
+  data(seq_data_example)
+  data(ribbon_data_example)
+  p0 <- ggchord(seq_data_example, ribbon_data_example) + geom_seq() + geom_ribbon()
+  p1 <- ggchord(seq_data_example, ribbon_data_example) + geom_seq() +
+    geom_ribbon(legend_key_length = 5)
+  b0 <- ggplot_build(p0)
+  b1 <- ggplot_build(p1)
+  find_kh <- function(b) {
+    for (s in b$plot$scales$non_position_scales()$scales) {
+      if (identical(class(s$guide)[1], "GuideColourbar")) {
+        return(as.character(s$guide$params$theme$legend.key.height))
+      }
+    }
+    "none"
+  }
+  expect_equal(find_kh(b0), "1null")
+  expect_equal(find_kh(b1), "5cm")
 })
 
 test_that("documented data and parameter values are validated", {

@@ -81,7 +81,7 @@ Axis parameters (spacing, tick count/length, label size/orientation, etc.) are s
 
 
 <dt id="arg-axis-tick-major-number">axis_tick_major_number<a class="anchor" aria-label="anchor" href="#arg-axis-tick-major-number"></a></dt>
-<dd><p>Optional integer/vector. Number of major ticks, default 5</p></dd>
+<dd><p>Optional integer/vector. Number of major ticks, default 3</p></dd>
 
 
 <dt id="arg-axis-tick-major-length">axis_tick_major_length<a class="anchor" aria-label="anchor" href="#arg-axis-tick-major-length"></a></dt>
@@ -105,7 +105,14 @@ Axis parameters (spacing, tick count/length, label size/orientation, etc.) are s
 
 
 <dt id="arg-axis-label-orientation">axis_label_orientation<a class="anchor" aria-label="anchor" href="#arg-axis-label-orientation"></a></dt>
-<dd><p>Optional character/numeric/vector. Label orientation, default "horizontal"</p></dd>
+<dd><p>Optional character/numeric/vector. Label
+orientation, default "parallel". Accepted values: "horizontal" (text stays
+horizontal), "parallel" (text runs parallel to the axis, i.e. along the
+arc), "perpendicular" (text runs perpendicular to the axis, i.e. along the
+radial direction), or a numeric angle in degrees (ggplot2 convention:
+counter-clockwise from horizontal, in the final rendered plot space). A
+vector or named vector can be used to specify a different orientation per
+sequence.</p></dd>
 
 
 <dt id="arg-axis-label-hide-overlaps">axis_label_hide_overlaps<a class="anchor" aria-label="anchor" href="#arg-axis-label-hide-overlaps"></a></dt>

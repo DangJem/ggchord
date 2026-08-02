@@ -57,8 +57,13 @@ ribbon_geom <- rename_fill_geom()
 #' @param legend_position Position of this layer's legend (the Identity(%)
 #'   colourbar): one of "left", "right", "top", "bottom" or "inside", default
 #'   "left". Pass NULL to let the legend follow
-#'   \code{theme(legend.position = ...)} together with the other legends. Can also be set with
-#'   \code{theme(legend.position.ribbon = ...)}.
+#'   \code{theme(legend.position = ...)} together with the other legends.
+#' @param legend_key_length Optional length of the Identity(%) colourbar (the
+#'   long dimension: its height when placed on the left/right, its width when
+#'   placed on the top/bottom). Accepts a grid unit, e.g.
+#'   \code{unit(5, "cm")}, or a number interpreted as centimetres. Default
+#'   NULL lets the vertical bar fill the available height (and the horizontal
+#'   bar default to 4 cm).
 #' @param ... Additional arguments passed to \code{geom_polygon()}
 #'
 #' @return A list of ggplot2 layers
@@ -75,6 +80,7 @@ geom_ribbon <- function(mapping = NULL, data = NULL,
                         ribbon_outline_linetype = 1,
                         show_legend = TRUE,
                         legend_position = "left",
+                        legend_key_length = NULL,
                         ...) {
   ribbon_alpha <- alpha %||% ribbon_alpha
 
@@ -133,7 +139,8 @@ geom_ribbon <- function(mapping = NULL, data = NULL,
     ribbon_outline_color    = ribbon_outline_color,
     ribbon_outline_width    = ribbon_outline_width,
     ribbon_outline_linetype = ribbon_outline_linetype,
-    legend_position         = legend_position
+    legend_position         = legend_position,
+    legend_key_length       = legend_key_length
   )
   list(lyr)
 }

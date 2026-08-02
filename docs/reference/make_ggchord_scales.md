@@ -11,7 +11,8 @@ make_ggchord_scales(
   has_gene = FALSE,
   legend_position = NULL,
   legend_box = NULL,
-  positions = list()
+  positions = list(),
+  legend_key_length = NULL
 )
 ```
 

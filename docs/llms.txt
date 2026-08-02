@@ -686,6 +686,7 @@ gene_label_rotation = list(20)                            # length-one list recy
 | `ribbon_outline_linetype` | numeric/character | 1 | Ribbon outline line type (1 = solid) |
 | `show_legend` | logical | TRUE | Show legend |
 | `legend_position` | character | “left” | Position of the Identity(%) colourbar: “left”, “right”, “top”, “bottom” or “inside” (NULL = follow `theme(legend.position = ...)`) |
+| `legend_key_length` | unit/number | NULL | Length of the Identity(%) colourbar (height when vertical, width when horizontal); a number is in cm, e.g. `legend_key_length = 5` or `unit(5, "cm")` |
 
 ### geom_gene() Parameters
 
@@ -734,13 +735,13 @@ parameters plus:
 |----|----|----|----|
 | `show_axis` | logical | TRUE | Display axes |
 | `axis_gap` | numeric/vector | 0.05 | Radial gap to sequences |
-| `axis_tick_major_number` | integer/vector | 5 | Number of major ticks |
+| `axis_tick_major_number` | integer/vector | 3 | Number of major ticks |
 | `axis_tick_major_length` | numeric/vector | 0.02 | Major tick length proportion |
 | `axis_tick_minor_number` | integer/vector | 4 | Number of minor ticks |
 | `axis_tick_minor_length` | numeric/vector | 0.01 | Minor tick length proportion |
 | `axis_label_size` | numeric/vector | 3 | Tick label font size |
 | `axis_label_offset` | numeric/vector | 2 | Label offset ratio |
-| `axis_label_orientation` | character/numeric/vector | “horizontal” | Label orientation |
+| `axis_label_orientation` | character/numeric/vector | “parallel” | Label orientation: `"parallel"` (text parallel to the axis), `"perpendicular"` (text perpendicular to the axis), `"horizontal"` (text stays horizontal), or numeric angles in degrees counter-clockwise from horizontal (e.g. `45`, `90`, `c(0, 45, 80, 130)`); vectors/named vectors set a different orientation per sequence |
 | `axis_label_hide_overlaps` | logical | FALSE | Auto-hide axis labels that overlap the plot content or other labels |
 | `show_legend` | logical | FALSE | Show legend |
 
