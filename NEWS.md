@@ -106,6 +106,14 @@
   `gene_label_side = "outside"` on the outside while their leader line still
   starts at the gene.
 
+* With `gene_label_side`, every label is kept on the requested side of its arc
+  (previously only the labels moved by the side switch were re-checked, so a
+  crowded repulsion layout could push other labels across the arc).
+
+* The built-in `gene_data_example` annotations no longer contain URL-encoded
+  `%2C` artifacts (e.g. "ribonucleotide reductase%2C large subunit" is now
+  "ribonucleotide reductase large subunit").
+
 ## New features
 * Each legend can now be positioned independently via the `legend_position`
   argument of `geom_seq()`, `geom_ribbon()` and `geom_gene()` (e.g.

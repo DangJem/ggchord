@@ -829,14 +829,15 @@ compute_chord_layout <- function(
       )
       gene_labels <- res$labels
       gene_label_segments <- res$segments
-      # Side-flipped labels must end up on the requested side: if the
-      # repulsion pushed them back across their arc, mirror them across the
-      # arc again (keeping their distance from the arc) and update the
+      # With gene_label_side, every label must end up on the requested side:
+      # if the repulsion pushed a label across its arc, mirror it across the
+      # arc again (keeping its distance from the arc) and update the
       # leader-line endpoints.
-      if (any(gene_labels$side_flipped %in% TRUE)) {
+      if (!identical(gene_label_side, "auto") && nrow(gene_labels) > 0) {
         cs <- cos(rot_rad)
         sn <- sin(rot_rad)
-        for (i in which(gene_labels$side_flipped)) {
+        moved <- logical(nrow(gene_labels))
+        for (i in seq_len(nrow(gene_labels))) {
           sid <- gene_labels$seq_id[i]
           ref <- seq_refs[[sid]]
           px <- gene_labels$text_x[i]
@@ -876,10 +877,11 @@ compute_chord_layout <- function(
           if ((s > 0) != want_inside) {
             gene_labels$text_x[i] <- px - 2 * s * nxr
             gene_labels$text_y[i] <- py - 2 * s * nyr
+            moved[i] <- TRUE
           }
         }
-        if (nrow(gene_label_segments) > 0) {
-          upd <- gene_label_segments$group %in% which(gene_labels$side_flipped)
+        if (nrow(gene_label_segments) > 0 && any(moved)) {
+          upd <- gene_label_segments$group %in% which(moved)
           idx_lbl <- match(gene_label_segments$group[upd],
                            seq_len(nrow(gene_labels)))
           gene_label_segments$x1[upd] <- gene_labels$text_x[idx_lbl]
