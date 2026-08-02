@@ -47,69 +47,35 @@ devtools::install_github("DangJem/ggchord")
 
 ## Quick Start
 
-### Building a Chord Diagram
+### Build Your First Chord Diagram
+
+The package ships with example datasets, so you can run the code below as-is:
 
 ```r
 library(ggchord)
 
+# Load the built-in example datasets
 data(seq_data_example)
 data(ribbon_data_example)
 data(gene_data_example)
 
-# Simplest: all default parameters
+# Build a chord diagram by stacking ggplot2-style layers
 p <- ggchord(
   seq_data = seq_data_example,
   ribbon_data = ribbon_data_example,
   gene_data = gene_data_example
 ) +
-  geom_seq() +
-  geom_ribbon() +
-  geom_gene() +
-  geom_axis()
+  geom_seq() +      # sequence arcs
+  geom_ribbon() +   # alignment ribbons
+  geom_gene() +     # gene annotations
+  geom_axis()       # position axes
 
 print(p)
 ```
 
-### Parameters in Geom Layers (v0.4.0)
+![Basic chord diagram with all default parameters](man/figures/combined_default.png)
 
-```r
-# Just like ggplot2: parameters go with the layer that uses them
-ggchord(seq_data_example, ribbon_data_example, gene_data_example,
-        title = "Fine Parameter Control", rotation = 30) +
-  geom_seq(
-    seq_radius = c(3, 2, 2, 1),
-    seq_curvature = c(0, 1, -1, 1.5),
-    seq_orientation = c(-1, -1, -1, 1)
-  ) +
-  geom_ribbon(
-    ribbon_color_scheme = "pident",
-    ribbon_gap = 0.1
-  ) +
-  geom_gene(
-    gene_offset = list(
-      c("+" = 0.2, "-" = -0.2),
-      c("+" = 0.2, "-" = -0.2),
-      c("+" = 0.2, "-" = 0),
-      c("+" = 0.2, "-" = 0.1)
-    ),
-    gene_width = 0.08,
-    gene_label_show = TRUE,
-    gene_label_rotation = list(
-      c("+" = 45, "-" = -45),
-      c("+" = 0.2, "-" = -0.2),
-      c("+" = 0.2, "-" = 0),
-      c("+" = 0.2, "-" = 0.1)
-    )
-  ) +
-  geom_axis(
-    axis_label_orientation = c(0, 45, 80, 130),
-    axis_gap = 0,
-    axis_tick_major_length = 0.03,
-    axis_label_size = 2
-  )
-```
-
-> All parameters have sensible defaults. You can write `geom_seq()` with no arguments, or fine-tune each detail as shown above.
+`ggchord()` only takes the data and global options; every `geom_*` layer has sensible defaults, so the plot above needs no parameters at all. To learn how to customize each layer, follow the step-by-step examples below.
 
 ---
 
@@ -228,41 +194,32 @@ write_tsv(geneTrackTable, "gene_track.tsv")
 
 ## Usage Examples
 
-### Reading Data
+All examples below use the built-in datasets, so you can run them directly:
 
 ```r
-seq_data <- read.delim("seq_track.tsv", sep = "\t", stringsAsFactors = FALSE)
+library(ggchord)
 
-read_blast <- function(file) {
-  df <- read.delim(file, sep = "\t", header = FALSE,
-                   stringsAsFactors = FALSE, comment.char = "#")
-  colnames(df) <- c("qaccver", "saccver", "pident", "length", "mismatches",
-                    "gapopen", "qstart", "qend", "sstart", "send",
-                    "evalue", "bitscore", "qcovs", "qlen", "slen",
-                    "sstrand", "stitle")
-  df
-}
-blast_files <- list.files(path = ".", pattern = "\\.o7$", full.names = TRUE)
-all_blast <- do.call(rbind, lapply(blast_files, read_blast))
-ribbon_data <- subset(all_blast, length >= 100)
-
-gene_data <- read.delim("gene_track.tsv", sep = "\t",
-  stringsAsFactors = FALSE) |>
-  dplyr::slice_max(order_by = end - start, n = 5, by = seq_id)
+data(seq_data_example)
+data(ribbon_data_example)
+data(gene_data_example)
 ```
 
-### Sequences Only
+If you want to use your own data, see [Data Preparation](#data-preparation) above for the required formats and how to read them from common file types.
+
+### Step 1: Draw the Sequence Arcs
+
+The simplest plot needs only `seq_data` — each sequence is drawn as a colored arc whose length is proportional to the sequence length:
 
 ```r
-# Default: counterclockwise in seq_data order
-ggchord(seq_data = seq_data) + geom_seq()
+ggchord(seq_data = seq_data_example) + geom_seq()
 ```
 
-![Sequence chord diagram (default)](examples/plots/seq_only_default.png)
+![Sequence chord diagram with default parameters](man/figures/seq_only_default.png)
+
+Customize the sequence layout — order, orientation, curvature, and colors all belong to `geom_seq()`:
 
 ```r
-# Custom sequence layout
-ggchord(seq_data = seq_data) +
+ggchord(seq_data = seq_data_example) +
   geom_seq(
     seq_order = c("MT118296.1", "OR222515.1", "MT108731.1", "OQ646790.1"),
     seq_orientation = c(1, -1, 1, -1),
@@ -271,49 +228,61 @@ ggchord(seq_data = seq_data) +
   )
 ```
 
-![Sequence chord diagram (custom layout)](examples/plots/seq_only_custom.png)
+![Sequence chord diagram with a customized layout](man/figures/seq_only_custom.png)
 
-### Adding Alignment Ribbons
+### Step 2: Add Alignment Ribbons
+
+Add `ribbon_data` and draw ribbons between the sequences. By default ribbons are colored by percent identity (`pident`, the `"pident"` scheme):
 
 ```r
-# Default: colored by percent identity
-ggchord(seq_data = seq_data, ribbon_data = ribbon_data) +
+ggchord(seq_data_example, ribbon_data_example) +
   geom_seq() + geom_ribbon()
 ```
 
-![Alignment ribbons colored by percent identity](examples/plots/ribbon_pident.png)
+![Alignment ribbons colored by percent identity](man/figures/ribbon_pident.png)
+
+Other ribbon color schemes are available:
 
 ```r
-# Color by query sequence
-ggchord(seq_data = seq_data, ribbon_data = ribbon_data) +
-  geom_seq() +
-  geom_ribbon(ribbon_color_scheme = "query")
+# Color ribbons by the query sequence
+ggchord(seq_data_example, ribbon_data_example) +
+  geom_seq() + geom_ribbon(ribbon_color_scheme = "query")
 ```
 
-![Alignment ribbons colored by query sequence](examples/plots/ribbon_query.png)
+![Alignment ribbons colored by the query sequence](man/figures/ribbon_query.png)
 
 ```r
-# Single color
-ggchord(seq_data = seq_data, ribbon_data = ribbon_data) +
+# Color ribbons by the subject sequence
+ggchord(seq_data_example, ribbon_data_example) +
+  geom_seq() + geom_ribbon(ribbon_color_scheme = "subject")
+```
+
+![Alignment ribbons colored by the subject sequence](man/figures/ribbon_subject.png)
+
+```r
+# Use a single color for all ribbons
+ggchord(seq_data_example, ribbon_data_example) +
   geom_seq() +
   geom_ribbon(ribbon_color_scheme = "single", ribbon_colors = "orange")
 ```
 
-![Alignment ribbons in a single color](examples/plots/ribbon_single.png)
+![Alignment ribbons in a single color](man/figures/ribbon_single.png)
 
-### Adding Gene Annotations
+### Step 3: Add Gene Annotations
+
+Add `gene_data` and draw genes as arrow polygons. By default arrows are colored by strand (`+` / `-`):
 
 ```r
-# Color by strand
-ggchord(seq_data = seq_data, gene_data = gene_data) +
+ggchord(seq_data_example, gene_data = gene_data_example) +
   geom_seq() + geom_gene()
 ```
 
-![Gene arrows colored by strand](examples/plots/gene_strand.png)
+![Gene arrows colored by strand](man/figures/gene_strand.png)
+
+Color by annotation category and show gene labels:
 
 ```r
-# Color by annotation + show labels
-ggchord(seq_data = seq_data, gene_data = gene_data) +
+ggchord(seq_data_example, gene_data = gene_data_example) +
   geom_seq() +
   geom_gene(
     gene_color_scheme = "manual",
@@ -323,24 +292,34 @@ ggchord(seq_data = seq_data, gene_data = gene_data) +
   )
 ```
 
-![Gene arrows colored by annotation with labels](examples/plots/gene_manual_label.png)
+![Gene arrows colored by annotation with labels](man/figures/gene_manual_label.png)
 
-### Full Example
+### Step 4: Add Axes and Sequence Labels
+
+Axes annotate sequence positions with major/minor ticks, and `geom_seq_label()` places labels on or outside the arcs:
 
 ```r
-# All defaults
-ggchord(seq_data, ribbon_data, gene_data) +
-  geom_seq() + geom_ribbon() + geom_gene() + geom_axis()
+ggchord(seq_data_example) +
+  geom_seq() +
+  geom_axis(
+    axis_tick_major_length = 0.03,
+    axis_tick_minor_length = 0.015,
+    axis_label_size = 2.5
+  ) +
+  geom_seq_label(seq_label_radius = 1.2)
 ```
 
-![Full chord diagram with all default parameters](examples/plots/combined_default.png)
+![Axes and sequence labels](man/figures/axis_seq_label.png)
+
+### Step 5: Combine Everything and Fine-Tune
+
+Combine all layers and distribute fine-grained parameters to the layer that uses them:
 
 ```r
-# v0.4.0: fine-grained control with parameters distributed across geom layers
 ggchord(
-  seq_data = seq_data,
-  ribbon_data = ribbon_data,
-  gene_data = gene_data,
+  seq_data = seq_data_example,
+  ribbon_data = ribbon_data_example,
+  gene_data = gene_data_example,
   title = "Multi-sequence Chord Diagram with Gene Annotations",
   rotation = 45
 ) +
@@ -365,24 +344,54 @@ ggchord(
     gene_label_show = TRUE,
     gene_label_rotation = list(
       c("+" = 45, "-" = -45),
-      c("+" = 0.2, "-" = -0.2),
-      c("+" = 0.2, "-" = 0),
-      c("+" = 0.2, "-" = 0.1)
+      c("+" = 30, "-" = -30),
+      c("+" = 15, "-" = -15),
+      c("+" = 0, "-" = 0)
     )
   ) +
   geom_axis(
     axis_gap = 0,
     axis_tick_major_length = 0.03,
-    axis_label_size = 2,
-    axis_label_orientation = c(0, 45, 80, 130)
+    axis_label_size = 2
   )
 ```
 
-![Full chord diagram with fine-grained control](examples/plots/combined_fine.png)
+![Full chord diagram with fine-grained control](man/figures/combined_fine.png)
 
-> Sequence-level parameters (e.g., `seq_radius`, `seq_gap`) support single value, unnamed vector, and named vector formats. Gene-level parameters additionally support per-strand (`+`/`-`) list formats.
+### Step 6: Add Themes and Scales with `+`
 
----
+Because a ggchord plot is a real ggplot2 object, themes and scales can be added with `+` just like in ggplot2:
+
+```r
+ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
+  geom_seq() + geom_ribbon() + geom_gene() + geom_axis() +
+  theme(
+    legend.position = "bottom",
+    legend.box = "horizontal",
+    panel.background = element_rect(fill = "grey95")
+  ) +
+  scale_color_manual(
+    values = c("MT108731.1" = "#E41A1C",
+               "MT118296.1" = "#377EB8",
+               "OQ646790.1" = "#4DAF4A",
+               "OR222515.1" = "#984EA3")
+  )
+```
+
+![Chord diagram with a custom theme and scale](man/figures/theme_custom.png)
+
+### Step 7: Make It Interactive with plotly
+
+A ggchord plot can be converted to an interactive chart with `plotly::ggplotly()` (requires the `plotly` package). Ribbons, gene arrows, axes, and the Seq ID / Strand / Identity legends are all preserved:
+
+```r
+p <- ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
+  geom_seq() + geom_ribbon() + geom_gene() + geom_axis()
+
+plotly::ggplotly(p)
+```
+
+> **Parameter formats**: sequence-level parameters (`seq_radius`, `seq_gap`, etc.) accept a single value, an unnamed vector, or a named vector. Gene-level parameters additionally accept per-strand (`+`/`-`) list formats, e.g. `gene_offset = list(c("+" = 0.2, "-" = -0.2), ...)`.
 
 ## Layer Reference
 
@@ -392,8 +401,7 @@ ggchord(
 | Alignment Ribbons | `geom_ribbon()` | Draws colored ribbons from alignment results |
 | Gene Arrows | `geom_gene()` | Draws gene annotation arrow polygons and labels |
 | Axes | `geom_axis()` | Draws axis lines, major/minor ticks, and tick labels |
-
----
+| Sequence Labels | `geom_seq_label()` | Places labels on or outside the sequence arcs |
 
 ## Parameter Reference
 

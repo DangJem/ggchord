@@ -75,7 +75,7 @@ p <- ggchord(
 print(p)
 ```
 
-![全默认参数的基础弦图](examples/plots/combined_default.png)
+![全默认参数的基础弦图](man/figures/combined_default.png)
 
 `ggchord()` 只接收数据和全局参数；每个 `geom_*` 图层都有合理的默认值，因此上图无需任何参数即可绘制。想要自定义每个图层，请继续阅读下面的分步示例。
 
@@ -209,7 +209,7 @@ data(gene_data_example)
 ggchord(seq_data = seq_data_example) + geom_seq()
 ```
 
-![默认参数的序列弦图](examples/plots/seq_only_default.png)
+![默认参数的序列弦图](man/figures/seq_only_default.png)
 
 自定义序列布局——顺序、方向、曲率与颜色都属于 `geom_seq()`：
 
@@ -223,7 +223,7 @@ ggchord(seq_data = seq_data_example) +
   )
 ```
 
-![自定义布局的序列弦图](examples/plots/seq_only_custom.png)
+![自定义布局的序列弦图](man/figures/seq_only_custom.png)
 
 ### 第 2 步：加入比对连接带
 
@@ -234,7 +234,7 @@ ggchord(seq_data_example, ribbon_data_example) +
   geom_seq() + geom_ribbon()
 ```
 
-![按相似度着色的连接带](examples/plots/ribbon_pident.png)
+![按相似度着色的连接带](man/figures/ribbon_pident.png)
 
 `geom_ribbon()` 还提供其他配色方案：
 
@@ -244,7 +244,7 @@ ggchord(seq_data_example, ribbon_data_example) +
   geom_seq() + geom_ribbon(ribbon_color_scheme = "query")
 ```
 
-![按查询序列着色的连接带](examples/plots/ribbon_query.png)
+![按查询序列着色的连接带](man/figures/ribbon_query.png)
 
 ```r
 # 按目标序列着色
@@ -252,7 +252,7 @@ ggchord(seq_data_example, ribbon_data_example) +
   geom_seq() + geom_ribbon(ribbon_color_scheme = "subject")
 ```
 
-![按目标序列着色的连接带](examples/plots/ribbon_subject.png)
+![按目标序列着色的连接带](man/figures/ribbon_subject.png)
 
 ```r
 # 全部连接带使用单一颜色
@@ -261,7 +261,7 @@ ggchord(seq_data_example, ribbon_data_example) +
   geom_ribbon(ribbon_color_scheme = "single", ribbon_colors = "orange")
 ```
 
-![单色连接带](examples/plots/ribbon_single.png)
+![单色连接带](man/figures/ribbon_single.png)
 
 ### 第 3 步：加入基因注释
 
@@ -272,7 +272,7 @@ ggchord(seq_data_example, gene_data = gene_data_example) +
   geom_seq() + geom_gene()
 ```
 
-![按链方向着色的基因箭头](examples/plots/gene_strand.png)
+![按链方向着色的基因箭头](man/figures/gene_strand.png)
 
 按注释类别着色并显示基因标签：
 
@@ -287,7 +287,7 @@ ggchord(seq_data_example, gene_data = gene_data_example) +
   )
 ```
 
-![按注释类别着色并显示标签的基因箭头](examples/plots/gene_manual_label.png)
+![按注释类别着色并显示标签的基因箭头](man/figures/gene_manual_label.png)
 
 ### 第 4 步：加入坐标轴与序列标签
 
@@ -304,7 +304,7 @@ ggchord(seq_data_example) +
   geom_seq_label(seq_label_radius = 1.2)
 ```
 
-![坐标轴与序列标签](examples/plots/axis_seq_label.png)
+![坐标轴与序列标签](man/figures/axis_seq_label.png)
 
 ### 第 5 步：组合所有图层并精细控制
 
@@ -351,7 +351,7 @@ ggchord(
   )
 ```
 
-![精细参数控制的综合弦图](examples/plots/combined_fine.png)
+![精细参数控制的综合弦图](man/figures/combined_fine.png)
 
 ### 第 6 步：用 `+` 添加主题与 scale
 
@@ -373,7 +373,7 @@ ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
   )
 ```
 
-![自定义主题与 scale 的弦图](examples/plots/theme_custom.png)
+![自定义主题与 scale 的弦图](man/figures/theme_custom.png)
 
 ### 第 7 步：用 plotly 生成交互图表
 

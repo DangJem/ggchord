@@ -1,4 +1,6 @@
 url: https://dangjem.github.io/ggchord
+template:
+  bootstrap: 5
 navbar:
   title: "ggchord"
   left:

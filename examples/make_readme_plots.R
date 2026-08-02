@@ -1,7 +1,7 @@
 # ============================================================================
 # make_readme_plots.R
 # Regenerates every image referenced by README.md / README-Hans.md into
-# examples/plots/.
+# man/figures/ (the location required by pkgdown for README images).
 #
 # The README examples use the built-in datasets (seq_data_example,
 # ribbon_data_example, gene_data_example), so the code blocks in the README
@@ -17,7 +17,7 @@ data(seq_data_example)
 data(ribbon_data_example)
 data(gene_data_example)
 
-outdir <- file.path("examples", "plots")
+outdir <- file.path("man", "figures")
 dir.create(outdir, showWarnings = FALSE, recursive = TRUE)
 
 save_plot <- function(p, name, width = 800, height = 800, res = 100) {

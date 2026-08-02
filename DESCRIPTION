@@ -10,7 +10,7 @@ VignetteBuilder: knitr
 Suggests: knitr, rmarkdown, qpdf, dplyr, plotly, testthat (>= 3.0.0)
 Encoding: UTF-8
 LazyData: true
-URL: https://github.com/DangJem/ggchord
+URL: https://github.com/DangJem/ggchord, https://dangjem.github.io/ggchord
 BugReports: https://github.com/DangJem/ggchord/issues
 NeedsCompilation: no
 Packaged: 2025-07-08 05:21:57 UTC; 92330

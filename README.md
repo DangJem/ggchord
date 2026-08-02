@@ -75,7 +75,7 @@ p <- ggchord(
 print(p)
 ```
 
-![Basic chord diagram with all default parameters](examples/plots/combined_default.png)
+![Basic chord diagram with all default parameters](man/figures/combined_default.png)
 
 `ggchord()` only takes the data and global options; every `geom_*` layer has sensible defaults, so the plot above needs no parameters at all. To learn how to customize each layer, follow the step-by-step examples below.
 
@@ -216,7 +216,7 @@ The simplest plot needs only `seq_data` — each sequence is drawn as a colored 
 ggchord(seq_data = seq_data_example) + geom_seq()
 ```
 
-![Sequence chord diagram with default parameters](examples/plots/seq_only_default.png)
+![Sequence chord diagram with default parameters](man/figures/seq_only_default.png)
 
 Customize the sequence layout — order, orientation, curvature, and colors all belong to `geom_seq()`:
 
@@ -230,7 +230,7 @@ ggchord(seq_data = seq_data_example) +
   )
 ```
 
-![Sequence chord diagram with a customized layout](examples/plots/seq_only_custom.png)
+![Sequence chord diagram with a customized layout](man/figures/seq_only_custom.png)
 
 ### Step 2: Add Alignment Ribbons
 
@@ -241,7 +241,7 @@ ggchord(seq_data_example, ribbon_data_example) +
   geom_seq() + geom_ribbon()
 ```
 
-![Alignment ribbons colored by percent identity](examples/plots/ribbon_pident.png)
+![Alignment ribbons colored by percent identity](man/figures/ribbon_pident.png)
 
 Other ribbon color schemes are available:
 
@@ -251,7 +251,7 @@ ggchord(seq_data_example, ribbon_data_example) +
   geom_seq() + geom_ribbon(ribbon_color_scheme = "query")
 ```
 
-![Alignment ribbons colored by the query sequence](examples/plots/ribbon_query.png)
+![Alignment ribbons colored by the query sequence](man/figures/ribbon_query.png)
 
 ```r
 # Color ribbons by the subject sequence
@@ -259,7 +259,7 @@ ggchord(seq_data_example, ribbon_data_example) +
   geom_seq() + geom_ribbon(ribbon_color_scheme = "subject")
 ```
 
-![Alignment ribbons colored by the subject sequence](examples/plots/ribbon_subject.png)
+![Alignment ribbons colored by the subject sequence](man/figures/ribbon_subject.png)
 
 ```r
 # Use a single color for all ribbons
@@ -268,7 +268,7 @@ ggchord(seq_data_example, ribbon_data_example) +
   geom_ribbon(ribbon_color_scheme = "single", ribbon_colors = "orange")
 ```
 
-![Alignment ribbons in a single color](examples/plots/ribbon_single.png)
+![Alignment ribbons in a single color](man/figures/ribbon_single.png)
 
 ### Step 3: Add Gene Annotations
 
@@ -279,7 +279,7 @@ ggchord(seq_data_example, gene_data = gene_data_example) +
   geom_seq() + geom_gene()
 ```
 
-![Gene arrows colored by strand](examples/plots/gene_strand.png)
+![Gene arrows colored by strand](man/figures/gene_strand.png)
 
 Color by annotation category and show gene labels:
 
@@ -294,7 +294,7 @@ ggchord(seq_data_example, gene_data = gene_data_example) +
   )
 ```
 
-![Gene arrows colored by annotation with labels](examples/plots/gene_manual_label.png)
+![Gene arrows colored by annotation with labels](man/figures/gene_manual_label.png)
 
 ### Step 4: Add Axes and Sequence Labels
 
@@ -311,7 +311,7 @@ ggchord(seq_data_example) +
   geom_seq_label(seq_label_radius = 1.2)
 ```
 
-![Axes and sequence labels](examples/plots/axis_seq_label.png)
+![Axes and sequence labels](man/figures/axis_seq_label.png)
 
 ### Step 5: Combine Everything and Fine-Tune
 
@@ -358,7 +358,7 @@ ggchord(
   )
 ```
 
-![Full chord diagram with fine-grained control](examples/plots/combined_fine.png)
+![Full chord diagram with fine-grained control](man/figures/combined_fine.png)
 
 ### Step 6: Add Themes and Scales with `+`
 
@@ -380,7 +380,7 @@ ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
   )
 ```
 
-![Chord diagram with a custom theme and scale](examples/plots/theme_custom.png)
+![Chord diagram with a custom theme and scale](man/figures/theme_custom.png)
 
 ### Step 7: Make It Interactive with plotly
 
