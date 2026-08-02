@@ -752,9 +752,18 @@ compute_chord_layout <- function(
       )
       gene_labels <- res$labels
       gene_label_segments <- res$segments
-      # horizontal text: reset the rotation angle
+      # Horizontal text: reset the rotation angle and justify the text on the
+      # far side of the leader line (i.e. the text extends away from the gene
+      # anchor). Otherwise a label whose text is justified towards the line
+      # would have the line (or the elbow stub) crossing the text.
       if (identical(gene_label_orientation, "horizontal")) {
         gene_labels$text_angle <- 0
+        if (nrow(gene_label_segments) > 0) {
+          seg <- gene_label_segments
+          # one segment row per label at this stage (before the elbow split)
+          moved_right <- (seg$x1 - seg$x0) >= 0
+          gene_labels$hjust[seg$group] <- ifelse(moved_right, 0, 1)
+        }
       }
       # elbow leader lines: an oblique segment from the gene to the label's
       # horizontal level, then a short horizontal stub into the label
@@ -771,9 +780,16 @@ compute_chord_layout <- function(
           max(1, diff(range(c(seg$x0, seg$x1)))) / 6
         stub_len <- pmax(0.08, 0.3 * widths[match(seg$group,
                                                     seq_len(nrow(gene_labels)))])
-        dir <- sign(seg$x1 - seg$x0)
-        dir[dir == 0] <- 1
+        # Approach the label from the empty side of the text (hjust == 0 means
+        # the text extends rightwards, so the stub comes from the left).
+        hj <- gene_labels$hjust[match(seg$group, seq_len(nrow(gene_labels)))]
+        dir <- ifelse(hj < 0.5, 1, -1)
         bx <- seg$x1 - dir * stub_len
+        # Keep the bend between the gene and the label. When a label moved
+        # mostly vertically (|x1 - x0| < stub_len), an unclamped bend would
+        # lie beyond the gene, making the oblique segment and the stub point
+        # in opposite directions (a doubled-back elbow).
+        bx <- ifelse(hj < 0.5, pmax(bx, seg$x0), pmin(bx, seg$x0))
         elbow <- data.frame(
           x0 = c(seg$x0, bx),
           y0 = c(seg$y0, seg$y1),

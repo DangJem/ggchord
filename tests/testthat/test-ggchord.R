@@ -562,6 +562,66 @@ test_that("gene_label_orientation and gene_label_segment work", {
   dev.off()
 })
 
+test_that("horizontal repelled labels sit on the far side of the leader line", {
+  data(seq_data_example)
+  data(gene_data_example)
+  # elbow mode
+  p <- ggchord(seq_data_example, gene_data = gene_data_example) +
+    geom_seq() + geom_gene() +
+    geom_gene_label_repel(gene_label_orientation = "horizontal",
+                          gene_label_segment = "elbow", gene_label_wrap = 15)
+  ggplot_build(p)
+  l <- get_chord_layout()
+  gl <- l$gene_labels
+  seg <- l$gene_label_segments
+  if (nrow(seg) > 0 && nrow(gl) > 0) {
+    grDevices::pdf(NULL)
+    on.exit(grDevices::dev.off())
+    w <- suppressWarnings(graphics::strwidth(gl$text, units = "inches",
+                                             cex = (gl$size %||% 2.5) / 12)) *
+      max(1, diff(range(c(seg$x0, seg$x1)))) / 6
+    for (i in seq_len(nrow(gl))) {
+      g <- which(seg$group == i)
+      if (length(g) == 0) next
+      stub <- seg[g[length(g)], ]
+      tx <- gl$text_x[i]
+      hjust <- gl$hjust[i]
+      x0box <- if (hjust < 0.5) tx else if (hjust > 0.5) tx - w[i] else tx - w[i] / 2
+      x1box <- if (hjust < 0.5) tx + w[i] else if (hjust > 0.5) tx else tx + w[i] / 2
+      # the elbow stub must never cross the interior of the text box
+      expect_false(
+        max(stub$x0, stub$x1) > x0box + 1e-3 &&
+          min(stub$x0, stub$x1) < x1box - 1e-3,
+        info = paste("label", i, "(", gl$text[i], ") stub crosses its text")
+      )
+    }
+    # the elbow must not double back: the oblique segment and the horizontal
+    # stub may both be slanted/vertical, but never point in opposite
+    # horizontal directions
+    for (g in unique(seg$group)) {
+      rows <- seg[seg$group == g, ]
+      if (nrow(rows) < 2) next
+      dx_long <- sign(rows$x1[1] - rows$x0[1])
+      dx_stub <- sign(rows$x1[2] - rows$x0[2])
+      if (dx_long != 0 && dx_stub != 0 && dx_long != dx_stub) {
+        fail(paste("elbow for label", g, "doubles back on itself"))
+      }
+    }
+  }
+  # line mode: text is justified away from the gene anchor
+  p2 <- ggchord(seq_data_example, gene_data = gene_data_example) +
+    geom_seq() + geom_gene() +
+    geom_gene_label_repel(gene_label_orientation = "horizontal")
+  ggplot_build(p2)
+  l2 <- get_chord_layout()
+  seg2 <- l2$gene_label_segments
+  gl2 <- l2$gene_labels
+  if (nrow(seg2) > 0) {
+    moved_right <- (seg2$x1 - seg2$x0) >= 0
+    expect_equal(gl2$hjust[seg2$group], ifelse(moved_right, 0, 1))
+  }
+})
+
 test_that("axis labels are aligned outward and can be hidden on overlap", {
   data(seq_data_example)
   p <- ggchord(seq_data_example) + geom_seq() + geom_axis()
