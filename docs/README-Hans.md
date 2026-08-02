@@ -389,6 +389,21 @@ ggchord(seq_data_example, gene_data = gene_data_example) +
 
 带引导线的防重叠基因标签
 
+标签摆放可以更灵活：用 `gene_label_orientation = "horizontal"`
+让所有文字横向 摆放，用 `gene_label_segment = "elbow"` 使用折线引导线：
+
+``` r
+
+ggchord(seq_data_example, gene_data = gene_data_example) +
+  geom_seq() +
+  geom_gene() +
+  geom_gene_label_repel(
+    gene_label_orientation = "horizontal",
+    gene_label_segment = "elbow",
+    gene_label_wrap = 15
+  )
+```
+
 ### 第 4 步：加入坐标轴与序列标签
 
 坐标轴用主/次刻度标注序列位置，[`geom_seq_label()`](https://dangjem.github.io/ggchord/reference/geom_seq_label.md)
@@ -662,29 +677,32 @@ gene_label_rotation = list(20)                            # 单元素列表自�
 [`geom_gene_label()`](https://dangjem.github.io/ggchord/reference/geom_gene_label.md)
 的参数外，还有：
 
-| 参数                 | 类型 | 默认值 | 描述                               |
-|----------------------|------|--------|------------------------------------|
-| `max_overlaps`       | 数值 | Inf    | 隐藏仍与超过该数量标签重叠的标签   |
-| `box_padding`        | 数值 | 0.25   | 每个标签框的额外内边距（数据单位） |
-| `point_padding`      | 数值 | 0.1    | 锚点周围的额外内边距（数据单位）   |
-| `min_segment_length` | 数值 | 0.05   | 移动距离小于该值的标签不绘制引导线 |
-| `force`              | 数值 | 1      | 排斥力强度                         |
-| `seed`               | 数值 | 123    | 防重叠算法随机种子                 |
+| 参数 | 类型 | 默认值 | 描述 |
+|----|----|----|----|
+| `max_overlaps` | 数值 | Inf | 隐藏仍与超过该数量标签重叠的标签 |
+| `box_padding` | 数值 | 0.25 | 每个标签框的额外内边距（数据单位） |
+| `point_padding` | 数值 | 0.1 | 锚点周围的额外内边距（数据单位） |
+| `min_segment_length` | 数值 | 0.05 | 移动距离小于该值的标签不绘制引导线 |
+| `force` | 数值 | 1 | 排斥力强度 |
+| `seed` | 数值 | 123 | 防重叠算法随机种子 |
+| `gene_label_orientation` | 字符 | “arc” | 标签文字方向：`"arc"`（沿弧线旋转）或 `"horizontal"`（全部横向） |
+| `gene_label_segment` | 字符 | “line” | 引导线样式：`"line"`（直线）或 `"elbow"`（折线） |
 
 ### geom_axis() 参数
 
-| 参数                     | 类型           | 默认值       | 描述                   |
-|--------------------------|----------------|--------------|------------------------|
-| `show_axis`              | 逻辑值         | TRUE         | 是否显示坐标轴         |
-| `axis_gap`               | 数值/向量      | 0.05         | 序列与坐标轴的径向间距 |
-| `axis_tick_major_number` | 整数/向量      | 5            | 主刻度数量             |
-| `axis_tick_major_length` | 数值/向量      | 0.02         | 主刻度长度比例         |
-| `axis_tick_minor_number` | 整数/向量      | 4            | 次刻度数量             |
-| `axis_tick_minor_length` | 数值/向量      | 0.01         | 次刻度长度比例         |
-| `axis_label_size`        | 数值/向量      | 3            | 刻度标签字号           |
-| `axis_label_offset`      | 数值/向量      | 1.5          | 标签偏移比例           |
-| `axis_label_orientation` | 字符/数值/向量 | “horizontal” | 标签方向               |
-| `show_legend`            | 逻辑值         | FALSE        | 是否显示图例           |
+| 参数 | 类型 | 默认值 | 描述 |
+|----|----|----|----|
+| `show_axis` | 逻辑值 | TRUE | 是否显示坐标轴 |
+| `axis_gap` | 数值/向量 | 0.05 | 序列与坐标轴的径向间距 |
+| `axis_tick_major_number` | 整数/向量 | 5 | 主刻度数量 |
+| `axis_tick_major_length` | 数值/向量 | 0.02 | 主刻度长度比例 |
+| `axis_tick_minor_number` | 整数/向量 | 4 | 次刻度数量 |
+| `axis_tick_minor_length` | 数值/向量 | 0.01 | 次刻度长度比例 |
+| `axis_label_size` | 数值/向量 | 3 | 刻度标签字号 |
+| `axis_label_offset` | 数值/向量 | 2 | 标签偏移比例 |
+| `axis_label_orientation` | 字符/数值/向量 | “horizontal” | 标签方向 |
+| `axis_label_hide_overlaps` | 逻辑值 | FALSE | 自动隐藏与绘图内容或其他标签重叠的坐标轴标签 |
+| `show_legend` | 逻辑值 | FALSE | 是否显示图例 |
 
 ------------------------------------------------------------------------
 

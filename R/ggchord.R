@@ -9,7 +9,7 @@ globalVariables(c(
   "x", "y", "group", "pident", "fill", "strand", "anno", "seq_id",
   "text_x", "text_y", "text", "text_angle", "hjust", "vjust",
   "x0", "y0", "x1", "y1", "label", "label_x", "label_y", "size",
-  "fill_col", "alpha"
+  "fill_col", "alpha", "label_hjust", "label_vjust"
 ))
 
 #' ggchord: layered multi-sequence alignment chord diagrams for ggplot2
@@ -419,6 +419,8 @@ compute_chord_geometry <- function(plot) {
   gene_lrepel_minseg <- gene_repel_params$min_segment_length %||% 0.5
   gene_lrepel_force <- gene_repel_params$force %||% 1
   gene_lrepel_seed  <- gene_repel_params$seed %||% 123
+  gene_lrepel_orient <- gene_repel_params$gene_label_orientation %||% "arc"
+  gene_lrepel_seg    <- gene_repel_params$gene_label_segment %||% "line"
 
   if (!gene_cs %in% c("strand", "manual")) {
     stop("gene_color_scheme must be 'strand' or 'manual'")
@@ -449,8 +451,9 @@ compute_chord_geometry <- function(plot) {
                                        seqs, "axis_tick_minor_length", 0.01)
   labelSize  <- process_sequence_param(axis_params$axis_label_size %||% 3,
                                        seqs, "axis_label_size", 3)
-  labelOffset <- process_sequence_param(axis_params$axis_label_offset %||% 1.5,
-                                        seqs, "axis_label_offset", 1.5)
+  labelOffset <- process_sequence_param(axis_params$axis_label_offset %||% 2,
+                                        seqs, "axis_label_offset", 2)
+  axisLabelHide <- isTRUE(axis_params$axis_label_hide_overlaps)
   axisLabelOri <- process_axis_orientation(
     axis_params$axis_label_orientation %||% "horizontal", seqs
   )
@@ -497,6 +500,8 @@ compute_chord_geometry <- function(plot) {
     gene_label_repel_min_segment_length = gene_lrepel_minseg,
     gene_label_repel_force = gene_lrepel_force,
     gene_label_repel_seed = gene_lrepel_seed,
+    gene_label_orientation = gene_lrepel_orient,
+    gene_label_segment = gene_lrepel_seg,
     gene_color_scheme = gene_cs, gene_colors = gene_cols,
     gene_order = gene_ord,
     seq_label_text = seq_label_text,
@@ -507,6 +512,7 @@ compute_chord_geometry <- function(plot) {
     axisMin = axisMin, axisMinLen = axisMinLen,
     labelSize = labelSize, labelOffset = labelOffset,
     axisLabelOrientation = axisLabelOri,
+    axis_label_hide_overlaps = axisLabelHide,
     show_axis = show_axis,
     rotation = global$rotation, debug = global$debug
   )

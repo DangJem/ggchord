@@ -312,6 +312,21 @@ ggchord(seq_data_example, gene_data = gene_data_example) +
 
 ![Gene labels repelled with leader lines](man/figures/gene_repel.png)
 
+The label placement can be made more flexible: use
+`gene_label_orientation = "horizontal"` for all-horizontal text and
+`gene_label_segment = "elbow"` for L-shaped leader lines:
+
+```r
+ggchord(seq_data_example, gene_data = gene_data_example) +
+  geom_seq() +
+  geom_gene() +
+  geom_gene_label_repel(
+    gene_label_orientation = "horizontal",
+    gene_label_segment = "elbow",
+    gene_label_wrap = 15
+  )
+```
+
 ### Step 4: Add Axes and Sequence Labels
 
 Axes annotate sequence positions with major/minor ticks, and `geom_seq_label()` places labels on or outside the arcs:
@@ -569,6 +584,8 @@ All `geom_gene_label()` parameters plus:
 | `min_segment_length` | numeric | 0.05 | Labels that moved less than this distance draw no leader line |
 | `force` | numeric | 1 | Strength of the repulsive forces |
 | `seed` | numeric | 123 | Random seed for reproducible repulsion |
+| `gene_label_orientation` | character | "arc" | Label text direction: `"arc"` (rotated along the arc) or `"horizontal"` |
+| `gene_label_segment` | character | "line" | Leader line style: `"line"` (straight) or `"elbow"` (L-shaped) |
 
 ### geom_axis() Parameters
 
@@ -581,8 +598,9 @@ All `geom_gene_label()` parameters plus:
 | `axis_tick_minor_number` | integer/vector | 4 | Number of minor ticks |
 | `axis_tick_minor_length` | numeric/vector | 0.01 | Minor tick length proportion |
 | `axis_label_size` | numeric/vector | 3 | Tick label font size |
-| `axis_label_offset` | numeric/vector | 1.5 | Label offset proportion |
+| `axis_label_offset` | numeric/vector | 2 | Label offset ratio |
 | `axis_label_orientation` | character/numeric/vector | "horizontal" | Label orientation |
+| `axis_label_hide_overlaps` | logical | FALSE | Auto-hide axis labels that overlap the plot content or other labels |
 | `show_legend` | logical | FALSE | Show legend |
 
 ---

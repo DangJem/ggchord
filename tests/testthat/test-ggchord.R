@@ -533,6 +533,46 @@ test_that("gene_label_wrap wraps long annotations", {
   dev.off()
 })
 
+test_that("gene_label_orientation and gene_label_segment work", {
+  data(seq_data_example)
+  data(ribbon_data_example)
+  data(gene_data_example)
+  # horizontal text + elbow leader lines
+  p <- ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
+    geom_seq() + geom_ribbon() + geom_gene() +
+    geom_gene_label_repel(gene_label_orientation = "horizontal",
+                          gene_label_segment = "elbow") +
+    geom_axis()
+  gl <- p$ggchord$ref$layout$gene_labels
+  seg <- p$ggchord$ref$layout$gene_label_segments
+  expect_true(all(gl$text_angle == 0))
+  expect_gt(nrow(seg), 0)
+  # each elbow is two rows: (x0,y0)->(x0,y1) then (x0,y1)->(x1,y1)
+  expect_equal(nrow(seg) %% 2, 0)
+  idx <- which(seg$group == seg$group[1])
+  expect_equal(seg$x0[idx[2]], seg$x1[idx[1]])
+  expect_equal(seg$y0[idx[2]], seg$y1[idx[1]])
+  pdf(tempfile(fileext = ".pdf"), 8, 8)
+  expect_no_error(print(p))
+  dev.off()
+})
+
+test_that("axis labels are aligned outward and can be hidden on overlap", {
+  data(seq_data_example)
+  p <- ggchord(seq_data_example) + geom_seq() + geom_axis()
+  layout <- p$ggchord$ref$layout
+  at <- layout$axis_ticks
+  # labels carry outward hjust/vjust
+  expect_true(all(at$label_hjust[!is.na(at$label)] %in% c(0, 1)))
+  expect_true(all(at$label_vjust[!is.na(at$label)] %in% c(0, 1)))
+  # hide-overlaps option renders without error
+  p2 <- ggchord(seq_data_example) + geom_seq() +
+    geom_axis(axis_label_hide_overlaps = TRUE)
+  pdf(tempfile(fileext = ".pdf"), 8, 8)
+  expect_no_error(print(p2))
+  dev.off()
+})
+
 test_that("documented data and parameter values are validated", {
   expect_error(
     ggchord(data.frame(seq_id = c("a", "a"), length = c(1, 2))),

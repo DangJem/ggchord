@@ -54,6 +54,7 @@ Axis parameters (spacing, tick count/length, label size/orientation, etc.) are s
 <span>  axis_label_size <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  axis_label_offset <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  axis_label_orientation <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  axis_label_hide_overlaps <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  show_legend <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -100,11 +101,17 @@ Axis parameters (spacing, tick count/length, label size/orientation, etc.) are s
 
 
 <dt id="arg-axis-label-offset">axis_label_offset<a class="anchor" aria-label="anchor" href="#arg-axis-label-offset"></a></dt>
-<dd><p>Optional numeric/vector. Label offset ratio, default 1.5</p></dd>
+<dd><p>Optional numeric/vector. Label offset ratio, default 2</p></dd>
 
 
 <dt id="arg-axis-label-orientation">axis_label_orientation<a class="anchor" aria-label="anchor" href="#arg-axis-label-orientation"></a></dt>
 <dd><p>Optional character/numeric/vector. Label orientation, default "horizontal"</p></dd>
+
+
+<dt id="arg-axis-label-hide-overlaps">axis_label_hide_overlaps<a class="anchor" aria-label="anchor" href="#arg-axis-label-hide-overlaps"></a></dt>
+<dd><p>Logical, default FALSE. When TRUE, axis
+labels whose boxes would overlap the plot content (sequence arcs, genes,
+ribbons) or other axis labels are automatically hidden.</p></dd>
 
 
 <dt id="arg-show-legend">show_legend<a class="anchor" aria-label="anchor" href="#arg-show-legend"></a></dt>

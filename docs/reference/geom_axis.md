@@ -19,6 +19,7 @@ geom_axis(
   axis_label_size = NULL,
   axis_label_offset = NULL,
   axis_label_orientation = NULL,
+  axis_label_hide_overlaps = FALSE,
   show_legend = FALSE,
   ...
 )
@@ -65,12 +66,18 @@ geom_axis(
 
 - axis_label_offset:
 
-  Optional numeric/vector. Label offset ratio, default 1.5
+  Optional numeric/vector. Label offset ratio, default 2
 
 - axis_label_orientation:
 
   Optional character/numeric/vector. Label orientation, default
   "horizontal"
+
+- axis_label_hide_overlaps:
+
+  Logical, default FALSE. When TRUE, axis labels whose boxes would
+  overlap the plot content (sequence arcs, genes, ribbons) or other axis
+  labels are automatically hidden.
 
 - show_legend:
 

@@ -313,10 +313,10 @@ ggchord_repel_labels <- function(gl, units_per_inch = 0.35,
         dx <- x[i] - ax[j]
         dy <- y[i] - ay[j]
         d <- sqrt(dx^2 + dy^2)
-        cutoff <- point_padding + 0.6
+        cutoff <- point_padding + 0.4
         if (d < cutoff) {
           if (d < 1e-4) d <- 1e-4
-          f <- force * 0.25 * (1 - d / cutoff)
+          f <- force * 0.1 * (1 - d / cutoff)
           fx[i] <- fx[i] + f * dx / d
           fy[i] <- fy[i] + f * dy / d
         }
@@ -325,7 +325,7 @@ ggchord_repel_labels <- function(gl, units_per_inch = 0.35,
     # 1b) repulsion from the plot content (arcs, genes, axes) so labels do
     #     not cover other elements
     if (n_repel > 0) {
-      cutoff_content <- point_padding + 0.8
+      cutoff_content <- point_padding + 0.3
       for (i in seq_len(n)) {
         dx <- x[i] - rpx
         dy <- y[i] - rpy
@@ -334,7 +334,7 @@ ggchord_repel_labels <- function(gl, units_per_inch = 0.35,
         if (any(keep)) {
           dd <- d[keep]
           dd[dd < 1e-4] <- 1e-4
-          f <- force * 0.15 * (1 - dd / cutoff_content)
+          f <- force * 0.08 * (1 - dd / cutoff_content)
           fx[i] <- fx[i] + sum(f * dx[keep] / dd)
           fy[i] <- fy[i] + sum(f * dy[keep] / dd)
         }
@@ -358,8 +358,8 @@ ggchord_repel_labels <- function(gl, units_per_inch = 0.35,
       }
     }
     # 3) spring back toward the own anchor (keeps the label associated)
-    x <- x + (ax - x) * 0.12 + fx * 0.5
-    y <- y + (ay - y) * 0.12 + fy * 0.5
+    x <- x + (ax - x) * 0.18 + fx * 0.5
+    y <- y + (ay - y) * 0.18 + fy * 0.5
     # 4) clamp inside the region
     x <- pmin(pmax(x, x_lim[1]), x_lim[2])
     y <- pmin(pmax(y, y_lim[1]), y_lim[2])
@@ -436,4 +436,52 @@ ggchord_repel_points <- function(seq_arcs, gene_polys, axis_lines, axis_ticks,
     return(data.frame(x = numeric(0), y = numeric(0)))
   }
   do.call(rbind, pts)
+}
+
+#' Hide text labels that overlap the plot content or each other
+#'
+#' Estimates each label box (using the measured text size) and sets
+#' \code{label} to NA when the box overlaps the given content points or another
+#' label box.
+#' @keywords internal
+ggchord_hide_text_overlaps <- function(df, content_pts,
+                                       units_per_inch = 0.35) {
+  idx <- which(!is.na(df$label))
+  if (length(idx) < 1) return(df)
+  if (nrow(content_pts) == 0) {
+    content_pts <- data.frame(x = numeric(0), y = numeric(0))
+  }
+  grDevices::pdf(NULL)
+  on.exit(grDevices::dev.off())
+  sizes <- df$size[idx] %||% rep(3, length(idx))
+  w <- suppressWarnings(graphics::strwidth(df$label[idx], units = "inches",
+                                           cex = sizes / 12)) * units_per_inch
+  h <- suppressWarnings(graphics::strheight(df$label[idx], units = "inches",
+                                            cex = sizes / 12)) * units_per_inch
+
+  hide <- logical(length(idx))
+  for (k in seq_along(idx)) {
+    i <- idx[k]
+    x <- df$label_x[i]
+    y <- df$label_y[i]
+    # overlap with content points: label center too close to an element
+    if (nrow(content_pts) > 0) {
+      d <- sqrt((x - content_pts$x)^2 + (y - content_pts$y)^2)
+      if (any(d < min(w[k], h[k]) * 0.5 + 0.05)) hide[k] <- TRUE
+    }
+    if (!hide[k]) {
+      # overlap with another label's box
+      for (k2 in seq_along(idx)) {
+        if (k2 == k) next
+        j <- idx[k2]
+        if (abs(x - df$label_x[j]) < (w[k] + w[k2]) / 2 &&
+            abs(y - df$label_y[j]) < (h[k] + h[k2]) / 2) {
+          hide[k] <- TRUE
+          break
+        }
+      }
+    }
+  }
+  df$label[idx[hide]] <- NA
+  df
 }

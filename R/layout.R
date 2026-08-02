@@ -43,6 +43,8 @@ compute_chord_layout <- function(
     gene_label_repel_min_segment_length = 0.5,
     gene_label_repel_force = 1,
     gene_label_repel_seed = 123,
+    gene_label_orientation = "arc",
+    gene_label_segment = "line",
     gene_color_scheme, gene_colors, gene_order,
     # Sequence label parameters
     seq_label_text = NULL, seq_label_radius = NULL,
@@ -50,6 +52,7 @@ compute_chord_layout <- function(
     # Axis parameters
     axisGap, axisMaj, axisMajLen, axisMin, axisMinLen,
     labelSize, labelOffset, axisLabelOrientation,
+    axis_label_hide_overlaps = FALSE,
     show_axis,
     # Global parameters
     rotation, debug = FALSE
@@ -617,7 +620,16 @@ compute_chord_layout <- function(
   # Apply to all geometric elements (avoid deep copies: modify the original object's columns in place)
   seq_arcs <- lapply(seq_arcs, rotate_df)
   if (nrow(axis_lines) > 0) axis_lines <- rotate_df(axis_lines)
-  if (nrow(axis_ticks) > 0) axis_ticks <- rotate_df(axis_ticks)
+  if (nrow(axis_ticks) > 0) {
+    axis_ticks <- rotate_df(axis_ticks)
+    # Align horizontal labels outward (away from the chord) so they do not
+    # overlap the axis lines / ticks.
+    eps <- 1e-3
+    axis_ticks$label_hjust <- ifelse(axis_ticks$label_x > eps, 0,
+                                     ifelse(axis_ticks$label_x < -eps, 1, 0.5))
+    axis_ticks$label_vjust <- ifelse(axis_ticks$label_y > eps, 1,
+                                     ifelse(axis_ticks$label_y < -eps, 0, 0.5))
+  }
   if (!is.null(ribbon_polys)) ribbon_polys <- rotate_df(ribbon_polys)
   if (nrow(gene_labels) > 0) gene_labels <- rotate_df(gene_labels)
   if (nrow(seq_labels_df) > 0) seq_labels_df <- rotate_df(seq_labels_df)
@@ -660,6 +672,24 @@ compute_chord_layout <- function(
       )
       gene_labels <- res$labels
       gene_label_segments <- res$segments
+      # horizontal text: reset the rotation angle
+      if (identical(gene_label_orientation, "horizontal")) {
+        gene_labels$text_angle <- 0
+      }
+      # elbow leader lines: anchor -> (anchor.x, label.y) -> label
+      if (identical(gene_label_segment, "elbow") &&
+          nrow(gene_label_segments) > 0) {
+        seg <- gene_label_segments
+        elbow <- data.frame(
+          x0 = c(seg$x0, seg$x0),
+          y0 = c(seg$y0, seg$y1),
+          x1 = c(seg$x0, seg$x1),
+          y1 = c(seg$y1, seg$y1),
+          group = c(seg$group, seg$group),
+          stringsAsFactors = FALSE
+        )
+        gene_label_segments <- elbow
+      }
     } else {
       # Legacy gentle de-overlap for fixed labels
       gene_labels <- ggchord_label_deoverlap(gene_labels,
@@ -667,6 +697,21 @@ compute_chord_layout <- function(
     }
     # hidden labels are dropped from the layout (the text layer skips NAs)
     gene_labels <- gene_labels[!is.na(gene_labels$text), , drop = FALSE]
+  }
+
+  # ====================================================================
+  # Step 8c: optionally hide axis labels that overlap other elements
+  # ====================================================================
+  if (isTRUE(axis_label_hide_overlaps) && nrow(axis_ticks) > 0 &&
+      any(!is.na(axis_ticks$label))) {
+    content <- ggchord_repel_points(seq_arcs, gene_polys,
+                                    data.frame(x = numeric(0), y = numeric(0)),
+                                    data.frame(), show_axis = FALSE)
+    axis_ticks <- ggchord_hide_text_overlaps(
+      axis_ticks, content,
+      units_per_inch = max(1, diff(range(c(axis_ticks$label_x,
+                                           axis_ticks$label_y)))) / 6
+    )
   }
 
   # ====================================================================

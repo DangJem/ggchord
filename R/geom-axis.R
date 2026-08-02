@@ -16,8 +16,11 @@
 #' @param axis_tick_minor_number Optional integer/vector. Number of minor ticks, default 4
 #' @param axis_tick_minor_length Optional numeric/vector. Minor tick length ratio, default 0.01
 #' @param axis_label_size Optional numeric/vector. Tick label font size, default 3
-#' @param axis_label_offset Optional numeric/vector. Label offset ratio, default 1.5
+#' @param axis_label_offset Optional numeric/vector. Label offset ratio, default 2
 #' @param axis_label_orientation Optional character/numeric/vector. Label orientation, default "horizontal"
+#' @param axis_label_hide_overlaps Logical, default FALSE. When TRUE, axis
+#'   labels whose boxes would overlap the plot content (sequence arcs, genes,
+#'   ribbons) or other axis labels are automatically hidden.
 #' @param show_legend Whether to show the legend, default FALSE (axes do not participate in legends)
 #' @param ... Additional arguments passed to geom_path/geom_segment/geom_text
 #'
@@ -33,6 +36,7 @@ geom_axis <- function(mapping = NULL, data = NULL,
                       axis_label_size = NULL,
                       axis_label_offset = NULL,
                       axis_label_orientation = NULL,
+                      axis_label_hide_overlaps = FALSE,
                       show_legend = FALSE,
                       ...) {
   empty_id <- data.frame(x = numeric(0), y = numeric(0),
@@ -41,6 +45,7 @@ geom_axis <- function(mapping = NULL, data = NULL,
                           x1 = numeric(0), y1 = numeric(0),
                           label = character(0), label_x = numeric(0),
                           label_y = numeric(0), size = numeric(0),
+                          label_hjust = numeric(0), label_vjust = numeric(0),
                           seq_id = character(0))
 
   path_layer <- geom_path(data = empty_id,
@@ -58,7 +63,8 @@ geom_axis <- function(mapping = NULL, data = NULL,
     axis_tick_minor_length  = axis_tick_minor_length,
     axis_label_size         = axis_label_size,
     axis_label_offset       = axis_label_offset,
-    axis_label_orientation  = axis_label_orientation
+    axis_label_orientation  = axis_label_orientation,
+    axis_label_hide_overlaps = axis_label_hide_overlaps
   )
 
   seg_layer <- geom_segment(data = empty_seg,
@@ -70,7 +76,9 @@ geom_axis <- function(mapping = NULL, data = NULL,
 
   text_layer <- geom_text(data = empty_seg[integer(0), ],
                           mapping = aes(x = label_x, y = label_y,
-                                        label = label, size = size),
+                                        label = label, size = size,
+                                        hjust = label_hjust,
+                                        vjust = label_vjust),
                           inherit.aes = FALSE, color = "black",
                           angle = 0, show.legend = show_legend, ...)
   text_layer$ggchord_type <- "axis_text"

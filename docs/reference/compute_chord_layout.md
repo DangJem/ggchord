@@ -39,6 +39,8 @@ compute_chord_layout(
   gene_label_repel_min_segment_length = 0.5,
   gene_label_repel_force = 1,
   gene_label_repel_seed = 123,
+  gene_label_orientation = "arc",
+  gene_label_segment = "line",
   gene_color_scheme,
   gene_colors,
   gene_order,
@@ -54,6 +56,7 @@ compute_chord_layout(
   labelSize,
   labelOffset,
   axisLabelOrientation,
+  axis_label_hide_overlaps = FALSE,
   show_axis,
   rotation,
   debug = FALSE

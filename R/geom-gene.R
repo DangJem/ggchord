@@ -203,6 +203,13 @@ geom_gene_label <- function(mapping = NULL, data = NULL,
 #'   Keep it small so that every label is connected to its gene.
 #' @param force Numeric, default 1. Strength of the repulsive forces.
 #' @param seed Numeric, default 123. Random seed for reproducibility.
+#' @param gene_label_orientation Character, default "arc". One of
+#'   \code{"arc"} (text rotated along the sequence arc) or \code{"horizontal"}
+#'   (all labels are drawn horizontally).
+#' @param gene_label_segment Character, default "line". Leader line style: a
+#'   straight \code{"line"} from the gene to the label, or an L-shaped
+#'   \code{"elbow"} (a short segment outward, then a horizontal segment to the
+#'   label).
 #' @param show_legend Whether to show the legend, default FALSE
 #' @param ... Additional arguments passed to \code{geom_text()}
 #'
@@ -221,8 +228,13 @@ geom_gene_label_repel <- function(mapping = NULL, data = NULL,
                                   min_segment_length = 0.05,
                                   force = 1,
                                   seed = 123,
+                                  gene_label_orientation = "arc",
+                                  gene_label_segment = "line",
                                   show_legend = FALSE,
                                   ...) {
+  gene_label_orientation <- match.arg(gene_label_orientation,
+                                      c("arc", "horizontal"))
+  gene_label_segment <- match.arg(gene_label_segment, c("line", "elbow"))
   layers <- list()
 
   # Leader line layer (from the anchor to the repelled label position)
@@ -268,7 +280,9 @@ geom_gene_label_repel <- function(mapping = NULL, data = NULL,
     point_padding            = point_padding,
     min_segment_length       = min_segment_length,
     force                    = force,
-    seed                     = seed
+    seed                     = seed,
+    gene_label_orientation   = gene_label_orientation,
+    gene_label_segment       = gene_label_segment
   )
   layers[[length(layers) + 1]] <- text_layer
 

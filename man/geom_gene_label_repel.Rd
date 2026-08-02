@@ -19,6 +19,8 @@ geom_gene_label_repel(
   min_segment_length = 0.05,
   force = 1,
   seed = 123,
+  gene_label_orientation = "arc",
+  gene_label_segment = "line",
   show_legend = FALSE,
   ...
 )
@@ -58,6 +60,15 @@ Keep it small so that every label is connected to its gene.}
 \item{force}{Numeric, default 1. Strength of the repulsive forces.}
 
 \item{seed}{Numeric, default 123. Random seed for reproducibility.}
+
+\item{gene_label_orientation}{Character, default "arc". One of
+\code{"arc"} (text rotated along the sequence arc) or \code{"horizontal"}
+(all labels are drawn horizontally).}
+
+\item{gene_label_segment}{Character, default "line". Leader line style: a
+straight \code{"line"} from the gene to the label, or an L-shaped
+\code{"elbow"} (a short segment outward, then a horizontal segment to the
+label).}
 
 \item{show_legend}{Whether to show the legend, default FALSE}
 
