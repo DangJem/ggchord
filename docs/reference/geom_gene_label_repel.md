@@ -24,7 +24,7 @@ geom_gene_label_repel(
   max_overlaps = Inf,
   box_padding = 0.25,
   point_padding = 0.1,
-  min_segment_length = 0.5,
+  min_segment_length = 0.05,
   force = 1,
   seed = 123,
   show_legend = FALSE,
@@ -87,8 +87,9 @@ geom_gene_label_repel(
 
 - min_segment_length:
 
-  Numeric, default 0.5. Labels that moved less than this distance (data
-  units) from their anchor do not draw a leader line.
+  Numeric, default 0.05. Labels that moved less than this distance (data
+  units) from their anchor do not draw a leader line. Keep it small so
+  that every label is connected to its gene.
 
 - force:
 

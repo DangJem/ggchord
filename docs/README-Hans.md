@@ -667,7 +667,7 @@ gene_label_rotation = list(20)                            # 单元素列表自�
 | `max_overlaps`       | 数值 | Inf    | 隐藏仍与超过该数量标签重叠的标签   |
 | `box_padding`        | 数值 | 0.25   | 每个标签框的额外内边距（数据单位） |
 | `point_padding`      | 数值 | 0.1    | 锚点周围的额外内边距（数据单位）   |
-| `min_segment_length` | 数值 | 0.5    | 移动距离小于该值的标签不绘制引导线 |
+| `min_segment_length` | 数值 | 0.05   | 移动距离小于该值的标签不绘制引导线 |
 | `force`              | 数值 | 1      | 排斥力强度                         |
 | `seed`               | 数值 | 123    | 防重叠算法随机种子                 |
 

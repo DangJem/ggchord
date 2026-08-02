@@ -307,7 +307,7 @@ ggchord_repel_labels <- function(gl, units_per_inch = 0.35,
         cutoff <- point_padding + 0.6
         if (d < cutoff) {
           if (d < 1e-4) d <- 1e-4
-          f <- force * 0.15 * (1 - d / cutoff)
+          f <- force * 0.25 * (1 - d / cutoff)
           fx[i] <- fx[i] + f * dx / d
           fy[i] <- fy[i] + f * dy / d
         }
@@ -331,8 +331,8 @@ ggchord_repel_labels <- function(gl, units_per_inch = 0.35,
       }
     }
     # 3) spring back toward the own anchor (keeps the label associated)
-    x <- x + (ax - x) * 0.15 + fx * 0.5
-    y <- y + (ay - y) * 0.15 + fy * 0.5
+    x <- x + (ax - x) * 0.12 + fx * 0.5
+    y <- y + (ay - y) * 0.12 + fy * 0.5
     # 4) clamp inside the region
     x <- pmin(pmax(x, x_lim[1]), x_lim[2])
     y <- pmin(pmax(y, y_lim[1]), y_lim[2])

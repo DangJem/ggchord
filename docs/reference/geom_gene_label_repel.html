@@ -63,7 +63,7 @@ that still overlap too many others can be hidden.</p>
 <span>  max_overlaps <span class="op">=</span> <span class="cn">Inf</span>,</span>
 <span>  box_padding <span class="op">=</span> <span class="fl">0.25</span>,</span>
 <span>  point_padding <span class="op">=</span> <span class="fl">0.1</span>,</span>
-<span>  min_segment_length <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>  min_segment_length <span class="op">=</span> <span class="fl">0.05</span>,</span>
 <span>  force <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  seed <span class="op">=</span> <span class="fl">123</span>,</span>
 <span>  show_legend <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -125,8 +125,9 @@ points (data units).</p></dd>
 
 
 <dt id="arg-min-segment-length">min_segment_length<a class="anchor" aria-label="anchor" href="#arg-min-segment-length"></a></dt>
-<dd><p>Numeric, default 0.5. Labels that moved less than
-this distance (data units) from their anchor do not draw a leader line.</p></dd>
+<dd><p>Numeric, default 0.05. Labels that moved less than
+this distance (data units) from their anchor do not draw a leader line.
+Keep it small so that every label is connected to its gene.</p></dd>
 
 
 <dt id="arg-force">force<a class="anchor" aria-label="anchor" href="#arg-force"></a></dt>

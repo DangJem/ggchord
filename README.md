@@ -566,7 +566,7 @@ All `geom_gene_label()` parameters plus:
 | `max_overlaps` | numeric | Inf | Hide labels that still overlap more than this many other labels after repulsion |
 | `box_padding` | numeric | 0.25 | Extra padding around each label box (data units) |
 | `point_padding` | numeric | 0.1 | Extra padding around the anchor points (data units) |
-| `min_segment_length` | numeric | 0.5 | Labels that moved less than this distance draw no leader line |
+| `min_segment_length` | numeric | 0.05 | Labels that moved less than this distance draw no leader line |
 | `force` | numeric | 1 | Strength of the repulsive forces |
 | `seed` | numeric | 123 | Random seed for reproducible repulsion |
 
