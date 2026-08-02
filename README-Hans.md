@@ -311,7 +311,7 @@ ggchord(seq_data_example, gene_data = gene_data_example) +
   geom_gene_label_repel(
     gene_label_orientation = "horizontal",
     gene_label_segment = "elbow",
-    gene_label_wrap = 15
+    gene_label_wrap = 0
   )
 ```
 
@@ -334,7 +334,7 @@ ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
     gene_label_orientation = "horizontal",
     gene_label_segment = "elbow",
     gene_label_side = "outside",
-    gene_label_wrap = 15
+    gene_label_wrap = 0
   )
 ```
 
@@ -413,7 +413,41 @@ ggchord(seq3, ribbon3, gene3) +
 
 ![三序列比较](man/figures/example_seq3.png)
 
-#### 第 7 步：组合所有图层并精细控制
+#### 第 7 步：用 `+` 添加主题与 scale
+
+ggchord 图形是真正的 ggplot2 对象，`theme()` 与 `scale_*()` 可以像在 ggplot2 中一样使用：
+
+```r
+ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
+  geom_seq() + geom_ribbon() + geom_gene() + geom_axis() +
+  theme(panel.background = element_rect(fill = "grey95")) +
+  scale_color_manual(
+    values = c("MT108731.1" = "#E41A1C",
+               "MT118296.1" = "#377EB8",
+               "OQ646790.1" = "#4DAF4A",
+               "OR222515.1" = "#984EA3")
+  )
+```
+
+![自定义主题与 scale 的弦图](man/figures/theme_custom.png)
+
+> 提示：出现 "Scale for colour is already present" 信息只是表示你的
+> `scale_color_manual()` 替换了内置的默认 scale，属于正常现象，不影响结果。
+
+**图例摆放**。默认情况下各图层的图例独立摆放：Seq ID 图例与链/基因注释图例在右侧，Identity(%) 色条在左侧。可通过 `geom_seq()`、`geom_ribbon()`、`geom_gene()` 各自的 `legend_position` 参数分别移动。若将 `legend_position` 设为 `NULL`，该图例将遵循 `theme(legend.position = ...)`，从而可以把所有图例放在一起：
+
+```r
+ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
+  geom_seq(legend_position = NULL) +
+  geom_ribbon(legend_position = NULL) +
+  geom_gene(legend_position = NULL) +
+  geom_axis() +
+  theme(legend.position = "bottom", legend.box = "horizontal")
+```
+
+![通过 theme() 将所有图例放在底部](man/figures/legend_bottom.png)
+
+#### 第 8 步：组合所有图层并精细控制
 
 每个图层都可以接收精细参数。下图把 ggchord 的特色功能全部组合在一起：
 逐序列的半径、方向与弯曲度，按一致性着色的 ribbon，按链向着色的基因箭头，
@@ -496,40 +530,6 @@ ggchord(
 ```
 
 ![精细控制下的完整弦图（可作为封面图）](man/figures/combined_fine.png)
-
-#### 第 8 步：用 `+` 添加主题与 scale
-
-ggchord 图形是真正的 ggplot2 对象，`theme()` 与 `scale_*()` 可以像在 ggplot2 中一样使用：
-
-```r
-ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
-  geom_seq() + geom_ribbon() + geom_gene() + geom_axis() +
-  theme(panel.background = element_rect(fill = "grey95")) +
-  scale_color_manual(
-    values = c("MT108731.1" = "#E41A1C",
-               "MT118296.1" = "#377EB8",
-               "OQ646790.1" = "#4DAF4A",
-               "OR222515.1" = "#984EA3")
-  )
-```
-
-![自定义主题与 scale 的弦图](man/figures/theme_custom.png)
-
-> 提示：出现 "Scale for colour is already present" 信息只是表示你的
-> `scale_color_manual()` 替换了内置的默认 scale，属于正常现象，不影响结果。
-
-**图例摆放**。默认情况下各图层的图例独立摆放：Seq ID 图例与链/基因注释图例在右侧，Identity(%) 色条在左侧。可通过 `geom_seq()`、`geom_ribbon()`、`geom_gene()` 各自的 `legend_position` 参数分别移动。若将 `legend_position` 设为 `NULL`，该图例将遵循 `theme(legend.position = ...)`，从而可以把所有图例放在一起：
-
-```r
-ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
-  geom_seq(legend_position = NULL) +
-  geom_ribbon(legend_position = NULL) +
-  geom_gene(legend_position = NULL) +
-  geom_axis() +
-  theme(legend.position = "bottom", legend.box = "horizontal")
-```
-
-![通过 theme() 将所有图例放在底部](man/figures/legend_bottom.png)
 
 ### 3. 灵活的参数格式
 

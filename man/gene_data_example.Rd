@@ -18,6 +18,8 @@ A data frame containing the following columns:
 gene_data_example
 }
 \description{
-Gene annotation data for ggchord demonstration (short genes have been filtered out)
+Gene annotation data for ggchord demonstration, read from
+\code{examples/gene_track.tsv} (the full gene track converted from the
+example GFF3 files)
 }
 \keyword{datasets}

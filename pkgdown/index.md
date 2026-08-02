@@ -341,7 +341,7 @@ ggchord(seq_data_example, gene_data = gene_data_example) +
   geom_gene_label_repel(
     gene_label_orientation = "horizontal",
     gene_label_segment = "elbow",
-    gene_label_wrap = 15
+    gene_label_wrap = 0
   )
 ```
 
@@ -402,7 +402,48 @@ ggchord(seq3, ribbon3, gene3) +
 
 ![Three-sequence comparison](man/figures/example_seq3.png)
 
-#### Step 7: Combine everything and fine-tune
+#### Step 7: Add themes and scales with `+`
+
+A ggchord plot is a real ggplot2 object, so `theme()` and `scale_*()` work as
+usual:
+
+```r
+ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
+  geom_seq() + geom_ribbon() + geom_gene() + geom_axis() +
+  theme(panel.background = element_rect(fill = "grey95")) +
+  scale_color_manual(
+    values = c("MT108731.1" = "#E41A1C",
+               "MT118296.1" = "#377EB8",
+               "OQ646790.1" = "#4DAF4A",
+               "OR222515.1" = "#984EA3")
+  )
+```
+
+![Chord diagram with a custom theme and scale](man/figures/theme_custom.png)
+
+> The "Scale for colour is already present" message simply means your
+> `scale_color_manual()` replaces the built-in default scale — this is
+> expected and harmless.
+
+**Legend placement.** Each layer's legend is placed independently by default:
+the Seq ID legend and the Strand/Gene legend are on the right, and the
+Identity(%) colourbar is on the left. Move each one with the `legend_position`
+argument of `geom_seq()`, `geom_ribbon()` and `geom_gene()`. Set
+`legend_position = NULL` to make a legend follow `theme(legend.position = ...)`
+so all legends can be grouped together:
+
+```r
+ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
+  geom_seq(legend_position = NULL) +
+  geom_ribbon(legend_position = NULL) +
+  geom_gene(legend_position = NULL) +
+  geom_axis() +
+  theme(legend.position = "bottom", legend.box = "horizontal")
+```
+
+![All legends grouped at the bottom via theme()](man/figures/legend_bottom.png)
+
+#### Step 8: Combine everything and fine-tune
 
 Every layer accepts fine-grained parameters. The plot below puts them all
 together: per-sequence radii, orientations and curvatures, identity-colored
@@ -486,47 +527,6 @@ ggchord(
 ```
 
 ![Full chord diagram with fine-grained control](man/figures/combined_fine.png)
-
-#### Step 8: Add themes and scales with `+`
-
-A ggchord plot is a real ggplot2 object, so `theme()` and `scale_*()` work as
-usual:
-
-```r
-ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
-  geom_seq() + geom_ribbon() + geom_gene() + geom_axis() +
-  theme(panel.background = element_rect(fill = "grey95")) +
-  scale_color_manual(
-    values = c("MT108731.1" = "#E41A1C",
-               "MT118296.1" = "#377EB8",
-               "OQ646790.1" = "#4DAF4A",
-               "OR222515.1" = "#984EA3")
-  )
-```
-
-![Chord diagram with a custom theme and scale](man/figures/theme_custom.png)
-
-> The "Scale for colour is already present" message simply means your
-> `scale_color_manual()` replaces the built-in default scale — this is
-> expected and harmless.
-
-**Legend placement.** Each layer's legend is placed independently by default:
-the Seq ID legend and the Strand/Gene legend are on the right, and the
-Identity(%) colourbar is on the left. Move each one with the `legend_position`
-argument of `geom_seq()`, `geom_ribbon()` and `geom_gene()`. Set
-`legend_position = NULL` to make a legend follow `theme(legend.position = ...)`
-so all legends can be grouped together:
-
-```r
-ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
-  geom_seq(legend_position = NULL) +
-  geom_ribbon(legend_position = NULL) +
-  geom_gene(legend_position = NULL) +
-  geom_axis() +
-  theme(legend.position = "bottom", legend.box = "horizontal")
-```
-
-![All legends grouped at the bottom via theme()](man/figures/legend_bottom.png)
 
 ### 3. Flexible parameter formats
 

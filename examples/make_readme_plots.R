@@ -98,7 +98,7 @@ save_plot(
     geom_gene_label_repel(
       gene_label_orientation = "horizontal",
       gene_label_segment = "elbow",
-      gene_label_wrap = 15
+      gene_label_wrap = 0
     ),
   "gene_repel_elbow.png")
 save_plot(
@@ -110,7 +110,7 @@ save_plot(
       gene_label_orientation = "horizontal",
       gene_label_segment = "elbow",
       gene_label_side = "outside",
-      gene_label_wrap = 15
+      gene_label_wrap = 0
     ),
   "gene_repel_outside.png")
 save_plot(
