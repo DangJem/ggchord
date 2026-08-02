@@ -444,6 +444,39 @@ test_that("axis_gap defaults to 0.05", {
   expect_true(nrow(axis_layer) > 0)
 })
 
+test_that("geom_ribbon shows the Identity colourbar legend without gene data", {
+  data(seq_data_example)
+  data(ribbon_data_example)
+  p <- ggchord(seq_data_example, ribbon_data_example) + geom_seq() + geom_ribbon()
+  pdf(tempfile(fileext = ".pdf"), 8, 8)
+  g <- ggplotGrob(p)
+  dev.off()
+  # the colourbar legend is rendered (a rastergrob inside a guide box)
+  found <- FALSE
+  walk <- function(x) {
+    if (inherits(x, "rastergrob")) found <<- TRUE
+    if (!is.null(x$grobs)) for (ch in x$grobs) walk(ch)
+    if (!is.null(x$children)) for (ch in x$children) walk(ch)
+  }
+  for (i in seq_along(g$grobs)) if (inherits(g$grobs[[i]], "gtable") && grepl("guide-box", g$grobs[[i]]$name)) walk(g$grobs[[i]])
+  expect_true(found)
+})
+
+test_that("no spurious fill-scale warning when gene data is present without a gene layer", {
+  data(seq_data_example)
+  data(ribbon_data_example)
+  data(gene_data_example)
+  p <- ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
+    geom_seq() + geom_ribbon()
+  warns <- character(0)
+  pdf(tempfile(fileext = ".pdf"), 8, 8)
+  withCallingHandlers(print(p), warning = function(w) {
+    warns <<- c(warns, conditionMessage(w)); invokeRestart("muffleWarning")
+  })
+  dev.off()
+  expect_false(any(grepl("No shared levels", warns)))
+})
+
 test_that("documented data and parameter values are validated", {
   expect_error(
     ggchord(data.frame(seq_id = c("a", "a"), length = c(1, 2))),

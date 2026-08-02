@@ -638,12 +638,14 @@ make_ggchord_scales <- function(layout, has_seq = FALSE, has_gene = FALSE,
     }
   }
 
-  # ggplot2 allows only one scale per aesthetic. When both the ribbon and the
-  # gene layers are present, the ribbon scale is attached to the internal
-  # aesthetic "fill_ribbon" and the gene scale keeps "fill", so they do not
-  # overwrite each other.
+  # The ribbon layer always uses the internal "zfill" aesthetic (never the
+  # plain "fill" aesthetic), so that its mapping stays consistent with the
+  # ribbon geom's default aesthetics (which are renamed to avoid injecting a
+  # plain "fill" default into the ribbon data). This also keeps ggplot2's
+  # guide matching working when no gene layer is present, so the Identity(%)
+  # colourbar legend is shown even without gene data.
   ribbon_aes <- "fill"
-  if (!is.null(ribbon_fill_scale) && !is.null(gene_fill_scale)) {
+  if (!is.null(ribbon_fill_scale)) {
     ribbon_aes <- "zfill"
     s <- ribbon_fill_scale
     s$aesthetics <- ribbon_aes
@@ -655,9 +657,9 @@ make_ggchord_scales <- function(layout, has_seq = FALSE, has_gene = FALSE,
       }
     }
     scales[[length(scales) + 1]] <- s
-    scales[[length(scales) + 1]] <- gene_fill_scale
-  } else if (!is.null(ribbon_fill_scale)) {
-    scales[[length(scales) + 1]] <- ribbon_fill_scale
+    if (!is.null(gene_fill_scale)) {
+      scales[[length(scales) + 1]] <- gene_fill_scale
+    }
   } else if (!is.null(gene_fill_scale)) {
     scales[[length(scales) + 1]] <- gene_fill_scale
   }
@@ -729,7 +731,7 @@ prepare_ggchord_plot <- function(plot) {
   cls <- classify_ggchord_layers(plot)
   sc <- make_ggchord_scales(layout,
                             has_seq = length(cls$seq) > 0,
-                            has_gene = nrow(layout$gene_polys) > 0,
+                            has_gene = length(cls$gene_poly) > 0,
                             legend_position = plot$theme$legend.position,
                             legend_box = plot$theme$legend.box,
                             positions = ggchord_legend_positions(plot))
@@ -801,7 +803,7 @@ ggplot_build.ggchord <- function(plot, ...) {
   # ====================================================================
   sc <- make_ggchord_scales(layout,
                             has_seq = length(seq_indices) > 0,
-                            has_gene = nrow(layout$gene_polys) > 0,
+                            has_gene = length(gene_poly_indices) > 0,
                             legend_position = plot$theme$legend.position,
                             legend_box = plot$theme$legend.box,
                             positions = ggchord_legend_positions(plot))

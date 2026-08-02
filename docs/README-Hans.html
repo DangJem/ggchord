@@ -38,7 +38,7 @@
 
 <div class="section level2">
 <h2 id="概述">概述<a class="anchor" aria-label="anchor" href="#%E6%A6%82%E8%BF%B0"></a></h2>
-<p><code>ggchord</code> 是一个基于 <code>ggplot2</code> 的 R 语言包，采用分层图形语法将多序列比对结果可视化为直观的弦图。v0.4.0 实现了布局参数从 <code><a href="reference/ggchord.html">ggchord()</a></code> 向各 <code>geom_*</code> 图层的下沉，靠近 <code>ggplot2</code> 的设计哲学——每个图层管自己的样式。v0.5.0 移除了 <code>ggnewscale</code>/<code>RColorBrewer</code> 依赖并新增连接带轮廓定制。最新 v0.6.0 使绘图对象完全自包含（布局在构建时计算），支持 <code><a href="https://rdrr.io/pkg/ggplot2/man/ggsave.html" class="external-link">ggsave()</a></code>/<code><a href="https://rdrr.io/pkg/ggplot2/man/ggplot_build.html" class="external-link">ggplot_build()</a></code>，加强数据校验并加入 CI。</p>
+<p><code>ggchord</code> 是一个基于 <code>ggplot2</code> 的 R 语言包，采用分层图形语法将多序列比对结果可视化为直观的弦图。v0.4.0 实现了布局参数从 <code><a href="reference/ggchord.html">ggchord()</a></code> 向各 <code>geom_*</code> 图层的下沉，靠近 <code>ggplot2</code> 的设计哲学——每个图层管自己的样式。v0.5.0 移除了 <code>ggnewscale</code>/<code>RColorBrewer</code> 依赖并新增连接带轮廓定制。最新 v0.6.0 使绘图对象完全自包含（布局在构建时计算），支持 <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code>/<code><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">ggplot_build()</a></code>，加强数据校验并加入 CI。</p>
 <ul><li>每条序列以圆弧呈现，按比例映射长度。</li>
 <li>彩色连接带（ribbon）表示序列间的比对区域，支持按相似度或来源着色。</li>
 <li>基因注释以箭头形式叠加，支持按链方向或功能类别着色。</li>
@@ -51,7 +51,7 @@
 <ul><li>
 <strong>真正的 ggplot2 分层风格</strong>：<code><a href="reference/ggchord.html">ggchord()</a></code> 仅接收数据和全局参数，各 <code>geom_*</code> 接收自己的布局参数，像 <code>ggplot2</code> 一样自然。</li>
 <li>
-<strong>延迟计算模型</strong>：布局在绘图构建时（<code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code>、<code><a href="https://rdrr.io/pkg/ggplot2/man/ggsave.html" class="external-link">ggsave()</a></code> 或 <code><a href="https://rdrr.io/pkg/ggplot2/man/ggplot_build.html" class="external-link">ggplot_build()</a></code>）计算，因此 <code>geom</code> 中指定的参数和之前叠加的参数都会在渲染时汇总生效。</li>
+<strong>延迟计算模型</strong>：布局在绘图构建时（<code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code>、<code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code> 或 <code><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">ggplot_build()</a></code>）计算，因此 <code>geom</code> 中指定的参数和之前叠加的参数都会在渲染时汇总生效。</li>
 <li>
 <strong>多序列支持</strong>：同时展示 2 条及以上序列的比对关系。</li>
 <li>
@@ -65,7 +65,7 @@
 <li>
 <strong>序列标签</strong>：可通过 <code><a href="reference/geom_seq_label.html">geom_seq_label()</a></code> 将标签放在每条序列弧线上/外侧。</li>
 <li>
-<strong>灵活集成</strong>：绘图对象自包含，支持 <code><a href="https://rdrr.io/pkg/ggplot2/man/ggsave.html" class="external-link">ggsave()</a></code>、<code><a href="https://rdrr.io/pkg/ggplot2/man/ggplot_build.html" class="external-link">ggplot_build()</a></code> 与 <code>ggplotly()</code>；<code><a href="https://rdrr.io/pkg/ggplot2/man/theme.html" class="external-link">theme()</a></code> 与自定义 scale 可用 <code>+</code> 叠加。</li>
+<strong>灵活集成</strong>：绘图对象自包含，支持 <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code>、<code><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">ggplot_build()</a></code> 与 <code>ggplotly()</code>；<code><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme()</a></code> 与自定义 scale 可用 <code>+</code> 叠加。</li>
 </ul></div>
 <div class="section level2">
 <h2 id="安装">安装<a class="anchor" aria-label="anchor" href="#%E5%AE%89%E8%A3%85"></a></h2>
@@ -478,8 +478,8 @@
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/ggchord.html">ggchord</a></span><span class="op">(</span><span class="va">seq_data_example</span>, <span class="va">ribbon_data_example</span>, <span class="va">gene_data_example</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="reference/geom_seq.html">geom_seq</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="reference/geom_ribbon.html">geom_ribbon</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="reference/geom_gene.html">geom_gene</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="reference/geom_axis.html">geom_axis</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/theme.html" class="external-link">theme</a></span><span class="op">(</span>panel.background <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/element.html" class="external-link">element_rect</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"grey95"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>panel.background <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_rect</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"grey95"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span></span>
 <span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"MT108731.1"</span> <span class="op">=</span> <span class="st">"#E41A1C"</span>,</span>
 <span>               <span class="st">"MT118296.1"</span> <span class="op">=</span> <span class="st">"#377EB8"</span>,</span>
 <span>               <span class="st">"OQ646790.1"</span> <span class="op">=</span> <span class="st">"#4DAF4A"</span>,</span>
@@ -495,7 +495,7 @@
 <span>  <span class="fu"><a href="reference/geom_ribbon.html">geom_ribbon</a></span><span class="op">(</span>legend_position <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="reference/geom_gene.html">geom_gene</a></span><span class="op">(</span>legend_position <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="reference/geom_axis.html">geom_axis</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"bottom"</span>, legend.box <span class="op">=</span> <span class="st">"horizontal"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"bottom"</span>, legend.box <span class="op">=</span> <span class="st">"horizontal"</span><span class="op">)</span></span></code></pre></div>
 <p><strong>灵活的参数格式</strong>：所有序列级参数（<code>seq_radius</code>、<code>seq_gap</code> 等）支持单值、无命名向量、按序列 ID 命名的向量/列表、按序列顺序命名（<code>"1"</code>、<code>"2"</code>、…）的列表、以及无命名列表。基因级参数（如 <code>gene_label_rotation</code>、<code>gene_offset</code>）额外支持按链（<code>+</code>/<code>-</code>）指定——既可以用命名向量，也可以写在列表里：</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">gene_label_rotation</span> <span class="op">=</span> <span class="fl">20</span>                                  <span class="co"># 所有序列、正负链相同</span></span>
@@ -836,7 +836,7 @@
 <ul><li>
 <strong>绘图对象自包含</strong>：数据与参数直接存储在绘图对象上，多个图可并存，且对象可经 <code><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">saveRDS()</a></code>/<code><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS()</a></code> 保存与恢复。</li>
 <li>
-<strong>构建时布局</strong>：布局改由 <code><a href="https://rdrr.io/pkg/ggplot2/man/ggplot_build.html" class="external-link">ggplot_build()</a></code> 计算（而非 <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code>），因此 <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code>、<code><a href="https://rdrr.io/pkg/ggplot2/man/ggsave.html" class="external-link">ggsave()</a></code>、<code><a href="https://rdrr.io/pkg/ggplot2/man/ggplot_build.html" class="external-link">ggplot_build()</a></code>（及 <code>ggplotly()</code>）均可用；渲染不再修改用户绘图对象。</li>
+<strong>构建时布局</strong>：布局改由 <code><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">ggplot_build()</a></code> 计算（而非 <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code>），因此 <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code>、<code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code>、<code><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">ggplot_build()</a></code>（及 <code>ggplotly()</code>）均可用；渲染不再修改用户绘图对象。</li>
 <li>
 <strong>新图层 <code><a href="reference/geom_seq_label.html">geom_seq_label()</a></code></strong>：在弧线上/外侧放置序列标签（<code>seq_label_radius</code>、<code>seq_label_rotation</code>、<code>seq_label_size</code>）。</li>
 <li>
@@ -844,7 +844,7 @@
 <li>
 <strong>导出 <code><a href="reference/get_chord_layout.html">get_chord_layout()</a></code></strong>：获取计算后的布局，便于自定义图层。</li>
 <li>
-<strong><code>+</code> 叠加 <code><a href="https://rdrr.io/pkg/ggplot2/man/theme.html" class="external-link">theme()</a></code>/scale</strong>：支持 <code><a href="https://rdrr.io/pkg/ggplot2/man/theme.html" class="external-link">theme()</a></code> 与用户自定义 scale。</li>
+<strong><code>+</code> 叠加 <code><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme()</a></code>/scale</strong>：支持 <code><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme()</a></code> 与用户自定义 scale。</li>
 <li>
 <strong>数据校验</strong>：<code><a href="reference/ggchord.html">ggchord()</a></code> 会对越界或反向的比对/基因坐标、未知序列 ID 给出警告。</li>
 <li>

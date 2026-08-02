@@ -58,7 +58,7 @@ geom_seq_label(
 - ...:
 
   Additional arguments passed to
-  [`geom_text()`](https://rdrr.io/pkg/ggplot2/man/geom_text.html)
+  [`geom_text()`](https://ggplot2.tidyverse.org/reference/geom_text.html)
 
 ## Value
 

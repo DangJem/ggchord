@@ -2,7 +2,7 @@
 
 Returns the most recently computed chord layout (after the plot was
 built, e.g. via [`print()`](https://rdrr.io/r/base/print.html) or
-[`ggplot_build()`](https://rdrr.io/pkg/ggplot2/man/ggplot_build.html)).
+[`ggplot_build()`](https://ggplot2.tidyverse.org/reference/ggplot_build.html)).
 This is useful for building custom layers or annotations on top of the
 chord geometry.
 

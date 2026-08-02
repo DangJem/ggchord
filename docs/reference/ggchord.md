@@ -6,8 +6,8 @@ global settings; the `geom_*` layers are stacked as needed, each
 responsible for its own layout parameters and visual rendering. The
 layout is computed lazily when the plot is built (e.g. via
 [`print()`](https://rdrr.io/r/base/print.html),
-[`ggsave()`](https://rdrr.io/pkg/ggplot2/man/ggsave.html), or
-[`ggplot_build()`](https://rdrr.io/pkg/ggplot2/man/ggplot_build.html)).
+[`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html), or
+[`ggplot_build()`](https://ggplot2.tidyverse.org/reference/ggplot_build.html)).
 
 ## Usage
 
