@@ -822,9 +822,17 @@ test_that("elbow leader lines adapt their segment lengths per label", {
     rows <- seg[seg$group == g, ]
     abs(rows$x1[2] - rows$x0[2])
   }, numeric(1))
+  # horizontal span between the gene anchor and the label
+  span <- vapply(groups, function(g) {
+    rows <- seg[seg$group == g, ]
+    abs(rows$x1[2] - rows$x0[1])
+  }, numeric(1))
   # stubs scale with each label's position instead of being one fixed length
   expect_gt(length(unique(round(stub_len, 4))), 1)
-  expect_true(all(stub_len >= 0.02 - 1e-6))
+  # stubs stay >= 0.02, unless the label sits almost vertically above/below
+  # its gene: then the bend is clamped to the anchor and the stub collapses
+  # to the (tiny) horizontal span (a straight-looking leader line)
+  expect_true(all(stub_len >= pmin(0.02, span) - 1e-6))
   # the bend never lands beyond the gene anchor (no doubled-back elbows)
   for (g in groups) {
     rows <- seg[seg$group == g, ]
