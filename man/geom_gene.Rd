@@ -21,6 +21,7 @@ geom_gene(
   show_legend = TRUE,
   show_label = NULL,
   label_size = NULL,
+  legend_position = NULL,
   ...
 )
 }
@@ -56,6 +57,12 @@ geom_gene(
 \item{show_label}{Whether to show gene labels (overrides gene_label_show), default NULL}
 
 \item{label_size}{Label font size (overrides gene_label_size), default NULL}
+
+\item{legend_position}{Optional position of this layer's legend (the Strand
+or Gene Annotation legend): one of "left", "right", "top", "bottom" or
+"inside". When NULL the legend follows \code{theme(legend.position = ...)}
+together with the other legends. Can also be set with
+\code{theme(legend.position.gene = ...)}.}
 
 \item{...}{Additional arguments passed to \code{geom_polygon()}}
 }

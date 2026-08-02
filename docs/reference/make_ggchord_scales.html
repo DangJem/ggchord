@@ -39,11 +39,43 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">make_ggchord_scales</span><span class="op">(</span><span class="va">layout</span>, has_seq <span class="op">=</span> <span class="cn">FALSE</span>, has_gene <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">make_ggchord_scales</span><span class="op">(</span></span>
+<span>  <span class="va">layout</span>,</span>
+<span>  has_seq <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  has_gene <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  legend_position <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  legend_box <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  positions <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
+    <div class="section level2">
+    <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
 
-  </main></div>
+
+<dl><dt id="arg-legend-position">legend_position<a class="anchor" aria-label="anchor" href="#arg-legend-position"></a></dt>
+<dd><p>The plot theme's `legend.position` (character).</p></dd>
+
+
+<dt id="arg-legend-box">legend_box<a class="anchor" aria-label="anchor" href="#arg-legend-box"></a></dt>
+<dd><p>The plot theme's `legend.box` setting. When the legend is
+at the top/bottom or the legend box is laid out horizontally
+(`"horizontal"`), a `unit(1, "null")` colorbar key height collapses to zero
+height in ggplot2 (the Identity(<!-- %) bar becomes invisible). A fixed size is -->
+used in those cases so the colorbar stays visible; otherwise the colorbar
+fills the available height.</p></dd>
+
+
+<dt id="arg-positions">positions<a class="anchor" aria-label="anchor" href="#arg-positions"></a></dt>
+<dd><p>Named list with per-legend position overrides
+(`seq`, `ribbon`, `gene`), each `NULL` or one of "left", "right", "top",
+"bottom", "inside". Overrides make that legend sit in its own legend box at
+the given position instead of following the theme's `legend.position`.</p></dd>
+
+</dl></div>
+
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">

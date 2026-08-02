@@ -54,6 +54,11 @@ ribbon_geom <- rename_fill_geom()
 #' @param ribbon_outline_width Numeric. Line width of the ribbon outline, default 0.05
 #' @param ribbon_outline_linetype Numeric or character. Line type of the ribbon outline, default 1 (solid); see \code{linetype} in ggplot2 for options
 #' @param show_legend Whether to show the legend, default TRUE
+#' @param legend_position Optional position of this layer's legend (the
+#'   Identity(%) colourbar): one of "left", "right", "top", "bottom" or
+#'   "inside". When NULL the legend follows \code{theme(legend.position = ...)}
+#'   together with the other legends. Can also be set with
+#'   \code{theme(legend.position.ribbon = ...)}.
 #' @param ... Additional arguments passed to \code{geom_polygon()}
 #'
 #' @return A list of ggplot2 layers
@@ -69,6 +74,7 @@ geom_ribbon <- function(mapping = NULL, data = NULL,
                         ribbon_outline_width = 0.05,
                         ribbon_outline_linetype = 1,
                         show_legend = TRUE,
+                        legend_position = NULL,
                         ...) {
   ribbon_alpha <- alpha %||% ribbon_alpha
 
@@ -126,7 +132,8 @@ geom_ribbon <- function(mapping = NULL, data = NULL,
     ribbon_gap              = ribbon_gap,
     ribbon_outline_color    = ribbon_outline_color,
     ribbon_outline_width    = ribbon_outline_width,
-    ribbon_outline_linetype = ribbon_outline_linetype
+    ribbon_outline_linetype = ribbon_outline_linetype,
+    legend_position         = legend_position
   )
   list(lyr)
 }

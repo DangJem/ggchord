@@ -32,6 +32,14 @@ ggplotly.ggchord <- function(p, ...) {
     pl <- tryCatch(ggchord_plotly_legend(pl, layout, out$colors),
                    error = function(e) pl)
   }
+  # The standard plot uses identity scales with show.legend = FALSE, so plotly
+  # disables the legend at the layout level. Turn it back on (the legend-only
+  # traces added above provide the Seq ID / Strand / Identity entries).
+  pl$x$layout$showlegend <- TRUE
+  # geom_seq draws arrowheads that plotly cannot reproduce on line traces;
+  # add them as plotly annotations so the arc direction stays visible.
+  tryCatch(pl <- ggchord_plotly_arrows(pl, layout, out$colors),
+           error = function(e) NULL)
   pl
 }
 
@@ -231,6 +239,47 @@ ggchord_layer_params <- function(p, type) {
     if (!is.null(pp) && identical(pp$type, type)) return(pp)
   }
   list()
+}
+
+#' Add arrowhead annotations at the tip of every sequence arc
+#'
+#' plotly's scatter traces cannot draw line arrowheads, so the directional
+#' arrows used by \code{geom_seq()} are reproduced as plotly annotations.
+#' @keywords internal
+ggchord_plotly_arrows <- function(pl, layout, colors = NULL) {
+  if (length(layout$seq_arcs) == 0) return(pl)
+  seq_cols <- colors$seq %||% layout$seq_colors
+  ext <- layout$extremes
+  span <- max(ext$x_max - ext$x_min, ext$y_max - ext$y_min, 1)
+  arrow_len <- 0.05 * span
+
+  ann <- pl$x$layout$annotations
+  if (is.null(ann)) ann <- list()
+
+  for (arc in layout$seq_arcs) {
+    n <- nrow(arc)
+    if (n < 3) next
+    sid <- unique(arc$seq_id)[1]
+    tip_x <- arc$x[n]
+    tip_y <- arc$y[n]
+    dx <- tip_x - arc$x[n - 1]
+    dy <- tip_y - arc$y[n - 1]
+    len <- sqrt(dx^2 + dy^2)
+    if (len == 0) next
+    # arrow tail sits behind the tip, pointing along the arc's direction
+    tail_x <- tip_x - dx / len * arrow_len
+    tail_y <- tip_y - dy / len * arrow_len
+    ann[[length(ann) + 1]] <- list(
+      x = tip_x, y = tip_y, xref = "x", yref = "y",
+      ax = tail_x, ay = tail_y, axref = "x", ayref = "y",
+      showarrow = TRUE, arrowhead = 2, arrowsize = 1,
+      arrowcolor = unname(seq_cols[sid]),
+      text = "", hoverinfo = "none"
+    )
+  }
+
+  pl$x$layout$annotations <- ann
+  pl
 }
 
 #' Append legend-only traces (Seq ID, Strand/Annotation, Identity) to a plotly

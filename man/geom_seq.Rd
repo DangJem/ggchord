@@ -16,6 +16,7 @@ geom_seq(
   seq_colors = NULL,
   linewidth = 1.2,
   show_legend = TRUE,
+  legend_position = NULL,
   ...
 )
 }
@@ -41,6 +42,11 @@ geom_seq(
 \item{linewidth}{Arc line width, default 1.2}
 
 \item{show_legend}{Whether to show the legend for this layer, default TRUE}
+
+\item{legend_position}{Optional position of this layer's legend (the Seq ID
+legend): one of "left", "right", "top", "bottom" or "inside". When NULL the
+legend follows \code{theme(legend.position = ...)} together with the other
+legends. Can also be set with \code{theme(legend.position.seq = ...)}.}
 
 \item{...}{Additional arguments passed to \code{geom_path()}}
 }

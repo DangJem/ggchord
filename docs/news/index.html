@@ -60,7 +60,15 @@
 </ul></div>
 <div class="section level3">
 <h3 id="bug-fixes-0-6-0">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-6-0"></a></h3>
-<ul><li>Tests no longer write to a hard-coded <code>/tmp</code> path: they use <code><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile()</a></code>, so the test suite passes on Windows and leaves no stray files behind for <code>R CMD check</code> (fixes the CRAN incoming-check failure).</li>
+<ul><li><p>Tests no longer write to a hard-coded <code>/tmp</code> path: they use <code><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile()</a></code>, so the test suite passes on Windows and leaves no stray files behind for <code>R CMD check</code> (fixes the CRAN incoming-check failure).</p></li>
+<li><p>The Identity(%) colourbar no longer collapses into a thin/invisible line when the legend is placed at the top/bottom or the legend box is horizontal (<code>legend.box = "horizontal"</code>). It now follows the theme’s legend position: a vertical bar filling the available height at the left/right, and a fixed-size horizontal bar at the top/bottom.</p></li>
+<li><p>Legend keys keep a fixed white background instead of inheriting <code>panel.background</code> (ggplot2 4.x lets unset legend keys follow the panel background, so a coloured panel bled into the legend).</p></li>
+<li><p><code><a href="https://rdrr.io/pkg/plotly/man/ggplotly.html" class="external-link">plotly::ggplotly()</a></code> output now shows the Seq ID / Strand / Identity legends (the layout-level <code>showlegend</code> switch is enabled) and reproduces the <code><a href="../reference/geom_seq.html">geom_seq()</a></code> directional arrowheads as plotly annotations.</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="new-features-0-6-0-1">New features<a class="anchor" aria-label="anchor" href="#new-features-0-6-0-1"></a></h3>
+<ul><li><p>Each legend can now be positioned independently via the <code>legend_position</code> argument of <code><a href="../reference/geom_seq.html">geom_seq()</a></code>, <code><a href="../reference/geom_ribbon.html">geom_ribbon()</a></code> and <code><a href="../reference/geom_gene.html">geom_gene()</a></code> (e.g. <code>geom_ribbon(legend_position = "bottom")</code>). Legends without an explicit position stay together at <code>theme(legend.position = ...)</code>.</p></li>
+<li><p>Parameter specification is now more flexible and human-friendly. Sequence parameters accept a single value, vectors, vectors/lists named by sequence ID, lists named by sequence order (<code>"1"</code>, <code>"2"</code>, …) and unnamed lists; gene parameters additionally accept per-strand (<code>+</code>/<code>-</code>) specifications in any of those forms (e.g. <code>gene_label_rotation = c("+" = -15, "-" = -45)</code> or <code>list(c("+" = -15, "-" = -45), ...)</code>), including length-one lists that recycle.</p></li>
 </ul></div>
 </div>
     <div class="section level2">

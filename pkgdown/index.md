@@ -311,7 +311,45 @@ ggchord(seq_data_example) +
 
 ![Axes and sequence labels](man/figures/axis_seq_label.png)
 
-### Step 5: Combine Everything and Fine-Tune
+### Step 5: Two-Sequence Comparison
+
+The built-in datasets contain four sequences, but you can plot any subset.
+Start from two sequences by keeping only the rows you need:
+
+```r
+# Keep two sequences and the matching ribbons / genes
+seq2 <- seq_data_example[seq_data_example$seq_id %in% c("MT108731.1", "MT118296.1"), ]
+ribbon2 <- ribbon_data_example[
+  ribbon_data_example$qaccver %in% seq2$seq_id &
+    ribbon_data_example$saccver %in% seq2$seq_id, ]
+gene2 <- gene_data_example[gene_data_example$seq_id %in% seq2$seq_id, ]
+
+ggchord(seq2, ribbon2, gene2) +
+  geom_seq() + geom_ribbon() + geom_gene() + geom_axis()
+```
+
+![Two-sequence comparison](man/figures/example_seq2.png)
+
+### Step 6: Three-Sequence Comparison
+
+The same idea works for three sequences — keep the sequences of interest and
+filter `ribbon_data` and `gene_data` accordingly:
+
+```r
+seq3 <- seq_data_example[seq_data_example$seq_id %in%
+                           c("MT108731.1", "MT118296.1", "OQ646790.1"), ]
+ribbon3 <- ribbon_data_example[
+  ribbon_data_example$qaccver %in% seq3$seq_id &
+    ribbon_data_example$saccver %in% seq3$seq_id, ]
+gene3 <- gene_data_example[gene_data_example$seq_id %in% seq3$seq_id, ]
+
+ggchord(seq3, ribbon3, gene3) +
+  geom_seq() + geom_ribbon() + geom_gene() + geom_axis()
+```
+
+![Three-sequence comparison](man/figures/example_seq3.png)
+
+### Step 7: Combine Everything and Fine-Tune
 
 Combine all layers and distribute fine-grained parameters to the layer that uses them:
 
@@ -358,7 +396,7 @@ ggchord(
 
 ![Full chord diagram with fine-grained control](man/figures/combined_fine.png)
 
-### Step 6: Add Themes and Scales with `+`
+### Step 8: Add Themes and Scales with `+`
 
 Because a ggchord plot is a real ggplot2 object, themes and scales can be added with `+` just like in ggplot2:
 
@@ -380,18 +418,36 @@ ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
 
 ![Chord diagram with a custom theme and scale](man/figures/theme_custom.png)
 
-### Step 7: Make It Interactive with plotly
-
-A ggchord plot can be converted to an interactive chart with `plotly::ggplotly()` (requires the `plotly` package). Ribbons, gene arrows, axes, and the Seq ID / Strand / Identity legends are all preserved:
+Each legend can also be placed independently with the `legend_position`
+argument of `geom_seq()`, `geom_ribbon()` and `geom_gene()` (the Seq ID legend,
+the Identity(%) colourbar, and the Strand/Gene Annotation legend). Legends
+without an explicit position stay together at `theme(legend.position = ...)`:
 
 ```r
-p <- ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
-  geom_seq() + geom_ribbon() + geom_gene() + geom_axis()
-
-plotly::ggplotly(p)
+ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
+  geom_seq(legend_position = "left") +
+  geom_ribbon(legend_position = "bottom") +
+  geom_gene(legend_position = "right") +
+  geom_axis()
 ```
 
-> **Parameter formats**: sequence-level parameters (`seq_radius`, `seq_gap`, etc.) accept a single value, an unnamed vector, or a named vector. Gene-level parameters additionally accept per-strand (`+`/`-`) list formats, e.g. `gene_offset = list(c("+" = 0.2, "-" = -0.2), ...)`.
+**Flexible parameter formats**: all sequence-level parameters (`seq_radius`, `seq_gap`, etc.) accept a single value, an unnamed vector, a vector/list named by sequence ID, a list named by sequence order (`"1"`, `"2"`, ...), or an unnamed list. Gene-level parameters (e.g. `gene_label_rotation`, `gene_offset`) additionally accept per-strand (`+`/`-`) specifications — as a named vector or inside lists:
+
+```r
+gene_label_rotation = 20                                  # same for everything
+gene_label_rotation = c("+" = -15, "-" = -45)             # same for every sequence, per strand
+gene_label_rotation = list("MT118296.1" = c("+" = -15, "-" = -45),
+                           "MT108731.1" = c("+" = -15, "-" = -45))       # by sequence ID
+gene_label_rotation = list("1" = c("+" = -15, "-" = -45),
+                           "2" = c("+" = 30, "-" = -30),
+                           "3" = c("+" = 15, "-" = -15),
+                           "4" = c("+" = 0, "-" = 0))                    # by sequence order
+gene_label_rotation = list(c("+" = -15, "-" = -45),
+                           c("+" = 30, "-" = -30),
+                           c("+" = 15, "-" = -15),
+                           c("+" = 0, "-" = 0))                          # unnamed list by order
+gene_label_rotation = list(20)                            # length-one list recycles
+```
 
 ## Layer Reference
 
@@ -431,6 +487,7 @@ plotly::ggplotly(p)
 | `seq_colors` | color vector | Set1 | Sequence arc colors |
 | `linewidth` | numeric | 1.2 | Arc line width |
 | `show_legend` | logical | TRUE | Show legend |
+| `legend_position` | character | NULL | Position of the Seq ID legend: "left", "right", "top", "bottom" or "inside" (NULL = follow `theme(legend.position = ...)`) |
 
 ### geom_seq_label() Parameters
 
@@ -456,6 +513,7 @@ plotly::ggplotly(p)
 | `ribbon_outline_width` | numeric | 0.05 | Ribbon outline line width |
 | `ribbon_outline_linetype` | numeric/character | 1 | Ribbon outline line type (1 = solid) |
 | `show_legend` | logical | TRUE | Show legend |
+| `legend_position` | character | NULL | Position of the Identity(%) colourbar: "left", "right", "top", "bottom" or "inside" (NULL = follow `theme(legend.position = ...)`) |
 
 ### geom_gene() Parameters
 
@@ -473,6 +531,7 @@ plotly::ggplotly(p)
 | `gene_label_circum_offset` | numeric/vector/list | 0 | Circumferential offset |
 | `gene_label_circum_limit` | logical/vector/list | TRUE | Limit circumferential offset |
 | `show_legend` | logical | TRUE | Show legend |
+| `legend_position` | character | NULL | Position of the Strand/Gene Annotation legend: "left", "right", "top", "bottom" or "inside" (NULL = follow `theme(legend.position = ...)`) |
 | `show_label` | logical | NULL | Override gene_label_show |
 | `label_size` | numeric | NULL | Override gene_label_size |
 

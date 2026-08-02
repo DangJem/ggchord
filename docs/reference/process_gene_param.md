@@ -1,8 +1,8 @@
 # Process gene-related parameters
 
-Standardizes gene parameters (e.g., offset, width) from various input
-formats (single value/vector/list) into a list seperated by sequence and
-strand
+Standardizes gene parameters (e.g., offset, width, label rotation) from
+flexible input formats into a list separated by sequence and strand. All
+of the following formats are supported:
 
 ## Usage
 
@@ -14,7 +14,7 @@ process_gene_param(param, seqs, param_name, default_value, is_logical = FALSE)
 
 - param:
 
-  Input parameter (can be NULL, single value, vector, list)
+  Input parameter (can be NULL, single value, vector, or list)
 
 - seqs:
 
@@ -35,4 +35,19 @@ process_gene_param(param, seqs, param_name, default_value, is_logical = FALSE)
 ## Value
 
 List (named by seq_id), where each element is a vector with "+"/"-"
-(parameter values for positive/negative strands)
+
+## Details
+
+1\. A single value: applied to every sequence and strand, e.g. \`20\`.
+2. A named vector by strand, applied to every sequence: \`c("+" = -15,
+"-" = -45)\` (a missing strand keeps the default). 3. A named vector by
+sequence ID (same value on both strands), e.g. \`c("MT118296.1" = 20,
+"OR222515.1" = 30)\`. 4. An unnamed vector with length equal to the
+number of sequences (same value on both strands, matched by sequence
+order). 5. A list named by sequence ID, each element a \`+\`/\`-\` named
+vector. 6. A list named by sequence order ("1", "2", ...), each element
+a \`+\`/\`-\` named vector. 7. An unnamed list with length equal to the
+number of sequences, each element a \`+\`/\`-\` named vector (matched by
+sequence order). 8. A length-one list that recycles: \`list(20)\`
+applies 20 to everything, \`list(c("+" = -15, "-" = -45))\` applies the
+per-strand values to every sequence.

@@ -24,6 +24,11 @@
 #' @param show_legend Whether to show the legend, default TRUE
 #' @param show_label Whether to show gene labels (overrides gene_label_show), default NULL
 #' @param label_size Label font size (overrides gene_label_size), default NULL
+#' @param legend_position Optional position of this layer's legend (the Strand
+#'   or Gene Annotation legend): one of "left", "right", "top", "bottom" or
+#'   "inside". When NULL the legend follows \code{theme(legend.position = ...)}
+#'   together with the other legends. Can also be set with
+#'   \code{theme(legend.position.gene = ...)}.
 #' @param ... Additional arguments passed to \code{geom_polygon()}
 #'
 #' @return A list of ggplot2 layers
@@ -43,6 +48,7 @@ geom_gene <- function(mapping = NULL, data = NULL,
                       show_legend = TRUE,
                       show_label = NULL,
                       label_size = NULL,
+                      legend_position = NULL,
                       ...) {
   layers <- list()
 
@@ -88,7 +94,8 @@ geom_gene <- function(mapping = NULL, data = NULL,
     gene_label_circum_offset  = gene_label_circum_offset,
     gene_label_circum_limit   = gene_label_circum_limit,
     show_label_override       = show_label,
-    label_size_override       = label_size
+    label_size_override       = label_size,
+    legend_position           = legend_position
   )
   layers[[length(layers) + 1]] <- poly_layer
 

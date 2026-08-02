@@ -17,6 +17,7 @@ geom_ribbon(
   ribbon_outline_width = 0.05,
   ribbon_outline_linetype = 1,
   show_legend = TRUE,
+  legend_position = NULL,
   ...
 )
 }
@@ -44,6 +45,12 @@ geom_ribbon(
 \item{ribbon_outline_linetype}{Numeric or character. Line type of the ribbon outline, default 1 (solid); see \code{linetype} in ggplot2 for options}
 
 \item{show_legend}{Whether to show the legend, default TRUE}
+
+\item{legend_position}{Optional position of this layer's legend (the
+Identity(%) colourbar): one of "left", "right", "top", "bottom" or
+"inside". When NULL the legend follows \code{theme(legend.position = ...)}
+together with the other legends. Can also be set with
+\code{theme(legend.position.ribbon = ...)}.}
 
 \item{...}{Additional arguments passed to \code{geom_polygon()}}
 }

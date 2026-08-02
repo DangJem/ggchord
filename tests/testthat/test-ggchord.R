@@ -287,7 +287,8 @@ test_that("get_chord_layout is exported after building", {
 
 test_that("plots convert to plotly when plotly is installed", {
   skip_if_not_installed("plotly")
-  suppressWarnings(library(plotly))
+  # NOTE: do not attach plotly with library() here - it masks geom_ribbon()
+  # and would leak into the other tests in this session.
   data(seq_data_example)
   data(ribbon_data_example)
   data(gene_data_example)
@@ -296,6 +297,115 @@ test_that("plots convert to plotly when plotly is installed", {
   pl <- suppressWarnings(plotly::ggplotly(p))
   expect_true(inherits(pl, "plotly"))
   expect_gt(length(pl$x$data), 0)
+})
+
+test_that("legend keys keep a white background regardless of panel.background", {
+  data(seq_data_example)
+  data(ribbon_data_example)
+  data(gene_data_example)
+  p <- ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
+    geom_seq() + geom_ribbon() + geom_gene() + geom_axis() +
+    theme(panel.background = element_rect(fill = "grey95"))
+  b <- ggplot_build(p)
+  # the legend key fill is fixed to white, not inherited from panel.background
+  expect_equal(b$plot$theme$legend.key$fill, "white")
+})
+
+test_that("Identity colourbar stays visible with a horizontal bottom legend", {
+  data(seq_data_example)
+  data(ribbon_data_example)
+  data(gene_data_example)
+  p <- ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
+    geom_seq() + geom_ribbon() + geom_gene() + geom_axis() +
+    theme(legend.position = "bottom", legend.box = "horizontal")
+  b <- ggplot_build(p)
+  # find the colourbar guide and check it uses a fixed (non-null) key height
+  heights <- character(0)
+  for (gd in b$plot$guides$guides) {
+    if (identical(class(gd)[1], "GuideColourbar")) {
+      heights <- c(heights, as.character(gd$params$theme$legend.key.height))
+    }
+  }
+  expect_gt(length(heights), 0)
+  expect_false(any(grepl("null", heights)))
+})
+
+test_that("plotly conversion keeps legends and adds sequence-arc arrows", {
+  skip_if_not_installed("plotly")
+  data(seq_data_example)
+  data(ribbon_data_example)
+  data(gene_data_example)
+  p <- ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
+    geom_seq() + geom_ribbon() + geom_gene() + geom_axis()
+  pl <- suppressWarnings(plotly::ggplotly(p))
+  expect_true(isTRUE(pl$x$layout$showlegend))
+  expect_gt(length(pl$x$layout$annotations), 0)
+})
+
+test_that("legends can be positioned independently with legend_position", {
+  data(seq_data_example)
+  data(ribbon_data_example)
+  data(gene_data_example)
+  p <- ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
+    geom_seq(legend_position = "left") +
+    geom_ribbon(legend_position = "bottom") +
+    geom_gene(legend_position = "right") +
+    geom_axis()
+  pdf(tempfile(fileext = ".pdf"), 8, 8)
+  expect_no_error(suppressWarnings(print(p)))
+  dev.off()
+  # the three legends occupy separate boxes (left, bottom, right);
+  # ggplotGrob() opens a device for text measurement, so open one explicitly
+  pdf(tempfile(fileext = ".pdf"), 8, 8)
+  g <- ggplotGrob(p)
+  dev.off()
+  filled <- vapply(g$grobs, function(gr) {
+    inherits(gr, "gtable") && grepl("guide-box", gr$name) &&
+      (length(gr$grobs) > 0 || length(gr$children) > 0)
+  }, logical(1))
+  positions <- g$layout$name[filled]
+  expect_true(any(grepl("guide-box-left", positions)))
+  expect_true(any(grepl("guide-box-bottom", positions)))
+  expect_true(any(grepl("guide-box-right", positions)))
+  # invalid positions are rejected (validate at build time, no device)
+  p2 <- ggchord(seq_data_example) + geom_seq(legend_position = "center")
+  expect_error(ggplot_build(p2), "legend_position")
+})
+
+test_that("gene parameters accept all flexible input formats", {
+  data(seq_data_example)
+  seqs <- seq_data_example$seq_id
+  # 1) single value / 2) strand vector / list forms all produce per-seq lists
+  f <- ggchord:::process_gene_param
+  expect_identical(f(20, seqs, "p", 0)[[1]], c("+" = 20, "-" = 20))
+  expect_identical(f(c("+" = -15, "-" = -45), seqs, "p", 0)[[1]],
+                   c("+" = -15, "-" = -45))
+  expect_identical(f(list("1" = c("+" = -15, "-" = -45),
+                          "2" = c("+" = 30, "-" = -30),
+                          "3" = c("+" = 15, "-" = -15),
+                          "4" = c("+" = 0, "-" = 0)), seqs, "p", 0),
+                   setNames(list(c("+" = -15, "-" = -45),
+                                 c("+" = 30, "-" = -30),
+                                 c("+" = 15, "-" = -15),
+                                 c("+" = 0, "-" = 0)), seqs))
+  expect_identical(f(list(20), seqs, "p", 0)[[1]], c("+" = 20, "-" = 20))
+  expect_identical(f(list(c("+" = -15, "-" = -45)), seqs, "p", 0)[[1]],
+                   c("+" = -15, "-" = -45))
+  # a named list by sequence ID
+  res <- f(list("MT108731.1" = c("+" = 1, "-" = 2)), seqs, "p", 0)
+  expect_identical(res[["MT108731.1"]], c("+" = 1, "-" = 2))
+  expect_identical(res[["MT118296.1"]], c("+" = 0, "-" = 0))
+})
+
+test_that("sequence parameters accept list formats", {
+  data(seq_data_example)
+  seqs <- seq_data_example$seq_id
+  f <- ggchord:::process_sequence_param
+  expect_identical(f(list(5), seqs, "p"), setNames(rep(5, length(seqs)), seqs))
+  expect_identical(f(list("1" = 3, "4" = 1), seqs, "p", 2),
+                   setNames(c(3, 2, 2, 1), seqs))
+  expect_identical(f(list(3, 2, 2, 1), seqs, "p"),
+                   setNames(c(3, 2, 2, 1), seqs))
 })
 
 test_that("documented data and parameter values are validated", {
@@ -307,6 +417,6 @@ test_that("documented data and parameter values are validated", {
   data(seq_data_example)
   expect_error({
     p <- ggchord(seq_data_example) + geom_seq(seq_orientation = 0)
-    pdf(tempfile(fileext = ".pdf")); print(p); dev.off()
+    ggplot_build(p)
   }, "1 or -1")
 })

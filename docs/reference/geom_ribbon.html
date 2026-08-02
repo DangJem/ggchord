@@ -52,6 +52,7 @@
 <span>  ribbon_outline_width <span class="op">=</span> <span class="fl">0.05</span>,</span>
 <span>  ribbon_outline_linetype <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  show_legend <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  legend_position <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -106,6 +107,14 @@
 
 <dt id="arg-show-legend">show_legend<a class="anchor" aria-label="anchor" href="#arg-show-legend"></a></dt>
 <dd><p>Whether to show the legend, default TRUE</p></dd>
+
+
+<dt id="arg-legend-position">legend_position<a class="anchor" aria-label="anchor" href="#arg-legend-position"></a></dt>
+<dd><p>Optional position of this layer's legend (the
+Identity(<!-- %) colourbar): one of "left", "right", "top", "bottom" or -->
+"inside". When NULL the legend follows <code>theme(legend.position = ...)</code>
+together with the other legends. Can also be set with
+<code>theme(legend.position.ribbon = ...)</code>.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>

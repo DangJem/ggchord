@@ -19,6 +19,7 @@ geom_ribbon(
   ribbon_outline_width = 0.05,
   ribbon_outline_linetype = 1,
   show_legend = TRUE,
+  legend_position = NULL,
   ...
 )
 ```
@@ -76,6 +77,13 @@ geom_ribbon(
 - show_legend:
 
   Whether to show the legend, default TRUE
+
+- legend_position:
+
+  Optional position of this layer's legend (the Identity( "inside". When
+  NULL the legend follows `theme(legend.position = ...)` together with
+  the other legends. Can also be set with
+  `theme(legend.position.ribbon = ...)`.
 
 - ...:
 

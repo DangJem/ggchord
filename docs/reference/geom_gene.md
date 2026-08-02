@@ -25,6 +25,7 @@ geom_gene(
   show_legend = TRUE,
   show_label = NULL,
   label_size = NULL,
+  legend_position = NULL,
   ...
 )
 ```
@@ -97,6 +98,14 @@ geom_gene(
 - label_size:
 
   Label font size (overrides gene_label_size), default NULL
+
+- legend_position:
+
+  Optional position of this layer's legend (the Strand or Gene
+  Annotation legend): one of "left", "right", "top", "bottom" or
+  "inside". When NULL the legend follows `theme(legend.position = ...)`
+  together with the other legends. Can also be set with
+  `theme(legend.position.gene = ...)`.
 
 - ...:
 

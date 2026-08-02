@@ -1,8 +1,18 @@
 #' Process sequence-related parameters
 #'
-#' Standardizes sequence parameters (e.g., radius, gap) from various input formats (single value/vector/named vector) into a vector named by sequence IDs
+#' Standardizes sequence parameters (e.g., radius, gap) from flexible input
+#' formats into a vector named by sequence IDs. Supported formats:
 #'
-#' @param param Input parameter (can be NULL, single value, vector, named vector)
+#' 1. A single value, recycled to every sequence.
+#' 2. A named vector by sequence ID, e.g. `c("MT108731.1" = 3, "OR222515.1" = 1)`.
+#' 3. An unnamed vector with length equal to the number of sequences (matched
+#'    by sequence order).
+#' 4. A list named by sequence ID.
+#' 5. A list named by sequence order ("1", "2", ...).
+#' 6. An unnamed list matched by sequence order (length 1 or equal to the
+#'    number of sequences); a length-one list recycles.
+#'
+#' @param param Input parameter (can be NULL, single value, vector, named vector, or list)
 #' @param seqs Character vector, list of sequence IDs
 #' @param param_name Character, name of the parameter (used in error messages)
 #' @param default_value Default value when param is NULL, default NULL
@@ -15,17 +25,13 @@ process_sequence_param <- function(param, seqs, param_name, default_value = NULL
   # Handle case where parameter is NULL
   if (is.null(param)) {
     if (allow_null) return(NULL)
-
-    # Ensure default value is a single value or vector matching sequence length
     if (!is.null(default_value)) {
       if (length(default_value) == 1) {
         return(setNames(rep(default_value, n), seqs))
       } else if (length(default_value) == n) {
-        # Ensure default value vector has correct naming
         if (is.null(names(default_value))) {
           return(setNames(default_value, seqs))
         } else {
-          # Check if names match sequence IDs
           if (all(names(default_value) %in% seqs)) {
             return(default_value[seqs])
           } else {
@@ -37,193 +43,267 @@ process_sequence_param <- function(param, seqs, param_name, default_value = NULL
         stop(paste0("Length of default ", param_name, " must be 1 or equal to the number of sequences (", n, ")"))
       }
     }
-
     stop(paste0(param_name, " cannot be NULL and no default value is specified"))
   }
 
-  # Handle case where parameter is a single value
-  if (length(param) == 1) {
+  # Build the base vector used for unspecified sequences
+  default_base <- function() {
+    if (is.null(default_value)) return(rep(NA, n))
+    if (length(default_value) == 1) return(rep(default_value, n))
+    if (length(default_value) == n) return(default_value)
+    stop(paste0("Length of default ", param_name, " must be 1 or equal to the number of sequences (", n, ")"))
+  }
+
+  # Handle a single unnamed value: recycled to every sequence
+  if (length(param) == 1 && is.null(names(param)) && !is.list(param)) {
     return(setNames(rep(param, n), seqs))
   }
 
-  # Handle case where parameter is an unnamed vector with length matching number of sequences
-  if (length(param) == n && is.null(names(param))) {
+  # Handle a plain unnamed vector with length matching the number of sequences
+  if (length(param) == n && is.null(names(param)) && !is.list(param)) {
     return(setNames(param, seqs))
   }
 
-  # Handle case where parameter is a named vector
-  if (!is.null(names(param))) {
-    # Check if all names are in sequence IDs
+  # Handle a named vector (names are sequence IDs)
+  if (!is.null(names(param)) && !is.list(param)) {
     if (!all(names(param) %in% seqs)) {
       stop(paste0(param_name, " contains unknown sequence IDs: ",
                   paste(setdiff(names(param), seqs), collapse = ", ")))
     }
-
-    # Return parameter values in sequence ID order
-    return(param[seqs])
+    # Missing sequences keep the default value (or NA when no default is set)
+    out <- setNames(default_base(), seqs)
+    out[names(param)] <- param
+    return(out)
   }
 
-  stop(paste0("Unprocessable format for ", param_name, ". Please provide a single value, named vector, or unnamed vector with length equal to the number of sequences"))
-}
+  # Handle list input (named by sequence ID, named by order index, or unnamed)
+  if (is.list(param)) {
+    nm <- names(param)
+    idx_names <- as.character(seq_along(seqs))
 
+    # length-one list: recycle the single element
+    if (length(param) == 1 && (is.null(nm) || all(nm == ""))) {
+      val <- param[[1]]
+      if (length(val) != 1) {
+        stop(paste0("Elements of the list for ", param_name, " must be single values"))
+      }
+      return(setNames(rep(val, n), seqs))
+    }
+
+    # named by sequence ID
+    if (!is.null(nm) && length(nm) > 0 && all(nm %in% seqs)) {
+      out <- setNames(default_base(), seqs)
+      for (id in nm) {
+        val <- param[[id]]
+        if (length(val) != 1) {
+          stop(paste0("Elements of the list for ", param_name, " must be single values"))
+        }
+        out[id] <- val
+      }
+      return(out)
+    }
+
+    # named by sequence order ("1", "2", ...)
+    if (!is.null(nm) && length(nm) > 0 && all(nm %in% idx_names)) {
+      out <- setNames(default_base(), seqs)
+      for (i in seq_along(nm)) {
+        val <- param[[i]]
+        if (length(val) != 1) {
+          stop(paste0("Elements of the list for ", param_name, " must be single values"))
+        }
+        out[seqs[as.integer(nm[i])]] <- val
+      }
+      return(out)
+    }
+
+    # unnamed list matched by sequence order
+    if (is.null(nm) || all(nm == "")) {
+      if (length(param) != n) {
+        stop(paste0("Length of unnamed list for ", param_name,
+                    " must be 1 or match the number of sequences (", n, ")"))
+      }
+      vals <- unlist(param)
+      if (length(vals) != n) {
+        stop(paste0("Elements of the list for ", param_name, " must be single values"))
+      }
+      return(setNames(vals, seqs))
+    }
+
+    stop(paste0("Names of the list for ", param_name,
+                " must all be sequence IDs, all be sequence order indices ('1', '2', ...), or be omitted"))
+  }
+
+  stop(paste0("Unprocessable format for ", param_name, ". Please provide a single value, named vector, unnamed vector with length equal to the number of sequences, or a list (named by sequence ID, named by order, or unnamed)"))
+}
 
 #' Process gene-related parameters
 #'
-#' Standardizes gene parameters (e.g., offset, width) from various input formats (single value/vector/list) into a list seperated by sequence and strand
+#' Standardizes gene parameters (e.g., offset, width, label rotation) from
+#' flexible input formats into a list separated by sequence and strand. All of
+#' the following formats are supported:
 #'
-#' @param param Input parameter (can be NULL, single value, vector, list)
+#' 1. A single value: applied to every sequence and strand, e.g. `20`.
+#' 2. A named vector by strand, applied to every sequence:
+#'    `c("+" = -15, "-" = -45)` (a missing strand keeps the default).
+#' 3. A named vector by sequence ID (same value on both strands), e.g.
+#'    `c("MT118296.1" = 20, "OR222515.1" = 30)`.
+#' 4. An unnamed vector with length equal to the number of sequences (same
+#'    value on both strands, matched by sequence order).
+#' 5. A list named by sequence ID, each element a `+`/`-` named vector.
+#' 6. A list named by sequence order ("1", "2", ...), each element a `+`/`-`
+#'    named vector.
+#' 7. An unnamed list with length equal to the number of sequences, each
+#'    element a `+`/`-` named vector (matched by sequence order).
+#' 8. A length-one list that recycles: `list(20)` applies 20 to everything,
+#'    `list(c("+" = -15, "-" = -45))` applies the per-strand values to every
+#'    sequence.
+#'
+#' @param param Input parameter (can be NULL, single value, vector, or list)
 #' @param seqs Character vector, list of sequence IDs
 #' @param param_name Character, name of the parameter (used in error messages)
 #' @param default_value Default value when param is NULL
 #' @param is_logical Logical, whether the parameter is logical (TRUE/FALSE), default FALSE
-#' @return List (named by seq_id), where each element is a vector with "+"/"-" (parameter values for positive/negative strands)
+#' @return List (named by seq_id), where each element is a vector with "+"/"-"
 #' @keywords internal
 process_gene_param <- function(param, seqs, param_name, default_value, is_logical = FALSE) {
   n <- length(seqs)
-  # Initialize result list: each sequence corresponds to a vector containing "+" and "-"
   result <- setNames(lapply(seqs, function(id) {
-    if (is_logical) {
-      c("+" = default_value, "-" = default_value)  # Logical parameter
-    } else {
-      c("+" = default_value, "-" = default_value)  # Numeric parameter
-    }
+    c("+" = default_value, "-" = default_value)
   }), seqs)
 
-  if (is.null(param)) {
-    return(result)
+  if (is.null(param)) return(result)
+
+  # Validate and strip a single value
+  check_value <- function(val, where) {
+    if (is_logical && !is.logical(val)) {
+      stop(param_name, " is a logical parameter and must be TRUE/FALSE (", where, ")")
+    }
+    if (!is_logical && !is.numeric(val)) {
+      stop(param_name, " is a numeric parameter and must be numeric (", where, ")")
+    }
+    unname(val)
   }
 
-  # 1. Single value (same value for all sequences and strands)
-  if (length(param) == 1 && !is.list(param)) {
-    # Validate parameter type
-    if (is_logical && !is.logical(param)) {
-      stop(paste(param_name, "is a logical parameter and must be TRUE/FALSE"))
+  # Check that an element is a per-strand specification (named "+"/"-" or an
+  # unnamed length-2 vector interpreted as "+", "-")
+  strand_spec <- function(elem, where) {
+    if (is.null(elem) || length(elem) == 0) {
+      stop("List element for ", param_name, " (", where, ") cannot be empty")
     }
-    if (!is_logical && !is.numeric(param)) {
-      stop(paste(param_name, "is a numeric parameter and must be a number"))
+    if (is.null(names(elem))) {
+      if (length(elem) == 2 && (is.numeric(elem) || is.logical(elem))) {
+        elem <- c("+" = elem[1], "-" = elem[2])
+      } else {
+        stop("List element for ", param_name, " (", where,
+             ") must be a named vector containing '+' and '-' (or a length-2 vector)")
+      }
+    } else if (!all(names(elem) %in% c("+", "-"))) {
+      stop("List element for ", param_name, " (", where,
+           ") can only be named '+' and/or '-'")
     }
-    val <- param
-    # Key modification: remove names with unname(val)
-    return(setNames(lapply(seqs, function(id) c("+" = unname(val), "-" = unname(val))), seqs))
+    out <- c("+" = default_value, "-" = default_value)
+    for (st in names(elem)) {
+      out[st] <- check_value(elem[[st]], paste0(where, ", strand '", st, "'"))
+    }
+    out
   }
 
-  # 2. Vector input (not a list)
+  # ---- 1. single value: everything gets the same value ----
+  if (length(param) == 1 && !is.list(param) && is.null(names(param))) {
+    val <- check_value(param, "single value")
+    return(setNames(lapply(seqs, function(id) c("+" = val, "-" = val)), seqs))
+  }
+
+  # ---- 2. plain vector (not a list) ----
   if (is.vector(param) && !is.list(param)) {
-    # 2.1 Named vector: validate sequence names
-    if (!is.null(names(param))) {
-      unknown <- setdiff(names(param), seqs)
+    nm <- names(param)
+    # 2.0 named by strand: global per-strand values
+    if (!is.null(nm) && all(nm %in% c("+", "-"))) {
+      vals <- strand_spec(param, "named vector")
+      return(setNames(lapply(seqs, function(id) vals), seqs))
+    }
+    # 2.1 named by sequence ID (same value on both strands)
+    if (!is.null(nm)) {
+      unknown <- setdiff(nm, seqs)
       if (length(unknown) > 0) {
-        warning(paste(param_name, "contains non-existent sequence IDs:", paste(unknown, collapse = ", ")))
+        stop(param_name, " contains unknown sequence IDs: ",
+             paste(unknown, collapse = ", "))
       }
-      valid_names <- intersect(names(param), seqs)
-      for (id in valid_names) {
-        val <- param[id]
-        # Validate type
-        if (is_logical && !is.logical(val)) {
-          stop(paste("Elements of named vector for", param_name, "must be TRUE/FALSE"))
-        }
-        if (!is_logical && !is.numeric(val)) {
-          stop(paste("Elements of named vector for", param_name, "must be numeric"))
-        }
-        # Key modification: remove names with unname(val)
-        result[[id]] <- c("+" = unname(val), "-" = unname(val))  # Vector does not distinguish strands; same value for both strands
+      for (id in intersect(nm, seqs)) {
+        result[[id]] <- c("+" = check_value(param[[id]], id),
+                          "-" = check_value(param[[id]], id))
       }
       return(result)
     }
-
-    # 2.2 Unnamed vector: validate length match
+    # 2.2 unnamed vector matched by sequence order
     if (length(param) != n) {
-      stop(paste("Length of unnamed vector for", param_name, "must match the number of sequences (current number of sequences:", n, ")"))
+      stop("Length of unnamed vector for ", param_name,
+           " must match the number of sequences (current number of sequences: ", n, ")")
     }
     for (i in seq_along(seqs)) {
-      val <- param[i]
-      # Validate type
-      if (is_logical && !is.logical(val)) {
-        stop(paste("Elements of unnamed vector for", param_name, "must be TRUE/FALSE"))
-      }
-      if (!is_logical && !is.numeric(val)) {
-        stop(paste("Elements of unnamed vector for", param_name, "must be numeric"))
-      }
-      # Key modification: remove names with unname(val)
-      result[[seqs[i]]] <- c("+" = unname(val), "-" = unname(val))  # Vector does not distinguish strands
+      result[[seqs[i]]] <- c("+" = check_value(param[i], seqs[i]),
+                             "-" = check_value(param[i], seqs[i]))
     }
     return(result)
   }
 
-  # 3. List input (unchanged as issues do not involve lists)
+  # ---- 3. list ----
   if (is.list(param)) {
-    # 3.1 Single-value list (same values for positive/negative strands across all sequences)
-    if (length(param) == 1 && is.null(names(param))) {
-      elem <- param[[1]]
-      # Check if list element contains "+" and "-"
-      if (!all(c("+", "-") %in% names(elem))) {
-        stop(paste("Single-value list element for", param_name, "must be a named vector containing '+' and '-'"))
-      }
-      # Validate type
-      if (is_logical && (!is.logical(elem["+"]) || !is.logical(elem["-"]))) {
-        stop(paste("List elements for", param_name, "must be logical values (TRUE/FALSE)"))
-      }
-      if (!is_logical && (!is.numeric(elem["+"]) || !is.numeric(elem["-"]))) {
-        stop(paste("List elements for", param_name, "must be numeric"))
-      }
-      return(setNames(lapply(seqs, function(id) elem[c("+", "-")]), seqs))
-    }
+    nm <- names(param)
+    idx_names <- as.character(seq_along(seqs))
 
-    # 3.2 Named list (specify values for positive/negative strands of specific sequences)
-    if (!is.null(names(param))) {
-      unknown <- setdiff(names(param), seqs)
-      if (length(unknown) > 0) {
-        warning(paste("List for", param_name, "contains non-existent sequence IDs:", paste(unknown, collapse = ", ")))
-      }
-      valid_names <- intersect(names(param), seqs)
-      for (id in valid_names) {
-        elem <- param[[id]]
-        if (!all(c("+", "-") %in% names(elem))) {
-          stop(paste("List element", id, "for", param_name, "must be a named vector containing '+' and '-'"))
-        }
-        # Validate type
-        if (is_logical && (!is.logical(elem["+"]) || !is.logical(elem["-"]))) {
-          stop(paste("List element", id, "for", param_name, "must be logical values (TRUE/FALSE)"))
-        }
-        if (!is_logical && (!is.numeric(elem["+"]) || !is.numeric(elem["-"]))) {
-          stop(paste("List element", id, "for", param_name, "must be numeric"))
-        }
-        result[[id]] <- elem[c("+", "-")]
+    # 3.0 named by sequence ID
+    if (!is.null(nm) && length(nm) > 0 && all(nm %in% seqs)) {
+      for (id in nm) {
+        result[[id]] <- strand_spec(param[[id]], id)
       }
       return(result)
     }
-
-    # 3.3 Unnamed list (specify values for positive/negative strands in sequence order)
-    if (length(param) != n) {
-      stop(paste("Length of unnamed list for", param_name, "must match the number of sequences (current number of sequences:", n, ")"))
+    # 3.1 named by sequence order ("1", "2", ...)
+    if (!is.null(nm) && length(nm) > 0 && all(nm %in% idx_names)) {
+      for (i in seq_along(nm)) {
+        result[[seqs[as.integer(nm[i])]]] <- strand_spec(param[[i]], nm[i])
+      }
+      return(result)
     }
-    for (i in seq_along(seqs)) {
-      elem <- param[[i]]
-      if (!all(c("+", "-") %in% names(elem))) {
-        stop(paste("Unnamed list element", i, "for", param_name, "must be a named vector containing '+' and '-'"))
+    # 3.2 unnamed list
+    if (is.null(nm) || all(nm == "")) {
+      # length-one list: recycle
+      if (length(param) == 1) {
+        elem <- param[[1]]
+        if (length(elem) == 1 && is.null(names(elem))) {
+          # list(20): scalar recycled everywhere
+          val <- check_value(elem, "single-value list")
+          return(setNames(lapply(seqs, function(id) c("+" = val, "-" = val)), seqs))
+        }
+        # list(c("+"=.., "-"=..)) or list(c(.., ..)): global per-strand
+        vals <- strand_spec(elem, "single-value list")
+        return(setNames(lapply(seqs, function(id) vals), seqs))
       }
-      # Validate type
-      if (is_logical && (!is.logical(elem["+"]) || !is.logical(elem["-"]))) {
-        stop(paste("Unnamed list element", i, "for", param_name, "must be logical values (TRUE/FALSE)"))
+      if (length(param) != n) {
+        stop("Length of unnamed list for ", param_name,
+             " must be 1 or match the number of sequences (current number of sequences: ", n, ")")
       }
-      if (!is_logical && (!is.numeric(elem["+"]) || !is.numeric(elem["-"]))) {
-        stop(paste("Unnamed list element", i, "for", param_name, "must be numeric"))
+      for (i in seq_along(seqs)) {
+        result[[seqs[i]]] <- strand_spec(param[[i]], as.character(i))
       }
-      result[[seqs[i]]] <- elem[c("+", "-")]
+      return(result)
     }
-    return(result)
+    # 3.3 mixed / unknown names
+    stop("Names of the list for ", param_name,
+         " must all be sequence IDs, all be sequence order indices ('1', '2', ...), or be omitted")
   }
 
-  # Invalid format
-  stop(paste("Invalid format for", param_name, ". Supported input methods:\n",
-             "1. Single value (shared by all sequences/strands)\n",
-             "2. Named vector (names are sequence IDs, shared by all strands)\n",
-             "3. Unnamed vector (length matches number of sequences, shared by all strands)\n",
-             "4. Single-value list (element is a named vector with '+'/'-', shared by all sequences)\n",
-             "5. Named list (names are sequence IDs, elements are named vectors with '+'/'-')\n",
-             "6. Unnamed list (length matches number of sequences, elements are named vectors with '+'/'-')"))
+  stop("Invalid format for ", param_name, ". Supported input methods:\n",
+       "1. Single value (shared by all sequences/strands)\n",
+       "2. Named vector by strand (c('+' = .., '-' = ..), shared by all sequences)\n",
+       "3. Named vector by sequence ID (shared by both strands)\n",
+       "4. Unnamed vector (length matches the number of sequences, shared by both strands)\n",
+       "5. List named by sequence ID (elements are '+'/'-' named vectors)\n",
+       "6. List named by sequence order '1', '2', ... (elements are '+'/'-' named vectors)\n",
+       "7. Unnamed list (length matches the number of sequences, elements are '+'/'-' named vectors)\n",
+       "8. Length-one list (scalar or '+'/'-' vector, recycled to all sequences)")
 }
-
 
 #' Process axis label orientation parameters
 #'

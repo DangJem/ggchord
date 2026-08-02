@@ -76,6 +76,42 @@
   suite passes on Windows and leaves no stray files behind for
   `R CMD check` (fixes the CRAN incoming-check failure).
 
+- The Identity(%) colourbar no longer collapses into a thin/invisible
+  line when the legend is placed at the top/bottom or the legend box is
+  horizontal (`legend.box = "horizontal"`). It now follows the theme’s
+  legend position: a vertical bar filling the available height at the
+  left/right, and a fixed-size horizontal bar at the top/bottom.
+
+- Legend keys keep a fixed white background instead of inheriting
+  `panel.background` (ggplot2 4.x lets unset legend keys follow the
+  panel background, so a coloured panel bled into the legend).
+
+- [`plotly::ggplotly()`](https://rdrr.io/pkg/plotly/man/ggplotly.html)
+  output now shows the Seq ID / Strand / Identity legends (the
+  layout-level `showlegend` switch is enabled) and reproduces the
+  [`geom_seq()`](https://dangjem.github.io/ggchord/reference/geom_seq.md)
+  directional arrowheads as plotly annotations.
+
+### New features
+
+- Each legend can now be positioned independently via the
+  `legend_position` argument of
+  [`geom_seq()`](https://dangjem.github.io/ggchord/reference/geom_seq.md),
+  [`geom_ribbon()`](https://dangjem.github.io/ggchord/reference/geom_ribbon.md)
+  and
+  [`geom_gene()`](https://dangjem.github.io/ggchord/reference/geom_gene.md)
+  (e.g. `geom_ribbon(legend_position = "bottom")`). Legends without an
+  explicit position stay together at `theme(legend.position = ...)`.
+
+- Parameter specification is now more flexible and human-friendly.
+  Sequence parameters accept a single value, vectors, vectors/lists
+  named by sequence ID, lists named by sequence order (`"1"`, `"2"`, …)
+  and unnamed lists; gene parameters additionally accept per-strand
+  (`+`/`-`) specifications in any of those forms
+  (e.g. `gene_label_rotation = c("+" = -15, "-" = -45)` or
+  `list(c("+" = -15, "-" = -45), ...)`), including length-one lists that
+  recycle.
+
 ## ggchord 0.5.0
 
 ### New features

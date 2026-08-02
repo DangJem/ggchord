@@ -108,7 +108,28 @@ save_plot(
   "axis_seq_label.png")
 
 # ---------------------------------------------------------------------------
-# 6. Full customization
+# 6. Two-sequence and three-sequence comparisons (subset of the example data)
+# ---------------------------------------------------------------------------
+seq2 <- seq_data_example[seq_data_example$seq_id %in% c("MT108731.1", "MT118296.1"), ]
+ribbon2 <- ribbon_data_example[
+  ribbon_data_example$qaccver %in% seq2$seq_id &
+  ribbon_data_example$saccver %in% seq2$seq_id, ]
+gene2 <- gene_data_example[gene_data_example$seq_id %in% seq2$seq_id, ]
+save_plot(
+  ggchord(seq2, ribbon2, gene2) + geom_seq() + geom_ribbon() + geom_gene() + geom_axis(),
+  "example_seq2.png")
+
+seq3 <- seq_data_example[seq_data_example$seq_id %in% c("MT108731.1", "MT118296.1", "OQ646790.1"), ]
+ribbon3 <- ribbon_data_example[
+  ribbon_data_example$qaccver %in% seq3$seq_id &
+  ribbon_data_example$saccver %in% seq3$seq_id, ]
+gene3 <- gene_data_example[gene_data_example$seq_id %in% seq3$seq_id, ]
+save_plot(
+  ggchord(seq3, ribbon3, gene3) + geom_seq() + geom_ribbon() + geom_gene() + geom_axis(),
+  "example_seq3.png")
+
+# ---------------------------------------------------------------------------
+# 7. Full customization
 # ---------------------------------------------------------------------------
 save_plot(
   ggchord(

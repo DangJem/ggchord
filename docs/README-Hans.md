@@ -390,7 +390,50 @@ ggchord(seq_data_example) +
 
 坐标轴与序列标签
 
-### 第 5 步：组合所有图层并精细控制
+### 第 5 步：双序列比对
+
+内置数据集包含四条序列，你可以绘制任意子集。先从两条序列开始，只需保留需要的行：
+
+``` r
+
+# 保留两条序列及其对应的连接带与基因
+seq2 <- seq_data_example[seq_data_example$seq_id %in% c("MT108731.1", "MT118296.1"), ]
+ribbon2 <- ribbon_data_example[
+  ribbon_data_example$qaccver %in% seq2$seq_id &
+    ribbon_data_example$saccver %in% seq2$seq_id, ]
+gene2 <- gene_data_example[gene_data_example$seq_id %in% seq2$seq_id, ]
+
+ggchord(seq2, ribbon2, gene2) +
+  geom_seq() + geom_ribbon() + geom_gene() + geom_axis()
+```
+
+![双序列比对弦图](reference/figures/example_seq2.png)
+
+双序列比对弦图
+
+### 第 6 步：三序列比对
+
+同样的方法也适用于三条序列——保留感兴趣的序列，并相应过滤 `ribbon_data`
+与 `gene_data`：
+
+``` r
+
+seq3 <- seq_data_example[seq_data_example$seq_id %in%
+                           c("MT108731.1", "MT118296.1", "OQ646790.1"), ]
+ribbon3 <- ribbon_data_example[
+  ribbon_data_example$qaccver %in% seq3$seq_id &
+    ribbon_data_example$saccver %in% seq3$seq_id, ]
+gene3 <- gene_data_example[gene_data_example$seq_id %in% seq3$seq_id, ]
+
+ggchord(seq3, ribbon3, gene3) +
+  geom_seq() + geom_ribbon() + geom_gene() + geom_axis()
+```
+
+![三序列比对弦图](reference/figures/example_seq3.png)
+
+三序列比对弦图
+
+### 第 7 步：组合所有图层并精细控制
 
 组合所有图层，并把精细参数分发到使用它的图层中：
 
@@ -440,7 +483,7 @@ ggchord(
 
 精细参数控制的综合弦图
 
-### 第 6 步：用 `+` 添加主题与 scale
+### 第 8 步：用 `+` 添加主题与 scale
 
 ggchord 绘图对象是真正的 ggplot2 对象，因此可以像 ggplot2 一样用 `+`
 叠加主题与 scale：
@@ -466,24 +509,44 @@ ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
 
 自定义主题与 scale 的弦图
 
-### 第 7 步：用 plotly 生成交互图表
-
-ggchord 绘图对象可通过
-[`plotly::ggplotly()`](https://rdrr.io/pkg/plotly/man/ggplotly.html)
-转换为交互式图表（需安装 `plotly` 包），连接带、基因箭头、坐标轴以及 Seq
-ID / Strand / Identity 图例都会保留：
+每个图例还可以通过
+[`geom_seq()`](https://dangjem.github.io/ggchord/reference/geom_seq.md)、[`geom_ribbon()`](https://dangjem.github.io/ggchord/reference/geom_ribbon.md)
+和
+[`geom_gene()`](https://dangjem.github.io/ggchord/reference/geom_gene.md)
+的 `legend_position` 参数独立放置（分别控制 Seq ID 图例、Identity(%)
+色条和 Strand / Gene Annotation 图例）。未显式指定位置的图例仍会一起放在
+`theme(legend.position = ...)` 指定的位置：
 
 ``` r
 
-p <- ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
-  geom_seq() + geom_ribbon() + geom_gene() + geom_axis()
-
-plotly::ggplotly(p)
+ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
+  geom_seq(legend_position = "left") +
+  geom_ribbon(legend_position = "bottom") +
+  geom_gene(legend_position = "right") +
+  geom_axis()
 ```
 
-> **参数格式**：序列级参数（`seq_radius`、`seq_gap`
-> 等）支持单值、无命名向量、命名向量三种格式。基因级参数额外支持按链（`+`/`-`）区分的列表格式，例如
-> `gene_offset = list(c("+" = 0.2, "-" = -0.2), ...)`。
+**灵活的参数格式**：所有序列级参数（`seq_radius`、`seq_gap`
+等）支持单值、无命名向量、按序列 ID
+命名的向量/列表、按序列顺序命名（`"1"`、`"2"`、…）的列表、以及无命名列表。基因级参数（如
+`gene_label_rotation`、`gene_offset`）额外支持按链（`+`/`-`）指定——既可以用命名向量，也可以写在列表里：
+
+``` r
+
+gene_label_rotation = 20                                  # 所有序列、正负链相同
+gene_label_rotation = c("+" = -15, "-" = -45)             # 所有序列按链分别指定
+gene_label_rotation = list("MT118296.1" = c("+" = -15, "-" = -45),
+                           "MT108731.1" = c("+" = -15, "-" = -45))       # 按序列 ID
+gene_label_rotation = list("1" = c("+" = -15, "-" = -45),
+                           "2" = c("+" = 30, "-" = -30),
+                           "3" = c("+" = 15, "-" = -15),
+                           "4" = c("+" = 0, "-" = 0))                    # 按序列顺序
+gene_label_rotation = list(c("+" = -15, "-" = -45),
+                           c("+" = 30, "-" = -30),
+                           c("+" = 15, "-" = -15),
+                           c("+" = 0, "-" = 0))                          # 无命名列表按顺序
+gene_label_rotation = list(20)                            # 单元素列表自动循环
+```
 
 ## 图层参考
 
@@ -512,17 +575,18 @@ plotly::ggplotly(p)
 
 ### geom_seq() 参数
 
-| 参数              | 类型           | 默认值 | 描述                             |
-|-------------------|----------------|--------|----------------------------------|
-| `seq_order`       | 字符向量       | NULL   | 序列绘制顺序                     |
-| `seq_labels`      | 字符向量       | NULL   | 序列标签                         |
-| `seq_orientation` | 数值 (1/-1)    | 1      | 序列方向                         |
-| `seq_gap`         | 数值 \[0, 0.5) | 0.03   | 序列间空白比例                   |
-| `seq_radius`      | 数值 (\> 0)    | 1.0    | 序列弧线半径                     |
-| `seq_curvature`   | 数值           | 1.0    | 曲率：0=直线, 1=标准弧, \>1=更弯 |
-| `seq_colors`      | 颜色向量       | Set1   | 序列弧线颜色                     |
-| `linewidth`       | 数值           | 1.2    | 弧线宽度                         |
-| `show_legend`     | 逻辑值         | TRUE   | 是否显示图例                     |
+| 参数 | 类型 | 默认值 | 描述 |
+|----|----|----|----|
+| `seq_order` | 字符向量 | NULL | 序列绘制顺序 |
+| `seq_labels` | 字符向量 | NULL | 序列标签 |
+| `seq_orientation` | 数值 (1/-1) | 1 | 序列方向 |
+| `seq_gap` | 数值 \[0, 0.5) | 0.03 | 序列间空白比例 |
+| `seq_radius` | 数值 (\> 0) | 1.0 | 序列弧线半径 |
+| `seq_curvature` | 数值 | 1.0 | 曲率：0=直线, 1=标准弧, \>1=更弯 |
+| `seq_colors` | 颜色向量 | Set1 | 序列弧线颜色 |
+| `linewidth` | 数值 | 1.2 | 弧线宽度 |
+| `show_legend` | 逻辑值 | TRUE | 是否显示图例 |
+| `legend_position` | 字符 | NULL | Seq ID 图例的位置：“left”、“right”、“top”、“bottom” 或 “inside”（NULL = 跟随 `theme(legend.position = ...)`） |
 
 ### geom_seq_label() 参数
 
@@ -548,6 +612,7 @@ plotly::ggplotly(p)
 | `ribbon_outline_width` | 数值 | 0.05 | 连接带轮廓线宽 |
 | `ribbon_outline_linetype` | 数值/字符 | 1 | 连接带轮廓线型（1 = 实线） |
 | `show_legend` | 逻辑值 | TRUE | 是否显示图例 |
+| `legend_position` | 字符 | NULL | Identity(%) 色条的位置：“left”、“right”、“top”、“bottom” 或 “inside”（NULL = 跟随 `theme(legend.position = ...)`） |
 
 ### geom_gene() 参数
 
@@ -565,6 +630,7 @@ plotly::ggplotly(p)
 | `gene_label_circum_offset` | 数值/向量/列表 | 0 | 标签周向偏移比例 |
 | `gene_label_circum_limit` | 逻辑值/向量/列表 | TRUE | 是否限制周向偏移 |
 | `show_legend` | 逻辑值 | TRUE | 是否显示图例 |
+| `legend_position` | 字符 | NULL | Strand / Gene Annotation 图例的位置：“left”、“right”、“top”、“bottom” 或 “inside”（NULL = 跟随 `theme(legend.position = ...)`） |
 | `show_label` | 逻辑值 | NULL | 覆盖 gene_label_show |
 | `label_size` | 数值 | NULL | 覆盖 gene_label_size |
 

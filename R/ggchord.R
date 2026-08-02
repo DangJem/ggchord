@@ -160,6 +160,10 @@ ggchord <- function(
       plot.margin      = margin(t = margin_vals$t, r = margin_vals$r,
                                 b = margin_vals$b, l = margin_vals$l),
       legend.background = element_blank(),
+      # Keep the legend key background fixed (white) instead of inheriting the
+      # panel background (ggplot2 4.x lets unset legend keys follow
+      # panel.background, so a grey/coloured panel would bleed into the legend).
+      legend.key        = element_rect(fill = "white", colour = NA),
       legend.box.spacing  = unit(10, "mm"),
       legend.spacing      = unit(5, "mm"),
       legend.text         = element_text(size = 8),
@@ -516,9 +520,44 @@ classify_ggchord_layers <- function(plot) {
   idx
 }
 
-#' Build the list of scales for a computed layout
+#' Resolve the per-legend position overrides for a plot
+#'
+#' Each legend can be moved independently with the `legend_position` argument
+#' of `geom_seq()`, `geom_ribbon()` and `geom_gene()`. A NULL entry means that
+#' legend follows the theme's `legend.position` together with the others.
 #' @keywords internal
-make_ggchord_scales <- function(layout, has_seq = FALSE, has_gene = FALSE) {
+ggchord_legend_positions <- function(plot) {
+  pos <- list(seq = NULL, ribbon = NULL, gene = NULL)
+  for (lyr in plot$layers) {
+    pp <- lyr$ggchord_params
+    if (is.null(pp)) next
+    lp <- pp$legend_position
+    if (is.null(lp)) next
+    if (!lp %in% c("left", "right", "top", "bottom", "inside")) {
+      stop("legend_position must be one of 'left', 'right', 'top', 'bottom' or 'inside'")
+    }
+    if (!is.null(pp$type) && pp$type %in% names(pos)) pos[[pp$type]] <- lp
+  }
+  pos
+}
+
+#' Build the list of scales for a computed layout
+#'
+#' @param legend_position The plot theme's `legend.position` (character).
+#' @param legend_box The plot theme's `legend.box` setting. When the legend is
+#'   at the top/bottom or the legend box is laid out horizontally
+#'   (`"horizontal"`), a `unit(1, "null")` colorbar key height collapses to zero
+#'   height in ggplot2 (the Identity(%) bar becomes invisible). A fixed size is
+#'   used in those cases so the colorbar stays visible; otherwise the colorbar
+#'   fills the available height.
+#' @param positions Named list with per-legend position overrides
+#'   (`seq`, `ribbon`, `gene`), each `NULL` or one of "left", "right", "top",
+#'   "bottom", "inside". Overrides make that legend sit in its own legend box at
+#'   the given position instead of following the theme's `legend.position`.
+#' @keywords internal
+make_ggchord_scales <- function(layout, has_seq = FALSE, has_gene = FALSE,
+                                legend_position = NULL, legend_box = NULL,
+                                positions = list()) {
   scales <- list()
 
   if (has_seq) {
@@ -526,22 +565,41 @@ make_ggchord_scales <- function(layout, has_seq = FALSE, has_gene = FALSE) {
       name   = "Seq ID",
       values = layout$seq_colors,
       labels = layout$seq_labels,
-      breaks = layout$seqs
+      breaks = layout$seqs,
+      guide  = guide_legend(position = positions$seq %||% NULL)
     )
   }
 
   ribbon_fill_scale <- NULL
   if (!is.null(layout$ribbon_polys)) {
     if (layout$ribbon_color_scheme == "pident") {
+      # The colorbar follows its effective legend position: vertical and
+      # filling the available height at the left/right, horizontal (with a
+      # fixed size) at the top/bottom. A "null" key height collapses to zero
+      # inside horizontal legend boxes, so a fixed size is used whenever the
+      # legend sits at the top/bottom or the box is horizontal.
+      ribbon_pos <- positions$ribbon %||% legend_position %||% "right"
+      horizontal_legend <- ribbon_pos %in% c("top", "bottom") ||
+        identical(legend_box, "horizontal")
       ribbon_fill_scale <- scale_fill_stepsn(
         name    = "Identity(%)",
         colours = layout$ribbon_colors,
         limits  = c(0, 100),
         breaks  = c(0, 50, 80, 90, 95, 100),
         guide   = guide_colorbar(
-          theme = theme(legend.title.position = "top",
-                        legend.key.height = unit(1, "null")),
-          order = 1, position = "left"
+          position = positions$ribbon %||% NULL,
+          theme = theme(
+            legend.title.position = "top",
+            legend.key.height = if (horizontal_legend) {
+              unit(1.5, "cm")
+            } else {
+              unit(1, "null")
+            },
+            # A horizontal colorbar needs a longer key; the vertical bar keeps
+            # the default key width.
+            legend.key.width = if (horizontal_legend) unit(4, "cm") else NULL
+          ),
+          order = 1
         )
       )
     } else {
@@ -555,13 +613,15 @@ make_ggchord_scales <- function(layout, has_seq = FALSE, has_gene = FALSE) {
       gene_fill_scale <- scale_fill_manual(
         name   = "Strand",
         breaks = c("+", "-"),
-        values = layout$gene_pal
+        values = layout$gene_pal,
+        guide  = guide_legend(position = positions$gene %||% NULL)
       )
     } else {
       gene_fill_scale <- scale_fill_manual(
         name   = "Gene Annotation",
         breaks = layout$final_gene_order,
-        values = layout$gene_pal
+        values = layout$gene_pal,
+        guide  = guide_legend(position = positions$gene %||% NULL)
       )
     }
   }
@@ -657,7 +717,10 @@ prepare_ggchord_plot <- function(plot) {
   cls <- classify_ggchord_layers(plot)
   sc <- make_ggchord_scales(layout,
                             has_seq = length(cls$seq) > 0,
-                            has_gene = nrow(layout$gene_polys) > 0)
+                            has_gene = nrow(layout$gene_polys) > 0,
+                            legend_position = plot$theme$legend.position,
+                            legend_box = plot$theme$legend.box,
+                            positions = ggchord_legend_positions(plot))
   plot <- rename_ribbon_layers(plot, cls$ribbon, sc$ribbon_aes, layout)
   plot <- attach_ggchord_scales(plot, sc$scales)
   plot <- set_ggchord_coord(plot, layout)
@@ -726,7 +789,10 @@ ggplot_build.ggchord <- function(plot, ...) {
   # ====================================================================
   sc <- make_ggchord_scales(layout,
                             has_seq = length(seq_indices) > 0,
-                            has_gene = nrow(layout$gene_polys) > 0)
+                            has_gene = nrow(layout$gene_polys) > 0,
+                            legend_position = plot$theme$legend.position,
+                            legend_box = plot$theme$legend.box,
+                            positions = ggchord_legend_positions(plot))
   plot <- rename_ribbon_layers(plot, ribbon_indices, sc$ribbon_aes, layout)
   plot <- attach_ggchord_scales(plot, sc$scales)
 
