@@ -286,9 +286,8 @@ Color by annotation category and show gene labels:
 ```r
 ggchord(seq_data_example, gene_data = gene_data_example) +
   geom_seq() +
-  geom_gene(
-    gene_color_scheme = "manual",
-    gene_label_show = TRUE,
+  geom_gene(gene_color_scheme = "manual") +
+  geom_gene_label(
     gene_label_rotation = 45,
     gene_label_radial_offset = 0.1
   )
@@ -303,8 +302,8 @@ Gene labels can overlap when annotations are long or genes are dense. Use
 ```r
 ggchord(seq_data_example, gene_data = gene_data_example) +
   geom_seq() +
-  geom_gene(
-    gene_label_show = TRUE,
+  geom_gene() +
+  geom_gene_label(
     gene_label_repel = TRUE,
     gene_label_wrap = 15
   )
@@ -394,8 +393,9 @@ ggchord(
       c("+" = 0.2, "-" = 0),
       c("+" = 0.2, "-" = 0.1)
     ),
-    gene_width = 0.08,
-    gene_label_show = TRUE,
+    gene_width = 0.08
+  ) +
+  geom_gene_label(
     gene_label_rotation = list(
       c("+" = 45, "-" = -45),
       c("+" = 30, "-" = -30),
@@ -539,20 +539,23 @@ gene_label_rotation = list(20)                            # length-one list recy
 | `gene_color_scheme` | character | "strand" | Scheme: `"strand"` or `"manual"` |
 | `gene_colors` | color vector | auto | Gene arrow fill colors |
 | `gene_order` | character vector | NULL | Gene display order in legend |
-| `gene_label_show` | logical | FALSE | Display gene labels |
+| `show_legend` | logical | TRUE | Show legend |
+| `legend_position` | character | "right" | Position of the Strand/Gene Annotation legend: "left", "right", "top", "bottom" or "inside" (NULL = follow `theme(legend.position = ...)`) |
+
+### geom_gene_label() Parameters
+
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
 | `gene_label_size` | numeric | 2.5 | Label font size |
-| `gene_label_repel` | logical | FALSE | Automatically push overlapping gene labels apart |
-| `gene_label_wrap` | numeric | NULL | Wrap long annotations at this many characters (e.g. 15) |
-| `gene_label_max_overlaps` | numeric | Inf | Hide labels that still overlap more than this many others (with `gene_label_repel = TRUE`) |
-| `gene_label_seed` | numeric | 123 | Seed for reproducible label de-overlapping |
 | `gene_label_rotation` | numeric/vector/list | 0 | Label rotation angle |
 | `gene_label_radial_offset` | numeric/vector/list | 0 | Radial offset of labels |
 | `gene_label_circum_offset` | numeric/vector/list | 0 | Circumferential offset |
 | `gene_label_circum_limit` | logical/vector/list | TRUE | Limit circumferential offset |
-| `show_legend` | logical | TRUE | Show legend |
-| `legend_position` | character | "right" | Position of the Strand/Gene Annotation legend: "left", "right", "top", "bottom" or "inside" (NULL = follow `theme(legend.position = ...)`) |
-| `show_label` | logical | NULL | Override gene_label_show |
-| `label_size` | numeric | NULL | Override gene_label_size |
+| `gene_label_repel` | logical | FALSE | Automatically push overlapping gene labels apart |
+| `gene_label_wrap` | numeric | NULL | Wrap long annotations at this many characters (e.g. 15) |
+| `gene_label_max_overlaps` | numeric | Inf | Hide labels that still overlap more than this many others (with `gene_label_repel = TRUE`) |
+| `gene_label_seed` | numeric | 123 | Seed for reproducible label de-overlapping |
+| `show_legend` | logical | FALSE | Show legend |
 
 ### geom_axis() Parameters
 

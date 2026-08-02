@@ -10,6 +10,8 @@
   : Add an axis layer
 - [`geom_gene()`](https://dangjem.github.io/ggchord/reference/geom_gene.md)
   : Add a gene arrow layer
+- [`geom_gene_label()`](https://dangjem.github.io/ggchord/reference/geom_gene_label.md)
+  : Add a gene label layer
 - [`geom_ribbon()`](https://dangjem.github.io/ggchord/reference/geom_ribbon.md)
   : Add an alignment ribbon layer
 - [`geom_seq()`](https://dangjem.github.io/ggchord/reference/geom_seq.md)

@@ -137,8 +137,8 @@ test_that("README color, label override, and transparency parameters take effect
   p <- ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
     geom_seq(linewidth = 2) +
     geom_ribbon(ribbon_color_scheme = "query", alpha = 0.2) +
-    geom_gene(gene_color_scheme = "manual", show_label = TRUE,
-              label_size = 4) +
+    geom_gene(gene_color_scheme = "manual") +
+    geom_gene_label(gene_label_size = 4) +
     geom_axis()
 
   out <- tempfile(fileext = ".pdf")
@@ -481,7 +481,7 @@ test_that("gene_label_size is applied to the gene text layer", {
   data(seq_data_example)
   data(gene_data_example)
   p <- ggchord(seq_data_example, gene_data = gene_data_example) +
-    geom_seq() + geom_gene(gene_label_show = TRUE)
+    geom_seq() + geom_gene() + geom_gene_label()
   layout <- p$ggchord$ref$layout
   # the layout carries the (default 2.5) label size
   expect_true(all(layout$gene_labels$size == 2.5))
@@ -494,7 +494,7 @@ test_that("gene_label_size is applied to the gene text layer", {
   expect_true("size" %in% names(text_layer$mapping))
   # a custom size flows through
   p2 <- ggchord(seq_data_example, gene_data = gene_data_example) +
-    geom_seq() + geom_gene(gene_label_show = TRUE, gene_label_size = 4)
+    geom_seq() + geom_gene() + geom_gene_label(gene_label_size = 4)
   expect_true(all(p2$ggchord$ref$layout$gene_labels$size == 4))
 })
 
@@ -507,9 +507,9 @@ test_that("gene_label_repel de-overlaps gene labels", {
                    end = pmax(200, end - 200),
                    anno = paste0(anno, " (copy)"))
   gd <- rbind(gd, dup)
-  p0 <- ggchord(seq_data_example, gene_data = gd) + geom_seq() + geom_gene(gene_label_show = TRUE)
+  p0 <- ggchord(seq_data_example, gene_data = gd) + geom_seq() + geom_gene() + geom_gene_label()
   p1 <- ggchord(seq_data_example, gene_data = gd) + geom_seq() +
-    geom_gene(gene_label_show = TRUE, gene_label_repel = TRUE)
+    geom_gene() + geom_gene_label(gene_label_repel = TRUE)
   # de-overlap should not error and should move at least one label (positions differ)
   expect_true(is.list(p1$ggchord$ref$layout))
   moved <- any(p0$ggchord$ref$layout$gene_labels$text_x != p1$ggchord$ref$layout$gene_labels$text_x |
@@ -524,7 +524,7 @@ test_that("gene_label_wrap wraps long annotations", {
   data(seq_data_example)
   data(gene_data_example)
   p <- ggchord(seq_data_example, gene_data = gene_data_example) +
-    geom_seq() + geom_gene(gene_label_show = TRUE, gene_label_wrap = 10)
+    geom_seq() + geom_gene() + geom_gene_label(gene_label_wrap = 10)
   gl <- p$ggchord$ref$layout$gene_labels
   expect_true(any(grepl("\n", gl$text)))
   pdf(tempfile(fileext = ".pdf"), 8, 8)

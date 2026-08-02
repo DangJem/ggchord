@@ -357,9 +357,8 @@ ggchord(seq_data_example, gene_data = gene_data_example) +
 
 ggchord(seq_data_example, gene_data = gene_data_example) +
   geom_seq() +
-  geom_gene(
-    gene_color_scheme = "manual",
-    gene_label_show = TRUE,
+  geom_gene(gene_color_scheme = "manual") +
+  geom_gene_label(
     gene_label_rotation = 45,
     gene_label_radial_offset = 0.1
   )
@@ -377,8 +376,8 @@ ggchord(seq_data_example, gene_data = gene_data_example) +
 
 ggchord(seq_data_example, gene_data = gene_data_example) +
   geom_seq() +
-  geom_gene(
-    gene_label_show = TRUE,
+  geom_gene() +
+  geom_gene_label(
     gene_label_repel = TRUE,
     gene_label_wrap = 15
   )
@@ -478,8 +477,9 @@ ggchord(
       c("+" = 0.2, "-" = 0),
       c("+" = 0.2, "-" = 0.1)
     ),
-    gene_width = 0.08,
-    gene_label_show = TRUE,
+    gene_width = 0.08
+  ) +
+  geom_gene_label(
     gene_label_rotation = list(
       c("+" = 45, "-" = -45),
       c("+" = 30, "-" = -30),
@@ -635,20 +635,23 @@ gene_label_rotation = list(20)                            # 单元素列表自�
 | `gene_color_scheme` | 字符 | “strand” | 配色方案：`"strand"` 或 `"manual"` |
 | `gene_colors` | 颜色向量 | 自动 | 基因箭头填充色 |
 | `gene_order` | 字符向量 | NULL | 基因在图例中的显示顺序 |
-| `gene_label_show` | 逻辑值 | FALSE | 是否显示基因标签 |
+| `show_legend` | 逻辑值 | TRUE | 是否显示图例 |
+| `legend_position` | 字符 | “right” | Strand / Gene Annotation 图例的位置：“left”、“right”、“top”、“bottom” 或 “inside”（NULL = 跟随 `theme(legend.position = ...)`） |
+
+### geom_gene_label() 参数
+
+| 参数 | 类型 | 默认值 | 描述 |
+|----|----|----|----|
 | `gene_label_size` | 数值 | 2.5 | 标签字号 |
-| `gene_label_repel` | 逻辑值 | FALSE | 自动推开重叠的基因标签 |
-| `gene_label_wrap` | 数值 | NULL | 将长注释按此字符数换行（如 15） |
-| `gene_label_max_overlaps` | 数值 | Inf | 配合 `gene_label_repel = TRUE`，隐藏仍与超过该数量标签重叠的标签 |
-| `gene_label_seed` | 数值 | 123 | 标签防重叠算法的随机种子 |
 | `gene_label_rotation` | 数值/向量/列表 | 0 | 标签旋转角度 |
 | `gene_label_radial_offset` | 数值/向量/列表 | 0 | 标签径向偏移 |
 | `gene_label_circum_offset` | 数值/向量/列表 | 0 | 标签周向偏移比例 |
 | `gene_label_circum_limit` | 逻辑值/向量/列表 | TRUE | 是否限制周向偏移 |
-| `show_legend` | 逻辑值 | TRUE | 是否显示图例 |
-| `legend_position` | 字符 | “right” | Strand / Gene Annotation 图例的位置：“left”、“right”、“top”、“bottom” 或 “inside”（NULL = 跟随 `theme(legend.position = ...)`） |
-| `show_label` | 逻辑值 | NULL | 覆盖 gene_label_show |
-| `label_size` | 数值 | NULL | 覆盖 gene_label_size |
+| `gene_label_repel` | 逻辑值 | FALSE | 自动推开重叠的基因标签 |
+| `gene_label_wrap` | 数值 | NULL | 将长注释按此字符数换行（如 15） |
+| `gene_label_max_overlaps` | 数值 | Inf | 配合 `gene_label_repel = TRUE`，隐藏仍与超过该数量标签重叠的标签 |
+| `gene_label_seed` | 数值 | 123 | 标签防重叠算法的随机种子 |
+| `show_legend` | 逻辑值 | FALSE | 是否显示图例 |
 
 ### geom_axis() 参数
 

@@ -384,9 +384,8 @@ Color by annotation category and show gene labels:
 
 ggchord(seq_data_example, gene_data = gene_data_example) +
   geom_seq() +
-  geom_gene(
-    gene_color_scheme = "manual",
-    gene_label_show = TRUE,
+  geom_gene(gene_color_scheme = "manual") +
+  geom_gene_label(
     gene_label_rotation = 45,
     gene_label_radial_offset = 0.1
   )
@@ -396,6 +395,21 @@ ggchord(seq_data_example, gene_data = gene_data_example) +
 labels](reference/figures/gene_manual_label.png)
 
 Gene arrows colored by annotation with labels
+
+Gene labels can overlap when annotations are long or genes are dense.
+Use `gene_label_repel = TRUE` to push overlapping labels apart, and
+`gene_label_wrap = 15` to wrap long annotation texts:
+
+``` r
+
+ggchord(seq_data_example, gene_data = gene_data_example) +
+  geom_seq() +
+  geom_gene() +
+  geom_gene_label(
+    gene_label_repel = TRUE,
+    gene_label_wrap = 15
+  )
+```
 
 ### Step 4: Add Axes and Sequence Labels
 
@@ -494,8 +508,9 @@ ggchord(
       c("+" = 0.2, "-" = 0),
       c("+" = 0.2, "-" = 0.1)
     ),
-    gene_width = 0.08,
-    gene_label_show = TRUE,
+    gene_width = 0.08
+  ) +
+  geom_gene_label(
     gene_label_rotation = list(
       c("+" = 45, "-" = -45),
       c("+" = 30, "-" = -30),
@@ -504,7 +519,7 @@ ggchord(
     )
   ) +
   geom_axis(
-    axis_gap = 0,
+    axis_gap = 0.05,
     axis_tick_major_length = 0.03,
     axis_label_size = 2
   )
@@ -524,11 +539,7 @@ be added with `+` just like in ggplot2:
 
 ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
   geom_seq() + geom_ribbon() + geom_gene() + geom_axis() +
-  theme(
-    legend.position = "bottom",
-    legend.box = "horizontal",
-    panel.background = element_rect(fill = "grey95")
-  ) +
+  theme(panel.background = element_rect(fill = "grey95")) +
   scale_color_manual(
     values = c("MT108731.1" = "#E41A1C",
                "MT118296.1" = "#377EB8",
@@ -542,23 +553,25 @@ scale](reference/figures/theme_custom.png)
 
 Chord diagram with a custom theme and scale
 
-Each legend can also be placed independently with the `legend_position`
-argument of
+By default the three legends are placed independently: the Seq ID and
+the Strand / Gene Annotation legends sit on the right, and the
+Identity(%) colourbar sits on the left. Each can be moved with the
+`legend_position` argument of
 [`geom_seq()`](https://dangjem.github.io/ggchord/reference/geom_seq.md),
 [`geom_ribbon()`](https://dangjem.github.io/ggchord/reference/geom_ribbon.md)
 and
-[`geom_gene()`](https://dangjem.github.io/ggchord/reference/geom_gene.md)
-(the Seq ID legend, the Identity(%) colourbar, and the Strand/Gene
-Annotation legend). Legends without an explicit position stay together
-at `theme(legend.position = ...)`:
+[`geom_gene()`](https://dangjem.github.io/ggchord/reference/geom_gene.md).
+Pass `legend_position = NULL` on a layer to make its legend follow
+`theme(legend.position = ...)` and group the legends together:
 
 ``` r
 
 ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
-  geom_seq(legend_position = "left") +
-  geom_ribbon(legend_position = "bottom") +
-  geom_gene(legend_position = "right") +
-  geom_axis()
+  geom_seq(legend_position = NULL) +
+  geom_ribbon(legend_position = NULL) +
+  geom_gene(legend_position = NULL) +
+  geom_axis() +
+  theme(legend.position = "bottom", legend.box = "horizontal")
 ```
 
 **Flexible parameter formats**: all sequence-level parameters
@@ -623,7 +636,7 @@ gene_label_rotation = list(20)                            # length-one list recy
 | `seq_colors` | color vector | Set1 | Sequence arc colors |
 | `linewidth` | numeric | 1.2 | Arc line width |
 | `show_legend` | logical | TRUE | Show legend |
-| `legend_position` | character | NULL | Position of the Seq ID legend: “left”, “right”, “top”, “bottom” or “inside” (NULL = follow `theme(legend.position = ...)`) |
+| `legend_position` | character | “right” | Position of the Seq ID legend: “left”, “right”, “top”, “bottom” or “inside” (NULL = follow `theme(legend.position = ...)`) |
 
 ### geom_seq_label() Parameters
 
@@ -649,7 +662,7 @@ gene_label_rotation = list(20)                            # length-one list recy
 | `ribbon_outline_width` | numeric | 0.05 | Ribbon outline line width |
 | `ribbon_outline_linetype` | numeric/character | 1 | Ribbon outline line type (1 = solid) |
 | `show_legend` | logical | TRUE | Show legend |
-| `legend_position` | character | NULL | Position of the Identity(%) colourbar: “left”, “right”, “top”, “bottom” or “inside” (NULL = follow `theme(legend.position = ...)`) |
+| `legend_position` | character | “left” | Position of the Identity(%) colourbar: “left”, “right”, “top”, “bottom” or “inside” (NULL = follow `theme(legend.position = ...)`) |
 
 ### geom_gene() Parameters
 
@@ -660,23 +673,30 @@ gene_label_rotation = list(20)                            # length-one list recy
 | `gene_color_scheme` | character | “strand” | Scheme: `"strand"` or `"manual"` |
 | `gene_colors` | color vector | auto | Gene arrow fill colors |
 | `gene_order` | character vector | NULL | Gene display order in legend |
-| `gene_label_show` | logical | FALSE | Display gene labels |
+| `show_legend` | logical | TRUE | Show legend |
+| `legend_position` | character | “right” | Position of the Strand/Gene Annotation legend: “left”, “right”, “top”, “bottom” or “inside” (NULL = follow `theme(legend.position = ...)`) |
+
+### geom_gene_label() Parameters
+
+| Parameter | Type | Default | Description |
+|----|----|----|----|
 | `gene_label_size` | numeric | 2.5 | Label font size |
 | `gene_label_rotation` | numeric/vector/list | 0 | Label rotation angle |
 | `gene_label_radial_offset` | numeric/vector/list | 0 | Radial offset of labels |
 | `gene_label_circum_offset` | numeric/vector/list | 0 | Circumferential offset |
 | `gene_label_circum_limit` | logical/vector/list | TRUE | Limit circumferential offset |
-| `show_legend` | logical | TRUE | Show legend |
-| `legend_position` | character | NULL | Position of the Strand/Gene Annotation legend: “left”, “right”, “top”, “bottom” or “inside” (NULL = follow `theme(legend.position = ...)`) |
-| `show_label` | logical | NULL | Override gene_label_show |
-| `label_size` | numeric | NULL | Override gene_label_size |
+| `gene_label_repel` | logical | FALSE | Automatically push overlapping gene labels apart |
+| `gene_label_wrap` | numeric | NULL | Wrap long annotations at this many characters (e.g. 15) |
+| `gene_label_max_overlaps` | numeric | Inf | Hide labels that still overlap more than this many others (with `gene_label_repel = TRUE`) |
+| `gene_label_seed` | numeric | 123 | Seed for reproducible label de-overlapping |
+| `show_legend` | logical | FALSE | Show legend |
 
 ### geom_axis() Parameters
 
 | Parameter | Type | Default | Description |
 |----|----|----|----|
 | `show_axis` | logical | TRUE | Display axes |
-| `axis_gap` | numeric/vector | 0.04 | Radial gap to sequences |
+| `axis_gap` | numeric/vector | 0.05 | Radial gap to sequences |
 | `axis_tick_major_number` | integer/vector | 5 | Number of major ticks |
 | `axis_tick_major_length` | numeric/vector | 0.02 | Major tick length proportion |
 | `axis_tick_minor_number` | integer/vector | 4 | Number of minor ticks |

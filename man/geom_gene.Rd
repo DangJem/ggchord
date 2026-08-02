@@ -12,20 +12,8 @@ geom_gene(
   gene_color_scheme = NULL,
   gene_colors = NULL,
   gene_order = NULL,
-  gene_label_show = NULL,
-  gene_label_size = NULL,
-  gene_label_rotation = NULL,
-  gene_label_radial_offset = NULL,
-  gene_label_circum_offset = NULL,
-  gene_label_circum_limit = NULL,
   show_legend = TRUE,
-  show_label = NULL,
-  label_size = NULL,
   legend_position = "right",
-  gene_label_repel = FALSE,
-  gene_label_wrap = NULL,
-  gene_label_max_overlaps = Inf,
-  gene_label_seed = 123,
   ...
 )
 }
@@ -44,52 +32,22 @@ geom_gene(
 
 \item{gene_order}{Optional character vector. Display order of genes in the legend}
 
-\item{gene_label_show}{Logical. Whether to show gene labels, default FALSE}
-
-\item{gene_label_size}{Numeric. Label font size, default 2.5}
-
-\item{gene_label_rotation}{Optional numeric/vector/list. Label rotation angle, default 0}
-
-\item{gene_label_radial_offset}{Optional numeric/vector/list. Radial offset of labels, default 0}
-
-\item{gene_label_circum_offset}{Optional numeric/vector/list. Circumferential offset of labels, default 0}
-
-\item{gene_label_circum_limit}{Optional logical/vector/list. Whether to limit circumferential offset, default TRUE}
-
 \item{show_legend}{Whether to show the legend, default TRUE}
-
-\item{show_label}{Whether to show gene labels (overrides gene_label_show), default NULL}
-
-\item{label_size}{Label font size (overrides gene_label_size), default NULL}
 
 \item{legend_position}{Position of this layer's legend (the Strand or Gene
 Annotation legend): one of "left", "right", "top", "bottom" or "inside",
 default "right". Pass NULL to let the legend follow
 \code{theme(legend.position = ...)} together with the other legends.}
 
-\item{gene_label_repel}{Logical, default FALSE. When TRUE, overlapping gene
-labels are automatically pushed apart (collision detection + automatic
-avoidance) so they do not cover each other.}
-
-\item{gene_label_wrap}{Numeric or NULL, default NULL. When set, long gene
-annotations are wrapped at this many characters (e.g. 15), which makes the
-labels narrower and less prone to overlap.}
-
-\item{gene_label_max_overlaps}{Numeric, default Inf. With
-\code{gene_label_repel = TRUE}, labels that still overlap more than this
-many other labels after de-overlapping are hidden (ggrepel-style). Use a
-finite value to declutter crowded plots.}
-
-\item{gene_label_seed}{Numeric, default 123. Seed used by the de-overlap
-algorithm for reproducible results.}
-
 \item{...}{Additional arguments passed to \code{geom_polygon()}}
 }
 \value{
-A list of ggplot2 layers
+A list of ggplot2 layers. To annotate the genes with their labels,
+  add a \code{\link{geom_gene_label}()} layer.
 }
 \description{
-Draws gene annotation arrows on the chord diagram. Gene layout parameters (offset, width, color scheme, etc.) are specified here.
+Draws gene annotation arrows on the chord diagram. Gene layout parameters
+(offset, width, color scheme, etc.) are specified here.
 The gene fill scale is kept independent from the ribbon's fill scale via a
 separate internal aesthetic used by the ribbon layer.
 }

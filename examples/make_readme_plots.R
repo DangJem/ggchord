@@ -87,9 +87,8 @@ save_plot(
 save_plot(
   ggchord(seq_data_example, gene_data = gene_data_example) +
     geom_seq() +
-    geom_gene(
-      gene_color_scheme = "manual",
-      gene_label_show = TRUE,
+    geom_gene(gene_color_scheme = "manual") +
+    geom_gene_label(
       gene_label_rotation = 45,
       gene_label_radial_offset = 0.1
     ),
@@ -153,8 +152,9 @@ save_plot(
         c("+" = 0.2, "-" = 0),
         c("+" = 0.2, "-" = 0.1)
       ),
-      gene_width = 0.08,
-      gene_label_show = TRUE,
+      gene_width = 0.08
+    ) +
+    geom_gene_label(
       gene_label_rotation = list(
         c("+" = 45, "-" = -45),
         c("+" = 30, "-" = -30),

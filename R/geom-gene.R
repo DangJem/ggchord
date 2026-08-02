@@ -1,10 +1,16 @@
-# geom-gene.R - gene arrow layer
-# Fetches pre-computed gene arrow polygons and label data from the package environment
-# Gene parameters are specified in this layer and stored for use at print time
+# geom-gene.R - gene arrow layer and gene label layer
+# Fetches pre-computed gene arrow polygons / label data from the package
+# environment. Gene parameters are specified in this layer and stored for use
+# at print time.
+
+# ---------------------------------------------------------------------------
+# geom_gene(): gene arrow polygons
+# ---------------------------------------------------------------------------
 
 #' Add a gene arrow layer
 #'
-#' Draws gene annotation arrows on the chord diagram. Gene layout parameters (offset, width, color scheme, etc.) are specified here.
+#' Draws gene annotation arrows on the chord diagram. Gene layout parameters
+#' (offset, width, color scheme, etc.) are specified here.
 #' The gene fill scale is kept independent from the ribbon's fill scale via a
 #' separate internal aesthetic used by the ribbon layer.
 #'
@@ -15,34 +21,15 @@
 #' @param gene_color_scheme Character. "strand" or "manual", default "strand"
 #' @param gene_colors Optional color vector. Fill color of gene arrows
 #' @param gene_order Optional character vector. Display order of genes in the legend
-#' @param gene_label_show Logical. Whether to show gene labels, default FALSE
-#' @param gene_label_size Numeric. Label font size, default 2.5
-#' @param gene_label_rotation Optional numeric/vector/list. Label rotation angle, default 0
-#' @param gene_label_radial_offset Optional numeric/vector/list. Radial offset of labels, default 0
-#' @param gene_label_circum_offset Optional numeric/vector/list. Circumferential offset of labels, default 0
-#' @param gene_label_circum_limit Optional logical/vector/list. Whether to limit circumferential offset, default TRUE
 #' @param show_legend Whether to show the legend, default TRUE
-#' @param show_label Whether to show gene labels (overrides gene_label_show), default NULL
-#' @param label_size Label font size (overrides gene_label_size), default NULL
 #' @param legend_position Position of this layer's legend (the Strand or Gene
 #'   Annotation legend): one of "left", "right", "top", "bottom" or "inside",
 #'   default "right". Pass NULL to let the legend follow
 #'   \code{theme(legend.position = ...)} together with the other legends.
-#' @param gene_label_repel Logical, default FALSE. When TRUE, overlapping gene
-#'   labels are automatically pushed apart (collision detection + automatic
-#'   avoidance) so they do not cover each other.
-#' @param gene_label_wrap Numeric or NULL, default NULL. When set, long gene
-#'   annotations are wrapped at this many characters (e.g. 15), which makes the
-#'   labels narrower and less prone to overlap.
-#' @param gene_label_max_overlaps Numeric, default Inf. With
-#'   \code{gene_label_repel = TRUE}, labels that still overlap more than this
-#'   many other labels after de-overlapping are hidden (ggrepel-style). Use a
-#'   finite value to declutter crowded plots.
-#' @param gene_label_seed Numeric, default 123. Seed used by the de-overlap
-#'   algorithm for reproducible results.
 #' @param ... Additional arguments passed to \code{geom_polygon()}
 #'
-#' @return A list of ggplot2 layers
+#' @return A list of ggplot2 layers. To annotate the genes with their labels,
+#'   add a \code{\link{geom_gene_label}()} layer.
 #' @export
 geom_gene <- function(mapping = NULL, data = NULL,
                       gene_offset = NULL,
@@ -50,21 +37,28 @@ geom_gene <- function(mapping = NULL, data = NULL,
                       gene_color_scheme = NULL,
                       gene_colors = NULL,
                       gene_order = NULL,
-                      gene_label_show = NULL,
-                      gene_label_size = NULL,
-                      gene_label_rotation = NULL,
-                      gene_label_radial_offset = NULL,
-                      gene_label_circum_offset = NULL,
-                      gene_label_circum_limit = NULL,
                       show_legend = TRUE,
-                      show_label = NULL,
-                      label_size = NULL,
                       legend_position = "right",
-                      gene_label_repel = FALSE,
-                      gene_label_wrap = NULL,
-                      gene_label_max_overlaps = Inf,
-                      gene_label_seed = 123,
                       ...) {
+  # Backward compatibility: gene label parameters used to live here. Point the
+  # user to the dedicated layer instead of silently ignoring them.
+  legacy_label_args <- intersect(
+    names(list(...)),
+    c("gene_label_show", "gene_label_size", "gene_label_rotation",
+      "gene_label_radial_offset", "gene_label_circum_offset",
+      "gene_label_circum_limit", "gene_label_repel", "gene_label_wrap",
+      "gene_label_max_overlaps", "gene_label_seed", "show_label", "label_size")
+  )
+  if (length(legacy_label_args) > 0) {
+    warning(
+      "Gene label arguments (",
+      paste(legacy_label_args, collapse = ", "),
+      ") have moved to the dedicated `geom_gene_label()` layer and are ignored ",
+      "here. Add `geom_gene_label()` after `geom_gene()` to show gene labels.",
+      call. = FALSE
+    )
+  }
+
   layers <- list()
 
   # Manual colors map by annotation; default colors map by strand.
@@ -96,29 +90,71 @@ geom_gene <- function(mapping = NULL, data = NULL,
   )
   poly_layer$ggchord_type <- "gene_poly"
   poly_layer$ggchord_params <- list(
-    type                      = "gene",
-    gene_offset               = gene_offset,
-    gene_width                = gene_width,
-    gene_color_scheme         = gene_color_scheme,
-    gene_colors               = gene_colors,
-    gene_order                = gene_order,
-    gene_label_show           = gene_label_show,
-    gene_label_size           = gene_label_size,
-    gene_label_rotation       = gene_label_rotation,
-    gene_label_radial_offset  = gene_label_radial_offset,
-    gene_label_circum_offset  = gene_label_circum_offset,
-    gene_label_circum_limit   = gene_label_circum_limit,
-    show_label_override       = show_label,
-    label_size_override       = label_size,
-    legend_position           = legend_position,
-    gene_label_repel          = gene_label_repel,
-    gene_label_wrap           = gene_label_wrap,
-    gene_label_max_overlaps   = gene_label_max_overlaps,
-    gene_label_seed           = gene_label_seed
+    type              = "gene",
+    gene_offset       = gene_offset,
+    gene_width        = gene_width,
+    gene_color_scheme = gene_color_scheme,
+    gene_colors       = gene_colors,
+    gene_order        = gene_order,
+    legend_position   = legend_position
   )
   layers[[length(layers) + 1]] <- poly_layer
 
-  # Placeholder Text layer (for gene label injection; real data is injected at print time)
+  layers
+}
+
+# ---------------------------------------------------------------------------
+# geom_gene_label(): gene annotation labels
+# ---------------------------------------------------------------------------
+
+#' Add a gene label layer
+#'
+#' Draws the gene annotation labels on a chord diagram. This layer is
+#' independent from \code{\link{geom_gene}()}: add it after \code{geom_gene()}
+#' to annotate the gene arrows with their texts.
+#'
+#' Long or crowded labels can be handled with \code{gene_label_repel}
+#' (automatic de-overlapping), \code{gene_label_wrap} (wrapping long
+#' annotations) and \code{gene_label_max_overlaps} (hiding labels that still
+#' overlap too many others).
+#'
+#' @param mapping Default NULL (uses pre-computed data)
+#' @param data Default NULL (retrieved automatically from the layout)
+#' @param gene_label_size Numeric. Label font size, default 2.5
+#' @param gene_label_rotation Optional numeric/vector/list. Label rotation angle, default 0
+#' @param gene_label_radial_offset Optional numeric/vector/list. Radial offset of labels, default 0
+#' @param gene_label_circum_offset Optional numeric/vector/list. Circumferential offset of labels, default 0
+#' @param gene_label_circum_limit Optional logical/vector/list. Whether to limit circumferential offset, default TRUE
+#' @param gene_label_repel Logical, default FALSE. When TRUE, overlapping gene
+#'   labels are automatically pushed apart (collision detection + automatic
+#'   avoidance) so they do not cover each other.
+#' @param gene_label_wrap Numeric or NULL, default NULL. When set, long gene
+#'   annotations are wrapped at this many characters (e.g. 15), which makes the
+#'   labels narrower and less prone to overlap.
+#' @param gene_label_max_overlaps Numeric, default Inf. With
+#'   \code{gene_label_repel = TRUE}, labels that still overlap more than this
+#'   many other labels after de-overlapping are hidden (ggrepel-style). Use a
+#'   finite value to declutter crowded plots.
+#' @param gene_label_seed Numeric, default 123. Seed used by the de-overlap
+#'   algorithm for reproducible results.
+#' @param show_legend Whether to show the legend, default FALSE
+#' @param ... Additional arguments passed to \code{geom_text()}
+#'
+#' @return A list of ggplot2 layers
+#' @export
+geom_gene_label <- function(mapping = NULL, data = NULL,
+                            gene_label_size = NULL,
+                            gene_label_rotation = NULL,
+                            gene_label_radial_offset = NULL,
+                            gene_label_circum_offset = NULL,
+                            gene_label_circum_limit = NULL,
+                            gene_label_repel = FALSE,
+                            gene_label_wrap = NULL,
+                            gene_label_max_overlaps = Inf,
+                            gene_label_seed = 123,
+                            show_legend = FALSE,
+                            ...) {
+  # Placeholder text layer (real data is injected at print time)
   text_layer <- geom_text(
     data        = data.frame(x = numeric(0), y = numeric(0),
                              text_x = numeric(0), text_y = numeric(0),
@@ -129,10 +165,21 @@ geom_gene <- function(mapping = NULL, data = NULL,
                       angle = text_angle, hjust = hjust, vjust = vjust,
                       size = size),
     inherit.aes = FALSE,
-    show.legend = FALSE
+    show.legend = show_legend,
+    ...
   )
   text_layer$ggchord_type <- "gene_text"
-  layers[[length(layers) + 1]] <- text_layer
-
-  layers
+  text_layer$ggchord_params <- list(
+    type                    = "gene_label",
+    gene_label_size         = gene_label_size,
+    gene_label_rotation     = gene_label_rotation,
+    gene_label_radial_offset = gene_label_radial_offset,
+    gene_label_circum_offset = gene_label_circum_offset,
+    gene_label_circum_limit  = gene_label_circum_limit,
+    gene_label_repel         = gene_label_repel,
+    gene_label_wrap          = gene_label_wrap,
+    gene_label_max_overlaps  = gene_label_max_overlaps,
+    gene_label_seed          = gene_label_seed
+  )
+  list(text_layer)
 }

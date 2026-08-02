@@ -267,19 +267,22 @@ compute_chord_geometry <- function(plot) {
   seq_params    <- list()
   ribbon_params <- list()
   gene_params   <- list()
+  gene_label_params <- list()
   axis_params   <- list()
   seq_label_params <- list()
   seq_layer_requested <- FALSE
+  gene_label_layer <- FALSE
 
   for (i in seq_along(plot$layers)) {
     pp <- plot$layers[[i]]$ggchord_params
     if (is.null(pp)) next
     switch(pp$type,
-      seq       = { seq_params <- pp; seq_layer_requested <- TRUE },
-      ribbon    = ribbon_params <- pp,
-      gene      = gene_params <- pp,
-      axis      = axis_params <- pp,
-      seq_label = seq_label_params <- pp
+      seq        = { seq_params <- pp; seq_layer_requested <- TRUE },
+      ribbon     = ribbon_params <- pp,
+      gene       = gene_params <- pp,
+      gene_label = { gene_label_params <- pp; gene_label_layer <- TRUE },
+      axis       = axis_params <- pp,
+      seq_label  = seq_label_params <- pp
     )
   }
 
@@ -385,19 +388,32 @@ compute_chord_geometry <- function(plot) {
   gene_cs   <- gene_params$gene_color_scheme %||% "strand"
   gene_cols <- gene_params$gene_colors
   gene_ord  <- gene_params$gene_order
-  gene_ls   <- gene_params$show_label_override %||%
-    gene_params$gene_label_show %||% FALSE
-  gene_lsz  <- gene_params$label_size_override %||%
+  # Gene label settings come from the dedicated geom_gene_label() layer, with
+  # the legacy geom_gene() arguments as fallback.
+  gene_ls   <- gene_label_layer ||
+    isTRUE(gene_params$show_label_override) ||
+    isTRUE(gene_params$gene_label_show)
+  gene_lsz  <- gene_label_params$gene_label_size %||%
+    gene_params$label_size_override %||%
     gene_params$gene_label_size %||% 2.5
-  gene_lr   <- gene_params$gene_label_rotation %||% 0
-  gene_lro  <- gene_params$gene_label_radial_offset %||% 0
-  gene_lco  <- gene_params$gene_label_circum_offset %||% 0
-  gene_lcl  <- if (is.null(gene_params$gene_label_circum_limit)) TRUE
-               else gene_params$gene_label_circum_limit
-  gene_lrepel <- isTRUE(gene_params$gene_label_repel)
-  gene_lwrap  <- gene_params$gene_label_wrap
-  gene_lmaxov <- gene_params$gene_label_max_overlaps %||% Inf
-  gene_lseed  <- gene_params$gene_label_seed %||% 123
+  gene_lr   <- gene_label_params$gene_label_rotation %||%
+    gene_params$gene_label_rotation %||% 0
+  gene_lro  <- gene_label_params$gene_label_radial_offset %||%
+    gene_params$gene_label_radial_offset %||% 0
+  gene_lco  <- gene_label_params$gene_label_circum_offset %||%
+    gene_params$gene_label_circum_offset %||% 0
+  gene_lcl  <- if (is.null(gene_label_params$gene_label_circum_limit)) {
+    if (is.null(gene_params$gene_label_circum_limit)) TRUE
+    else gene_params$gene_label_circum_limit
+  } else gene_label_params$gene_label_circum_limit
+  gene_lrepel <- isTRUE(gene_label_params$gene_label_repel %||%
+                          gene_params$gene_label_repel)
+  gene_lwrap  <- gene_label_params$gene_label_wrap %||%
+    gene_params$gene_label_wrap
+  gene_lmaxov <- gene_label_params$gene_label_max_overlaps %||%
+    gene_params$gene_label_max_overlaps %||% Inf
+  gene_lseed  <- gene_label_params$gene_label_seed %||%
+    gene_params$gene_label_seed %||% 123
 
   if (!gene_cs %in% c("strand", "manual")) {
     stop("gene_color_scheme must be 'strand' or 'manual'")
