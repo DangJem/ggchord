@@ -180,3 +180,86 @@ get_plot_extremes <- function(allRibbon=NULL, seqArcs=NULL, axisLines=NULL, axis
     y_max = max(y_coords) # Top extreme
   )
 }
+
+#' Wrap long gene annotation texts at a given character width
+#' @keywords internal
+ggchord_label_wrap_text <- function(text, width = NULL) {
+  if (is.null(width) || width <= 0) return(text)
+  vapply(text, function(t) {
+    if (is.na(t) || !nzchar(t)) return(NA_character_)
+    paste(strwrap(t, width = width), collapse = "\n")
+  }, character(1), USE.NAMES = FALSE)
+}
+
+#' De-overlap gene labels
+#'
+#' Detects overlapping gene label boxes (estimated from the text size) and
+#' pushes the labels apart until they no longer collide. Optionally hides
+#' labels that still overlap more than `max_overlaps` other labels
+#' (ggrepel-style decluttering).
+#' @keywords internal
+ggchord_label_deoverlap <- function(gl, units_per_inch = 0.35, seed = 123,
+                                    max_overlaps = Inf) {
+  if (nrow(gl) < 2) return(gl)
+
+  grDevices::pdf(NULL)
+  on.exit(grDevices::dev.off())
+  sizes <- gl$size %||% rep(2.5, nrow(gl))
+  w <- suppressWarnings(graphics::strwidth(gl$text, units = "inches",
+                                           cex = sizes / 12)) * units_per_inch
+  n_lines <- vapply(strsplit(gl$text, "\n"), length, integer(1))
+  h <- suppressWarnings(graphics::strheight(gl$text, units = "inches",
+                                            cex = sizes / 12)) *
+    n_lines * units_per_inch
+
+  x <- gl$text_x
+  y <- gl$text_y
+  n <- nrow(gl)
+
+  # Resolve axis-aligned box overlaps iteratively, pushing labels apart along
+  # the axis of least penetration.
+  for (iter in seq_len(100)) {
+    moved <- FALSE
+    for (i in seq_len(n - 1)) {
+      for (j in (i + 1):n) {
+        dx <- x[j] - x[i]
+        dy <- y[j] - y[i]
+        ox <- (w[i] + w[j]) / 2 - abs(dx)
+        oy <- (h[i] + h[j]) / 2 - abs(dy)
+        if (ox > 0 && oy > 0) {
+          if (ox < oy) {
+            sgn <- if (dx >= 0) 1 else -1
+            x[i] <- x[i] - sgn * ox / 2
+            x[j] <- x[j] + sgn * ox / 2
+          } else {
+            sgn <- if (dy >= 0) 1 else -1
+            y[i] <- y[i] - sgn * oy / 2
+            y[j] <- y[j] + sgn * oy / 2
+          }
+          moved <- TRUE
+        }
+      }
+    }
+    if (!moved) break
+  }
+
+  # Optional decluttering: hide labels that still overlap too many others
+  if (is.finite(max_overlaps)) {
+    n_over <- numeric(n)
+    for (i in seq_len(n - 1)) {
+      for (j in (i + 1):n) {
+        if (abs(x[i] - x[j]) < (w[i] + w[j]) / 2 &&
+            abs(y[i] - y[j]) < (h[i] + h[j]) / 2) {
+          n_over[i] <- n_over[i] + 1
+          n_over[j] <- n_over[j] + 1
+        }
+      }
+    }
+    hide <- n_over > max_overlaps
+    if (any(hide)) gl$text[hide] <- NA
+  }
+
+  gl$text_x <- x
+  gl$text_y <- y
+  gl
+}

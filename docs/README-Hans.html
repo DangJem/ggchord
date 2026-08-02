@@ -278,14 +278,14 @@
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span></span>
 <span><span class="va">gff3FilesPath</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span>path <span class="op">=</span> <span class="st">"."</span>, pattern <span class="op">=</span> <span class="st">"*.gff3"</span><span class="op">)</span></span>
-<span><span class="va">gff3Table</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map_dfr.html" class="external-link">map_df</a></span><span class="op">(</span><span class="va">gff3FilesPath</span>, <span class="op">~</span><span class="fu"><a href="https://rdrr.io/pkg/readr/man/read_delim.html" class="external-link">read_tsv</a></span><span class="op">(</span><span class="va">.x</span>, show_col_types <span class="op">=</span> <span class="cn">F</span>, comment <span class="op">=</span> <span class="st">"#"</span>,</span>
-<span>  col_names <span class="op">=</span> <span class="cn">F</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rlang.r-lib.org/reference/set_names.html" class="external-link">set_names</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"seq_id"</span>, <span class="st">"source"</span>, <span class="st">"type"</span>, <span class="st">"start"</span>, <span class="st">"end"</span>,</span>
+<span><span class="va">gff3Table</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/purrr/man/map_dfr.html" class="external-link">map_df</a></span><span class="op">(</span><span class="va">gff3FilesPath</span>, <span class="op">~</span><span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html" class="external-link">read_tsv</a></span><span class="op">(</span><span class="va">.x</span>, show_col_types <span class="op">=</span> <span class="cn">F</span>, comment <span class="op">=</span> <span class="st">"#"</span>,</span>
+<span>  col_names <span class="op">=</span> <span class="cn">F</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/rlang/man/set_names.html" class="external-link">set_names</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"seq_id"</span>, <span class="st">"source"</span>, <span class="st">"type"</span>, <span class="st">"start"</span>, <span class="st">"end"</span>,</span>
 <span>  <span class="st">"score"</span>, <span class="st">"strand"</span>, <span class="st">"phase"</span>, <span class="st">"attributes"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">geneTrackTable</span> <span class="op">&lt;-</span> <span class="va">gff3Table</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">type</span> <span class="op">==</span> <span class="st">"CDS"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>anno <span class="op">=</span> <span class="fu"><a href="https://stringr.tidyverse.org/reference/str_extract.html" class="external-link">str_extract</a></span><span class="op">(</span><span class="va">attributes</span>, <span class="st">"(?&lt;=product=)[^;]+(?=;)"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">seq_id</span>, <span class="va">start</span>, <span class="va">end</span>, <span class="va">strand</span>, <span class="va">anno</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/readr/man/write_delim.html" class="external-link">write_tsv</a></span><span class="op">(</span><span class="va">geneTrackTable</span>, <span class="st">"gene_track.tsv"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://readr.tidyverse.org/reference/write_delim.html" class="external-link">write_tsv</a></span><span class="op">(</span><span class="va">geneTrackTable</span>, <span class="st">"gene_track.tsv"</span><span class="op">)</span></span></code></pre></div>
 <hr></div>
 </div>
 </div>
@@ -375,11 +375,20 @@
 <div class="float">
 <img src="reference/figures/gene_manual_label.png" alt="按注释类别着色并显示标签的基因箭头"><div class="figcaption">按注释类别着色并显示标签的基因箭头</div>
 </div>
+<p>当注释文本较长或基因较密集时，基因标签可能互相重叠。可用 <code>gene_label_repel = TRUE</code> 自动推开重叠的标签，并用 <code>gene_label_wrap = 15</code> 将长注释换行：</p>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/ggchord.html">ggchord</a></span><span class="op">(</span><span class="va">seq_data_example</span>, gene_data <span class="op">=</span> <span class="va">gene_data_example</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="reference/geom_seq.html">geom_seq</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="reference/geom_gene.html">geom_gene</a></span><span class="op">(</span></span>
+<span>    gene_label_show <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>    gene_label_repel <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>    gene_label_wrap <span class="op">=</span> <span class="fl">15</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="第-4-步加入坐标轴与序列标签">第 4 步：加入坐标轴与序列标签<a class="anchor" aria-label="anchor" href="#%E7%AC%AC-4-%E6%AD%A5%E5%8A%A0%E5%85%A5%E5%9D%90%E6%A0%87%E8%BD%B4%E4%B8%8E%E5%BA%8F%E5%88%97%E6%A0%87%E7%AD%BE"></a></h3>
 <p>坐标轴用主/次刻度标注序列位置，<code><a href="reference/geom_seq_label.html">geom_seq_label()</a></code> 可将标签放在弧线上或外侧：</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/ggchord.html">ggchord</a></span><span class="op">(</span><span class="va">seq_data_example</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="reference/geom_seq.html">geom_seq</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="reference/geom_axis.html">geom_axis</a></span><span class="op">(</span></span>
@@ -395,7 +404,7 @@
 <div class="section level3">
 <h3 id="第-5-步双序列比对">第 5 步：双序列比对<a class="anchor" aria-label="anchor" href="#%E7%AC%AC-5-%E6%AD%A5%E5%8F%8C%E5%BA%8F%E5%88%97%E6%AF%94%E5%AF%B9"></a></h3>
 <p>内置数据集包含四条序列，你可以绘制任意子集。先从两条序列开始，只需保留需要的行：</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># 保留两条序列及其对应的连接带与基因</span></span>
 <span><span class="va">seq2</span> <span class="op">&lt;-</span> <span class="va">seq_data_example</span><span class="op">[</span><span class="va">seq_data_example</span><span class="op">$</span><span class="va">seq_id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"MT108731.1"</span>, <span class="st">"MT118296.1"</span><span class="op">)</span>, <span class="op">]</span></span>
 <span><span class="va">ribbon2</span> <span class="op">&lt;-</span> <span class="va">ribbon_data_example</span><span class="op">[</span></span>
@@ -412,7 +421,7 @@
 <div class="section level3">
 <h3 id="第-6-步三序列比对">第 6 步：三序列比对<a class="anchor" aria-label="anchor" href="#%E7%AC%AC-6-%E6%AD%A5%E4%B8%89%E5%BA%8F%E5%88%97%E6%AF%94%E5%AF%B9"></a></h3>
 <p>同样的方法也适用于三条序列——保留感兴趣的序列，并相应过滤 <code>ribbon_data</code> 与 <code>gene_data</code>：</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">seq3</span> <span class="op">&lt;-</span> <span class="va">seq_data_example</span><span class="op">[</span><span class="va">seq_data_example</span><span class="op">$</span><span class="va">seq_id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span></span>
 <span>                           <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"MT108731.1"</span>, <span class="st">"MT118296.1"</span>, <span class="st">"OQ646790.1"</span><span class="op">)</span>, <span class="op">]</span></span>
 <span><span class="va">ribbon3</span> <span class="op">&lt;-</span> <span class="va">ribbon_data_example</span><span class="op">[</span></span>
@@ -429,7 +438,7 @@
 <div class="section level3">
 <h3 id="第-7-步组合所有图层并精细控制">第 7 步：组合所有图层并精细控制<a class="anchor" aria-label="anchor" href="#%E7%AC%AC-7-%E6%AD%A5%E7%BB%84%E5%90%88%E6%89%80%E6%9C%89%E5%9B%BE%E5%B1%82%E5%B9%B6%E7%B2%BE%E7%BB%86%E6%8E%A7%E5%88%B6"></a></h3>
 <p>组合所有图层，并把精细参数分发到使用它的图层中：</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/ggchord.html">ggchord</a></span><span class="op">(</span></span>
 <span>  seq_data <span class="op">=</span> <span class="va">seq_data_example</span>,</span>
 <span>  ribbon_data <span class="op">=</span> <span class="va">ribbon_data_example</span>,</span>
@@ -475,7 +484,7 @@
 <div class="section level3">
 <h3 id="第-8-步用--添加主题与-scale">第 8 步：用 <code>+</code> 添加主题与 scale<a class="anchor" aria-label="anchor" href="#%E7%AC%AC-8-%E6%AD%A5%E7%94%A8--%E6%B7%BB%E5%8A%A0%E4%B8%BB%E9%A2%98%E4%B8%8E-scale"></a></h3>
 <p>ggchord 绘图对象是真正的 ggplot2 对象，因此可以像 ggplot2 一样用 <code>+</code> 叠加主题与 scale：</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/ggchord.html">ggchord</a></span><span class="op">(</span><span class="va">seq_data_example</span>, <span class="va">ribbon_data_example</span>, <span class="va">gene_data_example</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="reference/geom_seq.html">geom_seq</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="reference/geom_ribbon.html">geom_ribbon</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="reference/geom_gene.html">geom_gene</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="reference/geom_axis.html">geom_axis</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>panel.background <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_rect</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"grey95"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -489,7 +498,7 @@
 <img src="reference/figures/theme_custom.png" alt="自定义主题与 scale 的弦图"><div class="figcaption">自定义主题与 scale 的弦图</div>
 </div>
 <p>默认情况下三个图例独立放置：Seq ID 与 Strand / Gene Annotation 图例在右侧， Identity(%) 色条在左侧。每个图例都可以通过 <code><a href="reference/geom_seq.html">geom_seq()</a></code>、<code><a href="reference/geom_ribbon.html">geom_ribbon()</a></code> 和 <code><a href="reference/geom_gene.html">geom_gene()</a></code> 的 <code>legend_position</code> 参数单独移动。在某图层传入 <code>legend_position = NULL</code> 可让其图例跟随 <code>theme(legend.position = ...)</code>， 从而把图例聚合到一起：</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/ggchord.html">ggchord</a></span><span class="op">(</span><span class="va">seq_data_example</span>, <span class="va">ribbon_data_example</span>, <span class="va">gene_data_example</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="reference/geom_seq.html">geom_seq</a></span><span class="op">(</span>legend_position <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="reference/geom_ribbon.html">geom_ribbon</a></span><span class="op">(</span>legend_position <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">+</span></span>
@@ -497,7 +506,7 @@
 <span>  <span class="fu"><a href="reference/geom_axis.html">geom_axis</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"bottom"</span>, legend.box <span class="op">=</span> <span class="st">"horizontal"</span><span class="op">)</span></span></code></pre></div>
 <p><strong>灵活的参数格式</strong>：所有序列级参数（<code>seq_radius</code>、<code>seq_gap</code> 等）支持单值、无命名向量、按序列 ID 命名的向量/列表、按序列顺序命名（<code>"1"</code>、<code>"2"</code>、…）的列表、以及无命名列表。基因级参数（如 <code>gene_label_rotation</code>、<code>gene_offset</code>）额外支持按链（<code>+</code>/<code>-</code>）指定——既可以用命名向量，也可以写在列表里：</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">gene_label_rotation</span> <span class="op">=</span> <span class="fl">20</span>                                  <span class="co"># 所有序列、正负链相同</span></span>
 <span><span class="va">gene_label_rotation</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"+"</span> <span class="op">=</span> <span class="op">-</span><span class="fl">15</span>, <span class="st">"-"</span> <span class="op">=</span> <span class="op">-</span><span class="fl">45</span><span class="op">)</span>             <span class="co"># 所有序列按链分别指定</span></span>
 <span><span class="va">gene_label_rotation</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"MT118296.1"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"+"</span> <span class="op">=</span> <span class="op">-</span><span class="fl">15</span>, <span class="st">"-"</span> <span class="op">=</span> <span class="op">-</span><span class="fl">45</span><span class="op">)</span>,</span>
@@ -737,6 +746,22 @@
 <td>数值</td>
 <td>2.5</td>
 <td>标签字号</td>
+</tr><tr><td><code>gene_label_repel</code></td>
+<td>逻辑值</td>
+<td>FALSE</td>
+<td>自动推开重叠的基因标签</td>
+</tr><tr><td><code>gene_label_wrap</code></td>
+<td>数值</td>
+<td>NULL</td>
+<td>将长注释按此字符数换行（如 15）</td>
+</tr><tr><td><code>gene_label_max_overlaps</code></td>
+<td>数值</td>
+<td>Inf</td>
+<td>配合 <code>gene_label_repel = TRUE</code>，隐藏仍与超过该数量标签重叠的标签</td>
+</tr><tr><td><code>gene_label_seed</code></td>
+<td>数值</td>
+<td>123</td>
+<td>标签防重叠算法的随机种子</td>
 </tr><tr><td><code>gene_label_rotation</code></td>
 <td>数值/向量/列表</td>
 <td>0</td>

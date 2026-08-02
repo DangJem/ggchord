@@ -35,6 +35,8 @@ compute_chord_layout <- function(
     geneLabelRadialOffset, geneLabelCircumOffset,
     geneLabelCircumLimit, geneLabelRotation,
     gene_label_show, gene_label_size,
+    gene_label_repel = FALSE, gene_label_wrap = NULL,
+    gene_label_max_overlaps = Inf, gene_label_seed = 123,
     gene_color_scheme, gene_colors, gene_order,
     # Sequence label parameters
     seq_label_text = NULL, seq_label_radius = NULL,
@@ -616,6 +618,29 @@ compute_chord_layout <- function(
   if (nrow(gene_polys) > 0) {
     gene_polys <- rotate_df(gene_polys)
     gene_polys <- gene_polys[with(gene_polys, order(group, ord)), ]
+  }
+
+  # ====================================================================
+  # Step 8b: wrap and de-overlap gene labels
+  # ====================================================================
+  if (nrow(gene_labels) > 0) {
+    if (!is.null(gene_label_wrap)) {
+      gene_labels$text <- ggchord_label_wrap_text(gene_labels$text,
+                                                  gene_label_wrap)
+    }
+    if (isTRUE(gene_label_repel)) {
+      range_x <- max(c(gene_labels$text_x, gene_polys$x,
+                       if (nrow(seq_labels_df)) seq_labels_df$text_x else 0))
+      range_x <- range_x - min(c(gene_labels$text_x, gene_polys$x,
+                                 if (nrow(seq_labels_df)) seq_labels_df$text_x else 0))
+      units_per_inch <- max(range_x, 1) / 6
+      gene_labels <- ggchord_label_deoverlap(
+        gene_labels, units_per_inch = units_per_inch,
+        seed = gene_label_seed, max_overlaps = gene_label_max_overlaps
+      )
+      # hidden labels are dropped from the layout (the text layer skips NAs)
+      gene_labels <- gene_labels[!is.na(gene_labels$text), , drop = FALSE]
+    }
   }
 
   # ====================================================================

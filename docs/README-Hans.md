@@ -369,6 +369,21 @@ ggchord(seq_data_example, gene_data = gene_data_example) +
 
 按注释类别着色并显示标签的基因箭头
 
+当注释文本较长或基因较密集时，基因标签可能互相重叠。可用
+`gene_label_repel = TRUE` 自动推开重叠的标签，并用
+`gene_label_wrap = 15` 将长注释换行：
+
+``` r
+
+ggchord(seq_data_example, gene_data = gene_data_example) +
+  geom_seq() +
+  geom_gene(
+    gene_label_show = TRUE,
+    gene_label_repel = TRUE,
+    gene_label_wrap = 15
+  )
+```
+
 ### 第 4 步：加入坐标轴与序列标签
 
 坐标轴用主/次刻度标注序列位置，[`geom_seq_label()`](https://dangjem.github.io/ggchord/reference/geom_seq_label.md)
@@ -622,6 +637,10 @@ gene_label_rotation = list(20)                            # 单元素列表自�
 | `gene_order` | 字符向量 | NULL | 基因在图例中的显示顺序 |
 | `gene_label_show` | 逻辑值 | FALSE | 是否显示基因标签 |
 | `gene_label_size` | 数值 | 2.5 | 标签字号 |
+| `gene_label_repel` | 逻辑值 | FALSE | 自动推开重叠的基因标签 |
+| `gene_label_wrap` | 数值 | NULL | 将长注释按此字符数换行（如 15） |
+| `gene_label_max_overlaps` | 数值 | Inf | 配合 `gene_label_repel = TRUE`，隐藏仍与超过该数量标签重叠的标签 |
+| `gene_label_seed` | 数值 | 123 | 标签防重叠算法的随机种子 |
 | `gene_label_rotation` | 数值/向量/列表 | 0 | 标签旋转角度 |
 | `gene_label_radial_offset` | 数值/向量/列表 | 0 | 标签径向偏移 |
 | `gene_label_circum_offset` | 数值/向量/列表 | 0 | 标签周向偏移比例 |

@@ -63,6 +63,10 @@ separate internal aesthetic used by the ribbon layer.</p>
 <span>  show_label <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  label_size <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  legend_position <span class="op">=</span> <span class="st">"right"</span>,</span>
+<span>  gene_label_repel <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  gene_label_wrap <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  gene_label_max_overlaps <span class="op">=</span> <span class="cn">Inf</span>,</span>
+<span>  gene_label_seed <span class="op">=</span> <span class="fl">123</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -139,8 +143,31 @@ separate internal aesthetic used by the ribbon layer.</p>
 <dd><p>Position of this layer's legend (the Strand or Gene
 Annotation legend): one of "left", "right", "top", "bottom" or "inside",
 default "right". Pass NULL to let the legend follow
-<code>theme(legend.position = ...)</code> together with the other legends. Can also be set with
-<code>theme(legend.position.gene = ...)</code>.</p></dd>
+<code>theme(legend.position = ...)</code> together with the other legends.</p></dd>
+
+
+<dt id="arg-gene-label-repel">gene_label_repel<a class="anchor" aria-label="anchor" href="#arg-gene-label-repel"></a></dt>
+<dd><p>Logical, default FALSE. When TRUE, overlapping gene
+labels are automatically pushed apart (collision detection + automatic
+avoidance) so they do not cover each other.</p></dd>
+
+
+<dt id="arg-gene-label-wrap">gene_label_wrap<a class="anchor" aria-label="anchor" href="#arg-gene-label-wrap"></a></dt>
+<dd><p>Numeric or NULL, default NULL. When set, long gene
+annotations are wrapped at this many characters (e.g. 15), which makes the
+labels narrower and less prone to overlap.</p></dd>
+
+
+<dt id="arg-gene-label-max-overlaps">gene_label_max_overlaps<a class="anchor" aria-label="anchor" href="#arg-gene-label-max-overlaps"></a></dt>
+<dd><p>Numeric, default Inf. With
+<code>gene_label_repel = TRUE</code>, labels that still overlap more than this
+many other labels after de-overlapping are hidden (ggrepel-style). Use a
+finite value to declutter crowded plots.</p></dd>
+
+
+<dt id="arg-gene-label-seed">gene_label_seed<a class="anchor" aria-label="anchor" href="#arg-gene-label-seed"></a></dt>
+<dd><p>Numeric, default 123. Seed used by the de-overlap
+algorithm for reproducible results.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>

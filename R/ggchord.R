@@ -394,6 +394,10 @@ compute_chord_geometry <- function(plot) {
   gene_lco  <- gene_params$gene_label_circum_offset %||% 0
   gene_lcl  <- if (is.null(gene_params$gene_label_circum_limit)) TRUE
                else gene_params$gene_label_circum_limit
+  gene_lrepel <- isTRUE(gene_params$gene_label_repel)
+  gene_lwrap  <- gene_params$gene_label_wrap
+  gene_lmaxov <- gene_params$gene_label_max_overlaps %||% Inf
+  gene_lseed  <- gene_params$gene_label_seed %||% 123
 
   if (!gene_cs %in% c("strand", "manual")) {
     stop("gene_color_scheme must be 'strand' or 'manual'")
@@ -464,6 +468,8 @@ compute_chord_geometry <- function(plot) {
     geneLabelCircumLimit = geneLabelCircumLimit,
     geneLabelRotation = geneLabelRotation,
     gene_label_show = gene_ls, gene_label_size = gene_lsz,
+    gene_label_repel = gene_lrepel, gene_label_wrap = gene_lwrap,
+    gene_label_max_overlaps = gene_lmaxov, gene_label_seed = gene_lseed,
     gene_color_scheme = gene_cs, gene_colors = gene_cols,
     gene_order = gene_ord,
     seq_label_text = seq_label_text,
@@ -744,7 +750,9 @@ ggchord_label_pad <- function(layout) {
   on.exit(grDevices::dev.off())
   widths <- suppressWarnings(graphics::strwidth(texts, units = "inches",
                                                 cex = sizes / 12))
-  max(widths, na.rm = TRUE) * 0.5
+  # A label at the edge can extend up to its full width beyond its anchor
+  # (depending on hjust/angle), so reserve slightly more than half the width.
+  max(widths, na.rm = TRUE) * 0.9
 }
 
 #' Fully prepare a ggchord plot and return it (compute layout, rename ribbon

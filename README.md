@@ -296,6 +296,20 @@ ggchord(seq_data_example, gene_data = gene_data_example) +
 
 ![Gene arrows colored by annotation with labels](man/figures/gene_manual_label.png)
 
+Gene labels can overlap when annotations are long or genes are dense. Use
+`gene_label_repel = TRUE` to push overlapping labels apart, and
+`gene_label_wrap = 15` to wrap long annotation texts:
+
+```r
+ggchord(seq_data_example, gene_data = gene_data_example) +
+  geom_seq() +
+  geom_gene(
+    gene_label_show = TRUE,
+    gene_label_repel = TRUE,
+    gene_label_wrap = 15
+  )
+```
+
 ### Step 4: Add Axes and Sequence Labels
 
 Axes annotate sequence positions with major/minor ticks, and `geom_seq_label()` places labels on or outside the arcs:
@@ -527,6 +541,10 @@ gene_label_rotation = list(20)                            # length-one list recy
 | `gene_order` | character vector | NULL | Gene display order in legend |
 | `gene_label_show` | logical | FALSE | Display gene labels |
 | `gene_label_size` | numeric | 2.5 | Label font size |
+| `gene_label_repel` | logical | FALSE | Automatically push overlapping gene labels apart |
+| `gene_label_wrap` | numeric | NULL | Wrap long annotations at this many characters (e.g. 15) |
+| `gene_label_max_overlaps` | numeric | Inf | Hide labels that still overlap more than this many others (with `gene_label_repel = TRUE`) |
+| `gene_label_seed` | numeric | 123 | Seed for reproducible label de-overlapping |
 | `gene_label_rotation` | numeric/vector/list | 0 | Label rotation angle |
 | `gene_label_radial_offset` | numeric/vector/list | 0 | Radial offset of labels |
 | `gene_label_circum_offset` | numeric/vector/list | 0 | Circumferential offset |

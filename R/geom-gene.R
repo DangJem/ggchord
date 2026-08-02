@@ -27,8 +27,19 @@
 #' @param legend_position Position of this layer's legend (the Strand or Gene
 #'   Annotation legend): one of "left", "right", "top", "bottom" or "inside",
 #'   default "right". Pass NULL to let the legend follow
-#'   \code{theme(legend.position = ...)} together with the other legends. Can also be set with
-#'   \code{theme(legend.position.gene = ...)}.
+#'   \code{theme(legend.position = ...)} together with the other legends.
+#' @param gene_label_repel Logical, default FALSE. When TRUE, overlapping gene
+#'   labels are automatically pushed apart (collision detection + automatic
+#'   avoidance) so they do not cover each other.
+#' @param gene_label_wrap Numeric or NULL, default NULL. When set, long gene
+#'   annotations are wrapped at this many characters (e.g. 15), which makes the
+#'   labels narrower and less prone to overlap.
+#' @param gene_label_max_overlaps Numeric, default Inf. With
+#'   \code{gene_label_repel = TRUE}, labels that still overlap more than this
+#'   many other labels after de-overlapping are hidden (ggrepel-style). Use a
+#'   finite value to declutter crowded plots.
+#' @param gene_label_seed Numeric, default 123. Seed used by the de-overlap
+#'   algorithm for reproducible results.
 #' @param ... Additional arguments passed to \code{geom_polygon()}
 #'
 #' @return A list of ggplot2 layers
@@ -49,6 +60,10 @@ geom_gene <- function(mapping = NULL, data = NULL,
                       show_label = NULL,
                       label_size = NULL,
                       legend_position = "right",
+                      gene_label_repel = FALSE,
+                      gene_label_wrap = NULL,
+                      gene_label_max_overlaps = Inf,
+                      gene_label_seed = 123,
                       ...) {
   layers <- list()
 
@@ -95,7 +110,11 @@ geom_gene <- function(mapping = NULL, data = NULL,
     gene_label_circum_limit   = gene_label_circum_limit,
     show_label_override       = show_label,
     label_size_override       = label_size,
-    legend_position           = legend_position
+    legend_position           = legend_position,
+    gene_label_repel          = gene_label_repel,
+    gene_label_wrap           = gene_label_wrap,
+    gene_label_max_overlaps   = gene_label_max_overlaps,
+    gene_label_seed           = gene_label_seed
   )
   layers[[length(layers) + 1]] <- poly_layer
 

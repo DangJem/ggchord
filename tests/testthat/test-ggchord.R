@@ -498,6 +498,40 @@ test_that("gene_label_size is applied to the gene text layer", {
   expect_true(all(p2$ggchord$ref$layout$gene_labels$size == 4))
 })
 
+test_that("gene_label_repel de-overlaps gene labels", {
+  data(seq_data_example)
+  data(gene_data_example)
+  # dense gene data to force overlapping labels (keep positions in range)
+  gd <- gene_data_example
+  dup <- transform(gd, start = pmax(1, start - 200),
+                   end = pmax(200, end - 200),
+                   anno = paste0(anno, " (copy)"))
+  gd <- rbind(gd, dup)
+  p0 <- ggchord(seq_data_example, gene_data = gd) + geom_seq() + geom_gene(gene_label_show = TRUE)
+  p1 <- ggchord(seq_data_example, gene_data = gd) + geom_seq() +
+    geom_gene(gene_label_show = TRUE, gene_label_repel = TRUE)
+  # de-overlap should not error and should move at least one label (positions differ)
+  expect_true(is.list(p1$ggchord$ref$layout))
+  moved <- any(p0$ggchord$ref$layout$gene_labels$text_x != p1$ggchord$ref$layout$gene_labels$text_x |
+                 p0$ggchord$ref$layout$gene_labels$text_y != p1$ggchord$ref$layout$gene_labels$text_y)
+  expect_true(moved)
+  pdf(tempfile(fileext = ".pdf"), 8, 8)
+  expect_no_error(print(p1))
+  dev.off()
+})
+
+test_that("gene_label_wrap wraps long annotations", {
+  data(seq_data_example)
+  data(gene_data_example)
+  p <- ggchord(seq_data_example, gene_data = gene_data_example) +
+    geom_seq() + geom_gene(gene_label_show = TRUE, gene_label_wrap = 10)
+  gl <- p$ggchord$ref$layout$gene_labels
+  expect_true(any(grepl("\n", gl$text)))
+  pdf(tempfile(fileext = ".pdf"), 8, 8)
+  expect_no_error(print(p))
+  dev.off()
+})
+
 test_that("documented data and parameter values are validated", {
   expect_error(
     ggchord(data.frame(seq_id = c("a", "a"), length = c(1, 2))),
