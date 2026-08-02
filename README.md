@@ -375,8 +375,10 @@ ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
 #### Step 4: Add axes and sequence labels
 
 Axes annotate sequence positions with major/minor ticks. By default the tick
-labels run parallel to the axis; `geom_seq_label()` places sequence names on or
-outside the arcs:
+labels run parallel to the axis; `geom_seq_label()` places sequence names
+around the arcs. `seq_label_radius` is a multiplier of the arc radius:
+`1` sits on the arc, `> 1` moves the label outside (away from the chord
+center, e.g. `1.2` = 20% outside) and `< 1` moves it inside:
 
 ```r
 ggchord(seq_data_example) +
@@ -390,6 +392,23 @@ ggchord(seq_data_example) +
 ```
 
 ![Axes and sequence labels](man/figures/axis_seq_label.png)
+
+Sequence labels are rotated along their arc and kept readable by default; set
+`seq_label_orientation = "horizontal"` to draw every label horizontally,
+extending away from the chord center:
+
+```r
+ggchord(seq_data_example, rotation = 30) +
+  geom_seq() +
+  geom_seq_label(
+    seq_label_radius = 1.15,
+    seq_label_orientation = "horizontal",
+    seq_label_size = 3.5,
+    colour = "#2563EB"
+  )
+```
+
+![Horizontal sequence labels](man/figures/seq_label_horizontal.png)
 
 #### Step 5: Two-sequence comparison
 
@@ -479,7 +498,7 @@ ggchord(
     seed = 42
   ) +
   geom_seq_label(
-    seq_label_radius = 0.9,  # < 1 places the names outside the arcs
+    seq_label_radius = 1.1,  # > 1 places the names outside the arcs
     seq_label_size = 3.4,
     colour = "#52525B"
   ) +
@@ -641,10 +660,14 @@ gene_label_rotation = list(20)
 
 | Parameter | Type | Default | Description |
 | --- | --- | --- | --- |
-| `seq_label_radius` | numeric/vector | 1.15 | Radial position of labels as a multiplier of the arc radius (1 = on the arc) |
-| `seq_label_rotation` | numeric/vector | 0 | Additional label rotation (degrees) |
+| `seq_label_radius` | numeric/vector | 1.15 | Radial position of labels as a multiplier of the arc radius: 1 = on the arc, > 1 = outside, < 1 = inside |
+| `seq_label_rotation` | numeric/vector | 0 | Additional label rotation (degrees); ignored in horizontal mode |
 | `seq_label_size` | numeric/vector | 3 | Label font size |
 | `seq_labels` | character vector | NULL | Override label texts (defaults to the sequence labels from `geom_seq()`) |
+| `seq_label_orientation` | character | "arc" | Label text orientation: `"arc"` (rotated along the arc, kept readable) or `"horizontal"` |
+| `seq_label_hjust` | numeric/vector | NULL (0.5) | Horizontal justification; automatic (text extends away from the chord) in horizontal mode |
+| `seq_label_vjust` | numeric/vector | NULL (0.5) | Vertical justification |
+| `check_overlap` | logical | FALSE | Skip labels that would overlap a previously drawn label |
 | `show_legend` | logical | FALSE | Show legend |
 
 ### geom_ribbon() Parameters

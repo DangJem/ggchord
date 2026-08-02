@@ -139,6 +139,14 @@ save_plot(
               axis_label_size = 2.5) +
     geom_seq_label(seq_label_radius = 1.2),
   "axis_seq_label.png")
+save_plot(
+  ggchord(seq_data_example, rotation = 30) +
+    geom_seq() +
+    geom_seq_label(seq_label_radius = 1.15,
+                   seq_label_orientation = "horizontal",
+                   seq_label_size = 3.5,
+                   colour = "#2563EB"),
+  "seq_label_horizontal.png")
 
 # ---------------------------------------------------------------------------
 # 6. Two-sequence and three-sequence comparisons (subset of the example data)
@@ -212,7 +220,7 @@ save_plot(
       seed = 42
     ) +
     geom_seq_label(
-      seq_label_radius = 0.9,
+      seq_label_radius = 1.1,
       seq_label_size = 3.4,
       colour = "#52525B"
     ) +

@@ -13,6 +13,16 @@
   other valid ggplot2 linetype (e.g. `"dotted"` or a numeric dash pattern) is
   applied to all leader lines.
 
+* `geom_seq_label()` now documents and follows the intended `seq_label_radius`
+  semantics: `1` sits on the arc, `> 1` places the label outside (away from
+  the chord center) and `< 1` inside. Previously the multiplier was applied in
+  the opposite direction (the default `1.15` put labels *inside* the chord).
+
+* New `geom_seq_label()` options: `seq_label_orientation = "arc" | "horizontal"`
+  (horizontal labels extend away from the chord center),
+  `seq_label_hjust` / `seq_label_vjust` for per-sequence justification, and
+  `check_overlap` to skip labels that would overlap.
+
 ## Improvements
 
 * Elbow leader lines no longer force fixed segment lengths: the stub scales
@@ -21,6 +31,10 @@
   degenerate (near-zero) stubs.
 
 ## Bug fixes
+
+* Sequence (and gene) labels no longer end up upside down when a global
+  `rotation >= 90` is used: the readability flip is now re-applied after the
+  layout rotation instead of only before it.
 
 * The repulsion spring now pulls labels toward their own starting position
   rather than the leader-line anchor, which keeps labels moved with

@@ -47,6 +47,9 @@ compute_chord_layout(
   seq_label_radius = NULL,
   seq_label_rotation = NULL,
   seq_label_size = NULL,
+  seq_label_orientation = "arc",
+  seq_label_hjust = NULL,
+  seq_label_vjust = NULL,
   axisGap,
   axisMaj,
   axisMajLen,
@@ -89,6 +92,17 @@ center) or "outside" (away from the center, avoiding ribbon overlap).}
 \item{gene_label_segment_linetype}{Character or numeric, default "auto".
 Leader-line linetype; "auto" uses solid lines except for labels moved to
 the other side of their arc, which use dashed lines.}
+
+\item{seq_label_orientation}{Character, default "arc". Sequence label text
+orientation: "arc" (rotated along the arc, kept readable) or "horizontal"
+(all labels horizontal, extending away from the chord center).}
+
+\item{seq_label_hjust}{Optional named vector or NULL, default NULL. Per-seq
+horizontal justification; NULL uses 0.5 (arc mode) or a side-based value
+(horizontal mode).}
+
+\item{seq_label_vjust}{Optional named vector or NULL, default NULL. Per-seq
+vertical justification; NULL uses 0.5.}
 
 \item{rotation}{Global rotation angle (degrees)}
 

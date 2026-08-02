@@ -466,6 +466,9 @@ compute_chord_geometry <- function(plot) {
   seq_label_radius <- NULL
   seq_label_rotation <- NULL
   seq_label_size <- NULL
+  seq_label_orientation <- "arc"
+  seq_label_hjust <- NULL
+  seq_label_vjust <- NULL
   if (length(seq_label_params) > 0) {
     seq_label_text <- if (is.null(seq_label_params$seq_labels)) {
       seq_labels
@@ -481,6 +484,19 @@ compute_chord_geometry <- function(plot) {
       seq_label_params$seq_label_rotation, seqs, "seq_label_rotation", 0)
     seq_label_size <- process_sequence_param(
       seq_label_params$seq_label_size, seqs, "seq_label_size", 3)
+    seq_label_orientation <- seq_label_params$seq_label_orientation %||% "arc"
+    seq_label_hjust <- if (is.null(seq_label_params$seq_label_hjust)) {
+      NULL
+    } else {
+      process_sequence_param(seq_label_params$seq_label_hjust, seqs,
+                             "seq_label_hjust", 0.5)
+    }
+    seq_label_vjust <- if (is.null(seq_label_params$seq_label_vjust)) {
+      NULL
+    } else {
+      process_sequence_param(seq_label_params$seq_label_vjust, seqs,
+                             "seq_label_vjust", 0.5)
+    }
   }
 
   # ====================================================================
@@ -520,6 +536,9 @@ compute_chord_geometry <- function(plot) {
     seq_label_radius = seq_label_radius,
     seq_label_rotation = seq_label_rotation,
     seq_label_size = seq_label_size,
+    seq_label_orientation = seq_label_orientation,
+    seq_label_hjust = seq_label_hjust,
+    seq_label_vjust = seq_label_vjust,
     axisGap = axisGap, axisMaj = axisMaj, axisMajLen = axisMajLen,
     axisMin = axisMin, axisMinLen = axisMinLen,
     labelSize = labelSize, labelOffset = labelOffset,

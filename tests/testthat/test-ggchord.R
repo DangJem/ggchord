@@ -254,6 +254,85 @@ test_that("geom_seq_label places sequence labels", {
   expect_true(all(c("text_x", "text_y", "label") %in% names(layout$seq_labels_df)))
 })
 
+test_that("seq_label_radius places labels outside/inside the arcs", {
+  data(seq_data_example)
+  label_multiplier <- function(radius) {
+    p <- ggchord(seq_data_example) + geom_seq() +
+      geom_seq_label(seq_label_radius = radius)
+    ggplot_build(p)
+    l <- get_chord_layout()
+    arc_r <- vapply(l$seq_arcs, function(a) {
+      median(sqrt(a$x^2 + a$y^2))
+    }, numeric(1))
+    lbl_r <- sqrt(l$seq_labels_df$text_x^2 + l$seq_labels_df$text_y^2)
+    lbl_r / arc_r
+  }
+  # > 1 = outside, 1 = on the arc, < 1 = inside (as documented)
+  expect_true(all(label_multiplier(1.2) > 1))
+  expect_true(all(abs(label_multiplier(1) - 1) < 1e-6))
+  expect_true(all(label_multiplier(0.8) < 1))
+})
+
+test_that("sequence labels stay readable under global rotation", {
+  data(seq_data_example)
+  data(gene_data_example)
+  for (rot in c(0, 45, 90, 135)) {
+    p <- ggchord(seq_data_example, rotation = rot) + geom_seq() + geom_seq_label()
+    ggplot_build(p)
+    a <- get_chord_layout()$seq_labels_df$text_angle
+    expect_equal(sum(a > 90 & a < 270), 0,
+                 info = paste("seq labels upside down at rotation", rot))
+  }
+  # the same readability fix applies to fixed gene labels
+  p <- ggchord(seq_data_example, gene_data = gene_data_example, rotation = 90) +
+    geom_seq() + geom_gene() + geom_gene_label()
+  ggplot_build(p)
+  a <- get_chord_layout()$gene_labels$text_angle
+  expect_equal(sum(a > 90 & a < 270), 0)
+})
+
+test_that("seq_label_orientation horizontal draws horizontal labels", {
+  data(seq_data_example)
+  p <- ggchord(seq_data_example, rotation = 45) + geom_seq() +
+    geom_seq_label(seq_label_orientation = "horizontal")
+  ggplot_build(p)
+  l <- get_chord_layout()
+  expect_true(all(l$seq_labels_df$text_angle == 0))
+  # text extends away from the chord center: hjust 0 on the right, 1 on the left
+  expect_equal(l$seq_labels_df$hjust, ifelse(l$seq_labels_df$text_x >= 0, 0, 1))
+  # invalid orientation is rejected
+  expect_error(geom_seq_label(seq_label_orientation = "vertical"), "should be")
+})
+
+test_that("seq_label_hjust and seq_label_vjust are applied", {
+  data(seq_data_example)
+  # rotation 0 avoids the readability flips that toggle hjust
+  p <- ggchord(seq_data_example, rotation = 0) + geom_seq() +
+    geom_seq_label(seq_label_hjust = c(0.1, 0.9, 0.1, 0.9), seq_label_vjust = 1)
+  ggplot_build(p)
+  l <- get_chord_layout()
+  # user-supplied hjust values are used as-is; when the readability flip turns
+  # a label by 180 degrees the justification toggles (1 - h) so the text box
+  # stays anchored at the arc midpoint
+  expect_equal(unname(l$seq_labels_df$hjust), c(0.9, 0.9, 0.1, 0.1),
+               tolerance = 1e-6)
+  expect_equal(unique(l$seq_labels_df$vjust), 1)
+  # a centered justification is flip-invariant
+  p2 <- ggchord(seq_data_example, rotation = 0) + geom_seq() +
+    geom_seq_label(seq_label_hjust = 0.5)
+  ggplot_build(p2)
+  expect_equal(unique(get_chord_layout()$seq_labels_df$hjust), 0.5)
+})
+
+test_that("seq_label check_overlap renders", {
+  data(seq_data_example)
+  p <- ggchord(seq_data_example) + geom_seq() +
+    geom_seq_label(check_overlap = TRUE)
+  pdf(tempfile(fileext = ".pdf"), 8, 8)
+  expect_no_error(print(p))
+  dev.off()
+})
+
 test_that("ribbon subject color scheme works", {
   data(seq_data_example)
   data(ribbon_data_example)

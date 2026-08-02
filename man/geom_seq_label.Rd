@@ -11,6 +11,10 @@ geom_seq_label(
   seq_label_rotation = NULL,
   seq_label_size = NULL,
   seq_labels = NULL,
+  seq_label_orientation = c("arc", "horizontal"),
+  seq_label_hjust = NULL,
+  seq_label_vjust = NULL,
+  check_overlap = FALSE,
   show_legend = FALSE,
   ...
 )
@@ -21,16 +25,36 @@ geom_seq_label(
 \item{data}{Default NULL (retrieved automatically from the layout)}
 
 \item{seq_label_radius}{Optional numeric/vector. Radial position of the
-labels as a multiplier of the sequence arc radius (e.g. 1.15 = 15% outside
-the arc), default NULL (1.15)}
+labels as a multiplier of the sequence arc radius: \code{1} is on the arc,
+\code{> 1} places the label outside (away from the chord center, e.g.
+\code{1.15} = 15% outside) and \code{< 1} places it inside, default NULL
+(1.15)}
 
 \item{seq_label_rotation}{Optional numeric/vector. Additional label rotation
-(degrees), default NULL (0)}
+(degrees) on top of the arc-aligned orientation, default NULL (0). Ignored
+when \code{seq_label_orientation = "horizontal"}.}
 
 \item{seq_label_size}{Optional numeric/vector. Label font size, default NULL (3)}
 
 \item{seq_labels}{Optional character vector. Override the label texts
 (defaults to the sequence labels from \code{geom_seq()} or the sequence IDs)}
+
+\item{seq_label_orientation}{Character, default "arc". Label text
+orientation: \code{"arc"} rotates the text along the sequence arc (and
+keeps it readable), \code{"horizontal"} draws every label horizontally,
+extending away from the chord center.}
+
+\item{seq_label_hjust}{Optional numeric/vector. Horizontal justification of
+the labels, default NULL (0.5; with
+\code{seq_label_orientation = "horizontal"} the justification is chosen
+automatically so the text extends away from the chord center).}
+
+\item{seq_label_vjust}{Optional numeric/vector. Vertical justification of
+the labels, default NULL (0.5).}
+
+\item{check_overlap}{Logical, default FALSE. When TRUE, labels that would
+overlap a previously drawn label are skipped (ggplot2's
+\code{geom_text()} option).}
 
 \item{show_legend}{Whether to show the legend, default FALSE}
 
@@ -41,6 +65,6 @@ A list of ggplot2 layers
 }
 \description{
 Places sequence labels at the midpoint of each sequence arc, radially
-offset from the arc. Labels can be styled via their radial offset, rotation
-and font size.
+offset from the arc. Labels can be styled via their radial offset, rotation,
+font size, text orientation and justification.
 }

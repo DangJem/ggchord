@@ -23,6 +23,14 @@
 #' @param gene_label_segment_linetype Character or numeric, default "auto".
 #'   Leader-line linetype; "auto" uses solid lines except for labels moved to
 #'   the other side of their arc, which use dashed lines.
+#' @param seq_label_orientation Character, default "arc". Sequence label text
+#'   orientation: "arc" (rotated along the arc, kept readable) or "horizontal"
+#'   (all labels horizontal, extending away from the chord center).
+#' @param seq_label_hjust Optional named vector or NULL, default NULL. Per-seq
+#'   horizontal justification; NULL uses 0.5 (arc mode) or a side-based value
+#'   (horizontal mode).
+#' @param seq_label_vjust Optional named vector or NULL, default NULL. Per-seq
+#'   vertical justification; NULL uses 0.5.
 #' @param rotation Global rotation angle (degrees)
 #' @param debug Whether to output debug information
 #'
@@ -57,6 +65,8 @@ compute_chord_layout <- function(
     # Sequence label parameters
     seq_label_text = NULL, seq_label_radius = NULL,
     seq_label_rotation = NULL, seq_label_size = NULL,
+    seq_label_orientation = "arc",
+    seq_label_hjust = NULL, seq_label_vjust = NULL,
     # Axis parameters
     axisGap, axisMaj, axisMajLen, axisMin, axisMinLen,
     labelSize, labelOffset, axisLabelOrientation,
@@ -631,7 +641,11 @@ compute_chord_layout <- function(
     seq_labels_df <- do.call(rbind, lapply(seqs, function(id) {
       ref <- seq_refs[[id]]
       mid_angle <- (starts[id] + ends[id]) / 2
-      r <- seqRadius[id] * seq_label_radius[id]
+      # seq_label_radius is a multiplier of the arc radius: 1 = on the arc,
+      # > 1 = outside (away from the chord center), < 1 = inside. map_to_curve()
+      # measures its radius parameter along the inward normal, so the
+      # multiplier must be mirrored: R = seqRadius * (2 - multiplier).
+      r <- seqRadius[id] * (2 - seq_label_radius[id])
       pt <- map_to_curve(mid_angle, r, ref)
       # Tangent angle at the midpoint, used to orient the label along the arc.
       idx <- which.min(abs(ref$angles - mid_angle))
@@ -643,9 +657,13 @@ compute_chord_layout <- function(
         dy <- ref$path$y[idx] - ref$path$y[idx - 1]
       }
       text_angle <- atan2(dy, dx) * 180 / pi + 90 + seq_label_rotation[id]
+      hjust <- if (is.null(seq_label_hjust)) 0.5 else seq_label_hjust[[id]]
+      vjust <- if (is.null(seq_label_vjust)) 0.5 else seq_label_vjust[[id]]
       text_angle <- (text_angle + 360) %% 360
       if (text_angle > 90 && text_angle < 270) {
         text_angle <- text_angle + 180
+        # keep the text box anchored when a user-supplied hjust is flipped
+        if (!is.null(seq_label_hjust)) hjust <- 1 - hjust
       }
       text_angle <- text_angle %% 360
       data.frame(
@@ -653,7 +671,7 @@ compute_chord_layout <- function(
         label = seq_label_text[id],
         text_angle = text_angle,
         size = seq_label_size[id],
-        hjust = 0.5, vjust = 0.5,
+        hjust = hjust, vjust = vjust,
         seq_id = id,
         stringsAsFactors = FALSE
       )
@@ -695,6 +713,15 @@ compute_chord_layout <- function(
       df$text_x <- TX * cos(rot_rad) - TY * sin(rot_rad)
       df$text_y <- TX * sin(rot_rad) + TY * cos(rot_rad)
       df$text_angle <- df$text_angle + rotation
+      # Keep the text readable after the global rotation: labels whose angle
+      # ends up in (90, 270) would be upside down, so flip them by 180 degrees
+      # (and flip their justification so the text box stays anchored).
+      flip <- df$text_angle > 90 & df$text_angle < 270
+      if (any(flip)) {
+        df$text_angle[flip] <- df$text_angle[flip] + 180
+        if ("hjust" %in% names(df)) df$hjust[flip] <- 1 - df$hjust[flip]
+      }
+      df$text_angle <- df$text_angle %% 360
     }
     if (all(c("anchor_x", "anchor_y") %in% names(df))) {
       AX <- df$anchor_x; AY <- df$anchor_y
@@ -752,6 +779,16 @@ compute_chord_layout <- function(
   if (!is.null(ribbon_polys)) ribbon_polys <- rotate_df(ribbon_polys)
   if (nrow(gene_labels) > 0) gene_labels <- rotate_df(gene_labels)
   if (nrow(seq_labels_df) > 0) seq_labels_df <- rotate_df(seq_labels_df)
+  # Horizontal sequence labels: keep every label horizontal (independent of
+  # the global rotation) and let the text extend away from the chord center
+  # unless the user supplied an explicit justification.
+  if (identical(seq_label_orientation, "horizontal") &&
+      nrow(seq_labels_df) > 0) {
+    seq_labels_df$text_angle <- 0
+    if (is.null(seq_label_hjust)) {
+      seq_labels_df$hjust <- ifelse(seq_labels_df$text_x >= 0, 0, 1)
+    }
+  }
   if (nrow(gene_polys) > 0) {
     gene_polys <- rotate_df(gene_polys)
     gene_polys <- gene_polys[with(gene_polys, order(group, ord)), ]

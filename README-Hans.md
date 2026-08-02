@@ -342,7 +342,10 @@ ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
 
 #### 第 4 步：加入坐标轴与序列标签
 
-坐标轴用主/次刻度标注序列位置。默认刻度标签平行于坐标轴；`geom_seq_label()` 将序列名称放在弧线内侧或外侧：
+坐标轴用主/次刻度标注序列位置。默认刻度标签平行于坐标轴；
+`geom_seq_label()` 将序列名称放在弧线周围。`seq_label_radius` 是弧线半径的
+倍数：`1` 表示在弧线上，`> 1` 表示移到弧线外侧（远离圆心，如 `1.2` = 弧外
+20%），`< 1` 表示移到内侧：
 
 ```r
 ggchord(seq_data_example) +
@@ -356,6 +359,23 @@ ggchord(seq_data_example) +
 ```
 
 ![坐标轴与序列标签](man/figures/axis_seq_label.png)
+
+序列标签默认沿弧线旋转并自动保持文字可读；设置
+`seq_label_orientation = "horizontal"` 可以让所有标签保持水平，
+文字从圆心向外延伸：
+
+```r
+ggchord(seq_data_example, rotation = 30) +
+  geom_seq() +
+  geom_seq_label(
+    seq_label_radius = 1.15,
+    seq_label_orientation = "horizontal",
+    seq_label_size = 3.5,
+    colour = "#2563EB"
+  )
+```
+
+![水平序列标签](man/figures/seq_label_horizontal.png)
 
 #### 第 5 步：双序列比较
 
@@ -444,7 +464,7 @@ ggchord(
     seed = 42
   ) +
   geom_seq_label(
-    seq_label_radius = 0.9,  # 小于 1 时名称放在弧线外侧
+    seq_label_radius = 1.1,  # 大于 1 时名称放在弧线外侧
     seq_label_size = 3.4,
     colour = "#52525B"
   ) +
@@ -595,10 +615,14 @@ gene_label_rotation = list(20)
 
 | 参数 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
-| `seq_label_radius` | 数值/向量 | 1.15 | 标签径向位置（弧线半径的倍数，1 = 在弧线上） |
-| `seq_label_rotation` | 数值/向量 | 0 | 标签额外旋转角度（度） |
+| `seq_label_radius` | 数值/向量 | 1.15 | 标签径向位置（弧线半径的倍数：1 = 在弧线上，> 1 = 外侧，< 1 = 内侧） |
+| `seq_label_rotation` | 数值/向量 | 0 | 标签额外旋转角度（度）；水平模式下忽略 |
 | `seq_label_size` | 数值/向量 | 3 | 标签字号 |
 | `seq_labels` | 字符向量 | NULL | 覆盖标签文本（默认使用 `geom_seq()` 中的序列标签） |
+| `seq_label_orientation` | 字符 | "arc" | 标签文字方向：`"arc"`（沿弧线旋转并保持可读）或 `"horizontal"`（全部水平） |
+| `seq_label_hjust` | 数值/向量 | NULL (0.5) | 水平对齐方式；水平模式下自动设为文字远离圆心 |
+| `seq_label_vjust` | 数值/向量 | NULL (0.5) | 垂直对齐方式 |
+| `check_overlap` | logical | FALSE | 跳过会与已有标签重叠的标签 |
 | `show_legend` | logical | FALSE | 是否显示图例 |
 
 ### geom_ribbon() 参数
