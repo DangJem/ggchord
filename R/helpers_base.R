@@ -287,8 +287,11 @@ ggchord_repel_labels <- function(gl, units_per_inch = 0.35,
   # Anchors are the original (fixed) label positions; labels start there.
   ax <- gl$text_x
   ay <- gl$text_y
-  x <- ax
-  y <- ay
+  # Start from a small, seed-dependent jitter around the anchor so that
+  # different seeds lead to different (but reproducible) layouts, as in
+  # ggrepel. The jitter is a fraction of the widest label box.
+  x <- ax + stats::runif(n, -0.5, 0.5) * 0.08 * max(w)
+  y <- ay + stats::runif(n, -0.5, 0.5) * 0.08 * max(w)
 
   # Optional obstacle points (sequence arcs, gene arrows, axes) that the labels
   # should avoid.

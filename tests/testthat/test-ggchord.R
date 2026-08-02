@@ -521,6 +521,40 @@ test_that("geom_gene_label_repel repels gene labels with leader lines", {
   dev.off()
 })
 
+test_that("geom_seq_label seq_labels maps unnamed vectors positionally", {
+  data(seq_data_example)
+  p <- ggchord(seq_data_example) + geom_seq() +
+    geom_seq_label(seq_labels = c("S1", "S2", "S3", "S4"))
+  ggplot_build(p)
+  l <- get_chord_layout()
+  expect_equal(l$seq_labels_df$label, c("S1", "S2", "S3", "S4"))
+  # named vectors are matched by sequence ID
+  p2 <- ggchord(seq_data_example) + geom_seq() +
+    geom_seq_label(seq_labels = c("MT118296.1" = "B2", "MT108731.1" = "A1"))
+  ggplot_build(p2)
+  l2 <- get_chord_layout()
+  expect_equal(unname(l2$seq_labels_df$label[l2$seq_labels_df$seq_id == "MT118296.1"]), "B2")
+  expect_equal(unname(l2$seq_labels_df$label[l2$seq_labels_df$seq_id == "MT108731.1"]), "A1")
+})
+
+test_that("geom_gene_label_repel seed changes and reproduces the layout", {
+  data(seq_data_example)
+  data(gene_data_example)
+  build_seed <- function(s) {
+    p <- ggchord(seq_data_example, gene_data = gene_data_example) +
+      geom_seq() + geom_gene() +
+      geom_gene_label_repel(seed = s)
+    ggplot_build(p)
+    get_chord_layout()$gene_labels[, c("text_x", "text_y")]
+  }
+  l1 <- build_seed(1)
+  l2 <- build_seed(2)
+  l1b <- build_seed(1)
+  # different seeds give different layouts; the same seed is reproducible
+  expect_gt(max(abs(l1$text_x - l2$text_x)), 0)
+  expect_equal(l1, l1b)
+})
+
 test_that("gene_label_wrap wraps long annotations", {
   data(seq_data_example)
   data(gene_data_example)

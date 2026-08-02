@@ -464,7 +464,14 @@ compute_chord_geometry <- function(plot) {
   seq_label_rotation <- NULL
   seq_label_size <- NULL
   if (length(seq_label_params) > 0) {
-    seq_label_text <- seq_label_params$seq_labels %||% seq_labels
+    seq_label_text <- if (is.null(seq_label_params$seq_labels)) {
+      seq_labels
+    } else {
+      # Process through the standard parameter helper so that unnamed vectors
+      # are matched positionally to the sequences (named by seq_id).
+      process_sequence_param(seq_label_params$seq_labels, seqs, "seq_labels",
+                             default_value = seqs)
+    }
     seq_label_radius <- process_sequence_param(
       seq_label_params$seq_label_radius, seqs, "seq_label_radius", 1.15)
     seq_label_rotation <- process_sequence_param(
