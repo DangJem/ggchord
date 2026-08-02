@@ -68,6 +68,8 @@ that still overlap too many others can be hidden.</p>
 <span>  seed <span class="op">=</span> <span class="fl">123</span>,</span>
 <span>  gene_label_orientation <span class="op">=</span> <span class="st">"arc"</span>,</span>
 <span>  gene_label_segment <span class="op">=</span> <span class="st">"line"</span>,</span>
+<span>  gene_label_side <span class="op">=</span> <span class="st">"auto"</span>,</span>
+<span>  gene_label_segment_linetype <span class="op">=</span> <span class="st">"auto"</span>,</span>
 <span>  show_legend <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -150,7 +152,25 @@ Keep it small so that every label is connected to its gene.</p></dd>
 <dd><p>Character, default "line". Leader line style: a
 straight <code>"line"</code> from the gene to the label, or an L-shaped
 <code>"elbow"</code> (a short segment outward, then a horizontal segment to the
-label).</p></dd>
+label). Elbow segment lengths adapt to each label's position and text
+width, so labels can be placed freely.</p></dd>
+
+
+<dt id="arg-gene-label-side">gene_label_side<a class="anchor" aria-label="anchor" href="#arg-gene-label-side"></a></dt>
+<dd><p>Character, default "auto". Which side of the arc the
+labels sit on. <code>"auto"</code> keeps the strand-based placement
+(same as before); <code>"outside"</code> moves labels that would be inside the
+chord (where they can overlap the ribbons) to the outside of their arc;
+<code>"inside"</code> does the opposite. Labels moved to the other side are
+connected with a dashed leader line (see <code>gene_label_segment_linetype</code>).</p></dd>
+
+
+<dt id="arg-gene-label-segment-linetype">gene_label_segment_linetype<a class="anchor" aria-label="anchor" href="#arg-gene-label-segment-linetype"></a></dt>
+<dd><p>Character or numeric, default "auto".
+Leader-line linetype. <code>"auto"</code> draws solid lines, except for labels
+that were moved to the other side of their arc, which are drawn dashed.
+Any other valid ggplot2 linetype (e.g. <code>"solid"</code>, <code>"dashed"</code>,
+<code>"dotted"</code>, or a numeric dash pattern) is used for all leader lines.</p></dd>
 
 
 <dt id="arg-show-legend">show_legend<a class="anchor" aria-label="anchor" href="#arg-show-legend"></a></dt>

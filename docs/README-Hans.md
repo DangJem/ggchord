@@ -375,7 +375,7 @@ ggchord(seq_data_example, gene_data = gene_data_example) +
   geom_gene_label_repel(
     gene_label_orientation = "horizontal",
     gene_label_segment = "elbow",
-    gene_label_wrap = 15
+    gene_label_wrap = 0
   )
 ```
 
@@ -383,10 +383,39 @@ ggchord(seq_data_example, gene_data = gene_data_example) +
 
 横向基因标签与 L 形引导线
 
+L 形引导线的长短会随每个标签的位置和文字宽度自适应，标签可以自由摆放，
+不会强制所有引导线段等长。
+
+当 ribbon 占据弦图内部时，内侧的标签容易压到 ribbon 上。 设置
+`gene_label_side = "outside"` 可将这些标签移到弧线外侧；
+被移出去的标签对应的引导线默认会变成虚线 （`gene_label_segment_linetype`
+可调节所有引导线的线型）：
+
+``` r
+
+ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
+  geom_seq() +
+  geom_ribbon() +
+  geom_gene() +
+  geom_gene_label_repel(
+    gene_label_orientation = "horizontal",
+    gene_label_segment = "elbow",
+    gene_label_side = "outside",
+    gene_label_wrap = 0
+  )
+```
+
+![内侧基因标签移至外侧并用虚线连接](reference/figures/gene_repel_outside.png)
+
+内侧基因标签移至外侧并用虚线连接
+
 #### 第 4 步：加入坐标轴与序列标签
 
-坐标轴用主/次刻度标注序列位置。默认刻度标签平行于坐标轴；[`geom_seq_label()`](https://dangjem.github.io/ggchord/reference/geom_seq_label.md)
-将序列名称放在弧线内侧或外侧：
+坐标轴用主/次刻度标注序列位置。默认刻度标签平行于坐标轴；
+[`geom_seq_label()`](https://dangjem.github.io/ggchord/reference/geom_seq_label.md)
+将序列名称放在弧线周围。`seq_label_radius` 是弧线半径的 倍数：`1`
+表示在弧线上，`> 1` 表示移到弧线外侧（远离圆心，如 `1.2` = 弧外
+20%），`< 1` 表示移到内侧：
 
 ``` r
 
@@ -403,6 +432,26 @@ ggchord(seq_data_example) +
 ![坐标轴与序列标签](reference/figures/axis_seq_label.png)
 
 坐标轴与序列标签
+
+序列标签默认沿弧线旋转并自动保持文字可读；设置
+`seq_label_orientation = "horizontal"` 可以让所有标签保持水平，
+文字从圆心向外延伸：
+
+``` r
+
+ggchord(seq_data_example, rotation = 30) +
+  geom_seq() +
+  geom_seq_label(
+    seq_label_radius = 1.15,
+    seq_label_orientation = "horizontal",
+    seq_label_size = 3.5,
+    colour = "#2563EB"
+  )
+```
+
+![水平序列标签](reference/figures/seq_label_horizontal.png)
+
+水平序列标签
 
 #### 第 5 步：双序列比较
 
@@ -446,58 +495,7 @@ ggchord(seq3, ribbon3, gene3) +
 
 三序列比较
 
-#### 第 7 步：组合所有图层并精细控制
-
-每个图层都可以接收精细参数。下面把参数分配给对应的图层：
-
-``` r
-
-ggchord(
-  seq_data    = seq_data_example,
-  ribbon_data = ribbon_data_example,
-  gene_data   = gene_data_example,
-  title       = "Multi-sequence Chord Diagram with Gene Annotations",
-  rotation    = 45
-) +
-  geom_seq(
-    seq_radius      = c(3, 2, 2, 1),
-    seq_orientation = c(-1, -1, -1, 1),
-    seq_curvature   = c(0, 1, -1, 1.5),
-    seq_gap         = 0.03
-  ) +
-  geom_ribbon(
-    ribbon_color_scheme = "pident",
-    ribbon_gap = 0.1
-  ) +
-  geom_gene(
-    gene_offset = list(
-      c("+" = 0.2, "-" = -0.2),
-      c("+" = 0.2, "-" = -0.2),
-      c("+" = 0.2, "-" = 0),
-      c("+" = 0.2, "-" = 0.1)
-    ),
-    gene_width = 0.08
-  ) +
-  geom_gene_label(
-    gene_label_rotation = list(
-      c("+" = 45, "-" = -45),
-      c("+" = 30, "-" = -30),
-      c("+" = 15, "-" = -15),
-      c("+" = 0,  "-" = 0)
-    )
-  ) +
-  geom_axis(
-    axis_gap = 0.05,
-    axis_tick_major_length = 0.03,
-    axis_label_size = 2
-  )
-```
-
-![精细控制下的完整弦图](reference/figures/combined_fine.png)
-
-精细控制下的完整弦图
-
-#### 第 8 步：用 `+` 添加主题与 scale
+#### 第 7 步：用 `+` 添加主题与 scale
 
 ggchord 图形是真正的 ggplot2
 对象，[`theme()`](https://ggplot2.tidyverse.org/reference/theme.html) 与
@@ -544,6 +542,94 @@ ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
 ![通过 theme() 将所有图例放在底部](reference/figures/legend_bottom.png)
 
 通过 theme() 将所有图例放在底部
+
+#### 第 8 步：组合所有图层并精细控制
+
+每个图层都可以接收精细参数。下图把 ggchord 的特色功能全部组合在一起：
+逐序列的半径、方向与弯曲度，按一致性着色的
+ribbon，按链向着色的基因箭头， 被推到弧线外侧（不会压到
+ribbon）的防重叠标签、序列名称、位置坐标轴，
+以及自定义主题与精心挑选的配色：
+
+``` r
+
+ggchord(
+  seq_data     = seq_data_example,
+  ribbon_data  = ribbon_data_example,
+  gene_data    = gene_data_example,
+  title        = "ggchord",
+  rotation     = 45,
+  panel_margin = list(t = 1.5, r = 0.6, b = 0.6, l = 0.6)
+) +
+  labs(subtitle = "Layered multi-sequence chord diagrams for ggplot2") +
+  geom_seq(
+    seq_radius      = c(3.3, 2.5, 1.8, 1.25),
+    seq_orientation = c(-1, -1, 1, -1),
+    seq_curvature   = c(0.8, 1, 1.4, 1),
+    seq_gap         = 0.035,
+    seq_colors      = c(
+      "MT108731.1" = "#E76F51",
+      "MT118296.1" = "#264653",
+      "OQ646790.1" = "#2A9D8F",
+      "OR222515.1" = "#D9A62E"
+    ),
+    linewidth = 1.6
+  ) +
+  geom_ribbon(
+    ribbon_color_scheme = "pident",
+    ribbon_gap = 0.12,
+    ribbon_alpha = 0.45,
+    ribbon_outline_color = "#FBF9F6",
+    ribbon_outline_width = 0.03
+  ) +
+  geom_gene(
+    gene_offset = 0.1,
+    gene_width = 0.06,
+    gene_colors = c("+" = "#4C6EF5", "-" = "#F06595")
+  ) +
+  geom_gene_label_repel(
+    gene_label_orientation = "horizontal",
+    gene_label_segment = "elbow",
+    gene_label_side = "outside",
+    gene_label_wrap = 0,
+    gene_label_size = 2,
+    seed = 42
+  ) +
+  geom_seq_label(
+    seq_label_radius = 1,
+    seq_label_hjust = -.2,
+    seq_label_size = 3.4,
+    colour = "#52525B"
+  ) +
+  geom_axis(
+    axis_gap = 0.07,
+    axis_tick_major_number = 4,
+    axis_tick_major_length = 0.025,
+    axis_tick_minor_number = 4,
+    axis_tick_minor_length = 0.012,
+    axis_label_size = 1.8
+  ) +
+  theme(
+    plot.background  = element_rect(fill = "#FBF9F6", colour = NA),
+    panel.background = element_rect(fill = "#FBF9F6", colour = NA),
+    plot.title       = element_text(
+      size = 26, face = "bold", colour = "#1F2937",
+      hjust = 0.5, margin = margin(t = 10, b = 2)
+    ),
+    plot.subtitle = element_text(
+      size = 12, colour = "#6B7280",
+      hjust = 0.5, margin = margin(b = 12)
+    ),
+    legend.position = "right",
+    legend.title    = element_text(size = 9, face = "bold", colour = "#374151"),
+    legend.text     = element_text(size = 8, colour = "#4B5563"),
+    legend.key.size = unit(0.7, "cm")
+  )
+```
+
+![精细控制下的完整弦图（可作为封面图）](reference/figures/combined_fine.png)
+
+精细控制下的完整弦图（可作为封面图）
 
 ### 3. 灵活的参数格式
 
@@ -634,10 +720,14 @@ gene_label_rotation = list(20)
 
 | 参数 | 类型 | 默认值 | 说明 |
 |----|----|----|----|
-| `seq_label_radius` | 数值/向量 | 1.15 | 标签径向位置（弧线半径的倍数，1 = 在弧线上） |
-| `seq_label_rotation` | 数值/向量 | 0 | 标签额外旋转角度（度） |
+| `seq_label_radius` | 数值/向量 | 1.15 | 标签径向位置（弧线半径的倍数：1 = 在弧线上，\> 1 = 外侧，\< 1 = 内侧） |
+| `seq_label_rotation` | 数值/向量 | 0 | 标签额外旋转角度（度）；水平模式下忽略 |
 | `seq_label_size` | 数值/向量 | 3 | 标签字号 |
 | `seq_labels` | 字符向量 | NULL | 覆盖标签文本（默认使用 [`geom_seq()`](https://dangjem.github.io/ggchord/reference/geom_seq.md) 中的序列标签） |
+| `seq_label_orientation` | 字符 | “arc” | 标签文字方向：`"arc"`（沿弧线旋转并保持可读）或 `"horizontal"`（全部水平） |
+| `seq_label_hjust` | 数值/向量 | NULL (0.5) | 水平对齐方式；水平模式下自动设为文字远离圆心 |
+| `seq_label_vjust` | 数值/向量 | NULL (0.5) | 垂直对齐方式 |
+| `check_overlap` | logical | FALSE | 跳过会与已有标签重叠的标签 |
 | `show_legend` | logical | FALSE | 是否显示图例 |
 
 ### geom_ribbon() 参数
@@ -696,6 +786,8 @@ gene_label_rotation = list(20)
 | `seed` | 数值 | 123 | 随机种子（保证可复现） |
 | `gene_label_orientation` | 字符 | “arc” | 标签文字方向：`"arc"`（沿弧线旋转）或 `"horizontal"`（水平） |
 | `gene_label_segment` | 字符 | “line” | 引导线样式：`"line"`（直线）或 `"elbow"`（L 形） |
+| `gene_label_side` | 字符 | “auto” | 标签位于弧线哪一侧：`"auto"`（按链向）、`"outside"`（外侧，避开 ribbon 重叠）或 `"inside"`（内侧） |
+| `gene_label_segment_linetype` | 字符/数值 | “auto” | 引导线线型；`"auto"` 为实线，被移到弧线另一侧的标签引导线自动变为虚线；也可指定任意 ggplot2 线型 |
 
 ### geom_axis() 参数
 

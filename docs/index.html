@@ -429,9 +429,9 @@
 <span>  col_names <span class="op">=</span> <span class="cn">F</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rlang.r-lib.org/reference/set_names.html" class="external-link">set_names</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"seq_id"</span>, <span class="st">"source"</span>, <span class="st">"type"</span>, <span class="st">"start"</span>, <span class="st">"end"</span>,</span>
 <span>  <span class="st">"score"</span>, <span class="st">"strand"</span>, <span class="st">"phase"</span>, <span class="st">"attributes"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">geneTrackTable</span> <span class="op">&lt;-</span> <span class="va">gff3Table</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">type</span> <span class="op">==</span> <span class="st">"CDS"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>anno <span class="op">=</span> <span class="fu"><a href="https://stringr.tidyverse.org/reference/str_extract.html" class="external-link">str_extract</a></span><span class="op">(</span><span class="va">attributes</span>, <span class="st">"(?&lt;=product=)[^;]+(?=;)"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">seq_id</span>, <span class="va">start</span>, <span class="va">end</span>, <span class="va">strand</span>, <span class="va">anno</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">type</span> <span class="op">==</span> <span class="st">"CDS"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>anno <span class="op">=</span> <span class="fu"><a href="https://stringr.tidyverse.org/reference/str_extract.html" class="external-link">str_extract</a></span><span class="op">(</span><span class="va">attributes</span>, <span class="st">"(?&lt;=product=)[^;]+(?=;)"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">seq_id</span>, <span class="va">start</span>, <span class="va">end</span>, <span class="va">strand</span>, <span class="va">anno</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://readr.tidyverse.org/reference/write_delim.html" class="external-link">write_tsv</a></span><span class="op">(</span><span class="va">geneTrackTable</span>, <span class="st">"gene_track.tsv"</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
@@ -543,7 +543,7 @@
 <span>  <span class="fu"><a href="reference/geom_gene_label_repel.html">geom_gene_label_repel</a></span><span class="op">(</span></span>
 <span>    gene_label_orientation <span class="op">=</span> <span class="st">"horizontal"</span>,</span>
 <span>    gene_label_segment <span class="op">=</span> <span class="st">"elbow"</span>,</span>
-<span>    gene_label_wrap <span class="op">=</span> <span class="fl">15</span></span>
+<span>    gene_label_wrap <span class="op">=</span> <span class="fl">0</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
 <div class="float">
 <img src="reference/figures/gene_repel_elbow.png" alt="Horizontal gene labels with elbow leader lines"><div class="figcaption">Horizontal gene labels with elbow leader lines</div>
@@ -603,59 +603,11 @@
 </div>
 </div>
 <div class="section level4">
-<h4 id="step-7-combine-everything-and-fine-tune">Step 7: Combine everything and fine-tune<a class="anchor" aria-label="anchor" href="#step-7-combine-everything-and-fine-tune"></a>
-</h4>
-<p>Every layer accepts fine-grained parameters. Here, each layer receives the parameters that belong to it:</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/ggchord.html">ggchord</a></span><span class="op">(</span></span>
-<span>  seq_data    <span class="op">=</span> <span class="va">seq_data_example</span>,</span>
-<span>  ribbon_data <span class="op">=</span> <span class="va">ribbon_data_example</span>,</span>
-<span>  gene_data   <span class="op">=</span> <span class="va">gene_data_example</span>,</span>
-<span>  title       <span class="op">=</span> <span class="st">"Multi-sequence Chord Diagram with Gene Annotations"</span>,</span>
-<span>  rotation    <span class="op">=</span> <span class="fl">45</span></span>
-<span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="reference/geom_seq.html">geom_seq</a></span><span class="op">(</span></span>
-<span>    seq_radius      <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">2</span>, <span class="fl">2</span>, <span class="fl">1</span><span class="op">)</span>,</span>
-<span>    seq_orientation <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="op">-</span><span class="fl">1</span>, <span class="op">-</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>,</span>
-<span>    seq_curvature   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="op">-</span><span class="fl">1</span>, <span class="fl">1.5</span><span class="op">)</span>,</span>
-<span>    seq_gap         <span class="op">=</span> <span class="fl">0.03</span></span>
-<span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="reference/geom_ribbon.html">geom_ribbon</a></span><span class="op">(</span></span>
-<span>    ribbon_color_scheme <span class="op">=</span> <span class="st">"pident"</span>,</span>
-<span>    ribbon_gap <span class="op">=</span> <span class="fl">0.1</span></span>
-<span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="reference/geom_gene.html">geom_gene</a></span><span class="op">(</span></span>
-<span>    gene_offset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>      <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"+"</span> <span class="op">=</span> <span class="fl">0.2</span>, <span class="st">"-"</span> <span class="op">=</span> <span class="op">-</span><span class="fl">0.2</span><span class="op">)</span>,</span>
-<span>      <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"+"</span> <span class="op">=</span> <span class="fl">0.2</span>, <span class="st">"-"</span> <span class="op">=</span> <span class="op">-</span><span class="fl">0.2</span><span class="op">)</span>,</span>
-<span>      <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"+"</span> <span class="op">=</span> <span class="fl">0.2</span>, <span class="st">"-"</span> <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>,</span>
-<span>      <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"+"</span> <span class="op">=</span> <span class="fl">0.2</span>, <span class="st">"-"</span> <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span></span>
-<span>    <span class="op">)</span>,</span>
-<span>    gene_width <span class="op">=</span> <span class="fl">0.08</span></span>
-<span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="reference/geom_gene_label.html">geom_gene_label</a></span><span class="op">(</span></span>
-<span>    gene_label_rotation <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>      <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"+"</span> <span class="op">=</span> <span class="fl">45</span>, <span class="st">"-"</span> <span class="op">=</span> <span class="op">-</span><span class="fl">45</span><span class="op">)</span>,</span>
-<span>      <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"+"</span> <span class="op">=</span> <span class="fl">30</span>, <span class="st">"-"</span> <span class="op">=</span> <span class="op">-</span><span class="fl">30</span><span class="op">)</span>,</span>
-<span>      <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"+"</span> <span class="op">=</span> <span class="fl">15</span>, <span class="st">"-"</span> <span class="op">=</span> <span class="op">-</span><span class="fl">15</span><span class="op">)</span>,</span>
-<span>      <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"+"</span> <span class="op">=</span> <span class="fl">0</span>,  <span class="st">"-"</span> <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
-<span>    <span class="op">)</span></span>
-<span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="reference/geom_axis.html">geom_axis</a></span><span class="op">(</span></span>
-<span>    axis_gap <span class="op">=</span> <span class="fl">0.05</span>,</span>
-<span>    axis_tick_major_length <span class="op">=</span> <span class="fl">0.03</span>,</span>
-<span>    axis_label_size <span class="op">=</span> <span class="fl">2</span></span>
-<span>  <span class="op">)</span></span></code></pre></div>
-<div class="float">
-<img src="reference/figures/combined_fine.png" alt="Full chord diagram with fine-grained control"><div class="figcaption">Full chord diagram with fine-grained control</div>
-</div>
-</div>
-<div class="section level4">
-<h4 id="step-8-add-themes-and-scales-with-">Step 8: Add themes and scales with <code>+</code>
-<a class="anchor" aria-label="anchor" href="#step-8-add-themes-and-scales-with-"></a>
+<h4 id="step-7-add-themes-and-scales-with-">Step 7: Add themes and scales with <code>+</code>
+<a class="anchor" aria-label="anchor" href="#step-7-add-themes-and-scales-with-"></a>
 </h4>
 <p>A ggchord plot is a real ggplot2 object, so <code><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme()</a></code> and <code>scale_*()</code> work as usual:</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/ggchord.html">ggchord</a></span><span class="op">(</span><span class="va">seq_data_example</span>, <span class="va">ribbon_data_example</span>, <span class="va">gene_data_example</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="reference/geom_seq.html">geom_seq</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="reference/geom_ribbon.html">geom_ribbon</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="reference/geom_gene.html">geom_gene</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="reference/geom_axis.html">geom_axis</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>panel.background <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_rect</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"grey95"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -672,7 +624,7 @@
 <p>The “Scale for colour is already present” message simply means your <code><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual()</a></code> replaces the built-in default scale — this is expected and harmless.</p>
 </blockquote>
 <p><strong>Legend placement.</strong> Each layer’s legend is placed independently by default: the Seq ID legend and the Strand/Gene legend are on the right, and the Identity(%) colourbar is on the left. Move each one with the <code>legend_position</code> argument of <code><a href="reference/geom_seq.html">geom_seq()</a></code>, <code><a href="reference/geom_ribbon.html">geom_ribbon()</a></code> and <code><a href="reference/geom_gene.html">geom_gene()</a></code>. Set <code>legend_position = NULL</code> to make a legend follow <code>theme(legend.position = ...)</code> so all legends can be grouped together:</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/ggchord.html">ggchord</a></span><span class="op">(</span><span class="va">seq_data_example</span>, <span class="va">ribbon_data_example</span>, <span class="va">gene_data_example</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="reference/geom_seq.html">geom_seq</a></span><span class="op">(</span>legend_position <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="reference/geom_ribbon.html">geom_ribbon</a></span><span class="op">(</span>legend_position <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">+</span></span>
@@ -681,6 +633,87 @@
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"bottom"</span>, legend.box <span class="op">=</span> <span class="st">"horizontal"</span><span class="op">)</span></span></code></pre></div>
 <div class="float">
 <img src="reference/figures/legend_bottom.png" alt="All legends grouped at the bottom via theme()"><div class="figcaption">All legends grouped at the bottom via theme()</div>
+</div>
+</div>
+<div class="section level4">
+<h4 id="step-8-combine-everything-and-fine-tune">Step 8: Combine everything and fine-tune<a class="anchor" aria-label="anchor" href="#step-8-combine-everything-and-fine-tune"></a>
+</h4>
+<p>Every layer accepts fine-grained parameters. The plot below puts them all together: per-sequence radii, orientations and curvatures, identity-colored ribbons, strand-colored gene arrows, repelled labels pushed outside the arcs (so they never cover the ribbons), sequence names, position axes, and a custom theme with a curated palette:</p>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/ggchord.html">ggchord</a></span><span class="op">(</span></span>
+<span>  seq_data     <span class="op">=</span> <span class="va">seq_data_example</span>,</span>
+<span>  ribbon_data  <span class="op">=</span> <span class="va">ribbon_data_example</span>,</span>
+<span>  gene_data    <span class="op">=</span> <span class="va">gene_data_example</span>,</span>
+<span>  title        <span class="op">=</span> <span class="st">"ggchord"</span>,</span>
+<span>  rotation     <span class="op">=</span> <span class="fl">45</span>,</span>
+<span>  panel_margin <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>t <span class="op">=</span> <span class="fl">1.5</span>, r <span class="op">=</span> <span class="fl">0.6</span>, b <span class="op">=</span> <span class="fl">0.6</span>, l <span class="op">=</span> <span class="fl">0.6</span><span class="op">)</span></span>
+<span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>subtitle <span class="op">=</span> <span class="st">"Layered multi-sequence chord diagrams for ggplot2"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="reference/geom_seq.html">geom_seq</a></span><span class="op">(</span></span>
+<span>    seq_radius      <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3.3</span>, <span class="fl">2.5</span>, <span class="fl">1.8</span>, <span class="fl">1.25</span><span class="op">)</span>,</span>
+<span>    seq_orientation <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="op">-</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="op">-</span><span class="fl">1</span><span class="op">)</span>,</span>
+<span>    seq_curvature   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.8</span>, <span class="fl">1</span>, <span class="fl">1.4</span>, <span class="fl">1</span><span class="op">)</span>,</span>
+<span>    seq_gap         <span class="op">=</span> <span class="fl">0.035</span>,</span>
+<span>    seq_colors      <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>      <span class="st">"MT108731.1"</span> <span class="op">=</span> <span class="st">"#E76F51"</span>,</span>
+<span>      <span class="st">"MT118296.1"</span> <span class="op">=</span> <span class="st">"#264653"</span>,</span>
+<span>      <span class="st">"OQ646790.1"</span> <span class="op">=</span> <span class="st">"#2A9D8F"</span>,</span>
+<span>      <span class="st">"OR222515.1"</span> <span class="op">=</span> <span class="st">"#D9A62E"</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    linewidth <span class="op">=</span> <span class="fl">1.6</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="reference/geom_ribbon.html">geom_ribbon</a></span><span class="op">(</span></span>
+<span>    ribbon_color_scheme <span class="op">=</span> <span class="st">"pident"</span>,</span>
+<span>    ribbon_gap <span class="op">=</span> <span class="fl">0.12</span>,</span>
+<span>    ribbon_alpha <span class="op">=</span> <span class="fl">0.45</span>,</span>
+<span>    ribbon_outline_color <span class="op">=</span> <span class="st">"#FBF9F6"</span>,</span>
+<span>    ribbon_outline_width <span class="op">=</span> <span class="fl">0.03</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="reference/geom_gene.html">geom_gene</a></span><span class="op">(</span></span>
+<span>    gene_offset <span class="op">=</span> <span class="fl">0.1</span>,</span>
+<span>    gene_width <span class="op">=</span> <span class="fl">0.06</span>,</span>
+<span>    gene_colors <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"+"</span> <span class="op">=</span> <span class="st">"#4C6EF5"</span>, <span class="st">"-"</span> <span class="op">=</span> <span class="st">"#F06595"</span><span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="reference/geom_gene_label_repel.html">geom_gene_label_repel</a></span><span class="op">(</span></span>
+<span>    gene_label_orientation <span class="op">=</span> <span class="st">"horizontal"</span>,</span>
+<span>    gene_label_segment <span class="op">=</span> <span class="st">"elbow"</span>,</span>
+<span>    gene_label_side <span class="op">=</span> <span class="st">"outside"</span>,</span>
+<span>    gene_label_wrap <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>    gene_label_size <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>    seed <span class="op">=</span> <span class="fl">42</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="reference/geom_seq_label.html">geom_seq_label</a></span><span class="op">(</span></span>
+<span>    seq_label_radius <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>    seq_label_hjust <span class="op">=</span> <span class="op">-</span><span class="fl">.2</span>,</span>
+<span>    seq_label_size <span class="op">=</span> <span class="fl">3.4</span>,</span>
+<span>    colour <span class="op">=</span> <span class="st">"#52525B"</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="reference/geom_axis.html">geom_axis</a></span><span class="op">(</span></span>
+<span>    axis_gap <span class="op">=</span> <span class="fl">0.07</span>,</span>
+<span>    axis_tick_major_number <span class="op">=</span> <span class="fl">4</span>,</span>
+<span>    axis_tick_major_length <span class="op">=</span> <span class="fl">0.025</span>,</span>
+<span>    axis_tick_minor_number <span class="op">=</span> <span class="fl">4</span>,</span>
+<span>    axis_tick_minor_length <span class="op">=</span> <span class="fl">0.012</span>,</span>
+<span>    axis_label_size <span class="op">=</span> <span class="fl">1.8</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span></span>
+<span>    plot.background  <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_rect</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"#FBF9F6"</span>, colour <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span>,</span>
+<span>    panel.background <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_rect</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"#FBF9F6"</span>, colour <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span>,</span>
+<span>    plot.title       <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span></span>
+<span>      size <span class="op">=</span> <span class="fl">26</span>, face <span class="op">=</span> <span class="st">"bold"</span>, colour <span class="op">=</span> <span class="st">"#1F2937"</span>,</span>
+<span>      hjust <span class="op">=</span> <span class="fl">0.5</span>, margin <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">margin</a></span><span class="op">(</span>t <span class="op">=</span> <span class="fl">10</span>, b <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    plot.subtitle <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span></span>
+<span>      size <span class="op">=</span> <span class="fl">12</span>, colour <span class="op">=</span> <span class="st">"#6B7280"</span>,</span>
+<span>      hjust <span class="op">=</span> <span class="fl">0.5</span>, margin <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">margin</a></span><span class="op">(</span>b <span class="op">=</span> <span class="fl">12</span><span class="op">)</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    legend.position <span class="op">=</span> <span class="st">"right"</span>,</span>
+<span>    legend.title    <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">9</span>, face <span class="op">=</span> <span class="st">"bold"</span>, colour <span class="op">=</span> <span class="st">"#374151"</span><span class="op">)</span>,</span>
+<span>    legend.text     <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">8</span>, colour <span class="op">=</span> <span class="st">"#4B5563"</span><span class="op">)</span>,</span>
+<span>    legend.key.size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">0.7</span>, <span class="st">"cm"</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
+<div class="float">
+<img src="reference/figures/combined_fine.png" alt="Full chord diagram with fine-grained control"><div class="figcaption">Full chord diagram with fine-grained control</div>
 </div>
 </div>
 </div>

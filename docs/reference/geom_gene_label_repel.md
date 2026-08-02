@@ -29,6 +29,8 @@ geom_gene_label_repel(
   seed = 123,
   gene_label_orientation = "arc",
   gene_label_segment = "line",
+  gene_label_side = "auto",
+  gene_label_segment_linetype = "auto",
   show_legend = FALSE,
   ...
 )
@@ -110,7 +112,26 @@ geom_gene_label_repel(
 
   Character, default "line". Leader line style: a straight `"line"` from
   the gene to the label, or an L-shaped `"elbow"` (a short segment
-  outward, then a horizontal segment to the label).
+  outward, then a horizontal segment to the label). Elbow segment
+  lengths adapt to each label's position and text width, so labels can
+  be placed freely.
+
+- gene_label_side:
+
+  Character, default "auto". Which side of the arc the labels sit on.
+  `"auto"` keeps the strand-based placement (same as before);
+  `"outside"` moves labels that would be inside the chord (where they
+  can overlap the ribbons) to the outside of their arc; `"inside"` does
+  the opposite. Labels moved to the other side are connected with a
+  dashed leader line (see `gene_label_segment_linetype`).
+
+- gene_label_segment_linetype:
+
+  Character or numeric, default "auto". Leader-line linetype. `"auto"`
+  draws solid lines, except for labels that were moved to the other side
+  of their arc, which are drawn dashed. Any other valid ggplot2 linetype
+  (e.g. `"solid"`, `"dashed"`, `"dotted"`, or a numeric dash pattern) is
+  used for all leader lines.
 
 - show_legend:
 

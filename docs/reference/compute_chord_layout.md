@@ -41,6 +41,8 @@ compute_chord_layout(
   gene_label_repel_seed = 123,
   gene_label_orientation = "arc",
   gene_label_segment = "line",
+  gene_label_side = "auto",
+  gene_label_segment_linetype = "auto",
   gene_color_scheme,
   gene_colors,
   gene_order,
@@ -48,6 +50,9 @@ compute_chord_layout(
   seq_label_radius = NULL,
   seq_label_rotation = NULL,
   seq_label_size = NULL,
+  seq_label_orientation = "arc",
+  seq_label_hjust = NULL,
+  seq_label_vjust = NULL,
   axisGap,
   axisMaj,
   axisMajLen,
@@ -104,6 +109,35 @@ compute_chord_layout(
 - gene_data:
 
   Gene data (already validated)
+
+- gene_label_side:
+
+  Character, default "auto". Which side of the arc the labels sit on:
+  "auto" (strand-based placement), "inside" (toward the chord center) or
+  "outside" (away from the center, avoiding ribbon overlap).
+
+- gene_label_segment_linetype:
+
+  Character or numeric, default "auto". Leader-line linetype; "auto"
+  uses solid lines except for labels moved to the other side of their
+  arc, which use dashed lines.
+
+- seq_label_orientation:
+
+  Character, default "arc". Sequence label text orientation: "arc"
+  (rotated along the arc, kept readable) or "horizontal" (all labels
+  horizontal, extending away from the chord center).
+
+- seq_label_hjust:
+
+  Optional named vector or NULL, default NULL. Per-seq horizontal
+  justification; NULL uses 0.5 (arc mode) or a side-based value
+  (horizontal mode).
+
+- seq_label_vjust:
+
+  Optional named vector or NULL, default NULL. Per-seq vertical
+  justification; NULL uses 0.5.
 
 - rotation:
 

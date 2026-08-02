@@ -76,6 +76,8 @@ into Cartesian (x, y) coordinates and stores them in a layout list.</p>
 <span>  gene_label_repel_seed <span class="op">=</span> <span class="fl">123</span>,</span>
 <span>  gene_label_orientation <span class="op">=</span> <span class="st">"arc"</span>,</span>
 <span>  gene_label_segment <span class="op">=</span> <span class="st">"line"</span>,</span>
+<span>  gene_label_side <span class="op">=</span> <span class="st">"auto"</span>,</span>
+<span>  gene_label_segment_linetype <span class="op">=</span> <span class="st">"auto"</span>,</span>
 <span>  <span class="va">gene_color_scheme</span>,</span>
 <span>  <span class="va">gene_colors</span>,</span>
 <span>  <span class="va">gene_order</span>,</span>
@@ -83,6 +85,9 @@ into Cartesian (x, y) coordinates and stores them in a layout list.</p>
 <span>  seq_label_radius <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  seq_label_rotation <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  seq_label_size <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  seq_label_orientation <span class="op">=</span> <span class="st">"arc"</span>,</span>
+<span>  seq_label_hjust <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  seq_label_vjust <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">axisGap</span>,</span>
 <span>  <span class="va">axisMaj</span>,</span>
 <span>  <span class="va">axisMajLen</span>,</span>
@@ -140,6 +145,35 @@ into Cartesian (x, y) coordinates and stores them in a layout list.</p>
 
 <dt id="arg-gene-data">gene_data<a class="anchor" aria-label="anchor" href="#arg-gene-data"></a></dt>
 <dd><p>Gene data (already validated)</p></dd>
+
+
+<dt id="arg-gene-label-side">gene_label_side<a class="anchor" aria-label="anchor" href="#arg-gene-label-side"></a></dt>
+<dd><p>Character, default "auto". Which side of the arc the
+labels sit on: "auto" (strand-based placement), "inside" (toward the chord
+center) or "outside" (away from the center, avoiding ribbon overlap).</p></dd>
+
+
+<dt id="arg-gene-label-segment-linetype">gene_label_segment_linetype<a class="anchor" aria-label="anchor" href="#arg-gene-label-segment-linetype"></a></dt>
+<dd><p>Character or numeric, default "auto".
+Leader-line linetype; "auto" uses solid lines except for labels moved to
+the other side of their arc, which use dashed lines.</p></dd>
+
+
+<dt id="arg-seq-label-orientation">seq_label_orientation<a class="anchor" aria-label="anchor" href="#arg-seq-label-orientation"></a></dt>
+<dd><p>Character, default "arc". Sequence label text
+orientation: "arc" (rotated along the arc, kept readable) or "horizontal"
+(all labels horizontal, extending away from the chord center).</p></dd>
+
+
+<dt id="arg-seq-label-hjust">seq_label_hjust<a class="anchor" aria-label="anchor" href="#arg-seq-label-hjust"></a></dt>
+<dd><p>Optional named vector or NULL, default NULL. Per-seq
+horizontal justification; NULL uses 0.5 (arc mode) or a side-based value
+(horizontal mode).</p></dd>
+
+
+<dt id="arg-seq-label-vjust">seq_label_vjust<a class="anchor" aria-label="anchor" href="#arg-seq-label-vjust"></a></dt>
+<dd><p>Optional named vector or NULL, default NULL. Per-seq
+vertical justification; NULL uses 0.5.</p></dd>
 
 
 <dt id="arg-rotation">rotation<a class="anchor" aria-label="anchor" href="#arg-rotation"></a></dt>
