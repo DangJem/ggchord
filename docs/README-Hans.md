@@ -473,7 +473,7 @@ ggchord(
     )
   ) +
   geom_axis(
-    axis_gap = 0,
+    axis_gap = 0.05,
     axis_tick_major_length = 0.03,
     axis_label_size = 2
   )
@@ -492,11 +492,7 @@ ggchord 绘图对象是真正的 ggplot2 对象，因此可以像 ggplot2 一样
 
 ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
   geom_seq() + geom_ribbon() + geom_gene() + geom_axis() +
-  theme(
-    legend.position = "bottom",
-    legend.box = "horizontal",
-    panel.background = element_rect(fill = "grey95")
-  ) +
+  theme(panel.background = element_rect(fill = "grey95")) +
   scale_color_manual(
     values = c("MT108731.1" = "#E41A1C",
                "MT118296.1" = "#377EB8",
@@ -509,21 +505,22 @@ ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
 
 自定义主题与 scale 的弦图
 
-每个图例还可以通过
+默认情况下三个图例独立放置：Seq ID 与 Strand / Gene Annotation
+图例在右侧， Identity(%) 色条在左侧。每个图例都可以通过
 [`geom_seq()`](https://dangjem.github.io/ggchord/reference/geom_seq.md)、[`geom_ribbon()`](https://dangjem.github.io/ggchord/reference/geom_ribbon.md)
 和
 [`geom_gene()`](https://dangjem.github.io/ggchord/reference/geom_gene.md)
-的 `legend_position` 参数独立放置（分别控制 Seq ID 图例、Identity(%)
-色条和 Strand / Gene Annotation 图例）。未显式指定位置的图例仍会一起放在
-`theme(legend.position = ...)` 指定的位置：
+的 `legend_position` 参数单独移动。在某图层传入 `legend_position = NULL`
+可让其图例跟随 `theme(legend.position = ...)`， 从而把图例聚合到一起：
 
 ``` r
 
 ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
-  geom_seq(legend_position = "left") +
-  geom_ribbon(legend_position = "bottom") +
-  geom_gene(legend_position = "right") +
-  geom_axis()
+  geom_seq(legend_position = NULL) +
+  geom_ribbon(legend_position = NULL) +
+  geom_gene(legend_position = NULL) +
+  geom_axis() +
+  theme(legend.position = "bottom", legend.box = "horizontal")
 ```
 
 **灵活的参数格式**：所有序列级参数（`seq_radius`、`seq_gap`
@@ -586,7 +583,7 @@ gene_label_rotation = list(20)                            # 单元素列表自�
 | `seq_colors` | 颜色向量 | Set1 | 序列弧线颜色 |
 | `linewidth` | 数值 | 1.2 | 弧线宽度 |
 | `show_legend` | 逻辑值 | TRUE | 是否显示图例 |
-| `legend_position` | 字符 | NULL | Seq ID 图例的位置：“left”、“right”、“top”、“bottom” 或 “inside”（NULL = 跟随 `theme(legend.position = ...)`） |
+| `legend_position` | 字符 | “right” | Seq ID 图例的位置：“left”、“right”、“top”、“bottom” 或 “inside”（NULL = 跟随 `theme(legend.position = ...)`） |
 
 ### geom_seq_label() 参数
 
@@ -612,7 +609,7 @@ gene_label_rotation = list(20)                            # 单元素列表自�
 | `ribbon_outline_width` | 数值 | 0.05 | 连接带轮廓线宽 |
 | `ribbon_outline_linetype` | 数值/字符 | 1 | 连接带轮廓线型（1 = 实线） |
 | `show_legend` | 逻辑值 | TRUE | 是否显示图例 |
-| `legend_position` | 字符 | NULL | Identity(%) 色条的位置：“left”、“right”、“top”、“bottom” 或 “inside”（NULL = 跟随 `theme(legend.position = ...)`） |
+| `legend_position` | 字符 | “left” | Identity(%) 色条的位置：“left”、“right”、“top”、“bottom” 或 “inside”（NULL = 跟随 `theme(legend.position = ...)`） |
 
 ### geom_gene() 参数
 
@@ -630,7 +627,7 @@ gene_label_rotation = list(20)                            # 单元素列表自�
 | `gene_label_circum_offset` | 数值/向量/列表 | 0 | 标签周向偏移比例 |
 | `gene_label_circum_limit` | 逻辑值/向量/列表 | TRUE | 是否限制周向偏移 |
 | `show_legend` | 逻辑值 | TRUE | 是否显示图例 |
-| `legend_position` | 字符 | NULL | Strand / Gene Annotation 图例的位置：“left”、“right”、“top”、“bottom” 或 “inside”（NULL = 跟随 `theme(legend.position = ...)`） |
+| `legend_position` | 字符 | “right” | Strand / Gene Annotation 图例的位置：“left”、“right”、“top”、“bottom” 或 “inside”（NULL = 跟随 `theme(legend.position = ...)`） |
 | `show_label` | 逻辑值 | NULL | 覆盖 gene_label_show |
 | `label_size` | 数值 | NULL | 覆盖 gene_label_size |
 
@@ -639,7 +636,7 @@ gene_label_rotation = list(20)                            # 单元素列表自�
 | 参数                     | 类型           | 默认值       | 描述                   |
 |--------------------------|----------------|--------------|------------------------|
 | `show_axis`              | 逻辑值         | TRUE         | 是否显示坐标轴         |
-| `axis_gap`               | 数值/向量      | 0.04         | 序列与坐标轴的径向间距 |
+| `axis_gap`               | 数值/向量      | 0.05         | 序列与坐标轴的径向间距 |
 | `axis_tick_major_number` | 整数/向量      | 5            | 主刻度数量             |
 | `axis_tick_major_length` | 数值/向量      | 0.02         | 主刻度长度比例         |
 | `axis_tick_minor_number` | 整数/向量      | 4            | 次刻度数量             |

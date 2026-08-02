@@ -41,7 +41,7 @@ geom_axis(
 - axis_gap:
 
   Optional numeric/vector. Spacing between sequence and axis, default
-  0.04
+  0.05
 
 - axis_tick_major_number:
 

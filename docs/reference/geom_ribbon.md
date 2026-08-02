@@ -19,7 +19,7 @@ geom_ribbon(
   ribbon_outline_width = 0.05,
   ribbon_outline_linetype = 1,
   show_legend = TRUE,
-  legend_position = NULL,
+  legend_position = "left",
   ...
 )
 ```
@@ -80,9 +80,10 @@ geom_ribbon(
 
 - legend_position:
 
-  Optional position of this layer's legend (the Identity( "inside". When
-  NULL the legend follows `theme(legend.position = ...)` together with
-  the other legends. Can also be set with
+  Position of this layer's legend (the Identity( colourbar): one of
+  "left", "right", "top", "bottom" or "inside", default "left". Pass
+  NULL to let the legend follow `theme(legend.position = ...)` together
+  with the other legends. Can also be set with
   `theme(legend.position.ribbon = ...)`.
 
 - ...:

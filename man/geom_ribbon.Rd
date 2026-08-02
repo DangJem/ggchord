@@ -17,7 +17,7 @@ geom_ribbon(
   ribbon_outline_width = 0.05,
   ribbon_outline_linetype = 1,
   show_legend = TRUE,
-  legend_position = NULL,
+  legend_position = "left",
   ...
 )
 }
@@ -46,10 +46,10 @@ geom_ribbon(
 
 \item{show_legend}{Whether to show the legend, default TRUE}
 
-\item{legend_position}{Optional position of this layer's legend (the
-Identity(%) colourbar): one of "left", "right", "top", "bottom" or
-"inside". When NULL the legend follows \code{theme(legend.position = ...)}
-together with the other legends. Can also be set with
+\item{legend_position}{Position of this layer's legend (the Identity(%)
+colourbar): one of "left", "right", "top", "bottom" or "inside", default
+"left". Pass NULL to let the legend follow
+\code{theme(legend.position = ...)} together with the other legends. Can also be set with
 \code{theme(legend.position.ribbon = ...)}.}
 
 \item{...}{Additional arguments passed to \code{geom_polygon()}}

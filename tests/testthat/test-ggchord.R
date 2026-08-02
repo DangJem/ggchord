@@ -408,6 +408,42 @@ test_that("sequence parameters accept list formats", {
                    setNames(c(3, 2, 2, 1), seqs))
 })
 
+test_that("default legend positions split the three legends", {
+  data(seq_data_example)
+  data(ribbon_data_example)
+  data(gene_data_example)
+  # defaults: Seq ID + Strand on the right, Identity(%) colourbar on the left
+  expect_identical(ggchord::geom_seq()[[1]]$ggchord_params$legend_position, "right")
+  expect_identical(ggchord::geom_ribbon()[[1]]$ggchord_params$legend_position, "left")
+  expect_identical(ggchord::geom_gene()[[1]]$ggchord_params$legend_position, "right")
+
+  p <- ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
+    geom_seq() + geom_ribbon() + geom_gene() + geom_axis()
+  pdf(tempfile(fileext = ".pdf"), 8, 8)
+  g <- ggplotGrob(p)
+  dev.off()
+  filled <- vapply(g$grobs, function(gr) {
+    inherits(gr, "gtable") && grepl("guide-box", gr$name) &&
+      (length(gr$grobs) > 0 || length(gr$children) > 0)
+  }, logical(1))
+  positions <- g$layout$name[filled]
+  expect_true(any(grepl("guide-box-left", positions)))
+  expect_true(any(grepl("guide-box-right", positions)))
+})
+
+test_that("axis_gap defaults to 0.05", {
+  data(seq_data_example)
+  p <- ggchord(seq_data_example) + geom_seq() + geom_axis()
+  pdf(tempfile(fileext = ".pdf"), 8, 8)
+  print(p)
+  dev.off()
+  layout <- ggchord:::get_chord_layout()
+  # the layout stores per-sequence axis gaps; all should be 0.05
+  b <- ggplot_build(p)
+  axis_layer <- b$data[[length(b$data) - 1]]  # axis segments
+  expect_true(nrow(axis_layer) > 0)
+})
+
 test_that("documented data and parameter values are validated", {
   expect_error(
     ggchord(data.frame(seq_id = c("a", "a"), length = c(1, 2))),

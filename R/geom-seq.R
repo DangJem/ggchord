@@ -18,10 +18,10 @@
 #' @param seq_colors Optional color vector or named vector. Sequence colors
 #' @param linewidth Arc line width, default 1.2
 #' @param show_legend Whether to show the legend for this layer, default TRUE
-#' @param legend_position Optional position of this layer's legend (the Seq ID
-#'   legend): one of "left", "right", "top", "bottom" or "inside". When NULL the
-#'   legend follows \code{theme(legend.position = ...)} together with the other
-#'   legends. Can also be set with \code{theme(legend.position.seq = ...)}.
+#' @param legend_position Position of this layer's legend (the Seq ID legend):
+#'   one of "left", "right", "top", "bottom" or "inside", default "right". Pass
+#'   NULL to let the legend follow \code{theme(legend.position = ...)} together
+#'   with the other legends. Can also be set with \code{theme(legend.position.seq = ...)}.
 #' @param ... Additional arguments passed to \code{geom_path()}
 #'
 #' @return A list of ggplot2 layers
@@ -36,7 +36,7 @@ geom_seq <- function(mapping = NULL, data = NULL,
                      seq_colors = NULL,
                      linewidth = 1.2,
                      show_legend = TRUE,
-                     legend_position = NULL,
+                     legend_position = "right",
                      ...) {
   # The layout is computed at build time (ggplot_build.ggchord). The
   # parameters are attached to the layer itself so that the plot object is

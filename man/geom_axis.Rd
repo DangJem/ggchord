@@ -27,7 +27,7 @@ geom_axis(
 
 \item{show_axis}{Logical. Whether to show the axis, default TRUE}
 
-\item{axis_gap}{Optional numeric/vector. Spacing between sequence and axis, default 0.04}
+\item{axis_gap}{Optional numeric/vector. Spacing between sequence and axis, default 0.05}
 
 \item{axis_tick_major_number}{Optional integer/vector. Number of major ticks, default 5}
 

@@ -400,7 +400,7 @@ compute_chord_geometry <- function(plot) {
 
   # --- Process axes ---
   show_axis  <- axis_params$show_axis %||% TRUE
-  axisGap    <- process_sequence_param(axis_params$axis_gap %||% 0.04,
+  axisGap    <- process_sequence_param(axis_params$axis_gap %||% 0.05,
                                        seqs, "axis_gap", 0.04)
   axisMaj    <- process_sequence_param(axis_params$axis_tick_major_number %||% 5,
                                        seqs, "axis_tick_major_number", 5)
@@ -566,7 +566,7 @@ make_ggchord_scales <- function(layout, has_seq = FALSE, has_gene = FALSE,
       values = layout$seq_colors,
       labels = layout$seq_labels,
       breaks = layout$seqs,
-      guide  = guide_legend(position = positions$seq %||% NULL)
+      guide  = guide_legend(position = positions$seq %||% NULL, order = 1)
     )
   }
 
@@ -599,7 +599,7 @@ make_ggchord_scales <- function(layout, has_seq = FALSE, has_gene = FALSE,
             # the default key width.
             legend.key.width = if (horizontal_legend) unit(4, "cm") else NULL
           ),
-          order = 1
+          order = 2
         )
       )
     } else {
@@ -614,14 +614,14 @@ make_ggchord_scales <- function(layout, has_seq = FALSE, has_gene = FALSE,
         name   = "Strand",
         breaks = c("+", "-"),
         values = layout$gene_pal,
-        guide  = guide_legend(position = positions$gene %||% NULL)
+        guide  = guide_legend(position = positions$gene %||% NULL, order = 3)
       )
     } else {
       gene_fill_scale <- scale_fill_manual(
         name   = "Gene Annotation",
         breaks = layout$final_gene_order,
         values = layout$gene_pal,
-        guide  = guide_legend(position = positions$gene %||% NULL)
+        guide  = guide_legend(position = positions$gene %||% NULL, order = 3)
       )
     }
   }

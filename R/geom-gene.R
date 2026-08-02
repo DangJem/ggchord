@@ -24,10 +24,10 @@
 #' @param show_legend Whether to show the legend, default TRUE
 #' @param show_label Whether to show gene labels (overrides gene_label_show), default NULL
 #' @param label_size Label font size (overrides gene_label_size), default NULL
-#' @param legend_position Optional position of this layer's legend (the Strand
-#'   or Gene Annotation legend): one of "left", "right", "top", "bottom" or
-#'   "inside". When NULL the legend follows \code{theme(legend.position = ...)}
-#'   together with the other legends. Can also be set with
+#' @param legend_position Position of this layer's legend (the Strand or Gene
+#'   Annotation legend): one of "left", "right", "top", "bottom" or "inside",
+#'   default "right". Pass NULL to let the legend follow
+#'   \code{theme(legend.position = ...)} together with the other legends. Can also be set with
 #'   \code{theme(legend.position.gene = ...)}.
 #' @param ... Additional arguments passed to \code{geom_polygon()}
 #'
@@ -48,7 +48,7 @@ geom_gene <- function(mapping = NULL, data = NULL,
                       show_legend = TRUE,
                       show_label = NULL,
                       label_size = NULL,
-                      legend_position = NULL,
+                      legend_position = "right",
                       ...) {
   layers <- list()
 

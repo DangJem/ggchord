@@ -20,7 +20,7 @@ geom_seq(
   seq_colors = NULL,
   linewidth = 1.2,
   show_legend = TRUE,
-  legend_position = NULL,
+  legend_position = "right",
   ...
 )
 ```
@@ -74,10 +74,11 @@ geom_seq(
 
 - legend_position:
 
-  Optional position of this layer's legend (the Seq ID legend): one of
-  "left", "right", "top", "bottom" or "inside". When NULL the legend
-  follows `theme(legend.position = ...)` together with the other
-  legends. Can also be set with `theme(legend.position.seq = ...)`.
+  Position of this layer's legend (the Seq ID legend): one of "left",
+  "right", "top", "bottom" or "inside", default "right". Pass NULL to
+  let the legend follow `theme(legend.position = ...)` together with the
+  other legends. Can also be set with
+  `theme(legend.position.seq = ...)`.
 
 - ...:
 

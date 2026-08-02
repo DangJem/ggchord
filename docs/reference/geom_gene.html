@@ -62,7 +62,7 @@ separate internal aesthetic used by the ribbon layer.</p>
 <span>  show_legend <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  show_label <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  label_size <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  legend_position <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  legend_position <span class="op">=</span> <span class="st">"right"</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -136,10 +136,10 @@ separate internal aesthetic used by the ribbon layer.</p>
 
 
 <dt id="arg-legend-position">legend_position<a class="anchor" aria-label="anchor" href="#arg-legend-position"></a></dt>
-<dd><p>Optional position of this layer's legend (the Strand
-or Gene Annotation legend): one of "left", "right", "top", "bottom" or
-"inside". When NULL the legend follows <code>theme(legend.position = ...)</code>
-together with the other legends. Can also be set with
+<dd><p>Position of this layer's legend (the Strand or Gene
+Annotation legend): one of "left", "right", "top", "bottom" or "inside",
+default "right". Pass NULL to let the legend follow
+<code>theme(legend.position = ...)</code> together with the other legends. Can also be set with
 <code>theme(legend.position.gene = ...)</code>.</p></dd>
 
 

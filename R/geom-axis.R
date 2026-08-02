@@ -10,7 +10,7 @@
 #' @param mapping Default NULL (uses pre-computed data)
 #' @param data Default NULL (retrieved automatically from the layout)
 #' @param show_axis Logical. Whether to show the axis, default TRUE
-#' @param axis_gap Optional numeric/vector. Spacing between sequence and axis, default 0.04
+#' @param axis_gap Optional numeric/vector. Spacing between sequence and axis, default 0.05
 #' @param axis_tick_major_number Optional integer/vector. Number of major ticks, default 5
 #' @param axis_tick_major_length Optional numeric/vector. Major tick length ratio, default 0.02
 #' @param axis_tick_minor_number Optional integer/vector. Number of minor ticks, default 4
