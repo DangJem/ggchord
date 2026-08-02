@@ -644,6 +644,9 @@ compute_chord_layout <- function(
                                if (nrow(seq_labels_df)) seq_labels_df$text_x else 0))
     units_per_inch <- max(range_x, 1) / 6
     if (isTRUE(gene_label_repel_layer)) {
+      repel_pts <- ggchord_repel_points(
+        seq_arcs, gene_polys, axis_lines, axis_ticks, show_axis
+      )
       res <- ggchord_repel_labels(
         gene_labels,
         units_per_inch = units_per_inch,
@@ -652,7 +655,8 @@ compute_chord_layout <- function(
         point_padding = gene_label_repel_point_padding,
         min_segment_length = gene_label_repel_min_segment_length,
         force = gene_label_repel_force,
-        seed = gene_label_repel_seed
+        seed = gene_label_repel_seed,
+        repel_points = repel_pts
       )
       gene_labels <- res$labels
       gene_label_segments <- res$segments

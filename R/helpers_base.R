@@ -266,7 +266,7 @@ ggchord_label_deoverlap <- function(gl, units_per_inch = 0.35, seed = 123,
 ggchord_repel_labels <- function(gl, units_per_inch = 0.35,
                                  max_overlaps = Inf, box_padding = 0.25,
                                  point_padding = 0.1, min_segment_length = 0.5,
-                                 force = 1, seed = 123) {
+                                 force = 1, seed = 123, repel_points = NULL) {
   n <- nrow(gl)
   empty_segments <- data.frame(x0 = numeric(0), y0 = numeric(0),
                                x1 = numeric(0), y1 = numeric(0),
@@ -290,6 +290,15 @@ ggchord_repel_labels <- function(gl, units_per_inch = 0.35,
   x <- ax
   y <- ay
 
+  # Optional obstacle points (sequence arcs, gene arrows, axes) that the labels
+  # should avoid.
+  if (is.null(repel_points) || nrow(repel_points) == 0) {
+    repel_points <- data.frame(x = numeric(0), y = numeric(0))
+  }
+  rpx <- repel_points$x
+  rpy <- repel_points$y
+  n_repel <- length(rpx)
+
   # Keep labels inside a generous region around the anchors.
   x_lim <- range(ax) + c(-1, 1) * (max(w) + 1.5)
   y_lim <- range(ay) + c(-1, 1) * (max(w) + 1.5)
@@ -310,6 +319,24 @@ ggchord_repel_labels <- function(gl, units_per_inch = 0.35,
           f <- force * 0.25 * (1 - d / cutoff)
           fx[i] <- fx[i] + f * dx / d
           fy[i] <- fy[i] + f * dy / d
+        }
+      }
+    }
+    # 1b) repulsion from the plot content (arcs, genes, axes) so labels do
+    #     not cover other elements
+    if (n_repel > 0) {
+      cutoff_content <- point_padding + 0.8
+      for (i in seq_len(n)) {
+        dx <- x[i] - rpx
+        dy <- y[i] - rpy
+        d <- sqrt(dx^2 + dy^2)
+        keep <- d < cutoff_content
+        if (any(keep)) {
+          dd <- d[keep]
+          dd[dd < 1e-4] <- 1e-4
+          f <- force * 0.15 * (1 - dd / cutoff_content)
+          fx[i] <- fx[i] + sum(f * dx[keep] / dd)
+          fy[i] <- fy[i] + sum(f * dy[keep] / dd)
         }
       }
     }
@@ -371,4 +398,42 @@ ggchord_repel_labels <- function(gl, units_per_inch = 0.35,
   gl$text_x <- x
   gl$text_y <- y
   list(labels = gl, segments = segments)
+}
+
+#' Sample the plot content as repulsive points for label repulsion
+#'
+#' Collects a sparse set of points along the sequence arcs, gene arrows and
+#' axes so that repelled gene labels avoid overlapping the plot content.
+#' @keywords internal
+ggchord_repel_points <- function(seq_arcs, gene_polys, axis_lines, axis_ticks,
+                                 show_axis = FALSE) {
+  pts <- list()
+  if (length(seq_arcs) > 0) {
+    for (arc in seq_arcs) {
+      if (nrow(arc) == 0) next
+      idx <- seq(1, nrow(arc), by = 25)
+      pts[[length(pts) + 1]] <- arc[idx, c("x", "y"), drop = FALSE]
+    }
+  }
+  if (nrow(gene_polys) > 0) {
+    idx <- seq(1, nrow(gene_polys), by = 15)
+    pts[[length(pts) + 1]] <- gene_polys[idx, c("x", "y"), drop = FALSE]
+  }
+  if (show_axis) {
+    if (nrow(axis_lines) > 0) {
+      idx <- seq(1, nrow(axis_lines), by = 25)
+      pts[[length(pts) + 1]] <- axis_lines[idx, c("x", "y"), drop = FALSE]
+    }
+    if (nrow(axis_ticks) > 0) {
+      pts[[length(pts) + 1]] <- data.frame(
+        x = c(axis_ticks$x0, axis_ticks$x1, axis_ticks$label_x),
+        y = c(axis_ticks$y0, axis_ticks$y1, axis_ticks$label_y),
+        stringsAsFactors = FALSE
+      )
+    }
+  }
+  if (length(pts) == 0) {
+    return(data.frame(x = numeric(0), y = numeric(0)))
+  }
+  do.call(rbind, pts)
 }
