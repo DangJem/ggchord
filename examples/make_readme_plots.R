@@ -87,6 +87,16 @@ save_plot(
   "gene_repel.png")
 save_plot(
   ggchord(seq_data_example, gene_data = gene_data_example) +
+    geom_seq() +
+    geom_gene() +
+    geom_gene_label_repel(
+      gene_label_orientation = "horizontal",
+      gene_label_segment = "elbow",
+      gene_label_wrap = 15
+    ),
+  "gene_repel_elbow.png")
+save_plot(
+  ggchord(seq_data_example, gene_data = gene_data_example) +
     geom_seq() + geom_gene(),
   "gene_strand.png")
 
@@ -189,5 +199,17 @@ save_plot(
                  "OR222515.1" = "#984EA3")
     ),
   "theme_custom.png")
+
+# ---------------------------------------------------------------------------
+# 8b. Legends grouped with theme()
+# ---------------------------------------------------------------------------
+save_plot(
+  ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
+    geom_seq(legend_position = NULL) +
+    geom_ribbon(legend_position = NULL) +
+    geom_gene(legend_position = NULL) +
+    geom_axis() +
+    theme(legend.position = "bottom", legend.box = "horizontal"),
+  "legend_bottom.png")
 
 cat("ALL PLOTS DONE\n")

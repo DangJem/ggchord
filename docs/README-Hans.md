@@ -1,80 +1,66 @@
-# ggchord：多序列比对弦图可视化工具
+# ggchord：基于 ggplot2 的多序列弦图可视化工具
 
-🌐 语言切换:
-【[现代汉语（Han）](https://dangjem.github.io/ggchord/README-Hans.md) \|
-[英文（English）](https://dangjem.github.io/ggchord/README.md)】
+🌐
+语言切换：【[现代汉语（Hans）](https://dangjem.github.io/ggchord/README-Hans.md)
+\| [English](https://dangjem.github.io/ggchord/README.md)】
 
 ## 概述
 
 `ggchord` 是一个基于 `ggplot2` 的 R
-语言包，采用分层图形语法将多序列比对结果可视化为直观的弦图。v0.4.0
-实现了布局参数从
-[`ggchord()`](https://dangjem.github.io/ggchord/reference/ggchord.md)
-向各 `geom_*` 图层的下沉，靠近 `ggplot2`
-的设计哲学——每个图层管自己的样式。v0.5.0 移除了
-`ggnewscale`/`RColorBrewer` 依赖并新增连接带轮廓定制。最新 v0.6.0
-使绘图对象完全自包含（布局在构建时计算），支持
-[`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html)/[`ggplot_build()`](https://ggplot2.tidyverse.org/reference/ggplot_build.html)，加强数据校验并加入
-CI。
+语言包，采用**分层的图形语法**将多序列数据绘制为直观的弦图。与”一个大函数”不同，你通过叠加图层来构建图形：[`ggchord()`](https://dangjem.github.io/ggchord/reference/ggchord.md)
+负责提供数据与全局选项，每个 `geom_*`
+图层负责绘制一类元素（序列弧线、比对连接带、基因注释、坐标轴、标签）。每个图层都有合理的默认值，因此**一行代码即可画出完整的弦图**，需要精细控制时也可以分别微调每个图层。
 
-- 每条序列以圆弧呈现，按比例映射长度。
-- 彩色连接带（ribbon）表示序列间的比对区域，支持按相似度或来源着色。
-- 基因注释以箭头形式叠加，支持按链方向或功能类别着色。
-- 配备可定制的坐标轴，精准标注序列位置与长度。
-- 布局参数可分散到对应 `geom_*` 图层中指定，也可省略使用默认值。
+- 每条序列以圆弧呈现，长度按比例映射。
+- 连接带（ribbon）表示序列之间的比对/同源区域。
+- 基因（或其他特征）以箭头多边形绘制在序列弧上。
+- 坐标轴与标签标注序列位置。
+- 由于 ggchord 图形是真正的 `ggplot2`
+  对象，[`theme()`](https://ggplot2.tidyverse.org/reference/theme.html)、`scale_*()`、[`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html)、[`ggplot_build()`](https://ggplot2.tidyverse.org/reference/ggplot_build.html)
+  与
+  [`plotly::ggplotly()`](https://rdrr.io/pkg/plotly/man/ggplotly.html)
+  均可直接使用。
 
-适用于比较基因组学、泛基因组分析、噬菌体-宿主序列关系等研究。
+该包是通用的多序列比较工具，可用于序列比较、基因邻域分析、噬菌体-宿主关系、泛基因组区块、共线性分析等——你只需要准备三张规整的数据表。
 
 ## 主要功能
 
-- **真正的 ggplot2
+- **真正的 `ggplot2`
   分层风格**：[`ggchord()`](https://dangjem.github.io/ggchord/reference/ggchord.md)
-  仅接收数据和全局参数，各 `geom_*` 接收自己的布局参数，像 `ggplot2`
-  一样自然。
-- **延迟计算模型**：布局在绘图构建时（[`print()`](https://rdrr.io/r/base/print.html)、[`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html)
-  或
-  [`ggplot_build()`](https://ggplot2.tidyverse.org/reference/ggplot_build.html)）计算，因此
-  `geom` 中指定的参数和之前叠加的参数都会在渲染时汇总生效。
-- **多序列支持**：同时展示 2 条及以上序列的比对关系。
-- **序列级定制**：自定义序列顺序、方向、间隙、半径与曲率——参数放在
-  [`geom_seq()`](https://dangjem.github.io/ggchord/reference/geom_seq.md)。
-- **灵活的连接带样式**：3 种配色方案，支持贝塞尔曲线控制点——参数放在
-  [`geom_ribbon()`](https://dangjem.github.io/ggchord/reference/geom_ribbon.md)。
-- **基因箭头图层**：按链方向或注释类别着色，支持标签——参数放在
-  [`geom_gene()`](https://dangjem.github.io/ggchord/reference/geom_gene.md)。
-- **精细化坐标轴**：主/次刻度、标签大小与方向——参数放在
-  [`geom_axis()`](https://dangjem.github.io/ggchord/reference/geom_axis.md)。
-- **序列标签**：可通过
-  [`geom_seq_label()`](https://dangjem.github.io/ggchord/reference/geom_seq_label.md)
-  将标签放在每条序列弧线上/外侧。
-- **灵活集成**：绘图对象自包含，支持
-  [`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html)、[`ggplot_build()`](https://ggplot2.tidyverse.org/reference/ggplot_build.html)
-  与
-  `ggplotly()`；[`theme()`](https://ggplot2.tidyverse.org/reference/theme.html)
-  与自定义 scale 可用 `+` 叠加。
+  只接收数据和全局选项，每个 `geom_*` 图层管理自己的布局参数。
+- **开箱即用**：`ggchord(data) + geom_seq() + geom_ribbon() + geom_gene() + geom_axis()`
+  即可得到完整图形。
+- **多序列支持**：可同时展示两条、三条、四条或更多序列。
+- **逐序列参数**：顺序、方向、间距、半径、曲率等均在
+  [`geom_seq()`](https://dangjem.github.io/ggchord/reference/geom_seq.md)
+  中设置；支持单值、向量、命名向量与列表等多种格式（见[灵活的参数格式](#%E7%81%B5%E6%B4%BB%E7%9A%84%E5%8F%82%E6%95%B0%E6%A0%BC%E5%BC%8F)）。
+- **灵活的连接带**：可按相似度、查询序列、目标序列或单一颜色着色；支持自定义贝塞尔曲率与描边。
+- **基因注释**：按链方向或功能类别着色，并可通过
+  [`geom_gene_label_repel()`](https://dangjem.github.io/ggchord/reference/geom_gene_label_repel.md)
+  实现防重叠标签。
+- **精细的坐标轴**：主/次刻度，标签文字支持
+  `"parallel"`（平行于坐标轴）、`"perpendicular"`（垂直于坐标轴）、`"horizontal"`（水平）或任意角度。
+- **与 ggplot2
+  生态无缝衔接**：[`theme()`](https://ggplot2.tidyverse.org/reference/theme.html)、`scale_*()`、[`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html)、[`ggplot_build()`](https://ggplot2.tidyverse.org/reference/ggplot_build.html)、[`plotly::ggplotly()`](https://rdrr.io/pkg/plotly/man/ggplotly.html)
+  均可使用。
 
 ## 安装
 
-### 依赖环境
-
-- R (≥ 3.6.0)
-- ggplot2 (≥ 3.3.0)
+`ggchord` 需要 R（≥ 4.1.0）和 `ggplot2`（≥ 4.0.0）。
 
 ``` r
 
-install.packages("ggplot2")
+install.packages("ggplot2")   # 如需要
 ```
 
-### 如何安装 ggchord？
-
-从 CRAN 安装稳定版本：
+从 CRAN 安装：
 
 ``` r
 
 install.packages("ggchord")
 ```
 
-从 GitHub 安装开发版本：
+从 GitHub 安装（开发版）：
 
 ``` r
 
@@ -83,9 +69,7 @@ devtools::install_github("DangJem/ggchord")
 
 ## 快速开始
 
-### 构建你的第一张弦图
-
-包内置了示例数据集，你可以直接运行下面的代码：
+包内自带三份示例数据，直接运行以下代码即可：
 
 ``` r
 
@@ -96,11 +80,11 @@ data(seq_data_example)
 data(ribbon_data_example)
 data(gene_data_example)
 
-# 像 ggplot2 一样通过叠加图层来构建弦图
+# 像 ggplot2 一样叠加图层
 p <- ggchord(
-  seq_data = seq_data_example,
-  ribbon_data = ribbon_data_example,
-  gene_data = gene_data_example
+  seq_data     = seq_data_example,
+  ribbon_data  = ribbon_data_example,
+  gene_data    = gene_data_example
 ) +
   geom_seq() +      # 序列弧线
   geom_ribbon() +   # 比对连接带
@@ -110,39 +94,38 @@ p <- ggchord(
 print(p)
 ```
 
-![全默认参数的基础弦图](reference/figures/combined_default.png)
+![使用全部默认参数的弦图](reference/figures/combined_default.png)
 
-全默认参数的基础弦图
+使用全部默认参数的弦图
 
-[`ggchord()`](https://dangjem.github.io/ggchord/reference/ggchord.md)
-只接收数据和全局参数；每个 `geom_*`
-图层都有合理的默认值，因此上图无需任何参数即可绘制。想要自定义每个图层，请继续阅读下面的分步示例。
+核心思想就一句话：**数据交给
+[`ggchord()`](https://dangjem.github.io/ggchord/reference/ggchord.md)，样式交给各图层**。下表概括了每个图层的作用，下一节会逐一演示。
+
+| 图层 | 作用 |
+|----|----|
+| [`geom_seq()`](https://dangjem.github.io/ggchord/reference/geom_seq.md) | 绘制序列弧线（含方向箭头） |
+| [`geom_ribbon()`](https://dangjem.github.io/ggchord/reference/geom_ribbon.md) | 绘制序列之间的连接带 |
+| [`geom_gene()`](https://dangjem.github.io/ggchord/reference/geom_gene.md) | 绘制基因/特征箭头多边形 |
+| [`geom_gene_label()`](https://dangjem.github.io/ggchord/reference/geom_gene_label.md) / [`geom_gene_label_repel()`](https://dangjem.github.io/ggchord/reference/geom_gene_label_repel.md) | 绘制基因标签（固定位置或力导向防重叠） |
+| [`geom_axis()`](https://dangjem.github.io/ggchord/reference/geom_axis.md) | 绘制坐标轴线、刻度与刻度标签 |
+| [`geom_seq_label()`](https://dangjem.github.io/ggchord/reference/geom_seq_label.md) | 在弧线内侧/外侧放置序列名称 |
 
 ------------------------------------------------------------------------
 
 ## 使用说明
 
-### 前期数据准备
+### 1. 前期数据准备
 
-需准备三类输入数据：
+包需要三类输入数据，均为普通数据框。
 
 #### 【必须】序列信息数据（`seq_data`）
 
-描述待绘制序列的数据框，必须包含以下列：
-
-| 列名     | 类型 | 含义             |
-|----------|------|------------------|
-| `seq_id` | 字符 | 序列唯一标识     |
-| `length` | 整数 | 序列长度（正数） |
+| 列名     | 类型 | 说明                   |
+|----------|------|------------------------|
+| `seq_id` | 字符 | 序列唯一标识           |
+| `length` | 整数 | 序列长度（必须为正数） |
 
 示例：
-
-``` r
-
-seq_data <- read.delim("seq_track.tsv", sep = "\t", stringsAsFactors = FALSE)
-```
-
-其中 `seq_track.tsv` 格式如下：
 
 | seq_id     | length |
 |------------|--------|
@@ -151,29 +134,28 @@ seq_data <- read.delim("seq_track.tsv", sep = "\t", stringsAsFactors = FALSE)
 | OQ646790.1 | 57367  |
 | OR222515.1 | 83080  |
 
-从 FASTA 自动生成：
+从 FASTA 文件生成该表格的常见方法：
 
 ``` bash
-seqkit fx2tab -nil *fna | sed '1i seq_id\tlength' > seq_track.tsv
+seqkit fx2tab -nil *.fna | sed '1i seq_id\tlength' > seq_track.tsv
 ```
 
 #### 【可选】比对数据（`ribbon_data`）
 
-逐条记录两条序列之间一个比对区间的数据框，必须包含以下列（列名沿用常见比对工具输出约定，如
-BLAST）：
+每行表示两条序列之间的一个比对片段（列名遵循常见比对工具的输出约定）：
 
-| 列名      | 类型 | 含义                           |
-|-----------|------|--------------------------------|
-| `qaccver` | 字符 | 查询序列 ID                    |
-| `saccver` | 字符 | 目标序列 ID                    |
-| `length`  | 整数 | 比对长度（bp）                 |
-| `pident`  | 数值 | 相似度百分比（0-100）          |
-| `qstart`  | 整数 | 比对区间在查询序列上的起始位置 |
-| `qend`    | 整数 | 比对区间在查询序列上的结束位置 |
-| `sstart`  | 整数 | 比对区间在目标序列上的起始位置 |
-| `send`    | 整数 | 比对区间在目标序列上的结束位置 |
+| 列名      | 类型 | 说明                  |
+|-----------|------|-----------------------|
+| `qaccver` | 字符 | 查询序列 ID           |
+| `saccver` | 字符 | 目标序列 ID           |
+| `length`  | 整数 | 比对长度（bp）        |
+| `pident`  | 数值 | 相似度百分比（0–100） |
+| `qstart`  | 整数 | 查询序列上的起始位置  |
+| `qend`    | 整数 | 查询序列上的终止位置  |
+| `sstart`  | 整数 | 目标序列上的起始位置  |
+| `send`    | 整数 | 目标序列上的终止位置  |
 
-示例数据行：
+示例行：
 
 | qaccver    | saccver    | length | pident | qstart | qend  | sstart | send  |
 |------------|------------|--------|--------|--------|-------|--------|-------|
@@ -181,7 +163,7 @@ BLAST）：
 | MT108731.1 | MT118296.1 | 4412   | 97.031 | 21513  | 25922 | 2365   | 6772  |
 | MT108731.1 | MT118296.1 | 464    | 94.181 | 20691  | 21146 | 1032   | 1495  |
 
-例如，批量 BLAST 的输出可直接解析为该表格：
+例如，BLAST 的 `-outfmt 7` 标准输出可以直接解析为该表格：
 
 ``` bash
 seqs=("MT108731.1" "MT118296.1" "OQ646790.1" "OR222515.1")
@@ -199,17 +181,17 @@ done
 
 #### 【可选】基因数据（`gene_data`）
 
-在序列上标注基因（或其他特征）的数据框，必须包含以下列：
+每行表示一条序列上的一个基因（或其他特征）：
 
-| 列名     | 类型 | 含义                 |
+| 列名     | 类型 | 说明                 |
 |----------|------|----------------------|
 | `seq_id` | 字符 | 基因所属序列 ID      |
 | `start`  | 整数 | 基因起始位置         |
-| `end`    | 整数 | 基因结束位置         |
+| `end`    | 整数 | 基因终止位置         |
 | `strand` | 字符 | 链方向（`+` 或 `-`） |
 | `anno`   | 字符 | 基因注释 / 功能类别  |
 
-示例数据行：
+示例行：
 
 | seq_id     | start | end   | strand | anno                      |
 |------------|-------|-------|--------|---------------------------|
@@ -234,11 +216,9 @@ geneTrackTable <- gff3Table %>%
 write_tsv(geneTrackTable, "gene_track.tsv")
 ```
 
-------------------------------------------------------------------------
+### 2. 由浅入深示例
 
-## 使用示例
-
-下面的示例全部使用内置数据集，可以直接运行：
+以下示例均使用内置数据，可以直接复制运行：
 
 ``` r
 
@@ -249,21 +229,18 @@ data(ribbon_data_example)
 data(gene_data_example)
 ```
 
-如果你想使用自己的数据，请参考上面的[前期数据准备](#%E5%89%8D%E6%9C%9F%E6%95%B0%E6%8D%AE%E5%87%86%E5%A4%87)，了解所需的数据格式以及如何从常见文件读取。
+#### 第 1 步：绘制序列弧线
 
-### 第 1 步：绘制序列弧线
-
-最简单的图只需要
-`seq_data`——每条序列绘制为一条彩色弧线，长度与序列长度成比例：
+最简单的图形只需要 `seq_data`：
 
 ``` r
 
 ggchord(seq_data = seq_data_example) + geom_seq()
 ```
 
-![默认参数的序列弦图](reference/figures/seq_only_default.png)
+![默认参数下的序列弦图](reference/figures/seq_only_default.png)
 
-默认参数的序列弦图
+默认参数下的序列弦图
 
 自定义序列布局——顺序、方向、曲率与颜色都属于
 [`geom_seq()`](https://dangjem.github.io/ggchord/reference/geom_seq.md)：
@@ -272,10 +249,10 @@ ggchord(seq_data = seq_data_example) + geom_seq()
 
 ggchord(seq_data = seq_data_example) +
   geom_seq(
-    seq_order = c("MT118296.1", "OR222515.1", "MT108731.1", "OQ646790.1"),
+    seq_order      = c("MT118296.1", "OR222515.1", "MT108731.1", "OQ646790.1"),
     seq_orientation = c(1, -1, 1, -1),
-    seq_curvature = c(0, 2, -2, 6),
-    seq_colors = c("steelblue", "orange", "pink", "yellow")
+    seq_curvature   = c(0, 2, -2, 6),
+    seq_colors      = c("steelblue", "orange", "pink", "yellow")
   )
 ```
 
@@ -283,11 +260,10 @@ ggchord(seq_data = seq_data_example) +
 
 自定义布局的序列弦图
 
-### 第 2 步：加入比对连接带
+#### 第 2 步：加入比对连接带
 
-提供 `ribbon_data`
-后即可在序列之间绘制连接带。默认按相似度（`pident`，即 `"pident"`
-方案）着色：
+添加 `ribbon_data`
+并绘制连接带。默认按相似度百分比着色（`ribbon_color_scheme = "pident"`）：
 
 ``` r
 
@@ -299,8 +275,7 @@ ggchord(seq_data_example, ribbon_data_example) +
 
 按相似度着色的连接带
 
-[`geom_ribbon()`](https://dangjem.github.io/ggchord/reference/geom_ribbon.md)
-还提供其他配色方案：
+其他配色方案：
 
 ``` r
 
@@ -332,14 +307,13 @@ ggchord(seq_data_example, ribbon_data_example) +
   geom_ribbon(ribbon_color_scheme = "single", ribbon_colors = "orange")
 ```
 
-![单色连接带](reference/figures/ribbon_single.png)
+![单一颜色的连接带](reference/figures/ribbon_single.png)
 
-单色连接带
+单一颜色的连接带
 
-### 第 3 步：加入基因注释
+#### 第 3 步：加入基因注释与标签
 
-提供 `gene_data` 后即可在序列上绘制基因箭头。默认按链方向（`+` /
-`-`）着色：
+添加 `gene_data` 并将基因绘制为箭头。默认按链方向（`+` / `-`）着色：
 
 ``` r
 
@@ -351,7 +325,9 @@ ggchord(seq_data_example, gene_data = gene_data_example) +
 
 按链方向着色的基因箭头
 
-按注释类别着色并显示基因标签：
+按注释类别着色，并用
+[`geom_gene_label()`](https://dangjem.github.io/ggchord/reference/geom_gene_label.md)
+添加标签：
 
 ``` r
 
@@ -364,15 +340,13 @@ ggchord(seq_data_example, gene_data = gene_data_example) +
   )
 ```
 
-![按注释类别着色并显示标签的基因箭头](reference/figures/gene_manual_label.png)
+![按注释类别着色并带标签的基因](reference/figures/gene_manual_label.png)
 
-按注释类别着色并显示标签的基因箭头
+按注释类别着色并带标签的基因
 
-当注释文本较长或基因较密集时，基因标签可能互相重叠。
-[`geom_gene_label_repel()`](https://dangjem.github.io/ggchord/reference/geom_gene_label_repel.md)
-采用 ggrepel 风格的力导向算法放置标签（把标签从
-基因/弧线上推开，用引导线连接到对应基因），并支持长注释换行与隐藏最拥挤的
-标签：
+当注释较长或基因较密集时，标签容易重叠。[`geom_gene_label_repel()`](https://dangjem.github.io/ggchord/reference/geom_gene_label_repel.md)
+采用类似 ggrepel
+的力导向布局将标签推开，并用引导线连接对应的基因；还可以自动换行（`gene_label_wrap`）并隐藏最拥挤的标签（`max_overlaps`）：
 
 ``` r
 
@@ -389,8 +363,9 @@ ggchord(seq_data_example, gene_data = gene_data_example) +
 
 带引导线的防重叠基因标签
 
-标签摆放可以更灵活：用 `gene_label_orientation = "horizontal"`
-让所有文字横向 摆放，用 `gene_label_segment = "elbow"` 使用折线引导线：
+如需全部横向文字和 L 形引导线，可设置
+`gene_label_orientation = "horizontal"` 与
+`gene_label_segment = "elbow"`：
 
 ``` r
 
@@ -404,10 +379,14 @@ ggchord(seq_data_example, gene_data = gene_data_example) +
   )
 ```
 
-### 第 4 步：加入坐标轴与序列标签
+![横向基因标签与 L 形引导线](reference/figures/gene_repel_elbow.png)
 
-坐标轴用主/次刻度标注序列位置，[`geom_seq_label()`](https://dangjem.github.io/ggchord/reference/geom_seq_label.md)
-可将标签放在弧线上或外侧：
+横向基因标签与 L 形引导线
+
+#### 第 4 步：加入坐标轴与序列标签
+
+坐标轴用主/次刻度标注序列位置。默认刻度标签平行于坐标轴；[`geom_seq_label()`](https://dangjem.github.io/ggchord/reference/geom_seq_label.md)
+将序列名称放在弧线内侧或外侧：
 
 ``` r
 
@@ -425,14 +404,14 @@ ggchord(seq_data_example) +
 
 坐标轴与序列标签
 
-### 第 5 步：双序列比对
+#### 第 5 步：双序列比较
 
-内置数据集包含四条序列，你可以绘制任意子集。先从两条序列开始，只需保留需要的行：
+可以绘制任意子集。保留两条序列及其对应的连接带与基因：
 
 ``` r
 
-# 保留两条序列及其对应的连接带与基因
-seq2 <- seq_data_example[seq_data_example$seq_id %in% c("MT108731.1", "MT118296.1"), ]
+seq2 <- seq_data_example[seq_data_example$seq_id %in%
+                           c("MT108731.1", "MT118296.1"), ]
 ribbon2 <- ribbon_data_example[
   ribbon_data_example$qaccver %in% seq2$seq_id &
     ribbon_data_example$saccver %in% seq2$seq_id, ]
@@ -442,14 +421,13 @@ ggchord(seq2, ribbon2, gene2) +
   geom_seq() + geom_ribbon() + geom_gene() + geom_axis()
 ```
 
-![双序列比对弦图](reference/figures/example_seq2.png)
+![双序列比较](reference/figures/example_seq2.png)
 
-双序列比对弦图
+双序列比较
 
-### 第 6 步：三序列比对
+#### 第 6 步：三序列比较
 
-同样的方法也适用于三条序列——保留感兴趣的序列，并相应过滤 `ribbon_data`
-与 `gene_data`：
+同样的思路适用于三条序列：
 
 ``` r
 
@@ -464,28 +442,28 @@ ggchord(seq3, ribbon3, gene3) +
   geom_seq() + geom_ribbon() + geom_gene() + geom_axis()
 ```
 
-![三序列比对弦图](reference/figures/example_seq3.png)
+![三序列比较](reference/figures/example_seq3.png)
 
-三序列比对弦图
+三序列比较
 
-### 第 7 步：组合所有图层并精细控制
+#### 第 7 步：组合所有图层并精细控制
 
-组合所有图层，并把精细参数分发到使用它的图层中：
+每个图层都可以接收精细参数。下面把参数分配给对应的图层：
 
 ``` r
 
 ggchord(
-  seq_data = seq_data_example,
+  seq_data    = seq_data_example,
   ribbon_data = ribbon_data_example,
-  gene_data = gene_data_example,
-  title = "Multi-sequence Chord Diagram with Gene Annotations",
-  rotation = 45
+  gene_data   = gene_data_example,
+  title       = "Multi-sequence Chord Diagram with Gene Annotations",
+  rotation    = 45
 ) +
   geom_seq(
-    seq_radius = c(3, 2, 2, 1),
+    seq_radius      = c(3, 2, 2, 1),
     seq_orientation = c(-1, -1, -1, 1),
-    seq_curvature = c(0, 1, -1, 1.5),
-    seq_gap = 0.03
+    seq_curvature   = c(0, 1, -1, 1.5),
+    seq_gap         = 0.03
   ) +
   geom_ribbon(
     ribbon_color_scheme = "pident",
@@ -505,7 +483,7 @@ ggchord(
       c("+" = 45, "-" = -45),
       c("+" = 30, "-" = -30),
       c("+" = 15, "-" = -15),
-      c("+" = 0, "-" = 0)
+      c("+" = 0,  "-" = 0)
     )
   ) +
   geom_axis(
@@ -515,14 +493,15 @@ ggchord(
   )
 ```
 
-![精细参数控制的综合弦图](reference/figures/combined_fine.png)
+![精细控制下的完整弦图](reference/figures/combined_fine.png)
 
-精细参数控制的综合弦图
+精细控制下的完整弦图
 
-### 第 8 步：用 `+` 添加主题与 scale
+#### 第 8 步：用 `+` 添加主题与 scale
 
-ggchord 绘图对象是真正的 ggplot2 对象，因此可以像 ggplot2 一样用 `+`
-叠加主题与 scale：
+ggchord 图形是真正的 ggplot2
+对象，[`theme()`](https://ggplot2.tidyverse.org/reference/theme.html) 与
+`scale_*()` 可以像在 ggplot2 中一样使用：
 
 ``` r
 
@@ -541,13 +520,16 @@ ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
 
 自定义主题与 scale 的弦图
 
-默认情况下三个图例独立放置：Seq ID 与 Strand / Gene Annotation
-图例在右侧， Identity(%) 色条在左侧。每个图例都可以通过
-[`geom_seq()`](https://dangjem.github.io/ggchord/reference/geom_seq.md)、[`geom_ribbon()`](https://dangjem.github.io/ggchord/reference/geom_ribbon.md)
-和
-[`geom_gene()`](https://dangjem.github.io/ggchord/reference/geom_gene.md)
-的 `legend_position` 参数单独移动。在某图层传入 `legend_position = NULL`
-可让其图例跟随 `theme(legend.position = ...)`， 从而把图例聚合到一起：
+> 提示：出现 “Scale for colour is already present” 信息只是表示你的
+> [`scale_color_manual()`](https://ggplot2.tidyverse.org/reference/scale_manual.html)
+> 替换了内置的默认 scale，属于正常现象，不影响结果。
+
+**图例摆放**。默认情况下各图层的图例独立摆放：Seq ID
+图例与链/基因注释图例在右侧，Identity(%) 色条在左侧。可通过
+[`geom_seq()`](https://dangjem.github.io/ggchord/reference/geom_seq.md)、[`geom_ribbon()`](https://dangjem.github.io/ggchord/reference/geom_ribbon.md)、[`geom_gene()`](https://dangjem.github.io/ggchord/reference/geom_gene.md)
+各自的 `legend_position` 参数分别移动。若将 `legend_position` 设为
+`NULL`，该图例将遵循
+`theme(legend.position = ...)`，从而可以把所有图例放在一起：
 
 ``` r
 
@@ -559,160 +541,186 @@ ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
   theme(legend.position = "bottom", legend.box = "horizontal")
 ```
 
-**灵活的参数格式**：所有序列级参数（`seq_radius`、`seq_gap`
-等）支持单值、无命名向量、按序列 ID
-命名的向量/列表、按序列顺序命名（`"1"`、`"2"`、…）的列表、以及无命名列表。基因级参数（如
-`gene_label_rotation`、`gene_offset`）额外支持按链（`+`/`-`）指定——既可以用命名向量，也可以写在列表里：
+![通过 theme() 将所有图例放在底部](reference/figures/legend_bottom.png)
+
+通过 theme() 将所有图例放在底部
+
+### 3. 灵活的参数格式
+
+序列级参数（`seq_radius`、`seq_gap`、`axis_label_size`
+等）支持**单值、无名向量、按序列 ID
+命名的向量/列表、按序列顺序命名的列表（`"1"`、`"2"`…）或无名列表**。基因级参数（`gene_label_rotation`、`gene_offset`
+等）还额外支持按链方向（`+`/`-`）指定。以下写法均合法：
 
 ``` r
 
-gene_label_rotation = 20                                  # 所有序列、正负链相同
-gene_label_rotation = c("+" = -15, "-" = -45)             # 所有序列按链分别指定
-gene_label_rotation = list("MT118296.1" = c("+" = -15, "-" = -45),
-                           "MT108731.1" = c("+" = -15, "-" = -45))       # 按序列 ID
-gene_label_rotation = list("1" = c("+" = -15, "-" = -45),
-                           "2" = c("+" = 30, "-" = -30),
-                           "3" = c("+" = 15, "-" = -15),
-                           "4" = c("+" = 0, "-" = 0))                    # 按序列顺序
-gene_label_rotation = list(c("+" = -15, "-" = -45),
-                           c("+" = 30, "-" = -30),
-                           c("+" = 15, "-" = -15),
-                           c("+" = 0, "-" = 0))                          # 无命名列表按顺序
-gene_label_rotation = list(20)                            # 单元素列表自动循环
+# 1. 全部使用同一个值
+gene_label_rotation = 20
+
+# 2. 每条序列按链方向分别指定
+gene_label_rotation = c("+" = -15, "-" = -45)
+
+# 3. 按序列 ID 名称指定
+gene_label_rotation = list(
+  "MT118296.1" = c("+" = -15, "-" = -45),
+  "OR222515.1" = c("+" = 30, "-" = -30),
+  "MT108731.1" = c("+" = 15, "-" = -15),
+  "OQ646790.1" = c("+" = 0,  "-" = 0)
+)
+
+# 4. 按序列顺序指定（"1" 表示第一条序列）
+gene_label_rotation = list(
+  "1" = c("+" = -15, "-" = -45),
+  "2" = c("+" = 30, "-" = -30),
+  "3" = c("+" = 15, "-" = -15),
+  "4" = c("+" = 0,  "-" = 0)
+)
+
+# 5. 无名列表：按序列顺序（与 #4 等价）
+gene_label_rotation = list(
+  c("+" = -15, "-" = -45),
+  c("+" = 30, "-" = -30),
+  c("+" = 15, "-" = -15),
+  c("+" = 0,  "-" = 0)
+)
+
+# 6. 长度为一的列表会循环应用到每条序列
+gene_label_rotation = list(20)
 ```
 
 ## 图层参考
 
-| 图层 | 函数 | 描述 |
+| 图层 | 函数 | 说明 |
 |----|----|----|
-| 序列弧线 | [`geom_seq()`](https://dangjem.github.io/ggchord/reference/geom_seq.md) | 绘制每条序列的弧线（或直线），带方向箭头 |
-| 比对连接带 | [`geom_ribbon()`](https://dangjem.github.io/ggchord/reference/geom_ribbon.md) | 绘制比对结果的彩色 ribbon |
-| 基因箭头 | [`geom_gene()`](https://dangjem.github.io/ggchord/reference/geom_gene.md) | 绘制基因注释的箭头多边形和标签 |
-| 坐标轴 | [`geom_axis()`](https://dangjem.github.io/ggchord/reference/geom_axis.md) | 绘制轴线、主/次刻度线和刻度标签 |
-| 序列标签 | [`geom_seq_label()`](https://dangjem.github.io/ggchord/reference/geom_seq_label.md) | 在序列弧线上或外侧放置标签 |
+| 序列弧线 | [`geom_seq()`](https://dangjem.github.io/ggchord/reference/geom_seq.md) | 为每条序列绘制弧线（或直线），含方向箭头 |
+| 比对连接带 | [`geom_ribbon()`](https://dangjem.github.io/ggchord/reference/geom_ribbon.md) | 根据比对结果绘制彩色连接带 |
+| 基因箭头 | [`geom_gene()`](https://dangjem.github.io/ggchord/reference/geom_gene.md) | 绘制基因/特征箭头多边形 |
+| 基因标签 | [`geom_gene_label()`](https://dangjem.github.io/ggchord/reference/geom_gene_label.md) | 在固定位置绘制基因标签 |
+| 防重叠基因标签 | [`geom_gene_label_repel()`](https://dangjem.github.io/ggchord/reference/geom_gene_label_repel.md) | 类 ggrepel 标签：带引导线、支持换行与重叠隐藏 |
+| 坐标轴 | [`geom_axis()`](https://dangjem.github.io/ggchord/reference/geom_axis.md) | 绘制坐标轴线、主/次刻度与刻度标签 |
+| 序列标签 | [`geom_seq_label()`](https://dangjem.github.io/ggchord/reference/geom_seq_label.md) | 在弧线内侧/外侧放置序列名称 |
 
 ## 参数详情
 
 ### ggchord() 参数
 
-| 参数           | 类型       | 默认值 | 描述                                  |
-|----------------|------------|--------|---------------------------------------|
-| `seq_data`     | data.frame | \-     | 序列信息，必须包含 `seq_id`、`length` |
-| `ribbon_data`  | data.frame | NULL   | 比对结果（如 BLAST 输出）             |
-| `gene_data`    | data.frame | NULL   | 基因注释数据                          |
-| `title`        | 字符       | NULL   | 图形主标题                            |
-| `rotation`     | 数值       | 45     | 全局旋转角度（度）                    |
-| `panel_margin` | 数值/列表  | 0      | 面板边距                              |
-| `show_legend`  | 逻辑值     | TRUE   | 是否显示图例                          |
-| `debug`        | 逻辑值     | FALSE  | 是否输出调试信息                      |
+| 参数           | 类型         | 默认值 | 说明                                  |
+|----------------|--------------|--------|---------------------------------------|
+| `seq_data`     | data.frame   | \-     | 序列信息；必须包含 `seq_id`、`length` |
+| `ribbon_data`  | data.frame   | NULL   | 比对结果                              |
+| `gene_data`    | data.frame   | NULL   | 基因注释数据                          |
+| `title`        | character    | NULL   | 图形标题                              |
+| `rotation`     | numeric      | 45     | 全局旋转角度（度）                    |
+| `panel_margin` | numeric/list | 0      | 面板边距                              |
+| `show_legend`  | logical      | TRUE   | 是否显示图例                          |
+| `debug`        | logical      | FALSE  | 是否输出调试信息                      |
 
 ### geom_seq() 参数
 
-| 参数 | 类型 | 默认值 | 描述 |
+| 参数 | 类型 | 默认值 | 说明 |
 |----|----|----|----|
 | `seq_order` | 字符向量 | NULL | 序列绘制顺序 |
 | `seq_labels` | 字符向量 | NULL | 序列标签 |
 | `seq_orientation` | 数值 (1/-1) | 1 | 序列方向 |
-| `seq_gap` | 数值 \[0, 0.5) | 0.03 | 序列间空白比例 |
+| `seq_gap` | 数值 \[0, 0.5) | 0.03 | 序列之间的间隔比例 |
 | `seq_radius` | 数值 (\> 0) | 1.0 | 序列弧线半径 |
-| `seq_curvature` | 数值 | 1.0 | 曲率：0=直线, 1=标准弧, \>1=更弯 |
+| `seq_curvature` | 数值 | 1.0 | 曲率：0=直线，1=标准，\>1=更弯曲 |
 | `seq_colors` | 颜色向量 | Set1 | 序列弧线颜色 |
 | `linewidth` | 数值 | 1.2 | 弧线宽度 |
-| `show_legend` | 逻辑值 | TRUE | 是否显示图例 |
-| `legend_position` | 字符 | “right” | Seq ID 图例的位置：“left”、“right”、“top”、“bottom” 或 “inside”（NULL = 跟随 `theme(legend.position = ...)`） |
+| `show_legend` | logical | TRUE | 是否显示 Seq ID 图例 |
+| `legend_position` | 字符 | “right” | Seq ID 图例位置：`"left"`、`"right"`、`"top"`、`"bottom"` 或 `"inside"`（`NULL` = 遵循 `theme(legend.position = ...)`） |
 
 ### geom_seq_label() 参数
 
-| 参数 | 类型 | 默认值 | 描述 |
+| 参数 | 类型 | 默认值 | 说明 |
 |----|----|----|----|
-| `seq_label_radius` | 数值/向量 | 1.15 | 标签径向位置（以弧线半径的倍数为单位，1 = 在弧线上） |
-| `seq_label_rotation` | 数值/向量 | 0 | 标签附加旋转角度（度） |
+| `seq_label_radius` | 数值/向量 | 1.15 | 标签径向位置（弧线半径的倍数，1 = 在弧线上） |
+| `seq_label_rotation` | 数值/向量 | 0 | 标签额外旋转角度（度） |
 | `seq_label_size` | 数值/向量 | 3 | 标签字号 |
-| `seq_labels` | 字符向量 | NULL | 覆盖标签文本（默认使用 [`geom_seq()`](https://dangjem.github.io/ggchord/reference/geom_seq.md) 的序列标签） |
-| `show_legend` | 逻辑值 | FALSE | 是否显示图例 |
+| `seq_labels` | 字符向量 | NULL | 覆盖标签文本（默认使用 [`geom_seq()`](https://dangjem.github.io/ggchord/reference/geom_seq.md) 中的序列标签） |
+| `show_legend` | logical | FALSE | 是否显示图例 |
 
 ### geom_ribbon() 参数
 
-| 参数 | 类型 | 默认值 | 描述 |
+| 参数 | 类型 | 默认值 | 说明 |
 |----|----|----|----|
 | `ribbon_color_scheme` | 字符 | “pident” | 配色方案：`"pident"`、`"query"`、`"subject"`、`"single"` |
 | `ribbon_colors` | 颜色向量 | 自动 | 连接带颜色参数 |
 | `ribbon_alpha` | 数值 (0-1) | 0.35 | 连接带透明度 |
-| `ribbon_ctrl_point` | 向量/列表 | c(0,0) | 贝塞尔曲线控制点 |
-| `ribbon_gap` | 数值/向量 | 0.15 | 序列与连接带的径向间距 |
-| `alpha` | 数值 | 0.35 | 透明度（可覆盖 ribbon_alpha） |
+| `ribbon_ctrl_point` | 向量/列表 | c(0, 0) | 贝塞尔控制点 |
+| `ribbon_gap` | 数值/向量 | 0.15 | 序列与连接带之间的径向间距 |
 | `ribbon_outline_color` | 字符 | “black” | 连接带轮廓（边框）颜色 |
 | `ribbon_outline_width` | 数值 | 0.05 | 连接带轮廓线宽 |
 | `ribbon_outline_linetype` | 数值/字符 | 1 | 连接带轮廓线型（1 = 实线） |
-| `show_legend` | 逻辑值 | TRUE | 是否显示图例 |
-| `legend_position` | 字符 | “left” | Identity(%) 色条的位置：“left”、“right”、“top”、“bottom” 或 “inside”（NULL = 跟随 `theme(legend.position = ...)`） |
-| `legend_key_length` | unit/数值 | NULL | Identity(%) 色条的长度（竖直时为其高度、水平时为其宽度）；数值按厘米计，如 `legend_key_length = 5` 或 `unit(5, "cm")` |
+| `show_legend` | logical | TRUE | 是否显示 Identity(%) 图例 |
+| `legend_position` | 字符 | “left” | Identity(%) 色条位置：`"left"`、`"right"`、`"top"`、`"bottom"` 或 `"inside"`（`NULL` = 遵循 `theme(legend.position = ...)`） |
+| `legend_key_length` | unit/数值 | NULL | Identity(%) 色条的长度（竖直时指高度、水平时指宽度）；数值按厘米计，如 `legend_key_length = 5` 或 `unit(5, "cm")` |
 
 ### geom_gene() 参数
 
-| 参数 | 类型 | 默认值 | 描述 |
+| 参数 | 类型 | 默认值 | 说明 |
 |----|----|----|----|
-| `gene_offset` | 数值/向量/列表 | 0.1 | 基因箭头径向偏移 |
+| `gene_offset` | 数值/向量/列表 | 0.1 | 基因箭头的径向偏移 |
 | `gene_width` | 数值/向量/列表 | 0.05 | 基因箭头宽度 |
 | `gene_color_scheme` | 字符 | “strand” | 配色方案：`"strand"` 或 `"manual"` |
-| `gene_colors` | 颜色向量 | 自动 | 基因箭头填充色 |
+| `gene_colors` | 颜色向量 | 自动 | 基因箭头填充颜色 |
 | `gene_order` | 字符向量 | NULL | 基因在图例中的显示顺序 |
-| `show_legend` | 逻辑值 | TRUE | 是否显示图例 |
-| `legend_position` | 字符 | “right” | Strand / Gene Annotation 图例的位置：“left”、“right”、“top”、“bottom” 或 “inside”（NULL = 跟随 `theme(legend.position = ...)`） |
+| `show_legend` | logical | TRUE | 是否显示链/基因图例 |
+| `legend_position` | 字符 | “right” | 链/基因图例位置：`"left"`、`"right"`、`"top"`、`"bottom"` 或 `"inside"`（`NULL` = 遵循 `theme(legend.position = ...)`） |
 
 ### geom_gene_label() 参数
 
-| 参数 | 类型 | 默认值 | 描述 |
+| 参数 | 类型 | 默认值 | 说明 |
 |----|----|----|----|
 | `gene_label_size` | 数值 | 2.5 | 标签字号 |
 | `gene_label_rotation` | 数值/向量/列表 | 0 | 标签旋转角度 |
 | `gene_label_radial_offset` | 数值/向量/列表 | 0 | 标签径向偏移 |
-| `gene_label_circum_offset` | 数值/向量/列表 | 0 | 标签周向偏移比例 |
-| `gene_label_circum_limit` | 逻辑值/向量/列表 | TRUE | 是否限制周向偏移 |
-| `gene_label_wrap` | 数值 | NULL | 将长注释按此字符数换行（如 15） |
-| `show_legend` | 逻辑值 | FALSE | 是否显示图例 |
+| `gene_label_circum_offset` | 数值/向量/列表 | 0 | 环向偏移 |
+| `gene_label_circum_limit` | logical/向量/列表 | TRUE | 是否限制环向偏移 |
+| `gene_label_wrap` | 数值 | NULL | 长注释按该字符数换行（如 15） |
+| `show_legend` | logical | FALSE | 是否显示图例 |
 
 ### geom_gene_label_repel() 参数
 
-除
+包含
 [`geom_gene_label()`](https://dangjem.github.io/ggchord/reference/geom_gene_label.md)
-的参数外，还有：
+的全部参数，另加：
 
-| 参数 | 类型 | 默认值 | 描述 |
+| 参数 | 类型 | 默认值 | 说明 |
 |----|----|----|----|
-| `max_overlaps` | 数值 | Inf | 隐藏仍与超过该数量标签重叠的标签 |
-| `box_padding` | 数值 | 0.25 | 每个标签框的额外内边距（数据单位） |
-| `point_padding` | 数值 | 0.1 | 锚点周围的额外内边距（数据单位） |
-| `min_segment_length` | 数值 | 0.05 | 移动距离小于该值的标签不绘制引导线 |
+| `max_overlaps` | 数值 | Inf | 防重叠后仍与其他标签重叠过多的标签将被隐藏 |
+| `box_padding` | 数值 | 0.25 | 标签框额外内边距（数据单位） |
+| `point_padding` | 数值 | 0.1 | 锚点额外内边距（数据单位） |
+| `min_segment_length` | 数值 | 0.05 | 移动距离小于该值的标签不画引导线 |
 | `force` | 数值 | 1 | 排斥力强度 |
-| `seed` | 数值 | 123 | 防重叠算法随机种子 |
-| `gene_label_orientation` | 字符 | “arc” | 标签文字方向：`"arc"`（沿弧线旋转）或 `"horizontal"`（全部横向） |
-| `gene_label_segment` | 字符 | “line” | 引导线样式：`"line"`（直线）或 `"elbow"`（折线） |
+| `seed` | 数值 | 123 | 随机种子（保证可复现） |
+| `gene_label_orientation` | 字符 | “arc” | 标签文字方向：`"arc"`（沿弧线旋转）或 `"horizontal"`（水平） |
+| `gene_label_segment` | 字符 | “line” | 引导线样式：`"line"`（直线）或 `"elbow"`（L 形） |
 
 ### geom_axis() 参数
 
-| 参数 | 类型 | 默认值 | 描述 |
+| 参数 | 类型 | 默认值 | 说明 |
 |----|----|----|----|
-| `show_axis` | 逻辑值 | TRUE | 是否显示坐标轴 |
-| `axis_gap` | 数值/向量 | 0.05 | 序列与坐标轴的径向间距 |
+| `show_axis` | logical | TRUE | 是否显示坐标轴 |
+| `axis_gap` | 数值/向量 | 0.05 | 与序列的径向间距 |
 | `axis_tick_major_number` | 整数/向量 | 3 | 主刻度数量 |
 | `axis_tick_major_length` | 数值/向量 | 0.02 | 主刻度长度比例 |
 | `axis_tick_minor_number` | 整数/向量 | 4 | 次刻度数量 |
 | `axis_tick_minor_length` | 数值/向量 | 0.01 | 次刻度长度比例 |
 | `axis_label_size` | 数值/向量 | 3 | 刻度标签字号 |
 | `axis_label_offset` | 数值/向量 | 2 | 标签偏移比例 |
-| `axis_label_orientation` | 字符/数值/向量 | “parallel” | 标签方向：`"parallel"`（文字平行于坐标轴）、`"perpendicular"`（文字垂直于坐标轴）、`"horizontal"`（文字保持水平），或数值角度（逆时针，如 `45`、`90`、`c(0, 45, 80, 130)`）；向量/命名向量可分别为每条序列指定方向 |
-| `axis_label_hide_overlaps` | 逻辑值 | FALSE | 自动隐藏与绘图内容或其他标签重叠的坐标轴标签 |
-| `show_legend` | 逻辑值 | FALSE | 是否显示图例 |
+| `axis_label_orientation` | 字符/数值/向量 | “parallel” | 标签方向：`"parallel"`（平行于坐标轴）、`"perpendicular"`（垂直于坐标轴）、`"horizontal"`（水平），或逆时针角度数值（如 `45`、`90`、`c(0, 45, 80, 130)`）；向量/命名向量可分别为每条序列指定 |
+| `axis_label_hide_overlaps` | logical | FALSE | 自动隐藏与绘图内容或其他标签重叠的坐标轴标签 |
+| `show_legend` | logical | FALSE | 是否显示图例 |
 
 ------------------------------------------------------------------------
 
 ## 图形解读
 
-- **序列弧线**：每条彩色弧线代表一条序列，长度按比例映射，箭头指示方向。
-- **连接带**：连接不同序列的彩色区域，代表比对区间。
-- **基因箭头**：标注在序列上的箭头多边形，可选配文字标签。
-- **坐标轴**：每条序列外侧的刻度线与数字，标注序列位置。
+- **序列弧线**——每条彩色弧线代表一条序列，长度按比例映射，箭头表示方向。
+- **连接带**——连接序列之间的彩色区域代表比对/同源区间；默认颜色编码相似度、查询或目标序列。
+- **基因箭头**——绘制在序列上的箭头多边形；颜色编码链方向或功能类别，可选标签。
+- **坐标轴**——每条弧线外侧的刻度与数字标注序列位置。
 
 ------------------------------------------------------------------------
 
@@ -720,99 +728,86 @@ gene_label_rotation = list(20)                            # 单元素列表自�
 
 ### v0.6.0（最新）
 
-- **绘图对象自包含**：数据与参数直接存储在绘图对象上，多个图可并存，且对象可经
-  [`saveRDS()`](https://rdrr.io/r/base/readRDS.html)/[`readRDS()`](https://rdrr.io/r/base/readRDS.html)
-  保存与恢复。
-- **构建时布局**：布局改由
+- **自包含绘图对象**：数据与参数存储在绘图对象自身，多个图形可共存，支持
+  [`saveRDS()`](https://rdrr.io/r/base/readRDS.html)/[`readRDS()`](https://rdrr.io/r/base/readRDS.html)。
+- **构建时布局**：布局由
   [`ggplot_build()`](https://ggplot2.tidyverse.org/reference/ggplot_build.html)
-  计算（而非 [`print()`](https://rdrr.io/r/base/print.html)），因此
-  [`print()`](https://rdrr.io/r/base/print.html)、[`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html)、[`ggplot_build()`](https://ggplot2.tidyverse.org/reference/ggplot_build.html)（及
-  `ggplotly()`）均可用；渲染不再修改用户绘图对象。
-- **新图层
-  [`geom_seq_label()`](https://dangjem.github.io/ggchord/reference/geom_seq_label.md)**：在弧线上/外侧放置序列标签（`seq_label_radius`、`seq_label_rotation`、`seq_label_size`）。
-- **新配色方案 `"subject"`**：按目标序列为连接带着色。
+  计算，[`print()`](https://rdrr.io/r/base/print.html)、[`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html)、[`ggplot_build()`](https://ggplot2.tidyverse.org/reference/ggplot_build.html)（以及
+  `ggplotly()`）均可使用，渲染时不再修改用户对象。
+- **新增图层
+  [`geom_seq_label()`](https://dangjem.github.io/ggchord/reference/geom_seq_label.md)**：在弧线内侧/外侧放置序列标签。
+- **新增连接带配色方案 `"subject"`**：按目标序列着色。
 - **导出
   [`get_chord_layout()`](https://dangjem.github.io/ggchord/reference/get_chord_layout.md)**：获取计算后的布局，便于自定义图层。
-- **`+` 叠加
-  [`theme()`](https://ggplot2.tidyverse.org/reference/theme.html)/scale**：支持
-  [`theme()`](https://ggplot2.tidyverse.org/reference/theme.html)
-  与用户自定义 scale。
-- **数据校验**：[`ggchord()`](https://dangjem.github.io/ggchord/reference/ggchord.md)
-  会对越界或反向的比对/基因坐标、未知序列 ID 给出警告。
-- **性能**：布局坐标映射改用二分查找，替代线性扫描。
-- **依赖声明**：与实现一致地声明 `ggplot2 (>= 4.0.0)` 与
-  `R (>= 4.1.0)`。
-- **CI**：新增 GitHub Actions `R CMD check` 工作流（macOS / Windows /
-  Linux）。
+- **支持 `+` 添加主题与
+  scale**：[`theme()`](https://ggplot2.tidyverse.org/reference/theme.html)
+  与用户 scale 均生效。
+- **数据校验**：对越界、反向的比对/基因坐标与未知序列 ID 给出警告。
+- **坐标轴标签方向**：支持
+  `"parallel"`（默认）、`"perpendicular"`、`"horizontal"` 或数值角度。
+- **性能优化**：布局映射中更快的角度查找。
+- **依赖声明**：`ggplot2 (>= 4.0.0)` 与 `R (>= 4.1.0)`。
+- **CI**：GitHub Actions 在 macOS、Windows、Linux 上运行 `R CMD check`。
 
 ### v0.5.0
 
-- **连接带轮廓定制**：[`geom_ribbon()`](https://dangjem.github.io/ggchord/reference/geom_ribbon.md)
-  新增 `ribbon_outline_color`（默认
+- **连接带轮廓定制**：`ribbon_outline_color`（默认
   `"black"`）、`ribbon_outline_width`（默认 `0.05`）与
   `ribbon_outline_linetype`（默认 `1`，实线）。
-- **移除依赖**：去掉 `ggnewscale`（连接带与基因 fill scale
-  改为内部机制分离）与 `RColorBrewer`（Set1 调色板内置）。
+- **移除依赖**：去掉 `ggnewscale` 与 `RColorBrewer`。
 - **Bug 修复**：连接带 fill scale 被基因 scale 覆盖；`ribbon_alpha`
-  透明度渲染错误；`geom_axis(show_axis = FALSE)` 报错；混合
-  `axis_label_orientation` 向量报错；少于 3 项时 `brewer.pal()`
+  透明度；`geom_axis(show_axis = FALSE)` 报错；混合
+  `axis_label_orientation` 向量报错；`brewer.pal()`
   警告；[`geom_gene()`](https://dangjem.github.io/ggchord/reference/geom_gene.md)
   先于
   [`geom_ribbon()`](https://dangjem.github.io/ggchord/reference/geom_ribbon.md)
   报错；仅含 axis 的绘图；S3 方法注册。
-- **文档**：注释与提示信息英文化；新增函数帮助页；数据准备列含义表与示例数据；渲染示例图；弱化
-  BLAST 定位；vignette 按分层 API 重写。
+- **文档**：注释/信息全部英文；新增数据准备表格；渲染示例图；弱化 BLAST
+  定位；重写 vignette。
 
 ### v0.4.0
 
 - **参数下沉**：布局参数从
   [`ggchord()`](https://dangjem.github.io/ggchord/reference/ggchord.md)
-  移至各 `geom_*`
-  图层。[`ggchord()`](https://dangjem.github.io/ggchord/reference/ggchord.md)
-  仅保留数据校验和全局样式参数（`title`、`rotation`、`panel_margin`、`show_legend`、`debug`）。
-- **延迟计算模型**：坐标布局在
-  [`print()`](https://rdrr.io/r/base/print.html)
-  阶段计算，各图层指定的参数在渲染时汇总。
-- **自定义 `print.ggchord()` 方法**：合并所有参数 → 计算布局 → 注入各
-  layer 数据 → 渲染。
-- **新增 15 个单元测试**。
+  移入各 `geom_*`
+  图层；[`ggchord()`](https://dangjem.github.io/ggchord/reference/ggchord.md)
+  只负责数据校验与全局样式。
+- **延迟计算**：坐标布局在
+  [`print()`](https://rdrr.io/r/base/print.html) 时计算。
+- **自定义 `print.ggchord()` 方法**，新增 15 个单元测试。
 
 ### v0.3.0
 
-- 分层 API 重构：从单体函数拆分为
-  `ggchord() + geom_seq() + geom_ribbon() + geom_gene() + geom_axis()`。
-- 自定义 `+.ggchord` 方法，支持图层列表自动展平。
-- 轻量
-  [`coord_chord()`](https://dangjem.github.io/ggchord/reference/coord_chord.md)
-  坐标系统。
+- 分层 API
+  重构：`ggchord() + geom_seq() + geom_ribbon() + geom_gene() + geom_axis()`。
+- 自定义 `+.ggchord` 方法与轻量级
+  [`coord_chord()`](https://dangjem.github.io/ggchord/reference/coord_chord.md)。
 
 ### v0.2.0
 
-- 高级弧线和直线模式优化，增强曲线拟合。
-- 精确的曲率和间隙控制。
-- 增强的颜色定制。
+- 优化弧线/直线模式；精确控制曲率与间距；增强颜色定制。
 
 ### v0.1.0
 
-- 分离管理序列、比对与基因数据。
-- 序列方向控制、自定义顺序、间隙与半径调整。
-- 可定制坐标轴。连接带支持 3 种配色方案。
+- 分别管理序列、比对与基因数据；支持序列方向、自定义顺序、间距与半径；可定制坐标轴；连接带支持
+  3 种配色方案。
 
 ### v0.0.2
 
-- 多序列展示，弧线/直线模式切换。
+- 多序列支持；弧线/直线模式切换。
 
 ### v0.0.1
 
-- 初始版本，双序列 BLAST 比对弦图。
+- 初始版本；成对 BLAST 比对弦图可视化。
 
 ------------------------------------------------------------------------
 
 ## 贡献与反馈
 
-欢迎提交 issue 报告 bug 或建议新功能，也可通过 Pull Request 参与开发。
+欢迎通过 [GitHub Issues](https://github.com/DangJem/ggchord/issues) 提交
+Bug 报告与功能建议，也欢迎提交 Pull Request。
 
 ## 许可证
 
-本项目采用 MIT 许可证，详情见
+本项目基于 MIT 许可证发布，详见
 [LICENSE](https://dangjem.github.io/ggchord/LICENSE) 文件。
