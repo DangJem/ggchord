@@ -83,7 +83,7 @@ geom_seq(
 - ...:
 
   Additional arguments passed to
-  [`geom_path()`](https://ggplot2.tidyverse.org/reference/geom_path.html)
+  [`geom_path()`](https://rdrr.io/pkg/ggplot2/man/geom_path.html)
 
 ## Value
 

@@ -163,7 +163,7 @@ save_plot(
       )
     ) +
     geom_axis(
-      axis_gap = 0,
+      axis_gap = 0.05,
       axis_tick_major_length = 0.03,
       axis_label_size = 2
     ),
@@ -175,11 +175,7 @@ save_plot(
 save_plot(
   ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
     geom_seq() + geom_ribbon() + geom_gene() + geom_axis() +
-    theme(
-      legend.position = "bottom",
-      legend.box = "horizontal",
-      panel.background = element_rect(fill = "grey95")
-    ) +
+    theme(panel.background = element_rect(fill = "grey95")) +
     scale_color_manual(
       values = c("MT108731.1" = "#E41A1C",
                  "MT118296.1" = "#377EB8",

@@ -224,6 +224,18 @@ ggchord <- function(
     if (!is.null(p$ggchord$ref)) {
       p <- tryCatch(prepare_ggchord_plot(p), error = function(e) p)
     }
+  } else if (inherits(e2, "Scale")) {
+    # A user-supplied scale intentionally replaces the ggchord-managed default
+    # scale of the same aesthetic; muffle ggplot2's "already present" message.
+    p <- withCallingHandlers(
+      NextMethod(),
+      message = function(m) {
+        if (grepl("already present", conditionMessage(m)) &&
+            !is.null(findRestart("muffleMessage"))) {
+          invokeRestart("muffleMessage")
+        }
+      }
+    )
   } else {
     p <- NextMethod()
   }

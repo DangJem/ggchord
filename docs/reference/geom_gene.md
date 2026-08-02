@@ -110,7 +110,7 @@ geom_gene(
 - ...:
 
   Additional arguments passed to
-  [`geom_polygon()`](https://ggplot2.tidyverse.org/reference/geom_polygon.html)
+  [`geom_polygon()`](https://rdrr.io/pkg/ggplot2/man/geom_polygon.html)
 
 ## Value
 

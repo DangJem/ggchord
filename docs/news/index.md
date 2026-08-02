@@ -12,11 +12,11 @@
   [`readRDS()`](https://rdrr.io/r/base/readRDS.html).
 
 - The layout is now computed by
-  [`ggplot_build()`](https://ggplot2.tidyverse.org/reference/ggplot_build.html)
+  [`ggplot_build()`](https://rdrr.io/pkg/ggplot2/man/ggplot_build.html)
   rather than by a custom [`print()`](https://rdrr.io/r/base/print.html)
   method. As a result [`print()`](https://rdrr.io/r/base/print.html),
-  [`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html),
-  [`ggplot_build()`](https://ggplot2.tidyverse.org/reference/ggplot_build.html)
+  [`ggsave()`](https://rdrr.io/pkg/ggplot2/man/ggsave.html),
+  [`ggplot_build()`](https://rdrr.io/pkg/ggplot2/man/ggplot_build.html)
   and other standard ggplot2 workflows
   (e.g. [`plotly::ggplotly()`](https://rdrr.io/pkg/plotly/man/ggplotly.html))
   all work directly on ggchord plots, and rendering no longer modifies

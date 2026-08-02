@@ -14,7 +14,7 @@
 的设计哲学——每个图层管自己的样式。v0.5.0 移除了
 `ggnewscale`/`RColorBrewer` 依赖并新增连接带轮廓定制。最新 v0.6.0
 使绘图对象完全自包含（布局在构建时计算），支持
-[`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html)/[`ggplot_build()`](https://ggplot2.tidyverse.org/reference/ggplot_build.html)，加强数据校验并加入
+[`ggsave()`](https://rdrr.io/pkg/ggplot2/man/ggsave.html)/[`ggplot_build()`](https://rdrr.io/pkg/ggplot2/man/ggplot_build.html)，加强数据校验并加入
 CI。
 
 - 每条序列以圆弧呈现，按比例映射长度。
@@ -31,9 +31,9 @@ CI。
   分层风格**：[`ggchord()`](https://dangjem.github.io/ggchord/reference/ggchord.md)
   仅接收数据和全局参数，各 `geom_*` 接收自己的布局参数，像 `ggplot2`
   一样自然。
-- **延迟计算模型**：布局在绘图构建时（[`print()`](https://rdrr.io/r/base/print.html)、[`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html)
+- **延迟计算模型**：布局在绘图构建时（[`print()`](https://rdrr.io/r/base/print.html)、[`ggsave()`](https://rdrr.io/pkg/ggplot2/man/ggsave.html)
   或
-  [`ggplot_build()`](https://ggplot2.tidyverse.org/reference/ggplot_build.html)）计算，因此
+  [`ggplot_build()`](https://rdrr.io/pkg/ggplot2/man/ggplot_build.html)）计算，因此
   `geom` 中指定的参数和之前叠加的参数都会在渲染时汇总生效。
 - **多序列支持**：同时展示 2 条及以上序列的比对关系。
 - **序列级定制**：自定义序列顺序、方向、间隙、半径与曲率——参数放在
@@ -48,9 +48,9 @@ CI。
   [`geom_seq_label()`](https://dangjem.github.io/ggchord/reference/geom_seq_label.md)
   将标签放在每条序列弧线上/外侧。
 - **灵活集成**：绘图对象自包含，支持
-  [`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html)、[`ggplot_build()`](https://ggplot2.tidyverse.org/reference/ggplot_build.html)
+  [`ggsave()`](https://rdrr.io/pkg/ggplot2/man/ggsave.html)、[`ggplot_build()`](https://rdrr.io/pkg/ggplot2/man/ggplot_build.html)
   与
-  `ggplotly()`；[`theme()`](https://ggplot2.tidyverse.org/reference/theme.html)
+  `ggplotly()`；[`theme()`](https://rdrr.io/pkg/ggplot2/man/theme.html)
   与自定义 scale 可用 `+` 叠加。
 
 ## 安装
@@ -665,9 +665,9 @@ gene_label_rotation = list(20)                            # 单元素列表自�
   [`saveRDS()`](https://rdrr.io/r/base/readRDS.html)/[`readRDS()`](https://rdrr.io/r/base/readRDS.html)
   保存与恢复。
 - **构建时布局**：布局改由
-  [`ggplot_build()`](https://ggplot2.tidyverse.org/reference/ggplot_build.html)
+  [`ggplot_build()`](https://rdrr.io/pkg/ggplot2/man/ggplot_build.html)
   计算（而非 [`print()`](https://rdrr.io/r/base/print.html)），因此
-  [`print()`](https://rdrr.io/r/base/print.html)、[`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html)、[`ggplot_build()`](https://ggplot2.tidyverse.org/reference/ggplot_build.html)（及
+  [`print()`](https://rdrr.io/r/base/print.html)、[`ggsave()`](https://rdrr.io/pkg/ggplot2/man/ggsave.html)、[`ggplot_build()`](https://rdrr.io/pkg/ggplot2/man/ggplot_build.html)（及
   `ggplotly()`）均可用；渲染不再修改用户绘图对象。
 - **新图层
   [`geom_seq_label()`](https://dangjem.github.io/ggchord/reference/geom_seq_label.md)**：在弧线上/外侧放置序列标签（`seq_label_radius`、`seq_label_rotation`、`seq_label_size`）。
@@ -675,9 +675,9 @@ gene_label_rotation = list(20)                            # 单元素列表自�
 - **导出
   [`get_chord_layout()`](https://dangjem.github.io/ggchord/reference/get_chord_layout.md)**：获取计算后的布局，便于自定义图层。
 - **`+` 叠加
-  [`theme()`](https://ggplot2.tidyverse.org/reference/theme.html)/scale**：支持
-  [`theme()`](https://ggplot2.tidyverse.org/reference/theme.html)
-  与用户自定义 scale。
+  [`theme()`](https://rdrr.io/pkg/ggplot2/man/theme.html)/scale**：支持
+  [`theme()`](https://rdrr.io/pkg/ggplot2/man/theme.html) 与用户自定义
+  scale。
 - **数据校验**：[`ggchord()`](https://dangjem.github.io/ggchord/reference/ggchord.md)
   会对越界或反向的比对/基因坐标、未知序列 ID 给出警告。
 - **性能**：布局坐标映射改用二分查找，替代线性扫描。

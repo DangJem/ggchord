@@ -11,7 +11,7 @@ design philosophy — each layer manages its own style. v0.5.0 removed the
 `ggnewscale`/`RColorBrewer` dependencies and added ribbon outline
 customization. The latest v0.6.0 release makes plot objects fully
 self-contained (layout is computed at build time), adds
-[`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html)/[`ggplot_build()`](https://ggplot2.tidyverse.org/reference/ggplot_build.html)
+[`ggsave()`](https://rdrr.io/pkg/ggplot2/man/ggsave.html)/[`ggplot_build()`](https://rdrr.io/pkg/ggplot2/man/ggplot_build.html)
 support, strengthens data validation, and adds CI.
 
 - Each sequence is presented as an arc with length proportionally
@@ -36,8 +36,8 @@ sequence relationship studies, and more.
   layout parameters, just like `ggplot2`.
 - **Deferred Computation Model**: Layout is computed when the plot is
   built (via [`print()`](https://rdrr.io/r/base/print.html),
-  [`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html), or
-  [`ggplot_build()`](https://ggplot2.tidyverse.org/reference/ggplot_build.html)),
+  [`ggsave()`](https://rdrr.io/pkg/ggplot2/man/ggsave.html), or
+  [`ggplot_build()`](https://rdrr.io/pkg/ggplot2/man/ggplot_build.html)),
   so parameters specified across `geom`s are all collected and applied
   during rendering.
 - **Multi-sequence Support**: Display alignment relationships of two or
@@ -58,9 +58,8 @@ sequence relationship studies, and more.
   via
   [`geom_seq_label()`](https://dangjem.github.io/ggchord/reference/geom_seq_label.md).
 - **Flexible Integration**: Plot objects are self-contained and work
-  with
-  [`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html),
-  [`ggplot_build()`](https://ggplot2.tidyverse.org/reference/ggplot_build.html)
+  with [`ggsave()`](https://rdrr.io/pkg/ggplot2/man/ggsave.html),
+  [`ggplot_build()`](https://rdrr.io/pkg/ggplot2/man/ggplot_build.html)
   and `ggplotly()`; themes and scales can be added with `+`.
 
 ## Installation
@@ -709,11 +708,11 @@ gene_label_rotation = list(20)                            # length-one list recy
   plot itself, so multiple plots can coexist and plots survive
   [`saveRDS()`](https://rdrr.io/r/base/readRDS.html)/[`readRDS()`](https://rdrr.io/r/base/readRDS.html).
 - **Build-time layout**: the layout is now computed by
-  [`ggplot_build()`](https://ggplot2.tidyverse.org/reference/ggplot_build.html)
+  [`ggplot_build()`](https://rdrr.io/pkg/ggplot2/man/ggplot_build.html)
   instead of [`print()`](https://rdrr.io/r/base/print.html), so
   [`print()`](https://rdrr.io/r/base/print.html),
-  [`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html),
-  [`ggplot_build()`](https://ggplot2.tidyverse.org/reference/ggplot_build.html)
+  [`ggsave()`](https://rdrr.io/pkg/ggplot2/man/ggsave.html),
+  [`ggplot_build()`](https://rdrr.io/pkg/ggplot2/man/ggplot_build.html)
   (and `ggplotly()`) all work; the user’s plot object is no longer
   modified when rendering.
 - **New layer
@@ -726,7 +725,7 @@ gene_label_rotation = list(20)                            # length-one list recy
   [`get_chord_layout()`](https://dangjem.github.io/ggchord/reference/get_chord_layout.md)**:
   access the computed layout for custom layers.
 - **Themes/scales via `+`**:
-  [`theme()`](https://ggplot2.tidyverse.org/reference/theme.html) and
+  [`theme()`](https://rdrr.io/pkg/ggplot2/man/theme.html) and
   user-supplied scales are respected.
 - **Data validation**:
   [`ggchord()`](https://dangjem.github.io/ggchord/reference/ggchord.md)

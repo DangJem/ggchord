@@ -2,8 +2,8 @@
 
 LayerInstance objects cannot be cloned with `ggproto(NULL, .)`, so the
 layer is rebuilt through
-[`layer()`](https://ggplot2.tidyverse.org/reference/layer.html) with the
-same geom/stat/mapping/params.
+[`layer()`](https://rdrr.io/pkg/ggplot2/man/layer.html) with the same
+geom/stat/mapping/params.
 
 ## Usage
 
