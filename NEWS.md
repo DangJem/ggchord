@@ -48,6 +48,11 @@
 * Removed the internal legacy `fill_ggnewscale_1` aesthetic name in favour of
   `fill_ribbon`.
 
+## Bug fixes
+* Tests no longer write to a hard-coded `/tmp` path: they use `tempfile()`, so
+  the test suite passes on Windows and leaves no stray files behind for
+  `R CMD check` (fixes the CRAN incoming-check failure).
+
 # ggchord 0.5.0
 
 

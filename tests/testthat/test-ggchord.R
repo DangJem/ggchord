@@ -120,11 +120,13 @@ test_that("print renders the full chord diagram", {
     geom_gene() +
     geom_axis()
 
-  # Render to PDF
-  pdf("/tmp/ggchord_test_print.pdf", 8, 8)
+  # Render to PDF (use a session temp file so the tests pass on any platform
+  # and do not leave artifacts behind for R CMD check)
+  out <- tempfile(fileext = ".pdf")
+  pdf(out, 8, 8)
   suppressMessages(suppressWarnings(print(p)))
   dev.off()
-  expect_true(file.exists("/tmp/ggchord_test_print.pdf"))
+  expect_true(file.exists(out))
 })
 
 test_that("README color, label override, and transparency parameters take effect", {
@@ -139,7 +141,8 @@ test_that("README color, label override, and transparency parameters take effect
               label_size = 4) +
     geom_axis()
 
-  pdf("/tmp/ggchord_readme_params.pdf", 8, 8)
+  out <- tempfile(fileext = ".pdf")
+  pdf(out, 8, 8)
   expect_no_warning(print(p))
   dev.off()
 
@@ -147,7 +150,7 @@ test_that("README color, label override, and transparency parameters take effect
   expect_true("fill" %in% names(layout$ribbon_polys))
   expect_true(all(layout$ribbon_polys$alpha == 0.2))
   expect_gt(nrow(layout$gene_labels), 0)
-  expect_true(file.exists("/tmp/ggchord_readme_params.pdf"))
+  expect_true(file.exists(out))
 })
 
 test_that("ribbon outline parameters work with sensible defaults", {
