@@ -81,6 +81,12 @@ save_plot(
 # ---------------------------------------------------------------------------
 save_plot(
   ggchord(seq_data_example, gene_data = gene_data_example) +
+    geom_seq() +
+    geom_gene() +
+    geom_gene_label_repel(gene_label_wrap = 15, max_overlaps = 5),
+  "gene_repel.png")
+save_plot(
+  ggchord(seq_data_example, gene_data = gene_data_example) +
     geom_seq() + geom_gene(),
   "gene_strand.png")
 

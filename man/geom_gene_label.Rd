@@ -12,10 +12,7 @@ geom_gene_label(
   gene_label_radial_offset = NULL,
   gene_label_circum_offset = NULL,
   gene_label_circum_limit = NULL,
-  gene_label_repel = FALSE,
   gene_label_wrap = NULL,
-  gene_label_max_overlaps = Inf,
-  gene_label_seed = 123,
   show_legend = FALSE,
   ...
 )
@@ -35,28 +32,18 @@ geom_gene_label(
 
 \item{gene_label_circum_limit}{Optional logical/vector/list. Whether to limit circumferential offset, default TRUE}
 
-\item{gene_label_repel}{Logical, default FALSE. When TRUE, overlapping gene
-labels are automatically pushed apart (collision detection + automatic
-avoidance) so they do not cover each other.}
-
 \item{gene_label_wrap}{Numeric or NULL, default NULL. When set, long gene
 annotations are wrapped at this many characters (e.g. 15), which makes the
 labels narrower and less prone to overlap.}
-
-\item{gene_label_max_overlaps}{Numeric, default Inf. With
-\code{gene_label_repel = TRUE}, labels that still overlap more than this
-many other labels after de-overlapping are hidden (ggrepel-style). Use a
-finite value to declutter crowded plots.}
-
-\item{gene_label_seed}{Numeric, default 123. Seed used by the de-overlap
-algorithm for reproducible results.}
 
 \item{show_legend}{Whether to show the legend, default FALSE}
 
 \item{...}{Additional arguments passed to \code{geom_text()}}
 }
 \value{
-A list of ggplot2 layers
+A list of ggplot2 layers. To let the labels avoid each other and the
+  genes (with leader lines), use \code{\link{geom_gene_label_repel}()}
+  instead.
 }
 \description{
 Draws the gene annotation labels on a chord diagram. This layer is
@@ -64,8 +51,7 @@ independent from \code{\link{geom_gene}()}: add it after \code{geom_gene()}
 to annotate the gene arrows with their texts.
 }
 \details{
-Long or crowded labels can be handled with \code{gene_label_repel}
-(automatic de-overlapping), \code{gene_label_wrap} (wrapping long
-annotations) and \code{gene_label_max_overlaps} (hiding labels that still
-overlap too many others).
+Long annotations can be wrapped with \code{gene_label_wrap}. For automatic
+de-overlapping (with leader lines), use
+\code{\link{geom_gene_label_repel}()} instead.
 }

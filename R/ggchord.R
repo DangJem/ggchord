@@ -268,21 +268,24 @@ compute_chord_geometry <- function(plot) {
   ribbon_params <- list()
   gene_params   <- list()
   gene_label_params <- list()
+  gene_repel_params <- list()
   axis_params   <- list()
   seq_label_params <- list()
   seq_layer_requested <- FALSE
   gene_label_layer <- FALSE
+  gene_repel_layer <- FALSE
 
   for (i in seq_along(plot$layers)) {
     pp <- plot$layers[[i]]$ggchord_params
     if (is.null(pp)) next
     switch(pp$type,
-      seq        = { seq_params <- pp; seq_layer_requested <- TRUE },
-      ribbon     = ribbon_params <- pp,
-      gene       = gene_params <- pp,
-      gene_label = { gene_label_params <- pp; gene_label_layer <- TRUE },
-      axis       = axis_params <- pp,
-      seq_label  = seq_label_params <- pp
+      seq               = { seq_params <- pp; seq_layer_requested <- TRUE },
+      ribbon            = ribbon_params <- pp,
+      gene              = gene_params <- pp,
+      gene_label        = { gene_label_params <- pp; gene_label_layer <- TRUE },
+      gene_label_repel  = { gene_repel_params <- pp; gene_repel_layer <- TRUE },
+      axis              = axis_params <- pp,
+      seq_label         = seq_label_params <- pp
     )
   }
 
@@ -390,30 +393,32 @@ compute_chord_geometry <- function(plot) {
   gene_ord  <- gene_params$gene_order
   # Gene label settings come from the dedicated geom_gene_label() layer, with
   # the legacy geom_gene() arguments as fallback.
-  gene_ls   <- gene_label_layer ||
+  # The repel layer takes priority over the fixed label layer
+  lbl <- if (gene_repel_layer) gene_repel_params else gene_label_params
+  gene_ls   <- gene_label_layer || gene_repel_layer ||
     isTRUE(gene_params$show_label_override) ||
     isTRUE(gene_params$gene_label_show)
-  gene_lsz  <- gene_label_params$gene_label_size %||%
+  gene_lsz  <- lbl$gene_label_size %||%
     gene_params$label_size_override %||%
     gene_params$gene_label_size %||% 2.5
-  gene_lr   <- gene_label_params$gene_label_rotation %||%
+  gene_lr   <- lbl$gene_label_rotation %||%
     gene_params$gene_label_rotation %||% 0
-  gene_lro  <- gene_label_params$gene_label_radial_offset %||%
+  gene_lro  <- lbl$gene_label_radial_offset %||%
     gene_params$gene_label_radial_offset %||% 0
-  gene_lco  <- gene_label_params$gene_label_circum_offset %||%
+  gene_lco  <- lbl$gene_label_circum_offset %||%
     gene_params$gene_label_circum_offset %||% 0
-  gene_lcl  <- if (is.null(gene_label_params$gene_label_circum_limit)) {
+  gene_lcl  <- if (is.null(lbl$gene_label_circum_limit)) {
     if (is.null(gene_params$gene_label_circum_limit)) TRUE
     else gene_params$gene_label_circum_limit
-  } else gene_label_params$gene_label_circum_limit
-  gene_lrepel <- isTRUE(gene_label_params$gene_label_repel %||%
-                          gene_params$gene_label_repel)
-  gene_lwrap  <- gene_label_params$gene_label_wrap %||%
-    gene_params$gene_label_wrap
-  gene_lmaxov <- gene_label_params$gene_label_max_overlaps %||%
-    gene_params$gene_label_max_overlaps %||% Inf
-  gene_lseed  <- gene_label_params$gene_label_seed %||%
-    gene_params$gene_label_seed %||% 123
+  } else lbl$gene_label_circum_limit
+  gene_lwrap  <- lbl$gene_label_wrap %||% gene_params$gene_label_wrap
+  gene_lrepel_layer <- gene_repel_layer
+  gene_lrepel_maxov <- gene_repel_params$max_overlaps %||% Inf
+  gene_lrepel_box   <- gene_repel_params$box_padding %||% 0.25
+  gene_lrepel_pt    <- gene_repel_params$point_padding %||% 0.1
+  gene_lrepel_minseg <- gene_repel_params$min_segment_length %||% 0.5
+  gene_lrepel_force <- gene_repel_params$force %||% 1
+  gene_lrepel_seed  <- gene_repel_params$seed %||% 123
 
   if (!gene_cs %in% c("strand", "manual")) {
     stop("gene_color_scheme must be 'strand' or 'manual'")
@@ -484,8 +489,14 @@ compute_chord_geometry <- function(plot) {
     geneLabelCircumLimit = geneLabelCircumLimit,
     geneLabelRotation = geneLabelRotation,
     gene_label_show = gene_ls, gene_label_size = gene_lsz,
-    gene_label_repel = gene_lrepel, gene_label_wrap = gene_lwrap,
-    gene_label_max_overlaps = gene_lmaxov, gene_label_seed = gene_lseed,
+    gene_label_wrap = gene_lwrap,
+    gene_label_repel_layer = gene_lrepel_layer,
+    gene_label_repel_max_overlaps = gene_lrepel_maxov,
+    gene_label_repel_box_padding = gene_lrepel_box,
+    gene_label_repel_point_padding = gene_lrepel_pt,
+    gene_label_repel_min_segment_length = gene_lrepel_minseg,
+    gene_label_repel_force = gene_lrepel_force,
+    gene_label_repel_seed = gene_lrepel_seed,
     gene_color_scheme = gene_cs, gene_colors = gene_cols,
     gene_order = gene_ord,
     seq_label_text = seq_label_text,
@@ -543,9 +554,10 @@ reconstruct_layer <- function(lyr, data, mapping = NULL) {
 #' @keywords internal
 classify_ggchord_layers <- function(plot) {
   idx <- list(seq = integer(0), ribbon = integer(0), gene_poly = integer(0),
-              gene_text = integer(0), axis_line = integer(0),
-              axis_seg = integer(0), axis_text = integer(0),
-              seq_label = integer(0))
+              gene_text = integer(0), gene_text_repel = integer(0),
+              gene_label_segment = integer(0),
+              axis_line = integer(0), axis_seg = integer(0),
+              axis_text = integer(0), seq_label = integer(0))
   for (i in seq_along(plot$layers)) {
     lyr <- plot$layers[[i]]
     type <- lyr$ggchord_type %||% ""
@@ -818,6 +830,8 @@ ggplot_build.ggchord <- function(plot, ...) {
   ribbon_indices <- integer(0)
   gene_poly_indices <- integer(0)
   gene_text_indices <- integer(0)
+  gene_text_repel_indices <- integer(0)
+  gene_label_segment_indices <- integer(0)
   axis_line_indices <- integer(0)
   axis_seg_indices  <- integer(0)
   axis_text_indices <- integer(0)
@@ -832,6 +846,8 @@ ggplot_build.ggchord <- function(plot, ...) {
       ribbon    = ribbon_indices <- c(ribbon_indices, i),
       gene_poly = gene_poly_indices <- c(gene_poly_indices, i),
       gene_text = gene_text_indices <- c(gene_text_indices, i),
+      gene_text_repel = gene_text_repel_indices <- c(gene_text_repel_indices, i),
+      gene_label_segment = gene_label_segment_indices <- c(gene_label_segment_indices, i),
       axis_line = axis_line_indices <- c(axis_line_indices, i),
       axis_seg  = axis_seg_indices <- c(axis_seg_indices, i),
       axis_text = axis_text_indices <- c(axis_text_indices, i),

@@ -263,3 +263,112 @@ ggchord_label_deoverlap <- function(gl, units_per_inch = 0.35, seed = 123,
   gl$text_y <- y
   gl
 }
+ggchord_repel_labels <- function(gl, units_per_inch = 0.35,
+                                 max_overlaps = Inf, box_padding = 0.25,
+                                 point_padding = 0.1, min_segment_length = 0.5,
+                                 force = 1, seed = 123) {
+  n <- nrow(gl)
+  empty_segments <- data.frame(x0 = numeric(0), y0 = numeric(0),
+                               x1 = numeric(0), y1 = numeric(0),
+                               group = integer(0), stringsAsFactors = FALSE)
+  if (n == 0) return(list(labels = gl, segments = empty_segments))
+
+  set.seed(seed)
+  grDevices::pdf(NULL)
+  on.exit(grDevices::dev.off())
+  sizes <- gl$size %||% rep(2.5, n)
+  w <- suppressWarnings(graphics::strwidth(gl$text, units = "inches",
+                                           cex = sizes / 12)) * units_per_inch
+  n_lines <- vapply(strsplit(gl$text, "\n"), length, integer(1))
+  h <- suppressWarnings(graphics::strheight(gl$text, units = "inches",
+                                            cex = sizes / 12)) *
+    n_lines * units_per_inch
+
+  # Anchors are the original (fixed) label positions; labels start there.
+  ax <- gl$text_x
+  ay <- gl$text_y
+  x <- ax
+  y <- ay
+
+  # Keep labels inside a generous region around the anchors.
+  x_lim <- range(ax) + c(-1, 1) * (max(w) + 1.5)
+  y_lim <- range(ay) + c(-1, 1) * (max(w) + 1.5)
+
+  for (iter in seq_len(300)) {
+    fx <- numeric(n)
+    fy <- numeric(n)
+    # 1) short-range repulsion from every anchor point (labels sit just off
+    #    the genes / arcs, but do not fly away)
+    for (i in seq_len(n)) {
+      for (j in seq_len(n)) {
+        dx <- x[i] - ax[j]
+        dy <- y[i] - ay[j]
+        d <- sqrt(dx^2 + dy^2)
+        cutoff <- point_padding + 0.6
+        if (d < cutoff) {
+          if (d < 1e-4) d <- 1e-4
+          f <- force * 0.15 * (1 - d / cutoff)
+          fx[i] <- fx[i] + f * dx / d
+          fy[i] <- fy[i] + f * dy / d
+        }
+      }
+    }
+    # 2) repulsion between labels (so their boxes do not overlap)
+    for (i in seq_len(n - 1)) {
+      for (j in (i + 1):n) {
+        dx <- x[j] - x[i]
+        dy <- y[j] - y[i]
+        d <- sqrt(dx^2 + dy^2)
+        if (d < 1e-4) d <- 1e-4
+        cutoff <- ((w[i] + w[j]) / 2) * (1 + box_padding)
+        if (d < cutoff) {
+          f <- force * ((cutoff - d) / cutoff)
+          fx[i] <- fx[i] - f * dx / d
+          fy[i] <- fy[i] - f * dy / d
+          fx[j] <- fx[j] + f * dx / d
+          fy[j] <- fy[j] + f * dy / d
+        }
+      }
+    }
+    # 3) spring back toward the own anchor (keeps the label associated)
+    x <- x + (ax - x) * 0.15 + fx * 0.5
+    y <- y + (ay - y) * 0.15 + fy * 0.5
+    # 4) clamp inside the region
+    x <- pmin(pmax(x, x_lim[1]), x_lim[2])
+    y <- pmin(pmax(y, y_lim[1]), y_lim[2])
+  }
+
+  # Leader lines: from anchor to the final label position
+  seg_dist <- sqrt((x - ax)^2 + (y - ay)^2)
+  keep_seg <- seg_dist > min_segment_length
+  segments <- data.frame(
+    x0 = ax[keep_seg], y0 = ay[keep_seg],
+    x1 = x[keep_seg], y1 = y[keep_seg],
+    group = which(keep_seg),
+    stringsAsFactors = FALSE
+  )
+
+  # Optional decluttering: hide labels that still overlap too many others
+  if (is.finite(max_overlaps)) {
+    n_over <- numeric(n)
+    for (i in seq_len(n - 1)) {
+      for (j in (i + 1):n) {
+        if (abs(x[i] - x[j]) < (w[i] + w[j]) / 2 &&
+            abs(y[i] - y[j]) < (h[i] + h[j]) / 2) {
+          n_over[i] <- n_over[i] + 1
+          n_over[j] <- n_over[j] + 1
+        }
+      }
+    }
+    hide <- n_over > max_overlaps
+    if (any(hide)) {
+      gl$text[hide] <- NA
+      keep_seg[hide] <- FALSE
+      segments <- segments[segments$group %in% which(!hide), , drop = FALSE]
+    }
+  }
+
+  gl$text_x <- x
+  gl$text_y <- y
+  list(labels = gl, segments = segments)
+}

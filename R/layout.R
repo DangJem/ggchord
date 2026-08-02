@@ -35,8 +35,14 @@ compute_chord_layout <- function(
     geneLabelRadialOffset, geneLabelCircumOffset,
     geneLabelCircumLimit, geneLabelRotation,
     gene_label_show, gene_label_size,
-    gene_label_repel = FALSE, gene_label_wrap = NULL,
-    gene_label_max_overlaps = Inf, gene_label_seed = 123,
+    gene_label_wrap = NULL,
+    gene_label_repel_layer = FALSE,
+    gene_label_repel_max_overlaps = Inf,
+    gene_label_repel_box_padding = 0.25,
+    gene_label_repel_point_padding = 0.1,
+    gene_label_repel_min_segment_length = 0.5,
+    gene_label_repel_force = 1,
+    gene_label_repel_seed = 123,
     gene_color_scheme, gene_colors, gene_order,
     # Sequence label parameters
     seq_label_text = NULL, seq_label_radius = NULL,
@@ -621,26 +627,42 @@ compute_chord_layout <- function(
   }
 
   # ====================================================================
-  # Step 8b: wrap and de-overlap gene labels
+  # Step 8b: wrap gene labels; optionally repel them (ggrepel-style)
   # ====================================================================
+  gene_label_segments <- data.frame(x0 = numeric(0), y0 = numeric(0),
+                                    x1 = numeric(0), y1 = numeric(0),
+                                    group = integer(0),
+                                    stringsAsFactors = FALSE)
   if (nrow(gene_labels) > 0) {
     if (!is.null(gene_label_wrap)) {
       gene_labels$text <- ggchord_label_wrap_text(gene_labels$text,
                                                   gene_label_wrap)
     }
-    if (isTRUE(gene_label_repel)) {
-      range_x <- max(c(gene_labels$text_x, gene_polys$x,
-                       if (nrow(seq_labels_df)) seq_labels_df$text_x else 0))
-      range_x <- range_x - min(c(gene_labels$text_x, gene_polys$x,
-                                 if (nrow(seq_labels_df)) seq_labels_df$text_x else 0))
-      units_per_inch <- max(range_x, 1) / 6
-      gene_labels <- ggchord_label_deoverlap(
-        gene_labels, units_per_inch = units_per_inch,
-        seed = gene_label_seed, max_overlaps = gene_label_max_overlaps
+    range_x <- max(c(gene_labels$text_x, gene_polys$x,
+                     if (nrow(seq_labels_df)) seq_labels_df$text_x else 0))
+    range_x <- range_x - min(c(gene_labels$text_x, gene_polys$x,
+                               if (nrow(seq_labels_df)) seq_labels_df$text_x else 0))
+    units_per_inch <- max(range_x, 1) / 6
+    if (isTRUE(gene_label_repel_layer)) {
+      res <- ggchord_repel_labels(
+        gene_labels,
+        units_per_inch = units_per_inch,
+        max_overlaps = gene_label_repel_max_overlaps,
+        box_padding = gene_label_repel_box_padding,
+        point_padding = gene_label_repel_point_padding,
+        min_segment_length = gene_label_repel_min_segment_length,
+        force = gene_label_repel_force,
+        seed = gene_label_repel_seed
       )
-      # hidden labels are dropped from the layout (the text layer skips NAs)
-      gene_labels <- gene_labels[!is.na(gene_labels$text), , drop = FALSE]
+      gene_labels <- res$labels
+      gene_label_segments <- res$segments
+    } else {
+      # Legacy gentle de-overlap for fixed labels
+      gene_labels <- ggchord_label_deoverlap(gene_labels,
+                                             units_per_inch = units_per_inch)
     }
+    # hidden labels are dropped from the layout (the text layer skips NAs)
+    gene_labels <- gene_labels[!is.na(gene_labels$text), , drop = FALSE]
   }
 
   # ====================================================================
@@ -666,6 +688,7 @@ compute_chord_layout <- function(
     ribbon_polys   = ribbon_polys,
     gene_polys     = gene_polys,
     gene_labels    = gene_labels,
+    gene_label_segments = gene_label_segments,
     seq_labels_df  = seq_labels_df,
     axis_lines     = axis_lines,
     axis_ticks     = axis_ticks,

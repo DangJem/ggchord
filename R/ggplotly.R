@@ -111,6 +111,17 @@ ggchord_plotly_ggplot <- function(p) {
 
   # ---- gene labels ----
   if (nrow(layout$gene_labels) > 0) {
+    # leader lines for repelled labels
+    if (nrow(layout$gene_label_segments) > 0) {
+      std <- std + ggplot2::geom_segment(
+        data = layout$gene_label_segments,
+        mapping = ggplot2::aes(x = x0, y = y0, xend = x1, yend = y1,
+                               group = group),
+        inherit.aes = FALSE,
+        colour = "grey50",
+        linewidth = 0.3
+      )
+    }
     std <- std + ggplot2::geom_text(
       data = layout$gene_labels,
       mapping = ggplot2::aes(x = text_x, y = text_y, label = text,

@@ -278,14 +278,14 @@
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span></span>
 <span><span class="va">gff3FilesPath</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span>path <span class="op">=</span> <span class="st">"."</span>, pattern <span class="op">=</span> <span class="st">"*.gff3"</span><span class="op">)</span></span>
-<span><span class="va">gff3Table</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map_dfr.html" class="external-link">map_df</a></span><span class="op">(</span><span class="va">gff3FilesPath</span>, <span class="op">~</span><span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html" class="external-link">read_tsv</a></span><span class="op">(</span><span class="va">.x</span>, show_col_types <span class="op">=</span> <span class="cn">F</span>, comment <span class="op">=</span> <span class="st">"#"</span>,</span>
+<span><span class="va">gff3Table</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map_dfr.html" class="external-link">map_df</a></span><span class="op">(</span><span class="va">gff3FilesPath</span>, <span class="op">~</span><span class="fu"><a href="https://rdrr.io/pkg/readr/man/read_delim.html" class="external-link">read_tsv</a></span><span class="op">(</span><span class="va">.x</span>, show_col_types <span class="op">=</span> <span class="cn">F</span>, comment <span class="op">=</span> <span class="st">"#"</span>,</span>
 <span>  col_names <span class="op">=</span> <span class="cn">F</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rlang.r-lib.org/reference/set_names.html" class="external-link">set_names</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"seq_id"</span>, <span class="st">"source"</span>, <span class="st">"type"</span>, <span class="st">"start"</span>, <span class="st">"end"</span>,</span>
 <span>  <span class="st">"score"</span>, <span class="st">"strand"</span>, <span class="st">"phase"</span>, <span class="st">"attributes"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">geneTrackTable</span> <span class="op">&lt;-</span> <span class="va">gff3Table</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">type</span> <span class="op">==</span> <span class="st">"CDS"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>anno <span class="op">=</span> <span class="fu"><a href="https://stringr.tidyverse.org/reference/str_extract.html" class="external-link">str_extract</a></span><span class="op">(</span><span class="va">attributes</span>, <span class="st">"(?&lt;=product=)[^;]+(?=;)"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">seq_id</span>, <span class="va">start</span>, <span class="va">end</span>, <span class="va">strand</span>, <span class="va">anno</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://readr.tidyverse.org/reference/write_delim.html" class="external-link">write_tsv</a></span><span class="op">(</span><span class="va">geneTrackTable</span>, <span class="st">"gene_track.tsv"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/pkg/readr/man/write_delim.html" class="external-link">write_tsv</a></span><span class="op">(</span><span class="va">geneTrackTable</span>, <span class="st">"gene_track.tsv"</span><span class="op">)</span></span></code></pre></div>
 <hr></div>
 </div>
 </div>
@@ -374,15 +374,18 @@
 <div class="float">
 <img src="reference/figures/gene_manual_label.png" alt="按注释类别着色并显示标签的基因箭头"><div class="figcaption">按注释类别着色并显示标签的基因箭头</div>
 </div>
-<p>当注释文本较长或基因较密集时，基因标签可能互相重叠。可用 <code>gene_label_repel = TRUE</code> 自动推开重叠的标签，并用 <code>gene_label_wrap = 15</code> 将长注释换行：</p>
+<p>当注释文本较长或基因较密集时，基因标签可能互相重叠。 <code><a href="reference/geom_gene_label_repel.html">geom_gene_label_repel()</a></code> 采用 ggrepel 风格的力导向算法放置标签（把标签从 基因/弧线上推开，用引导线连接到对应基因），并支持长注释换行与隐藏最拥挤的 标签：</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/ggchord.html">ggchord</a></span><span class="op">(</span><span class="va">seq_data_example</span>, gene_data <span class="op">=</span> <span class="va">gene_data_example</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="reference/geom_seq.html">geom_seq</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="reference/geom_gene.html">geom_gene</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="reference/geom_gene_label.html">geom_gene_label</a></span><span class="op">(</span></span>
-<span>    gene_label_repel <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>    gene_label_wrap <span class="op">=</span> <span class="fl">15</span></span>
+<span>  <span class="fu"><a href="reference/geom_gene_label_repel.html">geom_gene_label_repel</a></span><span class="op">(</span></span>
+<span>    gene_label_wrap <span class="op">=</span> <span class="fl">15</span>,</span>
+<span>    max_overlaps <span class="op">=</span> <span class="fl">5</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
+<div class="float">
+<img src="reference/figures/gene_repel.png" alt="带引导线的防重叠基因标签"><div class="figcaption">带引导线的防重叠基因标签</div>
+</div>
 </div>
 <div class="section level3">
 <h3 id="第-4-步加入坐标轴与序列标签">第 4 步：加入坐标轴与序列标签<a class="anchor" aria-label="anchor" href="#%E7%AC%AC-4-%E6%AD%A5%E5%8A%A0%E5%85%A5%E5%9D%90%E6%A0%87%E8%BD%B4%E4%B8%8E%E5%BA%8F%E5%88%97%E6%A0%87%E7%AD%BE"></a></h3>
@@ -773,26 +776,46 @@
 <td>逻辑值/向量/列表</td>
 <td>TRUE</td>
 <td>是否限制周向偏移</td>
-</tr><tr><td><code>gene_label_repel</code></td>
-<td>逻辑值</td>
-<td>FALSE</td>
-<td>自动推开重叠的基因标签</td>
 </tr><tr><td><code>gene_label_wrap</code></td>
 <td>数值</td>
 <td>NULL</td>
 <td>将长注释按此字符数换行（如 15）</td>
-</tr><tr><td><code>gene_label_max_overlaps</code></td>
-<td>数值</td>
-<td>Inf</td>
-<td>配合 <code>gene_label_repel = TRUE</code>，隐藏仍与超过该数量标签重叠的标签</td>
-</tr><tr><td><code>gene_label_seed</code></td>
-<td>数值</td>
-<td>123</td>
-<td>标签防重叠算法的随机种子</td>
 </tr><tr><td><code>show_legend</code></td>
 <td>逻辑值</td>
 <td>FALSE</td>
 <td>是否显示图例</td>
+</tr></tbody></table></div>
+<div class="section level3">
+<h3 id="geom_gene_label_repel-参数">geom_gene_label_repel() 参数<a class="anchor" aria-label="anchor" href="#geom_gene_label_repel-%E5%8F%82%E6%95%B0"></a></h3>
+<p>除 <code><a href="reference/geom_gene_label.html">geom_gene_label()</a></code> 的参数外，还有：</p>
+<table class="table"><colgroup><col width="25%"><col width="25%"><col width="25%"><col width="25%"></colgroup><thead><tr><th>参数</th>
+<th>类型</th>
+<th>默认值</th>
+<th>描述</th>
+</tr></thead><tbody><tr><td><code>max_overlaps</code></td>
+<td>数值</td>
+<td>Inf</td>
+<td>隐藏仍与超过该数量标签重叠的标签</td>
+</tr><tr><td><code>box_padding</code></td>
+<td>数值</td>
+<td>0.25</td>
+<td>每个标签框的额外内边距（数据单位）</td>
+</tr><tr><td><code>point_padding</code></td>
+<td>数值</td>
+<td>0.1</td>
+<td>锚点周围的额外内边距（数据单位）</td>
+</tr><tr><td><code>min_segment_length</code></td>
+<td>数值</td>
+<td>0.5</td>
+<td>移动距离小于该值的标签不绘制引导线</td>
+</tr><tr><td><code>force</code></td>
+<td>数值</td>
+<td>1</td>
+<td>排斥力强度</td>
+</tr><tr><td><code>seed</code></td>
+<td>数值</td>
+<td>123</td>
+<td>防重叠算法随机种子</td>
 </tr></tbody></table></div>
 <div class="section level3">
 <h3 id="geom_axis-参数">geom_axis() 参数<a class="anchor" aria-label="anchor" href="#geom_axis-%E5%8F%82%E6%95%B0"></a></h3>

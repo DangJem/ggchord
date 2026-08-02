@@ -113,10 +113,9 @@ geom_gene <- function(mapping = NULL, data = NULL,
 #' independent from \code{\link{geom_gene}()}: add it after \code{geom_gene()}
 #' to annotate the gene arrows with their texts.
 #'
-#' Long or crowded labels can be handled with \code{gene_label_repel}
-#' (automatic de-overlapping), \code{gene_label_wrap} (wrapping long
-#' annotations) and \code{gene_label_max_overlaps} (hiding labels that still
-#' overlap too many others).
+#' Long annotations can be wrapped with \code{gene_label_wrap}. For automatic
+#' de-overlapping (with leader lines), use
+#' \code{\link{geom_gene_label_repel}()} instead.
 #'
 #' @param mapping Default NULL (uses pre-computed data)
 #' @param data Default NULL (retrieved automatically from the layout)
@@ -125,22 +124,15 @@ geom_gene <- function(mapping = NULL, data = NULL,
 #' @param gene_label_radial_offset Optional numeric/vector/list. Radial offset of labels, default 0
 #' @param gene_label_circum_offset Optional numeric/vector/list. Circumferential offset of labels, default 0
 #' @param gene_label_circum_limit Optional logical/vector/list. Whether to limit circumferential offset, default TRUE
-#' @param gene_label_repel Logical, default FALSE. When TRUE, overlapping gene
-#'   labels are automatically pushed apart (collision detection + automatic
-#'   avoidance) so they do not cover each other.
 #' @param gene_label_wrap Numeric or NULL, default NULL. When set, long gene
 #'   annotations are wrapped at this many characters (e.g. 15), which makes the
 #'   labels narrower and less prone to overlap.
-#' @param gene_label_max_overlaps Numeric, default Inf. With
-#'   \code{gene_label_repel = TRUE}, labels that still overlap more than this
-#'   many other labels after de-overlapping are hidden (ggrepel-style). Use a
-#'   finite value to declutter crowded plots.
-#' @param gene_label_seed Numeric, default 123. Seed used by the de-overlap
-#'   algorithm for reproducible results.
 #' @param show_legend Whether to show the legend, default FALSE
 #' @param ... Additional arguments passed to \code{geom_text()}
 #'
-#' @return A list of ggplot2 layers
+#' @return A list of ggplot2 layers. To let the labels avoid each other and the
+#'   genes (with leader lines), use \code{\link{geom_gene_label_repel}()}
+#'   instead.
 #' @export
 geom_gene_label <- function(mapping = NULL, data = NULL,
                             gene_label_size = NULL,
@@ -148,10 +140,7 @@ geom_gene_label <- function(mapping = NULL, data = NULL,
                             gene_label_radial_offset = NULL,
                             gene_label_circum_offset = NULL,
                             gene_label_circum_limit = NULL,
-                            gene_label_repel = FALSE,
                             gene_label_wrap = NULL,
-                            gene_label_max_overlaps = Inf,
-                            gene_label_seed = 123,
                             show_legend = FALSE,
                             ...) {
   # Placeholder text layer (real data is injected at print time)
@@ -170,16 +159,117 @@ geom_gene_label <- function(mapping = NULL, data = NULL,
   )
   text_layer$ggchord_type <- "gene_text"
   text_layer$ggchord_params <- list(
-    type                    = "gene_label",
-    gene_label_size         = gene_label_size,
-    gene_label_rotation     = gene_label_rotation,
+    type                     = "gene_label",
+    gene_label_size          = gene_label_size,
+    gene_label_rotation      = gene_label_rotation,
     gene_label_radial_offset = gene_label_radial_offset,
     gene_label_circum_offset = gene_label_circum_offset,
     gene_label_circum_limit  = gene_label_circum_limit,
-    gene_label_repel         = gene_label_repel,
-    gene_label_wrap          = gene_label_wrap,
-    gene_label_max_overlaps  = gene_label_max_overlaps,
-    gene_label_seed          = gene_label_seed
+    gene_label_wrap          = gene_label_wrap
   )
   list(text_layer)
+}
+
+# ---------------------------------------------------------------------------
+# geom_gene_label_repel(): ggrepel-style gene labels
+# ---------------------------------------------------------------------------
+
+#' Add a repelled gene label layer (ggrepel-style)
+#'
+#' Like \code{\link{geom_gene_label}()}, but the labels are placed with a
+#' force-based simulation that pushes them away from the genes and from each
+#' other (similar to \code{ggrepel::geom_text_repel()}). Labels that move far
+#' enough from their anchor are connected to it with a leader line, and labels
+#' that still overlap too many others can be hidden.
+#'
+#' @param mapping Default NULL (uses pre-computed data)
+#' @param data Default NULL (retrieved automatically from the layout)
+#' @param gene_label_size Numeric. Label font size, default 2.5
+#' @param gene_label_rotation Optional numeric/vector/list. Label rotation angle, default 0
+#' @param gene_label_radial_offset Optional numeric/vector/list. Radial offset of labels, default 0
+#' @param gene_label_circum_offset Optional numeric/vector/list. Circumferential offset of labels, default 0
+#' @param gene_label_circum_limit Optional logical/vector/list. Whether to limit circumferential offset, default TRUE
+#' @param gene_label_wrap Numeric or NULL, default NULL. When set, long gene
+#'   annotations are wrapped at this many characters (e.g. 15).
+#' @param max_overlaps Numeric, default Inf. Hide labels that still overlap
+#'   more than this many other labels after repulsion (ggrepel-style
+#'   decluttering). Use a finite value to clean up crowded plots.
+#' @param box_padding Numeric, default 0.25. Extra padding around each label
+#'   box (data units).
+#' @param point_padding Numeric, default 0.1. Extra padding around the anchor
+#'   points (data units).
+#' @param min_segment_length Numeric, default 0.5. Labels that moved less than
+#'   this distance (data units) from their anchor do not draw a leader line.
+#' @param force Numeric, default 1. Strength of the repulsive forces.
+#' @param seed Numeric, default 123. Random seed for reproducibility.
+#' @param show_legend Whether to show the legend, default FALSE
+#' @param ... Additional arguments passed to \code{geom_text()}
+#'
+#' @return A list of ggplot2 layers (a leader-line layer and a text layer).
+#' @export
+geom_gene_label_repel <- function(mapping = NULL, data = NULL,
+                                  gene_label_size = NULL,
+                                  gene_label_rotation = NULL,
+                                  gene_label_radial_offset = NULL,
+                                  gene_label_circum_offset = NULL,
+                                  gene_label_circum_limit = NULL,
+                                  gene_label_wrap = NULL,
+                                  max_overlaps = Inf,
+                                  box_padding = 0.25,
+                                  point_padding = 0.1,
+                                  min_segment_length = 0.5,
+                                  force = 1,
+                                  seed = 123,
+                                  show_legend = FALSE,
+                                  ...) {
+  layers <- list()
+
+  # Leader line layer (from the anchor to the repelled label position)
+  seg_layer <- geom_segment(
+    data        = data.frame(x0 = numeric(0), y0 = numeric(0),
+                             x1 = numeric(0), y1 = numeric(0),
+                             group = integer(0)),
+    mapping     = aes(x = x0, y = y0, xend = x1, yend = y1, group = group),
+    inherit.aes = FALSE,
+    show.legend = FALSE,
+    colour      = "grey50",
+    linewidth   = 0.3
+  )
+  seg_layer$ggchord_type <- "gene_label_segment"
+  seg_layer$ggchord_params <- list(type = "gene_label_segment")
+  layers[[length(layers) + 1]] <- seg_layer
+
+  # Text layer (drawn at the repelled positions)
+  text_layer <- geom_text(
+    data        = data.frame(x = numeric(0), y = numeric(0),
+                             text_x = numeric(0), text_y = numeric(0),
+                             text = character(0), text_angle = numeric(0),
+                             hjust = numeric(0), vjust = numeric(0),
+                             size = numeric(0)),
+    mapping     = aes(x = text_x, y = text_y, label = text,
+                      angle = text_angle, hjust = hjust, vjust = vjust,
+                      size = size),
+    inherit.aes = FALSE,
+    show.legend = show_legend,
+    ...
+  )
+  text_layer$ggchord_type <- "gene_text_repel"
+  text_layer$ggchord_params <- list(
+    type                     = "gene_label_repel",
+    gene_label_size          = gene_label_size,
+    gene_label_rotation      = gene_label_rotation,
+    gene_label_radial_offset = gene_label_radial_offset,
+    gene_label_circum_offset = gene_label_circum_offset,
+    gene_label_circum_limit  = gene_label_circum_limit,
+    gene_label_wrap          = gene_label_wrap,
+    max_overlaps             = max_overlaps,
+    box_padding              = box_padding,
+    point_padding            = point_padding,
+    min_segment_length       = min_segment_length,
+    force                    = force,
+    seed                     = seed
+  )
+  layers[[length(layers) + 1]] <- text_layer
+
+  layers
 }

@@ -18,10 +18,7 @@ geom_gene_label(
   gene_label_radial_offset = NULL,
   gene_label_circum_offset = NULL,
   gene_label_circum_limit = NULL,
-  gene_label_repel = FALSE,
   gene_label_wrap = NULL,
-  gene_label_max_overlaps = Inf,
-  gene_label_seed = 123,
   show_legend = FALSE,
   ...
 )
@@ -59,29 +56,11 @@ geom_gene_label(
   Optional logical/vector/list. Whether to limit circumferential offset,
   default TRUE
 
-- gene_label_repel:
-
-  Logical, default FALSE. When TRUE, overlapping gene labels are
-  automatically pushed apart (collision detection + automatic avoidance)
-  so they do not cover each other.
-
 - gene_label_wrap:
 
   Numeric or NULL, default NULL. When set, long gene annotations are
   wrapped at this many characters (e.g. 15), which makes the labels
   narrower and less prone to overlap.
-
-- gene_label_max_overlaps:
-
-  Numeric, default Inf. With `gene_label_repel = TRUE`, labels that
-  still overlap more than this many other labels after de-overlapping
-  are hidden (ggrepel-style). Use a finite value to declutter crowded
-  plots.
-
-- gene_label_seed:
-
-  Numeric, default 123. Seed used by the de-overlap algorithm for
-  reproducible results.
 
 - show_legend:
 
@@ -94,11 +73,14 @@ geom_gene_label(
 
 ## Value
 
-A list of ggplot2 layers
+A list of ggplot2 layers. To let the labels avoid each other and the
+genes (with leader lines), use
+[`geom_gene_label_repel()`](https://dangjem.github.io/ggchord/reference/geom_gene_label_repel.md)
+instead.
 
 ## Details
 
-Long or crowded labels can be handled with `gene_label_repel` (automatic
-de-overlapping), `gene_label_wrap` (wrapping long annotations) and
-`gene_label_max_overlaps` (hiding labels that still overlap too many
-others).
+Long annotations can be wrapped with `gene_label_wrap`. For automatic
+de-overlapping (with leader lines), use
+[`geom_gene_label_repel()`](https://dangjem.github.io/ggchord/reference/geom_gene_label_repel.md)
+instead.

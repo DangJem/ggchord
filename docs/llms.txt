@@ -397,19 +397,26 @@ labels](reference/figures/gene_manual_label.png)
 Gene arrows colored by annotation with labels
 
 Gene labels can overlap when annotations are long or genes are dense.
-Use `gene_label_repel = TRUE` to push overlapping labels apart, and
-`gene_label_wrap = 15` to wrap long annotation texts:
+[`geom_gene_label_repel()`](https://dangjem.github.io/ggchord/reference/geom_gene_label_repel.md)
+places the labels with a ggrepel-style force-based repulsion (labels are
+pushed off the genes/arcs, leader lines connect them to their genes) and
+can wrap long annotations and hide the most crowded labels:
 
 ``` r
 
 ggchord(seq_data_example, gene_data = gene_data_example) +
   geom_seq() +
   geom_gene() +
-  geom_gene_label(
-    gene_label_repel = TRUE,
-    gene_label_wrap = 15
+  geom_gene_label_repel(
+    gene_label_wrap = 15,
+    max_overlaps = 5
   )
 ```
+
+![Gene labels repelled with leader
+lines](reference/figures/gene_repel.png)
+
+Gene labels repelled with leader lines
 
 ### Step 4: Add Axes and Sequence Labels
 
@@ -685,11 +692,23 @@ gene_label_rotation = list(20)                            # length-one list recy
 | `gene_label_radial_offset` | numeric/vector/list | 0 | Radial offset of labels |
 | `gene_label_circum_offset` | numeric/vector/list | 0 | Circumferential offset |
 | `gene_label_circum_limit` | logical/vector/list | TRUE | Limit circumferential offset |
-| `gene_label_repel` | logical | FALSE | Automatically push overlapping gene labels apart |
 | `gene_label_wrap` | numeric | NULL | Wrap long annotations at this many characters (e.g. 15) |
-| `gene_label_max_overlaps` | numeric | Inf | Hide labels that still overlap more than this many others (with `gene_label_repel = TRUE`) |
-| `gene_label_seed` | numeric | 123 | Seed for reproducible label de-overlapping |
 | `show_legend` | logical | FALSE | Show legend |
+
+### geom_gene_label_repel() Parameters
+
+All
+[`geom_gene_label()`](https://dangjem.github.io/ggchord/reference/geom_gene_label.md)
+parameters plus:
+
+| Parameter | Type | Default | Description |
+|----|----|----|----|
+| `max_overlaps` | numeric | Inf | Hide labels that still overlap more than this many other labels after repulsion |
+| `box_padding` | numeric | 0.25 | Extra padding around each label box (data units) |
+| `point_padding` | numeric | 0.1 | Extra padding around the anchor points (data units) |
+| `min_segment_length` | numeric | 0.5 | Labels that moved less than this distance draw no leader line |
+| `force` | numeric | 1 | Strength of the repulsive forces |
+| `seed` | numeric | 123 | Random seed for reproducible repulsion |
 
 ### geom_axis() Parameters
 
@@ -851,6 +870,8 @@ This project is licensed under the MIT License — see the
   : Add a gene arrow layer
 - [`geom_gene_label()`](https://dangjem.github.io/ggchord/reference/geom_gene_label.md)
   : Add a gene label layer
+- [`geom_gene_label_repel()`](https://dangjem.github.io/ggchord/reference/geom_gene_label_repel.md)
+  : Add a repelled gene label layer (ggrepel-style)
 - [`geom_ribbon()`](https://dangjem.github.io/ggchord/reference/geom_ribbon.md)
   : Add an alignment ribbon layer
 - [`geom_seq()`](https://dangjem.github.io/ggchord/reference/geom_seq.md)

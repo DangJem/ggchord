@@ -368,20 +368,26 @@ ggchord(seq_data_example, gene_data = gene_data_example) +
 
 按注释类别着色并显示标签的基因箭头
 
-当注释文本较长或基因较密集时，基因标签可能互相重叠。可用
-`gene_label_repel = TRUE` 自动推开重叠的标签，并用
-`gene_label_wrap = 15` 将长注释换行：
+当注释文本较长或基因较密集时，基因标签可能互相重叠。
+[`geom_gene_label_repel()`](https://dangjem.github.io/ggchord/reference/geom_gene_label_repel.md)
+采用 ggrepel 风格的力导向算法放置标签（把标签从
+基因/弧线上推开，用引导线连接到对应基因），并支持长注释换行与隐藏最拥挤的
+标签：
 
 ``` r
 
 ggchord(seq_data_example, gene_data = gene_data_example) +
   geom_seq() +
   geom_gene() +
-  geom_gene_label(
-    gene_label_repel = TRUE,
-    gene_label_wrap = 15
+  geom_gene_label_repel(
+    gene_label_wrap = 15,
+    max_overlaps = 5
   )
 ```
+
+![带引导线的防重叠基因标签](reference/figures/gene_repel.png)
+
+带引导线的防重叠基因标签
 
 ### 第 4 步：加入坐标轴与序列标签
 
@@ -647,11 +653,23 @@ gene_label_rotation = list(20)                            # 单元素列表自�
 | `gene_label_radial_offset` | 数值/向量/列表 | 0 | 标签径向偏移 |
 | `gene_label_circum_offset` | 数值/向量/列表 | 0 | 标签周向偏移比例 |
 | `gene_label_circum_limit` | 逻辑值/向量/列表 | TRUE | 是否限制周向偏移 |
-| `gene_label_repel` | 逻辑值 | FALSE | 自动推开重叠的基因标签 |
 | `gene_label_wrap` | 数值 | NULL | 将长注释按此字符数换行（如 15） |
-| `gene_label_max_overlaps` | 数值 | Inf | 配合 `gene_label_repel = TRUE`，隐藏仍与超过该数量标签重叠的标签 |
-| `gene_label_seed` | 数值 | 123 | 标签防重叠算法的随机种子 |
 | `show_legend` | 逻辑值 | FALSE | 是否显示图例 |
+
+### geom_gene_label_repel() 参数
+
+除
+[`geom_gene_label()`](https://dangjem.github.io/ggchord/reference/geom_gene_label.md)
+的参数外，还有：
+
+| 参数                 | 类型 | 默认值 | 描述                               |
+|----------------------|------|--------|------------------------------------|
+| `max_overlaps`       | 数值 | Inf    | 隐藏仍与超过该数量标签重叠的标签   |
+| `box_padding`        | 数值 | 0.25   | 每个标签框的额外内边距（数据单位） |
+| `point_padding`      | 数值 | 0.1    | 锚点周围的额外内边距（数据单位）   |
+| `min_segment_length` | 数值 | 0.5    | 移动距离小于该值的标签不绘制引导线 |
+| `force`              | 数值 | 1      | 排斥力强度                         |
+| `seed`               | 数值 | 123    | 防重叠算法随机种子                 |
 
 ### geom_axis() 参数
 

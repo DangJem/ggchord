@@ -408,14 +408,14 @@
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span></span>
 <span><span class="va">gff3FilesPath</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span>path <span class="op">=</span> <span class="st">"."</span>, pattern <span class="op">=</span> <span class="st">"*.gff3"</span><span class="op">)</span></span>
-<span><span class="va">gff3Table</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map_dfr.html" class="external-link">map_df</a></span><span class="op">(</span><span class="va">gff3FilesPath</span>, <span class="op">~</span><span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html" class="external-link">read_tsv</a></span><span class="op">(</span><span class="va">.x</span>, show_col_types <span class="op">=</span> <span class="cn">F</span>, comment <span class="op">=</span> <span class="st">"#"</span>,</span>
+<span><span class="va">gff3Table</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map_dfr.html" class="external-link">map_df</a></span><span class="op">(</span><span class="va">gff3FilesPath</span>, <span class="op">~</span><span class="fu"><a href="https://rdrr.io/pkg/readr/man/read_delim.html" class="external-link">read_tsv</a></span><span class="op">(</span><span class="va">.x</span>, show_col_types <span class="op">=</span> <span class="cn">F</span>, comment <span class="op">=</span> <span class="st">"#"</span>,</span>
 <span>  col_names <span class="op">=</span> <span class="cn">F</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rlang.r-lib.org/reference/set_names.html" class="external-link">set_names</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"seq_id"</span>, <span class="st">"source"</span>, <span class="st">"type"</span>, <span class="st">"start"</span>, <span class="st">"end"</span>,</span>
 <span>  <span class="st">"score"</span>, <span class="st">"strand"</span>, <span class="st">"phase"</span>, <span class="st">"attributes"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">geneTrackTable</span> <span class="op">&lt;-</span> <span class="va">gff3Table</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">type</span> <span class="op">==</span> <span class="st">"CDS"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>anno <span class="op">=</span> <span class="fu"><a href="https://stringr.tidyverse.org/reference/str_extract.html" class="external-link">str_extract</a></span><span class="op">(</span><span class="va">attributes</span>, <span class="st">"(?&lt;=product=)[^;]+(?=;)"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">seq_id</span>, <span class="va">start</span>, <span class="va">end</span>, <span class="va">strand</span>, <span class="va">anno</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://readr.tidyverse.org/reference/write_delim.html" class="external-link">write_tsv</a></span><span class="op">(</span><span class="va">geneTrackTable</span>, <span class="st">"gene_track.tsv"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/pkg/readr/man/write_delim.html" class="external-link">write_tsv</a></span><span class="op">(</span><span class="va">geneTrackTable</span>, <span class="st">"gene_track.tsv"</span><span class="op">)</span></span></code></pre></div>
 <hr>
 </div>
 </div>
@@ -509,15 +509,18 @@
 <div class="float">
 <img src="reference/figures/gene_manual_label.png" alt="Gene arrows colored by annotation with labels"><div class="figcaption">Gene arrows colored by annotation with labels</div>
 </div>
-<p>Gene labels can overlap when annotations are long or genes are dense. Use <code>gene_label_repel = TRUE</code> to push overlapping labels apart, and <code>gene_label_wrap = 15</code> to wrap long annotation texts:</p>
+<p>Gene labels can overlap when annotations are long or genes are dense. <code><a href="reference/geom_gene_label_repel.html">geom_gene_label_repel()</a></code> places the labels with a ggrepel-style force-based repulsion (labels are pushed off the genes/arcs, leader lines connect them to their genes) and can wrap long annotations and hide the most crowded labels:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/ggchord.html">ggchord</a></span><span class="op">(</span><span class="va">seq_data_example</span>, gene_data <span class="op">=</span> <span class="va">gene_data_example</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="reference/geom_seq.html">geom_seq</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="reference/geom_gene.html">geom_gene</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="reference/geom_gene_label.html">geom_gene_label</a></span><span class="op">(</span></span>
-<span>    gene_label_repel <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>    gene_label_wrap <span class="op">=</span> <span class="fl">15</span></span>
+<span>  <span class="fu"><a href="reference/geom_gene_label_repel.html">geom_gene_label_repel</a></span><span class="op">(</span></span>
+<span>    gene_label_wrap <span class="op">=</span> <span class="fl">15</span>,</span>
+<span>    max_overlaps <span class="op">=</span> <span class="fl">5</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
+<div class="float">
+<img src="reference/figures/gene_repel.png" alt="Gene labels repelled with leader lines"><div class="figcaption">Gene labels repelled with leader lines</div>
+</div>
 </div>
 <div class="section level3">
 <h3 id="step-4-add-axes-and-sequence-labels">Step 4: Add Axes and Sequence Labels<a class="anchor" aria-label="anchor" href="#step-4-add-axes-and-sequence-labels"></a>
@@ -1106,34 +1109,73 @@
 <td>Limit circumferential offset</td>
 </tr>
 <tr>
-<td><code>gene_label_repel</code></td>
-<td>logical</td>
-<td>FALSE</td>
-<td>Automatically push overlapping gene labels apart</td>
-</tr>
-<tr>
 <td><code>gene_label_wrap</code></td>
 <td>numeric</td>
 <td>NULL</td>
 <td>Wrap long annotations at this many characters (e.g. 15)</td>
 </tr>
 <tr>
-<td><code>gene_label_max_overlaps</code></td>
-<td>numeric</td>
-<td>Inf</td>
-<td>Hide labels that still overlap more than this many others (with <code>gene_label_repel = TRUE</code>)</td>
-</tr>
-<tr>
-<td><code>gene_label_seed</code></td>
-<td>numeric</td>
-<td>123</td>
-<td>Seed for reproducible label de-overlapping</td>
-</tr>
-<tr>
 <td><code>show_legend</code></td>
 <td>logical</td>
 <td>FALSE</td>
 <td>Show legend</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section level3">
+<h3 id="geom_gene_label_repel-parameters">geom_gene_label_repel() Parameters<a class="anchor" aria-label="anchor" href="#geom_gene_label_repel-parameters"></a>
+</h3>
+<p>All <code><a href="reference/geom_gene_label.html">geom_gene_label()</a></code> parameters plus:</p>
+<table class="table">
+<colgroup>
+<col width="25%">
+<col width="25%">
+<col width="25%">
+<col width="25%">
+</colgroup>
+<thead><tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>max_overlaps</code></td>
+<td>numeric</td>
+<td>Inf</td>
+<td>Hide labels that still overlap more than this many other labels after repulsion</td>
+</tr>
+<tr>
+<td><code>box_padding</code></td>
+<td>numeric</td>
+<td>0.25</td>
+<td>Extra padding around each label box (data units)</td>
+</tr>
+<tr>
+<td><code>point_padding</code></td>
+<td>numeric</td>
+<td>0.1</td>
+<td>Extra padding around the anchor points (data units)</td>
+</tr>
+<tr>
+<td><code>min_segment_length</code></td>
+<td>numeric</td>
+<td>0.5</td>
+<td>Labels that moved less than this distance draw no leader line</td>
+</tr>
+<tr>
+<td><code>force</code></td>
+<td>numeric</td>
+<td>1</td>
+<td>Strength of the repulsive forces</td>
+</tr>
+<tr>
+<td><code>seed</code></td>
+<td>numeric</td>
+<td>123</td>
+<td>Random seed for reproducible repulsion</td>
 </tr>
 </tbody>
 </table>

@@ -498,7 +498,7 @@ test_that("gene_label_size is applied to the gene text layer", {
   expect_true(all(p2$ggchord$ref$layout$gene_labels$size == 4))
 })
 
-test_that("gene_label_repel de-overlaps gene labels", {
+test_that("geom_gene_label_repel repels gene labels with leader lines", {
   data(seq_data_example)
   data(gene_data_example)
   # dense gene data to force overlapping labels (keep positions in range)
@@ -508,13 +508,14 @@ test_that("gene_label_repel de-overlaps gene labels", {
                    anno = paste0(anno, " (copy)"))
   gd <- rbind(gd, dup)
   p0 <- ggchord(seq_data_example, gene_data = gd) + geom_seq() + geom_gene() + geom_gene_label()
-  p1 <- ggchord(seq_data_example, gene_data = gd) + geom_seq() +
-    geom_gene() + geom_gene_label(gene_label_repel = TRUE)
-  # de-overlap should not error and should move at least one label (positions differ)
+  p1 <- ggchord(seq_data_example, gene_data = gd) + geom_seq() + geom_gene() +
+    geom_gene_label_repel()
+  # repel should move at least one label and create leader-line segments
   expect_true(is.list(p1$ggchord$ref$layout))
   moved <- any(p0$ggchord$ref$layout$gene_labels$text_x != p1$ggchord$ref$layout$gene_labels$text_x |
                  p0$ggchord$ref$layout$gene_labels$text_y != p1$ggchord$ref$layout$gene_labels$text_y)
   expect_true(moved)
+  expect_gt(nrow(p1$ggchord$ref$layout$gene_label_segments), 0)
   pdf(tempfile(fileext = ".pdf"), 8, 8)
   expect_no_error(print(p1))
   dev.off()
