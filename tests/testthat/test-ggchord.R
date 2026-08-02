@@ -378,7 +378,7 @@ test_that("plots convert to plotly when plotly is installed", {
   expect_gt(length(pl$x$data), 0)
 })
 
-test_that("legend keys keep a white background regardless of panel.background", {
+test_that("legend keys are transparent regardless of panel.background", {
   data(seq_data_example)
   data(ribbon_data_example)
   data(gene_data_example)
@@ -386,8 +386,11 @@ test_that("legend keys keep a white background regardless of panel.background", 
     geom_seq() + geom_ribbon() + geom_gene() + geom_axis() +
     theme(panel.background = element_rect(fill = "grey95"))
   b <- ggplot_build(p)
-  # the legend key fill is fixed to white, not inherited from panel.background
-  expect_equal(b$plot$theme$legend.key$fill, "white")
+  # legend keys have no fill of their own, so they blend into the background
+  expect_true(is.na(b$plot$theme$legend.key$fill))
+  # the default theme has no grid lines
+  expect_true(is.null(b$plot$theme$panel.grid) ||
+                inherits(b$plot$theme$panel.grid, "element_blank"))
 })
 
 test_that("Identity colourbar stays visible with a horizontal bottom legend", {

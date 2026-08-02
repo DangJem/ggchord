@@ -1,46 +1,3 @@
-# ggchord 0.7.0
-
-## New features
-
-* `geom_gene_label_repel()` gains `gene_label_side = "auto" | "inside" |
-  "outside"`. With `"outside"`, labels that would sit inside the chord (where
-  they can overlap the ribbons) are mirrored to the outside of their sequence
-  arc, keeping the same radial distance from the arc.
-
-* New `gene_label_segment_linetype` argument controls the leader-line linetype.
-  The default `"auto"` draws solid lines, except for labels that were moved to
-  the other side of their arc (`gene_label_side`), which are drawn dashed. Any
-  other valid ggplot2 linetype (e.g. `"dotted"` or a numeric dash pattern) is
-  applied to all leader lines.
-
-* `geom_seq_label()` now documents and follows the intended `seq_label_radius`
-  semantics: `1` sits on the arc, `> 1` places the label outside (away from
-  the chord center) and `< 1` inside. Previously the multiplier was applied in
-  the opposite direction (the default `1.15` put labels *inside* the chord).
-
-* New `geom_seq_label()` options: `seq_label_orientation = "arc" | "horizontal"`
-  (horizontal labels extend away from the chord center),
-  `seq_label_hjust` / `seq_label_vjust` for per-sequence justification, and
-  `check_overlap` to skip labels that would overlap.
-
-## Improvements
-
-* Elbow leader lines no longer force fixed segment lengths: the stub scales
-  with each label's text width and the horizontal space available between the
-  gene and the label, so labels can be placed more flexibly without
-  degenerate (near-zero) stubs.
-
-## Bug fixes
-
-* Sequence (and gene) labels no longer end up upside down when a global
-  `rotation >= 90` is used: the readability flip is now re-applied after the
-  layout rotation instead of only before it.
-
-* The repulsion spring now pulls labels toward their own starting position
-  rather than the leader-line anchor, which keeps labels moved with
-  `gene_label_side = "outside"` on the outside while their leader line still
-  starts at the gene.
-
 # ggchord 0.6.0
 
 ## New features
@@ -78,6 +35,36 @@
   alignment/gene coordinates, `pident` outside [0, 100], and sequence IDs that
   are not present in `seq_data`.
 
+* `geom_gene_label_repel()` gains `gene_label_side = "auto" | "inside" |
+  "outside"`. With `"outside"`, labels that would sit inside the chord (where
+  they can overlap the ribbons) are mirrored to the outside of their sequence
+  arc, keeping the same radial distance from the arc.
+
+* New `gene_label_segment_linetype` argument controls the leader-line linetype.
+  The default `"auto"` draws solid lines, except for labels that were moved to
+  the other side of their arc (`gene_label_side`), which are drawn dashed. Any
+  other valid ggplot2 linetype (e.g. `"dotted"` or a numeric dash pattern) is
+  applied to all leader lines.
+
+* Elbow leader lines no longer force fixed segment lengths: the stub scales
+  with each label's text width and the horizontal space available between the
+  gene and the label, so labels can be placed more flexibly without
+  degenerate (near-zero) stubs.
+
+* `geom_seq_label()` now documents and follows the intended `seq_label_radius`
+  semantics: `1` sits on the arc, `> 1` places the label outside (away from
+  the chord center) and `< 1` inside. Previously the multiplier was applied in
+  the opposite direction (the default `1.15` put labels *inside* the chord).
+
+* New `geom_seq_label()` options: `seq_label_orientation = "arc" | "horizontal"`
+  (horizontal labels extend away from the chord center),
+  `seq_label_hjust` / `seq_label_vjust` for per-sequence justification, and
+  `check_overlap` to skip labels that would overlap.
+
+* The default theme no longer draws grid lines (`panel.grid` is blank) and
+  legend keys are transparent (they blend into the plot background instead of
+  a fixed white rectangle).
+
 ## Performance
 * Replaced the linear angle lookup in the layout mapping with a binary search
   (`findInterval`), speeding up layout computation for large plots.
@@ -102,13 +89,22 @@
   vertical bar filling the available height at the left/right, and a fixed-size
   horizontal bar at the top/bottom.
 
-* Legend keys keep a fixed white background instead of inheriting
-  `panel.background` (ggplot2 4.x lets unset legend keys follow the panel
-  background, so a coloured panel bled into the legend).
+* Legend keys are transparent and do not inherit `panel.background` (ggplot2
+  4.x lets unset legend keys follow the panel background, so the key fill is
+  set explicitly to stay transparent).
 
 * `plotly::ggplotly()` output now shows the Seq ID / Strand / Identity legends
   (the layout-level `showlegend` switch is enabled) and reproduces the
   `geom_seq()` directional arrowheads as plotly annotations.
+
+* Sequence (and gene) labels no longer end up upside down when a global
+  `rotation >= 90` is used: the readability flip is now re-applied after the
+  layout rotation instead of only before it.
+
+* The repulsion spring now pulls labels toward their own starting position
+  rather than the leader-line anchor, which keeps labels moved with
+  `gene_label_side = "outside"` on the outside while their leader line still
+  starts at the gene.
 
 ## New features
 * Each legend can now be positioned independently via the `legend_position`

@@ -161,10 +161,9 @@ ggchord <- function(
       plot.margin      = margin(t = margin_vals$t, r = margin_vals$r,
                                 b = margin_vals$b, l = margin_vals$l),
       legend.background = element_blank(),
-      # Keep the legend key background fixed (white) instead of inheriting the
-      # panel background (ggplot2 4.x lets unset legend keys follow
-      # panel.background, so a grey/coloured panel would bleed into the legend).
-      legend.key        = element_rect(fill = "white", colour = NA),
+      # Transparent legend keys: the background (if any) is the plot/page
+      # background, not the panel, so legends blend into any theme.
+      legend.key        = element_rect(fill = NA, colour = NA),
       legend.box.spacing  = unit(10, "mm"),
       legend.spacing      = unit(5, "mm"),
       legend.text         = element_text(size = 8),
@@ -174,6 +173,7 @@ ggchord <- function(
       axis.ticks          = element_blank(),
       axis.text           = element_blank(),
       panel.background    = element_blank(),
+      panel.grid          = element_blank(),
       legend.position     = if (isTRUE(show_legend)) "right" else "none"
     )
 

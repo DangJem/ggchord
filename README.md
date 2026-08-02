@@ -493,12 +493,13 @@ ggchord(
     gene_label_orientation = "horizontal",
     gene_label_segment = "elbow",
     gene_label_side = "outside",
-    gene_label_wrap = 12,
+    gene_label_wrap = 0,
     gene_label_size = 2,
     seed = 42
   ) +
   geom_seq_label(
-    seq_label_radius = 1.1,  # > 1 places the names outside the arcs
+    seq_label_radius = 1,
+    seq_label_hjust = -.2,
     seq_label_size = 3.4,
     colour = "#52525B"
   ) +
