@@ -189,6 +189,101 @@ geneTrackTable <- gff3Table %>%
 write_tsv(geneTrackTable, "gene_track.tsv")
 ```
 
+### 1b. 在 R 中导入 FASTA / BLAST / GFF3 数据
+
+外部命令行工具（BLAST、seqkit 等）通常用于*准备*数据，但它们产出的文件
+也可以直接用包内置的导入助手在 R 中读取，从而把「在 R 外准备数据」与
+「在 R 中导入并绘图」两个步骤清晰分开：
+
+```r
+library(ggchord)
+
+# FASTA -> seq_data
+seq_data <- read_fasta_lengths("genomes.fna")
+
+# BLAST -outfmt 6/7 表格输出 -> ribbon_data（12 或 17 列自动识别）
+ribbon_data <- read_blast("myblast.o7")
+
+# GFF3 -> gene_data（默认取 CDS；anno 从 product/Name/... 属性提取）
+gene_data <- read_gff3("annotations.gff3")
+
+ggchord(seq_data, ribbon_data, gene_data) +
+  geom_seq() + geom_ribbon() + geom_gene()
+```
+
+`read_blast()` 保留有用的额外列（`evalue`、`bitscore`、`qcovs`、`qlen`、
+`slen`、`sstrand`、`stitle`）；`read_gff3()` 保留 `type`、`source`、
+`score`、`phase`、`attributes`；`read_fasta_lengths()` 可通过
+`header_delim = "|"` 拆分 NCBI 风格标题。
+
+### 1c. 数据校验与清理
+
+绘图前用 `validate_ggchord_data()` 发现问题（缺列、NA/Inf、重复 ID、
+未知序列 ID、越界坐标、反向区间、非法 strand、重复与高度重叠区块），
+并报告每个问题对应的原始行号：
+
+```r
+res <- validate_ggchord_data(seq_data, ribbon_data, gene_data)
+res$valid          # 数据是否可以安全绘图
+print(res)         # 人类可读的报告
+summary(res)       # 按类别统计
+res$invalid_rows   # 每个问题类别对应的原始行号
+res$cleanable      # 可自动修复的问题及建议动作
+
+# 也可直接对严重问题报错：
+validate_ggchord_data(seq_data, ribbon_data, gene_data, strict = TRUE)
+```
+
+`clean_ggchord_data()` 用明确、保守的策略修复可修复的问题，并逐条记录
+改动（原始行号、原因、原值/新值、处理方式），且**不会修改你传入的数据**：
+
+```r
+out <- clean_ggchord_data(
+  seq_data, ribbon_data, gene_data,
+  unknown_id        = "drop",   # 删除引用未知序列的行
+  out_of_range      = "clip",   # 将坐标裁剪到 [1, 序列长度]
+  reversed_interval = "sort",   # 排序 start > end（原始方向会记录在报告中）
+  invalid_pident    = "clip",   # 将 pident 限制到 [0, 100]
+  empty_annotation  = "replace" # 用 "unannotated" 填充缺失的 anno
+)
+head(out$report)
+p <- ggchord(out$seq_data, out$ribbon_data, out$gene_data) +
+  geom_seq() + geom_ribbon() + geom_gene()
+```
+
+`ggchord()` 会自动执行该校验，并在数据有问题时只发出**一条汇总警告**
+（绝不会逐行警告）。需要立即停止则用 `validate = "error"`，超大数据可用
+`validate = "none"` 跳过诊断。完整报告缓存在绘图对象上：
+`p$ggchord$validation`。
+
+### 1d. Ribbon 筛选、去重与合并
+
+比对表过大或冗余时，先在绘图前整理：
+
+```r
+# 只保留高质量比对并按一致性排序
+kept <- filter_ggchord_ribbons(
+  ribbon_data,
+  min_pident  = 90,
+  drop_self_links = TRUE,
+  sort_by     = c("pident", "-evalue")
+)
+ribbon_data <- kept$data
+kept$report  # 删除/保留的数量与原因
+
+# 去除完全重复、坐标近似重复或高度重叠的区块
+dedup <- deduplicate_ggchord_ribbons(ribbon_data, by = "exact",
+                                     keep = "best_pident")
+
+# 合并同一序列对的相邻区块（pident 按比对长度加权）
+merged <- merge_ggchord_ribbons(dedup$data, max_gap = 0)
+ribbon_data <- merged$data
+merged$report  # output_row -> from_rows 追溯
+```
+
+三个助手都会保留额外列与原始列顺序，并把原始行号附加为返回数据的
+`source_rows` 属性，结果始终可以追溯到输入行。
+
 ### 2. 由浅入深示例
 
 以下示例均使用内置数据，可以直接复制运行：
@@ -712,7 +807,30 @@ gene_label_rotation = list(20)
 
 ## 版本更新记录
 
-### v0.6.0（最新）
+### v0.7.0（最新）
+- **结构化数据校验 `validate_ggchord_data()`**：返回 `ggchord_validation`
+  对象（`valid`、`errors`、`warnings`、按类别 `summary`、`data_summary`、
+  每个问题的原始行号 `invalid_rows` 与可自动修复项 `cleanable`），并提供
+  `print()` / `summary()` 方法；`strict = TRUE` 时对严重问题直接报错。
+- **数据清理 `clean_ggchord_data()`**：按显式、保守的策略（`unknown_id`、
+  `out_of_range`、`reversed_interval`、`invalid_pident`、
+  `empty_annotation`）修复数据，返回清理后的三张表加完整处理报告；不修改
+  用户传入的对象，绝不静默丢弃数据。
+- **`ggchord()` 新增 `validate = c("warn", "error", "none")`**：默认
+  `"warn"` 只发一条汇总警告（不会逐行警告）并把完整报告缓存在
+  `p$ggchord$validation`；`"error"` 对严重问题立即停止；`"none"` 保留
+  高性能路径。合法输入渲染结果与之前完全一致。
+- **导入助手**：`read_blast()`（BLAST -outfmt 6/7 表格，12/17 列自动识别）、
+  `read_gff3()`（GFF3 -> gene_data，按 feature 类型筛选并提取注释）、
+  `read_fasta_lengths()`（FASTA -> seq_id/length），无需 tidyverse。
+- **Ribbon 预处理**：`filter_ggchord_ribbons()`（按 pident/长度/E-value/
+  bitscore/覆盖度/序列对筛选与排序）、`deduplicate_ggchord_ribbons()`
+  （完全重复/坐标近似/高重叠去重）、`merge_ggchord_ribbons()`（同对相邻
+  区块合并，pident 按长度加权）；均返回处理报告并保留 `source_rows` 追溯。
+- **测试体系**：新增校验、清理、导入、ribbon 预处理与轻量视觉回归测试
+  （确定性布局指纹 + 可选 PNG md5 基线）。
+
+### v0.6.0
 - **自包含绘图对象**：数据与参数存储在绘图对象自身，多个图形可共存，支持 `saveRDS()`/`readRDS()`。
 - **构建时布局**：布局由 `ggplot_build()` 计算，`print()`、`ggsave()`、`ggplot_build()`（以及 `ggplotly()`）均可使用，渲染时不再修改用户对象。
 - **新增图层 `geom_seq_label()`**：在弧线内侧/外侧放置序列标签。
