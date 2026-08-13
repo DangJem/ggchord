@@ -12,7 +12,8 @@ ggchord(
   rotation = 45,
   panel_margin = 0,
   show_legend = TRUE,
-  debug = FALSE
+  debug = FALSE,
+  validate = c("warn", "error", "none")
 )
 }
 \arguments{
@@ -31,6 +32,14 @@ ggchord(
 \item{show_legend}{Logical. Whether to show legends, default TRUE}
 
 \item{debug}{Logical. Whether to output debug information, default FALSE}
+
+\item{validate}{Character, default \code{"warn"}. How to run the structured
+input-data validation (see \code{\link{validate_ggchord_data}}):
+\code{"warn"} emits a single summary warning when the data has problems
+and caches the full report on the plot object
+(\code{p$ggchord$validation}); \code{"error"} stops on severe problems;
+\code{"none"} skips the diagnostic validation (the cheap structural
+checks that prevent crashes are still performed).}
 }
 \value{
 A ggchord object (inherits from ggplot) to which geom_* layers can be added with +

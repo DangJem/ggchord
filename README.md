@@ -212,6 +212,107 @@ geneTrackTable <- gff3Table %>%
 write_tsv(geneTrackTable, "gene_track.tsv")
 ```
 
+### 1b. Importing FASTA / BLAST / GFF3 data in R
+
+External command-line tools (BLAST, seqkit, ...) are often used to *prepare*
+the data, but the files they produce can also be read directly in R with the
+built-in import helpers. This keeps the "prepare data outside R" and
+"import + plot in R" steps clearly separated:
+
+```r
+library(ggchord)
+
+# FASTA -> seq_data
+seq_data <- read_fasta_lengths("genomes.fna")
+
+# BLAST -outfmt 6/7 tabular output -> ribbon_data (12 or 17 columns auto-detected)
+ribbon_data <- read_blast("myblast.o7")
+
+# GFF3 -> gene_data (CDS features by default; anno from product/Name/...)
+gene_data <- read_gff3("annotations.gff3")
+
+ggchord(seq_data, ribbon_data, gene_data) +
+  geom_seq() + geom_ribbon() + geom_gene()
+```
+
+`read_blast()` preserves useful extra columns (`evalue`, `bitscore`, `qcovs`,
+`qlen`, `slen`, `sstrand`, `stitle`); `read_gff3()` preserves `type`,
+`source`, `score`, `phase` and `attributes`; `read_fasta_lengths()` optionally
+splits NCBI-style headers with `header_delim = "|"`.
+
+### 1c. Data validation and cleaning
+
+Before plotting, `validate_ggchord_data()` finds problems (missing columns,
+NA/Inf, duplicated IDs, unknown sequence IDs, out-of-range coordinates,
+reversed intervals, bad strand, duplicates, overlapping blocks) and reports
+the original row numbers of every issue:
+
+```r
+res <- validate_ggchord_data(seq_data, ribbon_data, gene_data)
+res$valid          # TRUE when the data can be safely plotted
+print(res)         # human-readable report
+summary(res)       # per-category counts
+res$invalid_rows   # original row numbers per problem category
+res$cleanable      # fixable issues with suggested actions
+
+# stop on severe problems instead:
+validate_ggchord_data(seq_data, ribbon_data, gene_data, strict = TRUE)
+```
+
+`clean_ggchord_data()` fixes the fixable issues with explicit, conservative
+policies and reports every change (original row number, reason, original/new
+values, action). Your input data frames are never modified:
+
+```r
+out <- clean_ggchord_data(
+  seq_data, ribbon_data, gene_data,
+  unknown_id        = "drop",   # drop rows referencing unknown sequences
+  out_of_range      = "clip",   # clip coordinates to [1, sequence length]
+  reversed_interval = "sort",   # sort start > end (original direction recorded)
+  invalid_pident    = "clip",   # clamp pident to [0, 100]
+  empty_annotation  = "replace" # fill missing anno with "unannotated"
+)
+head(out$report)
+p <- ggchord(out$seq_data, out$ribbon_data, out$gene_data) +
+  geom_seq() + geom_ribbon() + geom_gene()
+```
+
+`ggchord()` runs this validation automatically and emits a single summary
+warning (never one warning per row) when the data has problems. Use
+`validate = "error"` to stop on severe problems, or `validate = "none"` to
+skip the diagnostics for very large inputs. The full report is cached on the
+plot: `p$ggchord$validation`.
+
+### 1d. Ribbon filtering, deduplication and merging
+
+When an alignment table is too large or redundant, prepare it before
+plotting:
+
+```r
+# Keep only good alignments and sort by identity
+kept <- filter_ggchord_ribbons(
+  ribbon_data,
+  min_pident  = 90,
+  drop_self_links = TRUE,
+  sort_by     = c("pident", "-evalue")
+)
+ribbon_data <- kept$data
+kept$report  # how many rows were removed and why
+
+# Remove duplicate / near-duplicate / highly overlapping blocks
+dedup <- deduplicate_ggchord_ribbons(ribbon_data, by = "exact",
+                                     keep = "best_pident")
+
+# Merge adjacent blocks of the same pair (length-weighted pident)
+merged <- merge_ggchord_ribbons(dedup$data, max_gap = 0)
+ribbon_data <- merged$data
+merged$report  # output_row -> from_rows traceability
+```
+
+All three helpers keep extra columns and the original column order, and attach
+the original row numbers as the `source_rows` attribute of the returned data,
+so results can always be traced back to the input rows.
+
 ### 2. Learn by examples
 
 All examples use the built-in data sets, so you can copy-paste and run them

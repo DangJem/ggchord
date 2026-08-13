@@ -626,9 +626,11 @@ test_that("geom_gene_label_repel repels gene labels with leader lines", {
                    end = pmax(200, end - 200),
                    anno = paste0(anno, " (copy)"))
   gd <- rbind(gd, dup)
-  p0 <- ggchord(seq_data_example, gene_data = gd) + geom_seq() + geom_gene() + geom_gene_label()
-  p1 <- ggchord(seq_data_example, gene_data = gd) + geom_seq() + geom_gene() +
-    geom_gene_label_repel()
+  p0 <- suppressWarnings(ggchord(seq_data_example, gene_data = gd) +
+                           geom_seq() + geom_gene() + geom_gene_label())
+  p1 <- suppressWarnings(ggchord(seq_data_example, gene_data = gd) +
+                           geom_seq() + geom_gene() +
+                           geom_gene_label_repel())
   # repel should move at least one label and create leader-line segments
   expect_true(is.list(p1$ggchord$ref$layout))
   moved <- any(p0$ggchord$ref$layout$gene_labels$text_x != p1$ggchord$ref$layout$gene_labels$text_x |

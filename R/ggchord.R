@@ -29,6 +29,13 @@ globalVariables(c(
 #' @param panel_margin Optional numeric/list. Panel margin, default 0
 #' @param show_legend Logical. Whether to show legends, default TRUE
 #' @param debug Logical. Whether to output debug information, default FALSE
+#' @param validate Character, default \code{"warn"}. How to run the structured
+#'   input-data validation (see \code{\link{validate_ggchord_data}}):
+#'   \code{"warn"} emits a single summary warning when the data has problems
+#'   and caches the full report on the plot object
+#'   (\code{p$ggchord$validation}); \code{"error"} stops on severe problems;
+#'   \code{"none"} skips the diagnostic validation (the cheap structural
+#'   checks that prevent crashes are still performed).
 #'
 #' @return A ggchord object (inherits from ggplot) to which geom_* layers can be added with +
 #' @export
@@ -61,8 +68,10 @@ ggchord <- function(
     rotation = 45,
     panel_margin = 0,
     show_legend = TRUE,
-    debug = FALSE
+    debug = FALSE,
+    validate = c("warn", "error", "none")
 ) {
+  validate <- match.arg(validate)
   # ====================================================================
   # 1. Validate data
   # ====================================================================
@@ -119,32 +128,6 @@ ggchord <- function(
       stop("The 'length' values in ribbon_data must be positive")
     }
     if (nrow(ribbon_data) == 0) warning("No valid alignment data in ribbon_data")
-    if (nrow(ribbon_data) > 0) {
-      unknown <- setdiff(unique(c(ribbon_data$qaccver, ribbon_data$saccver)),
-                         seq_data$seq_id)
-      if (length(unknown) > 0) {
-        warning("ribbon_data contains sequence IDs not present in seq_data: ",
-                paste(unknown, collapse = ", "))
-      }
-      if (any(ribbon_data$qstart > ribbon_data$qend |
-              ribbon_data$sstart > ribbon_data$send, na.rm = TRUE)) {
-        warning("ribbon_data contains rows where start > end; these may render abnormally")
-      }
-      both_known <- ribbon_data$qaccver %in% seq_data$seq_id &
-                    ribbon_data$saccver %in% seq_data$seq_id
-      if (any(both_known)) {
-        out_of_range <- (ribbon_data$qstart[both_known] < 1 |
-                         ribbon_data$qend[both_known] > seq_lens[ribbon_data$qaccver[both_known]] |
-                         ribbon_data$sstart[both_known] < 1 |
-                         ribbon_data$send[both_known] > seq_lens[ribbon_data$saccver[both_known]])
-        if (any(out_of_range, na.rm = TRUE)) {
-          warning("ribbon_data contains alignment positions outside the sequence length")
-        }
-      }
-      if (any(ribbon_data$pident < 0 | ribbon_data$pident > 100, na.rm = TRUE)) {
-        warning("ribbon_data contains pident values outside [0, 100]")
-      }
-    }
     if (debug) cat("Number of alignment data rows: ", nrow(ribbon_data), "\n")
   }
 
@@ -168,25 +151,38 @@ ggchord <- function(
       stop("The 'strand' values in gene_data can only be '+' or '-'")
     }
     if (nrow(gene_data) == 0) warning("No valid gene annotation data in gene_data")
-    if (nrow(gene_data) > 0) {
-      unknown <- setdiff(unique(gene_data$seq_id), seq_data$seq_id)
-      if (length(unknown) > 0) {
-        warning("gene_data contains sequence IDs not present in seq_data: ",
-                paste(unknown, collapse = ", "))
-      }
-      known <- gene_data$seq_id %in% seq_data$seq_id
-      if (any(known)) {
-        if (any(gene_data$start[known] > gene_data$end[known])) {
-          warning("gene_data contains rows where start > end")
-        }
-        out_of_range <- gene_data$start[known] < 1 |
-                        gene_data$end[known] > seq_lens[gene_data$seq_id[known]]
-        if (any(out_of_range, na.rm = TRUE)) {
-          warning("gene_data contains positions outside the sequence length")
-        }
+    if (debug) cat("Number of gene annotation rows: ", nrow(gene_data), "\n")
+  }
+
+  # ====================================================================
+  # 1b. Structured validation (v0.7.0).  A single summary warning is emitted
+  #     for "warn" (never one warning per row); "error" stops on severe
+  #     problems; "none" keeps the fast path (structural checks above still
+  #     prevent internal crashes).  The full report is cached on the plot.
+  # ====================================================================
+  validation <- NULL
+  if (validate != "none") {
+    validation <- validate_ggchord_data(seq_data, ribbon_data, gene_data,
+                                        strict = FALSE)
+    if (validate == "error" && !validation$valid) {
+      stop(sprintf(
+        "ggchord(): input data failed validation (%d severe error(s); first: %s). Run validate_ggchord_data(..., strict = FALSE) for the full report.",
+        nrow(validation$errors), validation$errors$message[1]),
+        call. = FALSE)
+    }
+    if (validate == "warn") {
+      n_err <- nrow(validation$errors)
+      n_warn <- nrow(validation$warnings)
+      if (n_err > 0) {
+        warning(sprintf(
+          "ggchord(): input data has %d severe validation error(s) (e.g. \"%s\"). The plot may be misleading; run validate_ggchord_data(..., strict = FALSE) for details.",
+          n_err, validation$errors$message[1]), call. = FALSE)
+      } else if (n_warn > 0) {
+        warning(sprintf(
+          "ggchord(): input data has %d validation warning(s) (e.g. \"%s\"). Run validate_ggchord_data(...) for details.",
+          n_warn, validation$warnings$message[1]), call. = FALSE)
       }
     }
-    if (debug) cat("Number of gene annotation rows: ", nrow(gene_data), "\n")
   }
 
   # ====================================================================
@@ -223,7 +219,9 @@ ggchord <- function(
     data   = list(seq_data = seq_data, ribbon_data = ribbon_data,
                   gene_data = gene_data),
     global = list(rotation = rotation, panel_margin = panel_margin,
-                  show_legend = show_legend, debug = debug),
+                  show_legend = show_legend, debug = debug,
+                  validate = validate),
+    validation = validation,
     # Shared reference environment: layers use it to reach the (latest) plot
     # and to lazily fetch their computed geometry (e.g. for plotly::ggplotly).
     ref    = new.env(),
