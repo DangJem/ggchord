@@ -96,6 +96,43 @@ test_that("seq_data with non-positive lengths errors", {
   )
 })
 
+test_that("missing and non-finite input values are rejected before layout", {
+  data(seq_data_example)
+  data(ribbon_data_example)
+  data(gene_data_example)
+
+  expect_error(ggchord(transform(seq_data_example, length = NA_real_)),
+               "finite positive")
+  expect_error(ggchord(transform(seq_data_example, length = Inf)),
+               "finite positive")
+  expect_error(
+    ggchord(seq_data_example, transform(ribbon_data_example, qstart = NA_real_)),
+    "numeric columns"
+  )
+  expect_error(
+    ggchord(seq_data_example, gene_data = transform(gene_data_example, start = Inf)),
+    "finite numbers"
+  )
+})
+
+test_that("invalid numeric layout parameters report their parameter names", {
+  data(seq_data_example)
+  expect_error(
+    ggplot_build(ggchord(seq_data_example) + geom_seq(seq_radius = NA_real_)),
+    "seq_radius"
+  )
+  expect_error(
+    ggplot_build(ggchord(seq_data_example) + geom_seq() +
+                   geom_axis(axis_tick_minor_number = -1)),
+    "axis_tick_minor_number"
+  )
+  expect_error(
+    ggplot_build(ggchord(seq_data_example) + geom_seq() +
+                   geom_seq_label(seq_label_size = Inf)),
+    "seq_label_size"
+  )
+})
+
 test_that("debug mode outputs debug information", {
   data(seq_data_example)
   p <- ggchord(seq_data = seq_data_example, debug = TRUE)

@@ -175,11 +175,14 @@ process_gene_param <- function(param, seqs, param_name, default_value, is_logica
 
   # Validate and strip a single value
   check_value <- function(val, where) {
+    if (length(val) != 1 || is.na(val)) {
+      stop(param_name, " must be a single non-missing value (", where, ")")
+    }
     if (is_logical && !is.logical(val)) {
       stop(param_name, " is a logical parameter and must be TRUE/FALSE (", where, ")")
     }
-    if (!is_logical && !is.numeric(val)) {
-      stop(param_name, " is a numeric parameter and must be numeric (", where, ")")
+    if (!is_logical && (!is.numeric(val) || !is.finite(val))) {
+      stop(param_name, " is a numeric parameter and must be finite (", where, ")")
     }
     unname(val)
   }

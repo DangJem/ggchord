@@ -66,12 +66,28 @@ ggchord <- function(
   # ====================================================================
   # 1. Validate data
   # ====================================================================
+  if (!is.numeric(rotation) || length(rotation) != 1 || !is.finite(rotation)) {
+    stop("rotation must be a finite numeric value")
+  }
+  if (!is.logical(show_legend) || length(show_legend) != 1 || is.na(show_legend)) {
+    stop("show_legend must be TRUE or FALSE")
+  }
+  if (!is.logical(debug) || length(debug) != 1 || is.na(debug)) {
+    stop("debug must be TRUE or FALSE")
+  }
+  if (!is.data.frame(seq_data) || nrow(seq_data) == 0) {
+    stop("seq_data must be a non-empty data.frame")
+  }
   required_seq_cols <- c("seq_id", "length")
   if (!all(required_seq_cols %in% colnames(seq_data))) {
     stop("seq_data must contain the following columns: ", paste(required_seq_cols, collapse = ", "))
   }
-  if (any(seq_data$length <= 0)) {
-    stop("The 'length' values in seq_data must be positive")
+  if (anyNA(seq_data$seq_id) || any(!nzchar(as.character(seq_data$seq_id)))) {
+    stop("The 'seq_id' values in seq_data must be non-missing and non-empty")
+  }
+  if (!is.numeric(seq_data$length) || any(!is.finite(seq_data$length)) ||
+      any(seq_data$length <= 0)) {
+    stop("The 'length' values in seq_data must be finite positive numbers")
   }
   if (anyDuplicated(seq_data$seq_id)) {
     stop("The 'seq_id' values in seq_data must be unique")
@@ -80,11 +96,27 @@ ggchord <- function(
   seq_lens <- setNames(seq_data$length, seq_data$seq_id)
 
   if (!is.null(ribbon_data)) {
+    if (!is.data.frame(ribbon_data)) {
+      stop("ribbon_data must be a data.frame")
+    }
     required_ribbon_cols <- c("qaccver", "saccver", "length", "pident",
                               "qstart", "qend", "sstart", "send")
     if (!all(required_ribbon_cols %in% colnames(ribbon_data))) {
       stop("ribbon_data must contain the following columns: ",
            paste(required_ribbon_cols, collapse = ", "))
+    }
+    numeric_ribbon_cols <- c("length", "pident", "qstart", "qend", "sstart", "send")
+    if (any(vapply(ribbon_data[numeric_ribbon_cols],
+                   function(x) !is.numeric(x) || any(!is.finite(x)), logical(1)))) {
+      stop("ribbon_data numeric columns (length, pident, qstart, qend, sstart, send) must contain finite numbers")
+    }
+    if (anyNA(ribbon_data$qaccver) || anyNA(ribbon_data$saccver) ||
+        any(!nzchar(as.character(ribbon_data$qaccver))) ||
+        any(!nzchar(as.character(ribbon_data$saccver)))) {
+      stop("ribbon_data sequence IDs must be non-missing and non-empty")
+    }
+    if (any(ribbon_data$length <= 0)) {
+      stop("The 'length' values in ribbon_data must be positive")
     }
     if (nrow(ribbon_data) == 0) warning("No valid alignment data in ribbon_data")
     if (nrow(ribbon_data) > 0) {
@@ -117,15 +149,25 @@ ggchord <- function(
   }
 
   if (!is.null(gene_data)) {
+    if (!is.data.frame(gene_data)) {
+      stop("gene_data must be a data.frame")
+    }
     required_gene_cols <- c("seq_id", "start", "end", "strand", "anno")
     if (!all(required_gene_cols %in% colnames(gene_data))) {
       stop("gene_data must contain the following columns: ",
            paste(required_gene_cols, collapse = ", "))
     }
-    if (nrow(gene_data) == 0) warning("No valid gene annotation data in gene_data")
-    if (any(!gene_data$strand %in% c("+", "-"))) {
+    if (!is.numeric(gene_data$start) || !is.numeric(gene_data$end) ||
+        any(!is.finite(gene_data$start)) || any(!is.finite(gene_data$end))) {
+      stop("The 'start' and 'end' values in gene_data must be finite numbers")
+    }
+    if (anyNA(gene_data$seq_id) || any(!nzchar(as.character(gene_data$seq_id)))) {
+      stop("gene_data sequence IDs must be non-missing and non-empty")
+    }
+    if (anyNA(gene_data$strand) || any(!gene_data$strand %in% c("+", "-"))) {
       stop("The 'strand' values in gene_data can only be '+' or '-'")
     }
+    if (nrow(gene_data) == 0) warning("No valid gene annotation data in gene_data")
     if (nrow(gene_data) > 0) {
       unknown <- setdiff(unique(gene_data$seq_id), seq_data$seq_id)
       if (length(unknown) > 0) {
@@ -315,12 +357,19 @@ compute_chord_geometry <- function(plot) {
   seq_curvature <- process_sequence_param(seq_params$seq_curvature, seqs,
                                           "seq_curvature", 1.0)
 
-  if (any(seqRadius <= 0)) stop("seq_radius must be positive")
-  if (any(!orientation %in% c(-1, 1))) {
+  if (!is.numeric(seqRadius) || any(!is.finite(seqRadius)) || any(seqRadius <= 0)) {
+    stop("seq_radius must contain finite positive numbers")
+  }
+  if (!is.numeric(orientation) || any(!is.finite(orientation)) ||
+      any(!orientation %in% c(-1, 1))) {
     stop("seq_orientation can only be 1 or -1")
   }
-  if (any(seq_gap < 0 | seq_gap >= 0.5)) {
+  if (!is.numeric(seq_gap) || any(!is.finite(seq_gap)) ||
+      any(seq_gap < 0 | seq_gap >= 0.5)) {
     stop("seq_gap must be in the [0, 0.5) range")
+  }
+  if (!is.numeric(seq_curvature) || any(!is.finite(seq_curvature))) {
+    stop("seq_curvature must contain finite numbers")
   }
 
   if (!is.null(seq_params$seq_colors)) {
@@ -342,8 +391,11 @@ compute_chord_geometry <- function(plot) {
     stop("ribbon_color_scheme must be 'pident', 'query', 'subject', or 'single'")
   }
   if (!is.numeric(ribbon_alpha) || length(ribbon_alpha) != 1 ||
-      ribbon_alpha < 0 || ribbon_alpha > 1) {
+      !is.finite(ribbon_alpha) || ribbon_alpha < 0 || ribbon_alpha > 1) {
     stop("ribbon_alpha must be in the [0, 1] range")
+  }
+  if (!is.numeric(ribbonGap) || any(!is.finite(ribbonGap))) {
+    stop("ribbon_gap must contain finite numbers")
   }
 
   # ribbon_colors validation only runs when ribbon_data is actually present
@@ -428,6 +480,14 @@ compute_chord_geometry <- function(plot) {
   if (!gene_cs %in% c("strand", "manual")) {
     stop("gene_color_scheme must be 'strand' or 'manual'")
   }
+  if (!is.numeric(gene_lsz) || length(gene_lsz) != 1 || !is.finite(gene_lsz) ||
+      gene_lsz <= 0) {
+    stop("gene_label_size must be a finite positive number")
+  }
+  if (!is.null(gene_lwrap) && (!is.numeric(gene_lwrap) ||
+      length(gene_lwrap) != 1 || !is.finite(gene_lwrap) || gene_lwrap < 0)) {
+    stop("gene_label_wrap must be NULL or a finite non-negative number")
+  }
 
   geneGap    <- process_gene_param(gene_off, seqs, "gene_offset", 0.1, FALSE)
   geneWidth  <- process_gene_param(gene_w, seqs, "gene_width", 0.05, FALSE)
@@ -460,6 +520,30 @@ compute_chord_geometry <- function(plot) {
   axisLabelOri <- process_axis_orientation(
     axis_params$axis_label_orientation %||% "parallel", seqs
   )
+  if (!is.logical(show_axis) || length(show_axis) != 1 || is.na(show_axis)) {
+    stop("show_axis must be TRUE or FALSE")
+  }
+  axis_numeric <- list(
+    axis_gap = axisGap,
+    axis_tick_major_length = axisMajLen,
+    axis_tick_minor_length = axisMinLen,
+    axis_label_size = labelSize,
+    axis_label_offset = labelOffset
+  )
+  for (nm in names(axis_numeric)) {
+    value <- axis_numeric[[nm]]
+    if (!is.numeric(value) || any(!is.finite(value))) {
+      stop(nm, " must contain finite numbers")
+    }
+  }
+  if (!is.numeric(axisMaj) || any(!is.finite(axisMaj)) ||
+      any(axisMaj < 1 | axisMaj != as.integer(axisMaj))) {
+    stop("axis_tick_major_number must contain positive integers")
+  }
+  if (!is.numeric(axisMin) || any(!is.finite(axisMin)) ||
+      any(axisMin < 0 | axisMin != as.integer(axisMin))) {
+    stop("axis_tick_minor_number must contain non-negative integers")
+  }
 
   # --- Process sequence labels ---
   seq_label_text <- NULL
@@ -496,6 +580,22 @@ compute_chord_geometry <- function(plot) {
     } else {
       process_sequence_param(seq_label_params$seq_label_vjust, seqs,
                              "seq_label_vjust", 0.5)
+    }
+    seq_label_numeric <- list(
+      seq_label_radius = seq_label_radius,
+      seq_label_rotation = seq_label_rotation,
+      seq_label_size = seq_label_size,
+      seq_label_hjust = seq_label_hjust,
+      seq_label_vjust = seq_label_vjust
+    )
+    for (nm in names(seq_label_numeric)) {
+      value <- seq_label_numeric[[nm]]
+      if (!is.null(value) && (!is.numeric(value) || any(!is.finite(value)))) {
+        stop(nm, " must contain finite numbers")
+      }
+    }
+    if (any(seq_label_size <= 0)) {
+      stop("seq_label_size must contain positive numbers")
     }
   }
 
