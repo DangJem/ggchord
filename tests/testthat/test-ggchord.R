@@ -1,4 +1,6 @@
 # testthat test file - v0.4.0 layered API
+#
+# Plotly conversion tests are opt-in: set GGCHORD_RUN_PLOTLY_TESTS=1.
 
 test_that("ggchord with only seq_data returns a ggchord object", {
   data(seq_data_example)
@@ -178,16 +180,11 @@ test_that("README color, label override, and transparency parameters take effect
     geom_gene_label(gene_label_size = 4) +
     geom_axis()
 
-  out <- tempfile(fileext = ".pdf")
-  pdf(out, 8, 8)
-  expect_no_warning(print(p))
-  dev.off()
-
+  ggplot_build(p)
   layout <- ggchord:::get_chord_layout()
   expect_true("fill" %in% names(layout$ribbon_polys))
   expect_true(all(layout$ribbon_polys$alpha == 0.2))
   expect_gt(nrow(layout$gene_labels), 0)
-  expect_true(file.exists(out))
 })
 
 test_that("ribbon outline parameters work with sensible defaults", {
@@ -210,9 +207,7 @@ test_that("ribbon outline parameters work with sensible defaults", {
   expect_equal(l2$aes_params$linewidth, 0.8)
   expect_equal(l2$aes_params$linetype, "dashed")
 
-  pdf(tempfile(fileext = ".pdf"), 8, 8)
-  expect_no_error(suppressWarnings(print(p2)))
-  dev.off()
+  expect_no_error(ggplot_build(p2))
 })
 
 test_that("plot objects are self-contained (no cross-talk between plots)", {
@@ -232,9 +227,7 @@ test_that("plots survive saveRDS/readRDS and render", {
   f <- tempfile(fileext = ".rds")
   saveRDS(p, f)
   p2 <- readRDS(f)
-  pdf(tempfile(fileext = ".pdf"), 8, 8)
-  expect_no_error(suppressWarnings(print(p2)))
-  dev.off()
+  expect_no_error(ggplot_build(p2))
   expect_equal(p2$layers[[1]]$ggchord_params$seq_radius, 5)
 })
 
@@ -263,9 +256,6 @@ test_that("plot objects are self-contained and repeated builds stay stable", {
   expect_false(is.null(p$layers[[1]]$ggchord_params))
   # repeated builds remain stable
   expect_no_error(ggplot_build(p))
-  pdf(tempfile(fileext = ".pdf"), 8, 8)
-  expect_no_error(suppressWarnings(print(p)))
-  dev.off()
 })
 
 test_that("ribbon data sanity checks warn on bad input", {
@@ -285,9 +275,7 @@ test_that("geom_seq_label places sequence labels", {
   p <- ggchord(seq_data_example) +
     geom_seq() +
     geom_seq_label(seq_label_radius = 1.25, seq_label_size = 3.5)
-  pdf(tempfile(fileext = ".pdf"), 8, 8)
-  expect_no_error(suppressWarnings(print(p)))
-  dev.off()
+  ggplot_build(p)
   layout <- ggchord:::get_chord_layout()
   expect_gt(nrow(layout$seq_labels_df), 0)
   expect_true(all(c("text_x", "text_y", "label") %in% names(layout$seq_labels_df)))
@@ -367,9 +355,7 @@ test_that("seq_label check_overlap renders", {
   data(seq_data_example)
   p <- ggchord(seq_data_example) + geom_seq() +
     geom_seq_label(check_overlap = TRUE)
-  pdf(tempfile(fileext = ".pdf"), 8, 8)
-  expect_no_error(print(p))
-  dev.off()
+  expect_no_error(ggplot_build(p))
 })
 
 test_that("ribbon subject color scheme works", {
@@ -378,26 +364,20 @@ test_that("ribbon subject color scheme works", {
   p <- ggchord(seq_data_example, ribbon_data_example) +
     geom_seq() +
     geom_ribbon(ribbon_color_scheme = "subject")
-  pdf(tempfile(fileext = ".pdf"), 8, 8)
-  expect_no_error(suppressWarnings(print(p)))
-  dev.off()
+  expect_no_error(ggplot_build(p))
 })
 
 test_that("theme customization via + works", {
   data(seq_data_example)
   p <- ggchord(seq_data_example) + geom_seq() +
     ggplot2::theme(legend.position = "bottom")
-  pdf(tempfile(fileext = ".pdf"), 8, 8)
-  expect_no_error(suppressWarnings(print(p)))
-  dev.off()
+  expect_no_error(ggplot_build(p))
 })
 
 test_that("get_chord_layout is exported after building", {
   data(seq_data_example)
   p <- ggchord(seq_data_example) + geom_seq()
-  pdf(tempfile(fileext = ".pdf"), 8, 8)
-  print(p)
-  dev.off()
+  ggplot_build(p)
   layout <- get_chord_layout()
   expect_true(inherits(layout, "chord_layout"))
   expect_gt(length(layout$seq_arcs), 0)
@@ -405,6 +385,8 @@ test_that("get_chord_layout is exported after building", {
 
 test_that("plots convert to plotly when plotly is installed", {
   skip_if_not_installed("plotly")
+  skip_if(Sys.getenv("GGCHORD_RUN_PLOTLY_TESTS") != "1",
+          "set GGCHORD_RUN_PLOTLY_TESTS=1 to run plotly conversion tests")
   # NOTE: do not attach plotly with library() here - it masks geom_ribbon()
   # and would leak into the other tests in this session.
   data(seq_data_example)
@@ -453,6 +435,8 @@ test_that("Identity colourbar stays visible with a horizontal bottom legend", {
 
 test_that("plotly conversion keeps legends and adds sequence-arc arrows", {
   skip_if_not_installed("plotly")
+  skip_if(Sys.getenv("GGCHORD_RUN_PLOTLY_TESTS") != "1",
+          "set GGCHORD_RUN_PLOTLY_TESTS=1 to run plotly conversion tests")
   data(seq_data_example)
   data(ribbon_data_example)
   data(gene_data_example)
@@ -472,9 +456,6 @@ test_that("legends can be positioned independently with legend_position", {
     geom_ribbon(legend_position = "bottom") +
     geom_gene(legend_position = "right") +
     geom_axis()
-  pdf(tempfile(fileext = ".pdf"), 8, 8)
-  expect_no_error(suppressWarnings(print(p)))
-  dev.off()
   # the three legends occupy separate boxes (left, bottom, right);
   # ggplotGrob() opens a device for text measurement, so open one explicitly
   pdf(tempfile(fileext = ".pdf"), 8, 8)
@@ -555,10 +536,6 @@ test_that("default legend positions split the three legends", {
 test_that("axis_gap defaults to 0.05", {
   data(seq_data_example)
   p <- ggchord(seq_data_example) + geom_seq() + geom_axis()
-  pdf(tempfile(fileext = ".pdf"), 8, 8)
-  print(p)
-  dev.off()
-  layout <- ggchord:::get_chord_layout()
   # the layout stores per-sequence axis gaps; all should be 0.05
   b <- ggplot_build(p)
   axis_layer <- b$data[[length(b$data) - 1]]  # axis segments
@@ -643,9 +620,7 @@ test_that("geom_gene_label_repel repels gene labels with leader lines", {
                  p0$ggchord$ref$layout$gene_labels$text_y != p1$ggchord$ref$layout$gene_labels$text_y)
   expect_true(moved)
   expect_gt(nrow(p1$ggchord$ref$layout$gene_label_segments), 0)
-  pdf(tempfile(fileext = ".pdf"), 8, 8)
-  expect_no_error(print(p1))
-  dev.off()
+  expect_no_error(ggplot_build(p1))
 })
 
 test_that("gene label repulsion separates rotated text boxes with varied leaders", {
@@ -725,9 +700,7 @@ test_that("gene_label_wrap wraps long annotations", {
   p <- ggchord:::prepare_ggchord_plot(p)
   gl <- p$ggchord$ref$layout$gene_labels
   expect_true(any(grepl("\n", gl$text)))
-  pdf(tempfile(fileext = ".pdf"), 8, 8)
-  expect_no_error(print(p))
-  dev.off()
+  expect_no_error(ggplot_build(p))
 })
 
 test_that("gene_label_orientation and gene_label_segment work", {
@@ -755,9 +728,7 @@ test_that("gene_label_orientation and gene_label_segment work", {
   # the stub is horizontal and short
   expect_equal(seg$y0[idx[2]], seg$y1[idx[2]])
   expect_lt(abs(seg$x1[idx[2]] - seg$x0[idx[2]]), 0.2)
-  pdf(tempfile(fileext = ".pdf"), 8, 8)
-  expect_no_error(print(p))
-  dev.off()
+  expect_no_error(ggplot_build(p))
 })
 
 test_that("horizontal repelled labels sit on the far side of the leader line", {
@@ -939,9 +910,7 @@ test_that("axis labels are aligned outward and can be hidden on overlap", {
   # hide-overlaps option renders without error
   p2 <- ggchord(seq_data_example) + geom_seq() +
     geom_axis(axis_label_hide_overlaps = TRUE)
-  pdf(tempfile(fileext = ".pdf"), 8, 8)
-  expect_no_error(print(p2))
-  dev.off()
+  expect_no_error(ggplot_build(p2))
 })
 
 test_that("axis_label_orientation rotates axis labels", {

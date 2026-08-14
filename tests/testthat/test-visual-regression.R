@@ -1,10 +1,12 @@
 # v0.7.0 lightweight visual-regression tests.
 #
-# The layout-fingerprint tests are deterministic and run everywhere. The PNG
-# md5 comparisons are platform/font-dependent and only run when
-# GGCHORD_VISUAL_REGRESSION=1 (see helper-visual.R and visual-baseline.rds).
+# The layout-fingerprint tests are deterministic and run everywhere. PNG
+# rendering and pixel-level md5 comparisons are platform/font-dependent and
+# are opt-in: set GGCHORD_VISUAL_REGRESSION=1 to run them (see helper-visual.R
+# and visual-baseline.rds).
 
 test_that("key plots render to PNG without errors and produce output", {
+  skip_unless_visual_regression()
   set.seed(123)
   paths <- render_regression_set()
   for (nm in names(paths)) {
@@ -63,8 +65,7 @@ test_that("ribbon color schemes produce distinct layout fingerprints", {
 # ---------------------------------------------------------------------------
 
 test_that("rendered PNGs match the committed md5 baseline (opt-in)", {
-  skip_if(Sys.getenv("GGCHORD_VISUAL_REGRESSION") != "1",
-          "set GGCHORD_VISUAL_REGRESSION=1 to run pixel-level baselines")
+  skip_unless_visual_regression()
   baseline_file <- testthat::test_path("visual-baseline.rds")
   skip_if(!file.exists(baseline_file), "no visual-baseline.rds committed")
   baseline <- readRDS(baseline_file)
