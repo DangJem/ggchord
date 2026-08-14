@@ -111,7 +111,7 @@ print(p)
 从 FASTA 文件生成该表格的常见方法：
 
 ```bash
-seqkit fx2tab -nil *.fna | sed '1i seq_id\tlength' > seq_track.tsv
+seqkit fx2tab -nil examples/fasta/*.fna | sed '1i seq_id\tlength' > examples/seq_track.tsv
 ```
 
 #### 【可选】比对数据（`ribbon_data`）
@@ -146,9 +146,9 @@ for ((i=0; i<${#seqs[@]}-1; i++)); do
   for ((j=i+1; j<${#seqs[@]}; j++)); do
     blastn \
       -outfmt '7 qaccver saccver pident length mismatch gapopen qstart qend sstart send evalue bitscore qcovs qlen slen sstrand stitle' \
-      -query "${seqs[$i]}.${ext}" \
-      -subject "${seqs[$j]}.${ext}" \
-      -out "${seqs[$i]}__${seqs[$j]}.o7"
+      -query "examples/fasta/${seqs[$i]}.${ext}" \
+      -subject "examples/fasta/${seqs[$j]}.${ext}" \
+      -out "examples/blastn/${seqs[$i]}__${seqs[$j]}.o7"
   done
 done
 ```
@@ -178,7 +178,7 @@ done
 
 ```r
 library(tidyverse)
-gff3FilesPath <- list.files(path = ".", pattern = "*.gff3")
+gff3FilesPath <- list.files(path = "examples/gff3", pattern = "\\.gff3$", full.names = TRUE)
 gff3Table <- map_df(gff3FilesPath, ~read_tsv(.x, show_col_types = F, comment = "#",
   col_names = F) %>% set_names(c("seq_id", "source", "type", "start", "end",
   "score", "strand", "phase", "attributes")))
@@ -186,7 +186,7 @@ geneTrackTable <- gff3Table %>%
   filter(type == "CDS") %>%
   mutate(anno = str_extract(attributes, "(?<=product=)[^;]+(?=;)")) %>%
   select(seq_id, start, end, strand, anno)
-write_tsv(geneTrackTable, "gene_track.tsv")
+write_tsv(geneTrackTable, "examples/gene_track.tsv")
 ```
 
 ### 1b. 在 R 中导入 FASTA / BLAST / GFF3 数据
@@ -198,14 +198,14 @@ write_tsv(geneTrackTable, "gene_track.tsv")
 ```r
 library(ggchord)
 
-# FASTA -> seq_data
-seq_data <- read_fasta_lengths("genomes.fna")
+# FASTA -> seq_data（读取并合并全部示例 FASTA 文件）
+seq_data <- read_fasta_lengths(files = "examples/fasta/*.fna")
 
 # BLAST -outfmt 6/7 表格输出 -> ribbon_data（12 或 17 列自动识别）
-ribbon_data <- read_blast("myblast.o7")
+ribbon_data <- read_blast(files = "examples/blastn/*.o7")
 
 # GFF3 -> gene_data（默认取 CDS；anno 从 product/Name/... 属性提取）
-gene_data <- read_gff3("annotations.gff3")
+gene_data <- read_gff3(files = "examples/gff3/*.gff3")
 
 ggchord(seq_data, ribbon_data, gene_data) +
   geom_seq() + geom_ribbon() + geom_gene()
@@ -223,7 +223,12 @@ ggchord(seq_data, ribbon_data, gene_data) +
 并报告每个问题对应的原始行号：
 
 ```r
-res <- validate_ggchord_data(seq_data, ribbon_data, gene_data)
+data(seq_data_example)
+data(ribbon_data_example)
+data(gene_data_example)
+
+res <- validate_ggchord_data(seq_data_example, ribbon_data_example,
+                             gene_data_example)
 res$valid          # 数据是否可以安全绘图
 print(res)         # 人类可读的报告
 summary(res)       # 按类别统计
@@ -231,7 +236,8 @@ res$invalid_rows   # 每个问题类别对应的原始行号
 res$cleanable      # 可自动修复的问题及建议动作
 
 # 也可直接对严重问题报错：
-validate_ggchord_data(seq_data, ribbon_data, gene_data, strict = TRUE)
+validate_ggchord_data(seq_data_example, ribbon_data_example,
+                      gene_data_example, strict = TRUE)
 ```
 
 `clean_ggchord_data()` 用明确、保守的策略修复可修复的问题，并逐条记录
@@ -239,7 +245,7 @@ validate_ggchord_data(seq_data, ribbon_data, gene_data, strict = TRUE)
 
 ```r
 out <- clean_ggchord_data(
-  seq_data, ribbon_data, gene_data,
+  seq_data_example, ribbon_data_example, gene_data_example,
   unknown_id        = "drop",   # 删除引用未知序列的行
   out_of_range      = "clip",   # 将坐标裁剪到 [1, 序列长度]
   reversed_interval = "sort",   # 排序 start > end（原始方向会记录在报告中）
@@ -261,23 +267,25 @@ p <- ggchord(out$seq_data, out$ribbon_data, out$gene_data) +
 比对表过大或冗余时，先在绘图前整理：
 
 ```r
+data(ribbon_data_example)
+
 # 只保留高质量比对并按一致性排序
 kept <- filter_ggchord_ribbons(
-  ribbon_data,
+  ribbon_data_example,
   min_pident  = 90,
   drop_self_links = TRUE,
   sort_by     = c("pident", "-evalue")
 )
-ribbon_data <- kept$data
+ribbon_data_example <- kept$data
 kept$report  # 删除/保留的数量与原因
 
 # 去除完全重复、坐标近似重复或高度重叠的区块
-dedup <- deduplicate_ggchord_ribbons(ribbon_data, by = "exact",
+dedup <- deduplicate_ggchord_ribbons(ribbon_data_example, by = "exact",
                                      keep = "best_pident")
 
 # 合并同一序列对的相邻区块（pident 按比对长度加权）
 merged <- merge_ggchord_ribbons(dedup$data, max_gap = 0)
-ribbon_data <- merged$data
+ribbon_data_example <- merged$data
 merged$report  # output_row -> from_rows 追溯
 ```
 

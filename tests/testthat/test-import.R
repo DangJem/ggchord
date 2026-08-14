@@ -100,3 +100,48 @@ test_that("read_fasta_lengths reports empty files and missing headers", {
   writeLines(c("ACGT", "TGCA"), f)
   expect_error(read_fasta_lengths(f), "no FASTA headers")
 })
+
+test_that("read_* functions accept `files` and combine multiple files", {
+  # FASTA: one sequence per file
+  f1 <- tempfile(fileext = ".fna")
+  writeLines(c(">seqA", "ACGT"), f1)
+  f2 <- tempfile(fileext = ".fna")
+  writeLines(c(">seqB", "ACGTACGT"), f2)
+  fl <- read_fasta_lengths(files = c(f1, f2))
+  expect_equal(fl$seq_id, c("seqA", "seqB"))
+  expect_equal(fl$length, c(4, 8))
+
+  # GFF3: combine features from two files
+  g1 <- tempfile(fileext = ".gff3")
+  writeLines(paste("seqA", "s", "CDS", "1", "100", ".", "+", "0",
+                   "ID=a;product=alpha", sep = "\t"), g1)
+  g2 <- tempfile(fileext = ".gff3")
+  writeLines(paste("seqA", "s", "CDS", "200", "300", ".", "-", "0",
+                   "ID=b;product=beta", sep = "\t"), g2)
+  gd <- read_gff3(files = c(g1, g2))
+  expect_equal(nrow(gd), 2)
+  expect_equal(gd$anno, c("alpha", "beta"))
+
+  # BLAST: combine files with different column layouts
+  b1 <- tempfile(fileext = ".o6")
+  writeLines(paste("seqA", "seqB", "98", "10", "0", "0",
+                   "1", "10", "1", "10", "1e-5", "100", sep = "\t"), b1)
+  b2 <- tempfile(fileext = ".o7")
+  writeLines(paste("seqA", "seqC", "99", "20", "0", "0",
+                   "1", "20", "1", "20", "1e-8", "200", "80", "5000",
+                   "5000", "plus", "seqC", sep = "\t"), b2)
+  rb <- read_blast(files = c(b1, b2))
+  expect_equal(nrow(rb), 2)
+  expect_true(all(c("qaccver", "qcovs", "stitle") %in% names(rb)))
+})
+
+test_that("read_* `files` supports wildcards and reports no-match clearly", {
+  d <- tempfile(pattern = "ggchord_fasta_")
+  dir.create(d)
+  writeLines(c(">seqA", "ACGT"), file.path(d, "a.fna"))
+  writeLines(c(">seqB", "ACGTACGT"), file.path(d, "b.fna"))
+  fl <- read_fasta_lengths(files = file.path(d, "*.fna"))
+  expect_equal(fl$seq_id, c("seqA", "seqB"))
+  expect_error(read_fasta_lengths(files = file.path(d, "*.gff3")),
+               "no files match pattern")
+})

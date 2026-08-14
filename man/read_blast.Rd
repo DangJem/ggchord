@@ -2,10 +2,11 @@
 % Please edit documentation in R/data-import.R
 \name{read_blast}
 \alias{read_blast}
-\title{Read BLAST tabular output into ribbon_data format}
+\title{Read one or more BLAST tabular output files into ribbon_data format}
 \usage{
 read_blast(
-  file,
+  file = NULL,
+  files = NULL,
   format = c("auto", "outfmt6", "outfmt7", "custom"),
   col_names = NULL,
   comment = "#",
@@ -13,7 +14,11 @@ read_blast(
 )
 }
 \arguments{
-\item{file}{Path to a BLAST tabular output file.}
+\item{file}{Optional path to a single BLAST tabular output file.}
+
+\item{files}{Optional character vector of BLAST tabular output files
+(literal paths and/or wildcard patterns such as \code{"examples/blastn/*.o7"}).
+All matched files are read and combined into one data.frame.}
 
 \item{format}{Character. \code{"auto"} (default) detects the column layout
 from the number of columns; \code{"outfmt6"} / \code{"outfmt7"} require the

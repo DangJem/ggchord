@@ -5,49 +5,80 @@
 # dependency.  External command-line preparation (BLAST, seqkit, ...) stays
 # outside the package; these helpers cover the "read the file in R" step.
 
-#' Read BLAST tabular output into ribbon_data format
-#'
-#' Parses BLAST \code{-outfmt 6} or \code{-outfmt 7} tabular output into a data
-#' frame that can be passed directly to \code{\link{ggchord}()} as
-#' \code{ribbon_data}. The standard 12-column layout
-#' (\code{qaccver saccver pident length mismatch gapopen qstart qend sstart
-#' send evalue bitscore}) and the 17-column extension used by the README
-#' workflow (\code{...+ qcovs qlen slen sstrand stitle}) are recognised
-#' automatically. Optional columns such as \code{evalue}, \code{bitscore},
-#' \code{qcovs}, \code{qlen}, \code{slen}, \code{sstrand} and \code{stitle} are
-#' preserved for filtering and hover diagnostics.
-#'
-#' @param file Path to a BLAST tabular output file.
-#' @param format Character. \code{"auto"} (default) detects the column layout
-#'   from the number of columns; \code{"outfmt6"} / \code{"outfmt7"} require the
-#'   standard 12/17-column layouts; \code{"custom"} requires \code{col_names}.
-#' @param col_names Optional character vector naming the columns in the file,
-#'   used with \code{format = "custom"} or to override auto-detection.
-#' @param comment Character comment character, default \code{"#"} (BLAST
-#'   outfmt 7 header lines start with \code{#}).
-#' @param ... Additional arguments passed to \code{\link[utils]{read.table}}
-#'   (e.g. \code{na.strings}).
-#'
-#' @return A data.frame with the required ribbon columns first
-#'   (\code{qaccver}, \code{saccver}, \code{length}, \code{pident},
-#'   \code{qstart}, \code{qend}, \code{sstart}, \code{send}) followed by any
-#'   preserved optional columns.
-#' @export
-#'
-#' @examples
-#' \donttest{
-#' blast_file <- tempfile(fileext = ".o7")
-#' writeLines(c(
-#'   "# BLASTN 2.13.0+",
-#'   "# Query: seqA",
-#'   "seqA\tseqB\t98.5\t1200\t18\t0\t1\t1200\t1\t1200\t1e-180\t2400\t100\t5000\t4800\tplus\tseqB",
-#'   "seqA\tseqC\t95.0\t800\t40\t2\t1300\t2100\t50\t850\t1e-100\t1500\t80\t5000\t6000\tminus\tseqC"
-#' ), blast_file)
-#' rb <- read_blast(blast_file)
-#' head(rb)
-#' }
-read_blast <- function(file, format = c("auto", "outfmt6", "outfmt7", "custom"),
-                       col_names = NULL, comment = "#", ...) {
+# Resolve `file` and `files` into a character vector of paths. `files` may
+# contain wildcard patterns (e.g. "examples/fasta/*.fna") and/or literal paths.
+ggchord_resolve_files <- function(file, files, fun) {
+  if (is.null(files)) {
+    if (is.null(file) || length(file) == 0) {
+      ggchord_stop(sprintf("%s(): provide `file` or `files`", fun),
+           call. = FALSE)
+    }
+    if (!is.character(file)) {
+      ggchord_stop(sprintf("%s(): `file` must be a character path", fun),
+           call. = FALSE)
+    }
+    paths <- as.character(file)
+  } else {
+    if (!is.character(files)) {
+      ggchord_stop(sprintf("%s(): `files` must be a character vector", fun),
+           call. = FALSE)
+    }
+    paths <- as.character(files)
+  }
+
+  expanded <- unlist(lapply(paths, function(x) {
+    if (grepl("[*?[]", x)) {
+      g <- Sys.glob(x)
+      if (length(g) == 0) {
+        ggchord_stop(sprintf("%s(): no files match pattern: %s", fun, x),
+             call. = FALSE)
+      }
+      g
+    } else {
+      if (!file.exists(x)) {
+        ggchord_stop(sprintf("%s(): file not found: %s", fun, x),
+             call. = FALSE)
+      }
+      x
+    }
+  }), use.names = FALSE)
+
+  # Allow both `file` and `files` to be supplied; `file` is read first.
+  if (!is.null(file) && length(file) > 0 && !is.null(files)) {
+    expanded <- unique(c(as.character(file), expanded))
+  }
+  if (length(expanded) == 0) {
+    ggchord_stop(sprintf("%s(): no files to read", fun), call. = FALSE)
+  }
+  expanded
+}
+
+# Combine data.frames that may have different columns (e.g. BLAST outfmt 6 and
+# outfmt 7 files), filling missing columns with typed NA values.
+ggchord_rbind_fill <- function(xs) {
+  xs <- Filter(function(x) !is.null(x), xs)
+  if (length(xs) == 0) return(NULL)
+  if (length(xs) == 1) return(xs[[1]])
+  template <- xs
+  cols <- unique(unlist(lapply(xs, names), use.names = FALSE))
+  xs <- lapply(xs, function(d) {
+    miss <- setdiff(cols, names(d))
+    if (length(miss) > 0) {
+      for (m in miss) {
+        src <- Find(function(x) m %in% names(x), template)
+        d[[m]] <- if (!is.null(src)) src[[m]][NA_integer_] else NA
+      }
+    }
+    d[, cols, drop = FALSE]
+  })
+  do.call(rbind, xs)
+}
+
+
+# Internal single-file reader; the public read_blast() wrapper resolves
+# `file` / `files` and combines the result.
+read_blast_single <- function(file, format = c("auto", "outfmt6", "outfmt7", "custom"),
+                               col_names = NULL, comment = "#", ...) {
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
 
@@ -119,48 +150,50 @@ read_blast <- function(file, format = c("auto", "outfmt6", "outfmt7", "custom"),
   raw[, c(req, extra), drop = FALSE]
 }
 
-#' Read a GFF3 file into gene_data format
+#' Read one or more BLAST tabular output files into ribbon_data format
 #'
-#' Parses a GFF3 file (9 tab-separated columns) and returns a data frame that
-#' can be passed to \code{\link{ggchord}()} as \code{gene_data}. Only features
-#' whose \code{type} is in \code{feature_types} are kept. The annotation label
-#' (\code{anno}) is extracted from the GFF3 attributes column by trying the
-#' keys in \code{anno_from} in order (e.g. \code{product}, then \code{Name}).
-#' The original useful columns (\code{type}, \code{source}, \code{score},
-#' \code{phase}, \code{attributes}) are preserved.
+#' `file` reads a single BLAST tabular output file; `files` reads multiple
+#' files at once and combines them. `files` accepts a character vector of
+#' literal paths and/or wildcard patterns (e.g. `"examples/blastn/*.o7"`).
 #'
-#' @param file Path to a GFF3 file.
-#' @param feature_types Character vector of feature types to keep, default
-#'   \code{"CDS"}. Common choices: \code{"gene"}, \code{"tRNA"},
-#'   \code{"rRNA"}, \code{"repeat_region"}.
-#' @param anno_from Character vector of GFF3 attribute keys, tried in order to
-#'   fill the \code{anno} column, default \code{c("product", "Name", "gene",
-#'   "ID")}. \code{anno} is \code{NA} when none of the keys is present.
-#' @param unstranded Character, default \code{"plus"}. How to treat features
-#'   whose strand is \code{"."} or \code{"?"}: \code{"plus"} maps them to
-#'   \code{"+"}, \code{"drop"} removes them (ggchord requires \code{"+"} or
-#'   \code{"-"}).
+#' @param file Optional path to a single BLAST tabular output file.
+#' @param files Optional character vector of BLAST tabular output files
+#'   (literal paths and/or wildcard patterns). All matched files are read and
+#'   combined into one data.frame.
+#' @param format Character. `"auto"` (default) detects the column layout
+#'   from the number of columns; `"outfmt6"` / `"outfmt7"` require the
+#'   standard 12/17-column layouts; `"custom"` requires `col_names`.
+#' @param col_names Optional character vector naming the columns in the file,
+#'   used with `format = "custom"` or to override auto-detection.
+#' @param comment Character comment character, default `"#"` (BLAST
+#'   outfmt 7 header lines start with `#`).
+#' @param ... Additional arguments passed to [utils::read.table()]
+#'   (e.g. `na.strings`).
 #'
-#' @return A data.frame with \code{seq_id}, \code{start}, \code{end},
-#'   \code{strand}, \code{anno} followed by \code{type}, \code{source},
-#'   \code{score}, \code{phase} and \code{attributes}.
+#' @return A data.frame with the required ribbon columns first
+#'   (`qaccver`, `saccver`, `length`, `pident`, `qstart`, `qend`,
+#'   `sstart`, `send`) followed by any preserved optional columns.
 #' @export
-#'
-#' @examples
-#' \donttest{
-#' gff <- tempfile(fileext = ".gff3")
-#' writeLines(c(
-#'   "##gff-version 3",
-#'   "seqA\tsource\tCDS\t101\t500\t.\t+\t0\tID=cds1;product=hypothetical protein",
-#'   "seqA\tsource\tCDS\t600\t900\t.\t-\t0\tID=cds2;Name=integrase",
-#'   "seqA\tsource\ttRNA\t1000\t1080\t.\t+\t0\tID=trna1"
-#' ), gff)
-#' gd <- read_gff3(gff)
-#' gd
-#' }
-read_gff3 <- function(file, feature_types = "CDS",
-                      anno_from = c("product", "Name", "gene", "ID"),
-                      unstranded = c("plus", "drop")) {
+read_blast <- function(file = NULL, files = NULL,
+                       format = c("auto", "outfmt6", "outfmt7", "custom"),
+                       col_names = NULL, comment = "#", ...) {
+  old_error <- ggchord_disable_debug()
+  on.exit(options(error = old_error), add = TRUE)
+
+  format <- match.arg(format)
+  paths <- ggchord_resolve_files(file, files, "read_blast")
+  out <- lapply(paths, function(f) {
+    read_blast_single(f, format = format, col_names = col_names,
+                      comment = comment, ...)
+  })
+  ggchord_rbind_fill(out)
+}
+
+# Internal single-file reader; the public read_gff3() wrapper resolves
+# `file` / `files` and combines the result.
+read_gff3_single <- function(file, feature_types = "CDS",
+                              anno_from = c("product", "Name", "gene", "ID"),
+                              unstranded = c("plus", "drop")) {
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
 
@@ -226,6 +259,39 @@ read_gff3 <- function(file, feature_types = "CDS",
   )
 }
 
+#' Read one or more GFF3 files into gene_data format
+#'
+#' `file` reads a single GFF3 file; `files` reads multiple files at once and
+#' combines them. `files` accepts a character vector of literal paths and/or
+#' wildcard patterns (e.g. `"examples/gff3/*.gff3"`).
+#'
+#' @param file Optional path to a single GFF3 file.
+#' @param files Optional character vector of GFF3 files (literal paths and/or
+#'   wildcard patterns). All matched files are read and combined.
+#' @param feature_types Character vector of feature types to keep, default
+#'   `"CDS"`.
+#' @param anno_from Character vector of GFF3 attribute keys, tried in order to
+#'   fill the `anno` column.
+#' @param unstranded Character, default `"plus"`.
+#'
+#' @return A data.frame with `seq_id`, `start`, `end`, `strand`, `anno`
+#'   followed by `type`, `source`, `score`, `phase` and `attributes`.
+#' @export
+read_gff3 <- function(file = NULL, files = NULL, feature_types = "CDS",
+                      anno_from = c("product", "Name", "gene", "ID"),
+                      unstranded = c("plus", "drop")) {
+  old_error <- ggchord_disable_debug()
+  on.exit(options(error = old_error), add = TRUE)
+
+  unstranded <- match.arg(unstranded)
+  paths <- ggchord_resolve_files(file, files, "read_gff3")
+  out <- lapply(paths, function(f) {
+    read_gff3_single(f, feature_types = feature_types,
+                     anno_from = anno_from, unstranded = unstranded)
+  })
+  ggchord_rbind_fill(out)
+}
+
 #' Extract a GFF3 attribute value by key
 #' @keywords internal
 extract_gff3_attr <- function(attrs, keys) {
@@ -251,34 +317,9 @@ gff3_percent_decode <- function(x) {
   }, character(1), USE.NAMES = FALSE)
 }
 
-#' Read FASTA headers and sequence lengths
-#'
-#' Reads a FASTA file and returns a \code{seq_id}/\code{length} data frame
-#' suitable for \code{\link{ggchord}()}. The sequence ID is the first
-#' whitespace-delimited token of each header by default; pass
-#' \code{header_delim} (e.g. \code{"|"}) to split NCBI-style headers further
-#' and keep only the first field.
-#'
-#' @param file Path to a FASTA file.
-#' @param header_delim Optional character. When given, each header is split at
-#'   every occurrence of this delimiter and only the first piece is kept (e.g.
-#'   \code{"|"} for NCBI headers such as \code{>NC_000001.1|cds|...}).
-#'
-#' @return A data.frame with columns \code{seq_id} and \code{length}. A warning
-#'   is emitted when the file contains duplicate sequence IDs.
-#' @export
-#'
-#' @examples
-#' fasta <- tempfile(fileext = ".fna")
-#' writeLines(c(
-#'   ">seqA some description",
-#'   "ACGTACGTACGTACGT",
-#'   "ACGTACGT",
-#'   ">seqB",
-#'   "TTTTGGGG"
-#' ), fasta)
-#' read_fasta_lengths(fasta)
-read_fasta_lengths <- function(file, header_delim = NULL) {
+# Internal single-file reader; the public read_fasta_lengths() wrapper
+# resolves `file` / `files` and combines the result.
+read_fasta_lengths_single <- function(file, header_delim = NULL) {
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
 
@@ -320,4 +361,35 @@ read_fasta_lengths <- function(file, header_delim = NULL) {
             paste(dup, collapse = ", "), call. = FALSE)
   }
   out
+}
+
+#' Read one or more FASTA files into seq_data format
+#'
+#' `file` reads a single FASTA file; `files` reads multiple files at once and
+#' combines them. `files` accepts a character vector of literal paths and/or
+#' wildcard patterns (e.g. `"examples/fasta/*.fna"`).
+#'
+#' @param file Optional path to a single FASTA file.
+#' @param files Optional character vector of FASTA files (literal paths and/or
+#'   wildcard patterns). All matched files are read and combined.
+#' @param header_delim Optional character. When given, each header is split at
+#'   every occurrence of this delimiter and only the first piece is kept.
+#'
+#' @return A data.frame with columns `seq_id` and `length`.
+#' @export
+read_fasta_lengths <- function(file = NULL, files = NULL, header_delim = NULL) {
+  old_error <- ggchord_disable_debug()
+  on.exit(options(error = old_error), add = TRUE)
+
+  paths <- ggchord_resolve_files(file, files, "read_fasta_lengths")
+  out <- lapply(paths, function(f) {
+    read_fasta_lengths_single(f, header_delim = header_delim)
+  })
+  res <- ggchord_rbind_fill(out)
+  if (!is.null(res) && anyDuplicated(res$seq_id)) {
+    dup <- unique(res$seq_id[duplicated(res$seq_id)])
+    warning("read_fasta_lengths(): duplicate sequence IDs found: ",
+            paste(dup, collapse = ", "), call. = FALSE)
+  }
+  res
 }

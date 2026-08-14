@@ -2,12 +2,16 @@
 % Please edit documentation in R/data-import.R
 \name{read_fasta_lengths}
 \alias{read_fasta_lengths}
-\title{Read FASTA headers and sequence lengths}
+\title{Read one or more FASTA files into seq_data format}
 \usage{
-read_fasta_lengths(file, header_delim = NULL)
+read_fasta_lengths(file = NULL, files = NULL, header_delim = NULL)
 }
 \arguments{
-\item{file}{Path to a FASTA file.}
+\item{file}{Optional path to a single FASTA file.}
+
+\item{files}{Optional character vector of FASTA files (literal paths and/or
+wildcard patterns such as \code{"examples/fasta/*.fna"}). All matched files
+are read and combined into one data.frame.}
 
 \item{header_delim}{Optional character. When given, each header is split at
 every occurrence of this delimiter and only the first piece is kept (e.g.

@@ -2,17 +2,22 @@
 % Please edit documentation in R/data-import.R
 \name{read_gff3}
 \alias{read_gff3}
-\title{Read a GFF3 file into gene_data format}
+\title{Read one or more GFF3 files into gene_data format}
 \usage{
 read_gff3(
-  file,
+  file = NULL,
+  files = NULL,
   feature_types = "CDS",
   anno_from = c("product", "Name", "gene", "ID"),
   unstranded = c("plus", "drop")
 )
 }
 \arguments{
-\item{file}{Path to a GFF3 file.}
+\item{file}{Optional path to a single GFF3 file.}
+
+\item{files}{Optional character vector of GFF3 files (literal paths and/or
+wildcard patterns such as \code{"examples/gff3/*.gff3"}). All matched files
+are read and combined into one data.frame.}
 
 \item{feature_types}{Character vector of feature types to keep, default
 \code{"CDS"}. Common choices: \code{"gene"}, \code{"tRNA"},

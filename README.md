@@ -132,7 +132,7 @@ Example:
 A common way to build this table from FASTA files:
 
 ```bash
-seqkit fx2tab -nil *.fna | sed '1i seq_id\tlength' > seq_track.tsv
+seqkit fx2tab -nil examples/fasta/*.fna | sed '1i seq_id\tlength' > examples/seq_track.tsv
 ```
 
 #### [Optional] Alignment data (`ribbon_data`)
@@ -169,9 +169,9 @@ for ((i=0; i<${#seqs[@]}-1; i++)); do
   for ((j=i+1; j<${#seqs[@]}; j++)); do
     blastn \
       -outfmt '7 qaccver saccver pident length mismatch gapopen qstart qend sstart send evalue bitscore qcovs qlen slen sstrand stitle' \
-      -query "${seqs[$i]}.${ext}" \
-      -subject "${seqs[$j]}.${ext}" \
-      -out "${seqs[$i]}__${seqs[$j]}.o7"
+      -query "examples/fasta/${seqs[$i]}.${ext}" \
+      -subject "examples/fasta/${seqs[$j]}.${ext}" \
+      -out "examples/blastn/${seqs[$i]}__${seqs[$j]}.o7"
   done
 done
 ```
@@ -201,7 +201,7 @@ For example, this table can be converted from GFF3 files:
 
 ```r
 library(tidyverse)
-gff3FilesPath <- list.files(path = ".", pattern = "*.gff3")
+gff3FilesPath <- list.files(path = "examples/gff3", pattern = "\\.gff3$", full.names = TRUE)
 gff3Table <- map_df(gff3FilesPath, ~read_tsv(.x, show_col_types = F, comment = "#",
   col_names = F) %>% set_names(c("seq_id", "source", "type", "start", "end",
   "score", "strand", "phase", "attributes")))
@@ -209,7 +209,7 @@ geneTrackTable <- gff3Table %>%
   filter(type == "CDS") %>%
   mutate(anno = str_extract(attributes, "(?<=product=)[^;]+(?=;)")) %>%
   select(seq_id, start, end, strand, anno)
-write_tsv(geneTrackTable, "gene_track.tsv")
+write_tsv(geneTrackTable, "examples/gene_track.tsv")
 ```
 
 ### 1b. Importing FASTA / BLAST / GFF3 data in R
@@ -222,14 +222,14 @@ built-in import helpers. This keeps the "prepare data outside R" and
 ```r
 library(ggchord)
 
-# FASTA -> seq_data
-seq_data <- read_fasta_lengths("genomes.fna")
+# FASTA -> seq_data (read and combine all example FASTA files)
+seq_data <- read_fasta_lengths(files = "examples/fasta/*.fna")
 
 # BLAST -outfmt 6/7 tabular output -> ribbon_data (12 or 17 columns auto-detected)
-ribbon_data <- read_blast("myblast.o7")
+ribbon_data <- read_blast(files = "examples/blastn/*.o7")
 
 # GFF3 -> gene_data (CDS features by default; anno from product/Name/...)
-gene_data <- read_gff3("annotations.gff3")
+gene_data <- read_gff3(files = "examples/gff3/*.gff3")
 
 ggchord(seq_data, ribbon_data, gene_data) +
   geom_seq() + geom_ribbon() + geom_gene()
@@ -248,7 +248,12 @@ reversed intervals, bad strand, duplicates, overlapping blocks) and reports
 the original row numbers of every issue:
 
 ```r
-res <- validate_ggchord_data(seq_data, ribbon_data, gene_data)
+data(seq_data_example)
+data(ribbon_data_example)
+data(gene_data_example)
+
+res <- validate_ggchord_data(seq_data_example, ribbon_data_example,
+                             gene_data_example)
 res$valid          # TRUE when the data can be safely plotted
 print(res)         # human-readable report
 summary(res)       # per-category counts
@@ -256,7 +261,8 @@ res$invalid_rows   # original row numbers per problem category
 res$cleanable      # fixable issues with suggested actions
 
 # stop on severe problems instead:
-validate_ggchord_data(seq_data, ribbon_data, gene_data, strict = TRUE)
+validate_ggchord_data(seq_data_example, ribbon_data_example,
+                      gene_data_example, strict = TRUE)
 ```
 
 `clean_ggchord_data()` fixes the fixable issues with explicit, conservative
@@ -265,7 +271,7 @@ values, action). Your input data frames are never modified:
 
 ```r
 out <- clean_ggchord_data(
-  seq_data, ribbon_data, gene_data,
+  seq_data_example, ribbon_data_example, gene_data_example,
   unknown_id        = "drop",   # drop rows referencing unknown sequences
   out_of_range      = "clip",   # clip coordinates to [1, sequence length]
   reversed_interval = "sort",   # sort start > end (original direction recorded)
@@ -289,23 +295,25 @@ When an alignment table is too large or redundant, prepare it before
 plotting:
 
 ```r
+data(ribbon_data_example)
+
 # Keep only good alignments and sort by identity
 kept <- filter_ggchord_ribbons(
-  ribbon_data,
+  ribbon_data_example,
   min_pident  = 90,
   drop_self_links = TRUE,
   sort_by     = c("pident", "-evalue")
 )
-ribbon_data <- kept$data
+ribbon_data_example <- kept$data
 kept$report  # how many rows were removed and why
 
 # Remove duplicate / near-duplicate / highly overlapping blocks
-dedup <- deduplicate_ggchord_ribbons(ribbon_data, by = "exact",
+dedup <- deduplicate_ggchord_ribbons(ribbon_data_example, by = "exact",
                                      keep = "best_pident")
 
 # Merge adjacent blocks of the same pair (length-weighted pident)
 merged <- merge_ggchord_ribbons(dedup$data, max_gap = 0)
-ribbon_data <- merged$data
+ribbon_data_example <- merged$data
 merged$report  # output_row -> from_rows traceability
 ```
 
