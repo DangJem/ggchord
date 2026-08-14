@@ -6,7 +6,7 @@ navbar:
   left:
     - text: "Tutorial"
       href: "articles/ggchord_vignette.html"
-    - text: "中文指南"
+    - text: "汉语指南"
       href: "articles/ggchord_guide_hans.html"
     - text: "Functions"
       href: "reference/index.html"

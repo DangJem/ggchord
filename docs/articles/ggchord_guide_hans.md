@@ -1,4 +1,4 @@
-# ggchord 中文使用指南
+# ggchord 汉语使用指南
 
 ``` r
 

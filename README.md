@@ -83,7 +83,7 @@ That is the whole idea: **data in `ggchord()`, styling in the layers**.
 | Need | Resource |
 | --- | --- |
 | Full walkthrough: data preparation, import, validation, cleaning, examples and flexible parameter formats | [**ggchord tutorial**](https://dangjem.github.io/ggchord/articles/ggchord_vignette.html) ([source](vignettes/ggchord_vignette.Rmd)) |
-| 中文完整使用指南 | [**ggchord 中文指南**](https://dangjem.github.io/ggchord/articles/ggchord_guide_hans.html) ([source](vignettes/ggchord_guide_hans.Rmd)) |
+| 汉语完整使用指南 | [**ggchord 汉语指南**](https://dangjem.github.io/ggchord/articles/ggchord_guide_hans.html) ([source](vignettes/ggchord_guide_hans.Rmd)) |
 | Complete function and parameter reference | [**Function reference**](https://dangjem.github.io/ggchord/reference/index.html) |
 | Version history | [**NEWS.md**](NEWS.md) |
 

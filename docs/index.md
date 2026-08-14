@@ -31,7 +31,7 @@ devtools::install_github("DangJem/ggchord")   # development version
 | Need | Resource |
 |----|----|
 | Full tutorial | [ggchord tutorial](https://dangjem.github.io/ggchord/articles/ggchord_vignette.html) |
-| 中文完整指南 | [ggchord 中文指南](https://dangjem.github.io/ggchord/articles/ggchord_guide_hans.html) |
+| 汉语完整指南 | [ggchord 汉语指南](https://dangjem.github.io/ggchord/articles/ggchord_guide_hans.html) |
 | Function reference | [Function reference](https://dangjem.github.io/ggchord/reference/index.html) |
 | Version history | [NEWS.md](https://dangjem.github.io/ggchord/NEWS.md) |
 

@@ -69,7 +69,7 @@ ggchord(
 | 需求 | 资源 |
 | --- | --- |
 | 完整教程：数据准备、导入、校验、清理、示例与灵活参数格式 | [**ggchord 教程**](https://dangjem.github.io/ggchord/articles/ggchord_vignette.html)（[源文件](vignettes/ggchord_vignette.Rmd)） |
-| 中文完整使用指南 | [**ggchord 中文指南**](https://dangjem.github.io/ggchord/articles/ggchord_guide_hans.html)（[源文件](vignettes/ggchord_guide_hans.Rmd)） |
+| 汉语完整使用指南 | [**ggchord 汉语指南**](https://dangjem.github.io/ggchord/articles/ggchord_guide_hans.html)（[源文件](vignettes/ggchord_guide_hans.Rmd)） |
 | 完整的函数与参数参考 | [**函数参考**](https://dangjem.github.io/ggchord/reference/index.html) |
 | 版本更新记录 | [**NEWS.md**](NEWS.md) |
 

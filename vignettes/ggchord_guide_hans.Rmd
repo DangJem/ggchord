@@ -1,8 +1,8 @@
 ---
-title: "ggchord 中文使用指南"
+title: "ggchord 汉语使用指南"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{ggchord 中文使用指南}
+  %\VignetteIndexEntry{ggchord 汉语使用指南}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
