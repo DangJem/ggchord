@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ggchord</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -34,6 +34,27 @@
       <small>Source: <a href="https://github.com/DangJem/ggchord/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.8.0" id="ggchord-080">ggchord 0.8.0<a class="anchor" aria-label="anchor" href="#ggchord-080"></a></h2>
+<div class="section level3">
+<h3 id="new-features-sequence-grouping-0-8-0">New features: sequence grouping<a class="anchor" aria-label="anchor" href="#new-features-sequence-grouping-0-8-0"></a></h3>
+<ul><li><p><code><a href="../reference/geom_seq.html">geom_seq()</a></code> gains sequence-grouping support via <code>seq_group</code>, <code>seq_group_gap</code>, <code>seq_group_labels</code>, <code>seq_group_label_radius</code> and <code>seq_group_colors</code>. Groups can be taken from a <code>seq_group</code> column in <code>seq_data</code> or supplied as a named/positional vector. An extra gap is inserted only at boundaries between different groups, and optional group labels are drawn at the angular midpoint of each group.</p></li>
+<li><p>Group labels are rendered horizontally and keep their own internal <code>zcolour</code> identity scale, so they do not interfere with the existing Seq ID colour legend. <code><a href="../reference/geom_seq.html">geom_seq()</a></code> remains backward compatible and still returns a single layer; group labels are appended lazily at build time.</p></li>
+<li><p><code><a href="https://rdrr.io/pkg/plotly/man/ggplotly.html" class="external-link">plotly::ggplotly()</a></code> and the layout data path now include group labels.</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="new-features-ribbon-visual-mapping-and-direction-v090-scope-version-kept-at-0-8-0">New features: ribbon visual mapping and direction (v0.9.0 scope, version kept at 0.8.0)<a class="anchor" aria-label="anchor" href="#new-features-ribbon-visual-mapping-and-direction-v090-scope-version-kept-at-0-8-0"></a></h3>
+<ul><li><p><code><a href="../reference/geom_ribbon.html">geom_ribbon()</a></code> now supports <code>ribbon_color_by</code> (any numeric column mapped to a continuous fill), <code>ribbon_color_limits</code>, <code>ribbon_color_breaks</code> and <code>ribbon_color_name</code>, as well as <code>ribbon_alpha_by</code> / <code>ribbon_alpha_range</code>.</p></li>
+<li><p><code>ribbon_outline_by</code> / <code>ribbon_outline_colors</code> and <code>ribbon_linetype_by</code> / <code>ribbon_linetypes</code> map discrete columns to outline colour and linetype using internal aesthetics that do not disturb the existing Seq ID or Identity(%) legends.</p></li>
+<li><p><code>ribbon_direction</code> visually distinguishes same- vs reverse-orientation alignments through alpha, outline colour or linetype.</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="new-features-highlights-and-generic-features-v090-scope-0-8-0">New features: highlights and generic features (v0.9.0 scope)<a class="anchor" aria-label="anchor" href="#new-features-highlights-and-generic-features-v090-scope-0-8-0"></a></h3>
+<ul><li><p>New <code><a href="../reference/geom_seq_region.html">geom_seq_region()</a></code> draws user-defined bands along sequence arcs and supports <code>seq_id</code>, <code>start</code>, <code>end</code>, optional <code>label</code>, <code>category</code> and <code>color</code>.</p></li>
+<li><p>New <code><a href="../reference/geom_ribbon_highlight.html">geom_ribbon_highlight()</a></code> emphasizes selected ribbons using safe filters (<code>ribbon_ids</code>, query/subject IDs, pident/length ranges, or a predicate function) and reuses the computed ribbon geometry.</p></li>
+<li><p>New <code><a href="../reference/geom_feature.html">geom_feature()</a></code> is a generic convenience wrapper around <code><a href="../reference/geom_gene.html">geom_gene()</a></code> for CDS, tRNA, rRNA, repeat, CRISPR, promoter and custom feature tables.</p></li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.7.0" id="ggchord-070">ggchord 0.7.0<a class="anchor" aria-label="anchor" href="#ggchord-070"></a></h2>
 <div class="section level3">
@@ -66,7 +87,7 @@
 <div class="section level3">
 <h3 id="new-features-0-6-0">New features<a class="anchor" aria-label="anchor" href="#new-features-0-6-0"></a></h3>
 <ul><li><p>Plot objects are now fully self-contained: data and parameters are stored on the plot itself instead of in a package-wide environment. Multiple plots can be created and built independently in the same session, and plots survive <code><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">saveRDS()</a></code> / <code><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS()</a></code>.</p></li>
-<li><p>The layout is now computed by <code><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">ggplot_build()</a></code> rather than by a custom <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> method. As a result <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code>, <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code>, <code><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">ggplot_build()</a></code> and other standard ggplot2 workflows (e.g. <code><a href="https://rdrr.io/pkg/plotly/man/ggplotly.html" class="external-link">plotly::ggplotly()</a></code>) all work directly on ggchord plots, and rendering no longer modifies the user’s plot object.</p></li>
+<li><p>The layout is now computed by <code>ggplot_build()</code> rather than by a custom <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> method. As a result <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code>, <code>ggsave()</code>, <code>ggplot_build()</code> and other standard ggplot2 workflows (e.g. <code><a href="https://rdrr.io/pkg/plotly/man/ggplotly.html" class="external-link">plotly::ggplotly()</a></code>) all work directly on ggchord plots, and rendering no longer modifies the user’s plot object.</p></li>
 <li><p>New layer <code><a href="../reference/geom_seq_label.html">geom_seq_label()</a></code>: places sequence labels at the midpoint of each sequence arc with control over radial offset (<code>seq_label_radius</code>), rotation (<code>seq_label_rotation</code>) and font size (<code>seq_label_size</code>).</p></li>
 <li><p>New ribbon color scheme <code>"subject"</code>: colors ribbons by the subject sequence (<code>saccver</code>), complementing the existing <code>"query"</code> scheme.</p></li>
 <li><p>The layout accessor <code><a href="../reference/get_chord_layout.html">get_chord_layout()</a></code> is now exported, making the computed geometry available for custom layers and annotations.</p></li>
@@ -157,7 +178,7 @@
 <li>Lightweight <code><a href="../reference/coord_chord.html">coord_chord()</a></code> coordinate system.</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.2.0" id="ggchord-020">ggchord 0.2.0<a class="anchor" aria-label="anchor" href="#ggchord-020"></a></h2><p class="text-muted">CRAN release: 2025-07-16</p>
+<h2 class="pkg-version" data-toc-text="0.2.0" id="ggchord-020">ggchord 0.2.0<a class="anchor" aria-label="anchor" href="#ggchord-020"></a></h2>
 <ul><li>Enhanced arc and line mode optimization.</li>
 <li>Precise curvature and gap control.</li>
 <li>Enhanced color customization.</li>

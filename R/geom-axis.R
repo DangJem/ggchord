@@ -35,9 +35,10 @@
 #' @export
 #'
 #' @examples
+#' library(ggchord)
 #' data(seq_data_example)
 #' p <- ggchord(seq_data_example) + geom_seq() + geom_axis()
-#' ggplot2::ggplot_build(p)
+#' p
 geom_axis <- function(mapping = NULL, data = NULL,
                       show_axis = NULL,
                       axis_gap = NULL,

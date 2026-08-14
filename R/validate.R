@@ -692,6 +692,7 @@ validation_cleanable <- function(errors, warnings) {
 #' @export
 #'
 #' @examples
+#' library(ggchord)
 #' data(seq_data_example)
 #' data(ribbon_data_example)
 #' data(gene_data_example)

@@ -45,6 +45,7 @@ alignment blocks within each (query, subject) pair and keeps the best
 representative per \code{keep}.
 }
 \examples{
+library(ggchord)
 data(ribbon_data_example)
 dup <- rbind(ribbon_data_example, ribbon_data_example[1, ])
 out <- deduplicate_ggchord_ribbons(dup, by = "exact")

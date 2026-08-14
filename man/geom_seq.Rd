@@ -85,7 +85,8 @@ Sequence layout parameters (order, orientation, radius, curvature, colors, etc.)
 Sequences can be visually grouped with an extra inter-group gap and optional group labels.
 }
 \examples{
+library(ggchord)
 data(seq_data_example)
 p <- ggchord(seq_data_example) + geom_seq()
-ggplot2::ggplot_build(p)
+p
 }

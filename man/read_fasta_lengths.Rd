@@ -10,32 +10,23 @@ read_fasta_lengths(file = NULL, files = NULL, header_delim = NULL)
 \item{file}{Optional path to a single FASTA file.}
 
 \item{files}{Optional character vector of FASTA files (literal paths and/or
-wildcard patterns such as \code{"examples/fasta/*.fna"}). All matched files
-are read and combined into one data.frame.}
+wildcard patterns). All matched files are read and combined.}
 
 \item{header_delim}{Optional character. When given, each header is split at
-every occurrence of this delimiter and only the first piece is kept (e.g.
-\code{"|"} for NCBI headers such as \code{>NC_000001.1|cds|...}).}
+every occurrence of this delimiter and only the first piece is kept.}
 }
 \value{
-A data.frame with columns \code{seq_id} and \code{length}. A warning
-  is emitted when the file contains duplicate sequence IDs.
+A data.frame with columns `seq_id` and `length`.
 }
 \description{
-Reads a FASTA file and returns a \code{seq_id}/\code{length} data frame
-suitable for \code{\link{ggchord}()}. The sequence ID is the first
-whitespace-delimited token of each header by default; pass
-\code{header_delim} (e.g. \code{"|"}) to split NCBI-style headers further
-and keep only the first field.
+`file` reads a single FASTA file; `files` reads multiple files at once and
+combines them. `files` accepts a character vector of literal paths and/or
+wildcard patterns (e.g. `"examples/fasta/*.fna"`).
 }
 \examples{
+library(ggchord)
 fasta <- tempfile(fileext = ".fna")
-writeLines(c(
-  ">seqA some description",
-  "ACGTACGTACGTACGT",
-  "ACGTACGT",
-  ">seqB",
-  "TTTTGGGG"
-), fasta)
+writeLines(c(">seqA some description", "ACGTACGTACGTACGT", "ACGTACGT",
+             ">seqB", "TTTTGGGG"), fasta)
 read_fasta_lengths(fasta)
 }

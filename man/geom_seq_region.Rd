@@ -55,10 +55,11 @@ intervals. This is useful for marking loci, repeats, CRISPR arrays, or other
 user-defined regions without turning them into gene arrows.
 }
 \examples{
+library(ggchord)
 data(seq_data_example)
 regions <- data.frame(seq_id = "MT108731.1",
                       start = 1000, end = 4000,
                       color = "orange")
 p <- ggchord(seq_data_example) + geom_seq() + geom_seq_region(regions)
-ggplot2::ggplot_build(p)
+p
 }

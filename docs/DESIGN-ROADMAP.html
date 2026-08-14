@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="index.html">ggchord</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -48,10 +48,10 @@
 <td>[done]</td>
 </tr><tr><td>v0.8.0</td>
 <td>Usability: import helpers, ribbon processing, sequence grouping</td>
-<td>A/B/C [done], D [designed]</td>
+<td>[done]</td>
 </tr><tr><td>v0.9.0</td>
 <td>Expressiveness: ribbon direction mapping, highlights, features, crowded layouts</td>
-<td>designed</td>
+<td>A/B/C [done], D [designed]</td>
 </tr><tr><td>v1.0.0</td>
 <td>Ecosystem: Plotly, export, themes, documentation, stable API</td>
 <td>designed</td>
@@ -79,9 +79,9 @@
 <p><code><a href="reference/filter_ggchord_ribbons.html">filter_ggchord_ribbons()</a></code>, <code><a href="reference/deduplicate_ggchord_ribbons.html">deduplicate_ggchord_ribbons()</a></code>, <code><a href="reference/merge_ggchord_ribbons.html">merge_ggchord_ribbons()</a></code>. All return <code>list(data, report)</code> and attach <code>source_rows</code> to <code>data</code>.</p>
 </div>
 <div class="section level3">
-<h3 id="d-sequence-grouping-seq_group-designed">D. Sequence grouping (<code>seq_group</code>) [designed]<a class="anchor" aria-label="anchor" href="#d-sequence-grouping-seq_group-designed"></a></h3>
+<h3 id="d-sequence-grouping-seq_group-done">D. Sequence grouping (<code>seq_group</code>) [done]<a class="anchor" aria-label="anchor" href="#d-sequence-grouping-seq_group-done"></a></h3>
 <p>Goal: group sequences (host/phage, chromosome sets, sample groups) with visual separation: a larger inter-group gap, group labels and optional group colors, without changing the layered API.</p>
-<p><strong>Public API (draft):</strong></p>
+<p><strong>Public API:</strong></p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Option 1: group column in seq_data (preferred)</span></span>
 <span><span class="va">seq_data</span><span class="op">$</span><span class="va">seq_group</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"phage"</span>, <span class="st">"phage"</span>, <span class="st">"host"</span>, <span class="st">"host"</span><span class="op">)</span></span>
@@ -112,7 +112,7 @@
 <div class="section level2">
 <h2 id="v090--expressiveness--complex-layouts">v0.9.0 — Expressiveness &amp; complex layouts<a class="anchor" aria-label="anchor" href="#v090--expressiveness--complex-layouts"></a></h2>
 <div class="section level3">
-<h3 id="a-ribbon-direction--visual-mapping-designed">A. Ribbon direction &amp; visual mapping [designed]<a class="anchor" aria-label="anchor" href="#a-ribbon-direction--visual-mapping-designed"></a></h3>
+<h3 id="a-ribbon-direction--visual-mapping-done">A. Ribbon direction &amp; visual mapping [done]<a class="anchor" aria-label="anchor" href="#a-ribbon-direction--visual-mapping-done"></a></h3>
 <p>Extend <code><a href="reference/geom_ribbon.html">geom_ribbon()</a></code> while keeping <code>"pident"</code>, <code>"query"</code>, <code>"subject"</code>, <code>"single"</code> behaviour byte-for-byte compatible:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/geom_ribbon.html">geom_ribbon</a></span><span class="op">(</span></span>
@@ -133,9 +133,9 @@
 <li>Tests: each scheme produces distinct layout fingerprints; legend titles correct; gene legend unchanged; plotly conversion does not error.</li>
 </ul></div>
 <div class="section level3">
-<h3 id="b-highlight-layers-designed">B. Highlight layers [designed]<a class="anchor" aria-label="anchor" href="#b-highlight-layers-designed"></a></h3>
+<h3 id="b-highlight-layers-done">B. Highlight layers [done]<a class="anchor" aria-label="anchor" href="#b-highlight-layers-done"></a></h3>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">geom_seq_region</span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="reference/geom_seq_region.html">geom_seq_region</a></span><span class="op">(</span></span>
 <span>  data <span class="op">=</span> <span class="cn">NULL</span>, mapping <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  regions <span class="op">=</span> <span class="cn">NULL</span>,                    <span class="co"># data.frame(seq_id, start, end[, label, category, color])</span></span>
 <span>  region_color <span class="op">=</span> <span class="st">"#F59E0B"</span>,</span>
@@ -149,7 +149,7 @@
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">geom_ribbon_highlight</span><span class="op">(</span></span>
+<span><span class="fu"><a href="reference/geom_ribbon_highlight.html">geom_ribbon_highlight</a></span><span class="op">(</span></span>
 <span>  data <span class="op">=</span> <span class="cn">NULL</span>, mapping <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  ribbon_ids <span class="op">=</span> <span class="cn">NULL</span>,                 <span class="co"># original row numbers or ribbon group IDs</span></span>
 <span>  predicate <span class="op">=</span> <span class="cn">NULL</span>,                  <span class="co"># a SAFE function(row) -&gt; logical (no string eval)</span></span>
@@ -169,10 +169,10 @@
 <li>Both layers must register empty placeholder data, be listed in <code><a href="reference/classify_ggchord_layers.html">classify_ggchord_layers()</a></code> and <code><a href="reference/extract_ggchord_layer_data.html">extract_ggchord_layer_data()</a></code>, and be added to <code><a href="reference/ggchord_plotly_ggplot.html">ggchord_plotly_ggplot()</a></code> (pre-mapped colors) and the visual-regression set. Empty matches return the empty placeholder → safe no-op.</li>
 </ul></div>
 <div class="section level3">
-<h3 id="c-generic-feature-layer-designed--keep-geom_gene">C. Generic feature layer [designed — keep geom_gene()]<a class="anchor" aria-label="anchor" href="#c-generic-feature-layer-designed--keep-geom_gene"></a></h3>
-<p><code><a href="reference/geom_gene.html">geom_gene()</a></code> stays; <code>geom_feature()</code> is a generalization:</p>
+<h3 id="c-generic-feature-layer-done--keep-geom_gene">C. Generic feature layer [done] — keep geom_gene()<a class="anchor" aria-label="anchor" href="#c-generic-feature-layer-done--keep-geom_gene"></a></h3>
+<p><code><a href="reference/geom_gene.html">geom_gene()</a></code> stays; <code><a href="reference/geom_feature.html">geom_feature()</a></code> is a generalization:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">geom_feature</span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="reference/geom_feature.html">geom_feature</a></span><span class="op">(</span></span>
 <span>  data <span class="op">=</span> <span class="cn">NULL</span>, mapping <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  feature_type <span class="op">=</span> <span class="cn">NULL</span>,               <span class="co"># column name, default "type"</span></span>
 <span>  feature_shape <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"arrow"</span>, <span class="st">"block"</span>, <span class="st">"chevron"</span>, <span class="st">"lollipop"</span><span class="op">)</span>,</span>
@@ -186,7 +186,7 @@
 <p>Input columns: <code>seq_id, start, end, strand, type, label, category</code> (label → anno). Internally it reuses the gene-arrow path builder in <code>layout.R</code> (parameterize the head/body polygon shape). <code><a href="reference/geom_gene.html">geom_gene()</a></code> becomes a thin wrapper (<code>feature_type = "gene"</code>, arrow shape) so nothing breaks. Tests: <code><a href="reference/geom_gene.html">geom_gene()</a></code> output is byte-identical before/after the wrapper refactor.</p>
 </div>
 <div class="section level3">
-<h3 id="d-crowded-layouts-designed">D. Crowded layouts [designed]<a class="anchor" aria-label="anchor" href="#d-crowded-layouts-designed"></a></h3>
+<h3 id="d-crowded-layout-designed">D. Crowded layout [designed]<a class="anchor" aria-label="anchor" href="#d-crowded-layout-designed"></a></h3>
 <ul><li>
 <strong>Auto ring placement:</strong> <code>geom_seq(seq_ring = "auto")</code> groups sequences into nested rings when <code>n</code> is large; each ring gets its own <code>seqRadius</code> range. All automatic choices must be reproducible (seed), explainable (the chosen assignment is returned in <code>get_chord_layout()$rings</code>), overridable (<code>seq_ring = NULL</code> disables; explicit <code>seq_radius</code>/<code>seq_order</code> win).</li>
 <li>

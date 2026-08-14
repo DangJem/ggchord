@@ -16,46 +16,31 @@ read_gff3(
 \item{file}{Optional path to a single GFF3 file.}
 
 \item{files}{Optional character vector of GFF3 files (literal paths and/or
-wildcard patterns such as \code{"examples/gff3/*.gff3"}). All matched files
-are read and combined into one data.frame.}
+wildcard patterns). All matched files are read and combined.}
 
 \item{feature_types}{Character vector of feature types to keep, default
-\code{"CDS"}. Common choices: \code{"gene"}, \code{"tRNA"},
-\code{"rRNA"}, \code{"repeat_region"}.}
+`"CDS"`.}
 
 \item{anno_from}{Character vector of GFF3 attribute keys, tried in order to
-fill the \code{anno} column, default \code{c("product", "Name", "gene",
-"ID")}. \code{anno} is \code{NA} when none of the keys is present.}
+fill the `anno` column.}
 
-\item{unstranded}{Character, default \code{"plus"}. How to treat features
-whose strand is \code{"."} or \code{"?"}: \code{"plus"} maps them to
-\code{"+"}, \code{"drop"} removes them (ggchord requires \code{"+"} or
-\code{"-"}).}
+\item{unstranded}{Character, default `"plus"`.}
 }
 \value{
-A data.frame with \code{seq_id}, \code{start}, \code{end},
-  \code{strand}, \code{anno} followed by \code{type}, \code{source},
-  \code{score}, \code{phase} and \code{attributes}.
+A data.frame with `seq_id`, `start`, `end`, `strand`, `anno`
+  followed by `type`, `source`, `score`, `phase` and `attributes`.
 }
 \description{
-Parses a GFF3 file (9 tab-separated columns) and returns a data frame that
-can be passed to \code{\link{ggchord}()} as \code{gene_data}. Only features
-whose \code{type} is in \code{feature_types} are kept. The annotation label
-(\code{anno}) is extracted from the GFF3 attributes column by trying the
-keys in \code{anno_from} in order (e.g. \code{product}, then \code{Name}).
-The original useful columns (\code{type}, \code{source}, \code{score},
-\code{phase}, \code{attributes}) are preserved.
+`file` reads a single GFF3 file; `files` reads multiple files at once and
+combines them. `files` accepts a character vector of literal paths and/or
+wildcard patterns (e.g. `"examples/gff3/*.gff3"`).
 }
 \examples{
-\donttest{
+library(ggchord)
 gff <- tempfile(fileext = ".gff3")
 writeLines(c(
   "##gff-version 3",
-  "seqA\tsource\tCDS\t101\t500\t.\t+\t0\tID=cds1;product=hypothetical protein",
-  "seqA\tsource\tCDS\t600\t900\t.\t-\t0\tID=cds2;Name=integrase",
-  "seqA\tsource\ttRNA\t1000\t1080\t.\t+\t0\tID=trna1"
+  "seqA	source	CDS	101	500	.	+	0	ID=cds1;product=hypothetical protein"
 ), gff)
-gd <- read_gff3(gff)
-gd
-}
+read_gff3(gff)
 }

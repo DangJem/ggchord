@@ -69,6 +69,7 @@ original column order; the original row numbers are attached as the
 \code{source_rows} attribute.
 }
 \examples{
+library(ggchord)
 data(ribbon_data_example)
 out <- filter_ggchord_ribbons(
   ribbon_data_example,

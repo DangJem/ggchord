@@ -11,7 +11,8 @@ make_ggchord_scales(
   legend_position = NULL,
   legend_box = NULL,
   positions = list(),
-  legend_key_length = NULL
+  legend_key_width = NULL,
+  legend_key_height = NULL
 )
 }
 \arguments{

@@ -26,8 +26,6 @@
 #' @param highlight_alpha Numeric (0-1). Highlight alpha, default 0.8.
 #' @param highlight_outline_color Optional outline colour, default \code{NULL}.
 #' @param highlight_outline_width Numeric. Outline width, default 0.3.
-#' @param highlight_expand Numeric. Fraction by which to expand the highlight
-#'   polygon (currently reserved; 0 keeps the exact ribbon geometry).
 #' @param show_legend Logical. Whether to show a legend, default FALSE.
 #' @param ... Additional arguments passed to \code{geom_polygon()}
 #'
@@ -35,11 +33,12 @@
 #' @export
 #'
 #' @examples
+#' library(ggchord)
 #' data(seq_data_example)
 #' data(ribbon_data_example)
 #' p <- ggchord(seq_data_example, ribbon_data_example) +
 #'   geom_seq() + geom_ribbon() + geom_ribbon_highlight(ribbon_ids = 1)
-#' ggplot2::ggplot_build(p)
+#' p
 geom_ribbon_highlight <- function(mapping = NULL, data = NULL,
                                   ribbon_ids = NULL,
                                   qaccver = NULL,
@@ -53,7 +52,6 @@ geom_ribbon_highlight <- function(mapping = NULL, data = NULL,
                                   highlight_alpha = 0.8,
                                   highlight_outline_color = NULL,
                                   highlight_outline_width = 0.3,
-                                  highlight_expand = 0,
                                   show_legend = FALSE,
                                   ...) {
   old_error <- ggchord_disable_debug()
@@ -82,7 +80,9 @@ geom_ribbon_highlight <- function(mapping = NULL, data = NULL,
     check.aes   = FALSE,
     check.param = FALSE,
     params      = c(list(...),
-                    list(colour = highlight_outline_color %||% NA,
+                    list(fill = highlight_color,
+                         alpha = highlight_alpha,
+                         colour = highlight_outline_color %||% NA,
                          linewidth = highlight_outline_width))
   )
   lyr$ggchord_type <- "ribbon_highlight"
@@ -99,8 +99,7 @@ geom_ribbon_highlight <- function(mapping = NULL, data = NULL,
     highlight_color          = highlight_color,
     highlight_alpha          = highlight_alpha,
     highlight_outline_color  = highlight_outline_color,
-    highlight_outline_width  = highlight_outline_width,
-    highlight_expand         = highlight_expand
+    highlight_outline_width  = highlight_outline_width
   )
   list(lyr)
 }

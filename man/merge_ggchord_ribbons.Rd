@@ -43,6 +43,7 @@ be inconsistent (unequal), whose pident differs by more than
 \code{require_same_orientation}) are left unmerged.
 }
 \examples{
+library(ggchord)
 # Two adjacent, collinear blocks of the same pair -> one merged block
 rb <- data.frame(
   qaccver = c("A", "A"), saccver = c("B", "B"),

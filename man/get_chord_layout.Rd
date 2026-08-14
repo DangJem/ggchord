@@ -16,10 +16,10 @@ e.g. via \code{print()} or \code{ggplot_build()}). This is useful for
 building custom layers or annotations on top of the chord geometry.
 }
 \examples{
+library(ggchord)
 data(seq_data_example)
 data(ribbon_data_example)
 p <- ggchord(seq_data_example, ribbon_data_example) + geom_seq() + geom_ribbon()
-ggplot2::ggplot_build(p)
-layout <- get_chord_layout()
-names(layout$seq_arcs)
+invisible(ggplot2::ggplot_build(p))
+names(get_chord_layout()$seq_arcs)
 }

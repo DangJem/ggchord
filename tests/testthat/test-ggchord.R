@@ -909,24 +909,28 @@ test_that("axis_label_orientation rotates axis labels", {
   expect_true(all(rot$label_vjust %in% c(0, 0.5, 1)))
 })
 
-test_that("legend_key_length controls the Identity colourbar length", {
+test_that("legend_key_width and legend_key_height control the Identity colourbar key", {
   data(seq_data_example)
   data(ribbon_data_example)
   p0 <- ggchord(seq_data_example, ribbon_data_example) + geom_seq() + geom_ribbon()
   p1 <- ggchord(seq_data_example, ribbon_data_example) + geom_seq() +
-    geom_ribbon(legend_key_length = 5)
+    geom_ribbon(legend_key_height = 5, legend_key_width = 1)
   b0 <- ggplot_build(p0)
   b1 <- ggplot_build(p1)
-  find_kh <- function(b) {
+  find_key <- function(b) {
     for (s in b$plot$scales$non_position_scales()$scales) {
       if (identical(class(s$guide)[1], "GuideColourbar")) {
-        return(as.character(s$guide$params$theme$legend.key.height))
+        return(list(
+          height = as.character(s$guide$params$theme$legend.key.height),
+          width = as.character(s$guide$params$theme$legend.key.width)
+        ))
       }
     }
-    "none"
+    list(height = "none", width = "none")
   }
-  expect_equal(find_kh(b0), "1null")
-  expect_equal(find_kh(b1), "5cm")
+  expect_equal(find_key(b0)$height, "1null")
+  expect_equal(find_key(b1)$height, "5cm")
+  expect_equal(find_key(b1)$width, "1cm")
 })
 
 test_that("documented data and parameter values are validated", {

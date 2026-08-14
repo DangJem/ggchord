@@ -17,7 +17,8 @@ A lightweight Coord. It creates placeholder coordinates in \code{ggchord()},
 which are replaced at print time with the actual extents computed from the layout.
 }
 \examples{
+library(ggchord)
 data(seq_data_example)
 p <- ggchord(seq_data_example) + coord_chord() + geom_seq()
-ggplot2::ggplot_build(p)
+p
 }

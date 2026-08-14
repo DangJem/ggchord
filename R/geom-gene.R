@@ -33,11 +33,12 @@
 #' @export
 #'
 #' @examples
+#' library(ggchord)
 #' data(seq_data_example)
 #' data(gene_data_example)
 #' p <- ggchord(seq_data_example, gene_data = gene_data_example) +
 #'   geom_seq() + geom_gene()
-#' ggplot2::ggplot_build(p)
+#' p
 geom_gene <- function(mapping = NULL, data = NULL,
                       gene_offset = NULL,
                       gene_width = NULL,
@@ -146,11 +147,12 @@ geom_gene <- function(mapping = NULL, data = NULL,
 #' @export
 #'
 #' @examples
+#' library(ggchord)
 #' data(seq_data_example)
 #' data(gene_data_example)
 #' p <- ggchord(seq_data_example, gene_data = gene_data_example) +
 #'   geom_seq() + geom_gene() + geom_gene_label()
-#' ggplot2::ggplot_build(p)
+#' p
 geom_gene_label <- function(mapping = NULL, data = NULL,
                             gene_label_size = NULL,
                             gene_label_rotation = NULL,
@@ -249,11 +251,12 @@ geom_gene_label <- function(mapping = NULL, data = NULL,
 #' @export
 #'
 #' @examples
+#' library(ggchord)
 #' data(seq_data_example)
 #' data(gene_data_example)
 #' p <- ggchord(seq_data_example, gene_data = gene_data_example) +
 #'   geom_seq() + geom_gene() + geom_gene_label_repel()
-#' ggplot2::ggplot_build(p)
+#' p
 geom_gene_label_repel <- function(mapping = NULL, data = NULL,
                                   gene_label_size = NULL,
                                   gene_label_rotation = NULL,

@@ -19,7 +19,6 @@ geom_ribbon_highlight(
   highlight_alpha = 0.8,
   highlight_outline_color = NULL,
   highlight_outline_width = 0.3,
-  highlight_expand = 0,
   show_legend = FALSE,
   ...
 )
@@ -58,9 +57,6 @@ parsing).}
 
 \item{highlight_outline_width}{Numeric. Outline width, default 0.3.}
 
-\item{highlight_expand}{Numeric. Fraction by which to expand the highlight
-polygon (currently reserved; 0 keeps the exact ribbon geometry).}
-
 \item{show_legend}{Logical. Whether to show a legend, default FALSE.}
 
 \item{...}{Additional arguments passed to \code{geom_polygon()}}
@@ -75,9 +71,10 @@ done with safe, explicit filters (row numbers, query/subject IDs, pident and
 length ranges) or a predicate function.
 }
 \examples{
+library(ggchord)
 data(seq_data_example)
 data(ribbon_data_example)
 p <- ggchord(seq_data_example, ribbon_data_example) +
   geom_seq() + geom_ribbon() + geom_ribbon_highlight(ribbon_ids = 1)
-ggplot2::ggplot_build(p)
+p
 }

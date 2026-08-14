@@ -17,49 +17,38 @@ read_blast(
 \item{file}{Optional path to a single BLAST tabular output file.}
 
 \item{files}{Optional character vector of BLAST tabular output files
-(literal paths and/or wildcard patterns such as \code{"examples/blastn/*.o7"}).
-All matched files are read and combined into one data.frame.}
+(literal paths and/or wildcard patterns). All matched files are read and
+combined into one data.frame.}
 
-\item{format}{Character. \code{"auto"} (default) detects the column layout
-from the number of columns; \code{"outfmt6"} / \code{"outfmt7"} require the
-standard 12/17-column layouts; \code{"custom"} requires \code{col_names}.}
+\item{format}{Character. `"auto"` (default) detects the column layout
+from the number of columns; `"outfmt6"` / `"outfmt7"` require the
+standard 12/17-column layouts; `"custom"` requires `col_names`.}
 
 \item{col_names}{Optional character vector naming the columns in the file,
-used with \code{format = "custom"} or to override auto-detection.}
+used with `format = "custom"` or to override auto-detection.}
 
-\item{comment}{Character comment character, default \code{"#"} (BLAST
-outfmt 7 header lines start with \code{#}).}
+\item{comment}{Character comment character, default `"#"` (BLAST
+outfmt 7 header lines start with `#`).}
 
-\item{...}{Additional arguments passed to \code{\link[utils]{read.table}}
-(e.g. \code{na.strings}).}
+\item{...}{Additional arguments passed to [utils::read.table()]
+(e.g. `na.strings`).}
 }
 \value{
 A data.frame with the required ribbon columns first
-  (\code{qaccver}, \code{saccver}, \code{length}, \code{pident},
-  \code{qstart}, \code{qend}, \code{sstart}, \code{send}) followed by any
-  preserved optional columns.
+  (`qaccver`, `saccver`, `length`, `pident`, `qstart`, `qend`,
+  `sstart`, `send`) followed by any preserved optional columns.
 }
 \description{
-Parses BLAST \code{-outfmt 6} or \code{-outfmt 7} tabular output into a data
-frame that can be passed directly to \code{\link{ggchord}()} as
-\code{ribbon_data}. The standard 12-column layout
-(\code{qaccver saccver pident length mismatch gapopen qstart qend sstart
-send evalue bitscore}) and the 17-column extension used by the README
-workflow (\code{...+ qcovs qlen slen sstrand stitle}) are recognised
-automatically. Optional columns such as \code{evalue}, \code{bitscore},
-\code{qcovs}, \code{qlen}, \code{slen}, \code{sstrand} and \code{stitle} are
-preserved for filtering and hover diagnostics.
+`file` reads a single BLAST tabular output file; `files` reads multiple
+files at once and combines them. `files` accepts a character vector of
+literal paths and/or wildcard patterns (e.g. `"examples/blastn/*.o7"`).
 }
 \examples{
-\donttest{
+library(ggchord)
 blast_file <- tempfile(fileext = ".o7")
 writeLines(c(
   "# BLASTN 2.13.0+",
-  "# Query: seqA",
-  "seqA\tseqB\t98.5\t1200\t18\t0\t1\t1200\t1\t1200\t1e-180\t2400\t100\t5000\t4800\tplus\tseqB",
-  "seqA\tseqC\t95.0\t800\t40\t2\t1300\t2100\t50\t850\t1e-100\t1500\t80\t5000\t6000\tminus\tseqC"
+  "seqA	seqB	98.5	1200	18	0	1	1200	1	1200	1e-180	2400"
 ), blast_file)
-rb <- read_blast(blast_file)
-head(rb)
-}
+read_blast(blast_file)
 }

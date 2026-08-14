@@ -101,9 +101,10 @@ enough from their anchor are connected to it with a leader line, and labels
 that still overlap too many others can be hidden.
 }
 \examples{
+library(ggchord)
 data(seq_data_example)
 data(gene_data_example)
 p <- ggchord(seq_data_example, gene_data = gene_data_example) +
   geom_seq() + geom_gene() + geom_gene_label_repel()
-ggplot2::ggplot_build(p)
+p
 }

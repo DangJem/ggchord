@@ -45,6 +45,7 @@
 #' @export
 #'
 #' @examples
+#' library(ggchord)
 #' data(ribbon_data_example)
 #' out <- filter_ggchord_ribbons(
 #'   ribbon_data_example,
@@ -300,6 +301,7 @@ normalize_keep_pairs <- function(pairs) {
 #' @export
 #'
 #' @examples
+#' library(ggchord)
 #' data(ribbon_data_example)
 #' dup <- rbind(ribbon_data_example, ribbon_data_example[1, ])
 #' out <- deduplicate_ggchord_ribbons(dup, by = "exact")
@@ -462,6 +464,7 @@ deduplicate_ggchord_ribbons <- function(
 #' @export
 #'
 #' @examples
+#' library(ggchord)
 #' # Two adjacent, collinear blocks of the same pair -> one merged block
 #' rb <- data.frame(
 #'   qaccver = c("A", "A"), saccver = c("B", "B"),

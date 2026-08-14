@@ -56,9 +56,10 @@ de-overlapping (with leader lines), use
 \code{\link{geom_gene_label_repel}()} instead.
 }
 \examples{
+library(ggchord)
 data(seq_data_example)
 data(gene_data_example)
 p <- ggchord(seq_data_example, gene_data = gene_data_example) +
   geom_seq() + geom_gene() + geom_gene_label()
-ggplot2::ggplot_build(p)
+p
 }

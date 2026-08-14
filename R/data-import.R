@@ -174,6 +174,15 @@ read_blast_single <- function(file, format = c("auto", "outfmt6", "outfmt7", "cu
 #'   (`qaccver`, `saccver`, `length`, `pident`, `qstart`, `qend`,
 #'   `sstart`, `send`) followed by any preserved optional columns.
 #' @export
+#'
+#' @examples
+#' library(ggchord)
+#' blast_file <- tempfile(fileext = ".o7")
+#' writeLines(c(
+#'   "# BLASTN 2.13.0+",
+#'   "seqA	seqB	98.5	1200	18	0	1	1200	1	1200	1e-180	2400"
+#' ), blast_file)
+#' read_blast(blast_file)
 read_blast <- function(file = NULL, files = NULL,
                        format = c("auto", "outfmt6", "outfmt7", "custom"),
                        col_names = NULL, comment = "#", ...) {
@@ -277,6 +286,15 @@ read_gff3_single <- function(file, feature_types = "CDS",
 #' @return A data.frame with `seq_id`, `start`, `end`, `strand`, `anno`
 #'   followed by `type`, `source`, `score`, `phase` and `attributes`.
 #' @export
+#'
+#' @examples
+#' library(ggchord)
+#' gff <- tempfile(fileext = ".gff3")
+#' writeLines(c(
+#'   "##gff-version 3",
+#'   "seqA	source	CDS	101	500	.	+	0	ID=cds1;product=hypothetical protein"
+#' ), gff)
+#' read_gff3(gff)
 read_gff3 <- function(file = NULL, files = NULL, feature_types = "CDS",
                       anno_from = c("product", "Name", "gene", "ID"),
                       unstranded = c("plus", "drop")) {
@@ -377,6 +395,13 @@ read_fasta_lengths_single <- function(file, header_delim = NULL) {
 #'
 #' @return A data.frame with columns `seq_id` and `length`.
 #' @export
+#'
+#' @examples
+#' library(ggchord)
+#' fasta <- tempfile(fileext = ".fna")
+#' writeLines(c(">seqA some description", "ACGTACGTACGTACGT", "ACGTACGT",
+#'              ">seqB", "TTTTGGGG"), fasta)
+#' read_fasta_lengths(fasta)
 read_fasta_lengths <- function(file = NULL, files = NULL, header_delim = NULL) {
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)

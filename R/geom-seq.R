@@ -77,9 +77,10 @@ seq_group_label_geom <- rename_text_colour_geom()
 #' @export
 #'
 #' @examples
+#' library(ggchord)
 #' data(seq_data_example)
 #' p <- ggchord(seq_data_example) + geom_seq()
-#' ggplot2::ggplot_build(p)
+#' p
 geom_seq <- function(mapping = NULL, data = NULL,
                      seq_order = NULL,
                      seq_labels = NULL,

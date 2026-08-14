@@ -103,23 +103,25 @@ make_ribbon_geom <- function(outline = FALSE, linetype = FALSE) {
 #'   colourbar): one of "left", "right", "top", "bottom" or "inside", default
 #'   "left". Pass NULL to let the legend follow
 #'   \code{theme(legend.position = ...)} together with the other legends.
-#' @param legend_key_length Optional length of the Identity(%) colourbar (the
-#'   long dimension: its height when placed on the left/right, its width when
-#'   placed on the top/bottom). Accepts a grid unit, e.g.
-#'   \code{unit(5, "cm")}, or a number interpreted as centimetres. Default
-#'   NULL lets the vertical bar fill the available height (and the horizontal
-#'   bar default to 4 cm).
+#' @param legend_key_width Optional width of the Identity(%) colourbar key.
+#'   Accepts a grid unit, e.g. \code{unit(1, "cm")}, or a number interpreted
+#'   as centimetres. Default NULL uses the ggplot2 default width.
+#' @param legend_key_height Optional height of the Identity(%) colourbar key.
+#'   Accepts a grid unit, e.g. \code{unit(5, "cm")}, or a number interpreted
+#'   as centimetres. Default NULL lets the vertical bar fill the available
+#'   height (and uses a fixed height for horizontal legends).
 #' @param ... Additional arguments passed to \code{geom_polygon()}
 #'
 #' @return A list of ggplot2 layers
 #' @export
 #'
 #' @examples
+#' library(ggchord)
 #' data(seq_data_example)
 #' data(ribbon_data_example)
 #' p <- ggchord(seq_data_example, ribbon_data_example) +
 #'   geom_seq() + geom_ribbon()
-#' ggplot2::ggplot_build(p)
+#' p
 geom_ribbon <- function(mapping = NULL, data = NULL,
                         ribbon_color_scheme = NULL,
                         ribbon_colors = NULL,
@@ -146,7 +148,8 @@ geom_ribbon <- function(mapping = NULL, data = NULL,
                         ribbon_direction_alpha = c(same = 1, reverse = 0.45),
                         show_legend = TRUE,
                         legend_position = "left",
-                        legend_key_length = NULL,
+                        legend_key_width = NULL,
+                        legend_key_height = NULL,
                         ...) {
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
@@ -233,7 +236,8 @@ geom_ribbon <- function(mapping = NULL, data = NULL,
     ribbon_direction_linetypes = ribbon_direction_linetypes,
     ribbon_direction_alpha    = ribbon_direction_alpha,
     legend_position           = legend_position,
-    legend_key_length         = legend_key_length
+    legend_key_width          = legend_key_width,
+    legend_key_height         = legend_key_height
   )
   list(lyr)
 }

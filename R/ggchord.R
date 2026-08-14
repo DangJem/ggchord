@@ -914,16 +914,16 @@ ggchord_legend_positions <- function(plot) {
   pos
 }
 
-#' Read the ribbon layer's legend_key_length (colourbar length) if set
+#' Read the ribbon layer's legend key width/height overrides if set
 #' @keywords internal
-ggchord_ribbon_key_length <- function(plot) {
+ggchord_ribbon_key_dims <- function(plot) {
   for (lyr in plot$layers) {
     pp <- lyr$ggchord_params
     if (!is.null(pp) && identical(pp$type, "ribbon")) {
-      return(pp$legend_key_length)
+      return(list(width = pp$legend_key_width, height = pp$legend_key_height))
     }
   }
-  NULL
+  list(width = NULL, height = NULL)
 }
 
 #' Build the list of scales for a computed layout
@@ -942,7 +942,8 @@ ggchord_ribbon_key_length <- function(plot) {
 #' @keywords internal
 make_ggchord_scales <- function(layout, has_seq = FALSE, has_gene = FALSE,
                                 legend_position = NULL, legend_box = NULL,
-                                positions = list(), legend_key_length = NULL) {
+                                positions = list(), legend_key_width = NULL,
+                                legend_key_height = NULL) {
   scales <- list()
 
   if (has_seq) {
@@ -966,11 +967,12 @@ make_ggchord_scales <- function(layout, has_seq = FALSE, has_gene = FALSE,
       ribbon_pos <- positions$ribbon %||% legend_position %||% "right"
       horizontal_legend <- ribbon_pos %in% c("top", "bottom") ||
         identical(legend_box, "horizontal")
-      # legend_key_length controls the long dimension of the colourbar (its
-      # height when vertical, its width when horizontal); a number is treated
-      # as centimetres.
-      key_len <- legend_key_length
-      if (!is.null(key_len) && !is.unit(key_len)) key_len <- unit(key_len, "cm")
+      # legend_key_width / legend_key_height control the colourbar key
+      # dimensions directly; numbers are interpreted as centimetres.
+      key_width <- legend_key_width
+      if (!is.null(key_width) && !is.unit(key_width)) key_width <- unit(key_width, "cm")
+      key_height <- legend_key_height
+      if (!is.null(key_height) && !is.unit(key_height)) key_height <- unit(key_height, "cm")
       value_scheme <- identical(layout$ribbon_color_scheme, "value")
       ribbon_name <- if (value_scheme) {
         layout$ribbon_color_name %||% "value"
@@ -999,13 +1001,17 @@ make_ggchord_scales <- function(layout, has_seq = FALSE, has_gene = FALSE,
           theme = theme(
             legend.title.position = "top",
             legend.key.height = if (horizontal_legend) {
-              unit(1.5, "cm")
+              key_height %||% unit(1.5, "cm")
             } else {
-              key_len %||% unit(1, "null")
+              key_height %||% unit(1, "null")
             },
             # A horizontal colorbar needs a longer key; the vertical bar keeps
             # the default key width.
-            legend.key.width = if (horizontal_legend) key_len %||% unit(4, "cm") else NULL
+            legend.key.width = if (horizontal_legend) {
+              key_width %||% unit(4, "cm")
+            } else {
+              key_width %||% NULL
+            }
           ),
           order = 2
         )
@@ -1183,7 +1189,8 @@ prepare_ggchord_plot <- function(plot) {
                             legend_position = plot$theme$legend.position,
                             legend_box = plot$theme$legend.box,
                             positions = ggchord_legend_positions(plot),
-                            legend_key_length = ggchord_ribbon_key_length(plot))
+                            legend_key_width = ggchord_ribbon_key_dims(plot)$width,
+                            legend_key_height = ggchord_ribbon_key_dims(plot)$height)
   plot <- rename_ribbon_layers(plot, cls$ribbon, sc$ribbon_aes, layout)
   plot <- attach_ggchord_scales(plot, sc$scales)
   plot <- set_ggchord_coord(plot, layout)
@@ -1270,7 +1277,8 @@ ggplot_build.ggchord <- function(plot, ...) {
                             legend_position = plot$theme$legend.position,
                             legend_box = plot$theme$legend.box,
                             positions = ggchord_legend_positions(plot),
-                            legend_key_length = ggchord_ribbon_key_length(plot))
+                            legend_key_width = ggchord_ribbon_key_dims(plot)$width,
+                            legend_key_height = ggchord_ribbon_key_dims(plot)$height)
   plot <- rename_ribbon_layers(plot, ribbon_indices, sc$ribbon_aes, layout)
   plot <- attach_ggchord_scales(plot, sc$scales)
 

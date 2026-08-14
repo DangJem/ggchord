@@ -68,6 +68,7 @@ change (including every dropped row) is recorded in \code{report} with the
 original row number, the reason, the original value(s) and the new value(s).
 }
 \examples{
+library(ggchord)
 data(seq_data_example)
 data(ribbon_data_example)
 data(gene_data_example)

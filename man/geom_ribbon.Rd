@@ -32,7 +32,8 @@ geom_ribbon(
   ribbon_direction_alpha = c(same = 1, reverse = 0.45),
   show_legend = TRUE,
   legend_position = "left",
-  legend_key_length = NULL,
+  legend_key_width = NULL,
+  legend_key_height = NULL,
   ...
 )
 }
@@ -113,12 +114,14 @@ colourbar): one of "left", "right", "top", "bottom" or "inside", default
 "left". Pass NULL to let the legend follow
 \code{theme(legend.position = ...)} together with the other legends.}
 
-\item{legend_key_length}{Optional length of the Identity(%) colourbar (the
-long dimension: its height when placed on the left/right, its width when
-placed on the top/bottom). Accepts a grid unit, e.g.
-\code{unit(5, "cm")}, or a number interpreted as centimetres. Default
-NULL lets the vertical bar fill the available height (and the horizontal
-bar default to 4 cm).}
+\item{legend_key_width}{Optional width of the Identity(%) colourbar key.
+Accepts a grid unit, e.g. \code{unit(1, "cm")}, or a number interpreted
+as centimetres. Default NULL uses the ggplot2 default width.}
+
+\item{legend_key_height}{Optional height of the Identity(%) colourbar key.
+Accepts a grid unit, e.g. \code{unit(5, "cm")}, or a number interpreted
+as centimetres. Default NULL lets the vertical bar fill the available
+height (and uses a fixed height for horizontal legends).}
 
 \item{...}{Additional arguments passed to \code{geom_polygon()}}
 }
@@ -129,9 +132,10 @@ A list of ggplot2 layers
 Draws colored ribbons corresponding to alignment results. Color scheme and spacing parameters are specified here.
 }
 \examples{
+library(ggchord)
 data(seq_data_example)
 data(ribbon_data_example)
 p <- ggchord(seq_data_example, ribbon_data_example) +
   geom_seq() + geom_ribbon()
-ggplot2::ggplot_build(p)
+p
 }

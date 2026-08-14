@@ -65,6 +65,7 @@ counts, a data summary, the original row numbers of every problem, and a
 list of automatically fixable issues.
 }
 \examples{
+library(ggchord)
 data(seq_data_example)
 data(ribbon_data_example)
 data(gene_data_example)

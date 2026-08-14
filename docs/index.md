@@ -738,7 +738,8 @@ gene_label_rotation = list(20)
 | `ribbon_outline_linetype` | numeric/character | 1 | Ribbon outline line type (1 = solid) |
 | `show_legend` | logical | TRUE | Show the Identity(%) legend |
 | `legend_position` | character | “left” | Position of the Identity(%) colourbar: `"left"`, `"right"`, `"top"`, `"bottom"` or `"inside"` (`NULL` = follow `theme(legend.position = ...)`) |
-| `legend_key_length` | unit/number | NULL | Length of the Identity(%) colourbar (height when vertical, width when horizontal); a number is in cm, e.g. `legend_key_length = 5` or `unit(5, "cm")` |
+| `legend_key_width` | unit/number | NULL | Width of the Identity(%) colourbar key; a number is in cm, e.g. `legend_key_width = 1` or `unit(1, "cm")` |
+| `legend_key_height` | unit/number | NULL | Height of the Identity(%) colourbar key; a number is in cm, e.g. `legend_key_height = 5` or `unit(5, "cm")` |
 
 ### geom_gene() Parameters
 
