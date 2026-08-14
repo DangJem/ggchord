@@ -65,7 +65,11 @@ test_that("ribbon color schemes produce distinct layout fingerprints", {
 
 test_that("rendered PNGs match the committed md5 baseline (opt-in)", {
   skip_unless_slow_tests()
-  skip_on_ci()  # pixel md5 baselines are platform/font-specific
+  # Pixel md5 baselines are platform/font-specific and should not run in
+  # normal CI/check workflows. They only run when explicitly requested with
+  # GGCHORD_RUN_VISUAL_MD5=1.
+  skip_if(Sys.getenv("GGCHORD_RUN_VISUAL_MD5") != "1",
+          "set GGCHORD_RUN_VISUAL_MD5=1 to compare pixel md5 baselines")
   baseline_file <- testthat::test_path("visual-baseline.rds")
   skip_if(!file.exists(baseline_file), "no visual-baseline.rds committed")
   baseline <- readRDS(baseline_file)
