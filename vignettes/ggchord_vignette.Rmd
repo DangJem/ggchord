@@ -328,24 +328,20 @@ knitr::include_graphics("../man/figures/legend_bottom.png")
 
 ```{r tutorial-fine, eval=FALSE}
 ggchord(seq_data_example, ribbon_data_example, gene_data_example,
-        title = "ggchord", rotation = 45) +
+        title = "ggchord") +
   geom_seq(seq_radius = c(3.3, 2.5, 1.8, 1.25),
            seq_orientation = c(-1, -1, 1, -1),
            seq_colors = c("MT108731.1" = "#E76F51",
                           "MT118296.1" = "#264653",
                           "OQ646790.1" = "#2A9D8F",
                           "OR222515.1" = "#D9A62E")) +
-  geom_ribbon(ribbon_color_scheme = "pident", ribbon_alpha = 0.45) +
+  geom_ribbon(ribbon_alpha = 0.45) +
   geom_gene() +
-  geom_gene_label_repel(gene_label_orientation = "horizontal",
-                        gene_label_segment = "elbow",
-                        gene_label_side = "outside",
-                        gene_label_size = 2, seed = 42) +
+  geom_gene_label_repel(gene_label_size = 2, seed = 42) +
   geom_seq_label() +
   geom_axis() +
   theme(plot.background = element_rect(fill = "#FBF9F6", colour = NA),
-        panel.background = element_rect(fill = "#FBF9F6", colour = NA),
-        legend.position = "right")
+        panel.background = element_rect(fill = "#FBF9F6", colour = NA))
 ```
 
 ```{r tutorial-fine-img, echo=FALSE, fig.cap="A complete fine-tuned chord diagram."}
