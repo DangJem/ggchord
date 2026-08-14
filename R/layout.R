@@ -1220,61 +1220,6 @@ compute_chord_layout <- function(
       )
       gene_labels <- res$labels
       gene_label_segments <- res$segments
-      # With gene_label_side, every label must end up on the requested side:
-      # if the repulsion pushed a label across its arc, reflect it across the
-      # nearest point on the arc and update the leader-line endpoints.
-      if (!identical(gene_label_side, "auto") && nrow(gene_labels) > 0) {
-        cs <- cos(rot_rad)
-        sn <- sin(rot_rad)
-        want_inside <- identical(gene_label_side, "inside")
-        moved <- logical(nrow(gene_labels))
-        for (i in seq_len(nrow(gene_labels))) {
-          sid <- gene_labels$seq_id[i]
-          ref <- seq_refs[[sid]]
-          px <- gene_labels$text_x[i]
-          py <- gene_labels$text_y[i]
-
-          # Nearest point on this sequence's reference path, expressed in the
-          # un-rotated frame.  The reference paths are stored before the
-          # global rotation is applied.
-          ang <- (atan2(py, px) - rot_rad) %% (2 * pi)
-          # Find the closest reference angle on the circle.  `findInterval`
-          # assumes an increasing vector, which breaks for reversed
-          # orientations where starts > ends.
-          idx <- which.min(abs(((ref$angles - ang + pi) %% (2 * pi)) - pi))
-          bx <- ref$path$x[idx]
-          by <- ref$path$y[idx]
-
-          # Rotate the nearest path point into the plotted frame.
-          bxr <- bx * cs - by * sn
-          byr <- bx * sn + by * cs
-
-          # Determine the current side using the Euclidean distance from the
-          # chord centre.  This is more stable than a tangent-normal
-          # projection when a label has been repelled far away from its arc.
-          base_r <- sqrt(bxr^2 + byr^2)
-          label_r <- sqrt(px^2 + py^2)
-          currently_inside <- label_r < base_r
-          if (currently_inside != want_inside) {
-            # Mirror the label across the arc radius (2*base_r - label_r)
-            # while keeping its angular direction.  This is stable for labels
-            # that were repelled far away and does not depend on the nearest
-            # path point being collinear with the label.
-            new_r <- 2 * base_r - label_r
-            scale <- if (label_r > 0) new_r / label_r else 0
-            gene_labels$text_x[i] <- px * scale
-            gene_labels$text_y[i] <- py * scale
-            moved[i] <- TRUE
-          }
-        }
-        if (nrow(gene_label_segments) > 0 && any(moved)) {
-          upd <- gene_label_segments$group %in% which(moved)
-          idx_lbl <- match(gene_label_segments$group[upd],
-                           seq_len(nrow(gene_labels)))
-          gene_label_segments$x1[upd] <- gene_labels$text_x[idx_lbl]
-          gene_label_segments$y1[upd] <- gene_labels$text_y[idx_lbl]
-        }
-      }
       # Horizontal text: reset the rotation angle and justify the text on the
       # far side of the leader line (i.e. the text extends away from the gene
       # anchor). Otherwise a label whose text is justified towards the line
@@ -1298,6 +1243,54 @@ compute_chord_layout <- function(
         box_padding = gene_label_repel_box_padding,
         repel_boxes = repel_boxes
       )
+
+      # Enforce the requested arc side only after the final de-overlap pass.
+      # Doing it here avoids a second mirroring step and keeps the final
+      # rendered text position on the correct side.
+      if (!identical(gene_label_side, "auto") && nrow(gene_labels) > 0) {
+        want_inside <- identical(gene_label_side, "inside")
+
+        # The documented meaning of `gene_label_side` is radial: labels are
+        # inside the chord when they are closer to the centre than their
+        # sequence arc, and outside when they are farther away.  Use the
+        # median rendered radius of each sequence arc so the test is stable
+        # for circular, straight and Bézier paths alike.
+        arc_radius_by_id <- vapply(
+          seq_arcs,
+          function(a) median(sqrt(a$x^2 + a$y^2)),
+          numeric(1)
+        )
+        names(arc_radius_by_id) <- vapply(
+          seq_arcs,
+          function(a) unique(a$seq_id)[1],
+          character(1)
+        )
+
+        for (i in seq_len(nrow(gene_labels))) {
+          sid <- gene_labels$seq_id[i]
+          base_r <- arc_radius_by_id[[sid]]
+          px <- gene_labels$text_x[i]
+          py <- gene_labels$text_y[i]
+          label_r <- sqrt(px^2 + py^2)
+          currently_inside <- label_r < base_r
+          if (currently_inside != want_inside) {
+            new_r <- 2 * base_r - label_r
+            scale <- if (label_r > 0) new_r / label_r else 0
+            gene_labels$text_x[i] <- px * scale
+            gene_labels$text_y[i] <- py * scale
+          }
+        }
+      }
+
+      # Recompute horizontal justification from the final label positions.
+      # The final de-overlap / side-enforcement pass can move a label across
+      # its gene, especially for reversed sequence orientations.
+      if (identical(gene_label_orientation, "horizontal")) {
+        gene_labels$hjust <- ifelse(
+          gene_labels$text_x >= gene_labels$anchor_x, 0, 1
+        )
+      }
+
       gene_label_segments <- ggchord_repel_segments(
         gene_labels,
         min_segment_length = gene_label_repel_min_segment_length

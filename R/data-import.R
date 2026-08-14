@@ -292,7 +292,8 @@ read_gff3_single <- function(file, feature_types = "CDS",
 #' gff <- tempfile(fileext = ".gff3")
 #' writeLines(c(
 #'   "##gff-version 3",
-#'   "seqA	source	CDS	101	500	.	+	0	ID=cds1;product=hypothetical protein"
+#'   paste0("seqA	source	CDS	101	500	.	+	0	",
+#'          "ID=cds1;product=hypothetical protein")
 #' ), gff)
 #' read_gff3(gff)
 read_gff3 <- function(file = NULL, files = NULL, feature_types = "CDS",
