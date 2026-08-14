@@ -1220,75 +1220,133 @@ compute_chord_layout <- function(
       )
       gene_labels <- res$labels
       gene_label_segments <- res$segments
-      # Horizontal text: reset the rotation angle and justify the text on the
-      # far side of the leader line (i.e. the text extends away from the gene
-      # anchor). Otherwise a label whose text is justified towards the line
-      # would have the line (or the elbow stub) crossing the text.
-      if (identical(gene_label_orientation, "horizontal")) {
-        gene_labels$text_angle <- 0
-        if (nrow(gene_label_segments) > 0) {
-          seg <- gene_label_segments
-          # one segment row per label at this stage (before the elbow split)
-          moved_right <- (seg$x1 - seg$x0) >= 0
-          gene_labels$hjust[seg$group] <- ifelse(moved_right, 0, 1)
+      has_reversed_orientation <- any(orientation == -1)
+
+      if (has_reversed_orientation) {
+        # Reversed sequence orientations need a stable radial text direction;
+        # otherwise labels on the left side can extend back toward the chord
+        # interior and their elbow leader lines cross the ribbons.
+        if (identical(gene_label_orientation, "horizontal")) {
+          gene_labels$text_angle <- 0
+          gene_labels$hjust <- ifelse(
+            gene_labels$anchor_x >= 0, 0, 1
+          )
+          gene_labels$vjust <- 0.5
         }
-      }
-      # Final deterministic pass with the exact rendered boxes (horizontal
-      # labels now have their final justification and orientation).  This
-      # removes any residual label-label overlaps left by the force layout
-      # and keeps the labels off the sequence/group/axis label rectangles.
-      gene_labels <- ggchord_repel_labels_final(
-        gene_labels,
-        units_per_inch = units_per_inch,
-        box_padding = gene_label_repel_box_padding,
-        repel_boxes = repel_boxes
-      )
 
-      # Enforce the requested arc side only after the final de-overlap pass.
-      # Doing it here avoids a second mirroring step and keeps the final
-      # rendered text position on the correct side.
-      if (!identical(gene_label_side, "auto") && nrow(gene_labels) > 0) {
-        want_inside <- identical(gene_label_side, "inside")
-
-        # The documented meaning of `gene_label_side` is radial: labels are
-        # inside the chord when they are closer to the centre than their
-        # sequence arc, and outside when they are farther away.  Use the
-        # median rendered radius of each sequence arc so the test is stable
-        # for circular, straight and Bézier paths alike.
-        arc_radius_by_id <- vapply(
-          seq_arcs,
-          function(a) median(sqrt(a$x^2 + a$y^2)),
-          numeric(1)
-        )
-        names(arc_radius_by_id) <- vapply(
-          seq_arcs,
-          function(a) unique(a$seq_id)[1],
-          character(1)
-        )
-
-        for (i in seq_len(nrow(gene_labels))) {
-          sid <- gene_labels$seq_id[i]
-          base_r <- arc_radius_by_id[[sid]]
-          px <- gene_labels$text_x[i]
-          py <- gene_labels$text_y[i]
-          label_r <- sqrt(px^2 + py^2)
-          currently_inside <- label_r < base_r
-          if (currently_inside != want_inside) {
-            new_r <- 2 * base_r - label_r
-            scale <- if (label_r > 0) new_r / label_r else 0
-            gene_labels$text_x[i] <- px * scale
-            gene_labels$text_y[i] <- py * scale
+        if (!identical(gene_label_side, "auto") && nrow(gene_labels) > 0) {
+          want_inside <- identical(gene_label_side, "inside")
+          arc_radius_by_id <- vapply(
+            seq_arcs,
+            function(a) median(sqrt(a$x^2 + a$y^2)),
+            numeric(1)
+          )
+          names(arc_radius_by_id) <- vapply(
+            seq_arcs,
+            function(a) unique(a$seq_id)[1],
+            character(1)
+          )
+          for (i in seq_len(nrow(gene_labels))) {
+            sid <- gene_labels$seq_id[i]
+            base_r <- arc_radius_by_id[[sid]]
+            px <- gene_labels$text_x[i]
+            py <- gene_labels$text_y[i]
+            label_r <- sqrt(px^2 + py^2)
+            currently_inside <- label_r < base_r
+            if (currently_inside != want_inside) {
+              new_r <- 2 * base_r - label_r
+              scale <- if (label_r > 0) new_r / label_r else 0
+              gene_labels$text_x[i] <- px * scale
+              gene_labels$text_y[i] <- py * scale
+            }
           }
         }
-      }
 
-      # Recompute horizontal justification from the final label positions.
-      # The final de-overlap / side-enforcement pass can move a label across
-      # its gene, especially for reversed sequence orientations.
-      if (identical(gene_label_orientation, "horizontal")) {
-        gene_labels$hjust <- ifelse(
-          gene_labels$text_x >= gene_labels$anchor_x, 0, 1
+        for (pass in seq_len(3)) {
+          gene_labels <- ggchord_repel_labels_final(
+            gene_labels,
+            units_per_inch = units_per_inch,
+            box_padding = max(gene_label_repel_box_padding, 0.5),
+            repel_boxes = NULL
+          )
+        }
+
+        # Re-assert the side after the final separation pass.
+        if (!identical(gene_label_side, "auto") && nrow(gene_labels) > 0) {
+          want_inside <- identical(gene_label_side, "inside")
+          for (i in seq_len(nrow(gene_labels))) {
+            sid <- gene_labels$seq_id[i]
+            base_r <- arc_radius_by_id[[sid]]
+            px <- gene_labels$text_x[i]
+            py <- gene_labels$text_y[i]
+            label_r <- sqrt(px^2 + py^2)
+            currently_inside <- label_r < base_r
+            if (currently_inside != want_inside) {
+              new_r <- 2 * base_r - label_r
+              scale <- if (label_r > 0) new_r / label_r else 0
+              gene_labels$text_x[i] <- px * scale
+              gene_labels$text_y[i] <- py * scale
+            }
+          }
+        }
+      } else {
+        # Horizontal text: reset the rotation angle and justify the text on the
+        # far side of the leader line (i.e. the text extends away from the gene
+        # anchor). Otherwise a label whose text is justified towards the line
+        # would have the line (or the elbow stub) crossing the text.
+        if (identical(gene_label_orientation, "horizontal")) {
+          gene_labels$text_angle <- 0
+          if (nrow(gene_label_segments) > 0) {
+            seg <- gene_label_segments
+            moved_right <- (seg$x1 - seg$x0) >= 0
+            gene_labels$hjust[seg$group] <- ifelse(moved_right, 0, 1)
+          }
+        }
+        # Final deterministic pass with the exact rendered boxes (horizontal
+        # labels now have their final justification and orientation).  This
+        # removes any residual label-label overlaps left by the force layout
+        # and keeps the labels off the sequence/group/axis label rectangles.
+        gene_labels <- ggchord_repel_labels_final(
+          gene_labels,
+          units_per_inch = units_per_inch,
+          box_padding = gene_label_repel_box_padding,
+          repel_boxes = repel_boxes
         )
+
+        # Enforce the requested arc side only after the final de-overlap pass.
+        if (!identical(gene_label_side, "auto") && nrow(gene_labels) > 0) {
+          want_inside <- identical(gene_label_side, "inside")
+          arc_radius_by_id <- vapply(
+            seq_arcs,
+            function(a) median(sqrt(a$x^2 + a$y^2)),
+            numeric(1)
+          )
+          names(arc_radius_by_id) <- vapply(
+            seq_arcs,
+            function(a) unique(a$seq_id)[1],
+            character(1)
+          )
+          for (i in seq_len(nrow(gene_labels))) {
+            sid <- gene_labels$seq_id[i]
+            base_r <- arc_radius_by_id[[sid]]
+            px <- gene_labels$text_x[i]
+            py <- gene_labels$text_y[i]
+            label_r <- sqrt(px^2 + py^2)
+            currently_inside <- label_r < base_r
+            if (currently_inside != want_inside) {
+              new_r <- 2 * base_r - label_r
+              scale <- if (label_r > 0) new_r / label_r else 0
+              gene_labels$text_x[i] <- px * scale
+              gene_labels$text_y[i] <- py * scale
+            }
+          }
+        }
+
+        if (identical(gene_label_orientation, "horizontal")) {
+          gene_labels$hjust <- ifelse(
+            gene_labels$text_x >= gene_labels$anchor_x, 0, 1
+          )
+        }
       }
 
       gene_label_segments <- ggchord_repel_segments(
