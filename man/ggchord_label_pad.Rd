@@ -8,8 +8,8 @@ labels rendered by the gene/sequence label layers stay inside the figure.}
 ggchord_label_pad(layout)
 }
 \description{
-The measured text width (inches) is converted to data units with a
-calibration factor calibrated for square figures (the standard ggchord
-layout); the value is intentionally slightly conservative.
+Kept for backwards compatibility.  Plot limits are now computed adaptively
+by \code{\link{ggchord_adaptive_limits}()}, which fits the actual text
+boxes rather than adding a single conservative margin on every side.
 }
 \keyword{internal}

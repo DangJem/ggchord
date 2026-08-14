@@ -12,9 +12,8 @@
 #' @param data Default NULL (retrieved automatically from the layout)
 #' @param seq_label_radius Optional numeric/vector. Radial position of the
 #'   labels as a multiplier of the sequence arc radius: \code{1} is on the arc,
-#'   \code{> 1} places the label outside (away from the chord center, e.g.
-#'   \code{1.15} = 15% outside) and \code{< 1} places it inside, default NULL
-#'   (1.15)
+#'   \code{> 1} places the label outside (away from the chord center) and
+#'   \code{< 1} places it inside, default 1
 #' @param seq_label_rotation Optional numeric/vector. Additional label rotation
 #'   (degrees) on top of the arc-aligned orientation, default NULL (0). Ignored
 #'   when \code{seq_label_orientation = "horizontal"}.
@@ -26,9 +25,10 @@
 #'   keeps it readable), \code{"horizontal"} draws every label horizontally,
 #'   extending away from the chord center.
 #' @param seq_label_hjust Optional numeric/vector. Horizontal justification of
-#'   the labels, default NULL (0.5; with
+#'   the labels, default NULL. The default arc orientation uses -0.2 so the
+#'   text sits just inside the sequence; with
 #'   \code{seq_label_orientation = "horizontal"} the justification is chosen
-#'   automatically so the text extends away from the chord center).
+#'   automatically so the text extends away from the chord center.
 #' @param seq_label_vjust Optional numeric/vector. Vertical justification of
 #'   the labels, default NULL (0.5).
 #' @param check_overlap Logical, default FALSE. When TRUE, labels that would
@@ -46,7 +46,7 @@
 #' p <- ggchord(seq_data_example) + geom_seq() + geom_seq_label()
 #' p
 geom_seq_label <- function(mapping = NULL, data = NULL,
-                           seq_label_radius = NULL,
+                           seq_label_radius = 1,
                            seq_label_rotation = NULL,
                            seq_label_size = NULL,
                            seq_labels = NULL,

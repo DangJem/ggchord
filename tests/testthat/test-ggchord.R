@@ -678,7 +678,8 @@ test_that("gene_label_segment_linetype overrides the auto dash behaviour", {
   )
   # default "auto" stays solid when nothing was moved to the other side
   p0 <- ggchord(seq_data_example, gene_data = gene_data_example) +
-    geom_seq() + geom_gene() + geom_gene_label_repel(seed = 1)
+    geom_seq() + geom_gene() +
+    geom_gene_label_repel(seed = 1, gene_label_side = "auto")
   ggplot_build(p0)
   expect_equal(unique(get_chord_layout()$gene_label_segments$linetype), "solid")
 })

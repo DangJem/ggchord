@@ -1189,6 +1189,23 @@ compute_chord_layout <- function(
       repel_pts <- ggchord_repel_points(
         seq_arcs, gene_polys, axis_lines, axis_ticks, show_axis
       )
+      repel_boxes <- ggchord_text_obstacle_boxes(
+        seq_labels_df, group_labels, axis_ticks, show_axis,
+        units_per_inch = units_per_inch
+      )
+
+      # Horizontal labels must be solved with their final (horizontal) text
+      # boxes.  Assign the starting side justification before the repulsion
+      # run; the layout refreshes it from the final leader-line direction
+      # below.
+      if (identical(gene_label_orientation, "horizontal")) {
+        gene_labels$text_angle <- 0
+        gene_labels$hjust <- ifelse(
+          gene_labels$text_x >= gene_labels$anchor_x, 0, 1
+        )
+        gene_labels$vjust <- 0.5
+      }
+
       res <- ggchord_repel_labels(
         gene_labels,
         units_per_inch = units_per_inch,
@@ -1198,58 +1215,55 @@ compute_chord_layout <- function(
         min_segment_length = gene_label_repel_min_segment_length,
         force = gene_label_repel_force,
         seed = gene_label_repel_seed,
-        repel_points = repel_pts
+        repel_points = repel_pts,
+        repel_boxes = repel_boxes
       )
       gene_labels <- res$labels
       gene_label_segments <- res$segments
       # With gene_label_side, every label must end up on the requested side:
-      # if the repulsion pushed a label across its arc, mirror it across the
-      # arc again (keeping its distance from the arc) and update the
-      # leader-line endpoints.
+      # if the repulsion pushed a label across its arc, reflect it across the
+      # nearest point on the arc and update the leader-line endpoints.
       if (!identical(gene_label_side, "auto") && nrow(gene_labels) > 0) {
         cs <- cos(rot_rad)
         sn <- sin(rot_rad)
+        want_inside <- identical(gene_label_side, "inside")
         moved <- logical(nrow(gene_labels))
         for (i in seq_len(nrow(gene_labels))) {
           sid <- gene_labels$seq_id[i]
           ref <- seq_refs[[sid]]
           px <- gene_labels$text_x[i]
           py <- gene_labels$text_y[i]
-          # label's angle in the un-rotated frame (the reference paths are
-          # stored pre-rotation)
+
+          # Nearest point on this sequence's reference path, expressed in the
+          # un-rotated frame.  The reference paths are stored before the
+          # global rotation is applied.
           ang <- (atan2(py, px) - rot_rad) %% (2 * pi)
-          fi <- findInterval(ang, ref$angles)
-          if (fi < 1) fi <- 1
-          if (fi >= length(ref$angles)) fi <- length(ref$angles) - 1
-          idx <- if (abs(ref$angles[fi] - ang) <=
-                      abs(ref$angles[fi + 1] - ang)) fi else fi + 1
+          # Find the closest reference angle on the circle.  `findInterval`
+          # assumes an increasing vector, which breaks for reversed
+          # orientations where starts > ends.
+          idx <- which.min(abs(((ref$angles - ang + pi) %% (2 * pi)) - pi))
           bx <- ref$path$x[idx]
           by <- ref$path$y[idx]
-          if (idx < nrow(ref$path)) {
-            dx <- ref$path$x[idx + 1] - bx
-            dy <- ref$path$y[idx + 1] - by
-          } else {
-            dx <- bx - ref$path$x[idx - 1]
-            dy <- by - ref$path$y[idx - 1]
-          }
-          # inward normal (same convention as map_to_curve)
-          nx <- -dy
-          ny <- dx
-          nl <- sqrt(nx^2 + ny^2)
-          if (nl > 0) {
-            nx <- nx / nl
-            ny <- ny / nl
-          }
-          # rotate base point and normal into the plotted frame
+
+          # Rotate the nearest path point into the plotted frame.
           bxr <- bx * cs - by * sn
           byr <- bx * sn + by * cs
-          nxr <- nx * cs - ny * sn
-          nyr <- nx * sn + ny * cs
-          s <- (px - bxr) * nxr + (py - byr) * nyr
-          want_inside <- identical(gene_label_side, "inside")
-          if ((s > 0) != want_inside) {
-            gene_labels$text_x[i] <- px - 2 * s * nxr
-            gene_labels$text_y[i] <- py - 2 * s * nyr
+
+          # Determine the current side using the Euclidean distance from the
+          # chord centre.  This is more stable than a tangent-normal
+          # projection when a label has been repelled far away from its arc.
+          base_r <- sqrt(bxr^2 + byr^2)
+          label_r <- sqrt(px^2 + py^2)
+          currently_inside <- label_r < base_r
+          if (currently_inside != want_inside) {
+            # Mirror the label across the arc radius (2*base_r - label_r)
+            # while keeping its angular direction.  This is stable for labels
+            # that were repelled far away and does not depend on the nearest
+            # path point being collinear with the label.
+            new_r <- 2 * base_r - label_r
+            scale <- if (label_r > 0) new_r / label_r else 0
+            gene_labels$text_x[i] <- px * scale
+            gene_labels$text_y[i] <- py * scale
             moved[i] <- TRUE
           }
         }
@@ -1274,6 +1288,21 @@ compute_chord_layout <- function(
           gene_labels$hjust[seg$group] <- ifelse(moved_right, 0, 1)
         }
       }
+      # Final deterministic pass with the exact rendered boxes (horizontal
+      # labels now have their final justification and orientation).  This
+      # removes any residual label-label overlaps left by the force layout
+      # and keeps the labels off the sequence/group/axis label rectangles.
+      gene_labels <- ggchord_repel_labels_final(
+        gene_labels,
+        units_per_inch = units_per_inch,
+        box_padding = gene_label_repel_box_padding,
+        repel_boxes = repel_boxes
+      )
+      gene_label_segments <- ggchord_repel_segments(
+        gene_labels,
+        min_segment_length = gene_label_repel_min_segment_length
+      )
+
       # elbow leader lines: an oblique segment from the gene to the label's
       # horizontal level, then a short horizontal stub into the label
       if (identical(gene_label_segment, "elbow") &&

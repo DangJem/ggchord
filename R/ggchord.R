@@ -574,9 +574,9 @@ compute_chord_geometry <- function(plot) {
   gene_lrepel_minseg <- gene_repel_params$min_segment_length %||% 0.5
   gene_lrepel_force <- gene_repel_params$force %||% 1
   gene_lrepel_seed  <- gene_repel_params$seed %||% 123
-  gene_lrepel_orient <- gene_repel_params$gene_label_orientation %||% "arc"
-  gene_lrepel_seg    <- gene_repel_params$gene_label_segment %||% "line"
-  gene_lrepel_side   <- gene_repel_params$gene_label_side %||% "auto"
+  gene_lrepel_orient <- gene_repel_params$gene_label_orientation %||% "horizontal"
+  gene_lrepel_seg    <- gene_repel_params$gene_label_segment %||% "elbow"
+  gene_lrepel_side   <- gene_repel_params$gene_label_side %||% "outside"
   gene_lrepel_ltype  <- gene_repel_params$gene_label_segment_linetype %||% "auto"
 
   if (!gene_cs %in% c("strand", "manual")) {
@@ -665,14 +665,18 @@ compute_chord_geometry <- function(plot) {
                              default_value = seqs)
     }
     seq_label_radius <- process_sequence_param(
-      seq_label_params$seq_label_radius, seqs, "seq_label_radius", 1.15)
+      seq_label_params$seq_label_radius, seqs, "seq_label_radius", 1)
     seq_label_rotation <- process_sequence_param(
       seq_label_params$seq_label_rotation, seqs, "seq_label_rotation", 0)
     seq_label_size <- process_sequence_param(
       seq_label_params$seq_label_size, seqs, "seq_label_size", 3)
     seq_label_orientation <- seq_label_params$seq_label_orientation %||% "arc"
     seq_label_hjust <- if (is.null(seq_label_params$seq_label_hjust)) {
-      NULL
+      if (identical(seq_label_orientation, "arc")) {
+        process_sequence_param(-0.2, seqs, "seq_label_hjust", -0.2)
+      } else {
+        NULL
+      }
     } else {
       process_sequence_param(seq_label_params$seq_label_hjust, seqs,
                              "seq_label_hjust", 0.5)
@@ -1126,50 +1130,108 @@ rename_ribbon_layers <- function(plot, ribbon_indices, ribbon_aes, layout) {
 #' Set the fixed coordinate system from the layout extremes
 #' @keywords internal
 set_ggchord_coord <- function(plot, layout) {
-  ext <- layout$extremes
-  pad <- 0.05 * max(ext$x_max - ext$x_min, ext$y_max - ext$y_min, 1)
-  # Reserve extra space for text labels (gene labels and sequence labels) so
-  # that they are not clipped at the edge of the figure.
-  pad <- pad + ggchord_label_pad(layout)
+  lim <- ggchord_adaptive_limits(layout)
   plot$coordinates <- coord_fixed(
     ratio = 1,
-    xlim  = c(ext$x_min - pad, ext$x_max + pad),
-    ylim  = c(ext$y_min - pad, ext$y_max + pad),
+    xlim  = lim$xlim,
+    ylim  = lim$ylim,
     clip  = "off"
   )
   plot
 }
 
+#' Compute coordinate limits that fit the rendered text boxes
+#'
+#' The chord geometry is placed in a square, fixed-aspect panel.  Instead of
+#' adding one global text-width pad on every side, this helper measures the
+#' actual gene/sequence/group/axis label boxes and expands only the sides that
+#' need it.  The result is a tighter plot that uses the available panel area.
+#' @keywords internal
+ggchord_adaptive_limits <- function(layout) {
+  ext <- layout$extremes
+  if (is.null(ext) || !all(is.finite(c(ext$x_min, ext$x_max,
+                                        ext$y_min, ext$y_max)))) {
+    return(list(xlim = c(-1, 1), ylim = c(-1, 1)))
+  }
+
+  x_range <- ext$x_max - ext$x_min
+  y_range <- ext$y_max - ext$y_min
+  span <- max(x_range, y_range, 1)
+  units_per_inch <- span / 6
+
+  x_lim <- c(ext$x_min, ext$x_max)
+  y_lim <- c(ext$y_min, ext$y_max)
+
+  add_boxes <- function(b) {
+    if (is.null(b) || nrow(b) == 0) return(invisible(NULL))
+    x_lim <<- range(c(x_lim, b$xmin, b$xmax), na.rm = TRUE)
+    y_lim <<- range(c(y_lim, b$ymin, b$ymax), na.rm = TRUE)
+    invisible(NULL)
+  }
+
+  if (nrow(layout$gene_labels) > 0) {
+    add_boxes(ggchord_text_boxes(
+      layout$gene_labels,
+      x_col = "text_x", y_col = "text_y", text_col = "text",
+      angle_col = "text_angle", size_col = "size",
+      hjust_col = "hjust", vjust_col = "vjust",
+      units_per_inch = units_per_inch, box_padding = 0.03
+    ))
+  }
+  if (nrow(layout$seq_labels_df) > 0) {
+    add_boxes(ggchord_text_boxes(
+      layout$seq_labels_df,
+      x_col = "text_x", y_col = "text_y", text_col = "label",
+      angle_col = "text_angle", size_col = "size",
+      hjust_col = "hjust", vjust_col = "vjust",
+      units_per_inch = units_per_inch, box_padding = 0.03
+    ))
+  }
+  if (!is.null(layout$group_labels) && nrow(layout$group_labels) > 0) {
+    add_boxes(ggchord_text_boxes(
+      layout$group_labels,
+      x_col = "text_x", y_col = "text_y", text_col = "label",
+      angle_col = "text_angle", size_col = "size",
+      hjust_col = "hjust", vjust_col = "vjust",
+      units_per_inch = units_per_inch, box_padding = 0.03
+    ))
+  }
+  if (isTRUE(layout$show_axis) && nrow(layout$axis_ticks) > 0) {
+    axis_labels <- layout$axis_ticks[!is.na(layout$axis_ticks$label), ,
+                                     drop = FALSE]
+    if (nrow(axis_labels) > 0) {
+      add_boxes(ggchord_text_boxes(
+        axis_labels,
+        x_col = "label_x", y_col = "label_y", text_col = "label",
+        angle_col = "label_angle", size_col = "size",
+        hjust_col = "label_hjust", vjust_col = "label_vjust",
+        units_per_inch = units_per_inch, box_padding = 0.03
+      ))
+    }
+  }
+
+  # coord_fixed() needs a square data range; centering the square on the
+  # rendered content avoids any extra blank strip on one side.
+  x_mid <- mean(x_lim)
+  y_mid <- mean(y_lim)
+  half <- max(diff(range(x_lim)), diff(range(y_lim))) / 2
+  half <- half + 0.02 * max(half * 2, 1)
+
+  list(
+    xlim = c(x_mid - half, x_mid + half),
+    ylim = c(y_mid - half, y_mid + half)
+  )
+}
+
 #' Estimate the coordinate margin (in data units) needed so that the text
 #' labels rendered by the gene/sequence label layers stay inside the figure.
 #'
-#' The measured text width (inches) is converted to data units with a
-#' calibration factor calibrated for square figures (the standard ggchord
-#' layout); the value is intentionally slightly conservative.
+#' Kept for backwards compatibility.  Plot limits are now computed adaptively
+#' by \code{\link{ggchord_adaptive_limits}()}, which fits the actual text
+#' boxes rather than adding a single conservative margin on every side.
 #' @keywords internal
 ggchord_label_pad <- function(layout) {
-  texts <- character(0)
-  sizes <- numeric(0)
-  if (nrow(layout$gene_labels) > 0) {
-    texts <- c(texts, layout$gene_labels$text)
-    sizes <- c(sizes, rep(3.88, nrow(layout$gene_labels)))
-  }
-  if (nrow(layout$seq_labels_df) > 0) {
-    texts <- c(texts, layout$seq_labels_df$label)
-    sizes <- c(sizes, layout$seq_labels_df$size)
-  }
-  if (!is.null(layout$group_labels) && nrow(layout$group_labels) > 0) {
-    texts <- c(texts, layout$group_labels$label)
-    sizes <- c(sizes, layout$group_labels$size)
-  }
-  if (length(texts) == 0) return(0)
-  grDevices::pdf(NULL)
-  on.exit(grDevices::dev.off())
-  widths <- suppressWarnings(graphics::strwidth(texts, units = "inches",
-                                                cex = sizes / 12))
-  # A label at the edge can extend up to its full width beyond its anchor
-  # (depending on hjust/angle), so reserve slightly more than half the width.
-  max(widths, na.rm = TRUE) * 0.9
+  0
 }
 
 #' Fully prepare a ggchord plot and return it (compute layout, rename ribbon
