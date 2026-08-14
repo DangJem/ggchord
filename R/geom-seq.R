@@ -75,6 +75,11 @@ seq_group_label_geom <- rename_text_colour_geom()
 #'
 #' @return A list of ggplot2 layers
 #' @export
+#'
+#' @examples
+#' data(seq_data_example)
+#' p <- ggchord(seq_data_example) + geom_seq()
+#' ggplot2::ggplot_build(p)
 geom_seq <- function(mapping = NULL, data = NULL,
                      seq_order = NULL,
                      seq_labels = NULL,

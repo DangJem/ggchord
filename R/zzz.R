@@ -64,6 +64,14 @@ set_chord_layout <- function(layout) {
 #' @return A chord layout list containing the computed geometry (sequence
 #'   arcs, ribbon polygons, gene arrows, axis elements, extremes, colors, etc.)
 #' @export
+#'
+#' @examples
+#' data(seq_data_example)
+#' data(ribbon_data_example)
+#' p <- ggchord(seq_data_example, ribbon_data_example) + geom_seq() + geom_ribbon()
+#' ggplot2::ggplot_build(p)
+#' layout <- get_chord_layout()
+#' names(layout$seq_arcs)
 get_chord_layout <- function() {
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)

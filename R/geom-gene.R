@@ -31,6 +31,13 @@
 #' @return A list of ggplot2 layers. To annotate the genes with their labels,
 #'   add a \code{\link{geom_gene_label}()} layer.
 #' @export
+#'
+#' @examples
+#' data(seq_data_example)
+#' data(gene_data_example)
+#' p <- ggchord(seq_data_example, gene_data = gene_data_example) +
+#'   geom_seq() + geom_gene()
+#' ggplot2::ggplot_build(p)
 geom_gene <- function(mapping = NULL, data = NULL,
                       gene_offset = NULL,
                       gene_width = NULL,
@@ -137,6 +144,13 @@ geom_gene <- function(mapping = NULL, data = NULL,
 #'   genes (with leader lines), use \code{\link{geom_gene_label_repel}()}
 #'   instead.
 #' @export
+#'
+#' @examples
+#' data(seq_data_example)
+#' data(gene_data_example)
+#' p <- ggchord(seq_data_example, gene_data = gene_data_example) +
+#'   geom_seq() + geom_gene() + geom_gene_label()
+#' ggplot2::ggplot_build(p)
 geom_gene_label <- function(mapping = NULL, data = NULL,
                             gene_label_size = NULL,
                             gene_label_rotation = NULL,
@@ -233,6 +247,13 @@ geom_gene_label <- function(mapping = NULL, data = NULL,
 #'
 #' @return A list of ggplot2 layers (a leader-line layer and a text layer).
 #' @export
+#'
+#' @examples
+#' data(seq_data_example)
+#' data(gene_data_example)
+#' p <- ggchord(seq_data_example, gene_data = gene_data_example) +
+#'   geom_seq() + geom_gene() + geom_gene_label_repel()
+#' ggplot2::ggplot_build(p)
 geom_gene_label_repel <- function(mapping = NULL, data = NULL,
                                   gene_label_size = NULL,
                                   gene_label_rotation = NULL,

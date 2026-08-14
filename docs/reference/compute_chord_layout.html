@@ -9,7 +9,7 @@ into Cartesian (x, y) coordinates and stores them in a layout list."></head><bod
 
     <a class="navbar-brand me-2" href="../index.html">ggchord</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,12 +53,39 @@ into Cartesian (x, y) coordinates and stores them in a layout list.</p>
 <span>  <span class="va">seq_curvature</span>,</span>
 <span>  <span class="va">orientation</span>,</span>
 <span>  <span class="va">seq_gap</span>,</span>
+<span>  seq_group <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  seq_group_gap <span class="op">=</span> <span class="fl">0.08</span>,</span>
+<span>  seq_group_labels <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  seq_group_label_radius <span class="op">=</span> <span class="fl">1.35</span>,</span>
+<span>  seq_group_colors <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  ribbon_data <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">ribbonGap</span>,</span>
 <span>  <span class="va">ribbon_color_scheme</span>,</span>
 <span>  <span class="va">ribbon_colors</span>,</span>
 <span>  <span class="va">ribbon_alpha</span>,</span>
+<span>  ribbon_color_by <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  ribbon_color_limits <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  ribbon_color_breaks <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  ribbon_color_name <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  ribbon_alpha_by <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  ribbon_alpha_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.15</span>, <span class="fl">0.9</span><span class="op">)</span>,</span>
+<span>  ribbon_outline_by <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  ribbon_outline_colors <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  ribbon_linetype_by <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  ribbon_linetypes <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  ribbon_direction <span class="op">=</span> <span class="st">"none"</span>,</span>
+<span>  ribbon_direction_colors <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>same <span class="op">=</span> <span class="st">"black"</span>, reverse <span class="op">=</span> <span class="st">"grey50"</span><span class="op">)</span>,</span>
+<span>  ribbon_direction_linetypes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>same <span class="op">=</span> <span class="st">"solid"</span>, reverse <span class="op">=</span> <span class="st">"dashed"</span><span class="op">)</span>,</span>
+<span>  ribbon_direction_alpha <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>same <span class="op">=</span> <span class="fl">1</span>, reverse <span class="op">=</span> <span class="fl">0.45</span><span class="op">)</span>,</span>
 <span>  <span class="va">ribbon_ctrl_point</span>,</span>
+<span>  region_data <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  region_fill <span class="op">=</span> <span class="st">"#F59E0B"</span>,</span>
+<span>  region_color <span class="op">=</span> <span class="st">"#B45309"</span>,</span>
+<span>  region_alpha <span class="op">=</span> <span class="fl">0.25</span>,</span>
+<span>  region_width <span class="op">=</span> <span class="fl">0.08</span>,</span>
+<span>  region_offset <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  region_side <span class="op">=</span> <span class="st">"inside"</span>,</span>
+<span>  ribbon_highlight_rows <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">integer</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
 <span>  gene_data <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">geneGap</span>,</span>
 <span>  <span class="va">geneWidth</span>,</span>

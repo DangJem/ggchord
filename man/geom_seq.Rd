@@ -84,3 +84,8 @@ Draws arcs (or straight lines, depending on the curvature setting) representing 
 Sequence layout parameters (order, orientation, radius, curvature, colors, etc.) are specified here.
 Sequences can be visually grouped with an extra inter-group gap and optional group labels.
 }
+\examples{
+data(seq_data_example)
+p <- ggchord(seq_data_example) + geom_seq()
+ggplot2::ggplot_build(p)
+}

@@ -11,6 +11,11 @@
 #'
 #' @return A Coord object for ggplot2 \code{+} composition
 #' @export
+#'
+#' @examples
+#' data(seq_data_example)
+#' p <- ggchord(seq_data_example) + coord_chord() + geom_seq()
+#' ggplot2::ggplot_build(p)
 coord_chord <- function(layout = NULL) {
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)

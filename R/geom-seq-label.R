@@ -39,6 +39,11 @@
 #'
 #' @return A list of ggplot2 layers
 #' @export
+#'
+#' @examples
+#' data(seq_data_example)
+#' p <- ggchord(seq_data_example) + geom_seq() + geom_seq_label()
+#' ggplot2::ggplot_build(p)
 geom_seq_label <- function(mapping = NULL, data = NULL,
                            seq_label_radius = NULL,
                            seq_label_rotation = NULL,

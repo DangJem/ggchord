@@ -74,3 +74,10 @@ emphasized without changing the underlying Identity(%) legend. Selection is
 done with safe, explicit filters (row numbers, query/subject IDs, pident and
 length ranges) or a predicate function.
 }
+\examples{
+data(seq_data_example)
+data(ribbon_data_example)
+p <- ggchord(seq_data_example, ribbon_data_example) +
+  geom_seq() + geom_ribbon() + geom_ribbon_highlight(ribbon_ids = 1)
+ggplot2::ggplot_build(p)
+}

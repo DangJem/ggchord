@@ -33,6 +33,13 @@
 #'
 #' @return A list of ggplot2 layers
 #' @export
+#'
+#' @examples
+#' data(seq_data_example)
+#' data(ribbon_data_example)
+#' p <- ggchord(seq_data_example, ribbon_data_example) +
+#'   geom_seq() + geom_ribbon() + geom_ribbon_highlight(ribbon_ids = 1)
+#' ggplot2::ggplot_build(p)
 geom_ribbon_highlight <- function(mapping = NULL, data = NULL,
                                   ribbon_ids = NULL,
                                   qaccver = NULL,

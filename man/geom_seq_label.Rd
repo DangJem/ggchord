@@ -68,3 +68,8 @@ Places sequence labels at the midpoint of each sequence arc, radially
 offset from the arc. Labels can be styled via their radial offset, rotation,
 font size, text orientation and justification.
 }
+\examples{
+data(seq_data_example)
+p <- ggchord(seq_data_example) + geom_seq() + geom_seq_label()
+ggplot2::ggplot_build(p)
+}

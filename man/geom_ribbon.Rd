@@ -128,3 +128,10 @@ A list of ggplot2 layers
 \description{
 Draws colored ribbons corresponding to alignment results. Color scheme and spacing parameters are specified here.
 }
+\examples{
+data(seq_data_example)
+data(ribbon_data_example)
+p <- ggchord(seq_data_example, ribbon_data_example) +
+  geom_seq() + geom_ribbon()
+ggplot2::ggplot_build(p)
+}

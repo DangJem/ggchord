@@ -66,3 +66,8 @@ A list of ggplot2 layers
 Draws axes for each sequence in the chord diagram (including axis lines, major/minor ticks, and labels).
 Axis parameters (spacing, tick count/length, label size/orientation, etc.) are specified here.
 }
+\examples{
+data(seq_data_example)
+p <- ggchord(seq_data_example) + geom_seq() + geom_axis()
+ggplot2::ggplot_build(p)
+}

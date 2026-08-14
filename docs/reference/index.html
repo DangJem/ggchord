@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ggchord</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -34,9 +34,9 @@
     </div>
 
     <div class="section level2">
-      <h2 id="all-functions">All functions<a class="anchor" aria-label="anchor" href="#all-functions"></a></h2>
+      <h2 id="plot-construction">Plot construction<a class="anchor" aria-label="anchor" href="#plot-construction"></a></h2>
 
-
+      <div class="section-desc"><p>Build, convert and inspect ggchord plots.</p></div>
 
       <dl></dl></div><div class="section level2">
 
@@ -45,10 +45,10 @@
 
       <dl><dt>
 
-          <code><a href="clean_ggchord_data.html">clean_ggchord_data()</a></code>
+          <code><a href="ggchord.html">ggchord()</a></code>
 
         </dt>
-        <dd>Clean ggchord input data with explicit, report-driven policies</dd>
+        <dd>ggchord: layered multi-sequence alignment chord diagrams for ggplot2</dd>
 
         <dt>
 
@@ -59,17 +59,61 @@
 
         <dt>
 
-          <code><a href="deduplicate_ggchord_ribbons.html">deduplicate_ggchord_ribbons()</a></code>
+          <code><a href="get_chord_layout.html">get_chord_layout()</a></code>
 
         </dt>
-        <dd>Deduplicate alignment ribbons</dd>
+        <dd>Get the chord layout from the package environment</dd>
 
         <dt>
 
-          <code><a href="filter_ggchord_ribbons.html">filter_ggchord_ribbons()</a></code>
+          <code><a href="plus-.ggchord.html">`+`(<i>&lt;ggchord&gt;</i>)</a></code>
 
         </dt>
-        <dd>Filter alignment ribbons before plotting</dd>
+        <dd>Combine a ggchord plot with ggplot2 objects</dd>
+
+        <dt>
+
+          <code><a href="ggplotly.ggchord.html">ggplotly(<i>&lt;ggchord&gt;</i>)</a></code>
+
+        </dt>
+        <dd>Convert a ggchord plot to a plotly object</dd>
+      </dl></div><div class="section level2">
+      <h2 id="methods-and-datasets">Methods and datasets<a class="anchor" aria-label="anchor" href="#methods-and-datasets"></a></h2>
+
+      <div class="section-desc"><p>S3 methods and example data shipped with ggchord.</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="as.data.frame.ggchord_validation.html">as.data.frame(<i>&lt;ggchord_validation&gt;</i>)</a></code>
+
+        </dt>
+        <dd>Coerce a validation result to a flat data.frame</dd>
+
+        <dt>
+
+          <code><a href="print.ggchord_clean.html">print(<i>&lt;ggchord_clean&gt;</i>)</a></code>
+
+        </dt>
+        <dd>Print a cleaned ggchord data result</dd>
+
+        <dt>
+
+          <code><a href="seq_data_example.html">seq_data_example</a></code>
+
+        </dt>
+        <dd>Example sequence data</dd>
+
+        <dt>
+
+          <code><a href="ribbon_data_example.html">ribbon_data_example</a></code>
+
+        </dt>
+        <dd>Example alignment data</dd>
 
         <dt>
 
@@ -77,13 +121,29 @@
 
         </dt>
         <dd>Example gene annotation data</dd>
+      </dl></div><div class="section level2">
+      <h2 id="layers">Layers<a class="anchor" aria-label="anchor" href="#layers"></a></h2>
+
+      <div class="section-desc"><p>Stack geometry, annotation, axis and label layers.</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="geom_seq.html">geom_seq()</a></code>
+
+        </dt>
+        <dd>Add a sequence arc layer</dd>
 
         <dt>
 
-          <code><a href="geom_axis.html">geom_axis()</a></code>
+          <code><a href="geom_ribbon.html">geom_ribbon()</a></code>
 
         </dt>
-        <dd>Add an axis layer</dd>
+        <dd>Add an alignment ribbon layer</dd>
 
         <dt>
 
@@ -108,17 +168,10 @@
 
         <dt>
 
-          <code><a href="geom_ribbon.html">geom_ribbon()</a></code>
+          <code><a href="geom_axis.html">geom_axis()</a></code>
 
         </dt>
-        <dd>Add an alignment ribbon layer</dd>
-
-        <dt>
-
-          <code><a href="geom_seq.html">geom_seq()</a></code>
-
-        </dt>
-        <dd>Add a sequence arc layer</dd>
+        <dd>Add an axis layer</dd>
 
         <dt>
 
@@ -129,38 +182,40 @@
 
         <dt>
 
-          <code><a href="get_chord_layout.html">get_chord_layout()</a></code>
+          <code><a href="geom_seq_region.html">geom_seq_region()</a></code>
 
         </dt>
-        <dd>Get the chord layout from the package environment</dd>
+        <dd>Highlight regions along sequence arcs</dd>
 
         <dt>
 
-          <code><a href="ggchord.html">ggchord()</a></code>
+          <code><a href="geom_ribbon_highlight.html">geom_ribbon_highlight()</a></code>
 
         </dt>
-        <dd>ggchord: layered multi-sequence alignment chord diagrams for ggplot2</dd>
+        <dd>Highlight selected alignment ribbons</dd>
 
         <dt>
 
-          <code><a href="ggplotly.ggchord.html">ggplotly(<i>&lt;ggchord&gt;</i>)</a></code>
+          <code><a href="geom_feature.html">geom_feature()</a></code>
 
         </dt>
-        <dd>Convert a ggchord plot to a plotly object</dd>
+        <dd>Draw generic genomic features</dd>
+      </dl></div><div class="section level2">
+      <h2 id="data-import">Data import<a class="anchor" aria-label="anchor" href="#data-import"></a></h2>
 
-        <dt>
+      <div class="section-desc"><p>Read FASTA, BLAST and GFF3 files in R.</p></div>
 
-          <code><a href="merge_ggchord_ribbons.html">merge_ggchord_ribbons()</a></code>
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="read_fasta_lengths.html">read_fasta_lengths()</a></code>
 
         </dt>
-        <dd>Merge adjacent or overlapping alignment blocks of the same sequence pair</dd>
-
-        <dt>
-
-          <code><a href="plus-.ggchord.html">`+`(<i>&lt;ggchord&gt;</i>)</a></code>
-
-        </dt>
-        <dd>Combine a ggchord plot with ggplot2 objects</dd>
+        <dd>Read one or more FASTA files into seq_data format</dd>
 
         <dt>
 
@@ -171,40 +226,66 @@
 
         <dt>
 
-          <code><a href="read_fasta_lengths.html">read_fasta_lengths()</a></code>
-
-        </dt>
-        <dd>Read one or more FASTA files into seq_data format</dd>
-
-        <dt>
-
           <code><a href="read_gff3.html">read_gff3()</a></code>
 
         </dt>
         <dd>Read one or more GFF3 files into gene_data format</dd>
+      </dl></div><div class="section level2">
+      <h2 id="validation-and-cleaning">Validation and cleaning<a class="anchor" aria-label="anchor" href="#validation-and-cleaning"></a></h2>
 
-        <dt>
+      <div class="section-desc"><p>Check and repair ggchord input tables before plotting.</p></div>
 
-          <code><a href="ribbon_data_example.html">ribbon_data_example</a></code>
+      <dl></dl></div><div class="section level2">
 
-        </dt>
-        <dd>Example alignment data</dd>
 
-        <dt>
 
-          <code><a href="seq_data_example.html">seq_data_example</a></code>
 
-        </dt>
-        <dd>Example sequence data</dd>
-
-        <dt>
+      <dl><dt>
 
           <code><a href="validate_ggchord_data.html">validate_ggchord_data()</a></code>
 
         </dt>
         <dd>Validate ggchord input data before plotting</dd>
+
+        <dt>
+
+          <code><a href="clean_ggchord_data.html">clean_ggchord_data()</a></code>
+
+        </dt>
+        <dd>Clean ggchord input data with explicit, report-driven policies</dd>
+      </dl></div><div class="section level2">
+      <h2 id="ribbon-preparation">Ribbon preparation<a class="anchor" aria-label="anchor" href="#ribbon-preparation"></a></h2>
+
+      <div class="section-desc"><p>Filter, deduplicate and merge alignment blocks.</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="filter_ggchord_ribbons.html">filter_ggchord_ribbons()</a></code>
+
+        </dt>
+        <dd>Filter alignment ribbons before plotting</dd>
+
+        <dt>
+
+          <code><a href="deduplicate_ggchord_ribbons.html">deduplicate_ggchord_ribbons()</a></code>
+
+        </dt>
+        <dd>Deduplicate alignment ribbons</dd>
+
+        <dt>
+
+          <code><a href="merge_ggchord_ribbons.html">merge_ggchord_ribbons()</a></code>
+
+        </dt>
+        <dd>Merge adjacent or overlapping alignment blocks of the same sequence pair</dd>
       </dl></div>
-  </main></div>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">

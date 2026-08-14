@@ -57,3 +57,11 @@ CRISPR, promoter or user-defined features. It prepares a gene-compatible
 table from a \code{type} / \code{category} / \code{label} specification and
 reuses the proven \code{geom_gene()} geometry and scales.
 }
+\examples{
+data(seq_data_example)
+features <- data.frame(seq_id = "MT108731.1",
+                       start = 1000, end = 4000,
+                       strand = "+", type = "CDS")
+p <- ggchord(seq_data_example) + geom_seq() + geom_feature(features)
+ggplot2::ggplot_build(p)
+}

@@ -113,6 +113,13 @@ make_ribbon_geom <- function(outline = FALSE, linetype = FALSE) {
 #'
 #' @return A list of ggplot2 layers
 #' @export
+#'
+#' @examples
+#' data(seq_data_example)
+#' data(ribbon_data_example)
+#' p <- ggchord(seq_data_example, ribbon_data_example) +
+#'   geom_seq() + geom_ribbon()
+#' ggplot2::ggplot_build(p)
 geom_ribbon <- function(mapping = NULL, data = NULL,
                         ribbon_color_scheme = NULL,
                         ribbon_colors = NULL,

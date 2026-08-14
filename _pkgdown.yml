@@ -17,3 +17,50 @@ articles:
     contents:
       - ggchord_vignette
       - ggchord_guide_hans
+reference:
+  - title: "Plot construction"
+    desc: "Build, convert and inspect ggchord plots."
+    contents:
+      - ggchord
+      - coord_chord
+      - get_chord_layout
+      - +.ggchord
+      - ggplotly.ggchord
+  - title: "Methods and datasets"
+    desc: "S3 methods and example data shipped with ggchord."
+    contents:
+      - as.data.frame.ggchord_validation
+      - print.ggchord_clean
+      - seq_data_example
+      - ribbon_data_example
+      - gene_data_example
+  - title: "Layers"
+    desc: "Stack geometry, annotation, axis and label layers."
+    contents:
+      - geom_seq
+      - geom_ribbon
+      - geom_gene
+      - geom_gene_label
+      - geom_gene_label_repel
+      - geom_axis
+      - geom_seq_label
+      - geom_seq_region
+      - geom_ribbon_highlight
+      - geom_feature
+  - title: "Data import"
+    desc: "Read FASTA, BLAST and GFF3 files in R."
+    contents:
+      - read_fasta_lengths
+      - read_blast
+      - read_gff3
+  - title: "Validation and cleaning"
+    desc: "Check and repair ggchord input tables before plotting."
+    contents:
+      - validate_ggchord_data
+      - clean_ggchord_data
+  - title: "Ribbon preparation"
+    desc: "Filter, deduplicate and merge alignment blocks."
+    contents:
+      - filter_ggchord_ribbons
+      - deduplicate_ggchord_ribbons
+      - merge_ggchord_ribbons

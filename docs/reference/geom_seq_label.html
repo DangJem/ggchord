@@ -11,7 +11,7 @@ font size, text orientation and justification."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">ggchord</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -120,7 +120,7 @@ the labels, default NULL (0.5).</p></dd>
 <dt id="arg-check-overlap">check_overlap<a class="anchor" aria-label="anchor" href="#arg-check-overlap"></a></dt>
 <dd><p>Logical, default FALSE. When TRUE, labels that would
 overlap a previously drawn label are skipped (ggplot2's
-<code><a href="https://ggplot2.tidyverse.org/reference/geom_text.html" class="external-link">geom_text()</a></code> option).</p></dd>
+<code>geom_text()</code> option).</p></dd>
 
 
 <dt id="arg-show-legend">show_legend<a class="anchor" aria-label="anchor" href="#arg-show-legend"></a></dt>
@@ -128,7 +128,7 @@ overlap a previously drawn label are skipped (ggplot2's
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>Additional arguments passed to <code><a href="https://ggplot2.tidyverse.org/reference/geom_text.html" class="external-link">geom_text()</a></code></p></dd>
+<dd><p>Additional arguments passed to <code>geom_text()</code></p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -136,6 +136,811 @@ overlap a previously drawn label are skipped (ggplot2's
     <p>A list of ggplot2 layers</p>
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">seq_data_example</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="ggchord.html">ggchord</a></span><span class="op">(</span><span class="va">seq_data_example</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="geom_seq.html">geom_seq</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu">geom_seq_label</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">ggplot_build</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;ggplot2::ggplot_built&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  @ data  :List of 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. $ :'data.frame':	2000 obs. of  8 variables:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ..  ..$ x        : num [1:2000] 0.707 0.705 0.703 0.701 0.699 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ..  ..$ y        : num [1:2000] 0.707 0.709 0.711 0.713 0.716 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ..  ..$ group    : int [1:2000] 1 1 1 1 1 1 1 1 1 1 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ..  .. ..- attr(*, "n")= int 4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ..  ..$ colour   : chr [1:2000] "#E41A1C" "#E41A1C" "#E41A1C" "#E41A1C" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ..  ..$ PANEL    : Factor w/ 1 level "1": 1 1 1 1 1 1 1 1 1 1 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ..  ..$ linewidth: num [1:2000] 1.2 1.2 1.2 1.2 1.2 1.2 1.2 1.2 1.2 1.2 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ..  ..$ linetype : int [1:2000] 1 1 1 1 1 1 1 1 1 1 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ..  ..$ alpha    : logi [1:2000] NA NA NA NA NA NA ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. $ :'data.frame':	4 obs. of  16 variables:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ..  ..$ x         : num [1:4] 0.0402 -1.1014 -0.6776 1.0708</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ..  ..$ y         : num [1:4] 1.149 0.331 -0.929 -0.419</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ..  ..$ label     : chr [1:4] "MT108731.1" "MT118296.1" "OQ646790.1" "OR222515.1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ..  ..$ angle     : num [1:4] 88 343.3 53.9 338.6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ..  ..$ hjust     : num [1:4] 0.5 0.5 0.5 0.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ..  ..$ vjust     : num [1:4] 0.5 0.5 0.5 0.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ..  ..$ size      : num [1:4] 3 3 3 3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ..  ..$ PANEL     : Factor w/ 1 level "1": 1 1 1 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ..  ..$ group     : int [1:4] -1 -1 -1 -1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ..  .. ..- attr(*, "n")= int 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ..  ..$ nudge_x   : num [1:4] 0 0 0 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ..  ..$ nudge_y   : num [1:4] 0 0 0 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ..  ..$ colour    : chr [1:4] "black" "black" "black" "black"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ..  ..$ family    : chr [1:4] "" "" "" ""</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ..  ..$ alpha     : logi [1:4] NA NA NA NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ..  ..$ fontface  : num [1:4] 1 1 1 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ..  ..$ lineheight: num [1:4] 1.2 1.2 1.2 1.2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  @ layout:Classes 'Layout', 'ggproto', 'gg' &lt;ggproto object: Class Layout, gg&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     coord: &lt;ggproto object: Class CoordCartesian, Coord, gg&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         aspect: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         backtransform_range: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         clip: off</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         default: FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         distance: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         draw_panel: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         expand: TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         is_free: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         is_linear: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         labels: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         limits: list</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         modify_scales: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         range: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         ratio: 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         render_axis_h: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         render_axis_v: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         render_bg: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         render_fg: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         reverse: none</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         setup_data: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         setup_layout: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         setup_panel_guides: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         setup_panel_params: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         setup_params: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         train_panel_guides: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         transform: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         super:  &lt;ggproto object: Class CoordCartesian, Coord, gg&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     coord_params: list</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     facet: &lt;ggproto object: Class FacetNull, Facet, gg&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         attach_axes: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         attach_strips: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         compute_layout: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         draw_back: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         draw_front: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         draw_labels: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         draw_panel_content: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         draw_panels: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         finish_data: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         format_strip_labels: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         init_gtable: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         init_scales: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         map_data: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         params: list</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         set_panel_size: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         setup_data: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         setup_panel_params: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         setup_params: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         shrink: TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         train_scales: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         vars: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         super:  &lt;ggproto object: Class FacetNull, Facet, gg&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     facet_params: list</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     finish_data: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     get_scales: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     layout: data.frame</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     map_position: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     panel_params: list</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     panel_scales_x: list</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     panel_scales_y: list</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     render: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     render_labels: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     reset_scales: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     resolve_label: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     setup: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     setup_panel_guides: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     setup_panel_params: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     train_position: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     super:  &lt;ggproto object: Class Layout, gg&gt; </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  @ plot  : &lt;ggplot2::ggplot&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. @ data       : list()</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. - attr(*, "class")= chr "waiver"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. @ layers     :List of 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ geom_seq :Classes 'LayerInstance', 'Layer', 'ggproto', 'gg' &lt;ggproto object: Class LayerInstance, Layer, gg&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     aes_params: list</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     compute_aesthetics: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     compute_geom_1: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     compute_geom_2: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     compute_position: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     compute_statistic: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     computed_geom_params: list</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     computed_mapping: ggplot2::mapping, uneval, gg, S7_object</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     computed_stat_params: list</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     constructor: call</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     data: data.frame</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     draw_geom: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     finish_statistics: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     geom: &lt;ggproto object: Class GeomPath, Geom, gg&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         aesthetics: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         default_aes: ggplot2::mapping, uneval, gg, S7_object</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         draw_group: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         draw_key: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         draw_layer: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         draw_panel: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         extra_params: na.rm</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         handle_na: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         non_missing_aes: linewidth colour linetype</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         optional_aes: </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         parameters: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         rename_size: TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         required_aes: x y</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         setup_data: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         setup_params: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         use_defaults: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         super:  &lt;ggproto object: Class GeomPath, Geom, gg&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     geom_params: list</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     ggchord_params: list</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     ggchord_placeholder: data.frame</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     ggchord_ref: environment</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     ggchord_type: seq</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     inherit.aes: FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     layer_data: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     layout: NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     map_statistic: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     mapping: ggplot2::mapping, uneval, gg, S7_object</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     name: NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     position: &lt;ggproto object: Class PositionIdentity, Position, gg&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         aesthetics: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         compute_layer: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         compute_panel: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         default_aes: ggplot2::mapping, uneval, gg, S7_object</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         required_aes: </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         setup_data: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         setup_params: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         use_defaults: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         super:  &lt;ggproto object: Class Position, gg&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     print: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     setup_layer: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     show.legend: TRUE FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     stat: &lt;ggproto object: Class StatIdentity, Stat, gg&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         aesthetics: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         compute_group: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         compute_layer: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         compute_panel: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         default_aes: ggplot2::mapping, uneval, gg, S7_object</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         dropped_aes: </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         extra_params: na.rm</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         finish_layer: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         non_missing_aes: </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         optional_aes: </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         parameters: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         required_aes: </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         retransform: TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         setup_data: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         setup_params: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         super:  &lt;ggproto object: Class Stat, gg&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     stat_params: list</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     super:  &lt;ggproto object: Class Layer, gg&gt; </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ geom_text:Classes 'LayerInstance', 'Layer', 'ggproto', 'gg' &lt;ggproto object: Class LayerInstance, Layer, gg&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     aes_params: list</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     compute_aesthetics: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     compute_geom_1: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     compute_geom_2: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     compute_position: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     compute_statistic: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     computed_geom_params: list</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     computed_mapping: ggplot2::mapping, uneval, gg, S7_object</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     computed_stat_params: list</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     constructor: call</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     data: data.frame</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     draw_geom: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     finish_statistics: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     geom: &lt;ggproto object: Class GeomText, Geom, gg&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         aesthetics: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         default_aes: ggplot2::mapping, uneval, gg, S7_object</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         draw_group: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         draw_key: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         draw_layer: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         draw_panel: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         extra_params: na.rm</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         handle_na: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         non_missing_aes: angle</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         optional_aes: </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         parameters: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         rename_size: FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         required_aes: x y label</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         setup_data: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         setup_params: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         use_defaults: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         super:  &lt;ggproto object: Class Geom, gg&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     geom_params: list</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     ggchord_params: list</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     ggchord_placeholder: data.frame</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     ggchord_ref: environment</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     ggchord_type: seq_label</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     inherit.aes: FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     layer_data: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     layout: NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     map_statistic: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     mapping: ggplot2::mapping, uneval, gg, S7_object</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     name: NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     position: &lt;ggproto object: Class PositionNudge, Position, gg&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         aesthetics: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         compute_layer: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         compute_panel: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         default_aes: ggplot2::mapping, uneval, gg, S7_object</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         required_aes: </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         setup_data: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         setup_params: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         use_defaults: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         x: NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         y: NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         super:  &lt;ggproto object: Class Position, gg&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     print: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     setup_layer: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     show.legend: FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     stat: &lt;ggproto object: Class StatIdentity, Stat, gg&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         aesthetics: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         compute_group: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         compute_layer: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         compute_panel: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         default_aes: ggplot2::mapping, uneval, gg, S7_object</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         dropped_aes: </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         extra_params: na.rm</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         finish_layer: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         non_missing_aes: </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         optional_aes: </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         parameters: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         required_aes: </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         retransform: TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         setup_data: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         setup_params: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         super:  &lt;ggproto object: Class Stat, gg&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     stat_params: list</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     super:  &lt;ggproto object: Class Layer, gg&gt; </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. @ scales     :Classes 'ScalesList', 'ggproto', 'gg' &lt;ggproto object: Class ScalesList, gg&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     add: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     add_defaults: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     add_missing: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     backtransform_df: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     clone: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     find: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     get_scales: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     has_scale: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     input: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     map_df: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     n: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     non_position_scales: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     scales: list</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     set_palettes: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     train_df: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     transform_df: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     super:  &lt;ggproto object: Class ScalesList, gg&gt; </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. @ guides     :Classes 'Guides', 'ggproto', 'gg' &lt;ggproto object: Class Guides, gg&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     add: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     aesthetics: colour</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     assemble: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     build: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     draw: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     get_custom: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     get_guide: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     get_params: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     get_position: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     guides: list</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     merge: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     missing: &lt;ggproto object: Class GuideNone, Guide, gg&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         add_title: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         arrange_layout: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         assemble_drawing: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         available_aes: any</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         build_decor: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         build_labels: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         build_ticks: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         build_title: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         draw: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         draw_early_exit: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         elements: list</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         extract_decor: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         extract_key: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         extract_params: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         get_layer_key: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         hashables: list</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         measure_grobs: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         merge: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         override_elements: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         params: list</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         process_layers: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         setup_elements: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         setup_params: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         train: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         transform: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         super:  &lt;ggproto object: Class GuideNone, Guide, gg&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     package_box: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     params: list</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     print: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     process_layers: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     setup: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     subset_guides: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     train: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     update_params: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     super:  &lt;ggproto object: Class Guides, gg&gt; </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. @ mapping    : &lt;ggplot2::mapping&gt;  Named list()</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. @ theme      : &lt;theme&gt; List of 144</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ line                            : &lt;ggplot2::element_line&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ colour       : chr "black"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ linewidth    : num 0.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ linetype     : num 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ lineend      : chr "butt"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ linejoin     : chr "round"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ arrow        : logi FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ arrow.fill   : chr "black"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ inherit.blank: logi TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ rect                            : &lt;ggplot2::element_rect&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ fill         : chr "white"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ colour       : chr "black"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ linewidth    : num 0.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ linetype     : num 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ linejoin     : chr "round"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ inherit.blank: logi TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ text                            : &lt;ggplot2::element_text&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ family       : chr ""</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ face         : chr "plain"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ italic       : chr NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ fontweight   : num NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ fontwidth    : num NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ colour       : chr "black"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ size         : num 11</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ hjust        : num 0.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ vjust        : num 0.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ angle        : num 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ lineheight   : num 0.9</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ margin       : &lt;ggplot2::margin&gt; num [1:4] 0 0 0 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ debug        : logi FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ inherit.blank: logi TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ title                           : &lt;ggplot2::element_text&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ family       : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ face         : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ italic       : chr NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ fontweight   : num NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ fontwidth    : num NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ colour       : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ size         : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ hjust        : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ vjust        : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ angle        : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ lineheight   : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ margin       : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ debug        : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ inherit.blank: logi TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ point                           : &lt;ggplot2::element_point&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ colour       : chr "black"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ shape        : num 19</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ size         : num 1.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ fill         : chr "white"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ stroke       : num 0.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ inherit.blank: logi TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ polygon                         : &lt;ggplot2::element_polygon&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ fill         : chr "white"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ colour       : chr "black"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ linewidth    : num 0.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ linetype     : num 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ linejoin     : chr "round"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ inherit.blank: logi TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ geom                            : &lt;ggplot2::element_geom&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ ink        : chr "black"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ paper      : chr "white"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ accent     : chr "#3366FF"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ linewidth  : num 0.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ borderwidth: num 0.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ linetype   : int 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ bordertype : int 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ family     : chr ""</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ fontsize   : num 3.87</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ pointsize  : num 1.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ pointshape : num 19</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ colour     : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ fill       : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ spacing                         : 'simpleUnit' num 5.5points</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..- attr(*, "unit")= int 8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ margins                         : &lt;ggplot2::margin&gt; num [1:4] 5.5 5.5 5.5 5.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ aspect.ratio                    : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ axis.title                      : &lt;ggplot2::element_blank&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ axis.title.x                    : &lt;ggplot2::element_text&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ family       : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ face         : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ italic       : chr NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ fontweight   : num NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ fontwidth    : num NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ colour       : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ size         : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ hjust        : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ vjust        : num 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ angle        : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ lineheight   : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ margin       : &lt;ggplot2::margin&gt; num [1:4] 2.75 0 0 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ debug        : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ inherit.blank: logi TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ axis.title.x.top                : &lt;ggplot2::element_text&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ family       : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ face         : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ italic       : chr NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ fontweight   : num NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ fontwidth    : num NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ colour       : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ size         : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ hjust        : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ vjust        : num 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ angle        : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ lineheight   : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ margin       : &lt;ggplot2::margin&gt; num [1:4] 0 0 2.75 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ debug        : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ inherit.blank: logi TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ axis.title.x.bottom             : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ axis.title.y                    : &lt;ggplot2::element_text&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ family       : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ face         : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ italic       : chr NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ fontweight   : num NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ fontwidth    : num NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ colour       : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ size         : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ hjust        : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ vjust        : num 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ angle        : num 90</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ lineheight   : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ margin       : &lt;ggplot2::margin&gt; num [1:4] 0 2.75 0 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ debug        : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ inherit.blank: logi TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ axis.title.y.left               : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ axis.title.y.right              : &lt;ggplot2::element_text&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ family       : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ face         : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ italic       : chr NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ fontweight   : num NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ fontwidth    : num NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ colour       : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ size         : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ hjust        : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ vjust        : num 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ angle        : num -90</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ lineheight   : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ margin       : &lt;ggplot2::margin&gt; num [1:4] 0 0 0 2.75</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ debug        : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ inherit.blank: logi TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ axis.text                       : &lt;ggplot2::element_blank&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ axis.text.x                     : &lt;ggplot2::element_text&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ family       : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ face         : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ italic       : chr NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ fontweight   : num NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ fontwidth    : num NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ colour       : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ size         : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ hjust        : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ vjust        : num 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ angle        : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ lineheight   : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ margin       : &lt;ggplot2::margin&gt; num [1:4] 2.2 0 0 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ debug        : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ inherit.blank: logi TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ axis.text.x.top                 : &lt;ggplot2::element_text&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ family       : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ face         : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ italic       : chr NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ fontweight   : num NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ fontwidth    : num NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ colour       : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ size         : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ hjust        : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ vjust        : num 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ angle        : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ lineheight   : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ margin       : &lt;ggplot2::margin&gt; num [1:4] 0 0 2.2 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ debug        : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ inherit.blank: logi TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ axis.text.x.bottom              : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ axis.text.y                     : &lt;ggplot2::element_text&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ family       : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ face         : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ italic       : chr NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ fontweight   : num NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ fontwidth    : num NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ colour       : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ size         : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ hjust        : num 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ vjust        : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ angle        : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ lineheight   : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ margin       : &lt;ggplot2::margin&gt; num [1:4] 0 2.2 0 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ debug        : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ inherit.blank: logi TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ axis.text.y.left                : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ axis.text.y.right               : &lt;ggplot2::element_text&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ family       : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ face         : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ italic       : chr NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ fontweight   : num NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ fontwidth    : num NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ colour       : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ size         : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ hjust        : num 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ vjust        : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ angle        : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ lineheight   : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ margin       : &lt;ggplot2::margin&gt; num [1:4] 0 0 0 2.2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ debug        : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ inherit.blank: logi TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ axis.text.theta                 : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ axis.text.r                     : &lt;ggplot2::element_text&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ family       : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ face         : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ italic       : chr NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ fontweight   : num NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ fontwidth    : num NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ colour       : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ size         : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ hjust        : num 0.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ vjust        : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ angle        : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ lineheight   : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ margin       : &lt;ggplot2::margin&gt; num [1:4] 0 2.2 0 2.2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ debug        : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ inherit.blank: logi TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ axis.ticks                      : &lt;ggplot2::element_blank&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ axis.ticks.x                    : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ axis.ticks.x.top                : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ axis.ticks.x.bottom             : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ axis.ticks.y                    : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ axis.ticks.y.left               : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ axis.ticks.y.right              : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ axis.ticks.theta                : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ axis.ticks.r                    : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ axis.minor.ticks.x.top          : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ axis.minor.ticks.x.bottom       : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ axis.minor.ticks.y.left         : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ axis.minor.ticks.y.right        : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ axis.minor.ticks.theta          : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ axis.minor.ticks.r              : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ axis.ticks.length               : 'rel' num 0.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ axis.ticks.length.x             : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ axis.ticks.length.x.top         : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ axis.ticks.length.x.bottom      : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ axis.ticks.length.y             : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ axis.ticks.length.y.left        : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ axis.ticks.length.y.right       : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ axis.ticks.length.theta         : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ axis.ticks.length.r             : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ axis.minor.ticks.length         : 'rel' num 0.75</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ axis.minor.ticks.length.x       : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ axis.minor.ticks.length.x.top   : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ axis.minor.ticks.length.x.bottom: NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ axis.minor.ticks.length.y       : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ axis.minor.ticks.length.y.left  : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ axis.minor.ticks.length.y.right : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ axis.minor.ticks.length.theta   : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ axis.minor.ticks.length.r       : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ axis.line                       : &lt;ggplot2::element_blank&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ axis.line.x                     : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ axis.line.x.top                 : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ axis.line.x.bottom              : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ axis.line.y                     : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ axis.line.y.left                : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ axis.line.y.right               : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ axis.line.theta                 : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ axis.line.r                     : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ legend.background               : &lt;ggplot2::element_blank&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ legend.margin                   : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ legend.spacing                  : 'simpleUnit' num 5mm</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..- attr(*, "unit")= int 7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ legend.spacing.x                : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ legend.spacing.y                : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ legend.key                      : &lt;ggplot2::element_rect&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ fill         : logi NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ colour       : logi NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ linewidth    : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ linetype     : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ linejoin     : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ inherit.blank: logi FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ legend.key.size                 : 'simpleUnit' num 1.2lines</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..- attr(*, "unit")= int 3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ legend.key.height               : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ legend.key.width                : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ legend.key.spacing              : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ legend.key.spacing.x            : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ legend.key.spacing.y            : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ legend.key.justification        : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ legend.frame                    : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ legend.ticks                    : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ legend.ticks.length             : 'rel' num 0.2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ legend.axis.line                : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ legend.text                     : &lt;ggplot2::element_text&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ family       : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ face         : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ italic       : chr NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ fontweight   : num NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ fontwidth    : num NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ colour       : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ size         : num 8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ hjust        : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ vjust        : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ angle        : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ lineheight   : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ margin       : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ debug        : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ inherit.blank: logi FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ legend.text.position            : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ legend.title                    : &lt;ggplot2::element_text&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ family       : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ face         : chr "bold"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ italic       : chr NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ fontweight   : num NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ fontwidth    : num NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ colour       : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ size         : num 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ hjust        : num 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ vjust        : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ angle        : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ lineheight   : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ margin       : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ debug        : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..@ inherit.blank: logi FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ legend.title.position           : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ legend.position                 : chr "right"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ legend.position.inside          : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ legend.direction                : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ legend.byrow                    : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ legend.justification            : chr "center"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ legend.justification.top        : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ legend.justification.bottom     : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ legend.justification.left       : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ legend.justification.right      : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ legend.justification.inside     : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  [list output truncated]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. @ complete: logi TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. @ validate: logi TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. @ coordinates:Classes 'CoordCartesian', 'Coord', 'ggproto', 'gg' &lt;ggproto object: Class CoordCartesian, Coord, gg&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     aspect: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     backtransform_range: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     clip: off</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     default: FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     distance: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     draw_panel: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     expand: TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     is_free: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     is_linear: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     labels: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     limits: list</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     modify_scales: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     range: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     ratio: 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     render_axis_h: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     render_axis_v: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     render_bg: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     render_fg: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     reverse: none</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     setup_data: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     setup_layout: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     setup_panel_guides: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     setup_panel_params: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     setup_params: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     train_panel_guides: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     transform: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     super:  &lt;ggproto object: Class CoordCartesian, Coord, gg&gt; </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. @ facet      :Classes 'FacetNull', 'Facet', 'ggproto', 'gg' &lt;ggproto object: Class FacetNull, Facet, gg&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     attach_axes: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     attach_strips: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     compute_layout: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     draw_back: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     draw_front: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     draw_labels: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     draw_panel_content: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     draw_panels: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     finish_data: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     format_strip_labels: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     init_gtable: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     init_scales: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     map_data: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     params: list</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     set_panel_size: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     setup_data: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     setup_panel_params: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     setup_params: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     shrink: TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     train_scales: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     vars: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     super:  &lt;ggproto object: Class FacetNull, Facet, gg&gt; </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. @ layout     :Classes 'Layout', 'ggproto', 'gg' &lt;ggproto object: Class Layout, gg&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     coord: NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     coord_params: list</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     facet: NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     facet_params: list</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     finish_data: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     get_scales: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     layout: NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     map_position: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     panel_params: NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     panel_scales_x: NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     panel_scales_y: NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     render: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     render_labels: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     reset_scales: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     resolve_label: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     setup: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     setup_panel_guides: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     setup_panel_params: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     train_position: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     super:  &lt;ggproto object: Class Layout, gg&gt; </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. @ labels     : &lt;ggplot2::labels&gt; List of 11</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ title : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ x     : chr "x"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ y     : chr "y"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ group : chr "seq_id"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ colour: chr "seq_id"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ label : chr "label"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ angle : chr "text_angle"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ hjust : chr "hjust"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ vjust : chr "vjust"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ size  : chr "size"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ alt   : chr ""</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. @ meta       :List of 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. .. $ ggchord:List of 5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..$ data      :List of 3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  .. ..$ seq_data   :'data.frame':	4 obs. of  2 variables:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  .. .. ..$ seq_id: chr [1:4] "MT108731.1" "MT118296.1" "OQ646790.1" "OR222515.1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  .. .. ..$ length: int [1:4] 64323 32090 57367 83080</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  .. ..$ ribbon_data: NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  .. ..$ gene_data  : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..$ global    :List of 5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  .. ..$ rotation    : num 45</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  .. ..$ panel_margin: num 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  .. ..$ show_legend : logi TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  .. ..$ debug       : logi FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  .. ..$ validate    : chr "warn"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..$ validation:List of 7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  .. ..$ valid       : logi TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  .. ..$ errors      :'data.frame':	0 obs. of  5 variables:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  .. .. ..$ table   : chr(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  .. .. ..$ category: chr(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  .. .. ..$ row     : int(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  .. .. ..$ column  : chr(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  .. .. ..$ message : chr(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  .. ..$ warnings    :'data.frame':	0 obs. of  5 variables:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  .. .. ..$ table   : chr(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  .. .. ..$ category: chr(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  .. .. ..$ row     : int(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  .. .. ..$ column  : chr(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  .. .. ..$ message : chr(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  .. ..$ summary     :'data.frame':	0 obs. of  4 variables:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  .. .. ..$ table   : chr(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  .. .. ..$ category: chr(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  .. .. ..$ severity: chr(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  .. .. ..$ n       : int(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  .. ..$ data_summary:List of 13</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  .. .. ..$ n_seq                : int 4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  .. .. ..$ n_ribbon             : int NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  .. .. ..$ n_gene               : int NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  .. .. ..$ n_unknown_ribbon_ids : int 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  .. .. ..$ n_unknown_gene_ids   : int 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  .. .. ..$ n_self_links         : int 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  .. .. ..$ n_out_of_range_ribbon: int 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  .. .. ..$ n_out_of_range_gene  : int 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  .. .. ..$ n_reversed_ribbon    : int 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  .. .. ..$ n_reversed_gene      : int 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  .. .. ..$ n_duplicates_ribbon  : int 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  .. .. ..$ n_duplicates_gene    : int 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  .. .. ..$ n_bad_strand         : int 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  .. ..$ invalid_rows: list()</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  .. ..$ cleanable   :'data.frame':	0 obs. of  4 variables:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  .. .. ..$ table     : chr(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  .. .. ..$ category  : chr(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  .. .. ..$ rows      : list()</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  .. .. .. ..- attr(*, "class")= chr "AsIs"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  .. .. ..$ suggestion: chr(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  .. ..- attr(*, "class")= chr "ggchord_validation"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..$ ref       :&lt;environment: 0xb70b2e4a0&gt; </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. ..  ..$ layout    : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  .. @ plot_env   :&lt;environment: 0xb7255f118&gt; </span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 
