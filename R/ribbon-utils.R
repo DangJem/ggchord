@@ -66,14 +66,17 @@ filter_ggchord_ribbons <- function(
     keep_pairs = NULL,
     drop_self_links = TRUE,
     sort_by = NULL) {
+  old_error <- ggchord_disable_debug()
+  on.exit(options(error = old_error), add = TRUE)
+
   if (!is.data.frame(ribbon_data)) {
-    stop("filter_ggchord_ribbons(): ribbon_data must be a data.frame",
+    ggchord_stop("filter_ggchord_ribbons(): ribbon_data must be a data.frame",
          call. = FALSE)
   }
   req <- c("qaccver", "saccver")
   missing <- setdiff(req, colnames(ribbon_data))
   if (length(missing) > 0) {
-    stop("filter_ggchord_ribbons(): ribbon_data is missing required column(s): ",
+    ggchord_stop("filter_ggchord_ribbons(): ribbon_data is missing required column(s): ",
          paste(missing, collapse = ", "), call. = FALSE)
   }
   n_input <- nrow(ribbon_data)
@@ -81,7 +84,7 @@ filter_ggchord_ribbons <- function(
 
   require_col <- function(col, arg) {
     if (!col %in% colnames(ribbon_data)) {
-      stop(sprintf(paste0(
+      ggchord_stop(sprintf(paste0(
         "filter_ggchord_ribbons(): column '%s' is required for the '%s' ",
         "filter but is missing from ribbon_data"), col, arg), call. = FALSE)
     }
@@ -164,7 +167,7 @@ filter_ggchord_ribbons <- function(
   sort_info <- NULL
   if (!is.null(sort_by)) {
     if (!is.character(sort_by) || length(sort_by) == 0) {
-      stop("filter_ggchord_ribbons(): sort_by must be a non-empty character vector",
+      ggchord_stop("filter_ggchord_ribbons(): sort_by must be a non-empty character vector",
            call. = FALSE)
     }
     keys <- lapply(sort_by, function(nm) {
@@ -178,7 +181,7 @@ filter_ggchord_ribbons <- function(
         col <- sub("^desc:", "", nm)
       }
       if (!col %in% colnames(out)) {
-        stop("filter_ggchord_ribbons(): sort_by column not found: ", col,
+        ggchord_stop("filter_ggchord_ribbons(): sort_by column not found: ", col,
              call. = FALSE)
       }
       list(col = col, desc = desc)
@@ -224,7 +227,7 @@ filter_ggchord_ribbons <- function(
 normalize_keep_pairs <- function(pairs) {
   if (is.data.frame(pairs)) {
     if (ncol(pairs) < 2) {
-      stop("keep_pairs data.frame must have at least two columns (query, subject)",
+      ggchord_stop("keep_pairs data.frame must have at least two columns (query, subject)",
            call. = FALSE)
     }
     return(data.frame(
@@ -235,7 +238,7 @@ normalize_keep_pairs <- function(pairs) {
   }
   if (is.matrix(pairs)) {
     if (ncol(pairs) < 2) {
-      stop("keep_pairs matrix must have at least two columns (query, subject)",
+      ggchord_stop("keep_pairs matrix must have at least two columns (query, subject)",
            call. = FALSE)
     }
     return(data.frame(
@@ -255,7 +258,7 @@ normalize_keep_pairs <- function(pairs) {
       is.character(x) && length(x) == 2
     }, logical(1)))
     if (!ok) {
-      stop("keep_pairs must be a data.frame/matrix with query/subject columns, a list of length-2 character vectors, or a single length-2 character vector",
+      ggchord_stop("keep_pairs must be a data.frame/matrix with query/subject columns, a list of length-2 character vectors, or a single length-2 character vector",
            call. = FALSE)
     }
     m <- do.call(rbind, pairs)
@@ -264,7 +267,7 @@ normalize_keep_pairs <- function(pairs) {
   if (is.character(pairs) && length(pairs) == 2) {
     return(data.frame(q = pairs[1], s = pairs[2], stringsAsFactors = FALSE))
   }
-  stop("keep_pairs must be a data.frame/matrix with query/subject columns, a list of length-2 character vectors, or a single length-2 character vector",
+  ggchord_stop("keep_pairs must be a data.frame/matrix with query/subject columns, a list of length-2 character vectors, or a single length-2 character vector",
        call. = FALSE)
 }
 
@@ -307,28 +310,31 @@ deduplicate_ggchord_ribbons <- function(
     by = c("exact", "coordinates", "overlap"),
     keep = c("best_pident", "longest", "first"),
     min_reciprocal_overlap = 0.9) {
+  old_error <- ggchord_disable_debug()
+  on.exit(options(error = old_error), add = TRUE)
+
   by <- match.arg(by)
   keep <- match.arg(keep)
   if (!is.data.frame(ribbon_data)) {
-    stop("deduplicate_ggchord_ribbons(): ribbon_data must be a data.frame",
+    ggchord_stop("deduplicate_ggchord_ribbons(): ribbon_data must be a data.frame",
          call. = FALSE)
   }
   req <- c("qaccver", "saccver", "length", "pident",
            "qstart", "qend", "sstart", "send")
   missing <- setdiff(req, colnames(ribbon_data))
   if (length(missing) > 0) {
-    stop("deduplicate_ggchord_ribbons(): ribbon_data is missing required column(s): ",
+    ggchord_stop("deduplicate_ggchord_ribbons(): ribbon_data is missing required column(s): ",
          paste(missing, collapse = ", "), call. = FALSE)
   }
   if (!is.numeric(tolerance) || length(tolerance) != 1 || is.na(tolerance) ||
       tolerance < 0) {
-    stop("deduplicate_ggchord_ribbons(): tolerance must be a non-negative number",
+    ggchord_stop("deduplicate_ggchord_ribbons(): tolerance must be a non-negative number",
          call. = FALSE)
   }
   if (!is.numeric(min_reciprocal_overlap) || length(min_reciprocal_overlap) != 1 ||
       is.na(min_reciprocal_overlap) || min_reciprocal_overlap < 0 ||
       min_reciprocal_overlap > 1) {
-    stop("deduplicate_ggchord_ribbons(): min_reciprocal_overlap must be in [0, 1]",
+    ggchord_stop("deduplicate_ggchord_ribbons(): min_reciprocal_overlap must be in [0, 1]",
          call. = FALSE)
   }
 
@@ -472,29 +478,32 @@ merge_ggchord_ribbons <- function(
     min_pident_difference = 0,
     require_same_orientation = TRUE,
     group_by = c("qaccver", "saccver")) {
+  old_error <- ggchord_disable_debug()
+  on.exit(options(error = old_error), add = TRUE)
+
   if (!is.data.frame(ribbon_data)) {
-    stop("merge_ggchord_ribbons(): ribbon_data must be a data.frame",
+    ggchord_stop("merge_ggchord_ribbons(): ribbon_data must be a data.frame",
          call. = FALSE)
   }
   req <- c("qaccver", "saccver", "length", "pident",
            "qstart", "qend", "sstart", "send")
   missing <- setdiff(req, colnames(ribbon_data))
   if (length(missing) > 0) {
-    stop("merge_ggchord_ribbons(): ribbon_data is missing required column(s): ",
+    ggchord_stop("merge_ggchord_ribbons(): ribbon_data is missing required column(s): ",
          paste(missing, collapse = ", "), call. = FALSE)
   }
   if (length(group_by) == 0 || !all(group_by %in% colnames(ribbon_data))) {
-    stop("merge_ggchord_ribbons(): group_by must be a subset of the ribbon_data columns",
+    ggchord_stop("merge_ggchord_ribbons(): group_by must be a subset of the ribbon_data columns",
          call. = FALSE)
   }
   if (!is.numeric(max_gap) || length(max_gap) != 1 || is.na(max_gap) ||
       max_gap < 0) {
-    stop("merge_ggchord_ribbons(): max_gap must be a non-negative number",
+    ggchord_stop("merge_ggchord_ribbons(): max_gap must be a non-negative number",
          call. = FALSE)
   }
   if (!is.numeric(min_pident_difference) || length(min_pident_difference) != 1 ||
       is.na(min_pident_difference) || min_pident_difference < 0) {
-    stop("merge_ggchord_ribbons(): min_pident_difference must be a non-negative number",
+    ggchord_stop("merge_ggchord_ribbons(): min_pident_difference must be a non-negative number",
          call. = FALSE)
   }
 

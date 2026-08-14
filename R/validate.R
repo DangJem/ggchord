@@ -688,20 +688,23 @@ validate_ggchord_data <- function(seq_data,
                                   check_coordinates = TRUE,
                                   check_duplicates = TRUE,
                                   check_self_links = TRUE) {
+  old_error <- ggchord_disable_debug()
+  on.exit(options(error = old_error), add = TRUE)
+
   if (!is.logical(strict) || length(strict) != 1 || is.na(strict)) {
-    stop("validate_ggchord_data(): strict must be TRUE or FALSE", call. = FALSE)
+    ggchord_stop("validate_ggchord_data(): strict must be TRUE or FALSE", call. = FALSE)
   }
   if (!is.logical(check_coordinates) || length(check_coordinates) != 1 ||
       is.na(check_coordinates)) {
-    stop("validate_ggchord_data(): check_coordinates must be TRUE or FALSE", call. = FALSE)
+    ggchord_stop("validate_ggchord_data(): check_coordinates must be TRUE or FALSE", call. = FALSE)
   }
   if (!is.logical(check_duplicates) || length(check_duplicates) != 1 ||
       is.na(check_duplicates)) {
-    stop("validate_ggchord_data(): check_duplicates must be TRUE or FALSE", call. = FALSE)
+    ggchord_stop("validate_ggchord_data(): check_duplicates must be TRUE or FALSE", call. = FALSE)
   }
   if (!is.logical(check_self_links) || length(check_self_links) != 1 ||
       is.na(check_self_links)) {
-    stop("validate_ggchord_data(): check_self_links must be TRUE or FALSE", call. = FALSE)
+    ggchord_stop("validate_ggchord_data(): check_self_links must be TRUE or FALSE", call. = FALSE)
   }
 
   col <- new_validation_collector()
@@ -754,7 +757,7 @@ validate_ggchord_data <- function(seq_data,
   ), class = "ggchord_validation")
 
   if (strict && !valid) {
-    stop(sprintf(paste0(
+    ggchord_stop(sprintf(paste0(
       "validate_ggchord_data(): %d severe error(s) found in the input data ",
       "(first error: %s). Run validate_ggchord_data(..., strict = FALSE) to ",
       "obtain the full report."),
@@ -765,6 +768,9 @@ validate_ggchord_data <- function(seq_data,
 
 #' @export
 print.ggchord_validation <- function(x, ...) {
+  old_error <- ggchord_disable_debug()
+  on.exit(options(error = old_error), add = TRUE)
+
   cat("ggchord data validation\n")
   cat("========================\n")
   status <- if (x$valid) "VALID" else "INVALID"
@@ -800,6 +806,9 @@ print.ggchord_validation <- function(x, ...) {
 
 #' @export
 summary.ggchord_validation <- function(object, ...) {
+  old_error <- ggchord_disable_debug()
+  on.exit(options(error = old_error), add = TRUE)
+
   out <- object$summary
   attr(out, "valid") <- object$valid
   attr(out, "data_summary") <- object$data_summary
@@ -809,6 +818,9 @@ summary.ggchord_validation <- function(object, ...) {
 
 #' @export
 print.ggchord_validation_summary <- function(x, ...) {
+  old_error <- ggchord_disable_debug()
+  on.exit(options(error = old_error), add = TRUE)
+
   cat("ggchord validation summary\n")
   cat(sprintf("Valid: %s\n", if (isTRUE(attr(x, "valid"))) "TRUE" else "FALSE"))
   ds <- attr(x, "data_summary")

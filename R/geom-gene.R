@@ -40,6 +40,9 @@ geom_gene <- function(mapping = NULL, data = NULL,
                       show_legend = TRUE,
                       legend_position = "right",
                       ...) {
+  old_error <- ggchord_disable_debug()
+  on.exit(options(error = old_error), add = TRUE)
+
   # Backward compatibility: gene label parameters used to live here. Point the
   # user to the dedicated layer instead of silently ignoring them.
   legacy_label_args <- intersect(
@@ -143,6 +146,9 @@ geom_gene_label <- function(mapping = NULL, data = NULL,
                             gene_label_wrap = NULL,
                             show_legend = FALSE,
                             ...) {
+  old_error <- ggchord_disable_debug()
+  on.exit(options(error = old_error), add = TRUE)
+
   # Placeholder text layer (real data is injected at print time)
   text_layer <- geom_text(
     data        = data.frame(x = numeric(0), y = numeric(0),
@@ -246,6 +252,9 @@ geom_gene_label_repel <- function(mapping = NULL, data = NULL,
                                   gene_label_segment_linetype = "auto",
                                   show_legend = FALSE,
                                   ...) {
+  old_error <- ggchord_disable_debug()
+  on.exit(options(error = old_error), add = TRUE)
+
   gene_label_orientation <- match.arg(gene_label_orientation,
                                       c("arc", "horizontal"))
   gene_label_segment <- match.arg(gene_label_segment, c("line", "elbow"))

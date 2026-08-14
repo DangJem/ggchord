@@ -12,6 +12,9 @@
 #' @return A Coord object for ggplot2 \code{+} composition
 #' @export
 coord_chord <- function(layout = NULL) {
+  old_error <- ggchord_disable_debug()
+  on.exit(options(error = old_error), add = TRUE)
+
   # Initial placeholder range; replaced by print.ggchord at print time
   coord_fixed(
     ratio = 1,

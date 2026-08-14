@@ -25,6 +25,9 @@
 #' @return A plotly object.
 #' @exportS3Method plotly::ggplotly
 ggplotly.ggchord <- function(p, ...) {
+  old_error <- ggchord_disable_debug()
+  on.exit(options(error = old_error), add = TRUE)
+
   out <- ggchord_plotly_ggplot(p)
   layout <- out$layout
   pl <- plotly::ggplotly(out$plot, ...)

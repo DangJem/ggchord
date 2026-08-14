@@ -50,6 +50,9 @@ geom_seq_label <- function(mapping = NULL, data = NULL,
                            check_overlap = FALSE,
                            show_legend = FALSE,
                            ...) {
+  old_error <- ggchord_disable_debug()
+  on.exit(options(error = old_error), add = TRUE)
+
   seq_label_orientation <- match.arg(seq_label_orientation)
   lyr <- ggplot2::geom_text(
     data = data.frame(text_x = numeric(0), text_y = numeric(0),

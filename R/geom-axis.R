@@ -46,6 +46,9 @@ geom_axis <- function(mapping = NULL, data = NULL,
                       axis_label_hide_overlaps = FALSE,
                       show_legend = FALSE,
                       ...) {
+  old_error <- ggchord_disable_debug()
+  on.exit(options(error = old_error), add = TRUE)
+
   empty_id <- data.frame(x = numeric(0), y = numeric(0),
                          seq_id = character(0))
   empty_seg <- data.frame(x0 = numeric(0), y0 = numeric(0),

@@ -3,3 +3,5 @@
 ..Rcheck/
 .DS_Store
 inst/doc
+R/.Rhistory
+.gitignore

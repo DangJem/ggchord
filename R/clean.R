@@ -78,6 +78,9 @@ clean_ggchord_data <- function(
     invalid_pident = c("clip", "drop", "error", "keep"),
     empty_annotation = c("keep", "drop", "replace"),
     replacement_annotation = "unannotated") {
+  old_error <- ggchord_disable_debug()
+  on.exit(options(error = old_error), add = TRUE)
+
   unknown_id <- match.arg(unknown_id)
   out_of_range <- match.arg(out_of_range)
   reversed_interval <- match.arg(reversed_interval)
@@ -87,27 +90,27 @@ clean_ggchord_data <- function(
   if (!is.character(replacement_annotation) ||
       length(replacement_annotation) != 1 ||
       is.na(replacement_annotation)) {
-    stop("clean_ggchord_data(): replacement_annotation must be a single non-NA character string",
+    ggchord_stop("clean_ggchord_data(): replacement_annotation must be a single non-NA character string",
          call. = FALSE)
   }
 
   # seq_data is the coordinate reference; it must itself be usable.
   if (!is.data.frame(seq_data) || nrow(seq_data) == 0) {
-    stop("clean_ggchord_data(): seq_data must be a non-empty data.frame",
+    ggchord_stop("clean_ggchord_data(): seq_data must be a non-empty data.frame",
          call. = FALSE)
   }
   if (!all(c("seq_id", "length") %in% colnames(seq_data))) {
-    stop("clean_ggchord_data(): seq_data must contain the columns seq_id and length",
+    ggchord_stop("clean_ggchord_data(): seq_data must contain the columns seq_id and length",
          call. = FALSE)
   }
   if (anyNA(seq_data$seq_id) || any(!nzchar(as.character(seq_data$seq_id))) ||
       anyDuplicated(seq_data$seq_id)) {
-    stop("clean_ggchord_data(): seq_data$seq_id must be non-missing, non-empty and unique",
+    ggchord_stop("clean_ggchord_data(): seq_data$seq_id must be non-missing, non-empty and unique",
          call. = FALSE)
   }
   if (!is.numeric(seq_data$length) || any(!is.finite(seq_data$length)) ||
       any(seq_data$length <= 0)) {
-    stop("clean_ggchord_data(): seq_data$length must contain finite positive numbers",
+    ggchord_stop("clean_ggchord_data(): seq_data$length must contain finite positive numbers",
          call. = FALSE)
   }
   seq_lens <- stats::setNames(seq_data$length, seq_data$seq_id)
@@ -138,35 +141,35 @@ clean_ggchord_data <- function(
   # -------------------------------------------------------------------------
   if (!is.null(ribbon_out)) {
     if (!is.data.frame(ribbon_out)) {
-      stop("clean_ggchord_data(): ribbon_data must be a data.frame", call. = FALSE)
+      ggchord_stop("clean_ggchord_data(): ribbon_data must be a data.frame", call. = FALSE)
     }
     req <- c("qaccver", "saccver", "length", "pident",
              "qstart", "qend", "sstart", "send")
     missing <- setdiff(req, colnames(ribbon_out))
     if (length(missing) > 0) {
-      stop("clean_ggchord_data(): ribbon_data is missing required column(s): ",
+      ggchord_stop("clean_ggchord_data(): ribbon_data is missing required column(s): ",
            paste(missing, collapse = ", "), call. = FALSE)
     }
     num_cols <- c("length", "pident", "qstart", "qend", "sstart", "send")
     for (nm in num_cols) {
       if (!is.numeric(ribbon_out[[nm]])) {
-        stop("clean_ggchord_data(): ribbon_data$", nm, " must be numeric",
+        ggchord_stop("clean_ggchord_data(): ribbon_data$", nm, " must be numeric",
              call. = FALSE)
       }
       if (any(!is.finite(ribbon_out[[nm]]))) {
-        stop("clean_ggchord_data(): ribbon_data$", nm,
+        ggchord_stop("clean_ggchord_data(): ribbon_data$", nm,
              " contains NA/NaN/Inf values; clean non-finite values before cleaning",
              call. = FALSE)
       }
     }
     if (any(ribbon_out$length <= 0)) {
-      stop("clean_ggchord_data(): ribbon_data$length must be positive",
+      ggchord_stop("clean_ggchord_data(): ribbon_data$length must be positive",
            call. = FALSE)
     }
     if (anyNA(ribbon_out$qaccver) || anyNA(ribbon_out$saccver) ||
         any(!nzchar(as.character(ribbon_out$qaccver))) ||
         any(!nzchar(as.character(ribbon_out$saccver)))) {
-      stop("clean_ggchord_data(): ribbon_data sequence IDs must be non-missing and non-empty",
+      ggchord_stop("clean_ggchord_data(): ribbon_data sequence IDs must be non-missing and non-empty",
            call. = FALSE)
     }
 
@@ -179,7 +182,7 @@ clean_ggchord_data <- function(
       if (any(bad)) {
         rows <- which(bad)
         if (unknown_id == "error") {
-          stop(sprintf(paste0("clean_ggchord_data(): unknown sequence ID(s) in ",
+          ggchord_stop(sprintf(paste0("clean_ggchord_data(): unknown sequence ID(s) in ",
                               "ribbon_data row(s) %s (column %s): %s; choose ",
                               "unknown_id = 'drop' or 'keep'"),
                        paste(rows, collapse = ", "), colname,
@@ -216,7 +219,7 @@ clean_ggchord_data <- function(
         val <- coords[[nm]]
         if (val < 1 || val > len) {
           if (out_of_range == "error") {
-            stop(sprintf(paste0("clean_ggchord_data(): ribbon_data$%s row %d is ",
+            ggchord_stop(sprintf(paste0("clean_ggchord_data(): ribbon_data$%s row %d is ",
                                 "outside [1, %d] (value %s); choose ",
                                 "out_of_range = 'clip', 'drop' or 'keep'"),
                          nm, i, len, val), call. = FALSE)
@@ -251,7 +254,7 @@ clean_ggchord_data <- function(
       if (coords[["qstart"]] > coords[["qend"]] ||
           coords[["sstart"]] > coords[["send"]]) {
         if (reversed_interval == "error") {
-          stop(sprintf(paste0("clean_ggchord_data(): reversed interval in ",
+          ggchord_stop(sprintf(paste0("clean_ggchord_data(): reversed interval in ",
                               "ribbon_data row %d (start > end); choose ",
                               "reversed_interval = 'sort', 'drop' or 'keep'"),
                        i), call. = FALSE)
@@ -306,7 +309,7 @@ clean_ggchord_data <- function(
       p <- row$pident
       if (p < 0 || p > 100) {
         if (invalid_pident == "error") {
-          stop(sprintf("clean_ggchord_data(): ribbon_data$pident row %d is %s; choose invalid_pident = 'clip', 'drop' or 'keep'",
+          ggchord_stop(sprintf("clean_ggchord_data(): ribbon_data$pident row %d is %s; choose invalid_pident = 'clip', 'drop' or 'keep'",
                        i, p), call. = FALSE)
         } else if (invalid_pident == "drop") {
           drop[i] <- TRUE
@@ -337,25 +340,25 @@ clean_ggchord_data <- function(
   # -------------------------------------------------------------------------
   if (!is.null(gene_out)) {
     if (!is.data.frame(gene_out)) {
-      stop("clean_ggchord_data(): gene_data must be a data.frame", call. = FALSE)
+      ggchord_stop("clean_ggchord_data(): gene_data must be a data.frame", call. = FALSE)
     }
     req <- c("seq_id", "start", "end", "strand", "anno")
     missing <- setdiff(req, colnames(gene_out))
     if (length(missing) > 0) {
-      stop("clean_ggchord_data(): gene_data is missing required column(s): ",
+      ggchord_stop("clean_ggchord_data(): gene_data is missing required column(s): ",
            paste(missing, collapse = ", "), call. = FALSE)
     }
     if (!is.numeric(gene_out$start) || !is.numeric(gene_out$end) ||
         any(!is.finite(gene_out$start)) || any(!is.finite(gene_out$end))) {
-      stop("clean_ggchord_data(): gene_data$start and $end must contain finite numbers",
+      ggchord_stop("clean_ggchord_data(): gene_data$start and $end must contain finite numbers",
            call. = FALSE)
     }
     if (anyNA(gene_out$strand) || any(!gene_out$strand %in% c("+", "-"))) {
-      stop("clean_ggchord_data(): gene_data$strand can only be '+' or '-'",
+      ggchord_stop("clean_ggchord_data(): gene_data$strand can only be '+' or '-'",
            call. = FALSE)
     }
     if (anyNA(gene_out$seq_id) || any(!nzchar(as.character(gene_out$seq_id)))) {
-      stop("clean_ggchord_data(): gene_data$seq_id must be non-missing and non-empty",
+      ggchord_stop("clean_ggchord_data(): gene_data$seq_id must be non-missing and non-empty",
            call. = FALSE)
     }
 
@@ -367,7 +370,7 @@ clean_ggchord_data <- function(
     if (any(bad)) {
       rows <- which(bad)
       if (unknown_id == "error") {
-        stop(sprintf(paste0("clean_ggchord_data(): unknown sequence ID(s) in ",
+        ggchord_stop(sprintf(paste0("clean_ggchord_data(): unknown sequence ID(s) in ",
                             "gene_data row(s) %s (column seq_id): %s; choose ",
                             "unknown_id = 'drop' or 'keep'"),
                      paste(rows, collapse = ", "),
@@ -392,7 +395,7 @@ clean_ggchord_data <- function(
 
       if (st < 1 || st > len) {
         if (out_of_range == "error") {
-          stop(sprintf("clean_ggchord_data(): gene_data$start row %d is %s (outside [1, %d]); choose out_of_range = 'clip', 'drop' or 'keep'",
+          ggchord_stop(sprintf("clean_ggchord_data(): gene_data$start row %d is %s (outside [1, %d]); choose out_of_range = 'clip', 'drop' or 'keep'",
                        i, st, len), call. = FALSE)
         } else if (out_of_range == "drop") {
           drop[i] <- TRUE
@@ -412,7 +415,7 @@ clean_ggchord_data <- function(
       }
       if (en < 1 || en > len) {
         if (out_of_range == "error") {
-          stop(sprintf("clean_ggchord_data(): gene_data$end row %d is %s (outside [1, %d]); choose out_of_range = 'clip', 'drop' or 'keep'",
+          ggchord_stop(sprintf("clean_ggchord_data(): gene_data$end row %d is %s (outside [1, %d]); choose out_of_range = 'clip', 'drop' or 'keep'",
                        i, en, len), call. = FALSE)
         } else if (out_of_range == "drop") {
           drop[i] <- TRUE
@@ -434,7 +437,7 @@ clean_ggchord_data <- function(
 
       if (st > en) {
         if (reversed_interval == "error") {
-          stop(sprintf("clean_ggchord_data(): reversed interval in gene_data row %d (start > end); choose reversed_interval = 'sort', 'drop' or 'keep'",
+          ggchord_stop(sprintf("clean_ggchord_data(): reversed interval in gene_data row %d (start > end); choose reversed_interval = 'sort', 'drop' or 'keep'",
                        i), call. = FALSE)
         } else if (reversed_interval == "drop") {
           drop[i] <- TRUE

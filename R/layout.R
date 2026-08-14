@@ -84,7 +84,7 @@ compute_chord_layout <- function(
   total_gap_prop <- sum(seq_gap)
 
   if (total_gap_prop >= 1) {
-    stop("The sum of seq_gap cannot exceed 1 (no space left for sequences)")
+    ggchord_stop("The sum of seq_gap cannot exceed 1 (no space left for sequences)")
   }
 
   seq_total_prop <- 1 - total_gap_prop

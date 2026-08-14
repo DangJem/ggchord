@@ -71,61 +71,64 @@ ggchord <- function(
     debug = FALSE,
     validate = c("warn", "error", "none")
 ) {
+  old_error <- ggchord_disable_debug()
+  on.exit(options(error = old_error), add = TRUE)
+
   validate <- match.arg(validate)
   # ====================================================================
   # 1. Validate data
   # ====================================================================
   if (!is.numeric(rotation) || length(rotation) != 1 || !is.finite(rotation)) {
-    stop("rotation must be a finite numeric value")
+    ggchord_stop("rotation must be a finite numeric value")
   }
   if (!is.logical(show_legend) || length(show_legend) != 1 || is.na(show_legend)) {
-    stop("show_legend must be TRUE or FALSE")
+    ggchord_stop("show_legend must be TRUE or FALSE")
   }
   if (!is.logical(debug) || length(debug) != 1 || is.na(debug)) {
-    stop("debug must be TRUE or FALSE")
+    ggchord_stop("debug must be TRUE or FALSE")
   }
   if (!is.data.frame(seq_data) || nrow(seq_data) == 0) {
-    stop("seq_data must be a non-empty data.frame")
+    ggchord_stop("seq_data must be a non-empty data.frame")
   }
   required_seq_cols <- c("seq_id", "length")
   if (!all(required_seq_cols %in% colnames(seq_data))) {
-    stop("seq_data must contain the following columns: ", paste(required_seq_cols, collapse = ", "))
+    ggchord_stop("seq_data must contain the following columns: ", paste(required_seq_cols, collapse = ", "))
   }
   if (anyNA(seq_data$seq_id) || any(!nzchar(as.character(seq_data$seq_id)))) {
-    stop("The 'seq_id' values in seq_data must be non-missing and non-empty")
+    ggchord_stop("The 'seq_id' values in seq_data must be non-missing and non-empty")
   }
   if (!is.numeric(seq_data$length) || any(!is.finite(seq_data$length)) ||
       any(seq_data$length <= 0)) {
-    stop("The 'length' values in seq_data must be finite positive numbers")
+    ggchord_stop("The 'length' values in seq_data must be finite positive numbers")
   }
   if (anyDuplicated(seq_data$seq_id)) {
-    stop("The 'seq_id' values in seq_data must be unique")
+    ggchord_stop("The 'seq_id' values in seq_data must be unique")
   }
 
   seq_lens <- setNames(seq_data$length, seq_data$seq_id)
 
   if (!is.null(ribbon_data)) {
     if (!is.data.frame(ribbon_data)) {
-      stop("ribbon_data must be a data.frame")
+      ggchord_stop("ribbon_data must be a data.frame")
     }
     required_ribbon_cols <- c("qaccver", "saccver", "length", "pident",
                               "qstart", "qend", "sstart", "send")
     if (!all(required_ribbon_cols %in% colnames(ribbon_data))) {
-      stop("ribbon_data must contain the following columns: ",
+      ggchord_stop("ribbon_data must contain the following columns: ",
            paste(required_ribbon_cols, collapse = ", "))
     }
     numeric_ribbon_cols <- c("length", "pident", "qstart", "qend", "sstart", "send")
     if (any(vapply(ribbon_data[numeric_ribbon_cols],
                    function(x) !is.numeric(x) || any(!is.finite(x)), logical(1)))) {
-      stop("ribbon_data numeric columns (length, pident, qstart, qend, sstart, send) must contain finite numbers")
+      ggchord_stop("ribbon_data numeric columns (length, pident, qstart, qend, sstart, send) must contain finite numbers")
     }
     if (anyNA(ribbon_data$qaccver) || anyNA(ribbon_data$saccver) ||
         any(!nzchar(as.character(ribbon_data$qaccver))) ||
         any(!nzchar(as.character(ribbon_data$saccver)))) {
-      stop("ribbon_data sequence IDs must be non-missing and non-empty")
+      ggchord_stop("ribbon_data sequence IDs must be non-missing and non-empty")
     }
     if (any(ribbon_data$length <= 0)) {
-      stop("The 'length' values in ribbon_data must be positive")
+      ggchord_stop("The 'length' values in ribbon_data must be positive")
     }
     if (nrow(ribbon_data) == 0) warning("No valid alignment data in ribbon_data")
     if (debug) cat("Number of alignment data rows: ", nrow(ribbon_data), "\n")
@@ -133,22 +136,22 @@ ggchord <- function(
 
   if (!is.null(gene_data)) {
     if (!is.data.frame(gene_data)) {
-      stop("gene_data must be a data.frame")
+      ggchord_stop("gene_data must be a data.frame")
     }
     required_gene_cols <- c("seq_id", "start", "end", "strand", "anno")
     if (!all(required_gene_cols %in% colnames(gene_data))) {
-      stop("gene_data must contain the following columns: ",
+      ggchord_stop("gene_data must contain the following columns: ",
            paste(required_gene_cols, collapse = ", "))
     }
     if (!is.numeric(gene_data$start) || !is.numeric(gene_data$end) ||
         any(!is.finite(gene_data$start)) || any(!is.finite(gene_data$end))) {
-      stop("The 'start' and 'end' values in gene_data must be finite numbers")
+      ggchord_stop("The 'start' and 'end' values in gene_data must be finite numbers")
     }
     if (anyNA(gene_data$seq_id) || any(!nzchar(as.character(gene_data$seq_id)))) {
-      stop("gene_data sequence IDs must be non-missing and non-empty")
+      ggchord_stop("gene_data sequence IDs must be non-missing and non-empty")
     }
     if (anyNA(gene_data$strand) || any(!gene_data$strand %in% c("+", "-"))) {
-      stop("The 'strand' values in gene_data can only be '+' or '-'")
+      ggchord_stop("The 'strand' values in gene_data can only be '+' or '-'")
     }
     if (nrow(gene_data) == 0) warning("No valid gene annotation data in gene_data")
     if (debug) cat("Number of gene annotation rows: ", nrow(gene_data), "\n")
@@ -165,7 +168,7 @@ ggchord <- function(
     validation <- validate_ggchord_data(seq_data, ribbon_data, gene_data,
                                         strict = FALSE)
     if (validate == "error" && !validation$valid) {
-      stop(sprintf(
+      ggchord_stop(sprintf(
         "ggchord(): input data failed validation (%d severe error(s); first: %s). Run validate_ggchord_data(..., strict = FALSE) for the full report.",
         nrow(validation$errors), validation$errors$message[1]),
         call. = FALSE)
@@ -247,6 +250,9 @@ ggchord <- function(
 #' @return A ggchord object
 #' @export
 `+.ggchord` <- function(e1, e2) {
+  old_error <- ggchord_disable_debug()
+  on.exit(options(error = old_error), add = TRUE)
+
   # Our geom_* functions return plain lists of layers; flatten them.  Other
   # list-like objects (e.g. themes) must be handled by the standard ggplot2
   # `+` method instead.
@@ -299,7 +305,7 @@ compute_chord_geometry <- function(plot) {
   # Step 1: collect data and parameters from the plot object
   chord <- plot$ggchord
   if (is.null(chord)) {
-    stop("Not a valid ggchord object: no data stored on the plot. ",
+    ggchord_stop("Not a valid ggchord object: no data stored on the plot. ",
          "Please build the plot with ggchord().")
   }
   data_list <- chord$data
@@ -337,7 +343,7 @@ compute_chord_geometry <- function(plot) {
 
   if (!is.null(seq_params$seq_order)) {
     if (!all(seq_params$seq_order %in% seqs)) {
-      stop("seq_order contains unknown sequence IDs")
+      ggchord_stop("seq_order contains unknown sequence IDs")
     }
     seqs <- seq_params$seq_order
     lens <- lens[seqs]
@@ -356,18 +362,18 @@ compute_chord_geometry <- function(plot) {
                                           "seq_curvature", 1.0)
 
   if (!is.numeric(seqRadius) || any(!is.finite(seqRadius)) || any(seqRadius <= 0)) {
-    stop("seq_radius must contain finite positive numbers")
+    ggchord_stop("seq_radius must contain finite positive numbers")
   }
   if (!is.numeric(orientation) || any(!is.finite(orientation)) ||
       any(!orientation %in% c(-1, 1))) {
-    stop("seq_orientation can only be 1 or -1")
+    ggchord_stop("seq_orientation can only be 1 or -1")
   }
   if (!is.numeric(seq_gap) || any(!is.finite(seq_gap)) ||
       any(seq_gap < 0 | seq_gap >= 0.5)) {
-    stop("seq_gap must be in the [0, 0.5) range")
+    ggchord_stop("seq_gap must be in the [0, 0.5) range")
   }
   if (!is.numeric(seq_curvature) || any(!is.finite(seq_curvature))) {
-    stop("seq_curvature must contain finite numbers")
+    ggchord_stop("seq_curvature must contain finite numbers")
   }
 
   if (!is.null(seq_params$seq_colors)) {
@@ -386,14 +392,14 @@ compute_chord_geometry <- function(plot) {
 
   ribbon_colors <- ribbon_params$ribbon_colors
   if (!ribbon_color_scheme %in% c("pident", "query", "subject", "single")) {
-    stop("ribbon_color_scheme must be 'pident', 'query', 'subject', or 'single'")
+    ggchord_stop("ribbon_color_scheme must be 'pident', 'query', 'subject', or 'single'")
   }
   if (!is.numeric(ribbon_alpha) || length(ribbon_alpha) != 1 ||
       !is.finite(ribbon_alpha) || ribbon_alpha < 0 || ribbon_alpha > 1) {
-    stop("ribbon_alpha must be in the [0, 1] range")
+    ggchord_stop("ribbon_alpha must be in the [0, 1] range")
   }
   if (!is.numeric(ribbonGap) || any(!is.finite(ribbonGap))) {
-    stop("ribbon_gap must contain finite numbers")
+    ggchord_stop("ribbon_gap must contain finite numbers")
   }
 
   # ribbon_colors validation only runs when ribbon_data is actually present
@@ -430,9 +436,9 @@ compute_chord_geometry <- function(plot) {
       ribbon_colors <- process_sequence_param(ribbon_colors, seqs,
                                               "ribbon_colors")
     } else if (ribbon_color_scheme == "pident" && length(ribbon_colors) < 2) {
-      stop("The 'pident' scheme requires at least two ribbon_colors")
+      ggchord_stop("The 'pident' scheme requires at least two ribbon_colors")
     } else if (ribbon_color_scheme == "single" && length(ribbon_colors) < 1) {
-      stop("The 'single' scheme requires at least one ribbon_colors")
+      ggchord_stop("The 'single' scheme requires at least one ribbon_colors")
     }
   }
 
@@ -476,15 +482,15 @@ compute_chord_geometry <- function(plot) {
   gene_lrepel_ltype  <- gene_repel_params$gene_label_segment_linetype %||% "auto"
 
   if (!gene_cs %in% c("strand", "manual")) {
-    stop("gene_color_scheme must be 'strand' or 'manual'")
+    ggchord_stop("gene_color_scheme must be 'strand' or 'manual'")
   }
   if (!is.numeric(gene_lsz) || length(gene_lsz) != 1 || !is.finite(gene_lsz) ||
       gene_lsz <= 0) {
-    stop("gene_label_size must be a finite positive number")
+    ggchord_stop("gene_label_size must be a finite positive number")
   }
   if (!is.null(gene_lwrap) && (!is.numeric(gene_lwrap) ||
       length(gene_lwrap) != 1 || !is.finite(gene_lwrap) || gene_lwrap < 0)) {
-    stop("gene_label_wrap must be NULL or a finite non-negative number")
+    ggchord_stop("gene_label_wrap must be NULL or a finite non-negative number")
   }
 
   geneGap    <- process_gene_param(gene_off, seqs, "gene_offset", 0.1, FALSE)
@@ -519,7 +525,7 @@ compute_chord_geometry <- function(plot) {
     axis_params$axis_label_orientation %||% "parallel", seqs
   )
   if (!is.logical(show_axis) || length(show_axis) != 1 || is.na(show_axis)) {
-    stop("show_axis must be TRUE or FALSE")
+    ggchord_stop("show_axis must be TRUE or FALSE")
   }
   axis_numeric <- list(
     axis_gap = axisGap,
@@ -531,16 +537,16 @@ compute_chord_geometry <- function(plot) {
   for (nm in names(axis_numeric)) {
     value <- axis_numeric[[nm]]
     if (!is.numeric(value) || any(!is.finite(value))) {
-      stop(nm, " must contain finite numbers")
+      ggchord_stop(nm, " must contain finite numbers")
     }
   }
   if (!is.numeric(axisMaj) || any(!is.finite(axisMaj)) ||
       any(axisMaj < 1 | axisMaj != as.integer(axisMaj))) {
-    stop("axis_tick_major_number must contain positive integers")
+    ggchord_stop("axis_tick_major_number must contain positive integers")
   }
   if (!is.numeric(axisMin) || any(!is.finite(axisMin)) ||
       any(axisMin < 0 | axisMin != as.integer(axisMin))) {
-    stop("axis_tick_minor_number must contain non-negative integers")
+    ggchord_stop("axis_tick_minor_number must contain non-negative integers")
   }
 
   # --- Process sequence labels ---
@@ -589,11 +595,11 @@ compute_chord_geometry <- function(plot) {
     for (nm in names(seq_label_numeric)) {
       value <- seq_label_numeric[[nm]]
       if (!is.null(value) && (!is.numeric(value) || any(!is.finite(value)))) {
-        stop(nm, " must contain finite numbers")
+        ggchord_stop(nm, " must contain finite numbers")
       }
     }
     if (any(seq_label_size <= 0)) {
-      stop("seq_label_size must contain positive numbers")
+      ggchord_stop("seq_label_size must contain positive numbers")
     }
   }
 
@@ -715,7 +721,7 @@ ggchord_legend_positions <- function(plot) {
     lp <- pp$legend_position
     if (is.null(lp)) next
     if (!lp %in% c("left", "right", "top", "bottom", "inside")) {
-      stop("legend_position must be one of 'left', 'right', 'top', 'bottom' or 'inside'")
+      ggchord_stop("legend_position must be one of 'left', 'right', 'top', 'bottom' or 'inside'")
     }
     if (!is.null(pp$type) && pp$type %in% names(pos)) pos[[pp$type]] <- lp
   }
@@ -961,9 +967,12 @@ prepare_ggchord_plot <- function(plot) {
 
 #' @export
 ggplot_build.ggchord <- function(plot, ...) {
+  old_error <- ggchord_disable_debug()
+  on.exit(options(error = old_error), add = TRUE)
+
   chord <- plot$ggchord
   if (is.null(chord)) {
-    stop("Not a valid ggchord object: no data stored on the plot. ",
+    ggchord_stop("Not a valid ggchord object: no data stored on the plot. ",
          "Please build the plot with ggchord().")
   }
   # The plot object is self-contained: it carries its own scales (tagged with

@@ -38,6 +38,9 @@ geom_seq <- function(mapping = NULL, data = NULL,
                      show_legend = TRUE,
                      legend_position = "right",
                      ...) {
+  old_error <- ggchord_disable_debug()
+  on.exit(options(error = old_error), add = TRUE)
+
   # The layout is computed at build time (ggplot_build.ggchord). The
   # parameters are attached to the layer itself so that the plot object is
   # fully self-contained.

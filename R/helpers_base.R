@@ -429,7 +429,7 @@ validate_gene_segment_linetype <- function(lt) {
   ok <- c("blank", "solid", "dashed", "dotted",
           "dotdash", "longdash", "twodash")
   if (is.character(lt) && length(lt) >= 1 && all(lt %in% ok)) return(lt)
-  stop("gene_label_segment_linetype must be 'auto' or a valid ggplot2 ",
+  ggchord_stop("gene_label_segment_linetype must be 'auto' or a valid ggplot2 ",
        "linetype (e.g. 'solid', 'dashed', 'dotted', or a numeric dash ",
        "pattern)", call. = FALSE)
 }

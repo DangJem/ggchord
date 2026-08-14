@@ -48,9 +48,12 @@
 #' }
 read_blast <- function(file, format = c("auto", "outfmt6", "outfmt7", "custom"),
                        col_names = NULL, comment = "#", ...) {
+  old_error <- ggchord_disable_debug()
+  on.exit(options(error = old_error), add = TRUE)
+
   format <- match.arg(format)
   if (is.character(file) && length(file) == 1 && !file.exists(file)) {
-    stop("read_blast(): file not found: ", file, call. = FALSE)
+    ggchord_stop("read_blast(): file not found: ", file, call. = FALSE)
   }
 
   raw <- utils::read.table(
@@ -59,7 +62,7 @@ read_blast <- function(file, format = c("auto", "outfmt6", "outfmt7", "custom"),
     stringsAsFactors = FALSE, ...
   )
   if (ncol(raw) == 0 || nrow(raw) == 0) {
-    stop("read_blast(): no data rows parsed from ", file, call. = FALSE)
+    ggchord_stop("read_blast(): no data rows parsed from ", file, call. = FALSE)
   }
 
   std12 <- c("qaccver", "saccver", "pident", "length", "mismatch", "gapopen",
@@ -68,14 +71,14 @@ read_blast <- function(file, format = c("auto", "outfmt6", "outfmt7", "custom"),
 
   if (is.null(col_names)) {
     col_names <- if (format == "custom") {
-      stop("read_blast(): col_names is required when format = 'custom'",
+      ggchord_stop("read_blast(): col_names is required when format = 'custom'",
            call. = FALSE)
     } else if (ncol(raw) == 12) {
       std12
     } else if (ncol(raw) == 17) {
       ext17
     } else {
-      stop(sprintf(paste0(
+      ggchord_stop(sprintf(paste0(
         "read_blast(): cannot auto-detect the column layout (%d columns found). ",
         "Expected 12 (outfmt 6) or 17 (outfmt 7 with qcovs/qlen/slen/sstrand/stitle). ",
         "Pass col_names and format = 'custom' for other layouts."),
@@ -83,7 +86,7 @@ read_blast <- function(file, format = c("auto", "outfmt6", "outfmt7", "custom"),
     }
   } else {
     if (length(col_names) != ncol(raw)) {
-      stop(sprintf("read_blast(): col_names has %d entries but the file has %d columns",
+      ggchord_stop(sprintf("read_blast(): col_names has %d entries but the file has %d columns",
                    length(col_names), ncol(raw)), call. = FALSE)
     }
   }
@@ -93,7 +96,7 @@ read_blast <- function(file, format = c("auto", "outfmt6", "outfmt7", "custom"),
            "qstart", "qend", "sstart", "send")
   missing <- setdiff(req, col_names)
   if (length(missing) > 0) {
-    stop("read_blast(): required ribbon_data column(s) missing: ",
+    ggchord_stop("read_blast(): required ribbon_data column(s) missing: ",
          paste(missing, collapse = ", "), call. = FALSE)
   }
 
@@ -158,20 +161,23 @@ read_blast <- function(file, format = c("auto", "outfmt6", "outfmt7", "custom"),
 read_gff3 <- function(file, feature_types = "CDS",
                       anno_from = c("product", "Name", "gene", "ID"),
                       unstranded = c("plus", "drop")) {
+  old_error <- ggchord_disable_debug()
+  on.exit(options(error = old_error), add = TRUE)
+
   unstranded <- match.arg(unstranded)
   if (!is.character(feature_types) || length(feature_types) == 0) {
-    stop("read_gff3(): feature_types must be a non-empty character vector",
+    ggchord_stop("read_gff3(): feature_types must be a non-empty character vector",
          call. = FALSE)
   }
   if (is.character(file) && length(file) == 1 && !file.exists(file)) {
-    stop("read_gff3(): file not found: ", file, call. = FALSE)
+    ggchord_stop("read_gff3(): file not found: ", file, call. = FALSE)
   }
 
   raw <- utils::read.table(file, sep = "\t", header = FALSE, quote = "",
                            comment.char = "#", fill = TRUE,
                            stringsAsFactors = FALSE)
   if (ncol(raw) < 9) {
-    stop(sprintf("read_gff3(): expected 9 GFF3 columns but found %d in %s",
+    ggchord_stop(sprintf("read_gff3(): expected 9 GFF3 columns but found %d in %s",
                  ncol(raw), file), call. = FALSE)
   }
   names(raw)[1:9] <- c("seqid", "source", "type", "start", "end",
@@ -186,7 +192,7 @@ read_gff3 <- function(file, feature_types = "CDS",
 
   sub <- raw[raw$type %in% feature_types, , drop = FALSE]
   if (nrow(sub) == 0) {
-    stop(sprintf(paste0("read_gff3(): no features of type(s) %s found in %s; ",
+    ggchord_stop(sprintf(paste0("read_gff3(): no features of type(s) %s found in %s; ",
                         "use feature_types to select the features to keep"),
                  paste(feature_types, collapse = ", "), file), call. = FALSE)
   }
@@ -197,7 +203,7 @@ read_gff3 <- function(file, feature_types = "CDS",
     sub <- sub[sub$strand %in% c("+", "-"), , drop = FALSE]
   }
   if (nrow(sub) == 0) {
-    stop("read_gff3(): no features with a '+' or '-' strand remain after filtering",
+    ggchord_stop("read_gff3(): no features with a '+' or '-' strand remain after filtering",
          call. = FALSE)
   }
 
@@ -273,16 +279,19 @@ gff3_percent_decode <- function(x) {
 #' ), fasta)
 #' read_fasta_lengths(fasta)
 read_fasta_lengths <- function(file, header_delim = NULL) {
+  old_error <- ggchord_disable_debug()
+  on.exit(options(error = old_error), add = TRUE)
+
   if (is.character(file) && length(file) == 1 && !file.exists(file)) {
-    stop("read_fasta_lengths(): file not found: ", file, call. = FALSE)
+    ggchord_stop("read_fasta_lengths(): file not found: ", file, call. = FALSE)
   }
   lines <- readLines(file, warn = FALSE)
   if (length(lines) == 0) {
-    stop("read_fasta_lengths(): file is empty", call. = FALSE)
+    ggchord_stop("read_fasta_lengths(): file is empty", call. = FALSE)
   }
   is_header <- grepl("^>", lines)
   if (!any(is_header)) {
-    stop("read_fasta_lengths(): no FASTA headers (lines starting with '>') found",
+    ggchord_stop("read_fasta_lengths(): no FASTA headers (lines starting with '>') found",
          call. = FALSE)
   }
   ids <- sub("^>", "", lines[is_header])

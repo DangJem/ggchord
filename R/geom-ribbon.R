@@ -82,6 +82,9 @@ geom_ribbon <- function(mapping = NULL, data = NULL,
                         legend_position = "left",
                         legend_key_length = NULL,
                         ...) {
+  old_error <- ggchord_disable_debug()
+  on.exit(options(error = old_error), add = TRUE)
+
   ribbon_alpha <- alpha %||% ribbon_alpha
 
   # Placeholder data

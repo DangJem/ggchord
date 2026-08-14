@@ -40,10 +40,10 @@ process_sequence_param <- function(param, seqs, param_name, default_value = NULL
           }
         }
       } else {
-        stop(paste0("Length of default ", param_name, " must be 1 or equal to the number of sequences (", n, ")"))
+        ggchord_stop(paste0("Length of default ", param_name, " must be 1 or equal to the number of sequences (", n, ")"))
       }
     }
-    stop(paste0(param_name, " cannot be NULL and no default value is specified"))
+    ggchord_stop(paste0(param_name, " cannot be NULL and no default value is specified"))
   }
 
   # Build the base vector used for unspecified sequences
@@ -51,7 +51,7 @@ process_sequence_param <- function(param, seqs, param_name, default_value = NULL
     if (is.null(default_value)) return(rep(NA, n))
     if (length(default_value) == 1) return(rep(default_value, n))
     if (length(default_value) == n) return(default_value)
-    stop(paste0("Length of default ", param_name, " must be 1 or equal to the number of sequences (", n, ")"))
+    ggchord_stop(paste0("Length of default ", param_name, " must be 1 or equal to the number of sequences (", n, ")"))
   }
 
   # Handle a single unnamed value: recycled to every sequence
@@ -67,7 +67,7 @@ process_sequence_param <- function(param, seqs, param_name, default_value = NULL
   # Handle a named vector (names are sequence IDs)
   if (!is.null(names(param)) && !is.list(param)) {
     if (!all(names(param) %in% seqs)) {
-      stop(paste0(param_name, " contains unknown sequence IDs: ",
+      ggchord_stop(paste0(param_name, " contains unknown sequence IDs: ",
                   paste(setdiff(names(param), seqs), collapse = ", ")))
     }
     # Missing sequences keep the default value (or NA when no default is set)
@@ -85,7 +85,7 @@ process_sequence_param <- function(param, seqs, param_name, default_value = NULL
     if (length(param) == 1 && (is.null(nm) || all(nm == ""))) {
       val <- param[[1]]
       if (length(val) != 1) {
-        stop(paste0("Elements of the list for ", param_name, " must be single values"))
+        ggchord_stop(paste0("Elements of the list for ", param_name, " must be single values"))
       }
       return(setNames(rep(val, n), seqs))
     }
@@ -96,7 +96,7 @@ process_sequence_param <- function(param, seqs, param_name, default_value = NULL
       for (id in nm) {
         val <- param[[id]]
         if (length(val) != 1) {
-          stop(paste0("Elements of the list for ", param_name, " must be single values"))
+          ggchord_stop(paste0("Elements of the list for ", param_name, " must be single values"))
         }
         out[id] <- val
       }
@@ -109,7 +109,7 @@ process_sequence_param <- function(param, seqs, param_name, default_value = NULL
       for (i in seq_along(nm)) {
         val <- param[[i]]
         if (length(val) != 1) {
-          stop(paste0("Elements of the list for ", param_name, " must be single values"))
+          ggchord_stop(paste0("Elements of the list for ", param_name, " must be single values"))
         }
         out[seqs[as.integer(nm[i])]] <- val
       }
@@ -119,21 +119,21 @@ process_sequence_param <- function(param, seqs, param_name, default_value = NULL
     # unnamed list matched by sequence order
     if (is.null(nm) || all(nm == "")) {
       if (length(param) != n) {
-        stop(paste0("Length of unnamed list for ", param_name,
+        ggchord_stop(paste0("Length of unnamed list for ", param_name,
                     " must be 1 or match the number of sequences (", n, ")"))
       }
       vals <- unlist(param)
       if (length(vals) != n) {
-        stop(paste0("Elements of the list for ", param_name, " must be single values"))
+        ggchord_stop(paste0("Elements of the list for ", param_name, " must be single values"))
       }
       return(setNames(vals, seqs))
     }
 
-    stop(paste0("Names of the list for ", param_name,
+    ggchord_stop(paste0("Names of the list for ", param_name,
                 " must all be sequence IDs, all be sequence order indices ('1', '2', ...), or be omitted"))
   }
 
-  stop(paste0("Unprocessable format for ", param_name, ". Please provide a single value, named vector, unnamed vector with length equal to the number of sequences, or a list (named by sequence ID, named by order, or unnamed)"))
+  ggchord_stop(paste0("Unprocessable format for ", param_name, ". Please provide a single value, named vector, unnamed vector with length equal to the number of sequences, or a list (named by sequence ID, named by order, or unnamed)"))
 }
 
 #' Process gene-related parameters
@@ -176,13 +176,13 @@ process_gene_param <- function(param, seqs, param_name, default_value, is_logica
   # Validate and strip a single value
   check_value <- function(val, where) {
     if (length(val) != 1 || is.na(val)) {
-      stop(param_name, " must be a single non-missing value (", where, ")")
+      ggchord_stop(param_name, " must be a single non-missing value (", where, ")")
     }
     if (is_logical && !is.logical(val)) {
-      stop(param_name, " is a logical parameter and must be TRUE/FALSE (", where, ")")
+      ggchord_stop(param_name, " is a logical parameter and must be TRUE/FALSE (", where, ")")
     }
     if (!is_logical && (!is.numeric(val) || !is.finite(val))) {
-      stop(param_name, " is a numeric parameter and must be finite (", where, ")")
+      ggchord_stop(param_name, " is a numeric parameter and must be finite (", where, ")")
     }
     unname(val)
   }
@@ -191,17 +191,17 @@ process_gene_param <- function(param, seqs, param_name, default_value, is_logica
   # unnamed length-2 vector interpreted as "+", "-")
   strand_spec <- function(elem, where) {
     if (is.null(elem) || length(elem) == 0) {
-      stop("List element for ", param_name, " (", where, ") cannot be empty")
+      ggchord_stop("List element for ", param_name, " (", where, ") cannot be empty")
     }
     if (is.null(names(elem))) {
       if (length(elem) == 2 && (is.numeric(elem) || is.logical(elem))) {
         elem <- c("+" = elem[1], "-" = elem[2])
       } else {
-        stop("List element for ", param_name, " (", where,
+        ggchord_stop("List element for ", param_name, " (", where,
              ") must be a named vector containing '+' and '-' (or a length-2 vector)")
       }
     } else if (!all(names(elem) %in% c("+", "-"))) {
-      stop("List element for ", param_name, " (", where,
+      ggchord_stop("List element for ", param_name, " (", where,
            ") can only be named '+' and/or '-'")
     }
     out <- c("+" = default_value, "-" = default_value)
@@ -229,7 +229,7 @@ process_gene_param <- function(param, seqs, param_name, default_value, is_logica
     if (!is.null(nm)) {
       unknown <- setdiff(nm, seqs)
       if (length(unknown) > 0) {
-        stop(param_name, " contains unknown sequence IDs: ",
+        ggchord_stop(param_name, " contains unknown sequence IDs: ",
              paste(unknown, collapse = ", "))
       }
       for (id in intersect(nm, seqs)) {
@@ -240,7 +240,7 @@ process_gene_param <- function(param, seqs, param_name, default_value, is_logica
     }
     # 2.2 unnamed vector matched by sequence order
     if (length(param) != n) {
-      stop("Length of unnamed vector for ", param_name,
+      ggchord_stop("Length of unnamed vector for ", param_name,
            " must match the number of sequences (current number of sequences: ", n, ")")
     }
     for (i in seq_along(seqs)) {
@@ -284,7 +284,7 @@ process_gene_param <- function(param, seqs, param_name, default_value, is_logica
         return(setNames(lapply(seqs, function(id) vals), seqs))
       }
       if (length(param) != n) {
-        stop("Length of unnamed list for ", param_name,
+        ggchord_stop("Length of unnamed list for ", param_name,
              " must be 1 or match the number of sequences (current number of sequences: ", n, ")")
       }
       for (i in seq_along(seqs)) {
@@ -293,11 +293,11 @@ process_gene_param <- function(param, seqs, param_name, default_value, is_logica
       return(result)
     }
     # 3.3 mixed / unknown names
-    stop("Names of the list for ", param_name,
+    ggchord_stop("Names of the list for ", param_name,
          " must all be sequence IDs, all be sequence order indices ('1', '2', ...), or be omitted")
   }
 
-  stop("Invalid format for ", param_name, ". Supported input methods:\n",
+  ggchord_stop("Invalid format for ", param_name, ". Supported input methods:\n",
        "1. Single value (shared by all sequences/strands)\n",
        "2. Named vector by strand (c('+' = .., '-' = ..), shared by all sequences)\n",
        "3. Named vector by sequence ID (shared by both strands)\n",
@@ -351,7 +351,7 @@ process_axis_orientation <- function(param, seqs) {
       } else if (is.numeric(val) || (!is.na(num_val) && num_val == val)) {
         result[seq_id] <- as.character(num_val)
       } else {
-        stop(paste("Element", i, "of axis_label_orientation has incorrect format; must be numeric, 'horizontal', 'parallel' or 'perpendicular'"))
+        ggchord_stop(paste("Element", i, "of axis_label_orientation has incorrect format; must be numeric, 'horizontal', 'parallel' or 'perpendicular'"))
       }
     }
 
@@ -369,13 +369,13 @@ process_axis_orientation <- function(param, seqs) {
       } else if (is.numeric(val) || (!is.na(num_val) && num_val == val)) {
         result[id] <- as.character(num_val)
       } else {
-        stop(paste("Format of", id, "in axis_label_orientation is incorrect; must be numeric, 'horizontal', 'parallel' or 'perpendicular'"))
+        ggchord_stop(paste("Format of", id, "in axis_label_orientation is incorrect; must be numeric, 'horizontal', 'parallel' or 'perpendicular'"))
       }
     }
     return(result)
   }
 
-  stop("Incorrect format for axis_label_orientation parameter. Please provide:\n",
+  ggchord_stop("Incorrect format for axis_label_orientation parameter. Please provide:\n",
        "- A keyword: 'horizontal', 'parallel' (default, parallel to the axis) or 'perpendicular'\n",
        "- A single numeric value\n",
        "- A vector with length matching the number of sequences (can mix keywords and numeric values)\n",
@@ -399,7 +399,7 @@ process_strand_colors <- function(gene_colors) {
   # Handle named vector
   if (!is.null(names(gene_colors))) {
     if (!all(names(gene_colors) %in% c("+", "-"))) {
-      stop("In 'strand' mode, named vectors for gene_colors can only contain '+' and '-'")
+      ggchord_stop("In 'strand' mode, named vectors for gene_colors can only contain '+' and '-'")
     }
     res <- default
     res[names(gene_colors)] <- gene_colors
@@ -412,7 +412,7 @@ process_strand_colors <- function(gene_colors) {
     } else if (len == 2) {
       return(c("+" = gene_colors[1], "-" = gene_colors[2]))
     } else {
-      stop("In 'strand' mode, unnamed gene_colors must have length 1 or 2")
+      ggchord_stop("In 'strand' mode, unnamed gene_colors must have length 1 or 2")
     }
   }
 }
@@ -432,7 +432,7 @@ process_manual_colors <- function(gene_colors, unique_anno, gene_order) {
     # Validate all elements in gene_order exist in unique_anno
     unknown <- setdiff(gene_order, unique_anno)
     if (length(unknown) > 0) {
-      stop("'gene_order' contains unknown gene annotations: ", paste(unknown, collapse = ","))
+      ggchord_stop("'gene_order' contains unknown gene annotations: ", paste(unknown, collapse = ","))
     }
     # Ensure all unique_anno are included, ordered by gene_order, with unordered ones at the end
     final_order <- c(gene_order, setdiff(unique_anno, gene_order))
