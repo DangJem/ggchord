@@ -1,47 +1,21 @@
 # ggchord 0.8.0
 
-## New features: sequence grouping
+* Improved label defaults: `geom_seq_label()` places sequence names on the
+  arc, `geom_gene_label()` sits beside gene arrows, and
+  `geom_gene_label_repel()` uses horizontal labels, elbow leader lines and
+  outside placement with better overlap avoidance.
 
-* `geom_seq()` gains sequence-grouping support via `seq_group`,
-  `seq_group_gap`, `seq_group_labels`, `seq_group_label_radius` and
-  `seq_group_colors`. Groups can be taken from a `seq_group` column in
-  `seq_data` or supplied as a named/positional vector. An extra gap is
-  inserted only at boundaries between different groups, and optional group
-  labels are drawn at the angular midpoint of each group.
+* Plot limits now fit the rendered text boxes, reducing empty margins.
 
-* Group labels are rendered horizontally and keep their own internal
-  `zcolour` identity scale, so they do not interfere with the existing Seq ID
-  colour legend. `geom_seq()` remains backward compatible and still returns a
-  single layer; group labels are appended lazily at build time.
+* `geom_seq()` supports sequence grouping via `seq_group`, including
+  optional group labels and inter-group gaps.
 
-* `plotly::ggplotly()` and the layout data path now include group labels.
+* `geom_ribbon()` adds numeric and discrete visual mappings
+  (`ribbon_color_by`, `ribbon_alpha_by`, `ribbon_outline_by`,
+  `ribbon_linetype_by`, `ribbon_direction`).
 
-## New features: ribbon visual mapping and direction (v0.9.0 scope, version kept at 0.8.0)
-
-* `geom_ribbon()` now supports `ribbon_color_by` (any numeric column mapped to
-  a continuous fill), `ribbon_color_limits`, `ribbon_color_breaks` and
-  `ribbon_color_name`, as well as `ribbon_alpha_by` /
-  `ribbon_alpha_range`.
-
-* `ribbon_outline_by` / `ribbon_outline_colors` and `ribbon_linetype_by` /
-  `ribbon_linetypes` map discrete columns to outline colour and linetype using
-  internal aesthetics that do not disturb the existing Seq ID or Identity(%)
-  legends.
-
-* `ribbon_direction` visually distinguishes same- vs reverse-orientation
-  alignments through alpha, outline colour or linetype.
-
-## New features: highlights and generic features (v0.9.0 scope)
-
-* New `geom_seq_region()` draws user-defined bands along sequence arcs and
-  supports `seq_id`, `start`, `end`, optional `label`, `category` and `color`.
-
-* New `geom_ribbon_highlight()` emphasizes selected ribbons using safe filters
-  (`ribbon_ids`, query/subject IDs, pident/length ranges, or a predicate
-  function) and reuses the computed ribbon geometry.
-
-* New `geom_feature()` is a generic convenience wrapper around `geom_gene()`
-  for CDS, tRNA, rRNA, repeat, CRISPR, promoter and custom feature tables.
+* New `geom_seq_region()`, `geom_ribbon_highlight()` and `geom_feature()`
+  layers for regions, ribbon highlighting and generic features.
 
 # ggchord 0.7.0
 
