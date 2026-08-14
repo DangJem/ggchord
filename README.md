@@ -254,11 +254,15 @@ data(gene_data_example)
 
 res <- validate_ggchord_data(seq_data_example, ribbon_data_example,
                              gene_data_example)
+
 res$valid          # TRUE when the data can be safely plotted
 print(res)         # human-readable report
 summary(res)       # per-category counts
+res$errors         # severe problems (table, category, row, column, message)
+res$warnings       # non-severe issues (same columns)
 res$invalid_rows   # original row numbers per problem category
 res$cleanable      # fixable issues with suggested actions
+as.data.frame(res) # flat table with a severity column
 
 # stop on severe problems instead:
 validate_ggchord_data(seq_data_example, ribbon_data_example,
@@ -278,7 +282,9 @@ out <- clean_ggchord_data(
   invalid_pident    = "clip",   # clamp pident to [0, 100]
   empty_annotation  = "replace" # fill missing anno with "unannotated"
 )
-head(out$report)
+
+out                  # print() shows a summary of cleaned tables and report
+head(out$report)     # one row per change: table/row/column/reason/...
 p <- ggchord(out$seq_data, out$ribbon_data, out$gene_data) +
   geom_seq() + geom_ribbon() + geom_gene()
 ```

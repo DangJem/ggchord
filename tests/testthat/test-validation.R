@@ -254,3 +254,16 @@ test_that("cleanable lists the fixable issues", {
   expect_true("unknown_id" %in% v$cleanable$category)
   expect_true(grepl("clean_ggchord_data", v$cleanable$suggestion[1]))
 })
+
+test_that("validation results can be coerced to a flat data.frame", {
+  data(seq_data_example)
+  data(ribbon_data_example)
+  bad <- ribbon_data_example
+  bad$saccver[1] <- "UNKNOWN"
+  v <- validate_ggchord_data(seq_data_example, bad)
+  df <- as.data.frame(v)
+  expect_s3_class(df, "data.frame")
+  expect_true(all(c("table", "category", "row", "column", "message",
+                    "severity") %in% names(df)))
+  expect_true(any(df$severity == "error"))
+})

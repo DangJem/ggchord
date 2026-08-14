@@ -120,20 +120,15 @@ clean_ggchord_data <- function(
   ribbon_out <- if (is.data.frame(ribbon_data)) ribbon_data else NULL
   gene_out <- if (is.data.frame(gene_data)) gene_data else NULL
 
-  report <- data.frame(
-    table = character(0), row = integer(0), column = character(0),
-    reason = character(0), original_value = character(0),
-    new_value = character(0), action = character(0),
-    stringsAsFactors = FALSE
-  )
+  report_rows <- list()
   report_chunk <- function(table, row, column, reason,
                            original_value, new_value, action) {
-    report <<- rbind(report, data.frame(
+    report_rows[[length(report_rows) + 1L]] <<- data.frame(
       table = table, row = as.integer(row), column = column,
       reason = reason, original_value = original_value,
       new_value = new_value, action = action,
       stringsAsFactors = FALSE
-    ))
+    )
   }
 
   # -------------------------------------------------------------------------
@@ -496,10 +491,61 @@ clean_ggchord_data <- function(
     gene_out <- gene_out[!drop, , drop = FALSE]
   }
 
-  list(
+  report <- if (length(report_rows) > 0) {
+    do.call(rbind, report_rows)
+  } else {
+    data.frame(
+      table = character(0), row = integer(0), column = character(0),
+      reason = character(0), original_value = character(0),
+      new_value = character(0), action = character(0),
+      stringsAsFactors = FALSE
+    )
+  }
+
+  structure(list(
     seq_data = seq_out,
     ribbon_data = ribbon_out,
     gene_data = gene_out,
     report = report
-  )
+  ), class = "ggchord_clean")
+}
+
+#' Print a cleaned ggchord data result
+#'
+#' Shows the dimensions of the cleaned tables and the first rows of the change
+#' report.
+#'
+#' @param x A \code{"ggchord_clean"} object.
+#' @param ... Ignored.
+#' @return The object invisibly.
+#' @export
+print.ggchord_clean <- function(x, ...) {
+  old_error <- ggchord_disable_debug()
+  on.exit(options(error = old_error), add = TRUE)
+
+  cat("ggchord cleaned data
+")
+  cat("====================
+")
+  cat(sprintf("seq_data: %s row(s)
+", nrow(x$seq_data)))
+  cat(sprintf("ribbon_data: %s row(s)
+",
+              if (is.null(x$ribbon_data)) "NULL" else nrow(x$ribbon_data)))
+  cat(sprintf("gene_data: %s row(s)
+",
+              if (is.null(x$gene_data)) "NULL" else nrow(x$gene_data)))
+  cat(sprintf("report: %s change(s)
+", nrow(x$report)))
+  if (nrow(x$report) > 0) {
+    cat("
+First changes:
+")
+    print(utils::head(x$report, 10), row.names = FALSE)
+    if (nrow(x$report) > 10) {
+      cat(sprintf("... and %d more change(s)
+", nrow(x$report) - 10))
+    }
+  }
+  invisible(x)
 }

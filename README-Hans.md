@@ -229,11 +229,15 @@ data(gene_data_example)
 
 res <- validate_ggchord_data(seq_data_example, ribbon_data_example,
                              gene_data_example)
+
 res$valid          # 数据是否可以安全绘图
 print(res)         # 人类可读的报告
 summary(res)       # 按类别统计
+res$errors         # 严重问题（table、category、row、column、message）
+res$warnings       # 非严重问题（列同 errors）
 res$invalid_rows   # 每个问题类别对应的原始行号
 res$cleanable      # 可自动修复的问题及建议动作
+as.data.frame(res) # 扁平表格，含 severity 列
 
 # 也可直接对严重问题报错：
 validate_ggchord_data(seq_data_example, ribbon_data_example,
@@ -252,7 +256,9 @@ out <- clean_ggchord_data(
   invalid_pident    = "clip",   # 将 pident 限制到 [0, 100]
   empty_annotation  = "replace" # 用 "unannotated" 填充缺失的 anno
 )
-head(out$report)
+
+out                  # print() 显示清洗后的表维度与处理报告概览
+head(out$report)     # 每次改动一行：table/row/column/reason/...
 p <- ggchord(out$seq_data, out$ribbon_data, out$gene_data) +
   geom_seq() + geom_ribbon() + geom_gene()
 ```
@@ -819,11 +825,13 @@ gene_label_rotation = list(20)
 - **结构化数据校验 `validate_ggchord_data()`**：返回 `ggchord_validation`
   对象（`valid`、`errors`、`warnings`、按类别 `summary`、`data_summary`、
   每个问题的原始行号 `invalid_rows` 与可自动修复项 `cleanable`），并提供
-  `print()` / `summary()` 方法；`strict = TRUE` 时对严重问题直接报错。
+  `print()` / `summary()` / `as.data.frame()` 方法；`strict = TRUE` 时对严重
+  问题直接报错。
 - **数据清理 `clean_ggchord_data()`**：按显式、保守的策略（`unknown_id`、
   `out_of_range`、`reversed_interval`、`invalid_pident`、
-  `empty_annotation`）修复数据，返回清理后的三张表加完整处理报告；不修改
-  用户传入的对象，绝不静默丢弃数据。
+  `empty_annotation`）修复数据，返回带 `ggchord_clean` 类的对象（清理后的
+  三张表加完整处理报告），并提供 `print()` 方法；不修改用户传入的对象，
+  绝不静默丢弃数据。
 - **`ggchord()` 新增 `validate = c("warn", "error", "none")`**：默认
   `"warn"` 只发一条汇总警告（不会逐行警告）并把完整报告缓存在
   `p$ggchord$validation`；`"error"` 对严重问题立即停止；`"none"` 保留

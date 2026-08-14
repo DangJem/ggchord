@@ -142,3 +142,12 @@ test_that("cleaned data can be plotted directly", {
   expect_no_warning(
     ggchord(out2$seq_data, out2$ribbon_data, out2$gene_data))
 })
+
+test_that("cleaned data has a print method and ggchord_clean class", {
+  data(seq_data_example)
+  data(ribbon_data_example)
+  bad <- transform(ribbon_data_example, qstart = 0L)
+  out <- clean_ggchord_data(seq_data_example, bad, out_of_range = "clip")
+  expect_s3_class(out, "ggchord_clean")
+  expect_output(print(out), "ggchord cleaned data")
+})

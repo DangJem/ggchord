@@ -10,12 +10,21 @@
 # ---------------------------------------------------------------------------
 
 new_validation_collector <- function() {
+  # Issues are accumulated in lists and rbind()-ed once when validation is
+  # complete; this avoids repeatedly copying growing data.frames.
+  list(errors = list(), warnings = list())
+}
+
+finalize_validation_collector <- function(col) {
   empty <- data.frame(
     table = character(0), category = character(0),
     row = integer(0), column = character(0),
     message = character(0), stringsAsFactors = FALSE
   )
-  list(errors = empty, warnings = empty)
+  list(
+    errors   = if (length(col$errors)) do.call(rbind, col$errors) else empty,
+    warnings = if (length(col$warnings)) do.call(rbind, col$warnings) else empty
+  )
 }
 
 #' Add one issue (error or warning) to a validation collector
@@ -32,8 +41,8 @@ add_validation_issue <- function(col, table, category, rows = NA_integer_,
     message = rep(message, length(rows)),
     stringsAsFactors = FALSE
   )
-  col[[if (severity == "error") "errors" else "warnings"]] <-
-    rbind(col[[if (severity == "error") "errors" else "warnings"]], df)
+  key <- if (severity == "error") "errors" else "warnings"
+  col[[key]][[length(col[[key]]) + 1L]] <- df
   col
 }
 
@@ -731,6 +740,7 @@ validate_ggchord_data <- function(seq_data,
   col <- validate_gene_data(gene_data, seq_data, col,
                             check_coordinates, check_duplicates)
 
+  col <- finalize_validation_collector(col)
   errors <- col$errors
   warnings <- col$warnings
   valid <- nrow(errors) == 0
@@ -850,4 +860,31 @@ print.ggchord_validation_summary <- function(x, ...) {
     print.data.frame(as.data.frame(x), row.names = FALSE)
   }
   invisible(x)
+}
+
+#' Coerce a validation result to a flat data.frame
+#'
+#' Combines the \code{errors} and \code{warnings} tables into a single
+#' data.frame and adds a \code{severity} column, which is convenient for
+#' filtering, exporting or printing the full report programmatically.
+#'
+#' @param x A \code{"ggchord_validation"} object.
+#' @param row.names Ignored.
+#' @param optional Ignored.
+#' @param ... Ignored.
+#' @return A data.frame with columns \code{table}, \code{category},
+#'   \code{row}, \code{column}, \code{message} and \code{severity}.
+#' @export
+as.data.frame.ggchord_validation <- function(x, row.names = NULL,
+                                             optional = FALSE, ...) {
+  old_error <- ggchord_disable_debug()
+  on.exit(options(error = old_error), add = TRUE)
+
+  err <- x$errors
+  warn <- x$warnings
+  err$severity <- if (nrow(err) > 0) "error" else character(0)
+  warn$severity <- if (nrow(warn) > 0) "warning" else character(0)
+  out <- rbind(err, warn)
+  out[, c("table", "category", "row", "column", "message", "severity"),
+      drop = FALSE]
 }
