@@ -88,7 +88,7 @@ bezier_pts <- function(p0, p3, c1, c2, n = 100) {
   t <- seq(0, 1, length.out = n)
   bx <- (1 - t)^3*p0[1] + 3*(1 - t)^2*t*c1[1] + 3*(1 - t)*t^2*c2[1] + t^3*p3[1]
   by <- (1 - t)^3*p0[2] + 3*(1 - t)^2*t*c1[2] + 3*(1 - t)*t^2*c2[2] + t^3*p3[2]
-  data.frame(x = bx, y = by)
+  cbind(x = bx, y = by)
 }
 
 

@@ -122,62 +122,58 @@ process_panel_margin <- function(arg_list) {
 #' @param show_axis Logical, whether to include extreme value calculation for axis-related elements, default FALSE
 #' @return List containing x_min (minimum x), x_max (maximum x), y_min (minimum y), y_max (maximum y)
 #' @keywords internal
-get_plot_extremes <- function(allRibbon=NULL, seqArcs=NULL, axisLines=NULL, axisTicks=NULL, gene_arrows=NULL, gene_polys = NULL, seq_labels = NULL, show_axis = FALSE) {
-  # Initialize vectors to store x and y coordinates
-  x_coords <- numeric(0)
-  y_coords <- numeric(0)
+get_plot_extremes <- function(allRibbon = NULL, seqArcs = NULL,
+                                axisLines = NULL, axisTicks = NULL,
+                                gene_arrows = NULL, gene_polys = NULL,
+                                seq_labels = NULL, show_axis = FALSE) {
+  x_min <- Inf
+  x_max <- -Inf
+  y_min <- Inf
+  y_max <- -Inf
 
-  # 1. Process ribbons (allRibbon)
-  if (!is.null(allRibbon) && nrow(allRibbon) > 0) {
-    x_coords <- c(x_coords, allRibbon$x)
-    y_coords <- c(y_coords, allRibbon$y)
+  include <- function(x, y) {
+    if (length(x) == 0L || length(y) == 0L) return(invisible(NULL))
+    ok <- is.finite(x) & is.finite(y)
+    if (any(ok)) {
+      x_min <<- min(x_min, min(x[ok]))
+      x_max <<- max(x_max, max(x[ok]))
+      y_min <<- min(y_min, min(y[ok]))
+      y_max <<- max(y_max, max(y[ok]))
+    }
+    invisible(NULL)
   }
-  # 2. Process sequence arcs (seqArcs, convert list to data frame)
+
+  if (!is.null(allRibbon) && nrow(allRibbon) > 0) {
+    include(allRibbon$x, allRibbon$y)
+  }
   if (!is.null(seqArcs) && length(seqArcs) > 0) {
-    seq_df <- do.call(rbind, seqArcs)
-    if (nrow(seq_df) > 0) {
-      x_coords <- c(x_coords, seq_df$x)
-      y_coords <- c(y_coords, seq_df$y)
+    for (arc in seqArcs) {
+      if (nrow(arc) > 0) include(arc$x, arc$y)
     }
   }
-  # 3. Process gene labels (gene_arrows)
   if (!is.null(gene_arrows) && nrow(gene_arrows) > 0) {
-    x_coords <- c(x_coords, gene_arrows$text_x)
-    y_coords <- c(y_coords, gene_arrows$text_y)
+    include(gene_arrows$text_x, gene_arrows$text_y)
   }
-  # 4. Process axis lines (axisLines)
   if (show_axis && !is.null(axisLines) && nrow(axisLines) > 0) {
-    x_coords <- c(x_coords, axisLines$x)
-    y_coords <- c(y_coords, axisLines$y)
+    include(axisLines$x, axisLines$y)
   }
-  # 5. Process tick marks (axisTicks)
   if (show_axis && !is.null(axisTicks) && nrow(axisTicks) > 0) {
-    # x coordinates: x0, x1, label_x
-    x_coords <- c(x_coords, axisTicks$x0, axisTicks$x1, axisTicks$label_x)
-    # y coordinates: y0, y1, label_y
-    y_coords <- c(y_coords, axisTicks$y0, axisTicks$y1, axisTicks$label_y)
+    include(axisTicks$x0, axisTicks$y0)
+    include(axisTicks$x1, axisTicks$y1)
+    include(axisTicks$label_x, axisTicks$label_y)
   }
-  # 6. Process gene arrow polygons (gene_polys): contains x, y coordinates (polygon vertices)
   if (!is.null(gene_polys) && nrow(gene_polys) > 0) {
-    x_coords <- c(x_coords, gene_polys$x)
-    y_coords <- c(y_coords, gene_polys$y)
+    include(gene_polys$x, gene_polys$y)
   }
-  # 7. Process sequence labels (seq_labels): contains text_x/text_y
   if (!is.null(seq_labels) && nrow(seq_labels) > 0) {
-    x_coords <- c(x_coords, seq_labels$text_x)
-    y_coords <- c(y_coords, seq_labels$text_y)
+    include(seq_labels$text_x, seq_labels$text_y)
   }
 
-  # Filter missing values (NA)
-  x_coords <- x_coords[!is.na(x_coords)]
-  y_coords <- y_coords[!is.na(y_coords)]
-
-  # Calculate extremes (return list containing min/max for x and y)
   list(
-    x_min = min(x_coords), # Left extreme
-    x_max = max(x_coords), # Right extreme
-    y_min = min(y_coords), # Bottom extreme
-    y_max = max(y_coords) # Top extreme
+    x_min = if (is.finite(x_min)) x_min else NA_real_,
+    x_max = if (is.finite(x_max)) x_max else NA_real_,
+    y_min = if (is.finite(y_min)) y_min else NA_real_,
+    y_max = if (is.finite(y_max)) y_max else NA_real_
   )
 }
 

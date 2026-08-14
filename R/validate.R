@@ -364,19 +364,35 @@ validation_ribbon_duplicates <- function(ribbon_data, near_tol = 5,
     ss <- ss[finite_rows]
     se <- se[finite_rows]
     if (length(g) < 2) next
-    for (i in seq_len(length(g) - 1L)) {
-      for (j in (i + 1L):length(g)) {
-        d <- max(abs(qs[i] - qs[j]), abs(qe[i] - qe[j]),
-                 abs(ss[i] - ss[j]), abs(se[i] - se[j]))
-        if (d <= near_tol) {
-          near_rows[[length(near_rows) + 1L]] <- c(g[j], g[i])
-        }
-        qr <- interval_recip_overlap(qs[i], qe[i], qs[j], qe[j])
-        sr <- interval_recip_overlap(ss[i], se[i], ss[j], se[j])
-        if (is.finite(qr) && is.finite(sr) &&
-            qr >= overlap_ratio && sr >= overlap_ratio) {
-          overlap_rows[[length(overlap_rows) + 1L]] <- c(g[j], g[i])
-        }
+    k <- length(g)
+    for (i in seq_len(k - 1L)) {
+      j <- (i + 1L):k
+
+      d <- pmax(abs(qs[i] - qs[j]), abs(qe[i] - qe[j]),
+                abs(ss[i] - ss[j]), abs(se[i] - se[j]))
+      near_j <- j[d <= near_tol]
+      if (length(near_j) > 0L) {
+        near_rows[[length(near_rows) + 1L]] <- cbind(g[near_j], g[i])
+      }
+
+      qlo <- pmax(qs[i], qs[j])
+      qhi <- pmin(qe[i], qe[j])
+      qovl <- pmax(0, qhi - qlo + 1)
+      qden <- pmin(abs(qe[i] - qs[i]) + 1, abs(qe[j] - qs[j]) + 1)
+      qr <- qovl / qden
+      qr[qden <= 0] <- 0
+
+      slo <- pmax(ss[i], ss[j])
+      shi <- pmin(se[i], se[j])
+      sovl <- pmax(0, shi - slo + 1)
+      sden <- pmin(abs(se[i] - ss[i]) + 1, abs(se[j] - ss[j]) + 1)
+      sr <- sovl / sden
+      sr[sden <= 0] <- 0
+
+      ovl_j <- j[is.finite(qr) & is.finite(sr) &
+                   qr >= overlap_ratio & sr >= overlap_ratio]
+      if (length(ovl_j) > 0L) {
+        overlap_rows[[length(overlap_rows) + 1L]] <- cbind(g[ovl_j], g[i])
       }
     }
   }

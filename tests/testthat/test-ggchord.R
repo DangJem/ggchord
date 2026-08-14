@@ -253,8 +253,10 @@ test_that("plot objects are self-contained and repeated builds stay stable", {
   data(gene_data_example)
   p <- ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
     geom_seq() + geom_ribbon() + geom_gene() + geom_axis()
-  # The plot carries its own scales (tagged ggchord_managed) so that tools such
-  # as plotly::ggplotly() that clone the plot see the same scales as a build.
+  # Layout/scales are computed lazily; prepare explicitly to verify the plot
+  # carries its own scales (tagged ggchord_managed) so that tools such as
+  # plotly::ggplotly() that clone the plot see the same scales as a build.
+  p <- ggchord:::prepare_ggchord_plot(p)
   expect_gt(length(p$scales$scales), 0)
   expect_true(all(vapply(p$scales$scales,
                          function(s) !is.null(s$ggchord_managed), logical(1))))
@@ -601,6 +603,7 @@ test_that("gene_label_size is applied to the gene text layer", {
   data(gene_data_example)
   p <- ggchord(seq_data_example, gene_data = gene_data_example) +
     geom_seq() + geom_gene() + geom_gene_label()
+  p <- ggchord:::prepare_ggchord_plot(p)
   layout <- p$ggchord$ref$layout
   # the layout carries the (default 2.5) label size
   expect_true(all(layout$gene_labels$size == 2.5))
@@ -614,6 +617,7 @@ test_that("gene_label_size is applied to the gene text layer", {
   # a custom size flows through
   p2 <- ggchord(seq_data_example, gene_data = gene_data_example) +
     geom_seq() + geom_gene() + geom_gene_label(gene_label_size = 4)
+  p2 <- ggchord:::prepare_ggchord_plot(p2)
   expect_true(all(p2$ggchord$ref$layout$gene_labels$size == 4))
 })
 
@@ -631,6 +635,8 @@ test_that("geom_gene_label_repel repels gene labels with leader lines", {
   p1 <- suppressWarnings(ggchord(seq_data_example, gene_data = gd) +
                            geom_seq() + geom_gene() +
                            geom_gene_label_repel())
+  p0 <- ggchord:::prepare_ggchord_plot(p0)
+  p1 <- ggchord:::prepare_ggchord_plot(p1)
   # repel should move at least one label and create leader-line segments
   expect_true(is.list(p1$ggchord$ref$layout))
   moved <- any(p0$ggchord$ref$layout$gene_labels$text_x != p1$ggchord$ref$layout$gene_labels$text_x |
@@ -681,6 +687,7 @@ test_that("gene_label_wrap wraps long annotations", {
   data(gene_data_example)
   p <- ggchord(seq_data_example, gene_data = gene_data_example) +
     geom_seq() + geom_gene() + geom_gene_label(gene_label_wrap = 10)
+  p <- ggchord:::prepare_ggchord_plot(p)
   gl <- p$ggchord$ref$layout$gene_labels
   expect_true(any(grepl("\n", gl$text)))
   pdf(tempfile(fileext = ".pdf"), 8, 8)
@@ -698,6 +705,7 @@ test_that("gene_label_orientation and gene_label_segment work", {
     geom_gene_label_repel(gene_label_orientation = "horizontal",
                           gene_label_segment = "elbow") +
     geom_axis()
+  p <- ggchord:::prepare_ggchord_plot(p)
   gl <- p$ggchord$ref$layout$gene_labels
   seg <- p$ggchord$ref$layout$gene_label_segments
   expect_true(all(gl$text_angle == 0))
@@ -887,6 +895,7 @@ test_that("elbow leader lines adapt their segment lengths per label", {
 test_that("axis labels are aligned outward and can be hidden on overlap", {
   data(seq_data_example)
   p <- ggchord(seq_data_example) + geom_seq() + geom_axis()
+  p <- ggchord:::prepare_ggchord_plot(p)
   layout <- p$ggchord$ref$layout
   at <- layout$axis_ticks
   # labels carry outward hjust/vjust (rotated labels may be centered on one axis)

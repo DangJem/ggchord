@@ -264,13 +264,11 @@ ggchord <- function(
       wire_ggchord_layer(elem, e1)
       p <- p + elem
     }
-    # Eagerly prepare the plot so that it is self-contained (layout, scales and
-    # coordinates attached) even before it is built.  Tools such as
-    # plotly::ggplotly() clone the plot before building, so the plot must
-    # already carry its scales.
-    if (!is.null(p$ggchord$ref)) {
-      p <- tryCatch(prepare_ggchord_plot(p), error = function(e) p)
-    }
+    # Layout/scales/coordinates are computed lazily on the first build or
+    # plotly conversion (ggchord_layer_data() and ggchord_plotly_ggplot() both
+    # call prepare_ggchord_plot() on demand). Eagerly preparing here would
+    # recompute the full chord geometry after every added layer, which is very
+    # expensive for large alignment tables.
   } else if (inherits(e2, "Scale")) {
     # A user-supplied scale intentionally replaces the ggchord-managed default
     # scale of the same aesthetic; muffle ggplot2's "already present" message.

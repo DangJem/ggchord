@@ -127,6 +127,39 @@ compute_chord_layout <- function(
   names(seq_refs) <- seqs
 
   # Curve coordinate mapping function
+  map_to_curve_many <- function(angle, radius, ref) {
+    n <- length(angle)
+    nref <- length(ref$angles)
+
+    # Vectorised nearest-reference lookup (O(n log n) overall).
+    fi <- findInterval(angle, ref$angles)
+    fi <- pmax(1, pmin(fi, nref - 1))
+    idx <- ifelse(abs(ref$angles[fi] - angle) <=
+                    abs(ref$angles[fi + 1] - angle), fi, fi + 1)
+
+    base <- ref$path[idx, , drop = FALSE]
+    idx_next <- pmin(idx + 1, nref)
+    idx_prev <- pmax(idx - 1, 1)
+    dx <- ref$path$x[idx_next] - base$x
+    dy <- ref$path$y[idx_next] - base$y
+    last <- idx == nref
+    if (any(last)) {
+      dx[last] <- base$x[last] - ref$path$x[idx_prev[last]]
+      dy[last] <- base$y[last] - ref$path$y[idx_prev[last]]
+    }
+
+    norm_x <- -dy
+    norm_y <- dx
+    nl <- sqrt(norm_x^2 + norm_y^2)
+    ok <- nl > 0
+    norm_x[ok] <- norm_x[ok] / nl[ok]
+    norm_y[ok] <- norm_y[ok] / nl[ok]
+
+    offset <- radius - ref$r0
+    cbind(x = base$x + norm_x * offset,
+          y = base$y + norm_y * offset)
+  }
+
   map_to_curve <- function(angle, radius, ref) {
     # ref$angles is sorted, so use findInterval (O(log n)) instead of a
     # full linear scan to locate the nearest reference angle.
@@ -185,9 +218,7 @@ compute_chord_layout <- function(
       ref <- seq_refs[[id]]
       r0 <- ref$r0 - axisGap[id]
       angles <- seq(starts[id], ends[id], length.out = nSeg)
-      pts <- t(sapply(angles, function(angle) {
-        map_to_curve(angle, r0, ref)
-      }))
+      pts <- map_to_curve_many(angles, r0, ref)
       data.frame(x = pts[, 1], y = pts[, 2], seq_id = id, stringsAsFactors = FALSE)
     }))
 
@@ -214,58 +245,57 @@ compute_chord_layout <- function(
       relative_angle <- is.character(orient_val) &&
         tolower(orient_val) %in% c("parallel", "perpendicular")
 
-      do.call(rbind, lapply(seq_len(nrow(pts)), function(j) {
-        p <- pts[j, ]
-        frac <- if (orientation[id] == 1) p$pos / lens[id] else 1 - p$pos / lens[id]
-        angle <- starts[id] + frac * (ends[id] - starts[id])
+      frac <- if (orientation[id] == 1) pts$pos / lens[id] else 1 - pts$pos / lens[id]
+      angle <- starts[id] + frac * (ends[id] - starts[id])
 
-        # Tangent direction at this tick position (used for "parallel" and
-        # "perpendicular" orientations).
-        fi <- findInterval(angle, ref$angles)
-        if (fi < 1) fi <- 1
-        if (fi >= length(ref$angles)) fi <- length(ref$angles) - 1
-        idx <- if (abs(ref$angles[fi] - angle) <=
-                    abs(ref$angles[fi + 1] - angle)) fi else fi + 1
-        if (idx < nrow(ref$path)) {
-          dx_t <- ref$path$x[idx + 1] - ref$path$x[idx]
-          dy_t <- ref$path$y[idx + 1] - ref$path$y[idx]
-        } else {
-          dx_t <- ref$path$x[idx] - ref$path$x[idx - 1]
-          dy_t <- ref$path$y[idx] - ref$path$y[idx - 1]
-        }
-        base_angle <- atan2(dy_t, dx_t) * 180 / pi
+      # Tangent direction at each tick position (used for "parallel" and
+      # "perpendicular" orientations).
+      fi <- findInterval(angle, ref$angles)
+      fi <- pmax(1, pmin(fi, length(ref$angles) - 1))
+      idx <- ifelse(abs(ref$angles[fi] - angle) <=
+                      abs(ref$angles[fi + 1] - angle), fi, fi + 1)
+      idx_next <- pmin(idx + 1, nrow(ref$path))
+      idx_prev <- pmax(idx - 1, 1)
+      dx_t <- ref$path$x[idx_next] - ref$path$x[idx]
+      dy_t <- ref$path$y[idx_next] - ref$path$y[idx]
+      last <- idx == nrow(ref$path)
+      if (any(last)) {
+        dx_t[last] <- ref$path$x[idx[last]] - ref$path$x[idx_prev[last]]
+        dy_t[last] <- ref$path$y[idx[last]] - ref$path$y[idx_prev[last]]
+      }
+      base_angle <- atan2(dy_t, dx_t) * 180 / pi
 
-        if (is.character(orient_val) && tolower(orient_val) == "horizontal") {
-          label_angle <- 0
-        } else if (is.character(orient_val) &&
-                   tolower(orient_val) == "parallel") {
-          label_angle <- base_angle
-        } else if (is.character(orient_val) &&
-                   tolower(orient_val) == "perpendicular") {
-          label_angle <- base_angle + 90
-        } else {
-          label_angle <- suppressWarnings(as.numeric(orient_val))
-          if (is.na(label_angle)) label_angle <- 0
-        }
+      if (is.character(orient_val) && tolower(orient_val) == "horizontal") {
+        label_angle <- rep(0, nrow(pts))
+      } else if (is.character(orient_val) &&
+                 tolower(orient_val) == "parallel") {
+        label_angle <- base_angle
+      } else if (is.character(orient_val) &&
+                 tolower(orient_val) == "perpendicular") {
+        label_angle <- base_angle + 90
+      } else {
+        label_angle <- suppressWarnings(as.numeric(orient_val))
+        if (is.na(label_angle)) label_angle <- 0
+        label_angle <- rep(label_angle, nrow(pts))
+      }
 
-        base <- map_to_curve(angle, r0, ref)
-        dir <- if (axisGap[id] >= 0) -1 else 1
-        len <- if (p$is_major) axisMajLen[id] else axisMinLen[id]
-        tip <- map_to_curve(angle, r0 + len * dir, ref)
-        lbl <- map_to_curve(angle, r0 + len * (1.5 + labelOffset[id]) * dir, ref)
+      dir <- if (axisGap[id] >= 0) -1 else 1
+      len <- ifelse(pts$is_major, axisMajLen[id], axisMinLen[id])
+      base <- map_to_curve_many(angle, r0, ref)
+      tip <- map_to_curve_many(angle, r0 + len * dir, ref)
+      lbl <- map_to_curve_many(angle, r0 + len * (1.5 + labelOffset[id]) * dir, ref)
 
-        data.frame(
-          x0 = base[1], y0 = base[2],
-          x1 = tip[1], y1 = tip[2],
-          label = if (p$is_major) as.character(p$pos) else NA,
-          label_x = lbl[1], label_y = lbl[2],
-          size = labelSize[id],
-          label_angle = label_angle,
-          label_angle_relative = relative_angle,
-          seq_id = id,
-          stringsAsFactors = FALSE
-        )
-      }))
+      data.frame(
+        x0 = base[, 1], y0 = base[, 2],
+        x1 = tip[, 1], y1 = tip[, 2],
+        label = ifelse(pts$is_major, as.character(pts$pos), NA),
+        label_x = lbl[, 1], label_y = lbl[, 2],
+        size = labelSize[[id]],
+        label_angle = label_angle,
+        label_angle_relative = relative_angle,
+        seq_id = id,
+        stringsAsFactors = FALSE
+      )
     }))
   }
 
@@ -293,46 +323,49 @@ compute_chord_layout <- function(
       rampFunc <- colorRampPalette(ribbon_colors)
     }
 
-    for (i in seq_len(nrow(ribbon_data))) {
-      row <- ribbon_data[i, ]
-      q <- row$qaccver
-      s <- row$saccver
-      if (q == s || !q %in% seqs || !s %in% seqs) {
-        cntInvalid <- cntInvalid + 1
-        next
-      }
+    # Pre-extract columns for faster iteration and validation.
+    n_ribbons <- nrow(ribbon_data)
+    rib_q <- ribbon_data$qaccver
+    rib_s <- ribbon_data$saccver
+    rib_qstart <- ribbon_data$qstart
+    rib_qend <- ribbon_data$qend
+    rib_sstart <- ribbon_data$sstart
+    rib_send <- ribbon_data$send
+    rib_pident <- ribbon_data$pident
 
-      # Query sequence coordinates
+    valid <- rib_q != rib_s & rib_q %in% seqs & rib_s %in% seqs
+    valid_idx <- which(valid)
+    cntInvalid <- n_ribbons - length(valid_idx)
+
+    ribbon_polys_list <- vector("list", length(valid_idx))
+    ribbon_group <- integer(length(valid_idx))
+    ribbon_fill <- character(length(valid_idx))
+    ribbon_pident <- numeric(length(valid_idx))
+
+    for (j in seq_along(valid_idx)) {
+      i <- valid_idx[j]
+      q <- rib_q[i]
+      s <- rib_s[i]
+
       q_ref <- seq_refs[[q]]
-      q_frac_start <- if (orientation[q] == 1) (row$qstart - 1) / lens[q] else 1 - (row$qstart - 1) / lens[q]
-      q_angle_start <- starts[q] + q_frac_start * (ends[q] - starts[q])
-      q_start_coord <- map_to_curve(q_angle_start, seqRadius[q] + ribbonGap[q], q_ref)
+      s_ref <- seq_refs[[s]]
+      rq <- seqRadius[q] + ribbonGap[q]
+      rs <- seqRadius[s] + ribbonGap[s]
 
-      q_frac_end <- if (orientation[q] == 1) (row$qend - 1) / lens[q] else 1 - (row$qend - 1) / lens[q]
+      q_frac_start <- if (orientation[q] == 1) (rib_qstart[i] - 1) / lens[q] else 1 - (rib_qstart[i] - 1) / lens[q]
+      q_angle_start <- starts[q] + q_frac_start * (ends[q] - starts[q])
+      q_frac_end <- if (orientation[q] == 1) (rib_qend[i] - 1) / lens[q] else 1 - (rib_qend[i] - 1) / lens[q]
       q_angle_end <- starts[q] + q_frac_end * (ends[q] - starts[q])
-      q_end_coord <- map_to_curve(q_angle_end, seqRadius[q] + ribbonGap[q], q_ref)
+
+      s_frac_start <- if (orientation[s] == 1) (rib_sstart[i] - 1) / lens[s] else 1 - (rib_sstart[i] - 1) / lens[s]
+      s_angle_start <- starts[s] + s_frac_start * (ends[s] - starts[s])
+      s_frac_end <- if (orientation[s] == 1) (rib_send[i] - 1) / lens[s] else 1 - (rib_send[i] - 1) / lens[s]
+      s_angle_end <- starts[s] + s_frac_end * (ends[s] - starts[s])
 
       q_angles <- seq(q_angle_start, q_angle_end, length.out = 50)
-      q_coords <- do.call(rbind, lapply(q_angles, function(angle) {
-        map_to_curve(angle, seqRadius[q] + ribbonGap[q], q_ref)
-      }))
-      segQ <- data.frame(x = q_coords[, 1], y = q_coords[, 2])
-
-      # Subject sequence coordinates
-      s_ref <- seq_refs[[s]]
-      s_frac_start <- if (orientation[s] == 1) (row$sstart - 1) / lens[s] else 1 - (row$sstart - 1) / lens[s]
-      s_angle_start <- starts[s] + s_frac_start * (ends[s] - starts[s])
-      s_start_coord <- map_to_curve(s_angle_start, seqRadius[s] + ribbonGap[s], s_ref)
-
-      s_frac_end <- if (orientation[s] == 1) (row$send - 1) / lens[s] else 1 - (row$send - 1) / lens[s]
-      s_angle_end <- starts[s] + s_frac_end * (ends[s] - starts[s])
-      s_end_coord <- map_to_curve(s_angle_end, seqRadius[s] + ribbonGap[s], s_ref)
-
       s_angles <- seq(s_angle_start, s_angle_end, length.out = 50)
-      s_coords <- do.call(rbind, lapply(s_angles, function(angle) {
-        map_to_curve(angle, seqRadius[s] + ribbonGap[s], s_ref)
-      }))
-      segS <- data.frame(x = s_coords[, 1], y = s_coords[, 2])
+      q_coords <- map_to_curve_many(q_angles, rq, q_ref)
+      s_coords <- map_to_curve_many(s_angles, rs, s_ref)
 
       # Bezier control points
       if (!is.null(ribbon_ctrl_point)) {
@@ -361,52 +394,54 @@ compute_chord_layout <- function(
         mid_angle_s <- (s_angle_start + s_angle_end) / 2
         mid_point_q <- map_to_curve(mid_angle_q, seqRadius[q] + ribbonGap[q] * 0.5, q_ref)
         mid_point_s <- map_to_curve(mid_angle_s, seqRadius[s] + ribbonGap[s] * 0.5, s_ref)
-        c1 <- colMeans(rbind(mid_point_q, mid_point_s))
+        c1 <- (mid_point_q + mid_point_s) / 2
         c2 <- c1
       }
 
-      # Generate Bezier curves
-      b1 <- bezier_pts(
-        as.numeric(segQ[1, ]),
-        as.numeric(segS[1, ]),
-        c1, c1,
-        n = 50
-      )
-      b2 <- bezier_pts(
-        as.numeric(segQ[nrow(segQ), ]),
-        as.numeric(segS[nrow(segS), ]),
-        c2, c2,
-        n = 50
-      )
+      b1 <- bezier_pts(q_coords[1, ], s_coords[1, ], c1, c1, n = 50)
+      b2 <- bezier_pts(q_coords[50, ], s_coords[50, ], c2, c2, n = 50)
 
-      # Close the polygon
-      poly <- rbind(
-        segQ,
-        b2,
-        segS[nrow(segS):1, ],
-        b1[nrow(b1):1, ]
+      ribbon_polys_list[[j]] <- cbind(
+        x = c(q_coords[, 1], b2[, 1], rev(s_coords[, 1]), rev(b1[, 1])),
+        y = c(q_coords[, 2], b2[, 2], rev(s_coords[, 2]), rev(b1[, 2]))
       )
-
+      ribbon_group[j] <- j
       if (ribbon_color_scheme == "pident") {
-        poly$pident <- row$pident
+        ribbon_pident[j] <- rib_pident[i]
       } else {
-        poly$fill <- switch(ribbon_color_scheme,
-                            single = singleCol,
-                            query = queryCols[q],
-                            subject = queryCols[s])
+        ribbon_fill[j] <- switch(ribbon_color_scheme,
+                                 single = singleCol,
+                                 query = queryCols[q],
+                                 subject = queryCols[s])
       }
-      poly$group <- cntValid + 1
-      poly$alpha <- ribbon_alpha
-      ribbons[[length(ribbons) + 1]] <- poly
-      cntValid <- cntValid + 1
     }
+    cntValid <- length(valid_idx)
 
     if (debug) {
       cat("Valid ribbons:", cntValid, "invalid ribbons:", cntInvalid, "\n")
     }
 
     if (cntValid > 0) {
-      ribbon_polys <- do.call(rbind, ribbons)
+      m <- do.call(rbind, ribbon_polys_list)
+      group_vals <- rep(ribbon_group, each = 200)
+      alpha_vals <- rep(ribbon_alpha, nrow(m))
+      if (ribbon_color_scheme == "pident") {
+        ribbon_polys <- data.frame(
+          x = m[, 1], y = m[, 2],
+          pident = rep(ribbon_pident, each = 200),
+          group = group_vals,
+          alpha = alpha_vals,
+          stringsAsFactors = FALSE
+        )
+      } else {
+        ribbon_polys <- data.frame(
+          x = m[, 1], y = m[, 2],
+          fill = rep(ribbon_fill, each = 200),
+          group = group_vals,
+          alpha = alpha_vals,
+          stringsAsFactors = FALSE
+        )
+      }
     } else {
       warning("No valid alignment data available for plotting")
     }
@@ -444,6 +479,7 @@ compute_chord_layout <- function(
     }
 
     # Generate arrow polygons
+    gene_poly_list <- list()
     for (i in seq_len(nrow(valid_genes))) {
       gene <- valid_genes[i, ]
       sid <- gene$seq_id
@@ -485,11 +521,7 @@ compute_chord_layout <- function(
       orig_rad <- c(outer_r, rev(inner_r))
 
       ref <- seq_refs[[sid]]
-      pts_list <- mapply(function(ang, rad) {
-        map_to_curve(ang, rad, ref)
-      }, orig_ang, orig_rad, SIMPLIFY = FALSE)
-
-      mapped <- do.call(rbind, pts_list)
+      mapped <- map_to_curve_many(orig_ang, orig_rad, ref)
 
       gene_poly <- data.frame(
         x = mapped[, 1],
@@ -500,8 +532,9 @@ compute_chord_layout <- function(
         ord = seq_len(2 * total_pt),
         stringsAsFactors = FALSE
       )
-      gene_polys <- rbind(gene_polys, gene_poly)
+      gene_poly_list[[length(gene_poly_list) + 1]] <- gene_poly
     }
+    gene_polys <- if (length(gene_poly_list)) do.call(rbind, gene_poly_list) else data.frame()
 
     # Generate gene labels
     if (gene_label_show && nrow(valid_genes) > 0) {
