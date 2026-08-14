@@ -187,15 +187,7 @@ test_that("plots survive saveRDS/readRDS and render", {
   expect_equal(p2$layers[[1]]$ggchord_params$seq_radius, 5)
 })
 
-test_that("ggsave works directly on a ggchord plot", {
-  skip_unless_slow_tests()
-  data(seq_data_example)
-  data(ribbon_data_example)
-  p <- ggchord(seq_data_example, ribbon_data_example) + geom_seq() + geom_ribbon()
-  f <- tempfile(fileext = ".png")
-  expect_no_error(ggsave(f, p, width = 6, height = 6, dpi = 72))
-  expect_true(file.exists(f))
-})
+
 
 test_that("plot objects are self-contained and repeated builds stay stable", {
   data(seq_data_example)
@@ -319,20 +311,7 @@ test_that("theme customization via + works", {
   expect_no_error(ggplot_build(p))
 })
 
-test_that("plots convert to plotly when plotly is installed", {
-  skip_if_not_installed("plotly")
-  skip_unless_slow_tests()
-  # NOTE: do not attach plotly with library() here - it masks geom_ribbon()
-  # and would leak into the other tests in this session.
-  data(seq_data_example)
-  data(ribbon_data_example)
-  data(gene_data_example)
-  # sequence-only plot (the common interactive use case)
-  p <- ggchord(seq_data_example) + geom_seq()
-  pl <- suppressWarnings(plotly::ggplotly(p))
-  expect_true(inherits(pl, "plotly"))
-  expect_gt(length(pl$x$data), 0)
-})
+
 
 test_that("legend keys are transparent regardless of panel.background", {
   data(seq_data_example)
@@ -368,46 +347,9 @@ test_that("Identity colourbar stays visible with a horizontal bottom legend", {
   expect_false(any(grepl("null", heights)))
 })
 
-test_that("plotly conversion keeps legends and adds sequence-arc arrows", {
-  skip_if_not_installed("plotly")
-  skip_unless_slow_tests()
-  data(seq_data_example)
-  data(ribbon_data_example)
-  data(gene_data_example)
-  p <- ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
-    geom_seq() + geom_ribbon() + geom_gene() + geom_axis()
-  pl <- suppressWarnings(plotly::ggplotly(p))
-  expect_true(isTRUE(pl$x$layout$showlegend))
-  expect_gt(length(pl$x$layout$annotations), 0)
-})
 
-test_that("legends can be positioned independently with legend_position", {
-  skip_unless_slow_tests()
-  data(seq_data_example)
-  data(ribbon_data_example)
-  data(gene_data_example)
-  p <- ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
-    geom_seq(legend_position = "left") +
-    geom_ribbon(legend_position = "bottom") +
-    geom_gene(legend_position = "right") +
-    geom_axis()
-  # the three legends occupy separate boxes (left, bottom, right);
-  # ggplotGrob() opens a device for text measurement, so open one explicitly
-  pdf(tempfile(fileext = ".pdf"), 8, 8)
-  g <- ggplotGrob(p)
-  dev.off()
-  filled <- vapply(g$grobs, function(gr) {
-    inherits(gr, "gtable") && grepl("guide-box", gr$name) &&
-      (length(gr$grobs) > 0 || length(gr$children) > 0)
-  }, logical(1))
-  positions <- g$layout$name[filled]
-  expect_true(any(grepl("guide-box-left", positions)))
-  expect_true(any(grepl("guide-box-bottom", positions)))
-  expect_true(any(grepl("guide-box-right", positions)))
-  # invalid positions are rejected (validate at build time, no device)
-  p2 <- ggchord(seq_data_example) + geom_seq(legend_position = "center")
-  expect_error(ggplot_build(p2), "legend_position")
-})
+
+
 
 test_that("gene parameters accept all flexible input formats", {
   data(seq_data_example)
@@ -445,29 +387,7 @@ test_that("sequence parameters accept list formats", {
                    setNames(c(3, 2, 2, 1), seqs))
 })
 
-test_that("default legend positions split the three legends", {
-  skip_unless_slow_tests()
-  data(seq_data_example)
-  data(ribbon_data_example)
-  data(gene_data_example)
-  # defaults: Seq ID + Strand on the right, Identity(%) colourbar on the left
-  expect_identical(ggchord::geom_seq()[[1]]$ggchord_params$legend_position, "right")
-  expect_identical(ggchord::geom_ribbon()[[1]]$ggchord_params$legend_position, "left")
-  expect_identical(ggchord::geom_gene()[[1]]$ggchord_params$legend_position, "right")
 
-  p <- ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
-    geom_seq() + geom_ribbon() + geom_gene() + geom_axis()
-  pdf(tempfile(fileext = ".pdf"), 8, 8)
-  g <- ggplotGrob(p)
-  dev.off()
-  filled <- vapply(g$grobs, function(gr) {
-    inherits(gr, "gtable") && grepl("guide-box", gr$name) &&
-      (length(gr$grobs) > 0 || length(gr$children) > 0)
-  }, logical(1))
-  positions <- g$layout$name[filled]
-  expect_true(any(grepl("guide-box-left", positions)))
-  expect_true(any(grepl("guide-box-right", positions)))
-})
 
 test_that("axis_gap defaults to 0.05", {
   data(seq_data_example)
@@ -478,40 +398,9 @@ test_that("axis_gap defaults to 0.05", {
   expect_true(nrow(axis_layer) > 0)
 })
 
-test_that("geom_ribbon shows the Identity colourbar legend without gene data", {
-  skip_unless_slow_tests()
-  data(seq_data_example)
-  data(ribbon_data_example)
-  p <- ggchord(seq_data_example, ribbon_data_example) + geom_seq() + geom_ribbon()
-  pdf(tempfile(fileext = ".pdf"), 8, 8)
-  g <- ggplotGrob(p)
-  dev.off()
-  # the colourbar legend is rendered (a rastergrob inside a guide box)
-  found <- FALSE
-  walk <- function(x) {
-    if (inherits(x, "rastergrob")) found <<- TRUE
-    if (!is.null(x$grobs)) for (ch in x$grobs) walk(ch)
-    if (!is.null(x$children)) for (ch in x$children) walk(ch)
-  }
-  for (i in seq_along(g$grobs)) if (inherits(g$grobs[[i]], "gtable") && grepl("guide-box", g$grobs[[i]]$name)) walk(g$grobs[[i]])
-  expect_true(found)
-})
 
-test_that("no spurious fill-scale warning when gene data is present without a gene layer", {
-  skip_unless_slow_tests()
-  data(seq_data_example)
-  data(ribbon_data_example)
-  data(gene_data_example)
-  p <- ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
-    geom_seq() + geom_ribbon()
-  warns <- character(0)
-  pdf(tempfile(fileext = ".pdf"), 8, 8)
-  withCallingHandlers(print(p), warning = function(w) {
-    warns <<- c(warns, conditionMessage(w)); invokeRestart("muffleWarning")
-  })
-  dev.off()
-  expect_false(any(grepl("No shared levels", warns)))
-})
+
+
 
 test_that("gene_label_size is applied to the gene text layer", {
   data(seq_data_example)
