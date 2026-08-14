@@ -146,6 +146,19 @@ ggchord_plotly_ggplot <- function(p) {
     )
   }
 
+  # ---- sequence-group labels ----
+  if (!is.null(layout$group_labels) && nrow(layout$group_labels) > 0) {
+    std <- std + ggplot2::geom_text(
+      data = layout$group_labels,
+      mapping = ggplot2::aes(x = text_x, y = text_y, label = label,
+                             angle = text_angle, size = size,
+                             hjust = hjust, vjust = vjust),
+      inherit.aes = FALSE,
+      show.legend = FALSE,
+      colour = layout$group_labels$zcolour
+    )
+  }
+
   # ---- axis ----
   if (nrow(layout$axis_lines) > 0) {
     std <- std + ggplot2::geom_path(

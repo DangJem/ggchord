@@ -241,6 +241,25 @@ merged$report  # output_row -> from_rows 追溯
 三个助手都会保留额外列与原始列顺序，并把原始行号附加为返回数据的
 `source_rows` 属性，结果始终可以追溯到输入行。
 
+## 4b. 序列分组
+
+可通过 `seq_group`（`seq_data` 中的列名，或命名向量）对序列分组。不同组之间会插入更大空隙，并可自定义组标签：
+
+```{r seq-group}
+seq_grouped <- transform(seq_data_example,
+                         seq_group = c("host", "phage", "phage", "host"))
+
+ggchord(seq_grouped, ribbon_data_example, gene_data_example) +
+  geom_seq(seq_group = "seq_group",
+           seq_group_colors = c(host = "#E41A1C", phage = "#377EB8")) +
+  geom_ribbon() +
+  geom_gene() +
+  geom_axis()
+```
+
+`geom_seq(seq_group_labels = FALSE)` 保留组间空隙但隐藏组标签；`seq_group_gap`
+控制组间额外空隙大小。
+
 ## 5. 由浅入深示例
 
 以下示例均使用上面已加载的内置数据，可以直接复制运行。关键结果统一使用与英文教程相同的共享示例图片。
@@ -624,6 +643,11 @@ gene_label_rotation = list(20)
 | `seq_radius` | 数值 (> 0) | 1.0 | 序列弧线半径 |
 | `seq_curvature` | 数值 | 1.0 | 曲率：0=直线，1=标准，>1=更弯曲 |
 | `seq_colors` | 颜色向量 | Set1 | 序列弧线颜色 |
+| `seq_group` | NULL / 列名 / 向量 | NULL | 每条序列的分组 |
+| `seq_group_gap` | 数值 | 0.08 | 组间额外空隙比例 |
+| `seq_group_labels` | 逻辑 / 字符 | TRUE | 是否绘制组标签；命名向量可覆盖标签文字 |
+| `seq_group_label_radius` | 数值 | 1.35 | 组标签径向位置（`1` = 在弧线上，`> 1` = 外侧） |
+| `seq_group_colors` | 命名颜色向量 | grey20 | 组标签颜色 |
 | `linewidth` | 数值 | 1.2 | 弧线宽度 |
 | `show_legend` | logical | TRUE | 是否显示 Seq ID 图例 |
 | `legend_position` | 字符 | "right" | Seq ID 图例位置：`"left"`、`"right"`、`"top"`、`"bottom"` 或 `"inside"`（`NULL` = 遵循 `theme(legend.position = ...)`） |

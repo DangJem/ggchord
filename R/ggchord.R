@@ -10,7 +10,7 @@ globalVariables(c(
   "text_x", "text_y", "text", "text_angle", "hjust", "vjust",
   "x0", "y0", "x1", "y1", "label", "label_x", "label_y", "size",
   "fill_col", "alpha", "label_hjust", "label_vjust", "label_angle",
-  "linetype"
+  "linetype", "zcolour"
 ))
 
 #' ggchord: layered multi-sequence alignment chord diagrams for ggplot2
@@ -381,6 +381,31 @@ compute_chord_geometry <- function(plot) {
     seq_colors <- setNames(pal, seqs)
   }
 
+  # --- Process sequence grouping (v0.8.0) ---
+  seq_group <- resolve_ggchord_seq_group(seq_data, seqs, seq_params$seq_group)
+  seq_group_gap <- seq_params$seq_group_gap %||% 0.08
+  seq_group_labels <- seq_params$seq_group_labels %||% TRUE
+  seq_group_label_radius <- seq_params$seq_group_label_radius %||% 1.35
+  seq_group_colors <- seq_params$seq_group_colors
+
+  if (!is.numeric(seq_group_gap) || length(seq_group_gap) != 1 ||
+      !is.finite(seq_group_gap) || seq_group_gap < 0) {
+    ggchord_stop("seq_group_gap must be a finite non-negative number")
+  }
+  if (!is.numeric(seq_group_label_radius) || length(seq_group_label_radius) != 1 ||
+      !is.finite(seq_group_label_radius)) {
+    ggchord_stop("seq_group_label_radius must be a finite number")
+  }
+  if (!is.null(seq_group)) {
+    if (length(seq_group) != length(seqs) ||
+        anyNA(seq_group) || any(!nzchar(as.character(seq_group)))) {
+      ggchord_stop("seq_group must provide a non-missing, non-empty group for every sequence")
+    }
+    seq_group <- as.character(seq_group)
+  } else if (!is.null(seq_group_colors)) {
+    ggchord_stop("seq_group_colors requires seq_group (add a seq_group column or pass geom_seq(seq_group = ...))")
+  }
+
   # --- Process ribbons ---
   ribbonGap  <- process_sequence_param(ribbon_params$ribbon_gap %||% 0.15,
                                        seqs, "ribbon_gap", 0.15)
@@ -609,6 +634,11 @@ compute_chord_geometry <- function(plot) {
     seq_colors = seq_colors, seqRadius = seqRadius,
     seq_curvature = seq_curvature, orientation = orientation,
     seq_gap = seq_gap,
+    seq_group = seq_group,
+    seq_group_gap = seq_group_gap,
+    seq_group_labels = seq_group_labels,
+    seq_group_label_radius = seq_group_label_radius,
+    seq_group_colors = seq_group_colors,
     ribbon_data = data_list$ribbon_data, ribbonGap = ribbonGap,
     ribbon_color_scheme = ribbon_color_scheme,
     ribbon_colors = ribbon_colors, ribbon_alpha = ribbon_alpha,
@@ -696,7 +726,8 @@ classify_ggchord_layers <- function(plot) {
               gene_text = integer(0), gene_text_repel = integer(0),
               gene_label_segment = integer(0),
               axis_line = integer(0), axis_seg = integer(0),
-              axis_text = integer(0), seq_label = integer(0))
+              axis_text = integer(0), seq_label = integer(0),
+              seq_group_label = integer(0))
   for (i in seq_along(plot$layers)) {
     lyr <- plot$layers[[i]]
     type <- lyr$ggchord_type %||% ""
@@ -858,6 +889,11 @@ make_ggchord_scales <- function(layout, has_seq = FALSE, has_gene = FALSE,
   if (!is.null(layout$ribbon_polys)) {
     scales[[length(scales) + 1]] <- scale_alpha_identity()
   }
+  # Sequence-group label colours use an internal aesthetic so they do not
+  # collide with the Seq ID colour scale used by geom_seq().
+  if (!is.null(layout$group_labels) && nrow(layout$group_labels) > 0) {
+    scales[[length(scales) + 1]] <- scale_colour_identity(aesthetics = "zcolour")
+  }
   # Axis text size scale
   scales[[length(scales) + 1]] <- scale_size_identity()
 
@@ -928,6 +964,10 @@ ggchord_label_pad <- function(layout) {
   if (nrow(layout$seq_labels_df) > 0) {
     texts <- c(texts, layout$seq_labels_df$label)
     sizes <- c(sizes, layout$seq_labels_df$size)
+  }
+  if (!is.null(layout$group_labels) && nrow(layout$group_labels) > 0) {
+    texts <- c(texts, layout$group_labels$label)
+    sizes <- c(sizes, layout$group_labels$size)
   }
   if (length(texts) == 0) return(0)
   grDevices::pdf(NULL)
@@ -1025,6 +1065,13 @@ ggplot_build.ggchord <- function(plot, ...) {
     new_layers[[i]] <- reconstruct_layer(lyr, extract_ggchord_layer_data(lyr, layout))
   }
   plot$layers <- new_layers
+
+  # Sequence-group labels are appended at build time (geom_seq() itself keeps
+  # returning a single layer for backward compatibility).
+  group_label_layer <- ggchord_group_label_layer(layout$group_labels)
+  if (!is.null(group_label_layer)) {
+    plot$layers[[length(plot$layers) + 1L]] <- group_label_layer
+  }
 
 
   # ====================================================================

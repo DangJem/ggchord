@@ -14,6 +14,11 @@ geom_seq(
   seq_radius = NULL,
   seq_curvature = NULL,
   seq_colors = NULL,
+  seq_group = NULL,
+  seq_group_gap = 0.08,
+  seq_group_labels = TRUE,
+  seq_group_label_radius = 1.35,
+  seq_group_colors = NULL,
   linewidth = 1.2,
   show_legend = TRUE,
   legend_position = "right",
@@ -39,6 +44,27 @@ geom_seq(
 
 \item{seq_colors}{Optional color vector or named vector. Sequence colors}
 
+\item{seq_group}{Optional group specification. NULL disables grouping unless
+\code{seq_data} contains a \code{seq_group} column; a single string naming
+such a column uses that column; otherwise a single value, named vector,
+unnamed vector matching the sequences, or a list (see
+\code{process_sequence_param()}) is accepted.}
+
+\item{seq_group_gap}{Numeric, default 0.08. Extra gap proportion inserted
+between consecutive groups (in addition to \code{seq_gap}).}
+
+\item{seq_group_labels}{Logical or character, default TRUE. When TRUE the
+group names are drawn at the angular midpoint of each group; a named
+character vector can be used to override the group label text.}
+
+\item{seq_group_label_radius}{Numeric, default 1.35. Radial position of the
+group labels as a multiplier of the group's outermost sequence radius
+(same convention as \code{seq_label_radius}: \code{1} on the arc,
+\code{> 1} outside).}
+
+\item{seq_group_colors}{Optional named color vector by group name (or an
+unnamed vector recycled positionally). Colours the group labels.}
+
 \item{linewidth}{Arc line width, default 1.2}
 
 \item{show_legend}{Whether to show the legend for this layer, default TRUE}
@@ -56,4 +82,5 @@ A list of ggplot2 layers
 \description{
 Draws arcs (or straight lines, depending on the curvature setting) representing sequences in the chord diagram.
 Sequence layout parameters (order, orientation, radius, curvature, colors, etc.) are specified here.
+Sequences can be visually grouped with an extra inter-group gap and optional group labels.
 }

@@ -142,6 +142,7 @@ extract_ggchord_layer_data <- function(lyr, layout) {
     gene_text_repel = if (nrow(layout$gene_labels) > 0) layout$gene_labels else fallback,
     gene_label_segment = if (nrow(layout$gene_label_segments) > 0) layout$gene_label_segments else fallback,
     seq_label = if (nrow(layout$seq_labels_df) > 0) layout$seq_labels_df else fallback,
+    seq_group_label = if (nrow(layout$group_labels) > 0) layout$group_labels else fallback,
     axis_line = if (nrow(layout$axis_lines) > 0) layout$axis_lines else fallback,
     axis_seg  = if (nrow(layout$axis_ticks) > 0) layout$axis_ticks else fallback,
     axis_text = {

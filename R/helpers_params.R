@@ -479,3 +479,74 @@ process_manual_colors <- function(gene_colors, unique_anno, gene_order) {
     return(res)
   }
 }
+
+# ---------------------------------------------------------------------------
+# Sequence grouping helper (v0.8.0)
+# ---------------------------------------------------------------------------
+
+#' Resolve a seq_group specification into a named character vector
+#'
+#' @param seq_data data.frame containing at least `seq_id` and, optionally,
+#'   a `seq_group` column.
+#' @param seqs Character vector of sequence IDs in drawing order.
+#' @param seq_group NULL, a column name in `seq_data`, or a parameter accepted
+#'   by [process_sequence_param()] (single value, named vector, unnamed vector
+#'   matching the sequences, or a list).
+#' @return A named character vector with one element per sequence (names are
+#'   sequence IDs), or NULL when grouping is disabled.
+#' @keywords internal
+resolve_ggchord_seq_group <- function(seq_data, seqs, seq_group) {
+  if (is.null(seq_group)) {
+    if (is.data.frame(seq_data) && "seq_group" %in% colnames(seq_data)) {
+      seq_group <- stats::setNames(as.character(seq_data$seq_group),
+                                   as.character(seq_data$seq_id))
+      seq_group <- seq_group[seqs]
+      return(seq_group)
+    }
+    return(NULL)
+  }
+
+  # A single unnamed string is treated as a column name when that column
+  # exists in seq_data; otherwise it is a group label recycled to every
+  # sequence (which is rarely useful but is a valid process_sequence_param()
+  # input).
+  if (length(seq_group) == 1 && is.character(seq_group) &&
+      is.null(names(seq_group)) && !is.list(seq_group) &&
+      is.data.frame(seq_data) && seq_group %in% colnames(seq_data)) {
+    seq_group <- stats::setNames(as.character(seq_data[[seq_group]]),
+                                 as.character(seq_data$seq_id))
+    seq_group <- seq_group[seqs]
+    return(seq_group)
+  }
+
+  out <- process_sequence_param(seq_group, seqs, "seq_group", allow_null = TRUE)
+  if (is.null(out)) return(NULL)
+  as.character(out)
+}
+
+#' Normalise a named vector of group colours
+#'
+#' @param colors Named vector, or NULL. When NULL a default grey is used later.
+#' @param groups Character vector of group names in display order.
+#' @return Named character vector with names equal to `groups`; unnamed colour
+#'   vectors are recycled positionally.
+#' @keywords internal
+resolve_ggchord_group_colors <- function(colors, groups) {
+  if (is.null(colors)) return(NULL)
+  if (is.null(names(colors))) {
+    if (length(colors) == 1) colors <- setNames(rep(colors, length(groups)), groups)
+    else if (length(colors) == length(groups)) colors <- setNames(as.character(colors), groups)
+    else ggchord_stop("seq_group_colors must be length 1 or match the number of groups")
+  } else {
+    unknown <- setdiff(names(colors), groups)
+    if (length(unknown) > 0) {
+      ggchord_stop("seq_group_colors contains unknown group name(s): ",
+                   paste(unknown, collapse = ", "))
+    }
+    out <- rep("grey20", length(groups))
+    names(out) <- groups
+    out[names(colors)] <- as.character(colors)
+    colors <- out
+  }
+  colors
+}

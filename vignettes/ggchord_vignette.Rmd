@@ -249,6 +249,27 @@ All three helpers keep extra columns and the original column order, and attach
 the original row numbers as the `source_rows` attribute of the returned data,
 so results can always be traced back to the input rows.
 
+## 4b. Sequence grouping
+
+Sequences can be grouped with `seq_group` (a `seq_data` column or a named
+vector). An extra gap is added between different groups, and group labels can
+be customised:
+
+```{r seq-group}
+seq_grouped <- transform(seq_data_example,
+                         seq_group = c("host", "phage", "phage", "host"))
+
+ggchord(seq_grouped, ribbon_data_example, gene_data_example) +
+  geom_seq(seq_group = "seq_group",
+           seq_group_colors = c(host = "#E41A1C", phage = "#377EB8")) +
+  geom_ribbon() +
+  geom_gene() +
+  geom_axis()
+```
+
+`geom_seq(seq_group_labels = FALSE)` keeps the extra group gap but hides the
+group labels. `seq_group_gap` controls the size of the inter-group gap.
+
 ## 5. Learn by examples
 
 All examples use the built-in data sets already loaded above, so you can
@@ -654,6 +675,11 @@ gene_label_rotation = list(20)
 | `seq_radius` | numeric (> 0) | 1.0 | Sequence arc radius |
 | `seq_curvature` | numeric | 1.0 | Curvature: 0 = straight, 1 = standard, > 1 = more curved |
 | `seq_colors` | color vector | Set1 | Sequence arc colors |
+| `seq_group` | NULL / column name / vector | NULL | Group specification for each sequence |
+| `seq_group_gap` | numeric | 0.08 | Extra gap proportion between groups |
+| `seq_group_labels` | logical / character | TRUE | Draw group labels; a named vector overrides label text |
+| `seq_group_label_radius` | numeric | 1.35 | Radial position of group labels (`1` = on arc, `> 1` = outside) |
+| `seq_group_colors` | named color vector | grey20 | Colours for group labels |
 | `linewidth` | numeric | 1.2 | Arc line width |
 | `show_legend` | logical | TRUE | Show the Seq ID legend |
 | `legend_position` | character | "right" | Position of the Seq ID legend: `"left"`, `"right"`, `"top"`, `"bottom"` or `"inside"` (`NULL` = follow `theme(legend.position = ...)`) |

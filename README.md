@@ -78,6 +78,21 @@ ggchord(
 
 That is the whole idea: **data in `ggchord()`, styling in the layers**.
 
+### Sequence grouping
+
+Sequences can be grouped (for example host vs. phage) with a larger gap
+between groups and optional group labels:
+
+```r
+seq_data_example$seq_group <- c("host", "phage", "phage", "host")
+
+ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
+  geom_seq(seq_group = "seq_group",
+           seq_group_colors = c(host = "#E41A1C", phage = "#377EB8")) +
+  geom_ribbon() +
+  geom_gene()
+```
+
 ## Where to go next
 
 | Need | Resource |

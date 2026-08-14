@@ -15,7 +15,7 @@ expressiveness → ecosystem**.
 | Version | Theme | Status |
 | --- | --- | --- |
 | v0.7.0 | Reliability: validation, cleaning, tests, visual regression | [done] |
-| v0.8.0 | Usability: import helpers, ribbon processing, sequence grouping | A/B/C [done], D [designed] |
+| v0.8.0 | Usability: import helpers, ribbon processing, sequence grouping | [done] |
 | v0.9.0 | Expressiveness: ribbon direction mapping, highlights, features, crowded layouts | designed |
 | v1.0.0 | Ecosystem: Plotly, export, themes, documentation, stable API | designed |
 
@@ -43,13 +43,13 @@ optional columns preserved; clear diagnostics for malformed files.
 `merge_ggchord_ribbons()`. All return `list(data, report)` and attach
 `source_rows` to `data`.
 
-### D. Sequence grouping (`seq_group`) [designed]
+### D. Sequence grouping (`seq_group`) [done]
 
 Goal: group sequences (host/phage, chromosome sets, sample groups) with visual
 separation: a larger inter-group gap, group labels and optional group colors,
 without changing the layered API.
 
-**Public API (draft):**
+**Public API:**
 
 ```r
 # Option 1: group column in seq_data (preferred)

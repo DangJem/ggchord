@@ -1,3 +1,21 @@
+# ggchord 0.8.0
+
+## New features: sequence grouping
+
+* `geom_seq()` gains sequence-grouping support via `seq_group`,
+  `seq_group_gap`, `seq_group_labels`, `seq_group_label_radius` and
+  `seq_group_colors`. Groups can be taken from a `seq_group` column in
+  `seq_data` or supplied as a named/positional vector. An extra gap is
+  inserted only at boundaries between different groups, and optional group
+  labels are drawn at the angular midpoint of each group.
+
+* Group labels are rendered horizontally and keep their own internal
+  `zcolour` identity scale, so they do not interfere with the existing Seq ID
+  colour legend. `geom_seq()` remains backward compatible and still returns a
+  single layer; group labels are appended lazily at build time.
+
+* `plotly::ggplotly()` and the layout data path now include group labels.
+
 # ggchord 0.7.0
 
 ## New features: structured data validation and cleaning

@@ -39,6 +39,12 @@
 compute_chord_layout <- function(
     seqs, lens, seq_labels, seq_colors,
     seqRadius, seq_curvature, orientation, seq_gap,
+    # Sequence grouping parameters (v0.8.0)
+    seq_group = NULL,
+    seq_group_gap = 0.08,
+    seq_group_labels = TRUE,
+    seq_group_label_radius = 1.35,
+    seq_group_colors = NULL,
     # Ribbon parameters
     ribbon_data = NULL, ribbonGap,
     ribbon_color_scheme, ribbon_colors, ribbon_alpha,
@@ -81,10 +87,35 @@ compute_chord_layout <- function(
   # Step 1: compute angle allocation
   # ====================================================================
   total_circ <- 2 * pi
-  total_gap_prop <- sum(seq_gap)
+
+  # Sequence groups (v0.8.0): the optional extra gap is inserted only at
+  # boundaries where the group of sequence i differs from the group of
+  # sequence i + 1.  The normal seq_gap is still applied at every boundary.
+  has_group <- !is.null(seq_group)
+  if (has_group) {
+    if (length(seq_group) != n) {
+      ggchord_stop("seq_group must have one value per sequence")
+    }
+    if (anyNA(seq_group) || any(!nzchar(as.character(seq_group)))) {
+      ggchord_stop("seq_group must not contain missing or empty values")
+    }
+    groups <- as.character(seq_group)
+    names(groups) <- seqs
+    group_boundaries <- if (n > 1) which(groups[-n] != groups[-1]) else integer(0)
+  } else {
+    groups <- setNames(rep("", n), seqs)
+    group_boundaries <- integer(0)
+  }
+
+  if (!is.numeric(seq_group_gap) || length(seq_group_gap) != 1 ||
+      !is.finite(seq_group_gap) || seq_group_gap < 0) {
+    ggchord_stop("seq_group_gap must be a finite non-negative number")
+  }
+
+  total_gap_prop <- sum(seq_gap) + seq_group_gap * length(group_boundaries)
 
   if (total_gap_prop >= 1) {
-    ggchord_stop("The sum of seq_gap cannot exceed 1 (no space left for sequences)")
+    ggchord_stop("The sum of seq_gap plus the extra seq_group_gap cannot exceed 1 (no space left for sequences)")
   }
 
   seq_total_prop <- 1 - total_gap_prop
@@ -99,7 +130,8 @@ compute_chord_layout <- function(
 
   if (n > 1) {
     for (i in 2:n) {
-      starts[i] <- starts[i - 1] + theta[i - 1] + gap_rads[i - 1]
+      extra <- if ((i - 1L) %in% group_boundaries) total_circ * seq_group_gap else 0
+      starts[i] <- starts[i - 1] + theta[i - 1] + gap_rads[i - 1] + extra
     }
   }
   ends <- starts + theta
@@ -712,6 +744,86 @@ compute_chord_layout <- function(
   }
 
   # ====================================================================
+  # Step 7c: generate sequence-group labels (v0.8.0)
+  # ====================================================================
+  group_labels <- data.frame()
+  group_colors <- NULL
+  if (has_group && (isTRUE(seq_group_labels) || is.character(seq_group_labels))) {
+    group_names <- as.character(unique(unname(groups)))
+    group_text <- group_names
+    names(group_text) <- group_names
+
+    if (is.character(seq_group_labels)) {
+      if (!is.null(names(seq_group_labels))) {
+        unknown <- setdiff(names(seq_group_labels), group_names)
+        if (length(unknown) > 0) {
+          ggchord_stop("seq_group_labels contains unknown group name(s): ",
+                       paste(unknown, collapse = ", "))
+        }
+        group_text[names(seq_group_labels)] <- as.character(seq_group_labels)
+      } else if (length(seq_group_labels) == length(group_names)) {
+        group_text <- setNames(as.character(seq_group_labels), group_names)
+      } else if (length(seq_group_labels) != 1) {
+        ggchord_stop("seq_group_labels must be TRUE, a named vector by group, or a vector matching the number of groups")
+      } else {
+        group_text <- setNames(rep(as.character(seq_group_labels),
+                                   length(group_names)), group_names)
+      }
+    }
+
+    group_colors <- resolve_ggchord_group_colors(seq_group_colors, group_names)
+    if (is.null(group_colors)) group_colors <- setNames(rep("grey20", length(group_names)), group_names)
+
+    # Iterate over contiguous runs rather than unique group names so that the
+    # same group label appearing in two separated blocks is drawn once per
+    # block instead of straddling an unrelated block in between.
+    grp_vals <- unname(groups)
+    run_lengths <- rle(grp_vals)$lengths
+    run_values <- rle(grp_vals)$values
+    run_end <- cumsum(run_lengths)
+    run_start <- c(1L, run_end[-length(run_end)] + 1L)
+
+    group_labels_list <- lapply(seq_along(run_values), function(k) {
+      g <- run_values[k]
+      idx <- run_start[k] + seq_len(run_lengths[k]) - 1L
+      first <- idx[1]
+      last <- idx[length(idx)]
+
+      mid_angle <- (starts[first] + ends[last]) / 2
+      base_radius <- max(seqRadius[idx])
+      # Same radial convention as seq_label_radius: 1 = on the arc, > 1 = outside.
+      r <- base_radius * (2 - seq_group_label_radius)
+
+      # Anchor the label on the sequence whose arc contains the group midpoint
+      # (or, when the midpoint falls in a gap, the nearest sequence).  This
+      # keeps the group label aligned with the actual curve when
+      # seq_curvature != 1.
+      centers <- (starts + ends) / 2
+      in_arc <- which(starts <= mid_angle & ends >= mid_angle)
+      if (length(in_arc) > 0) {
+        ref_id <- seqs[in_arc[which.min(abs(centers[in_arc] - mid_angle))]]
+      } else {
+        ref_id <- seqs[which.min(abs(centers - mid_angle))]
+      }
+      pt <- map_to_curve(mid_angle, r, seq_refs[[ref_id]])
+
+      data.frame(
+        text_x = pt[1],
+        text_y = pt[2],
+        label = unname(group_text[g]),
+        text_angle = 0,
+        hjust = 0.5,
+        vjust = 0.5,
+        size = 3.5,
+        group_id = g,
+        zcolour = unname(group_colors[g]),
+        stringsAsFactors = FALSE
+      )
+    })
+    group_labels <- do.call(rbind, group_labels_list)
+  }
+
+  # ====================================================================
   # Step 8: rotate all elements uniformly
   # ====================================================================
   rotate_df <- function(df) {
@@ -812,6 +924,7 @@ compute_chord_layout <- function(
   if (!is.null(ribbon_polys)) ribbon_polys <- rotate_df(ribbon_polys)
   if (nrow(gene_labels) > 0) gene_labels <- rotate_df(gene_labels)
   if (nrow(seq_labels_df) > 0) seq_labels_df <- rotate_df(seq_labels_df)
+  if (nrow(group_labels) > 0) group_labels <- rotate_df(group_labels)
   # Horizontal sequence labels: keep every label horizontal (independent of
   # the global rotation) and let the text extend away from the chord center
   # unless the user supplied an explicit justification.
@@ -821,6 +934,13 @@ compute_chord_layout <- function(
     if (is.null(seq_label_hjust)) {
       seq_labels_df$hjust <- ifelse(seq_labels_df$text_x >= 0, 0, 1)
     }
+  }
+  # Group labels are always drawn horizontally and extend away from the chord
+  # center, independent of the global rotation.
+  if (nrow(group_labels) > 0) {
+    group_labels$text_angle <- 0
+    group_labels$hjust <- ifelse(group_labels$text_x >= 0, 0, 1)
+    group_labels$vjust <- ifelse(group_labels$text_y >= 0, 1, 0)
   }
   if (nrow(gene_polys) > 0) {
     gene_polys <- rotate_df(gene_polys)
@@ -1038,6 +1158,7 @@ compute_chord_layout <- function(
     gene_labels    = gene_labels,
     gene_label_segments = gene_label_segments,
     seq_labels_df  = seq_labels_df,
+    group_labels   = group_labels,
     axis_lines     = axis_lines,
     axis_ticks     = axis_ticks,
 
@@ -1049,6 +1170,7 @@ compute_chord_layout <- function(
     seq_labels     = seq_labels,
     seqs           = seqs,
     seqRadius      = seqRadius,
+    seq_groups     = if (has_group) groups else NULL,
 
     # Ribbon-related
     ribbon_color_scheme = ribbon_color_scheme,
