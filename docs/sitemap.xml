@@ -1,13 +1,16 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
 <url><loc>https://dangjem.github.io/ggchord/404.html</loc></url>
+<url><loc>https://dangjem.github.io/ggchord/DESIGN-ROADMAP.html</loc></url>
 <url><loc>https://dangjem.github.io/ggchord/LICENSE-text.html</loc></url>
 <url><loc>https://dangjem.github.io/ggchord/LICENSE.html</loc></url>
 <url><loc>https://dangjem.github.io/ggchord/README-Hans.html</loc></url>
+<url><loc>https://dangjem.github.io/ggchord/articles/ggchord_guide_hans.html</loc></url>
 <url><loc>https://dangjem.github.io/ggchord/articles/ggchord_vignette.html</loc></url>
 <url><loc>https://dangjem.github.io/ggchord/articles/index.html</loc></url>
 <url><loc>https://dangjem.github.io/ggchord/authors.html</loc></url>
 <url><loc>https://dangjem.github.io/ggchord/index.html</loc></url>
 <url><loc>https://dangjem.github.io/ggchord/news/index.html</loc></url>
+<url><loc>https://dangjem.github.io/ggchord/reference/add_validation_issue.html</loc></url>
 <url><loc>https://dangjem.github.io/ggchord/reference/attach_ggchord_scales.html</loc></url>
 <url><loc>https://dangjem.github.io/ggchord/reference/bezier_pts.html</loc></url>
 <url><loc>https://dangjem.github.io/ggchord/reference/breakPointsFunc.html</loc></url>
@@ -15,12 +18,16 @@
 <url><loc>https://dangjem.github.io/ggchord/reference/chord_default_palette.html</loc></url>
 <url><loc>https://dangjem.github.io/ggchord/reference/chord_palette_set1.html</loc></url>
 <url><loc>https://dangjem.github.io/ggchord/reference/classify_ggchord_layers.html</loc></url>
+<url><loc>https://dangjem.github.io/ggchord/reference/clean_ggchord_data.html</loc></url>
 <url><loc>https://dangjem.github.io/ggchord/reference/clear_chord_env.html</loc></url>
 <url><loc>https://dangjem.github.io/ggchord/reference/compute_chord_layout.html</loc></url>
 <url><loc>https://dangjem.github.io/ggchord/reference/coord_chord.html</loc></url>
+<url><loc>https://dangjem.github.io/ggchord/reference/deduplicate_ggchord_ribbons.html</loc></url>
 <url><loc>https://dangjem.github.io/ggchord/reference/dot-chord_env.html</loc></url>
 <url><loc>https://dangjem.github.io/ggchord/reference/draw_key_gene_arrow.html</loc></url>
+<url><loc>https://dangjem.github.io/ggchord/reference/extract_gff3_attr.html</loc></url>
 <url><loc>https://dangjem.github.io/ggchord/reference/extract_ggchord_layer_data.html</loc></url>
+<url><loc>https://dangjem.github.io/ggchord/reference/filter_ggchord_ribbons.html</loc></url>
 <url><loc>https://dangjem.github.io/ggchord/reference/gene_data_example.html</loc></url>
 <url><loc>https://dangjem.github.io/ggchord/reference/generate_curvature_path.html</loc></url>
 <url><loc>https://dangjem.github.io/ggchord/reference/geom_axis.html</loc></url>
@@ -33,6 +40,7 @@
 <url><loc>https://dangjem.github.io/ggchord/reference/get_chord_data.html</loc></url>
 <url><loc>https://dangjem.github.io/ggchord/reference/get_chord_layout.html</loc></url>
 <url><loc>https://dangjem.github.io/ggchord/reference/get_plot_extremes.html</loc></url>
+<url><loc>https://dangjem.github.io/ggchord/reference/gff3_percent_decode.html</loc></url>
 <url><loc>https://dangjem.github.io/ggchord/reference/ggchord.html</loc></url>
 <url><loc>https://dangjem.github.io/ggchord/reference/ggchord_gene_fill.html</loc></url>
 <url><loc>https://dangjem.github.io/ggchord/reference/ggchord_hide_text_overlaps.html</loc></url>
@@ -52,11 +60,14 @@
 <url><loc>https://dangjem.github.io/ggchord/reference/ggplotly.ggchord.html</loc></url>
 <url><loc>https://dangjem.github.io/ggchord/reference/if_null_else.html</loc></url>
 <url><loc>https://dangjem.github.io/ggchord/reference/index.html</loc></url>
+<url><loc>https://dangjem.github.io/ggchord/reference/interval_recip_overlap.html</loc></url>
 <url><loc>https://dangjem.github.io/ggchord/reference/key_glyph_gene.html</loc></url>
 <url><loc>https://dangjem.github.io/ggchord/reference/key_glyph_ribbon.html</loc></url>
 <url><loc>https://dangjem.github.io/ggchord/reference/key_glyph_seq.html</loc></url>
 <url><loc>https://dangjem.github.io/ggchord/reference/make_ggchord_lazy_data.html</loc></url>
 <url><loc>https://dangjem.github.io/ggchord/reference/make_ggchord_scales.html</loc></url>
+<url><loc>https://dangjem.github.io/ggchord/reference/merge_ggchord_ribbons.html</loc></url>
+<url><loc>https://dangjem.github.io/ggchord/reference/normalize_keep_pairs.html</loc></url>
 <url><loc>https://dangjem.github.io/ggchord/reference/null-coalescing-operator.html</loc></url>
 <url><loc>https://dangjem.github.io/ggchord/reference/plus-.ggchord.html</loc></url>
 <url><loc>https://dangjem.github.io/ggchord/reference/prepare_ggchord_plot.html</loc></url>
@@ -66,6 +77,9 @@
 <url><loc>https://dangjem.github.io/ggchord/reference/process_panel_margin.html</loc></url>
 <url><loc>https://dangjem.github.io/ggchord/reference/process_sequence_param.html</loc></url>
 <url><loc>https://dangjem.github.io/ggchord/reference/process_strand_colors.html</loc></url>
+<url><loc>https://dangjem.github.io/ggchord/reference/read_blast.html</loc></url>
+<url><loc>https://dangjem.github.io/ggchord/reference/read_fasta_lengths.html</loc></url>
+<url><loc>https://dangjem.github.io/ggchord/reference/read_gff3.html</loc></url>
 <url><loc>https://dangjem.github.io/ggchord/reference/reconstruct_layer.html</loc></url>
 <url><loc>https://dangjem.github.io/ggchord/reference/rename_ribbon_layers.html</loc></url>
 <url><loc>https://dangjem.github.io/ggchord/reference/ribbon_data_example.html</loc></url>
@@ -74,6 +88,7 @@
 <url><loc>https://dangjem.github.io/ggchord/reference/set_chord_layout.html</loc></url>
 <url><loc>https://dangjem.github.io/ggchord/reference/set_ggchord_coord.html</loc></url>
 <url><loc>https://dangjem.github.io/ggchord/reference/validate_gene_segment_linetype.html</loc></url>
+<url><loc>https://dangjem.github.io/ggchord/reference/validate_ggchord_data.html</loc></url>
 <url><loc>https://dangjem.github.io/ggchord/reference/wire_ggchord_layer.html</loc></url>
 </urlset>
 

@@ -1,5 +1,85 @@
 # Changelog
 
+## ggchord 0.7.0
+
+### New features: structured data validation and cleaning
+
+- New exported function
+  [`validate_ggchord_data()`](https://dangjem.github.io/ggchord/reference/validate_ggchord_data.md)
+  returns a structured `ggchord_validation` object: a `valid` flag,
+  `errors` (severe problems), `warnings` (drawable but noteworthy
+  issues), per-category `summary` counts, a `data_summary`
+  (sequences/ribbons/genes, unknown IDs, out-of-range rows, …), the
+  original row numbers of every problem (`invalid_rows`) and the
+  automatically fixable issues (`cleanable`).
+  [`print()`](https://rdrr.io/r/base/print.html) and
+  [`summary()`](https://rdrr.io/r/base/summary.html) methods are
+  provided; `strict = TRUE` stops on severe problems.
+
+- New exported function
+  [`clean_ggchord_data()`](https://dangjem.github.io/ggchord/reference/clean_ggchord_data.md)
+  applies explicit, conservative policies (`unknown_id`, `out_of_range`,
+  `reversed_interval`, `invalid_pident`, `empty_annotation`) and returns
+  the cleaned tables plus a full report of every change (original row
+  number, reason, original/new values, action). The input objects are
+  never modified and nothing is dropped silently.
+
+- [`ggchord()`](https://dangjem.github.io/ggchord/reference/ggchord.md)
+  gains a `validate = c("warn", "error", "none")` argument. The default
+  `"warn"` emits a single summary warning (never one warning per row)
+  and caches the full report on the plot (`p$ggchord$validation`);
+  `"error"` stops on severe problems; `"none"` keeps a fast path. Valid
+  input renders exactly as before.
+
+### New features: data import and ribbon preparation
+
+- [`read_blast()`](https://dangjem.github.io/ggchord/reference/read_blast.md)
+  parses BLAST `-outfmt 6/7` tabular output (12 or 17 columns,
+  auto-detected) into `ribbon_data` format, preserving `evalue`,
+  `bitscore`, `qcovs`, `qlen`, `slen`, `sstrand` and `stitle` when
+  present.
+
+- [`read_gff3()`](https://dangjem.github.io/ggchord/reference/read_gff3.md)
+  parses GFF3 files into `gene_data` format, selecting `feature_types`
+  (default `CDS`), extracting `anno` from attribute keys (`product`,
+  `Name`, …), decoding percent-encoding, and mapping unstranded features
+  to `+` (or dropping them).
+
+- [`read_fasta_lengths()`](https://dangjem.github.io/ggchord/reference/read_fasta_lengths.md)
+  reads FASTA headers and sequence lengths into `seq_data` format, with
+  optional `header_delim` splitting.
+
+- [`filter_ggchord_ribbons()`](https://dangjem.github.io/ggchord/reference/filter_ggchord_ribbons.md)
+  filters ribbons by sequence IDs, pident, length, E-value, bitscore,
+  query/subject coverage, undirected sequence pairs and self-links, with
+  optional sorting; missing columns produce clear errors.
+
+- [`deduplicate_ggchord_ribbons()`](https://dangjem.github.io/ggchord/reference/deduplicate_ggchord_ribbons.md)
+  removes exact, coordinate-near or highly overlapping duplicate blocks
+  (`by = "exact" | "coordinates" | "overlap"`) keeping the best pident,
+  longest, or first representative.
+
+- [`merge_ggchord_ribbons()`](https://dangjem.github.io/ggchord/reference/merge_ggchord_ribbons.md)
+  merges adjacent/overlapping blocks of the same sequence pair with
+  length-weighted pident. Merging is deliberately conservative: blocks
+  with inconsistent spans, large pident differences or different
+  orientations are left unmerged.
+
+- All ribbon utilities keep extra columns and the original column order,
+  attach the original row numbers as the `source_rows` attribute, and
+  return a report of what was removed/merged and why.
+
+### Testing
+
+- Added test files covering validation, cleaning, the `validate`
+  integration, data import, ribbon filtering/deduplication/merging and a
+  lightweight visual-regression suite (deterministic layout fingerprints
+  plus an opt-in PNG md5 baseline behind `GGCHORD_VISUAL_REGRESSION=1`).
+
+## ggchord 0.6.1
+
+(No user-facing changes; internal bug fixes.)
+
 ## ggchord 0.6.0
 
 ### New features

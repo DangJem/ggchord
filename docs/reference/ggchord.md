@@ -20,7 +20,8 @@ ggchord(
   rotation = 45,
   panel_margin = 0,
   show_legend = TRUE,
-  debug = FALSE
+  debug = FALSE,
+  validate = c("warn", "error", "none")
 )
 ```
 
@@ -57,6 +58,17 @@ ggchord(
 - debug:
 
   Logical. Whether to output debug information, default FALSE
+
+- validate:
+
+  Character, default `"warn"`. How to run the structured input-data
+  validation (see
+  [`validate_ggchord_data`](https://dangjem.github.io/ggchord/reference/validate_ggchord_data.md)):
+  `"warn"` emits a single summary warning when the data has problems and
+  caches the full report on the plot object (`p$ggchord$validation`);
+  `"error"` stops on severe problems; `"none"` skips the diagnostic
+  validation (the cheap structural checks that prevent crashes are still
+  performed).
 
 ## Value
 

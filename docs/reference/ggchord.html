@@ -15,7 +15,7 @@ ggsave(), or ggplot_build())."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">ggchord</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -24,7 +24,9 @@ ggsave(), or ggplot_build())."></head><body>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/ggchord_vignette.html">Tutorial</a></li>
+<li class="nav-item"><a class="nav-link" href="../articles/ggchord_guide_hans.html">中文指南</a></li>
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html">Functions</a></li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">News</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/DangJem/ggchord/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
@@ -59,7 +61,8 @@ The layout is computed lazily when the plot is built (e.g. via <code><a href="ht
 <span>  rotation <span class="op">=</span> <span class="fl">45</span>,</span>
 <span>  panel_margin <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  show_legend <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  debug <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  debug <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  validate <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"warn"</span>, <span class="st">"error"</span>, <span class="st">"none"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -97,6 +100,16 @@ The layout is computed lazily when the plot is built (e.g. via <code><a href="ht
 
 <dt id="arg-debug">debug<a class="anchor" aria-label="anchor" href="#arg-debug"></a></dt>
 <dd><p>Logical. Whether to output debug information, default FALSE</p></dd>
+
+
+<dt id="arg-validate">validate<a class="anchor" aria-label="anchor" href="#arg-validate"></a></dt>
+<dd><p>Character, default <code>"warn"</code>. How to run the structured
+input-data validation (see <code><a href="validate_ggchord_data.html">validate_ggchord_data</a></code>):
+<code>"warn"</code> emits a single summary warning when the data has problems
+and caches the full report on the plot object
+(<code>p$ggchord$validation</code>); <code>"error"</code> stops on severe problems;
+<code>"none"</code> skips the diagnostic validation (the cheap structural
+checks that prevent crashes are still performed).</p></dd>
 
 </dl></div>
     <div class="section level2">

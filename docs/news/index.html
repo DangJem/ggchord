@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ggchord</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -16,7 +16,9 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/ggchord_vignette.html">Tutorial</a></li>
+<li class="nav-item"><a class="nav-link" href="../articles/ggchord_guide_hans.html">中文指南</a></li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Functions</a></li>
+<li class="active nav-item"><a class="nav-link" href="../news/index.html">News</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/DangJem/ggchord/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
@@ -32,6 +34,33 @@
       <small>Source: <a href="https://github.com/DangJem/ggchord/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.7.0" id="ggchord-070">ggchord 0.7.0<a class="anchor" aria-label="anchor" href="#ggchord-070"></a></h2>
+<div class="section level3">
+<h3 id="new-features-structured-data-validation-and-cleaning-0-7-0">New features: structured data validation and cleaning<a class="anchor" aria-label="anchor" href="#new-features-structured-data-validation-and-cleaning-0-7-0"></a></h3>
+<ul><li><p>New exported function <code><a href="../reference/validate_ggchord_data.html">validate_ggchord_data()</a></code> returns a structured <code>ggchord_validation</code> object: a <code>valid</code> flag, <code>errors</code> (severe problems), <code>warnings</code> (drawable but noteworthy issues), per-category <code>summary</code> counts, a <code>data_summary</code> (sequences/ribbons/genes, unknown IDs, out-of-range rows, …), the original row numbers of every problem (<code>invalid_rows</code>) and the automatically fixable issues (<code>cleanable</code>). <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> and <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> methods are provided; <code>strict = TRUE</code> stops on severe problems.</p></li>
+<li><p>New exported function <code><a href="../reference/clean_ggchord_data.html">clean_ggchord_data()</a></code> applies explicit, conservative policies (<code>unknown_id</code>, <code>out_of_range</code>, <code>reversed_interval</code>, <code>invalid_pident</code>, <code>empty_annotation</code>) and returns the cleaned tables plus a full report of every change (original row number, reason, original/new values, action). The input objects are never modified and nothing is dropped silently.</p></li>
+<li><p><code><a href="../reference/ggchord.html">ggchord()</a></code> gains a <code>validate = c("warn", "error", "none")</code> argument. The default <code>"warn"</code> emits a single summary warning (never one warning per row) and caches the full report on the plot (<code>p$ggchord$validation</code>); <code>"error"</code> stops on severe problems; <code>"none"</code> keeps a fast path. Valid input renders exactly as before.</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="new-features-data-import-and-ribbon-preparation-0-7-0">New features: data import and ribbon preparation<a class="anchor" aria-label="anchor" href="#new-features-data-import-and-ribbon-preparation-0-7-0"></a></h3>
+<ul><li><p><code><a href="../reference/read_blast.html">read_blast()</a></code> parses BLAST <code>-outfmt 6/7</code> tabular output (12 or 17 columns, auto-detected) into <code>ribbon_data</code> format, preserving <code>evalue</code>, <code>bitscore</code>, <code>qcovs</code>, <code>qlen</code>, <code>slen</code>, <code>sstrand</code> and <code>stitle</code> when present.</p></li>
+<li><p><code><a href="../reference/read_gff3.html">read_gff3()</a></code> parses GFF3 files into <code>gene_data</code> format, selecting <code>feature_types</code> (default <code>CDS</code>), extracting <code>anno</code> from attribute keys (<code>product</code>, <code>Name</code>, …), decoding percent-encoding, and mapping unstranded features to <code>+</code> (or dropping them).</p></li>
+<li><p><code><a href="../reference/read_fasta_lengths.html">read_fasta_lengths()</a></code> reads FASTA headers and sequence lengths into <code>seq_data</code> format, with optional <code>header_delim</code> splitting.</p></li>
+<li><p><code><a href="../reference/filter_ggchord_ribbons.html">filter_ggchord_ribbons()</a></code> filters ribbons by sequence IDs, pident, length, E-value, bitscore, query/subject coverage, undirected sequence pairs and self-links, with optional sorting; missing columns produce clear errors.</p></li>
+<li><p><code><a href="../reference/deduplicate_ggchord_ribbons.html">deduplicate_ggchord_ribbons()</a></code> removes exact, coordinate-near or highly overlapping duplicate blocks (<code>by = "exact" | "coordinates" | "overlap"</code>) keeping the best pident, longest, or first representative.</p></li>
+<li><p><code><a href="../reference/merge_ggchord_ribbons.html">merge_ggchord_ribbons()</a></code> merges adjacent/overlapping blocks of the same sequence pair with length-weighted pident. Merging is deliberately conservative: blocks with inconsistent spans, large pident differences or different orientations are left unmerged.</p></li>
+<li><p>All ribbon utilities keep extra columns and the original column order, attach the original row numbers as the <code>source_rows</code> attribute, and return a report of what was removed/merged and why.</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="testing-0-7-0">Testing<a class="anchor" aria-label="anchor" href="#testing-0-7-0"></a></h3>
+<ul><li>Added test files covering validation, cleaning, the <code>validate</code> integration, data import, ribbon filtering/deduplication/merging and a lightweight visual-regression suite (deterministic layout fingerprints plus an opt-in PNG md5 baseline behind <code>GGCHORD_VISUAL_REGRESSION=1</code>).</li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.6.1" id="ggchord-061">ggchord 0.6.1<a class="anchor" aria-label="anchor" href="#ggchord-061"></a></h2>
+<p>(No user-facing changes; internal bug fixes.)</p>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.6.0" id="ggchord-060">ggchord 0.6.0<a class="anchor" aria-label="anchor" href="#ggchord-060"></a></h2>
 <div class="section level3">
