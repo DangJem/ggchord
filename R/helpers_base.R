@@ -280,6 +280,25 @@ ggchord_repel_labels <- function(gl, units_per_inch = 0.35,
                                             cex = sizes / 12)) *
     n_lines * units_per_inch
 
+  # Work with the axis-aligned projection of each text box. Gene labels are
+  # usually rotated along their arc, so using only their unrotated string
+  # width makes two tall, nearly vertical labels appear non-overlapping to the
+  # solver even when they visibly collide.
+  angle <- (gl$text_angle %||% rep(0, n)) * pi / 180
+  bw <- abs(cos(angle)) * w + abs(sin(angle)) * h
+  bh <- abs(sin(angle)) * w + abs(cos(angle)) * h
+  pad <- box_padding * units_per_inch
+  bw <- bw + 2 * pad
+  bh <- bh + 2 * pad
+  hjust <- gl$hjust %||% rep(0.5, n)
+  vjust <- gl$vjust %||% rep(0.5, n)
+  # text_x/text_y are the point selected by hjust/vjust, not necessarily the
+  # centre of the rendered text box.  Collisions must use box centres.
+  cx_off <- (0.5 - hjust) * w * cos(angle) -
+    (0.5 - vjust) * h * sin(angle)
+  cy_off <- (0.5 - hjust) * w * sin(angle) +
+    (0.5 - vjust) * h * cos(angle)
+
   # Anchors are the original (fixed) label positions next to the genes and are
   # used as the leader-line origins; labels start at their text positions.
   # When a label was moved to the other side of its arc (gene_label_side),
@@ -309,8 +328,8 @@ ggchord_repel_labels <- function(gl, units_per_inch = 0.35,
   n_repel <- length(rpx)
 
   # Keep labels inside a generous region around the anchors.
-  x_lim <- range(ax) + c(-1, 1) * (max(w) + 1.5)
-  y_lim <- range(ay) + c(-1, 1) * (max(w) + 1.5)
+  x_lim <- range(ax) + c(-1, 1) * (max(bw) + 1.5)
+  y_lim <- range(ay) + c(-1, 1) * (max(bh) + 1.5)
 
   for (iter in seq_len(300)) {
     fx <- numeric(n)
@@ -349,20 +368,35 @@ ggchord_repel_labels <- function(gl, units_per_inch = 0.35,
         }
       }
     }
-    # 2) repulsion between labels (so their boxes do not overlap)
+    # 2) Repulsion between actual label boxes.  The old radial cutoff only
+    # used text width, which missed collisions between labels stacked in the
+    # narrow direction and made the final layout depend too much on a common
+    # radial starting offset.
     for (i in seq_len(n - 1)) {
       for (j in (i + 1):n) {
-        dx <- x[j] - x[i]
-        dy <- y[j] - y[i]
-        d <- sqrt(dx^2 + dy^2)
-        if (d < 1e-4) d <- 1e-4
-        cutoff <- ((w[i] + w[j]) / 2) * (1 + box_padding)
-        if (d < cutoff) {
-          f <- force * ((cutoff - d) / cutoff)
-          fx[i] <- fx[i] - f * dx / d
-          fy[i] <- fy[i] - f * dy / d
-          fx[j] <- fx[j] + f * dx / d
-          fy[j] <- fy[j] + f * dy / d
+        dx <- (x[j] + cx_off[j]) - (x[i] + cx_off[i])
+        dy <- (y[j] + cy_off[j]) - (y[i] + cy_off[i])
+        ox <- (bw[i] + bw[j]) / 2 - abs(dx)
+        oy <- (bh[i] + bh[j]) / 2 - abs(dy)
+        if (ox > 0 && oy > 0) {
+          # Separate on the axis with less penetration.  A tiny deterministic
+          # seed-derived jitter breaks exact ties without making a layout
+          # non-reproducible.
+          if (ox <= oy) {
+            sgn <- if (abs(dx) < 1e-8) {
+              if (stats::runif(1) < 0.5) -1 else 1
+            } else sign(dx)
+            f <- force * (ox / max(bw[i] + bw[j], 1e-8))
+            fx[i] <- fx[i] - sgn * f
+            fx[j] <- fx[j] + sgn * f
+          } else {
+            sgn <- if (abs(dy) < 1e-8) {
+              if (stats::runif(1) < 0.5) -1 else 1
+            } else sign(dy)
+            f <- force * (oy / max(bh[i] + bh[j], 1e-8))
+            fy[i] <- fy[i] - sgn * f
+            fy[j] <- fy[j] + sgn * f
+          }
         }
       }
     }
@@ -370,11 +404,46 @@ ggchord_repel_labels <- function(gl, units_per_inch = 0.35,
     # label associated). For labels moved to the other side of their arc the
     # starting position is the mirrored (outer) position, so the spring keeps
     # them on that side while the leader line still starts at the gene.
-    x <- x + (gl$text_x - x) * 0.18 + fx * 0.5
-    y <- y + (gl$text_y - y) * 0.18 + fy * 0.5
+    x <- x + (gl$text_x - x) * 0.10 + fx * 0.65
+    y <- y + (gl$text_y - y) * 0.10 + fy * 0.65
     # 4) clamp inside the region
     x <- pmin(pmax(x, x_lim[1]), x_lim[2])
     y <- pmin(pmax(y, y_lim[1]), y_lim[2])
+  }
+
+  # Finish with a deterministic box-separation pass.  The force simulation
+  # deliberately keeps labels near their genes; in a very dense track that
+  # spring can leave small residual overlaps.  This pass removes those
+  # residuals while retaining the force layout as its starting point.
+  for (iter in seq_len(500)) {
+    moved <- FALSE
+    for (i in seq_len(n - 1)) {
+      for (j in (i + 1):n) {
+        dx <- (x[j] + cx_off[j]) - (x[i] + cx_off[i])
+        dy <- (y[j] + cy_off[j]) - (y[i] + cy_off[i])
+        ox <- (bw[i] + bw[j]) / 2 - abs(dx)
+        oy <- (bh[i] + bh[j]) / 2 - abs(dy)
+        if (ox > 0 && oy > 0) {
+          if (ox <= oy) {
+            sgn <- if (abs(dx) < 1e-8) {
+              if (stats::runif(1) < 0.5) -1 else 1
+            } else sign(dx)
+            x[i] <- x[i] - sgn * ox / 2
+            x[j] <- x[j] + sgn * ox / 2
+          } else {
+            sgn <- if (abs(dy) < 1e-8) {
+              if (stats::runif(1) < 0.5) -1 else 1
+            } else sign(dy)
+            y[i] <- y[i] - sgn * oy / 2
+            y[j] <- y[j] + sgn * oy / 2
+          }
+          moved <- TRUE
+        }
+      }
+    }
+    x <- pmin(pmax(x, x_lim[1]), x_lim[2])
+    y <- pmin(pmax(y, y_lim[1]), y_lim[2])
+    if (!moved) break
   }
 
   # Leader lines: from anchor to the final label position
@@ -392,8 +461,10 @@ ggchord_repel_labels <- function(gl, units_per_inch = 0.35,
     n_over <- numeric(n)
     for (i in seq_len(n - 1)) {
       for (j in (i + 1):n) {
-        if (abs(x[i] - x[j]) < (w[i] + w[j]) / 2 &&
-            abs(y[i] - y[j]) < (h[i] + h[j]) / 2) {
+        if (abs((x[i] + cx_off[i]) - (x[j] + cx_off[j])) <
+              (bw[i] + bw[j]) / 2 &&
+            abs((y[i] + cy_off[i]) - (y[j] + cy_off[j])) <
+              (bh[i] + bh[j]) / 2) {
           n_over[i] <- n_over[i] + 1
           n_over[j] <- n_over[j] + 1
         }

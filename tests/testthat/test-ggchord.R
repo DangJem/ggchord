@@ -648,6 +648,41 @@ test_that("geom_gene_label_repel repels gene labels with leader lines", {
   dev.off()
 })
 
+test_that("gene label repulsion separates rotated text boxes with varied leaders", {
+  # A tightly packed arc of vertical labels exposed the former width-only,
+  # radial collision test: boxes could still overlap and the layout tended to
+  # preserve a common leader-line offset.
+  anchors <- seq(0, 0.14, length.out = 8)
+  gl <- data.frame(
+    text = paste("dense label", seq_len(8)),
+    text_x = anchors, text_y = rep(0, 8),
+    anchor_x = anchors, anchor_y = rep(0, 8),
+    text_angle = rep(90, 8), size = rep(2.5, 8)
+  )
+  res <- ggchord:::ggchord_repel_labels(
+    gl, seed = 42, min_segment_length = 0.05,
+    repel_points = data.frame(x = numeric(0), y = numeric(0))
+  )
+  out <- res$labels
+  pdf(NULL)
+  on.exit(dev.off())
+  w <- strwidth(out$text, units = "inches", cex = out$size / 12) * 0.35
+  h <- strheight(out$text, units = "inches", cex = out$size / 12) * 0.35
+  a <- out$text_angle * pi / 180
+  bw <- abs(cos(a)) * w + abs(sin(a)) * h + 2 * 0.25 * 0.35
+  bh <- abs(sin(a)) * w + abs(cos(a)) * h + 2 * 0.25 * 0.35
+  for (i in seq_len(nrow(out) - 1)) {
+    for (j in (i + 1):nrow(out)) {
+      expect_false(
+        abs(out$text_x[i] - out$text_x[j]) < (bw[i] + bw[j]) / 2 &&
+          abs(out$text_y[i] - out$text_y[j]) < (bh[i] + bh[j]) / 2
+      )
+    }
+  }
+  seg_len <- with(res$segments, sqrt((x1 - x0)^2 + (y1 - y0)^2))
+  expect_gt(length(unique(round(seg_len, 3))), 2)
+})
+
 test_that("geom_seq_label seq_labels maps unnamed vectors positionally", {
   data(seq_data_example)
   p <- ggchord(seq_data_example) + geom_seq() +
