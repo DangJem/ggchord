@@ -10,3 +10,4 @@
 ^.gitignore$
 ^.Rhistory$
 ^.github$
+^DESIGN-ROADMAP\.md$
