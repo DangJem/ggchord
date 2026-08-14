@@ -10,7 +10,8 @@ globalVariables(c(
   "text_x", "text_y", "text", "text_angle", "hjust", "vjust",
   "x0", "y0", "x1", "y1", "label", "label_x", "label_y", "size",
   "fill_col", "alpha", "label_hjust", "label_vjust", "label_angle",
-  "linetype", "zcolour"
+  "linetype", "zcolour", "zregionfill", "zoutline", "zlinetype",
+  "outline_col", "linetype_val", "value", "source_row", "direction"
 ))
 
 #' ggchord: layered multi-sequence alignment chord diagrams for ggplot2
@@ -312,10 +313,13 @@ compute_chord_geometry <- function(plot) {
   seq_params    <- list()
   ribbon_params <- list()
   gene_params   <- list()
+  gene_data_override <- NULL
   gene_label_params <- list()
   gene_repel_params <- list()
   axis_params   <- list()
   seq_label_params <- list()
+  seq_region_params <- list()
+  ribbon_highlight_params <- list()
   seq_layer_requested <- FALSE
   gene_label_layer <- FALSE
   gene_repel_layer <- FALSE
@@ -326,11 +330,16 @@ compute_chord_geometry <- function(plot) {
     switch(pp$type,
       seq               = { seq_params <- pp; seq_layer_requested <- TRUE },
       ribbon            = ribbon_params <- pp,
-      gene              = gene_params <- pp,
+      gene              = {
+        gene_params <- pp
+        if (!is.null(pp$gene_data_override)) gene_data_override <- pp$gene_data_override
+      },
       gene_label        = { gene_label_params <- pp; gene_label_layer <- TRUE },
       gene_label_repel  = { gene_repel_params <- pp; gene_repel_layer <- TRUE },
       axis              = axis_params <- pp,
-      seq_label         = seq_label_params <- pp
+      seq_label         = seq_label_params <- pp,
+      seq_region        = seq_region_params <- pp,
+      ribbon_highlight  = ribbon_highlight_params <- pp
     )
   }
 
@@ -410,12 +419,30 @@ compute_chord_geometry <- function(plot) {
   ribbonGap  <- process_sequence_param(ribbon_params$ribbon_gap %||% 0.15,
                                        seqs, "ribbon_gap", 0.15)
   ribbon_color_scheme <- ribbon_params$ribbon_color_scheme %||% "pident"
+  ribbon_color_by     <- ribbon_params$ribbon_color_by
+  ribbon_color_limits <- ribbon_params$ribbon_color_limits
+  ribbon_color_breaks <- ribbon_params$ribbon_color_breaks
+  ribbon_color_name   <- ribbon_params$ribbon_color_name
   ribbon_alpha    <- ribbon_params$ribbon_alpha %||% 0.35
+  ribbon_alpha_by <- ribbon_params$ribbon_alpha_by
+  ribbon_alpha_range <- ribbon_params$ribbon_alpha_range %||% c(0.15, 0.9)
   ribbon_ctrl_pt  <- ribbon_params$ribbon_ctrl_point %||% c(0, 0)
+  ribbon_outline_by   <- ribbon_params$ribbon_outline_by
+  ribbon_outline_colors <- ribbon_params$ribbon_outline_colors
+  ribbon_linetype_by  <- ribbon_params$ribbon_linetype_by
+  ribbon_linetypes    <- ribbon_params$ribbon_linetypes
+  ribbon_direction    <- ribbon_params$ribbon_direction %||% "none"
+  ribbon_direction_colors <- ribbon_params$ribbon_direction_colors %||% c(same = "black", reverse = "grey50")
+  ribbon_direction_linetypes <- ribbon_params$ribbon_direction_linetypes %||% c(same = "solid", reverse = "dashed")
+  ribbon_direction_alpha <- ribbon_params$ribbon_direction_alpha %||% c(same = 1, reverse = 0.45)
 
   ribbon_colors <- ribbon_params$ribbon_colors
   if (!ribbon_color_scheme %in% c("pident", "query", "subject", "single")) {
     ggchord_stop("ribbon_color_scheme must be 'pident', 'query', 'subject', or 'single'")
+  }
+  if (!is.null(ribbon_color_by)) {
+    ribbon_color_scheme <- "value"
+    ribbon_color_name <- ribbon_color_name %||% ribbon_color_by
   }
   if (!is.numeric(ribbon_alpha) || length(ribbon_alpha) != 1 ||
       !is.finite(ribbon_alpha) || ribbon_alpha < 0 || ribbon_alpha > 1) {
@@ -423,6 +450,24 @@ compute_chord_geometry <- function(plot) {
   }
   if (!is.numeric(ribbonGap) || any(!is.finite(ribbonGap))) {
     ggchord_stop("ribbon_gap must contain finite numbers")
+  }
+  if (!is.null(ribbon_color_limits) &&
+      (!is.numeric(ribbon_color_limits) || length(ribbon_color_limits) != 2 ||
+       !is.finite(ribbon_color_limits[1]) || !is.finite(ribbon_color_limits[2]) ||
+       ribbon_color_limits[1] >= ribbon_color_limits[2])) {
+    ggchord_stop("ribbon_color_limits must be a length-2 increasing numeric vector")
+  }
+  if (!is.null(ribbon_color_breaks) &&
+      (!is.numeric(ribbon_color_breaks) || any(!is.finite(ribbon_color_breaks)))) {
+    ggchord_stop("ribbon_color_breaks must be a finite numeric vector")
+  }
+  if (!is.numeric(ribbon_alpha_range) || length(ribbon_alpha_range) != 2 ||
+      any(!is.finite(ribbon_alpha_range)) || ribbon_alpha_range[1] < 0 ||
+      ribbon_alpha_range[2] > 1 || ribbon_alpha_range[1] > ribbon_alpha_range[2]) {
+    ggchord_stop("ribbon_alpha_range must be two increasing values within [0, 1]")
+  }
+  if (!ribbon_direction %in% c("none", "alpha", "outline", "linetype")) {
+    ggchord_stop("ribbon_direction must be 'none', 'alpha', 'outline', or 'linetype'")
   }
 
   # ribbon_colors validation only runs when ribbon_data is actually present
@@ -453,15 +498,45 @@ compute_chord_geometry <- function(plot) {
         },
         pident = c("#440154FF","#482878FF","#3E4A89FF","#31688EFF",
                     "#26828EFF","#1F9E89FF","#35B779FF","#6DCD59FF",
+                    "#B4DE2CFF","#FDE725FF"),
+        value = c("#440154FF","#482878FF","#3E4A89FF","#31688EFF",
+                    "#26828EFF","#1F9E89FF","#35B779FF","#6DCD59FF",
                     "#B4DE2CFF","#FDE725FF"))
     }
     if (ribbon_color_scheme %in% c("query", "subject")) {
       ribbon_colors <- process_sequence_param(ribbon_colors, seqs,
                                               "ribbon_colors")
-    } else if (ribbon_color_scheme == "pident" && length(ribbon_colors) < 2) {
-      ggchord_stop("The 'pident' scheme requires at least two ribbon_colors")
+    } else if (ribbon_color_scheme %in% c("pident", "value") && length(ribbon_colors) < 2) {
+      ggchord_stop("The 'pident'/'value' scheme requires at least two ribbon_colors")
     } else if (ribbon_color_scheme == "single" && length(ribbon_colors) < 1) {
       ggchord_stop("The 'single' scheme requires at least one ribbon_colors")
+    }
+
+    if (!is.null(ribbon_color_by)) {
+      if (!ribbon_color_by %in% colnames(data_list$ribbon_data)) {
+        ggchord_stop("ribbon_color_by column '", ribbon_color_by, "' not found in ribbon_data")
+      }
+      if (!is.numeric(data_list$ribbon_data[[ribbon_color_by]]) ||
+          any(!is.finite(data_list$ribbon_data[[ribbon_color_by]]))) {
+        ggchord_stop("ribbon_color_by column '", ribbon_color_by, "' must be numeric and finite")
+      }
+    }
+    if (!is.null(ribbon_alpha_by)) {
+      if (!ribbon_alpha_by %in% colnames(data_list$ribbon_data)) {
+        ggchord_stop("ribbon_alpha_by column '", ribbon_alpha_by, "' not found in ribbon_data")
+      }
+      if (!is.numeric(data_list$ribbon_data[[ribbon_alpha_by]]) ||
+          any(!is.finite(data_list$ribbon_data[[ribbon_alpha_by]]))) {
+        ggchord_stop("ribbon_alpha_by column '", ribbon_alpha_by, "' must be numeric and finite")
+      }
+    }
+    if (!is.null(ribbon_outline_by) &&
+        !ribbon_outline_by %in% colnames(data_list$ribbon_data)) {
+      ggchord_stop("ribbon_outline_by column '", ribbon_outline_by, "' not found in ribbon_data")
+    }
+    if (!is.null(ribbon_linetype_by) &&
+        !ribbon_linetype_by %in% colnames(data_list$ribbon_data)) {
+      ggchord_stop("ribbon_linetype_by column '", ribbon_linetype_by, "' not found in ribbon_data")
     }
   }
 
@@ -626,6 +701,65 @@ compute_chord_geometry <- function(plot) {
     }
   }
 
+  # --- Process sequence-region highlight data ---
+  region_data <- seq_region_params$regions
+  region_fill   <- seq_region_params$region_fill %||% "#F59E0B"
+  region_color  <- seq_region_params$region_color %||% "#B45309"
+  region_alpha  <- seq_region_params$region_alpha %||% 0.25
+  region_width  <- seq_region_params$region_width %||% 0.08
+  region_offset <- seq_region_params$region_offset %||% 0
+  region_side   <- seq_region_params$region_side %||% "inside"
+  if (!is.null(region_data) && !is.data.frame(region_data)) {
+    ggchord_stop("geom_seq_region(): regions must be a data.frame")
+  }
+
+  # --- Compute ribbon highlight selection (safe, no string evaluation) ---
+  ribbon_highlight_rows <- integer(0)
+  if (length(ribbon_highlight_params) > 0 &&
+      !is.null(data_list$ribbon_data) && nrow(data_list$ribbon_data) > 0) {
+    rd <- data_list$ribbon_data
+    keep <- rep(TRUE, nrow(rd))
+
+    if (!is.null(ribbon_highlight_params$ribbon_ids)) {
+      ids <- ribbon_highlight_params$ribbon_ids
+      if (!is.numeric(ids)) {
+        ggchord_stop("geom_ribbon_highlight(): ribbon_ids must be numeric row numbers")
+      }
+      keep <- keep & seq_len(nrow(rd)) %in% as.integer(ids)
+    }
+    if (!is.null(ribbon_highlight_params$qaccver)) {
+      keep <- keep & rd$qaccver %in% ribbon_highlight_params$qaccver
+    }
+    if (!is.null(ribbon_highlight_params$saccver)) {
+      keep <- keep & rd$saccver %in% ribbon_highlight_params$saccver
+    }
+    if (!is.null(ribbon_highlight_params$min_pident)) {
+      keep <- keep & rd$pident >= ribbon_highlight_params$min_pident
+    }
+    if (!is.null(ribbon_highlight_params$max_pident)) {
+      keep <- keep & rd$pident <= ribbon_highlight_params$max_pident
+    }
+    if (!is.null(ribbon_highlight_params$min_length)) {
+      keep <- keep & rd$length >= ribbon_highlight_params$min_length
+    }
+    if (!is.null(ribbon_highlight_params$max_length)) {
+      keep <- keep & rd$length <= ribbon_highlight_params$max_length
+    }
+    pred <- ribbon_highlight_params$predicate
+    if (!is.null(pred)) {
+      pred_res <- tryCatch(as.logical(pred(rd)),
+                           error = function(e) {
+                             ggchord_stop("geom_ribbon_highlight(): predicate failed: ",
+                                          conditionMessage(e))
+                           })
+      if (length(pred_res) != nrow(rd)) {
+        ggchord_stop("geom_ribbon_highlight(): predicate must return one logical value per ribbon row")
+      }
+      keep <- keep & pred_res
+    }
+    ribbon_highlight_rows <- which(keep)
+  }
+
   # ====================================================================
   # Step 2: compute the layout
   # ====================================================================
@@ -642,8 +776,30 @@ compute_chord_geometry <- function(plot) {
     ribbon_data = data_list$ribbon_data, ribbonGap = ribbonGap,
     ribbon_color_scheme = ribbon_color_scheme,
     ribbon_colors = ribbon_colors, ribbon_alpha = ribbon_alpha,
+    ribbon_color_by = ribbon_color_by,
+    ribbon_color_limits = ribbon_color_limits,
+    ribbon_color_breaks = ribbon_color_breaks,
+    ribbon_color_name = ribbon_color_name,
+    ribbon_alpha_by = ribbon_alpha_by,
+    ribbon_alpha_range = ribbon_alpha_range,
+    ribbon_outline_by = ribbon_outline_by,
+    ribbon_outline_colors = ribbon_outline_colors,
+    ribbon_linetype_by = ribbon_linetype_by,
+    ribbon_linetypes = ribbon_linetypes,
+    ribbon_direction = ribbon_direction,
+    ribbon_direction_colors = ribbon_direction_colors,
+    ribbon_direction_linetypes = ribbon_direction_linetypes,
+    ribbon_direction_alpha = ribbon_direction_alpha,
     ribbon_ctrl_point = ribbon_ctrl_pt,
-    gene_data = data_list$gene_data,
+    region_data = region_data,
+    region_fill = region_fill,
+    region_color = region_color,
+    region_alpha = region_alpha,
+    region_width = region_width,
+    region_offset = region_offset,
+    region_side = region_side,
+    ribbon_highlight_rows = ribbon_highlight_rows,
+    gene_data = gene_data_override %||% data_list$gene_data,
     geneGap = geneGap, geneWidth = geneWidth,
     geneLabelRadialOffset = geneLabelRadialOffset,
     geneLabelCircumOffset = geneLabelCircumOffset,
@@ -727,7 +883,8 @@ classify_ggchord_layers <- function(plot) {
               gene_label_segment = integer(0),
               axis_line = integer(0), axis_seg = integer(0),
               axis_text = integer(0), seq_label = integer(0),
-              seq_group_label = integer(0))
+              seq_group_label = integer(0),
+              seq_region = integer(0), ribbon_highlight = integer(0))
   for (i in seq_along(plot$layers)) {
     lyr <- plot$layers[[i]]
     type <- lyr$ggchord_type %||% ""
@@ -800,7 +957,7 @@ make_ggchord_scales <- function(layout, has_seq = FALSE, has_gene = FALSE,
 
   ribbon_fill_scale <- NULL
   if (!is.null(layout$ribbon_polys)) {
-    if (layout$ribbon_color_scheme == "pident") {
+    if (layout$ribbon_color_scheme %in% c("pident", "value")) {
       # The colorbar follows its effective legend position: vertical and
       # filling the available height at the left/right, horizontal (with a
       # fixed size) at the top/bottom. A "null" key height collapses to zero
@@ -814,11 +971,29 @@ make_ggchord_scales <- function(layout, has_seq = FALSE, has_gene = FALSE,
       # as centimetres.
       key_len <- legend_key_length
       if (!is.null(key_len) && !is.unit(key_len)) key_len <- unit(key_len, "cm")
+      value_scheme <- identical(layout$ribbon_color_scheme, "value")
+      ribbon_name <- if (value_scheme) {
+        layout$ribbon_color_name %||% "value"
+      } else {
+        "Identity(%)"
+      }
+      ribbon_limits <- if (value_scheme) {
+        lims <- layout$ribbon_color_limits %||% range(layout$ribbon_polys$value, na.rm = TRUE)
+        if (lims[1] == lims[2]) lims <- lims + c(-0.5, 0.5)
+        lims
+      } else {
+        c(0, 100)
+      }
+      ribbon_breaks <- if (value_scheme) {
+        layout$ribbon_color_breaks %||% pretty(ribbon_limits, n = 5)
+      } else {
+        c(0, 50, 80, 90, 95, 100)
+      }
       ribbon_fill_scale <- scale_fill_stepsn(
-        name    = "Identity(%)",
+        name    = ribbon_name,
         colours = layout$ribbon_colors,
-        limits  = c(0, 100),
-        breaks  = c(0, 50, 80, 90, 95, 100),
+        limits  = ribbon_limits,
+        breaks  = ribbon_breaks,
         guide   = guide_colorbar(
           position = positions$ribbon %||% NULL,
           theme = theme(
@@ -888,6 +1063,18 @@ make_ggchord_scales <- function(layout, has_seq = FALSE, has_gene = FALSE,
   # Ribbon alpha is a preset value; use an identity scale so it renders as specified
   if (!is.null(layout$ribbon_polys)) {
     scales[[length(scales) + 1]] <- scale_alpha_identity()
+  }
+  # Optional per-ribbon outline / linetype mappings use internal aesthetics so
+  # they do not collide with the sequence colour scale or the ribbon fill scale.
+  if (isTRUE(layout$ribbon_use_outline)) {
+    scales[[length(scales) + 1]] <- scale_colour_identity(aesthetics = "zoutline")
+  }
+  if (isTRUE(layout$ribbon_use_linetype)) {
+    scales[[length(scales) + 1]] <- scale_linetype_identity(aesthetics = "zlinetype")
+  }
+  # Sequence-region bands use their own internal fill aesthetic.
+  if (!is.null(layout$region_polys) && nrow(layout$region_polys) > 0) {
+    scales[[length(scales) + 1]] <- scale_fill_identity(aesthetics = "zregionfill")
   }
   # Sequence-group label colours use an internal aesthetic so they do not
   # collide with the Seq ID colour scale used by geom_seq().

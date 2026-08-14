@@ -16,7 +16,7 @@ expressiveness → ecosystem**.
 | --- | --- | --- |
 | v0.7.0 | Reliability: validation, cleaning, tests, visual regression | [done] |
 | v0.8.0 | Usability: import helpers, ribbon processing, sequence grouping | [done] |
-| v0.9.0 | Expressiveness: ribbon direction mapping, highlights, features, crowded layouts | designed |
+| v0.9.0 | Expressiveness: ribbon direction mapping, highlights, features, crowded layouts | A/B/C [done], D [designed] |
 | v1.0.0 | Ecosystem: Plotly, export, themes, documentation, stable API | designed |
 
 ---
@@ -102,7 +102,7 @@ labels render; unknown group names error.
 
 ## v0.9.0 — Expressiveness & complex layouts
 
-### A. Ribbon direction & visual mapping [designed]
+### A. Ribbon direction & visual mapping [done]
 
 Extend `geom_ribbon()` while keeping `"pident"`, `"query"`, `"subject"`,
 `"single"` behaviour byte-for-byte compatible:
@@ -143,7 +143,7 @@ geom_ribbon(
 - Tests: each scheme produces distinct layout fingerprints; legend titles
   correct; gene legend unchanged; plotly conversion does not error.
 
-### B. Highlight layers [designed]
+### B. Highlight layers [done]
 
 ```r
 geom_seq_region(
@@ -197,7 +197,7 @@ geom_ribbon_highlight(
   to `ggchord_plotly_ggplot()` (pre-mapped colors) and the visual-regression
   set. Empty matches return the empty placeholder → safe no-op.
 
-### C. Generic feature layer [designed — keep geom_gene()]
+### C. Generic feature layer [done] — keep geom_gene()
 
 `geom_gene()` stays; `geom_feature()` is a generalization:
 
@@ -221,7 +221,7 @@ anno). Internally it reuses the gene-arrow path builder in `layout.R`
 wrapper (`feature_type = "gene"`, arrow shape) so nothing breaks. Tests:
 `geom_gene()` output is byte-identical before/after the wrapper refactor.
 
-### D. Crowded layouts [designed]
+### D. Crowded layout [designed]
 
 - **Auto ring placement:** `geom_seq(seq_ring = "auto")` groups sequences into
   nested rings when `n` is large; each ring gets its own `seqRadius` range.

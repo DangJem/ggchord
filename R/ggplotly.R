@@ -87,15 +87,56 @@ ggchord_plotly_ggplot <- function(p) {
     rp <- layout$ribbon_polys
     rp$fill_col <- ggchord_ribbon_fill(layout, cols$ribbon)
     outline <- ggchord_layer_params(p, "ribbon")
+    outline_col <- if (isTRUE(layout$ribbon_use_outline) && "outline_col" %in% names(rp)) {
+      rp$outline_col
+    } else {
+      outline$ribbon_outline_color %||% "black"
+    }
+    outline_lt <- if (isTRUE(layout$ribbon_use_linetype) && "linetype_val" %in% names(rp)) {
+      rp$linetype_val
+    } else {
+      outline$ribbon_outline_linetype %||% 1
+    }
     std <- std + ggplot2::geom_polygon(
       data = rp,
       mapping = ggplot2::aes(x = x, y = y, group = group,
                              fill = fill_col, alpha = alpha),
       inherit.aes = FALSE,
       show.legend = FALSE,
-      colour = outline$ribbon_outline_color %||% "black",
+      colour = outline_col,
       linewidth = outline$ribbon_outline_width %||% 0.05,
-      linetype = outline$ribbon_outline_linetype %||% 1
+      linetype = outline_lt
+    )
+  }
+
+  # ---- sequence-region bands ----
+  if (!is.null(layout$region_polys) && nrow(layout$region_polys) > 0) {
+    rp <- layout$region_polys
+    std <- std + ggplot2::scale_fill_identity()
+    std <- std + ggplot2::geom_polygon(
+      data = rp,
+      mapping = ggplot2::aes(x = x, y = y, group = group,
+                             fill = zregionfill, alpha = alpha),
+      inherit.aes = FALSE,
+      show.legend = FALSE,
+      colour = "black",
+      linewidth = 0.15
+    )
+  }
+
+  # ---- ribbon highlight overlays ----
+  if (!is.null(layout$ribbon_highlight_polys) && nrow(layout$ribbon_highlight_polys) > 0) {
+    hp <- layout$ribbon_highlight_polys
+    hl <- ggchord_layer_params(p, "ribbon_highlight")
+    std <- std + ggplot2::geom_polygon(
+      data = hp,
+      mapping = ggplot2::aes(x = x, y = y, group = group),
+      inherit.aes = FALSE,
+      show.legend = FALSE,
+      fill = hl$highlight_color %||% "#E11D48",
+      alpha = hl$highlight_alpha %||% 0.8,
+      colour = hl$highlight_outline_color %||% NA,
+      linewidth = hl$highlight_outline_width %||% 0.3
     )
   }
 
@@ -239,10 +280,21 @@ ggchord_plotly_colors <- function(p, layout) {
 #' @keywords internal
 ggchord_ribbon_fill <- function(layout, ribbon_colors = NULL) {
   rp <- layout$ribbon_polys
-  if (layout$ribbon_color_scheme == "pident") {
-    # Interpolate the pident value (0-100) across the ribbon color gradient.
-    ramp <- grDevices::colorRamp(ribbon_colors %||% layout$ribbon_colors)
-    t <- pmin(1, pmax(0, rp$pident / 100))
+  if (layout$ribbon_color_scheme %in% c("pident", "value")) {
+    cols <- ribbon_colors %||% layout$ribbon_colors
+    if (layout$ribbon_color_scheme == "pident") {
+      vals <- rp$pident
+      lo <- 0
+      hi <- 100
+    } else {
+      vals <- rp$value
+      lims <- layout$ribbon_color_limits %||% range(vals, na.rm = TRUE)
+      lo <- lims[1]
+      hi <- lims[2]
+    }
+    ramp <- grDevices::colorRamp(cols)
+    t <- if (hi > lo) (vals - lo) / (hi - lo) else rep(0.5, length(vals))
+    t <- pmin(1, pmax(0, t))
     m <- ramp(t)
     grDevices::rgb(m[, 1], m[, 2], m[, 3], maxColorValue = 255)
   } else {

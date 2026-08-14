@@ -64,20 +64,6 @@ ggchord(
 
 核心思想就一句话：**数据交给 `ggchord()`，样式交给各图层**。
 
-### 序列分组
-
-可以按宿主/噬菌体、染色体组或样本组对序列进行分组，并在组间留出更大空隙、显示组标签：
-
-```r
-seq_data_example$seq_group <- c("host", "phage", "phage", "host")
-
-ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
-  geom_seq(seq_group = "seq_group",
-           seq_group_colors = c(host = "#E41A1C", phage = "#377EB8")) +
-  geom_ribbon() +
-  geom_gene()
-```
-
 ## 延伸阅读
 
 | 需求 | 资源 |

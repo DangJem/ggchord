@@ -16,6 +16,33 @@
 
 * `plotly::ggplotly()` and the layout data path now include group labels.
 
+## New features: ribbon visual mapping and direction (v0.9.0 scope, version kept at 0.8.0)
+
+* `geom_ribbon()` now supports `ribbon_color_by` (any numeric column mapped to
+  a continuous fill), `ribbon_color_limits`, `ribbon_color_breaks` and
+  `ribbon_color_name`, as well as `ribbon_alpha_by` /
+  `ribbon_alpha_range`.
+
+* `ribbon_outline_by` / `ribbon_outline_colors` and `ribbon_linetype_by` /
+  `ribbon_linetypes` map discrete columns to outline colour and linetype using
+  internal aesthetics that do not disturb the existing Seq ID or Identity(%)
+  legends.
+
+* `ribbon_direction` visually distinguishes same- vs reverse-orientation
+  alignments through alpha, outline colour or linetype.
+
+## New features: highlights and generic features (v0.9.0 scope)
+
+* New `geom_seq_region()` draws user-defined bands along sequence arcs and
+  supports `seq_id`, `start`, `end`, optional `label`, `category` and `color`.
+
+* New `geom_ribbon_highlight()` emphasizes selected ribbons using safe filters
+  (`ribbon_ids`, query/subject IDs, pident/length ranges, or a predicate
+  function) and reuses the computed ribbon geometry.
+
+* New `geom_feature()` is a generic convenience wrapper around `geom_gene()`
+  for CDS, tRNA, rRNA, repeat, CRISPR, promoter and custom feature tables.
+
 # ggchord 0.7.0
 
 ## New features: structured data validation and cleaning

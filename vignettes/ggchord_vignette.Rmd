@@ -270,6 +270,57 @@ ggchord(seq_grouped, ribbon_data_example, gene_data_example) +
 `geom_seq(seq_group_labels = FALSE)` keeps the extra group gap but hides the
 group labels. `seq_group_gap` controls the size of the inter-group gap.
 
+## 4c. Ribbon mapping and direction
+
+`geom_ribbon()` can map any numeric column to a continuous fill (not only
+`pident`), map alpha from a numeric column, and distinguish same- vs
+reverse-orientation alignments:
+
+```{r ribbon-mapping}
+rb_scored <- transform(ribbon_data_example,
+                       bitscore = seq_len(nrow(ribbon_data_example)) * 10)
+
+ggchord(seq_data_example, rb_scored) +
+  geom_seq() +
+  geom_ribbon(ribbon_color_by = "bitscore",
+              ribbon_alpha_by = "bitscore",
+              ribbon_direction = "linetype")
+```
+
+`ribbon_outline_by` / `ribbon_linetype_by` map outline colour or linetype from
+a discrete column.
+
+## 4d. Highlights and generic features
+
+Mark sequence intervals with `geom_seq_region()` and emphasise selected ribbons
+with `geom_ribbon_highlight()`:
+
+```{r highlights}
+regions <- data.frame(seq_id = "MT108731.1",
+                      start = 1000, end = 4000, color = "orange")
+
+ggchord(seq_data_example, ribbon_data_example) +
+  geom_seq() +
+  geom_ribbon() +
+  geom_seq_region(regions = regions) +
+  geom_ribbon_highlight(ribbon_ids = 1)
+```
+
+`geom_feature()` is a generic convenience wrapper around `geom_gene()` for CDS,
+tRNA, rRNA, repeat, CRISPR, promoter or user-defined features:
+
+```{r features}
+features <- data.frame(
+  seq_id = c("MT108731.1", "MT118296.1"),
+  start  = c(1000, 500), end = c(4000, 2000),
+  strand = c("+", "-"), type = c("CDS", "tRNA")
+)
+
+ggchord(seq_data_example) +
+  geom_seq() +
+  geom_feature(features)
+```
+
 ## 5. Learn by examples
 
 All examples use the built-in data sets already loaded above, so you can
@@ -710,6 +761,11 @@ gene_label_rotation = list(20)
 | `ribbon_outline_color` | character | "black" | Ribbon outline (border) color |
 | `ribbon_outline_width` | numeric | 0.05 | Ribbon outline line width |
 | `ribbon_outline_linetype` | numeric/character | 1 | Ribbon outline line type (1 = solid) |
+| `ribbon_color_by` | character | NULL | Map a numeric column to a continuous fill instead of `pident` |
+| `ribbon_alpha_by` | character | NULL | Map a numeric column to ribbon alpha |
+| `ribbon_outline_by` | character | NULL | Map a discrete column to outline colour |
+| `ribbon_linetype_by` | character | NULL | Map a discrete column to outline linetype |
+| `ribbon_direction` | character | "none" | Distinguish same/reverse alignments: `"none"`, `"alpha"`, `"outline"` or `"linetype"` |
 | `show_legend` | logical | TRUE | Show the Identity(%) legend |
 | `legend_position` | character | "left" | Position of the Identity(%) colourbar: `"left"`, `"right"`, `"top"`, `"bottom"` or `"inside"` (`NULL` = follow `theme(legend.position = ...)`) |
 | `legend_key_length` | unit/number | NULL | Length of the Identity(%) colourbar (height when vertical, width when horizontal); a number is in cm, e.g. `legend_key_length = 5` or `unit(5, "cm")` |

@@ -48,7 +48,29 @@ compute_chord_layout <- function(
     # Ribbon parameters
     ribbon_data = NULL, ribbonGap,
     ribbon_color_scheme, ribbon_colors, ribbon_alpha,
+    ribbon_color_by = NULL,
+    ribbon_color_limits = NULL,
+    ribbon_color_breaks = NULL,
+    ribbon_color_name = NULL,
+    ribbon_alpha_by = NULL,
+    ribbon_alpha_range = c(0.15, 0.9),
+    ribbon_outline_by = NULL,
+    ribbon_outline_colors = NULL,
+    ribbon_linetype_by = NULL,
+    ribbon_linetypes = NULL,
+    ribbon_direction = "none",
+    ribbon_direction_colors = c(same = "black", reverse = "grey50"),
+    ribbon_direction_linetypes = c(same = "solid", reverse = "dashed"),
+    ribbon_direction_alpha = c(same = 1, reverse = 0.45),
     ribbon_ctrl_point,
+    region_data = NULL,
+    region_fill = "#F59E0B",
+    region_color = "#B45309",
+    region_alpha = 0.25,
+    region_width = 0.08,
+    region_offset = 0,
+    region_side = "inside",
+    ribbon_highlight_rows = integer(0),
     # Gene parameters
     gene_data = NULL,
     geneGap, geneWidth,
@@ -336,6 +358,31 @@ compute_chord_layout <- function(
   # ====================================================================
   ribbon_polys <- NULL
   ribbon_color_info <- list(scheme = ribbon_color_scheme)
+  ribbon_use_outline <- !is.null(ribbon_outline_by) || identical(ribbon_direction, "outline")
+  ribbon_use_linetype <- !is.null(ribbon_linetype_by) || identical(ribbon_direction, "linetype")
+
+  resolve_discrete_ribbon_values <- function(vals, supplied, default_fun, arg_name) {
+    uniq <- unique(vals)
+    if (is.null(supplied)) {
+      return(setNames(default_fun(length(uniq)), uniq))
+    }
+    if (is.null(names(supplied))) {
+      if (length(supplied) == 1) {
+        return(setNames(rep(supplied, length(uniq)), uniq))
+      }
+      if (length(supplied) == length(uniq)) {
+        return(setNames(as.character(supplied), uniq))
+      }
+      ggchord_stop(arg_name, " must be length 1 or match the number of unique values")
+    }
+    unknown <- setdiff(names(supplied), uniq)
+    if (length(unknown) > 0) {
+      ggchord_stop(arg_name, " contains unknown value(s): ", paste(unknown, collapse = ", "))
+    }
+    out <- setNames(default_fun(length(uniq)), uniq)
+    out[names(supplied)] <- as.character(supplied)
+    out
+  }
 
   if (!is.null(ribbon_data) && nrow(ribbon_data) > 0) {
     ribbons <- list()
@@ -345,14 +392,11 @@ compute_chord_layout <- function(
     # Pre-process ribbon colors
     singleCol <- NULL
     queryCols <- NULL
-    rampFunc <- NULL
 
     if (ribbon_color_scheme == "single") {
       singleCol <- if (length(ribbon_colors) > 1) ribbon_colors[[1]] else ribbon_colors
     } else if (ribbon_color_scheme %in% c("query", "subject")) {
       queryCols <- ribbon_colors
-    } else if (ribbon_color_scheme == "pident") {
-      rampFunc <- colorRampPalette(ribbon_colors)
     }
 
     # Pre-extract columns for faster iteration and validation.
@@ -373,6 +417,50 @@ compute_chord_layout <- function(
     ribbon_group <- integer(length(valid_idx))
     ribbon_fill <- character(length(valid_idx))
     ribbon_pident <- numeric(length(valid_idx))
+    ribbon_value <- numeric(length(valid_idx))
+    ribbon_alpha_vec <- numeric(length(valid_idx))
+    ribbon_outline_vec <- character(length(valid_idx))
+    ribbon_linetype_vec <- character(length(valid_idx))
+    ribbon_dir_vec <- character(length(valid_idx))
+
+    # Continuous / discrete value preparation on the valid rows only.
+    alpha_norm <- rep(1, length(valid_idx))
+    if (!is.null(ribbon_alpha_by)) {
+      av <- as.numeric(ribbon_data[[ribbon_alpha_by]][valid_idx])
+      if (length(av) > 1 && diff(range(av, na.rm = TRUE)) > 0) {
+        rng <- range(av, na.rm = TRUE)
+        alpha_norm <- (av - rng[1]) / (rng[2] - rng[1])
+      } else {
+        alpha_norm <- rep(0.5, length(av))
+      }
+      alpha_norm <- ribbon_alpha_range[1] +
+        alpha_norm * (ribbon_alpha_range[2] - ribbon_alpha_range[1])
+    }
+
+    if (!is.null(ribbon_outline_by)) {
+      ov <- as.character(ribbon_data[[ribbon_outline_by]][valid_idx])
+      outline_map <- resolve_discrete_ribbon_values(
+        ov, ribbon_outline_colors, chord_default_palette, "ribbon_outline_colors")
+      ribbon_outline_vec <- unname(outline_map[ov])
+    } else if (identical(ribbon_direction, "outline")) {
+      ribbon_outline_vec <- rep("black", length(valid_idx))
+    } else {
+      ribbon_outline_vec <- rep("black", length(valid_idx))
+    }
+
+    if (!is.null(ribbon_linetype_by)) {
+      lv <- as.character(ribbon_data[[ribbon_linetype_by]][valid_idx])
+      linetype_map <- resolve_discrete_ribbon_values(
+        lv, ribbon_linetypes,
+        function(n) rep_len(c("solid", "dashed", "dotted", "dotdash",
+                              "longdash", "twodash"), n),
+        "ribbon_linetypes")
+      ribbon_linetype_vec <- unname(linetype_map[lv])
+    } else if (identical(ribbon_direction, "linetype")) {
+      ribbon_linetype_vec <- rep("solid", length(valid_idx))
+    } else {
+      ribbon_linetype_vec <- rep("solid", length(valid_idx))
+    }
 
     for (j in seq_along(valid_idx)) {
       i <- valid_idx[j]
@@ -438,31 +526,79 @@ compute_chord_layout <- function(
         y = c(q_coords[, 2], b2[, 2], rev(s_coords[, 2]), rev(b1[, 2]))
       )
       ribbon_group[j] <- j
+
+      dir_sign <- (rib_qend[i] - rib_qstart[i]) * (rib_send[i] - rib_sstart[i])
+      dir_val <- ifelse(dir_sign >= 0, "same", "reverse")
+      ribbon_dir_vec[j] <- dir_val
+
       if (ribbon_color_scheme == "pident") {
         ribbon_pident[j] <- rib_pident[i]
+      } else if (ribbon_color_scheme == "value") {
+        ribbon_value[j] <- as.numeric(ribbon_data[[ribbon_color_by]][i])
       } else {
         ribbon_fill[j] <- switch(ribbon_color_scheme,
                                  single = singleCol,
                                  query = queryCols[q],
                                  subject = queryCols[s])
       }
+
+      dir_alpha_factor <- if (identical(ribbon_direction, "alpha")) {
+        as.numeric(ribbon_direction_alpha[dir_val])
+      } else {
+        1
+      }
+      ribbon_alpha_vec[j] <- ribbon_alpha * alpha_norm[j] * dir_alpha_factor
+
+      if (!is.null(ribbon_outline_by)) {
+        ribbon_outline_vec[j] <- unname(outline_map[as.character(ribbon_data[[ribbon_outline_by]][i])])
+      } else if (identical(ribbon_direction, "outline")) {
+        ribbon_outline_vec[j] <- as.character(ribbon_direction_colors[dir_val])
+      }
+
+      if (!is.null(ribbon_linetype_by)) {
+        ribbon_linetype_vec[j] <- unname(linetype_map[as.character(ribbon_data[[ribbon_linetype_by]][i])])
+      } else if (identical(ribbon_direction, "linetype")) {
+        ribbon_linetype_vec[j] <- as.character(ribbon_direction_linetypes[dir_val])
+      }
     }
     cntValid <- length(valid_idx)
 
     if (debug) {
-      cat("Valid ribbons:", cntValid, "invalid ribbons:", cntInvalid, "\n")
+      cat("Valid ribbons:", cntValid, "invalid ribbons:", cntInvalid, "
+")
     }
 
     if (cntValid > 0) {
       m <- do.call(rbind, ribbon_polys_list)
       group_vals <- rep(ribbon_group, each = 200)
-      alpha_vals <- rep(ribbon_alpha, nrow(m))
+      source_row_vals <- rep(valid_idx, each = 200)
+      alpha_vals <- rep(ribbon_alpha_vec, each = 200)
+      outline_vals <- rep(ribbon_outline_vec, each = 200)
+      linetype_vals <- rep(ribbon_linetype_vec, each = 200)
+      dir_vals <- rep(ribbon_dir_vec, each = 200)
+
       if (ribbon_color_scheme == "pident") {
         ribbon_polys <- data.frame(
           x = m[, 1], y = m[, 2],
           pident = rep(ribbon_pident, each = 200),
           group = group_vals,
+          source_row = source_row_vals,
           alpha = alpha_vals,
+          outline_col = outline_vals,
+          linetype_val = linetype_vals,
+          direction = dir_vals,
+          stringsAsFactors = FALSE
+        )
+      } else if (ribbon_color_scheme == "value") {
+        ribbon_polys <- data.frame(
+          x = m[, 1], y = m[, 2],
+          value = rep(ribbon_value, each = 200),
+          group = group_vals,
+          source_row = source_row_vals,
+          alpha = alpha_vals,
+          outline_col = outline_vals,
+          linetype_val = linetype_vals,
+          direction = dir_vals,
           stringsAsFactors = FALSE
         )
       } else {
@@ -470,13 +606,95 @@ compute_chord_layout <- function(
           x = m[, 1], y = m[, 2],
           fill = rep(ribbon_fill, each = 200),
           group = group_vals,
+          source_row = source_row_vals,
           alpha = alpha_vals,
+          outline_col = outline_vals,
+          linetype_val = linetype_vals,
+          direction = dir_vals,
           stringsAsFactors = FALSE
         )
       }
     } else {
       warning("No valid alignment data available for plotting")
     }
+  }
+
+  # ====================================================================
+  # Step 6b: generate sequence-region bands and ribbon highlights (v0.9.0)
+  # ====================================================================
+  region_polys <- data.frame()
+  if (!is.null(region_data) && nrow(region_data) > 0) {
+    req <- c("seq_id", "start", "end")
+    if (!all(req %in% colnames(region_data))) {
+      ggchord_stop("regions must contain seq_id, start and end columns")
+    }
+    region_data$start <- as.numeric(region_data$start)
+    region_data$end <- as.numeric(region_data$end)
+    ok_rows <- is.finite(region_data$start) & is.finite(region_data$end) &
+      region_data$seq_id %in% seqs
+    if (any(!ok_rows)) region_data <- region_data[ok_rows, , drop = FALSE]
+    if (nrow(region_data) > 0) {
+      region_poly_list <- lapply(seq_len(nrow(region_data)), function(i) {
+        row <- region_data[i, ]
+        sid <- as.character(row$seq_id)
+        len <- lens[sid]
+        sp <- min(row$start, row$end)
+        ep <- max(row$start, row$end)
+        if (sp < 1) sp <- 1
+        if (ep > len) ep <- len
+        if (ep <= sp) return(NULL)
+
+        frac_sp <- if (orientation[sid] == 1) sp / len else 1 - sp / len
+        frac_ep <- if (orientation[sid] == 1) ep / len else 1 - ep / len
+        a_start <- starts[sid] + frac_sp * (ends[sid] - starts[sid])
+        a_end <- starts[sid] + frac_ep * (ends[sid] - starts[sid])
+
+        ref <- seq_refs[[sid]]
+        side <- region_side
+        if (identical(side, "auto")) side <- "inside"
+        base_radius <- if (identical(side, "inside")) {
+          seqRadius[sid] + region_offset
+        } else {
+          seqRadius[sid] - region_offset
+        }
+
+        n <- 30
+        angs <- seq(a_start, a_end, length.out = n)
+        outer_r <- base_radius + region_width / 2
+        inner_r <- base_radius - region_width / 2
+        orig_ang <- c(angs, rev(angs))
+        orig_rad <- c(rep(outer_r, n), rep(inner_r, n))
+        mapped <- map_to_curve_many(orig_ang, orig_rad, ref)
+
+        fill_col <- if ("color" %in% colnames(region_data) && !is.na(row$color)) {
+          as.character(row$color)
+        } else {
+          region_fill
+        }
+        data.frame(
+          x = mapped[, 1], y = mapped[, 2],
+          group = i,
+          zregionfill = fill_col,
+          alpha = region_alpha,
+          label = if ("label" %in% colnames(region_data)) as.character(row$label) else NA_character_,
+          category = if ("category" %in% colnames(region_data)) as.character(row$category) else NA_character_,
+          source_row = i,
+          stringsAsFactors = FALSE
+        )
+      })
+      region_poly_list <- Filter(Negate(is.null), region_poly_list)
+      if (length(region_poly_list) > 0) {
+        region_polys <- do.call(rbind, region_poly_list)
+      }
+    }
+  }
+
+  ribbon_highlight_polys <- data.frame()
+  if (length(ribbon_highlight_rows) > 0 && !is.null(ribbon_polys) &&
+      nrow(ribbon_polys) > 0) {
+    ribbon_highlight_polys <- ribbon_polys[
+      ribbon_polys$source_row %in% ribbon_highlight_rows, , drop = FALSE
+    ]
   }
 
   # ====================================================================
@@ -922,6 +1140,8 @@ compute_chord_layout <- function(
     }
   }
   if (!is.null(ribbon_polys)) ribbon_polys <- rotate_df(ribbon_polys)
+  if (nrow(region_polys) > 0) region_polys <- rotate_df(region_polys)
+  if (nrow(ribbon_highlight_polys) > 0) ribbon_highlight_polys <- rotate_df(ribbon_highlight_polys)
   if (nrow(gene_labels) > 0) gene_labels <- rotate_df(gene_labels)
   if (nrow(seq_labels_df) > 0) seq_labels_df <- rotate_df(seq_labels_df)
   if (nrow(group_labels) > 0) group_labels <- rotate_df(group_labels)
@@ -1154,6 +1374,8 @@ compute_chord_layout <- function(
     # Geometric data
     seq_arcs       = seq_arcs,
     ribbon_polys   = ribbon_polys,
+    region_polys   = region_polys,
+    ribbon_highlight_polys = ribbon_highlight_polys,
     gene_polys     = gene_polys,
     gene_labels    = gene_labels,
     gene_label_segments = gene_label_segments,
@@ -1176,6 +1398,12 @@ compute_chord_layout <- function(
     ribbon_color_scheme = ribbon_color_scheme,
     ribbon_colors  = ribbon_colors,
     ribbon_alpha   = ribbon_alpha,
+    ribbon_color_by = ribbon_color_by,
+    ribbon_color_limits = ribbon_color_limits,
+    ribbon_color_breaks = ribbon_color_breaks,
+    ribbon_color_name = ribbon_color_name,
+    ribbon_use_outline = ribbon_use_outline,
+    ribbon_use_linetype = ribbon_use_linetype,
 
     # Gene-related
     gene_pal           = gene_pal,

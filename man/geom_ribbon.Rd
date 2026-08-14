@@ -9,13 +9,27 @@ geom_ribbon(
   data = NULL,
   ribbon_color_scheme = NULL,
   ribbon_colors = NULL,
+  ribbon_color_by = NULL,
+  ribbon_color_limits = NULL,
+  ribbon_color_breaks = NULL,
+  ribbon_color_name = NULL,
   ribbon_alpha = NULL,
+  ribbon_alpha_by = NULL,
+  ribbon_alpha_range = c(0.15, 0.9),
   ribbon_ctrl_point = NULL,
   ribbon_gap = NULL,
   alpha = NULL,
   ribbon_outline_color = "black",
   ribbon_outline_width = 0.05,
   ribbon_outline_linetype = 1,
+  ribbon_outline_by = NULL,
+  ribbon_outline_colors = NULL,
+  ribbon_linetype_by = NULL,
+  ribbon_linetypes = NULL,
+  ribbon_direction = c("none", "alpha", "outline", "linetype"),
+  ribbon_direction_colors = c(same = "black", reverse = "grey50"),
+  ribbon_direction_linetypes = c(same = "solid", reverse = "dashed"),
+  ribbon_direction_alpha = c(same = 1, reverse = 0.45),
   show_legend = TRUE,
   legend_position = "left",
   legend_key_length = NULL,
@@ -27,11 +41,31 @@ geom_ribbon(
 
 \item{data}{Default NULL (retrieved automatically from the layout)}
 
-\item{ribbon_color_scheme}{Character. Color scheme "pident", "query" or "single", default "pident"}
+\item{ribbon_color_scheme}{Character. Color scheme \code{"pident"},
+\code{"query"}, \code{"subject"} or \code{"single"}, default \code{"pident"}}
 
 \item{ribbon_colors}{Optional color vector. Ribbon color parameters}
 
+\item{ribbon_color_by}{Optional character column name. When set, ribbon fill
+is mapped to a continuous colourbar for that numeric column instead of
+\code{pident} (e.g. \code{"bitscore"}).}
+
+\item{ribbon_color_limits}{Optional numeric length-2 limits for
+\code{ribbon_color_by}.}
+
+\item{ribbon_color_breaks}{Optional numeric breaks for the \code{ribbon_color_by}
+colourbar.}
+
+\item{ribbon_color_name}{Optional legend title for the \code{ribbon_color_by}
+colourbar (defaults to the column name).}
+
 \item{ribbon_alpha}{Numeric (0-1). Ribbon transparency, default 0.35}
+
+\item{ribbon_alpha_by}{Optional character column name. When set, alpha is
+scaled continuously from that numeric column.}
+
+\item{ribbon_alpha_range}{Numeric length-2. Alpha range used by
+\code{ribbon_alpha_by}, default \code{c(0.15, 0.9)}.}
 
 \item{ribbon_ctrl_point}{Optional vector/list. Bezier control points, default c(0,0)}
 
@@ -44,6 +78,33 @@ geom_ribbon(
 \item{ribbon_outline_width}{Numeric. Line width of the ribbon outline, default 0.05}
 
 \item{ribbon_outline_linetype}{Numeric or character. Line type of the ribbon outline, default 1 (solid); see \code{linetype} in ggplot2 for options}
+
+\item{ribbon_outline_by}{Optional discrete column name. When set, outline
+colour is mapped by that column and \code{ribbon_outline_colors} controls
+the palette.}
+
+\item{ribbon_outline_colors}{Optional named color vector for
+\code{ribbon_outline_by}; unnamed vectors are recycled positionally.}
+
+\item{ribbon_linetype_by}{Optional discrete column name. When set, outline
+linetype is mapped by that column and \code{ribbon_linetypes} controls the
+values.}
+
+\item{ribbon_linetypes}{Optional named linetype vector for
+\code{ribbon_linetype_by}.}
+
+\item{ribbon_direction}{Character. How to visually distinguish same- vs
+reverse-orientation alignments: \code{"none"}, \code{"alpha"},
+\code{"outline"} or \code{"linetype"}.}
+
+\item{ribbon_direction_colors}{Named color vector with \code{same} and
+\code{reverse} entries, used when \code{ribbon_direction = "outline"}.}
+
+\item{ribbon_direction_linetypes}{Named linetype vector with \code{same} and
+\code{reverse} entries, used when \code{ribbon_direction = "linetype"}.}
+
+\item{ribbon_direction_alpha}{Named numeric vector with \code{same} and
+\code{reverse} entries, used when \code{ribbon_direction = "alpha"}.}
 
 \item{show_legend}{Whether to show the legend, default TRUE}
 

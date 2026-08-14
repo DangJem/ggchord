@@ -260,6 +260,52 @@ ggchord(seq_grouped, ribbon_data_example, gene_data_example) +
 `geom_seq(seq_group_labels = FALSE)` 保留组间空隙但隐藏组标签；`seq_group_gap`
 控制组间额外空隙大小。
 
+## 4c. Ribbon 映射与方向
+
+`geom_ribbon()` 可将任意数值列映射为连续填充色（不再局限于 `pident`），也可将数值列映射为透明度，并区分同向/反向比对：
+
+```{r ribbon-mapping}
+rb_scored <- transform(ribbon_data_example,
+                       bitscore = seq_len(nrow(ribbon_data_example)) * 10)
+
+ggchord(seq_data_example, rb_scored) +
+  geom_seq() +
+  geom_ribbon(ribbon_color_by = "bitscore",
+              ribbon_alpha_by = "bitscore",
+              ribbon_direction = "linetype")
+```
+
+`ribbon_outline_by` / `ribbon_linetype_by` 可将离散列的取值映射为描边颜色或线型。
+
+## 4d. 高亮与通用 feature
+
+使用 `geom_seq_region()` 标记序列区间，使用 `geom_ribbon_highlight()` 强调选中的连接带：
+
+```{r highlights}
+regions <- data.frame(seq_id = "MT108731.1",
+                      start = 1000, end = 4000, color = "orange")
+
+ggchord(seq_data_example, ribbon_data_example) +
+  geom_seq() +
+  geom_ribbon() +
+  geom_seq_region(regions = regions) +
+  geom_ribbon_highlight(ribbon_ids = 1)
+```
+
+`geom_feature()` 是 `geom_gene()` 的通用便捷封装，可用于 CDS、tRNA、rRNA、repeat、CRISPR、promoter 或自定义 feature：
+
+```{r features}
+features <- data.frame(
+  seq_id = c("MT108731.1", "MT118296.1"),
+  start  = c(1000, 500), end = c(4000, 2000),
+  strand = c("+", "-"), type = c("CDS", "tRNA")
+)
+
+ggchord(seq_data_example) +
+  geom_seq() +
+  geom_feature(features)
+```
+
 ## 5. 由浅入深示例
 
 以下示例均使用上面已加载的内置数据，可以直接复制运行。关键结果统一使用与英文教程相同的共享示例图片。
@@ -678,6 +724,11 @@ gene_label_rotation = list(20)
 | `ribbon_outline_color` | 字符 | "black" | 连接带轮廓（边框）颜色 |
 | `ribbon_outline_width` | 数值 | 0.05 | 连接带轮廓线宽 |
 | `ribbon_outline_linetype` | 数值/字符 | 1 | 连接带轮廓线型（1 = 实线） |
+| `ribbon_color_by` | 字符 | NULL | 将数值列映射为连续填充色，替代 `pident` |
+| `ribbon_alpha_by` | 字符 | NULL | 将数值列映射为 ribbon 透明度 |
+| `ribbon_outline_by` | 字符 | NULL | 将离散列映射为描边颜色 |
+| `ribbon_linetype_by` | 字符 | NULL | 将离散列映射为描边线型 |
+| `ribbon_direction` | 字符 | "none" | 区分同向/反向比对：`"none"`、`"alpha"`、`"outline"` 或 `"linetype"` |
 | `show_legend` | logical | TRUE | 是否显示 Identity(%) 图例 |
 | `legend_position` | 字符 | "left" | Identity(%) 色条位置：`"left"`、`"right"`、`"top"`、`"bottom"` 或 `"inside"`（`NULL` = 遵循 `theme(legend.position = ...)`） |
 | `legend_key_length` | unit/数值 | NULL | Identity(%) 色条的长度（竖直时指高度、水平时指宽度）；数值按厘米计，如 `legend_key_length = 5` 或 `unit(5, "cm")` |
