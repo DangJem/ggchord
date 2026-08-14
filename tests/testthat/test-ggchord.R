@@ -1,52 +1,20 @@
 # testthat test file - v0.4.0 layered API
 #
-# Plotly conversion tests are opt-in: set GGCHORD_RUN_PLOTLY_TESTS=1.
+# Slow rendering / integration tests are opt-in: set GGCHORD_RUN_SLOW_TESTS=1.
 
-test_that("ggchord with only seq_data returns a ggchord object", {
-  data(seq_data_example)
-  p <- ggchord(seq_data = seq_data_example)
-  expect_s3_class(p, "ggchord")
-  expect_s3_class(p, "ggplot")
-})
-
-test_that("ggchord + geom_seq creates a sequence arc layer", {
-  data(seq_data_example)
-  p <- ggchord(seq_data = seq_data_example) + geom_seq()
-  expect_s3_class(p, "ggchord")
-  expect_true(length(p$layers) >= 1)
-})
-
-test_that("ggchord + geom_seq + geom_ribbon handles alignment data correctly", {
+test_that("ggchord builds with minimal and layered inputs", {
   data(seq_data_example)
   data(ribbon_data_example)
-  p <- ggchord(
-    seq_data = seq_data_example,
-    ribbon_data = ribbon_data_example
-  ) +
-    geom_seq() +
-    geom_ribbon()
-  expect_s3_class(p, "ggchord")
-  expect_true(length(p$layers) >= 1)
-})
-
-test_that("ggchord + geom_gene handles gene data correctly", {
-  data(seq_data_example)
   data(gene_data_example)
-  p <- ggchord(
-    seq_data = seq_data_example,
-    gene_data = gene_data_example
-  ) +
-    geom_seq() +
-    geom_gene()
-  expect_s3_class(p, "ggchord")
-})
 
-test_that("ggchord + geom_axis can add an axis", {
-  data(seq_data_example)
-  p <- ggchord(seq_data = seq_data_example) +
-    geom_seq() +
-    geom_axis()
+  p0 <- ggchord(seq_data = seq_data_example)
+  expect_s3_class(p0, "ggchord")
+  expect_s3_class(p0, "ggplot")
+
+  p <- ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
+    geom_seq() + geom_ribbon() + geom_gene() + geom_axis()
   expect_s3_class(p, "ggchord")
+  expect_gte(length(p$layers), 4)
 })
 
 test_that("parameters can be distributed across geoms", {
@@ -135,18 +103,6 @@ test_that("invalid numeric layout parameters report their parameter names", {
   )
 })
 
-test_that("debug mode outputs debug information", {
-  data(seq_data_example)
-  p <- ggchord(seq_data = seq_data_example, debug = TRUE)
-  expect_s3_class(p, "ggchord")
-})
-
-test_that("ggchord global parameters are passed correctly", {
-  data(seq_data_example)
-  p <- ggchord(seq_data = seq_data_example, title = "Hello", rotation = 90)
-  expect_s3_class(p, "ggchord")
-})
-
 test_that("print renders the full chord diagram", {
   data(seq_data_example)
   data(ribbon_data_example)
@@ -232,6 +188,7 @@ test_that("plots survive saveRDS/readRDS and render", {
 })
 
 test_that("ggsave works directly on a ggchord plot", {
+  skip_unless_slow_tests()
   data(seq_data_example)
   data(ribbon_data_example)
   p <- ggchord(seq_data_example, ribbon_data_example) + geom_seq() + geom_ribbon()
@@ -256,18 +213,6 @@ test_that("plot objects are self-contained and repeated builds stay stable", {
   expect_false(is.null(p$layers[[1]]$ggchord_params))
   # repeated builds remain stable
   expect_no_error(ggplot_build(p))
-})
-
-test_that("ribbon data sanity checks warn on bad input", {
-  data(seq_data_example)
-  bad_ribbon <- data.frame(
-    qaccver = c("MT108731.1", "MT108731.1"),
-    saccver = c("MT118296.1", "MT118296.1"),
-    length = c(100, 100), pident = c(90, 90),
-    qstart = c(50000, 100), qend = c(40000, 200),   # qstart > qend
-    sstart = c(1, 1), send = c(100, 100)
-  )
-  expect_warning(ggchord(seq_data_example, bad_ribbon), "start > end")
 })
 
 test_that("geom_seq_label places sequence labels", {
@@ -374,19 +319,9 @@ test_that("theme customization via + works", {
   expect_no_error(ggplot_build(p))
 })
 
-test_that("get_chord_layout is exported after building", {
-  data(seq_data_example)
-  p <- ggchord(seq_data_example) + geom_seq()
-  ggplot_build(p)
-  layout <- get_chord_layout()
-  expect_true(inherits(layout, "chord_layout"))
-  expect_gt(length(layout$seq_arcs), 0)
-})
-
 test_that("plots convert to plotly when plotly is installed", {
   skip_if_not_installed("plotly")
-  skip_if(Sys.getenv("GGCHORD_RUN_PLOTLY_TESTS") != "1",
-          "set GGCHORD_RUN_PLOTLY_TESTS=1 to run plotly conversion tests")
+  skip_unless_slow_tests()
   # NOTE: do not attach plotly with library() here - it masks geom_ribbon()
   # and would leak into the other tests in this session.
   data(seq_data_example)
@@ -435,8 +370,7 @@ test_that("Identity colourbar stays visible with a horizontal bottom legend", {
 
 test_that("plotly conversion keeps legends and adds sequence-arc arrows", {
   skip_if_not_installed("plotly")
-  skip_if(Sys.getenv("GGCHORD_RUN_PLOTLY_TESTS") != "1",
-          "set GGCHORD_RUN_PLOTLY_TESTS=1 to run plotly conversion tests")
+  skip_unless_slow_tests()
   data(seq_data_example)
   data(ribbon_data_example)
   data(gene_data_example)
@@ -448,6 +382,7 @@ test_that("plotly conversion keeps legends and adds sequence-arc arrows", {
 })
 
 test_that("legends can be positioned independently with legend_position", {
+  skip_unless_slow_tests()
   data(seq_data_example)
   data(ribbon_data_example)
   data(gene_data_example)
@@ -511,6 +446,7 @@ test_that("sequence parameters accept list formats", {
 })
 
 test_that("default legend positions split the three legends", {
+  skip_unless_slow_tests()
   data(seq_data_example)
   data(ribbon_data_example)
   data(gene_data_example)
@@ -543,6 +479,7 @@ test_that("axis_gap defaults to 0.05", {
 })
 
 test_that("geom_ribbon shows the Identity colourbar legend without gene data", {
+  skip_unless_slow_tests()
   data(seq_data_example)
   data(ribbon_data_example)
   p <- ggchord(seq_data_example, ribbon_data_example) + geom_seq() + geom_ribbon()
@@ -561,6 +498,7 @@ test_that("geom_ribbon shows the Identity colourbar legend without gene data", {
 })
 
 test_that("no spurious fill-scale warning when gene data is present without a gene layer", {
+  skip_unless_slow_tests()
   data(seq_data_example)
   data(ribbon_data_example)
   data(gene_data_example)

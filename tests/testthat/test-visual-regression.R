@@ -2,11 +2,10 @@
 #
 # The layout-fingerprint tests are deterministic and run everywhere. PNG
 # rendering and pixel-level md5 comparisons are platform/font-dependent and
-# are opt-in: set GGCHORD_VISUAL_REGRESSION=1 to run them (see helper-visual.R
-# and visual-baseline.rds).
+# opt-in: set GGCHORD_RUN_SLOW_TESTS=1 (see helper-visual.R).
 
 test_that("key plots render to PNG without errors and produce output", {
-  skip_unless_visual_regression()
+  skip_unless_slow_tests()
   set.seed(123)
   paths <- render_regression_set()
   for (nm in names(paths)) {
@@ -65,7 +64,7 @@ test_that("ribbon color schemes produce distinct layout fingerprints", {
 # ---------------------------------------------------------------------------
 
 test_that("rendered PNGs match the committed md5 baseline (opt-in)", {
-  skip_unless_visual_regression()
+  skip_unless_slow_tests()
   baseline_file <- testthat::test_path("visual-baseline.rds")
   skip_if(!file.exists(baseline_file), "no visual-baseline.rds committed")
   baseline <- readRDS(baseline_file)

@@ -1,12 +1,13 @@
 # Helper functions for the lightweight visual-regression tests.
 #
 # Layout fingerprints are deterministic and platform-independent (pure
-# geometry); PNG rendering and md5 baselines are platform/font dependent and
-# therefore only run when GGCHORD_VISUAL_REGRESSION=1.
+# geometry). Slow platform/font-dependent work (PNG rendering, md5 baselines,
+# plotly conversion, and heavy device rendering) is opt-in and only runs when
+# GGCHORD_RUN_SLOW_TESTS=1.
 
-skip_unless_visual_regression <- function() {
-  skip_if(Sys.getenv("GGCHORD_VISUAL_REGRESSION") != "1",
-          "set GGCHORD_VISUAL_REGRESSION=1 to run PNG rendering tests")
+skip_unless_slow_tests <- function() {
+  skip_if(Sys.getenv("GGCHORD_RUN_SLOW_TESTS") != "1",
+          "set GGCHORD_RUN_SLOW_TESTS=1 to run slow rendering/integration tests")
 }
 
 #' Render a ggchord plot to a PNG file (fixed device), return the path
