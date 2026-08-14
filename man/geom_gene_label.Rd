@@ -9,7 +9,7 @@ geom_gene_label(
   data = NULL,
   gene_label_size = NULL,
   gene_label_rotation = NULL,
-  gene_label_radial_offset = NULL,
+  gene_label_radial_offset = 0.04,
   gene_label_circum_offset = NULL,
   gene_label_circum_limit = NULL,
   gene_label_wrap = NULL,
@@ -26,7 +26,7 @@ geom_gene_label(
 
 \item{gene_label_rotation}{Optional numeric/vector/list. Label rotation angle, default 0}
 
-\item{gene_label_radial_offset}{Optional numeric/vector/list. Radial offset of labels, default 0}
+\item{gene_label_radial_offset}{Optional numeric/vector/list. Radial offset of labels, default 0.04}
 
 \item{gene_label_circum_offset}{Optional numeric/vector/list. Circumferential offset of labels, default 0}
 

@@ -20,3 +20,14 @@ coord_chord(layout = NULL)
 ## Value
 
 A Coord object for ggplot2 `+` composition
+
+## Examples
+
+``` r
+library(ggchord)
+data(seq_data_example)
+p <- ggchord(seq_data_example) + coord_chord() + geom_seq()
+#> Coordinate system already present.
+#> ℹ Adding new coordinate system, which will replace the existing one.
+p
+```

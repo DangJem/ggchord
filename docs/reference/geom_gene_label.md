@@ -15,7 +15,7 @@ geom_gene_label(
   data = NULL,
   gene_label_size = NULL,
   gene_label_rotation = NULL,
-  gene_label_radial_offset = NULL,
+  gene_label_radial_offset = 0.04,
   gene_label_circum_offset = NULL,
   gene_label_circum_limit = NULL,
   gene_label_wrap = NULL,
@@ -44,7 +44,7 @@ geom_gene_label(
 
 - gene_label_radial_offset:
 
-  Optional numeric/vector/list. Radial offset of labels, default 0
+  Optional numeric/vector/list. Radial offset of labels, default 0.04
 
 - gene_label_circum_offset:
 
@@ -68,8 +68,7 @@ geom_gene_label(
 
 - ...:
 
-  Additional arguments passed to
-  [`geom_text()`](https://ggplot2.tidyverse.org/reference/geom_text.html)
+  Additional arguments passed to `geom_text()`
 
 ## Value
 
@@ -84,3 +83,14 @@ Long annotations can be wrapped with `gene_label_wrap`. For automatic
 de-overlapping (with leader lines), use
 [`geom_gene_label_repel()`](https://dangjem.github.io/ggchord/reference/geom_gene_label_repel.md)
 instead.
+
+## Examples
+
+``` r
+library(ggchord)
+data(seq_data_example)
+data(gene_data_example)
+p <- ggchord(seq_data_example, gene_data = gene_data_example) +
+  geom_seq() + geom_gene() + geom_gene_label()
+p
+```

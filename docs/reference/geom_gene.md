@@ -66,11 +66,21 @@ geom_gene(
 
 - ...:
 
-  Additional arguments passed to
-  [`geom_polygon()`](https://ggplot2.tidyverse.org/reference/geom_polygon.html)
+  Additional arguments passed to `geom_polygon()`
 
 ## Value
 
 A list of ggplot2 layers. To annotate the genes with their labels, add a
 [`geom_gene_label()`](https://dangjem.github.io/ggchord/reference/geom_gene_label.md)
 layer.
+
+## Examples
+
+``` r
+library(ggchord)
+data(seq_data_example)
+data(gene_data_example)
+p <- ggchord(seq_data_example, gene_data = gene_data_example) +
+  geom_seq() + geom_gene()
+p
+```

@@ -50,7 +50,7 @@ font size, text orientation and justification.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">geom_seq_label</span><span class="op">(</span></span>
 <span>  mapping <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  data <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  seq_label_radius <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  seq_label_radius <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  seq_label_rotation <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  seq_label_size <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  seq_labels <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -78,9 +78,8 @@ font size, text orientation and justification.</p>
 <dt id="arg-seq-label-radius">seq_label_radius<a class="anchor" aria-label="anchor" href="#arg-seq-label-radius"></a></dt>
 <dd><p>Optional numeric/vector. Radial position of the
 labels as a multiplier of the sequence arc radius: <code>1</code> is on the arc,
-<code>&gt; 1</code> places the label outside (away from the chord center, e.g.
-<code>1.15</code> = 15<!-- % outside) and \code{&lt; 1} places it inside, default NULL -->
-(1.15)</p></dd>
+<code>&gt; 1</code> places the label outside (away from the chord center) and
+<code>&lt; 1</code> places it inside, default 1</p></dd>
 
 
 <dt id="arg-seq-label-rotation">seq_label_rotation<a class="anchor" aria-label="anchor" href="#arg-seq-label-rotation"></a></dt>
@@ -107,9 +106,10 @@ extending away from the chord center.</p></dd>
 
 <dt id="arg-seq-label-hjust">seq_label_hjust<a class="anchor" aria-label="anchor" href="#arg-seq-label-hjust"></a></dt>
 <dd><p>Optional numeric/vector. Horizontal justification of
-the labels, default NULL (0.5; with
+the labels, default NULL. The default arc orientation uses -0.2 so the
+text sits just inside the sequence; with
 <code>seq_label_orientation = "horizontal"</code> the justification is chosen
-automatically so the text extends away from the chord center).</p></dd>
+automatically so the text extends away from the chord center.</p></dd>
 
 
 <dt id="arg-seq-label-vjust">seq_label_vjust<a class="anchor" aria-label="anchor" href="#arg-seq-label-vjust"></a></dt>

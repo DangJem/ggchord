@@ -27,9 +27,9 @@ geom_gene_label_repel(
   min_segment_length = 0.05,
   force = 1,
   seed = 123,
-  gene_label_orientation = "arc",
-  gene_label_segment = "line",
-  gene_label_side = "auto",
+  gene_label_orientation = "horizontal",
+  gene_label_segment = "elbow",
+  gene_label_side = "outside",
   gene_label_segment_linetype = "auto",
   show_legend = FALSE,
   ...
@@ -105,20 +105,21 @@ geom_gene_label_repel(
 
 - gene_label_orientation:
 
-  Character, default "arc". One of `"arc"` (text rotated along the
-  sequence arc) or `"horizontal"` (all labels are drawn horizontally).
+  Character, default "horizontal". One of `"arc"` (text rotated along
+  the sequence arc) or `"horizontal"` (all labels are drawn
+  horizontally).
 
 - gene_label_segment:
 
-  Character, default "line". Leader line style: a straight `"line"` from
-  the gene to the label, or an L-shaped `"elbow"` (a short segment
+  Character, default "elbow". Leader line style: a straight `"line"`
+  from the gene to the label, or an L-shaped `"elbow"` (a short segment
   outward, then a horizontal segment to the label). Elbow segment
   lengths adapt to each label's position and text width, so labels can
   be placed freely.
 
 - gene_label_side:
 
-  Character, default "auto". Which side of the arc the labels sit on.
+  Character, default "outside". Which side of the arc the labels sit on.
   `"auto"` keeps the strand-based placement (same as before);
   `"outside"` moves labels that would be inside the chord (where they
   can overlap the ribbons) to the outside of their arc; `"inside"` does
@@ -139,9 +140,19 @@ geom_gene_label_repel(
 
 - ...:
 
-  Additional arguments passed to
-  [`geom_text()`](https://ggplot2.tidyverse.org/reference/geom_text.html)
+  Additional arguments passed to `geom_text()`
 
 ## Value
 
 A list of ggplot2 layers (a leader-line layer and a text layer).
+
+## Examples
+
+``` r
+library(ggchord)
+data(seq_data_example)
+data(gene_data_example)
+p <- ggchord(seq_data_example, gene_data = gene_data_example) +
+  geom_seq() + geom_gene() + geom_gene_label_repel()
+p
+```

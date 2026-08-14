@@ -87,7 +87,7 @@
 <div class="section level3">
 <h3 id="new-features-0-6-0">New features<a class="anchor" aria-label="anchor" href="#new-features-0-6-0"></a></h3>
 <ul><li><p>Plot objects are now fully self-contained: data and parameters are stored on the plot itself instead of in a package-wide environment. Multiple plots can be created and built independently in the same session, and plots survive <code><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">saveRDS()</a></code> / <code><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS()</a></code>.</p></li>
-<li><p>The layout is now computed by <code>ggplot_build()</code> rather than by a custom <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> method. As a result <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code>, <code>ggsave()</code>, <code>ggplot_build()</code> and other standard ggplot2 workflows (e.g. <code><a href="https://rdrr.io/pkg/plotly/man/ggplotly.html" class="external-link">plotly::ggplotly()</a></code>) all work directly on ggchord plots, and rendering no longer modifies the user’s plot object.</p></li>
+<li><p>The layout is now computed by <code><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">ggplot_build()</a></code> rather than by a custom <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> method. As a result <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code>, <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code>, <code><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">ggplot_build()</a></code> and other standard ggplot2 workflows (e.g. <code><a href="https://rdrr.io/pkg/plotly/man/ggplotly.html" class="external-link">plotly::ggplotly()</a></code>) all work directly on ggchord plots, and rendering no longer modifies the user’s plot object.</p></li>
 <li><p>New layer <code><a href="../reference/geom_seq_label.html">geom_seq_label()</a></code>: places sequence labels at the midpoint of each sequence arc with control over radial offset (<code>seq_label_radius</code>), rotation (<code>seq_label_rotation</code>) and font size (<code>seq_label_size</code>).</p></li>
 <li><p>New ribbon color scheme <code>"subject"</code>: colors ribbons by the subject sequence (<code>saccver</code>), complementing the existing <code>"query"</code> scheme.</p></li>
 <li><p>The layout accessor <code><a href="../reference/get_chord_layout.html">get_chord_layout()</a></code> is now exported, making the computed geometry available for custom layers and annotations.</p></li>
@@ -178,7 +178,7 @@
 <li>Lightweight <code><a href="../reference/coord_chord.html">coord_chord()</a></code> coordinate system.</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.2.0" id="ggchord-020">ggchord 0.2.0<a class="anchor" aria-label="anchor" href="#ggchord-020"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.2.0" id="ggchord-020">ggchord 0.2.0<a class="anchor" aria-label="anchor" href="#ggchord-020"></a></h2><p class="text-muted">CRAN release: 2025-07-16</p>
 <ul><li>Enhanced arc and line mode optimization.</li>
 <li>Precise curvature and gap control.</li>
 <li>Enhanced color customization.</li>

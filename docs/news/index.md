@@ -1,5 +1,63 @@
 # Changelog
 
+## ggchord 0.8.0
+
+### New features: sequence grouping
+
+- [`geom_seq()`](https://dangjem.github.io/ggchord/reference/geom_seq.md)
+  gains sequence-grouping support via `seq_group`, `seq_group_gap`,
+  `seq_group_labels`, `seq_group_label_radius` and `seq_group_colors`.
+  Groups can be taken from a `seq_group` column in `seq_data` or
+  supplied as a named/positional vector. An extra gap is inserted only
+  at boundaries between different groups, and optional group labels are
+  drawn at the angular midpoint of each group.
+
+- Group labels are rendered horizontally and keep their own internal
+  `zcolour` identity scale, so they do not interfere with the existing
+  Seq ID colour legend.
+  [`geom_seq()`](https://dangjem.github.io/ggchord/reference/geom_seq.md)
+  remains backward compatible and still returns a single layer; group
+  labels are appended lazily at build time.
+
+- [`plotly::ggplotly()`](https://rdrr.io/pkg/plotly/man/ggplotly.html)
+  and the layout data path now include group labels.
+
+### New features: ribbon visual mapping and direction (v0.9.0 scope, version kept at 0.8.0)
+
+- [`geom_ribbon()`](https://dangjem.github.io/ggchord/reference/geom_ribbon.md)
+  now supports `ribbon_color_by` (any numeric column mapped to a
+  continuous fill), `ribbon_color_limits`, `ribbon_color_breaks` and
+  `ribbon_color_name`, as well as `ribbon_alpha_by` /
+  `ribbon_alpha_range`.
+
+- `ribbon_outline_by` / `ribbon_outline_colors` and `ribbon_linetype_by`
+  / `ribbon_linetypes` map discrete columns to outline colour and
+  linetype using internal aesthetics that do not disturb the existing
+  Seq ID or Identity(%) legends.
+
+- `ribbon_direction` visually distinguishes same- vs reverse-orientation
+  alignments through alpha, outline colour or linetype.
+
+### New features: highlights and generic features (v0.9.0 scope)
+
+- New
+  [`geom_seq_region()`](https://dangjem.github.io/ggchord/reference/geom_seq_region.md)
+  draws user-defined bands along sequence arcs and supports `seq_id`,
+  `start`, `end`, optional `label`, `category` and `color`.
+
+- New
+  [`geom_ribbon_highlight()`](https://dangjem.github.io/ggchord/reference/geom_ribbon_highlight.md)
+  emphasizes selected ribbons using safe filters (`ribbon_ids`,
+  query/subject IDs, pident/length ranges, or a predicate function) and
+  reuses the computed ribbon geometry.
+
+- New
+  [`geom_feature()`](https://dangjem.github.io/ggchord/reference/geom_feature.md)
+  is a generic convenience wrapper around
+  [`geom_gene()`](https://dangjem.github.io/ggchord/reference/geom_gene.md)
+  for CDS, tRNA, rRNA, repeat, CRISPR, promoter and custom feature
+  tables.
+
 ## ggchord 0.7.0
 
 ### New features: structured data validation and cleaning

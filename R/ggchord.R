@@ -576,7 +576,11 @@ compute_chord_geometry <- function(plot) {
   gene_lrepel_seed  <- gene_repel_params$seed %||% 123
   gene_lrepel_orient <- gene_repel_params$gene_label_orientation %||% "horizontal"
   gene_lrepel_seg    <- gene_repel_params$gene_label_segment %||% "elbow"
-  gene_lrepel_side   <- gene_repel_params$gene_label_side %||% "outside"
+  gene_lrepel_side   <- if (gene_repel_layer) {
+    gene_repel_params$gene_label_side %||% "outside"
+  } else {
+    "auto"
+  }
   gene_lrepel_ltype  <- gene_repel_params$gene_label_segment_linetype %||% "auto"
 
   if (!gene_cs %in% c("strand", "manual")) {

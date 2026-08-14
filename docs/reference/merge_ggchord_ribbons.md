@@ -56,6 +56,7 @@ every output row).
 ## Examples
 
 ``` r
+library(ggchord)
 # Two adjacent, collinear blocks of the same pair -> one merged block
 rb <- data.frame(
   qaccver = c("A", "A"), saccver = c("B", "B"),

@@ -5,9 +5,8 @@ layered grammar. The `ggchord()` constructor handles data validation and
 global settings; the `geom_*` layers are stacked as needed, each
 responsible for its own layout parameters and visual rendering. The
 layout is computed lazily when the plot is built (e.g. via
-[`print()`](https://rdrr.io/r/base/print.html),
-[`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html), or
-[`ggplot_build()`](https://ggplot2.tidyverse.org/reference/ggplot_build.html)).
+[`print()`](https://rdrr.io/r/base/print.html), `ggsave()`, or
+`ggplot_build()`).
 
 ## Usage
 

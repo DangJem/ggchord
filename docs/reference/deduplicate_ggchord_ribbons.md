@@ -56,6 +56,7 @@ removed rows with `row`, `duplicate_of` and `reason`).
 ## Examples
 
 ``` r
+library(ggchord)
 data(ribbon_data_example)
 dup <- rbind(ribbon_data_example, ribbon_data_example[1, ])
 out <- deduplicate_ggchord_ribbons(dup, by = "exact")

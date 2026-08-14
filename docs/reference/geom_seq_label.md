@@ -10,7 +10,7 @@ rotation, font size, text orientation and justification.
 geom_seq_label(
   mapping = NULL,
   data = NULL,
-  seq_label_radius = NULL,
+  seq_label_radius = 1,
   seq_label_rotation = NULL,
   seq_label_size = NULL,
   seq_labels = NULL,
@@ -37,7 +37,8 @@ geom_seq_label(
 
   Optional numeric/vector. Radial position of the labels as a multiplier
   of the sequence arc radius: `1` is on the arc, `> 1` places the label
-  outside (away from the chord center, e.g. `1.15` = 15 (1.15)
+  outside (away from the chord center) and `< 1` places it inside,
+  default 1
 
 - seq_label_rotation:
 
@@ -65,9 +66,10 @@ geom_seq_label(
 - seq_label_hjust:
 
   Optional numeric/vector. Horizontal justification of the labels,
-  default NULL (0.5; with `seq_label_orientation = "horizontal"` the
-  justification is chosen automatically so the text extends away from
-  the chord center).
+  default NULL. The default arc orientation uses -0.2 so the text sits
+  just inside the sequence; with `seq_label_orientation = "horizontal"`
+  the justification is chosen automatically so the text extends away
+  from the chord center.
 
 - seq_label_vjust:
 
@@ -77,9 +79,7 @@ geom_seq_label(
 - check_overlap:
 
   Logical, default FALSE. When TRUE, labels that would overlap a
-  previously drawn label are skipped (ggplot2's
-  [`geom_text()`](https://ggplot2.tidyverse.org/reference/geom_text.html)
-  option).
+  previously drawn label are skipped (ggplot2's `geom_text()` option).
 
 - show_legend:
 
@@ -87,9 +87,17 @@ geom_seq_label(
 
 - ...:
 
-  Additional arguments passed to
-  [`geom_text()`](https://ggplot2.tidyverse.org/reference/geom_text.html)
+  Additional arguments passed to `geom_text()`
 
 ## Value
 
 A list of ggplot2 layers
+
+## Examples
+
+``` r
+library(ggchord)
+data(seq_data_example)
+p <- ggchord(seq_data_example) + geom_seq() + geom_seq_label()
+p
+```

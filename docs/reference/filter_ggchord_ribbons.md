@@ -92,6 +92,7 @@ removed_rows and kept_rows).
 ## Examples
 
 ``` r
+library(ggchord)
 data(ribbon_data_example)
 out <- filter_ggchord_ribbons(
   ribbon_data_example,

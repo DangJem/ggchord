@@ -16,8 +16,8 @@ expressiveness → ecosystem**.
 | Version | Theme | Status |
 |----|----|----|
 | v0.7.0 | Reliability: validation, cleaning, tests, visual regression | \[done\] |
-| v0.8.0 | Usability: import helpers, ribbon processing, sequence grouping | A/B/C \[done\], D \[designed\] |
-| v0.9.0 | Expressiveness: ribbon direction mapping, highlights, features, crowded layouts | designed |
+| v0.8.0 | Usability: import helpers, ribbon processing, sequence grouping | \[done\] |
+| v0.9.0 | Expressiveness: ribbon direction mapping, highlights, features, crowded layouts | A/B/C \[done\], D \[designed\] |
 | v1.0.0 | Ecosystem: Plotly, export, themes, documentation, stable API | designed |
 
 ------------------------------------------------------------------------
@@ -50,13 +50,13 @@ for malformed files.
 [`merge_ggchord_ribbons()`](https://dangjem.github.io/ggchord/reference/merge_ggchord_ribbons.md).
 All return `list(data, report)` and attach `source_rows` to `data`.
 
-### D. Sequence grouping (`seq_group`) \[designed\]
+### D. Sequence grouping (`seq_group`) \[done\]
 
 Goal: group sequences (host/phage, chromosome sets, sample groups) with
 visual separation: a larger inter-group gap, group labels and optional
 group colors, without changing the layered API.
 
-**Public API (draft):**
+**Public API:**
 
 ``` r
 
@@ -116,7 +116,7 @@ reproducible; group labels render; unknown group names error.
 
 ## v0.9.0 — Expressiveness & complex layouts
 
-### A. Ribbon direction & visual mapping \[designed\]
+### A. Ribbon direction & visual mapping \[done\]
 
 Extend
 [`geom_ribbon()`](https://dangjem.github.io/ggchord/reference/geom_ribbon.md)
@@ -170,7 +170,7 @@ geom_ribbon(
   titles correct; gene legend unchanged; plotly conversion does not
   error.
 
-### B. Highlight layers \[designed\]
+### B. Highlight layers \[done\]
 
 ``` r
 
@@ -231,10 +231,12 @@ geom_ribbon_highlight(
   (pre-mapped colors) and the visual-regression set. Empty matches
   return the empty placeholder → safe no-op.
 
-### C. Generic feature layer \[designed — keep geom_gene()\]
+### C. Generic feature layer \[done\] — keep geom_gene()
 
 [`geom_gene()`](https://dangjem.github.io/ggchord/reference/geom_gene.md)
-stays; `geom_feature()` is a generalization:
+stays;
+[`geom_feature()`](https://dangjem.github.io/ggchord/reference/geom_feature.md)
+is a generalization:
 
 ``` r
 
@@ -260,7 +262,7 @@ breaks. Tests:
 [`geom_gene()`](https://dangjem.github.io/ggchord/reference/geom_gene.md)
 output is byte-identical before/after the wrapper refactor.
 
-### D. Crowded layouts \[designed\]
+### D. Crowded layout \[designed\]
 
 - **Auto ring placement:** `geom_seq(seq_ring = "auto")` groups
   sequences into nested rings when `n` is large; each ring gets its own

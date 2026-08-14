@@ -97,3 +97,12 @@ geom_axis(
 ## Value
 
 A list of ggplot2 layers
+
+## Examples
+
+``` r
+library(ggchord)
+data(seq_data_example)
+p <- ggchord(seq_data_example) + geom_seq() + geom_axis()
+p
+```

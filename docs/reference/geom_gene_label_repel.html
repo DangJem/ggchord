@@ -46,7 +46,7 @@ that still overlap too many others can be hidden."></head><body>
     <div class="ref-description section level2">
     <p>Like <code><a href="geom_gene_label.html">geom_gene_label()</a></code>, but the labels are placed with a
 force-based simulation that pushes them away from the genes and from each
-other (similar to <code><a href="https://rdrr.io/pkg/ggrepel/man/geom_text_repel.html" class="external-link">ggrepel::geom_text_repel()</a></code>). Labels that move far
+other (similar to <code><a href="https://ggrepel.slowkow.com/reference/geom_text_repel.html" class="external-link">ggrepel::geom_text_repel()</a></code>). Labels that move far
 enough from their anchor are connected to it with a leader line, and labels
 that still overlap too many others can be hidden.</p>
     </div>
@@ -68,9 +68,9 @@ that still overlap too many others can be hidden.</p>
 <span>  min_segment_length <span class="op">=</span> <span class="fl">0.05</span>,</span>
 <span>  force <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  seed <span class="op">=</span> <span class="fl">123</span>,</span>
-<span>  gene_label_orientation <span class="op">=</span> <span class="st">"arc"</span>,</span>
-<span>  gene_label_segment <span class="op">=</span> <span class="st">"line"</span>,</span>
-<span>  gene_label_side <span class="op">=</span> <span class="st">"auto"</span>,</span>
+<span>  gene_label_orientation <span class="op">=</span> <span class="st">"horizontal"</span>,</span>
+<span>  gene_label_segment <span class="op">=</span> <span class="st">"elbow"</span>,</span>
+<span>  gene_label_side <span class="op">=</span> <span class="st">"outside"</span>,</span>
 <span>  gene_label_segment_linetype <span class="op">=</span> <span class="st">"auto"</span>,</span>
 <span>  show_legend <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  <span class="va">...</span></span>
@@ -145,13 +145,13 @@ Keep it small so that every label is connected to its gene.</p></dd>
 
 
 <dt id="arg-gene-label-orientation">gene_label_orientation<a class="anchor" aria-label="anchor" href="#arg-gene-label-orientation"></a></dt>
-<dd><p>Character, default "arc". One of
+<dd><p>Character, default "horizontal". One of
 <code>"arc"</code> (text rotated along the sequence arc) or <code>"horizontal"</code>
 (all labels are drawn horizontally).</p></dd>
 
 
 <dt id="arg-gene-label-segment">gene_label_segment<a class="anchor" aria-label="anchor" href="#arg-gene-label-segment"></a></dt>
-<dd><p>Character, default "line". Leader line style: a
+<dd><p>Character, default "elbow". Leader line style: a
 straight <code>"line"</code> from the gene to the label, or an L-shaped
 <code>"elbow"</code> (a short segment outward, then a horizontal segment to the
 label). Elbow segment lengths adapt to each label's position and text
@@ -159,8 +159,8 @@ width, so labels can be placed freely.</p></dd>
 
 
 <dt id="arg-gene-label-side">gene_label_side<a class="anchor" aria-label="anchor" href="#arg-gene-label-side"></a></dt>
-<dd><p>Character, default "auto". Which side of the arc the
-labels sit on. <code>"auto"</code> keeps the strand-based placement
+<dd><p>Character, default "outside". Which side of the arc
+the labels sit on. <code>"auto"</code> keeps the strand-based placement
 (same as before); <code>"outside"</code> moves labels that would be inside the
 chord (where they can overlap the ribbons) to the outside of their arc;
 <code>"inside"</code> does the opposite. Labels moved to the other side are
