@@ -437,10 +437,6 @@ ggchord_repel_labels <- function(gl, units_per_inch = 0.35,
   x_lim <- range(ax) + c(-1, 1) * (max(bw) + 1.5)
   y_lim <- range(ay) + c(-1, 1) * (max(bh) + 1.5)
 
-  closest_point_on_rect <- function(px, py, xmin, ymin, xmax, ymax) {
-    c(pmin(pmax(px, xmin), xmax), pmin(pmax(py, ymin), ymax))
-  }
-
   for (iter in seq_len(300)) {
     fx <- numeric(n)
     fy <- numeric(n)
@@ -486,34 +482,37 @@ ggchord_repel_labels <- function(gl, units_per_inch = 0.35,
     if (n_boxes > 0) {
       cutoff_box <- point_padding + 0.25
       for (i in seq_len(n)) {
-        for (k in seq_len(n_boxes)) {
-          cp <- closest_point_on_rect(x[i], y[i],
-                                      ob$xmin[k], ob$ymin[k],
-                                      ob$xmax[k], ob$ymax[k])
-          dx <- x[i] - cp[1]
-          dy <- y[i] - cp[2]
-          d <- sqrt(dx^2 + dy^2)
-          if (d < 1e-4) {
+        cx <- pmin(pmax(x[i], ob$xmin), ob$xmax)
+        cy <- pmin(pmax(y[i], ob$ymin), ob$ymax)
+        dx <- x[i] - cx
+        dy <- y[i] - cy
+        d <- sqrt(dx^2 + dy^2)
+
+        outside <- d >= 1e-4 & d < cutoff_box
+        if (any(outside)) {
+          dd <- d[outside]
+          f <- force * 0.10 * (1 - dd / cutoff_box)
+          fx[i] <- fx[i] + sum(f * dx[outside] / dd)
+          fy[i] <- fy[i] + sum(f * dy[outside] / dd)
+        }
+
+        inside <- d < 1e-4
+        if (any(inside)) {
+          for (k in which(inside)) {
             left <- x[i] - ob$xmin[k]
             right <- ob$xmax[k] - x[i]
             bottom <- y[i] - ob$ymin[k]
             top <- ob$ymax[k] - y[i]
             m <- min(left, right, bottom, top)
             if (identical(m, left)) {
-              dx <- -1; dy <- 0
+              fx[i] <- fx[i] - force * 0.12
             } else if (identical(m, right)) {
-              dx <- 1; dy <- 0
+              fx[i] <- fx[i] + force * 0.12
             } else if (identical(m, bottom)) {
-              dx <- 0; dy <- -1
+              fy[i] <- fy[i] - force * 0.12
             } else {
-              dx <- 0; dy <- 1
+              fy[i] <- fy[i] + force * 0.12
             }
-            fx[i] <- fx[i] + force * 0.12 * dx
-            fy[i] <- fy[i] + force * 0.12 * dy
-          } else if (d < cutoff_box) {
-            f <- force * 0.10 * (1 - d / cutoff_box)
-            fx[i] <- fx[i] + f * dx / d
-            fy[i] <- fy[i] + f * dy / d
           }
         }
       }
