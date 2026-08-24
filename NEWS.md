@@ -1,21 +1,102 @@
 # ggchord 0.8.0
 
-* Improved label defaults: `geom_seq_label()` places sequence names on the
-  arc, `geom_gene_label()` sits beside gene arrows, and
-  `geom_gene_label_repel()` uses horizontal labels, elbow leader lines and
-  outside placement with better overlap avoidance.
+## New features: improved label placement and de-overlap
 
-* Plot limits now fit the rendered text boxes, reducing empty margins.
+* `geom_seq_label()` now places sequence names on the arc by default
+  (`seq_label_radius = 1`) and rotates them along the arc while keeping them
+  readable; `seq_label_orientation = "horizontal"` draws every label
+  horizontally, extending away from the chord centre.
 
-* `geom_seq()` supports sequence grouping via `seq_group`, including
-  optional group labels and inter-group gaps.
+* `geom_gene_label()` now sits right beside the gene arrows by default
+  (`gene_label_radial_offset = 0.04`) and gains `gene_label_wrap` for
+  wrapping long annotations into narrower, less overlapping labels.
 
-* `geom_ribbon()` adds numeric and discrete visual mappings
-  (`ribbon_color_by`, `ribbon_alpha_by`, `ribbon_outline_by`,
-  `ribbon_linetype_by`, `ribbon_direction`).
+* `geom_gene_label_repel()` now defaults to `gene_label_orientation =
+  "horizontal"`, `gene_label_segment = "elbow"` (an L-shaped leader line that
+  adapts to each label's position and text width) and `gene_label_side =
+  "outside"`, so labels stay readable and out of the ribbon area. A
+  deterministic final de-overlap pass measures the exact rendered text boxes
+  and treats the sequence, group and axis labels as hard rectangular
+  obstacles; `max_overlaps` hides labels that still collide after repulsion
+  (ggrepel-style decluttering).
 
-* New `geom_seq_region()`, `geom_ribbon_highlight()` and `geom_feature()`
-  layers for regions, ribbon highlighting and generic features.
+* The label text-box projection is now shared by the repulsion solver, the
+  obstacle boxes and the coordinate limits, so all three agree on where text
+  will actually be drawn.
+
+## New features: adaptive plot limits
+
+* Plot limits now fit the rendered text boxes instead of adding one global
+  text-width pad on every side. The actual gene/sequence/group/axis label
+  boxes are measured and only the sides that need it are expanded, reducing
+  empty margins and using the panel area more efficiently.
+
+## New features: sequence grouping
+
+* `geom_seq()` gains sequence-grouping support via `seq_group`,
+  `seq_group_gap`, `seq_group_labels`, `seq_group_label_radius` and
+  `seq_group_colors`. Groups can come from a `seq_group` column in `seq_data`
+  or be supplied as a single value, a named/positional vector, or a list.
+
+* An extra inter-group gap (`seq_group_gap`) is inserted only at boundaries
+  between different groups, and optional group labels are drawn at the
+  angular midpoint of each group, at a customisable radius.
+
+* Group labels are rendered horizontally and use their own internal
+  `zcolour` identity scale, so they never interfere with the Seq ID colour
+  legend. `geom_seq()` stays backward compatible and still returns a single
+  layer; group labels are appended lazily at build time.
+
+* `plotly::ggplotly()` and the layout-data path now include the group labels.
+
+## New features: ribbon visual mappings and direction
+
+* `geom_ribbon()` can now map any numeric column to a continuous fill via
+  `ribbon_color_by` (for example `"bitscore"` instead of `pident`), with
+  `ribbon_color_limits`, `ribbon_color_breaks` and `ribbon_color_name` to
+  control the colourbar.
+
+* `ribbon_alpha_by` / `ribbon_alpha_range` scale ribbon transparency
+  continuously from a numeric column.
+
+* `ribbon_outline_by` / `ribbon_outline_colors` and `ribbon_linetype_by` /
+  `ribbon_linetypes` map discrete columns to outline colour and linetype
+  using internal aesthetics, without disturbing the Seq ID or Identity(%)
+  legends.
+
+* `ribbon_direction` (one of `"none"`, `"alpha"`, `"outline"` or
+  `"linetype"`) visually distinguishes same- vs reverse-orientation
+  alignments, with `ribbon_direction_colors`, `ribbon_direction_linetypes`
+  and `ribbon_direction_alpha` for fine control.
+
+* `legend_key_width` / `legend_key_height` control the size of the Identity(%)
+  colourbar key.
+
+## New features: highlights and generic features
+
+* New `geom_seq_region()` draws rectangular bands along sequence arcs to mark
+  loci, repeats, CRISPR arrays or other user-defined intervals. It accepts
+  `seq_id`, `start` and `end` (plus optional `label`, `category` and `color`)
+  and exposes `region_fill`, `region_color`, `region_alpha`, `region_width`,
+  `region_offset` and `region_side`.
+
+* New `geom_ribbon_highlight()` emphasizes selected ribbons without changing
+  the underlying Identity(%) legend. Selection uses safe, explicit filters
+  (`ribbon_ids`, query/subject IDs, pident/length ranges, or a predicate
+  function) and reuses the computed ribbon geometry.
+
+* New `geom_feature()` is a thin, backwards-compatible convenience layer for
+  CDS, tRNA, rRNA, repeat, CRISPR, promoter and custom feature tables; it
+  prepares a gene-compatible table and reuses `geom_gene()`'s geometry and
+  scales, with `feature_colors`, `feature_width`, `feature_offset` and
+  `feature_order` for styling.
+
+## Documentation
+
+* Added man pages and runnable examples for the new layers
+  (`geom_seq_region()`, `geom_ribbon_highlight()`, `geom_feature()`) and
+  expanded the documentation for the updated `geom_seq()`, `geom_ribbon()`,
+  `geom_seq_label()` and `geom_gene_label_repel()` parameters.
 
 # ggchord 0.7.0
 

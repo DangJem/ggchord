@@ -36,12 +36,42 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.8.0" id="ggchord-080">ggchord 0.8.0<a class="anchor" aria-label="anchor" href="#ggchord-080"></a></h2>
-<ul><li><p>Improved label defaults: <code><a href="../reference/geom_seq_label.html">geom_seq_label()</a></code> places sequence names on the arc, <code><a href="../reference/geom_gene_label.html">geom_gene_label()</a></code> sits beside gene arrows, and <code><a href="../reference/geom_gene_label_repel.html">geom_gene_label_repel()</a></code> uses horizontal labels, elbow leader lines and outside placement with better overlap avoidance.</p></li>
-<li><p>Plot limits now fit the rendered text boxes, reducing empty margins.</p></li>
-<li><p><code><a href="../reference/geom_seq.html">geom_seq()</a></code> supports sequence grouping via <code>seq_group</code>, including optional group labels and inter-group gaps.</p></li>
-<li><p><code><a href="../reference/geom_ribbon.html">geom_ribbon()</a></code> adds numeric and discrete visual mappings (<code>ribbon_color_by</code>, <code>ribbon_alpha_by</code>, <code>ribbon_outline_by</code>, <code>ribbon_linetype_by</code>, <code>ribbon_direction</code>).</p></li>
-<li><p>New <code><a href="../reference/geom_seq_region.html">geom_seq_region()</a></code>, <code><a href="../reference/geom_ribbon_highlight.html">geom_ribbon_highlight()</a></code> and <code><a href="../reference/geom_feature.html">geom_feature()</a></code> layers for regions, ribbon highlighting and generic features.</p></li>
-</ul>
+<div class="section level3">
+<h3 id="new-features-improved-label-placement-and-de-overlap-0-8-0">New features: improved label placement and de-overlap<a class="anchor" aria-label="anchor" href="#new-features-improved-label-placement-and-de-overlap-0-8-0"></a></h3>
+<ul><li><p><code><a href="../reference/geom_seq_label.html">geom_seq_label()</a></code> now places sequence names on the arc by default (<code>seq_label_radius = 1</code>) and rotates them along the arc while keeping them readable; <code>seq_label_orientation = "horizontal"</code> draws every label horizontally, extending away from the chord centre.</p></li>
+<li><p><code><a href="../reference/geom_gene_label.html">geom_gene_label()</a></code> now sits right beside the gene arrows by default (<code>gene_label_radial_offset = 0.04</code>) and gains <code>gene_label_wrap</code> for wrapping long annotations into narrower, less overlapping labels.</p></li>
+<li><p><code><a href="../reference/geom_gene_label_repel.html">geom_gene_label_repel()</a></code> now defaults to <code>gene_label_orientation = "horizontal"</code>, <code>gene_label_segment = "elbow"</code> (an L-shaped leader line that adapts to each label's position and text width) and <code>gene_label_side = "outside"</code>, so labels stay readable and out of the ribbon area. A deterministic final de-overlap pass measures the exact rendered text boxes and treats the sequence, group and axis labels as hard rectangular obstacles; <code>max_overlaps</code> hides labels that still collide after repulsion (ggrepel-style decluttering).</p></li>
+<li><p>The label text-box projection is now shared by the repulsion solver, the obstacle boxes and the coordinate limits, so all three agree on where text will actually be drawn.</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="new-features-adaptive-plot-limits-0-8-0">New features: adaptive plot limits<a class="anchor" aria-label="anchor" href="#new-features-adaptive-plot-limits-0-8-0"></a></h3>
+<ul><li><p>Plot limits now fit the rendered text boxes instead of adding one global text-width pad on every side. The actual gene/sequence/group/axis label boxes are measured and only the sides that need it are expanded, reducing empty margins and using the panel area more efficiently.</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="new-features-sequence-grouping-0-8-0">New features: sequence grouping<a class="anchor" aria-label="anchor" href="#new-features-sequence-grouping-0-8-0"></a></h3>
+<ul><li><p><code><a href="../reference/geom_seq.html">geom_seq()</a></code> gains sequence-grouping support via <code>seq_group</code>, <code>seq_group_gap</code>, <code>seq_group_labels</code>, <code>seq_group_label_radius</code> and <code>seq_group_colors</code>. Groups can come from a <code>seq_group</code> column in <code>seq_data</code> or be supplied as a single value, a named/positional vector, or a list.</p></li>
+<li><p>An extra inter-group gap (<code>seq_group_gap</code>) is inserted only at boundaries between different groups, and optional group labels are drawn at the angular midpoint of each group, at a customisable radius.</p></li>
+<li><p>Group labels are rendered horizontally and use their own internal <code>zcolour</code> identity scale, so they never interfere with the Seq ID colour legend. <code><a href="../reference/geom_seq.html">geom_seq()</a></code> stays backward compatible and still returns a single layer; group labels are appended lazily at build time.</p></li>
+<li><p><code><a href="https://rdrr.io/pkg/plotly/man/ggplotly.html" class="external-link">plotly::ggplotly()</a></code> and the layout-data path now include the group labels.</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="new-features-ribbon-visual-mappings-and-direction-0-8-0">New features: ribbon visual mappings and direction<a class="anchor" aria-label="anchor" href="#new-features-ribbon-visual-mappings-and-direction-0-8-0"></a></h3>
+<ul><li><p><code><a href="../reference/geom_ribbon.html">geom_ribbon()</a></code> can now map any numeric column to a continuous fill via <code>ribbon_color_by</code> (for example <code>"bitscore"</code> instead of <code>pident</code>), with <code>ribbon_color_limits</code>, <code>ribbon_color_breaks</code> and <code>ribbon_color_name</code> to control the colourbar.</p></li>
+<li><p><code>ribbon_alpha_by</code> / <code>ribbon_alpha_range</code> scale ribbon transparency continuously from a numeric column.</p></li>
+<li><p><code>ribbon_outline_by</code> / <code>ribbon_outline_colors</code> and <code>ribbon_linetype_by</code> / <code>ribbon_linetypes</code> map discrete columns to outline colour and linetype using internal aesthetics, without disturbing the Seq ID or Identity(%) legends.</p></li>
+<li><p><code>ribbon_direction</code> (one of <code>"none"</code>, <code>"alpha"</code>, <code>"outline"</code> or <code>"linetype"</code>) visually distinguishes same- vs reverse-orientation alignments, with <code>ribbon_direction_colors</code>, <code>ribbon_direction_linetypes</code> and <code>ribbon_direction_alpha</code> for fine control.</p></li>
+<li><p><code>legend_key_width</code> / <code>legend_key_height</code> control the size of the Identity(%) colourbar key.</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="new-features-highlights-and-generic-features-0-8-0">New features: highlights and generic features<a class="anchor" aria-label="anchor" href="#new-features-highlights-and-generic-features-0-8-0"></a></h3>
+<ul><li><p>New <code><a href="../reference/geom_seq_region.html">geom_seq_region()</a></code> draws rectangular bands along sequence arcs to mark loci, repeats, CRISPR arrays or other user-defined intervals. It accepts <code>seq_id</code>, <code>start</code> and <code>end</code> (plus optional <code>label</code>, <code>category</code> and <code>color</code>) and exposes <code>region_fill</code>, <code>region_color</code>, <code>region_alpha</code>, <code>region_width</code>, <code>region_offset</code> and <code>region_side</code>.</p></li>
+<li><p>New <code><a href="../reference/geom_ribbon_highlight.html">geom_ribbon_highlight()</a></code> emphasizes selected ribbons without changing the underlying Identity(%) legend. Selection uses safe, explicit filters (<code>ribbon_ids</code>, query/subject IDs, pident/length ranges, or a predicate function) and reuses the computed ribbon geometry.</p></li>
+<li><p>New <code><a href="../reference/geom_feature.html">geom_feature()</a></code> is a thin, backwards-compatible convenience layer for CDS, tRNA, rRNA, repeat, CRISPR, promoter and custom feature tables; it prepares a gene-compatible table and reuses <code><a href="../reference/geom_gene.html">geom_gene()</a></code>'s geometry and scales, with <code>feature_colors</code>, <code>feature_width</code>, <code>feature_offset</code> and <code>feature_order</code> for styling.</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="documentation-0-8-0">Documentation<a class="anchor" aria-label="anchor" href="#documentation-0-8-0"></a></h3>
+<ul><li><p>Added man pages and runnable examples for the new layers (<code><a href="../reference/geom_seq_region.html">geom_seq_region()</a></code>, <code><a href="../reference/geom_ribbon_highlight.html">geom_ribbon_highlight()</a></code>, <code><a href="../reference/geom_feature.html">geom_feature()</a></code>) and expanded the documentation for the updated <code><a href="../reference/geom_seq.html">geom_seq()</a></code>, <code><a href="../reference/geom_ribbon.html">geom_ribbon()</a></code>, <code><a href="../reference/geom_seq_label.html">geom_seq_label()</a></code> and <code><a href="../reference/geom_gene_label_repel.html">geom_gene_label_repel()</a></code> parameters.</p></li>
+</ul></div>
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.7.0" id="ggchord-070">ggchord 0.7.0<a class="anchor" aria-label="anchor" href="#ggchord-070"></a></h2>

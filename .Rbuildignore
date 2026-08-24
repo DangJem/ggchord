@@ -11,3 +11,4 @@
 ^.Rhistory$
 ^.github$
 ^DESIGN-ROADMAP\.md$
+^\.codex-tmp$
