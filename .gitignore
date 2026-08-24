@@ -5,3 +5,8 @@
 inst/doc
 R/.Rhistory
 .gitignore
+
+# Ignore all hidden directories (e.g. .codex-tmp, .idea, .vscode)
+.*/
+!.github/
+!.github/**
