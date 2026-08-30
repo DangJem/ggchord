@@ -10,7 +10,7 @@
 # ---------------------------------------------------------------------------
 rename_text_colour_geom <- function(geom = ggplot2::GeomText,
                                     old_aes = "colour",
-                                    new_aes = "zcolour") {
+                                    new_aes = "group_colour") {
   new_geom <- ggplot2::ggproto(
     paste0("GeomChord", sub("^Geom", "", class(geom)[1])), geom
   )
@@ -33,6 +33,7 @@ rename_text_colour_geom <- function(geom = ggplot2::GeomText,
 }
 
 seq_group_label_geom <- rename_text_colour_geom()
+seq_geom <- rename_geom_aes(GeomPath, renames = c(colour = "seq_colour"))
 
 #' Add a sequence arc layer
 #'
@@ -116,12 +117,12 @@ geom_seq <- function(mapping = NULL, data = NULL,
   lyr <- ggplot2::layer(
     data        = data.frame(x = numeric(0), y = numeric(0),
                              seq_id = character(0)),
-    mapping     = aes(x = x, y = y, group = seq_id, color = seq_id),
+    mapping     = aes(x = x, y = y, group = seq_id, seq_colour = seq_id),
     stat        = "identity",
-    geom        = GeomPath,
+    geom        = seq_geom,
     position    = "identity",
     show.legend = if (identical(show_legend, TRUE)) {
-                    c(colour = TRUE, fill = FALSE)
+                    c(seq_colour = TRUE, fill = FALSE)
                   } else show_legend,
     inherit.aes = FALSE,
     check.param = FALSE,
@@ -152,6 +153,15 @@ geom_seq <- function(mapping = NULL, data = NULL,
   lyr <- ggchord_capture_layer_input(
     lyr, data, mapping, c("seq_id", "length", "seq_group")
   )
+  lyr <- ggchord_add_legacy_scale(
+    lyr, !missing(seq_colors) && !is.null(seq_colors), "seq_colors",
+    "seq_colour", "scale_seq_colour_manual(values = ...)"
+  )
+  lyr <- ggchord_add_legacy_scale(
+    lyr, !missing(seq_group_colors) && !is.null(seq_group_colors),
+    "seq_group_colors", "group_colour",
+    "scale_group_colour_manual(values = ...)"
+  )
 
   list(lyr)
 }
@@ -168,7 +178,7 @@ ggchord_group_label_layer <- function(group_labels) {
     data = group_labels,
     mapping = aes(x = text_x, y = text_y, label = label,
                   angle = text_angle, hjust = hjust, vjust = vjust,
-                  size = size, zcolour = zcolour),
+                  size = size, group_colour = zcolour),
     stat = "identity",
     geom = seq_group_label_geom,
     position = "identity",

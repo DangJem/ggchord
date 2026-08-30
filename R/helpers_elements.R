@@ -154,6 +154,7 @@ draw_key_gene_arrow <- function(data, params, size) {
 #' from mixing unrelated layers into other legends with default grey/black symbols).
 #' @keywords internal
 key_glyph_seq <- function(data, params, size) {
+  data$colour <- data$seq_colour %||% data$colour
   if (is.null(data$colour)) return(zeroGrob())
   draw_key_path(data, params, size)
 }
@@ -163,6 +164,9 @@ key_glyph_seq <- function(data, params, size) {
 #' Draws the polygon symbol only when the key data contains fill; otherwise returns a blank.
 #' @keywords internal
 key_glyph_ribbon <- function(data, params, size) {
+  data$fill <- data$ribbon_fill %||% data$fill
+  data$colour <- data$ribbon_colour %||% data$colour
+  data$alpha <- data$ribbon_alpha %||% data$alpha
   if (is.null(data$fill)) return(zeroGrob())
   draw_key_polygon(data, params, size)
 }
@@ -172,6 +176,7 @@ key_glyph_ribbon <- function(data, params, size) {
 #' Draws the gene arrow only when the key data contains fill; otherwise returns a blank.
 #' @keywords internal
 key_glyph_gene <- function(data, params, size) {
+  data$fill <- data$gene_fill %||% data$feature_fill %||% data$fill
   if (is.null(data$fill)) return(zeroGrob())
   draw_key_gene_arrow(data, params, size)
 }

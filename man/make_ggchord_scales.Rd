@@ -8,6 +8,7 @@ make_ggchord_scales(
   layout,
   has_seq = FALSE,
   has_gene = FALSE,
+  has_feature = FALSE,
   legend_position = NULL,
   legend_box = NULL,
   positions = list(),

@@ -29,6 +29,7 @@ test_that("the main plotting layers build together", {
     geom_seq() +
     geom_ribbon() +
     geom_gene() +
+    geom_axis() +
     geom_gene_label() +
     geom_seq_label() +
     geom_axis()
@@ -143,12 +144,12 @@ test_that("same-type layers keep independent data and mapped columns", {
     geom_gene(
       data = first,
       mapping = aes(seq_id = chromosome, start = from, end = to,
-                    strand = direction, anno = category, fill = category),
-      gene_color_scheme = "manual"
+                    strand = direction, anno = category,
+                    gene_fill = category)
     ) +
-    geom_gene(data = second, gene_color_scheme = "manual") +
-    geom_seq_region(data = r1, mapping = aes(zregionfill = category)) +
-    geom_seq_region(data = r2, mapping = aes(zregionfill = category))
+    geom_gene(data = second, mapping = aes(gene_fill = anno)) +
+    geom_seq_region(data = r1, mapping = aes(region_fill = category)) +
+    geom_seq_region(data = r2, mapping = aes(region_fill = category))
 
   expect_s3_class(build_ggchord_smoke(p), "ggplot_built")
   layout <- get_chord_layout(p, build = FALSE)
@@ -198,7 +199,7 @@ test_that("sequence, ribbon, axis and label data mappings are honoured", {
       data = ribbons,
       mapping = aes(qaccver = query, saccver = subject, length = span,
                     pident = identity, qstart = q_from, qend = q_to,
-                    sstart = s_from, send = s_to, alpha = score)
+                    sstart = s_from, send = s_to, ribbon_alpha = score)
     ) +
     geom_seq_label(data = seq_subset) +
     geom_axis(data = seq_subset)
@@ -213,4 +214,56 @@ test_that("sequence, ribbon, axis and label data mappings are honoured", {
   ))]]$ggchord_layer_id
   expect_equal(unique(layout$layer_geometry[[ribbon_id]]$ribbon$score), 0.6)
   expect_equal(unique(layout$layer_geometry[[label_id]]$seq_label$seq_id), "A")
+})
+
+test_that("role-specific scales coexist without replacing one another", {
+  data(seq_data_example)
+  data(ribbon_data_example)
+  data(gene_data_example)
+  region <- data.frame(
+    seq_id = seq_data_example$seq_id[1], start = 100, end = 500,
+    category = "focus"
+  )
+  seq_values <- stats::setNames(
+    rep_len(c("#0072B2", "#D55E00"), nrow(seq_data_example)),
+    seq_data_example$seq_id
+  )
+  p <- ggchord(
+    seq_data_example, ribbon_data_example, gene_data_example,
+    validate = "none"
+  ) +
+    geom_seq() +
+    geom_ribbon() +
+    geom_gene() +
+    geom_seq_region(
+      data = region, mapping = aes(region_fill = category), show_legend = TRUE
+    ) +
+    scale_seq_colour_manual(values = seq_values) +
+    scale_ribbon_fill_gradientn(colours = c("#F7FBFF", "#08306B")) +
+    scale_gene_fill_manual(values = c("+" = "#D55E00", "-" = "#0072B2")) +
+    scale_region_fill_manual(values = c(focus = "#E69F00")) +
+    scale_seq_position_continuous(
+      breaks = c(0, 100), labels = c("start", "100 bp")
+    )
+
+  expect_true(all(vapply(
+    c("seq_colour", "ribbon_fill", "gene_fill", "region_fill", "seq_position"),
+    p$scales$has_scale, logical(1)
+  )))
+  expect_s3_class(build_ggchord_smoke(p), "ggplot_built")
+  axis_labels <- unique(stats::na.omit(get_chord_layout(p, FALSE)$axis_ticks$label))
+  expect_true(all(c("start", "100 bp") %in% axis_labels))
+  expect_s3_class(scale_seq_position_continuous(), "ScaleContinuous")
+})
+
+test_that("legacy scale arguments warn and conflict with role scales", {
+  seq <- data.frame(seq_id = c("A", "B"), length = c(100, 100))
+  old <- ggchord(seq, validate = "none") +
+    geom_seq(seq_colors = c(A = "red", B = "blue"))
+  expect_warning(build_ggchord_smoke(old), "seq_colors.*deprecated")
+
+  conflict <- old + scale_seq_colour_manual(
+    values = c(A = "black", B = "grey50")
+  )
+  expect_error(build_ggchord_smoke(conflict), "conflicts.*seq_colour")
 })

@@ -8,45 +8,16 @@
 # scales are independent from the gene layer's plain "fill" scale and from the
 # sequence layer's plain "colour" scale.
 # ---------------------------------------------------------------------------
-rename_geom_aes <- function(geom = GeomPolygon,
-                            renames = c(fill = "zfill",
-                                        colour = "zoutline",
-                                        linetype = "zlinetype")) {
-  new_geom <- ggplot2::ggproto(
-    paste0("GeomChord", sub("^Geom", "", class(geom)[1])), geom
-  )
-
-  aes_names <- names(new_geom$default_aes)
-  for (old in names(renames)) {
-    aes_names[aes_names == old] <- renames[[old]]
-  }
-  names(new_geom$default_aes) <- aes_names
-
-  old_handle_na <- geom$handle_na
-  new_geom$handle_na <- function(self, data, params) {
-    for (old in names(renames)) {
-      colnames(data)[colnames(data) == renames[[old]]] <- old
-    }
-    old_handle_na(data, params)
-  }
-  old_draw_key <- geom$draw_key
-  new_geom$draw_key <- function(data, params, size) {
-    for (old in names(renames)) {
-      colnames(data)[colnames(data) == renames[[old]]] <- old
-    }
-    old_draw_key(data, params, size)
-  }
-  new_geom
-}
-
 # The geom used by the ribbon layer; fill is exposed as "zfill" so that the
 # ribbon and gene layers keep independent fill scales.
-ribbon_geom <- rename_geom_aes(GeomPolygon, renames = c(fill = "zfill"))
+ribbon_geom <- rename_geom_aes(
+  GeomPolygon, renames = c(fill = "ribbon_fill", alpha = "ribbon_alpha")
+)
 
 make_ribbon_geom <- function(outline = FALSE, linetype = FALSE) {
-  renames <- c(fill = "zfill")
-  if (isTRUE(outline)) renames <- c(renames, colour = "zoutline")
-  if (isTRUE(linetype)) renames <- c(renames, linetype = "zlinetype")
+  renames <- c(fill = "ribbon_fill", alpha = "ribbon_alpha")
+  if (isTRUE(outline)) renames <- c(renames, colour = "ribbon_colour")
+  if (isTRUE(linetype)) renames <- c(renames, linetype = "ribbon_linetype")
   rename_geom_aes(GeomPolygon, renames = renames)
 }
 
@@ -160,8 +131,12 @@ geom_ribbon <- function(mapping = NULL, data = NULL,
   # Determine the fill aesthetic early: the real geometry is injected at build
   # time, but the mapping must already use the correct data column.
   scheme <- if (!is.null(ribbon_color_by)) "value" else ribbon_color_scheme %||% "pident"
-  outline_mapped <- !is.null(ribbon_outline_by) || identical(ribbon_direction, "outline")
-  linetype_mapped <- !is.null(ribbon_linetype_by) || identical(ribbon_direction, "linetype")
+  outline_mapped <- !is.null(ribbon_outline_by) ||
+    identical(ribbon_direction, "outline") ||
+    (!is.null(mapping) && "ribbon_colour" %in% names(mapping))
+  linetype_mapped <- !is.null(ribbon_linetype_by) ||
+    identical(ribbon_direction, "linetype") ||
+    (!is.null(mapping) && "ribbon_linetype" %in% names(mapping))
 
   empty_polys <- data.frame(
     x = numeric(0), y = numeric(0),
@@ -183,10 +158,10 @@ geom_ribbon <- function(mapping = NULL, data = NULL,
     fill_mapping <- aes(fill = fill)
   }
 
-  mapping_base <- aes(x = x, y = y, group = group, alpha = alpha)
-  mapping_base[["fill"]] <- fill_mapping$fill
-  if (isTRUE(outline_mapped)) mapping_base[["zoutline"]] <- as.name("outline_col")
-  if (isTRUE(linetype_mapped)) mapping_base[["zlinetype"]] <- as.name("linetype_val")
+  mapping_base <- aes(x = x, y = y, group = group, ribbon_alpha = alpha)
+  mapping_base[["ribbon_fill"]] <- fill_mapping$fill
+  if (isTRUE(outline_mapped)) mapping_base[["ribbon_colour"]] <- as.name("outline_col")
+  if (isTRUE(linetype_mapped)) mapping_base[["ribbon_linetype"]] <- as.name("linetype_val")
 
   outline_params <- list()
   if (!outline_mapped) {
@@ -202,7 +177,8 @@ geom_ribbon <- function(mapping = NULL, data = NULL,
     geom        = make_ribbon_geom(outline = outline_mapped, linetype = linetype_mapped),
     position    = "identity",
     show.legend = if (identical(show_legend, TRUE)) {
-                    c(fill = TRUE, colour = FALSE, linetype = FALSE)
+                    c(ribbon_fill = TRUE, ribbon_colour = FALSE,
+                      ribbon_linetype = FALSE)
                   } else show_legend,
     inherit.aes = FALSE,
     check.aes   = FALSE,
@@ -243,6 +219,59 @@ geom_ribbon <- function(mapping = NULL, data = NULL,
     lyr, data, mapping,
     c("qaccver", "saccver", "length", "pident", "qstart", "qend",
       "sstart", "send")
+  )
+  legacy <- list(
+    c("ribbon_color_scheme", "ribbon_fill", "aes(ribbon_fill = ...)",
+      !missing(ribbon_color_scheme) && !is.null(ribbon_color_scheme)),
+    c("ribbon_colors", "ribbon_fill", "scale_ribbon_fill_*()",
+      !missing(ribbon_colors) && !is.null(ribbon_colors)),
+    c("ribbon_color_by", "ribbon_fill", "aes(ribbon_fill = ...)",
+      !missing(ribbon_color_by) && !is.null(ribbon_color_by)),
+    c("ribbon_color_limits", "ribbon_fill", "scale_ribbon_fill_*(limits = ...)",
+      !missing(ribbon_color_limits) && !is.null(ribbon_color_limits)),
+    c("ribbon_color_breaks", "ribbon_fill", "scale_ribbon_fill_*(breaks = ...)",
+      !missing(ribbon_color_breaks) && !is.null(ribbon_color_breaks)),
+    c("ribbon_color_name", "ribbon_fill", "scale_ribbon_fill_*(name = ...)",
+      !missing(ribbon_color_name) && !is.null(ribbon_color_name)),
+    c("ribbon_alpha_by", "ribbon_alpha", "aes(ribbon_alpha = ...)",
+      !missing(ribbon_alpha_by) && !is.null(ribbon_alpha_by)),
+    c("ribbon_alpha_range", "ribbon_alpha", "scale_ribbon_alpha_continuous(range = ...)",
+      !missing(ribbon_alpha_range)),
+    c("ribbon_outline_by", "ribbon_colour", "aes(ribbon_colour = ...)",
+      !missing(ribbon_outline_by) && !is.null(ribbon_outline_by)),
+    c("ribbon_outline_colors", "ribbon_colour", "scale_ribbon_colour_manual(values = ...)",
+      !missing(ribbon_outline_colors) && !is.null(ribbon_outline_colors)),
+    c("ribbon_linetype_by", "ribbon_linetype", "aes(ribbon_linetype = ...)",
+      !missing(ribbon_linetype_by) && !is.null(ribbon_linetype_by)),
+    c("ribbon_linetypes", "ribbon_linetype", "scale_ribbon_linetype_manual(values = ...)",
+      !missing(ribbon_linetypes) && !is.null(ribbon_linetypes))
+  )
+  for (spec in legacy) {
+    lyr <- ggchord_add_legacy_scale(
+      lyr, identical(spec[[4]], "TRUE"), spec[[1]], spec[[2]], spec[[3]]
+    )
+  }
+  if (!missing(ribbon_direction) && !identical(ribbon_direction, "none")) {
+    direction_aesthetic <- switch(
+      ribbon_direction, alpha = "ribbon_alpha", outline = "ribbon_colour",
+      linetype = "ribbon_linetype", "ribbon_fill"
+    )
+    lyr <- ggchord_add_legacy_scale(
+      lyr, TRUE, "ribbon_direction", direction_aesthetic,
+      paste0("aes(", direction_aesthetic, " = after_stat(direction))")
+    )
+  }
+  lyr <- ggchord_add_legacy_scale(
+    lyr, !missing(ribbon_direction_colors), "ribbon_direction_colors",
+    "ribbon_colour", "scale_ribbon_colour_manual(values = ...)"
+  )
+  lyr <- ggchord_add_legacy_scale(
+    lyr, !missing(ribbon_direction_linetypes), "ribbon_direction_linetypes",
+    "ribbon_linetype", "scale_ribbon_linetype_manual(values = ...)"
+  )
+  lyr <- ggchord_add_legacy_scale(
+    lyr, !missing(ribbon_direction_alpha), "ribbon_direction_alpha",
+    "ribbon_alpha", "scale_ribbon_alpha_manual(values = ...)"
   )
   list(lyr)
 }

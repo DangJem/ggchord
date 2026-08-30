@@ -86,6 +86,13 @@ geom_axis <- function(mapping = NULL, data = NULL,
   path_layer <- ggchord_capture_layer_input(
     path_layer, data, mapping, c("seq_id", "length")
   )
+  path_layer <- ggchord_add_legacy_scale(
+    path_layer,
+    (!missing(axis_tick_major_number) && !is.null(axis_tick_major_number)) ||
+      (!missing(axis_tick_minor_number) && !is.null(axis_tick_minor_number)),
+    "axis_tick_major_number/axis_tick_minor_number", "seq_position",
+    "scale_seq_position_continuous(breaks = ..., minor_breaks = ...)"
+  )
 
   seg_layer <- geom_segment(data = empty_seg,
                            mapping = aes(x = x0, y = y0,

@@ -7,6 +7,8 @@
 # geom_gene(): gene arrow polygons
 # ---------------------------------------------------------------------------
 
+gene_geom <- rename_geom_aes(GeomPolygon, renames = c(fill = "gene_fill"))
+
 #' Add a gene arrow layer
 #'
 #' Draws gene annotation arrows on the chord diagram. Gene layout parameters
@@ -73,11 +75,15 @@ geom_gene <- function(mapping = NULL, data = NULL,
   layers <- list()
 
   # Manual colors map by annotation; default colors map by strand.
-  gene_scheme <- gene_color_scheme %||% "strand"
-  fill_mapping <- if (identical(gene_scheme, "manual")) {
-    aes(x = x, y = y, group = group, fill = anno)
+  gene_scheme <- if (!is.null(mapping) && "gene_fill" %in% names(mapping)) {
+    "manual"
   } else {
-    aes(x = x, y = y, group = group, fill = strand)
+    gene_color_scheme %||% "strand"
+  }
+  fill_mapping <- if (identical(gene_scheme, "manual")) {
+    aes(x = x, y = y, group = group, gene_fill = anno)
+  } else {
+    aes(x = x, y = y, group = group, gene_fill = strand)
   }
 
   # The polygon layer carries the gene parameters so that the plot object is
@@ -89,10 +95,10 @@ geom_gene <- function(mapping = NULL, data = NULL,
                              anno = character(0), ord = integer(0)),
     mapping     = fill_mapping,
     stat        = "identity",
-    geom        = GeomPolygon,
+    geom        = gene_geom,
     position    = "identity",
     show.legend = if (identical(show_legend, TRUE)) {
-                    c(fill = TRUE, colour = FALSE)
+                    c(gene_fill = TRUE, colour = FALSE)
                   } else show_legend,
     inherit.aes = FALSE,
     check.param = FALSE,
@@ -104,7 +110,7 @@ geom_gene <- function(mapping = NULL, data = NULL,
     type              = "gene",
     gene_offset       = gene_offset,
     gene_width        = gene_width,
-    gene_color_scheme = gene_color_scheme,
+    gene_color_scheme = gene_scheme,
     gene_colors       = gene_colors,
     gene_order        = gene_order,
     legend_position   = legend_position
@@ -112,6 +118,14 @@ geom_gene <- function(mapping = NULL, data = NULL,
   poly_layer <- ggchord_capture_layer_input(
     poly_layer, data, mapping,
     c("seq_id", "start", "end", "strand", "anno")
+  )
+  poly_layer <- ggchord_add_legacy_scale(
+    poly_layer,
+    (!missing(gene_color_scheme) && !is.null(gene_color_scheme)) ||
+      (!missing(gene_colors) && !is.null(gene_colors)) ||
+      (!missing(gene_order) && !is.null(gene_order)),
+    "gene_color_scheme/gene_colors/gene_order", "gene_fill",
+    "aes(gene_fill = ...) + scale_gene_fill_manual()"
   )
   layers[[length(layers) + 1]] <- poly_layer
 

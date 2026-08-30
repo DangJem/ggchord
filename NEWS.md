@@ -42,6 +42,33 @@
   independent same-type layers. The cache is local to that build and cannot
   leak geometry between plots.
 
+## Role-specific scales
+
+* Sequence, group, ribbon, gene, feature and region layers now use independent
+  role aesthetics: `seq_colour`, `group_colour`, `ribbon_fill`,
+  `ribbon_alpha`, `ribbon_colour`, `ribbon_linetype`, `gene_fill`,
+  `feature_fill` and `region_fill`. Their public `scale_*()` constructors can
+  coexist in one plot without replacing another layer's fill or colour scale.
+
+* `scale_seq_position_continuous()` controls genomic major/minor breaks and
+  labels. It is trained independently against each sequence length.
+
+* Old scale-like geom arguments remain functional during v0.9.0 and emit one
+  migration warning per session. Supplying both an old argument and the new
+  role scale is an error rather than silently choosing one. Principal
+  migrations are:
+
+| Old geom argument | New interface |
+| --- | --- |
+| `seq_colors`, `seq_group_colors` | `scale_seq_colour_manual()`, `scale_group_colour_manual()` |
+| `ribbon_colors`, colour limits/breaks/name | `scale_ribbon_fill_*()` |
+| `ribbon_*_by` | the corresponding `aes(ribbon_* = ...)` |
+| `ribbon_alpha_range` | `scale_ribbon_alpha_continuous(range = ...)` |
+| ribbon outline/linetype/direction visual values | ribbon colour/linetype/alpha scales |
+| `gene_colors`, `gene_order` | `scale_gene_fill_manual()` |
+| `feature_colors`, `feature_order` | `scale_feature_fill_manual()` |
+| axis major/minor counts and labels | `scale_seq_position_continuous()` |
+
 ## Deterministic gene-label layouts
 
 * `geom_gene_label_repel()` now uses the deterministic

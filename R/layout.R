@@ -94,6 +94,7 @@ compute_chord_layout <- function(
     # Axis parameters
     axisGap, axisMaj, axisMajLen, axisMin, axisMinLen,
     labelSize, labelOffset, axisLabelOrientation,
+    axis_breaks = NULL, axis_minor_breaks = NULL, axis_labels = NULL,
     axis_label_hide_overlaps = FALSE,
     show_axis,
     # Global parameters
@@ -291,13 +292,18 @@ compute_chord_layout <- function(
       ref <- seq_refs[[id]]
       r0 <- ref$r0 - axisGap[id]
 
-      majors <- breakPointsFunc(lens[id], axisMaj[id])
-      minors <- unlist(lapply(seq_len(length(majors) - 1), function(i) {
-        seq(majors[i], majors[i + 1], length.out = axisMin[id] + 2)[-c(1, axisMin[id] + 2)]
-      }))
+      majors <- axis_breaks[[id]] %||% breakPointsFunc(lens[id], axisMaj[id])
+      minors <- axis_minor_breaks[[id]]
+      if (is.null(minors)) {
+        minors <- unlist(lapply(seq_len(length(majors) - 1), function(i) {
+          seq(majors[i], majors[i + 1], length.out = axisMin[id] + 2)[-c(1, axisMin[id] + 2)]
+        }))
+      }
+      major_labels <- axis_labels[[id]] %||% as.character(majors)
       pts <- data.frame(
         pos = c(majors, minors),
-        is_major = c(rep(TRUE, length(majors)), rep(FALSE, length(minors)))
+        is_major = c(rep(TRUE, length(majors)), rep(FALSE, length(minors))),
+        display_label = c(as.character(major_labels), rep(NA_character_, length(minors)))
       )
 
       # Label orientation for this sequence. "horizontal" keeps the text
@@ -352,7 +358,7 @@ compute_chord_layout <- function(
       data.frame(
         x0 = base[, 1], y0 = base[, 2],
         x1 = tip[, 1], y1 = tip[, 2],
-        label = ifelse(pts$is_major, as.character(pts$pos), NA),
+        label = pts$display_label,
         label_x = lbl[, 1], label_y = lbl[, 2],
         size = labelSize[[id]],
         label_angle = label_angle,

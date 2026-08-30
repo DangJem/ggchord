@@ -44,6 +44,53 @@ ggchord_disable_debug <- function() {
   old
 }
 
+#' Emit one migration warning per old argument in a session
+#' @noRd
+ggchord_deprecate_once <- function(argument, replacement) {
+  key <- paste0("deprecated:", argument)
+  if (!isTRUE(.chord_env[[key]])) {
+    warning(
+      "`", argument, "` is deprecated for v0.9.0; use `", replacement,
+      "` instead.", call. = FALSE
+    )
+    .chord_env[[key]] <- TRUE
+  }
+  invisible(NULL)
+}
+
+#' Record an old scale argument on a layer for build-time migration checks
+#' @noRd
+ggchord_add_legacy_scale <- function(
+    lyr, supplied, argument, aesthetic, replacement) {
+  if (!isTRUE(supplied)) return(lyr)
+  spec <- data.frame(
+    argument = argument, aesthetic = aesthetic, replacement = replacement,
+    stringsAsFactors = FALSE
+  )
+  lyr$ggchord_legacy_scales <- rbind(lyr$ggchord_legacy_scales, spec)
+  lyr
+}
+
+#' Check legacy scale arguments and emit their one-time migration warning
+#' @noRd
+ggchord_check_legacy_scales <- function(plot) {
+  for (lyr in plot$layers) {
+    specs <- lyr$ggchord_legacy_scales
+    if (is.null(specs) || nrow(specs) == 0) next
+    for (i in seq_len(nrow(specs))) {
+      if (plot$scales$has_scale(specs$aesthetic[i])) {
+        ggchord_stop(
+          "`", specs$argument[i], "` conflicts with a user-supplied scale for `",
+          specs$aesthetic[i], "`; remove the old argument and use `",
+          specs$replacement[i], "`"
+        )
+      }
+      ggchord_deprecate_once(specs$argument[i], specs$replacement[i])
+    }
+  }
+  invisible(plot)
+}
+
 
 # ====================================================================
 # Layout cache (set at build time; used by the get_chord_layout() accessor)
@@ -194,7 +241,9 @@ ggchord_attach_input_columns <- function(geometry, input) {
     "text_x", "text_y", "text", "label_x", "label_y", "label",
     "text_angle", "label_angle", "hjust", "vjust", "size", "alpha",
     "colour", "fill", "zfill", "zcolour", "zregionfill", "zoutline",
-    "zlinetype", "outline_col", "linetype_val"
+    "zlinetype", "outline_col", "linetype_val", "seq_colour",
+    "group_colour", "ribbon_fill", "ribbon_alpha", "ribbon_colour",
+    "ribbon_linetype", "gene_fill", "feature_fill", "region_fill"
   )
   if ("source_row" %in% names(geometry)) {
     idx <- geometry$source_row

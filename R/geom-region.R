@@ -1,19 +1,8 @@
 # geom-region.R - sequence-region highlight layer (v0.9.0)
 
-region_geom <- ggplot2::ggproto(
-  "GeomChordRegion", GeomPolygon
+region_geom <- rename_geom_aes(
+  GeomPolygon, renames = c(fill = "region_fill")
 )
-aes_names <- names(region_geom$default_aes)
-aes_names[aes_names == "fill"] <- "zregionfill"
-names(region_geom$default_aes) <- aes_names
-region_geom$handle_na <- function(self, data, params) {
-  colnames(data)[colnames(data) == "zregionfill"] <- "fill"
-  GeomPolygon$handle_na(data, params)
-}
-region_geom$draw_key <- function(data, params, size) {
-  colnames(data)[colnames(data) == "zregionfill"] <- "fill"
-  GeomPolygon$draw_key(data, params, size)
-}
 
 #' Highlight regions along sequence arcs
 #'
@@ -95,7 +84,7 @@ geom_seq_region <- function(mapping = NULL, data = NULL,
   lyr <- ggplot2::layer(
     data        = empty_polys,
     mapping     = aes(x = x, y = y, group = group,
-                      zregionfill = zregionfill, colour = colour,
+                      region_fill = zregionfill, colour = colour,
                       alpha = alpha),
     stat        = "identity",
     geom        = region_geom,

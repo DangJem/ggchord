@@ -1,5 +1,9 @@
 # geom-feature.R - generic feature layer (v0.9.0)
 
+feature_geom <- rename_geom_aes(
+  GeomPolygon, renames = c(fill = "feature_fill")
+)
+
 #' Draw generic genomic features
 #'
 #' A thin, backwards-compatible convenience layer for CDS, tRNA, rRNA, repeat,
@@ -147,6 +151,20 @@ geom_feature <- function(mapping = NULL, data = NULL,
   )
   for (lyr in layers) {
     lyr$ggchord_params$gene_data_override <- gene_data
+    names(lyr$mapping)[names(lyr$mapping) == "gene_fill"] <- "feature_fill"
+    if (is.logical(lyr$show.legend) && !is.null(names(lyr$show.legend))) {
+      names(lyr$show.legend)[names(lyr$show.legend) == "gene_fill"] <-
+        "feature_fill"
+    }
+    lyr$geom <- feature_geom
+    lyr$ggchord_legacy_scales <- NULL
+    lyr <- ggchord_add_legacy_scale(
+      lyr,
+      (!missing(feature_colors) && !is.null(feature_colors)) ||
+        (!missing(feature_order) && !is.null(feature_order)),
+      "feature_colors/feature_order", "feature_fill",
+      "aes(feature_fill = ...) + scale_feature_fill_manual()"
+    )
   }
   layers
 }

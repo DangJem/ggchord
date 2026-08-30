@@ -11,7 +11,10 @@ globalVariables(c(
   "x0", "y0", "x1", "y1", "label", "label_x", "label_y", "size",
   "fill_col", "alpha", "label_hjust", "label_vjust", "label_angle",
   "linetype", "zcolour", "zregionfill", "zoutline", "zlinetype",
-  "outline_col", "linetype_val", "value", "source_row", "direction"
+  "outline_col", "linetype_val", "value", "source_row", "direction",
+  "seq_colour", "group_colour", "ribbon_fill", "ribbon_alpha",
+  "ribbon_colour", "ribbon_linetype", "gene_fill", "feature_fill",
+  "region_fill"
 ))
 
 #' ggchord: layered multi-sequence alignment chord diagrams for ggplot2
@@ -707,6 +710,25 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
       any(axisMin < 0 | axisMin != as.integer(axisMin))) {
     ggchord_stop("axis_tick_minor_number must contain non-negative integers")
   }
+  axis_breaks <- axis_minor_breaks <- axis_labels <- NULL
+  position_scale <- plot$scales$get_scales("seq_position")
+  if (!is.null(position_scale)) {
+    axis_breaks <- axis_minor_breaks <- axis_labels <- setNames(
+      vector("list", length(seqs)), seqs
+    )
+    for (id in seqs) {
+      sc <- position_scale$clone()
+      sc$train(c(0, lens[[id]]))
+      br <- sc$get_breaks()
+      br <- br[is.finite(br) & br >= 0 & br <= lens[[id]]]
+      axis_breaks[[id]] <- br
+      minor <- sc$get_breaks_minor()
+      axis_minor_breaks[[id]] <- minor[
+        is.finite(minor) & minor >= 0 & minor <= lens[[id]]
+      ]
+      axis_labels[[id]] <- sc$get_labels(br)
+    }
+  }
 
   # --- Process sequence labels ---
   seq_label_text <- NULL
@@ -891,6 +913,9 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     axisMin = axisMin, axisMinLen = axisMinLen,
     labelSize = labelSize, labelOffset = labelOffset,
     axisLabelOrientation = axisLabelOri,
+    axis_breaks = axis_breaks,
+    axis_minor_breaks = axis_minor_breaks,
+    axis_labels = axis_labels,
     axis_label_hide_overlaps = axisLabelHide,
     show_axis = show_axis,
     rotation = global$rotation, debug = global$debug,
@@ -931,6 +956,7 @@ compute_chord_geometry <- function(plot) {
   if (is.null(chord)) {
     ggchord_stop("Not a valid ggchord object: no data stored on the plot")
   }
+  ggchord_check_legacy_scales(plot)
 
   # Layers added through ordinary ggplot2 mechanisms may not have passed the
   # list branch of +.ggchord. Assign deterministic IDs before grouping.
@@ -1098,7 +1124,7 @@ reconstruct_layer <- function(lyr, data, mapping = NULL) {
   for (fld in c(
     "ggchord_type", "ggchord_params", "ggchord_placeholder", "ggchord_ref",
     "ggchord_layer_id", "ggchord_input_data", "ggchord_input_mapping",
-    "ggchord_role_aes"
+    "ggchord_role_aes", "ggchord_legacy_scales"
   )) {
     if (!is.null(lyr[[fld]])) new[[fld]] <- lyr[[fld]]
   }
@@ -1171,13 +1197,14 @@ ggchord_ribbon_key_dims <- function(plot) {
 #'   the given position instead of following the theme's `legend.position`.
 #' @keywords internal
 make_ggchord_scales <- function(layout, has_seq = FALSE, has_gene = FALSE,
+                                has_feature = FALSE,
                                 legend_position = NULL, legend_box = NULL,
                                 positions = list(), legend_key_width = NULL,
                                 legend_key_height = NULL) {
   scales <- list()
 
   if (has_seq) {
-    scales[[length(scales) + 1]] <- scale_color_manual(
+    scales[[length(scales) + 1]] <- scale_seq_colour_manual(
       name   = "Seq ID",
       values = layout$seq_colors,
       labels = layout$seq_labels,
@@ -1221,12 +1248,13 @@ make_ggchord_scales <- function(layout, has_seq = FALSE, has_gene = FALSE,
       } else {
         c(0, 50, 80, 90, 95, 100)
       }
-      ribbon_fill_scale <- scale_fill_stepsn(
+      ribbon_fill_scale <- scale_ribbon_fill_stepsn(
         name    = ribbon_name,
         colours = layout$ribbon_colors,
         limits  = ribbon_limits,
         breaks  = ribbon_breaks,
         guide   = guide_colorbar(
+          available_aes = "ribbon_fill",
           position = positions$ribbon %||% NULL,
           theme = theme(
             legend.title.position = "top",
@@ -1247,21 +1275,21 @@ make_ggchord_scales <- function(layout, has_seq = FALSE, has_gene = FALSE,
         )
       )
     } else {
-      ribbon_fill_scale <- scale_fill_identity()
+      ribbon_fill_scale <- scale_ribbon_fill_identity()
     }
   }
 
   gene_fill_scale <- NULL
   if (has_gene) {
     if (layout$gene_color_scheme == "strand") {
-      gene_fill_scale <- scale_fill_manual(
+      gene_fill_scale <- scale_gene_fill_manual(
         name   = "Strand",
         breaks = c("+", "-"),
         values = layout$gene_pal,
         guide  = guide_legend(position = positions$gene %||% NULL, order = 3)
       )
     } else {
-      gene_fill_scale <- scale_fill_manual(
+      gene_fill_scale <- scale_gene_fill_manual(
         name   = "Gene Annotation",
         breaks = layout$final_gene_order,
         values = layout$gene_pal,
@@ -1276,9 +1304,17 @@ make_ggchord_scales <- function(layout, has_seq = FALSE, has_gene = FALSE,
   # plain "fill" default into the ribbon data). This also keeps ggplot2's
   # guide matching working when no gene layer is present, so the Identity(%)
   # colourbar legend is shown even without gene data.
-  ribbon_aes <- "fill"
+  feature_fill_scale <- NULL
+  if (has_feature) {
+    feature_fill_scale <- scale_feature_fill_manual(
+      name = "Feature", breaks = layout$final_gene_order,
+      values = layout$gene_pal,
+      guide = guide_legend(position = positions$gene %||% NULL, order = 3)
+    )
+  }
+
+  ribbon_aes <- "ribbon_fill"
   if (!is.null(ribbon_fill_scale)) {
-    ribbon_aes <- "zfill"
     s <- ribbon_fill_scale
     s$aesthetics <- ribbon_aes
     if (inherits(s$guide, "Guide")) {
@@ -1295,27 +1331,32 @@ make_ggchord_scales <- function(layout, has_seq = FALSE, has_gene = FALSE,
   } else if (!is.null(gene_fill_scale)) {
     scales[[length(scales) + 1]] <- gene_fill_scale
   }
+  if (!is.null(feature_fill_scale)) {
+    scales[[length(scales) + 1]] <- feature_fill_scale
+  }
 
   # Ribbon alpha is a preset value; use an identity scale so it renders as specified
   if (!is.null(layout$ribbon_polys)) {
-    scales[[length(scales) + 1]] <- scale_alpha_identity()
+    scales[[length(scales) + 1]] <- scale_alpha_identity(
+      aesthetics = "ribbon_alpha"
+    )
   }
   # Optional per-ribbon outline / linetype mappings use internal aesthetics so
   # they do not collide with the sequence colour scale or the ribbon fill scale.
   if (isTRUE(layout$ribbon_use_outline)) {
-    scales[[length(scales) + 1]] <- scale_colour_identity(aesthetics = "zoutline")
+    scales[[length(scales) + 1]] <- scale_colour_identity(aesthetics = "ribbon_colour")
   }
   if (isTRUE(layout$ribbon_use_linetype)) {
-    scales[[length(scales) + 1]] <- scale_linetype_identity(aesthetics = "zlinetype")
+    scales[[length(scales) + 1]] <- scale_linetype_identity(aesthetics = "ribbon_linetype")
   }
   # Sequence-region bands use their own internal fill aesthetic.
   if (!is.null(layout$region_polys) && nrow(layout$region_polys) > 0) {
-    scales[[length(scales) + 1]] <- scale_fill_identity(aesthetics = "zregionfill")
+    scales[[length(scales) + 1]] <- scale_fill_identity(aesthetics = "region_fill")
   }
   # Sequence-group label colours use an internal aesthetic so they do not
   # collide with the Seq ID colour scale used by geom_seq().
   if (!is.null(layout$group_labels) && nrow(layout$group_labels) > 0) {
-    scales[[length(scales) + 1]] <- scale_colour_identity(aesthetics = "zcolour")
+    scales[[length(scales) + 1]] <- scale_colour_identity(aesthetics = "group_colour")
   }
   # Axis text size scale
   scales[[length(scales) + 1]] <- scale_size_identity()
@@ -1471,9 +1512,16 @@ prepare_ggchord_plot <- function(plot) {
                                plot$scales$scales)
   layout <- compute_chord_geometry(plot)
   cls <- classify_ggchord_layers(plot)
+  has_feature <- any(vapply(plot$layers, function(x) {
+    "feature_fill" %in% names(x$mapping)
+  }, logical(1)))
+  has_gene <- any(vapply(plot$layers, function(x) {
+    "gene_fill" %in% names(x$mapping)
+  }, logical(1)))
   sc <- make_ggchord_scales(layout,
                             has_seq = length(cls$seq) > 0,
-                            has_gene = length(cls$gene_poly) > 0,
+                            has_gene = has_gene,
+                            has_feature = has_feature,
                             legend_position = plot$theme$legend.position,
                             legend_box = plot$theme$legend.box,
                             positions = ggchord_legend_positions(plot),
@@ -1561,7 +1609,12 @@ ggplot_build.ggchord <- function(plot, ...) {
   # ====================================================================
   sc <- make_ggchord_scales(layout,
                             has_seq = length(seq_indices) > 0,
-                            has_gene = length(gene_poly_indices) > 0,
+                            has_gene = any(vapply(plot$layers, function(x) {
+                              "gene_fill" %in% names(x$mapping)
+                            }, logical(1))),
+                            has_feature = any(vapply(plot$layers, function(x) {
+                              "feature_fill" %in% names(x$mapping)
+                            }, logical(1))),
                             legend_position = plot$theme$legend.position,
                             legend_box = plot$theme$legend.box,
                             positions = ggchord_legend_positions(plot),
