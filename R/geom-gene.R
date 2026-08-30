@@ -113,6 +113,7 @@ geom_gene <- function(mapping = NULL, data = NULL,
     key_glyph   = key_glyph_gene,
     params      = c(
       if (!("colour" %in% names(dots))) list(colour = "#2F2F2F") else list(),
+      if (!("linewidth" %in% names(dots))) list(linewidth = 0.25) else list(),
       dots
     )
   )

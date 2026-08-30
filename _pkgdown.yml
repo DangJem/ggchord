@@ -19,13 +19,12 @@ articles:
       - ggchord_guide_hans
 reference:
   - title: "Plot construction"
-    desc: "Build, convert and inspect ggchord plots."
+    desc: "Build and inspect ggchord plots."
     contents:
       - ggchord
       - coord_chord
       - get_chord_layout
       - +.ggchord
-      - ggplotly.ggchord
   - title: "Methods and datasets"
     desc: "S3 methods and example data shipped with ggchord."
     contents:

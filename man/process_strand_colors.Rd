@@ -10,7 +10,7 @@ process_strand_colors(gene_colors)
 \item{gene_colors}{Color vector (can be NULL, single value, vector of length 2, named vector with "+"/"-")}
 }
 \value{
-Named vector (names are "+"/"-"), standardized color values (default "+" is red, "-" is blue)
+Named vector (names are "+"/"-"), standardized colour values
 }
 \description{
 Standardizes gene color parameters in strand mode (color by strand direction) into a named vector with "+"/"-"

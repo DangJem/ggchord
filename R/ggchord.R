@@ -232,13 +232,10 @@ ggchord <- function(
                   show_legend = show_legend, debug = debug,
                   validate = validate),
     validation = validation,
-    # Shared reference environment: layers use it to reach the (latest) plot
-    # and to lazily fetch their computed geometry (e.g. for plotly::ggplotly).
+    # Shared reference environment for plot-owned layout caching.
     ref    = new.env(),
     layout = NULL
   )
-  p$ggchord$ref$plot <- p
-
   class(p) <- c("ggchord", class(p))
   p
 }
@@ -275,12 +272,11 @@ ggchord <- function(
     layer_id <- sprintf("layer-%04d", max(c(0L, existing), na.rm = TRUE) + 1L)
     for (elem in e2) {
       elem$ggchord_layer_id <- layer_id
-      elem <- wire_ggchord_layer(elem, e1)
+      elem$ggchord_placeholder <- elem$data
       p <- p + elem
     }
-    # Layout/scales/coordinates are computed lazily on the first build or
-    # plotly conversion (ggchord_layer_data() and ggchord_plotly_ggplot() both
-    # call prepare_ggchord_plot() on demand). Eagerly preparing here would
+    # Layout/scales/coordinates are computed lazily on the first build.
+    # Eagerly preparing here would
     # recompute the full chord geometry after every added layer, which is very
     # expensive for large alignment tables.
   } else if (inherits(e2, "Scale")) {
@@ -298,9 +294,7 @@ ggchord <- function(
   } else {
     p <- NextMethod()
   }
-  # Keep the shared reference pointing at the latest plot so that lazy layer
-  # data (used by plotly::ggplotly and friends) sees the complete plot.
-  if (!is.null(e1$ggchord$ref)) e1$ggchord$ref$plot <- p
+  # Invalidate the plot-owned layout after adding any component.
   if (!is.null(e1$ggchord$ref)) e1$ggchord$ref$layout <- NULL
   class(p) <- unique(c("ggchord", class(p)))
   p
@@ -495,7 +489,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   ribbon_color_limits <- ribbon_params$ribbon_color_limits
   ribbon_color_breaks <- ribbon_params$ribbon_color_breaks
   ribbon_color_name   <- ribbon_params$ribbon_color_name
-  ribbon_alpha    <- ribbon_params$ribbon_alpha %||% 0.35
+  ribbon_alpha    <- ribbon_params$ribbon_alpha %||% 0.38
   ribbon_alpha_by <- ribbon_params$ribbon_alpha_by
   ribbon_alpha_range <- ribbon_params$ribbon_alpha_range %||% c(0.15, 0.9)
   ribbon_ctrl_pt  <- ribbon_params$ribbon_ctrl_point %||% c(0, 0)
@@ -1136,8 +1130,7 @@ compute_chord_geometry <- function(plot) {
 
 
 # ====================================================================
-# Shared helpers used by both ggplot_build.ggchord() and the lazy layer
-# data path (so that plotly::ggplotly() sees the same scales and geometry).
+# Shared helpers used by ggplot_build.ggchord() and layout preparation.
 # ====================================================================
 
 #' Reconstruct a layer with the given data (and optional remapped mapping).
@@ -1158,7 +1151,7 @@ reconstruct_layer <- function(lyr, data, mapping = NULL) {
   )
   # Preserve the ggchord custom fields on the reconstructed layer
   for (fld in c(
-    "ggchord_type", "ggchord_params", "ggchord_placeholder", "ggchord_ref",
+    "ggchord_type", "ggchord_params", "ggchord_placeholder",
     "ggchord_layer_id", "ggchord_input_data", "ggchord_input_mapping",
     "ggchord_role_aes", "ggchord_legacy_scales", "ggchord_theme_element"
   )) {
@@ -1583,8 +1576,7 @@ ggchord_label_pad <- function(layout) {
 #' Fully prepare a ggchord plot and return it (compute layout, rename ribbon
 #' mappings, attach scales, set coordinates). The layout is cached on the plot
 #' (and on the shared reference environment) during preparation. Used by the
-#' lazy layer data path so that plotly::ggplotly() sees the same state as a
-#' normal build.
+#' callers that need a fully prepared ggplot object.
 #' @keywords internal
 prepare_ggchord_plot <- function(plot) {
   plot$scales$scales <- Filter(function(s) is.null(s$ggchord_managed),
@@ -1624,8 +1616,7 @@ ggplot_build.ggchord <- function(plot, ...) {
          "Please build the plot with ggchord().")
   }
   # The plot object is self-contained: it carries its own scales (tagged with
-  # ggchord_managed) so that tools such as plotly::ggplotly() that clone the
-  # plot before building see the correct scales.  ggchord-managed scales are
+  # ggchord_managed). ggchord-managed scales are
   # refreshed on every build (user-supplied scales are kept).
   plot$scales$scales <- Filter(function(s) is.null(s$ggchord_managed),
                                plot$scales$scales)

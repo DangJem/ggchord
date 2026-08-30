@@ -39,7 +39,7 @@ make_ribbon_geom <- function(outline = FALSE, linetype = FALSE) {
 #'   colourbar.
 #' @param ribbon_color_name Optional legend title for the \code{ribbon_color_by}
 #'   colourbar (defaults to the column name).
-#' @param ribbon_alpha Numeric (0-1). Ribbon transparency, default 0.35
+#' @param ribbon_alpha Numeric (0-1). Ribbon transparency, default 0.38
 #' @param ribbon_alpha_by Optional character column name. When set, alpha is
 #'   scaled continuously from that numeric column.
 #' @param ribbon_alpha_range Numeric length-2. Alpha range used by
@@ -47,8 +47,9 @@ make_ribbon_geom <- function(outline = FALSE, linetype = FALSE) {
 #' @param ribbon_ctrl_point Optional vector/list. Bezier control points, default c(0,0)
 #' @param ribbon_gap Optional numeric/vector. Spacing between sequences and ribbons, default 0.15
 #' @param alpha Ribbon transparency (overrides ribbon_alpha), defaults to the value used in the layout
-#' @param ribbon_outline_color Character. Color of the ribbon outline (border), default "black"
-#' @param ribbon_outline_width Numeric. Line width of the ribbon outline, default 0.05
+#' @param ribbon_outline_color Character. Colour of the ribbon outline,
+#'   default white for subtle separation between overlapping ribbons.
+#' @param ribbon_outline_width Numeric. Line width of the ribbon outline, default 0.08
 #' @param ribbon_outline_linetype Numeric or character. Line type of the ribbon outline, default 1 (solid); see \code{linetype} in ggplot2 for options
 #' @param ribbon_outline_by Optional discrete column name. When set, outline
 #'   colour is mapped by that column and \code{ribbon_outline_colors} controls
@@ -106,8 +107,8 @@ geom_ribbon <- function(mapping = NULL, data = NULL,
                         ribbon_ctrl_point = NULL,
                         ribbon_gap = NULL,
                         alpha = NULL,
-                        ribbon_outline_color = "black",
-                        ribbon_outline_width = 0.05,
+                        ribbon_outline_color = "#FFFFFF",
+                        ribbon_outline_width = 0.08,
                         ribbon_outline_linetype = 1,
                         ribbon_outline_by = NULL,
                         ribbon_outline_colors = NULL,

@@ -189,25 +189,6 @@ clear_chord_env <- function() {
   rm(list = ls(.chord_env, all.names = TRUE), envir = .chord_env)
 }
 
-# ====================================================================
-# Lazy layer data (plotly::ggplotly and other tools call layer$layer_data()
-# directly, bypassing ggplot_build()).  Each ggchord layer is tagged with a
-# ggchord_type and given a lazy data function that computes (on demand) and
-# returns the geometry for that layer.
-# ====================================================================
-
-#' Attach the shared plot reference and a lazy data function to a ggchord layer
-#' @keywords internal
-wire_ggchord_layer <- function(lyr, plot) {
-  if (!inherits(lyr, "LayerInstance") || is.null(lyr$ggchord_type)) return(lyr)
-  if (is.null(lyr$ggchord_ref) && !is.null(plot$ggchord$ref)) {
-    lyr$ggchord_placeholder <- lyr$data
-    lyr$ggchord_ref <- plot$ggchord$ref
-    lyr$data <- make_ggchord_lazy_data(lyr)
-  }
-  lyr
-}
-
 #' Capture user data and mappings separately from the computed placeholder
 #' @noRd
 ggchord_capture_layer_input <- function(lyr, data, mapping, roles) {
@@ -285,29 +266,6 @@ ggchord_attach_input_columns <- function(geometry, input) {
   cols <- setdiff(names(input), protected)
   for (nm in cols) geometry[[nm]] <- input[[nm]][idx]
   geometry
-}
-
-#' Build a lazy data function for a ggchord layer
-#' @keywords internal
-make_ggchord_lazy_data <- function(lyr) {
-  force(lyr)
-  function(plot_data) ggchord_layer_data(lyr)
-}
-
-#' Return the computed geometry for a ggchord layer, computing the layout on
-#' demand if it has not been computed yet.
-#' @keywords internal
-ggchord_layer_data <- function(lyr) {
-  ref <- lyr$ggchord_ref
-  plot <- ref$plot
-  layout <- ref$layout
-  if (is.null(layout)) {
-    # Compute the layout (and, for tools such as plotly::ggplotly() that read
-    # layer data directly, attach scales and coordinates to the plot in place).
-    plot <- prepare_ggchord_plot(plot)
-    layout <- plot$ggchord$layout
-  }
-  extract_ggchord_layer_data(lyr, layout)
 }
 
 #' Extract the geometry for one layer from a computed layout

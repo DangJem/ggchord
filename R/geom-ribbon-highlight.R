@@ -22,8 +22,8 @@
 #' @param predicate Optional function taking the ribbon data.frame and returning
 #'   a logical vector with one element per row. Evaluated safely (no string
 #'   parsing).
-#' @param highlight_color Character. Highlight fill colour, default \code{"#E11D48"}.
-#' @param highlight_alpha Numeric (0-1). Highlight alpha, default 0.8.
+#' @param highlight_color Character. Highlight fill colour, default \code{"#C51B7D"}.
+#' @param highlight_alpha Numeric (0-1). Highlight alpha, default 0.75.
 #' @param highlight_outline_color Optional outline colour, default \code{NULL}.
 #' @param highlight_outline_width Numeric. Outline width, default 0.3.
 #' @param show_legend Logical. Whether to show a legend, default FALSE.
@@ -48,8 +48,8 @@ geom_ribbon_highlight <- function(mapping = NULL, data = NULL,
                                   min_length = NULL,
                                   max_length = NULL,
                                   predicate = NULL,
-                                  highlight_color = "#E11D48",
-                                  highlight_alpha = 0.8,
+                                  highlight_color = "#C51B7D",
+                                  highlight_alpha = 0.75,
                                   highlight_outline_color = NULL,
                                   highlight_outline_width = 0.3,
                                   show_legend = FALSE,

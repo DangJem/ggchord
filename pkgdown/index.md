@@ -12,8 +12,7 @@ tidy data frames (`seq_data`, `ribbon_data`, `gene_data`) and stack
 - True `ggplot2` layered style
 - Multi-sequence, multi-ribbon and multi-gene support
 - Per-sequence and per-strand parameters
-- Themes, scales, `ggsave()`, `ggplot_build()` and `plotly::ggplotly()`
-  integration
+- Themes, scales, `ggsave()` and `ggplot_build()` integration
 
 ## Installation
 

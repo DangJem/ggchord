@@ -15,8 +15,8 @@ geom_ribbon_highlight(
   min_length = NULL,
   max_length = NULL,
   predicate = NULL,
-  highlight_color = "#E11D48",
-  highlight_alpha = 0.8,
+  highlight_color = "#C51B7D",
+  highlight_alpha = 0.75,
   highlight_outline_color = NULL,
   highlight_outline_width = 0.3,
   show_legend = FALSE,
@@ -49,9 +49,9 @@ this set are highlighted.}
 a logical vector with one element per row. Evaluated safely (no string
 parsing).}
 
-\item{highlight_color}{Character. Highlight fill colour, default \code{"#E11D48"}.}
+\item{highlight_color}{Character. Highlight fill colour, default \code{"#C51B7D"}.}
 
-\item{highlight_alpha}{Numeric (0-1). Highlight alpha, default 0.8.}
+\item{highlight_alpha}{Numeric (0-1). Highlight alpha, default 0.75.}
 
 \item{highlight_outline_color}{Optional outline colour, default \code{NULL}.}
 

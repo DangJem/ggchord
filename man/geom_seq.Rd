@@ -19,7 +19,7 @@ geom_seq(
   seq_group_labels = TRUE,
   seq_group_label_radius = 1.35,
   seq_group_colors = NULL,
-  linewidth = 1.2,
+  linewidth = 1.1,
   show_legend = TRUE,
   legend_position = "right",
   ...
@@ -65,7 +65,7 @@ group labels as a multiplier of the group's outermost sequence radius
 \item{seq_group_colors}{Optional named color vector by group name (or an
 unnamed vector recycled positionally). Colours the group labels.}
 
-\item{linewidth}{Arc line width, default 1.2}
+\item{linewidth}{Arc line width, default 1.1}
 
 \item{show_legend}{Whether to show the legend for this layer, default TRUE}
 

@@ -143,7 +143,7 @@ draw_key_gene_arrow <- function(data, params, size) {
     gp = gpar(
       fill = alpha(if_null_else(data$fill, "grey"), if_null_else(data$alpha, 1)),
       col = if_null_else(data$colour, "black"),
-      lwd = if_null_else(data$size, 0.5) * .pt
+      lwd = if_null_else(data$linewidth %||% data$size, 0.5) * .pt
     )
   )
 }
@@ -156,7 +156,20 @@ draw_key_gene_arrow <- function(data, params, size) {
 key_glyph_seq <- function(data, params, size) {
   data$colour <- data$seq_colour %||% data$colour
   if (is.null(data$colour)) return(zeroGrob())
-  draw_key_path(data, params, size)
+  col <- alpha(data$colour, data$alpha %||% 1)
+  lwd <- (data$linewidth %||% data$size %||% 0.8) * .pt
+  grobTree(
+    segmentsGrob(
+      x0 = unit(0.12, "npc"), x1 = unit(0.78, "npc"),
+      y0 = unit(0.5, "npc"), y1 = unit(0.5, "npc"),
+      gp = gpar(col = col, lwd = lwd, lineend = "round")
+    ),
+    polygonGrob(
+      x = unit(c(0.78, 0.94, 0.78), "npc"),
+      y = unit(c(0.28, 0.5, 0.72), "npc"),
+      gp = gpar(fill = col, col = col)
+    )
+  )
 }
 
 #' Key glyph for ribbon legends

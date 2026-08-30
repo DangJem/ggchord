@@ -1,5 +1,17 @@
 # ggchord 0.9.0 (development version)
 
+## Static rendering focus
+
+* The experimental Plotly conversion method and dependency have been removed.
+  v0.9.0 focuses on deterministic ggplot2 output; a future interactive design
+  will be considered separately after the static API is stable.
+
+* Default discrete colours now use a colour-vision-friendly palette (with a
+  qualitative HCL fallback for larger sets). Strand colours, sequence and gene
+  outlines, ribbon separation, highlight colour and legend key glyphs were
+  recalibrated for clearer screen, PDF and greyscale output. These defaults
+  remain fully replaceable through the role-specific scales and geom styles.
+
 ## Data correctness and import fixes
 
 * `clean_ggchord_data(unknown_id = "keep")` now retains unknown gene rows
@@ -218,8 +230,6 @@ wording in the documentation is removed.
   legend. `geom_seq()` stays backward compatible and still returns a single
   layer; group labels are appended lazily at build time.
 
-* `plotly::ggplotly()` and the layout-data path now include the group labels.
-
 ## New features: ribbon visual mappings and direction
 
 * `geom_ribbon()` can now map any numeric column to a continuous fill via
@@ -346,8 +356,8 @@ wording in the documentation is removed.
 
 * The layout is now computed by `ggplot_build()` rather than by a custom
   `print()` method. As a result `print()`, `ggsave()`, `ggplot_build()` and
-  other standard ggplot2 workflows (e.g. `plotly::ggplotly()`) all work
-  directly on ggchord plots, and rendering no longer modifies the user's plot
+  other standard ggplot2 workflows all work directly on ggchord plots, and
+  rendering no longer modifies the user's plot
   object.
 
 * New layer `geom_seq_label()`: places sequence labels at the midpoint of each
@@ -363,11 +373,6 @@ wording in the documentation is removed.
 * Themes, scales and other ggplot2 objects can now be added with `+` (e.g.
   `p + theme(legend.position = "bottom")`), and user-supplied colour/fill
   scales are respected instead of being overwritten.
-
-* `plotly::ggplotly()` now works on any ggchord plot, including plots that
-  combine the ribbon and gene layers (previously this raised a scale error).
-  A dedicated `ggplotly.ggchord()` method converts the computed geometry to a
-  plotly-friendly plot and restores the Seq ID / Strand / Identity legends.
 
 * `ggchord()` now warns about suspicious input data: reversed or out-of-range
   alignment/gene coordinates, `pident` outside [0, 100], and sequence IDs that
@@ -430,10 +435,6 @@ wording in the documentation is removed.
 * Legend keys are transparent and do not inherit `panel.background` (ggplot2
   4.x lets unset legend keys follow the panel background, so the key fill is
   set explicitly to stay transparent).
-
-* `plotly::ggplotly()` output now shows the Seq ID / Strand / Identity legends
-  (the layout-level `showlegend` switch is enabled) and reproduces the
-  `geom_seq()` directional arrowheads as plotly annotations.
 
 * Sequence (and gene) labels no longer end up upside down when a global
   `rotation >= 90` is used: the readability flip is now re-applied after the

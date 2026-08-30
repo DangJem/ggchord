@@ -388,11 +388,11 @@ process_axis_orientation <- function(param, seqs) {
 #' Standardizes gene color parameters in strand mode (color by strand direction) into a named vector with "+"/"-"
 #'
 #' @param gene_colors Color vector (can be NULL, single value, vector of length 2, named vector with "+"/"-")
-#' @return Named vector (names are "+"/"-"), standardized color values (default "+" is red, "-" is blue)
+#' @return Named vector (names are "+"/"-"), standardized colour values
 #' @keywords internal
 process_strand_colors <- function(gene_colors) {
   # Default values
-  default <- c("+" = "#E41A1C", "-" = "#377EB8")
+  default <- c("+" = "#D55E00", "-" = "#0072B2")
   if (is.null(gene_colors)) {
     return(default)
   }
@@ -424,7 +424,7 @@ process_strand_colors <- function(gene_colors) {
 #' @param gene_colors Color vector (can be NULL, single value, vector, named vector with gene annotations)
 #' @param unique_anno Character vector, unique gene annotation names
 #' @param gene_order Character vector, display order of genes in the legend, default NULL (order of appearance)
-#' @return Named vector (names are gene annotations), standardized color values (default uses the built-in Set1 palette)
+#' @return Named vector (names are gene annotations), standardized colour values
 #' @keywords internal
 process_manual_colors <- function(gene_colors, unique_anno, gene_order) {
   # Determine final gene order
