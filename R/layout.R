@@ -1175,6 +1175,7 @@ compute_chord_layout <- function(
                                     group = integer(0),
                                     linetype = character(0),
                                     stringsAsFactors = FALSE)
+  gene_label_clip_units <- NA_real_
   if (nrow(gene_labels) > 0) {
     if (!is.null(gene_label_wrap)) {
       gene_labels$text <- ggchord_label_wrap_text(gene_labels$text,
@@ -1384,8 +1385,10 @@ compute_chord_layout <- function(
 
       # Horizontal labels read best as one compact, ordered band per sequence.
       # The force solver above resolves the difficult local cases and supplies
-      # seed-dependent variation; this final projection removes excessive
-      # radial drift and restores separation between nested sequence radii.
+      # seed-dependent variation; this final projection puts labels on ordered
+      # cardinal rails around each sequence. This removes excessive radial
+      # drift and restores separation between nested sequence radii.
+      label_directions <- NULL
       if (identical(gene_label_orientation, "horizontal")) {
         compact_x <- c(
           unlist(lapply(seq_arcs, `[[`, "x"), use.names = FALSE),
@@ -1415,6 +1418,7 @@ compute_chord_layout <- function(
           )
           gene_labels <- compact$labels
           label_lanes <- compact$lanes
+          label_directions <- compact$directions
           compact_units_per_inch <- min(
             compact_units_limit,
             max(compact_units_per_inch,
@@ -1425,12 +1429,6 @@ compute_chord_layout <- function(
             units_per_inch = compact_units_per_inch
           )
         }
-        gene_labels <- ggchord_uncross_labels(
-          gene_labels, lanes = label_lanes
-        )$labels
-        gene_labels$hjust <- ifelse(
-          gene_labels$text_x >= gene_labels$anchor_x, 0, 1
-        )
       }
 
       gene_label_segments <- ggchord_repel_segments(
@@ -1449,21 +1447,42 @@ compute_chord_layout <- function(
         # far labels a longer one, so the elbow adapts to each label's final
         # position instead of forcing all segments to equal lengths.
         elbow_units <- max(1, diff(range(c(seg$x0, seg$x1)))) / 6
-        widths <- ggchord_text_boxes(
+        text_boxes <- ggchord_text_boxes(
           gene_labels, units_per_inch = elbow_units
-        )$w
-        bends <- ggchord_elbow_bends(gene_labels, widths)
+        )
+        bends <- ggchord_elbow_bends(
+          gene_labels, text_boxes$w, text_boxes$h,
+          directions = label_directions
+        )
         bx <- bends$x[seg$group]
+        by <- bends$y[seg$group]
         elbow <- data.frame(
           x0 = c(seg$x0, bx),
-          y0 = c(seg$y0, seg$y1),
+          y0 = c(seg$y0, by),
           x1 = c(bx, seg$x1),
-          y1 = c(seg$y1, seg$y1),
+          y1 = c(by, seg$y1),
           group = c(seg$group, seg$group),
           stringsAsFactors = FALSE
         )
         gene_label_segments <- ggchord_collapse_crossed_elbows(
           elbow, lanes = label_lanes
+        )
+      }
+      if (nrow(gene_label_segments) > 0) {
+        clip_x <- c(
+          unlist(lapply(seq_arcs, `[[`, "x"), use.names = FALSE),
+          gene_polys$x
+        )
+        clip_y <- c(
+          unlist(lapply(seq_arcs, `[[`, "y"), use.names = FALSE),
+          gene_polys$y
+        )
+        gene_label_clip_units <- ggchord_device_units_per_inch(
+          clip_x, clip_y
+        )
+        gene_label_segments <- ggchord_clip_segments_to_labels(
+          gene_label_segments, gene_labels,
+          units_per_inch = gene_label_clip_units
         )
       }
       # Per-label leader-line linetype. "auto" means solid, except for labels
@@ -1530,6 +1549,7 @@ compute_chord_layout <- function(
     gene_polys     = gene_polys,
     gene_labels    = gene_labels,
     gene_label_segments = gene_label_segments,
+    gene_label_clip_units = gene_label_clip_units,
     seq_labels_df  = seq_labels_df,
     group_labels   = group_labels,
     axis_lines     = axis_lines,

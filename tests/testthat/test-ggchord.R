@@ -543,16 +543,25 @@ test_that("gene_label_orientation and gene_label_segment work", {
   seg <- p$ggchord$ref$layout$gene_label_segments
   expect_true(all(gl$text_angle == 0))
   expect_gt(nrow(seg), 0)
-  # each elbow is two rows: an oblique segment from the gene to the label's
-  # horizontal level, then a short horizontal stub into the label
-  expect_equal(nrow(seg) %% 2, 0)
-  idx <- which(seg$group == seg$group[1])
-  # the two segments meet at the bend point
-  expect_equal(seg$x0[idx[2]], seg$x1[idx[1]])
-  expect_equal(seg$y0[idx[2]], seg$y1[idx[1]])
-  # the stub is horizontal and short
-  expect_equal(seg$y0[idx[2]], seg$y1[idx[2]])
-  expect_lt(abs(seg$x1[idx[2]] - seg$x0[idx[2]]), 0.2)
+  # Clipping can split either leg around another label, so an elbow need not
+  # remain exactly two rows. Its final visible piece must still approach the
+  # label on the cardinal rail: horizontally for left/right rails and
+  # vertically for top/bottom rails.
+  final_rows <- vapply(seq_len(nrow(gl)), function(i) {
+    candidates <- which(
+      seg$group == i &
+        abs(seg$x1 - gl$text_x[i]) < 1e-10 &
+        abs(seg$y1 - gl$text_y[i]) < 1e-10
+    )
+    if (length(candidates)) candidates[length(candidates)] else NA_integer_
+  }, integer(1))
+  final_rows <- final_rows[!is.na(final_rows)]
+  expect_gt(length(final_rows), 0)
+  final <- seg[final_rows, , drop = FALSE]
+  dx_stub <- final$x1 - final$x0
+  dy_stub <- final$y1 - final$y0
+  expect_true(all(abs(dx_stub) < 1e-10 | abs(dy_stub) < 1e-10))
+  expect_true(all(sqrt(dx_stub^2 + dy_stub^2) < 0.2))
   expect_no_error(ggplot_build(p))
 })
 
@@ -569,24 +578,28 @@ test_that("horizontal repelled labels sit on the far side of the leader line", {
   gl <- l$gene_labels
   seg <- l$gene_label_segments
   if (nrow(seg) > 0 && nrow(gl) > 0) {
-    w <- ggchord:::ggchord_text_boxes(
+    text_boxes <- ggchord:::ggchord_text_boxes(
       gl,
       units_per_inch = max(1, diff(range(c(seg$x0, seg$x1)))) / 6
-    )$w
+    )
     for (i in seq_len(nrow(gl))) {
       g <- which(seg$group == i)
       if (length(g) == 0) next
       stub <- seg[g[length(g)], ]
-      tx <- gl$text_x[i]
-      hjust <- gl$hjust[i]
-      x0box <- if (hjust < 0.5) tx else if (hjust > 0.5) tx - w[i] else tx - w[i] / 2
-      x1box <- if (hjust < 0.5) tx + w[i] else if (hjust > 0.5) tx else tx + w[i] / 2
       # the elbow stub must never cross the interior of the text box
-      expect_false(
-        max(stub$x0, stub$x1) > x0box + 1e-3 &&
-          min(stub$x0, stub$x1) < x1box - 1e-3,
-        info = paste("label", i, "(", gl$text[i], ") stub crosses its text")
-      )
+      if (abs(stub$x1 - stub$x0) >= abs(stub$y1 - stub$y0)) {
+        expect_false(
+          max(stub$x0, stub$x1) > text_boxes$xmin[i] + 1e-3 &&
+            min(stub$x0, stub$x1) < text_boxes$xmax[i] - 1e-3,
+          info = paste("label", i, "(", gl$text[i], ") stub crosses its text")
+        )
+      } else {
+        expect_false(
+          max(stub$y0, stub$y1) > text_boxes$ymin[i] + 1e-3 &&
+            min(stub$y0, stub$y1) < text_boxes$ymax[i] - 1e-3,
+          info = paste("label", i, "(", gl$text[i], ") stub crosses its text")
+        )
+      }
     }
     # the elbow must not double back: the oblique segment and the horizontal
     # stub may both be slanted/vertical, but never point in opposite
@@ -594,9 +607,20 @@ test_that("horizontal repelled labels sit on the far side of the leader line", {
     for (g in unique(seg$group)) {
       rows <- seg[seg$group == g, ]
       if (nrow(rows) < 2) next
-      dx_long <- sign(rows$x1[1] - rows$x0[1])
-      dx_stub <- sign(rows$x1[2] - rows$x0[2])
-      if (dx_long != 0 && dx_stub != 0 && dx_long != dx_stub) {
+      horizontal <- abs(rows$x1[2] - rows$x0[2]) >=
+        abs(rows$y1[2] - rows$y0[2])
+      long_component <- if (horizontal) {
+        sign(rows$x1[1] - rows$x0[1])
+      } else {
+        sign(rows$y1[1] - rows$y0[1])
+      }
+      stub_component <- if (horizontal) {
+        sign(rows$x1[2] - rows$x0[2])
+      } else {
+        sign(rows$y1[2] - rows$y0[2])
+      }
+      if (long_component != 0 && stub_component != 0 &&
+          long_component != stub_component) {
         fail(paste("elbow for label", g, "doubles back on itself"))
       }
     }
@@ -613,10 +637,20 @@ test_that("horizontal repelled labels sit on the far side of the leader line", {
     # In elbow mode the first leg may be vertical. The final leg is the one
     # that approaches the text and therefore determines its justification.
     final_leg <- !duplicated(seg2$group, fromLast = TRUE)
-    moved_right <- (seg2$x1[final_leg] - seg2$x0[final_leg]) >= 0
-    expect_equal(
-      gl2$hjust[seg2$group[final_leg]], ifelse(moved_right, 0, 1)
-    )
+    final <- seg2[final_leg, ]
+    horizontal <- abs(final$x1 - final$x0) >= abs(final$y1 - final$y0)
+    if (any(horizontal)) {
+      moved_right <- (final$x1[horizontal] - final$x0[horizontal]) >= 0
+      expect_equal(
+        gl2$hjust[final$group[horizontal]], ifelse(moved_right, 0, 1)
+      )
+    }
+    if (any(!horizontal)) {
+      moved_up <- (final$y1[!horizontal] - final$y0[!horizontal]) >= 0
+      expect_equal(
+        gl2$vjust[final$group[!horizontal]], ifelse(moved_up, 0, 1)
+      )
+    }
   }
 })
 
@@ -701,12 +735,19 @@ test_that("elbow leader lines adapt their segment lengths per label", {
   groups <- unique(seg$group)
   stub_len <- vapply(groups, function(g) {
     rows <- seg[seg$group == g, ]
-    abs(rows$x1[2] - rows$x0[2])
+    sqrt((rows$x1[2] - rows$x0[2])^2 +
+           (rows$y1[2] - rows$y0[2])^2)
   }, numeric(1))
-  # horizontal span between the gene anchor and the label
+  # span between the gene anchor and the label along the final approach axis
   span <- vapply(groups, function(g) {
     rows <- seg[seg$group == g, ]
-    abs(rows$x1[2] - rows$x0[1])
+    horizontal <- abs(rows$x1[2] - rows$x0[2]) >=
+      abs(rows$y1[2] - rows$y0[2])
+    if (horizontal) {
+      abs(rows$x1[2] - rows$x0[1])
+    } else {
+      abs(rows$y1[2] - rows$y0[1])
+    }
   }, numeric(1))
   # stubs scale with each label's position instead of being one fixed length
   expect_gt(length(unique(round(stub_len, 4))), 1)
@@ -718,10 +759,21 @@ test_that("elbow leader lines adapt their segment lengths per label", {
   # the bend never lands beyond the gene anchor (no doubled-back elbows)
   for (g in groups) {
     rows <- seg[seg$group == g, ]
+    horizontal <- abs(rows$x1[2] - rows$x0[2]) >=
+      abs(rows$y1[2] - rows$y0[2])
+    long_component <- if (horizontal) {
+      sign(rows$x1[1] - rows$x0[1])
+    } else {
+      sign(rows$y1[1] - rows$y0[1])
+    }
+    stub_component <- if (horizontal) {
+      sign(rows$x1[2] - rows$x0[2])
+    } else {
+      sign(rows$y1[2] - rows$y0[2])
+    }
     expect_true(
-      sign(rows$x1[1] - rows$x0[1]) == 0 ||
-        sign(rows$x1[2] - rows$x0[2]) == 0 ||
-        sign(rows$x1[1] - rows$x0[1]) == sign(rows$x1[2] - rows$x0[2]),
+      long_component == 0 || stub_component == 0 ||
+        long_component == stub_component,
       info = paste("elbow for label group", g, "doubles back")
     )
   }

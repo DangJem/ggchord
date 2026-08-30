@@ -39,6 +39,57 @@ same_lane_leaders_cross <- function(layout) {
   FALSE
 }
 
+any_leaders_cross <- function(layout) {
+  seg <- layout$gene_label_segments
+  if (nrow(seg) < 2) return(FALSE)
+  for (i in seq_len(nrow(seg) - 1L)) {
+    for (j in (i + 1L):nrow(seg)) {
+      if (seg$group[i] == seg$group[j]) next
+      if (ggchord:::ggchord_segments_cross(
+        seg$x0[i], seg$y0[i], seg$x1[i], seg$y1[i],
+        seg$x0[j], seg$y0[j], seg$x1[j], seg$y1[j]
+      )) return(TRUE)
+    }
+  }
+  FALSE
+}
+
+leader_hits_other_label <- function(layout) {
+  seg <- layout$gene_label_segments
+  gl <- layout$gene_labels
+  if (nrow(seg) == 0 || nrow(gl) < 2) return(FALSE)
+  clip_units <- layout$gene_label_clip_units
+  if (is.null(clip_units) || !is.finite(clip_units)) {
+    clip_units <- ggchord:::ggchord_device_units_per_inch(
+      unlist(lapply(layout$seq_arcs, `[[`, "x"), use.names = FALSE),
+      unlist(lapply(layout$seq_arcs, `[[`, "y"), use.names = FALSE)
+    )
+  }
+  boxes <- ggchord:::ggchord_text_boxes(
+    gl, units_per_inch = clip_units
+  )
+  interval <- function(origin, delta, lower, upper, tol = 1e-8) {
+    if (abs(delta) < tol) {
+      if (origin <= lower + tol || origin >= upper - tol) return(NULL)
+      return(c(-Inf, Inf))
+    }
+    sort(c((lower - origin) / delta, (upper - origin) / delta))
+  }
+  for (s in seq_len(nrow(seg))) {
+    dx <- seg$x1[s] - seg$x0[s]
+    dy <- seg$y1[s] - seg$y0[s]
+    for (i in setdiff(seq_len(nrow(gl)), seg$group[s])) {
+      tx <- interval(seg$x0[s], dx, boxes$xmin[i], boxes$xmax[i])
+      ty <- interval(seg$y0[s], dy, boxes$ymin[i], boxes$ymax[i])
+      if (is.null(tx) || is.null(ty)) next
+      enter <- max(0, tx[1], ty[1])
+      exit <- min(1, tx[2], ty[2])
+      if (enter < exit - 1e-8) return(TRUE)
+    }
+  }
+  FALSE
+}
+
 test_that("repelled labels respect the complete geom_seq geometry", {
   data(seq_data_example)
   data(gene_data_example)
@@ -97,6 +148,8 @@ test_that("repelled labels respect the complete geom_seq geometry", {
 
       expect_false(label_boxes_overlap(layout), info = context)
       expect_false(same_lane_leaders_cross(layout), info = context)
+      expect_false(any_leaders_cross(layout), info = context)
+      expect_false(leader_hits_other_label(layout), info = context)
       frame <- ggchord:::ggchord_label_curve_frame(
         layout$gene_labels, layout$seq_arcs
       )
@@ -150,4 +203,59 @@ test_that("nested sequence radii use compact per-sequence label bands", {
   expect_true(all(median_by_sequence < 1.1))
   expect_false(label_boxes_overlap(layout))
   expect_false(same_lane_leaders_cross(layout))
+  expect_false(any_leaders_cross(layout))
+  expect_false(leader_hits_other_label(layout))
+
+  blue <- gl$seq_id == "MT118296.1"
+  expect_equal(diff(range(gl$text_x[blue])), 0, tolerance = 1e-8)
+  expect_true(all(gl$hjust[blue] == 1 & gl$vjust[blue] == 0.5))
+
+  green <- gl$seq_id == "OQ646790.1"
+  expect_true(all(gl$hjust[green] == 0.5 & gl$vjust[green] == 1))
+  expect_lte(length(unique(round(gl$text_y[green], 8))), 3)
+})
+
+test_that("leader clipping follows the physical output size", {
+  data(seq_data_example)
+  data(ribbon_data_example)
+  data(gene_data_example)
+  p <- ggchord(
+    seq_data_example, ribbon_data_example, gene_data_example,
+    title = "ggchord"
+  ) +
+    geom_seq(
+      seq_radius = c(3.3, 2.5, 1.8, 1.25),
+      seq_orientation = c(1, -1, 1, -1)
+    ) +
+    geom_ribbon(ribbon_alpha = 0.45) +
+    geom_gene() +
+    geom_gene_label_repel() +
+    geom_seq_label() +
+    geom_axis()
+
+  build_at_size <- function(width, height) {
+    path <- tempfile(fileext = ".png")
+    grDevices::png(path, width = width, height = height,
+                   units = "in", res = 72)
+    result <- tryCatch({
+      invisible(suppressWarnings(ggplot2::ggplot_build(p)))
+      layout <- get_chord_layout()
+      retained <- with(
+        layout$gene_label_segments,
+        sum(sqrt((x1 - x0)^2 + (y1 - y0)^2))
+      )
+      c(units = layout$gene_label_clip_units, retained = retained)
+    }, finally = {
+      grDevices::dev.off()
+      unlink(path)
+    })
+    result
+  }
+
+  small <- build_at_size(6, 6)
+  large <- build_at_size(15, 10)
+  expect_gt(unname(small["units"]), unname(large["units"]))
+  # A larger device renders smaller text in data units, so clipping must not
+  # remove more of the same leader geometry.
+  expect_gte(unname(large["retained"]), unname(small["retained"]) - 1e-8)
 })

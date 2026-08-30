@@ -333,6 +333,37 @@ ggchord_text_boxes <- function(df,
   )
 }
 
+#' Convert physical text dimensions to the current fixed-aspect plot scale.
+#'
+#' Text is rendered in millimetres, whereas chord geometry is expressed in
+#' data units. A fixed data-units-per-inch constant therefore cannot describe
+#' the same label on both a small and a large output device. This helper uses
+#' the current device dimensions and the undecorated chord span; importantly,
+#' it does not feed already-expanded label limits back into the estimate. The
+#' latter used to make leader-line clipping grow with the labels themselves and
+#' produced conspicuously large, output-size-dependent gaps.
+#' @keywords internal
+ggchord_device_units_per_inch <- function(x, y,
+                                          fallback_inches = 6,
+                                          margin_inches = 1.25) {
+  x <- x[is.finite(x)]
+  y <- y[is.finite(y)]
+  x_span <- if (length(x) > 1) diff(range(x)) else 0
+  y_span <- if (length(y) > 1) diff(range(y)) else 0
+  geometry_span <- max(x_span, y_span, 1)
+
+  device_inches <- tryCatch(
+    grDevices::dev.size("in"),
+    error = function(e) c(NA_real_, NA_real_)
+  )
+  usable_inches <- suppressWarnings(min(device_inches, na.rm = TRUE)) -
+    margin_inches
+  if (!is.finite(usable_inches) || usable_inches < 2) {
+    usable_inches <- fallback_inches
+  }
+  geometry_span / usable_inches
+}
+
 #' Convert text layers into fixed obstacle rectangles for label repulsion.
 #' @keywords internal
 ggchord_text_obstacle_boxes <- function(seq_labels_df = NULL,
@@ -894,17 +925,32 @@ ggchord_uncross_labels <- function(gl, lanes = NULL, max_swaps = NULL,
   list(labels = gl, swaps = total_swaps)
 }
 
-ggchord_elbow_bends <- function(gl, text_widths) {
+ggchord_elbow_bends <- function(gl, text_widths, text_heights = NULL,
+                                directions = NULL) {
   n <- nrow(gl)
   if (n == 0) return(data.frame(x = numeric(0), y = numeric(0)))
+  if (is.null(text_heights)) text_heights <- text_widths
+  if (is.null(directions)) {
+    directions <- ifelse(gl$hjust < 0.5, "right", "left")
+  }
   horiz <- abs(gl$text_x - gl$anchor_x)
-  stub_len <- pmin(pmax(0.02, 0.3 * horiz),
-                   pmax(0.3 * text_widths, 0.04))
-  dir <- ifelse(gl$hjust < 0.5, 1, -1)
-  bx <- gl$text_x - dir * stub_len
-  bx <- ifelse(gl$hjust < 0.5,
-               pmax(bx, gl$anchor_x), pmin(bx, gl$anchor_x))
-  data.frame(x = bx, y = gl$text_y)
+  vert <- abs(gl$text_y - gl$anchor_y)
+  horizontal_stub <- directions %in% c("left", "right")
+  span <- ifelse(horizontal_stub, horiz, vert)
+  extent <- ifelse(horizontal_stub, text_widths, text_heights)
+  stub_len <- pmin(pmax(0.02, 0.3 * span), pmax(0.3 * extent, 0.04))
+
+  bx <- gl$text_x
+  by <- gl$text_y
+  left <- directions == "left"
+  right <- directions == "right"
+  bottom <- directions == "bottom"
+  top <- directions == "top"
+  bx[left] <- pmin(gl$text_x[left] + stub_len[left], gl$anchor_x[left])
+  bx[right] <- pmax(gl$text_x[right] - stub_len[right], gl$anchor_x[right])
+  by[bottom] <- pmin(gl$text_y[bottom] + stub_len[bottom], gl$anchor_y[bottom])
+  by[top] <- pmax(gl$text_y[top] - stub_len[top], gl$anchor_y[top])
+  data.frame(x = bx, y = by)
 }
 
 ggchord_label_curve_frame <- function(gl, seq_arcs) {
@@ -979,11 +1025,70 @@ ggchord_enforce_label_side <- function(gl, seq_arcs, side = "auto") {
   gl
 }
 
-# Put horizontal labels into compact local bands around their own sequence.
-# The free force layout supplies seed-dependent starting positions, but this
-# pass constrains both radial and tangential drift around each gene anchor.
-# Labels therefore use nearby two-dimensional space instead of escaping into
-# one large global ring when sequences have very different radii.
+# Pack one-dimensional label anchors while preserving their gene order.
+ggchord_pack_label_axis <- function(preferred, order_value,
+                                    before, after, gap = 0) {
+  n <- length(preferred)
+  if (n < 2) return(preferred)
+  ord <- order(order_value, seq_len(n))
+  position <- preferred[ord]
+  before <- before[ord]
+  after <- after[ord]
+
+  # A forward pass creates the minimum legal spacing. Translating the whole
+  # lane afterwards is the least-squares fit back to the preferred positions
+  # and does not change any of those spacings.
+  for (i in 2:n) {
+    position[i] <- max(
+      position[i], position[i - 1L] + after[i - 1L] + before[i] + gap
+    )
+  }
+  position <- position + mean(preferred[ord] - position)
+  out <- numeric(n)
+  out[ord] <- position
+  out
+}
+
+# Pack away from a shared lane centre. The label nearest that centre remains
+# close to its gene, while congestion is absorbed by labels farther towards
+# either end of the sequence. This avoids giving adjacent labels parallel,
+# similarly offset leaders that can intersect on a curved arc.
+ggchord_pack_label_axis_outward <- function(preferred, order_value,
+                                            before, after, centre,
+                                            gap = 0) {
+  n <- length(preferred)
+  if (n < 2) return(preferred)
+  ord <- order(order_value, seq_len(n))
+  position <- preferred[ord]
+  before <- before[ord]
+  after <- after[ord]
+  pivot <- which.min(abs(order_value[ord] - centre))
+
+  if (pivot > 1) {
+    for (i in seq.int(pivot - 1L, 1L)) {
+      position[i] <- min(
+        position[i], position[i + 1L] - after[i] - before[i + 1L] - gap
+      )
+    }
+  }
+  if (pivot < n) {
+    for (i in seq.int(pivot + 1L, n)) {
+      position[i] <- max(
+        position[i], position[i - 1L] + after[i - 1L] + before[i] + gap
+      )
+    }
+  }
+  out <- numeric(n)
+  out[ord] <- position
+  out
+}
+
+# Put horizontal labels on compact cardinal rails around their own sequence.
+# Each label is classified from the actual local normal of the sequence curve,
+# so radius, curvature, gap, rotation and sequence orientation are all already
+# represented in the rail choice. Left/right rails form vertical columns and
+# top/bottom rails form horizontal rows. Within each rail the original gene
+# order is retained, making the resulting leaders planar by construction.
 ggchord_compact_label_lanes <- function(gl, seq_arcs,
                                         side = "outside",
                                         units_per_inch = 0.35,
@@ -1006,150 +1111,353 @@ ggchord_compact_label_lanes <- function(gl, seq_arcs,
   } else {
     ifelse(anchor_frame$signed_distance < 0, -1, 1)
   }
-  lanes <- paste(gl$seq_id, side_sign, sep = "\r")
+  desired_x <- side_sign * anchor_frame$outward_x
+  desired_y <- side_sign * anchor_frame$outward_y
+  directions <- rep(NA_character_, n)
+  direction_groups <- paste(gl$seq_id, side_sign, sep = "\r")
+  for (rows in split(which(active), direction_groups[active], drop = TRUE)) {
+    mean_x <- mean(desired_x[rows])
+    mean_y <- mean(desired_y[rows])
+    directions[rows] <- if (abs(mean_x) >= abs(mean_y)) {
+      if (mean_x < 0) "left" else "right"
+    } else {
+      if (mean_y < 0) "bottom" else "top"
+    }
+  }
+  directions[!active] <- NA_character_
+  base_lanes <- paste(gl$seq_id, directions, sep = "\r")
 
-  tangent_x <- -anchor_frame$outward_y
-  tangent_y <- anchor_frame$outward_x
-  direction_x <- side_sign * anchor_frame$outward_x
-  gl$hjust[active] <- ifelse(direction_x[active] >= 0, 0, 1)
-  gl$vjust[active] <- 0.5
+  gl$text_angle[active] <- 0
+  gl$hjust[active] <- c(left = 1, right = 0, top = 0.5, bottom = 0.5)[
+    directions[active]
+  ]
+  gl$vjust[active] <- c(left = 0.5, right = 0.5, top = 0, bottom = 1)[
+    directions[active]
+  ]
   boxes <- ggchord_text_boxes(
     gl, units_per_inch = units_per_inch, box_padding = box_padding
   )
-  centre_normal <-
-    (boxes$cx - boxes$x) * anchor_frame$outward_x +
-    (boxes$cy - boxes$y) * anchor_frame$outward_y
-  normal_extent <-
-    (boxes$bw * abs(anchor_frame$outward_x) +
-       boxes$bh * abs(anchor_frame$outward_y)) / 2
-  clearance <- pmax(abs(anchor_frame$signed_distance), point_padding) + 0.04
-  minimum_distance <- pmax(
-    abs(anchor_frame$signed_distance) + 0.04,
-    clearance + normal_extent - side_sign * centre_normal
-  )
-  band_depth <- max(0.22, 0.28 * units_per_inch)
-  tangent_limit <- max(0.55, 0.75 * units_per_inch)
-
-  vx <- gl$text_x - anchor_frame$curve_x
-  vy <- gl$text_y - anchor_frame$curve_y
-  tangent_offset <- vx * tangent_x + vy * tangent_y
-  radial_distance <- side_sign *
-    (vx * anchor_frame$outward_x + vy * anchor_frame$outward_y)
-  tangent_offset <- pmin(pmax(tangent_offset, -tangent_limit), tangent_limit)
-  radial_distance <- pmin(
-    pmax(radial_distance, minimum_distance), minimum_distance + band_depth
-  )
-  gl$text_x[active] <- anchor_frame$curve_x[active] +
-    tangent_offset[active] * tangent_x[active] +
-    side_sign[active] * radial_distance[active] *
-      anchor_frame$outward_x[active]
-  gl$text_y[active] <- anchor_frame$curve_y[active] +
-    tangent_offset[active] * tangent_y[active] +
-    side_sign[active] * radial_distance[active] *
-      anchor_frame$outward_y[active]
-
-  # The final approach direction can differ from the radial direction when a
-  # label uses tangential space. Justify from the actual gene-to-label leader
-  # so elbow stubs always enter the empty side of the text.
-  gl$hjust[active] <- ifelse(
-    gl$text_x[active] >= gl$anchor_x[active], 0, 1
-  )
-
-  update_minimum_distance <- function(labels) {
-    current_boxes <- ggchord_text_boxes(
-      labels, units_per_inch = units_per_inch,
-      box_padding = box_padding
+  axis_gap <- max(0.02, 0.025 * units_per_inch)
+  # Long horizontal text cannot form one compact row without either a large
+  # empty margin or very long leaders. Split only top/bottom lanes into a
+  # small number of staggered parallel rows. Their shared endpoint ordering
+  # keeps the leaders planar; vertical lanes deliberately remain one column
+  # so their text anchors line up exactly.
+  rail_index <- rep(1L, n)
+  base_lane_rows <- split(which(active), base_lanes[active], drop = TRUE)
+  for (rows in base_lane_rows) {
+    if (!directions[rows[1]] %in% c("top", "bottom") ||
+        length(rows) < 3) next
+    ord <- rows[order(gl$anchor_x[rows], rows)]
+    occupied <- boxes$bw[ord]
+    available <- max(
+      diff(range(gl$anchor_x[ord])) + 1.2 * units_per_inch,
+      3 * units_per_inch
     )
-    current_centre_normal <-
-      (current_boxes$cx - current_boxes$x) * anchor_frame$outward_x +
-      (current_boxes$cy - current_boxes$y) * anchor_frame$outward_y
-    current_normal_extent <-
-      (current_boxes$bw * abs(anchor_frame$outward_x) +
-         current_boxes$bh * abs(anchor_frame$outward_y)) / 2
-    pmax(
-      abs(anchor_frame$signed_distance) + 0.04,
-      clearance + current_normal_extent -
-        side_sign * current_centre_normal
-    )
+    rail_count <- min(length(ord), ceiling(
+      (sum(occupied) + axis_gap * (length(ord) - 1L)) / available
+    ))
+    if (rail_count < 2) next
+    for (k in seq_along(ord)) {
+      rail_index[ord[k]] <- ((k - 1L) %% rail_count) + 1L
+    }
   }
-  minimum_distance <- update_minimum_distance(gl)
+  lanes <- paste(base_lanes, rail_index, sep = "\r")
+  rail_gap <- point_padding + box_padding * units_per_inch +
+    max(0.04, 0.04 * units_per_inch)
+  rail_step <- max(0.16, 0.16 * units_per_inch) +
+    max(boxes$h[active], 0)
 
-  # Alternate one collision correction with a projection back into the local
-  # band. If a lane is unusually dense, grow the band gradually instead of
-  # sending one label far away in a single step.
-  active_rows <- which(active)
-  work_boxes <- ggchord_text_boxes(
-    gl[active_rows, , drop = FALSE],
-    units_per_inch = units_per_inch,
-    box_padding = box_padding
-  )
-  for (iter in seq_len(max_iter)) {
-    old_x <- gl$text_x[active_rows]
-    old_y <- gl$text_y[active_rows]
-    cx_off <- work_boxes$cx - work_boxes$x
-    cy_off <- work_boxes$cy - work_boxes$y
-    separated <- ggchord_separate_boxes(
-      old_x, old_y, work_boxes$bw, work_boxes$bh,
-      cx_off, cy_off, repel_boxes = repel_boxes,
-      max_iter = 1
-    )
-    gl$text_x[active_rows] <- separated$x
-    gl$text_y[active_rows] <- separated$y
-    new_hjust <- ifelse(
-      gl$text_x[active] >= gl$anchor_x[active], 0, 1
-    )
-    if (any(new_hjust != gl$hjust[active])) {
-      gl$hjust[active] <- new_hjust
-      minimum_distance <- update_minimum_distance(gl)
-      work_boxes <- ggchord_text_boxes(
-        gl[active_rows, , drop = FALSE],
-        units_per_inch = units_per_inch,
-        box_padding = box_padding
+  lane_rows <- split(which(active), lanes[active], drop = TRUE)
+  for (rows in lane_rows) {
+    direction <- directions[rows[1]]
+    # Retain a small amount of seed-dependent variation without allowing it
+    # to alter the gene order or the rail chosen for a label.
+    if (direction %in% c("left", "right")) {
+      preferred <- gl$anchor_y[rows] + 0.12 *
+        (gl$text_y[rows] - gl$anchor_y[rows])
+      before <- boxes$y[rows] - boxes$ymin[rows]
+      after <- boxes$ymax[rows] - boxes$y[rows]
+      gl$text_y[rows] <- ggchord_pack_label_axis(
+        preferred, gl$anchor_y[rows], before, after, gap = axis_gap
       )
-    }
-
-    extra <- 0.12 * floor((iter - 1L) / 40L)
-    vx <- gl$text_x - anchor_frame$curve_x
-    vy <- gl$text_y - anchor_frame$curve_y
-    tangent_offset <- vx * tangent_x + vy * tangent_y
-    radial_distance <- side_sign *
-      (vx * anchor_frame$outward_x + vy * anchor_frame$outward_y)
-    tangent_offset <- pmin(
-      pmax(tangent_offset, -(tangent_limit + extra)),
-      tangent_limit + extra
-    )
-    radial_distance <- pmin(
-      pmax(radial_distance, minimum_distance),
-      minimum_distance + band_depth + extra
-    )
-    gl$text_x[active] <- anchor_frame$curve_x[active] +
-      tangent_offset[active] * tangent_x[active] +
-      side_sign[active] * radial_distance[active] *
-        anchor_frame$outward_x[active]
-    gl$text_y[active] <- anchor_frame$curve_y[active] +
-      tangent_offset[active] * tangent_y[active] +
-      side_sign[active] * radial_distance[active] *
-        anchor_frame$outward_y[active]
-    new_hjust <- ifelse(
-      gl$text_x[active] >= gl$anchor_x[active], 0, 1
-    )
-    if (any(new_hjust != gl$hjust[active])) {
-      gl$hjust[active] <- new_hjust
-      minimum_distance <- update_minimum_distance(gl)
-      work_boxes <- ggchord_text_boxes(
-        gl[active_rows, , drop = FALSE],
-        units_per_inch = units_per_inch,
-        box_padding = box_padding
+      gl$text_x[rows] <- if (direction == "left") {
+        min(anchor_frame$curve_x[rows]) - rail_gap
+      } else {
+        max(anchor_frame$curve_x[rows]) + rail_gap
+      }
+    } else {
+      base_rows <- which(base_lanes == base_lanes[rows[1]] & active)
+      preferred <- gl$anchor_x[rows] + 0.12 *
+        (gl$text_x[rows] - gl$anchor_x[rows])
+      before <- boxes$x[rows] - boxes$xmin[rows]
+      after <- boxes$xmax[rows] - boxes$x[rows]
+      gl$text_x[rows] <- ggchord_pack_label_axis_outward(
+        preferred, gl$anchor_x[rows], before, after,
+        centre = 0, gap = axis_gap
       )
+      gl$text_y[rows] <- if (direction == "bottom") {
+        min(anchor_frame$curve_y[base_rows]) - rail_gap -
+          (rail_index[rows[1]] - 1L) * rail_step
+      } else {
+        max(anchor_frame$curve_y[base_rows]) + rail_gap +
+          (rail_index[rows[1]] - 1L) * rail_step
+      }
     }
-    displacement <- max(
-      abs(gl$text_x[active_rows] - old_x),
-      abs(gl$text_y[active_rows] - old_y)
-    )
-    if (is.finite(displacement) && displacement < 1e-6) break
   }
 
-  list(labels = gl, lanes = lanes)
+  # Parallel rows are staggered, so each row has room for long horizontal
+  # text. Alternate row-specific spacing constraints with a weak global
+  # monotonic constraint. This keeps endpoints in gene order without forcing
+  # different rows to reserve each other's full text widths.
+  for (rows in base_lane_rows) {
+    if (!directions[rows[1]] %in% c("top", "bottom")) next
+    anchor_order <- rows[order(gl$anchor_x[rows], rows)]
+    centre_before <- mean(gl$text_x[rows])
+    for (pass in seq_len(max_iter)) {
+      old <- gl$text_x[rows]
+      for (index in sort(unique(rail_index[rows]))) {
+        same_rail <- rows[rail_index[rows] == index]
+        same_rail <- same_rail[order(gl$anchor_x[same_rail], same_rail)]
+        if (length(same_rail) < 2) next
+        for (k in seq_len(length(same_rail) - 1L)) {
+          i <- same_rail[k]
+          j <- same_rail[k + 1L]
+          required <- (boxes$bw[i] + boxes$bw[j]) / 2 + axis_gap
+          shortage <- required - (gl$text_x[j] - gl$text_x[i])
+          if (shortage > 0) {
+            gl$text_x[i] <- gl$text_x[i] - shortage / 2
+            gl$text_x[j] <- gl$text_x[j] + shortage / 2
+          }
+        }
+      }
+      if (length(anchor_order) > 1) {
+        for (k in seq_len(length(anchor_order) - 1L)) {
+          i <- anchor_order[k]
+          j <- anchor_order[k + 1L]
+          shortage <- axis_gap / 4 - (gl$text_x[j] - gl$text_x[i])
+          if (shortage > 0) {
+            gl$text_x[i] <- gl$text_x[i] - shortage / 2
+            gl$text_x[j] <- gl$text_x[j] + shortage / 2
+          }
+        }
+      }
+      if (max(abs(gl$text_x[rows] - old)) < 1e-7) break
+    }
+    gl$text_x[rows] <- gl$text_x[rows] +
+      centre_before - mean(gl$text_x[rows])
+  }
+
+  # Neighbouring sequences can share the same top or bottom sector when
+  # radii and curvature differ strongly. Preserve endpoint order across those
+  # sequences too, alternating it with the full within-row spacing rule.
+  horizontal <- which(active & directions %in% c("top", "bottom"))
+  if (length(horizontal) > 1) {
+    for (pass in seq_len(max_iter)) {
+      old <- gl$text_x[horizontal]
+      for (rows in lane_rows) {
+        if (!directions[rows[1]] %in% c("top", "bottom") ||
+            length(rows) < 2) next
+        ord <- rows[order(gl$anchor_x[rows], rows)]
+        for (k in seq_len(length(ord) - 1L)) {
+          i <- ord[k]
+          j <- ord[k + 1L]
+          required <- (boxes$bw[i] + boxes$bw[j]) / 2 + axis_gap
+          shortage <- required - (gl$text_x[j] - gl$text_x[i])
+          if (shortage > 0) {
+            gl$text_x[i] <- gl$text_x[i] - shortage / 2
+            gl$text_x[j] <- gl$text_x[j] + shortage / 2
+          }
+        }
+      }
+      for (direction in c("top", "bottom")) {
+        rows <- which(active & directions == direction)
+        if (length(rows) < 2) next
+        ord <- rows[order(gl$anchor_x[rows], rows)]
+        for (k in seq_len(length(ord) - 1L)) {
+          i <- ord[k]
+          j <- ord[k + 1L]
+          shortage <- axis_gap / 4 - (gl$text_x[j] - gl$text_x[i])
+          if (shortage > 0) {
+            gl$text_x[i] <- gl$text_x[i] - shortage / 2
+            gl$text_x[j] <- gl$text_x[j] + shortage / 2
+          }
+        }
+      }
+      if (max(abs(gl$text_x[horizontal] - old)) < 1e-7) break
+    }
+  }
+
+  # A curved arc can still make two adjacent diagonal approaches intersect
+  # even when their endpoint x order is monotone. Exchange only their nearby
+  # parallel row levels while retaining each label's x position. This changes
+  # the approach order without assigning either label to a distant slot.
+  for (pass in seq_len(max_iter)) {
+    changed <- FALSE
+    for (rows in base_lane_rows) {
+      if (!directions[rows[1]] %in% c("top", "bottom") ||
+          length(rows) < 2) next
+      for (ii in seq_len(length(rows) - 1L)) {
+        for (jj in (ii + 1L):length(rows)) {
+          i <- rows[ii]
+          j <- rows[jj]
+          if (rail_index[i] == rail_index[j]) next
+          if (ggchord_segments_cross(
+            gl$anchor_x[i], gl$anchor_y[i], gl$text_x[i], gl$text_y[i],
+            gl$anchor_x[j], gl$anchor_y[j], gl$text_x[j], gl$text_y[j]
+          )) {
+            old_distance <-
+              (gl$text_y[i] - gl$anchor_y[i])^2 +
+              (gl$text_y[j] - gl$anchor_y[j])^2
+            new_distance <-
+              (gl$text_y[j] - gl$anchor_y[i])^2 +
+              (gl$text_y[i] - gl$anchor_y[j])^2
+            if (new_distance <= old_distance + 1e-10) {
+              gl$text_y[c(i, j)] <- gl$text_y[c(j, i)]
+              changed <- TRUE
+              break
+            }
+          }
+        }
+        if (changed) break
+      }
+      if (changed) break
+    }
+    if (!changed) break
+  }
+
+  move_lane_outward <- function(rows, amount) {
+    if (!is.finite(amount) || amount <= 0) return()
+    direction <- directions[rows[1]]
+    if (direction == "left") gl$text_x[rows] <<- gl$text_x[rows] - amount
+    if (direction == "right") gl$text_x[rows] <<- gl$text_x[rows] + amount
+    if (direction == "bottom") gl$text_y[rows] <<- gl$text_y[rows] - amount
+    if (direction == "top") gl$text_y[rows] <<- gl$text_y[rows] + amount
+  }
+
+  # Keep every rail on the requested side even after the labels have been
+  # packed along it. Oblique local normals may require a small outward shift
+  # when a long lane extends tangentially beyond its sequence endpoint.
+  ensure_requested_side <- function() {
+    for (rows in base_lane_rows) {
+      direction <- directions[rows[1]]
+      dx <- gl$text_x[rows] - anchor_frame$curve_x[rows]
+      dy <- gl$text_y[rows] - anchor_frame$curve_y[rows]
+      signed <- side_sign[rows] *
+        (dx * anchor_frame$outward_x[rows] +
+           dy * anchor_frame$outward_y[rows])
+      projection <- switch(
+        direction,
+        left = -side_sign[rows] * anchor_frame$outward_x[rows],
+        right = side_sign[rows] * anchor_frame$outward_x[rows],
+        bottom = -side_sign[rows] * anchor_frame$outward_y[rows],
+        top = side_sign[rows] * anchor_frame$outward_y[rows]
+      )
+      amount <- max((rail_gap - signed) / pmax(projection, 0.1), 0)
+      move_lane_outward(rows, amount)
+    }
+  }
+  ensure_requested_side()
+
+  # Sequence and axis text are fixed obstacles. Resolve those conflicts by
+  # moving the complete rail outwards, which preserves its alignment and the
+  # order of every leader instead of pushing individual labels off the rail.
+  if (!is.null(repel_boxes) && nrow(repel_boxes) > 0) {
+    for (pass in seq_len(8)) {
+      moved <- FALSE
+      boxes <- ggchord_text_boxes(
+        gl, units_per_inch = units_per_inch, box_padding = 0
+      )
+      for (rows in lane_rows) {
+        overlap_x <- outer(
+          boxes$xmin[rows], repel_boxes$xmax,
+          function(a, b) a < b - 1e-7
+        ) & outer(
+          boxes$xmax[rows], repel_boxes$xmin,
+          function(a, b) a > b + 1e-7
+        )
+        overlap_y <- outer(
+          boxes$ymin[rows], repel_boxes$ymax,
+          function(a, b) a < b - 1e-7
+        ) & outer(
+          boxes$ymax[rows], repel_boxes$ymin,
+          function(a, b) a > b + 1e-7
+        )
+        hits <- which(overlap_x & overlap_y, arr.ind = TRUE)
+        if (nrow(hits) == 0) next
+        direction <- directions[rows[1]]
+        amount <- switch(
+          direction,
+          left = max(boxes$xmax[rows[hits[, 1]]] -
+                       repel_boxes$xmin[hits[, 2]] + axis_gap),
+          right = max(repel_boxes$xmax[hits[, 2]] -
+                        boxes$xmin[rows[hits[, 1]]] + axis_gap),
+          bottom = max(boxes$ymax[rows[hits[, 1]]] -
+                         repel_boxes$ymin[hits[, 2]] + axis_gap),
+          top = max(repel_boxes$ymax[hits[, 2]] -
+                      boxes$ymin[rows[hits[, 1]]] + axis_gap)
+        )
+        base_rows <- which(base_lanes == base_lanes[rows[1]] & active)
+        move_lane_outward(base_rows, amount)
+        moved <- TRUE
+      }
+      if (!moved) break
+    }
+  }
+  ensure_requested_side()
+
+  # Resolve the remaining visible-box conflicts between different sequence
+  # rails by moving the already outer rail farther out as one rigid unit.
+  # This keeps vertical columns and staggered rows aligned.
+  for (pass in seq_len(12)) {
+    visible_boxes <- ggchord_text_boxes(
+      gl, units_per_inch = units_per_inch, box_padding = 0
+    )
+    dx <- abs(outer(visible_boxes$cx, visible_boxes$cx, "-"))
+    dy <- abs(outer(visible_boxes$cy, visible_boxes$cy, "-"))
+    hits <- which(
+      upper.tri(dx) &
+        dx < outer(visible_boxes$bw, visible_boxes$bw, "+") / 2 - 1e-7 &
+        dy < outer(visible_boxes$bh, visible_boxes$bh, "+") / 2 - 1e-7,
+      arr.ind = TRUE
+    )
+    if (nrow(hits) == 0) break
+    moved <- FALSE
+    for (hit in seq_len(nrow(hits))) {
+      i <- hits[hit, 1]
+      j <- hits[hit, 2]
+      if (base_lanes[i] == base_lanes[j]) next
+      if (directions[i] != directions[j]) next
+      direction <- directions[i]
+      lane_i <- which(base_lanes == base_lanes[i] & active)
+      lane_j <- which(base_lanes == base_lanes[j] & active)
+      amount <- if (direction %in% c("top", "bottom")) {
+        (visible_boxes$bh[i] + visible_boxes$bh[j]) / 2 -
+          abs(visible_boxes$cy[i] - visible_boxes$cy[j]) + axis_gap
+      } else {
+        (visible_boxes$bw[i] + visible_boxes$bw[j]) / 2 -
+          abs(visible_boxes$cx[i] - visible_boxes$cx[j]) + axis_gap
+      }
+      outer_i <- switch(
+        direction,
+        top = mean(gl$text_y[lane_i]) >= mean(gl$text_y[lane_j]),
+        bottom = mean(gl$text_y[lane_i]) <= mean(gl$text_y[lane_j]),
+        left = mean(gl$text_x[lane_i]) <= mean(gl$text_x[lane_j]),
+        right = mean(gl$text_x[lane_i]) >= mean(gl$text_x[lane_j])
+      )
+      move_lane_outward(if (outer_i) lane_i else lane_j, amount)
+      moved <- TRUE
+      break
+    }
+    if (!moved) break
+  }
+  ensure_requested_side()
+
+  list(
+    labels = gl,
+    lanes = lanes,
+    directions = directions
+  )
 }
 
 ggchord_label_box_conflicts <- function(gl, units_per_inch = 0.35,
@@ -1263,6 +1571,81 @@ ggchord_repel_segments <- function(gl, min_segment_length = 0.5) {
     group = which(keep_seg),
     stringsAsFactors = FALSE
   )
+}
+
+# Remove the portions of leader lines hidden by other labels. Staggered rails
+# deliberately reuse horizontal space; clipping at the real text rectangles
+# keeps those compact layouts readable without moving an outer-row label far
+# away merely because its approach passes behind an inner-row label.
+ggchord_clip_segments_to_labels <- function(segments, gl,
+                                            units_per_inch = 0.35,
+                                            padding = 0.01) {
+  if (nrow(segments) == 0 || nrow(gl) < 2) return(segments)
+  boxes <- ggchord_text_boxes(gl, units_per_inch = units_per_inch)
+  pad <- padding * units_per_inch
+  boxes$xmin <- boxes$xmin - pad
+  boxes$xmax <- boxes$xmax + pad
+  boxes$ymin <- boxes$ymin - pad
+  boxes$ymax <- boxes$ymax + pad
+  visible <- !is.na(gl$text) & nzchar(gl$text)
+  out <- list()
+
+  inside_interval <- function(origin, delta, lower, upper, tol = 1e-10) {
+    if (abs(delta) < tol) {
+      if (origin <= lower || origin >= upper) return(NULL)
+      return(c(-Inf, Inf))
+    }
+    sort(c((lower - origin) / delta, (upper - origin) / delta))
+  }
+
+  for (s in seq_len(nrow(segments))) {
+    dx <- segments$x1[s] - segments$x0[s]
+    dy <- segments$y1[s] - segments$y0[s]
+    pieces <- matrix(c(0, 1), ncol = 2)
+    others <- setdiff(which(visible), segments$group[s])
+    for (i in others) {
+      tx <- inside_interval(segments$x0[s], dx, boxes$xmin[i], boxes$xmax[i])
+      ty <- inside_interval(segments$y0[s], dy, boxes$ymin[i], boxes$ymax[i])
+      if (is.null(tx) || is.null(ty)) next
+      cut_start <- max(0, tx[1], ty[1])
+      cut_end <- min(1, tx[2], ty[2])
+      if (cut_start >= cut_end - 1e-10) next
+
+      kept <- list()
+      for (p in seq_len(nrow(pieces))) {
+        start <- pieces[p, 1]
+        end <- pieces[p, 2]
+        if (cut_end <= start || cut_start >= end) {
+          kept[[length(kept) + 1L]] <- c(start, end)
+        } else {
+          if (cut_start > start + 1e-10) {
+            kept[[length(kept) + 1L]] <- c(start, min(cut_start, end))
+          }
+          if (cut_end < end - 1e-10) {
+            kept[[length(kept) + 1L]] <- c(max(cut_end, start), end)
+          }
+        }
+      }
+      if (length(kept) == 0) {
+        pieces <- matrix(numeric(0), ncol = 2)
+        break
+      }
+      pieces <- do.call(rbind, kept)
+    }
+
+    if (nrow(pieces) == 0) next
+    for (p in seq_len(nrow(pieces))) {
+      if (pieces[p, 2] - pieces[p, 1] < 1e-8) next
+      piece <- segments[s, , drop = FALSE]
+      piece$x0 <- segments$x0[s] + pieces[p, 1] * dx
+      piece$y0 <- segments$y0[s] + pieces[p, 1] * dy
+      piece$x1 <- segments$x0[s] + pieces[p, 2] * dx
+      piece$y1 <- segments$y0[s] + pieces[p, 2] * dy
+      out[[length(out) + 1L]] <- piece
+    }
+  }
+  if (length(out) == 0) return(segments[0, , drop = FALSE])
+  do.call(rbind, out)
 }
 
 #' Validate the gene leader-line linetype argument
