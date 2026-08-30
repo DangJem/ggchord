@@ -193,46 +193,42 @@ geom_gene_label <- function(mapping = NULL, data = NULL,
 }
 
 # ---------------------------------------------------------------------------
-# geom_gene_label_repel(): ggrepel-style gene labels
+# geom_gene_label_repel(): deterministic automatic gene-label layouts
 # ---------------------------------------------------------------------------
 
-#' Add a repelled gene label layer (ggrepel-style)
+#' Add an automatically arranged gene label layer
 #'
-#' Like \code{\link{geom_gene_label}()}, but the labels are placed with a
-#' force-based simulation that pushes them away from the genes and from each
-#' other (similar to \code{ggrepel::geom_text_repel()}). Labels that move far
-#' enough from their anchor are connected to it with a leader line, and labels
-#' that still overlap too many others can be hidden.
+#' Like \code{\link{geom_gene_label}()}, but labels are placed by one of three
+#' deterministic collision-avoiding layouts. The default \code{"aligned"}
+#' layout uses orderly cardinal rails, \code{"radial"} uses compact local
+#' offset tracks, and \code{"arc"} keeps text close to and rotated with the
+#' sequence curve.
+#'
+#' The local outside/inside label concepts are informed by SnapGene and
+#' Geneious, but ggchord uses generic mode names and an independent geometry
+#' implementation. See
+#' \href{https://support.snapgene.com/hc/en-us/articles/10383722725524-Display-Feature-Labels-Below-or-Inside-a-Map}{SnapGene feature labels}
+#' and
+#' \href{https://manual.geneious.com/en/latest/Sequences.html}{Geneious label options}.
+#'
+#' Low-level force, padding, orientation and segment arguments used by earlier
+#' releases have been removed and now produce an error. Use
+#' \code{gene_label_layout} for automatic placement, or
+#' \code{\link{geom_gene_label}()} for manual rotation and offsets.
 #'
 #' @param mapping Default NULL (uses pre-computed data)
 #' @param data Default NULL (retrieved automatically from the layout)
 #' @param gene_label_size Numeric. Label font size, default 2.5
-#' @param gene_label_rotation Optional numeric/vector/list. Label rotation angle, default 0
-#' @param gene_label_radial_offset Optional numeric/vector/list. Radial offset of labels, default 0
-#' @param gene_label_circum_offset Optional numeric/vector/list. Circumferential offset of labels, default 0
-#' @param gene_label_circum_limit Optional logical/vector/list. Whether to limit circumferential offset, default TRUE
+#' @param gene_label_layout Character, default \code{"aligned"}. Label layout:
+#'   \code{"aligned"} uses horizontal labels on orderly top, bottom, left and
+#'   right rails; \code{"radial"} uses horizontal labels on the nearest
+#'   collision-free local offset track; \code{"arc"} rotates labels along the
+#'   sequence tangent and keeps them close to their genes.
 #' @param gene_label_wrap Numeric or NULL, default NULL. When set, long gene
 #'   annotations are wrapped at this many characters (e.g. 15).
 #' @param max_overlaps Numeric, default Inf. Hide labels that still overlap
 #'   more than this many other labels after repulsion (ggrepel-style
 #'   decluttering). Use a finite value to clean up crowded plots.
-#' @param box_padding Numeric, default 0.25. Extra padding around each label
-#'   box (data units).
-#' @param point_padding Numeric, default 0.1. Extra padding around the anchor
-#'   points (data units).
-#' @param min_segment_length Numeric, default 0.05. Labels that moved less than
-#'   this distance (data units) from their anchor do not draw a leader line.
-#'   Keep it small so that every label is connected to its gene.
-#' @param force Numeric, default 1. Strength of the repulsive forces.
-#' @param seed Numeric, default 123. Random seed for reproducibility.
-#' @param gene_label_orientation Character, default "horizontal". One of
-#'   \code{"arc"} (text rotated along the sequence arc) or \code{"horizontal"}
-#'   (all labels are drawn horizontally).
-#' @param gene_label_segment Character, default "elbow". Leader line style: a
-#'   straight \code{"line"} from the gene to the label, or an L-shaped
-#'   \code{"elbow"} (a short segment outward, then a horizontal segment to the
-#'   label). Elbow segment lengths adapt to each label's position and text
-#'   width, so labels can be placed freely.
 #' @param gene_label_side Character, default "outside". Which side of the arc
 #'   the labels sit on. \code{"auto"} keeps the strand-based placement
 #'   (same as before); \code{"outside"} moves labels that would be inside the
@@ -258,30 +254,48 @@ geom_gene_label <- function(mapping = NULL, data = NULL,
 #'   geom_seq() + geom_gene() + geom_gene_label_repel()
 #' p
 geom_gene_label_repel <- function(mapping = NULL, data = NULL,
+                                  gene_label_layout = "aligned",
                                   gene_label_size = NULL,
-                                  gene_label_rotation = NULL,
-                                  gene_label_radial_offset = NULL,
-                                  gene_label_circum_offset = NULL,
-                                  gene_label_circum_limit = NULL,
                                   gene_label_wrap = NULL,
-                                  max_overlaps = Inf,
-                                  box_padding = 0.25,
-                                  point_padding = 0.1,
-                                  min_segment_length = 0.05,
-                                  force = 1,
-                                  seed = 123,
-                                  gene_label_orientation = "horizontal",
-                                  gene_label_segment = "elbow",
                                   gene_label_side = "outside",
+                                  max_overlaps = Inf,
                                   gene_label_segment_linetype = "auto",
                                   show_legend = FALSE,
                                   ...) {
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
 
-  gene_label_orientation <- match.arg(gene_label_orientation,
-                                      c("arc", "horizontal"))
-  gene_label_segment <- match.arg(gene_label_segment, c("line", "elbow"))
+  # Inspect the unevaluated call before R's partial argument matching can turn
+  # the removed `gene_label_segment` into `gene_label_segment_linetype`.
+  raw_argument_names <- names(as.list(sys.call())[-1L])
+  dots <- list(...)
+  removed <- c(
+    "gene_label_rotation", "gene_label_radial_offset",
+    "gene_label_circum_offset", "gene_label_circum_limit",
+    "box_padding", "point_padding", "min_segment_length", "force", "seed",
+    "gene_label_orientation", "gene_label_segment"
+  )
+  supplied_removed <- intersect(c(names(dots), raw_argument_names), removed)
+  if (length(supplied_removed) > 0) {
+    positioning <- intersect(
+      supplied_removed,
+      c("gene_label_rotation", "gene_label_radial_offset",
+        "gene_label_circum_offset", "gene_label_circum_limit")
+    )
+    replacement <- if (length(positioning) > 0) {
+      " Use geom_gene_label() when manual rotation or offsets are required."
+    } else {
+      " Repulsion and leader geometry are now selected by gene_label_layout."
+    }
+    ggchord_stop(
+      "Removed geom_gene_label_repel() argument(s): ",
+      paste(supplied_removed, collapse = ", "), ".", replacement
+    )
+  }
+
+  gene_label_layout <- match.arg(
+    gene_label_layout, c("aligned", "radial", "arc")
+  )
   gene_label_side <- match.arg(gene_label_side, c("auto", "inside", "outside"))
   gene_label_segment_linetype <- validate_gene_segment_linetype(
     gene_label_segment_linetype
@@ -306,7 +320,7 @@ geom_gene_label_repel <- function(mapping = NULL, data = NULL,
   layers[[length(layers) + 1]] <- seg_layer
 
   # Text layer (drawn at the repelled positions)
-  text_layer <- geom_text(
+  text_layer <- do.call(geom_text, c(list(
     data        = data.frame(x = numeric(0), y = numeric(0),
                              text_x = numeric(0), text_y = numeric(0),
                              text = character(0), text_angle = numeric(0),
@@ -316,26 +330,15 @@ geom_gene_label_repel <- function(mapping = NULL, data = NULL,
                       angle = text_angle, hjust = hjust, vjust = vjust,
                       size = size),
     inherit.aes = FALSE,
-    show.legend = show_legend,
-    ...
-  )
+    show.legend = show_legend
+  ), dots))
   text_layer$ggchord_type <- "gene_text_repel"
   text_layer$ggchord_params <- list(
     type                     = "gene_label_repel",
+    gene_label_layout        = gene_label_layout,
     gene_label_size          = gene_label_size,
-    gene_label_rotation      = gene_label_rotation,
-    gene_label_radial_offset = gene_label_radial_offset,
-    gene_label_circum_offset = gene_label_circum_offset,
-    gene_label_circum_limit  = gene_label_circum_limit,
     gene_label_wrap          = gene_label_wrap,
     max_overlaps             = max_overlaps,
-    box_padding              = box_padding,
-    point_padding            = point_padding,
-    min_segment_length       = min_segment_length,
-    force                    = force,
-    seed                     = seed,
-    gene_label_orientation   = gene_label_orientation,
-    gene_label_segment       = gene_label_segment,
     gene_label_side          = gene_label_side,
     gene_label_segment_linetype = gene_label_segment_linetype
   )

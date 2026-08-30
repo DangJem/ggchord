@@ -4,6 +4,10 @@
 
 ## 概述
 
+> **开发状态：**当前分支为 **v0.9.0 开发版**。开发版安装后
+> `packageVersion("ggchord")` 会直接返回 `0.9.0`；正式发布时版本号不变，
+> 只移除文档中的“开发版”字样。
+
 `ggchord` 是一个基于 `ggplot2` 的 R 语言包，采用**分层的图形语法**将多序列数据绘制为直观的弦图。与“一个大函数”不同，你通过叠加图层来构建图形：`ggchord()` 负责提供数据与全局选项，每个 `geom_*` 图层负责绘制一类元素（序列弧线、比对连接带、基因注释、坐标轴、标签）。每个图层都有合理的默认值，因此**一行代码即可画出完整的弦图**，需要精细控制时也可以分别微调每个图层。
 
 该包是通用的多序列比较工具，可用于序列比较、基因邻域分析、噬菌体-宿主关系、泛基因组区块、共线性分析等——你只需要准备三张规整的数据表。
@@ -15,6 +19,7 @@
 - **多序列支持**：可同时展示两条、三条、四条或更多序列。
 - **灵活的参数**：支持单值、向量、命名向量与列表，可按序列或链方向分别设置。
 - **与 ggplot2 生态无缝衔接**：`theme()`、`scale_*()`、`ggsave()`、`ggplot_build()`、`plotly::ggplotly()` 均可使用。
+- **三种确定性基因标签布局**：规则对齐轨道、紧凑局部径向轨道和沿弧线切线放置的标签。
 
 ## 安装
 
@@ -63,6 +68,32 @@ ggchord(
 ![使用全部默认参数的弦图](man/figures/combined_default.png)
 
 核心思想就一句话：**数据交给 `ggchord()`，样式交给各图层**。
+
+## 基因标签布局（v0.9.0）
+
+`geom_gene_label_repel()` 通过 `gene_label_layout` 选择三种自动且完全可复现的布局：
+
+```r
+# 规则的水平行/垂直列（默认）
+geom_gene_label_repel(gene_label_layout = "aligned")
+
+# 沿序列局部偏移轨道放置水平文字
+geom_gene_label_repel(gene_label_layout = "radial")
+
+# 沿每条序列的切线旋转文字
+geom_gene_label_repel(gene_label_layout = "arc")
+```
+
+三种模式都会使用 `geom_seq()` 的真实几何，包括 `seq_radius`、
+`seq_curvature`、`seq_gap`、`seq_orientation`、全局旋转和序列分组。
+`radial` 与 `arc` 的布局理念借鉴了
+[SnapGene](https://support.snapgene.com/hc/en-us/articles/10383722725524-Display-Feature-Labels-Below-or-Inside-a-Map)
+和 [Geneious](https://manual.geneious.com/en/latest/Sequences.html) 对外侧/内侧
+feature 标签的处理思路；ggchord 使用通用模式名和独立的几何实现。
+
+如需手工旋转或偏移标签，请使用 `geom_gene_label()`。旧的力模拟、padding、
+方向与线型控制参数已从 `geom_gene_label_repel()` 删除，由布局模式统一管理；
+迁移方法见 [NEWS.md](NEWS.md)。
 
 ## 延伸阅读
 

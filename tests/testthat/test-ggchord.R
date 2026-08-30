@@ -499,22 +499,49 @@ test_that("geom_seq_label seq_labels maps unnamed vectors positionally", {
   expect_equal(unname(l2$seq_labels_df$label[l2$seq_labels_df$seq_id == "MT108731.1"]), "A1")
 })
 
-test_that("geom_gene_label_repel seed changes and reproduces the layout", {
+test_that("geom_gene_label_repel layouts are deterministic", {
   data(seq_data_example)
   data(gene_data_example)
-  build_seed <- function(s) {
+  build_mode <- function(mode) {
     p <- ggchord(seq_data_example, gene_data = gene_data_example) +
       geom_seq() + geom_gene() +
-      geom_gene_label_repel(seed = s)
+      geom_gene_label_repel(gene_label_layout = mode)
     ggplot_build(p)
-    get_chord_layout()$gene_labels[, c("text_x", "text_y")]
+    get_chord_layout()$gene_labels[, c("text_x", "text_y", "text_angle")]
   }
-  l1 <- build_seed(1)
-  l2 <- build_seed(2)
-  l1b <- build_seed(1)
-  # different seeds give different layouts; the same seed is reproducible
-  expect_gt(max(abs(l1$text_x - l2$text_x)), 0)
-  expect_equal(l1, l1b)
+  for (mode in c("aligned", "radial", "arc")) {
+    expect_equal(build_mode(mode), build_mode(mode), info = mode)
+  }
+  expect_error(geom_gene_label_repel(gene_label_layout = "unknown"),
+               "arg.*aligned")
+})
+
+test_that("geom_gene_label_repel exposes the v0.9.0 focused interface", {
+  expect_equal(
+    names(formals(geom_gene_label_repel)),
+    c("mapping", "data", "gene_label_layout", "gene_label_size",
+      "gene_label_wrap", "gene_label_side", "max_overlaps",
+      "gene_label_segment_linetype", "show_legend", "...")
+  )
+})
+
+test_that("removed repel arguments fail with migration guidance", {
+  position_args <- c(
+    "gene_label_rotation", "gene_label_radial_offset",
+    "gene_label_circum_offset", "gene_label_circum_limit"
+  )
+  solver_args <- c(
+    "box_padding", "point_padding", "min_segment_length", "force", "seed",
+    "gene_label_orientation", "gene_label_segment"
+  )
+  for (arg in position_args) {
+    call <- setNames(list(1), arg)
+    expect_error(do.call(geom_gene_label_repel, call), "geom_gene_label\\(\\)")
+  }
+  for (arg in solver_args) {
+    call <- setNames(list(1), arg)
+    expect_error(do.call(geom_gene_label_repel, call), "gene_label_layout")
+  }
 })
 
 test_that("gene_label_wrap wraps long annotations", {
@@ -528,20 +555,31 @@ test_that("gene_label_wrap wraps long annotations", {
   expect_no_error(ggplot_build(p))
 })
 
-test_that("gene_label_orientation and gene_label_segment work", {
+test_that("gene_label_layout modes have their documented geometry", {
   data(seq_data_example)
   data(ribbon_data_example)
   data(gene_data_example)
-  # horizontal text + elbow leader lines
-  p <- ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
-    geom_seq() + geom_ribbon() + geom_gene() +
-    geom_gene_label_repel(gene_label_orientation = "horizontal",
-                          gene_label_segment = "elbow") +
-    geom_axis()
-  p <- ggchord:::prepare_ggchord_plot(p)
-  gl <- p$ggchord$ref$layout$gene_labels
-  seg <- p$ggchord$ref$layout$gene_label_segments
-  expect_true(all(gl$text_angle == 0))
+  build_mode <- function(mode) {
+    p <- ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
+      geom_seq() + geom_ribbon() + geom_gene() +
+      geom_gene_label_repel(gene_label_layout = mode) + geom_axis()
+    ggchord:::prepare_ggchord_plot(p)$ggchord$ref$layout
+  }
+  aligned <- build_mode("aligned")
+  radial <- build_mode("radial")
+  arc <- build_mode("arc")
+  expect_true(all(aligned$gene_labels$text_angle == 0))
+  expect_true(all(radial$gene_labels$text_angle == 0))
+  expect_true(any(abs(arc$gene_labels$text_angle) > 1e-8))
+  expect_true(all(arc$gene_labels$text_angle <= 90 |
+                    arc$gene_labels$text_angle >= 270))
+  expect_true(all(radial$gene_labels$label_track >= 1))
+  expect_true(all(arc$gene_labels$label_track >= 1))
+  expect_true(any(arc$gene_labels$label_track == 1))
+  first_track <- which(arc$gene_labels$label_track == 1)
+  expect_false(any(arc$gene_label_segments$group %in% first_track))
+  seg <- aligned$gene_label_segments
+  gl <- aligned$gene_labels
   expect_gt(nrow(seg), 0)
   # Clipping can split either leg around another label, so an elbow need not
   # remain exactly two rows. Its final visible piece must still approach the
@@ -562,7 +600,22 @@ test_that("gene_label_orientation and gene_label_segment work", {
   dy_stub <- final$y1 - final$y0
   expect_true(all(abs(dx_stub) < 1e-10 | abs(dy_stub) < 1e-10))
   expect_true(all(sqrt(dx_stub^2 + dy_stub^2) < 0.2))
-  expect_no_error(ggplot_build(p))
+})
+
+test_that("finite max_overlaps hides only unresolved conflicts", {
+  labels <- data.frame(
+    text = c("same", "same"), text_x = c(0, 0), text_y = c(0, 0),
+    text_angle = c(0, 0), size = c(2.5, 2.5),
+    hjust = c(0.5, 0.5), vjust = c(0.5, 0.5)
+  )
+  kept <- ggchord:::ggchord_hide_conflicted_labels(
+    labels, max_overlaps = Inf, units_per_inch = 0.5
+  )
+  hidden <- ggchord:::ggchord_hide_conflicted_labels(
+    labels, max_overlaps = 0, units_per_inch = 0.5
+  )
+  expect_equal(kept$text, labels$text)
+  expect_true(all(is.na(hidden$text)))
 })
 
 test_that("horizontal repelled labels sit on the far side of the leader line", {
@@ -571,8 +624,7 @@ test_that("horizontal repelled labels sit on the far side of the leader line", {
   # elbow mode
   p <- ggchord(seq_data_example, gene_data = gene_data_example) +
     geom_seq() + geom_gene() +
-    geom_gene_label_repel(gene_label_orientation = "horizontal",
-                          gene_label_segment = "elbow", gene_label_wrap = 15)
+    geom_gene_label_repel(gene_label_wrap = 15)
   ggplot_build(p)
   l <- get_chord_layout()
   gl <- l$gene_labels
@@ -625,10 +677,10 @@ test_that("horizontal repelled labels sit on the far side of the leader line", {
       }
     }
   }
-  # line mode: text is justified away from the gene anchor
+  # Default aligned mode justifies text away from the gene anchor.
   p2 <- ggchord(seq_data_example, gene_data = gene_data_example) +
     geom_seq() + geom_gene() +
-    geom_gene_label_repel(gene_label_orientation = "horizontal")
+    geom_gene_label_repel()
   ggplot_build(p2)
   l2 <- get_chord_layout()
   seg2 <- l2$gene_label_segments
@@ -661,10 +713,7 @@ test_that("gene_label_side moves labels to the requested arc side", {
     p <- ggchord(seq_data_example, gene_data = gene_data_example) +
       geom_seq() + geom_gene() +
       geom_gene_label_repel(
-        seed = 1,
-        gene_label_side = side,
-        gene_label_orientation = "horizontal",
-        gene_label_segment = "elbow"
+        gene_label_side = side
       )
     ggplot_build(p)
     l <- get_chord_layout()
@@ -697,7 +746,7 @@ test_that("gene_label_segment_linetype overrides the auto dash behaviour", {
   build_lt <- function(...) {
     p <- ggchord(seq_data_example, gene_data = gene_data_example) +
       geom_seq() + geom_gene() +
-      geom_gene_label_repel(seed = 1, gene_label_side = "outside", ...)
+      geom_gene_label_repel(gene_label_side = "outside", ...)
     ggplot_build(p)
     get_chord_layout()$gene_label_segments$linetype
   }
@@ -713,7 +762,7 @@ test_that("gene_label_segment_linetype overrides the auto dash behaviour", {
   # default "auto" stays solid when nothing was moved to the other side
   p0 <- ggchord(seq_data_example, gene_data = gene_data_example) +
     geom_seq() + geom_gene() +
-    geom_gene_label_repel(seed = 1, gene_label_side = "auto")
+    geom_gene_label_repel(gene_label_side = "auto")
   ggplot_build(p0)
   expect_equal(unique(get_chord_layout()$gene_label_segments$linetype), "solid")
 })
@@ -724,10 +773,7 @@ test_that("elbow leader lines adapt their segment lengths per label", {
   p <- ggchord(seq_data_example, gene_data = gene_data_example) +
     geom_seq() + geom_gene() +
     geom_gene_label_repel(
-      seed = 1,
-      gene_label_side = "outside",
-      gene_label_orientation = "horizontal",
-      gene_label_segment = "elbow"
+      gene_label_side = "outside"
     )
   ggplot_build(p)
   seg <- get_chord_layout()$gene_label_segments

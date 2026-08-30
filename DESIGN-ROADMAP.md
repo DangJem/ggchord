@@ -16,7 +16,7 @@ expressiveness → ecosystem**.
 | --- | --- | --- |
 | v0.7.0 | Reliability: validation, cleaning, tests, visual regression | [done] |
 | v0.8.0 | Usability: import helpers, ribbon processing, sequence grouping | [done] |
-| v0.9.0 | Expressiveness: ribbon direction mapping, highlights, features, crowded layouts | A/B/C [done], D [designed] |
+| v0.9.0 | Expressiveness: ribbon direction mapping, highlights, features, crowded layouts | development version; A/B/C and label layouts done, auto rings pending |
 | v1.0.0 | Ecosystem: Plotly, export, themes, documentation, stable API | designed |
 
 ---
@@ -221,16 +221,19 @@ anno). Internally it reuses the gene-arrow path builder in `layout.R`
 wrapper (`feature_type = "gene"`, arrow shape) so nothing breaks. Tests:
 `geom_gene()` output is byte-identical before/after the wrapper refactor.
 
-### D. Crowded layout [designed]
+### D. Crowded layout [partly implemented in v0.9.0 development]
 
 - **Auto ring placement:** `geom_seq(seq_ring = "auto")` groups sequences into
   nested rings when `n` is large; each ring gets its own `seqRadius` range.
   All automatic choices must be reproducible (seed), explainable (the chosen
   assignment is returned in `get_chord_layout()$rings`), overridable
   (`seq_ring = NULL` disables; explicit `seq_radius`/`seq_order` win).
-- **Label avoidance:** cap `ggchord_repel_labels()` iterations, add
-  `max_overlaps` sampling and a "hide labels beyond N" strategy for huge
-  datasets (already partially present via `max_overlaps`).
+- **Label avoidance [done]:** `geom_gene_label_repel()` now offers the
+  deterministic `"aligned"`, `"radial"` and `"arc"` modes, with oriented text
+  collision, fixed-obstacle avoidance, device-aware clipping and finite
+  `max_overlaps` hiding. The manual-layout data contract is deferred. The
+  radial/arc ideas are informed by SnapGene and Geneious feature-label
+  layouts, while names and implementation remain generic and independent.
 - **Ribbon bundling/aggregation:** add `geom_ribbon(ribbon_reduce =
   c("none", "sample", "bundle", "density"))`. "sample" draws a stratified
   subsample; "bundle" merges nearby ribbons into a single band (reuse

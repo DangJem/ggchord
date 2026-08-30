@@ -278,6 +278,7 @@ ggchord_text_boxes <- function(df,
     x = numeric(0), y = numeric(0),
     cx = numeric(0), cy = numeric(0),
     w = numeric(0), h = numeric(0),
+    ow = numeric(0), oh = numeric(0), angle = numeric(0),
     bw = numeric(0), bh = numeric(0),
     xmin = numeric(0), xmax = numeric(0),
     ymin = numeric(0), ymax = numeric(0),
@@ -326,11 +327,66 @@ ggchord_text_boxes <- function(df,
     x = x, y = y,
     cx = x + cx_off, cy = y + cy_off,
     w = w, h = h,
+    ow = w + 2 * box_padding * units_per_inch,
+    oh = h + 2 * box_padding * units_per_inch,
+    angle = angles,
     bw = bw, bh = bh,
     xmin = x + cx_off - bw / 2, xmax = x + cx_off + bw / 2,
     ymin = y + cy_off - bh / 2, ymax = y + cy_off + bh / 2,
     stringsAsFactors = FALSE
   )
+}
+
+# Test one oriented text rectangle against zero or more oriented rectangles.
+# A cheap axis-aligned prefilter is followed by the separating-axis theorem;
+# this avoids treating a diagonal label's large empty corner triangles as
+# occupied space.
+ggchord_oriented_box_overlaps <- function(candidate, other, tol = 1e-7) {
+  if (is.null(other) || nrow(other) == 0) return(logical(0))
+  possible <- candidate$xmin < other$xmax - tol &
+    candidate$xmax > other$xmin + tol &
+    candidate$ymin < other$ymax - tol &
+    candidate$ymax > other$ymin + tol
+  out <- rep(FALSE, nrow(other))
+  rows <- which(possible)
+  if (length(rows) == 0) return(out)
+
+  candidate_angle <- candidate$angle[1] %||% 0
+  candidate_ow <- candidate$ow[1] %||% candidate$bw[1]
+  candidate_oh <- candidate$oh[1] %||% candidate$bh[1]
+  candidate_axes <- rbind(
+    c(cos(candidate_angle), sin(candidate_angle)),
+    c(-sin(candidate_angle), cos(candidate_angle))
+  )
+  for (j in rows) {
+    other_angle <- other$angle[j] %||% 0
+    other_ow <- other$ow[j] %||% other$bw[j]
+    other_oh <- other$oh[j] %||% other$bh[j]
+    other_axes <- rbind(
+      c(cos(other_angle), sin(other_angle)),
+      c(-sin(other_angle), cos(other_angle))
+    )
+    axes <- rbind(candidate_axes, other_axes)
+    centre_delta <- c(other$cx[j] - candidate$cx[1],
+                      other$cy[j] - candidate$cy[1])
+    separated <- FALSE
+    for (k in seq_len(nrow(axes))) {
+      axis <- axes[k, ]
+      candidate_extent <-
+        candidate_ow / 2 * abs(sum(axis * candidate_axes[1, ])) +
+        candidate_oh / 2 * abs(sum(axis * candidate_axes[2, ]))
+      other_extent <-
+        other_ow / 2 * abs(sum(axis * other_axes[1, ])) +
+        other_oh / 2 * abs(sum(axis * other_axes[2, ]))
+      if (abs(sum(centre_delta * axis)) >=
+          candidate_extent + other_extent - tol) {
+        separated <- TRUE
+        break
+      }
+    }
+    out[j] <- !separated
+  }
+  out
 }
 
 #' Convert physical text dimensions to the current fixed-aspect plot scale.
@@ -408,14 +464,9 @@ ggchord_text_obstacle_boxes <- function(seq_labels_df = NULL,
   }
 
   if (length(out) == 0) {
-    return(data.frame(xmin = numeric(0), ymin = numeric(0),
-                      xmax = numeric(0), ymax = numeric(0),
-                      stringsAsFactors = FALSE))
+    return(ggchord_text_boxes(data.frame()))
   }
-  boxes <- do.call(rbind, out)
-  data.frame(xmin = boxes$xmin, ymin = boxes$ymin,
-             xmax = boxes$xmax, ymax = boxes$ymax,
-             stringsAsFactors = FALSE)
+  do.call(rbind, out)
 }
 
 # Separate axis-aligned label boxes from one another and from fixed boxes.
@@ -958,7 +1009,8 @@ ggchord_label_curve_frame <- function(gl, seq_arcs) {
   frame <- data.frame(
     curve_x = numeric(n), curve_y = numeric(n),
     outward_x = numeric(n), outward_y = numeric(n),
-    signed_distance = numeric(n)
+    signed_distance = numeric(n),
+    curve_index = integer(n)
   )
   if (n == 0) return(frame)
 
@@ -998,6 +1050,7 @@ ggchord_label_curve_frame <- function(gl, seq_arcs) {
       frame$curve_y[i] <- arc$y[k]
       frame$outward_x[i] <- nx
       frame$outward_y[i] <- ny
+      frame$curve_index[i] <- k
       frame$signed_distance[i] <-
         (gl$text_x[i] - arc$x[k]) * nx +
         (gl$text_y[i] - arc$y[k]) * ny
@@ -1460,6 +1513,206 @@ ggchord_compact_label_lanes <- function(gl, seq_arcs,
   )
 }
 
+# Put labels on the nearest collision-free local offset track. Unlike a
+# radius-from-origin layout, every candidate position is measured from the
+# actual sequence curve and its local outward normal, so straight, strongly
+# curved and differently sized sequences use the same algorithm.
+ggchord_offset_label_tracks <- function(gl, seq_arcs,
+                                        side = "outside",
+                                        orientation = c("horizontal", "arc"),
+                                        units_per_inch = 0.35,
+                                        box_padding = 0.18,
+                                        point_padding = 0.08,
+                                        repel_boxes = NULL) {
+  orientation <- match.arg(orientation)
+  n <- nrow(gl)
+  if (n == 0) {
+    return(list(labels = gl, lanes = character(0),
+                directions = character(0), tracks = integer(0),
+                draw_segment = logical(0)))
+  }
+
+  active <- !is.na(gl$text) & nzchar(gl$text)
+  source_frame <- ggchord_label_curve_frame(gl, seq_arcs)
+  anchor_labels <- gl
+  anchor_labels$text_x <- anchor_labels$anchor_x
+  anchor_labels$text_y <- anchor_labels$anchor_y
+  frame <- ggchord_label_curve_frame(anchor_labels, seq_arcs)
+  side_sign <- if (identical(side, "outside")) {
+    rep(1, n)
+  } else if (identical(side, "inside")) {
+    rep(-1, n)
+  } else {
+    ifelse(source_frame$signed_distance < 0, -1, 1)
+  }
+  side_sign[!is.finite(side_sign)] <- 1
+  normal_x <- side_sign * frame$outward_x
+  normal_y <- side_sign * frame$outward_y
+  directions <- ifelse(
+    abs(normal_x) >= abs(normal_y),
+    ifelse(normal_x < 0, "left", "right"),
+    ifelse(normal_y < 0, "bottom", "top")
+  )
+
+  if (identical(orientation, "horizontal")) {
+    gl$text_angle[active] <- 0
+    gl$hjust[active] <- c(left = 1, right = 0, top = 0.5, bottom = 0.5)[
+      directions[active]
+    ]
+    gl$vjust[active] <- c(left = 0.5, right = 0.5, top = 0, bottom = 1)[
+      directions[active]
+    ]
+  } else {
+    tangent_x <- -frame$outward_y
+    tangent_y <- frame$outward_x
+    angle <- (atan2(tangent_y, tangent_x) * 180 / pi + 360) %% 360
+    upside_down <- angle > 90 & angle < 270
+    angle[upside_down] <- (angle[upside_down] + 180) %% 360
+    gl$text_angle[active] <- angle[active]
+    gl$hjust[active] <- 0.5
+    gl$vjust[active] <- 0.5
+  }
+
+  # Measure the anchor-relative box offset once. The innermost edge of every
+  # first-track label is then placed at the same visual clearance from its
+  # own sequence curve, even when text justification differs by quadrant.
+  gl$text_x <- frame$curve_x
+  gl$text_y <- frame$curve_y
+  templates <- ggchord_text_boxes(
+    gl, units_per_inch = units_per_inch, box_padding = box_padding
+  )
+  centre_offset <-
+    (templates$cx - templates$x) * normal_x +
+    (templates$cy - templates$y) * normal_y
+  text_angle <- gl$text_angle * pi / 180
+  text_x_axis_x <- cos(text_angle)
+  text_x_axis_y <- sin(text_angle)
+  text_y_axis_x <- -sin(text_angle)
+  text_y_axis_y <- cos(text_angle)
+  # Project the oriented rectangle itself, not its axis-aligned bounding box.
+  # Projecting the latter makes a long tangent-aligned arc label look long in
+  # the normal direction as well and can push it several unnecessary tracks
+  # away from the sequence.
+  normal_extent <-
+    templates$w * abs(text_x_axis_x * normal_x +
+                        text_x_axis_y * normal_y) / 2 +
+    templates$h * abs(text_y_axis_x * normal_x +
+                        text_y_axis_y * normal_y) / 2 +
+    box_padding * units_per_inch
+  clearance <- point_padding + max(0.035, 0.04 * units_per_inch)
+  base_distance <- pmax(
+    clearance - centre_offset + normal_extent,
+    clearance
+  )
+
+  base_lanes <- paste(gl$seq_id, side_sign, sep = "\r")
+  lane_rows <- split(which(active), base_lanes[active], drop = TRUE)
+  tracks <- rep(NA_integer_, n)
+  placed_boxes <- NULL
+  axis_gap <- max(0.015, 0.02 * units_per_inch)
+
+  overlaps_boxes <- function(candidate, other) {
+    any(ggchord_oriented_box_overlaps(candidate, other))
+  }
+
+  for (rows in lane_rows) {
+    rows <- rows[order(frame$curve_index[rows], rows)]
+    lane_step <- max(
+      2 * normal_extent[rows] + axis_gap,
+      0.08 + 0.08 * units_per_inch,
+      na.rm = TRUE
+    )
+    for (i in rows) {
+      selected <- FALSE
+      # At most one new track per active label is needed when boxes are
+      # finite, with a small reserve for fixed sequence/axis obstacles.
+      for (track in seq_len(length(rows) + 8L)) {
+        distance <- base_distance[i] + (track - 1L) * lane_step
+        # Keep the text centre on its feature's local normal. Tangential
+        # nudging can reverse two neighbouring labels and consequently make
+        # their leaders cross, even when both text boxes remain disjoint.
+        candidate_label <- gl[i, , drop = FALSE]
+        candidate_label$text_x <- frame$curve_x[i] + normal_x[i] * distance
+        candidate_label$text_y <- frame$curve_y[i] + normal_y[i] * distance
+        candidate_box <- ggchord_text_boxes(
+          candidate_label,
+          units_per_inch = units_per_inch,
+          box_padding = box_padding
+        )
+        if (!overlaps_boxes(candidate_box, placed_boxes) &&
+            !overlaps_boxes(candidate_box, repel_boxes)) {
+          gl$text_x[i] <- candidate_label$text_x
+          gl$text_y[i] <- candidate_label$text_y
+          tracks[i] <- track
+          placed_boxes <- rbind(placed_boxes, candidate_box)
+          selected <- TRUE
+        }
+        if (selected) break
+      }
+      if (!selected) {
+        track <- length(rows) + 9L
+        distance <- base_distance[i] + (track - 1L) * lane_step
+        gl$text_x[i] <- frame$curve_x[i] + normal_x[i] * distance
+        gl$text_y[i] <- frame$curve_y[i] + normal_y[i] * distance
+        tracks[i] <- track
+        placed_boxes <- rbind(
+          placed_boxes,
+          ggchord_text_boxes(
+            gl[i, , drop = FALSE], units_per_inch = units_per_inch,
+            box_padding = box_padding
+          )
+        )
+      }
+    }
+  }
+
+  lanes <- paste(base_lanes, tracks, sep = "\r")
+  draw_segment <- active
+  if (identical(orientation, "arc")) {
+    draw_segment <- active & !is.na(tracks) & tracks > 1L
+  }
+  list(
+    labels = gl,
+    lanes = lanes,
+    directions = directions,
+    tracks = tracks,
+    draw_segment = draw_segment
+  )
+}
+
+# Hide only labels that remain conflicted after a deterministic layout. The
+# default max_overlaps = Inf therefore retains every label, while a finite
+# value behaves as a final decluttering threshold without influencing any
+# successfully placed label coordinates.
+ggchord_hide_conflicted_labels <- function(gl, max_overlaps = Inf,
+                                            units_per_inch = 0.35,
+                                            repel_boxes = NULL) {
+  if (!is.finite(max_overlaps) || nrow(gl) == 0) return(gl)
+  active <- !is.na(gl$text) & nzchar(gl$text)
+  rows <- which(active)
+  if (length(rows) == 0) return(gl)
+  boxes <- ggchord_text_boxes(gl[rows, , drop = FALSE],
+                              units_per_inch = units_per_inch)
+  counts <- integer(length(rows))
+  if (length(rows) > 1) {
+    for (i in seq_len(nrow(boxes))) {
+      other <- setdiff(seq_len(nrow(boxes)), i)
+      counts[i] <- counts[i] + sum(ggchord_oriented_box_overlaps(
+        boxes[i, , drop = FALSE], boxes[other, , drop = FALSE]
+      ))
+    }
+  }
+  if (!is.null(repel_boxes) && nrow(repel_boxes) > 0) {
+    for (i in seq_len(nrow(boxes))) {
+      counts[i] <- counts[i] + sum(ggchord_oriented_box_overlaps(
+        boxes[i, , drop = FALSE], repel_boxes
+      ))
+    }
+  }
+  gl$text[rows[counts > max_overlaps]] <- NA_character_
+  gl
+}
+
 ggchord_label_box_conflicts <- function(gl, units_per_inch = 0.35,
                                         box_padding = 0.25,
                                         repel_boxes = NULL,
@@ -1579,14 +1832,14 @@ ggchord_repel_segments <- function(gl, min_segment_length = 0.5) {
 # away merely because its approach passes behind an inner-row label.
 ggchord_clip_segments_to_labels <- function(segments, gl,
                                             units_per_inch = 0.35,
-                                            padding = 0.01) {
-  if (nrow(segments) == 0 || nrow(gl) < 2) return(segments)
+                                            padding = 0.01,
+                                            include_own = FALSE) {
+  if (nrow(segments) == 0 || nrow(gl) == 0 ||
+      (!isTRUE(include_own) && nrow(gl) < 2)) return(segments)
   boxes <- ggchord_text_boxes(gl, units_per_inch = units_per_inch)
   pad <- padding * units_per_inch
-  boxes$xmin <- boxes$xmin - pad
-  boxes$xmax <- boxes$xmax + pad
-  boxes$ymin <- boxes$ymin - pad
-  boxes$ymax <- boxes$ymax + pad
+  angles <- gl$text_angle %||% rep(0, nrow(gl))
+  angles[!is.finite(angles)] <- 0
   visible <- !is.na(gl$text) & nzchar(gl$text)
   out <- list()
 
@@ -1602,10 +1855,30 @@ ggchord_clip_segments_to_labels <- function(segments, gl,
     dx <- segments$x1[s] - segments$x0[s]
     dy <- segments$y1[s] - segments$y0[s]
     pieces <- matrix(c(0, 1), ncol = 2)
-    others <- setdiff(which(visible), segments$group[s])
+    others <- which(visible)
+    if (!isTRUE(include_own)) {
+      others <- setdiff(others, segments$group[s])
+    }
     for (i in others) {
-      tx <- inside_interval(segments$x0[s], dx, boxes$xmin[i], boxes$xmax[i])
-      ty <- inside_interval(segments$y0[s], dy, boxes$ymin[i], boxes$ymax[i])
+      # Intersect in the label's own coordinate system. Using its
+      # axis-aligned bounding box over-clips diagonal leaders around rotated
+      # arc labels, producing device-size-dependent gaps that are visibly
+      # wider than the text itself.
+      angle <- angles[i] * pi / 180
+      cos_a <- cos(angle)
+      sin_a <- sin(angle)
+      rel_x <- segments$x0[s] - boxes$cx[i]
+      rel_y <- segments$y0[s] - boxes$cy[i]
+      local_x0 <- rel_x * cos_a + rel_y * sin_a
+      local_y0 <- -rel_x * sin_a + rel_y * cos_a
+      local_dx <- dx * cos_a + dy * sin_a
+      local_dy <- -dx * sin_a + dy * cos_a
+      tx <- inside_interval(local_x0, local_dx,
+                            -boxes$w[i] / 2 - pad,
+                            boxes$w[i] / 2 + pad)
+      ty <- inside_interval(local_y0, local_dy,
+                            -boxes$h[i] / 2 - pad,
+                            boxes$h[i] / 2 + pad)
       if (is.null(tx) || is.null(ty)) next
       cut_start <- max(0, tx[1], ty[1])
       cut_end <- min(1, tx[2], ty[2])

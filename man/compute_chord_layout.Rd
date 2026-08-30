@@ -58,13 +58,7 @@ compute_chord_layout(
   gene_label_wrap = NULL,
   gene_label_repel_layer = FALSE,
   gene_label_repel_max_overlaps = Inf,
-  gene_label_repel_box_padding = 0.25,
-  gene_label_repel_point_padding = 0.1,
-  gene_label_repel_min_segment_length = 0.5,
-  gene_label_repel_force = 1,
-  gene_label_repel_seed = 123,
-  gene_label_orientation = "arc",
-  gene_label_segment = "line",
+  gene_label_layout = "aligned",
   gene_label_side = "auto",
   gene_label_segment_linetype = "auto",
   gene_color_scheme,
@@ -111,6 +105,9 @@ compute_chord_layout(
 \item{ribbonGap}{Named vector of ribbon gaps}
 
 \item{gene_data}{Gene data (already validated)}
+
+\item{gene_label_layout}{Character, default "aligned". Deterministic
+automatic layout: "aligned", "radial", or "arc".}
 
 \item{gene_label_side}{Character, default "auto". Which side of the arc the
 labels sit on: "auto" (strand-based placement), "inside" (toward the chord

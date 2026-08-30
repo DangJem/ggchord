@@ -4,6 +4,10 @@
 
 ## Overview
 
+> **Development status:** this branch is the **v0.9.0 development version**.
+> Development installs intentionally report `packageVersion("ggchord")` as
+> `0.9.0`; the version number will stay the same for release.
+
 `ggchord` is an R package built on `ggplot2` that draws **chord diagrams for
 multi-sequence data** using the layered grammar of graphics. Instead of a single
 monolithic function, you build a plot by stacking layers — `ggchord()` supplies
@@ -28,6 +32,8 @@ data frames.
   values, vectors, named vectors, and lists.
 - **Full ggplot2 integration** — `theme()`, `scale_*()`, `ggsave()`,
   `ggplot_build()`, and `plotly::ggplotly()` all work.
+- **Three deterministic gene-label layouts** — orderly aligned rails, compact
+  local radial tracks, or tangent-following arc labels.
 
 ## Installation
 
@@ -77,6 +83,36 @@ ggchord(
 ![Basic chord diagram with all default parameters](man/figures/combined_default.png)
 
 That is the whole idea: **data in `ggchord()`, styling in the layers**.
+
+## Gene-label layouts (v0.9.0)
+
+`geom_gene_label_repel()` uses `gene_label_layout` to select one of three
+automatic, deterministic layouts:
+
+```r
+# Orderly horizontal rows/columns (default)
+geom_gene_label_repel(gene_label_layout = "aligned")
+
+# Horizontal labels on local offset tracks
+geom_gene_label_repel(gene_label_layout = "radial")
+
+# Labels rotated along each sequence curve
+geom_gene_label_repel(gene_label_layout = "arc")
+```
+
+All three modes respect the actual `geom_seq()` geometry, including
+`seq_radius`, `seq_curvature`, `seq_gap`, `seq_orientation`, global rotation
+and sequence grouping. The `radial` and `arc` ideas are informed by the way
+[SnapGene](https://support.snapgene.com/hc/en-us/articles/10383722725524-Display-Feature-Labels-Below-or-Inside-a-Map)
+and [Geneious](https://manual.geneious.com/en/latest/Sequences.html) expose
+outside and inside feature labels; ggchord uses independent generic names and
+its own geometry implementation.
+
+Manual label rotation and offsets remain available through
+`geom_gene_label()`. Low-level force, padding, orientation and segment
+arguments have been removed from `geom_gene_label_repel()`; its layouts now
+manage those details consistently. See [NEWS.md](NEWS.md) for the migration
+table.
 
 ## Where to go next
 

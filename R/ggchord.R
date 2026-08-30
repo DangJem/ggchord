@@ -556,26 +556,28 @@ compute_chord_geometry <- function(plot) {
   gene_lsz  <- lbl$gene_label_size %||%
     gene_params$label_size_override %||%
     gene_params$gene_label_size %||% 2.5
-  gene_lr   <- lbl$gene_label_rotation %||%
-    gene_params$gene_label_rotation %||% 0
-  gene_lro  <- lbl$gene_label_radial_offset %||%
-    gene_params$gene_label_radial_offset %||% 0
-  gene_lco  <- lbl$gene_label_circum_offset %||%
-    gene_params$gene_label_circum_offset %||% 0
-  gene_lcl  <- if (is.null(lbl$gene_label_circum_limit)) {
-    if (is.null(gene_params$gene_label_circum_limit)) TRUE
-    else gene_params$gene_label_circum_limit
-  } else lbl$gene_label_circum_limit
+  # Repelled labels now use mode-owned deterministic positioning. Manual
+  # rotation and offsets remain available through geom_gene_label(), but are
+  # intentionally not inherited by geom_gene_label_repel().
+  if (gene_repel_layer) {
+    gene_lr <- gene_lro <- gene_lco <- 0
+    gene_lcl <- TRUE
+  } else {
+    gene_lr <- lbl$gene_label_rotation %||%
+      gene_params$gene_label_rotation %||% 0
+    gene_lro <- lbl$gene_label_radial_offset %||%
+      gene_params$gene_label_radial_offset %||% 0
+    gene_lco <- lbl$gene_label_circum_offset %||%
+      gene_params$gene_label_circum_offset %||% 0
+    gene_lcl <- if (is.null(lbl$gene_label_circum_limit)) {
+      if (is.null(gene_params$gene_label_circum_limit)) TRUE
+      else gene_params$gene_label_circum_limit
+    } else lbl$gene_label_circum_limit
+  }
   gene_lwrap  <- lbl$gene_label_wrap %||% gene_params$gene_label_wrap
   gene_lrepel_layer <- gene_repel_layer
   gene_lrepel_maxov <- gene_repel_params$max_overlaps %||% Inf
-  gene_lrepel_box   <- gene_repel_params$box_padding %||% 0.25
-  gene_lrepel_pt    <- gene_repel_params$point_padding %||% 0.1
-  gene_lrepel_minseg <- gene_repel_params$min_segment_length %||% 0.5
-  gene_lrepel_force <- gene_repel_params$force %||% 1
-  gene_lrepel_seed  <- gene_repel_params$seed %||% 123
-  gene_lrepel_orient <- gene_repel_params$gene_label_orientation %||% "horizontal"
-  gene_lrepel_seg    <- gene_repel_params$gene_label_segment %||% "elbow"
+  gene_lrepel_layout <- gene_repel_params$gene_label_layout %||% "aligned"
   gene_lrepel_side   <- if (gene_repel_layer) {
     gene_repel_params$gene_label_side %||% "outside"
   } else {
@@ -593,6 +595,10 @@ compute_chord_geometry <- function(plot) {
   if (!is.null(gene_lwrap) && (!is.numeric(gene_lwrap) ||
       length(gene_lwrap) != 1 || !is.finite(gene_lwrap) || gene_lwrap < 0)) {
     ggchord_stop("gene_label_wrap must be NULL or a finite non-negative number")
+  }
+  if (!is.numeric(gene_lrepel_maxov) || length(gene_lrepel_maxov) != 1 ||
+      is.na(gene_lrepel_maxov) || gene_lrepel_maxov < 0) {
+    ggchord_stop("max_overlaps must be a non-negative number or Inf")
   }
 
   geneGap    <- process_gene_param(gene_off, seqs, "gene_offset", 0.1, FALSE)
@@ -817,13 +823,7 @@ compute_chord_geometry <- function(plot) {
     gene_label_wrap = gene_lwrap,
     gene_label_repel_layer = gene_lrepel_layer,
     gene_label_repel_max_overlaps = gene_lrepel_maxov,
-    gene_label_repel_box_padding = gene_lrepel_box,
-    gene_label_repel_point_padding = gene_lrepel_pt,
-    gene_label_repel_min_segment_length = gene_lrepel_minseg,
-    gene_label_repel_force = gene_lrepel_force,
-    gene_label_repel_seed = gene_lrepel_seed,
-    gene_label_orientation = gene_lrepel_orient,
-    gene_label_segment = gene_lrepel_seg,
+    gene_label_layout = gene_lrepel_layout,
     gene_label_side = gene_lrepel_side,
     gene_label_segment_linetype = gene_lrepel_ltype,
     gene_color_scheme = gene_cs, gene_colors = gene_cols,

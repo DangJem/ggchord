@@ -31,7 +31,8 @@ data(gene_data_example)
 
 This tutorial walks through the complete `ggchord` workflow: preparing input
 data, importing files in R, validating and cleaning data, and building plots
-layer by layer.
+layer by layer. It documents the **v0.9.0 development version**; development
+installs intentionally report `packageVersion("ggchord")` as `0.9.0`.
 
 ## 1. Data preparation
 
@@ -232,6 +233,33 @@ ggchord(seq_data_example, gene_data = gene_data_example) +
 knitr::include_graphics("../man/figures/gene_repel.png")
 ```
 
+#### Choosing a gene-label layout
+
+`geom_gene_label_repel()` has three deterministic modes. `"aligned"` is the
+default and creates orderly horizontal rows and vertical columns. `"radial"`
+keeps text horizontal and uses the nearest collision-free track parallel to
+the actual sequence curve. `"arc"` follows the local tangent, flips upside-down
+text automatically, and only draws a short leader when a label moves away from
+its first track.
+
+```{r tutorial-gene-layouts, eval=FALSE}
+base <- ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
+  geom_seq(seq_radius = c(3.3, 2.5, 1.8, 1.25),
+           seq_orientation = c(1, -1, 1, -1)) +
+  geom_ribbon() + geom_gene()
+
+base + geom_gene_label_repel(gene_label_layout = "aligned")
+base + geom_gene_label_repel(gene_label_layout = "radial")
+base + geom_gene_label_repel(gene_label_layout = "arc")
+```
+
+Every mode uses the real `seq_radius`, `seq_curvature`, `seq_gap`,
+`seq_orientation`, rotation and grouping geometry. The local outside/inside
+label concepts are informed by [SnapGene](https://support.snapgene.com/hc/en-us/articles/10383722725524-Display-Feature-Labels-Below-or-Inside-a-Map)
+and [Geneious](https://manual.geneious.com/en/latest/Sequences.html), while
+ggchord uses generic mode names and an independent implementation. Use
+`geom_gene_label()` when manual label rotation or offsets are required.
+
 ### 3.6 Add axes and sequence labels
 
 ```{r tutorial-axis, eval=FALSE}
@@ -337,7 +365,8 @@ ggchord(seq_data_example, ribbon_data_example, gene_data_example,
                           "OR222515.1" = "#D9A62E")) +
   geom_ribbon(ribbon_alpha = 0.45) +
   geom_gene() +
-  geom_gene_label_repel(gene_label_size = 2, seed = 42) +
+  geom_gene_label_repel(gene_label_size = 2,
+                        gene_label_layout = "aligned") +
   geom_seq_label() +
   geom_axis() +
   theme(plot.background = element_rect(fill = "#FBF9F6", colour = NA),
@@ -353,8 +382,11 @@ knitr::include_graphics("../man/figures/combined_fine.png")
 Sequence-level parameters (`seq_radius`, `seq_gap`, `axis_label_size`, ...)
 accept **a single value, an unnamed vector, a vector/list named by sequence ID,
 a list named by sequence order (`"1"`, `"2"`, ...), or an unnamed list**.
-Gene-level parameters (`gene_label_rotation`, `gene_offset`, ...) additionally
-accept per-strand (`+`/`-`) values. All of the following are valid:
+Gene-level parameters of the fixed-position `geom_gene_label()` layer
+(`gene_label_rotation`, `gene_offset`, ...) additionally accept per-strand
+(`+`/`-`) values. The automatic `geom_gene_label_repel()` modes intentionally
+manage their own rotation and offsets. All of the following are valid for
+fixed labels:
 
 ```{r flexible-formats, eval=FALSE}
 # 1. One value for everything
@@ -399,7 +431,7 @@ gene_label_rotation = list(20)
 | Alignment ribbons | `geom_ribbon()` | Draws colored ribbons from alignment results |
 | Gene arrows | `geom_gene()` | Draws gene/feature arrow polygons |
 | Gene labels | `geom_gene_label()` | Draws gene labels at fixed positions |
-| Repelled gene labels | `geom_gene_label_repel()` | ggrepel-style labels with leader lines, wrapping and overlap hiding |
+| Automatic gene labels | `geom_gene_label_repel()` | Deterministic aligned, radial or arc layouts with collision-free leaders |
 | Axes | `geom_axis()` | Draws axis lines, major/minor ticks and tick labels |
 | Sequence labels | `geom_seq_label()` | Places sequence names on/outside the arcs |
 

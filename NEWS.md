@@ -1,3 +1,62 @@
+# ggchord 0.9.0 (development version)
+
+## Deterministic gene-label layouts
+
+* `geom_gene_label_repel()` now uses the deterministic
+  `gene_label_layout = "aligned" | "radial" | "arc"` interface. `"aligned"`
+  remains the default and arranges horizontal labels on orderly cardinal
+  rails. `"radial"` uses the nearest collision-free local offset track while
+  keeping text horizontal. `"arc"` rotates readable text along the sequence
+  tangent and draws a short leader only when a label has moved away from its
+  first track.
+
+* All modes now use each sequence's real curve and local normal, including
+  custom `seq_radius`, `seq_curvature`, `seq_gap`, mixed `seq_orientation`,
+  rotation and sequence groups. They share fixed-obstacle avoidance,
+  cross-sequence collision handling, order-preserving leader routing and
+  device-aware clipping. Rotated labels use oriented-rectangle collision and
+  clipping, preventing spurious whitespace and oversized breaks in leaders.
+
+* The layout ideas are informed by orderly multi-sequence callout figures and
+  by the external/inside feature-label approaches offered by SnapGene and
+  Geneious. ggchord uses its own generic mode names and implementation; it
+  does not copy third-party assets or visual designs. See the
+  [SnapGene feature-label documentation](https://support.snapgene.com/hc/en-us/articles/10383722725524-Display-Feature-Labels-Below-or-Inside-a-Map)
+  and [Geneious label options](https://manual.geneious.com/en/latest/Sequences.html).
+
+## Breaking API simplification
+
+`geom_gene_label_repel()` now has the following focused interface:
+
+```r
+geom_gene_label_repel(
+  mapping = NULL, data = NULL,
+  gene_label_layout = "aligned",
+  gene_label_size = NULL, gene_label_wrap = NULL,
+  gene_label_side = "outside", max_overlaps = Inf,
+  gene_label_segment_linetype = "auto",
+  show_legend = FALSE, ...
+)
+```
+
+Removed arguments fail immediately rather than being silently ignored:
+
+| Removed argument(s) | Migration |
+| --- | --- |
+| `gene_label_rotation`, `gene_label_radial_offset`, `gene_label_circum_offset`, `gene_label_circum_limit` | Use `geom_gene_label()` for manual rotation or offsets. |
+| `box_padding`, `point_padding`, `min_segment_length`, `force`, `seed` | Select an automatic `gene_label_layout`; collision and line settings are managed by the mode. |
+| `gene_label_orientation`, `gene_label_segment` | Use `gene_label_layout = "aligned"`, `"radial"`, or `"arc"`. |
+
+The planned manual layout is intentionally deferred until its data contract can
+be designed separately. The fixed-position `geom_gene_label()` API is unchanged.
+
+## Development versioning
+
+This repository is the **v0.9.0 development version**. `DESCRIPTION` already
+uses `Version: 0.9.0`, so development installs report `packageVersion("ggchord")`
+as `0.9.0`. At release time the version remains `0.9.0`; only the development
+wording in the documentation is removed.
+
 # ggchord 0.8.0
 
 ## New features: improved label placement and de-overlap
