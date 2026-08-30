@@ -102,6 +102,19 @@ geom_seq <- function(mapping = NULL, data = NULL,
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
 
+  if (!missing(seq_labels) && !is.null(seq_labels)) {
+    ggchord_deprecate_once(
+      "geom_seq(seq_labels)",
+      "scale_seq_colour_manual(labels = ...) and geom_seq_label(labels = ...)"
+    )
+  }
+  if (!missing(legend_position)) {
+    ggchord_deprecate_once(
+      "geom_seq(legend_position)",
+      "guides(seq_colour = guide_ggchord_legend(position = ...))"
+    )
+  }
+
   if (!is.numeric(seq_group_gap) || length(seq_group_gap) != 1 ||
       !is.finite(seq_group_gap) || seq_group_gap < 0) {
     ggchord_stop("seq_group_gap must be a finite non-negative number")
@@ -166,6 +179,62 @@ geom_seq <- function(mapping = NULL, data = NULL,
   list(lyr)
 }
 
+#' Add sequence-group labels
+#'
+#' Draws labels for contiguous sequence groups defined by `seq_group` in
+#' `geom_seq()`. This dedicated layer lets group-label typography be
+#' controlled independently through `ggchord.group.label`.
+#'
+#' @param mapping,data Optional layer mapping and sequence data.
+#' @param labels Logical or character labels. `TRUE` uses group names;
+#'   named values replace selected group names.
+#' @param radius Radial position relative to the outermost sequence radius.
+#' @param size Optional text size in millimetres. The theme element is used
+#'   when `NULL`.
+#' @param show_legend Whether to show a group-colour legend.
+#' @param ... Additional fixed arguments passed to `geom_text()`.
+#'
+#' @return A list containing one ggplot2 layer.
+#' @export
+geom_seq_group_label <- function(mapping = NULL, data = NULL,
+                                 labels = TRUE, radius = 1.35, size = NULL,
+                                 show_legend = FALSE, ...) {
+  old_error <- ggchord_disable_debug()
+  on.exit(options(error = old_error), add = TRUE)
+  if (!is.numeric(radius) || length(radius) != 1 || !is.finite(radius)) {
+    ggchord_stop("geom_seq_group_label(): radius must be a finite number")
+  }
+  if (!is.null(size) && (!is.numeric(size) || length(size) != 1 ||
+      !is.finite(size) || size <= 0)) {
+    ggchord_stop("geom_seq_group_label(): size must be NULL or a positive number")
+  }
+
+  lyr <- ggplot2::layer(
+    data = data.frame(
+      text_x = numeric(0), text_y = numeric(0), label = character(0),
+      text_angle = numeric(0), hjust = numeric(0), vjust = numeric(0),
+      size = numeric(0), group_id = character(0)
+    ),
+    mapping = aes(
+      x = text_x, y = text_y, label = label, angle = text_angle,
+      hjust = hjust, vjust = vjust, size = I(size),
+      group_colour = group_id
+    ),
+    stat = "identity", geom = seq_group_label_geom, position = "identity",
+    show.legend = show_legend, inherit.aes = FALSE, check.param = FALSE,
+    params = list(...)
+  )
+  lyr$ggchord_type <- "seq_group_label"
+  lyr$ggchord_theme_element <- "ggchord.group.label"
+  lyr$ggchord_params <- list(
+    type = "seq_group_label", labels = labels, radius = radius, size = size
+  )
+  lyr <- ggchord_capture_layer_input(
+    lyr, data, mapping, c("seq_id", "length", "seq_group")
+  )
+  list(lyr)
+}
+
 #' Build a concrete sequence-group label layer from computed layout data
 #'
 #' Group labels are appended at build time (not when the user calls
@@ -174,11 +243,11 @@ geom_seq <- function(mapping = NULL, data = NULL,
 #' @keywords internal
 ggchord_group_label_layer <- function(group_labels) {
   if (is.null(group_labels) || nrow(group_labels) == 0) return(NULL)
-  ggplot2::layer(
+  lyr <- ggplot2::layer(
     data = group_labels,
     mapping = aes(x = text_x, y = text_y, label = label,
                   angle = text_angle, hjust = hjust, vjust = vjust,
-                  size = size, group_colour = zcolour),
+                  size = I(size), group_colour = group_id),
     stat = "identity",
     geom = seq_group_label_geom,
     position = "identity",
@@ -187,4 +256,6 @@ ggchord_group_label_layer <- function(group_labels) {
     check.param = FALSE,
     params = list()
   )
+  lyr$ggchord_theme_element <- "ggchord.group.label"
+  lyr
 }

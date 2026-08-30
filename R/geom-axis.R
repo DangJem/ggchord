@@ -28,8 +28,12 @@
 #' @param axis_label_hide_overlaps Logical, default FALSE. When TRUE, axis
 #'   labels whose boxes would overlap the plot content (sequence arcs, genes,
 #'   ribbons) or other axis labels are automatically hidden.
-#' @param show_legend Whether to show the legend, default FALSE (axes do not participate in legends)
-#' @param ... Additional arguments passed to geom_path/geom_segment/geom_text
+#' @param line_params,tick_params,text_params Named lists of fixed style
+#'   arguments for the axis path, tick segments and tick labels respectively.
+#'   These override the corresponding `ggchord.axis.*` theme elements.
+#' @param ... Shared fixed style arguments. `colour`, `alpha` and
+#'   `na.rm` apply to all three components; line-specific and
+#'   text-specific arguments are routed only to compatible geoms.
 #'
 #' @return A list of ggplot2 layers
 #' @export
@@ -50,10 +54,16 @@ geom_axis <- function(mapping = NULL, data = NULL,
                       axis_label_offset = NULL,
                       axis_label_orientation = NULL,
                       axis_label_hide_overlaps = FALSE,
-                      show_legend = FALSE,
+                      line_params = list(),
+                      tick_params = list(),
+                      text_params = list(),
                       ...) {
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
+
+  split_params <- ggchord_axis_params(
+    list(...), line_params, tick_params, text_params
+  )
 
   empty_id <- data.frame(x = numeric(0), y = numeric(0),
                          seq_id = character(0))
@@ -65,11 +75,13 @@ geom_axis <- function(mapping = NULL, data = NULL,
                           label_angle = numeric(0),
                           seq_id = character(0))
 
-  path_layer <- geom_path(data = empty_id,
-                          mapping = aes(x = x, y = y, group = seq_id),
-                          color = "black", linewidth = 0.3,
-                          inherit.aes = FALSE, show.legend = show_legend, ...)
+  path_layer <- do.call(geom_path, c(list(
+    data = empty_id,
+    mapping = aes(x = x, y = y, group = seq_id),
+    inherit.aes = FALSE, show.legend = FALSE
+  ), split_params$line))
   path_layer$ggchord_type <- "axis_line"
+  path_layer$ggchord_theme_element <- "ggchord.axis.line"
   path_layer$ggchord_params <- list(
     type                    = "axis",
     show_axis               = show_axis,
@@ -94,28 +106,95 @@ geom_axis <- function(mapping = NULL, data = NULL,
     "scale_seq_position_continuous(breaks = ..., minor_breaks = ...)"
   )
 
-  seg_layer <- geom_segment(data = empty_seg,
-                           mapping = aes(x = x0, y = y0,
-                                         xend = x1, yend = y1),
-                           color = "black", linewidth = 0.3,
-                           inherit.aes = FALSE, show.legend = show_legend, ...)
+  seg_layer <- do.call(geom_segment, c(list(
+    data = empty_seg,
+    mapping = aes(x = x0, y = y0, xend = x1, yend = y1),
+    inherit.aes = FALSE, show.legend = FALSE
+  ), split_params$ticks))
   seg_layer$ggchord_type <- "axis_seg"
+  seg_layer$ggchord_theme_element <- "ggchord.axis.ticks"
   seg_layer <- ggchord_capture_layer_input(
     seg_layer, data, mapping, c("seq_id", "length")
   )
 
-  text_layer <- geom_text(data = empty_seg[integer(0), ],
-                          mapping = aes(x = label_x, y = label_y,
-                                        label = label, size = size,
-                                        hjust = label_hjust,
-                                        vjust = label_vjust,
-                                        angle = label_angle),
-                          inherit.aes = FALSE, color = "black",
-                          show.legend = show_legend, ...)
+  text_layer <- do.call(geom_text, c(list(
+    data = empty_seg[integer(0), ],
+    mapping = aes(x = label_x, y = label_y,
+                  label = label, size = I(size),
+                  hjust = label_hjust, vjust = label_vjust,
+                  angle = label_angle),
+    inherit.aes = FALSE, show.legend = FALSE
+  ), split_params$text))
   text_layer$ggchord_type <- "axis_text"
+  text_layer$ggchord_theme_element <- "ggchord.axis.text"
   text_layer <- ggchord_capture_layer_input(
     text_layer, data, mapping, c("seq_id", "length")
   )
 
   list(path_layer, seg_layer, text_layer)
+}
+
+#' Route geom_axis style arguments to compatible child geoms
+#' @noRd
+ggchord_axis_params <- function(dots, line, ticks, text) {
+  for (item in list(line = line, ticks = ticks, text = text)) {
+    if (!is.list(item) || (length(item) > 0 && is.null(names(item)))) {
+      ggchord_stop("geom_axis(): *_params arguments must be named lists")
+    }
+  }
+  normalize <- function(x) {
+    if ("color" %in% names(x)) {
+      if ("colour" %in% names(x)) {
+        ggchord_stop("geom_axis(): use only one of colour and color")
+      }
+      names(x)[names(x) == "color"] <- "colour"
+    }
+    x
+  }
+  dots <- normalize(dots)
+  line <- normalize(line)
+  ticks <- normalize(ticks)
+  text <- normalize(text)
+
+  common <- c("colour", "alpha", "na.rm")
+  line_names <- c(common, "linewidth", "linetype", "lineend", "linejoin")
+  tick_names <- c(line_names, "arrow", "arrow.fill")
+  text_names <- c(
+    common, "family", "fontface", "lineheight", "parse", "check_overlap"
+  )
+  known <- union(line_names, union(tick_names, text_names))
+  if (length(dots) > 0 && (is.null(names(dots)) || any(!nzchar(names(dots))))) {
+    ggchord_stop("geom_axis(): all shared style arguments in ... must be named")
+  }
+  unknown <- setdiff(names(dots), known)
+  if (length(unknown) > 0) {
+    if ("show_legend" %in% unknown) {
+      ggchord_stop("geom_axis(): show_legend was removed because axes never create a legend")
+    }
+    ggchord_stop(
+      "geom_axis(): unsupported shared style argument(s): ",
+      paste(unknown, collapse = ", "),
+      ". Use line_params, tick_params or text_params for component styles."
+    )
+  }
+  merge <- function(shared, specific) {
+    shared <- shared[setdiff(names(shared), names(specific))]
+    c(shared, specific)
+  }
+  allowed <- list(line = line_names, ticks = tick_names, text = text_names)
+  supplied <- list(line = line, ticks = ticks, text = text)
+  for (nm in names(supplied)) {
+    bad <- setdiff(names(supplied[[nm]]), allowed[[nm]])
+    if (length(bad) > 0) {
+      ggchord_stop(
+        "geom_axis(): unsupported ", nm, "_params argument(s): ",
+        paste(bad, collapse = ", ")
+      )
+    }
+  }
+  list(
+    line = merge(dots[intersect(names(dots), line_names)], line),
+    ticks = merge(dots[intersect(names(dots), tick_names)], ticks),
+    text = merge(dots[intersect(names(dots), text_names)], text)
+  )
 }

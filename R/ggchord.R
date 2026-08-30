@@ -14,7 +14,7 @@ globalVariables(c(
   "outline_col", "linetype_val", "value", "source_row", "direction",
   "seq_colour", "group_colour", "ribbon_fill", "ribbon_alpha",
   "ribbon_colour", "ribbon_linetype", "gene_fill", "feature_fill",
-  "region_fill"
+  "region_fill", "group_id"
 ))
 
 #' ggchord: layered multi-sequence alignment chord diagrams for ggplot2
@@ -336,6 +336,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   gene_repel_params <- list()
   axis_params   <- list()
   seq_label_params <- list()
+  seq_group_label_params <- list()
   seq_region_params <- list()
   ribbon_highlight_params <- list()
   seq_layer_requested <- FALSE
@@ -387,6 +388,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
       },
       axis              = axis_params <- pp,
       seq_label         = seq_label_params <- pp,
+      seq_group_label   = seq_group_label_params <- pp,
       seq_region        = {
         seq_region_params <- pp
         region_data_override <- ggchord_resolve_layer_input(lyr, pp$regions)
@@ -452,7 +454,16 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   seq_group_gap <- seq_params$seq_group_gap %||% 0.08
   seq_group_labels <- seq_params$seq_group_labels %||% TRUE
   seq_group_label_radius <- seq_params$seq_group_label_radius %||% 1.35
+  seq_group_label_size <- ggchord_theme_text_size(
+    plot, "ggchord.group.label", 3.5
+  )
   seq_group_colors <- seq_params$seq_group_colors
+  if (length(seq_group_label_params) > 0) {
+    seq_group_labels <- seq_group_label_params$labels
+    seq_group_label_radius <- seq_group_label_params$radius
+    seq_group_label_size <- seq_group_label_params$size %||%
+      seq_group_label_size
+  }
 
   if (!is.numeric(seq_group_gap) || length(seq_group_gap) != 1 ||
       !is.finite(seq_group_gap) || seq_group_gap < 0) {
@@ -461,6 +472,10 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   if (!is.numeric(seq_group_label_radius) || length(seq_group_label_radius) != 1 ||
       !is.finite(seq_group_label_radius)) {
     ggchord_stop("seq_group_label_radius must be a finite number")
+  }
+  if (!is.numeric(seq_group_label_size) || length(seq_group_label_size) != 1 ||
+      !is.finite(seq_group_label_size) || seq_group_label_size <= 0) {
+    ggchord_stop("sequence group label size must be a finite positive number")
   }
   if (!is.null(seq_group)) {
     if (length(seq_group) != length(seqs) ||
@@ -612,7 +627,8 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     isTRUE(gene_params$gene_label_show)
   gene_lsz  <- lbl$gene_label_size %||%
     gene_params$label_size_override %||%
-    gene_params$gene_label_size %||% 2.5
+    gene_params$gene_label_size %||%
+    ggchord_theme_text_size(plot, "ggchord.gene.label", 2.5)
   # Repelled labels now use mode-owned deterministic positioning. Manual
   # rotation and offsets remain available through geom_gene_label(), but are
   # intentionally not inherited by geom_gene_label_repel().
@@ -681,8 +697,13 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
                                        seqs, "axis_tick_minor_number", 4)
   axisMinLen <- process_sequence_param(axis_params$axis_tick_minor_length %||% 0.01,
                                        seqs, "axis_tick_minor_length", 0.01)
-  labelSize  <- process_sequence_param(axis_params$axis_label_size %||% 3,
-                                       seqs, "axis_label_size", 3)
+  axis_theme_size <- ggchord_theme_text_size(
+    plot, "ggchord.axis.text", 3
+  )
+  labelSize  <- process_sequence_param(
+    axis_params$axis_label_size %||% axis_theme_size,
+    seqs, "axis_label_size", axis_theme_size
+  )
   labelOffset <- process_sequence_param(axis_params$axis_label_offset %||% 2,
                                         seqs, "axis_label_offset", 2)
   axisLabelHide <- isTRUE(axis_params$axis_label_hide_overlaps)
@@ -754,8 +775,12 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
       seq_label_params$seq_label_radius, seqs, "seq_label_radius", 1)
     seq_label_rotation <- process_sequence_param(
       seq_label_params$seq_label_rotation, seqs, "seq_label_rotation", 0)
+    seq_theme_size <- ggchord_theme_text_size(
+      plot, "ggchord.seq.label", 3
+    )
     seq_label_size <- process_sequence_param(
-      seq_label_params$seq_label_size, seqs, "seq_label_size", 3)
+      seq_label_params$seq_label_size, seqs, "seq_label_size", seq_theme_size
+    )
     seq_label_orientation <- seq_label_params$seq_label_orientation %||% "arc"
     seq_label_hjust <- if (is.null(seq_label_params$seq_label_hjust)) {
       if (identical(seq_label_orientation, "arc")) {
@@ -869,6 +894,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     seq_group_gap = seq_group_gap,
     seq_group_labels = seq_group_labels,
     seq_group_label_radius = seq_group_label_radius,
+    seq_group_label_size = seq_group_label_size,
     seq_group_colors = seq_group_colors,
     ribbon_data = ribbon_data, ribbonGap = ribbonGap,
     ribbon_color_scheme = ribbon_color_scheme,
@@ -990,7 +1016,7 @@ compute_chord_geometry <- function(plot) {
                     character(1))
     main <- types[types %in% c(
       "seq", "ribbon", "gene", "gene_label", "gene_label_repel", "axis",
-      "seq_label", "seq_region", "ribbon_highlight"
+      "seq_label", "seq_group_label", "seq_region", "ribbon_highlight"
     )]
     if (length(main)) main[length(main)] else ""
   }, character(1))
@@ -1037,6 +1063,7 @@ compute_chord_geometry <- function(plot) {
         axis_seg = chord$data$seq_data,
         axis_text = chord$data$seq_data,
         seq_label = chord$data$seq_data,
+        seq_group_label = chord$data$seq_data,
         ribbon = chord$data$ribbon_data,
         ribbon_highlight = chord$data$ribbon_data,
         gene_poly = chord$data$gene_data,
@@ -1133,7 +1160,7 @@ reconstruct_layer <- function(lyr, data, mapping = NULL) {
   for (fld in c(
     "ggchord_type", "ggchord_params", "ggchord_placeholder", "ggchord_ref",
     "ggchord_layer_id", "ggchord_input_data", "ggchord_input_mapping",
-    "ggchord_role_aes", "ggchord_legacy_scales"
+    "ggchord_role_aes", "ggchord_legacy_scales", "ggchord_theme_element"
   )) {
     if (!is.null(lyr[[fld]])) new[[fld]] <- lyr[[fld]]
   }
@@ -1373,11 +1400,10 @@ make_ggchord_scales <- function(layout, has_seq = FALSE, has_gene = FALSE,
   # Sequence-group label colours use an internal aesthetic so they do not
   # collide with the Seq ID colour scale used by geom_seq().
   if (!is.null(layout$group_labels) && nrow(layout$group_labels) > 0) {
-    scales[[length(scales) + 1]] <- scale_colour_identity(aesthetics = "group_colour")
+    scales[[length(scales) + 1]] <- scale_group_colour_manual(
+      name = "Sequence group", values = layout$group_colors, guide = "none"
+    )
   }
-  # Axis text size scale
-  scales[[length(scales) + 1]] <- scale_size_identity()
-
   list(scales = scales, ribbon_aes = ribbon_aes)
 }
 
@@ -1583,6 +1609,7 @@ prepare_ggchord_plot <- function(plot) {
   plot <- rename_ribbon_layers(plot, cls$ribbon, sc$ribbon_aes, layout)
   plot <- attach_ggchord_scales(plot, sc$scales)
   plot <- set_ggchord_coord(plot, layout)
+  plot <- ggchord_apply_theme_styles(plot)
   plot
 }
 
@@ -1651,8 +1678,12 @@ ggplot_build.ggchord <- function(plot, ...) {
 
   # Sequence-group labels are appended at build time (geom_seq() itself keeps
   # returning a single layer for backward compatibility).
+  has_group_label_layer <- any(vapply(
+    plot$layers,
+    function(x) identical(x$ggchord_type, "seq_group_label"), logical(1)
+  ))
   group_label_layer <- ggchord_group_label_layer(layout$group_labels)
-  if (!is.null(group_label_layer)) {
+  if (!has_group_label_layer && !is.null(group_label_layer)) {
     plot$layers[[length(plot$layers) + 1L]] <- group_label_layer
   }
 
@@ -1680,6 +1711,7 @@ ggplot_build.ggchord <- function(plot, ...) {
   # Step 5: update the coord range
   # ====================================================================
   plot <- set_ggchord_coord(plot, layout)
+  plot <- ggchord_apply_theme_styles(plot)
 
   # Run the standard ggplot2 build on the prepared plot.  The ggchord class is
   # removed first so that dispatch proceeds to the base ggplot2 method instead

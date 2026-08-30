@@ -17,7 +17,9 @@ geom_axis(
   axis_label_offset = NULL,
   axis_label_orientation = NULL,
   axis_label_hide_overlaps = FALSE,
-  show_legend = FALSE,
+  line_params = list(),
+  tick_params = list(),
+  text_params = list(),
   ...
 )
 }
@@ -55,9 +57,13 @@ sequence.}
 labels whose boxes would overlap the plot content (sequence arcs, genes,
 ribbons) or other axis labels are automatically hidden.}
 
-\item{show_legend}{Whether to show the legend, default FALSE (axes do not participate in legends)}
+\item{line_params, tick_params, text_params}{Named lists of fixed style
+arguments for the axis path, tick segments and tick labels respectively.
+These override the corresponding `ggchord.axis.*` theme elements.}
 
-\item{...}{Additional arguments passed to geom_path/geom_segment/geom_text}
+\item{...}{Shared fixed style arguments. `colour`, `alpha` and
+`na.rm` apply to all three components; line-specific and
+text-specific arguments are routed only to compatible geoms.}
 }
 \value{
 A list of ggplot2 layers

@@ -60,6 +60,58 @@ test_that("ggchord themes and guides use registered role elements", {
   expect_s3_class(guide_ggchord_colourbar(), "GuideColourbar")
 })
 
+test_that("annotation themes and component styles remain independent", {
+  data(seq_data_example)
+  data(gene_data_example)
+
+  p <- ggchord(seq_data_example, gene_data = gene_data_example,
+               validate = "none") +
+    geom_seq() +
+    geom_gene_label_repel() +
+    theme(
+      ggchord.gene.label = element_text(size = 14, colour = "purple"),
+      ggchord.gene.label.segment = element_line(
+        colour = "orange", linewidth = 1
+      )
+    )
+  built <- build_ggchord_smoke(p)
+  expect_false(built$plot$scales$has_scale("size"))
+  expect_equal(unique(get_chord_layout(p)$gene_labels$size), 14 / ggplot2::.pt)
+  expect_equal(unique(built$data[[2]]$colour), "orange")
+  expect_equal(unique(built$data[[3]]$colour), "purple")
+
+  axis_plot <- ggchord(seq_data_example, validate = "none") +
+    geom_seq() +
+    geom_axis(
+      line_params = list(colour = "red"),
+      tick_params = list(colour = "blue"),
+      text_params = list(colour = "green")
+    )
+  axis_built <- build_ggchord_smoke(axis_plot)
+  expect_equal(unique(axis_built$data[[2]]$colour), "red")
+  expect_equal(unique(axis_built$data[[3]]$colour), "blue")
+  expect_equal(unique(axis_built$data[[4]]$colour), "green")
+  expect_error(geom_axis(show_legend = TRUE), "show_legend was removed")
+})
+
+test_that("sequence-group labels have a dedicated layer and scale", {
+  seq <- data.frame(
+    seq_id = c("A", "B", "C"), length = c(100, 120, 140),
+    seq_group = c("g1", "g1", "g2")
+  )
+  p <- ggchord(seq, validate = "none") +
+    geom_seq() +
+    geom_seq_group_label() +
+    scale_group_colour_manual(values = c(g1 = "red", g2 = "blue"))
+  built <- build_ggchord_smoke(p)
+  expect_equal(nrow(built$data[[2]]), 2)
+  expect_true(built$plot$scales$has_scale("group_colour"))
+  expect_error(
+    geom_gene(gene_label_size = 3),
+    "Add geom_gene_label"
+  )
+})
+
 test_that("the main plotting layers build together", {
   data(seq_data_example)
   data(ribbon_data_example)

@@ -58,6 +58,13 @@ geom_feature <- function(mapping = NULL, data = NULL,
                          ...) {
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
+  legend_position_supplied <- !missing(legend_position)
+  if (legend_position_supplied) {
+    ggchord_deprecate_once(
+      "geom_feature(legend_position)",
+      "guides(feature_fill = guide_ggchord_legend(position = ...))"
+    )
+  }
 
   # Preserve the pre-v0.9 positional `geom_feature(data)` call while exposing
   # the standard ggplot2 `mapping, data` signature.
@@ -137,7 +144,7 @@ geom_feature <- function(mapping = NULL, data = NULL,
       setdiff(names(visual_mapping), holder$ggchord_role_aes)
     ]
   }
-  layers <- geom_gene(
+  gene_args <- list(
     mapping = visual_mapping,
     data = gene_data,
     gene_offset = feature_offset,
@@ -145,11 +152,13 @@ geom_feature <- function(mapping = NULL, data = NULL,
     gene_color_scheme = "manual",
     gene_colors = pal,
     gene_order = feature_order,
-    show_legend = show_legend,
-    legend_position = legend_position,
-    ...
+    show_legend = show_legend
   )
+  layers <- do.call(geom_gene, c(gene_args, list(...)))
   for (lyr in layers) {
+    if (legend_position_supplied) {
+      lyr$ggchord_params$legend_position <- legend_position
+    }
     lyr$ggchord_params$gene_data_override <- gene_data
     names(lyr$mapping)[names(lyr$mapping) == "gene_fill"] <- "feature_fill"
     if (is.logical(lyr$show.legend) && !is.null(names(lyr$show.legend))) {

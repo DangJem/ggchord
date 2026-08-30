@@ -88,6 +88,30 @@
   remain functional in v0.9.0 but point users to `labs()`, `coord_chord()` and
   `theme()` respectively.
 
+## Geom and annotation interfaces
+
+* Gene, sequence and axis text sizes are now fixed layer values rather than a
+  shared `size` scale, so adding one label layer cannot rescale another.
+  Registered axis, sequence-label, gene-label and leader-line theme elements
+  are resolved before the standard ggplot2 build; an explicit geom style still
+  takes priority.
+
+* `geom_axis()` routes shared styles only to compatible child geoms and accepts
+  separate `line_params`, `tick_params` and `text_params`. Its former
+  `show_legend` argument is removed because axis annotations never participate
+  in a legend.
+
+* `geom_seq_group_label()` provides an independent group-label layer, while
+  the labels created implicitly by `geom_seq()` remain available for
+  compatibility. Group values now train `scale_group_colour_manual()` instead
+  of treating already-resolved colour strings as categories.
+
+* `geom_seq_label(labels = ...)` separates displayed sequence text from scale
+  labels; `seq_labels` remains a deprecated alias. Label arguments passed to
+  `geom_gene()` now fail clearly instead of being warned about and then leaked
+  into `geom_polygon()`. Geom-level legend positions and colourbar dimensions
+  remain functional during v0.9.0 but direct users to `guides()`.
+
 ## Deterministic gene-label layouts
 
 * `geom_gene_label_repel()` now uses the deterministic

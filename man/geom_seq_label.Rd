@@ -10,6 +10,7 @@ geom_seq_label(
   seq_label_radius = 1,
   seq_label_rotation = NULL,
   seq_label_size = NULL,
+  labels = NULL,
   seq_labels = NULL,
   seq_label_orientation = c("arc", "horizontal"),
   seq_label_hjust = NULL,
@@ -35,8 +36,10 @@ when \code{seq_label_orientation = "horizontal"}.}
 
 \item{seq_label_size}{Optional numeric/vector. Label font size, default NULL (3)}
 
-\item{seq_labels}{Optional character vector. Override the label texts
+\item{labels}{Optional character vector. Override the label texts
 (defaults to the sequence labels from \code{geom_seq()} or the sequence IDs)}
+
+\item{seq_labels}{Deprecated alias for \code{labels}.}
 
 \item{seq_label_orientation}{Character, default "arc". Label text
 orientation: \code{"arc"} rotates the text along the sequence arc (and

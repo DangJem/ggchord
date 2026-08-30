@@ -46,6 +46,7 @@ compute_chord_layout <- function(
     seq_group_gap = 0.08,
     seq_group_labels = TRUE,
     seq_group_label_radius = 1.35,
+    seq_group_label_size = 3.5,
     seq_group_colors = NULL,
     # Ribbon parameters
     ribbon_data = NULL, ribbonGap,
@@ -1063,7 +1064,7 @@ compute_chord_layout <- function(
         text_angle = 0,
         hjust = 0.5,
         vjust = 0.5,
-        size = 3.5,
+        size = seq_group_label_size,
         group_id = g,
         zcolour = unname(group_colors[g]),
         stringsAsFactors = FALSE
@@ -1480,6 +1481,7 @@ compute_chord_layout <- function(
     seqs           = seqs,
     seqRadius      = seqRadius,
     seq_groups     = if (has_group) groups else NULL,
+    group_colors   = group_colors,
 
     # Ribbon-related
     ribbon_color_scheme = ribbon_color_scheme,

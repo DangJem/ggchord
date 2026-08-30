@@ -52,23 +52,31 @@ geom_gene <- function(mapping = NULL, data = NULL,
                       ...) {
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
+  dots <- list(...)
+  if ("color" %in% names(dots) && !("colour" %in% names(dots))) {
+    names(dots)[names(dots) == "color"] <- "colour"
+  }
+  if (!missing(legend_position)) {
+    ggchord_deprecate_once(
+      "geom_gene(legend_position)",
+      "guides(gene_fill = guide_ggchord_legend(position = ...))"
+    )
+  }
 
   # Backward compatibility: gene label parameters used to live here. Point the
   # user to the dedicated layer instead of silently ignoring them.
   legacy_label_args <- intersect(
-    names(list(...)),
+    names(dots),
     c("gene_label_show", "gene_label_size", "gene_label_rotation",
       "gene_label_radial_offset", "gene_label_circum_offset",
       "gene_label_circum_limit", "gene_label_repel", "gene_label_wrap",
       "gene_label_max_overlaps", "gene_label_seed", "show_label", "label_size")
   )
   if (length(legacy_label_args) > 0) {
-    warning(
-      "Gene label arguments (",
+    ggchord_stop(
+      "Removed geom_gene() label argument(s): ",
       paste(legacy_label_args, collapse = ", "),
-      ") have moved to the dedicated `geom_gene_label()` layer and are ignored ",
-      "here. Add `geom_gene_label()` after `geom_gene()` to show gene labels.",
-      call. = FALSE
+      ". Add geom_gene_label() or geom_gene_label_repel() as a separate layer."
     )
   }
 
@@ -103,7 +111,10 @@ geom_gene <- function(mapping = NULL, data = NULL,
     inherit.aes = FALSE,
     check.param = FALSE,
     key_glyph   = key_glyph_gene,
-    params      = list(color = "black", ...)
+    params      = c(
+      if (!("colour" %in% names(dots))) list(colour = "#2F2F2F") else list(),
+      dots
+    )
   )
   poly_layer$ggchord_type <- "gene_poly"
   poly_layer$ggchord_params <- list(
@@ -192,12 +203,13 @@ geom_gene_label <- function(mapping = NULL, data = NULL,
                              size = numeric(0)),
     mapping     = aes(x = text_x, y = text_y, label = text,
                       angle = text_angle, hjust = hjust, vjust = vjust,
-                      size = size),
+                      size = I(size)),
     inherit.aes = FALSE,
     show.legend = show_legend,
     ...
   )
   text_layer$ggchord_type <- "gene_text"
+  text_layer$ggchord_theme_element <- "ggchord.gene.label"
   text_layer$ggchord_params <- list(
     type                     = "gene_label",
     gene_label_size          = gene_label_size,
@@ -333,11 +345,10 @@ geom_gene_label_repel <- function(mapping = NULL, data = NULL,
     mapping     = aes(x = x0, y = y0, xend = x1, yend = y1, group = group,
                       linetype = I(linetype)),
     inherit.aes = FALSE,
-    show.legend = FALSE,
-    colour      = "grey50",
-    linewidth   = 0.3
+    show.legend = FALSE
   )
   seg_layer$ggchord_type <- "gene_label_segment"
+  seg_layer$ggchord_theme_element <- "ggchord.gene.label.segment"
   seg_layer$ggchord_params <- list(type = "gene_label_segment")
   seg_layer <- ggchord_capture_layer_input(
     seg_layer, data, mapping,
@@ -354,11 +365,12 @@ geom_gene_label_repel <- function(mapping = NULL, data = NULL,
                              size = numeric(0)),
     mapping     = aes(x = text_x, y = text_y, label = text,
                       angle = text_angle, hjust = hjust, vjust = vjust,
-                      size = size),
+                      size = I(size)),
     inherit.aes = FALSE,
     show.legend = show_legend
   ), dots))
   text_layer$ggchord_type <- "gene_text_repel"
+  text_layer$ggchord_theme_element <- "ggchord.gene.label"
   text_layer$ggchord_params <- list(
     type                     = "gene_label_repel",
     gene_label_layout        = gene_label_layout,

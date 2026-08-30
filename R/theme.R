@@ -34,12 +34,18 @@ theme_ggchord <- function(base_size = 11, base_family = "") {
       panel.grid = element_blank(),
       ggchord.axis.line = element_line(colour = "#4D4D4D", linewidth = 0.35),
       ggchord.axis.ticks = element_line(colour = "#4D4D4D", linewidth = 0.3),
-      ggchord.axis.text = element_text(colour = "#2F2F2F", size = 7 * scale),
-      ggchord.seq.label = element_text(colour = "#202020", size = 9 * scale),
-      ggchord.group.label = element_text(
-        colour = "#202020", size = 9 * scale, face = "bold"
+      ggchord.axis.text = element_text(
+        colour = "#2F2F2F", size = 3 * ggplot2::.pt * scale
       ),
-      ggchord.gene.label = element_text(colour = "#202020", size = 7 * scale),
+      ggchord.seq.label = element_text(
+        colour = "#202020", size = 3 * ggplot2::.pt * scale
+      ),
+      ggchord.group.label = element_text(
+        colour = "#202020", size = 3.5 * ggplot2::.pt * scale, face = "bold"
+      ),
+      ggchord.gene.label = element_text(
+        colour = "#202020", size = 2.5 * ggplot2::.pt * scale
+      ),
       ggchord.gene.label.segment = element_line(
         colour = "#6B6B6B", linewidth = 0.3
       )
@@ -96,4 +102,72 @@ theme_ggchord_publication <- function(base_size = 9, base_family = "") {
       legend.key.height = unit(4, "mm"),
       legend.key.width = unit(5, "mm")
     )
+}
+
+#' Resolve a ggchord theme element without leaking theme internals elsewhere
+#' @noRd
+ggchord_theme_element <- function(plot, name) {
+  tryCatch(
+    ggplot2::calc_element(name, plot$theme),
+    error = function(e) NULL
+  )
+}
+
+#' Resolve a theme text size (points) to a geom text size (millimetres)
+#' @noRd
+ggchord_theme_text_size <- function(plot, name, fallback) {
+  el <- ggchord_theme_element(plot, name)
+  if (is.null(el) || inherits(el, "element_blank") ||
+      is.null(el@size) || !is.finite(el@size)) {
+    return(fallback)
+  }
+  el@size / ggplot2::.pt
+}
+
+#' Apply registered theme elements to ggchord annotation layers
+#' @noRd
+ggchord_apply_theme_styles <- function(plot) {
+  for (i in seq_along(plot$layers)) {
+    lyr <- plot$layers[[i]]
+    name <- lyr$ggchord_theme_element
+    if (is.null(name)) next
+    el <- ggchord_theme_element(plot, name)
+    if (is.null(el)) next
+    if (inherits(el, "element_blank")) {
+      if (is.null(lyr$aes_params$alpha)) lyr$aes_params$alpha <- 0
+      next
+    }
+
+    if (inherits(el, "element_line")) {
+      values <- list(
+        colour = el@colour,
+        linewidth = el@linewidth,
+        linetype = el@linetype
+      )
+      geom_values <- list(lineend = el@lineend, linejoin = el@linejoin)
+    } else if (inherits(el, "element_text")) {
+      values <- list(
+        colour = el@colour,
+        family = el@family,
+        fontface = el@face,
+        lineheight = el@lineheight
+      )
+      geom_values <- list()
+    } else {
+      next
+    }
+    if (identical(name, "ggchord.group.label")) values$colour <- NULL
+    for (nm in names(values)) {
+      if (is.null(lyr$aes_params[[nm]]) && !is.null(values[[nm]])) {
+        lyr$aes_params[[nm]] <- values[[nm]]
+      }
+    }
+    for (nm in names(geom_values)) {
+      if (is.null(lyr$geom_params[[nm]]) && !is.null(geom_values[[nm]])) {
+        lyr$geom_params[[nm]] <- geom_values[[nm]]
+      }
+    }
+    plot$layers[[i]] <- lyr
+  }
+  plot
 }

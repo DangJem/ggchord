@@ -18,8 +18,9 @@
 #'   (degrees) on top of the arc-aligned orientation, default NULL (0). Ignored
 #'   when \code{seq_label_orientation = "horizontal"}.
 #' @param seq_label_size Optional numeric/vector. Label font size, default NULL (3)
-#' @param seq_labels Optional character vector. Override the label texts
+#' @param labels Optional character vector. Override the label texts
 #'   (defaults to the sequence labels from \code{geom_seq()} or the sequence IDs)
+#' @param seq_labels Deprecated alias for \code{labels}.
 #' @param seq_label_orientation Character, default "arc". Label text
 #'   orientation: \code{"arc"} rotates the text along the sequence arc (and
 #'   keeps it readable), \code{"horizontal"} draws every label horizontally,
@@ -49,6 +50,7 @@ geom_seq_label <- function(mapping = NULL, data = NULL,
                            seq_label_radius = 1,
                            seq_label_rotation = NULL,
                            seq_label_size = NULL,
+                           labels = NULL,
                            seq_labels = NULL,
                            seq_label_orientation = c("arc", "horizontal"),
                            seq_label_hjust = NULL,
@@ -59,6 +61,14 @@ geom_seq_label <- function(mapping = NULL, data = NULL,
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
 
+  if (!missing(seq_labels) && !is.null(seq_labels)) {
+    if (!is.null(labels)) {
+      ggchord_stop("geom_seq_label(): use only one of labels and seq_labels")
+    }
+    ggchord_deprecate_once("geom_seq_label(seq_labels)", "geom_seq_label(labels)")
+    labels <- seq_labels
+  }
+
   seq_label_orientation <- match.arg(seq_label_orientation)
   lyr <- ggplot2::geom_text(
     data = data.frame(text_x = numeric(0), text_y = numeric(0),
@@ -67,19 +77,20 @@ geom_seq_label <- function(mapping = NULL, data = NULL,
                       vjust = numeric(0)),
     mapping = aes(x = text_x, y = text_y, label = label,
                   angle = text_angle, hjust = hjust, vjust = vjust,
-                  size = size),
+                  size = I(size)),
     inherit.aes = FALSE,
     show.legend = show_legend,
     check_overlap = check_overlap,
     ...
   )
   lyr$ggchord_type <- "seq_label"
+  lyr$ggchord_theme_element <- "ggchord.seq.label"
   lyr$ggchord_params <- list(
     type              = "seq_label",
     seq_label_radius  = seq_label_radius,
     seq_label_rotation = seq_label_rotation,
     seq_label_size    = seq_label_size,
-    seq_labels        = seq_labels,
+    seq_labels        = labels,
     seq_label_orientation = seq_label_orientation,
     seq_label_hjust   = seq_label_hjust,
     seq_label_vjust   = seq_label_vjust

@@ -125,6 +125,14 @@ geom_ribbon <- function(mapping = NULL, data = NULL,
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
 
+  if (!missing(legend_position) || !missing(legend_key_width) ||
+      !missing(legend_key_height)) {
+    ggchord_deprecate_once(
+      "geom_ribbon(legend_position/legend_key_width/legend_key_height)",
+      "guides(ribbon_fill = guide_ggchord_colourbar(...))"
+    )
+  }
+
   ribbon_alpha <- alpha %||% ribbon_alpha
   ribbon_direction <- match.arg(ribbon_direction)
 

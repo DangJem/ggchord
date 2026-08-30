@@ -17,6 +17,7 @@ compute_chord_layout(
   seq_group_gap = 0.08,
   seq_group_labels = TRUE,
   seq_group_label_radius = 1.35,
+  seq_group_label_size = 3.5,
   seq_group_colors = NULL,
   ribbon_data = NULL,
   ribbonGap,
