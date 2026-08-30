@@ -1180,11 +1180,48 @@ compute_chord_layout <- function(
       gene_labels$text <- ggchord_label_wrap_text(gene_labels$text,
                                                   gene_label_wrap)
     }
-    range_x <- max(c(gene_labels$text_x, gene_polys$x,
-                     if (nrow(seq_labels_df)) seq_labels_df$text_x else 0))
-    range_x <- range_x - min(c(gene_labels$text_x, gene_polys$x,
-                               if (nrow(seq_labels_df)) seq_labels_df$text_x else 0))
-    units_per_inch <- max(range_x, 1) / 6
+    label_units_per_inch <- function(labels) {
+      x_values <- c(
+        unlist(lapply(seq_arcs, `[[`, "x"), use.names = FALSE),
+        gene_polys$x, labels$text_x,
+        if (nrow(seq_labels_df)) seq_labels_df$text_x else 0,
+        if (!is.null(group_labels) && nrow(group_labels)) group_labels$text_x else 0,
+        if (!is.null(axis_ticks) && nrow(axis_ticks)) axis_ticks$label_x else 0
+      )
+      y_values <- c(
+        unlist(lapply(seq_arcs, `[[`, "y"), use.names = FALSE),
+        gene_polys$y, labels$text_y,
+        if (nrow(seq_labels_df)) seq_labels_df$text_y else 0,
+        if (!is.null(group_labels) && nrow(group_labels)) group_labels$text_y else 0,
+        if (!is.null(axis_ticks) && nrow(axis_ticks)) axis_ticks$label_y else 0
+      )
+      units <- max(diff(range(x_values, na.rm = TRUE)),
+                   diff(range(y_values, na.rm = TRUE)), 1) / 6
+      # Text itself expands the fixed-aspect coordinate square. Iterate the
+      # scale estimate so collision boxes use the same data-units-per-inch as
+      # the eventual rendered limits, including tall/rotated geometries.
+      for (scale_pass in seq_len(3)) {
+        label_boxes <- ggchord_text_boxes(
+          labels, units_per_inch = units, box_padding = 0.03
+        )
+        fixed_boxes <- ggchord_text_obstacle_boxes(
+          seq_labels_df, group_labels, axis_ticks, show_axis,
+          units_per_inch = units, box_padding = 0.03
+        )
+        expanded_x <- c(
+          x_values, label_boxes$xmin, label_boxes$xmax,
+          fixed_boxes$xmin, fixed_boxes$xmax
+        )
+        expanded_y <- c(
+          y_values, label_boxes$ymin, label_boxes$ymax,
+          fixed_boxes$ymin, fixed_boxes$ymax
+        )
+        units <- max(diff(range(expanded_x, na.rm = TRUE)),
+                     diff(range(expanded_y, na.rm = TRUE)), 1) / 6
+      }
+      units
+    }
+    units_per_inch <- label_units_per_inch(gene_labels)
     if (isTRUE(gene_label_repel_layer)) {
       repel_pts <- ggchord_repel_points(
         seq_arcs, gene_polys, axis_lines, axis_ticks, show_axis
@@ -1233,62 +1270,116 @@ compute_chord_layout <- function(
           gene_labels$hjust[seg$group] <- ifelse(moved_right, 0, 1)
         }
       }
-      # Final deterministic pass with the exact rendered boxes (horizontal
-      # labels now have their final justification and orientation).  This
-      # removes any residual label-label overlaps left by the force layout
-      # and keeps the labels off the sequence/group/axis label rectangles.
-      gene_labels <- ggchord_repel_labels_final(
-        gene_labels,
-        units_per_inch = units_per_inch,
-        box_padding = gene_label_repel_box_padding,
-        repel_boxes = repel_boxes
+      # Finish the layout only after its requested side and exact text
+      # justification are known. Previously the final separation happened
+      # before side mirroring; the mirror and hjust update could therefore
+      # recreate both overlaps and leader crossings, especially when a
+      # sequence used orientation -1.
+      gene_labels <- ggchord_enforce_label_side(
+        gene_labels, seq_arcs, gene_label_side
       )
-
-      # Enforce the requested arc side only after the final de-overlap pass.
-      # Doing it here avoids a second mirroring step and keeps the final
-      # rendered text position on the correct side.
-      if (!identical(gene_label_side, "auto") && nrow(gene_labels) > 0) {
-        want_inside <- identical(gene_label_side, "inside")
-
-        # The documented meaning of `gene_label_side` is radial: labels are
-        # inside the chord when they are closer to the centre than their
-        # sequence arc, and outside when they are farther away.  Use the
-        # median rendered radius of each sequence arc so the test is stable
-        # for circular, straight and Bézier paths alike.
-        arc_radius_by_id <- vapply(
-          seq_arcs,
-          function(a) median(sqrt(a$x^2 + a$y^2)),
-          numeric(1)
-        )
-        names(arc_radius_by_id) <- vapply(
-          seq_arcs,
-          function(a) unique(a$seq_id)[1],
-          character(1)
-        )
-
-        for (i in seq_len(nrow(gene_labels))) {
-          sid <- gene_labels$seq_id[i]
-          base_r <- arc_radius_by_id[[sid]]
-          px <- gene_labels$text_x[i]
-          py <- gene_labels$text_y[i]
-          label_r <- sqrt(px^2 + py^2)
-          currently_inside <- label_r < base_r
-          if (currently_inside != want_inside) {
-            new_r <- 2 * base_r - label_r
-            scale <- if (label_r > 0) new_r / label_r else 0
-            gene_labels$text_x[i] <- px * scale
-            gene_labels$text_y[i] <- py * scale
-          }
-        }
-      }
-
-      # Recompute horizontal justification from the final label positions.
-      # The final de-overlap / side-enforcement pass can move a label across
-      # its gene, especially for reversed sequence orientations.
       if (identical(gene_label_orientation, "horizontal")) {
         gene_labels$hjust <- ifelse(
           gene_labels$text_x >= gene_labels$anchor_x, 0, 1
         )
+      }
+
+      # Separating boxes can reorder nearby endpoints, while uncrossing two
+      # leaders can exchange positions occupied by differently sized labels.
+      # Alternate the two operations only while a real conflict remains. A
+      # conflict-free plot completes in one pass and retains its coordinates.
+      for (final_pass in seq_len(4)) {
+        final_units_per_inch <- label_units_per_inch(gene_labels)
+        repel_boxes <- ggchord_text_obstacle_boxes(
+          seq_labels_df, group_labels, axis_ticks, show_axis,
+          units_per_inch = final_units_per_inch
+        )
+        gene_labels <- ggchord_repel_labels_final(
+          gene_labels,
+          units_per_inch = final_units_per_inch,
+          box_padding = gene_label_repel_box_padding,
+          repel_boxes = repel_boxes
+        )
+        gene_labels <- ggchord_enforce_label_side(
+          gene_labels, seq_arcs, gene_label_side
+        )
+        if (identical(gene_label_orientation, "horizontal")) {
+          gene_labels$hjust <- ifelse(
+            gene_labels$text_x >= gene_labels$anchor_x, 0, 1
+          )
+        }
+
+        radial_side <- if (identical(gene_label_side, "auto")) {
+          curve_frame <- ggchord_label_curve_frame(gene_labels, seq_arcs)
+          ifelse(curve_frame$signed_distance < 0, "inside", "outside")
+        } else {
+          rep(gene_label_side, nrow(gene_labels))
+        }
+        label_lanes <- paste(gene_labels$seq_id, radial_side, sep = "\r")
+        if (identical(gene_label_segment, "elbow")) {
+          provisional_segments <- ggchord_repel_segments(
+            gene_labels,
+            min_segment_length = gene_label_repel_min_segment_length
+          )
+          leader_range <- if (nrow(provisional_segments) > 0) {
+            diff(range(c(provisional_segments$x0, provisional_segments$x1)))
+          } else {
+            1
+          }
+          elbow_widths <- ggchord_text_boxes(
+            gene_labels,
+            units_per_inch = max(1, leader_range) / 6
+          )$w
+          elbow_endpoints <- function(labels) {
+            if (identical(gene_label_orientation, "horizontal")) {
+              labels$hjust <- ifelse(
+                labels$text_x >= labels$anchor_x, 0, 1
+              )
+            }
+            ggchord_elbow_bends(labels, elbow_widths)
+          }
+          uncrossed <- ggchord_uncross_labels(
+            gene_labels, lanes = label_lanes,
+            endpoint_fun = elbow_endpoints
+          )
+          gene_labels <- uncrossed$labels
+          if (identical(gene_label_orientation, "horizontal")) {
+            gene_labels$hjust <- ifelse(
+              gene_labels$text_x >= gene_labels$anchor_x, 0, 1
+            )
+          }
+          # Keep the underlying direct routes planar as well. If an elbow
+          # still conflicts later, collapsing its stub then reveals this
+          # already uncrossed direct segment instead of creating a new cross.
+          uncrossed <- ggchord_uncross_labels(
+            gene_labels, lanes = label_lanes
+          )
+        } else {
+          uncrossed <- ggchord_uncross_labels(
+            gene_labels, lanes = label_lanes
+          )
+        }
+        gene_labels <- uncrossed$labels
+        gene_labels <- ggchord_enforce_label_side(
+          gene_labels, seq_arcs, gene_label_side
+        )
+        if (identical(gene_label_orientation, "horizontal")) {
+          gene_labels$hjust <- ifelse(
+            gene_labels$text_x >= gene_labels$anchor_x, 0, 1
+          )
+        }
+
+        check_units_per_inch <- label_units_per_inch(gene_labels)
+        if (!ggchord_label_box_conflicts(
+          gene_labels,
+          units_per_inch = check_units_per_inch,
+          box_padding = gene_label_repel_box_padding,
+          repel_boxes = repel_boxes
+        )) {
+          units_per_inch <- check_units_per_inch
+          break
+        }
+        units_per_inch <- check_units_per_inch
       }
 
       gene_label_segments <- ggchord_repel_segments(
@@ -1306,27 +1397,12 @@ compute_chord_layout <- function(
         # the label. Labels sitting close to their gene get a short stub and
         # far labels a longer one, so the elbow adapts to each label's final
         # position instead of forcing all segments to equal lengths.
-        pdf(NULL)
-        on.exit(grDevices::dev.off())
-        sizes <- gene_labels$size %||% rep(2.5, nrow(gene_labels))
-        widths <- suppressWarnings(graphics::strwidth(gene_labels$text,
-                                                     units = "inches",
-                                                     cex = sizes / 12)) *
-          max(1, diff(range(c(seg$x0, seg$x1)))) / 6
-        wl <- widths[match(seg$group, seq_len(nrow(gene_labels)))]
-        horiz <- abs(seg$x1 - seg$x0)
-        stub_len <- pmin(pmax(0.02, 0.3 * horiz),
-                         pmax(0.3 * wl, 0.04))
-        # Approach the label from the empty side of the text (hjust == 0 means
-        # the text extends rightwards, so the stub comes from the left).
-        hj <- gene_labels$hjust[match(seg$group, seq_len(nrow(gene_labels)))]
-        dir <- ifelse(hj < 0.5, 1, -1)
-        bx <- seg$x1 - dir * stub_len
-        # Keep the bend between the gene and the label. When a label moved
-        # mostly vertically (|x1 - x0| < stub_len), an unclamped bend would
-        # lie beyond the gene, making the oblique segment and the stub point
-        # in opposite directions (a doubled-back elbow).
-        bx <- ifelse(hj < 0.5, pmax(bx, seg$x0), pmin(bx, seg$x0))
+        elbow_units <- max(1, diff(range(c(seg$x0, seg$x1)))) / 6
+        widths <- ggchord_text_boxes(
+          gene_labels, units_per_inch = elbow_units
+        )$w
+        bends <- ggchord_elbow_bends(gene_labels, widths)
+        bx <- bends$x[seg$group]
         elbow <- data.frame(
           x0 = c(seg$x0, bx),
           y0 = c(seg$y0, seg$y1),
@@ -1335,7 +1411,9 @@ compute_chord_layout <- function(
           group = c(seg$group, seg$group),
           stringsAsFactors = FALSE
         )
-        gene_label_segments <- elbow
+        gene_label_segments <- ggchord_collapse_crossed_elbows(
+          elbow, lanes = label_lanes
+        )
       }
       # Per-label leader-line linetype. "auto" means solid, except for labels
       # that were moved to the other side of their arc (dashed); any other

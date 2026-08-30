@@ -300,12 +300,18 @@ ggchord_text_boxes <- function(df,
   if (any(valid)) {
     grDevices::pdf(NULL)
     on.exit(grDevices::dev.off())
+    # ggplot2 text sizes are millimetres and are converted to grid font points
+    # with `.pt` (72.27 / 25.4). Base graphics' cex is relative to the
+    # device's 12-point default. Omitting this conversion underestimates both
+    # dimensions by about 2.845 and lets visibly overlapping labels pass the
+    # collision test.
+    text_cex <- sizes[valid] * (72.27 / 25.4) / 12
     w[valid] <- suppressWarnings(graphics::strwidth(
-      texts[valid], units = "inches", cex = sizes[valid] / 12
+      texts[valid], units = "inches", cex = text_cex
     )) * units_per_inch
     n_lines <- vapply(strsplit(texts[valid], "\n"), length, integer(1))
     h[valid] <- suppressWarnings(graphics::strheight(
-      texts[valid], units = "inches", cex = sizes[valid] / 12
+      texts[valid], units = "inches", cex = text_cex
     )) * n_lines * units_per_inch
   }
 
@@ -740,10 +746,12 @@ ggchord_repel_labels_final <- function(gl, units_per_inch = 0.35,
                                        box_padding = 0.25,
                                        repel_boxes = NULL,
                                        max_iter = 500) {
-  n <- nrow(gl)
-  if (n == 0) return(gl)
+  active <- !is.na(gl$text) & nzchar(gl$text)
+  if (!any(active)) return(gl)
+  active_rows <- which(active)
+  work <- gl[active_rows, , drop = FALSE]
 
-  boxes <- ggchord_text_boxes(gl,
+  boxes <- ggchord_text_boxes(work,
                               units_per_inch = units_per_inch,
                               box_padding = box_padding)
   bw <- boxes$bw
@@ -751,14 +759,14 @@ ggchord_repel_labels_final <- function(gl, units_per_inch = 0.35,
   cx_off <- boxes$cx - boxes$x
   cy_off <- boxes$cy - boxes$y
 
-  x <- gl$text_x
-  y <- gl$text_y
-  if ("anchor_x" %in% names(gl)) {
-    ax <- gl$anchor_x
-    ay <- gl$anchor_y
+  x <- work$text_x
+  y <- work$text_y
+  if ("anchor_x" %in% names(work)) {
+    ax <- work$anchor_x
+    ay <- work$anchor_y
   } else {
-    ax <- gl$text_x
-    ay <- gl$text_y
+    ax <- work$text_x
+    ay <- work$text_y
   }
   x_lim <- range(c(ax, x)) + c(-1, 1) * (max(bw) + 1.5)
   y_lim <- range(c(ay, y)) + c(-1, 1) * (max(bh) + 1.5)
@@ -777,9 +785,280 @@ ggchord_repel_labels_final <- function(gl, units_per_inch = 0.35,
   x <- separated$x
   y <- separated$y
 
-  gl$text_x <- x
-  gl$text_y <- y
+  gl$text_x[active_rows] <- x
+  gl$text_y[active_rows] <- y
   gl
+}
+
+# Return TRUE when two leader-line segments cross in their interiors.
+ggchord_segments_cross <- function(ax, ay, bx, by, cx, cy, dx, dy,
+                                   tol = 1e-10) {
+  orient <- function(px, py, qx, qy, rx, ry) {
+    (qx - px) * (ry - py) - (qy - py) * (rx - px)
+  }
+  o1 <- orient(ax, ay, bx, by, cx, cy)
+  o2 <- orient(ax, ay, bx, by, dx, dy)
+  o3 <- orient(cx, cy, dx, dy, ax, ay)
+  o4 <- orient(cx, cy, dx, dy, bx, by)
+  o1 * o2 < -tol && o3 * o4 < -tol
+}
+
+# Remove crossings by swapping label positions within each sequence-side lane.
+#
+# For two crossing segments, exchanging their endpoints strictly shortens the
+# total segment length. Repeating that 2-opt operation therefore converges and
+# preserves the set of label positions; layouts without crossings are left
+# byte-for-byte unchanged.
+ggchord_uncross_labels <- function(gl, lanes = NULL, max_swaps = NULL,
+                                   endpoint_fun = NULL) {
+  n <- nrow(gl)
+  if (n < 2) return(list(labels = gl, swaps = 0L))
+  if (is.null(lanes)) lanes <- gl$seq_id %||% rep("all", n)
+  if (length(lanes) != n) {
+    ggchord_stop("lanes must have one value per gene label")
+  }
+
+  active <- !is.na(gl$text) & nzchar(gl$text)
+  lane_rows <- split(which(active), as.character(lanes[active]), drop = TRUE)
+  total_swaps <- 0L
+
+  for (rows in lane_rows) {
+    nr <- length(rows)
+    if (nr < 2) next
+    swap_limit <- max_swaps %||% max(100L, 4L * nr^2)
+    changed <- TRUE
+    lane_swaps <- 0L
+
+    while (changed && lane_swaps < swap_limit) {
+      changed <- FALSE
+      endpoints <- if (is.null(endpoint_fun)) {
+        data.frame(x = gl$text_x, y = gl$text_y)
+      } else {
+        endpoint_fun(gl)
+      }
+      for (ii in seq_len(nr - 1L)) {
+        for (jj in (ii + 1L):nr) {
+          i <- rows[ii]
+          j <- rows[jj]
+          crossed <- ggchord_segments_cross(
+            gl$anchor_x[i], gl$anchor_y[i], endpoints$x[i], endpoints$y[i],
+            gl$anchor_x[j], gl$anchor_y[j], endpoints$x[j], endpoints$y[j]
+          )
+          if (!crossed) next
+
+          if (is.null(endpoint_fun)) {
+            candidate_x_i <- gl$text_x[j]
+            candidate_y_i <- gl$text_y[j]
+            candidate_x_j <- gl$text_x[i]
+            candidate_y_j <- gl$text_y[i]
+            candidate_endpoints <- NULL
+          } else {
+            candidate <- gl
+            candidate$text_x[c(i, j)] <- gl$text_x[c(j, i)]
+            candidate$text_y[c(i, j)] <- gl$text_y[c(j, i)]
+            candidate_endpoints <- endpoint_fun(candidate)
+          }
+          old_length <- sqrt((endpoints$x[i] - gl$anchor_x[i])^2 +
+                               (endpoints$y[i] - gl$anchor_y[i])^2) +
+            sqrt((endpoints$x[j] - gl$anchor_x[j])^2 +
+                   (endpoints$y[j] - gl$anchor_y[j])^2)
+          new_length <- if (is.null(endpoint_fun)) {
+            sqrt((candidate_x_i - gl$anchor_x[i])^2 +
+                   (candidate_y_i - gl$anchor_y[i])^2) +
+              sqrt((candidate_x_j - gl$anchor_x[j])^2 +
+                     (candidate_y_j - gl$anchor_y[j])^2)
+          } else {
+            sqrt((candidate_endpoints$x[i] - gl$anchor_x[i])^2 +
+                   (candidate_endpoints$y[i] - gl$anchor_y[i])^2) +
+              sqrt((candidate_endpoints$x[j] - gl$anchor_x[j])^2 +
+                     (candidate_endpoints$y[j] - gl$anchor_y[j])^2)
+          }
+          if (new_length >= old_length - 1e-10) next
+
+          if (is.null(endpoint_fun)) {
+            gl$text_x[c(i, j)] <- c(candidate_x_i, candidate_x_j)
+            gl$text_y[c(i, j)] <- c(candidate_y_i, candidate_y_j)
+          } else {
+            gl <- candidate
+          }
+          lane_swaps <- lane_swaps + 1L
+          total_swaps <- total_swaps + 1L
+          changed <- TRUE
+          break
+        }
+        if (changed) break
+      }
+    }
+  }
+
+  list(labels = gl, swaps = total_swaps)
+}
+
+ggchord_elbow_bends <- function(gl, text_widths) {
+  n <- nrow(gl)
+  if (n == 0) return(data.frame(x = numeric(0), y = numeric(0)))
+  horiz <- abs(gl$text_x - gl$anchor_x)
+  stub_len <- pmin(pmax(0.02, 0.3 * horiz),
+                   pmax(0.3 * text_widths, 0.04))
+  dir <- ifelse(gl$hjust < 0.5, 1, -1)
+  bx <- gl$text_x - dir * stub_len
+  bx <- ifelse(gl$hjust < 0.5,
+               pmax(bx, gl$anchor_x), pmin(bx, gl$anchor_x))
+  data.frame(x = bx, y = gl$text_y)
+}
+
+ggchord_label_curve_frame <- function(gl, seq_arcs) {
+  n <- nrow(gl)
+  frame <- data.frame(
+    curve_x = numeric(n), curve_y = numeric(n),
+    outward_x = numeric(n), outward_y = numeric(n),
+    signed_distance = numeric(n)
+  )
+  if (n == 0) return(frame)
+
+  arc_ids <- vapply(seq_arcs, function(a) {
+    if (nrow(a) == 0) "" else as.character(unique(a$seq_id)[1])
+  }, character(1))
+
+  for (sid in unique(gl$seq_id)) {
+    rows <- which(gl$seq_id == sid)
+    arc_pos <- match(sid, arc_ids)
+    if (is.na(arc_pos) || nrow(seq_arcs[[arc_pos]]) < 2) next
+    arc <- seq_arcs[[arc_pos]]
+
+    for (i in rows) {
+      # Locate the label by its fixed gene anchor, not by the repelled text.
+      # This prevents a far-moving label from snapping to another part of a
+      # highly curved sequence path.
+      d2 <- (arc$x - gl$anchor_x[i])^2 + (arc$y - gl$anchor_y[i])^2
+      k <- which.min(d2)
+      k0 <- max(1L, k - 1L)
+      k1 <- min(nrow(arc), k + 1L)
+      tx <- arc$x[k1] - arc$x[k0]
+      ty <- arc$y[k1] - arc$y[k0]
+      tangent_length <- sqrt(tx^2 + ty^2)
+      if (!is.finite(tangent_length) || tangent_length < 1e-12) next
+
+      # Either local normal is valid geometrically. Choose the one pointing
+      # away from the chord centre, which works for circular, straight and
+      # Bézier sequence paths and is independent of sequence orientation.
+      nx <- -ty / tangent_length
+      ny <- tx / tangent_length
+      if (nx * arc$x[k] + ny * arc$y[k] < 0) {
+        nx <- -nx
+        ny <- -ny
+      }
+      frame$curve_x[i] <- arc$x[k]
+      frame$curve_y[i] <- arc$y[k]
+      frame$outward_x[i] <- nx
+      frame$outward_y[i] <- ny
+      frame$signed_distance[i] <-
+        (gl$text_x[i] - arc$x[k]) * nx +
+        (gl$text_y[i] - arc$y[k]) * ny
+    }
+  }
+  frame
+}
+
+ggchord_enforce_label_side <- function(gl, seq_arcs, side = "auto") {
+  if (nrow(gl) == 0 || identical(side, "auto")) return(gl)
+  frame <- ggchord_label_curve_frame(gl, seq_arcs)
+  want_inside <- identical(side, "inside")
+  flip <- (frame$signed_distance < 0) != want_inside
+  flip[!is.finite(frame$signed_distance)] <- FALSE
+  if (!any(flip)) return(gl)
+
+  # Reflect across the actual local tangent of the sequence curve. Unlike a
+  # radius-from-origin approximation, this remains correct when seq_radius,
+  # seq_curvature, seq_gap, seq_order or global rotation change the geometry.
+  correction <- 2 * frame$signed_distance[flip]
+  gl$text_x[flip] <- gl$text_x[flip] -
+    correction * frame$outward_x[flip]
+  gl$text_y[flip] <- gl$text_y[flip] -
+    correction * frame$outward_y[flip]
+  gl
+}
+
+ggchord_label_box_conflicts <- function(gl, units_per_inch = 0.35,
+                                        box_padding = 0.25,
+                                        repel_boxes = NULL,
+                                        tol = 1e-7) {
+  active <- !is.na(gl$text) & nzchar(gl$text)
+  gl <- gl[active, , drop = FALSE]
+  n <- nrow(gl)
+  if (n == 0) return(FALSE)
+
+  boxes <- ggchord_text_boxes(
+    gl, units_per_inch = units_per_inch, box_padding = box_padding
+  )
+  if (n > 1) {
+    dx <- abs(outer(boxes$cx, boxes$cx, "-"))
+    dy <- abs(outer(boxes$cy, boxes$cy, "-"))
+    overlap <- upper.tri(dx) &
+      dx < outer(boxes$bw, boxes$bw, "+") / 2 - tol &
+      dy < outer(boxes$bh, boxes$bh, "+") / 2 - tol
+    if (any(overlap)) return(TRUE)
+  }
+
+  if (!is.null(repel_boxes) && nrow(repel_boxes) > 0) {
+    overlap_x <- outer(boxes$xmin, repel_boxes$xmax, function(a, b) a < b - tol) &
+      outer(boxes$xmax, repel_boxes$xmin, function(a, b) a > b + tol)
+    overlap_y <- outer(boxes$ymin, repel_boxes$ymax, function(a, b) a < b - tol) &
+      outer(boxes$ymax, repel_boxes$ymin, function(a, b) a > b + tol)
+    if (any(overlap_x & overlap_y)) return(TRUE)
+  }
+
+  FALSE
+}
+
+# Collapse only elbow stubs that cause same-lane crossings. The corresponding
+# leader becomes straight; all conflict-free elbows retain their original
+# bend and stub lengths.
+ggchord_collapse_crossed_elbows <- function(segments, lanes,
+                                            max_passes = NULL) {
+  if (nrow(segments) < 2 || length(lanes) == 0) return(segments)
+  groups <- unique(segments$group)
+  max_passes <- max_passes %||% length(groups)
+
+  for (pass in seq_len(max_passes)) {
+    bad <- integer(0)
+    for (i in seq_len(nrow(segments) - 1L)) {
+      gi <- segments$group[i]
+      for (j in (i + 1L):nrow(segments)) {
+        gj <- segments$group[j]
+        if (gi == gj || is.na(lanes[gi]) || is.na(lanes[gj]) ||
+            lanes[gi] != lanes[gj]) next
+        if (ggchord_segments_cross(
+          segments$x0[i], segments$y0[i], segments$x1[i], segments$y1[i],
+          segments$x0[j], segments$y0[j], segments$x1[j], segments$y1[j]
+        )) {
+          bad <- c(bad, gi, gj)
+        }
+      }
+    }
+    bad <- unique(bad)
+    if (length(bad) == 0) break
+
+    changed <- FALSE
+    for (g in bad) {
+      rows <- which(segments$group == g)
+      if (length(rows) < 2) next
+      first <- rows[1]
+      stub <- rows[length(rows)]
+      if (segments$x0[stub] == segments$x1[stub] &&
+          segments$y0[stub] == segments$y1[stub]) next
+      # The final row ends at the text anchor. Move the preceding bend there
+      # and collapse the horizontal stub to a zero-length segment.
+      segments$x1[first] <- segments$x1[stub]
+      segments$y1[first] <- segments$y1[stub]
+      segments$x0[stub] <- segments$x1[stub]
+      segments$y0[stub] <- segments$y1[stub]
+      changed <- TRUE
+    }
+    if (!changed) break
+  }
+
+  segments
 }
 
 #' Rebuild straight leader-line segments after a final label de-overlap pass.
@@ -799,7 +1078,12 @@ ggchord_repel_segments <- function(gl, min_segment_length = 0.5) {
     ay <- gl$text_y
   }
   seg_dist <- sqrt((gl$text_x - ax)^2 + (gl$text_y - ay)^2)
-  keep_seg <- seg_dist > min_segment_length
+  visible <- if ("text" %in% names(gl)) {
+    !is.na(gl$text) & nzchar(gl$text)
+  } else {
+    rep(TRUE, n)
+  }
+  keep_seg <- seg_dist > min_segment_length & visible
   data.frame(
     x0 = ax[keep_seg], y0 = ay[keep_seg],
     x1 = gl$text_x[keep_seg], y1 = gl$text_y[keep_seg],

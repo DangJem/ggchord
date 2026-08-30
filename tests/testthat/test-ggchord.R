@@ -466,13 +466,11 @@ test_that("gene label repulsion separates rotated text boxes with varied leaders
     repel_points = data.frame(x = numeric(0), y = numeric(0))
   )
   out <- res$labels
-  pdf(NULL)
-  on.exit(dev.off())
-  w <- strwidth(out$text, units = "inches", cex = out$size / 12) * 0.35
-  h <- strheight(out$text, units = "inches", cex = out$size / 12) * 0.35
-  a <- out$text_angle * pi / 180
-  bw <- abs(cos(a)) * w + abs(sin(a)) * h + 2 * 0.25 * 0.35
-  bh <- abs(sin(a)) * w + abs(cos(a)) * h + 2 * 0.25 * 0.35
+  boxes <- ggchord:::ggchord_text_boxes(
+    out, units_per_inch = 0.35, box_padding = 0.25
+  )
+  bw <- boxes$bw
+  bh <- boxes$bh
   for (i in seq_len(nrow(out) - 1)) {
     for (j in (i + 1):nrow(out)) {
       expect_false(
@@ -571,11 +569,10 @@ test_that("horizontal repelled labels sit on the far side of the leader line", {
   gl <- l$gene_labels
   seg <- l$gene_label_segments
   if (nrow(seg) > 0 && nrow(gl) > 0) {
-    grDevices::pdf(NULL)
-    on.exit(grDevices::dev.off())
-    w <- suppressWarnings(graphics::strwidth(gl$text, units = "inches",
-                                             cex = (gl$size %||% 2.5) / 12)) *
-      max(1, diff(range(c(seg$x0, seg$x1)))) / 6
+    w <- ggchord:::ggchord_text_boxes(
+      gl,
+      units_per_inch = max(1, diff(range(c(seg$x0, seg$x1)))) / 6
+    )$w
     for (i in seq_len(nrow(gl))) {
       g <- which(seg$group == i)
       if (length(g) == 0) next
@@ -636,14 +633,12 @@ test_that("gene_label_side moves labels to the requested arc side", {
     seg <- l$gene_label_segments
     expect_true("side_flipped" %in% names(gl))
     expect_true(any(gl$side_flipped))
-    # every label sits on the requested side of its sequence arc
-    arc_r <- vapply(l$seq_arcs, function(a) {
-      median(sqrt(a$x^2 + a$y^2))
-    }, numeric(1))
-    names(arc_r) <- vapply(l$seq_arcs, function(a) {
-      unique(a$seq_id)[1]
-    }, character(1))
-    label_delta <- sqrt(gl$text_x^2 + gl$text_y^2) - arc_r[gl$seq_id]
+    # Every label sits on the requested side of its actual sequence curve.
+    # A global radius comparison is not valid for straight or strongly curved
+    # paths, nor when individual sequence radii differ.
+    label_delta <- ggchord:::ggchord_label_curve_frame(
+      gl, l$seq_arcs
+    )$signed_distance
     if (side == "outside") {
       expect_true(all(label_delta > -0.02))
     } else {
@@ -710,10 +705,11 @@ test_that("elbow leader lines adapt their segment lengths per label", {
   }, numeric(1))
   # stubs scale with each label's position instead of being one fixed length
   expect_gt(length(unique(round(stub_len, 4))), 1)
-  # stubs stay >= 0.02, unless the label sits almost vertically above/below
-  # its gene: then the bend is clamped to the anchor and the stub collapses
-  # to the (tiny) horizontal span (a straight-looking leader line)
-  expect_true(all(stub_len >= pmin(0.02, span) - 1e-6))
+  # Stubs stay >= 0.02 unless the label sits almost vertically above/below
+  # its gene, or the stub is collapsed to keep two leaders from crossing.
+  expect_true(all(
+    stub_len < 1e-7 | stub_len >= pmin(0.02, span) - 1e-6
+  ))
   # the bend never lands beyond the gene anchor (no doubled-back elbows)
   for (g in groups) {
     rows <- seg[seg$group == g, ]
