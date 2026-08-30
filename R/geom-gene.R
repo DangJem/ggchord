@@ -109,6 +109,10 @@ geom_gene <- function(mapping = NULL, data = NULL,
     gene_order        = gene_order,
     legend_position   = legend_position
   )
+  poly_layer <- ggchord_capture_layer_input(
+    poly_layer, data, mapping,
+    c("seq_id", "start", "end", "strand", "anno")
+  )
   layers[[length(layers) + 1]] <- poly_layer
 
   layers
@@ -188,6 +192,10 @@ geom_gene_label <- function(mapping = NULL, data = NULL,
     gene_label_circum_offset = gene_label_circum_offset,
     gene_label_circum_limit  = gene_label_circum_limit,
     gene_label_wrap          = gene_label_wrap
+  )
+  text_layer <- ggchord_capture_layer_input(
+    text_layer, data, mapping,
+    c("seq_id", "start", "end", "strand", "anno")
   )
   list(text_layer)
 }
@@ -317,6 +325,10 @@ geom_gene_label_repel <- function(mapping = NULL, data = NULL,
   )
   seg_layer$ggchord_type <- "gene_label_segment"
   seg_layer$ggchord_params <- list(type = "gene_label_segment")
+  seg_layer <- ggchord_capture_layer_input(
+    seg_layer, data, mapping,
+    c("seq_id", "start", "end", "strand", "anno")
+  )
   layers[[length(layers) + 1]] <- seg_layer
 
   # Text layer (drawn at the repelled positions)
@@ -341,6 +353,10 @@ geom_gene_label_repel <- function(mapping = NULL, data = NULL,
     max_overlaps             = max_overlaps,
     gene_label_side          = gene_label_side,
     gene_label_segment_linetype = gene_label_segment_linetype
+  )
+  text_layer <- ggchord_capture_layer_input(
+    text_layer, data, mapping,
+    c("seq_id", "start", "end", "strand", "anno")
   )
   layers[[length(layers) + 1]] <- text_layer
 

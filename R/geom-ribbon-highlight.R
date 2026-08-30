@@ -132,5 +132,10 @@ geom_ribbon_highlight <- function(mapping = NULL, data = NULL,
     highlight_outline_color  = highlight_outline_color,
     highlight_outline_width  = highlight_outline_width
   )
+  lyr <- ggchord_capture_layer_input(
+    lyr, data, mapping,
+    c("qaccver", "saccver", "length", "pident", "qstart", "qend",
+      "sstart", "send")
+  )
   list(lyr)
 }

@@ -83,6 +83,9 @@ geom_axis <- function(mapping = NULL, data = NULL,
     axis_label_orientation  = axis_label_orientation,
     axis_label_hide_overlaps = axis_label_hide_overlaps
   )
+  path_layer <- ggchord_capture_layer_input(
+    path_layer, data, mapping, c("seq_id", "length")
+  )
 
   seg_layer <- geom_segment(data = empty_seg,
                            mapping = aes(x = x0, y = y0,
@@ -90,6 +93,9 @@ geom_axis <- function(mapping = NULL, data = NULL,
                            color = "black", linewidth = 0.3,
                            inherit.aes = FALSE, show.legend = show_legend, ...)
   seg_layer$ggchord_type <- "axis_seg"
+  seg_layer <- ggchord_capture_layer_input(
+    seg_layer, data, mapping, c("seq_id", "length")
+  )
 
   text_layer <- geom_text(data = empty_seg[integer(0), ],
                           mapping = aes(x = label_x, y = label_y,
@@ -100,6 +106,9 @@ geom_axis <- function(mapping = NULL, data = NULL,
                           inherit.aes = FALSE, color = "black",
                           show.legend = show_legend, ...)
   text_layer$ggchord_type <- "axis_text"
+  text_layer <- ggchord_capture_layer_input(
+    text_layer, data, mapping, c("seq_id", "length")
+  )
 
   list(path_layer, seg_layer, text_layer)
 }

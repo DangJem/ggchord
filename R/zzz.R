@@ -61,6 +61,9 @@ set_chord_layout <- function(layout) {
 #' e.g. via \code{print()} or \code{ggplot_build()}). This is useful for
 #' building custom layers or annotations on top of the chord geometry.
 #'
+#' @param plot Optional ggchord plot. Supplying the plot is the reliable way to
+#'   retrieve its own layout when several plots are built in one session.
+#' @param build Logical. Build the layout when it is not cached, default TRUE.
 #' @return A chord layout list containing the computed geometry (sequence
 #'   arcs, ribbon polygons, gene arrows, axis elements, extremes, colors, etc.)
 #' @export
@@ -71,12 +74,30 @@ set_chord_layout <- function(layout) {
 #' data(ribbon_data_example)
 #' p <- ggchord(seq_data_example, ribbon_data_example) + geom_seq() + geom_ribbon()
 #' invisible(ggplot2::ggplot_build(p))
-#' names(get_chord_layout()$seq_arcs)
-get_chord_layout <- function() {
+#' names(get_chord_layout(p)$seq_arcs)
+get_chord_layout <- function(plot = NULL, build = TRUE) {
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
 
-  layout <- .chord_env$layout
+  if (!is.logical(build) || length(build) != 1 || is.na(build)) {
+    ggchord_stop("get_chord_layout(): build must be TRUE or FALSE")
+  }
+  if (!is.null(plot)) {
+    if (!inherits(plot, "ggchord") || is.null(plot$ggchord)) {
+      ggchord_stop("get_chord_layout(): plot must be a ggchord object")
+    }
+    layout <- plot$ggchord$ref$layout
+    if (is.null(layout) && isTRUE(build)) layout <- compute_chord_geometry(plot)
+  } else {
+    if (!isTRUE(.chord_env$warned_get_layout)) {
+      warning(
+        "get_chord_layout() without a plot is deprecated; use get_chord_layout(plot)",
+        call. = FALSE
+      )
+      .chord_env$warned_get_layout <- TRUE
+    }
+    layout <- .chord_env$layout
+  }
   if (is.null(layout)) {
     ggchord_stop(
       "Chord layout data not found. Please render the plot first.",
@@ -115,6 +136,83 @@ wire_ggchord_layer <- function(lyr, plot) {
   lyr
 }
 
+#' Capture user data and mappings separately from the computed placeholder
+#' @noRd
+ggchord_capture_layer_input <- function(lyr, data, mapping, roles) {
+  lyr$ggchord_input_data <- data
+  lyr$ggchord_input_mapping <- mapping
+  lyr$ggchord_role_aes <- roles
+  lyr
+}
+
+#' Resolve a layer's input table and role mappings
+#' @noRd
+ggchord_resolve_layer_input <- function(lyr, fallback = NULL) {
+  data <- lyr$ggchord_input_data %||% fallback
+  if (is.null(data)) return(NULL)
+  if (!is.data.frame(data)) {
+    ggchord_stop("ggchord layer data must be a data.frame")
+  }
+  data <- as.data.frame(data, stringsAsFactors = FALSE)
+  mapping <- lyr$ggchord_input_mapping
+  roles <- intersect(lyr$ggchord_role_aes %||% character(0), names(mapping))
+  for (role in roles) {
+    value <- tryCatch(
+      rlang::eval_tidy(mapping[[role]], data = data),
+      error = function(e) ggchord_stop(
+        "Cannot evaluate `", role, "` in layer mapping: ", conditionMessage(e)
+      )
+    )
+    if (length(value) == 1 && nrow(data) != 1) value <- rep(value, nrow(data))
+    if (length(value) != nrow(data)) {
+      ggchord_stop("Mapped `", role, "` must return one value per input row")
+    }
+    data[[role]] <- value
+  }
+  data
+}
+
+#' Combine computed and user visual mappings
+#' @noRd
+ggchord_effective_mapping <- function(lyr) {
+  out <- lyr$mapping
+  user <- lyr$ggchord_input_mapping
+  if (is.null(user)) return(out)
+  visual <- setdiff(names(user), lyr$ggchord_role_aes %||% character(0))
+  for (nm in visual) out[[nm]] <- user[[nm]]
+  out
+}
+
+#' Add original input columns to expanded geometry
+#' @noRd
+ggchord_attach_input_columns <- function(geometry, input) {
+  if (is.null(input) || !is.data.frame(input) || nrow(geometry) == 0) {
+    return(geometry)
+  }
+  protected <- c(
+    "x", "y", "x0", "y0", "x1", "y1", "xend", "yend", "group",
+    "text_x", "text_y", "text", "label_x", "label_y", "label",
+    "text_angle", "label_angle", "hjust", "vjust", "size", "alpha",
+    "colour", "fill", "zfill", "zcolour", "zregionfill", "zoutline",
+    "zlinetype", "outline_col", "linetype_val"
+  )
+  if ("source_row" %in% names(geometry)) {
+    idx <- geometry$source_row
+  } else if ("seq_id" %in% names(geometry) && "seq_id" %in% names(input)) {
+    idx <- match(as.character(geometry$seq_id), as.character(input$seq_id))
+    geometry <- geometry[!is.na(idx), , drop = FALSE]
+    idx <- idx[!is.na(idx)]
+  } else {
+    return(geometry)
+  }
+  valid <- !is.na(idx) & idx >= 1 & idx <= nrow(input)
+  geometry <- geometry[valid, , drop = FALSE]
+  idx <- idx[valid]
+  cols <- setdiff(names(input), protected)
+  for (nm in cols) geometry[[nm]] <- input[[nm]][idx]
+  geometry
+}
+
 #' Build a lazy data function for a ggchord layer
 #' @keywords internal
 make_ggchord_lazy_data <- function(lyr) {
@@ -142,7 +240,11 @@ ggchord_layer_data <- function(lyr) {
 #' @keywords internal
 extract_ggchord_layer_data <- function(lyr, layout) {
   fallback <- lyr$ggchord_placeholder
-  switch(lyr$ggchord_type %||% "",
+  registry <- layout$layer_geometry[[lyr$ggchord_layer_id %||% ""]]
+  if (!is.null(registry) && !is.null(registry[[lyr$ggchord_type]])) {
+    geometry <- registry[[lyr$ggchord_type]]
+  } else {
+    geometry <- switch(lyr$ggchord_type %||% "",
     seq       = if (length(layout$seq_arcs) > 0) do.call(rbind, layout$seq_arcs) else fallback,
     ribbon    = if (!is.null(layout$ribbon_polys)) layout$ribbon_polys else fallback,
     gene_poly = if (nrow(layout$gene_polys) > 0) layout$gene_polys else fallback,
@@ -159,8 +261,13 @@ extract_ggchord_layer_data <- function(lyr, layout) {
       d <- layout$axis_ticks
       if (nrow(d) > 0) d[!is.na(d$label), , drop = FALSE] else fallback
     },
-    fallback
-  )
+    fallback)
+  }
+  input <- layout$layer_inputs[[lyr$ggchord_layer_id %||% ""]][[
+    lyr$ggchord_type %||% ""
+  ]]
+  input <- input %||% ggchord_resolve_layer_input(lyr)
+  ggchord_attach_input_columns(geometry, input)
 }
 
 # ====================================================================

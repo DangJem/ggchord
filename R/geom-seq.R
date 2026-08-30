@@ -149,6 +149,9 @@ geom_seq <- function(mapping = NULL, data = NULL,
     seq_group_colors      = seq_group_colors,
     legend_position       = legend_position
   )
+  lyr <- ggchord_capture_layer_input(
+    lyr, data, mapping, c("seq_id", "length", "seq_group")
+  )
 
   list(lyr)
 }

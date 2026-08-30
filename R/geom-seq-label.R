@@ -84,5 +84,8 @@ geom_seq_label <- function(mapping = NULL, data = NULL,
     seq_label_hjust   = seq_label_hjust,
     seq_label_vjust   = seq_label_vjust
   )
+  lyr <- ggchord_capture_layer_input(
+    lyr, data, mapping, c("seq_id", "length")
+  )
   list(lyr)
 }

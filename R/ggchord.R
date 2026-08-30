@@ -261,8 +261,15 @@ ggchord <- function(
     length(e2) > 0 && all(vapply(e2, function(el) inherits(el, "LayerInstance"), logical(1)))
   if (is_layer_list) {
     p <- e1
+    existing <- vapply(
+      p$layers,
+      function(x) suppressWarnings(as.integer(sub("^layer-", "", x$ggchord_layer_id %||% "0"))),
+      integer(1)
+    )
+    layer_id <- sprintf("layer-%04d", max(c(0L, existing), na.rm = TRUE) + 1L)
     for (elem in e2) {
-      wire_ggchord_layer(elem, e1)
+      elem$ggchord_layer_id <- layer_id
+      elem <- wire_ggchord_layer(elem, e1)
       p <- p + elem
     }
     # Layout/scales/coordinates are computed lazily on the first build or
@@ -288,6 +295,7 @@ ggchord <- function(
   # Keep the shared reference pointing at the latest plot so that lazy layer
   # data (used by plotly::ggplotly and friends) sees the complete plot.
   if (!is.null(e1$ggchord$ref)) e1$ggchord$ref$plot <- p
+  if (!is.null(e1$ggchord$ref)) e1$ggchord$ref$layout <- NULL
   class(p) <- unique(c("ggchord", class(p)))
   p
 }
@@ -300,7 +308,7 @@ ggchord <- function(
 # in any order, without cross-talk between plots.
 # ====================================================================
 
-compute_chord_geometry <- function(plot) {
+compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   # Step 1: collect data and parameters from the plot object
   chord <- plot$ggchord
   if (is.null(chord)) {
@@ -313,7 +321,11 @@ compute_chord_geometry <- function(plot) {
   seq_params    <- list()
   ribbon_params <- list()
   gene_params   <- list()
+  seq_data_override <- NULL
+  ribbon_data_override <- NULL
   gene_data_override <- NULL
+  region_data_override <- NULL
+  highlight_data_override <- NULL
   gene_label_params <- list()
   gene_repel_params <- list()
   axis_params   <- list()
@@ -325,26 +337,65 @@ compute_chord_geometry <- function(plot) {
   gene_repel_layer <- FALSE
 
   for (i in seq_along(plot$layers)) {
-    pp <- plot$layers[[i]]$ggchord_params
+    lyr <- plot$layers[[i]]
+    pp <- lyr$ggchord_params
     if (is.null(pp)) next
     switch(pp$type,
-      seq               = { seq_params <- pp; seq_layer_requested <- TRUE },
-      ribbon            = ribbon_params <- pp,
+      seq               = {
+        seq_params <- pp
+        seq_layer_requested <- TRUE
+        seq_data_override <- ggchord_resolve_layer_input(
+          lyr, data_list$seq_data
+        )
+      },
+      ribbon            = {
+        ribbon_params <- pp
+        ribbon_data_override <- ggchord_resolve_layer_input(
+          lyr, data_list$ribbon_data
+        )
+      },
       gene              = {
         gene_params <- pp
-        if (!is.null(pp$gene_data_override)) gene_data_override <- pp$gene_data_override
+        gene_data_override <- pp$gene_data_override %||%
+          ggchord_resolve_layer_input(lyr, data_list$gene_data)
       },
-      gene_label        = { gene_label_params <- pp; gene_label_layer <- TRUE },
-      gene_label_repel  = { gene_repel_params <- pp; gene_repel_layer <- TRUE },
+      gene_label        = {
+        gene_label_params <- pp
+        gene_label_layer <- TRUE
+        label_data <- ggchord_resolve_layer_input(lyr, data_list$gene_data)
+        if (!is.null(lyr$ggchord_input_data) ||
+            length(intersect(names(lyr$ggchord_input_mapping),
+                             lyr$ggchord_role_aes)) > 0) {
+          gene_data_override <- label_data
+        }
+      },
+      gene_label_repel  = {
+        gene_repel_params <- pp
+        gene_repel_layer <- TRUE
+        label_data <- ggchord_resolve_layer_input(lyr, data_list$gene_data)
+        if (!is.null(lyr$ggchord_input_data) ||
+            length(intersect(names(lyr$ggchord_input_mapping),
+                             lyr$ggchord_role_aes)) > 0) {
+          gene_data_override <- label_data
+        }
+      },
       axis              = axis_params <- pp,
       seq_label         = seq_label_params <- pp,
-      seq_region        = seq_region_params <- pp,
-      ribbon_highlight  = ribbon_highlight_params <- pp
+      seq_region        = {
+        seq_region_params <- pp
+        region_data_override <- ggchord_resolve_layer_input(lyr, pp$regions)
+      },
+      ribbon_highlight  = {
+        ribbon_highlight_params <- pp
+        highlight_data_override <- ggchord_resolve_layer_input(
+          lyr, data_list$ribbon_data
+        )
+      }
     )
   }
 
   # --- Process sequences ---
-  seq_data <- data_list$seq_data
+  seq_data <- seq_data_override %||% data_list$seq_data
   seqs     <- seq_data$seq_id
   lens     <- setNames(seq_data$length, seqs)
 
@@ -471,8 +522,8 @@ compute_chord_geometry <- function(plot) {
   }
 
   # ribbon_colors validation only runs when ribbon_data is actually present
-  has_ribbon_data <- !is.null(data_list$ribbon_data) &&
-                     nrow(data_list$ribbon_data) > 0
+  ribbon_data <- ribbon_data_override %||% data_list$ribbon_data
+  has_ribbon_data <- !is.null(ribbon_data) && nrow(ribbon_data) > 0
 
   if (has_ribbon_data) {
     if (is.null(ribbon_colors)) {
@@ -513,29 +564,29 @@ compute_chord_geometry <- function(plot) {
     }
 
     if (!is.null(ribbon_color_by)) {
-      if (!ribbon_color_by %in% colnames(data_list$ribbon_data)) {
+      if (!ribbon_color_by %in% colnames(ribbon_data)) {
         ggchord_stop("ribbon_color_by column '", ribbon_color_by, "' not found in ribbon_data")
       }
-      if (!is.numeric(data_list$ribbon_data[[ribbon_color_by]]) ||
-          any(!is.finite(data_list$ribbon_data[[ribbon_color_by]]))) {
+      if (!is.numeric(ribbon_data[[ribbon_color_by]]) ||
+          any(!is.finite(ribbon_data[[ribbon_color_by]]))) {
         ggchord_stop("ribbon_color_by column '", ribbon_color_by, "' must be numeric and finite")
       }
     }
     if (!is.null(ribbon_alpha_by)) {
-      if (!ribbon_alpha_by %in% colnames(data_list$ribbon_data)) {
+      if (!ribbon_alpha_by %in% colnames(ribbon_data)) {
         ggchord_stop("ribbon_alpha_by column '", ribbon_alpha_by, "' not found in ribbon_data")
       }
-      if (!is.numeric(data_list$ribbon_data[[ribbon_alpha_by]]) ||
-          any(!is.finite(data_list$ribbon_data[[ribbon_alpha_by]]))) {
+      if (!is.numeric(ribbon_data[[ribbon_alpha_by]]) ||
+          any(!is.finite(ribbon_data[[ribbon_alpha_by]]))) {
         ggchord_stop("ribbon_alpha_by column '", ribbon_alpha_by, "' must be numeric and finite")
       }
     }
     if (!is.null(ribbon_outline_by) &&
-        !ribbon_outline_by %in% colnames(data_list$ribbon_data)) {
+        !ribbon_outline_by %in% colnames(ribbon_data)) {
       ggchord_stop("ribbon_outline_by column '", ribbon_outline_by, "' not found in ribbon_data")
     }
     if (!is.null(ribbon_linetype_by) &&
-        !ribbon_linetype_by %in% colnames(data_list$ribbon_data)) {
+        !ribbon_linetype_by %in% colnames(ribbon_data)) {
       ggchord_stop("ribbon_linetype_by column '", ribbon_linetype_by, "' not found in ribbon_data")
     }
   }
@@ -716,7 +767,7 @@ compute_chord_geometry <- function(plot) {
   }
 
   # --- Process sequence-region highlight data ---
-  region_data <- seq_region_params$regions
+  region_data <- region_data_override %||% seq_region_params$regions
   region_fill   <- seq_region_params$region_fill %||% "#F59E0B"
   region_color  <- seq_region_params$region_color %||% "#B45309"
   region_alpha  <- seq_region_params$region_alpha %||% 0.25
@@ -730,8 +781,9 @@ compute_chord_geometry <- function(plot) {
   # --- Compute ribbon highlight selection (safe, no string evaluation) ---
   ribbon_highlight_rows <- integer(0)
   if (length(ribbon_highlight_params) > 0 &&
-      !is.null(data_list$ribbon_data) && nrow(data_list$ribbon_data) > 0) {
-    rd <- data_list$ribbon_data
+      !is.null(highlight_data_override %||% ribbon_data) &&
+      nrow(highlight_data_override %||% ribbon_data) > 0) {
+    rd <- highlight_data_override %||% ribbon_data
     keep <- rep(TRUE, nrow(rd))
 
     if (!is.null(ribbon_highlight_params$ribbon_ids)) {
@@ -787,7 +839,7 @@ compute_chord_geometry <- function(plot) {
     seq_group_labels = seq_group_labels,
     seq_group_label_radius = seq_group_label_radius,
     seq_group_colors = seq_group_colors,
-    ribbon_data = data_list$ribbon_data, ribbonGap = ribbonGap,
+    ribbon_data = ribbon_data, ribbonGap = ribbonGap,
     ribbon_color_scheme = ribbon_color_scheme,
     ribbon_colors = ribbon_colors, ribbon_alpha = ribbon_alpha,
     ribbon_color_by = ribbon_color_by,
@@ -841,17 +893,183 @@ compute_chord_geometry <- function(plot) {
     axisLabelOrientation = axisLabelOri,
     axis_label_hide_overlaps = axisLabelHide,
     show_axis = show_axis,
-    rotation = global$rotation, debug = global$debug
+    rotation = global$rotation, debug = global$debug,
+    geometry_cache = geometry_cache
   )
 
-  # Cache the layout so the get_chord_layout() accessor can inspect it and so
-  # layers can lazily fetch their geometry (e.g. for plotly::ggplotly).  The
-  # shared reference environment is used because it is shared by the plot and
-  # all of its layers.
-  set_chord_layout(layout)
-  if (!is.null(plot$ggchord$ref)) plot$ggchord$ref$layout <- layout
-  plot$ggchord$layout <- layout
   layout
+}
+
+#' Extract one drawable component from a computed layout
+#' @noRd
+ggchord_layout_component <- function(layout, type, fallback = data.frame()) {
+  switch(type,
+    seq = if (length(layout$seq_arcs) > 0) do.call(rbind, layout$seq_arcs) else fallback,
+    ribbon = layout$ribbon_polys %||% fallback,
+    gene_poly = layout$gene_polys %||% fallback,
+    gene_text = layout$gene_labels %||% fallback,
+    gene_text_repel = layout$gene_labels %||% fallback,
+    gene_label_segment = layout$gene_label_segments %||% fallback,
+    seq_label = layout$seq_labels_df %||% fallback,
+    seq_group_label = layout$group_labels %||% fallback,
+    seq_region = layout$region_polys %||% fallback,
+    ribbon_highlight = layout$ribbon_highlight_polys %||% fallback,
+    axis_line = layout$axis_lines %||% fallback,
+    axis_seg = layout$axis_ticks %||% fallback,
+    axis_text = {
+      d <- layout$axis_ticks %||% fallback
+      if (nrow(d) > 0 && "label" %in% names(d)) d[!is.na(d$label), , drop = FALSE] else d
+    },
+    fallback
+  )
+}
+
+#' Compute a plot-owned, per-layer geometry registry
+#' @noRd
+compute_chord_geometry <- function(plot) {
+  chord <- plot$ggchord
+  if (is.null(chord)) {
+    ggchord_stop("Not a valid ggchord object: no data stored on the plot")
+  }
+
+  # Layers added through ordinary ggplot2 mechanisms may not have passed the
+  # list branch of +.ggchord. Assign deterministic IDs before grouping.
+  next_id <- 1L
+  for (i in seq_along(plot$layers)) {
+    lyr <- plot$layers[[i]]
+    if (is.null(lyr$ggchord_type)) next
+    if (is.null(lyr$ggchord_layer_id)) {
+      lyr$ggchord_layer_id <- sprintf("layer-%04d", next_id)
+      plot$layers[[i]] <- lyr
+    }
+    next_id <- next_id + 1L
+  }
+
+  geometry_cache <- new.env(parent = emptyenv())
+  primary <- compute_chord_geometry_single(plot, geometry_cache)
+  ids <- vapply(plot$layers, function(x) x$ggchord_layer_id %||% "", character(1))
+  groups <- split(which(nzchar(ids)), ids[nzchar(ids)])
+
+  group_type <- vapply(groups, function(idx) {
+    types <- vapply(idx, function(i) plot$layers[[i]]$ggchord_params$type %||% "",
+                    character(1))
+    main <- types[types %in% c(
+      "seq", "ribbon", "gene", "gene_label", "gene_label_repel", "axis",
+      "seq_label", "seq_region", "ribbon_highlight"
+    )]
+    if (length(main)) main[length(main)] else ""
+  }, character(1))
+  type_counts <- table(group_type[nzchar(group_type)])
+
+  first_group <- function(type) {
+    hit <- names(group_type)[group_type == type]
+    if (length(hit)) groups[[hit[1]]] else integer(0)
+  }
+  seq_dep <- first_group("seq")
+  gene_dep <- first_group("gene")
+  ribbon_dep <- first_group("ribbon")
+
+  registry <- list()
+  inputs <- list()
+  layouts <- list()
+  for (id in names(groups)) {
+    idx <- groups[[id]]
+    main_type <- group_type[[id]]
+    needs_own <- nzchar(main_type) && type_counts[[main_type]] > 1
+    sub_layout <- primary
+    if (isTRUE(needs_own)) {
+      deps <- seq_dep
+      if (main_type %in% c("gene_label", "gene_label_repel")) {
+        deps <- c(deps, gene_dep)
+      }
+      if (main_type == "ribbon_highlight") deps <- c(deps, ribbon_dep)
+      sub_plot <- plot
+      sub_plot$layers <- plot$layers[sort(unique(c(deps, idx)))]
+      sub_layout <- compute_chord_geometry_single(sub_plot, geometry_cache)
+    }
+    layouts[[id]] <- sub_layout
+    registry[[id]] <- list()
+    inputs[[id]] <- list()
+    for (i in idx) {
+      lyr <- plot$layers[[i]]
+      component <- lyr$ggchord_type
+      registry[[id]][[component]] <- ggchord_layout_component(
+        sub_layout, component, lyr$ggchord_placeholder %||% data.frame()
+      )
+      fallback <- switch(component,
+        seq = chord$data$seq_data,
+        axis_line = chord$data$seq_data,
+        axis_seg = chord$data$seq_data,
+        axis_text = chord$data$seq_data,
+        seq_label = chord$data$seq_data,
+        ribbon = chord$data$ribbon_data,
+        ribbon_highlight = chord$data$ribbon_data,
+        gene_poly = chord$data$gene_data,
+        gene_text = chord$data$gene_data,
+        gene_text_repel = chord$data$gene_data,
+        gene_label_segment = chord$data$gene_data,
+        seq_region = lyr$ggchord_params$regions,
+        NULL
+      )
+      inputs[[id]][[component]] <- ggchord_resolve_layer_input(lyr, fallback)
+      registry[[id]][[component]] <- ggchord_attach_input_columns(
+        registry[[id]][[component]], inputs[[id]][[component]]
+      )
+    }
+  }
+  primary$layer_geometry <- registry
+  primary$layer_inputs <- inputs
+  primary$layer_layouts <- layouts
+
+  # Plot limits must see all independent layers, not only the compatibility
+  # fields in the primary layout.
+  collect <- function(component) {
+    values <- lapply(registry, `[[`, component)
+    values <- Filter(function(x) is.data.frame(x) && nrow(x) > 0, values)
+    if (length(values)) ggchord_rbind_fill(values) else data.frame()
+  }
+  for (pair in list(
+    c("ribbon_polys", "ribbon"), c("gene_polys", "gene_poly"),
+    c("gene_labels", "gene_text"), c("gene_label_segments", "gene_label_segment"),
+    c("seq_labels_df", "seq_label"), c("region_polys", "seq_region"),
+    c("ribbon_highlight_polys", "ribbon_highlight"),
+    c("axis_lines", "axis_line"), c("axis_ticks", "axis_seg")
+  )) {
+    combined <- collect(pair[2])
+    if (nrow(combined) > 0) primary[[pair[1]]] <- combined
+  }
+  repel_labels <- collect("gene_text_repel")
+  fixed_labels <- collect("gene_text")
+  all_gene_labels <- Filter(function(x) nrow(x) > 0,
+                            list(fixed_labels, repel_labels))
+  if (length(all_gene_labels)) {
+    primary$gene_labels <- ggchord_rbind_fill(all_gene_labels)
+  }
+
+  palettes <- lapply(layouts, function(x) x$gene_pal)
+  palettes <- Filter(function(x) !is.null(x) && length(x) > 0, palettes)
+  if (length(palettes)) {
+    pal <- do.call(c, unname(palettes))
+    primary$gene_pal <- pal[!duplicated(names(pal), fromLast = TRUE)]
+    orders <- unlist(lapply(layouts, function(x) x$final_gene_order),
+                     use.names = FALSE)
+    primary$final_gene_order <- unique(orders)
+  }
+  primary$extremes <- get_plot_extremes(
+    allRibbon = primary$ribbon_polys,
+    seqArcs = primary$seq_arcs,
+    axisLines = primary$axis_lines,
+    axisTicks = primary$axis_ticks,
+    gene_polys = primary$gene_polys,
+    gene_arrows = primary$gene_labels,
+    seq_labels = primary$seq_labels_df,
+    show_axis = primary$show_axis
+  )
+
+  set_chord_layout(primary)
+  if (!is.null(plot$ggchord$ref)) plot$ggchord$ref$layout <- primary
+  plot$ggchord$layout <- primary
+  primary
 }
 
 
@@ -870,14 +1088,18 @@ reconstruct_layer <- function(lyr, data, mapping = NULL) {
   params <- params[!duplicated(names(params))]
   new <- ggplot2::layer(
     geom = lyr$geom, stat = lyr$stat, data = data,
-    mapping = mapping %||% lyr$mapping, position = lyr$position,
+    mapping = mapping %||% ggchord_effective_mapping(lyr), position = lyr$position,
     params = params,
     inherit.aes = lyr$inherit.aes,
     show.legend = lyr$show.legend,
     check.aes = FALSE
   )
   # Preserve the ggchord custom fields on the reconstructed layer
-  for (fld in c("ggchord_type", "ggchord_params", "ggchord_placeholder", "ggchord_ref")) {
+  for (fld in c(
+    "ggchord_type", "ggchord_params", "ggchord_placeholder", "ggchord_ref",
+    "ggchord_layer_id", "ggchord_input_data", "ggchord_input_mapping",
+    "ggchord_role_aes"
+  )) {
     if (!is.null(lyr[[fld]])) new[[fld]] <- lyr[[fld]]
   }
   new
@@ -1125,7 +1347,7 @@ rename_ribbon_layers <- function(plot, ribbon_indices, ribbon_aes, layout) {
       mp_names <- names(mp)
       mp_names[mp_names == "fill"] <- ribbon_aes
       names(mp) <- mp_names
-      plot$layers[[idx]] <- reconstruct_layer(lyr, layout$ribbon_polys, mapping = mp)
+      plot$layers[[idx]] <- reconstruct_layer(lyr, lyr$data, mapping = mp)
     }
   }
   plot

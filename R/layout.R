@@ -97,7 +97,8 @@ compute_chord_layout <- function(
     axis_label_hide_overlaps = FALSE,
     show_axis,
     # Global parameters
-    rotation, debug = FALSE
+    rotation, debug = FALSE,
+    geometry_cache = NULL
 ) {
   n <- length(seqs)
 
@@ -167,14 +168,27 @@ compute_chord_layout <- function(
   nRef <- 2000
 
   # High-resolution reference path for each sequence
-  seq_refs <- lapply(seqs, function(id) {
-    path <- generate_curvature_path(
-      starts[id], ends[id], seqRadius[id], seq_curvature[id], n_points = nRef
-    )
-    angles <- seq(starts[id], ends[id], length.out = nRef)
-    list(path = path, angles = angles, r0 = seqRadius[id])
-  })
-  names(seq_refs) <- seqs
+  reference_key <- list(
+    seqs = seqs, starts = starts, ends = ends,
+    radius = seqRadius, curvature = seq_curvature
+  )
+  if (!is.null(geometry_cache) &&
+      identical(geometry_cache$reference_key, reference_key)) {
+    seq_refs <- geometry_cache$seq_refs
+  } else {
+    seq_refs <- lapply(seqs, function(id) {
+      path <- generate_curvature_path(
+        starts[id], ends[id], seqRadius[id], seq_curvature[id], n_points = nRef
+      )
+      angles <- seq(starts[id], ends[id], length.out = nRef)
+      list(path = path, angles = angles, r0 = seqRadius[id])
+    })
+    names(seq_refs) <- seqs
+    if (!is.null(geometry_cache)) {
+      geometry_cache$reference_key <- reference_key
+      geometry_cache$seq_refs <- seq_refs
+    }
+  }
 
   # Curve coordinate mapping function
   map_to_curve_many <- function(angle, radius, ref) {
@@ -711,7 +725,9 @@ compute_chord_layout <- function(
   gene_labels <- data.frame()
 
   if (!is.null(gene_data) && nrow(gene_data) > 0) {
-    valid_genes <- gene_data[gene_data$seq_id %in% seqs, ]
+    valid_gene_rows <- which(gene_data$seq_id %in% seqs)
+    valid_genes <- gene_data[valid_gene_rows, , drop = FALSE]
+    valid_genes$.source_row <- valid_gene_rows
 
     # Process gene colors
     gene_pal <- NULL
@@ -786,6 +802,7 @@ compute_chord_layout <- function(
         group = i,
         anno = anno,
         strand = strand,
+        source_row = gene$.source_row,
         ord = seq_len(2 * total_pt),
         stringsAsFactors = FALSE
       )
@@ -911,6 +928,7 @@ compute_chord_layout <- function(
           size = gene_label_size,
           seq_id = sid,
           group = i,
+          source_row = gene$.source_row,
           anchor_x = anchor_x,
           anchor_y = anchor_y,
           side_flipped = side_flipped,

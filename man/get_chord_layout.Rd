@@ -4,7 +4,13 @@
 \alias{get_chord_layout}
 \title{Get the chord layout from the package environment}
 \usage{
-get_chord_layout()
+get_chord_layout(plot = NULL, build = TRUE)
+}
+\arguments{
+\item{plot}{Optional ggchord plot. Supplying the plot is the reliable way to
+retrieve its own layout when several plots are built in one session.}
+
+\item{build}{Logical. Build the layout when it is not cached, default TRUE.}
 }
 \value{
 A chord layout list containing the computed geometry (sequence
@@ -21,5 +27,5 @@ data(seq_data_example)
 data(ribbon_data_example)
 p <- ggchord(seq_data_example, ribbon_data_example) + geom_seq() + geom_ribbon()
 invisible(ggplot2::ggplot_build(p))
-names(get_chord_layout()$seq_arcs)
+names(get_chord_layout(p)$seq_arcs)
 }

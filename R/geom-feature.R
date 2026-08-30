@@ -7,6 +7,10 @@
 #' table from a \code{type} / \code{category} / \code{label} specification and
 #' reuses the proven \code{geom_gene()} geometry and scales.
 #'
+#' @param mapping Optional aesthetic mapping. Role aesthetics such as
+#'   \code{seq_id}, \code{start}, \code{end} and \code{strand} may rename
+#'   input columns; ordinary visual mappings are evaluated after geometry is
+#'   generated.
 #' @param data data.frame with \code{seq_id}, \code{start}, \code{end} and
 #'   \code{strand}; optional \code{type}, \code{category} and \code{label}.
 #' @param type Column name used as the feature type, default \code{"type"}.
@@ -37,7 +41,7 @@
 #'                        strand = "+", type = "CDS")
 #' p <- ggchord(seq_data_example) + geom_seq() + geom_feature(features)
 #' p
-geom_feature <- function(data,
+geom_feature <- function(mapping = NULL, data = NULL,
                          type = "type",
                          category = NULL,
                          label = "label",
@@ -51,6 +55,20 @@ geom_feature <- function(data,
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
 
+  # Preserve the pre-v0.9 positional `geom_feature(data)` call while exposing
+  # the standard ggplot2 `mapping, data` signature.
+  if (is.data.frame(mapping) && is.null(data)) {
+    data <- mapping
+    mapping <- NULL
+  }
+
+  holder <- list(
+    ggchord_input_data = data,
+    ggchord_input_mapping = mapping,
+    ggchord_role_aes = c("seq_id", "start", "end", "strand", "type",
+                         "category", "label")
+  )
+  data <- ggchord_resolve_layer_input(holder)
   if (!is.data.frame(data)) {
     ggchord_stop("geom_feature(): data must be a data.frame")
   }
@@ -66,13 +84,11 @@ geom_feature <- function(data,
     ggchord_stop("geom_feature(): value column '", value_col, "' not found in data")
   }
 
-  gene_data <- data.frame(
-    seq_id = as.character(data$seq_id),
-    start = as.numeric(data$start),
-    end = as.numeric(data$end),
-    strand = as.character(data$strand),
-    stringsAsFactors = FALSE
-  )
+  gene_data <- as.data.frame(data, stringsAsFactors = FALSE)
+  gene_data$seq_id <- as.character(data$seq_id)
+  gene_data$start <- as.numeric(data$start)
+  gene_data$end <- as.numeric(data$end)
+  gene_data$strand <- as.character(data$strand)
   # `anno` is currently the value consumed by geom_gene() for its fill. Keep
   # the display label separate so a category column cannot be overwritten by
   # an unrelated label column.
@@ -111,7 +127,14 @@ geom_feature <- function(data,
     pal[names(feature_colors)] <- as.character(feature_colors)
   }
 
+  visual_mapping <- mapping
+  if (!is.null(visual_mapping)) {
+    visual_mapping <- visual_mapping[
+      setdiff(names(visual_mapping), holder$ggchord_role_aes)
+    ]
+  }
   layers <- geom_gene(
+    mapping = visual_mapping,
     data = gene_data,
     gene_offset = feature_offset,
     gene_width = feature_width,

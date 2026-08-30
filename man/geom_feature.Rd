@@ -5,7 +5,8 @@
 \title{Draw generic genomic features}
 \usage{
 geom_feature(
-  data,
+  mapping = NULL,
+  data = NULL,
   type = "type",
   category = NULL,
   label = "label",
@@ -19,6 +20,11 @@ geom_feature(
 )
 }
 \arguments{
+\item{mapping}{Optional aesthetic mapping. Role aesthetics such as
+\code{seq_id}, \code{start}, \code{end} and \code{strand} may rename
+input columns; ordinary visual mappings are evaluated after geometry is
+generated.}
+
 \item{data}{data.frame with \code{seq_id}, \code{start}, \code{end} and
 \code{strand}; optional \code{type}, \code{category} and \code{label}.}
 

@@ -239,5 +239,10 @@ geom_ribbon <- function(mapping = NULL, data = NULL,
     legend_key_width          = legend_key_width,
     legend_key_height         = legend_key_height
   )
+  lyr <- ggchord_capture_layer_input(
+    lyr, data, mapping,
+    c("qaccver", "saccver", "length", "pident", "qstart", "qend",
+      "sstart", "send")
+  )
   list(lyr)
 }

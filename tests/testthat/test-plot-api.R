@@ -34,7 +34,7 @@ test_that("the main plotting layers build together", {
     geom_axis()
 
   expect_s3_class(build_ggchord_smoke(p), "ggplot_built")
-  layout <- get_chord_layout()
+  layout <- get_chord_layout(p)
   expect_true(length(layout$seq_arcs) > 0)
   expect_true(nrow(layout$ribbon_polys) > 0)
   expect_true(nrow(layout$gene_polys) > 0)
@@ -75,7 +75,7 @@ test_that("region and ribbon-highlight layers build", {
     geom_ribbon_highlight(ribbon_ids = 1)
 
   expect_s3_class(build_ggchord_smoke(p), "ggplot_built")
-  layout <- get_chord_layout()
+  layout <- get_chord_layout(p)
   expect_true(nrow(layout$region_polys) > 0)
   expect_true(nrow(layout$ribbon_highlight_polys) > 0)
 })
@@ -99,7 +99,7 @@ test_that("feature and sequence-group layers build", {
     geom_feature(feature)
 
   expect_s3_class(build_ggchord_smoke(p), "ggplot_built")
-  layout <- get_chord_layout()
+  layout <- get_chord_layout(p)
   expect_true(nrow(layout$gene_polys) > 0)
   expect_true(nrow(layout$group_labels) > 0)
 })
@@ -119,9 +119,98 @@ test_that("feature category and region outline survive geometry generation", {
     geom_seq_region(regions = region, region_color = "#123456",
                     region_side = "auto")
   expect_s3_class(build_ggchord_smoke(p), "ggplot_built")
-  layout <- get_chord_layout()
+  layout <- get_chord_layout(p)
   expect_true(all(layout$gene_polys$anno == "coding"))
   expect_true(all(layout$region_polys$colour == "#123456"))
 
   expect_error(geom_ribbon_highlight(ribbon_ids = 0), "positive")
+})
+
+test_that("same-type layers keep independent data and mapped columns", {
+  seq <- data.frame(seq_id = c("A", "B"), length = c(1000, 1000))
+  first <- data.frame(
+    chromosome = "A", from = 100, to = 200, direction = "+",
+    category = "first"
+  )
+  second <- data.frame(
+    seq_id = "B", start = 300, end = 400, strand = "-", anno = "second"
+  )
+  r1 <- data.frame(seq_id = "A", start = 450, end = 500, category = "r1")
+  r2 <- data.frame(seq_id = "B", start = 550, end = 600, category = "r2")
+
+  p <- ggchord(seq, validate = "none") +
+    geom_seq() +
+    geom_gene(
+      data = first,
+      mapping = aes(seq_id = chromosome, start = from, end = to,
+                    strand = direction, anno = category, fill = category),
+      gene_color_scheme = "manual"
+    ) +
+    geom_gene(data = second, gene_color_scheme = "manual") +
+    geom_seq_region(data = r1, mapping = aes(zregionfill = category)) +
+    geom_seq_region(data = r2, mapping = aes(zregionfill = category))
+
+  expect_s3_class(build_ggchord_smoke(p), "ggplot_built")
+  layout <- get_chord_layout(p, build = FALSE)
+  gene_ids <- vapply(
+    p$layers[vapply(p$layers, function(x) identical(x$ggchord_type, "gene_poly"),
+                    logical(1))],
+    function(x) x$ggchord_layer_id, character(1)
+  )
+  region_ids <- vapply(
+    p$layers[vapply(p$layers, function(x) identical(x$ggchord_type, "seq_region"),
+                    logical(1))],
+    function(x) x$ggchord_layer_id, character(1)
+  )
+  expect_equal(length(unique(gene_ids)), 2)
+  expect_equal(length(unique(region_ids)), 2)
+  expect_equal(unique(layout$layer_geometry[[gene_ids[1]]]$gene_poly$anno), "first")
+  expect_equal(unique(layout$layer_geometry[[gene_ids[2]]]$gene_poly$anno), "second")
+  expect_equal(unique(layout$layer_geometry[[region_ids[1]]]$seq_region$category), "r1")
+  expect_equal(unique(layout$layer_geometry[[region_ids[2]]]$seq_region$category), "r2")
+})
+
+test_that("plot-specific layout retrieval does not use another plot's cache", {
+  p1 <- ggchord(data.frame(seq_id = "A", length = 100), validate = "none") +
+    geom_seq()
+  p2 <- ggchord(data.frame(seq_id = "B", length = 200), validate = "none") +
+    geom_seq()
+  expect_equal(get_chord_layout(p1)$seqs, "A")
+  expect_equal(get_chord_layout(p2)$seqs, "B")
+  expect_equal(get_chord_layout(p1, build = FALSE)$seqs, "A")
+})
+
+test_that("sequence, ribbon, axis and label data mappings are honoured", {
+  seq_base <- data.frame(seq_id = c("A", "B"), length = c(1000, 1000))
+  seq_mapped <- data.frame(chromosome = c("A", "B"), bases = c(1000, 1000))
+  ribbons <- data.frame(
+    query = "A", subject = "B", span = 100, identity = 95,
+    q_from = 1, q_to = 100, s_from = 200, s_to = 101,
+    score = 0.6
+  )
+  seq_subset <- data.frame(seq_id = "A", length = 1000)
+  p <- ggchord(seq_base, validate = "none") +
+    geom_seq(
+      data = seq_mapped,
+      mapping = aes(seq_id = chromosome, length = bases)
+    ) +
+    geom_ribbon(
+      data = ribbons,
+      mapping = aes(qaccver = query, saccver = subject, length = span,
+                    pident = identity, qstart = q_from, qend = q_to,
+                    sstart = s_from, send = s_to, alpha = score)
+    ) +
+    geom_seq_label(data = seq_subset) +
+    geom_axis(data = seq_subset)
+
+  expect_s3_class(build_ggchord_smoke(p), "ggplot_built")
+  layout <- get_chord_layout(p, build = FALSE)
+  ribbon_id <- p$layers[[which(vapply(
+    p$layers, function(x) identical(x$ggchord_type, "ribbon"), logical(1)
+  ))]]$ggchord_layer_id
+  label_id <- p$layers[[which(vapply(
+    p$layers, function(x) identical(x$ggchord_type, "seq_label"), logical(1)
+  ))]]$ggchord_layer_id
+  expect_equal(unique(layout$layer_geometry[[ribbon_id]]$ribbon$score), 0.6)
+  expect_equal(unique(layout$layer_geometry[[label_id]]$seq_label$seq_id), "A")
 })

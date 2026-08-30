@@ -22,6 +22,26 @@
   reported rather than omitted silently. Feature categories, region outlines,
   curved-region side selection and highlight argument validation were fixed.
 
+## Layer-specific data and geometry
+
+* Every ggchord layer now receives a stable `layer_id` and its own geometry
+  registry entry. Multiple gene, feature, region, ribbon, highlight, axis or
+  label layers no longer reuse the last layer's data and parameters.
+
+* Layer `data` and role mappings such as `aes(seq_id = chromosome, start =
+  from)` are evaluated against that layer's input. Original columns are joined
+  back to expanded geometry through `source_row`, so ordinary visual mappings
+  remain available during the ggplot2 build.
+
+* `get_chord_layout(plot, build = TRUE)` retrieves the layout owned by a
+  specific plot. Calling `get_chord_layout()` without a plot still works for
+  compatibility but is deprecated because “most recently built plot” is
+  ambiguous when plots are built in an interleaved order.
+
+* Sequence reference paths are cached within one build and reused by
+  independent same-type layers. The cache is local to that build and cannot
+  leak geometry between plots.
+
 ## Deterministic gene-label layouts
 
 * `geom_gene_label_repel()` now uses the deterministic

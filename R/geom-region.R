@@ -62,6 +62,12 @@ geom_seq_region <- function(mapping = NULL, data = NULL,
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
 
+  # Preserve the documented pre-v0.9 positional `geom_seq_region(regions)`
+  # call while keeping the standard mapping/data argument order.
+  if (is.data.frame(mapping) && is.null(data) && is.null(regions)) {
+    regions <- mapping
+    mapping <- NULL
+  }
   regions <- regions %||% data
   region_side <- match.arg(region_side)
   if (!is.numeric(region_alpha) || length(region_alpha) != 1 ||
@@ -110,6 +116,9 @@ geom_seq_region <- function(mapping = NULL, data = NULL,
     region_width   = region_width,
     region_offset  = region_offset,
     region_side    = region_side
+  )
+  lyr <- ggchord_capture_layer_input(
+    lyr, regions, mapping, c("seq_id", "start", "end")
   )
   list(lyr)
 }

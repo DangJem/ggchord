@@ -82,7 +82,8 @@ compute_chord_layout(
   axis_label_hide_overlaps = FALSE,
   show_axis,
   rotation,
-  debug = FALSE
+  debug = FALSE,
+  geometry_cache = NULL
 )
 }
 \arguments{
