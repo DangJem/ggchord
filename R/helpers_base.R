@@ -381,6 +381,116 @@ ggchord_text_obstacle_boxes <- function(seq_labels_df = NULL,
              stringsAsFactors = FALSE)
 }
 
+# Separate axis-aligned label boxes from one another and from fixed boxes.
+#
+# Collision detection is vectorised because the old nested R loops spent most
+# of their time visiting pairs that did not overlap.  Displacements are still
+# applied in label order, preserving the deterministic behaviour of the
+# original solver while only looping over actual collisions.
+ggchord_separate_boxes <- function(x, y, bw, bh, cx_off, cy_off,
+                                   repel_boxes = NULL, max_iter = 500,
+                                   x_lim = c(-Inf, Inf),
+                                   y_lim = c(-Inf, Inf), tol = 1e-7) {
+  n <- length(x)
+  if (n == 0 || max_iter <= 0) {
+    return(list(x = x, y = y, iterations = 0L))
+  }
+
+  if (is.null(repel_boxes) || nrow(repel_boxes) == 0) {
+    ob_cx <- ob_cy <- ob_hw <- ob_hh <- numeric(0)
+  } else {
+    ob_cx <- (repel_boxes$xmin + repel_boxes$xmax) / 2
+    ob_cy <- (repel_boxes$ymin + repel_boxes$ymax) / 2
+    ob_hw <- (repel_boxes$xmax - repel_boxes$xmin) / 2
+    ob_hh <- (repel_boxes$ymax - repel_boxes$ymin) / 2
+  }
+
+  for (iter in seq_len(max_iter)) {
+    old_x <- x
+    old_y <- y
+    cx <- x + cx_off
+    cy <- y + cy_off
+    moved <- FALSE
+
+    if (n > 1) {
+      # Matrices use labels as rows/columns. Restricting to the upper triangle
+      # gives each unordered pair once; ordering restores the former i/j loop.
+      dx <- outer(cx, cx, function(a, b) b - a)
+      dy <- outer(cy, cy, function(a, b) b - a)
+      ox <- outer(bw, bw, "+") / 2 - abs(dx)
+      oy <- outer(bh, bh, "+") / 2 - abs(dy)
+      hits <- which(upper.tri(dx) & ox > 0 & oy > 0, arr.ind = TRUE)
+      if (nrow(hits) > 1) {
+        hits <- hits[order(hits[, 1], hits[, 2]), , drop = FALSE]
+      }
+      if (nrow(hits) > 0) {
+        moved <- TRUE
+        for (hit in seq_len(nrow(hits))) {
+          i <- hits[hit, 1]
+          j <- hits[hit, 2]
+          if (ox[i, j] <= oy[i, j]) {
+            sgn <- if (abs(dx[i, j]) < 1e-8) {
+              if (stats::runif(1) < 0.5) -1 else 1
+            } else sign(dx[i, j])
+            x[i] <- x[i] - sgn * ox[i, j] / 2
+            x[j] <- x[j] + sgn * ox[i, j] / 2
+          } else {
+            sgn <- if (abs(dy[i, j]) < 1e-8) {
+              if (stats::runif(1) < 0.5) -1 else 1
+            } else sign(dy[i, j])
+            y[i] <- y[i] - sgn * oy[i, j] / 2
+            y[j] <- y[j] + sgn * oy[i, j] / 2
+          }
+        }
+      }
+    }
+
+    if (length(ob_cx) > 0) {
+      dx_ob <- outer(cx, ob_cx, "-")
+      dy_ob <- outer(cy, ob_cy, "-")
+      ox_ob <- outer(bw / 2, ob_hw, "+") - abs(dx_ob)
+      oy_ob <- outer(bh / 2, ob_hh, "+") - abs(dy_ob)
+      hits <- which(ox_ob > 0 & oy_ob > 0, arr.ind = TRUE)
+      if (nrow(hits) > 1) {
+        hits <- hits[order(hits[, 1], hits[, 2]), , drop = FALSE]
+      }
+      if (nrow(hits) > 0) {
+        moved <- TRUE
+        for (hit in seq_len(nrow(hits))) {
+          i <- hits[hit, 1]
+          k <- hits[hit, 2]
+          if (ox_ob[i, k] <= oy_ob[i, k]) {
+            sgn <- if (abs(dx_ob[i, k]) < 1e-8) {
+              if (stats::runif(1) < 0.5) -1 else 1
+            } else sign(dx_ob[i, k])
+            x[i] <- x[i] + sgn * ox_ob[i, k]
+          } else {
+            sgn <- if (abs(dy_ob[i, k]) < 1e-8) {
+              if (stats::runif(1) < 0.5) -1 else 1
+            } else sign(dy_ob[i, k])
+            y[i] <- y[i] + sgn * oy_ob[i, k]
+          }
+        }
+      }
+    }
+
+    x <- pmin(pmax(x, x_lim[1]), x_lim[2])
+    y <- pmin(pmax(y, y_lim[1]), y_lim[2])
+    displacement <- max(abs(x - old_x), abs(y - old_y))
+    if (!moved || !is.finite(displacement) || displacement < tol) break
+  }
+
+  list(x = x, y = y, iterations = iter)
+}
+
+ggchord_sum_by_index <- function(index, value, n) {
+  out <- numeric(n)
+  if (length(index) == 0) return(out)
+  totals <- rowsum(value, index, reorder = FALSE)
+  out[as.integer(rownames(totals))] <- totals[, 1]
+  out
+}
+
 ggchord_repel_labels <- function(gl, units_per_inch = 0.35,
                                  max_overlaps = Inf, box_padding = 0.25,
                                  point_padding = 0.1, min_segment_length = 0.5,
@@ -437,25 +547,25 @@ ggchord_repel_labels <- function(gl, units_per_inch = 0.35,
   x_lim <- range(ax) + c(-1, 1) * (max(bw) + 1.5)
   y_lim <- range(ay) + c(-1, 1) * (max(bh) + 1.5)
 
+  stable_iterations <- 0L
   for (iter in seq_len(300)) {
+    old_x <- x
+    old_y <- y
     fx <- numeric(n)
     fy <- numeric(n)
 
-    # 1) short-range repulsion from every anchor point.
-    for (i in seq_len(n)) {
-      for (j in seq_len(n)) {
-        dx <- x[i] - ax[j]
-        dy <- y[i] - ay[j]
-        d <- sqrt(dx^2 + dy^2)
-        cutoff <- point_padding + 0.4
-        if (d < cutoff) {
-          if (d < 1e-4) d <- 1e-4
-          f <- force * 0.1 * (1 - d / cutoff)
-          fx[i] <- fx[i] + f * dx / d
-          fy[i] <- fy[i] + f * dy / d
-        }
-      }
-    }
+    # 1) short-range repulsion from every anchor point. The pairwise work is
+    # evaluated in vectorised C code instead of two interpreted R loops.
+    dx_anchor <- outer(x, ax, "-")
+    dy_anchor <- outer(y, ay, "-")
+    d_anchor <- sqrt(dx_anchor^2 + dy_anchor^2)
+    cutoff <- point_padding + 0.4
+    near_anchor <- d_anchor < cutoff
+    d_anchor[d_anchor < 1e-4] <- 1e-4
+    f_anchor <- force * 0.1 * (1 - d_anchor / cutoff)
+    f_anchor[!near_anchor] <- 0
+    fx <- fx + rowSums(f_anchor * dx_anchor / d_anchor)
+    fy <- fy + rowSums(f_anchor * dy_anchor / d_anchor)
 
     # 1b) repulsion from sampled plot content (arcs, genes, axes).
     if (n_repel > 0) {
@@ -518,29 +628,44 @@ ggchord_repel_labels <- function(gl, units_per_inch = 0.35,
       }
     }
 
-    # 2) repulsion between actual label boxes.
-    for (i in seq_len(n - 1)) {
-      for (j in (i + 1):n) {
-        dx <- (x[j] + cx_off[j]) - (x[i] + cx_off[i])
-        dy <- (y[j] + cy_off[j]) - (y[i] + cy_off[i])
-        ox <- (bw[i] + bw[j]) / 2 - abs(dx)
-        oy <- (bh[i] + bh[j]) / 2 - abs(dy)
-        if (ox > 0 && oy > 0) {
-          if (ox <= oy) {
-            sgn <- if (abs(dx) < 1e-8) {
-              if (stats::runif(1) < 0.5) -1 else 1
-            } else sign(dx)
-            f <- force * (ox / max(bw[i] + bw[j], 1e-8))
-            fx[i] <- fx[i] - sgn * f
-            fx[j] <- fx[j] + sgn * f
-          } else {
-            sgn <- if (abs(dy) < 1e-8) {
-              if (stats::runif(1) < 0.5) -1 else 1
-            } else sign(dy)
-            f <- force * (oy / max(bh[i] + bh[j], 1e-8))
-            fy[i] <- fy[i] - sgn * f
-            fy[j] <- fy[j] + sgn * f
-          }
+    # 2) repulsion between actual label boxes. Detect all colliding pairs at
+    # once, then accumulate their forces by label index.
+    if (n > 1) {
+      cx <- x + cx_off
+      cy <- y + cy_off
+      dx_pair <- outer(cx, cx, function(a, b) b - a)
+      dy_pair <- outer(cy, cy, function(a, b) b - a)
+      ox_pair <- outer(bw, bw, "+") / 2 - abs(dx_pair)
+      oy_pair <- outer(bh, bh, "+") / 2 - abs(dy_pair)
+      hits <- which(upper.tri(dx_pair) & ox_pair > 0 & oy_pair > 0,
+                    arr.ind = TRUE)
+      if (nrow(hits) > 0) {
+        ii <- hits[, 1]
+        jj <- hits[, 2]
+        horizontal <- ox_pair[hits] <= oy_pair[hits]
+        if (any(horizontal)) {
+          hi <- ii[horizontal]
+          hj <- jj[horizontal]
+          hd <- dx_pair[hits[horizontal, , drop = FALSE]]
+          hs <- sign(hd)
+          tied <- abs(hd) < 1e-8
+          hs[tied] <- ifelse(stats::runif(sum(tied)) < 0.5, -1, 1)
+          hf <- force * ox_pair[hits[horizontal, , drop = FALSE]] /
+            pmax(bw[hi] + bw[hj], 1e-8)
+          fx <- fx + ggchord_sum_by_index(hi, -hs * hf, n) +
+            ggchord_sum_by_index(hj, hs * hf, n)
+        }
+        if (any(!horizontal)) {
+          vi <- ii[!horizontal]
+          vj <- jj[!horizontal]
+          vd <- dy_pair[hits[!horizontal, , drop = FALSE]]
+          vs <- sign(vd)
+          tied <- abs(vd) < 1e-8
+          vs[tied] <- ifelse(stats::runif(sum(tied)) < 0.5, -1, 1)
+          vf <- force * oy_pair[hits[!horizontal, , drop = FALSE]] /
+            pmax(bh[vi] + bh[vj], 1e-8)
+          fy <- fy + ggchord_sum_by_index(vi, -vs * vf, n) +
+            ggchord_sum_by_index(vj, vs * vf, n)
         }
       }
     }
@@ -550,76 +675,23 @@ ggchord_repel_labels <- function(gl, units_per_inch = 0.35,
     y <- y + (gl$text_y - y) * 0.10 + fy * 0.65
     x <- pmin(pmax(x, x_lim[1]), x_lim[2])
     y <- pmin(pmax(y, y_lim[1]), y_lim[2])
+    displacement <- max(abs(x - old_x), abs(y - old_y))
+    if (is.finite(displacement) && displacement < 1e-4) {
+      stable_iterations <- stable_iterations + 1L
+      if (stable_iterations >= 5L) break
+    } else {
+      stable_iterations <- 0L
+    }
   }
 
-  # Deterministic box-separation pass.  This also treats text obstacles as
-  # hard rectangles rather than as a cloud of points, so the final positions
-  # do not cover sequence labels, group labels or axis labels.
-  for (iter in seq_len(500)) {
-    moved <- FALSE
-    cx <- x + cx_off
-    cy <- y + cy_off
-
-    # 4a) separate label boxes from one another.
-    for (i in seq_len(n - 1)) {
-      for (j in (i + 1):n) {
-        dx <- cx[j] - cx[i]
-        dy <- cy[j] - cy[i]
-        ox <- (bw[i] + bw[j]) / 2 - abs(dx)
-        oy <- (bh[i] + bh[j]) / 2 - abs(dy)
-        if (ox > 0 && oy > 0) {
-          if (ox <= oy) {
-            sgn <- if (abs(dx) < 1e-8) {
-              if (stats::runif(1) < 0.5) -1 else 1
-            } else sign(dx)
-            x[i] <- x[i] - sgn * ox / 2
-            x[j] <- x[j] + sgn * ox / 2
-          } else {
-            sgn <- if (abs(dy) < 1e-8) {
-              if (stats::runif(1) < 0.5) -1 else 1
-            } else sign(dy)
-            y[i] <- y[i] - sgn * oy / 2
-            y[j] <- y[j] + sgn * oy / 2
-          }
-          moved <- TRUE
-        }
-      }
-    }
-
-    # 4b) separate label boxes from fixed text obstacles.
-    if (n_boxes > 0) {
-      for (i in seq_len(n)) {
-        for (k in seq_len(n_boxes)) {
-          obx <- (ob$xmin[k] + ob$xmax[k]) / 2
-          oby <- (ob$ymin[k] + ob$ymax[k]) / 2
-          obw <- (ob$xmax[k] - ob$xmin[k]) / 2
-          obh <- (ob$ymax[k] - ob$ymin[k]) / 2
-          dx <- cx[i] - obx
-          dy <- cy[i] - oby
-          ox <- (bw[i] / 2 + obw) - abs(dx)
-          oy <- (bh[i] / 2 + obh) - abs(dy)
-          if (ox > 0 && oy > 0) {
-            if (ox <= oy) {
-              sgn <- if (abs(dx) < 1e-8) {
-                if (stats::runif(1) < 0.5) -1 else 1
-              } else sign(dx)
-              x[i] <- x[i] + sgn * ox
-            } else {
-              sgn <- if (abs(dy) < 1e-8) {
-                if (stats::runif(1) < 0.5) -1 else 1
-              } else sign(dy)
-              y[i] <- y[i] + sgn * oy
-            }
-            moved <- TRUE
-          }
-        }
-      }
-    }
-
-    x <- pmin(pmax(x, x_lim[1]), x_lim[2])
-    y <- pmin(pmax(y, y_lim[1]), y_lim[2])
-    if (!moved) break
-  }
+  # Deterministic box-separation pass. This also treats text obstacles as hard
+  # rectangles rather than as a cloud of points.
+  separated <- ggchord_separate_boxes(
+    x, y, bw, bh, cx_off, cy_off, repel_boxes = ob,
+    max_iter = 500, x_lim = x_lim, y_lim = y_lim
+  )
+  x <- separated$x
+  y <- separated$y
 
   # Leader lines: from anchor to the final label position.
   seg_dist <- sqrt((x - ax)^2 + (y - ay)^2)
@@ -697,71 +769,13 @@ ggchord_repel_labels_final <- function(gl, units_per_inch = 0.35,
                               stringsAsFactors = FALSE)
   }
   ob <- repel_boxes
-  n_boxes <- nrow(ob)
 
-  for (iter in seq_len(max_iter)) {
-    moved <- FALSE
-    cx <- x + cx_off
-    cy <- y + cy_off
-
-    for (i in seq_len(n - 1)) {
-      for (j in (i + 1):n) {
-        dx <- cx[j] - cx[i]
-        dy <- cy[j] - cy[i]
-        ox <- (bw[i] + bw[j]) / 2 - abs(dx)
-        oy <- (bh[i] + bh[j]) / 2 - abs(dy)
-        if (ox > 0 && oy > 0) {
-          if (ox <= oy) {
-            sgn <- if (abs(dx) < 1e-8) {
-              if (stats::runif(1) < 0.5) -1 else 1
-            } else sign(dx)
-            x[i] <- x[i] - sgn * ox / 2
-            x[j] <- x[j] + sgn * ox / 2
-          } else {
-            sgn <- if (abs(dy) < 1e-8) {
-              if (stats::runif(1) < 0.5) -1 else 1
-            } else sign(dy)
-            y[i] <- y[i] - sgn * oy / 2
-            y[j] <- y[j] + sgn * oy / 2
-          }
-          moved <- TRUE
-        }
-      }
-    }
-
-    if (n_boxes > 0) {
-      for (i in seq_len(n)) {
-        for (k in seq_len(n_boxes)) {
-          obx <- (ob$xmin[k] + ob$xmax[k]) / 2
-          oby <- (ob$ymin[k] + ob$ymax[k]) / 2
-          obw <- (ob$xmax[k] - ob$xmin[k]) / 2
-          obh <- (ob$ymax[k] - ob$ymin[k]) / 2
-          dx <- cx[i] - obx
-          dy <- cy[i] - oby
-          ox <- (bw[i] / 2 + obw) - abs(dx)
-          oy <- (bh[i] / 2 + obh) - abs(dy)
-          if (ox > 0 && oy > 0) {
-            if (ox <= oy) {
-              sgn <- if (abs(dx) < 1e-8) {
-                if (stats::runif(1) < 0.5) -1 else 1
-              } else sign(dx)
-              x[i] <- x[i] + sgn * ox
-            } else {
-              sgn <- if (abs(dy) < 1e-8) {
-                if (stats::runif(1) < 0.5) -1 else 1
-              } else sign(dy)
-              y[i] <- y[i] + sgn * oy
-            }
-            moved <- TRUE
-          }
-        }
-      }
-    }
-
-    x <- pmin(pmax(x, x_lim[1]), x_lim[2])
-    y <- pmin(pmax(y, y_lim[1]), y_lim[2])
-    if (!moved) break
-  }
+  separated <- ggchord_separate_boxes(
+    x, y, bw, bh, cx_off, cy_off, repel_boxes = ob,
+    max_iter = max_iter, x_lim = x_lim, y_lim = y_lim
+  )
+  x <- separated$x
+  y <- separated$y
 
   gl$text_x <- x
   gl$text_y <- y
