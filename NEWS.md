@@ -69,6 +69,25 @@
 | `feature_colors`, `feature_order` | `scale_feature_fill_manual()` |
 | axis major/minor counts and labels | `scale_seq_position_continuous()` |
 
+## Coordinate, theme and guide helpers
+
+* `coord_chord()` now owns global rotation, aspect ratio, clipping and view
+  fitting. `fit = "labels"` measures annotation boxes, `fit = "geometry"`
+  fits only geometric marks, and `fit = "manual"` requires explicit limits.
+  User-supplied limits take priority, and replacing it with another ggplot2
+  coordinate system is no longer silently undone during the build.
+
+* `theme_ggchord()`, `theme_ggchord_minimal()`, `theme_ggchord_dark()` and
+  `theme_ggchord_publication()` provide a small set of composable themes.
+  Dedicated theme elements are registered for axes, sequence/group labels,
+  gene labels and leader segments; data-driven colours remain scales.
+
+* `guide_ggchord_legend()` and `guide_ggchord_colourbar()` are thin wrappers
+  around ggplot2 guides with compact chord-diagram defaults. Existing
+  `ggchord()` arguments `title`, `rotation`, `panel_margin` and `show_legend`
+  remain functional in v0.9.0 but point users to `labs()`, `coord_chord()` and
+  `theme()` respectively.
+
 ## Deterministic gene-label layouts
 
 * `geom_gene_label_repel()` now uses the deterministic

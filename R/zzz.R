@@ -11,6 +11,31 @@
 #' @keywords internal
 .chord_env <- new.env(parent = emptyenv())
 
+# Register package-specific theme elements with ggplot2. These elements affect
+# annotations drawn by ggchord; data-dependent fill and colour remain scales.
+.onLoad <- function(libname, pkgname) {
+  ggplot2::register_theme_elements(
+    ggchord.axis.line = ggplot2::element_line(),
+    ggchord.axis.ticks = ggplot2::element_line(),
+    ggchord.axis.text = ggplot2::element_text(),
+    ggchord.seq.label = ggplot2::element_text(),
+    ggchord.group.label = ggplot2::element_text(),
+    ggchord.gene.label = ggplot2::element_text(),
+    ggchord.gene.label.segment = ggplot2::element_line(),
+    element_tree = list(
+      "ggchord.axis.line" = ggplot2::el_def("element_line", inherit = "line"),
+      "ggchord.axis.ticks" = ggplot2::el_def("element_line", inherit = "line"),
+      "ggchord.axis.text" = ggplot2::el_def("element_text", inherit = "text"),
+      "ggchord.seq.label" = ggplot2::el_def("element_text", inherit = "text"),
+      "ggchord.group.label" = ggplot2::el_def("element_text", inherit = "text"),
+      "ggchord.gene.label" = ggplot2::el_def("element_text", inherit = "text"),
+      "ggchord.gene.label.segment" = ggplot2::el_def(
+        "element_line", inherit = "line"
+      )
+    )
+  )
+}
+
 # ====================================================================
 # Error signalling
 # ====================================================================

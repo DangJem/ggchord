@@ -78,6 +78,23 @@ ggchord <- function(
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
 
+  if (!missing(title) && !is.null(title)) {
+    ggchord_deprecate_once("ggchord(title)", "labs(title = ...)")
+  }
+  if (!missing(rotation)) {
+    ggchord_deprecate_once("ggchord(rotation)", "coord_chord(rotation = ...)")
+  }
+  if (!missing(panel_margin)) {
+    ggchord_deprecate_once(
+      "ggchord(panel_margin)", "theme(plot.margin = margin(...))"
+    )
+  }
+  if (!missing(show_legend)) {
+    ggchord_deprecate_once(
+      "ggchord(show_legend)", "theme(legend.position = 'none')"
+    )
+  }
+
   validate <- match.arg(validate)
   # ====================================================================
   # 1. Validate data
@@ -199,26 +216,12 @@ ggchord <- function(
   margin_vals <- process_panel_margin(panel_margin)
 
   p <- ggplot() +
-    coord_chord() +
+    coord_chord(rotation = rotation) +
     labs(title = title) +
+    theme_ggchord() +
     theme(
-      plot.title       = element_text(hjust = 0.5, size = 20, face = "bold"),
-      plot.margin      = margin(t = margin_vals$t, r = margin_vals$r,
-                                b = margin_vals$b, l = margin_vals$l),
-      legend.background = element_blank(),
-      # Transparent legend keys: the background (if any) is the plot/page
-      # background, not the panel, so legends blend into any theme.
-      legend.key        = element_rect(fill = NA, colour = NA),
-      legend.box.spacing  = unit(10, "mm"),
-      legend.spacing      = unit(5, "mm"),
-      legend.text         = element_text(size = 8),
-      legend.title        = element_text(size = 10, face = "bold"),
-      axis.title          = element_blank(),
-      axis.line           = element_blank(),
-      axis.ticks          = element_blank(),
-      axis.text           = element_blank(),
-      panel.background    = element_blank(),
-      panel.grid          = element_blank(),
+      plot.margin = margin(t = margin_vals$t, r = margin_vals$r,
+                           b = margin_vals$b, l = margin_vals$l),
       legend.position     = if (isTRUE(show_legend)) "right" else "none"
     )
 
@@ -851,6 +854,12 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   # ====================================================================
   # Step 2: compute the layout
   # ====================================================================
+  coord_rotation <- if (isTRUE(plot$coordinates$ggchord_coord)) {
+    plot$coordinates$rotation
+  } else {
+    global$rotation
+  }
+
   layout <- compute_chord_layout(
     seqs = seqs, lens = lens, seq_labels = seq_labels,
     seq_colors = seq_colors, seqRadius = seqRadius,
@@ -918,7 +927,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     axis_labels = axis_labels,
     axis_label_hide_overlaps = axisLabelHide,
     show_axis = show_axis,
-    rotation = global$rotation, debug = global$debug,
+    rotation = coord_rotation, debug = global$debug,
     geometry_cache = geometry_cache
   )
 
@@ -1209,7 +1218,9 @@ make_ggchord_scales <- function(layout, has_seq = FALSE, has_gene = FALSE,
       values = layout$seq_colors,
       labels = layout$seq_labels,
       breaks = layout$seqs,
-      guide  = guide_legend(position = positions$seq %||% NULL, order = 1)
+      guide  = guide_ggchord_legend(
+        position = positions$seq %||% NULL, order = 1
+      )
     )
   }
 
@@ -1253,7 +1264,7 @@ make_ggchord_scales <- function(layout, has_seq = FALSE, has_gene = FALSE,
         colours = layout$ribbon_colors,
         limits  = ribbon_limits,
         breaks  = ribbon_breaks,
-        guide   = guide_colorbar(
+        guide   = guide_ggchord_colourbar(
           available_aes = "ribbon_fill",
           position = positions$ribbon %||% NULL,
           theme = theme(
@@ -1286,14 +1297,18 @@ make_ggchord_scales <- function(layout, has_seq = FALSE, has_gene = FALSE,
         name   = "Strand",
         breaks = c("+", "-"),
         values = layout$gene_pal,
-        guide  = guide_legend(position = positions$gene %||% NULL, order = 3)
+        guide  = guide_ggchord_legend(
+          position = positions$gene %||% NULL, order = 3
+        )
       )
     } else {
       gene_fill_scale <- scale_gene_fill_manual(
         name   = "Gene Annotation",
         breaks = layout$final_gene_order,
         values = layout$gene_pal,
-        guide  = guide_legend(position = positions$gene %||% NULL, order = 3)
+        guide  = guide_ggchord_legend(
+          position = positions$gene %||% NULL, order = 3
+        )
       )
     }
   }
@@ -1309,7 +1324,9 @@ make_ggchord_scales <- function(layout, has_seq = FALSE, has_gene = FALSE,
     feature_fill_scale <- scale_feature_fill_manual(
       name = "Feature", breaks = layout$final_gene_order,
       values = layout$gene_pal,
-      guide = guide_legend(position = positions$gene %||% NULL, order = 3)
+      guide = guide_ggchord_legend(
+        position = positions$gene %||% NULL, order = 3
+      )
     )
   }
 
@@ -1397,14 +1414,50 @@ rename_ribbon_layers <- function(plot, ribbon_indices, ribbon_aes, layout) {
 #' Set the fixed coordinate system from the layout extremes
 #' @keywords internal
 set_ggchord_coord <- function(plot, layout) {
-  lim <- ggchord_adaptive_limits(layout)
-  plot$coordinates <- coord_fixed(
-    ratio = 1,
-    xlim  = lim$xlim,
-    ylim  = lim$ylim,
-    clip  = "off"
+  coord <- plot$coordinates
+  if (!isTRUE(coord$ggchord_coord)) return(plot)
+
+  lim <- switch(
+    coord$fit %||% "labels",
+    labels = ggchord_adaptive_limits(layout),
+    geometry = ggchord_geometry_limits(layout),
+    manual = list(xlim = coord$user_xlim, ylim = coord$user_ylim)
   )
+  xlim <- coord$user_xlim %||% lim$xlim
+  ylim <- coord$user_ylim %||% lim$ylim
+
+  resolved <- coord_fixed(
+    ratio = coord$ratio %||% 1,
+    xlim = xlim,
+    ylim = ylim,
+    expand = coord$expand %||% TRUE,
+    clip = coord$clip %||% "off"
+  )
+  resolved$ggchord_coord <- TRUE
+  resolved$rotation <- coord$rotation
+  resolved$fit <- coord$fit
+  resolved$user_xlim <- coord$user_xlim
+  resolved$user_ylim <- coord$user_ylim
+  plot$coordinates <- resolved
   plot
+}
+
+#' Compute square coordinate limits for geometry only
+#' @noRd
+ggchord_geometry_limits <- function(layout) {
+  ext <- layout$extremes
+  if (is.null(ext) || !all(is.finite(c(ext$x_min, ext$x_max,
+                                        ext$y_min, ext$y_max)))) {
+    return(list(xlim = c(-1, 1), ylim = c(-1, 1)))
+  }
+  x_mid <- mean(c(ext$x_min, ext$x_max))
+  y_mid <- mean(c(ext$y_min, ext$y_max))
+  half <- max(ext$x_max - ext$x_min, ext$y_max - ext$y_min, 1) / 2
+  half <- half * 1.02
+  list(
+    xlim = c(x_mid - half, x_mid + half),
+    ylim = c(y_mid - half, y_mid + half)
+  )
 }
 
 #' Compute coordinate limits that fit the rendered text boxes

@@ -17,6 +17,49 @@ test_that("ggchord creates a plot and rejects invalid sequence data", {
   )
 })
 
+test_that("coord_chord controls rotation, fit and explicit limits", {
+  seq <- data.frame(seq_id = c("A", "B"), length = c(1000, 1200))
+  p <- ggchord(seq, validate = "none") +
+    geom_seq() +
+    coord_chord(
+      rotation = 90, xlim = c(-5, 6), ylim = c(-7, 8),
+      fit = "labels", expand = FALSE
+    )
+
+  layout <- get_chord_layout(p)
+  expect_equal(layout$rotation, 90)
+  prepared <- ggchord:::prepare_ggchord_plot(p)
+  expect_equal(prepared$coordinates$limits$x, c(-5, 6))
+  expect_equal(prepared$coordinates$limits$y, c(-7, 8))
+  expect_false(prepared$coordinates$expand)
+
+  expect_error(coord_chord(fit = "manual"), "requires xlim and ylim")
+
+  p_cartesian <- suppressMessages(
+    ggchord(seq, validate = "none") + geom_seq() +
+      ggplot2::coord_cartesian(xlim = c(-2, 2))
+  )
+  prepared_cartesian <- ggchord:::prepare_ggchord_plot(p_cartesian)
+  expect_s3_class(prepared_cartesian$coordinates, "CoordCartesian")
+  expect_false(isTRUE(prepared_cartesian$coordinates$ggchord_coord))
+  expect_equal(prepared_cartesian$coordinates$limits$x, c(-2, 2))
+})
+
+test_that("ggchord themes and guides use registered role elements", {
+  for (fun in list(
+    theme_ggchord, theme_ggchord_minimal,
+    theme_ggchord_dark, theme_ggchord_publication
+  )) {
+    expect_s3_class(fun(), "theme")
+  }
+  expect_s3_class(
+    ggplot2::calc_element("ggchord.axis.line", theme_ggchord()),
+    "element_line"
+  )
+  expect_s3_class(guide_ggchord_legend(), "GuideLegend")
+  expect_s3_class(guide_ggchord_colourbar(), "GuideColourbar")
+})
+
 test_that("the main plotting layers build together", {
   data(seq_data_example)
   data(ribbon_data_example)

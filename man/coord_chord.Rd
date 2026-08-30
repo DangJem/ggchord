@@ -4,17 +4,38 @@
 \alias{coord_chord}
 \title{Chord diagram coordinate system}
 \usage{
-coord_chord(layout = NULL)
+coord_chord(
+  rotation = 45,
+  ratio = 1,
+  xlim = NULL,
+  ylim = NULL,
+  expand = TRUE,
+  clip = "off",
+  fit = c("labels", "geometry", "manual")
+)
 }
 \arguments{
-\item{layout}{Chord layout object (passed internally by ggchord(), may be NULL)}
+\item{rotation}{Global clockwise layout rotation in degrees, default 45.}
+
+\item{ratio}{Fixed y/x aspect ratio, default 1.}
+
+\item{xlim, ylim}{Optional user limits. Explicit limits take priority over
+automatically fitted limits.}
+
+\item{expand}{Logical. Expand coordinate limits, default TRUE.}
+
+\item{clip}{Whether drawing is clipped to the panel, default \code{"off"}.}
+
+\item{fit}{Fitting strategy: \code{"labels"} includes measured label boxes,
+\code{"geometry"} fits geometric elements only, and \code{"manual"}
+requires explicit \code{xlim} and \code{ylim}.}
 }
 \value{
 A Coord object for ggplot2 \code{+} composition
 }
 \description{
-A lightweight Coord. It creates placeholder coordinates in \code{ggchord()},
-which are replaced at print time with the actual extents computed from the layout.
+Controls global rotation, aspect ratio, coordinate limits, clipping and the
+strategy used to fit chord geometry and labels.
 }
 \examples{
 library(ggchord)
