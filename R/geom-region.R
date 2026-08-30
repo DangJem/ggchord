@@ -81,6 +81,7 @@ geom_seq_region <- function(mapping = NULL, data = NULL,
     x = numeric(0), y = numeric(0),
     group = integer(0),
     zregionfill = character(0),
+    colour = character(0),
     alpha = numeric(0),
     stringsAsFactors = FALSE
   )
@@ -88,7 +89,8 @@ geom_seq_region <- function(mapping = NULL, data = NULL,
   lyr <- ggplot2::layer(
     data        = empty_polys,
     mapping     = aes(x = x, y = y, group = group,
-                      zregionfill = zregionfill, alpha = alpha),
+                      zregionfill = zregionfill, colour = colour,
+                      alpha = alpha),
     stat        = "identity",
     geom        = region_geom,
     position    = "identity",

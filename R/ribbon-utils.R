@@ -81,7 +81,10 @@ filter_ggchord_ribbons <- function(
          paste(missing, collapse = ", "), call. = FALSE)
   }
   n_input <- nrow(ribbon_data)
-  reason <- rep(NA_character_, n_input)
+  reasons <- replicate(n_input, character(0), simplify = FALSE)
+  mark_reason <- function(idx, value) {
+    for (i in idx) reasons[[i]] <<- unique(c(reasons[[i]], value))
+  }
 
   require_col <- function(col, arg) {
     if (!col %in% colnames(ribbon_data)) {
@@ -94,32 +97,32 @@ filter_ggchord_ribbons <- function(
   if (!is.null(seq_ids)) {
     idx <- which(!(ribbon_data$qaccver %in% seq_ids &
                      ribbon_data$saccver %in% seq_ids))
-    if (length(idx) > 0) reason[idx] <- "seq_ids"
+    if (length(idx) > 0) mark_reason(idx, "seq_ids")
   }
   if (!is.null(min_pident)) {
     require_col("pident", "min_pident")
     idx <- which(is.na(ribbon_data$pident) | ribbon_data$pident < min_pident)
-    if (length(idx) > 0) reason[idx] <- "min_pident"
+    if (length(idx) > 0) mark_reason(idx, "min_pident")
   }
   if (!is.null(max_pident)) {
     require_col("pident", "max_pident")
     idx <- which(is.na(ribbon_data$pident) | ribbon_data$pident > max_pident)
-    if (length(idx) > 0) reason[idx] <- "max_pident"
+    if (length(idx) > 0) mark_reason(idx, "max_pident")
   }
   if (!is.null(min_length)) {
     require_col("length", "min_length")
     idx <- which(is.na(ribbon_data$length) | ribbon_data$length < min_length)
-    if (length(idx) > 0) reason[idx] <- "min_length"
+    if (length(idx) > 0) mark_reason(idx, "min_length")
   }
   if (!is.null(max_evalue)) {
     require_col("evalue", "max_evalue")
     idx <- which(is.na(ribbon_data$evalue) | ribbon_data$evalue > max_evalue)
-    if (length(idx) > 0) reason[idx] <- "max_evalue"
+    if (length(idx) > 0) mark_reason(idx, "max_evalue")
   }
   if (!is.null(min_bitscore)) {
     require_col("bitscore", "min_bitscore")
     idx <- which(is.na(ribbon_data$bitscore) | ribbon_data$bitscore < min_bitscore)
-    if (length(idx) > 0) reason[idx] <- "min_bitscore"
+    if (length(idx) > 0) mark_reason(idx, "min_bitscore")
   }
   if (!is.null(min_query_coverage)) {
     if ("qcovs" %in% colnames(ribbon_data)) {
@@ -133,7 +136,7 @@ filter_ggchord_ribbons <- function(
       )
     }
     idx <- which(is.na(cov) | cov < min_query_coverage)
-    if (length(idx) > 0) reason[idx] <- "min_query_coverage"
+    if (length(idx) > 0) mark_reason(idx, "min_query_coverage")
   }
   if (!is.null(min_subject_coverage)) {
     require_col("slen", "min_subject_coverage")
@@ -143,11 +146,11 @@ filter_ggchord_ribbons <- function(
         ribbon_data$slen * 100
     )
     idx <- which(is.na(cov) | cov < min_subject_coverage)
-    if (length(idx) > 0) reason[idx] <- "min_subject_coverage"
+    if (length(idx) > 0) mark_reason(idx, "min_subject_coverage")
   }
   if (isTRUE(drop_self_links)) {
     idx <- which(ribbon_data$qaccver == ribbon_data$saccver)
-    if (length(idx) > 0) reason[idx] <- "self_link"
+    if (length(idx) > 0) mark_reason(idx, "self_link")
   }
   if (!is.null(keep_pairs)) {
     pairs <- normalize_keep_pairs(keep_pairs)
@@ -157,10 +160,10 @@ filter_ggchord_ribbons <- function(
       any((pairs$q == q & pairs$s == s) | (pairs$q == s & pairs$s == q))
     }, logical(1))
     idx <- which(!keep_row)
-    if (length(idx) > 0) reason[idx] <- "keep_pairs"
+    if (length(idx) > 0) mark_reason(idx, "keep_pairs")
   }
 
-  kept <- is.na(reason)
+  kept <- lengths(reasons) == 0L
   removed_rows <- which(!kept)
   out <- ribbon_data[kept, , drop = FALSE]
   kept_src <- which(kept)
@@ -200,11 +203,17 @@ filter_ggchord_ribbons <- function(
 
   attr(out, "source_rows") <- kept_src
 
-  removed_reasons <- reason[!is.na(reason)]
-  if (length(removed_reasons) == 0) {
+  removed_detail <- if (length(removed_rows) == 0) {
+    data.frame(row = integer(0), reason = character(0))
+  } else {
+    do.call(rbind, lapply(removed_rows, function(i) {
+      data.frame(row = i, reason = reasons[[i]], stringsAsFactors = FALSE)
+    }))
+  }
+  if (nrow(removed_detail) == 0) {
     removed_by_reason <- data.frame(reason = character(0), n = integer(0))
   } else {
-    removed_by_reason <- as.data.frame(table(removed_reasons),
+    removed_by_reason <- as.data.frame(table(removed_detail$reason),
                                        stringsAsFactors = FALSE)
     names(removed_by_reason) <- c("reason", "n")
   }
@@ -217,6 +226,7 @@ filter_ggchord_ribbons <- function(
       n_removed = sum(!kept),
       removed_by_reason = removed_by_reason,
       removed_rows = removed_rows,
+      removed_reasons = removed_detail,
       kept_rows = which(kept),
       sort_by = sort_info
     )
@@ -395,7 +405,14 @@ deduplicate_ggchord_ribbons <- function(
       keep_idx[g] <- TRUE
       next
     }
-    ord_g <- g[order(ribbon_data$qstart[g], ribbon_data$sstart[g])]
+    # "first" means first in the user's input, not first after coordinate
+    # sorting. Other policies retain coordinate order to avoid needless
+    # comparisons between distant blocks.
+    ord_g <- if (keep == "first") {
+      g
+    } else {
+      g[order(ribbon_data$qstart[g], ribbon_data$sstart[g])]
+    }
     for (i in seq_along(ord_g)) {
       cur <- ord_g[i]
       if (keep_idx[cur]) next
@@ -412,6 +429,9 @@ deduplicate_ggchord_ribbons <- function(
         keep_idx[cur] <- TRUE
       } else if (better(cur, dup_of)) {
         keep_idx[dup_of] <- FALSE
+        # Earlier duplicates must point at the final representative rather
+        # than at the representative that has just been replaced.
+        removed$duplicate_of[removed$duplicate_of == dup_of] <- cur
         removed <- rbind(removed, data.frame(
           row = dup_of, duplicate_of = cur,
           reason = paste0("duplicate_", by), stringsAsFactors = FALSE))
@@ -457,6 +477,10 @@ deduplicate_ggchord_ribbons <- function(
 #'   descending, i.e. collinear or both inverted in the same way).
 #' @param group_by Character vector, default \code{c("qaccver", "saccver")}.
 #'   Columns used to identify the same sequence pair.
+#' @param extra_columns How to handle columns other than the required ribbon
+#'   fields when multiple rows are merged. \code{"consistent"} (default)
+#'   keeps a value only when all source rows agree and otherwise stores a typed
+#'   missing value; \code{"first"} retains the first source row's value.
 #'
 #' @return A list with \code{data} (merged data frame with \code{source_rows}
 #'   attribute) and \code{report} (data.frame with \code{output_row},
@@ -480,9 +504,11 @@ merge_ggchord_ribbons <- function(
     max_gap = 0,
     min_pident_difference = 0,
     require_same_orientation = TRUE,
-    group_by = c("qaccver", "saccver")) {
+    group_by = c("qaccver", "saccver"),
+    extra_columns = c("consistent", "first")) {
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
+  extra_columns <- match.arg(extra_columns)
 
   if (!is.data.frame(ribbon_data)) {
     ggchord_stop("merge_ggchord_ribbons(): ribbon_data must be a data.frame",
@@ -573,6 +599,15 @@ merge_ggchord_ribbons <- function(
         new_row$send <- if (cur_sdir >= 0) cur_sB else cur_sA
         new_row$length <- cur_qB - cur_qA + 1
         new_row$pident <- cur_wsum / cur_lsum
+        if (extra_columns == "consistent" && length(cur_rows) > 1) {
+          extra <- setdiff(names(ribbon_data), req)
+          for (nm in extra) {
+            values <- ribbon_data[[nm]][cur_rows]
+            same <- length(unique(values[!is.na(values)])) <= 1 &&
+              (all(is.na(values)) || !anyNA(values))
+            if (!same) new_row[[nm]] <- ribbon_data[[nm]][NA_integer_][1]
+          }
+        }
         out_chunks[[length(out_chunks) + 1L]] <<- new_row
         out_src[[length(out_src) + 1L]] <<- cur_rows
         report <<- rbind(report, data.frame(

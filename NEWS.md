@@ -1,5 +1,27 @@
 # ggchord 0.9.0 (development version)
 
+## Data correctness and import fixes
+
+* `clean_ggchord_data(unknown_id = "keep")` now retains unknown gene rows
+  without attempting coordinate checks against a missing sequence length.
+  Sorting reversed ribbon intervals records their original same/reverse
+  direction so drawing does not silently change alignment orientation.
+
+* Ribbon filtering reports every removal reason for a row;
+  `deduplicate_ggchord_ribbons(keep = "first")` now means the first input row;
+  and `merge_ggchord_ribbons()` no longer leaves stale values in disagreeing
+  auxiliary columns. Use `extra_columns = "first"` to request the previous
+  first-row behaviour explicitly.
+
+* BLAST outfmt 7 imports now parse and validate `# Fields:` instead of assuming
+  a fixed 17-column layout. GFF3 parsing stops at `##FASTA`. All three import
+  helpers can add `.source_file` with `source_file = TRUE`.
+
+* Unknown ribbon and gene sequence IDs now have the same severe validation
+  level. Skipped duplicate checks for exceptionally large pair groups are
+  reported rather than omitted silently. Feature categories, region outlines,
+  curved-region side selection and highlight argument validation were fixed.
+
 ## Deterministic gene-label layouts
 
 * `geom_gene_label_repel()` now uses the deterministic

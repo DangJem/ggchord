@@ -4,7 +4,12 @@
 \alias{read_fasta_lengths}
 \title{Read one or more FASTA files into seq_data format}
 \usage{
-read_fasta_lengths(file = NULL, files = NULL, header_delim = NULL)
+read_fasta_lengths(
+  file = NULL,
+  files = NULL,
+  header_delim = NULL,
+  source_file = FALSE
+)
 }
 \arguments{
 \item{file}{Optional path to a single FASTA file.}
@@ -14,6 +19,9 @@ wildcard patterns). All matched files are read and combined.}
 
 \item{header_delim}{Optional character. When given, each header is split at
 every occurrence of this delimiter and only the first piece is kept.}
+
+\item{source_file}{Logical. Add a `.source_file` column when reading one or
+more files, default `FALSE`.}
 }
 \value{
 A data.frame with columns `seq_id` and `length`.

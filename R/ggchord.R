@@ -6,7 +6,7 @@
 
 # Global variable declarations (to avoid R CMD check NOTEs)
 globalVariables(c(
-  "x", "y", "group", "pident", "fill", "strand", "anno", "seq_id",
+  "x", "y", "group", "pident", "fill", "colour", "strand", "anno", "seq_id",
   "text_x", "text_y", "text", "text_angle", "hjust", "vjust",
   "x0", "y0", "x1", "y1", "label", "label_x", "label_y", "size",
   "fill_col", "alpha", "label_hjust", "label_vjust", "label_angle",

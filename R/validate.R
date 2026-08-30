@@ -288,6 +288,16 @@ validate_ribbon_data <- function(ribbon_data, seq_data, col,
         "Highly overlapping alignment blocks (reciprocal overlap >= 0.9 on both sequences)",
         "warning")
     }
+    if (nrow(dups$skipped) > 0) {
+      col <- add_validation_issue(
+        col, "ribbon", "duplicate_check_skipped", NA_integer_, NA_character_,
+        sprintf(
+          "Near-duplicate checks were skipped for %d sequence-pair group(s) larger than the validation limit (%s)",
+          nrow(dups$skipped),
+          paste(dups$skipped$pair, collapse = ", ")
+        ),
+        "warning")
+    }
   }
 
   # Optional-field diagnostics (informative only; the columns are not required)
@@ -343,6 +353,8 @@ validation_ribbon_duplicates <- function(ribbon_data, near_tol = 5,
   exact <- data.frame(row = integer(0), dup_of = integer(0))
   near <- data.frame(row = integer(0), dup_of = integer(0))
   overlap <- data.frame(row = integer(0), dup_of = integer(0))
+  skipped <- data.frame(pair = character(0), n = integer(0),
+                        stringsAsFactors = FALSE)
 
   key <- paste(ribbon_data$qaccver, ribbon_data$saccver,
                ribbon_data$qstart, ribbon_data$qend,
@@ -358,9 +370,16 @@ validation_ribbon_duplicates <- function(ribbon_data, near_tol = 5,
   grp <- split(seq_len(nrow(ribbon_data)), pair)
   near_rows <- list()
   overlap_rows <- list()
-  for (g in grp) {
+  for (pair_name in names(grp)) {
+    g <- grp[[pair_name]]
     if (length(g) < 2) next
-    if (length(g) > max_group) next
+    if (length(g) > max_group) {
+      skipped <- rbind(skipped, data.frame(
+        pair = gsub("\r", " / ", pair_name, fixed = TRUE),
+        n = length(g), stringsAsFactors = FALSE
+      ))
+      next
+    }
     qs <- ribbon_data$qstart[g]
     qe <- ribbon_data$qend[g]
     ss <- ribbon_data$sstart[g]
@@ -413,7 +432,7 @@ validation_ribbon_duplicates <- function(ribbon_data, near_tol = 5,
     m <- do.call(rbind, overlap_rows)
     overlap <- data.frame(row = m[, 1], dup_of = m[, 2])
   }
-  list(exact = exact, near = near, overlap = overlap)
+  list(exact = exact, near = near, overlap = overlap, skipped = skipped)
 }
 
 #' Reciprocal overlap of two 1-based closed intervals
@@ -499,7 +518,7 @@ validate_gene_data <- function(gene_data, seq_data, col,
         col, "gene", "unknown_id", rows, "seq_id",
         sprintf(paste0("gene_data$seq_id references sequence IDs not present in ",
                        "seq_data (%s); these features are skipped when drawing"),
-                paste(unk, collapse = ", ")), "warning")
+                paste(unk, collapse = ", ")), "error")
     }
   }
 
@@ -752,8 +771,8 @@ validate_ggchord_data <- function(seq_data,
     n_gene = if (is.data.frame(gene_data)) nrow(gene_data) else NA_integer_,
     n_unknown_ribbon_ids = sum(errors$category == "unknown_id" &
                                  errors$table == "ribbon" & !is.na(errors$row)),
-    n_unknown_gene_ids = sum(warnings$category == "unknown_id" &
-                               warnings$table == "gene" & !is.na(warnings$row)),
+    n_unknown_gene_ids = sum(errors$category == "unknown_id" &
+                               errors$table == "gene" & !is.na(errors$row)),
     n_self_links = sum(errors$category == "self_link" & !is.na(errors$row)),
     n_out_of_range_ribbon = sum(errors$category == "out_of_range" &
                                   errors$table == "ribbon" & !is.na(errors$row)),

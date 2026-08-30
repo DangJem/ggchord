@@ -9,7 +9,8 @@ read_gff3(
   files = NULL,
   feature_types = "CDS",
   anno_from = c("product", "Name", "gene", "ID"),
-  unstranded = c("plus", "drop")
+  unstranded = c("plus", "drop"),
+  source_file = FALSE
 )
 }
 \arguments{
@@ -25,6 +26,9 @@ wildcard patterns). All matched files are read and combined.}
 fill the `anno` column.}
 
 \item{unstranded}{Character, default `"plus"`.}
+
+\item{source_file}{Logical. Add a `.source_file` column when reading one or
+more files, default `FALSE`.}
 }
 \value{
 A data.frame with `seq_id`, `start`, `end`, `strand`, `anno`

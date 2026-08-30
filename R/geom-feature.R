@@ -73,12 +73,14 @@ geom_feature <- function(data,
     strand = as.character(data$strand),
     stringsAsFactors = FALSE
   )
-  if (label %in% colnames(data)) {
-    gene_data$anno <- as.character(data[[label]])
-  } else if (value_col %in% colnames(data)) {
-    gene_data$anno <- as.character(data[[value_col]])
+  # `anno` is currently the value consumed by geom_gene() for its fill. Keep
+  # the display label separate so a category column cannot be overwritten by
+  # an unrelated label column.
+  gene_data$anno <- as.character(data[[value_col]])
+  gene_data$label <- if (label %in% colnames(data)) {
+    as.character(data[[label]])
   } else {
-    gene_data$anno <- "feature"
+    gene_data$anno
   }
   # Preserve the original value columns for traceability.
   if (type %in% colnames(data)) gene_data$type <- as.character(data[[type]])

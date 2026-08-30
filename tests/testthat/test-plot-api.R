@@ -103,3 +103,25 @@ test_that("feature and sequence-group layers build", {
   expect_true(nrow(layout$gene_polys) > 0)
   expect_true(nrow(layout$group_labels) > 0)
 })
+
+test_that("feature category and region outline survive geometry generation", {
+  data(seq_data_example)
+  feature <- data.frame(
+    seq_id = seq_data_example$seq_id[1], start = 100, end = 500,
+    strand = "+", type = "CDS", category = "coding", label = "display"
+  )
+  region <- data.frame(
+    seq_id = seq_data_example$seq_id[1], start = 600, end = 900
+  )
+  p <- ggchord(seq_data_example, validate = "none") +
+    geom_seq(seq_curvature = 0.4) +
+    geom_feature(feature, category = "category") +
+    geom_seq_region(regions = region, region_color = "#123456",
+                    region_side = "auto")
+  expect_s3_class(build_ggchord_smoke(p), "ggplot_built")
+  layout <- get_chord_layout()
+  expect_true(all(layout$gene_polys$anno == "coding"))
+  expect_true(all(layout$region_polys$colour == "#123456"))
+
+  expect_error(geom_ribbon_highlight(ribbon_ids = 0), "positive")
+})

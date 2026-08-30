@@ -9,7 +9,8 @@ merge_ggchord_ribbons(
   max_gap = 0,
   min_pident_difference = 0,
   require_same_orientation = TRUE,
-  group_by = c("qaccver", "saccver")
+  group_by = c("qaccver", "saccver"),
+  extra_columns = c("consistent", "first")
 )
 }
 \arguments{
@@ -27,6 +28,11 @@ descending, i.e. collinear or both inverted in the same way).}
 
 \item{group_by}{Character vector, default \code{c("qaccver", "saccver")}.
 Columns used to identify the same sequence pair.}
+
+\item{extra_columns}{How to handle columns other than the required ribbon
+fields when multiple rows are merged. \code{"consistent"} (default)
+keeps a value only when all source rows agree and otherwise stores a typed
+missing value; \code{"first"} retains the first source row's value.}
 }
 \value{
 A list with \code{data} (merged data frame with \code{source_rows}

@@ -63,3 +63,74 @@ test_that("ribbon preparation helpers run on simple inputs", {
   )
   expect_equal(nrow(merge_ggchord_ribbons(blocks)$data), 1)
 })
+
+test_that("cleaning preserves kept unknown genes and ribbon direction", {
+  seq <- data.frame(seq_id = c("A", "B"), length = c(100, 100))
+  genes <- data.frame(
+    seq_id = "unknown", start = 1, end = 10, strand = "+", anno = "x"
+  )
+  ribbons <- data.frame(
+    qaccver = "A", saccver = "B", length = 10, pident = 90,
+    qstart = 1, qend = 10, sstart = 20, send = 11
+  )
+
+  cleaned <- clean_ggchord_data(
+    seq, ribbons, genes, unknown_id = "keep", reversed_interval = "sort"
+  )
+  expect_equal(nrow(cleaned$gene_data), 1)
+  expect_equal(cleaned$ribbon_data$direction, "reverse")
+  expect_lt(cleaned$ribbon_data$sstart, cleaned$ribbon_data$send)
+
+  validation <- validate_ggchord_data(seq, gene_data = genes, strict = FALSE)
+  expect_false(validation$valid)
+  expect_true(any(validation$errors$category == "unknown_id"))
+})
+
+test_that("ribbon reports retain all reasons and input-first semantics", {
+  ribbons <- data.frame(
+    qaccver = c("A", "A"), saccver = c("A", "B"),
+    length = c(5, 5), pident = c(10, 20),
+    qstart = c(50, 1), qend = c(55, 5),
+    sstart = c(50, 1), send = c(55, 5), score = c("x", "y")
+  )
+  filtered <- filter_ggchord_ribbons(
+    ribbons, min_pident = 50, min_length = 10, drop_self_links = TRUE
+  )
+  expect_equal(nrow(filtered$report$removed_reasons), 5)
+
+  dup <- ribbons[c(1, 1), ]
+  dup$qstart <- c(50, 1)
+  dup$qend <- c(55, 6)
+  dup$sstart <- c(50, 1)
+  dup$send <- c(55, 6)
+  dedup <- deduplicate_ggchord_ribbons(
+    dup, by = "coordinates", tolerance = 100, keep = "first"
+  )
+  expect_equal(attr(dedup$data, "source_rows"), 1L)
+
+  merged <- merge_ggchord_ribbons(
+    transform(ribbons, qaccver = "A", saccver = "B",
+              qstart = c(1, 6), qend = c(5, 10),
+              sstart = c(1, 6), send = c(5, 10), pident = c(90, 90))
+  )
+  expect_true(is.na(merged$data$score))
+})
+
+test_that("outfmt7 fields, GFF3 FASTA boundaries and source files are parsed", {
+  blast <- tempfile(fileext = ".o7")
+  writeLines(c(
+    "# BLASTN 2.15.0+",
+    "# Fields: query acc.ver, subject acc.ver, % identity, alignment length, q. start, q. end, s. start, s. end",
+    "A\tB\t99\t10\t1\t10\t20\t11"
+  ), blast)
+  parsed <- read_blast(blast, format = "outfmt7", source_file = TRUE)
+  expect_true(all(c("qaccver", "saccver", ".source_file") %in% names(parsed)))
+
+  gff <- tempfile(fileext = ".gff3")
+  writeLines(c(
+    "##gff-version 3",
+    "A\tsrc\tCDS\t1\t10\t.\t+\t0\tID=x",
+    "##FASTA", ">A", "ACGT"
+  ), gff)
+  expect_equal(nrow(read_gff3(gff)), 1)
+})

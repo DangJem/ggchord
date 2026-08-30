@@ -10,6 +10,7 @@ read_blast(
   format = c("auto", "outfmt6", "outfmt7", "custom"),
   col_names = NULL,
   comment = "#",
+  source_file = FALSE,
   ...
 )
 }
@@ -21,14 +22,18 @@ read_blast(
 combined into one data.frame.}
 
 \item{format}{Character. `"auto"` (default) detects the column layout
-from the number of columns; `"outfmt6"` / `"outfmt7"` require the
-standard 12/17-column layouts; `"custom"` requires `col_names`.}
+from the file; `"outfmt6"` requires the standard 12-column layout,
+`"outfmt7"` parses its `# Fields:` declaration, and `"custom"` requires
+`col_names`.}
 
 \item{col_names}{Optional character vector naming the columns in the file,
 used with `format = "custom"` or to override auto-detection.}
 
 \item{comment}{Character comment character, default `"#"` (BLAST
 outfmt 7 header lines start with `#`).}
+
+\item{source_file}{Logical. Add a `.source_file` column when reading one or
+more files, default `FALSE`.}
 
 \item{...}{Additional arguments passed to [utils::read.table()]
 (e.g. `na.strings`).}

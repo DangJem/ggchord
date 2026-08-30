@@ -523,8 +523,15 @@ compute_chord_layout <- function(
       )
       ribbon_group[j] <- j
 
-      dir_sign <- (rib_qend[i] - rib_qstart[i]) * (rib_send[i] - rib_sstart[i])
-      dir_val <- ifelse(dir_sign >= 0, "same", "reverse")
+      dir_val <- if ("direction" %in% names(ribbon_data) &&
+                     !is.na(ribbon_data$direction[i]) &&
+                     ribbon_data$direction[i] %in% c("same", "reverse")) {
+        as.character(ribbon_data$direction[i])
+      } else {
+        dir_sign <- (rib_qend[i] - rib_qstart[i]) *
+          (rib_send[i] - rib_sstart[i])
+        ifelse(dir_sign >= 0, "same", "reverse")
+      }
       ribbon_dir_vec[j] <- dir_val
 
       if (ribbon_color_scheme == "pident") {
@@ -646,13 +653,16 @@ compute_chord_layout <- function(
         a_end <- starts[sid] + frac_ep * (ends[sid] - starts[sid])
 
         ref <- seq_refs[[sid]]
-        side <- region_side
-        if (identical(side, "auto")) side <- "inside"
-        base_radius <- if (identical(side, "inside")) {
-          seqRadius[sid] + region_offset
-        } else {
-          seqRadius[sid] - region_offset
-        }
+        # Determine which side of the local curve normal points toward the
+        # chord centre. This remains correct for non-circular curvature.
+        mid_angle <- (a_start + a_end) / 2
+        mid_base <- map_to_curve(mid_angle, seqRadius[sid], ref)
+        mid_plus <- map_to_curve(mid_angle, seqRadius[sid] + 1e-4, ref)
+        normal <- mid_plus - mid_base
+        inward_sign <- if (sum(normal * -mid_base) >= 0) 1 else -1
+        side <- if (identical(region_side, "auto")) "inside" else region_side
+        side_sign <- if (identical(side, "inside")) inward_sign else -inward_sign
+        base_radius <- seqRadius[sid] + side_sign * region_offset
 
         n <- 30
         angs <- seq(a_start, a_end, length.out = n)
@@ -671,6 +681,7 @@ compute_chord_layout <- function(
           x = mapped[, 1], y = mapped[, 2],
           group = i,
           zregionfill = fill_col,
+          colour = region_color,
           alpha = region_alpha,
           label = if ("label" %in% colnames(region_data)) as.character(row$label) else NA_character_,
           category = if ("category" %in% colnames(region_data)) as.character(row$category) else NA_character_,

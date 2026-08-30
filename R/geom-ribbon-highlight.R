@@ -64,6 +64,37 @@ geom_ribbon_highlight <- function(mapping = NULL, data = NULL,
       !is.finite(highlight_alpha) || highlight_alpha < 0 || highlight_alpha > 1) {
     ggchord_stop("highlight_alpha must be in [0, 1]")
   }
+  validate_optional_numeric <- function(x, name, integer = FALSE) {
+    if (is.null(x)) return(invisible(NULL))
+    if (!is.numeric(x) || length(x) == 0 || any(!is.finite(x)) ||
+        (integer && any(x != as.integer(x)))) {
+      suffix <- if (integer) "finite integer values" else "finite numeric values"
+      ggchord_stop("geom_ribbon_highlight(): ", name, " must contain ", suffix)
+    }
+  }
+  validate_optional_numeric(ribbon_ids, "ribbon_ids", integer = TRUE)
+  for (nm in c("min_pident", "max_pident", "min_length", "max_length")) {
+    value <- get(nm)
+    validate_optional_numeric(value, nm)
+    if (!is.null(value) && length(value) != 1) {
+      ggchord_stop("geom_ribbon_highlight(): ", nm, " must be a single value")
+    }
+  }
+  if (!is.null(ribbon_ids) && any(ribbon_ids < 1)) {
+    ggchord_stop("geom_ribbon_highlight(): ribbon_ids must be positive row numbers")
+  }
+  if (!is.null(min_pident) && !is.null(max_pident) && min_pident > max_pident) {
+    ggchord_stop("geom_ribbon_highlight(): min_pident cannot exceed max_pident")
+  }
+  if (!is.null(min_length) && !is.null(max_length) && min_length > max_length) {
+    ggchord_stop("geom_ribbon_highlight(): min_length cannot exceed max_length")
+  }
+  if (!is.null(qaccver) && (!is.character(qaccver) || anyNA(qaccver))) {
+    ggchord_stop("geom_ribbon_highlight(): qaccver must be a character vector without NA")
+  }
+  if (!is.null(saccver) && (!is.character(saccver) || anyNA(saccver))) {
+    ggchord_stop("geom_ribbon_highlight(): saccver must be a character vector without NA")
+  }
 
   empty_polys <- data.frame(
     x = numeric(0), y = numeric(0), group = integer(0),

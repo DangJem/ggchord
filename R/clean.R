@@ -246,6 +246,20 @@ clean_ggchord_data <- function(
       }
       coords <- new_coords
 
+      # Preserve the relationship between query and subject directions before
+      # sorting endpoints. Sorting must not silently turn a reverse alignment
+      # into a same-direction alignment.
+      direction <- if ((coords[["qend"]] - coords[["qstart"]]) *
+                       (coords[["send"]] - coords[["sstart"]]) >= 0) {
+        "same"
+      } else {
+        "reverse"
+      }
+      if (!"direction" %in% names(ribbon_out)) {
+        ribbon_out$direction <- NA_character_
+      }
+      ribbon_out[i, "direction"] <- direction
+
       # Reversed intervals
       if (coords[["qstart"]] > coords[["qend"]] ||
           coords[["sstart"]] > coords[["send"]]) {
@@ -384,6 +398,11 @@ clean_ggchord_data <- function(
     for (i in which(!drop)) {
       row <- gene_out[i, ]
       sid_ <- as.character(row$seq_id)
+      if (!sid_ %in% names(seq_lens)) {
+        # unknown_id = "keep": without a reference length there is no safe
+        # coordinate operation to perform. The row was already reported.
+        next
+      }
       len <- seq_lens[[sid_]]
       st <- row$start
       en <- row$end
