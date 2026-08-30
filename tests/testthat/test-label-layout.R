@@ -120,3 +120,34 @@ test_that("hidden repelled labels do not retain leader lines", {
   seg <- ggchord:::ggchord_repel_segments(labels, min_segment_length = 0)
   expect_equal(seg$group, 1L)
 })
+
+test_that("nested sequence radii use compact per-sequence label bands", {
+  data(seq_data_example)
+  data(ribbon_data_example)
+  data(gene_data_example)
+  p <- ggchord(
+    seq_data_example, ribbon_data_example, gene_data_example,
+    title = "ggchord"
+  ) +
+    geom_seq(
+      seq_radius = c(3.3, 2.5, 1.8, 1.25),
+      seq_orientation = c(1, -1, 1, -1)
+    ) +
+    geom_ribbon(ribbon_alpha = 0.45) +
+    geom_gene() +
+    geom_gene_label_repel() +
+    geom_seq_label() +
+    geom_axis()
+  invisible(suppressWarnings(ggplot2::ggplot_build(p)))
+  layout <- get_chord_layout()
+  gl <- layout$gene_labels
+  leader_length <- sqrt(
+    (gl$text_x - gl$anchor_x)^2 + (gl$text_y - gl$anchor_y)^2
+  )
+  median_by_sequence <- tapply(leader_length, gl$seq_id, median)
+
+  expect_lt(max(leader_length), 2)
+  expect_true(all(median_by_sequence < 1.1))
+  expect_false(label_boxes_overlap(layout))
+  expect_false(same_lane_leaders_cross(layout))
+})

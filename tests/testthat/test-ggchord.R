@@ -610,8 +610,13 @@ test_that("horizontal repelled labels sit on the far side of the leader line", {
   seg2 <- l2$gene_label_segments
   gl2 <- l2$gene_labels
   if (nrow(seg2) > 0) {
-    moved_right <- (seg2$x1 - seg2$x0) >= 0
-    expect_equal(gl2$hjust[seg2$group], ifelse(moved_right, 0, 1))
+    # In elbow mode the first leg may be vertical. The final leg is the one
+    # that approaches the text and therefore determines its justification.
+    final_leg <- !duplicated(seg2$group, fromLast = TRUE)
+    moved_right <- (seg2$x1[final_leg] - seg2$x0[final_leg]) >= 0
+    expect_equal(
+      gl2$hjust[seg2$group[final_leg]], ifelse(moved_right, 0, 1)
+    )
   }
 })
 

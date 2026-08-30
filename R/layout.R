@@ -1382,6 +1382,57 @@ compute_chord_layout <- function(
         units_per_inch <- check_units_per_inch
       }
 
+      # Horizontal labels read best as one compact, ordered band per sequence.
+      # The force solver above resolves the difficult local cases and supplies
+      # seed-dependent variation; this final projection removes excessive
+      # radial drift and restores separation between nested sequence radii.
+      if (identical(gene_label_orientation, "horizontal")) {
+        compact_x <- c(
+          unlist(lapply(seq_arcs, `[[`, "x"), use.names = FALSE),
+          gene_polys$x
+        )
+        compact_y <- c(
+          unlist(lapply(seq_arcs, `[[`, "y"), use.names = FALSE),
+          gene_polys$y
+        )
+        compact_units_per_inch <- max(
+          diff(range(compact_x, na.rm = TRUE)),
+          diff(range(compact_y, na.rm = TRUE)), 1
+        ) / 6
+        compact_obstacles <- ggchord_text_obstacle_boxes(
+          seq_labels_df, group_labels, axis_ticks, show_axis,
+          units_per_inch = compact_units_per_inch
+        )
+        compact_units_limit <- 1.25 * compact_units_per_inch
+        for (compact_pass in seq_len(2)) {
+          compact <- ggchord_compact_label_lanes(
+            gene_labels, seq_arcs,
+            side = gene_label_side,
+            units_per_inch = compact_units_per_inch,
+            box_padding = gene_label_repel_box_padding,
+            point_padding = gene_label_repel_point_padding,
+            repel_boxes = compact_obstacles
+          )
+          gene_labels <- compact$labels
+          label_lanes <- compact$lanes
+          compact_units_per_inch <- min(
+            compact_units_limit,
+            max(compact_units_per_inch,
+                label_units_per_inch(gene_labels))
+          )
+          compact_obstacles <- ggchord_text_obstacle_boxes(
+            seq_labels_df, group_labels, axis_ticks, show_axis,
+            units_per_inch = compact_units_per_inch
+          )
+        }
+        gene_labels <- ggchord_uncross_labels(
+          gene_labels, lanes = label_lanes
+        )$labels
+        gene_labels$hjust <- ifelse(
+          gene_labels$text_x >= gene_labels$anchor_x, 0, 1
+        )
+      }
+
       gene_label_segments <- ggchord_repel_segments(
         gene_labels,
         min_segment_length = gene_label_repel_min_segment_length

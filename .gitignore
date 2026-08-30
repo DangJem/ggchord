@@ -4,6 +4,7 @@
 .DS_Store
 inst/doc
 R/.Rhistory
+/.Rhistory
 .gitignore
 
 # Ignore all hidden directories (e.g. .codex-tmp, .idea, .vscode)

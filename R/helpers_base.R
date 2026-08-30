@@ -979,6 +979,179 @@ ggchord_enforce_label_side <- function(gl, seq_arcs, side = "auto") {
   gl
 }
 
+# Put horizontal labels into compact local bands around their own sequence.
+# The free force layout supplies seed-dependent starting positions, but this
+# pass constrains both radial and tangential drift around each gene anchor.
+# Labels therefore use nearby two-dimensional space instead of escaping into
+# one large global ring when sequences have very different radii.
+ggchord_compact_label_lanes <- function(gl, seq_arcs,
+                                        side = "outside",
+                                        units_per_inch = 0.35,
+                                        box_padding = 0.25,
+                                        point_padding = 0.1,
+                                        repel_boxes = NULL,
+                                        max_iter = 100) {
+  n <- nrow(gl)
+  if (n == 0) return(list(labels = gl, lanes = character(0)))
+
+  active <- !is.na(gl$text) & nzchar(gl$text)
+  anchor_labels <- gl
+  anchor_labels$text_x <- anchor_labels$anchor_x
+  anchor_labels$text_y <- anchor_labels$anchor_y
+  anchor_frame <- ggchord_label_curve_frame(anchor_labels, seq_arcs)
+  side_sign <- if (identical(side, "outside")) {
+    rep(1, n)
+  } else if (identical(side, "inside")) {
+    rep(-1, n)
+  } else {
+    ifelse(anchor_frame$signed_distance < 0, -1, 1)
+  }
+  lanes <- paste(gl$seq_id, side_sign, sep = "\r")
+
+  tangent_x <- -anchor_frame$outward_y
+  tangent_y <- anchor_frame$outward_x
+  direction_x <- side_sign * anchor_frame$outward_x
+  gl$hjust[active] <- ifelse(direction_x[active] >= 0, 0, 1)
+  gl$vjust[active] <- 0.5
+  boxes <- ggchord_text_boxes(
+    gl, units_per_inch = units_per_inch, box_padding = box_padding
+  )
+  centre_normal <-
+    (boxes$cx - boxes$x) * anchor_frame$outward_x +
+    (boxes$cy - boxes$y) * anchor_frame$outward_y
+  normal_extent <-
+    (boxes$bw * abs(anchor_frame$outward_x) +
+       boxes$bh * abs(anchor_frame$outward_y)) / 2
+  clearance <- pmax(abs(anchor_frame$signed_distance), point_padding) + 0.04
+  minimum_distance <- pmax(
+    abs(anchor_frame$signed_distance) + 0.04,
+    clearance + normal_extent - side_sign * centre_normal
+  )
+  band_depth <- max(0.22, 0.28 * units_per_inch)
+  tangent_limit <- max(0.55, 0.75 * units_per_inch)
+
+  vx <- gl$text_x - anchor_frame$curve_x
+  vy <- gl$text_y - anchor_frame$curve_y
+  tangent_offset <- vx * tangent_x + vy * tangent_y
+  radial_distance <- side_sign *
+    (vx * anchor_frame$outward_x + vy * anchor_frame$outward_y)
+  tangent_offset <- pmin(pmax(tangent_offset, -tangent_limit), tangent_limit)
+  radial_distance <- pmin(
+    pmax(radial_distance, minimum_distance), minimum_distance + band_depth
+  )
+  gl$text_x[active] <- anchor_frame$curve_x[active] +
+    tangent_offset[active] * tangent_x[active] +
+    side_sign[active] * radial_distance[active] *
+      anchor_frame$outward_x[active]
+  gl$text_y[active] <- anchor_frame$curve_y[active] +
+    tangent_offset[active] * tangent_y[active] +
+    side_sign[active] * radial_distance[active] *
+      anchor_frame$outward_y[active]
+
+  # The final approach direction can differ from the radial direction when a
+  # label uses tangential space. Justify from the actual gene-to-label leader
+  # so elbow stubs always enter the empty side of the text.
+  gl$hjust[active] <- ifelse(
+    gl$text_x[active] >= gl$anchor_x[active], 0, 1
+  )
+
+  update_minimum_distance <- function(labels) {
+    current_boxes <- ggchord_text_boxes(
+      labels, units_per_inch = units_per_inch,
+      box_padding = box_padding
+    )
+    current_centre_normal <-
+      (current_boxes$cx - current_boxes$x) * anchor_frame$outward_x +
+      (current_boxes$cy - current_boxes$y) * anchor_frame$outward_y
+    current_normal_extent <-
+      (current_boxes$bw * abs(anchor_frame$outward_x) +
+         current_boxes$bh * abs(anchor_frame$outward_y)) / 2
+    pmax(
+      abs(anchor_frame$signed_distance) + 0.04,
+      clearance + current_normal_extent -
+        side_sign * current_centre_normal
+    )
+  }
+  minimum_distance <- update_minimum_distance(gl)
+
+  # Alternate one collision correction with a projection back into the local
+  # band. If a lane is unusually dense, grow the band gradually instead of
+  # sending one label far away in a single step.
+  active_rows <- which(active)
+  work_boxes <- ggchord_text_boxes(
+    gl[active_rows, , drop = FALSE],
+    units_per_inch = units_per_inch,
+    box_padding = box_padding
+  )
+  for (iter in seq_len(max_iter)) {
+    old_x <- gl$text_x[active_rows]
+    old_y <- gl$text_y[active_rows]
+    cx_off <- work_boxes$cx - work_boxes$x
+    cy_off <- work_boxes$cy - work_boxes$y
+    separated <- ggchord_separate_boxes(
+      old_x, old_y, work_boxes$bw, work_boxes$bh,
+      cx_off, cy_off, repel_boxes = repel_boxes,
+      max_iter = 1
+    )
+    gl$text_x[active_rows] <- separated$x
+    gl$text_y[active_rows] <- separated$y
+    new_hjust <- ifelse(
+      gl$text_x[active] >= gl$anchor_x[active], 0, 1
+    )
+    if (any(new_hjust != gl$hjust[active])) {
+      gl$hjust[active] <- new_hjust
+      minimum_distance <- update_minimum_distance(gl)
+      work_boxes <- ggchord_text_boxes(
+        gl[active_rows, , drop = FALSE],
+        units_per_inch = units_per_inch,
+        box_padding = box_padding
+      )
+    }
+
+    extra <- 0.12 * floor((iter - 1L) / 40L)
+    vx <- gl$text_x - anchor_frame$curve_x
+    vy <- gl$text_y - anchor_frame$curve_y
+    tangent_offset <- vx * tangent_x + vy * tangent_y
+    radial_distance <- side_sign *
+      (vx * anchor_frame$outward_x + vy * anchor_frame$outward_y)
+    tangent_offset <- pmin(
+      pmax(tangent_offset, -(tangent_limit + extra)),
+      tangent_limit + extra
+    )
+    radial_distance <- pmin(
+      pmax(radial_distance, minimum_distance),
+      minimum_distance + band_depth + extra
+    )
+    gl$text_x[active] <- anchor_frame$curve_x[active] +
+      tangent_offset[active] * tangent_x[active] +
+      side_sign[active] * radial_distance[active] *
+        anchor_frame$outward_x[active]
+    gl$text_y[active] <- anchor_frame$curve_y[active] +
+      tangent_offset[active] * tangent_y[active] +
+      side_sign[active] * radial_distance[active] *
+        anchor_frame$outward_y[active]
+    new_hjust <- ifelse(
+      gl$text_x[active] >= gl$anchor_x[active], 0, 1
+    )
+    if (any(new_hjust != gl$hjust[active])) {
+      gl$hjust[active] <- new_hjust
+      minimum_distance <- update_minimum_distance(gl)
+      work_boxes <- ggchord_text_boxes(
+        gl[active_rows, , drop = FALSE],
+        units_per_inch = units_per_inch,
+        box_padding = box_padding
+      )
+    }
+    displacement <- max(
+      abs(gl$text_x[active_rows] - old_x),
+      abs(gl$text_y[active_rows] - old_y)
+    )
+    if (is.finite(displacement) && displacement < 1e-6) break
+  }
+
+  list(labels = gl, lanes = lanes)
+}
+
 ggchord_label_box_conflicts <- function(gl, units_per_inch = 0.35,
                                         box_padding = 0.25,
                                         repel_boxes = NULL,
