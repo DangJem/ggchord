@@ -487,6 +487,7 @@ v0.10.0 不新增独立的手动标签 geom，而是增强现有 `geom_gene_labe
 - Identity 色条使用紧凑的物理尺寸，不再随设备高度无限拉伸；
 - sequence/gene 图例符号表达实际方向，并减少过粗的线条和箭头；
 - 默认白底、标题、轴线、标签、ribbon 透明度和图例间距统一校准；
+- 文档和默认验收图使用 4:3 画布；实际设备尺寸仍由 RStudio 或 `ggsave()` 控制；
 - 用 4×3、6×4、8×6、12×8 英寸以及 PNG/PDF/SVG 验收。
 
 视觉设计只借鉴通用原则：[Circos](https://genome.cshlp.org/content/19/9/1639)

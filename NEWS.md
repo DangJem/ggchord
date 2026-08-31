@@ -29,7 +29,11 @@
 * The default theme now uses a white export-safe canvas, quieter axes, a
   smaller title and tighter legend spacing. Sequence strokes and arrowheads
   are lighter, ribbon opacity is slightly increased, and strand keys use slim
-  arrows that point in opposite directions for `+` and `-`.
+  arrows that point in opposite directions for `+` and `-`. Colourbar titles
+  now have a physical gap from the bar, and vertically stacked legend groups
+  have slightly more separation. Package examples use a conventional
+  4:3 canvas; external RStudio/graphics-device dimensions remain under user
+  control, as in ggplot2.
 
 * The visual hierarchy is informed by Circos' restrained circular information
   design, clinker's publication-oriented gene arrows, DNA Features Viewer's

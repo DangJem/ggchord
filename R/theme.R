@@ -25,6 +25,8 @@ theme_ggchord <- function(base_size = 11, base_family = "") {
       legend.key = element_rect(fill = NA, colour = NA),
       legend.box.spacing = unit(4 * scale, "mm"),
       legend.spacing = unit(2 * scale, "mm"),
+      legend.spacing.x = unit(2 * scale, "mm"),
+      legend.spacing.y = unit(4 * scale, "mm"),
       legend.text = element_text(size = 8 * scale, colour = "#343A40"),
       legend.title = element_text(
         size = 9 * scale, face = "bold", colour = "#252A2E"

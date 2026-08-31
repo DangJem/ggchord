@@ -66,6 +66,12 @@ test_that("ggchord themes and guides use registered role elements", {
   expect_equal(as.numeric(horizontal$params$theme$legend.key.height), 3)
   vertical <- guide_ggchord_colourbar(position = "left")
   expect_equal(as.numeric(vertical$params$theme$legend.key.height), 46)
+  expect_equal(
+    as.numeric(vertical$params$theme$legend.title@margin[3]), 2
+  )
+  expect_equal(
+    as.numeric(vertical$params$theme$legend.text@margin[4]), 1.2
+  )
 })
 
 test_that("annotation themes and component styles remain independent", {

@@ -59,7 +59,9 @@ guide_ggchord_colourbar <- function(
     legend.key.height = unit(if (horizontal) 3 else 46, "mm"),
     legend.ticks.length = unit(1, "mm"),
     legend.text = element_text(margin = margin(l = 1.2)),
-    legend.title = element_text(margin = margin(b = 1.5))
+    legend.title = element_text(
+      margin = margin(b = 2, unit = "mm")
+    )
   )
   if (!is.null(theme)) compact <- compact + theme
   guide_colourbar(
