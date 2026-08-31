@@ -169,6 +169,20 @@ test_that("all automatic gene-label layouts build", {
   )
 })
 
+test_that("strand legend glyph matches the tapered gene silhouette", {
+  key_data <- data.frame(
+    fill = "#D95F02", colour = "#353A3E", alpha = 1,
+    linewidth = 0.25, strand = "+"
+  )
+  plus <- ggchord:::draw_key_gene_arrow(key_data, list(), 5)
+  key_data$strand <- "-"
+  minus <- ggchord:::draw_key_gene_arrow(key_data, list(), 5)
+
+  expect_equal(as.numeric(plus$x), c(0.10, 0.62, 0.90, 0.62, 0.10))
+  expect_equal(as.numeric(minus$x), 1 - as.numeric(plus$x))
+  expect_equal(as.numeric(plus$y), c(0.32, 0.32, 0.50, 0.68, 0.68))
+})
+
 test_that("fixed gene labels expose compact deterministic controls", {
   data(seq_data_example)
   data(gene_data_example)
