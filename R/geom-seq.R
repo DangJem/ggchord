@@ -66,7 +66,7 @@ seq_geom <- rename_geom_aes(GeomPath, renames = c(colour = "seq_colour"))
 #'   \code{> 1} outside).
 #' @param seq_group_colors Optional named color vector by group name (or an
 #'   unnamed vector recycled positionally). Colours the group labels.
-#' @param linewidth Arc line width, default 1.1
+#' @param linewidth Arc line width, default 0.9
 #' @param show_legend Whether to show the legend for this layer, default TRUE
 #' @param legend_position Position of this layer's legend (the Seq ID legend):
 #'   one of "left", "right", "top", "bottom" or "inside", default "right". Pass
@@ -95,7 +95,7 @@ geom_seq <- function(mapping = NULL, data = NULL,
                      seq_group_labels = TRUE,
                      seq_group_label_radius = 1.35,
                      seq_group_colors = NULL,
-                     linewidth = 1.1,
+                     linewidth = 0.9,
                      show_legend = TRUE,
                      legend_position = "right",
                      ...) {
@@ -142,7 +142,7 @@ geom_seq <- function(mapping = NULL, data = NULL,
     key_glyph   = key_glyph_seq,
     params      = list(
       linewidth = linewidth,
-      arrow = grid::arrow(type = "closed", length = grid::unit(3, "mm")),
+      arrow = grid::arrow(type = "closed", length = grid::unit(2.4, "mm")),
       ...
     )
   )

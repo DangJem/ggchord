@@ -57,6 +57,8 @@ compute_chord_layout(
   gene_label_show,
   gene_label_size,
   gene_label_wrap = NULL,
+  gene_label_orientation = "horizontal",
+  gene_label_overlap = "hide",
   gene_label_repel_layer = FALSE,
   gene_label_repel_max_overlaps = Inf,
   gene_label_layout = "aligned",
@@ -110,6 +112,13 @@ compute_chord_layout(
 \item{ribbonGap}{Named vector of ribbon gaps}
 
 \item{gene_data}{Gene data (already validated)}
+
+\item{gene_label_orientation}{Fixed-label text orientation: "radial",
+"tangent", or "horizontal". Automatic repel layouts manage their own
+text orientation.}
+
+\item{gene_label_overlap}{Fixed-label collision policy: "hide", "nudge",
+or "allow".}
 
 \item{gene_label_layout}{Character, default "aligned". Deterministic
 automatic layout: "aligned", "radial", or "arc".}

@@ -39,7 +39,7 @@ make_ribbon_geom <- function(outline = FALSE, linetype = FALSE) {
 #'   colourbar.
 #' @param ribbon_color_name Optional legend title for the \code{ribbon_color_by}
 #'   colourbar (defaults to the column name).
-#' @param ribbon_alpha Numeric (0-1). Ribbon transparency, default 0.38
+#' @param ribbon_alpha Numeric (0-1). Ribbon transparency, default 0.42
 #' @param ribbon_alpha_by Optional character column name. When set, alpha is
 #'   scaled continuously from that numeric column.
 #' @param ribbon_alpha_range Numeric length-2. Alpha range used by
@@ -71,17 +71,17 @@ make_ribbon_geom <- function(outline = FALSE, linetype = FALSE) {
 #' @param ribbon_direction_alpha Named numeric vector with \code{same} and
 #'   \code{reverse} entries, used when \code{ribbon_direction = "alpha"}.
 #' @param show_legend Whether to show the legend, default TRUE
-#' @param legend_position Position of this layer's legend (the Identity(%)
+#' @param legend_position Position of this layer's legend (the Identity (%)
 #'   colourbar): one of "left", "right", "top", "bottom" or "inside", default
 #'   "left". Pass NULL to let the legend follow
 #'   \code{theme(legend.position = ...)} together with the other legends.
-#' @param legend_key_width Optional width of the Identity(%) colourbar key.
+#' @param legend_key_width Optional width of the Identity (%) colourbar key.
 #'   Accepts a grid unit, e.g. \code{unit(1, "cm")}, or a number interpreted
 #'   as centimetres. Default NULL uses the ggplot2 default width.
-#' @param legend_key_height Optional height of the Identity(%) colourbar key.
+#' @param legend_key_height Optional height of the Identity (%) colourbar key.
 #'   Accepts a grid unit, e.g. \code{unit(5, "cm")}, or a number interpreted
-#'   as centimetres. Default NULL lets the vertical bar fill the available
-#'   height (and uses a fixed height for horizontal legends).
+#'   as centimetres. Default NULL uses a compact fixed physical height so the
+#'   guide remains stable across output-device sizes.
 #' @param ... Additional arguments passed to \code{geom_polygon()}
 #'
 #' @return A list of ggplot2 layers

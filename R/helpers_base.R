@@ -259,6 +259,41 @@ ggchord_label_deoverlap <- function(gl, units_per_inch = 0.35, seed = 123,
   gl$text_y <- y
   gl
 }
+
+#' Hide fixed labels that collide, preserving deterministic input priority
+#'
+#' Unlike the automatic repel layouts, fixed labels must not silently acquire
+#' leader lines or move far away from their feature. This greedy filter keeps
+#' the first label in input order and omits only later labels whose oriented
+#' text box intersects one that has already been retained.
+#' @noRd
+ggchord_label_prune_overlaps <- function(gl, units_per_inch = 0.35,
+                                         box_padding = 0.015,
+                                         repel_boxes = NULL) {
+  if (nrow(gl) < 2) return(gl)
+  active <- which(!is.na(gl$text) & nzchar(gl$text))
+  if (length(active) < 2) return(gl)
+
+  boxes <- ggchord_text_boxes(
+    gl[active, , drop = FALSE], units_per_inch = units_per_inch,
+    box_padding = box_padding
+  )
+  kept <- integer(0)
+  for (i in seq_along(active)) {
+    conflict <- (length(kept) > 0 && any(ggchord_oriented_box_overlaps(
+      boxes[i, , drop = FALSE], boxes[kept, , drop = FALSE]
+    ))) || (!is.null(repel_boxes) && nrow(repel_boxes) > 0 &&
+      any(ggchord_oriented_box_overlaps(
+        boxes[i, , drop = FALSE], repel_boxes
+      )))
+    if (conflict) {
+      gl$text[active[i]] <- NA_character_
+    } else {
+      kept <- c(kept, i)
+    }
+  }
+  gl
+}
 #' Estimate the axis-aligned text boxes for a set of text labels.
 #'
 #' `text_x`/`text_y` are the points selected by `hjust`/`vjust`, not the

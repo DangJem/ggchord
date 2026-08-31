@@ -251,6 +251,18 @@ base + geom_gene_label_repel(gene_label_layout = "arc")
 使用通用模式名和独立实现。如需手工旋转或偏移，请使用
 `geom_gene_label()`。
 
+`geom_gene_label()` 也是紧凑的固定标签方案。v0.10.0 默认将文字水平放在
+弦图外侧，按输入行顺序保留标签并省略后续冲突项。可以用
+`gene_label_orientation = "radial"` 或 `"tangent"` 改变文字方向，用
+`gene_label_side = "auto"` 或 `"inside"` 选择侧向，并用
+`gene_label_overlap = "nudge"` 或 `"allow"` 优先保留全部文字。手工旋转和逐序列/
+逐链偏移仍集中在这一个固定标签图层中，不新增重复的手动 geom。
+
+整体信息层级还借鉴了 [Circos](https://genome.cshlp.org/content/19/9/1639)、
+[clinker](https://academic.oup.com/bioinformatics/article/37/16/2473/6129045) 的发表级基因箭头，
+以及 [DNA Features Viewer](https://edinburgh-genome-foundry.github.io/DnaFeaturesViewer/) 的注释冲突处理思路。
+这些只是设计原则参考，ggchord 使用独立的配色、几何和通用 API 名称。
+
 ### 3.6 加入坐标轴与序列标签
 
 ```{r tutorial-axis, eval=FALSE}

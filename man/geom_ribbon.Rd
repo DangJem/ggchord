@@ -60,7 +60,7 @@ colourbar.}
 \item{ribbon_color_name}{Optional legend title for the \code{ribbon_color_by}
 colourbar (defaults to the column name).}
 
-\item{ribbon_alpha}{Numeric (0-1). Ribbon transparency, default 0.38}
+\item{ribbon_alpha}{Numeric (0-1). Ribbon transparency, default 0.42}
 
 \item{ribbon_alpha_by}{Optional character column name. When set, alpha is
 scaled continuously from that numeric column.}
@@ -110,19 +110,19 @@ reverse-orientation alignments: \code{"none"}, \code{"alpha"},
 
 \item{show_legend}{Whether to show the legend, default TRUE}
 
-\item{legend_position}{Position of this layer's legend (the Identity(%)
+\item{legend_position}{Position of this layer's legend (the Identity (%)
 colourbar): one of "left", "right", "top", "bottom" or "inside", default
 "left". Pass NULL to let the legend follow
 \code{theme(legend.position = ...)} together with the other legends.}
 
-\item{legend_key_width}{Optional width of the Identity(%) colourbar key.
+\item{legend_key_width}{Optional width of the Identity (%) colourbar key.
 Accepts a grid unit, e.g. \code{unit(1, "cm")}, or a number interpreted
 as centimetres. Default NULL uses the ggplot2 default width.}
 
-\item{legend_key_height}{Optional height of the Identity(%) colourbar key.
+\item{legend_key_height}{Optional height of the Identity (%) colourbar key.
 Accepts a grid unit, e.g. \code{unit(5, "cm")}, or a number interpreted
-as centimetres. Default NULL lets the vertical bar fill the available
-height (and uses a fixed height for horizontal legends).}
+as centimetres. Default NULL uses a compact fixed physical height so the
+guide remains stable across output-device sizes.}
 
 \item{...}{Additional arguments passed to \code{geom_polygon()}}
 }

@@ -25,6 +25,11 @@
 #' @param gene_label_segment_linetype Character or numeric, default "auto".
 #'   Leader-line linetype; "auto" uses solid lines except for labels moved to
 #'   the other side of their arc, which use dashed lines.
+#' @param gene_label_orientation Fixed-label text orientation: "radial",
+#'   "tangent", or "horizontal". Automatic repel layouts manage their own
+#'   text orientation.
+#' @param gene_label_overlap Fixed-label collision policy: "hide", "nudge",
+#'   or "allow".
 #' @param seq_label_orientation Character, default "arc". Sequence label text
 #'   orientation: "arc" (rotated along the arc, kept readable) or "horizontal"
 #'   (all labels horizontal, extending away from the chord center).
@@ -81,6 +86,8 @@ compute_chord_layout <- function(
     geneLabelCircumLimit, geneLabelRotation,
     gene_label_show, gene_label_size,
     gene_label_wrap = NULL,
+    gene_label_orientation = "horizontal",
+    gene_label_overlap = "hide",
     gene_label_repel_layer = FALSE,
     gene_label_repel_max_overlaps = Inf,
     gene_label_layout = "aligned",
@@ -906,7 +913,14 @@ compute_chord_layout <- function(
         }
 
         base_angle <- atan2(dy, dx) * 180 / pi
-        text_angle <- base_angle + 90 + geneLabelRotation[[sid]][strand]
+        text_angle <- switch(
+          gene_label_orientation,
+          radial = base_angle + 90,
+          tangent = base_angle,
+          # coord_chord() subsequently rotates every grob by `rotation`;
+          # compensate here so "horizontal" means horizontal on the device.
+          horizontal = -rotation
+        ) + geneLabelRotation[[sid]][strand]
 
         if (strand == "+" && orient == 1) {
           hjust <- 1
@@ -924,6 +938,24 @@ compute_chord_layout <- function(
           hjust <- 1 - hjust
         }
         text_angle <- text_angle %% 360
+        vjust <- 0.5
+
+        if (identical(gene_label_orientation, "tangent")) {
+          hjust <- 0.5
+        } else if (identical(gene_label_orientation, "horizontal")) {
+          rotation_rad <- rotation * pi / 180
+          device_x <- cos(rotation_rad) * text_x - sin(rotation_rad) * text_y
+          device_y <- sin(rotation_rad) * text_x + cos(rotation_rad) * text_y
+          # Prefer a left/right anchor in diagonal quadrants so horizontal
+          # text extends away from the chord rather than half back across it.
+          if (abs(device_x) >= 0.75 * abs(device_y)) {
+            hjust <- if (device_x >= 0) 0 else 1
+            vjust <- 0.5
+          } else {
+            hjust <- 0.5
+            vjust <- if (device_y >= 0) 0 else 1
+          }
+        }
 
         data.frame(
           text = gene$anno,
@@ -931,7 +963,7 @@ compute_chord_layout <- function(
           text_y = text_y,
           text_angle = text_angle,
           hjust = hjust,
-          vjust = 0.5,
+          vjust = vjust,
           size = gene_label_size,
           seq_id = sid,
           group = i,
@@ -1407,10 +1439,19 @@ compute_chord_layout <- function(
           )
         }
       }
-    } else {
-      # Legacy gentle de-overlap for fixed labels
-      gene_labels <- ggchord_label_deoverlap(gene_labels,
-                                             units_per_inch = units_per_inch)
+    } else if (identical(gene_label_overlap, "nudge")) {
+      gene_labels <- ggchord_label_deoverlap(
+        gene_labels, units_per_inch = units_per_inch
+      )
+    } else if (identical(gene_label_overlap, "hide")) {
+      fixed_obstacles <- ggchord_text_obstacle_boxes(
+        seq_labels_df, group_labels, axis_ticks, show_axis,
+        units_per_inch = units_per_inch, box_padding = 0.01
+      )
+      gene_labels <- ggchord_label_prune_overlaps(
+        gene_labels, units_per_inch = units_per_inch,
+        repel_boxes = fixed_obstacles
+      )
     }
     # Drop hidden labels and remap segment group IDs so every segment keeps a
     # valid reference after max_overlaps removes an interior label row.

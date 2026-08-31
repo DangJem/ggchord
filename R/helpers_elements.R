@@ -134,15 +134,19 @@ breakPointsFunc <- function(max_value, n = 5, tol = 0.5) {
 #' @return grid::polygonGrob object, gene arrow-shaped legend symbol
 #' @keywords internal
 draw_key_gene_arrow <- function(data, params, size) {
-  # Five vertices: rectangle bottom-left, rectangle top-left, rectangle top-right, arrow tip, rectangle bottom-right
-  x_pts <- unit(c(0.1, 0.1, 0.6, 0.9, 0.6), "npc")
-  y_pts <- unit(c(0.2, 0.8, 0.8, 0.5, 0.2), "npc")
+  # A slim shaft plus a distinct shoulder reads as a genomic feature arrow at
+  # small journal-figure sizes. Strand overrides reverse the glyph so the key
+  # conveys direction instead of using colour alone.
+  x <- c(0.10, 0.10, 0.62, 0.62, 0.90, 0.62, 0.62)
+  if (identical(as.character(data$strand %||% "+")[1], "-")) x <- 1 - x
+  x_pts <- unit(x, "npc")
+  y_pts <- unit(c(0.32, 0.68, 0.68, 0.78, 0.50, 0.22, 0.32), "npc")
 
   polygonGrob(
     x = x_pts, y = y_pts,
     gp = gpar(
       fill = alpha(if_null_else(data$fill, "grey"), if_null_else(data$alpha, 1)),
-      col = if_null_else(data$colour, "black"),
+      col = if_null_else(data$colour, "#353A3E"),
       lwd = if_null_else(data$linewidth %||% data$size, 0.5) * .pt
     )
   )
@@ -160,13 +164,13 @@ key_glyph_seq <- function(data, params, size) {
   lwd <- (data$linewidth %||% data$size %||% 0.8) * .pt
   grobTree(
     segmentsGrob(
-      x0 = unit(0.12, "npc"), x1 = unit(0.78, "npc"),
+      x0 = unit(0.12, "npc"), x1 = unit(0.74, "npc"),
       y0 = unit(0.5, "npc"), y1 = unit(0.5, "npc"),
       gp = gpar(col = col, lwd = lwd, lineend = "round")
     ),
     polygonGrob(
-      x = unit(c(0.78, 0.94, 0.78), "npc"),
-      y = unit(c(0.28, 0.5, 0.72), "npc"),
+      x = unit(c(0.70, 0.90, 0.70), "npc"),
+      y = unit(c(0.34, 0.5, 0.66), "npc"),
       gp = gpar(fill = col, col = col)
     )
   )

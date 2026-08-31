@@ -112,7 +112,7 @@ geom_gene <- function(mapping = NULL, data = NULL,
     check.param = FALSE,
     key_glyph   = key_glyph_gene,
     params      = c(
-      if (!("colour" %in% names(dots))) list(colour = "#2F2F2F") else list(),
+      if (!("colour" %in% names(dots))) list(colour = "#353A3E") else list(),
       if (!("linewidth" %in% names(dots))) list(linewidth = 0.25) else list(),
       dots
     )
@@ -154,13 +154,27 @@ geom_gene <- function(mapping = NULL, data = NULL,
 #' independent from \code{\link{geom_gene}()}: add it after \code{geom_gene()}
 #' to annotate the gene arrows with their texts.
 #'
-#' Long annotations can be wrapped with \code{gene_label_wrap}. For automatic
-#' de-overlapping (with leader lines), use
+#' This is the deterministic, fixed-position label layer. By default labels
+#' sit outside their sequence and labels that would collide are omitted in
+#' input-row order. Use \code{gene_label_overlap = "nudge"} to retain the
+#' legacy gentle adjustment, or \code{"allow"} to draw every label at its
+#' requested position. For automatic arrangement with leader lines, use
 #' \code{\link{geom_gene_label_repel}()} instead.
 #'
 #' @param mapping Default NULL (uses pre-computed data)
 #' @param data Default NULL (retrieved automatically from the layout)
 #' @param gene_label_size Numeric. Label font size, default 2.5
+#' @param gene_label_orientation Character, default \code{"horizontal"}. Text
+#'   orientation relative to each sequence path: \code{"radial"},
+#'   \code{"tangent"}, or \code{"horizontal"}.
+#' @param gene_label_side Character, default \code{"outside"}. Place labels
+#'   outside the chord, use the strand-based \code{"auto"} side, or force
+#'   \code{"inside"} placement.
+#' @param gene_label_overlap Character, default \code{"hide"}. Fixed-label
+#'   collision policy: omit later conflicting labels (\code{"hide"}), apply
+#'   the legacy gentle adjustment (\code{"nudge"}), or keep all requested
+#'   positions (\code{"allow"}). Input row order therefore provides a simple
+#'   way to prioritize labels in \code{"hide"} mode.
 #' @param gene_label_rotation Optional numeric/vector/list. Label rotation angle, default 0
 #' @param gene_label_radial_offset Optional numeric/vector/list. Radial offset of labels, default 0.04
 #' @param gene_label_circum_offset Optional numeric/vector/list. Circumferential offset of labels, default 0
@@ -185,6 +199,9 @@ geom_gene <- function(mapping = NULL, data = NULL,
 #' p
 geom_gene_label <- function(mapping = NULL, data = NULL,
                             gene_label_size = NULL,
+                            gene_label_orientation = "horizontal",
+                            gene_label_side = "outside",
+                            gene_label_overlap = "hide",
                             gene_label_rotation = NULL,
                             gene_label_radial_offset = 0.04,
                             gene_label_circum_offset = NULL,
@@ -194,6 +211,16 @@ geom_gene_label <- function(mapping = NULL, data = NULL,
                             ...) {
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
+
+  gene_label_orientation <- match.arg(
+    gene_label_orientation, c("radial", "tangent", "horizontal")
+  )
+  gene_label_side <- match.arg(
+    gene_label_side, c("outside", "auto", "inside")
+  )
+  gene_label_overlap <- match.arg(
+    gene_label_overlap, c("hide", "nudge", "allow")
+  )
 
   # Placeholder text layer (real data is injected at print time)
   text_layer <- geom_text(
@@ -214,6 +241,9 @@ geom_gene_label <- function(mapping = NULL, data = NULL,
   text_layer$ggchord_params <- list(
     type                     = "gene_label",
     gene_label_size          = gene_label_size,
+    gene_label_orientation   = gene_label_orientation,
+    gene_label_side          = gene_label_side,
+    gene_label_overlap       = gene_label_overlap,
     gene_label_rotation      = gene_label_rotation,
     gene_label_radial_offset = gene_label_radial_offset,
     gene_label_circum_offset = gene_label_circum_offset,

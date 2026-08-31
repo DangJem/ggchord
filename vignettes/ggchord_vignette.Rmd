@@ -259,6 +259,22 @@ and [Geneious](https://manual.geneious.com/en/latest/Sequences.html), while
 ggchord uses generic mode names and an independent implementation. Use
 `geom_gene_label()` when manual label rotation or offsets are required.
 
+`geom_gene_label()` is also the compact fixed-label option. Its v0.10.0
+defaults keep text horizontal and outside the chord, then retain labels in
+input-row order while omitting later collisions. Set
+`gene_label_orientation = "radial"` or `"tangent"`, choose
+`gene_label_side = "auto"` or `"inside"`, and use
+`gene_label_overlap = "nudge"` or `"allow"` when preserving every requested
+label is more important than a sparse default. This keeps manual rotation and
+per-sequence/per-strand offsets in one fixed-label layer rather than adding a
+separate manual geom.
+
+The broader visual hierarchy draws on [Circos](https://genome.cshlp.org/content/19/9/1639),
+publication-oriented gene arrows in [clinker](https://academic.oup.com/bioinformatics/article/37/16/2473/6129045),
+and annotation collision ideas from [DNA Features Viewer](https://edinburgh-genome-foundry.github.io/DnaFeaturesViewer/).
+These are design references only; ggchord uses independent palettes, geometry
+and generic API names.
+
 ### 3.6 Add axes and sequence labels
 
 ```{r tutorial-axis, eval=FALSE}

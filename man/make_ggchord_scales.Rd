@@ -19,12 +19,10 @@ make_ggchord_scales(
 \arguments{
 \item{legend_position}{The plot theme's `legend.position` (character).}
 
-\item{legend_box}{The plot theme's `legend.box` setting. When the legend is
-at the top/bottom or the legend box is laid out horizontally
-(`"horizontal"`), a `unit(1, "null")` colorbar key height collapses to zero
-height in ggplot2 (the Identity(%) bar becomes invisible). A fixed size is
-used in those cases so the colorbar stays visible; otherwise the colorbar
-fills the available height.}
+\item{legend_box}{The plot theme's `legend.box` setting. ggchord uses compact
+physical dimensions for both horizontal and vertical colourbars, avoiding
+device-relative bars that disappear in horizontal boxes or grow across an
+entire tall export.}
 
 \item{positions}{Named list with per-legend position overrides
 (`seq`, `ribbon`, `gene`), each `NULL` or one of "left", "right", "top",

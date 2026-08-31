@@ -8,6 +8,9 @@ geom_gene_label(
   mapping = NULL,
   data = NULL,
   gene_label_size = NULL,
+  gene_label_orientation = "horizontal",
+  gene_label_side = "outside",
+  gene_label_overlap = "hide",
   gene_label_rotation = NULL,
   gene_label_radial_offset = 0.04,
   gene_label_circum_offset = NULL,
@@ -23,6 +26,20 @@ geom_gene_label(
 \item{data}{Default NULL (retrieved automatically from the layout)}
 
 \item{gene_label_size}{Numeric. Label font size, default 2.5}
+
+\item{gene_label_orientation}{Character, default \code{"horizontal"}. Text
+orientation relative to each sequence path: \code{"radial"},
+\code{"tangent"}, or \code{"horizontal"}.}
+
+\item{gene_label_side}{Character, default \code{"outside"}. Place labels
+outside the chord, use the strand-based \code{"auto"} side, or force
+\code{"inside"} placement.}
+
+\item{gene_label_overlap}{Character, default \code{"hide"}. Fixed-label
+collision policy: omit later conflicting labels (\code{"hide"}), apply
+the legacy gentle adjustment (\code{"nudge"}), or keep all requested
+positions (\code{"allow"}). Input row order therefore provides a simple
+way to prioritize labels in \code{"hide"} mode.}
 
 \item{gene_label_rotation}{Optional numeric/vector/list. Label rotation angle, default 0}
 
@@ -51,8 +68,11 @@ independent from \code{\link{geom_gene}()}: add it after \code{geom_gene()}
 to annotate the gene arrows with their texts.
 }
 \details{
-Long annotations can be wrapped with \code{gene_label_wrap}. For automatic
-de-overlapping (with leader lines), use
+This is the deterministic, fixed-position label layer. By default labels
+sit outside their sequence and labels that would collide are omitted in
+input-row order. Use \code{gene_label_overlap = "nudge"} to retain the
+legacy gentle adjustment, or \code{"allow"} to draw every label at its
+requested position. For automatic arrangement with leader lines, use
 \code{\link{geom_gene_label_repel}()} instead.
 }
 \examples{

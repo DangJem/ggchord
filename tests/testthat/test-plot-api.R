@@ -58,6 +58,11 @@ test_that("ggchord themes and guides use registered role elements", {
   )
   expect_s3_class(guide_ggchord_legend(), "GuideLegend")
   expect_s3_class(guide_ggchord_colourbar(), "GuideColourbar")
+  horizontal <- guide_ggchord_colourbar(
+    position = "bottom", direction = "horizontal"
+  )
+  expect_equal(as.numeric(horizontal$params$theme$legend.key.width), 42)
+  expect_equal(as.numeric(horizontal$params$theme$legend.key.height), 3)
 })
 
 test_that("annotation themes and component styles remain independent", {
@@ -153,6 +158,24 @@ test_that("all automatic gene-label layouts build", {
     geom_gene_label_repel(force = 1),
     "Removed"
   )
+})
+
+test_that("fixed gene labels expose compact deterministic controls", {
+  data(seq_data_example)
+  data(gene_data_example)
+
+  layer <- geom_gene_label()[[1]]
+  expect_equal(layer$ggchord_params$gene_label_orientation, "horizontal")
+  expect_equal(layer$ggchord_params$gene_label_side, "outside")
+  expect_equal(layer$ggchord_params$gene_label_overlap, "hide")
+
+  for (orientation in c("horizontal", "radial", "tangent")) {
+    p <- ggchord(seq_data_example, gene_data = gene_data_example,
+                 validate = "none") +
+      geom_seq() + geom_gene() +
+      geom_gene_label(gene_label_orientation = orientation)
+    expect_s3_class(build_ggchord_smoke(p), "ggplot_built")
+  }
 })
 
 test_that("region and ribbon-highlight layers build", {

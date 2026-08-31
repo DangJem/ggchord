@@ -1,3 +1,33 @@
+# ggchord 0.10.0 (development version)
+
+## Fixed labels and publication defaults
+
+* `geom_gene_label()` is now the single fixed/manual label layer; no separate
+  `geom_gene_label_manual()` is planned. It adds `gene_label_orientation =
+  "horizontal" | "radial" | "tangent"`, `gene_label_side = "outside" |
+  "auto" | "inside"`, and `gene_label_overlap = "hide" | "nudge" | "allow"`.
+  The new defaults keep fixed labels horizontal and outside the chord, and
+  deterministically omit later colliding labels in input order. Existing
+  per-sequence/per-strand rotation and offsets remain available for direct
+  control; automatic leader-line placement remains the responsibility of
+  `geom_gene_label_repel()`.
+
+* The Identity colourbar now has compact physical dimensions instead of
+  filling the available device height. Its title is `Identity (%)`, its
+  default breaks are less crowded, and vertical and horizontal guides remain
+  stable when the export size changes.
+
+* The default theme now uses a white export-safe canvas, quieter axes, a
+  smaller title and tighter legend spacing. Sequence strokes and arrowheads
+  are lighter, ribbon opacity is slightly increased, and strand keys use slim
+  arrows that point in opposite directions for `+` and `-`.
+
+* The visual hierarchy is informed by Circos' restrained circular information
+  design, clinker's publication-oriented gene arrows, DNA Features Viewer's
+  annotation collision handling, and the local annotation/crowding behaviour
+  documented by SnapGene and Geneious. ggchord uses its own palettes, generic
+  API names, geometry and key glyphs rather than copying third-party assets.
+
 # ggchord 0.9.0
 
 ## Release audit
@@ -193,8 +223,9 @@ Removed arguments fail immediately rather than being silently ignored:
 | `box_padding`, `point_padding`, `min_segment_length`, `force`, `seed` | Select an automatic `gene_label_layout`; collision and line settings are managed by the mode. |
 | `gene_label_orientation`, `gene_label_segment` | Use `gene_label_layout = "aligned"`, `"radial"`, or `"arc"`. |
 
-The planned manual layout is intentionally deferred until its data contract can
-be designed separately. The fixed-position `geom_gene_label()` API is unchanged.
+This was the v0.9.0 interface. v0.10.0 subsequently strengthens the existing
+fixed-position `geom_gene_label()` instead of introducing a separate manual
+geom; see the development section above.
 
 # ggchord 0.8.0
 

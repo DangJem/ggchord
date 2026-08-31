@@ -434,7 +434,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   ribbon_color_limits <- ribbon_params$ribbon_color_limits
   ribbon_color_breaks <- ribbon_params$ribbon_color_breaks
   ribbon_color_name   <- ribbon_params$ribbon_color_name
-  ribbon_alpha    <- ribbon_params$ribbon_alpha %||% 0.38
+  ribbon_alpha    <- ribbon_params$ribbon_alpha %||% 0.42
   ribbon_alpha_by <- ribbon_params$ribbon_alpha_by
   ribbon_alpha_range <- ribbon_params$ribbon_alpha_range %||% c(0.15, 0.9)
   ribbon_ctrl_pt  <- ribbon_params$ribbon_ctrl_point %||% c(0, 0)
@@ -587,13 +587,23 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     } else lbl$gene_label_circum_limit
   }
   gene_lwrap  <- lbl$gene_label_wrap %||% gene_params$gene_label_wrap
+  gene_lorientation <- if (gene_repel_layer) {
+    "radial"
+  } else {
+    lbl$gene_label_orientation %||% "horizontal"
+  }
+  gene_loverlap <- if (gene_repel_layer) {
+    "allow"
+  } else {
+    lbl$gene_label_overlap %||% "hide"
+  }
   gene_lrepel_layer <- gene_repel_layer
   gene_lrepel_maxov <- gene_repel_params$max_overlaps %||% Inf
   gene_lrepel_layout <- gene_repel_params$gene_label_layout %||% "aligned"
   gene_lrepel_side   <- if (gene_repel_layer) {
     gene_repel_params$gene_label_side %||% "outside"
   } else {
-    "auto"
+    lbl$gene_label_side %||% "outside"
   }
   gene_lrepel_ltype  <- gene_repel_params$gene_label_segment_linetype %||% "auto"
 
@@ -869,6 +879,8 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     geneLabelRotation = geneLabelRotation,
     gene_label_show = gene_ls, gene_label_size = gene_lsz,
     gene_label_wrap = gene_lwrap,
+    gene_label_orientation = gene_lorientation,
+    gene_label_overlap = gene_loverlap,
     gene_label_repel_layer = gene_lrepel_layer,
     gene_label_repel_max_overlaps = gene_lrepel_maxov,
     gene_label_layout = gene_lrepel_layout,
@@ -1159,12 +1171,10 @@ ggchord_ribbon_key_dims <- function(plot) {
 #' Build the list of scales for a computed layout
 #'
 #' @param legend_position The plot theme's `legend.position` (character).
-#' @param legend_box The plot theme's `legend.box` setting. When the legend is
-#'   at the top/bottom or the legend box is laid out horizontally
-#'   (`"horizontal"`), a `unit(1, "null")` colorbar key height collapses to zero
-#'   height in ggplot2 (the Identity(%) bar becomes invisible). A fixed size is
-#'   used in those cases so the colorbar stays visible; otherwise the colorbar
-#'   fills the available height.
+#' @param legend_box The plot theme's `legend.box` setting. ggchord uses compact
+#'   physical dimensions for both horizontal and vertical colourbars, avoiding
+#'   device-relative bars that disappear in horizontal boxes or grow across an
+#'   entire tall export.
 #' @param positions Named list with per-legend position overrides
 #'   (`seq`, `ribbon`, `gene`), each `NULL` or one of "left", "right", "top",
 #'   "bottom", "inside". Overrides make that legend sit in its own legend box at
@@ -1192,11 +1202,9 @@ make_ggchord_scales <- function(layout, has_seq = FALSE, has_gene = FALSE,
   ribbon_fill_scale <- NULL
   if (!is.null(layout$ribbon_polys)) {
     if (layout$ribbon_color_scheme %in% c("pident", "value")) {
-      # The colorbar follows its effective legend position: vertical and
-      # filling the available height at the left/right, horizontal (with a
-      # fixed size) at the top/bottom. A "null" key height collapses to zero
-      # inside horizontal legend boxes, so a fixed size is used whenever the
-      # legend sits at the top/bottom or the box is horizontal.
+      # Use physical dimensions in either direction. Device-relative "null"
+      # heights made the Identity guide consume most of a tall device and
+      # could push its title or end labels outside compact exports.
       ribbon_pos <- positions$ribbon %||% legend_position %||% "right"
       horizontal_legend <- ribbon_pos %in% c("top", "bottom") ||
         identical(legend_box, "horizontal")
@@ -1210,7 +1218,7 @@ make_ggchord_scales <- function(layout, has_seq = FALSE, has_gene = FALSE,
       ribbon_name <- if (value_scheme) {
         layout$ribbon_color_name %||% "value"
       } else {
-        "Identity(%)"
+        "Identity (%)"
       }
       ribbon_limits <- if (value_scheme) {
         lims <- layout$ribbon_color_limits %||% range(layout$ribbon_polys$value, na.rm = TRUE)
@@ -1222,7 +1230,7 @@ make_ggchord_scales <- function(layout, has_seq = FALSE, has_gene = FALSE,
       ribbon_breaks <- if (value_scheme) {
         layout$ribbon_color_breaks %||% pretty(ribbon_limits, n = 5)
       } else {
-        c(0, 50, 80, 90, 95, 100)
+        c(0, 50, 80, 90, 100)
       }
       ribbon_fill_scale <- scale_ribbon_fill_stepsn(
         name    = ribbon_name,
@@ -1235,16 +1243,16 @@ make_ggchord_scales <- function(layout, has_seq = FALSE, has_gene = FALSE,
           theme = theme(
             legend.title.position = "top",
             legend.key.height = if (horizontal_legend) {
-              key_height %||% unit(1.5, "cm")
+              key_height %||% unit(3, "mm")
             } else {
-              key_height %||% unit(1, "null")
+              key_height %||% unit(42, "mm")
             },
             # A horizontal colorbar needs a longer key; the vertical bar keeps
             # the default key width.
             legend.key.width = if (horizontal_legend) {
-              key_width %||% unit(4, "cm")
+              key_width %||% unit(42, "mm")
             } else {
-              key_width %||% NULL
+              key_width %||% unit(3, "mm")
             }
           ),
           order = 2
@@ -1263,7 +1271,8 @@ make_ggchord_scales <- function(layout, has_seq = FALSE, has_gene = FALSE,
         breaks = c("+", "-"),
         values = layout$gene_pal,
         guide  = guide_ggchord_legend(
-          position = positions$gene %||% NULL, order = 3
+          position = positions$gene %||% NULL, order = 3,
+          override.aes = list(strand = c("+", "-"))
         )
       )
     } else {

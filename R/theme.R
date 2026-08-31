@@ -3,9 +3,9 @@
 #' ggchord themes
 #'
 #' Theme helpers remove Cartesian axes and provide consistent typography and
-#' legend spacing for chord diagrams. `theme_ggchord()` preserves the
-#' package's established default appearance; the other variants provide a
-#' quieter canvas, a dark canvas, or a print-oriented white canvas.
+#' legend spacing for chord diagrams. `theme_ggchord()` uses a restrained
+#' white publication canvas; the other variants provide a still quieter
+#' canvas, a dark canvas, or tighter print typography.
 #'
 #' @param base_size Base font size in points.
 #' @param base_family Base font family.
@@ -17,37 +17,42 @@ theme_ggchord <- function(base_size = 11, base_family = "") {
   theme_void(base_size = base_size, base_family = base_family) +
     theme(
       plot.title = element_text(
-        hjust = 0.5, size = 20 * scale, face = "bold",
-        margin = margin(b = 5.5 * scale)
+        hjust = 0.5, size = 14 * scale, face = "bold", colour = "#202428",
+        margin = margin(b = 4 * scale)
       ),
-      legend.background = element_blank(),
+      text = element_text(colour = "#30353A"),
+      legend.background = element_rect(fill = "white", colour = NA),
       legend.key = element_rect(fill = NA, colour = NA),
-      legend.box.spacing = unit(10 * scale, "mm"),
-      legend.spacing = unit(5 * scale, "mm"),
-      legend.text = element_text(size = 8 * scale),
-      legend.title = element_text(size = 10 * scale, face = "bold"),
+      legend.box.spacing = unit(4 * scale, "mm"),
+      legend.spacing = unit(2 * scale, "mm"),
+      legend.text = element_text(size = 8 * scale, colour = "#343A40"),
+      legend.title = element_text(
+        size = 9 * scale, face = "bold", colour = "#252A2E"
+      ),
       axis.title = element_blank(),
       axis.line = element_blank(),
       axis.ticks = element_blank(),
       axis.text = element_blank(),
-      panel.background = element_blank(),
+      plot.background = element_rect(fill = "white", colour = NA),
+      panel.background = element_rect(fill = "white", colour = NA),
       panel.grid = element_blank(),
-      ggchord.axis.line = element_line(colour = "#4D4D4D", linewidth = 0.35),
-      ggchord.axis.ticks = element_line(colour = "#4D4D4D", linewidth = 0.3),
+      plot.margin = margin(5.5, 5.5, 5.5, 5.5),
+      ggchord.axis.line = element_line(colour = "#737A80", linewidth = 0.3),
+      ggchord.axis.ticks = element_line(colour = "#8A9096", linewidth = 0.25),
       ggchord.axis.text = element_text(
-        colour = "#2F2F2F", size = 3 * ggplot2::.pt * scale
+        colour = "#3D4348", size = 2.8 * ggplot2::.pt * scale
       ),
       ggchord.seq.label = element_text(
-        colour = "#202020", size = 3 * ggplot2::.pt * scale
+        colour = "#252A2E", size = 3 * ggplot2::.pt * scale
       ),
       ggchord.group.label = element_text(
         colour = "#202020", size = 3.5 * ggplot2::.pt * scale, face = "bold"
       ),
       ggchord.gene.label = element_text(
-        colour = "#202020", size = 2.5 * ggplot2::.pt * scale
+        colour = "#2B3035", size = 2.4 * ggplot2::.pt * scale
       ),
       ggchord.gene.label.segment = element_line(
-        colour = "#6B6B6B", linewidth = 0.3
+        colour = "#858B91", linewidth = 0.25
       )
     )
 }
@@ -59,8 +64,8 @@ theme_ggchord_minimal <- function(base_size = 11, base_family = "") {
     theme(
       plot.background = element_rect(fill = "white", colour = NA),
       panel.background = element_rect(fill = "white", colour = NA),
-      plot.title = element_text(size = base_size * 1.35),
-      legend.box.spacing = unit(6, "mm")
+      plot.title = element_text(size = base_size * 1.25),
+      legend.box.spacing = unit(3, "mm")
     )
 }
 
@@ -73,6 +78,7 @@ theme_ggchord_dark <- function(base_size = 11, base_family = "") {
       text = element_text(colour = light),
       plot.background = element_rect(fill = "#17191C", colour = NA),
       panel.background = element_rect(fill = "#17191C", colour = NA),
+      legend.background = element_rect(fill = "#17191C", colour = NA),
       plot.title = element_text(colour = light),
       legend.text = element_text(colour = light),
       legend.title = element_text(colour = light),

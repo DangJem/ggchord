@@ -23,9 +23,9 @@ guide_ggchord_legend <- function(
     order = 0, ...) {
   compact <- ggplot2::theme(
     legend.key = element_rect(fill = NA, colour = NA),
-    legend.key.height = unit(4.5, "mm"),
-    legend.key.width = unit(6, "mm"),
-    legend.text = element_text(margin = margin(l = 1.5))
+    legend.key.height = unit(4, "mm"),
+    legend.key.width = unit(5.5, "mm"),
+    legend.text = element_text(margin = margin(l = 1.2))
   )
   if (!is.null(theme)) compact <- compact + theme
   guide_legend(
@@ -51,11 +51,15 @@ guide_ggchord_colourbar <- function(
       "colour", "color", "fill", "ribbon_fill", "gene_fill",
       "feature_fill", "region_fill"
     ), ...) {
+  horizontal <- identical(direction, "horizontal") ||
+    (!is.null(position) && position %in% c("top", "bottom"))
   compact <- ggplot2::theme(
     legend.title.position = "top",
-    legend.key.width = unit(4.5, "mm"),
-    legend.key.height = unit(18, "mm"),
-    legend.ticks.length = unit(1.5, "mm")
+    legend.key.width = unit(if (horizontal) 42 else 3, "mm"),
+    legend.key.height = unit(if (horizontal) 3 else 42, "mm"),
+    legend.ticks.length = unit(1, "mm"),
+    legend.text = element_text(margin = margin(l = 1.2)),
+    legend.title = element_text(margin = margin(b = 1.5))
   )
   if (!is.null(theme)) compact <- compact + theme
   guide_colourbar(
