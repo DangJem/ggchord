@@ -286,7 +286,8 @@ geom_gene_label <- function(mapping = NULL, data = NULL,
 #' @param gene_label_size Numeric. Label font size, default 2.5
 #' @param gene_label_layout Character, default \code{"aligned"}. Label layout:
 #'   \code{"aligned"} uses horizontal labels on orderly top, bottom, left and
-#'   right rails; \code{"radial"} uses horizontal labels on the nearest
+#'   right rails, with crowded off-centre rows allowed to use a neighbouring
+#'   outer corner column; \code{"radial"} uses horizontal labels on the nearest
 #'   collision-free local offset track; \code{"arc"} rotates labels along the
 #'   sequence tangent and keeps them close to their genes.
 #' @param gene_label_wrap Numeric or NULL, default NULL. When set, long gene
