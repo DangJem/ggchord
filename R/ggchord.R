@@ -108,86 +108,31 @@ ggchord <- function(
   if (!is.logical(debug) || length(debug) != 1 || is.na(debug)) {
     ggchord_stop("debug must be TRUE or FALSE")
   }
-  if (!is.data.frame(seq_data) || nrow(seq_data) == 0) {
-    ggchord_stop("seq_data must be a non-empty data.frame")
+  # One structured validation pass supplies both the always-on crash-prevention
+  # checks and the optional diagnostics. `validate = "none"` skips the costly
+  # coordinate, duplicate and self-link checks but still rejects unsafe input.
+  validation_result <- validate_ggchord_data(
+    seq_data, ribbon_data, gene_data, strict = FALSE,
+    check_coordinates = validate != "none",
+    check_duplicates = validate != "none",
+    check_self_links = validate != "none"
+  )
+  structural_errors <- ggchord_structural_validation_errors(validation_result)
+  if (nrow(structural_errors) > 0) {
+    ggchord_stop("ggchord(): ", structural_errors$message[1])
   }
-  required_seq_cols <- c("seq_id", "length")
-  if (!all(required_seq_cols %in% colnames(seq_data))) {
-    ggchord_stop("seq_data must contain the following columns: ", paste(required_seq_cols, collapse = ", "))
-  }
-  if (anyNA(seq_data$seq_id) || any(!nzchar(as.character(seq_data$seq_id)))) {
-    ggchord_stop("The 'seq_id' values in seq_data must be non-missing and non-empty")
-  }
-  if (!is.numeric(seq_data$length) || any(!is.finite(seq_data$length)) ||
-      any(seq_data$length <= 0)) {
-    ggchord_stop("The 'length' values in seq_data must be finite positive numbers")
-  }
-  if (anyDuplicated(seq_data$seq_id)) {
-    ggchord_stop("The 'seq_id' values in seq_data must be unique")
-  }
-
-  seq_lens <- setNames(seq_data$length, seq_data$seq_id)
 
   if (!is.null(ribbon_data)) {
-    if (!is.data.frame(ribbon_data)) {
-      ggchord_stop("ribbon_data must be a data.frame")
-    }
-    required_ribbon_cols <- c("qaccver", "saccver", "length", "pident",
-                              "qstart", "qend", "sstart", "send")
-    if (!all(required_ribbon_cols %in% colnames(ribbon_data))) {
-      ggchord_stop("ribbon_data must contain the following columns: ",
-           paste(required_ribbon_cols, collapse = ", "))
-    }
-    numeric_ribbon_cols <- c("length", "pident", "qstart", "qend", "sstart", "send")
-    if (any(vapply(ribbon_data[numeric_ribbon_cols],
-                   function(x) !is.numeric(x) || any(!is.finite(x)), logical(1)))) {
-      ggchord_stop("ribbon_data numeric columns (length, pident, qstart, qend, sstart, send) must contain finite numbers")
-    }
-    if (anyNA(ribbon_data$qaccver) || anyNA(ribbon_data$saccver) ||
-        any(!nzchar(as.character(ribbon_data$qaccver))) ||
-        any(!nzchar(as.character(ribbon_data$saccver)))) {
-      ggchord_stop("ribbon_data sequence IDs must be non-missing and non-empty")
-    }
-    if (any(ribbon_data$length <= 0)) {
-      ggchord_stop("The 'length' values in ribbon_data must be positive")
-    }
     if (nrow(ribbon_data) == 0) warning("No valid alignment data in ribbon_data")
     if (debug) cat("Number of alignment data rows: ", nrow(ribbon_data), "\n")
   }
-
   if (!is.null(gene_data)) {
-    if (!is.data.frame(gene_data)) {
-      ggchord_stop("gene_data must be a data.frame")
-    }
-    required_gene_cols <- c("seq_id", "start", "end", "strand", "anno")
-    if (!all(required_gene_cols %in% colnames(gene_data))) {
-      ggchord_stop("gene_data must contain the following columns: ",
-           paste(required_gene_cols, collapse = ", "))
-    }
-    if (!is.numeric(gene_data$start) || !is.numeric(gene_data$end) ||
-        any(!is.finite(gene_data$start)) || any(!is.finite(gene_data$end))) {
-      ggchord_stop("The 'start' and 'end' values in gene_data must be finite numbers")
-    }
-    if (anyNA(gene_data$seq_id) || any(!nzchar(as.character(gene_data$seq_id)))) {
-      ggchord_stop("gene_data sequence IDs must be non-missing and non-empty")
-    }
-    if (anyNA(gene_data$strand) || any(!gene_data$strand %in% c("+", "-"))) {
-      ggchord_stop("The 'strand' values in gene_data can only be '+' or '-'")
-    }
     if (nrow(gene_data) == 0) warning("No valid gene annotation data in gene_data")
     if (debug) cat("Number of gene annotation rows: ", nrow(gene_data), "\n")
   }
 
-  # ====================================================================
-  # 1b. Structured validation (v0.7.0).  A single summary warning is emitted
-  #     for "warn" (never one warning per row); "error" stops on severe
-  #     problems; "none" keeps the fast path (structural checks above still
-  #     prevent internal crashes).  The full report is cached on the plot.
-  # ====================================================================
-  validation <- NULL
-  if (validate != "none") {
-    validation <- validate_ggchord_data(seq_data, ribbon_data, gene_data,
-                                        strict = FALSE)
+  validation <- if (validate == "none") NULL else validation_result
+  if (!is.null(validation)) {
     if (validate == "error" && !validation$valid) {
       ggchord_stop(sprintf(
         "ggchord(): input data failed validation (%d severe error(s); first: %s). Run validate_ggchord_data(..., strict = FALSE) for the full report.",
@@ -1560,17 +1505,6 @@ ggchord_adaptive_limits <- function(layout) {
     xlim = c(x_mid - half, x_mid + half),
     ylim = c(y_mid - half, y_mid + half)
   )
-}
-
-#' Estimate the coordinate margin (in data units) needed so that the text
-#' labels rendered by the gene/sequence label layers stay inside the figure.
-#'
-#' Kept for backwards compatibility.  Plot limits are now computed adaptively
-#' by \code{\link{ggchord_adaptive_limits}()}, which fits the actual text
-#' boxes rather than adding a single conservative margin on every side.
-#' @keywords internal
-ggchord_label_pad <- function(layout) {
-  0
 }
 
 #' Fully prepare a ggchord plot and return it (compute layout, rename ribbon

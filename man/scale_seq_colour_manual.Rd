@@ -4,6 +4,7 @@
 \alias{scale_seq_colour_manual}
 \alias{scale_seq_color_manual}
 \alias{scale_group_colour_manual}
+\alias{scale_group_color_manual}
 \title{Sequence and sequence-group colour scales}
 \usage{
 scale_seq_colour_manual(..., values)
@@ -11,6 +12,8 @@ scale_seq_colour_manual(..., values)
 scale_seq_color_manual(..., values)
 
 scale_group_colour_manual(..., values)
+
+scale_group_color_manual(..., values)
 }
 \arguments{
 \item{...}{Arguments passed to [ggplot2::scale_colour_manual()].}

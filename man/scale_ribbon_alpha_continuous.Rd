@@ -4,6 +4,7 @@
 \alias{scale_ribbon_alpha_continuous}
 \alias{scale_ribbon_alpha_manual}
 \alias{scale_ribbon_colour_manual}
+\alias{scale_ribbon_color_manual}
 \alias{scale_ribbon_linetype_manual}
 \title{Ribbon alpha, outline and linetype scales}
 \usage{
@@ -12,6 +13,8 @@ scale_ribbon_alpha_continuous(..., range = NULL)
 scale_ribbon_alpha_manual(..., values)
 
 scale_ribbon_colour_manual(..., values)
+
+scale_ribbon_color_manual(..., values)
 
 scale_ribbon_linetype_manual(..., values)
 }

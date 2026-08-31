@@ -349,6 +349,10 @@ test_that("role-specific scales coexist without replacing one another", {
   axis_labels <- unique(stats::na.omit(get_chord_layout(p, FALSE)$axis_ticks$label))
   expect_true(all(c("start", "100 bp") %in% axis_labels))
   expect_s3_class(scale_seq_position_continuous(), "ScaleContinuous")
+  expect_s3_class(scale_group_color_manual(values = c(group = "black")),
+                  "ScaleDiscrete")
+  expect_s3_class(scale_ribbon_color_manual(values = c(kind = "black")),
+                  "ScaleDiscrete")
 })
 
 test_that("legacy scale arguments warn and conflict with role scales", {

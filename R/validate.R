@@ -166,6 +166,8 @@ validate_ribbon_data <- function(ribbon_data, seq_data, col,
         "error")
     }
   }
+  numeric_ok <- all(vapply(ribbon_data[num_cols], is.numeric, logical(1))) &&
+    all(vapply(ribbon_data[num_cols], function(x) all(is.finite(x)), logical(1)))
 
   for (nm in c("qaccver", "saccver")) {
     x <- ribbon_data[[nm]]
@@ -184,15 +186,15 @@ validate_ribbon_data <- function(ribbon_data, seq_data, col,
     }
   }
 
-  if (any(ribbon_data$length <= 0)) {
+  if (is.numeric(ribbon_data$length) && any(ribbon_data$length <= 0, na.rm = TRUE)) {
     rows <- which(ribbon_data$length <= 0)
     col <- add_validation_issue(
       col, "ribbon", "invalid_length", rows, "length",
       "ribbon_data$length must be positive", "error")
   }
 
-  known_ids <- seq_data$seq_id
   if (is.data.frame(seq_data) && "seq_id" %in% colnames(seq_data)) {
+    known_ids <- seq_data$seq_id
     for (nm in c("qaccver", "saccver")) {
       x <- as.character(ribbon_data[[nm]])
       bad <- !is.na(x) & nzchar(x) & !(x %in% known_ids)
@@ -222,29 +224,35 @@ validate_ribbon_data <- function(ribbon_data, seq_data, col,
 
   # Reversed intervals are a legitimate representation of reverse-complement
   # hits in BLAST output (sstart > send), so they are a warning, not an error.
-  rev <- ribbon_data$qstart > ribbon_data$qend |
-    ribbon_data$sstart > ribbon_data$send
-  rev[is.na(rev)] <- FALSE
-  if (any(rev)) {
-    rows <- which(rev)
-    col <- add_validation_issue(
-      col, "ribbon", "reversed_interval", rows, "qstart/qend/sstart/send",
-      "start > end in ribbon coordinates (may represent a reverse-complement hit; clean_ggchord_data() can sort them for stable drawing)",
-      "warning")
+  if (numeric_ok) {
+    rev <- ribbon_data$qstart > ribbon_data$qend |
+      ribbon_data$sstart > ribbon_data$send
+    rev[is.na(rev)] <- FALSE
+    if (any(rev)) {
+      rows <- which(rev)
+      col <- add_validation_issue(
+        col, "ribbon", "reversed_interval", rows, "qstart/qend/sstart/send",
+        "start > end in ribbon coordinates (may represent a reverse-complement hit; clean_ggchord_data() can sort them for stable drawing)",
+        "warning")
+    }
   }
 
-  pid <- ribbon_data$pident
-  pid_bad <- !is.na(pid) & (pid < 0 | pid > 100)
-  if (any(pid_bad)) {
-    rows <- which(pid_bad)
-    col <- add_validation_issue(
-      col, "ribbon", "invalid_pident", rows, "pident",
-      "pident values outside [0, 100] (clean_ggchord_data(invalid_pident = 'clip') clamps them)",
-      "warning")
+  if (is.numeric(ribbon_data$pident)) {
+    pid <- ribbon_data$pident
+    pid_bad <- !is.na(pid) & (pid < 0 | pid > 100)
+    if (any(pid_bad)) {
+      rows <- which(pid_bad)
+      col <- add_validation_issue(
+        col, "ribbon", "invalid_pident", rows, "pident",
+        "pident values outside [0, 100] (clean_ggchord_data(invalid_pident = 'clip') clamps them)",
+        "warning")
+    }
   }
 
-  if (isTRUE(check_coordinates) && is.data.frame(seq_data) &&
-      all(c("seq_id", "length") %in% colnames(seq_data))) {
+  seq_lengths_ok <- is.data.frame(seq_data) &&
+    all(c("seq_id", "length") %in% colnames(seq_data)) &&
+    is.numeric(seq_data$length) && all(is.finite(seq_data$length))
+  if (isTRUE(check_coordinates) && numeric_ok && seq_lengths_ok) {
     lens <- stats::setNames(seq_data$length, seq_data$seq_id)
     coords <- list(
       qstart = "qaccver", qend = "qaccver",
@@ -268,7 +276,7 @@ validate_ribbon_data <- function(ribbon_data, seq_data, col,
     }
   }
 
-  if (isTRUE(check_duplicates)) {
+  if (isTRUE(check_duplicates) && numeric_ok) {
     dups <- validation_ribbon_duplicates(ribbon_data)
     if (nrow(dups$exact) > 0) {
       col <- add_validation_issue(
@@ -464,6 +472,8 @@ validate_gene_data <- function(gene_data, seq_data, col,
   }
   if (nrow(gene_data) == 0) return(col)
 
+  coords_ok <- is.numeric(gene_data$start) && is.numeric(gene_data$end) &&
+    all(is.finite(gene_data$start)) && all(is.finite(gene_data$end))
   if (!is.numeric(gene_data$start) || !is.numeric(gene_data$end)) {
     col <- add_validation_issue(
       col, "gene", "non_numeric", NA_integer_, "start/end",
@@ -522,18 +532,22 @@ validate_gene_data <- function(gene_data, seq_data, col,
     }
   }
 
-  rev <- gene_data$start > gene_data$end
-  rev[is.na(rev)] <- FALSE
-  if (any(rev)) {
-    rows <- which(rev)
-    col <- add_validation_issue(
-      col, "gene", "reversed_interval", rows, "start/end",
-      "start > end in gene_data (drawn with min/max; clean_ggchord_data(reversed_interval = 'sort') can sort them)",
-      "warning")
+  if (coords_ok) {
+    rev <- gene_data$start > gene_data$end
+    rev[is.na(rev)] <- FALSE
+    if (any(rev)) {
+      rows <- which(rev)
+      col <- add_validation_issue(
+        col, "gene", "reversed_interval", rows, "start/end",
+        "start > end in gene_data (drawn with min/max; clean_ggchord_data(reversed_interval = 'sort') can sort them)",
+        "warning")
+    }
   }
 
-  if (isTRUE(check_coordinates) && is.data.frame(seq_data) &&
-      all(c("seq_id", "length") %in% colnames(seq_data))) {
+  seq_lengths_ok <- is.data.frame(seq_data) &&
+    all(c("seq_id", "length") %in% colnames(seq_data)) &&
+    is.numeric(seq_data$length) && all(is.finite(seq_data$length))
+  if (isTRUE(check_coordinates) && coords_ok && seq_lengths_ok) {
     lens <- stats::setNames(seq_data$length, seq_data$seq_id)
     ids <- as.character(sid)
     known <- !is.na(ids) & ids %in% names(lens)
@@ -573,17 +587,20 @@ validate_gene_data <- function(gene_data, seq_data, col,
         "Fully duplicated gene features (same seq_id, coordinates, strand and anno)",
         "warning")
     }
-    # highly overlapping features on the same sequence
-    grp <- split(seq_len(nrow(gene_data)), gene_data$seq_id)
+    # Highly overlapping features require valid numeric coordinates. Exact
+    # duplicate reporting above remains useful even when coordinates are bad.
     ov_rows <- integer(0)
-    for (g in grp) {
-      if (length(g) < 2 || length(g) > 1000) next
-      st <- gene_data$start[g]
-      en <- gene_data$end[g]
-      for (i in seq_len(length(g) - 1L)) {
-        for (j in (i + 1L):length(g)) {
-          r <- interval_recip_overlap(st[i], en[i], st[j], en[j])
-          if (is.finite(r) && r >= 0.9) ov_rows <- c(ov_rows, g[j])
+    if (coords_ok) {
+      grp <- split(seq_len(nrow(gene_data)), gene_data$seq_id)
+      for (g in grp) {
+        if (length(g) < 2 || length(g) > 1000) next
+        st <- gene_data$start[g]
+        en <- gene_data$end[g]
+        for (i in seq_len(length(g) - 1L)) {
+          for (j in (i + 1L):length(g)) {
+            r <- interval_recip_overlap(st[i], en[i], st[j], en[j])
+            if (is.finite(r) && r >= 0.9) ov_rows <- c(ov_rows, g[j])
+          }
         }
       }
     }
@@ -810,6 +827,36 @@ validate_ggchord_data <- function(seq_data,
       nrow(errors), errors$message[1]), call. = FALSE)
   }
   out
+}
+
+#' Return validation errors that make geometry construction unsafe
+#'
+#' The constructor always evaluates this subset, including when
+#' `validate = "none"`. Keeping the classification next to the structured
+#' validator avoids maintaining a second copy of the validation rules in
+#' `ggchord()`.
+#' @noRd
+ggchord_structural_validation_errors <- function(validation) {
+  errors <- validation$errors
+  if (nrow(errors) == 0) return(errors)
+  structural <- list(
+    seq = c(
+      "not_dataframe", "empty", "missing_columns", "missing_id",
+      "empty_id", "duplicate_id", "invalid_length"
+    ),
+    ribbon = c(
+      "not_dataframe", "missing_columns", "non_numeric", "non_finite",
+      "missing_id", "empty_id", "invalid_length"
+    ),
+    gene = c(
+      "not_dataframe", "missing_columns", "non_numeric", "non_finite",
+      "missing_id", "empty_id", "invalid_strand"
+    )
+  )
+  keep <- vapply(seq_len(nrow(errors)), function(i) {
+    errors$category[i] %in% (structural[[errors$table[i]]] %||% character(0))
+  }, logical(1))
+  errors[keep, , drop = FALSE]
 }
 
 #' @export

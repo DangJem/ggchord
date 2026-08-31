@@ -14,6 +14,20 @@ test_that("validation and cleaning return their public result objects", {
   expect_s3_class(cleaned, "ggchord_clean")
   expect_true(all(c("seq_data", "ribbon_data", "gene_data", "report") %in%
                     names(cleaned)))
+
+  malformed <- transform(
+    ribbon_data_example[1, ], length = "bad", pident = "bad",
+    qstart = "bad", qend = "bad", sstart = "bad", send = "bad"
+  )
+  malformed_result <- validate_ggchord_data(
+    seq_data_example, malformed, check_duplicates = TRUE
+  )
+  expect_s3_class(malformed_result, "ggchord_validation")
+  expect_true(any(malformed_result$errors$category == "non_numeric"))
+  expect_error(
+    ggchord(seq_data_example, malformed, validate = "none"),
+    "ribbon_data\\$length must be numeric"
+  )
 })
 
 test_that("the three import helpers parse minimal files", {

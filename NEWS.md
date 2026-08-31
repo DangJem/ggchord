@@ -1,5 +1,23 @@
 # ggchord 0.9.0 (development version)
 
+## Release-candidate audit
+
+* The v0.9.0 public API was audited across constructors, geoms, role-specific
+  scales, themes, guides, coordinates, data utilities and import helpers.
+  Layer-local data/mappings, same-type layer isolation, old/new scale
+  conflicts and plot-owned layout retrieval were rechecked against the final
+  v0.9.0 interface.
+
+* The obsolete, unused `ggchord_label_pad()` internal helper and its generated
+  help page were removed. Adaptive limits remain the single implementation
+  used to fit rendered label boxes.
+
+* `ggchord()` now reuses the structured validator for its always-on safety
+  checks instead of maintaining a second validation rule set. Validation also
+  stops advanced coordinate and duplicate calculations when malformed numeric
+  columns make those calculations unsafe, returning a complete report rather
+  than a secondary type error.
+
 ## Static rendering focus
 
 * The experimental Plotly conversion method and dependency have been removed.
@@ -64,6 +82,10 @@
 
 * `scale_seq_position_continuous()` controls genomic major/minor breaks and
   labels. It is trained independently against each sequence length.
+
+* `scale_group_color_manual()` and `scale_ribbon_color_manual()` are available
+  as American-English aliases of their `colour` counterparts, matching
+  ggplot2's spelling convention.
 
 * Old scale-like geom arguments remain functional during v0.9.0 and emit one
   migration warning per session. Supplying both an old argument and the new

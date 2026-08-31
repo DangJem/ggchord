@@ -3,8 +3,9 @@
 本文档记录 ggchord 的实际实现状态、已确认的问题、目标 API 以及版本计划。
 状态以当前代码为准，不再把“已有设计”标记成“已经完成”。
 
-当前版本为 **v0.9.0 开发版**。v0.9.0 正式发布前的首要目标不是继续增加
-图层数量，而是完成一次以正确性和 ggplot2 语法一致性为中心的基础重构。
+当前版本为 **v0.9.0 开发版**。以正确性和 ggplot2 语法一致性为中心的基础重构
+已经完成，并通过发布候选审计；目前只保留正式发布动作，不再向 v0.9.0 增加新的
+功能范围。
 
 总体优先级：
 
@@ -20,11 +21,43 @@
 | 版本 | 主题 | 状态 |
 | --- | --- | --- |
 | v0.7.0 | 数据验证、清理和基础测试 | 已发布；视觉回归并未真正建立 |
-| v0.8.0 | 数据导入、ribbon 预处理、序列分组 | 已发布；仍有若干正确性问题待修复 |
-| v0.9.0 | grammar 基础、scale/theme/guide/coord、图层独立性 | 开发中 |
+| v0.8.0 | 数据导入、ribbon 预处理、序列分组 | 已发布；遗留正确性问题已在 v0.9.0 修复 |
+| v0.9.0 | grammar 基础、scale/theme/guide/coord、图层独立性 | 收尾完成；待正式发布 |
 | v0.10.0 | feature 形状、手动标签、显式多环和密集 ribbon | 规划中 |
 | v0.11.0 | 布局导出和大数据性能 | 规划中 |
 | v1.0.0 | API 冻结、完整文档和长期兼容承诺 | 规划中 |
+
+### v0.9.0 发布候选状态
+
+截至本轮收尾，v0.9.0 已完成：
+
+- 数据清理、验证和导入中的已知正确性修复；
+- plot-owned 布局、稳定 `layer_id` 和逐图层 geometry registry；
+- 全部公开 geom 的 `data` / `mapping` 接入及同类图层隔离；
+- role-specific aesthetic、scale、theme、guide 和 `coord_chord()`；
+- `aligned`、`radial`、`arc` 三种确定性基因标签布局；
+- 发表级静态默认样式、静态设备验收及 Plotly 实验代码清理；
+- 精简 testthat、roxygen/Rd 一致性检查和 `R CMD check`。
+
+以下内容不是 v0.9.0 发布阻断项：
+
+- 旧 scale 类 geom 参数在 v0.9.0 中继续作为带警告的兼容入口，到 v1.0.0 删除；
+- 自定义 Stat/Geom 的进一步拆分属于内部演进，不改变 v0.9.0 的公开契约；
+- 全量文档、网页和图片重写留到 v1.0.0；
+- feature shape、手动标签、多环、密集 ribbon 和正式布局导出按后续版本推进。
+
+### v0.9.0 发布候选验收记录（2026-08-31）
+
+- testthat 保持为 15 个公开行为场景、90 项断言：0 fail、0 warning、0 skip；
+- `R CMD check` 包含中英文 vignette 重建：0 error、0 warning；唯一 NOTE 为隔离
+  环境无法联网校验系统时间，与包代码无关；
+- 用户四序列示例在 `aligned`、`radial`、`arc` 下分别以 6×4 和 12×8 英寸构建，
+  均为 0 标签重叠、0 指示线交叉、0 二次裁切损失；
+- 相同设备和输入重复构建的标签与线段数据完全一致；
+- 80 标签 `aligned` 基准的三次构建中位数约 0.36 秒，低于 2.5 秒验收线；
+- PNG、PDF、SVG 均成功导出；默认、minimal、dark、publication 和灰度效果已
+  人工检查；临时 SVG 验收工具不加入包依赖；
+- 中英文 README 没有因本轮一般功能收尾发生变化。
 
 ---
 
@@ -67,11 +100,14 @@
 
 ---
 
-## 三、当前实现审计
+## 三、v0.9.0 实现审计
+
+本节同时保留问题来源与处理目标，便于解释 API 为什么发生变化。除明确写为
+“后续项”的内容外，本节所列 v0.9.0 问题均已处理，不再视为待办。
 
 ### 3.1 核心构建流程
 
-#### 已确认问题
+#### v0.9.0 前问题（已处理）
 
 1. `compute_chord_geometry()` 每种图层只保存一份参数，多个同类图层由最后一个
    覆盖。两个 `geom_seq_region()` 最终会绘制完全相同的最后一组 region。
@@ -83,7 +119,7 @@
    不明确。
 5. `ggchord()` 重复执行基础验证和 `validate_ggchord_data()`，验证规则存在两个来源。
 
-#### 改进方向
+#### v0.9.0 处理结果
 
 - 为每个图层分配稳定 `layer_id`；
 - sequence 基础布局只计算一次；
@@ -91,15 +127,16 @@
 - 计算结果按 `layer_id` 注入对应图层；
 - 几何数据保留原始数据列，允许标准 `aes()` 映射；
 - 新增 `get_chord_layout(plot, build = TRUE)`，无参数调用先弃用再删除；
-- 中期逐步迁移到自定义 Stat/Geom，缩小自定义 `ggplot_build()` 的职责。
+- 自定义 `ggplot_build()` 已缩小为布局注入和标准 build 桥接；进一步迁移到自定义
+  Stat/Geom 是后续内部优化，不阻断 v0.9.0。
 
 ### 3.2 scale
 
-当前 scale 在 `make_ggchord_scales()` 中临时创建，颜色、limits、breaks、图例标题、
-图例位置和 key 尺寸又分散在各 geom 参数中。普通 `scale_fill_*()` 只能可靠影响
-gene，不能独立控制 ribbon、region 和 feature。
+v0.9.0 前，scale 在 `make_ggchord_scales()` 中临时创建，颜色、limits、breaks、
+图例标题、图例位置和 key 尺寸分散在 geom 参数中。当前实现已公开角色专用
+aesthetic 和 scale；默认 scale 只在用户没有提供相同角色 scale 时注入。
 
-目标是公开角色专用 aesthetic：
+已公开的角色专用 aesthetic：
 
 ```r
 seq_colour
@@ -119,6 +156,7 @@ region_fill
 scale_seq_colour_manual()
 scale_seq_color_manual()       # 美式拼写别名
 scale_group_colour_manual()
+scale_group_color_manual()     # 美式拼写别名
 
 scale_ribbon_fill_stepsn()
 scale_ribbon_fill_gradientn()
@@ -127,6 +165,7 @@ scale_ribbon_fill_identity()
 scale_ribbon_alpha_continuous()
 scale_ribbon_alpha_manual()
 scale_ribbon_colour_manual()
+scale_ribbon_color_manual()    # 美式拼写别名
 scale_ribbon_linetype_manual()
 
 scale_gene_fill_manual()
@@ -134,7 +173,7 @@ scale_feature_fill_manual()
 scale_region_fill_manual()
 ```
 
-所有 scale 应接受与 ggplot2 对应 scale 一致的常用参数：`name`、`breaks`、
+所有 scale 已接受与 ggplot2 对应 scale 一致的常用参数：`name`、`breaks`、
 `labels`、`limits`、`values`/`colours`、`na.value`、`oob`、`transform` 和 `guide`。
 默认 scale 仅在用户没有添加对应角色 scale 时插入。
 
@@ -182,7 +221,8 @@ scale_seq_position_continuous(
 
 ### 3.3 theme
 
-`ggchord()` 当前硬编码标题、边距、背景、网格和图例样式。目标是将默认外观提取为：
+v0.9.0 前 `ggchord()` 硬编码标题、边距、背景、网格和图例样式。当前默认外观已
+提取为：
 
 ```r
 theme_ggchord()
@@ -191,8 +231,7 @@ theme_ggchord_dark()
 theme_ggchord_publication()
 ```
 
-`theme_ggchord()` 必须复现当前默认外观。只保留少量通用主题，不提供带特定期刊
-名称的主题。
+`theme_ggchord()` 必须复现当前默认外观。只保留少量通用主题，不提供带特定期刊名称的主题。
 
 可注册的 ggchord 专用主题元素：
 
@@ -256,7 +295,9 @@ guide_ggchord_colourbar()
 ```
 
 封装只提供合适的 key glyph、默认方向和尺寸，不新建复杂 Guide ggproto。
-`legend_position`、`legend_key_width`、`legend_key_height` 从 geom 删除，改为：
+新代码应使用 `guides()` 管理图例。`legend_position`、`legend_key_width`、
+`legend_key_height` 在 v0.9.0 中仅保留为带警告的兼容入口，并计划在 v1.0.0
+删除：
 
 ```r
 guides(
@@ -267,8 +308,8 @@ guides(
 
 ### 3.6 coord
 
-当前 `coord_chord(layout = NULL)` 的 `layout` 未使用，构建时又被新的
-`coord_fixed()` 无条件覆盖。目标接口：
+旧 `coord_chord(layout = NULL)` 的 `layout` 未使用，构建时还会被新的
+`coord_fixed()` 覆盖。当前已实现并采用以下接口：
 
 ```r
 coord_chord(
@@ -282,7 +323,7 @@ coord_chord(
 )
 ```
 
-- `rotation` 从 `ggchord()` 迁入 coord；
+- 新代码由 coord 管理 `rotation`；`ggchord(rotation = ...)` 在 v0.9.0 中仅作兼容入口；
 - 用户给出的 x/y limits 必须优先；
 - `fit = "labels"` 使用当前设备感知的文字边界；
 - `fit = "geometry"` 只适配几何数据；
@@ -291,64 +332,67 @@ coord_chord(
 
 ### 3.7 geom 参数和行为
 
+下列 v0.9.0 接口整理均已完成；其中旧参数仍按 2.4 的兼容策略工作。明确列入
+v0.10.0 的 shape 和手动坐标契约不属于本轮完成范围。
+
 #### `geom_seq()`
 
-- `data`、`mapping` 当前无效；
-- `seq_colors`、`seq_group_colors` 移入 scale；
-- `seq_labels` 拆分为序列显示文字和图例 labels，避免一参两用；
-- group label 建议成为独立的 `geom_seq_group_label()`；
-- `linewidth` 和 arrow 应在不同静态输出设备中保持一致；
-- 保留 `seq_order`、`seq_orientation`、`seq_gap`、`seq_radius`、
-  `seq_curvature`、`seq_group` 和 `seq_group_gap` 等布局参数。
+- `data`、`mapping` 已生效；
+- `seq_colors`、`seq_group_colors` 已迁入 scale，旧参数保留迁移警告；
+- 序列显示文字由 `geom_seq_label(labels = ...)` 控制，scale labels 独立；
+- group label 已有独立 `geom_seq_group_label()`，隐式旧行为暂时兼容；
+- `linewidth` 和 arrow 已通过不同静态输出设备检查；
+- `seq_order`、`seq_orientation`、`seq_gap`、`seq_radius`、
+  `seq_curvature`、`seq_group` 和 `seq_group_gap` 保留为布局参数。
 
 #### `geom_ribbon()`
 
-- `ribbon_*_by` 改为 aes；
-- palette、limits、breaks、name、range 和分类取值移入 scale；
-- `ribbon_alpha` 与 `alpha` 合并为标准 `alpha`；
-- outline 参数改用 `colour`、`linewidth`、`linetype`；
-- direction 始终作为计算列提供，由 aes/scale 决定是否展示；
-- `ribbon_gap`、`ribbon_ctrl_point` 保留为几何参数。
+- `ribbon_*_by` 已由角色 aes 接替，旧参数保留迁移警告；
+- palette、limits、breaks、name、range 和分类取值已有对应 scale；
+- 固定透明度可使用标准 `alpha`，旧 `ribbon_alpha` 仍兼容；
+- outline 的新映射使用 `ribbon_colour` / `ribbon_linetype` 及对应 scale；
+- direction 作为计算列保留，可由 aes/scale 显示；
+- `ribbon_gap`、`ribbon_ctrl_point` 继续作为几何参数。
 
 #### `geom_gene()` 与 `geom_feature()`
 
-- gene/feature 分类列由 aes 指定，颜色和顺序由 scale 指定；
-- `geom_feature()` 统一成 `mapping = NULL, data = NULL` 的 ggplot2 风格签名；
-- 修复 category 被 label 覆盖的问题；
-- 多个 gene/feature 图层必须独立；
-- `geom_gene()` 中已迁移的旧 label 参数应从 `...` 真正移除；
-- feature 的 block、chevron、lollipop 尚未实现，不再标记为完成。
+- gene/feature 分类列已可由 aes 指定，颜色和顺序由 scale 指定；
+- `geom_feature()` 已统一为 `mapping = NULL, data = NULL` 的 ggplot2 风格签名；
+- category 被 label 覆盖的问题已修复；
+- 多个 gene/feature 图层已经独立；
+- `geom_gene()` 中旧 label 参数会立即给出迁移错误；
+- feature 的 block、chevron、lollipop 留到 v0.10.0，不标记为完成。
 
 #### gene label
 
-- 保留 `geom_gene_label()` 作为固定位置和手工微调图层；
-- 保留 `geom_gene_label_repel()` 的 `aligned`、`radial`、`arc` 三种确定性模式；
-- 修复所有 label geom 的 `data`、`mapping`；
+- `geom_gene_label()` 保留为固定位置和手工微调图层；
+- `geom_gene_label_repel()` 已提供 `aligned`、`radial`、`arc` 三种确定性模式；
+- 所有 label geom 的 `data`、`mapping` 已生效；
 - leader 的 colour、linewidth、alpha 默认由 theme 元素控制；
-- 文本 size 作为固定值时不再映射到全局 `scale_size_identity()`；
-- 真正的逐标签手动坐标契约放入 v0.10.0。
+- 固定文本 size 不再创建全局 `scale_size_identity()`；
+- 真正的逐标签手动坐标契约仍放入 v0.10.0。
 
 #### `geom_axis()` 和 `geom_seq_label()`
 
-- axis breaks/labels 移入 `scale_seq_position_continuous()`；
-- 轴线、tick 和文字分别接收样式，不能共享同一个未筛选的 `...`；
-- 删除无意义的 axis `show_legend`；
-- sequence label 的 data/mapping 必须生效；
+- axis breaks/labels 已移入 `scale_seq_position_continuous()`；
+- 轴线、tick 和文字已分别接收经过筛选的样式参数；
+- 无意义的 axis `show_legend` 已删除并给出明确错误；
+- sequence label 的 data/mapping 已生效；
 - 文字大小不再污染其他文字图层的 size scale。
 
 #### region 和 highlight
 
-- 修复 `region_color` 未绘制；
-- `region_side = "auto"` 必须根据真实局部法线选择方向；
-- category 通过 `region_fill` aesthetic 和 scale 产生图例；
-- 修正文档中把 region 数据误传给 mapping 的示例；
-- highlight 的 selection 参数增加类型、长度、范围和有限性检查；
+- `region_color` 已正确绘制；
+- `region_side = "auto"` 已根据真实局部法线选择方向；
+- category 可通过 `region_fill` aesthetic 和 scale 产生图例；
+- region 数据示例和 mapping 语义已修正；
+- highlight selection 参数已有类型、长度、范围和有限性检查；
 - highlight legend 使用映射而不是常量填充；
-- 多个 region/highlight 图层独立工作。
+- 多个 region/highlight 图层已经独立工作。
 
 ### 3.8 数据验证、清理和导入
 
-#### 已确认问题
+#### v0.9.0 前问题（已处理）
 
 - `clean_ggchord_data(unknown_id = "keep")` 对未知 gene ID 报错；
 - ribbon 的默认 interval 排序会丢失反向比对方向；
@@ -363,7 +407,7 @@ coord_chord(
 - GFF3 未显式处理 `##FASTA`；
 - 多文件导入未保留来源文件。
 
-#### 改进方向
+#### v0.9.0 处理结果
 
 - 统一结构验证入口，`ggchord()` 只调用一套规则；
 - 清理 ribbon 时保留原始 direction 或 `sstrand`；
@@ -376,26 +420,28 @@ coord_chord(
 
 ### 3.9 代码与文档清理
 
-- 删除完全注释且自 v0.3.0 不再使用的 `R/helpers_plot.R`；
-- 删除已被确定性标签算法取代的随机排斥辅助函数；
-- 内部函数优先使用 `@noRd`，减少无意义的 internal Rd 页面；
-- 删除未使用变量和重复赋值；
-- README 中“Full ggplot2 integration”的表述在重构完成前改为更准确的说明；
-- v0.9.x 只更新与正确性、破坏性变更和公开 API 直接相关的说明；
-- 一般功能更新只写入 NEWS，不加入 README；
-- README 保持简短稳定，只保留定位、安装、最小示例和文档入口；
-- 全量 source 文档、roxygen、Rd、vignette、网页手册和图片统一留到 v1.0.0
-  发布前重构，避免同一内容在开发阶段被反复编辑。
+- 已删除完全注释且自 v0.3.0 不再使用的 `R/helpers_plot.R`、Plotly 实验代码、
+  随机排斥辅助函数和确认无调用的旧内部边距函数；
+- 新增内部函数优先使用 `@noRd`；既有 internal Rd 不在 v0.9.0 做无意义的批量
+  重写，统一留给 v1.0.0 文档重构；
+- v0.9.x 只更新与正确性、破坏性变更和公开 API 直接相关的 NEWS、roxygen 和 Rd；
+- 按用户确认保持中英文 README 原有主体内容，不加入一般功能更新；
+- 全量 source 文档、vignette、网页手册和图片统一留到 v1.0.0 发布前重构，避免
+  同一内容在开发阶段被反复编辑。
 
 ---
 
 ## 四、v0.9.0 — grammar 与正确性
+
+**状态：实现与发布候选验收已完成，等待维护者决定正式发布、打 tag。**
 
 ### A. 已确认 bug 修复
 
 - 修复 clean、deduplicate、feature category、region outline/legend、BLAST format；
 - 修复默认静态绘图中的明显样式问题；
 - 为每个 bug 保留一个最小回归测试。
+
+状态：已完成。
 
 ### B. 图层独立性
 
@@ -404,18 +450,25 @@ coord_chord(
 - 多个同类图层互不覆盖；
 - `get_chord_layout(plot)` 替代全局最近布局。
 
+状态：已完成；无参调用仅作为 v0.9.0 兼容入口保留并警告。
+
 ### C. scale/theme/guide/coord
 
 - 实现第三节列出的首批接口；
 - 以发表级可读性为目标更新默认色板、图例和默认参数；
 - 旧参数进入弃用期；
-- 当前阶段只维护精简后的中英文 README 和必要 NEWS；完整文档重构留到 v1.0.0。
+- 当前阶段只维护必要的 NEWS 和生成文档，README 保持稳定；完整文档重构留到 v1.0.0。
+
+状态：已完成。README 按确认保持稳定，必要变更已记录在 NEWS 和生成的 Rd 中。
 
 ### D. 标签布局
 
 - 保留已完成的 `aligned`、`radial`、`arc`；
 - 继续保证不同 radius、curvature、gap、orientation、rotation 和设备尺寸；
 - 标签实现迁入逐层架构，不恢复随机 force 参数。
+
+状态：已完成；三种模式通过不同序列方向、半径、曲率、间距、旋转和静态设备
+组合验收。
 
 ---
 

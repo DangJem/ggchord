@@ -22,6 +22,10 @@ scale_group_colour_manual <- function(..., values) {
   ggplot2::scale_colour_manual(..., values = values, aesthetics = "group_colour")
 }
 
+#' @rdname scale_seq_colour_manual
+#' @export
+scale_group_color_manual <- scale_group_colour_manual
+
 #' Ribbon fill scales
 #'
 #' @param ... Arguments passed to the corresponding ggplot2 scale.
@@ -91,6 +95,10 @@ scale_ribbon_colour_manual <- function(..., values) {
     ..., values = values, aesthetics = "ribbon_colour"
   )
 }
+
+#' @rdname scale_ribbon_alpha_continuous
+#' @export
+scale_ribbon_color_manual <- scale_ribbon_colour_manual
 
 #' @rdname scale_ribbon_alpha_continuous
 #' @export
