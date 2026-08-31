@@ -9,7 +9,9 @@
 #' @param ratio Fixed y/x aspect ratio, default 1.
 #' @param xlim,ylim Optional user limits. Explicit limits take priority over
 #'   automatically fitted limits.
-#' @param expand Logical. Expand coordinate limits, default TRUE.
+#' @param expand Logical. Expand coordinate limits, default FALSE. Automatic
+#'   fitting already includes a small safety margin; set TRUE to request the
+#'   additional ggplot2 coordinate expansion.
 #' @param clip Whether drawing is clipped to the panel, default \code{"off"}.
 #' @param fit Fitting strategy: \code{"labels"} includes measured label boxes,
 #'   \code{"geometry"} fits geometric elements only, and \code{"manual"}
@@ -25,7 +27,7 @@
 #' p
 coord_chord <- function(rotation = 45, ratio = 1,
                         xlim = NULL, ylim = NULL,
-                        expand = TRUE, clip = "off",
+                        expand = FALSE, clip = "off",
                         fit = c("labels", "geometry", "manual")) {
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)

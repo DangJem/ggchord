@@ -9,7 +9,7 @@ coord_chord(
   ratio = 1,
   xlim = NULL,
   ylim = NULL,
-  expand = TRUE,
+  expand = FALSE,
   clip = "off",
   fit = c("labels", "geometry", "manual")
 )
@@ -22,7 +22,9 @@ coord_chord(
 \item{xlim, ylim}{Optional user limits. Explicit limits take priority over
 automatically fitted limits.}
 
-\item{expand}{Logical. Expand coordinate limits, default TRUE.}
+\item{expand}{Logical. Expand coordinate limits, default FALSE. Automatic
+fitting already includes a small safety margin; set TRUE to request the
+additional ggplot2 coordinate expansion.}
 
 \item{clip}{Whether drawing is clipped to the panel, default \code{"off"}.}
 

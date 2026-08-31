@@ -318,7 +318,7 @@ coord_chord(
   ratio = 1,
   xlim = NULL,
   ylim = NULL,
-  expand = TRUE,
+  expand = FALSE,
   clip = "off",
   fit = c("labels", "geometry", "manual")
 )
@@ -329,6 +329,8 @@ coord_chord(
 - `fit = "labels"` 使用当前设备感知的文字边界；
 - `fit = "geometry"` 只适配几何数据；
 - `fit = "manual"` 要求显式 limits；
+- 自动范围对 x/y 分别紧贴内容，`coord_fixed()` 负责保持物理单位等比；
+- 默认 `expand = FALSE`，因为自动范围已包含安全边距；
 - 用户添加的 coord 不得被静默覆盖。
 
 ### 3.7 geom 参数和行为

@@ -15,7 +15,16 @@
 * The Identity colourbar now has compact physical dimensions instead of
   filling the available device height. Its title is `Identity (%)`, its
   default breaks are less crowded, and vertical and horizontal guides remain
-  stable when the export size changes.
+  stable when the export size changes. The initial compact bar was lengthened
+  slightly after visual review.
+
+* Automatic coordinate fitting now keeps independent tight x/y ranges instead
+  of padding both dimensions to a square. `coord_fixed()` still preserves the
+  geometry's physical aspect ratio, while the panel uses wide or tall devices
+  more efficiently. `coord_chord()` now defaults to `expand = FALSE` because
+  automatic fitting already includes a small safety margin. The default plot
+  also retains `theme_ggchord()`'s small outer margin; the deprecated
+  `panel_margin` argument only overrides it when explicitly supplied.
 
 * The default theme now uses a white export-safe canvas, quieter axes, a
   smaller title and tighter legend spacing. Sequence strokes and arrowheads

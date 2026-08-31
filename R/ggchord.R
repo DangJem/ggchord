@@ -77,6 +77,7 @@ ggchord <- function(
 ) {
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
+  panel_margin_supplied <- !missing(panel_margin)
 
   if (!missing(title) && !is.null(title)) {
     ggchord_deprecate_once("ggchord(title)", "labs(title = ...)")
@@ -165,10 +166,17 @@ ggchord <- function(
     labs(title = title) +
     theme_ggchord() +
     theme(
-      plot.margin = margin(t = margin_vals$t, r = margin_vals$r,
-                           b = margin_vals$b, l = margin_vals$l),
       legend.position     = if (isTRUE(show_legend)) "right" else "none"
     )
+  # Preserve theme_ggchord()'s small export-safe outer margin by default.
+  # The deprecated panel_margin compatibility argument only overrides it when
+  # users still supply that argument explicitly.
+  if (panel_margin_supplied) {
+    p <- p + theme(
+      plot.margin = margin(t = margin_vals$t, r = margin_vals$r,
+                           b = margin_vals$b, l = margin_vals$l)
+    )
+  }
 
   p$ggchord <- list(
     data   = list(seq_data = seq_data, ribbon_data = ribbon_data,
@@ -1245,12 +1253,12 @@ make_ggchord_scales <- function(layout, has_seq = FALSE, has_gene = FALSE,
             legend.key.height = if (horizontal_legend) {
               key_height %||% unit(3, "mm")
             } else {
-              key_height %||% unit(42, "mm")
+              key_height %||% unit(46, "mm")
             },
             # A horizontal colorbar needs a longer key; the vertical bar keeps
             # the default key width.
             legend.key.width = if (horizontal_legend) {
-              key_width %||% unit(42, "mm")
+              key_width %||% unit(46, "mm")
             } else {
               key_width %||% unit(3, "mm")
             }
@@ -1415,7 +1423,7 @@ set_ggchord_coord <- function(plot, layout) {
   plot
 }
 
-#' Compute square coordinate limits for geometry only
+#' Compute tight coordinate limits for geometry only
 #' @noRd
 ggchord_geometry_limits <- function(layout) {
   ext <- layout$extremes
@@ -1423,22 +1431,21 @@ ggchord_geometry_limits <- function(layout) {
                                         ext$y_min, ext$y_max)))) {
     return(list(xlim = c(-1, 1), ylim = c(-1, 1)))
   }
-  x_mid <- mean(c(ext$x_min, ext$x_max))
-  y_mid <- mean(c(ext$y_min, ext$y_max))
-  half <- max(ext$x_max - ext$x_min, ext$y_max - ext$y_min, 1) / 2
-  half <- half * 1.02
+  x_pad <- 0.02 * max(ext$x_max - ext$x_min, 1)
+  y_pad <- 0.02 * max(ext$y_max - ext$y_min, 1)
   list(
-    xlim = c(x_mid - half, x_mid + half),
-    ylim = c(y_mid - half, y_mid + half)
+    xlim = c(ext$x_min - x_pad, ext$x_max + x_pad),
+    ylim = c(ext$y_min - y_pad, ext$y_max + y_pad)
   )
 }
 
 #' Compute coordinate limits that fit the rendered text boxes
 #'
-#' The chord geometry is placed in a square, fixed-aspect panel.  Instead of
-#' adding one global text-width pad on every side, this helper measures the
-#' actual gene/sequence/group/axis label boxes and expands only the sides that
-#' need it.  The result is a tighter plot that uses the available panel area.
+#' Instead of adding one global text-width pad on every side, this helper
+#' measures the actual gene/sequence/group/axis label boxes and expands only
+#' the sides that need it. x and y are fitted independently: `coord_fixed()`
+#' preserves equal physical units without requiring a square data range. This
+#' lets wide or tall rendered content use the available panel more efficiently.
 #' @keywords internal
 ggchord_adaptive_limits <- function(layout) {
   ext <- layout$extremes
@@ -1503,16 +1510,12 @@ ggchord_adaptive_limits <- function(layout) {
     }
   }
 
-  # coord_fixed() needs a square data range; centering the square on the
-  # rendered content avoids any extra blank strip on one side.
-  x_mid <- mean(x_lim)
-  y_mid <- mean(y_lim)
-  half <- max(diff(range(x_lim)), diff(range(y_lim))) / 2
-  half <- half + 0.02 * max(half * 2, 1)
+  x_pad <- 0.02 * max(diff(x_lim), 1)
+  y_pad <- 0.02 * max(diff(y_lim), 1)
 
   list(
-    xlim = c(x_mid - half, x_mid + half),
-    ylim = c(y_mid - half, y_mid + half)
+    xlim = c(x_lim[1] - x_pad, x_lim[2] + x_pad),
+    ylim = c(y_lim[1] - y_pad, y_lim[2] + y_pad)
   )
 }
 

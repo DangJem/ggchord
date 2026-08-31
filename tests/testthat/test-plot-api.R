@@ -32,6 +32,7 @@ test_that("coord_chord controls rotation, fit and explicit limits", {
   expect_equal(prepared$coordinates$limits$x, c(-5, 6))
   expect_equal(prepared$coordinates$limits$y, c(-7, 8))
   expect_false(prepared$coordinates$expand)
+  expect_false(coord_chord()$expand)
 
   expect_error(coord_chord(fit = "manual"), "requires xlim and ylim")
 
@@ -61,8 +62,10 @@ test_that("ggchord themes and guides use registered role elements", {
   horizontal <- guide_ggchord_colourbar(
     position = "bottom", direction = "horizontal"
   )
-  expect_equal(as.numeric(horizontal$params$theme$legend.key.width), 42)
+  expect_equal(as.numeric(horizontal$params$theme$legend.key.width), 46)
   expect_equal(as.numeric(horizontal$params$theme$legend.key.height), 3)
+  vertical <- guide_ggchord_colourbar(position = "left")
+  expect_equal(as.numeric(vertical$params$theme$legend.key.height), 46)
 })
 
 test_that("annotation themes and component styles remain independent", {
