@@ -134,13 +134,13 @@ breakPointsFunc <- function(max_value, n = 5, tol = 0.5) {
 #' @return grid::polygonGrob object, gene arrow-shaped legend symbol
 #' @keywords internal
 draw_key_gene_arrow <- function(data, params, size) {
-  # Match geom_gene(): a constant-width body followed by a linearly tapered
-  # head, without the wider shoulder used by a conventional block arrow.
-  # Strand overrides mirror the same polygon horizontally.
-  x <- c(0.10, 0.62, 0.90, 0.62, 0.10)
+  # A slim shaft plus a distinct shoulder reads as a genomic feature arrow at
+  # small journal-figure sizes. Strand overrides reverse the glyph so the key
+  # conveys direction instead of using colour alone.
+  x <- c(0.10, 0.10, 0.62, 0.62, 0.90, 0.62, 0.62)
   if (identical(as.character(data$strand %||% "+")[1], "-")) x <- 1 - x
   x_pts <- unit(x, "npc")
-  y_pts <- unit(c(0.32, 0.32, 0.50, 0.68, 0.68), "npc")
+  y_pts <- unit(c(0.32, 0.68, 0.68, 0.78, 0.50, 0.22, 0.32), "npc")
 
   polygonGrob(
     x = x_pts, y = y_pts,

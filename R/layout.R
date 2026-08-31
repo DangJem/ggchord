@@ -1356,7 +1356,6 @@ compute_chord_layout <- function(
 
       label_lanes <- layout_result$lanes
       label_directions <- layout_result$directions
-      corner_labels <- layout_result$corner %||% rep(FALSE, nrow(gene_labels))
       draw_segment <- layout_result$draw_segment
       gene_labels$label_layout <- gene_label_layout
       gene_labels$label_track <- layout_result$tracks
@@ -1400,10 +1399,6 @@ compute_chord_layout <- function(
             gene_labels, text_boxes$w, text_boxes$h,
             directions = label_directions
           )
-          # Straight approaches are more legible at a top/bottom-to-side
-          # corner transition and preserve the packed column ordering.
-          bends$x[corner_labels] <- gene_labels$text_x[corner_labels]
-          bends$y[corner_labels] <- gene_labels$text_y[corner_labels]
           bx <- bends$x[seg$group]
           by <- bends$y[seg$group]
           elbow <- data.frame(

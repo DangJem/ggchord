@@ -169,66 +169,6 @@ test_that("all automatic gene-label layouts build", {
   )
 })
 
-test_that("aligned labels use free corner space without crossings", {
-  data(seq_data_example)
-  data(ribbon_data_example)
-  data(gene_data_example)
-
-  p <- ggchord(
-    seq_data_example, ribbon_data_example, gene_data_example,
-    validate = "none"
-  ) +
-    geom_seq(
-      seq_radius = c(3.3, 2.5, 1.8, 1.25),
-      seq_orientation = -1
-    ) +
-    geom_ribbon() + geom_gene() + geom_gene_label_repel() +
-    geom_seq_label() + geom_axis()
-  build_ggchord_smoke(p)
-  layout <- get_chord_layout(p)
-
-  green <- layout$gene_labels[
-    layout$gene_labels$seq_id == "OQ646790.1", , drop = FALSE
-  ]
-  expect_gte(sum(green$text_x < min(green$anchor_x)), 2)
-  expect_false(ggchord:::ggchord_label_box_conflicts(
-    layout$gene_labels,
-    units_per_inch = layout$gene_label_clip_units,
-    box_padding = 0.03
-  ))
-
-  segments <- layout$gene_label_segments
-  crossings <- 0L
-  if (nrow(segments) > 1L) {
-    for (i in seq_len(nrow(segments) - 1L)) {
-      for (j in seq.int(i + 1L, nrow(segments))) {
-        if (segments$group[i] == segments$group[j]) next
-        crossings <- crossings + ggchord:::ggchord_segments_cross(
-          segments$x0[i], segments$y0[i],
-          segments$x1[i], segments$y1[i],
-          segments$x0[j], segments$y0[j],
-          segments$x1[j], segments$y1[j]
-        )
-      }
-    }
-  }
-  expect_equal(crossings, 0L)
-})
-
-test_that("strand legend glyph matches the tapered gene silhouette", {
-  key_data <- data.frame(
-    fill = "#D95F02", colour = "#353A3E", alpha = 1,
-    linewidth = 0.25, strand = "+"
-  )
-  plus <- ggchord:::draw_key_gene_arrow(key_data, list(), 5)
-  key_data$strand <- "-"
-  minus <- ggchord:::draw_key_gene_arrow(key_data, list(), 5)
-
-  expect_equal(as.numeric(plus$x), c(0.10, 0.62, 0.90, 0.62, 0.10))
-  expect_equal(as.numeric(minus$x), 1 - as.numeric(plus$x))
-  expect_equal(as.numeric(plus$y), c(0.32, 0.32, 0.50, 0.68, 0.68))
-})
-
 test_that("fixed gene labels expose compact deterministic controls", {
   data(seq_data_example)
   data(gene_data_example)

@@ -781,11 +781,9 @@ ggchord_compact_label_lanes <- function(gl, seq_arcs,
                                         box_padding = 0.25,
                                         point_padding = 0.1,
                                         repel_boxes = NULL,
-                                        max_iter = 100,
-                                        allow_corner = TRUE) {
+                                        max_iter = 100) {
   n <- nrow(gl)
   if (n == 0) return(list(labels = gl, lanes = character(0)))
-  input_gl <- gl
 
   active <- !is.na(gl$text) & nzchar(gl$text)
   anchor_labels <- gl
@@ -801,15 +799,6 @@ ggchord_compact_label_lanes <- function(gl, seq_arcs,
   }
   desired_x <- side_sign * anchor_frame$outward_x
   desired_y <- side_sign * anchor_frame$outward_y
-  sequence_x_min <- sequence_x_max <- sequence_x_centre <- numeric(0)
-  for (arc in seq_arcs) {
-    if (is.null(arc) || nrow(arc) == 0 || !any(is.finite(arc$x))) next
-    sid <- as.character(arc$seq_id[1])
-    xr <- range(arc$x[is.finite(arc$x)])
-    sequence_x_min[sid] <- xr[1]
-    sequence_x_max[sid] <- xr[2]
-    sequence_x_centre[sid] <- mean(xr)
-  }
   directions <- rep(NA_character_, n)
   direction_groups <- paste(gl$seq_id, side_sign, sep = "\r")
   for (rows in split(which(active), direction_groups[active], drop = TRUE)) {
@@ -820,38 +809,6 @@ ggchord_compact_label_lanes <- function(gl, seq_arcs,
     } else {
       if (mean_y < 0) "bottom" else "top"
     }
-  }
-  # A crowded top/bottom sequence can leave an adjacent outer corner unused.
-  # Move only the outermost third of its labels onto that side column. For a
-  # nearly centred sequence, use the side where its annotated genes cluster.
-  # The column is still pushed along the real local outward normals below, so
-  # this reduces top/bottom expansion without an origin/radius approximation.
-  corner_lane <- rep(FALSE, n)
-  corner_threshold <- max(0.18, 0.22 * units_per_inch)
-  for (rows in split(which(active), direction_groups[active], drop = TRUE)) {
-    if (!isTRUE(allow_corner)) break
-    direction <- directions[rows[1]]
-    if (!direction %in% c("top", "bottom") || length(rows) < 4L ||
-        !all(side_sign[rows] > 0)) next
-    sid <- as.character(gl$seq_id[rows[1]])
-    centre <- unname(sequence_x_centre[sid])
-    if (length(centre) != 1L || !is.finite(centre)) next
-    side_bias <- if (abs(centre) >= corner_threshold) {
-      centre
-    } else {
-      mean(gl$anchor_x[rows])
-    }
-    if (!is.finite(side_bias) || abs(side_bias) < corner_threshold) next
-    corner_direction <- if (side_bias < 0) "left" else "right"
-    ord <- if (corner_direction == "right") {
-      rows[order(gl$anchor_x[rows], decreasing = TRUE)]
-    } else {
-      rows[order(gl$anchor_x[rows])]
-    }
-    relief_count <- min(length(ord) - 2L, ceiling(length(ord) / 3))
-    relief <- utils::head(ord, relief_count)
-    directions[relief] <- corner_direction
-    corner_lane[relief] <- TRUE
   }
   directions[!active] <- NA_character_
   base_lanes <- paste(gl$seq_id, directions, sep = "\r")
@@ -910,25 +867,10 @@ ggchord_compact_label_lanes <- function(gl, seq_arcs,
       gl$text_y[rows] <- ggchord_pack_label_axis(
         preferred, gl$anchor_y[rows], before, after, gap = axis_gap
       )
-      sid <- as.character(gl$seq_id[rows[1]])
       gl$text_x[rows] <- if (direction == "left") {
-        edge <- if (any(corner_lane[rows])) sequence_x_min[sid] else NA_real_
-        if (!is.finite(edge)) edge <- min(anchor_frame$curve_x[rows])
-        edge - rail_gap
+        min(anchor_frame$curve_x[rows]) - rail_gap
       } else {
-        edge <- if (any(corner_lane[rows])) sequence_x_max[sid] else NA_real_
-        if (!is.finite(edge)) edge <- max(anchor_frame$curve_x[rows])
-        edge + rail_gap
-      }
-      if (any(corner_lane[rows]) && length(rows) > 1L) {
-        ord <- rows[order(gl$anchor_x[rows], rows)]
-        step <- max(0.12, 0.40 * units_per_inch)
-        offsets <- seq(0, by = step, length.out = length(ord))
-        if (direction == "right") {
-          gl$text_x[ord] <- gl$text_x[ord] + offsets
-        } else {
-          gl$text_x[ord] <- gl$text_x[ord] - rev(offsets)
-        }
+        max(anchor_frame$curve_x[rows]) + rail_gap
       }
     } else {
       base_rows <- which(base_lanes == base_lanes[rows[1]] & active)
@@ -936,9 +878,9 @@ ggchord_compact_label_lanes <- function(gl, seq_arcs,
         (gl$text_x[rows] - gl$anchor_x[rows])
       before <- boxes$x[rows] - boxes$xmin[rows]
       after <- boxes$xmax[rows] - boxes$x[rows]
-      gl$text_x[rows] <- ggchord_pack_label_axis(
+      gl$text_x[rows] <- ggchord_pack_label_axis_outward(
         preferred, gl$anchor_x[rows], before, after,
-        gap = axis_gap
+        centre = 0, gap = axis_gap
       )
       gl$text_y[rows] <- if (direction == "bottom") {
         min(anchor_frame$curve_y[base_rows]) - rail_gap -
@@ -957,14 +899,7 @@ ggchord_compact_label_lanes <- function(gl, seq_arcs,
   for (rows in base_lane_rows) {
     if (!directions[rows[1]] %in% c("top", "bottom")) next
     anchor_order <- rows[order(gl$anchor_x[rows], rows)]
-    # Rebalance horizontal rails towards the middle of the available top or
-    # bottom sector, rather than keeping them under an often one-sided gene
-    # cluster. Limit the tangential translation in physical units so nearby
-    # free space is used without creating leaders across the whole plot.
-    anchor_centre <- mean(gl$anchor_x[rows])
-    max_rebalance <- max(0.18, 0.28 * units_per_inch)
-    rebalance <- max(-max_rebalance, min(max_rebalance, -anchor_centre))
-    target_centre <- mean(gl$text_x[rows]) + rebalance
+    centre_before <- mean(gl$text_x[rows])
     for (pass in seq_len(max_iter)) {
       old <- gl$text_x[rows]
       for (index in sort(unique(rail_index[rows]))) {
@@ -996,7 +931,7 @@ ggchord_compact_label_lanes <- function(gl, seq_arcs,
       if (max(abs(gl$text_x[rows] - old)) < 1e-7) break
     }
     gl$text_x[rows] <- gl$text_x[rows] +
-      target_centre - mean(gl$text_x[rows])
+      centre_before - mean(gl$text_x[rows])
   }
 
   # Neighbouring sequences can share the same top or bottom sector when
@@ -1043,21 +978,6 @@ ggchord_compact_label_lanes <- function(gl, seq_arcs,
   # even when their endpoint x order is monotone. Exchange only their nearby
   # parallel row levels while retaining each label's x position. This changes
   # the approach order without assigning either label to a distant slot.
-  lane_crossing_count <- function(rows) {
-    total <- 0L
-    if (length(rows) < 2L) return(total)
-    for (ii in seq_len(length(rows) - 1L)) {
-      for (jj in seq.int(ii + 1L, length(rows))) {
-        i <- rows[ii]
-        j <- rows[jj]
-        total <- total + ggchord_segments_cross(
-          gl$anchor_x[i], gl$anchor_y[i], gl$text_x[i], gl$text_y[i],
-          gl$anchor_x[j], gl$anchor_y[j], gl$text_x[j], gl$text_y[j]
-        )
-      }
-    }
-    total
-  }
   for (pass in seq_len(max_iter)) {
     changed <- FALSE
     for (rows in base_lane_rows) {
@@ -1072,14 +992,17 @@ ggchord_compact_label_lanes <- function(gl, seq_arcs,
             gl$anchor_x[i], gl$anchor_y[i], gl$text_x[i], gl$text_y[i],
             gl$anchor_x[j], gl$anchor_y[j], gl$text_x[j], gl$text_y[j]
           )) {
-            before_crossings <- lane_crossing_count(rows)
-            old_y <- gl$text_y[c(i, j)]
-            gl$text_y[c(i, j)] <- gl$text_y[c(j, i)]
-            if (lane_crossing_count(rows) < before_crossings) {
+            old_distance <-
+              (gl$text_y[i] - gl$anchor_y[i])^2 +
+              (gl$text_y[j] - gl$anchor_y[j])^2
+            new_distance <-
+              (gl$text_y[j] - gl$anchor_y[i])^2 +
+              (gl$text_y[i] - gl$anchor_y[j])^2
+            if (new_distance <= old_distance + 1e-10) {
+              gl$text_y[c(i, j)] <- gl$text_y[c(j, i)]
               changed <- TRUE
               break
             }
-            gl$text_y[c(i, j)] <- old_y
           }
         }
         if (changed) break
@@ -1091,16 +1014,6 @@ ggchord_compact_label_lanes <- function(gl, seq_arcs,
 
   move_lane_outward <- function(rows, amount) {
     if (!is.finite(amount) || amount <= 0) return()
-    if (any(corner_lane[rows])) {
-      nx <- mean(desired_x[rows])
-      ny <- mean(desired_y[rows])
-      norm <- sqrt(nx^2 + ny^2)
-      if (is.finite(norm) && norm > 1e-10) {
-        gl$text_x[rows] <<- gl$text_x[rows] + amount * nx / norm
-        gl$text_y[rows] <<- gl$text_y[rows] + amount * ny / norm
-        return()
-      }
-    }
     direction <- directions[rows[1]]
     if (direction == "left") gl$text_x[rows] <<- gl$text_x[rows] - amount
     if (direction == "right") gl$text_x[rows] <<- gl$text_x[rows] + amount
@@ -1119,25 +1032,13 @@ ggchord_compact_label_lanes <- function(gl, seq_arcs,
       signed <- side_sign[rows] *
         (dx * anchor_frame$outward_x[rows] +
            dy * anchor_frame$outward_y[rows])
-      projection <- if (any(corner_lane[rows])) {
-        nx <- mean(desired_x[rows])
-        ny <- mean(desired_y[rows])
-        norm <- sqrt(nx^2 + ny^2)
-        if (!is.finite(norm) || norm < 1e-10) {
-          rep(1, length(rows))
-        } else {
-          (nx / norm) * desired_x[rows] +
-            (ny / norm) * desired_y[rows]
-        }
-      } else {
-        switch(
-          direction,
-          left = -side_sign[rows] * anchor_frame$outward_x[rows],
-          right = side_sign[rows] * anchor_frame$outward_x[rows],
-          bottom = -side_sign[rows] * anchor_frame$outward_y[rows],
-          top = side_sign[rows] * anchor_frame$outward_y[rows]
-        )
-      }
+      projection <- switch(
+        direction,
+        left = -side_sign[rows] * anchor_frame$outward_x[rows],
+        right = side_sign[rows] * anchor_frame$outward_x[rows],
+        bottom = -side_sign[rows] * anchor_frame$outward_y[rows],
+        top = side_sign[rows] * anchor_frame$outward_y[rows]
+      )
       amount <- max((rail_gap - signed) / pmax(projection, 0.1), 0)
       move_lane_outward(rows, amount)
     }
@@ -1238,207 +1139,10 @@ ggchord_compact_label_lanes <- function(gl, seq_arcs,
   }
   ensure_requested_side()
 
-  # Corner relief columns can meet a neighbouring horizontal rail at the
-  # corner even though each rail is internally collision-free. Resolve only
-  # those mixed-direction contacts by moving the complete corner column along
-  # its mean local outward normal; individual labels never change order.
-  for (pass in seq_len(16)) {
-    visible_boxes <- ggchord_text_boxes(
-      gl, units_per_inch = units_per_inch, box_padding = 0
-    )
-    dx <- abs(outer(visible_boxes$cx, visible_boxes$cx, "-"))
-    dy <- abs(outer(visible_boxes$cy, visible_boxes$cy, "-"))
-    hits <- which(
-      upper.tri(dx) &
-        dx < outer(visible_boxes$bw, visible_boxes$bw, "+") / 2 - 1e-7 &
-        dy < outer(visible_boxes$bh, visible_boxes$bh, "+") / 2 - 1e-7,
-      arr.ind = TRUE
-    )
-    if (nrow(hits) == 0) break
-    corner_hit <- which(
-      corner_lane[hits[, 1]] | corner_lane[hits[, 2]]
-    )[1]
-    if (is.na(corner_hit)) break
-    i <- hits[corner_hit, 1]
-    j <- hits[corner_hit, 2]
-    chosen <- if (corner_lane[i]) i else j
-    rows <- which(base_lanes == base_lanes[chosen] & active)
-    move_lane_outward(rows, max(axis_gap, 0.08 * units_per_inch))
-  }
-  ensure_requested_side()
-
-  # Resolve residual contacts between perpendicular or otherwise differently
-  # directed rails. Move one complete rail outward at a time; this preserves
-  # all within-rail ordering and alignment.
-  for (pass in seq_len(32)) {
-    final_boxes <- ggchord_text_boxes(
-      gl, units_per_inch = units_per_inch, box_padding = 0.03
-    )
-    dx <- abs(outer(final_boxes$cx, final_boxes$cx, "-"))
-    dy <- abs(outer(final_boxes$cy, final_boxes$cy, "-"))
-    hits <- which(
-      upper.tri(dx) &
-        dx < outer(final_boxes$bw, final_boxes$bw, "+") / 2 - 1e-7 &
-        dy < outer(final_boxes$bh, final_boxes$bh, "+") / 2 - 1e-7,
-      arr.ind = TRUE
-    )
-    if (nrow(hits) == 0) break
-    resolvable <- which(
-      base_lanes[hits[, 1]] != base_lanes[hits[, 2]]
-    )[1]
-    if (is.na(resolvable)) break
-    i <- hits[resolvable, 1]
-    j <- hits[resolvable, 2]
-    lane_i <- which(base_lanes == base_lanes[i] & active)
-    lane_j <- which(base_lanes == base_lanes[j] & active)
-    outward_score <- function(rows) {
-      switch(
-        directions[rows[1]],
-        top = mean(gl$text_y[rows]),
-        bottom = -mean(gl$text_y[rows]),
-        left = -mean(gl$text_x[rows]),
-        right = mean(gl$text_x[rows])
-      )
-    }
-    chosen <- if (corner_lane[i] != corner_lane[j]) {
-      if (corner_lane[i]) lane_i else lane_j
-    } else if (outward_score(lane_i) >= outward_score(lane_j)) {
-      lane_i
-    } else {
-      lane_j
-    }
-    move_lane_outward(chosen, max(axis_gap, 0.08 * units_per_inch))
-  }
-  ensure_requested_side()
-
-  # Obstacle and inter-sequence rail shifts above can change approach angles.
-  # Re-run the monotone row-level exchange on the final rail coordinates.
-  for (pass in seq_len(max_iter)) {
-    changed <- FALSE
-    for (rows in base_lane_rows) {
-      if (!directions[rows[1]] %in% c("top", "bottom") ||
-          length(rows) < 2L) next
-      for (ii in seq_len(length(rows) - 1L)) {
-        for (jj in seq.int(ii + 1L, length(rows))) {
-          i <- rows[ii]
-          j <- rows[jj]
-          if (rail_index[i] == rail_index[j] ||
-              !ggchord_segments_cross(
-                gl$anchor_x[i], gl$anchor_y[i], gl$text_x[i], gl$text_y[i],
-                gl$anchor_x[j], gl$anchor_y[j], gl$text_x[j], gl$text_y[j]
-              )) next
-          before_crossings <- lane_crossing_count(rows)
-          old_y <- gl$text_y[c(i, j)]
-          gl$text_y[c(i, j)] <- gl$text_y[c(j, i)]
-          if (lane_crossing_count(rows) < before_crossings) {
-            changed <- TRUE
-            break
-          }
-          gl$text_y[c(i, j)] <- old_y
-        }
-        if (changed) break
-      }
-      if (changed) break
-    }
-    if (!changed) break
-  }
-
-  # The corner column and its neighbouring horizontal rail have different
-  # endpoint axes, so disjoint text boxes alone do not guarantee planar
-  # approaches. Alternate final box and crossing checks while moving the
-  # complete corner column outward.
-  for (pass in seq_len(12)) {
-    crossed_corner <- NA_integer_
-    rows <- which(active)
-    final_boxes <- ggchord_text_boxes(
-      gl, units_per_inch = units_per_inch, box_padding = 0.03
-    )
-    if (length(rows) > 1L) {
-      for (ii in seq_len(length(rows) - 1L)) {
-        i <- rows[ii]
-        for (jj in seq.int(ii + 1L, length(rows))) {
-          j <- rows[jj]
-          if (!(corner_lane[i] || corner_lane[j])) next
-          if (ggchord_oriented_box_overlaps(
-            final_boxes[i, , drop = FALSE],
-            final_boxes[j, , drop = FALSE]
-          )) {
-            crossed_corner <- if (corner_lane[i]) i else j
-            break
-          }
-        }
-        if (!is.na(crossed_corner)) break
-      }
-    }
-    if (length(rows) > 1L) {
-      for (ii in seq_len(length(rows) - 1L)) {
-        if (!is.na(crossed_corner)) break
-        i <- rows[ii]
-        for (jj in seq.int(ii + 1L, length(rows))) {
-          j <- rows[jj]
-          if (!(corner_lane[i] || corner_lane[j])) next
-          if (ggchord_segments_cross(
-            gl$anchor_x[i], gl$anchor_y[i], gl$text_x[i], gl$text_y[i],
-            gl$anchor_x[j], gl$anchor_y[j], gl$text_x[j], gl$text_y[j]
-          )) {
-            crossed_corner <- if (corner_lane[i]) i else j
-            break
-          }
-        }
-        if (!is.na(crossed_corner)) break
-      }
-    }
-    if (is.na(crossed_corner)) break
-    lane <- which(base_lanes == base_lanes[crossed_corner] & active)
-    move_lane_outward(lane, max(axis_gap, 0.08 * units_per_inch))
-  }
-  ensure_requested_side()
-
-  if (isTRUE(allow_corner) && any(corner_lane)) {
-    unresolved_corner <- FALSE
-    rows <- which(active)
-    final_boxes <- ggchord_text_boxes(
-      gl, units_per_inch = units_per_inch, box_padding = 0.03
-    )
-    if (length(rows) > 1L) {
-      for (ii in seq_len(length(rows) - 1L)) {
-        i <- rows[ii]
-        for (jj in seq.int(ii + 1L, length(rows))) {
-          j <- rows[jj]
-          if (!(corner_lane[i] || corner_lane[j])) next
-          if (ggchord_oriented_box_overlaps(
-              final_boxes[i, , drop = FALSE],
-              final_boxes[j, , drop = FALSE]
-            ) || ggchord_segments_cross(
-              gl$anchor_x[i], gl$anchor_y[i], gl$text_x[i], gl$text_y[i],
-              gl$anchor_x[j], gl$anchor_y[j], gl$text_x[j], gl$text_y[j]
-            )) {
-            unresolved_corner <- TRUE
-            break
-          }
-        }
-        if (unresolved_corner) break
-      }
-    }
-    if (unresolved_corner) {
-      return(ggchord_compact_label_lanes(
-        input_gl, seq_arcs,
-        side = side,
-        units_per_inch = units_per_inch,
-        box_padding = box_padding,
-        point_padding = point_padding,
-        repel_boxes = repel_boxes,
-        max_iter = max_iter,
-        allow_corner = FALSE
-      ))
-    }
-  }
-
   list(
     labels = gl,
     lanes = lanes,
-    directions = directions,
-    corner = corner_lane
+    directions = directions
   )
 }
 
@@ -1458,7 +1162,7 @@ ggchord_offset_label_tracks <- function(gl, seq_arcs,
   if (n == 0) {
     return(list(labels = gl, lanes = character(0),
                 directions = character(0), tracks = integer(0),
-                draw_segment = logical(0), corner = logical(0)))
+                draw_segment = logical(0)))
   }
 
   active <- !is.na(gl$text) & nzchar(gl$text)
@@ -1605,8 +1309,7 @@ ggchord_offset_label_tracks <- function(gl, seq_arcs,
     lanes = lanes,
     directions = directions,
     tracks = tracks,
-    draw_segment = draw_segment,
-    corner = rep(FALSE, n)
+    draw_segment = draw_segment
   )
 }
 

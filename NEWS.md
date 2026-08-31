@@ -35,12 +35,6 @@
   4:3 canvas; external RStudio/graphics-device dimensions remain under user
   control, as in ggplot2.
 
-* The default `aligned` gene-label solver now rebalances top/bottom rails
-  towards nearby free space and can move a small, ordered subset into an
-  adjacent outer corner column. This reduces crowded bottom or top rows without
-  introducing label or leader-line crossings. Strand legend keys now use the
-  same constant-width body and tapered head as `geom_gene()`.
-
 * The visual hierarchy is informed by Circos' restrained circular information
   design, clinker's publication-oriented gene arrows, DNA Features Viewer's
   annotation collision handling, and the local annotation/crowding behaviour
