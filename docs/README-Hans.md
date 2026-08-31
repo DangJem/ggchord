@@ -23,8 +23,9 @@
 - **多序列支持**：可同时展示两条、三条、四条或更多序列。
 - **灵活的参数**：支持单值、向量、命名向量与列表，可按序列或链方向分别设置。
 - **与 ggplot2
-  生态无缝衔接**：`theme()`、`scale_*()`、`ggsave()`、`ggplot_build()`、[`plotly::ggplotly()`](https://rdrr.io/pkg/plotly/man/ggplotly.html)
+  生态无缝衔接**：`theme()`、`scale_*()`、`ggsave()`、`ggplot_build()`
   均可使用。
+- **三种确定性基因标签布局**：规则对齐轨道、紧凑局部径向轨道和沿弧线切线放置的标签。
 
 ## 安装
 
@@ -42,7 +43,7 @@ install.packages("ggplot2")   # 如需要
 install.packages("ggchord")
 ```
 
-从 GitHub 安装（开发版）：
+从 GitHub 安装：
 
 ``` r
 

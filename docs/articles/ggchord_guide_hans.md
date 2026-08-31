@@ -11,7 +11,7 @@ data(gene_data_example)
 ```
 
 本教程完整介绍 `ggchord` 的工作流程：准备输入数据、在 R 中导入文件、
-校验与清理数据，以及逐层构建图形。
+校验与清理数据，以及逐层构建图形。本文对应 **v0.9.0 正式版**。
 
 ## 1. 前期数据准备
 
@@ -219,6 +219,34 @@ ggchord(seq_data_example, gene_data = gene_data_example) +
 
 带防重叠标签的基因箭头。
 
+#### 选择基因标签布局
+
+[`geom_gene_label_repel()`](https://dangjem.github.io/ggchord/reference/geom_gene_label_repel.md)
+提供三种确定性模式。默认 `"aligned"` 将水平文字
+排成规则的行和垂直列；`"radial"`
+保持文字水平，并沿真实序列曲线选择最近的 无冲突平行轨道；`"arc"`
+沿局部切线旋转文字、自动翻转倒置文字，并且只在
+标签离开第一轨道后绘制短指示线。
+
+``` r
+
+base <- ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
+  geom_seq(seq_radius = c(3.3, 2.5, 1.8, 1.25),
+           seq_orientation = c(1, -1, 1, -1)) +
+  geom_ribbon() + geom_gene()
+
+base + geom_gene_label_repel(gene_label_layout = "aligned")
+base + geom_gene_label_repel(gene_label_layout = "radial")
+base + geom_gene_label_repel(gene_label_layout = "arc")
+```
+
+三种模式都会使用实际的 `seq_radius`、`seq_curvature`、`seq_gap`、
+`seq_orientation`、旋转和分组几何。局部外侧/内侧标签理念借鉴了
+[SnapGene](https://support.snapgene.com/hc/en-us/articles/10383722725524-Display-Feature-Labels-Below-or-Inside-a-Map)
+与 [Geneious](https://manual.geneious.com/en/latest/Sequences.html)，但
+ggchord 使用通用模式名和独立实现。如需手工旋转或偏移，请使用
+[`geom_gene_label()`](https://dangjem.github.io/ggchord/reference/geom_gene_label.md)。
+
 ### 3.6 加入坐标轴与序列标签
 
 ``` r
@@ -332,7 +360,8 @@ ggchord(seq_data_example, ribbon_data_example, gene_data_example,
                           "OR222515.1" = "#D9A62E")) +
   geom_ribbon(ribbon_alpha = 0.45) +
   geom_gene() +
-  geom_gene_label_repel(gene_label_size = 2, seed = 42) +
+  geom_gene_label_repel(gene_label_size = 2,
+                        gene_label_layout = "aligned") +
   geom_seq_label() +
   geom_axis() +
   theme(plot.background = element_rect(fill = "#FBF9F6", colour = NA),
@@ -347,8 +376,12 @@ ggchord(seq_data_example, ribbon_data_example, gene_data_example,
 
 序列级参数（`seq_radius`、`seq_gap`、`axis_label_size`
 等）支持**单值、无名向量、按序列 ID
-命名的向量/列表、按序列顺序命名的列表（`"1"`、`"2"`…）或无名列表**。基因级参数（`gene_label_rotation`、`gene_offset`
-等）还额外支持按链方向（`+`/`-`）指定。以下写法均合法：
+命名的向量/列表、按序列顺序命名的列表（`"1"`、`"2"`…）或无名列表**。固定位置图层
+[`geom_gene_label()`](https://dangjem.github.io/ggchord/reference/geom_gene_label.md)
+的基因级参数（`gene_label_rotation`、`gene_offset`
+等）还额外支持按链方向（`+`/`-`）指定；自动布局
+[`geom_gene_label_repel()`](https://dangjem.github.io/ggchord/reference/geom_gene_label_repel.md)
+会自行管理旋转与偏移。以下写法适用于固定标签：
 
 ``` r
 
@@ -394,7 +427,7 @@ gene_label_rotation = list(20)
 | 比对连接带 | [`geom_ribbon()`](https://dangjem.github.io/ggchord/reference/geom_ribbon.md) | 根据比对结果绘制彩色连接带 |
 | 基因箭头 | [`geom_gene()`](https://dangjem.github.io/ggchord/reference/geom_gene.md) | 绘制基因/特征箭头多边形 |
 | 基因标签 | [`geom_gene_label()`](https://dangjem.github.io/ggchord/reference/geom_gene_label.md) | 在固定位置绘制基因标签 |
-| 防重叠基因标签 | [`geom_gene_label_repel()`](https://dangjem.github.io/ggchord/reference/geom_gene_label_repel.md) | 类 ggrepel 标签：带引导线、支持换行与重叠隐藏 |
+| 自动基因标签 | [`geom_gene_label_repel()`](https://dangjem.github.io/ggchord/reference/geom_gene_label_repel.md) | 确定性的 aligned、radial 或 arc 布局，并自动避免标签和指示线冲突 |
 | 坐标轴 | [`geom_axis()`](https://dangjem.github.io/ggchord/reference/geom_axis.md) | 绘制坐标轴线、主/次刻度与刻度标签 |
 | 序列标签 | [`geom_seq_label()`](https://dangjem.github.io/ggchord/reference/geom_seq_label.md) | 在弧线内侧/外侧放置序列名称 |
 

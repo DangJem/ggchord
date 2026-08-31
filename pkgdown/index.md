@@ -20,7 +20,7 @@ tidy data frames (`seq_data`, `ribbon_data`, `gene_data`) and stack
 
 ```r
 install.packages("ggchord")            # CRAN
-devtools::install_github("DangJem/ggchord")   # development version
+devtools::install_github("DangJem/ggchord")   # GitHub release
 ```
 
 ## Get started

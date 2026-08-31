@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ggchord</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,7 +36,7 @@
     <div class="section level2">
       <h2 id="plot-construction">Plot construction<a class="anchor" aria-label="anchor" href="#plot-construction"></a></h2>
 
-      <div class="section-desc"><p>Build, convert and inspect ggchord plots.</p></div>
+      <div class="section-desc"><p>Build and inspect ggchord plots.</p></div>
 
       <dl></dl></div><div class="section level2">
 
@@ -70,13 +70,6 @@
 
         </dt>
         <dd>Combine a ggchord plot with ggplot2 objects</dd>
-
-        <dt>
-
-          <code><a href="ggplotly.ggchord.html">ggplotly(<i>&lt;ggchord&gt;</i>)</a></code>
-
-        </dt>
-        <dd>Convert a ggchord plot to a plotly object</dd>
       </dl></div><div class="section level2">
       <h2 id="methods-and-datasets">Methods and datasets<a class="anchor" aria-label="anchor" href="#methods-and-datasets"></a></h2>
 
@@ -164,7 +157,7 @@
           <code><a href="geom_gene_label_repel.html">geom_gene_label_repel()</a></code>
 
         </dt>
-        <dd>Add a repelled gene label layer (ggrepel-style)</dd>
+        <dd>Add an automatically arranged gene label layer</dd>
 
         <dt>
 
@@ -179,6 +172,13 @@
 
         </dt>
         <dd>Add a sequence label layer</dd>
+
+        <dt>
+
+          <code><a href="geom_seq_group_label.html">geom_seq_group_label()</a></code>
+
+        </dt>
+        <dd>Add sequence-group labels</dd>
 
         <dt>
 
@@ -200,6 +200,73 @@
 
         </dt>
         <dd>Draw generic genomic features</dd>
+      </dl></div><div class="section level2">
+      <h2 id="scales">Scales<a class="anchor" aria-label="anchor" href="#scales"></a></h2>
+
+      <div class="section-desc"><p>Control sequence, ribbon, feature and genomic-position aesthetics.</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="scale_seq_colour_manual.html">scale_seq_colour_manual()</a></code> <code><a href="scale_seq_colour_manual.html">scale_seq_color_manual()</a></code> <code><a href="scale_seq_colour_manual.html">scale_group_colour_manual()</a></code> <code><a href="scale_seq_colour_manual.html">scale_group_color_manual()</a></code>
+
+        </dt>
+        <dd>Sequence and sequence-group colour scales</dd>
+
+        <dt>
+
+          <code><a href="scale_ribbon_fill_stepsn.html">scale_ribbon_fill_stepsn()</a></code> <code><a href="scale_ribbon_fill_stepsn.html">scale_ribbon_fill_gradientn()</a></code> <code><a href="scale_ribbon_fill_stepsn.html">scale_ribbon_fill_manual()</a></code> <code><a href="scale_ribbon_fill_stepsn.html">scale_ribbon_fill_identity()</a></code>
+
+        </dt>
+        <dd>Ribbon fill scales</dd>
+
+        <dt>
+
+          <code><a href="scale_ribbon_alpha_continuous.html">scale_ribbon_alpha_continuous()</a></code> <code><a href="scale_ribbon_alpha_continuous.html">scale_ribbon_alpha_manual()</a></code> <code><a href="scale_ribbon_alpha_continuous.html">scale_ribbon_colour_manual()</a></code> <code><a href="scale_ribbon_alpha_continuous.html">scale_ribbon_color_manual()</a></code> <code><a href="scale_ribbon_alpha_continuous.html">scale_ribbon_linetype_manual()</a></code>
+
+        </dt>
+        <dd>Ribbon alpha, outline and linetype scales</dd>
+
+        <dt>
+
+          <code><a href="scale_gene_fill_manual.html">scale_gene_fill_manual()</a></code> <code><a href="scale_gene_fill_manual.html">scale_feature_fill_manual()</a></code> <code><a href="scale_gene_fill_manual.html">scale_region_fill_manual()</a></code>
+
+        </dt>
+        <dd>Gene, feature and region fill scales</dd>
+
+        <dt>
+
+          <code><a href="scale_seq_position_continuous.html">scale_seq_position_continuous()</a></code>
+
+        </dt>
+        <dd>Genomic sequence position scale</dd>
+      </dl></div><div class="section level2">
+      <h2 id="themes-and-guides">Themes and guides<a class="anchor" aria-label="anchor" href="#themes-and-guides"></a></h2>
+
+      <div class="section-desc"><p>Apply publication-ready themes and legend defaults.</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="theme_ggchord.html">theme_ggchord()</a></code> <code><a href="theme_ggchord.html">theme_ggchord_minimal()</a></code> <code><a href="theme_ggchord.html">theme_ggchord_dark()</a></code> <code><a href="theme_ggchord.html">theme_ggchord_publication()</a></code>
+
+        </dt>
+        <dd>ggchord themes</dd>
+
+        <dt>
+
+          <code><a href="guide_ggchord_legend.html">guide_ggchord_legend()</a></code> <code><a href="guide_ggchord_legend.html">guide_ggchord_colourbar()</a></code>
+
+        </dt>
+        <dd>Guides for ggchord role aesthetics</dd>
       </dl></div><div class="section level2">
       <h2 id="data-import">Data import<a class="anchor" aria-label="anchor" href="#data-import"></a></h2>
 

@@ -13,6 +13,7 @@ geom_seq_label(
   seq_label_radius = 1,
   seq_label_rotation = NULL,
   seq_label_size = NULL,
+  labels = NULL,
   seq_labels = NULL,
   seq_label_orientation = c("arc", "horizontal"),
   seq_label_hjust = NULL,
@@ -50,12 +51,16 @@ geom_seq_label(
 
   Optional numeric/vector. Label font size, default NULL (3)
 
-- seq_labels:
+- labels:
 
   Optional character vector. Override the label texts (defaults to the
   sequence labels from
   [`geom_seq()`](https://dangjem.github.io/ggchord/reference/geom_seq.md)
   or the sequence IDs)
+
+- seq_labels:
+
+  Deprecated alias for `labels`.
 
 - seq_label_orientation:
 

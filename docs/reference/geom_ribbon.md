@@ -21,8 +21,8 @@ geom_ribbon(
   ribbon_ctrl_point = NULL,
   ribbon_gap = NULL,
   alpha = NULL,
-  ribbon_outline_color = "black",
-  ribbon_outline_width = 0.05,
+  ribbon_outline_color = "#FFFFFF",
+  ribbon_outline_width = 0.08,
   ribbon_outline_linetype = 1,
   ribbon_outline_by = NULL,
   ribbon_outline_colors = NULL,
@@ -80,7 +80,7 @@ geom_ribbon(
 
 - ribbon_alpha:
 
-  Numeric (0-1). Ribbon transparency, default 0.35
+  Numeric (0-1). Ribbon transparency, default 0.38
 
 - ribbon_alpha_by:
 
@@ -108,11 +108,12 @@ geom_ribbon(
 
 - ribbon_outline_color:
 
-  Character. Color of the ribbon outline (border), default "black"
+  Character. Colour of the ribbon outline, default white for subtle
+  separation between overlapping ribbons.
 
 - ribbon_outline_width:
 
-  Numeric. Line width of the ribbon outline, default 0.05
+  Numeric. Line width of the ribbon outline, default 0.08
 
 - ribbon_outline_linetype:
 

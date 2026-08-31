@@ -11,7 +11,8 @@ geometry and scales.
 
 ``` r
 geom_feature(
-  data,
+  mapping = NULL,
+  data = NULL,
   type = "type",
   category = NULL,
   label = "label",
@@ -26,6 +27,12 @@ geom_feature(
 ```
 
 ## Arguments
+
+- mapping:
+
+  Optional aesthetic mapping. Role aesthetics such as `seq_id`, `start`,
+  `end` and `strand` may rename input columns; ordinary visual mappings
+  are evaluated after geometry is generated.
 
 - data:
 

@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ggchord</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -35,24 +35,134 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.8.0" id="ggchord-080">ggchord 0.8.0<a class="anchor" aria-label="anchor" href="#ggchord-080"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.9.0" id="ggchord-090">ggchord 0.9.0<a class="anchor" aria-label="anchor" href="#ggchord-090"></a></h2>
+<div class="section level3">
+<h3 id="release-audit-0-9-0">Release audit<a class="anchor" aria-label="anchor" href="#release-audit-0-9-0"></a></h3>
+<ul><li><p>The v0.9.0 public API was audited across constructors, geoms, role-specific scales, themes, guides, coordinates, data utilities and import helpers. Layer-local data/mappings, same-type layer isolation, old/new scale conflicts and plot-owned layout retrieval were rechecked against the final v0.9.0 interface.</p></li>
+<li><p>The obsolete, unused <code>ggchord_label_pad()</code> internal helper and its generated help page were removed. Adaptive limits remain the single implementation used to fit rendered label boxes.</p></li>
+<li><p><code><a href="../reference/ggchord.html">ggchord()</a></code> now reuses the structured validator for its always-on safety checks instead of maintaining a second validation rule set. Validation also stops advanced coordinate and duplicate calculations when malformed numeric columns make those calculations unsafe, returning a complete report rather than a secondary type error.</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="static-rendering-focus-0-9-0">Static rendering focus<a class="anchor" aria-label="anchor" href="#static-rendering-focus-0-9-0"></a></h3>
+<ul><li><p>The experimental Plotly conversion method and dependency have been removed. v0.9.0 focuses on deterministic ggplot2 output; a future interactive design will be considered separately after the static API is stable.</p></li>
+<li><p>Default discrete colours now use a colour-vision-friendly palette (with a qualitative HCL fallback for larger sets). Strand colours, sequence and gene outlines, ribbon separation, highlight colour and legend key glyphs were recalibrated for clearer screen, PDF and greyscale output. These defaults remain fully replaceable through the role-specific scales and geom styles.</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="data-correctness-and-import-fixes-0-9-0">Data correctness and import fixes<a class="anchor" aria-label="anchor" href="#data-correctness-and-import-fixes-0-9-0"></a></h3>
+<ul><li><p><code>clean_ggchord_data(unknown_id = "keep")</code> now retains unknown gene rows without attempting coordinate checks against a missing sequence length. Sorting reversed ribbon intervals records their original same/reverse direction so drawing does not silently change alignment orientation.</p></li>
+<li><p>Ribbon filtering reports every removal reason for a row; <code>deduplicate_ggchord_ribbons(keep = "first")</code> now means the first input row; and <code><a href="../reference/merge_ggchord_ribbons.html">merge_ggchord_ribbons()</a></code> no longer leaves stale values in disagreeing auxiliary columns. Use <code>extra_columns = "first"</code> to request the previous first-row behaviour explicitly.</p></li>
+<li><p>BLAST outfmt 7 imports now parse and validate <code># Fields:</code> instead of assuming a fixed 17-column layout. GFF3 parsing stops at <code>##FASTA</code>. All three import helpers can add <code>.source_file</code> with <code>source_file = TRUE</code>.</p></li>
+<li><p>Unknown ribbon and gene sequence IDs now have the same severe validation level. Skipped duplicate checks for exceptionally large pair groups are reported rather than omitted silently. Feature categories, region outlines, curved-region side selection and highlight argument validation were fixed.</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="layer-specific-data-and-geometry-0-9-0">Layer-specific data and geometry<a class="anchor" aria-label="anchor" href="#layer-specific-data-and-geometry-0-9-0"></a></h3>
+<ul><li><p>Every ggchord layer now receives a stable <code>layer_id</code> and its own geometry registry entry. Multiple gene, feature, region, ribbon, highlight, axis or label layers no longer reuse the last layer’s data and parameters.</p></li>
+<li><p>Layer <code>data</code> and role mappings such as <code>aes(seq_id = chromosome, start = from)</code> are evaluated against that layer’s input. Original columns are joined back to expanded geometry through <code>source_row</code>, so ordinary visual mappings remain available during the ggplot2 build.</p></li>
+<li><p><code>get_chord_layout(plot, build = TRUE)</code> retrieves the layout owned by a specific plot. Calling <code><a href="../reference/get_chord_layout.html">get_chord_layout()</a></code> without a plot still works for compatibility but is deprecated because “most recently built plot” is ambiguous when plots are built in an interleaved order.</p></li>
+<li><p>Sequence reference paths are cached within one build and reused by independent same-type layers. The cache is local to that build and cannot leak geometry between plots.</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="role-specific-scales-0-9-0">Role-specific scales<a class="anchor" aria-label="anchor" href="#role-specific-scales-0-9-0"></a></h3>
+<ul><li><p>Sequence, group, ribbon, gene, feature and region layers now use independent role aesthetics: <code>seq_colour</code>, <code>group_colour</code>, <code>ribbon_fill</code>, <code>ribbon_alpha</code>, <code>ribbon_colour</code>, <code>ribbon_linetype</code>, <code>gene_fill</code>, <code>feature_fill</code> and <code>region_fill</code>. Their public <code>scale_*()</code> constructors can coexist in one plot without replacing another layer’s fill or colour scale.</p></li>
+<li><p><code><a href="../reference/scale_seq_position_continuous.html">scale_seq_position_continuous()</a></code> controls genomic major/minor breaks and labels. It is trained independently against each sequence length.</p></li>
+<li><p><code><a href="../reference/scale_seq_colour_manual.html">scale_group_color_manual()</a></code> and <code><a href="../reference/scale_ribbon_alpha_continuous.html">scale_ribbon_color_manual()</a></code> are available as American-English aliases of their <code>colour</code> counterparts, matching ggplot2’s spelling convention.</p></li>
+<li><p>Old scale-like geom arguments remain functional during v0.9.0 and emit one migration warning per session. Supplying both an old argument and the new role scale is an error rather than silently choosing one. Principal migrations are:</p></li>
+</ul><table class="table"><colgroup><col width="50%"><col width="50%"></colgroup><thead><tr><th>Old geom argument</th>
+<th>New interface</th>
+</tr></thead><tbody><tr><td>
+<code>seq_colors</code>, <code>seq_group_colors</code>
+</td>
+<td>
+<code><a href="../reference/scale_seq_colour_manual.html">scale_seq_colour_manual()</a></code>, <code><a href="../reference/scale_seq_colour_manual.html">scale_group_colour_manual()</a></code>
+</td>
+</tr><tr><td>
+<code>ribbon_colors</code>, colour limits/breaks/name</td>
+<td><code>scale_ribbon_fill_*()</code></td>
+</tr><tr><td><code>ribbon_*_by</code></td>
+<td>the corresponding <code>aes(ribbon_* = ...)</code>
+</td>
+</tr><tr><td><code>ribbon_alpha_range</code></td>
+<td><code>scale_ribbon_alpha_continuous(range = ...)</code></td>
+</tr><tr><td>ribbon outline/linetype/direction visual values</td>
+<td>ribbon colour/linetype/alpha scales</td>
+</tr><tr><td>
+<code>gene_colors</code>, <code>gene_order</code>
+</td>
+<td><code><a href="../reference/scale_gene_fill_manual.html">scale_gene_fill_manual()</a></code></td>
+</tr><tr><td>
+<code>feature_colors</code>, <code>feature_order</code>
+</td>
+<td><code><a href="../reference/scale_gene_fill_manual.html">scale_feature_fill_manual()</a></code></td>
+</tr><tr><td>axis major/minor counts and labels</td>
+<td><code><a href="../reference/scale_seq_position_continuous.html">scale_seq_position_continuous()</a></code></td>
+</tr></tbody></table></div>
+<div class="section level3">
+<h3 id="coordinate-theme-and-guide-helpers-0-9-0">Coordinate, theme and guide helpers<a class="anchor" aria-label="anchor" href="#coordinate-theme-and-guide-helpers-0-9-0"></a></h3>
+<ul><li><p><code><a href="../reference/coord_chord.html">coord_chord()</a></code> now owns global rotation, aspect ratio, clipping and view fitting. <code>fit = "labels"</code> measures annotation boxes, <code>fit = "geometry"</code> fits only geometric marks, and <code>fit = "manual"</code> requires explicit limits. User-supplied limits take priority, and replacing it with another ggplot2 coordinate system is no longer silently undone during the build.</p></li>
+<li><p><code><a href="../reference/theme_ggchord.html">theme_ggchord()</a></code>, <code><a href="../reference/theme_ggchord.html">theme_ggchord_minimal()</a></code>, <code><a href="../reference/theme_ggchord.html">theme_ggchord_dark()</a></code> and <code><a href="../reference/theme_ggchord.html">theme_ggchord_publication()</a></code> provide a small set of composable themes. Dedicated theme elements are registered for axes, sequence/group labels, gene labels and leader segments; data-driven colours remain scales.</p></li>
+<li><p><code><a href="../reference/guide_ggchord_legend.html">guide_ggchord_legend()</a></code> and <code><a href="../reference/guide_ggchord_legend.html">guide_ggchord_colourbar()</a></code> are thin wrappers around ggplot2 guides with compact chord-diagram defaults. Existing <code><a href="../reference/ggchord.html">ggchord()</a></code> arguments <code>title</code>, <code>rotation</code>, <code>panel_margin</code> and <code>show_legend</code> remain functional in v0.9.0 but point users to <code><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs()</a></code>, <code><a href="../reference/coord_chord.html">coord_chord()</a></code> and <code><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme()</a></code> respectively.</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="geom-and-annotation-interfaces-0-9-0">Geom and annotation interfaces<a class="anchor" aria-label="anchor" href="#geom-and-annotation-interfaces-0-9-0"></a></h3>
+<ul><li><p>Gene, sequence and axis text sizes are now fixed layer values rather than a shared <code>size</code> scale, so adding one label layer cannot rescale another. Registered axis, sequence-label, gene-label and leader-line theme elements are resolved before the standard ggplot2 build; an explicit geom style still takes priority.</p></li>
+<li><p><code><a href="../reference/geom_axis.html">geom_axis()</a></code> routes shared styles only to compatible child geoms and accepts separate <code>line_params</code>, <code>tick_params</code> and <code>text_params</code>. Its former <code>show_legend</code> argument is removed because axis annotations never participate in a legend.</p></li>
+<li><p><code><a href="../reference/geom_seq_group_label.html">geom_seq_group_label()</a></code> provides an independent group-label layer, while the labels created implicitly by <code><a href="../reference/geom_seq.html">geom_seq()</a></code> remain available for compatibility. Group values now train <code><a href="../reference/scale_seq_colour_manual.html">scale_group_colour_manual()</a></code> instead of treating already-resolved colour strings as categories.</p></li>
+<li><p><code>geom_seq_label(labels = ...)</code> separates displayed sequence text from scale labels; <code>seq_labels</code> remains a deprecated alias. Label arguments passed to <code><a href="../reference/geom_gene.html">geom_gene()</a></code> now fail clearly instead of being warned about and then leaked into <code><a href="https://ggplot2.tidyverse.org/reference/geom_polygon.html" class="external-link">geom_polygon()</a></code>. Geom-level legend positions and colourbar dimensions remain functional during v0.9.0 but direct users to <code><a href="https://ggplot2.tidyverse.org/reference/guides.html" class="external-link">guides()</a></code>.</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="deterministic-gene-label-layouts-0-9-0">Deterministic gene-label layouts<a class="anchor" aria-label="anchor" href="#deterministic-gene-label-layouts-0-9-0"></a></h3>
+<ul><li><p><code><a href="../reference/geom_gene_label_repel.html">geom_gene_label_repel()</a></code> now uses the deterministic <code>gene_label_layout = "aligned" | "radial" | "arc"</code> interface. <code>"aligned"</code> remains the default and arranges horizontal labels on orderly cardinal rails. <code>"radial"</code> uses the nearest collision-free local offset track while keeping text horizontal. <code>"arc"</code> rotates readable text along the sequence tangent and draws a short leader only when a label has moved away from its first track.</p></li>
+<li><p>All modes now use each sequence’s real curve and local normal, including custom <code>seq_radius</code>, <code>seq_curvature</code>, <code>seq_gap</code>, mixed <code>seq_orientation</code>, rotation and sequence groups. They share fixed-obstacle avoidance, cross-sequence collision handling, order-preserving leader routing and device-aware clipping. Rotated labels use oriented-rectangle collision and clipping, preventing spurious whitespace and oversized breaks in leaders.</p></li>
+<li><p>The layout ideas are informed by orderly multi-sequence callout figures and by the external/inside feature-label approaches offered by SnapGene and Geneious. ggchord uses its own generic mode names and implementation; it does not copy third-party assets or visual designs. See the <a href="https://support.snapgene.com/hc/en-us/articles/10383722725524-Display-Feature-Labels-Below-or-Inside-a-Map" class="external-link">SnapGene feature-label documentation</a> and <a href="https://manual.geneious.com/en/latest/Sequences.html" class="external-link">Geneious label options</a>.</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="breaking-api-simplification-0-9-0">Breaking API simplification<a class="anchor" aria-label="anchor" href="#breaking-api-simplification-0-9-0"></a></h3>
+<p><code><a href="../reference/geom_gene_label_repel.html">geom_gene_label_repel()</a></code> now has the following focused interface:</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/geom_gene_label_repel.html">geom_gene_label_repel</a></span><span class="op">(</span></span>
+<span>  mapping <span class="op">=</span> <span class="cn">NULL</span>, data <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  gene_label_layout <span class="op">=</span> <span class="st">"aligned"</span>,</span>
+<span>  gene_label_size <span class="op">=</span> <span class="cn">NULL</span>, gene_label_wrap <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  gene_label_side <span class="op">=</span> <span class="st">"outside"</span>, max_overlaps <span class="op">=</span> <span class="cn">Inf</span>,</span>
+<span>  gene_label_segment_linetype <span class="op">=</span> <span class="st">"auto"</span>,</span>
+<span>  show_legend <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>Removed arguments fail immediately rather than being silently ignored:</p>
+<table class="table"><colgroup><col width="50%"><col width="50%"></colgroup><thead><tr><th>Removed argument(s)</th>
+<th>Migration</th>
+</tr></thead><tbody><tr><td>
+<code>gene_label_rotation</code>, <code>gene_label_radial_offset</code>, <code>gene_label_circum_offset</code>, <code>gene_label_circum_limit</code>
+</td>
+<td>Use <code><a href="../reference/geom_gene_label.html">geom_gene_label()</a></code> for manual rotation or offsets.</td>
+</tr><tr><td>
+<code>box_padding</code>, <code>point_padding</code>, <code>min_segment_length</code>, <code>force</code>, <code>seed</code>
+</td>
+<td>Select an automatic <code>gene_label_layout</code>; collision and line settings are managed by the mode.</td>
+</tr><tr><td>
+<code>gene_label_orientation</code>, <code>gene_label_segment</code>
+</td>
+<td>Use <code>gene_label_layout = "aligned"</code>, <code>"radial"</code>, or <code>"arc"</code>.</td>
+</tr></tbody></table><p>The planned manual layout is intentionally deferred until its data contract can be designed separately. The fixed-position <code><a href="../reference/geom_gene_label.html">geom_gene_label()</a></code> API is unchanged.</p>
+</div>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.8.0" id="ggchord-080">ggchord 0.8.0<a class="anchor" aria-label="anchor" href="#ggchord-080"></a></h2><p class="text-muted">CRAN release: 2026-08-24</p>
 <div class="section level3">
 <h3 id="new-features-improved-label-placement-and-de-overlap-0-8-0">New features: improved label placement and de-overlap<a class="anchor" aria-label="anchor" href="#new-features-improved-label-placement-and-de-overlap-0-8-0"></a></h3>
 <ul><li><p><code><a href="../reference/geom_seq_label.html">geom_seq_label()</a></code> now places sequence names on the arc by default (<code>seq_label_radius = 1</code>) and rotates them along the arc while keeping them readable; <code>seq_label_orientation = "horizontal"</code> draws every label horizontally, extending away from the chord centre.</p></li>
 <li><p><code><a href="../reference/geom_gene_label.html">geom_gene_label()</a></code> now sits right beside the gene arrows by default (<code>gene_label_radial_offset = 0.04</code>) and gains <code>gene_label_wrap</code> for wrapping long annotations into narrower, less overlapping labels.</p></li>
-<li><p><code><a href="../reference/geom_gene_label_repel.html">geom_gene_label_repel()</a></code> now defaults to <code>gene_label_orientation = "horizontal"</code>, <code>gene_label_segment = "elbow"</code> (an L-shaped leader line that adapts to each label's position and text width) and <code>gene_label_side = "outside"</code>, so labels stay readable and out of the ribbon area. A deterministic final de-overlap pass measures the exact rendered text boxes and treats the sequence, group and axis labels as hard rectangular obstacles; <code>max_overlaps</code> hides labels that still collide after repulsion (ggrepel-style decluttering).</p></li>
+<li><p><code><a href="../reference/geom_gene_label_repel.html">geom_gene_label_repel()</a></code> now defaults to <code>gene_label_orientation = "horizontal"</code>, <code>gene_label_segment = "elbow"</code> (an L-shaped leader line that adapts to each label’s position and text width) and <code>gene_label_side = "outside"</code>, so labels stay readable and out of the ribbon area. A deterministic final de-overlap pass measures the exact rendered text boxes and treats the sequence, group and axis labels as hard rectangular obstacles; <code>max_overlaps</code> hides labels that still collide after repulsion (ggrepel-style decluttering).</p></li>
 <li><p>The label text-box projection is now shared by the repulsion solver, the obstacle boxes and the coordinate limits, so all three agree on where text will actually be drawn.</p></li>
 </ul></div>
 <div class="section level3">
 <h3 id="new-features-adaptive-plot-limits-0-8-0">New features: adaptive plot limits<a class="anchor" aria-label="anchor" href="#new-features-adaptive-plot-limits-0-8-0"></a></h3>
-<ul><li><p>Plot limits now fit the rendered text boxes instead of adding one global text-width pad on every side. The actual gene/sequence/group/axis label boxes are measured and only the sides that need it are expanded, reducing empty margins and using the panel area more efficiently.</p></li>
+<ul><li>Plot limits now fit the rendered text boxes instead of adding one global text-width pad on every side. The actual gene/sequence/group/axis label boxes are measured and only the sides that need it are expanded, reducing empty margins and using the panel area more efficiently.</li>
 </ul></div>
 <div class="section level3">
 <h3 id="new-features-sequence-grouping-0-8-0">New features: sequence grouping<a class="anchor" aria-label="anchor" href="#new-features-sequence-grouping-0-8-0"></a></h3>
 <ul><li><p><code><a href="../reference/geom_seq.html">geom_seq()</a></code> gains sequence-grouping support via <code>seq_group</code>, <code>seq_group_gap</code>, <code>seq_group_labels</code>, <code>seq_group_label_radius</code> and <code>seq_group_colors</code>. Groups can come from a <code>seq_group</code> column in <code>seq_data</code> or be supplied as a single value, a named/positional vector, or a list.</p></li>
 <li><p>An extra inter-group gap (<code>seq_group_gap</code>) is inserted only at boundaries between different groups, and optional group labels are drawn at the angular midpoint of each group, at a customisable radius.</p></li>
 <li><p>Group labels are rendered horizontally and use their own internal <code>zcolour</code> identity scale, so they never interfere with the Seq ID colour legend. <code><a href="../reference/geom_seq.html">geom_seq()</a></code> stays backward compatible and still returns a single layer; group labels are appended lazily at build time.</p></li>
-<li><p><code><a href="https://rdrr.io/pkg/plotly/man/ggplotly.html" class="external-link">plotly::ggplotly()</a></code> and the layout-data path now include the group labels.</p></li>
 </ul></div>
 <div class="section level3">
 <h3 id="new-features-ribbon-visual-mappings-and-direction-0-8-0">New features: ribbon visual mappings and direction<a class="anchor" aria-label="anchor" href="#new-features-ribbon-visual-mappings-and-direction-0-8-0"></a></h3>
@@ -66,11 +176,11 @@
 <h3 id="new-features-highlights-and-generic-features-0-8-0">New features: highlights and generic features<a class="anchor" aria-label="anchor" href="#new-features-highlights-and-generic-features-0-8-0"></a></h3>
 <ul><li><p>New <code><a href="../reference/geom_seq_region.html">geom_seq_region()</a></code> draws rectangular bands along sequence arcs to mark loci, repeats, CRISPR arrays or other user-defined intervals. It accepts <code>seq_id</code>, <code>start</code> and <code>end</code> (plus optional <code>label</code>, <code>category</code> and <code>color</code>) and exposes <code>region_fill</code>, <code>region_color</code>, <code>region_alpha</code>, <code>region_width</code>, <code>region_offset</code> and <code>region_side</code>.</p></li>
 <li><p>New <code><a href="../reference/geom_ribbon_highlight.html">geom_ribbon_highlight()</a></code> emphasizes selected ribbons without changing the underlying Identity(%) legend. Selection uses safe, explicit filters (<code>ribbon_ids</code>, query/subject IDs, pident/length ranges, or a predicate function) and reuses the computed ribbon geometry.</p></li>
-<li><p>New <code><a href="../reference/geom_feature.html">geom_feature()</a></code> is a thin, backwards-compatible convenience layer for CDS, tRNA, rRNA, repeat, CRISPR, promoter and custom feature tables; it prepares a gene-compatible table and reuses <code><a href="../reference/geom_gene.html">geom_gene()</a></code>'s geometry and scales, with <code>feature_colors</code>, <code>feature_width</code>, <code>feature_offset</code> and <code>feature_order</code> for styling.</p></li>
+<li><p>New <code><a href="../reference/geom_feature.html">geom_feature()</a></code> is a thin, backwards-compatible convenience layer for CDS, tRNA, rRNA, repeat, CRISPR, promoter and custom feature tables; it prepares a gene-compatible table and reuses <code><a href="../reference/geom_gene.html">geom_gene()</a></code>’s geometry and scales, with <code>feature_colors</code>, <code>feature_width</code>, <code>feature_offset</code> and <code>feature_order</code> for styling.</p></li>
 </ul></div>
 <div class="section level3">
 <h3 id="documentation-0-8-0">Documentation<a class="anchor" aria-label="anchor" href="#documentation-0-8-0"></a></h3>
-<ul><li><p>Added man pages and runnable examples for the new layers (<code><a href="../reference/geom_seq_region.html">geom_seq_region()</a></code>, <code><a href="../reference/geom_ribbon_highlight.html">geom_ribbon_highlight()</a></code>, <code><a href="../reference/geom_feature.html">geom_feature()</a></code>) and expanded the documentation for the updated <code><a href="../reference/geom_seq.html">geom_seq()</a></code>, <code><a href="../reference/geom_ribbon.html">geom_ribbon()</a></code>, <code><a href="../reference/geom_seq_label.html">geom_seq_label()</a></code> and <code><a href="../reference/geom_gene_label_repel.html">geom_gene_label_repel()</a></code> parameters.</p></li>
+<ul><li>Added man pages and runnable examples for the new layers (<code><a href="../reference/geom_seq_region.html">geom_seq_region()</a></code>, <code><a href="../reference/geom_ribbon_highlight.html">geom_ribbon_highlight()</a></code>, <code><a href="../reference/geom_feature.html">geom_feature()</a></code>) and expanded the documentation for the updated <code><a href="../reference/geom_seq.html">geom_seq()</a></code>, <code><a href="../reference/geom_ribbon.html">geom_ribbon()</a></code>, <code><a href="../reference/geom_seq_label.html">geom_seq_label()</a></code> and <code><a href="../reference/geom_gene_label_repel.html">geom_gene_label_repel()</a></code> parameters.</li>
 </ul></div>
 </div>
     <div class="section level2">
@@ -105,12 +215,11 @@
 <div class="section level3">
 <h3 id="new-features-0-6-0">New features<a class="anchor" aria-label="anchor" href="#new-features-0-6-0"></a></h3>
 <ul><li><p>Plot objects are now fully self-contained: data and parameters are stored on the plot itself instead of in a package-wide environment. Multiple plots can be created and built independently in the same session, and plots survive <code><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">saveRDS()</a></code> / <code><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS()</a></code>.</p></li>
-<li><p>The layout is now computed by <code><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">ggplot_build()</a></code> rather than by a custom <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> method. As a result <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code>, <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code>, <code><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">ggplot_build()</a></code> and other standard ggplot2 workflows (e.g. <code><a href="https://rdrr.io/pkg/plotly/man/ggplotly.html" class="external-link">plotly::ggplotly()</a></code>) all work directly on ggchord plots, and rendering no longer modifies the user’s plot object.</p></li>
+<li><p>The layout is now computed by <code><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">ggplot_build()</a></code> rather than by a custom <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> method. As a result <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code>, <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code>, <code><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">ggplot_build()</a></code> and other standard ggplot2 workflows all work directly on ggchord plots, and rendering no longer modifies the user’s plot object.</p></li>
 <li><p>New layer <code><a href="../reference/geom_seq_label.html">geom_seq_label()</a></code>: places sequence labels at the midpoint of each sequence arc with control over radial offset (<code>seq_label_radius</code>), rotation (<code>seq_label_rotation</code>) and font size (<code>seq_label_size</code>).</p></li>
 <li><p>New ribbon color scheme <code>"subject"</code>: colors ribbons by the subject sequence (<code>saccver</code>), complementing the existing <code>"query"</code> scheme.</p></li>
 <li><p>The layout accessor <code><a href="../reference/get_chord_layout.html">get_chord_layout()</a></code> is now exported, making the computed geometry available for custom layers and annotations.</p></li>
 <li><p>Themes, scales and other ggplot2 objects can now be added with <code>+</code> (e.g. <code>p + theme(legend.position = "bottom")</code>), and user-supplied colour/fill scales are respected instead of being overwritten.</p></li>
-<li><p><code><a href="https://rdrr.io/pkg/plotly/man/ggplotly.html" class="external-link">plotly::ggplotly()</a></code> now works on any ggchord plot, including plots that combine the ribbon and gene layers (previously this raised a scale error). A dedicated <code><a href="../reference/ggplotly.ggchord.html">ggplotly.ggchord()</a></code> method converts the computed geometry to a plotly-friendly plot and restores the Seq ID / Strand / Identity legends.</p></li>
 <li><p><code><a href="../reference/ggchord.html">ggchord()</a></code> now warns about suspicious input data: reversed or out-of-range alignment/gene coordinates, <code>pident</code> outside [0, 100], and sequence IDs that are not present in <code>seq_data</code>.</p></li>
 <li><p><code><a href="../reference/geom_gene_label_repel.html">geom_gene_label_repel()</a></code> gains <code>gene_label_side = "auto" | "inside" | "outside"</code>. With <code>"outside"</code>, labels that would sit inside the chord (where they can overlap the ribbons) are mirrored to the outside of their sequence arc, keeping the same radial distance from the arc.</p></li>
 <li><p>New <code>gene_label_segment_linetype</code> argument controls the leader-line linetype. The default <code>"auto"</code> draws solid lines, except for labels that were moved to the other side of their arc (<code>gene_label_side</code>), which are drawn dashed. Any other valid ggplot2 linetype (e.g. <code>"dotted"</code> or a numeric dash pattern) is applied to all leader lines.</p></li>
@@ -137,7 +246,6 @@
 <ul><li><p>Tests no longer write to a hard-coded <code>/tmp</code> path: they use <code><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile()</a></code>, so the test suite passes on Windows and leaves no stray files behind for <code>R CMD check</code> (fixes the CRAN incoming-check failure).</p></li>
 <li><p>The Identity(%) colourbar no longer collapses into a thin/invisible line when the legend is placed at the top/bottom or the legend box is horizontal (<code>legend.box = "horizontal"</code>). It now follows the theme’s legend position: a vertical bar filling the available height at the left/right, and a fixed-size horizontal bar at the top/bottom.</p></li>
 <li><p>Legend keys are transparent and do not inherit <code>panel.background</code> (ggplot2 4.x lets unset legend keys follow the panel background, so the key fill is set explicitly to stay transparent).</p></li>
-<li><p><code><a href="https://rdrr.io/pkg/plotly/man/ggplotly.html" class="external-link">plotly::ggplotly()</a></code> output now shows the Seq ID / Strand / Identity legends (the layout-level <code>showlegend</code> switch is enabled) and reproduces the <code><a href="../reference/geom_seq.html">geom_seq()</a></code> directional arrowheads as plotly annotations.</p></li>
 <li><p>Sequence (and gene) labels no longer end up upside down when a global <code>rotation &gt;= 90</code> is used: the readability flip is now re-applied after the layout rotation instead of only before it.</p></li>
 <li><p>The repulsion spring now pulls labels toward their own starting position rather than the leader-line anchor, which keeps labels moved with <code>gene_label_side = "outside"</code> on the outside while their leader line still starts at the gene.</p></li>
 <li><p>With <code>gene_label_side</code>, every label is kept on the requested side of its arc (previously only the labels moved by the side switch were re-checked, so a crowded repulsion layout could push other labels across the arc).</p></li>

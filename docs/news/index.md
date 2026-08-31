@@ -1,14 +1,259 @@
 # Changelog
 
+## ggchord 0.9.0
+
+### Release audit
+
+- The v0.9.0 public API was audited across constructors, geoms,
+  role-specific scales, themes, guides, coordinates, data utilities and
+  import helpers. Layer-local data/mappings, same-type layer isolation,
+  old/new scale conflicts and plot-owned layout retrieval were rechecked
+  against the final v0.9.0 interface.
+
+- The obsolete, unused `ggchord_label_pad()` internal helper and its
+  generated help page were removed. Adaptive limits remain the single
+  implementation used to fit rendered label boxes.
+
+- [`ggchord()`](https://dangjem.github.io/ggchord/reference/ggchord.md)
+  now reuses the structured validator for its always-on safety checks
+  instead of maintaining a second validation rule set. Validation also
+  stops advanced coordinate and duplicate calculations when malformed
+  numeric columns make those calculations unsafe, returning a complete
+  report rather than a secondary type error.
+
+### Static rendering focus
+
+- The experimental Plotly conversion method and dependency have been
+  removed. v0.9.0 focuses on deterministic ggplot2 output; a future
+  interactive design will be considered separately after the static API
+  is stable.
+
+- Default discrete colours now use a colour-vision-friendly palette
+  (with a qualitative HCL fallback for larger sets). Strand colours,
+  sequence and gene outlines, ribbon separation, highlight colour and
+  legend key glyphs were recalibrated for clearer screen, PDF and
+  greyscale output. These defaults remain fully replaceable through the
+  role-specific scales and geom styles.
+
+### Data correctness and import fixes
+
+- `clean_ggchord_data(unknown_id = "keep")` now retains unknown gene
+  rows without attempting coordinate checks against a missing sequence
+  length. Sorting reversed ribbon intervals records their original
+  same/reverse direction so drawing does not silently change alignment
+  orientation.
+
+- Ribbon filtering reports every removal reason for a row;
+  `deduplicate_ggchord_ribbons(keep = "first")` now means the first
+  input row; and
+  [`merge_ggchord_ribbons()`](https://dangjem.github.io/ggchord/reference/merge_ggchord_ribbons.md)
+  no longer leaves stale values in disagreeing auxiliary columns. Use
+  `extra_columns = "first"` to request the previous first-row behaviour
+  explicitly.
+
+- BLAST outfmt 7 imports now parse and validate `# Fields:` instead of
+  assuming a fixed 17-column layout. GFF3 parsing stops at `##FASTA`.
+  All three import helpers can add `.source_file` with
+  `source_file = TRUE`.
+
+- Unknown ribbon and gene sequence IDs now have the same severe
+  validation level. Skipped duplicate checks for exceptionally large
+  pair groups are reported rather than omitted silently. Feature
+  categories, region outlines, curved-region side selection and
+  highlight argument validation were fixed.
+
+### Layer-specific data and geometry
+
+- Every ggchord layer now receives a stable `layer_id` and its own
+  geometry registry entry. Multiple gene, feature, region, ribbon,
+  highlight, axis or label layers no longer reuse the last layer’s data
+  and parameters.
+
+- Layer `data` and role mappings such as
+  `aes(seq_id = chromosome, start = from)` are evaluated against that
+  layer’s input. Original columns are joined back to expanded geometry
+  through `source_row`, so ordinary visual mappings remain available
+  during the ggplot2 build.
+
+- `get_chord_layout(plot, build = TRUE)` retrieves the layout owned by a
+  specific plot. Calling
+  [`get_chord_layout()`](https://dangjem.github.io/ggchord/reference/get_chord_layout.md)
+  without a plot still works for compatibility but is deprecated because
+  “most recently built plot” is ambiguous when plots are built in an
+  interleaved order.
+
+- Sequence reference paths are cached within one build and reused by
+  independent same-type layers. The cache is local to that build and
+  cannot leak geometry between plots.
+
+### Role-specific scales
+
+- Sequence, group, ribbon, gene, feature and region layers now use
+  independent role aesthetics: `seq_colour`, `group_colour`,
+  `ribbon_fill`, `ribbon_alpha`, `ribbon_colour`, `ribbon_linetype`,
+  `gene_fill`, `feature_fill` and `region_fill`. Their public
+  `scale_*()` constructors can coexist in one plot without replacing
+  another layer’s fill or colour scale.
+
+- [`scale_seq_position_continuous()`](https://dangjem.github.io/ggchord/reference/scale_seq_position_continuous.md)
+  controls genomic major/minor breaks and labels. It is trained
+  independently against each sequence length.
+
+- [`scale_group_color_manual()`](https://dangjem.github.io/ggchord/reference/scale_seq_colour_manual.md)
+  and
+  [`scale_ribbon_color_manual()`](https://dangjem.github.io/ggchord/reference/scale_ribbon_alpha_continuous.md)
+  are available as American-English aliases of their `colour`
+  counterparts, matching ggplot2’s spelling convention.
+
+- Old scale-like geom arguments remain functional during v0.9.0 and emit
+  one migration warning per session. Supplying both an old argument and
+  the new role scale is an error rather than silently choosing one.
+  Principal migrations are:
+
+| Old geom argument | New interface |
+|----|----|
+| `seq_colors`, `seq_group_colors` | [`scale_seq_colour_manual()`](https://dangjem.github.io/ggchord/reference/scale_seq_colour_manual.md), [`scale_group_colour_manual()`](https://dangjem.github.io/ggchord/reference/scale_seq_colour_manual.md) |
+| `ribbon_colors`, colour limits/breaks/name | `scale_ribbon_fill_*()` |
+| `ribbon_*_by` | the corresponding `aes(ribbon_* = ...)` |
+| `ribbon_alpha_range` | `scale_ribbon_alpha_continuous(range = ...)` |
+| ribbon outline/linetype/direction visual values | ribbon colour/linetype/alpha scales |
+| `gene_colors`, `gene_order` | [`scale_gene_fill_manual()`](https://dangjem.github.io/ggchord/reference/scale_gene_fill_manual.md) |
+| `feature_colors`, `feature_order` | [`scale_feature_fill_manual()`](https://dangjem.github.io/ggchord/reference/scale_gene_fill_manual.md) |
+| axis major/minor counts and labels | [`scale_seq_position_continuous()`](https://dangjem.github.io/ggchord/reference/scale_seq_position_continuous.md) |
+
+### Coordinate, theme and guide helpers
+
+- [`coord_chord()`](https://dangjem.github.io/ggchord/reference/coord_chord.md)
+  now owns global rotation, aspect ratio, clipping and view fitting.
+  `fit = "labels"` measures annotation boxes, `fit = "geometry"` fits
+  only geometric marks, and `fit = "manual"` requires explicit limits.
+  User-supplied limits take priority, and replacing it with another
+  ggplot2 coordinate system is no longer silently undone during the
+  build.
+
+- [`theme_ggchord()`](https://dangjem.github.io/ggchord/reference/theme_ggchord.md),
+  [`theme_ggchord_minimal()`](https://dangjem.github.io/ggchord/reference/theme_ggchord.md),
+  [`theme_ggchord_dark()`](https://dangjem.github.io/ggchord/reference/theme_ggchord.md)
+  and
+  [`theme_ggchord_publication()`](https://dangjem.github.io/ggchord/reference/theme_ggchord.md)
+  provide a small set of composable themes. Dedicated theme elements are
+  registered for axes, sequence/group labels, gene labels and leader
+  segments; data-driven colours remain scales.
+
+- [`guide_ggchord_legend()`](https://dangjem.github.io/ggchord/reference/guide_ggchord_legend.md)
+  and
+  [`guide_ggchord_colourbar()`](https://dangjem.github.io/ggchord/reference/guide_ggchord_legend.md)
+  are thin wrappers around ggplot2 guides with compact chord-diagram
+  defaults. Existing
+  [`ggchord()`](https://dangjem.github.io/ggchord/reference/ggchord.md)
+  arguments `title`, `rotation`, `panel_margin` and `show_legend` remain
+  functional in v0.9.0 but point users to
+  [`labs()`](https://ggplot2.tidyverse.org/reference/labs.html),
+  [`coord_chord()`](https://dangjem.github.io/ggchord/reference/coord_chord.md)
+  and [`theme()`](https://ggplot2.tidyverse.org/reference/theme.html)
+  respectively.
+
+### Geom and annotation interfaces
+
+- Gene, sequence and axis text sizes are now fixed layer values rather
+  than a shared `size` scale, so adding one label layer cannot rescale
+  another. Registered axis, sequence-label, gene-label and leader-line
+  theme elements are resolved before the standard ggplot2 build; an
+  explicit geom style still takes priority.
+
+- [`geom_axis()`](https://dangjem.github.io/ggchord/reference/geom_axis.md)
+  routes shared styles only to compatible child geoms and accepts
+  separate `line_params`, `tick_params` and `text_params`. Its former
+  `show_legend` argument is removed because axis annotations never
+  participate in a legend.
+
+- [`geom_seq_group_label()`](https://dangjem.github.io/ggchord/reference/geom_seq_group_label.md)
+  provides an independent group-label layer, while the labels created
+  implicitly by
+  [`geom_seq()`](https://dangjem.github.io/ggchord/reference/geom_seq.md)
+  remain available for compatibility. Group values now train
+  [`scale_group_colour_manual()`](https://dangjem.github.io/ggchord/reference/scale_seq_colour_manual.md)
+  instead of treating already-resolved colour strings as categories.
+
+- `geom_seq_label(labels = ...)` separates displayed sequence text from
+  scale labels; `seq_labels` remains a deprecated alias. Label arguments
+  passed to
+  [`geom_gene()`](https://dangjem.github.io/ggchord/reference/geom_gene.md)
+  now fail clearly instead of being warned about and then leaked into
+  [`geom_polygon()`](https://ggplot2.tidyverse.org/reference/geom_polygon.html).
+  Geom-level legend positions and colourbar dimensions remain functional
+  during v0.9.0 but direct users to
+  [`guides()`](https://ggplot2.tidyverse.org/reference/guides.html).
+
+### Deterministic gene-label layouts
+
+- [`geom_gene_label_repel()`](https://dangjem.github.io/ggchord/reference/geom_gene_label_repel.md)
+  now uses the deterministic
+  `gene_label_layout = "aligned" | "radial" | "arc"` interface.
+  `"aligned"` remains the default and arranges horizontal labels on
+  orderly cardinal rails. `"radial"` uses the nearest collision-free
+  local offset track while keeping text horizontal. `"arc"` rotates
+  readable text along the sequence tangent and draws a short leader only
+  when a label has moved away from its first track.
+
+- All modes now use each sequence’s real curve and local normal,
+  including custom `seq_radius`, `seq_curvature`, `seq_gap`, mixed
+  `seq_orientation`, rotation and sequence groups. They share
+  fixed-obstacle avoidance, cross-sequence collision handling,
+  order-preserving leader routing and device-aware clipping. Rotated
+  labels use oriented-rectangle collision and clipping, preventing
+  spurious whitespace and oversized breaks in leaders.
+
+- The layout ideas are informed by orderly multi-sequence callout
+  figures and by the external/inside feature-label approaches offered by
+  SnapGene and Geneious. ggchord uses its own generic mode names and
+  implementation; it does not copy third-party assets or visual designs.
+  See the [SnapGene feature-label
+  documentation](https://support.snapgene.com/hc/en-us/articles/10383722725524-Display-Feature-Labels-Below-or-Inside-a-Map)
+  and [Geneious label
+  options](https://manual.geneious.com/en/latest/Sequences.html).
+
+### Breaking API simplification
+
+[`geom_gene_label_repel()`](https://dangjem.github.io/ggchord/reference/geom_gene_label_repel.md)
+now has the following focused interface:
+
+``` r
+
+geom_gene_label_repel(
+  mapping = NULL, data = NULL,
+  gene_label_layout = "aligned",
+  gene_label_size = NULL, gene_label_wrap = NULL,
+  gene_label_side = "outside", max_overlaps = Inf,
+  gene_label_segment_linetype = "auto",
+  show_legend = FALSE, ...
+)
+```
+
+Removed arguments fail immediately rather than being silently ignored:
+
+| Removed argument(s) | Migration |
+|----|----|
+| `gene_label_rotation`, `gene_label_radial_offset`, `gene_label_circum_offset`, `gene_label_circum_limit` | Use [`geom_gene_label()`](https://dangjem.github.io/ggchord/reference/geom_gene_label.md) for manual rotation or offsets. |
+| `box_padding`, `point_padding`, `min_segment_length`, `force`, `seed` | Select an automatic `gene_label_layout`; collision and line settings are managed by the mode. |
+| `gene_label_orientation`, `gene_label_segment` | Use `gene_label_layout = "aligned"`, `"radial"`, or `"arc"`. |
+
+The planned manual layout is intentionally deferred until its data
+contract can be designed separately. The fixed-position
+[`geom_gene_label()`](https://dangjem.github.io/ggchord/reference/geom_gene_label.md)
+API is unchanged.
+
 ## ggchord 0.8.0
+
+CRAN release: 2026-08-24
 
 ### New features: improved label placement and de-overlap
 
 - [`geom_seq_label()`](https://dangjem.github.io/ggchord/reference/geom_seq_label.md)
-  now places sequence names on the arc by default (`seq_label_radius = 1`)
-  and rotates them along the arc while keeping them readable;
-  `seq_label_orientation = "horizontal"` draws every label horizontally,
-  extending away from the chord centre.
+  now places sequence names on the arc by default
+  (`seq_label_radius = 1`) and rotates them along the arc while keeping
+  them readable; `seq_label_orientation = "horizontal"` draws every
+  label horizontally, extending away from the chord centre.
 
 - [`geom_gene_label()`](https://dangjem.github.io/ggchord/reference/geom_gene_label.md)
   now sits right beside the gene arrows by default
@@ -18,91 +263,92 @@
 - [`geom_gene_label_repel()`](https://dangjem.github.io/ggchord/reference/geom_gene_label_repel.md)
   now defaults to `gene_label_orientation = "horizontal"`,
   `gene_label_segment = "elbow"` (an L-shaped leader line that adapts to
-  each label's position and text width) and `gene_label_side = "outside"`,
-  so labels stay readable and out of the ribbon area. A deterministic final
-  de-overlap pass measures the exact rendered text boxes and treats the
-  sequence, group and axis labels as hard rectangular obstacles;
-  `max_overlaps` hides labels that still collide after repulsion
-  (ggrepel-style decluttering).
+  each label’s position and text width) and
+  `gene_label_side = "outside"`, so labels stay readable and out of the
+  ribbon area. A deterministic final de-overlap pass measures the exact
+  rendered text boxes and treats the sequence, group and axis labels as
+  hard rectangular obstacles; `max_overlaps` hides labels that still
+  collide after repulsion (ggrepel-style decluttering).
 
-- The label text-box projection is now shared by the repulsion solver, the
-  obstacle boxes and the coordinate limits, so all three agree on where text
-  will actually be drawn.
+- The label text-box projection is now shared by the repulsion solver,
+  the obstacle boxes and the coordinate limits, so all three agree on
+  where text will actually be drawn.
 
 ### New features: adaptive plot limits
 
-- Plot limits now fit the rendered text boxes instead of adding one global
-  text-width pad on every side. The actual gene/sequence/group/axis label
-  boxes are measured and only the sides that need it are expanded, reducing
-  empty margins and using the panel area more efficiently.
+- Plot limits now fit the rendered text boxes instead of adding one
+  global text-width pad on every side. The actual
+  gene/sequence/group/axis label boxes are measured and only the sides
+  that need it are expanded, reducing empty margins and using the panel
+  area more efficiently.
 
 ### New features: sequence grouping
 
 - [`geom_seq()`](https://dangjem.github.io/ggchord/reference/geom_seq.md)
   gains sequence-grouping support via `seq_group`, `seq_group_gap`,
   `seq_group_labels`, `seq_group_label_radius` and `seq_group_colors`.
-  Groups can come from a `seq_group` column in `seq_data` or be supplied as
-  a single value, a named/positional vector, or a list.
+  Groups can come from a `seq_group` column in `seq_data` or be supplied
+  as a single value, a named/positional vector, or a list.
 
-- An extra inter-group gap (`seq_group_gap`) is inserted only at boundaries
-  between different groups, and optional group labels are drawn at the
-  angular midpoint of each group, at a customisable radius.
+- An extra inter-group gap (`seq_group_gap`) is inserted only at
+  boundaries between different groups, and optional group labels are
+  drawn at the angular midpoint of each group, at a customisable radius.
 
 - Group labels are rendered horizontally and use their own internal
-  `zcolour` identity scale, so they never interfere with the Seq ID colour
-  legend. [`geom_seq()`](https://dangjem.github.io/ggchord/reference/geom_seq.md)
-  stays backward compatible and still returns a single layer; group labels
-  are appended lazily at build time.
-
-- [`plotly::ggplotly()`](https://rdrr.io/pkg/plotly/man/ggplotly.html) and
-  the layout-data path now include the group labels.
+  `zcolour` identity scale, so they never interfere with the Seq ID
+  colour legend.
+  [`geom_seq()`](https://dangjem.github.io/ggchord/reference/geom_seq.md)
+  stays backward compatible and still returns a single layer; group
+  labels are appended lazily at build time.
 
 ### New features: ribbon visual mappings and direction
 
 - [`geom_ribbon()`](https://dangjem.github.io/ggchord/reference/geom_ribbon.md)
-  can now map any numeric column to a continuous fill via `ribbon_color_by`
-  (for example `"bitscore"` instead of `pident`), with `ribbon_color_limits`,
-  `ribbon_color_breaks` and `ribbon_color_name` to control the colourbar.
+  can now map any numeric column to a continuous fill via
+  `ribbon_color_by` (for example `"bitscore"` instead of `pident`), with
+  `ribbon_color_limits`, `ribbon_color_breaks` and `ribbon_color_name`
+  to control the colourbar.
 
 - `ribbon_alpha_by` / `ribbon_alpha_range` scale ribbon transparency
   continuously from a numeric column.
 
-- `ribbon_outline_by` / `ribbon_outline_colors` and `ribbon_linetype_by` /
-  `ribbon_linetypes` map discrete columns to outline colour and linetype
-  using internal aesthetics, without disturbing the Seq ID or Identity(%)
-  legends.
+- `ribbon_outline_by` / `ribbon_outline_colors` and `ribbon_linetype_by`
+  / `ribbon_linetypes` map discrete columns to outline colour and
+  linetype using internal aesthetics, without disturbing the Seq ID or
+  Identity(%) legends.
 
 - `ribbon_direction` (one of `"none"`, `"alpha"`, `"outline"` or
   `"linetype"`) visually distinguishes same- vs reverse-orientation
-  alignments, with `ribbon_direction_colors`, `ribbon_direction_linetypes`
-  and `ribbon_direction_alpha` for fine control.
+  alignments, with `ribbon_direction_colors`,
+  `ribbon_direction_linetypes` and `ribbon_direction_alpha` for fine
+  control.
 
-- `legend_key_width` / `legend_key_height` control the size of the Identity(%)
-  colourbar key.
+- `legend_key_width` / `legend_key_height` control the size of the
+  Identity(%) colourbar key.
 
 ### New features: highlights and generic features
 
 - New
   [`geom_seq_region()`](https://dangjem.github.io/ggchord/reference/geom_seq_region.md)
-  draws rectangular bands along sequence arcs to mark loci, repeats, CRISPR
-  arrays or other user-defined intervals. It accepts `seq_id`, `start` and
-  `end` (plus optional `label`, `category` and `color`) and exposes
-  `region_fill`, `region_color`, `region_alpha`, `region_width`,
+  draws rectangular bands along sequence arcs to mark loci, repeats,
+  CRISPR arrays or other user-defined intervals. It accepts `seq_id`,
+  `start` and `end` (plus optional `label`, `category` and `color`) and
+  exposes `region_fill`, `region_color`, `region_alpha`, `region_width`,
   `region_offset` and `region_side`.
 
 - New
   [`geom_ribbon_highlight()`](https://dangjem.github.io/ggchord/reference/geom_ribbon_highlight.md)
-  emphasizes selected ribbons without changing the underlying Identity(%)
-  legend. Selection uses safe, explicit filters (`ribbon_ids`,
-  query/subject IDs, pident/length ranges, or a predicate function) and
-  reuses the computed ribbon geometry.
+  emphasizes selected ribbons without changing the underlying
+  Identity(%) legend. Selection uses safe, explicit filters
+  (`ribbon_ids`, query/subject IDs, pident/length ranges, or a predicate
+  function) and reuses the computed ribbon geometry.
 
 - New
   [`geom_feature()`](https://dangjem.github.io/ggchord/reference/geom_feature.md)
   is a thin, backwards-compatible convenience layer for CDS, tRNA, rRNA,
   repeat, CRISPR, promoter and custom feature tables; it prepares a
   gene-compatible table and reuses
-  [`geom_gene()`](https://dangjem.github.io/ggchord/reference/geom_gene.md)'s
+  [`geom_gene()`](https://dangjem.github.io/ggchord/reference/geom_gene.md)’s
   geometry and scales, with `feature_colors`, `feature_width`,
   `feature_offset` and `feature_order` for styling.
 
@@ -217,10 +463,8 @@
   method. As a result [`print()`](https://rdrr.io/r/base/print.html),
   [`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html),
   [`ggplot_build()`](https://ggplot2.tidyverse.org/reference/ggplot_build.html)
-  and other standard ggplot2 workflows
-  (e.g. [`plotly::ggplotly()`](https://rdrr.io/pkg/plotly/man/ggplotly.html))
-  all work directly on ggchord plots, and rendering no longer modifies
-  the user’s plot object.
+  and other standard ggplot2 workflows all work directly on ggchord
+  plots, and rendering no longer modifies the user’s plot object.
 
 - New layer
   [`geom_seq_label()`](https://dangjem.github.io/ggchord/reference/geom_seq_label.md):
@@ -239,13 +483,6 @@
 - Themes, scales and other ggplot2 objects can now be added with `+`
   (e.g. `p + theme(legend.position = "bottom")`), and user-supplied
   colour/fill scales are respected instead of being overwritten.
-
-- [`plotly::ggplotly()`](https://rdrr.io/pkg/plotly/man/ggplotly.html)
-  now works on any ggchord plot, including plots that combine the ribbon
-  and gene layers (previously this raised a scale error). A dedicated
-  [`ggplotly.ggchord()`](https://dangjem.github.io/ggchord/reference/ggplotly.ggchord.md)
-  method converts the computed geometry to a plotly-friendly plot and
-  restores the Seq ID / Strand / Identity legends.
 
 - [`ggchord()`](https://dangjem.github.io/ggchord/reference/ggchord.md)
   now warns about suspicious input data: reversed or out-of-range
@@ -321,12 +558,6 @@
 - Legend keys are transparent and do not inherit `panel.background`
   (ggplot2 4.x lets unset legend keys follow the panel background, so
   the key fill is set explicitly to stay transparent).
-
-- [`plotly::ggplotly()`](https://rdrr.io/pkg/plotly/man/ggplotly.html)
-  output now shows the Seq ID / Strand / Identity legends (the
-  layout-level `showlegend` switch is enabled) and reproduces the
-  [`geom_seq()`](https://dangjem.github.io/ggchord/reference/geom_seq.md)
-  directional arrowheads as plotly annotations.
 
 - Sequence (and gene) labels no longer end up upside down when a global
   `rotation >= 90` is used: the readability flip is now re-applied after

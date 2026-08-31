@@ -11,7 +11,7 @@ literal paths and/or wildcard patterns (e.g. `"examples/blastn/*.o7"`).'></head>
 
     <a class="navbar-brand me-2" href="../index.html">ggchord</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,6 +53,7 @@ literal paths and/or wildcard patterns (e.g. `"examples/blastn/*.o7"`).</p>
 <span>  format <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"auto"</span>, <span class="st">"outfmt6"</span>, <span class="st">"outfmt7"</span>, <span class="st">"custom"</span><span class="op">)</span>,</span>
 <span>  col_names <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  comment <span class="op">=</span> <span class="st">"#"</span>,</span>
+<span>  source_file <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -73,8 +74,9 @@ combined into one data.frame.</p></dd>
 
 <dt id="arg-format">format<a class="anchor" aria-label="anchor" href="#arg-format"></a></dt>
 <dd><p>Character. `"auto"` (default) detects the column layout
-from the number of columns; `"outfmt6"` / `"outfmt7"` require the
-standard 12/17-column layouts; `"custom"` requires `col_names`.</p></dd>
+from the file; `"outfmt6"` requires the standard 12-column layout,
+`"outfmt7"` parses its `# Fields:` declaration, and `"custom"` requires
+`col_names`.</p></dd>
 
 
 <dt id="arg-col-names">col_names<a class="anchor" aria-label="anchor" href="#arg-col-names"></a></dt>
@@ -85,6 +87,11 @@ used with `format = "custom"` or to override auto-detection.</p></dd>
 <dt id="arg-comment">comment<a class="anchor" aria-label="anchor" href="#arg-comment"></a></dt>
 <dd><p>Character comment character, default `"#"` (BLAST
 outfmt 7 header lines start with `#`).</p></dd>
+
+
+<dt id="arg-source-file">source_file<a class="anchor" aria-label="anchor" href="#arg-source-file"></a></dt>
+<dd><p>Logical. Add a `.source_file` column when reading one or
+more files, default `FALSE`.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>

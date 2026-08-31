@@ -19,7 +19,7 @@ require_same_orientation) are left unmerged."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">ggchord</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -64,7 +64,8 @@ be inconsistent (unequal), whose pident differs by more than
 <span>  max_gap <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  min_pident_difference <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  require_same_orientation <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  group_by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"qaccver"</span>, <span class="st">"saccver"</span><span class="op">)</span></span>
+<span>  group_by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"qaccver"</span>, <span class="st">"saccver"</span><span class="op">)</span>,</span>
+<span>  extra_columns <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"consistent"</span>, <span class="st">"first"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -95,6 +96,13 @@ descending, i.e. collinear or both inverted in the same way).</p></dd>
 <dt id="arg-group-by">group_by<a class="anchor" aria-label="anchor" href="#arg-group-by"></a></dt>
 <dd><p>Character vector, default <code>c("qaccver", "saccver")</code>.
 Columns used to identify the same sequence pair.</p></dd>
+
+
+<dt id="arg-extra-columns">extra_columns<a class="anchor" aria-label="anchor" href="#arg-extra-columns"></a></dt>
+<dd><p>How to handle columns other than the required ribbon
+fields when multiple rows are merged. <code>"consistent"</code> (default)
+keeps a value only when all source rows agree and otherwise stores a typed
+missing value; <code>"first"</code> retains the first source row's value.</p></dd>
 
 </dl></div>
     <div class="section level2">

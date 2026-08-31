@@ -11,7 +11,7 @@ wildcard patterns (e.g. `"examples/gff3/*.gff3"`).'></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">ggchord</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -52,7 +52,8 @@ wildcard patterns (e.g. `"examples/gff3/*.gff3"`).</p>
 <span>  files <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  feature_types <span class="op">=</span> <span class="st">"CDS"</span>,</span>
 <span>  anno_from <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"product"</span>, <span class="st">"Name"</span>, <span class="st">"gene"</span>, <span class="st">"ID"</span><span class="op">)</span>,</span>
-<span>  unstranded <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"plus"</span>, <span class="st">"drop"</span><span class="op">)</span></span>
+<span>  unstranded <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"plus"</span>, <span class="st">"drop"</span><span class="op">)</span>,</span>
+<span>  source_file <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -82,6 +83,11 @@ fill the `anno` column.</p></dd>
 <dt id="arg-unstranded">unstranded<a class="anchor" aria-label="anchor" href="#arg-unstranded"></a></dt>
 <dd><p>Character, default `"plus"`.</p></dd>
 
+
+<dt id="arg-source-file">source_file<a class="anchor" aria-label="anchor" href="#arg-source-file"></a></dt>
+<dd><p>Logical. Add a `.source_file` column when reading one or
+more files, default `FALSE`.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -95,7 +101,8 @@ fill the `anno` column.</p></dd>
 <span class="r-in"><span><span class="va">gff</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".gff3"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/writeLines.html" class="external-link">writeLines</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="st">"##gff-version 3"</span>,</span></span>
-<span class="r-in"><span>  <span class="st">"seqA  source  CDS  101  500  .  +  0  ID=cds1;product=hypothetical protein"</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"seqA  source  CDS  101  500  .  +  0  "</span>,</span></span>
+<span class="r-in"><span>         <span class="st">"ID=cds1;product=hypothetical protein"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span>, <span class="va">gff</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">read_gff3</span><span class="op">(</span><span class="va">gff</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   seq_id start end strand                 anno type source score phase</span>

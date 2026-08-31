@@ -103,7 +103,7 @@ out <- filter_ggchord_ribbons(
 out$report
 #> $n_input
 #> [1] 31
-#> 
+#>
 #> $n_kept
 #> [1] 3
 #> 
@@ -118,6 +118,37 @@ out$report
 #>  [1]  3  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28
 #> [26] 29 30 31
 #> 
+#> $removed_reasons
+#>    row     reason
+#> 1    3 min_pident
+#> 2    5 min_pident
+#> 3    6 min_pident
+#> 4    7 min_pident
+#> 5    8 min_pident
+#> 6    9 min_pident
+#> 7   10 min_pident
+#> 8   11 min_pident
+#> 9   12 min_pident
+#> 10  13 min_pident
+#> 11  14 min_pident
+#> 12  15 min_pident
+#> 13  16 min_pident
+#> 14  17 min_pident
+#> 15  18 min_pident
+#> 16  19 min_pident
+#> 17  20 min_pident
+#> 18  21 min_pident
+#> 19  22 min_pident
+#> 20  23 min_pident
+#> 21  24 min_pident
+#> 22  25 min_pident
+#> 23  26 min_pident
+#> 24  27 min_pident
+#> 25  28 min_pident
+#> 26  29 min_pident
+#> 27  30 min_pident
+#> 28  31 min_pident
+#>
 #> $kept_rows
 #> [1] 1 2 4
 #> 

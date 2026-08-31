@@ -43,9 +43,23 @@ reference:
       - geom_gene_label_repel
       - geom_axis
       - geom_seq_label
+      - geom_seq_group_label
       - geom_seq_region
       - geom_ribbon_highlight
       - geom_feature
+  - title: "Scales"
+    desc: "Control sequence, ribbon, feature and genomic-position aesthetics."
+    contents:
+      - scale_seq_colour_manual
+      - scale_ribbon_fill_stepsn
+      - scale_ribbon_alpha_continuous
+      - scale_gene_fill_manual
+      - scale_seq_position_continuous
+  - title: "Themes and guides"
+    desc: "Apply publication-ready themes and legend defaults."
+    contents:
+      - theme_ggchord
+      - guide_ggchord_legend
   - title: "Data import"
     desc: "Read FASTA, BLAST and GFF3 files in R."
     contents:

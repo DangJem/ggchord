@@ -1,6 +1,6 @@
-# ggchord 0.9.0 (development version)
+# ggchord 0.9.0
 
-## Release-candidate audit
+## Release audit
 
 * The v0.9.0 public API was audited across constructors, geoms, role-specific
   scales, themes, guides, coordinates, data utilities and import helpers.
@@ -195,13 +195,6 @@ Removed arguments fail immediately rather than being silently ignored:
 
 The planned manual layout is intentionally deferred until its data contract can
 be designed separately. The fixed-position `geom_gene_label()` API is unchanged.
-
-## Development versioning
-
-This repository is the **v0.9.0 development version**. `DESCRIPTION` already
-uses `Version: 0.9.0`, so development installs report `packageVersion("ggchord")`
-as `0.9.0`. At release time the version remains `0.9.0`; only the development
-wording in the documentation is removed.
 
 # ggchord 0.8.0
 

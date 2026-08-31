@@ -18,5 +18,4 @@ process_strand_colors(gene_colors)
 
 ## Value
 
-Named vector (names are "+"/"-"), standardized color values (default "+"
-is red, "-" is blue)
+Named vector (names are "+"/"-"), standardized colour values

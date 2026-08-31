@@ -12,9 +12,7 @@ You provide three tidy data frames (`seq_data`, `ribbon_data`,
 - True `ggplot2` layered style
 - Multi-sequence, multi-ribbon and multi-gene support
 - Per-sequence and per-strand parameters
-- Themes, scales, `ggsave()`, `ggplot_build()` and
-  [`plotly::ggplotly()`](https://rdrr.io/pkg/plotly/man/ggplotly.html)
-  integration
+- Themes, scales, `ggsave()` and `ggplot_build()` integration
 
 ## Installation
 
@@ -23,7 +21,7 @@ You provide three tidy data frames (`seq_data`, `ribbon_data`,
 ``` r
 
 install.packages("ggchord")            # CRAN
-devtools::install_github("DangJem/ggchord")   # development version
+devtools::install_github("DangJem/ggchord")   # GitHub release
 ```
 
 ## Get started

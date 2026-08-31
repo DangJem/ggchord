@@ -31,8 +31,7 @@ data(gene_data_example)
 
 This tutorial walks through the complete `ggchord` workflow: preparing input
 data, importing files in R, validating and cleaning data, and building plots
-layer by layer. It documents the **v0.9.0 development version**; development
-installs intentionally report `packageVersion("ggchord")` as `0.9.0`.
+layer by layer. It documents the **v0.9.0 release**.
 
 ## 1. Data preparation
 

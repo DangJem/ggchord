@@ -11,7 +11,7 @@ font size, text orientation and justification."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">ggchord</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,6 +53,7 @@ font size, text orientation and justification.</p>
 <span>  seq_label_radius <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  seq_label_rotation <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  seq_label_size <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  labels <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  seq_labels <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  seq_label_orientation <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"arc"</span>, <span class="st">"horizontal"</span><span class="op">)</span>,</span>
 <span>  seq_label_hjust <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -92,9 +93,13 @@ when <code>seq_label_orientation = "horizontal"</code>.</p></dd>
 <dd><p>Optional numeric/vector. Label font size, default NULL (3)</p></dd>
 
 
-<dt id="arg-seq-labels">seq_labels<a class="anchor" aria-label="anchor" href="#arg-seq-labels"></a></dt>
+<dt id="arg-labels">labels<a class="anchor" aria-label="anchor" href="#arg-labels"></a></dt>
 <dd><p>Optional character vector. Override the label texts
 (defaults to the sequence labels from <code><a href="geom_seq.html">geom_seq()</a></code> or the sequence IDs)</p></dd>
+
+
+<dt id="arg-seq-labels">seq_labels<a class="anchor" aria-label="anchor" href="#arg-seq-labels"></a></dt>
+<dd><p>Deprecated alias for <code>labels</code>.</p></dd>
 
 
 <dt id="arg-seq-label-orientation">seq_label_orientation<a class="anchor" aria-label="anchor" href="#arg-seq-label-orientation"></a></dt>

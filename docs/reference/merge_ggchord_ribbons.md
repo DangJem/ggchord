@@ -16,7 +16,8 @@ merge_ggchord_ribbons(
   max_gap = 0,
   min_pident_difference = 0,
   require_same_orientation = TRUE,
-  group_by = c("qaccver", "saccver")
+  group_by = c("qaccver", "saccver"),
+  extra_columns = c("consistent", "first")
 )
 ```
 
@@ -46,6 +47,13 @@ merge_ggchord_ribbons(
 
   Character vector, default `c("qaccver", "saccver")`. Columns used to
   identify the same sequence pair.
+
+- extra_columns:
+
+  How to handle columns other than the required ribbon fields when
+  multiple rows are merged. `"consistent"` (default) keeps a value only
+  when all source rows agree and otherwise stores a typed missing value;
+  `"first"` retains the first source row's value.
 
 ## Value
 

@@ -19,8 +19,8 @@ geom_ribbon_highlight(
   min_length = NULL,
   max_length = NULL,
   predicate = NULL,
-  highlight_color = "#E11D48",
-  highlight_alpha = 0.8,
+  highlight_color = "#C51B7D",
+  highlight_alpha = 0.75,
   highlight_outline_color = NULL,
   highlight_outline_width = 0.3,
   show_legend = FALSE,
@@ -75,11 +75,11 @@ geom_ribbon_highlight(
 
 - highlight_color:
 
-  Character. Highlight fill colour, default `"#E11D48"`.
+  Character. Highlight fill colour, default `"#C51B7D"`.
 
 - highlight_alpha:
 
-  Numeric (0-1). Highlight alpha, default 0.8.
+  Numeric (0-1). Highlight alpha, default 0.75.
 
 - highlight_outline_color:
 

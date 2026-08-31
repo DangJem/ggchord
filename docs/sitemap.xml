@@ -39,6 +39,7 @@
 <url><loc>https://dangjem.github.io/ggchord/reference/geom_ribbon.html</loc></url>
 <url><loc>https://dangjem.github.io/ggchord/reference/geom_ribbon_highlight.html</loc></url>
 <url><loc>https://dangjem.github.io/ggchord/reference/geom_seq.html</loc></url>
+<url><loc>https://dangjem.github.io/ggchord/reference/geom_seq_group_label.html</loc></url>
 <url><loc>https://dangjem.github.io/ggchord/reference/geom_seq_label.html</loc></url>
 <url><loc>https://dangjem.github.io/ggchord/reference/geom_seq_region.html</loc></url>
 <url><loc>https://dangjem.github.io/ggchord/reference/get_chord_data.html</loc></url>
@@ -47,6 +48,7 @@
 <url><loc>https://dangjem.github.io/ggchord/reference/gff3_percent_decode.html</loc></url>
 <url><loc>https://dangjem.github.io/ggchord/reference/ggchord.html</loc></url>
 <url><loc>https://dangjem.github.io/ggchord/reference/ggchord_adaptive_limits.html</loc></url>
+<url><loc>https://dangjem.github.io/ggchord/reference/ggchord_device_units_per_inch.html</loc></url>
 <url><loc>https://dangjem.github.io/ggchord/reference/ggchord_gene_fill.html</loc></url>
 <url><loc>https://dangjem.github.io/ggchord/reference/ggchord_group_label_layer.html</loc></url>
 <url><loc>https://dangjem.github.io/ggchord/reference/ggchord_hide_text_overlaps.html</loc></url>
@@ -68,6 +70,7 @@
 <url><loc>https://dangjem.github.io/ggchord/reference/ggchord_text_boxes.html</loc></url>
 <url><loc>https://dangjem.github.io/ggchord/reference/ggchord_text_obstacle_boxes.html</loc></url>
 <url><loc>https://dangjem.github.io/ggchord/reference/ggplotly.ggchord.html</loc></url>
+<url><loc>https://dangjem.github.io/ggchord/reference/guide_ggchord_legend.html</loc></url>
 <url><loc>https://dangjem.github.io/ggchord/reference/if_null_else.html</loc></url>
 <url><loc>https://dangjem.github.io/ggchord/reference/index.html</loc></url>
 <url><loc>https://dangjem.github.io/ggchord/reference/interval_recip_overlap.html</loc></url>
@@ -96,10 +99,16 @@
 <url><loc>https://dangjem.github.io/ggchord/reference/resolve_ggchord_group_colors.html</loc></url>
 <url><loc>https://dangjem.github.io/ggchord/reference/resolve_ggchord_seq_group.html</loc></url>
 <url><loc>https://dangjem.github.io/ggchord/reference/ribbon_data_example.html</loc></url>
+<url><loc>https://dangjem.github.io/ggchord/reference/scale_gene_fill_manual.html</loc></url>
+<url><loc>https://dangjem.github.io/ggchord/reference/scale_ribbon_alpha_continuous.html</loc></url>
+<url><loc>https://dangjem.github.io/ggchord/reference/scale_ribbon_fill_stepsn.html</loc></url>
+<url><loc>https://dangjem.github.io/ggchord/reference/scale_seq_colour_manual.html</loc></url>
+<url><loc>https://dangjem.github.io/ggchord/reference/scale_seq_position_continuous.html</loc></url>
 <url><loc>https://dangjem.github.io/ggchord/reference/seq_data_example.html</loc></url>
 <url><loc>https://dangjem.github.io/ggchord/reference/set_chord_data.html</loc></url>
 <url><loc>https://dangjem.github.io/ggchord/reference/set_chord_layout.html</loc></url>
 <url><loc>https://dangjem.github.io/ggchord/reference/set_ggchord_coord.html</loc></url>
+<url><loc>https://dangjem.github.io/ggchord/reference/theme_ggchord.html</loc></url>
 <url><loc>https://dangjem.github.io/ggchord/reference/validate_gene_segment_linetype.html</loc></url>
 <url><loc>https://dangjem.github.io/ggchord/reference/validate_ggchord_data.html</loc></url>
 <url><loc>https://dangjem.github.io/ggchord/reference/wire_ggchord_layer.html</loc></url>

@@ -14,6 +14,7 @@ read_blast(
   format = c("auto", "outfmt6", "outfmt7", "custom"),
   col_names = NULL,
   comment = "#",
+  source_file = FALSE,
   ...
 )
 ```
@@ -33,8 +34,9 @@ read_blast(
 - format:
 
   Character. \`"auto"\` (default) detects the column layout from the
-  number of columns; \`"outfmt6"\` / \`"outfmt7"\` require the standard
-  12/17-column layouts; \`"custom"\` requires \`col_names\`.
+  file; \`"outfmt6"\` requires the standard 12-column layout,
+  \`"outfmt7"\` parses its \`# Fields:\` declaration, and \`"custom"\`
+  requires \`col_names\`.
 
 - col_names:
 
@@ -45,6 +47,11 @@ read_blast(
 
   Character comment character, default \`"#"\` (BLAST outfmt 7 header
   lines start with \`#\`).
+
+- source_file:
+
+  Logical. Add a \`.source_file\` column when reading one or more files,
+  default \`FALSE\`.
 
 - ...:
 

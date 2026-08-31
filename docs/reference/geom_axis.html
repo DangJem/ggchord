@@ -9,7 +9,7 @@ Axis parameters (spacing, tick count/length, label size/orientation, etc.) are s
 
     <a class="navbar-brand me-2" href="../index.html">ggchord</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -57,7 +57,9 @@ Axis parameters (spacing, tick count/length, label size/orientation, etc.) are s
 <span>  axis_label_offset <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  axis_label_orientation <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  axis_label_hide_overlaps <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  show_legend <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  line_params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  tick_params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  text_params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -123,12 +125,16 @@ labels whose boxes would overlap the plot content (sequence arcs, genes,
 ribbons) or other axis labels are automatically hidden.</p></dd>
 
 
-<dt id="arg-show-legend">show_legend<a class="anchor" aria-label="anchor" href="#arg-show-legend"></a></dt>
-<dd><p>Whether to show the legend, default FALSE (axes do not participate in legends)</p></dd>
+<dt id="arg-line-params-tick-params-text-params">line_params, tick_params, text_params<a class="anchor" aria-label="anchor" href="#arg-line-params-tick-params-text-params"></a></dt>
+<dd><p>Named lists of fixed style
+arguments for the axis path, tick segments and tick labels respectively.
+These override the corresponding `ggchord.axis.*` theme elements.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>Additional arguments passed to geom_path/geom_segment/geom_text</p></dd>
+<dd><p>Shared fixed style arguments. `colour`, `alpha` and
+`na.rm` apply to all three components; line-specific and
+text-specific arguments are routed only to compatible geoms.</p></dd>
 
 </dl></div>
     <div class="section level2">

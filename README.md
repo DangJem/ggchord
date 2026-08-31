@@ -4,10 +4,6 @@
 
 ## Overview
 
-> **Development status:** this branch is the **v0.9.0 development version**.
-> Development installs intentionally report `packageVersion("ggchord")` as
-> `0.9.0`; the version number will stay the same for release.
-
 `ggchord` is an R package built on `ggplot2` that draws **chord diagrams for
 multi-sequence data** using the layered grammar of graphics. Instead of a single
 monolithic function, you build a plot by stacking layers — `ggchord()` supplies
@@ -30,8 +26,8 @@ data frames.
 - **Multi-sequence support** — two, three, four or more sequences in one plot.
 - **Flexible parameters** — per-sequence and per-strand values using single
   values, vectors, named vectors, and lists.
-- **Full ggplot2 integration** — `theme()`, `scale_*()`, `ggsave()`,
-  `ggplot_build()`, and `plotly::ggplotly()` all work.
+- **Full ggplot2 integration** — `theme()`, `scale_*()`, `ggsave()`, and
+  `ggplot_build()` all work.
 - **Three deterministic gene-label layouts** — orderly aligned rails, compact
   local radial tracks, or tangent-following arc labels.
 
@@ -49,7 +45,7 @@ From CRAN:
 install.packages("ggchord")
 ```
 
-From GitHub (development version):
+From GitHub:
 
 ```r
 devtools::install_github("DangJem/ggchord")

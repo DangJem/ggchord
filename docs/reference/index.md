@@ -2,7 +2,7 @@
 
 ## Plot construction
 
-Build, convert and inspect ggchord plots.
+Build and inspect ggchord plots.
 
 - [`ggchord()`](https://dangjem.github.io/ggchord/reference/ggchord.md)
   : ggchord: layered multi-sequence alignment chord diagrams for ggplot2
@@ -12,8 +12,6 @@ Build, convert and inspect ggchord plots.
   : Get the chord layout from the package environment
 - [`` `+`( ``*`<ggchord>`*`)`](https://dangjem.github.io/ggchord/reference/plus-.ggchord.md)
   : Combine a ggchord plot with ggplot2 objects
-- [`ggplotly(`*`<ggchord>`*`)`](https://dangjem.github.io/ggchord/reference/ggplotly.ggchord.md)
-  : Convert a ggchord plot to a plotly object
 
 ## Methods and datasets
 
@@ -43,17 +41,59 @@ Stack geometry, annotation, axis and label layers.
 - [`geom_gene_label()`](https://dangjem.github.io/ggchord/reference/geom_gene_label.md)
   : Add a gene label layer
 - [`geom_gene_label_repel()`](https://dangjem.github.io/ggchord/reference/geom_gene_label_repel.md)
-  : Add a repelled gene label layer (ggrepel-style)
+  : Add an automatically arranged gene label layer
 - [`geom_axis()`](https://dangjem.github.io/ggchord/reference/geom_axis.md)
   : Add an axis layer
 - [`geom_seq_label()`](https://dangjem.github.io/ggchord/reference/geom_seq_label.md)
   : Add a sequence label layer
+- [`geom_seq_group_label()`](https://dangjem.github.io/ggchord/reference/geom_seq_group_label.md)
+  : Add sequence-group labels
 - [`geom_seq_region()`](https://dangjem.github.io/ggchord/reference/geom_seq_region.md)
   : Highlight regions along sequence arcs
 - [`geom_ribbon_highlight()`](https://dangjem.github.io/ggchord/reference/geom_ribbon_highlight.md)
   : Highlight selected alignment ribbons
 - [`geom_feature()`](https://dangjem.github.io/ggchord/reference/geom_feature.md)
   : Draw generic genomic features
+
+## Scales
+
+Control sequence, ribbon, feature and genomic-position aesthetics.
+
+- [`scale_seq_colour_manual()`](https://dangjem.github.io/ggchord/reference/scale_seq_colour_manual.md)
+  [`scale_seq_color_manual()`](https://dangjem.github.io/ggchord/reference/scale_seq_colour_manual.md)
+  [`scale_group_colour_manual()`](https://dangjem.github.io/ggchord/reference/scale_seq_colour_manual.md)
+  [`scale_group_color_manual()`](https://dangjem.github.io/ggchord/reference/scale_seq_colour_manual.md)
+  : Sequence and sequence-group colour scales
+- [`scale_ribbon_fill_stepsn()`](https://dangjem.github.io/ggchord/reference/scale_ribbon_fill_stepsn.md)
+  [`scale_ribbon_fill_gradientn()`](https://dangjem.github.io/ggchord/reference/scale_ribbon_fill_stepsn.md)
+  [`scale_ribbon_fill_manual()`](https://dangjem.github.io/ggchord/reference/scale_ribbon_fill_stepsn.md)
+  [`scale_ribbon_fill_identity()`](https://dangjem.github.io/ggchord/reference/scale_ribbon_fill_stepsn.md)
+  : Ribbon fill scales
+- [`scale_ribbon_alpha_continuous()`](https://dangjem.github.io/ggchord/reference/scale_ribbon_alpha_continuous.md)
+  [`scale_ribbon_alpha_manual()`](https://dangjem.github.io/ggchord/reference/scale_ribbon_alpha_continuous.md)
+  [`scale_ribbon_colour_manual()`](https://dangjem.github.io/ggchord/reference/scale_ribbon_alpha_continuous.md)
+  [`scale_ribbon_color_manual()`](https://dangjem.github.io/ggchord/reference/scale_ribbon_alpha_continuous.md)
+  [`scale_ribbon_linetype_manual()`](https://dangjem.github.io/ggchord/reference/scale_ribbon_alpha_continuous.md)
+  : Ribbon alpha, outline and linetype scales
+- [`scale_gene_fill_manual()`](https://dangjem.github.io/ggchord/reference/scale_gene_fill_manual.md)
+  [`scale_feature_fill_manual()`](https://dangjem.github.io/ggchord/reference/scale_gene_fill_manual.md)
+  [`scale_region_fill_manual()`](https://dangjem.github.io/ggchord/reference/scale_gene_fill_manual.md)
+  : Gene, feature and region fill scales
+- [`scale_seq_position_continuous()`](https://dangjem.github.io/ggchord/reference/scale_seq_position_continuous.md)
+  : Genomic sequence position scale
+
+## Themes and guides
+
+Apply publication-ready themes and legend defaults.
+
+- [`theme_ggchord()`](https://dangjem.github.io/ggchord/reference/theme_ggchord.md)
+  [`theme_ggchord_minimal()`](https://dangjem.github.io/ggchord/reference/theme_ggchord.md)
+  [`theme_ggchord_dark()`](https://dangjem.github.io/ggchord/reference/theme_ggchord.md)
+  [`theme_ggchord_publication()`](https://dangjem.github.io/ggchord/reference/theme_ggchord.md)
+  : ggchord themes
+- [`guide_ggchord_legend()`](https://dangjem.github.io/ggchord/reference/guide_ggchord_legend.md)
+  [`guide_ggchord_colourbar()`](https://dangjem.github.io/ggchord/reference/guide_ggchord_legend.md)
+  : Guides for ggchord role aesthetics
 
 ## Data import
 

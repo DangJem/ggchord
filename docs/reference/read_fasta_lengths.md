@@ -7,7 +7,12 @@ paths and/or wildcard patterns (e.g. \`"examples/fasta/\*.fna"\`).
 ## Usage
 
 ``` r
-read_fasta_lengths(file = NULL, files = NULL, header_delim = NULL)
+read_fasta_lengths(
+  file = NULL,
+  files = NULL,
+  header_delim = NULL,
+  source_file = FALSE
+)
 ```
 
 ## Arguments
@@ -25,6 +30,11 @@ read_fasta_lengths(file = NULL, files = NULL, header_delim = NULL)
 
   Optional character. When given, each header is split at every
   occurrence of this delimiter and only the first piece is kept.
+
+- source_file:
+
+  Logical. Add a \`.source_file\` column when reading one or more files,
+  default \`FALSE\`.
 
 ## Value
 

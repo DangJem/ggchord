@@ -9,7 +9,7 @@ into Cartesian (x, y) coordinates and stores them in a layout list."></head><bod
 
     <a class="navbar-brand me-2" href="../index.html">ggchord</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -57,6 +57,7 @@ into Cartesian (x, y) coordinates and stores them in a layout list.</p>
 <span>  seq_group_gap <span class="op">=</span> <span class="fl">0.08</span>,</span>
 <span>  seq_group_labels <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  seq_group_label_radius <span class="op">=</span> <span class="fl">1.35</span>,</span>
+<span>  seq_group_label_size <span class="op">=</span> <span class="fl">3.5</span>,</span>
 <span>  seq_group_colors <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  ribbon_data <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">ribbonGap</span>,</span>
@@ -98,13 +99,7 @@ into Cartesian (x, y) coordinates and stores them in a layout list.</p>
 <span>  gene_label_wrap <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  gene_label_repel_layer <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  gene_label_repel_max_overlaps <span class="op">=</span> <span class="cn">Inf</span>,</span>
-<span>  gene_label_repel_box_padding <span class="op">=</span> <span class="fl">0.25</span>,</span>
-<span>  gene_label_repel_point_padding <span class="op">=</span> <span class="fl">0.1</span>,</span>
-<span>  gene_label_repel_min_segment_length <span class="op">=</span> <span class="fl">0.5</span>,</span>
-<span>  gene_label_repel_force <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  gene_label_repel_seed <span class="op">=</span> <span class="fl">123</span>,</span>
-<span>  gene_label_orientation <span class="op">=</span> <span class="st">"arc"</span>,</span>
-<span>  gene_label_segment <span class="op">=</span> <span class="st">"line"</span>,</span>
+<span>  gene_label_layout <span class="op">=</span> <span class="st">"aligned"</span>,</span>
 <span>  gene_label_side <span class="op">=</span> <span class="st">"auto"</span>,</span>
 <span>  gene_label_segment_linetype <span class="op">=</span> <span class="st">"auto"</span>,</span>
 <span>  <span class="va">gene_color_scheme</span>,</span>
@@ -125,10 +120,14 @@ into Cartesian (x, y) coordinates and stores them in a layout list.</p>
 <span>  <span class="va">labelSize</span>,</span>
 <span>  <span class="va">labelOffset</span>,</span>
 <span>  <span class="va">axisLabelOrientation</span>,</span>
+<span>  axis_breaks <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  axis_minor_breaks <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  axis_labels <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  axis_label_hide_overlaps <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  <span class="va">show_axis</span>,</span>
 <span>  <span class="va">rotation</span>,</span>
-<span>  debug <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  debug <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  geometry_cache <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -174,6 +173,11 @@ into Cartesian (x, y) coordinates and stores them in a layout list.</p>
 
 <dt id="arg-gene-data">gene_data<a class="anchor" aria-label="anchor" href="#arg-gene-data"></a></dt>
 <dd><p>Gene data (already validated)</p></dd>
+
+
+<dt id="arg-gene-label-layout">gene_label_layout<a class="anchor" aria-label="anchor" href="#arg-gene-label-layout"></a></dt>
+<dd><p>Character, default "aligned". Deterministic
+automatic layout: "aligned", "radial", or "arc".</p></dd>
 
 
 <dt id="arg-gene-label-side">gene_label_side<a class="anchor" aria-label="anchor" href="#arg-gene-label-side"></a></dt>

@@ -1,21 +1,50 @@
 # Chord diagram coordinate system
 
-A lightweight Coord. It creates placeholder coordinates in
-[`ggchord()`](https://dangjem.github.io/ggchord/reference/ggchord.md),
-which are replaced at print time with the actual extents computed from
-the layout.
+Controls global rotation, aspect ratio, coordinate limits, clipping and
+the strategy used to fit chord geometry and labels.
 
 ## Usage
 
 ``` r
-coord_chord(layout = NULL)
+coord_chord(
+  rotation = 45,
+  ratio = 1,
+  xlim = NULL,
+  ylim = NULL,
+  expand = TRUE,
+  clip = "off",
+  fit = c("labels", "geometry", "manual")
+)
 ```
 
 ## Arguments
 
-- layout:
+- rotation:
 
-  Chord layout object (passed internally by ggchord(), may be NULL)
+  Global clockwise layout rotation in degrees, default 45.
+
+- ratio:
+
+  Fixed y/x aspect ratio, default 1.
+
+- xlim, ylim:
+
+  Optional user limits. Explicit limits take priority over automatically
+  fitted limits.
+
+- expand:
+
+  Logical. Expand coordinate limits, default TRUE.
+
+- clip:
+
+  Whether drawing is clipped to the panel, default `"off"`.
+
+- fit:
+
+  Fitting strategy: `"labels"` includes measured label boxes,
+  `"geometry"` fits geometric elements only, and `"manual"` requires
+  explicit `xlim` and `ylim`.
 
 ## Value
 

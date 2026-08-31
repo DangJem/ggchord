@@ -1,13 +1,11 @@
-# Add a repelled gene label layer (ggrepel-style)
+# Add an automatically arranged gene label layer
 
 Like
 [`geom_gene_label()`](https://dangjem.github.io/ggchord/reference/geom_gene_label.md),
-but the labels are placed with a force-based simulation that pushes them
-away from the genes and from each other (similar to
-[`ggrepel::geom_text_repel()`](https://ggrepel.slowkow.com/reference/geom_text_repel.html)).
-Labels that move far enough from their anchor are connected to it with a
-leader line, and labels that still overlap too many others can be
-hidden.
+but labels are placed by one of three deterministic collision-avoiding
+layouts. The default `"aligned"` layout uses orderly cardinal rails,
+`"radial"` uses compact local offset tracks, and `"arc"` keeps text
+close to and rotated with the sequence curve.
 
 ## Usage
 
@@ -15,21 +13,11 @@ hidden.
 geom_gene_label_repel(
   mapping = NULL,
   data = NULL,
+  gene_label_layout = "aligned",
   gene_label_size = NULL,
-  gene_label_rotation = NULL,
-  gene_label_radial_offset = NULL,
-  gene_label_circum_offset = NULL,
-  gene_label_circum_limit = NULL,
   gene_label_wrap = NULL,
-  max_overlaps = Inf,
-  box_padding = 0.25,
-  point_padding = 0.1,
-  min_segment_length = 0.05,
-  force = 1,
-  seed = 123,
-  gene_label_orientation = "horizontal",
-  gene_label_segment = "elbow",
   gene_label_side = "outside",
+  max_overlaps = Inf,
   gene_label_segment_linetype = "auto",
   show_legend = FALSE,
   ...
@@ -46,76 +34,22 @@ geom_gene_label_repel(
 
   Default NULL (retrieved automatically from the layout)
 
+- gene_label_layout:
+
+  Character, default `"aligned"`. Label layout: `"aligned"` uses
+  horizontal labels on orderly top, bottom, left and right rails;
+  `"radial"` uses horizontal labels on the nearest collision-free local
+  offset track; `"arc"` rotates labels along the sequence tangent and
+  keeps them close to their genes.
+
 - gene_label_size:
 
   Numeric. Label font size, default 2.5
-
-- gene_label_rotation:
-
-  Optional numeric/vector/list. Label rotation angle, default 0
-
-- gene_label_radial_offset:
-
-  Optional numeric/vector/list. Radial offset of labels, default 0
-
-- gene_label_circum_offset:
-
-  Optional numeric/vector/list. Circumferential offset of labels,
-  default 0
-
-- gene_label_circum_limit:
-
-  Optional logical/vector/list. Whether to limit circumferential offset,
-  default TRUE
 
 - gene_label_wrap:
 
   Numeric or NULL, default NULL. When set, long gene annotations are
   wrapped at this many characters (e.g. 15).
-
-- max_overlaps:
-
-  Numeric, default Inf. Hide labels that still overlap more than this
-  many other labels after repulsion (ggrepel-style decluttering). Use a
-  finite value to clean up crowded plots.
-
-- box_padding:
-
-  Numeric, default 0.25. Extra padding around each label box (data
-  units).
-
-- point_padding:
-
-  Numeric, default 0.1. Extra padding around the anchor points (data
-  units).
-
-- min_segment_length:
-
-  Numeric, default 0.05. Labels that moved less than this distance (data
-  units) from their anchor do not draw a leader line. Keep it small so
-  that every label is connected to its gene.
-
-- force:
-
-  Numeric, default 1. Strength of the repulsive forces.
-
-- seed:
-
-  Numeric, default 123. Random seed for reproducibility.
-
-- gene_label_orientation:
-
-  Character, default "horizontal". One of `"arc"` (text rotated along
-  the sequence arc) or `"horizontal"` (all labels are drawn
-  horizontally).
-
-- gene_label_segment:
-
-  Character, default "elbow". Leader line style: a straight `"line"`
-  from the gene to the label, or an L-shaped `"elbow"` (a short segment
-  outward, then a horizontal segment to the label). Elbow segment
-  lengths adapt to each label's position and text width, so labels can
-  be placed freely.
 
 - gene_label_side:
 
@@ -125,6 +59,12 @@ geom_gene_label_repel(
   can overlap the ribbons) to the outside of their arc; `"inside"` does
   the opposite. Labels moved to the other side are connected with a
   dashed leader line (see `gene_label_segment_linetype`).
+
+- max_overlaps:
+
+  Numeric, default Inf. Hide labels that still overlap more than this
+  many other labels after repulsion (ggrepel-style decluttering). Use a
+  finite value to clean up crowded plots.
 
 - gene_label_segment_linetype:
 
@@ -145,6 +85,21 @@ geom_gene_label_repel(
 ## Value
 
 A list of ggplot2 layers (a leader-line layer and a text layer).
+
+## Details
+
+The local outside/inside label concepts are informed by SnapGene and
+Geneious, but ggchord uses generic mode names and an independent
+geometry implementation. See [SnapGene feature
+labels](https://support.snapgene.com/hc/en-us/articles/10383722725524-Display-Feature-Labels-Below-or-Inside-a-Map)
+and [Geneious label
+options](https://manual.geneious.com/en/latest/Sequences.html).
+
+Low-level force, padding, orientation and segment arguments used by
+earlier releases have been removed and now produce an error. Use
+`gene_label_layout` for automatic placement, or
+[`geom_gene_label()`](https://dangjem.github.io/ggchord/reference/geom_gene_label.md)
+for manual rotation and offsets.
 
 ## Examples
 

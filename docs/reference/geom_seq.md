@@ -24,7 +24,7 @@ geom_seq(
   seq_group_labels = TRUE,
   seq_group_label_radius = 1.35,
   seq_group_colors = NULL,
-  linewidth = 1.2,
+  linewidth = 1.1,
   show_legend = TRUE,
   legend_position = "right",
   ...
@@ -103,7 +103,7 @@ geom_seq(
 
 - linewidth:
 
-  Arc line width, default 1.2
+  Arc line width, default 1.1
 
 - show_legend:
 

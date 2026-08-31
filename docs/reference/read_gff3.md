@@ -12,7 +12,8 @@ read_gff3(
   files = NULL,
   feature_types = "CDS",
   anno_from = c("product", "Name", "gene", "ID"),
-  unstranded = c("plus", "drop")
+  unstranded = c("plus", "drop"),
+  source_file = FALSE
 )
 ```
 
@@ -40,6 +41,11 @@ read_gff3(
 
   Character, default \`"plus"\`.
 
+- source_file:
+
+  Logical. Add a \`.source_file\` column when reading one or more files,
+  default \`FALSE\`.
+
 ## Value
 
 A data.frame with \`seq_id\`, \`start\`, \`end\`, \`strand\`, \`anno\`
@@ -53,7 +59,8 @@ library(ggchord)
 gff <- tempfile(fileext = ".gff3")
 writeLines(c(
   "##gff-version 3",
-  "seqA  source  CDS  101  500  .  +  0  ID=cds1;product=hypothetical protein"
+  paste0("seqA  source  CDS  101  500  .  +  0  ",
+         "ID=cds1;product=hypothetical protein")
 ), gff)
 read_gff3(gff)
 #>   seq_id start end strand                 anno type source score phase
