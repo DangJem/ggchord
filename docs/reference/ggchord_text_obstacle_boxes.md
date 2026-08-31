@@ -7,7 +7,6 @@ Convert text layers into fixed obstacle rectangles for label repulsion.
 ``` r
 ggchord_text_obstacle_boxes(
   seq_labels_df = NULL,
-  group_labels = NULL,
   axis_ticks = NULL,
   show_axis = FALSE,
   units_per_inch = 0.35,

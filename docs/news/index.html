@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ggchord</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.10.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -34,6 +34,20 @@
       <small>Source: <a href="https://github.com/DangJem/ggchord/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.10.0" id="ggchord-0100-development-version">ggchord 0.10.0 (development version)<a class="anchor" aria-label="anchor" href="#ggchord-0100-development-version"></a></h2>
+<div class="section level3">
+<h3 id="fixed-labels-and-publication-defaults-0-10-0">Fixed labels and publication defaults<a class="anchor" aria-label="anchor" href="#fixed-labels-and-publication-defaults-0-10-0"></a></h3>
+<ul><li><p><code><a href="../reference/geom_feature.html">geom_feature()</a></code> now draws independent <code>"arrow"</code>, <code>"block"</code>, <code>"chevron"</code>, and <code>"lollipop"</code> geometries along each sequence’s real local curve. Map <code>feature_shape</code> and control category-to-geometry values with the new <code><a href="../reference/scale_feature_shape_manual.html">scale_feature_shape_manual()</a></code>; fixed <code>feature_shape</code> values remain available directly in the geom. Legend keys use the same silhouettes as the plot.</p></li>
+<li><p>Sequence grouping has been removed. <code>geom_seq_group_label()</code>, <code>scale_group_colour_manual()</code> / <code>scale_group_color_manual()</code>, and all <code>seq_group*</code> arguments in <code><a href="../reference/geom_seq.html">geom_seq()</a></code> no longer form part of the package. Passing a removed grouping argument or aesthetic now produces a direct migration error instead of silently changing sequence spacing.</p></li>
+<li><p><code><a href="../reference/geom_ribbon.html">geom_ribbon()</a></code> now uses a darker neutral default outline (<code>#59636D</code>) so ribbon boundaries remain legible after transparency is applied. Explicit outline colours and <code>ribbon_colour</code> scales still take precedence.</p></li>
+<li><p><code><a href="../reference/geom_gene_label.html">geom_gene_label()</a></code> is now the single fixed/manual label layer; no separate <code>geom_gene_label_manual()</code> is planned. It adds <code>gene_label_orientation = "horizontal" | "radial" | "tangent"</code>, <code>gene_label_side = "outside" | "auto" | "inside"</code>, and <code>gene_label_overlap = "hide" | "nudge" | "allow"</code>. The new defaults keep fixed labels horizontal and outside the chord, and deterministically omit later colliding labels in input order. Existing per-sequence/per-strand rotation and offsets remain available for direct control; automatic leader-line placement remains the responsibility of <code><a href="../reference/geom_gene_label_repel.html">geom_gene_label_repel()</a></code>.</p></li>
+<li><p>The Identity colourbar now has compact physical dimensions instead of filling the available device height. Its title is <code>Identity (%)</code>, its default breaks are less crowded, and vertical and horizontal guides remain stable when the export size changes. The initial compact bar was lengthened slightly after visual review.</p></li>
+<li><p>Automatic coordinate fitting now keeps independent tight x/y ranges instead of padding both dimensions to a square. <code><a href="https://ggplot2.tidyverse.org/reference/coord_fixed.html" class="external-link">coord_fixed()</a></code> still preserves the geometry’s physical aspect ratio, while the panel uses wide or tall devices more efficiently. <code><a href="../reference/coord_chord.html">coord_chord()</a></code> now defaults to <code>expand = FALSE</code> because automatic fitting already includes a small safety margin. The default plot also retains <code><a href="../reference/theme_ggchord.html">theme_ggchord()</a></code>’s small outer margin; the deprecated <code>panel_margin</code> argument only overrides it when explicitly supplied.</p></li>
+<li><p>The default theme now uses a white export-safe canvas, quieter axes, a smaller title and tighter legend spacing. Sequence strokes and arrowheads are lighter, ribbon opacity is slightly increased, and strand keys use slim arrows that point in opposite directions for <code>+</code> and <code>-</code>. Colourbar titles now have a physical gap from the bar, and vertically stacked legend groups have slightly more separation. Package examples use a conventional 4:3 canvas; external RStudio/graphics-device dimensions remain under user control, as in ggplot2.</p></li>
+<li><p>The visual hierarchy is informed by Circos’ restrained circular information design, clinker’s publication-oriented gene arrows, DNA Features Viewer’s annotation collision handling, and the local annotation/crowding behaviour documented by SnapGene and Geneious. ggchord uses its own palettes, generic API names, geometry and key glyphs rather than copying third-party assets.</p></li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.9.0" id="ggchord-090">ggchord 0.9.0<a class="anchor" aria-label="anchor" href="#ggchord-090"></a></h2>
 <div class="section level3">
@@ -65,7 +79,7 @@
 <h3 id="role-specific-scales-0-9-0">Role-specific scales<a class="anchor" aria-label="anchor" href="#role-specific-scales-0-9-0"></a></h3>
 <ul><li><p>Sequence, group, ribbon, gene, feature and region layers now use independent role aesthetics: <code>seq_colour</code>, <code>group_colour</code>, <code>ribbon_fill</code>, <code>ribbon_alpha</code>, <code>ribbon_colour</code>, <code>ribbon_linetype</code>, <code>gene_fill</code>, <code>feature_fill</code> and <code>region_fill</code>. Their public <code>scale_*()</code> constructors can coexist in one plot without replacing another layer’s fill or colour scale.</p></li>
 <li><p><code><a href="../reference/scale_seq_position_continuous.html">scale_seq_position_continuous()</a></code> controls genomic major/minor breaks and labels. It is trained independently against each sequence length.</p></li>
-<li><p><code><a href="../reference/scale_seq_colour_manual.html">scale_group_color_manual()</a></code> and <code><a href="../reference/scale_ribbon_alpha_continuous.html">scale_ribbon_color_manual()</a></code> are available as American-English aliases of their <code>colour</code> counterparts, matching ggplot2’s spelling convention.</p></li>
+<li><p><code>scale_group_color_manual()</code> and <code><a href="../reference/scale_ribbon_alpha_continuous.html">scale_ribbon_color_manual()</a></code> are available as American-English aliases of their <code>colour</code> counterparts, matching ggplot2’s spelling convention.</p></li>
 <li><p>Old scale-like geom arguments remain functional during v0.9.0 and emit one migration warning per session. Supplying both an old argument and the new role scale is an error rather than silently choosing one. Principal migrations are:</p></li>
 </ul><table class="table"><colgroup><col width="50%"><col width="50%"></colgroup><thead><tr><th>Old geom argument</th>
 <th>New interface</th>
@@ -73,7 +87,7 @@
 <code>seq_colors</code>, <code>seq_group_colors</code>
 </td>
 <td>
-<code><a href="../reference/scale_seq_colour_manual.html">scale_seq_colour_manual()</a></code>, <code><a href="../reference/scale_seq_colour_manual.html">scale_group_colour_manual()</a></code>
+<code><a href="../reference/scale_seq_colour_manual.html">scale_seq_colour_manual()</a></code>, <code>scale_group_colour_manual()</code>
 </td>
 </tr><tr><td>
 <code>ribbon_colors</code>, colour limits/breaks/name</td>
@@ -106,7 +120,7 @@
 <h3 id="geom-and-annotation-interfaces-0-9-0">Geom and annotation interfaces<a class="anchor" aria-label="anchor" href="#geom-and-annotation-interfaces-0-9-0"></a></h3>
 <ul><li><p>Gene, sequence and axis text sizes are now fixed layer values rather than a shared <code>size</code> scale, so adding one label layer cannot rescale another. Registered axis, sequence-label, gene-label and leader-line theme elements are resolved before the standard ggplot2 build; an explicit geom style still takes priority.</p></li>
 <li><p><code><a href="../reference/geom_axis.html">geom_axis()</a></code> routes shared styles only to compatible child geoms and accepts separate <code>line_params</code>, <code>tick_params</code> and <code>text_params</code>. Its former <code>show_legend</code> argument is removed because axis annotations never participate in a legend.</p></li>
-<li><p><code><a href="../reference/geom_seq_group_label.html">geom_seq_group_label()</a></code> provides an independent group-label layer, while the labels created implicitly by <code><a href="../reference/geom_seq.html">geom_seq()</a></code> remain available for compatibility. Group values now train <code><a href="../reference/scale_seq_colour_manual.html">scale_group_colour_manual()</a></code> instead of treating already-resolved colour strings as categories.</p></li>
+<li><p><code>geom_seq_group_label()</code> provides an independent group-label layer, while the labels created implicitly by <code><a href="../reference/geom_seq.html">geom_seq()</a></code> remain available for compatibility. Group values now train <code>scale_group_colour_manual()</code> instead of treating already-resolved colour strings as categories.</p></li>
 <li><p><code>geom_seq_label(labels = ...)</code> separates displayed sequence text from scale labels; <code>seq_labels</code> remains a deprecated alias. Label arguments passed to <code><a href="../reference/geom_gene.html">geom_gene()</a></code> now fail clearly instead of being warned about and then leaked into <code><a href="https://ggplot2.tidyverse.org/reference/geom_polygon.html" class="external-link">geom_polygon()</a></code>. Geom-level legend positions and colourbar dimensions remain functional during v0.9.0 but direct users to <code><a href="https://ggplot2.tidyverse.org/reference/guides.html" class="external-link">guides()</a></code>.</p></li>
 </ul></div>
 <div class="section level3">
@@ -142,7 +156,7 @@
 <code>gene_label_orientation</code>, <code>gene_label_segment</code>
 </td>
 <td>Use <code>gene_label_layout = "aligned"</code>, <code>"radial"</code>, or <code>"arc"</code>.</td>
-</tr></tbody></table><p>The planned manual layout is intentionally deferred until its data contract can be designed separately. The fixed-position <code><a href="../reference/geom_gene_label.html">geom_gene_label()</a></code> API is unchanged.</p>
+</tr></tbody></table><p>This was the v0.9.0 interface. v0.10.0 subsequently strengthens the existing fixed-position <code><a href="../reference/geom_gene_label.html">geom_gene_label()</a></code> instead of introducing a separate manual geom; see the development section above.</p>
 </div>
 </div>
     <div class="section level2">
@@ -342,4 +356,3 @@
 
 
   </body></html>
-

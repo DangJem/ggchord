@@ -197,3 +197,48 @@ key_glyph_gene <- function(data, params, size) {
   if (is.null(data$fill)) return(zeroGrob())
   draw_key_gene_arrow(data, params, size)
 }
+
+#' Key glyph for generic genomic features
+#' @keywords internal
+key_glyph_feature <- function(data, params, size) {
+  data$fill <- data$feature_fill %||% data$fill
+  if (is.null(data$fill)) return(zeroGrob())
+
+  shape <- as.character(data$feature_shape %||% "arrow")[1]
+  if (!shape %in% c("arrow", "block", "chevron", "lollipop")) {
+    shape <- "arrow"
+  }
+  col <- alpha(data$colour %||% "#353A3E", data$alpha %||% 1)
+  fill <- alpha(data$fill, data$alpha %||% 1)
+  lwd <- (data$linewidth %||% data$size %||% 0.25) * .pt
+  gp <- gpar(col = col, fill = fill, lwd = lwd, linejoin = "round")
+
+  if (identical(shape, "arrow")) {
+    return(draw_key_gene_arrow(data, params, size))
+  }
+  if (identical(shape, "block")) {
+    return(rectGrob(
+      x = unit(0.5, "npc"), y = unit(0.5, "npc"),
+      width = unit(0.76, "npc"), height = unit(0.34, "npc"), gp = gp
+    ))
+  }
+  if (identical(shape, "chevron")) {
+    return(polygonGrob(
+      x = unit(c(0.10, 0.62, 0.90, 0.62, 0.10, 0.34), "npc"),
+      y = unit(c(0.32, 0.32, 0.50, 0.68, 0.68, 0.50), "npc"),
+      gp = gp
+    ))
+  }
+
+  grobTree(
+    segmentsGrob(
+      x0 = unit(0.18, "npc"), x1 = unit(0.62, "npc"),
+      y0 = unit(0.5, "npc"), y1 = unit(0.5, "npc"),
+      gp = gpar(col = col, lwd = max(lwd, 0.7), lineend = "round")
+    ),
+    circleGrob(
+      x = unit(0.70, "npc"), y = unit(0.5, "npc"),
+      r = unit(0.18, "npc"), gp = gp
+    )
+  )
+}

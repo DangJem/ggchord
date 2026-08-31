@@ -1,5 +1,78 @@
 # Changelog
 
+## ggchord 0.10.0 (development version)
+
+### Fixed labels and publication defaults
+
+- [`geom_feature()`](https://dangjem.github.io/ggchord/reference/geom_feature.md)
+  now draws independent `"arrow"`, `"block"`, `"chevron"`, and
+  `"lollipop"` geometries along each sequence’s real local curve. Map
+  `feature_shape` and control category-to-geometry values with the new
+  [`scale_feature_shape_manual()`](https://dangjem.github.io/ggchord/reference/scale_feature_shape_manual.md);
+  fixed `feature_shape` values remain available directly in the geom.
+  Legend keys use the same silhouettes as the plot.
+
+- Sequence grouping has been removed. `geom_seq_group_label()`,
+  `scale_group_colour_manual()` / `scale_group_color_manual()`, and all
+  `seq_group*` arguments in
+  [`geom_seq()`](https://dangjem.github.io/ggchord/reference/geom_seq.md)
+  no longer form part of the package. Passing a removed grouping
+  argument or aesthetic now produces a direct migration error instead of
+  silently changing sequence spacing.
+
+- [`geom_ribbon()`](https://dangjem.github.io/ggchord/reference/geom_ribbon.md)
+  now uses a darker neutral default outline (`#59636D`) so ribbon
+  boundaries remain legible after transparency is applied. Explicit
+  outline colours and `ribbon_colour` scales still take precedence.
+
+- [`geom_gene_label()`](https://dangjem.github.io/ggchord/reference/geom_gene_label.md)
+  is now the single fixed/manual label layer; no separate
+  `geom_gene_label_manual()` is planned. It adds
+  `gene_label_orientation = "horizontal" | "radial" | "tangent"`,
+  `gene_label_side = "outside" | "auto" | "inside"`, and
+  `gene_label_overlap = "hide" | "nudge" | "allow"`. The new defaults
+  keep fixed labels horizontal and outside the chord, and
+  deterministically omit later colliding labels in input order. Existing
+  per-sequence/per-strand rotation and offsets remain available for
+  direct control; automatic leader-line placement remains the
+  responsibility of
+  [`geom_gene_label_repel()`](https://dangjem.github.io/ggchord/reference/geom_gene_label_repel.md).
+
+- The Identity colourbar now has compact physical dimensions instead of
+  filling the available device height. Its title is `Identity (%)`, its
+  default breaks are less crowded, and vertical and horizontal guides
+  remain stable when the export size changes. The initial compact bar
+  was lengthened slightly after visual review.
+
+- Automatic coordinate fitting now keeps independent tight x/y ranges
+  instead of padding both dimensions to a square.
+  [`coord_fixed()`](https://ggplot2.tidyverse.org/reference/coord_fixed.html)
+  still preserves the geometry’s physical aspect ratio, while the panel
+  uses wide or tall devices more efficiently.
+  [`coord_chord()`](https://dangjem.github.io/ggchord/reference/coord_chord.md)
+  now defaults to `expand = FALSE` because automatic fitting already
+  includes a small safety margin. The default plot also retains
+  [`theme_ggchord()`](https://dangjem.github.io/ggchord/reference/theme_ggchord.md)’s
+  small outer margin; the deprecated `panel_margin` argument only
+  overrides it when explicitly supplied.
+
+- The default theme now uses a white export-safe canvas, quieter axes, a
+  smaller title and tighter legend spacing. Sequence strokes and
+  arrowheads are lighter, ribbon opacity is slightly increased, and
+  strand keys use slim arrows that point in opposite directions for `+`
+  and `-`. Colourbar titles now have a physical gap from the bar, and
+  vertically stacked legend groups have slightly more separation.
+  Package examples use a conventional 4:3 canvas; external
+  RStudio/graphics-device dimensions remain under user control, as in
+  ggplot2.
+
+- The visual hierarchy is informed by Circos’ restrained circular
+  information design, clinker’s publication-oriented gene arrows, DNA
+  Features Viewer’s annotation collision handling, and the local
+  annotation/crowding behaviour documented by SnapGene and Geneious.
+  ggchord uses its own palettes, generic API names, geometry and key
+  glyphs rather than copying third-party assets.
+
 ## ggchord 0.9.0
 
 ### Release audit
@@ -99,8 +172,7 @@
   controls genomic major/minor breaks and labels. It is trained
   independently against each sequence length.
 
-- [`scale_group_color_manual()`](https://dangjem.github.io/ggchord/reference/scale_seq_colour_manual.md)
-  and
+- `scale_group_color_manual()` and
   [`scale_ribbon_color_manual()`](https://dangjem.github.io/ggchord/reference/scale_ribbon_alpha_continuous.md)
   are available as American-English aliases of their `colour`
   counterparts, matching ggplot2’s spelling convention.
@@ -112,7 +184,7 @@
 
 | Old geom argument | New interface |
 |----|----|
-| `seq_colors`, `seq_group_colors` | [`scale_seq_colour_manual()`](https://dangjem.github.io/ggchord/reference/scale_seq_colour_manual.md), [`scale_group_colour_manual()`](https://dangjem.github.io/ggchord/reference/scale_seq_colour_manual.md) |
+| `seq_colors`, `seq_group_colors` | [`scale_seq_colour_manual()`](https://dangjem.github.io/ggchord/reference/scale_seq_colour_manual.md), `scale_group_colour_manual()` |
 | `ribbon_colors`, colour limits/breaks/name | `scale_ribbon_fill_*()` |
 | `ribbon_*_by` | the corresponding `aes(ribbon_* = ...)` |
 | `ribbon_alpha_range` | `scale_ribbon_alpha_continuous(range = ...)` |
@@ -167,13 +239,12 @@
   `show_legend` argument is removed because axis annotations never
   participate in a legend.
 
-- [`geom_seq_group_label()`](https://dangjem.github.io/ggchord/reference/geom_seq_group_label.md)
-  provides an independent group-label layer, while the labels created
-  implicitly by
+- `geom_seq_group_label()` provides an independent group-label layer,
+  while the labels created implicitly by
   [`geom_seq()`](https://dangjem.github.io/ggchord/reference/geom_seq.md)
   remain available for compatibility. Group values now train
-  [`scale_group_colour_manual()`](https://dangjem.github.io/ggchord/reference/scale_seq_colour_manual.md)
-  instead of treating already-resolved colour strings as categories.
+  `scale_group_colour_manual()` instead of treating already-resolved
+  colour strings as categories.
 
 - `geom_seq_label(labels = ...)` separates displayed sequence text from
   scale labels; `seq_labels` remains a deprecated alias. Label arguments
@@ -238,10 +309,11 @@ Removed arguments fail immediately rather than being silently ignored:
 | `box_padding`, `point_padding`, `min_segment_length`, `force`, `seed` | Select an automatic `gene_label_layout`; collision and line settings are managed by the mode. |
 | `gene_label_orientation`, `gene_label_segment` | Use `gene_label_layout = "aligned"`, `"radial"`, or `"arc"`. |
 
-The planned manual layout is intentionally deferred until its data
-contract can be designed separately. The fixed-position
+This was the v0.9.0 interface. v0.10.0 subsequently strengthens the
+existing fixed-position
 [`geom_gene_label()`](https://dangjem.github.io/ggchord/reference/geom_gene_label.md)
-API is unchanged.
+instead of introducing a separate manual geom; see the development
+section above.
 
 ## ggchord 0.8.0
 

@@ -19,7 +19,6 @@
     ggchord.axis.ticks = ggplot2::element_line(),
     ggchord.axis.text = ggplot2::element_text(),
     ggchord.seq.label = ggplot2::element_text(),
-    ggchord.group.label = ggplot2::element_text(),
     ggchord.gene.label = ggplot2::element_text(),
     ggchord.gene.label.segment = ggplot2::element_line(),
     element_tree = list(
@@ -27,7 +26,6 @@
       "ggchord.axis.ticks" = ggplot2::el_def("element_line", inherit = "line"),
       "ggchord.axis.text" = ggplot2::el_def("element_text", inherit = "text"),
       "ggchord.seq.label" = ggplot2::el_def("element_text", inherit = "text"),
-      "ggchord.group.label" = ggplot2::el_def("element_text", inherit = "text"),
       "ggchord.gene.label" = ggplot2::el_def("element_text", inherit = "text"),
       "ggchord.gene.label.segment" = ggplot2::el_def(
         "element_line", inherit = "line"
@@ -248,8 +246,9 @@ ggchord_attach_input_columns <- function(geometry, input) {
     "text_angle", "label_angle", "hjust", "vjust", "size", "alpha",
     "colour", "fill", "zfill", "zcolour", "zregionfill", "zoutline",
     "zlinetype", "outline_col", "linetype_val", "seq_colour",
-    "group_colour", "ribbon_fill", "ribbon_alpha", "ribbon_colour",
-    "ribbon_linetype", "gene_fill", "feature_fill", "region_fill"
+    "ribbon_fill", "ribbon_alpha", "ribbon_colour",
+    "ribbon_linetype", "gene_fill", "feature_fill", "feature_shape",
+    "region_fill"
   )
   if ("source_row" %in% names(geometry)) {
     idx <- geometry$source_row
@@ -284,7 +283,6 @@ extract_ggchord_layer_data <- function(lyr, layout) {
     gene_text_repel = if (nrow(layout$gene_labels) > 0) layout$gene_labels else fallback,
     gene_label_segment = if (nrow(layout$gene_label_segments) > 0) layout$gene_label_segments else fallback,
     seq_label = if (nrow(layout$seq_labels_df) > 0) layout$seq_labels_df else fallback,
-    seq_group_label = if (nrow(layout$group_labels) > 0) layout$group_labels else fallback,
     seq_region = if (nrow(layout$region_polys) > 0) layout$region_polys else fallback,
     ribbon_highlight = if (nrow(layout$ribbon_highlight_polys) > 0) layout$ribbon_highlight_polys else fallback,
     axis_line = if (nrow(layout$axis_lines) > 0) layout$axis_lines else fallback,

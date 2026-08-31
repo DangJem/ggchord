@@ -245,7 +245,7 @@ base + geom_gene_label_repel(gene_label_layout = "arc")
 ```
 
 三种模式都会使用实际的 `seq_radius`、`seq_curvature`、`seq_gap`、
-`seq_orientation`、旋转和分组几何。局部外侧/内侧标签理念借鉴了
+`seq_orientation`、旋转和局部曲线几何。局部外侧/内侧标签理念借鉴了
 [SnapGene](https://support.snapgene.com/hc/en-us/articles/10383722725524-Display-Feature-Labels-Below-or-Inside-a-Map)
 与 [Geneious](https://manual.geneious.com/en/latest/Sequences.html)，但 ggchord
 使用通用模式名和独立实现。如需手工旋转或偏移，请使用
@@ -274,23 +274,7 @@ ggchord(seq_data_example) +
 knitr::include_graphics("../man/figures/axis_seq_label.png")
 ```
 
-### 3.7 对序列分组
-
-```{r tutorial-group, eval=FALSE}
-seq_grouped <- transform(seq_data_example,
-                         seq_group = c("host", "host", "phage", "phage"))
-
-ggchord(seq_grouped, ribbon_data_example, gene_data_example) +
-  geom_seq(seq_group = "seq_group",
-           seq_group_colors = c(host = "#E41A1C", phage = "#377EB8")) +
-  geom_ribbon() + geom_gene()
-```
-
-```{r tutorial-group-img, echo=FALSE, fig.cap="带组间空隙和组标签的分组序列。"}
-knitr::include_graphics("../man/figures/tutorial_seq_group.png")
-```
-
-### 3.8 映射数值列与 Ribbon 方向
+### 3.7 映射数值列与 Ribbon 方向
 
 ```{r tutorial-ribbon-map, eval=FALSE}
 rb_scored <- transform(ribbon_data_example,
@@ -307,7 +291,7 @@ ggchord(seq_data_example, rb_scored) +
 knitr::include_graphics("../man/figures/tutorial_ribbon_mapping.png")
 ```
 
-### 3.9 高亮区间与连接带
+### 3.8 高亮区间与连接带
 
 ```{r tutorial-highlight, eval=FALSE}
 regions <- data.frame(seq_id = "MT108731.1",
@@ -323,22 +307,30 @@ ggchord(seq_data_example, ribbon_data_example) +
 knitr::include_graphics("../man/figures/tutorial_highlights.png")
 ```
 
-### 3.10 绘制通用 feature
+### 3.9 绘制通用 feature
 
 ```{r tutorial-feature, eval=FALSE}
-features <- data.frame(seq_id = c("MT108731.1", "MT118296.1"),
-                       start = c(1000, 500), end = c(4000, 2000),
-                       strand = c("+", "-"), type = c("CDS", "tRNA"))
+features <- data.frame(seq_id = rep("MT108731.1", 4),
+                       start = c(1000, 7000, 13000, 19000),
+                       end = c(5000, 11000, 17000, 23000),
+                       strand = c("+", "-", "+", "-"),
+                       type = c("CDS", "tRNA", "repeat", "promoter"))
 
 ggchord(seq_data_example, ribbon_data_example) +
-  geom_seq() + geom_ribbon() + geom_feature(features)
+  geom_seq() + geom_ribbon() +
+  geom_feature(aes(feature_shape = type), data = features,
+               feature_width = 0.10) +
+  scale_feature_shape_manual(values = c(
+    CDS = "arrow", tRNA = "block", "repeat" = "chevron",
+    promoter = "lollipop"
+  ))
 ```
 
-```{r tutorial-feature-img, echo=FALSE, fig.cap="用 geom_feature() 绘制的通用 feature。"}
+```{r tutorial-feature-img, echo=FALSE, fig.cap="用 geom_feature() 绘制的四种 feature 几何。"}
 knitr::include_graphics("../man/figures/tutorial_features.png")
 ```
 
-### 3.11 应用主题与 scale
+### 3.10 应用主题与 scale
 
 ```{r tutorial-theme, eval=FALSE}
 ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
@@ -355,7 +347,7 @@ ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
 knitr::include_graphics("../man/figures/legend_bottom.png")
 ```
 
-### 3.12 发表级精细控制
+### 3.11 发表级精细控制
 
 ```{r tutorial-fine, eval=FALSE}
 ggchord(seq_data_example, ribbon_data_example, gene_data_example,

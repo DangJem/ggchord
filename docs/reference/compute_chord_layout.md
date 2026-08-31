@@ -16,12 +16,6 @@ compute_chord_layout(
   seq_curvature,
   orientation,
   seq_gap,
-  seq_group = NULL,
-  seq_group_gap = 0.08,
-  seq_group_labels = TRUE,
-  seq_group_label_radius = 1.35,
-  seq_group_label_size = 3.5,
-  seq_group_colors = NULL,
   ribbon_data = NULL,
   ribbonGap,
   ribbon_color_scheme,
@@ -60,6 +54,8 @@ compute_chord_layout(
   gene_label_show,
   gene_label_size,
   gene_label_wrap = NULL,
+  gene_label_orientation = "horizontal",
+  gene_label_overlap = "hide",
   gene_label_repel_layer = FALSE,
   gene_label_repel_max_overlaps = Inf,
   gene_label_layout = "aligned",
@@ -68,6 +64,8 @@ compute_chord_layout(
   gene_color_scheme,
   gene_colors,
   gene_order,
+  feature_shape_pal = NULL,
+  feature_shape_order = NULL,
   seq_label_text = NULL,
   seq_label_radius = NULL,
   seq_label_rotation = NULL,
@@ -135,6 +133,15 @@ compute_chord_layout(
 - gene_data:
 
   Gene data (already validated)
+
+- gene_label_orientation:
+
+  Fixed-label text orientation: "radial", "tangent", or "horizontal".
+  Automatic repel layouts manage their own text orientation.
+
+- gene_label_overlap:
+
+  Fixed-label collision policy: "hide", "nudge", or "allow".
 
 - gene_label_layout:
 

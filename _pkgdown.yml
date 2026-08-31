@@ -43,7 +43,6 @@ reference:
       - geom_gene_label_repel
       - geom_axis
       - geom_seq_label
-      - geom_seq_group_label
       - geom_seq_region
       - geom_ribbon_highlight
       - geom_feature
@@ -54,6 +53,7 @@ reference:
       - scale_ribbon_fill_stepsn
       - scale_ribbon_alpha_continuous
       - scale_gene_fill_manual
+      - scale_feature_shape_manual
       - scale_seq_position_continuous
   - title: "Themes and guides"
     desc: "Apply publication-ready themes and legend defaults."

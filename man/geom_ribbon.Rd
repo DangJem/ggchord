@@ -19,7 +19,7 @@ geom_ribbon(
   ribbon_ctrl_point = NULL,
   ribbon_gap = NULL,
   alpha = NULL,
-  ribbon_outline_color = "#FFFFFF",
+  ribbon_outline_color = "#59636D",
   ribbon_outline_width = 0.08,
   ribbon_outline_linetype = 1,
   ribbon_outline_by = NULL,
@@ -75,7 +75,8 @@ scaled continuously from that numeric column.}
 \item{alpha}{Ribbon transparency (overrides ribbon_alpha), defaults to the value used in the layout}
 
 \item{ribbon_outline_color}{Character. Colour of the ribbon outline,
-default white for subtle separation between overlapping ribbons.}
+default \code{"#59636D"}, a restrained dark neutral that remains visible
+after ribbon transparency is applied.}
 
 \item{ribbon_outline_width}{Numeric. Line width of the ribbon outline, default 0.08}
 

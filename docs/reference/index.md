@@ -46,8 +46,6 @@ Stack geometry, annotation, axis and label layers.
   : Add an axis layer
 - [`geom_seq_label()`](https://dangjem.github.io/ggchord/reference/geom_seq_label.md)
   : Add a sequence label layer
-- [`geom_seq_group_label()`](https://dangjem.github.io/ggchord/reference/geom_seq_group_label.md)
-  : Add sequence-group labels
 - [`geom_seq_region()`](https://dangjem.github.io/ggchord/reference/geom_seq_region.md)
   : Highlight regions along sequence arcs
 - [`geom_ribbon_highlight()`](https://dangjem.github.io/ggchord/reference/geom_ribbon_highlight.md)
@@ -61,9 +59,7 @@ Control sequence, ribbon, feature and genomic-position aesthetics.
 
 - [`scale_seq_colour_manual()`](https://dangjem.github.io/ggchord/reference/scale_seq_colour_manual.md)
   [`scale_seq_color_manual()`](https://dangjem.github.io/ggchord/reference/scale_seq_colour_manual.md)
-  [`scale_group_colour_manual()`](https://dangjem.github.io/ggchord/reference/scale_seq_colour_manual.md)
-  [`scale_group_color_manual()`](https://dangjem.github.io/ggchord/reference/scale_seq_colour_manual.md)
-  : Sequence and sequence-group colour scales
+  : Sequence colour scales
 - [`scale_ribbon_fill_stepsn()`](https://dangjem.github.io/ggchord/reference/scale_ribbon_fill_stepsn.md)
   [`scale_ribbon_fill_gradientn()`](https://dangjem.github.io/ggchord/reference/scale_ribbon_fill_stepsn.md)
   [`scale_ribbon_fill_manual()`](https://dangjem.github.io/ggchord/reference/scale_ribbon_fill_stepsn.md)
@@ -79,6 +75,8 @@ Control sequence, ribbon, feature and genomic-position aesthetics.
   [`scale_feature_fill_manual()`](https://dangjem.github.io/ggchord/reference/scale_gene_fill_manual.md)
   [`scale_region_fill_manual()`](https://dangjem.github.io/ggchord/reference/scale_gene_fill_manual.md)
   : Gene, feature and region fill scales
+- [`scale_feature_shape_manual()`](https://dangjem.github.io/ggchord/reference/scale_feature_shape_manual.md)
+  : Feature shape scale
 - [`scale_seq_position_continuous()`](https://dangjem.github.io/ggchord/reference/scale_seq_position_continuous.md)
   : Genomic sequence position scale
 

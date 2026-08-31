@@ -106,18 +106,18 @@ out$report
 #>
 #> $n_kept
 #> [1] 3
-#> 
+#>
 #> $n_removed
 #> [1] 28
-#> 
+#>
 #> $removed_by_reason
 #>       reason  n
 #> 1 min_pident 28
-#> 
+#>
 #> $removed_rows
 #>  [1]  3  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28
 #> [26] 29 30 31
-#> 
+#>
 #> $removed_reasons
 #>    row     reason
 #> 1    3 min_pident
@@ -151,8 +151,8 @@ out$report
 #>
 #> $kept_rows
 #> [1] 1 2 4
-#> 
+#>
 #> $sort_by
 #> [1] "pident"  "-length"
-#> 
+#>
 ```

@@ -10,6 +10,7 @@ geom_feature(
   type = "type",
   category = NULL,
   label = "label",
+  feature_shape = "arrow",
   feature_colors = NULL,
   feature_width = NULL,
   feature_offset = NULL,
@@ -36,6 +37,12 @@ generated.}
 \item{label}{Optional column name used for annotation text; defaults to
 \code{label} when present, otherwise \code{type}.}
 
+\item{feature_shape}{Fixed feature geometry used when \code{feature_shape}
+is not mapped in \code{aes()}: \code{"arrow"}, \code{"block"},
+\code{"chevron"}, or \code{"lollipop"}. The default is \code{"arrow"}.
+Use \code{aes(feature_shape = type)} together with
+\code{scale_feature_shape_manual()} to map categories to geometry.}
+
 \item{feature_colors}{Optional named color vector by feature value; unnamed
 vectors are recycled positionally.}
 
@@ -58,10 +65,10 @@ offset; passed to \code{geom_gene(gene_offset = ...)}.}
 A list of ggplot2 layers
 }
 \description{
-A thin, backwards-compatible convenience layer for CDS, tRNA, rRNA, repeat,
-CRISPR, promoter or user-defined features. It prepares a gene-compatible
-table from a \code{type} / \code{category} / \code{label} specification and
-reuses the proven \code{geom_gene()} geometry and scales.
+A general layer for CDS, tRNA, rRNA, repeat, CRISPR, promoter or user-defined
+features. It supports directional arrows, blocks, notched chevrons and
+lollipops, all generated against the sequence's real local curve. Feature
+fill and geometry use independent role-specific scales.
 }
 \examples{
 library(ggchord)

@@ -11,7 +11,7 @@ to annotate the gene arrows with their texts."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">ggchord</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.10.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -51,6 +51,9 @@ to annotate the gene arrows with their texts.</p>
 <span>  mapping <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  data <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  gene_label_size <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  gene_label_orientation <span class="op">=</span> <span class="st">"horizontal"</span>,</span>
+<span>  gene_label_side <span class="op">=</span> <span class="st">"outside"</span>,</span>
+<span>  gene_label_overlap <span class="op">=</span> <span class="st">"hide"</span>,</span>
 <span>  gene_label_rotation <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  gene_label_radial_offset <span class="op">=</span> <span class="fl">0.04</span>,</span>
 <span>  gene_label_circum_offset <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -75,6 +78,26 @@ to annotate the gene arrows with their texts.</p>
 
 <dt id="arg-gene-label-size">gene_label_size<a class="anchor" aria-label="anchor" href="#arg-gene-label-size"></a></dt>
 <dd><p>Numeric. Label font size, default 2.5</p></dd>
+
+
+<dt id="arg-gene-label-orientation">gene_label_orientation<a class="anchor" aria-label="anchor" href="#arg-gene-label-orientation"></a></dt>
+<dd><p>Character, default <code>"horizontal"</code>. Text
+orientation relative to each sequence path: <code>"radial"</code>,
+<code>"tangent"</code>, or <code>"horizontal"</code>.</p></dd>
+
+
+<dt id="arg-gene-label-side">gene_label_side<a class="anchor" aria-label="anchor" href="#arg-gene-label-side"></a></dt>
+<dd><p>Character, default <code>"outside"</code>. Place labels
+outside the chord, use the strand-based <code>"auto"</code> side, or force
+<code>"inside"</code> placement.</p></dd>
+
+
+<dt id="arg-gene-label-overlap">gene_label_overlap<a class="anchor" aria-label="anchor" href="#arg-gene-label-overlap"></a></dt>
+<dd><p>Character, default <code>"hide"</code>. Fixed-label
+collision policy: omit later conflicting labels (<code>"hide"</code>), apply
+the legacy gentle adjustment (<code>"nudge"</code>), or keep all requested
+positions (<code>"allow"</code>). Input row order therefore provides a simple
+way to prioritize labels in <code>"hide"</code> mode.</p></dd>
 
 
 <dt id="arg-gene-label-rotation">gene_label_rotation<a class="anchor" aria-label="anchor" href="#arg-gene-label-rotation"></a></dt>
@@ -115,8 +138,11 @@ labels narrower and less prone to overlap.</p></dd>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>Long annotations can be wrapped with <code>gene_label_wrap</code>. For automatic
-de-overlapping (with leader lines), use
+    <p>This is the deterministic, fixed-position label layer. By default labels
+sit outside their sequence and labels that would collide are omitted in
+input-row order. Use <code>gene_label_overlap = "nudge"</code> to retain the
+legacy gentle adjustment, or <code>"allow"</code> to draw every label at its
+requested position. For automatic arrangement with leader lines, use
 <code><a href="geom_gene_label_repel.html">geom_gene_label_repel()</a></code> instead.</p>
     </div>
 
@@ -150,4 +176,3 @@ de-overlapping (with leader lines), use
 
 
   </body></html>
-

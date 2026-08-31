@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ggchord</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.10.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,14 +53,14 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>ggchord tutorial</h1>
-            
-      
+
+
       <small class="dont-index">Source: <a href="https://github.com/DangJem/ggchord/blob/HEAD/vignettes/ggchord_vignette.Rmd" class="external-link"><code>vignettes/ggchord_vignette.Rmd</code></a></small>
       <div class="d-none name"><code>ggchord_vignette.Rmd</code></div>
     </div>
 
-    
-    
+
+
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/DangJem/ggchord" class="external-link">ggchord</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
@@ -464,12 +464,27 @@ label moves away from its first track.</p>
 <span><span class="va">base</span> <span class="op">+</span> <span class="fu"><a href="../reference/geom_gene_label_repel.html">geom_gene_label_repel</a></span><span class="op">(</span>gene_label_layout <span class="op">=</span> <span class="st">"arc"</span><span class="op">)</span></span></code></pre></div>
 <p>Every mode uses the real <code>seq_radius</code>,
 <code>seq_curvature</code>, <code>seq_gap</code>,
-<code>seq_orientation</code>, rotation and grouping geometry. The local
-outside/inside label concepts are informed by <a href="https://support.snapgene.com/hc/en-us/articles/10383722725524-Display-Feature-Labels-Below-or-Inside-a-Map" class="external-link">SnapGene</a>
+<code>seq_orientation</code>, rotation and local curve geometry. The
+local outside/inside label concepts are informed by <a href="https://support.snapgene.com/hc/en-us/articles/10383722725524-Display-Feature-Labels-Below-or-Inside-a-Map" class="external-link">SnapGene</a>
 and <a href="https://manual.geneious.com/en/latest/Sequences.html" class="external-link">Geneious</a>,
 while ggchord uses generic mode names and an independent implementation.
 Use <code><a href="../reference/geom_gene_label.html">geom_gene_label()</a></code> when manual label rotation or offsets
 are required.</p>
+<p><code><a href="../reference/geom_gene_label.html">geom_gene_label()</a></code> is also the compact fixed-label
+option. Its v0.10.0 defaults keep text horizontal and outside the chord,
+then retain labels in input-row order while omitting later collisions.
+Set <code>gene_label_orientation = "radial"</code> or
+<code>"tangent"</code>, choose <code>gene_label_side = "auto"</code> or
+<code>"inside"</code>, and use <code>gene_label_overlap = "nudge"</code>
+or <code>"allow"</code> when preserving every requested label is more
+important than a sparse default. This keeps manual rotation and
+per-sequence/per-strand offsets in one fixed-label layer rather than
+adding a separate manual geom.</p>
+<p>The broader visual hierarchy draws on <a href="https://genome.cshlp.org/content/19/9/1639" class="external-link">Circos</a>,
+publication-oriented gene arrows in <a href="https://academic.oup.com/bioinformatics/article/37/16/2473/6129045" class="external-link">clinker</a>,
+and annotation collision ideas from <a href="https://edinburgh-genome-foundry.github.io/DnaFeaturesViewer/" class="external-link">DNA
+Features Viewer</a>. These are design references only; ggchord uses
+independent palettes, geometry and generic API names.</p>
 </div>
 </div>
 <div class="section level3">
@@ -485,26 +500,9 @@ Axes and sequence labels.
 </div>
 </div>
 <div class="section level3">
-<h3 id="group-sequences">3.7 Group sequences<a class="anchor" aria-label="anchor" href="#group-sequences"></a>
+<h3 id="map-numeric-ribbon-columns-and-direction">3.7 Map numeric ribbon columns and direction<a class="anchor" aria-label="anchor" href="#map-numeric-ribbon-columns-and-direction"></a>
 </h3>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">seq_grouped</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/transform.html" class="external-link">transform</a></span><span class="op">(</span><span class="va">seq_data_example</span>,</span>
-<span>                         seq_group <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"host"</span>, <span class="st">"host"</span>, <span class="st">"phage"</span>, <span class="st">"phage"</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="../reference/ggchord.html">ggchord</a></span><span class="op">(</span><span class="va">seq_grouped</span>, <span class="va">ribbon_data_example</span>, <span class="va">gene_data_example</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/geom_seq.html">geom_seq</a></span><span class="op">(</span>seq_group <span class="op">=</span> <span class="st">"seq_group"</span>,</span>
-<span>           seq_group_colors <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>host <span class="op">=</span> <span class="st">"#E41A1C"</span>, phage <span class="op">=</span> <span class="st">"#377EB8"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/geom_ribbon.html">geom_ribbon</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="../reference/geom_gene.html">geom_gene</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<div class="figure" style="text-align: center">
-<img src="../reference/figures/tutorial_seq_group.png" class="r-plt" alt="Sequences grouped with an inter-group gap and labels." width="100%"><p class="caption">
-Sequences grouped with an inter-group gap and labels.
-</p>
-</div>
-</div>
-<div class="section level3">
-<h3 id="map-numeric-ribbon-columns-and-direction">3.8 Map numeric ribbon columns and direction<a class="anchor" aria-label="anchor" href="#map-numeric-ribbon-columns-and-direction"></a>
-</h3>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">rb_scored</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/transform.html" class="external-link">transform</a></span><span class="op">(</span><span class="va">ribbon_data_example</span>,</span>
 <span>                       bitscore <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">ribbon_data_example</span><span class="op">)</span><span class="op">)</span> <span class="op">*</span> <span class="fl">10</span><span class="op">)</span></span>
 <span></span>
@@ -520,9 +518,9 @@ Continuous ribbon fill, alpha and direction mapping.
 </div>
 </div>
 <div class="section level3">
-<h3 id="highlight-regions-and-ribbons">3.9 Highlight regions and ribbons<a class="anchor" aria-label="anchor" href="#highlight-regions-and-ribbons"></a>
+<h3 id="highlight-regions-and-ribbons">3.8 Highlight regions and ribbons<a class="anchor" aria-label="anchor" href="#highlight-regions-and-ribbons"></a>
 </h3>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">regions</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>seq_id <span class="op">=</span> <span class="st">"MT108731.1"</span>,</span>
 <span>                      start <span class="op">=</span> <span class="fl">1000</span>, end <span class="op">=</span> <span class="fl">4000</span>, color <span class="op">=</span> <span class="st">"orange"</span><span class="op">)</span></span>
 <span></span>
@@ -537,25 +535,33 @@ Sequence regions and ribbon highlight.
 </div>
 </div>
 <div class="section level3">
-<h3 id="draw-generic-features">3.10 Draw generic features<a class="anchor" aria-label="anchor" href="#draw-generic-features"></a>
+<h3 id="draw-generic-features">3.9 Draw generic features<a class="anchor" aria-label="anchor" href="#draw-generic-features"></a>
 </h3>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">features</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>seq_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"MT108731.1"</span>, <span class="st">"MT118296.1"</span><span class="op">)</span>,</span>
-<span>                       start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1000</span>, <span class="fl">500</span><span class="op">)</span>, end <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4000</span>, <span class="fl">2000</span><span class="op">)</span>,</span>
-<span>                       strand <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"+"</span>, <span class="st">"-"</span><span class="op">)</span>, type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"CDS"</span>, <span class="st">"tRNA"</span><span class="op">)</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">features</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>seq_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"MT108731.1"</span>, <span class="fl">4</span><span class="op">)</span>,</span>
+<span>                       start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1000</span>, <span class="fl">7000</span>, <span class="fl">13000</span>, <span class="fl">19000</span><span class="op">)</span>,</span>
+<span>                       end <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5000</span>, <span class="fl">11000</span>, <span class="fl">17000</span>, <span class="fl">23000</span><span class="op">)</span>,</span>
+<span>                       strand <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"+"</span>, <span class="st">"-"</span>, <span class="st">"+"</span>, <span class="st">"-"</span><span class="op">)</span>,</span>
+<span>                       type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"CDS"</span>, <span class="st">"tRNA"</span>, <span class="st">"repeat"</span>, <span class="st">"promoter"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/ggchord.html">ggchord</a></span><span class="op">(</span><span class="va">seq_data_example</span>, <span class="va">ribbon_data_example</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/geom_seq.html">geom_seq</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="../reference/geom_ribbon.html">geom_ribbon</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="../reference/geom_feature.html">geom_feature</a></span><span class="op">(</span><span class="va">features</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/geom_seq.html">geom_seq</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="../reference/geom_ribbon.html">geom_ribbon</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/geom_feature.html">geom_feature</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>feature_shape <span class="op">=</span> <span class="va">type</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">features</span>,</span>
+<span>               feature_width <span class="op">=</span> <span class="fl">0.10</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/scale_feature_shape_manual.html">scale_feature_shape_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>    CDS <span class="op">=</span> <span class="st">"arrow"</span>, tRNA <span class="op">=</span> <span class="st">"block"</span>, <span class="st">"repeat"</span> <span class="op">=</span> <span class="st">"chevron"</span>,</span>
+<span>    promoter <span class="op">=</span> <span class="st">"lollipop"</span></span>
+<span>  <span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="../reference/figures/tutorial_features.png" class="r-plt" alt="Generic features drawn with geom_feature()." width="100%"><p class="caption">
-Generic features drawn with geom_feature().
+<img src="../reference/figures/tutorial_features.png" class="r-plt" alt="Four feature geometries drawn with geom_feature()." width="100%"><p class="caption">
+Four feature geometries drawn with geom_feature().
 </p>
 </div>
 </div>
 <div class="section level3">
-<h3 id="apply-themes-and-scales">3.11 Apply themes and scales<a class="anchor" aria-label="anchor" href="#apply-themes-and-scales"></a>
+<h3 id="apply-themes-and-scales">3.10 Apply themes and scales<a class="anchor" aria-label="anchor" href="#apply-themes-and-scales"></a>
 </h3>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ggchord.html">ggchord</a></span><span class="op">(</span><span class="va">seq_data_example</span>, <span class="va">ribbon_data_example</span>, <span class="va">gene_data_example</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/geom_seq.html">geom_seq</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="../reference/geom_ribbon.html">geom_ribbon</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="../reference/geom_gene.html">geom_gene</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="../reference/geom_axis.html">geom_axis</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"MT108731.1"</span> <span class="op">=</span> <span class="st">"#E41A1C"</span>,</span>
@@ -571,9 +577,9 @@ A themed plot with all legends grouped.
 </div>
 </div>
 <div class="section level3">
-<h3 id="fine-tuned-publication-style-plot">3.12 Fine-tuned publication-style plot<a class="anchor" aria-label="anchor" href="#fine-tuned-publication-style-plot"></a>
+<h3 id="fine-tuned-publication-style-plot">3.11 Fine-tuned publication-style plot<a class="anchor" aria-label="anchor" href="#fine-tuned-publication-style-plot"></a>
 </h3>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ggchord.html">ggchord</a></span><span class="op">(</span><span class="va">seq_data_example</span>, <span class="va">ribbon_data_example</span>, <span class="va">gene_data_example</span>,</span>
 <span>        title <span class="op">=</span> <span class="st">"ggchord"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/geom_seq.html">geom_seq</a></span><span class="op">(</span>seq_radius <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3.3</span>, <span class="fl">2.5</span>, <span class="fl">1.8</span>, <span class="fl">1.25</span><span class="op">)</span>,</span>
@@ -611,7 +617,7 @@ an unnamed list</strong>. Gene-level parameters of the fixed-position
 <code><a href="../reference/geom_gene_label_repel.html">geom_gene_label_repel()</a></code> modes intentionally manage their
 own rotation and offsets. All of the following are valid for fixed
 labels:</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># 1. One value for everything</span></span>
 <span><span class="va">gene_label_rotation</span> <span class="op">=</span> <span class="fl">20</span></span>
 <span></span>

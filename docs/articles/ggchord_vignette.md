@@ -250,7 +250,7 @@ base + geom_gene_label_repel(gene_label_layout = "arc")
 ```
 
 Every mode uses the real `seq_radius`, `seq_curvature`, `seq_gap`,
-`seq_orientation`, rotation and grouping geometry. The local
+`seq_orientation`, rotation and local curve geometry. The local
 outside/inside label concepts are informed by
 [SnapGene](https://support.snapgene.com/hc/en-us/articles/10383722725524-Display-Feature-Labels-Below-or-Inside-a-Map)
 and [Geneious](https://manual.geneious.com/en/latest/Sequences.html),
@@ -258,6 +258,25 @@ while ggchord uses generic mode names and an independent implementation.
 Use
 [`geom_gene_label()`](https://dangjem.github.io/ggchord/reference/geom_gene_label.md)
 when manual label rotation or offsets are required.
+
+[`geom_gene_label()`](https://dangjem.github.io/ggchord/reference/geom_gene_label.md)
+is also the compact fixed-label option. Its v0.10.0 defaults keep text
+horizontal and outside the chord, then retain labels in input-row order
+while omitting later collisions. Set `gene_label_orientation = "radial"`
+or `"tangent"`, choose `gene_label_side = "auto"` or `"inside"`, and use
+`gene_label_overlap = "nudge"` or `"allow"` when preserving every
+requested label is more important than a sparse default. This keeps
+manual rotation and per-sequence/per-strand offsets in one fixed-label
+layer rather than adding a separate manual geom.
+
+The broader visual hierarchy draws on
+[Circos](https://genome.cshlp.org/content/19/9/1639),
+publication-oriented gene arrows in
+[clinker](https://academic.oup.com/bioinformatics/article/37/16/2473/6129045),
+and annotation collision ideas from [DNA Features
+Viewer](https://edinburgh-genome-foundry.github.io/DnaFeaturesViewer/).
+These are design references only; ggchord uses independent palettes,
+geometry and generic API names.
 
 ### 3.6 Add axes and sequence labels
 
@@ -271,25 +290,7 @@ ggchord(seq_data_example) +
 
 Axes and sequence labels.
 
-### 3.7 Group sequences
-
-``` r
-
-seq_grouped <- transform(seq_data_example,
-                         seq_group = c("host", "host", "phage", "phage"))
-
-ggchord(seq_grouped, ribbon_data_example, gene_data_example) +
-  geom_seq(seq_group = "seq_group",
-           seq_group_colors = c(host = "#E41A1C", phage = "#377EB8")) +
-  geom_ribbon() + geom_gene()
-```
-
-![Sequences grouped with an inter-group gap and
-labels.](../reference/figures/tutorial_seq_group.png)
-
-Sequences grouped with an inter-group gap and labels.
-
-### 3.8 Map numeric ribbon columns and direction
+### 3.7 Map numeric ribbon columns and direction
 
 ``` r
 
@@ -308,7 +309,7 @@ mapping.](../reference/figures/tutorial_ribbon_mapping.png)
 
 Continuous ribbon fill, alpha and direction mapping.
 
-### 3.9 Highlight regions and ribbons
+### 3.8 Highlight regions and ribbons
 
 ``` r
 
@@ -326,24 +327,32 @@ highlight.](../reference/figures/tutorial_highlights.png)
 
 Sequence regions and ribbon highlight.
 
-### 3.10 Draw generic features
+### 3.9 Draw generic features
 
 ``` r
 
-features <- data.frame(seq_id = c("MT108731.1", "MT118296.1"),
-                       start = c(1000, 500), end = c(4000, 2000),
-                       strand = c("+", "-"), type = c("CDS", "tRNA"))
+features <- data.frame(seq_id = rep("MT108731.1", 4),
+                       start = c(1000, 7000, 13000, 19000),
+                       end = c(5000, 11000, 17000, 23000),
+                       strand = c("+", "-", "+", "-"),
+                       type = c("CDS", "tRNA", "repeat", "promoter"))
 
 ggchord(seq_data_example, ribbon_data_example) +
-  geom_seq() + geom_ribbon() + geom_feature(features)
+  geom_seq() + geom_ribbon() +
+  geom_feature(aes(feature_shape = type), data = features,
+               feature_width = 0.10) +
+  scale_feature_shape_manual(values = c(
+    CDS = "arrow", tRNA = "block", "repeat" = "chevron",
+    promoter = "lollipop"
+  ))
 ```
 
-![Generic features drawn with
+![Four feature geometries drawn with
 geom_feature().](../reference/figures/tutorial_features.png)
 
-Generic features drawn with geom_feature().
+Four feature geometries drawn with geom_feature().
 
-### 3.11 Apply themes and scales
+### 3.10 Apply themes and scales
 
 ``` r
 
@@ -362,7 +371,7 @@ grouped.](../reference/figures/legend_bottom.png)
 
 A themed plot with all legends grouped.
 
-### 3.12 Fine-tuned publication-style plot
+### 3.11 Fine-tuned publication-style plot
 
 ``` r
 

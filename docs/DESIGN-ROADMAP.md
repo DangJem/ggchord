@@ -3,8 +3,9 @@
 本文档记录 ggchord 的实际实现状态、已确认的问题、目标 API 以及版本计划。
 状态以当前代码为准，不再把“已有设计”标记成“已经完成”。
 
-当前正式版本为 **v0.9.0**。以正确性和 ggplot2 语法一致性为中心的基础重构
-已经完成，并于 2026-08-31 通过发布审计。后续功能进入 v0.10.0 开发范围。
+当前正式版本为 **v0.9.0**，代码库版本为 **v0.10.0 开发版**。 以正确性和
+ggplot2 语法一致性为中心的基础重构已于 2026-08-31 随 v0.9.0
+发布；v0.10.0 在用户确认前不创建正式标签或 Release。
 
 总体优先级：
 
@@ -22,7 +23,7 @@
 | v0.7.0 | 数据验证、清理和基础测试 | 已发布；视觉回归并未真正建立 |
 | v0.8.0 | 数据导入、ribbon 预处理、序列分组 | 已发布；遗留正确性问题已在 v0.9.0 修复 |
 | v0.9.0 | grammar 基础、scale/theme/guide/coord、图层独立性 | 已正式发布（2026-08-31） |
-| v0.10.0 | feature 形状、手动标签、显式多环和密集 ribbon | 规划中 |
+| v0.10.0 | 发表级默认视觉、固定标签、feature 形状、显式多环和密集 ribbon | 开发中 |
 | v0.11.0 | 布局导出和大数据性能 | 规划中 |
 | v1.0.0 | API 冻结、完整文档和长期兼容承诺 | 规划中 |
 
@@ -36,7 +37,7 @@ v0.9.0 已完成：
 - role-specific aesthetic、scale、theme、guide 和
   [`coord_chord()`](https://dangjem.github.io/ggchord/reference/coord_chord.md)；
 - `aligned`、`radial`、`arc` 三种确定性基因标签布局；
-- 发表级静态默认样式、静态设备验收及 Plotly 实验代码清理；
+- 首批静态默认样式、静态设备验收及 Plotly 实验代码清理；
 - 精简 testthat、roxygen/Rd 一致性检查和 `R CMD check`。
 
 以下内容不是 v0.9.0 发布阻断项：
@@ -45,8 +46,7 @@ v0.9.0 已完成：
   删除；
 - 自定义 Stat/Geom 的进一步拆分属于内部演进，不改变 v0.9.0 的公开契约；
 - 全量文档、网页和图片重写留到 v1.0.0；
-- feature shape、手动标签、多环、密集 ribbon
-  和正式布局导出按后续版本推进。
+- feature shape、多环、密集 ribbon 和正式布局导出按后续版本推进。
 
 ### v0.9.0 正式版验收记录（2026-08-31）
 
@@ -155,13 +155,13 @@ geom 参数中。当前实现已公开角色专用 aesthetic 和 scale；默认 
 ``` r
 
 seq_colour
-group_colour
 ribbon_fill
 ribbon_alpha
 ribbon_colour
 ribbon_linetype
 gene_fill
 feature_fill
+feature_shape
 region_fill
 ```
 
@@ -171,8 +171,6 @@ region_fill
 
 scale_seq_colour_manual()
 scale_seq_color_manual()       # 美式拼写别名
-scale_group_colour_manual()
-scale_group_color_manual()     # 美式拼写别名
 
 scale_ribbon_fill_stepsn()
 scale_ribbon_fill_gradientn()
@@ -186,6 +184,7 @@ scale_ribbon_linetype_manual()
 
 scale_gene_fill_manual()
 scale_feature_fill_manual()
+scale_feature_shape_manual()
 scale_region_fill_manual()
 ```
 
@@ -213,7 +212,6 @@ scale_seq_position_continuous(
 | 旧参数 | 新归属 |
 |----|----|
 | `seq_colors` | `scale_seq_colour_manual(values = ...)` |
-| `seq_group_colors` | `scale_group_colour_manual(values = ...)` |
 | `ribbon_colors` | ribbon fill scale |
 | `ribbon_color_limits/breaks/name` | ribbon fill scale 的 `limits/breaks/name` |
 | `ribbon_alpha_range` | ribbon alpha scale 的 `range` |
@@ -262,7 +260,6 @@ ggchord.axis.line
 ggchord.axis.ticks
 ggchord.axis.text
 ggchord.seq.label
-ggchord.group.label
 ggchord.gene.label
 ggchord.gene.label.segment
 ```
@@ -278,14 +275,14 @@ ggchord.gene.label.segment
 
 ### 3.4 默认配色与发表级外观
 
-grammar
-重构时同步调整默认视觉，使用户不增加参数也能得到适合论文初稿的图形。
-这项工作不追求装饰性，而强调可读性、层级、打印和色觉友好。
+v0.9.0 建立了视觉参数的 scale/theme/guide 基础，v0.10.0 继续校准默认
+视觉，使用户不增加参数也能得到适合论文初稿的图形。这项工作不追求
+装饰性，而强调可读性、层级、打印和色觉友好。
 
 #### 配色原则
 
-- sequence、group、gene 和 feature
-  的离散色板优先使用色觉友好且灰度可区分的 配色；
+- sequence、gene 和 feature 的离散色板优先使用色觉友好且灰度可区分的
+  配色；
 - ribbon 连续色板使用亮度单调的方案，避免彩虹色板和难以解释的颜色跳变；
 - strand、direction
   等二分类采用对比明确、黑白打印仍可借助形状或线型识别的 组合；
@@ -344,7 +341,7 @@ coord_chord(
   ratio = 1,
   xlim = NULL,
   ylim = NULL,
-  expand = TRUE,
+  expand = FALSE,
   clip = "off",
   fit = c("labels", "geometry", "manual")
 )
@@ -356,25 +353,27 @@ coord_chord(
 - `fit = "labels"` 使用当前设备感知的文字边界；
 - `fit = "geometry"` 只适配几何数据；
 - `fit = "manual"` 要求显式 limits；
+- 自动范围对 x/y 分别紧贴内容，`coord_fixed()` 负责保持物理单位等比；
+- 默认 `expand = FALSE`，因为自动范围已包含安全边距；
 - 用户添加的 coord 不得被静默覆盖。
 
 ### 3.7 geom 参数和行为
 
-下列 v0.9.0 接口整理均已完成；其中旧参数仍按 2.4
-的兼容策略工作。明确列入 v0.10.0 的 shape
-和手动坐标契约不属于本轮完成范围。
+下列 v0.9.0 接口整理均已完成；其中旧参数仍按 2.4 的兼容策略工作。
+v0.10.0 不新增独立的手动标签 geom，而是增强现有
+[`geom_gene_label()`](https://dangjem.github.io/ggchord/reference/geom_gene_label.md)。
 
 #### `geom_seq()`
 
 - `data`、`mapping` 已生效；
-- `seq_colors`、`seq_group_colors` 已迁入 scale，旧参数保留迁移警告；
+- `seq_colors` 已迁入 scale，旧参数保留迁移警告；
 - 序列显示文字由 `geom_seq_label(labels = ...)` 控制，scale labels
   独立；
-- group label 已有独立
-  [`geom_seq_group_label()`](https://dangjem.github.io/ggchord/reference/geom_seq_group_label.md)，隐式旧行为暂时兼容；
 - `linewidth` 和 arrow 已通过不同静态输出设备检查；
 - `seq_order`、`seq_orientation`、`seq_gap`、`seq_radius`、
-  `seq_curvature`、`seq_group` 和 `seq_group_gap` 保留为布局参数。
+  `seq_curvature` 保留为布局参数。
+- v0.10.0 移除序列分组、组间距、组标签和组配色整套接口；这些概念
+  与序列顺序、半径和显式多环的职责重叠，且没有足够清晰的通用语义。
 
 #### `geom_ribbon()`
 
@@ -400,13 +399,16 @@ coord_chord(
 #### gene label
 
 - [`geom_gene_label()`](https://dangjem.github.io/ggchord/reference/geom_gene_label.md)
-  保留为固定位置和手工微调图层；
+  是唯一的固定位置和手工微调图层；
 - [`geom_gene_label_repel()`](https://dangjem.github.io/ggchord/reference/geom_gene_label_repel.md)
   已提供 `aligned`、`radial`、`arc` 三种确定性模式；
 - 所有 label geom 的 `data`、`mapping` 已生效；
 - leader 的 colour、linewidth、alpha 默认由 theme 元素控制；
 - 固定文本 size 不再创建全局 `scale_size_identity()`；
-- 真正的逐标签手动坐标契约仍放入 v0.10.0。
+- v0.10.0 新增水平/径向/切向文字、内外侧以及隐藏/微调/允许重叠策略；
+- 逐序列、逐链的 rotation/radial/circumferential offset
+  继续提供手工自由；
+- 不规划 `geom_gene_label_manual()`，避免两个固定标签图层职责重叠。
 
 #### `geom_axis()` 和 `geom_seq_label()`
 
@@ -495,7 +497,7 @@ coord_chord(
 ### C. scale/theme/guide/coord
 
 - 实现第三节列出的首批接口；
-- 以发表级可读性为目标更新默认色板、图例和默认参数；
+- 建立首批色觉友好默认色板、图例和主题元素；v0.10.0 继续视觉校准；
 - 旧参数进入弃用期；
 - 当前阶段只维护必要的 NEWS 和生成文档，README
   保持稳定；完整文档重构留到 v1.0.0。
@@ -515,16 +517,41 @@ coord_chord(
 
 ------------------------------------------------------------------------
 
-## 五、v0.10.0 — 表达能力
+## 五、v0.10.0 — 表达能力与默认视觉
 
-### A. 通用 feature geometry
+**状态：开发中；用户确认后再发布正式版。**
+
+### A. 固定标签与发表级默认视觉
+
+- 增强
+  [`geom_gene_label()`](https://dangjem.github.io/ggchord/reference/geom_gene_label.md)，使其同时承担简洁默认标签和精确手工微调；
+- Identity 色条使用紧凑的物理尺寸，不再随设备高度无限拉伸；
+- sequence/gene 图例符号表达实际方向，并减少过粗的线条和箭头；
+- 默认白底、标题、轴线、标签、ribbon 透明度和图例间距统一校准；
+- 文档和默认验收图使用 4:3 画布；实际设备尺寸仍由 RStudio 或 `ggsave()`
+  控制；
+- 用 4×3、6×4、8×6、12×8 英寸以及 PNG/PDF/SVG 验收。
+
+视觉设计只借鉴通用原则：[Circos](https://genome.cshlp.org/content/19/9/1639)
+的环形信息层级与克制
+ribbon、[clinker](https://academic.oup.com/bioinformatics/article/37/16/2473/6129045)
+的发表级基因箭头、[DNA Features
+Viewer](https://edinburgh-genome-foundry.github.io/DnaFeaturesViewer/)
+的注释冲突处理，以及
+[SnapGene](https://support.snapgene.com/hc/en-us/articles/10383722725524-Display-Feature-Labels-Below-or-Inside-a-Map)
+和 [Geneious](https://manual.geneious.com/en/latest/Sequences.html)
+的局部特征标签与拥挤隐藏思路。
+不复制第三方资产、专有配色或具体视觉实现。
+
+### B. 通用 feature geometry
 
 实现真正独立的 feature shape：
 
 ``` r
+
 geom_feature(aes(feature_shape = type))
 scale_feature_shape_manual(values = c(
-  CDS = "arrow", tRNA = "block", repeat = "chevron"
+  CDS = "arrow", tRNA = "block", repeat_region = "chevron"
 ))
 ```
 
@@ -533,20 +560,11 @@ scale_feature_shape_manual(values = c(
 保持为 gene arrow
 的便捷封装，但验收标准是几何和视觉等价，不承诺内部字节完全一致。
 
-### B. 手动标签布局
-
-为逐标签覆盖提供独立数据契约，例如：
-
-``` r
-
-geom_gene_label_manual(
-  data = label_positions,
-  aes(gene_id = gene_id, x = x, y = y, label = label)
-)
-```
-
-自动模式的结果可以由 layout export
-导出、手工调整后再输入。具体列名和优先级在 实现前单独设计。
+v0.10.0 同时移除 `geom_seq_group_label()`、`scale_group_colour_manual()`
+及
+[`geom_seq()`](https://dangjem.github.io/ggchord/reference/geom_seq.md)
+中的所有 `seq_group*` 参数。这是开发版的破坏性精简，
+旧参数立即报错，不保留隐式分组布局。
 
 ### C. 显式多环
 
@@ -635,7 +653,7 @@ alias。
 - 核心 geom 组合能 build；
 - 三种 label layout 能 build；
 - validate、clean、三个 import、三个 ribbon utility 的单一成功路径；
-- region、highlight、feature、sequence group 的单一成功路径；
+- region、highlight、feature 的单一成功路径；
 - 每个已确认严重 bug 修复后保留一个最小回归用例；
 - 一个最基本的错误输入测试。
 

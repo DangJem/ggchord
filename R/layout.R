@@ -46,13 +46,6 @@
 compute_chord_layout <- function(
     seqs, lens, seq_labels, seq_colors,
     seqRadius, seq_curvature, orientation, seq_gap,
-    # Sequence grouping parameters (v0.8.0)
-    seq_group = NULL,
-    seq_group_gap = 0.08,
-    seq_group_labels = TRUE,
-    seq_group_label_radius = 1.35,
-    seq_group_label_size = 3.5,
-    seq_group_colors = NULL,
     # Ribbon parameters
     ribbon_data = NULL, ribbonGap,
     ribbon_color_scheme, ribbon_colors, ribbon_alpha,
@@ -94,6 +87,7 @@ compute_chord_layout <- function(
     gene_label_side = "auto",
     gene_label_segment_linetype = "auto",
     gene_color_scheme, gene_colors, gene_order,
+    feature_shape_pal = NULL, feature_shape_order = NULL,
     # Sequence label parameters
     seq_label_text = NULL, seq_label_radius = NULL,
     seq_label_rotation = NULL, seq_label_size = NULL,
@@ -116,34 +110,10 @@ compute_chord_layout <- function(
   # ====================================================================
   total_circ <- 2 * pi
 
-  # Sequence groups (v0.8.0): the optional extra gap is inserted only at
-  # boundaries where the group of sequence i differs from the group of
-  # sequence i + 1.  The normal seq_gap is still applied at every boundary.
-  has_group <- !is.null(seq_group)
-  if (has_group) {
-    if (length(seq_group) != n) {
-      ggchord_stop("seq_group must have one value per sequence")
-    }
-    if (anyNA(seq_group) || any(!nzchar(as.character(seq_group)))) {
-      ggchord_stop("seq_group must not contain missing or empty values")
-    }
-    groups <- as.character(seq_group)
-    names(groups) <- seqs
-    group_boundaries <- if (n > 1) which(groups[-n] != groups[-1]) else integer(0)
-  } else {
-    groups <- setNames(rep("", n), seqs)
-    group_boundaries <- integer(0)
-  }
-
-  if (!is.numeric(seq_group_gap) || length(seq_group_gap) != 1 ||
-      !is.finite(seq_group_gap) || seq_group_gap < 0) {
-    ggchord_stop("seq_group_gap must be a finite non-negative number")
-  }
-
-  total_gap_prop <- sum(seq_gap) + seq_group_gap * length(group_boundaries)
+  total_gap_prop <- sum(seq_gap)
 
   if (total_gap_prop >= 1) {
-    ggchord_stop("The sum of seq_gap plus the extra seq_group_gap cannot exceed 1 (no space left for sequences)")
+    ggchord_stop("The sum of seq_gap cannot exceed 1 (no space left for sequences)")
   }
 
   seq_total_prop <- 1 - total_gap_prop
@@ -158,8 +128,7 @@ compute_chord_layout <- function(
 
   if (n > 1) {
     for (i in 2:n) {
-      extra <- if ((i - 1L) %in% group_boundaries) total_circ * seq_group_gap else 0
-      starts[i] <- starts[i - 1] + theta[i - 1] + gap_rads[i - 1] + extra
+      starts[i] <- starts[i - 1] + theta[i - 1] + gap_rads[i - 1]
     }
   }
   ends <- starts + theta
@@ -787,40 +756,95 @@ compute_chord_layout <- function(
       a_end <- starts[sid] + frac_ep * (ends[sid] - starts[sid])
       if (strand == "-") { tmp <- a_start; a_start <- a_end; a_end <- tmp }
 
-      n_body <- 30
-      n_head <- 15
-      body_ang <- seq(a_start, a_start + 0.6 * (a_end - a_start), length.out = n_body)
-      head_ang <- seq(tail(body_ang, 1), a_end, length.out = n_head)
-      angs <- c(body_ang, head_ang)
-      total_pt <- length(angs)
-      widths <- c(rep(1, n_body), seq(1, 0, length.out = n_head))
-
       if (strand == "+") {
         r0 <- seqRadius[sid] - geneGap[[sid]][strand]
       } else {
         r0 <- seqRadius[sid] + geneGap[[sid]][strand]
       }
 
-      outer_r <- r0 + (width / 2) * widths
-      inner_r <- r0 - (width / 2) * widths
-
-      orig_ang <- c(angs, rev(angs))
-      orig_rad <- c(outer_r, rev(inner_r))
-
       ref <- seq_refs[[sid]]
-      mapped <- map_to_curve_many(orig_ang, orig_rad, ref)
+      feature_shape <- if (".feature_shape" %in% names(gene)) {
+        as.character(gene[[".feature_shape"]])
+      } else {
+        "arrow"
+      }
+      span <- a_end - a_start
 
-      gene_poly <- data.frame(
-        x = mapped[, 1],
-        y = mapped[, 2],
-        group = i,
-        anno = anno,
-        strand = strand,
-        source_row = gene$.source_row,
-        ord = seq_len(2 * total_pt),
-        stringsAsFactors = FALSE
+      shape_parts <- switch(
+        feature_shape,
+        block = {
+          ang <- seq(a_start, a_end, length.out = 60)
+          list(list(
+            angle = c(ang, rev(ang)),
+            radius = c(rep(r0 + width / 2, length(ang)),
+                       rep(r0 - width / 2, length(ang)))
+          ))
+        },
+        chevron = {
+          shoulder <- seq(a_start, a_start + 0.68 * span, length.out = 30)
+          list(list(
+            angle = c(shoulder, a_end, rev(shoulder),
+                      a_start + 0.28 * span),
+            radius = c(rep(r0 + width / 2, length(shoulder)), r0,
+                       rep(r0 - width / 2, length(shoulder)), r0)
+          ))
+        },
+        lollipop = {
+          mid <- (a_start + a_end) / 2
+          angle_half <- min(
+            abs(span) * 0.08,
+            width / (8 * pi * max(abs(r0), 0.1))
+          )
+          stem_start <- seqRadius[sid]
+          stem_end <- r0
+          stem <- list(
+            angle = c(mid - angle_half, mid + angle_half,
+                      mid + angle_half, mid - angle_half),
+            radius = c(stem_start, stem_start, stem_end, stem_end)
+          )
+          theta <- seq(0, 2 * pi, length.out = 48)
+          head_radius <- width * 0.58
+          head <- list(
+            angle = mid + cos(theta) * head_radius /
+              (2 * pi * max(abs(r0), 0.1)),
+            radius = r0 + sin(theta) * head_radius
+          )
+          list(stem, head)
+        },
+        {
+          n_body <- 30
+          n_head <- 15
+          body_ang <- seq(
+            a_start, a_start + 0.6 * span, length.out = n_body
+          )
+          head_ang <- seq(utils::tail(body_ang, 1), a_end,
+                          length.out = n_head)
+          ang <- c(body_ang, head_ang)
+          width_factor <- c(rep(1, n_body), seq(1, 0, length.out = n_head))
+          list(list(
+            angle = c(ang, rev(ang)),
+            radius = c(r0 + (width / 2) * width_factor,
+                       rev(r0 - (width / 2) * width_factor))
+          ))
+        }
       )
-      gene_poly_list[[length(gene_poly_list) + 1]] <- gene_poly
+
+      for (part in seq_along(shape_parts)) {
+        mapped <- map_to_curve_many(
+          shape_parts[[part]]$angle, shape_parts[[part]]$radius, ref
+        )
+        gene_poly_list[[length(gene_poly_list) + 1]] <- data.frame(
+          x = mapped[, 1],
+          y = mapped[, 2],
+          group = i * 10L + part,
+          anno = anno,
+          strand = strand,
+          feature_shape = feature_shape,
+          source_row = gene$.source_row,
+          ord = seq_len(nrow(mapped)),
+          stringsAsFactors = FALSE
+        )
+      }
     }
     gene_polys <- if (length(gene_poly_list)) do.call(rbind, gene_poly_list) else data.frame()
 
@@ -1026,86 +1050,6 @@ compute_chord_layout <- function(
   }
 
   # ====================================================================
-  # Step 7c: generate sequence-group labels (v0.8.0)
-  # ====================================================================
-  group_labels <- data.frame()
-  group_colors <- NULL
-  if (has_group && (isTRUE(seq_group_labels) || is.character(seq_group_labels))) {
-    group_names <- as.character(unique(unname(groups)))
-    group_text <- group_names
-    names(group_text) <- group_names
-
-    if (is.character(seq_group_labels)) {
-      if (!is.null(names(seq_group_labels))) {
-        unknown <- setdiff(names(seq_group_labels), group_names)
-        if (length(unknown) > 0) {
-          ggchord_stop("seq_group_labels contains unknown group name(s): ",
-                       paste(unknown, collapse = ", "))
-        }
-        group_text[names(seq_group_labels)] <- as.character(seq_group_labels)
-      } else if (length(seq_group_labels) == length(group_names)) {
-        group_text <- setNames(as.character(seq_group_labels), group_names)
-      } else if (length(seq_group_labels) != 1) {
-        ggchord_stop("seq_group_labels must be TRUE, a named vector by group, or a vector matching the number of groups")
-      } else {
-        group_text <- setNames(rep(as.character(seq_group_labels),
-                                   length(group_names)), group_names)
-      }
-    }
-
-    group_colors <- resolve_ggchord_group_colors(seq_group_colors, group_names)
-    if (is.null(group_colors)) group_colors <- setNames(rep("grey20", length(group_names)), group_names)
-
-    # Iterate over contiguous runs rather than unique group names so that the
-    # same group label appearing in two separated blocks is drawn once per
-    # block instead of straddling an unrelated block in between.
-    grp_vals <- unname(groups)
-    run_lengths <- rle(grp_vals)$lengths
-    run_values <- rle(grp_vals)$values
-    run_end <- cumsum(run_lengths)
-    run_start <- c(1L, run_end[-length(run_end)] + 1L)
-
-    group_labels_list <- lapply(seq_along(run_values), function(k) {
-      g <- run_values[k]
-      idx <- run_start[k] + seq_len(run_lengths[k]) - 1L
-      first <- idx[1]
-      last <- idx[length(idx)]
-
-      mid_angle <- (starts[first] + ends[last]) / 2
-      base_radius <- max(seqRadius[idx])
-      # Same radial convention as seq_label_radius: 1 = on the arc, > 1 = outside.
-      r <- base_radius * (2 - seq_group_label_radius)
-
-      # Anchor the label on the sequence whose arc contains the group midpoint
-      # (or, when the midpoint falls in a gap, the nearest sequence).  This
-      # keeps the group label aligned with the actual curve when
-      # seq_curvature != 1.
-      centers <- (starts + ends) / 2
-      in_arc <- which(starts <= mid_angle & ends >= mid_angle)
-      if (length(in_arc) > 0) {
-        ref_id <- seqs[in_arc[which.min(abs(centers[in_arc] - mid_angle))]]
-      } else {
-        ref_id <- seqs[which.min(abs(centers - mid_angle))]
-      }
-      pt <- map_to_curve(mid_angle, r, seq_refs[[ref_id]])
-
-      data.frame(
-        text_x = pt[1],
-        text_y = pt[2],
-        label = unname(group_text[g]),
-        text_angle = 0,
-        hjust = 0.5,
-        vjust = 0.5,
-        size = seq_group_label_size,
-        group_id = g,
-        zcolour = unname(group_colors[g]),
-        stringsAsFactors = FALSE
-      )
-    })
-    group_labels <- do.call(rbind, group_labels_list)
-  }
-
-  # ====================================================================
   # Step 8: rotate all elements uniformly
   # ====================================================================
   rotate_df <- function(df) {
@@ -1208,7 +1152,6 @@ compute_chord_layout <- function(
   if (nrow(ribbon_highlight_polys) > 0) ribbon_highlight_polys <- rotate_df(ribbon_highlight_polys)
   if (nrow(gene_labels) > 0) gene_labels <- rotate_df(gene_labels)
   if (nrow(seq_labels_df) > 0) seq_labels_df <- rotate_df(seq_labels_df)
-  if (nrow(group_labels) > 0) group_labels <- rotate_df(group_labels)
   # Horizontal sequence labels: keep every label horizontal (independent of
   # the global rotation) and let the text extend away from the chord center
   # unless the user supplied an explicit justification.
@@ -1218,13 +1161,6 @@ compute_chord_layout <- function(
     if (is.null(seq_label_hjust)) {
       seq_labels_df$hjust <- ifelse(seq_labels_df$text_x >= 0, 0, 1)
     }
-  }
-  # Group labels are always drawn horizontally and extend away from the chord
-  # center, independent of the global rotation.
-  if (nrow(group_labels) > 0) {
-    group_labels$text_angle <- 0
-    group_labels$hjust <- ifelse(group_labels$text_x >= 0, 0, 1)
-    group_labels$vjust <- ifelse(group_labels$text_y >= 0, 1, 0)
   }
   if (nrow(gene_polys) > 0) {
     gene_polys <- rotate_df(gene_polys)
@@ -1250,14 +1186,12 @@ compute_chord_layout <- function(
         unlist(lapply(seq_arcs, `[[`, "x"), use.names = FALSE),
         gene_polys$x, labels$text_x,
         if (nrow(seq_labels_df)) seq_labels_df$text_x else 0,
-        if (!is.null(group_labels) && nrow(group_labels)) group_labels$text_x else 0,
         if (!is.null(axis_ticks) && nrow(axis_ticks)) axis_ticks$label_x else 0
       )
       y_values <- c(
         unlist(lapply(seq_arcs, `[[`, "y"), use.names = FALSE),
         gene_polys$y, labels$text_y,
         if (nrow(seq_labels_df)) seq_labels_df$text_y else 0,
-        if (!is.null(group_labels) && nrow(group_labels)) group_labels$text_y else 0,
         if (!is.null(axis_ticks) && nrow(axis_ticks)) axis_ticks$label_y else 0
       )
       units <- max(diff(range(x_values, na.rm = TRUE)),
@@ -1270,7 +1204,7 @@ compute_chord_layout <- function(
           labels, units_per_inch = units, box_padding = 0.03
         )
         fixed_boxes <- ggchord_text_obstacle_boxes(
-          seq_labels_df, group_labels, axis_ticks, show_axis,
+          seq_labels_df, axis_ticks, show_axis,
           units_per_inch = units, box_padding = 0.03
         )
         expanded_x <- c(
@@ -1319,7 +1253,7 @@ compute_chord_layout <- function(
       # space around already-distant labels).
       for (layout_pass in seq_len(2)) {
         layout_obstacles <- ggchord_text_obstacle_boxes(
-          seq_labels_df, group_labels, axis_ticks, show_axis,
+          seq_labels_df, axis_ticks, show_axis,
           units_per_inch = layout_units
         )
         if (identical(gene_label_layout, "aligned")) {
@@ -1360,7 +1294,7 @@ compute_chord_layout <- function(
       gene_labels$label_layout <- gene_label_layout
       gene_labels$label_track <- layout_result$tracks
       final_obstacles <- ggchord_text_obstacle_boxes(
-        seq_labels_df, group_labels, axis_ticks, show_axis,
+        seq_labels_df, axis_ticks, show_axis,
         units_per_inch = layout_units
       )
       gene_labels <- ggchord_hide_conflicted_labels(
@@ -1445,7 +1379,7 @@ compute_chord_layout <- function(
       )
     } else if (identical(gene_label_overlap, "hide")) {
       fixed_obstacles <- ggchord_text_obstacle_boxes(
-        seq_labels_df, group_labels, axis_ticks, show_axis,
+        seq_labels_df, axis_ticks, show_axis,
         units_per_inch = units_per_inch, box_padding = 0.01
       )
       gene_labels <- ggchord_label_prune_overlaps(
@@ -1508,8 +1442,9 @@ compute_chord_layout <- function(
     gene_label_segments = gene_label_segments,
     gene_label_clip_units = gene_label_clip_units,
     gene_label_layout = gene_label_layout,
+    feature_shape_pal = feature_shape_pal,
+    feature_shape_order = feature_shape_order,
     seq_labels_df  = seq_labels_df,
-    group_labels   = group_labels,
     axis_lines     = axis_lines,
     axis_ticks     = axis_ticks,
 
@@ -1521,8 +1456,6 @@ compute_chord_layout <- function(
     seq_labels     = seq_labels,
     seqs           = seqs,
     seqRadius      = seqRadius,
-    seq_groups     = if (has_group) groups else NULL,
-    group_colors   = group_colors,
 
     # Ribbon-related
     ribbon_color_scheme = ribbon_color_scheme,

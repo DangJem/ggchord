@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="index.html">ggchord</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.10.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -37,7 +37,7 @@
 <div id="ggchord-设计路线图" class="section level1">
 
 <p>本文档记录 ggchord 的实际实现状态、已确认的问题、目标 API 以及版本计划。 状态以当前代码为准，不再把“已有设计”标记成“已经完成”。</p>
-<p>当前正式版本为 <strong>v0.9.0</strong>。以正确性和 ggplot2 语法一致性为中心的基础重构 已经完成，并于 2026-08-31 通过发布审计。后续功能进入 v0.10.0 开发范围。</p>
+<p>当前正式版本为 <strong>v0.9.0</strong>，代码库版本为 <strong>v0.10.0 开发版</strong>。 以正确性和 ggplot2 语法一致性为中心的基础重构已于 2026-08-31 随 v0.9.0 发布；v0.10.0 在用户确认前不创建正式标签或 Release。</p>
 <p>总体优先级：</p>
 <ol style="list-style-type: decimal"><li>正确性与可重复性；</li>
 <li>ggplot2 风格的公开接口；</li>
@@ -58,8 +58,8 @@
 <td>grammar 基础、scale/theme/guide/coord、图层独立性</td>
 <td>已正式发布（2026-08-31）</td>
 </tr><tr><td>v0.10.0</td>
-<td>feature 形状、手动标签、显式多环和密集 ribbon</td>
-<td>规划中</td>
+<td>发表级默认视觉、固定标签、feature 形状、显式多环和密集 ribbon</td>
+<td>开发中</td>
 </tr><tr><td>v0.11.0</td>
 <td>布局导出和大数据性能</td>
 <td>规划中</td>
@@ -75,13 +75,13 @@
 <li>role-specific aesthetic、scale、theme、guide 和 <code><a href="reference/coord_chord.html">coord_chord()</a></code>；</li>
 <li>
 <code>aligned</code>、<code>radial</code>、<code>arc</code> 三种确定性基因标签布局；</li>
-<li>发表级静态默认样式、静态设备验收及 Plotly 实验代码清理；</li>
+<li>首批静态默认样式、静态设备验收及 Plotly 实验代码清理；</li>
 <li>精简 testthat、roxygen/Rd 一致性检查和 <code>R CMD check</code>。</li>
 </ul><p>以下内容不是 v0.9.0 发布阻断项：</p>
 <ul><li>旧 scale 类 geom 参数在 v0.9.0 中继续作为带警告的兼容入口，到 v1.0.0 删除；</li>
 <li>自定义 Stat/Geom 的进一步拆分属于内部演进，不改变 v0.9.0 的公开契约；</li>
 <li>全量文档、网页和图片重写留到 v1.0.0；</li>
-<li>feature shape、手动标签、多环、密集 ribbon 和正式布局导出按后续版本推进。</li>
+<li>feature shape、多环、密集 ribbon 和正式布局导出按后续版本推进。</li>
 </ul></div>
 <div class="section level3">
 <h3 id="v090-正式版验收记录2026-08-31">v0.9.0 正式版验收记录（2026-08-31）<a class="anchor" aria-label="anchor" href="#v090-%E6%AD%A3%E5%BC%8F%E7%89%88%E9%AA%8C%E6%94%B6%E8%AE%B0%E5%BD%952026-08-31"></a></h3>
@@ -166,20 +166,18 @@
 <p>已公开的角色专用 aesthetic：</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">seq_colour</span></span>
-<span><span class="va">group_colour</span></span>
 <span><span class="va">ribbon_fill</span></span>
 <span><span class="va">ribbon_alpha</span></span>
 <span><span class="va">ribbon_colour</span></span>
 <span><span class="va">ribbon_linetype</span></span>
 <span><span class="va">gene_fill</span></span>
 <span><span class="va">feature_fill</span></span>
+<span><span class="va">feature_shape</span></span>
 <span><span class="va">region_fill</span></span></code></pre></div>
 <p>首批公开 scale：</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/scale_seq_colour_manual.html">scale_seq_colour_manual</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/scale_seq_colour_manual.html">scale_seq_color_manual</a></span><span class="op">(</span><span class="op">)</span>       <span class="co"># 美式拼写别名</span></span>
-<span><span class="fu"><a href="reference/scale_seq_colour_manual.html">scale_group_colour_manual</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="fu"><a href="reference/scale_seq_colour_manual.html">scale_group_color_manual</a></span><span class="op">(</span><span class="op">)</span>     <span class="co"># 美式拼写别名</span></span>
 <span></span>
 <span><span class="fu"><a href="reference/scale_ribbon_fill_stepsn.html">scale_ribbon_fill_stepsn</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/scale_ribbon_fill_stepsn.html">scale_ribbon_fill_gradientn</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -193,6 +191,7 @@
 <span></span>
 <span><span class="fu"><a href="reference/scale_gene_fill_manual.html">scale_gene_fill_manual</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/scale_gene_fill_manual.html">scale_feature_fill_manual</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/scale_feature_shape_manual.html">scale_feature_shape_manual</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/scale_gene_fill_manual.html">scale_region_fill_manual</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>所有 scale 已接受与 ggplot2 对应 scale 一致的常用参数：<code>name</code>、<code>breaks</code>、 <code>labels</code>、<code>limits</code>、<code>values</code>/<code>colours</code>、<code>na.value</code>、<code>oob</code>、<code>transform</code> 和 <code>guide</code>。 默认 scale 仅在用户没有添加对应角色 scale 时插入。</p>
 <p>基因组坐标轴增加：</p>
@@ -209,8 +208,6 @@
 <th>新归属</th>
 </tr></thead><tbody><tr><td><code>seq_colors</code></td>
 <td><code>scale_seq_colour_manual(values = ...)</code></td>
-</tr><tr><td><code>seq_group_colors</code></td>
-<td><code>scale_group_colour_manual(values = ...)</code></td>
 </tr><tr><td><code>ribbon_colors</code></td>
 <td>ribbon fill scale</td>
 </tr><tr><td><code>ribbon_color_limits/breaks/name</code></td>
@@ -267,7 +264,6 @@
 <span><span class="va">ggchord.axis.ticks</span></span>
 <span><span class="va">ggchord.axis.text</span></span>
 <span><span class="va">ggchord.seq.label</span></span>
-<span><span class="va">ggchord.group.label</span></span>
 <span><span class="va">ggchord.gene.label</span></span>
 <span><span class="va">ggchord.gene.label.segment</span></span></code></pre></div>
 <p>数据图层的填充色不进入 theme。显式 geom 参数覆盖 theme 默认值。</p>
@@ -281,10 +277,10 @@
 </ul></div>
 <div class="section level3">
 <h3 id="id_34-默认配色与发表级外观">3.4 默认配色与发表级外观<a class="anchor" aria-label="anchor" href="#id_34-%E9%BB%98%E8%AE%A4%E9%85%8D%E8%89%B2%E4%B8%8E%E5%8F%91%E8%A1%A8%E7%BA%A7%E5%A4%96%E8%A7%82"></a></h3>
-<p>grammar 重构时同步调整默认视觉，使用户不增加参数也能得到适合论文初稿的图形。 这项工作不追求装饰性，而强调可读性、层级、打印和色觉友好。</p>
+<p>v0.9.0 建立了视觉参数的 scale/theme/guide 基础，v0.10.0 继续校准默认 视觉，使用户不增加参数也能得到适合论文初稿的图形。这项工作不追求 装饰性，而强调可读性、层级、打印和色觉友好。</p>
 <div class="section level4">
 <h4 id="配色原则">配色原则<a class="anchor" aria-label="anchor" href="#%E9%85%8D%E8%89%B2%E5%8E%9F%E5%88%99"></a></h4>
-<ul><li>sequence、group、gene 和 feature 的离散色板优先使用色觉友好且灰度可区分的 配色；</li>
+<ul><li>sequence、gene 和 feature 的离散色板优先使用色觉友好且灰度可区分的 配色；</li>
 <li>ribbon 连续色板使用亮度单调的方案，避免彩虹色板和难以解释的颜色跳变；</li>
 <li>strand、direction 等二分类采用对比明确、黑白打印仍可借助形状或线型识别的 组合；</li>
 <li>region 和 highlight 使用可与 ribbon、gene 区分的强调色；</li>
@@ -324,7 +320,7 @@
 <span>  ratio <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  xlim <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  ylim <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  expand <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  expand <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  clip <span class="op">=</span> <span class="st">"off"</span>,</span>
 <span>  fit <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"labels"</span>, <span class="st">"geometry"</span>, <span class="st">"manual"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -336,23 +332,25 @@
 <code>fit = "geometry"</code> 只适配几何数据；</li>
 <li>
 <code>fit = "manual"</code> 要求显式 limits；</li>
+<li>自动范围对 x/y 分别紧贴内容，<code>coord_fixed()</code> 负责保持物理单位等比；</li>
+<li>默认 <code>expand = FALSE</code>，因为自动范围已包含安全边距；</li>
 <li>用户添加的 coord 不得被静默覆盖。</li>
 </ul></div>
 <div class="section level3">
 <h3 id="id_37-geom-参数和行为">3.7 geom 参数和行为<a class="anchor" aria-label="anchor" href="#id_37-geom-%E5%8F%82%E6%95%B0%E5%92%8C%E8%A1%8C%E4%B8%BA"></a></h3>
-<p>下列 v0.9.0 接口整理均已完成；其中旧参数仍按 2.4 的兼容策略工作。明确列入 v0.10.0 的 shape 和手动坐标契约不属于本轮完成范围。</p>
+<p>下列 v0.9.0 接口整理均已完成；其中旧参数仍按 2.4 的兼容策略工作。 v0.10.0 不新增独立的手动标签 geom，而是增强现有 <code><a href="reference/geom_gene_label.html">geom_gene_label()</a></code>。</p>
 <div class="section level4">
 <h4 id="geom_seq"><code>geom_seq()</code><a class="anchor" aria-label="anchor" href="#geom_seq"></a></h4>
 <ul><li>
 <code>data</code>、<code>mapping</code> 已生效；</li>
 <li>
-<code>seq_colors</code>、<code>seq_group_colors</code> 已迁入 scale，旧参数保留迁移警告；</li>
+<code>seq_colors</code> 已迁入 scale，旧参数保留迁移警告；</li>
 <li>序列显示文字由 <code>geom_seq_label(labels = ...)</code> 控制，scale labels 独立；</li>
-<li>group label 已有独立 <code><a href="reference/geom_seq_group_label.html">geom_seq_group_label()</a></code>，隐式旧行为暂时兼容；</li>
 <li>
 <code>linewidth</code> 和 arrow 已通过不同静态输出设备检查；</li>
 <li>
-<code>seq_order</code>、<code>seq_orientation</code>、<code>seq_gap</code>、<code>seq_radius</code>、 <code>seq_curvature</code>、<code>seq_group</code> 和 <code>seq_group_gap</code> 保留为布局参数。</li>
+<code>seq_order</code>、<code>seq_orientation</code>、<code>seq_gap</code>、<code>seq_radius</code>、 <code>seq_curvature</code> 保留为布局参数。</li>
+<li>v0.10.0 移除序列分组、组间距、组标签和组配色整套接口；这些概念 与序列顺序、半径和显式多环的职责重叠，且没有足够清晰的通用语义。</li>
 </ul></div>
 <div class="section level4">
 <h4 id="geom_ribbon"><code>geom_ribbon()</code><a class="anchor" aria-label="anchor" href="#geom_ribbon"></a></h4>
@@ -381,13 +379,15 @@
 <div class="section level4">
 <h4 id="gene-label">gene label<a class="anchor" aria-label="anchor" href="#gene-label"></a></h4>
 <ul><li>
-<code><a href="reference/geom_gene_label.html">geom_gene_label()</a></code> 保留为固定位置和手工微调图层；</li>
+<code><a href="reference/geom_gene_label.html">geom_gene_label()</a></code> 是唯一的固定位置和手工微调图层；</li>
 <li>
 <code><a href="reference/geom_gene_label_repel.html">geom_gene_label_repel()</a></code> 已提供 <code>aligned</code>、<code>radial</code>、<code>arc</code> 三种确定性模式；</li>
 <li>所有 label geom 的 <code>data</code>、<code>mapping</code> 已生效；</li>
 <li>leader 的 colour、linewidth、alpha 默认由 theme 元素控制；</li>
 <li>固定文本 size 不再创建全局 <code>scale_size_identity()</code>；</li>
-<li>真正的逐标签手动坐标契约仍放入 v0.10.0。</li>
+<li>v0.10.0 新增水平/径向/切向文字、内外侧以及隐藏/微调/允许重叠策略；</li>
+<li>逐序列、逐链的 rotation/radial/circumferential offset 继续提供手工自由；</li>
+<li>不规划 <code>geom_gene_label_manual()</code>，避免两个固定标签图层职责重叠。</li>
 </ul></div>
 <div class="section level4">
 <h4 id="geom_axis-和-geom_seq_label">
@@ -475,7 +475,7 @@
 <div class="section level3">
 <h3 id="c-scalethemeguidecoord">C. scale/theme/guide/coord<a class="anchor" aria-label="anchor" href="#c-scalethemeguidecoord"></a></h3>
 <ul><li>实现第三节列出的首批接口；</li>
-<li>以发表级可读性为目标更新默认色板、图例和默认参数；</li>
+<li>建立首批色觉友好默认色板、图例和主题元素；v0.10.0 继续视觉校准；</li>
 <li>旧参数进入弃用期；</li>
 <li>当前阶段只维护必要的 NEWS 和生成文档，README 保持稳定；完整文档重构留到 v1.0.0。</li>
 </ul><p>状态：已完成。README 按确认保持稳定，必要变更已记录在 NEWS 和生成的 Rd 中。</p>
@@ -489,25 +489,28 @@
 <hr></div>
 </div>
 <div class="section level2">
-<h2 id="五v0100--表达能力">五、v0.10.0 — 表达能力<a class="anchor" aria-label="anchor" href="#%E4%BA%94v0100--%E8%A1%A8%E8%BE%BE%E8%83%BD%E5%8A%9B"></a></h2>
+<h2 id="五v0100--表达能力与默认视觉">五、v0.10.0 — 表达能力与默认视觉<a class="anchor" aria-label="anchor" href="#%E4%BA%94v0100--%E8%A1%A8%E8%BE%BE%E8%83%BD%E5%8A%9B%E4%B8%8E%E9%BB%98%E8%AE%A4%E8%A7%86%E8%A7%89"></a></h2>
+<p><strong>状态：开发中；用户确认后再发布正式版。</strong></p>
 <div class="section level3">
-<h3 id="a-通用-feature-geometry">A. 通用 feature geometry<a class="anchor" aria-label="anchor" href="#a-%E9%80%9A%E7%94%A8-feature-geometry"></a></h3>
-<p>实现真正独立的 feature shape：</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">geom_feature</span>(<span class="fu">aes</span>(<span class="at">feature_shape =</span> type))</span>
-<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a><span class="fu">scale_feature_shape_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(</span>
-<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>  <span class="at">CDS =</span> <span class="st">"arrow"</span>, <span class="at">tRNA =</span> <span class="st">"block"</span>, <span class="at">repeat =</span> <span class="st">"chevron"</span></span>
-<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>))</span></code></pre></div>
-<p>首批只考虑 <code>arrow</code>、<code>block</code>、<code>chevron</code>、<code>lollipop</code>。<code><a href="reference/geom_gene.html">geom_gene()</a></code> 保持为 gene arrow 的便捷封装，但验收标准是几何和视觉等价，不承诺内部字节完全一致。</p>
+<h3 id="a-固定标签与发表级默认视觉">A. 固定标签与发表级默认视觉<a class="anchor" aria-label="anchor" href="#a-%E5%9B%BA%E5%AE%9A%E6%A0%87%E7%AD%BE%E4%B8%8E%E5%8F%91%E8%A1%A8%E7%BA%A7%E9%BB%98%E8%AE%A4%E8%A7%86%E8%A7%89"></a></h3>
+<ul><li>增强 <code><a href="reference/geom_gene_label.html">geom_gene_label()</a></code>，使其同时承担简洁默认标签和精确手工微调；</li>
+<li>Identity 色条使用紧凑的物理尺寸，不再随设备高度无限拉伸；</li>
+<li>sequence/gene 图例符号表达实际方向，并减少过粗的线条和箭头；</li>
+<li>默认白底、标题、轴线、标签、ribbon 透明度和图例间距统一校准；</li>
+<li>文档和默认验收图使用 4:3 画布；实际设备尺寸仍由 RStudio 或 <code>ggsave()</code> 控制；</li>
+<li>用 4×3、6×4、8×6、12×8 英寸以及 PNG/PDF/SVG 验收。</li>
+</ul><p>视觉设计只借鉴通用原则：<a href="https://genome.cshlp.org/content/19/9/1639" class="external-link">Circos</a> 的环形信息层级与克制 ribbon、<a href="https://academic.oup.com/bioinformatics/article/37/16/2473/6129045" class="external-link">clinker</a> 的发表级基因箭头、<a href="https://edinburgh-genome-foundry.github.io/DnaFeaturesViewer/" class="external-link">DNA Features Viewer</a> 的注释冲突处理，以及 <a href="https://support.snapgene.com/hc/en-us/articles/10383722725524-Display-Feature-Labels-Below-or-Inside-a-Map" class="external-link">SnapGene</a> 和 <a href="https://manual.geneious.com/en/latest/Sequences.html" class="external-link">Geneious</a> 的局部特征标签与拥挤隐藏思路。 不复制第三方资产、专有配色或具体视觉实现。</p>
 </div>
 <div class="section level3">
-<h3 id="b-手动标签布局">B. 手动标签布局<a class="anchor" aria-label="anchor" href="#b-%E6%89%8B%E5%8A%A8%E6%A0%87%E7%AD%BE%E5%B8%83%E5%B1%80"></a></h3>
-<p>为逐标签覆盖提供独立数据契约，例如：</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">geom_gene_label_manual</span><span class="op">(</span></span>
-<span>  data <span class="op">=</span> <span class="va">label_positions</span>,</span>
-<span>  <span class="fu">aes</span><span class="op">(</span>gene_id <span class="op">=</span> <span class="va">gene_id</span>, x <span class="op">=</span> <span class="va">x</span>, y <span class="op">=</span> <span class="va">y</span>, label <span class="op">=</span> <span class="va">label</span><span class="op">)</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-<p>自动模式的结果可以由 layout export 导出、手工调整后再输入。具体列名和优先级在 实现前单独设计。</p>
+<h3 id="b-通用-feature-geometry">B. 通用 feature geometry<a class="anchor" aria-label="anchor" href="#b-%E9%80%9A%E7%94%A8-feature-geometry"></a></h3>
+<p>实现真正独立的 feature shape：</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/geom_feature.html">geom_feature</a></span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>feature_shape <span class="op">=</span> <span class="va">type</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/scale_feature_shape_manual.html">scale_feature_shape_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>  CDS <span class="op">=</span> <span class="st">"arrow"</span>, tRNA <span class="op">=</span> <span class="st">"block"</span>, repeat_region <span class="op">=</span> <span class="st">"chevron"</span></span>
+<span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p>首批只考虑 <code>arrow</code>、<code>block</code>、<code>chevron</code>、<code>lollipop</code>。<code><a href="reference/geom_gene.html">geom_gene()</a></code> 保持为 gene arrow 的便捷封装，但验收标准是几何和视觉等价，不承诺内部字节完全一致。</p>
+<p>v0.10.0 同时移除 <code>geom_seq_group_label()</code>、<code>scale_group_colour_manual()</code> 及 <code><a href="reference/geom_seq.html">geom_seq()</a></code> 中的所有 <code>seq_group*</code> 参数。这是开发版的破坏性精简， 旧参数立即报错，不保留隐式分组布局。</p>
 </div>
 <div class="section level3">
 <h3 id="c-显式多环">C. 显式多环<a class="anchor" aria-label="anchor" href="#c-%E6%98%BE%E5%BC%8F%E5%A4%9A%E7%8E%AF"></a></h3>
@@ -516,7 +519,7 @@
 <div class="section level3">
 <h3 id="d-密集-ribbon">D. 密集 ribbon<a class="anchor" aria-label="anchor" href="#d-%E5%AF%86%E9%9B%86-ribbon"></a></h3>
 <p>不在 <code><a href="reference/geom_ribbon.html">geom_ribbon()</a></code> 中加入 <code>ribbon_reduce</code>。使用职责更明确的接口：</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">stat_ribbon_bundle</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu">stat_ribbon_density</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu">bundle_ggchord_ribbons</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
@@ -528,7 +531,7 @@
 <div class="section level3">
 <h3 id="a-布局导出">A. 布局导出<a class="anchor" aria-label="anchor" href="#a-%E5%B8%83%E5%B1%80%E5%AF%BC%E5%87%BA"></a></h3>
 <p>只保留一个正式名称：</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">export_ggchord_layout</span><span class="op">(</span></span>
 <span>  <span class="va">plot</span>,</span>
 <span>  include <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"seq"</span>, <span class="st">"ribbon"</span>, <span class="st">"gene"</span>, <span class="st">"feature"</span>, <span class="st">"labels"</span>, <span class="st">"axis"</span><span class="op">)</span>,</span>
@@ -568,7 +571,7 @@
 <li>核心 geom 组合能 build；</li>
 <li>三种 label layout 能 build；</li>
 <li>validate、clean、三个 import、三个 ribbon utility 的单一成功路径；</li>
-<li>region、highlight、feature、sequence group 的单一成功路径；</li>
+<li>region、highlight、feature 的单一成功路径；</li>
 <li>每个已确认严重 bug 修复后保留一个最小回归用例；</li>
 <li>一个最基本的错误输入测试。</li>
 </ul></div>
@@ -617,4 +620,3 @@
 
 
   </body></html>
-

@@ -9,7 +9,7 @@ into Cartesian (x, y) coordinates and stores them in a layout list."></head><bod
 
     <a class="navbar-brand me-2" href="../index.html">ggchord</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.10.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,12 +53,6 @@ into Cartesian (x, y) coordinates and stores them in a layout list.</p>
 <span>  <span class="va">seq_curvature</span>,</span>
 <span>  <span class="va">orientation</span>,</span>
 <span>  <span class="va">seq_gap</span>,</span>
-<span>  seq_group <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  seq_group_gap <span class="op">=</span> <span class="fl">0.08</span>,</span>
-<span>  seq_group_labels <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  seq_group_label_radius <span class="op">=</span> <span class="fl">1.35</span>,</span>
-<span>  seq_group_label_size <span class="op">=</span> <span class="fl">3.5</span>,</span>
-<span>  seq_group_colors <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  ribbon_data <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">ribbonGap</span>,</span>
 <span>  <span class="va">ribbon_color_scheme</span>,</span>
@@ -97,6 +91,8 @@ into Cartesian (x, y) coordinates and stores them in a layout list.</p>
 <span>  <span class="va">gene_label_show</span>,</span>
 <span>  <span class="va">gene_label_size</span>,</span>
 <span>  gene_label_wrap <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  gene_label_orientation <span class="op">=</span> <span class="st">"horizontal"</span>,</span>
+<span>  gene_label_overlap <span class="op">=</span> <span class="st">"hide"</span>,</span>
 <span>  gene_label_repel_layer <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  gene_label_repel_max_overlaps <span class="op">=</span> <span class="cn">Inf</span>,</span>
 <span>  gene_label_layout <span class="op">=</span> <span class="st">"aligned"</span>,</span>
@@ -105,6 +101,8 @@ into Cartesian (x, y) coordinates and stores them in a layout list.</p>
 <span>  <span class="va">gene_color_scheme</span>,</span>
 <span>  <span class="va">gene_colors</span>,</span>
 <span>  <span class="va">gene_order</span>,</span>
+<span>  feature_shape_pal <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  feature_shape_order <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  seq_label_text <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  seq_label_radius <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  seq_label_rotation <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -175,6 +173,17 @@ into Cartesian (x, y) coordinates and stores them in a layout list.</p>
 <dd><p>Gene data (already validated)</p></dd>
 
 
+<dt id="arg-gene-label-orientation">gene_label_orientation<a class="anchor" aria-label="anchor" href="#arg-gene-label-orientation"></a></dt>
+<dd><p>Fixed-label text orientation: "radial",
+"tangent", or "horizontal". Automatic repel layouts manage their own
+text orientation.</p></dd>
+
+
+<dt id="arg-gene-label-overlap">gene_label_overlap<a class="anchor" aria-label="anchor" href="#arg-gene-label-overlap"></a></dt>
+<dd><p>Fixed-label collision policy: "hide", "nudge",
+or "allow".</p></dd>
+
+
 <dt id="arg-gene-label-layout">gene_label_layout<a class="anchor" aria-label="anchor" href="#arg-gene-label-layout"></a></dt>
 <dd><p>Character, default "aligned". Deterministic
 automatic layout: "aligned", "radial", or "arc".</p></dd>
@@ -241,4 +250,3 @@ vertical justification; NULL uses 0.5.</p></dd>
 
 
   </body></html>
-

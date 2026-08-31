@@ -140,13 +140,13 @@ aesthetic 和 scale；默认 scale 只在用户没有提供相同角色 scale �
 
 ```r
 seq_colour
-group_colour
 ribbon_fill
 ribbon_alpha
 ribbon_colour
 ribbon_linetype
 gene_fill
 feature_fill
+feature_shape
 region_fill
 ```
 
@@ -155,8 +155,6 @@ region_fill
 ```r
 scale_seq_colour_manual()
 scale_seq_color_manual()       # 美式拼写别名
-scale_group_colour_manual()
-scale_group_color_manual()     # 美式拼写别名
 
 scale_ribbon_fill_stepsn()
 scale_ribbon_fill_gradientn()
@@ -170,6 +168,7 @@ scale_ribbon_linetype_manual()
 
 scale_gene_fill_manual()
 scale_feature_fill_manual()
+scale_feature_shape_manual()
 scale_region_fill_manual()
 ```
 
@@ -195,7 +194,6 @@ scale_seq_position_continuous(
 | 旧参数 | 新归属 |
 | --- | --- |
 | `seq_colors` | `scale_seq_colour_manual(values = ...)` |
-| `seq_group_colors` | `scale_group_colour_manual(values = ...)` |
 | `ribbon_colors` | ribbon fill scale |
 | `ribbon_color_limits/breaks/name` | ribbon fill scale 的 `limits/breaks/name` |
 | `ribbon_alpha_range` | ribbon alpha scale 的 `range` |
@@ -240,7 +238,6 @@ ggchord.axis.line
 ggchord.axis.ticks
 ggchord.axis.text
 ggchord.seq.label
-ggchord.group.label
 ggchord.gene.label
 ggchord.gene.label.segment
 ```
@@ -261,7 +258,7 @@ v0.9.0 建立了视觉参数的 scale/theme/guide 基础，v0.10.0 继续校准�
 
 #### 配色原则
 
-- sequence、group、gene 和 feature 的离散色板优先使用色觉友好且灰度可区分的
+- sequence、gene 和 feature 的离散色板优先使用色觉友好且灰度可区分的
   配色；
 - ribbon 连续色板使用亮度单调的方案，避免彩虹色板和难以解释的颜色跳变；
 - strand、direction 等二分类采用对比明确、黑白打印仍可借助形状或线型识别的
@@ -341,12 +338,13 @@ v0.10.0 不新增独立的手动标签 geom，而是增强现有 `geom_gene_labe
 #### `geom_seq()`
 
 - `data`、`mapping` 已生效；
-- `seq_colors`、`seq_group_colors` 已迁入 scale，旧参数保留迁移警告；
+- `seq_colors` 已迁入 scale，旧参数保留迁移警告；
 - 序列显示文字由 `geom_seq_label(labels = ...)` 控制，scale labels 独立；
-- group label 已有独立 `geom_seq_group_label()`，隐式旧行为暂时兼容；
 - `linewidth` 和 arrow 已通过不同静态输出设备检查；
 - `seq_order`、`seq_orientation`、`seq_gap`、`seq_radius`、
-  `seq_curvature`、`seq_group` 和 `seq_group_gap` 保留为布局参数。
+  `seq_curvature` 保留为布局参数。
+- v0.10.0 移除序列分组、组间距、组标签和组配色整套接口；这些概念
+  与序列顺序、半径和显式多环的职责重叠，且没有足够清晰的通用语义。
 
 #### `geom_ribbon()`
 
@@ -504,12 +502,16 @@ v0.10.0 不新增独立的手动标签 geom，而是增强现有 `geom_gene_labe
 ```r
 geom_feature(aes(feature_shape = type))
 scale_feature_shape_manual(values = c(
-  CDS = "arrow", tRNA = "block", repeat = "chevron"
+  CDS = "arrow", tRNA = "block", repeat_region = "chevron"
 ))
 ```
 
 首批只考虑 `arrow`、`block`、`chevron`、`lollipop`。`geom_gene()` 保持为 gene
 arrow 的便捷封装，但验收标准是几何和视觉等价，不承诺内部字节完全一致。
+
+v0.10.0 同时移除 `geom_seq_group_label()`、`scale_group_colour_manual()`
+及 `geom_seq()` 中的所有 `seq_group*` 参数。这是开发版的破坏性精简，
+旧参数立即报错，不保留隐式分组布局。
 
 ### C. 显式多环
 
@@ -587,7 +589,7 @@ layout export 契约，单独评估更成熟的交互方案，不在本路线图
 - 核心 geom 组合能 build；
 - 三种 label layout 能 build；
 - validate、clean、三个 import、三个 ribbon utility 的单一成功路径；
-- region、highlight、feature、sequence group 的单一成功路径；
+- region、highlight、feature 的单一成功路径；
 - 每个已确认严重 bug 修复后保留一个最小回归用例；
 - 一个最基本的错误输入测试。
 

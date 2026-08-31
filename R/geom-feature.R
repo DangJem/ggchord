@@ -1,15 +1,24 @@
 # geom-feature.R - generic feature layer (v0.9.0)
 
-feature_geom <- rename_geom_aes(
+feature_polygon_geom <- rename_geom_aes(
   GeomPolygon, renames = c(fill = "feature_fill")
+)
+feature_geom_defaults <- feature_polygon_geom$default_aes
+feature_geom_defaults$feature_shape <- "arrow"
+feature_geom <- ggplot2::ggproto(
+  "GeomChordFeature", feature_polygon_geom,
+  default_aes = feature_geom_defaults,
+  draw_key = function(data, params, size) {
+    key_glyph_feature(data, params, size)
+  }
 )
 
 #' Draw generic genomic features
 #'
-#' A thin, backwards-compatible convenience layer for CDS, tRNA, rRNA, repeat,
-#' CRISPR, promoter or user-defined features. It prepares a gene-compatible
-#' table from a \code{type} / \code{category} / \code{label} specification and
-#' reuses the proven \code{geom_gene()} geometry and scales.
+#' A general layer for CDS, tRNA, rRNA, repeat, CRISPR, promoter or user-defined
+#' features. It supports directional arrows, blocks, notched chevrons and
+#' lollipops, all generated against the sequence's real local curve. Feature
+#' fill and geometry use independent role-specific scales.
 #'
 #' @param mapping Optional aesthetic mapping. Role aesthetics such as
 #'   \code{seq_id}, \code{start}, \code{end} and \code{strand} may rename
@@ -22,6 +31,11 @@ feature_geom <- rename_geom_aes(
 #'   \code{type}.
 #' @param label Optional column name used for annotation text; defaults to
 #'   \code{label} when present, otherwise \code{type}.
+#' @param feature_shape Fixed feature geometry used when \code{feature_shape}
+#'   is not mapped in \code{aes()}: \code{"arrow"}, \code{"block"},
+#'   \code{"chevron"}, or \code{"lollipop"}. The default is \code{"arrow"}.
+#'   Use \code{aes(feature_shape = type)} together with
+#'   \code{scale_feature_shape_manual()} to map categories to geometry.
 #' @param feature_colors Optional named color vector by feature value; unnamed
 #'   vectors are recycled positionally.
 #' @param feature_width Optional numeric or named vector controlling feature
@@ -49,6 +63,7 @@ geom_feature <- function(mapping = NULL, data = NULL,
                          type = "type",
                          category = NULL,
                          label = "label",
+                         feature_shape = "arrow",
                          feature_colors = NULL,
                          feature_width = NULL,
                          feature_offset = NULL,
@@ -83,6 +98,16 @@ geom_feature <- function(mapping = NULL, data = NULL,
   if (!is.data.frame(data)) {
     ggchord_stop("geom_feature(): data must be a data.frame")
   }
+  allowed_shapes <- c("arrow", "block", "chevron", "lollipop")
+  shape_mapped <- !is.null(mapping) && "feature_shape" %in% names(mapping)
+  if (!shape_mapped &&
+      (!is.character(feature_shape) || length(feature_shape) != 1L ||
+       is.na(feature_shape) || !feature_shape %in% allowed_shapes)) {
+    ggchord_stop(
+      "geom_feature(): feature_shape must be 'arrow', 'block', ",
+      "'chevron', or 'lollipop'"
+    )
+  }
   required <- c("seq_id", "start", "end", "strand")
   missing <- setdiff(required, colnames(data))
   if (length(missing) > 0) {
@@ -108,6 +133,26 @@ geom_feature <- function(mapping = NULL, data = NULL,
     as.character(data[[label]])
   } else {
     gene_data$anno
+  }
+  if (shape_mapped) {
+    shape_value <- tryCatch(
+      rlang::eval_tidy(mapping[["feature_shape"]], data = data),
+      error = function(e) ggchord_stop(
+        "Cannot evaluate `feature_shape` in layer mapping: ",
+        conditionMessage(e)
+      )
+    )
+    if (length(shape_value) == 1L && nrow(data) != 1L) {
+      shape_value <- rep(shape_value, nrow(data))
+    }
+    if (length(shape_value) != nrow(data) || anyNA(shape_value)) {
+      ggchord_stop(
+        "Mapped `feature_shape` must return one non-missing value per input row"
+      )
+    }
+    gene_data$.feature_shape_raw <- as.character(shape_value)
+  } else {
+    gene_data$.feature_shape_raw <- rep(feature_shape, nrow(gene_data))
   }
   # Preserve the original value columns for traceability.
   if (type %in% colnames(data)) gene_data$type <- as.character(data[[type]])
@@ -144,6 +189,9 @@ geom_feature <- function(mapping = NULL, data = NULL,
       setdiff(names(visual_mapping), holder$ggchord_role_aes)
     ]
   }
+  if (shape_mapped) {
+    visual_mapping[["feature_shape"]] <- as.name(".feature_shape_raw")
+  }
   gene_args <- list(
     mapping = visual_mapping,
     data = gene_data,
@@ -160,12 +208,25 @@ geom_feature <- function(mapping = NULL, data = NULL,
       lyr$ggchord_params$legend_position <- legend_position
     }
     lyr$ggchord_params$gene_data_override <- gene_data
+    lyr$ggchord_params$is_feature <- TRUE
+    lyr$ggchord_params$feature_shape_mapped <- shape_mapped
+    lyr$ggchord_params$feature_shape <- feature_shape
     names(lyr$mapping)[names(lyr$mapping) == "gene_fill"] <- "feature_fill"
+    if (shape_mapped && is.null(category)) {
+      # Both aesthetics describe the same feature type in the common case.
+      # Using the same source column lets ggplot2 merge fill and shape into one
+      # compact legend instead of printing two redundant "Feature" guides.
+      lyr$mapping[["feature_fill"]] <- as.name(".feature_shape_raw")
+    }
     if (is.logical(lyr$show.legend) && !is.null(names(lyr$show.legend))) {
       names(lyr$show.legend)[names(lyr$show.legend) == "gene_fill"] <-
         "feature_fill"
+      if (shape_mapped && isTRUE(show_legend)) {
+        lyr$show.legend <- c(lyr$show.legend, feature_shape = TRUE)
+      }
     }
     lyr$geom <- feature_geom
+    if (!shape_mapped) lyr$aes_params$feature_shape <- feature_shape
     lyr$ggchord_legacy_scales <- NULL
     lyr <- ggchord_add_legacy_scale(
       lyr,

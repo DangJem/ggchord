@@ -14,6 +14,9 @@ geom_gene_label(
   mapping = NULL,
   data = NULL,
   gene_label_size = NULL,
+  gene_label_orientation = "horizontal",
+  gene_label_side = "outside",
+  gene_label_overlap = "hide",
   gene_label_rotation = NULL,
   gene_label_radial_offset = 0.04,
   gene_label_circum_offset = NULL,
@@ -37,6 +40,24 @@ geom_gene_label(
 - gene_label_size:
 
   Numeric. Label font size, default 2.5
+
+- gene_label_orientation:
+
+  Character, default `"horizontal"`. Text orientation relative to each
+  sequence path: `"radial"`, `"tangent"`, or `"horizontal"`.
+
+- gene_label_side:
+
+  Character, default `"outside"`. Place labels outside the chord, use
+  the strand-based `"auto"` side, or force `"inside"` placement.
+
+- gene_label_overlap:
+
+  Character, default `"hide"`. Fixed-label collision policy: omit later
+  conflicting labels (`"hide"`), apply the legacy gentle adjustment
+  (`"nudge"`), or keep all requested positions (`"allow"`). Input row
+  order therefore provides a simple way to prioritize labels in `"hide"`
+  mode.
 
 - gene_label_rotation:
 
@@ -79,8 +100,11 @@ instead.
 
 ## Details
 
-Long annotations can be wrapped with `gene_label_wrap`. For automatic
-de-overlapping (with leader lines), use
+This is the deterministic, fixed-position label layer. By default labels
+sit outside their sequence and labels that would collide are omitted in
+input-row order. Use `gene_label_overlap = "nudge"` to retain the legacy
+gentle adjustment, or `"allow"` to draw every label at its requested
+position. For automatic arrangement with leader lines, use
 [`geom_gene_label_repel()`](https://dangjem.github.io/ggchord/reference/geom_gene_label_repel.md)
 instead.
 

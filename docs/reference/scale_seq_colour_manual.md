@@ -1,6 +1,6 @@
-# Sequence and sequence-group colour scales
+# Sequence colour scales
 
-Sequence and sequence-group colour scales
+Sequence colour scales
 
 ## Usage
 
@@ -8,10 +8,6 @@ Sequence and sequence-group colour scales
 scale_seq_colour_manual(..., values)
 
 scale_seq_color_manual(..., values)
-
-scale_group_colour_manual(..., values)
-
-scale_group_color_manual(..., values)
 ```
 
 ## Arguments

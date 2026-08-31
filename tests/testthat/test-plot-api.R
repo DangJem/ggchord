@@ -108,18 +108,11 @@ test_that("annotation themes and component styles remain independent", {
   expect_error(geom_axis(show_legend = TRUE), "show_legend was removed")
 })
 
-test_that("sequence-group labels have a dedicated layer and scale", {
-  seq <- data.frame(
-    seq_id = c("A", "B", "C"), length = c(100, 120, 140),
-    seq_group = c("g1", "g1", "g2")
+test_that("removed sequence grouping and gene-label arguments fail clearly", {
+  expect_error(
+    geom_seq(seq_group = "group-a"),
+    "Sequence grouping was removed in v0.10.0"
   )
-  p <- ggchord(seq, validate = "none") +
-    geom_seq() +
-    geom_seq_group_label() +
-    scale_group_colour_manual(values = c(g1 = "red", g2 = "blue"))
-  built <- build_ggchord_smoke(p)
-  expect_equal(nrow(built$data[[2]]), 2)
-  expect_true(built$plot$scales$has_scale("group_colour"))
   expect_error(
     geom_gene(gene_label_size = 3),
     "Add geom_gene_label"
@@ -222,28 +215,30 @@ test_that("region and ribbon-highlight layers build", {
   expect_true(nrow(layout$ribbon_highlight_polys) > 0)
 })
 
-test_that("feature and sequence-group layers build", {
+test_that("feature geometry shapes build", {
   data(seq_data_example)
 
   feature <- data.frame(
-    seq_id = seq_data_example$seq_id[1],
-    start = 100,
-    end = 500,
-    strand = "+",
-    type = "CDS"
-  )
-  groups <- stats::setNames(
-    rep(c("group-a", "group-b"), length.out = nrow(seq_data_example)),
-    seq_data_example$seq_id
+    seq_id = rep(seq_data_example$seq_id[1], 4),
+    start = c(100, 700, 1300, 1900),
+    end = c(500, 1100, 1700, 2300),
+    strand = c("+", "-", "+", "-"),
+    type = c("CDS", "tRNA", "repeat", "promoter")
   )
   p <- ggchord(seq_data_example, validate = "none") +
-    geom_seq(seq_group = groups) +
-    geom_feature(feature)
+    geom_seq() +
+    geom_feature(aes(feature_shape = type), data = feature) +
+    scale_feature_shape_manual(values = c(
+      CDS = "arrow", tRNA = "block", "repeat" = "chevron",
+      promoter = "lollipop"
+    ))
 
   expect_s3_class(build_ggchord_smoke(p), "ggplot_built")
   layout <- get_chord_layout(p)
-  expect_true(nrow(layout$gene_polys) > 0)
-  expect_true(nrow(layout$group_labels) > 0)
+  expect_setequal(
+    unique(layout$gene_polys$feature_shape),
+    c("arrow", "block", "chevron", "lollipop")
+  )
 })
 
 test_that("feature category and region outline survive geometry generation", {
@@ -395,8 +390,10 @@ test_that("role-specific scales coexist without replacing one another", {
   axis_labels <- unique(stats::na.omit(get_chord_layout(p, FALSE)$axis_ticks$label))
   expect_true(all(c("start", "100 bp") %in% axis_labels))
   expect_s3_class(scale_seq_position_continuous(), "ScaleContinuous")
-  expect_s3_class(scale_group_color_manual(values = c(group = "black")),
-                  "ScaleDiscrete")
+  expect_s3_class(
+    scale_feature_shape_manual(values = c(CDS = "block")),
+    "ScaleDiscrete"
+  )
   expect_s3_class(scale_ribbon_color_manual(values = c(kind = "black")),
                   "ScaleDiscrete")
 })

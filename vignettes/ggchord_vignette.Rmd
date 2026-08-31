@@ -253,7 +253,7 @@ base + geom_gene_label_repel(gene_label_layout = "arc")
 ```
 
 Every mode uses the real `seq_radius`, `seq_curvature`, `seq_gap`,
-`seq_orientation`, rotation and grouping geometry. The local outside/inside
+`seq_orientation`, rotation and local curve geometry. The local outside/inside
 label concepts are informed by [SnapGene](https://support.snapgene.com/hc/en-us/articles/10383722725524-Display-Feature-Labels-Below-or-Inside-a-Map)
 and [Geneious](https://manual.geneious.com/en/latest/Sequences.html), while
 ggchord uses generic mode names and an independent implementation. Use
@@ -286,23 +286,7 @@ ggchord(seq_data_example) +
 knitr::include_graphics("../man/figures/axis_seq_label.png")
 ```
 
-### 3.7 Group sequences
-
-```{r tutorial-group, eval=FALSE}
-seq_grouped <- transform(seq_data_example,
-                         seq_group = c("host", "host", "phage", "phage"))
-
-ggchord(seq_grouped, ribbon_data_example, gene_data_example) +
-  geom_seq(seq_group = "seq_group",
-           seq_group_colors = c(host = "#E41A1C", phage = "#377EB8")) +
-  geom_ribbon() + geom_gene()
-```
-
-```{r tutorial-group-img, echo=FALSE, fig.cap="Sequences grouped with an inter-group gap and labels."}
-knitr::include_graphics("../man/figures/tutorial_seq_group.png")
-```
-
-### 3.8 Map numeric ribbon columns and direction
+### 3.7 Map numeric ribbon columns and direction
 
 ```{r tutorial-ribbon-map, eval=FALSE}
 rb_scored <- transform(ribbon_data_example,
@@ -319,7 +303,7 @@ ggchord(seq_data_example, rb_scored) +
 knitr::include_graphics("../man/figures/tutorial_ribbon_mapping.png")
 ```
 
-### 3.9 Highlight regions and ribbons
+### 3.8 Highlight regions and ribbons
 
 ```{r tutorial-highlight, eval=FALSE}
 regions <- data.frame(seq_id = "MT108731.1",
@@ -335,22 +319,30 @@ ggchord(seq_data_example, ribbon_data_example) +
 knitr::include_graphics("../man/figures/tutorial_highlights.png")
 ```
 
-### 3.10 Draw generic features
+### 3.9 Draw generic features
 
 ```{r tutorial-feature, eval=FALSE}
-features <- data.frame(seq_id = c("MT108731.1", "MT118296.1"),
-                       start = c(1000, 500), end = c(4000, 2000),
-                       strand = c("+", "-"), type = c("CDS", "tRNA"))
+features <- data.frame(seq_id = rep("MT108731.1", 4),
+                       start = c(1000, 7000, 13000, 19000),
+                       end = c(5000, 11000, 17000, 23000),
+                       strand = c("+", "-", "+", "-"),
+                       type = c("CDS", "tRNA", "repeat", "promoter"))
 
 ggchord(seq_data_example, ribbon_data_example) +
-  geom_seq() + geom_ribbon() + geom_feature(features)
+  geom_seq() + geom_ribbon() +
+  geom_feature(aes(feature_shape = type), data = features,
+               feature_width = 0.10) +
+  scale_feature_shape_manual(values = c(
+    CDS = "arrow", tRNA = "block", "repeat" = "chevron",
+    promoter = "lollipop"
+  ))
 ```
 
-```{r tutorial-feature-img, echo=FALSE, fig.cap="Generic features drawn with geom_feature()."}
+```{r tutorial-feature-img, echo=FALSE, fig.cap="Four feature geometries drawn with geom_feature()."}
 knitr::include_graphics("../man/figures/tutorial_features.png")
 ```
 
-### 3.11 Apply themes and scales
+### 3.10 Apply themes and scales
 
 ```{r tutorial-theme, eval=FALSE}
 ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
@@ -367,7 +359,7 @@ ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
 knitr::include_graphics("../man/figures/legend_bottom.png")
 ```
 
-### 3.12 Fine-tuned publication-style plot
+### 3.11 Fine-tuned publication-style plot
 
 ```{r tutorial-fine, eval=FALSE}
 ggchord(seq_data_example, ribbon_data_example, gene_data_example,

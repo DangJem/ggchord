@@ -2,6 +2,22 @@
 
 ## Fixed labels and publication defaults
 
+* `geom_feature()` now draws independent `"arrow"`, `"block"`, `"chevron"`,
+  and `"lollipop"` geometries along each sequence's real local curve. Map
+  `feature_shape` and control category-to-geometry values with the new
+  `scale_feature_shape_manual()`; fixed `feature_shape` values remain available
+  directly in the geom. Legend keys use the same silhouettes as the plot.
+
+* Sequence grouping has been removed. `geom_seq_group_label()`,
+  `scale_group_colour_manual()` / `scale_group_color_manual()`, and all
+  `seq_group*` arguments in `geom_seq()` no longer form part of the package.
+  Passing a removed grouping argument or aesthetic now produces a direct
+  migration error instead of silently changing sequence spacing.
+
+* `geom_ribbon()` now uses a darker neutral default outline (`#59636D`) so
+  ribbon boundaries remain legible after transparency is applied. Explicit
+  outline colours and `ribbon_colour` scales still take precedence.
+
 * `geom_gene_label()` is now the single fixed/manual label layer; no separate
   `geom_gene_label_manual()` is planned. It adds `gene_label_orientation =
   "horizontal" | "radial" | "tangent"`, `gene_label_side = "outside" |

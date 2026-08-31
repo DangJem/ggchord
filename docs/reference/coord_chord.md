@@ -11,7 +11,7 @@ coord_chord(
   ratio = 1,
   xlim = NULL,
   ylim = NULL,
-  expand = TRUE,
+  expand = FALSE,
   clip = "off",
   fit = c("labels", "geometry", "manual")
 )
@@ -34,7 +34,9 @@ coord_chord(
 
 - expand:
 
-  Logical. Expand coordinate limits, default TRUE.
+  Logical. Expand coordinate limits, default FALSE. Automatic fitting
+  already includes a small safety margin; set TRUE to request the
+  additional ggplot2 coordinate expansion.
 
 - clip:
 

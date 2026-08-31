@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ggchord</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.10.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,14 +53,14 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>ggchord 汉语使用指南</h1>
-            
-      
+
+
       <small class="dont-index">Source: <a href="https://github.com/DangJem/ggchord/blob/HEAD/vignettes/ggchord_guide_hans.Rmd" class="external-link"><code>vignettes/ggchord_guide_hans.Rmd</code></a></small>
       <div class="d-none name"><code>ggchord_guide_hans.Rmd</code></div>
     </div>
 
-    
-    
+
+
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/DangJem/ggchord" class="external-link">ggchord</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
@@ -457,11 +457,24 @@
 <span><span class="va">base</span> <span class="op">+</span> <span class="fu"><a href="../reference/geom_gene_label_repel.html">geom_gene_label_repel</a></span><span class="op">(</span>gene_label_layout <span class="op">=</span> <span class="st">"arc"</span><span class="op">)</span></span></code></pre></div>
 <p>三种模式都会使用实际的
 <code>seq_radius</code>、<code>seq_curvature</code>、<code>seq_gap</code>、
-<code>seq_orientation</code>、旋转和分组几何。局部外侧/内侧标签理念借鉴了
+<code>seq_orientation</code>、旋转和局部曲线几何。局部外侧/内侧标签理念借鉴了
 <a href="https://support.snapgene.com/hc/en-us/articles/10383722725524-Display-Feature-Labels-Below-or-Inside-a-Map" class="external-link">SnapGene</a>
 与 <a href="https://manual.geneious.com/en/latest/Sequences.html" class="external-link">Geneious</a>，但
 ggchord 使用通用模式名和独立实现。如需手工旋转或偏移，请使用
 <code><a href="../reference/geom_gene_label.html">geom_gene_label()</a></code>。</p>
+<p><code><a href="../reference/geom_gene_label.html">geom_gene_label()</a></code> 也是紧凑的固定标签方案。v0.10.0
+默认将文字水平放在
+弦图外侧，按输入行顺序保留标签并省略后续冲突项。可以用
+<code>gene_label_orientation = "radial"</code> 或 <code>"tangent"</code>
+改变文字方向，用 <code>gene_label_side = "auto"</code> 或
+<code>"inside"</code> 选择侧向，并用
+<code>gene_label_overlap = "nudge"</code> 或 <code>"allow"</code>
+优先保留全部文字。手工旋转和逐序列/
+逐链偏移仍集中在这一个固定标签图层中，不新增重复的手动 geom。</p>
+<p>整体信息层级还借鉴了 <a href="https://genome.cshlp.org/content/19/9/1639" class="external-link">Circos</a>、 <a href="https://academic.oup.com/bioinformatics/article/37/16/2473/6129045" class="external-link">clinker</a>
+的发表级基因箭头， 以及 <a href="https://edinburgh-genome-foundry.github.io/DnaFeaturesViewer/" class="external-link">DNA
+Features Viewer</a> 的注释冲突处理思路。 这些只是设计原则参考，ggchord
+使用独立的配色、几何和通用 API 名称。</p>
 </div>
 </div>
 <div class="section level3">
@@ -477,26 +490,9 @@ ggchord 使用通用模式名和独立实现。如需手工旋转或偏移，请
 </div>
 </div>
 <div class="section level3">
-<h3 id="对序列分组">3.7 对序列分组<a class="anchor" aria-label="anchor" href="#%E5%AF%B9%E5%BA%8F%E5%88%97%E5%88%86%E7%BB%84"></a>
+<h3 id="映射数值列与-ribbon-方向">3.7 映射数值列与 Ribbon 方向<a class="anchor" aria-label="anchor" href="#%E6%98%A0%E5%B0%84%E6%95%B0%E5%80%BC%E5%88%97%E4%B8%8E-ribbon-%E6%96%B9%E5%90%91"></a>
 </h3>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">seq_grouped</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/transform.html" class="external-link">transform</a></span><span class="op">(</span><span class="va">seq_data_example</span>,</span>
-<span>                         seq_group <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"host"</span>, <span class="st">"host"</span>, <span class="st">"phage"</span>, <span class="st">"phage"</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="../reference/ggchord.html">ggchord</a></span><span class="op">(</span><span class="va">seq_grouped</span>, <span class="va">ribbon_data_example</span>, <span class="va">gene_data_example</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/geom_seq.html">geom_seq</a></span><span class="op">(</span>seq_group <span class="op">=</span> <span class="st">"seq_group"</span>,</span>
-<span>           seq_group_colors <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>host <span class="op">=</span> <span class="st">"#E41A1C"</span>, phage <span class="op">=</span> <span class="st">"#377EB8"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/geom_ribbon.html">geom_ribbon</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="../reference/geom_gene.html">geom_gene</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<div class="figure" style="text-align: center">
-<img src="../reference/figures/tutorial_seq_group.png" class="r-plt" alt="带组间空隙和组标签的分组序列。" width="100%"><p class="caption">
-带组间空隙和组标签的分组序列。
-</p>
-</div>
-</div>
-<div class="section level3">
-<h3 id="映射数值列与-ribbon-方向">3.8 映射数值列与 Ribbon 方向<a class="anchor" aria-label="anchor" href="#%E6%98%A0%E5%B0%84%E6%95%B0%E5%80%BC%E5%88%97%E4%B8%8E-ribbon-%E6%96%B9%E5%90%91"></a>
-</h3>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">rb_scored</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/transform.html" class="external-link">transform</a></span><span class="op">(</span><span class="va">ribbon_data_example</span>,</span>
 <span>                       bitscore <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">ribbon_data_example</span><span class="op">)</span><span class="op">)</span> <span class="op">*</span> <span class="fl">10</span><span class="op">)</span></span>
 <span></span>
@@ -512,9 +508,9 @@ ggchord 使用通用模式名和独立实现。如需手工旋转或偏移，请
 </div>
 </div>
 <div class="section level3">
-<h3 id="高亮区间与连接带">3.9 高亮区间与连接带<a class="anchor" aria-label="anchor" href="#%E9%AB%98%E4%BA%AE%E5%8C%BA%E9%97%B4%E4%B8%8E%E8%BF%9E%E6%8E%A5%E5%B8%A6"></a>
+<h3 id="高亮区间与连接带">3.8 高亮区间与连接带<a class="anchor" aria-label="anchor" href="#%E9%AB%98%E4%BA%AE%E5%8C%BA%E9%97%B4%E4%B8%8E%E8%BF%9E%E6%8E%A5%E5%B8%A6"></a>
 </h3>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">regions</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>seq_id <span class="op">=</span> <span class="st">"MT108731.1"</span>,</span>
 <span>                      start <span class="op">=</span> <span class="fl">1000</span>, end <span class="op">=</span> <span class="fl">4000</span>, color <span class="op">=</span> <span class="st">"orange"</span><span class="op">)</span></span>
 <span></span>
@@ -529,25 +525,33 @@ ggchord 使用通用模式名和独立实现。如需手工旋转或偏移，请
 </div>
 </div>
 <div class="section level3">
-<h3 id="绘制通用-feature">3.10 绘制通用 feature<a class="anchor" aria-label="anchor" href="#%E7%BB%98%E5%88%B6%E9%80%9A%E7%94%A8-feature"></a>
+<h3 id="绘制通用-feature">3.9 绘制通用 feature<a class="anchor" aria-label="anchor" href="#%E7%BB%98%E5%88%B6%E9%80%9A%E7%94%A8-feature"></a>
 </h3>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">features</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>seq_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"MT108731.1"</span>, <span class="st">"MT118296.1"</span><span class="op">)</span>,</span>
-<span>                       start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1000</span>, <span class="fl">500</span><span class="op">)</span>, end <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4000</span>, <span class="fl">2000</span><span class="op">)</span>,</span>
-<span>                       strand <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"+"</span>, <span class="st">"-"</span><span class="op">)</span>, type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"CDS"</span>, <span class="st">"tRNA"</span><span class="op">)</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">features</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>seq_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"MT108731.1"</span>, <span class="fl">4</span><span class="op">)</span>,</span>
+<span>                       start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1000</span>, <span class="fl">7000</span>, <span class="fl">13000</span>, <span class="fl">19000</span><span class="op">)</span>,</span>
+<span>                       end <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5000</span>, <span class="fl">11000</span>, <span class="fl">17000</span>, <span class="fl">23000</span><span class="op">)</span>,</span>
+<span>                       strand <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"+"</span>, <span class="st">"-"</span>, <span class="st">"+"</span>, <span class="st">"-"</span><span class="op">)</span>,</span>
+<span>                       type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"CDS"</span>, <span class="st">"tRNA"</span>, <span class="st">"repeat"</span>, <span class="st">"promoter"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/ggchord.html">ggchord</a></span><span class="op">(</span><span class="va">seq_data_example</span>, <span class="va">ribbon_data_example</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/geom_seq.html">geom_seq</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="../reference/geom_ribbon.html">geom_ribbon</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="../reference/geom_feature.html">geom_feature</a></span><span class="op">(</span><span class="va">features</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/geom_seq.html">geom_seq</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="../reference/geom_ribbon.html">geom_ribbon</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/geom_feature.html">geom_feature</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>feature_shape <span class="op">=</span> <span class="va">type</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">features</span>,</span>
+<span>               feature_width <span class="op">=</span> <span class="fl">0.10</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/scale_feature_shape_manual.html">scale_feature_shape_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>    CDS <span class="op">=</span> <span class="st">"arrow"</span>, tRNA <span class="op">=</span> <span class="st">"block"</span>, <span class="st">"repeat"</span> <span class="op">=</span> <span class="st">"chevron"</span>,</span>
+<span>    promoter <span class="op">=</span> <span class="st">"lollipop"</span></span>
+<span>  <span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="../reference/figures/tutorial_features.png" class="r-plt" alt="用 geom_feature() 绘制的通用 feature。" width="100%"><p class="caption">
-用 geom_feature() 绘制的通用 feature。
+<img src="../reference/figures/tutorial_features.png" class="r-plt" alt="用 geom_feature() 绘制的四种 feature 几何。" width="100%"><p class="caption">
+用 geom_feature() 绘制的四种 feature 几何。
 </p>
 </div>
 </div>
 <div class="section level3">
-<h3 id="应用主题与-scale">3.11 应用主题与 scale<a class="anchor" aria-label="anchor" href="#%E5%BA%94%E7%94%A8%E4%B8%BB%E9%A2%98%E4%B8%8E-scale"></a>
+<h3 id="应用主题与-scale">3.10 应用主题与 scale<a class="anchor" aria-label="anchor" href="#%E5%BA%94%E7%94%A8%E4%B8%BB%E9%A2%98%E4%B8%8E-scale"></a>
 </h3>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ggchord.html">ggchord</a></span><span class="op">(</span><span class="va">seq_data_example</span>, <span class="va">ribbon_data_example</span>, <span class="va">gene_data_example</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/geom_seq.html">geom_seq</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="../reference/geom_ribbon.html">geom_ribbon</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="../reference/geom_gene.html">geom_gene</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="../reference/geom_axis.html">geom_axis</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"MT108731.1"</span> <span class="op">=</span> <span class="st">"#E41A1C"</span>,</span>
@@ -563,9 +567,9 @@ ggchord 使用通用模式名和独立实现。如需手工旋转或偏移，请
 </div>
 </div>
 <div class="section level3">
-<h3 id="发表级精细控制">3.12 发表级精细控制<a class="anchor" aria-label="anchor" href="#%E5%8F%91%E8%A1%A8%E7%BA%A7%E7%B2%BE%E7%BB%86%E6%8E%A7%E5%88%B6"></a>
+<h3 id="发表级精细控制">3.11 发表级精细控制<a class="anchor" aria-label="anchor" href="#%E5%8F%91%E8%A1%A8%E7%BA%A7%E7%B2%BE%E7%BB%86%E6%8E%A7%E5%88%B6"></a>
 </h3>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ggchord.html">ggchord</a></span><span class="op">(</span><span class="va">seq_data_example</span>, <span class="va">ribbon_data_example</span>, <span class="va">gene_data_example</span>,</span>
 <span>        title <span class="op">=</span> <span class="st">"ggchord"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/geom_seq.html">geom_seq</a></span><span class="op">(</span>seq_radius <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3.3</span>, <span class="fl">2.5</span>, <span class="fl">1.8</span>, <span class="fl">1.25</span><span class="op">)</span>,</span>
@@ -600,7 +604,7 @@ ggchord 使用通用模式名和独立实现。如需手工旋转或偏移，请
 等）还额外支持按链方向（<code>+</code>/<code>-</code>）指定；自动布局
 <code><a href="../reference/geom_gene_label_repel.html">geom_gene_label_repel()</a></code>
 会自行管理旋转与偏移。以下写法适用于固定标签：</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># 1. 全部使用同一个值</span></span>
 <span><span class="va">gene_label_rotation</span> <span class="op">=</span> <span class="fl">20</span></span>
 <span></span>

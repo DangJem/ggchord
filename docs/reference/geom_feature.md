@@ -1,11 +1,9 @@
 # Draw generic genomic features
 
-A thin, backwards-compatible convenience layer for CDS, tRNA, rRNA,
-repeat, CRISPR, promoter or user-defined features. It prepares a
-gene-compatible table from a `type` / `category` / `label` specification
-and reuses the proven
-[`geom_gene()`](https://dangjem.github.io/ggchord/reference/geom_gene.md)
-geometry and scales.
+A general layer for CDS, tRNA, rRNA, repeat, CRISPR, promoter or
+user-defined features. It supports directional arrows, blocks, notched
+chevrons and lollipops, all generated against the sequence's real local
+curve. Feature fill and geometry use independent role-specific scales.
 
 ## Usage
 
@@ -16,6 +14,7 @@ geom_feature(
   type = "type",
   category = NULL,
   label = "label",
+  feature_shape = "arrow",
   feature_colors = NULL,
   feature_width = NULL,
   feature_offset = NULL,
@@ -51,6 +50,14 @@ geom_feature(
 
   Optional column name used for annotation text; defaults to `label`
   when present, otherwise `type`.
+
+- feature_shape:
+
+  Fixed feature geometry used when `feature_shape` is not mapped in
+  `aes()`: `"arrow"`, `"block"`, `"chevron"`, or `"lollipop"`. The
+  default is `"arrow"`. Use `aes(feature_shape = type)` together with
+  [`scale_feature_shape_manual()`](https://dangjem.github.io/ggchord/reference/scale_feature_shape_manual.md)
+  to map categories to geometry.
 
 - feature_colors:
 

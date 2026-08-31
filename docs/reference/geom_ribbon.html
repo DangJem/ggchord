@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ggchord</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.10.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -56,7 +56,7 @@
 <span>  ribbon_ctrl_point <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  ribbon_gap <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  alpha <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  ribbon_outline_color <span class="op">=</span> <span class="st">"#FFFFFF"</span>,</span>
+<span>  ribbon_outline_color <span class="op">=</span> <span class="st">"#59636D"</span>,</span>
 <span>  ribbon_outline_width <span class="op">=</span> <span class="fl">0.08</span>,</span>
 <span>  ribbon_outline_linetype <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  ribbon_outline_by <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -118,7 +118,7 @@ colourbar (defaults to the column name).</p></dd>
 
 
 <dt id="arg-ribbon-alpha">ribbon_alpha<a class="anchor" aria-label="anchor" href="#arg-ribbon-alpha"></a></dt>
-<dd><p>Numeric (0-1). Ribbon transparency, default 0.38</p></dd>
+<dd><p>Numeric (0-1). Ribbon transparency, default 0.42</p></dd>
 
 
 <dt id="arg-ribbon-alpha-by">ribbon_alpha_by<a class="anchor" aria-label="anchor" href="#arg-ribbon-alpha-by"></a></dt>
@@ -145,7 +145,8 @@ scaled continuously from that numeric column.</p></dd>
 
 <dt id="arg-ribbon-outline-color">ribbon_outline_color<a class="anchor" aria-label="anchor" href="#arg-ribbon-outline-color"></a></dt>
 <dd><p>Character. Colour of the ribbon outline,
-default white for subtle separation between overlapping ribbons.</p></dd>
+default <code>"#59636D"</code>, a restrained dark neutral that remains visible
+after ribbon transparency is applied.</p></dd>
 
 
 <dt id="arg-ribbon-outline-width">ribbon_outline_width<a class="anchor" aria-label="anchor" href="#arg-ribbon-outline-width"></a></dt>
@@ -204,23 +205,23 @@ reverse-orientation alignments: <code>"none"</code>, <code>"alpha"</code>,
 
 
 <dt id="arg-legend-position">legend_position<a class="anchor" aria-label="anchor" href="#arg-legend-position"></a></dt>
-<dd><p>Position of this layer's legend (the Identity(<!-- %) -->
+<dd><p>Position of this layer's legend (the Identity (<!-- %) -->
 colourbar): one of "left", "right", "top", "bottom" or "inside", default
 "left". Pass NULL to let the legend follow
 <code>theme(legend.position = ...)</code> together with the other legends.</p></dd>
 
 
 <dt id="arg-legend-key-width">legend_key_width<a class="anchor" aria-label="anchor" href="#arg-legend-key-width"></a></dt>
-<dd><p>Optional width of the Identity(<!-- %) colourbar key. -->
+<dd><p>Optional width of the Identity (<!-- %) colourbar key. -->
 Accepts a grid unit, e.g. <code>unit(1, "cm")</code>, or a number interpreted
 as centimetres. Default NULL uses the ggplot2 default width.</p></dd>
 
 
 <dt id="arg-legend-key-height">legend_key_height<a class="anchor" aria-label="anchor" href="#arg-legend-key-height"></a></dt>
-<dd><p>Optional height of the Identity(<!-- %) colourbar key. -->
+<dd><p>Optional height of the Identity (<!-- %) colourbar key. -->
 Accepts a grid unit, e.g. <code>unit(5, "cm")</code>, or a number interpreted
-as centimetres. Default NULL lets the vertical bar fill the available
-height (and uses a fixed height for horizontal legends).</p></dd>
+as centimetres. Default NULL uses a compact fixed physical height so the
+guide remains stable across output-device sizes.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
@@ -262,4 +263,3 @@ height (and uses a fixed height for horizontal legends).</p></dd>
 
 
   </body></html>
-

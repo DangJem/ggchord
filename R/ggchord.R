@@ -12,9 +12,10 @@ globalVariables(c(
   "fill_col", "alpha", "label_hjust", "label_vjust", "label_angle",
   "linetype", "zcolour", "zregionfill", "zoutline", "zlinetype",
   "outline_col", "linetype_val", "value", "source_row", "direction",
-  "seq_colour", "group_colour", "ribbon_fill", "ribbon_alpha",
+  "seq_colour", "ribbon_fill", "ribbon_alpha",
   "ribbon_colour", "ribbon_linetype", "gene_fill", "feature_fill",
-  "region_fill", "group_id"
+  "feature_shape",
+  "region_fill"
 ))
 
 #' ggchord: layered multi-sequence alignment chord diagrams for ggplot2
@@ -283,7 +284,6 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   gene_repel_params <- list()
   axis_params   <- list()
   seq_label_params <- list()
-  seq_group_label_params <- list()
   seq_region_params <- list()
   ribbon_highlight_params <- list()
   seq_layer_requested <- FALSE
@@ -335,7 +335,6 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
       },
       axis              = axis_params <- pp,
       seq_label         = seq_label_params <- pp,
-      seq_group_label   = seq_group_label_params <- pp,
       seq_region        = {
         seq_region_params <- pp
         region_data_override <- ggchord_resolve_layer_input(lyr, pp$regions)
@@ -394,44 +393,6 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   } else {
     pal <- chord_default_palette(n)
     seq_colors <- setNames(pal, seqs)
-  }
-
-  # --- Process sequence grouping (v0.8.0) ---
-  seq_group <- resolve_ggchord_seq_group(seq_data, seqs, seq_params$seq_group)
-  seq_group_gap <- seq_params$seq_group_gap %||% 0.08
-  seq_group_labels <- seq_params$seq_group_labels %||% TRUE
-  seq_group_label_radius <- seq_params$seq_group_label_radius %||% 1.35
-  seq_group_label_size <- ggchord_theme_text_size(
-    plot, "ggchord.group.label", 3.5
-  )
-  seq_group_colors <- seq_params$seq_group_colors
-  if (length(seq_group_label_params) > 0) {
-    seq_group_labels <- seq_group_label_params$labels
-    seq_group_label_radius <- seq_group_label_params$radius
-    seq_group_label_size <- seq_group_label_params$size %||%
-      seq_group_label_size
-  }
-
-  if (!is.numeric(seq_group_gap) || length(seq_group_gap) != 1 ||
-      !is.finite(seq_group_gap) || seq_group_gap < 0) {
-    ggchord_stop("seq_group_gap must be a finite non-negative number")
-  }
-  if (!is.numeric(seq_group_label_radius) || length(seq_group_label_radius) != 1 ||
-      !is.finite(seq_group_label_radius)) {
-    ggchord_stop("seq_group_label_radius must be a finite number")
-  }
-  if (!is.numeric(seq_group_label_size) || length(seq_group_label_size) != 1 ||
-      !is.finite(seq_group_label_size) || seq_group_label_size <= 0) {
-    ggchord_stop("sequence group label size must be a finite positive number")
-  }
-  if (!is.null(seq_group)) {
-    if (length(seq_group) != length(seqs) ||
-        anyNA(seq_group) || any(!nzchar(as.character(seq_group)))) {
-      ggchord_stop("seq_group must provide a non-missing, non-empty group for every sequence")
-    }
-    seq_group <- as.character(seq_group)
-  } else if (!is.null(seq_group_colors)) {
-    ggchord_stop("seq_group_colors requires seq_group (add a seq_group column or pass geom_seq(seq_group = ...))")
   }
 
   # --- Process ribbons ---
@@ -633,6 +594,62 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
 
   geneGap    <- process_gene_param(gene_off, seqs, "gene_offset", 0.1, FALSE)
   geneWidth  <- process_gene_param(gene_w, seqs, "gene_width", 0.05, FALSE)
+
+  # Feature geometry is resolved before coordinate generation because these
+  # values change the actual polygon, not only its appearance. A user-supplied
+  # feature-shape scale is cloned and trained here so the layout and legend use
+  # exactly the same category-to-shape mapping.
+  gene_data_layout <- gene_data_override %||% data_list$gene_data
+  feature_shape_pal <- NULL
+  feature_shape_order <- NULL
+  if (isTRUE(gene_params$is_feature) && !is.null(gene_data_layout) &&
+      nrow(gene_data_layout) > 0L) {
+    raw_shape <- as.character(
+      gene_data_layout$.feature_shape_raw %||%
+        rep(gene_params$feature_shape %||% "arrow", nrow(gene_data_layout))
+    )
+    feature_shape_order <- unique(raw_shape)
+    if (isTRUE(gene_params$feature_shape_mapped)) {
+      shape_scale <- plot$scales$get_scales("feature_shape")
+      if (!is.null(shape_scale)) {
+        shape_scale <- shape_scale$clone()
+        shape_scale$train(raw_shape)
+        mapped_shape <- as.character(shape_scale$map(raw_shape))
+      } else {
+        allowed_shape <- c("arrow", "block", "chevron", "lollipop")
+        if (all(feature_shape_order %in% allowed_shape)) {
+          feature_shape_pal <- stats::setNames(
+            feature_shape_order, feature_shape_order
+          )
+        } else {
+          feature_shape_pal <- stats::setNames(
+            rep(allowed_shape, length.out = length(feature_shape_order)),
+            feature_shape_order
+          )
+        }
+        mapped_shape <- unname(feature_shape_pal[raw_shape])
+      }
+    } else {
+      mapped_shape <- raw_shape
+    }
+    allowed_shape <- c("arrow", "block", "chevron", "lollipop")
+    mapped_shape[is.na(mapped_shape)] <- "arrow"
+    if (any(!mapped_shape %in% allowed_shape)) {
+      ggchord_stop(
+        "feature_shape scale values must use 'arrow', 'block', ",
+        "'chevron', or 'lollipop'"
+      )
+    }
+    if (is.null(feature_shape_pal) &&
+        isTRUE(gene_params$feature_shape_mapped)) {
+      feature_shape_pal <- stats::setNames(
+        mapped_shape[match(feature_shape_order, raw_shape)],
+        feature_shape_order
+      )
+    }
+    gene_data_layout <- as.data.frame(gene_data_layout, stringsAsFactors = FALSE)
+    gene_data_layout$.feature_shape <- mapped_shape
+  }
   geneLabelRadialOffset <- process_gene_param(gene_lro, seqs,
                                               "gene_label_radial_offset", 0, FALSE)
   geneLabelCircumOffset <- process_gene_param(gene_lco, seqs,
@@ -847,12 +864,6 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     seq_colors = seq_colors, seqRadius = seqRadius,
     seq_curvature = seq_curvature, orientation = orientation,
     seq_gap = seq_gap,
-    seq_group = seq_group,
-    seq_group_gap = seq_group_gap,
-    seq_group_labels = seq_group_labels,
-    seq_group_label_radius = seq_group_label_radius,
-    seq_group_label_size = seq_group_label_size,
-    seq_group_colors = seq_group_colors,
     ribbon_data = ribbon_data, ribbonGap = ribbonGap,
     ribbon_color_scheme = ribbon_color_scheme,
     ribbon_colors = ribbon_colors, ribbon_alpha = ribbon_alpha,
@@ -879,7 +890,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     region_offset = region_offset,
     region_side = region_side,
     ribbon_highlight_rows = ribbon_highlight_rows,
-    gene_data = gene_data_override %||% data_list$gene_data,
+    gene_data = gene_data_layout,
     geneGap = geneGap, geneWidth = geneWidth,
     geneLabelRadialOffset = geneLabelRadialOffset,
     geneLabelCircumOffset = geneLabelCircumOffset,
@@ -896,6 +907,8 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     gene_label_segment_linetype = gene_lrepel_ltype,
     gene_color_scheme = gene_cs, gene_colors = gene_cols,
     gene_order = gene_ord,
+    feature_shape_pal = feature_shape_pal,
+    feature_shape_order = feature_shape_order,
     seq_label_text = seq_label_text,
     seq_label_radius = seq_label_radius,
     seq_label_rotation = seq_label_rotation,
@@ -930,7 +943,6 @@ ggchord_layout_component <- function(layout, type, fallback = data.frame()) {
     gene_text_repel = layout$gene_labels %||% fallback,
     gene_label_segment = layout$gene_label_segments %||% fallback,
     seq_label = layout$seq_labels_df %||% fallback,
-    seq_group_label = layout$group_labels %||% fallback,
     seq_region = layout$region_polys %||% fallback,
     ribbon_highlight = layout$ribbon_highlight_polys %||% fallback,
     axis_line = layout$axis_lines %||% fallback,
@@ -975,7 +987,7 @@ compute_chord_geometry <- function(plot) {
                     character(1))
     main <- types[types %in% c(
       "seq", "ribbon", "gene", "gene_label", "gene_label_repel", "axis",
-      "seq_label", "seq_group_label", "seq_region", "ribbon_highlight"
+      "seq_label", "seq_region", "ribbon_highlight"
     )]
     if (length(main)) main[length(main)] else ""
   }, character(1))
@@ -1022,7 +1034,6 @@ compute_chord_geometry <- function(plot) {
         axis_seg = chord$data$seq_data,
         axis_text = chord$data$seq_data,
         seq_label = chord$data$seq_data,
-        seq_group_label = chord$data$seq_data,
         ribbon = chord$data$ribbon_data,
         ribbon_highlight = chord$data$ribbon_data,
         gene_poly = chord$data$gene_data,
@@ -1075,6 +1086,19 @@ compute_chord_geometry <- function(plot) {
     orders <- unlist(lapply(layouts, function(x) x$final_gene_order),
                      use.names = FALSE)
     primary$final_gene_order <- unique(orders)
+  }
+  shape_palettes <- lapply(layouts, function(x) x$feature_shape_pal)
+  shape_palettes <- Filter(
+    function(x) !is.null(x) && length(x) > 0L, shape_palettes
+  )
+  if (length(shape_palettes)) {
+    shape_pal <- do.call(c, unname(shape_palettes))
+    primary$feature_shape_pal <- shape_pal[
+      !duplicated(names(shape_pal), fromLast = TRUE)
+    ]
+    primary$feature_shape_order <- unique(unlist(lapply(
+      layouts, function(x) x$feature_shape_order
+    ), use.names = FALSE))
   }
   primary$extremes <- get_plot_extremes(
     allRibbon = primary$ribbon_polys,
@@ -1133,7 +1157,6 @@ classify_ggchord_layers <- function(plot) {
               gene_label_segment = integer(0),
               axis_line = integer(0), axis_seg = integer(0),
               axis_text = integer(0), seq_label = integer(0),
-              seq_group_label = integer(0),
               seq_region = integer(0), ribbon_highlight = integer(0))
   for (i in seq_along(plot$layers)) {
     lyr <- plot$layers[[i]]
@@ -1190,6 +1213,7 @@ ggchord_ribbon_key_dims <- function(plot) {
 #' @keywords internal
 make_ggchord_scales <- function(layout, has_seq = FALSE, has_gene = FALSE,
                                 has_feature = FALSE,
+                                has_feature_shape = FALSE,
                                 legend_position = NULL, legend_box = NULL,
                                 positions = list(), legend_key_width = NULL,
                                 legend_key_height = NULL) {
@@ -1302,13 +1326,41 @@ make_ggchord_scales <- function(layout, has_seq = FALSE, has_gene = FALSE,
   # guide matching working when no gene layer is present, so the Identity(%)
   # colourbar legend is shown even without gene data.
   feature_fill_scale <- NULL
+  merge_feature_guides <- FALSE
   if (has_feature) {
+    merge_feature_guides <- has_feature_shape &&
+      !is.null(layout$feature_shape_pal) &&
+      identical(
+        as.character(layout$final_gene_order),
+        as.character(layout$feature_shape_order)
+      )
+    feature_override <- if (merge_feature_guides) {
+      list(feature_shape = unname(
+        layout$feature_shape_pal[layout$final_gene_order]
+      ))
+    } else {
+      list()
+    }
     feature_fill_scale <- scale_feature_fill_manual(
       name = "Feature", breaks = layout$final_gene_order,
       values = layout$gene_pal,
       guide = guide_ggchord_legend(
-        position = positions$gene %||% NULL, order = 3
+        position = positions$gene %||% NULL, order = 3,
+        override.aes = feature_override
       )
+    )
+  }
+  feature_shape_scale <- NULL
+  if (has_feature_shape && !is.null(layout$feature_shape_pal)) {
+    feature_shape_scale <- scale_feature_shape_manual(
+      name = "Feature",
+      breaks = layout$feature_shape_order,
+      values = layout$feature_shape_pal,
+      guide = if (isTRUE(merge_feature_guides)) "none" else {
+        guide_ggchord_legend(
+          position = positions$gene %||% NULL, order = 3
+        )
+      }
     )
   }
 
@@ -1333,6 +1385,9 @@ make_ggchord_scales <- function(layout, has_seq = FALSE, has_gene = FALSE,
   if (!is.null(feature_fill_scale)) {
     scales[[length(scales) + 1]] <- feature_fill_scale
   }
+  if (!is.null(feature_shape_scale)) {
+    scales[[length(scales) + 1]] <- feature_shape_scale
+  }
 
   # Ribbon alpha is a preset value; use an identity scale so it renders as specified
   if (!is.null(layout$ribbon_polys)) {
@@ -1351,13 +1406,6 @@ make_ggchord_scales <- function(layout, has_seq = FALSE, has_gene = FALSE,
   # Sequence-region bands use their own internal fill aesthetic.
   if (!is.null(layout$region_polys) && nrow(layout$region_polys) > 0) {
     scales[[length(scales) + 1]] <- scale_fill_identity(aesthetics = "region_fill")
-  }
-  # Sequence-group label colours use an internal aesthetic so they do not
-  # collide with the Seq ID colour scale used by geom_seq().
-  if (!is.null(layout$group_labels) && nrow(layout$group_labels) > 0) {
-    scales[[length(scales) + 1]] <- scale_group_colour_manual(
-      name = "Sequence group", values = layout$group_colors, guide = "none"
-    )
   }
   list(scales = scales, ribbon_aes = ribbon_aes)
 }
@@ -1442,7 +1490,7 @@ ggchord_geometry_limits <- function(layout) {
 #' Compute coordinate limits that fit the rendered text boxes
 #'
 #' Instead of adding one global text-width pad on every side, this helper
-#' measures the actual gene/sequence/group/axis label boxes and expands only
+#' measures the actual gene, sequence and axis label boxes and expands only
 #' the sides that need it. x and y are fitted independently: `coord_fixed()`
 #' preserves equal physical units without requiring a square data range. This
 #' lets wide or tall rendered content use the available panel more efficiently.
@@ -1487,15 +1535,6 @@ ggchord_adaptive_limits <- function(layout) {
       units_per_inch = units_per_inch, box_padding = 0.03
     ))
   }
-  if (!is.null(layout$group_labels) && nrow(layout$group_labels) > 0) {
-    add_boxes(ggchord_text_boxes(
-      layout$group_labels,
-      x_col = "text_x", y_col = "text_y", text_col = "label",
-      angle_col = "text_angle", size_col = "size",
-      hjust_col = "hjust", vjust_col = "vjust",
-      units_per_inch = units_per_inch, box_padding = 0.03
-    ))
-  }
   if (isTRUE(layout$show_axis) && nrow(layout$axis_ticks) > 0) {
     axis_labels <- layout$axis_ticks[!is.na(layout$axis_ticks$label), ,
                                      drop = FALSE]
@@ -1532,6 +1571,9 @@ prepare_ggchord_plot <- function(plot) {
   has_feature <- any(vapply(plot$layers, function(x) {
     "feature_fill" %in% names(x$mapping)
   }, logical(1)))
+  has_feature_shape <- any(vapply(plot$layers, function(x) {
+    "feature_shape" %in% names(ggchord_effective_mapping(x))
+  }, logical(1)))
   has_gene <- any(vapply(plot$layers, function(x) {
     "gene_fill" %in% names(x$mapping)
   }, logical(1)))
@@ -1539,6 +1581,7 @@ prepare_ggchord_plot <- function(plot) {
                             has_seq = length(cls$seq) > 0,
                             has_gene = has_gene,
                             has_feature = has_feature,
+                            has_feature_shape = has_feature_shape,
                             legend_position = plot$theme$legend.position,
                             legend_box = plot$theme$legend.box,
                             positions = ggchord_legend_positions(plot),
@@ -1613,18 +1656,6 @@ ggplot_build.ggchord <- function(plot, ...) {
   }
   plot$layers <- new_layers
 
-  # Sequence-group labels are appended at build time (geom_seq() itself keeps
-  # returning a single layer for backward compatibility).
-  has_group_label_layer <- any(vapply(
-    plot$layers,
-    function(x) identical(x$ggchord_type, "seq_group_label"), logical(1)
-  ))
-  group_label_layer <- ggchord_group_label_layer(layout$group_labels)
-  if (!has_group_label_layer && !is.null(group_label_layer)) {
-    plot$layers[[length(plot$layers) + 1L]] <- group_label_layer
-  }
-
-
   # ====================================================================
   # Step 4: build and attach scales
   # ====================================================================
@@ -1636,6 +1667,14 @@ ggplot_build.ggchord <- function(plot, ...) {
                             has_feature = any(vapply(plot$layers, function(x) {
                               "feature_fill" %in% names(x$mapping)
                             }, logical(1))),
+                            has_feature_shape = any(vapply(
+                              plot$layers,
+                              function(x) {
+                                "feature_shape" %in%
+                                  names(ggchord_effective_mapping(x))
+                              },
+                              logical(1)
+                            )),
                             legend_position = plot$theme$legend.position,
                             legend_box = plot$theme$legend.box,
                             positions = ggchord_legend_positions(plot),

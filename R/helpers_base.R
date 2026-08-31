@@ -458,7 +458,6 @@ ggchord_device_units_per_inch <- function(x, y,
 #' Convert text layers into fixed obstacle rectangles for label repulsion.
 #' @keywords internal
 ggchord_text_obstacle_boxes <- function(seq_labels_df = NULL,
-                                        group_labels = NULL,
                                         axis_ticks = NULL,
                                         show_axis = FALSE,
                                         units_per_inch = 0.35,
@@ -468,16 +467,6 @@ ggchord_text_obstacle_boxes <- function(seq_labels_df = NULL,
   if (!is.null(seq_labels_df) && nrow(seq_labels_df) > 0) {
     out[[length(out) + 1]] <- ggchord_text_boxes(
       seq_labels_df,
-      x_col = "text_x", y_col = "text_y", text_col = "label",
-      angle_col = "text_angle", size_col = "size",
-      hjust_col = "hjust", vjust_col = "vjust",
-      units_per_inch = units_per_inch, box_padding = box_padding
-    )
-  }
-
-  if (!is.null(group_labels) && nrow(group_labels) > 0) {
-    out[[length(out) + 1]] <- ggchord_text_boxes(
-      group_labels,
       x_col = "text_x", y_col = "text_y", text_col = "label",
       angle_col = "text_angle", size_col = "size",
       hjust_col = "hjust", vjust_col = "vjust",

@@ -21,7 +21,7 @@ geom_ribbon(
   ribbon_ctrl_point = NULL,
   ribbon_gap = NULL,
   alpha = NULL,
-  ribbon_outline_color = "#FFFFFF",
+  ribbon_outline_color = "#59636D",
   ribbon_outline_width = 0.08,
   ribbon_outline_linetype = 1,
   ribbon_outline_by = NULL,
@@ -80,7 +80,7 @@ geom_ribbon(
 
 - ribbon_alpha:
 
-  Numeric (0-1). Ribbon transparency, default 0.38
+  Numeric (0-1). Ribbon transparency, default 0.42
 
 - ribbon_alpha_by:
 
@@ -108,8 +108,9 @@ geom_ribbon(
 
 - ribbon_outline_color:
 
-  Character. Colour of the ribbon outline, default white for subtle
-  separation between overlapping ribbons.
+  Character. Colour of the ribbon outline, default `"#59636D"`, a
+  restrained dark neutral that remains visible after ribbon transparency
+  is applied.
 
 - ribbon_outline_width:
 
@@ -165,23 +166,23 @@ geom_ribbon(
 
 - legend_position:
 
-  Position of this layer's legend (the Identity( colourbar): one of
+  Position of this layer's legend (the Identity ( colourbar): one of
   "left", "right", "top", "bottom" or "inside", default "left". Pass
   NULL to let the legend follow `theme(legend.position = ...)` together
   with the other legends.
 
 - legend_key_width:
 
-  Optional width of the Identity( Accepts a grid unit, e.g.
+  Optional width of the Identity ( Accepts a grid unit, e.g.
   `unit(1, "cm")`, or a number interpreted as centimetres. Default NULL
   uses the ggplot2 default width.
 
 - legend_key_height:
 
-  Optional height of the Identity( Accepts a grid unit, e.g.
+  Optional height of the Identity ( Accepts a grid unit, e.g.
   `unit(5, "cm")`, or a number interpreted as centimetres. Default NULL
-  lets the vertical bar fill the available height (and uses a fixed
-  height for horizontal legends).
+  uses a compact fixed physical height so the guide remains stable
+  across output-device sizes.
 
 - ...:
 

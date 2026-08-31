@@ -2,7 +2,7 @@
 # independent sequence, ribbon, gene, feature and region scales without the
 # usual fill/colour collisions.
 
-#' Sequence and sequence-group colour scales
+#' Sequence colour scales
 #'
 #' @param ... Arguments passed to [ggplot2::scale_colour_manual()].
 #' @param values A set of aesthetic values to map data values to.
@@ -15,16 +15,6 @@ scale_seq_colour_manual <- function(..., values) {
 #' @rdname scale_seq_colour_manual
 #' @export
 scale_seq_color_manual <- scale_seq_colour_manual
-
-#' @rdname scale_seq_colour_manual
-#' @export
-scale_group_colour_manual <- function(..., values) {
-  ggplot2::scale_colour_manual(..., values = values, aesthetics = "group_colour")
-}
-
-#' @rdname scale_seq_colour_manual
-#' @export
-scale_group_color_manual <- scale_group_colour_manual
 
 #' Ribbon fill scales
 #'
@@ -122,6 +112,41 @@ scale_gene_fill_manual <- function(..., values) {
 #' @export
 scale_feature_fill_manual <- function(..., values) {
   ggplot2::scale_fill_manual(..., values = values, aesthetics = "feature_fill")
+}
+
+#' Feature shape scale
+#'
+#' Maps feature categories to the four geometry types understood by
+#' [geom_feature()]: `"arrow"`, `"block"`, `"chevron"`, and `"lollipop"`.
+#' Shape values affect the actual feature geometry as well as its legend key.
+#'
+#' @param ... Arguments passed to [ggplot2::discrete_scale()].
+#' @param values A named or unnamed character vector of feature geometry names.
+#' @param name Scale and guide title, default `"Feature"`.
+#' @param limits Optional category order. Named `values` use their name order
+#'   by default so shape and fill guides can merge cleanly.
+#' @param guide Guide specification. The default is `"none"` because
+#'   [geom_feature()] combines shape silhouettes into its fill legend when
+#'   both aesthetics describe the same feature categories. Supply
+#'   [guide_ggchord_legend()] for a separate shape guide.
+#' @return A ggplot2 discrete scale for the `feature_shape` aesthetic.
+#' @export
+scale_feature_shape_manual <- function(..., values, name = "Feature",
+                                       limits = NULL, guide = "none") {
+  allowed <- c("arrow", "block", "chevron", "lollipop")
+  if (!is.character(values) || length(values) == 0L || anyNA(values) ||
+      any(!values %in% allowed)) {
+    ggchord_stop(
+      "scale_feature_shape_manual(): values must use 'arrow', 'block', ",
+      "'chevron', or 'lollipop'"
+    )
+  }
+  if (is.null(limits) && !is.null(names(values))) limits <- names(values)
+  ggplot2::discrete_scale(
+    aesthetics = "feature_shape",
+    palette = scales::manual_pal(values),
+    ..., name = name, limits = limits, na.value = "arrow", guide = guide
+  )
 }
 
 #' @rdname scale_gene_fill_manual

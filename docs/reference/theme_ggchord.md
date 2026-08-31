@@ -1,9 +1,9 @@
 # ggchord themes
 
 Theme helpers remove Cartesian axes and provide consistent typography
-and legend spacing for chord diagrams. \`theme_ggchord()\` preserves the
-package's established default appearance; the other variants provide a
-quieter canvas, a dark canvas, or a print-oriented white canvas.
+and legend spacing for chord diagrams. \`theme_ggchord()\` uses a
+restrained white publication canvas; the other variants provide a still
+quieter canvas, a dark canvas, or tighter print typography.
 
 ## Usage
 

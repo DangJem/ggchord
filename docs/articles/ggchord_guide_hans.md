@@ -241,11 +241,28 @@ base + geom_gene_label_repel(gene_label_layout = "arc")
 ```
 
 三种模式都会使用实际的 `seq_radius`、`seq_curvature`、`seq_gap`、
-`seq_orientation`、旋转和分组几何。局部外侧/内侧标签理念借鉴了
+`seq_orientation`、旋转和局部曲线几何。局部外侧/内侧标签理念借鉴了
 [SnapGene](https://support.snapgene.com/hc/en-us/articles/10383722725524-Display-Feature-Labels-Below-or-Inside-a-Map)
 与 [Geneious](https://manual.geneious.com/en/latest/Sequences.html)，但
 ggchord 使用通用模式名和独立实现。如需手工旋转或偏移，请使用
 [`geom_gene_label()`](https://dangjem.github.io/ggchord/reference/geom_gene_label.md)。
+
+[`geom_gene_label()`](https://dangjem.github.io/ggchord/reference/geom_gene_label.md)
+也是紧凑的固定标签方案。v0.10.0 默认将文字水平放在
+弦图外侧，按输入行顺序保留标签并省略后续冲突项。可以用
+`gene_label_orientation = "radial"` 或 `"tangent"` 改变文字方向，用
+`gene_label_side = "auto"` 或 `"inside"` 选择侧向，并用
+`gene_label_overlap = "nudge"` 或 `"allow"`
+优先保留全部文字。手工旋转和逐序列/
+逐链偏移仍集中在这一个固定标签图层中，不新增重复的手动 geom。
+
+整体信息层级还借鉴了
+[Circos](https://genome.cshlp.org/content/19/9/1639)、
+[clinker](https://academic.oup.com/bioinformatics/article/37/16/2473/6129045)
+的发表级基因箭头， 以及 [DNA Features
+Viewer](https://edinburgh-genome-foundry.github.io/DnaFeaturesViewer/)
+的注释冲突处理思路。 这些只是设计原则参考，ggchord
+使用独立的配色、几何和通用 API 名称。
 
 ### 3.6 加入坐标轴与序列标签
 
@@ -259,24 +276,7 @@ ggchord(seq_data_example) +
 
 坐标轴与序列标签。
 
-### 3.7 对序列分组
-
-``` r
-
-seq_grouped <- transform(seq_data_example,
-                         seq_group = c("host", "host", "phage", "phage"))
-
-ggchord(seq_grouped, ribbon_data_example, gene_data_example) +
-  geom_seq(seq_group = "seq_group",
-           seq_group_colors = c(host = "#E41A1C", phage = "#377EB8")) +
-  geom_ribbon() + geom_gene()
-```
-
-![带组间空隙和组标签的分组序列。](../reference/figures/tutorial_seq_group.png)
-
-带组间空隙和组标签的分组序列。
-
-### 3.8 映射数值列与 Ribbon 方向
+### 3.7 映射数值列与 Ribbon 方向
 
 ``` r
 
@@ -294,7 +294,7 @@ ggchord(seq_data_example, rb_scored) +
 
 连续填充、透明度与方向映射。
 
-### 3.9 高亮区间与连接带
+### 3.8 高亮区间与连接带
 
 ``` r
 
@@ -311,24 +311,32 @@ ggchord(seq_data_example, ribbon_data_example) +
 
 序列区间与连接带高亮。
 
-### 3.10 绘制通用 feature
+### 3.9 绘制通用 feature
 
 ``` r
 
-features <- data.frame(seq_id = c("MT108731.1", "MT118296.1"),
-                       start = c(1000, 500), end = c(4000, 2000),
-                       strand = c("+", "-"), type = c("CDS", "tRNA"))
+features <- data.frame(seq_id = rep("MT108731.1", 4),
+                       start = c(1000, 7000, 13000, 19000),
+                       end = c(5000, 11000, 17000, 23000),
+                       strand = c("+", "-", "+", "-"),
+                       type = c("CDS", "tRNA", "repeat", "promoter"))
 
 ggchord(seq_data_example, ribbon_data_example) +
-  geom_seq() + geom_ribbon() + geom_feature(features)
+  geom_seq() + geom_ribbon() +
+  geom_feature(aes(feature_shape = type), data = features,
+               feature_width = 0.10) +
+  scale_feature_shape_manual(values = c(
+    CDS = "arrow", tRNA = "block", "repeat" = "chevron",
+    promoter = "lollipop"
+  ))
 ```
 
-![用 geom_feature() 绘制的通用
-feature。](../reference/figures/tutorial_features.png)
+![用 geom_feature() 绘制的四种 feature
+几何。](../reference/figures/tutorial_features.png)
 
-用 geom_feature() 绘制的通用 feature。
+用 geom_feature() 绘制的四种 feature 几何。
 
-### 3.11 应用主题与 scale
+### 3.10 应用主题与 scale
 
 ``` r
 
@@ -346,7 +354,7 @@ ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
 
 统一图例的主题化图形。
 
-### 3.12 发表级精细控制
+### 3.11 发表级精细控制
 
 ``` r
 

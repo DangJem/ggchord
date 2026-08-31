@@ -47,9 +47,6 @@ theme_ggchord <- function(base_size = 11, base_family = "") {
       ggchord.seq.label = element_text(
         colour = "#252A2E", size = 3 * ggplot2::.pt * scale
       ),
-      ggchord.group.label = element_text(
-        colour = "#202020", size = 3.5 * ggplot2::.pt * scale, face = "bold"
-      ),
       ggchord.gene.label = element_text(
         colour = "#2B3035", size = 2.4 * ggplot2::.pt * scale
       ),
@@ -88,7 +85,6 @@ theme_ggchord_dark <- function(base_size = 11, base_family = "") {
       ggchord.axis.ticks = element_line(colour = "#ADB5BD", linewidth = 0.3),
       ggchord.axis.text = element_text(colour = light),
       ggchord.seq.label = element_text(colour = light),
-      ggchord.group.label = element_text(colour = light, face = "bold"),
       ggchord.gene.label = element_text(colour = light),
       ggchord.gene.label.segment = element_line(
         colour = "#CED4DA", linewidth = 0.3
@@ -164,7 +160,6 @@ ggchord_apply_theme_styles <- function(plot) {
     } else {
       next
     }
-    if (identical(name, "ggchord.group.label")) values$colour <- NULL
     for (nm in names(values)) {
       if (is.null(lyr$aes_params[[nm]]) && !is.null(values[[nm]])) {
         lyr$aes_params[[nm]] <- values[[nm]]
