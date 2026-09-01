@@ -57,6 +57,17 @@ test_that("ggchord themes and guides use registered role elements", {
     ggplot2::calc_element("ggchord.axis.line", theme_ggchord()),
     "element_line"
   )
+  for (name in c("axis.title", "axis.line", "axis.ticks", "axis.text",
+                 "panel.grid")) {
+    expect_s3_class(
+      ggplot2::calc_element(name, theme_ggchord()),
+      "element_blank"
+    )
+  }
+  expect_identical(
+    unname(getNamespaceImports("ggchord")$ggplot2),
+    "ggplot_build"
+  )
   expect_s3_class(guide_ggchord_legend(), "GuideLegend")
   expect_s3_class(guide_ggchord_colourbar(), "GuideColourbar")
   horizontal <- guide_ggchord_colourbar(
@@ -73,6 +84,40 @@ test_that("ggchord themes and guides use registered role elements", {
   expect_equal(
     as.numeric(vertical$params$theme$legend.text@margin[4]), 1.2
   )
+  scaled <- guide_ggchord_colourbar(position = "left", size_scale = 0.5)
+  expect_equal(as.numeric(scaled$params$theme$legend.key.height), 25)
+  expect_equal(as.numeric(scaled$params$theme$legend.key.width), 1.8)
+  themed <- guide_ggchord_legend(
+    size_scale = 0.5,
+    theme = ggplot2::theme(
+      legend.text = ggplot2::element_text(size = 6)
+    )
+  )
+  expect_equal(themed$params$theme$legend.text@size, 6)
+  expect_equal(
+    ggchord:::ggchord_device_scale(c(width = 4, height = 3)), 0.5
+  )
+  expect_equal(
+    ggchord:::ggchord_device_scale(c(width = 32, height = 24)), 1.6
+  )
+  expect_error(
+    guide_ggchord_legend(size_scale = 0),
+    "positive finite number"
+  )
+})
+
+test_that("small devices use their real physical scale for text fitting", {
+  compact <- ggchord:::ggchord_device_units_per_inch(
+    c(-3, 3), c(-2, 2), device_inches = c(4, 3)
+  )
+  standard <- ggchord:::ggchord_device_units_per_inch(
+    c(-3, 3), c(-2, 2), device_inches = c(8, 6)
+  )
+
+  expect_gt(compact, standard)
+  expect_equal(compact, 6 / 1.8)
+  expect_equal(standard, 6 / 4.75)
+  expect_true(is.na(theme_ggchord()$legend.background@fill))
 })
 
 test_that("annotation themes and component styles remain independent", {
@@ -83,9 +128,11 @@ test_that("annotation themes and component styles remain independent", {
                validate = "none") +
     geom_seq() +
     geom_gene_label_repel() +
-    theme(
-      ggchord.gene.label = element_text(size = 14, colour = "purple"),
-      ggchord.gene.label.segment = element_line(
+    ggplot2::theme(
+      ggchord.gene.label = ggplot2::element_text(
+        size = 14, colour = "purple"
+      ),
+      ggchord.gene.label.segment = ggplot2::element_line(
         colour = "orange", linewidth = 1
       )
     )
@@ -228,7 +275,7 @@ test_that("feature geometry shapes build", {
   )
   p <- ggchord(seq_data_example, validate = "none") +
     geom_seq() +
-    geom_feature(aes(feature_shape = type), data = feature) +
+    geom_feature(ggplot2::aes(feature_shape = type), data = feature) +
     scale_feature_shape_manual(values = c(
       CDS = "arrow", tRNA = "block", "repeat" = "chevron",
       promoter = "lollipop"
@@ -317,13 +364,13 @@ test_that("same-type layers keep independent data and mapped columns", {
     geom_seq() +
     geom_gene(
       data = first,
-      mapping = aes(seq_id = chromosome, start = from, end = to,
+      mapping = ggplot2::aes(seq_id = chromosome, start = from, end = to,
                     strand = direction, anno = category,
                     gene_fill = category)
     ) +
-    geom_gene(data = second, mapping = aes(gene_fill = anno)) +
-    geom_seq_region(data = r1, mapping = aes(region_fill = category)) +
-    geom_seq_region(data = r2, mapping = aes(region_fill = category))
+    geom_gene(data = second, mapping = ggplot2::aes(gene_fill = anno)) +
+    geom_seq_region(data = r1, mapping = ggplot2::aes(region_fill = category)) +
+    geom_seq_region(data = r2, mapping = ggplot2::aes(region_fill = category))
 
   expect_s3_class(build_ggchord_smoke(p), "ggplot_built")
   layout <- get_chord_layout(p, build = FALSE)
@@ -367,11 +414,11 @@ test_that("sequence, ribbon, axis and label data mappings are honoured", {
   p <- ggchord(seq_base, validate = "none") +
     geom_seq(
       data = seq_mapped,
-      mapping = aes(seq_id = chromosome, length = bases)
+      mapping = ggplot2::aes(seq_id = chromosome, length = bases)
     ) +
     geom_ribbon(
       data = ribbons,
-      mapping = aes(qaccver = query, saccver = subject, length = span,
+      mapping = ggplot2::aes(qaccver = query, saccver = subject, length = span,
                     pident = identity, qstart = q_from, qend = q_to,
                     sstart = s_from, send = s_to, ribbon_alpha = score)
     ) +
@@ -410,7 +457,7 @@ test_that("role-specific scales coexist without replacing one another", {
     geom_ribbon() +
     geom_gene() +
     geom_seq_region(
-      data = region, mapping = aes(region_fill = category), show_legend = TRUE
+      data = region, mapping = ggplot2::aes(region_fill = category), show_legend = TRUE
     ) +
     scale_seq_colour_manual(values = seq_values) +
     scale_ribbon_fill_gradientn(colours = c("#F7FBFF", "#08306B")) +

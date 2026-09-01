@@ -2,7 +2,7 @@
 
 #' Clone a geom and expose selected standard aesthetics under role names
 #' @noRd
-rename_geom_aes <- function(geom = GeomPolygon, renames) {
+rename_geom_aes <- function(geom = ggplot2::GeomPolygon, renames) {
   new_geom <- ggplot2::ggproto(
     paste0("GeomChord", sub("^Geom", "", class(geom)[1])), geom
   )

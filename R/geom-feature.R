@@ -1,7 +1,7 @@
 # geom-feature.R - generic feature layer (v0.9.0)
 
 feature_polygon_geom <- rename_geom_aes(
-  GeomPolygon, renames = c(fill = "feature_fill")
+  ggplot2::GeomPolygon, renames = c(fill = "feature_fill")
 )
 feature_geom_defaults <- feature_polygon_geom$default_aes
 feature_geom_defaults$feature_shape <- "arrow"
@@ -233,7 +233,7 @@ geom_feature <- function(mapping = NULL, data = NULL,
       (!missing(feature_colors) && !is.null(feature_colors)) ||
         (!missing(feature_order) && !is.null(feature_order)),
       "feature_colors/feature_order", "feature_fill",
-      "aes(feature_fill = ...) + scale_feature_fill_manual()"
+      "ggplot2::aes(feature_fill = ...) + scale_feature_fill_manual()"
     )
   }
   layers

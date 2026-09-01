@@ -11,14 +11,14 @@
 # The geom used by the ribbon layer; fill is exposed as "zfill" so that the
 # ribbon and gene layers keep independent fill scales.
 ribbon_geom <- rename_geom_aes(
-  GeomPolygon, renames = c(fill = "ribbon_fill", alpha = "ribbon_alpha")
+  ggplot2::GeomPolygon, renames = c(fill = "ribbon_fill", alpha = "ribbon_alpha")
 )
 
 make_ribbon_geom <- function(outline = FALSE, linetype = FALSE) {
   renames <- c(fill = "ribbon_fill", alpha = "ribbon_alpha")
   if (isTRUE(outline)) renames <- c(renames, colour = "ribbon_colour")
   if (isTRUE(linetype)) renames <- c(renames, linetype = "ribbon_linetype")
-  rename_geom_aes(GeomPolygon, renames = renames)
+  rename_geom_aes(ggplot2::GeomPolygon, renames = renames)
 }
 
 #' Add an alignment ribbon layer
@@ -169,14 +169,14 @@ geom_ribbon <- function(mapping = NULL, data = NULL,
   )
 
   if (scheme == "pident") {
-    fill_mapping <- aes(fill = pident)
+    fill_mapping <- ggplot2::aes(fill = pident)
   } else if (scheme == "value") {
-    fill_mapping <- aes(fill = value)
+    fill_mapping <- ggplot2::aes(fill = value)
   } else {
-    fill_mapping <- aes(fill = fill)
+    fill_mapping <- ggplot2::aes(fill = fill)
   }
 
-  mapping_base <- aes(x = x, y = y, group = group, ribbon_alpha = alpha)
+  mapping_base <- ggplot2::aes(x = x, y = y, group = group, ribbon_alpha = alpha)
   mapping_base[["ribbon_fill"]] <- fill_mapping$fill
   if (isTRUE(outline_mapped)) mapping_base[["ribbon_colour"]] <- as.name("outline_col")
   if (isTRUE(linetype_mapped)) mapping_base[["ribbon_linetype"]] <- as.name("linetype_val")
@@ -239,11 +239,11 @@ geom_ribbon <- function(mapping = NULL, data = NULL,
       "sstart", "send")
   )
   legacy <- list(
-    c("ribbon_color_scheme", "ribbon_fill", "aes(ribbon_fill = ...)",
+    c("ribbon_color_scheme", "ribbon_fill", "ggplot2::aes(ribbon_fill = ...)",
       !missing(ribbon_color_scheme) && !is.null(ribbon_color_scheme)),
     c("ribbon_colors", "ribbon_fill", "scale_ribbon_fill_*()",
       !missing(ribbon_colors) && !is.null(ribbon_colors)),
-    c("ribbon_color_by", "ribbon_fill", "aes(ribbon_fill = ...)",
+    c("ribbon_color_by", "ribbon_fill", "ggplot2::aes(ribbon_fill = ...)",
       !missing(ribbon_color_by) && !is.null(ribbon_color_by)),
     c("ribbon_color_limits", "ribbon_fill", "scale_ribbon_fill_*(limits = ...)",
       !missing(ribbon_color_limits) && !is.null(ribbon_color_limits)),
@@ -251,15 +251,15 @@ geom_ribbon <- function(mapping = NULL, data = NULL,
       !missing(ribbon_color_breaks) && !is.null(ribbon_color_breaks)),
     c("ribbon_color_name", "ribbon_fill", "scale_ribbon_fill_*(name = ...)",
       !missing(ribbon_color_name) && !is.null(ribbon_color_name)),
-    c("ribbon_alpha_by", "ribbon_alpha", "aes(ribbon_alpha = ...)",
+    c("ribbon_alpha_by", "ribbon_alpha", "ggplot2::aes(ribbon_alpha = ...)",
       !missing(ribbon_alpha_by) && !is.null(ribbon_alpha_by)),
     c("ribbon_alpha_range", "ribbon_alpha", "scale_ribbon_alpha_continuous(range = ...)",
       !missing(ribbon_alpha_range)),
-    c("ribbon_outline_by", "ribbon_colour", "aes(ribbon_colour = ...)",
+    c("ribbon_outline_by", "ribbon_colour", "ggplot2::aes(ribbon_colour = ...)",
       !missing(ribbon_outline_by) && !is.null(ribbon_outline_by)),
     c("ribbon_outline_colors", "ribbon_colour", "scale_ribbon_colour_manual(values = ...)",
       !missing(ribbon_outline_colors) && !is.null(ribbon_outline_colors)),
-    c("ribbon_linetype_by", "ribbon_linetype", "aes(ribbon_linetype = ...)",
+    c("ribbon_linetype_by", "ribbon_linetype", "ggplot2::aes(ribbon_linetype = ...)",
       !missing(ribbon_linetype_by) && !is.null(ribbon_linetype_by)),
     c("ribbon_linetypes", "ribbon_linetype", "scale_ribbon_linetype_manual(values = ...)",
       !missing(ribbon_linetypes) && !is.null(ribbon_linetypes))
@@ -276,7 +276,7 @@ geom_ribbon <- function(mapping = NULL, data = NULL,
     )
     lyr <- ggchord_add_legacy_scale(
       lyr, TRUE, "ribbon_direction", direction_aesthetic,
-      paste0("aes(", direction_aesthetic, " = after_stat(direction))")
+      paste0("ggplot2::aes(", direction_aesthetic, " = after_stat(direction))")
     )
   }
   lyr <- ggchord_add_legacy_scale(

@@ -58,7 +58,7 @@ coord_chord <- function(rotation = 45, ratio = 1,
     ggchord_stop("coord_chord(): fit = 'manual' requires xlim and ylim")
   }
 
-  coord <- coord_fixed(
+  coord <- ggplot2::coord_fixed(
     ratio = ratio, xlim = xlim, ylim = ylim,
     expand = expand, clip = clip
   )

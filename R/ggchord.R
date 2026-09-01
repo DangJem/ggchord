@@ -62,9 +62,7 @@ globalVariables(c(
 #'   geom_axis()
 #' print(p)
 #'
-#' @import ggplot2
-#' @import grDevices
-#' @import grid
+#' @importFrom ggplot2 ggplot_build
 ggchord <- function(
     seq_data,
     ribbon_data = NULL,
@@ -81,19 +79,19 @@ ggchord <- function(
   panel_margin_supplied <- !missing(panel_margin)
 
   if (!missing(title) && !is.null(title)) {
-    ggchord_deprecate_once("ggchord(title)", "labs(title = ...)")
+    ggchord_deprecate_once("ggchord(title)", "ggplot2::labs(title = ...)")
   }
   if (!missing(rotation)) {
     ggchord_deprecate_once("ggchord(rotation)", "coord_chord(rotation = ...)")
   }
   if (!missing(panel_margin)) {
     ggchord_deprecate_once(
-      "ggchord(panel_margin)", "theme(plot.margin = margin(...))"
+      "ggchord(panel_margin)", "ggplot2::theme(plot.margin = ggplot2::margin(...))"
     )
   }
   if (!missing(show_legend)) {
     ggchord_deprecate_once(
-      "ggchord(show_legend)", "theme(legend.position = 'none')"
+      "ggchord(show_legend)", "ggplot2::theme(legend.position = 'none')"
     )
   }
 
@@ -162,19 +160,19 @@ ggchord <- function(
   # ====================================================================
   margin_vals <- process_panel_margin(panel_margin)
 
-  p <- ggplot() +
+  p <- ggplot2::ggplot() +
     coord_chord(rotation = rotation) +
-    labs(title = title) +
+    ggplot2::labs(title = title) +
     theme_ggchord() +
-    theme(
+    ggplot2::theme(
       legend.position     = if (isTRUE(show_legend)) "right" else "none"
     )
   # Preserve theme_ggchord()'s small export-safe outer margin by default.
   # The deprecated panel_margin compatibility argument only overrides it when
   # users still supply that argument explicitly.
   if (panel_margin_supplied) {
-    p <- p + theme(
-      plot.margin = margin(t = margin_vals$t, r = margin_vals$r,
+    p <- p + ggplot2::theme(
+      plot.margin = ggplot2::margin(t = margin_vals$t, r = margin_vals$r,
                            b = margin_vals$b, l = margin_vals$l)
     )
   }
@@ -483,18 +481,18 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
         query  = {
           mix <- 0.5
           sapply(seq_colors, function(col) {
-            cols <- col2rgb(col)
+            cols <- grDevices::col2rgb(col)
             light_cols <- cols + (255 - cols) * mix
-            rgb(light_cols[1,], light_cols[2,], light_cols[3,],
+            grDevices::rgb(light_cols[1,], light_cols[2,], light_cols[3,],
                 maxColorValue = 255)
           })
         },
         subject = {
           mix <- 0.5
           sapply(seq_colors, function(col) {
-            cols <- col2rgb(col)
+            cols <- grDevices::col2rgb(col)
             light_cols <- cols + (255 - cols) * mix
-            rgb(light_cols[1,], light_cols[2,], light_cols[3,],
+            grDevices::rgb(light_cols[1,], light_cols[2,], light_cols[3,],
                 maxColorValue = 255)
           })
         },
@@ -1293,8 +1291,19 @@ make_ggchord_scales <- function(layout, has_seq = FALSE, has_gene = FALSE,
                                 has_feature_shape = FALSE,
                                 legend_position = NULL, legend_box = NULL,
                                 positions = list(), legend_key_width = NULL,
-                                legend_key_height = NULL) {
+                                legend_key_height = NULL,
+                                legend_scale = ggchord_device_scale(),
+                                legend_text_size = 8,
+                                legend_title_size = 9) {
   scales <- list()
+  responsive_legend_theme <- ggplot2::theme(
+    legend.text = ggplot2::element_text(
+      size = legend_text_size * legend_scale
+    ),
+    legend.title = ggplot2::element_text(
+      size = legend_title_size * legend_scale
+    )
+  )
 
   if (has_seq) {
     scales[[length(scales) + 1]] <- scale_seq_colour_manual(
@@ -1303,7 +1312,9 @@ make_ggchord_scales <- function(layout, has_seq = FALSE, has_gene = FALSE,
       labels = layout$seq_labels,
       breaks = layout$seqs,
       guide  = guide_ggchord_legend(
-        position = positions$seq %||% NULL, order = 1
+        position = positions$seq %||% NULL, order = 1,
+        theme = responsive_legend_theme,
+        size_scale = legend_scale
       )
     )
   }
@@ -1320,9 +1331,9 @@ make_ggchord_scales <- function(layout, has_seq = FALSE, has_gene = FALSE,
       # legend_key_width / legend_key_height control the colourbar key
       # dimensions directly; numbers are interpreted as centimetres.
       key_width <- legend_key_width
-      if (!is.null(key_width) && !is.unit(key_width)) key_width <- unit(key_width, "cm")
+      if (!is.null(key_width) && !grid::is.unit(key_width)) key_width <- grid::unit(key_width, "cm")
       key_height <- legend_key_height
-      if (!is.null(key_height) && !is.unit(key_height)) key_height <- unit(key_height, "cm")
+      if (!is.null(key_height) && !grid::is.unit(key_height)) key_height <- grid::unit(key_height, "cm")
       value_scheme <- identical(layout$ribbon_color_scheme, "value")
       ribbon_name <- if (value_scheme) {
         layout$ribbon_color_name %||% "value"
@@ -1349,19 +1360,20 @@ make_ggchord_scales <- function(layout, has_seq = FALSE, has_gene = FALSE,
         guide   = guide_ggchord_colourbar(
           available_aes = "ribbon_fill",
           position = positions$ribbon %||% NULL,
-          theme = theme(
+          size_scale = legend_scale,
+          theme = responsive_legend_theme + ggplot2::theme(
             legend.title.position = "top",
             legend.key.height = if (horizontal_legend) {
-              key_height %||% unit(3.6, "mm")
+              key_height %||% grid::unit(3.6 * legend_scale, "mm")
             } else {
-              key_height %||% unit(50, "mm")
+              key_height %||% grid::unit(50 * legend_scale, "mm")
             },
             # A horizontal colorbar needs a longer key; the vertical bar keeps
             # the default key width.
             legend.key.width = if (horizontal_legend) {
-              key_width %||% unit(50, "mm")
+              key_width %||% grid::unit(50 * legend_scale, "mm")
             } else {
-              key_width %||% unit(3.6, "mm")
+              key_width %||% grid::unit(3.6 * legend_scale, "mm")
             }
           ),
           order = 2
@@ -1381,6 +1393,8 @@ make_ggchord_scales <- function(layout, has_seq = FALSE, has_gene = FALSE,
         values = layout$gene_pal,
         guide  = guide_ggchord_legend(
           position = positions$gene %||% NULL, order = 3,
+          theme = responsive_legend_theme,
+          size_scale = legend_scale,
           override.aes = list(strand = c("+", "-"))
         )
       )
@@ -1390,7 +1404,9 @@ make_ggchord_scales <- function(layout, has_seq = FALSE, has_gene = FALSE,
         breaks = layout$final_gene_order,
         values = layout$gene_pal,
         guide  = guide_ggchord_legend(
-          position = positions$gene %||% NULL, order = 3
+          position = positions$gene %||% NULL, order = 3,
+          theme = responsive_legend_theme,
+          size_scale = legend_scale
         )
       )
     }
@@ -1423,6 +1439,8 @@ make_ggchord_scales <- function(layout, has_seq = FALSE, has_gene = FALSE,
       values = layout$gene_pal,
       guide = guide_ggchord_legend(
         position = positions$gene %||% NULL, order = 3,
+        theme = responsive_legend_theme,
+        size_scale = legend_scale,
         override.aes = feature_override
       )
     )
@@ -1435,7 +1453,9 @@ make_ggchord_scales <- function(layout, has_seq = FALSE, has_gene = FALSE,
       values = layout$feature_shape_pal,
       guide = if (isTRUE(merge_feature_guides)) "none" else {
         guide_ggchord_legend(
-          position = positions$gene %||% NULL, order = 3
+          position = positions$gene %||% NULL, order = 3,
+          theme = responsive_legend_theme,
+          size_scale = legend_scale
         )
       }
     )
@@ -1468,21 +1488,21 @@ make_ggchord_scales <- function(layout, has_seq = FALSE, has_gene = FALSE,
 
   # Ribbon alpha is a preset value; use an identity scale so it renders as specified
   if (!is.null(layout$ribbon_polys)) {
-    scales[[length(scales) + 1]] <- scale_alpha_identity(
+    scales[[length(scales) + 1]] <- ggplot2::scale_alpha_identity(
       aesthetics = "ribbon_alpha"
     )
   }
   # Optional per-ribbon outline / linetype mappings use internal aesthetics so
   # they do not collide with the sequence colour scale or the ribbon fill scale.
   if (isTRUE(layout$ribbon_use_outline)) {
-    scales[[length(scales) + 1]] <- scale_colour_identity(aesthetics = "ribbon_colour")
+    scales[[length(scales) + 1]] <- ggplot2::scale_colour_identity(aesthetics = "ribbon_colour")
   }
   if (isTRUE(layout$ribbon_use_linetype)) {
-    scales[[length(scales) + 1]] <- scale_linetype_identity(aesthetics = "ribbon_linetype")
+    scales[[length(scales) + 1]] <- ggplot2::scale_linetype_identity(aesthetics = "ribbon_linetype")
   }
   # Sequence-region bands use their own internal fill aesthetic.
   if (!is.null(layout$region_polys) && nrow(layout$region_polys) > 0) {
-    scales[[length(scales) + 1]] <- scale_fill_identity(aesthetics = "region_fill")
+    scales[[length(scales) + 1]] <- ggplot2::scale_fill_identity(aesthetics = "region_fill")
   }
   list(scales = scales, ribbon_aes = ribbon_aes)
 }
@@ -1532,7 +1552,7 @@ set_ggchord_coord <- function(plot, layout) {
   xlim <- coord$user_xlim %||% lim$xlim
   ylim <- coord$user_ylim %||% lim$ylim
 
-  resolved <- coord_fixed(
+  resolved <- ggplot2::coord_fixed(
     ratio = coord$ratio %||% 1,
     xlim = xlim,
     ylim = ylim,
@@ -1579,10 +1599,13 @@ ggchord_adaptive_limits <- function(layout) {
     return(list(xlim = c(-1, 1), ylim = c(-1, 1)))
   }
 
-  x_range <- ext$x_max - ext$x_min
-  y_range <- ext$y_max - ext$y_min
-  span <- max(x_range, y_range, 1)
-  units_per_inch <- span / 6
+  units_per_inch <- layout$text_units_per_inch
+  if (is.null(units_per_inch) || length(units_per_inch) != 1L ||
+      !is.finite(units_per_inch) || units_per_inch <= 0) {
+    units_per_inch <- ggchord_device_units_per_inch(
+      c(ext$x_min, ext$x_max), c(ext$y_min, ext$y_max)
+    )
+  }
 
   x_lim <- c(ext$x_min, ext$x_max)
   y_lim <- c(ext$y_min, ext$y_max)
@@ -1663,7 +1686,13 @@ prepare_ggchord_plot <- function(plot) {
                             legend_box = plot$theme$legend.box,
                             positions = ggchord_legend_positions(plot),
                             legend_key_width = ggchord_ribbon_key_dims(plot)$width,
-                            legend_key_height = ggchord_ribbon_key_dims(plot)$height)
+                            legend_key_height = ggchord_ribbon_key_dims(plot)$height,
+                            legend_text_size = ggchord_theme_point_size(
+                              plot, "legend.text", 8
+                            ),
+                            legend_title_size = ggchord_theme_point_size(
+                              plot, "legend.title", 9
+                            ))
   plot <- rename_ribbon_layers(plot, cls$ribbon, sc$ribbon_aes, layout)
   plot <- attach_ggchord_scales(plot, sc$scales)
   plot <- set_ggchord_coord(plot, layout)
@@ -1756,7 +1785,13 @@ ggplot_build.ggchord <- function(plot, ...) {
                             legend_box = plot$theme$legend.box,
                             positions = ggchord_legend_positions(plot),
                             legend_key_width = ggchord_ribbon_key_dims(plot)$width,
-                            legend_key_height = ggchord_ribbon_key_dims(plot)$height)
+                            legend_key_height = ggchord_ribbon_key_dims(plot)$height,
+                            legend_text_size = ggchord_theme_point_size(
+                              plot, "legend.text", 8
+                            ),
+                            legend_title_size = ggchord_theme_point_size(
+                              plot, "legend.title", 9
+                            ))
   plot <- rename_ribbon_layers(plot, ribbon_indices, sc$ribbon_aes, layout)
   plot <- attach_ggchord_scales(plot, sc$scales)
 
@@ -1770,5 +1805,5 @@ ggplot_build.ggchord <- function(plot, ...) {
   # removed first so that dispatch proceeds to the base ggplot2 method instead
   # of recursing into this method.
   class(plot) <- setdiff(class(plot), "ggchord")
-  ggplot_build(plot)
+  ggplot2::ggplot_build(plot)
 }

@@ -1242,6 +1242,20 @@ compute_chord_layout <- function(
     gene_polys <- gene_polys[with(gene_polys, order(group, ord)), ]
   }
 
+  # Use the undecorated chord geometry as the single physical scale for all
+  # text measurement. Labels must not enlarge their own scale estimate: that
+  # feedback produced excessive margins on large devices and underestimated
+  # boxes on small devices when the old six-inch fallback was triggered.
+  compact_x <- c(
+    unlist(lapply(seq_arcs, `[[`, "x"), use.names = FALSE),
+    gene_polys$x
+  )
+  compact_y <- c(
+    unlist(lapply(seq_arcs, `[[`, "y"), use.names = FALSE),
+    gene_polys$y
+  )
+  text_units_per_inch <- ggchord_device_units_per_inch(compact_x, compact_y)
+
   # ====================================================================
   # Step 8b: wrap gene labels; optionally arrange them automatically
   # ====================================================================
@@ -1256,46 +1270,7 @@ compute_chord_layout <- function(
       gene_labels$text <- ggchord_label_wrap_text(gene_labels$text,
                                                   gene_label_wrap)
     }
-    label_units_per_inch <- function(labels) {
-      x_values <- c(
-        unlist(lapply(seq_arcs, `[[`, "x"), use.names = FALSE),
-        gene_polys$x, labels$text_x,
-        if (nrow(seq_labels_df)) seq_labels_df$text_x else 0,
-        if (!is.null(axis_ticks) && nrow(axis_ticks)) axis_ticks$label_x else 0
-      )
-      y_values <- c(
-        unlist(lapply(seq_arcs, `[[`, "y"), use.names = FALSE),
-        gene_polys$y, labels$text_y,
-        if (nrow(seq_labels_df)) seq_labels_df$text_y else 0,
-        if (!is.null(axis_ticks) && nrow(axis_ticks)) axis_ticks$label_y else 0
-      )
-      units <- max(diff(range(x_values, na.rm = TRUE)),
-                   diff(range(y_values, na.rm = TRUE)), 1) / 6
-      # Text itself expands the fixed-aspect coordinate square. Iterate the
-      # scale estimate so collision boxes use the same data-units-per-inch as
-      # the eventual rendered limits, including tall/rotated geometries.
-      for (scale_pass in seq_len(3)) {
-        label_boxes <- ggchord_text_boxes(
-          labels, units_per_inch = units, box_padding = 0.03
-        )
-        fixed_boxes <- ggchord_text_obstacle_boxes(
-          seq_labels_df, axis_ticks, show_axis,
-          units_per_inch = units, box_padding = 0.03
-        )
-        expanded_x <- c(
-          x_values, label_boxes$xmin, label_boxes$xmax,
-          fixed_boxes$xmin, fixed_boxes$xmax
-        )
-        expanded_y <- c(
-          y_values, label_boxes$ymin, label_boxes$ymax,
-          fixed_boxes$ymin, fixed_boxes$ymax
-        )
-        units <- max(diff(range(expanded_x, na.rm = TRUE)),
-                     diff(range(expanded_y, na.rm = TRUE)), 1) / 6
-      }
-      units
-    }
-    units_per_inch <- label_units_per_inch(gene_labels)
+    units_per_inch <- text_units_per_inch
     if (isTRUE(gene_label_repel_layer)) {
       # Layout modes own these internal clearances. Keeping them out of the
       # public API prevents combinations that violate the geometry invariants.
@@ -1310,15 +1285,7 @@ compute_chord_layout <- function(
         0.05
       }
       layout_min_segment <- 0.02
-      compact_x <- c(
-        unlist(lapply(seq_arcs, `[[`, "x"), use.names = FALSE),
-        gene_polys$x
-      )
-      compact_y <- c(
-        unlist(lapply(seq_arcs, `[[`, "y"), use.names = FALSE),
-        gene_polys$y
-      )
-      layout_units <- ggchord_device_units_per_inch(compact_x, compact_y)
+      layout_units <- text_units_per_inch
       base_gene_labels <- gene_labels
       layout_result <- NULL
 
@@ -1400,9 +1367,8 @@ compute_chord_layout <- function(
         ]
         if (nrow(gene_label_segments) > 0) {
           seg <- gene_label_segments
-          elbow_units <- max(1, diff(range(c(seg$x0, seg$x1)))) / 6
           text_boxes <- ggchord_text_boxes(
-            gene_labels, units_per_inch = elbow_units
+            gene_labels, units_per_inch = text_units_per_inch
           )
           bends <- ggchord_elbow_bends(
             gene_labels, text_boxes$w, text_boxes$h,
@@ -1484,8 +1450,7 @@ compute_chord_layout <- function(
                                     data.frame(), show_axis = FALSE)
     axis_ticks <- ggchord_hide_text_overlaps(
       axis_ticks, content,
-      units_per_inch = max(1, diff(range(c(axis_ticks$label_x,
-                                           axis_ticks$label_y)))) / 6
+      units_per_inch = text_units_per_inch
     )
   }
 
@@ -1516,6 +1481,7 @@ compute_chord_layout <- function(
     gene_labels    = gene_labels,
     gene_label_segments = gene_label_segments,
     gene_label_clip_units = gene_label_clip_units,
+    text_units_per_inch = text_units_per_inch,
     gene_label_layout = gene_label_layout,
     feature_shape_pal = feature_shape_pal,
     feature_shape_order = feature_shape_order,

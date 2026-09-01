@@ -1,7 +1,7 @@
 # geom-region.R - sequence-region highlight layer (v0.9.0)
 
 region_geom <- rename_geom_aes(
-  GeomPolygon, renames = c(fill = "region_fill")
+  ggplot2::GeomPolygon, renames = c(fill = "region_fill")
 )
 
 #' Highlight regions along sequence arcs
@@ -83,7 +83,7 @@ geom_seq_region <- function(mapping = NULL, data = NULL,
 
   lyr <- ggplot2::layer(
     data        = empty_polys,
-    mapping     = aes(x = x, y = y, group = group,
+    mapping     = ggplot2::aes(x = x, y = y, group = group,
                       region_fill = zregionfill, colour = colour,
                       alpha = alpha),
     stat        = "identity",

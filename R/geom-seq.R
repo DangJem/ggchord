@@ -2,7 +2,7 @@
 # Fetches pre-computed sequence arc data from the package environment and renders it with geom_path
 # Sequence layout parameters are specified in this layer and stored for use at print time
 
-seq_geom <- rename_geom_aes(GeomPath, renames = c(colour = "seq_colour"))
+seq_geom <- rename_geom_aes(ggplot2::GeomPath, renames = c(colour = "seq_colour"))
 
 #' Add a sequence arc layer
 #'
@@ -89,7 +89,7 @@ geom_seq <- function(mapping = NULL, data = NULL,
   lyr <- ggplot2::layer(
     data        = data.frame(x = numeric(0), y = numeric(0),
                              seq_id = character(0)),
-    mapping     = aes(x = x, y = y, group = seq_id, seq_colour = seq_id),
+    mapping     = ggplot2::aes(x = x, y = y, group = seq_id, seq_colour = seq_id),
     stat        = "identity",
     geom        = seq_geom,
     position    = "identity",

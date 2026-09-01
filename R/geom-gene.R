@@ -7,7 +7,7 @@
 # geom_gene(): gene arrow polygons
 # ---------------------------------------------------------------------------
 
-gene_geom <- rename_geom_aes(GeomPolygon, renames = c(fill = "gene_fill"))
+gene_geom <- rename_geom_aes(ggplot2::GeomPolygon, renames = c(fill = "gene_fill"))
 
 #' Add a gene arrow layer
 #'
@@ -89,9 +89,9 @@ geom_gene <- function(mapping = NULL, data = NULL,
     gene_color_scheme %||% "strand"
   }
   fill_mapping <- if (identical(gene_scheme, "manual")) {
-    aes(x = x, y = y, group = group, gene_fill = anno)
+    ggplot2::aes(x = x, y = y, group = group, gene_fill = anno)
   } else {
-    aes(x = x, y = y, group = group, gene_fill = strand)
+    ggplot2::aes(x = x, y = y, group = group, gene_fill = strand)
   }
 
   # The polygon layer carries the gene parameters so that the plot object is
@@ -137,7 +137,7 @@ geom_gene <- function(mapping = NULL, data = NULL,
       (!missing(gene_colors) && !is.null(gene_colors)) ||
       (!missing(gene_order) && !is.null(gene_order)),
     "gene_color_scheme/gene_colors/gene_order", "gene_fill",
-    "aes(gene_fill = ...) + scale_gene_fill_manual()"
+    "ggplot2::aes(gene_fill = ...) + scale_gene_fill_manual()"
   )
   layers[[length(layers) + 1]] <- poly_layer
 
@@ -223,13 +223,13 @@ geom_gene_label <- function(mapping = NULL, data = NULL,
   )
 
   # Placeholder text layer (real data is injected at print time)
-  text_layer <- geom_text(
+  text_layer <- ggplot2::geom_text(
     data        = data.frame(x = numeric(0), y = numeric(0),
                              text_x = numeric(0), text_y = numeric(0),
                              text = character(0), text_angle = numeric(0),
                              hjust = numeric(0), vjust = numeric(0),
                              size = numeric(0)),
-    mapping     = aes(x = text_x, y = text_y, label = text,
+    mapping     = ggplot2::aes(x = text_x, y = text_y, label = text,
                       angle = text_angle, hjust = hjust, vjust = vjust,
                       size = I(size)),
     inherit.aes = FALSE,
@@ -368,12 +368,12 @@ geom_gene_label_repel <- function(mapping = NULL, data = NULL,
   layers <- list()
 
   # Leader line layer (from the anchor to the repelled label position)
-  seg_layer <- geom_segment(
+  seg_layer <- ggplot2::geom_segment(
     data        = data.frame(x0 = numeric(0), y0 = numeric(0),
                              x1 = numeric(0), y1 = numeric(0),
                              group = integer(0),
                              linetype = character(0)),
-    mapping     = aes(x = x0, y = y0, xend = x1, yend = y1, group = group,
+    mapping     = ggplot2::aes(x = x0, y = y0, xend = x1, yend = y1, group = group,
                       linetype = I(linetype)),
     inherit.aes = FALSE,
     show.legend = FALSE
@@ -388,13 +388,13 @@ geom_gene_label_repel <- function(mapping = NULL, data = NULL,
   layers[[length(layers) + 1]] <- seg_layer
 
   # Text layer (drawn at the repelled positions)
-  text_layer <- do.call(geom_text, c(list(
+  text_layer <- do.call(ggplot2::geom_text, c(list(
     data        = data.frame(x = numeric(0), y = numeric(0),
                              text_x = numeric(0), text_y = numeric(0),
                              text = character(0), text_angle = numeric(0),
                              hjust = numeric(0), vjust = numeric(0),
                              size = numeric(0)),
-    mapping     = aes(x = text_x, y = text_y, label = text,
+    mapping     = ggplot2::aes(x = text_x, y = text_y, label = text,
                       angle = text_angle, hjust = hjust, vjust = vjust,
                       size = I(size)),
     inherit.aes = FALSE,

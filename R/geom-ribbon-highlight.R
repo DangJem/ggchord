@@ -102,9 +102,9 @@ geom_ribbon_highlight <- function(mapping = NULL, data = NULL,
   )
   lyr <- ggplot2::layer(
     data        = empty_polys,
-    mapping     = aes(x = x, y = y, group = group),
+    mapping     = ggplot2::aes(x = x, y = y, group = group),
     stat        = "identity",
-    geom        = GeomPolygon,
+    geom        = ggplot2::GeomPolygon,
     position    = "identity",
     show.legend = show_legend,
     inherit.aes = FALSE,

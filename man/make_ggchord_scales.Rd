@@ -14,7 +14,10 @@ make_ggchord_scales(
   legend_box = NULL,
   positions = list(),
   legend_key_width = NULL,
-  legend_key_height = NULL
+  legend_key_height = NULL,
+  legend_scale = ggchord_device_scale(),
+  legend_text_size = 8,
+  legend_title_size = 9
 )
 }
 \arguments{

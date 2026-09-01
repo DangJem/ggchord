@@ -6,7 +6,7 @@
 \title{Guides for ggchord role aesthetics}
 \usage{
 guide_ggchord_legend(
-  title = waiver(),
+  title = ggplot2::waiver(),
   theme = NULL,
   position = NULL,
   direction = NULL,
@@ -15,11 +15,12 @@ guide_ggchord_legend(
   ncol = NULL,
   reverse = FALSE,
   order = 0,
+  size_scale = 1,
   ...
 )
 
 guide_ggchord_colourbar(
-  title = waiver(),
+  title = ggplot2::waiver(),
   theme = NULL,
   nbin = NULL,
   display = "raster",
@@ -33,6 +34,7 @@ guide_ggchord_colourbar(
   order = 0,
   available_aes = c("colour", "color", "fill", "ribbon_fill", "gene_fill",
     "feature_fill", "region_fill"),
+  size_scale = 1,
   ...
 )
 }
@@ -50,6 +52,10 @@ guide_ggchord_colourbar(
 \item{reverse}{Whether to reverse the key order.}
 
 \item{order}{Guide order.}
+
+\item{size_scale}{Positive multiplier for keys, spacing and typography.
+ggchord's automatically generated guides derive this from the active
+export device; direct calls default to 1.}
 
 \item{...}{Additional arguments passed to the corresponding ggplot2 guide.}
 

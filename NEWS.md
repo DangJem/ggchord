@@ -2,6 +2,27 @@
 
 ## Dense ribbons and static preview
 
+* Package imports are now deliberately narrow: ggplot2, grid and grDevices are
+  referenced with qualified calls, with only the ggplot2 `ggplot_build()` S3
+  generic imported explicitly. This reduces dependency symbols exposed to IDE
+  completion during package development without changing the public API.
+
+* `theme_ggchord()` no longer repeats Cartesian-axis and panel-grid settings
+  already supplied by `theme_void()`; the minimal and publication variants
+  likewise avoid restating unchanged backgrounds and margins. Resolved theme
+  elements and rendered defaults remain unchanged.
+
+* Automatically generated legends now scale their keys, colourbars,
+  typography and margins from the active output device, using the 8-by-6-inch
+  defaults as the reference and bounded scaling for extreme devices. Explicit
+  guide dimensions still take precedence.
+
+* Small-device text fitting now uses the real device short side instead of
+  falling back to a six-inch canvas. Automatic limits, collision boxes and
+  leader-line clipping share one scale derived from the undecorated chord
+  geometry. The default legend background is transparent so it cannot mask
+  labels that legitimately extend into a compact plot margin.
+
 * New `bundle_ggchord_ribbons()` explicitly groups dense alignments by directed
   sequence pair, alignment direction, normalized midpoint bins, and optional
   grouping columns. It preserves small groups, reports every source row, keeps

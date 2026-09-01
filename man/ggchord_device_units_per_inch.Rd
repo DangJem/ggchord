@@ -4,7 +4,13 @@
 \alias{ggchord_device_units_per_inch}
 \title{Convert physical text dimensions to the current fixed-aspect plot scale.}
 \usage{
-ggchord_device_units_per_inch(x, y, fallback_inches = 6, margin_inches = 1.25)
+ggchord_device_units_per_inch(
+  x,
+  y,
+  fallback_inches = 6,
+  margin_inches = 1.25,
+  device_inches = NULL
+)
 }
 \description{
 Text is rendered in millimetres, whereas chord geometry is expressed in

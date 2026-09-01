@@ -75,9 +75,9 @@ geom_axis <- function(mapping = NULL, data = NULL,
                           label_angle = numeric(0),
                           seq_id = character(0))
 
-  path_layer <- do.call(geom_path, c(list(
+  path_layer <- do.call(ggplot2::geom_path, c(list(
     data = empty_id,
-    mapping = aes(x = x, y = y, group = seq_id),
+    mapping = ggplot2::aes(x = x, y = y, group = seq_id),
     inherit.aes = FALSE, show.legend = FALSE
   ), split_params$line))
   path_layer$ggchord_type <- "axis_line"
@@ -106,9 +106,9 @@ geom_axis <- function(mapping = NULL, data = NULL,
     "scale_seq_position_continuous(breaks = ..., minor_breaks = ...)"
   )
 
-  seg_layer <- do.call(geom_segment, c(list(
+  seg_layer <- do.call(ggplot2::geom_segment, c(list(
     data = empty_seg,
-    mapping = aes(x = x0, y = y0, xend = x1, yend = y1),
+    mapping = ggplot2::aes(x = x0, y = y0, xend = x1, yend = y1),
     inherit.aes = FALSE, show.legend = FALSE
   ), split_params$ticks))
   seg_layer$ggchord_type <- "axis_seg"
@@ -117,9 +117,9 @@ geom_axis <- function(mapping = NULL, data = NULL,
     seg_layer, data, mapping, c("seq_id", "length")
   )
 
-  text_layer <- do.call(geom_text, c(list(
+  text_layer <- do.call(ggplot2::geom_text, c(list(
     data = empty_seg[integer(0), ],
-    mapping = aes(x = label_x, y = label_y,
+    mapping = ggplot2::aes(x = label_x, y = label_y,
                   label = label, size = I(size),
                   hjust = label_hjust, vjust = label_vjust,
                   angle = label_angle),

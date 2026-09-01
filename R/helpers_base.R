@@ -436,21 +436,30 @@ ggchord_oriented_box_overlaps <- function(candidate, other, tol = 1e-7) {
 #' @keywords internal
 ggchord_device_units_per_inch <- function(x, y,
                                           fallback_inches = 6,
-                                          margin_inches = 1.25) {
+                                          margin_inches = 1.25,
+                                          device_inches = NULL) {
   x <- x[is.finite(x)]
   y <- y[is.finite(y)]
   x_span <- if (length(x) > 1) diff(range(x)) else 0
   y_span <- if (length(y) > 1) diff(range(y)) else 0
   geometry_span <- max(x_span, y_span, 1)
 
-  device_inches <- tryCatch(
-    grDevices::dev.size("in"),
-    error = function(e) c(NA_real_, NA_real_)
-  )
-  usable_inches <- suppressWarnings(min(device_inches, na.rm = TRUE)) -
-    margin_inches
-  if (!is.finite(usable_inches) || usable_inches < 2) {
+  if (is.null(device_inches)) {
+    device_inches <- tryCatch(
+      grDevices::dev.size("in"),
+      error = function(e) c(NA_real_, NA_real_)
+    )
+  }
+  device_short_side <- suppressWarnings(min(device_inches, na.rm = TRUE))
+  if (!is.finite(device_short_side) || device_short_side <= 0) {
     usable_inches <- fallback_inches
+  } else {
+    # Keep a modest allowance for titles and legends, but never replace a
+    # genuinely small device with the much larger fallback canvas. The old
+    # `< 2` fallback made 4 x 3 inch exports behave as if they were six inches
+    # wide and consequently underestimated every text box.
+    reserve <- min(margin_inches, device_short_side * 0.4)
+    usable_inches <- max(device_short_side - reserve, 0.75)
   }
   geometry_span / usable_inches
 }
