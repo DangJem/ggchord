@@ -15,7 +15,7 @@ globalVariables(c(
   "seq_colour", "ribbon_fill", "ribbon_alpha",
   "ribbon_colour", "ribbon_linetype", "gene_fill", "feature_fill",
   "feature_shape",
-  "region_fill"
+  "region_fill", ".bundle_n", ".bundle_weight", ".bundle_density"
 ))
 
 #' ggchord: layered multi-sequence alignment chord diagrams for ggplot2

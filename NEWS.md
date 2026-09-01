@@ -1,5 +1,25 @@
 # ggchord 0.10.0 (development version)
 
+## Dense ribbons and static preview
+
+* New `bundle_ggchord_ribbons()` explicitly groups dense alignments by directed
+  sequence pair, alignment direction, normalized midpoint bins, and optional
+  grouping columns. It preserves small groups, reports every source row, keeps
+  forward and reverse alignments separate, and adds `.bundle_n`,
+  `.bundle_weight`, and `.bundle_density`. `geom_ribbon()` remains conservative:
+  one input row still means one ribbon unless the user calls this helper.
+
+* New `optimize_ggchord_layout()` deterministically searches sequence order and
+  orientation for a lower weighted crossing-and-span score. It never mutates
+  input data or accepts a worse arrangement; inputs above 2,000 ribbons use a
+  documented fixed 64-bin approximation.
+
+* New `view_ggchord()` renders a temporary PNG or SVG with standard `ggsave()`
+  dimensions and can open it in an IDE viewer or browser. Its 8-by-6-inch
+  default avoids a super-wide preview; `viewer = "none"` supports scripts and
+  tests. It does not add Shiny, Plotly, an HTML widget, a canvas object, or a
+  package-specific saving workflow.
+
 ## Fixed labels and publication defaults
 
 * The layout-export and performance work previously planned for v0.11.0 is now

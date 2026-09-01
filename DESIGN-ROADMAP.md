@@ -23,7 +23,8 @@
 | v0.7.0 | 数据验证、清理和基础测试 | 已发布；视觉回归并未真正建立 |
 | v0.8.0 | 数据导入、ribbon 预处理、序列分组 | 已发布；遗留正确性问题已在 v0.9.0 修复 |
 | v0.9.0 | grammar 基础、scale/theme/guide/coord、图层独立性 | 已正式发布（2026-08-31） |
-| v0.10.0 | 发表级视觉、feature 几何、布局导出和大数据性能 | 开发中；原 v0.11.0 范围已合并 |
+| v0.10.0 | 发表级视觉、feature 几何、显式 ribbon 聚合、布局导出与静态预览 | 开发中 |
+| v0.11.0 | 高级 ribbon stat、区域聚焦、feature 堆叠和显式多环 | 规划中 |
 | v1.0.0 | API 冻结、完整文档和长期兼容承诺 | 规划中 |
 
 ### v0.9.0 正式版状态
@@ -515,24 +516,22 @@ v0.10.0 同时移除 `geom_seq_group_label()`、`scale_group_colour_manual()`
 及 `geom_seq()` 中的所有 `seq_group*` 参数。这是开发版的破坏性精简，
 旧参数立即报错，不保留隐式分组布局。
 
-### C. 显式多环
+### C. 密集 ribbon
 
-不实现根据序列数自动猜测的 `seq_ring = "auto"`。如果实际需求充分，提供用户
-显式的 ring 映射；每个 ring 的 radius、gap 和 ribbon 锚点必须可解释、可导出。
-
-### D. 密集 ribbon
-
-不在 `geom_ribbon()` 中加入 `ribbon_reduce`。使用职责更明确的接口：
+不在 `geom_ribbon()` 中加入 `ribbon_reduce`，也不让 geom 静默抽样或改变图义。
+v0.10.0 提供两个显式数据/布局工具：
 
 ```r
-stat_ribbon_bundle()
-stat_ribbon_density()
 bundle_ggchord_ribbons()
+optimize_ggchord_layout()
 ```
 
-抽样属于数据处理，应使用显式预处理函数，而不是由 geom 静默丢弃数据。
+前者按序列对、方向、归一化中点网格和用户分组聚合，并保留源行映射；后者在
+不改变输入的前提下确定性优化序列顺序和方向。`geom_ribbon()` 继续严格保持
+“一行数据对应一条 ribbon”。无法消除的非平面连接用 bundling、透明度和明确
+诊断缓解，不承诺所有 ribbon 都能无交叉。
 
-### E. 局部障碍感知 ribbon
+### D. 局部障碍感知 ribbon
 
 - `ribbon_gap = NULL` 是默认自动模式；
 - 每个 ribbon 端点按自己的基因组区间判断，不在整条序列上统一留白；
@@ -540,7 +539,7 @@ bundle_ggchord_ribbons()
 - 无障碍端点贴近 `geom_seq()`，有障碍端点保留实际所需安全间距；
 - 显式设置数值 `ribbon_gap` 时关闭自动判断，严格使用用户数值。
 
-### F. 布局导出
+### E. 布局导出
 
 只保留一个正式名称：
 
@@ -556,16 +555,41 @@ export_ggchord_layout(
 ratio、单位和是否已经应用 coord transform。不再规划重复 alias。
 该单一正式接口已并入 v0.10.0。
 
-### G. 性能
+### F. 性能
 
 - sequence 基础布局缓存一次；
 - 每层只计算自己的几何，未添加的 ribbon/gene 实体不生成多边形；
 - 大型 ribbon 使用 `tools/benchmark-layout.R` 独立验收，不将机器耗时写入 testthat；
 - 不使用影响绘图结果的全局可变缓存。
 
+### G. 输出尺寸预览
+
+新增 `view_ggchord()`：使用标准 `ggsave()` 参数把图临时渲染为 PNG/SVG，再在
+IDE Viewer 或浏览器显示；默认 8×6 英寸，`viewer = "none"` 只返回临时文件路径。
+它只用于检查真实导出尺寸，不引入 canvas、专用保存函数、Shiny、Plotly 或
+HTML widget。正式保存仍使用 `ggsave()`，临时目录仅保留最近 20 次预览。
+
 ---
 
-## 六、v1.0.0 — 稳定 API
+## 六、v0.11.0 — 高级轨道与布局
+
+v0.10.0 发布后再进入以下工作，不继续扩张当前开发版：
+
+- 基于 bundling 核心增加正式的 `stat_ribbon_bundle()` 和
+  `stat_ribbon_density()`，公开 `after_stat(bundle_n)` 与
+  `after_stat(density)`；
+- 新增 `focus_ggchord_data()`，按 `seq_id/start/end` 同步裁切并重定位 sequence、
+  gene 和 ribbon，支持多个 locus、`expand` 及 `"trim"`/`"drop"` 边界策略；
+- 新增 `position_feature_stack()`，让重叠 gene/feature 使用最少径向轨道，并允许
+  标签层复用相同 position；
+- 通过 `seq_ring` aesthetic 和 `scale_seq_ring_manual(values = ...)` 设计显式多环，
+  不自动猜测环数或半径；
+- 不引入 gggenomes 式完整命名 track 容器，继续使用构造器数据、图层 `data` 和
+  geometry registry。
+
+---
+
+## 七、v1.0.0 — 稳定 API
 
 - 删除已完成迁移的旧参数；
 - 冻结核心 aes、scale、theme、guide、coord 和 layout export 契约；
@@ -580,13 +604,13 @@ ratio、单位和是否已经应用 coord transform。不再规划重复 alias�
 - 明确支持的 R 和 ggplot2 版本；
 - 无严重已知正确性问题后才发布 1.0.0。
 
-交互式绘图不属于 v0.9.0–v1.0.0 的发布范围。相关实现、依赖、说明和网页入口在
-正式版前从发行内容中清理；v1.0.0 发布后再基于稳定的 scale、guide、coord 和
-layout export 契约，单独评估更成熟的交互方案，不在本路线图中预先承诺接口。
+v0.10.0 的 `view_ggchord()` 只是静态导出尺寸预览，不属于交互式绘图。真正的
+交互方案不属于 v0.9.0–v1.0.0 的发布范围；v1.0.0 发布后再基于稳定的 scale、
+guide、coord 和 layout export 契约单独评估，不在本路线图中预先承诺接口。
 
 ---
 
-## 七、testthat 精简策略
+## 八、testthat 精简策略
 
 测试只保留公开 API 的最小行为，不再通过大量精确坐标断言锁定内部实现。
 
@@ -616,7 +640,7 @@ layout export 契约，单独评估更成熟的交互方案，不在本路线图
 
 ---
 
-## 八、验收规则
+## 九、验收规则
 
 - 精简后的 `testthat::test_local()` 必须通过；
 - `R CMD check` 必须通过；

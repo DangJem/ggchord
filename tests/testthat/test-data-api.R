@@ -78,6 +78,48 @@ test_that("ribbon preparation helpers run on simple inputs", {
   expect_equal(nrow(merge_ggchord_ribbons(blocks)$data), 1)
 })
 
+test_that("dense ribbon helpers bundle explicitly and optimize deterministically", {
+  seq <- data.frame(seq_id = c("A", "B", "C"), length = c(1000, 1000, 1000))
+  ribbons <- data.frame(
+    qaccver = c("A", "A", "A", "A", "B"),
+    saccver = c("B", "B", "B", "B", "C"),
+    length = rep(100, 5), pident = c(90, 94, 80, 84, 88),
+    qstart = c(100, 120, 100, 120, 700),
+    qend = c(199, 219, 199, 219, 799),
+    sstart = c(100, 120, 219, 239, 100),
+    send = c(199, 219, 120, 140, 199),
+    note = c("same", "different", "reverse", "reverse", "single")
+  )
+  original <- ribbons
+
+  bundled <- bundle_ggchord_ribbons(ribbons, seq, bins = 10)
+  expect_identical(ribbons, original)
+  expect_lt(nrow(bundled$data), nrow(ribbons))
+  expect_equal(sort(bundled$data$.bundle_n), c(1L, 2L, 2L))
+  expect_equal(sum(bundled$data$.bundle_weight), sum(ribbons$length))
+  expect_true(is.na(bundled$data$note[bundled$data$pident == 92]))
+  expect_equal(sort(bundled$report$n_input), c(1L, 2L, 2L))
+  expect_setequal(bundled$report$source_rows, c("1,2", "3,4", "5"))
+
+  identity_weighted <- bundle_ggchord_ribbons(
+    ribbons, seq, bins = 10, weight = "pident"
+  )
+  expect_equal(
+    sum(identity_weighted$data$.bundle_weight),
+    sum(ribbons$length * ribbons$pident / 100)
+  )
+
+  optimized <- optimize_ggchord_layout(seq, ribbons)
+  repeated <- optimize_ggchord_layout(seq, ribbons)
+  expect_setequal(optimized$seq_order, seq$seq_id)
+  expect_true(all(optimized$seq_orientation %in% c(-1, 1)))
+  expect_lt(optimized$score_after, optimized$score_before)
+  expect_identical(optimized, repeated)
+
+  many <- ribbons[rep(seq_len(nrow(ribbons)), length.out = 2001), ]
+  expect_true(optimize_ggchord_layout(seq, many)$report$approximate)
+})
+
 test_that("cleaning preserves kept unknown genes and ribbon direction", {
   seq <- data.frame(seq_id = c("A", "B"), length = c(100, 100))
   genes <- data.frame(

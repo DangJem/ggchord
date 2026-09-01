@@ -465,6 +465,31 @@ test_that("layout export preserves layer identity and coordinate metadata", {
   expect_true(length(exported$original_data) >= 3L)
 })
 
+test_that("view_ggchord renders an exact-size headless preview", {
+  p <- ggplot2::ggplot(mtcars, ggplot2::aes(wt, mpg)) +
+    ggplot2::geom_point()
+  preview <- view_ggchord(
+    p, width = 2, height = 1, units = "in", dpi = 50,
+    device = "png", viewer = "none"
+  )
+  expect_true(file.exists(preview))
+  expect_true(file.exists(sub("\\.png$", ".html", preview)))
+
+  con <- file(preview, open = "rb")
+  on.exit(close(con), add = TRUE)
+  header <- readBin(con, what = "raw", n = 24)
+  big_endian <- function(x) sum(as.integer(x) * 256^(3:0))
+  expect_equal(big_endian(header[17:20]), 100)
+  expect_equal(big_endian(header[21:24]), 50)
+  expect_error(view_ggchord(list(), viewer = "none"), "plot must be")
+  expect_error(view_ggchord(p, width = 0, viewer = "none"), "positive")
+
+  if (requireNamespace("svglite", quietly = TRUE)) {
+    svg <- view_ggchord(p, device = "svg", viewer = "none")
+    expect_true(file.exists(svg))
+  }
+})
+
 test_that("layout skips geometry for layers that were not requested", {
   data(seq_data_example)
   data(ribbon_data_example)
