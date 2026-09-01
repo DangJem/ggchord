@@ -9,10 +9,34 @@
 #'
 #' @param base_size Base font size in points.
 #' @param base_family Base font family.
+#' @param axis_line,axis_ticks Optional line or blank elements for genomic
+#'   axes. `NULL` keeps the preset value.
+#' @param axis_text,seq_label,gene_label Optional text or blank elements.
+#'   `NULL` keeps the preset value.
+#' @param gene_label_segment Optional line or blank element for gene leader
+#'   lines. `NULL` keeps the preset value.
 #'
 #' @return A ggplot2 theme object.
 #' @export
-theme_ggchord <- function(base_size = 11, base_family = "") {
+theme_ggchord <- function(
+    base_size = 11,
+    base_family = "",
+    axis_line = NULL,
+    axis_ticks = NULL,
+    axis_text = NULL,
+    seq_label = NULL,
+    gene_label = NULL,
+    gene_label_segment = NULL) {
+  out <- ggchord_theme_base(base_size, base_family)
+  ggchord_theme_override(
+    out, axis_line, axis_ticks, axis_text, seq_label, gene_label,
+    gene_label_segment
+  )
+}
+
+#' Construct the default complete theme before user overrides
+#' @noRd
+ggchord_theme_base <- function(base_size = 11, base_family = "") {
   scale <- base_size / 11
   ggplot2::theme_void(base_size = base_size, base_family = base_family) +
     ggplot2::theme(
@@ -59,19 +83,48 @@ theme_ggchord <- function(base_size = 11, base_family = "") {
 
 #' @rdname theme_ggchord
 #' @export
-theme_ggchord_minimal <- function(base_size = 11, base_family = "") {
-  theme_ggchord(base_size, base_family) +
+theme_ggchord_minimal <- function(
+    base_size = 11,
+    base_family = "",
+    axis_line = NULL,
+    axis_ticks = NULL,
+    axis_text = NULL,
+    seq_label = NULL,
+    gene_label = NULL,
+    gene_label_segment = NULL) {
+  out <- ggchord_theme_base(base_size, base_family) +
     ggplot2::theme(
       plot.title = ggplot2::element_text(size = base_size * 1.25),
-      legend.box.spacing = grid::unit(3, "mm")
+      legend.box.spacing = grid::unit(3, "mm"),
+      ggchord.axis.line = ggplot2::element_line(
+        colour = "#90969B", linewidth = 0.25
+      ),
+      ggchord.axis.ticks = ggplot2::element_line(
+        colour = "#A0A5AA", linewidth = 0.2
+      ),
+      ggchord.gene.label.segment = ggplot2::element_line(
+        colour = "#A1A6AA", linewidth = 0.2
+      )
     )
+  ggchord_theme_override(
+    out, axis_line, axis_ticks, axis_text, seq_label, gene_label,
+    gene_label_segment
+  )
 }
 
 #' @rdname theme_ggchord
 #' @export
-theme_ggchord_dark <- function(base_size = 11, base_family = "") {
+theme_ggchord_dark <- function(
+    base_size = 11,
+    base_family = "",
+    axis_line = NULL,
+    axis_ticks = NULL,
+    axis_text = NULL,
+    seq_label = NULL,
+    gene_label = NULL,
+    gene_label_segment = NULL) {
   light <- "#F1F3F5"
-  theme_ggchord(base_size, base_family) +
+  out <- ggchord_theme_base(base_size, base_family) +
     ggplot2::theme(
       text = ggplot2::element_text(colour = light),
       plot.background = ggplot2::element_rect(fill = "#17191C", colour = NA),
@@ -89,12 +142,24 @@ theme_ggchord_dark <- function(base_size = 11, base_family = "") {
         colour = "#CED4DA", linewidth = 0.3
       )
     )
+  ggchord_theme_override(
+    out, axis_line, axis_ticks, axis_text, seq_label, gene_label,
+    gene_label_segment
+  )
 }
 
 #' @rdname theme_ggchord
 #' @export
-theme_ggchord_publication <- function(base_size = 9, base_family = "") {
-  theme_ggchord(base_size, base_family) +
+theme_ggchord_publication <- function(
+    base_size = 9,
+    base_family = "",
+    axis_line = NULL,
+    axis_ticks = NULL,
+    axis_text = NULL,
+    seq_label = NULL,
+    gene_label = NULL,
+    gene_label_segment = NULL) {
+  out <- ggchord_theme_base(base_size, base_family) +
     ggplot2::theme(
       plot.title = ggplot2::element_text(size = base_size * 1.25),
       legend.box.spacing = grid::unit(4, "mm"),
@@ -102,21 +167,16 @@ theme_ggchord_publication <- function(base_size = 9, base_family = "") {
       legend.key.height = grid::unit(4, "mm"),
       legend.key.width = grid::unit(5, "mm")
     )
+  ggchord_theme_override(
+    out, axis_line, axis_ticks, axis_text, seq_label, gene_label,
+    gene_label_segment
+  )
 }
 
-#' Modify ggchord-specific theme elements
-#'
-#' A focused counterpart to [ggplot2::theme()] for annotations drawn by
-#' ggchord itself. General plot titles, backgrounds, margins and legends stay
-#' under [ggplot2::theme()]. `NULL` leaves an element unchanged and
-#' [ggplot2::element_blank()] hides it.
-#'
-#' @param axis_line,axis_ticks Line or blank elements for genomic axes.
-#' @param axis_text,seq_label,gene_label Text or blank elements.
-#' @param gene_label_segment Line or blank element for gene leader lines.
-#' @return A ggplot2 theme object containing only supplied ggchord elements.
-#' @export
-theme_ggchord_elements <- function(
+#' Apply user-supplied ggchord elements to a complete preset
+#' @noRd
+ggchord_theme_override <- function(
+    theme,
     axis_line = NULL,
     axis_ticks = NULL,
     axis_text = NULL,
@@ -132,7 +192,8 @@ theme_ggchord_elements <- function(
     ggchord.gene.label.segment = gene_label_segment
   )
   values <- values[!vapply(values, is.null, logical(1))]
-  do.call(ggplot2::theme, values)
+  if (length(values) == 0L) return(theme)
+  theme + do.call(ggplot2::theme, values)
 }
 
 #' Resolve a ggchord theme element without leaking theme internals elsewhere
@@ -172,6 +233,41 @@ ggchord_theme_point_size <- function(plot, name, fallback) {
 ggchord_apply_theme_styles <- function(plot) {
   for (i in seq_along(plot$layers)) {
     lyr <- plot$layers[[i]]
+    components <- lyr$ggchord_theme_components
+    if (!is.null(components)) {
+      for (param_name in names(components)) {
+        el <- ggchord_theme_element(plot, unname(components[[param_name]]))
+        if (is.null(el)) next
+        current <- lyr$geom_params[[param_name]] %||% list()
+        if (inherits(el, "element_blank")) {
+          current$alpha <- 0
+        } else if (inherits(el, "element_line")) {
+          values <- list(
+            colour = el@colour, linewidth = el@linewidth,
+            linetype = el@linetype, lineend = el@lineend,
+            linejoin = el@linejoin
+          )
+          for (nm in names(values)) {
+            if (is.null(current[[nm]]) && !is.null(values[[nm]])) {
+              current[[nm]] <- values[[nm]]
+            }
+          }
+        } else if (inherits(el, "element_text")) {
+          values <- list(
+            colour = el@colour, family = el@family, fontface = el@face,
+            lineheight = el@lineheight
+          )
+          for (nm in names(values)) {
+            if (is.null(current[[nm]]) && !is.null(values[[nm]])) {
+              current[[nm]] <- values[[nm]]
+            }
+          }
+        }
+        lyr$geom_params[[param_name]] <- current
+      }
+      plot$layers[[i]] <- lyr
+      next
+    }
     name <- lyr$ggchord_theme_element
     if (is.null(name)) next
     el <- ggchord_theme_element(plot, name)

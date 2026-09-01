@@ -7,19 +7,18 @@
 geom_axis(
   mapping = NULL,
   data = NULL,
-  show_axis = NULL,
   axis_gap = NULL,
-  axis_tick_major_number = NULL,
   axis_tick_major_length = NULL,
-  axis_tick_minor_number = NULL,
   axis_tick_minor_length = NULL,
-  axis_label_size = NULL,
   axis_label_offset = NULL,
   axis_label_orientation = NULL,
   axis_label_hide_overlaps = FALSE,
   line_params = list(),
   tick_params = list(),
   text_params = list(),
+  position = "identity",
+  show.legend = FALSE,
+  inherit.aes = FALSE,
   ...
 )
 }
@@ -28,19 +27,11 @@ geom_axis(
 
 \item{data}{Default NULL (retrieved automatically from the layout)}
 
-\item{show_axis}{Logical. Whether to show the axis, default TRUE}
-
 \item{axis_gap}{Optional numeric/vector. Spacing between sequence and axis, default 0.05}
-
-\item{axis_tick_major_number}{Optional integer/vector. Number of major ticks, default 3}
 
 \item{axis_tick_major_length}{Optional numeric/vector. Major tick length ratio, default 0.02}
 
-\item{axis_tick_minor_number}{Optional integer/vector. Number of minor ticks, default 4}
-
 \item{axis_tick_minor_length}{Optional numeric/vector. Minor tick length ratio, default 0.01}
-
-\item{axis_label_size}{Optional numeric/vector. Tick label font size, default 3}
 
 \item{axis_label_offset}{Optional numeric/vector. Label offset ratio, default 2}
 
@@ -61,16 +52,21 @@ ribbons) or other axis labels are automatically hidden.}
 arguments for the axis path, tick segments and tick labels respectively.
 These override the corresponding `ggchord.axis.*` theme elements.}
 
+\item{position, show.legend, inherit.aes}{Standard ggplot2 layer arguments.}
+
 \item{...}{Shared fixed style arguments. `colour`, `alpha` and
 `na.rm` apply to all three components; line-specific and
 text-specific arguments are routed only to compatible geoms.}
 }
 \value{
-A list of ggplot2 layers
+A ggplot2 layer.
 }
 \description{
 Draws axes for each sequence in the chord diagram (including axis lines, major/minor ticks, and labels).
-Axis parameters (spacing, tick count/length, label size/orientation, etc.) are specified here.
+Axis spacing, tick lengths and label orientation are specified here. Breaks,
+labels and limits belong to code{scale_seq_position_continuous()}, while
+fixed visual styles belong to code{...}, the component parameter lists, or
+a ggchord theme.
 }
 \examples{
 library(ggchord)

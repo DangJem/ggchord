@@ -15,11 +15,14 @@ geom_ribbon_highlight(
   min_length = NULL,
   max_length = NULL,
   predicate = NULL,
-  highlight_color = "#C51B7D",
-  highlight_alpha = 0.75,
-  highlight_outline_color = NULL,
-  highlight_outline_width = 0.3,
-  show_legend = FALSE,
+  fill = "#C51B7D",
+  alpha = 0.75,
+  colour = NA,
+  linewidth = 0.3,
+  linetype = 1,
+  position = "identity",
+  show.legend = FALSE,
+  inherit.aes = FALSE,
   ...
 )
 }
@@ -49,20 +52,14 @@ this set are highlighted.}
 a logical vector with one element per row. Evaluated safely (no string
 parsing).}
 
-\item{highlight_color}{Character. Highlight fill colour, default \code{"#C51B7D"}.}
+\item{fill, alpha, colour, linewidth, linetype}{Standard fixed polygon styles.}
 
-\item{highlight_alpha}{Numeric (0-1). Highlight alpha, default 0.75.}
-
-\item{highlight_outline_color}{Optional outline colour, default \code{NULL}.}
-
-\item{highlight_outline_width}{Numeric. Outline width, default 0.3.}
-
-\item{show_legend}{Logical. Whether to show a legend, default FALSE.}
+\item{position, show.legend, inherit.aes}{Standard ggplot2 layer arguments.}
 
 \item{...}{Additional arguments passed to \code{geom_polygon()}}
 }
 \value{
-A list of ggplot2 layers
+A ggplot2 layer.
 }
 \description{
 Draws a second polygon layer on top of selected ribbons so they can be

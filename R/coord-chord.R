@@ -1,5 +1,31 @@
 # coord-chord.R - chord diagram coordinate system
 
+#' Chord-diagram coordinate ggproto
+#' @noRd
+CoordChord <- ggplot2::ggproto(
+  "CoordChord", ggplot2::CoordCartesian,
+  ggchord_coord = TRUE
+)
+
+#' Construct a CoordChord instance
+#' @noRd
+new_coord_chord <- function(rotation, ratio, xlim, ylim, expand, clip, fit,
+                            user_xlim = xlim, user_ylim = ylim) {
+  ggplot2::ggproto(
+    NULL, CoordChord,
+    limits = list(x = xlim, y = ylim),
+    reverse = "none",
+    expand = expand,
+    default = FALSE,
+    clip = clip,
+    ratio = ratio,
+    rotation = rotation,
+    fit = fit,
+    user_xlim = user_xlim,
+    user_ylim = user_ylim
+  )
+}
+
 #' Chord diagram coordinate system
 #'
 #' Controls global rotation, aspect ratio, coordinate limits, clipping and the
@@ -58,14 +84,5 @@ coord_chord <- function(rotation = 45, ratio = 1,
     ggchord_stop("coord_chord(): fit = 'manual' requires xlim and ylim")
   }
 
-  coord <- ggplot2::coord_fixed(
-    ratio = ratio, xlim = xlim, ylim = ylim,
-    expand = expand, clip = clip
-  )
-  coord$ggchord_coord <- TRUE
-  coord$rotation <- rotation
-  coord$fit <- fit
-  coord$user_xlim <- xlim
-  coord$user_ylim <- ylim
-  coord
+  new_coord_chord(rotation, ratio, xlim, ylim, expand, clip, fit)
 }

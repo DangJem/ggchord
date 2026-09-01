@@ -9,12 +9,9 @@ geom_gene(
   data = NULL,
   gene_offset = NULL,
   gene_width = NULL,
-  gene_color_scheme = NULL,
-  gene_colors = NULL,
-  gene_order = NULL,
   position = "identity",
-  show_legend = TRUE,
-  legend_position = "right",
+  show.legend = TRUE,
+  inherit.aes = FALSE,
   ...
 )
 }
@@ -27,26 +24,15 @@ geom_gene(
 
 \item{gene_width}{Optional numeric/vector/list. Width of gene arrows, default 0.05}
 
-\item{gene_color_scheme}{Character. "strand" or "manual", default "strand"}
-
-\item{gene_colors}{Optional color vector. Fill color of gene arrows}
-
-\item{gene_order}{Optional character vector. Display order of genes in the legend}
-
 \item{position}{Position adjustment. Use [position_feature_stack()] to place
 overlapping genes or features on radial lanes.}
 
-\item{show_legend}{Whether to show the legend, default TRUE}
-
-\item{legend_position}{Position of this layer's legend (the Strand or Gene
-Annotation legend): one of "left", "right", "top", "bottom" or "inside",
-default "right". Pass NULL to let the legend follow
-\code{theme(legend.position = ...)} together with the other legends.}
+\item{show.legend, inherit.aes}{Standard ggplot2 layer arguments.}
 
 \item{...}{Additional arguments passed to \code{geom_polygon()}}
 }
 \value{
-A list of ggplot2 layers. To annotate the genes with their labels,
+A ggplot2 layer. To annotate the genes with their labels,
   add a \code{\link{geom_gene_label}()} layer.
 }
 \description{

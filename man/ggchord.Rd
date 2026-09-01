@@ -8,12 +8,9 @@ ggchord(
   seq_data,
   ribbon_data = NULL,
   gene_data = NULL,
-  title = NULL,
-  rotation = 45,
-  panel_margin = 0,
-  show_legend = TRUE,
   debug = FALSE,
-  validate = c("warn", "error", "none")
+  validate = c("warn", "error", "none"),
+  ...
 )
 }
 \arguments{
@@ -22,14 +19,6 @@ ggchord(
 \item{ribbon_data}{data.frame/tibble, optional. Alignment results}
 
 \item{gene_data}{data.frame/tibble, optional. Gene annotation data}
-
-\item{title}{Character. Main title of the plot, default NULL}
-
-\item{rotation}{Numeric. Global rotation angle (degrees), default 45}
-
-\item{panel_margin}{Optional numeric/list. Panel margin, default 0}
-
-\item{show_legend}{Logical. Whether to show legends, default TRUE}
 
 \item{debug}{Logical. Whether to output debug information, default FALSE}
 
@@ -40,6 +29,9 @@ and caches the full report on the plot object
 (\code{p$ggchord$validation}); \code{"error"} stops on severe problems;
 \code{"none"} skips the diagnostic validation (the cheap structural
 checks that prevent crashes are still performed).}
+
+\item{...}{Reserved for clear migration errors from removed constructor
+arguments. Use [labs()], [coord_chord()] and [theme()] for presentation.}
 }
 \value{
 A ggchord object (inherits from ggplot) to which geom_* layers can be added with +

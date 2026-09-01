@@ -11,7 +11,9 @@ stat_ribbon_bundle(
   min_bundle = 2L,
   weight = c("length", "count", "pident"),
   group_by = NULL,
-  show_legend = TRUE,
+  position = "identity",
+  show.legend = TRUE,
+  inherit.aes = FALSE,
   ...
 )
 }
@@ -21,7 +23,7 @@ stat_ribbon_bundle(
 \item{bins, min_bundle, weight, group_by}{Passed to
 [bundle_ggchord_ribbons()].}
 
-\item{show_legend}{Whether to show the ribbon fill guide.}
+\item{position, show.legend, inherit.aes}{Standard ggplot2 layer arguments.}
 
 \item{...}{Ribbon geometry and appearance arguments passed to
 [geom_ribbon()].}

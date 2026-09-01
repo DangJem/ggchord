@@ -8,13 +8,13 @@ geom_gene_label_repel(
   mapping = NULL,
   data = NULL,
   gene_label_layout = "aligned",
-  gene_label_size = NULL,
   gene_label_wrap = NULL,
   gene_label_side = "outside",
   max_overlaps = Inf,
   gene_label_segment_linetype = "auto",
   position = "identity",
-  show_legend = FALSE,
+  show.legend = FALSE,
+  inherit.aes = FALSE,
   ...
 )
 }
@@ -28,8 +28,6 @@ geom_gene_label_repel(
 right rails; \code{"radial"} uses horizontal labels on the nearest
 collision-free local offset track; \code{"arc"} rotates labels along the
 sequence tangent and keeps them close to their genes.}
-
-\item{gene_label_size}{Numeric. Label font size, default 2.5}
 
 \item{gene_label_wrap}{Numeric or NULL, default NULL. When set, long gene
 annotations are wrapped at this many characters (e.g. 15).}
@@ -55,12 +53,12 @@ Any other valid ggplot2 linetype (e.g. \code{"solid"}, \code{"dashed"},
 [position_feature_stack()] used by a gene/feature layer when labels are
 drawn from separate data or without a geometry layer.}
 
-\item{show_legend}{Whether to show the legend, default FALSE}
+\item{show.legend, inherit.aes}{Standard ggplot2 layer arguments.}
 
 \item{...}{Additional arguments passed to \code{geom_text()}}
 }
 \value{
-A list of ggplot2 layers (a leader-line layer and a text layer).
+A ggplot2 layer that draws labels and leader lines together.
 }
 \description{
 Like \code{\link{geom_gene_label}()}, but labels are placed by one of three

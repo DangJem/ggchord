@@ -7,18 +7,63 @@
 \alias{theme_ggchord_publication}
 \title{ggchord themes}
 \usage{
-theme_ggchord(base_size = 11, base_family = "")
+theme_ggchord(
+  base_size = 11,
+  base_family = "",
+  axis_line = NULL,
+  axis_ticks = NULL,
+  axis_text = NULL,
+  seq_label = NULL,
+  gene_label = NULL,
+  gene_label_segment = NULL
+)
 
-theme_ggchord_minimal(base_size = 11, base_family = "")
+theme_ggchord_minimal(
+  base_size = 11,
+  base_family = "",
+  axis_line = NULL,
+  axis_ticks = NULL,
+  axis_text = NULL,
+  seq_label = NULL,
+  gene_label = NULL,
+  gene_label_segment = NULL
+)
 
-theme_ggchord_dark(base_size = 11, base_family = "")
+theme_ggchord_dark(
+  base_size = 11,
+  base_family = "",
+  axis_line = NULL,
+  axis_ticks = NULL,
+  axis_text = NULL,
+  seq_label = NULL,
+  gene_label = NULL,
+  gene_label_segment = NULL
+)
 
-theme_ggchord_publication(base_size = 9, base_family = "")
+theme_ggchord_publication(
+  base_size = 9,
+  base_family = "",
+  axis_line = NULL,
+  axis_ticks = NULL,
+  axis_text = NULL,
+  seq_label = NULL,
+  gene_label = NULL,
+  gene_label_segment = NULL
+)
 }
 \arguments{
 \item{base_size}{Base font size in points.}
 
 \item{base_family}{Base font family.}
+
+\item{axis_line, axis_ticks}{Optional line or blank elements for genomic
+axes. `NULL` keeps the preset value.}
+
+\item{axis_text, seq_label, gene_label}{Optional text or blank elements.
+`NULL` keeps the preset value.}
+
+\item{gene_label_segment}{Optional line or blank element for gene leader
+lines. `NULL` keeps the preset value.}
 }
 \value{
 A ggplot2 theme object.

@@ -10,7 +10,9 @@ stat_ribbon_density(
   bins = 80L,
   weight = c("length", "count", "pident"),
   group_by = NULL,
-  show_legend = TRUE,
+  position = "identity",
+  show.legend = TRUE,
+  inherit.aes = FALSE,
   ...
 )
 }
@@ -24,7 +26,7 @@ sequence.}
 
 \item{group_by}{Optional columns that define independent density groups.}
 
-\item{show_legend}{Whether to show the ribbon fill guide.}
+\item{position, show.legend, inherit.aes}{Standard ggplot2 layer arguments.}
 
 \item{...}{Ribbon geometry and appearance arguments passed to
 [geom_ribbon()].}

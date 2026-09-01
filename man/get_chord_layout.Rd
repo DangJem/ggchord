@@ -2,13 +2,12 @@
 % Please edit documentation in R/zzz.R
 \name{get_chord_layout}
 \alias{get_chord_layout}
-\title{Get the chord layout from the package environment}
+\title{Get the chord layout from a ggchord plot}
 \usage{
-get_chord_layout(plot = NULL, build = TRUE)
+get_chord_layout(plot, build = TRUE)
 }
 \arguments{
-\item{plot}{Optional ggchord plot. Supplying the plot is the reliable way to
-retrieve its own layout when several plots are built in one session.}
+\item{plot}{A ggchord plot.}
 
 \item{build}{Logical. Build the layout when it is not cached, default TRUE.}
 }
@@ -17,9 +16,8 @@ A chord layout list containing the computed geometry (sequence
   arcs, ribbon polygons, gene arrows, axis elements, extremes, colors, etc.)
 }
 \description{
-Returns the most recently computed chord layout (after the plot was built,
-e.g. via \code{print()} or \code{ggplot_build()}). This is useful for
-building custom layers or annotations on top of the chord geometry.
+Returns the layout owned by an explicit ggchord plot. This avoids ambiguous
+cross-talk when several plots are built in one R session.
 }
 \examples{
 library(ggchord)

@@ -1,15 +1,6 @@
 # zzz.R - package environment and infrastructure
-# The package keeps no global state that affects rendering: plot data and
-# parameters are stored on the plot object itself. The package environment
-# only holds a cache of the most recently computed layout so that the
-# get_chord_layout() accessor can inspect it after rendering.
-
-#' Package-level environment
-#'
-#' Internal environment that caches the most recently computed chord layout.
-#'
-#' @keywords internal
-.chord_env <- new.env(parent = emptyenv())
+# The package keeps no global rendering or layout state. Plot data, parameters
+# and any computed layout cache belong to the plot object itself.
 
 # Register package-specific theme elements with ggplot2. These elements affect
 # annotations drawn by ggchord; data-dependent fill and colour remain scales.
@@ -67,72 +58,30 @@ ggchord_disable_debug <- function() {
   old
 }
 
-#' Emit one migration warning per old argument in a session
+#' Reject removed public arguments with a concise migration message
 #' @noRd
-ggchord_deprecate_once <- function(argument, replacement) {
-  key <- paste0("deprecated:", argument)
-  if (!isTRUE(.chord_env[[key]])) {
-    warning(
-      "`", argument, "` is deprecated for v0.9.0; use `", replacement,
-      "` instead.", call. = FALSE
-    )
-    .chord_env[[key]] <- TRUE
-  }
-  invisible(NULL)
-}
-
-#' Record an old scale argument on a layer for build-time migration checks
-#' @noRd
-ggchord_add_legacy_scale <- function(
-    lyr, supplied, argument, aesthetic, replacement) {
-  if (!isTRUE(supplied)) return(lyr)
-  spec <- data.frame(
-    argument = argument, aesthetic = aesthetic, replacement = replacement,
-    stringsAsFactors = FALSE
+ggchord_reject_retired <- function(dots, caller, migrations,
+                                   call = sys.call(-1L)) {
+  raw <- names(as.list(call)[-1L]) %||% character()
+  supplied <- unique(intersect(c(names(dots), raw), names(migrations)))
+  if (!length(supplied)) return(invisible(NULL))
+  advice <- unique(unname(migrations[supplied]))
+  ggchord_stop(
+    caller, ": removed argument(s): ", paste(supplied, collapse = ", "),
+    ". Use ", paste(advice, collapse = "; "), "."
   )
-  lyr$ggchord_legacy_scales <- rbind(lyr$ggchord_legacy_scales, spec)
-  lyr
 }
-
-#' Check legacy scale arguments and emit their one-time migration warning
-#' @noRd
-ggchord_check_legacy_scales <- function(plot) {
-  for (lyr in plot$layers) {
-    specs <- lyr$ggchord_legacy_scales
-    if (is.null(specs) || nrow(specs) == 0) next
-    for (i in seq_len(nrow(specs))) {
-      if (plot$scales$has_scale(specs$aesthetic[i])) {
-        ggchord_stop(
-          "`", specs$argument[i], "` conflicts with a user-supplied scale for `",
-          specs$aesthetic[i], "`; remove the old argument and use `",
-          specs$replacement[i], "`"
-        )
-      }
-      ggchord_deprecate_once(specs$argument[i], specs$replacement[i])
-    }
-  }
-  invisible(plot)
-}
-
 
 # ====================================================================
-# Layout cache (set at build time; used by the get_chord_layout() accessor)
+# Plot-owned layout access
 # ====================================================================
 
-#' Set the chord layout into the package environment
-#' @keywords internal
-set_chord_layout <- function(layout) {
-  .chord_env$layout <- layout
-}
-
-#' Get the chord layout from the package environment
+#' Get the chord layout from a ggchord plot
 #'
-#' Returns the most recently computed chord layout (after the plot was built,
-#' e.g. via \code{print()} or \code{ggplot_build()}). This is useful for
-#' building custom layers or annotations on top of the chord geometry.
+#' Returns the layout owned by an explicit ggchord plot. This avoids ambiguous
+#' cross-talk when several plots are built in one R session.
 #'
-#' @param plot Optional ggchord plot. Supplying the plot is the reliable way to
-#'   retrieve its own layout when several plots are built in one session.
+#' @param plot A ggchord plot.
 #' @param build Logical. Build the layout when it is not cached, default TRUE.
 #' @return A chord layout list containing the computed geometry (sequence
 #'   arcs, ribbon polygons, gene arrows, axis elements, extremes, colors, etc.)
@@ -145,29 +94,18 @@ set_chord_layout <- function(layout) {
 #' p <- ggchord(seq_data_example, ribbon_data_example) + geom_seq() + geom_ribbon()
 #' invisible(ggplot2::ggplot_build(p))
 #' names(get_chord_layout(p)$seq_arcs)
-get_chord_layout <- function(plot = NULL, build = TRUE) {
+get_chord_layout <- function(plot, build = TRUE) {
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
 
   if (!is.logical(build) || length(build) != 1 || is.na(build)) {
     ggchord_stop("get_chord_layout(): build must be TRUE or FALSE")
   }
-  if (!is.null(plot)) {
-    if (!inherits(plot, "ggchord") || is.null(plot$ggchord)) {
-      ggchord_stop("get_chord_layout(): plot must be a ggchord object")
-    }
-    layout <- plot$ggchord$ref$layout
-    if (is.null(layout) && isTRUE(build)) layout <- compute_chord_geometry(plot)
-  } else {
-    if (!isTRUE(.chord_env$warned_get_layout)) {
-      warning(
-        "get_chord_layout() without a plot is deprecated; use get_chord_layout(plot)",
-        call. = FALSE
-      )
-      .chord_env$warned_get_layout <- TRUE
-    }
-    layout <- .chord_env$layout
+  if (missing(plot) || !inherits(plot, "ggchord") || is.null(plot$ggchord)) {
+    ggchord_stop("get_chord_layout(): plot must be supplied as a ggchord object")
   }
+  layout <- plot$ggchord$ref$layout
+  if (is.null(layout) && isTRUE(build)) layout <- compute_chord_geometry(plot)
   if (is.null(layout)) {
     ggchord_stop(
       "Chord layout data not found. Please render the plot first.",
@@ -175,16 +113,6 @@ get_chord_layout <- function(plot = NULL, build = TRUE) {
     )
   }
   layout
-}
-
-# ====================================================================
-# Environment cleanup
-# ====================================================================
-
-#' Clear the package environment (used to reset state)
-#' @keywords internal
-clear_chord_env <- function() {
-  rm(list = ls(.chord_env, all.names = TRUE), envir = .chord_env)
 }
 
 #' Capture user data and mappings separately from the computed placeholder
@@ -201,13 +129,35 @@ ggchord_capture_layer_input <- function(lyr, data, mapping, roles) {
 ggchord_resolve_layer_input <- function(lyr, fallback = NULL) {
   data <- lyr$ggchord_input_data %||% fallback
   if (is.null(data)) return(NULL)
+  if (is.function(data)) {
+    data_function <- data
+    data <- tryCatch(
+      data_function(fallback),
+      error = function(e) ggchord_stop(
+        "ggchord layer data function failed: ", conditionMessage(e)
+      )
+    )
+  }
   if (!is.data.frame(data)) {
-    ggchord_stop("ggchord layer data must be a data.frame")
+    ggchord_stop("ggchord layer data must be a data.frame or a function returning one")
   }
   data <- as.data.frame(data, stringsAsFactors = FALSE)
   mapping <- lyr$ggchord_input_mapping
   roles <- intersect(lyr$ggchord_role_aes %||% character(0), names(mapping))
   for (role in roles) {
+    expr <- rlang::quo_get_expr(mapping[[role]])
+    contains_stage <- function(x) {
+      if (!is.call(x)) return(FALSE)
+      if (identical(as.character(x[[1L]]), "after_stat") ||
+          identical(as.character(x[[1L]]), "after_scale")) return(TRUE)
+      any(vapply(as.list(x)[-1L], contains_stage, logical(1)))
+    }
+    if (contains_stage(expr)) {
+      ggchord_stop(
+        "Role aesthetic `", role,
+        "` controls geometry and cannot use after_stat() or after_scale()"
+      )
+    }
     value <- tryCatch(
       rlang::eval_tidy(mapping[[role]], data = data),
       error = function(e) ggchord_stop(
@@ -220,6 +170,8 @@ ggchord_resolve_layer_input <- function(lyr, fallback = NULL) {
     }
     data[[role]] <- value
   }
+  transform <- lyr$ggchord_input_transform
+  if (!is.null(transform)) data <- transform(data)
   data
 }
 
@@ -291,6 +243,8 @@ extract_ggchord_layer_data <- function(lyr, layout) {
       d <- layout$axis_ticks
       if (nrow(d) > 0) d[!is.na(d$label), , drop = FALSE] else fallback
     },
+    axis = ggchord_axis_geometry(layout),
+    gene_label_repel = ggchord_repel_geometry(layout),
     fallback)
   }
   input <- layout$layer_inputs[[lyr$ggchord_layer_id %||% ""]][[
@@ -298,6 +252,79 @@ extract_ggchord_layer_data <- function(lyr, layout) {
   ]]
   input <- input %||% ggchord_resolve_layer_input(lyr)
   ggchord_attach_input_columns(geometry, input)
+}
+
+#' Combine axis components for GeomChordAxis
+#' @noRd
+ggchord_axis_geometry <- function(layout) {
+  line <- layout$axis_lines %||% data.frame()
+  tick <- layout$axis_ticks %||% data.frame()
+  label <- if (nrow(tick) && "label" %in% names(tick)) {
+    tick[!is.na(tick$label), , drop = FALSE]
+  } else {
+    tick[integer(0), , drop = FALSE]
+  }
+  if (nrow(line)) {
+    line$.component <- "line"
+    line$group <- line$seq_id
+  }
+  if (nrow(tick)) {
+    tick$.component <- "tick"
+    tick$x <- tick$x0
+    tick$y <- tick$y0
+    tick$xend <- tick$x1
+    tick$yend <- tick$y1
+  }
+  if (nrow(label)) {
+    label$.component <- "text"
+    label$x <- label$label_x
+    label$y <- label$label_y
+    label$angle <- label$label_angle
+    label$hjust <- label$label_hjust
+    label$vjust <- label$label_vjust
+  }
+  values <- Filter(nrow, list(line, tick, label))
+  if (!length(values)) {
+    return(data.frame(x = numeric(), y = numeric(), .component = character()))
+  }
+  ggchord_rbind_fill(values)
+}
+
+#' Combine automatic label components for GeomChordGeneLabelRepel
+#' @noRd
+ggchord_repel_geometry <- function(layout) {
+  segment <- layout$gene_label_segments %||% data.frame()
+  text <- layout$gene_labels %||% data.frame()
+  if (nrow(segment)) {
+    # Leader paths are stored as one or more segments per label and therefore
+    # only carry the label group.  Restore the source-row identity before the
+    # geometry is joined to user columns; otherwise the generic join drops all
+    # segment rows while retaining the text rows.
+    if (nrow(text) && "group" %in% names(segment) &&
+        "group" %in% names(text)) {
+      label_index <- match(segment$group, text$group)
+      for (nm in intersect(c("source_row", "seq_id"), names(text))) {
+        segment[[nm]] <- text[[nm]][label_index]
+      }
+    }
+    segment$.component <- "segment"
+    segment$x <- segment$x0
+    segment$y <- segment$y0
+    segment$xend <- segment$x1
+    segment$yend <- segment$y1
+  }
+  if (nrow(text)) {
+    text$.component <- "text"
+    text$x <- text$text_x
+    text$y <- text$text_y
+    text$label <- text$text
+    text$angle <- text$text_angle
+  }
+  values <- Filter(nrow, list(segment, text))
+  if (!length(values)) {
+    return(data.frame(x = numeric(), y = numeric(), .component = character()))
+  }
+  ggchord_rbind_fill(values)
 }
 
 # ====================================================================

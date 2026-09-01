@@ -8,7 +8,8 @@
 globalVariables(c(
   "x", "y", "group", "pident", "fill", "colour", "strand", "anno", "seq_id",
   "text_x", "text_y", "text", "text_angle", "hjust", "vjust",
-  "x0", "y0", "x1", "y1", "label", "label_x", "label_y", "size",
+  "x0", "y0", "x1", "y1", "xend", "yend", ".component",
+  "label", "label_x", "label_y", "size", "angle",
   "fill_col", "alpha", "label_hjust", "label_vjust", "label_angle",
   "linetype", "zcolour", "zregionfill", "zoutline", "zlinetype",
   "outline_col", "linetype_val", "value", "source_row", "direction",
@@ -29,10 +30,6 @@ globalVariables(c(
 #' @param seq_data data.frame/tibble, required. Basic sequence information
 #' @param ribbon_data data.frame/tibble, optional. Alignment results
 #' @param gene_data data.frame/tibble, optional. Gene annotation data
-#' @param title Character. Main title of the plot, default NULL
-#' @param rotation Numeric. Global rotation angle (degrees), default 45
-#' @param panel_margin Optional numeric/list. Panel margin, default 0
-#' @param show_legend Logical. Whether to show legends, default TRUE
 #' @param debug Logical. Whether to output debug information, default FALSE
 #' @param validate Character, default \code{"warn"}. How to run the structured
 #'   input-data validation (see \code{\link{validate_ggchord_data}}):
@@ -41,6 +38,8 @@ globalVariables(c(
 #'   (\code{p$ggchord$validation}); \code{"error"} stops on severe problems;
 #'   \code{"none"} skips the diagnostic validation (the cheap structural
 #'   checks that prevent crashes are still performed).
+#' @param ... Reserved for clear migration errors from removed constructor
+#'   arguments. Use [labs()], [coord_chord()] and [theme()] for presentation.
 #'
 #' @return A ggchord object (inherits from ggplot) to which geom_* layers can be added with +
 #' @export
@@ -67,44 +66,28 @@ ggchord <- function(
     seq_data,
     ribbon_data = NULL,
     gene_data = NULL,
-    title = NULL,
-    rotation = 45,
-    panel_margin = 0,
-    show_legend = TRUE,
     debug = FALSE,
-    validate = c("warn", "error", "none")
+    validate = c("warn", "error", "none"),
+    ...
 ) {
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
-  panel_margin_supplied <- !missing(panel_margin)
-
-  if (!missing(title) && !is.null(title)) {
-    ggchord_deprecate_once("ggchord(title)", "ggplot2::labs(title = ...)")
-  }
-  if (!missing(rotation)) {
-    ggchord_deprecate_once("ggchord(rotation)", "coord_chord(rotation = ...)")
-  }
-  if (!missing(panel_margin)) {
-    ggchord_deprecate_once(
-      "ggchord(panel_margin)", "ggplot2::theme(plot.margin = ggplot2::margin(...))"
-    )
-  }
-  if (!missing(show_legend)) {
-    ggchord_deprecate_once(
-      "ggchord(show_legend)", "ggplot2::theme(legend.position = 'none')"
-    )
+  dots <- list(...)
+  ggchord_reject_retired(dots, "ggchord()", c(
+    title = "labs(title = ...)",
+    rotation = "coord_chord(rotation = ...)",
+    panel_margin = "theme(plot.margin = margin(...))",
+    show_legend = "theme(legend.position = 'none')"
+  ))
+  if (length(dots)) {
+    ggchord_stop("ggchord(): unused argument(s): ",
+                 paste(names(dots), collapse = ", "))
   }
 
   validate <- match.arg(validate)
   # ====================================================================
   # 1. Validate data
   # ====================================================================
-  if (!is.numeric(rotation) || length(rotation) != 1 || !is.finite(rotation)) {
-    ggchord_stop("rotation must be a finite numeric value")
-  }
-  if (!is.logical(show_legend) || length(show_legend) != 1 || is.na(show_legend)) {
-    ggchord_stop("show_legend must be TRUE or FALSE")
-  }
   if (!is.logical(debug) || length(debug) != 1 || is.na(debug)) {
     ggchord_stop("debug must be TRUE or FALSE")
   }
@@ -158,31 +141,14 @@ ggchord <- function(
   # 2. Build the base ggplot object and store data + global parameters
   #    on the plot itself so the object is fully self-contained.
   # ====================================================================
-  margin_vals <- process_panel_margin(panel_margin)
-
   p <- ggplot2::ggplot() +
-    coord_chord(rotation = rotation) +
-    ggplot2::labs(title = title) +
-    theme_ggchord() +
-    ggplot2::theme(
-      legend.position     = if (isTRUE(show_legend)) "right" else "none"
-    )
-  # Preserve theme_ggchord()'s small export-safe outer margin by default.
-  # The deprecated panel_margin compatibility argument only overrides it when
-  # users still supply that argument explicitly.
-  if (panel_margin_supplied) {
-    p <- p + ggplot2::theme(
-      plot.margin = ggplot2::margin(t = margin_vals$t, r = margin_vals$r,
-                           b = margin_vals$b, l = margin_vals$l)
-    )
-  }
+    coord_chord(rotation = 45) +
+    theme_ggchord()
 
   p$ggchord <- list(
     data   = list(seq_data = seq_data, ribbon_data = ribbon_data,
                   gene_data = gene_data),
-    global = list(rotation = rotation, panel_margin = panel_margin,
-                  show_legend = show_legend, debug = debug,
-                  validate = validate),
+    global = list(rotation = 45, debug = debug, validate = validate),
     validation = validation,
     # Shared reference environment for plot-owned layout caching.
     ref    = new.env(),
@@ -198,40 +164,18 @@ ggchord <- function(
 
 #' Combine a ggchord plot with ggplot2 objects
 #'
-#' Supports stacking ggplot2 layers, lists of layers, scales, and themes
-#' onto a ggchord plot using the \code{+} operator.
+#' Uses ggplot2's standard composition semantics for layers, scales, themes,
+#' coordinates and annotations.
 #'
 #' @param e1 A ggchord object
-#' @param e2 A ggplot2 layer, a list of layers, a scale, or a theme
+#' @param e2 A ggplot2 component.
 #' @return A ggchord object
 #' @export
 `+.ggchord` <- function(e1, e2) {
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
 
-  # Our geom_* functions return plain lists of layers; flatten them.  Other
-  # list-like objects (e.g. themes) must be handled by the standard ggplot2
-  # `+` method instead.
-  is_layer_list <- is.list(e2) && !inherits(e2, "theme") &&
-    length(e2) > 0 && all(vapply(e2, function(el) inherits(el, "LayerInstance"), logical(1)))
-  if (is_layer_list) {
-    p <- e1
-    existing <- vapply(
-      p$layers,
-      function(x) suppressWarnings(as.integer(sub("^layer-", "", x$ggchord_layer_id %||% "0"))),
-      integer(1)
-    )
-    layer_id <- sprintf("layer-%04d", max(c(0L, existing), na.rm = TRUE) + 1L)
-    for (elem in e2) {
-      elem$ggchord_layer_id <- layer_id
-      elem$ggchord_placeholder <- elem$data
-      p <- p + elem
-    }
-    # Layout/scales/coordinates are computed lazily on the first build.
-    # Eagerly preparing here would
-    # recompute the full chord geometry after every added layer, which is very
-    # expensive for large alignment tables.
-  } else if (inherits(e2, "Scale")) {
+  if (inherits(e2, "Scale")) {
     # A user-supplied scale intentionally replaces the ggchord-managed default
     # scale of the same aesthetic; muffle ggplot2's "already present" message.
     p <- withCallingHandlers(
@@ -1127,6 +1071,7 @@ ggchord_layout_component <- function(layout, type, fallback = data.frame()) {
     gene_text = layout$gene_labels %||% fallback,
     gene_text_repel = layout$gene_labels %||% fallback,
     gene_label_segment = layout$gene_label_segments %||% fallback,
+    gene_label_repel = ggchord_repel_geometry(layout),
     seq_label = layout$seq_labels_df %||% fallback,
     seq_region = layout$region_polys %||% fallback,
     ribbon_highlight = layout$ribbon_highlight_polys %||% fallback,
@@ -1136,6 +1081,7 @@ ggchord_layout_component <- function(layout, type, fallback = data.frame()) {
       d <- layout$axis_ticks %||% fallback
       if (nrow(d) > 0 && "label" %in% names(d)) d[!is.na(d$label), , drop = FALSE] else d
     },
+    axis = ggchord_axis_geometry(layout),
     fallback
   )
 }
@@ -1147,8 +1093,6 @@ compute_chord_geometry <- function(plot) {
   if (is.null(chord)) {
     ggchord_stop("Not a valid ggchord object: no data stored on the plot")
   }
-  ggchord_check_legacy_scales(plot)
-
   # Layers added through ordinary ggplot2 mechanisms may not have passed the
   # list branch of +.ggchord. Assign deterministic IDs before grouping.
   next_id <- 1L
@@ -1222,6 +1166,7 @@ compute_chord_geometry <- function(plot) {
         axis_line = chord$data$seq_data,
         axis_seg = chord$data$seq_data,
         axis_text = chord$data$seq_data,
+        axis = chord$data$seq_data,
         seq_label = chord$data$seq_data,
         ribbon = chord$data$ribbon_data,
         ribbon_highlight = chord$data$ribbon_data,
@@ -1229,6 +1174,7 @@ compute_chord_geometry <- function(plot) {
         gene_text = chord$data$gene_data,
         gene_text_repel = chord$data$gene_data,
         gene_label_segment = chord$data$gene_data,
+        gene_label_repel = chord$data$gene_data,
         seq_region = lyr$ggchord_params$regions,
         NULL
       )
@@ -1305,7 +1251,6 @@ compute_chord_geometry <- function(plot) {
     show_axis = primary$show_axis
   )
 
-  set_chord_layout(primary)
   if (!is.null(plot$ggchord$ref)) plot$ggchord$ref$layout <- primary
   plot$ggchord$layout <- primary
   primary
@@ -1336,7 +1281,8 @@ reconstruct_layer <- function(lyr, data, mapping = NULL) {
   for (fld in c(
     "ggchord_type", "ggchord_params", "ggchord_placeholder",
     "ggchord_layer_id", "ggchord_input_data", "ggchord_input_mapping",
-    "ggchord_role_aes", "ggchord_legacy_scales", "ggchord_theme_element"
+    "ggchord_role_aes", "ggchord_theme_element",
+    "ggchord_theme_components", "ggchord_input_transform"
   )) {
     if (!is.null(lyr[[fld]])) new[[fld]] <- lyr[[fld]]
   }
@@ -1350,7 +1296,8 @@ classify_ggchord_layers <- function(plot) {
               gene_text = integer(0), gene_text_repel = integer(0),
               gene_label_segment = integer(0),
               axis_line = integer(0), axis_seg = integer(0),
-              axis_text = integer(0), seq_label = integer(0),
+              axis_text = integer(0), axis = integer(0),
+              gene_label_repel = integer(0), seq_label = integer(0),
               seq_region = integer(0), ribbon_highlight = integer(0))
   for (i in seq_along(plot$layers)) {
     lyr <- plot$layers[[i]]
@@ -1358,39 +1305,6 @@ classify_ggchord_layers <- function(plot) {
     if (type %in% names(idx)) idx[[type]] <- c(idx[[type]], i)
   }
   idx
-}
-
-#' Resolve the per-legend position overrides for a plot
-#'
-#' Each legend can be moved independently with the `legend_position` argument
-#' of `geom_seq()`, `geom_ribbon()` and `geom_gene()`. A NULL entry means that
-#' legend follows the theme's `legend.position` together with the others.
-#' @keywords internal
-ggchord_legend_positions <- function(plot) {
-  pos <- list(seq = NULL, ribbon = NULL, gene = NULL)
-  for (lyr in plot$layers) {
-    pp <- lyr$ggchord_params
-    if (is.null(pp)) next
-    lp <- pp$legend_position
-    if (is.null(lp)) next
-    if (!lp %in% c("left", "right", "top", "bottom", "inside")) {
-      ggchord_stop("legend_position must be one of 'left', 'right', 'top', 'bottom' or 'inside'")
-    }
-    if (!is.null(pp$type) && pp$type %in% names(pos)) pos[[pp$type]] <- lp
-  }
-  pos
-}
-
-#' Read the ribbon layer's legend key width/height overrides if set
-#' @keywords internal
-ggchord_ribbon_key_dims <- function(plot) {
-  for (lyr in plot$layers) {
-    pp <- lyr$ggchord_params
-    if (!is.null(pp) && identical(pp$type, "ribbon")) {
-      return(list(width = pp$legend_key_width, height = pp$legend_key_height))
-    }
-  }
-  list(width = NULL, height = NULL)
 }
 
 #' Build the list of scales for a computed layout
@@ -1639,6 +1553,123 @@ attach_ggchord_scales <- function(plot, scales) {
   plot
 }
 
+#' Inspect explicit user mappings for default-scale inference
+#' @noRd
+ggchord_mapping_info <- function(plot, aesthetic) {
+  infos <- list()
+  for (lyr in plot$layers) {
+    mapping <- lyr$ggchord_input_mapping
+    if (is.null(mapping) || !aesthetic %in% names(mapping)) next
+    expr <- rlang::quo_get_expr(mapping[[aesthetic]])
+    label <- rlang::as_label(expr)
+    staged <- grepl("after_stat\\s*\\(", label)
+    value <- if (staged) NULL else tryCatch(
+      rlang::eval_tidy(mapping[[aesthetic]], data = lyr$data),
+      error = function(e) NULL
+    )
+    kind <- if (staged) {
+      if (aesthetic %in% c("ribbon_linetype", "feature_shape")) {
+        "discrete"
+      } else {
+        "continuous"
+      }
+    } else if (is.numeric(value) && !is.factor(value)) {
+      "continuous"
+    } else {
+      "discrete"
+    }
+    infos[[length(infos) + 1L]] <- list(
+      kind = kind, value = value, label = label
+    )
+  }
+  if (!length(infos)) return(NULL)
+  kinds <- unique(vapply(infos, `[[`, character(1), "kind"))
+  if (length(kinds) > 1L) {
+    ggchord_stop(
+      "Incompatible continuous and discrete mappings were supplied for `",
+      aesthetic, "`"
+    )
+  }
+  values <- unlist(lapply(infos, `[[`, "value"), use.names = FALSE)
+  list(kind = kinds, values = values, label = infos[[1L]]$label)
+}
+
+#' Replace managed defaults when an explicit mapping needs another scale type
+#' @noRd
+ggchord_infer_visual_scales <- function(plot, layout, scales) {
+  aesthetics <- c(
+    "seq_colour", "ribbon_fill", "ribbon_alpha", "ribbon_colour",
+    "ribbon_linetype", "gene_fill", "feature_fill", "region_fill"
+  )
+  for (aesthetic in aesthetics) {
+    if (plot$scales$has_scale(aesthetic)) next
+    info <- ggchord_mapping_info(plot, aesthetic)
+    if (is.null(info)) next
+    scales <- Filter(function(s) !aesthetic %in% s$aesthetics, scales)
+    if (info$kind == "discrete") {
+      levels <- unique(as.character(info$values))
+      levels <- levels[!is.na(levels)]
+      values <- chord_default_palette(max(length(levels), 1L))
+      names(values) <- levels
+      scale <- switch(aesthetic,
+        seq_colour = scale_seq_colour_manual(
+          name = info$label, values = values
+        ),
+        ribbon_fill = scale_ribbon_fill_manual(
+          name = info$label, values = values
+        ),
+        ribbon_alpha = scale_ribbon_alpha_manual(
+          name = info$label,
+          values = stats::setNames(seq(0.35, 0.9, length.out = max(length(levels), 1L)), levels)
+        ),
+        ribbon_colour = scale_ribbon_colour_manual(
+          name = info$label, values = values
+        ),
+        ribbon_linetype = scale_ribbon_linetype_manual(
+          name = info$label,
+          values = stats::setNames(rep(c(1, 2, 3, 4, 5, 6), length.out = max(length(levels), 1L)), levels)
+        ),
+        gene_fill = scale_gene_fill_manual(
+          name = info$label, values = values
+        ),
+        feature_fill = scale_feature_fill_manual(
+          name = info$label, values = values
+        ),
+        region_fill = scale_region_fill_manual(
+          name = info$label, values = values
+        )
+      )
+    } else {
+      colours <- layout$ribbon_colors %||%
+        c("#34457E", "#2FA96B", "#8BD925", "#F0E51B")
+      scale <- switch(aesthetic,
+        ribbon_fill = scale_ribbon_fill_gradientn(
+          name = info$label, colours = colours
+        ),
+        ribbon_alpha = scale_ribbon_alpha_continuous(name = info$label),
+        ribbon_colour = ggplot2::scale_colour_gradientn(
+          name = info$label, colours = colours, aesthetics = aesthetic
+        ),
+        seq_colour = ggplot2::scale_colour_gradientn(
+          name = info$label, colours = colours, aesthetics = aesthetic
+        ),
+        gene_fill = ggplot2::scale_fill_gradientn(
+          name = info$label, colours = colours, aesthetics = aesthetic
+        ),
+        feature_fill = ggplot2::scale_fill_gradientn(
+          name = info$label, colours = colours, aesthetics = aesthetic
+        ),
+        region_fill = ggplot2::scale_fill_gradientn(
+          name = info$label, colours = colours, aesthetics = aesthetic
+        ),
+        ggchord_stop("A continuous mapping is not supported for `", aesthetic, "`")
+      )
+    }
+    scales[[length(scales) + 1L]] <- scale
+  }
+  scales
+}
+
 #' Rename the ribbon layers' fill mapping to the internal ribbon aesthetic
 #' @keywords internal
 rename_ribbon_layers <- function(plot, ribbon_indices, ribbon_aes, layout) {
@@ -1671,18 +1702,17 @@ set_ggchord_coord <- function(plot, layout) {
   xlim <- coord$user_xlim %||% lim$xlim
   ylim <- coord$user_ylim %||% lim$ylim
 
-  resolved <- ggplot2::coord_fixed(
+  resolved <- new_coord_chord(
+    rotation = coord$rotation %||% 45,
     ratio = coord$ratio %||% 1,
     xlim = xlim,
     ylim = ylim,
     expand = coord$expand %||% TRUE,
-    clip = coord$clip %||% "off"
+    clip = coord$clip %||% "off",
+    fit = coord$fit %||% "labels",
+    user_xlim = coord$user_xlim,
+    user_ylim = coord$user_ylim
   )
-  resolved$ggchord_coord <- TRUE
-  resolved$rotation <- coord$rotation
-  resolved$fit <- coord$fit
-  resolved$user_xlim <- coord$user_xlim
-  resolved$user_ylim <- coord$user_ylim
   plot$coordinates <- resolved
   plot
 }
@@ -1787,6 +1817,15 @@ prepare_ggchord_plot <- function(plot) {
                                plot$scales$scales)
   layout <- compute_chord_geometry(plot)
   cls <- classify_ggchord_layers(plot)
+  new_layers <- plot$layers
+  for (i in seq_along(plot$layers)) {
+    lyr <- plot$layers[[i]]
+    if (is.null(lyr$ggchord_type)) next
+    new_layers[[i]] <- reconstruct_layer(
+      lyr, extract_ggchord_layer_data(lyr, layout)
+    )
+  }
+  plot$layers <- new_layers
   has_feature <- any(vapply(plot$layers, function(x) {
     "feature_fill" %in% names(x$mapping)
   }, logical(1)))
@@ -1803,15 +1842,16 @@ prepare_ggchord_plot <- function(plot) {
                             has_feature_shape = has_feature_shape,
                             legend_position = plot$theme$legend.position,
                             legend_box = plot$theme$legend.box,
-                            positions = ggchord_legend_positions(plot),
-                            legend_key_width = ggchord_ribbon_key_dims(plot)$width,
-                            legend_key_height = ggchord_ribbon_key_dims(plot)$height,
+                            positions = list(),
+                            legend_key_width = NULL,
+                            legend_key_height = NULL,
                             legend_text_size = ggchord_theme_point_size(
                               plot, "legend.text", 8
                             ),
                             legend_title_size = ggchord_theme_point_size(
                               plot, "legend.title", 9
                             ))
+  sc$scales <- ggchord_infer_visual_scales(plot, layout, sc$scales)
   plot <- rename_ribbon_layers(plot, cls$ribbon, sc$ribbon_aes, layout)
   plot <- attach_ggchord_scales(plot, sc$scales)
   plot <- set_ggchord_coord(plot, layout)
@@ -1824,105 +1864,11 @@ ggplot_build.ggchord <- function(plot, ...) {
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
 
-  chord <- plot$ggchord
-  if (is.null(chord)) {
+  if (is.null(plot$ggchord)) {
     ggchord_stop("Not a valid ggchord object: no data stored on the plot. ",
          "Please build the plot with ggchord().")
   }
-  # The plot object is self-contained: it carries its own scales (tagged with
-  # ggchord_managed). ggchord-managed scales are
-  # refreshed on every build (user-supplied scales are kept).
-  plot$scales$scales <- Filter(function(s) is.null(s$ggchord_managed),
-                               plot$scales$scales)
-
-  layout <- compute_chord_geometry(plot)
-
-  # ====================================================================
-  # Step 3: classify layers and inject data into CLONED layers
-  # (cloning keeps the user's plot object untouched)
-  # ====================================================================
-  seq_indices    <- integer(0)
-  ribbon_indices <- integer(0)
-  gene_poly_indices <- integer(0)
-  gene_text_indices <- integer(0)
-  gene_text_repel_indices <- integer(0)
-  gene_label_segment_indices <- integer(0)
-  axis_line_indices <- integer(0)
-  axis_seg_indices  <- integer(0)
-  axis_text_indices <- integer(0)
-  seq_label_indices <- integer(0)
-
-  # Layers are tagged with a ggchord_type marker at creation, so they can be
-  # classified even before their (lazily computed) data exists.
-  for (i in seq_along(plot$layers)) {
-    lyr <- plot$layers[[i]]
-    switch(lyr$ggchord_type %||% "",
-      seq       = seq_indices <- c(seq_indices, i),
-      ribbon    = ribbon_indices <- c(ribbon_indices, i),
-      gene_poly = gene_poly_indices <- c(gene_poly_indices, i),
-      gene_text = gene_text_indices <- c(gene_text_indices, i),
-      gene_text_repel = gene_text_repel_indices <- c(gene_text_repel_indices, i),
-      gene_label_segment = gene_label_segment_indices <- c(gene_label_segment_indices, i),
-      axis_line = axis_line_indices <- c(axis_line_indices, i),
-      axis_seg  = axis_seg_indices <- c(axis_seg_indices, i),
-      axis_text = axis_text_indices <- c(axis_text_indices, i),
-      seq_label = seq_label_indices <- c(seq_label_indices, i)
-    )
-  }
-
-  # Reconstruct every ggchord layer with its computed geometry (or its
-  # placeholder data when the geometry is empty).  This replaces the lazy data
-  # functions so that a normal build leaves the plot fully concrete.
-  new_layers <- plot$layers
-  for (i in seq_along(plot$layers)) {
-    lyr <- plot$layers[[i]]
-    if (is.null(lyr$ggchord_type)) next
-    new_layers[[i]] <- reconstruct_layer(lyr, extract_ggchord_layer_data(lyr, layout))
-  }
-  plot$layers <- new_layers
-
-  # ====================================================================
-  # Step 4: build and attach scales
-  # ====================================================================
-  sc <- make_ggchord_scales(layout,
-                            has_seq = length(seq_indices) > 0,
-                            has_gene = any(vapply(plot$layers, function(x) {
-                              "gene_fill" %in% names(x$mapping)
-                            }, logical(1))),
-                            has_feature = any(vapply(plot$layers, function(x) {
-                              "feature_fill" %in% names(x$mapping)
-                            }, logical(1))),
-                            has_feature_shape = any(vapply(
-                              plot$layers,
-                              function(x) {
-                                "feature_shape" %in%
-                                  names(ggchord_effective_mapping(x))
-                              },
-                              logical(1)
-                            )),
-                            legend_position = plot$theme$legend.position,
-                            legend_box = plot$theme$legend.box,
-                            positions = ggchord_legend_positions(plot),
-                            legend_key_width = ggchord_ribbon_key_dims(plot)$width,
-                            legend_key_height = ggchord_ribbon_key_dims(plot)$height,
-                            legend_text_size = ggchord_theme_point_size(
-                              plot, "legend.text", 8
-                            ),
-                            legend_title_size = ggchord_theme_point_size(
-                              plot, "legend.title", 9
-                            ))
-  plot <- rename_ribbon_layers(plot, ribbon_indices, sc$ribbon_aes, layout)
-  plot <- attach_ggchord_scales(plot, sc$scales)
-
-  # ====================================================================
-  # Step 5: update the coord range
-  # ====================================================================
-  plot <- set_ggchord_coord(plot, layout)
-  plot <- ggchord_apply_theme_styles(plot)
-
-  # Run the standard ggplot2 build on the prepared plot.  The ggchord class is
-  # removed first so that dispatch proceeds to the base ggplot2 method instead
-  # of recursing into this method.
+  plot <- prepare_ggchord_plot(plot)
   class(plot) <- setdiff(class(plot), "ggchord")
   ggplot2::ggplot_build(plot)
 }

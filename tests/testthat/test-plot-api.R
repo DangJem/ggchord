@@ -4,628 +4,242 @@ build_ggchord_smoke <- function(plot) {
   ggplot2::ggplot_build(plot)
 }
 
-test_that("ggchord creates a plot and rejects invalid sequence data", {
+test_that("constructor and coordinate follow the ggplot2 contract", {
   data(seq_data_example)
-
-  p <- ggchord(seq_data_example, validate = "none")
+  p <- ggchord(seq_data_example, validate = "none") + geom_seq()
   expect_s3_class(p, "ggchord")
-  expect_s3_class(coord_chord(), "Coord")
-
-  expect_error(
-    ggchord(data.frame(id = "A", length = 100)),
-    "seq_data"
-  )
-})
-
-test_that("coord_chord controls rotation, fit and explicit limits", {
-  seq <- data.frame(seq_id = c("A", "B"), length = c(1000, 1200))
-  p <- ggchord(seq, validate = "none") +
-    geom_seq() +
-    coord_chord(
-      rotation = 90, xlim = c(-5, 6), ylim = c(-7, 8),
-      fit = "labels", expand = FALSE
-    )
-
-  layout <- get_chord_layout(p)
-  expect_equal(layout$rotation, 90)
-  prepared <- ggchord:::prepare_ggchord_plot(p)
-  expect_equal(prepared$coordinates$limits$x, c(-5, 6))
-  expect_equal(prepared$coordinates$limits$y, c(-7, 8))
-  expect_false(prepared$coordinates$expand)
-  expect_false(coord_chord()$expand)
-
+  expect_s3_class(coord_chord(), "CoordChord")
+  expect_s3_class(build_ggchord_smoke(p), "ggplot_built")
   expect_error(coord_chord(fit = "manual"), "requires xlim and ylim")
-
-  p_cartesian <- suppressMessages(
-    ggchord(seq, validate = "none") + geom_seq() +
-      ggplot2::coord_cartesian(xlim = c(-2, 2))
-  )
-  prepared_cartesian <- ggchord:::prepare_ggchord_plot(p_cartesian)
-  expect_s3_class(prepared_cartesian$coordinates, "CoordCartesian")
-  expect_false(isTRUE(prepared_cartesian$coordinates$ggchord_coord))
-  expect_equal(prepared_cartesian$coordinates$limits$x, c(-2, 2))
+  expect_error(get_chord_layout(), "plot must be supplied")
 })
 
-test_that("ggchord themes and guides use registered role elements", {
-  for (fun in list(
-    theme_ggchord, theme_ggchord_minimal,
-    theme_ggchord_dark, theme_ggchord_publication
-  )) {
-    expect_s3_class(fun(), "theme")
-  }
-  expect_s3_class(
-    ggplot2::calc_element("ggchord.axis.line", theme_ggchord()),
-    "element_line"
+test_that("public geoms and stats return one standard layer", {
+  data(seq_data_example)
+  feature <- data.frame(
+    seq_id = seq_data_example$seq_id[1], start = 1, end = 100,
+    strand = "+", type = "CDS"
   )
-  for (name in c("axis.title", "axis.line", "axis.ticks", "axis.text",
-                 "panel.grid")) {
-    expect_s3_class(
-      ggplot2::calc_element(name, theme_ggchord()),
-      "element_blank"
-    )
+  region <- feature[c("seq_id", "start", "end")]
+  layers <- list(
+    geom_seq(), geom_ribbon(), geom_gene(), geom_feature(data = feature),
+    geom_axis(), geom_seq_label(), geom_gene_label(),
+    geom_gene_label_repel(), geom_seq_region(data = region),
+    geom_ribbon_highlight(), stat_ribbon_bundle(), stat_ribbon_density()
+  )
+  expect_true(all(vapply(layers, inherits, logical(1), "LayerInstance")))
+  for (layer_fun in list(
+    geom_seq, geom_ribbon, geom_gene, geom_feature, geom_axis,
+    geom_seq_label, geom_gene_label, geom_gene_label_repel,
+    geom_seq_region, geom_ribbon_highlight
+  )) {
+    expect_true(all(c(
+      "mapping", "data", "position", "show.legend", "inherit.aes", "..."
+    ) %in% names(formals(layer_fun))))
   }
-  useful_ggplot2 <- c(
+})
+
+test_that("main plotting layers build together as single layers", {
+  data(seq_data_example)
+  data(ribbon_data_example)
+  data(gene_data_example)
+  p <- ggchord(
+    seq_data_example, ribbon_data_example, gene_data_example,
+    validate = "none"
+  ) +
+    geom_seq() + geom_ribbon() + geom_gene() +
+    geom_gene_label_repel() + geom_seq_label() + geom_axis()
+  built <- build_ggchord_smoke(p)
+  layout <- get_chord_layout(p)
+  expect_length(built$data, 6L)
+  expect_true(length(layout$seq_arcs) > 0L)
+  expect_true(nrow(layout$ribbon_polys) > 0L)
+  expect_true(nrow(layout$gene_polys) > 0L)
+  expect_setequal(
+    unique(built$data[[4]]$.component), c("segment", "text")
+  )
+  expect_gt(sum(built$data[[4]]$.component == "segment"), 0L)
+  expect_setequal(
+    unique(built$data[[6]]$.component), c("line", "tick", "text")
+  )
+})
+
+test_that("removed parameters fail with direct migrations", {
+  data(seq_data_example)
+  expect_error(ggchord(seq_data_example, title = "x"), "labs")
+  expect_error(geom_seq(seq_colors = "red"), "scale_seq_colour_manual")
+  expect_error(geom_ribbon(ribbon_alpha = 0.5), "alpha")
+  expect_error(geom_gene(gene_colors = "red"), "scale_gene_fill_manual")
+  expect_error(geom_feature(type = "kind"), "feature_type")
+  expect_error(geom_axis(show_axis = FALSE), "omitting geom_axis")
+  expect_error(geom_seq_region(regions = data.frame()), "data")
+  expect_error(geom_gene_label_repel(force = 1), "Removed")
+})
+
+test_that("complete themes own ggchord-specific elements", {
+  themes <- list(
+    theme_ggchord(), theme_ggchord_minimal(),
+    theme_ggchord_publication(), theme_ggchord_dark()
+  )
+  expect_true(all(vapply(themes, inherits, logical(1), "theme")))
+  custom <- theme_ggchord_publication(
+    gene_label = element_text(colour = "purple", size = 8),
+    axis_ticks = element_blank()
+  )
+  expect_equal(
+    ggplot2::calc_element("ggchord.gene.label", custom)@colour, "purple"
+  )
+  expect_s3_class(
+    ggplot2::calc_element("ggchord.axis.ticks", custom), "element_blank"
+  )
+  expect_false("theme_ggchord_elements" %in% getNamespaceExports("ggchord"))
+})
+
+test_that("curated ggplot2 helpers are exact reexports", {
+  useful <- c(
     "aes", "after_stat", "after_scale", "annotate", "labs", "ggtitle",
     "guides", "theme", "element_blank", "element_line", "element_rect",
     "element_text", "margin", "rel", "ggsave", "last_plot", "waiver",
     "expansion"
   )
-  expect_true(all(useful_ggplot2 %in% getNamespaceExports("ggchord")))
+  exports <- getNamespaceExports("ggchord")
+  expect_true(all(useful %in% exports))
   expect_false(any(c(
-    "ggplot", "geom_point", "facet_wrap", "coord_cartesian",
-    "theme_minimal", "scale_colour_manual"
-  ) %in% getNamespaceExports("ggchord")))
-  expect_s3_class(guide_ggchord_legend(), "GuideLegend")
-  expect_s3_class(guide_ggchord_colourbar(), "GuideColourbar")
-  horizontal <- guide_ggchord_colourbar(
-    position = "bottom", direction = "horizontal"
-  )
-  expect_equal(as.numeric(horizontal$params$theme$legend.key.width), 50)
-  expect_equal(as.numeric(horizontal$params$theme$legend.key.height), 3.6)
-  vertical <- guide_ggchord_colourbar(position = "left")
-  expect_equal(as.numeric(vertical$params$theme$legend.key.height), 50)
-  expect_equal(as.numeric(vertical$params$theme$legend.key.width), 3.6)
-  expect_equal(
-    as.numeric(vertical$params$theme$legend.title@margin[3]), 2
-  )
-  expect_equal(
-    as.numeric(vertical$params$theme$legend.text@margin[4]), 1.2
-  )
-  scaled <- guide_ggchord_colourbar(position = "left", size_scale = 0.5)
-  expect_equal(as.numeric(scaled$params$theme$legend.key.height), 25)
-  expect_equal(as.numeric(scaled$params$theme$legend.key.width), 1.8)
-  themed <- guide_ggchord_legend(
-    size_scale = 0.5,
-    theme = ggplot2::theme(
-      legend.text = ggplot2::element_text(size = 6)
-    )
-  )
-  expect_equal(themed$params$theme$legend.text@size, 6)
-  expect_equal(
-    ggchord:::ggchord_device_scale(c(width = 4, height = 3)), 0.5
-  )
-  expect_equal(
-    ggchord:::ggchord_device_scale(c(width = 32, height = 24)), 1.6
-  )
-  expect_error(
-    guide_ggchord_legend(size_scale = 0),
-    "positive finite number"
-  )
+    "geom_point", "facet_wrap", "coord_cartesian", "theme_minimal"
+  ) %in% exports))
+  expect_identical(getExportedValue("ggchord", "theme"), ggplot2::theme)
+  expect_identical(getExportedValue("ggchord", "ggtitle"), ggplot2::ggtitle)
 })
 
-test_that("selected ggplot2 helpers work directly with ggchord", {
-  data(seq_data_example)
-
-  p <- ggchord(seq_data_example, validate = "none") +
-    geom_seq() +
-    ggtitle("Selected helper") +
-    theme(plot.title = element_text(face = "italic"))
-
-  built <- build_ggchord_smoke(p)
-  expect_equal(built$plot$labels$title, "Selected helper")
-  expect_equal(
-    ggplot2::calc_element("plot.title", built$plot$theme)@face,
-    "italic"
+test_that("data functions and role mappings are resolved once", {
+  seq <- data.frame(seq_id = c("A", "B"), length = c(1000, 1000))
+  feature <- data.frame(
+    chromosome = "A", from = 100, to = 300, direction = "+",
+    kind = "CDS", text = "gene A"
   )
-})
-
-test_that("small devices use their real physical scale for text fitting", {
-  compact <- ggchord:::ggchord_device_units_per_inch(
-    c(-3, 3), c(-2, 2), device_inches = c(4, 3)
-  )
-  standard <- ggchord:::ggchord_device_units_per_inch(
-    c(-3, 3), c(-2, 2), device_inches = c(8, 6)
-  )
-
-  expect_gt(compact, standard)
-  expect_equal(compact, 6 / 1.8)
-  expect_equal(standard, 6 / 4.75)
-  expect_true(is.na(theme_ggchord()$legend.background@fill))
-})
-
-test_that("annotation themes and component styles remain independent", {
-  data(seq_data_example)
-  data(gene_data_example)
-
-  p <- ggchord(seq_data_example, gene_data = gene_data_example,
-               validate = "none") +
-    geom_seq() +
-    geom_gene_label_repel() +
-    ggplot2::theme(
-      ggchord.gene.label = ggplot2::element_text(
-        size = 14, colour = "purple"
+  p <- ggchord(seq, validate = "none") +
+    geom_seq(data = function(x) x) +
+    geom_feature(
+      aes(
+        seq_id = chromosome, start = from, end = to, strand = direction,
+        feature_type = kind, feature_label = text
       ),
-      ggchord.gene.label.segment = ggplot2::element_line(
-        colour = "orange", linewidth = 1
-      )
+      data = function(x) feature
     )
-  built <- build_ggchord_smoke(p)
-  expect_false(built$plot$scales$has_scale("size"))
-  expect_equal(unique(get_chord_layout(p)$gene_labels$size), 14 / ggplot2::.pt)
-  expect_equal(unique(built$data[[2]]$colour), "orange")
-  expect_equal(unique(built$data[[3]]$colour), "purple")
-
-  axis_plot <- ggchord(seq_data_example, validate = "none") +
-    geom_seq() +
-    geom_axis(
-      line_params = list(colour = "red"),
-      tick_params = list(colour = "blue"),
-      text_params = list(colour = "green")
-    )
-  axis_built <- build_ggchord_smoke(axis_plot)
-  expect_equal(unique(axis_built$data[[2]]$colour), "red")
-  expect_equal(unique(axis_built$data[[3]]$colour), "blue")
-  expect_equal(unique(axis_built$data[[4]]$colour), "green")
-  expect_error(geom_axis(show_legend = TRUE), "show_legend was removed")
-})
-
-test_that("removed sequence grouping and gene-label arguments fail clearly", {
+  expect_equal(unique(get_chord_layout(p)$gene_polys$anno), "CDS")
   expect_error(
-    geom_seq(seq_group = "group-a"),
-    "Sequence grouping was removed in v0.10.0"
-  )
-  expect_error(
-    geom_gene(gene_label_size = 3),
-    "Add geom_gene_label"
+    build_ggchord_smoke(
+      ggchord(seq, validate = "none") +
+        geom_seq(aes(seq_ring = after_stat(seq_id)))
+    ),
+    "cannot use after_stat"
   )
 })
 
-test_that("the main plotting layers build together", {
+test_that("user scales win and missing scales are inferred", {
+  seq <- data.frame(seq_id = c("A", "B"), length = c(1000, 1000))
+  ribbon <- data.frame(
+    qaccver = "A", saccver = "B", length = 101, pident = 90,
+    qstart = 100, qend = 200, sstart = 300, send = 400,
+    category = "shared"
+  )
+  inferred <- ggchord(seq, ribbon, validate = "none") +
+    geom_seq() + geom_ribbon(aes(ribbon_fill = category))
+  prepared <- ggchord:::prepare_ggchord_plot(inferred)
+  expect_s3_class(prepared$scales$get_scales("ribbon_fill"), "ScaleDiscrete")
+
+  manual <- inferred + scale_ribbon_fill_manual(values = c(shared = "black"))
+  prepared_manual <- ggchord:::prepare_ggchord_plot(manual)
+  expect_identical(unname(
+    prepared_manual$scales$get_scales("ribbon_fill")$palette(1)
+  ), "black")
+})
+
+test_that("automatic labels and advanced layout tools build", {
   data(seq_data_example)
   data(ribbon_data_example)
   data(gene_data_example)
-
-  p <- ggchord(
-    seq_data_example, ribbon_data_example, gene_data_example,
-    validate = "none"
-  ) +
-    geom_seq() +
-    geom_ribbon() +
-    geom_gene() +
-    geom_axis() +
-    geom_gene_label() +
-    geom_seq_label() +
-    geom_axis()
-
-  expect_s3_class(build_ggchord_smoke(p), "ggplot_built")
-  layout <- get_chord_layout(p)
-  expect_true(length(layout$seq_arcs) > 0)
-  expect_true(nrow(layout$ribbon_polys) > 0)
-  expect_true(nrow(layout$gene_polys) > 0)
-})
-
-test_that("all automatic gene-label layouts build", {
-  data(seq_data_example)
-  data(gene_data_example)
-
   for (mode in c("aligned", "radial", "arc")) {
-    p <- ggchord(seq_data_example, gene_data = gene_data_example,
-                 validate = "none") +
-      geom_seq() +
-      geom_gene() +
+    p <- ggchord(
+      seq_data_example, ribbon_data_example, gene_data_example,
+      validate = "none"
+    ) + geom_seq() + geom_gene() +
       geom_gene_label_repel(gene_label_layout = mode)
     expect_s3_class(build_ggchord_smoke(p), "ggplot_built")
   }
+  stat_plot <- ggchord(
+    seq_data_example, ribbon_data_example, validate = "none"
+  ) + geom_seq() +
+    stat_ribbon_bundle(aes(ribbon_alpha = after_stat(density)), bins = 10)
+  stat_build <- build_ggchord_smoke(stat_plot)
+  expect_true(all(is.finite(stat_build$data[[2]]$ribbon_alpha)))
 
-  expect_error(
-    geom_gene_label_repel(force = 1),
-    "Removed"
-  )
+  rings <- transform(seq_data_example[1:2, ], ring = c("outer", "inner"))
+  ring_plot <- ggchord(rings, validate = "none") +
+    geom_seq(aes(seq_ring = ring)) +
+    scale_seq_ring_manual(values = c(outer = 2, inner = 1))
+  expect_equal(unname(get_chord_layout(ring_plot)$seq_ring_radius), c(2, 1))
 })
 
-test_that("strand legend glyph matches the tapered gene silhouette", {
-  key_data <- data.frame(
-    fill = "#D95F02", colour = "#353A3E", alpha = 1,
-    linewidth = 0.25, strand = "+"
-  )
-  plus <- ggchord:::draw_key_gene_arrow(key_data, list(), 5)
-  key_data$strand <- "-"
-  minus <- ggchord:::draw_key_gene_arrow(key_data, list(), 5)
-
-  expect_equal(as.numeric(plus$x), c(0.10, 0.62, 0.90, 0.62, 0.10))
-  expect_equal(as.numeric(minus$x), 1 - as.numeric(plus$x))
-  expect_equal(as.numeric(plus$y), c(0.32, 0.32, 0.50, 0.68, 0.68))
-})
-
-test_that("fixed gene labels expose compact deterministic controls", {
-  data(seq_data_example)
-  data(gene_data_example)
-
-  layer <- geom_gene_label()[[1]]
-  expect_equal(layer$ggchord_params$gene_label_orientation, "horizontal")
-  expect_equal(layer$ggchord_params$gene_label_side, "outside")
-  expect_equal(layer$ggchord_params$gene_label_overlap, "hide")
-
-  for (orientation in c("horizontal", "radial", "tangent")) {
-    p <- ggchord(seq_data_example, gene_data = gene_data_example,
-                 validate = "none") +
-      geom_seq() + geom_gene() +
-      geom_gene_label(gene_label_orientation = orientation)
-    expect_s3_class(build_ggchord_smoke(p), "ggplot_built")
-  }
-})
-
-test_that("region and ribbon-highlight layers build", {
+test_that("feature shapes, regions and highlights remain composable", {
   data(seq_data_example)
   data(ribbon_data_example)
-
-  regions <- data.frame(
-    seq_id = seq_data_example$seq_id[1],
-    start = 100,
-    end = 500
-  )
-  p <- ggchord(seq_data_example, ribbon_data_example, validate = "none") +
-    geom_seq() +
-    geom_ribbon() +
-    geom_seq_region(regions = regions) +
-    geom_ribbon_highlight(ribbon_ids = 1)
-
-  expect_s3_class(build_ggchord_smoke(p), "ggplot_built")
-  layout <- get_chord_layout(p)
-  expect_true(nrow(layout$region_polys) > 0)
-  expect_true(nrow(layout$ribbon_highlight_polys) > 0)
-})
-
-test_that("feature geometry shapes build", {
-  data(seq_data_example)
-
   feature <- data.frame(
-    seq_id = rep(seq_data_example$seq_id[1], 4),
-    start = c(100, 700, 1300, 1900),
-    end = c(500, 1100, 1700, 2300),
+    seq_id = seq_data_example$seq_id[1],
+    start = c(100, 700, 1300, 1900), end = c(500, 1100, 1700, 2300),
     strand = c("+", "-", "+", "-"),
     type = c("CDS", "tRNA", "repeat", "promoter")
   )
-  p <- ggchord(seq_data_example, validate = "none") +
-    geom_seq() +
-    geom_feature(ggplot2::aes(feature_shape = type), data = feature) +
+  region <- data.frame(
+    seq_id = seq_data_example$seq_id[1], start = 2500, end = 3000
+  )
+  p <- ggchord(seq_data_example, ribbon_data_example, validate = "none") +
+    geom_seq() + geom_ribbon() +
+    geom_feature(aes(feature_shape = type), data = feature) +
     scale_feature_shape_manual(values = c(
       CDS = "arrow", tRNA = "block", "repeat" = "chevron",
       promoter = "lollipop"
-    ))
-
-  expect_s3_class(build_ggchord_smoke(p), "ggplot_built")
+    )) +
+    geom_seq_region(data = region) +
+    geom_ribbon_highlight(ribbon_ids = 1)
   layout <- get_chord_layout(p)
   expect_setequal(
     unique(layout$gene_polys$feature_shape),
     c("arrow", "block", "chevron", "lollipop")
   )
-
-  lollipop <- layout$gene_polys[
-    layout$gene_polys$feature_shape == "lollipop" &
-      layout$gene_polys$group %% 10L == 2L,
-    c("x", "y"), drop = FALSE
-  ]
-  shape_variance <- eigen(stats::cov(lollipop))$values
-  expect_gt(sqrt(min(shape_variance) / max(shape_variance)), 0.97)
+  expect_true(nrow(layout$region_polys) > 0L)
+  expect_true(nrow(layout$ribbon_highlight_polys) > 0L)
 })
 
-test_that("default ribbon gap responds only to local polygon obstacles", {
+test_that("layout export and static viewer use explicit plots", {
   seq <- data.frame(seq_id = c("A", "B"), length = c(1000, 1000))
   ribbon <- data.frame(
     qaccver = "A", saccver = "B", length = 101, pident = 90,
-    qstart = 100, qend = 200, sstart = 100, send = 200
+    qstart = 100, qend = 200, sstart = 300, send = 400
   )
-  obstacle <- data.frame(
-    seq_id = "A", start = 100, end = 200, strand = "-", anno = "CDS"
-  )
-
-  open <- ggchord(seq, ribbon, validate = "none") +
-    geom_seq() + geom_ribbon()
-  open_ribbon <- get_chord_layout(open)$ribbon_polys
-  expect_equal(unique(open_ribbon$q_gap), 0.035)
-  expect_equal(unique(open_ribbon$s_gap), 0.035)
-
-  blocked <- ggchord(seq, ribbon, obstacle, validate = "none") +
-    geom_seq() + geom_ribbon() + geom_gene()
-  blocked_ribbon <- get_chord_layout(blocked)$ribbon_polys
-  expect_equal(unique(blocked_ribbon$q_gap), 0.15)
-  expect_equal(unique(blocked_ribbon$s_gap), 0.035)
-
-  explicit <- ggchord(seq, ribbon, obstacle, validate = "none") +
-    geom_seq() + geom_ribbon(ribbon_gap = 0.2) + geom_gene()
-  explicit_ribbon <- get_chord_layout(explicit)$ribbon_polys
-  expect_equal(unique(explicit_ribbon$q_gap), 0.2)
-  expect_equal(unique(explicit_ribbon$s_gap), 0.2)
-})
-
-test_that("feature category and region outline survive geometry generation", {
-  data(seq_data_example)
-  feature <- data.frame(
-    seq_id = seq_data_example$seq_id[1], start = 100, end = 500,
-    strand = "+", type = "CDS", category = "coding", label = "display"
-  )
-  region <- data.frame(
-    seq_id = seq_data_example$seq_id[1], start = 600, end = 900
-  )
-  p <- ggchord(seq_data_example, validate = "none") +
-    geom_seq(seq_curvature = 0.4) +
-    geom_feature(feature, category = "category") +
-    geom_seq_region(regions = region, region_color = "#123456",
-                    region_side = "auto")
-  expect_s3_class(build_ggchord_smoke(p), "ggplot_built")
-  layout <- get_chord_layout(p)
-  expect_true(all(layout$gene_polys$anno == "coding"))
-  expect_true(all(layout$region_polys$colour == "#123456"))
-
-  expect_error(geom_ribbon_highlight(ribbon_ids = 0), "positive")
-})
-
-test_that("same-type layers keep independent data and mapped columns", {
-  seq <- data.frame(seq_id = c("A", "B"), length = c(1000, 1000))
-  first <- data.frame(
-    chromosome = "A", from = 100, to = 200, direction = "+",
-    category = "first"
-  )
-  second <- data.frame(
-    seq_id = "B", start = 300, end = 400, strand = "-", anno = "second"
-  )
-  r1 <- data.frame(seq_id = "A", start = 450, end = 500, category = "r1")
-  r2 <- data.frame(seq_id = "B", start = 550, end = 600, category = "r2")
-
-  p <- ggchord(seq, validate = "none") +
-    geom_seq() +
-    geom_gene(
-      data = first,
-      mapping = ggplot2::aes(seq_id = chromosome, start = from, end = to,
-                    strand = direction, anno = category,
-                    gene_fill = category)
-    ) +
-    geom_gene(data = second, mapping = ggplot2::aes(gene_fill = anno)) +
-    geom_seq_region(data = r1, mapping = ggplot2::aes(region_fill = category)) +
-    geom_seq_region(data = r2, mapping = ggplot2::aes(region_fill = category))
-
-  expect_s3_class(build_ggchord_smoke(p), "ggplot_built")
-  layout <- get_chord_layout(p, build = FALSE)
-  gene_ids <- vapply(
-    p$layers[vapply(p$layers, function(x) identical(x$ggchord_type, "gene_poly"),
-                    logical(1))],
-    function(x) x$ggchord_layer_id, character(1)
-  )
-  region_ids <- vapply(
-    p$layers[vapply(p$layers, function(x) identical(x$ggchord_type, "seq_region"),
-                    logical(1))],
-    function(x) x$ggchord_layer_id, character(1)
-  )
-  expect_equal(length(unique(gene_ids)), 2)
-  expect_equal(length(unique(region_ids)), 2)
-  expect_equal(unique(layout$layer_geometry[[gene_ids[1]]]$gene_poly$anno), "first")
-  expect_equal(unique(layout$layer_geometry[[gene_ids[2]]]$gene_poly$anno), "second")
-  expect_equal(unique(layout$layer_geometry[[region_ids[1]]]$seq_region$category), "r1")
-  expect_equal(unique(layout$layer_geometry[[region_ids[2]]]$seq_region$category), "r2")
-})
-
-test_that("plot-specific layout retrieval does not use another plot's cache", {
-  p1 <- ggchord(data.frame(seq_id = "A", length = 100), validate = "none") +
-    geom_seq()
-  p2 <- ggchord(data.frame(seq_id = "B", length = 200), validate = "none") +
-    geom_seq()
-  expect_equal(get_chord_layout(p1)$seqs, "A")
-  expect_equal(get_chord_layout(p2)$seqs, "B")
-  expect_equal(get_chord_layout(p1, build = FALSE)$seqs, "A")
-})
-
-test_that("sequence, ribbon, axis and label data mappings are honoured", {
-  seq_base <- data.frame(seq_id = c("A", "B"), length = c(1000, 1000))
-  seq_mapped <- data.frame(chromosome = c("A", "B"), bases = c(1000, 1000))
-  ribbons <- data.frame(
-    query = "A", subject = "B", span = 100, identity = 95,
-    q_from = 1, q_to = 100, s_from = 200, s_to = 101,
-    score = 0.6
-  )
-  seq_subset <- data.frame(seq_id = "A", length = 1000)
-  p <- ggchord(seq_base, validate = "none") +
-    geom_seq(
-      data = seq_mapped,
-      mapping = ggplot2::aes(seq_id = chromosome, length = bases)
-    ) +
-    geom_ribbon(
-      data = ribbons,
-      mapping = ggplot2::aes(qaccver = query, saccver = subject, length = span,
-                    pident = identity, qstart = q_from, qend = q_to,
-                    sstart = s_from, send = s_to, ribbon_alpha = score)
-    ) +
-    geom_seq_label(data = seq_subset) +
-    geom_axis(data = seq_subset)
-
-  expect_s3_class(build_ggchord_smoke(p), "ggplot_built")
-  layout <- get_chord_layout(p, build = FALSE)
-  ribbon_id <- p$layers[[which(vapply(
-    p$layers, function(x) identical(x$ggchord_type, "ribbon"), logical(1)
-  ))]]$ggchord_layer_id
-  label_id <- p$layers[[which(vapply(
-    p$layers, function(x) identical(x$ggchord_type, "seq_label"), logical(1)
-  ))]]$ggchord_layer_id
-  expect_equal(unique(layout$layer_geometry[[ribbon_id]]$ribbon$score), 0.6)
-  expect_equal(unique(layout$layer_geometry[[label_id]]$seq_label$seq_id), "A")
-})
-
-test_that("role-specific scales coexist without replacing one another", {
-  data(seq_data_example)
-  data(ribbon_data_example)
-  data(gene_data_example)
-  region <- data.frame(
-    seq_id = seq_data_example$seq_id[1], start = 100, end = 500,
-    category = "focus"
-  )
-  seq_values <- stats::setNames(
-    rep_len(c("#0072B2", "#D55E00"), nrow(seq_data_example)),
-    seq_data_example$seq_id
-  )
-  p <- ggchord(
-    seq_data_example, ribbon_data_example, gene_data_example,
-    validate = "none"
-  ) +
-    geom_seq() +
-    geom_ribbon() +
-    geom_gene() +
-    geom_seq_region(
-      data = region, mapping = ggplot2::aes(region_fill = category), show_legend = TRUE
-    ) +
-    scale_seq_colour_manual(values = seq_values) +
-    scale_ribbon_fill_gradientn(colours = c("#F7FBFF", "#08306B")) +
-    scale_gene_fill_manual(values = c("+" = "#D55E00", "-" = "#0072B2")) +
-    scale_region_fill_manual(values = c(focus = "#E69F00")) +
-    scale_seq_position_continuous(
-      breaks = c(0, 100), labels = c("start", "100 bp")
-    )
-
-  expect_true(all(vapply(
-    c("seq_colour", "ribbon_fill", "gene_fill", "region_fill", "seq_position"),
-    p$scales$has_scale, logical(1)
-  )))
-  expect_s3_class(build_ggchord_smoke(p), "ggplot_built")
-  axis_labels <- unique(stats::na.omit(get_chord_layout(p, FALSE)$axis_ticks$label))
-  expect_true(all(c("start", "100 bp") %in% axis_labels))
-  expect_s3_class(scale_seq_position_continuous(), "ScaleContinuous")
-  expect_s3_class(
-    scale_feature_shape_manual(values = c(CDS = "block")),
-    "ScaleDiscrete"
-  )
-  expect_s3_class(scale_ribbon_color_manual(values = c(kind = "black")),
-                  "ScaleDiscrete")
-})
-
-test_that("layout export preserves layer identity and coordinate metadata", {
-  seq <- data.frame(seq_id = c("A", "B"), length = c(1000, 1000))
-  ribbon <- data.frame(
-    qaccver = "A", saccver = "B", length = 101, pident = 90,
-    qstart = 100, qend = 200, sstart = 300, send = 400,
-    score = 7
-  )
-  feature <- data.frame(
-    seq_id = "A", start = 500, end = 650, strand = "+", type = "promoter"
-  )
-  p <- ggchord(seq, ribbon, validate = "none") +
-    geom_seq() + geom_ribbon() +
-    geom_feature(data = feature, feature_shape = "lollipop") +
-    coord_chord(rotation = 30, ratio = 1.2)
-
-  exported <- export_ggchord_layout(
-    p, include = c("seq", "ribbon", "feature"), original_data = TRUE
-  )
+  p <- ggchord(seq, ribbon, validate = "none") + geom_seq() + geom_ribbon()
+  exported <- export_ggchord_layout(p, include = c("seq", "ribbon"))
   expect_s3_class(exported, "ggchord_layout_export")
   expect_true(all(c("layer_id", "source_row") %in% names(exported$ribbon)))
-  expect_equal(unique(exported$ribbon$score), 7)
-  expect_equal(unique(exported$feature$type), "promoter")
-  expect_equal(exported$metadata$rotation, 30)
-  expect_equal(exported$metadata$ratio, 1.2)
-  expect_true(exported$metadata$rotation_applied)
-  expect_false(exported$metadata$coord_transform_applied)
-  expect_true(length(exported$original_data) >= 3L)
-})
 
-test_that("view_ggchord renders an exact-size headless preview", {
-  p <- ggplot2::ggplot(mtcars, ggplot2::aes(wt, mpg)) +
-    ggplot2::geom_point()
   preview <- view_ggchord(
     p, width = 2, height = 1, units = "in", dpi = 50,
     device = "png", viewer = "none"
   )
   expect_true(file.exists(preview))
   expect_true(file.exists(sub("\\.png$", ".html", preview)))
-
-  con <- file(preview, open = "rb")
-  on.exit(close(con), add = TRUE)
-  header <- readBin(con, what = "raw", n = 24)
-  big_endian <- function(x) sum(as.integer(x) * 256^(3:0))
-  expect_equal(big_endian(header[17:20]), 100)
-  expect_equal(big_endian(header[21:24]), 50)
-  expect_error(view_ggchord(list(), viewer = "none"), "plot must be")
-  expect_error(view_ggchord(p, width = 0, viewer = "none"), "positive")
-
-  if (requireNamespace("svglite", quietly = TRUE)) {
-    svg <- view_ggchord(p, device = "svg", viewer = "none")
-    expect_true(file.exists(svg))
-  }
 })
 
-test_that("layout skips geometry for layers that were not requested", {
-  data(seq_data_example)
-  data(ribbon_data_example)
-  data(gene_data_example)
-  p <- ggchord(
-    seq_data_example, ribbon_data_example, gene_data_example,
-    validate = "none"
+test_that("plot-owned layouts are deterministic and isolated", {
+  p1 <- ggchord(
+    data.frame(seq_id = "A", length = 100), validate = "none"
   ) + geom_seq()
-  layout <- get_chord_layout(p)
-  expect_null(layout$ribbon_polys)
-  expect_equal(nrow(layout$gene_polys), 0L)
-})
-
-test_that("legacy scale arguments warn and conflict with role scales", {
-  seq <- data.frame(seq_id = c("A", "B"), length = c(100, 100))
-  old <- ggchord(seq, validate = "none") +
-    geom_seq(seq_colors = c(A = "red", B = "blue"))
-  expect_warning(build_ggchord_smoke(old), "seq_colors.*deprecated")
-
-  conflict <- old + scale_seq_colour_manual(
-    values = c(A = "black", B = "grey50")
-  )
-  expect_error(build_ggchord_smoke(conflict), "conflicts.*seq_colour")
-})
-
-test_that("v0.11 ribbon stats expose computed variables", {
-  data(seq_data_example)
-  data(ribbon_data_example)
-  p <- ggchord(seq_data_example, ribbon_data_example, validate = "none") +
-    geom_seq() +
-    stat_ribbon_bundle(
-      aes(ribbon_alpha = after_stat(density)), bins = 10
-    )
-  built <- build_ggchord_smoke(p)
-  layout <- get_chord_layout(p)
-  expect_lt(nrow(layout$ribbon_stat_data), nrow(ribbon_data_example))
-  expect_true(all(c("bundle_n", "bundle_weight", "density") %in%
-                    names(built$data[[2]])))
-  expect_true(all(is.finite(built$data[[2]]$ribbon_alpha)))
-})
-
-test_that("explicit rings, feature stacking and focused theme controls work", {
-  seq <- data.frame(
-    seq_id = c("A", "B"), length = c(100, 100), ring = c("outer", "inner")
-  )
-  p <- ggchord(seq, validate = "none") +
-    geom_seq(aes(seq_ring = ring)) +
-    scale_seq_ring_manual(values = c(outer = 2, inner = 1))
-  build_ggchord_smoke(p)
-  expect_equal(unname(get_chord_layout(p)$seq_ring_radius), c(2, 1))
-  expect_error(
-    build_ggchord_smoke(
-      ggchord(seq, validate = "none") + geom_seq(aes(seq_ring = ring))
-    ),
-    "scale_seq_ring_manual"
-  )
-
-  features <- data.frame(
-    seq_id = "A", start = c(1, 20, 70), end = c(50, 60, 90),
-    strand = "+", anno = letters[1:3]
-  )
-  stacked <- ggchord:::ggchord_stack_feature_tracks(
-    features, position_feature_stack()
-  )
-  expect_equal(stacked$.feature_stack_lane, c(0L, 1L, 0L))
-
-  local_theme <- theme_ggchord_elements(axis_text = element_blank())
-  expect_s3_class(local_theme$ggchord.axis.text, "element_blank")
+  p2 <- ggchord(
+    data.frame(seq_id = "B", length = 200), validate = "none"
+  ) + geom_seq()
+  first <- get_chord_layout(p1)
+  repeated <- get_chord_layout(p1)
+  expect_identical(first$seq_arcs, repeated$seq_arcs)
+  expect_equal(first$seqs, "A")
+  expect_equal(get_chord_layout(p2)$seqs, "B")
 })

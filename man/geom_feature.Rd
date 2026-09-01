@@ -7,17 +7,12 @@
 geom_feature(
   mapping = NULL,
   data = NULL,
-  type = "type",
-  category = NULL,
-  label = "label",
   feature_shape = "arrow",
-  feature_colors = NULL,
   feature_width = NULL,
   feature_offset = NULL,
-  feature_order = NULL,
   position = "identity",
-  show_legend = TRUE,
-  legend_position = "right",
+  show.legend = TRUE,
+  inherit.aes = FALSE,
   ...
 )
 }
@@ -30,22 +25,11 @@ generated.}
 \item{data}{data.frame with \code{seq_id}, \code{start}, \code{end} and
 \code{strand}; optional \code{type}, \code{category} and \code{label}.}
 
-\item{type}{Column name used as the feature type, default \code{"type"}.}
-
-\item{category}{Optional column name used for colour grouping; defaults to
-\code{type}.}
-
-\item{label}{Optional column name used for annotation text; defaults to
-\code{label} when present, otherwise \code{type}.}
-
 \item{feature_shape}{Fixed feature geometry used when \code{feature_shape}
 is not mapped in \code{aes()}: \code{"arrow"}, \code{"block"},
 \code{"chevron"}, or \code{"lollipop"}. The default is \code{"arrow"}.
 Use \code{aes(feature_shape = type)} together with
 \code{scale_feature_shape_manual()} to map categories to geometry.}
-
-\item{feature_colors}{Optional named color vector by feature value; unnamed
-vectors are recycled positionally.}
 
 \item{feature_width}{Optional numeric or named vector controlling feature
 width; passed to \code{geom_gene(gene_width = ...)}.}
@@ -53,20 +37,15 @@ width; passed to \code{geom_gene(gene_width = ...)}.}
 \item{feature_offset}{Optional numeric or named vector controlling feature
 offset; passed to \code{geom_gene(gene_offset = ...)}.}
 
-\item{feature_order}{Optional feature order for the legend.}
-
 \item{position}{Position adjustment passed to [geom_gene()]. Use
 [position_feature_stack()] to stack overlaps on radial lanes.}
 
-\item{show_legend}{Logical. Show the feature legend, default TRUE.}
-
-\item{legend_position}{Position of the feature legend: \code{"left"},
-\code{"right"}, \code{"top"}, \code{"bottom"} or \code{"inside"}.}
+\item{show.legend, inherit.aes}{Standard ggplot2 layer arguments.}
 
 \item{...}{Additional arguments passed to \code{geom_gene()}.}
 }
 \value{
-A list of ggplot2 layers
+A ggplot2 layer.
 }
 \description{
 A general layer for CDS, tRNA, rRNA, repeat, CRISPR, promoter or user-defined
@@ -80,6 +59,7 @@ data(seq_data_example)
 features <- data.frame(seq_id = "MT108731.1",
                        start = 1000, end = 4000,
                        strand = "+", type = "CDS")
-p <- ggchord(seq_data_example) + geom_seq() + geom_feature(features)
+p <- ggchord(seq_data_example) + geom_seq() +
+  geom_feature(data = features)
 p
 }

@@ -5,17 +5,16 @@
 #' Add an axis layer
 #'
 #' Draws axes for each sequence in the chord diagram (including axis lines, major/minor ticks, and labels).
-#' Axis parameters (spacing, tick count/length, label size/orientation, etc.) are specified here.
+#' Axis spacing, tick lengths and label orientation are specified here. Breaks,
+#' labels and limits belong to code{scale_seq_position_continuous()}, while
+#' fixed visual styles belong to code{...}, the component parameter lists, or
+#' a ggchord theme.
 #'
 #' @param mapping Default NULL (uses pre-computed data)
 #' @param data Default NULL (retrieved automatically from the layout)
-#' @param show_axis Logical. Whether to show the axis, default TRUE
 #' @param axis_gap Optional numeric/vector. Spacing between sequence and axis, default 0.05
-#' @param axis_tick_major_number Optional integer/vector. Number of major ticks, default 3
 #' @param axis_tick_major_length Optional numeric/vector. Major tick length ratio, default 0.02
-#' @param axis_tick_minor_number Optional integer/vector. Number of minor ticks, default 4
 #' @param axis_tick_minor_length Optional numeric/vector. Minor tick length ratio, default 0.01
-#' @param axis_label_size Optional numeric/vector. Tick label font size, default 3
 #' @param axis_label_offset Optional numeric/vector. Label offset ratio, default 2
 #' @param axis_label_orientation Optional character/numeric/vector. Label
 #'   orientation, default "parallel". Accepted values: "horizontal" (text stays
@@ -34,8 +33,9 @@
 #' @param ... Shared fixed style arguments. `colour`, `alpha` and
 #'   `na.rm` apply to all three components; line-specific and
 #'   text-specific arguments are routed only to compatible geoms.
+#' @param position,show.legend,inherit.aes Standard ggplot2 layer arguments.
 #'
-#' @return A list of ggplot2 layers
+#' @return A ggplot2 layer.
 #' @export
 #'
 #' @examples
@@ -44,94 +44,83 @@
 #' p <- ggchord(seq_data_example) + geom_seq() + geom_axis()
 #' p
 geom_axis <- function(mapping = NULL, data = NULL,
-                      show_axis = NULL,
                       axis_gap = NULL,
-                      axis_tick_major_number = NULL,
                       axis_tick_major_length = NULL,
-                      axis_tick_minor_number = NULL,
                       axis_tick_minor_length = NULL,
-                      axis_label_size = NULL,
                       axis_label_offset = NULL,
                       axis_label_orientation = NULL,
                       axis_label_hide_overlaps = FALSE,
                       line_params = list(),
                       tick_params = list(),
                       text_params = list(),
+                      position = "identity",
+                      show.legend = FALSE,
+                      inherit.aes = FALSE,
                       ...) {
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
 
-  split_params <- ggchord_axis_params(
-    list(...), line_params, tick_params, text_params
+  dots <- list(...)
+  ggchord_reject_retired(dots, "geom_axis()", c(
+    show_axis = "adding or omitting geom_axis()",
+    axis_tick_major_number = "scale_seq_position_continuous(breaks = ...)",
+    axis_tick_minor_number = "scale_seq_position_continuous(minor_breaks = ...)",
+    axis_label_size = "size or text_params = list(size = ...)",
+    show_legend = "show.legend"
+  ))
+  split_params <- ggchord_axis_params(dots, line_params, tick_params, text_params)
+
+  empty <- data.frame(
+    x = numeric(), y = numeric(), xend = numeric(), yend = numeric(),
+    label = character(), .component = character(), group = integer(),
+    size = numeric(), angle = numeric(), hjust = numeric(), vjust = numeric()
   )
-
-  empty_id <- data.frame(x = numeric(0), y = numeric(0),
-                         seq_id = character(0))
-  empty_seg <- data.frame(x0 = numeric(0), y0 = numeric(0),
-                          x1 = numeric(0), y1 = numeric(0),
-                          label = character(0), label_x = numeric(0),
-                          label_y = numeric(0), size = numeric(0),
-                          label_hjust = numeric(0), label_vjust = numeric(0),
-                          label_angle = numeric(0),
-                          seq_id = character(0))
-
-  path_layer <- do.call(ggplot2::geom_path, c(list(
-    data = empty_id,
-    mapping = ggplot2::aes(x = x, y = y, group = seq_id),
-    inherit.aes = FALSE, show.legend = FALSE
-  ), split_params$line))
-  path_layer$ggchord_type <- "axis_line"
-  path_layer$ggchord_theme_element <- "ggchord.axis.line"
-  path_layer$ggchord_params <- list(
+  lyr <- ggplot2::layer(
+    data = empty,
+    mapping = ggplot2::aes(
+      x = x, y = y, xend = xend, yend = yend, label = label,
+      group = group, size = I(size), angle = angle,
+      hjust = hjust, vjust = vjust, .component = I(.component)
+    ),
+    stat = "identity",
+    geom = GeomChordAxis,
+    position = position,
+    show.legend = show.legend,
+    inherit.aes = inherit.aes,
+    check.aes = FALSE,
+    check.param = FALSE,
+    params = list(
+      line_params = split_params$line,
+      tick_params = split_params$ticks,
+      text_params = split_params$text,
+      na.rm = split_params$line$na.rm %||%
+        split_params$ticks$na.rm %||%
+        split_params$text$na.rm %||% FALSE
+    )
+  )
+  lyr$ggchord_type <- "axis"
+  lyr$ggchord_theme_components <- c(
+    line_params = "ggchord.axis.line",
+    tick_params = "ggchord.axis.ticks",
+    text_params = "ggchord.axis.text"
+  )
+  lyr$ggchord_params <- list(
     type                    = "axis",
-    show_axis               = show_axis,
+    show_axis               = TRUE,
     axis_gap                = axis_gap,
-    axis_tick_major_number  = axis_tick_major_number,
+    axis_tick_major_number  = NULL,
     axis_tick_major_length  = axis_tick_major_length,
-    axis_tick_minor_number  = axis_tick_minor_number,
+    axis_tick_minor_number  = NULL,
     axis_tick_minor_length  = axis_tick_minor_length,
-    axis_label_size         = axis_label_size,
+    axis_label_size         = split_params$text$size %||% NULL,
     axis_label_offset       = axis_label_offset,
     axis_label_orientation  = axis_label_orientation,
     axis_label_hide_overlaps = axis_label_hide_overlaps
   )
-  path_layer <- ggchord_capture_layer_input(
-    path_layer, data, mapping, c("seq_id", "length")
+  lyr <- ggchord_capture_layer_input(
+    lyr, data, mapping, c("seq_id", "length")
   )
-  path_layer <- ggchord_add_legacy_scale(
-    path_layer,
-    (!missing(axis_tick_major_number) && !is.null(axis_tick_major_number)) ||
-      (!missing(axis_tick_minor_number) && !is.null(axis_tick_minor_number)),
-    "axis_tick_major_number/axis_tick_minor_number", "seq_position",
-    "scale_seq_position_continuous(breaks = ..., minor_breaks = ...)"
-  )
-
-  seg_layer <- do.call(ggplot2::geom_segment, c(list(
-    data = empty_seg,
-    mapping = ggplot2::aes(x = x0, y = y0, xend = x1, yend = y1),
-    inherit.aes = FALSE, show.legend = FALSE
-  ), split_params$ticks))
-  seg_layer$ggchord_type <- "axis_seg"
-  seg_layer$ggchord_theme_element <- "ggchord.axis.ticks"
-  seg_layer <- ggchord_capture_layer_input(
-    seg_layer, data, mapping, c("seq_id", "length")
-  )
-
-  text_layer <- do.call(ggplot2::geom_text, c(list(
-    data = empty_seg[integer(0), ],
-    mapping = ggplot2::aes(x = label_x, y = label_y,
-                  label = label, size = I(size),
-                  hjust = label_hjust, vjust = label_vjust,
-                  angle = label_angle),
-    inherit.aes = FALSE, show.legend = FALSE
-  ), split_params$text))
-  text_layer$ggchord_type <- "axis_text"
-  text_layer$ggchord_theme_element <- "ggchord.axis.text"
-  text_layer <- ggchord_capture_layer_input(
-    text_layer, data, mapping, c("seq_id", "length")
-  )
-
-  list(path_layer, seg_layer, text_layer)
+  lyr
 }
 
 #' Route geom_axis style arguments to compatible child geoms
@@ -160,7 +149,7 @@ ggchord_axis_params <- function(dots, line, ticks, text) {
   line_names <- c(common, "linewidth", "linetype", "lineend", "linejoin")
   tick_names <- c(line_names, "arrow", "arrow.fill")
   text_names <- c(
-    common, "family", "fontface", "lineheight", "parse", "check_overlap"
+    common, "size", "family", "fontface", "lineheight", "parse", "check_overlap"
   )
   known <- union(line_names, union(tick_names, text_names))
   if (length(dots) > 0 && (is.null(names(dots)) || any(!nzchar(names(dots))))) {

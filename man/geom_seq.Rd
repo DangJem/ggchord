@@ -8,15 +8,14 @@ geom_seq(
   mapping = NULL,
   data = NULL,
   seq_order = NULL,
-  seq_labels = NULL,
   seq_orientation = NULL,
   seq_gap = NULL,
   seq_radius = NULL,
   seq_curvature = NULL,
-  seq_colors = NULL,
   linewidth = 0.9,
-  show_legend = TRUE,
-  legend_position = "right",
+  position = "identity",
+  show.legend = TRUE,
+  inherit.aes = FALSE,
   ...
 )
 }
@@ -27,8 +26,6 @@ geom_seq(
 
 \item{seq_order}{Optional character vector. Specifies the drawing order of sequences}
 
-\item{seq_labels}{Optional character vector or named vector. Sequence labels}
-
 \item{seq_orientation}{Optional numeric (1 or -1). Sequence orientation, default 1}
 
 \item{seq_gap}{Optional numeric. Gap proportion between sequences, default 0.03}
@@ -37,21 +34,14 @@ geom_seq(
 
 \item{seq_curvature}{Optional numeric. Arc curvature (0=straight, 1=standard arc, >1=more curved), default 1.0}
 
-\item{seq_colors}{Optional color vector or named vector. Sequence colors}
-
 \item{linewidth}{Arc line width, default 0.9}
 
-\item{show_legend}{Whether to show the legend for this layer, default TRUE}
-
-\item{legend_position}{Position of this layer's legend (the Seq ID legend):
-one of "left", "right", "top", "bottom" or "inside", default "right". Pass
-NULL to let the legend follow \code{theme(legend.position = ...)} together
-with the other legends. Can also be set with \code{theme(legend.position.seq = ...)}.}
+\item{position, show.legend, inherit.aes}{Standard ggplot2 layer arguments.}
 
 \item{...}{Additional arguments passed to \code{geom_path()}}
 }
 \value{
-A list of ggplot2 layers
+A ggplot2 layer.
 }
 \description{
 Draws arcs (or straight lines, depending on the curvature setting) representing sequences in the chord diagram.

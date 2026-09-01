@@ -7,7 +7,6 @@
 geom_gene_label(
   mapping = NULL,
   data = NULL,
-  gene_label_size = NULL,
   gene_label_orientation = "horizontal",
   gene_label_side = "outside",
   gene_label_overlap = "hide",
@@ -17,7 +16,8 @@ geom_gene_label(
   gene_label_circum_limit = NULL,
   gene_label_wrap = NULL,
   position = "identity",
-  show_legend = FALSE,
+  show.legend = FALSE,
+  inherit.aes = FALSE,
   ...
 )
 }
@@ -25,8 +25,6 @@ geom_gene_label(
 \item{mapping}{Default NULL (uses pre-computed data)}
 
 \item{data}{Default NULL (retrieved automatically from the layout)}
-
-\item{gene_label_size}{Numeric. Label font size, default 2.5}
 
 \item{gene_label_orientation}{Character, default \code{"horizontal"}. Text
 orientation relative to each sequence path: \code{"radial"},
@@ -58,12 +56,12 @@ labels narrower and less prone to overlap.}
 [position_feature_stack()] used by a gene/feature layer when labels are
 drawn from separate data or without a geometry layer.}
 
-\item{show_legend}{Whether to show the legend, default FALSE}
+\item{show.legend, inherit.aes}{Standard ggplot2 layer arguments.}
 
 \item{...}{Additional arguments passed to \code{geom_text()}}
 }
 \value{
-A list of ggplot2 layers. To let the labels avoid each other and the
+A ggplot2 layer. To let the labels avoid each other and the
   genes (with leader lines), use \code{\link{geom_gene_label_repel}()}
   instead.
 }

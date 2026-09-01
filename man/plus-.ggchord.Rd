@@ -9,12 +9,12 @@
 \arguments{
 \item{e1}{A ggchord object}
 
-\item{e2}{A ggplot2 layer, a list of layers, a scale, or a theme}
+\item{e2}{A ggplot2 component.}
 }
 \value{
 A ggchord object
 }
 \description{
-Supports stacking ggplot2 layers, lists of layers, scales, and themes
-onto a ggchord plot using the \code{+} operator.
+Uses ggplot2's standard composition semantics for layers, scales, themes,
+coordinates and annotations.
 }

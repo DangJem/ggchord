@@ -2,28 +2,73 @@
 
 ## Advanced tracks and layout
 
-* New `stat_ribbon_bundle()` and `stat_ribbon_density()` integrate explicit
-  dense-alignment preprocessing with the ggplot2 stat stage. They expose
+* New `stat_ribbon_bundle()` and `stat_ribbon_density()` expose
   `after_stat(bundle_n)`, `after_stat(bundle_weight)`, and
   `after_stat(density)` while leaving `geom_ribbon()` conservative.
 
 * New `focus_ggchord_data()` synchronizes sequence, gene/feature, and ribbon
-  cropping across one or more loci. `boundary = "trim"` clips partial rows
-  with direction-preserving alignment interpolation; `"drop"` retains only
-  fully contained rows. Source rows and locus identities remain traceable.
+  cropping across one or more loci. `position_feature_stack()` assigns the
+  minimum deterministic radial lanes, while `seq_ring` and
+  `scale_seq_ring_manual()` provide explicit multi-ring radii.
 
-* New `position_feature_stack()` uses deterministic interval partitioning to
-  place overlaps on the minimum number of radial lanes. New explicit
-  `seq_ring` mapping and `scale_seq_ring_manual()` assign ring radii without
-  guessing topology or silently overriding `seq_radius`.
+## Standard ggplot2 layer grammar
 
-* New `theme_ggchord_elements()` exposes the six ggchord-only annotation theme
-  elements in a discoverable helper, while general plot and legend styling
-  remains in `theme()`.
+* Every public geom and stat now returns one standard `LayerInstance`.
+  `geom_axis()` and `geom_gene_label_repel()` use composite Geom/gTree
+  implementations instead of returning lists of child layers. The custom
+  `+.ggchord` list-flattening path has been removed.
 
-These APIs remain development interfaces until the v0.11.0 release is
-approved. README, vignettes, site pages, and generated figures are deliberately
-unchanged during this development cycle.
+* Public layers consistently expose `mapping`, `data`, `position`,
+  `show.legend`, `inherit.aes`, and `...`. A layer `data` argument may be a
+  data frame or a function receiving that layer's default input table.
+
+* `prepare_ggchord_plot()` is now the single orchestration path for geometry,
+  scales and coordinates. `ggplot_build.ggchord()` delegates to it before the
+  standard ggplot2 build, keeping printing, `ggsave()` and `view_ggchord()`
+  consistent.
+
+* `coord_chord()` now constructs a real `CoordChord` ggproto. Global
+  most-recent-layout state has been removed; `get_chord_layout()` requires an
+  explicit ggchord plot.
+
+* Role aesthetics use tidy evaluation once per build and preserve source
+  columns. Geometry roles reject `after_stat()`/`after_scale()`, while visual
+  mappings continue to support staged aesthetics. User scales always win;
+  missing visual scales are inferred as continuous or discrete, and
+  incompatible mappings fail clearly.
+
+## Themes and namespace
+
+* `theme_ggchord()`, `theme_ggchord_minimal()`,
+  `theme_ggchord_publication()`, and `theme_ggchord_dark()` now directly accept
+  `axis_line`, `axis_ticks`, `axis_text`, `seq_label`, `gene_label`, and
+  `gene_label_segment`. The redundant `theme_ggchord_elements()` helper was
+  removed. Minimal and publication presets now have distinct visual roles.
+
+* Selected ggplot2 helpers such as `theme()`, `ggtitle()`, `labs()` and
+  `guides()` remain exact re-exports. ggchord does not wrap them or expose
+  unrelated Cartesian geoms, facets, coordinates, scales, or complete themes.
+
+## Breaking API cleanup
+
+v0.11.0 removes the previous soft-compatibility layer. Removed arguments fail
+immediately with a migration message instead of warning or being ignored.
+
+| Removed entry | Replacement |
+| --- | --- |
+| `ggchord(title/rotation/panel_margin/show_legend)` | `labs()` / `coord_chord()` / `theme()` |
+| `show_legend` | `show.legend` |
+| geom legend position/key arguments | `guides()` + `guide_ggchord_*()` |
+| geom colours, order, limits, breaks and names | role-specific `scale_*()` |
+| ribbon `*_by`, direction and visual-value arguments | `aes(ribbon_* = ...)` + scales |
+| `ribbon_alpha` and ribbon outline names | `alpha`, `colour`, `linewidth`, `linetype` |
+| feature type/category/label column strings | `aes(feature_type/feature_fill/feature_label = ...)` |
+| `geom_seq(seq_labels/seq_colors)` | `geom_seq_label(labels = ...)` / sequence scale |
+| axis show/count/text-size arguments | layer presence / position scale / theme or `size` |
+| `geom_seq_region(regions/region_* style)` | `data`, `fill`, `colour`, `alpha` |
+
+README, vignettes, site pages, and generated figures remain deliberately
+unchanged until the final v1.0.0 documentation rebuild.
 
 # ggchord 0.10.0
 

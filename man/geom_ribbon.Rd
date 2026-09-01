@@ -7,33 +7,16 @@
 geom_ribbon(
   mapping = NULL,
   data = NULL,
-  ribbon_color_scheme = NULL,
-  ribbon_colors = NULL,
-  ribbon_color_by = NULL,
-  ribbon_color_limits = NULL,
-  ribbon_color_breaks = NULL,
-  ribbon_color_name = NULL,
-  ribbon_alpha = NULL,
-  ribbon_alpha_by = NULL,
-  ribbon_alpha_range = c(0.15, 0.9),
   ribbon_ctrl_point = NULL,
   ribbon_gap = NULL,
-  alpha = NULL,
-  ribbon_outline_color = "#59636D",
-  ribbon_outline_width = 0.08,
-  ribbon_outline_linetype = 1,
-  ribbon_outline_by = NULL,
-  ribbon_outline_colors = NULL,
-  ribbon_linetype_by = NULL,
-  ribbon_linetypes = NULL,
-  ribbon_direction = c("none", "alpha", "outline", "linetype"),
-  ribbon_direction_colors = c(same = "black", reverse = "grey50"),
-  ribbon_direction_linetypes = c(same = "solid", reverse = "dashed"),
-  ribbon_direction_alpha = c(same = 1, reverse = 0.45),
-  show_legend = TRUE,
-  legend_position = "left",
-  legend_key_width = NULL,
-  legend_key_height = NULL,
+  fill = NULL,
+  alpha = 0.42,
+  colour = "#59636D",
+  linewidth = 0.08,
+  linetype = 1,
+  position = "identity",
+  show.legend = TRUE,
+  inherit.aes = FALSE,
   ...
 )
 }
@@ -41,32 +24,6 @@ geom_ribbon(
 \item{mapping}{Default NULL (uses pre-computed data)}
 
 \item{data}{Default NULL (retrieved automatically from the layout)}
-
-\item{ribbon_color_scheme}{Character. Color scheme \code{"pident"},
-\code{"query"}, \code{"subject"} or \code{"single"}, default \code{"pident"}}
-
-\item{ribbon_colors}{Optional color vector. Ribbon color parameters}
-
-\item{ribbon_color_by}{Optional character column name. When set, ribbon fill
-is mapped to a continuous colourbar for that numeric column instead of
-\code{pident} (e.g. \code{"bitscore"}).}
-
-\item{ribbon_color_limits}{Optional numeric length-2 limits for
-\code{ribbon_color_by}.}
-
-\item{ribbon_color_breaks}{Optional numeric breaks for the \code{ribbon_color_by}
-colourbar.}
-
-\item{ribbon_color_name}{Optional legend title for the \code{ribbon_color_by}
-colourbar (defaults to the column name).}
-
-\item{ribbon_alpha}{Numeric (0-1). Ribbon transparency, default 0.42}
-
-\item{ribbon_alpha_by}{Optional character column name. When set, alpha is
-scaled continuously from that numeric column.}
-
-\item{ribbon_alpha_range}{Numeric length-2. Alpha range used by
-\code{ribbon_alpha_by}, default \code{c(0.15, 0.9)}.}
 
 \item{ribbon_ctrl_point}{Optional vector/list. Bezier control points, default c(0,0)}
 
@@ -78,68 +35,22 @@ genomic interval, and retain enough clearance where one does. Text and
 leader lines are ignored. Supplying a number disables the automatic rule
 and uses that exact spacing.}
 
-\item{alpha}{Ribbon transparency (overrides ribbon_alpha), defaults to the value used in the layout}
+\item{fill}{Optional fixed ribbon fill. `NULL` keeps the default Identity
+mapping.}
 
-\item{ribbon_outline_color}{Character. Colour of the ribbon outline,
-default \code{"#59636D"}, a restrained dark neutral that remains visible
-after ribbon transparency is applied.}
+\item{alpha, colour, linewidth, linetype}{Standard fixed ribbon styles.}
 
-\item{ribbon_outline_width}{Numeric. Line width of the ribbon outline, default 0.08}
-
-\item{ribbon_outline_linetype}{Numeric or character. Line type of the ribbon outline, default 1 (solid); see \code{linetype} in ggplot2 for options}
-
-\item{ribbon_outline_by}{Optional discrete column name. When set, outline
-colour is mapped by that column and \code{ribbon_outline_colors} controls
-the palette.}
-
-\item{ribbon_outline_colors}{Optional named color vector for
-\code{ribbon_outline_by}; unnamed vectors are recycled positionally.}
-
-\item{ribbon_linetype_by}{Optional discrete column name. When set, outline
-linetype is mapped by that column and \code{ribbon_linetypes} controls the
-values.}
-
-\item{ribbon_linetypes}{Optional named linetype vector for
-\code{ribbon_linetype_by}.}
-
-\item{ribbon_direction}{Character. How to visually distinguish same- vs
-reverse-orientation alignments: \code{"none"}, \code{"alpha"},
-\code{"outline"} or \code{"linetype"}.}
-
-\item{ribbon_direction_colors}{Named color vector with \code{same} and
-\code{reverse} entries, used when \code{ribbon_direction = "outline"}.}
-
-\item{ribbon_direction_linetypes}{Named linetype vector with \code{same} and
-\code{reverse} entries, used when \code{ribbon_direction = "linetype"}.}
-
-\item{ribbon_direction_alpha}{Named numeric vector with \code{same} and
-\code{reverse} entries, used when \code{ribbon_direction = "alpha"}.}
-
-\item{show_legend}{Whether to show the legend, default TRUE}
-
-\item{legend_position}{Position of this layer's legend (the Identity (%)
-colourbar): one of "left", "right", "top", "bottom" or "inside", default
-"left". Pass NULL to let the legend follow
-\code{theme(legend.position = ...)} together with the other legends.}
-
-\item{legend_key_width}{Optional width of the Identity (%) colourbar key.
-Accepts a grid unit, e.g. \code{unit(1, "cm")}, or a number interpreted
-as centimetres. Default NULL uses the package's 3.6 mm vertical-bar width
-or 50 mm horizontal-bar length.}
-
-\item{legend_key_height}{Optional height of the Identity (%) colourbar key.
-Accepts a grid unit, e.g. \code{unit(5, "cm")}, or a number interpreted
-as centimetres. Default NULL uses the package's 50 mm vertical-bar length
-or 3.6 mm horizontal-bar height so the guide remains stable across
-output-device sizes.}
+\item{position, show.legend, inherit.aes}{Standard ggplot2 layer arguments.}
 
 \item{...}{Additional arguments passed to \code{geom_polygon()}}
 }
 \value{
-A list of ggplot2 layers
+A ggplot2 layer.
 }
 \description{
-Draws colored ribbons corresponding to alignment results. Color scheme and spacing parameters are specified here.
+Draws alignment ribbons. Identity is mapped to `ribbon_fill` by default;
+alternative mappings and legends are controlled with `aes()`, `scale_*()`
+and `guides()`.
 }
 \examples{
 library(ggchord)

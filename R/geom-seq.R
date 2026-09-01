@@ -12,21 +12,15 @@ seq_geom <- rename_geom_aes(ggplot2::GeomPath, renames = c(colour = "seq_colour"
 #' @param mapping Default NULL (uses pre-computed data)
 #' @param data Default NULL (retrieved automatically from the layout)
 #' @param seq_order Optional character vector. Specifies the drawing order of sequences
-#' @param seq_labels Optional character vector or named vector. Sequence labels
 #' @param seq_orientation Optional numeric (1 or -1). Sequence orientation, default 1
 #' @param seq_gap Optional numeric. Gap proportion between sequences, default 0.03
 #' @param seq_radius Optional numeric (> 0). Sequence arc radius, default 1.0
 #' @param seq_curvature Optional numeric. Arc curvature (0=straight, 1=standard arc, >1=more curved), default 1.0
-#' @param seq_colors Optional color vector or named vector. Sequence colors
 #' @param linewidth Arc line width, default 0.9
-#' @param show_legend Whether to show the legend for this layer, default TRUE
-#' @param legend_position Position of this layer's legend (the Seq ID legend):
-#'   one of "left", "right", "top", "bottom" or "inside", default "right". Pass
-#'   NULL to let the legend follow \code{theme(legend.position = ...)} together
-#'   with the other legends. Can also be set with \code{theme(legend.position.seq = ...)}.
+#' @param position,show.legend,inherit.aes Standard ggplot2 layer arguments.
 #' @param ... Additional arguments passed to \code{geom_path()}
 #'
-#' @return A list of ggplot2 layers
+#' @return A ggplot2 layer.
 #' @export
 #'
 #' @examples
@@ -36,19 +30,24 @@ seq_geom <- rename_geom_aes(ggplot2::GeomPath, renames = c(colour = "seq_colour"
 #' p
 geom_seq <- function(mapping = NULL, data = NULL,
                      seq_order = NULL,
-                     seq_labels = NULL,
                      seq_orientation = NULL,
                      seq_gap = NULL,
                      seq_radius = NULL,
                      seq_curvature = NULL,
-                     seq_colors = NULL,
                      linewidth = 0.9,
-                     show_legend = TRUE,
-                     legend_position = "right",
+                     position = "identity",
+                     show.legend = TRUE,
+                     inherit.aes = FALSE,
                      ...) {
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
   dots <- list(...)
+  ggchord_reject_retired(dots, "geom_seq()", c(
+    seq_labels = "geom_seq_label(labels = ...) or a label scale",
+    seq_colors = "scale_seq_colour_manual(values = ...)",
+    show_legend = "show.legend",
+    legend_position = "guides(seq_colour = guide_ggchord_legend(position = ...))"
+  ))
   removed_group_args <- intersect(
     names(dots),
     c("seq_group", "seq_group_gap", "seq_group_labels",
@@ -70,19 +69,6 @@ geom_seq <- function(mapping = NULL, data = NULL,
     )
   }
 
-  if (!missing(seq_labels) && !is.null(seq_labels)) {
-    ggchord_deprecate_once(
-      "geom_seq(seq_labels)",
-      "scale_seq_colour_manual(labels = ...) and geom_seq_label(labels = ...)"
-    )
-  }
-  if (!missing(legend_position)) {
-    ggchord_deprecate_once(
-      "geom_seq(legend_position)",
-      "guides(seq_colour = guide_ggchord_legend(position = ...))"
-    )
-  }
-
   # The layout is computed at build time (ggplot_build.ggchord). The
   # parameters are attached to the layer itself so that the plot object is
   # fully self-contained.
@@ -92,11 +78,11 @@ geom_seq <- function(mapping = NULL, data = NULL,
     mapping     = ggplot2::aes(x = x, y = y, group = seq_id, seq_colour = seq_id),
     stat        = "identity",
     geom        = seq_geom,
-    position    = "identity",
-    show.legend = if (identical(show_legend, TRUE)) {
+    position    = position,
+    show.legend = if (identical(show.legend, TRUE)) {
                     c(seq_colour = TRUE, fill = FALSE)
-                  } else show_legend,
-    inherit.aes = FALSE,
+                  } else show.legend,
+    inherit.aes = inherit.aes,
     check.param = FALSE,
     key_glyph   = key_glyph_seq,
     params      = c(list(
@@ -108,20 +94,16 @@ geom_seq <- function(mapping = NULL, data = NULL,
   lyr$ggchord_params <- list(
     type                  = "seq",
     seq_order             = seq_order,
-    seq_labels            = seq_labels,
+    seq_labels            = NULL,
     seq_orientation       = seq_orientation,
     seq_gap               = seq_gap,
     seq_radius            = seq_radius,
     seq_curvature         = seq_curvature,
-    seq_colors            = seq_colors,
-    legend_position       = legend_position
+    seq_colors            = NULL,
+    legend_position       = NULL
   )
   lyr <- ggchord_capture_layer_input(
     lyr, data, mapping, c("seq_id", "length", "seq_ring")
   )
-  lyr <- ggchord_add_legacy_scale(
-    lyr, !missing(seq_colors) && !is.null(seq_colors), "seq_colors",
-    "seq_colour", "scale_seq_colour_manual(values = ...)"
-  )
-  list(lyr)
+  lyr
 }

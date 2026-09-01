@@ -70,10 +70,12 @@ export_ggchord_layout <- function(
       gene_text = "labels",
       gene_text_repel = "labels",
       gene_label_segment = "labels",
+      gene_label_repel = "labels",
       seq_label = "labels",
       axis_line = "axis",
       axis_seg = "axis",
       axis_text = "axis",
+      axis = "axis",
       NA_character_
     )
   }

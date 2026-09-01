@@ -87,11 +87,13 @@ ggchord_ribbon_density <- function(ribbon_data, seq_data, bins, weight,
 
 ggchord_stat_ribbon_layer <- function(
     type, mapping, data, bins, min_bundle, weight, group_by,
-    show_legend, dots) {
+    position, show.legend, inherit.aes, dots) {
   weight <- match.arg(weight, c("length", "count", "pident"))
-  args <- c(list(mapping = mapping, data = data, show_legend = show_legend), dots)
-  layers <- do.call(geom_ribbon, args)
-  lyr <- layers[[1L]]
+  args <- c(list(
+    mapping = mapping, data = data, show.legend = show.legend,
+    inherit.aes = inherit.aes, position = position
+  ), dots)
+  lyr <- do.call(geom_ribbon, args)
   # ggplot2 deliberately drops input columns that are not mapped before a Stat
   # runs. Carry the three precomputed values through private aesthetics, then
   # expose their public names from compute_panel() for after_stat().
@@ -110,7 +112,7 @@ ggchord_stat_ribbon_layer <- function(
     weight = weight,
     group_by = group_by
   )
-  list(lyr)
+  lyr
 }
 
 #' Bundle ribbons as a ggchord stat
@@ -122,7 +124,7 @@ ggchord_stat_ribbon_layer <- function(
 #' @param mapping,data Standard layer mapping and data arguments.
 #' @param bins,min_bundle,weight,group_by Passed to
 #'   [bundle_ggchord_ribbons()].
-#' @param show_legend Whether to show the ribbon fill guide.
+#' @param position,show.legend,inherit.aes Standard ggplot2 layer arguments.
 #' @param ... Ribbon geometry and appearance arguments passed to
 #'   [geom_ribbon()].
 #' @return A ggchord ribbon layer.
@@ -131,10 +133,11 @@ stat_ribbon_bundle <- function(
     mapping = NULL, data = NULL,
     bins = 80L, min_bundle = 2L,
     weight = c("length", "count", "pident"),
-    group_by = NULL, show_legend = TRUE, ...) {
+    group_by = NULL, position = "identity",
+    show.legend = TRUE, inherit.aes = FALSE, ...) {
   ggchord_stat_ribbon_layer(
     "bundle", mapping, data, bins, min_bundle, weight, group_by,
-    show_legend, list(...)
+    position, show.legend, inherit.aes, list(...)
   )
 }
 
@@ -156,9 +159,10 @@ stat_ribbon_density <- function(
     mapping = NULL, data = NULL,
     bins = 80L,
     weight = c("length", "count", "pident"),
-    group_by = NULL, show_legend = TRUE, ...) {
+    group_by = NULL, position = "identity",
+    show.legend = TRUE, inherit.aes = FALSE, ...) {
   ggchord_stat_ribbon_layer(
     "density", mapping, data, bins, 2L, weight, group_by,
-    show_legend, list(...)
+    position, show.legend, inherit.aes, list(...)
   )
 }

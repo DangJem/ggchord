@@ -22,14 +22,11 @@
 #' @param predicate Optional function taking the ribbon data.frame and returning
 #'   a logical vector with one element per row. Evaluated safely (no string
 #'   parsing).
-#' @param highlight_color Character. Highlight fill colour, default \code{"#C51B7D"}.
-#' @param highlight_alpha Numeric (0-1). Highlight alpha, default 0.75.
-#' @param highlight_outline_color Optional outline colour, default \code{NULL}.
-#' @param highlight_outline_width Numeric. Outline width, default 0.3.
-#' @param show_legend Logical. Whether to show a legend, default FALSE.
+#' @param fill,alpha,colour,linewidth,linetype Standard fixed polygon styles.
+#' @param position,show.legend,inherit.aes Standard ggplot2 layer arguments.
 #' @param ... Additional arguments passed to \code{geom_polygon()}
 #'
-#' @return A list of ggplot2 layers
+#' @return A ggplot2 layer.
 #' @export
 #'
 #' @examples
@@ -48,21 +45,32 @@ geom_ribbon_highlight <- function(mapping = NULL, data = NULL,
                                   min_length = NULL,
                                   max_length = NULL,
                                   predicate = NULL,
-                                  highlight_color = "#C51B7D",
-                                  highlight_alpha = 0.75,
-                                  highlight_outline_color = NULL,
-                                  highlight_outline_width = 0.3,
-                                  show_legend = FALSE,
+                                  fill = "#C51B7D",
+                                  alpha = 0.75,
+                                  colour = NA,
+                                  linewidth = 0.3,
+                                  linetype = 1,
+                                  position = "identity",
+                                  show.legend = FALSE,
+                                  inherit.aes = FALSE,
                                   ...) {
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
+  dots <- list(...)
+  ggchord_reject_retired(dots, "geom_ribbon_highlight()", c(
+    highlight_color = "fill",
+    highlight_alpha = "alpha",
+    highlight_outline_color = "colour",
+    highlight_outline_width = "linewidth",
+    show_legend = "show.legend"
+  ))
 
   if (!is.null(predicate) && !is.function(predicate)) {
     ggchord_stop("predicate must be a function taking ribbon_data and returning a logical vector")
   }
-  if (!is.numeric(highlight_alpha) || length(highlight_alpha) != 1 ||
-      !is.finite(highlight_alpha) || highlight_alpha < 0 || highlight_alpha > 1) {
-    ggchord_stop("highlight_alpha must be in [0, 1]")
+  if (!is.numeric(alpha) || length(alpha) != 1 ||
+      !is.finite(alpha) || alpha < 0 || alpha > 1) {
+    ggchord_stop("alpha must be in [0, 1]")
   }
   validate_optional_numeric <- function(x, name, integer = FALSE) {
     if (is.null(x)) return(invisible(NULL))
@@ -105,16 +113,15 @@ geom_ribbon_highlight <- function(mapping = NULL, data = NULL,
     mapping     = ggplot2::aes(x = x, y = y, group = group),
     stat        = "identity",
     geom        = ggplot2::GeomPolygon,
-    position    = "identity",
-    show.legend = show_legend,
-    inherit.aes = FALSE,
+    position    = position,
+    show.legend = show.legend,
+    inherit.aes = inherit.aes,
     check.aes   = FALSE,
     check.param = FALSE,
-    params      = c(list(...),
-                    list(fill = highlight_color,
-                         alpha = highlight_alpha,
-                         colour = highlight_outline_color %||% NA,
-                         linewidth = highlight_outline_width))
+    params      = c(dots, list(
+      fill = fill, alpha = alpha, colour = colour,
+      linewidth = linewidth, linetype = linetype
+    ))
   )
   lyr$ggchord_type <- "ribbon_highlight"
   lyr$ggchord_params <- list(
@@ -127,15 +134,15 @@ geom_ribbon_highlight <- function(mapping = NULL, data = NULL,
     min_length               = min_length,
     max_length               = max_length,
     predicate                = predicate,
-    highlight_color          = highlight_color,
-    highlight_alpha          = highlight_alpha,
-    highlight_outline_color  = highlight_outline_color,
-    highlight_outline_width  = highlight_outline_width
+    highlight_color          = fill,
+    highlight_alpha          = alpha,
+    highlight_outline_color  = colour,
+    highlight_outline_width  = linewidth
   )
   lyr <- ggchord_capture_layer_input(
     lyr, data, mapping,
     c("qaccver", "saccver", "length", "pident", "qstart", "qend",
       "sstart", "send")
   )
-  list(lyr)
+  lyr
 }

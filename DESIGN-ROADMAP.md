@@ -24,8 +24,7 @@
 | v0.8.0 | 数据导入、ribbon 预处理、序列分组 | 已发布；遗留正确性问题已在 v0.9.0 修复 |
 | v0.9.0 | grammar 基础、scale/theme/guide/coord、图层独立性 | 已正式发布（2026-08-31） |
 | v0.10.0 | 发表级视觉、feature 几何、显式 ribbon 聚合、布局导出与静态预览 | 已正式发布（2026-09-01） |
-| v0.11.0 | 高级轨道、显式多环和主题 API 可发现性 | 规划中 |
-| v0.12.0 | ggplot2 grammar 内核、公开 API 精简和扩展契约 | 规划中 |
+| v0.11.0 | 高级轨道、显式多环、ggplot2 grammar 内核与 API 收敛 | 开发中 |
 | v1.0.0 | API 冻结、完整文档和长期兼容承诺 | 规划中 |
 
 ### v0.9.0 正式版状态
@@ -42,7 +41,7 @@ v0.9.0 已完成：
 
 以下内容不是 v0.9.0 发布阻断项：
 
-- 旧 scale 类 geom 参数在 v0.9.0 中继续作为带警告的兼容入口，到 v1.0.0 删除；
+- 旧 scale 类 geom 参数在 v0.9.0–v0.10.0 中作为兼容入口，并已在 v0.11.0 删除；
 - 自定义 Stat/Geom 的进一步拆分属于内部演进，不改变 v0.9.0 的公开契约；
 - 全量文档、网页和图片重写留到 v1.0.0；
 - feature shape、多环、密集 ribbon 和正式布局导出按后续版本推进。
@@ -92,12 +91,14 @@ v0.9.0 已完成：
 
 ### 2.4 兼容策略
 
-- v0.9.0 保留旧的 scale 类参数并给出一次性弃用警告；
-- 旧参数在内部转换成对应 scale；
-- 同时使用旧参数和新 scale 时明确报冲突；
-- v1.0.0 删除已经完成迁移的旧参数；
-- 当前被静默忽略的 `data` 和 `mapping` 直接修复，不需要弃用过程；
-- 已经完成精简的 `geom_gene_label_repel()` 不恢复旧的随机排斥参数。
+- v0.9.0–v0.10.0 已完成旧接口的过渡和迁移说明；
+- v0.11.0 作为 v1.0.0 前最后一次集中收敛，直接删除旧的 scale 类 geom 参数，
+  不再保留软弃用或静默兼容；
+- 删除的参数必须立即给出可执行的迁移方向；
+- `data`、`mapping`、`position`、`show.legend` 和 `inherit.aes` 采用标准
+  ggplot2 语义；
+- 已完成精简的 `geom_gene_label_repel()` 不恢复随机 force/seed 参数；
+- v1.0.0 发布后再开始长期兼容承诺。
 
 ---
 
@@ -454,13 +455,13 @@ v0.10.0 不新增独立的手动标签 geom，而是增强现有 `geom_gene_labe
 - 多个同类图层互不覆盖；
 - `get_chord_layout(plot)` 替代全局最近布局。
 
-状态：已完成；无参调用仅作为 v0.9.0 兼容入口保留并警告。
+状态：已完成；无参调用在 v0.9.0–v0.10.0 兼容并警告，v0.11.0 已删除。
 
 ### C. scale/theme/guide/coord
 
 - 实现第三节列出的首批接口；
 - 建立首批色觉友好默认色板、图例和主题元素；v0.10.0 继续视觉校准；
-- 旧参数进入弃用期；
+- 旧参数在 v0.9.0–v0.10.0 进入弃用期，并于 v0.11.0 删除；
 - 当前阶段只维护必要的 NEWS 和生成文档，README 保持稳定；完整文档重构留到 v1.0.0。
 
 状态：已完成。README 按确认保持稳定，必要变更已记录在 NEWS 和生成的 Rd 中。
@@ -593,124 +594,89 @@ HTML widget。正式保存仍使用 `ggsave()`，临时目录仅保留最近 20 
 
 ---
 
-## 六、v0.11.0 — 高级轨道与布局（开发中）
+## 六、v0.11.0 — 高级轨道与 grammar 收敛（开发中）
 
-v0.10.0 已发布，当前以 `Version: 0.11.0` 开发版进入以下工作：
+v0.11.0 合并原 v0.12.0 计划，作为 v1.0.0 前的集中 API 收敛版本。当前实现包括：
 
-- 基于 bundling 核心增加正式的 `stat_ribbon_bundle()` 和
-  `stat_ribbon_density()`，公开 `after_stat(bundle_n)` 与
-  `after_stat(density)`；
-- 新增 `focus_ggchord_data()`，按 `seq_id/start/end` 同步裁切并重定位 sequence、
-  gene 和 ribbon，支持多个 locus、`expand` 及 `"trim"`/`"drop"` 边界策略；
-- 新增 `position_feature_stack()`，让重叠 gene/feature 使用最少径向轨道，并允许
-  标签层复用相同 position；
-- 通过 `seq_ring` aesthetic 和 `scale_seq_ring_manual(values = ...)` 设计显式多环，
-  不自动猜测环数或半径；
-- 新增 `theme_ggchord_elements()` 作为局部主题修改器，只显式提供
-  `axis_line`、`axis_ticks`、`axis_text`、`seq_label`、`gene_label` 和
-  `gene_label_segment` 六个 ggchord 专属参数；`NULL` 表示不覆盖，
-  `element_blank()` 表示隐藏；
-- `ggplot2::theme()` 继续负责标题、背景、边距和图例等通用元素，不复制完整
-  ggplot2 theme 参数；文档明确列出对 chord 图无作用的 Cartesian axis、facet 和
-  panel-grid 参数，避免把 `axis.text` 与 `ggchord.axis.text` 混淆；
-- 不引入 gggenomes 式完整命名 track 容器，继续使用构造器数据、图层 `data` 和
-  geometry registry。
+### A. 高级布局
 
-### v0.11.0 开发实现状态（2026-09-01）
+- `stat_ribbon_bundle()` / `stat_ribbon_density()` 已公开
+  `after_stat(bundle_n)`、`after_stat(bundle_weight)` 和 `after_stat(density)`；
+- `focus_ggchord_data()` 已支持多 locus 同步裁切、`trim` / `drop` 边界策略和
+  来源追踪；
+- `position_feature_stack()` 已实现确定性最少径向轨道；
+- `seq_ring` 和 `scale_seq_ring_manual()` 已实现显式多环，不猜测环数或半径；
+- 继续保留 `geom_ribbon_highlight()`，用于安全、可追踪的叠加筛选。
 
-- `stat_ribbon_bundle()` / `stat_ribbon_density()` 已完成，并可通过
-  `after_stat()` 访问 `bundle_n`、`bundle_weight` 和 `density`；
-- `focus_ggchord_data()` 已完成多 locus 同步裁切、坐标重定位、
-  `trim` / `drop` 边界策略及来源追踪；
-- `position_feature_stack()` 已完成确定性最少径向轨道分配，
-  `geom_gene()` 与 `geom_feature()` 共用该 position；
-- `seq_ring` 与 `scale_seq_ring_manual()` 已完成显式环层半径分配，
-  不自动猜测环数，不与 `seq_radius` 静默混用；
-- `theme_ggchord_elements()` 已完成六个 ggchord 专属主题元素的
-  显式局部修改接口；
-- 当前进入兼容性、边界输入、性能和 `R CMD check` 收尾阶段；
-  README、vignette、网站和说明图片仍保持不变。
+### B. 标准图层与构建
 
----
+- 每个公开 geom/stat 返回一个标准 `LayerInstance`；
+- `geom_axis()` 使用组合 Geom/gTree 绘制轴线、刻度和文字；
+- `geom_gene_label_repel()` 使用组合 Geom/gTree 绘制标签和指示线；
+- `+.ggchord` 不再展开自定义图层列表；
+- `prepare_ggchord_plot()` 成为布局、几何、默认标度和 Coord 的唯一准备入口；
+- `ggplot_build.ggchord()` 仅在准备后进入标准 ggplot2 build；
+- `coord_chord()` 现在返回真正的 `CoordChord` ggproto；
+- 删除全局“最近一次布局”，`get_chord_layout(plot)` 必须显式接收 plot。
 
-## 七、v0.12.0 — ggplot2 grammar 内核与 API 收敛
+### C. 参数和标度收敛
 
-v0.12.0 不再增加大量几何类型，而是在 v1.0.0 前完成一次可扩展性审计。
-目标是让用户能用熟悉的 ggplot2 分工理解 ggchord，并让第三方图层不需要
-依赖 ggchord 的未导出内部实现。
+所有公开 geom/stat 统一采用 `mapping`、`data`、`position`、`show.legend`、
+`inherit.aes` 和 `...`。`data` 可以是数据框或接收该图层默认数据的函数。
 
-### A. 与 ggplot2 风格的剩余差距
-
-1. **图层返回值**：部分 geom 仍返回图层列表，并依赖 <code>+.ggchord</code>
-   展平。v0.12.0 将评估用单个 Geom 的 <code>draw_panel()</code>/gTree 合并多种
-   grob，能返回单层的公开 geom 应返回标准 <code>LayerInstance</code>。
-2. **构建桥接**：当前 <code>ggplot_build.ggchord()</code> 负责共享布局、几何注入和
-   默认 scale。共享布局不能被机械地拆到各自独立的 Stat，但应把图层局部转换迁入
-   <code>setup_data()</code> / <code>setup_params()</code> /
-   <code>compute_group()</code>，将自定义 build 缩小成只调度一次全局布局的稳定桥接。
-3. **aesthetic 契约**：输入角色列和可视属性的映射目前仍有自定义求值路径。
-   将统一使用 quosure/tidy evaluation，保留原始列，并为后续
-   <code>after_stat()</code> 和 position 打通可测试的契约。
-4. **Geom/Stat/Position/Coord 对象**：当前 Coord 主要是装饰后的
-   <code>CoordFixed</code>，position 还没有正式公开。v0.12.0 将根据 v0.11.0
-   的 stack/ring 经验决定是否引入真正的 <code>CoordChord</code> ggproto，
-   并固化第三方 Stat/Position 可依赖的字段。
-5. **默认 scale 注入**：保留“缺失时自动添加”，但将 scale ownership、冲突
-   检测和 guide 合并从构建器中分离，并验证用户 scale 始终优先。
-6. **命名与生命周期**：统一 colour/color 别名、<code>*_by</code> 字符串参数、
-   role aesthetic 和报告对象命名；弃用消息只保留一个来源，并给出可直接执行的
-   迁移代码。
-7. **IDE 可发现性**：继续只精确导入 S3 注册必需的 ggplot2 符号；
-   ggchord 专属主题元素通过 <code>theme_ggchord_elements()</code> 显式列出，
-   不将 ggplot2 的整套 theme 参数重新包装一遍。
-
-### B. 函数与辅助函数价值审计
-
-| 结论 | 公开接口 | 理由与后续处理 |
-| --- | --- | --- |
-| 保留 | <code>ggchord()</code>、核心 geom、role scale、<code>coord_chord()</code> | 这些是 grammar 主干；内部可重构，公开语义应稳定 |
-| 保留 | validate/clean/read 系列 | 数据进入绘图前需要明确契约；三个 read 函数覆盖核心工作流 |
-| 保留 | filter/deduplicate/merge/bundle/optimize | 分别对应保守到激进的 ribbon 整理阶段，不应隐藏进 geom |
-| 保留 | <code>view_ggchord()</code> | 只预览标准 <code>ggsave()</code> 的真实尺寸，不建立第二套导出系统 |
-| 保留并明确分工 | <code>get_chord_layout()</code> / <code>export_ggchord_layout()</code> | 前者用于调试完整内部布局，后者是稳定、可选字段的对外导出 |
-| 保留 | <code>geom_feature()</code>、<code>geom_seq_region()</code> | 表达的生物语义不能由 gene/ribbon 无损替代 |
-| 审查后决定 | <code>geom_ribbon_highlight()</code> | 安全叠加筛选有价值，但与“过滤数据 + 第二个 ribbon 层”部分重复；未证明可无损替代前不删除 |
-| 精简候选 | <code>theme_ggchord_minimal()</code> / <code>theme_ggchord_publication()</code> | 当前与默认主题只有少量差异；v0.12.0 要么赋予清晰场景，要么弃用其中一个，dark 保留 |
-| 保留别名 | <code>scale_*_color_*()</code> | color/colour 双拼写是 ggplot2 生态预期，不视为冗余 |
-
-内部辅助函数按“单一职责、有直接调用者、可独立验证”三个条件审计。
-只为转发参数、重命名一次或兼容已删 API 而存在的 helper 合并到唯一调用点；
-几何运算、文字测量、碰撞检测、数据验证等可复用纯函数保留为内部 API。
-
-### C. 参数收敛表
-
-| 待收敛入口 | 目标用法 |
+| 已删除入口 | v0.11.0 用法 |
 | --- | --- |
-| <code>ggchord(title/rotation/panel_margin/show_legend)</code> | <code>labs()</code> / <code>coord_chord()</code> / <code>theme()</code> |
-| geom 中的 <code>legend_position</code> / <code>legend_key_*</code> | <code>guides()</code> + <code>guide_ggchord_*()</code> |
-| geom 中的颜色、顺序、limits、breaks 和 name 参数 | role-specific <code>scale_*()</code> |
-| <code>ribbon_*_by</code>、feature 的 type/category/label 字符串列名 | <code>aes()</code> 中的 role aesthetic |
-| <code>ribbon_alpha</code> 与 <code>alpha</code> 双入口 | 保留标准 <code>alpha</code>，映射用 ribbon alpha scale |
-| <code>geom_seq(seq_labels)</code> 与 seq label 层的 labels/seq_labels | 图例 labels 归 scale，图上文字归 seq label 层的单一入口 |
-| <code>geom_axis(show_axis = FALSE)</code> | 通过是否添加图层控制，不在已添加的 geom 中建第二个开关 |
-| <code>geom_seq_region(regions = ...)</code> | 统一使用标准 <code>data =</code> |
+| `ggchord(title/rotation/panel_margin/show_legend)` | `labs()` / `coord_chord()` / `theme()` |
+| `show_legend` | `show.legend` |
+| geom 的 `legend_position` / `legend_key_*` | `guides()` + `guide_ggchord_*()` |
+| geom 的颜色、顺序、limits、breaks、name | role-specific `scale_*()` |
+| `ribbon_*_by` 和 direction 样式参数 | `aes(ribbon_* = ...)` + 对应 scale |
+| `ribbon_alpha`、ribbon outline 参数 | `alpha`、`colour`、`linewidth`、`linetype` |
+| feature 的 type/category/label 字符串列名 | `aes(feature_type/feature_fill/feature_label = ...)` |
+| `geom_seq(seq_labels/seq_colors)` | `geom_seq_label(labels = ...)` / seq scale |
+| `geom_axis(show_axis/tick counts/axis_label_size)` | 是否添加图层、位置 scale、`size`/主题 |
+| `geom_seq_region(regions/region_* style)` | `data`、`fill`、`colour`、`alpha` |
 
-以上均先实现新路径、给出明确迁移警告，再于 v1.0.0 删除；
-<code>geom_gene_label_repel()</code> 已经完成的精简不再反向增加 force/seed
-等随机参数。
+旧参数不再软弃用或静默忽略，而是立即给出迁移错误。用户提供的 scale 永远优先；
+只提供映射而没有 scale 时，根据实际数据推断连续或离散默认标度；同一 aesthetic
+出现不兼容类型时明确报错。
 
-### D. v0.12.0 验收
+### D. aesthetic、主题与命名空间
 
-- 一张图上的用户 scale/theme/coord 始终优先于默认值；
-- 公开 geom 的 mapping/data/inherit.aes/show.legend 语义与 ggplot2 一致；
-- 第三方图层只依赖已记录的布局字段，不读取包环境或“最近一张图”状态；
-- 弃用入口有单一消息和可运行的替代写法；
-- 无新的广泛 namespace import，IDE 自动补全不暴露整个 ggplot2；
-- 重构前后使用同一组公开行为测试和少量临时视觉验收，不为内部坐标建立大型快照库。
+- role aesthetic 使用 quosure/tidy evaluation，在构建中只解析一次并保留原始列；
+- 控制坐标的 role aesthetic 禁止 `after_stat()` / `after_scale()`；视觉 aesthetic
+  支持标准 staged mapping；
+- `theme_ggchord()`、`theme_ggchord_minimal()`、
+  `theme_ggchord_publication()`、`theme_ggchord_dark()` 均直接接受
+  `axis_line`、`axis_ticks`、`axis_text`、`seq_label`、`gene_label` 和
+  `gene_label_segment`；删除重复的 `theme_ggchord_elements()`；
+- minimal 弱化辅助线，publication 使用紧凑期刊排版，dark 保留完整深色适配；
+- `theme()`、`ggtitle()`、`labs()` 等仍是 ggplot2 原函数的精确精选重导出，
+  不创建同名包装器，也不导出无关 geom/facet/coord/完整主题。
+
+### E. 接口价值审计结论
+
+- 保留核心 geom、role scale、guide、coord、数据验证/清理/导入、ribbon 整理、
+  Viewer、focus、stack、ring 和布局导出；
+- `get_chord_layout()` 用于完整内部调试，`export_ggchord_layout()` 用于稳定导出；
+- color/colour 双拼写别名遵循 ggplot2 生态，保留；
+- 删除全局布局环境、旧 scale 兼容 helper、图层列表展开和重复 build 路径；
+- 内部纯几何、文字测量、碰撞检测和验证 helper 保留。
+
+### F. 当前验收状态（2026-09-02）
+
+- testthat 已精简为 100 项公开行为断言，当前 0 fail、0 warning、0 skip；
+- 主图、三种自动标签、组合 Geom、stat、feature shape、region、highlight、ring、
+  data function、标度推断、布局导出和 Viewer 均已通过烟雾测试；
+- `R CMD check` 已达到 0 error、0 warning、0 note；
+- `aligned`、`radial`、`arc` 和小画布的临时 PNG 及 PDF 已完成视觉
+  验收，不写入仓库；SVG 代码路径保留可选 `svglite` / Cairo 检查，
+  当前机器因未安装 `svglite` 且 X11 动态库缺失，未做本地 SVG 视觉渲染；
+- README、vignette、网站及说明图片在开发阶段保持不变。
 
 ---
 
-## 八、v1.0.0 — 稳定 API
+## 七、v1.0.0 — 稳定 API
 
 - 删除已完成迁移的旧参数；
 - 冻结核心 aes、scale、theme、guide、coord 和 layout export 契约；
@@ -731,7 +697,7 @@ guide、coord 和 layout export 契约单独评估，不在本路线图中预先
 
 ---
 
-## 九、testthat 精简策略
+## 八、testthat 精简策略
 
 测试只保留公开 API 的最小行为，不再通过大量精确坐标断言锁定内部实现。
 
