@@ -64,10 +64,17 @@ test_that("ggchord themes and guides use registered role elements", {
       "element_blank"
     )
   }
-  expect_identical(
-    unname(getNamespaceImports("ggchord")$ggplot2),
-    "ggplot_build"
+  useful_ggplot2 <- c(
+    "aes", "after_stat", "after_scale", "annotate", "labs", "ggtitle",
+    "guides", "theme", "element_blank", "element_line", "element_rect",
+    "element_text", "margin", "rel", "ggsave", "last_plot", "waiver",
+    "expansion"
   )
+  expect_true(all(useful_ggplot2 %in% getNamespaceExports("ggchord")))
+  expect_false(any(c(
+    "ggplot", "geom_point", "facet_wrap", "coord_cartesian",
+    "theme_minimal", "scale_colour_manual"
+  ) %in% getNamespaceExports("ggchord")))
   expect_s3_class(guide_ggchord_legend(), "GuideLegend")
   expect_s3_class(guide_ggchord_colourbar(), "GuideColourbar")
   horizontal <- guide_ggchord_colourbar(
@@ -103,6 +110,22 @@ test_that("ggchord themes and guides use registered role elements", {
   expect_error(
     guide_ggchord_legend(size_scale = 0),
     "positive finite number"
+  )
+})
+
+test_that("selected ggplot2 helpers work directly with ggchord", {
+  data(seq_data_example)
+
+  p <- ggchord(seq_data_example, validate = "none") +
+    geom_seq() +
+    ggtitle("Selected helper") +
+    theme(plot.title = element_text(face = "italic"))
+
+  built <- build_ggchord_smoke(p)
+  expect_equal(built$plot$labels$title, "Selected helper")
+  expect_equal(
+    ggplot2::calc_element("plot.title", built$plot$theme)@face,
+    "italic"
   )
 })
 

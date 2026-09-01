@@ -1,119 +1,82 @@
-# ggchord 0.10.0 (development version)
+# ggchord 0.10.0
 
-## Dense ribbons and static preview
+## Highlights
 
-* Package imports are now deliberately narrow: ggplot2, grid and grDevices are
-  referenced with qualified calls, with only the ggplot2 `ggplot_build()` S3
-  generic imported explicitly. This reduces dependency symbols exposed to IDE
-  completion during package development without changing the public API.
+* Dense alignments can now be simplified explicitly with
+  `bundle_ggchord_ribbons()`, while `optimize_ggchord_layout()` searches for a
+  deterministic sequence order and orientation with fewer weighted crossings.
+  `geom_ribbon()` remains conservative: one input row still draws one ribbon
+  unless the user requests preprocessing.
 
-* `theme_ggchord()` no longer repeats Cartesian-axis and panel-grid settings
-  already supplied by `theme_void()`; the minimal and publication variants
-  likewise avoid restating unchanged backgrounds and margins. Resolved theme
-  elements and rendered defaults remain unchanged.
+* `geom_feature()` supports independent `"arrow"`, `"block"`,
+  `"chevron"`, and `"lollipop"` geometries with
+  `scale_feature_shape_manual()`. Shapes and legend keys follow each
+  sequence's local tangent/normal frame; lollipop heads remain circular on
+  curved sequences.
 
-* Automatically generated legends now scale their keys, colourbars,
-  typography and margins from the active output device, using the 8-by-6-inch
-  defaults as the reference and bounded scaling for extreme devices. Explicit
-  guide dimensions still take precedence.
+* New `export_ggchord_layout()` provides stable layer geometry with
+  `layer_id`, `source_row`, mapped input columns, and coordinate-space
+  metadata. New `view_ggchord()` previews the real dimensions produced by
+  `ggsave()` without introducing a second saving API or an interactive
+  dependency.
 
-* Small-device text fitting now uses the real device short side instead of
-  falling back to a six-inch canvas. Automatic limits, collision boxes and
-  leader-line clipping share one scale derived from the undecorated chord
-  geometry. The default legend background is transparent so it cannot mask
-  labels that legitimately extend into a compact plot margin.
+## Ribbons, labels, and layout
 
-* New `bundle_ggchord_ribbons()` explicitly groups dense alignments by directed
-  sequence pair, alignment direction, normalized midpoint bins, and optional
-  grouping columns. It preserves small groups, reports every source row, keeps
-  forward and reverse alignments separate, and adds `.bundle_n`,
-  `.bundle_weight`, and `.bundle_density`. `geom_ribbon()` remains conservative:
-  one input row still means one ribbon unless the user calls this helper.
+* The default `ribbon_gap = NULL` resolves clearance per endpoint. Ribbons
+  move closer to `geom_seq()` where no gene or feature polygon is present and
+  retain clearance where a physical obstacle overlaps the genomic interval.
+  Text and leader lines are not treated as ribbon obstacles.
 
-* New `optimize_ggchord_layout()` deterministically searches sequence order and
-  orientation for a lower weighted crossing-and-span score. It never mutates
-  input data or accepts a worse arrangement; inputs above 2,000 ribbons use a
-  documented fixed 64-bin approximation.
+* Ribbon boundaries use a darker neutral outline, and unrequested ribbon or
+  gene polygons are no longer computed. Dense-data reports preserve source-row
+  mappings, alignment direction, weights, and approximation diagnostics.
 
-* New `view_ggchord()` renders a temporary PNG or SVG with standard `ggsave()`
-  dimensions and can open it in an IDE viewer or browser. Its 8-by-6-inch
-  default avoids a super-wide preview; `viewer = "none"` supports scripts and
-  tests. It does not add Shiny, Plotly, an HTML widget, a canvas object, or a
-  package-specific saving workflow.
+* `geom_gene_label()` is the single fixed/manual label layer and now supports
+  horizontal, radial, or tangent text; inside, outside, or automatic side
+  selection; and hide, nudge, or allow overlap policies. Automatic leader-line
+  placement remains in `geom_gene_label_repel()`.
 
-## Fixed labels and publication defaults
+* Coordinate fitting uses independent tight x/y ranges. Text measurement,
+  collision boxes, leader clipping, and limits share a device-aware physical
+  scale, preventing small exports from being measured as a six-inch canvas.
+  The transparent default legend background no longer masks labels extending
+  into compact plot margins.
 
-* The layout-export and performance work previously planned for v0.11.0 is now
-  part of the v0.10.0 development cycle; the package version remains 0.10.0.
-  New `export_ggchord_layout()` returns selected layer geometry with stable
-  `layer_id`, `source_row`, mapped input columns and explicit coordinate-space
-  metadata. Unrequested ribbon and gene polygons are no longer computed.
+## Visual system and ggplot2 integration
 
-* The default `geom_ribbon(ribbon_gap = NULL)` now resolves endpoint spacing
-  locally. A ribbon endpoint moves close to its sequence when its genomic
-  interval contains no `geom_gene()` / `geom_feature()` polygon, while an
-  overlapping polygon retains the required clearance. Labels and leader lines
-  are deliberately ignored; an explicit numeric `ribbon_gap` disables this
-  automatic behaviour.
+* Default sequence, ribbon, gene, label, axis, and background styles were
+  recalibrated for a restrained publication-oriented hierarchy. Strand legend
+  keys use the same tapered silhouettes and directions as `geom_gene()`.
 
-* `geom_feature(feature_shape = "lollipop")` now constructs its head directly
-  in a local orthonormal tangent/normal frame, preventing the circle from
-  appearing flattened on curved sequences.
+* Identity, sequence, strand, and feature guides scale keys, colourbars,
+  typography, and margins relative to the output device, with bounded scaling
+  for extreme sizes. Explicit guide dimensions remain authoritative.
 
-* `geom_feature()` now draws independent `"arrow"`, `"block"`, `"chevron"`,
-  and `"lollipop"` geometries along each sequence's real local curve. Map
-  `feature_shape` and control category-to-geometry values with the new
-  `scale_feature_shape_manual()`; fixed `feature_shape` values remain available
-  directly in the geom. Legend keys use the same silhouettes as the plot.
+* Namespace imports are deliberately narrow. Internal ggplot2, grid, and
+  grDevices calls are qualified, while ggchord selectively re-exports only
+  helpers directly useful for chord plots: `aes()`, `after_stat()`,
+  `after_scale()`, `annotate()`, `labs()`, `ggtitle()`, `guides()`,
+  `theme()`, the four theme element constructors, `margin()`, `rel()`,
+  `ggsave()`, `last_plot()`, `waiver()`, and `expansion()`. Cartesian
+  geoms, facets, coordinates, generic scales, and complete theme presets remain
+  in ggplot2 so IDE completion stays focused.
 
-* Sequence grouping has been removed. `geom_seq_group_label()`,
-  `scale_group_colour_manual()` / `scale_group_color_manual()`, and all
-  `seq_group*` arguments in `geom_seq()` no longer form part of the package.
-  Passing a removed grouping argument or aesthetic now produces a direct
-  migration error instead of silently changing sequence spacing.
+* `theme_ggchord()` and its variants no longer repeat Cartesian-axis,
+  panel-grid, background, or margin settings already inherited unchanged.
 
-* `geom_ribbon()` now uses a darker neutral default outline (`#59636D`) so
-  ribbon boundaries remain legible after transparency is applied. Explicit
-  outline colours and `ribbon_colour` scales still take precedence.
+## Breaking changes
 
-* `geom_gene_label()` is now the single fixed/manual label layer; no separate
-  `geom_gene_label_manual()` is planned. It adds `gene_label_orientation =
-  "horizontal" | "radial" | "tangent"`, `gene_label_side = "outside" |
-  "auto" | "inside"`, and `gene_label_overlap = "hide" | "nudge" | "allow"`.
-  The new defaults keep fixed labels horizontal and outside the chord, and
-  deterministically omit later colliding labels in input order. Existing
-  per-sequence/per-strand rotation and offsets remain available for direct
-  control; automatic leader-line placement remains the responsibility of
-  `geom_gene_label_repel()`.
+* Sequence grouping has been removed: `geom_seq_group_label()`,
+  `scale_group_colour_manual()` / `scale_group_color_manual()`, and every
+  `seq_group*` argument or aesthetic now produce a clear migration error.
 
-* The Identity colourbar now has compact physical dimensions instead of
-  filling the available device height. Its title is `Identity (%)`, its
-  default breaks are less crowded, and vertical and horizontal guides remain
-  stable when the export size changes. The default bar is now 50 mm long and
-  3.6 mm thick after iterative visual review.
+* No separate `geom_gene_label_manual()` is introduced. Use
+  `geom_gene_label()` for fixed/manual placement and
+  `geom_gene_label_repel()` for automatic layouts.
 
-* Automatic coordinate fitting now keeps independent tight x/y ranges instead
-  of padding both dimensions to a square. `coord_fixed()` still preserves the
-  geometry's physical aspect ratio, while the panel uses wide or tall devices
-  more efficiently. `coord_chord()` now defaults to `expand = FALSE` because
-  automatic fitting already includes a small safety margin. The default plot
-  also retains `theme_ggchord()`'s small outer margin; the deprecated
-  `panel_margin` argument only overrides it when explicitly supplied.
-
-* The default theme now uses a white export-safe canvas, quieter axes, a
-  smaller title and tighter legend spacing. Sequence strokes and arrowheads
-  are lighter, ribbon opacity is slightly increased, and strand keys use slim
-  arrows that point in opposite directions for `+` and `-`. Colourbar titles
-  now have a physical gap from the bar, and vertically stacked legend groups
-  have slightly more separation. Package examples use a conventional
-  4:3 canvas; external RStudio/graphics-device dimensions remain under user
-  control, as in ggplot2.
-
-* The visual hierarchy is informed by Circos' restrained circular information
-  design, clinker's publication-oriented gene arrows, DNA Features Viewer's
-  annotation collision handling, and the local annotation/crowding behaviour
-  documented by SnapGene and Geneious. ggchord uses its own palettes, generic
-  API names, geometry and key glyphs rather than copying third-party assets.
+* Plotly conversion remains removed. v0.10.0 focuses on deterministic static
+  ggplot2 output; interactive rendering will be reconsidered only after the
+  static API is stable.
 
 # ggchord 0.9.0
 
