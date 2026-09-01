@@ -12,6 +12,7 @@ geom_gene(
   gene_color_scheme = NULL,
   gene_colors = NULL,
   gene_order = NULL,
+  position = "identity",
   show_legend = TRUE,
   legend_position = "right",
   ...
@@ -31,6 +32,9 @@ geom_gene(
 \item{gene_colors}{Optional color vector. Fill color of gene arrows}
 
 \item{gene_order}{Optional character vector. Display order of genes in the legend}
+
+\item{position}{Position adjustment. Use [position_feature_stack()] to place
+overlapping genes or features on radial lanes.}
 
 \item{show_legend}{Whether to show the legend, default TRUE}
 

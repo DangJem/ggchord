@@ -117,7 +117,7 @@ geom_seq <- function(mapping = NULL, data = NULL,
     legend_position       = legend_position
   )
   lyr <- ggchord_capture_layer_input(
-    lyr, data, mapping, c("seq_id", "length")
+    lyr, data, mapping, c("seq_id", "length", "seq_ring")
   )
   lyr <- ggchord_add_legacy_scale(
     lyr, !missing(seq_colors) && !is.null(seq_colors), "seq_colors",

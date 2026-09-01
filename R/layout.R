@@ -230,10 +230,29 @@ compute_chord_layout <- function(
       y = base$y + norm[2] * offset)
   }
 
+  gene_track_radius <- function(gene, sid, strand) {
+    side <- if (".feature_stack_side" %in% names(gene)) {
+      as.character(gene[[".feature_stack_side"]])
+    } else if (strand == "+") {
+      "inside"
+    } else {
+      "outside"
+    }
+    lane <- if (".feature_stack_lane" %in% names(gene)) {
+      as.numeric(gene[[".feature_stack_lane"]])
+    } else 0
+    spacing <- if (".feature_stack_spacing" %in% names(gene)) {
+      as.numeric(gene[[".feature_stack_spacing"]])
+    } else 0
+    direction <- if (identical(side, "inside")) -1 else 1
+    seqRadius[sid] + direction *
+      (geneGap[[sid]][strand] + lane * spacing)
+  }
+
   # ====================================================================
   # Step 4: generate sequence arcs (outer layer)
   # ====================================================================
-  seq_arcs <- lapply(seqs, function(id) {
+  seq_arcs <- stats::setNames(lapply(seqs, function(id) {
     path_data <- generate_curvature_path(
       starts[id], ends[id], seqRadius[id], seq_curvature[id], nSeg
     )
@@ -242,7 +261,7 @@ compute_chord_layout <- function(
       path_data <- path_data[nrow(path_data):1, ]
     }
     path_data
-  })
+  }), seqs)
 
   # ====================================================================
   # Step 5: generate axes (lines, ticks, labels)
@@ -811,11 +830,7 @@ compute_chord_layout <- function(
       a_end <- starts[sid] + frac_ep * (ends[sid] - starts[sid])
       if (strand == "-") { tmp <- a_start; a_start <- a_end; a_end <- tmp }
 
-      if (strand == "+") {
-        r0 <- seqRadius[sid] - geneGap[[sid]][strand]
-      } else {
-        r0 <- seqRadius[sid] + geneGap[[sid]][strand]
-      }
+      r0 <- gene_track_radius(gene, sid, strand)
 
       ref <- seq_refs[[sid]]
       feature_shape <- if (".feature_shape" %in% names(gene)) {
@@ -964,11 +979,7 @@ compute_chord_layout <- function(
 
         width <- geneWidth[[sid]][strand]
 
-        if (strand == "+") {
-          r0 <- seqRadius[sid] - geneGap[[sid]][strand]
-        } else {
-          r0 <- seqRadius[sid] + geneGap[[sid]][strand]
-        }
+        r0 <- gene_track_radius(gene, sid, strand)
 
         center_r <- r0
         center_pt <- map_to_curve(angle = ref$angles[idx], radius = center_r, ref = ref)

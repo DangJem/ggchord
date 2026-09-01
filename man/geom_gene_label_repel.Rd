@@ -13,6 +13,7 @@ geom_gene_label_repel(
   gene_label_side = "outside",
   max_overlaps = Inf,
   gene_label_segment_linetype = "auto",
+  position = "identity",
   show_legend = FALSE,
   ...
 )
@@ -49,6 +50,10 @@ Leader-line linetype. \code{"auto"} draws solid lines, except for labels
 that were moved to the other side of their arc, which are drawn dashed.
 Any other valid ggplot2 linetype (e.g. \code{"solid"}, \code{"dashed"},
 \code{"dotted"}, or a numeric dash pattern) is used for all leader lines.}
+
+\item{position}{Position adjustment. Supply the same
+[position_feature_stack()] used by a gene/feature layer when labels are
+drawn from separate data or without a geometry layer.}
 
 \item{show_legend}{Whether to show the legend, default FALSE}
 

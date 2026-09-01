@@ -190,3 +190,32 @@ test_that("outfmt7 fields, GFF3 FASTA boundaries and source files are parsed", {
   ), gff)
   expect_equal(nrow(read_gff3(gff)), 1)
 })
+
+test_that("focus_ggchord_data synchronizes loci, genes and ribbon direction", {
+  seq <- data.frame(seq_id = c("A", "B"), length = c(100, 100))
+  ribbons <- data.frame(
+    qaccver = "A", saccver = "B", length = 81, pident = 95,
+    qstart = 10, qend = 90, sstart = 90, send = 10
+  )
+  genes <- data.frame(
+    seq_id = "A", start = c(5, 30), end = c(25, 50),
+    strand = "+", anno = c("edge", "inside")
+  )
+  loci <- data.frame(
+    seq_id = c("A", "B"), start = c(20, 20), end = c(80, 80)
+  )
+
+  focused <- focus_ggchord_data(seq, ribbons, genes, loci, boundary = "trim")
+  expect_equal(focused$seq_data$length, c(61, 61))
+  expect_equal(
+    focused$ribbon_data[c("qstart", "qend", "sstart", "send")],
+    data.frame(qstart = 1, qend = 61, sstart = 61, send = 1)
+  )
+  expect_equal(focused$gene_data$start, c(1, 11))
+  expect_equal(focused$gene_data$end, c(6, 31))
+  expect_equal(focused$ribbon_data$.source_row, 1L)
+
+  dropped <- focus_ggchord_data(seq, ribbons, genes, loci, boundary = "drop")
+  expect_equal(nrow(dropped$ribbon_data), 0)
+  expect_equal(dropped$gene_data$anno, "inside")
+})

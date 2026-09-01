@@ -1,3 +1,30 @@
+# ggchord 0.11.0 (development version)
+
+## Advanced tracks and layout
+
+* New `stat_ribbon_bundle()` and `stat_ribbon_density()` integrate explicit
+  dense-alignment preprocessing with the ggplot2 stat stage. They expose
+  `after_stat(bundle_n)`, `after_stat(bundle_weight)`, and
+  `after_stat(density)` while leaving `geom_ribbon()` conservative.
+
+* New `focus_ggchord_data()` synchronizes sequence, gene/feature, and ribbon
+  cropping across one or more loci. `boundary = "trim"` clips partial rows
+  with direction-preserving alignment interpolation; `"drop"` retains only
+  fully contained rows. Source rows and locus identities remain traceable.
+
+* New `position_feature_stack()` uses deterministic interval partitioning to
+  place overlaps on the minimum number of radial lanes. New explicit
+  `seq_ring` mapping and `scale_seq_ring_manual()` assign ring radii without
+  guessing topology or silently overriding `seq_radius`.
+
+* New `theme_ggchord_elements()` exposes the six ggchord-only annotation theme
+  elements in a discoverable helper, while general plot and legend styling
+  remains in `theme()`.
+
+These APIs remain development interfaces until the v0.11.0 release is
+approved. README, vignettes, site pages, and generated figures are deliberately
+unchanged during this development cycle.
+
 # ggchord 0.10.0
 
 ## Highlights

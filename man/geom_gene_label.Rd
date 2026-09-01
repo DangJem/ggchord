@@ -16,6 +16,7 @@ geom_gene_label(
   gene_label_circum_offset = NULL,
   gene_label_circum_limit = NULL,
   gene_label_wrap = NULL,
+  position = "identity",
   show_legend = FALSE,
   ...
 )
@@ -52,6 +53,10 @@ way to prioritize labels in \code{"hide"} mode.}
 \item{gene_label_wrap}{Numeric or NULL, default NULL. When set, long gene
 annotations are wrapped at this many characters (e.g. 15), which makes the
 labels narrower and less prone to overlap.}
+
+\item{position}{Position adjustment. Supply the same
+[position_feature_stack()] used by a gene/feature layer when labels are
+drawn from separate data or without a geometry layer.}
 
 \item{show_legend}{Whether to show the legend, default FALSE}
 

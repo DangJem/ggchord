@@ -104,6 +104,37 @@ theme_ggchord_publication <- function(base_size = 9, base_family = "") {
     )
 }
 
+#' Modify ggchord-specific theme elements
+#'
+#' A focused counterpart to [ggplot2::theme()] for annotations drawn by
+#' ggchord itself. General plot titles, backgrounds, margins and legends stay
+#' under [ggplot2::theme()]. `NULL` leaves an element unchanged and
+#' [ggplot2::element_blank()] hides it.
+#'
+#' @param axis_line,axis_ticks Line or blank elements for genomic axes.
+#' @param axis_text,seq_label,gene_label Text or blank elements.
+#' @param gene_label_segment Line or blank element for gene leader lines.
+#' @return A ggplot2 theme object containing only supplied ggchord elements.
+#' @export
+theme_ggchord_elements <- function(
+    axis_line = NULL,
+    axis_ticks = NULL,
+    axis_text = NULL,
+    seq_label = NULL,
+    gene_label = NULL,
+    gene_label_segment = NULL) {
+  values <- list(
+    ggchord.axis.line = axis_line,
+    ggchord.axis.ticks = axis_ticks,
+    ggchord.axis.text = axis_text,
+    ggchord.seq.label = seq_label,
+    ggchord.gene.label = gene_label,
+    ggchord.gene.label.segment = gene_label_segment
+  )
+  values <- values[!vapply(values, is.null, logical(1))]
+  do.call(ggplot2::theme, values)
+}
+
 #' Resolve a ggchord theme element without leaking theme internals elsewhere
 #' @noRd
 ggchord_theme_element <- function(plot, name) {

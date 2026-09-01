@@ -43,6 +43,8 @@ feature_geom <- ggplot2::ggproto(
 #' @param feature_offset Optional numeric or named vector controlling feature
 #'   offset; passed to \code{geom_gene(gene_offset = ...)}.
 #' @param feature_order Optional feature order for the legend.
+#' @param position Position adjustment passed to [geom_gene()]. Use
+#'   [position_feature_stack()] to stack overlaps on radial lanes.
 #' @param show_legend Logical. Show the feature legend, default TRUE.
 #' @param legend_position Position of the feature legend: \code{"left"},
 #'   \code{"right"}, \code{"top"}, \code{"bottom"} or \code{"inside"}.
@@ -68,6 +70,7 @@ geom_feature <- function(mapping = NULL, data = NULL,
                          feature_width = NULL,
                          feature_offset = NULL,
                          feature_order = NULL,
+                         position = "identity",
                          show_legend = TRUE,
                          legend_position = "right",
                          ...) {
@@ -200,6 +203,7 @@ geom_feature <- function(mapping = NULL, data = NULL,
     gene_color_scheme = "manual",
     gene_colors = pal,
     gene_order = feature_order,
+    position = position,
     show_legend = show_legend
   )
   layers <- do.call(geom_gene, c(gene_args, list(...)))

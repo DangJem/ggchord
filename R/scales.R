@@ -16,6 +16,35 @@ scale_seq_colour_manual <- function(..., values) {
 #' @export
 scale_seq_color_manual <- scale_seq_colour_manual
 
+#' Explicit sequence ring scale
+#'
+#' Maps user-defined ring identifiers to positive sequence radii. Ring
+#' membership is supplied with `geom_seq(aes(seq_ring = ...))`; ggchord never
+#' guesses the number, order, or spacing of rings.
+#'
+#' @param ... Arguments passed to [ggplot2::discrete_scale()].
+#' @param values A named or unnamed numeric vector of positive radii.
+#' @param name Scale title. The guide is hidden by default because the scale
+#'   controls geometry rather than a visible legend aesthetic.
+#' @param limits Optional ring order.
+#' @param guide Guide specification, default `"none"`.
+#' @return A ggplot2 discrete scale for the `seq_ring` role.
+#' @export
+scale_seq_ring_manual <- function(..., values, name = "Ring",
+                                  limits = NULL, guide = "none") {
+  if (!is.numeric(values) || length(values) == 0L || anyNA(values) ||
+      any(!is.finite(values)) || any(values <= 0)) {
+    ggchord_stop(
+      "scale_seq_ring_manual(): values must be finite positive radii"
+    )
+  }
+  if (is.null(limits) && !is.null(names(values))) limits <- names(values)
+  ggplot2::discrete_scale(
+    aesthetics = "seq_ring", palette = scales::manual_pal(values),
+    ..., name = name, limits = limits, na.value = NA_real_, guide = guide
+  )
+}
+
 #' Ribbon fill scales
 #'
 #' @param ... Arguments passed to the corresponding ggplot2 scale.

@@ -14,7 +14,7 @@ globalVariables(c(
   "outline_col", "linetype_val", "value", "source_row", "direction",
   "seq_colour", "ribbon_fill", "ribbon_alpha",
   "ribbon_colour", "ribbon_linetype", "gene_fill", "feature_fill",
-  "feature_shape",
+  "feature_shape", "seq_ring", "bundle_n", "bundle_weight", "density",
   "region_fill", ".bundle_n", ".bundle_weight", ".bundle_density"
 ))
 
@@ -285,6 +285,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   seq_region_params <- list()
   ribbon_highlight_params <- list()
   seq_layer_requested <- FALSE
+  seq_ring_mapped <- FALSE
   ribbon_layer_requested <- FALSE
   ribbon_highlight_layer_requested <- FALSE
   gene_geometry_layer_requested <- FALSE
@@ -292,6 +293,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   axis_layer_requested <- FALSE
   gene_label_layer <- FALSE
   gene_repel_layer <- FALSE
+  feature_stack_position <- NULL
 
   for (i in seq_along(plot$layers)) {
     lyr <- plot$layers[[i]]
@@ -301,6 +303,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
       seq               = {
         seq_params <- pp
         seq_layer_requested <- TRUE
+        seq_ring_mapped <- "seq_ring" %in% names(lyr$ggchord_input_mapping)
         seq_data_override <- ggchord_resolve_layer_input(
           lyr, data_list$seq_data
         )
@@ -313,6 +316,10 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
         )
       },
       gene              = {
+        if (isTRUE(lyr$position$ggchord_feature_stack)) {
+          pp$feature_stack_position <- lyr$position
+          feature_stack_position <- lyr$position
+        }
         gene_params <- pp
         gene_geometry_layer_requested <- TRUE
         gene_data_override <- pp$gene_data_override %||%
@@ -323,6 +330,9 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
         )
       },
       gene_label        = {
+        if (isTRUE(lyr$position$ggchord_feature_stack)) {
+          feature_stack_position <- lyr$position
+        }
         gene_label_params <- pp
         gene_label_layer <- TRUE
         label_data <- ggchord_resolve_layer_input(lyr, data_list$gene_data)
@@ -333,6 +343,9 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
         }
       },
       gene_label_repel  = {
+        if (isTRUE(lyr$position$ggchord_feature_stack)) {
+          feature_stack_position <- lyr$position
+        }
         gene_repel_params <- pp
         gene_repel_layer <- TRUE
         label_data <- ggchord_resolve_layer_input(lyr, data_list$gene_data)
@@ -385,6 +398,43 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
                                           "seq_gap", 0.03)
   seq_curvature <- process_sequence_param(seq_params$seq_curvature, seqs,
                                           "seq_curvature", 1.0)
+
+  # Rings are explicit input roles. Their scale values are radii, so no ring
+  # count or spacing is guessed from the data. This deliberately keeps the
+  # existing seq_radius interface unchanged for plots without a ring mapping.
+  seq_ring <- NULL
+  if (isTRUE(seq_ring_mapped)) {
+    if (!is.null(seq_params$seq_radius)) {
+      ggchord_stop(
+        "geom_seq(): `seq_radius` cannot be combined with a `seq_ring` ",
+        "mapping; set radii with scale_seq_ring_manual(values = ...)"
+      )
+    }
+    ring_scale <- plot$scales$get_scales("seq_ring")
+    if (is.null(ring_scale)) {
+      ggchord_stop(
+        "A mapped `seq_ring` requires scale_seq_ring_manual(values = ...)"
+      )
+    }
+    raw_ring <- as.character(seq_data$seq_ring[match(seqs, seq_data$seq_id)])
+    if (anyNA(raw_ring) || any(!nzchar(raw_ring))) {
+      ggchord_stop("Mapped `seq_ring` values must be non-missing")
+    }
+    trained_ring_scale <- ring_scale$clone()
+    trained_ring_scale$train(raw_ring)
+    mapped_radius <- suppressWarnings(as.numeric(
+      trained_ring_scale$map(raw_ring)
+    ))
+    if (anyNA(mapped_radius) || any(!is.finite(mapped_radius)) ||
+        any(mapped_radius <= 0)) {
+      ggchord_stop(
+        "scale_seq_ring_manual(): every used ring must map to a finite ",
+        "positive radius"
+      )
+    }
+    seq_ring <- stats::setNames(raw_ring, seqs)
+    seqRadius <- stats::setNames(mapped_radius, seqs)
+  }
 
   if (!is.numeric(seqRadius) || any(!is.finite(seqRadius)) || any(seqRadius <= 0)) {
     ggchord_stop("seq_radius must contain finite positive numbers")
@@ -471,6 +521,38 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
       data_list$ribbon_data
   } else {
     NULL
+  }
+  ribbon_stat_report <- NULL
+  ribbon_stat_data <- NULL
+  ribbon_stat <- ribbon_params$ribbon_stat
+  if (!is.null(ribbon_stat) && !is.null(ribbon_data)) {
+    if (identical(ribbon_stat$type, "bundle")) {
+      computed <- bundle_ggchord_ribbons(
+        ribbon_data = ribbon_data,
+        seq_data = seq_data,
+        bins = ribbon_stat$bins,
+        min_bundle = ribbon_stat$min_bundle,
+        weight = ribbon_stat$weight,
+        group_by = ribbon_stat$group_by
+      )
+      computed$data$bundle_n <- computed$data$.bundle_n
+      computed$data$bundle_weight <- computed$data$.bundle_weight
+      computed$data$density <- computed$data$.bundle_density
+    } else if (identical(ribbon_stat$type, "density")) {
+      computed <- ggchord_ribbon_density(
+        ribbon_data = ribbon_data,
+        seq_data = seq_data,
+        bins = ribbon_stat$bins,
+        weight = ribbon_stat$weight,
+        group_by = ribbon_stat$group_by,
+        caller = "stat_ribbon_density()"
+      )
+    } else {
+      ggchord_stop("Unknown ggchord ribbon stat: ", ribbon_stat$type)
+    }
+    ribbon_data <- computed$data
+    ribbon_stat_data <- computed$data
+    ribbon_stat_report <- computed$report
   }
   has_ribbon_data <- !is.null(ribbon_data) && nrow(ribbon_data) > 0
 
@@ -636,6 +718,11 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
       d <- d[d$seq_id %in% seqs & d$strand %in% c("+", "-") &
                is.finite(d$start) & is.finite(d$end), , drop = FALSE]
       if (nrow(d) == 0L) return(NULL)
+      if (!is.null(spec$params$feature_stack_position)) {
+        d <- ggchord_stack_feature_tracks(
+          d, spec$params$feature_stack_position
+        )
+      }
 
       offsets <- process_gene_param(
         spec$params$gene_offset %||% 0.1,
@@ -647,7 +734,16 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
       )
       centers <- vapply(seq_len(nrow(d)), function(i) {
         value <- offsets[[d$seq_id[i]]][[d$strand[i]]]
-        if (identical(d$strand[i], "+")) -value else value
+        if (".feature_stack_side" %in% names(d)) {
+          direction <- if (identical(d$.feature_stack_side[i], "inside")) {
+            -1
+          } else 1
+          value <- value + d$.feature_stack_lane[i] *
+            d$.feature_stack_spacing[i]
+          direction * value
+        } else if (identical(d$strand[i], "+")) {
+          -value
+        } else value
       }, numeric(1))
       half_width <- vapply(seq_len(nrow(d)), function(i) {
         widths[[d$seq_id[i]]][[d$strand[i]]] / 2
@@ -714,6 +810,11 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     }
     gene_data_layout <- as.data.frame(gene_data_layout, stringsAsFactors = FALSE)
     gene_data_layout$.feature_shape <- mapped_shape
+  }
+  if (!is.null(feature_stack_position) && !is.null(gene_data_layout)) {
+    gene_data_layout <- ggchord_stack_feature_tracks(
+      gene_data_layout, feature_stack_position
+    )
   }
   geneLabelRadialOffset <- process_gene_param(gene_lro, seqs,
                                               "gene_label_radial_offset", 0, FALSE)
@@ -1000,6 +1101,19 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     geometry_cache = geometry_cache
   )
 
+  layout$seq_ring <- seq_ring
+  layout$seq_ring_radius <- if (is.null(seq_ring)) NULL else seqRadius
+  layout$ribbon_stat_data <- ribbon_stat_data
+  layout$ribbon_stat_report <- ribbon_stat_report
+  if (!is.null(seq_ring) && length(layout$seq_arcs)) {
+    layout$seq_arcs <- lapply(names(layout$seq_arcs), function(id) {
+      arc <- layout$seq_arcs[[id]]
+      arc$seq_ring <- unname(seq_ring[[id]])
+      arc
+    }) |>
+      stats::setNames(names(layout$seq_arcs))
+  }
+
   layout
 }
 
@@ -1118,7 +1232,12 @@ compute_chord_geometry <- function(plot) {
         seq_region = lyr$ggchord_params$regions,
         NULL
       )
-      inputs[[id]][[component]] <- ggchord_resolve_layer_input(lyr, fallback)
+      inputs[[id]][[component]] <- if (
+          component == "ribbon" && !is.null(sub_layout$ribbon_stat_data)) {
+        sub_layout$ribbon_stat_data
+      } else {
+        ggchord_resolve_layer_input(lyr, fallback)
+      }
       registry[[id]][[component]] <- ggchord_attach_input_columns(
         registry[[id]][[component]], inputs[[id]][[component]]
       )

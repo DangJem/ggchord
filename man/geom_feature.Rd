@@ -15,6 +15,7 @@ geom_feature(
   feature_width = NULL,
   feature_offset = NULL,
   feature_order = NULL,
+  position = "identity",
   show_legend = TRUE,
   legend_position = "right",
   ...
@@ -53,6 +54,9 @@ width; passed to \code{geom_gene(gene_width = ...)}.}
 offset; passed to \code{geom_gene(gene_offset = ...)}.}
 
 \item{feature_order}{Optional feature order for the legend.}
+
+\item{position}{Position adjustment passed to [geom_gene()]. Use
+[position_feature_stack()] to stack overlaps on radial lanes.}
 
 \item{show_legend}{Logical. Show the feature legend, default TRUE.}
 

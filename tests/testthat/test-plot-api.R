@@ -584,3 +584,48 @@ test_that("legacy scale arguments warn and conflict with role scales", {
   )
   expect_error(build_ggchord_smoke(conflict), "conflicts.*seq_colour")
 })
+
+test_that("v0.11 ribbon stats expose computed variables", {
+  data(seq_data_example)
+  data(ribbon_data_example)
+  p <- ggchord(seq_data_example, ribbon_data_example, validate = "none") +
+    geom_seq() +
+    stat_ribbon_bundle(
+      aes(ribbon_alpha = after_stat(density)), bins = 10
+    )
+  built <- build_ggchord_smoke(p)
+  layout <- get_chord_layout(p)
+  expect_lt(nrow(layout$ribbon_stat_data), nrow(ribbon_data_example))
+  expect_true(all(c("bundle_n", "bundle_weight", "density") %in%
+                    names(built$data[[2]])))
+  expect_true(all(is.finite(built$data[[2]]$ribbon_alpha)))
+})
+
+test_that("explicit rings, feature stacking and focused theme controls work", {
+  seq <- data.frame(
+    seq_id = c("A", "B"), length = c(100, 100), ring = c("outer", "inner")
+  )
+  p <- ggchord(seq, validate = "none") +
+    geom_seq(aes(seq_ring = ring)) +
+    scale_seq_ring_manual(values = c(outer = 2, inner = 1))
+  build_ggchord_smoke(p)
+  expect_equal(unname(get_chord_layout(p)$seq_ring_radius), c(2, 1))
+  expect_error(
+    build_ggchord_smoke(
+      ggchord(seq, validate = "none") + geom_seq(aes(seq_ring = ring))
+    ),
+    "scale_seq_ring_manual"
+  )
+
+  features <- data.frame(
+    seq_id = "A", start = c(1, 20, 70), end = c(50, 60, 90),
+    strand = "+", anno = letters[1:3]
+  )
+  stacked <- ggchord:::ggchord_stack_feature_tracks(
+    features, position_feature_stack()
+  )
+  expect_equal(stacked$.feature_stack_lane, c(0L, 1L, 0L))
+
+  local_theme <- theme_ggchord_elements(axis_text = element_blank())
+  expect_s3_class(local_theme$ggchord.axis.text, "element_blank")
+})

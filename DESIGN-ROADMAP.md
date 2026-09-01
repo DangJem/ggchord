@@ -593,9 +593,9 @@ HTML widget。正式保存仍使用 `ggsave()`，临时目录仅保留最近 20 
 
 ---
 
-## 六、v0.11.0 — 高级轨道与布局
+## 六、v0.11.0 — 高级轨道与布局（开发中）
 
-v0.10.0 发布后再进入以下工作，不继续扩张当前开发版：
+v0.10.0 已发布，当前以 `Version: 0.11.0` 开发版进入以下工作：
 
 - 基于 bundling 核心增加正式的 `stat_ribbon_bundle()` 和
   `stat_ribbon_density()`，公开 `after_stat(bundle_n)` 与
@@ -615,6 +615,21 @@ v0.10.0 发布后再进入以下工作，不继续扩张当前开发版：
   panel-grid 参数，避免把 `axis.text` 与 `ggchord.axis.text` 混淆；
 - 不引入 gggenomes 式完整命名 track 容器，继续使用构造器数据、图层 `data` 和
   geometry registry。
+
+### v0.11.0 开发实现状态（2026-09-01）
+
+- `stat_ribbon_bundle()` / `stat_ribbon_density()` 已完成，并可通过
+  `after_stat()` 访问 `bundle_n`、`bundle_weight` 和 `density`；
+- `focus_ggchord_data()` 已完成多 locus 同步裁切、坐标重定位、
+  `trim` / `drop` 边界策略及来源追踪；
+- `position_feature_stack()` 已完成确定性最少径向轨道分配，
+  `geom_gene()` 与 `geom_feature()` 共用该 position；
+- `seq_ring` 与 `scale_seq_ring_manual()` 已完成显式环层半径分配，
+  不自动猜测环数，不与 `seq_radius` 静默混用；
+- `theme_ggchord_elements()` 已完成六个 ggchord 专属主题元素的
+  显式局部修改接口；
+- 当前进入兼容性、边界输入、性能和 `R CMD check` 收尾阶段；
+  README、vignette、网站和说明图片仍保持不变。
 
 ---
 

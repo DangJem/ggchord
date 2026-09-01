@@ -23,6 +23,8 @@ gene_geom <- rename_geom_aes(ggplot2::GeomPolygon, renames = c(fill = "gene_fill
 #' @param gene_color_scheme Character. "strand" or "manual", default "strand"
 #' @param gene_colors Optional color vector. Fill color of gene arrows
 #' @param gene_order Optional character vector. Display order of genes in the legend
+#' @param position Position adjustment. Use [position_feature_stack()] to place
+#'   overlapping genes or features on radial lanes.
 #' @param show_legend Whether to show the legend, default TRUE
 #' @param legend_position Position of this layer's legend (the Strand or Gene
 #'   Annotation legend): one of "left", "right", "top", "bottom" or "inside",
@@ -47,6 +49,7 @@ geom_gene <- function(mapping = NULL, data = NULL,
                       gene_color_scheme = NULL,
                       gene_colors = NULL,
                       gene_order = NULL,
+                      position = "identity",
                       show_legend = TRUE,
                       legend_position = "right",
                       ...) {
@@ -104,7 +107,7 @@ geom_gene <- function(mapping = NULL, data = NULL,
     mapping     = fill_mapping,
     stat        = "identity",
     geom        = gene_geom,
-    position    = "identity",
+    position    = position,
     show.legend = if (identical(show_legend, TRUE)) {
                     c(gene_fill = TRUE, colour = FALSE)
                   } else show_legend,
@@ -182,6 +185,9 @@ geom_gene <- function(mapping = NULL, data = NULL,
 #' @param gene_label_wrap Numeric or NULL, default NULL. When set, long gene
 #'   annotations are wrapped at this many characters (e.g. 15), which makes the
 #'   labels narrower and less prone to overlap.
+#' @param position Position adjustment. Supply the same
+#'   [position_feature_stack()] used by a gene/feature layer when labels are
+#'   drawn from separate data or without a geometry layer.
 #' @param show_legend Whether to show the legend, default FALSE
 #' @param ... Additional arguments passed to \code{geom_text()}
 #'
@@ -207,6 +213,7 @@ geom_gene_label <- function(mapping = NULL, data = NULL,
                             gene_label_circum_offset = NULL,
                             gene_label_circum_limit = NULL,
                             gene_label_wrap = NULL,
+                            position = "identity",
                             show_legend = FALSE,
                             ...) {
   old_error <- ggchord_disable_debug()
@@ -233,6 +240,7 @@ geom_gene_label <- function(mapping = NULL, data = NULL,
                       angle = text_angle, hjust = hjust, vjust = vjust,
                       size = I(size)),
     inherit.aes = FALSE,
+    position = position,
     show.legend = show_legend,
     ...
   )
@@ -305,6 +313,9 @@ geom_gene_label <- function(mapping = NULL, data = NULL,
 #'   that were moved to the other side of their arc, which are drawn dashed.
 #'   Any other valid ggplot2 linetype (e.g. \code{"solid"}, \code{"dashed"},
 #'   \code{"dotted"}, or a numeric dash pattern) is used for all leader lines.
+#' @param position Position adjustment. Supply the same
+#'   [position_feature_stack()] used by a gene/feature layer when labels are
+#'   drawn from separate data or without a geometry layer.
 #' @param show_legend Whether to show the legend, default FALSE
 #' @param ... Additional arguments passed to \code{geom_text()}
 #'
@@ -325,6 +336,7 @@ geom_gene_label_repel <- function(mapping = NULL, data = NULL,
                                   gene_label_side = "outside",
                                   max_overlaps = Inf,
                                   gene_label_segment_linetype = "auto",
+                                  position = "identity",
                                   show_legend = FALSE,
                                   ...) {
   old_error <- ggchord_disable_debug()
@@ -376,6 +388,7 @@ geom_gene_label_repel <- function(mapping = NULL, data = NULL,
     mapping     = ggplot2::aes(x = x0, y = y0, xend = x1, yend = y1, group = group,
                       linetype = I(linetype)),
     inherit.aes = FALSE,
+    position = position,
     show.legend = FALSE
   )
   seg_layer$ggchord_type <- "gene_label_segment"
@@ -398,6 +411,7 @@ geom_gene_label_repel <- function(mapping = NULL, data = NULL,
                       angle = text_angle, hjust = hjust, vjust = vjust,
                       size = I(size)),
     inherit.aes = FALSE,
+    position = position,
     show.legend = show_legend
   ), dots))
   text_layer$ggchord_type <- "gene_text_repel"
