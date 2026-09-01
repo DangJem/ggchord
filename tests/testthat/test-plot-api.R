@@ -62,10 +62,11 @@ test_that("ggchord themes and guides use registered role elements", {
   horizontal <- guide_ggchord_colourbar(
     position = "bottom", direction = "horizontal"
   )
-  expect_equal(as.numeric(horizontal$params$theme$legend.key.width), 46)
-  expect_equal(as.numeric(horizontal$params$theme$legend.key.height), 3)
+  expect_equal(as.numeric(horizontal$params$theme$legend.key.width), 50)
+  expect_equal(as.numeric(horizontal$params$theme$legend.key.height), 3.6)
   vertical <- guide_ggchord_colourbar(position = "left")
-  expect_equal(as.numeric(vertical$params$theme$legend.key.height), 46)
+  expect_equal(as.numeric(vertical$params$theme$legend.key.height), 50)
+  expect_equal(as.numeric(vertical$params$theme$legend.key.width), 3.6)
   expect_equal(
     as.numeric(vertical$params$theme$legend.title@margin[3]), 2
   )
@@ -239,6 +240,43 @@ test_that("feature geometry shapes build", {
     unique(layout$gene_polys$feature_shape),
     c("arrow", "block", "chevron", "lollipop")
   )
+
+  lollipop <- layout$gene_polys[
+    layout$gene_polys$feature_shape == "lollipop" &
+      layout$gene_polys$group %% 10L == 2L,
+    c("x", "y"), drop = FALSE
+  ]
+  shape_variance <- eigen(stats::cov(lollipop))$values
+  expect_gt(sqrt(min(shape_variance) / max(shape_variance)), 0.97)
+})
+
+test_that("default ribbon gap responds only to local polygon obstacles", {
+  seq <- data.frame(seq_id = c("A", "B"), length = c(1000, 1000))
+  ribbon <- data.frame(
+    qaccver = "A", saccver = "B", length = 101, pident = 90,
+    qstart = 100, qend = 200, sstart = 100, send = 200
+  )
+  obstacle <- data.frame(
+    seq_id = "A", start = 100, end = 200, strand = "-", anno = "CDS"
+  )
+
+  open <- ggchord(seq, ribbon, validate = "none") +
+    geom_seq() + geom_ribbon()
+  open_ribbon <- get_chord_layout(open)$ribbon_polys
+  expect_equal(unique(open_ribbon$q_gap), 0.035)
+  expect_equal(unique(open_ribbon$s_gap), 0.035)
+
+  blocked <- ggchord(seq, ribbon, obstacle, validate = "none") +
+    geom_seq() + geom_ribbon() + geom_gene()
+  blocked_ribbon <- get_chord_layout(blocked)$ribbon_polys
+  expect_equal(unique(blocked_ribbon$q_gap), 0.15)
+  expect_equal(unique(blocked_ribbon$s_gap), 0.035)
+
+  explicit <- ggchord(seq, ribbon, obstacle, validate = "none") +
+    geom_seq() + geom_ribbon(ribbon_gap = 0.2) + geom_gene()
+  explicit_ribbon <- get_chord_layout(explicit)$ribbon_polys
+  expect_equal(unique(explicit_ribbon$q_gap), 0.2)
+  expect_equal(unique(explicit_ribbon$s_gap), 0.2)
 })
 
 test_that("feature category and region outline survive geometry generation", {
@@ -396,6 +434,48 @@ test_that("role-specific scales coexist without replacing one another", {
   )
   expect_s3_class(scale_ribbon_color_manual(values = c(kind = "black")),
                   "ScaleDiscrete")
+})
+
+test_that("layout export preserves layer identity and coordinate metadata", {
+  seq <- data.frame(seq_id = c("A", "B"), length = c(1000, 1000))
+  ribbon <- data.frame(
+    qaccver = "A", saccver = "B", length = 101, pident = 90,
+    qstart = 100, qend = 200, sstart = 300, send = 400,
+    score = 7
+  )
+  feature <- data.frame(
+    seq_id = "A", start = 500, end = 650, strand = "+", type = "promoter"
+  )
+  p <- ggchord(seq, ribbon, validate = "none") +
+    geom_seq() + geom_ribbon() +
+    geom_feature(data = feature, feature_shape = "lollipop") +
+    coord_chord(rotation = 30, ratio = 1.2)
+
+  exported <- export_ggchord_layout(
+    p, include = c("seq", "ribbon", "feature"), original_data = TRUE
+  )
+  expect_s3_class(exported, "ggchord_layout_export")
+  expect_true(all(c("layer_id", "source_row") %in% names(exported$ribbon)))
+  expect_equal(unique(exported$ribbon$score), 7)
+  expect_equal(unique(exported$feature$type), "promoter")
+  expect_equal(exported$metadata$rotation, 30)
+  expect_equal(exported$metadata$ratio, 1.2)
+  expect_true(exported$metadata$rotation_applied)
+  expect_false(exported$metadata$coord_transform_applied)
+  expect_true(length(exported$original_data) >= 3L)
+})
+
+test_that("layout skips geometry for layers that were not requested", {
+  data(seq_data_example)
+  data(ribbon_data_example)
+  data(gene_data_example)
+  p <- ggchord(
+    seq_data_example, ribbon_data_example, gene_data_example,
+    validate = "none"
+  ) + geom_seq()
+  layout <- get_chord_layout(p)
+  expect_null(layout$ribbon_polys)
+  expect_equal(nrow(layout$gene_polys), 0L)
 })
 
 test_that("legacy scale arguments warn and conflict with role scales", {

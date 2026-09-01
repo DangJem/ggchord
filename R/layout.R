@@ -15,8 +15,12 @@
 #' @param orientation Named vector of sequence orientations (1 or -1)
 #' @param seq_gap Named vector of sequence gap proportions
 #' @param ribbonGap Named vector of ribbon gaps
+#' @param ribbon_gap_auto Whether ribbon endpoints may move closer to sequence
+#'   arcs when no gene or feature geometry occupies the local interval.
+#' @param ribbon_obstacles Optional normalized gene/feature obstacle table.
 #' @param ribbon_data Alignment data (already validated)
 #' @param gene_data Gene data (already validated)
+#' @param draw_gene_geometry Whether gene/feature polygons should be generated.
 #' @param gene_label_layout Character, default "aligned". Deterministic
 #'   automatic layout: "aligned", "radial", or "arc".
 #' @param gene_label_side Character, default "auto". Which side of the arc the
@@ -48,6 +52,7 @@ compute_chord_layout <- function(
     seqRadius, seq_curvature, orientation, seq_gap,
     # Ribbon parameters
     ribbon_data = NULL, ribbonGap,
+    ribbon_gap_auto = FALSE, ribbon_obstacles = NULL,
     ribbon_color_scheme, ribbon_colors, ribbon_alpha,
     ribbon_color_by = NULL,
     ribbon_color_limits = NULL,
@@ -73,7 +78,7 @@ compute_chord_layout <- function(
     region_side = "inside",
     ribbon_highlight_rows = integer(0),
     # Gene parameters
-    gene_data = NULL,
+    gene_data = NULL, draw_gene_geometry = TRUE,
     geneGap, geneWidth,
     geneLabelRadialOffset, geneLabelCircumOffset,
     geneLabelCircumLimit, geneLabelRotation,
@@ -415,6 +420,33 @@ compute_chord_layout <- function(
     ribbon_outline_vec <- character(length(valid_idx))
     ribbon_linetype_vec <- character(length(valid_idx))
     ribbon_dir_vec <- character(length(valid_idx))
+    ribbon_q_gap <- numeric(length(valid_idx))
+    ribbon_s_gap <- numeric(length(valid_idx))
+
+    # With the default NULL ribbon_gap, determine spacing independently at
+    # each ribbon endpoint. Only polygons that occupy the ribbon-facing side
+    # of the sequence and overlap that endpoint's genomic interval count as
+    # obstacles. Text and leader segments never enter this table.
+    endpoint_ribbon_gap <- function(seq_id, start, end) {
+      configured <- unname(ribbonGap[[seq_id]])
+      if (!isTRUE(ribbon_gap_auto)) return(configured)
+
+      close_gap <- min(configured, 0.035)
+      if (is.null(ribbon_obstacles) || nrow(ribbon_obstacles) == 0L) {
+        return(close_gap)
+      }
+      lo <- min(start, end)
+      hi <- max(start, end)
+      hit <- ribbon_obstacles$seq_id == seq_id &
+        ribbon_obstacles$start <= hi & ribbon_obstacles$end >= lo &
+        ribbon_obstacles$outer_offset > 0
+      if (!any(hit)) return(close_gap)
+
+      # The standard gene offset (0.10) plus half-width (0.025) and this
+      # clearance reproduces the historical safe 0.15 gap where an obstacle
+      # actually exists, while wider/custom-offset features remain protected.
+      max(close_gap, max(ribbon_obstacles$outer_offset[hit]) + 0.025)
+    }
 
     # Continuous / discrete value preparation on the valid rows only.
     alpha_norm <- rep(1, length(valid_idx))
@@ -462,8 +494,12 @@ compute_chord_layout <- function(
 
       q_ref <- seq_refs[[q]]
       s_ref <- seq_refs[[s]]
-      rq <- seqRadius[q] + ribbonGap[q]
-      rs <- seqRadius[s] + ribbonGap[s]
+      q_gap <- endpoint_ribbon_gap(q, rib_qstart[i], rib_qend[i])
+      s_gap <- endpoint_ribbon_gap(s, rib_sstart[i], rib_send[i])
+      rq <- seqRadius[q] + q_gap
+      rs <- seqRadius[s] + s_gap
+      ribbon_q_gap[j] <- q_gap
+      ribbon_s_gap[j] <- s_gap
 
       q_frac_start <- if (orientation[q] == 1) (rib_qstart[i] - 1) / lens[q] else 1 - (rib_qstart[i] - 1) / lens[q]
       q_angle_start <- starts[q] + q_frac_start * (ends[q] - starts[q])
@@ -505,8 +541,12 @@ compute_chord_layout <- function(
       } else {
         mid_angle_q <- (q_angle_start + q_angle_end) / 2
         mid_angle_s <- (s_angle_start + s_angle_end) / 2
-        mid_point_q <- map_to_curve(mid_angle_q, seqRadius[q] + ribbonGap[q] * 0.5, q_ref)
-        mid_point_s <- map_to_curve(mid_angle_s, seqRadius[s] + ribbonGap[s] * 0.5, s_ref)
+        mid_point_q <- map_to_curve(
+          mid_angle_q, seqRadius[q] + q_gap * 0.5, q_ref
+        )
+        mid_point_s <- map_to_curve(
+          mid_angle_s, seqRadius[s] + s_gap * 0.5, s_ref
+        )
         c1 <- (mid_point_q + mid_point_s) / 2
         c2 <- c1
       }
@@ -576,6 +616,8 @@ compute_chord_layout <- function(
       outline_vals <- rep(ribbon_outline_vec, each = 200)
       linetype_vals <- rep(ribbon_linetype_vec, each = 200)
       dir_vals <- rep(ribbon_dir_vec, each = 200)
+      q_gap_vals <- rep(ribbon_q_gap, each = 200)
+      s_gap_vals <- rep(ribbon_s_gap, each = 200)
 
       if (ribbon_color_scheme == "pident") {
         ribbon_polys <- data.frame(
@@ -587,6 +629,8 @@ compute_chord_layout <- function(
           outline_col = outline_vals,
           linetype_val = linetype_vals,
           direction = dir_vals,
+          q_gap = q_gap_vals,
+          s_gap = s_gap_vals,
           stringsAsFactors = FALSE
         )
       } else if (ribbon_color_scheme == "value") {
@@ -599,6 +643,8 @@ compute_chord_layout <- function(
           outline_col = outline_vals,
           linetype_val = linetype_vals,
           direction = dir_vals,
+          q_gap = q_gap_vals,
+          s_gap = s_gap_vals,
           stringsAsFactors = FALSE
         )
       } else {
@@ -611,6 +657,8 @@ compute_chord_layout <- function(
           outline_col = outline_vals,
           linetype_val = linetype_vals,
           direction = dir_vals,
+          q_gap = q_gap_vals,
+          s_gap = s_gap_vals,
           stringsAsFactors = FALSE
         )
       }
@@ -734,9 +782,16 @@ compute_chord_layout <- function(
       final_gene_order <- character(0)
     }
 
-    # Generate arrow polygons
+    # Generate feature polygons only when a geom_gene()/geom_feature() layer
+    # is present. Label-only plots still use valid_genes below, without paying
+    # for polygons that will never be drawn.
     gene_poly_list <- list()
-    for (i in seq_len(nrow(valid_genes))) {
+    gene_rows_to_draw <- if (isTRUE(draw_gene_geometry)) {
+      seq_len(nrow(valid_genes))
+    } else {
+      integer(0)
+    }
+    for (i in gene_rows_to_draw) {
       gene <- valid_genes[i, ]
       sid <- gene$seq_id
       strand <- gene$strand
@@ -793,7 +848,7 @@ compute_chord_layout <- function(
           mid <- (a_start + a_end) / 2
           angle_half <- min(
             abs(span) * 0.08,
-            width / (8 * pi * max(abs(r0), 0.1))
+            width * 0.10 / max(abs(r0), 0.1)
           )
           stem_start <- seqRadius[sid]
           stem_end <- r0
@@ -804,10 +859,26 @@ compute_chord_layout <- function(
           )
           theta <- seq(0, 2 * pi, length.out = 48)
           head_radius <- width * 0.58
+          center <- as.numeric(map_to_curve_many(mid, r0, ref)[1, ])
+          delta <- max(abs(span) * 1e-4, 1e-7)
+          tangent_pts <- map_to_curve_many(
+            c(mid - delta, mid + delta), rep(r0, 2), ref
+          )
+          tangent <- as.numeric(tangent_pts[2, ] - tangent_pts[1, ])
+          tangent_norm <- sqrt(sum(tangent^2))
+          if (!is.finite(tangent_norm) || tangent_norm <= 1e-12) {
+            tangent <- c(1, 0)
+          } else {
+            tangent <- tangent / tangent_norm
+          }
+          normal <- c(-tangent[2], tangent[1])
           head <- list(
-            angle = mid + cos(theta) * head_radius /
-              (2 * pi * max(abs(r0), 0.1)),
-            radius = r0 + sin(theta) * head_radius
+            xy = cbind(
+              center[1] + head_radius *
+                (cos(theta) * tangent[1] + sin(theta) * normal[1]),
+              center[2] + head_radius *
+                (cos(theta) * tangent[2] + sin(theta) * normal[2])
+            )
           )
           list(stem, head)
         },
@@ -830,9 +901,13 @@ compute_chord_layout <- function(
       )
 
       for (part in seq_along(shape_parts)) {
-        mapped <- map_to_curve_many(
-          shape_parts[[part]]$angle, shape_parts[[part]]$radius, ref
-        )
+        mapped <- if (!is.null(shape_parts[[part]]$xy)) {
+          shape_parts[[part]]$xy
+        } else {
+          map_to_curve_many(
+            shape_parts[[part]]$angle, shape_parts[[part]]$radius, ref
+          )
+        }
         gene_poly_list[[length(gene_poly_list) + 1]] <- data.frame(
           x = mapped[, 1],
           y = mapped[, 2],

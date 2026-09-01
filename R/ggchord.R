@@ -287,6 +287,11 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   seq_region_params <- list()
   ribbon_highlight_params <- list()
   seq_layer_requested <- FALSE
+  ribbon_layer_requested <- FALSE
+  ribbon_highlight_layer_requested <- FALSE
+  gene_geometry_layer_requested <- FALSE
+  gene_obstacle_specs <- list()
+  axis_layer_requested <- FALSE
   gene_label_layer <- FALSE
   gene_repel_layer <- FALSE
 
@@ -304,14 +309,20 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
       },
       ribbon            = {
         ribbon_params <- pp
+        ribbon_layer_requested <- TRUE
         ribbon_data_override <- ggchord_resolve_layer_input(
           lyr, data_list$ribbon_data
         )
       },
       gene              = {
         gene_params <- pp
+        gene_geometry_layer_requested <- TRUE
         gene_data_override <- pp$gene_data_override %||%
           ggchord_resolve_layer_input(lyr, data_list$gene_data)
+        gene_obstacle_specs[[length(gene_obstacle_specs) + 1L]] <- list(
+          data = gene_data_override,
+          params = pp
+        )
       },
       gene_label        = {
         gene_label_params <- pp
@@ -333,7 +344,10 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
           gene_data_override <- label_data
         }
       },
-      axis              = axis_params <- pp,
+      axis              = {
+        axis_params <- pp
+        axis_layer_requested <- TRUE
+      },
       seq_label         = seq_label_params <- pp,
       seq_region        = {
         seq_region_params <- pp
@@ -341,6 +355,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
       },
       ribbon_highlight  = {
         ribbon_highlight_params <- pp
+        ribbon_highlight_layer_requested <- TRUE
         highlight_data_override <- ggchord_resolve_layer_input(
           lyr, data_list$ribbon_data
         )
@@ -396,6 +411,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   }
 
   # --- Process ribbons ---
+  ribbon_gap_auto <- is.null(ribbon_params$ribbon_gap)
   ribbonGap  <- process_sequence_param(ribbon_params$ribbon_gap %||% 0.15,
                                        seqs, "ribbon_gap", 0.15)
   ribbon_color_scheme <- ribbon_params$ribbon_color_scheme %||% "pident"
@@ -451,7 +467,13 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   }
 
   # ribbon_colors validation only runs when ribbon_data is actually present
-  ribbon_data <- ribbon_data_override %||% data_list$ribbon_data
+  ribbon_data <- if (ribbon_layer_requested ||
+      ribbon_highlight_layer_requested) {
+    ribbon_data_override %||% highlight_data_override %||%
+      data_list$ribbon_data
+  } else {
+    NULL
+  }
   has_ribbon_data <- !is.null(ribbon_data) && nrow(ribbon_data) > 0
 
   if (has_ribbon_data) {
@@ -599,7 +621,52 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   # values change the actual polygon, not only its appearance. A user-supplied
   # feature-shape scale is cloned and trained here so the layout and legend use
   # exactly the same category-to-shape mapping.
-  gene_data_layout <- gene_data_override %||% data_list$gene_data
+  gene_data_layout <- if (gene_geometry_layer_requested || gene_label_layer ||
+      gene_repel_layer) {
+    gene_data_override %||% data_list$gene_data
+  } else {
+    NULL
+  }
+  ribbon_obstacles <- data.frame()
+  if (isTRUE(ribbon_gap_auto) && length(gene_obstacle_specs) > 0L) {
+    obstacle_parts <- lapply(gene_obstacle_specs, function(spec) {
+      d <- spec$data
+      if (is.null(d) || !is.data.frame(d) || nrow(d) == 0L ||
+          !all(c("seq_id", "start", "end", "strand") %in% names(d))) {
+        return(NULL)
+      }
+      d <- d[d$seq_id %in% seqs & d$strand %in% c("+", "-") &
+               is.finite(d$start) & is.finite(d$end), , drop = FALSE]
+      if (nrow(d) == 0L) return(NULL)
+
+      offsets <- process_gene_param(
+        spec$params$gene_offset %||% 0.1,
+        seqs, "gene_offset", 0.1, FALSE
+      )
+      widths <- process_gene_param(
+        spec$params$gene_width %||% 0.05,
+        seqs, "gene_width", 0.05, FALSE
+      )
+      centers <- vapply(seq_len(nrow(d)), function(i) {
+        value <- offsets[[d$seq_id[i]]][[d$strand[i]]]
+        if (identical(d$strand[i], "+")) -value else value
+      }, numeric(1))
+      half_width <- vapply(seq_len(nrow(d)), function(i) {
+        widths[[d$seq_id[i]]][[d$strand[i]]] / 2
+      }, numeric(1))
+      data.frame(
+        seq_id = as.character(d$seq_id),
+        start = pmin(d$start, d$end),
+        end = pmax(d$start, d$end),
+        outer_offset = centers + half_width,
+        stringsAsFactors = FALSE
+      )
+    })
+    obstacle_parts <- Filter(Negate(is.null), obstacle_parts)
+    if (length(obstacle_parts)) {
+      ribbon_obstacles <- do.call(rbind, obstacle_parts)
+    }
+  }
   feature_shape_pal <- NULL
   feature_shape_order <- NULL
   if (isTRUE(gene_params$is_feature) && !is.null(gene_data_layout) &&
@@ -660,7 +727,10 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
                                               "gene_label_rotation", 0, FALSE)
 
   # --- Process axes ---
-  show_axis  <- axis_params$show_axis %||% TRUE
+  axis_geometry_requested <- axis_layer_requested ||
+    plot$scales$has_scale("seq_position")
+  show_axis  <- axis_geometry_requested &&
+    (axis_params$show_axis %||% TRUE)
   axisGap    <- process_sequence_param(axis_params$axis_gap %||% 0.05,
                                        seqs, "axis_gap", 0.04)
   axisMaj    <- process_sequence_param(axis_params$axis_tick_major_number %||% 3,
@@ -865,6 +935,8 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     seq_curvature = seq_curvature, orientation = orientation,
     seq_gap = seq_gap,
     ribbon_data = ribbon_data, ribbonGap = ribbonGap,
+    ribbon_gap_auto = ribbon_gap_auto,
+    ribbon_obstacles = ribbon_obstacles,
     ribbon_color_scheme = ribbon_color_scheme,
     ribbon_colors = ribbon_colors, ribbon_alpha = ribbon_alpha,
     ribbon_color_by = ribbon_color_by,
@@ -891,6 +963,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     region_side = region_side,
     ribbon_highlight_rows = ribbon_highlight_rows,
     gene_data = gene_data_layout,
+    draw_gene_geometry = gene_geometry_layer_requested,
     geneGap = geneGap, geneWidth = geneWidth,
     geneLabelRadialOffset = geneLabelRadialOffset,
     geneLabelCircumOffset = geneLabelCircumOffset,
@@ -1000,6 +1073,9 @@ compute_chord_geometry <- function(plot) {
   seq_dep <- first_group("seq")
   gene_dep <- first_group("gene")
   ribbon_dep <- first_group("ribbon")
+  gene_geometry_dep <- unlist(
+    groups[names(group_type)[group_type == "gene"]], use.names = FALSE
+  )
 
   registry <- list()
   inputs <- list()
@@ -1014,6 +1090,7 @@ compute_chord_geometry <- function(plot) {
       if (main_type %in% c("gene_label", "gene_label_repel")) {
         deps <- c(deps, gene_dep)
       }
+      if (main_type == "ribbon") deps <- c(deps, gene_geometry_dep)
       if (main_type == "ribbon_highlight") deps <- c(deps, ribbon_dep)
       sub_plot <- plot
       sub_plot$layers <- plot$layers[sort(unique(c(deps, idx)))]
@@ -1275,16 +1352,16 @@ make_ggchord_scales <- function(layout, has_seq = FALSE, has_gene = FALSE,
           theme = theme(
             legend.title.position = "top",
             legend.key.height = if (horizontal_legend) {
-              key_height %||% unit(3, "mm")
+              key_height %||% unit(3.6, "mm")
             } else {
-              key_height %||% unit(46, "mm")
+              key_height %||% unit(50, "mm")
             },
             # A horizontal colorbar needs a longer key; the vertical bar keeps
             # the default key width.
             legend.key.width = if (horizontal_legend) {
-              key_width %||% unit(46, "mm")
+              key_width %||% unit(50, "mm")
             } else {
-              key_width %||% unit(3, "mm")
+              key_width %||% unit(3.6, "mm")
             }
           ),
           order = 2

@@ -70,7 +70,13 @@ scaled continuously from that numeric column.}
 
 \item{ribbon_ctrl_point}{Optional vector/list. Bezier control points, default c(0,0)}
 
-\item{ribbon_gap}{Optional numeric/vector. Spacing between sequences and ribbons, default 0.15}
+\item{ribbon_gap}{Optional numeric/vector controlling spacing between
+sequences and ribbon endpoints. The default \code{NULL} uses local
+obstacle-aware spacing: endpoints move closer to \code{geom_seq()} where
+no \code{geom_gene()} or \code{geom_feature()} polygon overlaps that
+genomic interval, and retain enough clearance where one does. Text and
+leader lines are ignored. Supplying a number disables the automatic rule
+and uses that exact spacing.}
 
 \item{alpha}{Ribbon transparency (overrides ribbon_alpha), defaults to the value used in the layout}
 
@@ -118,12 +124,14 @@ colourbar): one of "left", "right", "top", "bottom" or "inside", default
 
 \item{legend_key_width}{Optional width of the Identity (%) colourbar key.
 Accepts a grid unit, e.g. \code{unit(1, "cm")}, or a number interpreted
-as centimetres. Default NULL uses the ggplot2 default width.}
+as centimetres. Default NULL uses the package's 3.6 mm vertical-bar width
+or 50 mm horizontal-bar length.}
 
 \item{legend_key_height}{Optional height of the Identity (%) colourbar key.
 Accepts a grid unit, e.g. \code{unit(5, "cm")}, or a number interpreted
-as centimetres. Default NULL uses a compact fixed physical height so the
-guide remains stable across output-device sizes.}
+as centimetres. Default NULL uses the package's 50 mm vertical-bar length
+or 3.6 mm horizontal-bar height so the guide remains stable across
+output-device sizes.}
 
 \item{...}{Additional arguments passed to \code{geom_polygon()}}
 }

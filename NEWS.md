@@ -2,6 +2,23 @@
 
 ## Fixed labels and publication defaults
 
+* The layout-export and performance work previously planned for v0.11.0 is now
+  part of the v0.10.0 development cycle; the package version remains 0.10.0.
+  New `export_ggchord_layout()` returns selected layer geometry with stable
+  `layer_id`, `source_row`, mapped input columns and explicit coordinate-space
+  metadata. Unrequested ribbon and gene polygons are no longer computed.
+
+* The default `geom_ribbon(ribbon_gap = NULL)` now resolves endpoint spacing
+  locally. A ribbon endpoint moves close to its sequence when its genomic
+  interval contains no `geom_gene()` / `geom_feature()` polygon, while an
+  overlapping polygon retains the required clearance. Labels and leader lines
+  are deliberately ignored; an explicit numeric `ribbon_gap` disables this
+  automatic behaviour.
+
+* `geom_feature(feature_shape = "lollipop")` now constructs its head directly
+  in a local orthonormal tangent/normal frame, preventing the circle from
+  appearing flattened on curved sequences.
+
 * `geom_feature()` now draws independent `"arrow"`, `"block"`, `"chevron"`,
   and `"lollipop"` geometries along each sequence's real local curve. Map
   `feature_shape` and control category-to-geometry values with the new
@@ -31,8 +48,8 @@
 * The Identity colourbar now has compact physical dimensions instead of
   filling the available device height. Its title is `Identity (%)`, its
   default breaks are less crowded, and vertical and horizontal guides remain
-  stable when the export size changes. The initial compact bar was lengthened
-  slightly after visual review.
+  stable when the export size changes. The default bar is now 50 mm long and
+  3.6 mm thick after iterative visual review.
 
 * Automatic coordinate fitting now keeps independent tight x/y ranges instead
   of padding both dimensions to a square. `coord_fixed()` still preserves the

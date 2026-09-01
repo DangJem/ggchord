@@ -15,6 +15,8 @@ compute_chord_layout(
   seq_gap,
   ribbon_data = NULL,
   ribbonGap,
+  ribbon_gap_auto = FALSE,
+  ribbon_obstacles = NULL,
   ribbon_color_scheme,
   ribbon_colors,
   ribbon_alpha,
@@ -42,6 +44,7 @@ compute_chord_layout(
   region_side = "inside",
   ribbon_highlight_rows = integer(0),
   gene_data = NULL,
+  draw_gene_geometry = TRUE,
   geneGap,
   geneWidth,
   geneLabelRadialOffset,
@@ -107,7 +110,14 @@ compute_chord_layout(
 
 \item{ribbonGap}{Named vector of ribbon gaps}
 
+\item{ribbon_gap_auto}{Whether ribbon endpoints may move closer to sequence
+arcs when no gene or feature geometry occupies the local interval.}
+
+\item{ribbon_obstacles}{Optional normalized gene/feature obstacle table.}
+
 \item{gene_data}{Gene data (already validated)}
+
+\item{draw_gene_geometry}{Whether gene/feature polygons should be generated.}
 
 \item{gene_label_orientation}{Fixed-label text orientation: "radial",
 "tangent", or "horizontal". Automatic repel layouts manage their own

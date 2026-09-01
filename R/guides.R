@@ -55,8 +55,8 @@ guide_ggchord_colourbar <- function(
     (!is.null(position) && position %in% c("top", "bottom"))
   compact <- ggplot2::theme(
     legend.title.position = "top",
-    legend.key.width = unit(if (horizontal) 46 else 3, "mm"),
-    legend.key.height = unit(if (horizontal) 3 else 46, "mm"),
+    legend.key.width = unit(if (horizontal) 50 else 3.6, "mm"),
+    legend.key.height = unit(if (horizontal) 3.6 else 50, "mm"),
     legend.ticks.length = unit(1, "mm"),
     legend.text = element_text(margin = margin(l = 1.2)),
     legend.title = element_text(

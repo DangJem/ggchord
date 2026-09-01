@@ -23,8 +23,7 @@
 | v0.7.0 | 数据验证、清理和基础测试 | 已发布；视觉回归并未真正建立 |
 | v0.8.0 | 数据导入、ribbon 预处理、序列分组 | 已发布；遗留正确性问题已在 v0.9.0 修复 |
 | v0.9.0 | grammar 基础、scale/theme/guide/coord、图层独立性 | 已正式发布（2026-08-31） |
-| v0.10.0 | 发表级默认视觉、固定标签、feature 形状、显式多环和密集 ribbon | 开发中 |
-| v0.11.0 | 布局导出和大数据性能 | 规划中 |
+| v0.10.0 | 发表级视觉、feature 几何、布局导出和大数据性能 | 开发中；原 v0.11.0 范围已合并 |
 | v1.0.0 | API 冻结、完整文档和长期兼容承诺 | 规划中 |
 
 ### v0.9.0 正式版状态
@@ -482,7 +481,8 @@ v0.10.0 不新增独立的手动标签 geom，而是增强现有 `geom_gene_labe
 ### A. 固定标签与发表级默认视觉
 
 - 增强 `geom_gene_label()`，使其同时承担简洁默认标签和精确手工微调；
-- Identity 色条使用紧凑的物理尺寸，不再随设备高度无限拉伸；
+- Identity 色条使用 50 mm 长、3.6 mm 厚的紧凑物理尺寸，
+  不再随设备高度无限拉伸；
 - sequence/gene 图例符号表达实际方向，并减少过粗的线条和箭头；
 - 默认白底、标题、轴线、标签、ribbon 透明度和图例间距统一校准；
 - 文档和默认验收图使用 4:3 画布；实际设备尺寸仍由 RStudio 或 `ggsave()` 控制；
@@ -508,6 +508,8 @@ scale_feature_shape_manual(values = c(
 
 首批只考虑 `arrow`、`block`、`chevron`、`lollipop`。`geom_gene()` 保持为 gene
 arrow 的便捷封装，但验收标准是几何和视觉等价，不承诺内部字节完全一致。
+四种形状已在 v0.10.0 实现；`lollipop` 的圆头在局部切线—法线
+正交坐标中直接生成，不再因序列半径或曲率显示为扁椭圆。
 
 v0.10.0 同时移除 `geom_seq_group_label()`、`scale_group_colour_manual()`
 及 `geom_seq()` 中的所有 `seq_group*` 参数。这是开发版的破坏性精简，
@@ -530,11 +532,15 @@ bundle_ggchord_ribbons()
 
 抽样属于数据处理，应使用显式预处理函数，而不是由 geom 静默丢弃数据。
 
----
+### E. 局部障碍感知 ribbon
 
-## 六、v0.11.0 — 导出与性能
+- `ribbon_gap = NULL` 是默认自动模式；
+- 每个 ribbon 端点按自己的基因组区间判断，不在整条序列上统一留白；
+- 只有 `geom_gene()` / `geom_feature()` 的实体多边形算障碍，文字和连线不算；
+- 无障碍端点贴近 `geom_seq()`，有障碍端点保留实际所需安全间距；
+- 显式设置数值 `ribbon_gap` 时关闭自动判断，严格使用用户数值。
 
-### A. 布局导出
+### F. 布局导出
 
 只保留一个正式名称：
 
@@ -548,17 +554,18 @@ export_ggchord_layout(
 
 返回带 `layer_id`、`source_row` 和原始映射列的布局副本。坐标契约必须记录 rotation、
 ratio、单位和是否已经应用 coord transform。不再规划重复 alias。
+该单一正式接口已并入 v0.10.0。
 
-### B. 性能
+### G. 性能
 
 - sequence 基础布局缓存一次；
-- 每层只计算自己的几何；
-- 大型 ribbon 的 bundle/density 有独立 benchmark；
+- 每层只计算自己的几何，未添加的 ribbon/gene 实体不生成多边形；
+- 大型 ribbon 使用 `tools/benchmark-layout.R` 独立验收，不将机器耗时写入 testthat；
 - 不使用影响绘图结果的全局可变缓存。
 
 ---
 
-## 七、v1.0.0 — 稳定 API
+## 六、v1.0.0 — 稳定 API
 
 - 删除已完成迁移的旧参数；
 - 冻结核心 aes、scale、theme、guide、coord 和 layout export 契约；
@@ -579,7 +586,7 @@ layout export 契约，单独评估更成熟的交互方案，不在本路线图
 
 ---
 
-## 八、testthat 精简策略
+## 七、testthat 精简策略
 
 测试只保留公开 API 的最小行为，不再通过大量精确坐标断言锁定内部实现。
 
@@ -609,7 +616,7 @@ layout export 契约，单独评估更成熟的交互方案，不在本路线图
 
 ---
 
-## 九、验收规则
+## 八、验收规则
 
 - 精简后的 `testthat::test_local()` 必须通过；
 - `R CMD check` 必须通过；
