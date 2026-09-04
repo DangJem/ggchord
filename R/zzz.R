@@ -8,6 +8,7 @@
   ggplot2::register_theme_elements(
     ggchord.axis.line = ggplot2::element_line(),
     ggchord.axis.ticks = ggplot2::element_line(),
+    ggchord.axis.minor.ticks = ggplot2::element_line(),
     ggchord.axis.text = ggplot2::element_text(),
     ggchord.seq.label = ggplot2::element_text(),
     ggchord.gene.label = ggplot2::element_text(),
@@ -15,6 +16,9 @@
     element_tree = list(
       "ggchord.axis.line" = ggplot2::el_def("element_line", inherit = "line"),
       "ggchord.axis.ticks" = ggplot2::el_def("element_line", inherit = "line"),
+      "ggchord.axis.minor.ticks" = ggplot2::el_def(
+        "element_line", inherit = "line"
+      ),
       "ggchord.axis.text" = ggplot2::el_def("element_text", inherit = "text"),
       "ggchord.seq.label" = ggplot2::el_def("element_text", inherit = "text"),
       "ggchord.gene.label" = ggplot2::el_def("element_text", inherit = "text"),
@@ -118,10 +122,59 @@ get_chord_layout <- function(plot, build = TRUE) {
 #' Capture user data and mappings separately from the computed placeholder
 #' @noRd
 ggchord_capture_layer_input <- function(lyr, data, mapping, roles) {
+  mapping <- ggchord_normalize_mapping(mapping)
   lyr$ggchord_input_data <- data
   lyr$ggchord_input_mapping <- mapping
   lyr$ggchord_role_aes <- roles
   lyr
+}
+
+#' Normalise public US spelling aliases before geometry or scale inference
+#' @noRd
+ggchord_normalize_mapping <- function(mapping) {
+  if (is.null(mapping)) return(mapping)
+  if (anyDuplicated(names(mapping))) {
+    duplicated_names <- unique(names(mapping)[duplicated(names(mapping))])
+    ggchord_stop(
+      "Duplicated aesthetic after colour/color normalisation: ",
+      paste(duplicated_names, collapse = ", ")
+    )
+  }
+  aliases <- c(seq_color = "seq_colour", ribbon_color = "ribbon_colour")
+  for (alias in names(aliases)) {
+    canonical <- aliases[[alias]]
+    if (alias %in% names(mapping) && canonical %in% names(mapping)) {
+      ggchord_stop("Use only one of `", canonical, "` and `", alias, "`")
+    }
+    if (alias %in% names(mapping)) names(mapping)[names(mapping) == alias] <- canonical
+  }
+  mapping
+}
+
+#' Resolve a fixed colour/color alias without ambiguous precedence
+#' @noRd
+ggchord_colour_alias <- function(colour, dots, caller, call = sys.call(-1L)) {
+  raw <- names(as.list(call)[-1L]) %||% character()
+  has_color <- "color" %in% names(dots)
+  has_colour <- "colour" %in% raw || "colour" %in% names(dots)
+  if (has_color && has_colour) {
+    ggchord_stop(caller, ": use only one of colour and color")
+  }
+  if (has_color) {
+    colour <- dots$color
+    dots$color <- NULL
+  }
+  if ("color" %in% names(dots)) names(dots)[names(dots) == "color"] <- "colour"
+  list(colour = colour, dots = dots)
+}
+
+#' Normalise colour/color inside variadic fixed aesthetics
+#' @noRd
+ggchord_colour_dots <- function(dots, caller) {
+  if ("color" %in% names(dots) && "colour" %in% names(dots))
+    ggchord_stop(caller, ": use only one of colour and color")
+  if ("color" %in% names(dots)) names(dots)[names(dots) == "color"] <- "colour"
+  dots
 }
 
 #' Resolve a layer's input table and role mappings
@@ -269,7 +322,7 @@ ggchord_axis_geometry <- function(layout) {
     line$group <- line$seq_id
   }
   if (nrow(tick)) {
-    tick$.component <- "tick"
+    tick$.component <- ifelse(tick$is_major, "major_tick", "minor_tick")
     tick$x <- tick$x0
     tick$y <- tick$y0
     tick$xend <- tick$x1
@@ -288,6 +341,32 @@ ggchord_axis_geometry <- function(layout) {
     return(data.frame(x = numeric(), y = numeric(), .component = character()))
   }
   ggchord_rbind_fill(values)
+}
+
+#' Internal automatic sequence-axis layer
+#' @noRd
+ggchord_axis_layer <- function(layout) {
+  data <- ggchord_axis_geometry(layout)
+  lyr <- ggplot2::layer(
+    data = data,
+    mapping = ggplot2::aes(
+      x = x, y = y, xend = xend, yend = yend, label = label,
+      group = group, size = I(size), angle = angle,
+      hjust = hjust, vjust = vjust, .component = I(.component)
+    ),
+    stat = "identity", geom = GeomChordAxis, position = "identity",
+    show.legend = FALSE, inherit.aes = FALSE, check.aes = FALSE,
+    check.param = FALSE,
+    params = list(line_params = list(), tick_params = list(),
+      minor_tick_params = list(), text_params = list(), na.rm = FALSE)
+  )
+  lyr$ggchord_theme_components <- c(
+    line_params = "ggchord.axis.line",
+    tick_params = "ggchord.axis.ticks",
+    minor_tick_params = "ggchord.axis.minor.ticks",
+    text_params = "ggchord.axis.text"
+  )
+  lyr
 }
 
 #' Combine automatic label components for GeomChordGeneLabelRepel

@@ -57,7 +57,13 @@ scale_seq_ring_manual <- function(..., values, name = "Ring",
 scale_ribbon_fill_stepsn <- function(
     ..., colours, values = NULL, colors,
     guide = ggplot2::guide_coloursteps(available_aes = "ribbon_fill")) {
-  if (missing(colours)) colours <- colors
+  has_colours <- !missing(colours)
+  has_colors <- !missing(colors)
+  if (has_colours && has_colors)
+    ggchord_stop("scale_ribbon_fill_stepsn(): use only one of colours and colors")
+  if (!has_colours && !has_colors)
+    ggchord_stop("scale_ribbon_fill_stepsn(): colours (or colors) is required")
+  if (!has_colours) colours <- colors
   ggplot2::scale_fill_stepsn(
     ..., colours = colours, values = values, aesthetics = "ribbon_fill",
     guide = guide
@@ -69,7 +75,13 @@ scale_ribbon_fill_stepsn <- function(
 scale_ribbon_fill_gradientn <- function(
     ..., colours, values = NULL, colors,
     guide = ggplot2::guide_colourbar(available_aes = "ribbon_fill")) {
-  if (missing(colours)) colours <- colors
+  has_colours <- !missing(colours)
+  has_colors <- !missing(colors)
+  if (has_colours && has_colors)
+    ggchord_stop("scale_ribbon_fill_gradientn(): use only one of colours and colors")
+  if (!has_colours && !has_colors)
+    ggchord_stop("scale_ribbon_fill_gradientn(): colours (or colors) is required")
+  if (!has_colours) colours <- colors
   ggplot2::scale_fill_gradientn(
     ..., colours = colours, values = values, aesthetics = "ribbon_fill",
     guide = guide

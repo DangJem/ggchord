@@ -42,6 +42,7 @@ geom_seq <- function(mapping = NULL, data = NULL,
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
   dots <- list(...)
+  dots <- ggchord_colour_dots(dots, "geom_seq()")
   ggchord_reject_retired(dots, "geom_seq()", c(
     seq_labels = "geom_seq_label(labels = ...) or a label scale",
     seq_colors = "scale_seq_colour_manual(values = ...)",

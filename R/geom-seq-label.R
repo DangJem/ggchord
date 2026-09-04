@@ -60,6 +60,7 @@ geom_seq_label <- function(mapping = NULL, data = NULL,
   on.exit(options(error = old_error), add = TRUE)
 
   dots <- list(...)
+  dots <- ggchord_colour_dots(dots, "geom_seq_label()")
   ggchord_reject_retired(dots, "geom_seq_label()", c(
     seq_label_size = "size",
     seq_labels = "labels",

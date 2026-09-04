@@ -377,11 +377,11 @@ v0.10.0 不新增独立的手动标签 geom，而是增强现有 `geom_gene_labe
 - 逐序列、逐链的 rotation/radial/circumferential offset 继续提供手工自由；
 - 不规划 `geom_gene_label_manual()`，避免两个固定标签图层职责重叠。
 
-#### `geom_axis()` 和 `geom_seq_label()`
+#### 自动轴和 `geom_seq_label()`
 
+- `geom_axis()` 已删除，序列轴作为默认内部坐标装饰自动绘制；
 - axis breaks/labels 已移入 `scale_seq_position_continuous()`；
-- 轴线、tick 和文字已分别接收经过筛选的样式参数；
-- 无意义的 axis `show_legend` 已删除并给出明确错误；
+- 轴线、主刻度、次刻度和文字由 `theme_ggchord()` 分别控制；
 - sequence label 的 data/mapping 已生效；
 - 文字大小不再污染其他文字图层的 size scale。
 
@@ -611,7 +611,9 @@ v0.11.0 合并原 v0.12.0 计划，作为 v1.0.0 前的集中 API 收敛版本�
 ### B. 标准图层与构建
 
 - 每个公开 geom/stat 返回一个标准 `LayerInstance`；
-- `geom_axis()` 使用组合 Geom/gTree 绘制轴线、刻度和文字；
+- 公开 `geom_axis()` 已删除，内部 `GeomChordAxis` 由构建流程自动注入；
+- 自动轴默认显示，`theme_ggchord(axis = element_blank())` 会同时从绘制范围和
+  标签障碍物中移除整套轴；
 - `geom_gene_label_repel()` 使用组合 Geom/gTree 绘制标签和指示线；
 - `+.ggchord` 不再展开自定义图层列表；
 - `prepare_ggchord_plot()` 成为布局、几何、默认标度和 Coord 的唯一准备入口；
@@ -634,7 +636,7 @@ v0.11.0 合并原 v0.12.0 计划，作为 v1.0.0 前的集中 API 收敛版本�
 | `ribbon_alpha`、ribbon outline 参数 | `alpha`、`colour`、`linewidth`、`linetype` |
 | feature 的 type/category/label 字符串列名 | `aes(feature_type/feature_fill/feature_label = ...)` |
 | `geom_seq(seq_labels/seq_colors)` | `geom_seq_label(labels = ...)` / seq scale |
-| `geom_axis(show_axis/tick counts/axis_label_size)` | 是否添加图层、位置 scale、`size`/主题 |
+| `geom_axis()` 及其全部参数 | 自动轴；外观和物理间距用 `theme_ggchord(axis.*)`，breaks/labels 用位置 scale |
 | `geom_seq_region(regions/region_* style)` | `data`、`fill`、`colour`、`alpha` |
 
 旧参数不再软弃用或静默忽略，而是立即给出迁移错误。用户提供的 scale 永远优先；
@@ -647,9 +649,17 @@ v0.11.0 合并原 v0.12.0 计划，作为 v1.0.0 前的集中 API 收敛版本�
 - 控制坐标的 role aesthetic 禁止 `after_stat()` / `after_scale()`；视觉 aesthetic
   支持标准 staged mapping；
 - `theme_ggchord()`、`theme_ggchord_minimal()`、
-  `theme_ggchord_publication()`、`theme_ggchord_dark()` 均直接接受
-  `axis_line`、`axis_ticks`、`axis_text`、`seq_label`、`gene_label` 和
-  `gene_label_segment`；删除重复的 `theme_ggchord_elements()`；
+  `theme_ggchord_publication()`、`theme_ggchord_dark()` 使用完全相同的点号参数；
+  `text` 是父级字体入口，轴、序列标签、基因标签和图例字号通过 `rel()` 继承；
+- 自动轴由 `axis.*` 控制；轴间距、主次刻度长度和文字偏移使用物理单位，位置
+  scale 继续独占 breaks、minor breaks、labels、limits 和 transform；
+- `legend.seq.*`、`legend.ribbon.*`、`legend.gene.*`、
+  `legend.feature.*`、`legend.region.*` 独立控制五种角色图例，并逐项继承通用
+  `legend.*`；role 父级 `element_blank()` 只隐藏该角色；
+- 英式 `colour/colours` 为规范拼写，美式 `color/colors`、role aesthetic、scale
+  函数和 `guide_ggchord_colorbar()` 为完整等价别名；同次调用不得混用；
+- 删除 `base_size`、`base_family`、旧下划线主题参数以及重复的
+  `theme_ggchord_elements()`；
 - minimal 弱化辅助线，publication 使用紧凑期刊排版，dark 保留完整深色适配；
 - `theme()`、`ggtitle()`、`labs()` 等仍是 ggplot2 原函数的精确精选重导出，
   不创建同名包装器，也不导出无关 geom/facet/coord/完整主题。
@@ -663,12 +673,13 @@ v0.11.0 合并原 v0.12.0 计划，作为 v1.0.0 前的集中 API 收敛版本�
 - 删除全局布局环境、旧 scale 兼容 helper、图层列表展开和重复 build 路径；
 - 内部纯几何、文字测量、碰撞检测和验证 helper 保留。
 
-### F. 当前验收状态（2026-09-02）
+### F. 当前验收状态（2026-09-04）
 
-- testthat 已精简为 100 项公开行为断言，当前 0 fail、0 warning、0 skip；
+- testthat 保持轻量公开行为测试，当前 128 项断言为 0 fail、0 warning、0 skip；
 - 主图、三种自动标签、组合 Geom、stat、feature shape、region、highlight、ring、
-  data function、标度推断、布局导出和 Viewer 均已通过烟雾测试；
-- `R CMD check` 已达到 0 error、0 warning、0 note；
+  data function、标度推断、自动轴、角色图例、双拼写别名、布局导出、标准
+  `ggsave()` 和 Viewer 均已通过烟雾测试；
+- `R CMD check --ignore-vignettes` 已达到 `Status: OK`；
 - `aligned`、`radial`、`arc` 和小画布的临时 PNG 及 PDF 已完成视觉
   验收，不写入仓库；SVG 代码路径保留可选 `svglite` / Cairo 检查，
   当前机器因未安装 `svglite` 且 X11 动态库缺失，未做本地 SVG 视觉渲染；

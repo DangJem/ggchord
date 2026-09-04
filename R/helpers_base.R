@@ -372,9 +372,14 @@ ggchord_device_units_per_inch <- function(x, y,
   geometry_span <- max(x_span, y_span, 1)
 
   if (is.null(device_inches)) {
-    device_inches <- tryCatch(
-      grDevices::dev.size("in"),
-      error = function(e) c(NA_real_, NA_real_)
+    # Querying dev.size() on the null device opens R's default device. That
+    # side effect could leave Rplots.pdf open after layout-only operations and
+    # make a following ggsave() close the wrong device. Use the documented
+    # fallback until an actual render device exists.
+    device_inches <- if (grDevices::dev.cur() == 1L) {
+      c(NA_real_, NA_real_)
+    } else tryCatch(
+      grDevices::dev.size("in"), error = function(e) c(NA_real_, NA_real_)
     )
   }
   device_short_side <- suppressWarnings(min(device_inches, na.rm = TRUE))

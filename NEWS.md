@@ -14,9 +14,9 @@
 ## Standard ggplot2 layer grammar
 
 * Every public geom and stat now returns one standard `LayerInstance`.
-  `geom_axis()` and `geom_gene_label_repel()` use composite Geom/gTree
-  implementations instead of returning lists of child layers. The custom
-  `+.ggchord` list-flattening path has been removed.
+  `geom_gene_label_repel()` uses a composite Geom/gTree implementation instead
+  of returning child-layer lists. The custom `+.ggchord` list-flattening path
+  has been removed.
 
 * Public layers consistently expose `mapping`, `data`, `position`,
   `show.legend`, `inherit.aes`, and `...`. A layer `data` argument may be a
@@ -40,10 +40,30 @@
 ## Themes and namespace
 
 * `theme_ggchord()`, `theme_ggchord_minimal()`,
-  `theme_ggchord_publication()`, and `theme_ggchord_dark()` now directly accept
-  `axis_line`, `axis_ticks`, `axis_text`, `seq_label`, `gene_label`, and
-  `gene_label_segment`. The redundant `theme_ggchord_elements()` helper was
-  removed. Minimal and publication presets now have distinct visual roles.
+  `theme_ggchord_publication()`, and `theme_ggchord_dark()` are now complete,
+  theme-like appearance interfaces with dotted arguments. `text` supplies the
+  parent typography and child sizes inherit through `rel()`; the redundant
+  `base_size`, `base_family`, underscore element arguments, and
+  `theme_ggchord_elements()` have been removed.
+
+* Sequence axes are displayed automatically and configured with `axis.*`
+  theme arguments. `geom_axis()` has been removed. Axis gaps, major/minor tick
+  lengths and text offsets use physical `grid::unit()` values; breaks, labels,
+  limits and transforms remain in `scale_seq_position_continuous()`.
+
+* Sequence, ribbon, gene, feature and region guides can independently inherit
+  or override position, direction, background, key dimensions, text, title,
+  margin and spacing through `legend.<role>.*`. Ribbon colourbar ticks and its
+  axis line are independently themeable. Explicit scale/`guides()` settings
+  still take precedence, and feature guides no longer inherit gene placement.
+
+* British colour spelling is canonical. `seq_color`, `ribbon_color`, `colors`,
+  `scale_*_color_*()` and the new `guide_ggchord_colorbar()` are complete US
+  aliases; supplying both spellings in one call now fails explicitly.
+
+* Layout-only operations no longer open an implicit `Rplots.pdf` device while
+  converting physical units. This also fixes a following `ggsave()` or
+  `view_ggchord()` occasionally closing the wrong graphics device.
 
 * Selected ggplot2 helpers such as `theme()`, `ggtitle()`, `labs()` and
   `guides()` remain exact re-exports. ggchord does not wrap them or expose
@@ -64,7 +84,7 @@ immediately with a migration message instead of warning or being ignored.
 | `ribbon_alpha` and ribbon outline names | `alpha`, `colour`, `linewidth`, `linetype` |
 | feature type/category/label column strings | `aes(feature_type/feature_fill/feature_label = ...)` |
 | `geom_seq(seq_labels/seq_colors)` | `geom_seq_label(labels = ...)` / sequence scale |
-| axis show/count/text-size arguments | layer presence / position scale / theme or `size` |
+| `geom_axis()` and its style/layout arguments | automatic axis + `theme_ggchord(axis.*)`; breaks/labels use the position scale |
 | `geom_seq_region(regions/region_* style)` | `data`, `fill`, `colour`, `alpha` |
 
 README, vignettes, site pages, and generated figures remain deliberately

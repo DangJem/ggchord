@@ -133,6 +133,19 @@ export_ggchord_layout <- function(
     }
   }
 
+  # The sequence axis is now an automatic decoration rather than a public
+  # layer, so export it directly from the computed layout under a stable
+  # synthetic layer id.
+  if ("axis" %in% include && nrow(exported$axis) == 0L) {
+    automatic_axis <- ggchord_axis_geometry(layout)
+    if (nrow(automatic_axis) > 0L) {
+      automatic_axis$source_row <- NA_integer_
+      automatic_axis$layer_id <- ".automatic-axis"
+      automatic_axis$component <- automatic_axis$.component
+      exported$axis <- automatic_axis
+    }
+  }
+
   coord <- plot$coordinates
   fitted <- ggchord_adaptive_limits(layout)
   metadata <- list(

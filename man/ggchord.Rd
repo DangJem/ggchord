@@ -56,8 +56,7 @@ p <- ggchord(
 ) +
   geom_seq() +
   geom_ribbon() +
-  geom_gene() +
-  geom_axis()
+  geom_gene()
 print(p)
 
 }

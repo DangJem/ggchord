@@ -67,6 +67,7 @@ geom_ribbon <- function(mapping = NULL, data = NULL,
                         ...) {
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
+  mapping <- ggchord_normalize_mapping(mapping)
   dots <- list(...)
   ggchord_reject_retired(dots, "geom_ribbon()", c(
     ribbon_color_scheme = "aes(ribbon_fill = ...) and scale_ribbon_fill_*()",
@@ -94,10 +95,9 @@ geom_ribbon <- function(mapping = NULL, data = NULL,
     legend_key_width = "guide_ggchord_colourbar(barwidth = ...)",
     legend_key_height = "guide_ggchord_colourbar(barheight = ...)"
   ))
-  if ("color" %in% names(dots)) {
-    colour <- dots$color
-    dots$color <- NULL
-  }
+  alias <- ggchord_colour_alias(colour, dots, "geom_ribbon()", sys.call())
+  colour <- alias$colour
+  dots <- alias$dots
   outline_mapped <- !is.null(mapping) && "ribbon_colour" %in% names(mapping)
   linetype_mapped <- !is.null(mapping) && "ribbon_linetype" %in% names(mapping)
 

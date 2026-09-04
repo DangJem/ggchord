@@ -10,28 +10,11 @@ make_ggchord_scales(
   has_gene = FALSE,
   has_feature = FALSE,
   has_feature_shape = FALSE,
-  legend_position = NULL,
-  legend_box = NULL,
-  positions = list(),
-  legend_key_width = NULL,
-  legend_key_height = NULL,
+  plot = NULL,
   legend_scale = ggchord_device_scale(),
   legend_text_size = 8,
   legend_title_size = 9
 )
-}
-\arguments{
-\item{legend_position}{The plot theme's `legend.position` (character).}
-
-\item{legend_box}{The plot theme's `legend.box` setting. ggchord uses compact
-physical dimensions for both horizontal and vertical colourbars, avoiding
-device-relative bars that disappear in horizontal boxes or grow across an
-entire tall export.}
-
-\item{positions}{Named list with per-legend position overrides
-(`seq`, `ribbon`, `gene`), each `NULL` or one of "left", "right", "top",
-"bottom", "inside". Overrides make that legend sit in its own legend box at
-the given position instead of following the theme's `legend.position`.}
 }
 \description{
 Build the list of scales for a computed layout

@@ -41,7 +41,7 @@ ggchord_component_style <- function(data, params, aesthetics) {
   data
 }
 
-#' Draw the three genomic-axis components as one standard ggplot2 layer
+#' Draw genomic-axis components as one standard ggplot2 layer
 #' @noRd
 GeomChordAxis <- ggplot2::ggproto(
   "GeomChordAxis", ggplot2::Geom,
@@ -53,19 +53,27 @@ GeomChordAxis <- ggplot2::ggproto(
     linetype = 1, size = 3, angle = 0, hjust = 0.5, vjust = 0.5,
     family = "", fontface = 1, lineheight = 1.2
   ),
-  extra_params = c("na.rm", "line_params", "tick_params", "text_params"),
+  extra_params = c(
+    "na.rm", "line_params", "tick_params", "minor_tick_params", "text_params"
+  ),
   draw_key = function(data, params, size) grid::nullGrob(),
   draw_panel = function(data, panel_params, coord, na.rm = FALSE,
                         line_params = list(), tick_params = list(),
+                        minor_tick_params = list(),
                         text_params = list()) {
     line <- data[data$.component %in% "line", , drop = FALSE]
-    tick <- data[data$.component %in% "tick", , drop = FALSE]
+    tick <- data[data$.component %in% "major_tick", , drop = FALSE]
+    minor_tick <- data[data$.component %in% "minor_tick", , drop = FALSE]
     text <- data[data$.component %in% "text", , drop = FALSE]
     line <- ggchord_component_style(
       line, line_params, c("colour", "alpha", "linewidth", "linetype")
     )
     tick <- ggchord_component_style(
       tick, tick_params, c("colour", "alpha", "linewidth", "linetype")
+    )
+    minor_tick <- ggchord_component_style(
+      minor_tick, minor_tick_params,
+      c("colour", "alpha", "linewidth", "linetype")
     )
     text <- ggchord_component_style(
       text, text_params,
@@ -87,6 +95,16 @@ GeomChordAxis <- ggplot2::ggproto(
         arrow.fill = tick_params$arrow.fill %||% NULL,
         lineend = tick_params$lineend %||% "butt",
         linejoin = tick_params$linejoin %||% "round",
+        na.rm = na.rm
+      )
+    }
+    if (nrow(minor_tick)) {
+      grobs[[length(grobs) + 1L]] <- ggplot2::GeomSegment$draw_panel(
+        minor_tick, panel_params, coord,
+        arrow = minor_tick_params$arrow %||% NULL,
+        arrow.fill = minor_tick_params$arrow.fill %||% NULL,
+        lineend = minor_tick_params$lineend %||% "butt",
+        linejoin = minor_tick_params$linejoin %||% "round",
         na.rm = na.rm
       )
     }

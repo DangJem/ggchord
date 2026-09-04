@@ -57,6 +57,11 @@ geom_ribbon_highlight <- function(mapping = NULL, data = NULL,
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
   dots <- list(...)
+  alias <- ggchord_colour_alias(
+    colour, dots, "geom_ribbon_highlight()", sys.call()
+  )
+  colour <- alias$colour
+  dots <- alias$dots
   ggchord_reject_retired(dots, "geom_ribbon_highlight()", c(
     highlight_color = "fill",
     highlight_alpha = "alpha",

@@ -51,6 +51,9 @@ geom_seq_region <- function(mapping = NULL, data = NULL,
   on.exit(options(error = old_error), add = TRUE)
 
   dots <- list(...)
+  alias <- ggchord_colour_alias(colour, dots, "geom_seq_region()", sys.call())
+  colour <- alias$colour
+  dots <- alias$dots
   ggchord_reject_retired(dots, "geom_seq_region()", c(
     regions = "data",
     region_fill = "fill",

@@ -113,6 +113,7 @@ geom_feature <- function(mapping = NULL, data = NULL,
                          ...) {
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
+  mapping <- ggchord_normalize_mapping(mapping)
   dots <- list(...)
   ggchord_reject_retired(dots, "geom_feature()", c(
     type = "aes(feature_type = ...)",

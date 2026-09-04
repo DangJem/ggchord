@@ -263,6 +263,16 @@ compute_chord_layout <- function(
     path_data
   }), seqs)
 
+  axis_reference_x <- unlist(lapply(seq_arcs, `[[`, "x"), use.names = FALSE)
+  axis_reference_y <- unlist(lapply(seq_arcs, `[[`, "y"), use.names = FALSE)
+  axis_units_per_inch <- ggchord_device_units_per_inch(
+    axis_reference_x, axis_reference_y
+  )
+  axisGap <- axisGap * axis_units_per_inch
+  axisMajLen <- axisMajLen * axis_units_per_inch
+  axisMinLen <- axisMinLen * axis_units_per_inch
+  labelOffset <- labelOffset * axis_units_per_inch
+
   # ====================================================================
   # Step 5: generate axes (lines, ticks, labels)
   # ====================================================================
@@ -354,7 +364,7 @@ compute_chord_layout <- function(
       len <- ifelse(pts$is_major, axisMajLen[id], axisMinLen[id])
       base <- map_to_curve_many(angle, r0, ref)
       tip <- map_to_curve_many(angle, r0 + len * dir, ref)
-      lbl <- map_to_curve_many(angle, r0 + len * (1.5 + labelOffset[id]) * dir, ref)
+      lbl <- map_to_curve_many(angle, r0 + (len + labelOffset[id]) * dir, ref)
 
       data.frame(
         x0 = base[, 1], y0 = base[, 2],
@@ -364,6 +374,7 @@ compute_chord_layout <- function(
         size = labelSize[[id]],
         label_angle = label_angle,
         label_angle_relative = relative_angle,
+        is_major = pts$is_major,
         seq_id = id,
         stringsAsFactors = FALSE
       )
@@ -736,8 +747,12 @@ compute_chord_layout <- function(
         orig_rad <- c(rep(outer_r, n), rep(inner_r, n))
         mapped <- map_to_curve_many(orig_ang, orig_rad, ref)
 
-        fill_col <- if ("color" %in% colnames(region_data) && !is.na(row$color)) {
-          as.character(row$color)
+        if (all(c("colour", "color") %in% colnames(region_data))) {
+          ggchord_stop("geom_seq_region(): data may contain only one of colour and color")
+        }
+        colour_column <- intersect(c("colour", "color"), colnames(region_data))
+        fill_col <- if (length(colour_column) && !is.na(row[[colour_column]])) {
+          as.character(row[[colour_column]])
         } else {
           region_fill
         }

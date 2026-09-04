@@ -53,9 +53,7 @@ geom_gene <- function(mapping = NULL, data = NULL,
     show_legend = "show.legend",
     legend_position = "guides(gene_fill = guide_ggchord_legend(position = ...))"
   ))
-  if ("color" %in% names(dots) && !("colour" %in% names(dots))) {
-    names(dots)[names(dots) == "color"] <- "colour"
-  }
+  dots <- ggchord_colour_dots(dots, "geom_gene()")
   # Backward compatibility: gene label parameters used to live here. Point the
   # user to the dedicated layer instead of silently ignoring them.
   legacy_label_args <- intersect(
@@ -196,6 +194,7 @@ geom_gene_label <- function(mapping = NULL, data = NULL,
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
   dots <- list(...)
+  dots <- ggchord_colour_dots(dots, "geom_gene_label()")
   ggchord_reject_retired(dots, "geom_gene_label()", c(
     gene_label_size = "size",
     show_legend = "show.legend"
@@ -326,6 +325,7 @@ geom_gene_label_repel <- function(mapping = NULL, data = NULL,
   # the removed `gene_label_segment` into `gene_label_segment_linetype`.
   raw_argument_names <- names(as.list(sys.call())[-1L])
   dots <- list(...)
+  dots <- ggchord_colour_dots(dots, "geom_gene_label_repel()")
   removed <- c(
     "gene_label_rotation", "gene_label_radial_offset",
     "gene_label_circum_offset", "gene_label_circum_limit",

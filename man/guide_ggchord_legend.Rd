@@ -3,6 +3,7 @@
 \name{guide_ggchord_legend}
 \alias{guide_ggchord_legend}
 \alias{guide_ggchord_colourbar}
+\alias{guide_ggchord_colorbar}
 \title{Guides for ggchord role aesthetics}
 \usage{
 guide_ggchord_legend(
@@ -20,6 +21,25 @@ guide_ggchord_legend(
 )
 
 guide_ggchord_colourbar(
+  title = ggplot2::waiver(),
+  theme = NULL,
+  nbin = NULL,
+  display = "raster",
+  alpha = NA,
+  draw.ulim = TRUE,
+  draw.llim = TRUE,
+  angle = NULL,
+  position = NULL,
+  direction = NULL,
+  reverse = FALSE,
+  order = 0,
+  available_aes = c("colour", "color", "fill", "ribbon_fill", "gene_fill",
+    "feature_fill", "region_fill"),
+  size_scale = 1,
+  ...
+)
+
+guide_ggchord_colorbar(
   title = ggplot2::waiver(),
   theme = NULL,
   nbin = NULL,
