@@ -24,7 +24,8 @@ reference:
       - ggchord
       - coord_chord
       - get_chord_layout
-      - +.ggchord
+      - export_ggchord_layout
+      - view_ggchord
   - title: "Methods and datasets"
     desc: "S3 methods and example data shipped with ggchord."
     contents:
@@ -41,7 +42,6 @@ reference:
       - geom_gene
       - geom_gene_label
       - geom_gene_label_repel
-      - geom_axis
       - geom_seq_label
       - geom_seq_region
       - geom_ribbon_highlight

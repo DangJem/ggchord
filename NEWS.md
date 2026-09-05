@@ -17,6 +17,22 @@
   height-dependent relayout oscillation and excessive outer legend whitespace.
   Default plot margins retain a small physical safety inset.
 
+## v0.11.0 closeout
+
+* Removed `"aligned"` requests now point directly to `"auto"`. Acceptance
+  checks verify that auto actually combines side columns with radial labels.
+* Static previews retain export warnings rather than silently suppressing
+  font, device or missing-data problems. Content fitting warns when legends
+  exceed the requested width; users can increase width or set guide rows.
+  A regression checks real PNG
+  dimensions and preservation of the caller's graphics device.
+* `tools/validate-release.R` provides reproducible common-geometry, label,
+  output, benchmark and executable-vignette checks, writing only temporary
+  artifacts. Extreme parameter stress tests are deferred.
+* Tutorial code uses the current API; retained figures are explicitly marked
+  as historical. Obsolete pkgdown references and preview-size descriptions
+  are corrected without rebuilding the published site or its assets.
+
 ## Advanced tracks and layout
 
 * New `stat_ribbon_bundle()` and `stat_ribbon_density()` expose
@@ -103,7 +119,7 @@
 
 * The default Identity colourbar is placed at the left edge of the panel;
   compact sequence, strand, feature and region guides use the right edge.
-  `view_ggchord()` now defaults to an 8 by 8 square export preview. Explicit
+  `view_ggchord()` defaults to an 11-inch-wide content-fitted preview. Explicit
   common or role guide positions and explicit preview dimensions still win.
 
 * British colour spelling is canonical. `seq_color`, `ribbon_color`, `colors`,
@@ -136,8 +152,9 @@ immediately with a migration message instead of warning or being ignored.
 | `geom_axis()` and its style/layout arguments | automatic axis + `theme_ggchord(axis.*)`; breaks/labels use the position scale |
 | `geom_seq_region(regions/region_* style)` | `data`, `fill`, `colour`, `alpha` |
 
-README, vignettes, site pages, and generated figures remain deliberately
-unchanged until the final v1.0.0 documentation rebuild.
+Vignette code examples are migrated to the current API and checked separately
+from document rendering. Existing figures and the public site are retained
+until the final v1.0.0 documentation rebuild.
 
 # ggchord 0.10.0
 

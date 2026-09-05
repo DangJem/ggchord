@@ -31,6 +31,15 @@ ggchord_preview_layout <- function(plot, width_inches, height_inches = 8) {
   table <- ggplot2::ggplotGrob(plot)
   fixed_width <- grid::convertWidth(sum(table$widths), "inches", valueOnly = TRUE)
   fixed_height <- grid::convertHeight(sum(table$heights), "inches", valueOnly = TRUE)
+  horizontal_guides <- which(table$layout$name %in% c("guide-box-top", "guide-box-bottom"))
+  guide_width <- max(c(0, vapply(horizontal_guides, function(i) {
+    grid::convertWidth(grid::grobWidth(table$grobs[[i]]), "inches", valueOnly = TRUE)
+  }, numeric(1))))
+  if (fixed_width >= width_inches || guide_width > width_inches) {
+    warning("view_ggchord(): legends exceed the requested width; increase width ",
+      "or set nrow in guide_ggchord_legend() via guides()",
+      call. = FALSE)
+  }
   nw <- grid::unitType(table$widths) == "null"
   nh <- grid::unitType(table$heights) == "null"
   if (!any(nw) || !any(nh)) return(list(plot = table, height = width_inches * 0.7))
@@ -56,6 +65,9 @@ ggchord_preview_height <- function(plot, width_inches) {
 #' small static preview page in the configured IDE viewer or web browser. This
 #' is an export-size preview, not an interactive plot conversion; the original
 #' plot and its standard \code{ggsave()} workflow remain unchanged.
+#' Automatic height fitting does not resize an overwide legend. If decorations
+#' exceed the requested width, increase \code{width} or use, for example,
+#' \code{guides(seq_colour = guide_ggchord_legend(nrow = 2))}.
 #'
 #' @param plot A ggchord or ggplot object, default \code{last_plot()}.
 #' @param width Positive output width, default 11 inches when \code{units = "in"}.
@@ -139,7 +151,7 @@ view_ggchord <- function(
     "png"
   }
   tryCatch(
-    suppressWarnings(ggplot2::ggsave(
+    ggplot2::ggsave(
         filename = image_file,
         plot = preview_plot,
         device = save_device,
@@ -148,7 +160,7 @@ view_ggchord <- function(
         units = units,
         dpi = dpi,
         bg = bg
-      )),
+      ),
     error = function(e) {
       if (identical(device, "svg")) {
         ggchord_stop(

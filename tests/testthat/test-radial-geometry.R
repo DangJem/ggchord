@@ -10,7 +10,7 @@ count_radial_crossings <- function(paths) {
 
 test_that("radial is default and removed aligned is rejected", {
   expect_identical(formals(geom_gene_label_repel)$gene_label_layout, "radial")
-  expect_error(geom_gene_label_repel(gene_label_layout = "aligned"), "arg")
+  expect_error(geom_gene_label_repel(gene_label_layout = "aligned"), "auto")
   seq <- data.frame(seq_id = "circle", length = 10000)
   genes <- data.frame(seq_id = "circle", start = seq(300, 9000, length.out = 12),
     end = seq(300, 9000, length.out = 12) + 100, strand = "+",
@@ -86,6 +86,32 @@ test_that("content-fitted previews keep explicit dimensions optional", {
   height <- ggchord:::ggchord_preview_height(p, 5)
   expect_true(is.finite(height) && height > 1 && height < 8)
   expect_null(formals(view_ggchord)$height)
+})
+
+test_that("preview preserves output warnings, dimensions and the caller device", {
+  grDevices::pdf(NULL, width = 6, height = 4)
+  on.exit(grDevices::dev.off())
+  caller_device <- grDevices::dev.cur()
+  p <- ggplot2::ggplot(data.frame(x = c(1, NA), y = c(1, 2)),
+    ggplot2::aes(x, y)) + ggplot2::geom_point()
+  expect_warning(file <- view_ggchord(p, width = 5.08, height = 2.54,
+    units = "cm", dpi = 100, viewer = "none"), "Removed 1 row")
+  expect_identical(grDevices::dev.cur(), caller_device)
+  # PNG IHDR stores the actual width and height as big-endian integers.
+  connection <- file(file, "rb")
+  on.exit(close(connection), add = TRUE)
+  readBin(connection, "raw", n = 16)
+  expect_identical(readBin(connection, "integer", n = 2, size = 4,
+    endian = "big"), c(200L, 100L))
+})
+
+test_that("content fitting reports a legend that cannot fit the requested width", {
+  p <- ggplot2::ggplot(data.frame(x = 1:3, group = c("a", "b", "c")),
+    ggplot2::aes(x, x, colour = group)) + ggplot2::geom_point() +
+    ggplot2::scale_colour_discrete(labels = rep("A long legend description", 3)) +
+    ggplot2::theme(legend.position = "top")
+  expect_warning(view_ggchord(p, width = 2, viewer = "none"),
+    "legends exceed the requested width")
 })
 
 test_that("radial balances opposite sectors without losing collision guarantees", {

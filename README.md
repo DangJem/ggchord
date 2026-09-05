@@ -2,6 +2,10 @@
 
 # ggchord: Layered Multi-Sequence Chord Diagrams for ggplot2
 
+> Development v0.11.0: this README and its figures describe earlier APIs.
+> Use the current [tutorial source](vignettes/ggchord_vignette.Rmd) and
+> [migration table](NEWS.md#breaking-api-cleanup). The full rewrite is planned for v1.0.0.
+
 ## Overview
 
 `ggchord` is an R package built on `ggplot2` that draws **chord diagrams for

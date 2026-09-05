@@ -21,8 +21,8 @@ knitr::opts_chunk$set(
 ```
 
 ```{r library}
-library(ggchord)
 library(ggplot2)
+library(ggchord)
 
 data(seq_data_example)
 data(ribbon_data_example)
@@ -30,7 +30,11 @@ data(gene_data_example)
 ```
 
 本教程完整介绍 `ggchord` 的工作流程：准备输入数据、在 R 中导入文件、
-校验与清理数据，以及逐层构建图形。本文对应 **v0.9.0 正式版**。
+校验与清理数据，以及逐层构建图形。本文对应 **v0.11.0 开发版**。
+
+> 代码示例已迁移至 v0.11.0；图片保留旧版示意，不代表当前默认外观。
+> 坐标轴现在自动显示，使用 `theme_ggchord(axis = element_blank())` 隐藏。
+> 完整说明与图片重构仍安排在 v1.0.0。
 
 ## 1. 前期数据准备
 
@@ -228,10 +232,10 @@ knitr::include_graphics("../man/figures/gene_repel.png")
 
 #### 选择基因标签布局
 
-`geom_gene_label_repel()` 提供三种确定性模式。默认 `"aligned"` 将水平文字
-排成规则的行和垂直列；`"radial"` 保持文字水平，并沿真实序列曲线选择最近的
-无冲突平行轨道；`"arc"` 沿局部切线旋转文字、自动翻转倒置文字，并且只在
-标签离开第一轨道后绘制短指示线。
+`geom_gene_label_repel()` 提供三种确定性模式。默认 `"radial"` 沿各自序列的
+偏移轮廓排布水平文字，使用法线直线或短法线段加连接段；`"auto"` 在左右
+使用共享垂直列，其余位置使用 radial；`"arc"` 沿局部切线旋转并翻转倒置文字。
+原 `"aligned"` 已删除，需要左右列时使用 `"auto"`。
 
 ```{r tutorial-gene-layouts, eval=FALSE}
 base <- ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
@@ -239,7 +243,7 @@ base <- ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
            seq_orientation = c(1, -1, 1, -1)) +
   geom_ribbon() + geom_gene()
 
-base + geom_gene_label_repel(gene_label_layout = "aligned")
+base + geom_gene_label_repel(gene_label_layout = "auto")
 base + geom_gene_label_repel(gene_label_layout = "radial")
 base + geom_gene_label_repel(gene_label_layout = "arc")
 ```
@@ -267,7 +271,7 @@ base + geom_gene_label_repel(gene_label_layout = "arc")
 
 ```{r tutorial-axis, eval=FALSE}
 ggchord(seq_data_example) +
-  geom_seq() + geom_axis() + geom_seq_label()
+  geom_seq() + geom_seq_label()
 ```
 
 ```{r tutorial-axis-img, echo=FALSE, fig.cap="坐标轴与序列标签。"}
@@ -282,9 +286,8 @@ rb_scored <- transform(ribbon_data_example,
 
 ggchord(seq_data_example, rb_scored) +
   geom_seq() +
-  geom_ribbon(ribbon_color_by = "bitscore",
-              ribbon_alpha_by = "bitscore",
-              ribbon_direction = "linetype")
+  geom_ribbon(aes(ribbon_fill = bitscore, ribbon_alpha = bitscore,
+                  ribbon_linetype = direction))
 ```
 
 ```{r tutorial-ribbon-map-img, echo=FALSE, fig.cap="连续填充、透明度与方向映射。"}
@@ -299,7 +302,7 @@ regions <- data.frame(seq_id = "MT108731.1",
 
 ggchord(seq_data_example, ribbon_data_example) +
   geom_seq() + geom_ribbon() +
-  geom_seq_region(regions = regions) +
+  geom_seq_region(data = regions) +
   geom_ribbon_highlight(ribbon_ids = 1)
 ```
 
@@ -334,8 +337,8 @@ knitr::include_graphics("../man/figures/tutorial_features.png")
 
 ```{r tutorial-theme, eval=FALSE}
 ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
-  geom_seq() + geom_ribbon() + geom_gene() + geom_axis() +
-  scale_color_manual(values = c("MT108731.1" = "#E41A1C",
+  geom_seq() + geom_ribbon() + geom_gene() +
+  scale_seq_colour_manual(values = c("MT108731.1" = "#E41A1C",
                                 "MT118296.1" = "#377EB8",
                                 "OQ646790.1" = "#4DAF4A",
                                 "OR222515.1" = "#984EA3")) +
@@ -350,20 +353,19 @@ knitr::include_graphics("../man/figures/legend_bottom.png")
 ### 3.11 发表级精细控制
 
 ```{r tutorial-fine, eval=FALSE}
-ggchord(seq_data_example, ribbon_data_example, gene_data_example,
-        title = "ggchord") +
+ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
+  labs(title = "ggchord") +
   geom_seq(seq_radius = c(3.3, 2.5, 1.8, 1.25),
-           seq_orientation = c(-1, -1, 1, -1),
-           seq_colors = c("MT108731.1" = "#E76F51",
+           seq_orientation = c(-1, -1, 1, -1)) +
+  scale_seq_colour_manual(values = c("MT108731.1" = "#E76F51",
                           "MT118296.1" = "#264653",
                           "OQ646790.1" = "#2A9D8F",
                           "OR222515.1" = "#D9A62E")) +
-  geom_ribbon(ribbon_alpha = 0.45) +
+  geom_ribbon(alpha = 0.45) +
   geom_gene() +
-  geom_gene_label_repel(gene_label_size = 2,
-                        gene_label_layout = "aligned") +
+  geom_gene_label_repel(size = 2,
+                        gene_label_layout = "auto") +
   geom_seq_label() +
-  geom_axis() +
   theme(plot.background = element_rect(fill = "#FBF9F6", colour = NA),
         panel.background = element_rect(fill = "#FBF9F6", colour = NA))
 ```
@@ -374,7 +376,7 @@ knitr::include_graphics("../man/figures/combined_fine.png")
 
 ## 6. 灵活的参数格式
 
-序列级参数（`seq_radius`、`seq_gap`、`axis_label_size` 等）支持**单值、无名向量、按序列 ID 命名的向量/列表、按序列顺序命名的列表（`"1"`、`"2"`...）或无名列表**。固定位置图层 `geom_gene_label()` 的基因级参数（`gene_label_rotation`、`gene_offset` 等）还额外支持按链方向（`+`/`-`）指定；自动布局 `geom_gene_label_repel()` 会自行管理旋转与偏移。以下写法适用于固定标签：
+序列级参数（`seq_radius`、`seq_gap`、`seq_curvature` 等）支持**单值、无名向量、按序列 ID 命名的向量/列表、按序列顺序命名的列表（`"1"`、`"2"`...）或无名列表**。固定位置图层 `geom_gene_label()` 的基因级参数（`gene_label_rotation`、`gene_offset` 等）还额外支持按链方向（`+`/`-`）指定；自动布局 `geom_gene_label_repel()` 会自行管理旋转与偏移。以下写法适用于固定标签：
 
 ```{r flexible-formats, eval=FALSE}
 # 1. 全部使用同一个值
@@ -420,7 +422,7 @@ gene_label_rotation = list(20)
 | 基因箭头 | `geom_gene()` | 绘制基因/特征箭头多边形 |
 | 基因标签 | `geom_gene_label()` | 在固定位置绘制基因标签 |
 | 自动基因标签 | `geom_gene_label_repel()` | 确定性的 aligned、radial 或 arc 布局，并自动避免标签和指示线冲突 |
-| 坐标轴 | `geom_axis()` | 绘制坐标轴线、主/次刻度与刻度标签 |
+| 坐标轴 | `theme_ggchord(axis.*)` | 设置自动轴外观；位置刻度使用 `scale_seq_position_continuous()` |
 | 序列标签 | `geom_seq_label()` | 在弧线内侧/外侧放置序列名称 |
 
 ## 8. 图形解读

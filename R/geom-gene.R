@@ -377,6 +377,10 @@ geom_gene_label_repel <- function(mapping = NULL, data = NULL,
     show_legend = "show.legend"
   ))
 
+  if (identical(gene_label_layout, "aligned")) {
+    ggchord_stop("geom_gene_label_repel(): removed argument value 'aligned'; ",
+      "use gene_label_layout = 'auto' for side columns")
+  }
   gene_label_layout <- match.arg(
     gene_label_layout, c("radial", "auto", "arc")
   )

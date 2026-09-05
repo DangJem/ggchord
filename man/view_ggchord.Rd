@@ -47,6 +47,9 @@ Renders a plot with \code{ggsave()} into a temporary PNG or SVG and opens a
 small static preview page in the configured IDE viewer or web browser. This
 is an export-size preview, not an interactive plot conversion; the original
 plot and its standard \code{ggsave()} workflow remain unchanged.
+Automatic height fitting does not resize an overwide legend. If decorations
+exceed the requested width, increase \code{width} or use, for example,
+\code{guides(seq_colour = guide_ggchord_legend(nrow = 2))}.
 }
 \examples{
 data(seq_data_example)

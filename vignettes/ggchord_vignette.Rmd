@@ -21,8 +21,8 @@ knitr::opts_chunk$set(
 ```
 
 ```{r library}
-library(ggchord)
 library(ggplot2)
+library(ggchord)
 
 data(seq_data_example)
 data(ribbon_data_example)
@@ -31,7 +31,9 @@ data(gene_data_example)
 
 This tutorial walks through the complete `ggchord` workflow: preparing input
 data, importing files in R, validating and cleaning data, and building plots
-layer by layer. It documents the **v0.9.0 release**.
+layer by layer. Code examples target **v0.11.0**. Figures are retained from earlier versions
+and illustrate the concepts, not the current default appearance. The full
+documentation and figure redesign is reserved for v1.0.0.
 
 ## 1. Data preparation
 
@@ -167,7 +169,8 @@ splits NCBI-style headers with `header_delim = "|"`.
 ## 3. Tutorial: from data to a diagram
 
 This section turns the prepared data into a complete chord diagram. Each step
-shows a short, runnable example and its corresponding figure.
+shows current code with a retained illustrative figure. Axes are automatic;
+use `theme_ggchord(axis = element_blank())` to hide them.
 
 ### 3.1 Validate and clean input data
 
@@ -234,12 +237,12 @@ knitr::include_graphics("../man/figures/gene_repel.png")
 
 #### Choosing a gene-label layout
 
-`geom_gene_label_repel()` has three deterministic modes. `"aligned"` is the
-default and creates orderly horizontal rows and vertical columns. `"radial"`
-keeps text horizontal and uses the nearest collision-free track parallel to
-the actual sequence curve. `"arc"` follows the local tangent, flips upside-down
-text automatically, and only draws a short leader when a label moves away from
-its first track.
+`geom_gene_label_repel()` has three deterministic modes. The default
+`"radial"` keeps names horizontal along each sequence's offset contour, using
+normal leaders or a short normal departure followed by a connector.
+`"auto"` uses shared left/right columns and radial placement elsewhere.
+`"arc"` follows the local tangent and flips upside-down text automatically.
+The former `"aligned"` mode has been removed; use `"auto"` for side columns.
 
 ```{r tutorial-gene-layouts, eval=FALSE}
 base <- ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
@@ -247,7 +250,7 @@ base <- ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
            seq_orientation = c(1, -1, 1, -1)) +
   geom_ribbon() + geom_gene()
 
-base + geom_gene_label_repel(gene_label_layout = "aligned")
+base + geom_gene_label_repel(gene_label_layout = "auto")
 base + geom_gene_label_repel(gene_label_layout = "radial")
 base + geom_gene_label_repel(gene_label_layout = "arc")
 ```
@@ -279,7 +282,7 @@ and generic API names.
 
 ```{r tutorial-axis, eval=FALSE}
 ggchord(seq_data_example) +
-  geom_seq() + geom_axis() + geom_seq_label()
+  geom_seq() + geom_seq_label()
 ```
 
 ```{r tutorial-axis-img, echo=FALSE, fig.cap="Axes and sequence labels."}
@@ -294,9 +297,8 @@ rb_scored <- transform(ribbon_data_example,
 
 ggchord(seq_data_example, rb_scored) +
   geom_seq() +
-  geom_ribbon(ribbon_color_by = "bitscore",
-              ribbon_alpha_by = "bitscore",
-              ribbon_direction = "linetype")
+  geom_ribbon(aes(ribbon_fill = bitscore, ribbon_alpha = bitscore,
+                  ribbon_linetype = direction))
 ```
 
 ```{r tutorial-ribbon-map-img, echo=FALSE, fig.cap="Continuous ribbon fill, alpha and direction mapping."}
@@ -311,7 +313,7 @@ regions <- data.frame(seq_id = "MT108731.1",
 
 ggchord(seq_data_example, ribbon_data_example) +
   geom_seq() + geom_ribbon() +
-  geom_seq_region(regions = regions) +
+  geom_seq_region(data = regions) +
   geom_ribbon_highlight(ribbon_ids = 1)
 ```
 
@@ -346,8 +348,8 @@ knitr::include_graphics("../man/figures/tutorial_features.png")
 
 ```{r tutorial-theme, eval=FALSE}
 ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
-  geom_seq() + geom_ribbon() + geom_gene() + geom_axis() +
-  scale_color_manual(values = c("MT108731.1" = "#E41A1C",
+  geom_seq() + geom_ribbon() + geom_gene() +
+  scale_seq_colour_manual(values = c("MT108731.1" = "#E41A1C",
                                 "MT118296.1" = "#377EB8",
                                 "OQ646790.1" = "#4DAF4A",
                                 "OR222515.1" = "#984EA3")) +
@@ -362,20 +364,19 @@ knitr::include_graphics("../man/figures/legend_bottom.png")
 ### 3.11 Fine-tuned publication-style plot
 
 ```{r tutorial-fine, eval=FALSE}
-ggchord(seq_data_example, ribbon_data_example, gene_data_example,
-        title = "ggchord") +
+ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
+  labs(title = "ggchord") +
   geom_seq(seq_radius = c(3.3, 2.5, 1.8, 1.25),
-           seq_orientation = c(-1, -1, 1, -1),
-           seq_colors = c("MT108731.1" = "#E76F51",
+           seq_orientation = c(-1, -1, 1, -1)) +
+  scale_seq_colour_manual(values = c("MT108731.1" = "#E76F51",
                           "MT118296.1" = "#264653",
                           "OQ646790.1" = "#2A9D8F",
                           "OR222515.1" = "#D9A62E")) +
-  geom_ribbon(ribbon_alpha = 0.45) +
+  geom_ribbon(alpha = 0.45) +
   geom_gene() +
-  geom_gene_label_repel(gene_label_size = 2,
-                        gene_label_layout = "aligned") +
+  geom_gene_label_repel(size = 2,
+                        gene_label_layout = "auto") +
   geom_seq_label() +
-  geom_axis() +
   theme(plot.background = element_rect(fill = "#FBF9F6", colour = NA),
         panel.background = element_rect(fill = "#FBF9F6", colour = NA))
 ```
@@ -386,7 +387,7 @@ knitr::include_graphics("../man/figures/combined_fine.png")
 
 ## 6. Flexible parameter formats
 
-Sequence-level parameters (`seq_radius`, `seq_gap`, `axis_label_size`, ...)
+Sequence-level parameters (`seq_radius`, `seq_gap`, `seq_curvature`, ...)
 accept **a single value, an unnamed vector, a vector/list named by sequence ID,
 a list named by sequence order (`"1"`, `"2"`, ...), or an unnamed list**.
 Gene-level parameters of the fixed-position `geom_gene_label()` layer
@@ -438,8 +439,8 @@ gene_label_rotation = list(20)
 | Alignment ribbons | `geom_ribbon()` | Draws colored ribbons from alignment results |
 | Gene arrows | `geom_gene()` | Draws gene/feature arrow polygons |
 | Gene labels | `geom_gene_label()` | Draws gene labels at fixed positions |
-| Automatic gene labels | `geom_gene_label_repel()` | Deterministic aligned, radial or arc layouts with collision-free leaders |
-| Axes | `geom_axis()` | Draws axis lines, major/minor ticks and tick labels |
+| Automatic gene labels | `geom_gene_label_repel()` | Deterministic auto, radial or arc layouts with collision-free leaders |
+| Axes | `theme_ggchord(axis.*)` | Styles automatic axes; use `scale_seq_position_continuous()` for breaks |
 | Sequence labels | `geom_seq_label()` | Places sequence names on/outside the arcs |
 
 ## 8. Plot interpretation
