@@ -1,4 +1,4 @@
-# ggchord 0.11.0 (development version)
+# ggchord 0.11.0
 
 * `geom_gene_label_repel()` now defaults to `gene_label_layout = "radial"`:
   horizontal names follow each sequence's offset contour, with normal leaders
@@ -17,8 +17,15 @@
   height-dependent relayout oscillation and excessive outer legend whitespace.
   Default plot margins retain a small physical safety inset.
 
-## v0.11.0 closeout
+## Preview and label fixes
 
+* Nested text measurements close only their own graphics device and restore
+  the previously active device. Alternating printing and previews no longer
+  changes preview layout or closes the IDE device, leaving later plots hidden.
+* Radial label contours now limit tangent extension past sequence endpoints.
+  Crowded labels try an outer contour instead of drifting toward a neighbouring
+  sequence, including mixed-radius plots with sequence names. The same bound
+  applies to the radial portion of `"auto"`.
 * Removed `"aligned"` requests now point directly to `"auto"`. Acceptance
   checks verify that auto actually combines side columns with radial labels.
 * Static previews retain export warnings rather than silently suppressing
@@ -154,7 +161,7 @@ immediately with a migration message instead of warning or being ignored.
 
 Vignette code examples are migrated to the current API and checked separately
 from document rendering. Existing figures and the public site are retained
-until the final v1.0.0 documentation rebuild.
+for a separate documentation rebuild after this release.
 
 # ggchord 0.10.0
 

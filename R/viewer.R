@@ -26,8 +26,8 @@ ggchord_preview_pixels <- function(value, units, dpi) {
 # panel dimensions carry its aspect ratio; guide boxes contribute their real
 # physical widths/heights. This fits whitespace without stretching geometry.
 ggchord_preview_layout <- function(plot, width_inches, height_inches = 8) {
-  grDevices::pdf(NULL, width = width_inches, height = height_inches)
-  on.exit(grDevices::dev.off())
+  close_device <- ggchord_measurement_device(width = width_inches, height = height_inches)
+  on.exit(close_device())
   table <- ggplot2::ggplotGrob(plot)
   fixed_width <- grid::convertWidth(sum(table$widths), "inches", valueOnly = TRUE)
   fixed_height <- grid::convertHeight(sum(table$heights), "inches", valueOnly = TRUE)
@@ -68,6 +68,10 @@ ggchord_preview_height <- function(plot, width_inches) {
 #' Automatic height fitting does not resize an overwide legend. If decorations
 #' exceed the requested width, increase \code{width} or use, for example,
 #' \code{guides(seq_colour = guide_ggchord_legend(nrow = 2))}.
+#'
+#' Printing directly uses the current graphics device dimensions, which may
+#' differ from this export-size preview (for example, a small IDE plot pane).
+#' Preview measurements restore the previously active graphics device.
 #'
 #' @param plot A ggchord or ggplot object, default \code{last_plot()}.
 #' @param width Positive output width, default 11 inches when \code{units = "in"}.

@@ -33,7 +33,7 @@ This tutorial walks through the complete `ggchord` workflow: preparing input
 data, importing files in R, validating and cleaning data, and building plots
 layer by layer. Code examples target **v0.11.0**. Figures are retained from earlier versions
 and illustrate the concepts, not the current default appearance. The full
-documentation and figure redesign is reserved for v1.0.0.
+documentation and figure redesign will follow in a separate post-release update.
 
 ## 1. Data preparation
 

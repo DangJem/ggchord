@@ -228,8 +228,8 @@ ggchord_label_deoverlap <- function(gl, units_per_inch = 0.35, seed = 123,
                                     max_overlaps = Inf) {
   if (nrow(gl) < 2) return(gl)
 
-  grDevices::pdf(NULL)
-  on.exit(grDevices::dev.off())
+  close_device <- ggchord_measurement_device()
+  on.exit(close_device())
   sizes <- gl$size %||% rep(2.5, nrow(gl))
   w <- suppressWarnings(graphics::strwidth(gl$text, units = "inches",
                                            cex = sizes / 12)) * units_per_inch
@@ -364,8 +364,8 @@ ggchord_text_boxes <- function(df,
   h <- numeric(n)
   valid <- !is.na(texts) & nzchar(texts)
   if (any(valid)) {
-    grDevices::pdf(NULL)
-    on.exit(grDevices::dev.off())
+    close_device <- ggchord_measurement_device()
+    on.exit(close_device())
     # ggplot2 text sizes are millimetres and are converted to grid font points
     # with `.pt` (72.27 / 25.4). Base graphics' cex is relative to the
     # device's 12-point default. Omitting this conversion underestimates both
@@ -1499,8 +1499,8 @@ ggchord_hide_text_overlaps <- function(df, content_pts,
   if (nrow(content_pts) == 0) {
     content_pts <- data.frame(x = numeric(0), y = numeric(0))
   }
-  grDevices::pdf(NULL)
-  on.exit(grDevices::dev.off())
+  close_device <- ggchord_measurement_device()
+  on.exit(close_device())
   sizes <- df$size[idx] %||% rep(3, length(idx))
   w <- suppressWarnings(graphics::strwidth(df$label[idx], units = "inches",
                                            cex = sizes / 12)) * units_per_inch

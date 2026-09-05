@@ -65,8 +65,9 @@ ggchord_radial_label_lanes <- function(gl, seq_arcs, side = "outside",
       (gl$anchor_y[rows] - source$curve_y[rows]) * signs[rows] * source$outward_y[rows]
     clearance <- max(anchor_offset, 0) + point_padding + 0.18 * units_per_inch
     step <- max(0.015, 0.05 * units_per_inch)
-    # Reserve enough tangential search space for the complete label group.
-    # Endpoints extend along their tangent on short or nearly straight arcs.
+    # Keep a small physical shoulder at each endpoint, rather than extending
+    # the contour indefinitely into a neighbouring sequence's space.
+    endpoint_padding <- 0.25 * units_per_inch
     shifts <- seq(0, max(diff(range(s)) / 2, sum(boxes$bw[rows]) / 2), by = step)
     offsets <- sort(unique(c(shifts, -shifts)))
     offsets <- offsets[order(abs(offsets), offsets)]
@@ -97,6 +98,7 @@ ggchord_radial_label_lanes <- function(gl, seq_arcs, side = "outside",
               local_offsets <- offsets[order(abs(offsets - bias), offsets)]
               for (shift in local_offsets) {
                 at <- preferred[as.character(i)] + shift
+                if (at < -endpoint_padding || at > tail(s, 1) + endpoint_padding) next
                 if ((!reverse && at <= previous + 1e-8) ||
                     (reverse && at >= previous - 1e-8)) next
                 normal <- c(interpolate(nx, at), interpolate(ny, at))

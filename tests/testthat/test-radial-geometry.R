@@ -133,3 +133,62 @@ test_that("radial balances opposite sectors without losing collision guarantees"
   expect_s3_class(fitted$plot, "gtable")
   expect_true(is.finite(fitted$height) && fitted$height > 0)
 })
+
+test_that("nested preview measurements preserve devices across repeated prints", {
+  previous <- grDevices::dev.cur()
+  original <- grDevices::dev.list()
+  on.exit({
+    for (device in setdiff(grDevices::dev.list(), original)) grDevices::dev.off(device)
+    if (previous %in% grDevices::dev.list()) grDevices::dev.set(previous)
+  })
+  grDevices::pdf(NULL, width = 6, height = 4)
+  grDevices::pdf(NULL, width = 7, height = 5)
+  caller <- grDevices::dev.cur()
+  devices <- grDevices::dev.list()
+  p <- ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
+    geom_seq(seq_radius = c(3.3, 2.5, 1.8, 1.25),
+      seq_orientation = c(1, -1, 1, -1)) +
+    geom_ribbon() + geom_gene() + geom_gene_label_repel() + geom_seq_label()
+  reference <- NULL
+  for (iteration in seq_len(2)) {
+    view_ggchord(p, viewer = "none")
+    labels <- get_chord_layout(p, build = FALSE)$gene_labels
+    if (is.null(reference)) reference <- labels else expect_identical(labels, reference)
+    expect_identical(grDevices::dev.cur(), caller)
+    expect_identical(grDevices::dev.list(), devices)
+    print(p)
+    expect_identical(grDevices::dev.cur(), caller)
+    expect_identical(grDevices::dev.list(), devices)
+    expect_gt(length(grid::grid.ls(print = FALSE)$name), 0L)
+  }
+  broken <- ggplot2::ggplot() + ggplot2::geom_point(
+    data = function(x) stop("intentional render failure"))
+  expect_error(view_ggchord(broken, viewer = "none"), "intentional render failure")
+  expect_identical(grDevices::dev.cur(), caller)
+  expect_identical(grDevices::dev.list(), devices)
+})
+
+test_that("unequal radial sequences keep endpoint labels near their own arc", {
+  # Match the measurement device used by content-fitted previews, including
+  # sequence-name obstacles and the user's mixed-radius/orientation example.
+  grDevices::pdf(NULL, width = 11, height = 8)
+  on.exit(grDevices::dev.off())
+  p <- ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
+    geom_seq(seq_radius = c(3.3, 2.5, 1.8, 1.25),
+      seq_orientation = c(1, -1, 1, -1)) +
+    geom_ribbon() + geom_gene() + geom_gene_label_repel(gene_label_layout = "radial") +
+    geom_seq_label() + ggtitle("ggchord")
+  layout <- get_chord_layout(p)
+  labels <- layout$gene_labels
+  expect_equal(nrow(labels), nrow(gene_data_example))
+  # Allow a small endpoint shoulder, not an unbounded tangent extension.
+  lengths <- vapply(layout$seq_arcs, function(a) {
+    sum(sqrt(diff(a$x)^2 + diff(a$y)^2))
+  }, numeric(1))
+  shoulder <- 0.3 * layout$text_units_per_inch
+  expect_true(all(labels$.radial_parameter >= -shoulder))
+  expect_true(all(labels$.radial_parameter <= lengths[labels$seq_id] + shoulder))
+  expect_false(ggchord:::ggchord_label_box_conflicts(labels,
+    units_per_inch = layout$text_units_per_inch, box_padding = 0))
+  expect_equal(count_radial_crossings(layout$gene_label_segments), 0L)
+})

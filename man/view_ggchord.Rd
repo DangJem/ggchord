@@ -51,6 +51,11 @@ Automatic height fitting does not resize an overwide legend. If decorations
 exceed the requested width, increase \code{width} or use, for example,
 \code{guides(seq_colour = guide_ggchord_legend(nrow = 2))}.
 }
+\details{
+Printing directly uses the current graphics device dimensions, which may
+differ from this export-size preview (for example, a small IDE plot pane).
+Preview measurements restore the previously active graphics device.
+}
 \examples{
 data(seq_data_example)
 p <- ggchord(seq_data_example) + geom_seq()

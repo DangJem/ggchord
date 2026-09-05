@@ -30,11 +30,11 @@ data(gene_data_example)
 ```
 
 本教程完整介绍 `ggchord` 的工作流程：准备输入数据、在 R 中导入文件、
-校验与清理数据，以及逐层构建图形。本文对应 **v0.11.0 开发版**。
+校验与清理数据，以及逐层构建图形。本文对应 **v0.11.0**。
 
 > 代码示例已迁移至 v0.11.0；图片保留旧版示意，不代表当前默认外观。
 > 坐标轴现在自动显示，使用 `theme_ggchord(axis = element_blank())` 隐藏。
-> 完整说明与图片重构仍安排在 v1.0.0。
+> 完整说明与图片重构将在正式版发布后单独进行。
 
 ## 1. 前期数据准备
 
@@ -421,7 +421,7 @@ gene_label_rotation = list(20)
 | 比对连接带 | `geom_ribbon()` | 根据比对结果绘制彩色连接带 |
 | 基因箭头 | `geom_gene()` | 绘制基因/特征箭头多边形 |
 | 基因标签 | `geom_gene_label()` | 在固定位置绘制基因标签 |
-| 自动基因标签 | `geom_gene_label_repel()` | 确定性的 aligned、radial 或 arc 布局，并自动避免标签和指示线冲突 |
+| 自动基因标签 | `geom_gene_label_repel()` | 确定性的 auto、radial 或 arc 布局，并自动避免标签和指示线冲突 |
 | 坐标轴 | `theme_ggchord(axis.*)` | 设置自动轴外观；位置刻度使用 `scale_seq_position_continuous()` |
 | 序列标签 | `geom_seq_label()` | 在弧线内侧/外侧放置序列名称 |
 
