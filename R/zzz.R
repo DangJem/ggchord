@@ -375,6 +375,11 @@ ggchord_repel_geometry <- function(layout) {
   segment <- layout$gene_label_segments %||% data.frame()
   text <- layout$gene_labels %||% data.frame()
   if (nrow(segment)) {
+    if ("occluded" %in% names(segment)) {
+      segment <- segment[
+        order(!segment$occluded, seq_len(nrow(segment))), , drop = FALSE
+      ]
+    }
     # Leader paths are stored as one or more segments per label and therefore
     # only carry the label group.  Restore the source-row identity before the
     # geometry is joined to user columns; otherwise the generic join drops all

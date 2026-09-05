@@ -22,6 +22,34 @@ ggchord_preview_pixels <- function(value, units, dpi) {
   )
 }
 
+# Measure the fixed gtable decorations and its equal-unit panel. The null
+# panel dimensions carry its aspect ratio; guide boxes contribute their real
+# physical widths/heights. This fits whitespace without stretching geometry.
+ggchord_preview_layout <- function(plot, width_inches, height_inches = 8) {
+  grDevices::pdf(NULL, width = width_inches, height = height_inches)
+  on.exit(grDevices::dev.off())
+  table <- ggplot2::ggplotGrob(plot)
+  fixed_width <- grid::convertWidth(sum(table$widths), "inches", valueOnly = TRUE)
+  fixed_height <- grid::convertHeight(sum(table$heights), "inches", valueOnly = TRUE)
+  nw <- grid::unitType(table$widths) == "null"
+  nh <- grid::unitType(table$heights) == "null"
+  if (!any(nw) || !any(nh)) return(list(plot = table, height = width_inches * 0.7))
+  ratio <- sum(as.numeric(table$heights[nh])) / sum(as.numeric(table$widths[nw]))
+  panel_height <- max(width_inches - fixed_width, 0.5) * ratio
+  guide_rows <- which(table$layout$name %in% c("guide-box-left", "guide-box-right"))
+  guide_height <- max(c(0, vapply(guide_rows, function(i) {
+    grid::convertHeight(grid::grobHeight(table$grobs[[i]]), "inches", valueOnly = TRUE)
+  }, numeric(1))))
+  fitted_height <- max(1, fixed_height + max(panel_height, guide_height))
+  # Freeze the measured gtable for export: rebuilding at a new height can
+  # select different label tracks and oscillate between two aspect ratios.
+  list(plot = table, height = fitted_height)
+}
+
+ggchord_preview_height <- function(plot, width_inches) {
+  ggchord_preview_layout(plot, width_inches)$height
+}
+
 #' Preview a ggchord plot at its intended export size
 #'
 #' Renders a plot with \code{ggsave()} into a temporary PNG or SVG and opens a
@@ -30,7 +58,10 @@ ggchord_preview_pixels <- function(value, units, dpi) {
 #' plot and its standard \code{ggsave()} workflow remain unchanged.
 #'
 #' @param plot A ggchord or ggplot object, default \code{last_plot()}.
-#' @param width,height Positive output dimensions, default 8 by 6.
+#' @param width Positive output width, default 11 inches when \code{units = "in"}.
+#' @param height Positive output height, or \code{NULL} (default) to fit the
+#'   sequence, labels and legends while preserving equal coordinate units.
+#'   Explicit width/height values are always respected.
 #' @param units Output units: \code{"in"}, \code{"cm"}, \code{"mm"}, or
 #'   \code{"px"}.
 #' @param device Preview device, \code{"png"} or \code{"svg"}. SVG output
@@ -47,11 +78,11 @@ ggchord_preview_pixels <- function(value, units, dpi) {
 #' @examples
 #' data(seq_data_example)
 #' p <- ggchord(seq_data_example) + geom_seq()
-#' if (interactive()) view_ggchord(p, width = 8, height = 6)
+#' if (interactive()) view_ggchord(p)
 view_ggchord <- function(
     plot = ggplot2::last_plot(),
-    width = 8,
-    height = 6,
+    width = 11,
+    height = NULL,
     units = c("in", "cm", "mm", "px"),
     device = c("png", "svg"),
     dpi = 150,
@@ -70,8 +101,8 @@ view_ggchord <- function(
   valid_dimension <- function(x) {
     is.numeric(x) && length(x) == 1L && is.finite(x) && x > 0
   }
-  if (!valid_dimension(width) || !valid_dimension(height)) {
-    ggchord_stop(caller, ": width and height must be positive finite numbers")
+  if (!valid_dimension(width) || (!is.null(height) && !valid_dimension(height))) {
+    ggchord_stop(caller, ": width and height must be positive finite numbers (or height = NULL)")
   }
   if (!valid_dimension(dpi)) {
     ggchord_stop(caller, ": dpi must be one positive finite number")
@@ -79,6 +110,16 @@ view_ggchord <- function(
   if (!is.null(bg) &&
       (!is.character(bg) || length(bg) != 1L || is.na(bg))) {
     ggchord_stop(caller, ": bg must be NULL or one colour string")
+  }
+
+  preview_plot <- plot
+  if (is.null(height)) {
+    width_inches <- ggchord_preview_pixels(width, units, dpi) / dpi
+    fitted <- ggchord_preview_layout(plot, width_inches)
+    height_inches <- fitted$height
+    preview_plot <- fitted$plot
+    height <- switch(units, "in" = height_inches, cm = height_inches * 2.54,
+                     mm = height_inches * 25.4, px = height_inches * dpi)
   }
 
   preview_dir <- file.path(tempdir(), "ggchord-preview")
@@ -100,7 +141,7 @@ view_ggchord <- function(
   tryCatch(
     suppressWarnings(ggplot2::ggsave(
         filename = image_file,
-        plot = plot,
+        plot = preview_plot,
         device = save_device,
         width = width,
         height = height,

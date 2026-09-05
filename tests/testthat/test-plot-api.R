@@ -161,6 +161,24 @@ test_that("role legends inherit independently and explicit guides win", {
   expect_identical(prepared$scales$get_scales("ribbon_fill")$guide, "none")
 })
 
+test_that("default role guides occupy opposite plot edges", {
+  data(seq_data_example)
+  data(ribbon_data_example)
+  p <- ggchord(seq_data_example, ribbon_data_example, validate = "none") +
+    geom_seq() + geom_ribbon()
+  expect_equal(
+    ggchord:::ggchord_role_guide_spec(p, "ribbon", TRUE)$position,
+    "left"
+  )
+  expect_equal(ggchord:::ggchord_role_guide_spec(p, "seq")$position, "right")
+  common <- p + theme_ggchord(legend.position = "bottom")
+  expect_equal(
+    ggchord:::ggchord_role_guide_spec(common, "ribbon", TRUE)$position,
+    "bottom"
+  )
+  expect_equal(ggchord:::ggchord_role_guide_spec(common, "seq")$position, "bottom")
+})
+
 test_that("colour and color aliases are symmetric and unambiguous", {
   data(seq_data_example)
   data(ribbon_data_example)
@@ -268,7 +286,7 @@ test_that("automatic labels and advanced layout tools build", {
   data(seq_data_example)
   data(ribbon_data_example)
   data(gene_data_example)
-  for (mode in c("aligned", "radial", "arc")) {
+  for (mode in c("auto", "radial", "arc")) {
     p <- ggchord(
       seq_data_example, ribbon_data_example, gene_data_example,
       validate = "none"
@@ -288,6 +306,177 @@ test_that("automatic labels and advanced layout tools build", {
     geom_seq(aes(seq_ring = ring)) +
     scale_seq_ring_manual(values = c(outer = 2, inner = 1))
   expect_equal(unname(get_chord_layout(ring_plot)$seq_ring_radius), c(2, 1))
+})
+
+test_that("automatic labels use compact sequence rails and adaptive fitting", {
+  data(seq_data_example)
+  data(ribbon_data_example)
+  data(gene_data_example)
+  p <- ggchord(
+    seq_data_example, ribbon_data_example, gene_data_example,
+    validate = "none"
+  ) +
+    geom_seq(
+      seq_radius = c(3.3, 2.5, 1.8, 1.25),
+      seq_orientation = c(1, -1, 1, -1)
+    ) +
+    geom_gene() +
+    geom_gene_label_repel(gene_label_layout = "auto", gene_label_fit = "none")
+  layout <- get_chord_layout(p)
+  labels <- layout$gene_labels
+  frame <- ggchord:::ggchord_label_curve_frame(labels, layout$seq_arcs)
+  direction <- ifelse(abs(frame$outward_x) >= abs(frame$outward_y),
+    ifelse(frame$outward_x < 0, "left", "right"),
+    ifelse(frame$outward_y < 0, "bottom", "top"))
+  expect_setequal(unique(direction), c("left", "right", "top", "bottom"))
+  vertical <- split(labels[direction %in% c("left", "right"), ],
+                    direction[direction %in% c("left", "right")])
+  expect_true(all(vapply(vertical, function(x) {
+    length(unique(round(x$text_x, 8))) == 1L
+  }, logical(1))))
+  expect_false(ggchord:::ggchord_label_box_conflicts(
+    labels,
+    units_per_inch = layout$text_units_per_inch,
+    box_padding = 0
+  ))
+  count_crossings <- function(leaders) {
+    crossings <- 0L
+    if (nrow(leaders) < 2L) return(crossings)
+    for (i in seq_len(nrow(leaders) - 1L)) {
+      for (j in (i + 1L):nrow(leaders)) {
+        if (leaders$group[i] == leaders$group[j]) next
+        crossings <- crossings + ggchord:::ggchord_segments_cross(
+          leaders$x0[i], leaders$y0[i], leaders$x1[i], leaders$y1[i],
+          leaders$x0[j], leaders$y0[j], leaders$x1[j], leaders$y1[j]
+        )
+      }
+    }
+    crossings
+  }
+  expect_equal(count_crossings(layout$gene_label_segments), 0L)
+
+  # Rotating curved sequences can assign labels from different sequences to
+  # one side column. Their shared endpoint order must remain crossing-free.
+  rotated <- get_chord_layout(
+    ggchord(
+      seq_data_example, ribbon_data_example, gene_data_example,
+      validate = "none"
+    ) +
+      geom_seq(
+        seq_radius = c(3.3, 2.5, 1.8, 1.25),
+        seq_orientation = c(1, -1, 1, -1),
+        seq_curvature = c(0.8, 1.2, 0.7, 1.1),
+        seq_gap = c(0.03, 0.06, 0.04, 0.08)
+      ) +
+      geom_gene() +
+      geom_gene_label_repel(gene_label_layout = "auto", gene_label_fit = "none") +
+      coord_chord(rotation = 35)
+  )
+  expect_equal(count_crossings(rotated$gene_label_segments), 0L)
+
+  fitted <- function(method) {
+    get_chord_layout(
+      ggchord(
+        seq_data_example, ribbon_data_example, gene_data_example,
+        validate = "none"
+      ) +
+        geom_seq(
+          seq_radius = c(3.3, 2.5, 1.8, 1.25),
+          seq_orientation = -1
+        ) +
+        geom_gene_label_repel(gene_label_fit = method)
+    )$gene_labels$text
+  }
+  expect_true(any(grepl("\n", fitted("wrap"), fixed = TRUE)))
+  expect_true(any(grepl("…$", fitted("ellipsis"))))
+  expect_error(
+    geom_gene_label_repel(gene_label_max_lines = 1.5),
+    "positive integer"
+  )
+})
+
+test_that("covered gene leaders can fade, clip or remain visible", {
+  labels <- data.frame(
+    text = c("target", "blocking label"),
+    text_x = c(2, 1), text_y = c(0, 0), text_angle = 0,
+    size = 2.5, hjust = 0.5, vjust = 0.5
+  )
+  segment <- data.frame(
+    x0 = 0, y0 = 0, x1 = 2, y1 = 0, group = 1L
+  )
+  split_leader <- function(mode, alpha = 0.18) {
+    ggchord:::ggchord_clip_segments_to_labels(
+      segment, labels, units_per_inch = 1,
+      overlap = mode, overlap_alpha = alpha
+    )
+  }
+  faded <- split_leader("fade", 0.3)
+  clipped <- split_leader("clip")
+  shown <- split_leader("show")
+  expect_true(any(faded$occluded))
+  expect_equal(unique(faded$alpha[faded$occluded]), 0.3)
+  expect_true(all(clipped$alpha == 1) && !any(clipped$occluded))
+  expect_equal(nrow(shown), 1L)
+  expect_equal(shown[c("x0", "y0", "x1", "y1")], segment[1:4])
+
+  layer <- geom_gene_label_repel(
+    gene_label_segment_overlap = "clip",
+    gene_label_segment_overlap_alpha = 0.4
+  )
+  expect_equal(layer$ggchord_params$gene_label_segment_overlap, "clip")
+  expect_equal(layer$ggchord_params$gene_label_segment_overlap_alpha, 0.4)
+  expect_error(
+    geom_gene_label_repel(gene_label_segment_overlap = "route"),
+    "should be one of"
+  )
+  expect_error(
+    geom_gene_label_repel(gene_label_segment_overlap_alpha = 2),
+    "finite number in \\[0, 1\\]"
+  )
+})
+
+test_that("manual auto-side labels extend toward their actual side", {
+  seq <- data.frame(seq_id = "A", length = 1000)
+  genes <- data.frame(
+    seq_id = "A", start = c(150, 650), end = c(300, 800),
+    strand = c("+", "-"), anno = c("outside", "inside")
+  )
+  p <- ggchord(seq, gene_data = genes, validate = "none") +
+    geom_seq() +
+    geom_gene_label(
+      gene_label_side = "auto",
+      gene_label_radial_offset = 0.25
+    )
+  layout <- get_chord_layout(p)
+  labels <- layout$gene_labels
+  frame <- ggchord:::ggchord_label_curve_frame(labels, layout$seq_arcs)
+  expect_true(any(frame$signed_distance < 0))
+  dx <- labels$text_x - frame$curve_x
+  dy <- labels$text_y - frame$curve_y
+  horizontal_side <- abs(dx) >= 0.75 * abs(dy)
+  if (any(horizontal_side)) {
+    expect_equal(
+      labels$hjust[horizontal_side],
+      ifelse(dx[horizontal_side] >= 0, 0, 1)
+    )
+  }
+  if (any(!horizontal_side)) {
+    expect_equal(
+      labels$vjust[!horizontal_side],
+      ifelse(dy[!horizontal_side] >= 0, 0, 1)
+    )
+  }
+})
+
+test_that("single-strand gene guides train with matching arrow keys", {
+  seq <- data.frame(seq_id = "A", length = 1000)
+  genes <- data.frame(
+    seq_id = "A", start = c(100, 500), end = c(250, 700),
+    strand = "+", anno = c("one", "two")
+  )
+  p <- ggchord(seq, gene_data = genes, validate = "none") +
+    geom_seq() + geom_gene()
+  expect_s3_class(build_ggchord_smoke(p), "ggplot_built")
 })
 
 test_that("feature shapes, regions and highlights remain composable", {
@@ -338,6 +527,8 @@ test_that("layout export and static viewer use explicit plots", {
   )
   expect_true(file.exists(preview))
   expect_true(file.exists(sub("\\.png$", ".html", preview)))
+  expect_equal(formals(view_ggchord)$width, 11)
+  expect_null(formals(view_ggchord)$height)
 })
 
 test_that("plot-owned layouts are deterministic and isolated", {

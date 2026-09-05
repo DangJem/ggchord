@@ -251,15 +251,15 @@ geom_gene_label <- function(mapping = NULL, data = NULL,
 
 #' Add an automatically arranged gene label layer
 #'
-#' Like \code{\link{geom_gene_label}()}, but labels are placed by one of three
-#' deterministic collision-avoiding layouts. The default \code{"aligned"}
-#' layout uses orderly cardinal rails, \code{"radial"} uses compact local
-#' offset tracks, and \code{"arc"} keeps text close to and rotated with the
-#' sequence curve.
+#' Like \code{\link{geom_gene_label}()}, with deterministic external label
+#' placement. The default \code{"radial"} keeps horizontal text on a contour
+#' following each sequence; crowded names fan out along that contour.
+#' \code{"auto"} aligns left/right names in columns and uses radial placement
+#' elsewhere. \code{"arc"} rotates text along the sequence tangent.
 #'
-#' The local outside/inside label concepts are informed by SnapGene and
-#' Geneious, but ggchord uses generic mode names and an independent geometry
-#' implementation. See
+#' The local outside/inside label organisation adapts concepts used by
+#' SnapGene and Geneious. ggchord keeps generic mode names and integrates those
+#' ideas into its own geometry system. See
 #' \href{https://support.snapgene.com/hc/en-us/articles/10383722725524-Display-Feature-Labels-Below-or-Inside-a-Map}{SnapGene feature labels}
 #' and
 #' \href{https://manual.geneious.com/en/latest/Sequences.html}{Geneious label options}.
@@ -271,13 +271,24 @@ geom_gene_label <- function(mapping = NULL, data = NULL,
 #'
 #' @param mapping Default NULL (uses pre-computed data)
 #' @param data Default NULL (retrieved automatically from the layout)
-#' @param gene_label_layout Character, default \code{"aligned"}. Label layout:
-#'   \code{"aligned"} uses horizontal labels on orderly top, bottom, left and
-#'   right rails; \code{"radial"} uses horizontal labels on the nearest
-#'   collision-free local offset track; \code{"arc"} rotates labels along the
-#'   sequence tangent and keeps them close to their genes.
+#' @param gene_label_layout Character, default \code{"radial"}. Label layout:
+#'   \code{"radial"} arranges horizontal external labels along sequence-relative
+#'   contours, with straight normal leaders or a short normal departure followed
+#'   by a long connector when displaced; \code{"auto"} uses shared vertical
+#'   columns on the left/right and radial placement elsewhere; \code{"arc"}
+#'   rotates text along the sequence tangent. The former \code{"aligned"}
+#'   mode has been removed; use \code{"auto"} for side columns.
 #' @param gene_label_wrap Numeric or NULL, default NULL. When set, long gene
-#'   annotations are wrapped at this many characters (e.g. 15).
+#'   annotations are wrapped at this many characters (e.g. 15), overriding
+#'   \code{gene_label_fit}.
+#' @param gene_label_fit Character, default \code{"wrap"}. How labels whose
+#'   initial boxes are crowded or unusually wide are fitted before deterministic layout:
+#'   \code{"wrap"} preserves the complete annotation over multiple lines,
+#'   \code{"ellipsis"} uses a single shortened line, \code{"auto"} wraps and
+#'   adds an ellipsis only if text exceeds \code{gene_label_max_lines}, and
+#'   \code{"none"} disables adaptive fitting.
+#' @param gene_label_max_lines Positive integer, default 2. Maximum number of
+#'   lines used by adaptive \code{"wrap"} or \code{"auto"} fitting.
 #' @param max_overlaps Numeric, default Inf. Hide labels that still overlap
 #'   more than this many other labels after repulsion (ggrepel-style
 #'   decluttering). Use a finite value to clean up crowded plots.
@@ -292,6 +303,14 @@ geom_gene_label <- function(mapping = NULL, data = NULL,
 #'   that were moved to the other side of their arc, which are drawn dashed.
 #'   Any other valid ggplot2 linetype (e.g. \code{"solid"}, \code{"dashed"},
 #'   \code{"dotted"}, or a numeric dash pattern) is used for all leader lines.
+#' @param gene_label_segment_overlap Character, default \code{"fade"}.
+#'   How portions of a leader line covered by another label are drawn:
+#'   \code{"fade"} keeps them at reduced opacity, \code{"clip"} removes them,
+#'   and \code{"show"} leaves the complete leader visible. This does not affect
+#'   text wrapping, ellipsis or label hiding.
+#' @param gene_label_segment_overlap_alpha Numeric in \code{[0, 1]}, default
+#'   0.18. Relative opacity applied only to covered leader-line portions when
+#'   \code{gene_label_segment_overlap = "fade"}.
 #' @param position Position adjustment. Supply the same
 #'   [position_feature_stack()] used by a gene/feature layer when labels are
 #'   drawn from separate data or without a geometry layer.
@@ -309,10 +328,14 @@ geom_gene_label <- function(mapping = NULL, data = NULL,
 #'   geom_seq() + geom_gene() + geom_gene_label_repel()
 #' p
 geom_gene_label_repel <- function(mapping = NULL, data = NULL,
-                                  gene_label_layout = "aligned",
+                                  gene_label_layout = "radial",
                                   gene_label_wrap = NULL,
+                                  gene_label_fit = "wrap",
+                                  gene_label_max_lines = 2L,
                                   gene_label_side = "outside",
                                   max_overlaps = Inf,
+                                  gene_label_segment_overlap = "fade",
+                                  gene_label_segment_overlap_alpha = 0.18,
                                   gene_label_segment_linetype = "auto",
                                   position = "identity",
                                   show.legend = FALSE,
@@ -355,16 +378,38 @@ geom_gene_label_repel <- function(mapping = NULL, data = NULL,
   ))
 
   gene_label_layout <- match.arg(
-    gene_label_layout, c("aligned", "radial", "arc")
+    gene_label_layout, c("radial", "auto", "arc")
   )
+  gene_label_fit <- match.arg(
+    gene_label_fit, c("wrap", "none", "ellipsis", "auto")
+  )
+  if (!is.numeric(gene_label_max_lines) ||
+      length(gene_label_max_lines) != 1L ||
+      !is.finite(gene_label_max_lines) || gene_label_max_lines < 1 ||
+      gene_label_max_lines != as.integer(gene_label_max_lines)) {
+    ggchord_stop("gene_label_max_lines must be one positive integer")
+  }
+  gene_label_max_lines <- as.integer(gene_label_max_lines)
   gene_label_side <- match.arg(gene_label_side, c("auto", "inside", "outside"))
+  gene_label_segment_overlap <- match.arg(
+    gene_label_segment_overlap, c("fade", "clip", "show")
+  )
+  if (!is.numeric(gene_label_segment_overlap_alpha) ||
+      length(gene_label_segment_overlap_alpha) != 1L ||
+      !is.finite(gene_label_segment_overlap_alpha) ||
+      gene_label_segment_overlap_alpha < 0 ||
+      gene_label_segment_overlap_alpha > 1) {
+    ggchord_stop(
+      "gene_label_segment_overlap_alpha must be one finite number in [0, 1]"
+    )
+  }
   gene_label_segment_linetype <- validate_gene_segment_linetype(
     gene_label_segment_linetype
   )
   empty <- data.frame(
     x = numeric(), y = numeric(), xend = numeric(), yend = numeric(),
     label = character(), .component = character(), group = integer(),
-    linetype = character(), size = numeric(), angle = numeric(),
+    linetype = character(), alpha = numeric(), size = numeric(), angle = numeric(),
     hjust = numeric(), vjust = numeric()
   )
   lyr <- ggplot2::layer(
@@ -372,6 +417,7 @@ geom_gene_label_repel <- function(mapping = NULL, data = NULL,
     mapping = ggplot2::aes(
       x = x, y = y, xend = xend, yend = yend, label = label,
       group = group, linetype = I(linetype), size = I(size),
+      alpha = I(alpha),
       angle = angle, hjust = hjust, vjust = vjust,
       .component = I(.component)
     ),
@@ -398,8 +444,12 @@ geom_gene_label_repel <- function(mapping = NULL, data = NULL,
     gene_label_layout        = gene_label_layout,
     gene_label_size          = dots$size %||% NULL,
     gene_label_wrap          = gene_label_wrap,
+    gene_label_fit           = gene_label_fit,
+    gene_label_max_lines     = gene_label_max_lines,
     max_overlaps             = max_overlaps,
     gene_label_side          = gene_label_side,
+    gene_label_segment_overlap = gene_label_segment_overlap,
+    gene_label_segment_overlap_alpha = gene_label_segment_overlap_alpha,
     gene_label_segment_linetype = gene_label_segment_linetype
   )
   lyr <- ggchord_capture_layer_input(

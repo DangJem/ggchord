@@ -625,12 +625,18 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   }
   gene_lrepel_layer <- gene_repel_layer
   gene_lrepel_maxov <- gene_repel_params$max_overlaps %||% Inf
-  gene_lrepel_layout <- gene_repel_params$gene_label_layout %||% "aligned"
+  gene_lrepel_layout <- gene_repel_params$gene_label_layout %||% "radial"
+  gene_lrepel_fit    <- gene_repel_params$gene_label_fit %||% "wrap"
+  gene_lrepel_lines  <- gene_repel_params$gene_label_max_lines %||% 2L
   gene_lrepel_side   <- if (gene_repel_layer) {
     gene_repel_params$gene_label_side %||% "outside"
   } else {
     lbl$gene_label_side %||% "outside"
   }
+  gene_lrepel_segment_overlap <-
+    gene_repel_params$gene_label_segment_overlap %||% "fade"
+  gene_lrepel_segment_overlap_alpha <-
+    gene_repel_params$gene_label_segment_overlap_alpha %||% 0.18
   gene_lrepel_ltype  <- gene_repel_params$gene_label_segment_linetype %||% "auto"
 
   if (!gene_cs %in% c("strand", "manual")) {
@@ -1028,12 +1034,16 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     geneLabelRotation = geneLabelRotation,
     gene_label_show = gene_ls, gene_label_size = gene_lsz,
     gene_label_wrap = gene_lwrap,
+    gene_label_fit = gene_lrepel_fit,
+    gene_label_max_lines = gene_lrepel_lines,
     gene_label_orientation = gene_lorientation,
     gene_label_overlap = gene_loverlap,
     gene_label_repel_layer = gene_lrepel_layer,
     gene_label_repel_max_overlaps = gene_lrepel_maxov,
     gene_label_layout = gene_lrepel_layout,
     gene_label_side = gene_lrepel_side,
+    gene_label_segment_overlap = gene_lrepel_segment_overlap,
+    gene_label_segment_overlap_alpha = gene_lrepel_segment_overlap_alpha,
     gene_label_segment_linetype = gene_lrepel_ltype,
     gene_color_scheme = gene_cs, gene_colors = gene_cols,
     gene_order = gene_ord,
@@ -1404,12 +1414,16 @@ make_ggchord_scales <- function(layout, has_seq = FALSE, has_gene = FALSE,
   gene_fill_scale <- NULL
   if (has_gene) {
     if (layout$gene_color_scheme == "strand") {
+      strand_breaks <- intersect(
+        c("+", "-"), unique(as.character(layout$gene_polys$strand))
+      )
+      if (length(strand_breaks) == 0L) strand_breaks <- c("+", "-")
       gene_fill_scale <- scale_gene_fill_manual(
         name   = "Strand",
-        breaks = c("+", "-"),
+        breaks = strand_breaks,
         values = layout$gene_pal,
         guide  = role_guide("gene", order = 3,
-          override.aes = list(strand = c("+", "-")))
+          override.aes = list(strand = strand_breaks))
       )
     } else {
       gene_fill_scale <- scale_gene_fill_manual(
@@ -1778,7 +1792,7 @@ ggchord_adaptive_limits <- function(layout) {
   }
 
   x_pad <- 0.02 * max(diff(x_lim), 1)
-  y_pad <- 0.02 * max(diff(y_lim), 1)
+  y_pad <- 0.01 * max(diff(y_lim), 1)
 
   list(
     xlim = c(x_lim[1] - x_pad, x_lim[2] + x_pad),

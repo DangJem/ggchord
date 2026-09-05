@@ -5,7 +5,7 @@
 #' @param start_angle Numeric, start angle (in radians)
 #' @param end_angle Numeric, end angle (in radians)
 #' @param radius Numeric, path radius
-#' @param curvature Numeric, curvature (0 = straight line, 1 = standard arc, >1 = more curved)
+#' @param curvature Numeric, curvature (0 = straight chord, 1 = standard arc, negative = opposite bow)
 #' @param n_points Integer, number of points in the path (controls smoothness), default 100
 #' @return data.frame containing columns x, y (coordinates of points on the path)
 #' @keywords internal
@@ -15,62 +15,29 @@
 #' @importFrom graphics text
 #'
 generate_curvature_path <- function(start_angle, end_angle, radius, curvature, n_points = 100) {
-  # Restrict curvature range
-  curvature <- max(-0.99, min(10, curvature))
-
-  # Calculate center angle and total angle
-  center_angle <- (start_angle + end_angle) / 2
-  total_angle <- end_angle - start_angle
-
-  # Generate uniformly distributed angles
-  angles <- seq(start_angle, end_angle, length.out = n_points)
-
-  # Ensure fixed positions for start and end points
-  fixed_start_x <- radius * cos(start_angle)
-  fixed_start_y <- radius * sin(start_angle)
-  fixed_end_x <- radius * cos(end_angle)
-  fixed_end_y <- radius * sin(end_angle)
-
-  # Adjust path based on curvature
-  if (curvature == 0) {
-    # Straight line
-    t <- seq(0, 1, length.out = n_points)
-    x <- fixed_start_x + t * (fixed_end_x - fixed_start_x)
-    y <- fixed_start_y + t * (fixed_end_y - fixed_start_y)
-  } else if (curvature == 1) {
-    # Original circular path
-    x <- radius * cos(angles)
-    y <- radius * sin(angles)
-  } else {
-    # Use Bezier curve for smooth curvature, ensuring fixed start and end points
-    # Control point position adjusted based on curvature
-    mid_angle <- center_angle
-    mid_radius_factor <- 1 + (curvature - 1) * 0.3  # Reduce curvature's impact on control points
-    mid_radius <- radius * mid_radius_factor
-
-    # Control point coordinates
-    control_x <- mid_radius * cos(mid_angle)
-    control_y <- mid_radius * sin(mid_angle)
-
-    # Calculate path points using Bezier curve
-    x <- numeric(n_points)
-    y <- numeric(n_points)
-
-    for (i in 1:n_points) {
-      t <- (i - 1) / (n_points - 1)
-
-      # Quadratic Bezier curve formula
-      x[i] <- (1 - t)^2 * fixed_start_x + 2 * (1 - t) * t * control_x + t^2 * fixed_end_x
-      y[i] <- (1 - t)^2 * fixed_start_y + 2 * (1 - t) * t * control_y + t^2 * fixed_end_y
-    }
+  if (length(curvature) != 1L || !is.finite(curvature)) {
+    ggchord_stop("curvature must be one finite number")
   }
-
-  # Ensure no NaN or Inf values
-  x[is.na(x) | is.infinite(x)] <- 0
-  y[is.na(y) | is.infinite(y)] <- 0
-
+  angles <- seq(start_angle, end_angle, length.out = n_points)
+  center <- (start_angle + end_angle) / 2
+  half_span <- (end_angle - start_angle) / 2
+  # Scale the signed perpendicular distance from the endpoint chord. This
+  # is continuous through 0 and 1; -c reflects +c across that chord.
+  # No asymmetric clipping: large positive and negative values stay distinct.
+  t <- seq(0, 1, length.out = n_points)
+  chord_along <- radius * (2 * t - 1) * sin(half_span)
+  circle_along <- radius * sin(angles - center)
+  # Fade tangential reparameterisation continuously to the straight chord.
+  # This also keeps curvature=0 inside its endpoints for arcs over 180 degrees.
+  along <- chord_along + min(abs(curvature), 1) * (circle_along - chord_along)
+  across <- radius * (cos(half_span) +
+    curvature * (cos(angles - center) - cos(half_span)))
+  x <- across * cos(center) - along * sin(center)
+  y <- across * sin(center) + along * cos(center)
+  if (any(!is.finite(c(x, y)))) ggchord_stop("Curvature produces non-finite coordinates")
   data.frame(x = x, y = y)
 }
+
 
 
 #' Generate Bezier curve points

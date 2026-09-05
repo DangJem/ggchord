@@ -7,10 +7,14 @@
 geom_gene_label_repel(
   mapping = NULL,
   data = NULL,
-  gene_label_layout = "aligned",
+  gene_label_layout = "radial",
   gene_label_wrap = NULL,
+  gene_label_fit = "wrap",
+  gene_label_max_lines = 2L,
   gene_label_side = "outside",
   max_overlaps = Inf,
+  gene_label_segment_overlap = "fade",
+  gene_label_segment_overlap_alpha = 0.18,
   gene_label_segment_linetype = "auto",
   position = "identity",
   show.legend = FALSE,
@@ -23,14 +27,27 @@ geom_gene_label_repel(
 
 \item{data}{Default NULL (retrieved automatically from the layout)}
 
-\item{gene_label_layout}{Character, default \code{"aligned"}. Label layout:
-\code{"aligned"} uses horizontal labels on orderly top, bottom, left and
-right rails; \code{"radial"} uses horizontal labels on the nearest
-collision-free local offset track; \code{"arc"} rotates labels along the
-sequence tangent and keeps them close to their genes.}
+\item{gene_label_layout}{Character, default \code{"radial"}. Label layout:
+\code{"radial"} arranges horizontal external labels along sequence-relative
+contours, with straight normal leaders or a short normal departure followed
+by a long connector when displaced; \code{"auto"} uses shared vertical
+columns on the left/right and radial placement elsewhere; \code{"arc"}
+rotates text along the sequence tangent. The former \code{"aligned"}
+mode has been removed; use \code{"auto"} for side columns.}
 
 \item{gene_label_wrap}{Numeric or NULL, default NULL. When set, long gene
-annotations are wrapped at this many characters (e.g. 15).}
+annotations are wrapped at this many characters (e.g. 15), overriding
+\code{gene_label_fit}.}
+
+\item{gene_label_fit}{Character, default \code{"wrap"}. How labels whose
+initial boxes are crowded or unusually wide are fitted before deterministic layout:
+\code{"wrap"} preserves the complete annotation over multiple lines,
+\code{"ellipsis"} uses a single shortened line, \code{"auto"} wraps and
+adds an ellipsis only if text exceeds \code{gene_label_max_lines}, and
+\code{"none"} disables adaptive fitting.}
+
+\item{gene_label_max_lines}{Positive integer, default 2. Maximum number of
+lines used by adaptive \code{"wrap"} or \code{"auto"} fitting.}
 
 \item{gene_label_side}{Character, default "outside". Which side of the arc
 the labels sit on. \code{"auto"} keeps the strand-based placement
@@ -42,6 +59,16 @@ connected with a dashed leader line (see \code{gene_label_segment_linetype}).}
 \item{max_overlaps}{Numeric, default Inf. Hide labels that still overlap
 more than this many other labels after repulsion (ggrepel-style
 decluttering). Use a finite value to clean up crowded plots.}
+
+\item{gene_label_segment_overlap}{Character, default \code{"fade"}.
+How portions of a leader line covered by another label are drawn:
+\code{"fade"} keeps them at reduced opacity, \code{"clip"} removes them,
+and \code{"show"} leaves the complete leader visible. This does not affect
+text wrapping, ellipsis or label hiding.}
+
+\item{gene_label_segment_overlap_alpha}{Numeric in \code{[0, 1]}, default
+0.18. Relative opacity applied only to covered leader-line portions when
+\code{gene_label_segment_overlap = "fade"}.}
 
 \item{gene_label_segment_linetype}{Character or numeric, default "auto".
 Leader-line linetype. \code{"auto"} draws solid lines, except for labels
@@ -61,16 +88,16 @@ drawn from separate data or without a geometry layer.}
 A ggplot2 layer that draws labels and leader lines together.
 }
 \description{
-Like \code{\link{geom_gene_label}()}, but labels are placed by one of three
-deterministic collision-avoiding layouts. The default \code{"aligned"}
-layout uses orderly cardinal rails, \code{"radial"} uses compact local
-offset tracks, and \code{"arc"} keeps text close to and rotated with the
-sequence curve.
+Like \code{\link{geom_gene_label}()}, with deterministic external label
+placement. The default \code{"radial"} keeps horizontal text on a contour
+following each sequence; crowded names fan out along that contour.
+\code{"auto"} aligns left/right names in columns and uses radial placement
+elsewhere. \code{"arc"} rotates text along the sequence tangent.
 }
 \details{
-The local outside/inside label concepts are informed by SnapGene and
-Geneious, but ggchord uses generic mode names and an independent geometry
-implementation. See
+The local outside/inside label organisation adapts concepts used by
+SnapGene and Geneious. ggchord keeps generic mode names and integrates those
+ideas into its own geometry system. See
 \href{https://support.snapgene.com/hc/en-us/articles/10383722725524-Display-Feature-Labels-Below-or-Inside-a-Map}{SnapGene feature labels}
 and
 \href{https://manual.geneious.com/en/latest/Sequences.html}{Geneious label options}.

@@ -21,14 +21,17 @@
 #' @param ribbon_data Alignment data (already validated)
 #' @param gene_data Gene data (already validated)
 #' @param draw_gene_geometry Whether gene/feature polygons should be generated.
-#' @param gene_label_layout Character, default "aligned". Deterministic
-#'   automatic layout: "aligned", "radial", or "arc".
+#' @param gene_label_layout Character, default "radial". Deterministic
+#'   automatic layout: "radial", "auto", or "arc".
 #' @param gene_label_side Character, default "auto". Which side of the arc the
 #'   labels sit on: "auto" (strand-based placement), "inside" (toward the chord
 #'   center) or "outside" (away from the center, avoiding ribbon overlap).
 #' @param gene_label_segment_linetype Character or numeric, default "auto".
 #'   Leader-line linetype; "auto" uses solid lines except for labels moved to
 #'   the other side of their arc, which use dashed lines.
+#' @param gene_label_segment_overlap Character: "fade", "clip", or "show".
+#' @param gene_label_segment_overlap_alpha Relative opacity for covered leader
+#'   portions when `gene_label_segment_overlap = "fade"`.
 #' @param gene_label_orientation Fixed-label text orientation: "radial",
 #'   "tangent", or "horizontal". Automatic repel layouts manage their own
 #'   text orientation.
@@ -84,12 +87,16 @@ compute_chord_layout <- function(
     geneLabelCircumLimit, geneLabelRotation,
     gene_label_show, gene_label_size,
     gene_label_wrap = NULL,
+    gene_label_fit = "wrap",
+    gene_label_max_lines = 2L,
     gene_label_orientation = "horizontal",
     gene_label_overlap = "hide",
     gene_label_repel_layer = FALSE,
     gene_label_repel_max_overlaps = Inf,
-    gene_label_layout = "aligned",
+    gene_label_layout = "radial",
     gene_label_side = "auto",
+    gene_label_segment_overlap = "fade",
+    gene_label_segment_overlap_alpha = 0.18,
     gene_label_segment_linetype = "auto",
     gene_color_scheme, gene_colors, gene_order,
     feature_shape_pal = NULL, feature_shape_order = NULL,
@@ -260,6 +267,7 @@ compute_chord_layout <- function(
     if (orientation[id] == -1) {
       path_data <- path_data[nrow(path_data):1, ]
     }
+    attr(path_data, "ggchord_path_direction") <- unname(orientation[id])
     path_data
   }), seqs)
 
@@ -1069,8 +1077,16 @@ compute_chord_layout <- function(
           hjust <- 0.5
         } else if (identical(gene_label_orientation, "horizontal")) {
           rotation_rad <- rotation * pi / 180
-          device_x <- cos(rotation_rad) * text_x - sin(rotation_rad) * text_y
-          device_y <- sin(rotation_rad) * text_x + cos(rotation_rad) * text_y
+          # Anchor text by the direction in which it was actually displaced
+          # from its own sequence curve. Using its position relative to the
+          # global origin made an inside label extend back across the arc in
+          # some quadrants, especially with gene_label_side = "auto".
+          label_dx <- text_x - center_pt[1]
+          label_dy <- text_y - center_pt[2]
+          device_x <- cos(rotation_rad) * label_dx -
+            sin(rotation_rad) * label_dy
+          device_y <- sin(rotation_rad) * label_dx +
+            cos(rotation_rad) * label_dy
           # Prefer a left/right anchor in diagonal quadrants so horizontal
           # text extends away from the chord rather than half back across it.
           if (abs(device_x) >= 0.75 * abs(device_y)) {
@@ -1282,12 +1298,15 @@ compute_chord_layout <- function(
   )
   text_units_per_inch <- ggchord_device_units_per_inch(compact_x, compact_y)
 
+
   # ====================================================================
   # Step 8b: wrap gene labels; optionally arrange them automatically
   # ====================================================================
   gene_label_segments <- data.frame(x0 = numeric(0), y0 = numeric(0),
                                     x1 = numeric(0), y1 = numeric(0),
                                     group = integer(0),
+                                    alpha = numeric(0),
+                                    occluded = logical(0),
                                     linetype = character(0),
                                     stringsAsFactors = FALSE)
   gene_label_clip_units <- NA_real_
@@ -1300,12 +1319,17 @@ compute_chord_layout <- function(
     if (isTRUE(gene_label_repel_layer)) {
       # Layout modes own these internal clearances. Keeping them out of the
       # public API prevents combinations that violate the geometry invariants.
-      layout_box_padding <- if (identical(gene_label_layout, "aligned")) {
-        0.18
+      layout_box_padding <- if (identical(gene_label_layout, "auto")) {
+        # Physical inches on each side of a text box. The previous 0.18-inch
+        # value made an eight-label vertical rail more than twice as tall as
+        # necessary and forced top/bottom labels onto extra rows. About 1 mm
+        # keeps labels visually separate while letting the cardinal rails use
+        # the available horizontal and vertical perimeter efficiently.
+        0.05
       } else {
         0.04
       }
-      layout_point_padding <- if (identical(gene_label_layout, "aligned")) {
+      layout_point_padding <- if (identical(gene_label_layout, "auto")) {
         0.08
       } else {
         0.05
@@ -1315,29 +1339,66 @@ compute_chord_layout <- function(
       base_gene_labels <- gene_labels
       layout_result <- NULL
 
+      if (is.null(gene_label_wrap) &&
+          !identical(gene_label_fit, "none")) {
+        initial_obstacles <- ggchord_text_obstacle_boxes(
+          seq_labels_df, axis_ticks, show_axis,
+          units_per_inch = layout_units
+        )
+        fit_labels <- base_gene_labels
+        # auto/radial ultimately draw horizontal text. Measure that final
+        # orientation here; measuring the temporary tangent angle could make a
+        # long label look artificially narrow and skip adaptive wrapping.
+        if (!identical(gene_label_layout, "arc")) {
+          fit_labels$text_angle <- 0
+        }
+        fit_labels <- ggchord_fit_label_text(
+          fit_labels,
+          fit = gene_label_fit,
+          max_lines = gene_label_max_lines,
+          units_per_inch = layout_units,
+          box_padding = layout_box_padding,
+          repel_boxes = initial_obstacles
+        )
+        base_gene_labels$text <- fit_labels$text
+        gene_labels <- base_gene_labels
+      }
+
+      if (gene_label_layout %in% c("radial", "auto")) {
+        # Reserve physical space for text on both sides before converting to
+        # data units. This estimate depends on the device and fitted font
+        # metrics, never on the positions produced by the layout solver.
+        physical <- ggchord_text_boxes(base_gene_labels, units_per_inch = 1)
+        device <- if (grDevices::dev.cur() == 1L) c(8, 8) else
+          grDevices::dev.size("in")
+        reserve <- c(1.5 + 2 * max(physical$w),
+                     0.75 + 2 * max(physical$h) + 0.8)
+        usable <- pmax(device - reserve, device * 0.35)
+        layout_units <- max(diff(range(compact_x)) / usable[1],
+                            diff(range(compact_y)) / usable[2])
+        text_units_per_inch <- layout_units
+      }
+
       # A second deterministic pass lets fixed obstacles and label boxes use
       # the same device-derived physical scale without feeding the expanded
       # label limits back into the estimate (which would create excess blank
       # space around already-distant labels).
-      for (layout_pass in seq_len(2)) {
+      layout_passes <- if (identical(gene_label_layout, "arc")) 2L else 1L
+      for (layout_pass in seq_len(layout_passes)) {
         layout_obstacles <- ggchord_text_obstacle_boxes(
           seq_labels_df, axis_ticks, show_axis,
           units_per_inch = layout_units
         )
-        if (identical(gene_label_layout, "aligned")) {
-          layout_result <- ggchord_compact_label_lanes(
-            if (layout_pass == 1L) base_gene_labels else gene_labels,
-            seq_arcs,
-            side = gene_label_side,
-            units_per_inch = layout_units,
-            box_padding = layout_box_padding,
-            point_padding = layout_point_padding,
-            repel_boxes = layout_obstacles
-          )
-          layout_result$tracks <- rep(NA_integer_, nrow(base_gene_labels))
-          layout_result$draw_segment <-
-            !is.na(layout_result$labels$text) &
-            nzchar(layout_result$labels$text)
+        if (identical(gene_label_layout, "auto")) {
+          layout_result <- ggchord_auto_label_lanes(
+            base_gene_labels, seq_arcs, side = gene_label_side,
+            units_per_inch = layout_units, box_padding = layout_box_padding,
+            point_padding = layout_point_padding, repel_boxes = layout_obstacles)
+        } else if (identical(gene_label_layout, "radial")) {
+          layout_result <- ggchord_radial_label_lanes(
+            base_gene_labels, seq_arcs, side = gene_label_side,
+            units_per_inch = layout_units, box_padding = layout_box_padding,
+            point_padding = layout_point_padding, repel_boxes = layout_obstacles)
         } else {
           layout_result <- ggchord_offset_label_tracks(
             base_gene_labels, seq_arcs,
@@ -1354,6 +1415,7 @@ compute_chord_layout <- function(
           )
         }
         gene_labels <- layout_result$labels
+
       }
 
       label_lanes <- layout_result$lanes
@@ -1374,7 +1436,15 @@ compute_chord_layout <- function(
       draw_segment <- draw_segment & !is.na(gene_labels$text) &
         nzchar(gene_labels$text)
 
-      if (identical(gene_label_layout, "arc")) {
+      if (gene_label_layout %in% c("radial", "auto")) {
+        rows <- which(draw_segment)
+        gene_label_segments <- data.frame(
+          x0 = c(gene_labels$anchor_x[rows], gene_labels$.radial_bend_x[rows]),
+          y0 = c(gene_labels$anchor_y[rows], gene_labels$.radial_bend_y[rows]),
+          x1 = c(gene_labels$.radial_bend_x[rows], gene_labels$text_x[rows]),
+          y1 = c(gene_labels$.radial_bend_y[rows], gene_labels$text_y[rows]),
+          group = rep(rows, 2L))
+      } else if (identical(gene_label_layout, "arc")) {
         rows <- which(draw_segment)
         gene_label_segments <- data.frame(
           x0 = gene_labels$anchor_x[rows],
@@ -1410,18 +1480,30 @@ compute_chord_layout <- function(
             group = c(seg$group, seg$group),
             stringsAsFactors = FALSE
           )
-          gene_label_segments <- ggchord_collapse_crossed_elbows(
-            elbow, lanes = label_lanes
+          direction <- label_directions[seg$group]
+          local <- direction %in% c("top", "bottom")
+          local_segments <- seg[local, , drop = FALSE]
+          elbow_segments <- elbow[!c(local, local), , drop = FALSE]
+          elbow_segments <- ggchord_collapse_crossed_elbows(
+            elbow_segments, lanes = label_lanes
           )
+          gene_label_segments <- rbind(elbow_segments, local_segments)
         }
       }
 
+      if (nrow(gene_label_segments) > 0) {
+        gene_label_segments <- gene_label_segments[
+          (gene_label_segments$x1 - gene_label_segments$x0)^2 +
+          (gene_label_segments$y1 - gene_label_segments$y0)^2 > 1e-16, , drop = FALSE]
+      }
       if (nrow(gene_label_segments) > 0) {
         gene_label_clip_units <- layout_units
         gene_label_segments <- ggchord_clip_segments_to_labels(
           gene_label_segments, gene_labels,
           units_per_inch = gene_label_clip_units,
-          include_own = identical(gene_label_layout, "arc")
+          include_own = identical(gene_label_layout, "arc"),
+          overlap = gene_label_segment_overlap,
+          overlap_alpha = gene_label_segment_overlap_alpha
         )
       }
       # "auto" is solid unless the requested side differs from the gene's

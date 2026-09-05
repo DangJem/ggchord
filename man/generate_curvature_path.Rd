@@ -19,7 +19,7 @@ generate_curvature_path(
 
 \item{radius}{Numeric, path radius}
 
-\item{curvature}{Numeric, curvature (0 = straight line, 1 = standard arc, >1 = more curved)}
+\item{curvature}{Numeric, curvature (0 = straight chord, 1 = standard arc, negative = opposite bow)}
 
 \item{n_points}{Integer, number of points in the path (controls smoothness), default 100}
 }

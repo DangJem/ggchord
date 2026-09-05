@@ -32,7 +32,7 @@ geom_seq(
 
 \item{seq_radius}{Optional numeric (> 0). Sequence arc radius, default 1.0}
 
-\item{seq_curvature}{Optional numeric. Arc curvature (0=straight, 1=standard arc, >1=more curved), default 1.0}
+\item{seq_curvature}{Optional numeric. Signed arc bow (0=straight, 1=standard arc, negative=opposite bow), default 1.0. Finite positive and negative values are accepted without clipping; magnitudes above 1 amplify the bow.}
 
 \item{linewidth}{Arc line width, default 0.9}
 

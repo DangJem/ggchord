@@ -1,6 +1,7 @@
 ^docs$
 ^doc$
 ^examples$
+^data-raw$
 ^pkgdown$
 ^README-Hans.md$
 ^README.md$
@@ -12,3 +13,4 @@
 ^.github$
 ^DESIGN-ROADMAP\.md$
 ^\.codex-tmp$
+^\.git$

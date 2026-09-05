@@ -11,6 +11,10 @@ A data frame containing standard alignment columns (qaccver, saccver, pident, et
 ribbon_data_example
 }
 \description{
-Alignment data for ggchord demonstration (length >= 100)
+A compact alignment fixture generated deterministically from the BLAST
+files under \code{examples/blastn}. Alignments shorter than 300 bases are
+omitted, and dense sequence pairs retain at most three spatially distributed
+representatives so the default chord remains readable. Sparse pairs are
+preserved unchanged.
 }
 \keyword{datasets}

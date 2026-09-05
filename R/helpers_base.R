@@ -114,6 +114,109 @@ ggchord_label_wrap_text <- function(text, width = NULL) {
   }, character(1), USE.NAMES = FALSE)
 }
 
+# Count collisions for each visible label against the other labels and any
+# fixed annotation boxes. Keeping the row-wise counts in one helper ensures
+# adaptive fitting and max_overlaps use exactly the same collision semantics.
+ggchord_label_conflict_counts <- function(gl, units_per_inch = 0.35,
+                                           box_padding = 0,
+                                           repel_boxes = NULL) {
+  counts <- integer(nrow(gl))
+  active <- !is.na(gl$text) & nzchar(gl$text)
+  rows <- which(active)
+  if (length(rows) == 0L) return(counts)
+
+  boxes <- ggchord_text_boxes(
+    gl[rows, , drop = FALSE],
+    units_per_inch = units_per_inch,
+    box_padding = box_padding
+  )
+  if (length(rows) > 1L) {
+    for (i in seq_len(nrow(boxes))) {
+      other <- setdiff(seq_len(nrow(boxes)), i)
+      counts[rows[i]] <- counts[rows[i]] + sum(
+        ggchord_oriented_box_overlaps(
+          boxes[i, , drop = FALSE], boxes[other, , drop = FALSE]
+        )
+      )
+    }
+  }
+  if (!is.null(repel_boxes) && nrow(repel_boxes) > 0L) {
+    for (i in seq_len(nrow(boxes))) {
+      counts[rows[i]] <- counts[rows[i]] + sum(
+        ggchord_oriented_box_overlaps(
+          boxes[i, , drop = FALSE], repel_boxes
+        )
+      )
+    }
+  }
+  counts
+}
+
+# Adapt labels whose initial boxes are crowded or physically too wide for a
+# compact perimeter rail. This is deliberately a text-fitting step rather than
+# another force/layout parameter: the selected layout remains deterministic and
+# is rerun after the text dimensions change.
+ggchord_fit_label_text <- function(gl,
+                                   fit = c("wrap", "none", "ellipsis", "auto"),
+                                   max_lines = 2L,
+                                   units_per_inch = 0.35,
+                                   box_padding = 0.18,
+                                   repel_boxes = NULL) {
+  fit <- match.arg(fit)
+  if (identical(fit, "none") || nrow(gl) == 0L) return(gl)
+  crowded <- ggchord_label_conflict_counts(
+    gl,
+    units_per_inch = units_per_inch,
+    box_padding = box_padding,
+    repel_boxes = repel_boxes
+  ) > 0L
+  measured <- ggchord_text_boxes(
+    gl,
+    units_per_inch = units_per_inch,
+    box_padding = 0
+  )
+  # Roughly one inch is a useful upper bound for a default horizontal callout.
+  # Measuring the rendered box (rather than counting characters) also works for
+  # wide glyphs and non-Latin labels.
+  wide <- measured$bw > 1.05 * units_per_inch
+  rows <- which((crowded | wide) & !is.na(gl$text) & nzchar(gl$text))
+  if (length(rows) == 0L) return(gl)
+
+  fit_one <- function(value) {
+    plain <- gsub("[\r\n]+", " ", value)
+    plain <- trimws(gsub("[[:space:]]+", " ", plain))
+    n_chars <- nchar(plain, type = "width")
+    if (!is.finite(n_chars) || n_chars < 2L) return(plain)
+    line_width <- max(8L, ceiling(n_chars / max_lines))
+
+    if (identical(fit, "ellipsis")) {
+      if (n_chars <= line_width) return(plain)
+      return(paste0(substr(plain, 1L, max(1L, line_width - 1L)), "\u2026"))
+    }
+
+    lines <- strwrap(plain, width = line_width)
+    if (length(lines) <= max_lines) return(paste(lines, collapse = "\n"))
+    if (identical(fit, "wrap")) {
+      lines <- c(
+        lines[seq_len(max_lines - 1L)],
+        paste(lines[max_lines:length(lines)], collapse = " ")
+      )
+      return(paste(lines, collapse = "\n"))
+    }
+
+    # auto: preserve as much text as the requested line count permits, then
+    # mark only the final overflow with an ellipsis.
+    kept <- lines[seq_len(max_lines)]
+    kept[max_lines] <- paste0(
+      substr(kept[max_lines], 1L, max(1L, line_width - 1L)), "\u2026"
+    )
+    paste(kept, collapse = "\n")
+  }
+
+  gl$text[rows] <- vapply(gl$text[rows], fit_one, character(1), USE.NAMES = FALSE)
+  gl
+}
+
 #' De-overlap gene labels
 #'
 #' Detects overlapping gene label boxes (estimated from the text size) and
@@ -445,7 +548,7 @@ ggchord_segments_cross <- function(ax, ay, bx, by, cx, cy, dx, dy,
   o2 <- orient(ax, ay, bx, by, dx, dy)
   o3 <- orient(cx, cy, dx, dy, ax, ay)
   o4 <- orient(cx, cy, dx, dy, bx, by)
-  o1 * o2 < -tol && o3 * o4 < -tol
+  o1 * o2 < -tol & o3 * o4 < -tol
 }
 
 # Remove crossings by swapping label positions within each sequence-side lane.
@@ -600,15 +703,12 @@ ggchord_label_curve_frame <- function(gl, seq_arcs) {
       tangent_length <- sqrt(tx^2 + ty^2)
       if (!is.finite(tangent_length) || tangent_length < 1e-12) next
 
-      # Either local normal is valid geometrically. Choose the one pointing
-      # away from the chord centre, which works for circular, straight and
-      # Bézier sequence paths and is independent of sequence orientation.
-      nx <- -ty / tangent_length
-      ny <- tx / tangent_length
-      if (nx * arc$x[k] + ny * arc$y[k] < 0) {
-        nx <- -nx
-        ny <- -ny
-      }
+      # Reference paths follow increasing genomic angle. Their right normal
+      # is the outside track, including concave curves and paths crossing the
+      # origin; an origin-dot-product test would flip sides mid-sequence.
+      path_direction <- attr(arc, "ggchord_path_direction") %||% 1
+      nx <- path_direction * ty / tangent_length
+      ny <- -path_direction * tx / tangent_length
       frame$curve_x[i] <- arc$x[k]
       frame$curve_y[i] <- arc$y[k]
       frame$outward_x[i] <- nx
@@ -699,23 +799,20 @@ ggchord_pack_label_axis_outward <- function(preferred, order_value,
   out
 }
 
-# Put horizontal labels on compact cardinal rails around their own sequence.
-# Each label is classified from the actual local normal of the sequence curve,
-# so radius, curvature, gap, rotation and sequence orientation are all already
-# represented in the rail choice. Left/right rails form vertical columns and
-# top/bottom rails form horizontal rows. Within each rail the original gene
-# order is retained, making the resulting leaders planar by construction.
-ggchord_compact_label_lanes <- function(gl, seq_arcs,
+# Put horizontal labels on compact cardinal lanes around their own sequence.
+# Shared left/right columns used by the auto layout.
+ggchord_side_label_columns <- function(gl, seq_arcs,
                                         side = "outside",
                                         units_per_inch = 0.35,
                                         box_padding = 0.25,
                                         point_padding = 0.1,
                                         repel_boxes = NULL,
-                                        max_iter = 100) {
+                                        max_iter = 100, directions = NULL) {
   n <- nrow(gl)
   if (n == 0) return(list(labels = gl, lanes = character(0)))
 
   active <- !is.na(gl$text) & nzchar(gl$text)
+  source_frame <- ggchord_label_curve_frame(gl, seq_arcs)
   anchor_labels <- gl
   anchor_labels$text_x <- anchor_labels$anchor_x
   anchor_labels$text_y <- anchor_labels$anchor_y
@@ -725,21 +822,16 @@ ggchord_compact_label_lanes <- function(gl, seq_arcs,
   } else if (identical(side, "inside")) {
     rep(-1, n)
   } else {
-    ifelse(anchor_frame$signed_distance < 0, -1, 1)
+    ifelse(source_frame$signed_distance < 0, -1, 1)
   }
+  side_sign[!is.finite(side_sign)] <- 1
   desired_x <- side_sign * anchor_frame$outward_x
   desired_y <- side_sign * anchor_frame$outward_y
-  directions <- rep(NA_character_, n)
-  direction_groups <- paste(gl$seq_id, side_sign, sep = "\r")
-  for (rows in split(which(active), direction_groups[active], drop = TRUE)) {
-    mean_x <- mean(desired_x[rows])
-    mean_y <- mean(desired_y[rows])
-    directions[rows] <- if (abs(mean_x) >= abs(mean_y)) {
-      if (mean_x < 0) "left" else "right"
-    } else {
-      if (mean_y < 0) "bottom" else "top"
-    }
-  }
+  # Give every sequence-side group one primary cardinal rail. This keeps the
+  # labels belonging to one sequence visually close and prevents neighbouring
+  # sequences from competing for the same corners. Parallel rows absorb genuine
+  # congestion without treating unused sides as a target to distribute toward.
+  if (is.null(directions)) directions <- ifelse(desired_x < 0, "left", "right")
   directions[!active] <- NA_character_
   base_lanes <- paste(gl$seq_id, directions, sep = "\r")
 
@@ -750,196 +842,75 @@ ggchord_compact_label_lanes <- function(gl, seq_arcs,
   gl$vjust[active] <- c(left = 0.5, right = 0.5, top = 0, bottom = 1)[
     directions[active]
   ]
-  boxes <- ggchord_text_boxes(
-    gl, units_per_inch = units_per_inch, box_padding = box_padding
-  )
   axis_gap <- max(0.02, 0.025 * units_per_inch)
-  # Long horizontal text cannot form one compact row without either a large
-  # empty margin or very long leaders. Split only top/bottom lanes into a
-  # small number of staggered parallel rows. Their shared endpoint ordering
-  # keeps the leaders planar; vertical lanes deliberately remain one column
-  # so their text anchors line up exactly.
-  rail_index <- rep(1L, n)
   base_lane_rows <- split(which(active), base_lanes[active], drop = TRUE)
-  for (rows in base_lane_rows) {
-    if (!directions[rows[1]] %in% c("top", "bottom") ||
-        length(rows) < 3) next
-    ord <- rows[order(gl$anchor_x[rows], rows)]
-    occupied <- boxes$bw[ord]
-    available <- max(
-      diff(range(gl$anchor_x[ord])) + 1.2 * units_per_inch,
-      3 * units_per_inch
-    )
-    rail_count <- min(length(ord), ceiling(
-      (sum(occupied) + axis_gap * (length(ord) - 1L)) / available
-    ))
-    if (rail_count < 2) next
-    for (k in seq_along(ord)) {
-      rail_index[ord[k]] <- ((k - 1L) %% rail_count) + 1L
-    }
-  }
-  lanes <- paste(base_lanes, rail_index, sep = "\r")
   rail_gap <- point_padding + box_padding * units_per_inch +
     max(0.04, 0.04 * units_per_inch)
-  rail_step <- max(0.16, 0.16 * units_per_inch) +
-    max(boxes$h[active], 0)
+  lanes <- base_lanes
+  tracks <- rep(NA_integer_, n)
 
-  lane_rows <- split(which(active), lanes[active], drop = TRUE)
-  for (rows in lane_rows) {
+  # All labels assigned to the same side share one compact vertical column.
+  # Packing from feature anchors, rather than previous-pass label positions,
+  # avoids layout feedback, preserves their global vertical order and prevents
+  # two sequence-specific columns from sending leaders across one another.
+  vertical_rows_all <- which(active & directions %in% c("left", "right"))
+  vertical_groups <- split(
+    vertical_rows_all, directions[vertical_rows_all], drop = TRUE
+  )
+  template_boxes <- ggchord_text_boxes(
+    gl, units_per_inch = units_per_inch, box_padding = box_padding
+  )
+  for (rows in vertical_groups) {
     direction <- directions[rows[1]]
-    # Retain a small amount of seed-dependent variation without allowing it
-    # to alter the gene order or the rail chosen for a label.
-    if (direction %in% c("left", "right")) {
-      preferred <- gl$anchor_y[rows] + 0.12 *
-        (gl$text_y[rows] - gl$anchor_y[rows])
-      before <- boxes$y[rows] - boxes$ymin[rows]
-      after <- boxes$ymax[rows] - boxes$y[rows]
-      gl$text_y[rows] <- ggchord_pack_label_axis(
-        preferred, gl$anchor_y[rows], before, after, gap = axis_gap
-      )
-      gl$text_x[rows] <- if (direction == "left") {
-        min(anchor_frame$curve_x[rows]) - rail_gap
-      } else {
-        max(anchor_frame$curve_x[rows]) + rail_gap
-      }
+    before <- template_boxes$y[rows] - template_boxes$ymin[rows]
+    after <- template_boxes$ymax[rows] - template_boxes$y[rows]
+    gl$text_y[rows] <- ggchord_pack_label_axis(
+      gl$anchor_y[rows], gl$anchor_y[rows], before, after, gap = axis_gap
+    )
+    gl$text_x[rows] <- if (direction == "left") {
+      min(anchor_frame$curve_x[rows]) - rail_gap
     } else {
-      base_rows <- which(base_lanes == base_lanes[rows[1]] & active)
-      preferred <- gl$anchor_x[rows] + 0.12 *
-        (gl$text_x[rows] - gl$anchor_x[rows])
-      before <- boxes$x[rows] - boxes$xmin[rows]
-      after <- boxes$xmax[rows] - boxes$x[rows]
-      gl$text_x[rows] <- ggchord_pack_label_axis_outward(
-        preferred, gl$anchor_x[rows], before, after,
-        centre = 0, gap = axis_gap
+      max(anchor_frame$curve_x[rows]) + rail_gap
+    }
+    tracks[rows] <- 1L
+    lanes[rows] <- direction
+  }
+
+  # A shared side column must also use a shared endpoint order. Curved and
+  # rotated sequences can place two feature anchors in an order that differs
+  # from their first packed label positions even when those positions do not
+  # overlap. Swap only crossing endpoints, then repack the resulting slots for
+  # their actual text heights. Repeating this small 2-opt pass produces a
+  # deterministic, compact column whose direct leaders do not cross.
+  if (length(vertical_rows_all) > 1L) {
+    for (pass in seq_len(8L)) {
+      candidate <- gl[vertical_rows_all, , drop = FALSE]
+      uncrossed <- ggchord_uncross_labels(
+        candidate, lanes = directions[vertical_rows_all]
       )
-      gl$text_y[rows] <- if (direction == "bottom") {
-        min(anchor_frame$curve_y[base_rows]) - rail_gap -
-          (rail_index[rows[1]] - 1L) * rail_step
-      } else {
-        max(anchor_frame$curve_y[base_rows]) + rail_gap +
-          (rail_index[rows[1]] - 1L) * rail_step
+      if (uncrossed$swaps == 0L) break
+      candidate <- uncrossed$labels
+      candidate_boxes <- ggchord_text_boxes(
+        candidate, units_per_inch = units_per_inch,
+        box_padding = box_padding
+      )
+      candidate_groups <- split(
+        seq_along(vertical_rows_all),
+        directions[vertical_rows_all], drop = TRUE
+      )
+      for (local_rows in candidate_groups) {
+        before <- candidate_boxes$y[local_rows] -
+          candidate_boxes$ymin[local_rows]
+        after <- candidate_boxes$ymax[local_rows] -
+          candidate_boxes$y[local_rows]
+        candidate$text_y[local_rows] <- ggchord_pack_label_axis(
+          candidate$text_y[local_rows], candidate$text_y[local_rows],
+          before, after, gap = axis_gap
+        )
       }
+      gl$text_x[vertical_rows_all] <- candidate$text_x
+      gl$text_y[vertical_rows_all] <- candidate$text_y
     }
-  }
-
-  # Parallel rows are staggered, so each row has room for long horizontal
-  # text. Alternate row-specific spacing constraints with a weak global
-  # monotonic constraint. This keeps endpoints in gene order without forcing
-  # different rows to reserve each other's full text widths.
-  for (rows in base_lane_rows) {
-    if (!directions[rows[1]] %in% c("top", "bottom")) next
-    anchor_order <- rows[order(gl$anchor_x[rows], rows)]
-    centre_before <- mean(gl$text_x[rows])
-    for (pass in seq_len(max_iter)) {
-      old <- gl$text_x[rows]
-      for (index in sort(unique(rail_index[rows]))) {
-        same_rail <- rows[rail_index[rows] == index]
-        same_rail <- same_rail[order(gl$anchor_x[same_rail], same_rail)]
-        if (length(same_rail) < 2) next
-        for (k in seq_len(length(same_rail) - 1L)) {
-          i <- same_rail[k]
-          j <- same_rail[k + 1L]
-          required <- (boxes$bw[i] + boxes$bw[j]) / 2 + axis_gap
-          shortage <- required - (gl$text_x[j] - gl$text_x[i])
-          if (shortage > 0) {
-            gl$text_x[i] <- gl$text_x[i] - shortage / 2
-            gl$text_x[j] <- gl$text_x[j] + shortage / 2
-          }
-        }
-      }
-      if (length(anchor_order) > 1) {
-        for (k in seq_len(length(anchor_order) - 1L)) {
-          i <- anchor_order[k]
-          j <- anchor_order[k + 1L]
-          shortage <- axis_gap / 4 - (gl$text_x[j] - gl$text_x[i])
-          if (shortage > 0) {
-            gl$text_x[i] <- gl$text_x[i] - shortage / 2
-            gl$text_x[j] <- gl$text_x[j] + shortage / 2
-          }
-        }
-      }
-      if (max(abs(gl$text_x[rows] - old)) < 1e-7) break
-    }
-    gl$text_x[rows] <- gl$text_x[rows] +
-      centre_before - mean(gl$text_x[rows])
-  }
-
-  # Neighbouring sequences can share the same top or bottom sector when
-  # radii and curvature differ strongly. Preserve endpoint order across those
-  # sequences too, alternating it with the full within-row spacing rule.
-  horizontal <- which(active & directions %in% c("top", "bottom"))
-  if (length(horizontal) > 1) {
-    for (pass in seq_len(max_iter)) {
-      old <- gl$text_x[horizontal]
-      for (rows in lane_rows) {
-        if (!directions[rows[1]] %in% c("top", "bottom") ||
-            length(rows) < 2) next
-        ord <- rows[order(gl$anchor_x[rows], rows)]
-        for (k in seq_len(length(ord) - 1L)) {
-          i <- ord[k]
-          j <- ord[k + 1L]
-          required <- (boxes$bw[i] + boxes$bw[j]) / 2 + axis_gap
-          shortage <- required - (gl$text_x[j] - gl$text_x[i])
-          if (shortage > 0) {
-            gl$text_x[i] <- gl$text_x[i] - shortage / 2
-            gl$text_x[j] <- gl$text_x[j] + shortage / 2
-          }
-        }
-      }
-      for (direction in c("top", "bottom")) {
-        rows <- which(active & directions == direction)
-        if (length(rows) < 2) next
-        ord <- rows[order(gl$anchor_x[rows], rows)]
-        for (k in seq_len(length(ord) - 1L)) {
-          i <- ord[k]
-          j <- ord[k + 1L]
-          shortage <- axis_gap / 4 - (gl$text_x[j] - gl$text_x[i])
-          if (shortage > 0) {
-            gl$text_x[i] <- gl$text_x[i] - shortage / 2
-            gl$text_x[j] <- gl$text_x[j] + shortage / 2
-          }
-        }
-      }
-      if (max(abs(gl$text_x[horizontal] - old)) < 1e-7) break
-    }
-  }
-
-  # A curved arc can still make two adjacent diagonal approaches intersect
-  # even when their endpoint x order is monotone. Exchange only their nearby
-  # parallel row levels while retaining each label's x position. This changes
-  # the approach order without assigning either label to a distant slot.
-  for (pass in seq_len(max_iter)) {
-    changed <- FALSE
-    for (rows in base_lane_rows) {
-      if (!directions[rows[1]] %in% c("top", "bottom") ||
-          length(rows) < 2) next
-      for (ii in seq_len(length(rows) - 1L)) {
-        for (jj in (ii + 1L):length(rows)) {
-          i <- rows[ii]
-          j <- rows[jj]
-          if (rail_index[i] == rail_index[j]) next
-          if (ggchord_segments_cross(
-            gl$anchor_x[i], gl$anchor_y[i], gl$text_x[i], gl$text_y[i],
-            gl$anchor_x[j], gl$anchor_y[j], gl$text_x[j], gl$text_y[j]
-          )) {
-            old_distance <-
-              (gl$text_y[i] - gl$anchor_y[i])^2 +
-              (gl$text_y[j] - gl$anchor_y[j])^2
-            new_distance <-
-              (gl$text_y[j] - gl$anchor_y[i])^2 +
-              (gl$text_y[i] - gl$anchor_y[j])^2
-            if (new_distance <= old_distance + 1e-10) {
-              gl$text_y[c(i, j)] <- gl$text_y[c(j, i)]
-              changed <- TRUE
-              break
-            }
-          }
-        }
-        if (changed) break
-      }
-      if (changed) break
-    }
-    if (!changed) break
   }
 
   move_lane_outward <- function(rows, amount) {
@@ -951,11 +922,8 @@ ggchord_compact_label_lanes <- function(gl, seq_arcs,
     if (direction == "top") gl$text_y[rows] <<- gl$text_y[rows] + amount
   }
 
-  # Keep every rail on the requested side even after the labels have been
-  # packed along it. Oblique local normals may require a small outward shift
-  # when a long lane extends tangentially beyond its sequence endpoint.
-  ensure_requested_side <- function() {
-    for (rows in base_lane_rows) {
+  ensure_vertical_side <- function() {
+    for (rows in vertical_groups) {
       direction <- directions[rows[1]]
       dx <- gl$text_x[rows] - anchor_frame$curve_x[rows]
       dy <- gl$text_y[rows] - anchor_frame$curve_y[rows]
@@ -969,11 +937,17 @@ ggchord_compact_label_lanes <- function(gl, seq_arcs,
         bottom = -side_sign[rows] * anchor_frame$outward_y[rows],
         top = side_sign[rows] * anchor_frame$outward_y[rows]
       )
-      amount <- max((rail_gap - signed) / pmax(projection, 0.1), 0)
-      move_lane_outward(rows, amount)
+      usable <- is.finite(projection) & projection > 0.25
+      if (!any(usable)) next
+      target <- max(0.015, 0.025 * units_per_inch)
+      amount <- max((target - signed[usable]) / projection[usable], 0)
+      # The rail coordinates already place it beyond the relevant curve
+      # extreme. This cap is only a local-side correction, never a second
+      # layout offset.
+      move_lane_outward(rows, min(amount, rail_gap))
     }
   }
-  ensure_requested_side()
+  ensure_vertical_side()
 
   # Sequence and axis text are fixed obstacles. Resolve those conflicts by
   # moving the complete rail outwards, which preserves its alignment and the
@@ -984,7 +958,7 @@ ggchord_compact_label_lanes <- function(gl, seq_arcs,
       boxes <- ggchord_text_boxes(
         gl, units_per_inch = units_per_inch, box_padding = 0
       )
-      for (rows in lane_rows) {
+      for (rows in vertical_groups) {
         overlap_x <- outer(
           boxes$xmin[rows], repel_boxes$xmax,
           function(a, b) a < b - 1e-7
@@ -1013,66 +987,20 @@ ggchord_compact_label_lanes <- function(gl, seq_arcs,
           top = max(repel_boxes$ymax[hits[, 2]] -
                       boxes$ymin[rows[hits[, 1]]] + axis_gap)
         )
-        base_rows <- which(base_lanes == base_lanes[rows[1]] & active)
-        move_lane_outward(base_rows, amount)
+        move_lane_outward(rows, amount)
         moved <- TRUE
       }
       if (!moved) break
     }
   }
-  ensure_requested_side()
+  ensure_vertical_side()
 
-  # Resolve the remaining visible-box conflicts between different sequence
-  # rails by moving the already outer rail farther out as one rigid unit.
-  # This keeps vertical columns and staggered rows aligned.
-  for (pass in seq_len(12)) {
-    visible_boxes <- ggchord_text_boxes(
-      gl, units_per_inch = units_per_inch, box_padding = 0
-    )
-    dx <- abs(outer(visible_boxes$cx, visible_boxes$cx, "-"))
-    dy <- abs(outer(visible_boxes$cy, visible_boxes$cy, "-"))
-    hits <- which(
-      upper.tri(dx) &
-        dx < outer(visible_boxes$bw, visible_boxes$bw, "+") / 2 - 1e-7 &
-        dy < outer(visible_boxes$bh, visible_boxes$bh, "+") / 2 - 1e-7,
-      arr.ind = TRUE
-    )
-    if (nrow(hits) == 0) break
-    moved <- FALSE
-    for (hit in seq_len(nrow(hits))) {
-      i <- hits[hit, 1]
-      j <- hits[hit, 2]
-      if (base_lanes[i] == base_lanes[j]) next
-      if (directions[i] != directions[j]) next
-      direction <- directions[i]
-      lane_i <- which(base_lanes == base_lanes[i] & active)
-      lane_j <- which(base_lanes == base_lanes[j] & active)
-      amount <- if (direction %in% c("top", "bottom")) {
-        (visible_boxes$bh[i] + visible_boxes$bh[j]) / 2 -
-          abs(visible_boxes$cy[i] - visible_boxes$cy[j]) + axis_gap
-      } else {
-        (visible_boxes$bw[i] + visible_boxes$bw[j]) / 2 -
-          abs(visible_boxes$cx[i] - visible_boxes$cx[j]) + axis_gap
-      }
-      outer_i <- switch(
-        direction,
-        top = mean(gl$text_y[lane_i]) >= mean(gl$text_y[lane_j]),
-        bottom = mean(gl$text_y[lane_i]) <= mean(gl$text_y[lane_j]),
-        left = mean(gl$text_x[lane_i]) <= mean(gl$text_x[lane_j]),
-        right = mean(gl$text_x[lane_i]) >= mean(gl$text_x[lane_j])
-      )
-      move_lane_outward(if (outer_i) lane_i else lane_j, amount)
-      moved <- TRUE
-      break
-    }
-    if (!moved) break
-  }
-  ensure_requested_side()
 
   list(
     labels = gl,
     lanes = lanes,
-    directions = directions
+    directions = directions,
+    tracks = tracks
   )
 }
 
@@ -1251,28 +1179,10 @@ ggchord_hide_conflicted_labels <- function(gl, max_overlaps = Inf,
                                             units_per_inch = 0.35,
                                             repel_boxes = NULL) {
   if (!is.finite(max_overlaps) || nrow(gl) == 0) return(gl)
-  active <- !is.na(gl$text) & nzchar(gl$text)
-  rows <- which(active)
-  if (length(rows) == 0) return(gl)
-  boxes <- ggchord_text_boxes(gl[rows, , drop = FALSE],
-                              units_per_inch = units_per_inch)
-  counts <- integer(length(rows))
-  if (length(rows) > 1) {
-    for (i in seq_len(nrow(boxes))) {
-      other <- setdiff(seq_len(nrow(boxes)), i)
-      counts[i] <- counts[i] + sum(ggchord_oriented_box_overlaps(
-        boxes[i, , drop = FALSE], boxes[other, , drop = FALSE]
-      ))
-    }
-  }
-  if (!is.null(repel_boxes) && nrow(repel_boxes) > 0) {
-    for (i in seq_len(nrow(boxes))) {
-      counts[i] <- counts[i] + sum(ggchord_oriented_box_overlaps(
-        boxes[i, , drop = FALSE], repel_boxes
-      ))
-    }
-  }
-  gl$text[rows[counts > max_overlaps]] <- NA_character_
+  counts <- ggchord_label_conflict_counts(
+    gl, units_per_inch = units_per_inch, repel_boxes = repel_boxes
+  )
+  gl$text[counts > max_overlaps] <- NA_character_
   gl
 }
 
@@ -1308,9 +1218,9 @@ ggchord_label_box_conflicts <- function(gl, units_per_inch = 0.35,
   FALSE
 }
 
-# Collapse only elbow stubs that cause same-lane crossings. The corresponding
-# leader becomes straight; all conflict-free elbows retain their original
-# bend and stub lengths.
+# Collapse only elbow stubs that take part in a crossing. This includes corner
+# crossings between different cardinal rails; the corresponding leader becomes
+# straight, while all conflict-free elbows retain their bend and stub lengths.
 ggchord_collapse_crossed_elbows <- function(segments, lanes,
                                             max_passes = NULL) {
   if (nrow(segments) < 2 || length(lanes) == 0) return(segments)
@@ -1323,8 +1233,7 @@ ggchord_collapse_crossed_elbows <- function(segments, lanes,
       gi <- segments$group[i]
       for (j in (i + 1L):nrow(segments)) {
         gj <- segments$group[j]
-        if (gi == gj || is.na(lanes[gi]) || is.na(lanes[gj]) ||
-            lanes[gi] != lanes[gj]) next
+        if (gi == gj || is.na(lanes[gi]) || is.na(lanes[gj])) next
         if (ggchord_segments_cross(
           segments$x0[i], segments$y0[i], segments$x1[i], segments$y1[i],
           segments$x0[j], segments$y0[j], segments$x1[j], segments$y1[j]
@@ -1389,16 +1298,33 @@ ggchord_repel_segments <- function(gl, min_segment_length = 0.5) {
   )
 }
 
-# Remove the portions of leader lines hidden by other labels. Staggered rails
-# deliberately reuse horizontal space; clipping at the real text rectangles
-# keeps those compact layouts readable without moving an outer-row label far
-# away merely because its approach passes behind an inner-row label.
+# Split leader lines at the real oriented rectangles of other labels. Covered
+# pieces can be faded, clipped, or shown in full. The target label itself is a
+# hard boundary when include_own is TRUE; it is never represented by a faded
+# line running through its own text.
 ggchord_clip_segments_to_labels <- function(segments, gl,
                                             units_per_inch = 0.35,
                                             padding = 0.01,
-                                            include_own = FALSE) {
-  if (nrow(segments) == 0 || nrow(gl) == 0 ||
-      (!isTRUE(include_own) && nrow(gl) < 2)) return(segments)
+                                            include_own = FALSE,
+                                            overlap = c("fade", "clip", "show"),
+                                            overlap_alpha = 0.18) {
+  overlap <- match.arg(overlap)
+  if (nrow(segments) == 0) return(segments)
+  if (!is.numeric(overlap_alpha) || length(overlap_alpha) != 1L ||
+      !is.finite(overlap_alpha) || overlap_alpha < 0 || overlap_alpha > 1) {
+    ggchord_stop("overlap_alpha must be one finite number in [0, 1]")
+  }
+  annotate <- function(x, occluded = FALSE, alpha = 1) {
+    x$occluded <- rep(occluded, nrow(x))
+    x$alpha <- rep(alpha, nrow(x))
+    x
+  }
+  if (nrow(gl) == 0 || (!isTRUE(include_own) && nrow(gl) < 2)) {
+    return(annotate(segments))
+  }
+  if (identical(overlap, "show") && !isTRUE(include_own)) {
+    return(annotate(segments))
+  }
   boxes <- ggchord_text_boxes(gl, units_per_inch = units_per_inch)
   pad <- padding * units_per_inch
   angles <- gl$text_angle %||% rep(0, nrow(gl))
@@ -1417,8 +1343,12 @@ ggchord_clip_segments_to_labels <- function(segments, gl,
   for (s in seq_len(nrow(segments))) {
     dx <- segments$x1[s] - segments$x0[s]
     dy <- segments$y1[s] - segments$y0[s]
-    pieces <- matrix(c(0, 1), ncol = 2)
-    others <- which(visible)
+    cuts <- data.frame(start = numeric(), end = numeric(), hard = logical())
+    others <- if (identical(overlap, "show")) {
+      intersect(which(visible), segments$group[s])
+    } else {
+      which(visible)
+    }
     if (!isTRUE(include_own)) {
       others <- setdiff(others, segments$group[s])
     }
@@ -1446,42 +1376,44 @@ ggchord_clip_segments_to_labels <- function(segments, gl,
       cut_start <- max(0, tx[1], ty[1])
       cut_end <- min(1, tx[2], ty[2])
       if (cut_start >= cut_end - 1e-10) next
-
-      kept <- list()
-      for (p in seq_len(nrow(pieces))) {
-        start <- pieces[p, 1]
-        end <- pieces[p, 2]
-        if (cut_end <= start || cut_start >= end) {
-          kept[[length(kept) + 1L]] <- c(start, end)
-        } else {
-          if (cut_start > start + 1e-10) {
-            kept[[length(kept) + 1L]] <- c(start, min(cut_start, end))
-          }
-          if (cut_end < end - 1e-10) {
-            kept[[length(kept) + 1L]] <- c(max(cut_end, start), end)
-          }
-        }
-      }
-      if (length(kept) == 0) {
-        pieces <- matrix(numeric(0), ncol = 2)
-        break
-      }
-      pieces <- do.call(rbind, kept)
+      cuts <- rbind(
+        cuts,
+        data.frame(
+          start = cut_start, end = cut_end,
+          hard = isTRUE(include_own) && i == segments$group[s]
+        )
+      )
     }
 
-    if (nrow(pieces) == 0) next
-    for (p in seq_len(nrow(pieces))) {
-      if (pieces[p, 2] - pieces[p, 1] < 1e-8) next
+    breaks <- sort(unique(c(0, 1, cuts$start, cuts$end)))
+    if (length(breaks) < 2L) next
+    for (p in seq_len(length(breaks) - 1L)) {
+      start <- breaks[p]
+      end <- breaks[p + 1L]
+      if (end - start < 1e-8) next
+      midpoint <- (start + end) / 2
+      covering <- cuts$start < midpoint & cuts$end > midpoint
+      hard <- any(cuts$hard[covering])
+      covered <- any(covering & !cuts$hard)
+      if (hard || (covered && identical(overlap, "clip"))) next
+      faded <- covered && identical(overlap, "fade")
+      alpha <- if (faded) overlap_alpha else 1
+      if (alpha <= 0) next
       piece <- segments[s, , drop = FALSE]
-      piece$x0 <- segments$x0[s] + pieces[p, 1] * dx
-      piece$y0 <- segments$y0[s] + pieces[p, 1] * dy
-      piece$x1 <- segments$x0[s] + pieces[p, 2] * dx
-      piece$y1 <- segments$y0[s] + pieces[p, 2] * dy
+      piece$x0 <- segments$x0[s] + start * dx
+      piece$y0 <- segments$y0[s] + start * dy
+      piece$x1 <- segments$x0[s] + end * dx
+      piece$y1 <- segments$y0[s] + end * dy
+      piece$occluded <- faded
+      piece$alpha <- alpha
       out[[length(out) + 1L]] <- piece
     }
   }
-  if (length(out) == 0) return(segments[0, , drop = FALSE])
-  do.call(rbind, out)
+  if (length(out) == 0) return(annotate(segments[0, , drop = FALSE]))
+  result <- do.call(rbind, out)
+  # Draw faint pieces first. Normal pieces then remain crisp at shared
+  # endpoints, and the composite geom draws all text after both kinds.
+  result[order(!result$occluded, seq_len(nrow(result))), , drop = FALSE]
 }
 
 #' Validate the gene leader-line linetype argument

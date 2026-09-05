@@ -12,12 +12,19 @@ A data frame containing the following columns:
   \item end: Gene end position
   \item strand: Strand direction (+/-)
   \item anno: Gene annotation category
+  \item source_strand: Strand direction in the source annotation file
 }
 }
 \usage{
 gene_data_example
 }
 \description{
-Gene annotation data for ggchord demonstration (short genes have been filtered out)
+A compact plotting fixture generated deterministically from
+\code{examples/gene_track.tsv}. Eight features of varied visible lengths are
+distributed across each sequence and favour informative annotations.
+Because the source records are
+strongly strand-biased, the demonstration \code{strand} alternates between
+\code{"+"} and \code{"-"}; the biological source value remains available as
+\code{source_strand}.
 }
 \keyword{datasets}

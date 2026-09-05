@@ -6,8 +6,8 @@
 \usage{
 view_ggchord(
   plot = ggplot2::last_plot(),
-  width = 8,
-  height = 6,
+  width = 11,
+  height = NULL,
   units = c("in", "cm", "mm", "px"),
   device = c("png", "svg"),
   dpi = 150,
@@ -18,7 +18,11 @@ view_ggchord(
 \arguments{
 \item{plot}{A ggchord or ggplot object, default \code{last_plot()}.}
 
-\item{width, height}{Positive output dimensions, default 8 by 6.}
+\item{width}{Positive output width, default 11 inches when \code{units = "in"}.}
+
+\item{height}{Positive output height, or \code{NULL} (default) to fit the
+sequence, labels and legends while preserving equal coordinate units.
+Explicit width/height values are always respected.}
 
 \item{units}{Output units: \code{"in"}, \code{"cm"}, \code{"mm"}, or
 \code{"px"}.}
@@ -47,5 +51,5 @@ plot and its standard \code{ggsave()} workflow remain unchanged.
 \examples{
 data(seq_data_example)
 p <- ggchord(seq_data_example) + geom_seq()
-if (interactive()) view_ggchord(p, width = 8, height = 6)
+if (interactive()) view_ggchord(p)
 }

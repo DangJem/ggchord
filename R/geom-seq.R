@@ -15,7 +15,7 @@ seq_geom <- rename_geom_aes(ggplot2::GeomPath, renames = c(colour = "seq_colour"
 #' @param seq_orientation Optional numeric (1 or -1). Sequence orientation, default 1
 #' @param seq_gap Optional numeric. Gap proportion between sequences, default 0.03
 #' @param seq_radius Optional numeric (> 0). Sequence arc radius, default 1.0
-#' @param seq_curvature Optional numeric. Arc curvature (0=straight, 1=standard arc, >1=more curved), default 1.0
+#' @param seq_curvature Optional numeric. Signed arc bow (0=straight, 1=standard arc, negative=opposite bow), default 1.0. Finite positive and negative values are accepted without clipping; magnitudes above 1 amplify the bow.
 #' @param linewidth Arc line width, default 0.9
 #' @param position,show.legend,inherit.aes Standard ggplot2 layer arguments.
 #' @param ... Additional arguments passed to \code{geom_path()}

@@ -137,6 +137,13 @@ ggchord_role_guide_spec <- function(plot, role, colourbar = FALSE) {
   settings <- ggchord_plot_settings(plot)
   common <- settings$legend
   item <- settings$legends[[role]]
+  # Keep legends at the outer sides of the plotting area by default. The
+  # continuous ribbon/Identity guide uses the left edge; compact categorical
+  # guides use the right. An explicitly supplied common or role position still
+  # takes precedence, including an ordinary theme(legend.position = ...).
+  default_position <- if (identical(role, "ribbon")) "left" else "right"
+  resolved_position <- item$position %||% common$position %||%
+    default_position
   global_position <- common$position %||% plot$theme$legend.position
   hidden <- identical(global_position, "none") || isTRUE(item$hidden) ||
     identical(item$position, "none")
@@ -172,7 +179,7 @@ ggchord_role_guide_spec <- function(plot, role, colourbar = FALSE) {
   resolved_direction <- item$direction %||% common$direction
   horizontal <- colourbar && (
     identical(resolved_direction, "horizontal") ||
-    (item$position %||% global_position %||% "right") %in% c("top", "bottom") ||
+    resolved_position %in% c("top", "bottom") ||
       identical(common$box, "horizontal")
   )
   if (is.null(vals$legend.key.width))
@@ -216,7 +223,7 @@ ggchord_role_guide_spec <- function(plot, role, colourbar = FALSE) {
   }
   list(
     hidden = FALSE,
-    position = item$position %||% NULL,
+    position = resolved_position,
     direction = resolved_direction %||% NULL,
     theme = if (length(vals)) do.call(ggplot2::theme, vals) else NULL,
     size_scale = size_scale

@@ -154,7 +154,7 @@ ggchord_theme_from_environment <- function(preset, env, dots) {
       plot.caption = ggplot2::element_text(size = ggplot2::rel(.72)),
       plot.background = ggplot2::element_rect(fill = bg, colour = NA),
       panel.background = ggplot2::element_rect(fill = bg, colour = NA),
-      plot.margin = ggplot2::margin(5.5, 5.5, 5.5, 5.5),
+      plot.margin = ggplot2::margin(3, 2, 3, 2),
       legend.background = ggplot2::element_rect(fill = NA, colour = NA),
       legend.key = ggplot2::element_rect(fill = NA, colour = NA),
       legend.box.spacing = grid::unit(if (preset == "minimal") 3 else 4, "mm"),

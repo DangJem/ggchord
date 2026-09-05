@@ -1,6 +1,12 @@
 #' Example gene annotation data
 #'
-#' Gene annotation data for ggchord demonstration (short genes have been filtered out)
+#' A compact plotting fixture generated deterministically from
+#' \code{examples/gene_track.tsv}. Eight features of varied visible lengths are
+#' distributed across each sequence and favour informative annotations.
+#' Because the source records are
+#' strongly strand-biased, the demonstration \code{strand} alternates between
+#' \code{"+"} and \code{"-"}; the biological source value remains available as
+#' \code{source_strand}.
 #'
 #' @format A data frame containing the following columns:
 #' \itemize{
@@ -9,6 +15,7 @@
 #'   \item end: Gene end position
 #'   \item strand: Strand direction (+/-)
 #'   \item anno: Gene annotation category
+#'   \item source_strand: Strand direction in the source annotation file
 #' }
 "gene_data_example"
 
@@ -21,7 +28,11 @@
 
 #' Example alignment data
 #'
-#' Alignment data for ggchord demonstration (length >= 100)
+#' A compact alignment fixture generated deterministically from the BLAST
+#' files under \code{examples/blastn}. Alignments shorter than 300 bases are
+#' omitted, and dense sequence pairs retain at most three spatially distributed
+#' representatives so the default chord remains readable. Sparse pairs are
+#' preserved unchanged.
 #'
 #' @format A data frame containing standard alignment columns (qaccver, saccver, pident, etc.)
 "ribbon_data_example"

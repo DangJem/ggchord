@@ -7,6 +7,20 @@
 已于 2026-08-31 随 v0.9.0 发布；表达能力、密集 ribbon、静态预览和默认视觉
 收尾已于 2026-09-01 随 v0.10.0 发布。
 
+### 2026-09-05 标签、画幅与正式版待办
+
+- 当前默认 `gene_label_layout = "radial"`：每条序列独立偏移轮廓，水平文字，
+  法线直线或“短法线段＋长连接段”；拥挤时沿轮廓展开。
+- `auto` 替代 `aligned`：左右垂直列，其余位置使用 radial；不再维护 aligned 接口。
+- 画幅以标签、图例和几何实际边界为依据，预览自动收紧高度；显式导出尺寸优先。
+- 修复曲率的负值截断及 0/1 分支不连续；后续扩展大幅正负弯曲下 ribbon、feature、
+  刻度、文字和区域高亮的几何压力矩阵，区分正常的形状相交与数值错误。
+- 正式版网站导航参考 [gggenomes](https://thackl.github.io/gggenomes/index.html)：
+  Get started、Reference、Articles（悬停展开多页）、Changelog；发布前另行讨论信息架构。
+- 正式版统一说明图片来源和生成脚本，建立可复用资产清单；网站、README、手册尽量
+  共用相同图片，只为不同介质所需的尺寸或格式生成变体，避免重复生成和提交。
+- 正式版设计 R 包六边形 logo；届时讨论图形、配色、字标及 SVG/PNG 导出，本轮不制作。
+
 总体优先级：
 
 1. 正确性与可重复性；
@@ -24,8 +38,30 @@
 | v0.8.0 | 数据导入、ribbon 预处理、序列分组 | 已发布；遗留正确性问题已在 v0.9.0 修复 |
 | v0.9.0 | grammar 基础、scale/theme/guide/coord、图层独立性 | 已正式发布（2026-08-31） |
 | v0.10.0 | 发表级视觉、feature 几何、显式 ribbon 聚合、布局导出与静态预览 | 已正式发布（2026-09-01） |
-| v0.11.0 | 高级轨道、显式多环、ggplot2 grammar 内核与 API 收敛 | 开发中 |
+| v0.11.0 | 高级轨道、显式多环、ggplot2 grammar 内核与 API 收敛 | 收尾中 |
+| v0.12.0 | link 几何命名、单点连接与局部平滑避障 | 规划中 |
+| v0.13.0 | 单序列圆图、限制性酶切位点与注释表达 | 规划中 |
+| v0.14.0 | 直线型多序列共线性坐标与同步布局 | 规划中 |
+| v0.15.0 | 数据准备适配器、规模化诊断与生态互操作 | 规划中 |
+| v0.16.0 | 定量多轨道、无障碍性与输出质量审计 | 规划中 |
+| v0.99.0 | API 冻结候选与发布前审计 | 规划中 |
 | v1.0.0 | API 冻结、完整文档和长期兼容承诺 | 规划中 |
+
+### 九项已确认方案的路线图审计
+
+| 项目 | 落实位置 | 状态 |
+| --- | --- | --- |
+| 一、建议的版本路线 | 本节 v0.11.0–v1.0.0 分期 | 已落实，并扩展至 v0.16.0 和 v0.99.0 |
+| 二、v0.11.0 收尾 | 第六节 | 开发收尾中 |
+| 三、单基因组圆图 | v0.13.0 A | 已规划 |
+| 四、限制性酶切位点 | v0.13.0 B | 已规划，包含邻近位点共享主干 |
+| 五、直线型多序列共线性 | v0.14.0 | 已规划为专用 coord，不静默忽略冲突参数 |
+| 六、基因标签布局与自适应文字 | v0.11.0 F | 已实现紧凑序列轨道、换行/省略和内侧对齐修复 |
+| 七、示例数据调整 | v0.11.0 F、v0.13.0 C | 已建立确定性生成规则，后续补单基因组 fixture |
+| 八、前期数据准备 | v0.15.0 | 已规划 R 适配器与报告式流程，外部比对不在绘图 build 中运行 |
+| 九、与类似工具相比的后续功能空间 | v0.12.0–v0.16.0 | 已规划 link、多轨道、focus/sync、可访问性和输出质量 |
+
+该审计表是后续更新的最小覆盖线；版本可以延后，但不得在没有说明的情况下删除其中任一项。
 
 ### v0.9.0 正式版状态
 
@@ -49,7 +85,7 @@ v0.9.0 已完成：
 ### v0.9.0 正式版验收记录（2026-08-31）
 
 - testthat 保持为 15 个公开行为场景、90 项断言：0 fail、0 warning、0 skip；
-- `R CMD check` 包含中英文 vignette 重建：0 error、0 warning；唯一 NOTE 为隔离
+- `R CMD check` 包含英语和汉语 vignette 重建：0 error、0 warning；唯一 NOTE 为隔离
   环境无法联网校验系统时间，与包代码无关；
 - 用户四序列示例在 `aligned`、`radial`、`arc` 下分别以 6×4 和 12×8 英寸构建，
   均为 0 标签重叠、0 指示线交叉、0 二次裁切损失；
@@ -57,7 +93,7 @@ v0.9.0 已完成：
 - 80 标签 `aligned` 基准的三次构建中位数约 0.36 秒，低于 2.5 秒验收线；
 - PNG、PDF、SVG 均成功导出；默认、minimal、dark、publication 和灰度效果已
   人工检查；临时 SVG 验收工具不加入包依赖；
-- 中英文 README 没有因本轮一般功能收尾发生变化。
+- 英语和汉语 README 没有因本轮一般功能收尾发生变化。
 
 ---
 
@@ -92,13 +128,27 @@ v0.9.0 已完成：
 ### 2.4 兼容策略
 
 - v0.9.0–v0.10.0 已完成旧接口的过渡和迁移说明；
-- v0.11.0 作为 v1.0.0 前最后一次集中收敛，直接删除旧的 scale 类 geom 参数，
+- v0.11.0 完成第一次集中收敛，直接删除旧的 scale 类 geom 参数，
   不再保留软弃用或静默兼容；
 - 删除的参数必须立即给出可执行的迁移方向；
 - `data`、`mapping`、`position`、`show.legend` 和 `inherit.aes` 采用标准
   ggplot2 语义；
 - 已完成精简的 `geom_gene_label_repel()` 不恢复随机 force/seed 参数；
 - v1.0.0 发布后再开始长期兼容承诺。
+
+### 2.5 设计借鉴、来源说明与许可
+
+- 说明文档和网页教程应明确写出某项功能借鉴了哪个软件、包或论文的什么
+  思路，包括函数语义、参数组织、布局策略和视觉风格；
+- 公开函数和参数仍使用通用且自洽的命名，不把第三方品牌名写进 API；
+- 可以直接吸收成熟软件的信息层级、交互逻辑和视觉规则，不必回避说明借鉴关系；
+- 代码、图标、图片、配色文件或其他资产只在其许可允许时直接复用，并在
+  `LICENSE` / `NOTICE` 或对应页面记录来源、版本和许可；无明确授权的专有资产
+  只借鉴其可抽象的设计原则；
+- 当前已完成功能的归因矩阵：整体 grammar 参考 ggplot2；环形层级参考 Circos；
+  基因箭头与注释可读性参考 clinker 和 DNA Features Viewer；径向/贴弧标签参考
+  SnapGene 和 Geneious；focus、方向同步、feature stacking 参考 gggenomes；
+  静态尺寸预览的工作流参考 ggview。
 
 ---
 
@@ -369,7 +419,7 @@ v0.10.0 不新增独立的手动标签 geom，而是增强现有 `geom_gene_labe
 #### gene label
 
 - `geom_gene_label()` 是唯一的固定位置和手工微调图层；
-- `geom_gene_label_repel()` 已提供 `aligned`、`radial`、`arc` 三种确定性模式；
+- `geom_gene_label_repel()` 现提供 `radial`、`auto`、`arc` 三种确定性模式；
 - 所有 label geom 的 `data`、`mapping` 已生效；
 - leader 的 colour、linewidth、alpha 默认由 theme 元素控制；
 - 固定文本 size 不再创建全局 `scale_size_identity()`；
@@ -430,7 +480,7 @@ v0.10.0 不新增独立的手动标签 geom，而是增强现有 `geom_gene_labe
 - 新增内部函数优先使用 `@noRd`；既有 internal Rd 不在 v0.9.0 做无意义的批量
   重写，统一留给 v1.0.0 文档重构；
 - v0.9.x 只更新与正确性、破坏性变更和公开 API 直接相关的 NEWS、roxygen 和 Rd；
-- 按用户确认保持中英文 README 原有主体内容，不加入一般功能更新；
+- 按用户确认保持英语和汉语 README 原有主体内容，不加入一般功能更新；
 - 全量 source 文档、vignette、网页手册和图片统一留到 v1.0.0 发布前重构，避免
   同一内容在开发阶段被反复编辑。
 
@@ -468,7 +518,7 @@ v0.10.0 不新增独立的手动标签 geom，而是增强现有 `geom_gene_labe
 
 ### D. 标签布局
 
-- 保留已完成的 `aligned`、`radial`、`arc`；
+- 保留 `radial`、`auto`、`arc`，`aligned` 已由 `auto` 替代；
 - 继续保证不同 radius、curvature、gap、orientation、rotation 和设备尺寸；
 - 标签实现迁入逐层架构，不恢复随机 force 参数。
 
@@ -492,15 +542,17 @@ v0.10.0 不新增独立的手动标签 geom，而是增强现有 `geom_gene_labe
   guide 尺寸不被覆盖；
 - 文字碰撞框和自动坐标范围按真实设备短边估算，不再将小画布误当成 6 英寸画布；
   默认图例背景透明，不遮挡小画布上合法伸入边距的标签；
-- 文档和默认验收图使用 4:3 画布；实际设备尺寸仍由 RStudio 或 `ggsave()` 控制；
-- 用 4×3、6×4、8×6、12×8 英寸以及 PNG/PDF/SVG 验收。
+- 默认 Viewer 和主要验收图使用 1:1 方形画布；实际设备尺寸仍由 RStudio 或
+  `ggsave()` 控制，非方形期刊版式继续作为兼容性场景；
+- 用 4×4、6×6、8×8 英寸为主，并以 6×4、8×6、12×8 英寸和 PNG/PDF/SVG
+  补充验收。
 
-视觉设计只借鉴通用原则：[Circos](https://genome.cshlp.org/content/19/9/1639)
+视觉设计明确借鉴：[Circos](https://genome.cshlp.org/content/19/9/1639)
 的环形信息层级与克制 ribbon、[clinker](https://academic.oup.com/bioinformatics/article/37/16/2473/6129045)
 的发表级基因箭头、[DNA Features Viewer](https://edinburgh-genome-foundry.github.io/DnaFeaturesViewer/)
 的注释冲突处理，以及 [SnapGene](https://support.snapgene.com/hc/en-us/articles/10383722725524-Display-Feature-Labels-Below-or-Inside-a-Map)
 和 [Geneious](https://manual.geneious.com/en/latest/Sequences.html) 的局部特征标签与拥挤隐藏思路。
-不复制第三方资产、专有配色或具体视觉实现。
+实现时可直接吸收成熟的视觉规则；若复用具体代码或资产，按 2.5 节记录许可和来源。
 
 ### B. 通用 feature geometry
 
@@ -673,31 +725,281 @@ v0.11.0 合并原 v0.12.0 计划，作为 v1.0.0 前的集中 API 收敛版本�
 - 删除全局布局环境、旧 scale 兼容 helper、图层列表展开和重复 build 路径；
 - 内部纯几何、文字测量、碰撞检测和验证 helper 保留。
 
-### F. 当前验收状态（2026-09-04）
+### F. 当前验收状态（2026-09-05）
 
-- testthat 保持轻量公开行为测试，当前 128 项断言为 0 fail、0 warning、0 skip；
+- 默认布局已改为 `radial`，沿各自序列偏移轮廓排布水平文字；`auto` 将左右
+  垂直列与其他方向的 radial 组合；`aligned` 已移除；
+- `geom_gene_label_repel()` 增加
+  `gene_label_segment_overlap = "fade" | "clip" | "show"` 和
+  `gene_label_segment_overlap_alpha`；默认将穿过其他标签的指示线区段
+  以低不透明度连续绘制，同时保留硬裁切和完整显示选项；
+- `geom_gene_label_repel()` 增加 `gene_label_fit` 和
+  `gene_label_max_lines`，对初始碰撞或物理宽度过大的文字执行换行、省略或
+  组合策略；显式
+  `gene_label_wrap` 仍具有最高优先级；
+- `geom_gene_label(gene_label_side = "auto")` 的水平文字按相对自身序列曲线的
+  实际位移决定对齐，不再错误地使用相对全图原点的象限；
+- 单链 gene 数据的 Strand guide 只生成实际存在的箭头 key，避免 guide 行数不匹配；
+- `data/gene_data_example.rda` 改为由未修改的 `examples/gene_track.tsv` 确定性
+  生成的紧凑绘图 fixture：每条序列八个分散且长短有层次的可见特征、正负展示链各四个，并保留
+  `source_strand` 说明原始注释方向；生成规则位于
+  `data-raw/generate_example_data.R`；
+- `data/ribbon_data_example.rda` 同样由未修改的 BLAST 原始文件确定性
+  生成：去除小于 300 bp 的短区段，密集序列对最多保留 3 条空间分散的
+  代表连接，稀疏序列对原样保留；数量从 31 条降为 13 条；
+- testthat 保持轻量公开行为测试；
 - 主图、三种自动标签、组合 Geom、stat、feature shape、region、highlight、ring、
   data function、标度推断、自动轴、角色图例、双拼写别名、布局导出、标准
   `ggsave()` 和 Viewer 均已通过烟雾测试；
-- `R CMD check --ignore-vignettes` 已达到 `Status: OK`；
-- `aligned`、`radial`、`arc` 和小画布的临时 PNG 及 PDF 已完成视觉
+- 本轮 `devtools::check(document = FALSE, manual = FALSE, vignettes = FALSE)`
+  达到 `Status: OK`（0 error / warning / note）；222 项测试通过；
+- `radial` / `auto` 各四组半径、曲率、方向与旋转矩阵共八组临时渲染，均保留
+  32 个标签，文字冲突与实际连线交叉均为 0；极短密集弧仍可能需要整组外移；
+- 径向求解增加整组扇形展开和上下额外间距平衡；相同 11×7 英寸示例中，
+  顶部平均引线缩短约 18%，上下平均长度差缩小约 62%；
+- 自动预览直接导出已测量的 gtable，避免重新布局触发长宽比振荡；1650 像素宽
+  默认预览左右外部安全边距约 4 / 12 像素，图例不裁切；
+- 默认 Viewer 为 11 英寸宽、按内容自适应高度；默认示例约为 11×7.48 英寸；
+  单圆密集标注及宽幅 PNG/PDF 已生成到系统临时目录，不写入说明图片目录；
+- 前一轮 `aligned`、`radial`、`arc` 和小画布的临时 PNG 及 PDF 已完成视觉
   验收，不写入仓库；SVG 代码路径保留可选 `svglite` / Cairo 检查，
   当前机器因未安装 `svglite` 且 X11 动态库缺失，未做本地 SVG 视觉渲染；
 - README、vignette、网站及说明图片在开发阶段保持不变。
 
+### G. 灵活参数格式的保留边界
+
+早期“灵活参数格式”仍然受支持，但只应用于确实具有逐序列或逐链语义的几何
+参数：
+
+- 序列几何继续接受单值、与序列数相同的无名向量、按 `seq_id` 命名的向量，
+  以及现有等价列表形式；典型参数包括 `seq_radius`、`seq_gap`、
+  `seq_curvature` 和 `seq_orientation`；
+- 固定 gene/feature 几何的 offset、width 和固定标签位置参数继续允许按序列和
+  `+`/`-` 链分别指定；
+- 不把这种列表语法扩展到 aesthetic、scale、guide 或 theme。数据驱动差异使用
+  `aes()` 与 `scale_*()`，非数据外观使用 `theme_ggchord()`，避免同一个参数同时
+  承担数据映射和外观覆盖；
+- v0.11.0 只补齐一致的校验、缺省值和错误提示，不再增加新的输入容器类型；
+  v0.99.0 再决定是否保留“按序号命名的列表”等低频形式。按 `seq_id` 命名的
+  向量作为长期推荐写法。
+
+旧教程中已经移除的 `axis_label_size` 等名称不代表当前公开接口；自动轴字号和
+物理间距分别由 `theme_ggchord(axis.text = ...)` 与 `axis.*` 单位参数管理。
+
 ---
 
-## 七、v1.0.0 — 稳定 API
+## 七、v0.12.0 — link 几何与局部平滑避障
+
+### A. 连接图层命名
+
+ggplot2 已导出 `geom_ribbon()`，ggchord 继续使用同名函数会造成搜索路径遮蔽、
+文档跳转歧义和 IDE 自动补全干扰。推荐建立以 `link` 为总概念的两个明确图层：
+
+```r
+geom_link_ribbon()  # 区间到区间的带状连接
+geom_link_line()    # 单点到单点的线状连接
+```
+
+- `geom_link_ribbon()` 作为现有 ggchord `geom_ribbon()` 的规范名称；
+- `geom_link_line()` 接受 `qaccver/saccver/qpos/spos`，不把零宽区间伪装成 ribbon；
+- 线状连接支持直线/曲线、方向箭头、`link_colour`、`link_alpha`、
+  `link_linewidth` 和 `link_linetype`；
+- ribbon 继续使用 `ribbon_fill` 等带状专属 aesthetic，避免为了改函数名
+  而无必要地重命名全部标度和用户映射；
+- 新增 `legend.link.*` 只管理线状连接，`legend.ribbon.*` 仍管理带状连接；
+- v0.12.0 先新增规范名称并迁移内部实现，旧 `geom_ribbon()` 只保留一个开发周期的
+  明确弃用提示；v0.13.0 移除其导出，在 v1.0.0 前彻底消除同名冲突。
+
+不推荐用单一 `geom_link(type = ...)` 同时承担线和带：两者的必需数据列、
+图例 key、fill 语义和避障边界都不同，分开函数更利于自动补全和错误提示。
+
+### B. 当前 ribbon 避障范围
+
+当前 `ribbon_gap = NULL` 的自动避障具体规则为：
+
+- 只收集 `geom_gene()` 和 `geom_feature()` 实体多边形所在的基因组区间；
+- 只把位于 ribbon 一侧、且与 query/subject 端点区间重叠的实体作为障碍；
+- 文字、指示线、轴、序列标签、region 和 highlight 不算障碍；
+- query 和 subject 两端独立计算；任一端区间命中障碍时，该端整条前沿
+  使用最大所需间距，未命中时使用贴近序列的小间距。
+
+这个实现安全但较生硬，而且新增几何必须修改中央构建函数才能参与避障。
+
+### C. 可扩展障碍协议
+
+将障碍物改为图层自主注册的几何契约，内部至少统一输出：
+
+```text
+seq_id, start, end, side, normal_min, normal_max, priority, source_layer
+```
+
+- gene、feature、未来的多轨道实体和用户扩展 geom 可以实现同一 obstacle provider；
+- 文字和连线默认不注册，透明 region 默认也不注册；
+- 协议保存局部法向范围和真实 side，不再只用 `gene_offset + gene_width / 2`
+  近似所有 shape；
+- v0.12.0 先作为内部契约，等第三方 geom 需求稳定后再决定是否公开。
+
+### D. 局部平滑避障
+
+默认不再将整条 ribbon 前沿统一后移。新算法沿 query/subject 区间采样距离剖面：
+
+1. 无障碍位置使用贴近序列的 `close_gap`；
+2. 命中障碍的局部使用该 shape 真实法向范围加安全间距；
+3. 障碍边界两侧用余弦或保形三次曲线过渡，并对必需间距做上包络，
+   防止平滑后反而穿过障碍；
+4. 根据区间长度、障碍边界和曲率自适应采样，检查前沿自交和方向翻转；
+5. query 和 subject 分别生成剖面，再与中部 Bezier 连接。
+
+预计提供 `link_avoid = "smooth" | "uniform" | "none"`：`"smooth"` 作为新默认，
+`"uniform"` 保留当前保守形式，`"none"` 不考虑实体障碍。显式数值 gap 始终优先，
+不被自动剖面覆盖。参数最终名称在原型验收后冻结。
+
+---
+
+## 八、v0.13.0 — 单序列圆图与生物学注释
+
+### A. 单序列圆图
+
+单条完整基因组不应只是“四序列 chord 少三条序列”的退化情况。v0.13.0 计划
+提供明确的单序列布局入口，共享现有 gene/feature/region、scale、theme、guide
+和标签组件，但不生成无意义的跨序列 ribbon。
+
+- 支持闭合圆形和带缺口的线性化圆图；
+- 基因、调控元件、重复区和用户 region 可放在显式内外轨道；
+- 标签可选择贴弧、局部径向或外部 callout，并复用碰撞、换行和省略策略；
+- 原点、方向、旋转和坐标标签由 coord/position scale 管理；
+- 明确参考 SnapGene、Geneious 和 DNA Features Viewer 的信息层级与可读性，
+  API 保持通用命名，资产复用按 2.5 节的许可规则执行。
+
+正式命名需要在实现前做最小原型比较；不把单序列行为偷偷塞入
+`coord_chord()` 的条件分支。
+
+### B. 限制性酶切位点
+
+计划拆成数据计算和几何表达两层：
+
+```r
+sites <- find_restriction_sites(sequence, enzymes = c("EcoRI", "BamHI"))
+
+ggchord(seq_data, gene_data = gene_data) +
+  geom_seq() +
+  geom_restriction_site(data = sites)
+```
+
+- `find_restriction_sites()` 返回酶名、识别序列、切割位置、黏性/平末端及来源；
+- 酶数据库版本必须可追踪，用户也可传入自定义 motif；
+- `geom_restriction_site()` 只负责刻线、标签和指示线；
+- 邻近标签采用确定性的共享主干（trunk）后分叉，不把不同切点合并成一个数据点；
+- 可按酶、切割次数和窗口过滤，重复名称仍保留全部位点；
+- 序列搜索优先使用轻量实现；大型序列可选用 Biostrings，但不设为强制依赖。
+
+### C. 示例体系
+
+- `examples/` 保留原始 FASTA、GFF3、BLAST 和 TSV，不为视觉效果修改源记录；
+- `data/` 只保存小型、清晰、可重复生成的教学 fixture；
+- `data-raw/` 保存生成规则，明确任何抽样、过滤或展示链重编码；
+- 补充单基因组、无 ribbon、单链 gene、密集标签和酶切位点的最小 fixture；
+- 开发阶段不生成文档图片，统一在 v1.0.0 文档重构时出图。
+
+---
+
+## 九、v0.14.0 — 直线型多序列共线性
+
+新增专用 coord 是合理方向，但不能“静默忽略”弦图参数。计划先验证
+`coord_collinear()` 原型：
+
+```r
+ggchord(seq_data, ribbon_data, gene_data) +
+  geom_seq() +
+  geom_link_ribbon() +
+  geom_gene() +
+  coord_collinear()
+```
+
+- 同一套 sequence/gene/feature/ribbon 数据和 role aesthetics 可在弦图与直线图间切换；
+- sequence 变为水平轨道，ribbon 变为相邻或跨轨道连接，gene/feature 使用法线偏移；
+- `seq_order`、`seq_orientation`、position scale 和 `focus_ggchord_data()` 保留
+  对应语义；
+- `seq_radius`、`seq_curvature`、`seq_ring` 等弦图专属参数若被显式设置，立即
+  给出可执行的冲突信息，不能静默忽略；
+- 可无损转换的参数才转换，例如 `seq_gap` 对应轨道间距；
+- 先支持全局坐标和相邻比较，再评估类似 gggenomes `sync()` 的局部锚定、
+  feature stack 和局部翻转；
+- 直线模式共享 scale/theme/guide，不另建一套重复 geom API。
+
+该版本重点是坐标契约和语义一致性，不承诺在第一版实现自由 track 容器或任意
+facet 组合。
+
+---
+
+## 十、v0.15.0 — 数据准备与生态互操作
+
+ggchord 应降低“已有结果转成图”的门槛，但不把 BLAST/DIAMOND 等外部程序本身
+打包进绘图包：
+
+- 保留并增强 `read_fasta_lengths()`、`read_gff3()`、`read_blast()`；
+- 增加 GenBank/GBFF、BED、PAF 和常见 synteny 表的可选适配器；
+- 提供统一列名映射与 `as_ggchord_*()` 转换器，接受 Biostrings、GenomicRanges
+  或常见 R 包产物时不强制依赖这些包；
+- 增加 `prepare_ggchord_data()` 报告式工作流，串联导入、验证、过滤、去重、
+  merge、bundle 和布局建议，但每一步仍可独立调用；
+- 对 BLASTN/BLASTP、DIAMOND、MMseqs2 等只提供输入格式说明、可执行文件检查和
+  结果导入，不在核心包中隐式安装、下载或运行外部二进制；
+- 对小型纯 R 比对可评估可选适配器，但必须明确其适用规模，不能让绘图函数在
+  build 阶段启动序列比对；
+- 增加复杂 ribbon 的诊断摘要，例如连接密度、非平面交叉下界、推荐 bundling
+  bins 和适合的 order/orientation，而不自动改变图义。
+
+生态比较重点参考 gggenomes 的 tidy 多表输入、focus/sync 和 feature stacking，
+参考 clinker、genoPlotR、gggenes 的共线性表达，参考 circlize 的多轨道扩展性，
+并继续保持 ggchord 的优势：同一 grammar 下的弦图、显式预处理、可导出布局和
+角色专用 scale/theme/guide。
+
+---
+
+## 十一、v0.16.0 — 定量多轨道与输出质量
+
+在 link、单序列和直线坐标稳定后，再补齐类似工具中对科研图常用但 ggchord
+尚缺少的定量轨道：
+
+- 设计统一的显式 track/ring 契约，不根据列名自动猜测轨道；
+- 评估 coverage、GC content/GC skew、分类 tile、折线和柱形轨道；
+- 数值映射继续使用 role-specific scale，轨道几何可向障碍协议注册实体范围；
+- 提供色觉友好、灰度和最小字号/线宽诊断，但不强制修改用户风格；
+- 对 PNG、PDF、SVG 的实际输出尺寸、字体、透明度、裁切和 guide 比例生成诊断报告；
+- 交互式绘图仍留到 v1.0.0 后，v0.16.0 不恢复 Plotly 或引入 Shiny。
+
+---
+
+## 十二、v0.99.0 与 v1.0.0 — 稳定 API
+
+v0.99.0 只做发布候选审计，不再扩张功能：
+
+- 清点全部导出函数、参数、aesthetic、S3 类和返回对象；
+- 删除无调用或职责重复的接口，冻结保留接口；
+- 对不同 R、ggplot2 版本和主流平台执行兼容检查；
+- 建立少量稳定视觉基准和性能基准；
+- 修复 release blocker，不再加入新布局模式。
+
+v1.0.0 完成发布与文档：
 
 - 删除已完成迁移的旧参数；
 - 冻结核心 aes、scale、theme、guide、coord 和 layout export 契约；
-- 基于最终 v1.0.0 API 重写全部中英文说明文档、README、vignette、roxygen、Rd、
-  网页手册、FAQ 和迁移指南；
+- 基于最终 v1.0.0 API 重写全部英语和现代汉语说明文档、README、vignette、
+  roxygen、Rd、网页手册、FAQ 和迁移指南；面向用户的语种名称统一写作“英语”
+  和“汉语”，不使用“中文”作为语种标签；
+- 网站每一个页面都建立英语/汉语一对一对应路由和显眼的语种切换，页面层级、
+  代码示例、参数和锚点尽量对齐，CI 检查缺失翻译或孤立页；
+- 英语和汉语页共用同一份图片资产和代码生成源，不为翻译版重复保存图片；
+- 网站视觉重构同时优化字体层级、行宽、对比度、代码折叠、页内目录、
+  搜索、移动端和键盘可访问性，以阅读效率而不是装饰复杂度为验收标准；
 - 删除旧的示例、旧图片及过时表述，从最终 API 重新编写最小且连贯的示例；
 - 重新生成所有带图片输出的示例，清理不再被引用的 `man/figures` 和网页图片；
 - 文档结构遵循“安装 → 数据格式 → 最小出图 → 常用调整 → 进阶功能 → FAQ”，
   让新用户能够快速上手；
 - README 继续保持稳定简洁，把详细功能说明留给 vignette 和 reference；
+- 每项主要布局、函数簇和默认风格在英语/汉语文档中都列出设计参考对象、
+  借鉴内容和可用的来源链接，资产许可遵循 2.5 节；
 - CRAN check、最小视觉快照和跨平台检查；
 - 明确支持的 R 和 ggplot2 版本；
 - 无严重已知正确性问题后才发布 1.0.0。
@@ -708,7 +1010,7 @@ guide、coord 和 layout export 契约单独评估，不在本路线图中预先
 
 ---
 
-## 八、testthat 精简策略
+## 十三、testthat 精简策略
 
 测试只保留公开 API 的最小行为，不再通过大量精确坐标断言锁定内部实现。
 
@@ -738,7 +1040,7 @@ guide、coord 和 layout export 契约单独评估，不在本路线图中预先
 
 ---
 
-## 十、验收规则
+## 十四、验收规则
 
 - 精简后的 `testthat::test_local()` 必须通过；
 - `R CMD check` 必须通过；

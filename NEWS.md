@@ -1,5 +1,22 @@
 # ggchord 0.11.0 (development version)
 
+* `geom_gene_label_repel()` now defaults to `gene_label_layout = "radial"`:
+  horizontal names follow each sequence's offset contour, with normal leaders
+  and short normal departures for displaced labels. `"auto"` combines side
+  columns with radial placement elsewhere, replacing the removed `"aligned"`.
+* Sequence curvature is continuous through zero and one and accepts signed
+  values without silent clipping; opposite signs mirror the bow across the
+  endpoint chord. Very large bows can make tracks intersect geometrically.
+* Static previews use a wider default and fit their height to content when
+  `height = NULL`; explicit output sizes remain respected.
+
+
+* Radial packing explores a wider, ordered fan before adding an outer contour,
+  and balances the extra clearance of opposite top/bottom sectors.
+* Content-fitted previews now export the measured gtable directly, avoiding
+  height-dependent relayout oscillation and excessive outer legend whitespace.
+  Default plot margins retain a small physical safety inset.
+
 ## Advanced tracks and layout
 
 * New `stat_ribbon_bundle()` and `stat_ribbon_density()` expose
@@ -10,6 +27,33 @@
   cropping across one or more loci. `position_feature_stack()` assigns the
   minimum deterministic radial lanes, while `seq_ring` and
   `scale_seq_ring_manual()` provide explicit multi-ring radii.
+
+
+* `geom_gene_label_repel()` adds `gene_label_segment_overlap = "fade" |
+  "clip" | "show"` and `gene_label_segment_overlap_alpha`. Covered leader
+  portions now default to a faint continuous line instead of a hard gap;
+  clipping and full display remain explicit per-layer choices.
+
+* `geom_gene_label_repel()` gains `gene_label_fit` and
+  `gene_label_max_lines`. Initially crowded annotations can be wrapped,
+  shortened with an ellipsis, handled automatically, or left unchanged;
+  explicit `gene_label_wrap` remains the fixed-width override.
+
+* `geom_gene_label(gene_label_side = "auto")` now aligns horizontal text from
+  its displacement relative to the local sequence curve rather than the plot
+  origin, fixing inward labels in several quadrants. Single-strand gene plots
+  also generate a Strand guide with the correct number and direction of keys.
+
+* The packaged gene example is rebuilt deterministically from the unchanged
+  source table with eight well-spaced, visibly varied features per sequence
+  and balanced display strands. `source_strand` retains the source annotation
+  direction, and the complete rule is recorded in
+  `data-raw/generate_example_data.R`.
+
+* The packaged ribbon example is rebuilt from the unchanged BLAST files with
+  a 300-base minimum and at most three spatially distributed alignments per
+  dense sequence pair. Sparse pairs remain intact, reducing the fixture from
+  31 to 13 ribbons without fabricating alignments.
 
 ## Standard ggplot2 layer grammar
 
@@ -56,6 +100,11 @@
   margin and spacing through `legend.<role>.*`. Ribbon colourbar ticks and its
   axis line are independently themeable. Explicit scale/`guides()` settings
   still take precedence, and feature guides no longer inherit gene placement.
+
+* The default Identity colourbar is placed at the left edge of the panel;
+  compact sequence, strand, feature and region guides use the right edge.
+  `view_ggchord()` now defaults to an 8 by 8 square export preview. Explicit
+  common or role guide positions and explicit preview dimensions still win.
 
 * British colour spelling is canonical. `seq_color`, `ribbon_color`, `colors`,
   `scale_*_color_*()` and the new `guide_ggchord_colorbar()` are complete US
@@ -330,15 +379,15 @@ unchanged until the final v1.0.0 documentation rebuild.
 
 * All modes now use each sequence's real curve and local normal, including
   custom `seq_radius`, `seq_curvature`, `seq_gap`, mixed `seq_orientation`,
-  rotation and sequence groups. They share fixed-obstacle avoidance,
+  rotation and explicit rings. They share fixed-obstacle avoidance,
   cross-sequence collision handling, order-preserving leader routing and
   device-aware clipping. Rotated labels use oriented-rectangle collision and
   clipping, preventing spurious whitespace and oversized breaks in leaders.
 
-* The layout ideas are informed by orderly multi-sequence callout figures and
-  by the external/inside feature-label approaches offered by SnapGene and
-  Geneious. ggchord uses its own generic mode names and implementation; it
-  does not copy third-party assets or visual designs. See the
+* The layout ideas adapt orderly multi-sequence callout figures and the
+  external/inside feature-label approaches offered by SnapGene and Geneious.
+  ggchord uses generic API names and integrates the ideas into its own geometry
+  system. See the
   [SnapGene feature-label documentation](https://support.snapgene.com/hc/en-us/articles/10383722725524-Display-Feature-Labels-Below-or-Inside-a-Map)
   and [Geneious label options](https://manual.geneious.com/en/latest/Sequences.html).
 

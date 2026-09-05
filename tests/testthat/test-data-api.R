@@ -30,6 +30,36 @@ test_that("validation and cleaning return their public result objects", {
   )
 })
 
+test_that("packaged gene example is compact, distributed and strand-balanced", {
+  data(seq_data_example)
+  data(gene_data_example)
+  expect_equal(
+    as.integer(table(factor(
+      gene_data_example$seq_id, levels = seq_data_example$seq_id
+    ))),
+    rep(8L, nrow(seq_data_example))
+  )
+  strand_counts <- table(gene_data_example$seq_id, gene_data_example$strand)
+  expect_true(all(strand_counts[, "+"] == 4L))
+  expect_true(all(strand_counts[, "-"] == 4L))
+  expect_true("source_strand" %in% names(gene_data_example))
+  expect_true(all(gene_data_example$start < gene_data_example$end))
+})
+
+test_that("packaged ribbon example is balanced across sequence pairs", {
+  data(ribbon_data_example)
+  pair <- paste(
+    pmin(ribbon_data_example$qaccver, ribbon_data_example$saccver),
+    pmax(ribbon_data_example$qaccver, ribbon_data_example$saccver),
+    sep = "\r"
+  )
+  counts <- table(pair)
+  expect_equal(nrow(ribbon_data_example), 13L)
+  expect_equal(length(counts), 6L)
+  expect_lte(max(counts), 3L)
+  expect_true(all(ribbon_data_example$length >= 300))
+})
+
 test_that("the three import helpers parse minimal files", {
   fasta <- tempfile(fileext = ".fna")
   writeLines(c(">seqA", "ACGTACGT"), fasta)
