@@ -77,7 +77,7 @@ ggchord_typed_na <- function(x) {
 #' Bundle dense alignment ribbons explicitly
 #'
 #' Aggregates nearby alignment ribbons on a normalized query/subject grid.
-#' Bundling is always explicit: \code{geom_ribbon()} continues to draw one
+#' Bundling is always explicit: \code{geom_link_ribbon()} continues to draw one
 #' ribbon per input row unless the returned data are supplied by the user.
 #'
 #' @param ribbon_data Alignment data in ggchord ribbon format.
@@ -103,7 +103,7 @@ ggchord_typed_na <- function(x) {
 #' nrow(bundled$data)
 #' bundled_plot <- ggchord(seq_data_example, bundled$data) +
 #'   geom_seq() +
-#'   geom_ribbon(ggplot2::aes(ribbon_alpha = .bundle_density)) +
+#'   geom_link_ribbon(ggplot2::aes(ribbon_alpha = .bundle_density)) +
 #'   scale_ribbon_alpha_continuous()
 bundle_ggchord_ribbons <- function(
     ribbon_data,
@@ -371,7 +371,7 @@ ggchord_layout_score <- function(scored, seq_order, orientation, lengths) {
 #'     seq_order = optimized$seq_order,
 #'     seq_orientation = optimized$seq_orientation
 #'   ) +
-#'   geom_ribbon()
+#'   geom_link_ribbon()
 optimize_ggchord_layout <- function(
     seq_data,
     ribbon_data,

@@ -67,7 +67,7 @@
 #' # The cleaned tables are ready for ggchord()
 #' \donttest{
 #' p <- ggchord(out$seq_data, out$ribbon_data, out$gene_data) +
-#'   geom_seq() + geom_ribbon() + geom_gene()
+#'   geom_seq() + geom_link_ribbon() + geom_gene()
 #' }
 clean_ggchord_data <- function(
     seq_data,

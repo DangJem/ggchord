@@ -1,3 +1,11 @@
+# ggchord 0.11.0.9000
+
+* Added `geom_link_ribbon()` as the canonical interval link geometry. Ribbon
+  aesthetics, scales, themes and exported layout components keep their names.
+* `ggchord::geom_ribbon()` now emits a deprecation warning directing callers
+  to `geom_link_ribbon()`; removal is planned for v0.13.0. Ribbon statistics
+  use the canonical constructor without triggering the compatibility warning.
+
 # ggchord 0.11.0
 
 * `geom_gene_label_repel()` now defaults to `gene_label_layout = "radial"`:

@@ -158,7 +158,7 @@ ribbon_data <- invisible(read_blast(files = "examples/blastn/*.o7"))
 gene_data <- invisible(read_gff3(files = "examples/gff3/*.gff3"))
 
 ggchord(seq_data, ribbon_data, gene_data) +
-  geom_seq() + geom_ribbon() + geom_gene()
+  geom_seq() + geom_link_ribbon() + geom_gene()
 ```
 
 `read_blast()` preserves useful extra columns (`evalue`, `bitscore`, `qcovs`,
@@ -217,7 +217,7 @@ knitr::include_graphics("../man/figures/seq_only_default.png")
 
 ```{r tutorial-ribbon, eval=FALSE}
 ggchord(seq_data_example, ribbon_data_example) +
-  geom_seq() + geom_ribbon()
+  geom_seq() + geom_link_ribbon()
 ```
 
 ```{r tutorial-ribbon-img, echo=FALSE, fig.cap="Ribbons coloured by percent identity."}
@@ -248,7 +248,7 @@ The former `"aligned"` mode has been removed; use `"auto"` for side columns.
 base <- ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
   geom_seq(seq_radius = c(3.3, 2.5, 1.8, 1.25),
            seq_orientation = c(1, -1, 1, -1)) +
-  geom_ribbon() + geom_gene()
+  geom_link_ribbon() + geom_gene()
 
 base + geom_gene_label_repel(gene_label_layout = "auto")
 base + geom_gene_label_repel(gene_label_layout = "radial")
@@ -297,7 +297,7 @@ rb_scored <- transform(ribbon_data_example,
 
 ggchord(seq_data_example, rb_scored) +
   geom_seq() +
-  geom_ribbon(aes(ribbon_fill = bitscore, ribbon_alpha = bitscore,
+  geom_link_ribbon(aes(ribbon_fill = bitscore, ribbon_alpha = bitscore,
                   ribbon_linetype = direction))
 ```
 
@@ -312,7 +312,7 @@ regions <- data.frame(seq_id = "MT108731.1",
                       start = 1000, end = 4000, color = "orange")
 
 ggchord(seq_data_example, ribbon_data_example) +
-  geom_seq() + geom_ribbon() +
+  geom_seq() + geom_link_ribbon() +
   geom_seq_region(data = regions) +
   geom_ribbon_highlight(ribbon_ids = 1)
 ```
@@ -331,7 +331,7 @@ features <- data.frame(seq_id = rep("MT108731.1", 4),
                        type = c("CDS", "tRNA", "repeat", "promoter"))
 
 ggchord(seq_data_example, ribbon_data_example) +
-  geom_seq() + geom_ribbon() +
+  geom_seq() + geom_link_ribbon() +
   geom_feature(aes(feature_shape = type), data = features,
                feature_width = 0.10) +
   scale_feature_shape_manual(values = c(
@@ -348,7 +348,7 @@ knitr::include_graphics("../man/figures/tutorial_features.png")
 
 ```{r tutorial-theme, eval=FALSE}
 ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
-  geom_seq() + geom_ribbon() + geom_gene() +
+  geom_seq() + geom_link_ribbon() + geom_gene() +
   scale_seq_colour_manual(values = c("MT108731.1" = "#E41A1C",
                                 "MT118296.1" = "#377EB8",
                                 "OQ646790.1" = "#4DAF4A",
@@ -372,7 +372,7 @@ ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
                           "MT118296.1" = "#264653",
                           "OQ646790.1" = "#2A9D8F",
                           "OR222515.1" = "#D9A62E")) +
-  geom_ribbon(alpha = 0.45) +
+  geom_link_ribbon(alpha = 0.45) +
   geom_gene() +
   geom_gene_label_repel(size = 2,
                         gene_label_layout = "auto") +
@@ -436,7 +436,7 @@ gene_label_rotation = list(20)
 | Layer | Function | Description |
 | --- | --- | --- |
 | Sequence arcs | `geom_seq()` | Draws an arc (or line) for each sequence, with direction arrows |
-| Alignment ribbons | `geom_ribbon()` | Draws colored ribbons from alignment results |
+| Alignment ribbons | `geom_link_ribbon()` | Draws colored ribbons from alignment results |
 | Gene arrows | `geom_gene()` | Draws gene/feature arrow polygons |
 | Gene labels | `geom_gene_label()` | Draws gene labels at fixed positions |
 | Automatic gene labels | `geom_gene_label_repel()` | Deterministic auto, radial or arc layouts with collision-free leaders |

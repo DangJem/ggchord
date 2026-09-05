@@ -55,7 +55,7 @@ p <- ggchord(
   gene_data = gene_data_example
 ) +
   geom_seq() +
-  geom_ribbon() +
+  geom_link_ribbon() +
   geom_gene()
 print(p)
 

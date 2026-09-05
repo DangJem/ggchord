@@ -54,7 +54,7 @@ test_that("negative and large bows keep feature, axis and ribbon coordinates fin
                         qend = 350, sstart = 500, send = 650, pident = 95, length = 151)
   for (curvature in list(c(-0.5, 0.5), c(-2, 2), c(-5, 5))) {
     p <- ggchord(seq, ribbons, genes, validate = "none") +
-      geom_seq(seq_curvature = curvature) + geom_gene() + geom_ribbon()
+      geom_seq(seq_curvature = curvature) + geom_gene() + geom_link_ribbon()
     layout <- get_chord_layout(p)
     for (data in c(layout$seq_arcs, list(layout$gene_polys, layout$ribbon_polys))) {
       expect_true(all(is.finite(c(data$x, data$y))))
@@ -148,7 +148,7 @@ test_that("nested preview measurements preserve devices across repeated prints",
   p <- ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
     geom_seq(seq_radius = c(3.3, 2.5, 1.8, 1.25),
       seq_orientation = c(1, -1, 1, -1)) +
-    geom_ribbon() + geom_gene() + geom_gene_label_repel() + geom_seq_label()
+    geom_link_ribbon() + geom_gene() + geom_gene_label_repel() + geom_seq_label()
   reference <- NULL
   for (iteration in seq_len(2)) {
     view_ggchord(p, viewer = "none")
@@ -176,7 +176,7 @@ test_that("unequal radial sequences keep endpoint labels near their own arc", {
   p <- ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
     geom_seq(seq_radius = c(3.3, 2.5, 1.8, 1.25),
       seq_orientation = c(1, -1, 1, -1)) +
-    geom_ribbon() + geom_gene() + geom_gene_label_repel(gene_label_layout = "radial") +
+    geom_link_ribbon() + geom_gene() + geom_gene_label_repel(gene_label_layout = "radial") +
     geom_seq_label() + ggtitle("ggchord")
   layout <- get_chord_layout(p)
   labels <- layout$gene_labels

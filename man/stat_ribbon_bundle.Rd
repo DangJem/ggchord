@@ -26,7 +26,7 @@ stat_ribbon_bundle(
 \item{position, show.legend, inherit.aes}{Standard ggplot2 layer arguments.}
 
 \item{...}{Ribbon geometry and appearance arguments passed to
-[geom_ribbon()].}
+[geom_link_ribbon()].}
 }
 \value{
 A ggchord ribbon layer.

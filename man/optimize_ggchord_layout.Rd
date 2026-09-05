@@ -53,5 +53,5 @@ optimized_plot <- ggchord(seq_data_example, ribbon_data_example) +
     seq_order = optimized$seq_order,
     seq_orientation = optimized$seq_orientation
   ) +
-  geom_ribbon()
+  geom_link_ribbon()
 }

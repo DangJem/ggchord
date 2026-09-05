@@ -93,7 +93,7 @@ ggchord_stat_ribbon_layer <- function(
     mapping = mapping, data = data, show.legend = show.legend,
     inherit.aes = inherit.aes, position = position
   ), dots)
-  lyr <- do.call(geom_ribbon, args)
+  lyr <- do.call(geom_link_ribbon, args)
   # ggplot2 deliberately drops input columns that are not mapped before a Stat
   # runs. Carry the three precomputed values through private aesthetics, then
   # expose their public names from compute_panel() for after_stat().
@@ -126,7 +126,7 @@ ggchord_stat_ribbon_layer <- function(
 #'   [bundle_ggchord_ribbons()].
 #' @param position,show.legend,inherit.aes Standard ggplot2 layer arguments.
 #' @param ... Ribbon geometry and appearance arguments passed to
-#'   [geom_ribbon()].
+#'   [geom_link_ribbon()].
 #' @return A ggchord ribbon layer.
 #' @export
 stat_ribbon_bundle <- function(

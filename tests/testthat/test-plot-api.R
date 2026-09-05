@@ -22,14 +22,14 @@ test_that("public geoms and stats return one standard layer", {
   )
   region <- feature[c("seq_id", "start", "end")]
   layers <- list(
-    geom_seq(), geom_ribbon(), geom_gene(), geom_feature(data = feature),
+    geom_seq(), geom_link_ribbon(), geom_gene(), geom_feature(data = feature),
     geom_seq_label(), geom_gene_label(),
     geom_gene_label_repel(), geom_seq_region(data = region),
     geom_ribbon_highlight(), stat_ribbon_bundle(), stat_ribbon_density()
   )
   expect_true(all(vapply(layers, inherits, logical(1), "LayerInstance")))
   for (layer_fun in list(
-    geom_seq, geom_ribbon, geom_gene, geom_feature,
+    geom_seq, geom_link_ribbon, geom_gene, geom_feature,
     geom_seq_label, geom_gene_label, geom_gene_label_repel,
     geom_seq_region, geom_ribbon_highlight
   )) {
@@ -47,7 +47,7 @@ test_that("main plotting layers build together as single layers", {
     seq_data_example, ribbon_data_example, gene_data_example,
     validate = "none"
   ) +
-    geom_seq() + geom_ribbon() + geom_gene() +
+    geom_seq() + geom_link_ribbon() + geom_gene() +
     geom_gene_label_repel() + geom_seq_label()
   built <- build_ggchord_smoke(p)
   layout <- get_chord_layout(p)
@@ -69,7 +69,7 @@ test_that("removed parameters fail with direct migrations", {
   data(seq_data_example)
   expect_error(ggchord(seq_data_example, title = "x"), "labs")
   expect_error(geom_seq(seq_colors = "red"), "scale_seq_colour_manual")
-  expect_error(geom_ribbon(ribbon_alpha = 0.5), "alpha")
+  expect_error(geom_link_ribbon(ribbon_alpha = 0.5), "alpha")
   expect_error(geom_gene(gene_colors = "red"), "scale_gene_fill_manual")
   expect_error(geom_feature(type = "kind"), "feature_type")
   expect_false("geom_axis" %in% getNamespaceExports("ggchord"))
@@ -127,7 +127,7 @@ test_that("role legends inherit independently and explicit guides win", {
   data(seq_data_example)
   data(ribbon_data_example)
   p <- ggchord(seq_data_example, ribbon_data_example, validate = "none") +
-    geom_seq() + geom_ribbon() +
+    geom_seq() + geom_link_ribbon() +
     theme_ggchord(
       legend.seq.position = "right",
       legend.ribbon.position = "left",
@@ -165,7 +165,7 @@ test_that("default role guides occupy opposite plot edges", {
   data(seq_data_example)
   data(ribbon_data_example)
   p <- ggchord(seq_data_example, ribbon_data_example, validate = "none") +
-    geom_seq() + geom_ribbon()
+    geom_seq() + geom_link_ribbon()
   expect_equal(
     ggchord:::ggchord_role_guide_spec(p, "ribbon", TRUE)$position,
     "left"
@@ -188,7 +188,7 @@ test_that("colour and color aliases are symmetric and unambiguous", {
   expect_identical(scale_seq_color_manual, scale_seq_colour_manual)
   expect_identical(scale_ribbon_color_manual, scale_ribbon_colour_manual)
   expect_identical(guide_ggchord_colorbar, guide_ggchord_colourbar)
-  ribbon_layer <- geom_ribbon(aes(ribbon_color = pident))
+  ribbon_layer <- geom_link_ribbon(aes(ribbon_color = pident))
   expect_true("ribbon_colour" %in% names(ribbon_layer$ggchord_input_mapping))
   expect_s3_class(
     scale_ribbon_fill_gradientn(colors = c("navy", "gold")),
@@ -197,7 +197,7 @@ test_that("colour and color aliases are symmetric and unambiguous", {
   expect_error(suppressWarnings(
     geom_seq(aes(seq_color = seq_id, seq_colour = seq_id))
   ), "normalisation")
-  expect_error(geom_ribbon(colour = "red", color = "blue"), "only one")
+  expect_error(geom_link_ribbon(colour = "red", color = "blue"), "only one")
   expect_error(
     scale_ribbon_fill_gradientn(
       colours = c("navy", "gold"), colors = c("black", "white")
@@ -271,7 +271,7 @@ test_that("user scales win and missing scales are inferred", {
     category = "shared"
   )
   inferred <- ggchord(seq, ribbon, validate = "none") +
-    geom_seq() + geom_ribbon(aes(ribbon_fill = category))
+    geom_seq() + geom_link_ribbon(aes(ribbon_fill = category))
   prepared <- ggchord:::prepare_ggchord_plot(inferred)
   expect_s3_class(prepared$scales$get_scales("ribbon_fill"), "ScaleDiscrete")
 
@@ -492,7 +492,7 @@ test_that("feature shapes, regions and highlights remain composable", {
     seq_id = seq_data_example$seq_id[1], start = 2500, end = 3000
   )
   p <- ggchord(seq_data_example, ribbon_data_example, validate = "none") +
-    geom_seq() + geom_ribbon() +
+    geom_seq() + geom_link_ribbon() +
     geom_feature(aes(feature_shape = type), data = feature) +
     scale_feature_shape_manual(values = c(
       CDS = "arrow", tRNA = "block", "repeat" = "chevron",
@@ -515,7 +515,7 @@ test_that("layout export and static viewer use explicit plots", {
     qaccver = "A", saccver = "B", length = 101, pident = 90,
     qstart = 100, qend = 200, sstart = 300, send = 400
   )
-  p <- ggchord(seq, ribbon, validate = "none") + geom_seq() + geom_ribbon()
+  p <- ggchord(seq, ribbon, validate = "none") + geom_seq() + geom_link_ribbon()
   exported <- export_ggchord_layout(p, include = c("seq", "ribbon", "axis"))
   expect_s3_class(exported, "ggchord_layout_export")
   expect_true(all(c("layer_id", "source_row") %in% names(exported$ribbon)))
@@ -543,4 +543,23 @@ test_that("plot-owned layouts are deterministic and isolated", {
   expect_identical(first$seq_arcs, repeated$seq_arcs)
   expect_equal(first$seqs, "A")
   expect_equal(get_chord_layout(p2)$seqs, "B")
+})
+
+
+test_that("ribbon compatibility name preserves geometry and explicit styles", {
+  data(seq_data_example)
+  data(ribbon_data_example)
+  base <- ggchord(seq_data_example, ribbon_data_example) + geom_seq()
+  expect_warning(
+    legacy <- geom_ribbon(fill = "red", color = "blue", ribbon_gap = 0.08),
+    "deprecated; use geom_link_ribbon"
+  )
+  canonical <- geom_link_ribbon(fill = "red", color = "blue", ribbon_gap = 0.08)
+  expect_equal(legacy$ggchord_params, canonical$ggchord_params)
+  expect_equal(
+    get_chord_layout(base + legacy)$ribbon_polys,
+    get_chord_layout(base + canonical)$ribbon_polys
+  )
+  expect_no_warning(stat_ribbon_bundle())
+  expect_no_warning(stat_ribbon_density())
 })

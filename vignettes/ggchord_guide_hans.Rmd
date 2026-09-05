@@ -156,7 +156,7 @@ ribbon_data <- invisible(read_blast(files = "examples/blastn/*.o7"))
 gene_data <- invisible(read_gff3(files = "examples/gff3/*.gff3"))
 
 ggchord(seq_data, ribbon_data, gene_data) +
-  geom_seq() + geom_ribbon() + geom_gene()
+  geom_seq() + geom_link_ribbon() + geom_gene()
 ```
 
 `read_blast()` 保留有用的额外列（`evalue`、`bitscore`、`qcovs`、`qlen`、
@@ -212,7 +212,7 @@ knitr::include_graphics("../man/figures/seq_only_default.png")
 
 ```{r tutorial-ribbon, eval=FALSE}
 ggchord(seq_data_example, ribbon_data_example) +
-  geom_seq() + geom_ribbon()
+  geom_seq() + geom_link_ribbon()
 ```
 
 ```{r tutorial-ribbon-img, echo=FALSE, fig.cap="按相似度着色的连接带。"}
@@ -241,7 +241,7 @@ knitr::include_graphics("../man/figures/gene_repel.png")
 base <- ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
   geom_seq(seq_radius = c(3.3, 2.5, 1.8, 1.25),
            seq_orientation = c(1, -1, 1, -1)) +
-  geom_ribbon() + geom_gene()
+  geom_link_ribbon() + geom_gene()
 
 base + geom_gene_label_repel(gene_label_layout = "auto")
 base + geom_gene_label_repel(gene_label_layout = "radial")
@@ -286,7 +286,7 @@ rb_scored <- transform(ribbon_data_example,
 
 ggchord(seq_data_example, rb_scored) +
   geom_seq() +
-  geom_ribbon(aes(ribbon_fill = bitscore, ribbon_alpha = bitscore,
+  geom_link_ribbon(aes(ribbon_fill = bitscore, ribbon_alpha = bitscore,
                   ribbon_linetype = direction))
 ```
 
@@ -301,7 +301,7 @@ regions <- data.frame(seq_id = "MT108731.1",
                       start = 1000, end = 4000, color = "orange")
 
 ggchord(seq_data_example, ribbon_data_example) +
-  geom_seq() + geom_ribbon() +
+  geom_seq() + geom_link_ribbon() +
   geom_seq_region(data = regions) +
   geom_ribbon_highlight(ribbon_ids = 1)
 ```
@@ -320,7 +320,7 @@ features <- data.frame(seq_id = rep("MT108731.1", 4),
                        type = c("CDS", "tRNA", "repeat", "promoter"))
 
 ggchord(seq_data_example, ribbon_data_example) +
-  geom_seq() + geom_ribbon() +
+  geom_seq() + geom_link_ribbon() +
   geom_feature(aes(feature_shape = type), data = features,
                feature_width = 0.10) +
   scale_feature_shape_manual(values = c(
@@ -337,7 +337,7 @@ knitr::include_graphics("../man/figures/tutorial_features.png")
 
 ```{r tutorial-theme, eval=FALSE}
 ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
-  geom_seq() + geom_ribbon() + geom_gene() +
+  geom_seq() + geom_link_ribbon() + geom_gene() +
   scale_seq_colour_manual(values = c("MT108731.1" = "#E41A1C",
                                 "MT118296.1" = "#377EB8",
                                 "OQ646790.1" = "#4DAF4A",
@@ -361,7 +361,7 @@ ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
                           "MT118296.1" = "#264653",
                           "OQ646790.1" = "#2A9D8F",
                           "OR222515.1" = "#D9A62E")) +
-  geom_ribbon(alpha = 0.45) +
+  geom_link_ribbon(alpha = 0.45) +
   geom_gene() +
   geom_gene_label_repel(size = 2,
                         gene_label_layout = "auto") +
@@ -418,7 +418,7 @@ gene_label_rotation = list(20)
 | 图层 | 函数 | 说明 |
 | --- | --- | --- |
 | 序列弧线 | `geom_seq()` | 为每条序列绘制弧线（或直线），含方向箭头 |
-| 比对连接带 | `geom_ribbon()` | 根据比对结果绘制彩色连接带 |
+| 比对连接带 | `geom_link_ribbon()` | 根据比对结果绘制彩色连接带 |
 | 基因箭头 | `geom_gene()` | 绘制基因/特征箭头多边形 |
 | 基因标签 | `geom_gene_label()` | 在固定位置绘制基因标签 |
 | 自动基因标签 | `geom_gene_label_repel()` | 确定性的 auto、radial 或 arc 布局，并自动避免标签和指示线冲突 |

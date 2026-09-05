@@ -48,7 +48,7 @@ label_metrics <- function(layout, expected) {
     max_track = max(labels$label_track, na.rm = TRUE))
 }
 base_plot <- function() ggchord(seq_data_example, ribbon_data_example,
-  gene_data_example, validate = "none") + geom_seq() + geom_ribbon() + geom_gene()
+  gene_data_example, validate = "none") + geom_seq() + geom_link_ribbon() + geom_gene()
 
 if (mode == "geometry") {
   sequences <- data.frame(seq_id = c("A", "B"), length = 1000)
@@ -67,7 +67,7 @@ if (mode == "geometry") {
       geom_feature(aes(feature_shape = type), data = features, feature_offset = -0.15) +
       scale_feature_shape_manual(values = setNames(unique(features$type), unique(features$type))) +
       geom_seq_region(data = features[1, ], region_side = "outside") +
-      geom_ribbon() + geom_ribbon_highlight(ribbon_ids = 1) +
+      geom_link_ribbon() + geom_ribbon_highlight(ribbon_ids = 1) +
       geom_gene_label(size = 2, gene_label_overlap = "allow") +
       coord_chord(rotation = 35)
     layout <- with_device(get_chord_layout(p))
@@ -92,7 +92,7 @@ if (mode == "geometry") {
     x <- cases[[name]]
     p <- ggchord(seq_data_example, ribbon_data_example, gene_data_example, validate = "none") +
       geom_seq(seq_radius = x$radius, seq_curvature = x$curvature, seq_orientation = x$orientation) +
-      geom_ribbon() + geom_gene() + geom_gene_label_repel(gene_label_layout = layout_mode) +
+      geom_link_ribbon() + geom_gene() + geom_gene_label_repel(gene_label_layout = layout_mode) +
       coord_chord(rotation = x$rotation)
     elapsed <- system.time(layout <- with_device(get_chord_layout(p)))[["elapsed"]]
     metrics <- label_metrics(layout, nrow(gene_data_example))
@@ -122,7 +122,7 @@ if (mode == "geometry") {
   }
   for (position in c("none", "top", "bottom", "left", "right")) {
     sample <- ggchord(seq_data_example, ribbon_data_example, validate = "none") +
-      geom_seq() + geom_ribbon() +
+      geom_seq() + geom_link_ribbon() +
       scale_seq_colour_manual(values = setNames(c("red", "blue", "green", "orange"), seq_data_example$seq_id),
         labels = paste("A longer sequence description", seq_len(4))) +
       theme(legend.position = position)

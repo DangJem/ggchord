@@ -95,7 +95,7 @@ ggchord_reject_retired <- function(dots, caller, migrations,
 #' library(ggchord)
 #' data(seq_data_example)
 #' data(ribbon_data_example)
-#' p <- ggchord(seq_data_example, ribbon_data_example) + geom_seq() + geom_ribbon()
+#' p <- ggchord(seq_data_example, ribbon_data_example) + geom_seq() + geom_link_ribbon()
 #' invisible(ggplot2::ggplot_build(p))
 #' names(get_chord_layout(p)$seq_arcs)
 get_chord_layout <- function(plot, build = TRUE) {

@@ -72,6 +72,6 @@ library(ggchord)
 data(seq_data_example)
 data(ribbon_data_example)
 p <- ggchord(seq_data_example, ribbon_data_example) +
-  geom_seq() + geom_ribbon() + geom_ribbon_highlight(ribbon_ids = 1)
+  geom_seq() + geom_link_ribbon() + geom_ribbon_highlight(ribbon_ids = 1)
 p
 }

@@ -38,7 +38,7 @@ A list with \code{data} and \code{report}. The data include
 }
 \description{
 Aggregates nearby alignment ribbons on a normalized query/subject grid.
-Bundling is always explicit: \code{geom_ribbon()} continues to draw one
+Bundling is always explicit: \code{geom_link_ribbon()} continues to draw one
 ribbon per input row unless the returned data are supplied by the user.
 }
 \examples{
@@ -48,6 +48,6 @@ bundled <- bundle_ggchord_ribbons(ribbon_data_example, seq_data_example)
 nrow(bundled$data)
 bundled_plot <- ggchord(seq_data_example, bundled$data) +
   geom_seq() +
-  geom_ribbon(ggplot2::aes(ribbon_alpha = .bundle_density)) +
+  geom_link_ribbon(ggplot2::aes(ribbon_alpha = .bundle_density)) +
   scale_ribbon_alpha_continuous()
 }
