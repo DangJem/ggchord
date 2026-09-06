@@ -78,6 +78,8 @@
 - geom_ribbon_highlight 已删除；feature 形状图例映射已修复，gene 图例高度已增加。
 - `tools/validate-release.R links` 已统一覆盖 line/ribbon 分叉、feature 图例以及
   smooth/uniform 避障；正式包检查仍按发布阶段执行。
+- 构造/build、自动标度、画幅、sequence/ribbon、gene/region、axis 与 label
+  计算已拆入职责单一的内部模块；公共 API、默认值和 layout 输出保持不变。
 
 ---
 
@@ -237,9 +239,6 @@ guide、coord 和 layout export 契约单独评估，不在本路线图中预先
 
 ## 跨版本待办
 
-- 在 v0.12 功能稳定后进行一次纯内部源码拆分：构造/build、自动标度、画幅，
-  以及 sequence/ribbon、gene/region、axis、label 计算分别归入职责单一的模块；
-  公共 API 和 layout 输出结构不变；
 - v0.16 或候选发布阶段补做大幅正负曲率、极短弧和超密集标签的几何压力矩阵，
   区分合法相交、数值错误和视觉退化，不把固定耗时作为机器无关门槛；
 - v1.0 文档重构时确定网站信息架构，建立英语/汉语共用的图片生成源和资产清单，

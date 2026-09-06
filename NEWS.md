@@ -27,6 +27,9 @@
   replacing each unshared path with its first vertex style.
 * Shared ribbon branches now honor explicit edge control points, including
   layout rotation, while preserving the shared junction tangent.
+* Split the constructor/build, automatic-scale, frame-fitting, sequence,
+  ribbon, gene/region, axis, and label calculations into focused internal
+  source modules without changing the public API or layout output.
 * Archived previous-release design records in DESIGN-HISTORY.md.
 
 # ggchord 0.11.0
