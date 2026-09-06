@@ -188,7 +188,6 @@ make_ggchord_scales <- function(layout, has_seq = FALSE, has_gene = FALSE,
   }
   list(scales = scales, ribbon_aes = ribbon_aes)
 }
-
 #' Add scales to a plot, respecting user-supplied scales
 #' @noRd
 attach_ggchord_scales <- function(plot, scales) {
@@ -346,4 +345,3 @@ rename_ribbon_layers <- function(plot, ribbon_indices, ribbon_aes, layout) {
   }
   plot
 }
-

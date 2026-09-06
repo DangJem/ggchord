@@ -758,7 +758,6 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
 
   layout
 }
-
 #' Extract one drawable component from a computed layout
 #' @noRd
 ggchord_layout_component <- function(layout, type, fallback = data.frame()) {
@@ -1019,4 +1018,3 @@ classify_ggchord_layers <- function(plot) {
   }
   idx
 }
-
