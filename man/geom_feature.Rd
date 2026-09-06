@@ -18,11 +18,11 @@ geom_feature(
 }
 \arguments{
 \item{mapping}{Optional aesthetic mapping. Role aesthetics such as
-\code{seq_id}, \code{start}, \code{end} and \code{strand} may rename
+\code{accver}, \code{start}, \code{end} and \code{strand} may rename
 input columns; ordinary visual mappings are evaluated after geometry is
 generated.}
 
-\item{data}{data.frame with \code{seq_id}, \code{start}, \code{end} and
+\item{data}{data.frame with \code{accver}, \code{start}, \code{end} and
 \code{strand}; optional \code{type}, \code{category} and \code{label}.}
 
 \item{feature_shape}{Fixed feature geometry used when \code{feature_shape}
@@ -56,7 +56,7 @@ fill and geometry use independent role-specific scales.
 \examples{
 library(ggchord)
 data(seq_data_example)
-features <- data.frame(seq_id = "MT108731.1",
+features <- data.frame(accver = "MT108731.1",
                        start = 1000, end = 4000,
                        strand = "+", type = "CDS")
 p <- ggchord(seq_data_example) + geom_seq() +

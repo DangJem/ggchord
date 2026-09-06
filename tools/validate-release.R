@@ -51,8 +51,8 @@ base_plot <- function() ggchord(seq_data_example, ribbon_data_example,
   gene_data_example, validate = "none") + geom_seq() + geom_link_ribbon() + geom_gene()
 
 if (mode == "geometry") {
-  sequences <- data.frame(seq_id = c("A", "B"), length = 1000)
-  features <- data.frame(seq_id = rep(c("A", "B"), each = 4),
+  sequences <- data.frame(accver = c("A", "B"), length = 1000)
+  features <- data.frame(accver = rep(c("A", "B"), each = 4),
     start = rep(c(100, 300, 500, 700), 2), end = rep(c(160, 360, 560, 760), 2),
     strand = rep(c("+", "-"), 4), type = rep(c("arrow", "block", "chevron", "lollipop"), 2))
   genes <- transform(features, anno = type)
@@ -67,12 +67,12 @@ if (mode == "geometry") {
       geom_feature(aes(feature_shape = type), data = features, feature_offset = -0.15) +
       scale_feature_shape_manual(values = setNames(unique(features$type), unique(features$type))) +
       geom_seq_region(data = features[1, ], region_side = "outside") +
-      geom_link_ribbon() + geom_ribbon_highlight(ribbon_ids = 1) +
+      geom_link_ribbon() +
       geom_gene_label(size = 2, gene_label_overlap = "allow") +
       coord_chord(rotation = 35)
     layout <- with_device(get_chord_layout(p))
     finite_geometry(c(layout$seq_arcs, list(layout$gene_polys, layout$ribbon_polys,
-      layout$region_polys, layout$ribbon_highlight_polys, layout$axis_lines, layout$axis_ticks)))
+      layout$region_polys, layout$axis_lines, layout$axis_ticks)))
     exported <- with_device(export_ggchord_layout(p))
     stopifnot(nrow(exported$feature) > 0, nrow(exported$gene) > 0,
       nrow(exported$axis) > 0, nrow(exported$ribbon) > 0)
@@ -123,7 +123,7 @@ if (mode == "geometry") {
   for (position in c("none", "top", "bottom", "left", "right")) {
     sample <- ggchord(seq_data_example, ribbon_data_example, validate = "none") +
       geom_seq() + geom_link_ribbon() +
-      scale_seq_colour_manual(values = setNames(c("red", "blue", "green", "orange"), seq_data_example$seq_id),
+      scale_seq_colour_manual(values = setNames(c("red", "blue", "green", "orange"), seq_data_example$accver),
         labels = paste("A longer sequence description", seq_len(4))) +
       theme(legend.position = position)
     if (position %in% c("top", "bottom")) {
@@ -137,9 +137,9 @@ if (mode == "geometry") {
 } else if (mode == "benchmark") {
   results <- list()
   for (n in c(32, 80)) {
-    sequences <- data.frame(seq_id = "A", length = 100000)
+    sequences <- data.frame(accver = "A", length = 100000)
     starts <- seq(100, 99000, length.out = n)
-    genes <- data.frame(seq_id = "A", start = starts, end = starts + 50,
+    genes <- data.frame(accver = "A", start = starts, end = starts + 50,
       strand = "+", anno = paste0("gene", seq_len(n)))
     p <- ggchord(sequences, gene_data = genes, validate = "none") + geom_seq() +
       geom_gene() + geom_gene_label_repel(size = 2)

@@ -14,7 +14,7 @@ vector, label orientation parameter}
 \item{seqs}{Character vector, list of sequence IDs}
 }
 \value{
-Named vector (names are seq_id), values are "horizontal",
+Named vector (names are accver), values are "horizontal",
   "parallel", "perpendicular" or numeric angles
 }
 \description{

@@ -24,19 +24,22 @@ make_ribbon_geom <- function(outline = FALSE, linetype = FALSE) {
 #' Add an alignment ribbon layer
 #'
 #' Draws alignment ribbons. Identity is mapped to `ribbon_fill` by default;
-#' alternative mappings and legends are controlled with `aes()`, `scale_*()`
+#' When pident is absent, the default is a fixed grey fill with no Identity
+#' guide. Alignment length and identity are never inferred from endpoints.
+#' Alternative mappings and legends are controlled with `aes()`, `scale_*()`
 #' and `guides()`.
 #'
 #' @param mapping Default NULL (uses pre-computed data)
 #' @param data Default NULL (retrieved automatically from the layout)
 #' @param ribbon_ctrl_point Optional vector/list. Bezier control points, default c(0,0)
 #' @param ribbon_gap Optional numeric/vector controlling spacing between
-#'   sequences and ribbon endpoints. The default \code{NULL} uses local
-#'   obstacle-aware spacing: endpoints move closer to \code{geom_seq()} where
-#'   no \code{geom_gene()} or \code{geom_feature()} polygon overlaps that
-#'   genomic interval, and retain enough clearance where one does. Text and
-#'   leader lines are ignored. Supplying a number disables the automatic rule
-#'   and uses that exact spacing.
+#'   sequences and ribbon endpoints. With the default
+#'   \code{link_avoid = "none"}, \code{NULL} uses the fixed spacing 0.035.
+#'   Set \code{link_avoid} to \code{"smooth"} or \code{"uniform"} to opt in
+#'   to obstacle-aware spacing based on \code{geom_gene()} and
+#'   \code{geom_feature()} polygons. Text and leader lines are ignored.
+#'   Supplying a number disables the automatic rule and uses that exact spacing.
+#' @inheritParams geom_link_line
 #' @param fill Optional fixed ribbon fill. `NULL` keeps the default Identity
 #'   mapping.
 #' @param alpha,colour,linewidth,linetype Standard fixed ribbon styles.
@@ -56,6 +59,9 @@ make_ribbon_geom <- function(outline = FALSE, linetype = FALSE) {
 geom_link_ribbon <- function(mapping = NULL, data = NULL,
                         ribbon_ctrl_point = NULL,
                         ribbon_gap = NULL,
+                        link_avoid = c("none", "smooth", "uniform"),
+                        link_branch = c("none", "query", "subject"),
+                        link_branch_fraction = 0.15,
                         fill = NULL,
                         alpha = 0.42,
                         colour = "#59636D",
@@ -67,6 +73,9 @@ geom_link_ribbon <- function(mapping = NULL, data = NULL,
                         ...) {
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
+  link_avoid <- match.arg(link_avoid)
+  link_branch <- match.arg(link_branch)
+  ggchord_check_branch_fraction(link_branch_fraction)
   mapping <- ggchord_normalize_mapping(mapping)
   dots <- list(...)
   ggchord_reject_retired(dots, "geom_link_ribbon()", c(
@@ -142,6 +151,7 @@ geom_link_ribbon <- function(mapping = NULL, data = NULL,
   lyr$ggchord_type <- "ribbon"
   lyr$ggchord_params <- list(
     type                      = "ribbon",
+    link_avoid = link_avoid, link_branch = link_branch, link_branch_fraction = link_branch_fraction,
     ribbon_color_scheme       = "pident",
     ribbon_colors             = NULL,
     ribbon_color_by           = NULL,

@@ -5,7 +5,7 @@
 \alias{seq_data_example}
 \title{Example sequence data}
 \format{
-A data frame containing columns: seq_id, length
+A data frame containing columns: accver, length
 }
 \usage{
 seq_data_example

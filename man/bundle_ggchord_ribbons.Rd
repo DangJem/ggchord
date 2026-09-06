@@ -16,7 +16,7 @@ bundle_ggchord_ribbons(
 \arguments{
 \item{ribbon_data}{Alignment data in ggchord ribbon format.}
 
-\item{seq_data}{Sequence data containing \code{seq_id} and \code{length}.}
+\item{seq_data}{Sequence data containing \code{accver} and \code{length}.}
 
 \item{bins}{Positive integer number of normalized midpoint bins per
 sequence, default 80.}

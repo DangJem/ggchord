@@ -17,7 +17,7 @@ clean_ggchord_data(
 )
 }
 \arguments{
-\item{seq_data}{data.frame/tibble, required. Must contain \code{seq_id} and
+\item{seq_data}{data.frame/tibble, required. Must contain \code{accver} and
 \code{length}; used as the coordinate reference for clipping.}
 
 \item{ribbon_data}{data.frame/tibble, optional. Alignment results.}

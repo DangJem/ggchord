@@ -11,15 +11,18 @@ raw_genes <- utils::read.delim(
   "examples/gene_track.tsv", stringsAsFactors = FALSE, check.names = FALSE
 )
 
+names(seq_data_example)[names(seq_data_example) == "seq_id"] <- "accver"
+names(raw_genes)[names(raw_genes) == "seq_id"] <- "accver"
+
 # Choose a small, readable set that spans each complete sequence. Informative
 # annotations receive a modest preference over repeated "hypothetical
 # protein" entries, but genomic coverage remains the dominant criterion.
 select_demo_genes <- function(data, sequence_data, n_per_sequence = 8L) {
   selected <- vector("list", nrow(sequence_data))
   for (i in seq_len(nrow(sequence_data))) {
-    sid <- sequence_data$seq_id[i]
+    sid <- sequence_data$accver[i]
     sequence_length <- sequence_data$length[i]
-    candidates <- data[data$seq_id == sid, , drop = FALSE]
+    candidates <- data[data$accver == sid, , drop = FALSE]
     candidates$.source_order <- seq_len(nrow(candidates))
     candidates$.midpoint <- (candidates$start + candidates$end) / 2
     candidates$.feature_length <- abs(candidates$end - candidates$start) + 1
@@ -43,7 +46,7 @@ select_demo_genes <- function(data, sequence_data, n_per_sequence = 8L) {
     }
 
     demo <- candidates[chosen, c(
-      "seq_id", "start", "end", "strand", "anno"
+      "accver", "start", "end", "strand", "anno"
     ), drop = FALSE]
     demo <- demo[order(demo$start, demo$end), , drop = FALSE]
     demo$source_strand <- demo$strand

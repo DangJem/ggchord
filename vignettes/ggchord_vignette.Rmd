@@ -43,12 +43,12 @@ Three types of input data are used. All three are plain data frames.
 
 | Column | Type | Description |
 | --- | --- | --- |
-| `seq_id` | character | Unique sequence identifier |
+| `accver` | character | Unique sequence identifier |
 | `length` | integer | Sequence length (must be positive) |
 
 Example:
 
-| seq_id | length |
+| accver | length |
 | --- | --- |
 | MT108731.1 | 64323 |
 | MT118296.1 | 32090 |
@@ -58,7 +58,7 @@ Example:
 A common way to build this table from FASTA files:
 
 ```bash
-seqkit fx2tab -nil examples/fasta/*.fna | sed '1i seq_id\tlength' > examples/seq_track.tsv
+seqkit fx2tab -nil examples/fasta/*.fna | sed '1i accver\tlength' > examples/seq_track.tsv
 ```
 
 ### [Optional] Alignment data (`ribbon_data`)
@@ -108,7 +108,7 @@ One row per gene (or feature) on a sequence:
 
 | Column | Type | Description |
 | --- | --- | --- |
-| `seq_id` | character | Sequence ID the gene belongs to |
+| `accver` | character | Sequence ID the gene belongs to |
 | `start` | integer | Gene start position |
 | `end` | integer | Gene end position |
 | `strand` | character | Strand direction (`+` or `-`) |
@@ -116,7 +116,7 @@ One row per gene (or feature) on a sequence:
 
 Example rows:
 
-| seq_id | start | end | strand | anno |
+| accver | start | end | strand | anno |
 | --- | --- | --- | --- | --- |
 | MT108731.1 | 60709 | 63087 | + | hypothetical protein |
 | MT118296.1 | 14628 | 16301 | + | virion structural protein |
@@ -129,12 +129,12 @@ For example, this table can be converted from GFF3 files:
 library(tidyverse)
 gff3FilesPath <- list.files(path = "examples/gff3", pattern = "\\.gff3$", full.names = TRUE)
 gff3Table <- map_df(gff3FilesPath, ~read_tsv(.x, show_col_types = F, comment = "#",
-  col_names = F) %>% set_names(c("seq_id", "source", "type", "start", "end",
+  col_names = F) %>% set_names(c("accver", "source", "type", "start", "end",
   "score", "strand", "phase", "attributes")))
 geneTrackTable <- gff3Table %>%
   filter(type == "CDS") %>%
   mutate(anno = str_extract(attributes, "(?<=product=)[^;]+(?=;)")) %>%
-  select(seq_id, start, end, strand, anno)
+  select(accver, start, end, strand, anno)
 write_tsv(geneTrackTable, "examples/gene_track.tsv")
 ```
 
@@ -308,13 +308,13 @@ knitr::include_graphics("../man/figures/tutorial_ribbon_mapping.png")
 ### 3.8 Highlight regions and ribbons
 
 ```{r tutorial-highlight, eval=FALSE}
-regions <- data.frame(seq_id = "MT108731.1",
+regions <- data.frame(accver = "MT108731.1",
                       start = 1000, end = 4000, color = "orange")
 
 ggchord(seq_data_example, ribbon_data_example) +
   geom_seq() + geom_link_ribbon() +
   geom_seq_region(data = regions) +
-  geom_ribbon_highlight(ribbon_ids = 1)
+  geom_link_ribbon(data = ribbon_data_example[1, ], fill = "orange")
 ```
 
 ```{r tutorial-highlight-img, echo=FALSE, fig.cap="Sequence regions and ribbon highlight."}
@@ -324,7 +324,7 @@ knitr::include_graphics("../man/figures/tutorial_highlights.png")
 ### 3.9 Draw generic features
 
 ```{r tutorial-feature, eval=FALSE}
-features <- data.frame(seq_id = rep("MT108731.1", 4),
+features <- data.frame(accver = rep("MT108731.1", 4),
                        start = c(1000, 7000, 13000, 19000),
                        end = c(5000, 11000, 17000, 23000),
                        strand = c("+", "-", "+", "-"),
@@ -459,3 +459,31 @@ gene_label_rotation = list(20)
 - [Function reference](https://dangjem.github.io/ggchord/reference/index.html)
 - [Version history (NEWS.md)](https://dangjem.github.io/ggchord/news/index.html)
 - [Package homepage](https://dangjem.github.io/ggchord/)
+
+
+## v0.12 data contracts and point links
+
+`accver` follows BLAST's accession/version naming, with `q` and `s` identifying
+query and subject. Custom identifiers are valid; versions are never added or
+removed. Legacy `seq_id` warns in v0.12 and is removed in v0.13; do not supply both.
+
+Ribbons require only `qaccver/saccver/qstart/qend/sstart/send`. Missing `pident`
+uses a fixed fill without an Identity guide. Alignment `length` is not inferred
+from endpoint spans. Filters and weighted statistics require the columns they
+use. Gene `anno` and feature categories/text are optional; accessions, coordinates
+and feature strands remain required. Missing annotations do not create labels.
+
+`link_avoid` defaults to `none`; opt into `smooth` or `uniform` when needed,
+and explicit gaps win. `link_branch` defaults to `none`, with optional `query` or `subject` trunks
+for identical endpoints and final styles within one layer. Ribbons match the
+whole ordered interval. Records remain separate and trunk `source_rows` lists
+members. Fork cross-sections partition geometric width, not statistical weights.
+
+```{r v012-links}
+s <- data.frame(accver = c("A", "B", "C"), length = 1000)
+links <- data.frame(qaccver = "A", saccver = c("B", "C"), qpos = 200, spos = 500)
+p <- ggchord(s) + geom_seq() +
+  geom_link_line(data = links, link_branch = "query",
+    arrow = arrow(length = unit(2, "mm")))
+invisible(export_ggchord_layout(p, include = "link"))
+```

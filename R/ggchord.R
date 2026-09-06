@@ -6,7 +6,7 @@
 
 # Global variable declarations (to avoid R CMD check NOTEs)
 globalVariables(c(
-  "x", "y", "group", "pident", "fill", "colour", "strand", "anno", "seq_id",
+  "x", "y", "group", "pident", "fill", "colour", "strand", "anno", "accver",
   "text_x", "text_y", "text", "text_angle", "hjust", "vjust",
   "x0", "y0", "x1", "y1", "xend", "yend", ".component",
   "label", "label_x", "label_y", "size", "angle",
@@ -27,9 +27,12 @@ globalVariables(c(
 #' The layout is computed lazily when the plot is built (e.g. via \code{print()},
 #' \code{ggsave()}, or \code{ggplot_build()}).
 #'
-#' @param seq_data data.frame/tibble, required. Basic sequence information
-#' @param ribbon_data data.frame/tibble, optional. Alignment results
-#' @param gene_data data.frame/tibble, optional. Gene annotation data
+#' @param seq_data data.frame/tibble with accver and length.
+#' @param ribbon_data Optional alignment table with qaccver, saccver, qstart,
+#'   qend, sstart and send. length and pident are optional unless requested
+#'   by a mapping, filter or statistic.
+#' @param gene_data Optional table with accver, start, end and strand.
+#'   Annotation (anno) may be omitted.
 #' @param debug Logical. Whether to output debug information, default FALSE
 #' @param validate Character, default \code{"warn"}. How to run the structured
 #'   input-data validation (see \code{\link{validate_ggchord_data}}):
@@ -69,6 +72,9 @@ ggchord <- function(
     validate = c("warn", "error", "none"),
     ...
 ) {
+  seq_data <- ggchord_normalize_accver(seq_data)
+  gene_data <- ggchord_normalize_accver(gene_data)
+
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
   dots <- list(...)
@@ -237,19 +243,15 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   ribbon_data_override <- NULL
   gene_data_override <- NULL
   region_data_override <- NULL
-  highlight_data_override <- NULL
   gene_label_params <- list()
   gene_repel_params <- list()
   axis_params   <- list()
   seq_label_params <- list()
   seq_region_params <- list()
-  ribbon_highlight_params <- list()
   seq_layer_requested <- FALSE
   seq_ring_mapped <- FALSE
   ribbon_layer_requested <- FALSE
-  ribbon_highlight_layer_requested <- FALSE
   gene_geometry_layer_requested <- FALSE
-  gene_obstacle_specs <- list()
   gene_label_layer <- FALSE
   gene_repel_layer <- FALSE
   feature_stack_position <- NULL
@@ -283,10 +285,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
         gene_geometry_layer_requested <- TRUE
         gene_data_override <- pp$gene_data_override %||%
           ggchord_resolve_layer_input(lyr, data_list$gene_data)
-        gene_obstacle_specs[[length(gene_obstacle_specs) + 1L]] <- list(
-          data = gene_data_override,
-          params = pp
-        )
+
       },
       gene_label        = {
         if (isTRUE(lyr$position$ggchord_feature_stack)) {
@@ -318,20 +317,14 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
       seq_region        = {
         seq_region_params <- pp
         region_data_override <- ggchord_resolve_layer_input(lyr, pp$regions)
-      },
-      ribbon_highlight  = {
-        ribbon_highlight_params <- pp
-        ribbon_highlight_layer_requested <- TRUE
-        highlight_data_override <- ggchord_resolve_layer_input(
-          lyr, data_list$ribbon_data
-        )
       }
+
     )
   }
 
   # --- Process sequences ---
   seq_data <- seq_data_override %||% data_list$seq_data
-  seqs     <- seq_data$seq_id
+  seqs     <- seq_data$accver
   lens     <- setNames(seq_data$length, seqs)
 
   if (!is.null(seq_params$seq_order)) {
@@ -371,7 +364,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
         "A mapped `seq_ring` requires scale_seq_ring_manual(values = ...)"
       )
     }
-    raw_ring <- as.character(seq_data$seq_ring[match(seqs, seq_data$seq_id)])
+    raw_ring <- as.character(seq_data$seq_ring[match(seqs, seq_data$accver)])
     if (anyNA(raw_ring) || any(!nzchar(raw_ring))) {
       ggchord_stop("Mapped `seq_ring` values must be non-missing")
     }
@@ -470,9 +463,8 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   }
 
   # ribbon_colors validation only runs when ribbon_data is actually present
-  ribbon_data <- if (ribbon_layer_requested ||
-      ribbon_highlight_layer_requested) {
-    ribbon_data_override %||% highlight_data_override %||%
+  ribbon_data <- if (ribbon_layer_requested) {
+    ribbon_data_override %||%
       data_list$ribbon_data
   } else {
     NULL
@@ -668,59 +660,9 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   } else {
     NULL
   }
-  ribbon_obstacles <- data.frame()
-  if (isTRUE(ribbon_gap_auto) && length(gene_obstacle_specs) > 0L) {
-    obstacle_parts <- lapply(gene_obstacle_specs, function(spec) {
-      d <- spec$data
-      if (is.null(d) || !is.data.frame(d) || nrow(d) == 0L ||
-          !all(c("seq_id", "start", "end", "strand") %in% names(d))) {
-        return(NULL)
-      }
-      d <- d[d$seq_id %in% seqs & d$strand %in% c("+", "-") &
-               is.finite(d$start) & is.finite(d$end), , drop = FALSE]
-      if (nrow(d) == 0L) return(NULL)
-      if (!is.null(spec$params$feature_stack_position)) {
-        d <- ggchord_stack_feature_tracks(
-          d, spec$params$feature_stack_position
-        )
-      }
-
-      offsets <- process_gene_param(
-        spec$params$gene_offset %||% 0.1,
-        seqs, "gene_offset", 0.1, FALSE
-      )
-      widths <- process_gene_param(
-        spec$params$gene_width %||% 0.05,
-        seqs, "gene_width", 0.05, FALSE
-      )
-      centers <- vapply(seq_len(nrow(d)), function(i) {
-        value <- offsets[[d$seq_id[i]]][[d$strand[i]]]
-        if (".feature_stack_side" %in% names(d)) {
-          direction <- if (identical(d$.feature_stack_side[i], "inside")) {
-            -1
-          } else 1
-          value <- value + d$.feature_stack_lane[i] *
-            d$.feature_stack_spacing[i]
-          direction * value
-        } else if (identical(d$strand[i], "+")) {
-          -value
-        } else value
-      }, numeric(1))
-      half_width <- vapply(seq_len(nrow(d)), function(i) {
-        widths[[d$seq_id[i]]][[d$strand[i]]] / 2
-      }, numeric(1))
-      data.frame(
-        seq_id = as.character(d$seq_id),
-        start = pmin(d$start, d$end),
-        end = pmax(d$start, d$end),
-        outer_offset = centers + half_width,
-        stringsAsFactors = FALSE
-      )
-    })
-    obstacle_parts <- Filter(Negate(is.null), obstacle_parts)
-    if (length(obstacle_parts)) {
-      ribbon_obstacles <- do.call(rbind, obstacle_parts)
-    }
+  ribbon_obstacles <- plot$ggchord$obstacles %||% ggchord_empty_obstacles()
+  if (!is.null(gene_data_layout) && !"anno" %in% names(gene_data_layout)) {
+    gene_data_layout$anno <- rep(NA_character_, nrow(gene_data_layout))
   }
   feature_shape_pal <- NULL
   feature_shape_order <- NULL
@@ -874,7 +816,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
       seq_labels
     } else {
       # Process through the standard parameter helper so that unnamed vectors
-      # are matched positionally to the sequences (named by seq_id).
+      # are matched positionally to the sequences (named by accver).
       process_sequence_param(seq_label_params$seq_labels, seqs, "seq_labels",
                              default_value = seqs)
     }
@@ -935,54 +877,6 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     ggchord_stop("geom_seq_region(): regions must be a data.frame")
   }
 
-  # --- Compute ribbon highlight selection (safe, no string evaluation) ---
-  ribbon_highlight_rows <- integer(0)
-  if (length(ribbon_highlight_params) > 0 &&
-      !is.null(highlight_data_override %||% ribbon_data) &&
-      nrow(highlight_data_override %||% ribbon_data) > 0) {
-    rd <- highlight_data_override %||% ribbon_data
-    keep <- rep(TRUE, nrow(rd))
-
-    if (!is.null(ribbon_highlight_params$ribbon_ids)) {
-      ids <- ribbon_highlight_params$ribbon_ids
-      if (!is.numeric(ids)) {
-        ggchord_stop("geom_ribbon_highlight(): ribbon_ids must be numeric row numbers")
-      }
-      keep <- keep & seq_len(nrow(rd)) %in% as.integer(ids)
-    }
-    if (!is.null(ribbon_highlight_params$qaccver)) {
-      keep <- keep & rd$qaccver %in% ribbon_highlight_params$qaccver
-    }
-    if (!is.null(ribbon_highlight_params$saccver)) {
-      keep <- keep & rd$saccver %in% ribbon_highlight_params$saccver
-    }
-    if (!is.null(ribbon_highlight_params$min_pident)) {
-      keep <- keep & rd$pident >= ribbon_highlight_params$min_pident
-    }
-    if (!is.null(ribbon_highlight_params$max_pident)) {
-      keep <- keep & rd$pident <= ribbon_highlight_params$max_pident
-    }
-    if (!is.null(ribbon_highlight_params$min_length)) {
-      keep <- keep & rd$length >= ribbon_highlight_params$min_length
-    }
-    if (!is.null(ribbon_highlight_params$max_length)) {
-      keep <- keep & rd$length <= ribbon_highlight_params$max_length
-    }
-    pred <- ribbon_highlight_params$predicate
-    if (!is.null(pred)) {
-      pred_res <- tryCatch(as.logical(pred(rd)),
-                           error = function(e) {
-                             ggchord_stop("geom_ribbon_highlight(): predicate failed: ",
-                                          conditionMessage(e))
-                           })
-      if (length(pred_res) != nrow(rd)) {
-        ggchord_stop("geom_ribbon_highlight(): predicate must return one logical value per ribbon row")
-      }
-      keep <- keep & pred_res
-    }
-    ribbon_highlight_rows <- which(keep)
-  }
-
   # ====================================================================
   # Step 2: compute the layout
   # ====================================================================
@@ -999,6 +893,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     seq_gap = seq_gap,
     ribbon_data = ribbon_data, ribbonGap = ribbonGap,
     ribbon_gap_auto = ribbon_gap_auto,
+    link_avoid = ribbon_params$link_avoid %||% "none",
     ribbon_obstacles = ribbon_obstacles,
     ribbon_color_scheme = ribbon_color_scheme,
     ribbon_colors = ribbon_colors, ribbon_alpha = ribbon_alpha,
@@ -1024,7 +919,6 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     region_width = region_width,
     region_offset = region_offset,
     region_side = region_side,
-    ribbon_highlight_rows = ribbon_highlight_rows,
     gene_data = gene_data_layout,
     draw_gene_geometry = gene_geometry_layer_requested,
     geneGap = geneGap, geneWidth = geneWidth,
@@ -1091,6 +985,7 @@ ggchord_layout_component <- function(layout, type, fallback = data.frame()) {
   switch(type,
     seq = if (length(layout$seq_arcs) > 0) do.call(rbind, layout$seq_arcs) else fallback,
     ribbon = layout$ribbon_polys %||% fallback,
+    link = layout$link_lines %||% fallback,
     gene_poly = layout$gene_polys %||% fallback,
     gene_text = layout$gene_labels %||% fallback,
     gene_text_repel = layout$gene_labels %||% fallback,
@@ -1098,7 +993,6 @@ ggchord_layout_component <- function(layout, type, fallback = data.frame()) {
     gene_label_repel = ggchord_repel_geometry(layout),
     seq_label = layout$seq_labels_df %||% fallback,
     seq_region = layout$region_polys %||% fallback,
-    ribbon_highlight = layout$ribbon_highlight_polys %||% fallback,
     axis_line = layout$axis_lines %||% fallback,
     axis_seg = layout$axis_ticks %||% fallback,
     axis_text = {
@@ -1131,7 +1025,19 @@ compute_chord_geometry <- function(plot) {
   }
 
   geometry_cache <- new.env(parent = emptyenv())
+  avoid_requested <- any(vapply(plot$layers, function(layer) {
+    params <- layer$ggchord_params
+    !is.null(params) && params$type %in% c("ribbon", "link") &&
+      !identical(params$link_avoid %||% "none", "none") &&
+      is.null(params$ribbon_gap %||% params$link_gap)
+  }, logical(1)))
+  plot$ggchord$obstacles <- if (avoid_requested) {
+    ggchord_collect_obstacles(plot, geometry_cache)
+  } else {
+    ggchord_empty_obstacles()
+  }
   primary <- compute_chord_geometry_single(plot, geometry_cache)
+  primary$obstacles <- plot$ggchord$obstacles
   ids <- vapply(plot$layers, function(x) x$ggchord_layer_id %||% "", character(1))
   groups <- split(which(nzchar(ids)), ids[nzchar(ids)])
 
@@ -1139,8 +1045,8 @@ compute_chord_geometry <- function(plot) {
     types <- vapply(idx, function(i) plot$layers[[i]]$ggchord_params$type %||% "",
                     character(1))
     main <- types[types %in% c(
-      "seq", "ribbon", "gene", "gene_label", "gene_label_repel", "axis",
-      "seq_label", "seq_region", "ribbon_highlight"
+      "seq", "ribbon", "link", "gene", "gene_label", "gene_label_repel", "axis",
+      "seq_label", "seq_region"
     )]
     if (length(main)) main[length(main)] else ""
   }, character(1))
@@ -1171,10 +1077,15 @@ compute_chord_geometry <- function(plot) {
         deps <- c(deps, gene_dep)
       }
       if (main_type == "ribbon") deps <- c(deps, gene_geometry_dep)
-      if (main_type == "ribbon_highlight") deps <- c(deps, ribbon_dep)
       sub_plot <- plot
       sub_plot$layers <- plot$layers[sort(unique(c(deps, idx)))]
       sub_layout <- compute_chord_geometry_single(sub_plot, geometry_cache)
+    }
+    if (main_type == "link") {
+      link_layer <- plot$layers[[idx[1L]]]
+      link_input <- ggchord_resolve_layer_input(link_layer)
+      sub_layout$link_lines <- ggchord_attach_input_columns(
+        ggchord_link_geometry(link_input, link_layer$ggchord_params, primary), link_input)
     }
     layouts[[id]] <- sub_layout
     registry[[id]] <- list()
@@ -1193,7 +1104,6 @@ compute_chord_geometry <- function(plot) {
         axis = chord$data$seq_data,
         seq_label = chord$data$seq_data,
         ribbon = chord$data$ribbon_data,
-        ribbon_highlight = chord$data$ribbon_data,
         gene_poly = chord$data$gene_data,
         gene_text = chord$data$gene_data,
         gene_text_repel = chord$data$gene_data,
@@ -1225,10 +1135,9 @@ compute_chord_geometry <- function(plot) {
     if (length(values)) ggchord_rbind_fill(values) else data.frame()
   }
   for (pair in list(
-    c("ribbon_polys", "ribbon"), c("gene_polys", "gene_poly"),
+    c("ribbon_polys", "ribbon"), c("link_lines", "link"), c("gene_polys", "gene_poly"),
     c("gene_labels", "gene_text"), c("gene_label_segments", "gene_label_segment"),
     c("seq_labels_df", "seq_label"), c("region_polys", "seq_region"),
-    c("ribbon_highlight_polys", "ribbon_highlight"),
     c("axis_lines", "axis_line"), c("axis_ticks", "axis_seg")
   )) {
     combined <- collect(pair[2])
@@ -1265,7 +1174,7 @@ compute_chord_geometry <- function(plot) {
     ), use.names = FALSE))
   }
   primary$extremes <- get_plot_extremes(
-    allRibbon = primary$ribbon_polys,
+    allRibbon = ggchord_rbind_fill(Filter(Negate(is.null), list(primary$ribbon_polys, primary$link_lines))),
     seqArcs = primary$seq_arcs,
     axisLines = primary$axis_lines,
     axisTicks = primary$axis_ticks,
@@ -1305,8 +1214,8 @@ reconstruct_layer <- function(lyr, data, mapping = NULL) {
   for (fld in c(
     "ggchord_type", "ggchord_params", "ggchord_placeholder",
     "ggchord_layer_id", "ggchord_input_data", "ggchord_input_mapping",
-    "ggchord_role_aes", "ggchord_theme_element",
-    "ggchord_theme_components", "ggchord_input_transform"
+    "ggchord_role_aes", "ggchord_resolved_input", "ggchord_theme_element",
+    "ggchord_theme_components", "ggchord_input_transform", "ggchord_obstacle_provider"
   )) {
     if (!is.null(lyr[[fld]])) new[[fld]] <- lyr[[fld]]
   }
@@ -1322,7 +1231,7 @@ classify_ggchord_layers <- function(plot) {
               axis_line = integer(0), axis_seg = integer(0),
               axis_text = integer(0), axis = integer(0),
               gene_label_repel = integer(0), seq_label = integer(0),
-              seq_region = integer(0), ribbon_highlight = integer(0))
+              seq_region = integer(0))
   for (i in seq_along(plot$layers)) {
     lyr <- plot$layers[[i]]
     type <- lyr$ggchord_type %||% ""
@@ -1814,6 +1723,7 @@ prepare_ggchord_plot <- function(plot) {
   for (i in seq_along(plot$layers)) {
     lyr <- plot$layers[[i]]
     if (is.null(lyr$ggchord_type)) next
+    lyr$ggchord_resolved_input <- layout$layer_inputs[[lyr$ggchord_layer_id]][[lyr$ggchord_type]]
     new_layers[[i]] <- reconstruct_layer(
       lyr, extract_ggchord_layer_data(lyr, layout)
     )
@@ -1843,6 +1753,7 @@ prepare_ggchord_plot <- function(plot) {
   sc$scales <- ggchord_infer_visual_scales(plot, layout, sc$scales)
   plot <- rename_ribbon_layers(plot, cls$ribbon, sc$ribbon_aes, layout)
   plot <- attach_ggchord_scales(plot, sc$scales)
+  plot <- ggchord_add_link_scales(plot)
   if (!isTRUE(ggchord_plot_settings(plot)$axis$hidden) &&
       nrow(layout$axis_lines %||% data.frame()) > 0L) {
     plot$layers[[length(plot$layers) + 1L]] <- ggchord_axis_layer(layout)
@@ -1863,5 +1774,5 @@ ggplot_build.ggchord <- function(plot, ...) {
   }
   plot <- prepare_ggchord_plot(plot)
   class(plot) <- setdiff(class(plot), "ggchord")
-  ggplot2::ggplot_build(plot)
+  ggchord_branch_built(ggplot2::ggplot_build(plot))
 }

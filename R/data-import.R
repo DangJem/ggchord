@@ -185,8 +185,7 @@ read_blast_single <- function(file, format = c("auto", "outfmt6", "outfmt7", "cu
   }
   names(raw) <- col_names
 
-  req <- c("qaccver", "saccver", "length", "pident",
-           "qstart", "qend", "sstart", "send")
+  req <- ggchord_ribbon_required_columns()
   missing <- setdiff(req, col_names)
   if (length(missing) > 0) {
     ggchord_stop("read_blast(): required ribbon_data column(s) missing: ",
@@ -236,8 +235,7 @@ read_blast_single <- function(file, format = c("auto", "outfmt6", "outfmt7", "cu
 #'   (e.g. `na.strings`).
 #'
 #' @return A data.frame with the required ribbon columns first
-#'   (`qaccver`, `saccver`, `length`, `pident`, `qstart`, `qend`,
-#'   `sstart`, `send`) followed by any preserved optional columns.
+#'   (`qaccver`, `saccver`, `qstart`, `qend`, `sstart`, `send`) followed by any preserved optional columns.
 #' @export
 #'
 #' @examples
@@ -331,7 +329,7 @@ read_gff3_single <- function(file, feature_types = "CDS",
   }, character(1), USE.NAMES = FALSE)
 
   data.frame(
-    seq_id = sub$seqid,
+    accver = sub$seqid,
     start = sub$start,
     end = sub$end,
     strand = sub$strand,
@@ -362,7 +360,7 @@ read_gff3_single <- function(file, feature_types = "CDS",
 #' @param source_file Logical. Add a `.source_file` column when reading one or
 #'   more files, default `FALSE`.
 #'
-#' @return A data.frame with `seq_id`, `start`, `end`, `strand`, `anno`
+#' @return A data.frame with `accver`, `start`, `end`, `strand`, `anno`
 #'   followed by `type`, `source`, `score`, `phase` and `attributes`.
 #' @export
 #'
@@ -452,7 +450,7 @@ read_fasta_lengths_single <- function(file, header_delim = NULL) {
     sum(nchar(gsub("[[:space:]]+", "", lines[starts[i]:ends[i]])))
   }, integer(1))
 
-  out <- data.frame(seq_id = ids, length = as.numeric(lens),
+  out <- data.frame(accver = ids, length = as.numeric(lens),
                     stringsAsFactors = FALSE)
   dup <- unique(ids[duplicated(ids)])
   if (length(dup) > 0) {
@@ -476,7 +474,7 @@ read_fasta_lengths_single <- function(file, header_delim = NULL) {
 #' @param source_file Logical. Add a `.source_file` column when reading one or
 #'   more files, default `FALSE`.
 #'
-#' @return A data.frame with columns `seq_id` and `length`.
+#' @return A data.frame with columns `accver` and `length`.
 #' @export
 #'
 #' @examples
@@ -496,8 +494,8 @@ read_fasta_lengths <- function(file = NULL, files = NULL, header_delim = NULL,
     ggchord_add_source_file(data, f, source_file)
   })
   res <- ggchord_rbind_fill(out)
-  if (!is.null(res) && anyDuplicated(res$seq_id)) {
-    dup <- unique(res$seq_id[duplicated(res$seq_id)])
+  if (!is.null(res) && anyDuplicated(res$accver)) {
+    dup <- unique(res$accver[duplicated(res$accver)])
     warning("read_fasta_lengths(): duplicate sequence IDs found: ",
             paste(dup, collapse = ", "), call. = FALSE)
   }

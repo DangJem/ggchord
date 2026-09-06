@@ -18,7 +18,7 @@ process_gene_param(param, seqs, param_name, default_value, is_logical = FALSE)
 \item{is_logical}{Logical, whether the parameter is logical (TRUE/FALSE), default FALSE}
 }
 \value{
-List (named by seq_id), where each element is a vector with "+"/"-"
+List (named by accver), where each element is a vector with "+"/"-"
 }
 \description{
 Standardizes gene parameters (e.g., offset, width, label rotation) from

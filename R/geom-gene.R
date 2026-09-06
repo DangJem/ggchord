@@ -118,8 +118,9 @@ geom_gene <- function(mapping = NULL, data = NULL,
   )
   poly_layer <- ggchord_capture_layer_input(
     poly_layer, data, mapping,
-    c("seq_id", "start", "end", "strand", "anno")
+    c("accver", "start", "end", "strand", "anno")
   )
+  poly_layer$ggchord_obstacle_provider <- ggchord_entity_obstacles
   poly_layer
 }
 
@@ -240,7 +241,7 @@ geom_gene_label <- function(mapping = NULL, data = NULL,
   )
   text_layer <- ggchord_capture_layer_input(
     text_layer, data, mapping,
-    c("seq_id", "start", "end", "strand", "anno")
+    c("accver", "start", "end", "strand", "anno")
   )
   text_layer
 }
@@ -458,7 +459,7 @@ geom_gene_label_repel <- function(mapping = NULL, data = NULL,
   )
   lyr <- ggchord_capture_layer_input(
     lyr, data, mapping,
-    c("seq_id", "start", "end", "strand", "anno")
+    c("accver", "start", "end", "strand", "anno")
   )
   lyr
 }

@@ -10,7 +10,7 @@
 #' @param plot A ggchord plot.
 #' @param include Character vector selecting any of \code{"seq"},
 #'   \code{"ribbon"}, \code{"gene"}, \code{"feature"}, \code{"labels"},
-#'   and \code{"axis"}.
+#'   \code{"link"}, and \code{"axis"}. Point links require explicit selection.
 #' @param original_data Logical. Include the resolved per-layer input tables
 #'   under \code{original_data}, default \code{FALSE}.
 #'
@@ -37,7 +37,7 @@ export_ggchord_layout <- function(
   if (!inherits(plot, "ggchord") || is.null(plot$ggchord)) {
     ggchord_stop("export_ggchord_layout(): plot must be a ggchord object")
   }
-  allowed <- c("seq", "ribbon", "gene", "feature", "labels", "axis")
+  allowed <- c("seq", "link", "ribbon", "gene", "feature", "labels", "axis")
   if (!is.character(include) || anyNA(include) ||
       any(!include %in% allowed)) {
     ggchord_stop(
@@ -60,7 +60,7 @@ export_ggchord_layout <- function(
     switch(component,
       seq = "seq",
       ribbon = "ribbon",
-      ribbon_highlight = "ribbon",
+      link = "link",
       gene_poly = if (isTRUE(layer$ggchord_params$is_feature)) {
         "feature"
       } else {
@@ -106,10 +106,10 @@ export_ggchord_layout <- function(
       input <- layout$layer_inputs[[layer_id]][[component]]
       if (!"source_row" %in% names(geometry)) {
         geometry$source_row <- if (!is.null(input) &&
-            all(c("seq_id") %in% names(geometry)) &&
-            "seq_id" %in% names(input)) {
+            all(c("accver") %in% names(geometry)) &&
+            "accver" %in% names(input)) {
           as.integer(match(
-            as.character(geometry$seq_id), as.character(input$seq_id)
+            as.character(geometry$accver), as.character(input$accver)
           ))
         } else {
           rep(NA_integer_, nrow(geometry))

@@ -44,12 +44,12 @@ data(gene_data_example)
 
 | 列名 | 类型 | 说明 |
 | --- | --- | --- |
-| `seq_id` | 字符 | 序列唯一标识 |
+| `accver` | 字符 | 序列唯一标识 |
 | `length` | 整数 | 序列长度（必须为正数） |
 
 示例：
 
-| seq_id | length |
+| accver | length |
 | --- | --- |
 | MT108731.1 | 64323 |
 | MT118296.1 | 32090 |
@@ -59,7 +59,7 @@ data(gene_data_example)
 从 FASTA 文件生成该表格的常见方法：
 
 ```bash
-seqkit fx2tab -nil examples/fasta/*.fna | sed '1i seq_id\tlength' > examples/seq_track.tsv
+seqkit fx2tab -nil examples/fasta/*.fna | sed '1i accver\tlength' > examples/seq_track.tsv
 ```
 
 ### 【可选】比对数据（`ribbon_data`）
@@ -107,7 +107,7 @@ done
 
 | 列名 | 类型 | 说明 |
 | --- | --- | --- |
-| `seq_id` | 字符 | 基因所属序列 ID |
+| `accver` | 字符 | 基因所属序列 ID |
 | `start` | 整数 | 基因起始位置 |
 | `end` | 整数 | 基因终止位置 |
 | `strand` | 字符 | 链方向（`+` 或 `-`） |
@@ -115,7 +115,7 @@ done
 
 示例行：
 
-| seq_id | start | end | strand | anno |
+| accver | start | end | strand | anno |
 | --- | --- | --- | --- | --- |
 | MT108731.1 | 60709 | 63087 | + | hypothetical protein |
 | MT118296.1 | 14628 | 16301 | + | virion structural protein |
@@ -128,12 +128,12 @@ done
 library(tidyverse)
 gff3FilesPath <- list.files(path = "examples/gff3", pattern = "\\.gff3$", full.names = TRUE)
 gff3Table <- map_df(gff3FilesPath, ~read_tsv(.x, show_col_types = F, comment = "#",
-  col_names = F) %>% set_names(c("seq_id", "source", "type", "start", "end",
+  col_names = F) %>% set_names(c("accver", "source", "type", "start", "end",
   "score", "strand", "phase", "attributes")))
 geneTrackTable <- gff3Table %>%
   filter(type == "CDS") %>%
   mutate(anno = str_extract(attributes, "(?<=product=)[^;]+(?=;)")) %>%
-  select(seq_id, start, end, strand, anno)
+  select(accver, start, end, strand, anno)
 write_tsv(geneTrackTable, "examples/gene_track.tsv")
 ```
 
@@ -297,13 +297,13 @@ knitr::include_graphics("../man/figures/tutorial_ribbon_mapping.png")
 ### 3.8 高亮区间与连接带
 
 ```{r tutorial-highlight, eval=FALSE}
-regions <- data.frame(seq_id = "MT108731.1",
+regions <- data.frame(accver = "MT108731.1",
                       start = 1000, end = 4000, color = "orange")
 
 ggchord(seq_data_example, ribbon_data_example) +
   geom_seq() + geom_link_ribbon() +
   geom_seq_region(data = regions) +
-  geom_ribbon_highlight(ribbon_ids = 1)
+  geom_link_ribbon(data = ribbon_data_example[1, ], fill = "orange")
 ```
 
 ```{r tutorial-highlight-img, echo=FALSE, fig.cap="序列区间与连接带高亮。"}
@@ -313,7 +313,7 @@ knitr::include_graphics("../man/figures/tutorial_highlights.png")
 ### 3.9 绘制通用 feature
 
 ```{r tutorial-feature, eval=FALSE}
-features <- data.frame(seq_id = rep("MT108731.1", 4),
+features <- data.frame(accver = rep("MT108731.1", 4),
                        start = c(1000, 7000, 13000, 19000),
                        end = c(5000, 11000, 17000, 23000),
                        strand = c("+", "-", "+", "-"),
@@ -438,3 +438,30 @@ gene_label_rotation = list(20)
 - [函数参考](https://dangjem.github.io/ggchord/reference/index.html)
 - [版本更新记录（NEWS）](https://dangjem.github.io/ggchord/news/index.html)
 - [包主页](https://dangjem.github.io/ggchord/)
+
+
+## v0.12 数据契约与连接模式
+
+`accver` 借鉴 BLAST 的 accession/version 命名；`q`、`s` 分别表示 query 和
+subject。自定义序列名称同样有效，包不会添加或删除版本号。旧 `seq_id` 在
+v0.12 中带警告转换，v0.13 移除；两列不能同时出现。
+
+ribbon 只要求 `qaccver/saccver/qstart/qend/sstart/send`。`pident` 缺失时使用
+固定颜色且不显示 Identity 图例；`length` 不从区间跨度推算。筛选、排序和加权
+只在使用相应统计量时要求该列。gene 的 `anno`、feature 的分类与文字可省略，
+标识、坐标和 `strand` 仍必需；无注释时不自动生成标签。
+
+`link_avoid` 默认为 `none`，可手动设为 `smooth` 或 `uniform`；显式 gap 优先。
+`link_branch` 默认 `none`，可选 `query` 或 `subject`；仅同层、完全相同端点、
+最终样式一致的连接共享主干。ribbon 匹配整个有序区间，而非仅起始位置。
+分叉是显示模式，不合并原始记录；`source_rows` 记录主干成员。分叉截面按分支
+划分几何宽度，不代表比对长度或流量的统计分配。
+
+```{r v012-links}
+s <- data.frame(accver = c("A", "B", "C"), length = 1000)
+links <- data.frame(qaccver = "A", saccver = c("B", "C"), qpos = 200, spos = 500)
+p <- ggchord(s) + geom_seq() +
+  geom_link_line(data = links, link_branch = "query",
+    arrow = arrow(length = unit(2, "mm")))
+invisible(export_ggchord_layout(p, include = "link"))
+```

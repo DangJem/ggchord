@@ -29,7 +29,7 @@ ggchord_radial_label_lanes <- function(gl, seq_arcs, side = "outside",
   paths <- data.frame(x0 = numeric(), y0 = numeric(), x1 = numeric(),
                       y1 = numeric(), group = integer())
   if (!is.null(.fixed_paths)) paths <- .fixed_paths
-  groups <- split(active, paste(gl$seq_id[active], signs[active], sep = "\r"))
+  groups <- split(active, paste(gl$accver[active], signs[active], sep = "\r"))
   if (length(groups) > 1L) {
     order_groups <- seq_along(groups)
     if (.attempt %% 2L) order_groups <- rev(order_groups)
@@ -37,10 +37,10 @@ ggchord_radial_label_lanes <- function(gl, seq_arcs, side = "outside",
     if (rotation) order_groups <- c(tail(order_groups, -rotation), utils::head(order_groups, rotation))
     groups <- groups[order_groups]
   }
-  arc_ids <- vapply(seq_arcs, function(a) as.character(a$seq_id[1]), character(1))
+  arc_ids <- vapply(seq_arcs, function(a) as.character(a$accver[1]), character(1))
 
   for (rows in groups) {
-    arc <- seq_arcs[[match(gl$seq_id[rows[1]], arc_ids)]]
+    arc <- seq_arcs[[match(gl$accver[rows[1]], arc_ids)]]
     s <- c(0, cumsum(sqrt(diff(arc$x)^2 + diff(arc$y)^2)))
     keep <- !duplicated(s)
     arc <- arc[keep, , drop = FALSE]
@@ -72,7 +72,7 @@ ggchord_radial_label_lanes <- function(gl, seq_arcs, side = "outside",
     offsets <- sort(unique(c(shifts, -shifts)))
     offsets <- offsets[order(abs(offsets), offsets)]
     best <- NULL
-    group_key <- paste(gl$seq_id[rows[1]], signs[rows[1]], sep = "\r")
+    group_key <- paste(gl$accver[rows[1]], signs[rows[1]], sep = "\r")
     minimum_level <- .minimum_levels[group_key]
     if (!length(minimum_level) || is.na(minimum_level)) minimum_level <- 0
     levels <- c(0:12, 16, 24, 40)
@@ -203,7 +203,7 @@ ggchord_radial_label_lanes <- function(gl, seq_arcs, side = "outside",
         ggchord_radial_label_lanes(original, seq_arcs, side, units_per_inch,
           box_padding, point_padding, repel_boxes, .attempt + 1L, .fixed_paths,
           .minimum_levels, .balance))
-      ggchord_stop("Cannot fit radial labels for ", gl$seq_id[rows[1]],
+      ggchord_stop("Cannot fit radial labels for ", gl$accver[rows[1]],
                    " on this device; enlarge the output or reduce label size")
     }
     gl <- best$labels
@@ -237,7 +237,7 @@ ggchord_radial_label_lanes <- function(gl, seq_arcs, side = "outside",
     }
   }
   gl$.radial_parameter <- parameter
-  list(labels = gl, lanes = paste(gl$seq_id, signs, sep = "\r"),
+  list(labels = gl, lanes = paste(gl$accver, signs, sep = "\r"),
        directions = directions, tracks = tracks,
        draw_segment = seq_len(n) %in% active)
 }

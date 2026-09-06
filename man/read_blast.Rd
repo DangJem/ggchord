@@ -40,8 +40,7 @@ more files, default `FALSE`.}
 }
 \value{
 A data.frame with the required ribbon columns first
-  (`qaccver`, `saccver`, `length`, `pident`, `qstart`, `qend`,
-  `sstart`, `send`) followed by any preserved optional columns.
+  (`qaccver`, `saccver`, `qstart`, `qend`, `sstart`, `send`) followed by any preserved optional columns.
 }
 \description{
 `file` reads a single BLAST tabular output file; `files` reads multiple

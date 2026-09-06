@@ -1,14 +1,15 @@
 # Explicit helpers for dense ribbon data and deterministic sequence layout.
 
 ggchord_ribbon_required_columns <- function() {
-  c("qaccver", "saccver", "length", "pident",
-    "qstart", "qend", "sstart", "send")
+  c("qaccver", "saccver", "qstart", "qend", "sstart", "send")
 }
 
 ggchord_check_ribbon_tables <- function(seq_data, ribbon_data, caller) {
+  seq_data <- ggchord_normalize_accver(seq_data)
+
   if (!is.data.frame(seq_data) ||
-      !all(c("seq_id", "length") %in% names(seq_data))) {
-    ggchord_stop(caller, ": seq_data must contain seq_id and length")
+      !all(c("accver", "length") %in% names(seq_data))) {
+    ggchord_stop(caller, ": seq_data must contain accver and length")
   }
   if (!is.data.frame(ribbon_data)) {
     ggchord_stop(caller, ": ribbon_data must be a data.frame")
@@ -22,17 +23,17 @@ ggchord_check_ribbon_tables <- function(seq_data, ribbon_data, caller) {
     )
   }
 
-  seq_ids <- as.character(seq_data$seq_id)
+  seq_ids <- as.character(seq_data$accver)
   seq_lengths <- seq_data$length
   if (anyNA(seq_ids) || any(!nzchar(seq_ids)) || anyDuplicated(seq_ids)) {
-    ggchord_stop(caller, ": seq_data$seq_id must be unique and non-missing")
+    ggchord_stop(caller, ": seq_data$accver must be unique and non-missing")
   }
   if (!is.numeric(seq_lengths) || any(!is.finite(seq_lengths)) ||
       any(seq_lengths <= 0)) {
     ggchord_stop(caller, ": seq_data$length must contain positive numbers")
   }
 
-  numeric_columns <- c("length", "pident", "qstart", "qend", "sstart", "send")
+  numeric_columns <- intersect(c("length", "pident", "qstart", "qend", "sstart", "send"), names(ribbon_data))
   if (any(!vapply(ribbon_data[numeric_columns], is.numeric, logical(1)))) {
     ggchord_stop(caller, ": ribbon coordinate, length and pident columns must be numeric")
   }
@@ -59,6 +60,9 @@ ggchord_check_ribbon_tables <- function(seq_data, ribbon_data, caller) {
 }
 
 ggchord_ribbon_weights <- function(ribbon_data, weight) {
+  ggchord_require_columns(input <- ribbon_data,
+    switch(weight, count = character(), length = "length", pident = c("length", "pident")),
+    paste0("ribbon weight='", weight, "'"))
   switch(weight,
     count = rep(1, nrow(ribbon_data)),
     length = pmax(0, as.numeric(ribbon_data$length)),
@@ -81,7 +85,7 @@ ggchord_typed_na <- function(x) {
 #' ribbon per input row unless the returned data are supplied by the user.
 #'
 #' @param ribbon_data Alignment data in ggchord ribbon format.
-#' @param seq_data Sequence data containing \code{seq_id} and \code{length}.
+#' @param seq_data Sequence data containing \code{accver} and \code{length}.
 #' @param bins Positive integer number of normalized midpoint bins per
 #'   sequence, default 80.
 #' @param min_bundle Minimum number of rows required for aggregation, default
@@ -112,6 +116,8 @@ bundle_ggchord_ribbons <- function(
     min_bundle = 2L,
     weight = c("length", "count", "pident"),
     group_by = NULL) {
+  seq_data <- ggchord_normalize_accver(seq_data)
+
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
 
@@ -182,7 +188,7 @@ bundle_ggchord_ribbons <- function(
   groups <- split(seq_len(n_input), factor(keys, levels = unique(keys)))
 
   required <- checked$required
-  extra <- setdiff(names(input), required)
+  extra <- setdiff(names(input), c(required, "length", "pident"))
   out_rows <- list()
   source_map <- list()
 
@@ -197,7 +203,7 @@ bundle_ggchord_ribbons <- function(
   append_bundle <- function(idx) {
     row <- input[idx[1], , drop = FALSE]
     local_weight <- row_weight[idx]
-    mean_weight <- pmax(as.numeric(input$length[idx]), .Machine$double.eps)
+    mean_weight <- if ("length" %in% names(input)) pmax(as.numeric(input$length[idx]), .Machine$double.eps) else rep(1, length(idx))
     qlo <- min(input$qstart[idx], input$qend[idx])
     qhi <- max(input$qstart[idx], input$qend[idx])
     slo <- min(input$sstart[idx], input$send[idx])
@@ -206,8 +212,8 @@ bundle_ggchord_ribbons <- function(
     row$qend <- if (qdir[idx[1]] >= 0) qhi else qlo
     row$sstart <- if (sdir[idx[1]] >= 0) slo else shi
     row$send <- if (sdir[idx[1]] >= 0) shi else slo
-    row$length <- round(stats::weighted.mean(input$length[idx], mean_weight))
-    row$pident <- stats::weighted.mean(input$pident[idx], mean_weight)
+    if ("length" %in% names(input)) row$length <- round(stats::weighted.mean(input$length[idx], mean_weight))
+    if ("pident" %in% names(input)) row$pident <- stats::weighted.mean(input$pident[idx], mean_weight)
 
     for (nm in extra) {
       values <- input[[nm]][idx]
@@ -347,7 +353,7 @@ ggchord_layout_score <- function(scored, seq_order, orientation, lengths) {
 #' above 2,000 ribbons use a deterministic 64-bin approximation and record
 #' \code{approximate = TRUE} in the returned report.
 #'
-#' @param seq_data Sequence data containing \code{seq_id} and \code{length}.
+#' @param seq_data Sequence data containing \code{accver} and \code{length}.
 #' @param ribbon_data Alignment data in ggchord ribbon format.
 #' @param seq_order Optional initial complete sequence order. The default uses
 #'   the row order of \code{seq_data}.
@@ -380,6 +386,8 @@ optimize_ggchord_layout <- function(
     optimize = c("order", "orientation"),
     weight = c("length", "count", "pident"),
     max_iter = 50L) {
+  seq_data <- ggchord_normalize_accver(seq_data)
+
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
 

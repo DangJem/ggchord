@@ -18,7 +18,7 @@ make_ribbons <- function(n, seq_length = 100000) {
 }
 
 seq_data <- data.frame(
-  seq_id = c("A", "B"), length = c(100000, 100000)
+  accver = c("A", "B"), length = c(100000, 100000)
 )
 
 for (n in c(1000L, 5000L)) {

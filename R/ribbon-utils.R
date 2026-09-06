@@ -331,8 +331,8 @@ deduplicate_ggchord_ribbons <- function(
     ggchord_stop("deduplicate_ggchord_ribbons(): ribbon_data must be a data.frame",
          call. = FALSE)
   }
-  req <- c("qaccver", "saccver", "length", "pident",
-           "qstart", "qend", "sstart", "send")
+  req <- c(ggchord_ribbon_required_columns(),
+    switch(keep, first = character(), longest = "length", best_pident = "pident"))
   missing <- setdiff(req, colnames(ribbon_data))
   if (length(missing) > 0) {
     ggchord_stop("deduplicate_ggchord_ribbons(): ribbon_data is missing required column(s): ",

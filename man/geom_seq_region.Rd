@@ -22,7 +22,7 @@ geom_seq_region(
 \arguments{
 \item{mapping}{Default NULL (uses pre-computed data)}
 
-\item{data}{data.frame with at least \code{seq_id}, \code{start},
+\item{data}{data.frame with at least \code{accver}, \code{start},
 \code{end}; optional \code{label}, \code{category} and \code{color}.}
 
 \item{fill}{Character. Default fill colour for regions, default
@@ -54,7 +54,7 @@ user-defined regions without turning them into gene arrows.
 \examples{
 library(ggchord)
 data(seq_data_example)
-regions <- data.frame(seq_id = "MT108731.1",
+regions <- data.frame(accver = "MT108731.1",
                       start = 1000, end = 4000,
                       color = "orange")
 p <- ggchord(seq_data_example) + geom_seq() +

@@ -24,6 +24,7 @@
 #' @param seq.label,gene.label Text elements for existing label layers.
 #' @param gene.label.segment Line element for existing gene leader lines.
 #' @param legend.position,legend.justification,legend.direction,legend.box,legend.box.just,legend.box.margin,legend.box.background,legend.box.spacing,legend.background,legend.margin,legend.spacing,legend.spacing.x,legend.spacing.y,legend.key,legend.key.size,legend.key.width,legend.key.height,legend.text,legend.text.position,legend.title,legend.title.position Standard legend theme settings inherited by roles.
+#' @param legend.link,legend.link.position,legend.link.direction,legend.link.background,legend.link.key,legend.link.key.size,legend.link.key.width,legend.link.key.height,legend.link.text,legend.link.text.position,legend.link.title,legend.link.title.position,legend.link.margin,legend.link.spacing Point-link guide appearance; follows the same role-specific rules.
 #' @param legend.seq,legend.ribbon,legend.gene,legend.feature,legend.region
 #'   `NULL` to show and inherit common settings, or [ggplot2::element_blank()]
 #'   to hide every guide for that role.
@@ -72,6 +73,13 @@ theme_ggchord <- function(
     legend.seq.text = NULL, legend.seq.text.position = NULL,
     legend.seq.title = NULL, legend.seq.title.position = NULL,
     legend.seq.margin = NULL, legend.seq.spacing = NULL,
+    legend.link = NULL, legend.link.position = NULL,
+    legend.link.direction = NULL, legend.link.background = NULL,
+    legend.link.key = NULL, legend.link.key.size = NULL,
+    legend.link.key.width = NULL, legend.link.key.height = NULL,
+    legend.link.text = NULL, legend.link.text.position = NULL,
+    legend.link.title = NULL, legend.link.title.position = NULL,
+    legend.link.margin = NULL, legend.link.spacing = NULL,
     legend.ribbon = NULL, legend.ribbon.position = NULL,
     legend.ribbon.direction = NULL, legend.ribbon.background = NULL,
     legend.ribbon.key = NULL, legend.ribbon.key.size = NULL,
@@ -234,7 +242,7 @@ ggchord_theme_settings <- function(values) {
   fields <- c("position", "direction", "background", "key", "key.size",
     "key.width", "key.height", "text", "text.position", "title",
     "title.position", "margin", "spacing")
-  roles <- c("seq", "ribbon", "gene", "feature", "region")
+  roles <- c("seq", "link", "ribbon", "gene", "feature", "region")
   role_settings <- stats::setNames(vector("list", length(roles)), roles)
   allowed <- c("left", "right", "top", "bottom", "inside", "none")
   for (role in roles) {

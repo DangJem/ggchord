@@ -109,7 +109,13 @@ get_chord_layout <- function(plot, build = TRUE) {
     ggchord_stop("get_chord_layout(): plot must be supplied as a ggchord object")
   }
   layout <- plot$ggchord$ref$layout
-  if (is.null(layout) && isTRUE(build)) layout <- compute_chord_geometry(plot)
+  if (is.null(layout) && isTRUE(build)) {
+    branching <- any(vapply(plot$layers, function(l) (l$ggchord_params$link_branch %||% "none") != "none", logical(1)))
+    if (branching) {
+      invisible(ggplot2::ggplot_build(plot))
+      layout <- plot$ggchord$ref$layout
+    } else layout <- compute_chord_geometry(plot)
+  }
   if (is.null(layout)) {
     ggchord_stop(
       "Chord layout data not found. Please render the plot first.",
@@ -123,7 +129,7 @@ get_chord_layout <- function(plot, build = TRUE) {
 #' @noRd
 ggchord_capture_layer_input <- function(lyr, data, mapping, roles) {
   mapping <- ggchord_normalize_mapping(mapping)
-  lyr$ggchord_input_data <- data
+  lyr$ggchord_input_data <- ggchord_normalize_accver(data)
   lyr$ggchord_input_mapping <- mapping
   lyr$ggchord_role_aes <- roles
   lyr
@@ -133,6 +139,11 @@ ggchord_capture_layer_input <- function(lyr, data, mapping, roles) {
 #' @noRd
 ggchord_normalize_mapping <- function(mapping) {
   if (is.null(mapping)) return(mapping)
+  if ("seq_id" %in% names(mapping)) {
+    if ("accver" %in% names(mapping)) ggchord_stop("Use only one of accver and seq_id")
+    warning("seq_id mapping is deprecated; use accver (removed in v0.13.0)", call. = FALSE)
+    names(mapping)[names(mapping) == "seq_id"] <- "accver"
+  }
   if (anyDuplicated(names(mapping))) {
     duplicated_names <- unique(names(mapping)[duplicated(names(mapping))])
     ggchord_stop(
@@ -140,7 +151,7 @@ ggchord_normalize_mapping <- function(mapping) {
       paste(duplicated_names, collapse = ", ")
     )
   }
-  aliases <- c(seq_color = "seq_colour", ribbon_color = "ribbon_colour")
+  aliases <- c(seq_color = "seq_colour", ribbon_color = "ribbon_colour", link_color = "link_colour")
   for (alias in names(aliases)) {
     canonical <- aliases[[alias]]
     if (alias %in% names(mapping) && canonical %in% names(mapping)) {
@@ -194,7 +205,7 @@ ggchord_resolve_layer_input <- function(lyr, fallback = NULL) {
   if (!is.data.frame(data)) {
     ggchord_stop("ggchord layer data must be a data.frame or a function returning one")
   }
-  data <- as.data.frame(data, stringsAsFactors = FALSE)
+  data <- ggchord_normalize_accver(as.data.frame(data, stringsAsFactors = FALSE))
   mapping <- lyr$ggchord_input_mapping
   roles <- intersect(lyr$ggchord_role_aes %||% character(0), names(mapping))
   for (role in roles) {
@@ -212,7 +223,7 @@ ggchord_resolve_layer_input <- function(lyr, fallback = NULL) {
       )
     }
     value <- tryCatch(
-      rlang::eval_tidy(mapping[[role]], data = data),
+      rlang::eval_tidy(mapping[[role]], data = if (identical(expr, as.name("seq_id")) && "accver" %in% names(data)) c(data, list(seq_id = data$accver)) else data),
       error = function(e) ggchord_stop(
         "Cannot evaluate `", role, "` in layer mapping: ", conditionMessage(e)
       )
@@ -222,6 +233,14 @@ ggchord_resolve_layer_input <- function(lyr, fallback = NULL) {
       ggchord_stop("Mapped `", role, "` must return one value per input row")
     }
     data[[role]] <- value
+  }
+  for (nm in setdiff(names(mapping), roles)) {
+    expr <- rlang::quo_get_expr(mapping[[nm]])
+    text <- rlang::as_label(expr)
+    if (!grepl("after_stat|after_scale", text)) {
+      columns <- intersect(all.vars(expr), c("pident", "length", "anno", "type", "label"))
+      ggchord_require_columns(data, columns, paste0("Mapping `", nm, "`"))
+    }
   }
   transform <- lyr$ggchord_input_transform
   if (!is.null(transform)) data <- transform(data)
@@ -233,6 +252,16 @@ ggchord_resolve_layer_input <- function(lyr, fallback = NULL) {
 ggchord_effective_mapping <- function(lyr) {
   out <- lyr$mapping
   user <- lyr$ggchord_input_mapping
+  input <- lyr$ggchord_resolved_input
+  if (identical(lyr$ggchord_type, "ribbon") && !is.null(input) &&
+      !"pident" %in% names(input) && !"ribbon_fill" %in% names(user)) {
+    out$ribbon_fill <- NULL
+  }
+  if (lyr$ggchord_type %in% c("gene_poly") && !is.null(input) &&
+      (!"anno" %in% names(input) || all(is.na(input$anno)))) {
+    if (!"gene_fill" %in% names(user)) out$gene_fill <- NULL
+    if (!"feature_fill" %in% names(user)) out$feature_fill <- NULL
+  }
   if (is.null(user)) return(out)
   visual <- setdiff(names(user), lyr$ggchord_role_aes %||% character(0))
   for (nm in visual) out[[nm]] <- user[[nm]]
@@ -257,8 +286,8 @@ ggchord_attach_input_columns <- function(geometry, input) {
   )
   if ("source_row" %in% names(geometry)) {
     idx <- geometry$source_row
-  } else if ("seq_id" %in% names(geometry) && "seq_id" %in% names(input)) {
-    idx <- match(as.character(geometry$seq_id), as.character(input$seq_id))
+  } else if ("accver" %in% names(geometry) && "accver" %in% names(input)) {
+    idx <- match(as.character(geometry$accver), as.character(input$accver))
     geometry <- geometry[!is.na(idx), , drop = FALSE]
     idx <- idx[!is.na(idx)]
   } else {
@@ -289,7 +318,6 @@ extract_ggchord_layer_data <- function(lyr, layout) {
     gene_label_segment = if (nrow(layout$gene_label_segments) > 0) layout$gene_label_segments else fallback,
     seq_label = if (nrow(layout$seq_labels_df) > 0) layout$seq_labels_df else fallback,
     seq_region = if (nrow(layout$region_polys) > 0) layout$region_polys else fallback,
-    ribbon_highlight = if (nrow(layout$ribbon_highlight_polys) > 0) layout$ribbon_highlight_polys else fallback,
     axis_line = if (nrow(layout$axis_lines) > 0) layout$axis_lines else fallback,
     axis_seg  = if (nrow(layout$axis_ticks) > 0) layout$axis_ticks else fallback,
     axis_text = {
@@ -319,7 +347,7 @@ ggchord_axis_geometry <- function(layout) {
   }
   if (nrow(line)) {
     line$.component <- "line"
-    line$group <- line$seq_id
+    line$group <- line$accver
   }
   if (nrow(tick)) {
     tick$.component <- ifelse(tick$is_major, "major_tick", "minor_tick")
@@ -387,7 +415,7 @@ ggchord_repel_geometry <- function(layout) {
     if (nrow(text) && "group" %in% names(segment) &&
         "group" %in% names(text)) {
       label_index <- match(segment$group, text$group)
-      for (nm in intersect(c("source_row", "seq_id"), names(text))) {
+      for (nm in intersect(c("source_row", "accver"), names(text))) {
         segment[[nm]] <- text[[nm]][label_index]
       }
     }

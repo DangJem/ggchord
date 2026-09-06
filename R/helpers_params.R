@@ -163,7 +163,7 @@ process_sequence_param <- function(param, seqs, param_name, default_value = NULL
 #' @param param_name Character, name of the parameter (used in error messages)
 #' @param default_value Default value when param is NULL
 #' @param is_logical Logical, whether the parameter is logical (TRUE/FALSE), default FALSE
-#' @return List (named by seq_id), where each element is a vector with "+"/"-"
+#' @return List (named by accver), where each element is a vector with "+"/"-"
 #' @keywords internal
 process_gene_param <- function(param, seqs, param_name, default_value, is_logical = FALSE) {
   n <- length(seqs)
@@ -316,7 +316,7 @@ process_gene_param <- function(param, seqs, param_name, default_value, is_logica
 #'   numeric (angle), vector (length matches number of sequences), or named
 #'   vector, label orientation parameter
 #' @param seqs Character vector, list of sequence IDs
-#' @return Named vector (names are seq_id), values are "horizontal",
+#' @return Named vector (names are accver), values are "horizontal",
 #'   "parallel", "perpendicular" or numeric angles
 #' @keywords internal
 process_axis_orientation <- function(param, seqs) {
@@ -343,13 +343,13 @@ process_axis_orientation <- function(param, seqs) {
 
     for (i in seq_along(param)) {
       val <- param[i]
-      seq_id <- seqs[i]
+      accver <- seqs[i]
 
       num_val <- suppressWarnings(as.numeric(val))
       if (is_keyword(val)) {
-        result[seq_id] <- tolower(val)
+        result[accver] <- tolower(val)
       } else if (is.numeric(val) || (!is.na(num_val) && num_val == val)) {
-        result[seq_id] <- as.character(num_val)
+        result[accver] <- as.character(num_val)
       } else {
         ggchord_stop(paste("Element", i, "of axis_label_orientation has incorrect format; must be numeric, 'horizontal', 'parallel' or 'perpendicular'"))
       }

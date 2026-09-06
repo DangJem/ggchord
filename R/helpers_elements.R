@@ -107,7 +107,7 @@ draw_key_gene_arrow <- function(data, params, size) {
   x <- c(0.10, 0.62, 0.90, 0.62, 0.10)
   if (identical(as.character(data$strand %||% "+")[1], "-")) x <- 1 - x
   x_pts <- grid::unit(x, "npc")
-  y_pts <- grid::unit(c(0.32, 0.32, 0.50, 0.68, 0.68), "npc")
+  y_pts <- grid::unit(c(0.23, 0.23, 0.50, 0.77, 0.77), "npc")
 
   grid::polygonGrob(
     x = x_pts, y = y_pts,

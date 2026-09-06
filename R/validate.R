@@ -61,7 +61,7 @@ validate_seq_data <- function(seq_data, col) {
       col, "seq", "empty", NA_integer_, NA_character_,
       "seq_data is empty; at least one sequence is required", "error"))
   }
-  required <- c("seq_id", "length")
+  required <- c("accver", "length")
   missing <- setdiff(required, colnames(seq_data))
   if (length(missing) > 0) {
     return(add_validation_issue(
@@ -70,27 +70,27 @@ validate_seq_data <- function(seq_data, col) {
               paste(missing, collapse = ", ")), "error"))
   }
 
-  sid <- seq_data$seq_id
+  sid <- seq_data$accver
   if (anyNA(sid)) {
     rows <- which(is.na(sid))
     col <- add_validation_issue(
-      col, "seq", "missing_id", rows, "seq_id",
-      "seq_id contains NA values", "error")
+      col, "seq", "missing_id", rows, "accver",
+      "accver contains NA values", "error")
   }
   empty_ids <- !is.na(sid) & !nzchar(as.character(sid))
   if (any(empty_ids)) {
     rows <- which(empty_ids)
     col <- add_validation_issue(
-      col, "seq", "empty_id", rows, "seq_id",
-      "seq_id contains empty strings", "error")
+      col, "seq", "empty_id", rows, "accver",
+      "accver contains empty strings", "error")
   }
   dup <- unique(sid[duplicated(sid)])
   dup <- dup[!is.na(dup) & nzchar(as.character(dup))]
   if (length(dup) > 0) {
     rows <- which(sid %in% dup)
     col <- add_validation_issue(
-      col, "seq", "duplicate_id", rows, "seq_id",
-      sprintf("seq_id is duplicated (values: %s); seq_id must be unique",
+      col, "seq", "duplicate_id", rows, "accver",
+      sprintf("accver is duplicated (values: %s); accver must be unique",
               paste(dup, collapse = ", ")), "error")
   }
 
@@ -141,8 +141,7 @@ validate_ribbon_data <- function(ribbon_data, seq_data, col,
       col, "ribbon", "not_dataframe", NA_integer_, NA_character_,
       "ribbon_data must be a data.frame", "error"))
   }
-  required <- c("qaccver", "saccver", "length", "pident",
-                "qstart", "qend", "sstart", "send")
+  required <- ggchord_ribbon_required_columns()
   missing <- setdiff(required, colnames(ribbon_data))
   if (length(missing) > 0) {
     return(add_validation_issue(
@@ -152,7 +151,7 @@ validate_ribbon_data <- function(ribbon_data, seq_data, col,
   }
   if (nrow(ribbon_data) == 0) return(col)
 
-  num_cols <- c("length", "pident", "qstart", "qend", "sstart", "send")
+  num_cols <- intersect(c("length", "pident", "qstart", "qend", "sstart", "send"), names(ribbon_data))
   for (nm in num_cols) {
     if (!is.numeric(ribbon_data[[nm]])) {
       col <- add_validation_issue(
@@ -193,8 +192,8 @@ validate_ribbon_data <- function(ribbon_data, seq_data, col,
       "ribbon_data$length must be positive", "error")
   }
 
-  if (is.data.frame(seq_data) && "seq_id" %in% colnames(seq_data)) {
-    known_ids <- seq_data$seq_id
+  if (is.data.frame(seq_data) && "accver" %in% colnames(seq_data)) {
+    known_ids <- seq_data$accver
     for (nm in c("qaccver", "saccver")) {
       x <- as.character(ribbon_data[[nm]])
       bad <- !is.na(x) & nzchar(x) & !(x %in% known_ids)
@@ -250,10 +249,10 @@ validate_ribbon_data <- function(ribbon_data, seq_data, col,
   }
 
   seq_lengths_ok <- is.data.frame(seq_data) &&
-    all(c("seq_id", "length") %in% colnames(seq_data)) &&
+    all(c("accver", "length") %in% colnames(seq_data)) &&
     is.numeric(seq_data$length) && all(is.finite(seq_data$length))
   if (isTRUE(check_coordinates) && numeric_ok && seq_lengths_ok) {
-    lens <- stats::setNames(seq_data$length, seq_data$seq_id)
+    lens <- stats::setNames(seq_data$length, seq_data$accver)
     coords <- list(
       qstart = "qaccver", qend = "qaccver",
       sstart = "saccver", send = "saccver"
@@ -462,7 +461,7 @@ validate_gene_data <- function(gene_data, seq_data, col,
       col, "gene", "not_dataframe", NA_integer_, NA_character_,
       "gene_data must be a data.frame", "error"))
   }
-  required <- c("seq_id", "start", "end", "strand", "anno")
+  required <- c("accver", "start", "end", "strand")
   missing <- setdiff(required, colnames(gene_data))
   if (length(missing) > 0) {
     return(add_validation_issue(
@@ -489,19 +488,19 @@ validate_gene_data <- function(gene_data, seq_data, col,
     }
   }
 
-  sid <- gene_data$seq_id
+  sid <- gene_data$accver
   if (anyNA(sid)) {
     rows <- which(is.na(sid))
     col <- add_validation_issue(
-      col, "gene", "missing_id", rows, "seq_id",
-      "gene_data$seq_id contains NA values", "error")
+      col, "gene", "missing_id", rows, "accver",
+      "gene_data$accver contains NA values", "error")
   }
   empty <- !is.na(sid) & !nzchar(as.character(sid))
   if (any(empty)) {
     rows <- which(empty)
     col <- add_validation_issue(
-      col, "gene", "empty_id", rows, "seq_id",
-      "gene_data$seq_id contains empty strings", "error")
+      col, "gene", "empty_id", rows, "accver",
+      "gene_data$accver contains empty strings", "error")
   }
   if (anyNA(gene_data$strand)) {
     rows <- which(is.na(gene_data$strand))
@@ -518,15 +517,15 @@ validate_gene_data <- function(gene_data, seq_data, col,
               paste(unique(gene_data$strand[bad_strand]), collapse = ", ")), "error")
   }
 
-  if (is.data.frame(seq_data) && "seq_id" %in% colnames(seq_data)) {
+  if (is.data.frame(seq_data) && "accver" %in% colnames(seq_data)) {
     x <- as.character(sid)
-    bad <- !is.na(x) & nzchar(x) & !(x %in% seq_data$seq_id)
+    bad <- !is.na(x) & nzchar(x) & !(x %in% seq_data$accver)
     if (any(bad)) {
       rows <- which(bad)
       unk <- sort(unique(x[bad]))
       col <- add_validation_issue(
-        col, "gene", "unknown_id", rows, "seq_id",
-        sprintf(paste0("gene_data$seq_id references sequence IDs not present in ",
+        col, "gene", "unknown_id", rows, "accver",
+        sprintf(paste0("gene_data$accver references sequence IDs not present in ",
                        "seq_data (%s); these features are skipped when drawing"),
                 paste(unk, collapse = ", ")), "error")
     }
@@ -545,10 +544,10 @@ validate_gene_data <- function(gene_data, seq_data, col,
   }
 
   seq_lengths_ok <- is.data.frame(seq_data) &&
-    all(c("seq_id", "length") %in% colnames(seq_data)) &&
+    all(c("accver", "length") %in% colnames(seq_data)) &&
     is.numeric(seq_data$length) && all(is.finite(seq_data$length))
   if (isTRUE(check_coordinates) && coords_ok && seq_lengths_ok) {
-    lens <- stats::setNames(seq_data$length, seq_data$seq_id)
+    lens <- stats::setNames(seq_data$length, seq_data$accver)
     ids <- as.character(sid)
     known <- !is.na(ids) & ids %in% names(lens)
     for (nm in c("start", "end")) {
@@ -576,22 +575,22 @@ validate_gene_data <- function(gene_data, seq_data, col,
   }
 
   if (isTRUE(check_duplicates) && nrow(gene_data) > 0) {
-    key <- paste(gene_data$seq_id, gene_data$start, gene_data$end,
-                 gene_data$strand, gene_data$anno, sep = "\r")
+    key <- paste(gene_data$accver, gene_data$start, gene_data$end,
+                 gene_data$strand, gene_data$anno %||% rep("", nrow(gene_data)), sep = "\r")
     dup_idx <- which(duplicated(key))
     if (length(dup_idx) > 0) {
       first <- match(key[dup_idx], key)
       rows <- unique(c(dup_idx, first))
       col <- add_validation_issue(
         col, "gene", "exact_duplicate", rows, NA_character_,
-        "Fully duplicated gene features (same seq_id, coordinates, strand and anno)",
+        "Fully duplicated gene features (same accver, coordinates, strand and anno)",
         "warning")
     }
     # Highly overlapping features require valid numeric coordinates. Exact
     # duplicate reporting above remains useful even when coordinates are bad.
     ov_rows <- integer(0)
     if (coords_ok) {
-      grp <- split(seq_len(nrow(gene_data)), gene_data$seq_id)
+      grp <- split(seq_len(nrow(gene_data)), gene_data$accver)
       for (g in grp) {
         if (length(g) < 2 || length(g) > 1000) next
         st <- gene_data$start[g]
@@ -694,12 +693,11 @@ validation_cleanable <- function(errors, warnings) {
 #' list of automatically fixable issues.
 #'
 #' @param seq_data data.frame/tibble, required. Basic sequence information
-#'   (columns \code{seq_id}, \code{length}).
+#'   (columns \code{accver}, \code{length}).
 #' @param ribbon_data data.frame/tibble, optional. Alignment results (columns
-#'   \code{qaccver}, \code{saccver}, \code{length}, \code{pident},
-#'   \code{qstart}, \code{qend}, \code{sstart}, \code{send}).
+#'   \code{qaccver}, \code{saccver}, \code{qstart}, \code{qend}, \code{sstart}, \code{send}).
 #' @param gene_data data.frame/tibble, optional. Gene annotation data (columns
-#'   \code{seq_id}, \code{start}, \code{end}, \code{strand}, \code{anno}).
+#'   \code{accver}, \code{start}, \code{end}, \code{strand}; \code{anno} is optional).
 #' @param strict Logical. When \code{TRUE}, stop with an error as soon as any
 #'   severe problem is found. When \code{FALSE} (default), return the full
 #'   diagnostic report without stopping.
@@ -750,6 +748,9 @@ validate_ggchord_data <- function(seq_data,
                                   check_coordinates = TRUE,
                                   check_duplicates = TRUE,
                                   check_self_links = TRUE) {
+  seq_data <- ggchord_normalize_accver(seq_data)
+  gene_data <- ggchord_normalize_accver(gene_data)
+
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
 

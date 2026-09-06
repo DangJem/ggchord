@@ -28,12 +28,12 @@ geom_ribbon(
 \item{ribbon_ctrl_point}{Optional vector/list. Bezier control points, default c(0,0)}
 
 \item{ribbon_gap}{Optional numeric/vector controlling spacing between
-sequences and ribbon endpoints. The default \code{NULL} uses local
-obstacle-aware spacing: endpoints move closer to \code{geom_seq()} where
-no \code{geom_gene()} or \code{geom_feature()} polygon overlaps that
-genomic interval, and retain enough clearance where one does. Text and
-leader lines are ignored. Supplying a number disables the automatic rule
-and uses that exact spacing.}
+sequences and ribbon endpoints. With the default
+\code{link_avoid = "none"}, \code{NULL} uses the fixed spacing 0.035.
+Set \code{link_avoid} to \code{"smooth"} or \code{"uniform"} to opt in
+to obstacle-aware spacing based on \code{geom_gene()} and
+\code{geom_feature()} polygons. Text and leader lines are ignored.
+Supplying a number disables the automatic rule and uses that exact spacing.}
 
 \item{fill}{Optional fixed ribbon fill. `NULL` keeps the default Identity
 mapping.}

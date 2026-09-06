@@ -11,7 +11,7 @@ region_geom <- rename_geom_aes(
 #' user-defined regions without turning them into gene arrows.
 #'
 #' @param mapping Default NULL (uses pre-computed data)
-#' @param data data.frame with at least \code{seq_id}, \code{start},
+#' @param data data.frame with at least \code{accver}, \code{start},
 #'   \code{end}; optional \code{label}, \code{category} and \code{color}.
 #' @param fill Character. Default fill colour for regions, default
 #'   \code{"#F59E0B"}.
@@ -30,7 +30,7 @@ region_geom <- rename_geom_aes(
 #' @examples
 #' library(ggchord)
 #' data(seq_data_example)
-#' regions <- data.frame(seq_id = "MT108731.1",
+#' regions <- data.frame(accver = "MT108731.1",
 #'                       start = 1000, end = 4000,
 #'                       color = "orange")
 #' p <- ggchord(seq_data_example) + geom_seq() +
@@ -110,7 +110,7 @@ geom_seq_region <- function(mapping = NULL, data = NULL,
     region_side    = region_side
   )
   lyr <- ggchord_capture_layer_input(
-    lyr, data, mapping, c("seq_id", "start", "end")
+    lyr, data, mapping, c("accver", "start", "end")
   )
   lyr
 }

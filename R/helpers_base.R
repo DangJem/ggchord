@@ -41,8 +41,8 @@ if_null_else <- function (x, y)
 #' Extracts x/y coordinate extremes from all plot elements (sequence arcs, ribbons, gene arrows, etc.) for adjusting the plot range
 #'
 #' @param allRibbon data.frame, ribbon data (with x, y columns), default NULL
-#' @param seqArcs List, sequence arc data (each element is a data frame with x, y, seq_id), default NULL
-#' @param axisLines data.frame, axis line data (with x, y, seq_id columns), default NULL
+#' @param seqArcs List, sequence arc data (each element is a data frame with x, y, accver), default NULL
+#' @param axisLines data.frame, axis line data (with x, y, accver columns), default NULL
 #' @param axisTicks data.frame, tick mark data (with x0, y0, x1, y1, label_x, label_y columns), default NULL
 #' @param gene_arrows data.frame, gene label data (with text_x, text_y columns), default NULL
 #' @param gene_polys data.frame, gene arrow polygon data (with x, y columns), default NULL
@@ -561,7 +561,7 @@ ggchord_uncross_labels <- function(gl, lanes = NULL, max_swaps = NULL,
                                    endpoint_fun = NULL) {
   n <- nrow(gl)
   if (n < 2) return(list(labels = gl, swaps = 0L))
-  if (is.null(lanes)) lanes <- gl$seq_id %||% rep("all", n)
+  if (is.null(lanes)) lanes <- gl$accver %||% rep("all", n)
   if (length(lanes) != n) {
     ggchord_stop("lanes must have one value per gene label")
   }
@@ -681,11 +681,11 @@ ggchord_label_curve_frame <- function(gl, seq_arcs) {
   if (n == 0) return(frame)
 
   arc_ids <- vapply(seq_arcs, function(a) {
-    if (nrow(a) == 0) "" else as.character(unique(a$seq_id)[1])
+    if (nrow(a) == 0) "" else as.character(unique(a$accver)[1])
   }, character(1))
 
-  for (sid in unique(gl$seq_id)) {
-    rows <- which(gl$seq_id == sid)
+  for (sid in unique(gl$accver)) {
+    rows <- which(gl$accver == sid)
     arc_pos <- match(sid, arc_ids)
     if (is.na(arc_pos) || nrow(seq_arcs[[arc_pos]]) < 2) next
     arc <- seq_arcs[[arc_pos]]
@@ -833,7 +833,7 @@ ggchord_side_label_columns <- function(gl, seq_arcs,
   # congestion without treating unused sides as a target to distribute toward.
   if (is.null(directions)) directions <- ifelse(desired_x < 0, "left", "right")
   directions[!active] <- NA_character_
-  base_lanes <- paste(gl$seq_id, directions, sep = "\r")
+  base_lanes <- paste(gl$accver, directions, sep = "\r")
 
   gl$text_angle[active] <- 0
   gl$hjust[active] <- c(left = 1, right = 0, top = 0.5, bottom = 0.5)[
@@ -1096,7 +1096,7 @@ ggchord_offset_label_tracks <- function(gl, seq_arcs,
     clearance
   )
 
-  base_lanes <- paste(gl$seq_id, side_sign, sep = "\r")
+  base_lanes <- paste(gl$accver, side_sign, sep = "\r")
   lane_rows <- split(which(active), base_lanes[active], drop = TRUE)
   tracks <- rep(NA_integer_, n)
   placed_boxes <- NULL
@@ -1485,9 +1485,9 @@ ggchord_hide_text_overlaps <- function(df, content_pts,
   if (length(idx) < 1) return(df)
   # keep the axis start/end labels of every sequence visible
   protect <- logical(length(idx))
-  if ("seq_id" %in% names(df) && length(idx) > 1) {
-    for (sid in unique(df$seq_id[idx])) {
-      rows <- idx[df$seq_id[idx] == sid]
+  if ("accver" %in% names(df) && length(idx) > 1) {
+    for (sid in unique(df$accver[idx])) {
+      rows <- idx[df$accver[idx] == sid]
       if (length(rows) > 1) {
         protect[match(min(rows), idx)] <- TRUE
         protect[match(max(rows), idx)] <- TRUE

@@ -31,7 +31,7 @@ fill the `anno` column.}
 more files, default `FALSE`.}
 }
 \value{
-A data.frame with `seq_id`, `start`, `end`, `strand`, `anno`
+A data.frame with `accver`, `start`, `end`, `strand`, `anno`
   followed by `type`, `source`, `score`, `phase` and `attributes`.
 }
 \description{

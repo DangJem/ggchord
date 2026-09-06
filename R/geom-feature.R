@@ -16,7 +16,7 @@ feature_geom <- ggplot2::ggproto(
 #' Normalize common and mapped feature roles once at build time
 #' @noRd
 ggchord_feature_data <- function(data, fixed_shape = "arrow") {
-  required <- c("seq_id", "start", "end", "strand")
+  required <- c("accver", "start", "end", "strand")
   missing <- setdiff(required, names(data))
   if (length(missing)) {
     ggchord_stop(
@@ -31,12 +31,10 @@ ggchord_feature_data <- function(data, fixed_shape = "arrow") {
   } else if ("anno" %in% names(data)) {
     data$anno
   } else {
-    ggchord_stop(
-      "geom_feature(): data must contain `type` or map `feature_type` in aes()"
-    )
+    rep(NA_character_, nrow(data))
   }
   out <- as.data.frame(data, stringsAsFactors = FALSE)
-  out$seq_id <- as.character(out$seq_id)
+  out$accver <- as.character(out$accver)
   out$start <- as.numeric(out$start)
   out$end <- as.numeric(out$end)
   out$strand <- as.character(out$strand)
@@ -72,10 +70,10 @@ ggchord_feature_data <- function(data, fixed_shape = "arrow") {
 #' fill and geometry use independent role-specific scales.
 #'
 #' @param mapping Optional aesthetic mapping. Role aesthetics such as
-#'   \code{seq_id}, \code{start}, \code{end} and \code{strand} may rename
+#'   \code{accver}, \code{start}, \code{end} and \code{strand} may rename
 #'   input columns; ordinary visual mappings are evaluated after geometry is
 #'   generated.
-#' @param data data.frame with \code{seq_id}, \code{start}, \code{end} and
+#' @param data data.frame with \code{accver}, \code{start}, \code{end} and
 #'   \code{strand}; optional \code{type}, \code{category} and \code{label}.
 #' @param feature_shape Fixed feature geometry used when \code{feature_shape}
 #'   is not mapped in \code{aes()}: \code{"arrow"}, \code{"block"},
@@ -97,7 +95,7 @@ ggchord_feature_data <- function(data, fixed_shape = "arrow") {
 #' @examples
 #' library(ggchord)
 #' data(seq_data_example)
-#' features <- data.frame(seq_id = "MT108731.1",
+#' features <- data.frame(accver = "MT108731.1",
 #'                        start = 1000, end = 4000,
 #'                        strand = "+", type = "CDS")
 #' p <- ggchord(seq_data_example) + geom_seq() +
@@ -136,11 +134,11 @@ geom_feature <- function(mapping = NULL, data = NULL,
     )
   }
   roles <- c(
-    "seq_id", "start", "end", "strand", "feature_type", "feature_label",
+    "accver", "start", "end", "strand", "feature_type", "feature_label",
     "feature_shape"
   )
   placeholder <- data.frame(
-    seq_id = character(), start = numeric(), end = numeric(),
+    accver = character(), start = numeric(), end = numeric(),
     strand = character(), anno = character(), label = character(),
     type = character(), .feature_shape_raw = character()
   )
@@ -193,6 +191,7 @@ geom_feature <- function(mapping = NULL, data = NULL,
       lyr$show.legend <- c(lyr$show.legend, feature_shape = TRUE)
     }
   }
+  if (shape_mapped) lyr$mapping[["feature_shape"]] <- as.name(".feature_shape_raw")
   lyr$geom <- feature_geom
   if (!shape_mapped) lyr$aes_params$feature_shape <- feature_shape
   lyr

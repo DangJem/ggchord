@@ -24,7 +24,7 @@ every occurrence of this delimiter and only the first piece is kept.}
 more files, default `FALSE`.}
 }
 \value{
-A data.frame with columns `seq_id` and `length`.
+A data.frame with columns `accver` and `length`.
 }
 \description{
 `file` reads a single FASTA file; `files` reads multiple files at once and

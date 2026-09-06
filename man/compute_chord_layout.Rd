@@ -17,6 +17,7 @@ compute_chord_layout(
   ribbonGap,
   ribbon_gap_auto = FALSE,
   ribbon_obstacles = NULL,
+  link_avoid = "none",
   ribbon_color_scheme,
   ribbon_colors,
   ribbon_alpha,
@@ -42,7 +43,6 @@ compute_chord_layout(
   region_width = 0.08,
   region_offset = 0,
   region_side = "inside",
-  ribbon_highlight_rows = integer(0),
   gene_data = NULL,
   draw_gene_geometry = TRUE,
   geneGap,
@@ -98,7 +98,7 @@ compute_chord_layout(
 \arguments{
 \item{seqs}{Vector of sequence IDs (order already processed)}
 
-\item{lens}{Named vector of sequence lengths (names = seq_id)}
+\item{lens}{Named vector of sequence lengths (names = accver)}
 
 \item{seq_labels}{Named vector of sequence labels}
 
@@ -118,6 +118,8 @@ compute_chord_layout(
 arcs when no gene or feature geometry occupies the local interval.}
 
 \item{ribbon_obstacles}{Optional normalized gene/feature obstacle table.}
+
+\item{link_avoid}{Automatic link spacing mode.}
 
 \item{gene_data}{Gene data (already validated)}
 

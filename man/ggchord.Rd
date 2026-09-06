@@ -14,11 +14,14 @@ ggchord(
 )
 }
 \arguments{
-\item{seq_data}{data.frame/tibble, required. Basic sequence information}
+\item{seq_data}{data.frame/tibble with accver and length.}
 
-\item{ribbon_data}{data.frame/tibble, optional. Alignment results}
+\item{ribbon_data}{Optional alignment table with qaccver, saccver, qstart,
+qend, sstart and send. length and pident are optional unless requested
+by a mapping, filter or statistic.}
 
-\item{gene_data}{data.frame/tibble, optional. Gene annotation data}
+\item{gene_data}{Optional table with accver, start, end and strand.
+Annotation (anno) may be omitted.}
 
 \item{debug}{Logical. Whether to output debug information, default FALSE}
 

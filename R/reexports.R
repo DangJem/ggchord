@@ -98,3 +98,31 @@ ggplot2::waiver
 #' @importFrom ggplot2 expansion
 #' @export
 ggplot2::expansion
+
+#' Physical units and direction arrows
+#'
+#' These are the original grid functions, available after loading ggchord.
+#' Use physical units for theme spacing and arrows for point links.
+#' @param x Numeric unit values.
+#' @param units Unit names, such as mm, inches or npc.
+#' @param data Optional supplementary data for special grid units.
+#' @param angle Arrow-head angle in degrees.
+#' @param length Arrow-head length as a unit object.
+#' @param ends Which ends receive arrows: first, last or both.
+#' @param type Arrow-head style: open or closed.
+#' @return A grid unit or arrow object.
+#' @name grid-helpers
+#' @examples
+#' unit(2, "mm")
+#' arrow(length = unit(2, "mm"), type = "closed")
+NULL
+
+#' @rdname grid-helpers
+#' @importFrom grid unit
+#' @export
+grid::unit
+
+#' @rdname grid-helpers
+#' @importFrom grid arrow
+#' @export
+grid::arrow

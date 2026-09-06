@@ -38,9 +38,9 @@ position_feature_stack <- function(
 
 ggchord_stack_feature_tracks <- function(data, position) {
   if (is.null(data) || !is.data.frame(data) || nrow(data) == 0L) return(data)
-  if (!all(c("seq_id", "start", "end", "strand") %in% names(data))) {
+  if (!all(c("accver", "start", "end", "strand") %in% names(data))) {
     ggchord_stop(
-      "position_feature_stack() requires seq_id, start, end, and strand"
+      "position_feature_stack() requires accver, start, end, and strand"
     )
   }
   side <- position$side %||% "strand"
@@ -50,7 +50,7 @@ ggchord_stack_feature_tracks <- function(data, position) {
     rep(side, nrow(data))
   }
   lane <- integer(nrow(data))
-  keys <- paste(as.character(data$seq_id), effective_side, sep = "\r")
+  keys <- paste(as.character(data$accver), effective_side, sep = "\r")
   groups <- split(seq_len(nrow(data)), factor(keys, levels = unique(keys)))
   for (idx in groups) {
     lo <- pmin(data$start[idx], data$end[idx])

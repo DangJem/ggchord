@@ -6,6 +6,25 @@
   to `geom_link_ribbon()`; removal is planned for v0.13.0. Ribbon statistics
   use the canonical constructor without triggering the compatibility warning.
 
+* Single-sequence tables now use `accver`. Legacy `seq_id` columns/mappings
+  warn in v0.12 and will be removed in v0.13; supplying both is an error.
+  Packaged example data have been regenerated from unchanged source files.
+* Ribbon drawing requires only the six endpoint columns. `length` and
+  `pident` are optional; requested filters/statistics still require their
+  inputs. Missing identity uses a fixed fill without an Identity guide.
+* Gene annotations and feature categories may be omitted. Coordinates,
+  accessions, sequence lengths and feature strands remain required.
+* Added point links (`geom_link_line()`), independent link scales and
+  `legend.link.*`, and re-exported `grid::unit()` and `grid::arrow()`.
+* Entity obstacle providers now use rendered shapes. Local clearance is opt-in
+  through `link_avoid = "smooth"` or `"uniform"`; the default is `"none"`.
+* `link_branch = "query"` or `"subject"` optionally shares equal endpoints
+  with equal mapped styles. Trunks retain source membership in layout exports.
+* Removed `geom_ribbon_highlight()`. Use an additional
+  `geom_link_ribbon(data = subset, fill = ...)` layer instead.
+* Fixed feature-shape legend mappings and increased gene-arrow key height.
+* Archived previous-release design records in DESIGN-HISTORY.md.
+
 # ggchord 0.11.0
 
 * `geom_gene_label_repel()` now defaults to `gene_label_layout = "radial"`:

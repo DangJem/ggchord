@@ -16,14 +16,13 @@ validate_ggchord_data(
 }
 \arguments{
 \item{seq_data}{data.frame/tibble, required. Basic sequence information
-(columns \code{seq_id}, \code{length}).}
+(columns \code{accver}, \code{length}).}
 
 \item{ribbon_data}{data.frame/tibble, optional. Alignment results (columns
-\code{qaccver}, \code{saccver}, \code{length}, \code{pident},
-\code{qstart}, \code{qend}, \code{sstart}, \code{send}).}
+\code{qaccver}, \code{saccver}, \code{qstart}, \code{qend}, \code{sstart}, \code{send}).}
 
 \item{gene_data}{data.frame/tibble, optional. Gene annotation data (columns
-\code{seq_id}, \code{start}, \code{end}, \code{strand}, \code{anno}).}
+\code{accver}, \code{start}, \code{end}, \code{strand}; \code{anno} is optional).}
 
 \item{strict}{Logical. When \code{TRUE}, stop with an error as soon as any
 severe problem is found. When \code{FALSE} (default), return the full

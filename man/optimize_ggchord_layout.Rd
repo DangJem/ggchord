@@ -15,7 +15,7 @@ optimize_ggchord_layout(
 )
 }
 \arguments{
-\item{seq_data}{Sequence data containing \code{seq_id} and \code{length}.}
+\item{seq_data}{Sequence data containing \code{accver} and \code{length}.}
 
 \item{ribbon_data}{Alignment data in ggchord ribbon format.}
 

@@ -35,11 +35,11 @@ test_that("packaged gene example is compact, distributed and strand-balanced", {
   data(gene_data_example)
   expect_equal(
     as.integer(table(factor(
-      gene_data_example$seq_id, levels = seq_data_example$seq_id
+      gene_data_example$accver, levels = seq_data_example$accver
     ))),
     rep(8L, nrow(seq_data_example))
   )
-  strand_counts <- table(gene_data_example$seq_id, gene_data_example$strand)
+  strand_counts <- table(gene_data_example$accver, gene_data_example$strand)
   expect_true(all(strand_counts[, "+"] == 4L))
   expect_true(all(strand_counts[, "-"] == 4L))
   expect_true("source_strand" %in% names(gene_data_example))
@@ -109,7 +109,7 @@ test_that("ribbon preparation helpers run on simple inputs", {
 })
 
 test_that("dense ribbon helpers bundle explicitly and optimize deterministically", {
-  seq <- data.frame(seq_id = c("A", "B", "C"), length = c(1000, 1000, 1000))
+  seq <- data.frame(accver = c("A", "B", "C"), length = c(1000, 1000, 1000))
   ribbons <- data.frame(
     qaccver = c("A", "A", "A", "A", "B"),
     saccver = c("B", "B", "B", "B", "C"),
@@ -141,7 +141,7 @@ test_that("dense ribbon helpers bundle explicitly and optimize deterministically
 
   optimized <- optimize_ggchord_layout(seq, ribbons)
   repeated <- optimize_ggchord_layout(seq, ribbons)
-  expect_setequal(optimized$seq_order, seq$seq_id)
+  expect_setequal(optimized$seq_order, seq$accver)
   expect_true(all(optimized$seq_orientation %in% c(-1, 1)))
   expect_lt(optimized$score_after, optimized$score_before)
   expect_identical(optimized, repeated)
@@ -151,9 +151,9 @@ test_that("dense ribbon helpers bundle explicitly and optimize deterministically
 })
 
 test_that("cleaning preserves kept unknown genes and ribbon direction", {
-  seq <- data.frame(seq_id = c("A", "B"), length = c(100, 100))
+  seq <- data.frame(accver = c("A", "B"), length = c(100, 100))
   genes <- data.frame(
-    seq_id = "unknown", start = 1, end = 10, strand = "+", anno = "x"
+    accver = "unknown", start = 1, end = 10, strand = "+", anno = "x"
   )
   ribbons <- data.frame(
     qaccver = "A", saccver = "B", length = 10, pident = 90,
@@ -222,17 +222,17 @@ test_that("outfmt7 fields, GFF3 FASTA boundaries and source files are parsed", {
 })
 
 test_that("focus_ggchord_data synchronizes loci, genes and ribbon direction", {
-  seq <- data.frame(seq_id = c("A", "B"), length = c(100, 100))
+  seq <- data.frame(accver = c("A", "B"), length = c(100, 100))
   ribbons <- data.frame(
     qaccver = "A", saccver = "B", length = 81, pident = 95,
     qstart = 10, qend = 90, sstart = 90, send = 10
   )
   genes <- data.frame(
-    seq_id = "A", start = c(5, 30), end = c(25, 50),
+    accver = "A", start = c(5, 30), end = c(25, 50),
     strand = "+", anno = c("edge", "inside")
   )
   loci <- data.frame(
-    seq_id = c("A", "B"), start = c(20, 20), end = c(80, 80)
+    accver = c("A", "B"), start = c(20, 20), end = c(80, 80)
   )
 
   focused <- focus_ggchord_data(seq, ribbons, genes, loci, boundary = "trim")

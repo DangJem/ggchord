@@ -14,13 +14,13 @@ focus_ggchord_data(
 )
 }
 \arguments{
-\item{seq_data}{Sequence table containing `seq_id` and `length`.}
+\item{seq_data}{Sequence table containing `accver` and `length`.}
 
 \item{ribbon_data}{Optional ggchord alignment table.}
 
 \item{gene_data}{Optional gene or feature table.}
 
-\item{loci}{Data frame containing `seq_id`, `start`, and `end`, and
+\item{loci}{Data frame containing `accver`, `start`, and `end`, and
 optionally `locus_id`.}
 
 \item{expand}{Non-negative number of bases added on both sides, scalar or

@@ -8,7 +8,7 @@
 #' into Cartesian (x, y) coordinates and stores them in a layout list.
 #'
 #' @param seqs Vector of sequence IDs (order already processed)
-#' @param lens Named vector of sequence lengths (names = seq_id)
+#' @param lens Named vector of sequence lengths (names = accver)
 #' @param seq_labels Named vector of sequence labels
 #' @param seqRadius Named vector of sequence radii
 #' @param seq_curvature Named vector of sequence curvatures
@@ -17,6 +17,7 @@
 #' @param ribbonGap Named vector of ribbon gaps
 #' @param ribbon_gap_auto Whether ribbon endpoints may move closer to sequence
 #'   arcs when no gene or feature geometry occupies the local interval.
+#' @param link_avoid Automatic link spacing mode.
 #' @param ribbon_obstacles Optional normalized gene/feature obstacle table.
 #' @param ribbon_data Alignment data (already validated)
 #' @param gene_data Gene data (already validated)
@@ -55,7 +56,7 @@ compute_chord_layout <- function(
     seqRadius, seq_curvature, orientation, seq_gap,
     # Ribbon parameters
     ribbon_data = NULL, ribbonGap,
-    ribbon_gap_auto = FALSE, ribbon_obstacles = NULL,
+    ribbon_gap_auto = FALSE, ribbon_obstacles = NULL, link_avoid = "none",
     ribbon_color_scheme, ribbon_colors, ribbon_alpha,
     ribbon_color_by = NULL,
     ribbon_color_limits = NULL,
@@ -79,7 +80,6 @@ compute_chord_layout <- function(
     region_width = 0.08,
     region_offset = 0,
     region_side = "inside",
-    ribbon_highlight_rows = integer(0),
     # Gene parameters
     gene_data = NULL, draw_gene_geometry = TRUE,
     geneGap, geneWidth,
@@ -180,63 +180,6 @@ compute_chord_layout <- function(
     }
   }
 
-  # Curve coordinate mapping function
-  map_to_curve_many <- function(angle, radius, ref) {
-    n <- length(angle)
-    nref <- length(ref$angles)
-
-    # Vectorised nearest-reference lookup (O(n log n) overall).
-    fi <- findInterval(angle, ref$angles)
-    fi <- pmax(1, pmin(fi, nref - 1))
-    idx <- ifelse(abs(ref$angles[fi] - angle) <=
-                    abs(ref$angles[fi + 1] - angle), fi, fi + 1)
-
-    base <- ref$path[idx, , drop = FALSE]
-    idx_next <- pmin(idx + 1, nref)
-    idx_prev <- pmax(idx - 1, 1)
-    dx <- ref$path$x[idx_next] - base$x
-    dy <- ref$path$y[idx_next] - base$y
-    last <- idx == nref
-    if (any(last)) {
-      dx[last] <- base$x[last] - ref$path$x[idx_prev[last]]
-      dy[last] <- base$y[last] - ref$path$y[idx_prev[last]]
-    }
-
-    norm_x <- -dy
-    norm_y <- dx
-    nl <- sqrt(norm_x^2 + norm_y^2)
-    ok <- nl > 0
-    norm_x[ok] <- norm_x[ok] / nl[ok]
-    norm_y[ok] <- norm_y[ok] / nl[ok]
-
-    offset <- radius - ref$r0
-    cbind(x = base$x + norm_x * offset,
-          y = base$y + norm_y * offset)
-  }
-
-  map_to_curve <- function(angle, radius, ref) {
-    # ref$angles is sorted, so use findInterval (O(log n)) instead of a
-    # full linear scan to locate the nearest reference angle.
-    fi <- findInterval(angle, ref$angles)
-    if (fi < 1) fi <- 1
-    if (fi >= length(ref$angles)) fi <- length(ref$angles) - 1
-    idx <- if (abs(ref$angles[fi] - angle) <= abs(ref$angles[fi + 1] - angle)) fi else fi + 1
-    base <- ref$path[idx, ]
-    if (idx < nrow(ref$path)) {
-      dx <- ref$path$x[idx + 1] - base$x
-      dy <- ref$path$y[idx + 1] - base$y
-    } else {
-      dx <- base$x - ref$path$x[idx - 1]
-      dy <- base$y - ref$path$y[idx - 1]
-    }
-    norm <- c(-dy, dx)
-    nl <- sqrt(sum(norm^2))
-    if (nl > 0) norm <- norm / nl
-    offset <- radius - ref$r0
-    c(x = base$x + norm[1] * offset,
-      y = base$y + norm[2] * offset)
-  }
-
   gene_track_radius <- function(gene, sid, strand) {
     side <- if (".feature_stack_side" %in% names(gene)) {
       as.character(gene[[".feature_stack_side"]])
@@ -263,7 +206,7 @@ compute_chord_layout <- function(
     path_data <- generate_curvature_path(
       starts[id], ends[id], seqRadius[id], seq_curvature[id], nSeg
     )
-    path_data$seq_id <- id
+    path_data$accver <- id
     if (orientation[id] == -1) {
       path_data <- path_data[nrow(path_data):1, ]
     }
@@ -285,7 +228,7 @@ compute_chord_layout <- function(
   # Step 5: generate axes (lines, ticks, labels)
   # ====================================================================
   axis_lines <- data.frame(x = numeric(0), y = numeric(0),
-                            seq_id = character(0),
+                            accver = character(0),
                             stringsAsFactors = FALSE)
   axis_ticks <- data.frame(x0 = numeric(0), y0 = numeric(0),
                            x1 = numeric(0), y1 = numeric(0),
@@ -293,7 +236,7 @@ compute_chord_layout <- function(
                            label_y = numeric(0), size = numeric(0),
                            label_angle = numeric(0),
                            label_angle_relative = logical(0),
-                           seq_id = character(0),
+                           accver = character(0),
                            stringsAsFactors = FALSE)
 
   if (show_axis) {
@@ -303,7 +246,7 @@ compute_chord_layout <- function(
       r0 <- ref$r0 - axisGap[id]
       angles <- seq(starts[id], ends[id], length.out = nSeg)
       pts <- map_to_curve_many(angles, r0, ref)
-      data.frame(x = pts[, 1], y = pts[, 2], seq_id = id, stringsAsFactors = FALSE)
+      data.frame(x = pts[, 1], y = pts[, 2], accver = id, stringsAsFactors = FALSE)
     }))
 
     # Tick marks
@@ -383,7 +326,7 @@ compute_chord_layout <- function(
         label_angle = label_angle,
         label_angle_relative = relative_angle,
         is_major = pts$is_major,
-        seq_id = id,
+        accver = id,
         stringsAsFactors = FALSE
       )
     }))
@@ -443,7 +386,7 @@ compute_chord_layout <- function(
     rib_qend <- ribbon_data$qend
     rib_sstart <- ribbon_data$sstart
     rib_send <- ribbon_data$send
-    rib_pident <- ribbon_data$pident
+    rib_pident <- ribbon_data$pident %||% rep(NA_real_, nrow(ribbon_data))
 
     valid <- rib_q != rib_s & rib_q %in% seqs & rib_s %in% seqs
     valid_idx <- which(valid)
@@ -460,30 +403,17 @@ compute_chord_layout <- function(
     ribbon_dir_vec <- character(length(valid_idx))
     ribbon_q_gap <- numeric(length(valid_idx))
     ribbon_s_gap <- numeric(length(valid_idx))
+    ribbon_q_n <- ribbon_s_n <- integer(length(valid_idx))
 
     # With the default NULL ribbon_gap, determine spacing independently at
     # each ribbon endpoint. Only polygons that occupy the ribbon-facing side
     # of the sequence and overlap that endpoint's genomic interval count as
     # obstacles. Text and leader segments never enter this table.
-    endpoint_ribbon_gap <- function(seq_id, start, end) {
-      configured <- unname(ribbonGap[[seq_id]])
+    endpoint_ribbon_gap <- function(accver, start, end) {
+      configured <- unname(ribbonGap[[accver]])
       if (!isTRUE(ribbon_gap_auto)) return(configured)
-
-      close_gap <- min(configured, 0.035)
-      if (is.null(ribbon_obstacles) || nrow(ribbon_obstacles) == 0L) {
-        return(close_gap)
-      }
-      lo <- min(start, end)
-      hi <- max(start, end)
-      hit <- ribbon_obstacles$seq_id == seq_id &
-        ribbon_obstacles$start <= hi & ribbon_obstacles$end >= lo &
-        ribbon_obstacles$outer_offset > 0
-      if (!any(hit)) return(close_gap)
-
-      # The standard gene offset (0.10) plus half-width (0.025) and this
-      # clearance reproduces the historical safe 0.15 gap where an obstacle
-      # actually exists, while wider/custom-offset features remain protected.
-      max(close_gap, max(ribbon_obstacles$outer_offset[hit]) + 0.025)
+      max(ggchord_gap_profile(c(start, end), accver, ribbon_obstacles,
+        if (link_avoid == "none") "none" else "uniform", min(configured, .035)))
     }
 
     # Continuous / discrete value preparation on the valid rows only.
@@ -525,6 +455,7 @@ compute_chord_layout <- function(
       ribbon_linetype_vec <- rep("solid", length(valid_idx))
     }
 
+    front_fallbacks <- 0L
     for (j in seq_along(valid_idx)) {
       i <- valid_idx[j]
       q <- rib_q[i]
@@ -549,11 +480,39 @@ compute_chord_layout <- function(
       s_frac_end <- if (orientation[s] == 1) (rib_send[i] - 1) / lens[s] else 1 - (rib_send[i] - 1) / lens[s]
       s_angle_end <- starts[s] + s_frac_end * (ends[s] - starts[s])
 
-      q_angles <- seq(q_angle_start, q_angle_end, length.out = 50)
-      s_angles <- seq(s_angle_start, s_angle_end, length.out = 50)
-      q_coords <- map_to_curve_many(q_angles, rq, q_ref)
-      s_coords <- map_to_curve_many(s_angles, rs, s_ref)
+      make_front <- function(id, start, end, ref, a0, a1, gap) {
+        positions <- seq(start, end, length.out = 50)
+        if (ribbon_gap_auto && link_avoid == "smooth" && nrow(ribbon_obstacles)) {
+          obs <- ribbon_obstacles[ribbon_obstacles$accver == id,,drop=FALSE]
+          span <- max(abs(end-start)*.08, 1)
+          knots <- c(obs$start-span, obs$start, obs$end, obs$end+span)
+          knots <- knots[knots > min(start,end) & knots < max(start,end)]
+          positions <- sort(unique(c(positions, knots)), decreasing = end < start)
+        }
+        front <- function(pos) {
+          angles <- if (end == start) rep(a0, length(pos)) else a0 + (pos-start)/(end-start)*(a1-a0)
+          gaps <- if (ribbon_gap_auto) ggchord_gap_profile(pos, id, ribbon_obstacles,
+            link_avoid, min(unname(ribbonGap[[id]]), .035)) else rep(gap,length(pos))
+          xy <- map_to_curve_many(angles, seqRadius[id] + gaps, ref)
+          list(xy=xy, baseline=map_to_curve_many(angles,seqRadius[id],ref), gaps=gaps)
+        }
+        result <- front(positions)
+        if (ribbon_gap_auto && link_avoid == "smooth" && ggchord_front_invalid(result$xy,result$baseline)) {
+          positions <- sort(unique(c(positions, (head(positions,-1)+tail(positions,-1))/2)), decreasing=end<start)
+          result <- front(positions)
+          if (ggchord_front_invalid(result$xy,result$baseline)) {
+            angles <- if (end == start) rep(a0, length(positions)) else a0+(positions-start)/(end-start)*(a1-a0)
+            result$xy <- map_to_curve_many(angles,seqRadius[id]+gap,ref)
+            front_fallbacks <<- front_fallbacks + 1L
+          }
+        }
+        result$xy
+      }
+      q_coords <- make_front(q, rib_qstart[i], rib_qend[i], q_ref, q_angle_start, q_angle_end, q_gap)
+      s_coords <- make_front(s, rib_sstart[i], rib_send[i], s_ref, s_angle_start, s_angle_end, s_gap)
 
+      ribbon_q_n[j] <- nrow(q_coords)
+      ribbon_s_n[j] <- nrow(s_coords)
       # Bezier control points
       if (!is.null(ribbon_ctrl_point)) {
         if (is.list(ribbon_ctrl_point)) {
@@ -590,7 +549,7 @@ compute_chord_layout <- function(
       }
 
       b1 <- bezier_pts(q_coords[1, ], s_coords[1, ], c1, c1, n = 50)
-      b2 <- bezier_pts(q_coords[50, ], s_coords[50, ], c2, c2, n = 50)
+      b2 <- bezier_pts(q_coords[nrow(q_coords), ], s_coords[nrow(s_coords), ], c2, c2, n = 50)
 
       ribbon_polys_list[[j]] <- cbind(
         x = c(q_coords[, 1], b2[, 1], rev(s_coords[, 1]), rev(b1[, 1])),
@@ -648,25 +607,28 @@ compute_chord_layout <- function(
 
     if (cntValid > 0) {
       m <- do.call(rbind, ribbon_polys_list)
-      group_vals <- rep(ribbon_group, each = 200)
-      source_row_vals <- rep(valid_idx, each = 200)
-      alpha_vals <- rep(ribbon_alpha_vec, each = 200)
-      outline_vals <- rep(ribbon_outline_vec, each = 200)
-      linetype_vals <- rep(ribbon_linetype_vec, each = 200)
-      dir_vals <- rep(ribbon_dir_vec, each = 200)
-      q_gap_vals <- rep(ribbon_q_gap, each = 200)
-      s_gap_vals <- rep(ribbon_s_gap, each = 200)
+      polygon_sizes <- vapply(ribbon_polys_list, nrow, integer(1))
+      group_vals <- rep(ribbon_group, times = polygon_sizes)
+      source_row_vals <- rep(valid_idx, times = polygon_sizes)
+      alpha_vals <- rep(ribbon_alpha_vec, times = polygon_sizes)
+      outline_vals <- rep(ribbon_outline_vec, times = polygon_sizes)
+      linetype_vals <- rep(ribbon_linetype_vec, times = polygon_sizes)
+      dir_vals <- rep(ribbon_dir_vec, times = polygon_sizes)
+      q_gap_vals <- rep(ribbon_q_gap, times = polygon_sizes)
+      s_gap_vals <- rep(ribbon_s_gap, times = polygon_sizes)
 
       if (ribbon_color_scheme == "pident") {
-        ribbon_polys <- data.frame(
+        if (front_fallbacks > 0L) warning(sprintf("Smooth avoidance used uniform fallback at %d endpoint(s)", front_fallbacks), call. = FALSE)
+    ribbon_polys <- data.frame(
           x = m[, 1], y = m[, 2],
-          pident = rep(ribbon_pident, each = 200),
+          pident = rep(ribbon_pident, times = polygon_sizes),
           group = group_vals,
           source_row = source_row_vals,
           alpha = alpha_vals,
           outline_col = outline_vals,
           linetype_val = linetype_vals,
           direction = dir_vals,
+          .q_n = rep(ribbon_q_n, polygon_sizes), .s_n = rep(ribbon_s_n, polygon_sizes),
           q_gap = q_gap_vals,
           s_gap = s_gap_vals,
           stringsAsFactors = FALSE
@@ -674,13 +636,14 @@ compute_chord_layout <- function(
       } else if (ribbon_color_scheme == "value") {
         ribbon_polys <- data.frame(
           x = m[, 1], y = m[, 2],
-          value = rep(ribbon_value, each = 200),
+          value = rep(ribbon_value, times = polygon_sizes),
           group = group_vals,
           source_row = source_row_vals,
           alpha = alpha_vals,
           outline_col = outline_vals,
           linetype_val = linetype_vals,
           direction = dir_vals,
+          .q_n = rep(ribbon_q_n, polygon_sizes), .s_n = rep(ribbon_s_n, polygon_sizes),
           q_gap = q_gap_vals,
           s_gap = s_gap_vals,
           stringsAsFactors = FALSE
@@ -688,13 +651,14 @@ compute_chord_layout <- function(
       } else {
         ribbon_polys <- data.frame(
           x = m[, 1], y = m[, 2],
-          fill = rep(ribbon_fill, each = 200),
+          fill = rep(ribbon_fill, times = polygon_sizes),
           group = group_vals,
           source_row = source_row_vals,
           alpha = alpha_vals,
           outline_col = outline_vals,
           linetype_val = linetype_vals,
           direction = dir_vals,
+          .q_n = rep(ribbon_q_n, polygon_sizes), .s_n = rep(ribbon_s_n, polygon_sizes),
           q_gap = q_gap_vals,
           s_gap = s_gap_vals,
           stringsAsFactors = FALSE
@@ -710,19 +674,19 @@ compute_chord_layout <- function(
   # ====================================================================
   region_polys <- data.frame()
   if (!is.null(region_data) && nrow(region_data) > 0) {
-    req <- c("seq_id", "start", "end")
+    req <- c("accver", "start", "end")
     if (!all(req %in% colnames(region_data))) {
-      ggchord_stop("regions must contain seq_id, start and end columns")
+      ggchord_stop("regions must contain accver, start and end columns")
     }
     region_data$start <- as.numeric(region_data$start)
     region_data$end <- as.numeric(region_data$end)
     ok_rows <- is.finite(region_data$start) & is.finite(region_data$end) &
-      region_data$seq_id %in% seqs
+      region_data$accver %in% seqs
     if (any(!ok_rows)) region_data <- region_data[ok_rows, , drop = FALSE]
     if (nrow(region_data) > 0) {
       region_poly_list <- lapply(seq_len(nrow(region_data)), function(i) {
         row <- region_data[i, ]
-        sid <- as.character(row$seq_id)
+        sid <- as.character(row$accver)
         len <- lens[sid]
         sp <- min(row$start, row$end)
         ep <- max(row$start, row$end)
@@ -783,14 +747,6 @@ compute_chord_layout <- function(
     }
   }
 
-  ribbon_highlight_polys <- data.frame()
-  if (length(ribbon_highlight_rows) > 0 && !is.null(ribbon_polys) &&
-      nrow(ribbon_polys) > 0) {
-    ribbon_highlight_polys <- ribbon_polys[
-      ribbon_polys$source_row %in% ribbon_highlight_rows, , drop = FALSE
-    ]
-  }
-
   # ====================================================================
   # Step 7: generate gene arrow polygons
   # ====================================================================
@@ -798,7 +754,7 @@ compute_chord_layout <- function(
   gene_labels <- data.frame()
 
   if (!is.null(gene_data) && nrow(gene_data) > 0) {
-    valid_gene_rows <- which(gene_data$seq_id %in% seqs)
+    valid_gene_rows <- which(gene_data$accver %in% seqs)
     valid_genes <- gene_data[valid_gene_rows, , drop = FALSE]
     valid_genes$.source_row <- valid_gene_rows
 
@@ -835,7 +791,7 @@ compute_chord_layout <- function(
     }
     for (i in gene_rows_to_draw) {
       gene <- valid_genes[i, ]
-      sid <- gene$seq_id
+      sid <- gene$accver
       strand <- gene$strand
       anno <- gene$anno
 
@@ -965,7 +921,7 @@ compute_chord_layout <- function(
     if (gene_label_show && nrow(valid_genes) > 0) {
       gene_labels <- do.call(rbind, lapply(seq_len(nrow(valid_genes)), function(i) {
         gene <- valid_genes[i, ]
-        sid <- gene$seq_id
+        sid <- gene$accver
         strand <- gene$strand
         seq_len <- lens[sid]
         ref <- seq_refs[[sid]]
@@ -1106,7 +1062,7 @@ compute_chord_layout <- function(
           hjust = hjust,
           vjust = vjust,
           size = gene_label_size,
-          seq_id = sid,
+          accver = sid,
           group = i,
           source_row = gene$.source_row,
           anchor_x = anchor_x,
@@ -1160,7 +1116,7 @@ compute_chord_layout <- function(
         text_angle = text_angle,
         size = seq_label_size[id],
         hjust = hjust, vjust = vjust,
-        seq_id = id,
+        accver = id,
         stringsAsFactors = FALSE
       )
     }))
@@ -1266,7 +1222,6 @@ compute_chord_layout <- function(
   }
   if (!is.null(ribbon_polys)) ribbon_polys <- rotate_df(ribbon_polys)
   if (nrow(region_polys) > 0) region_polys <- rotate_df(region_polys)
-  if (nrow(ribbon_highlight_polys) > 0) ribbon_highlight_polys <- rotate_df(ribbon_highlight_polys)
   if (nrow(gene_labels) > 0) gene_labels <- rotate_df(gene_labels)
   if (nrow(seq_labels_df) > 0) seq_labels_df <- rotate_df(seq_labels_df)
   # Horizontal sequence labels: keep every label horizontal (independent of
@@ -1580,11 +1535,12 @@ compute_chord_layout <- function(
   # Step 10: assemble and return the layout object
   # ====================================================================
   layout <- list(
+    sequence_reference = list(refs = seq_refs, starts = starts, ends = ends,
+      lens = lens, orientation = orientation, radius = seqRadius),
     # Geometric data
     seq_arcs       = seq_arcs,
     ribbon_polys   = ribbon_polys,
     region_polys   = region_polys,
-    ribbon_highlight_polys = ribbon_highlight_polys,
     gene_polys     = gene_polys,
     gene_labels    = gene_labels,
     gene_label_segments = gene_label_segments,

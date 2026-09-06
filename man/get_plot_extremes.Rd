@@ -18,9 +18,9 @@ get_plot_extremes(
 \arguments{
 \item{allRibbon}{data.frame, ribbon data (with x, y columns), default NULL}
 
-\item{seqArcs}{List, sequence arc data (each element is a data frame with x, y, seq_id), default NULL}
+\item{seqArcs}{List, sequence arc data (each element is a data frame with x, y, accver), default NULL}
 
-\item{axisLines}{data.frame, axis line data (with x, y, seq_id columns), default NULL}
+\item{axisLines}{data.frame, axis line data (with x, y, accver columns), default NULL}
 
 \item{axisTicks}{data.frame, tick mark data (with x0, y0, x1, y1, label_x, label_y columns), default NULL}
 

@@ -10,7 +10,7 @@
 #'
 #' @format A data frame containing the following columns:
 #' \itemize{
-#'   \item seq_id: Sequence ID
+#'   \item accver: Sequence accession/version or an unchanged custom identifier
 #'   \item start: Gene start position
 #'   \item end: Gene end position
 #'   \item strand: Strand direction (+/-)
@@ -23,7 +23,7 @@
 #'
 #' Sequence length data for ggchord demonstration
 #'
-#' @format A data frame containing columns: seq_id, length
+#' @format A data frame containing columns: accver, length
 "seq_data_example"
 
 #' Example alignment data

@@ -75,8 +75,8 @@ geom_seq <- function(mapping = NULL, data = NULL,
   # fully self-contained.
   lyr <- ggplot2::layer(
     data        = data.frame(x = numeric(0), y = numeric(0),
-                             seq_id = character(0)),
-    mapping     = ggplot2::aes(x = x, y = y, group = seq_id, seq_colour = seq_id),
+                             accver = character(0)),
+    mapping     = ggplot2::aes(x = x, y = y, group = accver, seq_colour = accver),
     stat        = "identity",
     geom        = seq_geom,
     position    = position,
@@ -104,7 +104,7 @@ geom_seq <- function(mapping = NULL, data = NULL,
     legend_position       = NULL
   )
   lyr <- ggchord_capture_layer_input(
-    lyr, data, mapping, c("seq_id", "length", "seq_ring")
+    lyr, data, mapping, c("accver", "length", "seq_ring")
   )
   lyr
 }
