@@ -140,9 +140,7 @@ ggchord_capture_layer_input <- function(lyr, data, mapping, roles) {
 ggchord_normalize_mapping <- function(mapping) {
   if (is.null(mapping)) return(mapping)
   if ("seq_id" %in% names(mapping)) {
-    if ("accver" %in% names(mapping)) ggchord_stop("Use only one of accver and seq_id")
-    warning("seq_id mapping is deprecated; use accver (removed in v0.13.0)", call. = FALSE)
-    names(mapping)[names(mapping) == "seq_id"] <- "accver"
+    ggchord_stop("`seq_id` mapping was removed in v0.13.0; use `accver`")
   }
   if (anyDuplicated(names(mapping))) {
     duplicated_names <- unique(names(mapping)[duplicated(names(mapping))])
@@ -223,7 +221,7 @@ ggchord_resolve_layer_input <- function(lyr, fallback = NULL) {
       )
     }
     value <- tryCatch(
-      rlang::eval_tidy(mapping[[role]], data = if (identical(expr, as.name("seq_id")) && "accver" %in% names(data)) c(data, list(seq_id = data$accver)) else data),
+      rlang::eval_tidy(mapping[[role]], data = data),
       error = function(e) ggchord_stop(
         "Cannot evaluate `", role, "` in layer mapping: ", conditionMessage(e)
       )

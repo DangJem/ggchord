@@ -10,7 +10,8 @@
 #' @param plot A ggchord plot.
 #' @param include Character vector selecting any of \code{"seq"},
 #'   \code{"ribbon"}, \code{"gene"}, \code{"feature"}, \code{"labels"},
-#'   \code{"link"}, and \code{"axis"}. Point links require explicit selection.
+#'   \code{"link"}, \code{"restriction"}, and \code{"axis"}. Point links and
+#'   restriction sites require explicit selection.
 #' @param original_data Logical. Include the resolved per-layer input tables
 #'   under \code{original_data}, default \code{FALSE}.
 #'
@@ -37,7 +38,8 @@ export_ggchord_layout <- function(
   if (!inherits(plot, "ggchord") || is.null(plot$ggchord)) {
     ggchord_stop("export_ggchord_layout(): plot must be a ggchord object")
   }
-  allowed <- c("seq", "link", "ribbon", "gene", "feature", "labels", "axis")
+  allowed <- c("seq", "link", "ribbon", "gene", "feature", "labels",
+               "restriction", "axis")
   if (!is.character(include) || anyNA(include) ||
       any(!include %in% allowed)) {
     ggchord_stop(
@@ -67,6 +69,7 @@ export_ggchord_layout <- function(
         "gene"
       },
       seq_region = "feature",
+      restriction_site = "restriction",
       gene_text = "labels",
       gene_text_repel = "labels",
       gene_label_segment = "labels",
@@ -161,6 +164,13 @@ export_ggchord_layout <- function(
     ylim = coord$user_ylim %||% fitted$ylim,
     clip = coord$clip %||% "off"
   )
+  if (isTRUE(coord$ggchord_genome)) {
+    metadata$coordinate <- "genome"
+    metadata$gap <- coord$genome_gap
+    metadata$direction <- coord$genome_direction
+  } else {
+    metadata$coordinate <- "chord"
+  }
 
   exported$metadata <- metadata
   if (isTRUE(original_data)) exported$original_data <- kept_inputs

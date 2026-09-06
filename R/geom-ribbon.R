@@ -189,27 +189,3 @@ geom_link_ribbon <- function(mapping = NULL, data = NULL,
   )
   lyr
 }
-
-#' Deprecated alignment ribbon name
-#'
-#' Use [geom_link_ribbon()] instead. This compatibility entry point is
-#' deprecated in version 0.12.0 and will be removed in version 0.13.0.
-#' Ribbon aesthetics and scales retain their existing names.
-#'
-#' @inheritParams geom_link_ribbon
-#' @return A ggplot2 layer.
-#' @export
-geom_ribbon <- function(mapping = NULL, data = NULL,
-                        ribbon_ctrl_point = NULL, ribbon_gap = NULL,
-                        fill = NULL, alpha = 0.42, colour = "#59636D",
-                        linewidth = 0.08, linetype = 1,
-                        position = "identity", show.legend = TRUE,
-                        inherit.aes = FALSE, ...) {
-  .Deprecated("geom_link_ribbon", package = "ggchord",
-              msg = paste0("ggchord::geom_ribbon() is deprecated; use ",
-                           "geom_link_ribbon() instead. The old name will ",
-                           "be removed in v0.13.0."))
-  call <- match.call(expand.dots = TRUE)
-  call[[1L]] <- geom_link_ribbon
-  eval(call, envir = parent.frame())
-}

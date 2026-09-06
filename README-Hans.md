@@ -15,7 +15,7 @@
 ## 主要功能
 
 - **真正的 `ggplot2` 分层风格**：数据与全局选项交给 `ggchord()`，每个 `geom_*` 图层管理自己的布局参数。
-- **开箱即用**：`ggchord(data) + geom_seq() + geom_ribbon() + geom_gene() + geom_axis()` 即可得到完整图形。
+- **开箱即用**：`ggchord(data) + geom_seq() + geom_link_ribbon() + geom_gene()` 即可得到完整图形。
 - **多序列支持**：可同时展示两条、三条、四条或更多序列。
 - **灵活的参数**：支持单值、向量、命名向量与列表，可按序列或链方向分别设置。
 - **与 ggplot2 生态无缝衔接**：`theme()`、`scale_*()`、`ggsave()`、`ggplot_build()` 均可使用。
@@ -60,7 +60,7 @@ ggchord(
   gene_data    = gene_data_example
 ) +
   geom_seq() +      # 序列弧线
-  geom_ribbon() +   # 比对连接带
+  geom_link_ribbon() +   # 比对连接带
   geom_gene() +     # 基因注释
   geom_axis()       # 位置坐标轴
 ```

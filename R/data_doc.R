@@ -36,3 +36,25 @@
 #'
 #' @format A data frame containing standard alignment columns (qaccver, saccver, pident, etc.)
 "ribbon_data_example"
+
+#' Minimal single-genome sequence fixture
+#'
+#' @format A one-row data frame with `accver` and `length`.
+#' @source `examples/single-genome/minimal.fasta`.
+#' @name single_genome_example
+NULL
+
+#' Minimal single-genome gene fixture
+#'
+#' @format A data frame with `accver`, `start`, `end`, `strand`, and `anno`.
+#' @source `examples/single-genome/features.tsv`.
+#' @name single_gene_example
+NULL
+
+#' Restriction sites for the minimal single-genome fixture
+#'
+#' @format A data frame returned by [find_restriction_sites()].
+#' @source Generated from `examples/single-genome/minimal.fasta` by
+#'   `data-raw/generate_example_data.R`.
+#' @name restriction_site_example
+NULL

@@ -1,12 +1,7 @@
-# Input-only compatibility bridge. Never changes the user's object in place.
+# Reject the v0.12 compatibility name at every public data boundary.
 ggchord_normalize_accver <- function(data) {
   if (!is.data.frame(data) || !"seq_id" %in% names(data)) return(data)
-  if ("accver" %in% names(data)) {
-    ggchord_stop("Use only one of accver and seq_id; rename the legacy column explicitly")
-  }
-  warning("seq_id is deprecated; rename it to accver (removed in v0.13.0)", call. = FALSE)
-  names(data)[names(data) == "seq_id"] <- "accver"
-  data
+  ggchord_stop("`seq_id` was removed in v0.13.0; rename the column to `accver`")
 }
 
 ggchord_require_columns <- function(data, columns, caller) {

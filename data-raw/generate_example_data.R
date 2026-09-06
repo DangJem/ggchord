@@ -129,3 +129,23 @@ row.names(ribbon_data_example) <- NULL
 save(seq_data_example, file = "data/seq_data_example.rda", compress = "xz")
 save(ribbon_data_example, file = "data/ribbon_data_example.rda", compress = "xz")
 save(gene_data_example, file = "data/gene_data_example.rda", compress = "xz")
+
+# Minimal single-genome fixture. The source FASTA deliberately contains a few
+# common restriction motifs and is kept intact under examples/single-genome/.
+single_lines <- readLines("examples/single-genome/minimal.fasta", warn = FALSE)
+single_sequence <- paste0(single_lines[!grepl("^>", single_lines)], collapse = "")
+single_genome_example <- data.frame(
+  accver = "minimal_genome", length = nchar(single_sequence),
+  stringsAsFactors = FALSE
+)
+single_gene_example <- utils::read.delim(
+  "examples/single-genome/features.tsv", stringsAsFactors = FALSE
+)
+restriction_site_example <- find_restriction_sites(
+  stats::setNames(single_sequence, "minimal_genome"),
+  enzymes = c("EcoRI", "BamHI", "HindIII", "PstI", "SmaI")
+)
+
+save(single_genome_example, file = "data/single_genome_example.rda", compress = "xz")
+save(single_gene_example, file = "data/single_gene_example.rda", compress = "xz")
+save(restriction_site_example, file = "data/restriction_site_example.rda", compress = "xz")

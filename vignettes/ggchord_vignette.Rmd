@@ -461,11 +461,41 @@ gene_label_rotation = list(20)
 - [Package homepage](https://dangjem.github.io/ggchord/)
 
 
-## v0.12 data contracts and point links
+## Single-genome circles and restriction sites
+
+Use `coord_genome()` when the input describes one complete genome. A zero
+opening closes the circle; `gap` opens it by a number of degrees. The
+coordinate also owns the origin rotation and genomic direction.
+
+```{r single-genome, eval=FALSE}
+data(single_genome_example)
+data(single_gene_example)
+data(restriction_site_example)
+
+ggchord(single_genome_example, gene_data = single_gene_example) +
+  geom_seq() +
+  geom_gene() +
+  geom_gene_label_repel() +
+  geom_restriction_site(data = restriction_site_example) +
+  coord_genome(gap = 10)
+```
+
+Restriction-site calculation is independent from drawing. The result records
+recognition and cut coordinates, overhang type, strand, and a traceable enzyme
+definition source. Supply a definition data frame for custom IUPAC motifs.
+
+```{r restriction-search, eval=FALSE}
+sites <- find_restriction_sites(
+  c(plasmid = "AAAAGAATTCTTTGGATCC"),
+  enzymes = c("EcoRI", "BamHI")
+)
+```
+
+## v0.13 data contracts and point links
 
 `accver` follows BLAST's accession/version naming, with `q` and `s` identifying
 query and subject. Custom identifiers are valid; versions are never added or
-removed. Legacy `seq_id` warns in v0.12 and is removed in v0.13; do not supply both.
+removed. In v0.13, use `accver`; the former `seq_id` compatibility entry no longer exists.
 
 Ribbons require only `qaccver/saccver/qstart/qend/sstart/send`. Missing `pident`
 uses a fixed fill without an Identity guide. Alignment `length` is not inferred
@@ -479,7 +509,7 @@ for identical endpoints and final styles within one layer. Ribbons match the
 whole ordered interval. Records remain separate and trunk `source_rows` lists
 members. Fork cross-sections partition geometric width, not statistical weights.
 
-```{r v012-links}
+```{r v013-links}
 s <- data.frame(accver = c("A", "B", "C"), length = 1000)
 links <- data.frame(qaccver = "A", saccver = c("B", "C"), qpos = 200, spos = 500)
 p <- ggchord(s) + geom_seq() +

@@ -1,15 +1,14 @@
 local_edition(3)
 
-test_that("accver migration and grid helpers preserve explicit inputs", {
+test_that("removed accver alias and grid helpers preserve explicit inputs", {
   old_dir <- setwd(tempdir())
   on.exit(setwd(old_dir), add = TRUE)
   seq <- data.frame(accver = c("A", "B"), length = c(1000, 1000))
   old <- seq
   names(old)[1] <- "seq_id"
-  expect_warning(p <- ggchord(old), "seq_id is deprecated")
-  expect_named(p$ggchord$data$seq_data, c("accver", "length"))
-  expect_error(ggchord(transform(seq, seq_id = accver)), "only one")
-  expect_warning(geom_seq(aes(seq_id = id)), "mapping is deprecated")
+  expect_error(ggchord(old), "removed in v0.13.0")
+  expect_error(ggchord(transform(seq, seq_id = accver)), "removed in v0.13.0")
+  expect_error(geom_seq(aes(seq_id = id)), "removed in v0.13.0")
   expect_identical(unit, grid::unit)
   expect_identical(arrow, grid::arrow)
 })

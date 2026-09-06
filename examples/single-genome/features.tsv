@@ -1,0 +1,5 @@
+accver	start	end	strand	anno
+minimal_genome	1	24	+	replication protein
+minimal_genome	35	62	-	regulatory protein
+minimal_genome	70	96	+	membrane protein
+minimal_genome	101	119	-	hypothetical protein

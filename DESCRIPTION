@@ -1,6 +1,6 @@
 Package: ggchord
 Title: Multi-Sequence Alignment Chord Diagram Visualization Tool
-Version: 0.12.0
+Version: 0.13.0
 Authors@R: person(given = "Jem", family = "Dang", email = "dangjem0730@gmail.com", role = c("aut", "cre"))
 Description: A 'ggplot2'-based R package that visualizes multi-sequence alignment results as chord diagrams using layered grammar of graphics. Users build chord plots by stacking sequence, ribbon, gene and annotation layers, with automatic sequence axes. Layout parameters are specified within each geom layer, following 'ggplot2' conventions. Homologous regions between query and subject sequences are intuitively displayed.
 License: MIT + file LICENSE

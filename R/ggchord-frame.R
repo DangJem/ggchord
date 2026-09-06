@@ -24,6 +24,12 @@ set_ggchord_coord <- function(plot, layout) {
     user_xlim = coord$user_xlim,
     user_ylim = coord$user_ylim
   )
+  if (isTRUE(coord$ggchord_genome)) {
+    class(resolved) <- unique(c("CoordGenome", class(resolved)))
+    resolved$ggchord_genome <- TRUE
+    resolved$genome_gap <- coord$genome_gap
+    resolved$genome_direction <- coord$genome_direction
+  }
   plot$coordinates <- resolved
   plot
 }

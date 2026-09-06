@@ -440,11 +440,39 @@ gene_label_rotation = list(20)
 - [包主页](https://dangjem.github.io/ggchord/)
 
 
-## v0.12 数据契约与连接模式
+## 单基因组圆图与限制性酶切位点
+
+输入是一条完整基因组时，使用 `coord_genome()`。`gap = 0` 形成闭合圆，正数按
+角度打开缺口；原点旋转和基因组方向也由这个坐标入口管理。
+
+```{r single-genome, eval=FALSE}
+data(single_genome_example)
+data(single_gene_example)
+data(restriction_site_example)
+
+ggchord(single_genome_example, gene_data = single_gene_example) +
+  geom_seq() +
+  geom_gene() +
+  geom_gene_label_repel() +
+  geom_restriction_site(data = restriction_site_example) +
+  coord_genome(gap = 10)
+```
+
+酶切位点计算与绘图相互独立。结果表记录识别区间、双链切点、末端类型、链和
+可追踪的酶定义来源；自定义 IUPAC motif 可通过定义表传入。
+
+```{r restriction-search, eval=FALSE}
+sites <- find_restriction_sites(
+  c(plasmid = "AAAAGAATTCTTTGGATCC"),
+  enzymes = c("EcoRI", "BamHI")
+)
+```
+
+## v0.13 数据契约与连接模式
 
 `accver` 借鉴 BLAST 的 accession/version 命名；`q`、`s` 分别表示 query 和
-subject。自定义序列名称同样有效，包不会添加或删除版本号。旧 `seq_id` 在
-v0.12 中带警告转换，v0.13 移除；两列不能同时出现。
+subject。自定义序列名称同样有效，包不会添加或删除版本号。v0.13 已删除旧
+`seq_id` 兼容入口，现统一使用 `accver`。
 
 ribbon 只要求 `qaccver/saccver/qstart/qend/sstart/send`。`pident` 缺失时使用
 固定颜色且不显示 Identity 图例；`length` 不从区间跨度推算。筛选、排序和加权
@@ -457,7 +485,7 @@ ribbon 只要求 `qaccver/saccver/qstart/qend/sstart/send`。`pident` 缺失时�
 分叉是显示模式，不合并原始记录；`source_rows` 记录主干成员。分叉截面按分支
 划分几何宽度，不代表比对长度或流量的统计分配。
 
-```{r v012-links}
+```{r v013-links}
 s <- data.frame(accver = c("A", "B", "C"), length = 1000)
 links <- data.frame(qaccver = "A", saccver = c("B", "C"), qpos = 200, spos = 500)
 p <- ggchord(s) + geom_seq() +

@@ -25,7 +25,7 @@ data frames.
 
 - **True `ggplot2` layered style** — data and global options live in
   `ggchord()`; each `geom_*` layer manages its own layout parameters.
-- **Everything has defaults** — `ggchord(data) + geom_seq() + geom_ribbon() +
+- **Everything has defaults** — `ggchord(data) + geom_seq() + geom_link_ribbon() +
   geom_gene() + geom_axis()` already produces a complete diagram.
 - **Multi-sequence support** — two, three, four or more sequences in one plot.
 - **Flexible parameters** — per-sequence and per-strand values using single
@@ -75,7 +75,7 @@ ggchord(
   gene_data    = gene_data_example
 ) +
   geom_seq() +      # sequence arcs
-  geom_ribbon() +   # alignment ribbons
+  geom_link_ribbon() +   # alignment ribbons
   geom_gene() +     # gene annotations
   geom_axis()       # position axes
 ```

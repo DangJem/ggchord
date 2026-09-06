@@ -1,3 +1,22 @@
+# ggchord 0.13.0
+
+* Added `coord_genome()` as an explicit coordinate contract for one complete
+  sequence. It supports a closed circle or a degree-based opening and owns the
+  genomic origin rotation and direction. Existing gene, feature, region, axis,
+  and label layers remain reusable; ribbon and link layers fail clearly.
+* Added `find_restriction_sites()` with versioned built-in definitions,
+  user-supplied IUPAC motifs, circular-origin matching, cut-count/window
+  filters, and explicit recognition, cut, end-type, strand, and source fields.
+* Added `geom_restriction_site()` for cut ticks and labels. Nearby labels use a
+  deterministic shared trunk while all original cut sites remain distinct.
+* Added reproducible single-genome, gene, and restriction-site teaching
+  fixtures generated from unchanged files under `examples/single-genome/`.
+* Removed the v0.12 `seq_id` data/mapping compatibility entry. Rename it to
+  `accver` before calling ggchord functions.
+* Removed `ggchord::geom_ribbon()` after its v0.12 deprecation. Use
+  `geom_link_ribbon()`; existing ribbon aesthetics, scales, themes, and layout
+  export component names are unchanged.
+
 # ggchord 0.12.0
 
 * Added `geom_link_ribbon()` as the canonical interval link geometry. Ribbon

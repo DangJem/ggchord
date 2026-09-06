@@ -127,6 +127,26 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   seq_curvature <- process_sequence_param(seq_params$seq_curvature, seqs,
                                           "seq_curvature", 1.0)
 
+  if (isTRUE(plot$coordinates$ggchord_genome)) {
+    if (n != 1L) {
+      ggchord_stop("coord_genome() requires exactly one sequence in seq_data")
+    }
+    incompatible <- vapply(plot$layers, function(layer) {
+      (layer$ggchord_params$type %||% "") %in% c("ribbon", "link")
+    }, logical(1))
+    if (any(incompatible)) {
+      ggchord_stop("coord_genome() does not support ribbon or link layers")
+    }
+    if (!is.null(seq_params$seq_gap)) {
+      ggchord_stop("coord_genome() owns the opening; use its `gap` argument instead of geom_seq(seq_gap = ...)")
+    }
+    if (!is.null(seq_params$seq_orientation)) {
+      ggchord_stop("coord_genome() owns genomic direction; use its `direction` argument instead of geom_seq(seq_orientation = ...)")
+    }
+    seq_gap[] <- plot$coordinates$genome_gap / 360
+    orientation[] <- if (identical(plot$coordinates$genome_direction, "clockwise")) -1 else 1
+  }
+
   # Rings are explicit input roles. Their scale values are radii, so no ring
   # count or spacing is guessed from the data. This deliberately keeps the
   # existing seq_radius interface unchanged for plots without a ring mapping.
@@ -661,7 +681,10 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   # Step 2: compute the layout
   # ====================================================================
   coord_rotation <- if (isTRUE(plot$coordinates$ggchord_coord)) {
-    plot$coordinates$rotation
+    plot$coordinates$rotation + if (isTRUE(plot$coordinates$ggchord_genome) &&
+        identical(plot$coordinates$genome_direction, "clockwise")) {
+      plot$coordinates$genome_gap
+    } else 0
   } else {
     global$rotation
   }
@@ -772,6 +795,7 @@ ggchord_layout_component <- function(layout, type, fallback = data.frame()) {
     gene_label_repel = ggchord_repel_geometry(layout),
     seq_label = layout$seq_labels_df %||% fallback,
     seq_region = layout$region_polys %||% fallback,
+    restriction_site = layout$restriction_sites %||% fallback,
     axis_line = layout$axis_lines %||% fallback,
     axis_seg = layout$axis_ticks %||% fallback,
     axis_text = {
@@ -825,7 +849,7 @@ compute_chord_geometry <- function(plot) {
                     character(1))
     main <- types[types %in% c(
       "seq", "ribbon", "link", "gene", "gene_label", "gene_label_repel", "axis",
-      "seq_label", "seq_region"
+      "seq_label", "seq_region", "restriction_site"
     )]
     if (length(main)) main[length(main)] else ""
   }, character(1))
@@ -866,6 +890,13 @@ compute_chord_geometry <- function(plot) {
       sub_layout$link_lines <- ggchord_attach_input_columns(
         ggchord_link_geometry(link_input, link_layer$ggchord_params, primary), link_input)
     }
+    if (main_type == "restriction_site") {
+      site_layer <- plot$layers[[idx[1L]]]
+      site_input <- ggchord_resolve_layer_input(site_layer)
+      sub_layout$restriction_sites <- ggchord_restriction_geometry(
+        site_input, site_layer$ggchord_params, primary, chord$data$seq_data
+      )
+    }
     layouts[[id]] <- sub_layout
     registry[[id]] <- list()
     inputs[[id]] <- list()
@@ -889,6 +920,7 @@ compute_chord_geometry <- function(plot) {
         gene_label_segment = chord$data$gene_data,
         gene_label_repel = chord$data$gene_data,
         seq_region = lyr$ggchord_params$regions,
+        restriction_site = lyr$ggchord_input_data,
         NULL
       )
       inputs[[id]][[component]] <- if (
@@ -917,7 +949,8 @@ compute_chord_geometry <- function(plot) {
     c("ribbon_polys", "ribbon"), c("link_lines", "link"), c("gene_polys", "gene_poly"),
     c("gene_labels", "gene_text"), c("gene_label_segments", "gene_label_segment"),
     c("seq_labels_df", "seq_label"), c("region_polys", "seq_region"),
-    c("axis_lines", "axis_line"), c("axis_ticks", "axis_seg")
+    c("axis_lines", "axis_line"), c("axis_ticks", "axis_seg"),
+    c("restriction_sites", "restriction_site")
   )) {
     combined <- collect(pair[2])
     if (nrow(combined) > 0) primary[[pair[1]]] <- combined
@@ -953,7 +986,9 @@ compute_chord_geometry <- function(plot) {
     ), use.names = FALSE))
   }
   primary$extremes <- get_plot_extremes(
-    allRibbon = ggchord_rbind_fill(Filter(Negate(is.null), list(primary$ribbon_polys, primary$link_lines))),
+    allRibbon = ggchord_rbind_fill(Filter(Negate(is.null), list(
+      primary$ribbon_polys, primary$link_lines, primary$restriction_sites
+    ))),
     seqArcs = primary$seq_arcs,
     axisLines = primary$axis_lines,
     axisTicks = primary$axis_ticks,
@@ -1010,7 +1045,7 @@ classify_ggchord_layers <- function(plot) {
               axis_line = integer(0), axis_seg = integer(0),
               axis_text = integer(0), axis = integer(0),
               gene_label_repel = integer(0), seq_label = integer(0),
-              seq_region = integer(0))
+              seq_region = integer(0), restriction_site = integer(0))
   for (i in seq_along(plot$layers)) {
     lyr <- plot$layers[[i]]
     type <- lyr$ggchord_type %||% ""

@@ -1,5 +1,5 @@
 # Reproducible release acceptance outside the fast testthat suite.
-# Rscript tools/validate-release.R geometry|links|labels|output|benchmark|examples [directory]
+# Rscript tools/validate-release.R genome|geometry|links|labels|output|benchmark|examples [directory]
 # Outputs are temporary by default; no README/site figures are overwritten.
 suppressPackageStartupMessages(library(ggplot2))
 pkgload::load_all(quiet = TRUE)
@@ -50,7 +50,32 @@ label_metrics <- function(layout, expected) {
 base_plot <- function() ggchord(seq_data_example, ribbon_data_example,
   gene_data_example, validate = "none") + geom_seq() + geom_link_ribbon() + geom_gene()
 
-if (mode == "geometry") {
+if (mode == "genome") {
+  p <- ggchord(single_genome_example, gene_data = single_gene_example,
+               validate = "none") +
+    geom_seq() + geom_gene() + geom_gene_label_repel() +
+    geom_restriction_site(data = restriction_site_example) +
+    coord_genome(gap = 10)
+  layout <- with_device(get_chord_layout(p), 8, 7)
+  finite_geometry(list(layout$seq_arcs, layout$gene_polys,
+                       layout$restriction_sites))
+  stopifnot(nrow(layout$restriction_sites) > nrow(restriction_site_example))
+  exported <- with_device(export_ggchord_layout(
+    p, include = c("seq", "gene", "restriction"), original_data = TRUE
+  ), 8, 7)
+  stopifnot(exported$metadata$coordinate == "genome",
+            exported$metadata$gap == 10,
+            length(unique(stats::na.omit(exported$restriction$source_row))) ==
+              nrow(restriction_site_example))
+  ggplot2::ggsave(file.path(out, "single-genome.png"), p,
+                  width = 8, height = 7, dpi = 120)
+  ggplot2::ggsave(file.path(out, "single-genome.pdf"), p,
+                  width = 8, height = 7)
+  if (requireNamespace("svglite", quietly = TRUE)) {
+    ggplot2::ggsave(file.path(out, "single-genome.svg"), p,
+                    width = 8, height = 7)
+  }
+} else if (mode == "geometry") {
   sequences <- data.frame(accver = c("A", "B"), length = 1000)
   features <- data.frame(accver = rep(c("A", "B"), each = 4),
     start = rep(c(100, 300, 500, 700), 2), end = rep(c(160, 360, 560, 760), 2),

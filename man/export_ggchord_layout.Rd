@@ -15,7 +15,8 @@ export_ggchord_layout(
 
 \item{include}{Character vector selecting any of \code{"seq"},
 \code{"ribbon"}, \code{"gene"}, \code{"feature"}, \code{"labels"},
-\code{"link"}, and \code{"axis"}. Point links require explicit selection.}
+\code{"link"}, \code{"restriction"}, and \code{"axis"}. Point links and
+restriction sites require explicit selection.}
 
 \item{original_data}{Logical. Include the resolved per-layer input tables
 under \code{original_data}, default \code{FALSE}.}

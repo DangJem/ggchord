@@ -95,10 +95,7 @@ test_that("feature shapes, regions and layout export are public behavior", {
   expect_gt(nrow(exported$feature), 0L)
 })
 
-test_that("deprecated ribbon name preserves canonical parameters", {
-  expect_warning(old <- geom_ribbon(fill = "red", ribbon_gap = 0.08),
-                 "deprecated; use geom_link_ribbon")
-  new <- geom_link_ribbon(fill = "red", ribbon_gap = 0.08)
-  expect_equal(old$ggchord_params, new$ggchord_params)
+test_that("canonical ribbon statistics do not use a compatibility entry", {
+  expect_false("geom_ribbon" %in% getNamespaceExports("ggchord"))
   expect_no_warning(stat_ribbon_bundle())
 })
