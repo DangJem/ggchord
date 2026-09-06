@@ -51,11 +51,19 @@ Automatic height fitting does not resize an overwide legend. If decorations
 exceed the requested width, increase \code{width} or use, for example,
 \code{guides(seq_colour = guide_ggchord_legend(nrow = 2))}.
 }
-\details{
-Printing directly uses the current graphics device dimensions, which may
-differ from this export-size preview (for example, a small IDE plot pane).
-Preview measurements restore the previously active graphics device.
+\section{RStudio plot pane and export-size rendering}{
+
+Label packing, guide sizing, and fitted limits use the active graphics
+device's physical dimensions. Printing \code{p} in a small or narrow
+RStudio Plots pane can therefore produce a substantially different layout
+from an export, and very small panes may not have enough room for all radial
+labels. Resize or Zoom the pane and print again for a larger direct preview.
+For size-sensitive chord plots, use \code{view_ggchord()} while composing,
+then save the final figure with \code{ggsave()} at an explicit width and
+height matching the intended output. Preview measurements restore the
+previously active graphics device.
 }
+
 \examples{
 data(seq_data_example)
 p <- ggchord(seq_data_example) + geom_seq()

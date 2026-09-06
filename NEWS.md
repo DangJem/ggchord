@@ -30,6 +30,9 @@
 * Split the constructor/build, automatic-scale, frame-fitting, sequence,
   ribbon, gene/region, axis, and label calculations into focused internal
   source modules without changing the public API or layout output.
+* Clarified why direct printing in a small RStudio Plots pane can differ from
+  export-size rendering, and recommends `view_ggchord()` for composition with
+  an explicit matching `ggsave()` size for final files.
 * Archived previous-release design records in DESIGN-HISTORY.md.
 
 # ggchord 0.11.0
