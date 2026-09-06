@@ -25,7 +25,11 @@ geom_ribbon(
 
 \item{data}{Default NULL (retrieved automatically from the layout)}
 
-\item{ribbon_ctrl_point}{Optional vector/list. Bezier control points, default c(0,0)}
+\item{ribbon_ctrl_point}{Optional vector/list of Bezier edge controls.
+Two numbers specify one shared control; four numbers specify controls for
+the two ribbon edges. A per-row list may contain pairs of coordinate vectors.
+NULL derives controls from the sequence endpoints. With shared branches,
+controls shape the far ends while the junction follows the shared trunk.}
 
 \item{ribbon_gap}{Optional numeric/vector controlling spacing between
 sequences and ribbon endpoints. With the default

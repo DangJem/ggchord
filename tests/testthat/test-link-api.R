@@ -136,3 +136,19 @@ test_that("unshared links preserve vertex-wise staged styles", {
   expect_equal(shared$link_alpha, separate$link_alpha)
   expect_equal(shared[c("x", "y")], separate[c("x", "y")])
 })
+
+
+test_that("shared ribbons retain explicit edge control points", {
+  old_dir <- setwd(tempdir()); on.exit(setwd(old_dir), add = TRUE)
+  s <- data.frame(accver = c("A", "B", "C"), length = 1000)
+  r <- data.frame(qaccver = "A", saccver = c("B", "C"),
+    qstart = 100, qend = 300, sstart = 400, send = 600)
+  p <- ggchord(s, r) + geom_seq() + geom_link_ribbon(
+    fill = "orange", link_branch = "query", ribbon_ctrl_point = c(4, 4))
+  d <- export_ggchord_layout(p, include = "ribbon")$ribbon
+  expect_true(any(d$.component == "trunk"))
+  # A deliberately external control must pull the branches beyond the tracks.
+  branches <- d[d$.component == "branch", ]
+  expect_gt(max(sqrt(branches$x^2 + branches$y^2)), 2)
+  expect_s3_class(ggplot2::ggplotGrob(p), "gtable")
+})

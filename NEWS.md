@@ -25,6 +25,8 @@
 * Fixed feature-shape legend mappings and increased gene-arrow key height.
 * Shared-link fallback now preserves vertex-wise staged aesthetics instead of
   replacing each unshared path with its first vertex style.
+* Shared ribbon branches now honor explicit edge control points, including
+  layout rotation, while preserving the shared junction tangent.
 * Archived previous-release design records in DESIGN-HISTORY.md.
 
 # ggchord 0.11.0

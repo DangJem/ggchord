@@ -149,7 +149,14 @@ ggchord_branch_built <- function(built) {
                               stats::approx(seq(0,1,length.out=nrow(node)),node[,2],f)$y)
           a <- node_slice[c(1,nrow(node_slice)),,drop=FALSE]
           b <- item$far[c(1,nrow(item$far)),,drop=FALSE]
-          xy <- polygon(node_slice,item$far,sweep(a,2,delta,"+"),(a+b)/2)
+          far_controls <- (a+b)/2
+          if (!is.null(item$control)) {
+            # Ribbon controls belong to the two strip edges, unlike line
+            # controls which belong to the query and subject ends.
+            controls <- ggchord_link_controls(item$control, 1, c(0, 0))
+            far_controls <- ggchord_rotate_points(do.call(rbind, controls), layout$rotation)
+          }
+          xy <- polygon(node_slice,item$far,sweep(a,2,delta,"+"),far_controls)
           emit(item,xy,"branch",item$row)
         }
       }

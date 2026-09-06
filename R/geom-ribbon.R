@@ -31,7 +31,11 @@ make_ribbon_geom <- function(outline = FALSE, linetype = FALSE) {
 #'
 #' @param mapping Default NULL (uses pre-computed data)
 #' @param data Default NULL (retrieved automatically from the layout)
-#' @param ribbon_ctrl_point Optional vector/list. Bezier control points, default c(0,0)
+#' @param ribbon_ctrl_point Optional vector/list of Bezier edge controls.
+#'   Two numbers specify one shared control; four numbers specify controls for
+#'   the two ribbon edges. A per-row list may contain pairs of coordinate vectors.
+#'   NULL derives controls from the sequence endpoints. With shared branches,
+#'   controls shape the far ends while the junction follows the shared trunk.
 #' @param ribbon_gap Optional numeric/vector controlling spacing between
 #'   sequences and ribbon endpoints. With the default
 #'   \code{link_avoid = "none"}, \code{NULL} uses the fixed spacing 0.035.
