@@ -302,7 +302,7 @@ ggchord_attach_input_columns <- function(geometry, input) {
 }
 
 #' Extract the geometry for one layer from a computed layout
-#' @keywords internal
+#' @noRd
 extract_ggchord_layer_data <- function(lyr, layout) {
   fallback <- lyr$ggchord_placeholder
   registry <- layout$layer_geometry[[lyr$ggchord_layer_id %||% ""]]
@@ -451,5 +451,5 @@ ggchord_repel_geometry <- function(layout) {
 #' @param y Default value returned when \code{x} is NULL
 #' @name null-coalescing-operator
 #' @rdname null-coalescing-operator
-#' @keywords internal
+#' @noRd
 `%||%` <- function(x, y) if (is.null(x)) y else x

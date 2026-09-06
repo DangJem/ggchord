@@ -18,7 +18,7 @@
 #' @param default_value Default value when param is NULL, default NULL
 #' @param allow_null Logical, whether to allow param to be NULL, default FALSE
 #' @return Named vector (names are seq_ids), standardized parameter values
-#' @keywords internal
+#' @noRd
 process_sequence_param <- function(param, seqs, param_name, default_value = NULL, allow_null = FALSE) {
   n <- length(seqs)
 
@@ -164,7 +164,7 @@ process_sequence_param <- function(param, seqs, param_name, default_value = NULL
 #' @param default_value Default value when param is NULL
 #' @param is_logical Logical, whether the parameter is logical (TRUE/FALSE), default FALSE
 #' @return List (named by accver), where each element is a vector with "+"/"-"
-#' @keywords internal
+#' @noRd
 process_gene_param <- function(param, seqs, param_name, default_value, is_logical = FALSE) {
   n <- length(seqs)
   result <- setNames(lapply(seqs, function(id) {
@@ -318,7 +318,7 @@ process_gene_param <- function(param, seqs, param_name, default_value, is_logica
 #' @param seqs Character vector, list of sequence IDs
 #' @return Named vector (names are accver), values are "horizontal",
 #'   "parallel", "perpendicular" or numeric angles
-#' @keywords internal
+#' @noRd
 process_axis_orientation <- function(param, seqs) {
   n <- length(seqs)
 
@@ -389,7 +389,7 @@ process_axis_orientation <- function(param, seqs) {
 #'
 #' @param gene_colors Color vector (can be NULL, single value, vector of length 2, named vector with "+"/"-")
 #' @return Named vector (names are "+"/"-"), standardized colour values
-#' @keywords internal
+#' @noRd
 process_strand_colors <- function(gene_colors) {
   # Default values
   default <- c("+" = "#D55E00", "-" = "#0072B2")
@@ -425,7 +425,7 @@ process_strand_colors <- function(gene_colors) {
 #' @param unique_anno Character vector, unique gene annotation names
 #' @param gene_order Character vector, display order of genes in the legend, default NULL (order of appearance)
 #' @return Named vector (names are gene annotations), standardized colour values
-#' @keywords internal
+#' @noRd
 process_manual_colors <- function(gene_colors, unique_anno, gene_order) {
   # Determine final gene order
   if (!is.null(gene_order)) {

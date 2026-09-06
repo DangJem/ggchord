@@ -234,7 +234,7 @@ filter_ggchord_ribbons <- function(
 }
 
 #' Normalize the keep_pairs argument into a data.frame(q, s)
-#' @keywords internal
+#' @noRd
 normalize_keep_pairs <- function(pairs) {
   if (is.data.frame(pairs)) {
     if (ncol(pairs) < 2) {

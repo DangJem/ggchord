@@ -29,7 +29,7 @@ chord_default_palette <- function(n) {
 #' @param x Any R object (may be NULL)
 #' @param y Default value to return when x is NULL
 #' @return x if x is not NULL, otherwise y
-#' @keywords internal
+#' @noRd
 if_null_else <- function (x, y)
 {
   if (is.null(x)) y else x
@@ -48,7 +48,7 @@ if_null_else <- function (x, y)
 #' @param gene_polys data.frame, gene arrow polygon data (with x, y columns), default NULL
 #' @param show_axis Logical, whether to include extreme value calculation for axis-related elements, default FALSE
 #' @return List containing x_min (minimum x), x_max (maximum x), y_min (minimum y), y_max (maximum y)
-#' @keywords internal
+#' @noRd
 get_plot_extremes <- function(allRibbon = NULL, seqArcs = NULL,
                                 axisLines = NULL, axisTicks = NULL,
                                 gene_arrows = NULL, gene_polys = NULL,
@@ -105,7 +105,7 @@ get_plot_extremes <- function(allRibbon = NULL, seqArcs = NULL,
 }
 
 #' Wrap long gene annotation texts at a given character width
-#' @keywords internal
+#' @noRd
 ggchord_label_wrap_text <- function(text, width = NULL) {
   if (is.null(width) || width <= 0) return(text)
   vapply(text, function(t) {
@@ -223,7 +223,7 @@ ggchord_fit_label_text <- function(gl,
 #' pushes the labels apart until they no longer collide. Optionally hides
 #' labels that still overlap more than `max_overlaps` other labels
 #' (ggrepel-style decluttering).
-#' @keywords internal
+#' @noRd
 ggchord_label_deoverlap <- function(gl, units_per_inch = 0.35, seed = 123,
                                     max_overlaps = Inf) {
   if (nrow(gl) < 2) return(gl)
@@ -331,7 +331,7 @@ ggchord_label_prune_overlaps <- function(gl, units_per_inch = 0.35,
 #' centre (`cx`/`cy`) together with the full axis-aligned width/height of the
 #' text box (`bw`/`bh`).  The same projection is used by the repulsion solver,
 #' the obstacle boxes and the adaptive coordinate limits so all three agree.
-#' @keywords internal
+#' @noRd
 ggchord_text_boxes <- function(df,
                                x_col = "text_x", y_col = "text_y",
                                text_col = "text", angle_col = "text_angle",
@@ -463,7 +463,7 @@ ggchord_oriented_box_overlaps <- function(candidate, other, tol = 1e-7) {
 #' it does not feed already-expanded label limits back into the estimate. The
 #' latter used to make leader-line clipping grow with the labels themselves and
 #' produced conspicuously large, output-size-dependent gaps.
-#' @keywords internal
+#' @noRd
 ggchord_device_units_per_inch <- function(x, y,
                                           fallback_inches = 6,
                                           margin_inches = 1.25,
@@ -500,7 +500,7 @@ ggchord_device_units_per_inch <- function(x, y,
 }
 
 #' Convert text layers into fixed obstacle rectangles for label repulsion.
-#' @keywords internal
+#' @noRd
 ggchord_text_obstacle_boxes <- function(seq_labels_df = NULL,
                                         axis_ticks = NULL,
                                         show_axis = FALSE,
@@ -1268,7 +1268,7 @@ ggchord_collapse_crossed_elbows <- function(segments, lanes,
 }
 
 #' Rebuild straight leader-line segments after a final label de-overlap pass.
-#' @keywords internal
+#' @noRd
 ggchord_repel_segments <- function(gl, min_segment_length = 0.5) {
   n <- nrow(gl)
   empty <- data.frame(x0 = numeric(0), y0 = numeric(0),
@@ -1421,7 +1421,7 @@ ggchord_clip_segments_to_labels <- function(segments, gl,
 #' `gene_label_segment_linetype` accepts the special value `"auto"` (solid
 #' lines, except dashed for labels moved to the other side of their arc) or
 #' any valid ggplot2 linetype (character name or numeric dash pattern).
-#' @keywords internal
+#' @noRd
 validate_gene_segment_linetype <- function(lt) {
   if (is.null(lt)) return("auto")
   if (identical(lt, "auto")) return("auto")
@@ -1438,7 +1438,7 @@ validate_gene_segment_linetype <- function(lt) {
 #'
 #' Collects a sparse set of points along the sequence arcs, gene arrows and
 #' axes so that repelled gene labels avoid overlapping the plot content.
-#' @keywords internal
+#' @noRd
 ggchord_repel_points <- function(seq_arcs, gene_polys, axis_lines, axis_ticks,
                                  show_axis = FALSE) {
   pts <- list()
@@ -1478,7 +1478,7 @@ ggchord_repel_points <- function(seq_arcs, gene_polys, axis_lines, axis_ticks,
 #' \code{label} to NA when the box overlaps the given content points or another
 #' label box. The first and last label of each sequence (axis start/end) are
 #' always kept.
-#' @keywords internal
+#' @noRd
 ggchord_hide_text_overlaps <- function(df, content_pts,
                                        units_per_inch = 0.35) {
   idx <- which(!is.na(df$label))

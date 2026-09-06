@@ -1,5 +1,5 @@
-# Reproducible v0.11 acceptance outside the fast testthat suite.
-# Rscript tools/validate-release.R geometry|labels|output|benchmark|examples [directory]
+# Reproducible release acceptance outside the fast testthat suite.
+# Rscript tools/validate-release.R geometry|links|labels|output|benchmark|examples [directory]
 # Outputs are temporary by default; no README/site figures are overwritten.
 suppressPackageStartupMessages(library(ggplot2))
 pkgload::load_all(quiet = TRUE)
@@ -83,6 +83,47 @@ if (mode == "geometry") {
     results[[length(results) + 1]] <- data.frame(curvature, finite = TRUE, features = 8)
   }
   write.csv(do.call(rbind, results), file.path(out, "geometry.csv"), row.names = FALSE)
+} else if (mode == "links") {
+  sequences <- data.frame(accver = c("A", "B", "C"), length = 1000)
+  links <- data.frame(qaccver = "A", saccver = c("B", "C"),
+    qpos = 200, spos = 500)
+  ribbons <- transform(links, qstart = 100, qend = 400,
+    sstart = 600, send = 400)
+  features <- data.frame(accver = "A", start = c(100, 300, 500, 700),
+    end = c(200, 400, 600, 800), strand = c("-", "-", "+", "+"),
+    type = c("CDS", "tRNA", "repeat", "promoter"))
+  shapes <- c(CDS = "arrow", tRNA = "block", "repeat" = "chevron",
+    promoter = "lollipop")
+  base <- ggchord(sequences) + geom_seq()
+  plots <- list(
+    line_query = base + geom_link_line(data = links, link_branch = "query",
+      arrow = arrow(length = unit(2, "mm"))),
+    line_subject = base + geom_link_line(
+      data = transform(links, qaccver = saccver, saccver = qaccver,
+        qpos = spos, spos = qpos),
+      link_branch = "subject", arrow = arrow(ends = "both", length = unit(2, "mm"))),
+    ribbon_query = ggchord(sequences, ribbons, validate = "none") + geom_seq() +
+      geom_link_ribbon(fill = "#3B90B6", link_branch = "query"),
+    feature_keys = base +
+      geom_feature(aes(feature_shape = type), data = features) +
+      scale_feature_shape_manual(values = shapes),
+    smooth = ggchord(sequences, ribbons, validate = "none") + geom_seq() +
+      geom_feature(aes(feature_shape = type), data = features) +
+      scale_feature_shape_manual(values = shapes) +
+      geom_link_ribbon(fill = "#3B90B6", link_avoid = "smooth"),
+    uniform = ggchord(sequences, ribbons, validate = "none") + geom_seq() +
+      geom_feature(aes(feature_shape = type), data = features) +
+      scale_feature_shape_manual(values = shapes) +
+      geom_link_ribbon(fill = "#3B90B6", link_avoid = "uniform")
+  )
+  for (name in names(plots)) {
+    layout <- with_device(get_chord_layout(plots[[name]]), 8, 6)
+    finite_geometry(layout)
+    for (extension in c("png", "pdf", "svg")) {
+      ggplot2::ggsave(file.path(out, paste0(name, ".", extension)),
+        plots[[name]], width = 8, height = 6, dpi = 120)
+    }
+  }
 } else if (mode == "labels") {
   cases <- list(
     default = list(radius = rep(2.5, 4), curvature = rep(1, 4), orientation = rep(1, 4), rotation = 45),

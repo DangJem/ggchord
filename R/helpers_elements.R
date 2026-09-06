@@ -14,6 +14,7 @@
 #' @importFrom utils tail
 #' @importFrom graphics text
 #'
+#' @noRd
 generate_curvature_path <- function(start_angle, end_angle, radius, curvature, n_points = 100) {
   if (length(curvature) != 1L || !is.finite(curvature)) {
     ggchord_stop("curvature must be one finite number")
@@ -51,6 +52,7 @@ generate_curvature_path <- function(start_angle, end_angle, radius, curvature, n
 #' @param n Integer, number of curve points (controls smoothness), default 100
 #' @return data.frame containing columns x, y (coordinates of points on the Bezier curve)
 #' @keywords internal
+#' @noRd
 bezier_pts <- function(p0, p3, c1, c2, n = 100) {
   t <- seq(0, 1, length.out = n)
   bx <- (1 - t)^3*p0[1] + 3*(1 - t)^2*t*c1[1] + 3*(1 - t)*t^2*c2[1] + t^3*p3[1]
@@ -68,6 +70,7 @@ bezier_pts <- function(p0, p3, c1, c2, n = 100) {
 #' @param tol Numeric (0-1), tolerance threshold for end tick length (proportion of the median length of other ticks), default 0.5
 #' @return Numeric vector, major tick positions (including 0 and max_value)
 #' @keywords internal
+#' @noRd
 breakPointsFunc <- function(max_value, n = 5, tol = 0.5) {
   if (max_value <= 0) return(c(0, max_value))
 
@@ -100,6 +103,7 @@ breakPointsFunc <- function(max_value, n = 5, tol = 0.5) {
 #' @param size Legend symbol size
 #' @return grid::polygonGrob object, gene arrow-shaped legend symbol
 #' @keywords internal
+#' @noRd
 draw_key_gene_arrow <- function(data, params, size) {
   # Match geom_gene(): a constant-width body followed by a linearly tapered
   # head, without the wider shoulder used by a conventional block arrow.
@@ -124,6 +128,7 @@ draw_key_gene_arrow <- function(data, params, size) {
 #' Draws the path symbol only when the key data contains colour; otherwise returns a blank (prevents ggplot2 4.x
 #' from mixing unrelated layers into other legends with default grey/black symbols).
 #' @keywords internal
+#' @noRd
 key_glyph_seq <- function(data, params, size) {
   data$colour <- data$seq_colour %||% data$colour
   if (is.null(data$colour)) return(ggplot2::zeroGrob())
@@ -147,6 +152,7 @@ key_glyph_seq <- function(data, params, size) {
 #'
 #' Draws the polygon symbol only when the key data contains fill; otherwise returns a blank.
 #' @keywords internal
+#' @noRd
 key_glyph_ribbon <- function(data, params, size) {
   data$fill <- data$ribbon_fill %||% data$fill
   data$colour <- data$ribbon_colour %||% data$colour
@@ -159,6 +165,7 @@ key_glyph_ribbon <- function(data, params, size) {
 #'
 #' Draws the gene arrow only when the key data contains fill; otherwise returns a blank.
 #' @keywords internal
+#' @noRd
 key_glyph_gene <- function(data, params, size) {
   data$fill <- data$gene_fill %||% data$feature_fill %||% data$fill
   if (is.null(data$fill)) return(ggplot2::zeroGrob())
@@ -167,6 +174,7 @@ key_glyph_gene <- function(data, params, size) {
 
 #' Key glyph for generic genomic features
 #' @keywords internal
+#' @noRd
 key_glyph_feature <- function(data, params, size) {
   data$fill <- data$feature_fill %||% data$fill
   if (is.null(data$fill)) return(ggplot2::zeroGrob())

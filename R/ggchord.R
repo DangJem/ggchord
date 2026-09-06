@@ -1198,7 +1198,7 @@ compute_chord_geometry <- function(plot) {
 #'
 #' LayerInstance objects cannot be cloned with \code{ggproto(NULL, .)}, so the
 #' layer is rebuilt through \code{layer()} with the same geom/stat/mapping/params.
-#' @keywords internal
+#' @noRd
 reconstruct_layer <- function(lyr, data, mapping = NULL) {
   params <- c(lyr$geom_params, lyr$stat_params, lyr$aes_params)
   params <- params[!duplicated(names(params))]
@@ -1223,7 +1223,7 @@ reconstruct_layer <- function(lyr, data, mapping = NULL) {
 }
 
 #' Classify the ggchord layers of a plot by their ggchord_type marker
-#' @keywords internal
+#' @noRd
 classify_ggchord_layers <- function(plot) {
   idx <- list(seq = integer(0), ribbon = integer(0), gene_poly = integer(0),
               gene_text = integer(0), gene_text_repel = integer(0),
@@ -1242,7 +1242,7 @@ classify_ggchord_layers <- function(plot) {
 
 #' Build the list of scales for a computed layout
 #'
-#' @keywords internal
+#' @noRd
 make_ggchord_scales <- function(layout, has_seq = FALSE, has_gene = FALSE,
                                 has_feature = FALSE,
                                 has_feature_shape = FALSE,
@@ -1432,7 +1432,7 @@ make_ggchord_scales <- function(layout, has_seq = FALSE, has_gene = FALSE,
 }
 
 #' Add scales to a plot, respecting user-supplied scales
-#' @keywords internal
+#' @noRd
 attach_ggchord_scales <- function(plot, scales) {
   for (s in scales) {
     aes <- s$aesthetics[1]
@@ -1573,7 +1573,7 @@ ggchord_infer_visual_scales <- function(plot, layout, scales) {
 }
 
 #' Rename the ribbon layers' fill mapping to the internal ribbon aesthetic
-#' @keywords internal
+#' @noRd
 rename_ribbon_layers <- function(plot, ribbon_indices, ribbon_aes, layout) {
   if (ribbon_aes != "fill" && length(ribbon_indices) > 0 &&
       !is.null(layout$ribbon_polys)) {
@@ -1590,7 +1590,7 @@ rename_ribbon_layers <- function(plot, ribbon_indices, ribbon_aes, layout) {
 }
 
 #' Set the fixed coordinate system from the layout extremes
-#' @keywords internal
+#' @noRd
 set_ggchord_coord <- function(plot, layout) {
   coord <- plot$coordinates
   if (!isTRUE(coord$ggchord_coord)) return(plot)
@@ -1642,7 +1642,7 @@ ggchord_geometry_limits <- function(layout) {
 #' the sides that need it. x and y are fitted independently: `coord_fixed()`
 #' preserves equal physical units without requiring a square data range. This
 #' lets wide or tall rendered content use the available panel more efficiently.
-#' @keywords internal
+#' @noRd
 ggchord_adaptive_limits <- function(layout) {
   ext <- layout$extremes
   if (is.null(ext) || !all(is.finite(c(ext$x_min, ext$x_max,
@@ -1713,7 +1713,7 @@ ggchord_adaptive_limits <- function(layout) {
 #' mappings, attach scales, set coordinates). The layout is cached on the plot
 #' (and on the shared reference environment) during preparation. Used by the
 #' callers that need a fully prepared ggplot object.
-#' @keywords internal
+#' @noRd
 prepare_ggchord_plot <- function(plot) {
   plot$scales$scales <- Filter(function(s) is.null(s$ggchord_managed),
                                plot$scales$scales)

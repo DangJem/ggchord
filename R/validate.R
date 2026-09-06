@@ -28,7 +28,7 @@ finalize_validation_collector <- function(col) {
 }
 
 #' Add one issue (error or warning) to a validation collector
-#' @keywords internal
+#' @noRd
 add_validation_issue <- function(col, table, category, rows = NA_integer_,
                                  column = NA_character_, message,
                                  severity = c("error", "warning")) {
@@ -443,7 +443,7 @@ validation_ribbon_duplicates <- function(ribbon_data, near_tol = 5,
 }
 
 #' Reciprocal overlap of two 1-based closed intervals
-#' @keywords internal
+#' @noRd
 interval_recip_overlap <- function(a1, a2, b1, b2) {
   lo <- max(a1, b1)
   hi <- min(a2, b2)

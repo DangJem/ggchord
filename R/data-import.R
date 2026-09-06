@@ -390,7 +390,7 @@ read_gff3 <- function(file = NULL, files = NULL, feature_types = "CDS",
 }
 
 #' Extract a GFF3 attribute value by key
-#' @keywords internal
+#' @noRd
 extract_gff3_attr <- function(attrs, keys) {
   if (is.na(attrs) || !nzchar(attrs)) return(NA_character_)
   parts <- strsplit(attrs, ";", fixed = TRUE)[[1]]
@@ -406,7 +406,7 @@ extract_gff3_attr <- function(attrs, keys) {
 }
 
 #' Decode GFF3 percent-encoding (\%XX) without touching literal '+'
-#' @keywords internal
+#' @noRd
 gff3_percent_decode <- function(x) {
   if (!grepl("%", x, fixed = TRUE)) return(x)
   vapply(x, function(s) {

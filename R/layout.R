@@ -50,7 +50,7 @@
 #' @param debug Whether to output debug information
 #'
 #' @return A chord layout list
-#' @keywords internal
+#' @noRd
 compute_chord_layout <- function(
     seqs, lens, seq_labels, seq_colors,
     seqRadius, seq_curvature, orientation, seq_gap,
