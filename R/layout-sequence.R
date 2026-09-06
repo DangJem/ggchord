@@ -1,5 +1,5 @@
 # Sequence allocation, references and track geometry.
-ggchord_layout_sequence_step <- function(context) evalq({
+ggchord_layout_sequence_step <- quote({
   n <- length(seqs)
 
   # ====================================================================
@@ -110,4 +110,4 @@ ggchord_layout_sequence_step <- function(context) evalq({
   labelOffset <- labelOffset * axis_units_per_inch
 
   # ====================================================================
-}, envir = context)
+})

@@ -1,5 +1,5 @@
 # Axis-label pruning, plot bounds and the final layout contract.
-ggchord_layout_finalize_step <- function(context) evalq({
+ggchord_layout_finalize_step <- quote({
   # ====================================================================
   # Step 8c: optionally hide axis labels that overlap other elements
   # ====================================================================
@@ -88,4 +88,4 @@ ggchord_layout_finalize_step <- function(context) evalq({
 
   class(layout) <- "chord_layout"
   layout
-}, envir = context)
+})

@@ -1,5 +1,5 @@
 # Sequence-axis lines, ticks and labels.
-ggchord_layout_axis_step <- function(context) evalq({
+ggchord_layout_axis_step <- quote({
   # Step 5: generate axes (lines, ticks, labels)
   # ====================================================================
   axis_lines <- data.frame(x = numeric(0), y = numeric(0),
@@ -107,4 +107,4 @@ ggchord_layout_axis_step <- function(context) evalq({
     }))
   }
 
-}, envir = context)
+})

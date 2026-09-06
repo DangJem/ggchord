@@ -1,5 +1,5 @@
 # Automatic and fixed gene-label layout.
-ggchord_layout_label_step <- function(context) evalq({
+ggchord_layout_label_step <- quote({
   # ====================================================================
   # Step 8b: wrap gene labels; optionally arrange them automatically
   # ====================================================================
@@ -249,4 +249,4 @@ ggchord_layout_label_step <- function(context) evalq({
     gene_labels <- gene_labels[visible_labels, , drop = FALSE]
   }
 
-}, envir = context)
+})

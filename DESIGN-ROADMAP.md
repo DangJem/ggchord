@@ -1,6 +1,6 @@
 # ggchord 当前与未来设计路线图
 
-当前正式版 v0.11.0，开发目标 v0.12.0。历史版本设计与验收记录见
+当前正式版 v0.12.0，下一开发目标 v0.13.0。历史版本设计与验收记录见
 [DESIGN-HISTORY.md](DESIGN-HISTORY.md)，日常开发无需重复读取。
 
 ## 当前开发契约
@@ -61,6 +61,8 @@
 
 ## v0.12.0 — link 几何与局部平滑避障
 
+**状态：已于 2026-09-06 完成发布验收。**
+
 ### 实施状态与接口
 
 - 已实现规范 ribbon 名称与旧名称弃用提示、grid unit/arrow 重导出、accver
@@ -77,9 +79,13 @@
   带状扭转。分叉不做全局网络布局，也不跨图层或模糊归并邻近端点。
 - geom_ribbon_highlight 已删除；feature 形状图例映射已修复，gene 图例高度已增加。
 - `tools/validate-release.R links` 已统一覆盖 line/ribbon 分叉、feature 图例以及
-  smooth/uniform 避障；正式包检查仍按发布阶段执行。
+  smooth/uniform 避障；正式包检查已在发布阶段执行。
 - 构造/build、自动标度、画幅、sequence/ribbon、gene/region、axis 与 label
   计算已拆入职责单一的内部模块；公共 API、默认值和 layout 输出保持不变。
+- 发布验收覆盖完整 testthat、双语 vignette、PNG/PDF/SVG、geometry/links/labels/
+  examples、32/80 标签 benchmark，以及 `R CMD check --as-cran --no-manual`；
+  本机 R 4.6.0 的最终检查结果为 `Status: OK`。PDF 包手册因本机未安装
+  `pdflatex` 未生成，绘图 PDF 与 vignette 已独立通过。
 
 ---
 

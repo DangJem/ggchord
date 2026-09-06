@@ -1,5 +1,5 @@
 # Region, gene and fixed sequence-label geometry.
-ggchord_layout_annotation_step <- function(context) evalq({
+ggchord_layout_annotation_step <- quote({
   # ====================================================================
   # Step 6b: generate sequence-region bands
   # ====================================================================
@@ -453,4 +453,4 @@ ggchord_layout_annotation_step <- function(context) evalq({
     }))
   }
 
-}, envir = context)
+})

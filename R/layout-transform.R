@@ -1,5 +1,5 @@
 # Common geometry rotation and text measurement scale.
-ggchord_layout_transform_step <- function(context) evalq({
+ggchord_layout_transform_step <- quote({
   # ====================================================================
   # Step 8: rotate all elements uniformly
   # ====================================================================
@@ -132,4 +132,4 @@ ggchord_layout_transform_step <- function(context) evalq({
   text_units_per_inch <- ggchord_device_units_per_inch(compact_x, compact_y)
 
 
-}, envir = context)
+})

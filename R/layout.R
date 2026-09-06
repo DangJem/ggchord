@@ -115,12 +115,14 @@ compute_chord_layout <- function(
     rotation, debug = FALSE,
     geometry_cache = NULL
 ) {
+  # Each focused module contributes one delayed expression. Evaluating them
+  # in this frame preserves the original local state and layout contract.
   context <- environment()
-  ggchord_layout_sequence_step(context)
-  ggchord_layout_axis_step(context)
-  ggchord_layout_ribbon_step(context)
-  ggchord_layout_annotation_step(context)
-  ggchord_layout_transform_step(context)
-  ggchord_layout_label_step(context)
-  ggchord_layout_finalize_step(context)
+  eval(ggchord_layout_sequence_step, envir = context)
+  eval(ggchord_layout_axis_step, envir = context)
+  eval(ggchord_layout_ribbon_step, envir = context)
+  eval(ggchord_layout_annotation_step, envir = context)
+  eval(ggchord_layout_transform_step, envir = context)
+  eval(ggchord_layout_label_step, envir = context)
+  eval(ggchord_layout_finalize_step, envir = context)
 }

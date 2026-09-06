@@ -1,4 +1,4 @@
-# ggchord 0.11.0.9000
+# ggchord 0.12.0
 
 * Added `geom_link_ribbon()` as the canonical interval link geometry. Ribbon
   aesthetics, scales, themes and exported layout components keep their names.

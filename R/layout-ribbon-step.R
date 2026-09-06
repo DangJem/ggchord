@@ -1,5 +1,5 @@
 # Alignment ribbon geometry and mapped ribbon metadata.
-ggchord_layout_ribbon_step <- function(context) evalq({
+ggchord_layout_ribbon_step <- quote({
   # ====================================================================
   # Step 6: generate ribbon polygons
   # ====================================================================
@@ -337,4 +337,4 @@ ggchord_layout_ribbon_step <- function(context) evalq({
     }
   }
 
-}, envir = context)
+})
