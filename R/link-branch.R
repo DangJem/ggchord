@@ -64,15 +64,16 @@ ggchord_branch_built <- function(built) {
     if (any(vapply(items,is.null,logical(1)))) next
     groups <- split(seq_along(items), vapply(items, `[[`, character(1), "key"))
     output <- list(); geometries <- list(); next_group <- 0L; failures <- 0L
-    emit <- function(item, xy, component, members, first=TRUE,last=TRUE) {
+    emit <- function(item, xy, component, members, first=TRUE,last=TRUE,preserve=FALSE) {
       next_group <<- next_group + 1L
-      d <- data[rep(item$idx[1], nrow(xy)),,drop=FALSE]
+      rows <- if (preserve) item$idx else rep(item$idx[1], nrow(xy))
+      d <- data[rows,,drop=FALSE]
       d$x <- xy[,1]; d$y <- xy[,2]; d$group <- next_group
       d$.component <- component; d$.arrow_first <- first; d$.arrow_last <- last
       d$source_row <- if (component == "trunk") NA_integer_ else data$source_row[item$idx[1]]
       d$source_rows <- rep(list(as.integer(members)),nrow(d))
       output[[length(output)+1L]] <<- d
-      raw <- original[rep(item$idx[1],nrow(xy)),,drop=FALSE]
+      raw <- original[rows,,drop=FALSE]
       raw$x <- xy[,1]; raw$y <- xy[,2]; raw$group <- next_group
       raw$.component <- component; raw$source_row <- d$source_row
       raw$source_rows <- d$source_rows
@@ -88,7 +89,7 @@ ggchord_branch_built <- function(built) {
       if (length(parts) < 2L || is.null(parts[[1]]$near)) {
         for (item in parts) {
           idx <- item$idx
-          emit(item,as.matrix(data[idx,c("x","y")]),"branch",data$source_row[idx[1]])
+          emit(item,as.matrix(data[idx,c("x","y")]),"branch",data$source_row[idx[1]],preserve=TRUE)
         }
         next
       }
@@ -99,7 +100,7 @@ ggchord_branch_built <- function(built) {
       norm <- sqrt(sum(direction^2))
       if (!is.finite(norm) || norm < 1e-8 || min(distances) < 1e-8) {
         failures <- failures+1L
-        for (item in parts) emit(item,item$xy,"branch",item$row)
+        for (item in parts) emit(item,item$xy,"branch",item$row,preserve=TRUE)
         next
       }
       delta <- direction/norm*min(vapply(parts, `[[`, numeric(1), "path_length"))*params$link_branch_fraction
@@ -133,7 +134,7 @@ ggchord_branch_built <- function(built) {
         # Reject invalid strip sides rather than hiding a fold with overdraw.
         if (ggchord_front_invalid(node,near)) {
           failures <- failures+1L
-          for (item in parts) emit(item,item$xy,"branch",item$row)
+          for (item in parts) emit(item,item$xy,"branch",item$row,preserve=TRUE)
           next
         }
         emit(parts[[1]],trunk,"trunk",members)

@@ -120,3 +120,19 @@ test_that("feature legends draw the mapped shapes and a taller gene arrow", {
   expect_gt(diff(range(as.numeric(keys[[1]]$y))),.5)
   expect_true(any(vapply(keys[[4]]$children,inherits,logical(1),"circle")))
 })
+
+
+test_that("unshared links preserve vertex-wise staged styles", {
+  old_dir <- setwd(tempdir()); on.exit(setwd(old_dir), add = TRUE)
+  s <- data.frame(accver = c("A", "B", "C"), length = 1000)
+  d <- data.frame(qaccver = "A", saccver = c("B", "C"), qpos = 200, spos = 500)
+  build <- function(branch) ggplot2::ggplot_build(
+    ggchord(s) + geom_seq() + geom_link_line(
+      aes(link_alpha = after_scale(seq_along(x) / length(x))),
+      data = d, link_branch = branch))$data[[2]]
+  separate <- build("none")
+  shared <- build("query")
+  expect_false(any(shared$.component == "trunk"))
+  expect_equal(shared$link_alpha, separate$link_alpha)
+  expect_equal(shared[c("x", "y")], separate[c("x", "y")])
+})

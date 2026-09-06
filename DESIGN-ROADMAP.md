@@ -5,7 +5,8 @@
 
 ## 当前开发契约
 
-- 当前 worktree 开发，稳定阶段提交并快进同步干净的 OneDrive 主目录，不自动发布或推送。
+- 直接在保存于 OneDrive 的本地 checkout 开发，稳定阶段提交；不创建独立 worktree、
+  不复制或额外同步目录，不自动发布或推送。
 - `seq_id` → `accver`，旧输入兼容至 v0.12，v0.13 移除；原始数据文件不改，随包数据重建。
 - ribbon 六个端点列必需，`length/pident` 按映射、筛选及统计需求检查，不伪造值。
 - gene/feature 注释与分类可选；标识、坐标及 strand 必需。grid 的 unit/arrow 重导出。

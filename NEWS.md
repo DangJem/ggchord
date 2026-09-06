@@ -23,6 +23,8 @@
 * Removed `geom_ribbon_highlight()`. Use an additional
   `geom_link_ribbon(data = subset, fill = ...)` layer instead.
 * Fixed feature-shape legend mappings and increased gene-arrow key height.
+* Shared-link fallback now preserves vertex-wise staged aesthetics instead of
+  replacing each unshared path with its first vertex style.
 * Archived previous-release design records in DESIGN-HISTORY.md.
 
 # ggchord 0.11.0
