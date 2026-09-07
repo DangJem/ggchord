@@ -71,7 +71,7 @@
   export_ggchord_layout(include = "link") 显式导出单点连接。
 - gene/feature 通过内部 provider 注册最终实体的局部法向范围；协议字段为
   accver/start/end/side/normal_min/normal_max/priority/source_layer。
-- link_avoid 支持 none/smooth/uniform；v0.13 默认 smooth 以恢复自动局部避障，
+- link_avoid 支持 none/smooth/uniform；v0.13 默认 uniform，
   显式 gap 优先。启用时局部前沿
   以余弦上包络连接，细化仍不安全时仅该端退回 uniform 并警告。
 - link_branch 默认 none，可选 query/subject；line 匹配位置，ribbon 匹配完整

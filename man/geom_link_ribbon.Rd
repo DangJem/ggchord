@@ -9,7 +9,7 @@ geom_link_ribbon(
   data = NULL,
   ribbon_ctrl_point = NULL,
   ribbon_gap = NULL,
-  link_avoid = c("smooth", "none", "uniform"),
+  link_avoid = c("uniform", "none", "smooth"),
   link_branch = c("none", "query", "subject"),
   link_branch_fraction = 0.15,
   fill = NULL,
@@ -36,15 +36,15 @@ controls shape the far ends while the junction follows the shared trunk.}
 
 \item{ribbon_gap}{Optional numeric/vector controlling spacing between
 sequences and ribbon endpoints. With the default
-\code{link_avoid = "smooth"}, \code{NULL} uses local obstacle-aware
-spacing based on \code{geom_gene()} and \code{geom_feature()} polygons.
-Use \code{"uniform"} for one clearance across an endpoint or \code{"none"}
-for fixed spacing 0.035. Text and leader lines are ignored.
+\code{link_avoid = "uniform"}, \code{NULL} uses one obstacle-aware
+clearance across each endpoint. Use \code{"smooth"} for clearance that
+changes only next to \code{geom_gene()} and \code{geom_feature()} polygons,
+or \code{"none"} for fixed spacing 0.035. Text and leader lines are ignored.
 Supplying a number disables the automatic rule and uses that exact spacing.}
 
-\item{link_avoid}{One of \code{"smooth"} (default), \code{"none"}, or
-\code{"uniform"}. Smooth avoidance changes clearance only next to
-overlapping gene/feature polygons.}
+\item{link_avoid}{One of \code{"uniform"} (default), \code{"none"}, or
+\code{"smooth"}. Smooth avoidance changes clearance locally; uniform
+avoidance uses one clearance across an endpoint.}
 
 \item{link_branch}{Share equal query or subject endpoints: "none", "query", "subject".}
 

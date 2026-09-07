@@ -523,8 +523,9 @@ ribbon 只要求 `qaccver/saccver/qstart/qend/sstart/send`。`pident` 缺失时�
 只在使用相应统计量时要求该列。gene 的 `anno`、feature 的分类与文字可省略，
 标识、坐标和 `strand` 仍必需；无注释时不自动生成标签。
 
-Ribbon 的 `link_avoid` 默认为局部 `smooth` 避障；`none` 明确关闭，
-`uniform` 为整个端点使用统一间距，显式 gap 优先。
+Ribbon 的 `link_avoid` 默认为 `uniform`，在每个端点使用统一的避障
+间距。显式设为 `smooth` 时启用局部避障，`none` 使用固定间距；
+显式 gap 优先。
 `link_branch` 默认 `none`，可选 `query` 或 `subject`；仅同层、完全相同端点、
 最终样式一致的连接共享主干。ribbon 匹配整个有序区间，而非仅起始位置。
 分叉是显示模式，不合并原始记录；`source_rows` 记录主干成员。分叉截面按分支

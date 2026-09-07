@@ -74,10 +74,10 @@
 * Removed `ggchord::geom_ribbon()` after its v0.12 deprecation. Use
   `geom_link_ribbon()`; existing ribbon aesthetics, scales, themes, and layout
   export component names are unchanged.
-* Restored automatic local gene/feature avoidance as the
-  `geom_link_ribbon()` default (`link_avoid = "smooth"`). Use
-  `link_avoid = "none"` for fixed spacing; an explicit `ribbon_gap` still
-  takes priority over automatic clearance.
+* `geom_link_ribbon()` now defaults to `link_avoid = "uniform"`, using one
+  obstacle-aware clearance across each endpoint. Local `"smooth"` avoidance
+  and fixed `"none"` spacing remain explicit choices; an explicit
+  `ribbon_gap` still takes priority.
 
 # ggchord 0.12.0
 

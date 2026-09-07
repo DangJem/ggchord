@@ -549,8 +549,9 @@ from endpoint spans. Filters and weighted statistics require the columns they
 use. Gene `anno` and feature categories/text are optional; accessions, coordinates
 and feature strands remain required. Missing annotations do not create labels.
 
-Ribbon `link_avoid` defaults to local `smooth` avoidance; use `none` to disable
-it or `uniform` for one endpoint-wide clearance. Explicit gaps win.
+Ribbon `link_avoid` defaults to `uniform`, using one obstacle-aware clearance
+across each endpoint. Set it to `smooth` for local clearance or `none` for
+fixed spacing. Explicit gaps win.
 `link_branch` defaults to `none`, with optional `query` or `subject` trunks
 for identical endpoints and final styles within one layer. Ribbons match the
 whole ordered interval. Records remain separate and trunk `source_rows` lists
