@@ -20,6 +20,8 @@
 \alias{last_plot}
 \alias{waiver}
 \alias{expansion}
+\alias{position_identity}
+\alias{PositionIdentity}
 \title{Selected ggplot2 helpers for ggchord plots}
 \usage{
 aes(x, y, ...)
@@ -276,6 +278,10 @@ last_plot()
 waiver()
 
 expansion(mult = 0, add = 0)
+
+position_identity()
+
+PositionIdentity
 }
 \description{
 ggchord re-exports a deliberately small set of ggplot2 helpers that are

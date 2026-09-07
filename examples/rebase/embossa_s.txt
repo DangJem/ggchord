@@ -1,0 +1,28 @@
+#  
+# REBASE version 609                                              embossa_s.609
+#  
+#     =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+#     REBASE, The Restriction Enzyme Database   http://rebase.neb.com
+#     Copyright (c)  Dr. Richard J. Roberts, 2024.   All rights reserved.
+#     =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+#  
+# Rich Roberts                                                    Aug 27 2026
+#  
+# REBASE Supplier information for EMBOSS (embossre.sup)
+#
+# Format:
+# Code of Supplier<ws>Supplier name
+#
+B Thermo Fisher Scientific
+E Agilent Technologies
+I SibEnzyme Ltd.
+J Nippon Gene Co., Ltd.
+K Takara Bio Inc.
+M Roche Custom Biotech
+N New England Biolabs
+O Toyobo Biochemicals
+Q Molecular Biology Resources - CHIMERx
+R Promega Corporation
+S Sigma Chemical Corporation
+V Vivantis Technologies
+X EURx Ltd.

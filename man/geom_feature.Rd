@@ -8,8 +8,12 @@ geom_feature(
   mapping = NULL,
   data = NULL,
   feature_shape = "arrow",
+  shape = NULL,
   feature_width = NULL,
   feature_offset = NULL,
+  arrow_head_length = 0.04,
+  arrow_head_width = 1,
+  short_feature = c("auto", "wedge", "block"),
   position = "identity",
   show.legend = TRUE,
   inherit.aes = FALSE,
@@ -31,18 +35,28 @@ is not mapped in \code{aes()}: \code{"arrow"}, \code{"block"},
 Use \code{aes(feature_shape = type)} together with
 \code{scale_feature_shape_manual()} to map categories to geometry.}
 
-\item{feature_width}{Optional numeric or named vector controlling feature
-width; passed to \code{geom_gene(gene_width = ...)}.}
+\item{shape}{Optional concise alias for fixed `feature_shape`. Supplying
+both is an error.}
 
-\item{feature_offset}{Optional numeric or named vector controlling feature
-offset; passed to \code{geom_gene(gene_offset = ...)}.}
+\item{feature_width}{Optional numeric/vector/list controlling width in the
+shared feature geometry engine.}
 
-\item{position}{Position adjustment passed to [geom_gene()]. Use
-[position_feature_stack()] to stack overlaps on radial lanes.}
+\item{feature_offset}{Deprecated placement input. Explicit values are
+translated to the former strand-separated geometry and emit a warning.}
+
+\item{arrow_head_length, arrow_head_width}{Arrow-head dimensions in the
+sequence-local frame, shared with [geom_gene()].}
+
+\item{short_feature}{Fallback for arrows too short to hold their requested
+head: automatic wedge/block selection, a wedge, or a block.}
+
+\item{position}{Feature placement. Use `"identity"`, `"strand"`,
+`"plasmid"`, [position_strand()], [position_plasmid()], or
+[position_feature_stack()].}
 
 \item{show.legend, inherit.aes}{Standard ggplot2 layer arguments.}
 
-\item{...}{Additional arguments passed to \code{geom_gene()}.}
+\item{...}{Additional fixed polygon aesthetics.}
 }
 \value{
 A ggplot2 layer.

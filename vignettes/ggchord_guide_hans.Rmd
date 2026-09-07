@@ -440,32 +440,76 @@ gene_label_rotation = list(20)
 - [包主页](https://dangjem.github.io/ggchord/)
 
 
-## 单基因组圆图与限制性酶切位点
+## 单条 circular sequence 与限制性酶切位点
 
-输入是一条完整基因组时，使用 `coord_genome()`。`gap = 0` 形成闭合圆，正数按
-角度打开缺口；原点旋转和基因组方向也由这个坐标入口管理。
+输入是一条完整环形序列时，使用 `coord_circular()`。`gap = 0` 形成
+闭合圆，正数按角度打开缺口；原点旋转和基因组方向也由这个坐标入口
+管理。v0.13 起 `geom_gene()` 默认为 `position = "identity"`；旧版分链布局
+使用 `position = "strand"`，plasmid 共享内侧 band 使用 `position = "plasmid"`。
+
+pUC19c 的基础图只需要 circular backbone 和中心信息：
+
+```{r puc19c-map, eval=FALSE}
+data(plasmid_sequence_example)
+puc <- subset(plasmid_sequence_example, label == "pUC19c")
+ggchord(puc) +
+  geom_seq(seq_style = "double") +
+  geom_seq_center_label() +
+  scale_seq_position_continuous() +
+  coord_circular(rotation = 90) +
+  theme_ggchord_plasmid()
+```
 
 ```{r single-genome, eval=FALSE}
-data(single_genome_example)
-data(single_gene_example)
-data(restriction_site_example)
+data(plasmid_sequence_example)
+data(plasmid_feature_example)
+data(plasmid_restriction_example)
+seq <- subset(plasmid_sequence_example, label == "pBR322")
+features <- subset(plasmid_feature_example, accver == seq$accver)
+genes <- subset(features, type == "CDS")
+other <- subset(features, type != "CDS")
+sites <- subset(plasmid_restriction_example, accver == seq$accver) |>
+  filter_restriction_sites(set = "unique_6plus")
 
-ggchord(single_genome_example, gene_data = single_gene_example) +
-  geom_seq() +
-  geom_gene() +
-  geom_gene_label_repel() +
-  geom_restriction_site(data = restriction_site_example) +
-  coord_genome(gap = 10)
+ggchord(seq, gene_data = genes) +
+  geom_seq(seq_style = "double") +
+  geom_gene(position = "plasmid") +
+  geom_feature(aes(feature_fill = type, feature_shape = type),
+    data = other, position = "plasmid") +
+  geom_feature_label_repel(aes(label = anno), data = features,
+    position = "plasmid", label_layout = "callout") +
+  geom_restriction_site(data = sites, leader = "trunk") +
+  geom_seq_center_label() +
+  scale_feature_fill_plasmid() +
+  scale_feature_shape_plasmid() +
+  scale_seq_position_continuous() +
+  coord_circular(rotation = 90) +
+  theme_ggchord_plasmid()
+```
+
+pBluescript II SK(+) 的密集 MCS 区域用于压力测试限制酶标签。真实位点的
+anchor 保持不动，共享外侧 trunk 以确定性方式分配标签位置：
+
+```{r pbluescript-restriction-map, eval=FALSE}
+blue <- subset(plasmid_sequence_example, label == "pBluescript II SK(+)")
+blue_sites <- subset(plasmid_restriction_example, accver == blue$accver)
+ggchord(blue) +
+  geom_seq(seq_style = "double") +
+  geom_restriction_site(data = blue_sites, leader = "trunk") +
+  geom_seq_center_label() +
+  scale_seq_position_continuous() +
+  coord_circular(rotation = 90) +
+  theme_ggchord_plasmid()
 ```
 
 酶切位点计算与绘图相互独立。结果表记录识别区间、双链切点、末端类型、链和
-可追踪的酶定义来源；自定义 IUPAC motif 可通过定义表传入。
+可追踪的 pattern identity；显示筛选由 `filter_restriction_sites()` 独立完成。
+自定义 IUPAC motif 可使用定义表或带酶名的字符向量传入。
 
 ```{r restriction-search, eval=FALSE}
-sites <- find_restriction_sites(
-  c(plasmid = "AAAAGAATTCTTTGGATCC"),
-  enzymes = c("EcoRI", "BamHI")
-)
+sites <- find_restriction_sites(c(plasmid = "AAAAGAATTCTTTGGATCC"),
+  patterns = c(EcoRI = "GAATTC", BamHI = "GGATCC")) |>
+  filter_restriction_sites(set = "unique_6plus")
 ```
 
 ## v0.13 数据契约与连接模式
@@ -479,7 +523,8 @@ ribbon 只要求 `qaccver/saccver/qstart/qend/sstart/send`。`pident` 缺失时�
 只在使用相应统计量时要求该列。gene 的 `anno`、feature 的分类与文字可省略，
 标识、坐标和 `strand` 仍必需；无注释时不自动生成标签。
 
-`link_avoid` 默认为 `none`，可手动设为 `smooth` 或 `uniform`；显式 gap 优先。
+Ribbon 的 `link_avoid` 默认为局部 `smooth` 避障；`none` 明确关闭，
+`uniform` 为整个端点使用统一间距，显式 gap 优先。
 `link_branch` 默认 `none`，可选 `query` 或 `subject`；仅同层、完全相同端点、
 最终样式一致的连接共享主干。ribbon 匹配整个有序区间，而非仅起始位置。
 分叉是显示模式，不合并原始记录；`source_rows` 记录主干成员。分叉截面按分支

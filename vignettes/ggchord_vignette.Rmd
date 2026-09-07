@@ -461,34 +461,80 @@ gene_label_rotation = list(20)
 - [Package homepage](https://dangjem.github.io/ggchord/)
 
 
-## Single-genome circles and restriction sites
+## Single circular sequences and restriction sites
 
-Use `coord_genome()` when the input describes one complete genome. A zero
-opening closes the circle; `gap` opens it by a number of degrees. The
-coordinate also owns the origin rotation and genomic direction.
+Use `coord_circular()` when the input describes one complete circular
+sequence. A zero gap closes the circle; `gap` opens it by a number of degrees.
+The coordinate owns genomic-origin rotation and direction. Since v0.13,
+`geom_gene()` uses `position = "identity"`; use `position = "strand"` for the
+former strand-separated default, or `position = "plasmid"` for a shared inner
+band.
+
+A basic pUC19c map needs only the circular backbone and centre metadata:
+
+```{r puc19c-map, eval=FALSE}
+data(plasmid_sequence_example)
+puc <- subset(plasmid_sequence_example, label == "pUC19c")
+ggchord(puc) +
+  geom_seq(seq_style = "double") +
+  geom_seq_center_label() +
+  scale_seq_position_continuous() +
+  coord_circular(rotation = 90) +
+  theme_ggchord_plasmid()
+```
 
 ```{r single-genome, eval=FALSE}
-data(single_genome_example)
-data(single_gene_example)
-data(restriction_site_example)
+data(plasmid_sequence_example)
+data(plasmid_feature_example)
+data(plasmid_restriction_example)
+seq <- subset(plasmid_sequence_example, label == "pBR322")
+features <- subset(plasmid_feature_example, accver == seq$accver)
+genes <- subset(features, type == "CDS")
+other <- subset(features, type != "CDS")
+sites <- subset(plasmid_restriction_example, accver == seq$accver) |>
+  filter_restriction_sites(set = "unique_6plus")
 
-ggchord(single_genome_example, gene_data = single_gene_example) +
-  geom_seq() +
-  geom_gene() +
-  geom_gene_label_repel() +
-  geom_restriction_site(data = restriction_site_example) +
-  coord_genome(gap = 10)
+ggchord(seq, gene_data = genes) +
+  geom_seq(seq_style = "double") +
+  geom_gene(position = "plasmid") +
+  geom_feature(aes(feature_fill = type, feature_shape = type),
+    data = other, position = "plasmid") +
+  geom_feature_label_repel(aes(label = anno), data = features,
+    position = "plasmid", label_layout = "callout") +
+  geom_restriction_site(data = sites, leader = "trunk") +
+  geom_seq_center_label() +
+  scale_feature_fill_plasmid() +
+  scale_feature_shape_plasmid() +
+  scale_seq_position_continuous() +
+  coord_circular(rotation = 90) +
+  theme_ggchord_plasmid()
+```
+
+The dense pBluescript II SK(+) multiple-cloning region is a restriction-label
+stress test. Real sites retain their anchors while the shared outer trunk
+spreads label slots deterministically:
+
+```{r pbluescript-restriction-map, eval=FALSE}
+blue <- subset(plasmid_sequence_example, label == "pBluescript II SK(+)")
+blue_sites <- subset(plasmid_restriction_example, accver == blue$accver)
+ggchord(blue) +
+  geom_seq(seq_style = "double") +
+  geom_restriction_site(data = blue_sites, leader = "trunk") +
+  geom_seq_center_label() +
+  scale_seq_position_continuous() +
+  coord_circular(rotation = 90) +
+  theme_ggchord_plasmid()
 ```
 
 Restriction-site calculation is independent from drawing. The result records
-recognition and cut coordinates, overhang type, strand, and a traceable enzyme
-definition source. Supply a definition data frame for custom IUPAC motifs.
+recognition and cut coordinates, overhang type, strand, and a traceable pattern
+identity. Display filtering is a separate step. Supply a definition data frame
+or named character vector for custom IUPAC motifs.
 
 ```{r restriction-search, eval=FALSE}
-sites <- find_restriction_sites(
-  c(plasmid = "AAAAGAATTCTTTGGATCC"),
-  enzymes = c("EcoRI", "BamHI")
-)
+sites <- find_restriction_sites(c(plasmid = "AAAAGAATTCTTTGGATCC"),
+  patterns = c(EcoRI = "GAATTC", BamHI = "GGATCC")) |>
+  filter_restriction_sites(set = "unique_6plus")
 ```
 
 ## v0.13 data contracts and point links
@@ -503,8 +549,9 @@ from endpoint spans. Filters and weighted statistics require the columns they
 use. Gene `anno` and feature categories/text are optional; accessions, coordinates
 and feature strands remain required. Missing annotations do not create labels.
 
-`link_avoid` defaults to `none`; opt into `smooth` or `uniform` when needed,
-and explicit gaps win. `link_branch` defaults to `none`, with optional `query` or `subject` trunks
+Ribbon `link_avoid` defaults to local `smooth` avoidance; use `none` to disable
+it or `uniform` for one endpoint-wide clearance. Explicit gaps win.
+`link_branch` defaults to `none`, with optional `query` or `subject` trunks
 for identical endpoints and final styles within one layer. Ribbons match the
 whole ordered interval. Records remain separate and trunk `source_rows` lists
 members. Fork cross-sections partition geometric width, not statistical weights.

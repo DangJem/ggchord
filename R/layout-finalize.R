@@ -83,7 +83,8 @@ ggchord_layout_finalize_step <- quote({
 
     # Metadata
     rotation        = rotation,
-    n_sequences     = n
+    n_sequences     = n,
+    circular        = circular
   )
 
   class(layout) <- "chord_layout"

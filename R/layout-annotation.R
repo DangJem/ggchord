@@ -129,121 +129,61 @@ ggchord_layout_annotation_step <- quote({
       width <- geneWidth[[sid]][strand]
       if (!is.numeric(width) || width <= 0) width <- 0.1
 
-      seq_len <- lens[sid]
-      sp <- min(gene$start, gene$end)
-      ep <- max(gene$start, gene$end)
-      if (ep <= sp) next
-
-      frac_sp <- if (orientation[sid] == 1) sp / seq_len else 1 - sp / seq_len
-      frac_ep <- if (orientation[sid] == 1) ep / seq_len else 1 - ep / seq_len
-      a_start <- starts[sid] + frac_sp * (ends[sid] - starts[sid])
-      a_end <- starts[sid] + frac_ep * (ends[sid] - starts[sid])
-      if (strand == "-") { tmp <- a_start; a_start <- a_end; a_end <- tmp }
-
-      r0 <- gene_track_radius(gene, sid, strand)
-
+      sequence_length <- lens[sid]
+      if (!is.finite(gene$start) || !is.finite(gene$end) ||
+          gene$start == gene$end) next
       ref <- seq_refs[[sid]]
       feature_shape <- if (".feature_shape" %in% names(gene)) {
         as.character(gene[[".feature_shape"]])
       } else {
         "arrow"
       }
-      span <- a_end - a_start
-
-      shape_parts <- switch(
-        feature_shape,
-        block = {
-          ang <- seq(a_start, a_end, length.out = 60)
-          list(list(
-            angle = c(ang, rev(ang)),
-            radius = c(rep(r0 + width / 2, length(ang)),
-                       rep(r0 - width / 2, length(ang)))
-          ))
-        },
-        chevron = {
-          shoulder <- seq(a_start, a_start + 0.68 * span, length.out = 30)
-          list(list(
-            angle = c(shoulder, a_end, rev(shoulder),
-                      a_start + 0.28 * span),
-            radius = c(rep(r0 + width / 2, length(shoulder)), r0,
-                       rep(r0 - width / 2, length(shoulder)), r0)
-          ))
-        },
-        lollipop = {
-          mid <- (a_start + a_end) / 2
-          angle_half <- min(
-            abs(span) * 0.08,
-            width * 0.10 / max(abs(r0), 0.1)
-          )
-          stem_start <- seqRadius[sid]
-          stem_end <- r0
-          stem <- list(
-            angle = c(mid - angle_half, mid + angle_half,
-                      mid + angle_half, mid - angle_half),
-            radius = c(stem_start, stem_start, stem_end, stem_end)
-          )
-          theta <- seq(0, 2 * pi, length.out = 48)
-          head_radius <- width * 0.58
-          center <- as.numeric(map_to_curve_many(mid, r0, ref)[1, ])
-          delta <- max(abs(span) * 1e-4, 1e-7)
-          tangent_pts <- map_to_curve_many(
-            c(mid - delta, mid + delta), rep(r0, 2), ref
-          )
-          tangent <- as.numeric(tangent_pts[2, ] - tangent_pts[1, ])
-          tangent_norm <- sqrt(sum(tangent^2))
-          if (!is.finite(tangent_norm) || tangent_norm <= 1e-12) {
-            tangent <- c(1, 0)
-          } else {
-            tangent <- tangent / tangent_norm
-          }
-          normal <- c(-tangent[2], tangent[1])
-          head <- list(
-            xy = cbind(
-              center[1] + head_radius *
-                (cos(theta) * tangent[1] + sin(theta) * normal[1]),
-              center[2] + head_radius *
-                (cos(theta) * tangent[2] + sin(theta) * normal[2])
-            )
-          )
-          list(stem, head)
-        },
-        {
-          n_body <- 30
-          n_head <- 15
-          body_ang <- seq(
-            a_start, a_start + 0.6 * span, length.out = n_body
-          )
-          head_ang <- seq(utils::tail(body_ang, 1), a_end,
-                          length.out = n_head)
-          ang <- c(body_ang, head_ang)
-          width_factor <- c(rep(1, n_body), seq(1, 0, length.out = n_head))
-          list(list(
-            angle = c(ang, rev(ang)),
-            radius = c(r0 + (width / 2) * width_factor,
-                       rev(r0 - (width / 2) * width_factor))
-          ))
-        }
+      pieces <- ggchord_feature_intervals(
+        gene$start, gene$end, sequence_length, strand,
+        circular = circular
       )
-
-      for (part in seq_along(shape_parts)) {
-        mapped <- if (!is.null(shape_parts[[part]]$xy)) {
-          shape_parts[[part]]$xy
-        } else {
-          map_to_curve_many(
-            shape_parts[[part]]$angle, shape_parts[[part]]$radius, ref
-          )
-        }
-        gene_poly_list[[length(gene_poly_list) + 1]] <- data.frame(
+      part_index <- 0L
+      for (piece in pieces) {
+        interval <- ggchord_feature_angle_interval(
+          piece, sequence_length, orientation[sid], starts[sid], ends[sid]
+        )
+        r0 <- gene_track_radius(
+          gene, sid, strand, mean(interval)
+        )
+        shape_parts <- ggchord_feature_geometry(
+          feature_shape, interval[1L], interval[2L], r0, width,
+          seqRadius[sid], ref,
+          arrow_head_length = arrow_head_length,
+          arrow_head_width = arrow_head_width,
+          short_feature = short_feature,
+          draw_head = piece$draw_head
+        )
+        for (part in seq_along(shape_parts)) {
+          part_index <- part_index + 1L
+          mapped <- if (!is.null(shape_parts[[part]]$xy)) {
+            shape_parts[[part]]$xy
+          } else {
+            map_to_curve_many(
+              shape_parts[[part]]$angle, shape_parts[[part]]$radius, ref
+            )
+          }
+          gene_poly_list[[length(gene_poly_list) + 1L]] <- data.frame(
           x = mapped[, 1],
           y = mapped[, 2],
-          group = i * 10L + part,
+          group = i * 100L + part_index,
           anno = anno,
           strand = strand,
           feature_shape = feature_shape,
+          position_name = as.character(gene$.position_name %||% "identity"),
+          base_offset = as.numeric(gene$.position_base_offset %||% 0),
+          lane = as.integer(gene$.feature_stack_lane %||% 0L),
+          lane_offset = as.numeric(gene$.position_lane_offset %||% 0),
+          normal_offset = as.numeric(gene$.normal_offset %||% 0),
           source_row = gene$.source_row,
           ord = seq_len(nrow(mapped)),
           stringsAsFactors = FALSE
         )
+        }
       }
     }
     gene_polys <- if (length(gene_poly_list)) do.call(rbind, gene_poly_list) else data.frame()
@@ -260,7 +200,12 @@ ggchord_layout_annotation_step <- quote({
 
         sp <- min(gene$start, gene$end)
         ep <- max(gene$start, gene$end)
-        frac_mid <- (sp + ep) / (2 * seq_len)
+        frac_mid <- if (isTRUE(circular) && gene$start > gene$end) {
+          ((gene$start + ((seq_len - gene$start) + gene$end) / 2) %% seq_len) /
+            seq_len
+        } else {
+          (sp + ep) / (2 * seq_len)
+        }
 
         circum_ratio <- geneLabelCircumOffset[[sid]][strand]
         if (geneLabelCircumLimit[[sid]][strand]) {
@@ -289,7 +234,7 @@ ggchord_layout_annotation_step <- quote({
 
         width <- geneWidth[[sid]][strand]
 
-        r0 <- gene_track_radius(gene, sid, strand)
+        r0 <- gene_track_radius(gene, sid, strand, ref$angles[idx])
 
         center_r <- r0
         center_pt <- map_to_curve(angle = ref$angles[idx], radius = center_r, ref = ref)
@@ -396,6 +341,11 @@ ggchord_layout_annotation_step <- quote({
           accver = sid,
           group = i,
           source_row = gene$.source_row,
+          position_name = as.character(gene$.position_name %||% "identity"),
+          base_offset = as.numeric(gene$.position_base_offset %||% 0),
+          lane = as.integer(gene$.feature_stack_lane %||% 0L),
+          lane_offset = as.numeric(gene$.position_lane_offset %||% 0),
+          normal_offset = as.numeric(gene$.normal_offset %||% 0),
           anchor_x = anchor_x,
           anchor_y = anchor_y,
           side_flipped = side_flipped,

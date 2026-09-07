@@ -6,7 +6,8 @@ PositionFeatureStack <- ggplot2::ggproto(
   "PositionFeatureStack", ggplot2::PositionIdentity,
   ggchord_feature_stack = TRUE,
   spacing = 0.08,
-  side = "strand"
+  side = "strand",
+  base_position = NULL
 )
 
 #' Stack overlapping genes or features on radial tracks
@@ -17,22 +18,37 @@ PositionFeatureStack <- ggplot2::ggproto(
 #' solved before polygons and labels are generated.
 #'
 #' @param spacing Positive radial distance between adjacent lanes.
-#' @param side Track side. `"strand"` preserves the normal gene convention
-#'   (`+` inside and `-` outside); `"outside"` or `"inside"` places both
-#'   strands on that side while retaining arrow direction.
+#' @param side Legacy track-side selector retained for compatibility when
+#'   `base_position` is `NULL`. Its historical names retain their existing
+#'   geometry.
+#' @param base_position Optional identity, strand, or plasmid Position applied
+#'   before interval-overlap detection and lane allocation.
 #' @return A ggplot2 Position object for `geom_gene()` or `geom_feature()`.
 #' @export
 position_feature_stack <- function(
     spacing = 0.08,
-    side = c("strand", "outside", "inside")) {
+    side = c("strand", "outside", "inside"),
+    base_position = NULL) {
+  side_missing <- missing(side)
   side <- match.arg(side)
   if (!is.numeric(spacing) || length(spacing) != 1L ||
       !is.finite(spacing) || spacing <= 0) {
     ggchord_stop("position_feature_stack(): spacing must be one positive number")
   }
+  if (!is.null(base_position)) {
+    if (!side_missing) {
+      ggchord_stop("position_feature_stack(): `side` cannot be combined with `base_position`")
+    }
+    base_position <- ggchord_as_feature_position(
+      base_position, "position_feature_stack()"
+    )
+    if (isTRUE(base_position$ggchord_feature_stack)) {
+      ggchord_stop("position_feature_stack(): base_position cannot itself be a stack")
+    }
+  }
   ggplot2::ggproto(
     NULL, PositionFeatureStack,
-    spacing = as.numeric(spacing), side = side
+    spacing = as.numeric(spacing), side = side, base_position = base_position
   )
 }
 

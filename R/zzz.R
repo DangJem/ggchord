@@ -13,6 +13,11 @@
     ggchord.seq.label = ggplot2::element_text(),
     ggchord.gene.label = ggplot2::element_text(),
     ggchord.gene.label.segment = ggplot2::element_line(),
+    ggchord.feature.label = ggplot2::element_text(),
+    ggchord.feature.label.segment = ggplot2::element_line(),
+    ggchord.restriction.label = ggplot2::element_text(),
+    ggchord.restriction.label.segment = ggplot2::element_line(),
+    ggchord.seq.center.label = ggplot2::element_text(),
     element_tree = list(
       "ggchord.axis.line" = ggplot2::el_def("element_line", inherit = "line"),
       "ggchord.axis.ticks" = ggplot2::el_def("element_line", inherit = "line"),
@@ -24,7 +29,12 @@
       "ggchord.gene.label" = ggplot2::el_def("element_text", inherit = "text"),
       "ggchord.gene.label.segment" = ggplot2::el_def(
         "element_line", inherit = "line"
-      )
+      ),
+      "ggchord.feature.label" = ggplot2::el_def("element_text", inherit = "text"),
+      "ggchord.feature.label.segment" = ggplot2::el_def("element_line", inherit = "line"),
+      "ggchord.restriction.label" = ggplot2::el_def("element_text", inherit = "text"),
+      "ggchord.restriction.label.segment" = ggplot2::el_def("element_line", inherit = "line"),
+      "ggchord.seq.center.label" = ggplot2::el_def("element_text", inherit = "text")
     )
   )
 }
@@ -292,10 +302,18 @@ ggchord_attach_input_columns <- function(geometry, input) {
     return(geometry)
   }
   valid <- !is.na(idx) & idx >= 1 & idx <= nrow(input)
-  geometry <- geometry[valid, , drop = FALSE]
-  idx <- idx[valid]
   cols <- setdiff(names(input), protected)
-  for (nm in cols) geometry[[nm]] <- input[[nm]][idx]
+  for (nm in cols) {
+    source <- input[[nm]]
+    if (is.list(source) && !is.data.frame(source)) {
+      value <- rep(list(NULL), nrow(geometry))
+      value[valid] <- source[idx[valid]]
+    } else {
+      value <- rep(ggchord_typed_na(source), nrow(geometry))
+      value[valid] <- source[idx[valid]]
+    }
+    geometry[[nm]] <- value
+  }
   geometry
 }
 

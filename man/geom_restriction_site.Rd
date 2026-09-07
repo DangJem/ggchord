@@ -2,15 +2,18 @@
 % Please edit documentation in R/restriction-sites.R
 \name{geom_restriction_site}
 \alias{geom_restriction_site}
-\title{Add restriction sites to a sequence track}
+\title{Draw restriction sites, labels and deterministic leaders}
 \usage{
 geom_restriction_site(
   mapping = NULL,
   data = NULL,
   label = TRUE,
+  label_style = c("enzyme_position", "enzyme", "position"),
+  label_side = c("outside", "inside", "auto"),
+  leader = c("trunk", "elbow", "straight"),
+  min_label_gap = 0.02,
   tick_length = 0.045,
-  label_offset = 0.16,
-  branch_threshold = 0.02,
+  label_offset = 0.28,
   colour = "#B42318",
   linewidth = 0.35,
   label_size = 2.6,
@@ -21,24 +24,29 @@ geom_restriction_site(
 )
 }
 \arguments{
-\item{mapping, data}{Standard layer inputs. Data require `accver`, `position`, and `enzyme`.}
+\item{mapping, data}{Standard layer inputs.}
 
-\item{label}{Whether to draw enzyme names.}
+\item{label}{Draw labels.}
 
-\item{tick_length, label_offset}{Coordinate-unit offsets from the sequence.}
+\item{label_style}{Label enzyme and position, enzyme only, or position only.}
 
-\item{branch_threshold}{Maximum genomic fraction for labels to share a trunk.}
+\item{label_side}{Draw labels outside, inside, or automatically.}
+
+\item{leader}{Leader routing style.}
+
+\item{min_label_gap}{Minimum genomic fraction between label slots.}
+
+\item{tick_length, label_offset}{Local-normal distances.}
 
 \item{colour, linewidth, label_size}{Fixed appearance.}
 
-\item{position, show.legend, inherit.aes}{Standard ggplot2 layer arguments.}
+\item{position, show.legend, inherit.aes}{Standard layer arguments.}
 
-\item{...}{Additional arguments passed to \code{geom_path()}}
+\item{...}{Additional geom parameters.}
 }
 \value{
 A ggplot2 layer.
 }
 \description{
-Draws cut ticks and optional labels. Nearby labels share a deterministic
-trunk while each cut remains a separate observation.
+Draw restriction sites, labels and deterministic leaders
 }

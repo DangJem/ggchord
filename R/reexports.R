@@ -99,6 +99,16 @@ ggplot2::waiver
 #' @export
 ggplot2::expansion
 
+#' @rdname ggplot2-helpers
+#' @importFrom ggplot2 position_identity
+#' @export
+ggplot2::position_identity
+
+#' @rdname ggplot2-helpers
+#' @importFrom ggplot2 PositionIdentity
+#' @export
+ggplot2::PositionIdentity
+
 #' Physical units and direction arrows
 #'
 #' These are the original grid functions, available after loading ggchord.

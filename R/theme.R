@@ -21,8 +21,11 @@
 #' @param axis.text.orientation One of `"horizontal"`, `"parallel"`,
 #'   `"perpendicular"`, or a finite numeric angle.
 #' @param axis.text.check.overlap Whether overlapping axis labels are hidden.
-#' @param seq.label,gene.label Text elements for existing label layers.
-#' @param gene.label.segment Line element for existing gene leader lines.
+#' @param seq.label,gene.label,feature.label,restriction.label,seq.center.label
+#'   Text elements for sequence, gene, feature, restriction-site and circular
+#'   centre labels.
+#' @param gene.label.segment,feature.label.segment,restriction.label.segment
+#'   Line elements for gene, feature and restriction-site leader lines.
 #' @param legend.position,legend.justification,legend.direction,legend.box,legend.box.just,legend.box.margin,legend.box.background,legend.box.spacing,legend.background,legend.margin,legend.spacing,legend.spacing.x,legend.spacing.y,legend.key,legend.key.size,legend.key.width,legend.key.height,legend.text,legend.text.position,legend.title,legend.title.position Standard legend theme settings inherited by roles.
 #' @param legend.link,legend.link.position,legend.link.direction,legend.link.background,legend.link.key,legend.link.key.size,legend.link.key.width,legend.link.key.height,legend.link.text,legend.link.text.position,legend.link.title,legend.link.title.position,legend.link.margin,legend.link.spacing Point-link guide appearance; follows the same role-specific rules.
 #' @param legend.seq,legend.ribbon,legend.gene,legend.feature,legend.region
@@ -57,6 +60,9 @@ theme_ggchord <- function(
     axis.minor.ticks.length = NULL, axis.text.offset = NULL,
     axis.text.orientation = NULL, axis.text.check.overlap = NULL,
     seq.label = NULL, gene.label = NULL, gene.label.segment = NULL,
+    feature.label = NULL, feature.label.segment = NULL,
+    restriction.label = NULL, restriction.label.segment = NULL,
+    seq.center.label = NULL,
     legend.position = NULL, legend.justification = NULL,
     legend.direction = NULL, legend.box = NULL, legend.box.just = NULL,
     legend.box.margin = NULL, legend.box.background = NULL,
@@ -134,6 +140,9 @@ theme_ggchord_dark <- ggchord_theme_variant("dark")
 #' @rdname theme_ggchord
 #' @export
 theme_ggchord_publication <- ggchord_theme_variant("publication")
+#' @rdname theme_ggchord
+#' @export
+theme_ggchord_plasmid <- ggchord_theme_variant("plasmid")
 
 #' @noRd
 ggchord_theme_from_environment <- function(preset, env, dots) {
@@ -148,7 +157,7 @@ ggchord_theme_from_environment <- function(preset, env, dots) {
   ggchord_reject_retired(dots, caller, old)
   nms <- setdiff(names(formals(theme_ggchord)), "...")
   values <- stats::setNames(lapply(nms, get, envir = env), nms)
-  base_size <- if (preset == "publication") 9 else 11
+  base_size <- if (preset == "publication") 9 else if (preset == "plasmid") 10 else 11
   dark <- preset == "dark"
   fg <- if (dark) "#F1F3F5" else "#30353A"
   bg <- if (dark) "#17191C" else "white"
@@ -162,10 +171,15 @@ ggchord_theme_from_environment <- function(preset, env, dots) {
       plot.caption = ggplot2::element_text(size = ggplot2::rel(.72)),
       plot.background = ggplot2::element_rect(fill = bg, colour = NA),
       panel.background = ggplot2::element_rect(fill = bg, colour = NA),
-      plot.margin = ggplot2::margin(3, 2, 3, 2),
+      plot.margin = if (preset == "plasmid") {
+        ggplot2::margin(6, 6, 6, 6)
+      } else ggplot2::margin(3, 2, 3, 2),
       legend.background = ggplot2::element_rect(fill = NA, colour = NA),
       legend.key = ggplot2::element_rect(fill = NA, colour = NA),
-      legend.box.spacing = grid::unit(if (preset == "minimal") 3 else 4, "mm"),
+      legend.box.spacing = grid::unit(
+        if (preset == "minimal") 3 else if (preset == "plasmid") 5 else 4,
+        "mm"
+      ),
       legend.spacing = grid::unit(2, "mm"),
       legend.spacing.x = grid::unit(2, "mm"),
       legend.spacing.y = grid::unit(4, "mm"),
@@ -187,7 +201,18 @@ ggchord_theme_from_environment <- function(preset, env, dots) {
         colour = if (dark) fg else "#2B3035", size = ggplot2::rel(.64)),
       ggchord.gene.label.segment = ggplot2::element_line(
         colour = if (dark) "#CED4DA" else if (preset == "minimal") "#A1A6AA" else "#858B91",
-        linewidth = if (preset == "minimal") .2 else .25)
+        linewidth = if (preset == "minimal") .2 else .25),
+      ggchord.feature.label = ggplot2::element_text(
+        colour = if (dark) fg else "#27313A", size = ggplot2::rel(.68)),
+      ggchord.feature.label.segment = ggplot2::element_line(
+        colour = if (dark) "#CED4DA" else "#7B858E", linewidth = .25),
+      ggchord.restriction.label = ggplot2::element_text(
+        colour = if (dark) fg else "#7A271A", size = ggplot2::rel(.62)),
+      ggchord.restriction.label.segment = ggplot2::element_line(
+        colour = if (dark) "#F1A7A0" else "#B5473C", linewidth = .25),
+      ggchord.seq.center.label = ggplot2::element_text(
+        colour = if (dark) fg else "#20282F", size = ggplot2::rel(1.05),
+        face = "bold", lineheight = 1.15)
     )
   custom <- list(
     ggchord.axis.line = values$axis.line,
@@ -196,7 +221,12 @@ ggchord_theme_from_environment <- function(preset, env, dots) {
     ggchord.axis.text = values$axis.text,
     ggchord.seq.label = values$seq.label,
     ggchord.gene.label = values$gene.label,
-    ggchord.gene.label.segment = values$gene.label.segment
+    ggchord.gene.label.segment = values$gene.label.segment,
+    ggchord.feature.label = values$feature.label,
+    ggchord.feature.label.segment = values$feature.label.segment,
+    ggchord.restriction.label = values$restriction.label,
+    ggchord.restriction.label.segment = values$restriction.label.segment,
+    ggchord.seq.center.label = values$seq.center.label
   )
   standard <- c("text", "plot.title", "plot.subtitle", "plot.caption", "plot.tag",
     "plot.title.position", "plot.caption.position", "plot.tag.position",
@@ -330,7 +360,8 @@ ggchord_apply_theme_styles <- function(plot) {
             linetype = el@linetype, lineend = el@lineend, linejoin = el@linejoin)
           for (nm in names(vals)) if (is.null(current[[nm]]) && !is.null(vals[[nm]])) current[[nm]] <- vals[[nm]]
         } else if (inherits(el, "element_text")) {
-          vals <- list(colour = el@colour, family = el@family,
+          vals <- list(colour = el@colour, size = el@size / ggplot2::.pt,
+            family = el@family,
             fontface = el@face, lineheight = el@lineheight)
           for (nm in names(vals)) if (is.null(current[[nm]]) && !is.null(vals[[nm]])) current[[nm]] <- vals[[nm]]
         }
@@ -352,7 +383,8 @@ ggchord_apply_theme_styles <- function(plot) {
       vals <- list(colour = el@colour, linewidth = el@linewidth, linetype = el@linetype)
       geom_vals <- list(lineend = el@lineend, linejoin = el@linejoin)
     } else if (inherits(el, "element_text")) {
-      vals <- list(colour = el@colour, family = el@family,
+      vals <- list(colour = el@colour, size = el@size / ggplot2::.pt,
+        family = el@family,
         fontface = el@face, lineheight = el@lineheight)
       geom_vals <- list()
     } else next

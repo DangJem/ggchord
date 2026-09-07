@@ -2,45 +2,32 @@
 % Please edit documentation in R/restriction-sites.R
 \name{find_restriction_sites}
 \alias{find_restriction_sites}
-\title{Find restriction-enzyme recognition and cut sites}
+\title{Find restriction pattern matches and cleavage coordinates}
 \usage{
 find_restriction_sites(
   sequence,
-  enzymes = c("EcoRI", "BamHI"),
+  enzymes = NULL,
+  patterns = NULL,
   circular = TRUE,
-  min_cuts = NULL,
-  max_cuts = NULL,
-  window = NULL
+  database = NULL
 )
 }
 \arguments{
-\item{sequence}{A DNA string, named character vector, or data frame with
+\item{sequence}{DNA text, a named character vector, or a data frame with
 `accver` and `sequence`.}
 
-\item{enzymes}{Built-in enzyme names, or a data frame with `enzyme`, `motif`,
-`cut_top`, and `cut_bottom`.}
+\item{enzymes}{Optional enzyme names. A data frame is a compatibility
+spelling for `patterns`.}
 
-\item{circular}{Whether matches may cross the sequence origin.}
+\item{patterns}{Optional custom definitions.}
 
-\item{min_cuts, max_cuts}{Optional inclusive cut-count filters, evaluated per
-enzyme and sequence before applying `window`.}
+\item{circular}{Allow recognition and cleavage coordinates to wrap origin.}
 
-\item{window}{Optional inclusive genomic interval of length two.}
+\item{database}{Optional parsed pattern database.}
 }
 \value{
-A data frame containing enzyme, recognition, cut and source fields.
+One row per pattern match without display filtering or deduplication.
 }
 \description{
-Searches DNA without requiring Biostrings. Built-in definitions are
-versioned with ggchord; custom definitions can be supplied as a data frame.
-}
-\details{
-Built-in definitions currently include EcoRI, BamHI, HindIII,
-  PstI, and SmaI. `cut_top` and `cut_bottom` identify the nucleotide
-  immediately following each strand's cleavage boundary; `position` is the
-  top-strand cut used by the plotting layer. The database version is stored
-  both in `source` and in the `enzyme_database_version` attribute.
-}
-\examples{
-find_restriction_sites("AAAAGAATTCTTTT", enzymes = "EcoRI")
+Find restriction pattern matches and cleavage coordinates
 }

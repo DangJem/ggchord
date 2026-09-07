@@ -4,14 +4,21 @@
 \alias{position_feature_stack}
 \title{Stack overlapping genes or features on radial tracks}
 \usage{
-position_feature_stack(spacing = 0.08, side = c("strand", "outside", "inside"))
+position_feature_stack(
+  spacing = 0.08,
+  side = c("strand", "outside", "inside"),
+  base_position = NULL
+)
 }
 \arguments{
 \item{spacing}{Positive radial distance between adjacent lanes.}
 
-\item{side}{Track side. `"strand"` preserves the normal gene convention
-(`+` inside and `-` outside); `"outside"` or `"inside"` places both
-strands on that side while retaining arrow direction.}
+\item{side}{Legacy track-side selector retained for compatibility when
+`base_position` is `NULL`. Its historical names retain their existing
+geometry.}
+
+\item{base_position}{Optional identity, strand, or plasmid Position applied
+before interval-overlap detection and lane allocation.}
 }
 \value{
 A ggplot2 Position object for `geom_gene()` or `geom_feature()`.

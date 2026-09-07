@@ -82,7 +82,9 @@ compute_chord_layout <- function(
     region_side = "inside",
     # Gene parameters
     gene_data = NULL, draw_gene_geometry = TRUE,
-    geneGap, geneWidth,
+    geneWidth,
+    arrow_head_length = 0.04, arrow_head_width = 1,
+    short_feature = "auto", circular = FALSE,
     geneLabelRadialOffset, geneLabelCircumOffset,
     geneLabelCircumLimit, geneLabelRotation,
     gene_label_show, gene_label_size,

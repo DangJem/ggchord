@@ -531,17 +531,9 @@ validate_gene_data <- function(gene_data, seq_data, col,
     }
   }
 
-  if (coords_ok) {
-    rev <- gene_data$start > gene_data$end
-    rev[is.na(rev)] <- FALSE
-    if (any(rev)) {
-      rows <- which(rev)
-      col <- add_validation_issue(
-        col, "gene", "reversed_interval", rows, "start/end",
-        "start > end in gene_data (drawn with min/max; clean_ggchord_data(reversed_interval = 'sort') can sort them)",
-        "warning")
-    }
-  }
+  # start > end is context dependent: coord_circular() interprets it as an
+  # origin-crossing interval. Non-circular builds retain the legacy min/max
+  # rendering and issue their warning once coordinate context is available.
 
   seq_lengths_ok <- is.data.frame(seq_data) &&
     all(c("accver", "length") %in% colnames(seq_data)) &&

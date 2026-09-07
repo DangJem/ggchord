@@ -20,7 +20,7 @@ ggchord_layout_label_step <- quote({
     if (isTRUE(gene_label_repel_layer)) {
       # Layout modes own these internal clearances. Keeping them out of the
       # public API prevents combinations that violate the geometry invariants.
-      layout_box_padding <- if (identical(gene_label_layout, "auto")) {
+      layout_box_padding <- if (gene_label_layout %in% c("auto", "callout")) {
         # Physical inches on each side of a text box. The previous 0.18-inch
         # value made an eight-label vertical rail more than twice as tall as
         # necessary and forced top/bottom labels onto extra rows. About 1 mm
@@ -30,7 +30,7 @@ ggchord_layout_label_step <- quote({
       } else {
         0.04
       }
-      layout_point_padding <- if (identical(gene_label_layout, "auto")) {
+      layout_point_padding <- if (gene_label_layout %in% c("auto", "callout")) {
         0.08
       } else {
         0.05
@@ -90,7 +90,7 @@ ggchord_layout_label_step <- quote({
           seq_labels_df, axis_ticks, show_axis,
           units_per_inch = layout_units
         )
-        if (identical(gene_label_layout, "auto")) {
+        if (gene_label_layout %in% c("auto", "callout")) {
           layout_result <- ggchord_auto_label_lanes(
             base_gene_labels, seq_arcs, side = gene_label_side,
             units_per_inch = layout_units, box_padding = layout_box_padding,

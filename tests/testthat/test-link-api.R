@@ -80,12 +80,18 @@ test_that("local entity clearance keeps unobstructed fronts close", {
   seq <- data.frame(accver=c("A","B"),length=1000)
   rib <- data.frame(qaccver="A",saccver="B",qstart=100,qend=800,sstart=100,send=800)
   feature <- data.frame(accver="A",start=350,end=450,strand="-",type="block")
-  base <- ggchord(seq,rib)+geom_seq()+geom_feature(data=feature,feature_shape="block")
+  base <- ggchord(seq,rib)+geom_seq()+geom_feature(
+    data=feature,feature_shape="block",position="strand"
+  )
   default <- get_chord_layout(base+geom_link_ribbon())
+  disabled <- get_chord_layout(base+geom_link_ribbon(link_avoid="none"))
   smooth <- get_chord_layout(base+geom_link_ribbon(link_avoid="smooth"))
   uniform <- get_chord_layout(base+geom_link_ribbon(link_avoid="uniform"))
-  expect_equal(nrow(default$obstacles), 0L)
-  expect_equal(unique(default$ribbon_polys$q_gap), .035)
+  expect_equal(default$obstacles, smooth$obstacles)
+  expect_equal(default$ribbon_polys$q_gap, smooth$ribbon_polys$q_gap)
+  expect_equal(default$ribbon_polys$s_gap, smooth$ribbon_polys$s_gap)
+  expect_equal(nrow(disabled$obstacles), 0L)
+  expect_equal(unique(disabled$ribbon_polys$q_gap), .035)
   expect_true(all(c("accver","side","normal_min","normal_max","source_layer") %in% names(smooth$obstacles)))
   expect_true(all(smooth$obstacles$normal_max > 0))
   front <- function(layout) {

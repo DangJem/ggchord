@@ -6,6 +6,10 @@
 inst/doc
 R/.Rhistory
 /.Rhistory
+/tests/testthat/Rplots.pdf
+/examples/rebase/misc.zip
+/*.tar.gz
+/*.Rcheck/
 
 # Ignore all hidden directories (e.g. .codex-tmp, .idea, .vscode)
 .*/

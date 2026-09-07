@@ -58,3 +58,33 @@ NULL
 #'   `data-raw/generate_example_data.R`.
 #' @name restriction_site_example
 NULL
+
+#' Circular plasmid sequence fixtures
+#'
+#' Three unchanged FASTA records used by the v0.13 circular-map examples.
+#'
+#' @format A three-row data frame with `accver`, display `label`, `length`, and
+#'   the DNA `sequence`.
+#' @source `examples/plasmid/`.
+"plasmid_sequence_example"
+
+#' Compact plasmid feature fixtures
+#'
+#' Core pBR322 and pUC19c annotations used to demonstrate gene and general
+#' feature layers. This compact table is not a complete replacement for the
+#' source records' feature tables.
+#'
+#' @format A data frame with `accver`, `start`, `end`, `strand`, `type`,
+#'   `anno`, and `source`.
+#' @source GenBank J01749.1 and L09137.2.
+"plasmid_feature_example"
+
+#' Common restriction sites in the plasmid examples
+#'
+#' Matches for a small independently specified panel of common motifs. It is
+#' generated from `plasmid_sequence_example`; the complete REBASE database is
+#' not bundled pending confirmation of redistribution terms.
+#'
+#' @format A data frame returned by [find_restriction_sites()].
+#' @source `examples/plasmid/` and `data-raw/generate_example_data.R`.
+"plasmid_restriction_example"

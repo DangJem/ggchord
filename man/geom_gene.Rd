@@ -9,6 +9,9 @@ geom_gene(
   data = NULL,
   gene_offset = NULL,
   gene_width = NULL,
+  arrow_head_length = 0.04,
+  arrow_head_width = 1,
+  short_feature = c("auto", "wedge", "block"),
   position = "identity",
   show.legend = TRUE,
   inherit.aes = FALSE,
@@ -20,12 +23,20 @@ geom_gene(
 
 \item{data}{Default NULL (retrieved automatically from the layout)}
 
-\item{gene_offset}{Optional numeric/vector/list. Radial offset of gene arrows, default 0.1}
+\item{gene_offset}{Deprecated placement input. Explicit values are translated
+to the former strand-separated geometry and emit a migration warning.}
 
 \item{gene_width}{Optional numeric/vector/list. Width of gene arrows, default 0.05}
 
-\item{position}{Position adjustment. Use [position_feature_stack()] to place
-overlapping genes or features on radial lanes.}
+\item{arrow_head_length, arrow_head_width}{Shared arrow-head dimensions in
+the sequence-local frame.}
+
+\item{short_feature}{Fallback for arrows too short to hold their requested
+head: automatic wedge/block selection, a wedge, or a block.}
+
+\item{position}{Feature placement. Use `"identity"`, `"strand"`,
+`"plasmid"`, [position_strand()], [position_plasmid()], or
+[position_feature_stack()].}
 
 \item{show.legend, inherit.aes}{Standard ggplot2 layer arguments.}
 

@@ -71,7 +71,8 @@
   export_ggchord_layout(include = "link") 显式导出单点连接。
 - gene/feature 通过内部 provider 注册最终实体的局部法向范围；协议字段为
   accver/start/end/side/normal_min/normal_max/priority/source_layer。
-- link_avoid 支持 none/smooth/uniform，默认 none；显式 gap 优先。启用时局部前沿
+- link_avoid 支持 none/smooth/uniform；v0.13 默认 smooth 以恢复自动局部避障，
+  显式 gap 优先。启用时局部前沿
   以余弦上包络连接，细化仍不安全时仅该端退回 uniform 并警告。
 - link_branch 默认 none，可选 query/subject；line 匹配位置，ribbon 匹配完整
   有序区间。按最终映射样式分组，主干单次绘制，导出 source_rows 成员列表。
@@ -91,8 +92,10 @@
 
 ## v0.13.0 — 单序列圆图与生物学注释
 
-**状态：实现完成，待正式发布验收。** 已确定专用 `coord_genome()` 契约，并完成
-限制性酶切位点的计算与几何分层；完整发布门槛通过前不标记为已发布。
+**状态：v0.13.0 功能实现与本地验收已完成，尚未发布。** 专用
+`coord_circular()`、通用 feature geometry、Position grammar 与限制性酶切
+数据/显示分层已通过 testthat、设备渲染、示例和源码包检查。完整
+REBASE 派生数据仍受再分发许可门禁约束，确认前不装入发布包。
 
 ### A. 单序列圆图
 
@@ -107,35 +110,70 @@
 - 明确参考 SnapGene、Geneious 和 DNA Features Viewer 的信息层级与可读性，
   API 保持通用命名，资产复用遵循本文件的设计来源与资产许可规则。
 
-最小原型比较后采用专用 `coord_genome()`，由它管理缺口、原点旋转和方向；
+最小原型比较后采用专用 `coord_circular()`，由它管理缺口、原点旋转和方向；
 单序列行为不放入 `coord_chord()` 的条件分支。
 
-### B. 限制性酶切位点
+### B. Position grammar 与通用 feature geometry
+
+- v0.13 起 `geom_gene()` 的默认 placement 是 `position = "identity"`；v0.12
+  隐式 `gene_offset = 0.1` 的迁移写法是 `geom_gene(position = "strand")`；
+- signed local-normal 统一规定正值向 sequence 外侧、负值向内侧；标量
+  `position_strand(0.1)` 展开为 `+ = +0.1, - = -0.1`，显式命名的链值不再翻转；
+- `position_plasmid(-0.1)` 让两条 strand 共用内侧 band，strand 仅控制箭头方向；
+- `position_feature_stack(base_position = ...)` 先放置基础 band，再进行确定性的
+  最少 lane 分配；无参数调用保留 v0.12 的既有实际 geometry；
+- `geom_gene()` 保留 gene role、gene scale、strand guide 和专用入口，但 polygon
+  由 `geom_gene()`/`geom_feature()` 共用的 interval、local frame、shape factory
+  与 short-feature pipeline 产生；
+- `gene_offset`/`feature_offset` 仅作为带 warning 的迁移入口，不能与非 identity
+  Position 同时使用；`gene_width` 等纯 geometry 参数继续保留。
+
+### C. 限制性酶切位点
 
 计划拆成数据计算和几何表达两层：
 
 ```r
-sites <- find_restriction_sites(sequence, enzymes = c("EcoRI", "BamHI"))
+sites <- find_restriction_sites(sequence) |>
+  filter_restriction_sites(set = "unique_6plus")
 
 ggchord(seq_data, gene_data = gene_data) +
   geom_seq() +
   geom_restriction_site(data = sites)
 ```
 
-- `find_restriction_sites()` 返回酶名、识别序列、切割位置、黏性/平末端及来源；
+- `find_restriction_sites()` 只进行搜索和切点计算，返回稳定 pattern identity、
+  酶名、识别序列、1/2/4/unknown cleavage、切割位置、末端类型及来源；
 - 酶数据库版本必须可追踪，用户也可传入自定义 motif；
-- `geom_restriction_site()` 只负责刻线、标签和指示线；
+- `filter_restriction_sites()` 独立处理 unique、长度、供应商、窗口等显示筛选；
+- `geom_restriction_site()` 在单个 geom 中负责刻线、标签和指示线；
 - 邻近标签采用确定性的共享主干（trunk）后分叉，不把不同切点合并成一个数据点；
 - 可按酶、切割次数和窗口过滤，重复名称仍保留全部位点；
 - 序列搜索优先使用轻量实现；大型序列可选用 Biostrings，但不设为强制依赖。
 
-### C. 示例体系
+完整 REBASE 609 parser 仅读取 `VERSION`、`embossa_e.txt`、`embossa_r.txt` 和
+`embossa_s.txt`。源文件声明 all rights reserved；再分发条款确认前不把完整派生
+数据库装入发布包，`data-raw/generate_rebase_database.R` 对此设置硬性发布门。
+`examples/rebase/misc.zip` 不读取、不解析、不依赖。
+
+### D. Backbone、标签、主题、scale 与示例体系
+
+- `geom_seq()` 增加 single/double/band backbone；
+- `geom_feature_label()`、`geom_feature_label_repel()` 复用 gene label 的文本测量、
+  碰撞、leader 与 fitting，实现 horizontal/radial/tangent 和 callout；
+- `geom_seq_center_label()` 显示通用 circular sequence 名称与长度；
+- `theme_ggchord_plasmid()` 只定义非数据外观；feature fill/shape 由独立 preset
+  scale 提供，任何手动 scale 在任意添加顺序下优先；
 
 - `examples/` 保留原始 FASTA、GFF3、BLAST 和 TSV，不为视觉效果修改源记录；
 - `data/` 只保存小型、清晰、可重复生成的教学 fixture；
 - `data-raw/` 保存生成规则，明确任何抽样、过滤或展示链重编码；
-- 补充单基因组、无 ribbon、单链 gene、密集标签和酶切位点的最小 fixture；
+- pUC19c、pBR322、pBluescript II SK(+) FASTA 保持不变；新增小型、可重复生成的
+  sequence、核心 feature 与常用 restriction-site fixture；
 - 开发阶段不生成文档图片，统一在 v1.0.0 文档重构时出图。
+
+本轮不新增 CDS/promoter/ori 专用 geom，不新增品牌化 API，不引入强制
+Biostrings 依赖，也不创建通用 `track_*()`。`coord_collinear()` 留至 v0.14；
+coverage/GC 等 quantitative ring 与统一 track contract 留至 v0.16。
 
 ---
 

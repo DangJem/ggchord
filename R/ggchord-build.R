@@ -34,7 +34,6 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   gene_geometry_layer_requested <- FALSE
   gene_label_layer <- FALSE
   gene_repel_layer <- FALSE
-  feature_stack_position <- NULL
 
   for (i in seq_along(plot$layers)) {
     lyr <- plot$layers[[i]]
@@ -57,10 +56,6 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
         )
       },
       gene              = {
-        if (isTRUE(lyr$position$ggchord_feature_stack)) {
-          pp$feature_stack_position <- lyr$position
-          feature_stack_position <- lyr$position
-        }
         gene_params <- pp
         gene_geometry_layer_requested <- TRUE
         gene_data_override <- pp$gene_data_override %||%
@@ -68,9 +63,6 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
 
       },
       gene_label        = {
-        if (isTRUE(lyr$position$ggchord_feature_stack)) {
-          feature_stack_position <- lyr$position
-        }
         gene_label_params <- pp
         gene_label_layer <- TRUE
         label_data <- ggchord_resolve_layer_input(lyr, data_list$gene_data)
@@ -81,9 +73,6 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
         }
       },
       gene_label_repel  = {
-        if (isTRUE(lyr$position$ggchord_feature_stack)) {
-          feature_stack_position <- lyr$position
-        }
         gene_repel_params <- pp
         gene_repel_layer <- TRUE
         label_data <- ggchord_resolve_layer_input(lyr, data_list$gene_data)
@@ -127,24 +116,24 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   seq_curvature <- process_sequence_param(seq_params$seq_curvature, seqs,
                                           "seq_curvature", 1.0)
 
-  if (isTRUE(plot$coordinates$ggchord_genome)) {
+  if (isTRUE(plot$coordinates$ggchord_circular)) {
     if (n != 1L) {
-      ggchord_stop("coord_genome() requires exactly one sequence in seq_data")
+      ggchord_stop("coord_circular() requires exactly one sequence in seq_data")
     }
     incompatible <- vapply(plot$layers, function(layer) {
       (layer$ggchord_params$type %||% "") %in% c("ribbon", "link")
     }, logical(1))
     if (any(incompatible)) {
-      ggchord_stop("coord_genome() does not support ribbon or link layers")
+      ggchord_stop("coord_circular() does not support ribbon or link layers")
     }
     if (!is.null(seq_params$seq_gap)) {
-      ggchord_stop("coord_genome() owns the opening; use its `gap` argument instead of geom_seq(seq_gap = ...)")
+      ggchord_stop("coord_circular() owns the opening; use its `gap` argument instead of geom_seq(seq_gap = ...)")
     }
     if (!is.null(seq_params$seq_orientation)) {
-      ggchord_stop("coord_genome() owns genomic direction; use its `direction` argument instead of geom_seq(seq_orientation = ...)")
+      ggchord_stop("coord_circular() owns genomic direction; use its `direction` argument instead of geom_seq(seq_orientation = ...)")
     }
-    seq_gap[] <- plot$coordinates$genome_gap / 360
-    orientation[] <- if (identical(plot$coordinates$genome_direction, "clockwise")) -1 else 1
+    seq_gap[] <- plot$coordinates$circular_gap / 360
+    orientation[] <- if (identical(plot$coordinates$circular_direction, "clockwise")) -1 else 1
   }
 
   # Rings are explicit input roles. Their scale values are radii, so no ring
@@ -191,9 +180,14 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
       any(!orientation %in% c(-1, 1))) {
     ggchord_stop("seq_orientation can only be 1 or -1")
   }
+  gap_limit <- if (isTRUE(plot$coordinates$ggchord_circular)) 1 else 0.5
   if (!is.numeric(seq_gap) || any(!is.finite(seq_gap)) ||
-      any(seq_gap < 0 | seq_gap >= 0.5)) {
-    ggchord_stop("seq_gap must be in the [0, 0.5) range")
+      any(seq_gap < 0 | seq_gap >= gap_limit)) {
+    ggchord_stop(
+      if (isTRUE(plot$coordinates$ggchord_circular)) {
+        "coord_circular() gap must leave some drawable circumference"
+      } else "seq_gap must be in the [0, 0.5) range"
+    )
   }
   if (!is.numeric(seq_curvature) || any(!is.finite(seq_curvature))) {
     ggchord_stop("seq_curvature must contain finite numbers")
@@ -370,7 +364,6 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   }
 
   # --- Process genes ---
-  gene_off  <- gene_params$gene_offset %||% 0.1
   gene_w    <- gene_params$gene_width %||% 0.05
   gene_cs   <- gene_params$gene_color_scheme %||% "strand"
   gene_cols <- gene_params$gene_colors
@@ -447,7 +440,6 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     ggchord_stop("max_overlaps must be a non-negative number or Inf")
   }
 
-  geneGap    <- process_gene_param(gene_off, seqs, "gene_offset", 0.1, FALSE)
   geneWidth  <- process_gene_param(gene_w, seqs, "gene_width", 0.05, FALSE)
 
   # Feature geometry is resolved before coordinate generation because these
@@ -514,9 +506,27 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     gene_data_layout <- as.data.frame(gene_data_layout, stringsAsFactors = FALSE)
     gene_data_layout$.feature_shape <- mapped_shape
   }
-  if (!is.null(feature_stack_position) && !is.null(gene_data_layout)) {
-    gene_data_layout <- ggchord_stack_feature_tracks(
-      gene_data_layout, feature_stack_position
+  if (!is.null(gene_data_layout)) {
+    if (!isTRUE(plot$coordinates$ggchord_circular) &&
+        any(gene_data_layout$start > gene_data_layout$end, na.rm = TRUE)) {
+      warning(
+        "start > end is drawn with legacy min/max outside coord_circular(); ",
+        "use coord_circular() for origin-crossing features",
+        call. = FALSE
+      )
+    }
+    active_position <- if (isTRUE(lbl$position_supplied)) {
+      lbl$feature_position
+    } else {
+      gene_params$feature_position %||% ggplot2::position_identity()
+    }
+    gene_data_layout <- ggchord_apply_feature_position(
+      gene_data_layout,
+      active_position,
+      seqs = seqs, lengths = lens,
+      circular = isTRUE(plot$coordinates$ggchord_circular),
+      legacy_offset = if (isTRUE(lbl$position_supplied)) NULL else gene_params$legacy_offset,
+      legacy_name = if (isTRUE(gene_params$is_feature)) "feature_offset" else "gene_offset"
     )
   }
   geneLabelRadialOffset <- process_gene_param(gene_lro, seqs,
@@ -681,10 +691,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   # Step 2: compute the layout
   # ====================================================================
   coord_rotation <- if (isTRUE(plot$coordinates$ggchord_coord)) {
-    plot$coordinates$rotation + if (isTRUE(plot$coordinates$ggchord_genome) &&
-        identical(plot$coordinates$genome_direction, "clockwise")) {
-      plot$coordinates$genome_gap
-    } else 0
+    plot$coordinates$rotation
   } else {
     global$rotation
   }
@@ -724,7 +731,11 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     region_side = region_side,
     gene_data = gene_data_layout,
     draw_gene_geometry = gene_geometry_layer_requested,
-    geneGap = geneGap, geneWidth = geneWidth,
+    geneWidth = geneWidth,
+    arrow_head_length = gene_params$arrow_head_length %||% 0.04,
+    arrow_head_width = gene_params$arrow_head_width %||% 1,
+    short_feature = gene_params$short_feature %||% "auto",
+    circular = isTRUE(plot$coordinates$ggchord_circular),
     geneLabelRadialOffset = geneLabelRadialOffset,
     geneLabelCircumOffset = geneLabelCircumOffset,
     geneLabelCircumLimit = geneLabelCircumLimit,
@@ -849,7 +860,7 @@ compute_chord_geometry <- function(plot) {
                     character(1))
     main <- types[types %in% c(
       "seq", "ribbon", "link", "gene", "gene_label", "gene_label_repel", "axis",
-      "seq_label", "seq_region", "restriction_site"
+      "seq_label", "seq_region", "restriction_site", "seq_center_label"
     )]
     if (length(main)) main[length(main)] else ""
   }, character(1))
@@ -897,15 +908,30 @@ compute_chord_geometry <- function(plot) {
         site_input, site_layer$ggchord_params, primary, chord$data$seq_data
       )
     }
+    if (main_type == "seq_center_label") {
+      center_layer <- plot$layers[[idx[1L]]]
+      center_input <- ggchord_resolve_layer_input(
+        center_layer, chord$data$seq_data
+      )
+      sub_layout$seq_center_label <- ggchord_seq_center_label_geometry(
+        center_input, center_layer$ggchord_params
+      )
+    }
     layouts[[id]] <- sub_layout
     registry[[id]] <- list()
     inputs[[id]] <- list()
     for (i in idx) {
       lyr <- plot$layers[[i]]
       component <- lyr$ggchord_type
-      registry[[id]][[component]] <- ggchord_layout_component(
-        sub_layout, component, lyr$ggchord_placeholder %||% data.frame()
-      )
+      registry[[id]][[component]] <- if (identical(component, "seq")) {
+        ggchord_seq_style_geometry(sub_layout$seq_arcs, lyr$ggchord_params)
+      } else if (identical(component, "seq_center_label")) {
+        sub_layout$seq_center_label
+      } else {
+        ggchord_layout_component(
+          sub_layout, component, lyr$ggchord_placeholder %||% data.frame()
+        )
+      }
       fallback <- switch(component,
         seq = chord$data$seq_data,
         axis_line = chord$data$seq_data,
@@ -921,6 +947,7 @@ compute_chord_geometry <- function(plot) {
         gene_label_repel = chord$data$gene_data,
         seq_region = lyr$ggchord_params$regions,
         restriction_site = lyr$ggchord_input_data,
+        seq_center_label = chord$data$seq_data,
         NULL
       )
       inputs[[id]][[component]] <- if (
@@ -950,7 +977,8 @@ compute_chord_geometry <- function(plot) {
     c("gene_labels", "gene_text"), c("gene_label_segments", "gene_label_segment"),
     c("seq_labels_df", "seq_label"), c("region_polys", "seq_region"),
     c("axis_lines", "axis_line"), c("axis_ticks", "axis_seg"),
-    c("restriction_sites", "restriction_site")
+    c("restriction_sites", "restriction_site"),
+    c("seq_center_label", "seq_center_label")
   )) {
     combined <- collect(pair[2])
     if (nrow(combined) > 0) primary[[pair[1]]] <- combined
@@ -1045,7 +1073,8 @@ classify_ggchord_layers <- function(plot) {
               axis_line = integer(0), axis_seg = integer(0),
               axis_text = integer(0), axis = integer(0),
               gene_label_repel = integer(0), seq_label = integer(0),
-              seq_region = integer(0), restriction_site = integer(0))
+              seq_region = integer(0), restriction_site = integer(0),
+              seq_center_label = integer(0))
   for (i in seq_along(plot$layers)) {
     lyr <- plot$layers[[i]]
     type <- lyr$ggchord_type %||% ""

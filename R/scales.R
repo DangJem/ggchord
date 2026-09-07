@@ -152,7 +152,9 @@ scale_gene_fill_manual <- function(..., values) {
 #' @rdname scale_gene_fill_manual
 #' @export
 scale_feature_fill_manual <- function(..., values) {
-  ggplot2::scale_fill_manual(..., values = values, aesthetics = "feature_fill")
+  out <- ggplot2::scale_fill_manual(..., values = values, aesthetics = "feature_fill")
+  attr(out, "ggchord_scale_priority") <- 2L
+  out
 }
 
 #' Feature shape scale
@@ -183,11 +185,42 @@ scale_feature_shape_manual <- function(..., values, name = "Feature",
     )
   }
   if (is.null(limits) && !is.null(names(values))) limits <- names(values)
-  ggplot2::discrete_scale(
+  out <- ggplot2::discrete_scale(
     aesthetics = "feature_shape",
     palette = scales::manual_pal(values),
     ..., name = name, limits = limits, na.value = "arrow", guide = guide
   )
+  attr(out, "ggchord_scale_priority") <- 2L
+  out
+}
+
+#' Plasmid-map feature presets
+#' @param ... Additional scale arguments.
+#' @return A feature fill or shape scale.
+#' @export
+scale_feature_fill_plasmid <- function(...) {
+  values <- c(CDS="#4477AA",promoter="#EE7733",rep_origin="#228833",
+    terminator="#AA3377",protein_bind="#CCBB44",RBS="#66CCEE",
+    repeat_region="#BBBBBB",misc_feature="#999933")
+  out <- ggplot2::scale_fill_manual(
+    ..., values=values, aesthetics="feature_fill", na.value="#B8BDC3"
+  )
+  attr(out,"ggchord_scale_priority") <- 1L
+  out
+}
+
+#' @rdname scale_feature_fill_plasmid
+#' @export
+scale_feature_shape_plasmid <- function(...) {
+  values <- c(CDS="arrow",promoter="chevron",rep_origin="block",
+    terminator="lollipop",protein_bind="block",RBS="chevron",
+    repeat_region="block",misc_feature="block")
+  out <- ggplot2::discrete_scale(
+    aesthetics="feature_shape",palette=scales::manual_pal(values),
+    ...,limits=names(values),na.value="block",guide="none"
+  )
+  attr(out,"ggchord_scale_priority") <- 1L
+  out
 }
 
 #' @rdname scale_gene_fill_manual

@@ -24,11 +24,21 @@ set_ggchord_coord <- function(plot, layout) {
     user_xlim = coord$user_xlim,
     user_ylim = coord$user_ylim
   )
-  if (isTRUE(coord$ggchord_genome)) {
-    class(resolved) <- unique(c("CoordGenome", class(resolved)))
-    resolved$ggchord_genome <- TRUE
-    resolved$genome_gap <- coord$genome_gap
-    resolved$genome_direction <- coord$genome_direction
+  if (isTRUE(coord$ggchord_circular)) {
+    resolved <- new_ggchord_coord(
+      CoordCircular,
+      rotation = coord$rotation %||% 0,
+      ratio = coord$ratio %||% 1,
+      xlim = xlim, ylim = ylim,
+      expand = coord$expand %||% FALSE,
+      clip = coord$clip %||% "off",
+      fit = coord$fit %||% "labels",
+      user_xlim = coord$user_xlim,
+      user_ylim = coord$user_ylim
+    )
+    resolved$ggchord_circular <- TRUE
+    resolved$circular_gap <- coord$circular_gap
+    resolved$circular_direction <- coord$circular_direction
   }
   plot$coordinates <- resolved
   plot
@@ -101,6 +111,23 @@ ggchord_adaptive_limits <- function(layout) {
       units_per_inch = units_per_inch, box_padding = 0.03
     ))
   }
+  restriction <- layout$restriction_sites
+  if (!is.null(restriction) && nrow(restriction) > 0L &&
+      all(c(".component", "label") %in% names(restriction))) {
+    restriction <- restriction[
+      restriction$.component == "label" & !is.na(restriction$label),,
+      drop = FALSE
+    ]
+    if (nrow(restriction)) {
+      add_boxes(ggchord_text_boxes(
+        restriction,
+        x_col = "x", y_col = "y", text_col = "label",
+        angle_col = "angle", size_col = "size",
+        hjust_col = "hjust", vjust_col = "vjust",
+        units_per_inch = units_per_inch, box_padding = 0.03
+      ))
+    }
+  }
   if (isTRUE(layout$show_axis) && nrow(layout$axis_ticks) > 0) {
     axis_labels <- layout$axis_ticks[!is.na(layout$axis_ticks$label), ,
                                      drop = FALSE]
@@ -138,6 +165,16 @@ prepare_ggchord_plot <- function(plot) {
   for (i in seq_along(plot$layers)) {
     lyr <- plot$layers[[i]]
     if (is.null(lyr$ggchord_type)) next
+    if (isTRUE(plot$coordinates$ggchord_circular) &&
+        identical(lyr$ggchord_type, "seq") &&
+        !isTRUE(lyr$ggchord_params$seq_arrow_supplied)) {
+      lyr$geom_params$arrow <- NULL
+    }
+    if (isTRUE(plot$coordinates$ggchord_circular) &&
+        identical(lyr$ggchord_type, "seq") &&
+        !isTRUE(lyr$ggchord_params$seq_legend_supplied)) {
+      lyr$show.legend <- FALSE
+    }
     lyr$ggchord_resolved_input <- layout$layer_inputs[[lyr$ggchord_layer_id]][[lyr$ggchord_type]]
     new_layers[[i]] <- reconstruct_layer(
       lyr, extract_ggchord_layer_data(lyr, layout)

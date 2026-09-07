@@ -1,21 +1,83 @@
 # ggchord 0.13.0
 
-* Added `coord_genome()` as an explicit coordinate contract for one complete
-  sequence. It supports a closed circle or a degree-based opening and owns the
-  genomic origin rotation and direction. Existing gene, feature, region, axis,
-  and label layers remain reusable; ribbon and link layers fail clearly.
-* Added `find_restriction_sites()` with versioned built-in definitions,
-  user-supplied IUPAC motifs, circular-origin matching, cut-count/window
-  filters, and explicit recognition, cut, end-type, strand, and source fields.
-* Added `geom_restriction_site()` for cut ticks and labels. Nearby labels use a
-  deterministic shared trunk while all original cut sites remain distinct.
-* Added reproducible single-genome, gene, and restriction-site teaching
-  fixtures generated from unchanged files under `examples/single-genome/`.
+* Added `coord_circular()` as an independent coordinate contract for one
+  circular sequence. It supports a closed circle (`gap = 0`), a degree-based
+  opening, genomic-origin rotation, clockwise/counterclockwise direction,
+  position scales, label-aware fitting, manual limits and clipping. Ribbon and
+  link layers fail clearly because they do not belong to this coordinate.
+* **Breaking Position change.** Before v0.13, `geom_gene()` implicitly used
+  strand-separated placement with `gene_offset = 0.1`. Since v0.13,
+  `geom_gene()` defaults to `position = "identity"`. To reproduce the former
+  default, use `geom_gene(position = "strand")`. For plasmid-style shared-band
+  placement, use `geom_gene(position = "plasmid")`.
+* Added `position_strand()` and `position_plasmid()`. Signed offsets use the
+  sequence-local outward normal: `position_strand(offset = 0.1)` exactly
+  reproduces the former default (`+` strand outside, `-` strand inside), while
+  named `+`/`-` values are already signed and are not flipped again.
+  `position_plasmid(offset = -0.1)` puts both strands on the same inner band
+  and leaves arrow direction controlled by strand.
+* Feature Positions accept the standard ggplot2 identity spellings
+  `position = "identity"`, `position = position_identity()`, and
+  `position = PositionIdentity`. The latter two ggplot2 objects are re-exported
+  for use after `library(ggchord)`.
+* `position_feature_stack()` now accepts `base_position = "identity"`,
+  `"strand"`, `"plasmid"`, or the corresponding Position object. Its no-argument
+  legacy preset retains the v0.12 lane order and spacing. Layout export now
+  records `position_name`, `base_offset`, `lane`, `lane_offset`, and
+  `normal_offset` for gene and feature polygons.
+* Explicit `gene_offset` and `feature_offset` remain temporarily accepted,
+  translate through the former flexible accver/strand resolver, and emit a
+  migration warning. Combining a legacy offset with a non-identity Position is
+  an error.
+* Refactored `geom_gene()` into a gene-specific convenience layer over the same
+  neutral feature geometry pipeline as `geom_feature(shape = "arrow")`.
+  Circular splitting, local tangent/normal calculations, arrow heads and
+  short-feature fallback are implemented once. Gene data roles, gene fill
+  scales, strand guide and key glyph remain independent public behavior.
+* `geom_feature()` and `geom_gene()` now share `arrow_head_length`,
+  `arrow_head_width`, and `short_feature = "auto" | "wedge" | "block"`.
+  Features crossing the circular origin retain one source identity and split
+  into drawable arc pieces without losing strand direction.
+* `geom_seq()` adds `seq_style = "single" | "double" | "band"`,
+  `seq_backbone_gap`, and `seq_backbone_width` for circular backbones. Under
+  `coord_circular()`, the implicit chord-direction arrow and redundant
+  one-sequence legend are omitted; explicit `arrow` and `show.legend` values
+  still take priority.
+* Added `geom_feature_label()` and `geom_feature_label_repel()`. They retain a
+  feature-specific public vocabulary while reusing the existing device-aware
+  text measurement, wrapping, ellipsis, collision, leader routing and frame
+  fitting engine. Repelled feature labels add `label_layout = "callout"`.
+* Added `find_restriction_sites()` as a calculation-only API. It preserves one
+  row per pattern match, stable pattern identity, multiple motifs per enzyme,
+  overlapping/IUPAC/reverse-complement matches, circular-origin matches,
+  negative and out-of-motif cleavage offsets, Type IIS, 1/2/4-cut records and
+  unknown cleavage (`ncuts = 0`). Custom motifs may be a data frame or named
+  character vector.
+* Added `filter_restriction_sites()` for display subsets (`all`, `unique`,
+  `unique_dual`, `six_plus`, `unique_6plus`, and `commercial`) and intersecting
+  enzyme, motif-length, site-count, window and commercial filters. Filtering
+  never rewrites biological coordinates.
+* `geom_restriction_site()` draws ticks, labels and straight/elbow/shared-trunk
+  leaders in one deterministic layer. Each tick retains its genomic anchor and
+  source row while dense labels move into separate slots.
+* Added `geom_seq_center_label()`, `theme_ggchord_plasmid()`,
+  `scale_feature_fill_plasmid()`, and `scale_feature_shape_plasmid()`. Manual
+  feature scales take priority over presets regardless of addition order.
+* Added small reproducible plasmid sequence, core-feature and restriction-site
+  fixtures generated from unchanged FASTA files under `examples/plasmid/`.
+  Complete REBASE 609 parsing is reproducible from exactly `VERSION` and the
+  three `embossa_*.txt` files. Because those files declare all rights reserved,
+  the complete derived database is not bundled pending confirmation of
+  redistribution terms; the generation script enforces that release gate.
 * Removed the v0.12 `seq_id` data/mapping compatibility entry. Rename it to
   `accver` before calling ggchord functions.
 * Removed `ggchord::geom_ribbon()` after its v0.12 deprecation. Use
   `geom_link_ribbon()`; existing ribbon aesthetics, scales, themes, and layout
   export component names are unchanged.
+* Restored automatic local gene/feature avoidance as the
+  `geom_link_ribbon()` default (`link_avoid = "smooth"`). Use
+  `link_avoid = "none"` for fixed spacing; an explicit `ribbon_gap` still
+  takes priority over automatic clearance.
 
 # ggchord 0.12.0
 

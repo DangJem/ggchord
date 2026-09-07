@@ -53,9 +53,10 @@ base_plot <- function() ggchord(seq_data_example, ribbon_data_example,
 if (mode == "genome") {
   p <- ggchord(single_genome_example, gene_data = single_gene_example,
                validate = "none") +
-    geom_seq() + geom_gene() + geom_gene_label_repel() +
+    geom_seq(seq_style = "double") + geom_gene(position = "plasmid") +
+    geom_gene_label_repel(position = "plasmid") +
     geom_restriction_site(data = restriction_site_example) +
-    coord_genome(gap = 10)
+    geom_seq_center_label() + coord_circular(gap = 10)
   layout <- with_device(get_chord_layout(p), 8, 7)
   finite_geometry(list(layout$seq_arcs, layout$gene_polys,
                        layout$restriction_sites))
@@ -63,7 +64,7 @@ if (mode == "genome") {
   exported <- with_device(export_ggchord_layout(
     p, include = c("seq", "gene", "restriction"), original_data = TRUE
   ), 8, 7)
-  stopifnot(exported$metadata$coordinate == "genome",
+  stopifnot(exported$metadata$coordinate == "circular",
             exported$metadata$gap == 10,
             length(unique(stats::na.omit(exported$restriction$source_row))) ==
               nrow(restriction_site_example))

@@ -75,6 +75,7 @@ export_ggchord_layout <- function(
       gene_label_segment = "labels",
       gene_label_repel = "labels",
       seq_label = "labels",
+      seq_center_label = "labels",
       axis_line = "axis",
       axis_seg = "axis",
       axis_text = "axis",
@@ -164,10 +165,10 @@ export_ggchord_layout <- function(
     ylim = coord$user_ylim %||% fitted$ylim,
     clip = coord$clip %||% "off"
   )
-  if (isTRUE(coord$ggchord_genome)) {
-    metadata$coordinate <- "genome"
-    metadata$gap <- coord$genome_gap
-    metadata$direction <- coord$genome_direction
+  if (isTRUE(coord$ggchord_circular)) {
+    metadata$coordinate <- "circular"
+    metadata$gap <- coord$circular_gap
+    metadata$direction <- coord$circular_direction
   } else {
     metadata$coordinate <- "chord"
   }

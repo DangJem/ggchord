@@ -30,6 +30,10 @@ ggchord_layout_sequence_step <- quote({
   }
   ends <- starts + theta
   names(ends) <- seqs
+  if (isTRUE(circular) && n == 1L && orientation[seqs[1L]] == -1) {
+    starts[1L] <- -theta[1L]
+    ends[1L] <- 0
+  }
 
   # ====================================================================
   # Step 2: convert to radians
@@ -65,23 +69,22 @@ ggchord_layout_sequence_step <- quote({
     }
   }
 
-  gene_track_radius <- function(gene, sid, strand) {
-    side <- if (".feature_stack_side" %in% names(gene)) {
-      as.character(gene[[".feature_stack_side"]])
-    } else if (strand == "+") {
-      "inside"
-    } else {
-      "outside"
+  gene_track_radius <- function(gene, sid, strand, angle) {
+    signed_outward <- if (".normal_offset" %in% names(gene)) {
+      as.numeric(gene[[".normal_offset"]])
+    } else 0
+    if (!is.finite(signed_outward) || signed_outward == 0) {
+      return(unname(seqRadius[sid]))
     }
-    lane <- if (".feature_stack_lane" %in% names(gene)) {
-      as.numeric(gene[[".feature_stack_lane"]])
-    } else 0
-    spacing <- if (".feature_stack_spacing" %in% names(gene)) {
-      as.numeric(gene[[".feature_stack_spacing"]])
-    } else 0
-    direction <- if (identical(side, "inside")) -1 else 1
-    seqRadius[sid] + direction *
-      (geneGap[[sid]][strand] + lane * spacing)
+    ref <- seq_refs[[sid]]
+    base <- map_to_curve(angle, seqRadius[sid], ref)
+    plus <- map_to_curve(angle, seqRadius[sid] + 1e-5, ref)
+    left_normal <- plus - base
+    # Convert the stable signed-outward Position contract to the curve
+    # mapper's left-normal radius convention at this exact genomic location.
+    # This remains valid for signed and non-unit sequence curvature.
+    radius_sign <- if (sum(left_normal * base) >= 0) 1 else -1
+    unname(seqRadius[sid]) + radius_sign * signed_outward
   }
 
   # ====================================================================

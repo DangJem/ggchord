@@ -7,7 +7,7 @@
 # geom_gene(): gene arrow polygons
 # ---------------------------------------------------------------------------
 
-gene_geom <- rename_geom_aes(ggplot2::GeomPolygon, renames = c(fill = "gene_fill"))
+gene_geom <- rename_geom_aes(GeomChordFeatureBase, renames = c(fill = "gene_fill"))
 
 #' Add a gene arrow layer
 #'
@@ -18,10 +18,16 @@ gene_geom <- rename_geom_aes(ggplot2::GeomPolygon, renames = c(fill = "gene_fill
 #'
 #' @param mapping Default NULL (uses pre-computed data)
 #' @param data Default NULL (retrieved automatically from the layout)
-#' @param gene_offset Optional numeric/vector/list. Radial offset of gene arrows, default 0.1
+#' @param gene_offset Deprecated placement input. Explicit values are translated
+#'   to the former strand-separated geometry and emit a migration warning.
 #' @param gene_width Optional numeric/vector/list. Width of gene arrows, default 0.05
-#' @param position Position adjustment. Use [position_feature_stack()] to place
-#'   overlapping genes or features on radial lanes.
+#' @param arrow_head_length,arrow_head_width Shared arrow-head dimensions in
+#'   the sequence-local frame.
+#' @param short_feature Fallback for arrows too short to hold their requested
+#'   head: automatic wedge/block selection, a wedge, or a block.
+#' @param position Feature placement. Use `"identity"`, `"strand"`,
+#'   `"plasmid"`, [position_strand()], [position_plasmid()], or
+#'   [position_feature_stack()].
 #' @param show.legend,inherit.aes Standard ggplot2 layer arguments.
 #' @param ... Additional arguments passed to \code{geom_polygon()}
 #'
@@ -39,6 +45,9 @@ gene_geom <- rename_geom_aes(ggplot2::GeomPolygon, renames = c(fill = "gene_fill
 geom_gene <- function(mapping = NULL, data = NULL,
                       gene_offset = NULL,
                       gene_width = NULL,
+                      arrow_head_length = 0.04,
+                      arrow_head_width = 1,
+                      short_feature = c("auto", "wedge", "block"),
                       position = "identity",
                       show.legend = TRUE,
                       inherit.aes = FALSE,
@@ -46,6 +55,23 @@ geom_gene <- function(mapping = NULL, data = NULL,
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
   dots <- list(...)
+  short_feature <- match.arg(short_feature)
+  position_object <- ggchord_as_feature_position(position, "geom_gene()")
+  if (!is.null(gene_offset)) {
+    if (!ggchord_is_identity_position(position_object)) {
+      ggchord_stop("geom_gene(): `gene_offset` cannot be combined with a non-identity position")
+    }
+    warning(
+      "`gene_offset` placement is deprecated. Use `position = position_strand(offset = ...)` instead.",
+      call. = FALSE
+    )
+  }
+  if (!is.numeric(arrow_head_length) || length(arrow_head_length) != 1L ||
+      !is.finite(arrow_head_length) || arrow_head_length < 0 ||
+      !is.numeric(arrow_head_width) || length(arrow_head_width) != 1L ||
+      !is.finite(arrow_head_width) || arrow_head_width <= 0) {
+    ggchord_stop("geom_gene(): arrow head dimensions must be finite non-negative/positive numbers")
+  }
   ggchord_reject_retired(dots, "geom_gene()", c(
     gene_color_scheme = "aes(gene_fill = ...) and scale_gene_fill_manual()",
     gene_colors = "scale_gene_fill_manual(values = ...)",
@@ -93,7 +119,7 @@ geom_gene <- function(mapping = NULL, data = NULL,
     mapping     = fill_mapping,
     stat        = "identity",
     geom        = gene_geom,
-    position    = position,
+    position    = position_object,
     show.legend = if (identical(show.legend, TRUE)) {
                     c(gene_fill = TRUE, colour = FALSE)
                   } else show.legend,
@@ -111,6 +137,12 @@ geom_gene <- function(mapping = NULL, data = NULL,
     type              = "gene",
     gene_offset       = gene_offset,
     gene_width        = gene_width,
+    arrow_head_length = as.numeric(arrow_head_length),
+    arrow_head_width  = as.numeric(arrow_head_width),
+    short_feature     = short_feature,
+    feature_position  = position_object,
+    legacy_offset     = gene_offset,
+    feature_role      = "gene",
     gene_color_scheme = gene_scheme,
     gene_colors       = NULL,
     gene_order        = NULL,
@@ -192,9 +224,11 @@ geom_gene_label <- function(mapping = NULL, data = NULL,
                             show.legend = FALSE,
                             inherit.aes = FALSE,
                             ...) {
+  position_missing <- missing(position)
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
   dots <- list(...)
+  position_object <- ggchord_as_feature_position(position, "geom_gene_label()")
   dots <- ggchord_colour_dots(dots, "geom_gene_label()")
   ggchord_reject_retired(dots, "geom_gene_label()", c(
     gene_label_size = "size",
@@ -222,7 +256,7 @@ geom_gene_label <- function(mapping = NULL, data = NULL,
                       angle = text_angle, hjust = hjust, vjust = vjust,
                       size = I(size)),
     inherit.aes = inherit.aes,
-    position = position,
+    position = position_object,
     show.legend = show.legend
   ), dots))
   text_layer$ggchord_type <- "gene_text"
@@ -237,7 +271,9 @@ geom_gene_label <- function(mapping = NULL, data = NULL,
     gene_label_radial_offset = gene_label_radial_offset,
     gene_label_circum_offset = gene_label_circum_offset,
     gene_label_circum_limit  = gene_label_circum_limit,
-    gene_label_wrap          = gene_label_wrap
+    gene_label_wrap          = gene_label_wrap,
+    feature_position         = position_object,
+    position_supplied        = !position_missing
   )
   text_layer <- ggchord_capture_layer_input(
     text_layer, data, mapping,
@@ -342,6 +378,7 @@ geom_gene_label_repel <- function(mapping = NULL, data = NULL,
                                   show.legend = FALSE,
                                   inherit.aes = FALSE,
                                   ...) {
+  position_missing <- missing(position)
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
 
@@ -349,6 +386,7 @@ geom_gene_label_repel <- function(mapping = NULL, data = NULL,
   # the removed `gene_label_segment` into `gene_label_segment_linetype`.
   raw_argument_names <- names(as.list(sys.call())[-1L])
   dots <- list(...)
+  position_object <- ggchord_as_feature_position(position, "geom_gene_label_repel()")
   dots <- ggchord_colour_dots(dots, "geom_gene_label_repel()")
   removed <- c(
     "gene_label_rotation", "gene_label_radial_offset",
@@ -428,7 +466,7 @@ geom_gene_label_repel <- function(mapping = NULL, data = NULL,
     ),
     stat = "identity",
     geom = GeomChordGeneLabelRepel,
-    position = position,
+    position = position_object,
     show.legend = show.legend,
     inherit.aes = inherit.aes,
     check.aes = FALSE,
@@ -455,7 +493,9 @@ geom_gene_label_repel <- function(mapping = NULL, data = NULL,
     gene_label_side          = gene_label_side,
     gene_label_segment_overlap = gene_label_segment_overlap,
     gene_label_segment_overlap_alpha = gene_label_segment_overlap_alpha,
-    gene_label_segment_linetype = gene_label_segment_linetype
+    gene_label_segment_linetype = gene_label_segment_linetype,
+    feature_position         = position_object,
+    position_supplied        = !position_missing
   )
   lyr <- ggchord_capture_layer_input(
     lyr, data, mapping,

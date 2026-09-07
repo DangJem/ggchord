@@ -2,27 +2,32 @@
 
 #' Chord-diagram coordinate ggproto
 #' @noRd
-CoordChord <- ggplot2::ggproto(
-  "CoordChord", ggplot2::CoordCartesian,
+CoordGgchord <- ggplot2::ggproto(
+  "CoordGgchord", ggplot2::CoordCartesian,
   ggchord_coord = TRUE
 )
+
+CoordChord <- ggplot2::ggproto("CoordChord", CoordGgchord)
+
+new_ggchord_coord <- function(proto, rotation, ratio, xlim, ylim, expand,
+                              clip, fit, user_xlim = xlim,
+                              user_ylim = ylim) {
+  ggplot2::ggproto(
+    NULL, proto,
+    limits = list(x = xlim, y = ylim), reverse = "none",
+    expand = expand, default = FALSE, clip = clip, ratio = ratio,
+    rotation = rotation, fit = fit,
+    user_xlim = user_xlim, user_ylim = user_ylim
+  )
+}
 
 #' Construct a CoordChord instance
 #' @noRd
 new_coord_chord <- function(rotation, ratio, xlim, ylim, expand, clip, fit,
                             user_xlim = xlim, user_ylim = ylim) {
-  ggplot2::ggproto(
-    NULL, CoordChord,
-    limits = list(x = xlim, y = ylim),
-    reverse = "none",
-    expand = expand,
-    default = FALSE,
-    clip = clip,
-    ratio = ratio,
-    rotation = rotation,
-    fit = fit,
-    user_xlim = user_xlim,
-    user_ylim = user_ylim
+  new_ggchord_coord(
+    CoordChord, rotation, ratio, xlim, ylim, expand, clip, fit,
+    user_xlim, user_ylim
   )
 }
 

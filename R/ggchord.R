@@ -16,7 +16,8 @@ globalVariables(c(
   "seq_colour", "ribbon_fill", "ribbon_alpha",
   "ribbon_colour", "ribbon_linetype", "gene_fill", "feature_fill",
   "feature_shape", "seq_ring", "bundle_n", "bundle_weight", "density",
-  "region_fill", ".bundle_n", ".bundle_weight", ".bundle_density"
+  "region_fill", ".bundle_n", ".bundle_weight", ".bundle_density",
+  ".feature_shape_raw"
 ))
 
 #' ggchord: layered multi-sequence alignment chord diagrams for ggplot2
@@ -196,12 +197,28 @@ ggchord <- function(
     }
   }
   if (inherits(e2, "Scale")) {
+    aesthetic <- e2$aesthetics[1L]
+    existing <- if (!is.null(aesthetic)) e1$scales$get_scales(aesthetic) else NULL
+    new_priority <- attr(e2, "ggchord_scale_priority") %||% 2L
+    old_priority <- if (is.null(existing)) -Inf else
+      attr(existing, "ggchord_scale_priority") %||% 2L
+    if (!is.null(existing) && new_priority < old_priority) return(e1)
     # A user-supplied scale intentionally replaces the ggchord-managed default
     # scale of the same aesthetic; muffle ggplot2's "already present" message.
     p <- withCallingHandlers(
       NextMethod(),
       message = function(m) {
         if (grepl("already present", conditionMessage(m)) &&
+            !is.null(findRestart("muffleMessage"))) {
+          invokeRestart("muffleMessage")
+        }
+      }
+    )
+  } else if (inherits(e2, "Coord")) {
+    p <- withCallingHandlers(
+      NextMethod(),
+      message = function(m) {
+        if (grepl("Coordinate system already present", conditionMessage(m)) &&
             !is.null(findRestart("muffleMessage"))) {
           invokeRestart("muffleMessage")
         }
