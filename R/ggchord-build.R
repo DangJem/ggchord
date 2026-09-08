@@ -66,9 +66,10 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
         gene_label_params <- pp
         gene_label_layer <- TRUE
         label_data <- ggchord_resolve_layer_input(lyr, data_list$gene_data)
-        if (!is.null(lyr$ggchord_input_data) ||
+        if (!isTRUE(gene_geometry_layer_requested) &&
+            (!is.null(lyr$ggchord_input_data) ||
             length(intersect(names(lyr$ggchord_input_mapping),
-                             lyr$ggchord_role_aes)) > 0) {
+                             lyr$ggchord_role_aes)) > 0)) {
           gene_data_override <- label_data
         }
       },
@@ -76,9 +77,10 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
         gene_repel_params <- pp
         gene_repel_layer <- TRUE
         label_data <- ggchord_resolve_layer_input(lyr, data_list$gene_data)
-        if (!is.null(lyr$ggchord_input_data) ||
+        if (!isTRUE(gene_geometry_layer_requested) &&
+            (!is.null(lyr$ggchord_input_data) ||
             length(intersect(names(lyr$ggchord_input_mapping),
-                             lyr$ggchord_role_aes)) > 0) {
+                             lyr$ggchord_role_aes)) > 0)) {
           gene_data_override <- label_data
         }
       },
@@ -196,7 +198,8 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   if (!is.null(seq_params$seq_colors)) {
     seq_colors <- process_sequence_param(seq_params$seq_colors, seqs, "seq_colors")
   } else {
-    pal <- chord_default_palette(n)
+    pal <- if (isTRUE(plot$coordinates$ggchord_circular)) "#252525" else
+      chord_default_palette(n)
     seq_colors <- setNames(pal, seqs)
   }
 
@@ -375,10 +378,13 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   gene_ls   <- gene_label_layer || gene_repel_layer ||
     isTRUE(gene_params$show_label_override) ||
     isTRUE(gene_params$gene_label_show)
+  label_theme_element <- if (isTRUE(lbl$is_feature_label)) {
+    "ggchord.feature.label"
+  } else "ggchord.gene.label"
   gene_lsz  <- lbl$gene_label_size %||%
     gene_params$label_size_override %||%
     gene_params$gene_label_size %||%
-    ggchord_theme_text_size(plot, "ggchord.gene.label", 2.5)
+    ggchord_theme_text_size(plot, label_theme_element, 2.5)
   # Repelled labels now use mode-owned deterministic positioning. Manual
   # rotation and offsets remain available through geom_gene_label(), but are
   # intentionally not inherited by geom_gene_label_repel().
@@ -399,7 +405,9 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   }
   gene_lwrap  <- lbl$gene_label_wrap %||% gene_params$gene_label_wrap
   gene_lorientation <- if (gene_repel_layer) {
-    "radial"
+    if (identical(gene_repel_params$gene_label_layout, "feature")) {
+      "feature"
+    } else "radial"
   } else {
     lbl$gene_label_orientation %||% "horizontal"
   }
@@ -734,6 +742,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     geneWidth = geneWidth,
     arrow_head_length = gene_params$arrow_head_length %||% 0.04,
     arrow_head_width = gene_params$arrow_head_width %||% 1,
+    arrow_head_style = gene_params$arrow_head_style %||% "shouldered",
     short_feature = gene_params$short_feature %||% "auto",
     circular = isTRUE(plot$coordinates$ggchord_circular),
     geneLabelRadialOffset = geneLabelRadialOffset,
@@ -883,13 +892,11 @@ compute_chord_geometry <- function(plot) {
   for (id in names(groups)) {
     idx <- groups[[id]]
     main_type <- group_type[[id]]
-    needs_own <- nzchar(main_type) && type_counts[[main_type]] > 1
+    needs_own <- nzchar(main_type) && (type_counts[[main_type]] > 1 ||
+      main_type %in% c("gene_label", "gene_label_repel"))
     sub_layout <- primary
     if (isTRUE(needs_own)) {
       deps <- seq_dep
-      if (main_type %in% c("gene_label", "gene_label_repel")) {
-        deps <- c(deps, gene_dep)
-      }
       if (main_type == "ribbon") deps <- c(deps, gene_geometry_dep)
       sub_plot <- plot
       sub_plot$layers <- plot$layers[sort(unique(c(deps, idx)))]
@@ -924,7 +931,12 @@ compute_chord_geometry <- function(plot) {
       lyr <- plot$layers[[i]]
       component <- lyr$ggchord_type
       registry[[id]][[component]] <- if (identical(component, "seq")) {
-        ggchord_seq_style_geometry(sub_layout$seq_arcs, lyr$ggchord_params)
+        ggchord_seq_style_geometry(
+          sub_layout$seq_arcs,
+          utils::modifyList(lyr$ggchord_params, list(
+            circular = isTRUE(sub_layout$circular)
+          ))
+        )
       } else if (identical(component, "seq_center_label")) {
         sub_layout$seq_center_label
       } else {
@@ -995,7 +1007,7 @@ compute_chord_geometry <- function(plot) {
   palettes <- Filter(function(x) !is.null(x) && length(x) > 0, palettes)
   if (length(palettes)) {
     pal <- do.call(c, unname(palettes))
-    primary$gene_pal <- pal[!duplicated(names(pal), fromLast = TRUE)]
+    primary$gene_pal <- pal[!duplicated(names(pal))]
     orders <- unlist(lapply(layouts, function(x) x$final_gene_order),
                      use.names = FALSE)
     primary$final_gene_order <- unique(orders)

@@ -18,6 +18,8 @@
     ggchord.restriction.label = ggplot2::element_text(),
     ggchord.restriction.label.segment = ggplot2::element_line(),
     ggchord.seq.center.label = ggplot2::element_text(),
+    ggchord.seq.center.name = ggplot2::element_text(),
+    ggchord.seq.center.length = ggplot2::element_text(),
     element_tree = list(
       "ggchord.axis.line" = ggplot2::el_def("element_line", inherit = "line"),
       "ggchord.axis.ticks" = ggplot2::el_def("element_line", inherit = "line"),
@@ -34,7 +36,9 @@
       "ggchord.feature.label.segment" = ggplot2::el_def("element_line", inherit = "line"),
       "ggchord.restriction.label" = ggplot2::el_def("element_text", inherit = "text"),
       "ggchord.restriction.label.segment" = ggplot2::el_def("element_line", inherit = "line"),
-      "ggchord.seq.center.label" = ggplot2::el_def("element_text", inherit = "text")
+      "ggchord.seq.center.label" = ggplot2::el_def("element_text", inherit = "text"),
+      "ggchord.seq.center.name" = ggplot2::el_def("element_text", inherit = "text"),
+      "ggchord.seq.center.length" = ggplot2::el_def("element_text", inherit = "text")
     )
   )
 }
@@ -290,7 +294,7 @@ ggchord_attach_input_columns <- function(geometry, input) {
     "zlinetype", "outline_col", "linetype_val", "seq_colour",
     "ribbon_fill", "ribbon_alpha", "ribbon_colour",
     "ribbon_linetype", "gene_fill", "feature_fill", "feature_shape",
-    "region_fill"
+    "feature_label_colour", "feature_label_orientation", "region_fill"
   )
   if ("source_row" %in% names(geometry)) {
     idx <- geometry$source_row
@@ -445,8 +449,12 @@ ggchord_repel_geometry <- function(layout) {
     text$.component <- "text"
     text$x <- text$text_x
     text$y <- text$text_y
+    text$xend <- NA_real_
+    text$yend <- NA_real_
     text$label <- text$text
     text$angle <- text$text_angle
+    text$linetype <- "solid"
+    text$alpha <- 1
   }
   values <- Filter(nrow, list(segment, text))
   if (!length(values)) {

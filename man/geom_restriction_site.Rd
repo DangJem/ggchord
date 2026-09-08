@@ -9,14 +9,17 @@ geom_restriction_site(
   data = NULL,
   label = TRUE,
   label_style = c("enzyme_position", "enzyme", "position"),
+  label_order = c("auto", "enzyme_position", "position_enzyme"),
   label_side = c("outside", "inside", "auto"),
-  leader = c("trunk", "elbow", "straight"),
-  min_label_gap = 0.02,
-  tick_length = 0.045,
-  label_offset = 0.28,
-  colour = "#B42318",
-  linewidth = 0.35,
-  label_size = 2.6,
+  leader = c("radial", "elbow", "straight", "trunk"),
+  min_label_gap = NULL,
+  tick_length = 0.04,
+  label_offset = 0.18,
+  colour = "#202020",
+  linewidth = 0.28,
+  label_size = 3.2,
+  fontface = NULL,
+  family = NULL,
   position = "identity",
   show.legend = FALSE,
   inherit.aes = FALSE,
@@ -30,15 +33,24 @@ geom_restriction_site(
 
 \item{label_style}{Label enzyme and position, enzyme only, or position only.}
 
+\item{label_order}{Automatic mirrored label order, enzyme first, or
+position first.}
+
 \item{label_side}{Draw labels outside, inside, or automatically.}
 
-\item{leader}{Leader routing style.}
+\item{leader}{Leader routing style. The default `"radial"` measures actual
+text boxes, separates site anchors from final Cartesian label positions,
+and routes either a direct connector or an independent radial stub plus
+fan segment.
+Dense regions form ordered side columns; top and bottom sectors split into
+left/right queues. `"trunk"` is retained only as a compatibility alias.}
 
-\item{min_label_gap}{Minimum genomic fraction between label slots.}
+\item{min_label_gap}{Minimum genomic fraction between label slots. `NULL`
+derives a compact device-aware default from the rendered labels.}
 
 \item{tick_length, label_offset}{Local-normal distances.}
 
-\item{colour, linewidth, label_size}{Fixed appearance.}
+\item{colour, linewidth, label_size, fontface, family}{Fixed appearance.}
 
 \item{position, show.legend, inherit.aes}{Standard layer arguments.}
 

@@ -45,8 +45,22 @@ test_that("short arrows fall back without swallowing the interval", {
   auto <- draw("auto")
   wedge <- draw("wedge")
   block <- draw("block")
-  expect_true(nrow(auto) > 2L)
+  expect_equal(nrow(auto), 120L)
   expect_true(all(is.finite(auto$x) & is.finite(auto$y)))
+
+  medium <- data
+  medium$end <- 115
+  medium_auto <- export_ggchord_layout(
+    ggchord(seq, validate = "none") + geom_seq() +
+      geom_feature(data = medium, short_feature = "auto") +
+      coord_circular(), include = "feature"
+  )$feature
+  medium_auto <- medium_auto[medium_auto$.component == "polygon", ]
+  expect_gt(nrow(medium_auto), 3L)
+  # A shortened shouldered arrow retains a body and multiple radial levels;
+  # it must not collapse to the three-vertex wedge fallback.
+  radius <- sqrt(medium_auto$x^2 + medium_auto$y^2)
+  expect_gte(length(unique(round(radius, 4))), 3L)
   expect_true(nrow(wedge) >= 3L)
   expect_equal(nrow(block), 120L)
 })
@@ -56,7 +70,7 @@ test_that("all feature shape factories build and preserve source identity", {
   data <- data.frame(
     accver = "circle", start = c(50, 250, 450, 650),
     end = c(180, 380, 580, 780), strand = c("+", "-", "+", "-"),
-    type = c("CDS", "promoter", "terminator", "protein_bind")
+    type = c("CDS", "RBS", "terminator", "protein_bind")
   )
   p <- ggchord(seq, validate = "none") + geom_seq() +
     geom_feature(
@@ -69,6 +83,35 @@ test_that("all feature shape factories build and preserve source identity", {
   expect_setequal(unique(out$feature_shape),
     c("arrow", "chevron", "lollipop", "block"))
   expect_s3_class(ggplot2::ggplot_build(p), "ggplot_built")
+})
+
+test_that("plasmid feature preset keeps one arrowhead and draws segment joins", {
+  seq <- data.frame(accver = "circle", length = 1000)
+  segments <- data.frame(
+    segment_index = 1:2, segment_type = "standard",
+    start = c(100, 181), end = c(180, 300), color = "#CCFFCC"
+  )
+  feature <- data.frame(
+    accver = "circle", start = 100, end = 300, strand = "+",
+    anno = "joined", feature_color = "#CCFFCC",
+    feature_shape = "arrow", segments = I(list(segments))
+  )
+  p <- ggchord(seq, validate = "none") + geom_seq() +
+    geom_feature_plasmid(data = feature) + coord_circular()
+  out <- export_ggchord_layout(p, include = "feature")$feature
+  expect_equal(unique(out$.component), c("polygon", "boundary"))
+  expect_equal(length(unique(out$group[out$.component == "polygon"])), 1L)
+  expect_equal(nrow(out[out$.component == "boundary", ]), 2L)
+  expect_s3_class(ggplot2::ggplotGrob(p), "gtable")
+
+  no_join <- ggchord(seq, validate = "none") + geom_seq() +
+    geom_feature_plasmid(data = feature, segment_boundaries = FALSE) +
+    coord_circular()
+  expect_s3_class(ggplot2::ggplotGrob(no_join), "gtable")
+  expect_s3_class(geom_feature(data = feature, arrow_head_style = "flush"),
+    "LayerInstance")
+  expect_s3_class(geom_feature(data = feature, arrow_head_style = "triangle"),
+    "LayerInstance")
 })
 
 test_that("feature labels reuse fixed and repel label layout", {
@@ -100,6 +143,86 @@ test_that("feature labels reuse fixed and repel label layout", {
   expect_identical(first, second)
   expect_true(any(first$label_layout == "callout", na.rm = TRUE))
   expect_s3_class(ggplot2::ggplotGrob(repel_plot), "gtable")
+
+  feature_plot <- ggchord(seq, validate = "none") + geom_seq() +
+    geom_feature_label_repel(
+      aes(label = anno), data = features, position = "plasmid"
+    ) + coord_circular()
+  staged <- export_ggchord_layout(
+    feature_plot, include = "labels"
+  )$labels
+  expect_true(any(staged$.component == "text"))
+  expect_true(all(staged$label_layout[staged$.component == "text"] ==
+    "feature"))
+  expect_s3_class(ggplot2::ggplotGrob(feature_plot), "gtable")
+
+  displaced <- features[rep(1L, 2L), , drop = FALSE]
+  displaced$start <- 100
+  displaced$end <- 110
+  displaced$anno <- c("long feature alpha", "long feature beta")
+  displaced_plot <- ggchord(seq, validate = "none") + geom_seq() +
+    geom_feature_label_repel(data = displaced, position = "plasmid") +
+    coord_circular()
+  moved <- export_ggchord_layout(
+    displaced_plot, include = "labels"
+  )$labels
+  expect_true(any(moved$.component == "segment"))
+})
+
+test_that("plasmid feature preset stacks overlapping intervals by default", {
+  seq <- data.frame(accver = "circle", length = 1000)
+  features <- data.frame(
+    accver = "circle", start = c(100, 150), end = c(300, 220),
+    strand = c("+", "+"), anno = c("outer", "nested")
+  )
+  out <- export_ggchord_layout(
+    ggchord(seq, validate = "none") + geom_seq() +
+      geom_feature_plasmid(data = features) + coord_circular(),
+    include = "feature"
+  )$feature
+  expect_setequal(unique(out$lane), 0:1)
+  expect_true(all(out$lane_offset %in% c(0, -.10)))
+
+  grouped <- transform(features, feature_group = "related")
+  grouped_out <- export_ggchord_layout(
+    ggchord(seq, validate = "none") + geom_seq() +
+      geom_feature_plasmid(data = grouped) + coord_circular(),
+    include = "feature"
+  )$feature
+  expect_equal(unique(grouped_out$lane), 0L)
+
+  preferred <- transform(features, preferred_lane = c(0L, 2L))
+  preferred_out <- export_ggchord_layout(
+    ggchord(seq, validate = "none") + geom_seq() +
+      geom_feature_plasmid(data = preferred) + coord_circular(),
+    include = "feature"
+  )$feature
+  expect_setequal(unique(preferred_out$lane), c(0L, 2L))
+})
+
+test_that("feature directions and segment-specific styles stay semantic", {
+  seq <- data.frame(accver = "circle", length = 1000)
+  segments <- data.frame(
+    segment_index = 1:3, segment_type = "standard",
+    start = c(100, 151, 201), end = c(150, 200, 300),
+    color = c("#FF0000", "#FF0000", "#00FF00"),
+    line_style = c("solid", "dotted", "dashed")
+  )
+  feature <- data.frame(
+    accver = "circle", start = 100, end = 300,
+    direction = "bidirectional", anno = "split",
+    feature_color = "#0000FF"
+  )
+  feature$segments <- I(list(segments))
+  plot <- ggchord(seq, validate = "none") + geom_seq() +
+    geom_feature(data = feature) + coord_circular()
+  out <- export_ggchord_layout(plot, include = "feature")$feature
+  polygons <- out[out$.component == "polygon", , drop = FALSE]
+  expect_true(all(polygons$biological_strand == "+/-"))
+  expect_equal(unique(polygons$feature_fill_explicit),
+    c("#FF0000", "#00FF00"))
+  expect_equal(unique(stats::na.omit(out$boundary_linetype)), "dotted")
+  expect_s3_class(ggplot2::ggplotGrob(plot), "gtable")
 })
 
 test_that("plasmid preset scales defer to manual scales in either order", {

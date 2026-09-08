@@ -155,8 +155,12 @@ ggchord_layout_annotation_step <- quote({
           seqRadius[sid], ref,
           arrow_head_length = arrow_head_length,
           arrow_head_width = arrow_head_width,
+          arrow_head_style = arrow_head_style,
           short_feature = short_feature,
-          draw_head = piece$draw_head
+          draw_head = piece$draw_head,
+          bidirectional = identical(
+            as.character(gene$.feature_biological_strand %||% strand), "+/-"
+          )
         )
         for (part in seq_along(shape_parts)) {
           part_index <- part_index + 1L
@@ -174,6 +178,12 @@ ggchord_layout_annotation_step <- quote({
           anno = anno,
           strand = strand,
           feature_shape = feature_shape,
+          biological_strand = as.character(
+            gene$.feature_biological_strand %||% strand
+          ),
+          feature_fill_explicit = if ("feature_color" %in% names(gene)) {
+            as.character(gene$feature_color)
+          } else NA_character_,
           position_name = as.character(gene$.position_name %||% "identity"),
           base_offset = as.numeric(gene$.position_base_offset %||% 0),
           lane = as.integer(gene$.feature_stack_lane %||% 0L),
@@ -181,15 +191,62 @@ ggchord_layout_annotation_step <- quote({
           normal_offset = as.numeric(gene$.normal_offset %||% 0),
           source_row = gene$.source_row,
           ord = seq_len(nrow(mapped)),
+          .component = "polygon",
           stringsAsFactors = FALSE
         )
         }
+
+        boundaries <- if (".feature_boundaries" %in% names(gene)) {
+          gene$.feature_boundaries[[1L]]
+        } else numeric()
+        boundary_styles <- if (".feature_boundary_styles" %in% names(gene)) {
+          as.character(gene$.feature_boundary_styles[[1L]])
+        } else rep(NA_character_, length(boundaries))
+        if (length(boundaries) && length(pieces) == 1L) {
+          keep_boundaries <-
+            boundaries > min(gene$start, gene$end) &
+              boundaries < max(gene$start, gene$end)
+          boundaries <- boundaries[keep_boundaries]
+          boundary_styles <- boundary_styles[keep_boundaries]
+          for (boundary_index in seq_along(boundaries)) {
+            boundary <- boundaries[boundary_index]
+            boundary_piece <- list(start = boundary, end = boundary)
+            boundary_angle <- ggchord_feature_angle_interval(
+              boundary_piece, sequence_length, orientation[sid],
+              starts[sid], ends[sid]
+            )[1L]
+            boundary_xy <- map_to_curve_many(
+              rep(boundary_angle, 2L),
+              c(r0 - width / 2, r0 + width / 2), ref
+            )
+            part_index <- part_index + 1L
+            gene_poly_list[[length(gene_poly_list) + 1L]] <- data.frame(
+              x = boundary_xy[, 1L], y = boundary_xy[, 2L],
+              group = i * 100L + part_index, anno = anno,
+              strand = strand, feature_shape = feature_shape,
+              position_name = as.character(gene$.position_name %||% "identity"),
+              base_offset = as.numeric(gene$.position_base_offset %||% 0),
+              lane = as.integer(gene$.feature_stack_lane %||% 0L),
+              lane_offset = as.numeric(gene$.position_lane_offset %||% 0),
+              normal_offset = as.numeric(gene$.normal_offset %||% 0),
+              boundary_linetype = boundary_styles[boundary_index],
+              source_row = gene$.source_row, ord = seq_len(nrow(boundary_xy)),
+              .component = "boundary", stringsAsFactors = FALSE
+            )
+          }
+        }
       }
     }
-    gene_polys <- if (length(gene_poly_list)) do.call(rbind, gene_poly_list) else data.frame()
+    gene_polys <- if (length(gene_poly_list)) {
+      ggchord_rbind_fill(gene_poly_list)
+    } else data.frame()
 
     # Generate gene labels
     if (gene_label_show && nrow(valid_genes) > 0) {
+      label_measure_units <- ggchord_device_units_per_inch(
+        unlist(lapply(seq_arcs, `[[`, "x"), use.names = FALSE),
+        unlist(lapply(seq_arcs, `[[`, "y"), use.names = FALSE)
+      )
       gene_labels <- do.call(rbind, lapply(seq_len(nrow(valid_genes)), function(i) {
         gene <- valid_genes[i, ]
         sid <- gene$accver
@@ -278,8 +335,42 @@ ggchord_layout_annotation_step <- quote({
         }
 
         base_angle <- atan2(dy, dx) * 180 / pi
+        resolved_label_orientation <- gene_label_orientation
+        feature_label_inside <- NA
+        if (identical(resolved_label_orientation, "feature")) {
+          feature_fraction <- if (isTRUE(circular) && gene$start > gene$end) {
+            ((seq_len - gene$start) + gene$end) / seq_len
+          } else (ep - sp) / seq_len
+          feature_arc_length <- feature_fraction * sum(sqrt(
+            diff(ref$path$x)^2 + diff(ref$path$y)^2
+          ))
+          measured_label <- ggchord_text_boxes(data.frame(
+            text = as.character(gene$anno), text_x = 0, text_y = 0,
+            text_angle = 0, hjust = .5, vjust = .5,
+            size = gene_label_size
+          ), units_per_inch = label_measure_units)
+          shape <- as.character(gene$.feature_shape %||% "arrow")
+          head_reserve <- if (shape == "arrow") {
+            arrow_head_length * max(abs(r0), .5)
+          } else 0
+          available_length <- max(0,
+            feature_arc_length - head_reserve - .08)
+          feature_label_inside <- measured_label$w <= available_length
+          # Plasmid feature text follows the interval direction whether it is
+          # inside the polygon or immediately adjacent to it. Compact labels
+          # move toward the map centre instead of changing to radial text.
+          resolved_label_orientation <- "tangent"
+          if (!isTRUE(feature_label_inside)) {
+            centre_length <- sqrt(sum(center_pt^2))
+            if (is.finite(centre_length) && centre_length > 1e-8) {
+              adjacent_offset <- width / 2 + measured_label$h * .60 + .012
+              text_x <- text_x - center_pt[1L] / centre_length * adjacent_offset
+              text_y <- text_y - center_pt[2L] / centre_length * adjacent_offset
+            }
+          }
+        }
         text_angle <- switch(
-          gene_label_orientation,
+          resolved_label_orientation,
           radial = base_angle + 90,
           tangent = base_angle,
           # coord_chord() subsequently rotates every grob by `rotation`;
@@ -305,9 +396,9 @@ ggchord_layout_annotation_step <- quote({
         text_angle <- text_angle %% 360
         vjust <- 0.5
 
-        if (identical(gene_label_orientation, "tangent")) {
+        if (identical(resolved_label_orientation, "tangent")) {
           hjust <- 0.5
-        } else if (identical(gene_label_orientation, "horizontal")) {
+        } else if (identical(resolved_label_orientation, "horizontal")) {
           rotation_rad <- rotation * pi / 180
           # Anchor text by the direction in which it was actually displaced
           # from its own sequence curve. Using its position relative to the
@@ -330,6 +421,12 @@ ggchord_layout_annotation_step <- quote({
           }
         }
 
+        feature_label_colour <- if (
+            isTRUE(feature_label_inside) &&
+            "feature_label_colour" %in% names(gene)) {
+          as.character(gene$feature_label_colour)
+        } else "#202020"
+
         data.frame(
           text = gene$anno,
           text_x = text_x,
@@ -349,6 +446,9 @@ ggchord_layout_annotation_step <- quote({
           anchor_x = anchor_x,
           anchor_y = anchor_y,
           side_flipped = side_flipped,
+          feature_label_colour = feature_label_colour,
+          feature_label_orientation = resolved_label_orientation,
+          feature_label_inside = feature_label_inside,
           stringsAsFactors = FALSE
         )
       }))

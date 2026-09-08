@@ -23,6 +23,8 @@ gene_geom <- rename_geom_aes(GeomChordFeatureBase, renames = c(fill = "gene_fill
 #' @param gene_width Optional numeric/vector/list. Width of gene arrows, default 0.05
 #' @param arrow_head_length,arrow_head_width Shared arrow-head dimensions in
 #'   the sequence-local frame.
+#' @param arrow_head_style Arrowhead construction: shouldered, flush, or a
+#'   full triangular wedge.
 #' @param short_feature Fallback for arrows too short to hold their requested
 #'   head: automatic wedge/block selection, a wedge, or a block.
 #' @param position Feature placement. Use `"identity"`, `"strand"`,
@@ -47,6 +49,7 @@ geom_gene <- function(mapping = NULL, data = NULL,
                       gene_width = NULL,
                       arrow_head_length = 0.04,
                       arrow_head_width = 1,
+                      arrow_head_style = c("shouldered", "flush", "triangle"),
                       short_feature = c("auto", "wedge", "block"),
                       position = "identity",
                       show.legend = TRUE,
@@ -55,6 +58,7 @@ geom_gene <- function(mapping = NULL, data = NULL,
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
   dots <- list(...)
+  arrow_head_style <- match.arg(arrow_head_style)
   short_feature <- match.arg(short_feature)
   position_object <- ggchord_as_feature_position(position, "geom_gene()")
   if (!is.null(gene_offset)) {
@@ -139,6 +143,7 @@ geom_gene <- function(mapping = NULL, data = NULL,
     gene_width        = gene_width,
     arrow_head_length = as.numeric(arrow_head_length),
     arrow_head_width  = as.numeric(arrow_head_width),
+    arrow_head_style  = arrow_head_style,
     short_feature     = short_feature,
     feature_position  = position_object,
     legacy_offset     = gene_offset,

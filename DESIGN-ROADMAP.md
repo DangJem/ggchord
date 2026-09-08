@@ -92,10 +92,9 @@
 
 ## v0.13.0 — 单序列圆图与生物学注释
 
-**状态：v0.13.0 功能实现与本地验收已完成，尚未发布。** 专用
-`coord_circular()`、通用 feature geometry、Position grammar 与限制性酶切
-数据/显示分层已通过 testthat、设备渲染、示例和源码包检查。完整
-REBASE 派生数据仍受再分发许可门禁约束，确认前不装入发布包。
+**状态：v0.13.0 开发与本地验收阶段，尚未发布。** 专用
+`coord_circular()`、通用 feature geometry、Position grammar、内置通用注释数据库
+与限制性酶切数据/显示分层均已实现，正在进行完整回归验收。
 
 ### A. 单序列圆图
 
@@ -126,6 +125,8 @@ REBASE 派生数据仍受再分发许可门禁约束，确认前不装入发布�
 - `geom_gene()` 保留 gene role、gene scale、strand guide 和专用入口，但 polygon
   由 `geom_gene()`/`geom_feature()` 共用的 interval、local frame、shape factory
   与 short-feature pipeline 产生；
+- `geom_feature_plasmid()` 是该通用引擎的单质粒快捷方式；连续 segment
+  合并为一个轮廓与一个肩式箭头，内部边界单独画短虚线；
 - `gene_offset`/`feature_offset` 仅作为带 warning 的迁移入口，不能与非 identity
   Position 同时使用；`gene_width` 等纯 geometry 参数继续保留。
 
@@ -147,20 +148,24 @@ ggchord(seq_data, gene_data = gene_data) +
 - 酶数据库版本必须可追踪，用户也可传入自定义 motif；
 - `filter_restriction_sites()` 独立处理 unique、长度、供应商、窗口等显示筛选；
 - `geom_restriction_site()` 在单个 geom 中负责刻线、标签和指示线；
-- 邻近标签采用确定性的共享主干（trunk）后分叉，不把不同切点合并成一个数据点；
+- 真实位点只决定 anchor，文字位置由实际 bbox 驱动的二维排版器决定；
+  密集区形成保留 genomic order 的侧边列，12/6 点区域分流到左右队列；
+- leader 在条件合适时直接连接，密集或分流标签使用独立的径向 stub
+  和 fan segment 两段折线，不共享主干；
+- 左/右半圆自动镜像酶名与括号坐标的顺序，leader 只连到酶名边缘；
 - 可按酶、切割次数和窗口过滤，重复名称仍保留全部位点；
 - 序列搜索优先使用轻量实现；大型序列可选用 Biostrings，但不设为强制依赖。
 
 完整 REBASE 609 parser 仅读取 `VERSION`、`embossa_e.txt`、`embossa_r.txt` 和
-`embossa_s.txt`。源文件声明 all rights reserved；再分发条款确认前不把完整派生
-数据库装入发布包，`data-raw/generate_rebase_database.R` 对此设置硬性发布门。
-`examples/rebase/misc.zip` 不读取、不解析、不依赖。
+`embossa_s.txt`。发布包内置由这些文件可重复生成的规范化模式表，
+并保留版本与来源元数据；`examples/rebase/misc.zip` 不读取、不解析、不依赖。
 
 ### D. Backbone、标签、主题、scale 与示例体系
 
 - `geom_seq()` 增加 single/double/band backbone；
 - `geom_feature_label()`、`geom_feature_label_repel()` 复用 gene label 的文本测量、
-  碰撞、leader 与 fitting，实现 horizontal/radial/tangent 和 callout；
+  碰撞、leader 与 fitting；默认 feature 模式优先在 feature 内切向排文，
+  放不下时仍保持周向旋转并紧邻 feature，只对明显移位的文字画轻量 leader；
 - `geom_seq_center_label()` 显示通用 circular sequence 名称与长度；
 - `theme_ggchord_plasmid()` 只定义非数据外观；feature fill/shape 由独立 preset
   scale 提供，任何手动 scale 在任意添加顺序下优先；
@@ -172,7 +177,7 @@ ggchord(seq_data, gene_data = gene_data) +
   sequence、核心 feature 与常用 restriction-site fixture；
 - 开发阶段不生成文档图片，统一在 v1.0.0 文档重构时出图。
 
-本轮不新增 CDS/promoter/ori 专用 geom，函数名和参数名不采用第三方名称，不引入
+本轮不新增 CDS/promoter/ori 专用 geom，不引入
 强制 Biostrings 依赖，也不创建通用 `track_*()`。`coord_collinear()` 留至 v0.14；
 coverage/GC 等 quantitative ring 与统一 track contract 留至 v0.16。
 

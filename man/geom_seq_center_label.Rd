@@ -10,6 +10,8 @@ geom_seq_center_label(
   name = TRUE,
   length = TRUE,
   separator = "\\n",
+  name_style = list(),
+  length_style = list(),
   show.legend = FALSE,
   inherit.aes = FALSE,
   ...
@@ -23,6 +25,10 @@ geom_seq_center_label(
 \item{length}{Show the formatted sequence length.}
 
 \item{separator}{Separator between name and length.}
+
+\item{name_style, length_style}{Named lists of fixed text-style overrides
+for the name and length grobs. Supported fields are `colour`, `size`,
+`family`, `fontface`, and `lineheight`.}
 
 \item{show.legend, inherit.aes}{Standard ggplot2 layer arguments.}
 

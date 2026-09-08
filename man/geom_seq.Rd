@@ -12,7 +12,7 @@ geom_seq(
   seq_gap = NULL,
   seq_radius = NULL,
   seq_curvature = NULL,
-  seq_style = c("single", "double", "band"),
+  seq_style = c("auto", "single", "double", "band"),
   seq_backbone_gap = 0.025,
   seq_backbone_width = 0.035,
   linewidth = 0.9,
@@ -37,7 +37,8 @@ geom_seq(
 
 \item{seq_curvature}{Optional numeric. Signed arc bow (0=straight, 1=standard arc, negative=opposite bow), default 1.0. Finite positive and negative values are accepted without clipping; magnitudes above 1 amplify the bow.}
 
-\item{seq_style}{Backbone geometry: one line, two parallel lines, or a band.}
+\item{seq_style}{Backbone geometry. `"auto"` uses a double backbone in
+[coord_circular()] and the historical single backbone in [coord_chord()].}
 
 \item{seq_backbone_gap}{Gap between double backbone lines.}
 

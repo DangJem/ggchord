@@ -34,7 +34,10 @@ GeomChordSeq <- ggplot2::ggproto(
 )
 
 ggchord_seq_style_geometry <- function(seq_arcs, params) {
-  style <- params$seq_style %||% "single"
+  style <- params$seq_style %||% "auto"
+  if (identical(style, "auto")) {
+    style <- if (isTRUE(params$circular)) "double" else "single"
+  }
   gap <- params$seq_backbone_gap %||% 0.025
   width <- params$seq_backbone_width %||% 0.035
   pieces <- lapply(names(seq_arcs), function(id) {
@@ -88,7 +91,8 @@ ggchord_seq_style_geometry <- function(seq_arcs, params) {
 #' @param seq_gap Optional numeric. Gap proportion between sequences, default 0.03
 #' @param seq_radius Optional numeric (> 0). Sequence arc radius, default 1.0
 #' @param seq_curvature Optional numeric. Signed arc bow (0=straight, 1=standard arc, negative=opposite bow), default 1.0. Finite positive and negative values are accepted without clipping; magnitudes above 1 amplify the bow.
-#' @param seq_style Backbone geometry: one line, two parallel lines, or a band.
+#' @param seq_style Backbone geometry. `"auto"` uses a double backbone in
+#'   [coord_circular()] and the historical single backbone in [coord_chord()].
 #' @param seq_backbone_gap Gap between double backbone lines.
 #' @param seq_backbone_width Width of a band backbone.
 #' @param linewidth Arc line width, default 0.9
@@ -109,7 +113,7 @@ geom_seq <- function(mapping = NULL, data = NULL,
                      seq_gap = NULL,
                      seq_radius = NULL,
                      seq_curvature = NULL,
-                     seq_style = c("single", "double", "band"),
+                     seq_style = c("auto", "single", "double", "band"),
                      seq_backbone_gap = 0.025,
                      seq_backbone_width = 0.035,
                      linewidth = 0.9,

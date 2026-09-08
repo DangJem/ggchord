@@ -29,7 +29,11 @@ ggchord_layout_axis_step <- quote({
       ref <- seq_refs[[id]]
       r0 <- ref$r0 - axisGap[id]
 
+      automatic_majors <- is.null(axis_breaks[[id]])
       majors <- axis_breaks[[id]] %||% breakPointsFunc(lens[id], axisMaj[id])
+      if (isTRUE(circular) && automatic_majors) {
+        majors <- majors[majors < lens[id]]
+      }
       minors <- axis_minor_breaks[[id]]
       if (is.null(minors)) {
         minors <- unlist(lapply(seq_len(length(majors) - 1), function(i) {

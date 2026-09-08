@@ -5,7 +5,7 @@
 \title{Stack overlapping genes or features on radial tracks}
 \usage{
 position_feature_stack(
-  spacing = 0.08,
+  spacing = 0.1,
   side = c("strand", "outside", "inside"),
   base_position = NULL
 )

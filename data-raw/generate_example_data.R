@@ -164,67 +164,24 @@ plasmid_files <- c(
   "pBluescript II SK(+)" = "examples/plasmid/pBluescript II SK(+).fna"
 )
 plasmids <- lapply(plasmid_files, read_one_fasta)
-plasmid_sequence_example <- data.frame(
-  accver = sub(" .*$", "", vapply(plasmids, `[[`, character(1), "header")),
-  label = names(plasmids),
-  length = nchar(vapply(plasmids, `[[`, character(1), "sequence")),
-  sequence = vapply(plasmids, `[[`, character(1), "sequence"),
-  stringsAsFactors = FALSE
+make_plasmid_object <- function(key) {
+  record <- plasmids[[key]]
+  data.frame(
+    accver = sub(" .*$", "", record$header),
+    label = key,
+    length = nchar(record$sequence),
+    sequence = record$sequence,
+    stringsAsFactors = FALSE
+  )
+}
+plasmid_example_pUC19c <- make_plasmid_object("pUC19c")
+plasmid_example_pBR322 <- make_plasmid_object("pBR322")
+plasmid_example_pBluescript_II_SK_plus <- make_plasmid_object(
+  "pBluescript II SK(+)"
 )
-
-# A compact, independently specified teaching panel of common motifs keeps the
-# installed fixture reproducible without redistributing the complete REBASE
-# database. Full REBASE parsing is audited separately by
-# generate_rebase_database.R and remains license-gated.
-common_motifs <- c(
-  EcoRI = "GAATTC", BamHI = "GGATCC", HindIII = "AAGCTT",
-  PstI = "CTGCAG", SmaI = "CCCGGG", KpnI = "GGTACC",
-  SacI = "GAGCTC", SalI = "GTCGAC", XbaI = "TCTAGA",
-  XhoI = "CTCGAG", SpeI = "ACTAGT", NotI = "GCGGCCGC",
-  EagI = "CGGCCG", ApaI = "GGGCCC", EcoRV = "GATATC"
-)
-plasmid_restriction_example <- find_restriction_sites(
-  stats::setNames(
-    plasmid_sequence_example$sequence, plasmid_sequence_example$accver
-  ),
-  patterns = common_motifs
-)
-
-# Core annotations for examples. pBR322 coordinates follow GenBank J01749.1;
-# pUC19c coordinates follow the feature summary embedded in GenBank L09137.2.
-# The fixture is deliberately compact rather than a replacement for either
-# source record's complete feature table.
-plasmid_feature_example <- data.frame(
-  accver = c(rep("J01749.1", 11), rep("L09137.2", 3)),
-  start = c(
-    27, 43, 86, 1515, 1788, 1905, 1915, 2011, 2351, 2535, 3293,
-    238, 396, 1629
-  ),
-  end = c(
-    33, 49, 1276, 1519, 1792, 1910, 2106, 2167, 2414, 2540, 4153,
-    682, 452, 2417
-  ),
-  strand = c(
-    "-", "+", "+", "-", "-", "+", "+", "+", "-", "+", "-",
-    "-", "-", "-"
-  ),
-  type = c(
-    "promoter", "promoter", "CDS", "repeat_region", "repeat_region",
-    "RBS", "CDS", "misc_feature", "misc_feature", "rep_origin", "CDS",
-    "CDS", "misc_feature", "CDS"
-  ),
-  anno = c(
-    "P1", "P2", "tet", "direct repeat", "direct repeat", "RBS",
-    "rop", "H-strand effector", "L-strand effector", "ori", "bla",
-    "lacZ alpha", "MCS", "bla"
-  ),
-  source = c(rep("GenBank J01749.1", 11), rep("GenBank L09137.2", 3)),
-  stringsAsFactors = FALSE
-)
-
-save(plasmid_sequence_example,
-  file = "data/plasmid_sequence_example.rda", compress = "xz")
-save(plasmid_feature_example,
-  file = "data/plasmid_feature_example.rda", compress = "xz")
-save(plasmid_restriction_example,
-  file = "data/plasmid_restriction_example.rda", compress = "xz")
+save(plasmid_example_pUC19c,
+  file = "data/plasmid_example_pUC19c.rda", compress = "xz")
+save(plasmid_example_pBR322,
+  file = "data/plasmid_example_pBR322.rda", compress = "xz")
+save(plasmid_example_pBluescript_II_SK_plus,
+  file = "data/plasmid_example_pBluescript_II_SK_plus.rda", compress = "xz")

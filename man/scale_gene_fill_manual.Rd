@@ -8,7 +8,7 @@
 \usage{
 scale_gene_fill_manual(..., values)
 
-scale_feature_fill_manual(..., values)
+scale_feature_fill_manual(..., values, limits = NULL)
 
 scale_region_fill_manual(..., values)
 }
@@ -16,6 +16,9 @@ scale_region_fill_manual(..., values)
 \item{...}{Arguments passed to [ggplot2::scale_fill_manual()].}
 
 \item{values}{A set of fill values to map data values to.}
+
+\item{limits}{Optional display order. Named feature values use their name
+order by default.}
 }
 \value{
 A ggplot2 scale.

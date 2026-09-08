@@ -7,7 +7,7 @@
 geom_feature_label_repel(
   mapping = NULL,
   data = NULL,
-  label_layout = c("radial", "auto", "callout"),
+  label_layout = c("feature", "radial", "auto", "callout"),
   label_wrap = NULL,
   label_fit = c("wrap", "none", "ellipsis", "auto"),
   label_max_lines = 2L,
@@ -22,7 +22,11 @@ geom_feature_label_repel(
 \arguments{
 \item{mapping, data}{Standard layer inputs. Map feature text with `label`.}
 
-\item{label_layout}{One of `"radial"`, `"auto"`, or `"callout"`.}
+\item{label_layout}{One of `"feature"`, `"radial"`, `"auto"`, or
+`"callout"`. The default `"feature"` follows plasmid-map convention:
+tangent text is tried inside first, then placed adjacent and nudged along
+the local tangent. A light leader appears only after material movement.
+Choose another mode for unrestricted external callouts.}
 
 \item{label_wrap, label_fit, label_max_lines}{Text fitting controls.}
 

@@ -165,7 +165,7 @@ test_that("feature stack composes after its base Position", {
   ])
   legacy_info <- legacy_info[order(legacy_info$source_row), ]
   expect_equal(legacy_info$lane, c(0L, 1L, 0L, 1L))
-  expect_equal(legacy_info$normal_offset, c(.1, .18, -.1, -.18))
+  expect_equal(legacy_info$normal_offset, c(.1, .2, -.1, -.2))
   expect_error(
     position_feature_stack(side = "inside", base_position = "identity"),
     "cannot be combined"

@@ -39,6 +39,8 @@ theme_ggchord(
   restriction.label = NULL,
   restriction.label.segment = NULL,
   seq.center.label = NULL,
+  seq.center.name = NULL,
+  seq.center.length = NULL,
   legend.position = NULL,
   legend.justification = NULL,
   legend.direction = NULL,
@@ -181,6 +183,8 @@ theme_ggchord_minimal(
   restriction.label = NULL,
   restriction.label.segment = NULL,
   seq.center.label = NULL,
+  seq.center.name = NULL,
+  seq.center.length = NULL,
   legend.position = NULL,
   legend.justification = NULL,
   legend.direction = NULL,
@@ -323,6 +327,8 @@ theme_ggchord_dark(
   restriction.label = NULL,
   restriction.label.segment = NULL,
   seq.center.label = NULL,
+  seq.center.name = NULL,
+  seq.center.length = NULL,
   legend.position = NULL,
   legend.justification = NULL,
   legend.direction = NULL,
@@ -465,6 +471,8 @@ theme_ggchord_publication(
   restriction.label = NULL,
   restriction.label.segment = NULL,
   seq.center.label = NULL,
+  seq.center.name = NULL,
+  seq.center.length = NULL,
   legend.position = NULL,
   legend.justification = NULL,
   legend.direction = NULL,
@@ -607,6 +615,8 @@ theme_ggchord_plasmid(
   restriction.label = NULL,
   restriction.label.segment = NULL,
   seq.center.label = NULL,
+  seq.center.name = NULL,
+  seq.center.length = NULL,
   legend.position = NULL,
   legend.justification = NULL,
   legend.direction = NULL,
@@ -735,14 +745,16 @@ ggplot2 title, caption and tag positions.}
 
 \item{axis.text}{Axis text element.}
 
-\item{axis.gap, axis.ticks.length, axis.minor.ticks.length, axis.text.offset}{Scalar [grid::unit()] objects controlling physical axis spacing.}
+\item{axis.gap, axis.ticks.length, axis.minor.ticks.length, axis.text.offset}{Scalar [grid::unit()] objects controlling physical axis spacing. A
+negative `axis.gap` moves circular ticks and labels inside the sequence
+ring; the plasmid preset uses this convention.}
 
 \item{axis.text.orientation}{One of `"horizontal"`, `"parallel"`,
 `"perpendicular"`, or a finite numeric angle.}
 
 \item{axis.text.check.overlap}{Whether overlapping axis labels are hidden.}
 
-\item{seq.label, gene.label, feature.label, restriction.label, seq.center.label}{Text elements for sequence, gene, feature, restriction-site and circular
+\item{seq.label, gene.label, feature.label, restriction.label, seq.center.label, seq.center.name, seq.center.length}{Text elements for sequence, gene, feature, restriction-site and circular
 centre labels.}
 
 \item{gene.label.segment, feature.label.segment, restriction.label.segment}{Line elements for gene, feature and restriction-site leader lines.}

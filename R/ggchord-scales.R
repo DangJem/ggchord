@@ -124,23 +124,40 @@ make_ggchord_scales <- function(layout, has_seq = FALSE, has_gene = FALSE,
     } else {
       list()
     }
-    feature_fill_scale <- scale_feature_fill_manual(
-      name = "Feature", breaks = layout$final_gene_order,
-      values = layout$gene_pal,
-      guide = role_guide("feature", order = 3,
-        override.aes = feature_override)
-    )
+    plasmid_types <- c("CDS", "promoter", "rep_origin", "terminator",
+      "protein_bind", "RBS", "repeat_region", "misc_feature")
+    feature_fill_scale <- if (isTRUE(layout$circular) &&
+        all(layout$final_gene_order %in% plasmid_types)) {
+      scale_feature_fill_plasmid(
+        name = "Feature", breaks = layout$final_gene_order,
+        guide = role_guide("feature", order = 3,
+          override.aes = feature_override)
+      )
+    } else scale_feature_fill_manual(
+        name = "Feature", breaks = layout$final_gene_order,
+        values = layout$gene_pal,
+        guide = role_guide("feature", order = 3,
+          override.aes = feature_override)
+      )
   }
   feature_shape_scale <- NULL
   if (has_feature_shape && !is.null(layout$feature_shape_pal)) {
-    feature_shape_scale <- scale_feature_shape_manual(
-      name = "Feature",
-      breaks = layout$feature_shape_order,
-      values = layout$feature_shape_pal,
-      guide = if (isTRUE(merge_feature_guides)) "none" else {
-        role_guide("feature", order = 3)
-      }
-    )
+    plasmid_types <- c("CDS", "promoter", "rep_origin", "terminator",
+      "protein_bind", "RBS", "repeat_region", "misc_feature")
+    feature_shape_scale <- if (isTRUE(layout$circular) &&
+        all(layout$feature_shape_order %in% plasmid_types)) {
+      scale_feature_shape_plasmid(
+        name = "Feature", breaks = layout$feature_shape_order,
+        guide = if (isTRUE(merge_feature_guides)) "none" else
+          role_guide("feature", order = 3)
+      )
+    } else scale_feature_shape_manual(
+        name = "Feature", breaks = layout$feature_shape_order,
+        values = layout$feature_shape_pal,
+        guide = if (isTRUE(merge_feature_guides)) "none" else {
+          role_guide("feature", order = 3)
+        }
+      )
   }
 
   ribbon_aes <- "ribbon_fill"

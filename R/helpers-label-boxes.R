@@ -121,19 +121,13 @@ ggchord_fit_label_text <- function(gl,
 ggchord_label_deoverlap <- function(gl, units_per_inch = 0.35, seed = 123,
                                     max_overlaps = Inf) {
   if (nrow(gl) < 2) return(gl)
-
-  close_device <- ggchord_measurement_device()
-  on.exit(close_device())
-  sizes <- gl$size %||% rep(2.5, nrow(gl))
-  w <- suppressWarnings(graphics::strwidth(gl$text, units = "inches",
-                                           cex = sizes / 12)) * units_per_inch
-  n_lines <- vapply(strsplit(gl$text, "\n"), length, integer(1))
-  h <- suppressWarnings(graphics::strheight(gl$text, units = "inches",
-                                            cex = sizes / 12)) *
-    n_lines * units_per_inch
-
-  x <- gl$text_x
-  y <- gl$text_y
+  measured <- ggchord_text_boxes(
+    gl, units_per_inch = units_per_inch, box_padding = .025
+  )
+  w <- measured$bw
+  h <- measured$bh
+  x <- measured$cx
+  y <- measured$cy
   n <- nrow(gl)
 
   # Resolve axis-aligned box overlaps iteratively, pushing labels apart along
@@ -179,8 +173,8 @@ ggchord_label_deoverlap <- function(gl, units_per_inch = 0.35, seed = 123,
     if (any(hide)) gl$text[hide] <- NA
   }
 
-  gl$text_x <- x
-  gl$text_y <- y
+  gl$text_x <- gl$text_x + x - measured$cx
+  gl$text_y <- gl$text_y + y - measured$cy
   gl
 }
 

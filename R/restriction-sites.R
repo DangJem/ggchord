@@ -106,27 +106,10 @@ ggchord_parse_rebase <- function(path) {
 }
 
 ggchord_builtin_rebase <- function() {
-  if (exists("ggchord_rebase_database", inherits=TRUE)) {
-    return(get("ggchord_rebase_database", inherits=TRUE))
+  if (!exists("ggchord_rebase_database", inherits = TRUE)) {
+    ggchord_stop("The internal REBASE database is missing; reinstall ggchord")
   }
-  configured <- getOption("ggchord.rebase.path", NULL)
-  candidates <- unique(c(configured, file.path(getwd(), "examples", "rebase"),
-                         file.path(dirname(getwd()), "examples", "rebase")))
-  candidates <- candidates[!is.na(candidates) & nzchar(candidates)]
-  hit <- candidates[vapply(candidates, function(x) all(file.exists(file.path(
-    x, c("VERSION", "embossa_e.txt", "embossa_r.txt", "embossa_s.txt")))), logical(1))]
-  if (length(hit)) return(ggchord_parse_rebase(hit[1L]))
-  data.frame(
-    pattern_id=paste0("ggchord:fallback:",seq_len(5L)),
-    pattern_source_row=seq_len(5L),
-    enzyme=c("EcoRI","BamHI","HindIII","PstI","SmaI"),
-    motif=c("GAATTC","GGATCC","AAGCTT","CTGCAG","CCCGGG"),
-    motif_length=6L,ncuts=2L,blunt=c(FALSE,FALSE,FALSE,FALSE,TRUE),
-    cut_offset_1=c(1L,1L,1L,5L,3L),cut_offset_2=c(5L,5L,5L,1L,3L),
-    cut_offset_3=0L,cut_offset_4=0L,organism=NA_character_,
-    supplier_codes=NA_character_,suppliers=NA_character_,commercial=FALSE,
-    database_version="fallback",source="ggchord fallback",stringsAsFactors=FALSE
-  )
+  get("ggchord_rebase_database", inherits = TRUE)
 }
 
 ggchord_normalize_restriction_patterns <- function(patterns) {
@@ -196,17 +179,11 @@ ggchord_normalize_restriction_patterns <- function(patterns) {
 #' @export
 find_restriction_sites <- function(sequence,enzymes=NULL,patterns=NULL,
                                    circular=TRUE,database=NULL){
-  if(is.data.frame(sequence)){
-    ggchord_require_columns(sequence,c("accver","sequence"),"find_restriction_sites()")
-    ids<-as.character(sequence$accver);seqs<-as.character(sequence$sequence)
-  }else if(is.character(sequence)&&length(sequence)){
-    seqs<-as.character(sequence);ids<-names(sequence)
-    if(is.null(ids))ids<-if(length(seqs)==1L)"sequence" else paste0("sequence_",seq_along(seqs))
-    bad<-is.na(ids)|!nzchar(ids);ids[bad]<-paste0("sequence_",which(bad))
-  }else ggchord_stop("find_restriction_sites(): invalid sequence input")
-  if(anyDuplicated(ids))ggchord_stop("find_restriction_sites(): sequence IDs must be unique")
-  seqs<-toupper(gsub("[[:space:]]","",seqs))
-  if(any(!grepl("^[ACGTRYSWKMBDHVN]+$",seqs)))ggchord_stop("find_restriction_sites(): invalid DNA symbols")
+  normalized <- ggchord_normalize_sequence_input(
+    sequence, "find_restriction_sites()"
+  )
+  ids <- normalized$ids
+  seqs <- normalized$sequences
   if(!is.logical(circular)||length(circular)!=1L||is.na(circular))ggchord_stop("find_restriction_sites(): circular must be TRUE or FALSE")
   if(is.data.frame(enzymes)){if(!is.null(patterns))ggchord_stop("Supply custom definitions once");patterns<-enzymes;enzymes<-NULL}
   defs<-if(!is.null(patterns))patterns else database%||%ggchord_builtin_rebase()
@@ -307,34 +284,396 @@ filter_restriction_sites<-function(sites,set=c("all","unique","unique_dual","six
   for(nm in setdiff(names(attrs),c("names","row.names","class")))attr(out,nm)<-attrs[[nm]];out
 }
 
-GeomRestrictionSite<-ggplot2::ggproto("GeomRestrictionSite",ggplot2::Geom,required_aes=c("x","y"),default_aes=ggplot2::aes(xend=NA_real_,yend=NA_real_,label=NA_character_,.component=NA_character_,group=NA_integer_,colour="#B42318",alpha=1,linewidth=.35,linetype=1,size=2.6,angle=0,hjust=.5,vjust=.5,family="",fontface=1,lineheight=1.2),draw_key=ggplot2::draw_key_path,draw_panel=function(data,panel_params,coord,na.rm=FALSE,segment_params=list(),text_params=list()){paths<-data[data$.component=="path",,drop=FALSE];labels<-data[data$.component=="label",,drop=FALSE];for(nm in names(segment_params))if(nm%in%names(paths))paths[[nm]]<-segment_params[[nm]];for(nm in names(text_params))if(nm%in%names(labels))labels[[nm]]<-text_params[[nm]];grobs<-list();if(nrow(paths))grobs[[length(grobs)+1L]]<-ggplot2::GeomPath$draw_panel(paths,panel_params,coord,lineend="round",linejoin="round",na.rm=na.rm);if(nrow(labels))grobs[[length(grobs)+1L]]<-ggplot2::GeomText$draw_panel(labels,panel_params,coord,parse=FALSE,check_overlap=FALSE,na.rm=na.rm);do.call(grid::grobTree,grobs)})
+GeomRestrictionSite <- ggplot2::ggproto(
+  "GeomRestrictionSite", ggplot2::Geom,
+  required_aes = c("x", "y"),
+  default_aes = ggplot2::aes(
+    xend = NA_real_, yend = NA_real_, label = NA_character_,
+    .component = NA_character_, group = NA_integer_, colour = "#202020",
+    alpha = 1, linewidth = .28, linetype = 1, size = 2.9, angle = 0,
+    hjust = .5, vjust = .5, family = "", fontface = 1, lineheight = 1.2
+  ),
+  draw_key = ggplot2::draw_key_path,
+  draw_panel = function(data, panel_params, coord, na.rm = FALSE,
+                        segment_params = list(), text_params = list(),
+                        composite_labels = TRUE) {
+    paths <- data[data$.component == "path", , drop = FALSE]
+    labels <- data[data$.component == "label", , drop = FALSE]
+    for (nm in names(segment_params)) {
+      if (nm %in% names(paths)) paths[[nm]] <- segment_params[[nm]]
+    }
+    for (nm in names(text_params)) {
+      if (nm %in% names(labels)) labels[[nm]] <- text_params[[nm]]
+    }
+    grobs <- list()
+    if (nrow(paths)) {
+      grobs[[length(grobs) + 1L]] <- ggplot2::GeomPath$draw_panel(
+        paths, panel_params, coord, lineend = "round", linejoin = "round",
+        na.rm = na.rm
+      )
+    }
+    if (nrow(labels)) {
+      composite <- isTRUE(composite_labels) &&
+        "plotmath_label" %in% names(labels)
+      if (composite) labels$label <- labels$plotmath_label
+      grobs[[length(grobs) + 1L]] <- ggplot2::GeomText$draw_panel(
+        labels, panel_params, coord, parse = composite,
+        check_overlap = FALSE, na.rm = na.rm
+      )
+    }
+    do.call(grid::grobTree, grobs)
+  }
+)
 
 #' Draw restriction sites, labels and deterministic leaders
 #' @param mapping,data Standard layer inputs.
 #' @param label Draw labels.
 #' @param label_style Label enzyme and position, enzyme only, or position only.
 #' @param label_side Draw labels outside, inside, or automatically.
-#' @param leader Leader routing style.
-#' @param min_label_gap Minimum genomic fraction between label slots.
+#' @param leader Leader routing style. The default `"radial"` measures actual
+#'   text boxes, separates site anchors from final Cartesian label positions,
+#'   and routes either a direct connector or an independent radial stub plus
+#'   fan segment.
+#'   Dense regions form ordered side columns; top and bottom sectors split into
+#'   left/right queues. `"trunk"` is retained only as a compatibility alias.
+#' @param min_label_gap Minimum genomic fraction between label slots. `NULL`
+#'   derives a compact device-aware default from the rendered labels.
 #' @param tick_length,label_offset Local-normal distances.
-#' @param colour,linewidth,label_size Fixed appearance.
+#' @param colour,linewidth,label_size,fontface,family Fixed appearance.
+#' @param label_order Automatic mirrored label order, enzyme first, or
+#'   position first.
 #' @param position,show.legend,inherit.aes Standard layer arguments.
 #' @param ... Additional geom parameters.
 #' @return A ggplot2 layer.
 #' @export
-geom_restriction_site<-function(mapping=NULL,data=NULL,label=TRUE,label_style=c("enzyme_position","enzyme","position"),label_side=c("outside","inside","auto"),leader=c("trunk","elbow","straight"),min_label_gap=.02,tick_length=.045,label_offset=.28,colour="#B42318",linewidth=.35,label_size=2.6,position="identity",show.legend=FALSE,inherit.aes=FALSE,...){
-  colour_supplied<-!missing(colour);linewidth_supplied<-!missing(linewidth);label_size_supplied<-!missing(label_size)
+geom_restriction_site<-function(mapping=NULL,data=NULL,label=TRUE,label_style=c("enzyme_position","enzyme","position"),label_order=c("auto","enzyme_position","position_enzyme"),label_side=c("outside","inside","auto"),leader=c("radial","elbow","straight","trunk"),min_label_gap=NULL,tick_length=.04,label_offset=.18,colour="#202020",linewidth=.28,label_size=3.2,fontface=NULL,family=NULL,position="identity",show.legend=FALSE,inherit.aes=FALSE,...){
+  colour_supplied<-!missing(colour);linewidth_supplied<-!missing(linewidth);label_size_supplied<-!missing(label_size);fontface_supplied<-!missing(fontface)&&!is.null(fontface);family_supplied<-!missing(family)&&!is.null(family)
   if(is.null(data))ggchord_stop("geom_restriction_site(): supply restriction-site data")
-  label_style<-match.arg(label_style);label_side<-match.arg(label_side);leader<-match.arg(leader)
-  vals<-c(min_label_gap,tick_length,label_offset);if(!is.numeric(vals)||any(!is.finite(vals))||any(vals<0))ggchord_stop("geom_restriction_site(): invalid gaps or offsets")
+  label_style<-match.arg(label_style);label_order<-match.arg(label_order);label_side<-match.arg(label_side);leader<-match.arg(leader)
+  if (identical(leader, "trunk")) leader <- "radial"
+  vals<-c(tick_length,label_offset);if(!is.numeric(vals)||any(!is.finite(vals))||any(vals<0)||(!is.null(min_label_gap)&&(!is.numeric(min_label_gap)||length(min_label_gap)!=1L||!is.finite(min_label_gap)||min_label_gap<0)))ggchord_stop("geom_restriction_site(): invalid gaps or offsets")
   segment_params<-list();text_params<-list()
   if(colour_supplied){segment_params$colour<-colour;text_params$colour<-colour}
   if(linewidth_supplied)segment_params$linewidth<-linewidth
   if(label_size_supplied)text_params$size<-label_size
-  lyr<-ggplot2::layer(data=data.frame(x=numeric(),y=numeric()),mapping=ggplot2::aes(x=x,y=y,group=group,label=label,.component=I(.component)),stat="identity",geom=GeomRestrictionSite,position=position,show.legend=show.legend,inherit.aes=inherit.aes,check.aes=FALSE,check.param=FALSE,params=c(list(na.rm=FALSE,colour=colour,linewidth=linewidth,size=label_size,segment_params=segment_params,text_params=text_params),list(...)))
+  if(fontface_supplied)text_params$fontface<-fontface
+  if(family_supplied)text_params$family<-family
+  lyr<-ggplot2::layer(data=data.frame(x=numeric(),y=numeric()),mapping=ggplot2::aes(x=x,y=y,group=group,label=label,.component=I(.component)),stat="identity",geom=GeomRestrictionSite,position=position,show.legend=show.legend,inherit.aes=inherit.aes,check.aes=FALSE,check.param=FALSE,params=c(list(na.rm=FALSE,colour=colour,linewidth=linewidth,size=label_size,segment_params=segment_params,text_params=text_params,composite_labels=!fontface_supplied),list(...)))
   lyr$ggchord_type<-"restriction_site";lyr$ggchord_theme_components<-c(segment_params="ggchord.restriction.label.segment",text_params="ggchord.restriction.label")
-  lyr$ggchord_params<-list(type="restriction_site",label=label,label_style=label_style,label_side=label_side,leader=leader,min_label_gap=min_label_gap,tick_length=tick_length,label_offset=label_offset)
+  lyr$ggchord_params<-list(type="restriction_site",label=label,label_style=label_style,label_order=label_order,label_side=label_side,leader=leader,min_label_gap=min_label_gap,tick_length=tick_length,label_offset=label_offset,label_size=label_size)
   ggchord_capture_layer_input(lyr,data,mapping,c("accver","position","enzyme"))
+}
+
+# This retired radial adapter remains private for comparison while the active
+# solver below uses measured Cartesian columns. Keeping it isolated makes the
+# current anchor/label separation explicit and avoids a shared-trunk fallback.
+ggchord_restriction_label_lanes_radial <- function(
+    gl, seq_arcs, side = "outside", units_per_inch = .3,
+    label_offset = .13, min_label_gap = NULL) {
+  frame <- ggchord_label_curve_frame(gl, seq_arcs)
+  anchor_clearance <- max(abs(frame$signed_distance), na.rm = TRUE)
+  if (!is.finite(anchor_clearance)) anchor_clearance <- 0
+  point_padding <- max(.01,
+    label_offset - anchor_clearance - .18 * units_per_inch)
+
+  # min_label_gap is expressed as a sequence fraction. Convert it to the
+  # solver's physical box padding, shared equally by adjacent labels.
+  box_padding <- .05
+  if (!is.null(min_label_gap)) {
+    arc_lengths <- vapply(seq_arcs, function(arc) sum(sqrt(
+      diff(arc$x)^2 + diff(arc$y)^2)), numeric(1))
+    box_padding <- max(box_padding,
+      min_label_gap * max(arc_lengths, na.rm = TRUE) /
+        max(2 * units_per_inch, 1e-8))
+  }
+  labels <- gl
+  labels$.radial_bend_x <- NA_real_
+  labels$.radial_bend_y <- NA_real_
+  labels$.radial_parameter <- NA_real_
+  directions <- rep(NA_character_, nrow(gl))
+  tracks <- rep(NA_integer_, nrow(gl))
+  occupied <- ggchord_text_boxes(data.frame())
+  fixed_paths <- data.frame(
+    x0 = numeric(), y0 = numeric(), x1 = numeric(), y1 = numeric(),
+    group = integer()
+  )
+  arc_ids <- vapply(seq_arcs, function(arc) as.character(arc$accver[1L]),
+    character(1))
+
+  # A single gene-label group intentionally shares one clearance level. A
+  # plasmid restriction map is different: several independent site fans can
+  # occur around the same circle. Solve each locally dense fan with the same
+  # radial engine so an MCS does not push every other label onto a huge ring.
+  groups <- list()
+  totals <- numeric()
+  for (id in unique(as.character(gl$accver))) {
+    rows <- which(as.character(gl$accver) == id)
+    arc <- seq_arcs[[match(id, arc_ids)]]
+    distance <- c(0, cumsum(sqrt(diff(arc$x)^2 + diff(arc$y)^2)))
+    keep <- !duplicated(distance)
+    arc <- arc[keep, , drop = FALSE]
+    distance <- distance[keep]
+    total <- tail(distance, 1L)
+    preferred <- vapply(rows, function(i) distance[which.min(
+      (arc$x - gl$anchor_x[i])^2 + (arc$y - gl$anchor_y[i])^2
+    )], numeric(1))
+    ord <- order(preferred, rows)
+    if (length(ord) > 1L) {
+      sorted <- preferred[ord]
+      gaps <- c(diff(sorted), total - tail(sorted, 1L) + sorted[1L])
+      cut <- which.max(gaps)
+      ord <- c(if (cut < length(ord)) ord[seq.int(cut + 1L, length(ord))]
+        else integer(), ord[seq_len(cut)])
+    }
+    opened <- preferred[ord]
+    if (length(opened) > 1L) {
+      for (j in 2:length(opened)) if (opened[j] < opened[j - 1L]) {
+        opened[j:length(opened)] <- opened[j:length(opened)] + total
+      }
+    }
+    fan_gap <- max(.025, min_label_gap %||% .014) * total
+    fan <- cumsum(c(TRUE, diff(opened) > fan_gap))
+    local <- split(rows[ord], fan)
+    groups <- c(groups, local)
+    totals <- c(totals, rep(total, length(local)))
+  }
+
+  for (g in seq_along(groups)) {
+    rows <- groups[[g]]
+    measured <- gl[rows, , drop = FALSE]
+    # Plotmath renders the enzyme fragment in bold, which is wider than the
+    # plain composite string available to the base-device measurer. Invisible
+    # side bearings reserve that horizontal difference without inflating the
+    # vertical spacing of dense right/left fans.
+    measured$text <- gl$text[rows]
+    solved <- ggchord_radial_label_lanes(
+      measured, seq_arcs, side = side,
+      units_per_inch = units_per_inch, box_padding = box_padding,
+      point_padding = point_padding, repel_boxes = occupied,
+      .fixed_paths = fixed_paths, .balance = FALSE
+    )
+    labels[rows, names(solved$labels)] <- solved$labels
+    directions[rows] <- solved$directions
+    tracks[rows] <- solved$tracks
+    labels$.radial_parameter[rows] <-
+      (solved$labels$.radial_parameter %% totals[g]) / totals[g]
+    occupied <- rbind(occupied, ggchord_text_boxes(
+      solved$labels, units_per_inch = units_per_inch,
+      box_padding = box_padding
+    ))
+    for (i in seq_along(rows)) {
+      bend <- c(solved$labels$.radial_bend_x[i],
+        solved$labels$.radial_bend_y[i])
+      direct <- sqrt(sum((bend - c(gl$anchor_x[rows[i]],
+        gl$anchor_y[rows[i]]))^2)) < 1e-8
+      if (direct) {
+        fixed_paths <- rbind(fixed_paths, data.frame(
+          x0 = gl$anchor_x[rows[i]], y0 = gl$anchor_y[rows[i]],
+          x1 = solved$labels$text_x[i], y1 = solved$labels$text_y[i],
+          group = rows[i]
+        ))
+      } else {
+        fixed_paths <- rbind(fixed_paths, data.frame(
+          x0 = c(gl$anchor_x[rows[i]], bend[1]),
+          y0 = c(gl$anchor_y[rows[i]], bend[2]),
+          x1 = c(bend[1], solved$labels$text_x[i]),
+          y1 = c(bend[2], solved$labels$text_y[i]),
+          group = rows[i]
+        ))
+      }
+    }
+  }
+  labels$text <- gl$text
+  boxes <- ggchord_text_boxes(labels, units_per_inch = units_per_inch)
+  # Near twelve and six o'clock, arc displacement is almost entirely
+  # horizontal. A final one-dimensional pass uses the actual composite-string
+  # widths (plus a small bold-enzyme allowance) to absorb the coordinate-limit
+  # feedback that otherwise lets two top labels visually touch after framing.
+  for (sector in c("top", "bottom")) {
+    rows <- which(directions == sector)
+    if (length(rows) < 2L) next
+    half_width <- boxes$w[rows]
+    packed <- ggchord_pack_label_axis(
+      boxes$cx[rows], boxes$cx[rows], half_width, half_width,
+      gap = .05
+    )
+    labels$text_x[rows] <- labels$text_x[rows] +
+      packed - boxes$cx[rows]
+  }
+  boxes <- ggchord_text_boxes(labels, units_per_inch = units_per_inch)
+  labels$.text_width <- boxes$w
+  labels$.text_height <- boxes$h
+  labels$.text_center_x <- boxes$cx
+  labels$.text_center_y <- boxes$cy
+  list(labels = labels, directions = directions, tracks = tracks,
+    lanes = paste(gl$accver, side, sep = "\r"),
+    draw_segment = !is.na(gl$text) & nzchar(gl$text))
+}
+
+# Restriction-site labels need a more constrained layout than general gene
+# labels. Their true site angle defines only the anchor. Sparse labels keep a
+# radial preference; dense side clusters become ordered Cartesian columns; and
+# the twelve/six-o'clock sectors are split into independent left/right queues.
+# All spacing below is based on the actual rendered text box.
+ggchord_restriction_label_lanes <- function(
+    gl, seq_arcs, side = "outside", units_per_inch = .3,
+    label_offset = .18, min_label_gap = NULL) {
+  frame <- ggchord_label_curve_frame(gl, seq_arcs)
+  labels <- gl
+  boxes <- ggchord_text_boxes(
+    gl, units_per_inch = units_per_inch, box_padding = .035
+  )
+  # The rendered plotmath label bolds only the enzyme token. A small allowance
+  # covers that weight change while keeping the measured and visible edges in
+  # the same place; the former 1.5 multiplier displaced long-label anchors.
+  width <- boxes$w * 1.08
+  height <- boxes$h
+  side_sign <- if (identical(side, "inside")) -1 else 1
+  extra <- max(.04, label_offset - .04)
+  labels$text_x <- gl$anchor_x + frame$outward_x * side_sign * extra
+  labels$text_y <- gl$anchor_y + frame$outward_y * side_sign * extra
+  labels$.radial_bend_x <- gl$anchor_x
+  labels$.radial_bend_y <- gl$anchor_y
+  labels$.radial_parameter <- NA_real_
+  directions <- rep(NA_character_, nrow(gl))
+  tracks <- integer(nrow(gl))
+  arc_ids <- vapply(seq_arcs, function(arc) as.character(arc$accver[1L]),
+    character(1))
+
+  pack_ordered <- function(preferred, genomic, before, after, gap) {
+    if (length(preferred) < 2L) return(preferred)
+    correlation <- suppressWarnings(stats::cor(genomic, preferred))
+    direction <- if (is.finite(correlation) && correlation < 0) -1 else 1
+    ggchord_pack_label_axis(
+      preferred, direction * genomic, before, after, gap = gap
+    )
+  }
+
+  for (id in unique(as.character(gl$accver))) {
+    rows <- which(as.character(gl$accver) == id)
+    arc <- seq_arcs[[match(id, arc_ids)]]
+    distance <- c(0, cumsum(sqrt(diff(arc$x)^2 + diff(arc$y)^2)))
+    keep <- !duplicated(distance)
+    arc <- arc[keep, , drop = FALSE]
+    distance <- distance[keep]
+    total <- tail(distance, 1L)
+    parameter <- vapply(rows, function(i) distance[which.min(
+      (arc$x - gl$anchor_x[i])^2 + (arc$y - gl$anchor_y[i])^2
+    )], numeric(1))
+    ord <- order(parameter, rows)
+    if (length(ord) > 1L) {
+      sorted <- parameter[ord]
+      gaps <- c(diff(sorted), total - tail(sorted, 1L) + sorted[1L])
+      cut <- which.max(gaps)
+      ord <- c(if (cut < length(ord)) ord[seq.int(cut + 1L, length(ord))]
+        else integer(), ord[seq_len(cut)])
+    }
+    opened <- parameter[ord]
+    if (length(opened) > 1L) {
+      for (j in 2:length(opened)) if (opened[j] < opened[j - 1L]) {
+        opened[j:length(opened)] <- opened[j:length(opened)] + total
+      }
+    }
+    fan_gap <- max(.04, min_label_gap %||% .014) * total
+    fan <- cumsum(c(TRUE, diff(opened) > fan_gap))
+    cluster <- integer(length(rows))
+    cluster[ord] <- fan
+
+    radius <- sqrt(gl$anchor_x[rows]^2 + gl$anchor_y[rows]^2)
+    radius[radius <= 1e-8] <- 1
+    top_bottom <- abs(gl$anchor_x[rows]) / radius < .38
+    directions[rows] <- ifelse(
+      top_bottom,
+      ifelse(gl$anchor_y[rows] >= 0, "top", "bottom"),
+      ifelse(gl$anchor_x[rows] >= 0, "right", "left")
+    )
+
+    # Dense lateral clusters share their inner text edge and use an ordered
+    # vertical axis. This gives long MCS callouts enough room without allowing
+    # labels to exchange genomic order.
+    for (cluster_id in unique(cluster)) {
+      members <- rows[cluster == cluster_id]
+      lateral <- unique(directions[members])
+      if (length(members) < 3L || length(lateral) != 1L ||
+          !lateral %in% c("left", "right")) next
+      local_parameter <- if ("genomic_position" %in% names(gl)) {
+        gl$genomic_position[members]
+      } else parameter[match(members, rows)]
+      labels$text_y[members] <- pack_ordered(
+        labels$text_y[members], local_parameter,
+        height[members] * .58, height[members] * .58,
+        gap = .018
+      )
+      if (lateral == "right") {
+        inner_edge <- max(
+          labels$text_x[members] - width[members] / 2,
+          gl$anchor_x[members] + .10
+        )
+        labels$text_x[members] <- inner_edge + width[members] / 2
+      } else {
+        inner_edge <- min(
+          labels$text_x[members] + width[members] / 2,
+          gl$anchor_x[members] - .10
+        )
+        labels$text_x[members] <- inner_edge - width[members] / 2
+      }
+      tracks[members] <- 1L
+    }
+
+    # Split the top and bottom around x = 0, then pack each queue along x.
+    # Central labels receive a little more normal clearance, which forms a
+    # restrained staircase instead of a flat row.
+    for (sector in c("top", "bottom")) {
+      sector_rows <- rows[directions[rows] == sector]
+      if (!length(sector_rows)) next
+      for (half in c("left", "right")) {
+        members <- sector_rows[
+          if (half == "left") gl$anchor_x[sector_rows] < 0 else
+            gl$anchor_x[sector_rows] >= 0
+        ]
+        if (!length(members)) next
+        local_parameter <- if ("genomic_position" %in% names(gl)) {
+          gl$genomic_position[members]
+        } else parameter[match(members, rows)]
+        labels$text_x[members] <- pack_ordered(
+          labels$text_x[members], local_parameter,
+          width[members] * .30, width[members] * .30,
+          gap = .018
+        )
+        if (half == "left") {
+          intrusion <- max(labels$text_x[members] + width[members] / 2) + .035
+          if (intrusion > 0) {
+            labels$text_x[members] <- labels$text_x[members] - intrusion
+          }
+        } else {
+          intrusion <- .035 - min(
+            labels$text_x[members] - width[members] / 2
+          )
+          if (intrusion > 0) {
+            labels$text_x[members] <- labels$text_x[members] + intrusion
+          }
+        }
+        centre_order <- order(abs(gl$anchor_x[members]), members)
+        stair <- integer(length(members))
+        stair[centre_order] <- rev(seq_along(members)) - 1L
+        stair_step <- max(height[members] * .90 + .012)
+        labels$text_y[members] <- labels$text_y[members] +
+          if (sector == "top") stair * stair_step else -stair * stair_step
+        tracks[members] <- as.integer(length(members) > 1L)
+      }
+    }
+    labels$.radial_parameter[rows] <- parameter / total
+  }
+
+  labels$text <- gl$text
+  boxes <- ggchord_text_boxes(labels, units_per_inch = units_per_inch)
+  labels$.text_width <- boxes$w
+  labels$.text_height <- boxes$h
+  labels$.text_center_x <- boxes$cx
+  labels$.text_center_y <- boxes$cy
+  list(labels = labels, directions = directions, tracks = tracks,
+    lanes = paste(gl$accver, side, sep = "\r"),
+    draw_segment = !is.na(gl$text) & nzchar(gl$text))
 }
 
 ggchord_restriction_geometry <- function(data, params, layout, seq_data) {
@@ -349,11 +688,13 @@ ggchord_restriction_geometry <- function(data, params, layout, seq_data) {
     ggchord_stop("geom_restriction_site(): position must contain finite numbers")
   }
 
-  output <- list()
-  gid <- 0L
+  output <- list(); gid <- 0L
   append_path <- function(points, component, source_row = NA_integer_,
                           anchor_position = NA_real_, slot_position = NA_real_,
-                          member_rows = "") {
+                          source_rows = integer(), cluster_id = NA_character_,
+                          junction_id = NA_character_,
+                          label_direction = NA_character_,
+                          label_order = NA_character_) {
     gid <<- gid + 1L
     points$.component <- "path"
     points$restriction_component <- component
@@ -362,7 +703,11 @@ ggchord_restriction_geometry <- function(data, params, layout, seq_data) {
     points$source_row <- source_row
     points$anchor_position <- anchor_position
     points$slot_position <- slot_position
-    points$member_rows <- member_rows
+    points$source_rows <- I(rep(list(as.integer(source_rows)), nrow(points)))
+    points$cluster_id <- cluster_id
+    points$junction_id <- junction_id
+    points$label_direction <- label_direction
+    points$label_order <- label_order
     output[[length(output) + 1L]] <<- points
   }
 
@@ -375,21 +720,18 @@ ggchord_restriction_geometry <- function(data, params, layout, seq_data) {
       data$pattern_source_row[idx]
     } else idx
     idx <- idx[order(data$position[idx], pattern_order, source_order, idx)]
+    # Rendering collapses enzymes at exactly the same cleavage coordinate into
+    # one deterministic callout. Biological search rows remain untouched and
+    # are preserved in source_rows for export/provenance.
+    site_members <- unname(split(idx,
+      factor(data$position[idx], levels = unique(data$position[idx]))))
+    idx <- vapply(site_members, `[`, integer(1), 1L)
+    site_enzyme <- vapply(site_members, function(rows) paste(
+      unique(as.character(data$enzyme[rows])), collapse = " - "
+    ), character(1))
     arc <- layout$seq_arcs[[id]]
     n <- nrow(arc)
     frac <- data$position[idx] / lens[id]
-
-    # Open the circular ordering at its largest empty gap so labels next to
-    # genomic origin remain neighbours during deterministic packing.
-    if (isTRUE(layout$circular) && length(frac) > 1L) {
-      gaps <- diff(c(frac, frac[1L] + 1))
-      cut <- which.max(gaps)
-      after <- if (cut < length(frac)) seq.int(cut + 1L, length(frac)) else integer()
-      ord <- c(after, seq_len(cut))
-      idx <- idx[ord]
-      frac <- data$position[idx] / lens[id]
-      frac[frac < frac[1L]] <- frac[frac < frac[1L]] + 1
-    }
 
     point_at <- function(fraction, offset = 0) {
       fraction <- fraction %% 1
@@ -409,91 +751,167 @@ ggchord_restriction_geometry <- function(data, params, layout, seq_data) {
     }
 
     side_sign <- if (params$label_side == "inside") -1 else 1
-    gap <- params$min_label_gap
-    slots <- frac
-    if (length(slots) > 1L) {
-      for (j in 2:length(slots)) slots[j] <- max(slots[j], slots[j - 1L] + gap)
-      if (max(slots) > 1) slots <- slots - (max(slots) - 1) / 2
+    position_text <- format(data$position[idx], big.mark = "",
+      scientific = FALSE, trim = TRUE)
+    raw_labels <- switch(params$label_style,
+      enzyme_position = paste0(site_enzyme, " (", position_text, ")"),
+      enzyme = site_enzyme, position = position_text)
+    # Cluster IDs remain useful export metadata, but they do not imply shared
+    # geometry. Open at the largest circular gap so origin-adjacent sites keep
+    # stable neighbouring IDs.
+    cluster <- seq_along(idx)
+    if (length(frac) > 1L) {
+      gap_limit <- max(.025, params$min_label_gap %||% .014)
+      opened <- frac
+      if (isTRUE(layout$circular)) {
+        gaps <- diff(c(frac, frac[1L] + 1))
+        cut <- which.max(gaps)
+        ord <- c(if (cut < length(frac)) seq.int(cut + 1L, length(frac)) else
+          integer(), seq_len(cut))
+        opened <- frac[ord]
+        opened[opened < opened[1L]] <- opened[opened < opened[1L]] + 1
+        opened_cluster <- cumsum(c(TRUE, diff(opened) > gap_limit))
+        cluster[ord] <- opened_cluster
+      } else {
+        cluster <- cumsum(c(TRUE, diff(frac) > gap_limit))
+      }
     }
-    cluster <- cumsum(c(TRUE, diff(frac) > gap))
+    cluster_names <- paste0(id, ":cluster:", sprintf("%03d", cluster))
+    junction_names <- paste0(id, ":site:", sprintf("%06d", idx))
+    bases <- point_at(frac, 0)
+    tips <- point_at(frac, side_sign * params$tick_length)
 
-    for (members in split(seq_along(idx), cluster)) {
-      shared <- isTRUE(params$label) && params$leader == "trunk" &&
-        length(members) > 1L
-      trunk_offset <- side_sign * params$label_offset * .55
-      member_text <- paste(idx[members], collapse = ",")
-      if (shared) {
-        trunk_range <- range(c(frac[members], slots[members]))
-        trunk_fractions <- seq(
-          trunk_range[1L], trunk_range[2L],
-          length.out = max(12L, ceiling(diff(trunk_range) * 360))
-        )
-        append_path(
-          point_at(trunk_fractions, trunk_offset), "trunk",
-          member_rows = member_text
-        )
+    for (member in seq_along(idx)) {
+      row <- idx[member]
+      append_path(
+        rbind(bases[member, , drop = FALSE], tips[member, , drop = FALSE]),
+        "tick", row, data$position[row], data$position[row],
+        site_members[[member]],
+        cluster_names[member], junction_names[member]
+      )
+    }
+    if (!isTRUE(params$label)) next
+
+    gl <- data.frame(
+      text = raw_labels, text_x = tips$x, text_y = tips$y,
+      text_angle = 0, hjust = .5, vjust = .5,
+      size = params$label_size %||% 2.9, accver = id,
+      group = seq_along(idx), source_row = idx,
+      genomic_position = data$position[idx],
+      anchor_x = tips$x, anchor_y = tips$y,
+      stringsAsFactors = FALSE
+    )
+    device <- if (grDevices::dev.cur() == 1L) c(8, 8) else
+      grDevices::dev.size("in")
+    span <- c(diff(range(arc$x)), diff(range(arc$y)))
+    units_per_inch <- max(span / pmax(device - c(2.2, 1.5), device * .45))
+    units_per_inch <- max(.20, min(.42, units_per_inch))
+    solved <- ggchord_restriction_label_lanes(
+      gl, layout$seq_arcs, side = params$label_side,
+      units_per_inch = units_per_inch,
+      label_offset = params$label_offset %||% .13,
+      min_label_gap = params$min_label_gap
+    )
+    labels <- solved$labels
+    directions <- solved$directions
+    tracks <- solved$tracks
+    order_values <- rep(params$label_order, length(idx))
+    if (params$label_order == "auto") {
+      order_values <- ifelse(
+        directions == "left" |
+          (directions %in% c("top", "bottom") &
+            labels$.text_center_x < 0),
+        "position_enzyme", "enzyme_position"
+      )
+    }
+    labels$hjust <- ifelse(order_values == "position_enzyme", 1, 0)
+    labels$text_x <- labels$.text_center_x +
+      (labels$hjust - .5) * labels$.text_width
+    labels$text_y <- labels$.text_center_y
+    slot_positions <- if (".radial_parameter" %in% names(labels)) {
+      labels$.radial_parameter * lens[id]
+    } else vapply(seq_along(idx), function(member) {
+      k <- which.min((arc$x - labels$text_x[member])^2 +
+        (arc$y - labels$text_y[member])^2)
+      (k - 1L) / max(1L, nrow(arc) - 1L) * lens[id]
+    }, numeric(1))
+
+    endpoint_x <- labels$text_x + ifelse(labels$hjust == 0, -.010, .010)
+    endpoint_y <- labels$text_y
+    leader_frame <- ggchord_label_curve_frame(gl, layout$seq_arcs)
+    segments <- lapply(seq_along(idx), function(member) {
+      # Sparse labels that remain on their natural radial ray need no elbow.
+      # Dense columns and top/bottom queues get exactly two segments, matching
+      # the radial gene-label convention: a short normal stub and one fan-out
+      # connector ending just before the enzyme-name edge.
+      if (identical(params$leader, "straight") || tracks[member] == 0L) {
+        return(data.frame(x0 = tips$x[member], y0 = tips$y[member],
+          x1 = endpoint_x[member], y1 = endpoint_y[member], group = member))
       }
+      distance <- sqrt((endpoint_x[member] - tips$x[member])^2 +
+        (endpoint_y[member] - tips$y[member])^2)
+      shoulder <- min(.085, max(.045, distance * .30))
+      bend <- c(
+        tips$x[member] + leader_frame$outward_x[member] * side_sign * shoulder,
+        tips$y[member] + leader_frame$outward_y[member] * side_sign * shoulder
+      )
+      data.frame(
+        x0 = c(tips$x[member], bend[1]),
+        y0 = c(tips$y[member], bend[2]),
+        x1 = c(bend[1], endpoint_x[member]),
+        y1 = c(bend[2], endpoint_y[member]), group = member
+      )
+    })
+    segments <- do.call(rbind, segments)
+    for (segment in seq_len(nrow(segments))) {
+      member <- segments$group[segment]
+      row <- idx[member]
+      append_path(
+        data.frame(x = c(segments$x0[segment], segments$x1[segment]),
+          y = c(segments$y0[segment], segments$y1[segment])),
+        "leader", row, data$position[row], slot_positions[member],
+        site_members[[member]],
+        cluster_names[member], junction_names[member], directions[member]
+      )
+    }
 
-      for (member in members) {
-        row <- idx[member]
-        biological_position <- data$position[row]
-        base <- point_at(frac[member], 0)
-        tip <- point_at(frac[member], side_sign * params$tick_length)
-        append_path(
-          rbind(base, tip), "tick", row, biological_position,
-          biological_position, as.character(row)
-        )
-
-        if (isTRUE(params$label)) {
-          lp <- point_at(slots[member], side_sign * params$label_offset)
-          if (shared) {
-            site_trunk <- point_at(frac[member], trunk_offset)
-            label_trunk <- point_at(slots[member], trunk_offset)
-            append_path(
-              rbind(tip, site_trunk), "site_branch", row,
-              biological_position, slots[member] * lens[id], member_text
-            )
-            append_path(
-              rbind(label_trunk, lp), "label_branch", row,
-              biological_position, slots[member] * lens[id], member_text
-            )
-          } else {
-            branch <- if (params$leader == "elbow") {
-              elbow <- data.frame(x = lp$x, y = tip$y)
-              rbind(tip, elbow, lp)
-            } else rbind(tip, lp)
-            append_path(
-              branch, "leader", row, biological_position,
-              slots[member] * lens[id], as.character(row)
-            )
-          }
-
-          position_text <- format(
-            biological_position, big.mark = ",", scientific = FALSE, trim = TRUE
-          )
-          label_text <- switch(
-            params$label_style,
-            enzyme_position = paste0(data$enzyme[row], " (", position_text, ")"),
-            enzyme = as.character(data$enzyme[row]),
-            position = position_text
-          )
-          gid <- gid + 1L
-          hjust <- if (lp$x > .12) 0 else if (lp$x < -.12) 1 else .5
-          vjust <- if (abs(lp$x) <= .12 && lp$y > 0) 0 else if (
-            abs(lp$x) <= .12 && lp$y < 0
-          ) 1 else .5
-          output[[length(output) + 1L]] <- data.frame(
-            x = lp$x, y = lp$y, label = label_text,
-            .component = "label", restriction_component = "label",
-            group = gid, source_row = row,
-            anchor_position = biological_position,
-            slot_position = slots[member] * lens[id],
-            member_rows = as.character(row), size = 2.6,
-            angle = 0, hjust = hjust, vjust = vjust,
-            stringsAsFactors = FALSE
-          )
-        }
-      }
+    quote_text <- function(x) paste0("'", gsub("'", "\\\\'", x,
+      fixed = TRUE), "'")
+    for (member in seq_along(idx)) {
+      row <- idx[member]
+      direction <- directions[member]
+      order_value <- order_values[member]
+      coordinate <- format(data$position[row], big.mark = "",
+        scientific = FALSE, trim = TRUE)
+      label_text <- switch(params$label_style,
+        enzyme_position = if (order_value == "position_enzyme")
+          paste0("(", coordinate, ") ", site_enzyme[member]) else
+          paste0(site_enzyme[member], " (", coordinate, ")"),
+        enzyme = site_enzyme[member], position = coordinate)
+      plotmath <- switch(params$label_style,
+        enzyme_position = if (order_value == "position_enzyme")
+          paste0(quote_text(paste0("(", coordinate, ")")), "~bold(",
+            quote_text(site_enzyme[member]), ")") else
+          paste0("bold(", quote_text(site_enzyme[member]), ")~",
+            quote_text(paste0("(", coordinate, ")"))),
+        enzyme = paste0("bold(", quote_text(site_enzyme[member]), ")"),
+        position = quote_text(coordinate))
+      gid <- gid + 1L
+      output[[length(output) + 1L]] <- data.frame(
+        x = labels$text_x[member], y = labels$text_y[member],
+        label = label_text, plotmath_label = plotmath,
+        .component = "label", restriction_component = "label",
+        group = gid, source_row = row,
+        anchor_position = data$position[row],
+        slot_position = slot_positions[member],
+        source_rows = I(list(as.integer(site_members[[member]]))),
+        cluster_id = cluster_names[member],
+        junction_id = junction_names[member],
+        label_direction = direction, label_order = order_value,
+        size = params$label_size %||% 2.9, angle = 0,
+        hjust = labels$hjust[member], vjust = labels$vjust[member],
+        stringsAsFactors = FALSE
+      )
     }
   }
   if (!length(output)) {
@@ -502,7 +920,9 @@ ggchord_restriction_geometry <- function(data, params, layout, seq_data) {
       .component = character(), restriction_component = character(),
       group = integer(), source_row = integer(),
       anchor_position = numeric(), slot_position = numeric(),
-      member_rows = character(), stringsAsFactors = FALSE
+      source_rows = I(list()), cluster_id = character(),
+      junction_id = character(), label_direction = character(),
+      label_order = character(), stringsAsFactors = FALSE
     ))
   }
   ggchord_rbind_fill(output)

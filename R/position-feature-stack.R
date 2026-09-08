@@ -5,7 +5,7 @@
 PositionFeatureStack <- ggplot2::ggproto(
   "PositionFeatureStack", ggplot2::PositionIdentity,
   ggchord_feature_stack = TRUE,
-  spacing = 0.08,
+  spacing = 0.10,
   side = "strand",
   base_position = NULL
 )
@@ -26,7 +26,7 @@ PositionFeatureStack <- ggplot2::ggproto(
 #' @return A ggplot2 Position object for `geom_gene()` or `geom_feature()`.
 #' @export
 position_feature_stack <- function(
-    spacing = 0.08,
+    spacing = 0.10,
     side = c("strand", "outside", "inside"),
     base_position = NULL) {
   side_missing <- missing(side)

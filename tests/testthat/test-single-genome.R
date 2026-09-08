@@ -43,6 +43,18 @@ test_that("coord_circular owns a one-sequence circular contract", {
   expect_s3_class(explicit_arrow$plot$layers[[1L]]$geom_params$arrow, "arrow")
   expect_true(isTRUE(explicit_arrow$plot$layers[[1L]]$show.legend[["seq_colour"]]))
 
+  plasmid_axis <- get_chord_layout(
+    ggchord(seq, validate = "none") + geom_seq() +
+      scale_seq_position_continuous() + coord_circular() +
+      theme_ggchord_plasmid()
+  )
+  major <- plasmid_axis$axis_ticks[plasmid_axis$axis_ticks$is_major, ]
+  expect_lt(
+    mean(sqrt(major$label_x^2 + major$label_y^2)),
+    mean(sqrt(plasmid_axis$seq_arcs[[1L]]$x^2 +
+      plasmid_axis$seq_arcs[[1L]]$y^2))
+  )
+
   two <- rbind(seq, transform(seq, accver = "other"))
   expect_error(
     get_chord_layout(ggchord(two, validate = "none") + geom_seq() + coord_circular()),
@@ -72,9 +84,11 @@ test_that("sequence backbone styles share the same reference", {
     ggplot2::ggplot_build(p)$data[[1L]]
   }
   single <- build_style("single")
+  auto <- build_style("auto")
   double <- build_style("double")
   band <- build_style("band")
   expect_true(all(single$.component == "path"))
+  expect_equal(length(unique(auto$group)), 2L)
   expect_equal(length(unique(double$group)), 2L)
   expect_true(all(double$.component == "path"))
   expect_true(all(band$.component == "band"))
@@ -86,8 +100,17 @@ test_that("centre labels use sequence metadata", {
   p <- ggchord(seq, validate = "none") + geom_seq() +
     geom_seq_center_label() + coord_circular()
   center <- get_chord_layout(p)$seq_center_label
-  expect_equal(center$label, "pBR322\n4,361 bp")
+  expect_equal(center$label, c("pBR322", "4,361 bp"))
+  expect_equal(center$.component, c("name", "length"))
+  expect_true(all(center$combined_label == "pBR322\n4,361 bp"))
   expect_s3_class(ggplot2::ggplotGrob(p), "gtable")
+
+  styled <- ggchord(seq, validate = "none") + geom_seq() +
+    geom_seq_center_label(
+      name_style = list(colour = "red", fontface = "bold"),
+      length_style = list(size = 2.5)
+    ) + coord_circular()
+  expect_s3_class(ggplot2::ggplotGrob(styled), "gtable")
 })
 
 test_that("restriction search preserves biological pattern rows", {
@@ -191,7 +214,7 @@ test_that("restriction layout is deterministic and never moves site anchors", {
     enzyme = c("A", "B", "C", "D"), pattern_id = paste0("p", 1:4),
     pattern_source_row = 1:4
   )
-  make_plot <- function(leader = "trunk") {
+  make_plot <- function(leader = "radial") {
     ggchord(seq, validate = "none") + geom_seq() +
       geom_restriction_site(data = sites, leader = leader, min_label_gap = .02) +
       coord_circular(gap = 8)
@@ -204,16 +227,105 @@ test_that("restriction layout is deterministic and never moves site anchors", {
   expect_equal(ticks$anchor_position, sites$position[ticks$source_row])
   labels <- first[first$restriction_component == "label", , drop = FALSE]
   expect_equal(sort(unique(labels$source_row)), seq_len(nrow(sites)))
-  expect_true(any(first$restriction_component == "trunk"))
-  trunk <- first[first$restriction_component == "trunk", , drop = FALSE]
-  expect_gt(nrow(trunk), 2L)
-  expect_true(all(sqrt(trunk$x^2 + trunk$y^2) > 1))
+  expect_false(any(first$restriction_component == "trunk"))
+  leaders <- first[first$restriction_component == "leader", , drop = FALSE]
+  expect_true(nrow(leaders) > 0L)
+  expect_true(all(lengths(leaders$source_rows) == 1L))
+  expect_true(all(c(
+    "source_rows", "cluster_id", "junction_id", "label_direction",
+    "label_order", "plotmath_label"
+  ) %in% names(first)))
+  expect_true(all(labels$label_order[labels$hjust == 1] ==
+    "position_enzyme"))
+  expect_true(all(labels$label_order[labels$hjust == 0] ==
+    "enzyme_position"))
+  # The connector must meet the enzyme-name edge, never the outer parenthesised
+  # coordinate: left edge for right labels, right edge for left labels.
+  for (junction in labels$junction_id) {
+    label_row <- labels[labels$junction_id == junction, , drop = FALSE]
+    leader_rows <- leaders[leaders$junction_id == junction, , drop = FALSE]
+    distance <- (leader_rows$x - label_row$x)^2 +
+      (leader_rows$y - label_row$y)^2
+    endpoint <- leader_rows[which.min(distance), , drop = FALSE]
+    if (label_row$hjust == 0) {
+      expect_lt(endpoint$x, label_row$x)
+    } else {
+      expect_gt(endpoint$x, label_row$x)
+    }
+  }
   expect_s3_class(ggplot2::ggplot_build(make_plot("elbow")), "ggplot_built")
   expect_s3_class(ggplot2::ggplotGrob(make_plot("straight")), "gtable")
+  ordering <- function(style) {
+    x <- export_ggchord_layout(make_plot(style), include = "restriction")$restriction
+    x <- x[x$restriction_component == "label",
+      c("source_row", "slot_position", "label_direction", "label_order")]
+    x <- x[order(x$source_row), , drop = FALSE]
+    rownames(x) <- NULL
+    x
+  }
+  expect_identical(ordering("radial"), ordering("elbow"))
+  expect_identical(ordering("radial"), ordering("straight"))
   expect_identical(
     export_ggchord_layout(make_plot(), include = "restriction")$metadata$coordinate,
     "circular"
   )
+
+  sparse <- export_ggchord_layout(
+    ggchord(seq, validate = "none") + geom_seq() +
+      geom_restriction_site(data = sites[4, , drop = FALSE]) +
+      coord_circular(), include = "restriction"
+  )$restriction
+  sparse <- sparse[sparse$restriction_component == "leader", , drop = FALSE]
+  expect_equal(length(unique(sparse$group)), 1L)
+
+  dense_sites <- data.frame(
+    accver = "g", position = seq(1, 22, by = 3),
+    enzyme = paste0("LongEnzyme", seq_len(8))
+  )
+  dense <- export_ggchord_layout(
+    ggchord(seq, validate = "none") + geom_seq() +
+      geom_restriction_site(data = dense_sites) + coord_circular(),
+    include = "restriction"
+  )$restriction
+  dense_leaders <- dense[dense$restriction_component == "leader", ]
+  segments_per_site <- vapply(split(dense_leaders, dense_leaders$source_row),
+    function(x) length(unique(x$group)), integer(1))
+  expect_true(all(segments_per_site == 2L))
+
+  same_position <- data.frame(
+    accver = "g", position = c(250, 250),
+    enzyme = c("BsaAI", "DraIII"),
+    pattern_id = c("p1", "p2"), pattern_source_row = 1:2
+  )
+  combined <- export_ggchord_layout(
+    ggchord(seq, validate = "none") + geom_seq() +
+      geom_restriction_site(data = same_position) + coord_circular(),
+    include = "restriction"
+  )$restriction
+  combined_label <- combined[
+    combined$restriction_component == "label", , drop = FALSE
+  ]
+  expect_equal(nrow(combined_label), 1L)
+  expect_match(combined_label$label, "BsaAI - DraIII")
+  expect_equal(combined_label$source_rows[[1L]], 1:2)
+  expect_equal(length(unique(combined$group[
+    combined$restriction_component == "tick"
+  ])), 1L)
+
+  perimeter_sites <- data.frame(
+    accver = "g", position = seq(25, 975, length.out = 16),
+    enzyme = paste0("E", seq_len(16))
+  )
+  perimeter <- export_ggchord_layout(
+    ggchord(seq, validate = "none") + geom_seq() +
+      geom_restriction_site(data = perimeter_sites) + coord_circular(),
+    include = "restriction"
+  )$restriction
+  perimeter <- perimeter[perimeter$restriction_component == "label", ]
+  for (direction in c("left", "right")) {
+    side <- perimeter[perimeter$label_direction == direction, ]
+    expect_gt(length(unique(round(side$x, 4))), 2L)
+  }
   styled <- ggplot2::ggplot_build(
     ggchord(seq, validate = "none") + geom_seq() +
       geom_restriction_site(

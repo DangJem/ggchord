@@ -169,14 +169,27 @@ ggchord_allocate_feature_lanes <- function(data, base, direction, spacing,
   for (idx in groups) {
     sid <- as.character(data$accver[idx[1L]])
     len <- if (!is.null(lengths)) unname(lengths[sid]) else NA_real_
-    intervals <- lapply(idx, function(i) {
+    row_intervals <- lapply(idx, function(i) {
       a <- as.numeric(data$start[i]); b <- as.numeric(data$end[i])
       if (isTRUE(circular) && is.finite(len) && a > b) {
         rbind(c(a, len), c(1, b))
       } else matrix(c(min(a, b), max(a, b)), nrow = 1L)
     })
+    group_value <- if ("feature_group" %in% names(data)) {
+      as.character(data$feature_group[idx])
+    } else rep(NA_character_, length(idx))
+    missing_group <- is.na(group_value) | !nzchar(group_value)
+    group_value[missing_group] <- paste0(".row.", idx[missing_group])
+    entity_members <- split(seq_along(idx),
+      factor(group_value, levels = unique(group_value)))
+    intervals <- lapply(entity_members, function(members) {
+      do.call(rbind, row_intervals[members])
+    })
+    entity_source <- vapply(entity_members, function(members) idx[members[1L]],
+      integer(1))
     ord <- order(vapply(intervals, function(x) min(x[, 1]), numeric(1)),
-                 vapply(intervals, function(x) max(x[, 2]), numeric(1)), idx)
+                 vapply(intervals, function(x) max(x[, 2]), numeric(1)),
+                 entity_source)
     lane_intervals <- list()
     overlaps <- function(a, occupied) {
       any(vapply(occupied, function(b) any(
@@ -186,12 +199,24 @@ ggchord_allocate_feature_lanes <- function(data, base, direction, spacing,
       ), logical(1)))
     }
     for (local in ord) {
-      chosen <- 1L
-      while (chosen <= length(lane_intervals) &&
-             overlaps(intervals[[local]], lane_intervals[[chosen]])) chosen <- chosen + 1L
+      members <- entity_members[[local]]
+      preferred <- if ("preferred_lane" %in% names(data)) {
+        suppressWarnings(as.integer(data$preferred_lane[idx[members[1L]]]))
+      } else NA_integer_
+      if (!is.finite(preferred) || preferred < 0L) preferred <- 0L
+      candidates <- unique(c(
+        preferred + 1L,
+        as.vector(rbind(preferred + seq_len(nrow(data)) + 1L,
+          preferred - seq_len(nrow(data)) + 1L))
+      ))
+      candidates <- candidates[candidates >= 1L]
+      chosen <- candidates[which(vapply(candidates, function(candidate) {
+        candidate > length(lane_intervals) ||
+          !overlaps(intervals[[local]], lane_intervals[[candidate]])
+      }, logical(1)))[1L]]
       if (chosen > length(lane_intervals)) lane_intervals[[chosen]] <- list()
       lane_intervals[[chosen]][[length(lane_intervals[[chosen]]) + 1L]] <- intervals[[local]]
-      lane[idx[local]] <- chosen - 1L
+      lane[idx[members]] <- chosen - 1L
     }
   }
   lane
@@ -257,10 +282,10 @@ ggchord_apply_feature_position <- function(data, position, seqs, lengths,
   if (isTRUE(position$ggchord_feature_stack)) {
     direction <- ifelse(base < 0, -1, 1)
     lane <- ggchord_allocate_feature_lanes(
-      out, base, direction, position$spacing %||% 0.08,
+      out, base, direction, position$spacing %||% 0.10,
       circular = circular, lengths = lengths
     )
-    lane_offset <- direction * lane * (position$spacing %||% 0.08)
+    lane_offset <- direction * lane * (position$spacing %||% 0.10)
   }
   out$.position_name <- position_name
   out$.position_base_offset <- base

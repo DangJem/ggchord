@@ -5,12 +5,16 @@
 \alias{scale_feature_shape_plasmid}
 \title{Plasmid-map feature presets}
 \usage{
-scale_feature_fill_plasmid(...)
+scale_feature_fill_plasmid(..., limits = NULL)
 
-scale_feature_shape_plasmid(...)
+scale_feature_shape_plasmid(..., limits = NULL, guide = "none")
 }
 \arguments{
 \item{...}{Additional scale arguments.}
+
+\item{limits}{Optional feature-type order.}
+
+\item{guide}{Guide used by the shape preset.}
 }
 \value{
 A feature fill or shape scale.

@@ -56,12 +56,20 @@ ggchord_shape_arrow <- function(a_start, a_end, r0, width,
   if (available < head_length) {
     fallback <- short_feature
     if (identical(fallback, "auto")) {
-      fallback <- if (available >= width * 0.35) "wedge" else "block"
+      # Preserve a visible rectangular body and shrink only the head. A full
+      # wedge makes short plasmid features look like detached triangles.
+      if (available < width * .18) {
+        return(ggchord_shape_block(a_start, a_end, r0, width))
+      }
+      head_length <- available * .36
+      fallback <- "arrow"
     }
     if (identical(fallback, "block")) {
       return(ggchord_shape_block(a_start, a_end, r0, width))
     }
-    return(ggchord_shape_wedge(a_start, a_end, r0, width))
+    if (identical(fallback, "wedge")) {
+      return(ggchord_shape_wedge(a_start, a_end, r0, width))
+    }
   }
   head_angle <- min(abs(span) * 0.45, head_length / max(abs(r0), 0.1))
   shoulder <- a_end - direction * head_angle
@@ -73,6 +81,43 @@ ggchord_shape_arrow <- function(a_start, a_end, r0, width,
     radius = c(
       rep(r0 + half_body, length(body)), r0 + half_head, r0,
       r0 - half_head, rep(r0 - half_body, length(body))
+    )
+  ))
+}
+
+ggchord_shape_bidirectional_arrow <- function(a_start, a_end, r0, width,
+                                               head_length = 0.04,
+                                               head_width = 1,
+                                               short_feature = "auto") {
+  span <- a_end - a_start
+  direction <- if (span < 0) -1 else 1
+  available <- abs(span) * max(abs(r0), 0.1)
+  if (available < 2 * head_length) {
+    if (identical(short_feature, "block") || identical(short_feature, "auto")) {
+      return(ggchord_shape_block(a_start, a_end, r0, width))
+    }
+    mid <- (a_start + a_end) / 2
+    return(list(list(
+      angle = c(a_start, mid, a_end, mid),
+      radius = c(r0, r0 + width / 2, r0, r0 - width / 2)
+    )))
+  }
+  head_angle <- min(abs(span) * .225,
+    head_length / max(abs(r0), .1))
+  start_shoulder <- a_start + direction * head_angle
+  end_shoulder <- a_end - direction * head_angle
+  body <- seq(start_shoulder, end_shoulder, length.out = 35L)
+  half_body <- width / 2
+  half_head <- half_body * head_width
+  list(list(
+    angle = c(
+      a_start, start_shoulder, body, end_shoulder,
+      a_end, end_shoulder, rev(body), start_shoulder
+    ),
+    radius = c(
+      r0, r0 + half_head, rep(r0 + half_body, length(body)),
+      r0 + half_head, r0, r0 - half_head,
+      rep(r0 - half_body, length(body)), r0 - half_head
     )
   ))
 }
@@ -120,8 +165,20 @@ ggchord_feature_geometry <- function(shape, a_start, a_end, r0, width,
                                      sequence_radius, ref,
                                      arrow_head_length = 0.04,
                                      arrow_head_width = 1,
+                                     arrow_head_style = "shouldered",
                                      short_feature = "auto",
-                                     draw_head = TRUE) {
+                                     draw_head = TRUE,
+                                     bidirectional = FALSE) {
+  if (identical(shape, "arrow") && isTRUE(bidirectional) &&
+      isTRUE(draw_head)) {
+    return(ggchord_shape_bidirectional_arrow(
+      a_start, a_end, r0, width,
+      head_length = arrow_head_length,
+      head_width = if (identical(arrow_head_style, "flush")) 1 else
+        arrow_head_width,
+      short_feature = short_feature
+    ))
+  }
   switch(
     shape,
     block = ggchord_shape_block(a_start, a_end, r0, width),
@@ -129,12 +186,17 @@ ggchord_feature_geometry <- function(shape, a_start, a_end, r0, width,
     lollipop = ggchord_shape_lollipop(
       a_start, a_end, r0, width, sequence_radius, ref
     ),
-    ggchord_shape_arrow(
-      a_start, a_end, r0, width,
-      head_length = arrow_head_length,
-      head_width = arrow_head_width,
-      short_feature = short_feature,
-      draw_head = draw_head
-    )
+    if (identical(arrow_head_style, "triangle") && isTRUE(draw_head)) {
+      ggchord_shape_wedge(a_start, a_end, r0, width * arrow_head_width)
+    } else {
+      ggchord_shape_arrow(
+        a_start, a_end, r0, width,
+        head_length = arrow_head_length,
+        head_width = if (identical(arrow_head_style, "flush")) 1 else
+          arrow_head_width,
+        short_feature = short_feature,
+        draw_head = draw_head
+      )
+    }
   )
 }

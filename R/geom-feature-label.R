@@ -4,7 +4,9 @@
 #' Label generic genomic features
 #'
 #' @param mapping,data Standard layer inputs. Map feature text with `label`.
-#' @param label_orientation One of `"horizontal"`, `"radial"`, or `"tangent"`.
+#' @param label_orientation One of `"feature"`, `"horizontal"`, `"radial"`,
+#'   or `"tangent"`. `"feature"` keeps both internal and adjacent labels
+#'   tangent to the feature direction; compact labels move beside the feature.
 #' @param label_side One of `"inside"`, `"outside"`, or `"auto"`.
 #' @param label_overlap Fixed-label collision policy.
 #' @param label_wrap Optional character wrapping width.
@@ -15,18 +17,20 @@
 #' @export
 geom_feature_label <- function(
     mapping = NULL, data = NULL,
-    label_orientation = c("horizontal", "radial", "tangent"),
+    label_orientation = c("feature", "horizontal", "radial", "tangent"),
     label_side = c("outside", "inside", "auto"),
     label_overlap = c("hide", "nudge", "allow"),
     label_wrap = NULL,
     position = "identity",
     show.legend = FALSE, inherit.aes = FALSE, ...) {
+  dots <- list(...)
   label_orientation <- match.arg(label_orientation)
   label_side <- match.arg(label_side)
   label_overlap <- match.arg(label_overlap)
   lyr <- geom_gene_label(
     mapping = mapping, data = data,
-    gene_label_orientation = label_orientation,
+    gene_label_orientation = if (label_orientation == "feature")
+      "tangent" else label_orientation,
     gene_label_side = label_side,
     gene_label_overlap = label_overlap,
     gene_label_wrap = label_wrap,
@@ -39,12 +43,24 @@ geom_feature_label <- function(
   ))
   lyr$ggchord_theme_element <- "ggchord.feature.label"
   lyr$ggchord_params$is_feature_label <- TRUE
+  lyr$ggchord_params$gene_label_orientation <- label_orientation
+  if (is.data.frame(data) && "feature_label_colour" %in% names(data) &&
+      !any(c("colour", "color") %in% names(mapping)) &&
+      !any(c("colour", "color") %in% names(dots))) {
+    lyr$mapping[["colour"]] <- ggplot2::aes(
+      colour = I(feature_label_colour)
+    )$colour
+  }
   lyr
 }
 
 #' Automatically arrange generic feature labels
 #'
-#' @param label_layout One of `"radial"`, `"auto"`, or `"callout"`.
+#' @param label_layout One of `"feature"`, `"radial"`, `"auto"`, or
+#'   `"callout"`. The default `"feature"` follows plasmid-map convention:
+#'   tangent text is tried inside first, then placed adjacent and nudged along
+#'   the local tangent. A light leader appears only after material movement.
+#'   Choose another mode for unrestricted external callouts.
 #' @param label_side One of `"inside"`, `"outside"`, or `"auto"`.
 #' @param label_wrap,label_fit,label_max_lines Text fitting controls.
 #' @param max_overlaps Maximum unresolved overlaps.
@@ -53,7 +69,7 @@ geom_feature_label <- function(
 #' @export
 geom_feature_label_repel <- function(
     mapping = NULL, data = NULL,
-    label_layout = c("radial", "auto", "callout"),
+    label_layout = c("feature", "radial", "auto", "callout"),
     label_wrap = NULL,
     label_fit = c("wrap", "none", "ellipsis", "auto"),
     label_max_lines = 2L,
@@ -61,9 +77,42 @@ geom_feature_label_repel <- function(
     max_overlaps = Inf,
     position = "identity",
     show.legend = FALSE, inherit.aes = FALSE, ...) {
+  dots <- list(...)
   label_layout <- match.arg(label_layout)
   label_fit <- match.arg(label_fit)
   label_side <- match.arg(label_side)
+  if (identical(label_layout, "feature")) {
+    lyr <- geom_gene_label_repel(
+      mapping = mapping, data = data,
+      gene_label_layout = "radial", gene_label_side = "inside",
+      gene_label_wrap = label_wrap, gene_label_fit = label_fit,
+      gene_label_max_lines = label_max_lines,
+      max_overlaps = max_overlaps,
+      position = position, show.legend = show.legend,
+      inherit.aes = inherit.aes, ...
+    )
+    # `feature` is an internal staged mode of the shared composite renderer:
+    # fit inside first, nudge only nearby labels, and emit leaders only for
+    # labels whose final displacement is visually meaningful.
+    lyr$ggchord_params$gene_label_layout <- "feature"
+    lyr$ggchord_params$is_feature_label <- TRUE
+    lyr$ggchord_input_transform <- ggchord_feature_label_data
+    lyr$ggchord_role_aes <- unique(c(
+      lyr$ggchord_role_aes, "label", "feature_label", "feature_type"
+    ))
+    lyr$ggchord_theme_components <- c(
+      segment_params = "ggchord.feature.label.segment",
+      text_params = "ggchord.feature.label"
+    )
+    if (is.data.frame(data) && "feature_label_colour" %in% names(data) &&
+        !any(c("colour", "color") %in% names(mapping)) &&
+        !any(c("colour", "color") %in% names(dots))) {
+      lyr$mapping[["colour"]] <- ggplot2::aes(
+        colour = I(feature_label_colour)
+      )$colour
+    }
+    return(lyr)
+  }
   core_layout <- if (identical(label_layout, "callout")) "auto" else label_layout
   lyr <- geom_gene_label_repel(
     mapping = mapping, data = data,
@@ -86,6 +135,13 @@ geom_feature_label_repel <- function(
     segment_params = "ggchord.feature.label.segment",
     text_params = "ggchord.feature.label"
   )
+  if (is.data.frame(data) && "feature_label_colour" %in% names(data) &&
+      !any(c("colour", "color") %in% names(mapping)) &&
+      !any(c("colour", "color") %in% names(dots))) {
+    lyr$mapping[["colour"]] <- ggplot2::aes(
+      colour = I(feature_label_colour)
+    )$colour
+  }
   lyr
 }
 
@@ -107,7 +163,9 @@ ggchord_feature_label_data <- function(x) {
   } else if ("category" %in% names(x)) {
     x$category
   } else rep(NA_character_, nrow(x))
-  out <- ggchord_feature_data(x, "arrow")
+  # A segmented biological feature may need several polygons but still owns
+  # one label. Keep the original feature row for label placement.
+  out <- ggchord_feature_data(x, "arrow", expand_segments = FALSE)
   out$anno <- as.character(label)
   out$label <- as.character(label)
   out

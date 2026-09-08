@@ -7,7 +7,7 @@
 geom_feature_label(
   mapping = NULL,
   data = NULL,
-  label_orientation = c("horizontal", "radial", "tangent"),
+  label_orientation = c("feature", "horizontal", "radial", "tangent"),
   label_side = c("outside", "inside", "auto"),
   label_overlap = c("hide", "nudge", "allow"),
   label_wrap = NULL,
@@ -20,7 +20,9 @@ geom_feature_label(
 \arguments{
 \item{mapping, data}{Standard layer inputs. Map feature text with `label`.}
 
-\item{label_orientation}{One of `"horizontal"`, `"radial"`, or `"tangent"`.}
+\item{label_orientation}{One of `"feature"`, `"horizontal"`, `"radial"`,
+or `"tangent"`. `"feature"` keeps both internal and adjacent labels
+tangent to the feature direction; compact labels move beside the feature.}
 
 \item{label_side}{One of `"inside"`, `"outside"`, or `"auto"`.}
 

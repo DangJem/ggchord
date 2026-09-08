@@ -143,6 +143,8 @@ scale_ribbon_linetype_manual <- function(..., values) {
 #'
 #' @param ... Arguments passed to [ggplot2::scale_fill_manual()].
 #' @param values A set of fill values to map data values to.
+#' @param limits Optional display order. Named feature values use their name
+#'   order by default.
 #' @return A ggplot2 scale.
 #' @export
 scale_gene_fill_manual <- function(..., values) {
@@ -151,8 +153,10 @@ scale_gene_fill_manual <- function(..., values) {
 
 #' @rdname scale_gene_fill_manual
 #' @export
-scale_feature_fill_manual <- function(..., values) {
-  out <- ggplot2::scale_fill_manual(..., values = values, aesthetics = "feature_fill")
+scale_feature_fill_manual <- function(..., values, limits = NULL) {
+  if (is.null(limits) && !is.null(names(values))) limits <- names(values)
+  out <- ggplot2::scale_fill_manual(..., values = values, limits = limits,
+    aesthetics = "feature_fill")
   attr(out, "ggchord_scale_priority") <- 2L
   out
 }
@@ -196,14 +200,17 @@ scale_feature_shape_manual <- function(..., values, name = "Feature",
 
 #' Plasmid-map feature presets
 #' @param ... Additional scale arguments.
+#' @param limits Optional feature-type order.
+#' @param guide Guide used by the shape preset.
 #' @return A feature fill or shape scale.
 #' @export
-scale_feature_fill_plasmid <- function(...) {
-  values <- c(CDS="#4477AA",promoter="#EE7733",rep_origin="#228833",
-    terminator="#AA3377",protein_bind="#CCBB44",RBS="#66CCEE",
-    repeat_region="#BBBBBB",misc_feature="#999933")
+scale_feature_fill_plasmid <- function(..., limits = NULL) {
+  values <- c(CDS="#CCFFCC",promoter="#FFFFFF",rep_origin="#FFFF00",
+    terminator="#993366",protein_bind="#A6ACB3",RBS="#FFFFFF",
+    repeat_region="#C8CDD2",misc_feature="#A6ACB3")
+  if (is.null(limits)) limits <- names(values)
   out <- ggplot2::scale_fill_manual(
-    ..., values=values, aesthetics="feature_fill", na.value="#B8BDC3"
+    ..., values=values, limits=limits, aesthetics="feature_fill", na.value="#B8BDC3"
   )
   attr(out,"ggchord_scale_priority") <- 1L
   out
@@ -211,13 +218,14 @@ scale_feature_fill_plasmid <- function(...) {
 
 #' @rdname scale_feature_fill_plasmid
 #' @export
-scale_feature_shape_plasmid <- function(...) {
-  values <- c(CDS="arrow",promoter="chevron",rep_origin="block",
+scale_feature_shape_plasmid <- function(..., limits = NULL, guide = "none") {
+  values <- c(CDS="arrow",promoter="arrow",rep_origin="arrow",
     terminator="lollipop",protein_bind="block",RBS="chevron",
     repeat_region="block",misc_feature="block")
+  if (is.null(limits)) limits <- names(values)
   out <- ggplot2::discrete_scale(
     aesthetics="feature_shape",palette=scales::manual_pal(values),
-    ...,limits=names(values),na.value="block",guide="none"
+    ...,limits=limits,na.value="block",guide=guide
   )
   attr(out,"ggchord_scale_priority") <- 1L
   out

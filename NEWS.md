@@ -22,7 +22,7 @@
   for use after `library(ggchord)`.
 * `position_feature_stack()` now accepts `base_position = "identity"`,
   `"strand"`, `"plasmid"`, or the corresponding Position object. Its no-argument
-  legacy preset retains the v0.12 lane order and spacing. Layout export now
+  preset uses wider 0.10-unit lanes for dense plasmid annotations. Layout export now
   records `position_name`, `base_offset`, `lane`, `lane_offset`, and
   `normal_offset` for gene and feature polygons.
 * Explicit `gene_offset` and `feature_offset` remain temporarily accepted,
@@ -35,9 +35,17 @@
   short-feature fallback are implemented once. Gene data roles, gene fill
   scales, strand guide and key glyph remain independent public behavior.
 * `geom_feature()` and `geom_gene()` now share `arrow_head_length`,
-  `arrow_head_width`, and `short_feature = "auto" | "wedge" | "block"`.
+  `arrow_head_width`, `arrow_head_style = "shouldered" | "flush" |
+  "triangle"`, and `short_feature = "auto" | "wedge" | "block"`.
   Features crossing the circular origin retain one source identity and split
   into drawable arc pieces without losing strand direction.
+* Added `geom_feature_plasmid()` as a compact circular-map preset over the
+  generic feature engine. Continuous database segments share one outline and
+  one arrowhead; their internal joins are rendered as short dashed dividers.
+  The plasmid fill/shape presets now use a SnapGene-like biological palette
+  and protruding shouldered block arrows. Its default position assigns
+  overlapping intervals to deterministic radial lanes. `preferred_lane` can
+  request a biological track and `feature_group` keeps related rows together.
 * `geom_seq()` adds `seq_style = "single" | "double" | "band"`,
   `seq_backbone_gap`, and `seq_backbone_width` for circular backbones. Under
   `coord_circular()`, the implicit chord-direction arrow and redundant
@@ -46,7 +54,11 @@
 * Added `geom_feature_label()` and `geom_feature_label_repel()`. They retain a
   feature-specific public vocabulary while reusing the existing device-aware
   text measurement, wrapping, ellipsis, collision, leader routing and frame
-  fitting engine. Repelled feature labels add `label_layout = "callout"`.
+  fitting engine. The default `label_layout = "feature"` compares measured text
+  width with usable feature arc length, uses tangent text inside intervals that
+  can contain it, and places compact-feature text nearby. Nearby collisions are
+  nudged deterministically and only materially displaced labels receive a light
+  leader; explicit radial/auto/callout layouts remain available.
 * Added `find_restriction_sites()` as a calculation-only API. It preserves one
   row per pattern match, stable pattern identity, multiple motifs per enzyme,
   overlapping/IUPAC/reverse-complement matches, circular-origin matches,
@@ -57,18 +69,28 @@
   `unique_dual`, `six_plus`, `unique_6plus`, and `commercial`) and intersecting
   enzyme, motif-length, site-count, window and commercial filters. Filtering
   never rewrites biological coordinates.
-* `geom_restriction_site()` draws ticks, labels and straight/elbow/shared-trunk
-  leaders in one deterministic layer. Each tick retains its genomic anchor and
-  source row while dense labels move into separate slots.
+* `geom_restriction_site()` draws ticks, labels and independent radial leaders
+  in one deterministic layer. Real site anchors are separated from final
+  Cartesian label positions. Measured text boxes drive ordered dense-region
+  columns, while the top and bottom sectors split into stable left/right
+  queues. Natural sparse callouts use a direct connector; displaced callouts
+  use exactly two segments, an independent radial stub and fan connector.
+  Enzymes sharing one cleavage coordinate are combined
+  into one stable callout while all contributing rows remain in `source_rows`.
+  Mirrored label order makes the connector meet the enzyme-name edge and never
+  the parenthesised coordinate. The former `leader = "trunk"` spelling remains
+  only as a compatibility alias and no longer creates a shared trunk.
 * Added `geom_seq_center_label()`, `theme_ggchord_plasmid()`,
   `scale_feature_fill_plasmid()`, and `scale_feature_shape_plasmid()`. Manual
-  feature scales take priority over presets regardless of addition order.
-* Added small reproducible plasmid sequence, core-feature and restriction-site
-  fixtures generated from unchanged FASTA files under `examples/plasmid/`.
-  Complete REBASE 609 parsing is reproducible from exactly `VERSION` and the
-  three `embossa_*.txt` files. Because those files declare all rights reserved,
-  the complete derived database is not bundled pending confirmation of
-  redistribution terms; the generation script enforces that release gate.
+  feature scales take priority over presets regardless of addition order. The
+  plasmid theme places coordinate ticks and labels inside the backbone.
+* Added reproducible one-row pUC19c, pBR322 and pBluescript II SK(+) sequence
+  fixtures generated byte-for-byte from unchanged FASTA files. Added a bundled
+  normalized common-feature database with provenance metadata and dynamic
+  exact/approximate DNA and six-frame protein matching. Complete REBASE 609
+  pattern data are embedded for working-directory-independent restriction-site
+  search and remain reproducible from `VERSION` plus the three `embossa_*.txt`
+  source files.
 * Removed the v0.12 `seq_id` data/mapping compatibility entry. Rename it to
   `accver` before calling ggchord functions.
 * Removed `ggchord::geom_ribbon()` after its v0.12 deprecation. Use

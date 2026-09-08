@@ -40,7 +40,8 @@ ggchord_layout_label_step <- quote({
       base_gene_labels <- gene_labels
       layout_result <- NULL
 
-      if (is.null(gene_label_wrap) &&
+      if (!identical(gene_label_layout, "feature") &&
+          is.null(gene_label_wrap) &&
           !identical(gene_label_fit, "none")) {
         initial_obstacles <- ggchord_text_obstacle_boxes(
           seq_labels_df, axis_ticks, show_axis,
@@ -90,7 +91,31 @@ ggchord_layout_label_step <- quote({
           seq_labels_df, axis_ticks, show_axis,
           units_per_inch = layout_units
         )
-        if (gene_label_layout %in% c("auto", "callout")) {
+        if (identical(gene_label_layout, "feature")) {
+          candidate <- ggchord_label_deoverlap(
+            base_gene_labels, units_per_inch = layout_units,
+            max_overlaps = gene_label_repel_max_overlaps
+          )
+          dx <- candidate$text_x - base_gene_labels$text_x
+          dy <- candidate$text_y - base_gene_labels$text_y
+          displacement <- sqrt(dx^2 + dy^2)
+          moved <- displacement >= max(.04, .16 * layout_units)
+          direction <- ifelse(abs(dx) >= abs(dy),
+            ifelse(dx < 0, "left", "right"),
+            ifelse(dy < 0, "bottom", "top"))
+          direction[!moved] <- ifelse(
+            abs(candidate$text_x) >= abs(candidate$text_y),
+            ifelse(candidate$text_x < 0, "left", "right"),
+            ifelse(candidate$text_y < 0, "bottom", "top")
+          )[!moved]
+          layout_result <- list(
+            labels = candidate,
+            lanes = paste(candidate$accver, direction, sep = "\r"),
+            directions = direction,
+            tracks = ifelse(moved, 2L, 1L),
+            draw_segment = moved
+          )
+        } else if (gene_label_layout %in% c("auto", "callout")) {
           layout_result <- ggchord_auto_label_lanes(
             base_gene_labels, seq_arcs, side = gene_label_side,
             units_per_inch = layout_units, box_padding = layout_box_padding,

@@ -11,6 +11,7 @@ geom_gene(
   gene_width = NULL,
   arrow_head_length = 0.04,
   arrow_head_width = 1,
+  arrow_head_style = c("shouldered", "flush", "triangle"),
   short_feature = c("auto", "wedge", "block"),
   position = "identity",
   show.legend = TRUE,
@@ -30,6 +31,9 @@ to the former strand-separated geometry and emit a migration warning.}
 
 \item{arrow_head_length, arrow_head_width}{Shared arrow-head dimensions in
 the sequence-local frame.}
+
+\item{arrow_head_style}{Arrowhead construction: shouldered, flush, or a
+full triangular wedge.}
 
 \item{short_feature}{Fallback for arrows too short to hold their requested
 head: automatic wedge/block selection, a wedge, or a block.}

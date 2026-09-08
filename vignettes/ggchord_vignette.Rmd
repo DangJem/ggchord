@@ -473,10 +473,10 @@ band.
 A basic pUC19c map needs only the circular backbone and centre metadata:
 
 ```{r puc19c-map, eval=FALSE}
-data(plasmid_sequence_example)
-puc <- subset(plasmid_sequence_example, label == "pUC19c")
+data(plasmid_example_pUC19c)
+puc <- plasmid_example_pUC19c
 ggchord(puc) +
-  geom_seq(seq_style = "double") +
+  geom_seq() +
   geom_seq_center_label() +
   scale_seq_position_continuous() +
   coord_circular(rotation = 90) +
@@ -484,42 +484,52 @@ ggchord(puc) +
 ```
 
 ```{r single-genome, eval=FALSE}
-data(plasmid_sequence_example)
-data(plasmid_feature_example)
-data(plasmid_restriction_example)
-seq <- subset(plasmid_sequence_example, label == "pBR322")
-features <- subset(plasmid_feature_example, accver == seq$accver)
-genes <- subset(features, type == "CDS")
-other <- subset(features, type != "CDS")
-sites <- subset(plasmid_restriction_example, accver == seq$accver) |>
-  filter_restriction_sites(set = "unique_6plus")
+data(plasmid_example_pBR322)
+seq <- plasmid_example_pBR322
+features <- find_common_features(seq)
+sites <- find_restriction_sites(seq,
+  enzymes = c("EcoRI", "BamHI", "HindIII", "PstI", "SalI", "PvuII")) |>
+  filter_restriction_sites(set = "unique_dual")
+plasmid_tracks <- position_feature_stack(
+  spacing = 0.10, base_position = position_plasmid()
+)
 
-ggchord(seq, gene_data = genes) +
-  geom_seq(seq_style = "double") +
-  geom_gene(position = "plasmid") +
-  geom_feature(aes(feature_fill = type, feature_shape = type),
-    data = other, position = "plasmid") +
-  geom_feature_label_repel(aes(label = anno), data = features,
-    position = "plasmid", label_layout = "callout") +
-  geom_restriction_site(data = sites, leader = "trunk") +
+ggchord(seq) +
+  geom_seq() +
+  geom_feature_plasmid(data = features, position = plasmid_tracks) +
+  geom_feature_label_repel(data = features, position = plasmid_tracks) +
+  geom_restriction_site(data = sites, leader = "radial") +
   geom_seq_center_label() +
-  scale_feature_fill_plasmid() +
-  scale_feature_shape_plasmid() +
   scale_seq_position_continuous() +
   coord_circular(rotation = 90) +
   theme_ggchord_plasmid()
 ```
 
 The dense pBluescript II SK(+) multiple-cloning region is a restriction-label
-stress test. Real sites retain their anchors while the shared outer trunk
-spreads label slots deterministically:
+stress test. Real sites retain their anchors while measured label boxes form
+ordered side columns. Each site keeps an independent radial stub, fan segment,
+or a direct connector when no fan-out is needed; both end just before the
+enzyme-name edge:
 
 ```{r pbluescript-restriction-map, eval=FALSE}
-blue <- subset(plasmid_sequence_example, label == "pBluescript II SK(+)")
-blue_sites <- subset(plasmid_restriction_example, accver == blue$accver)
+data(plasmid_example_pBluescript_II_SK_plus)
+blue <- plasmid_example_pBluescript_II_SK_plus
+blue_sites <- find_restriction_sites(blue,
+  enzymes = c("PsiI", "BsaAI", "DraIII", "BtgZI", "NgoMIV", "NaeI",
+    "Acc65I", "KpnI", "PspOMI", "EcoO109I", "ApaI", "XhoI", "SalI",
+    "AccI", "HincII", "ClaI", "HindIII", "EcoRV", "EcoRI", "PstI",
+    "XmaI", "SmaI", "BamHI", "SpeI", "XbaI", "NotI", "BspQI",
+    "SapI", "AflIII", "PciI", "NspI", "BseYI", "PspFI", "AlwNI",
+    "BsaI", "NmeAIII", "ScaI", "TatI", "BsaHI", "XmnI"))
+blue_features <- find_common_features(blue)
+blue_tracks <- position_feature_stack(
+  spacing = 0.10, base_position = position_plasmid()
+)
 ggchord(blue) +
-  geom_seq(seq_style = "double") +
-  geom_restriction_site(data = blue_sites, leader = "trunk") +
+  geom_seq() +
+  geom_feature_plasmid(data = blue_features, position = blue_tracks) +
+  geom_feature_label_repel(data = blue_features, position = blue_tracks) +
+  geom_restriction_site(data = blue_sites, leader = "radial") +
   geom_seq_center_label() +
   scale_seq_position_continuous() +
   coord_circular(rotation = 90) +
