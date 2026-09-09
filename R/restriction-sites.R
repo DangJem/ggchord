@@ -580,23 +580,32 @@ ggchord_restriction_label_lanes <- function(
     }
     if (!is.finite(y_direction) || y_direction == 0) y_direction <- -1
 
-    row_pitch <- max(boxes$h[rows], na.rm = TRUE) * 1.15 + .008
+    row_pitch <- max(boxes$h[rows], na.rm = TRUE) * 1.32 + .010
     row_index <- seq_along(ordered) - (length(ordered) + 1) / 2
     column_center_y <- mean(range(gl$anchor_y[rows]))
     column_y <- column_center_y +
       y_direction * row_index * row_pitch
 
-    stub <- max(.022, min(.028, label_offset * .14))
-    labels$.radial_bend_x[rows] <- gl$anchor_x[rows] +
-      frame$outward_x[rows] * stub
-    labels$.radial_bend_y[rows] <- gl$anchor_y[rows] +
-      frame$outward_y[rows] * stub
+    displacement <- abs(column_y - gl$anchor_y[ordered])
+    displacement_scale <- max(displacement)
+    if (!is.finite(displacement_scale) || displacement_scale <= 1e-10) {
+      displacement_scale <- 1
+    }
+    # Let labels travelling farther along the column retain a slightly longer
+    # radial departure. The bend envelope is therefore smooth but not a rigid
+    # vertical wall, while every line still leaves its exact site normally.
+    stub <- .014 + .030 * sqrt(displacement / displacement_scale)
+    stub <- pmax(.014, pmin(.046, stub))
+    labels$.radial_bend_x[ordered] <- gl$anchor_x[ordered] +
+      frame$outward_x[ordered] * stub
+    labels$.radial_bend_y[ordered] <- gl$anchor_y[ordered] +
+      frame$outward_y[ordered] * stub
     column_side <- if (mean(gl$anchor_x[rows]) >= 0) "right" else "left"
     if (column_side == "right") {
-      edge <- max(labels$.radial_bend_x[rows]) + .130
+      edge <- max(labels$.radial_bend_x[rows]) + .085
       labels$text_x[rows] <- edge + boxes$w[rows] / 2
     } else {
-      edge <- min(labels$.radial_bend_x[rows]) - .130
+      edge <- min(labels$.radial_bend_x[rows]) - .085
       labels$text_x[rows] <- edge - boxes$w[rows] / 2
     }
     labels$text_y[ordered] <- column_y
@@ -899,11 +908,14 @@ ggchord_restriction_geometry <- function(data, params, layout, seq_data) {
       data$pattern_source_row[idx]
     } else idx
     idx <- idx[order(data$position[idx], pattern_order, source_order, idx)]
-    # Rendering collapses enzymes at exactly the same cleavage coordinate into
-    # one deterministic callout. Biological search rows remain untouched and
-    # are preserved in source_rows for export/provenance.
+    # Rendering collapses enzymes only when their displayed anchor coordinates
+    # are exactly identical. The 17-digit key introduces no neighbourhood
+    # tolerance: adjacent bp always remain separate callouts. Enzymes sharing
+    # one anchor may have different second-strand cuts and still describe the
+    # same displayed restriction site.
+    site_key <- sprintf("%.17g", data$position[idx])
     site_members <- unname(split(idx,
-      factor(data$position[idx], levels = unique(data$position[idx]))))
+      factor(site_key, levels = unique(site_key))))
     idx <- vapply(site_members, `[`, integer(1), 1L)
     site_enzyme <- vapply(site_members, function(rows) paste(
       unique(as.character(data$enzyme[rows])), collapse = " - "
@@ -1076,13 +1088,13 @@ ggchord_restriction_geometry <- function(data, params, layout, seq_data) {
       )) {
         members <- which(column &
           labels$.restriction_column_group == column_group)
-        row_pitch <- max(metrics$height[members], na.rm = TRUE) * 1.08 + .006
+        row_pitch <- max(metrics$height[members], na.rm = TRUE) * 1.32 + .009
         centre_y[members] <- labels$.restriction_column_center_y[members] +
           labels$.restriction_column_index[members] * row_pitch
       }
     }
-    routing_half_width <- metrics$width / 2 + .004
-    routing_half_height <- metrics$height / 2 + .004
+    routing_half_width <- metrics$width / 2 + .003
+    routing_half_height <- metrics$height / 2 + .003
     endpoint_x <- centre_x + ifelse(
       connection_side == "left", -routing_half_width, routing_half_width
     )

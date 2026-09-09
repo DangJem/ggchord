@@ -329,6 +329,35 @@ test_that("restriction layout is deterministic and never moves site anchors", {
   expect_equal(abs(diff(ordered_column$y)),
     rep(abs(diff(ordered_column$y))[1L], nrow(ordered_column) - 1L),
     tolerance = 1e-8)
+  expect_gt(min(abs(diff(ordered_column$y))), .045)
+  column_leaders <- lateral[
+    lateral$restriction_component == "leader", , drop = FALSE
+  ]
+  terminal_x <- bend_x <- numeric(nrow(lateral_labels))
+  for (i in seq_len(nrow(lateral_labels))) {
+    paths <- column_leaders[
+      column_leaders$junction_id == lateral_labels$junction_id[i], ]
+    final <- paths[paths$group == max(paths$group), ]
+    terminal_x[i] <- final$x[which.min(
+      (final$x - lateral_labels$x[i])^2 +
+        (final$y - lateral_labels$y[i])^2
+    )]
+    point_key <- paste(round(paths$x, 10), round(paths$y, 10), sep = "\r")
+    bend_x[i] <- paths$x[duplicated(point_key)][1L]
+  }
+  expect_lt(diff(range(terminal_x)), 1e-8)
+  expect_gt(diff(range(bend_x)), .01)
+
+  small_cluster <- export_ggchord_layout(
+    ggchord(seq, validate = "none") + geom_seq() +
+      geom_restriction_site(data = lateral_sites[1:4, ]) +
+      coord_circular(rotation = 90),
+    include = "restriction"
+  )$restriction
+  small_cluster <- small_cluster[
+    small_cluster$restriction_component == "label", , drop = FALSE
+  ]
+  expect_true(all(small_cluster$label_layout == "radial"))
 
   same_position <- data.frame(
     accver = "g", position = c(250, 250),
