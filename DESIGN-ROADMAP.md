@@ -148,15 +148,18 @@ ggchord(seq_data, gene_data = gene_data) +
 - 酶数据库版本必须可追踪，用户也可传入自定义 motif；
 - `filter_restriction_sites()` 独立处理 unique、长度、供应商、窗口等显示筛选；
 - `geom_restriction_site()` 在单个 geom 中负责刻线、标签和指示线；
-- 真实位点只决定 anchor，文字位置由实际 bbox 驱动的径向排版器决定；
-  多数标签沿同一外接轮廓排布，只有碰撞簇允许小幅升到外层，并保留
-  genomic order；
+- 真实位点只决定 anchor，文字位置由实际 bbox 驱动的混合排版器决定；
+  稀疏标签保持自然径向轮廓，侧面密集簇自动切换为共享内边界、固定行距的
+  stacked label column，并严格保留 genomic order；
 - leader 在条件合适时直接连接，密集或分流标签使用独立的径向 stub
-  和 fan segment 两段折线，不共享主干；
+  和 fan segment 两段折线；密集簇先以短根段形成窄线束，再有序展开，
+  不共享主干；
 - leader 始终连到酶名所在的左/右文字边缘：向右走时连左缘，向左走时连右缘；
   接近垂直时使用该侧最近的左下/右下（或左上/右上）角，不改接上/下边中心；
   酶名自动放在接线一侧；
 - 可按酶、切割次数和窗口过滤，重复名称仍保留全部位点；
+- 默认复合标签用两个同一 bbox 管理的 grob 渲染：酶名粗体、坐标常规字重；
+  只合并真正同一切点，相邻 bp 始终保持独立；
 - 序列搜索优先使用轻量实现；大型序列可选用 Biostrings，但不设为强制依赖。
 
 完整 REBASE 609 parser 仅读取 `VERSION`、`embossa_e.txt`、`embossa_r.txt` 和

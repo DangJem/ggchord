@@ -42,9 +42,10 @@ position first.}
 text boxes, separates site anchors from final radial label positions,
 and routes either a direct connector or an independent radial stub plus
 fan segment.
-Most labels follow one common radial contour; collision-bound clusters may
-move to a nearby outer contour. `"trunk"` is retained only as a
-compatibility alias.}
+Sparse labels follow a radial contour; dense lateral clusters switch to a
+compact, genomic-order-preserving column with a shared inner text edge and
+narrow-rooted fan-out. `"trunk"` is retained only as a compatibility
+alias.}
 
 \item{min_label_gap}{Minimum genomic fraction between label slots. `NULL`
 derives a compact device-aware default from the rendered labels.}

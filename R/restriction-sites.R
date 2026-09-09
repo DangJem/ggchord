@@ -289,6 +289,8 @@ GeomRestrictionSite <- ggplot2::ggproto(
   required_aes = c("x", "y"),
   default_aes = ggplot2::aes(
     xend = NA_real_, yend = NA_real_, label = NA_character_,
+    enzyme_label = NA_character_, coordinate_label = NA_character_,
+    label_order = NA_character_,
     .component = NA_character_, group = NA_integer_, colour = "#202020",
     alpha = 1, linewidth = .28, linetype = 1, size = 2.9, angle = 0,
     hjust = .5, vjust = .5, family = "", fontface = 1, lineheight = 1.2
@@ -314,12 +316,67 @@ GeomRestrictionSite <- ggplot2::ggproto(
     }
     if (nrow(labels)) {
       composite <- isTRUE(composite_labels) &&
-        "plotmath_label" %in% names(labels)
-      if (composite) labels$label <- labels$plotmath_label
-      grobs[[length(grobs) + 1L]] <- ggplot2::GeomText$draw_panel(
-        labels, panel_params, coord, parse = composite,
-        check_overlap = FALSE, na.rm = na.rm
-      )
+        all(c("enzyme_label", "coordinate_label", "label_order") %in%
+          names(labels))
+      if (composite) {
+        placed <- coord$transform(labels, panel_params)
+        fragments <- vector("list", nrow(placed))
+        gap <- grid::unit(.65, "mm")
+        for (i in seq_len(nrow(placed))) {
+          common_gp <- list(
+            col = scales::alpha(placed$colour[i], placed$alpha[i]),
+            fontsize = placed$size[i] * (72.27 / 25.4),
+            fontfamily = placed$family[i], lineheight = placed$lineheight[i]
+          )
+          enzyme <- grid::textGrob(
+            placed$enzyme_label[i], y = grid::unit(placed$y[i], "native"),
+            vjust = placed$vjust[i],
+            gp = do.call(grid::gpar, c(common_gp, list(fontface = "bold")))
+          )
+          coordinate <- grid::textGrob(
+            placed$coordinate_label[i],
+            y = grid::unit(placed$y[i], "native"), vjust = placed$vjust[i],
+            gp = do.call(grid::gpar, c(common_gp, list(fontface = "plain")))
+          )
+          has_enzyme <- !is.na(placed$enzyme_label[i]) &&
+            nzchar(placed$enzyme_label[i])
+          has_coordinate <- !is.na(placed$coordinate_label[i]) &&
+            nzchar(placed$coordinate_label[i])
+          centre <- grid::unit(placed$x[i], "native")
+          if (has_enzyme && has_coordinate) {
+            total <- grid::grobWidth(enzyme) + gap +
+              grid::grobWidth(coordinate)
+            if (placed$label_order[i] == "enzyme_position") {
+              enzyme$x <- centre - total / 2
+              enzyme$hjust <- 0
+              coordinate$x <- enzyme$x + grid::grobWidth(enzyme) + gap
+              coordinate$hjust <- 0
+            } else {
+              enzyme$x <- centre + total / 2
+              enzyme$hjust <- 1
+              coordinate$x <- enzyme$x - grid::grobWidth(enzyme) - gap
+              coordinate$hjust <- 1
+            }
+            fragments[[i]] <- grid::grobTree(enzyme, coordinate)
+          } else if (has_enzyme) {
+            enzyme$x <- centre
+            enzyme$hjust <- .5
+            fragments[[i]] <- enzyme
+          } else if (has_coordinate) {
+            coordinate$x <- centre
+            coordinate$hjust <- .5
+            fragments[[i]] <- coordinate
+          } else {
+            fragments[[i]] <- grid::nullGrob()
+          }
+        }
+        grobs[[length(grobs) + 1L]] <- do.call(grid::grobTree, fragments)
+      } else {
+        grobs[[length(grobs) + 1L]] <- ggplot2::GeomText$draw_panel(
+          labels, panel_params, coord, parse = FALSE,
+          check_overlap = FALSE, na.rm = na.rm
+        )
+      }
     }
     do.call(grid::grobTree, grobs)
   }
@@ -334,9 +391,10 @@ GeomRestrictionSite <- ggplot2::ggproto(
 #'   text boxes, separates site anchors from final radial label positions,
 #'   and routes either a direct connector or an independent radial stub plus
 #'   fan segment.
-#'   Most labels follow one common radial contour; collision-bound clusters may
-#'   move to a nearby outer contour. `"trunk"` is retained only as a
-#'   compatibility alias.
+#'   Sparse labels follow a radial contour; dense lateral clusters switch to a
+#'   compact, genomic-order-preserving column with a shared inner text edge and
+#'   narrow-rooted fan-out. `"trunk"` is retained only as a compatibility
+#'   alias.
 #' @param min_label_gap Minimum genomic fraction between label slots. `NULL`
 #'   derives a compact device-aware default from the rendered labels.
 #' @param tick_length,label_offset Local-normal distances.
@@ -359,7 +417,7 @@ geom_restriction_site<-function(mapping=NULL,data=NULL,label=TRUE,label_style=c(
   if(label_size_supplied)text_params$size<-label_size
   if(fontface_supplied)text_params$fontface<-fontface
   if(family_supplied)text_params$family<-family
-  lyr<-ggplot2::layer(data=data.frame(x=numeric(),y=numeric()),mapping=ggplot2::aes(x=x,y=y,group=group,label=label,.component=I(.component)),stat="identity",geom=GeomRestrictionSite,position=position,show.legend=show.legend,inherit.aes=inherit.aes,check.aes=FALSE,check.param=FALSE,params=c(list(na.rm=FALSE,colour=colour,linewidth=linewidth,size=label_size,segment_params=segment_params,text_params=text_params,composite_labels=!fontface_supplied),list(...)))
+  lyr<-ggplot2::layer(data=data.frame(x=numeric(),y=numeric()),mapping=ggplot2::aes(x=x,y=y,group=group,label=label,.component=I(.component),enzyme_label=I(enzyme_label),coordinate_label=I(coordinate_label),label_order=I(label_order)),stat="identity",geom=GeomRestrictionSite,position=position,show.legend=show.legend,inherit.aes=inherit.aes,check.aes=FALSE,check.param=FALSE,params=c(list(na.rm=FALSE,colour=colour,linewidth=linewidth,size=label_size,segment_params=segment_params,text_params=text_params,composite_labels=!fontface_supplied),list(...)))
   lyr$ggchord_type<-"restriction_site";lyr$ggchord_theme_components<-c(segment_params="ggchord.restriction.label.segment",text_params="ggchord.restriction.label")
   lyr$ggchord_params<-list(type="restriction_site",label=label,label_style=label_style,label_order=label_order,label_side=label_side,leader=leader,min_label_gap=min_label_gap,tick_length=tick_length,label_offset=label_offset,label_size=label_size)
   ggchord_capture_layer_input(lyr,data,mapping,c("accver","position","enzyme"))
@@ -488,6 +546,69 @@ ggchord_restriction_label_lanes <- function(
   }
   labels$text <- gl$text
   boxes <- ggchord_text_boxes(labels, units_per_inch = units_per_inch)
+  labels$.restriction_column <- FALSE
+  labels$.restriction_column_edge <- NA_real_
+  labels$.restriction_column_side <- NA_character_
+  labels$.restriction_column_group <- NA_integer_
+  labels$.restriction_column_index <- NA_real_
+  labels$.restriction_column_center_y <- NA_real_
+
+  # Dense lateral site clusters switch from free radial placement to a strict
+  # label column.  The true anchors still determine the line roots, while the
+  # text rows use one measured pitch and one shared inner edge.  Sorting never
+  # changes genomic order, so the fan remains deterministic and non-crossing.
+  if (!identical(side, "inside")) for (column_group in seq_along(groups)) {
+    rows <- groups[[column_group]]
+    if (length(rows) < 5L) next
+    radius <- sqrt(gl$anchor_x[rows]^2 + gl$anchor_y[rows]^2)
+    radius[radius <= 1e-10] <- 1
+    lateral_score <- mean(abs(gl$anchor_x[rows]) / radius)
+    one_half <- length(unique(sign(gl$anchor_x[rows]))) == 1L
+    if (!one_half || lateral_score < .55) next
+
+    genomic <- if ("genomic_position" %in% names(gl)) {
+      gl$genomic_position[rows]
+    } else seq_along(rows)
+    ord <- order(genomic, rows)
+    ordered <- rows[ord]
+    y_direction <- suppressWarnings(sign(stats::cor(
+      genomic[ord], gl$anchor_y[ordered]
+    )))
+    if (!is.finite(y_direction) || y_direction == 0) {
+      y_direction <- sign(tail(gl$anchor_y[ordered], 1L) -
+        gl$anchor_y[ordered[1L]])
+    }
+    if (!is.finite(y_direction) || y_direction == 0) y_direction <- -1
+
+    row_pitch <- max(boxes$h[rows], na.rm = TRUE) * 1.15 + .008
+    row_index <- seq_along(ordered) - (length(ordered) + 1) / 2
+    column_center_y <- mean(range(gl$anchor_y[rows]))
+    column_y <- column_center_y +
+      y_direction * row_index * row_pitch
+
+    stub <- max(.022, min(.028, label_offset * .14))
+    labels$.radial_bend_x[rows] <- gl$anchor_x[rows] +
+      frame$outward_x[rows] * stub
+    labels$.radial_bend_y[rows] <- gl$anchor_y[rows] +
+      frame$outward_y[rows] * stub
+    column_side <- if (mean(gl$anchor_x[rows]) >= 0) "right" else "left"
+    if (column_side == "right") {
+      edge <- max(labels$.radial_bend_x[rows]) + .130
+      labels$text_x[rows] <- edge + boxes$w[rows] / 2
+    } else {
+      edge <- min(labels$.radial_bend_x[rows]) - .130
+      labels$text_x[rows] <- edge - boxes$w[rows] / 2
+    }
+    labels$text_y[ordered] <- column_y
+    labels$.restriction_column[rows] <- TRUE
+    labels$.restriction_column_edge[rows] <- edge
+    labels$.restriction_column_side[rows] <- column_side
+    labels$.restriction_column_group[rows] <- column_group
+    labels$.restriction_column_index[ordered] <- y_direction * row_index
+    labels$.restriction_column_center_y[rows] <- column_center_y
+    directions[rows] <- column_side
+    tracks[rows] <- 1L
+  }
   # Near twelve and six o'clock, solve all local clusters together. Ordering
   # by the real anchor x coordinate preserves genomic order across the origin;
   # projecting the packed centres back to one radius keeps the SnapGene-like
@@ -541,20 +662,23 @@ ggchord_restriction_label_lanes <- function(
     draw_segment = !is.na(gl$text) & nzchar(gl$text))
 }
 
-ggchord_restriction_text_metrics <- function(plotmath, size,
-                                             units_per_inch) {
-  n <- length(plotmath)
+ggchord_restriction_text_metrics <- function(text, size, units_per_inch,
+                                             parse = TRUE,
+                                             fontface = "plain") {
+  n <- length(text)
   size <- rep_len(size, n)
   width <- height <- numeric(n)
-  valid <- !is.na(plotmath) & nzchar(plotmath)
+  valid <- !is.na(text) & nzchar(text)
   if (!any(valid)) return(data.frame(width = width, height = height))
   close_device <- ggchord_measurement_device()
   on.exit(close_device())
   for (i in which(valid)) {
-    label <- tryCatch(parse(text = plotmath[i])[[1L]],
-      error = function(e) plotmath[i])
+    label <- if (isTRUE(parse)) tryCatch(parse(text = text[i])[[1L]],
+      error = function(e) text[i]) else text[i]
     grob <- grid::textGrob(
-      label, gp = grid::gpar(fontsize = size[i] * (72.27 / 25.4))
+      label, gp = grid::gpar(
+        fontsize = size[i] * (72.27 / 25.4), fontface = fontface
+      )
     )
     width[i] <- grid::convertWidth(
       grid::grobWidth(grob), "inches", valueOnly = TRUE
@@ -909,15 +1033,56 @@ ggchord_restriction_geometry <- function(data, params, layout, seq_data) {
         enzyme = paste0("bold(", quote_text(site_enzyme[member]), ")"),
         position = quote_text(coordinate[member]))
     }, character(1))
-    # Measure the expression that GeomText will actually draw. Measuring the
-    # unparsed plain string makes bold enzyme names several pixels wider than
-    # the routing box, which visually puts the connector inside the first or
-    # last glyph even when the nominal side is correct.
-    metrics <- ggchord_restriction_text_metrics(
-      plotmath, params$label_size %||% 2.9, units_per_inch
+    enzyme_label <- if (params$label_style %in% c("enzyme_position", "enzyme"))
+      site_enzyme else rep("", length(idx))
+    coordinate_label <- if (params$label_style == "enzyme_position") {
+      paste0("(", coordinate, ")")
+    } else if (params$label_style == "position") coordinate else
+      rep("", length(idx))
+    enzyme_metrics <- ggchord_restriction_text_metrics(
+      enzyme_label, params$label_size %||% 2.9, units_per_inch,
+      parse = FALSE, fontface = "bold"
     )
-    routing_half_width <- metrics$width / 2 + .010
-    routing_half_height <- metrics$height / 2 + .010
+    coordinate_metrics <- ggchord_restriction_text_metrics(
+      coordinate_label, params$label_size %||% 2.9, units_per_inch,
+      parse = FALSE, fontface = "plain"
+    )
+    spacer <- ifelse(nzchar(enzyme_label) & nzchar(coordinate_label), " ", "")
+    spacer_metrics <- ggchord_restriction_text_metrics(
+      spacer, params$label_size %||% 2.9, units_per_inch,
+      parse = FALSE, fontface = "plain"
+    )
+    # The layout and connector use the exact two grobs that will be rendered:
+    # a bold enzyme fragment and a regular coordinate fragment.
+    metrics <- data.frame(
+      width = enzyme_metrics$width + coordinate_metrics$width +
+        spacer_metrics$width,
+      height = pmax(enzyme_metrics$height, coordinate_metrics$height)
+    )
+    column <- if (".restriction_column" %in% names(labels)) {
+      labels$.restriction_column %in% TRUE
+    } else rep(FALSE, length(idx))
+    if (any(column)) {
+      right_column <- column & labels$.restriction_column_side == "right"
+      left_column <- column & labels$.restriction_column_side == "left"
+      centre_x[right_column] <- labels$.restriction_column_edge[right_column] +
+        metrics$width[right_column] / 2
+      centre_x[left_column] <- labels$.restriction_column_edge[left_column] -
+        metrics$width[left_column] / 2
+      connection_side[right_column] <- "left"
+      connection_side[left_column] <- "right"
+      for (column_group in unique(
+        labels$.restriction_column_group[column]
+      )) {
+        members <- which(column &
+          labels$.restriction_column_group == column_group)
+        row_pitch <- max(metrics$height[members], na.rm = TRUE) * 1.08 + .006
+        centre_y[members] <- labels$.restriction_column_center_y[members] +
+          labels$.restriction_column_index[members] * row_pitch
+      }
+    }
+    routing_half_width <- metrics$width / 2 + .004
+    routing_half_height <- metrics$height / 2 + .004
     endpoint_x <- centre_x + ifelse(
       connection_side == "left", -routing_half_width, routing_half_width
     )
@@ -1028,6 +1193,11 @@ ggchord_restriction_geometry <- function(data, params, layout, seq_data) {
         junction_id = junction_names[member],
         label_direction = direction, label_order = order_value,
         label_connection_side = connection_side[member],
+        label_layout = if (column[member]) "column" else "radial",
+        label_boundary = if (column[member])
+          labels$.restriction_column_edge[member] else NA_real_,
+        enzyme_label = enzyme_label[member],
+        coordinate_label = coordinate_label[member],
         size = params$label_size %||% 2.9, angle = 0,
         hjust = labels$hjust[member], vjust = labels$vjust[member],
         stringsAsFactors = FALSE
@@ -1043,6 +1213,7 @@ ggchord_restriction_geometry <- function(data, params, layout, seq_data) {
       source_rows = I(list()), cluster_id = character(),
       junction_id = character(), label_direction = character(),
       label_order = character(), label_connection_side = character(),
+      label_layout = character(), label_boundary = numeric(),
       stringsAsFactors = FALSE
     ))
   }

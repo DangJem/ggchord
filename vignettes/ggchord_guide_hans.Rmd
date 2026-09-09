@@ -483,8 +483,9 @@ ggchord(seq) +
 ```
 
 pBluescript II SK(+) 的密集 MCS 区域用于压力测试限制酶标签。真实位点的
-anchor 保持不动，文字沿同一径向外接轮廓排布，只有碰撞簇允许小幅
-升到外层。自然稀疏标签可直接连接，移位标签使用径向短线和扇出段两段折线：
+anchor 保持不动；稀疏标签保持自然径向布局，侧面密集簇则自动切换为
+共享内边界、均匀行距的紧凑标签列。密集引线先以短径向根段靠近圆环成束，
+再按 genomic order 展开到标签列：
 
 ```{r pbluescript-restriction-map, eval=FALSE}
 data(plasmid_example_pBluescript_II_SK_plus)

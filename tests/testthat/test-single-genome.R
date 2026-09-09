@@ -309,6 +309,27 @@ test_that("restriction layout is deterministic and never moves site anchors", {
   expect_true(all(segments_per_site <= 2L))
   expect_true(any(segments_per_site == 2L))
 
+  lateral_sites <- data.frame(
+    accver = "g", position = seq(220, 248, by = 4),
+    enzyme = paste0("E", seq_len(8))
+  )
+  lateral <- export_ggchord_layout(
+    ggchord(seq, validate = "none") + geom_seq() +
+      geom_restriction_site(data = lateral_sites) +
+      coord_circular(rotation = 90),
+    include = "restriction"
+  )$restriction
+  lateral_labels <- lateral[
+    lateral$restriction_component == "label", , drop = FALSE
+  ]
+  expect_true(all(lateral_labels$label_layout == "column"))
+  expect_equal(length(unique(lateral_labels$label_boundary)), 1L)
+  ordered_column <- lateral_labels[order(lateral_labels$anchor_position), ]
+  expect_true(all(diff(ordered_column$y) < 0))
+  expect_equal(abs(diff(ordered_column$y)),
+    rep(abs(diff(ordered_column$y))[1L], nrow(ordered_column) - 1L),
+    tolerance = 1e-8)
+
   same_position <- data.frame(
     accver = "g", position = c(250, 250),
     enzyme = c("BsaAI", "DraIII"),
@@ -324,10 +345,21 @@ test_that("restriction layout is deterministic and never moves site anchors", {
   ]
   expect_equal(nrow(combined_label), 1L)
   expect_match(combined_label$label, "BsaAI - DraIII")
+  expect_equal(combined_label$enzyme_label, "BsaAI - DraIII")
+  expect_equal(combined_label$coordinate_label, "(250)")
   expect_equal(combined_label$source_rows[[1L]], 1:2)
   expect_equal(length(unique(combined$group[
     combined$restriction_component == "tick"
   ])), 1L)
+
+  neighbouring <- same_position
+  neighbouring$position <- c(250, 251)
+  separate <- export_ggchord_layout(
+    ggchord(seq, validate = "none") + geom_seq() +
+      geom_restriction_site(data = neighbouring) + coord_circular(),
+    include = "restriction"
+  )$restriction
+  expect_equal(sum(separate$restriction_component == "label"), 2L)
 
   perimeter_sites <- data.frame(
     accver = "g", position = seq(25, 975, length.out = 16),

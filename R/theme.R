@@ -217,7 +217,7 @@ ggchord_theme_from_environment <- function(preset, env, dots) {
       ggchord.restriction.label = ggplot2::element_text(
         colour = if (dark) fg else if (preset == "plasmid") "#111111" else "#7A271A", size = ggplot2::rel(if (preset == "plasmid") .95 else .62)),
       ggchord.restriction.label.segment = ggplot2::element_line(
-        colour = if (dark) "#F1A7A0" else if (preset == "plasmid") "#8A8A8A" else "#B5473C", linewidth = if (preset == "plasmid") .22 else .25),
+        colour = if (dark) "#F1A7A0" else if (preset == "plasmid") "#858585" else "#B5473C", linewidth = if (preset == "plasmid") .28 else .25),
       ggchord.seq.center.label = ggplot2::element_text(
         colour = if (dark) fg else "#20282F", size = ggplot2::rel(1.05),
         face = "bold", lineheight = 1.15),
