@@ -11,8 +11,8 @@
 ^.gitignore$
 ^.Rhistory$
 ^.github$
-^DESIGN-ROADMAP\.md$
+^AGENTS\.md$
+^design-roadmap$
 ^\.codex-tmp$
 ^\.git$
-^DESIGN-HISTORY\.md$
 ^tools$
