@@ -322,8 +322,13 @@ test_that("restriction layout is deterministic and never moves site anchors", {
   lateral_labels <- lateral[
     lateral$restriction_component == "label", , drop = FALSE
   ]
-  expect_true(all(lateral_labels$label_layout == "column"))
-  expect_equal(length(unique(lateral_labels$label_boundary)), 1L)
+  expect_true(all(lateral_labels$label_layout == "contour_fan"))
+  boundary_radius <- sqrt(
+    lateral_labels$label_boundary^2 + lateral_labels$y^2
+  )
+  expect_equal(boundary_radius, rep(boundary_radius[1L],
+    nrow(lateral_labels)), tolerance = 1e-8)
+  expect_gt(length(unique(round(lateral_labels$label_boundary, 4))), 2L)
   ordered_column <- lateral_labels[order(lateral_labels$anchor_position), ]
   expect_true(all(diff(ordered_column$y) < 0))
   expect_equal(abs(diff(ordered_column$y)),
@@ -343,10 +348,13 @@ test_that("restriction layout is deterministic and never moves site anchors", {
         (final$y - lateral_labels$y[i])^2
     )]
     point_key <- paste(round(paths$x, 10), round(paths$y, 10), sep = "\r")
-    bend_x[i] <- paths$x[duplicated(point_key)][1L]
+    repeated <- paths$x[duplicated(point_key)]
+    bend_x[i] <- if (length(repeated)) repeated[1L] else NA_real_
   }
-  expect_lt(diff(range(terminal_x)), 1e-8)
-  expect_gt(diff(range(bend_x)), .01)
+  expect_equal(terminal_x, lateral_labels$label_boundary - .003,
+    tolerance = 1e-8)
+  expect_gte(sum(is.finite(bend_x)), 2L)
+  expect_gt(diff(range(bend_x, na.rm = TRUE)), .005)
 
   small_cluster <- export_ggchord_layout(
     ggchord(seq, validate = "none") + geom_seq() +
@@ -357,7 +365,14 @@ test_that("restriction layout is deterministic and never moves site anchors", {
   small_cluster <- small_cluster[
     small_cluster$restriction_component == "label", , drop = FALSE
   ]
-  expect_true(all(small_cluster$label_layout == "radial"))
+  expect_true(all(small_cluster$label_layout == "contour"))
+  attachment_radius <- sqrt(
+    small_cluster$label_attachment_x^2 +
+      small_cluster$label_attachment_y^2
+  )
+  expect_equal(attachment_radius, small_cluster$label_contour_radius,
+    tolerance = 1e-8)
+  expect_lt(diff(range(attachment_radius)), 1e-8)
 
   same_position <- data.frame(
     accver = "g", position = c(250, 250),

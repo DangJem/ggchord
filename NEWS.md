@@ -71,9 +71,10 @@
   never rewrites biological coordinates.
 * `geom_restriction_site()` draws ticks, labels and independent radial leaders
   in one deterministic layer. Real site anchors are separated from final
-  label positions. Sparse callouts retain a natural radial contour, while
-  dense lateral clusters switch deterministically to a compact stacked column
-  with one shared inner text edge and uniform measured row spacing.
+  label positions. All enzyme-facing text edges follow one close circular
+  contour in genomic order. Sparse callouts retain their natural angles, while
+  dense lateral clusters switch deterministically to a compact ordered fan
+  with uniform measured spacing rather than a rigid Cartesian text wall.
   Natural sparse callouts use a direct connector; displaced callouts
   use exactly two segments, an independent radial stub and fan connector.
   Enzymes sharing one cleavage coordinate are combined
@@ -85,7 +86,7 @@
   order keeps the enzyme at the connected side. The former `leader = "trunk"`
   spelling remains
   only as a compatibility alias and no longer creates a shared trunk.
-  Dense-column leaders retain individual site anchors, use a short radial root,
+  Dense-fan leaders retain individual site anchors, use a short radial root,
   and then fan out in genomic order from a narrow bundle. Default composite
   labels are rendered as two coordinated grobs, with bold enzyme names and
   regular-weight coordinates; adjacent but distinct bp sites are never merged.

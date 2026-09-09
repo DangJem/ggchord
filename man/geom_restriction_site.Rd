@@ -42,9 +42,10 @@ position first.}
 text boxes, separates site anchors from final radial label positions,
 and routes either a direct connector or an independent radial stub plus
 fan segment.
-Sparse labels follow a radial contour; dense lateral clusters switch to a
-compact, genomic-order-preserving column with a shared inner text edge and
-narrow-rooted fan-out. `"trunk"` is retained only as a compatibility
+All enzyme-facing text edges follow one close circular contour in genomic
+order. Dense lateral clusters use evenly spaced contour fans, while sparse
+clusters retain their natural angular positions. `"trunk"` is retained
+only as a compatibility
 alias.}
 
 \item{min_label_gap}{Minimum genomic fraction between label slots. `NULL`
