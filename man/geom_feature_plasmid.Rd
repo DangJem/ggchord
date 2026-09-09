@@ -9,9 +9,9 @@ geom_feature_plasmid(
   data = NULL,
   feature_shape = "arrow",
   shape = NULL,
-  feature_width = 0.07,
+  feature_width = 0.058,
   arrow_head_length = 0.055,
-  arrow_head_width = 1.55,
+  arrow_head_width = 1.32,
   arrow_head_style = "shouldered",
   short_feature = "auto",
   segment_boundaries = TRUE,
@@ -37,7 +37,9 @@ As an alternative to \code{strand}, \code{direction} may contain
 \code{"none"}.}
 
 \item{feature_shape}{Fixed feature geometry used when \code{feature_shape}
-is not mapped in \code{aes()}: \code{"arrow"}, \code{"block"},
+is not mapped in \code{aes()}: \code{"arrow"},
+\code{"compact_arrow"}, \code{"promoter_arrow"},
+\code{"primer_arrow"}, \code{"marker"}, \code{"block"},
 \code{"chevron"}, or \code{"lollipop"}. The default is \code{"arrow"}.
 Use \code{aes(feature_shape = type)} together with
 \code{scale_feature_shape_manual()} to map categories to geometry.}

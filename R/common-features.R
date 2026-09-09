@@ -204,18 +204,22 @@ ggchord_common_candidate <- function(accver, feature, method, start, end,
     strsplit(as.character(feature$segment_colors)[1L], ",", fixed = TRUE)[[1L]][1L]
   } else NA_character_
   if (is.na(feature_fill) || !nzchar(feature_fill)) feature_fill <- "#B8BDC3"
-  rgb <- grDevices::col2rgb(feature_fill)[, 1L] / 255
-  feature_label_colour <- if (sum(rgb * c(.2126, .7152, .0722)) < .48) {
-    "#FFFFFF"
-  } else "#202020"
-  feature_shape <- if (strand == ".") "block" else "arrow"
+  feature_label_colour <- ggchord_contrast_colour(feature_fill)
+  feature_class <- ggchord_feature_classes(feature$type)
+  feature_shape <- ggchord_feature_class_shape(feature_class)
+  if (strand == "." && feature_shape %in% c(
+      "arrow", "compact_arrow", "promoter_arrow", "primer_arrow")) {
+    feature_shape <- "block"
+  }
+  preferred_lane <- ggchord_feature_preferred_lane(feature_class)
   data.frame(
     accver = accver,
     start = as.integer(start), end = as.integer(end), strand = strand,
     cross_origin = isTRUE(cross_origin),
     type = as.character(feature$type), anno = as.character(feature$name),
     feature_color = feature_fill, feature_label_colour = feature_label_colour,
-    feature_shape = feature_shape,
+    feature_class = feature_class, feature_shape = feature_shape,
+    preferred_lane = preferred_lane, .semantic_lane_hint = TRUE,
     common_feature_id = id,
     match_id = paste(accver, id, strand, start, end, method, sep = ":"),
     match_method = method, identity = as.numeric(identity),
@@ -554,7 +558,9 @@ ggchord_empty_common_features <- function() {
     accver = character(), start = integer(), end = integer(),
     strand = character(), cross_origin = logical(), type = character(),
     anno = character(), feature_color = character(),
-    feature_label_colour = character(), feature_shape = character(),
+    feature_label_colour = character(), feature_class = character(),
+    feature_shape = character(), preferred_lane = integer(),
+    .semantic_lane_hint = logical(),
     common_feature_id = character(),
     match_id = character(), match_method = character(), identity = numeric(),
     coverage = numeric(), confidence = character(), segment_count = integer(),
@@ -586,8 +592,10 @@ ggchord_empty_common_features <- function() {
 #'   thresholds in `[0, 1]`.
 #' @param resolve Return deterministic best annotations or every candidate.
 #' @return A data frame directly usable by [geom_feature()] and
-#'   [geom_feature_label_repel()]. Its `segments` list-column preserves the
-#'   biological feature's segment structure.
+#'   [geom_feature_label_repel()]. `feature_class`, `feature_shape`, and
+#'   `preferred_lane` provide normalized semantic layout hints; explicit user
+#'   aesthetics and scales still take priority. Its `segments` list-column
+#'   preserves the biological feature's segment structure.
 #' @export
 find_common_features <- function(
     sequence, database = NULL, types = NULL, features = NULL,

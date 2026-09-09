@@ -385,6 +385,9 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     gene_params$label_size_override %||%
     gene_params$gene_label_size %||%
     ggchord_theme_text_size(plot, label_theme_element, 2.5)
+  gene_lfamily <- lbl$gene_label_family %||% ""
+  gene_lfontface <- lbl$gene_label_fontface %||% 1
+  gene_llineheight <- lbl$gene_label_lineheight %||% 1.2
   # Repelled labels now use mode-owned deterministic positioning. Manual
   # rotation and offsets remain available through geom_gene_label(), but are
   # intentionally not inherited by geom_gene_label_repel().
@@ -480,7 +483,10 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
         shape_scale$train(raw_shape)
         mapped_shape <- as.character(shape_scale$map(raw_shape))
       } else {
-        allowed_shape <- c("arrow", "block", "chevron", "lollipop")
+        allowed_shape <- c(
+          "arrow", "compact_arrow", "promoter_arrow", "primer_arrow",
+          "marker", "block", "chevron", "lollipop"
+        )
         if (all(feature_shape_order %in% allowed_shape)) {
           feature_shape_pal <- stats::setNames(
             feature_shape_order, feature_shape_order
@@ -496,12 +502,14 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     } else {
       mapped_shape <- raw_shape
     }
-    allowed_shape <- c("arrow", "block", "chevron", "lollipop")
+    allowed_shape <- c(
+      "arrow", "compact_arrow", "promoter_arrow", "primer_arrow",
+      "marker", "block", "chevron", "lollipop"
+    )
     mapped_shape[is.na(mapped_shape)] <- "arrow"
     if (any(!mapped_shape %in% allowed_shape)) {
       ggchord_stop(
-        "feature_shape scale values must use 'arrow', 'block', ",
-        "'chevron', or 'lollipop'"
+        "feature_shape scale contains an unknown geometry"
       )
     }
     if (is.null(feature_shape_pal) &&
@@ -513,6 +521,72 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     }
     gene_data_layout <- as.data.frame(gene_data_layout, stringsAsFactors = FALSE)
     gene_data_layout$.feature_shape <- mapped_shape
+    gene_data_layout$.feature_width_factor <-
+      ggchord_feature_width_factor(mapped_shape)
+    existing_label_colour <- if (
+        "feature_label_colour" %in% names(gene_data_layout)) {
+      as.character(gene_data_layout$feature_label_colour)
+    } else rep(NA_character_, nrow(gene_data_layout))
+    unresolved_labels <- is.na(existing_label_colour) |
+      !nzchar(existing_label_colour)
+    if (any(unresolved_labels)) {
+      fill_values <- if ("feature_color" %in% names(gene_data_layout)) {
+        as.character(gene_data_layout$feature_color)
+      } else rep(NA_character_, nrow(gene_data_layout))
+      unresolved <- is.na(fill_values) | !nzchar(fill_values)
+      fixed_fill <- gene_params$feature_fill_fixed
+      if (any(unresolved) && !is.null(fixed_fill) &&
+          length(fixed_fill) == 1L) {
+        fill_values[unresolved] <- as.character(fixed_fill)
+      }
+      raw_fill <- as.character(gene_data_layout$anno)
+      fill_mapping <- gene_params$feature_fill_mapping
+      if (any(unresolved) && !is.null(fill_mapping)) {
+        mapped_input <- tryCatch(
+          rlang::eval_tidy(fill_mapping, data = gene_data_layout),
+          error = function(e) NULL
+        )
+        if (!is.null(mapped_input)) {
+          if (length(mapped_input) == 1L) {
+            mapped_input <- rep(mapped_input, nrow(gene_data_layout))
+          }
+          if (length(mapped_input) == nrow(gene_data_layout)) {
+            raw_fill <- as.character(mapped_input)
+          }
+        }
+      }
+      fill_scale <- plot$scales$get_scales("feature_fill")
+      if (any(unresolved) && !is.null(fill_scale)) {
+        trained_fill <- fill_scale$clone()
+        trained_fill$train(raw_fill)
+        fill_values[unresolved] <- as.character(trained_fill$map(
+          raw_fill[unresolved]
+        ))
+      }
+      if (any(unresolved <- is.na(fill_values) | !nzchar(fill_values)) &&
+          isTRUE(plot$coordinates$ggchord_circular)) {
+        preset <- ggchord_plasmid_feature_colours()
+        fill_values[unresolved] <- unname(preset[
+          as.character(gene_data_layout$anno[unresolved])
+        ])
+      }
+      fill_values[is.na(fill_values) | !nzchar(fill_values)] <- "#B8BDC3"
+      existing_label_colour[unresolved_labels] <- ggchord_contrast_colour(
+        fill_values[unresolved_labels]
+      )
+      gene_data_layout$feature_label_colour <- existing_label_colour
+    }
+  }
+  if (!is.null(gene_data_layout) && nrow(gene_data_layout)) {
+    gene_data_layout$.feature_width <- vapply(seq_len(nrow(gene_data_layout)),
+      function(i) {
+        sid <- as.character(gene_data_layout$accver[i])
+        strand <- as.character(gene_data_layout$strand[i])
+        base_width <- geneWidth[[sid]][strand]
+        base_width * as.numeric(
+          gene_data_layout$.feature_width_factor[i] %||% 1
+        )
+      }, numeric(1))
   }
   if (!is.null(gene_data_layout)) {
     if (!isTRUE(plot$coordinates$ggchord_circular) &&
@@ -750,6 +824,9 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     geneLabelCircumLimit = geneLabelCircumLimit,
     geneLabelRotation = geneLabelRotation,
     gene_label_show = gene_ls, gene_label_size = gene_lsz,
+    gene_label_family = gene_lfamily,
+    gene_label_fontface = gene_lfontface,
+    gene_label_lineheight = gene_llineheight,
     gene_label_wrap = gene_lwrap,
     gene_label_fit = gene_lrepel_fit,
     gene_label_max_lines = gene_lrepel_lines,
@@ -897,6 +974,40 @@ compute_chord_geometry <- function(plot) {
     sub_layout <- primary
     if (isTRUE(needs_own)) {
       deps <- seq_dep
+      if (main_type %in% c("gene_label", "gene_label_repel")) {
+        label_rows <- idx[vapply(idx, function(j) {
+          isTRUE(plot$layers[[j]]$ggchord_params$is_feature_label)
+        }, logical(1))]
+        if (length(label_rows)) {
+          label_layer <- plot$layers[[label_rows[length(label_rows)]]]
+          label_input <- ggchord_resolve_layer_input(
+            label_layer, chord$data$gene_data
+          )
+          for (gene_row in gene_geometry_dep) {
+            feature_layer <- plot$layers[[gene_row]]
+            if (!isTRUE(feature_layer$ggchord_params$is_feature)) next
+            feature_input <- ggchord_resolve_layer_input(
+              feature_layer, chord$data$gene_data
+            )
+            compare <- intersect(
+              c("accver", "start", "end", "strand", "anno", "label"),
+              intersect(names(label_input), names(feature_input))
+            )
+            same_input <- nrow(label_input) == nrow(feature_input) &&
+              all(c("accver", "start", "end", "strand") %in% compare) &&
+              identical(label_input[compare], feature_input[compare])
+            label_position <- label_layer$ggchord_params$feature_position
+            feature_position <- feature_layer$ggchord_params$feature_position
+            same_position <- !isTRUE(
+              label_layer$ggchord_params$position_supplied
+            ) || identical(label_position, feature_position)
+            if (same_input && same_position) {
+              deps <- c(deps, gene_row)
+              break
+            }
+          }
+        }
+      }
       if (main_type == "ribbon") deps <- c(deps, gene_geometry_dep)
       sub_plot <- plot
       sub_plot$layers <- plot$layers[sort(unique(c(deps, idx)))]

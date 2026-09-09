@@ -225,6 +225,9 @@ ggchord_text_boxes <- function(df,
                                text_col = "text", angle_col = "text_angle",
                                size_col = "size", hjust_col = "hjust",
                                vjust_col = "vjust",
+                               family_col = "family",
+                               fontface_col = "fontface",
+                               lineheight_col = "lineheight",
                                units_per_inch = 0.35, box_padding = 0) {
   n <- nrow(df)
   empty <- data.frame(
@@ -247,6 +250,14 @@ ggchord_text_boxes <- function(df,
     pi / 180
   hjust <- if (is.null(df[[hjust_col]])) rep(0.5, n) else df[[hjust_col]]
   vjust <- if (is.null(df[[vjust_col]])) rep(0.5, n) else df[[vjust_col]]
+  families <- if (is.null(df[[family_col]])) rep("", n) else
+    as.character(df[[family_col]])
+  fontfaces <- if (is.null(df[[fontface_col]])) rep(1, n) else
+    df[[fontface_col]]
+  lineheights <- if (is.null(df[[lineheight_col]])) rep(1.2, n) else
+    as.numeric(df[[lineheight_col]])
+  families[is.na(families)] <- ""
+  lineheights[!is.finite(lineheights) | lineheights <= 0] <- 1.2
 
   w <- numeric(n)
   h <- numeric(n)
@@ -254,19 +265,22 @@ ggchord_text_boxes <- function(df,
   if (any(valid)) {
     close_device <- ggchord_measurement_device()
     on.exit(close_device())
-    # ggplot2 text sizes are millimetres and are converted to grid font points
-    # with `.pt` (72.27 / 25.4). Base graphics' cex is relative to the
-    # device's 12-point default. Omitting this conversion underestimates both
-    # dimensions by about 2.845 and lets visibly overlapping labels pass the
-    # collision test.
-    text_cex <- sizes[valid] * (72.27 / 25.4) / 12
-    w[valid] <- suppressWarnings(graphics::strwidth(
-      texts[valid], units = "inches", cex = text_cex
-    )) * units_per_inch
-    n_lines <- vapply(strsplit(texts[valid], "\n"), length, integer(1))
-    h[valid] <- suppressWarnings(graphics::strheight(
-      texts[valid], units = "inches", cex = text_cex
-    )) * n_lines * units_per_inch
+    valid_rows <- which(valid)
+    for (i in valid_rows) {
+      grob <- grid::textGrob(
+        texts[i], gp = grid::gpar(
+          fontsize = sizes[i] * (72.27 / 25.4),
+          fontfamily = families[i], fontface = fontfaces[i],
+          lineheight = lineheights[i]
+        )
+      )
+      w[i] <- grid::convertWidth(
+        grid::grobWidth(grob), "inches", valueOnly = TRUE
+      ) * units_per_inch
+      h[i] <- grid::convertHeight(
+        grid::grobHeight(grob), "inches", valueOnly = TRUE
+      ) * units_per_inch
+    }
   }
 
   cos_a <- cos(angles)
@@ -340,6 +354,91 @@ ggchord_oriented_box_overlaps <- function(candidate, other, tol = 1e-7) {
     out[j] <- !separated
   }
   out
+}
+
+ggchord_point_in_polygon <- function(x, y, polygon) {
+  px <- polygon$x
+  py <- polygon$y
+  n <- length(px)
+  if (n < 3L) return(FALSE)
+  j <- n
+  inside <- FALSE
+  for (i in seq_len(n)) {
+    crosses <- (py[i] > y) != (py[j] > y)
+    if (crosses) {
+      edge_x <- (px[j] - px[i]) * (y - py[i]) /
+        (py[j] - py[i]) + px[i]
+      if (x < edge_x) inside <- !inside
+    }
+    j <- i
+  }
+  inside
+}
+
+ggchord_box_corners <- function(box) {
+  angle <- box$angle[1] %||% 0
+  axes <- rbind(c(cos(angle), sin(angle)), c(-sin(angle), cos(angle)))
+  signs <- rbind(c(-1, -1), c(-1, 1), c(1, 1), c(1, -1))
+  cbind(
+    box$cx[1] + signs[, 1] * box$ow[1] / 2 * axes[1, 1] +
+      signs[, 2] * box$oh[1] / 2 * axes[2, 1],
+    box$cy[1] + signs[, 1] * box$ow[1] / 2 * axes[1, 2] +
+      signs[, 2] * box$oh[1] / 2 * axes[2, 2]
+  )
+}
+
+ggchord_segment_intersects <- function(a, b, c, d, tol = 1e-10) {
+  cross <- function(u, v) u[1] * v[2] - u[2] * v[1]
+  r <- b - a
+  s <- d - c
+  denominator <- cross(r, s)
+  if (abs(denominator) <= tol) return(FALSE)
+  offset <- c - a
+  t <- cross(offset, s) / denominator
+  u <- cross(offset, r) / denominator
+  t >= -tol && t <= 1 + tol && u >= -tol && u <= 1 + tol
+}
+
+ggchord_box_overlaps_feature <- function(box, polygon, tol = .004) {
+  if (nrow(polygon) < 3L) return(FALSE)
+  if (box$xmax[1] < min(polygon$x) - tol ||
+      box$xmin[1] > max(polygon$x) + tol ||
+      box$ymax[1] < min(polygon$y) - tol ||
+      box$ymin[1] > max(polygon$y) + tol) return(FALSE)
+  corners <- ggchord_box_corners(box)
+  if (any(vapply(seq_len(nrow(corners)), function(i) {
+    ggchord_point_in_polygon(corners[i, 1], corners[i, 2], polygon)
+  }, logical(1)))) return(TRUE)
+  if (ggchord_point_in_polygon(box$cx[1], box$cy[1], polygon)) return(TRUE)
+  closed_corners <- rbind(corners, corners[1L, , drop = FALSE])
+  polygon_xy <- cbind(polygon$x, polygon$y)
+  polygon_xy <- rbind(polygon_xy, polygon_xy[1L, , drop = FALSE])
+  for (i in seq_len(nrow(closed_corners) - 1L)) {
+    for (j in seq_len(nrow(polygon_xy) - 1L)) {
+      if (ggchord_segment_intersects(
+          closed_corners[i, ], closed_corners[i + 1L, ],
+          polygon_xy[j, ], polygon_xy[j + 1L, ])) return(TRUE)
+    }
+  }
+  # Dense feature paths make a vertex-in-box check an inexpensive and robust
+  # boundary-intersection test for the curved polygons produced by ggchord.
+  local_x <- (polygon$x - box$cx[1]) * cos(box$angle[1]) +
+    (polygon$y - box$cy[1]) * sin(box$angle[1])
+  local_y <- -(polygon$x - box$cx[1]) * sin(box$angle[1]) +
+    (polygon$y - box$cy[1]) * cos(box$angle[1])
+  any(abs(local_x) <= box$ow[1] / 2 + tol &
+      abs(local_y) <= box$oh[1] / 2 + tol)
+}
+
+ggchord_label_hits_features <- function(box, polygons, source_row = NA_integer_,
+                                         allow_own = FALSE) {
+  if (!length(polygons)) return(FALSE)
+  any(vapply(polygons, function(polygon) {
+    own <- isTRUE(!is.na(source_row) &&
+      unique(polygon$source_row)[1L] == source_row)
+    if (allow_own && own) return(FALSE)
+    ggchord_box_overlaps_feature(box, polygon)
+  }, logical(1)))
 }
 
 #' Convert physical text dimensions to the current fixed-aspect plot scale.

@@ -46,6 +46,12 @@
   and protruding shouldered block arrows. Its default position assigns
   overlapping intervals to deterministic radial lanes. `preferred_lane` can
   request a biological track and `feature_group` keeps related rows together.
+  The feature-shape vocabulary now also includes `compact_arrow`,
+  `promoter_arrow`, `primer_arrow`, and `marker`. Promoters and primers use
+  thinner dedicated glyphs, extremely short intervals retain a visible marker,
+  and small glyphs receive a lighter outline unless linewidth is explicit.
+  Lane allocation accounts for the rendered glyph width and minimum display
+  span, while semantic preferred lanes remain collision-driven hints.
 * `geom_seq()` adds `seq_style = "single" | "double" | "band"`,
   `seq_backbone_gap`, and `seq_backbone_width` for circular backbones. Under
   `coord_circular()`, the implicit chord-direction arrow and redundant
@@ -58,7 +64,14 @@
   width with usable feature arc length, uses tangent text inside intervals that
   can contain it, and places compact-feature text nearby. Nearby collisions are
   nudged deterministically and only materially displaced labels receive a light
-  leader; explicit radial/auto/callout layouts remain available.
+  leader; explicit radial/auto/callout layouts remain available. The feature
+  mode now exports `feature_label_mode = "inside" | "adjacent" | "callout"`,
+  measures the final font family, face, size and line height, and checks
+  oriented label boxes against other labels, rendered feature polygons, the
+  centre reserve and the circular backbone. Dense MCS labels preferentially
+  stagger along the local tangent before moving radially, preserving a compact
+  genomic reading order. Inside text automatically uses black or white from
+  the final fill luminance unless its colour is explicitly supplied.
 * Added `find_restriction_sites()` as a calculation-only API. It preserves one
   row per pattern match, stable pattern identity, multiple motifs per enzyme,
   overlapping/IUPAC/reverse-complement matches, circular-origin matches,

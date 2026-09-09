@@ -38,7 +38,9 @@ As an alternative to \code{strand}, \code{direction} may contain
 \code{"none"}.}
 
 \item{feature_shape}{Fixed feature geometry used when \code{feature_shape}
-is not mapped in \code{aes()}: \code{"arrow"}, \code{"block"},
+is not mapped in \code{aes()}: \code{"arrow"},
+\code{"compact_arrow"}, \code{"promoter_arrow"},
+\code{"primer_arrow"}, \code{"marker"}, \code{"block"},
 \code{"chevron"}, or \code{"lollipop"}. The default is \code{"arrow"}.
 Use \code{aes(feature_shape = type)} together with
 \code{scale_feature_shape_manual()} to map categories to geometry.}

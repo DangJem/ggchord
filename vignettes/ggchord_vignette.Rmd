@@ -505,6 +505,20 @@ ggchord(seq) +
   theme_ggchord_plasmid()
 ```
 
+`find_common_features()` supplies semantic classes, glyph hints, and preferred
+lanes for its built-in annotations. Long genes and origins remain shouldered
+arrows; promoters and primers use thinner dedicated arrows; binding sites,
+operators, and MCS regions use compact blocks. These are defaults rather than
+name-based rules, so explicit aesthetics and manual scales always win.
+
+With the default `label_layout = "feature"`, text is measured with its final
+font settings and tried inside the usable feature body first. Labels that do
+not fit are placed adjacent to the glyph or in a short callout. Dense clusters
+stagger mainly along the local tangent, then across radial lanes, while avoiding
+other feature polygons and label boxes. The exported label layout records the
+resolved `feature_label_mode` (`inside`, `adjacent`, or `callout`). Restriction
+labels are deliberately solved by their separate layer.
+
 The dense pBluescript II SK(+) multiple-cloning region is a restriction-label
 stress test. Real sites retain their anchors. Every enzyme-facing label edge
 follows one close circular contour in genomic order. Sparse labels retain their

@@ -44,8 +44,7 @@ geom_feature_label <- function(
   lyr$ggchord_theme_element <- "ggchord.feature.label"
   lyr$ggchord_params$is_feature_label <- TRUE
   lyr$ggchord_params$gene_label_orientation <- label_orientation
-  if (is.data.frame(data) && "feature_label_colour" %in% names(data) &&
-      !any(c("colour", "color") %in% names(mapping)) &&
+  if (!any(c("colour", "color") %in% names(mapping)) &&
       !any(c("colour", "color") %in% names(dots))) {
     lyr$mapping[["colour"]] <- ggplot2::aes(
       colour = I(feature_label_colour)
@@ -104,8 +103,7 @@ geom_feature_label_repel <- function(
       segment_params = "ggchord.feature.label.segment",
       text_params = "ggchord.feature.label"
     )
-    if (is.data.frame(data) && "feature_label_colour" %in% names(data) &&
-        !any(c("colour", "color") %in% names(mapping)) &&
+    if (!any(c("colour", "color") %in% names(mapping)) &&
         !any(c("colour", "color") %in% names(dots))) {
       lyr$mapping[["colour"]] <- ggplot2::aes(
         colour = I(feature_label_colour)
@@ -135,8 +133,7 @@ geom_feature_label_repel <- function(
     segment_params = "ggchord.feature.label.segment",
     text_params = "ggchord.feature.label"
   )
-  if (is.data.frame(data) && "feature_label_colour" %in% names(data) &&
-      !any(c("colour", "color") %in% names(mapping)) &&
+  if (!any(c("colour", "color") %in% names(mapping)) &&
       !any(c("colour", "color") %in% names(dots))) {
     lyr$mapping[["colour"]] <- ggplot2::aes(
       colour = I(feature_label_colour)

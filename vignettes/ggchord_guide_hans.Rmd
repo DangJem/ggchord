@@ -482,6 +482,17 @@ ggchord(seq) +
   theme_ggchord_plasmid()
 ```
 
+`find_common_features()` 会为内置注释提供语义分类、glyph 提示和首选 lane。
+长 gene 与 origin 保持肩式箭头；promoter、primer 使用更窄的专用箭头；binding
+site、operator 与 MCS 使用紧凑 block。这些只是缺省规则，不按名称硬编码，用户
+显式 aesthetic 和手动 scale 始终优先。
+
+默认 `label_layout = "feature"` 使用最终字体属性实测文字 bbox，先尝试放进
+feature 的可用 body；放不下时选择相邻标签或短 callout。密集簇优先沿局部切线
+错层，其次才改变 radial lane，并避开其他 feature polygon 与标签框。布局导出中的
+`feature_label_mode` 记录最终的 `inside`、`adjacent` 或 `callout`。限制性酶切标签
+仍由独立图层求解，不参与本轮联合避碰。
+
 pBluescript II SK(+) 的密集 MCS 区域用于压力测试限制酶标签。真实位点的
 anchor 保持不动；所有标签的酶名侧边缘按 genomic order 落在同一贴近
 质粒的圆弧上。稀疏标签保持自然角度，侧面密集簇使用均匀间距的紧凑标签扇。

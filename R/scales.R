@@ -163,8 +163,9 @@ scale_feature_fill_manual <- function(..., values, limits = NULL) {
 
 #' Feature shape scale
 #'
-#' Maps feature categories to the four geometry types understood by
-#' [geom_feature()]: `"arrow"`, `"block"`, `"chevron"`, and `"lollipop"`.
+#' Maps feature categories to the geometry types understood by
+#' [geom_feature()], including full/compact/promoter/primer arrows, markers,
+#' blocks, chevrons, and lollipops.
 #' Shape values affect the actual feature geometry as well as its legend key.
 #'
 #' @param ... Arguments passed to [ggplot2::discrete_scale()].
@@ -180,12 +181,14 @@ scale_feature_fill_manual <- function(..., values, limits = NULL) {
 #' @export
 scale_feature_shape_manual <- function(..., values, name = "Feature",
                                        limits = NULL, guide = "none") {
-  allowed <- c("arrow", "block", "chevron", "lollipop")
+  allowed <- c(
+    "arrow", "compact_arrow", "promoter_arrow", "primer_arrow", "marker",
+    "block", "chevron", "lollipop"
+  )
   if (!is.character(values) || length(values) == 0L || anyNA(values) ||
       any(!values %in% allowed)) {
     ggchord_stop(
-      "scale_feature_shape_manual(): values must use 'arrow', 'block', ",
-      "'chevron', or 'lollipop'"
+      "scale_feature_shape_manual(): values contain an unknown geometry"
     )
   }
   if (is.null(limits) && !is.null(names(values))) limits <- names(values)
@@ -198,6 +201,28 @@ scale_feature_shape_manual <- function(..., values, name = "Feature",
   out
 }
 
+ggchord_plasmid_feature_colours <- function() {
+  c(
+    CDS="#CCFFCC", gene="#CCFFCC", resistance_gene="#CCFFCC",
+    promoter="#FFFFFF", rep_origin="#FFFF00", replication_origin="#FFFF00",
+    ori="#FFFF00", origin="#FFFF00", primer_bind="#A020F0",
+    primer="#A020F0", terminator="#993366", protein_bind="#31849B",
+    binding_site="#31849B", operator="#31849B", RBS="#FFFFFF",
+    regulatory="#A6ACB3", repeat_region="#C8CDD2", MCS="#99CCFF",
+    misc_feature="#A6ACB3"
+  )
+}
+
+ggchord_contrast_colour <- function(fill) {
+  vapply(as.character(fill), function(value) {
+    rgb <- tryCatch(grDevices::col2rgb(value)[, 1L] / 255,
+      error = function(e) c(1, 1, 1))
+    linear <- ifelse(rgb <= .04045, rgb / 12.92,
+      ((rgb + .055) / 1.055)^2.4)
+    if (sum(linear * c(.2126, .7152, .0722)) < .36) "#FFFFFF" else "#202020"
+  }, character(1), USE.NAMES = FALSE)
+}
+
 #' Plasmid-map feature presets
 #' @param ... Additional scale arguments.
 #' @param limits Optional feature-type order.
@@ -205,9 +230,7 @@ scale_feature_shape_manual <- function(..., values, name = "Feature",
 #' @return A feature fill or shape scale.
 #' @export
 scale_feature_fill_plasmid <- function(..., limits = NULL) {
-  values <- c(CDS="#CCFFCC",promoter="#FFFFFF",rep_origin="#FFFF00",
-    terminator="#993366",protein_bind="#A6ACB3",RBS="#FFFFFF",
-    repeat_region="#C8CDD2",misc_feature="#A6ACB3")
+  values <- ggchord_plasmid_feature_colours()
   if (is.null(limits)) limits <- names(values)
   out <- ggplot2::scale_fill_manual(
     ..., values=values, limits=limits, aesthetics="feature_fill", na.value="#B8BDC3"
@@ -219,9 +242,15 @@ scale_feature_fill_plasmid <- function(..., limits = NULL) {
 #' @rdname scale_feature_fill_plasmid
 #' @export
 scale_feature_shape_plasmid <- function(..., limits = NULL, guide = "none") {
-  values <- c(CDS="arrow",promoter="arrow",rep_origin="arrow",
-    terminator="lollipop",protein_bind="block",RBS="chevron",
-    repeat_region="block",misc_feature="block")
+  values <- c(
+    CDS="arrow", gene="arrow", resistance_gene="arrow",
+    rep_origin="arrow", replication_origin="arrow", ori="arrow",
+    promoter="promoter_arrow", primer_bind="primer_arrow",
+    primer="primer_arrow", protein_bind="block", binding_site="block",
+    operator="block", terminator="lollipop", regulatory="compact_arrow",
+    RBS="chevron", repeat_region="block", MCS="block",
+    misc_feature="block"
+  )
   if (is.null(limits)) limits <- names(values)
   out <- ggplot2::discrete_scale(
     aesthetics="feature_shape",palette=scales::manual_pal(values),

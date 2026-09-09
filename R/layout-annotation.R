@@ -127,6 +127,7 @@ ggchord_layout_annotation_step <- quote({
       anno <- gene$anno
 
       width <- geneWidth[[sid]][strand]
+      width <- width * as.numeric(gene$.feature_width_factor %||% 1)
       if (!is.numeric(width) || width <= 0) width <- 0.1
 
       sequence_length <- lens[sid]
@@ -290,6 +291,7 @@ ggchord_layout_annotation_step <- quote({
         dy <- dy * orient
 
         width <- geneWidth[[sid]][strand]
+        width <- width * as.numeric(gene$.feature_width_factor %||% 1)
 
         r0 <- gene_track_radius(gene, sid, strand, ref$angles[idx])
 
@@ -347,14 +349,20 @@ ggchord_layout_annotation_step <- quote({
           measured_label <- ggchord_text_boxes(data.frame(
             text = as.character(gene$anno), text_x = 0, text_y = 0,
             text_angle = 0, hjust = .5, vjust = .5,
-            size = gene_label_size
+            size = gene_label_size, family = gene_label_family,
+            fontface = gene_label_fontface,
+            lineheight = gene_label_lineheight
           ), units_per_inch = label_measure_units)
           shape <- as.character(gene$.feature_shape %||% "arrow")
           head_reserve <- if (shape == "arrow") {
-            arrow_head_length * max(abs(r0), .5)
+            arrow_head_length
+          } else if (shape %in% c(
+              "compact_arrow", "promoter_arrow", "primer_arrow")) {
+            arrow_head_length * .65
           } else 0
+          body_padding <- max(.008, measured_label$h * .24)
           available_length <- max(0,
-            feature_arc_length - head_reserve - .08)
+            feature_arc_length - head_reserve - 2 * body_padding)
           feature_label_inside <- measured_label$w <= available_length
           # Plasmid feature text follows the interval direction whether it is
           # inside the polygon or immediately adjacent to it. Compact labels
@@ -363,9 +371,18 @@ ggchord_layout_annotation_step <- quote({
           if (!isTRUE(feature_label_inside)) {
             centre_length <- sqrt(sum(center_pt^2))
             if (is.finite(centre_length) && centre_length > 1e-8) {
-              adjacent_offset <- width / 2 + measured_label$h * .60 + .012
-              text_x <- text_x - center_pt[1L] / centre_length * adjacent_offset
-              text_y <- text_y - center_pt[2L] / centre_length * adjacent_offset
+              compact_shape <- shape %in% c(
+                "compact_arrow", "promoter_arrow", "primer_arrow", "marker"
+              )
+              adjacent_gap <- measured_label$h *
+                if (compact_shape) .76 else .64
+              adjacent_offset <- width / 2 + adjacent_gap + .014
+              inward_x <- -center_pt[1L] / centre_length
+              inward_y <- -center_pt[2L] / centre_length
+              anchor_x <- center_pt[1L] + inward_x * width / 2
+              anchor_y <- center_pt[2L] + inward_y * width / 2
+              text_x <- text_x + inward_x * adjacent_offset
+              text_y <- text_y + inward_y * adjacent_offset
             }
           }
         }
@@ -388,12 +405,9 @@ ggchord_layout_annotation_step <- quote({
           hjust <- 1
         }
 
-        text_angle <- (text_angle + 360) %% 360
-        if (text_angle > 90 && text_angle < 270) {
-          text_angle <- text_angle + 180
-          hjust <- 1 - hjust
-        }
-        text_angle <- text_angle %% 360
+        upright <- ggchord_normalize_text_orientation(text_angle, hjust)
+        text_angle <- upright$angle
+        hjust <- upright$hjust
         vjust <- 0.5
 
         if (identical(resolved_label_orientation, "tangent")) {
@@ -435,6 +449,9 @@ ggchord_layout_annotation_step <- quote({
           hjust = hjust,
           vjust = vjust,
           size = gene_label_size,
+          family = gene_label_family,
+          fontface = gene_label_fontface,
+          lineheight = gene_label_lineheight,
           accver = sid,
           group = i,
           source_row = gene$.source_row,
@@ -449,6 +466,7 @@ ggchord_layout_annotation_step <- quote({
           feature_label_colour = feature_label_colour,
           feature_label_orientation = resolved_label_orientation,
           feature_label_inside = feature_label_inside,
+          .feature_width = width,
           stringsAsFactors = FALSE
         )
       }))

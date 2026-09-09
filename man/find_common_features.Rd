@@ -39,8 +39,10 @@ thresholds in `[0, 1]`.}
 }
 \value{
 A data frame directly usable by [geom_feature()] and
-  [geom_feature_label_repel()]. Its `segments` list-column preserves the
-  biological feature's segment structure.
+  [geom_feature_label_repel()]. `feature_class`, `feature_shape`, and
+  `preferred_lane` provide normalized semantic layout hints; explicit user
+  aesthetics and scales still take priority. Its `segments` list-column
+  preserves the biological feature's segment structure.
 }
 \description{
 Searches the built-in common-feature database (or a compatible custom

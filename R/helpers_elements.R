@@ -180,7 +180,9 @@ key_glyph_feature <- function(data, params, size) {
   if (is.null(data$fill)) return(ggplot2::zeroGrob())
 
   shape <- as.character(data$feature_shape %||% "arrow")[1]
-  if (!shape %in% c("arrow", "block", "chevron", "lollipop")) {
+  if (!shape %in% c(
+      "arrow", "compact_arrow", "promoter_arrow", "primer_arrow", "marker",
+      "block", "chevron", "lollipop")) {
     shape <- "arrow"
   }
   col <- ggplot2::alpha(data$colour %||% "#353A3E", data$alpha %||% 1)
@@ -190,6 +192,22 @@ key_glyph_feature <- function(data, params, size) {
 
   if (identical(shape, "arrow")) {
     return(draw_key_gene_arrow(data, params, size))
+  }
+  if (shape %in% c("compact_arrow", "promoter_arrow", "primer_arrow")) {
+    half_height <- switch(shape,
+      compact_arrow = .14, promoter_arrow = .10, primer_arrow = .075)
+    return(grid::polygonGrob(
+      x = grid::unit(c(.12, .66, .66, .90, .66, .66, .12), "npc"),
+      y = grid::unit(.5 + c(-half_height, -half_height, -1.55 * half_height,
+        0, 1.55 * half_height, half_height, half_height), "npc"),
+      gp = gp
+    ))
+  }
+  if (identical(shape, "marker")) {
+    return(grid::polygonGrob(
+      x = grid::unit(c(.28, .50, .72, .50), "npc"),
+      y = grid::unit(c(.50, .70, .50, .30), "npc"), gp = gp
+    ))
   }
   if (identical(shape, "block")) {
     return(grid::rectGrob(

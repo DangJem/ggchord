@@ -171,9 +171,22 @@ ggchord_allocate_feature_lanes <- function(data, base, direction, spacing,
     len <- if (!is.null(lengths)) unname(lengths[sid]) else NA_real_
     row_intervals <- lapply(idx, function(i) {
       a <- as.numeric(data$start[i]); b <- as.numeric(data$end[i])
+      pad <- 0
+      shape <- as.character(data$.feature_shape[i] %||%
+        data$.feature_shape_raw[i] %||% "arrow")
+      if (isTRUE(is.finite(len)) && shape %in% c(
+          "promoter_arrow", "primer_arrow", "marker")) {
+        glyph_width <- as.numeric(data$.feature_width[i] %||% 0)
+        radius <- max(.1, abs(1 + base[i]))
+        multiple <- if (shape == "promoter_arrow") 2.6 else 3.0
+        display_bp <- glyph_width * multiple / radius / (2 * pi) * len
+        pad <- max(0, display_bp - abs(b - a)) / 2
+      }
       if (isTRUE(circular) && is.finite(len) && a > b) {
-        rbind(c(a, len), c(1, b))
-      } else matrix(c(min(a, b), max(a, b)), nrow = 1L)
+        rbind(c(max(1, a - pad), len), c(1, min(len, b + pad)))
+      } else matrix(c(max(1, min(a, b) - pad),
+        if (is.finite(len)) min(len, max(a, b) + pad) else max(a, b) + pad),
+        nrow = 1L)
     })
     group_value <- if ("feature_group" %in% names(data)) {
       as.character(data$feature_group[idx])
@@ -204,6 +217,18 @@ ggchord_allocate_feature_lanes <- function(data, base, direction, spacing,
         suppressWarnings(as.integer(data$preferred_lane[idx[members[1L]]]))
       } else NA_integer_
       if (!is.finite(preferred) || preferred < 0L) preferred <- 0L
+      semantic_hint <- ".semantic_lane_hint" %in% names(data) &&
+        isTRUE(data$.semantic_lane_hint[idx[members[1L]]])
+      if (semantic_hint) {
+        conflicting_lanes <- which(vapply(seq_along(lane_intervals),
+          function(candidate) overlaps(
+            intervals[[local]], lane_intervals[[candidate]]
+          ), logical(1)))
+        local_depth <- if (length(conflicting_lanes)) {
+          max(conflicting_lanes)
+        } else 0L
+        preferred <- min(preferred, local_depth)
+      }
       candidates <- unique(c(
         preferred + 1L,
         as.vector(rbind(preferred + seq_len(nrow(data)) + 1L,
@@ -220,6 +245,38 @@ ggchord_allocate_feature_lanes <- function(data, base, direction, spacing,
     }
   }
   lane
+}
+
+ggchord_feature_lane_offsets <- function(data, lane, base, direction,
+                                          spacing) {
+  offsets <- numeric(nrow(data))
+  band <- paste(
+    data$accver,
+    format(base, digits = 15, scientific = FALSE, trim = TRUE),
+    direction, sep = "\r"
+  )
+  groups <- split(seq_len(nrow(data)), factor(band, levels = unique(band)))
+  for (idx in groups) {
+    local_lanes <- lane[idx]
+    widths <- if (".feature_width" %in% names(data)) {
+      as.numeric(data$.feature_width[idx])
+    } else rep(0, length(idx))
+    widths[!is.finite(widths) | widths < 0] <- 0
+    lane_width <- vapply(seq.int(0L, max(local_lanes)), function(value) {
+      used <- widths[local_lanes == value]
+      if (length(used)) max(used) else 0
+    }, numeric(1))
+    centres <- numeric(length(lane_width))
+    if (length(centres) > 1L) {
+      for (i in 2:length(centres)) {
+        glyph_clearance <- lane_width[i - 1L] / 2 +
+          lane_width[i] / 2 + .018
+        centres[i] <- centres[i - 1L] + max(spacing, glyph_clearance)
+      }
+    }
+    offsets[idx] <- direction[idx] * centres[local_lanes + 1L]
+  }
+  offsets
 }
 
 ggchord_apply_feature_position <- function(data, position, seqs, lengths,
@@ -285,7 +342,9 @@ ggchord_apply_feature_position <- function(data, position, seqs, lengths,
       out, base, direction, position$spacing %||% 0.10,
       circular = circular, lengths = lengths
     )
-    lane_offset <- direction * lane * (position$spacing %||% 0.10)
+    lane_offset <- ggchord_feature_lane_offsets(
+      out, lane, base, direction, position$spacing %||% 0.10
+    )
   }
   out$.position_name <- position_name
   out$.position_base_offset <- base

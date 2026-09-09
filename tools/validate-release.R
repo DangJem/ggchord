@@ -1,5 +1,5 @@
 # Reproducible release acceptance outside the fast testthat suite.
-# Rscript tools/validate-release.R genome|geometry|links|labels|output|benchmark|examples [directory]
+# Rscript tools/validate-release.R genome|feature|geometry|links|labels|output|benchmark|examples [directory]
 # Outputs are temporary by default; no README/site figures are overwritten.
 suppressPackageStartupMessages(library(ggplot2))
 pkgload::load_all(quiet = TRUE)
@@ -20,6 +20,25 @@ finite_geometry <- function(x) {
     cols <- intersect(c("x", "y", "x0", "y0", "x1", "y1", "text_x", "text_y"), names(x))
     stopifnot(all(vapply(x[cols], function(z) all(is.finite(z)), logical(1))))
   } else if (is.list(x)) invisible(lapply(x, finite_geometry))
+}
+feature_polygons_overlap <- function(a, b) {
+  if (max(a$x) < min(b$x) || max(b$x) < min(a$x) ||
+      max(a$y) < min(b$y) || max(b$y) < min(a$y)) return(FALSE)
+  inside <- any(vapply(seq_len(nrow(a)), function(i) {
+    ggchord:::ggchord_point_in_polygon(a$x[i], a$y[i], b)
+  }, logical(1))) || any(vapply(seq_len(nrow(b)), function(i) {
+    ggchord:::ggchord_point_in_polygon(b$x[i], b$y[i], a)
+  }, logical(1)))
+  if (inside) return(TRUE)
+  aa <- rbind(cbind(a$x, a$y), c(a$x[1], a$y[1]))
+  bb <- rbind(cbind(b$x, b$y), c(b$x[1], b$y[1]))
+  for (i in seq_len(nrow(aa) - 1L)) {
+    for (j in seq_len(nrow(bb) - 1L)) {
+      if (ggchord:::ggchord_segment_intersects(
+          aa[i, ], aa[i + 1L, ], bb[j, ], bb[j + 1L, ])) return(TRUE)
+    }
+  }
+  FALSE
 }
 label_metrics <- function(layout, expected) {
   labels <- layout$gene_labels
@@ -75,6 +94,77 @@ if (mode == "genome") {
   if (requireNamespace("svglite", quietly = TRUE)) {
     ggplot2::ggsave(file.path(out, "single-genome.svg"), p,
                     width = 8, height = 7)
+  }
+} else if (mode == "feature") {
+  objects <- c("plasmid_example_pUC19c",
+    "plasmid_example_pBluescript_II_SK_plus")
+  files <- c("pUC19c-feature", "pBluescript-feature")
+  for (i in seq_along(objects)) {
+    utils::data(list = objects[i])
+    sequence <- get(objects[i])
+    features <- find_common_features(sequence)
+    tracks <- position_feature_stack(
+      spacing = .10, base_position = position_plasmid()
+    )
+    p <- ggchord(sequence) + geom_seq() +
+      geom_feature_plasmid(data = features, position = tracks) +
+      geom_feature_label_repel(data = features, position = tracks) +
+      geom_seq_center_label() + scale_seq_position_continuous() +
+      coord_circular(rotation = 90) + theme_ggchord_plasmid()
+    layout <- with_device(get_chord_layout(p), 7, 7)
+    finite_geometry(list(layout$gene_polys, layout$gene_labels,
+      layout$gene_label_segments))
+    stopifnot(all(layout$gene_labels$feature_label_mode %in%
+      c("inside", "adjacent", "callout")),
+      any(layout$gene_labels$feature_label_mode == "inside"),
+      any(layout$gene_labels$feature_label_mode != "inside"))
+    stopifnot(all(ggchord:::ggchord_label_conflict_counts(
+      layout$gene_labels, units_per_inch = layout$text_units_per_inch,
+      box_padding = .005
+    ) == 0L))
+    boxes <- ggchord:::ggchord_text_boxes(
+      layout$gene_labels, units_per_inch = layout$text_units_per_inch,
+      box_padding = .04
+    )
+    polygon_rows <- layout$gene_polys$.component == "polygon"
+    polygons <- split(layout$gene_polys[polygon_rows, , drop = FALSE],
+      layout$gene_polys$group[polygon_rows])
+    for (j in seq_len(nrow(layout$gene_labels))) {
+      stopifnot(!ggchord:::ggchord_label_hits_features(
+        boxes[j, , drop = FALSE], polygons,
+        source_row = layout$gene_labels$source_row[j],
+        allow_own = layout$gene_labels$feature_label_mode[j] == "inside"
+      ))
+    }
+    if (length(polygons) > 1L) {
+      for (j in seq_len(length(polygons) - 1L)) {
+        for (k in seq.int(j + 1L, length(polygons))) {
+          if (unique(polygons[[j]]$source_row)[1L] !=
+              unique(polygons[[k]]$source_row)[1L]) {
+            source_j <- unique(polygons[[j]]$source_row)[1L]
+            source_k <- unique(polygons[[k]]$source_row)[1L]
+            interval_overlap <- max(
+              features$start[source_j], features$start[source_k]
+            ) <= min(features$end[source_j], features$end[source_k])
+            if (interval_overlap &&
+                feature_polygons_overlap(polygons[[j]], polygons[[k]])) {
+              stop("feature polygons overlap: ",
+                source_j, " / ", source_k)
+            }
+          }
+        }
+      }
+    }
+    stopifnot(all(layout$gene_labels$text_angle <= 90 |
+      layout$gene_labels$text_angle >= 270))
+    ggplot2::ggsave(file.path(out, paste0(files[i], ".png")), p,
+      width = 7, height = 7, dpi = 150)
+    ggplot2::ggsave(file.path(out, paste0(files[i], ".pdf")), p,
+      width = 7, height = 7)
+    if (requireNamespace("svglite", quietly = TRUE)) {
+      ggplot2::ggsave(file.path(out, paste0(files[i], ".svg")), p,
+        width = 7, height = 7)
+    }
   }
 } else if (mode == "geometry") {
   sequences <- data.frame(accver = c("A", "B"), length = 1000)

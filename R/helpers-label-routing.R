@@ -1,3 +1,170 @@
+ggchord_normalize_text_orientation <- function(angle, hjust = .5) {
+  angle <- (angle + 360) %% 360
+  flip <- angle > 90 & angle < 270
+  angle[flip] <- (angle[flip] + 180) %% 360
+  hjust[flip] <- 1 - hjust[flip]
+  list(angle = angle, hjust = hjust)
+}
+
+ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
+                                         units_per_inch = .35,
+                                         max_overlaps = Inf) {
+  n <- nrow(gl)
+  if (!n) return(list(
+    labels = gl, lanes = character(), directions = character(),
+    tracks = integer(), draw_segment = logical()
+  ))
+  polygon_rows <- gene_polys$.component %||% rep("polygon", nrow(gene_polys))
+  polygon_rows <- is.na(polygon_rows) | polygon_rows == "polygon"
+  polygons <- if (nrow(gene_polys) && any(polygon_rows)) {
+    split(gene_polys[polygon_rows, , drop = FALSE],
+      gene_polys$group[polygon_rows])
+  } else list()
+  sequence_radius <- if (length(seq_arcs)) {
+    max(vapply(seq_arcs, function(path) {
+      max(sqrt(path$x^2 + path$y^2), na.rm = TRUE)
+    }, numeric(1)), na.rm = TRUE)
+  } else Inf
+  frame <- ggchord_label_curve_frame(gl, seq_arcs)
+  placed <- ggchord_text_boxes(data.frame())
+  result <- gl
+  mode <- ifelse(gl$feature_label_inside %in% TRUE, "inside", "adjacent")
+  tracks <- integer(n)
+  moved <- logical(n)
+  directions <- character(n)
+  all_metrics <- ggchord_text_boxes(
+    gl, units_per_inch = units_per_inch, box_padding = 0
+  )
+  order_rows <- order(!(gl$feature_label_inside %in% TRUE),
+    -all_metrics$w, gl$source_row, seq_len(n))
+
+  for (i in order_rows) {
+    outward <- c(frame$outward_x[i], frame$outward_y[i])
+    if (any(!is.finite(outward)) || sqrt(sum(outward^2)) < 1e-8) {
+      radial <- c(gl$text_x[i], gl$text_y[i])
+      radial_length <- sqrt(sum(radial^2))
+      outward <- if (radial_length > 1e-8) radial / radial_length else c(0, 1)
+    }
+    inward <- -outward / sqrt(sum(outward^2))
+    tangent <- c(-inward[2], inward[1])
+    measured <- ggchord_text_boxes(
+      gl[i, , drop = FALSE], units_per_inch = units_per_inch,
+      box_padding = .04
+    )
+    radial_step <- max(.052, measured$h * .82 + .024)
+    tangent_step <- max(.045, measured$h * .70)
+    starts_inside <- gl$feature_label_inside[i] %in% TRUE
+    radial_candidates <- if (starts_inside) 0:6 else -4:4
+    tangent_candidates <- -6:6
+    candidates <- expand.grid(
+      radial = radial_candidates, tangent = tangent_candidates
+    )
+    if (starts_inside) {
+      candidates <- candidates[
+        candidates$radial > 0 | candidates$tangent == 0, , drop = FALSE
+      ]
+    }
+    # Compact plasmid labels read best when they remain close to the glyph's
+    # radial track and spread along the local genomic tangent. Penalising a
+    # radial lane more strongly avoids the characteristic "spokes into the
+    # centre" seen when a dense MCS cluster is solved by radial search alone.
+    candidates$score <- abs(candidates$radial) * 2.2 +
+      abs(candidates$tangent) * .72 +
+      pmax(0, -candidates$radial) * .85 +
+      pmax(0, candidates$radial) * .15
+    candidates <- candidates[order(
+      candidates$score,
+      abs(candidates$radial), abs(candidates$tangent),
+      candidates$radial < 0, candidates$tangent < 0
+    ), , drop = FALSE]
+    chosen <- NULL
+    chosen_box <- NULL
+    chosen_radial <- 0L
+    chosen_tangent <- 0L
+
+    for (candidate_index in seq_len(nrow(candidates))) {
+        radial_index <- candidates$radial[candidate_index]
+        tangent_index <- candidates$tangent[candidate_index]
+        candidate <- gl[i, , drop = FALSE]
+        if (starts_inside && radial_index > 0L) {
+          # Failed inside labels restart immediately beyond their own glyph.
+          base <- max(.045, as.numeric(gl$.feature_width[i] %||% .07))
+          candidate$text_x <- gl$anchor_x[i] +
+            inward[1] * (base + radial_index * radial_step) +
+            tangent[1] * tangent_index * tangent_step
+          candidate$text_y <- gl$anchor_y[i] +
+            inward[2] * (base + radial_index * radial_step) +
+            tangent[2] * tangent_index * tangent_step
+        } else {
+          candidate$text_x <- gl$text_x[i] +
+            inward[1] * radial_index * radial_step +
+            tangent[1] * tangent_index * tangent_step
+          candidate$text_y <- gl$text_y[i] +
+            inward[2] * radial_index * radial_step +
+            tangent[2] * tangent_index * tangent_step
+        }
+        box <- ggchord_text_boxes(
+          candidate, units_per_inch = units_per_inch, box_padding = .04
+        )
+        label_collision <- nrow(placed) &&
+          any(ggchord_oriented_box_overlaps(box, placed))
+        feature_collision <- ggchord_label_hits_features(
+          box, polygons, source_row = gl$source_row[i],
+          allow_own = starts_inside && radial_index == 0L
+        )
+        corners <- ggchord_box_corners(box)
+        central_collision <- length(seq_arcs) == 1L &&
+          min(sqrt(rowSums(corners^2))) < .26
+        backbone_collision <- !(starts_inside && radial_index == 0L) &&
+          is.finite(sequence_radius) &&
+          max(sqrt(rowSums(corners^2))) > sequence_radius - .018
+        if (!label_collision && !feature_collision && !central_collision &&
+            !backbone_collision) {
+          chosen <- candidate
+          chosen_box <- box
+          chosen_radial <- radial_index
+          chosen_tangent <- tangent_index
+          break
+        }
+    }
+    if (is.null(chosen)) {
+      chosen <- gl[i, , drop = FALSE]
+      chosen_box <- ggchord_text_boxes(
+        chosen, units_per_inch = units_per_inch, box_padding = .04
+      )
+      if (is.finite(max_overlaps)) chosen$text <- NA_character_
+    }
+    result$text_x[i] <- chosen$text_x
+    result$text_y[i] <- chosen$text_y
+    result$text[i] <- chosen$text
+    placed <- rbind(placed, chosen_box)
+    displacement <- sqrt(
+      (result$text_x[i] - gl$text_x[i])^2 +
+      (result$text_y[i] - gl$text_y[i])^2
+    )
+    if (starts_inside && chosen_radial == 0L) {
+      mode[i] <- "inside"
+    } else if (abs(chosen_radial) <= 2L && abs(chosen_tangent) <= 1L) {
+      mode[i] <- "adjacent"
+    } else {
+      mode[i] <- "callout"
+    }
+    tracks[i] <- abs(chosen_radial) + 1L
+    moved[i] <- identical(mode[i], "callout") || displacement >= .11
+    delta <- c(result$text_x[i] - gl$anchor_x[i],
+      result$text_y[i] - gl$anchor_y[i])
+    directions[i] <- if (abs(delta[1]) >= abs(delta[2])) {
+      if (delta[1] < 0) "left" else "right"
+    } else if (delta[2] < 0) "bottom" else "top"
+  }
+  result$feature_label_mode <- mode
+  list(
+    labels = result,
+    lanes = paste(result$accver, mode, tracks, sep = "\r"),
+    directions = directions, tracks = tracks, draw_segment = moved
+  )
+}
+
 ggchord_uncross_labels <- function(gl, lanes = NULL, max_swaps = NULL,
                                    endpoint_fun = NULL) {
   n <- nrow(gl)

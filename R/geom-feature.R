@@ -13,7 +13,7 @@ feature_geom <- ggplot2::ggproto(
   default_aes = feature_geom_defaults,
   extra_params = c(
     "na.rm", "segment_boundaries", "boundary_colour",
-    "boundary_linewidth", "boundary_linetype"
+    "boundary_linewidth", "boundary_linetype", "adaptive_outline"
   ),
   draw_key = function(data, params, size) {
     key_glyph_feature(data, params, size)
@@ -22,12 +22,20 @@ feature_geom <- ggplot2::ggproto(
                         segment_boundaries = TRUE,
                         boundary_colour = "#666666",
                         boundary_linewidth = .25,
-                        boundary_linetype = "22") {
+                        boundary_linetype = "22",
+                        adaptive_outline = TRUE) {
     component <- data$.component %||% rep("polygon", nrow(data))
     polygons <- data[is.na(component) | component == "polygon", , drop = FALSE]
     boundaries <- data[component == "boundary", , drop = FALSE]
     grobs <- list()
     if (nrow(polygons)) {
+      if (isTRUE(adaptive_outline) && "feature_shape" %in% names(polygons)) {
+        small <- polygons$feature_shape %in% c(
+          "compact_arrow", "promoter_arrow", "primer_arrow", "marker",
+          "chevron", "lollipop"
+        )
+        polygons$linewidth[small] <- pmin(polygons$linewidth[small], .18)
+      }
       if ("feature_fill_explicit" %in% names(polygons)) {
         explicit <- !is.na(polygons$feature_fill_explicit) &
           nzchar(polygons$feature_fill_explicit)
@@ -116,6 +124,18 @@ ggchord_feature_data <- function(data, fixed_shape = "arrow",
   } else {
     out$anno
   }
+  if (!"feature_class" %in% names(out)) {
+    semantic_source <- if ("feature_type" %in% names(out)) {
+      out$feature_type
+    } else if ("type" %in% names(out)) {
+      out$type
+    } else if ("category" %in% names(out)) {
+      out$category
+    } else out$anno
+    out$feature_class <- ggchord_feature_classes(semantic_source)
+  } else {
+    out$feature_class <- ggchord_feature_classes(out$feature_class)
+  }
   out$.feature_shape_raw <- if ("feature_shape" %in% names(out)) {
     as.character(out$feature_shape)
   } else {
@@ -124,11 +144,14 @@ ggchord_feature_data <- function(data, fixed_shape = "arrow",
   nondirectional <- out$.feature_biological_strand == "." &
     out$.feature_shape_raw == "arrow"
   out$.feature_shape_raw[nondirectional] <- "block"
-  allowed <- c("arrow", "block", "chevron", "lollipop")
+  allowed <- c(
+    "arrow", "compact_arrow", "promoter_arrow", "primer_arrow", "marker",
+    "block", "chevron", "lollipop"
+  )
   if (anyNA(out$.feature_shape_raw) ||
       (!is.null(fixed_shape) && any(!out$.feature_shape_raw %in% allowed))) {
     ggchord_stop(
-      "geom_feature(): feature shapes must be arrow, block, chevron, or lollipop"
+      "geom_feature(): unknown feature shape"
     )
   }
   out$type <- out$anno
@@ -152,7 +175,9 @@ ggchord_feature_data <- function(data, fixed_shape = "arrow",
 #'   \code{"forward"}, \code{"reverse"}, \code{"bidirectional"}, or
 #'   \code{"none"}.
 #' @param feature_shape Fixed feature geometry used when \code{feature_shape}
-#'   is not mapped in \code{aes()}: \code{"arrow"}, \code{"block"},
+#'   is not mapped in \code{aes()}: \code{"arrow"},
+#'   \code{"compact_arrow"}, \code{"promoter_arrow"},
+#'   \code{"primer_arrow"}, \code{"marker"}, \code{"block"},
 #'   \code{"chevron"}, or \code{"lollipop"}. The default is \code{"arrow"}.
 #'   Use \code{aes(feature_shape = type)} together with
 #'   \code{scale_feature_shape_manual()} to map categories to geometry.
@@ -256,14 +281,16 @@ geom_feature <- function(mapping = NULL, data = NULL,
     legend_position = "guides(feature_fill = guide_ggchord_legend(position = ...))"
   ))
 
-  allowed_shapes <- c("arrow", "block", "chevron", "lollipop")
+  allowed_shapes <- c(
+    "arrow", "compact_arrow", "promoter_arrow", "primer_arrow", "marker",
+    "block", "chevron", "lollipop"
+  )
   shape_mapped <- !is.null(mapping) && "feature_shape" %in% names(mapping)
   if (!shape_mapped &&
       (!is.character(feature_shape) || length(feature_shape) != 1L ||
        is.na(feature_shape) || !feature_shape %in% allowed_shapes)) {
     ggchord_stop(
-      "geom_feature(): feature_shape must be 'arrow', 'block', ",
-      "'chevron', or 'lollipop'"
+      "geom_feature(): unknown feature_shape"
     )
   }
   roles <- c(
@@ -305,7 +332,9 @@ geom_feature <- function(mapping = NULL, data = NULL,
         segment_boundaries = segment_boundaries,
         boundary_colour = boundary_colour,
         boundary_linewidth = boundary_linewidth,
-        boundary_linetype = boundary_linetype
+        boundary_linetype = boundary_linetype,
+        adaptive_outline = !("linewidth" %in% names(dots) ||
+          (!is.null(mapping) && "linewidth" %in% names(mapping)))
       ),
       dots
     )
@@ -325,7 +354,9 @@ geom_feature <- function(mapping = NULL, data = NULL,
     gene_colors = NULL, gene_order = NULL,
     is_feature = TRUE,
     feature_shape_mapped = shape_mapped,
-    feature_shape = feature_shape
+    feature_shape = feature_shape,
+    feature_fill_mapping = visual_mapping[["feature_fill"]],
+    feature_fill_fixed = dots$feature_fill %||% NULL
   )
   if (!"feature_fill" %in% names(visual_mapping) && is.data.frame(data) &&
       all(c("anno", "feature_color") %in% names(data))) {
@@ -378,9 +409,9 @@ geom_feature <- function(mapping = NULL, data = NULL,
 #' @export
 geom_feature_plasmid <- function(mapping = NULL, data = NULL,
                                  feature_shape = "arrow", shape = NULL,
-                                 feature_width = .07,
+                                 feature_width = .058,
                                  arrow_head_length = .055,
-                                 arrow_head_width = 1.55,
+                                 arrow_head_width = 1.32,
                                  arrow_head_style = "shouldered",
                                  short_feature = "auto",
                                  segment_boundaries = TRUE,

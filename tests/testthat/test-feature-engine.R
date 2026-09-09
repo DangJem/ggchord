@@ -68,21 +68,148 @@ test_that("short arrows fall back without swallowing the interval", {
 test_that("all feature shape factories build and preserve source identity", {
   seq <- data.frame(accver = "circle", length = 1000)
   data <- data.frame(
-    accver = "circle", start = c(50, 250, 450, 650),
-    end = c(180, 380, 580, 780), strand = c("+", "-", "+", "-"),
-    type = c("CDS", "RBS", "terminator", "protein_bind")
+    accver = "circle", start = seq(40, 740, length.out = 8),
+    end = seq(110, 810, length.out = 8), strand = rep(c("+", "-"), 4),
+    type = c("CDS", "regulatory", "promoter", "primer", "marker",
+      "protein_bind", "RBS", "terminator")
   )
+  shapes <- c(CDS = "arrow", regulatory = "compact_arrow",
+    promoter = "promoter_arrow", primer = "primer_arrow", marker = "marker",
+    protein_bind = "block", RBS = "chevron", terminator = "lollipop")
   p <- ggchord(seq, validate = "none") + geom_seq() +
     geom_feature(
       aes(feature_shape = type, feature_fill = type), data = data,
       position = "plasmid"
-    ) + scale_feature_shape_plasmid() + scale_feature_fill_plasmid() +
+    ) + scale_feature_shape_manual(values = shapes) +
+    scale_feature_fill_plasmid() +
     coord_circular()
   out <- export_ggchord_layout(p, include = "feature")$feature
   expect_equal(sort(unique(out$source_row)), seq_len(nrow(data)))
-  expect_setequal(unique(out$feature_shape),
-    c("arrow", "chevron", "lollipop", "block"))
+  expect_setequal(unique(out$feature_shape), unname(shapes))
   expect_s3_class(ggplot2::ggplot_build(p), "ggplot_built")
+})
+
+test_that("feature label fitting uses final font metrics and exports modes", {
+  seq <- data.frame(accver = "circle", length = 1000)
+  feature <- data.frame(
+    accver = "circle", start = 100, end = 220, strand = "+",
+    anno = "measured label", type = "CDS"
+  )
+  draw <- function(size) export_ggchord_layout(
+    ggchord(seq, validate = "none") + geom_seq() +
+      geom_feature_plasmid(data = feature) +
+      geom_feature_label_repel(
+        data = feature, size = size, family = "mono",
+        fontface = "bold", lineheight = 1.35
+      ) + coord_circular(), include = "labels"
+  )$labels
+  small <- draw(2)
+  large <- draw(8)
+  small <- small[small$.component == "text", , drop = FALSE]
+  large <- large[large$.component == "text", , drop = FALSE]
+  expect_equal(small$feature_label_mode, "inside")
+  expect_true(large$feature_label_mode %in% c("adjacent", "callout"))
+  expect_equal(large$family, "mono")
+  expect_equal(large$fontface, "bold")
+  expect_equal(large$lineheight, 1.35)
+})
+
+test_that("inside feature text contrast follows fixed and mapped fill", {
+  seq <- data.frame(accver = "circle", length = 1000)
+  feature <- data.frame(
+    accver = "circle", start = c(100, 400), end = c(300, 600),
+    strand = "+", anno = c("dark", "light"), fill_role = c("a", "b")
+  )
+  tracks <- position_feature_stack(base_position = position_plasmid())
+  fixed <- export_ggchord_layout(
+    ggchord(seq, validate = "none") + geom_seq() +
+      geom_feature_plasmid(
+        data = feature[1, ], feature_fill = "#202020", position = tracks
+      ) +
+      geom_feature_label_repel(data = feature[1, ], position = tracks) +
+      coord_circular(),
+    include = "labels"
+  )$labels
+  expect_equal(unique(fixed$feature_label_colour), "#FFFFFF")
+
+  mapped <- export_ggchord_layout(
+    ggchord(seq, validate = "none") + geom_seq() +
+      geom_feature_plasmid(
+        aes(feature_fill = fill_role), data = feature, position = tracks
+      ) +
+      scale_feature_fill_manual(values = c(a = "#202020", b = "#F4F4F4")) +
+      geom_feature_label_repel(data = feature, position = tracks) +
+      coord_circular(),
+    include = "labels"
+  )$labels
+  mapped <- mapped[mapped$.component == "text", , drop = FALSE]
+  expect_equal(mapped$feature_label_colour, c("#FFFFFF", "#202020"))
+})
+
+test_that("dense plasmid feature labels avoid labels and feature glyphs", {
+  data(plasmid_example_pBluescript_II_SK_plus)
+  features <- find_common_features(plasmid_example_pBluescript_II_SK_plus)
+  tracks <- position_feature_stack(
+    spacing = .10, base_position = position_plasmid()
+  )
+  plot <- ggchord(plasmid_example_pBluescript_II_SK_plus) + geom_seq() +
+    geom_feature_plasmid(data = features, position = tracks) +
+    geom_feature_label_repel(data = features, position = tracks) +
+    coord_circular(rotation = 90)
+  first <- export_ggchord_layout(
+    plot, include = c("feature", "labels")
+  )
+  second <- export_ggchord_layout(
+    plot, include = c("feature", "labels")
+  )
+  expect_identical(first$labels, second$labels)
+  labels <- first$labels[first$labels$.component == "text", , drop = FALSE]
+  boxes <- ggchord_text_boxes(
+    labels, x_col = "x", y_col = "y", text_col = "text",
+    angle_col = "angle", size_col = "size", units_per_inch = .25,
+    box_padding = .005
+  )
+  overlaps <- 0L
+  if (nrow(boxes) > 1L) for (i in seq_len(nrow(boxes) - 1L)) {
+    overlaps <- overlaps + sum(ggchord_oriented_box_overlaps(
+      boxes[i, , drop = FALSE], boxes[seq.int(i + 1L, nrow(boxes)), , drop = FALSE]
+    ))
+  }
+  expect_equal(overlaps, 0L)
+  expect_true(all(labels$feature_label_mode %in%
+    c("inside", "adjacent", "callout")))
+  expect_true(any(labels$feature_label_mode == "inside"))
+  expect_true(any(labels$feature_label_mode != "inside"))
+  internal <- get_chord_layout(plot)
+  internal_labels <- internal$gene_labels
+  internal_boxes <- ggchord_text_boxes(
+    internal_labels, units_per_inch = internal$text_units_per_inch,
+    box_padding = .04
+  )
+  polygons <- split(
+    internal$gene_polys[
+      internal$gene_polys$.component == "polygon", , drop = FALSE
+    ],
+    internal$gene_polys$group[
+      internal$gene_polys$.component == "polygon"
+    ]
+  )
+  for (i in seq_len(nrow(internal_labels))) {
+    expect_false(ggchord_label_hits_features(
+      internal_boxes[i, , drop = FALSE], polygons,
+      source_row = internal_labels$source_row[i],
+      allow_own = internal_labels$feature_label_mode[i] == "inside"
+    ))
+  }
+  expect_lt(max(vapply(seq_len(nrow(boxes)), function(i) {
+    max(sqrt(rowSums(ggchord_box_corners(boxes[i, , drop = FALSE])^2)))
+  }, numeric(1))), 1)
+  expect_true(all(labels$angle <= 90 | labels$angle >= 270))
+  expect_true(all(c("feature_class", "preferred_lane") %in% names(features)))
+  expect_equal(features$feature_shape[features$feature_class == "promoter"],
+    rep("promoter_arrow", sum(features$feature_class == "promoter")))
+  expect_equal(features$feature_shape[features$feature_class == "primer"],
+    rep("primer_arrow", sum(features$feature_class == "primer")))
 })
 
 test_that("plasmid feature preset keeps one arrowhead and draws segment joins", {
@@ -166,7 +293,12 @@ test_that("feature labels reuse fixed and repel label layout", {
   moved <- export_ggchord_layout(
     displaced_plot, include = "labels"
   )$labels
-  expect_true(any(moved$.component == "segment"))
+  moved_text <- moved[moved$.component == "text", , drop = FALSE]
+  expect_true(all(moved_text$feature_label_mode %in%
+    c("adjacent", "callout")))
+  if (any(moved_text$feature_label_mode == "callout")) {
+    expect_true(any(moved$.component == "segment"))
+  }
 })
 
 test_that("plasmid feature preset stacks overlapping intervals by default", {

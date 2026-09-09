@@ -89,6 +89,8 @@ compute_chord_layout <- function(
     geneLabelRadialOffset, geneLabelCircumOffset,
     geneLabelCircumLimit, geneLabelRotation,
     gene_label_show, gene_label_size,
+    gene_label_family = "", gene_label_fontface = 1,
+    gene_label_lineheight = 1.2,
     gene_label_wrap = NULL,
     gene_label_fit = "wrap",
     gene_label_max_lines = 2L,

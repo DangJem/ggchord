@@ -1,5 +1,60 @@
 # Shared interval and shape helpers for geom_gene() and geom_feature().
 
+ggchord_feature_classes <- function(type) {
+  key <- tolower(trimws(as.character(type)))
+  key <- gsub("[^a-z0-9]+", "_", key)
+  key <- gsub("^_+|_+$", "", key)
+  aliases <- c(
+    gene = "gene", cds = "gene", resistance_gene = "resistance_gene",
+    rep_origin = "origin", replication_origin = "origin", ori = "origin",
+    origin = "origin", promoter = "promoter",
+    primer = "primer", primer_bind = "primer",
+    protein_bind = "binding_site", binding_site = "binding_site",
+    operator = "operator", regulatory = "regulatory",
+    regulatory_region = "regulatory", mcs = "mcs",
+    misc_feature = "misc_feature", repeat_region = "misc_feature",
+    terminator = "regulatory", rbs = "regulatory"
+  )
+  out <- unname(aliases[key])
+  out[is.na(out) | !nzchar(out)] <- "misc_feature"
+  out
+}
+
+ggchord_feature_class_shape <- function(feature_class) {
+  values <- c(
+    gene = "arrow", resistance_gene = "arrow", origin = "arrow",
+    promoter = "promoter_arrow", primer = "primer_arrow",
+    binding_site = "block", operator = "block", regulatory = "compact_arrow",
+    mcs = "block", misc_feature = "block"
+  )
+  out <- unname(values[as.character(feature_class)])
+  out[is.na(out)] <- "block"
+  out
+}
+
+ggchord_feature_width_factor <- function(shape) {
+  values <- c(
+    arrow = 1, compact_arrow = .72, promoter_arrow = .55,
+    primer_arrow = .48, marker = .38, block = .72,
+    chevron = .68, lollipop = .55
+  )
+  out <- unname(values[as.character(shape)])
+  out[is.na(out)] <- 1
+  out
+}
+
+ggchord_feature_preferred_lane <- function(feature_class) {
+  values <- c(
+    gene = 0L, resistance_gene = 0L, origin = 0L,
+    mcs = 1L, binding_site = 1L, operator = 1L,
+    regulatory = 1L, promoter = 2L, primer = 2L,
+    misc_feature = 1L
+  )
+  out <- unname(values[as.character(feature_class)])
+  out[is.na(out)] <- 0L
+  as.integer(out)
+}
+
 ggchord_feature_intervals <- function(start, end, length, strand,
                                       circular = FALSE) {
   if (isTRUE(circular) && start > end) {
@@ -40,6 +95,27 @@ ggchord_shape_wedge <- function(a_start, a_end, r0, width) {
     angle = c(a_start, a_start, a_end),
     radius = c(r0 + width / 2, r0 - width / 2, r0)
   ))
+}
+
+ggchord_shape_marker <- function(a_start, a_end, r0, width) {
+  mid <- (a_start + a_end) / 2
+  half <- min(abs(a_end - a_start) / 2,
+    width * .34 / max(abs(r0), .1))
+  direction <- if (a_end < a_start) -1 else 1
+  half <- direction * max(half, abs(a_end - a_start) * .22)
+  list(list(
+    angle = c(mid - half, mid, mid + half, mid),
+    radius = c(r0, r0 + width / 2, r0, r0 - width / 2)
+  ))
+}
+
+ggchord_minimum_display_span <- function(a_start, a_end, r0, width,
+                                          multiple) {
+  span <- a_end - a_start
+  direction <- if (span < 0) -1 else 1
+  visual_span <- max(abs(span), width * multiple / max(abs(r0), .1))
+  mid <- (a_start + a_end) / 2
+  c(mid - direction * visual_span / 2, mid + direction * visual_span / 2)
 }
 
 ggchord_shape_arrow <- function(a_start, a_end, r0, width,
@@ -169,6 +245,44 @@ ggchord_feature_geometry <- function(shape, a_start, a_end, r0, width,
                                      short_feature = "auto",
                                      draw_head = TRUE,
                                      bidirectional = FALSE) {
+  if (shape %in% c("compact_arrow", "promoter_arrow", "primer_arrow")) {
+    available <- abs(a_end - a_start) * max(abs(r0), .1)
+    if (available < width * .42) shape <- "marker"
+  }
+  if (identical(shape, "marker")) {
+    return(ggchord_shape_marker(a_start, a_end, r0, width))
+  }
+  if (identical(shape, "compact_arrow")) {
+    return(ggchord_shape_arrow(
+      a_start, a_end, r0, width,
+      head_length = min(arrow_head_length * .78,
+        abs(a_end - a_start) * max(abs(r0), .1) * .38),
+      head_width = min(arrow_head_width, 1.18),
+      short_feature = short_feature, draw_head = draw_head
+    ))
+  }
+  if (identical(shape, "promoter_arrow")) {
+    display <- ggchord_minimum_display_span(
+      a_start, a_end, r0, width, multiple = 2.6
+    )
+    return(ggchord_shape_arrow(
+      display[1L], display[2L], r0, width,
+      head_length = min(arrow_head_length * .72,
+        abs(display[2L] - display[1L]) * max(abs(r0), .1) * .34),
+      head_width = 1, short_feature = "block", draw_head = draw_head
+        ))
+  }
+  if (identical(shape, "primer_arrow")) {
+    display <- ggchord_minimum_display_span(
+      a_start, a_end, r0, width, multiple = 3.0
+    )
+    return(ggchord_shape_arrow(
+      display[1L], display[2L], r0, width,
+      head_length = min(arrow_head_length * .60,
+        abs(display[2L] - display[1L]) * max(abs(r0), .1) * .42),
+      head_width = 1.08, short_feature = "block", draw_head = draw_head
+    ))
+  }
   if (identical(shape, "arrow") && isTRUE(bidirectional) &&
       isTRUE(draw_head)) {
     return(ggchord_shape_bidirectional_arrow(
