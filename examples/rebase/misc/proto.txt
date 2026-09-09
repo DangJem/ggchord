@@ -1,0 +1,681 @@
+ 
+REBASE version 609                                              proto.609
+ 
+    =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+    REBASE, The Restriction Enzyme Database   http://rebase.neb.com
+    Copyright (c)  Dr. Richard J. Roberts, 2024.   All rights reserved.
+    =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+ 
+Rich Roberts                                                    Aug 27 2026
+ 
+
+
+
+	    TYPE II ENZYMES
+	    ---------------
+
+AarI                           CACCTGC (4/8)
+AatII                          GACGT^C
+Aba1056II                      CACRAC
+Aba13301I                      GCAAAC
+Aba19606II                     CTATCA
+AbaB8342IV                     CATTAG
+AbaPBA3II                      CAYGAC
+AbaUMB2I                       YCCGSS
+Abr4036II                      GRTYGACC
+AbsI                           CC^TCGAGG
+AccI                           GT^MKAC
+AccIX                          GACRAC
+AccX                           GGARCA
+Acc65V                         GACGCA
+AceIII                         CAGCTC (7/11)
+AciI                           CCGC (-3/-1)
+AclI                           AA^CGTT
+Aco12261II                     CCRGAG
+AcoY31II                       TAGCRAB
+AcyI                           GR^CGYC
+AflII                          C^TTAAG
+AflIII                         A^CRYGT
+AgeI                           A^CCGGT
+AgsI                           TTS^AA
+AhaIII                         TTT^AAA
+AhyRBAHI                       GCYYGAC
+AhyYL17I                       YAAMGAG
+AjuI                           (7/12) GAANNNNNNNTTGG (11/6)
+AlfI                           (10/12) GCANNNNNNTGC (12/10)
+AloI                           (7/12) GAACNNNNNNTCC (12/7)
+AluI                           AG^CT
+AlwFI                          GAAAYNNNNNRTG
+AlwNI                          CAGNNN^CTG
+AmaCSI                         GCTCCA (11/9)
+Aod1I                          GATCNAC
+AoxI                           ^GGCC
+ApaI                           GGGCC^C
+ApaBI                          GCANNNNN^TGC
+ApaLI                          G^TGCAC
+ApoI                           R^AATTY
+ApyPI                          ATCGAC (20/18)
+AquII                          GCCGNAC (20/18)
+AquIV                          GRGGAAG (19/17)
+ArsI                           (8/13) GACNNNNNNTTYG (11/6)
+AscI                           GG^CGCGCC
+Asl11923II                     GGGABCC
+Asp103I                        CGRAGGC
+Asp337I                        CARABGG
+AspAMDIV                       ACCCAC
+AspBHI                         YSCNS (8/12)
+AspDUT2V                       GNGCAAC
+AspJHL3II                      CGCCCAG
+AspNIH4III                     AAGAACB
+AspSLV7III                     GTCTCA
+Asp114pII                      AGCABCC
+AsuI                           G^GNCC
+AsuII                          TT^CGAA
+Asu14238IV                     CGTRAC
+AteTI                          GGGRAG
+AvaI                           C^YCGRG
+AvaII                          G^GWCC
+AvaIII                         ATGCAT
+Avi249I                        CTGCA
+AvrII                          C^CTAGG
+Awo1030IV                      GCCRAG
+BaeI                           (10/15) ACNNNNGTAYC (12/7)
+Bag18758I                      CCCGAG
+BalI                           TGG^CCA
+BamHI                          G^GATCC
+BanLI                          RTCAGG
+BarI                           (7/12) GAAGNNNNNNTAC (12/7)
+Bau1417V                       GTTCAG
+Bbr52II                        GGCGAG
+Bbr57III                       GTRAAYG
+Bbr7017II                      CGGGAG
+Bbr7017III                     GGRCAG
+BbuB31I                        GNAAYG
+BbuB31II                       CGRKA
+BbvI                           GCAGC (8/12)
+BbvII                          GAAGAC (2/6)
+BbvCI                          CCTCAGC (-5/-2)
+BccI                           CCATC (4/5)
+Bce83I                         CTTGAG (16/14)
+Bce3081I                       TAGGAG
+Bce10661III                    TATCNAG
+BcefI                          ACGGC (12/13)
+BcgI                           (10/12) CGANNNNNNTGC (12/10)
+BciVI                          GTATCC (6/5)
+BclI                           T^GATCA
+Bco11035III                    GAAGCY
+BdaI                           (10/12) TGANNNNNNTCA (12/10)
+BetI                           W^CCGGW
+BfaSII                         GANGGAG
+BfiI                           ACTGGG (5/4)
+BglI                           GCCNNNN^NGGC
+BglII                          A^GATCT
+Bhe175II                       GCCCNA
+BinI                           GGATC (4/5)
+BisI                           GC^NGC
+BkrAM31DI                      RTTAAATM
+Ble402II                       GRAGCAG
+BloAII                         GAGGAC
+BmgI                           GKGCCC
+BplI                           (8/13) GAGNNNNNCTC (13/8)
+Bps6700III                     TACCNAG
+Bpu10I                         CCTNAGC (-5/-2)
+BsaAI                          YAC^GTR
+BsaBI                          GATNN^NNATC
+BsaXI                          (9/12) ACNNNNNCTCC (10/7)
+BsbI                           CAACAC (21/19)
+BscGI                          CCCGT
+BscXI                          GCAGGC (-1/-5)
+BseMII                         CTCAG (10/8)
+BsePI                          G^CGCGC
+BseRI                          GAGGAG (10/8)
+BseSI                          GKGCM^C
+BseYI                          CCCAGC (-5/-1)
+BsgI                           GTGCAG (16/14)
+BsiI                           CACGAG (-5/-1)
+BsiYI                          CCNNNNN^NNGG
+BsmI                           GAATGC (1/-1)
+BsmAI                          GTCTC (1/5)
+Bsp24I                         (8/13) GACNNNNNNTGG (12/7)
+Bsp460III                      CGCGCAG
+Bsp1407I                       T^GTACA
+Bsp3004IV                      CCGCAT
+BspGI                          CTGGAC
+BspHI                          T^CATGA
+BspLU11I                       A^CATGT
+BspMI                          ACCTGC (4/8)
+BspMII                         T^CCGGA
+BspNCI                         CCAGA
+BsrI                           ACTGG (1/-1)
+BsrBI                          CCGCTC (-3/-3)
+BsrDI                          GCAATG (2/0)
+BstEII                         G^GTNACC
+BstXI                          CCANNNNN^NTGG
+BtgZI                          GCGATG (10/14)
+BtrI                           CACGTC (-3/-3)
+BtsI                           GCAGTG (2/0)
+BtsIMutI                       CAGTG (2/0)
+Bve1B23I                       GACNNNNNTGG
+Cac8I                          GCN^NGC
+Cal14237I                      GGTTAG
+CalB3II                        GRTTRAG
+CauII                          CC^SGG
+Cba13II                        AGGAAT
+Cba16038I                      CCTNAYNC
+Cbo67071IV                     GCRGAAG
+CcaP7V                         CRAAAAR
+CchII                          GGARGA (11/9)
+CchIII                         CCCAAG (20/18)
+Cch467III                      GNGAAAY
+Cco11366VI                     GAAGAA
+Cco11437V                      CAYNNNNNRTAG
+Cco14983V                      GGGTDA
+Cco14983VI                     GCYGA
+CcrNAIII                       CGACCAG
+CdiI                           CATCG (-1/-1)
+Cdi11397I                      GCGCAG
+Cdi13746V                      RGAAAGR
+Cdi13750III                    CCGATCC
+CdpI                           GCGGAG (20/18)
+Cdu23823II                     GTGAAG
+Cfa8380I                       GRGGAY
+CfrI                           Y^GGCCR
+Cfr10I                         R^CCGGY
+CfrMH13II                      AGCANCC
+CfrMH16VI                      CTAAAG
+Cfupf3II                       GARCAG
+Cgl13032I                      GGCGCA
+Cgl13032II                     ACGABGG
+Cin11811I                      TGKMCA
+CjeI                           (8/14) CCANNNNNNGT (15/9)
+Cje265V                        GKAAGC
+Cje54107III                    GKAAYC
+CjeFIII                        GCAAGG
+CjeFV                          GGRCA
+CjeNII                         GAGNNNNNGT
+CjeNIII                        GKAAYG (19/17)
+CjeNV                          CCYGA
+CjePI                          (7/13) CCANNNNNNNTC (14/8)
+CjeP659IV                      CACNNNNNNNGAA
+CjuI                           CAYNNNNNRTG
+CjuII                          CAYNNNNNCTC
+Cko11077IV                     TGACAG
+ClaI                           AT^CGAT
+Cla11845III                    GCGAA
+Cly7489II                      AAAAGRG
+Cpe2837III                     GRNACAYT
+Cpe10578V                      GANGAGY
+Cpe13170II                     GTTGNAG
+Cre7908I                       GCGGGA
+Csa9238II                      CAAANTC
+Csp2014I                       GGAGGC
+CspBP25III                     CCANNNNNRTGA
+CspCI                          (11/13) CAANNNNNGTGG (12/10)
+CspL61I                        TYGAYCT
+CspX1II                        ACCCCA
+CstMI                          AAGGAG (20/18)
+CviJI                          RG^CY
+CviRI                          TG^CA
+DdeI                           C^TNAG
+Dde51507I                      CCWGG
+Dpi3069I                       GACAG
+Dpi3084I                       CGRAG
+Dpi3090II                      AAGRAG
+DpnI                           GA^TC
+DraII                          RG^GNCCY
+DraIII                         CACNNN^GTG
+DraRI                          CAAGNAC (20/18)
+DrdI                           GACNNNN^NNGTC
+DrdII                          GAACCA
+DrdIV                          TACGAC (20/18)
+DrdV                           CATGNAC (10/8)
+DrdVI                          GCAGCC
+DrdVIII                        ARGAGC
+DsaI                           C^CRYGG
+DspS02II                       TGCCGAC
+DvuIII                         CACNCAC
+Eam1105I                       GACNNN^NNGTC
+EciI                           GGCGGA (11/9)
+Ecl234I                        CGGNAAG
+Ecl35734I                      GAAAYTC
+Eco31I                         GGTCTC (1/5)
+Eco47III                       AGC^GCT
+Eco57I                         CTGAAG (16/14)
+Eco1836I                       CACANTT
+Eco4174I                       GCACAG
+Eco4465II                      GAAABCC
+Eco8164I                       GCCKAG
+Eco9009II                      GAAANTC
+Eco9020I                       CGAABTT
+Eco9035I                       GGGANTT
+Eco9699II                      TAGARC
+Eco43896II                     CRARCAG
+EcoBLMcrX                      RCSRC (-3/-2)
+EcoE1140I                      ACCYAC
+Eco57MI                        CTGRAG (16/14)
+EcoMVII                        CANCATC
+EcoNI                          CCTNN^NNNAGG
+EcoRI                          G^AATTC
+EcoRII                         ^CCWGG
+EcoRV                          GAT^ATC
+Ehi46392I                      CCCNNAG
+Eli8509II                      CCGGAG
+ErhG4T10I                      CGANNNNNNTC
+EsaSSI                         GACCAC
+EspI                           GC^TNAGC
+Esp3I                          CGTCTC (1/5)
+Esp3007I                       CAGAAG
+FaiI                           YA^TR
+FalI                           (8/13) AAGNNNNNCTT (13/8)
+FauI                           CCCGC (4/6)
+Fba202Z8II                     AGAAGG
+Fco1691IV                      GCVGAG
+FinI                           GGGAC
+Fna13121I                      TTGAYC
+Fnu11326II                     GAGNNNNRTAY
+Fnu11326IV                     CTTAATT
+FnuDII                         CG^CG
+Fnu4HI                         GC^NGC
+FokI                           GGATG (9/13)
+FseI                           GGCCGG^CC
+FspAI                          RTGC^GCAY
+FspEI                          CC (12/16)
+FspPK15I                       GARGAAG
+FtnUV                          GAAACA
+GauT27I                        CGCGCAGG
+Gba708II                       ATGCAC
+GdiII                          CGGCCR (-5/-1)
+GlaI                           GC^GC
+Gru56503II                     CARABGC
+GsuI                           CTGGAG (16/14)
+HaeI                           WGG^CCW
+HaeII                          RGCGC^Y
+HaeIII                         GG^CC
+HaeIV                          (7/13) GAYNNNNNRTC (14/9)
+HbaII                          GCCCAG
+Hca13221V                      CACNNNNNRTAY
+HdeNY26I                       CGANNNNNNTCC
+HdeZA17I                       GCANNNNNNTCC
+HgaI                           GACGC (5/10)
+HgiAI                          GWGCW^C
+HgiCI                          G^GYRCC
+HgiEII                         ACCNNNNNNGGT
+HgiJII                         GRGCY^C
+HhaI                           GCG^C
+Hin4I                          (8/13) GAYNNNNNVTC (13/8)
+Hin4II                         CCTTC (6/5)
+HindII                         GTY^RAC
+HindIII                        A^AGCTT
+HinfI                          G^ANTC
+HpaI                           GTT^AAC
+HpaII                          C^CGG
+HphI                           GGTGA (8/7)
+Hpy99I                         CGWCG^
+Hpy99XIII                      GCCTA
+Hpy99XIV                       GGWTAA
+Hpy99XIV-mut1                  GGWCNA
+Hpy99XXII                      CYANNNNNNTGA
+Hpy178III                      TC^NNGA
+Hpy188I                        TCN^GA
+Hpy300XI                       CCTYNA
+Hpy12823XIII                   GAAAAG
+HpyAXIV                        GCGTA
+HpyAXVI-mut1                   CRTTAA
+HpyAXVI-mut2                   CRTCNA
+HpyAXVIII                      GGANNAG
+HpyAS001VI                     CYANNNNNNTTC
+HpyFXVI                        GCRGA
+HpyG272XV                      GAAAAG
+HpyH1XII                       GCRCA
+HpyLIM6XII                     CYANNNNNNTCC
+HpyLIM8XII                     GCRGA
+HpyLIM9XVI                     GAAAAG
+HpyPU007XIX                    CYANNNNNNTGY
+HpyPU009XV                     GCRGA
+HpySH002XIII                   GAAAAG
+HpySH010XIII                   GAAAAG
+HpyUM032XIII                   CYANNNNNNNTRG
+HpyUM032XIII-mut1              CYANNNNNNNTTC
+HpyUM032XIV                    GAAAG
+HpyUM037X                      GTGGNAG, TNGGNAG
+Hso63250IV                     AACNNNNNGTT
+Hso63373III                    CGANNNNNRTAY
+HspMHR1II                      GAGCAGC
+Jma19592I                      GTATNAC
+Jma19592II                     GRGCRAC
+Jsp2502II                      GRNGAAT
+Kas9737III                     CCCRAG
+KpnI                           GGTAC^C
+Kpn156V                        CRTGATT
+Kpn327I                        GACATC
+Kpn9178I                       GNGCGAG
+Kpn9644II                      GRACRAC
+KpnNH25III                     CTRGAG
+KpnNIH30III                    GTTCNAC
+KroI                           G^CCGGC
+Kro7512II                      ARCAGKC
+Ksp632I                        CTCTTC (1/4)
+Lba2029III                     CYAAANG
+Lbr124II                       CATCNAC
+Lcr047I                        CTCCA
+Lcr147VIII                     GGYAAG
+Lcr310I                        CAAAGC
+LcrJM1V                        AGCYAC
+LcrJM3I                        GRTAAAT
+LcrJM3II                       GMAGG
+Lde4408II                      ACAAAG
+LlaG50I                        CCGTKA
+Lme32I                         CTYCAA
+LmnI                           GCTCC (1/-1)
+Lmo370I                        AGCGCCG
+Lmo911II                       TAGRAG
+Lpl1004II                      AGGRAG
+Lpn11417II                     ACGAAT
+Lpn12272I                      GCNCAAC
+LpnPI                          CCG (11/15), CGG, GCGC
+Lra68I                         GTTCNAG
+LsaDS4I                        TGGAAT
+Lsp48III                       AGCACC
+Lsp6406VI                      CRAGCAC
+MaeI                           C^TAG
+MaeII                          A^CGT
+MaeIII                         ^GTNAC
+MaqI                           CRTTGAC (21/19)
+MauBI                          CG^CGCGCG
+Mba11I                         AGGCGA
+MboI                           ^GATC
+MboII                          GAAGA (8/7)
+Mch946II                       WCGATCT
+Mch10819I                      CYCAGCG
+McrI                           CGRY^CG
+MfeI                           C^AATTG
+MjaIV                          GTNNAC
+MkaDII                         GAGAYGT
+Mla10359I                      CGANNNNNNTCA
+MluI                           A^CGCGT
+Mlu211III                      AGCCCA
+MmeI                           TCCRAC (20/18)
+MnlI                           CCTC (7/6)
+MseI                           T^TAA
+MslI                           CAYNN^NNRTG
+MspBKII                        CGCTNAT
+MspBKIII                       CGGCNAC
+MspBKIV                        GGGCNAG
+MspCDII                        GCAAAAG
+MspCDIII                       CTCCNAG
+MspCDIV                        GCTCNAT
+MspF392I                       CCCAATV
+MspI7II                        ACGRAG
+MspI7IV                        GCMGAAG
+MspJI                          CNNR (9/13)
+MspNHIII                       CGCANAG
+MspNHIV                        GGCTNAG
+MspNHV                         GCTCNAG
+MspSC27II                      CCGCGAC
+MspSTII                        CGCTNAT
+MspSTIV                        CTCGNAT
+MstI                           TGC^GCA
+MteI                           GCGC^NGCGC
+MtuHN878II                     CACGCAG
+MwoI                           GCNNNNN^NNGC
+NaeI                           GCC^GGC
+Nal45188II                     ACCAGC
+Nan12227I                      CCANNNNNNTCY
+NarI                           GG^CGCC
+Nbr128II                       ACCGAC
+NcoI                           C^CATGG
+NdeI                           CA^TATG
+NgoAVII                        GCCGC (7/7)
+NgoAVIII                       (12/14) GACNNNNNTGA (13/11)
+NhaXI                          CAAGRAG
+NheI                           G^CTAGC
+NhoI                           GCWGC
+NlaIII                         CATG^
+NlaIV                          GGN^NCC
+NlaCI                          CATCAC (19/17)
+NmeAIII                        GCCGAG (21/19)
+NmeA6CIII                      GCCGAC (21/19)
+NotI                           GC^GGCCGC
+NpeUS61II                      GATCGAC
+NruI                           TCG^CGA
+NspI                           RCATG^Y
+NspBII                         CMG^CKG
+NspES21II                      CRTTCAG
+ObaBS10I                       ACGAG
+OgrI                           CAACNAC
+OliI                           CACNN^NNGTG
+OspHL35III                     YAGGAG
+PacI                           TTAAT^TAA
+PacIII                         GTAATC
+Pac19842II                     CCTTGA
+Pae8506I                       CATCGAR
+Pae10662III                    TGACGAG
+PaePA99III                     AAGAYC
+Pal408I                        CCRTGAG
+PasI                           CC^CWGGG
+Pba2294I                       GTAAG
+Pbu13063II                     GTATYC
+PcaII                          GACGAG
+PcsI                           WCGNNNN^NNNCGW
+Pdi8503III                     CCGGNAG
+Pdu1735I                       CACCAC
+PenI                           GCAGT
+Pfl1108I                       TCGTAG
+Pfl3756II                      CCCTNAG
+Pfl8569I                       GCN^NGC
+Pfl10783II                     GCGTCAG
+PflMI                          CCANNNN^NTGG
+PflPt14I                       RGCCCAC
+PfoI                           T^CCNGGA
+PfrJS12IV                      TANAAG
+PfrJS12V                       GGCGGAG
+PfrJS15III                     CTTCNAC
+PgaP73III                      TTCGAG
+Pin17FIII                      GGYGAB
+PinP23II                       CTRKCAG
+PinP59III                      GAAGNAG
+PleI                           GAGTC (4/5)
+PliMI                          CGCCGAC
+PmaCI                          CAC^GTG
+PmeI                           GTTT^AAAC
+Pme10899I                      GACAGG
+Pni103V                        AAGNNNNNGTC
+PpiI                           (7/12) GAACNNNNNCTC (13/8)
+PpiP13II                       CGCRGAC
+PpuMI                          RG^GWCCY
+Pru8113I                       CAGANGC
+Pse18267I                      RCCGAAG
+PshAI                          GACNN^NNGTC
+PsiI                           TTA^TAA
+Psp0357II                      GCGAAG
+Psp1314I                       GCTGCTG
+PspAT13III                     CCGANAG
+PspD7DII                       CCGCGAG
+PspMR102II                     CAAGAAC
+PspOMII                        CGCCCAR (20/18)
+PspPRI                         CCYCAG (15/13)
+PspR84I                        TACYCAC
+PspXI                          VC^TCGAGB
+PsrI                           (7/12) GAACNNNNNNTAC (12/7)
+PstI                           CTGCA^G
+Pst145I                        CTAMRAG
+Pst273I                        GATCGAG
+Pst14472I                      CNYACAC
+PsuGI                          BBCGD
+PvuI                           CGAT^CG
+PvuII                          CAG^CTG
+Ran11014IV                     GAAAGAG
+Rba2021I                       CACGAGH
+RceI                           CATCGAC (20/18)
+RdeGBI                         CCGCAG
+RdeGBII                        ACCCAG (20/18)
+RdeGBIII                       (9/11) TGRYCA (11/9)
+Rer8036II                      CCGAKGG
+RflFIII                        CGCCAG
+Rgo13296IV                     GRAAGCG
+Rho5650I                       AACGAG
+Rkr11038I                      GGANNNNNRTGA
+RlaI                           VCW
+RlaII                          ACACAG (20/18)
+RleAI                          CCCACA (12/9)
+Rmu369III                      GGCYAC
+RpaI                           GTYGGAG (11/9)
+RpaBI                          CCCGCAG (20/18)
+RpaB5I                         CGRGGAC (20/18)
+RpaTI                          GRTGGAG
+RsaI                           GT^AC
+Rsp008IV                       ACGCAG
+Rsp008V                        GCCCAT
+Rsp531II                       CACACG
+RspPBTS2III                    CTTCGAG
+RsrII                          CG^GWCCG
+Rtr1953I                       TGANNNNNNTGA
+SacI                           GAGCT^C
+SacII                          CCGC^GG
+Saf8902III                     CAATNAG
+Sag901I                        GCAAAT
+SalI                           G^TCGAC
+SanDI                          GG^GWCCC
+SapI                           GCTCTTC (1/4)
+SauI                           CC^TNAGG
+Sau1803III                     CGANNNNNNTAC
+Sau5656II                      GTTGCA
+Sau64037IV                     GTANNNNNNTGG
+SauMJ015III                    GARCNAG
+Sba460II                       GGNGAYG
+Sbo46I                         TGAAC
+ScaI                           AGT^ACT
+ScoDS2II                       GCTAAT
+ScrFI                          CC^NGG
+SdeAI                          CAGRAG (21/19)
+SdeOSI                         (11/13) GACNNNNRTGA (12/10)
+SduI                           GDGCH^C
+Sdy5370I                       CACNNNNNTCY
+Sdy7136I                       GAGNNNNNTAA
+Sdy9603I                       GCANNNNNNNTGA
+SecI                           C^CNNGG
+Sen5794III                     ACGAACB
+Sen6480IV                      GTTCAT
+Sen17963III                    CCAAAC
+SenA1673III                    GNGGCAG
+SenSARA26III                   ACRCAG
+SenTFIV                        GATCAG
+Sep11964I                      CGYCAT
+Seq11824I                      CTANNNNNCTC
+SetI                           ASST^
+SexAI                          A^CCWGGT
+SfaNI                          GCATC (5/9)
+SfeI                           C^TRYAG
+SfiI                           GGCCNNNN^NGGCC
+Sfl13829III                    GNYCAG
+SgeI                           CNNGNNNNNNNNN^
+SgfI                           GCGAT^CGC
+Sgr7807I                       GCCGAGG
+SgrAI                          CR^CCGGYG
+SgrAII                         CGAGATC
+SgrDI                          CG^TCGACG
+SgrTI                          CCDS (10/14)
+SimI                           GGGTC (-3/0)
+SmaI                           CCC^GGG
+Sma325I                        ARCCCT
+Sma10259II                     CAAAGA
+SmaUMH5I                       CTTGAC
+SmaUMH8I                       GCGAACB
+SmlI                           C^TYRAG
+SnaI                           GTATAC
+Sna507VIII                     CRTTGAG
+SnaBI                          TAC^GTA
+Sno506I                        GGCCGAG
+SpeI                           A^CTAGT
+Spe19205IV                     GGACY
+SphI                           GCATG^C
+SplI                           C^GTACG
+SpnRII                         TCGAG
+SpoDI                          GCGGRAG
+SrfI                           GCCC^GGGC
+Sse232I                        CG^CCGGCG
+Sse8387I                       CCTGCA^GG
+Sse8647I                       AG^GWCCT
+SspI                           AAT^ATT
+Ssp714II                       CGCAGCG
+Ssp6803IV                      GAAGGC
+SstE37I                        CGAAGAC (20/18)
+Sth132I                        CCCG (4/8)
+Sth20745III                    GGACGAC
+SthSt3II                       GAAGT
+StuI                           AGG^CCT
+StyI                           C^CWWGG
+SurP32aII                      ACRGAG
+SwaI                           ATTT^AAAT
+Sxy1780I                       GGGTNA
+TagI                           AC^GT
+TaqI                           T^CGA
+TaqII                          GACCGA (11/9)
+TaqIII                         CACCCA (11/9)
+TatI                           W^GTACW
+TauI                           GCSG^C
+TfiI                           G^AWTC
+TkoII                          TTCAAG (10/8)
+TpyTP2I                        ACCAAG
+TseI                           G^CWGC
+TsoI                           TARCCA (11/9)
+Tsp45I                         ^GTSAC
+TspARh3I                       GRACGAC
+Tsp4CI                         ACN^GT
+TspDTI                         ATGAA (11/9)
+TspEI                          ^AATT
+TspGWI                         ACGGA (11/9)
+TspRI                          CASTGNN^
+TssI                           GAGNNNCTC
+TstI                           (8/13) CACNNNNNNTCC (12/7)
+TsuI                           GCGAC
+Tth111I                        GACN^NNGTC
+Tth111II                       CAARCA (11/9)
+UbaF9I                         TACNNNNNRTGT
+UbaF11I                        TCGTA
+UbaF12I                        CTACNNNGTC
+UbaF13I                        GAGNNNNNNCTGG
+UbaF14I                        CCANNNNNTCG
+UbaPI                          CGAACG
+Van9116I                       CCKAAG
+Vdi96II                        GNCYTAG
+VpaSKIII                       CGTCAG
+VspI                           AT^TAAT
+Vtu19109I                      CACRAYC
+WviI                           CACRAG (21/19)
+XbaI                           T^CTAGA
+Xca85IV                        TACGAG
+XcmI                           CCANNNNN^NNNNTGG
+XhoI                           C^TCGAG
+XhoII                          R^GATCY
+XmaIII                         C^GGCCG
+XmnI                           GAANN^NNTTC
+Yps3606I                       CGGAAG
+Yru12986I                      AGGAAG
+
+
+
+	    TYPE I ENZYMES
+	    ---------------
+
+HindI                          RAACNNNNNTAG
+Lcr109IV                       CTNGAYC
+LcrJM4V                        GRTANAG
+LlaBIII                        GGCTNA
+LlaGI                          CTNGAYG
+Lmo10068II                     CCYRNAC
+SpnD39IIIB                     CRAANNNNNNNNNTTC
+SpnD39IIIC                     CACNNNNNNNCTT
+SpnD39IIID                     CACNNNNNNNCTG
+StySBLI                        GGTANNNNNNTCG
+StySKI                         CGATNNNNNNNGTTA
+
+
+
+	    TYPE III ENZYMES
+	    ---------------
+
+EcoP15I                        CAGCAG (25/27)
+EcoR22I                        GAACC
+PstII                          CTGATG (25/27)
+

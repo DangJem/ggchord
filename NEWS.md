@@ -100,7 +100,10 @@
   exact/approximate DNA and six-frame protein matching. Complete REBASE 609
   pattern data are embedded for working-directory-independent restriction-site
   search and remain reproducible from `VERSION` plus the three `embossa_*.txt`
-  source files.
+  source files. The extracted `examples/rebase/misc/` directory retains
+  supplemental REBASE information that may be used to enrich or verify
+  metadata when the database is built or updated; runtime searches do not
+  depend on that directory.
 * Removed the v0.12 `seq_id` data/mapping compatibility entry. Rename it to
   `accver` before calling ggchord functions.
 * Removed `ggchord::geom_ribbon()` after its v0.12 deprecation. Use
