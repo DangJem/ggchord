@@ -233,26 +233,37 @@ test_that("restriction layout is deterministic and never moves site anchors", {
   expect_true(all(lengths(leaders$source_rows) == 1L))
   expect_true(all(c(
     "source_rows", "cluster_id", "junction_id", "label_direction",
-    "label_order", "plotmath_label"
+    "label_order", "label_connection_side", "plotmath_label"
   ) %in% names(first)))
-  expect_true(all(labels$label_order[labels$hjust == 1] ==
-    "position_enzyme"))
-  expect_true(all(labels$label_order[labels$hjust == 0] ==
-    "enzyme_position"))
-  # The connector must meet the enzyme-name edge, never the outer parenthesised
-  # coordinate: left edge for right labels, right edge for left labels.
+  expect_true(all(labels$label_order[
+    labels$label_connection_side == "left"] == "enzyme_position"))
+  expect_true(all(labels$label_order[
+    labels$label_connection_side == "right"] == "position_enzyme"))
+  # Validate the final rendered approach, not just hjust: a right-travelling
+  # segment enters the left edge and a left-travelling segment the right edge.
   for (junction in labels$junction_id) {
     label_row <- labels[labels$junction_id == junction, , drop = FALSE]
     leader_rows <- leaders[leaders$junction_id == junction, , drop = FALSE]
-    distance <- (leader_rows$x - label_row$x)^2 +
-      (leader_rows$y - label_row$y)^2
-    endpoint <- leader_rows[which.min(distance), , drop = FALSE]
-    if (label_row$hjust == 0) {
+    # Each segment is exported as its own ordered path; the final path has the
+    # largest group id. A bend may be closer to a long label's centre than its
+    # true edge endpoint, so nearest-point selection is not sufficient here.
+    final_group <- max(leader_rows$group)
+    final_path <- leader_rows[leader_rows$group == final_group, ]
+    distance <- (final_path$x - label_row$x)^2 +
+      (final_path$y - label_row$y)^2
+    endpoint <- final_path[which.min(distance), , drop = FALSE]
+    start <- final_path[which.max(
+      (final_path$x - label_row$x)^2 + (final_path$y - label_row$y)^2
+    ), , drop = FALSE]
+    if (label_row$label_connection_side == "left") {
       expect_lt(endpoint$x, label_row$x)
+      expect_gt(endpoint$x, start$x)
     } else {
       expect_gt(endpoint$x, label_row$x)
+      expect_lt(endpoint$x, start$x)
     }
   }
+  expect_true(all(labels$label_connection_side %in% c("left", "right")))
   expect_s3_class(ggplot2::ggplot_build(make_plot("elbow")), "ggplot_built")
   expect_s3_class(ggplot2::ggplotGrob(make_plot("straight")), "gtable")
   ordering <- function(style) {
@@ -269,6 +280,11 @@ test_that("restriction layout is deterministic and never moves site anchors", {
     export_ggchord_layout(make_plot(), include = "restriction")$metadata$coordinate,
     "circular"
   )
+  origin_labels <- labels[labels$anchor_position %in% c(995, 5, 8), ]
+  origin_labels <- origin_labels[order(-origin_labels$y), ]
+  expect_equal(origin_labels$anchor_position, c(995, 5, 8))
+  origin_radius <- sqrt(origin_labels$x^2 + origin_labels$y^2)
+  expect_lt(diff(range(origin_radius)), .04)
 
   sparse <- export_ggchord_layout(
     ggchord(seq, validate = "none") + geom_seq() +
@@ -276,7 +292,7 @@ test_that("restriction layout is deterministic and never moves site anchors", {
       coord_circular(), include = "restriction"
   )$restriction
   sparse <- sparse[sparse$restriction_component == "leader", , drop = FALSE]
-  expect_equal(length(unique(sparse$group)), 1L)
+  expect_lte(length(unique(sparse$group)), 2L)
 
   dense_sites <- data.frame(
     accver = "g", position = seq(1, 22, by = 3),
@@ -290,7 +306,8 @@ test_that("restriction layout is deterministic and never moves site anchors", {
   dense_leaders <- dense[dense$restriction_component == "leader", ]
   segments_per_site <- vapply(split(dense_leaders, dense_leaders$source_row),
     function(x) length(unique(x$group)), integer(1))
-  expect_true(all(segments_per_site == 2L))
+  expect_true(all(segments_per_site <= 2L))
+  expect_true(any(segments_per_site == 2L))
 
   same_position <- data.frame(
     accver = "g", position = c(250, 250),

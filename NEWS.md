@@ -71,14 +71,18 @@
   never rewrites biological coordinates.
 * `geom_restriction_site()` draws ticks, labels and independent radial leaders
   in one deterministic layer. Real site anchors are separated from final
-  Cartesian label positions. Measured text boxes drive ordered dense-region
-  columns, while the top and bottom sectors split into stable left/right
-  queues. Natural sparse callouts use a direct connector; displaced callouts
+  radial label positions. Measured text boxes keep most callouts on one common
+  offset contour; collision-bound clusters may use a nearby outer contour.
+  Natural sparse callouts use a direct connector; displaced callouts
   use exactly two segments, an independent radial stub and fan connector.
   Enzymes sharing one cleavage coordinate are combined
   into one stable callout while all contributing rows remain in `source_rows`.
-  Mirrored label order makes the connector meet the enzyme-name edge and never
-  the parenthesised coordinate. The former `leader = "trunk"` spelling remains
+  Each connector ends on the enzyme-bearing left or right edge of the measured
+  label box: right-travelling lines meet its left edge and left-travelling
+  lines meet its right edge. Near-vertical leaders use the nearest corner on
+  that same side rather than switching to the top/bottom edge. Mirrored text
+  order keeps the enzyme at the connected side. The former `leader = "trunk"`
+  spelling remains
   only as a compatibility alias and no longer creates a shared trunk.
 * Added `geom_seq_center_label()`, `theme_ggchord_plasmid()`,
   `scale_feature_fill_plasmid()`, and `scale_feature_shape_plasmid()`. Manual

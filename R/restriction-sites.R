@@ -331,11 +331,12 @@ GeomRestrictionSite <- ggplot2::ggproto(
 #' @param label_style Label enzyme and position, enzyme only, or position only.
 #' @param label_side Draw labels outside, inside, or automatically.
 #' @param leader Leader routing style. The default `"radial"` measures actual
-#'   text boxes, separates site anchors from final Cartesian label positions,
+#'   text boxes, separates site anchors from final radial label positions,
 #'   and routes either a direct connector or an independent radial stub plus
 #'   fan segment.
-#'   Dense regions form ordered side columns; top and bottom sectors split into
-#'   left/right queues. `"trunk"` is retained only as a compatibility alias.
+#'   Most labels follow one common radial contour; collision-bound clusters may
+#'   move to a nearby outer contour. `"trunk"` is retained only as a
+#'   compatibility alias.
 #' @param min_label_gap Minimum genomic fraction between label slots. `NULL`
 #'   derives a compact device-aware default from the rendered labels.
 #' @param tick_length,label_offset Local-normal distances.
@@ -364,10 +365,11 @@ geom_restriction_site<-function(mapping=NULL,data=NULL,label=TRUE,label_style=c(
   ggchord_capture_layer_input(lyr,data,mapping,c("accver","position","enzyme"))
 }
 
-# This retired radial adapter remains private for comparison while the active
-# solver below uses measured Cartesian columns. Keeping it isolated makes the
-# current anchor/label separation explicit and avoids a shared-trunk fallback.
-ggchord_restriction_label_lanes_radial <- function(
+# Restriction labels use the same radial principles as gene-label repel, with
+# local site clusters so a dense MCS may rise one level without moving every
+# sparse callout. Most inner label edges therefore follow one common offset
+# contour; only collision-bound clusters use a nearby outer contour.
+ggchord_restriction_label_lanes <- function(
     gl, seq_arcs, side = "outside", units_per_inch = .3,
     label_offset = .13, min_label_gap = NULL) {
   frame <- ggchord_label_curve_frame(gl, seq_arcs)
@@ -445,12 +447,13 @@ ggchord_restriction_label_lanes_radial <- function(
     # plain composite string available to the base-device measurer. Invisible
     # side bearings reserve that horizontal difference without inflating the
     # vertical spacing of dense right/left fans.
-    measured$text <- gl$text[rows]
+    measured$text <- paste0("  ", gl$text[rows], "  ")
     solved <- ggchord_radial_label_lanes(
       measured, seq_arcs, side = side,
       units_per_inch = units_per_inch, box_padding = box_padding,
       point_padding = point_padding, repel_boxes = occupied,
-      .fixed_paths = fixed_paths, .balance = FALSE
+      .fixed_paths = fixed_paths, .balance = FALSE,
+      .tangent_limit = .055 * totals[g]
     )
     labels[rows, names(solved$labels)] <- solved$labels
     directions[rows] <- solved$directions
@@ -485,20 +488,48 @@ ggchord_restriction_label_lanes_radial <- function(
   }
   labels$text <- gl$text
   boxes <- ggchord_text_boxes(labels, units_per_inch = units_per_inch)
-  # Near twelve and six o'clock, arc displacement is almost entirely
-  # horizontal. A final one-dimensional pass uses the actual composite-string
-  # widths (plus a small bold-enzyme allowance) to absorb the coordinate-limit
-  # feedback that otherwise lets two top labels visually touch after framing.
+  # Near twelve and six o'clock, solve all local clusters together. Ordering
+  # by the real anchor x coordinate preserves genomic order across the origin;
+  # projecting the packed centres back to one radius keeps the SnapGene-like
+  # circular label contour instead of producing a flat Cartesian row.
+  anchor_radius <- sqrt(gl$anchor_x^2 + gl$anchor_y^2)
+  anchor_radius[anchor_radius <= 1e-10] <- 1
   for (sector in c("top", "bottom")) {
-    rows <- which(directions == sector)
+    rows <- if (sector == "top") {
+      which(gl$anchor_y > 0 & abs(gl$anchor_x) / anchor_radius < .45)
+    } else {
+      which(gl$anchor_y < 0 & abs(gl$anchor_x) / anchor_radius < .68)
+    }
     if (length(rows) < 2L) next
-    half_width <- boxes$w[rows]
+    half_width <- boxes$w[rows] * .62
     packed <- ggchord_pack_label_axis(
-      boxes$cx[rows], boxes$cx[rows], half_width, half_width,
-      gap = .05
+      boxes$cx[rows], gl$anchor_x[rows], half_width, half_width,
+      gap = .030
     )
+    # Do not let packing across the 0/180-degree seam swap a label to the
+    # other side of the vertical axis.  SnapGene keeps pre-seam sites in the
+    # left queue and post-seam sites in the right queue; this is also what
+    # determines which enzyme-bearing text edge receives the connector.
+    seam_gap <- .015
+    left <- gl$anchor_x[rows] < 0
+    if (any(left)) {
+      overflow <- max(packed[left] + half_width[left] + seam_gap)
+      if (overflow > 0) packed[left] <- packed[left] - overflow
+    }
+    if (any(!left)) {
+      underflow <- min(packed[!left] - half_width[!left] - seam_gap)
+      if (underflow < 0) packed[!left] <- packed[!left] - underflow
+    }
     labels$text_x[rows] <- labels$text_x[rows] +
       packed - boxes$cx[rows]
+    target_radius <- max(sqrt(
+      packed^2 + boxes$cy[rows]^2
+    ), max(abs(packed)) + .02)
+    projected_y <- sqrt(pmax(0, target_radius^2 - packed^2))
+    labels$text_y[rows] <- labels$text_y[rows] +
+      if (sector == "top") projected_y - boxes$cy[rows] else
+        -projected_y - boxes$cy[rows]
+    directions[rows] <- sector
   }
   boxes <- ggchord_text_boxes(labels, units_per_inch = units_per_inch)
   labels$.text_width <- boxes$w
@@ -510,12 +541,34 @@ ggchord_restriction_label_lanes_radial <- function(
     draw_segment = !is.na(gl$text) & nzchar(gl$text))
 }
 
-# Restriction-site labels need a more constrained layout than general gene
-# labels. Their true site angle defines only the anchor. Sparse labels keep a
-# radial preference; dense side clusters become ordered Cartesian columns; and
-# the twelve/six-o'clock sectors are split into independent left/right queues.
-# All spacing below is based on the actual rendered text box.
-ggchord_restriction_label_lanes <- function(
+ggchord_restriction_text_metrics <- function(plotmath, size,
+                                             units_per_inch) {
+  n <- length(plotmath)
+  size <- rep_len(size, n)
+  width <- height <- numeric(n)
+  valid <- !is.na(plotmath) & nzchar(plotmath)
+  if (!any(valid)) return(data.frame(width = width, height = height))
+  close_device <- ggchord_measurement_device()
+  on.exit(close_device())
+  for (i in which(valid)) {
+    label <- tryCatch(parse(text = plotmath[i])[[1L]],
+      error = function(e) plotmath[i])
+    grob <- grid::textGrob(
+      label, gp = grid::gpar(fontsize = size[i] * (72.27 / 25.4))
+    )
+    width[i] <- grid::convertWidth(
+      grid::grobWidth(grob), "inches", valueOnly = TRUE
+    ) * units_per_inch
+    height[i] <- grid::convertHeight(
+      grid::grobHeight(grob), "inches", valueOnly = TRUE
+    ) * units_per_inch
+  }
+  data.frame(width = width, height = height)
+}
+
+# Retained experimental Cartesian solver. The radial layout above is preferred
+# because plasmid labels should follow a common offset contour.
+ggchord_restriction_label_lanes_cartesian <- function(
     gl, seq_arcs, side = "outside", units_per_inch = .3,
     label_offset = .18, min_label_gap = NULL) {
   frame <- ggchord_label_curve_frame(gl, seq_arcs)
@@ -694,7 +747,8 @@ ggchord_restriction_geometry <- function(data, params, layout, seq_data) {
                           source_rows = integer(), cluster_id = NA_character_,
                           junction_id = NA_character_,
                           label_direction = NA_character_,
-                          label_order = NA_character_) {
+                          label_order = NA_character_,
+                          label_connection_side = NA_character_) {
     gid <<- gid + 1L
     points$.component <- "path"
     points$restriction_component <- component
@@ -708,6 +762,7 @@ ggchord_restriction_geometry <- function(data, params, layout, seq_data) {
     points$junction_id <- junction_id
     points$label_direction <- label_direction
     points$label_order <- label_order
+    points$label_connection_side <- label_connection_side
     output[[length(output) + 1L]] <<- points
   }
 
@@ -815,19 +870,86 @@ ggchord_restriction_geometry <- function(data, params, layout, seq_data) {
     labels <- solved$labels
     directions <- solved$directions
     tracks <- solved$tracks
+    bend_x <- labels$.radial_bend_x
+    bend_y <- labels$.radial_bend_y
+    invalid_bend <- !is.finite(bend_x) | !is.finite(bend_y)
+    bend_x[invalid_bend] <- tips$x[invalid_bend]
+    bend_y[invalid_bend] <- tips$y[invalid_bend]
+    centre_x <- labels$.text_center_x
+    centre_y <- labels$.text_center_y
+    # Text order and attachment edge follow the label's visual half of the
+    # plasmid, not merely the centre-to-bend vector.  The latter is unstable
+    # near twelve and six o'clock because a wide label can straddle its bend.
+    visual_x <- centre_x
+    visual_x[abs(visual_x) < .010] <- gl$anchor_x[abs(visual_x) < .010]
+    connection_side <- ifelse(visual_x < 0, "right", "left")
     order_values <- rep(params$label_order, length(idx))
     if (params$label_order == "auto") {
-      order_values <- ifelse(
-        directions == "left" |
-          (directions %in% c("top", "bottom") &
-            labels$.text_center_x < 0),
-        "position_enzyme", "enzyme_position"
-      )
+      order_values <- ifelse(connection_side == "right",
+        "position_enzyme", "enzyme_position")
     }
-    labels$hjust <- ifelse(order_values == "position_enzyme", 1, 0)
-    labels$text_x <- labels$.text_center_x +
-      (labels$hjust - .5) * labels$.text_width
-    labels$text_y <- labels$.text_center_y
+    quote_text <- function(x) paste0("'", gsub("'", "\\\\'", x,
+      fixed = TRUE), "'")
+    coordinate <- format(data$position[idx], big.mark = "",
+      scientific = FALSE, trim = TRUE)
+    label_text <- vapply(seq_along(idx), function(member) {
+      switch(params$label_style,
+        enzyme_position = if (order_values[member] == "position_enzyme")
+          paste0("(", coordinate[member], ") ", site_enzyme[member]) else
+          paste0(site_enzyme[member], " (", coordinate[member], ")"),
+        enzyme = site_enzyme[member], position = coordinate[member])
+    }, character(1))
+    plotmath <- vapply(seq_along(idx), function(member) {
+      switch(params$label_style,
+        enzyme_position = if (order_values[member] == "position_enzyme")
+          paste0(quote_text(paste0("(", coordinate[member], ")")),
+            "~bold(", quote_text(site_enzyme[member]), ")") else
+          paste0("bold(", quote_text(site_enzyme[member]), ")~",
+            quote_text(paste0("(", coordinate[member], ")"))),
+        enzyme = paste0("bold(", quote_text(site_enzyme[member]), ")"),
+        position = quote_text(coordinate[member]))
+    }, character(1))
+    # Measure the expression that GeomText will actually draw. Measuring the
+    # unparsed plain string makes bold enzyme names several pixels wider than
+    # the routing box, which visually puts the connector inside the first or
+    # last glyph even when the nominal side is correct.
+    metrics <- ggchord_restriction_text_metrics(
+      plotmath, params$label_size %||% 2.9, units_per_inch
+    )
+    routing_half_width <- metrics$width / 2 + .010
+    routing_half_height <- metrics$height / 2 + .010
+    endpoint_x <- centre_x + ifelse(
+      connection_side == "left", -routing_half_width, routing_half_width
+    )
+    # A selected left edge must lie to the right of its bend, and a selected
+    # right edge to the left.  Bottom/top packing can otherwise leave a wide
+    # bbox straddling the bend, so the nominally correct edge is approached
+    # backwards. Move only as far as needed to restore the actual approach.
+    route_clearance <- .012
+    shift_x <- ifelse(
+      connection_side == "left",
+      pmax(0, bend_x + route_clearance - endpoint_x),
+      pmin(0, bend_x - route_clearance - endpoint_x)
+    )
+    centre_x <- centre_x + shift_x
+    endpoint_x <- endpoint_x + shift_x
+    labels$.text_center_x <- centre_x
+    labels$text_x <- labels$text_x + shift_x
+    # SnapGene-style site labels always connect at the enzyme-bearing left or
+    # right edge, never at the middle of the top/bottom edge. Along that chosen
+    # vertical edge, use the point nearest the bend; a top label therefore
+    # naturally connects at its lower-left/lower-right corner.
+    endpoint_y <- pmax(
+      centre_y - routing_half_height,
+      pmin(bend_y, centre_y + routing_half_height)
+    )
+    # Keep the rendered label centred on the box used by the routing solver.
+    # The leader endpoint is a separate bbox intersection, so justification no
+    # longer shifts the visible edge after routing has been computed.
+    labels$hjust <- .5
+    labels$vjust <- .5
+    labels$text_x <- centre_x
+    labels$text_y <- centre_y
     slot_positions <- if (".radial_parameter" %in% names(labels)) {
       labels$.radial_parameter * lens[id]
     } else vapply(seq_along(idx), function(member) {
@@ -836,25 +958,38 @@ ggchord_restriction_geometry <- function(data, params, layout, seq_data) {
       (k - 1L) / max(1L, nrow(arc) - 1L) * lens[id]
     }, numeric(1))
 
-    endpoint_x <- labels$text_x + ifelse(labels$hjust == 0, -.010, .010)
-    endpoint_y <- labels$text_y
     leader_frame <- ggchord_label_curve_frame(gl, layout$seq_arcs)
     segments <- lapply(seq_along(idx), function(member) {
-      # Sparse labels that remain on their natural radial ray need no elbow.
-      # Dense columns and top/bottom queues get exactly two segments, matching
-      # the radial gene-label convention: a short normal stub and one fan-out
-      # connector ending just before the enzyme-name edge.
-      if (identical(params$leader, "straight") || tracks[member] == 0L) {
+      vector <- c(endpoint_x[member] - tips$x[member],
+        endpoint_y[member] - tips$y[member])
+      radial <- c(leader_frame$outward_x[member] * side_sign,
+        leader_frame$outward_y[member] * side_sign)
+      denominator <- sqrt(sum(vector^2) * sum(radial^2))
+      centre_vector <- c(labels$.text_center_x[member] - tips$x[member],
+        labels$.text_center_y[member] - tips$y[member])
+      centre_length <- sqrt(sum(centre_vector^2))
+      aligned <- is.finite(denominator) && denominator > 1e-12 &&
+        is.finite(centre_length) && centre_length > 1e-12 &&
+        sum(centre_vector * radial) > 0 &&
+        abs(centre_vector[1] * radial[2] - centre_vector[2] * radial[1]) /
+          centre_length < .02
+      # A label still on its natural radial ray uses one segment. Tangentially
+      # displaced labels use exactly the bend selected by the radial solver.
+      if (identical(params$leader, "straight") || aligned) {
         return(data.frame(x0 = tips$x[member], y0 = tips$y[member],
           x1 = endpoint_x[member], y1 = endpoint_y[member], group = member))
       }
-      distance <- sqrt((endpoint_x[member] - tips$x[member])^2 +
-        (endpoint_y[member] - tips$y[member])^2)
-      shoulder <- min(.085, max(.045, distance * .30))
-      bend <- c(
-        tips$x[member] + leader_frame$outward_x[member] * side_sign * shoulder,
-        tips$y[member] + leader_frame$outward_y[member] * side_sign * shoulder
-      )
+      bend <- c(labels$.radial_bend_x[member],
+        labels$.radial_bend_y[member])
+      if (any(!is.finite(bend)) || sqrt(sum((bend - unlist(tips[member, ]))^2)) <
+          1e-8) {
+        distance <- sqrt(sum(vector^2))
+        shoulder <- min(.085, max(.045, distance * .30))
+        bend <- c(
+          tips$x[member] + radial[1] * shoulder,
+          tips$y[member] + radial[2] * shoulder
+        )
+      }
       data.frame(
         x0 = c(tips$x[member], bend[1]),
         y0 = c(tips$y[member], bend[2]),
@@ -871,35 +1006,19 @@ ggchord_restriction_geometry <- function(data, params, layout, seq_data) {
           y = c(segments$y0[segment], segments$y1[segment])),
         "leader", row, data$position[row], slot_positions[member],
         site_members[[member]],
-        cluster_names[member], junction_names[member], directions[member]
+        cluster_names[member], junction_names[member], directions[member],
+        order_values[member], connection_side[member]
       )
     }
 
-    quote_text <- function(x) paste0("'", gsub("'", "\\\\'", x,
-      fixed = TRUE), "'")
     for (member in seq_along(idx)) {
       row <- idx[member]
       direction <- directions[member]
       order_value <- order_values[member]
-      coordinate <- format(data$position[row], big.mark = "",
-        scientific = FALSE, trim = TRUE)
-      label_text <- switch(params$label_style,
-        enzyme_position = if (order_value == "position_enzyme")
-          paste0("(", coordinate, ") ", site_enzyme[member]) else
-          paste0(site_enzyme[member], " (", coordinate, ")"),
-        enzyme = site_enzyme[member], position = coordinate)
-      plotmath <- switch(params$label_style,
-        enzyme_position = if (order_value == "position_enzyme")
-          paste0(quote_text(paste0("(", coordinate, ")")), "~bold(",
-            quote_text(site_enzyme[member]), ")") else
-          paste0("bold(", quote_text(site_enzyme[member]), ")~",
-            quote_text(paste0("(", coordinate, ")"))),
-        enzyme = paste0("bold(", quote_text(site_enzyme[member]), ")"),
-        position = quote_text(coordinate))
       gid <- gid + 1L
       output[[length(output) + 1L]] <- data.frame(
         x = labels$text_x[member], y = labels$text_y[member],
-        label = label_text, plotmath_label = plotmath,
+        label = label_text[member], plotmath_label = plotmath[member],
         .component = "label", restriction_component = "label",
         group = gid, source_row = row,
         anchor_position = data$position[row],
@@ -908,6 +1027,7 @@ ggchord_restriction_geometry <- function(data, params, layout, seq_data) {
         cluster_id = cluster_names[member],
         junction_id = junction_names[member],
         label_direction = direction, label_order = order_value,
+        label_connection_side = connection_side[member],
         size = params$label_size %||% 2.9, angle = 0,
         hjust = labels$hjust[member], vjust = labels$vjust[member],
         stringsAsFactors = FALSE
@@ -922,7 +1042,8 @@ ggchord_restriction_geometry <- function(data, params, layout, seq_data) {
       anchor_position = numeric(), slot_position = numeric(),
       source_rows = I(list()), cluster_id = character(),
       junction_id = character(), label_direction = character(),
-      label_order = character(), stringsAsFactors = FALSE
+      label_order = character(), label_connection_side = character(),
+      stringsAsFactors = FALSE
     ))
   }
   ggchord_rbind_fill(output)

@@ -507,9 +507,10 @@ ggchord(seq) +
 
 The dense pBluescript II SK(+) multiple-cloning region is a restriction-label
 stress test. Real sites retain their anchors while measured label boxes form
-ordered side columns. Each site keeps an independent radial stub, fan segment,
-or a direct connector when no fan-out is needed; both end just before the
-enzyme-name edge:
+a common radial offset contour; only collision-bound clusters rise to a nearby
+outer contour. Each site keeps an independent radial stub and fan segment, or a
+direct connector when no fan-out is needed. Leaders are clipped to the actual
+text-box edge:
 
 ```{r pbluescript-restriction-map, eval=FALSE}
 data(plasmid_example_pBluescript_II_SK_plus)

@@ -39,11 +39,12 @@ position first.}
 \item{label_side}{Draw labels outside, inside, or automatically.}
 
 \item{leader}{Leader routing style. The default `"radial"` measures actual
-text boxes, separates site anchors from final Cartesian label positions,
+text boxes, separates site anchors from final radial label positions,
 and routes either a direct connector or an independent radial stub plus
 fan segment.
-Dense regions form ordered side columns; top and bottom sectors split into
-left/right queues. `"trunk"` is retained only as a compatibility alias.}
+Most labels follow one common radial contour; collision-bound clusters may
+move to a nearby outer contour. `"trunk"` is retained only as a
+compatibility alias.}
 
 \item{min_label_gap}{Minimum genomic fraction between label slots. `NULL`
 derives a compact device-aware default from the rendered labels.}

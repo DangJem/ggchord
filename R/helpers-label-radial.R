@@ -6,7 +6,8 @@ ggchord_radial_label_lanes <- function(gl, seq_arcs, side = "outside",
                                         box_padding = 0.04,
                                         point_padding = 0.05,
                                         repel_boxes = NULL, .attempt = 0L, .fixed_paths = NULL,
-                                        .minimum_levels = numeric(), .balance = TRUE) {
+                                        .minimum_levels = numeric(), .balance = TRUE,
+                                        .tangent_limit = NULL) {
   n <- nrow(gl)
   active <- which(!is.na(gl$text) & nzchar(gl$text))
   original <- gl
@@ -68,7 +69,12 @@ ggchord_radial_label_lanes <- function(gl, seq_arcs, side = "outside",
     # Keep a small physical shoulder at each endpoint, rather than extending
     # the contour indefinitely into a neighbouring sequence's space.
     endpoint_padding <- 0.25 * units_per_inch
-    shifts <- seq(0, max(diff(range(s)) / 2, sum(boxes$bw[rows]) / 2), by = step)
+    shift_limit <- max(diff(range(s)) / 2, sum(boxes$bw[rows]) / 2)
+    if (!is.null(.tangent_limit)) {
+      shift_limit <- min(diff(range(s)) / 2,
+        max(sum(boxes$bw[rows]) / 2, .tangent_limit))
+    }
+    shifts <- seq(0, shift_limit, by = step)
     offsets <- sort(unique(c(shifts, -shifts)))
     offsets <- offsets[order(abs(offsets), offsets)]
     best <- NULL
@@ -202,7 +208,7 @@ ggchord_radial_label_lanes <- function(gl, seq_arcs, side = "outside",
       if (.attempt < max(1L, 2L * length(groups) - 1L)) return(
         ggchord_radial_label_lanes(original, seq_arcs, side, units_per_inch,
           box_padding, point_padding, repel_boxes, .attempt + 1L, .fixed_paths,
-          .minimum_levels, .balance))
+          .minimum_levels, .balance, .tangent_limit))
       ggchord_stop("Cannot fit radial labels for ", gl$accver[rows[1]],
                    " on this device; enlarge the output or reduce label size")
     }
@@ -232,7 +238,7 @@ ggchord_radial_label_lanes <- function(gl, seq_arcs, side = "outside",
         minimum[need] <- target
         return(ggchord_radial_label_lanes(original, seq_arcs, side, units_per_inch,
           box_padding, point_padding, repel_boxes, 0L, .fixed_paths,
-          minimum, .balance = FALSE))
+          minimum, .balance = FALSE, .tangent_limit = .tangent_limit))
       }
     }
   }
