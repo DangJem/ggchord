@@ -230,6 +230,46 @@ ggchord_common_candidate <- function(accver, feature, method, start, end,
   )
 }
 
+ggchord_common_reference_candidates <- function(target, accver, database,
+                                                 types = NULL,
+                                                 features = NULL) {
+  if (!all(c("reference_sequences", "reference_features") %in%
+      names(database))) return(list())
+  sequence_rows <- database$reference_sequences[
+    database$reference_sequences$sequence == target, , drop = FALSE]
+  if (!nrow(sequence_rows)) return(list())
+  reference_ids <- sequence_rows$reference_id
+  annotations <- database$reference_features[
+    database$reference_features$reference_id %in% reference_ids, , drop = FALSE]
+  if (!is.null(types)) {
+    annotations <- annotations[tolower(annotations$type) %in%
+      tolower(types), , drop = FALSE]
+  }
+  if (!is.null(features)) {
+    annotations <- annotations[
+      tolower(annotations$name) %in% tolower(features) |
+        annotations$common_feature_id %in% features, , drop = FALSE]
+  }
+  if (!nrow(annotations)) return(list())
+  lapply(seq_len(nrow(annotations)), function(i) {
+    annotation <- annotations[i, , drop = FALSE]
+    feature <- data.frame(
+      common_feature_id = annotation$common_feature_id,
+      name = annotation$name, type = annotation$type,
+      segment_colors = annotation$color, stringsAsFactors = FALSE
+    )
+    candidate <- ggchord_common_candidate(
+      accver, feature, "reference_exact", annotation$start, annotation$end,
+      annotation$strand, annotation$start > annotation$end,
+      annotation$segments[[1L]], metadata = database$metadata
+    )
+    source_row <- sequence_rows[
+      match(annotation$reference_id, sequence_rows$reference_id), , drop = FALSE]
+    candidate$source_sha256 <- source_row$source_sha256
+    candidate
+  })
+}
+
 ggchord_match_common_dna <- function(target, accver, feature, segments,
                                      circular, metadata) {
   parts <- ggchord_common_pattern_parts(segments)
@@ -384,7 +424,7 @@ ggchord_common_approx_hits <- function(reference, target,
     b <- strsplit(substr(target, tar_lo, tar_lo + overlap - 1L), "", fixed = TRUE)[[1L]]
     identity <- mean(a == b)
     coverage <- overlap / nr
-    if (round(identity, 2L) < min_identity || coverage < min_coverage) return(NULL)
+    if (identity < min_identity || coverage < min_coverage) return(NULL)
     data.frame(start = tar_lo, identity = identity, coverage = coverage,
       aa_length = overlap, ref_lo = ref_lo)
   })
@@ -398,7 +438,7 @@ ggchord_common_approx_hits <- function(reference, target,
       (aligned_reference - counts[1L, 1L, "sub"]) / aligned_reference
     } else 0
     coverage <- aligned_reference / nr
-    if (round(identity, 2L) >= min_identity && coverage >= min_coverage) {
+    if (identity >= min_identity && coverage >= min_coverage) {
       rows[[1L]] <- data.frame(
         start = offsets[1L, 1L, "first"], identity = identity,
         coverage = coverage,
@@ -415,8 +455,9 @@ ggchord_common_approx_hits <- function(reference, target,
 ggchord_match_common_protein <- function(target, accver, feature, frames,
                                          approximate, min_identity,
                                          min_coverage, metadata) {
-  reference <- ggchord_normalize_protein(feature$reference_protein)
-  if (!nzchar(reference)) return(list())
+  reference_with_stop <- ggchord_normalize_protein(feature$reference_protein)
+  if (!nzchar(reference_with_stop)) return(list())
+  reference <- reference_with_stop
   reference <- sub("\\*$", "", reference)
   out <- list(); target_length <- nchar(target)
   for (frame in frames) {
@@ -436,13 +477,19 @@ ggchord_match_common_protein <- function(target, accver, feature, frames,
     }
     if (!nrow(matches)) next
     for (i in seq_len(nrow(matches))) {
+      include_stop <- !approximate && endsWith(reference_with_stop, "*") &&
+        isTRUE(as.logical(feature$hitsStopCodon %||% FALSE)) &&
+        substr(frame$protein,
+          matches$start[i] + matches$aa_length[i],
+          matches$start[i] + matches$aa_length[i]) == "*"
+      matched_aa_length <- matches$aa_length[i] + as.integer(include_stop)
       coords <- ggchord_common_protein_coordinates(
-        frame, matches$start[i], matches$aa_length[i], target_length
+        frame, matches$start[i], matched_aa_length, target_length
       )
       seg <- data.frame(
         segment_index = 1L, segment_type = "standard",
         start = as.integer(coords["start"]), end = as.integer(coords["end"]),
-        length_bp = as.integer(matches$aa_length[i] * 3L), translated = TRUE,
+        length_bp = as.integer(matched_aa_length * 3L), translated = TRUE,
         segment_name = NA_character_,
         color = if ("segment_colors" %in% names(feature)) {
           strsplit(as.character(feature$segment_colors)[1L], ",", fixed = TRUE)[[1L]][1L]
@@ -477,7 +524,8 @@ ggchord_common_overlap <- function(a, b, length) {
 ggchord_resolve_common_candidates <- function(candidates, lengths) {
   if (!nrow(candidates)) return(candidates)
   method_rank <- match(candidates$match_method,
-    c("dna_exact", "protein_exact", "protein_approx"))
+    c("reference_exact", "dna_exact", "protein_exact", "dna_near_exact",
+      "protein_approx"))
   span <- vapply(seq_len(nrow(candidates)), function(i) {
     if (candidates$start[i] <= candidates$end[i])
       candidates$end[i] - candidates$start[i] + 1 else
@@ -519,8 +567,9 @@ ggchord_empty_common_features <- function() {
 #' Find common biological features in DNA sequences
 #'
 #' Searches the built-in common-feature database (or a compatible custom
-#' database) using exact DNA, segment-aware protein and high-confidence
-#' protein matching. Restriction sites are intentionally outside this API; use
+#' database) using curated exact-sequence annotations, exact DNA, and the
+#' detection mode stored for each database record. Restriction sites are
+#' intentionally outside this API; use
 #' [find_restriction_sites()] for those.
 #'
 #' @param sequence DNA text, a named character vector, or a data frame with
@@ -528,8 +577,11 @@ ggchord_empty_common_features <- function() {
 #' @param database Optional normalized database list or custom data frame.
 #' @param types,features Optional feature-type and feature-name/ID filters.
 #' @param circular Search across the sequence origin.
-#' @param mode Matching mode. `"auto"` tries DNA, protein exact, then protein
-#'   approximate matching.
+#' @param mode Matching mode. `"auto"` first uses curated annotations for an
+#'   exactly known sequence, then follows each record's detection mode. Records
+#'   marked `exactProteinMatch` use exact protein followed by near-exact DNA;
+#'   other records use exact DNA. `"protein"` explicitly enables exact and
+#'   approximate protein matching.
 #' @param min_protein_identity,min_protein_coverage Approximate protein
 #'   thresholds in `[0, 1]`.
 #' @param resolve Return deterministic best annotations or every candidate.
@@ -581,11 +633,25 @@ find_common_features <- function(
   candidates <- list()
   for (s in seq_along(input$sequences)) {
     target <- input$sequences[s]; accver <- input$ids[s]
+    if (mode == "auto") {
+      reference_hits <- ggchord_common_reference_candidates(
+        target, accver, db, types = types, features = features
+      )
+      if (length(reference_hits)) {
+        candidates <- c(candidates, reference_hits)
+        next
+      }
+    }
     frames <- NULL
     dna_matched <- character(); protein_exact_matched <- character()
     if (mode %in% c("auto", "dna")) {
       for (i in seq_len(nrow(feature_table))) {
         feature <- feature_table[i, , drop = FALSE]
+        protein_mode <- identical(
+          as.character(feature$detectionMode %||% NA_character_),
+          "exactProteinMatch"
+        )
+        if (mode == "auto" && protein_mode) next
         seg <- split_segments[[as.character(feature$common_feature_id)]]
         if (is.null(seg)) next
         hit <- ggchord_match_common_dna(
@@ -597,26 +663,16 @@ find_common_features <- function(
         }
       }
     }
-    if (mode == "auto") {
-      near_rows <- which(feature_table$type != "CDS" &
-        !feature_table$common_feature_id %in% dna_matched)
-      for (i in near_rows) {
-        feature <- feature_table[i, , drop = FALSE]
-        hit <- ggchord_match_common_dna_near_exact(
-          target, accver, feature, db$metadata
-        )
-        if (length(hit)) {
-          candidates <- c(candidates, hit)
-          dna_matched <- c(dna_matched,
-            as.character(feature$common_feature_id))
-        }
-      }
-    }
     if (mode %in% c("auto", "protein")) {
       frames <- ggchord_common_protein_frames(target)
       for (i in seq_len(nrow(feature_table))) {
         feature <- feature_table[i, , drop = FALSE]
         id <- as.character(feature$common_feature_id)
+        protein_mode <- identical(
+          as.character(feature$detectionMode %||% NA_character_),
+          "exactProteinMatch"
+        )
+        if (mode == "auto" && !protein_mode) next
         if (mode == "auto" && id %in% dna_matched) next
         hit <- ggchord_match_common_protein(
           target, accver, feature, frames, FALSE,
@@ -627,18 +683,30 @@ find_common_features <- function(
           protein_exact_matched <- c(protein_exact_matched, id)
         }
       }
-      translated <- if ("translated_any" %in% names(feature_table)) {
-        !is.na(feature_table$translated_any) & feature_table$translated_any
-      } else feature_table$type == "CDS"
-      approximate_rows <- which(feature_table$type == "CDS" & translated)
+      protein_modes <- !is.na(feature_table$detectionMode) &
+        feature_table$detectionMode == "exactProteinMatch"
+      if (mode == "auto") {
+        approximate_rows <- which(protein_modes)
+      } else {
+        translated <- if ("translated_any" %in% names(feature_table)) {
+          !is.na(feature_table$translated_any) & feature_table$translated_any
+        } else feature_table$type == "CDS"
+        approximate_rows <- which(feature_table$type == "CDS" & translated)
+      }
       for (i in approximate_rows) {
         feature <- feature_table[i, , drop = FALSE]
         id <- as.character(feature$common_feature_id)
         if (id %in% c(dna_matched, protein_exact_matched)) next
-        hit <- ggchord_match_common_protein(
-          target, accver, feature, frames, TRUE,
-          min_protein_identity, min_protein_coverage, db$metadata
-        )
+        hit <- if (mode == "auto") {
+          ggchord_match_common_dna_near_exact(
+            target, accver, feature, db$metadata
+          )
+        } else {
+          ggchord_match_common_protein(
+            target, accver, feature, frames, TRUE,
+            min_protein_identity, min_protein_coverage, db$metadata
+          )
+        }
         if (length(hit)) candidates <- c(candidates, hit)
       }
     }

@@ -1,11 +1,13 @@
 # Build the internal normalized common-feature database from the audited
-# workbook. readxl and digest are development-only dependencies.
+# workbook and the audited annotations embedded in the example SnapGene files.
+# readxl, digest, and xml2 are development-only dependencies.
 
 workbook <- "examples/standardCommonFeatures_tables.xlsx"
 expected_sha256 <- "3d9e7a78c705de2beeb9d8af3c74dede714faa468cd6eee61f78e0f784b65312"
 if (!requireNamespace("readxl", quietly = TRUE) ||
-    !requireNamespace("digest", quietly = TRUE)) {
-  stop("Install readxl and digest to regenerate the common-feature database",
+    !requireNamespace("digest", quietly = TRUE) ||
+    !requireNamespace("xml2", quietly = TRUE)) {
+  stop("Install readxl, digest, and xml2 to regenerate the common-feature database",
     call. = FALSE)
 }
 actual_sha256 <- digest::digest(workbook, algo = "sha256", file = TRUE,
@@ -62,6 +64,98 @@ stopifnot(all(is.na(standard_dna) | grepl("^[ACGTRYSWKMBDHVN]+$", standard_dna))
 
 features$common_feature_id <- as.character(features$feature_id)
 source_metadata <- stats::setNames(metadata_table$value, metadata_table$key)
+
+read_uint32_be <- function(bytes) {
+  values <- as.numeric(bytes)
+  values[1L] * 256^3 + values[2L] * 256^2 + values[3L] * 256 + values[4L]
+}
+
+value_or <- function(x, fallback) {
+  if (length(x) == 0L || is.na(x) || !nzchar(x)) fallback else x
+}
+
+read_binary_plasmid_reference <- function(path) {
+  bytes <- readBin(path, what = "raw", n = file.info(path)$size)
+  position <- 1L
+  sequence <- NULL
+  feature_xml <- NULL
+  while (position + 4L <= length(bytes)) {
+    block_id <- as.integer(bytes[position])
+    block_length <- read_uint32_be(bytes[(position + 1L):(position + 4L)])
+    first <- position + 5L
+    last <- first + block_length - 1L
+    if (last > length(bytes)) stop("Invalid SnapGene block in ", path,
+      call. = FALSE)
+    payload <- bytes[first:last]
+    if (block_id == 0L) sequence <- rawToChar(payload[-1L])
+    if (block_id == 10L) feature_xml <- rawToChar(payload)
+    position <- last + 1L
+  }
+  if (is.null(sequence) || is.null(feature_xml)) {
+    stop("SnapGene reference lacks sequence or feature data: ", path,
+      call. = FALSE)
+  }
+  reference_id <- make.names(tools::file_path_sans_ext(basename(path)))
+  document <- xml2::read_xml(feature_xml)
+  nodes <- xml2::xml_find_all(document, ".//Feature")
+  strand_map <- c(`0` = ".", `1` = "+", `2` = "-", `3` = "+/-")
+  rows <- lapply(seq_along(nodes), function(i) {
+    node <- nodes[[i]]
+    attrs <- xml2::xml_attrs(node)
+    segment_nodes <- xml2::xml_find_all(node, "./Segment")
+    segment_rows <- lapply(seq_along(segment_nodes), function(j) {
+      segment_attrs <- xml2::xml_attrs(segment_nodes[[j]])
+      bounds <- as.integer(strsplit(segment_attrs[["range"]], "-",
+        fixed = TRUE)[[1L]])
+      data.frame(
+        segment_index = j,
+        segment_type = value_or(segment_attrs["type"], "standard"),
+        start = min(bounds), end = max(bounds),
+        length_bp = abs(diff(bounds)) + 1L,
+        translated = FALSE, segment_name = NA_character_,
+        color = value_or(segment_attrs["color"], "#B8BDC3"),
+        stringsAsFactors = FALSE
+      )
+    })
+    reference_segments <- do.call(rbind, segment_rows)
+    directionality <- value_or(attrs["directionality"], "0")
+    data.frame(
+      reference_id = reference_id,
+      common_feature_id = paste0("reference:", reference_id, ":",
+        value_or(attrs["recentID"], sprintf("%04d", i))),
+      name = unname(attrs["name"]), type = unname(attrs["type"]),
+      start = min(reference_segments$start),
+      end = max(reference_segments$end),
+      strand = unname(value_or(strand_map[[directionality]], ".")),
+      color = reference_segments$color[1L],
+      segments = I(list(reference_segments)), stringsAsFactors = FALSE
+    )
+  })
+  list(
+    sequence = data.frame(
+      reference_id = reference_id,
+      label = tools::file_path_sans_ext(basename(path)),
+      sequence = toupper(sequence),
+      source_path = path,
+      source_sha256 = digest::digest(path, algo = "sha256", file = TRUE,
+        serialize = FALSE),
+      stringsAsFactors = FALSE
+    ),
+    features = do.call(rbind, rows)
+  )
+}
+
+binary_reference_paths <- file.path("examples", "plasmid", c(
+  "pUC19c.dna", "pBR322.dna", "pBluescript II SK(+).dna"
+))
+stopifnot(all(file.exists(binary_reference_paths)))
+binary_references <- lapply(binary_reference_paths,
+  read_binary_plasmid_reference)
+reference_sequences <- do.call(rbind,
+  lapply(binary_references, `[[`, "sequence"))
+reference_features <- do.call(rbind,
+  lapply(binary_references, `[[`, "features"))
+
 ggchord_common_feature_database <- list(
   metadata = list(
     database_id = "ggchord-common-features",
@@ -80,6 +174,8 @@ ggchord_common_feature_database <- list(
   qualifiers = qualifiers,
   qualifier_links = qualifier_links,
   feature_type_summary = feature_type_summary,
+  reference_sequences = reference_sequences,
+  reference_features = reference_features,
   search_indexes = list(
     dna_feature_ids = sort(unique(segments$feature_id[
       segments$segment_type == "standard" &

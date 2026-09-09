@@ -7,7 +7,10 @@ test_that("internal common-feature database is complete and self-contained", {
   expect_identical(db$metadata$source_workbook_sha256,
     "3d9e7a78c705de2beeb9d8af3c74dede714faa468cd6eee61f78e0f784b65312")
   expect_named(db, c("metadata", "features", "segments", "qualifiers",
-    "qualifier_links", "feature_type_summary", "search_indexes"))
+    "qualifier_links", "feature_type_summary", "reference_sequences",
+    "reference_features", "search_indexes"))
+  expect_equal(nrow(db$reference_sequences), 3L)
+  expect_equal(nrow(db$reference_features), 32L)
 })
 
 test_that("common-feature DNA matching handles orientation and origin", {
@@ -90,6 +93,28 @@ test_that("three FASTA-derived plasmids receive key dynamic annotations", {
   expect_true(all(c("AmpR", "ori", "MCS", "lacZα") %in% uc$anno))
   expect_true(all(c("AmpR", "f1 ori", "MCS", "T7 promoter", "T3 promoter",
     "KS primer", "SK primer") %in% blue$anno))
+  expect_true(all(br$match_method == "reference_exact"))
+  expect_true(all(uc$match_method == "reference_exact"))
+  expect_true(all(blue$match_method == "reference_exact"))
+  observed <- blue[match(c("lacZα", "AmpR"), blue$anno),
+    c("start", "end", "strand")]
+  rownames(observed) <- NULL
+  expect_equal(observed, data.frame(start = c(241L, 1973L),
+    end = c(816L, 2833L), strand = c("-", "-")))
+})
+
+test_that("auto matching follows stored exact-protein detection mode", {
+  protein <- paste(rep("ACDEFGHIKL", 5), collapse = "")
+  codon <- c(A="GCT", C="TGT", D="GAT", E="GAA", F="TTT", G="GGT",
+    H="CAT", I="ATT", K="AAA", L="CTG")
+  dna <- paste0(unname(codon[strsplit(protein, "", fixed = TRUE)[[1L]]]),
+    collapse = "")
+  db <- data.frame(common_feature_id = "protein", name = "protein",
+    type = "CDS", directionality_label = "forward", sequence = dna,
+    reference_protein = protein, translated_any = TRUE,
+    detectionMode = "exactProteinMatch", stringsAsFactors = FALSE)
+  hit <- find_common_features(dna, database = db, mode = "auto")
+  expect_equal(hit$match_method, "protein_exact")
 })
 
 test_that("new plasmid data objects exactly reproduce FASTA", {

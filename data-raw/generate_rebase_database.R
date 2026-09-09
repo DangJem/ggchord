@@ -1,7 +1,6 @@
 # Generate the internal restriction-pattern database from the four primary
-# REBASE/EMBOSS source files. The extracted examples/rebase/misc/ directory
-# contains supplemental information that may be used when building or updating
-# the database; the current normalized pattern table does not require it.
+# REBASE/EMBOSS source files plus misc/embossre.equ, which supplies the audited
+# preferred-enzyme mapping used by nonredundant display filtering.
 pkgload::load_all(".", quiet = TRUE)
 ggchord_rebase_database <- ggchord_parse_rebase("examples/rebase")
 stopifnot(

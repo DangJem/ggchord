@@ -30,7 +30,10 @@ ggchord_restriction_match_starts <- function(search, query, max_start) {
   anchor_start <- runs[chosen]; anchor <- substr(
     query,anchor_start,anchor_start+run_lengths[chosen]-1L
   )
-  hits <- gregexpr(anchor,search,fixed=TRUE)[[1L]]
+  # gregexpr(..., fixed = TRUE) consumes a match, so overlapping anchors such
+  # as GGG in GGGG were previously skipped.  A zero-width look-ahead retains
+  # every possible anchor start while keeping the inexpensive fixed anchor.
+  hits <- gregexpr(paste0("(?=", anchor, ")"), search, perl=TRUE)[[1L]]
   if (length(hits)==1L && hits[1L]<0L) return(integer())
   starts <- unique(hits-anchor_start+1L)
   starts <- starts[starts>=1L & starts<=max_start]
@@ -52,10 +55,12 @@ ggchord_parse_rebase <- function(path) {
   fields <- strsplit(trimws(enzyme_lines[source_rows]), "[[:space:]]+")
   if (any(lengths(fields) != 9L)) ggchord_stop("Invalid embossa_e.txt row width")
   mat <- do.call(rbind, fields)
+  source_motif <- mat[,2L]
   defs <- data.frame(
     pattern_id = sprintf("rebase%s:e:%06d", version, source_rows),
     pattern_source_row = source_rows,
-    enzyme = mat[,1L], motif = toupper(mat[,2L]),
+    enzyme = mat[,1L], motif = toupper(source_motif),
+    source_motif = source_motif,
     motif_length = as.integer(mat[,3L]), ncuts = as.integer(mat[,4L]),
     blunt = as.logical(as.integer(mat[,5L])),
     cut_offset_1 = as.integer(mat[,6L]), cut_offset_2 = as.integer(mat[,7L]),
@@ -65,6 +70,22 @@ ggchord_parse_rebase <- function(path) {
   if (any(nchar(defs$motif) != defs$motif_length) ||
       any(!defs$ncuts %in% c(0L,1L,2L,4L))) {
     ggchord_stop("Invalid REBASE pattern lengths or cut counts")
+  }
+  # EMBOSS uses a lower-case recognition sequence when an equivalent enzyme's
+  # cleavage orientation is reversed relative to the normalized motif.  Keep
+  # the source spelling, but orient the top/bottom cut pairs consistently for
+  # downstream coordinate calculation.
+  reverse_cleavage <- source_motif == tolower(source_motif) &
+    source_motif != toupper(source_motif)
+  if (any(reverse_cleavage)) {
+    first <- defs$cut_offset_1[reverse_cleavage]
+    defs$cut_offset_1[reverse_cleavage] <-
+      defs$cut_offset_2[reverse_cleavage]
+    defs$cut_offset_2[reverse_cleavage] <- first
+    third <- defs$cut_offset_3[reverse_cleavage]
+    defs$cut_offset_3[reverse_cleavage] <-
+      defs$cut_offset_4[reverse_cleavage]
+    defs$cut_offset_4[reverse_cleavage] <- third
   }
 
   supplier_lines <- readLines(file.path(path, "embossa_s.txt"), warn = FALSE)
@@ -99,6 +120,24 @@ ggchord_parse_rebase <- function(path) {
   defs$suppliers <- info$suppliers[matched]
   defs$commercial <- info$commercial[matched]
   defs$commercial[is.na(defs$commercial)] <- FALSE
+
+  equivalence_path <- file.path(path, "misc", "embossre.equ")
+  preferred <- stats::setNames(character(), character())
+  if (file.exists(equivalence_path)) {
+    equivalence_lines <- readLines(equivalence_path, warn = FALSE)
+    equivalence_lines <- equivalence_lines[
+      nzchar(trimws(equivalence_lines)) & !grepl("^#", equivalence_lines)
+    ]
+    equivalence_fields <- strsplit(trimws(equivalence_lines), "[[:space:]]+")
+    if (any(lengths(equivalence_fields) != 2L)) {
+      ggchord_stop("Invalid misc/embossre.equ row width")
+    }
+    equivalence <- do.call(rbind, equivalence_fields)
+    preferred <- stats::setNames(equivalence[, 2L], equivalence[, 1L])
+  }
+  mapped <- unname(preferred[defs$enzyme])
+  defs$preferred_enzyme <- ifelse(is.na(mapped), defs$enzyme, mapped)
+  defs$is_preferred_enzyme <- defs$enzyme == defs$preferred_enzyme
   defs$database_version <- version
   defs$source <- paste0("REBASE ", version)
   rownames(defs) <- NULL
@@ -135,8 +174,10 @@ ggchord_normalize_restriction_patterns <- function(patterns) {
     out$ncuts[out$ncuts==0L] <- 2L
   }
   for(i in 1:4){nm<-paste0("cut_offset_",i);if(!nm%in%names(out))out[[nm]]<-0L}
-  defaults <- list(organism=NA_character_,supplier_codes=NA_character_,
-    suppliers=NA_character_,commercial=FALSE,database_version="custom",source="custom")
+  defaults <- list(source_motif=out$motif,organism=NA_character_,
+    supplier_codes=NA_character_,suppliers=NA_character_,commercial=FALSE,
+    preferred_enzyme=out$enzyme,is_preferred_enzyme=TRUE,
+    database_version="custom",source="custom")
   for(nm in names(defaults))if(!nm%in%names(out))out[[nm]]<-defaults[[nm]]
   out$enzyme<-as.character(out$enzyme);out$motif<-toupper(as.character(out$motif))
   if(anyNA(out$enzyme)||any(!nzchar(out$enzyme))||anyNA(out$motif)||
@@ -195,7 +236,7 @@ find_restriction_sites <- function(sequence,enzymes=NULL,patterns=NULL,
     defs<-defs[order(match(defs$enzyme,enzymes),seq_len(nrow(defs))),,drop=FALSE]
   }
   empty_template <- function(){
-    out<-data.frame(accver=character(),match_id=character(),pattern_id=character(),pattern_source_row=integer(),enzyme=character(),motif=character(),motif_length=integer(),recognition_sequence=character(),start=integer(),end=integer(),crosses_origin=logical(),strand=character(),ncuts=integer(),blunt=logical(),end_type=character(),position=numeric(),display_position=numeric(),anchor_kind=character(),organism=character(),supplier_codes=character(),suppliers=character(),commercial=logical(),database_version=character(),source=character(),stringsAsFactors=FALSE)
+    out<-data.frame(accver=character(),match_id=character(),pattern_id=character(),pattern_source_row=integer(),enzyme=character(),preferred_enzyme=character(),is_preferred_enzyme=logical(),motif=character(),source_motif=character(),motif_length=integer(),recognition_sequence=character(),start=integer(),end=integer(),crosses_origin=logical(),strand=character(),ncuts=integer(),blunt=logical(),end_type=character(),position=numeric(),display_position=numeric(),anchor_kind=character(),organism=character(),supplier_codes=character(),suppliers=character(),commercial=logical(),database_version=character(),source=character(),stringsAsFactors=FALSE)
     for(k in 1:4){out[[paste0("cut_offset_",k)]]<-numeric();out[[paste0("cut_",k,"_unwrapped")]]<-numeric();out[[paste0("cut_",k)]]<-numeric()};out
   }
   rows<-list();match_number<-0L
@@ -230,7 +271,7 @@ find_restriction_sites <- function(sequence,enzymes=NULL,patterns=NULL,
         known_indices<-which(known);has_cut<-length(known_indices)>0L
         first_known<-if(has_cut)known_indices[1L] else NA_integer_
         position<-if(has_cut)cuts[,first_known] else starts
-        row<-data.frame(accver=rep(ids[s],count),match_id=sprintf("%s:%s:%s:%d:%06d",ids[s],defs$pattern_id[d],site_strand,starts,numbers),pattern_id=rep(defs$pattern_id[d],count),pattern_source_row=rep(defs$pattern_source_row[d],count),enzyme=rep(defs$enzyme[d],count),motif=rep(motif,count),motif_length=rep(m,count),recognition_sequence=substring(search,starts,starts+m-1L),start=starts,end=finish,crosses_origin=finish_unwrapped>len,strand=rep(site_strand,count),ncuts=rep(defs$ncuts[d],count),blunt=rep(defs$blunt[d],count),end_type=rep(end_type,count),position=position,display_position=position,anchor_kind=rep(if(has_cut)"cut" else "recognition",count),organism=rep(defs$organism[d],count),supplier_codes=rep(defs$supplier_codes[d],count),suppliers=rep(defs$suppliers[d],count),commercial=rep(defs$commercial[d],count),database_version=rep(defs$database_version[d],count),source=rep(defs$source[d],count),stringsAsFactors=FALSE)
+        row<-data.frame(accver=rep(ids[s],count),match_id=sprintf("%s:%s:%s:%d:%06d",ids[s],defs$pattern_id[d],site_strand,starts,numbers),pattern_id=rep(defs$pattern_id[d],count),pattern_source_row=rep(defs$pattern_source_row[d],count),enzyme=rep(defs$enzyme[d],count),preferred_enzyme=rep(defs$preferred_enzyme[d],count),is_preferred_enzyme=rep(defs$is_preferred_enzyme[d],count),motif=rep(motif,count),source_motif=rep(defs$source_motif[d],count),motif_length=rep(m,count),recognition_sequence=substring(search,starts,starts+m-1L),start=starts,end=finish,crosses_origin=finish_unwrapped>len,strand=rep(site_strand,count),ncuts=rep(defs$ncuts[d],count),blunt=rep(defs$blunt[d],count),end_type=rep(end_type,count),position=position,display_position=position,anchor_kind=rep(if(has_cut)"cut" else "recognition",count),organism=rep(defs$organism[d],count),supplier_codes=rep(defs$supplier_codes[d],count),suppliers=rep(defs$suppliers[d],count),commercial=rep(defs$commercial[d],count),database_version=rep(defs$database_version[d],count),source=rep(defs$source[d],count),stringsAsFactors=FALSE)
         for(k in 1:4){row[[paste0("cut_offset_",k)]]<-rep(as.numeric(defs[[paste0("cut_offset_",k)]][d]),count);row[[paste0("cut_",k,"_unwrapped")]]<-unwrapped[,k];row[[paste0("cut_",k)]]<-cuts[,k]}
         rows[[length(rows)+1L]]<-row
       }
@@ -244,11 +285,14 @@ find_restriction_sites <- function(sequence,enzymes=NULL,patterns=NULL,
 #' @param sites Result from [find_restriction_sites()].
 #' @param set Display preset.
 #' @param enzymes,min_site_length,cuts,window,commercial_only Additional filters.
+#' @param parent_set Enzyme catalogue subset. `"commercial_nonredundant"`
+#'   keeps one stable commercial representative per equivalent recognition
+#'   group and site, preferring the database's preferred enzyme when present.
 #' @return A row subset whose biological coordinates are unchanged.
 #' @export
-filter_restriction_sites<-function(sites,set=c("all","unique","unique_dual","six_plus","unique_6plus","commercial"),enzymes=NULL,min_site_length=NULL,cuts=NULL,window=NULL,commercial_only=FALSE){
+filter_restriction_sites<-function(sites,set=c("all","unique","unique_dual","six_plus","unique_6plus","commercial"),enzymes=NULL,min_site_length=NULL,cuts=NULL,window=NULL,commercial_only=FALSE,parent_set=c("all","commercial_all","commercial_nonredundant")){
   if(!is.data.frame(sites))ggchord_stop("filter_restriction_sites(): sites must be a data frame")
-  set<-match.arg(set);if(!nrow(sites))return(sites)
+  set<-match.arg(set);parent_set<-match.arg(parent_set);if(!nrow(sites))return(sites)
   ggchord_require_columns(sites,c("accver","enzyme","motif_length","position"),"filter_restriction_sites()")
   key<-paste(sites$accver,sites$enzyme,sep="\r");site_count<-as.integer(table(key)[key]);keep<-rep(TRUE,nrow(sites))
   if(set=="unique")keep<-keep&site_count==1L
@@ -279,6 +323,24 @@ filter_restriction_sites<-function(sites,set=c("all","unique","unique_dual","six
   if(commercial_only){
     if(!"commercial"%in%names(sites))ggchord_stop("filter_restriction_sites(): sites is missing commercial")
     keep<-keep&!is.na(sites$commercial)&sites$commercial
+  }
+  if(parent_set!="all"){
+    if(!"commercial"%in%names(sites))ggchord_stop("filter_restriction_sites(): sites is missing commercial")
+    keep<-keep&!is.na(sites$commercial)&sites$commercial
+  }
+  if(parent_set=="commercial_nonredundant"){
+    ggchord_require_columns(sites,c("preferred_enzyme","is_preferred_enzyme"),"filter_restriction_sites()")
+    candidate<-which(keep)
+    if(length(candidate)){
+      group<-paste(sites$accver[candidate],sites$preferred_enzyme[candidate],
+        sites$start[candidate],sep="\r")
+      source_order<-if("pattern_source_row"%in%names(sites))
+        sites$pattern_source_row[candidate] else candidate
+      rank<-order(group,!sites$is_preferred_enzyme[candidate],source_order,
+        sites$enzyme[candidate])
+      chosen<-candidate[rank][!duplicated(group[rank])]
+      keep[candidate]<-FALSE;keep[chosen]<-TRUE
+    }
   }
   attrs<-attributes(sites);out<-sites[keep,,drop=FALSE];rownames(out)<-NULL
   for(nm in setdiff(names(attrs),c("names","row.names","class")))attr(out,nm)<-attrs[[nm]];out

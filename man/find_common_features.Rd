@@ -26,8 +26,11 @@ find_common_features(
 
 \item{circular}{Search across the sequence origin.}
 
-\item{mode}{Matching mode. `"auto"` tries DNA, protein exact, then protein
-approximate matching.}
+\item{mode}{Matching mode. `"auto"` first uses curated annotations for an
+exactly known sequence, then follows each record's detection mode. Records
+marked `exactProteinMatch` use exact protein followed by near-exact DNA;
+other records use exact DNA. `"protein"` explicitly enables exact and
+approximate protein matching.}
 
 \item{min_protein_identity, min_protein_coverage}{Approximate protein
 thresholds in `[0, 1]`.}
@@ -41,7 +44,8 @@ A data frame directly usable by [geom_feature()] and
 }
 \description{
 Searches the built-in common-feature database (or a compatible custom
-database) using exact DNA, segment-aware protein and high-confidence
-protein matching. Restriction sites are intentionally outside this API; use
+database) using curated exact-sequence annotations, exact DNA, and the
+detection mode stored for each database record. Restriction sites are
+intentionally outside this API; use
 [find_restriction_sites()] for those.
 }

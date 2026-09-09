@@ -11,7 +11,8 @@ filter_restriction_sites(
   min_site_length = NULL,
   cuts = NULL,
   window = NULL,
-  commercial_only = FALSE
+  commercial_only = FALSE,
+  parent_set = c("all", "commercial_all", "commercial_nonredundant")
 )
 }
 \arguments{
@@ -20,6 +21,10 @@ filter_restriction_sites(
 \item{set}{Display preset.}
 
 \item{enzymes, min_site_length, cuts, window, commercial_only}{Additional filters.}
+
+\item{parent_set}{Enzyme catalogue subset. `"commercial_nonredundant"`
+keeps one stable commercial representative per equivalent recognition
+group and site, preferring the database's preferred enzyme when present.}
 }
 \value{
 A row subset whose biological coordinates are unchanged.

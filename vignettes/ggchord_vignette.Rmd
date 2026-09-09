@@ -513,16 +513,29 @@ uniform measured spacing. Each dense site keeps
 a short independent radial root before fanning out in genomic order; sparse
 sites may use a direct connector. Leaders are clipped to the actual text edge:
 
+The parent enzyme catalogue is part of the display definition, not part of
+sequence matching. The explicit list below reproduces the supplied reference
+map. For a database-derived general-purpose view, search all patterns and use
+`parent_set = "commercial_nonredundant"` in `filter_restriction_sites()`.
+Coordinates can still expose database-version differences: REBASE 609 defines
+NmeAIII as `GCCGAG(21/19)`, giving 2195 here, whereas the supplied older
+reference image labels that cut as 2194.
+
 ```{r pbluescript-restriction-map, eval=FALSE}
 data(plasmid_example_pBluescript_II_SK_plus)
 blue <- plasmid_example_pBluescript_II_SK_plus
-blue_sites <- find_restriction_sites(blue,
-  enzymes = c("PsiI", "BsaAI", "DraIII", "BtgZI", "NgoMIV", "NaeI",
-    "Acc65I", "KpnI", "PspOMI", "EcoO109I", "ApaI", "XhoI", "SalI",
-    "AccI", "HincII", "ClaI", "HindIII", "EcoRV", "EcoRI", "PstI",
-    "XmaI", "SmaI", "BamHI", "SpeI", "XbaI", "NotI", "BspQI",
-    "SapI", "AflIII", "PciI", "NspI", "BseYI", "PspFI", "AlwNI",
-    "BsaI", "NmeAIII", "ScaI", "TatI", "BsaHI", "XmnI"))
+blue_parent_enzymes <- c(
+  "PsiI", "BsaAI", "DraIII", "BtgZI", "NgoMIV", "NaeI", "Acc65I",
+  "KpnI", "PspOMI", "EcoO109I", "ApaI", "AbsI", "PaeR7I", "PspXI",
+  "XhoI", "SalI", "AccI", "HincII", "BspDI", "ClaI", "HindIII",
+  "EcoRV", "EcoRI", "PstI", "TspMI", "XmaI", "SmaI", "BamHI",
+  "SpeI", "XbaI", "EagI", "NotI", "BtgI", "AleI", "SacII", "BstXI",
+  "Eco53kI", "SacI", "BspQI", "SapI", "AflIII", "PciI", "NspI",
+  "AlwNI", "PspFI", "BseYI", "AhdI", "BsaI", "NmeAIII", "ScaI",
+  "TatI", "BsaHI", "XmnI"
+)
+blue_sites <- find_restriction_sites(blue, enzymes = blue_parent_enzymes) |>
+  filter_restriction_sites(set = "unique_6plus")
 blue_features <- find_common_features(blue)
 blue_tracks <- position_feature_stack(
   spacing = 0.10, base_position = position_plasmid()

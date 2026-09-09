@@ -488,16 +488,28 @@ anchor 保持不动；所有标签的酶名侧边缘按 genomic order 落在同�
 密集引线先以短径向根段靠近圆环成束，
 再按 genomic order 展开到标签列：
 
+父级酶目录属于显示定义，不属于序列匹配。下面的显式列表用来复现
+已提供的参考图；通用场景可搜索全部 pattern，再在
+`filter_restriction_sites()` 中使用
+`parent_set = "commercial_nonredundant"`。
+坐标仍可反映数据库版本差异：REBASE 609 将 NmeAIII 定义为
+`GCCGAG(21/19)`，因此此处结果为 2195，而已提供的较旧参考图标为 2194。
+
 ```{r pbluescript-restriction-map, eval=FALSE}
 data(plasmid_example_pBluescript_II_SK_plus)
 blue <- plasmid_example_pBluescript_II_SK_plus
-blue_sites <- find_restriction_sites(blue,
-  enzymes = c("PsiI", "BsaAI", "DraIII", "BtgZI", "NgoMIV", "NaeI",
-    "Acc65I", "KpnI", "PspOMI", "EcoO109I", "ApaI", "XhoI", "SalI",
-    "AccI", "HincII", "ClaI", "HindIII", "EcoRV", "EcoRI", "PstI",
-    "XmaI", "SmaI", "BamHI", "SpeI", "XbaI", "NotI", "BspQI",
-    "SapI", "AflIII", "PciI", "NspI", "BseYI", "PspFI", "AlwNI",
-    "BsaI", "NmeAIII", "ScaI", "TatI", "BsaHI", "XmnI"))
+blue_parent_enzymes <- c(
+  "PsiI", "BsaAI", "DraIII", "BtgZI", "NgoMIV", "NaeI", "Acc65I",
+  "KpnI", "PspOMI", "EcoO109I", "ApaI", "AbsI", "PaeR7I", "PspXI",
+  "XhoI", "SalI", "AccI", "HincII", "BspDI", "ClaI", "HindIII",
+  "EcoRV", "EcoRI", "PstI", "TspMI", "XmaI", "SmaI", "BamHI",
+  "SpeI", "XbaI", "EagI", "NotI", "BtgI", "AleI", "SacII", "BstXI",
+  "Eco53kI", "SacI", "BspQI", "SapI", "AflIII", "PciI", "NspI",
+  "AlwNI", "PspFI", "BseYI", "AhdI", "BsaI", "NmeAIII", "ScaI",
+  "TatI", "BsaHI", "XmnI"
+)
+blue_sites <- find_restriction_sites(blue, enzymes = blue_parent_enzymes) |>
+  filter_restriction_sites(set = "unique_6plus")
 blue_features <- find_common_features(blue)
 blue_tracks <- position_feature_stack(
   spacing = 0.10, base_position = position_plasmid()

@@ -172,6 +172,11 @@ test_that("restriction search preserves biological pattern rows", {
   dup_sites <- find_restriction_sites("GAATTC", patterns = duplicate)
   expect_equal(nrow(dup_sites), 2L)
   expect_equal(length(unique(dup_sites$pattern_id)), 2L)
+
+  overlapping <- find_restriction_sites(
+    "GGGG", patterns = c(Overlap = "GGG"), circular = FALSE
+  )
+  expect_equal(overlapping$start, 1:2)
 })
 
 test_that("REBASE parser uses stable pattern rows when source files exist", {
@@ -186,7 +191,22 @@ test_that("REBASE parser uses stable pattern rows when source files exist", {
   expect_equal(sum(parsed$ncuts == 0L), 3264L)
   expect_true(any(parsed$cut_offset_1 < 0))
   expect_true(any(parsed$cut_offset_2 > parsed$motif_length))
+  expect_true(all(c("source_motif", "preferred_enzyme",
+    "is_preferred_enzyme") %in% names(parsed)))
+  expect_identical(parsed$preferred_enzyme[parsed$enzyme == "PspFI"], "BseYI")
+  expect_true(any(parsed$source_motif != parsed$motif))
+  expect_equal(parsed$cut_offset_1[parsed$enzyme == "PspFI"], 5L)
+  expect_equal(parsed$cut_offset_2[parsed$enzyme == "PspFI"], 1L)
   expect_true(all(grepl("^rebase609:e:[0-9]{6}$", parsed$pattern_id)))
+})
+
+test_that("pBluescript IUPAC and reverse-cleavage sites match references", {
+  data(plasmid_example_pBluescript_II_SK_plus)
+  sites <- find_restriction_sites(plasmid_example_pBluescript_II_SK_plus,
+    enzymes = c("EcoO109I", "PspFI", "BseYI"))
+  observed <- sites$position[match(c("EcoO109I", "PspFI", "BseYI"),
+    sites$enzyme)]
+  expect_equal(observed, c(660, 1461, 1457))
 })
 
 test_that("restriction filters only subset rows", {
@@ -205,6 +225,17 @@ test_that("restriction filters only subset rows", {
   )
   expect_equal(out$marker, 2:3)
   expect_equal(out$position, sites$position[out$marker])
+
+  equivalent <- data.frame(
+    accver = "g", enzyme = c("Alias", "Preferred", "Other"),
+    preferred_enzyme = c("Preferred", "Preferred", "Other"),
+    is_preferred_enzyme = c(FALSE, TRUE, TRUE),
+    pattern_source_row = 1:3, motif_length = 6L, start = c(10L, 10L, 20L),
+    position = c(10, 11, 20), commercial = TRUE
+  )
+  reduced <- filter_restriction_sites(equivalent,
+    parent_set = "commercial_nonredundant")
+  expect_equal(reduced$enzyme, c("Preferred", "Other"))
 })
 
 test_that("restriction layout is deterministic and never moves site anchors", {
