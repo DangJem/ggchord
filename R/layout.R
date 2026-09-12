@@ -99,6 +99,7 @@ compute_chord_layout <- function(
     gene_label_repel_layer = FALSE,
     gene_label_repel_max_overlaps = Inf,
     gene_label_layout = "radial",
+    feature_label_external = TRUE,
     gene_label_side = "auto",
     gene_label_segment_overlap = "fade",
     gene_label_segment_overlap_alpha = 0.18,

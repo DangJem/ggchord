@@ -88,6 +88,7 @@ ggchord_layout_annotation_step <- quote({
     valid_gene_rows <- which(gene_data$accver %in% seqs)
     valid_genes <- gene_data[valid_gene_rows, , drop = FALSE]
     valid_genes$.source_row <- valid_gene_rows
+    geometry_genes <- ggchord_expand_feature_render_runs(valid_genes)
 
     # Process gene colors
     gene_pal <- NULL
@@ -116,12 +117,12 @@ ggchord_layout_annotation_step <- quote({
     # for polygons that will never be drawn.
     gene_poly_list <- list()
     gene_rows_to_draw <- if (isTRUE(draw_gene_geometry)) {
-      seq_len(nrow(valid_genes))
+      seq_len(nrow(geometry_genes))
     } else {
       integer(0)
     }
     for (i in gene_rows_to_draw) {
-      gene <- valid_genes[i, ]
+      gene <- geometry_genes[i, ]
       sid <- gene$accver
       strand <- gene$strand
       anno <- gene$anno
@@ -131,13 +132,43 @@ ggchord_layout_annotation_step <- quote({
       if (!is.numeric(width) || width <= 0) width <- 0.1
 
       sequence_length <- lens[sid]
-      if (!is.finite(gene$start) || !is.finite(gene$end) ||
-          gene$start == gene$end) next
+      if (!is.finite(gene$start) || !is.finite(gene$end)) next
       ref <- seq_refs[[sid]]
       feature_shape <- if (".feature_shape" %in% names(gene)) {
         as.character(gene[[".feature_shape"]])
       } else {
         "arrow"
+      }
+      if (gene$start == gene$end) {
+        point_piece <- list(start = gene$start, end = gene$end)
+        point_angle <- ggchord_feature_angle_interval(
+          point_piece, sequence_length, orientation[sid], starts[sid], ends[sid]
+        )[1L]
+        # Point features are backbone annotations, not artificially widened
+        # intervals. Keep the short radial mark centred on the DNA backbone.
+        r0 <- unname(seqRadius[sid])
+        tick_half <- max(.014, min(.028, width * .36))
+        mapped <- map_to_curve_many(
+          rep(point_angle, 2L), c(r0 - tick_half, r0 + tick_half), ref
+        )
+        gene_poly_list[[length(gene_poly_list) + 1L]] <- data.frame(
+          x = mapped[, 1L], y = mapped[, 2L], group = i * 100L + 1L,
+          anno = anno, strand = strand, feature_shape = "point",
+          biological_strand = as.character(
+            gene$.feature_biological_strand %||% strand
+          ),
+          feature_fill_explicit = as.character(
+            gene$feature_color %||% NA_character_
+          ),
+          position_name = as.character(gene$.position_name %||% "identity"),
+          base_offset = as.numeric(gene$.position_base_offset %||% 0),
+          lane = as.integer(gene$.feature_stack_lane %||% 0L),
+          lane_offset = as.numeric(gene$.position_lane_offset %||% 0),
+          normal_offset = as.numeric(gene$.normal_offset %||% 0),
+          source_row = gene$.source_row, ord = 1:2,
+          .component = "point", stringsAsFactors = FALSE
+        )
+        next
       }
       pieces <- ggchord_feature_intervals(
         gene$start, gene$end, sequence_length, strand,
@@ -158,7 +189,14 @@ ggchord_layout_annotation_step <- quote({
           arrow_head_width = arrow_head_width,
           arrow_head_style = arrow_head_style,
           short_feature = short_feature,
-          draw_head = piece$draw_head,
+          draw_head = piece$draw_head && isTRUE(
+            gene$.feature_draw_head %||% TRUE
+          ),
+          draw_start_head = isTRUE(
+            gene$.feature_draw_start_head %||% identical(
+              as.character(gene$.feature_biological_strand %||% strand), "+/-"
+            )
+          ),
           bidirectional = identical(
             as.character(gene$.feature_biological_strand %||% strand), "+/-"
           )
@@ -295,7 +333,9 @@ ggchord_layout_annotation_step <- quote({
 
         r0 <- gene_track_radius(gene, sid, strand, ref$angles[idx])
 
-        center_r <- r0
+        center_r <- if (gene$start == gene$end) {
+          unname(seqRadius[sid])
+        } else r0
         center_pt <- map_to_curve(angle = ref$angles[idx], radius = center_r, ref = ref)
 
         normal_x <- -dy

@@ -20,18 +20,6 @@ ggchord_feature_classes <- function(type) {
   out
 }
 
-ggchord_feature_class_shape <- function(feature_class) {
-  values <- c(
-    gene = "arrow", resistance_gene = "arrow", origin = "arrow",
-    promoter = "promoter_arrow", primer = "primer_arrow",
-    binding_site = "block", operator = "block", regulatory = "compact_arrow",
-    mcs = "block", misc_feature = "block"
-  )
-  out <- unname(values[as.character(feature_class)])
-  out[is.na(out)] <- "block"
-  out
-}
-
 ggchord_feature_width_factor <- function(shape) {
   values <- c(
     arrow = 1, compact_arrow = .72, promoter_arrow = .55,
@@ -41,18 +29,6 @@ ggchord_feature_width_factor <- function(shape) {
   out <- unname(values[as.character(shape)])
   out[is.na(out)] <- 1
   out
-}
-
-ggchord_feature_preferred_lane <- function(feature_class) {
-  values <- c(
-    gene = 0L, resistance_gene = 0L, origin = 0L,
-    mcs = 1L, binding_site = 1L, operator = 1L,
-    regulatory = 1L, promoter = 2L, primer = 2L,
-    misc_feature = 1L
-  )
-  out <- unname(values[as.character(feature_class)])
-  out[is.na(out)] <- 0L
-  as.integer(out)
 }
 
 ggchord_feature_intervals <- function(start, end, length, strand,
@@ -132,12 +108,12 @@ ggchord_shape_arrow <- function(a_start, a_end, r0, width,
   if (available < head_length) {
     fallback <- short_feature
     if (identical(fallback, "auto")) {
-      # Preserve a visible rectangular body and shrink only the head. A full
-      # wedge makes short plasmid features look like detached triangles.
-      if (available < width * .18) {
-        return(ggchord_shape_block(a_start, a_end, r0, width))
-      }
-      head_length <- available * .36
+      # Keep a restrained directional mark. Both head length and effective
+      # thickness contract for short intervals, preventing the bulky pentagon
+      # produced by applying a long-feature head ratio unchanged.
+      width <- min(width, max(width * .22, available * 1.15))
+      head_width <- min(head_width, 1)
+      head_length <- min(available * .28, width * .45)
       fallback <- "arrow"
     }
     if (identical(fallback, "block")) {
@@ -244,6 +220,7 @@ ggchord_feature_geometry <- function(shape, a_start, a_end, r0, width,
                                      arrow_head_style = "shouldered",
                                      short_feature = "auto",
                                      draw_head = TRUE,
+                                     draw_start_head = FALSE,
                                      bidirectional = FALSE) {
   if (shape %in% c("compact_arrow", "promoter_arrow", "primer_arrow")) {
     available <- abs(a_end - a_start) * max(abs(r0), .1)
@@ -284,7 +261,7 @@ ggchord_feature_geometry <- function(shape, a_start, a_end, r0, width,
     ))
   }
   if (identical(shape, "arrow") && isTRUE(bidirectional) &&
-      isTRUE(draw_head)) {
+      isTRUE(draw_head) && isTRUE(draw_start_head)) {
     return(ggchord_shape_bidirectional_arrow(
       a_start, a_end, r0, width,
       head_length = arrow_head_length,
@@ -300,7 +277,15 @@ ggchord_feature_geometry <- function(shape, a_start, a_end, r0, width,
     lollipop = ggchord_shape_lollipop(
       a_start, a_end, r0, width, sequence_radius, ref
     ),
-    if (identical(arrow_head_style, "triangle") && isTRUE(draw_head)) {
+    if (isTRUE(draw_start_head) && !isTRUE(draw_head)) {
+      ggchord_shape_arrow(
+        a_end, a_start, r0, width,
+        head_length = arrow_head_length,
+        head_width = if (identical(arrow_head_style, "flush")) 1 else
+          arrow_head_width,
+        short_feature = short_feature, draw_head = TRUE
+      )
+    } else if (identical(arrow_head_style, "triangle") && isTRUE(draw_head)) {
       ggchord_shape_wedge(a_start, a_end, r0, width * arrow_head_width)
     } else {
       ggchord_shape_arrow(

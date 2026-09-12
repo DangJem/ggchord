@@ -32,7 +32,8 @@ generated.}
 
 \item{data}{data.frame with \code{accver}, \code{start}, \code{end} and
 \code{strand}; optional \code{type}, \code{category} and \code{label}.
-As an alternative to \code{strand}, \code{direction} may contain
+`display_priority` or logical `prioritized_display`. As an alternative to
+\code{strand}, \code{directionality} or \code{direction} may contain
 \code{"forward"}, \code{"reverse"}, \code{"bidirectional"}, or
 \code{"none"}.}
 
@@ -71,9 +72,9 @@ internal segment joins.}
 \item{position}{Feature position. `NULL` (the default) automatically stacks
 overlapping features on compact lanes inside the plasmid backbone. Reuse
 the same explicit [position_feature_stack()] object for a separate label
-layer so polygons and labels share their lanes. Optional data columns
-`preferred_lane` and `feature_group` request a lane and keep related rows
-on one shared lane, respectively.}
+layer so polygons and labels share their lanes. Optional numeric
+`display_priority` (larger first) or logical `prioritized_display` can
+override the default longest-first ordering for overlapping features.}
 
 \item{show.legend, inherit.aes}{Standard ggplot2 layer arguments.}
 

@@ -33,7 +33,8 @@ generated.}
 
 \item{data}{data.frame with \code{accver}, \code{start}, \code{end} and
 \code{strand}; optional \code{type}, \code{category} and \code{label}.
-As an alternative to \code{strand}, \code{direction} may contain
+`display_priority` or logical `prioritized_display`. As an alternative to
+\code{strand}, \code{directionality} or \code{direction} may contain
 \code{"forward"}, \code{"reverse"}, \code{"bidirectional"}, or
 \code{"none"}.}
 
@@ -49,7 +50,8 @@ Use \code{aes(feature_shape = type)} together with
 both is an error.}
 
 \item{feature_width}{Optional numeric/vector/list controlling width in the
-shared feature geometry engine.}
+shared feature geometry engine. In a circular feature-label composition,
+the base width responds to final label size within bounded limits.}
 
 \item{feature_offset}{Deprecated placement input. Explicit values are
 translated to the former strand-separated geometry and emit a warning.}

@@ -422,6 +422,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   gene_lrepel_layer <- gene_repel_layer
   gene_lrepel_maxov <- gene_repel_params$max_overlaps %||% Inf
   gene_lrepel_layout <- gene_repel_params$gene_label_layout %||% "radial"
+  feature_label_external <- gene_repel_params$feature_label_external %||% TRUE
   gene_lrepel_fit    <- gene_repel_params$gene_label_fit %||% "wrap"
   gene_lrepel_lines  <- gene_repel_params$gene_label_max_lines %||% 2L
   gene_lrepel_side   <- if (gene_repel_layer) {
@@ -452,6 +453,17 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   }
 
   geneWidth  <- process_gene_param(gene_w, seqs, "gene_width", 0.05, FALSE)
+  if (isTRUE(gene_params$is_feature) && isTRUE(lbl$is_feature_label) &&
+      isTRUE(plot$coordinates$ggchord_circular)) {
+    # Feature bands accommodate the actual label font size within bounded
+    # limits. This is a modest physical adjustment, not a response to label
+    # length; long text must still use adjacent/external fallback.
+    width_factor <- pmin(1.42, pmax(.78, .82 + .072 * gene_lsz))
+    geneWidth <- lapply(geneWidth, function(value) {
+      adjusted <- as.numeric(value) * width_factor
+      stats::setNames(pmin(.095, pmax(.032, adjusted)), names(value))
+    })
+  }
 
   # Feature geometry is resolved before coordinate generation because these
   # values change the actual polygon, not only its appearance. A user-supplied
@@ -835,6 +847,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     gene_label_repel_layer = gene_lrepel_layer,
     gene_label_repel_max_overlaps = gene_lrepel_maxov,
     gene_label_layout = gene_lrepel_layout,
+    feature_label_external = feature_label_external,
     gene_label_side = gene_lrepel_side,
     gene_label_segment_overlap = gene_lrepel_segment_overlap,
     gene_label_segment_overlap_alpha = gene_lrepel_segment_overlap_alpha,

@@ -156,6 +156,23 @@ ggchord_resolve_legacy_offset <- function(offset, seqs, name) {
   lapply(old, function(x) c("+" = unname(x["+"]), "-" = -unname(x["-"])))
 }
 
+ggchord_feature_display_priority <- function(data, rows) {
+  priority <- rep(0, length(rows))
+  if ("display_priority" %in% names(data)) {
+    value <- data$display_priority[rows]
+    if (is.logical(value)) value <- as.numeric(value)
+    value <- suppressWarnings(as.numeric(value))
+    value[!is.finite(value)] <- 0
+    priority <- value
+  }
+  if ("prioritized_display" %in% names(data)) {
+    prioritized <- data$prioritized_display[rows]
+    prioritized[is.na(prioritized)] <- FALSE
+    priority[as.logical(prioritized)] <- Inf
+  }
+  priority
+}
+
 ggchord_allocate_feature_lanes <- function(data, base, direction, spacing,
                                             circular = FALSE, lengths = NULL) {
   lane <- integer(nrow(data))
@@ -188,11 +205,12 @@ ggchord_allocate_feature_lanes <- function(data, base, direction, spacing,
         if (is.finite(len)) min(len, max(a, b) + pad) else max(a, b) + pad),
         nrow = 1L)
     })
-    group_value <- if ("feature_group" %in% names(data)) {
-      as.character(data$feature_group[idx])
-    } else rep(NA_character_, length(idx))
-    missing_group <- is.na(group_value) | !nzchar(group_value)
-    group_value[missing_group] <- paste0(".row.", idx[missing_group])
+    # Only renderer-created rows from one multi-segment biological feature are
+    # co-allocated. User-facing feature names/groups never collapse collisions:
+    # local overlap itself is the grouping model.
+    group_value <- if (".biological_source_row" %in% names(data)) {
+      paste0(".feature.", data$.biological_source_row[idx])
+    } else paste0(".row.", idx)
     entity_members <- split(seq_along(idx),
       factor(group_value, levels = unique(group_value)))
     intervals <- lapply(entity_members, function(members) {
@@ -200,9 +218,16 @@ ggchord_allocate_feature_lanes <- function(data, base, direction, spacing,
     })
     entity_source <- vapply(entity_members, function(members) idx[members[1L]],
       integer(1))
-    ord <- order(vapply(intervals, function(x) min(x[, 1]), numeric(1)),
-                 vapply(intervals, function(x) max(x[, 2]), numeric(1)),
-                 entity_source)
+    entity_priority <- vapply(entity_members, function(members) {
+      max(ggchord_feature_display_priority(data, idx[members]))
+    }, numeric(1))
+    entity_span <- vapply(intervals, function(x) {
+      sum(pmax(0, x[, 2] - x[, 1]))
+    }, numeric(1))
+    # SnapGene-like tiling: explicit display priority wins, then the longest
+    # overlapping interval receives the nearest-to-backbone collision slot.
+    ord <- order(-entity_priority, -entity_span,
+      vapply(intervals, function(x) min(x[, 1]), numeric(1)), entity_source)
     lane_intervals <- list()
     overlaps <- function(a, occupied) {
       any(vapply(occupied, function(b) any(
@@ -213,28 +238,7 @@ ggchord_allocate_feature_lanes <- function(data, base, direction, spacing,
     }
     for (local in ord) {
       members <- entity_members[[local]]
-      preferred <- if ("preferred_lane" %in% names(data)) {
-        suppressWarnings(as.integer(data$preferred_lane[idx[members[1L]]]))
-      } else NA_integer_
-      if (!is.finite(preferred) || preferred < 0L) preferred <- 0L
-      semantic_hint <- ".semantic_lane_hint" %in% names(data) &&
-        isTRUE(data$.semantic_lane_hint[idx[members[1L]]])
-      if (semantic_hint) {
-        conflicting_lanes <- which(vapply(seq_along(lane_intervals),
-          function(candidate) overlaps(
-            intervals[[local]], lane_intervals[[candidate]]
-          ), logical(1)))
-        local_depth <- if (length(conflicting_lanes)) {
-          max(conflicting_lanes)
-        } else 0L
-        preferred <- min(preferred, local_depth)
-      }
-      candidates <- unique(c(
-        preferred + 1L,
-        as.vector(rbind(preferred + seq_len(nrow(data)) + 1L,
-          preferred - seq_len(nrow(data)) + 1L))
-      ))
-      candidates <- candidates[candidates >= 1L]
+      candidates <- seq_len(nrow(data) + 1L)
       chosen <- candidates[which(vapply(candidates, function(candidate) {
         candidate > length(lane_intervals) ||
           !overlaps(intervals[[local]], lane_intervals[[candidate]])

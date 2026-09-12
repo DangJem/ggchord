@@ -63,8 +63,25 @@ geom_feature_label <- function(
 #' @param label_side One of `"inside"`, `"outside"`, or `"auto"`.
 #' @param label_wrap,label_fit,label_max_lines Text fitting controls.
 #' @param max_overlaps Maximum unresolved overlaps.
+#' @param external Whether the staged feature layout may place a label outside
+#'   the circular backbone after inside and adjacent placement fail. When
+#'   `FALSE`, unresolved labels are hidden instead of pushing inward forever.
 #' @inheritParams geom_feature_label
 #' @return A composite text and leader-line layer.
+#' @examples
+#' seq <- data.frame(accver = "circle", length = 1000)
+#' features <- data.frame(
+#'   accver = "circle", start = c(100, 130), end = c(360, 155),
+#'   directionality = c("forward", "nondirectional"),
+#'   anno = c("long feature", "short feature")
+#' )
+#' tracks <- position_feature_stack(base_position = position_plasmid())
+#' ggchord(seq, validate = "none") +
+#'   geom_seq() +
+#'   geom_feature_plasmid(data = features, position = tracks) +
+#'   geom_feature_label_repel(data = features, position = tracks,
+#'     external = TRUE) +
+#'   coord_circular()
 #' @export
 geom_feature_label_repel <- function(
     mapping = NULL, data = NULL,
@@ -74,12 +91,16 @@ geom_feature_label_repel <- function(
     label_max_lines = 2L,
     label_side = c("outside", "inside", "auto"),
     max_overlaps = Inf,
+    external = TRUE,
     position = "identity",
     show.legend = FALSE, inherit.aes = FALSE, ...) {
   dots <- list(...)
   label_layout <- match.arg(label_layout)
   label_fit <- match.arg(label_fit)
   label_side <- match.arg(label_side)
+  if (!is.logical(external) || length(external) != 1L || is.na(external)) {
+    ggchord_stop("geom_feature_label_repel(): external must be TRUE or FALSE")
+  }
   if (identical(label_layout, "feature")) {
     lyr <- geom_gene_label_repel(
       mapping = mapping, data = data,
@@ -95,6 +116,7 @@ geom_feature_label_repel <- function(
     # labels whose final displacement is visually meaningful.
     lyr$ggchord_params$gene_label_layout <- "feature"
     lyr$ggchord_params$is_feature_label <- TRUE
+    lyr$ggchord_params$feature_label_external <- external
     lyr$ggchord_input_transform <- ggchord_feature_label_data
     lyr$ggchord_role_aes <- unique(c(
       lyr$ggchord_role_aes, "label", "feature_label", "feature_type"
@@ -125,6 +147,7 @@ geom_feature_label_repel <- function(
   )
   lyr$ggchord_params$gene_label_layout <- label_layout
   lyr$ggchord_params$is_feature_label <- TRUE
+  lyr$ggchord_params$feature_label_external <- external
   lyr$ggchord_input_transform <- ggchord_feature_label_data
   lyr$ggchord_role_aes <- unique(c(
     lyr$ggchord_role_aes, "label", "feature_label", "feature_type"

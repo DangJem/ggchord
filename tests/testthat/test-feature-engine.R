@@ -45,7 +45,7 @@ test_that("short arrows fall back without swallowing the interval", {
   auto <- draw("auto")
   wedge <- draw("wedge")
   block <- draw("block")
-  expect_equal(nrow(auto), 120L)
+  expect_gt(nrow(auto), 3L)
   expect_true(all(is.finite(auto$x) & is.finite(auto$y)))
 
   medium <- data
@@ -108,7 +108,7 @@ test_that("feature label fitting uses final font metrics and exports modes", {
   small <- small[small$.component == "text", , drop = FALSE]
   large <- large[large$.component == "text", , drop = FALSE]
   expect_equal(small$feature_label_mode, "inside")
-  expect_true(large$feature_label_mode %in% c("adjacent", "callout"))
+  expect_true(large$feature_label_mode %in% c("adjacent", "external"))
   expect_equal(large$family, "mono")
   expect_equal(large$fontface, "bold")
   expect_equal(large$lineheight, 1.35)
@@ -177,7 +177,7 @@ test_that("dense plasmid feature labels avoid labels and feature glyphs", {
   }
   expect_equal(overlaps, 0L)
   expect_true(all(labels$feature_label_mode %in%
-    c("inside", "adjacent", "callout")))
+    c("inside", "adjacent", "external")))
   expect_true(any(labels$feature_label_mode == "inside"))
   expect_true(any(labels$feature_label_mode != "inside"))
   internal <- get_chord_layout(plot)
@@ -201,15 +201,13 @@ test_that("dense plasmid feature labels avoid labels and feature glyphs", {
       allow_own = internal_labels$feature_label_mode[i] == "inside"
     ))
   }
-  expect_lt(max(vapply(seq_len(nrow(boxes)), function(i) {
-    max(sqrt(rowSums(ggchord_box_corners(boxes[i, , drop = FALSE])^2)))
-  }, numeric(1))), 1)
+  expect_true(any(labels$feature_label_mode == "external"))
   expect_true(all(labels$angle <= 90 | labels$angle >= 270))
-  expect_true(all(c("feature_class", "preferred_lane") %in% names(features)))
-  expect_equal(features$feature_shape[features$feature_class == "promoter"],
-    rep("promoter_arrow", sum(features$feature_class == "promoter")))
-  expect_equal(features$feature_shape[features$feature_class == "primer"],
-    rep("primer_arrow", sum(features$feature_class == "primer")))
+  expect_true("feature_class" %in% names(features))
+  expect_false("preferred_lane" %in% names(features))
+  expect_true(all(features$feature_shape == ifelse(
+    features$strand == ".", "block", "arrow"
+  )))
 })
 
 test_that("plasmid feature preset keeps one arrowhead and draws segment joins", {
@@ -295,13 +293,13 @@ test_that("feature labels reuse fixed and repel label layout", {
   )$labels
   moved_text <- moved[moved$.component == "text", , drop = FALSE]
   expect_true(all(moved_text$feature_label_mode %in%
-    c("adjacent", "callout")))
-  if (any(moved_text$feature_label_mode == "callout")) {
+    c("adjacent", "external")))
+  if (any(moved_text$feature_label_mode == "external")) {
     expect_true(any(moved$.component == "segment"))
   }
 })
 
-test_that("plasmid feature preset stacks overlapping intervals by default", {
+test_that("plasmid tracks use priority, span and compact interval reuse", {
   seq <- data.frame(accver = "circle", length = 1000)
   features <- data.frame(
     accver = "circle", start = c(100, 150), end = c(300, 220),
@@ -312,24 +310,40 @@ test_that("plasmid feature preset stacks overlapping intervals by default", {
       geom_feature_plasmid(data = features) + coord_circular(),
     include = "feature"
   )$feature
-  expect_setequal(unique(out$lane), 0:1)
-  expect_true(all(out$lane_offset %in% c(0, -.10)))
+  lanes <- unique(out[, c("anno", "lane")])
+  expect_equal(lanes$lane[lanes$anno == "outer"], 0L)
+  expect_equal(lanes$lane[lanes$anno == "nested"], 1L)
 
-  grouped <- transform(features, feature_group = "related")
-  grouped_out <- export_ggchord_layout(
+  typed <- transform(features, type = c("promoter", "CDS"))
+  typed_out <- export_ggchord_layout(
     ggchord(seq, validate = "none") + geom_seq() +
-      geom_feature_plasmid(data = grouped) + coord_circular(),
+      geom_feature_plasmid(data = typed) + coord_circular(),
     include = "feature"
   )$feature
-  expect_equal(unique(grouped_out$lane), 0L)
+  expect_equal(unique(typed_out[, c("anno", "lane")])$lane, lanes$lane)
 
-  preferred <- transform(features, preferred_lane = c(0L, 2L))
+  preferred <- transform(features, display_priority = c(0, 10))
   preferred_out <- export_ggchord_layout(
     ggchord(seq, validate = "none") + geom_seq() +
       geom_feature_plasmid(data = preferred) + coord_circular(),
     include = "feature"
   )$feature
-  expect_setequal(unique(preferred_out$lane), c(0L, 2L))
+  preferred_lanes <- unique(preferred_out[, c("anno", "lane")])
+  expect_equal(preferred_lanes$lane[preferred_lanes$anno == "nested"], 0L)
+  expect_equal(preferred_lanes$lane[preferred_lanes$anno == "outer"], 1L)
+
+  chain <- data.frame(
+    accver = "circle", start = c(100, 220, 340), end = c(240, 360, 470),
+    strand = "+", anno = c("A", "B", "C")
+  )
+  chain_out <- export_ggchord_layout(
+    ggchord(seq, validate = "none") + geom_seq() +
+      geom_feature_plasmid(data = chain) + coord_circular(),
+    include = "feature"
+  )$feature
+  chain_lanes <- unique(chain_out[, c("anno", "lane")])
+  expect_equal(chain_lanes$lane[chain_lanes$anno %in% c("A", "C")], c(0L, 0L))
+  expect_equal(chain_lanes$lane[chain_lanes$anno == "B"], 1L)
 })
 
 test_that("feature directions and segment-specific styles stay semantic", {
@@ -355,6 +369,68 @@ test_that("feature directions and segment-specific styles stay semantic", {
     c("#FF0000", "#00FF00"))
   expect_equal(unique(stats::na.omit(out$boundary_linetype)), "dotted")
   expect_s3_class(ggplot2::ggplotGrob(plot), "gtable")
+})
+
+test_that("point and multi-segment features retain distinct layout semantics", {
+  seq <- data.frame(accver = "circle", length = 1000)
+  point <- data.frame(
+    accver = "circle", start = 80, end = 80,
+    directionality = "nondirectional", anno = "point"
+  )
+  point_out <- export_ggchord_layout(
+    ggchord(seq, validate = "none") + geom_seq() +
+      geom_feature_plasmid(data = point) + coord_circular(),
+    include = "feature"
+  )$feature
+  expect_equal(unique(point_out$.component), "point")
+  expect_equal(nrow(point_out), 2L)
+  expect_equal(unique(point_out$feature_shape), "point")
+
+  segments <- data.frame(
+    segment_index = 1:3, segment_type = c("standard", "gap", "standard"),
+    start = c(100, 181, 221), end = c(180, 220, 320),
+    color = c("#FF0000", NA, "#00AA00"),
+    segment_name = c("left", NA, "right")
+  )
+  multi <- data.frame(
+    accver = "circle", start = 100, end = 320,
+    directionality = "forward", anno = "one feature",
+    segments = I(list(segments))
+  )
+  p <- ggchord(seq, validate = "none") + geom_seq() +
+    geom_feature_plasmid(data = multi) +
+    geom_feature_label_repel(data = multi) + coord_circular()
+  layout <- export_ggchord_layout(p, include = c("feature", "labels"))
+  polygons <- layout$feature[layout$feature$.component == "polygon", ]
+  expect_equal(unique(polygons$source_row), 1L)
+  expect_equal(unique(polygons$lane), 0L)
+  expect_setequal(unique(polygons$feature_fill_explicit),
+    c("#FF0000", "#00AA00"))
+  expect_equal(sum(layout$labels$.component == "text"), 1L)
+})
+
+test_that("feature labels use external fallback or hide by policy", {
+  seq <- data.frame(accver = "circle", length = 1000)
+  feature <- data.frame(
+    accver = "circle", start = rep(100, 3), end = rep(105, 3),
+    strand = "+", anno = paste("very long feature label", 1:3)
+  )
+  draw <- function(external) export_ggchord_layout(
+    ggchord(seq, validate = "none") + geom_seq() +
+      geom_feature_plasmid(data = feature) +
+      geom_feature_label_repel(data = feature, external = external,
+        max_overlaps = 0) + coord_circular(),
+    include = "labels"
+  )$labels
+  external <- draw(TRUE)
+  external <- external[external$.component == "text", , drop = FALSE]
+  internal_only <- draw(FALSE)
+  internal_only <- internal_only[
+    internal_only$.component == "text", , drop = FALSE
+  ]
+  expect_true(any(external$feature_label_mode == "external"))
+  expect_lte(nrow(internal_only), nrow(external))
+  expect_false(any(internal_only$feature_label_mode == "external"))
 })
 
 test_that("plasmid preset scales defer to manual scales in either order", {

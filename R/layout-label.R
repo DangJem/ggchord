@@ -95,7 +95,8 @@ ggchord_layout_label_step <- quote({
           layout_result <- ggchord_feature_label_lanes(
             base_gene_labels, gene_polys, seq_arcs,
             units_per_inch = layout_units,
-            max_overlaps = gene_label_repel_max_overlaps
+            max_overlaps = gene_label_repel_max_overlaps,
+            allow_external = feature_label_external
           )
         } else if (gene_label_layout %in% c("auto", "callout")) {
           layout_result <- ggchord_auto_label_lanes(
@@ -135,12 +136,14 @@ ggchord_layout_label_step <- quote({
         seq_labels_df, axis_ticks, show_axis,
         units_per_inch = layout_units
       )
-      gene_labels <- ggchord_hide_conflicted_labels(
-        gene_labels,
-        max_overlaps = gene_label_repel_max_overlaps,
-        units_per_inch = layout_units,
-        repel_boxes = final_obstacles
-      )
+      if (!identical(gene_label_layout, "feature")) {
+        gene_labels <- ggchord_hide_conflicted_labels(
+          gene_labels,
+          max_overlaps = gene_label_repel_max_overlaps,
+          units_per_inch = layout_units,
+          repel_boxes = final_obstacles
+        )
+      }
       draw_segment <- draw_segment & !is.na(gene_labels$text) &
         nzchar(gene_labels$text)
 

@@ -40,18 +40,25 @@
   Features crossing the circular origin retain one source identity and split
   into drawable arc pieces without losing strand direction.
 * Added `geom_feature_plasmid()` as a compact circular-map preset over the
-  generic feature engine. Continuous database segments share one outline and
-  one arrowhead; their internal joins are rendered as short dashed dividers.
-  The plasmid fill/shape presets now use a SnapGene-like biological palette
-  and protruding shouldered block arrows. Its default position assigns
-  overlapping intervals to deterministic radial lanes. `preferred_lane` can
-  request a biological track and `feature_group` keeps related rows together.
-  The feature-shape vocabulary now also includes `compact_arrow`,
+  generic feature engine. Multi-segment records remain one biological feature
+  during stacking and labelling; visible segment runs share one track and one
+  label, preserve gaps and per-segment colours, and draw arrowheads only at the
+  biological feature ends. Internal joins are short dashed dividers.
+  Its default position assigns overlapping intervals to generic collision
+  slots: explicit `display_priority`/`prioritized_display` comes first, then
+  longer spans, while every non-overlapping feature reuses the nearest slot.
+  Feature type, name, and colour no longer choose a radial lane, and
+  `find_common_features()` no longer emits semantic `preferred_lane` hints.
+  The feature-shape vocabulary includes `compact_arrow`,
   `promoter_arrow`, `primer_arrow`, and `marker`. Promoters and primers use
-  thinner dedicated glyphs, extremely short intervals retain a visible marker,
-  and small glyphs receive a lighter outline unless linewidth is explicit.
-  Lane allocation accounts for the rendered glyph width and minimum display
-  span, while semantic preferred lanes remain collision-driven hints.
+  optional dedicated glyphs. Default common-feature geometry now follows the
+  feature's own nondirectional/forward/reverse/bidirectional value rather than
+  its biological type. Extremely short directional intervals retain a
+  restrained direction mark whose head and thickness contract with available
+  display length; zero-length point features draw a radial tick rather than a
+  minimum-width polygon. Small glyphs receive a lighter outline unless
+  linewidth is explicit. Lane collision checks account for rendered glyph
+  width and minimum display span.
 * `geom_seq()` adds `seq_style = "single" | "double" | "band"`,
   `seq_backbone_gap`, and `seq_backbone_width` for circular backbones. Under
   `coord_circular()`, the implicit chord-direction arrow and redundant
@@ -65,12 +72,15 @@
   can contain it, and places compact-feature text nearby. Nearby collisions are
   nudged deterministically and only materially displaced labels receive a light
   leader; explicit radial/auto/callout layouts remain available. The feature
-  mode now exports `feature_label_mode = "inside" | "adjacent" | "callout"`,
+  mode now exports `feature_label_mode = "inside" | "adjacent" | "external"`,
   measures the final font family, face, size and line height, and checks
   oriented label boxes against other labels, rendered feature polygons, the
-  centre reserve and the circular backbone. Dense MCS labels preferentially
-  stagger along the local tangent before moving radially, preserving a compact
-  genomic reading order. Inside text automatically uses black or white from
+  centre reserve and the circular backbone. After two bounded adjacent radial
+  offsets, unresolved labels become horizontal external callouts; setting
+  `external = FALSE` hides them instead of pushing them indefinitely towards
+  the centre. Label-aware coordinate fitting includes their measured boxes.
+  Feature thickness responds to final label size within bounded limits, never
+  to unbounded label length. Inside text automatically uses black or white from
   the final fill luminance unless its colour is explicitly supplied.
 * Added `find_restriction_sites()` as a calculation-only API. It preserves one
   row per pattern match, stable pattern identity, multiple motifs per enzyme,

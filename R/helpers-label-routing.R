@@ -8,7 +8,8 @@ ggchord_normalize_text_orientation <- function(angle, hjust = .5) {
 
 ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
                                          units_per_inch = .35,
-                                         max_overlaps = Inf) {
+                                         max_overlaps = Inf,
+                                         allow_external = TRUE) {
   n <- nrow(gl)
   if (!n) return(list(
     labels = gl, lanes = character(), directions = character(),
@@ -54,14 +55,19 @@ ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
     radial_step <- max(.052, measured$h * .82 + .024)
     tangent_step <- max(.045, measured$h * .70)
     starts_inside <- gl$feature_label_inside[i] %in% TRUE
-    radial_candidates <- if (starts_inside) 0:6 else -4:4
+    # Only two nearby internal offsets count as adjacency. If those fail, move
+    # outside (or hide by policy) instead of building an inward label spiral.
+    radial_candidates <- c(0:2, -1:-5)
+    if (!isTRUE(allow_external)) {
+      radial_candidates <- radial_candidates[radial_candidates >= 0L]
+    }
     tangent_candidates <- -6:6
     candidates <- expand.grid(
       radial = radial_candidates, tangent = tangent_candidates
     )
     if (starts_inside) {
       candidates <- candidates[
-        candidates$radial > 0 | candidates$tangent == 0, , drop = FALSE
+        candidates$radial != 0 | candidates$tangent == 0, , drop = FALSE
       ]
     }
     # Compact plasmid labels read best when they remain close to the glyph's
@@ -86,7 +92,20 @@ ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
         radial_index <- candidates$radial[candidate_index]
         tangent_index <- candidates$tangent[candidate_index]
         candidate <- gl[i, , drop = FALSE]
-        if (starts_inside && radial_index > 0L) {
+        if (radial_index < 0L) {
+          external_gap <- max(.035, measured$h * .58)
+          candidate$text_x <- frame$curve_x[i] +
+            outward[1] * (external_gap + abs(radial_index - 1L) * radial_step) +
+            tangent[1] * tangent_index * tangent_step
+          candidate$text_y <- frame$curve_y[i] +
+            outward[2] * (external_gap + abs(radial_index - 1L) * radial_step) +
+            tangent[2] * tangent_index * tangent_step
+          # Feature-label routing runs after global geometry rotation, so zero
+          # is already an absolute horizontal display angle here.
+          candidate$text_angle <- 0
+          candidate$hjust <- if (candidate$text_x >= 0) 0 else 1
+          candidate$vjust <- .5
+        } else if (starts_inside && radial_index > 0L) {
           # Failed inside labels restart immediately beyond their own glyph.
           base <- max(.045, as.numeric(gl$.feature_width[i] %||% .07))
           candidate$text_x <- gl$anchor_x[i] +
@@ -115,7 +134,8 @@ ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
         corners <- ggchord_box_corners(box)
         central_collision <- length(seq_arcs) == 1L &&
           min(sqrt(rowSums(corners^2))) < .26
-        backbone_collision <- !(starts_inside && radial_index == 0L) &&
+        backbone_collision <- radial_index >= 0L &&
+          !(starts_inside && radial_index == 0L) &&
           is.finite(sequence_radius) &&
           max(sqrt(rowSums(corners^2))) > sequence_radius - .018
         if (!label_collision && !feature_collision && !central_collision &&
@@ -132,25 +152,30 @@ ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
       chosen_box <- ggchord_text_boxes(
         chosen, units_per_inch = units_per_inch, box_padding = .04
       )
-      if (is.finite(max_overlaps)) chosen$text <- NA_character_
+      chosen$text <- NA_character_
     }
     result$text_x[i] <- chosen$text_x
     result$text_y[i] <- chosen$text_y
     result$text[i] <- chosen$text
+    result$text_angle[i] <- chosen$text_angle
+    result$hjust[i] <- chosen$hjust
+    result$vjust[i] <- chosen$vjust
     placed <- rbind(placed, chosen_box)
     displacement <- sqrt(
       (result$text_x[i] - gl$text_x[i])^2 +
       (result$text_y[i] - gl$text_y[i])^2
     )
-    if (starts_inside && chosen_radial == 0L) {
+    if (chosen_radial < 0L) {
+      mode[i] <- "external"
+    } else if (starts_inside && chosen_radial == 0L) {
       mode[i] <- "inside"
-    } else if (abs(chosen_radial) <= 2L && abs(chosen_tangent) <= 1L) {
+    } else if (chosen_radial <= 2L) {
       mode[i] <- "adjacent"
     } else {
-      mode[i] <- "callout"
+      mode[i] <- "external"
     }
     tracks[i] <- abs(chosen_radial) + 1L
-    moved[i] <- identical(mode[i], "callout") || displacement >= .11
+    moved[i] <- identical(mode[i], "external") || displacement >= .11
     delta <- c(result$text_x[i] - gl$anchor_x[i],
       result$text_y[i] - gl$anchor_y[i])
     directions[i] <- if (abs(delta[1]) >= abs(delta[2])) {

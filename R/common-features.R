@@ -206,12 +206,8 @@ ggchord_common_candidate <- function(accver, feature, method, start, end,
   if (is.na(feature_fill) || !nzchar(feature_fill)) feature_fill <- "#B8BDC3"
   feature_label_colour <- ggchord_contrast_colour(feature_fill)
   feature_class <- ggchord_feature_classes(feature$type)
-  feature_shape <- ggchord_feature_class_shape(feature_class)
-  if (strand == "." && feature_shape %in% c(
-      "arrow", "compact_arrow", "promoter_arrow", "primer_arrow")) {
-    feature_shape <- "block"
-  }
-  preferred_lane <- ggchord_feature_preferred_lane(feature_class)
+  # Directionality, not biological type, supplies the default geometry.
+  feature_shape <- if (strand == ".") "block" else "arrow"
   data.frame(
     accver = accver,
     start = as.integer(start), end = as.integer(end), strand = strand,
@@ -219,7 +215,6 @@ ggchord_common_candidate <- function(accver, feature, method, start, end,
     type = as.character(feature$type), anno = as.character(feature$name),
     feature_color = feature_fill, feature_label_colour = feature_label_colour,
     feature_class = feature_class, feature_shape = feature_shape,
-    preferred_lane = preferred_lane, .semantic_lane_hint = TRUE,
     common_feature_id = id,
     match_id = paste(accver, id, strand, start, end, method, sep = ":"),
     match_method = method, identity = as.numeric(identity),
@@ -559,8 +554,7 @@ ggchord_empty_common_features <- function() {
     strand = character(), cross_origin = logical(), type = character(),
     anno = character(), feature_color = character(),
     feature_label_colour = character(), feature_class = character(),
-    feature_shape = character(), preferred_lane = integer(),
-    .semantic_lane_hint = logical(),
+    feature_shape = character(),
     common_feature_id = character(),
     match_id = character(), match_method = character(), identity = numeric(),
     coverage = numeric(), confidence = character(), segment_count = integer(),
@@ -592,9 +586,9 @@ ggchord_empty_common_features <- function() {
 #'   thresholds in `[0, 1]`.
 #' @param resolve Return deterministic best annotations or every candidate.
 #' @return A data frame directly usable by [geom_feature()] and
-#'   [geom_feature_label_repel()]. `feature_class`, `feature_shape`, and
-#'   `preferred_lane` provide normalized semantic layout hints; explicit user
-#'   aesthetics and scales still take priority. Its `segments` list-column
+#'   [geom_feature_label_repel()]. `feature_class` and `feature_shape` provide
+#'   semantic metadata and a geometry hint; neither affects radial stacking.
+#'   Explicit user aesthetics and scales still take priority. Its `segments` list-column
 #'   preserves the biological feature's segment structure.
 #' @export
 find_common_features <- function(
@@ -784,25 +778,72 @@ ggchord_expand_feature_segments <- function(data) {
     }
     if (length(current)) runs[[length(runs) + 1L]] <- current
 
+    biological_direction <- as.character(data$strand[i] %||% "+")
+    visible_runs <- list()
     for (j in seq_along(runs)) {
       run <- segments[runs[[j]], , drop = FALSE]
-      row <- data[i, , drop = FALSE]
-      row$start <- min(run$.lo)
-      row$end <- max(run$.hi)
-      row$.biological_source_row <- i
-      row$.segment_index <- min(run$segment_index)
       boundaries <- sort(unique(run$.lo[-1L]))
-      boundaries <- boundaries[boundaries > row$start & boundaries < row$end]
-      row$.feature_boundaries <- I(list(as.numeric(boundaries)))
+      run_start <- min(run$.lo)
+      run_end <- max(run$.hi)
+      boundaries <- boundaries[
+        boundaries > run_start & boundaries < run_end
+      ]
       boundary_styles <- rep(NA_character_, length(boundaries))
       if (length(boundaries) && "line_style" %in% names(run)) {
         style_rows <- match(boundaries, run$.lo)
         boundary_styles <- as.character(run$line_style[style_rows])
       }
-      row$.feature_boundary_styles <- I(list(boundary_styles))
+      run_colour <- NA_character_
       if ("color" %in% names(run)) {
-        run_colour <- run$color[!is.na(run$color) & nzchar(run$color)][1L]
-        if (length(run_colour)) row$feature_color <- run_colour
+        colour_values <- run$color[!is.na(run$color) & nzchar(run$color)]
+        if (length(colour_values)) run_colour <- as.character(colour_values[1L])
+      }
+      visible_runs[[j]] <- data.frame(
+        start = run_start, end = run_end,
+        segment_index = min(run$segment_index),
+        color = run_colour,
+        draw_head = if (biological_direction == "-") {
+          j == 1L
+        } else biological_direction != "." && j == length(runs),
+        draw_start_head = biological_direction == "+/-" && j == 1L,
+        stringsAsFactors = FALSE
+      )
+      visible_runs[[j]]$boundaries <- I(list(as.numeric(boundaries)))
+      visible_runs[[j]]$boundary_styles <- I(list(boundary_styles))
+    }
+    row <- data[i, , drop = FALSE]
+    row$.biological_source_row <- i
+    row$.feature_runs <- I(list(ggchord_rbind_fill(visible_runs)))
+    rows[[length(rows) + 1L]] <- row
+  }
+  out <- ggchord_rbind_fill(rows)
+  rownames(out) <- NULL
+  out
+}
+
+# Expand renderer runs only after track assignment. The layout and label
+# stages continue to see one row per biological feature.
+ggchord_expand_feature_render_runs <- function(data) {
+  if (!".feature_runs" %in% names(data) || !is.list(data$.feature_runs) ||
+      !nrow(data)) return(data)
+  rows <- list()
+  for (i in seq_len(nrow(data))) {
+    runs <- data$.feature_runs[[i]]
+    if (!is.data.frame(runs) || !nrow(runs)) {
+      rows[[length(rows) + 1L]] <- data[i, , drop = FALSE]
+      next
+    }
+    for (j in seq_len(nrow(runs))) {
+      row <- data[i, , drop = FALSE]
+      row$start <- runs$start[j]
+      row$end <- runs$end[j]
+      row$.segment_index <- runs$segment_index[j]
+      row$.feature_draw_head <- runs$draw_head[j]
+      row$.feature_draw_start_head <- runs$draw_start_head[j]
+      row$.feature_boundaries <- I(list(runs$boundaries[[j]]))
+      row$.feature_boundary_styles <- I(list(runs$boundary_styles[[j]]))
+      if (!is.na(runs$color[j]) && nzchar(runs$color[j])) {
+        row$feature_color <- runs$color[j]
       }
       rows[[length(rows) + 1L]] <- row
     }

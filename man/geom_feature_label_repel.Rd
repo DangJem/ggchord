@@ -13,6 +13,7 @@ geom_feature_label_repel(
   label_max_lines = 2L,
   label_side = c("outside", "inside", "auto"),
   max_overlaps = Inf,
+  external = TRUE,
   position = "identity",
   show.legend = FALSE,
   inherit.aes = FALSE,
@@ -34,6 +35,10 @@ Choose another mode for unrestricted external callouts.}
 
 \item{max_overlaps}{Maximum unresolved overlaps.}
 
+\item{external}{Whether the staged feature layout may place a label outside
+the circular backbone after inside and adjacent placement fail. When
+`FALSE`, unresolved labels are hidden instead of pushing inward forever.}
+
 \item{position}{Feature Position used for the label anchor.}
 
 \item{show.legend, inherit.aes}{Standard ggplot2 layer arguments.}
@@ -45,4 +50,19 @@ A composite text and leader-line layer.
 }
 \description{
 Automatically arrange generic feature labels
+}
+\examples{
+seq <- data.frame(accver = "circle", length = 1000)
+features <- data.frame(
+  accver = "circle", start = c(100, 130), end = c(360, 155),
+  directionality = c("forward", "nondirectional"),
+  anno = c("long feature", "short feature")
+)
+tracks <- position_feature_stack(base_position = position_plasmid())
+ggchord(seq, validate = "none") +
+  geom_seq() +
+  geom_feature_plasmid(data = features, position = tracks) +
+  geom_feature_label_repel(data = features, position = tracks,
+    external = TRUE) +
+  coord_circular()
 }

@@ -27,6 +27,7 @@ feature_geom <- ggplot2::ggproto(
     component <- data$.component %||% rep("polygon", nrow(data))
     polygons <- data[is.na(component) | component == "polygon", , drop = FALSE]
     boundaries <- data[component == "boundary", , drop = FALSE]
+    points <- data[component == "point", , drop = FALSE]
     grobs <- list()
     if (nrow(polygons)) {
       if (isTRUE(adaptive_outline) && "feature_shape" %in% names(polygons)) {
@@ -62,6 +63,13 @@ feature_geom <- ggplot2::ggproto(
         linejoin = "round", na.rm = na.rm
       )
     }
+    if (nrow(points)) {
+      points$linewidth <- pmax(points$linewidth, .55)
+      grobs[[length(grobs) + 1L]] <- ggplot2::GeomPath$draw_panel(
+        points, panel_params, coord, lineend = "butt", linejoin = "round",
+        na.rm = na.rm
+      )
+    }
     do.call(grid::grobTree, grobs)
   }
 )
@@ -70,8 +78,9 @@ feature_geom <- ggplot2::ggproto(
 #' @noRd
 ggchord_feature_data <- function(data, fixed_shape = "arrow",
                                  expand_segments = TRUE) {
-  if (!"strand" %in% names(data) && "direction" %in% names(data)) {
-    direction <- tolower(as.character(data$direction))
+  direction_column <- intersect(c("directionality", "direction"), names(data))[1L]
+  if (!is.na(direction_column)) {
+    direction <- tolower(as.character(data[[direction_column]]))
     direction_map <- c(
       forward = "+", reverse = "-", bidirectional = "+/-", none = ".",
       nondirectional = "."
@@ -155,6 +164,16 @@ ggchord_feature_data <- function(data, fixed_shape = "arrow",
     )
   }
   out$type <- out$anno
+  if ("display_priority" %in% names(out)) {
+    if (!is.numeric(out$display_priority) || anyNA(out$display_priority) ||
+        any(!is.finite(out$display_priority))) {
+      ggchord_stop("geom_feature(): display_priority must be finite numeric values")
+    }
+  }
+  if ("prioritized_display" %in% names(out) &&
+      (!is.logical(out$prioritized_display) || anyNA(out$prioritized_display))) {
+    ggchord_stop("geom_feature(): prioritized_display must contain TRUE or FALSE")
+  }
   out
 }
 
@@ -171,7 +190,8 @@ ggchord_feature_data <- function(data, fixed_shape = "arrow",
 #'   generated.
 #' @param data data.frame with \code{accver}, \code{start}, \code{end} and
 #'   \code{strand}; optional \code{type}, \code{category} and \code{label}.
-#'   As an alternative to \code{strand}, \code{direction} may contain
+#'   `display_priority` or logical `prioritized_display`. As an alternative to
+#'   \code{strand}, \code{directionality} or \code{direction} may contain
 #'   \code{"forward"}, \code{"reverse"}, \code{"bidirectional"}, or
 #'   \code{"none"}.
 #' @param feature_shape Fixed feature geometry used when \code{feature_shape}
@@ -184,7 +204,8 @@ ggchord_feature_data <- function(data, fixed_shape = "arrow",
 #' @param shape Optional concise alias for fixed `feature_shape`. Supplying
 #'   both is an error.
 #' @param feature_width Optional numeric/vector/list controlling width in the
-#'   shared feature geometry engine.
+#'   shared feature geometry engine. In a circular feature-label composition,
+#'   the base width responds to final label size within bounded limits.
 #' @param feature_offset Deprecated placement input. Explicit values are
 #'   translated to the former strand-separated geometry and emit a warning.
 #' @param arrow_head_length,arrow_head_width Arrow-head dimensions in the
@@ -402,9 +423,9 @@ geom_feature <- function(mapping = NULL, data = NULL,
 #' @param position Feature position. `NULL` (the default) automatically stacks
 #'   overlapping features on compact lanes inside the plasmid backbone. Reuse
 #'   the same explicit [position_feature_stack()] object for a separate label
-#'   layer so polygons and labels share their lanes. Optional data columns
-#'   `preferred_lane` and `feature_group` request a lane and keep related rows
-#'   on one shared lane, respectively.
+#'   layer so polygons and labels share their lanes. Optional numeric
+#'   `display_priority` (larger first) or logical `prioritized_display` can
+#'   override the default longest-first ordering for overlapping features.
 #' @return A ggplot2 layer.
 #' @export
 geom_feature_plasmid <- function(mapping = NULL, data = NULL,
