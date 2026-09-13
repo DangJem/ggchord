@@ -158,6 +158,20 @@ for (name in names(fixtures)) {
       all(lane_of[c("KS primer", "SK primer")] == 2L),
       !any(text$feature_label_mode == "external")
     )
+    leader_features <- unique(layout$labels$anno[
+      layout$labels$.component == "segment"
+    ])
+    stopifnot(all(c(
+      "M13 fwd", "T7 promoter", "KS primer", "SK primer",
+      "T3 promoter", "M13 rev", "lac operator"
+    ) %in% leader_features))
+    boundary_features <- table(layout$feature$anno[
+      layout$feature$.component == "boundary"
+    ])
+    stopifnot(
+      unname(boundary_features["AmpR"]) == 8L,
+      unname(boundary_features["lac promoter"]) == 16L
+    )
     polygon <- layout$feature[
       layout$feature$.component == "polygon", , drop = FALSE
     ]

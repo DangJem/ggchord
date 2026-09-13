@@ -76,7 +76,7 @@ ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
     bands <- bands[order(-bands$mid), , drop = FALSE]
     gutters <- numeric()
     label_step <- max(.046, max(all_metrics$h[rows], na.rm = TRUE) * 1.08)
-    radial_clearance <- max(all_metrics$h[rows], na.rm = TRUE) / 2 + .006
+    radial_clearance <- max(all_metrics$h[rows], na.rm = TRUE) / 2 + .012
     if (nrow(bands) > 1L) {
       for (j in seq_len(nrow(bands) - 1L)) {
         upper <- bands$min[j] - radial_clearance
@@ -131,7 +131,7 @@ ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
       track_radii <- sid_tracks
       if (length(bounds) == 2L) {
         track_radii <- track_radii[
-          track_radii + measured$h / 2 + .006 < bounds["min"]
+          track_radii + measured$h / 2 + .012 < bounds["min"]
         ]
       }
       track_radii <- unique(track_radii)
@@ -291,8 +291,15 @@ ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
     } else {
       chosen_track
     }
+    label_corners <- ggchord_boxes_corners(chosen_box)
+    label_outer_radius <- if (nrow(label_corners)) {
+      max(sqrt(rowSums(label_corners^2)))
+    } else sqrt(result$text_x[i]^2 + result$text_y[i]^2)
+    radial_gap <- if (length(bounds) == 2L) {
+      as.numeric(bounds["min"]) - label_outer_radius
+    } else displacement
     moved[i] <- identical(mode[i], "external") ||
-      (!identical(mode[i], "inside") && displacement >= .055)
+      (identical(mode[i], "adjacent") && radial_gap >= .012)
     delta <- c(result$text_x[i] - gl$anchor_x[i],
       result$text_y[i] - gl$anchor_y[i])
     directions[i] <- if (abs(delta[1]) >= abs(delta[2])) {

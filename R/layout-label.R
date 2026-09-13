@@ -165,6 +165,16 @@ ggchord_layout_label_step <- quote({
           group = rows,
           stringsAsFactors = FALSE
         )
+      } else if (identical(gene_label_layout, "feature")) {
+        rows <- which(draw_segment)
+        gene_label_segments <- data.frame(
+          x0 = gene_labels$anchor_x[rows],
+          y0 = gene_labels$anchor_y[rows],
+          x1 = gene_labels$text_x[rows],
+          y1 = gene_labels$text_y[rows],
+          group = rows,
+          stringsAsFactors = FALSE
+        )
       } else {
         gene_label_segments <- ggchord_repel_segments(
           gene_labels, min_segment_length = layout_min_segment

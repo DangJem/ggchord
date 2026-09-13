@@ -223,9 +223,10 @@ ggchord_feature_data <- function(data, fixed_shape = "arrow",
 #' @param short_feature Fallback for arrows too short to hold their requested
 #'   head: automatic wedge/block selection, a wedge, or a block.
 #' @param segment_boundaries Draw explicit internal marks carried by a
-#'   segmented feature. Segment membership alone does not create a divider;
-#'   a non-solid segment-level \code{line_style} or a `cleavage_arrows`
-#'   coordinate does. These marks never create additional arrowheads.
+#'   segmented feature. Contiguous source-segment joins use dotted dividers;
+#'   a non-solid segment-level \code{line_style} may override them, while a
+#'   `cleavage_arrows` coordinate adds or merges a biological cut mark. These
+#'   marks never create additional arrowheads.
 #' @param boundary_colour,boundary_linewidth,boundary_linetype Appearance of
 #'   internal segment joins.
 #' @param position Feature placement. Use `"identity"`, `"strand"`,

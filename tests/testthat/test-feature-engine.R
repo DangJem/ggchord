@@ -236,6 +236,13 @@ test_that("dense plasmid feature labels avoid labels and feature glyphs", {
   tangent_error <- abs((adjacent$angle - tangent_angle + 90) %% 180 - 90)
   expect_true(all(tangent_error < 1e-6))
   expect_true(any(first$labels$.component == "segment"))
+  leader_features <- unique(first$labels$anno[
+    first$labels$.component == "segment"
+  ])
+  expect_true(all(c(
+    "M13 fwd", "T7 promoter", "KS primer", "SK primer",
+    "T3 promoter", "M13 rev", "lac operator"
+  ) %in% leader_features))
   expect_true(all(labels$.draw_as_arc))
   glyphs <- first$labels[
     first$labels$.component == "arc_text", , drop = FALSE
@@ -300,9 +307,14 @@ test_that("dense plasmid feature labels avoid labels and feature glyphs", {
   expected_shape[features$type == "protein_bind" & features$strand != "."] <-
     "compact_arrow"
   expect_equal(features$feature_shape, expected_shape)
+  boundary_features <- table(first$feature$anno[
+    first$feature$.component == "boundary"
+  ])
+  expect_true(all(c("AmpR", "lac promoter") %in% names(boundary_features)))
+  expect_equal(unname(boundary_features[c("AmpR", "lac promoter")]), c(8L, 16L))
 })
 
-test_that("plasmid feature preset marks cleavage rather than every segment join", {
+test_that("plasmid feature preset merges segment joins and cleavage marks", {
   seq <- data.frame(accver = "circle", length = 1000)
   segments <- data.frame(
     segment_index = 1:2, segment_type = "standard",
@@ -325,6 +337,26 @@ test_that("plasmid feature preset marks cleavage rather than every segment join"
   expect_equal(unique(boundary$boundary_linetype), "dotted")
   expect_equal(unique(boundary$boundary_draw_linetype), "solid")
   expect_s3_class(ggplot2::ggplotGrob(p), "gtable")
+
+  feature$cleavage_arrows <- I(list(numeric()))
+  joined_only <- export_ggchord_layout(
+    ggchord(seq, validate = "none") + geom_seq() +
+      geom_feature_plasmid(data = feature) + coord_circular(),
+    include = "feature"
+  )$feature
+  joined_boundary <- joined_only[joined_only$.component == "boundary", ]
+  expect_equal(length(unique(joined_boundary$group)), 4L)
+  expect_equal(unique(joined_boundary$boundary_linetype), "dotted")
+
+  styled_segments <- segments
+  styled_segments$line_style <- c("solid", "dashed")
+  feature$segments <- I(list(styled_segments))
+  styled <- export_ggchord_layout(
+    ggchord(seq, validate = "none") + geom_seq() +
+      geom_feature_plasmid(data = feature) + coord_circular(),
+    include = "feature"
+  )$feature
+  expect_equal(unique(stats::na.omit(styled$boundary_linetype)), "dashed")
 
   no_join <- ggchord(seq, validate = "none") + geom_seq() +
     geom_feature_plasmid(data = feature, segment_boundaries = FALSE) +

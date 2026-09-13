@@ -117,8 +117,8 @@ geom_feature_label_repel <- function(
       inherit.aes = inherit.aes, ...
     )
     # `feature` is an internal staged mode of the shared composite renderer:
-    # fit inside first, nudge only nearby labels, and emit leaders only for
-    # labels whose final displacement is visually meaningful.
+    # fit inside first, nudge only nearby labels, and emit leaders only when a
+    # real radial gap separates the curved glyph envelope from its feature.
     lyr$ggchord_params$gene_label_layout <- "feature"
     lyr$ggchord_params$is_feature_label <- TRUE
     lyr$ggchord_params$feature_label_external <- external

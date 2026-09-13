@@ -10,7 +10,8 @@
   with narrower type-specific thicknesses. Extremely short arrows are widened
   symmetrically around their real midpoint for display, retaining a body,
   shoulders and a head without changing their genomic start/end or leader
-  anchor.
+  anchor. Contiguous source-segment joins again produce dotted internal marks;
+  cleavage coordinates at the same join are merged instead of overdrawn.
   Short dotted/dashed segment boundaries are emitted as explicit broken
   geometry so graphics devices cannot silently render them solid. Plasmid axis
   ticks are longer, labels remain inside the backbone, and the automatic major
@@ -70,9 +71,9 @@
   generic feature engine. Multi-segment records remain one biological feature
   during stacking and labelling; visible segment runs share one track and one
   label, preserve gaps and per-segment colours, and draw arrowheads only at the
-  biological feature ends. Segment membership alone no longer draws a dashed
-  divider; only source cleavage arrows or an explicit non-solid `line_style`
-  create an internal boundary.
+  biological feature ends. Contiguous segment joins use dotted internal
+  dividers, an explicit non-solid `line_style` can override the join style, and
+  source cleavage arrows add or merge biological cut marks.
   Its default position assigns overlapping intervals to generic collision
   slots: explicit `display_priority`/`prioritized_display` comes first,
   then the longest intervals are allocated first and each subsequent interval

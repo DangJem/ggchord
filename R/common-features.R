@@ -828,20 +828,29 @@ ggchord_expand_feature_segments <- function(data) {
       run <- segments[runs[[j]], , drop = FALSE]
       run_start <- min(run$.lo)
       run_end <- max(run$.hi)
-      # Segment membership alone is not a visual cut. Only explicit segment
-      # line styles and biological cleavage markers create an internal mark.
-      style_rows <- if ("line_style" %in% names(run)) {
-        which(!is.na(run$line_style) & nzchar(as.character(run$line_style)) &
-          as.character(run$line_style) != "solid")
-      } else integer()
-      boundaries <- as.numeric(run$.lo[style_rows])
-      boundary_styles <- as.character(run$line_style[style_rows])
+      # Contiguous source segments remain one outline, but their joins are
+      # visible dotted boundaries. A non-solid style on the following segment
+      # overrides that default. Use the preceding segment end so a cleavage at
+      # the same biological join de-duplicates cleanly.
+      boundaries <- if (nrow(run) > 1L) {
+        as.numeric(head(run$.hi, -1L))
+      } else numeric()
+      boundary_styles <- rep("dotted", length(boundaries))
+      if (length(boundaries) && "line_style" %in% names(run)) {
+        following_style <- as.character(run$line_style[-1L])
+        explicit <- !is.na(following_style) & nzchar(following_style) &
+          following_style != "solid"
+        boundary_styles[explicit] <- following_style[explicit]
+      }
       cleavage <- cleavage_arrows[
         cleavage_arrows > run_start & cleavage_arrows < run_end
       ]
       boundaries <- c(boundaries, cleavage)
       boundary_styles <- c(boundary_styles, rep("dotted", length(cleavage)))
       if (length(boundaries)) {
+        order_boundary <- order(boundaries, boundary_styles == "dotted")
+        boundaries <- boundaries[order_boundary]
+        boundary_styles <- boundary_styles[order_boundary]
         keep <- !duplicated(boundaries)
         boundaries <- boundaries[keep]
         boundary_styles <- boundary_styles[keep]

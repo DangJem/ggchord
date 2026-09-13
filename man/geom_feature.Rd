@@ -68,9 +68,10 @@ requested protruding head, `"flush"` keeps it level with the body, and
 head: automatic wedge/block selection, a wedge, or a block.}
 
 \item{segment_boundaries}{Draw explicit internal marks carried by a
-segmented feature. Segment membership alone does not create a divider;
-a non-solid segment-level \code{line_style} or a `cleavage_arrows`
-coordinate does. These marks never create additional arrowheads.}
+segmented feature. Contiguous source-segment joins use dotted dividers;
+a non-solid segment-level \code{line_style} may override them, while a
+`cleavage_arrows` coordinate adds or merges a biological cut mark. These
+marks never create additional arrowheads.}
 
 \item{boundary_colour, boundary_linewidth, boundary_linetype}{Appearance of
 internal segment joins.}
