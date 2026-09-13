@@ -13,6 +13,11 @@
   geometry so graphics devices cannot silently render them solid. Plasmid axis
   ticks are longer, labels remain inside the backbone, and the automatic major
   tick target is now five.
+* Enlarged circular feature-band separation into text-bearing corridors. Each
+  corridor is subdivided into as many fixed-radius label tracks as its measured
+  height permits. Feature labels select a radius first, then derive their
+  position and tangent from that circle; labels placed on a deeper radius use a
+  leader back to the owning outer feature instead of drifting around the map.
 * Added `coord_circular()` as an independent coordinate contract for one
   circular sequence. It supports a closed circle (`gap = 0`), a degree-based
   opening, genomic-origin rotation, clockwise/counterclockwise direction,

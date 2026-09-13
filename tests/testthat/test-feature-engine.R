@@ -217,6 +217,13 @@ test_that("dense plasmid feature labels avoid labels and feature glyphs", {
     "lac operator", "lac promoter"
   )]), rep(1L, 7L))
   expect_equal(unname(lane_of[c("KS primer", "SK primer")]), c(2L, 2L))
+  polygon <- first$feature[first$feature$.component == "polygon", ]
+  polygon$radius <- sqrt(polygon$x^2 + polygon$y^2)
+  band_bounds <- lapply(split(polygon, polygon$lane), function(x) {
+    range(x$radius)
+  })
+  expect_gt(band_bounds[["0"]][1L] - band_bounds[["1"]][2L], .10)
+  expect_gt(band_bounds[["1"]][1L] - band_bounds[["2"]][2L], .10)
   adjacent <- labels[labels$feature_label_mode == "adjacent", , drop = FALSE]
   label_radius <- sqrt(adjacent$x^2 + adjacent$y^2)
   # One label-track id means one physical circle, rather than a collection of
@@ -227,6 +234,7 @@ test_that("dense plasmid feature labels avoid labels and feature glyphs", {
   tangent_angle <- atan2(adjacent$y, adjacent$x) * 180 / pi + 90
   tangent_error <- abs((adjacent$angle - tangent_angle + 90) %% 180 - 90)
   expect_true(all(tangent_error < 1e-6))
+  expect_true(any(first$labels$.component == "segment"))
   internal <- get_chord_layout(plot)
   internal_labels <- internal$gene_labels
   internal_boxes <- ggchord_text_boxes(

@@ -20,7 +20,8 @@ PositionFeatureStack <- ggplot2::ggproto(
 #' The resulting anchors are shared with gene label layers because stacking is
 #' solved before polygons and labels are generated.
 #'
-#' @param spacing Positive radial distance between adjacent lanes.
+#' @param spacing Positive minimum radial distance between adjacent feature
+#'   lanes. Circular plasmid layout may enlarge it to preserve label corridors.
 #' @param side Legacy track-side selector retained for compatibility when
 #'   `base_position` is `NULL`. Its historical names retain their existing
 #'   geometry.

@@ -303,10 +303,12 @@ ggchord_feature_lane_offsets <- function(data, lane, base, direction,
     centres <- numeric(length(lane_width))
     if (length(centres) > 1L) {
       for (i in 2:length(centres)) {
-        # Reserve an actual annotation gutter between feature bands. Labels
-        # search these gutters before they are allowed to leave the circle.
+        # Reserve a text-bearing annotation corridor, not merely polygon
+        # clearance. At the plasmid preset's default size this corridor holds
+        # at least two tangential label tracks between adjacent feature bands.
+        label_gutter <- max(.125, spacing * 1.20)
         glyph_clearance <- lane_width[i - 1L] / 2 +
-          lane_width[i] / 2 + .040
+          lane_width[i] / 2 + label_gutter
         centres[i] <- centres[i - 1L] + max(spacing, glyph_clearance)
       }
     }

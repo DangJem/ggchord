@@ -155,6 +155,17 @@ for (name in names(fixtures)) {
       all(lane_of[c("KS primer", "SK primer")] == 2L),
       !any(text$feature_label_mode == "external")
     )
+    polygon <- layout$feature[
+      layout$feature$.component == "polygon", , drop = FALSE
+    ]
+    polygon$.radius <- sqrt(polygon$x^2 + polygon$y^2)
+    band_bounds <- lapply(split(polygon, polygon$lane), function(x) {
+      range(x$.radius)
+    })
+    stopifnot(
+      band_bounds[["0"]][1L] - band_bounds[["1"]][2L] > .10,
+      band_bounds[["1"]][1L] - band_bounds[["2"]][2L] > .10
+    )
     adjacent <- text[text$feature_label_mode == "adjacent", , drop = FALSE]
     radius <- sqrt(adjacent$x^2 + adjacent$y^2)
     stopifnot(all(tapply(radius, adjacent$label_track,

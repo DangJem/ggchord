@@ -11,7 +11,8 @@ position_feature_stack(
 )
 }
 \arguments{
-\item{spacing}{Positive radial distance between adjacent lanes.}
+\item{spacing}{Positive minimum radial distance between adjacent feature
+lanes. Circular plasmid layout may enlarge it to preserve label corridors.}
 
 \item{side}{Legacy track-side selector retained for compatibility when
 `base_position` is `NULL`. Its historical names retain their existing

@@ -75,17 +75,24 @@ ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
     bands <- do.call(rbind, band_rows)
     bands <- bands[order(-bands$mid), , drop = FALSE]
     gutters <- numeric()
+    label_step <- max(.046, max(all_metrics$h[rows], na.rm = TRUE) * 1.08)
+    radial_clearance <- max(all_metrics$h[rows], na.rm = TRUE) / 2 + .006
     if (nrow(bands) > 1L) {
       for (j in seq_len(nrow(bands) - 1L)) {
-        if (bands$min[j] > bands$max[j + 1L]) {
-          gutters <- c(gutters,
-            (bands$min[j] + bands$max[j + 1L]) / 2)
+        upper <- bands$min[j] - radial_clearance
+        lower <- bands$max[j + 1L] + radial_clearance
+        if (upper >= lower) {
+          count <- max(1L, floor((upper - lower) / label_step) + 1L)
+          # Each corridor owns one or more explicit radii. The label solver
+          # chooses among these radii before deriving any angular position.
+          gutters <- c(gutters, if (count == 1L) {
+            (upper + lower) / 2
+          } else seq(upper, lower, length.out = count))
         }
       }
     }
-    label_step <- max(.052, max(all_metrics$h[rows], na.rm = TRUE) * 1.12)
     deepest <- min(bands$min)
-    label_only <- deepest - label_step * c(.62, 1.78, 2.94, 4.10)
+    label_only <- deepest - radial_clearance - label_step * 0:3
     internal_tracks[[sid]] <- unique(c(gutters,
       label_only[label_only > .28]))
   }
