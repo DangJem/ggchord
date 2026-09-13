@@ -203,14 +203,30 @@ scale_feature_shape_manual <- function(..., values, name = "Feature",
 
 ggchord_plasmid_feature_colours <- function() {
   c(
-    CDS="#CCFFCC", gene="#CCFFCC", resistance_gene="#CCFFCC",
+    CDS="#993366", gene="#993366", resistance_gene="#CCFFCC",
+    selection_marker="#CCFFCC", reporter="#05FD14",
+    peptide="#CC99B2", tag="#CC99B2",
     promoter="#FFFFFF", rep_origin="#FFFF00", replication_origin="#FFFF00",
     ori="#FFFF00", origin="#FFFF00", primer_bind="#A020F0",
-    primer="#A020F0", terminator="#993366", protein_bind="#31849B",
-    binding_site="#31849B", operator="#31849B", RBS="#FFFFFF",
-    regulatory="#A6ACB3", repeat_region="#C8CDD2", MCS="#99CCFF",
-    misc_feature="#A6ACB3"
+    primer="#A020F0", terminator="#FFFFFF", enhancer="#FFFFFF",
+    protein_bind="#31849B", binding_site="#31849B", operator="#31849B",
+    RBS="#A6ACB3", polyA_signal="#A6ACB3", poly_a_signal="#A6ACB3",
+    regulatory="#A6ACB3", LTR="#FFE4C4", repeat_region="#FFE4C4",
+    misc_RNA="#00CCFF", MCS="#99CCFF", misc_feature="#A6ACB3"
   )
+}
+
+#' Lighten a feature colour for an external callout
+#' @noRd
+ggchord_feature_callout_fill <- function(fill, amount = .78) {
+  vapply(as.character(fill), function(value) {
+    rgb <- tryCatch(
+      grDevices::col2rgb(value, alpha = TRUE)[, 1L] / 255,
+      error = function(e) c(184, 189, 195, 255) / 255
+    )
+    mixed <- rgb[1:3] + (1 - rgb[1:3]) * amount
+    grDevices::rgb(mixed[1L], mixed[2L], mixed[3L], alpha = rgb[4L])
+  }, character(1L), USE.NAMES = FALSE)
 }
 
 ggchord_contrast_colour <- function(fill) {
@@ -244,12 +260,15 @@ scale_feature_fill_plasmid <- function(..., limits = NULL) {
 scale_feature_shape_plasmid <- function(..., limits = NULL, guide = "none") {
   values <- c(
     CDS="arrow", gene="arrow", resistance_gene="arrow",
+    selection_marker="arrow", reporter="arrow", peptide="compact_arrow",
+    tag="compact_arrow",
     rep_origin="arrow", replication_origin="arrow", ori="arrow",
     promoter="promoter_arrow", primer_bind="primer_arrow",
     primer="primer_arrow", protein_bind="block", binding_site="block",
-    operator="block", terminator="lollipop", regulatory="compact_arrow",
-    RBS="chevron", repeat_region="block", MCS="block",
-    misc_feature="block"
+    operator="block", terminator="block", enhancer="block",
+    regulatory="compact_arrow", RBS="block", polyA_signal="block",
+    poly_a_signal="block", LTR="block", repeat_region="block",
+    misc_RNA="block", MCS="block", misc_feature="block"
   )
   if (is.null(limits)) limits <- names(values)
   out <- ggplot2::discrete_scale(

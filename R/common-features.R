@@ -203,11 +203,24 @@ ggchord_common_candidate <- function(accver, feature, method, start, end,
   feature_fill <- if ("segment_colors" %in% names(feature)) {
     strsplit(as.character(feature$segment_colors)[1L], ",", fixed = TRUE)[[1L]][1L]
   } else NA_character_
+  if (!is.na(feature_fill) && tolower(feature_fill) == "nocolor") {
+    feature_fill <- "#FFFFFF"
+  }
   if (is.na(feature_fill) || !nzchar(feature_fill)) feature_fill <- "#B8BDC3"
   feature_label_colour <- ggchord_contrast_colour(feature_fill)
   feature_class <- ggchord_feature_classes(feature$type)
-  # Directionality, not biological type, supplies the default geometry.
-  feature_shape <- if (strand == ".") "block" else "arrow"
+  # Curated records may provide a type-aware geometry hint. The generic geom
+  # still honours explicit feature_shape values and user scales first.
+  feature_type <- tolower(as.character(feature$type))
+  feature_shape <- if (strand == ".") {
+    "block"
+  } else if (feature_type == "promoter") {
+    "promoter_arrow"
+  } else if (feature_type == "primer_bind") {
+    "primer_arrow"
+  } else if (feature_type == "protein_bind") {
+    "compact_arrow"
+  } else "arrow"
   data.frame(
     accver = accver,
     start = as.integer(start), end = as.integer(end), strand = strand,
@@ -262,6 +275,10 @@ ggchord_common_reference_candidates <- function(target, accver, database,
       annotation$strand, annotation$start > annotation$end,
       annotation$segments[[1L]], metadata = database$metadata
     )
+    candidate$cleavage_arrows <- if (
+        "cleavage_arrows" %in% names(annotation)) {
+      I(list(annotation$cleavage_arrows[[1L]]))
+    } else I(list(numeric()))
     source_row <- sequence_rows[
       match(annotation$reference_id, sequence_rows$reference_id), , drop = FALSE]
     candidate$source_sha256 <- source_row$source_sha256
@@ -738,6 +755,33 @@ ggchord_expand_feature_segments <- function(data) {
       rows[[length(rows) + 1L]] <- row
       next
     }
+    cleavage_arrows <- if ("cleavage_arrows" %in% names(data)) {
+      value <- data$cleavage_arrows[[i]]
+      as.numeric(value[is.finite(as.numeric(value))])
+    } else numeric()
+    # Origin-crossing features stay one biological and geometric interval.
+    # Segment tables are still retained on the source row, but flattening
+    # them with pmin()/pmax() would turn the circular seam into a false gap.
+    if (is.finite(data$start[i]) && is.finite(data$end[i]) &&
+        data$start[i] > data$end[i]) {
+      row <- data[i, , drop = FALSE]
+      row$.biological_source_row <- i
+      run <- data.frame(
+        start = data$start[i], end = data$end[i],
+        segment_index = min(segments$segment_index),
+        color = as.character(segments$color[which.max(
+          !is.na(segments$color) & nzchar(as.character(segments$color))
+        )]),
+        draw_head = data$strand[i] != ".",
+        draw_start_head = data$strand[i] == "+/-",
+        stringsAsFactors = FALSE
+      )
+      run$boundaries <- I(list(cleavage_arrows))
+      run$boundary_styles <- I(list(rep("dotted", length(cleavage_arrows))))
+      row$.feature_runs <- I(list(run))
+      rows[[length(rows) + 1L]] <- row
+      next
+    }
     segments$.lo <- pmin(segments$start, segments$end)
     segments$.hi <- pmax(segments$start, segments$end)
     segments <- segments[order(segments$.lo, segments$.hi,
@@ -782,20 +826,30 @@ ggchord_expand_feature_segments <- function(data) {
     visible_runs <- list()
     for (j in seq_along(runs)) {
       run <- segments[runs[[j]], , drop = FALSE]
-      boundaries <- sort(unique(run$.lo[-1L]))
       run_start <- min(run$.lo)
       run_end <- max(run$.hi)
-      boundaries <- boundaries[
-        boundaries > run_start & boundaries < run_end
+      # Segment membership alone is not a visual cut. Only explicit segment
+      # line styles and biological cleavage markers create an internal mark.
+      style_rows <- if ("line_style" %in% names(run)) {
+        which(!is.na(run$line_style) & nzchar(as.character(run$line_style)) &
+          as.character(run$line_style) != "solid")
+      } else integer()
+      boundaries <- as.numeric(run$.lo[style_rows])
+      boundary_styles <- as.character(run$line_style[style_rows])
+      cleavage <- cleavage_arrows[
+        cleavage_arrows > run_start & cleavage_arrows < run_end
       ]
-      boundary_styles <- rep(NA_character_, length(boundaries))
-      if (length(boundaries) && "line_style" %in% names(run)) {
-        style_rows <- match(boundaries, run$.lo)
-        boundary_styles <- as.character(run$line_style[style_rows])
+      boundaries <- c(boundaries, cleavage)
+      boundary_styles <- c(boundary_styles, rep("dotted", length(cleavage)))
+      if (length(boundaries)) {
+        keep <- !duplicated(boundaries)
+        boundaries <- boundaries[keep]
+        boundary_styles <- boundary_styles[keep]
       }
       run_colour <- NA_character_
       if ("color" %in% names(run)) {
         colour_values <- run$color[!is.na(run$color) & nzchar(run$color)]
+        colour_values[tolower(colour_values) == "nocolor"] <- "#FFFFFF"
         if (length(colour_values)) run_colour <- as.character(colour_values[1L])
       }
       visible_runs[[j]] <- data.frame(
@@ -843,7 +897,9 @@ ggchord_expand_feature_render_runs <- function(data) {
       row$.feature_boundaries <- I(list(runs$boundaries[[j]]))
       row$.feature_boundary_styles <- I(list(runs$boundary_styles[[j]]))
       if (!is.na(runs$color[j]) && nzchar(runs$color[j])) {
-        row$feature_color <- runs$color[j]
+        row$feature_color <- if (tolower(runs$color[j]) == "nocolor") {
+          "#FFFFFF"
+        } else runs$color[j]
       }
       rows[[length(rows) + 1L]] <- row
     }

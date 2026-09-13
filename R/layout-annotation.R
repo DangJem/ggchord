@@ -296,12 +296,13 @@ ggchord_layout_annotation_step <- quote({
 
         sp <- min(gene$start, gene$end)
         ep <- max(gene$start, gene$end)
-        frac_mid <- if (isTRUE(circular) && gene$start > gene$end) {
-          ((gene$start + ((seq_len - gene$start) + gene$end) / 2) %% seq_len) /
-            seq_len
+        feature_midpoint_position <- if (
+            isTRUE(circular) && gene$start > gene$end) {
+          (gene$start + ((seq_len - gene$start) + gene$end) / 2) %% seq_len
         } else {
-          (sp + ep) / (2 * seq_len)
+          (sp + ep) / 2
         }
+        frac_mid <- feature_midpoint_position / seq_len
 
         circum_ratio <- geneLabelCircumOffset[[sid]][strand]
         if (geneLabelCircumLimit[[sid]][strand]) {
@@ -495,6 +496,8 @@ ggchord_layout_annotation_step <- quote({
           accver = sid,
           group = i,
           source_row = gene$.source_row,
+          anchor_position = feature_midpoint_position,
+          sequence_length = seq_len,
           position_name = as.character(gene$.position_name %||% "identity"),
           base_offset = as.numeric(gene$.position_base_offset %||% 0),
           lane = as.integer(gene$.feature_stack_lane %||% 0L),
@@ -504,6 +507,9 @@ ggchord_layout_annotation_step <- quote({
           anchor_y = anchor_y,
           side_flipped = side_flipped,
           feature_label_colour = feature_label_colour,
+          feature_label_fill = as.character(
+            gene$feature_label_fill %||% "#F2F3F4"
+          ),
           feature_label_orientation = resolved_label_orientation,
           feature_label_inside = feature_label_inside,
           .feature_width = width,

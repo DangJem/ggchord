@@ -217,6 +217,9 @@ ggchord_normalize_restriction_patterns <- function(patterns) {
 #' @param circular Allow recognition and cleavage coordinates to wrap origin.
 #' @param database Optional parsed pattern database.
 #' @return One row per pattern match without display filtering or deduplication.
+#'   `enzyme_site_count` records the number of distinct cleavage/display
+#'   positions for that enzyme on the complete supplied sequence, so it remains
+#'   stable after display filtering.
 #' @export
 find_restriction_sites <- function(sequence,enzymes=NULL,patterns=NULL,
                                    circular=TRUE,database=NULL){
@@ -236,7 +239,7 @@ find_restriction_sites <- function(sequence,enzymes=NULL,patterns=NULL,
     defs<-defs[order(match(defs$enzyme,enzymes),seq_len(nrow(defs))),,drop=FALSE]
   }
   empty_template <- function(){
-    out<-data.frame(accver=character(),match_id=character(),pattern_id=character(),pattern_source_row=integer(),enzyme=character(),preferred_enzyme=character(),is_preferred_enzyme=logical(),motif=character(),source_motif=character(),motif_length=integer(),recognition_sequence=character(),start=integer(),end=integer(),crosses_origin=logical(),strand=character(),ncuts=integer(),blunt=logical(),end_type=character(),position=numeric(),display_position=numeric(),anchor_kind=character(),organism=character(),supplier_codes=character(),suppliers=character(),commercial=logical(),database_version=character(),source=character(),stringsAsFactors=FALSE)
+    out<-data.frame(accver=character(),match_id=character(),pattern_id=character(),pattern_source_row=integer(),enzyme=character(),preferred_enzyme=character(),is_preferred_enzyme=logical(),motif=character(),source_motif=character(),motif_length=integer(),recognition_sequence=character(),start=integer(),end=integer(),crosses_origin=logical(),strand=character(),ncuts=integer(),blunt=logical(),end_type=character(),position=numeric(),display_position=numeric(),enzyme_site_count=integer(),anchor_kind=character(),organism=character(),supplier_codes=character(),suppliers=character(),commercial=logical(),database_version=character(),source=character(),stringsAsFactors=FALSE)
     for(k in 1:4){out[[paste0("cut_offset_",k)]]<-numeric();out[[paste0("cut_",k,"_unwrapped")]]<-numeric();out[[paste0("cut_",k)]]<-numeric()};out
   }
   rows<-list();match_number<-0L
@@ -278,6 +281,12 @@ find_restriction_sites <- function(sequence,enzymes=NULL,patterns=NULL,
     }
   }}
   out<-if(length(rows))ggchord_rbind_fill(rows)else empty_template();rownames(out)<-NULL
+  if(nrow(out)){
+    enzyme_key<-paste(out$accver,out$enzyme,sep="\r")
+    count_by_enzyme<-vapply(split(out$position,enzyme_key),function(x)
+      length(unique(x[is.finite(x)])),integer(1L))
+    out$enzyme_site_count<-unname(count_by_enzyme[enzyme_key])
+  }
   attr(out,"enzyme_database_version")<-unique(defs$database_version);out
 }
 
@@ -294,7 +303,10 @@ filter_restriction_sites<-function(sites,set=c("all","unique","unique_dual","six
   if(!is.data.frame(sites))ggchord_stop("filter_restriction_sites(): sites must be a data frame")
   set<-match.arg(set);parent_set<-match.arg(parent_set);if(!nrow(sites))return(sites)
   ggchord_require_columns(sites,c("accver","enzyme","motif_length","position"),"filter_restriction_sites()")
-  key<-paste(sites$accver,sites$enzyme,sep="\r");site_count<-as.integer(table(key)[key]);keep<-rep(TRUE,nrow(sites))
+  key<-paste(sites$accver,sites$enzyme,sep="\r")
+  site_count<-if("enzyme_site_count"%in%names(sites))
+    as.integer(sites$enzyme_site_count) else as.integer(table(key)[key])
+  keep<-rep(TRUE,nrow(sites))
   if(set=="unique")keep<-keep&site_count==1L
   if(set=="unique_dual")keep<-keep&site_count%in%c(1L,2L)
   if(set=="six_plus")keep<-keep&sites$motif_length>=6L
@@ -352,7 +364,7 @@ GeomRestrictionSite <- ggplot2::ggproto(
   default_aes = ggplot2::aes(
     xend = NA_real_, yend = NA_real_, label = NA_character_,
     enzyme_label = NA_character_, coordinate_label = NA_character_,
-    label_order = NA_character_,
+    label_order = NA_character_, enzyme_fontface = "plain",
     .component = NA_character_, group = NA_integer_, colour = "#202020",
     alpha = 1, linewidth = .28, linetype = 1, size = 2.9, angle = 0,
     hjust = .5, vjust = .5, family = "", fontface = 1, lineheight = 1.2
@@ -390,10 +402,14 @@ GeomRestrictionSite <- ggplot2::ggproto(
             fontsize = placed$size[i] * (72.27 / 25.4),
             fontfamily = placed$family[i], lineheight = placed$lineheight[i]
           )
+          enzyme_face <- if ("enzyme_fontface" %in% names(placed) &&
+              !is.na(placed$enzyme_fontface[i])) {
+            placed$enzyme_fontface[i]
+          } else "plain"
           enzyme <- grid::textGrob(
             placed$enzyme_label[i], y = grid::unit(placed$y[i], "native"),
             vjust = placed$vjust[i],
-            gp = do.call(grid::gpar, c(common_gp, list(fontface = "bold")))
+            gp = do.call(grid::gpar, c(common_gp, list(fontface = enzyme_face)))
           )
           coordinate <- grid::textGrob(
             placed$coordinate_label[i],
@@ -461,7 +477,10 @@ GeomRestrictionSite <- ggplot2::ggproto(
 #' @param min_label_gap Minimum genomic fraction between label slots. `NULL`
 #'   derives a compact device-aware default from the rendered labels.
 #' @param tick_length,label_offset Local-normal distances.
-#' @param colour,linewidth,label_size,fontface,family Fixed appearance.
+#' @param colour,linewidth,label_size,fontface,family Fixed appearance. With
+#'   the default `fontface = NULL`, enzyme names are bold only when that enzyme
+#'   cuts once in the supplied sequence; coordinates remain regular. An
+#'   explicit `fontface` disables this automatic distinction.
 #' @param label_order Automatic mirrored label order, enzyme first, or
 #'   position first.
 #' @param position,show.legend,inherit.aes Standard layer arguments.
@@ -480,7 +499,7 @@ geom_restriction_site<-function(mapping=NULL,data=NULL,label=TRUE,label_style=c(
   if(label_size_supplied)text_params$size<-label_size
   if(fontface_supplied)text_params$fontface<-fontface
   if(family_supplied)text_params$family<-family
-  lyr<-ggplot2::layer(data=data.frame(x=numeric(),y=numeric()),mapping=ggplot2::aes(x=x,y=y,group=group,label=label,.component=I(.component),enzyme_label=I(enzyme_label),coordinate_label=I(coordinate_label),label_order=I(label_order)),stat="identity",geom=GeomRestrictionSite,position=position,show.legend=show.legend,inherit.aes=inherit.aes,check.aes=FALSE,check.param=FALSE,params=c(list(na.rm=FALSE,colour=colour,linewidth=linewidth,size=label_size,segment_params=segment_params,text_params=text_params,composite_labels=!fontface_supplied),list(...)))
+  lyr<-ggplot2::layer(data=data.frame(x=numeric(),y=numeric()),mapping=ggplot2::aes(x=x,y=y,group=group,label=label,.component=I(.component),enzyme_label=I(enzyme_label),coordinate_label=I(coordinate_label),label_order=I(label_order),enzyme_fontface=I(enzyme_fontface)),stat="identity",geom=GeomRestrictionSite,position=position,show.legend=show.legend,inherit.aes=inherit.aes,check.aes=FALSE,check.param=FALSE,params=c(list(na.rm=FALSE,colour=colour,linewidth=linewidth,size=label_size,segment_params=segment_params,text_params=text_params,composite_labels=!fontface_supplied),list(...)))
   lyr$ggchord_type<-"restriction_site";lyr$ggchord_theme_components<-c(segment_params="ggchord.restriction.label.segment",text_params="ggchord.restriction.label")
   lyr$ggchord_params<-list(type="restriction_site",label=label,label_style=label_style,label_order=label_order,label_side=label_side,leader=leader,min_label_gap=min_label_gap,tick_length=tick_length,label_offset=label_offset,label_size=label_size)
   ggchord_capture_layer_input(lyr,data,mapping,c("accver","position","enzyme"))
@@ -823,6 +842,7 @@ ggchord_restriction_text_metrics <- function(text, size, units_per_inch,
                                              fontface = "plain") {
   n <- length(text)
   size <- rep_len(size, n)
+  fontface <- rep_len(fontface, n)
   width <- height <- numeric(n)
   valid <- !is.na(text) & nzchar(text)
   if (!any(valid)) return(data.frame(width = width, height = height))
@@ -833,7 +853,7 @@ ggchord_restriction_text_metrics <- function(text, size, units_per_inch,
       error = function(e) text[i]) else text[i]
     grob <- grid::textGrob(
       label, gp = grid::gpar(
-        fontsize = size[i] * (72.27 / 25.4), fontface = fontface
+        fontsize = size[i] * (72.27 / 25.4), fontface = fontface[i]
       )
     )
     width[i] <- grid::convertWidth(
@@ -1060,32 +1080,50 @@ ggchord_restriction_geometry <- function(data, params, layout, seq_data) {
     # tolerance: adjacent bp always remain separate callouts. Enzymes sharing
     # one anchor may have different second-strand cuts and still describe the
     # same displayed restriction site.
-    site_key <- sprintf("%.17g", data$position[idx])
+    all_idx <- idx
+    site_key <- sprintf("%.17g", data$position[all_idx])
     site_members <- unname(split(idx,
       factor(site_key, levels = unique(site_key))))
     idx <- vapply(site_members, `[`, integer(1), 1L)
     site_enzyme <- vapply(site_members, function(rows) paste(
       unique(as.character(data$enzyme[rows])), collapse = " - "
     ), character(1))
+    unique_cutters <- if ("enzyme_site_count" %in% names(data)) {
+      unique(as.character(data$enzyme[all_idx])[
+        data$enzyme_site_count[all_idx] == 1L])
+    } else names(which(vapply(
+      split(data$position[all_idx], as.character(data$enzyme[all_idx])),
+      function(position) length(unique(position)) == 1L,
+      logical(1L)
+    )))
+    site_enzyme_fontface <- vapply(site_members, function(rows) {
+      enzymes <- unique(as.character(data$enzyme[rows]))
+      if (length(enzymes) && all(enzymes %in% unique_cutters)) "bold" else "plain"
+    }, character(1L))
     arc <- layout$seq_arcs[[id]]
     n <- nrow(arc)
     frac <- data$position[idx] / lens[id]
 
     point_at <- function(fraction, offset = 0) {
       fraction <- fraction %% 1
-      k <- pmax(1L, pmin(n, round(1 + fraction * (n - 1))))
+      continuous_index <- 1 + fraction * (n - 1)
+      k <- pmax(1L, pmin(n - 1L, floor(continuous_index)))
+      knext <- pmin(n, k + 1L)
+      weight <- continuous_index - k
+      base_x <- arc$x[k] + weight * (arc$x[knext] - arc$x[k])
+      base_y <- arc$y[k] + weight * (arc$y[knext] - arc$y[k])
       kp <- pmax(1L, k - 1L)
-      kn <- pmin(n, k + 1L)
+      kn <- pmin(n, knext + 1L)
       tx <- arc$x[kn] - arc$x[kp]
       ty <- arc$y[kn] - arc$y[kp]
       tangent_length <- sqrt(tx^2 + ty^2)
       tangent_length[tangent_length <= 1e-12] <- 1
       nx <- -ty / tangent_length
       ny <- tx / tangent_length
-      flip <- nx * arc$x[k] + ny * arc$y[k] < 0
+      flip <- nx * base_x + ny * base_y < 0
       nx[flip] <- -nx[flip]
       ny[flip] <- -ny[flip]
-      data.frame(x = arc$x[k] + offset * nx, y = arc$y[k] + offset * ny)
+      data.frame(x = base_x + offset * nx, y = base_y + offset * ny)
     }
 
     side_sign <- if (params$label_side == "inside") -1 else 1
@@ -1190,13 +1228,16 @@ ggchord_restriction_geometry <- function(data, params, layout, seq_data) {
         enzyme = site_enzyme[member], position = coordinate[member])
     }, character(1))
     plotmath <- vapply(seq_along(idx), function(member) {
+      enzyme_expression <- if (site_enzyme_fontface[member] == "bold") {
+        paste0("bold(", quote_text(site_enzyme[member]), ")")
+      } else quote_text(site_enzyme[member])
       switch(params$label_style,
         enzyme_position = if (order_values[member] == "position_enzyme")
           paste0(quote_text(paste0("(", coordinate[member], ")")),
-            "~bold(", quote_text(site_enzyme[member]), ")") else
-          paste0("bold(", quote_text(site_enzyme[member]), ")~",
+            "~", enzyme_expression) else
+          paste0(enzyme_expression, "~",
             quote_text(paste0("(", coordinate[member], ")"))),
-        enzyme = paste0("bold(", quote_text(site_enzyme[member]), ")"),
+        enzyme = enzyme_expression,
         position = quote_text(coordinate[member]))
     }, character(1))
     enzyme_label <- if (params$label_style %in% c("enzyme_position", "enzyme"))
@@ -1207,7 +1248,7 @@ ggchord_restriction_geometry <- function(data, params, layout, seq_data) {
       rep("", length(idx))
     enzyme_metrics <- ggchord_restriction_text_metrics(
       enzyme_label, params$label_size %||% 2.9, units_per_inch,
-      parse = FALSE, fontface = "bold"
+      parse = FALSE, fontface = site_enzyme_fontface
     )
     coordinate_metrics <- ggchord_restriction_text_metrics(
       coordinate_label, params$label_size %||% 2.9, units_per_inch,
@@ -1365,6 +1406,7 @@ ggchord_restriction_geometry <- function(data, params, layout, seq_data) {
         label_attachment_y = labels$.restriction_contour_y[member],
         label_contour_radius = labels$.restriction_contour_radius[member],
         enzyme_label = enzyme_label[member],
+        enzyme_fontface = site_enzyme_fontface[member],
         coordinate_label = coordinate_label[member],
         size = params$label_size %||% 2.9, angle = 0,
         hjust = labels$hjust[member], vjust = labels$vjust[member],

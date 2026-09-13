@@ -53,7 +53,10 @@ derives a compact device-aware default from the rendered labels.}
 
 \item{tick_length, label_offset}{Local-normal distances.}
 
-\item{colour, linewidth, label_size, fontface, family}{Fixed appearance.}
+\item{colour, linewidth, label_size, fontface, family}{Fixed appearance. With
+the default `fontface = NULL`, enzyme names are bold only when that enzyme
+cuts once in the supplied sequence; coordinates remain regular. An
+explicit `fontface` disables this automatic distinction.}
 
 \item{position, show.legend, inherit.aes}{Standard layer arguments.}
 

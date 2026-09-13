@@ -216,9 +216,10 @@ ggchord_feature_data <- function(data, fixed_shape = "arrow",
 #'   `"triangle"` draws a full triangular wedge.
 #' @param short_feature Fallback for arrows too short to hold their requested
 #'   head: automatic wedge/block selection, a wedge, or a block.
-#' @param segment_boundaries Draw joins inside continuous segmented features.
-#'   These joins never create additional arrowheads. A segment-level
-#'   \code{line_style} column overrides the fallback boundary linetype.
+#' @param segment_boundaries Draw explicit internal marks carried by a
+#'   segmented feature. Segment membership alone does not create a divider;
+#'   a non-solid segment-level \code{line_style} or a `cleavage_arrows`
+#'   coordinate does. These marks never create additional arrowheads.
 #' @param boundary_colour,boundary_linewidth,boundary_linetype Appearance of
 #'   internal segment joins.
 #' @param position Feature placement. Use `"identity"`, `"strand"`,

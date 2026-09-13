@@ -81,12 +81,12 @@ test_that("protein matching supports exact and approximate six-frame hits", {
     c("protein_exact", "protein_approx")))
 })
 
-test_that("three FASTA-derived plasmids receive key dynamic annotations", {
+test_that("reference FASTA-derived plasmids receive exact annotations", {
   data(plasmid_example_pBR322)
-  data(plasmid_example_pUC19c)
+  data(plasmid_example_pUC19)
   data(plasmid_example_pBluescript_II_SK_plus)
   br <- find_common_features(plasmid_example_pBR322)
-  uc <- find_common_features(plasmid_example_pUC19c)
+  uc <- find_common_features(plasmid_example_pUC19)
   blue <- find_common_features(plasmid_example_pBluescript_II_SK_plus)
   expect_true(all(c("AmpR", "rop", "bom", "ori") %in% br$anno))
   expect_true(any(br$anno %in% c("TetR", "TcR")))
@@ -118,9 +118,9 @@ test_that("auto matching follows stored exact-protein detection mode", {
 })
 
 test_that("new plasmid data objects exactly reproduce FASTA", {
-  objects <- c("plasmid_example_pUC19c", "plasmid_example_pBR322",
+  objects <- c("plasmid_example_pUC19", "plasmid_example_pBR322",
     "plasmid_example_pBluescript_II_SK_plus")
-  files <- c("pUC19c.fna", "pBR322.fna", "pBluescript II SK(+).fna")
+  files <- c("pUC19.fna", "pBR322.fna", "pBluescript II SK(+).fna")
   paths <- testthat::test_path("..", "..", "examples", "plasmid", files)
   skip_if_not(all(file.exists(paths)))
   for (i in seq_along(objects)) {

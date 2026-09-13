@@ -46,6 +46,12 @@ ggchord_layout_axis_step <- quote({
         is_major = c(rep(TRUE, length(majors)), rep(FALSE, length(minors))),
         display_label = c(as.character(major_labels), rep(NA_character_, length(minors)))
       )
+      origin_tick <- isTRUE(circular) &
+        pts$is_major & abs(pts$pos) < sqrt(.Machine$double.eps)
+      # Circular maps use the seam itself as the origin cue. A longer radial
+      # mark is clearer than printing a redundant zero over the 12-o'clock
+      # feature stack.
+      pts$display_label[origin_tick] <- NA_character_
 
       # Label orientation for this sequence. "horizontal" keeps the text
       # horizontal in the rendered plot; "parallel" aligns the text with the
@@ -92,6 +98,7 @@ ggchord_layout_axis_step <- quote({
 
       dir <- if (axisGap[id] >= 0) -1 else 1
       len <- ifelse(pts$is_major, axisMajLen[id], axisMinLen[id])
+      len[origin_tick] <- len[origin_tick] * 2.2
       base <- map_to_curve_many(angle, r0, ref)
       tip <- map_to_curve_many(angle, r0 + len * dir, ref)
       lbl <- map_to_curve_many(angle, r0 + (len + labelOffset[id]) * dir, ref)
@@ -105,6 +112,7 @@ ggchord_layout_axis_step <- quote({
         label_angle = label_angle,
         label_angle_relative = relative_angle,
         is_major = pts$is_major,
+        is_origin = origin_tick,
         accver = id,
         stringsAsFactors = FALSE
       )

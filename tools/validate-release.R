@@ -96,9 +96,9 @@ if (mode == "genome") {
                     width = 8, height = 7)
   }
 } else if (mode == "feature") {
-  objects <- c("plasmid_example_pUC19c",
+  objects <- c("plasmid_example_pUC19",
     "plasmid_example_pBluescript_II_SK_plus")
-  files <- c("pUC19c-feature", "pBluescript-feature")
+  files <- c("pUC19-feature", "pBluescript-feature")
   for (i in seq_along(objects)) {
     utils::data(list = objects[i])
     sequence <- get(objects[i])
@@ -115,7 +115,7 @@ if (mode == "genome") {
     finite_geometry(list(layout$gene_polys, layout$gene_labels,
       layout$gene_label_segments))
     stopifnot(all(layout$gene_labels$feature_label_mode %in%
-      c("inside", "adjacent", "callout")),
+      c("inside", "adjacent", "external")),
       any(layout$gene_labels$feature_label_mode == "inside"),
       any(layout$gene_labels$feature_label_mode != "inside"))
     stopifnot(all(ggchord:::ggchord_label_conflict_counts(

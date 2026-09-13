@@ -535,6 +535,53 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     gene_data_layout$.feature_shape <- mapped_shape
     gene_data_layout$.feature_width_factor <-
       ggchord_feature_width_factor(mapped_shape)
+    # Resolve the visible feature fill once so polygon text contrast and the
+    # pastel background of an external callout share exactly the same semantic
+    # colour. Explicit source colours and user scales remain authoritative.
+    fill_values <- if ("feature_color" %in% names(gene_data_layout)) {
+      as.character(gene_data_layout$feature_color)
+    } else rep(NA_character_, nrow(gene_data_layout))
+    unresolved_fill <- is.na(fill_values) | !nzchar(fill_values)
+    fixed_fill <- gene_params$feature_fill_fixed
+    if (any(unresolved_fill) && !is.null(fixed_fill) &&
+        length(fixed_fill) == 1L) {
+      fill_values[unresolved_fill] <- as.character(fixed_fill)
+    }
+    raw_fill <- as.character(gene_data_layout$anno)
+    fill_mapping <- gene_params$feature_fill_mapping
+    if (any(unresolved_fill) && !is.null(fill_mapping)) {
+      mapped_input <- tryCatch(
+        rlang::eval_tidy(fill_mapping, data = gene_data_layout),
+        error = function(e) NULL
+      )
+      if (!is.null(mapped_input)) {
+        if (length(mapped_input) == 1L) {
+          mapped_input <- rep(mapped_input, nrow(gene_data_layout))
+        }
+        if (length(mapped_input) == nrow(gene_data_layout)) {
+          raw_fill <- as.character(mapped_input)
+        }
+      }
+    }
+    fill_scale <- plot$scales$get_scales("feature_fill")
+    if (any(unresolved_fill) && !is.null(fill_scale)) {
+      trained_fill <- fill_scale$clone()
+      trained_fill$train(raw_fill)
+      fill_values[unresolved_fill] <- as.character(trained_fill$map(
+        raw_fill[unresolved_fill]
+      ))
+    }
+    unresolved_fill <- is.na(fill_values) | !nzchar(fill_values)
+    if (any(unresolved_fill) &&
+        isTRUE(plot$coordinates$ggchord_circular)) {
+      preset <- ggchord_plasmid_feature_colours()
+      fill_values[unresolved_fill] <- unname(preset[
+        as.character(gene_data_layout$anno[unresolved_fill])
+      ])
+    }
+    fill_values[is.na(fill_values) | !nzchar(fill_values)] <- "#B8BDC3"
+    gene_data_layout$feature_label_fill <-
+      ggchord_feature_callout_fill(fill_values)
     existing_label_colour <- if (
         "feature_label_colour" %in% names(gene_data_layout)) {
       as.character(gene_data_layout$feature_label_colour)
@@ -542,52 +589,11 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     unresolved_labels <- is.na(existing_label_colour) |
       !nzchar(existing_label_colour)
     if (any(unresolved_labels)) {
-      fill_values <- if ("feature_color" %in% names(gene_data_layout)) {
-        as.character(gene_data_layout$feature_color)
-      } else rep(NA_character_, nrow(gene_data_layout))
-      unresolved <- is.na(fill_values) | !nzchar(fill_values)
-      fixed_fill <- gene_params$feature_fill_fixed
-      if (any(unresolved) && !is.null(fixed_fill) &&
-          length(fixed_fill) == 1L) {
-        fill_values[unresolved] <- as.character(fixed_fill)
-      }
-      raw_fill <- as.character(gene_data_layout$anno)
-      fill_mapping <- gene_params$feature_fill_mapping
-      if (any(unresolved) && !is.null(fill_mapping)) {
-        mapped_input <- tryCatch(
-          rlang::eval_tidy(fill_mapping, data = gene_data_layout),
-          error = function(e) NULL
-        )
-        if (!is.null(mapped_input)) {
-          if (length(mapped_input) == 1L) {
-            mapped_input <- rep(mapped_input, nrow(gene_data_layout))
-          }
-          if (length(mapped_input) == nrow(gene_data_layout)) {
-            raw_fill <- as.character(mapped_input)
-          }
-        }
-      }
-      fill_scale <- plot$scales$get_scales("feature_fill")
-      if (any(unresolved) && !is.null(fill_scale)) {
-        trained_fill <- fill_scale$clone()
-        trained_fill$train(raw_fill)
-        fill_values[unresolved] <- as.character(trained_fill$map(
-          raw_fill[unresolved]
-        ))
-      }
-      if (any(unresolved <- is.na(fill_values) | !nzchar(fill_values)) &&
-          isTRUE(plot$coordinates$ggchord_circular)) {
-        preset <- ggchord_plasmid_feature_colours()
-        fill_values[unresolved] <- unname(preset[
-          as.character(gene_data_layout$anno[unresolved])
-        ])
-      }
-      fill_values[is.na(fill_values) | !nzchar(fill_values)] <- "#B8BDC3"
       existing_label_colour[unresolved_labels] <- ggchord_contrast_colour(
         fill_values[unresolved_labels]
       )
-      gene_data_layout$feature_label_colour <- existing_label_colour
     }
+    gene_data_layout$feature_label_colour <- existing_label_colour
   }
   if (!is.null(gene_data_layout) && nrow(gene_data_layout)) {
     gene_data_layout$.feature_width <- vapply(seq_len(nrow(gene_data_layout)),
@@ -1097,6 +1103,7 @@ compute_chord_geometry <- function(plot) {
       )
     }
   }
+  registry <- ggchord_share_external_annotations(registry, primary)
   primary$layer_geometry <- registry
   primary$layer_inputs <- inputs
   primary$layer_layouts <- layouts

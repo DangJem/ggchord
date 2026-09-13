@@ -66,6 +66,9 @@ geom_feature_label <- function(
 #' @param external Whether the staged feature layout may place a label outside
 #'   the circular backbone after inside and adjacent placement fail. When
 #'   `FALSE`, unresolved labels are hidden instead of pushing inward forever.
+#'   External labels are rendered as rounded callouts using a lightened form
+#'   of the feature's resolved fill. When restriction-site labels coexist on a
+#'   circular map, both layers are packed in one ordered perimeter layout.
 #' @inheritParams geom_feature_label
 #' @return A composite text and leader-line layer.
 #' @examples
@@ -131,6 +134,12 @@ geom_feature_label_repel <- function(
         colour = I(feature_label_colour)
       )$colour
     }
+    lyr$mapping[["feature_label_mode"]] <- ggplot2::aes(
+      feature_label_mode = I(feature_label_mode)
+    )$feature_label_mode
+    lyr$mapping[["feature_label_fill"]] <- ggplot2::aes(
+      feature_label_fill = I(feature_label_fill)
+    )$feature_label_fill
     return(lyr)
   }
   core_layout <- if (identical(label_layout, "callout")) "auto" else label_layout
@@ -162,6 +171,12 @@ geom_feature_label_repel <- function(
       colour = I(feature_label_colour)
     )$colour
   }
+  lyr$mapping[["feature_label_mode"]] <- ggplot2::aes(
+    feature_label_mode = I(feature_label_mode)
+  )$feature_label_mode
+  lyr$mapping[["feature_label_fill"]] <- ggplot2::aes(
+    feature_label_fill = I(feature_label_fill)
+  )$feature_label_fill
   lyr
 }
 

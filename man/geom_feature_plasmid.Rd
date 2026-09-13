@@ -62,9 +62,10 @@ requested protruding head, `"flush"` keeps it level with the body, and
 \item{short_feature}{Fallback for arrows too short to hold their requested
 head: automatic wedge/block selection, a wedge, or a block.}
 
-\item{segment_boundaries}{Draw joins inside continuous segmented features.
-These joins never create additional arrowheads. A segment-level
-\code{line_style} column overrides the fallback boundary linetype.}
+\item{segment_boundaries}{Draw explicit internal marks carried by a
+segmented feature. Segment membership alone does not create a divider;
+a non-solid segment-level \code{line_style} or a `cleavage_arrows`
+coordinate does. These marks never create additional arrowheads.}
 
 \item{boundary_colour, boundary_linewidth, boundary_linetype}{Appearance of
 internal segment joins.}

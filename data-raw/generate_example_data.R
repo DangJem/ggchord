@@ -159,7 +159,7 @@ read_one_fasta <- function(path) {
   )
 }
 plasmid_files <- c(
-  "pUC19c" = "examples/plasmid/pUC19c.fna",
+  "pUC19" = "examples/plasmid/pUC19.fna",
   "pBR322" = "examples/plasmid/pBR322.fna",
   "pBluescript II SK(+)" = "examples/plasmid/pBluescript II SK(+).fna"
 )
@@ -174,13 +174,18 @@ make_plasmid_object <- function(key) {
     stringsAsFactors = FALSE
   )
 }
-plasmid_example_pUC19c <- make_plasmid_object("pUC19c")
+plasmid_example_pUC19 <- make_plasmid_object("pUC19")
+# Retain the pre-release fixture spelling as a compatibility alias while the
+# visual benchmark moves to the official pUC19 reference.
+plasmid_example_pUC19c <- plasmid_example_pUC19
 plasmid_example_pBR322 <- make_plasmid_object("pBR322")
 plasmid_example_pBluescript_II_SK_plus <- make_plasmid_object(
   "pBluescript II SK(+)"
 )
 save(plasmid_example_pUC19c,
   file = "data/plasmid_example_pUC19c.rda", compress = "xz")
+save(plasmid_example_pUC19,
+  file = "data/plasmid_example_pUC19.rda", compress = "xz")
 save(plasmid_example_pBR322,
   file = "data/plasmid_example_pBR322.rda", compress = "xz")
 save(plasmid_example_pBluescript_II_SK_plus,

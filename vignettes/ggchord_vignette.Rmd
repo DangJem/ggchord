@@ -470,11 +470,11 @@ The coordinate owns genomic-origin rotation and direction. Since v0.13,
 former strand-separated default, or `position = "plasmid"` for a shared inner
 band.
 
-A basic pUC19c map needs only the circular backbone and centre metadata:
+A basic pUC19 map needs only the circular backbone and centre metadata:
 
 ```{r puc19c-map, eval=FALSE}
-data(plasmid_example_pUC19c)
-puc <- plasmid_example_pUC19c
+data(plasmid_example_pUC19)
+puc <- plasmid_example_pUC19
 ggchord(puc) +
   geom_seq() +
   geom_seq_center_label() +

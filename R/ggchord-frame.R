@@ -142,8 +142,11 @@ ggchord_adaptive_limits <- function(layout) {
     }
   }
 
-  x_pad <- 0.02 * max(diff(x_lim), 1)
-  y_pad <- 0.01 * max(diff(y_lim), 1)
+  # Rounded feature callouts and bold enzyme fragments extend slightly beyond
+  # the bare text metrics. Keep a modest physical-looking safety margin so a
+  # dense shared perimeter shrinks the map instead of clipping its last row.
+  x_pad <- 0.05 * max(diff(x_lim), 1)
+  y_pad <- 0.035 * max(diff(y_lim), 1)
 
   list(
     xlim = c(x_lim[1] - x_pad, x_lim[2] + x_pad),

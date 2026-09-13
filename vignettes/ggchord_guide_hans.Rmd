@@ -447,11 +447,11 @@ gene_label_rotation = list(20)
 管理。v0.13 起 `geom_gene()` 默认为 `position = "identity"`；旧版分链布局
 使用 `position = "strand"`，plasmid 共享内侧 band 使用 `position = "plasmid"`。
 
-pUC19c 的基础图只需要 circular backbone 和中心信息：
+pUC19 的基础图只需要 circular backbone 和中心信息：
 
 ```{r puc19c-map, eval=FALSE}
-data(plasmid_example_pUC19c)
-puc <- plasmid_example_pUC19c
+data(plasmid_example_pUC19)
+puc <- plasmid_example_pUC19
 ggchord(puc) +
   geom_seq() +
   geom_seq_center_label() +

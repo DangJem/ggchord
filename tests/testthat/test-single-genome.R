@@ -113,6 +113,65 @@ test_that("centre labels use sequence metadata", {
   expect_s3_class(ggplot2::ggplotGrob(styled), "gtable")
 })
 
+test_that("external feature and restriction labels share perimeter space", {
+  seq <- data.frame(accver = "circle", length = 1000)
+  features <- data.frame(
+    accver = "circle", start = c(95, 120, 145), end = c(101, 127, 153),
+    strand = "+", anno = paste("short feature", 1:3),
+    feature_color = c("#31849B", "#FF0000", "#FFFFFF")
+  )
+  sites <- data.frame(
+    accver = "circle", position = c(90, 135, 160, 650),
+    enzyme = c("OnceA", "OnceB", "Repeat", "Repeat")
+  )
+  tracks <- position_feature_stack(base_position = position_plasmid())
+  plot <- ggchord(seq, validate = "none") + geom_seq() +
+    geom_feature_plasmid(data = features, position = tracks) +
+    geom_feature_label_repel(data = features, position = tracks) +
+    geom_restriction_site(data = sites) + coord_circular(rotation = 90)
+  exported <- export_ggchord_layout(
+    plot, include = c("labels", "restriction")
+  )
+  feature <- exported$labels[
+    exported$labels$.component == "text" &
+      exported$labels$feature_label_mode == "external", , drop = FALSE
+  ]
+  restriction <- exported$restriction[
+    exported$restriction$.component == "label", , drop = FALSE
+  ]
+  expect_true(nrow(feature) > 0L)
+  expect_true(all(feature$external_annotation_type == "feature"))
+  expect_true(all(restriction$external_annotation_type == "restriction"))
+  expect_true(all(restriction$enzyme_fontface[
+    restriction$enzyme_label %in% c("OnceA", "OnceB")
+  ] == "bold"))
+  expect_true(all(restriction$enzyme_fontface[
+    restriction$enzyme_label == "Repeat"
+  ] == "plain"))
+
+  external <- rbind(
+    data.frame(text_x = feature$x, text_y = feature$y,
+      text = feature$label, size = feature$size, hjust = feature$hjust,
+      vjust = feature$vjust, text_angle = 0),
+    data.frame(text_x = restriction$x, text_y = restriction$y,
+      text = restriction$label, size = restriction$size,
+      hjust = restriction$hjust, vjust = restriction$vjust,
+      text_angle = 0)
+  )
+  boxes <- ggchord_text_boxes(
+    external, units_per_inch = get_chord_layout(plot)$text_units_per_inch,
+    box_padding = .01
+  )
+  if (nrow(boxes) > 1L) {
+    pairs <- utils::combn(seq_len(nrow(boxes)), 2L)
+    expect_false(any(apply(pairs, 2L, function(pair) {
+      ggchord_oriented_box_overlaps(
+        boxes[pair[1L], , drop = FALSE], boxes[pair[2L], , drop = FALSE]
+      )
+    })))
+  }
+})
+
 test_that("restriction search preserves biological pattern rows", {
   patterns <- data.frame(
     pattern_id = c("eco", "multi-a", "multi-b", "unknown", "type-iis", "four"),
@@ -133,7 +192,8 @@ test_that("restriction search preserves biological pattern rows", {
   expect_true(all(c(
     "match_id", "pattern_id", "pattern_source_row", "motif_length",
     "crosses_origin", "ncuts", "cut_offset_4", "cut_4_unwrapped",
-    "cut_4", "display_position", "anchor_kind", "database_version"
+    "cut_4", "display_position", "enzyme_site_count", "anchor_kind",
+    "database_version"
   ) %in% names(sites)))
   expect_equal(length(unique(sites$pattern_id[sites$enzyme == "Multi"])), 2L)
   expect_true(any(sites$ncuts == 4L))
@@ -177,6 +237,10 @@ test_that("restriction search preserves biological pattern rows", {
     "GGGG", patterns = c(Overlap = "GGG"), circular = FALSE
   )
   expect_equal(overlapping$start, 1:2)
+  expect_equal(unique(overlapping$enzyme_site_count), 2L)
+  one_visible <- filter_restriction_sites(overlapping, window = c(1, 1))
+  expect_equal(nrow(one_visible), 1L)
+  expect_equal(one_visible$enzyme_site_count, 2L)
 })
 
 test_that("REBASE parser uses stable pattern rows when source files exist", {

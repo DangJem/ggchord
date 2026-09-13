@@ -2,22 +2,24 @@
 # Run from the package root with:
 #   Rscript tools/validate-feature-engine.R [output-directory]
 #
-# Reference maps are inspected manually; their copyrighted .dna annotations
-# are not redistributed here. Synthetic class fixtures below are deliberately
-# named as classes and must never be treated as exact records of those vectors.
+# The 13 checked-in reference FASTA/.dna/PNG trios define the visual benchmark.
+# Synthetic class fixtures below remain deliberately generic and must never be
+# treated as exact records of a named vector.
 
 devtools::load_all(quiet = TRUE)
 
 reference_maps <- c(
-  "pBluescript II SK(+)" = "https://www.snapgene.com/plasmids/basic_cloning_vectors/pBluescript_II_SK%28%2B%29",
-  "pUC19 / pUC19c" = "https://www.snapgene.com/plasmids/basic_cloning_vectors/pUC19",
-  "pET-28a(+)" = "https://www.snapgene.com/plasmids/pet_and_duet_vectors_%28novagen%29/pET-28a%28%2B%29",
-  "pLKO.1" = "https://www.snapgene.com/plasmids/viral_expression_and_packaging_vectors/pLKO.1",
-  "pLEX-MCS" = "https://www.snapgene.com/plasmids/viral_expression_and_packaging_vectors/pLEX-MCS",
-  "pPICZ(alpha) A" = "https://www.snapgene.com/plasmids/yeast_plasmids/pPICZ%28alpha%29_A",
-  "pcDNA3.1 CT-GFP" = "https://www.snapgene.com/plasmids/mammalian_expression_vectors/pcDNA3.1_CT-GFP",
-  "pEGFP-N1" = "https://www.snapgene.com/plasmids/fluorescent_protein_genes_and_plasmids/pEGFP-N1"
+  "pBR322", "pUC19", "pBluescript II SK(+)", "pSB1C3", "pET-28a(+)",
+  "pETDuet-1", "pcDNA3.1(+)", "pTRE-Tight-BI",
+  "pSpCas9(BB)-2A-GFP (PX458)", "pDONR221", "pCAMBIA1300",
+  "pEarleyGate 201", "pTRIPZ"
 )
+names(reference_maps) <- make.names(reference_maps)
+reference_paths <- lapply(c(".fna", ".dna", ".png"), function(extension) {
+  file.path("examples", "plasmid", paste0(unname(reference_maps), extension))
+})
+stopifnot(all(vapply(reference_paths, function(path) all(file.exists(path)),
+  logical(1L))))
 
 output_dir <- commandArgs(trailingOnly = TRUE)[1]
 if (is.na(output_dir) || !nzchar(output_dir)) {
@@ -96,18 +98,27 @@ stress$features$segments <- vector("list", nrow(stress$features))
 stress$features$segments[[8]] <- stress_segments
 fixtures$synthetic_stress <- stress
 
-data(plasmid_example_pBluescript_II_SK_plus)
-data(plasmid_example_pUC19c)
-real_fixtures <- list(
-  pBluescript_II_SK_plus = list(
-    sequence = plasmid_example_pBluescript_II_SK_plus,
-    features = find_common_features(plasmid_example_pBluescript_II_SK_plus)
-  ),
-  pUC19c = list(
-    sequence = plasmid_example_pUC19c,
-    features = find_common_features(plasmid_example_pUC19c)
+read_reference_fasta <- function(name) {
+  path <- file.path("examples", "plasmid", paste0(name, ".fna"))
+  lines <- readLines(path, warn = FALSE)
+  sequence <- paste0(lines[!grepl("^>", lines)], collapse = "")
+  data.frame(
+    accver = make.names(name), label = name, length = nchar(sequence),
+    sequence = sequence, stringsAsFactors = FALSE
   )
-)
+}
+real_fixtures <- lapply(unname(reference_maps), function(name) {
+  sequence <- read_reference_fasta(name)
+  sites <- find_restriction_sites(sequence)
+  sites <- filter_restriction_sites(
+    sites, set = "unique_6plus", parent_set = "commercial_nonredundant"
+  )
+  list(
+    sequence = sequence, features = find_common_features(sequence),
+    sites = sites
+  )
+})
+names(real_fixtures) <- names(reference_maps)
 fixtures <- c(real_fixtures, fixtures)
 
 for (name in names(fixtures)) {
@@ -120,15 +131,44 @@ for (name in names(fixtures)) {
     geom_feature_plasmid(data = fixture$features, position = tracks) +
     geom_feature_label_repel(data = fixture$features, position = tracks,
       external = TRUE, max_overlaps = 0) +
+    (if (!is.null(fixture$sites)) {
+      geom_restriction_site(data = fixture$sites)
+    } else NULL) +
     geom_seq_center_label() + coord_circular(rotation = 90) +
     theme_ggchord_plasmid()
-  layout <- export_ggchord_layout(plot, include = c("feature", "labels"))
+  layout <- export_ggchord_layout(
+    plot, include = c("feature", "labels", "restriction")
+  )
   stopifnot(all(is.finite(layout$feature$x)), all(is.finite(layout$feature$y)))
   text <- layout$labels[layout$labels$.component == "text", , drop = FALSE]
-  external <- text[text$feature_label_mode == "external", , drop = FALSE]
+  feature_external <- text[
+    text$feature_label_mode == "external", , drop = FALSE
+  ]
+  restriction_external <- if (!is.null(layout$restriction)) {
+    layout$restriction[
+      layout$restriction$.component == "label", , drop = FALSE
+    ]
+  } else data.frame()
+  external <- rbind(
+    if (nrow(feature_external)) data.frame(
+      text_x = feature_external$x, text_y = feature_external$y,
+      text = feature_external$label, size = feature_external$size,
+      hjust = feature_external$hjust, vjust = feature_external$vjust,
+      text_angle = 0
+    ),
+    if (nrow(restriction_external)) data.frame(
+      text_x = restriction_external$x, text_y = restriction_external$y,
+      text = restriction_external$label, size = restriction_external$size,
+      hjust = restriction_external$hjust,
+      vjust = restriction_external$vjust, text_angle = 0
+    )
+  )
+  if (is.null(external)) external <- data.frame()
   if (nrow(external) > 1L) {
     boxes <- ggchord:::ggchord_text_boxes(
-      external, units_per_inch = .35, box_padding = .015
+      external, units_per_inch = .35, box_padding = .015,
+      x_col = "text_x", y_col = "text_y", text_col = "text",
+      angle_col = "text_angle"
     )
     pairs <- utils::combn(seq_len(nrow(boxes)), 2L)
     collisions <- apply(pairs, 2L, function(pair) {
@@ -156,7 +196,7 @@ stopifnot(
 )
 
 writeLines(c(
-  "Reference maps inspected manually (not redistributed):",
-  paste(names(reference_maps), unname(reference_maps), sep = "\t"),
+  "Reference maps inspected from examples/plasmid:",
+  unname(reference_maps),
   paste0("Rendered fixtures: ", output_dir)
 ))

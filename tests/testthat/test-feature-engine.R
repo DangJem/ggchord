@@ -205,12 +205,17 @@ test_that("dense plasmid feature labels avoid labels and feature glyphs", {
   expect_true(all(labels$angle <= 90 | labels$angle >= 270))
   expect_true("feature_class" %in% names(features))
   expect_false("preferred_lane" %in% names(features))
-  expect_true(all(features$feature_shape == ifelse(
-    features$strand == ".", "block", "arrow"
-  )))
+  expected_shape <- ifelse(features$strand == ".", "block", "arrow")
+  expected_shape[features$type == "promoter" & features$strand != "."] <-
+    "promoter_arrow"
+  expected_shape[features$type == "primer_bind" & features$strand != "."] <-
+    "primer_arrow"
+  expected_shape[features$type == "protein_bind" & features$strand != "."] <-
+    "compact_arrow"
+  expect_equal(features$feature_shape, expected_shape)
 })
 
-test_that("plasmid feature preset keeps one arrowhead and draws segment joins", {
+test_that("plasmid feature preset marks cleavage rather than every segment join", {
   seq <- data.frame(accver = "circle", length = 1000)
   segments <- data.frame(
     segment_index = 1:2, segment_type = "standard",
@@ -221,6 +226,7 @@ test_that("plasmid feature preset keeps one arrowhead and draws segment joins", 
     anno = "joined", feature_color = "#CCFFCC",
     feature_shape = "arrow", segments = I(list(segments))
   )
+  feature$cleavage_arrows <- I(list(180))
   p <- ggchord(seq, validate = "none") + geom_seq() +
     geom_feature_plasmid(data = feature) + coord_circular()
   out <- export_ggchord_layout(p, include = "feature")$feature

@@ -13,7 +13,10 @@ ggchord_feature_classes <- function(type) {
     operator = "operator", regulatory = "regulatory",
     regulatory_region = "regulatory", mcs = "mcs",
     misc_feature = "misc_feature", repeat_region = "misc_feature",
-    terminator = "regulatory", rbs = "regulatory"
+    ltr = "misc_feature", misc_rna = "regulatory",
+    terminator = "regulatory", rbs = "regulatory",
+    polya_signal = "regulatory", poly_a_signal = "regulatory",
+    enhancer = "regulatory"
   )
   out <- unname(aliases[key])
   out[is.na(out) | !nzchar(out)] <- "misc_feature"

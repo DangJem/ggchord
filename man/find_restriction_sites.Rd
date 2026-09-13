@@ -27,6 +27,9 @@ spelling for `patterns`.}
 }
 \value{
 One row per pattern match without display filtering or deduplication.
+  `enzyme_site_count` records the number of distinct cleavage/display
+  positions for that enzyme on the complete supplied sequence, so it remains
+  stable after display filtering.
 }
 \description{
 Find restriction pattern matches and cleavage coordinates

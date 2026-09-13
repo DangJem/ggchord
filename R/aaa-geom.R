@@ -71,6 +71,10 @@ GeomChordAxis <- ggplot2::ggproto(
     tick <- ggchord_component_style(
       tick, tick_params, c("colour", "alpha", "linewidth", "linetype")
     )
+    if (nrow(tick) && "is_origin" %in% names(tick)) {
+      origin <- !is.na(tick$is_origin) & tick$is_origin
+      tick$linewidth[origin] <- tick$linewidth[origin] * 1.8
+    }
     minor_tick <- ggchord_component_style(
       minor_tick, minor_tick_params,
       c("colour", "alpha", "linewidth", "linetype")
@@ -158,12 +162,30 @@ GeomChordGeneLabelRepel <- ggplot2::ggproto(
       )
     }
     if (nrow(text)) {
-      grobs[[length(grobs) + 1L]] <- ggplot2::GeomText$draw_panel(
-        text, panel_params, coord,
-        parse = text_params$parse %||% FALSE,
-        check_overlap = text_params$check_overlap %||% FALSE,
-        na.rm = na.rm
-      )
+      external <- if ("feature_label_mode" %in% names(text)) {
+        text$feature_label_mode %in% "external"
+      } else rep(FALSE, nrow(text))
+      plain <- text[!external, , drop = FALSE]
+      callout <- text[external, , drop = FALSE]
+      if (nrow(callout)) {
+        callout$fill <- if ("feature_label_fill" %in% names(callout)) {
+          callout$feature_label_fill
+        } else "#F2F3F4"
+        callout$colour <- "#353A3E"
+        grobs[[length(grobs) + 1L]] <- ggplot2::GeomLabel$draw_panel(
+          callout, panel_params, coord,
+          label.padding = grid::unit(.12, "lines"),
+          label.r = grid::unit(.16, "lines"), na.rm = na.rm
+        )
+      }
+      if (nrow(plain)) {
+        grobs[[length(grobs) + 1L]] <- ggplot2::GeomText$draw_panel(
+          plain, panel_params, coord,
+          parse = text_params$parse %||% FALSE,
+          check_overlap = text_params$check_overlap %||% FALSE,
+          na.rm = na.rm
+        )
+      }
     }
     do.call(grid::grobTree, grobs)
   }
