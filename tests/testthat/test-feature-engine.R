@@ -235,6 +235,21 @@ test_that("dense plasmid feature labels avoid labels and feature glyphs", {
   tangent_error <- abs((adjacent$angle - tangent_angle + 90) %% 180 - 90)
   expect_true(all(tangent_error < 1e-6))
   expect_true(any(first$labels$.component == "segment"))
+  expect_true(all(labels$.draw_as_arc))
+  glyphs <- first$labels[
+    first$labels$.component == "arc_text", , drop = FALSE
+  ]
+  expect_equal(nrow(glyphs), sum(nchar(labels$label, type = "chars")))
+  glyph_radius <- sqrt(glyphs$x^2 + glyphs$y^2)
+  radius_by_label <- tapply(glyph_radius, glyphs$.arc_parent_group,
+    function(value) diff(range(value)))
+  expect_true(all(radius_by_label < 1e-8))
+  glyph_tangent <- atan2(glyphs$y, glyphs$x) * 180 / pi + 90
+  glyph_tangent_error <- abs((glyphs$angle - glyph_tangent + 90) %% 180 - 90)
+  expect_true(all(glyph_tangent_error < 1e-6))
+  long_glyphs <- glyphs[glyphs$label != " " & glyphs$source_row ==
+    labels$source_row[labels$label == "AmpR promoter"], , drop = FALSE]
+  expect_gt(diff(range(long_glyphs$angle)), 1)
   internal <- get_chord_layout(plot)
   internal_labels <- internal$gene_labels
   internal_boxes <- ggchord_text_boxes(

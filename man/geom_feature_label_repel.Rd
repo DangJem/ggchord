@@ -25,8 +25,10 @@ geom_feature_label_repel(
 
 \item{label_layout}{One of `"feature"`, `"radial"`, `"auto"`, or
 `"callout"`. The default `"feature"` follows plasmid-map convention:
-tangent text is tried inside first, then placed adjacent and nudged along
-the local tangent. A light leader appears only after material movement.
+text is tried inside first, then assigned to a fixed-radius internal
+track. Non-external text is laid out character by character along that
+circle rather than rotated as one straight string. A light leader appears
+only after material movement.
 Choose another mode for unrestricted external callouts.}
 
 \item{label_wrap, label_fit, label_max_lines}{Text fitting controls.}

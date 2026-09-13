@@ -419,9 +419,75 @@ ggchord_axis_layer <- function(layout) {
 
 #' Combine automatic label components for GeomChordGeneLabelRepel
 #' @noRd
+ggchord_feature_arc_text <- function(text, units_per_inch) {
+  if (!nrow(text)) return(data.frame())
+  eligible <- text$feature_label_mode %in% c("inside", "adjacent") &
+    !grepl("\n", text$text, fixed = TRUE) &
+    !is.na(text$text) & nzchar(text$text)
+  text$.draw_as_arc <- eligible
+  glyphs <- list()
+  for (i in which(eligible)) {
+    chars <- strsplit(enc2utf8(as.character(text$text[i])), "", fixed = TRUE)[[1L]]
+    if (!length(chars)) next
+    measured <- text[rep(i, length(chars)), , drop = FALSE]
+    measured$text <- chars
+    measured$text_x <- 0
+    measured$text_y <- 0
+    measured$text_angle <- 0
+    measured$hjust <- .5
+    measured$vjust <- .5
+    boxes <- ggchord_text_boxes(
+      measured, units_per_inch = units_per_inch, box_padding = 0
+    )
+    advance <- boxes$w
+    fallback <- max(boxes$h, na.rm = TRUE) * .34
+    advance[!is.finite(advance) | advance <= 0] <- fallback
+    tracking <- max(.0008, median(boxes$h, na.rm = TRUE) * .018)
+    total <- sum(advance) + tracking * max(0, length(chars) - 1L)
+    along <- cumsum(c(0, head(advance + tracking, -1L))) + advance / 2 -
+      total / 2
+    radius <- sqrt(text$text_x[i]^2 + text$text_y[i]^2)
+    centre_angle <- atan2(text$text_y[i], text$text_x[i])
+    increasing_tangent <- (centre_angle * 180 / pi + 90) %% 360
+    centre_orientation <- text$text_angle[i] %% 360
+    orientation_delta <- abs((centre_orientation - increasing_tangent + 180) %%
+      360 - 180)
+    direction <- if (orientation_delta > 90) -1 else 1
+    glyph_angle <- centre_angle + direction * along / max(radius, .1)
+    rotation <- glyph_angle * 180 / pi + if (direction > 0) 90 else -90
+    upright <- ggchord_normalize_text_orientation(rotation, rep(.5, length(chars)))
+    glyph <- text[rep(i, length(chars)), , drop = FALSE]
+    glyph$text_x <- radius * cos(glyph_angle)
+    glyph$text_y <- radius * sin(glyph_angle)
+    glyph$text_angle <- upright$angle
+    glyph$hjust <- .5
+    glyph$vjust <- .5
+    glyph$text <- chars
+    glyph$.component <- "arc_text"
+    glyph$.arc_parent_group <- text$group[i]
+    glyph$.arc_glyph_index <- seq_along(chars)
+    glyphs[[length(glyphs) + 1L]] <- glyph
+  }
+  list(text = text, glyphs = if (length(glyphs)) {
+    ggchord_rbind_fill(glyphs)
+  } else data.frame())
+}
+
+#' @noRd
 ggchord_repel_geometry <- function(layout) {
   segment <- layout$gene_label_segments %||% data.frame()
   text <- layout$gene_labels %||% data.frame()
+  arc_text <- data.frame()
+  if (nrow(text) && identical(layout$gene_label_layout, "feature")) {
+    curved <- ggchord_feature_arc_text(
+      text, layout$text_units_per_inch %||% .35
+    )
+    text <- curved$text
+    arc_text <- curved$glyphs
+  }
+  if (nrow(text) && !".draw_as_arc" %in% names(text)) {
+    text$.draw_as_arc <- FALSE
+  }
   if (nrow(segment)) {
     if ("occluded" %in% names(segment)) {
       segment <- segment[
@@ -456,7 +522,17 @@ ggchord_repel_geometry <- function(layout) {
     text$linetype <- "solid"
     text$alpha <- 1
   }
-  values <- Filter(nrow, list(segment, text))
+  if (nrow(arc_text)) {
+    arc_text$x <- arc_text$text_x
+    arc_text$y <- arc_text$text_y
+    arc_text$xend <- NA_real_
+    arc_text$yend <- NA_real_
+    arc_text$label <- arc_text$text
+    arc_text$angle <- arc_text$text_angle
+    arc_text$linetype <- "solid"
+    arc_text$alpha <- 1
+  }
+  values <- Filter(nrow, list(segment, text, arc_text))
   if (!length(values)) {
     return(data.frame(x = numeric(), y = numeric(), .component = character()))
   }

@@ -173,6 +173,20 @@ for (name in names(fixtures)) {
     tangent <- atan2(adjacent$y, adjacent$x) * 180 / pi + 90
     error <- abs((adjacent$angle - tangent + 90) %% 180 - 90)
     stopifnot(all(error < 1e-6))
+    glyphs <- layout$labels[
+      layout$labels$.component == "arc_text", , drop = FALSE
+    ]
+    stopifnot(
+      all(text$.draw_as_arc),
+      nrow(glyphs) == sum(nchar(text$label, type = "chars"))
+    )
+    glyph_radius <- sqrt(glyphs$x^2 + glyphs$y^2)
+    glyph_tangent <- atan2(glyphs$y, glyphs$x) * 180 / pi + 90
+    stopifnot(
+      all(tapply(glyph_radius, glyphs$.arc_parent_group,
+        function(value) diff(range(value))) < 1e-8),
+      all(abs((glyphs$angle - glyph_tangent + 90) %% 180 - 90) < 1e-6)
+    )
   }
   feature_external <- text[
     text$feature_label_mode == "external", , drop = FALSE

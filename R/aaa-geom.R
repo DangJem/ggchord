@@ -48,7 +48,7 @@ GeomChordAxis <- ggplot2::ggproto(
   required_aes = c("x", "y"),
   default_aes = ggplot2::aes(
     xend = NA_real_, yend = NA_real_, label = NA_character_,
-    .component = NA_character_,
+    .component = NA_character_, .draw_as_arc = FALSE,
     colour = "#737A80", alpha = NA, linewidth = 0.3,
     linetype = 1, size = 3, angle = 0, hjust = 0.5, vjust = 0.5,
     family = "", fontface = 1, lineheight = 1.2
@@ -142,12 +142,17 @@ GeomChordGeneLabelRepel <- ggplot2::ggproto(
                         segment_params = list(), text_params = list()) {
     segment <- data[data$.component %in% "segment", , drop = FALSE]
     text <- data[data$.component %in% "text", , drop = FALSE]
+    arc_text <- data[data$.component %in% "arc_text", , drop = FALSE]
     segment <- ggchord_component_style(
       segment, segment_params,
       c("colour", "alpha", "linewidth", "linetype")
     )
     text <- ggchord_component_style(
       text, text_params,
+      c("colour", "alpha", "size", "family", "fontface", "lineheight")
+    )
+    arc_text <- ggchord_component_style(
+      arc_text, text_params,
       c("colour", "alpha", "size", "family", "fontface", "lineheight")
     )
     grobs <- list()
@@ -165,7 +170,10 @@ GeomChordGeneLabelRepel <- ggplot2::ggproto(
       external <- if ("feature_label_mode" %in% names(text)) {
         text$feature_label_mode %in% "external"
       } else rep(FALSE, nrow(text))
-      plain <- text[!external, , drop = FALSE]
+      curved <- if (".draw_as_arc" %in% names(text)) {
+        text$.draw_as_arc %in% TRUE
+      } else rep(FALSE, nrow(text))
+      plain <- text[!external & !curved, , drop = FALSE]
       callout <- text[external, , drop = FALSE]
       if (nrow(callout)) {
         callout$fill <- if ("feature_label_fill" %in% names(callout)) {
@@ -186,6 +194,12 @@ GeomChordGeneLabelRepel <- ggplot2::ggproto(
           na.rm = na.rm
         )
       }
+    }
+    if (nrow(arc_text)) {
+      grobs[[length(grobs) + 1L]] <- ggplot2::GeomText$draw_panel(
+        arc_text, panel_params, coord,
+        parse = FALSE, check_overlap = FALSE, na.rm = na.rm
+      )
     }
     do.call(grid::grobTree, grobs)
   }

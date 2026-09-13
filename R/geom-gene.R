@@ -460,6 +460,7 @@ geom_gene_label_repel <- function(mapping = NULL, data = NULL,
   empty <- data.frame(
     x = numeric(), y = numeric(), xend = numeric(), yend = numeric(),
     label = character(), .component = character(), group = integer(),
+    .draw_as_arc = logical(),
     linetype = character(), alpha = numeric(), size = numeric(), angle = numeric(),
     hjust = numeric(), vjust = numeric()
   )
@@ -470,7 +471,7 @@ geom_gene_label_repel <- function(mapping = NULL, data = NULL,
       group = group, linetype = I(linetype), size = I(size),
       alpha = I(alpha),
       angle = angle, hjust = hjust, vjust = vjust,
-      .component = I(.component)
+      .component = I(.component), .draw_as_arc = I(.draw_as_arc)
     ),
     stat = "identity",
     geom = GeomChordGeneLabelRepel,

@@ -18,6 +18,11 @@
   height permits. Feature labels select a radius first, then derive their
   position and tangent from that circle; labels placed on a deeper radius use a
   leader back to the owning outer feature instead of drifting around the map.
+* Circular feature-track labels now use a genuinely curved baseline. After a
+  track radius is selected, the renderer measures individual glyph advances,
+  distributes the characters along that circle, and derives a separate local
+  tangent angle for every character. The original straight-string row remains
+  available as label metadata and collision geometry but is not drawn.
 * Added `coord_circular()` as an independent coordinate contract for one
   circular sequence. It supports a closed circle (`gap = 0`), a degree-based
   opening, genomic-origin rotation, clockwise/counterclockwise direction,
