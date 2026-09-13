@@ -150,43 +150,71 @@ save(single_genome_example, file = "data/single_genome_example.rda", compress = 
 save(single_gene_example, file = "data/single_gene_example.rda", compress = "xz")
 save(restriction_site_example, file = "data/restriction_site_example.rda", compress = "xz")
 
-# Circular-plasmid fixtures. FASTA records are read without rewriting them.
+# Circular-plasmid fixtures. Every checked-in FASTA record under
+# examples/plasmid becomes one plasmid_example_* object. The file stem is the
+# stable sequence ID and display label; FASTA headers remain source metadata
+# and are not treated as identifiers because several contain spaces.
 read_one_fasta <- function(path) {
   lines <- readLines(path, warn = FALSE)
+  if (!length(lines) || !grepl("^>", lines[1L])) {
+    stop("Invalid FASTA record: ", path, call. = FALSE)
+  }
+  sequence <- toupper(paste0(lines[!grepl("^>", lines)], collapse = ""))
+  if (!nzchar(sequence) || !grepl("^[ACGTRYSWKMBDHVN]+$", sequence)) {
+    stop("Invalid DNA sequence in ", path, call. = FALSE)
+  }
   list(
     header = sub("^>", "", lines[1L]),
-    sequence = paste0(lines[!grepl("^>", lines)], collapse = "")
+    sequence = sequence
   )
 }
-plasmid_files <- c(
-  "pUC19" = "examples/plasmid/pUC19.fna",
-  "pBR322" = "examples/plasmid/pBR322.fna",
-  "pBluescript II SK(+)" = "examples/plasmid/pBluescript II SK(+).fna"
-)
+
+plasmid_files <- sort(list.files(
+  "examples/plasmid", pattern = "\\.fna$", full.names = TRUE
+))
+if (!length(plasmid_files)) {
+  stop("No plasmid FASTA records found under examples/plasmid", call. = FALSE)
+}
+plasmid_labels <- tools::file_path_sans_ext(basename(plasmid_files))
+names(plasmid_files) <- plasmid_labels
 plasmids <- lapply(plasmid_files, read_one_fasta)
+
+plasmid_object_name <- function(label) {
+  suffix <- gsub("\\(\\+\\)", "_plus", label)
+  suffix <- gsub("[^[:alnum:]]+", "_", suffix)
+  suffix <- gsub("^_+|_+$", "", suffix)
+  paste0("plasmid_example_", suffix)
+}
+plasmid_object_names <- vapply(
+  plasmid_labels, plasmid_object_name, character(1L)
+)
+if (anyDuplicated(plasmid_object_names)) {
+  stop("Plasmid file names do not produce unique example object names",
+    call. = FALSE)
+}
+
 make_plasmid_object <- function(key) {
   record <- plasmids[[key]]
   data.frame(
-    accver = sub(" .*$", "", record$header),
+    accver = key,
     label = key,
     length = nchar(record$sequence),
     sequence = record$sequence,
     stringsAsFactors = FALSE
   )
 }
-plasmid_example_pUC19 <- make_plasmid_object("pUC19")
+
+plasmid_examples <- stats::setNames(
+  lapply(plasmid_labels, make_plasmid_object), plasmid_object_names
+)
+invisible(list2env(plasmid_examples, envir = environment()))
+
 # Retain the pre-release fixture spelling as a compatibility alias while the
 # visual benchmark moves to the official pUC19 reference.
 plasmid_example_pUC19c <- plasmid_example_pUC19
-plasmid_example_pBR322 <- make_plasmid_object("pBR322")
-plasmid_example_pBluescript_II_SK_plus <- make_plasmid_object(
-  "pBluescript II SK(+)"
-)
 save(plasmid_example_pUC19c,
   file = "data/plasmid_example_pUC19c.rda", compress = "xz")
-save(plasmid_example_pUC19,
-  file = "data/plasmid_example_pUC19.rda", compress = "xz")
-save(plasmid_example_pBR322,
-  file = "data/plasmid_example_pBR322.rda", compress = "xz")
-save(plasmid_example_pBluescript_II_SK_plus,
-  file = "data/plasmid_example_pBluescript_II_SK_plus.rda", compress = "xz")
+for (object_name in names(plasmid_examples)) {
+  save(list = object_name,
+    file = file.path("data", paste0(object_name, ".rda")), compress = "xz")
+}

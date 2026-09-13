@@ -8,9 +8,13 @@ test_that("internal common-feature database is complete and self-contained", {
     "3d9e7a78c705de2beeb9d8af3c74dede714faa468cd6eee61f78e0f784b65312")
   expect_named(db, c("metadata", "features", "segments", "qualifiers",
     "qualifier_links", "feature_type_summary", "reference_sequences",
-    "reference_features", "search_indexes"))
-  expect_equal(nrow(db$reference_sequences), 3L)
-  expect_equal(nrow(db$reference_features), 32L)
+    "reference_features", "reference_primers", "search_indexes"))
+  expect_equal(nrow(db$reference_sequences), 13L)
+  expect_equal(nrow(db$reference_features), 201L)
+  expect_equal(sum(vapply(db$reference_features$segments, nrow, integer(1L))),
+    218L)
+  expect_equal(sum(lengths(db$reference_features$cleavage_arrows)), 11L)
+  expect_equal(nrow(db$reference_primers), 7L)
 })
 
 test_that("common-feature DNA matching handles orientation and origin", {
@@ -117,20 +121,30 @@ test_that("auto matching follows stored exact-protein detection mode", {
   expect_equal(hit$match_method, "protein_exact")
 })
 
-test_that("new plasmid data objects exactly reproduce FASTA", {
-  objects <- c("plasmid_example_pUC19", "plasmid_example_pBR322",
-    "plasmid_example_pBluescript_II_SK_plus")
-  files <- c("pUC19.fna", "pBR322.fna", "pBluescript II SK(+).fna")
-  paths <- testthat::test_path("..", "..", "examples", "plasmid", files)
+test_that("plasmid data objects exactly reproduce every reference FASTA", {
+  paths <- sort(list.files(
+    testthat::test_path("..", "..", "examples", "plasmid"),
+    pattern = "\\.fna$", full.names = TRUE
+  ))
   skip_if_not(all(file.exists(paths)))
-  for (i in seq_along(objects)) {
-    data(list = objects[i])
-    object <- get(objects[i])
-    lines <- readLines(paths[i], warn = FALSE)
+  labels <- tools::file_path_sans_ext(basename(paths))
+  suffixes <- gsub("\\(\\+\\)", "_plus", labels)
+  suffixes <- gsub("[^[:alnum:]]+", "_", suffixes)
+  suffixes <- gsub("^_+|_+$", "", suffixes)
+  objects <- paste0("plasmid_example_", suffixes)
+  expect_length(objects, 13L)
+  expect_false(anyDuplicated(objects))
+  for (i in seq_along(paths)) {
+    env <- new.env(parent = emptyenv())
+    utils::data(list = objects[i], envir = env)
+    object <- env[[objects[i]]]
+    lines <- readLines(paths[[i]], warn = FALSE)
     sequence <- paste0(lines[!grepl("^>", lines)], collapse = "")
     expect_equal(nrow(object), 1L)
     expect_identical(names(object), c("accver", "label", "length", "sequence"))
-    expect_identical(object$sequence, sequence)
+    expect_identical(object$accver, labels[i])
+    expect_identical(object$label, labels[i])
+    expect_identical(object$sequence, toupper(sequence))
     expect_identical(object$length, nchar(sequence))
   }
   expect_false(any(c("plasmid_sequence_example", "plasmid_feature_example",
