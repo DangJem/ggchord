@@ -32,7 +32,7 @@ test_that("gene and arrow feature use one geometry engine", {
   )
 })
 
-test_that("short arrows fall back without swallowing the interval", {
+test_that("short arrows preserve body shoulders and biological midpoint", {
   seq <- data.frame(accver = "circle", length = 1000)
   data <- data.frame(
     accver = "circle", start = 100, end = 101, strand = "+", anno = "short"
@@ -47,6 +47,12 @@ test_that("short arrows fall back without swallowing the interval", {
   block <- draw("block")
   expect_gt(nrow(auto), 3L)
   expect_true(all(is.finite(auto$x) & is.finite(auto$y)))
+  display <- ggchord_arrow_display_interval(0, 2 * pi / 1000, .9, .07, .04)
+  expect_gt(diff(display), 2 * pi / 1000)
+  expect_equal(mean(display), pi / 1000)
+  auto_polygon <- auto[auto$.component == "polygon", , drop = FALSE]
+  auto_radius <- sqrt(auto_polygon$x^2 + auto_polygon$y^2)
+  expect_gte(length(unique(round(auto_radius, 4))), 3L)
 
   medium <- data
   medium$end <- 115
@@ -89,7 +95,7 @@ test_that("all feature shape factories build and preserve source identity", {
   expect_s3_class(ggplot2::ggplot_build(p), "ggplot_built")
 })
 
-test_that("directional feature variants share arrow geometry and width", {
+test_that("directional variants share topology with type width ratios", {
   seq <- data.frame(accver = "circle", length = 1000)
   feature <- data.frame(
     accver = "circle", start = c(50, 300, 550, 800),
@@ -110,7 +116,12 @@ test_that("directional feature variants share arrow geometry and width", {
     radius <- sqrt(x$x^2 + x$y^2)
     c(vertices = nrow(x), width = diff(range(radius)))
   })
-  expect_equal(length(unique(radial_extent)), 1L)
+  extent <- do.call(rbind, radial_extent)
+  expect_equal(length(unique(extent[, "vertices"])), 1L)
+  expect_equal(
+    unname(extent[, "width"] / extent[1L, "width"]),
+    c(1, .78, .72, .65), tolerance = 1e-5
+  )
 })
 
 test_that("feature label fitting uses final font metrics and exports modes", {
@@ -188,18 +199,6 @@ test_that("dense plasmid feature labels avoid labels and feature glyphs", {
   )
   expect_identical(first$labels, second$labels)
   labels <- first$labels[first$labels$.component == "text", , drop = FALSE]
-  boxes <- ggchord_text_boxes(
-    labels, x_col = "x", y_col = "y", text_col = "text",
-    angle_col = "angle", size_col = "size", units_per_inch = .25,
-    box_padding = .005
-  )
-  overlaps <- 0L
-  if (nrow(boxes) > 1L) for (i in seq_len(nrow(boxes) - 1L)) {
-    overlaps <- overlaps + sum(ggchord_oriented_box_overlaps(
-      boxes[i, , drop = FALSE], boxes[seq.int(i + 1L, nrow(boxes)), , drop = FALSE]
-    ))
-  }
-  expect_equal(overlaps, 0L)
   expect_true(all(labels$feature_label_mode %in%
     c("inside", "adjacent", "external")))
   expect_true(any(labels$feature_label_mode == "inside"))
@@ -210,12 +209,13 @@ test_that("dense plasmid feature labels avoid labels and feature glyphs", {
     first$feature$.component == "polygon", c("anno", "lane")
   ])
   lane_of <- stats::setNames(feature_lanes$lane, feature_lanes$anno)
-  # The dense cloning cassette keeps a continuous middle band whenever the
-  # intervals do not collide; the two overlapping primers share the next band.
   expect_equal(unname(lane_of[c(
-    "M13 fwd", "T7 promoter", "MCS", "T3 promoter", "M13 rev",
-    "lac operator", "lac promoter"
-  )]), rep(1L, 7L))
+    "lacZα", "lac operator", "lac promoter", "ori", "AmpR",
+    "AmpR promoter"
+  )]), rep(0L, 6L))
+  expect_equal(unname(lane_of[c(
+    "f1 ori", "M13 fwd", "T7 promoter", "MCS", "T3 promoter", "M13 rev"
+  )]), rep(1L, 6L))
   expect_equal(unname(lane_of[c("KS primer", "SK primer")]), c(2L, 2L))
   polygon <- first$feature[first$feature$.component == "polygon", ]
   polygon$radius <- sqrt(polygon$x^2 + polygon$y^2)
@@ -223,7 +223,8 @@ test_that("dense plasmid feature labels avoid labels and feature glyphs", {
     range(x$radius)
   })
   expect_gt(band_bounds[["0"]][1L] - band_bounds[["1"]][2L], .10)
-  expect_gt(band_bounds[["1"]][1L] - band_bounds[["2"]][2L], .10)
+  expect_gt(band_bounds[["1"]][1L] - band_bounds[["2"]][2L], .015)
+  expect_lt(band_bounds[["1"]][1L] - band_bounds[["2"]][2L], .06)
   adjacent <- labels[labels$feature_label_mode == "adjacent", , drop = FALSE]
   label_radius <- sqrt(adjacent$x^2 + adjacent$y^2)
   # One label-track id means one physical circle, rather than a collection of
@@ -247,15 +248,28 @@ test_that("dense plasmid feature labels avoid labels and feature glyphs", {
   glyph_tangent <- atan2(glyphs$y, glyphs$x) * 180 / pi + 90
   glyph_tangent_error <- abs((glyphs$angle - glyph_tangent + 90) %% 180 - 90)
   expect_true(all(glyph_tangent_error < 1e-6))
+  glyph_boxes <- ggchord_text_boxes(
+    glyphs, x_col = "x", y_col = "y", text_col = "label",
+    angle_col = "angle", size_col = "size", units_per_inch = .25,
+    box_padding = .005
+  )
+  cross_label_overlaps <- 0L
+  if (nrow(glyph_boxes) > 1L) for (i in seq_len(nrow(glyph_boxes) - 1L)) {
+    other <- seq.int(i + 1L, nrow(glyph_boxes))
+    other <- other[glyphs$.arc_parent_group[other] !=
+      glyphs$.arc_parent_group[i]]
+    if (length(other)) cross_label_overlaps <- cross_label_overlaps + sum(
+      ggchord_oriented_box_overlaps(
+        glyph_boxes[i, , drop = FALSE], glyph_boxes[other, , drop = FALSE]
+      )
+    )
+  }
+  expect_equal(cross_label_overlaps, 0L)
   long_glyphs <- glyphs[glyphs$label != " " & glyphs$source_row ==
     labels$source_row[labels$label == "AmpR promoter"], , drop = FALSE]
   expect_gt(diff(range(long_glyphs$angle)), 1)
   internal <- get_chord_layout(plot)
   internal_labels <- internal$gene_labels
-  internal_boxes <- ggchord_text_boxes(
-    internal_labels, units_per_inch = internal$text_units_per_inch,
-    box_padding = .04
-  )
   polygons <- split(
     internal$gene_polys[
       internal$gene_polys$.component == "polygon", , drop = FALSE
@@ -265,8 +279,12 @@ test_that("dense plasmid feature labels avoid labels and feature glyphs", {
     ]
   )
   for (i in seq_len(nrow(internal_labels))) {
-    expect_false(ggchord_label_hits_features(
-      internal_boxes[i, , drop = FALSE], polygons,
+    internal_boxes <- ggchord_arc_text_layout(
+      internal_labels[i, , drop = FALSE],
+      units_per_inch = internal$text_units_per_inch, box_padding = .04
+    )$boxes
+    expect_false(ggchord_boxes_hit_features(
+      internal_boxes, polygons,
       source_row = internal_labels$source_row[i],
       allow_own = internal_labels$feature_label_mode[i] == "inside"
     ))

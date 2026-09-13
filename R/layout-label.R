@@ -212,7 +212,7 @@ ggchord_layout_label_step <- quote({
         gene_label_segments <- ggchord_clip_segments_to_labels(
           gene_label_segments, gene_labels,
           units_per_inch = gene_label_clip_units,
-          include_own = identical(gene_label_layout, "arc"),
+          include_own = gene_label_layout %in% c("arc", "feature"),
           overlap = gene_label_segment_overlap,
           overlap_alpha = gene_label_segment_overlap_alpha
         )

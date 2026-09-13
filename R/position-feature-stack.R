@@ -13,15 +13,15 @@ PositionFeatureStack <- ggplot2::ggproto(
 #' Stack overlapping genes or features on radial tracks
 #'
 #' Assigns overlapping intervals on the same sequence and side to radial lanes.
-#' Explicit display priority is ordered first. Structural spans are allocated
-#' by decreasing length; local short features then follow genomic order so
-#' neighbouring, non-overlapping annotations preferentially continue on the
-#' same available lane. Feature type, name and colour never choose a lane.
+#' Explicit display priority is ordered first, then intervals by decreasing
+#' length. Every interval takes the nearest collision-free lane; feature type,
+#' name and colour never choose a lane.
 #' The resulting anchors are shared with gene label layers because stacking is
 #' solved before polygons and labels are generated.
 #'
 #' @param spacing Positive minimum radial distance between adjacent feature
-#'   lanes. Circular plasmid layout may enlarge it to preserve label corridors.
+#'   lanes. Circular plasmid layout enlarges the first transition into a main
+#'   label corridor while keeping deeper overlapping lanes compact.
 #' @param side Legacy track-side selector retained for compatibility when
 #'   `base_position` is `NULL`. Its historical names retain their existing
 #'   geometry.

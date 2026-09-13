@@ -118,20 +118,29 @@ if (mode == "genome") {
       c("inside", "adjacent", "external")),
       any(layout$gene_labels$feature_label_mode == "inside"),
       any(layout$gene_labels$feature_label_mode != "inside"))
-    stopifnot(all(ggchord:::ggchord_label_conflict_counts(
-      layout$gene_labels, units_per_inch = layout$text_units_per_inch,
-      box_padding = .005
-    ) == 0L))
-    boxes <- ggchord:::ggchord_text_boxes(
+    arc_layout <- ggchord:::ggchord_arc_text_layout(
       layout$gene_labels, units_per_inch = layout$text_units_per_inch,
       box_padding = .04
     )
+    boxes <- arc_layout$boxes
+    if (nrow(boxes) > 1L) {
+      for (j in seq_len(nrow(boxes) - 1L)) {
+        other <- seq.int(j + 1L, nrow(boxes))
+        other <- other[arc_layout$owners[other] != arc_layout$owners[j]]
+        if (length(other)) stopifnot(!any(
+          ggchord:::ggchord_oriented_box_overlaps(
+            boxes[j, , drop = FALSE], boxes[other, , drop = FALSE]
+          )
+        ))
+      }
+    }
     polygon_rows <- layout$gene_polys$.component == "polygon"
     polygons <- split(layout$gene_polys[polygon_rows, , drop = FALSE],
       layout$gene_polys$group[polygon_rows])
     for (j in seq_len(nrow(layout$gene_labels))) {
-      stopifnot(!ggchord:::ggchord_label_hits_features(
-        boxes[j, , drop = FALSE], polygons,
+      own_boxes <- boxes[arc_layout$owners == j, , drop = FALSE]
+      stopifnot(!ggchord:::ggchord_boxes_hit_features(
+        own_boxes, polygons,
         source_row = layout$gene_labels$source_row[j],
         allow_own = layout$gene_labels$feature_label_mode[j] == "inside"
       ))

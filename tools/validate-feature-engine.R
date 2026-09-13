@@ -149,8 +149,11 @@ for (name in names(fixtures)) {
     lane_of <- stats::setNames(feature_lanes$lane, feature_lanes$anno)
     stopifnot(
       all(lane_of[c(
-        "M13 fwd", "T7 promoter", "MCS", "T3 promoter", "M13 rev",
-        "lac operator", "lac promoter"
+        "lacZα", "lac operator", "lac promoter", "ori", "AmpR",
+        "AmpR promoter"
+      )] == 0L),
+      all(lane_of[c(
+        "f1 ori", "M13 fwd", "T7 promoter", "MCS", "T3 promoter", "M13 rev"
       )] == 1L),
       all(lane_of[c("KS primer", "SK primer")] == 2L),
       !any(text$feature_label_mode == "external")
@@ -164,7 +167,8 @@ for (name in names(fixtures)) {
     })
     stopifnot(
       band_bounds[["0"]][1L] - band_bounds[["1"]][2L] > .10,
-      band_bounds[["1"]][1L] - band_bounds[["2"]][2L] > .10
+      band_bounds[["1"]][1L] - band_bounds[["2"]][2L] > .015,
+      band_bounds[["1"]][1L] - band_bounds[["2"]][2L] < .06
     )
     adjacent <- text[text$feature_label_mode == "adjacent", , drop = FALSE]
     radius <- sqrt(adjacent$x^2 + adjacent$y^2)

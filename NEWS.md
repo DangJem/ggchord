@@ -7,22 +7,26 @@
   gutters and deeper label tracks before becoming external, with short leaders
   for materially displaced internal labels. Compact, promoter and primer
   arrows use the same annular-arrow factory as other directional features,
-  the same requested thickness, and their real genomic interval; the common
-  short-arrow rule alone contracts glyphs that cannot contain a normal head.
+  with narrower type-specific thicknesses. Extremely short arrows are widened
+  symmetrically around their real midpoint for display, retaining a body,
+  shoulders and a head without changing their genomic start/end or leader
+  anchor.
   Short dotted/dashed segment boundaries are emitted as explicit broken
   geometry so graphics devices cannot silently render them solid. Plasmid axis
   ticks are longer, labels remain inside the backbone, and the automatic major
   tick target is now five.
-* Enlarged circular feature-band separation into text-bearing corridors. Each
-  corridor is subdivided into as many fixed-radius label tracks as its measured
-  height permits. Feature labels select a radius first, then derive their
-  position and tangent from that circle; labels placed on a deeper radius use a
-  leader back to the owning outer feature instead of drifting around the map.
+* Circular feature bands now use non-uniform radial spacing: the transition
+  from the backbone-near band to the nested cluster reserves a two-line main
+  text corridor, deeper overlapping bands keep compact geometric clearance,
+  and the deepest band owns shared label-only tracks. Feature labels select a
+  radius before deriving their position and tangent; labels crossing feature
+  bands use a leader clipped to the curved glyph envelope.
 * Circular feature-track labels now use a genuinely curved baseline. After a
   track radius is selected, the renderer measures individual glyph advances,
   distributes the characters along that circle, and derives a separate local
-  tangent angle for every character. The original straight-string row remains
-  available as label metadata and collision geometry but is not drawn.
+  tangent angle for every character. Collision detection and leader clipping
+  use the union of those same per-character envelopes rather than a straight
+  whole-string box; the original row remains metadata and is not drawn.
 * Added `coord_circular()` as an independent coordinate contract for one
   circular sequence. It supports a closed circle (`gap = 0`), a degree-based
   opening, genomic-origin rotation, clockwise/counterclockwise direction,
@@ -71,8 +75,9 @@
   create an internal boundary.
   Its default position assigns overlapping intervals to generic collision
   slots: explicit `display_priority`/`prioritized_display` comes first,
-  structural spans stabilize the outer bands, and short local annotations
-  follow genomic order so a non-overlapping cassette can continue on one lane.
+  then the longest intervals are allocated first and each subsequent interval
+  takes the nearest collision-free lane. Non-overlapping neighbours may share
+  a lane, but continuity never carries a cassette beyond its covering parent.
   Feature type, name, and colour no longer choose a radial lane, and
   `find_common_features()` no longer emits semantic `preferred_lane` hints.
   The feature-shape vocabulary includes `compact_arrow`,

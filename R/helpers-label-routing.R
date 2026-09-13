@@ -149,8 +149,11 @@ ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
         track = radial_indices + 1L, tangent = tangent_candidates
       )
     }
-    candidates$score <- (candidates$track - 1L) * 3.2 +
-      abs(candidates$tangent) * .62
+    # Prefer another real radius over walking a label far around one circle.
+    # Dense plasmid cassettes are resolved as radial text levels first; small
+    # tangential nudges are only the final tie-breaker within those levels.
+    candidates$score <- (candidates$track - 1L) * .82 +
+      abs(candidates$tangent) * 1.05
     candidates <- candidates[order(candidates$score,
       abs(candidates$tangent), candidates$tangent < 0), , drop = FALSE]
     if (starts_inside) {
@@ -199,16 +202,19 @@ ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
             tangent[2] * tangent_index * tangent_step
         }
       }
-      box <- ggchord_text_boxes(
+      box <- if (concentric_circle) {
+        ggchord_arc_text_layout(
+          candidate, units_per_inch = units_per_inch, box_padding = .04
+        )$boxes
+      } else ggchord_text_boxes(
         candidate, units_per_inch = units_per_inch, box_padding = .04
       )
-      label_collision <- nrow(placed) &&
-        any(ggchord_oriented_box_overlaps(box, placed))
-      feature_collision <- ggchord_label_hits_features(
+      label_collision <- ggchord_boxes_overlap_any(box, placed)
+      feature_collision <- ggchord_boxes_hit_features(
         box, polygons, source_row = gl$source_row[i],
         allow_own = starts_inside && track_index == 0L
       )
-      corners <- ggchord_box_corners(box)
+      corners <- ggchord_boxes_corners(box)
       central_collision <- length(seq_arcs) == 1L &&
         min(sqrt(rowSums(corners^2))) < .26
       backbone_collision <- !(starts_inside && track_index == 0L) &&

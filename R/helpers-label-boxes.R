@@ -304,6 +304,95 @@ ggchord_text_boxes <- function(df,
   )
 }
 
+# Lay one or more labels out glyph by glyph on the circle selected by their
+# text anchor. This is shared by collision detection, leader clipping and the
+# renderer so all three use the same curved baseline and local tangents.
+ggchord_arc_text_layout <- function(text, units_per_inch = .35,
+                                     box_padding = 0) {
+  if (!nrow(text)) return(list(glyphs = data.frame(), boxes =
+    ggchord_text_boxes(data.frame()), owners = integer()))
+  glyphs <- list()
+  boxes <- list()
+  owners <- integer()
+  for (i in seq_len(nrow(text))) {
+    chars <- strsplit(enc2utf8(as.character(text$text[i])), "", fixed = TRUE)[[1L]]
+    if (!length(chars) || is.na(text$text[i]) || !nzchar(text$text[i])) next
+    measured <- text[rep(i, length(chars)), , drop = FALSE]
+    measured$text <- chars
+    measured$text_x <- 0
+    measured$text_y <- 0
+    measured$text_angle <- 0
+    measured$hjust <- .5
+    measured$vjust <- .5
+    metrics <- ggchord_text_boxes(
+      measured, units_per_inch = units_per_inch, box_padding = 0
+    )
+    advance <- metrics$w
+    fallback <- max(metrics$h, na.rm = TRUE) * .34
+    advance[!is.finite(advance) | advance <= 0] <- fallback
+    tracking <- max(.0008, median(metrics$h, na.rm = TRUE) * .018)
+    total <- sum(advance) + tracking * max(0, length(chars) - 1L)
+    along <- cumsum(c(0, head(advance + tracking, -1L))) + advance / 2 -
+      total / 2
+    radius <- sqrt(text$text_x[i]^2 + text$text_y[i]^2)
+    centre_angle <- atan2(text$text_y[i], text$text_x[i])
+    increasing_tangent <- (centre_angle * 180 / pi + 90) %% 360
+    centre_orientation <- text$text_angle[i] %% 360
+    orientation_delta <- abs((centre_orientation - increasing_tangent + 180) %%
+      360 - 180)
+    direction <- if (orientation_delta > 90) -1 else 1
+    glyph_angle <- centre_angle + direction * along / max(radius, .1)
+    rotation <- glyph_angle * 180 / pi + if (direction > 0) 90 else -90
+    upright <- ggchord_normalize_text_orientation(
+      rotation, rep(.5, length(chars))
+    )
+    glyph <- text[rep(i, length(chars)), , drop = FALSE]
+    glyph$text_x <- radius * cos(glyph_angle)
+    glyph$text_y <- radius * sin(glyph_angle)
+    glyph$text_angle <- upright$angle
+    glyph$hjust <- .5
+    glyph$vjust <- .5
+    glyph$text <- chars
+    glyph$.arc_parent_group <- text$group[i] %||% i
+    glyph$.arc_glyph_index <- seq_along(chars)
+    glyphs[[length(glyphs) + 1L]] <- glyph
+    boxes[[length(boxes) + 1L]] <- ggchord_text_boxes(
+      glyph, units_per_inch = units_per_inch, box_padding = box_padding
+    )
+    owners <- c(owners, rep(i, length(chars)))
+  }
+  list(
+    glyphs = if (length(glyphs)) ggchord_rbind_fill(glyphs) else data.frame(),
+    boxes = if (length(boxes)) do.call(rbind, boxes) else
+      ggchord_text_boxes(data.frame()),
+    owners = owners
+  )
+}
+
+ggchord_boxes_overlap_any <- function(candidate, other) {
+  if (!nrow(candidate) || is.null(other) || !nrow(other)) return(FALSE)
+  any(vapply(seq_len(nrow(candidate)), function(i) {
+    any(ggchord_oriented_box_overlaps(candidate[i, , drop = FALSE], other))
+  }, logical(1L)))
+}
+
+ggchord_boxes_hit_features <- function(boxes, polygons, source_row = NA_integer_,
+                                        allow_own = FALSE) {
+  if (!nrow(boxes)) return(FALSE)
+  any(vapply(seq_len(nrow(boxes)), function(i) {
+    ggchord_label_hits_features(
+      boxes[i, , drop = FALSE], polygons, source_row, allow_own
+    )
+  }, logical(1L)))
+}
+
+ggchord_boxes_corners <- function(boxes) {
+  if (!nrow(boxes)) return(matrix(numeric(), ncol = 2L))
+  do.call(rbind, lapply(seq_len(nrow(boxes)), function(i) {
+    ggchord_box_corners(boxes[i, , drop = FALSE])
+  }))
+}
+
 # Test one oriented text rectangle against zero or more oriented rectangles.
 # A cheap axis-aligned prefilter is followed by the separating-axis theorem;
 # this avoids treating a diagonal label's large empty corner triangles as

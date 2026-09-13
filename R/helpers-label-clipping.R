@@ -21,11 +21,30 @@ ggchord_clip_segments_to_labels <- function(segments, gl,
   if (identical(overlap, "show") && !isTRUE(include_own)) {
     return(annotate(segments))
   }
-  boxes <- ggchord_text_boxes(gl, units_per_inch = units_per_inch)
+  curved <- if ("feature_label_mode" %in% names(gl)) {
+    gl$feature_label_mode %in% c("inside", "adjacent") &
+      !grepl("\n", gl$text, fixed = TRUE) & !is.na(gl$text) & nzchar(gl$text)
+  } else rep(FALSE, nrow(gl))
+  box_parts <- list()
+  box_owner <- integer()
+  if (any(curved)) {
+    arc <- ggchord_arc_text_layout(
+      gl[curved, , drop = FALSE], units_per_inch = units_per_inch
+    )
+    box_parts[[length(box_parts) + 1L]] <- arc$boxes
+    box_owner <- c(box_owner, which(curved)[arc$owners])
+  }
+  straight <- which(!curved & !is.na(gl$text) & nzchar(gl$text))
+  if (length(straight)) {
+    box_parts[[length(box_parts) + 1L]] <- ggchord_text_boxes(
+      gl[straight, , drop = FALSE], units_per_inch = units_per_inch
+    )
+    box_owner <- c(box_owner, straight)
+  }
+  boxes <- if (length(box_parts)) do.call(rbind, box_parts) else
+    ggchord_text_boxes(data.frame())
   pad <- padding * units_per_inch
-  angles <- gl$text_angle %||% rep(0, nrow(gl))
-  angles[!is.finite(angles)] <- 0
-  visible <- !is.na(gl$text) & nzchar(gl$text)
+  angles <- boxes$angle * 180 / pi
   out <- list()
 
   inside_interval <- function(origin, delta, lower, upper, tol = 1e-10) {
@@ -41,12 +60,12 @@ ggchord_clip_segments_to_labels <- function(segments, gl,
     dy <- segments$y1[s] - segments$y0[s]
     cuts <- data.frame(start = numeric(), end = numeric(), hard = logical())
     others <- if (identical(overlap, "show")) {
-      intersect(which(visible), segments$group[s])
+      which(box_owner == segments$group[s])
     } else {
-      which(visible)
+      seq_len(nrow(boxes))
     }
     if (!isTRUE(include_own)) {
-      others <- setdiff(others, segments$group[s])
+      others <- others[box_owner[others] != segments$group[s]]
     }
     for (i in others) {
       # Intersect in the label's own coordinate system. Using its
@@ -76,8 +95,19 @@ ggchord_clip_segments_to_labels <- function(segments, gl,
         cuts,
         data.frame(
           start = cut_start, end = cut_end,
-          hard = isTRUE(include_own) && i == segments$group[s]
+          hard = isTRUE(include_own) && box_owner[i] == segments$group[s]
         )
+      )
+    }
+
+    # A leader aimed at its own curved label stops at the first glyph envelope
+    # it reaches. Treating the spaces between glyph boxes as visible holes
+    # would otherwise fragment one short leader into many tiny line pieces.
+    if (any(cuts$hard)) {
+      first_own_hit <- min(cuts$start[cuts$hard])
+      cuts <- rbind(
+        cuts[!cuts$hard, , drop = FALSE],
+        data.frame(start = first_own_hit, end = 1, hard = TRUE)
       )
     }
 
