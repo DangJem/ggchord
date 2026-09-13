@@ -146,7 +146,7 @@ for (name in names(fixtures)) {
     raw_layout <- get_chord_layout(plot)
     major_ticks <- raw_layout$axis_ticks[raw_layout$axis_ticks$is_major, ]
     stopifnot(
-      all(abs(sqrt(major_ticks$x0^2 + major_ticks$y0^2) - 1.0125) < 1e-6),
+      all(abs(sqrt(major_ticks$x0^2 + major_ticks$y0^2) - .9875) < 1e-6),
       all(sqrt(major_ticks$label_x^2 + major_ticks$label_y^2) < .969)
     )
     site_ticks <- layout$restriction[

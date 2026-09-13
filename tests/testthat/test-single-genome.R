@@ -55,7 +55,7 @@ test_that("coord_circular owns a one-sequence circular contract", {
   ))
   expect_equal(
     sqrt(major$x0^2 + major$y0^2),
-    rep(1 + .025 / 2, nrow(major)), tolerance = 1e-6
+    rep(1 - .025 / 2, nrow(major)), tolerance = 1e-6
   )
   expect_lt(
     mean(sqrt(major$label_x^2 + major$label_y^2)),

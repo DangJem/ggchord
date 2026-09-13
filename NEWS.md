@@ -27,8 +27,8 @@
   cleavage coordinates at the same join are merged instead of overdrawn.
   Short dotted/dashed segment boundaries are emitted as explicit broken
   geometry so graphics devices cannot silently render them solid. Plasmid axis
-  ticks now start at the visible outer backbone boundary and cross into the
-  circle; labels retain additional clearance from the inner line, and the
+  ticks now start at the visible inner backbone boundary and extend towards
+  the centre; labels retain additional clearance from that inner line, and the
   automatic major tick target is now five. Restriction-site ticks likewise
   begin at the visible outer edge rather than the sequence centreline.
 * `view_ggchord()` now defaults to the pBluescript comparison canvas of

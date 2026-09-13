@@ -104,16 +104,17 @@ ggchord_layout_axis_step <- quote({
       len <- ifelse(pts$is_major, axisMajLen[id], axisMinLen[id])
       len[origin_tick] <- len[origin_tick] * 2.2
       if (isTRUE(circular)) {
-        # Circular tick marks begin at the visible outer edge of the backbone,
-        # cross the complete double/band backbone, and finish inside it. The
+        # Circular tick marks begin at the visible inner edge of the backbone
+        # and extend towards the centre. Restriction-site leaders use the outer
+        # edge instead; these are deliberately separate attachment contracts.
         # The curve mapper's radius parameter follows its left normal; for the
         # circular reference this means subtracting a signed outward offset.
         at_offset <- function(offset) map_to_curve_many(
           angle, ref$r0 - offset, ref
         )
-        base <- at_offset(seqBackboneOuter)
-        tip <- at_offset(axisGap[id] - len)
-        lbl <- at_offset(axisGap[id] - len - labelOffset[id])
+        base <- at_offset(-seqBackboneOuter)
+        tip <- at_offset(-seqBackboneOuter - len)
+        lbl <- at_offset(-seqBackboneOuter - len - labelOffset[id])
       } else {
         base <- map_to_curve_many(angle, r0, ref)
         tip <- map_to_curve_many(angle, r0 + len * dir, ref)
