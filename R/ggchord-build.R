@@ -646,8 +646,8 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   axis_unit_data <- ggchord_unit_inches
   axisGap    <- process_sequence_param(axis_unit_data(axis_theme$gap),
                                        seqs, "axis.gap", 0.04)
-  axisMaj    <- process_sequence_param(axis_params$axis_tick_major_number %||% 3,
-                                       seqs, "axis_tick_major_number", 3)
+  axisMaj    <- process_sequence_param(axis_params$axis_tick_major_number %||% 5,
+                                       seqs, "axis_tick_major_number", 5)
   axisMajLen <- process_sequence_param(axis_unit_data(axis_theme$ticks.length),
                                        seqs, "axis.ticks.length", 0.02)
   axisMin    <- process_sequence_param(axis_params$axis_tick_minor_number %||% 4,

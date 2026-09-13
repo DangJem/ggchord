@@ -58,6 +58,12 @@ feature_geom <- ggplot2::ggproto(
         boundaries$linetype[explicit] <-
           as.character(boundaries$boundary_linetype[explicit])
       }
+      if ("boundary_draw_linetype" %in% names(boundaries)) {
+        draw_style <- !is.na(boundaries$boundary_draw_linetype) &
+          nzchar(as.character(boundaries$boundary_draw_linetype))
+        boundaries$linetype[draw_style] <-
+          as.character(boundaries$boundary_draw_linetype[draw_style])
+      }
       grobs[[length(grobs) + 1L]] <- ggplot2::GeomPath$draw_panel(
         boundaries, panel_params, coord, lineend = "butt",
         linejoin = "round", na.rm = na.rm

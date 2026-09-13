@@ -25,8 +25,8 @@ ggchord_feature_classes <- function(type) {
 
 ggchord_feature_width_factor <- function(shape) {
   values <- c(
-    arrow = 1, compact_arrow = .72, promoter_arrow = .55,
-    primer_arrow = .48, marker = .38, block = .72,
+    arrow = 1, compact_arrow = 1, promoter_arrow = 1,
+    primer_arrow = 1, marker = .38, block = .72,
     chevron = .68, lollipop = .55
   )
   out <- unname(values[as.character(shape)])
@@ -86,15 +86,6 @@ ggchord_shape_marker <- function(a_start, a_end, r0, width) {
     angle = c(mid - half, mid, mid + half, mid),
     radius = c(r0, r0 + width / 2, r0, r0 - width / 2)
   ))
-}
-
-ggchord_minimum_display_span <- function(a_start, a_end, r0, width,
-                                          multiple) {
-  span <- a_end - a_start
-  direction <- if (span < 0) -1 else 1
-  visual_span <- max(abs(span), width * multiple / max(abs(r0), .1))
-  mid <- (a_start + a_end) / 2
-  c(mid - direction * visual_span / 2, mid + direction * visual_span / 2)
 }
 
 ggchord_shape_arrow <- function(a_start, a_end, r0, width,
@@ -225,42 +216,19 @@ ggchord_feature_geometry <- function(shape, a_start, a_end, r0, width,
                                      draw_head = TRUE,
                                      draw_start_head = FALSE,
                                      bidirectional = FALSE) {
-  if (shape %in% c("compact_arrow", "promoter_arrow", "primer_arrow")) {
-    available <- abs(a_end - a_start) * max(abs(r0), .1)
-    if (available < width * .42) shape <- "marker"
-  }
   if (identical(shape, "marker")) {
     return(ggchord_shape_marker(a_start, a_end, r0, width))
   }
-  if (identical(shape, "compact_arrow")) {
+  if (shape %in% c("compact_arrow", "promoter_arrow", "primer_arrow")) {
+    # Every directional feature uses the same annular-arrow construction and
+    # the same requested thickness. The common short-feature branch below
+    # contracts a glyph only when its true interval cannot contain a normal
+    # arrowhead; compact types are never widened to a fabricated interval.
     return(ggchord_shape_arrow(
       a_start, a_end, r0, width,
-      head_length = min(arrow_head_length * .78,
-        abs(a_end - a_start) * max(abs(r0), .1) * .38),
-      head_width = min(arrow_head_width, 1.18),
-      short_feature = short_feature, draw_head = draw_head
-    ))
-  }
-  if (identical(shape, "promoter_arrow")) {
-    display <- ggchord_minimum_display_span(
-      a_start, a_end, r0, width, multiple = 2.6
-    )
-    return(ggchord_shape_arrow(
-      display[1L], display[2L], r0, width,
-      head_length = min(arrow_head_length * .72,
-        abs(display[2L] - display[1L]) * max(abs(r0), .1) * .34),
-      head_width = 1, short_feature = "block", draw_head = draw_head
-        ))
-  }
-  if (identical(shape, "primer_arrow")) {
-    display <- ggchord_minimum_display_span(
-      a_start, a_end, r0, width, multiple = 3.0
-    )
-    return(ggchord_shape_arrow(
-      display[1L], display[2L], r0, width,
-      head_length = min(arrow_head_length * .60,
-        abs(display[2L] - display[1L]) * max(abs(r0), .1) * .42),
-      head_width = 1.08, short_feature = "block", draw_head = draw_head
+      head_length = arrow_head_length,
+      head_width = arrow_head_width,
+      short_feature = "auto", draw_head = draw_head
     ))
   }
   if (identical(shape, "arrow") && isTRUE(bidirectional) &&

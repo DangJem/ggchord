@@ -12,10 +12,11 @@ PositionFeatureStack <- ggplot2::ggproto(
 
 #' Stack overlapping genes or features on radial tracks
 #'
-#' Assigns overlapping intervals on the same sequence and side to the minimum
-#' number of radial lanes. Explicit display priority is ordered first, followed
-#' by decreasing genomic span. Non-overlapping intervals reuse the nearest lane;
-#' feature type, name and colour never choose a lane.
+#' Assigns overlapping intervals on the same sequence and side to radial lanes.
+#' Explicit display priority is ordered first. Structural spans are allocated
+#' by decreasing length; local short features then follow genomic order so
+#' neighbouring, non-overlapping annotations preferentially continue on the
+#' same available lane. Feature type, name and colour never choose a lane.
 #' The resulting anchors are shared with gene label layers because stacking is
 #' solved before polygons and labels are generated.
 #'

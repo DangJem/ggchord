@@ -194,14 +194,7 @@ key_glyph_feature <- function(data, params, size) {
     return(draw_key_gene_arrow(data, params, size))
   }
   if (shape %in% c("compact_arrow", "promoter_arrow", "primer_arrow")) {
-    half_height <- switch(shape,
-      compact_arrow = .14, promoter_arrow = .10, primer_arrow = .075)
-    return(grid::polygonGrob(
-      x = grid::unit(c(.12, .66, .66, .90, .66, .66, .12), "npc"),
-      y = grid::unit(.5 + c(-half_height, -half_height, -1.55 * half_height,
-        0, 1.55 * half_height, half_height, half_height), "npc"),
-      gp = gp
-    ))
+    return(draw_key_gene_arrow(data, params, size))
   }
   if (identical(shape, "marker")) {
     return(grid::polygonGrob(

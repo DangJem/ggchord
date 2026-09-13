@@ -29,10 +29,14 @@ ggchord_layout_axis_step <- quote({
       ref <- seq_refs[[id]]
       r0 <- ref$r0 - axisGap[id]
 
-      automatic_majors <- is.null(axis_breaks[[id]])
       majors <- axis_breaks[[id]] %||% breakPointsFunc(lens[id], axisMaj[id])
-      if (isTRUE(circular) && automatic_majors) {
-        majors <- majors[majors < lens[id]]
+      major_labels <- axis_labels[[id]]
+      if (isTRUE(circular) && any(abs(majors) < sqrt(.Machine$double.eps))) {
+        # Zero and sequence length are the same circular seam. Keep only the
+        # zero-side tick even when a default ggplot2 scale supplied both.
+        keep_major <- abs(majors - lens[id]) >= sqrt(.Machine$double.eps)
+        majors <- majors[keep_major]
+        if (!is.null(major_labels)) major_labels <- major_labels[keep_major]
       }
       minors <- axis_minor_breaks[[id]]
       if (is.null(minors)) {
@@ -40,7 +44,7 @@ ggchord_layout_axis_step <- quote({
           seq(majors[i], majors[i + 1], length.out = axisMin[id] + 2)[-c(1, axisMin[id] + 2)]
         }))
       }
-      major_labels <- axis_labels[[id]] %||% as.character(majors)
+      major_labels <- major_labels %||% as.character(majors)
       pts <- data.frame(
         pos = c(majors, minors),
         is_major = c(rep(TRUE, length(majors)), rep(FALSE, length(minors))),

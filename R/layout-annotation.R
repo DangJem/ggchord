@@ -254,24 +254,37 @@ ggchord_layout_annotation_step <- quote({
               boundary_piece, sequence_length, orientation[sid],
               starts[sid], ends[sid]
             )[1L]
-            boundary_xy <- map_to_curve_many(
-              rep(boundary_angle, 2L),
-              c(r0 - width / 2, r0 + width / 2), ref
-            )
-            part_index <- part_index + 1L
-            gene_poly_list[[length(gene_poly_list) + 1L]] <- data.frame(
-              x = boundary_xy[, 1L], y = boundary_xy[, 2L],
-              group = i * 100L + part_index, anno = anno,
-              strand = strand, feature_shape = feature_shape,
-              position_name = as.character(gene$.position_name %||% "identity"),
-              base_offset = as.numeric(gene$.position_base_offset %||% 0),
-              lane = as.integer(gene$.feature_stack_lane %||% 0L),
-              lane_offset = as.numeric(gene$.position_lane_offset %||% 0),
-              normal_offset = as.numeric(gene$.normal_offset %||% 0),
-              boundary_linetype = boundary_styles[boundary_index],
-              source_row = gene$.source_row, ord = seq_len(nrow(boundary_xy)),
-              .component = "boundary", stringsAsFactors = FALSE
-            )
+            boundary_style <- boundary_styles[boundary_index]
+            pattern <- if (identical(boundary_style, "dotted")) {
+              matrix(c(0, .13, .29, .42, .58, .71, .87, 1), ncol = 2,
+                byrow = TRUE)
+            } else if (identical(boundary_style, "dashed")) {
+              matrix(c(0, .38, .62, 1), ncol = 2, byrow = TRUE)
+            } else matrix(c(0, 1), ncol = 2)
+            for (pattern_row in seq_len(nrow(pattern))) {
+              radii <- r0 - width / 2 + pattern[pattern_row, ] * width
+              boundary_xy <- map_to_curve_many(
+                rep(boundary_angle, 2L), radii, ref
+              )
+              part_index <- part_index + 1L
+              gene_poly_list[[length(gene_poly_list) + 1L]] <- data.frame(
+                x = boundary_xy[, 1L], y = boundary_xy[, 2L],
+                group = i * 100L + part_index, anno = anno,
+                strand = strand, feature_shape = feature_shape,
+                position_name = as.character(gene$.position_name %||% "identity"),
+                base_offset = as.numeric(gene$.position_base_offset %||% 0),
+                lane = as.integer(gene$.feature_stack_lane %||% 0L),
+                lane_offset = as.numeric(gene$.position_lane_offset %||% 0),
+                normal_offset = as.numeric(gene$.normal_offset %||% 0),
+                boundary_linetype = boundary_style,
+                boundary_draw_linetype = if (
+                  boundary_style %in% c("dotted", "dashed")) "solid" else
+                    boundary_style,
+                source_row = gene$.source_row,
+                ord = seq_len(nrow(boundary_xy)),
+                .component = "boundary", stringsAsFactors = FALSE
+              )
+            }
           }
         }
       }
@@ -416,7 +429,7 @@ ggchord_layout_annotation_step <- quote({
                 "compact_arrow", "promoter_arrow", "primer_arrow", "marker"
               )
               adjacent_gap <- measured_label$h *
-                if (compact_shape) .76 else .64
+                if (compact_shape) 1.05 else .64
               adjacent_offset <- width / 2 + adjacent_gap + .014
               inward_x <- -center_pt[1L] / centre_length
               inward_y <- -center_pt[2L] / centre_length

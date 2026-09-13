@@ -141,29 +141,40 @@ for (name in names(fixtures)) {
   )
   stopifnot(all(is.finite(layout$feature$x)), all(is.finite(layout$feature$y)))
   text <- layout$labels[layout$labels$.component == "text", , drop = FALSE]
+  if (identical(as.character(fixture$sequence$label[1L]),
+      "pBluescript II SK(+)")) {
+    feature_lanes <- unique(layout$feature[
+      layout$feature$.component == "polygon", c("anno", "lane")
+    ])
+    lane_of <- stats::setNames(feature_lanes$lane, feature_lanes$anno)
+    stopifnot(
+      all(lane_of[c(
+        "M13 fwd", "T7 promoter", "MCS", "T3 promoter", "M13 rev",
+        "lac operator", "lac promoter"
+      )] == 1L),
+      all(lane_of[c("KS primer", "SK primer")] == 2L),
+      !any(text$feature_label_mode == "external")
+    )
+    adjacent <- text[text$feature_label_mode == "adjacent", , drop = FALSE]
+    radius <- sqrt(adjacent$x^2 + adjacent$y^2)
+    stopifnot(all(tapply(radius, adjacent$label_track,
+      function(value) diff(range(value))) < 1e-8))
+    tangent <- atan2(adjacent$y, adjacent$x) * 180 / pi + 90
+    error <- abs((adjacent$angle - tangent + 90) %% 180 - 90)
+    stopifnot(all(error < 1e-6))
+  }
   feature_external <- text[
     text$feature_label_mode == "external", , drop = FALSE
   ]
-  restriction_external <- if (!is.null(layout$restriction)) {
-    layout$restriction[
-      layout$restriction$.component == "label", , drop = FALSE
-    ]
-  } else data.frame()
-  external <- rbind(
-    if (nrow(feature_external)) data.frame(
+  # Restriction labels own their circular contour/fan and must not be folded
+  # into the feature-callout collision rail. Validate feature callouts only;
+  # restriction geometry has its own ordered-fan checks.
+  external <- if (nrow(feature_external)) data.frame(
       text_x = feature_external$x, text_y = feature_external$y,
       text = feature_external$label, size = feature_external$size,
       hjust = feature_external$hjust, vjust = feature_external$vjust,
       text_angle = 0
-    ),
-    if (nrow(restriction_external)) data.frame(
-      text_x = restriction_external$x, text_y = restriction_external$y,
-      text = restriction_external$label, size = restriction_external$size,
-      hjust = restriction_external$hjust,
-      vjust = restriction_external$vjust, text_angle = 0
-    )
-  )
-  if (is.null(external)) external <- data.frame()
+    ) else data.frame()
   if (nrow(external) > 1L) {
     boxes <- ggchord:::ggchord_text_boxes(
       external, units_per_inch = .35, box_padding = .015,

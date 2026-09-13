@@ -89,6 +89,30 @@ test_that("all feature shape factories build and preserve source identity", {
   expect_s3_class(ggplot2::ggplot_build(p), "ggplot_built")
 })
 
+test_that("directional feature variants share arrow geometry and width", {
+  seq <- data.frame(accver = "circle", length = 1000)
+  feature <- data.frame(
+    accver = "circle", start = c(50, 300, 550, 800),
+    end = c(130, 380, 630, 880), strand = "+",
+    anno = letters[1:4],
+    feature_shape = c(
+      "arrow", "compact_arrow", "promoter_arrow", "primer_arrow"
+    )
+  )
+  out <- export_ggchord_layout(
+    ggchord(seq, validate = "none") + geom_seq() +
+      geom_feature(data = feature, position = "plasmid", feature_width = .07) +
+      coord_circular(),
+    include = "feature"
+  )$feature
+  out <- out[out$.component == "polygon", , drop = FALSE]
+  radial_extent <- lapply(split(out, out$source_row), function(x) {
+    radius <- sqrt(x$x^2 + x$y^2)
+    c(vertices = nrow(x), width = diff(range(radius)))
+  })
+  expect_equal(length(unique(radial_extent)), 1L)
+})
+
 test_that("feature label fitting uses final font metrics and exports modes", {
   seq <- data.frame(accver = "circle", length = 1000)
   feature <- data.frame(
@@ -180,6 +204,29 @@ test_that("dense plasmid feature labels avoid labels and feature glyphs", {
     c("inside", "adjacent", "external")))
   expect_true(any(labels$feature_label_mode == "inside"))
   expect_true(any(labels$feature_label_mode != "inside"))
+  expect_false(any(labels$feature_label_mode == "external"))
+  expect_true(any(labels$label_track > 1L))
+  feature_lanes <- unique(first$feature[
+    first$feature$.component == "polygon", c("anno", "lane")
+  ])
+  lane_of <- stats::setNames(feature_lanes$lane, feature_lanes$anno)
+  # The dense cloning cassette keeps a continuous middle band whenever the
+  # intervals do not collide; the two overlapping primers share the next band.
+  expect_equal(unname(lane_of[c(
+    "M13 fwd", "T7 promoter", "MCS", "T3 promoter", "M13 rev",
+    "lac operator", "lac promoter"
+  )]), rep(1L, 7L))
+  expect_equal(unname(lane_of[c("KS primer", "SK primer")]), c(2L, 2L))
+  adjacent <- labels[labels$feature_label_mode == "adjacent", , drop = FALSE]
+  label_radius <- sqrt(adjacent$x^2 + adjacent$y^2)
+  # One label-track id means one physical circle, rather than a collection of
+  # per-label offsets that merely happen to be called tracks.
+  radius_spread <- tapply(label_radius, adjacent$label_track,
+    function(value) diff(range(value)))
+  expect_true(all(radius_spread < 1e-8))
+  tangent_angle <- atan2(adjacent$y, adjacent$x) * 180 / pi + 90
+  tangent_error <- abs((adjacent$angle - tangent_angle + 90) %% 180 - 90)
+  expect_true(all(tangent_error < 1e-6))
   internal <- get_chord_layout(plot)
   internal_labels <- internal$gene_labels
   internal_boxes <- ggchord_text_boxes(
@@ -201,7 +248,6 @@ test_that("dense plasmid feature labels avoid labels and feature glyphs", {
       allow_own = internal_labels$feature_label_mode[i] == "inside"
     ))
   }
-  expect_true(any(labels$feature_label_mode == "external"))
   expect_true(all(labels$angle <= 90 | labels$angle >= 270))
   expect_true("feature_class" %in% names(features))
   expect_false("preferred_lane" %in% names(features))
@@ -232,7 +278,11 @@ test_that("plasmid feature preset marks cleavage rather than every segment join"
   out <- export_ggchord_layout(p, include = "feature")$feature
   expect_equal(unique(out$.component), c("polygon", "boundary"))
   expect_equal(length(unique(out$group[out$.component == "polygon"])), 1L)
-  expect_equal(nrow(out[out$.component == "boundary", ]), 2L)
+  boundary <- out[out$.component == "boundary", ]
+  expect_equal(length(unique(boundary$group)), 4L)
+  expect_equal(nrow(boundary), 8L)
+  expect_equal(unique(boundary$boundary_linetype), "dotted")
+  expect_equal(unique(boundary$boundary_draw_linetype), "solid")
   expect_s3_class(ggplot2::ggplotGrob(p), "gtable")
 
   no_join <- ggchord(seq, validate = "none") + geom_seq() +
@@ -374,6 +424,9 @@ test_that("feature directions and segment-specific styles stay semantic", {
   expect_equal(unique(polygons$feature_fill_explicit),
     c("#FF0000", "#00FF00"))
   expect_equal(unique(stats::na.omit(out$boundary_linetype)), "dotted")
+  boundary <- out[out$.component == "boundary", , drop = FALSE]
+  expect_equal(length(unique(boundary$group)), 4L)
+  expect_true(all(boundary$boundary_draw_linetype == "solid"))
   expect_s3_class(ggplot2::ggplotGrob(plot), "gtable")
 })
 

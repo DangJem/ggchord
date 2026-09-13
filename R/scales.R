@@ -292,7 +292,7 @@ scale_region_fill_manual <- function(..., values) {
 #' range during chord layout.
 #'
 #' @param name Scale name; position guides are disabled by default.
-#' @param breaks,minor_breaks,labels,limits,expand,oob,transform Standard
+#' @param breaks,minor_breaks,labels,limits,expand,oob,transform,n.breaks Standard
 #'   continuous-scale controls.
 #' @param ... Additional arguments passed to [ggplot2::continuous_scale()].
 #' @return A ggplot2 continuous scale for the `seq_position` role.
@@ -301,12 +301,12 @@ scale_seq_position_continuous <- function(
     name = ggplot2::waiver(), breaks = ggplot2::waiver(),
     minor_breaks = ggplot2::waiver(), labels = ggplot2::waiver(),
     limits = NULL, expand = ggplot2::waiver(), oob = scales::censor,
-    transform = "identity", ...) {
+    transform = "identity", n.breaks = 6, ...) {
   ggplot2::continuous_scale(
     aesthetics = "seq_position",
     palette = function(x) x,
     name = name, breaks = breaks, minor_breaks = minor_breaks,
     labels = labels, limits = limits, expand = expand, oob = oob,
-    transform = transform, guide = "none", ...
+    transform = transform, n.breaks = n.breaks, guide = "none", ...
   )
 }

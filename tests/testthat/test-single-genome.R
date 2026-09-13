@@ -49,6 +49,10 @@ test_that("coord_circular owns a one-sequence circular contract", {
       theme_ggchord_plasmid()
   )
   major <- plasmid_axis$axis_ticks[plasmid_axis$axis_ticks$is_major, ]
+  expect_equal(nrow(major), 5L)
+  expect_true(all(
+    sqrt(major$x1^2 + major$y1^2) < sqrt(major$x0^2 + major$y0^2)
+  ))
   expect_lt(
     mean(sqrt(major$label_x^2 + major$label_y^2)),
     mean(sqrt(plasmid_axis$seq_arcs[[1L]]$x^2 +
@@ -113,7 +117,7 @@ test_that("centre labels use sequence metadata", {
   expect_s3_class(ggplot2::ggplotGrob(styled), "gtable")
 })
 
-test_that("external feature and restriction labels share perimeter space", {
+test_that("feature callouts do not rewrite restriction polar placement", {
   seq <- data.frame(accver = "circle", length = 1000)
   features <- data.frame(
     accver = "circle", start = c(95, 120, 145), end = c(101, 127, 153),
@@ -132,44 +136,26 @@ test_that("external feature and restriction labels share perimeter space", {
   exported <- export_ggchord_layout(
     plot, include = c("labels", "restriction")
   )
-  feature <- exported$labels[
-    exported$labels$.component == "text" &
-      exported$labels$feature_label_mode == "external", , drop = FALSE
-  ]
   restriction <- exported$restriction[
     exported$restriction$.component == "label", , drop = FALSE
   ]
-  expect_true(nrow(feature) > 0L)
-  expect_true(all(feature$external_annotation_type == "feature"))
-  expect_true(all(restriction$external_annotation_type == "restriction"))
+  restriction_only <- export_ggchord_layout(
+    ggchord(seq, validate = "none") + geom_seq() +
+      geom_restriction_site(data = sites) + coord_circular(rotation = 90),
+    include = "restriction"
+  )$restriction
+  restriction_only <- restriction_only[
+    restriction_only$.component == "label", , drop = FALSE
+  ]
+  expect_equal(restriction[, c("x", "y")],
+    restriction_only[, c("x", "y")])
+  expect_false("shared_external_side" %in% names(restriction))
   expect_true(all(restriction$enzyme_fontface[
     restriction$enzyme_label %in% c("OnceA", "OnceB")
   ] == "bold"))
   expect_true(all(restriction$enzyme_fontface[
     restriction$enzyme_label == "Repeat"
   ] == "plain"))
-
-  external <- rbind(
-    data.frame(text_x = feature$x, text_y = feature$y,
-      text = feature$label, size = feature$size, hjust = feature$hjust,
-      vjust = feature$vjust, text_angle = 0),
-    data.frame(text_x = restriction$x, text_y = restriction$y,
-      text = restriction$label, size = restriction$size,
-      hjust = restriction$hjust, vjust = restriction$vjust,
-      text_angle = 0)
-  )
-  boxes <- ggchord_text_boxes(
-    external, units_per_inch = get_chord_layout(plot)$text_units_per_inch,
-    box_padding = .01
-  )
-  if (nrow(boxes) > 1L) {
-    pairs <- utils::combn(seq_len(nrow(boxes)), 2L)
-    expect_false(any(apply(pairs, 2L, function(pair) {
-      ggchord_oriented_box_overlaps(
-        boxes[pair[1L], , drop = FALSE], boxes[pair[2L], , drop = FALSE]
-      )
-    })))
-  }
 })
 
 test_that("restriction search preserves biological pattern rows", {

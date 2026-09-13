@@ -144,7 +144,7 @@ ggchord_adaptive_limits <- function(layout) {
 
   # Rounded feature callouts and bold enzyme fragments extend slightly beyond
   # the bare text metrics. Keep a modest physical-looking safety margin so a
-  # dense shared perimeter shrinks the map instead of clipping its last row.
+  # dense annotation perimeter shrinks the map instead of clipping its last row.
   x_pad <- 0.05 * max(diff(x_lim), 1)
   y_pad <- 0.035 * max(diff(y_lim), 1)
 

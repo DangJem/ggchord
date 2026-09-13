@@ -191,12 +191,10 @@ ggchord_allocate_feature_lanes <- function(data, base, direction, spacing,
       pad <- 0
       shape <- as.character(data$.feature_shape[i] %||%
         data$.feature_shape_raw[i] %||% "arrow")
-      if (isTRUE(is.finite(len)) && shape %in% c(
-          "promoter_arrow", "primer_arrow", "marker")) {
+      if (isTRUE(is.finite(len)) && identical(shape, "marker")) {
         glyph_width <- as.numeric(data$.feature_width[i] %||% 0)
         radius <- max(.1, abs(1 + base[i]))
-        multiple <- if (shape == "promoter_arrow") 2.6 else 3.0
-        display_bp <- glyph_width * multiple / radius / (2 * pi) * len
+        display_bp <- glyph_width * 3 / radius / (2 * pi) * len
         pad <- max(0, display_bp - abs(b - a)) / 2
       }
       if (isTRUE(circular) && is.finite(len) && a > b) {
@@ -224,11 +222,17 @@ ggchord_allocate_feature_lanes <- function(data, base, direction, spacing,
     entity_span <- vapply(intervals, function(x) {
       sum(pmax(0, x[, 2] - x[, 1]))
     }, numeric(1))
-    # SnapGene-like tiling: explicit display priority wins, then the longest
-    # overlapping interval receives the nearest-to-backbone collision slot.
-    ord <- order(-entity_priority, -entity_span,
-      vapply(intervals, function(x) min(x[, 1]), numeric(1)), entity_source)
+    # Allocate structural spans first so the outer bands remain stable. Within
+    # each local short-feature cassette, genomic order then makes continuity
+    # available to the next item instead of letting a slightly longer promoter
+    # jump back to lane zero ahead of its neighbours.
+    entity_start <- vapply(intervals, function(x) min(x[, 1]), numeric(1))
+    structural_cutoff <- if (is.finite(len)) max(50, len * .02) else 50
+    structural <- entity_span >= structural_cutoff
+    ord <- order(-entity_priority, !structural,
+      ifelse(structural, -entity_span, 0), entity_start, entity_source)
     lane_intervals <- list()
+    entity_lanes <- rep(NA_integer_, length(entity_members))
     overlaps <- function(a, occupied) {
       any(vapply(occupied, function(b) any(
         outer(seq_len(nrow(a)), seq_len(nrow(b)), Vectorize(function(i, j) {
@@ -238,13 +242,39 @@ ggchord_allocate_feature_lanes <- function(data, base, direction, spacing,
     }
     for (local in ord) {
       members <- entity_members[[local]]
-      candidates <- seq_len(nrow(data) + 1L)
+      # Nearby non-overlapping annotations usually form one visual cassette.
+      # Prefer the track of the nearest already placed neighbour when that
+      # track is free; overlap remains authoritative and forces a deeper lane.
+      allocated <- which(!is.na(entity_lanes))
+      preferred <- integer()
+      if (length(allocated)) {
+        interval_gap <- function(a, b) {
+          gaps <- outer(seq_len(nrow(a)), seq_len(nrow(b)),
+            Vectorize(function(i, j) {
+              if (a[i, 1] <= b[j, 2] && b[j, 1] <= a[i, 2]) return(0)
+              min(abs(a[i, 1] - b[j, 2]), abs(b[j, 1] - a[i, 2]))
+            }))
+          min(gaps)
+        }
+        gaps <- vapply(allocated, function(other) {
+          interval_gap(intervals[[local]], intervals[[other]])
+        }, numeric(1))
+        neighbour_gap <- if (is.finite(len)) max(24, len * .012) else 24
+        nearby <- allocated[gaps <= neighbour_gap]
+        if (length(nearby)) {
+          nearby <- nearby[order(gaps[match(nearby, allocated)],
+            entity_source[nearby])]
+          preferred <- unique(entity_lanes[nearby] + 1L)
+        }
+      }
+      candidates <- unique(c(preferred, seq_len(nrow(data) + 1L)))
       chosen <- candidates[which(vapply(candidates, function(candidate) {
         candidate > length(lane_intervals) ||
           !overlaps(intervals[[local]], lane_intervals[[candidate]])
       }, logical(1)))[1L]]
       if (chosen > length(lane_intervals)) lane_intervals[[chosen]] <- list()
       lane_intervals[[chosen]][[length(lane_intervals[[chosen]]) + 1L]] <- intervals[[local]]
+      entity_lanes[local] <- chosen - 1L
       lane[idx[members]] <- chosen - 1L
     }
   }
@@ -273,8 +303,10 @@ ggchord_feature_lane_offsets <- function(data, lane, base, direction,
     centres <- numeric(length(lane_width))
     if (length(centres) > 1L) {
       for (i in 2:length(centres)) {
+        # Reserve an actual annotation gutter between feature bands. Labels
+        # search these gutters before they are allowed to leave the circle.
         glyph_clearance <- lane_width[i - 1L] / 2 +
-          lane_width[i] / 2 + .018
+          lane_width[i] / 2 + .040
         centres[i] <- centres[i - 1L] + max(spacing, glyph_clearance)
       }
     }

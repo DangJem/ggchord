@@ -1,5 +1,18 @@
 # ggchord 0.13.0
 
+* Refined the pBluescript II SK(+) circular-map layout against the supplied
+  visual reference. Restriction labels again retain their close polar contour
+  and local ordered fans instead of being flattened onto shared left/right
+  rails with feature callouts. Feature labels now exhaust internal feature
+  gutters and deeper label tracks before becoming external, with short leaders
+  for materially displaced internal labels. Compact, promoter and primer
+  arrows use the same annular-arrow factory as other directional features,
+  the same requested thickness, and their real genomic interval; the common
+  short-arrow rule alone contracts glyphs that cannot contain a normal head.
+  Short dotted/dashed segment boundaries are emitted as explicit broken
+  geometry so graphics devices cannot silently render them solid. Plasmid axis
+  ticks are longer, labels remain inside the backbone, and the automatic major
+  tick target is now five.
 * Added `coord_circular()` as an independent coordinate contract for one
   circular sequence. It supports a closed circle (`gap = 0`), a degree-based
   opening, genomic-origin rotation, clockwise/counterclockwise direction,
@@ -47,20 +60,21 @@
   divider; only source cleavage arrows or an explicit non-solid `line_style`
   create an internal boundary.
   Its default position assigns overlapping intervals to generic collision
-  slots: explicit `display_priority`/`prioritized_display` comes first, then
-  longer spans, while every non-overlapping feature reuses the nearest slot.
+  slots: explicit `display_priority`/`prioritized_display` comes first,
+  structural spans stabilize the outer bands, and short local annotations
+  follow genomic order so a non-overlapping cassette can continue on one lane.
   Feature type, name, and colour no longer choose a radial lane, and
   `find_common_features()` no longer emits semantic `preferred_lane` hints.
   The feature-shape vocabulary includes `compact_arrow`,
-  `promoter_arrow`, `primer_arrow`, and `marker`. Promoters and primers use
-  optional dedicated glyphs. Default common-feature geometry now follows the
+  `promoter_arrow`, `primer_arrow`, and `marker`. The three directional arrow
+  variants share one outline and width algorithm. Default common-feature geometry now follows the
   feature's own nondirectional/forward/reverse/bidirectional value rather than
   its biological type. Extremely short directional intervals retain a
   restrained direction mark whose head and thickness contract with available
   display length; zero-length point features draw a radial tick rather than a
   minimum-width polygon. Small glyphs receive a lighter outline unless
-  linewidth is explicit. Lane collision checks account for rendered glyph
-  width and minimum display span. The plasmid preset now uses the visual
+  linewidth is explicit. Lane collision checks use the true rendered interval
+  rather than a type-specific fabricated span. The plasmid preset now uses the visual
   reference's semantic feature colours and type-aware default shape hints while
   retaining user scale and explicit geometry priority.
 * `geom_seq()` adds `seq_style = "single" | "double" | "band"`,
@@ -79,16 +93,17 @@
   mode now exports `feature_label_mode = "inside" | "adjacent" | "external"`,
   measures the final font family, face, size and line height, and checks
   oriented label boxes against other labels, rendered feature polygons, the
-  centre reserve and the circular backbone. After two bounded adjacent radial
-  offsets, unresolved labels become horizontal external callouts; setting
+  centre reserve and the circular backbone. It searches feature-band gutters
+  and deeper internal label tracks before unresolved labels become horizontal
+  external callouts; setting
   `external = FALSE` hides them instead of pushing them indefinitely towards
   the centre. Label-aware coordinate fitting includes their measured boxes.
   Feature thickness responds to final label size within bounded limits, never
   to unbounded label length. Inside text automatically uses black or white from
   the final fill luminance unless its colour is explicitly supplied. External
   feature labels use rounded pastel callouts derived from their resolved fill.
-  When restriction labels are present, both annotation types share one final
-  perimeter layout with measured spacing and exported side/order metadata.
+  Restriction-site polar placement remains independent and is never rewritten
+  into shared Cartesian side rails by the presence of a feature callout.
 * Added `find_restriction_sites()` as a calculation-only API. It preserves one
   row per pattern match, stable pattern identity, multiple motifs per enzyme,
   overlapping/IUPAC/reverse-complement matches, circular-origin matches,
