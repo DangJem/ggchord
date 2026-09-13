@@ -57,10 +57,14 @@ test_that("coord_circular owns a one-sequence circular contract", {
     sqrt(major$x0^2 + major$y0^2),
     rep(1 - .025 / 2, nrow(major)), tolerance = 1e-6
   )
-  expect_lt(
-    mean(sqrt(major$label_x^2 + major$label_y^2)),
-    1 - .025 / 2 - .018
-  )
+  labelled_major <- major[!is.na(major$label), ]
+  expect_true(all(labelled_major$label_along_axis))
+  expect_equal(labelled_major$label_hjust, rep(0, nrow(labelled_major)))
+  expect_equal(labelled_major$label_vjust, rep(.5, nrow(labelled_major)))
+  expect_true(all(sqrt(
+    (labelled_major$label_x - labelled_major$x1)^2 +
+      (labelled_major$label_y - labelled_major$y1)^2
+  ) > 0))
   ccw_axis <- get_chord_layout(
     ggchord(seq, validate = "none") + geom_seq() + coord_circular(
       direction = "counterclockwise"

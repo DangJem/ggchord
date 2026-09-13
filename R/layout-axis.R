@@ -11,6 +11,8 @@ ggchord_layout_axis_step <- quote({
                            label_y = numeric(0), size = numeric(0),
                            label_angle = numeric(0),
                            label_angle_relative = logical(0),
+                           label_along_axis = logical(0),
+                           label_gap = numeric(0),
                            accver = character(0),
                            stringsAsFactors = FALSE)
 
@@ -65,6 +67,8 @@ ggchord_layout_axis_step <- quote({
       orient_val <- axisLabelOrientation[[id]]
       relative_angle <- is.character(orient_val) &&
         tolower(orient_val) %in% c("parallel", "perpendicular")
+      along_axis <- is.character(orient_val) &&
+        tolower(orient_val) == "parallel"
 
       frac <- if (orientation[id] == 1) pts$pos / lens[id] else 1 - pts$pos / lens[id]
       angle <- starts[id] + frac * (ends[id] - starts[id])
@@ -114,7 +118,11 @@ ggchord_layout_axis_step <- quote({
         )
         base <- at_offset(-seqBackboneOuter)
         tip <- at_offset(-seqBackboneOuter - len)
-        lbl <- at_offset(-seqBackboneOuter - len - labelOffset[id])
+        # Parallel text is attached beside the radial tick in the transform
+        # step, after its final readable tangent direction is known. Other
+        # orientations retain the historical radial offset.
+        lbl <- if (along_axis) tip else
+          at_offset(-seqBackboneOuter - len - labelOffset[id])
       } else {
         base <- map_to_curve_many(angle, r0, ref)
         tip <- map_to_curve_many(angle, r0 + len * dir, ref)
@@ -131,6 +139,8 @@ ggchord_layout_axis_step <- quote({
         size = labelSize[[id]],
         label_angle = label_angle,
         label_angle_relative = relative_angle,
+        label_along_axis = rep(along_axis, nrow(pts)),
+        label_gap = rep(labelOffset[id], nrow(pts)),
         is_major = pts$is_major,
         is_origin = origin_tick,
         accver = id,

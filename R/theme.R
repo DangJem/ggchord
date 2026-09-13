@@ -172,7 +172,7 @@ ggchord_theme_from_environment <- function(preset, env, dots) {
     values$axis.minor.ticks.length <- grid::unit(.55, "mm")
   }
   if (preset == "plasmid" && is.null(values$axis.text.offset)) {
-    values$axis.text.offset <- grid::unit(1.8, "mm")
+    values$axis.text.offset <- grid::unit(.7, "mm")
   }
   base_size <- if (preset == "publication") 9 else if (preset == "plasmid") 10 else 11
   dark <- preset == "dark"

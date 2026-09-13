@@ -145,9 +145,12 @@ for (name in names(fixtures)) {
       "pBluescript II SK(+)")) {
     raw_layout <- get_chord_layout(plot)
     major_ticks <- raw_layout$axis_ticks[raw_layout$axis_ticks$is_major, ]
+    labelled_ticks <- major_ticks[!is.na(major_ticks$label), ]
     stopifnot(
       all(abs(sqrt(major_ticks$x0^2 + major_ticks$y0^2) - .9875) < 1e-6),
-      all(sqrt(major_ticks$label_x^2 + major_ticks$label_y^2) < .969)
+      all(labelled_ticks$label_along_axis),
+      all(labelled_ticks$label_hjust == 0),
+      all(labelled_ticks$label_vjust == .5)
     )
     site_ticks <- layout$restriction[
       layout$restriction$restriction_component == "tick", , drop = FALSE

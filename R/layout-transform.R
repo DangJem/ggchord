@@ -97,6 +97,21 @@ ggchord_layout_transform_step <- quote({
       axis_ticks$label_vjust[idx] <- ifelse(sa[idx] > 0.05, 0,
                                             ifelse(sa[idx] < -0.05, 1, 0.5))
     }
+    # Circular parallel labels sit beside their radial tick. Anchor the
+    # leading text edge just beyond the tick in the final readable tangent
+    # direction instead of centring the string on the tick's radial ray.
+    alongside <- isTRUE(circular) &
+      !is.na(axis_ticks$label_along_axis) & axis_ticks$label_along_axis
+    if (any(alongside)) {
+      readable <- axis_ticks$label_angle[alongside] * pi / 180
+      gap <- axis_ticks$label_gap[alongside]
+      axis_ticks$label_x[alongside] <- axis_ticks$label_x[alongside] +
+        cos(readable) * gap
+      axis_ticks$label_y[alongside] <- axis_ticks$label_y[alongside] +
+        sin(readable) * gap
+      axis_ticks$label_hjust[alongside] <- 0
+      axis_ticks$label_vjust[alongside] <- .5
+    }
   }
   if (!is.null(ribbon_polys)) ribbon_polys <- rotate_df(ribbon_polys)
   if (nrow(region_polys) > 0) region_polys <- rotate_df(region_polys)

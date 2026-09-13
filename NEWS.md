@@ -28,8 +28,10 @@
   Short dotted/dashed segment boundaries are emitted as explicit broken
   geometry so graphics devices cannot silently render them solid. Plasmid axis
   ticks now start at the visible inner backbone boundary and extend towards
-  the centre; labels retain additional clearance from that inner line, and the
-  automatic major tick target is now five. Restriction-site ticks likewise
+  the centre. Parallel labels follow the inner-ring tangent beside their tick,
+  with the leading text edge separated from the radial line instead of the
+  string being centred across it. The automatic major tick target is now five.
+  Restriction-site ticks likewise
   begin at the visible outer edge rather than the sequence centreline.
 * `view_ggchord()` now defaults to the pBluescript comparison canvas of
   12.39 by 9.71 inches at 144 dpi (about 1784 by 1398 pixels). Explicit output
