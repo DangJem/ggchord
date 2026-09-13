@@ -81,15 +81,15 @@ ggchord_preview_height <- function(plot, width_inches) {
 #' previously active graphics device.
 #'
 #' @param plot A ggchord or ggplot object, default \code{last_plot()}.
-#' @param width Positive output width, default 11 inches when \code{units = "in"}.
-#' @param height Positive output height, or \code{NULL} (default) to fit the
+#' @param width Positive output width, default 12.39 inches when \code{units = "in"}.
+#' @param height Positive output height, default 9.71 inches. Use \code{NULL} to fit the
 #'   sequence, labels and legends while preserving equal coordinate units.
 #'   Explicit width/height values are always respected.
 #' @param units Output units: \code{"in"}, \code{"cm"}, \code{"mm"}, or
 #'   \code{"px"}.
 #' @param device Preview device, \code{"png"} or \code{"svg"}. SVG output
 #'   requires the optional svglite package or a working base Cairo SVG device.
-#' @param dpi Positive raster resolution, default 150.
+#' @param dpi Positive raster resolution, default 144.
 #' @param bg Optional background colour passed to \code{ggsave()}.
 #' @param viewer How to open the preview: \code{"auto"} prefers
 #'   \code{getOption("viewer")} and falls back to a browser in interactive
@@ -104,11 +104,11 @@ ggchord_preview_height <- function(plot, width_inches) {
 #' if (interactive()) view_ggchord(p)
 view_ggchord <- function(
     plot = ggplot2::last_plot(),
-    width = 11,
-    height = NULL,
+    width = 12.39,
+    height = 9.71,
     units = c("in", "cm", "mm", "px"),
     device = c("png", "svg"),
-    dpi = 150,
+    dpi = 144,
     bg = NULL,
     viewer = c("auto", "ide", "browser", "none")) {
   old_error <- ggchord_disable_debug()

@@ -410,14 +410,19 @@ ggchord_layout_annotation_step <- quote({
           shape <- as.character(gene$.feature_shape %||% "arrow")
           head_reserve <- if (shape == "arrow") {
             arrow_head_length
-          } else if (shape %in% c(
-              "compact_arrow", "promoter_arrow", "primer_arrow")) {
-            arrow_head_length * .65
+          } else if (shape == "compact_arrow") {
+            arrow_head_length * .76
+          } else if (shape == "promoter_arrow") {
+            arrow_head_length * .66
+          } else if (shape == "primer_arrow") {
+            arrow_head_length * .60
           } else 0
           body_padding <- max(.008, measured_label$h * .24)
           available_length <- max(0,
             feature_arc_length - head_reserve - 2 * body_padding)
-          feature_label_inside <- measured_label$w <= available_length
+          # Keep a safety margin inside the rectangular body; text that only
+          # fits by touching a shoulder belongs on the adjacent inner track.
+          feature_label_inside <- measured_label$w <= available_length * .90
           # Plasmid feature text follows the interval direction whether it is
           # inside the polygon or immediately adjacent to it. Compact labels
           # move toward the map centre instead of changing to radial text.

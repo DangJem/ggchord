@@ -421,6 +421,8 @@ ggchord_axis_layer <- function(layout) {
 #' @noRd
 ggchord_feature_arc_text <- function(text, units_per_inch) {
   if (!nrow(text)) return(data.frame())
+  # Every internal feature label follows the radius selected by the track
+  # solver. This includes labels moved off the feature into an inner track.
   eligible <- text$feature_label_mode %in% c("inside", "adjacent") &
     !grepl("\n", text$text, fixed = TRUE) &
     !is.na(text$text) & nzchar(text$text)
@@ -460,8 +462,14 @@ ggchord_repel_geometry <- function(layout) {
     if (nrow(text) && "group" %in% names(segment) &&
         "group" %in% names(text)) {
       label_index <- match(segment$group, text$group)
-      for (nm in intersect(c("source_row", "accver"), names(text))) {
+      for (nm in intersect(
+          c("source_row", "accver", "feature_track", "label_track"),
+          names(text))) {
         segment[[nm]] <- text[[nm]][label_index]
+      }
+      if (all(c("feature_track", "label_track") %in% names(segment))) {
+        segment$leader_track_start <- segment$feature_track + 1L
+        segment$leader_track_end <- segment$label_track - 1L
       }
     }
     segment$.component <- "segment"

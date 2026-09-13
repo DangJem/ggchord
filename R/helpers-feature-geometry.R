@@ -24,14 +24,10 @@ ggchord_feature_classes <- function(type) {
 }
 
 ggchord_feature_width_factor <- function(shape) {
-  values <- c(
-    arrow = 1, compact_arrow = .78, promoter_arrow = .72,
-    primer_arrow = .65, marker = .38, block = .72,
-    chevron = .68, lollipop = .55
-  )
-  out <- unname(values[as.character(shape)])
-  out[is.na(out)] <- 1
-  out
+  # Shape changes topology, not radial emphasis. Every feature type occupies
+  # the same band width so promoters, primers and markers remain legible beside
+  # long arrows and do not imply a weaker semantic hierarchy.
+  rep(1, length(shape))
 }
 
 # Minimum visible arc length for a directional glyph. Short biological
@@ -246,15 +242,28 @@ ggchord_feature_geometry <- function(shape, a_start, a_end, r0, width,
     return(ggchord_shape_marker(a_start, a_end, r0, width))
   }
   if (shape %in% c("compact_arrow", "promoter_arrow", "primer_arrow")) {
+    # Compact glyphs need a visible stem and a restrained head. Reusing the
+    # long-feature head verbatim turns very short promoters and primers into
+    # chunky pentagons once their display interval is widened.
+    head_length_factor <- c(
+      compact_arrow = .76, promoter_arrow = .66, primer_arrow = .60
+    )[[shape]]
+    head_width_factor <- c(
+      compact_arrow = .92, promoter_arrow = .86, primer_arrow = .82
+    )[[shape]]
+    compact_head_length <- min(
+      arrow_head_length * head_length_factor, width * 1.05
+    )
+    compact_head_width <- max(1, arrow_head_width * head_width_factor)
     interval <- if (identical(short_feature, "auto") && isTRUE(draw_head)) {
       ggchord_arrow_display_interval(
-        a_start, a_end, r0, width, arrow_head_length, heads = 1L
+        a_start, a_end, r0, width, compact_head_length, heads = 1L
       )
     } else c(a_start, a_end)
     return(ggchord_shape_arrow(
       interval[1L], interval[2L], r0, width,
-      head_length = arrow_head_length,
-      head_width = arrow_head_width,
+      head_length = compact_head_length,
+      head_width = compact_head_width,
       short_feature = "auto", draw_head = draw_head
     ))
   }

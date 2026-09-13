@@ -272,13 +272,14 @@ ggchord_feature_lane_offsets <- function(data, lane, base, direction,
     centres <- numeric(length(lane_width))
     if (length(centres) > 1L) {
       for (i in 2:length(centres)) {
-        # The first transition owns the main two-line label corridor. Deeper
-        # overlapping feature bands stay compact and use shared label-only
-        # tracks below the deepest glyph band.
+        # The first transition owns the main two-line label corridor. Every
+        # deeper feature band still reserves at least one measured-label-sized
+        # corridor so a feature can own an immediately adjacent inner label
+        # track instead of sending all text below the deepest glyph band.
         label_gutter <- if (i == 2L) {
           max(.125, spacing * 1.20)
         } else {
-          max(.018, spacing * .18)
+          max(.080, spacing * .85)
         }
         glyph_clearance <- lane_width[i - 1L] / 2 +
           lane_width[i] / 2 + label_gutter

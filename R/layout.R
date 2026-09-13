@@ -114,6 +114,7 @@ compute_chord_layout <- function(
     # Axis parameters
     axisGap, axisMaj, axisMajLen, axisMin, axisMinLen,
     labelSize, labelOffset, axisLabelOrientation,
+    seqBackboneOuter = 0,
     axis_breaks = NULL, axis_minor_breaks = NULL, axis_labels = NULL,
     axis_label_hide_overlaps = FALSE,
     show_axis,

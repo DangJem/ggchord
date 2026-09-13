@@ -6,11 +6,11 @@
 \usage{
 view_ggchord(
   plot = ggplot2::last_plot(),
-  width = 11,
-  height = NULL,
+  width = 12.39,
+  height = 9.71,
   units = c("in", "cm", "mm", "px"),
   device = c("png", "svg"),
-  dpi = 150,
+  dpi = 144,
   bg = NULL,
   viewer = c("auto", "ide", "browser", "none")
 )
@@ -18,9 +18,9 @@ view_ggchord(
 \arguments{
 \item{plot}{A ggchord or ggplot object, default \code{last_plot()}.}
 
-\item{width}{Positive output width, default 11 inches when \code{units = "in"}.}
+\item{width}{Positive output width, default 12.39 inches when \code{units = "in"}.}
 
-\item{height}{Positive output height, or \code{NULL} (default) to fit the
+\item{height}{Positive output height, default 9.71 inches. Use \code{NULL} to fit the
 sequence, labels and legends while preserving equal coordinate units.
 Explicit width/height values are always respected.}
 
@@ -30,7 +30,7 @@ Explicit width/height values are always respected.}
 \item{device}{Preview device, \code{"png"} or \code{"svg"}. SVG output
 requires the optional svglite package or a working base Cairo SVG device.}
 
-\item{dpi}{Positive raster resolution, default 150.}
+\item{dpi}{Positive raster resolution, default 144.}
 
 \item{bg}{Optional background colour passed to \code{ggsave()}.}
 

@@ -669,6 +669,16 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   axisLabelOri <- process_axis_orientation(
     axis_theme$text.orientation, seqs
   )
+  seq_style <- seq_params$seq_style %||% "auto"
+  if (identical(seq_style, "auto")) {
+    seq_style <- if (isTRUE(plot$coordinates$ggchord_circular)) "double" else "single"
+  }
+  seqBackboneOuter <- switch(
+    seq_style,
+    double = (seq_params$seq_backbone_gap %||% .025) / 2,
+    band = (seq_params$seq_backbone_width %||% .035) / 2,
+    0
+  )
   if (!is.logical(show_axis) || length(show_axis) != 1 || is.na(show_axis)) {
     ggchord_stop("show_axis must be TRUE or FALSE")
   }
@@ -873,6 +883,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     axisMin = axisMin, axisMinLen = axisMinLen,
     labelSize = labelSize, labelOffset = labelOffset,
     axisLabelOrientation = axisLabelOri,
+    seqBackboneOuter = seqBackboneOuter,
     axis_breaks = axis_breaks,
     axis_minor_breaks = axis_minor_breaks,
     axis_labels = axis_labels,
@@ -1041,6 +1052,23 @@ compute_chord_geometry <- function(plot) {
     if (main_type == "restriction_site") {
       site_layer <- plot$layers[[idx[1L]]]
       site_input <- ggchord_resolve_layer_input(site_layer)
+      seq_rows <- which(vapply(plot$layers, function(layer) {
+        identical(layer$ggchord_params$type %||% "", "seq")
+      }, logical(1L)))
+      seq_layer_params <- if (length(seq_rows)) {
+        plot$layers[[seq_rows[1L]]]$ggchord_params
+      } else list()
+      seq_style <- seq_layer_params$seq_style %||% "auto"
+      if (identical(seq_style, "auto")) {
+        seq_style <- if (isTRUE(primary$circular)) "double" else "single"
+      }
+      backbone_outer <- switch(
+        seq_style,
+        double = (seq_layer_params$seq_backbone_gap %||% .025) / 2,
+        band = (seq_layer_params$seq_backbone_width %||% .035) / 2,
+        0
+      )
+      site_layer$ggchord_params$backbone_outer_offset <- backbone_outer
       sub_layout$restriction_sites <- ggchord_restriction_geometry(
         site_input, site_layer$ggchord_params, primary, chord$data$seq_data
       )

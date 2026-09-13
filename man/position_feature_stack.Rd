@@ -13,7 +13,8 @@ position_feature_stack(
 \arguments{
 \item{spacing}{Positive minimum radial distance between adjacent feature
 lanes. Circular plasmid layout enlarges the first transition into a main
-label corridor while keeping deeper overlapping lanes compact.}
+label corridor and reserves at least one label track between deeper
+overlapping feature lanes.}
 
 \item{side}{Legacy track-side selector retained for compatibility when
 `base_position` is `NULL`. Its historical names retain their existing

@@ -1,33 +1,54 @@
 # ggchord 0.13.0
 
+* Increased the plasmid feature-label size and darkened its internal leaders
+  so feature names remain legible beside restriction-site annotations. Labels
+  placed on a feature and labels moved to an inner track both follow their
+  selected radius glyph by glyph. The nearest inner track is tried first;
+  deeper tracks are used only when the local curved envelopes collide.
+  Feature-leader line styling is now independent of the mapped text colour,
+  fixing leaders that were present in layout data but rendered with an `NA`
+  colour and therefore disappeared from the image.
+  All feature shapes now share one radial body width; the plasmid preset keeps
+  that band only slightly taller than its enlarged text. Long arrows retain
+  clear heads and shoulders; compact, promoter and primer arrows constrain their
+  head dimensions so very short features keep a visible stem instead of
+  becoming chunky pentagons.
 * Refined the pBluescript II SK(+) circular-map layout against the supplied
   visual reference. Restriction labels again retain their close polar contour
   and local ordered fans instead of being flattened onto shared left/right
   rails with feature callouts. Feature labels now exhaust internal feature
   gutters and deeper label tracks before becoming external, with short leaders
-  for materially displaced internal labels. Compact, promoter and primer
-  arrows use the same annular-arrow factory as other directional features,
-  with narrower type-specific thicknesses. Extremely short arrows are widened
+  whenever an intervening physical track separates a feature and its label.
+  Compact, promoter and primer arrows use the same annular-arrow factory and
+  radial body width as other directional features. Extremely short arrows are widened
   symmetrically around their real midpoint for display, retaining a body,
   shoulders and a head without changing their genomic start/end or leader
   anchor. Contiguous source-segment joins again produce dotted internal marks;
   cleavage coordinates at the same join are merged instead of overdrawn.
   Short dotted/dashed segment boundaries are emitted as explicit broken
   geometry so graphics devices cannot silently render them solid. Plasmid axis
-  ticks are longer, labels remain inside the backbone, and the automatic major
-  tick target is now five.
+  ticks now start at the visible outer backbone boundary and cross into the
+  circle; labels retain additional clearance from the inner line, and the
+  automatic major tick target is now five. Restriction-site ticks likewise
+  begin at the visible outer edge rather than the sequence centreline.
+* `view_ggchord()` now defaults to the pBluescript comparison canvas of
+  12.39 by 9.71 inches at 144 dpi (about 1784 by 1398 pixels). Explicit output
+  dimensions still take priority, and `height = NULL` retains content fitting.
 * Circular feature bands now use non-uniform radial spacing: the transition
   from the backbone-near band to the nested cluster reserves a two-line main
-  text corridor, deeper overlapping bands keep compact geometric clearance,
-  and the deepest band owns shared label-only tracks. Feature labels select a
-  radius before deriving their position and tangent; labels crossing feature
-  bands use a leader clipped to the curved glyph envelope.
+  text corridor, each deeper pair of feature bands reserves at least one label
+  track, and the deepest band owns shared label-only tracks. Feature labels select a
+  radius before deriving their position and tangent. The exported physical
+  track index counts the backbone as track 0 and interleaves feature and text
+  tracks by radius; labels crossing intervening tracks use a leader clipped to
+  the curved glyph envelope.
 * Circular feature-track labels now use a genuinely curved baseline. After a
   track radius is selected, the renderer measures individual glyph advances,
   distributes the characters along that circle, and derives a separate local
   tangent angle for every character. Collision detection and leader clipping
   use the union of those same per-character envelopes rather than a straight
-  whole-string box; the original row remains metadata and is not drawn.
+  whole-string box; this applies both inside a feature and on a neighbouring
+  inner label track. The original row remains metadata and is not drawn.
 * Added `coord_circular()` as an independent coordinate contract for one
   circular sequence. It supports a closed circle (`gap = 0`), a degree-based
   opening, genomic-origin rotation, clockwise/counterclockwise direction,

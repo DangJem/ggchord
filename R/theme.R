@@ -172,7 +172,7 @@ ggchord_theme_from_environment <- function(preset, env, dots) {
     values$axis.minor.ticks.length <- grid::unit(.55, "mm")
   }
   if (preset == "plasmid" && is.null(values$axis.text.offset)) {
-    values$axis.text.offset <- grid::unit(.65, "mm")
+    values$axis.text.offset <- grid::unit(1.8, "mm")
   }
   base_size <- if (preset == "publication") 9 else if (preset == "plasmid") 10 else 11
   dark <- preset == "dark"
@@ -220,9 +220,10 @@ ggchord_theme_from_environment <- function(preset, env, dots) {
         colour = if (dark) "#CED4DA" else if (preset == "minimal") "#A1A6AA" else "#858B91",
         linewidth = if (preset == "minimal") .2 else .25),
       ggchord.feature.label = ggplot2::element_text(
-        colour = if (dark) fg else if (preset == "plasmid") "#202020" else "#27313A", size = ggplot2::rel(if (preset == "plasmid") .74 else .68)),
+        colour = if (dark) fg else if (preset == "plasmid") "#202020" else "#27313A", size = ggplot2::rel(if (preset == "plasmid") .95 else .68)),
       ggchord.feature.label.segment = ggplot2::element_line(
-        colour = if (dark) "#CED4DA" else "#7B858E", linewidth = .25),
+        colour = if (dark) "#CED4DA" else if (preset == "plasmid") "#626A70" else "#7B858E",
+        linewidth = if (preset == "plasmid") .35 else .25),
       ggchord.restriction.label = ggplot2::element_text(
         colour = if (dark) fg else if (preset == "plasmid") "#111111" else "#7A271A", size = ggplot2::rel(if (preset == "plasmid") .95 else .62)),
       ggchord.restriction.label.segment = ggplot2::element_line(
@@ -383,8 +384,12 @@ ggchord_apply_theme_styles <- function(plot) {
         else if (inherits(el, "element_line")) {
           vals <- list(colour = el@colour, linewidth = el@linewidth,
             linetype = el@linetype, lineend = el@lineend, linejoin = el@linejoin)
+          # A composite layer may map text colour while its segment component
+          # still needs an independent theme colour. Component line styles
+          # are applied after scale mapping, so a layer-level mapping must not
+          # suppress them.
           for (nm in names(vals)) if (is.null(current[[nm]]) &&
-              is.null(lyr$mapping[[nm]]) && !is.null(vals[[nm]])) {
+              !is.null(vals[[nm]])) {
             current[[nm]] <- vals[[nm]]
           }
         } else if (inherits(el, "element_text")) {

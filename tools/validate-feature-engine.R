@@ -143,6 +143,17 @@ for (name in names(fixtures)) {
   text <- layout$labels[layout$labels$.component == "text", , drop = FALSE]
   if (identical(as.character(fixture$sequence$label[1L]),
       "pBluescript II SK(+)")) {
+    raw_layout <- get_chord_layout(plot)
+    major_ticks <- raw_layout$axis_ticks[raw_layout$axis_ticks$is_major, ]
+    stopifnot(
+      all(abs(sqrt(major_ticks$x0^2 + major_ticks$y0^2) - 1.0125) < 1e-6),
+      all(sqrt(major_ticks$label_x^2 + major_ticks$label_y^2) < .969)
+    )
+    site_ticks <- layout$restriction[
+      layout$restriction$restriction_component == "tick", , drop = FALSE
+    ]
+    site_roots <- site_ticks[!duplicated(site_ticks$group), , drop = FALSE]
+    stopifnot(all(abs(sqrt(site_roots$x^2 + site_roots$y^2) - 1.0125) < 3e-5))
     feature_lanes <- unique(layout$feature[
       layout$feature$.component == "polygon", c("anno", "lane")
     ])
@@ -161,10 +172,10 @@ for (name in names(fixtures)) {
     leader_features <- unique(layout$labels$anno[
       layout$labels$.component == "segment"
     ])
-    stopifnot(all(c(
-      "M13 fwd", "T7 promoter", "KS primer", "SK primer",
-      "T3 promoter", "M13 rev", "lac operator"
-    ) %in% leader_features))
+    expected_leaders <- text$anno[
+      text$label_track > text$feature_track + 1L
+    ]
+    stopifnot(setequal(leader_features, expected_leaders))
     boundary_features <- table(layout$feature$anno[
       layout$feature$.component == "boundary"
     ])
@@ -181,8 +192,8 @@ for (name in names(fixtures)) {
     })
     stopifnot(
       band_bounds[["0"]][1L] - band_bounds[["1"]][2L] > .10,
-      band_bounds[["1"]][1L] - band_bounds[["2"]][2L] > .015,
-      band_bounds[["1"]][1L] - band_bounds[["2"]][2L] < .06
+      band_bounds[["1"]][1L] - band_bounds[["2"]][2L] > .07,
+      band_bounds[["1"]][1L] - band_bounds[["2"]][2L] < .11
     )
     adjacent <- text[text$feature_label_mode == "adjacent", , drop = FALSE]
     radius <- sqrt(adjacent$x^2 + adjacent$y^2)

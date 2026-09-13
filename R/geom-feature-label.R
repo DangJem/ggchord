@@ -58,9 +58,10 @@ geom_feature_label <- function(
 #' @param label_layout One of `"feature"`, `"radial"`, `"auto"`, or
 #'   `"callout"`. The default `"feature"` follows plasmid-map convention:
 #'   text is tried inside first, then assigned to a fixed-radius internal
-#'   track. Non-external text is laid out character by character along that
-#'   circle rather than rotated as one straight string. A light leader appears
-#'   only after material movement.
+#'   track. All non-external text is laid out character by character along its
+#'   selected track radius rather than rotated as one straight string. A light
+#'   leader appears when one or more intervening tracks separate the feature
+#'   and its label.
 #'   Choose another mode for unrestricted external callouts.
 #' @param label_side One of `"inside"`, `"outside"`, or `"auto"`.
 #' @param label_wrap,label_fit,label_max_lines Text fitting controls.

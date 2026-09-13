@@ -95,7 +95,7 @@ test_that("all feature shape factories build and preserve source identity", {
   expect_s3_class(ggplot2::ggplot_build(p), "ggplot_built")
 })
 
-test_that("directional variants share topology with type width ratios", {
+test_that("feature shapes share topology and one radial width", {
   seq <- data.frame(accver = "circle", length = 1000)
   feature <- data.frame(
     accver = "circle", start = c(50, 300, 550, 800),
@@ -119,9 +119,11 @@ test_that("directional variants share topology with type width ratios", {
   extent <- do.call(rbind, radial_extent)
   expect_equal(length(unique(extent[, "vertices"])), 1L)
   expect_equal(
-    unname(extent[, "width"] / extent[1L, "width"]),
-    c(1, .78, .72, .65), tolerance = 1e-5
+    ggchord_feature_width_factor(feature$feature_shape),
+    rep(1, 4L)
   )
+  # Arrowheads may extend beyond the common body band as part of their shape.
+  expect_true(all(extent[, "width"] >= .07))
 })
 
 test_that("feature label fitting uses final font metrics and exports modes", {
@@ -223,8 +225,8 @@ test_that("dense plasmid feature labels avoid labels and feature glyphs", {
     range(x$radius)
   })
   expect_gt(band_bounds[["0"]][1L] - band_bounds[["1"]][2L], .10)
-  expect_gt(band_bounds[["1"]][1L] - band_bounds[["2"]][2L], .015)
-  expect_lt(band_bounds[["1"]][1L] - band_bounds[["2"]][2L], .06)
+  expect_gt(band_bounds[["1"]][1L] - band_bounds[["2"]][2L], .07)
+  expect_lt(band_bounds[["1"]][1L] - band_bounds[["2"]][2L], .11)
   adjacent <- labels[labels$feature_label_mode == "adjacent", , drop = FALSE]
   label_radius <- sqrt(adjacent$x^2 + adjacent$y^2)
   # One label-track id means one physical circle, rather than a collection of
@@ -239,11 +241,33 @@ test_that("dense plasmid feature labels avoid labels and feature glyphs", {
   leader_features <- unique(first$labels$anno[
     first$labels$.component == "segment"
   ])
-  expect_true(all(c(
-    "M13 fwd", "T7 promoter", "KS primer", "SK primer",
-    "T3 promoter", "M13 rev", "lac operator"
-  ) %in% leader_features))
+  expected_leaders <- labels$anno[
+    labels$label_track > labels$feature_track + 1L
+  ]
+  expect_setequal(leader_features, expected_leaders)
+  styled <- ggchord_apply_theme_styles(plot + theme_ggchord_plasmid())
+  segment_layer <- which(vapply(styled$layers, function(layer) {
+    identical(
+      unname(layer$ggchord_theme_components[["segment_params"]]),
+      "ggchord.feature.label.segment"
+    )
+  }, logical(1L)))[1L]
+  segment_style <- styled$layers[[segment_layer]]$geom_params$segment_params
+  expect_false(is.null(segment_style$colour))
+  expect_gt(segment_style$linewidth, 0)
   expect_true(all(labels$.draw_as_arc))
+  expect_true(all(c("feature_track", "label_track") %in% names(labels)))
+  expect_equal(
+    labels$feature_track[labels$feature_label_mode == "inside"],
+    labels$label_track[labels$feature_label_mode == "inside"]
+  )
+  leader_tracks <- first$labels[
+    first$labels$.component == "segment", , drop = FALSE
+  ]
+  expect_true(all(c("leader_track_start", "leader_track_end") %in%
+    names(leader_tracks)))
+  expect_true(all(leader_tracks$leader_track_start <=
+    leader_tracks$leader_track_end))
   glyphs <- first$labels[
     first$labels$.component == "arc_text", , drop = FALSE
   ]

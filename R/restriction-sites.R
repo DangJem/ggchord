@@ -1154,7 +1154,9 @@ ggchord_restriction_geometry <- function(data, params, layout, seq_data) {
     }
     cluster_names <- paste0(id, ":cluster:", sprintf("%03d", cluster))
     junction_names <- paste0(id, ":site:", sprintf("%06d", idx))
-    bases <- point_at(frac, 0)
+    # Restriction leaders attach to the visible outer boundary of the sequence
+    # backbone, rather than disappearing underneath a double line or band.
+    bases <- point_at(frac, params$backbone_outer_offset %||% 0)
     tips <- point_at(frac, side_sign * params$tick_length)
 
     for (member in seq_along(idx)) {

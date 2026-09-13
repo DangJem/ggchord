@@ -37,6 +37,7 @@ ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
   result <- gl
   mode <- ifelse(gl$feature_label_inside %in% TRUE, "inside", "adjacent")
   tracks <- integer(n)
+  feature_tracks <- integer(n)
   moved <- logical(n)
   directions <- character(n)
   all_metrics <- ggchord_text_boxes(
@@ -54,6 +55,12 @@ ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
       function(x) c(min = min(x$.radius), max = max(x$.radius)))
   }
   internal_tracks <- stats::setNames(
+    vector("list", length(unique(gl$accver))), unique(gl$accver)
+  )
+  feature_track_ids <- stats::setNames(
+    vector("list", length(unique(gl$accver))), unique(gl$accver)
+  )
+  label_track_ids <- stats::setNames(
     vector("list", length(unique(gl$accver))), unique(gl$accver)
   )
   for (sid in names(internal_tracks)) {
@@ -93,8 +100,25 @@ ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
     }
     deepest <- min(bands$min)
     label_only <- deepest - radial_clearance - label_step * 0:3
-    internal_tracks[[sid]] <- unique(c(gutters,
-      label_only[label_only > .28]))
+    label_radii <- unique(c(gutters, label_only[label_only > .28]))
+    internal_tracks[[sid]] <- label_radii
+    # One physical circular-track index is shared by feature bands and text
+    # bands. Track 0 is the sequence backbone; indices increase inward.
+    registry <- data.frame(
+      kind = c(rep("feature", nrow(bands)), rep("label", length(label_radii))),
+      key = c(as.character(bands$lane), as.character(seq_along(label_radii))),
+      radius = c(bands$mid, label_radii), stringsAsFactors = FALSE
+    )
+    registry <- registry[order(-registry$radius, registry$kind), , drop = FALSE]
+    registry$track <- seq_len(nrow(registry))
+    feature_rows <- registry$kind == "feature"
+    label_rows <- registry$kind == "label"
+    feature_track_ids[[sid]] <- stats::setNames(
+      registry$track[feature_rows], registry$key[feature_rows]
+    )
+    label_track_ids[[sid]] <- registry$track[label_rows][
+      match(as.character(seq_along(label_radii)), registry$key[label_rows])
+    ]
   }
   order_rows <- order(!(gl$feature_label_inside %in% TRUE),
     -all_metrics$w, gl$source_row, seq_len(n))
@@ -149,9 +173,9 @@ ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
         track = radial_indices + 1L, tangent = tangent_candidates
       )
     }
-    # Prefer another real radius over walking a label far around one circle.
-    # Dense plasmid cassettes are resolved as radial text levels first; small
-    # tangential nudges are only the final tie-breaker within those levels.
+    # The nearest inward text track is the primary association cue. Only use
+    # tangential movement as a tie-breaker within a track; if that track is
+    # crowded, moving inward preserves the genomic angle more faithfully.
     candidates$score <- (candidates$track - 1L) * .82 +
       abs(candidates$tangent) * 1.05
     candidates <- candidates[order(candidates$score,
@@ -282,15 +306,23 @@ ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
     } else {
       mode[i] <- "adjacent"
     }
+    sid <- as.character(gl$accver[i])
+    source_feature_track <- unname(
+      feature_track_ids[[sid]][as.character(gl$lane[i])]
+    )
+    if (!length(source_feature_track) || !is.finite(source_feature_track)) {
+      source_feature_track <- as.integer(gl$lane[i]) + 1L
+    }
     tracks[i] <- if (chosen_track < 0L) {
       abs(chosen_track) + length(sid_tracks) + 1L
     } else if (chosen_track == 0L) {
-      1L
+      source_feature_track
     } else if (concentric_circle) {
-      match(chosen_radius, sort(unique(sid_tracks), decreasing = TRUE)) + 1L
+      label_track_ids[[sid]][match(chosen_radius, sid_tracks)]
     } else {
       chosen_track
     }
+    feature_tracks[i] <- source_feature_track
     label_corners <- ggchord_boxes_corners(chosen_box)
     label_outer_radius <- if (nrow(label_corners)) {
       max(sqrt(rowSums(label_corners^2)))
@@ -299,7 +331,13 @@ ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
       as.numeric(bounds["min"]) - label_outer_radius
     } else displacement
     moved[i] <- identical(mode[i], "external") ||
-      (identical(mode[i], "adjacent") && radial_gap >= .012)
+      (identical(mode[i], "adjacent") &&
+        (if (concentric_circle) {
+          tracks[i] > feature_tracks[i] + 1L
+        } else {
+          radial_gap >= .012 ||
+            displacement >= max(.05, measured$h * 1.2)
+        }))
     delta <- c(result$text_x[i] - gl$anchor_x[i],
       result$text_y[i] - gl$anchor_y[i])
     directions[i] <- if (abs(delta[1]) >= abs(delta[2])) {
@@ -307,6 +345,7 @@ ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
     } else if (delta[2] < 0) "bottom" else "top"
   }
   result$feature_label_mode <- mode
+  result$feature_track <- feature_tracks
   list(
     labels = result,
     lanes = paste(result$accver, mode, tracks, sep = "\r"),

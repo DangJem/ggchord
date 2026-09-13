@@ -53,10 +53,23 @@ test_that("coord_circular owns a one-sequence circular contract", {
   expect_true(all(
     sqrt(major$x1^2 + major$y1^2) < sqrt(major$x0^2 + major$y0^2)
   ))
+  expect_equal(
+    sqrt(major$x0^2 + major$y0^2),
+    rep(1 + .025 / 2, nrow(major)), tolerance = 1e-6
+  )
   expect_lt(
     mean(sqrt(major$label_x^2 + major$label_y^2)),
-    mean(sqrt(plasmid_axis$seq_arcs[[1L]]$x^2 +
-      plasmid_axis$seq_arcs[[1L]]$y^2))
+    1 - .025 / 2 - .018
+  )
+  ccw_axis <- get_chord_layout(
+    ggchord(seq, validate = "none") + geom_seq() + coord_circular(
+      direction = "counterclockwise"
+    ) + theme_ggchord_plasmid()
+  )
+  expect_equal(
+    range(sqrt(ccw_axis$axis_lines$x^2 + ccw_axis$axis_lines$y^2)),
+    range(sqrt(plasmid_axis$axis_lines$x^2 + plasmid_axis$axis_lines$y^2)),
+    tolerance = 1e-6
   )
 
   two <- rbind(seq, transform(seq, accver = "other"))
@@ -367,12 +380,22 @@ test_that("restriction layout is deterministic and never moves site anchors", {
   origin_radius <- sqrt(origin_labels$x^2 + origin_labels$y^2)
   expect_lt(diff(range(origin_radius)), .04)
 
-  sparse <- export_ggchord_layout(
+  sparse_all <- export_ggchord_layout(
     ggchord(seq, validate = "none") + geom_seq() +
       geom_restriction_site(data = sites[4, , drop = FALSE]) +
       coord_circular(), include = "restriction"
   )$restriction
-  sparse <- sparse[sparse$restriction_component == "leader", , drop = FALSE]
+  sparse_tick <- sparse_all[
+    sparse_all$restriction_component == "tick", , drop = FALSE
+  ]
+  sparse_tick <- sparse_tick[!duplicated(sparse_tick$group), , drop = FALSE]
+  expect_equal(
+    sqrt(sparse_tick$x^2 + sparse_tick$y^2),
+    1 + .025 / 2, tolerance = 1e-5
+  )
+  sparse <- sparse_all[
+    sparse_all$restriction_component == "leader", , drop = FALSE
+  ]
   expect_lte(length(unique(sparse$group)), 2L)
 
   dense_sites <- data.frame(
