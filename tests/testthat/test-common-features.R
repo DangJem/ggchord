@@ -1,20 +1,116 @@
 test_that("internal common-feature database is complete and self-contained", {
   db <- ggchord:::ggchord_builtin_common_features()
-  expect_equal(nrow(db$features), 1273L)
-  expect_equal(nrow(db$segments), 1730L)
-  expect_equal(nrow(db$qualifiers), 4551L)
-  expect_equal(nrow(db$qualifier_links), 384L)
+  expect_equal(nrow(db$features), 1454L)
+  expect_equal(nrow(db$segments), 1970L)
+  expect_equal(nrow(db$qualifiers), 5216L)
+  expect_equal(nrow(db$qualifier_links), 548L)
   expect_identical(db$metadata$source_workbook_sha256,
-    "3d9e7a78c705de2beeb9d8af3c74dede714faa468cd6eee61f78e0f784b65312")
-  expect_named(db, c("metadata", "features", "segments", "qualifiers",
-    "qualifier_links", "feature_type_summary", "reference_sequences",
+    "7d9294df1ba89e6d9437f54d2aed5681d86ff4663f098fcc3d866b9ec58db69b")
+  expect_identical(db$metadata$database_version,
+    "snapgene-8.2.3-export15")
+  expect_named(db, c("metadata", "source_releases", "source_sequences",
+    "feature_identities", "features", "segments", "qualifiers",
+    "qualifier_links", "feature_type_summary", "legacy_feature_records",
+    "feature_correspondence", "source_audit", "reference_sequences",
     "reference_features", "reference_primers", "search_indexes"))
+  expect_equal(nrow(db$source_releases), 2L)
+  expect_equal(nrow(db$source_sequences), 1L)
+  expect_equal(db$source_sequences$length_bp, 903397L)
+  expect_equal(nchar(db$source_sequences$sequence), 903397L)
+  expect_false(any(c("reference_dna_top_strand",
+    "reference_dna_feature_5to3", "reference_protein", "segment_ranges",
+    "segment_colors", "translated_any") %in% names(db$features)))
+  expect_false(any(startsWith(names(db$features), "q_")))
+  expect_true(all(c("common_feature_id", "source_feature_id",
+    "source_recent_id", "prioritize") %in% names(db$features)))
+  expect_true(all(c("start_1based_inclusive", "end_1based_inclusive") %in%
+    names(db$segments)))
+  expect_false("dna_sequence_top_strand" %in% names(db$segments))
+  expect_true(all(c("text", "int", "predef", "bool", "value_display") %in%
+    names(db$qualifiers)))
+  expect_true(all(c("link_index", "anchor_text", "url") %in%
+    names(db$qualifier_links)))
+  expect_equal(sum(db$features$detectionMode == "exactProteinMatch",
+    na.rm = TRUE), 250L)
+  exact_types <- table(db$features$type[
+    db$features$detectionMode == "exactProteinMatch"])
+  expect_identical(as.integer(exact_types[c("CDS", "sig_peptide")]),
+    c(242L, 8L))
+  expect_equal(sum(db$features$prioritize %in% TRUE, na.rm = TRUE), 1L)
+  expect_equal(db$features$name[db$features$prioritize %in% TRUE],
+    "mini-white")
+  expect_equal(sum(db$segments$segment_type == "gap"), 40L)
+  expect_true(any(!is.na(db$qualifiers$text) &
+    !is.na(db$qualifiers$predef)))
+  repeated_url <- paste(db$qualifier_links$common_feature_id,
+    db$qualifier_links$qualifier_name, db$qualifier_links$value_index,
+    db$qualifier_links$url, sep = "\r")
+  expect_equal(max(tabulate(match(repeated_url, unique(repeated_url)))), 3L)
   expect_equal(nrow(db$reference_sequences), 13L)
   expect_equal(nrow(db$reference_features), 201L)
   expect_equal(sum(vapply(db$reference_features$segments, nrow, integer(1L))),
     218L)
   expect_equal(sum(lengths(db$reference_features$cleavage_arrows)), 11L)
   expect_equal(nrow(db$reference_primers), 7L)
+})
+
+test_that("common-feature migration provenance distinguishes source identities", {
+  db <- ggchord:::ggchord_builtin_common_features()
+  expect_false(anyDuplicated(db$features$common_feature_id))
+  expect_false(any(db$features$common_feature_id ==
+    db$features$source_feature_id))
+  expect_equal(length(unique(na.omit(
+    db$feature_correspondence$old_source_feature_id))), 1273L)
+  expect_equal(length(unique(na.omit(
+    db$feature_correspondence$new_source_feature_id))), 1454L)
+  expect_equal(sum(db$feature_correspondence$relationship == "unresolved"),
+    268L)
+  expect_false(any(db$feature_correspondence$relationship == "removed"))
+  expect_equal(table(db$feature_identities$created_in_release),
+    structure(c(448L, 1006L), names = c(
+      "snapgene-common-features-8.2.3-export15",
+      "snapgene-common-features-legacy-export13")))
+  tpa <- subset(db$feature_correspondence,
+    old_name == "tPA signal/pro sequence")
+  expect_equal(tpa$relationship, rep("split", 2L))
+  expect_setequal(tpa$new_type, c("sig_peptide", "propeptide"))
+  csy4 <- subset(db$feature_correspondence, old_name == "Csy4 site")
+  expect_equal(csy4$relationship, "renamed")
+  expect_equal(csy4$new_name, "Csy4 Site")
+  beta <- subset(db$feature_correspondence,
+    old_type == "polyA_site")
+  expect_equal(beta$relationship, rep("reclassified", 2L))
+  expect_equal(beta$new_type, rep("polyA_signal", 2L))
+})
+
+test_that("built-in matching derives DNA and protein from normalized relations", {
+  db <- ggchord:::ggchord_builtin_common_features()
+  source <- stats::setNames(db$source_sequences$sequence,
+    db$source_sequences$source_sequence_id)
+  feature_dna <- function(id) {
+    rows <- db$segments[db$segments$common_feature_id == id, , drop = FALSE]
+    rows <- rows[order(rows$segment_index), , drop = FALSE]
+    rows <- rows[rows$segment_type == "standard", , drop = FALSE]
+    paste0(mapply(function(source_id, start, end) {
+      substr(source[[source_id]], start, end)
+    }, rows$source_sequence_id, rows$start_1based_inclusive,
+      rows$end_1based_inclusive, USE.NAMES = FALSE), collapse = "")
+  }
+
+  promoter <- db$features[db$features$name == "AmpR promoter" &
+    is.na(db$features$detectionMode), , drop = FALSE][1L, ]
+  dna_hit <- find_common_features(feature_dna(promoter$common_feature_id),
+    database = db, features = promoter$common_feature_id, mode = "dna",
+    circular = FALSE, resolve = "all")
+  expect_true(any(dna_hit$match_method == "dna_exact"))
+
+  signal <- db$features[db$features$type == "sig_peptide" &
+    db$features$detectionMode == "exactProteinMatch", , drop = FALSE][1L, ]
+  protein_hit <- find_common_features(feature_dna(signal$common_feature_id),
+    database = db, features = signal$common_feature_id, mode = "auto",
+    circular = FALSE, resolve = "all")
+  expect_true(any(protein_hit$type == "sig_peptide" &
+    protein_hit$match_method == "protein_exact"))
 })
 
 test_that("common-feature DNA matching handles orientation and origin", {

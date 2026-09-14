@@ -196,7 +196,23 @@
   exact DNA and six-frame protein matching. In `mode = "auto"`, records now
   follow their stored detection mode: `exactProteinMatch` uses exact protein
   followed by near-exact DNA, while other records use exact DNA. Audited
-  annotations embedded in thirteen reference `.dna` files provide an exact
+  SnapGene 8.2.3 data are now the current source release: 1,454 features,
+  1,970 segments, 5,216 qualifier values, 548 hyperlink occurrences and a
+  903,397 bp backing sequence. The normalized database stores source-local
+  IDs separately from stable ggchord IDs, keeps standard and gap segments as
+  the authoritative structure, derives DNA from 1-based inclusive coordinates
+  plus the backing sequence, and derives protein from typed `translation`
+  qualifiers. Qualifier links retain occurrence order and anchor text without
+  URL deduplication. Version provenance records additions, modifications,
+  type reclassifications, the `Csy4 Site` name normalization and the tPA
+  signal/propeptide split; legacy wide-table DNA, protein and `q_*` columns are
+  no longer authoritative storage. Protein detection eligibility is independent
+  of feature type, including the new `sig_peptide` exact-protein records.
+  The removed legacy workbook is represented by a compact, immutable migration
+  provenance snapshot, so regenerating the database does not restore or depend
+  on the obsolete wide-table source.
+  Separately, audited annotations embedded in thirteen reference `.dna` files
+  provide an exact
   known-sequence layer for pBR322, pUC19, pBluescript II SK(+), pSB1C3,
   pET-28a(+), pETDuet-1, pcDNA3.1(+), pTRE-Tight-BI,
   pSpCas9(BB)-2A-GFP (PX458), pDONR221, pCAMBIA1300, pEarleyGate 201, and

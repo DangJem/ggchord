@@ -110,11 +110,34 @@ ggchord_common_feature_columns <- function(features) {
   features
 }
 
-ggchord_common_pattern_parts <- function(segments) {
+ggchord_common_source_sequence_map <- function(database) {
+  if (!"source_sequences" %in% names(database) ||
+      !is.data.frame(database$source_sequences) ||
+      !all(c("source_sequence_id", "sequence") %in%
+        names(database$source_sequences))) return(character())
+  stats::setNames(as.character(database$source_sequences$sequence),
+    as.character(database$source_sequences$source_sequence_id))
+}
+
+ggchord_common_pattern_parts <- function(segments,
+                                         source_sequences = character()) {
   segments <- segments[order(segments$segment_index), , drop = FALSE]
-  dna <- toupper(gsub(
-    "[[:space:]]", "", as.character(segments$dna_sequence_top_strand)
-  ))
+  if ("dna_sequence_top_strand" %in% names(segments)) {
+    dna <- as.character(segments$dna_sequence_top_strand)
+  } else if (all(c("source_sequence_id", "start_1based_inclusive",
+      "end_1based_inclusive") %in% names(segments))) {
+    dna <- mapply(function(source_sequence_id, start, end, type) {
+      if (type == "gap") return("")
+      sequence <- unname(source_sequences[as.character(source_sequence_id)])
+      if (!length(sequence) || is.na(sequence)) return(NA_character_)
+      substr(sequence, as.integer(start), as.integer(end))
+    }, segments$source_sequence_id, segments$start_1based_inclusive,
+      segments$end_1based_inclusive, segments$segment_type,
+      USE.NAMES = FALSE)
+  } else {
+    dna <- rep(NA_character_, nrow(segments))
+  }
+  dna <- toupper(gsub("[[:space:]]", "", dna))
   dna[is.na(dna)] <- ""
   length_bp <- as.integer(segments$length_bp)
   length_bp[is.na(length_bp)] <- nchar(dna[is.na(length_bp)])
@@ -130,6 +153,68 @@ ggchord_common_pattern_parts <- function(segments) {
       as.logical(segments$translated) else FALSE,
     stringsAsFactors = FALSE
   )
+}
+
+ggchord_common_runtime_features <- function(features, split_segments,
+                                             qualifiers,
+                                             source_sequences) {
+  ids <- as.character(features$common_feature_id)
+  parts <- lapply(ids, function(id) {
+    rows <- split_segments[[id]]
+    if (is.null(rows)) return(data.frame())
+    ggchord_common_pattern_parts(rows, source_sequences)
+  })
+  if (!"reference_dna_feature_5to3" %in% names(features)) {
+    features$reference_dna_feature_5to3 <- vapply(seq_along(parts), function(i) {
+      rows <- parts[[i]]
+      if (!nrow(rows)) return(NA_character_)
+      dna <- paste0(rows$dna[rows$segment_type != "gap"], collapse = "")
+      directionality <- tolower(as.character(
+        features$directionality_label[i] %||% "forward"))
+      if (identical(directionality, "reverse"))
+        ggchord_reverse_complement(dna) else dna
+    }, character(1))
+  }
+  if (!"segment_colors" %in% names(features)) {
+    features$segment_colors <- vapply(parts, function(rows) {
+      if (!nrow(rows)) return(NA_character_)
+      colors <- as.character(rows$color)
+      colors[is.na(colors)] <- ""
+      value <- paste(colors, collapse = ",")
+      if (nzchar(gsub(",", "", value, fixed = TRUE))) value else NA_character_
+    }, character(1))
+  }
+  if (!"translated_any" %in% names(features)) {
+    features$translated_any <- vapply(parts, function(rows) {
+      nrow(rows) && any(!is.na(rows$translated) & rows$translated)
+    }, logical(1))
+  }
+  if (!"reference_protein" %in% names(features)) {
+    features$reference_protein <- NA_character_
+  }
+  if (is.data.frame(qualifiers) && nrow(qualifiers) &&
+      "qualifier_name" %in% names(qualifiers)) {
+    qualifier_id <- intersect(c("common_feature_id", "feature_id"),
+      names(qualifiers))[1L]
+    value_column <- intersect(c("text", "value_text", "value_display"),
+      names(qualifiers))[1L]
+    if (!is.na(qualifier_id) && !is.na(value_column)) {
+      translation <- qualifiers[
+        qualifiers$qualifier_name == "translation", , drop = FALSE]
+      if (nrow(translation)) {
+        translation <- translation[order(translation[[qualifier_id]],
+          translation$value_index), , drop = FALSE]
+        first <- !duplicated(translation[[qualifier_id]])
+        protein <- stats::setNames(as.character(translation[[value_column]][first]),
+          as.character(translation[[qualifier_id]][first]))
+        hit <- match(ids, names(protein))
+        fill <- !is.na(hit) & (is.na(features$reference_protein) |
+          !nzchar(features$reference_protein))
+        features$reference_protein[fill] <- unname(protein[hit[fill]])
+      }
+    }
+  }
+  features
 }
 
 ggchord_common_regex <- function(parts, reverse = FALSE) {
@@ -287,8 +372,9 @@ ggchord_common_reference_candidates <- function(target, accver, database,
 }
 
 ggchord_match_common_dna <- function(target, accver, feature, segments,
-                                     circular, metadata) {
-  parts <- ggchord_common_pattern_parts(segments)
+                                     circular, metadata,
+                                     source_sequences = character()) {
+  parts <- ggchord_common_pattern_parts(segments, source_sequences)
   if (!nrow(parts) || any(parts$length_bp < 0L) ||
       any(parts$segment_type != "gap" & !nzchar(parts$dna))) return(list())
   span <- sum(parts$length_bp)
@@ -628,10 +714,21 @@ find_common_features <- function(
     as.data.frame(db$features, stringsAsFactors = FALSE)
   )
   segment_table <- as.data.frame(db$segments, stringsAsFactors = FALSE)
+  segment_id_column <- intersect(c("common_feature_id", "feature_id"),
+    names(segment_table))[1L]
+  coordinate_backed <- all(c("source_sequence_id",
+    "start_1based_inclusive", "end_1based_inclusive") %in%
+    names(segment_table))
+  embedded_dna <- "dna_sequence_top_strand" %in% names(segment_table)
   if (!all(c("common_feature_id", "name", "type") %in% names(feature_table)) ||
-      !all(c("feature_id", "segment_index", "segment_type", "length_bp",
-             "dna_sequence_top_strand") %in% names(segment_table))) {
+      is.na(segment_id_column) ||
+      !all(c("segment_index", "segment_type", "length_bp") %in%
+        names(segment_table)) || (!coordinate_backed && !embedded_dna)) {
     ggchord_stop("find_common_features(): malformed feature database")
+  }
+  source_sequences <- ggchord_common_source_sequence_map(db)
+  if (coordinate_backed && !length(source_sequences)) {
+    ggchord_stop("find_common_features(): source sequence is missing")
   }
   if (!is.null(types)) {
     if (!is.character(types) || anyNA(types))
@@ -648,7 +745,10 @@ find_common_features <- function(
   }
   if (!nrow(feature_table)) return(ggchord_empty_common_features())
   split_segments <- split(segment_table,
-    factor(segment_table$feature_id, levels = unique(segment_table$feature_id)))
+    factor(segment_table[[segment_id_column]],
+      levels = unique(segment_table[[segment_id_column]])))
+  feature_table <- ggchord_common_runtime_features(feature_table,
+    split_segments, db$qualifiers %||% data.frame(), source_sequences)
   candidates <- list()
   for (s in seq_along(input$sequences)) {
     target <- input$sequences[s]; accver <- input$ids[s]
@@ -674,7 +774,8 @@ find_common_features <- function(
         seg <- split_segments[[as.character(feature$common_feature_id)]]
         if (is.null(seg)) next
         hit <- ggchord_match_common_dna(
-          target, accver, feature, seg, circular, db$metadata
+          target, accver, feature, seg, circular, db$metadata,
+          source_sequences
         )
         if (length(hit)) {
           candidates <- c(candidates, hit)
@@ -707,10 +808,9 @@ find_common_features <- function(
       if (mode == "auto") {
         approximate_rows <- which(protein_modes)
       } else {
-        translated <- if ("translated_any" %in% names(feature_table)) {
-          !is.na(feature_table$translated_any) & feature_table$translated_any
-        } else feature_table$type == "CDS"
-        approximate_rows <- which(feature_table$type == "CDS" & translated)
+        translated <- !is.na(feature_table$translated_any) &
+          feature_table$translated_any
+        approximate_rows <- which(translated)
       }
       for (i in approximate_rows) {
         feature <- feature_table[i, , drop = FALSE]
