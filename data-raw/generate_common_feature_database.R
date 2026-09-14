@@ -503,6 +503,8 @@ read_binary_plasmid_reference <- function(path) {
   sequence <- NULL
   feature_xml <- NULL
   primer_xml <- NULL
+  enzyme_display_packet <- NULL
+  custom_enzyme_xml <- NULL
   while (position + 4L <= length(bytes)) {
     block_id <- as.integer(bytes[position])
     block_length <- read_uint32_be(bytes[(position + 1L):(position + 4L)])
@@ -514,6 +516,8 @@ read_binary_plasmid_reference <- function(path) {
     if (block_id == 0L) sequence <- rawToChar(payload[-1L])
     if (block_id == 10L) feature_xml <- rawToChar(payload)
     if (block_id == 5L) primer_xml <- rawToChar(payload)
+    if (block_id == 13L) enzyme_display_packet <- payload
+    if (block_id == 14L) custom_enzyme_xml <- rawToChar(payload)
     position <- last + 1L
   }
   if (is.null(sequence) || is.null(feature_xml)) {
@@ -620,6 +624,43 @@ read_binary_plasmid_reference <- function(path) {
     }), recursive = FALSE)
     if (length(parsed)) do.call(rbind, parsed) else empty_primers
   }
+  printable_runs <- if (is.null(enzyme_display_packet)) character() else {
+    printable <- as.integer(enzyme_display_packet)
+    printable[printable < 32L | printable > 126L] <- 32L
+    runs <- strsplit(trimws(rawToChar(as.raw(printable))),
+      "[[:space:]]{2,}")[[1L]]
+    trimws(runs[nchar(trimws(runs)) >= 2L])
+  }
+  selected_enzyme_set <- if (length(printable_runs)) {
+    printable_runs[which.max(nchar(printable_runs))]
+  } else NA_character_
+  custom_sets <- data.frame(name = character(), enzymes = I(list()))
+  if (!is.null(custom_enzyme_xml)) {
+    custom_document <- xml2::read_xml(custom_enzyme_xml)
+    custom_nodes <- xml2::xml_find_all(custom_document, ".//CustomEnzymeSet")
+    if (length(custom_nodes)) {
+      custom_sets <- do.call(rbind, lapply(custom_nodes, function(node) {
+        attrs <- xml2::xml_attrs(node)
+        enzyme_text <- value_or(attrs["enzymeNames"], "")
+        enzymes <- if (nzchar(enzyme_text)) {
+          strsplit(trimws(enzyme_text), "[[:space:]]+")[[1L]]
+        } else character()
+        data.frame(name = value_or(attrs["name"], ""),
+          enzymes = I(list(enzymes)), stringsAsFactors = FALSE)
+      }))
+    }
+  }
+  selected_custom <- match(selected_enzyme_set, custom_sets$name)
+  enzyme_profile <- data.frame(
+    reference_id = reference_id,
+    set_name = selected_enzyme_set,
+    profile_type = if (is.na(selected_enzyme_set)) "unknown" else if (
+      identical(selected_enzyme_set, "None")) "none" else if (
+      !is.na(selected_custom)) "custom" else "preset",
+    enzymes = I(list(if (is.na(selected_custom)) character() else
+      custom_sets$enzymes[[selected_custom]])),
+    stringsAsFactors = FALSE
+  )
   list(
     sequence = data.frame(
       reference_id = reference_id,
@@ -630,7 +671,8 @@ read_binary_plasmid_reference <- function(path) {
         serialize = FALSE),
       stringsAsFactors = FALSE
     ),
-    features = do.call(rbind, rows), primers = primer_rows
+    features = do.call(rbind, rows), primers = primer_rows,
+    enzyme_profile = enzyme_profile
   )
 }
 
@@ -649,11 +691,22 @@ reference_features <- do.call(rbind,
   lapply(binary_references, `[[`, "features"))
 reference_primers <- do.call(rbind,
   lapply(binary_references, `[[`, "primers"))
+reference_enzyme_profiles <- do.call(rbind,
+  lapply(binary_references, `[[`, "enzyme_profile"))
 stopifnot(
   nrow(reference_sequences) == 13L,
   nrow(reference_features) == 201L,
   sum(vapply(reference_features$segments, nrow, integer(1L))) == 218L,
   nrow(reference_primers) == 7L,
+  nrow(reference_enzyme_profiles) == 13L,
+  sum(reference_enzyme_profiles$profile_type == "custom") == 2L,
+  sum(reference_enzyme_profiles$profile_type == "none") == 1L,
+  identical(reference_enzyme_profiles$set_name[
+    reference_enzyme_profiles$reference_id == make.names(
+      "pSpCas9(BB)-2A-GFP (PX458)")], "BbsI + EcoRI"),
+  identical(reference_enzyme_profiles$set_name[
+    reference_enzyme_profiles$reference_id == make.names("pTRIPZ")],
+    "Unique Cutters + BamHI"),
   identical(sort(unique(reference_primers$reference_id)),
     sort(make.names(c("pSB1C3", "pETDuet-1"))))
 )
@@ -677,7 +730,8 @@ ggchord_common_feature_database <- list(
       plasmids = nrow(reference_sequences),
       features = nrow(reference_features),
       segments = sum(vapply(reference_features$segments, nrow, integer(1L))),
-      primers = nrow(reference_primers)
+      primers = nrow(reference_primers),
+      enzyme_profiles = nrow(reference_enzyme_profiles)
     ),
     generating_version = "0.13.0"
   ),
@@ -706,6 +760,7 @@ ggchord_common_feature_database <- list(
   reference_sequences = reference_sequences,
   reference_features = reference_features,
   reference_primers = reference_primers,
+  reference_enzyme_profiles = reference_enzyme_profiles,
   search_indexes = list(
     dna_feature_ids = sort(unique(segments$common_feature_id[
       segments$segment_type == "standard"])),

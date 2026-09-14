@@ -219,7 +219,9 @@ ggchord_normalize_restriction_patterns <- function(patterns) {
 #' @return One row per pattern match without display filtering or deduplication.
 #'   `enzyme_site_count` records the number of distinct cleavage/display
 #'   positions for that enzyme on the complete supplied sequence, so it remains
-#'   stable after display filtering.
+#'   stable after display filtering. For an exactly recognized bundled
+#'   reference sequence, the `reference_enzyme_profiles` attribute records its
+#'   saved display set for use by [filter_restriction_sites()].
 #' @export
 find_restriction_sites <- function(sequence,enzymes=NULL,patterns=NULL,
                                    circular=TRUE,database=NULL){
@@ -287,22 +289,97 @@ find_restriction_sites <- function(sequence,enzymes=NULL,patterns=NULL,
       length(unique(x[is.finite(x)])),integer(1L))
     out$enzyme_site_count<-unname(count_by_enzyme[enzyme_key])
   }
-  attr(out,"enzyme_database_version")<-unique(defs$database_version);out
+  reference_profiles <- data.frame()
+  common_db <- tryCatch(ggchord_builtin_common_features(),
+    error = function(e) NULL)
+  if (!is.null(common_db) && all(c("reference_sequences",
+      "reference_enzyme_profiles") %in% names(common_db))) {
+    profile_rows <- lapply(seq_along(seqs), function(i) {
+      matched <- common_db$reference_sequences$reference_id[
+        common_db$reference_sequences$sequence == seqs[i]]
+      if (!length(matched)) return(NULL)
+      profile_index <- match(matched[1L],
+        common_db$reference_enzyme_profiles$reference_id)
+      if (is.na(profile_index)) return(NULL)
+      profile <- common_db$reference_enzyme_profiles[
+        profile_index, , drop = FALSE]
+      profile$accver <- ids[i]
+      profile
+    })
+    profile_rows <- Filter(Negate(is.null), profile_rows)
+    if (length(profile_rows)) reference_profiles <-
+      ggchord_rbind_fill(profile_rows)
+  }
+  attr(out,"enzyme_database_version")<-unique(defs$database_version)
+  attr(out,"reference_enzyme_profiles")<-reference_profiles
+  out
 }
 
 #' Filter restriction sites for display
 #' @param sites Result from [find_restriction_sites()].
-#' @param set Display preset.
+#' @param set Display preset. `"reference"` reuses the enzyme-set profile
+#'   stored for an exactly recognized reference sequence. It errors when no
+#'   such profile is available. A saved `"None"` profile returns no sites.
 #' @param enzymes,min_site_length,cuts,window,commercial_only Additional filters.
 #' @param parent_set Enzyme catalogue subset. `"commercial_nonredundant"`
 #'   keeps one stable commercial representative per equivalent recognition
 #'   group and site, preferring the database's preferred enzyme when present.
 #' @return A row subset whose biological coordinates are unchanged.
+#' @examples
+#' data(plasmid_example_pSpCas9_BB_2A_GFP_PX458)
+#' sites <- find_restriction_sites(
+#'   plasmid_example_pSpCas9_BB_2A_GFP_PX458
+#' )
+#' reference_sites <- filter_restriction_sites(sites, set = "reference")
 #' @export
-filter_restriction_sites<-function(sites,set=c("all","unique","unique_dual","six_plus","unique_6plus","commercial"),enzymes=NULL,min_site_length=NULL,cuts=NULL,window=NULL,commercial_only=FALSE,parent_set=c("all","commercial_all","commercial_nonredundant")){
+filter_restriction_sites<-function(sites,set=c("all","unique","unique_dual","six_plus","unique_6plus","commercial","reference"),enzymes=NULL,min_site_length=NULL,cuts=NULL,window=NULL,commercial_only=FALSE,parent_set=c("all","commercial_all","commercial_nonredundant")){
   if(!is.data.frame(sites))ggchord_stop("filter_restriction_sites(): sites must be a data frame")
   set<-match.arg(set);parent_set<-match.arg(parent_set);if(!nrow(sites))return(sites)
   ggchord_require_columns(sites,c("accver","enzyme","motif_length","position"),"filter_restriction_sites()")
+  if (set == "reference") {
+    profiles <- attr(sites, "reference_enzyme_profiles")
+    if (!is.data.frame(profiles) || !nrow(profiles)) {
+      ggchord_stop(
+        "filter_restriction_sites(set = \"reference\"): no exact reference ",
+        "enzyme profile is available"
+      )
+    }
+    missing_profiles <- setdiff(unique(as.character(sites$accver)),
+      as.character(profiles$accver))
+    if (length(missing_profiles)) {
+      ggchord_stop(
+        "filter_restriction_sites(set = \"reference\"): no profile for ",
+        paste(missing_profiles, collapse = ", ")
+      )
+    }
+    filtered <- lapply(unique(as.character(sites$accver)), function(id) {
+      part <- sites[as.character(sites$accver) == id, , drop = FALSE]
+      profile <- profiles[match(id, profiles$accver), , drop = FALSE]
+      if (profile$profile_type == "none") return(part[FALSE, , drop = FALSE])
+      if (profile$profile_type == "custom") {
+        return(filter_restriction_sites(part, set = "all",
+          enzymes = profile$enzymes[[1L]], min_site_length = min_site_length,
+          cuts = cuts, window = window, commercial_only = commercial_only,
+          parent_set = "all"))
+      }
+      preset <- c(
+        "Unique Cutters" = "unique",
+        "Unique & Dual Cutters" = "unique_dual",
+        "6+ Cutters" = "six_plus",
+        "Unique 6+ Cutters" = "unique_6plus"
+      )[[profile$set_name]]
+      if (is.null(preset)) {
+        ggchord_stop("Unsupported reference enzyme set: ", profile$set_name)
+      }
+      filter_restriction_sites(part, set = preset,
+        min_site_length = min_site_length, cuts = cuts, window = window,
+        commercial_only = commercial_only, parent_set = parent_set)
+    })
+    attrs<-attributes(sites);out<-ggchord_rbind_fill(filtered);rownames(out)<-NULL
+    for(nm in setdiff(names(attrs),c("names","row.names","class")))
+      attr(out,nm)<-attrs[[nm]]
+    return(out)
+  }
   key<-paste(sites$accver,sites$enzyme,sep="\r")
   site_count<-if("enzyme_site_count"%in%names(sites))
     as.integer(sites$enzyme_site_count) else as.integer(table(key)[key])

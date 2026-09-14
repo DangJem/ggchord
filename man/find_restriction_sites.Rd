@@ -29,7 +29,9 @@ spelling for `patterns`.}
 One row per pattern match without display filtering or deduplication.
   `enzyme_site_count` records the number of distinct cleavage/display
   positions for that enzyme on the complete supplied sequence, so it remains
-  stable after display filtering.
+  stable after display filtering. For an exactly recognized bundled
+  reference sequence, the `reference_enzyme_profiles` attribute records its
+  saved display set for use by [filter_restriction_sites()].
 }
 \description{
 Find restriction pattern matches and cleavage coordinates

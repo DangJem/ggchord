@@ -168,12 +168,17 @@
   auditability and lower-case reverse-cleavage definitions are oriented before
   calculating display positions.
 * Added `filter_restriction_sites()` for display subsets (`all`, `unique`,
-  `unique_dual`, `six_plus`, `unique_6plus`, and `commercial`) and intersecting
+  `unique_dual`, `six_plus`, `unique_6plus`, `commercial`, and `reference`) and intersecting
   enzyme, motif-length, site-count, window and commercial filters. Filtering
   never rewrites biological coordinates. `parent_set` additionally selects all
   enzymes, all commercial enzymes, or a stable nonredundant commercial subset;
   equivalence groups and preferred representatives come from the bundled
-  REBASE `embossre.equ` source.
+  REBASE `embossre.equ` source. For the thirteen exact plasmid references,
+  `set = "reference"` reuses the enzyme-set name and any custom enzyme list
+  saved in the source `.dna` record. This fixes reference renders such as PX458
+  (`BbsI + EcoRI`) and pTRIPZ (`Unique Cutters + BamHI`) that were previously
+  forced through the unrelated `unique_6plus` preset. A file-saved `None`
+  profile deliberately returns no sites.
 * `geom_restriction_site()` draws ticks, labels and independent radial leaders
   in one deterministic layer. Real site anchors are separated from final
   label positions. Enzyme-facing text edges begin on a close circular

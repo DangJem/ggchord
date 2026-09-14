@@ -107,18 +107,32 @@ read_reference_fasta <- function(name) {
     sequence = sequence, stringsAsFactors = FALSE
   )
 }
+reference_restriction_sites <- function(sequence, name) {
+  sites <- find_restriction_sites(sequence)
+  if (identical(name, "pETDuet-1")) {
+    # The saved .dna profile is "None", but the checked-in PNG was exported
+    # with a dense unique-6+ display. The visual fixture therefore owns this
+    # explicit override; it must not be presented as recovered file metadata.
+    return(filter_restriction_sites(sites, set = "unique_6plus",
+      parent_set = "commercial_nonredundant"))
+  }
+  filter_restriction_sites(sites, set = "reference",
+    parent_set = "commercial_nonredundant")
+}
 real_fixtures <- lapply(unname(reference_maps), function(name) {
   sequence <- read_reference_fasta(name)
-  sites <- find_restriction_sites(sequence)
-  sites <- filter_restriction_sites(
-    sites, set = "unique_6plus", parent_set = "commercial_nonredundant"
-  )
+  sites <- reference_restriction_sites(sequence, name)
   list(
     sequence = sequence, features = find_common_features(sequence),
     sites = sites
   )
 })
 names(real_fixtures) <- names(reference_maps)
+stopifnot(
+  nrow(real_fixtures[[make.names("pSpCas9(BB)-2A-GFP (PX458)")]]$sites) == 4L,
+  nrow(real_fixtures[[make.names("pTRIPZ")]]$sites) == 38L,
+  nrow(real_fixtures[[make.names("pETDuet-1")]]$sites) == 58L
+)
 fixtures <- c(real_fixtures, fixtures)
 
 for (name in names(fixtures)) {

@@ -305,6 +305,20 @@ test_that("restriction filters only subset rows", {
   expect_equal(reduced$enzyme, c("Preferred", "Other"))
 })
 
+test_that("reference restriction profiles preserve saved enzyme sets", {
+  data(plasmid_example_pSpCas9_BB_2A_GFP_PX458)
+  sites <- find_restriction_sites(plasmid_example_pSpCas9_BB_2A_GFP_PX458)
+  profile <- attr(sites, "reference_enzyme_profiles")
+  expect_equal(profile$set_name, "BbsI + EcoRI")
+  reference <- filter_restriction_sites(sites, set = "reference")
+  expect_setequal(unique(reference$enzyme), c("BbsI", "EcoRI"))
+  expect_equal(nrow(reference), 4L)
+
+  unknown <- find_restriction_sites("AAAAGAATTCTTT")
+  expect_error(filter_restriction_sites(unknown, set = "reference"),
+    "no exact reference enzyme profile")
+})
+
 test_that("restriction layout is deterministic and never moves site anchors", {
   seq <- data.frame(accver = "g", length = 1000)
   sites <- data.frame(
