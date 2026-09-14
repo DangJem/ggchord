@@ -412,10 +412,29 @@ test_that("restriction layout is deterministic and never moves site anchors", {
     include = "restriction"
   )$restriction
   dense_leaders <- dense[dense$restriction_component == "leader", ]
-  segments_per_site <- vapply(split(dense_leaders, dense_leaders$source_row),
+  paths_per_site <- vapply(split(dense_leaders, dense_leaders$source_row),
     function(x) length(unique(x$group)), integer(1))
-  expect_true(all(segments_per_site <= 2L))
-  expect_true(any(segments_per_site == 2L))
+  expect_true(all(paths_per_site == 1L))
+
+  # Every outside leader remains outside the radius at which it leaves the
+  # backbone. Long fan connections may follow a sampled exterior arc rather
+  # than cutting across the plasmid interior.
+  segment_radius <- function(p0, p1) {
+    delta <- p1 - p0
+    denominator <- sum(delta^2)
+    parameter <- if (denominator <= 1e-16) 0 else
+      max(0, min(1, -sum(p0 * delta) / denominator))
+    sqrt(sum((p0 + parameter * delta)^2))
+  }
+  for (path in split(dense_leaders, dense_leaders$group)) {
+    if (nrow(path) < 2L) next
+    departure_radius <- sqrt(path$x[1L]^2 + path$y[1L]^2)
+    clearance <- vapply(seq_len(nrow(path) - 1L), function(i) {
+      segment_radius(c(path$x[i], path$y[i]),
+        c(path$x[i + 1L], path$y[i + 1L]))
+    }, numeric(1))
+    expect_gte(min(clearance), departure_radius - 1e-5)
+  }
 
   lateral_sites <- data.frame(
     accver = "g", position = seq(220, 248, by = 4),

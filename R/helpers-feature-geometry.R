@@ -32,14 +32,15 @@ ggchord_feature_width_factor <- function(shape) {
 
 # Minimum visible arc length for a directional glyph. Short biological
 # intervals keep their real anchor and metadata, but their drawing interval is
-# symmetrically widened so the common arrow factory can still form a body,
-# shoulders and a head.
+# symmetrically widened just enough to retain direction. The shape factory then
+# contracts its head and thickness to produce a compressed glyph instead of
+# making a few-base interval look like a conventional long feature.
 ggchord_arrow_minimum_length <- function(width, head_length = .04,
                                           heads = 1L) {
   if (heads > 1L) {
-    max(2.3 * head_length, 1.6 * width)
+    max(.70 * head_length, .55 * width)
   } else {
-    max(1.25 * head_length, 1.25 * width)
+    max(.32 * head_length, .35 * width)
   }
 }
 
@@ -161,14 +162,23 @@ ggchord_shape_bidirectional_arrow <- function(a_start, a_end, r0, width,
   direction <- if (span < 0) -1 else 1
   available <- abs(span) * max(abs(r0), 0.1)
   if (available < 2 * head_length) {
-    if (identical(short_feature, "block") || identical(short_feature, "auto")) {
+    if (identical(short_feature, "block")) {
       return(ggchord_shape_block(a_start, a_end, r0, width))
     }
-    mid <- (a_start + a_end) / 2
-    return(list(list(
-      angle = c(a_start, mid, a_end, mid),
-      radius = c(r0, r0 + width / 2, r0, r0 - width / 2)
-    )))
+    if (identical(short_feature, "auto")) {
+      # Preserve two visible directions in a compact band. The former fallback
+      # discarded direction by turning every short bidirectional interval into
+      # a full-width block.
+      width <- min(width, max(width * .22, available * .62))
+      head_width <- min(head_width, 1)
+      head_length <- min(available * .22, width * .42)
+    } else {
+      mid <- (a_start + a_end) / 2
+      return(list(list(
+        angle = c(a_start, mid, a_end, mid),
+        radius = c(r0, r0 + width / 2, r0, r0 - width / 2)
+      )))
+    }
   }
   head_angle <- min(abs(span) * .225,
     head_length / max(abs(r0), .1))

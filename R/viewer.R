@@ -59,6 +59,39 @@ ggchord_preview_height <- function(plot, width_inches) {
   ggchord_preview_layout(plot, width_inches)$height
 }
 
+# Fit a circular preview by preserving a readable physical backbone diameter
+# and expanding the canvas for the annotation envelope. The returned gtable is
+# frozen at the measurement device so exporting it does not trigger a second
+# size-dependent track solution.
+ggchord_preview_circular_layout <- function(plot) {
+  baseline <- c(width = 12.39, height = 9.71)
+  close_device <- ggchord_measurement_device(
+    width = baseline[["width"]], height = baseline[["height"]]
+  )
+  on.exit(close_device())
+  table <- ggplot2::ggplotGrob(plot)
+  layout <- plot$ggchord$ref$layout %||% plot$ggchord$layout
+  limits <- if (is.null(layout)) {
+    list(xlim = c(-1, 1), ylim = c(-1, 1))
+  } else ggchord_adaptive_limits(layout)
+  span <- c(diff(limits$xlim), diff(limits$ylim))
+  span[!is.finite(span) | span <= 0] <- 2
+
+  # Four inches per data unit gives an uncluttered eight-inch backbone for a
+  # sparse unit circle. Dense asymmetric annotations enlarge only the sides
+  # that need room instead of reducing the text to fit a fixed canvas.
+  panel <- pmax(7.6, 4 * span)
+  fixed <- c(
+    grid::convertWidth(sum(table$widths), "inches", valueOnly = TRUE),
+    grid::convertHeight(sum(table$heights), "inches", valueOnly = TRUE)
+  )
+  list(
+    plot = table,
+    width = max(8, panel[1] + fixed[1]),
+    height = max(8, panel[2] + fixed[2])
+  )
+}
+
 #' Preview a ggchord plot at its intended export size
 #'
 #' Renders a plot with \code{ggsave()} into a temporary PNG or SVG and opens a
@@ -81,8 +114,12 @@ ggchord_preview_height <- function(plot, width_inches) {
 #' previously active graphics device.
 #'
 #' @param plot A ggchord or ggplot object, default \code{last_plot()}.
-#' @param width Positive output width, default 12.39 inches when \code{units = "in"}.
-#' @param height Positive output height, default 9.71 inches. Use \code{NULL} to fit the
+#' @param width Positive output width. With no explicit dimensions,
+#'   \code{coord_chord()} uses 12.39 inches while \code{coord_circular()}
+#'   derives its width from the annotation envelope.
+#' @param height Positive output height. With no explicit dimensions,
+#'   \code{coord_chord()} uses 9.71 inches while \code{coord_circular()}
+#'   derives both dimensions. Use \code{NULL} to fit the
 #'   sequence, labels and legends while preserving equal coordinate units.
 #'   Explicit width/height values are always respected.
 #' @param units Output units: \code{"in"}, \code{"cm"}, \code{"mm"}, or
@@ -111,6 +148,8 @@ view_ggchord <- function(
     dpi = 144,
     bg = NULL,
     viewer = c("auto", "ide", "browser", "none")) {
+  width_missing <- missing(width)
+  height_missing <- missing(height)
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
 
@@ -136,7 +175,16 @@ view_ggchord <- function(
   }
 
   preview_plot <- plot
-  if (is.null(height)) {
+  circular_auto <- width_missing && height_missing &&
+    isTRUE(plot$coordinates$ggchord_circular)
+  if (circular_auto) {
+    fitted <- ggchord_preview_circular_layout(plot)
+    preview_plot <- fitted$plot
+    width <- switch(units, "in" = fitted$width, cm = fitted$width * 2.54,
+      mm = fitted$width * 25.4, px = fitted$width * dpi)
+    height <- switch(units, "in" = fitted$height, cm = fitted$height * 2.54,
+      mm = fitted$height * 25.4, px = fitted$height * dpi)
+  } else if (is.null(height)) {
     width_inches <- ggchord_preview_pixels(width, units, dpi) / dpi
     fitted <- ggchord_preview_layout(plot, width_inches)
     height_inches <- fitted$height

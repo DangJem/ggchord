@@ -827,6 +827,54 @@ ggchord_restriction_label_lanes <- function(
       placed <- c(placed, members)
     }
   }
+
+  # Reconcile the remaining boundary collisions with local exterior tracks.
+  # Moving only the later genomic label radially outward retains each fan's
+  # polar position and is much more compact than forcing all labels onto one
+  # ever-growing global contour.
+  labels$.restriction_outer_track <- 1L
+  for (id in unique(as.character(gl$accver))) {
+    rows <- which(as.character(gl$accver) == id)
+    if (length(rows) < 2L) next
+    ordered <- rows[order(gl$genomic_position[rows], rows)]
+    placed <- data.frame()
+    for (row in ordered) {
+      base_radius <- labels$.restriction_contour_radius[row]
+      theta <- atan2(labels$.restriction_contour_y[row],
+        labels$.restriction_contour_x[row])
+      chosen <- NULL
+      for (track in 1:12) {
+        radius <- base_radius + (track - 1L) * max(.050, boxes$h[row] * .82)
+        edge_x <- radius * cos(theta)
+        edge_y <- radius * sin(theta)
+        text_sign <- radial_sign * ifelse(edge_x < 0, -1, 1)
+        candidate <- labels[row, , drop = FALSE]
+        candidate$text_x <- edge_x + text_sign * boxes$w[row] / 2
+        candidate$text_y <- edge_y
+        candidate_box <- ggchord_text_boxes(
+          candidate, units_per_inch = units_per_inch, box_padding = .045
+        )
+        collision <- nrow(placed) &&
+          any(ggchord_oriented_box_overlaps(candidate_box, placed))
+        chosen <- list(radius = radius, edge_x = edge_x, edge_y = edge_y,
+          text_sign = text_sign, text_x = candidate$text_x,
+          text_y = candidate$text_y, box = candidate_box, track = track)
+        if (!collision) break
+      }
+      labels$.restriction_contour_x[row] <- chosen$edge_x
+      labels$.restriction_contour_y[row] <- chosen$edge_y
+      labels$.restriction_contour_radius[row] <- chosen$radius
+      labels$.restriction_text_sign[row] <- chosen$text_sign
+      labels$text_x[row] <- chosen$text_x
+      labels$text_y[row] <- chosen$text_y
+      labels$.restriction_outer_track[row] <- chosen$track
+      directions[row] <- if (chosen$text_sign < 0) "left" else "right"
+      if (labels$.restriction_column[row]) {
+        labels$.restriction_column_edge[row] <- chosen$edge_x
+      }
+      placed <- rbind(placed, chosen$box)
+    }
+  }
   boxes <- ggchord_text_boxes(labels, units_per_inch = units_per_inch)
   labels$.text_width <- boxes$w
   labels$.text_height <- boxes$h
@@ -1332,7 +1380,14 @@ ggchord_restriction_geometry <- function(data, params, layout, seq_data) {
     }, numeric(1))
 
     leader_frame <- ggchord_label_curve_frame(gl, layout$seq_arcs)
-    segments <- lapply(seq_along(idx), function(member) {
+    point_segment_radius <- function(p0, p1) {
+      delta <- p1 - p0
+      denom <- sum(delta^2)
+      parameter <- if (denom <= 1e-16) 0 else
+        max(0, min(1, -sum(p0 * delta) / denom))
+      sqrt(sum((p0 + parameter * delta)^2))
+    }
+    leader_paths <- lapply(seq_along(idx), function(member) {
       vector <- c(endpoint_x[member] - tips$x[member],
         endpoint_y[member] - tips$y[member])
       radial <- c(leader_frame$outward_x[member] * side_sign,
@@ -1348,9 +1403,13 @@ ggchord_restriction_geometry <- function(data, params, layout, seq_data) {
           centre_length < .02
       # A label still on its natural radial ray uses one segment. Tangentially
       # displaced labels use exactly the bend selected by the radial solver.
-      if (identical(params$leader, "straight") || aligned) {
-        return(data.frame(x0 = tips$x[member], y0 = tips$y[member],
-          x1 = endpoint_x[member], y1 = endpoint_y[member], group = member))
+      start <- c(tips$x[member], tips$y[member])
+      endpoint <- c(endpoint_x[member], endpoint_y[member])
+      safe_radius <- sqrt(sum(start^2)) - 1e-6
+      direct_is_safe <- point_segment_radius(start, endpoint) >= safe_radius
+      if ((identical(params$leader, "straight") || aligned) && direct_is_safe) {
+        return(data.frame(x = c(start[1], endpoint[1]),
+          y = c(start[2], endpoint[2])))
       }
       bend <- c(labels$.radial_bend_x[member],
         labels$.radial_bend_y[member])
@@ -1363,20 +1422,35 @@ ggchord_restriction_geometry <- function(data, params, layout, seq_data) {
           tips$y[member] + radial[2] * shoulder
         )
       }
-      data.frame(
-        x0 = c(tips$x[member], bend[1]),
-        y0 = c(tips$y[member], bend[2]),
-        x1 = c(bend[1], endpoint_x[member]),
-        y1 = c(bend[2], endpoint_y[member]), group = member
+      if (point_segment_radius(bend, endpoint) >= safe_radius) {
+        return(data.frame(x = c(start[1], bend[1], endpoint[1]),
+          y = c(start[2], bend[2], endpoint[2])))
+      }
+
+      # A long fan chord can cut through the plasmid even when both endpoints
+      # are outside it. Route such leaders along a safe exterior radius before
+      # approaching the label. This is especially important on very wide
+      # devices, where a dense top cluster may otherwise connect to a distant
+      # bottom slot through the map interior.
+      route_radius <- max(safe_radius + .012, sqrt(sum(bend^2)))
+      start_angle <- atan2(bend[2], bend[1])
+      end_angle <- atan2(endpoint[2], endpoint[1])
+      delta_angle <- atan2(sin(end_angle - start_angle),
+        cos(end_angle - start_angle))
+      arc_count <- max(2L, ceiling(abs(delta_angle) / (.035 * pi)))
+      angles <- seq(start_angle, start_angle + delta_angle,
+        length.out = arc_count)
+      route <- data.frame(
+        x = route_radius * cos(angles),
+        y = route_radius * sin(angles)
       )
+      rbind(data.frame(x = start[1], y = start[2]), route,
+        data.frame(x = endpoint[1], y = endpoint[2]))
     })
-    segments <- do.call(rbind, segments)
-    for (segment in seq_len(nrow(segments))) {
-      member <- segments$group[segment]
+    for (member in seq_along(leader_paths)) {
       row <- idx[member]
       append_path(
-        data.frame(x = c(segments$x0[segment], segments$x1[segment]),
-          y = c(segments$y0[segment], segments$y1[segment])),
+        leader_paths[[member]],
         "leader", row, data$position[row], slot_positions[member],
         site_members[[member]],
         cluster_names[member], junction_names[member], directions[member],
@@ -1407,6 +1481,9 @@ ggchord_restriction_geometry <- function(data, params, layout, seq_data) {
         label_attachment_x = labels$.restriction_contour_x[member],
         label_attachment_y = labels$.restriction_contour_y[member],
         label_contour_radius = labels$.restriction_contour_radius[member],
+        outer_annotation_region = "restriction",
+        outer_track = labels$.restriction_outer_track[member],
+        outer_slot = 0L,
         enzyme_label = enzyme_label[member],
         enzyme_fontface = site_enzyme_fontface[member],
         coordinate_label = coordinate_label[member],
@@ -1428,6 +1505,8 @@ ggchord_restriction_geometry <- function(data, params, layout, seq_data) {
       label_layout = character(), label_boundary = numeric(),
       label_attachment_x = numeric(), label_attachment_y = numeric(),
       label_contour_radius = numeric(),
+      outer_annotation_region = character(), outer_track = integer(),
+      outer_slot = integer(),
       stringsAsFactors = FALSE
     ))
   }

@@ -43,7 +43,9 @@ the circular backbone after inside and adjacent placement fail. When
 `FALSE`, unresolved labels are hidden instead of pushing inward forever.
 External labels are rendered as rounded callouts using a lightened form
 of the feature's resolved fill. When restriction-site labels coexist on a
-circular map, both layers are packed in one ordered perimeter layout.}
+circular map, both retain their own layout semantics but register final
+boxes in one coordinate-owned exterior track region so they cannot occupy
+the same space.}
 
 \item{position}{Feature Position used for the label anchor.}
 

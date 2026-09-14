@@ -8,8 +8,10 @@
   Feature-leader line styling is now independent of the mapped text colour,
   fixing leaders that were present in layout data but rendered with an `NA`
   colour and therefore disappeared from the image.
-  All feature shapes now share one radial body width; the plasmid preset keeps
-  that band only slightly taller than its enlarged text. Long arrows retain
+  All feature shapes now share one nominal radial body width; only an
+  insufficiently short directional interval contracts as a geometric
+  fallback. The plasmid preset keeps the regular band only slightly taller
+  than its enlarged text. Long arrows retain
   clear heads and shoulders; compact, promoter and primer arrows constrain their
   head dimensions so very short features keep a visible stem instead of
   becoming chunky pentagons.
@@ -33,9 +35,11 @@
   string being centred across it. The automatic major tick target is now five.
   Restriction-site ticks likewise
   begin at the visible outer edge rather than the sequence centreline.
-* `view_ggchord()` now defaults to the pBluescript comparison canvas of
-  12.39 by 9.71 inches at 144 dpi (about 1784 by 1398 pixels). Explicit output
-  dimensions still take priority, and `height = NULL` retains content fitting.
+* With no explicit dimensions, `view_ggchord()` keeps the 12.39 by 9.71 inch
+  canvas for `coord_chord()` and now derives both dimensions for
+  `coord_circular()` from its measured annotation envelope while preserving a
+  readable physical backbone diameter. Explicit output dimensions still take
+  priority, and `height = NULL` retains one-dimensional content fitting.
 * Circular feature bands now use non-uniform radial spacing: the transition
   from the backbone-near band to the nested cluster reserves a two-line main
   text corridor, each deeper pair of feature bands reserves at least one label
@@ -115,7 +119,12 @@
   linewidth is explicit. Lane collision checks use the true rendered interval
   rather than a type-specific fabricated span. The plasmid preset now uses the visual
   reference's semantic feature colours and type-aware default shape hints while
-  retaining user scale and explicit geometry priority.
+  retaining user scale and explicit geometry priority. The minimum display span
+  for very short directional features is substantially smaller: a few-base
+  feature now appears as a compressed arrow with contracted head and thickness,
+  instead of being enlarged to roughly a full feature-band width. Short
+  bidirectional features likewise retain two compact heads rather than falling
+  back to a nondirectional block.
 * `geom_seq()` adds `seq_style = "single" | "double" | "band"`,
   `seq_backbone_gap`, and `seq_backbone_width` for circular backbones. Under
   `coord_circular()`, the implicit chord-direction arrow and redundant
@@ -141,8 +150,13 @@
   to unbounded label length. Inside text automatically uses black or white from
   the final fill luminance unless its colour is explicitly supplied. External
   feature labels use rounded pastel callouts derived from their resolved fill.
+  Dense short-feature clusters stop after their nearest useful internal label
+  track and use the external fallback instead of consuming the centre.
   Restriction-site polar placement remains independent and is never rewritten
-  into shared Cartesian side rails by the presence of a feature callout.
+  into shared Cartesian side rails by the presence of a feature callout. A
+  coordinate-owned exterior occupancy pass now registers both layers' final
+  boxes and moves a colliding feature callout to the nearest free radial or
+  tangential slot without changing either layer's visual semantics.
 * Added `find_restriction_sites()` as a calculation-only API. It preserves one
   row per pattern match, stable pattern identity, multiple motifs per enzyme,
   overlapping/IUPAC/reverse-complement matches, circular-origin matches,
@@ -162,12 +176,15 @@
   REBASE `embossre.equ` source.
 * `geom_restriction_site()` draws ticks, labels and independent radial leaders
   in one deterministic layer. Real site anchors are separated from final
-  label positions. All enzyme-facing text edges follow one close circular
-  contour in genomic order. Sparse callouts retain their natural angles, while
+  label positions. Enzyme-facing text edges begin on a close circular
+  contour in genomic order; remaining boundary collisions move only to the
+  nearest local exterior track. Sparse callouts retain their natural angles, while
   dense lateral clusters switch deterministically to a compact ordered fan
   with uniform measured spacing rather than a rigid Cartesian text wall.
-  Natural sparse callouts use a direct connector; displaced callouts
-  use exactly two segments, an independent radial stub and fan connector.
+  Natural sparse callouts use a direct connector; displaced callouts normally
+  use a radial stub and fan connector. If that connector would enter the
+  sequence circle, it follows a sampled safe exterior arc before approaching
+  the label, so wide-device fans cannot cut through the plasmid interior.
   Enzymes sharing one cleavage coordinate are combined
   into one stable callout while all contributing rows remain in `source_rows`.
   Each connector ends on the enzyme-bearing left or right edge of the measured

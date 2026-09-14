@@ -18,9 +18,13 @@ view_ggchord(
 \arguments{
 \item{plot}{A ggchord or ggplot object, default \code{last_plot()}.}
 
-\item{width}{Positive output width, default 12.39 inches when \code{units = "in"}.}
+\item{width}{Positive output width. With no explicit dimensions,
+\code{coord_chord()} uses 12.39 inches while \code{coord_circular()}
+derives its width from the annotation envelope.}
 
-\item{height}{Positive output height, default 9.71 inches. Use \code{NULL} to fit the
+\item{height}{Positive output height. With no explicit dimensions,
+\code{coord_chord()} uses 9.71 inches while \code{coord_circular()}
+derives both dimensions. Use \code{NULL} to fit the
 sequence, labels and legends while preserving equal coordinate units.
 Explicit width/height values are always respected.}
 

@@ -221,7 +221,7 @@ ggchord_feature_data <- function(data, fixed_shape = "arrow",
 #'   requested protruding head, `"flush"` keeps it level with the body, and
 #'   `"triangle"` draws a full triangular wedge.
 #' @param short_feature Fallback for arrows too short to hold their requested
-#'   head: automatic wedge/block selection, a wedge, or a block.
+#'   head: an automatically compressed directional glyph, a wedge, or a block.
 #' @param segment_boundaries Draw explicit internal marks carried by a
 #'   segmented feature. Contiguous source-segment joins use dotted dividers;
 #'   a non-solid segment-level \code{line_style} may override them, while a

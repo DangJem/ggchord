@@ -43,6 +43,14 @@ ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
   all_metrics <- ggchord_text_boxes(
     gl, units_per_inch = units_per_inch, box_padding = 0
   )
+  anchor_angle <- atan2(gl$anchor_y, gl$anchor_x)
+  local_density <- vapply(seq_len(n), function(i) {
+    delta <- abs(atan2(sin(anchor_angle - anchor_angle[i]),
+      cos(anchor_angle - anchor_angle[i])))
+    sum(gl$accver == gl$accver[i] & delta <= .25)
+  }, integer(1L))
+  dense_short_cluster <- n >= 15L & local_density >= 5L &
+    !(gl$feature_label_inside %in% TRUE)
 
   # Derive real annotation tracks from feature-band geometry. A label track is
   # either an inter-band gutter or a shared label-only circle below the deepest
@@ -161,6 +169,12 @@ ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
       track_radii <- unique(track_radii)
       track_radii <- track_radii[order(abs(track_radii - feature_radius),
         -track_radii)]
+      # Dense short-feature clusters should not consume an arbitrary number of
+      # inward tracks. After the nearest association track, an exterior
+      # callout is easier to associate and leaves the centre readable.
+      if (dense_short_cluster[i] && length(track_radii) > 1L) {
+        track_radii <- track_radii[1L]
+      }
       candidates <- expand.grid(
         track = seq_along(track_radii), tangent = tangent_candidates
       )

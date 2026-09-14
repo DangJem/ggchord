@@ -49,6 +49,9 @@ test_that("short arrows preserve body shoulders and biological midpoint", {
   expect_true(all(is.finite(auto$x) & is.finite(auto$y)))
   display <- ggchord_arrow_display_interval(0, 2 * pi / 1000, .9, .07, .04)
   expect_gt(diff(display), 2 * pi / 1000)
+  # The visibility fallback stays a compact mark: a two-base interval is
+  # enlarged, but not into the former feature-width-sized long arrow.
+  expect_lt(diff(display) * .9, .5 * .07)
   expect_equal(mean(display), pi / 1000)
   auto_polygon <- auto[auto$.component == "polygon", , drop = FALSE]
   auto_radius <- sqrt(auto_polygon$x^2 + auto_polygon$y^2)
@@ -69,6 +72,16 @@ test_that("short arrows preserve body shoulders and biological midpoint", {
   expect_gte(length(unique(round(radius, 4))), 3L)
   expect_true(nrow(wedge) >= 3L)
   expect_equal(nrow(block), 120L)
+
+  bidirectional <- ggchord_arrow_display_interval(
+    0, 2 * pi / 1000, .9, .07, .04, heads = 2L
+  )
+  bidirectional_shape <- ggchord_shape_bidirectional_arrow(
+    bidirectional[1L], bidirectional[2L], .9, .07,
+    head_length = .04, short_feature = "auto"
+  )[[1L]]
+  expect_lt(diff(bidirectional) * .9, .07)
+  expect_equal(sum(bidirectional_shape$radius == .9), 2L)
 })
 
 test_that("all feature shape factories build and preserve source identity", {
@@ -587,6 +600,51 @@ test_that("feature labels use external fallback or hide by policy", {
   expect_true(any(external$feature_label_mode == "external"))
   expect_lte(nrow(internal_only), nrow(external))
   expect_false(any(internal_only$feature_label_mode == "external"))
+})
+
+test_that("circular exterior tracks arbitrate feature and restriction boxes", {
+  seq <- data.frame(accver = "circle", length = 1000)
+  feature <- data.frame(
+    accver = "circle", start = rep(100, 3), end = rep(105, 3),
+    strand = "+", anno = paste("very long feature label", 1:3)
+  )
+  sites <- data.frame(
+    accver = "circle", position = c(98, 101, 104),
+    enzyme = paste0("Enzyme", 1:3)
+  )
+  out <- export_ggchord_layout(
+    ggchord(seq, validate = "none") + geom_seq() +
+      geom_feature_plasmid(data = feature) +
+      geom_feature_label_repel(data = feature, external = TRUE,
+        max_overlaps = 0) +
+      geom_restriction_site(data = sites) + coord_circular(),
+    include = c("labels", "restriction")
+  )
+  feature_labels <- out$labels[
+    out$labels$.component == "text" &
+      out$labels$feature_label_mode == "external", , drop = FALSE
+  ]
+  site_labels <- out$restriction[
+    out$restriction$restriction_component == "label", , drop = FALSE
+  ]
+  expect_gt(nrow(feature_labels), 0L)
+  expect_true(all(feature_labels$outer_annotation_region == "feature"))
+  expect_true(all(site_labels$outer_annotation_region == "restriction"))
+  expect_true(all(feature_labels$outer_track >= 1L))
+
+  feature_boxes <- ggchord:::ggchord_text_boxes(
+    feature_labels, units_per_inch = .30, box_padding = .045
+  )
+  site_labels$text <- site_labels$label
+  site_labels$text_x <- site_labels$x
+  site_labels$text_y <- site_labels$y
+  site_labels$text_angle <- site_labels$angle
+  site_boxes <- ggchord:::ggchord_text_boxes(
+    site_labels, units_per_inch = .30, box_padding = .045
+  )
+  expect_false(any(ggchord:::ggchord_oriented_box_overlaps(
+    feature_boxes, site_boxes
+  )))
 })
 
 test_that("plasmid preset scales defer to manual scales in either order", {
