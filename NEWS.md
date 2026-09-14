@@ -1,5 +1,14 @@
 # ggchord 0.13.0
 
+* Added a reproducible bundled sequencing-primer catalogue generated from the
+  reviewed Addgene workbook: 137 distinct oligonucleotides and all 163 source
+  alias rows are retained separately. `primer_catalog()` exposes either view,
+  while `find_primer_bindings()` searches each distinct sequence once on both
+  strands, reports circular-origin matches and uniqueness, and preserves every
+  biological alias. Exact matching is the default; longest exact 3-prime
+  annealing and the seven authoritative reference-plasmid annotations are
+  explicit modes. `geom_primer()` adds a compact directional primer layer on
+  the shared feature geometry engine.
 * Increased the plasmid feature-label size and darkened its internal leaders
   so feature names remain legible beside restriction-site annotations. Labels
   placed on a feature and labels moved to an inner track both follow their

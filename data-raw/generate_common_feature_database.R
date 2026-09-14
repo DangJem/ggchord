@@ -781,5 +781,8 @@ objects <- list(ggchord_common_feature_database = ggchord_common_feature_databas
 if (exists("ggchord_rebase_database", envir = old, inherits = FALSE)) {
   objects$ggchord_rebase_database <- get("ggchord_rebase_database", envir = old)
 }
+if (exists("ggchord_primer_database", envir = old, inherits = FALSE)) {
+  objects$ggchord_primer_database <- get("ggchord_primer_database", envir = old)
+}
 list2env(objects, envir = environment())
 save(list = names(objects), file = "R/sysdata.rda", compress = "xz")

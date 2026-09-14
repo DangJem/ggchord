@@ -22,8 +22,9 @@
 ## 当前版本：v0.13.0
 
 目标是完成专用 `coord_circular()`、通用 feature geometry、Position grammar、
-单序列 backbone 与标签、通用注释数据库、限制性酶切数据/显示分层，以及 feature
-标签的 circular annotation track manager；restriction-site 保留独立的圆外极坐标排版。
+单序列 backbone 与标签、通用注释及测序引物数据库、限制性酶切数据/显示分层，
+以及由同一 annotation registry 管理、但分别采用同心环带与 sector/channel/slot
+分配器的圆内外布局；restriction-site 保留独立的圆外极坐标候选语义。
 十三个参考质粒构成当前视觉基准；
 主要功能已经实现，正在进行开发期轻量验证，发布级回归验收尚未开始。接口、非目标、数据约束和验收细节全部记录在
 [v0.13.0 详细文档](versions/v0.13.0.md)。
