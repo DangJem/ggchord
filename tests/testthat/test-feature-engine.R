@@ -82,6 +82,39 @@ test_that("short arrows preserve body shoulders and biological midpoint", {
   )[[1L]]
   expect_lt(diff(bidirectional) * .9, .07)
   expect_equal(sum(bidirectional_shape$radius == .9), 2L)
+  expect_equal(diff(range(bidirectional_shape$radius)), .07,
+    tolerance = 1e-8)
+})
+
+test_that("bidirectional compact shapes retain two heads", {
+  shape <- ggchord_feature_geometry(
+    "promoter_arrow", 0, .02, .9, .07, 1,
+    ref = list(), arrow_head_length = .04,
+    draw_head = TRUE, draw_start_head = TRUE, bidirectional = TRUE
+  )[[1L]]
+  expect_equal(sum(abs(shape$radius - .9) < 1e-10), 2L)
+  expect_equal(diff(range(shape$radius)), .07, tolerance = 1e-8)
+})
+
+test_that("capped-line features keep a thin body and two end caps", {
+  parts <- ggchord_feature_geometry(
+    "capped_line", 0, .4, .9, .08, 1, ref = list()
+  )
+  expect_length(parts, 3L)
+  expect_lt(diff(range(parts[[1L]]$radius)), .01)
+  expect_equal(diff(range(parts[[2L]]$radius)), .08 * .48,
+    tolerance = 1e-8)
+})
+
+test_that("curved labels choose one reading direction per string", {
+  label <- data.frame(
+    text = "direction", text_x = cos(pi / 2), text_y = sin(pi / 2),
+    text_angle = 180, hjust = .5, vjust = .5, size = 3,
+    family = "", fontface = 1, lineheight = 1.2, group = 1
+  )
+  glyphs <- ggchord_arc_text_layout(label, units_per_inch = .25)$glyphs
+  direction <- sign(cos(glyphs$angle * pi / 180))
+  expect_lte(length(unique(direction[direction != 0])), 1L)
 })
 
 test_that("all feature shape factories build and preserve source identity", {

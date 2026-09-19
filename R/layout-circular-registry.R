@@ -3,11 +3,14 @@
 ggchord_empty_circular_annotation_registry <- function() {
   data.frame(
     registry_id = character(), side = character(), kind = character(),
+    annotation_class = character(),
     owner = character(), component = character(), source_row = integer(),
     lane = integer(), track = integer(), radius = numeric(),
     radial_width = numeric(), radius_inner = numeric(),
     radius_outer = numeric(), region = character(), sector = integer(),
-    band = integer(), slot = integer(), bbox_xmin = numeric(),
+    band = integer(), slot = integer(), dominant_band = integer(),
+    spill_reason = character(), leader_crossing_count = integer(),
+    bbox_xmin = numeric(),
     bbox_xmax = numeric(), bbox_ymin = numeric(), bbox_ymax = numeric(),
     leader_corridor = character(), leader_track_start = integer(),
     leader_track_end = integer(), stringsAsFactors = FALSE
@@ -30,6 +33,8 @@ ggchord_registry_row <- function(
     radial_width = NA_real_, radius_inner = NA_real_,
     radius_outer = NA_real_, region = NA_character_, sector = NA_integer_,
     band = NA_integer_, slot = NA_integer_, bbox = NULL,
+    annotation_class = NA_character_, dominant_band = NA_integer_,
+    spill_reason = NA_character_, leader_crossing_count = NA_integer_,
     leader_corridor = NA_character_, leader_track_start = NA_integer_,
     leader_track_end = NA_integer_) {
   if (is.null(bbox) || !nrow(bbox)) {
@@ -37,12 +42,15 @@ ggchord_registry_row <- function(
       ymin = NA_real_, ymax = NA_real_)
   }
   data.frame(
-    registry_id = id, side = side, kind = kind, owner = owner,
+    registry_id = id, side = side, kind = kind,
+    annotation_class = annotation_class, owner = owner,
     component = component, source_row = as.integer(source_row),
     lane = as.integer(lane), track = as.integer(track), radius = radius,
     radial_width = radial_width, radius_inner = radius_inner,
     radius_outer = radius_outer, region = region, sector = as.integer(sector),
     band = as.integer(band), slot = as.integer(slot),
+    dominant_band = as.integer(dominant_band), spill_reason = spill_reason,
+    leader_crossing_count = as.integer(leader_crossing_count),
     bbox_xmin = bbox$xmin[1L], bbox_xmax = bbox$xmax[1L],
     bbox_ymin = bbox$ymin[1L], bbox_ymax = bbox$ymax[1L],
     leader_corridor = leader_corridor,
@@ -364,11 +372,16 @@ ggchord_resolve_outer_annotations <- function(layer_geometry, layout) {
       if (!is.data.frame(geometry) || !nrow(geometry)) next
       rows <- if (identical(component, "restriction_site")) {
         which(geometry$.component %in% "label" & !is.na(geometry$label))
-      } else if ("feature_label_mode" %in% names(geometry)) {
-        which(geometry$.component %in% "text" &
-          geometry$feature_label_mode %in% "external" &
+      } else {
+        external <- if ("feature_label_mode" %in% names(geometry)) {
+          geometry$feature_label_mode %in% "external"
+        } else rep(FALSE, nrow(geometry))
+        if ("annotation_class" %in% names(geometry)) {
+          external <- external | geometry$annotation_class %in% "primer"
+        }
+        which(geometry$.component %in% "text" & external &
           !is.na(geometry$label) & nzchar(geometry$label))
-      } else integer()
+      }
       if (!length(rows)) next
       boxes <- ggchord_annotation_text_boxes(geometry, rows, units_per_inch)
       region <- ggchord_circular_region(boxes$cx, boxes$cy)
@@ -411,9 +424,16 @@ ggchord_resolve_outer_annotations <- function(layer_geometry, layout) {
         geometry[[column]] <- NA_real_
       }
       geometry$annotation_side[rows] <- "outer"
+      annotation_class <- if (identical(component, "restriction_site")) {
+        rep("restriction", length(rows))
+      } else if ("annotation_class" %in% names(geometry)) {
+        as.character(geometry$annotation_class[rows])
+      } else rep("feature", length(rows))
+      annotation_class[is.na(annotation_class) | !nzchar(annotation_class)] <-
+        "feature"
       geometry$annotation_kind[rows] <- if (
         identical(component, "restriction_site")) "restriction_label" else
-        "feature_callout"
+        ifelse(annotation_class == "primer", "primer_label", "feature_callout")
       geometry$annotation_region[rows] <- region
       geometry$annotation_sector[rows] <- sector
       geometry$annotation_band[rows] <- band
@@ -442,7 +462,11 @@ ggchord_resolve_outer_annotations <- function(layer_geometry, layout) {
           id, "outer", geometry$annotation_kind[rows[j]], owner, component,
           source_row = source, region = region[j], sector = sector[j],
           band = band[j], slot = slot[j], bbox = boxes[j, , drop = FALSE],
-          leader_corridor = corridor[j]
+          leader_corridor = corridor[j],
+          annotation_class = annotation_class[j],
+          dominant_band = geometry$dominant_outer_band[rows[j]] %||% 1L,
+          spill_reason = geometry$outer_spill_reason[rows[j]] %||% NA_character_,
+          leader_crossing_count = geometry$leader_crossing_count[rows[j]] %||% 0L
         )
         leader_rows <- if (generated_source && "group" %in% names(geometry)) {
           geometry$group == geometry$group[rows[j]] &

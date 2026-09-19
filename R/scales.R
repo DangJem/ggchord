@@ -165,7 +165,8 @@ scale_feature_fill_manual <- function(..., values, limits = NULL) {
 #'
 #' Maps feature categories to the geometry types understood by
 #' [geom_feature()], including full/compact/promoter/primer arrows, markers,
-#' blocks, chevrons, and lollipops.
+#' blocks, capped lines, chevrons, and lollipops. `capped_line` is an
+#' unfilled interval with short terminal caps.
 #' Shape values affect the actual feature geometry as well as its legend key.
 #'
 #' @param ... Arguments passed to [ggplot2::discrete_scale()].
@@ -183,7 +184,7 @@ scale_feature_shape_manual <- function(..., values, name = "Feature",
                                        limits = NULL, guide = "none") {
   allowed <- c(
     "arrow", "compact_arrow", "promoter_arrow", "primer_arrow", "marker",
-    "block", "chevron", "lollipop"
+    "block", "capped_line", "primer_arc", "chevron", "lollipop"
   )
   if (!is.character(values) || length(values) == 0L || anyNA(values) ||
       any(!values %in% allowed)) {
@@ -268,7 +269,7 @@ scale_feature_shape_plasmid <- function(..., limits = NULL, guide = "none") {
     operator="block", terminator="block", enhancer="block",
     regulatory="compact_arrow", RBS="block", polyA_signal="block",
     poly_a_signal="block", LTR="block", repeat_region="block",
-    misc_RNA="block", MCS="block", misc_feature="block"
+    misc_RNA="block", intron="capped_line", MCS="block", misc_feature="block"
   )
   if (is.null(limits)) limits <- names(values)
   out <- ggplot2::discrete_scale(

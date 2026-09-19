@@ -44,6 +44,10 @@ feature_geom <- ggplot2::ggproto(
           polygons$feature_fill_explicit[explicit]
         polygons$fill <- polygons$feature_fill
       }
+      if ("feature_shape" %in% names(polygons)) {
+        line_only <- polygons$feature_shape %in% "capped_line"
+        polygons$fill[line_only] <- NA
+      }
       grobs[[length(grobs) + 1L]] <- ggplot2::GeomPolygon$draw_panel(
         polygons, panel_params, coord
       )
@@ -161,7 +165,7 @@ ggchord_feature_data <- function(data, fixed_shape = "arrow",
   out$.feature_shape_raw[nondirectional] <- "block"
   allowed <- c(
     "arrow", "compact_arrow", "promoter_arrow", "primer_arrow", "marker",
-    "block", "chevron", "lollipop"
+    "block", "capped_line", "primer_arc", "chevron", "lollipop"
   )
   if (anyNA(out$.feature_shape_raw) ||
       (!is.null(fixed_shape) && any(!out$.feature_shape_raw %in% allowed))) {
@@ -312,7 +316,7 @@ geom_feature <- function(mapping = NULL, data = NULL,
 
   allowed_shapes <- c(
     "arrow", "compact_arrow", "promoter_arrow", "primer_arrow", "marker",
-    "block", "chevron", "lollipop"
+    "block", "capped_line", "primer_arc", "chevron", "lollipop"
   )
   shape_mapped <- !is.null(mapping) && "feature_shape" %in% names(mapping)
   if (!shape_mapped &&

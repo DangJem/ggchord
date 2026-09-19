@@ -120,6 +120,16 @@ ggchord_reference_primer_bindings <- function(ids, sequences) {
       database$reference_primers$reference_id %in% reference_id, , drop = FALSE
     ]
     if (!nrow(hit)) next
+    # Databases generated before the v0.13 primer-geometry revision retained
+    # SnapGene's zero-based binding-site coordinates.  Convert at the runtime
+    # boundary as well so installed development data remains correct until the
+    # next deterministic data regeneration.
+    metadata_version <- database$metadata$primer_coordinate_system %||%
+      "snapgene_zero_based_inclusive"
+    if (identical(metadata_version, "snapgene_zero_based_inclusive")) {
+      hit$start <- hit$start + 1L
+      hit$end <- hit$end + 1L
+    }
     hit$accver <- ids[i]
     hit$crosses_origin <- hit$end < hit$start
     hit$annealed_length <- nchar(hit$annealed_bases)

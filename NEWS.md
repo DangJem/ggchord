@@ -5,11 +5,14 @@
   globally unique physical inner tracks: track 0 records the visible sequence
   backbone, while variable-width feature bands, curved-text tracks, inner
   leader corridors and the axis reserve record their radius and radial
-  boundaries. The independent restriction-site fan and feature-callout
-  candidate systems are retained, but their final exterior occupancy is
-  reconciled through shared cardinal regions, natural-angle sectors, radial
-  bands, globally assigned slots, measured bounding boxes and leader
-  corridors. `export_ggchord_layout()` exposes the registry and copies the
+  boundaries. Restriction sites, external feature labels and primer labels
+  retain their own visual semantics, but now register complete requests before
+  one exterior allocation pass. The allocator opens circular order at the
+  largest real gap, selects a dominant perimeter band, spills only to
+  consecutive bands after a measured collision, and shares bounding boxes and
+  leader occupancy across annotation classes. `export_ggchord_layout()` exposes
+  annotation class, dominant/actual band, spill reason and leader-crossing
+  count together with the registry, and copies the
   resolved track or exterior allocation fields onto affected geometry rows.
   Registry joins now guarantee scalar track identities even when a
   device-specific fallback omits a local resource, fixing circular layout
@@ -24,8 +27,11 @@
   strands, reports circular-origin matches and uniqueness, and preserves every
   biological alias. Exact matching is the default; longest exact 3-prime
   annealing and the seven authoritative reference-plasmid annotations are
-  explicit modes. `geom_primer()` adds a compact directional primer layer on
-  the shared feature geometry engine.
+  explicit modes. Reference `.dna` primer coordinates are converted from
+  zero-based storage to one-based inclusive ranges. `geom_primer()` now draws
+  an independent purple directional arc at a backbone edge; the new
+  `geom_primer_label_repel()` draws unboxed purple labels and leaders and can
+  include the binding range. Primers no longer consume an inner feature lane.
 * Increased the plasmid feature-label size and darkened its internal leaders
   so feature names remain legible beside restriction-site annotations. Labels
   placed on a feature and labels moved to an inner track both follow their
@@ -34,13 +40,25 @@
   Feature-leader line styling is now independent of the mapped text colour,
   fixing leaders that were present in layout data but rendered with an `NA`
   colour and therefore disappeared from the image.
-  All feature shapes now share one nominal radial body width; only an
-  insufficiently short directional interval contracts as a geometric
-  fallback. The plasmid preset keeps the regular band only slightly taller
+  All feature shapes now preserve one nominal radial body width, including
+  very short directional intervals; only the along-sequence body and head
+  lengths contract. The plasmid preset keeps the regular band only slightly taller
   than its enlarged text. Long arrows retain
-  clear heads and shoulders; compact, promoter and primer arrows constrain their
+  clear heads and shoulders; compact and promoter arrows constrain their
   head dimensions so very short features keep a visible stem instead of
   becoming chunky pentagons.
+* Added `capped_line`, an unfilled interval with short terminal caps, for
+  source records with line-only/`noColor` display semantics such as introns.
+  Directionality is now resolved before shape-specific single-head fallbacks,
+  so `+/-` promoters and other directional features keep symmetric heads.
+  Curved feature text chooses its reading direction once per complete string,
+  preventing individual characters from flipping midway around a label.
+* `find_restriction_sites()` now accepts `methylation = "auto"`, `"none"`, or
+  `"dam_dcm"` and returns `methylation_status`, `blocked_by`,
+  `display_warning`, and provenance fields. Source-backed blocked sites are
+  shown with a grey label/leader and an appended asterisk; unknown contexts are
+  not guessed. The pSB1C3 reference now reproduces the Dcm-blocked `PflMI *`
+  state without a plasmid-name rendering branch.
 * Refined the pBluescript II SK(+) circular-map layout against the supplied
   visual reference. Restriction labels again retain their close polar contour
   and local ordered fans instead of being flattened onto shared left/right
@@ -58,7 +76,9 @@
   ticks now start at the visible inner backbone boundary and extend towards
   the centre. Parallel labels follow the inner-ring tangent beside their tick,
   with the leading text edge separated from the radial line instead of the
-  string being centred across it. The automatic major tick target is now five.
+  string being centred across it. Automatic plasmid steps now use the smallest
+  `1/2/2.5/5 × 10^k` interval producing at most ten major ticks; the origin
+  seam is not labelled twice. Major ticks and label clearance are longer.
   Restriction-site ticks likewise
   begin at the visible outer edge rather than the sequence centreline.
 * With no explicit dimensions, `view_ggchord()` keeps the 12.39 by 9.71 inch

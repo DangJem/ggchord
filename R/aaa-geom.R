@@ -167,14 +167,30 @@ GeomChordGeneLabelRepel <- ggplot2::ggproto(
       )
     }
     if (nrow(text)) {
+      primer <- if ("annotation_class" %in% names(text)) {
+        !is.na(text$annotation_class) & text$annotation_class == "primer"
+      } else rep(FALSE, nrow(text))
+      if (any(primer) && all(c("primer_name", "primer_start", "primer_end") %in%
+          names(text))) {
+        range <- paste0("(", text$primer_start, " .. ", text$primer_end, ")")
+        show_location <- if ("primer_show_location" %in% names(text)) {
+          is.na(text$primer_show_location) | text$primer_show_location
+        } else rep(TRUE, nrow(text))
+        left <- text$x < 0
+        formatted <- ifelse(left,
+          paste(range, text$primer_name), paste(text$primer_name, range))
+        text$label[primer & show_location] <- formatted[primer & show_location]
+        text$label[primer & !show_location] <-
+          text$primer_name[primer & !show_location]
+      }
       external <- if ("feature_label_mode" %in% names(text)) {
         text$feature_label_mode %in% "external"
       } else rep(FALSE, nrow(text))
       curved <- if (".draw_as_arc" %in% names(text)) {
         text$.draw_as_arc %in% TRUE
       } else rep(FALSE, nrow(text))
-      plain <- text[!external & !curved, , drop = FALSE]
-      callout <- text[external, , drop = FALSE]
+      plain <- text[(!external | primer) & !curved, , drop = FALSE]
+      callout <- text[external & !primer, , drop = FALSE]
       if (nrow(callout)) {
         callout$fill <- if ("feature_label_fill" %in% names(callout)) {
           callout$feature_label_fill

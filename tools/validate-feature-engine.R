@@ -123,7 +123,6 @@ real_fixtures <- lapply(unname(reference_maps), function(name) {
   sequence <- read_reference_fasta(name)
   sites <- reference_restriction_sites(sequence, name)
   primers <- find_primer_bindings(sequence, set = "reference")
-  if (nrow(primers)) primers$feature_label <- primers$name
   list(
     sequence = sequence, features = find_common_features(sequence),
     sites = sites, primers = primers
@@ -136,6 +135,26 @@ stopifnot(
   nrow(real_fixtures[[make.names("pETDuet-1")]]$sites) == 58L,
   sum(vapply(real_fixtures, function(x) nrow(x$primers), integer(1L))) == 7L
 )
+psb_sites <- real_fixtures[[make.names("pSB1C3")]]$sites
+stopifnot(any(psb_sites$enzyme == "PflMI" &
+  psb_sites$display_warning == "methylation_blocked"))
+px_features <- real_fixtures[[make.names(
+  "pSpCas9(BB)-2A-GFP (PX458)")]]$features
+stopifnot(px_features$feature_shape[px_features$anno == "hybrid intron"] ==
+  "capped_line")
+tre_features <- real_fixtures[[make.names("pTRE-Tight-BI")]]$features
+stopifnot(tre_features$strand[tre_features$anno ==
+  "bidirectional TRE promoter"] == "+/-")
+bidirectional_promoter <- ggchord:::ggchord_feature_geometry(
+  "promoter_arrow", 0, .08, .9, .07, 1, ref = list(),
+  draw_head = TRUE, draw_start_head = TRUE, bidirectional = TRUE
+)[[1L]]
+stopifnot(sum(abs(bidirectional_promoter$radius - .9) < 1e-10) == 2L)
+axis_lengths <- c(2070, 2686, 4361, 5369, 9288, 13320)
+axis_steps <- vapply(axis_lengths, function(x) {
+  diff(ggchord:::breakPointsFunc(x))[1L]
+}, numeric(1L))
+stopifnot(identical(axis_steps, c(250, 500, 500, 1000, 1000, 2000)))
 reference_fixture_names <- names(real_fixtures)
 fixtures <- c(real_fixtures, fixtures)
 
@@ -144,16 +163,10 @@ for (name in names(fixtures)) {
   tracks <- position_feature_stack(
     spacing = .085, base_position = position_plasmid()
   )
-  primer_tracks <- position_feature_stack(
-    spacing = .085, base_position = position_plasmid()
-  )
   primer_layers <- if (!is.null(fixture$primers) && nrow(fixture$primers)) {
     list(
-      geom_primer(data = fixture$primers, position = primer_tracks),
-      geom_feature_label_repel(
-        data = fixture$primers, position = primer_tracks,
-        external = TRUE, max_overlaps = 0
-      )
+      geom_primer(data = fixture$primers),
+      geom_primer_label_repel(data = fixture$primers, max_overlaps = 0)
     )
   } else NULL
   plot <- ggchord(fixture$sequence, validate = "none") +
@@ -178,6 +191,17 @@ for (name in names(fixtures)) {
     finally = close_device()
   )
   stopifnot(all(is.finite(layout$feature$x)), all(is.finite(layout$feature$y)))
+  stopifnot(all(c("annotation_class", "dominant_band", "spill_reason",
+    "leader_crossing_count") %in% names(layout$annotation_registry)))
+  restriction_registry <- layout$annotation_registry[
+    !is.na(layout$annotation_registry$annotation_class) &
+      layout$annotation_registry$annotation_class == "restriction", ,
+    drop = FALSE
+  ]
+  if (nrow(restriction_registry)) {
+    used_bands <- sort(unique(restriction_registry$band))
+    stopifnot(identical(used_bands, seq_len(max(used_bands))))
+  }
   text <- layout$labels[layout$labels$.component == "text", , drop = FALSE]
   if (identical(as.character(fixture$sequence$label[1L]),
       "pBluescript II SK(+)")) {
@@ -207,8 +231,7 @@ for (name in names(fixtures)) {
       all(lane_of[c(
         "f1 ori", "M13 fwd", "T7 promoter", "MCS", "T3 promoter", "M13 rev"
       )] == 1L),
-      all(lane_of[c("KS primer", "SK primer")] == 2L),
-      !any(text$feature_label_mode == "external")
+      all(lane_of[c("KS primer", "SK primer")] == 2L)
     )
     leader_features <- unique(layout$labels$anno[
       layout$labels$.component == "segment"
@@ -245,9 +268,12 @@ for (name in names(fixtures)) {
     glyphs <- layout$labels[
       layout$labels$.component == "arc_text", , drop = FALSE
     ]
+    arc_text <- text[
+      text$feature_label_mode != "external", , drop = FALSE
+    ]
     stopifnot(
-      all(text$.draw_as_arc),
-      nrow(glyphs) == sum(nchar(text$label, type = "chars"))
+      all(arc_text$.draw_as_arc),
+      nrow(glyphs) == sum(nchar(arc_text$label, type = "chars"))
     )
     glyph_radius <- sqrt(glyphs$x^2 + glyphs$y^2)
     glyph_tangent <- atan2(glyphs$y, glyphs$x) * 180 / pi + 90
@@ -263,9 +289,17 @@ for (name in names(fixtures)) {
   # Restriction labels own their circular contour/fan and must not be folded
   # into the feature-callout collision rail. Validate feature callouts only;
   # restriction geometry has its own ordered-fan checks.
+  external_text <- feature_external$label
+  if (nrow(feature_external) && "annotation_class" %in% names(feature_external) &&
+      "feature_label" %in% names(feature_external)) {
+    primer_text <- !is.na(feature_external$annotation_class) &
+      feature_external$annotation_class == "primer" &
+      !is.na(feature_external$feature_label)
+    external_text[primer_text] <- feature_external$feature_label[primer_text]
+  }
   external <- if (nrow(feature_external)) data.frame(
       text_x = feature_external$x, text_y = feature_external$y,
-      text = feature_external$label, size = feature_external$size,
+      text = external_text, size = feature_external$size,
       hjust = feature_external$hjust, vjust = feature_external$vjust,
       text_angle = 0
     ) else data.frame()
@@ -294,7 +328,22 @@ for (name in names(fixtures)) {
       stopifnot(dimensions[2L] > dimensions[1L] * 1.6)
     }
     if (nrow(fixture$primers)) {
-      stopifnot(all(fixture$primers$name %in% layout$labels$label))
+      primer_registry <- layout$annotation_registry[
+        !is.na(layout$annotation_registry$annotation_class) &
+          layout$annotation_registry$annotation_class == "primer", ,
+        drop = FALSE
+      ]
+      stopifnot(nrow(primer_registry) == nrow(fixture$primers))
+      primer_text <- layout$labels[
+        layout$labels$.component == "text" &
+          !is.na(layout$labels$annotation_class) &
+          layout$labels$annotation_class == "primer", , drop = FALSE
+      ]
+      stopifnot(
+        all(fixture$primers$name %in% primer_text$primer_name),
+        all(primer_text$primer_show_location),
+        all(grepl("\\([0-9]+ \\.\\. [0-9]+\\)", primer_text$feature_label))
+      )
     }
   } else {
     ggplot2::ggsave(file.path(output_dir, paste0(name, ".png")), plot,

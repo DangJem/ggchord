@@ -497,7 +497,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
       } else {
         allowed_shape <- c(
           "arrow", "compact_arrow", "promoter_arrow", "primer_arrow",
-          "marker", "block", "chevron", "lollipop"
+          "marker", "block", "capped_line", "primer_arc", "chevron", "lollipop"
         )
         if (all(feature_shape_order %in% allowed_shape)) {
           feature_shape_pal <- stats::setNames(
@@ -516,7 +516,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     }
     allowed_shape <- c(
       "arrow", "compact_arrow", "promoter_arrow", "primer_arrow",
-      "marker", "block", "chevron", "lollipop"
+      "marker", "block", "capped_line", "primer_arc", "chevron", "lollipop"
     )
     mapped_shape[is.na(mapped_shape)] <- "arrow"
     if (any(!mapped_shape %in% allowed_shape)) {

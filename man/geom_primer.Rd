@@ -2,15 +2,15 @@
 % Please edit documentation in R/geom-primer.R
 \name{geom_primer}
 \alias{geom_primer}
-\title{Draw primer binding sites}
+\title{Draw primer binding ranges on a circular sequence}
 \usage{
 geom_primer(
   mapping = NULL,
   data = NULL,
-  feature_width = 0.058,
-  feature_fill = "#A020F0",
-  arrow_head_length = 0.042,
-  arrow_head_width = 1.18,
+  side = c("outside", "inside"),
+  arc_offset = 0.045,
+  arc_linewidth = 0.026,
+  colour = "#8A2BE2",
   position = NULL,
   show.legend = FALSE,
   inherit.aes = FALSE,
@@ -18,42 +18,27 @@ geom_primer(
 )
 }
 \arguments{
-\item{mapping}{Optional aesthetic mapping. Role aesthetics such as
-\code{accver}, \code{start}, \code{end} and \code{strand} may rename
-input columns; ordinary visual mappings are evaluated after geometry is
-generated.}
+\item{mapping, data}{Standard layer inputs.}
 
-\item{data}{data.frame with \code{accver}, \code{start}, \code{end} and
-\code{strand}; optional \code{type}, \code{category} and \code{label}.
-`display_priority` or logical `prioritized_display`. As an alternative to
-\code{strand}, \code{directionality} or \code{direction} may contain
-\code{"forward"}, \code{"reverse"}, \code{"bidirectional"}, or
-\code{"none"}.}
+\item{side}{Backbone edge used by the primer arc.}
 
-\item{feature_width}{Primer-band width.}
+\item{arc_offset}{Distance from the backbone centre.}
 
-\item{feature_fill}{Default primer fill colour.}
+\item{arc_linewidth}{Radial width of the primer arc.}
 
-\item{arrow_head_length, arrow_head_width}{Arrow-head dimensions in the
-sequence-local frame, shared with [geom_gene()]. Values above one for
-`arrow_head_width` create a protruding block-arrow head.}
+\item{colour}{Primer arc colour.}
 
-\item{position}{Feature placement. Use `"identity"`, `"strand"`,
-`"plasmid"`, [position_strand()], [position_plasmid()], or
-[position_feature_stack()].}
+\item{position, show.legend, inherit.aes}{Standard layer arguments.}
 
-\item{show.legend, inherit.aes}{Standard ggplot2 layer arguments.}
-
-\item{...}{Additional fixed polygon aesthetics.}
+\item{...}{Additional parameters passed to [geom_feature()].}
 }
 \value{
 A ggplot2 layer.
 }
 \description{
-A biological primer-binding layer built on [geom_feature()] and its compact
-directional `primer_arrow`. Binding discovery remains separate: pass the
-output of [find_primer_bindings()] here, and add
-[geom_feature_label_repel()] with the same data when labels are wanted.
+Primers are slender directional arcs attached to a sequence-backbone edge,
+not arrows in the feature stack. Add [geom_primer_label_repel()] for the
+matching unboxed label and leader.
 }
 \examples{
 primer <- data.frame(
@@ -61,5 +46,6 @@ primer <- data.frame(
   strand = "+", name = "sequencing primer"
 )
 ggchord(data.frame(accver = "circle", length = 1000)) +
-  geom_seq() + geom_primer(data = primer) + coord_circular()
+  geom_seq() + geom_primer(data = primer) +
+  geom_primer_label_repel(data = primer) + coord_circular()
 }

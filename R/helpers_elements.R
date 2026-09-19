@@ -66,31 +66,24 @@ bezier_pts <- function(p0, p3, c1, c2, n = 100) {
 #' Generates uniform and visually appealing major tick positions based on sequence length and target tick count (avoids excessively short end ticks)
 #'
 #' @param max_value Numeric, sequence length (maximum value)
-#' @param n Integer, target number of ticks, default 5
-#' @param tol Numeric (0-1), tolerance threshold for end tick length (proportion of the median length of other ticks), default 0.5
-#' @return Numeric vector, major tick positions (including 0 and max_value)
+#' @param n,tol Retained internal compatibility arguments. The plasmid cadence
+#'   is selected from 1/2/2.5/5 times a power of ten with at most ten ticks.
+#' @return Numeric vector of major tick positions. The maximum/seam is omitted.
 #' @keywords internal
 #' @noRd
 breakPointsFunc <- function(max_value, n = 5, tol = 0.5) {
   if (max_value <= 0) return(c(0, max_value))
-
-  # 1. Generate approximately n ticks using pretty()
-  ticks <- pretty(c(0, max_value), n = n)
-  ticks <- ticks[ticks >= 0 & ticks <= max_value]
-  ticks <- sort(unique(c(0, ticks, max_value)))
-
-  # 2. If the last segment is too small (less than median of other segments * tol), remove the penultimate tick
-  if (length(ticks) >= 3) {
-    d <- diff(ticks)
-    # Median of other segments (excluding the last one)
-    med <- median(d[-length(d)])
-    # Remove penultimate point if the last segment is too small
-    if (d[length(d)] < med * tol) {
-      ticks <- ticks[-(length(ticks) - 1)]
-    }
-  }
-
-  return(ticks)
+  # Plasmid maps favour a stable, readable coordinate cadence over an exact
+  # target count. Pick the smallest 1/2/2.5/5 x 10^k step that yields at most
+  # ten labelled intervals, matching common molecular-biology map practice.
+  exponent <- floor(log10(max_value)) - 2L
+  candidates <- sort(unique(as.vector(outer(
+    c(1, 2, 2.5, 5), 10^(exponent + 0:5), `*`
+  ))))
+  step <- candidates[which(ceiling(max_value / candidates) <= 10L)[1L]]
+  if (!is.finite(step)) step <- max_value
+  ticks <- seq(0, floor(max_value / step) * step, by = step)
+  sort(unique(ticks[ticks >= 0 & ticks < max_value]))
 }
 
 

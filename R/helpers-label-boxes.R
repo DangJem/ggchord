@@ -343,13 +343,19 @@ ggchord_arc_text_layout <- function(text, units_per_inch = .35,
     direction <- if (orientation_delta > 90) -1 else 1
     glyph_angle <- centre_angle + direction * along / max(radius, .1)
     rotation <- glyph_angle * 180 / pi + if (direction > 0) 90 else -90
-    upright <- ggchord_normalize_text_orientation(
-      rotation, rep(.5, length(chars))
+    # Decide readability once for the complete string.  Normalising every
+    # glyph independently made labels that cross a quadrant boundary reverse
+    # direction part-way through a word.
+    centre_rotation <- centre_angle * 180 / pi +
+      if (direction > 0) 90 else -90
+    centre_upright <- ggchord_normalize_text_orientation(
+      centre_rotation, .5
     )
+    string_flip <- ((centre_upright$angle - centre_rotation + 180) %% 360) - 180
     glyph <- text[rep(i, length(chars)), , drop = FALSE]
     glyph$text_x <- radius * cos(glyph_angle)
     glyph$text_y <- radius * sin(glyph_angle)
-    glyph$text_angle <- upright$angle
+    glyph$text_angle <- rotation + string_flip
     glyph$hjust <- .5
     glyph$vjust <- .5
     glyph$text <- chars

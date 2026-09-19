@@ -49,14 +49,12 @@ test_that("coord_circular owns a one-sequence circular contract", {
       theme_ggchord_plasmid()
   )
   major <- plasmid_axis$axis_ticks[plasmid_axis$axis_ticks$is_major, ]
-  expect_equal(nrow(major), 5L)
+  expect_equal(nrow(major), 10L)
   expect_true(all(
     sqrt(major$x1^2 + major$y1^2) < sqrt(major$x0^2 + major$y0^2)
   ))
-  expect_equal(
-    sqrt(major$x0^2 + major$y0^2),
-    rep(1 - .025 / 2, nrow(major)), tolerance = 1e-6
-  )
+  expect_equal(sqrt(major$x0^2 + major$y0^2),
+    rep(1 - .025 / 2, nrow(major)), tolerance = 1e-6)
   labelled_major <- major[!is.na(major$label), ]
   expect_true(all(labelled_major$label_along_axis))
   expect_equal(labelled_major$label_hjust, rep(0, nrow(labelled_major)))
@@ -179,8 +177,17 @@ test_that("feature callouts do not rewrite restriction polar placement", {
   restriction_only <- restriction_only[
     restriction_only$.component == "label", , drop = FALSE
   ]
-  expect_equal(restriction[, c("x", "y")],
-    restriction_only[, c("x", "y")])
+  overlap_count <- 0L
+  if (nrow(restriction) > 1L) for (i in seq_len(nrow(restriction) - 1L)) {
+    other <- seq.int(i + 1L, nrow(restriction))
+    overlap_count <- overlap_count + sum(
+      restriction$bbox_xmin[i] < restriction$bbox_xmax[other] &
+      restriction$bbox_xmax[i] > restriction$bbox_xmin[other] &
+      restriction$bbox_ymin[i] < restriction$bbox_ymax[other] &
+      restriction$bbox_ymax[i] > restriction$bbox_ymin[other]
+    )
+  }
+  expect_equal(overlap_count, 0L)
   expect_false("shared_external_side" %in% names(restriction))
   expect_true(all(restriction$enzyme_fontface[
     restriction$enzyme_label %in% c("OnceA", "OnceB")
@@ -332,6 +339,29 @@ test_that("reference restriction profiles preserve saved enzyme sets", {
   unknown <- find_restriction_sites("AAAAGAATTCTTT")
   expect_error(filter_restriction_sites(unknown, set = "reference"),
     "no exact reference enzyme profile")
+})
+
+test_that("methylation-blocked sites carry generic warning metadata", {
+  data(plasmid_example_pSB1C3)
+  sites <- find_restriction_sites(plasmid_example_pSB1C3,
+    enzymes = "PflMI", methylation = "dam_dcm")
+  expect_true(any(sites$methylation_status == "blocked"))
+  expect_true(any(sites$display_warning == "methylation_blocked"))
+  plot <- ggchord(plasmid_example_pSB1C3, validate = "none") + geom_seq() +
+    geom_restriction_site(data = sites) + coord_circular()
+  labels <- export_ggchord_layout(plot, include = "restriction")$restriction
+  labels <- labels[labels$.component == "label", ]
+  expect_true(any(grepl("PflMI [*]", labels$label)))
+  expect_true(any(labels$colour == "#858585"))
+})
+
+test_that("plasmid axis uses the audited nice-step cadence", {
+  lengths <- c(2070, 2686, 4361, 5369, 9288, 13320)
+  expected <- c(250, 500, 500, 1000, 1000, 2000)
+  observed <- vapply(lengths, function(x) {
+    diff(ggchord:::breakPointsFunc(x))[1L]
+  }, numeric(1L))
+  expect_equal(observed, expected)
 })
 
 test_that("restriction layout is deterministic and never moves site anchors", {

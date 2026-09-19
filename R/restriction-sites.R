@@ -151,6 +151,20 @@ ggchord_builtin_rebase <- function() {
   get("ggchord_rebase_database", inherits = TRUE)
 }
 
+# Source-backed methylation sensitivities used by the generic site-status
+# evaluator.  This is enzyme metadata, never a plasmid/name rendering special
+# case. Unknown enzymes remain unknown rather than being guessed.
+ggchord_restriction_methylation_sensitivity <- function() {
+  data.frame(
+    enzyme = "PflMI", blocked_by = "Dcm", methylation_motif = "CCWGG",
+    sensitivity_source = paste0(
+      "https://www.snapgene.com/plasmids/fluorescent_protein_genes_and_plasmids/",
+      "DsRed-Express"
+    ),
+    stringsAsFactors = FALSE
+  )
+}
+
 ggchord_normalize_restriction_patterns <- function(patterns) {
   if (is.character(patterns) && length(patterns)) {
     if (is.null(names(patterns)) || anyNA(names(patterns)) ||
@@ -177,8 +191,18 @@ ggchord_normalize_restriction_patterns <- function(patterns) {
   defaults <- list(source_motif=out$motif,organism=NA_character_,
     supplier_codes=NA_character_,suppliers=NA_character_,commercial=FALSE,
     preferred_enzyme=out$enzyme,is_preferred_enzyme=TRUE,
-    database_version="custom",source="custom")
+    database_version="custom",source="custom", blocked_by=NA_character_,
+    methylation_motif=NA_character_, sensitivity_source=NA_character_,
+    methylation_status=NA_character_, display_warning=NA_character_)
   for(nm in names(defaults))if(!nm%in%names(out))out[[nm]]<-defaults[[nm]]
+  sensitivity <- ggchord_restriction_methylation_sensitivity()
+  sensitivity_row <- match(out$enzyme, sensitivity$enzyme)
+  for (nm in c("blocked_by", "methylation_motif", "sensitivity_source")) {
+    missing_value <- is.na(out[[nm]]) | !nzchar(as.character(out[[nm]]))
+    fill <- sensitivity[[nm]][sensitivity_row]
+    use <- missing_value & !is.na(fill)
+    out[[nm]][use] <- fill[use]
+  }
   out$enzyme<-as.character(out$enzyme);out$motif<-toupper(as.character(out$motif))
   if(anyNA(out$enzyme)||any(!nzchar(out$enzyme))||anyNA(out$motif)||
      any(!nzchar(out$motif))||anyDuplicated(out$pattern_id))
@@ -216,7 +240,13 @@ ggchord_normalize_restriction_patterns <- function(patterns) {
 #' @param patterns Optional custom definitions.
 #' @param circular Allow recognition and cleavage coordinates to wrap origin.
 #' @param database Optional parsed pattern database.
+#' @param methylation Methylation context. `"auto"` uses the audited context
+#'   for recognized reference plasmids and otherwise makes no blocked-site
+#'   claim; `"none"` disables blocking; `"dam_dcm"` evaluates source-backed
+#'   Dam/Dcm sensitivities against the supplied sequence.
 #' @return One row per pattern match without display filtering or deduplication.
+#'   Methylation-aware columns include `methylation_status`, `blocked_by`,
+#'   `display_warning`, `methylation_motif`, and `sensitivity_source`.
 #'   `enzyme_site_count` records the number of distinct cleavage/display
 #'   positions for that enzyme on the complete supplied sequence, so it remains
 #'   stable after display filtering. For an exactly recognized bundled
@@ -224,7 +254,9 @@ ggchord_normalize_restriction_patterns <- function(patterns) {
 #'   saved display set for use by [filter_restriction_sites()].
 #' @export
 find_restriction_sites <- function(sequence,enzymes=NULL,patterns=NULL,
-                                   circular=TRUE,database=NULL){
+                                   circular=TRUE,database=NULL,
+                                   methylation=c("auto","none","dam_dcm")){
+  methylation <- match.arg(methylation)
   normalized <- ggchord_normalize_sequence_input(
     sequence, "find_restriction_sites()"
   )
@@ -241,7 +273,7 @@ find_restriction_sites <- function(sequence,enzymes=NULL,patterns=NULL,
     defs<-defs[order(match(defs$enzyme,enzymes),seq_len(nrow(defs))),,drop=FALSE]
   }
   empty_template <- function(){
-    out<-data.frame(accver=character(),match_id=character(),pattern_id=character(),pattern_source_row=integer(),enzyme=character(),preferred_enzyme=character(),is_preferred_enzyme=logical(),motif=character(),source_motif=character(),motif_length=integer(),recognition_sequence=character(),start=integer(),end=integer(),crosses_origin=logical(),strand=character(),ncuts=integer(),blunt=logical(),end_type=character(),position=numeric(),display_position=numeric(),enzyme_site_count=integer(),anchor_kind=character(),organism=character(),supplier_codes=character(),suppliers=character(),commercial=logical(),database_version=character(),source=character(),stringsAsFactors=FALSE)
+    out<-data.frame(accver=character(),match_id=character(),pattern_id=character(),pattern_source_row=integer(),enzyme=character(),preferred_enzyme=character(),is_preferred_enzyme=logical(),motif=character(),source_motif=character(),motif_length=integer(),recognition_sequence=character(),start=integer(),end=integer(),crosses_origin=logical(),strand=character(),ncuts=integer(),blunt=logical(),end_type=character(),position=numeric(),display_position=numeric(),enzyme_site_count=integer(),anchor_kind=character(),organism=character(),supplier_codes=character(),suppliers=character(),commercial=logical(),database_version=character(),source=character(),blocked_by=character(),methylation_motif=character(),sensitivity_source=character(),methylation_status=character(),display_warning=character(),stringsAsFactors=FALSE)
     for(k in 1:4){out[[paste0("cut_offset_",k)]]<-numeric();out[[paste0("cut_",k,"_unwrapped")]]<-numeric();out[[paste0("cut_",k)]]<-numeric()};out
   }
   rows<-list();match_number<-0L
@@ -276,7 +308,7 @@ find_restriction_sites <- function(sequence,enzymes=NULL,patterns=NULL,
         known_indices<-which(known);has_cut<-length(known_indices)>0L
         first_known<-if(has_cut)known_indices[1L] else NA_integer_
         position<-if(has_cut)cuts[,first_known] else starts
-        row<-data.frame(accver=rep(ids[s],count),match_id=sprintf("%s:%s:%s:%d:%06d",ids[s],defs$pattern_id[d],site_strand,starts,numbers),pattern_id=rep(defs$pattern_id[d],count),pattern_source_row=rep(defs$pattern_source_row[d],count),enzyme=rep(defs$enzyme[d],count),preferred_enzyme=rep(defs$preferred_enzyme[d],count),is_preferred_enzyme=rep(defs$is_preferred_enzyme[d],count),motif=rep(motif,count),source_motif=rep(defs$source_motif[d],count),motif_length=rep(m,count),recognition_sequence=substring(search,starts,starts+m-1L),start=starts,end=finish,crosses_origin=finish_unwrapped>len,strand=rep(site_strand,count),ncuts=rep(defs$ncuts[d],count),blunt=rep(defs$blunt[d],count),end_type=rep(end_type,count),position=position,display_position=position,anchor_kind=rep(if(has_cut)"cut" else "recognition",count),organism=rep(defs$organism[d],count),supplier_codes=rep(defs$supplier_codes[d],count),suppliers=rep(defs$suppliers[d],count),commercial=rep(defs$commercial[d],count),database_version=rep(defs$database_version[d],count),source=rep(defs$source[d],count),stringsAsFactors=FALSE)
+        row<-data.frame(accver=rep(ids[s],count),match_id=sprintf("%s:%s:%s:%d:%06d",ids[s],defs$pattern_id[d],site_strand,starts,numbers),pattern_id=rep(defs$pattern_id[d],count),pattern_source_row=rep(defs$pattern_source_row[d],count),enzyme=rep(defs$enzyme[d],count),preferred_enzyme=rep(defs$preferred_enzyme[d],count),is_preferred_enzyme=rep(defs$is_preferred_enzyme[d],count),motif=rep(motif,count),source_motif=rep(defs$source_motif[d],count),motif_length=rep(m,count),recognition_sequence=substring(search,starts,starts+m-1L),start=starts,end=finish,crosses_origin=finish_unwrapped>len,strand=rep(site_strand,count),ncuts=rep(defs$ncuts[d],count),blunt=rep(defs$blunt[d],count),end_type=rep(end_type,count),position=position,display_position=position,anchor_kind=rep(if(has_cut)"cut" else "recognition",count),organism=rep(defs$organism[d],count),supplier_codes=rep(defs$supplier_codes[d],count),suppliers=rep(defs$suppliers[d],count),commercial=rep(defs$commercial[d],count),database_version=rep(defs$database_version[d],count),source=rep(defs$source[d],count),blocked_by=rep(defs$blocked_by[d],count),methylation_motif=rep(defs$methylation_motif[d],count),sensitivity_source=rep(defs$sensitivity_source[d],count),methylation_status=rep(defs$methylation_status[d],count),display_warning=rep(defs$display_warning[d],count),stringsAsFactors=FALSE)
         for(k in 1:4){row[[paste0("cut_offset_",k)]]<-rep(as.numeric(defs[[paste0("cut_offset_",k)]][d]),count);row[[paste0("cut_",k,"_unwrapped")]]<-unwrapped[,k];row[[paste0("cut_",k)]]<-cuts[,k]}
         rows[[length(rows)+1L]]<-row
       }
@@ -310,8 +342,44 @@ find_restriction_sites <- function(sequence,enzymes=NULL,patterns=NULL,
     if (length(profile_rows)) reference_profiles <-
       ggchord_rbind_fill(profile_rows)
   }
+  active_methylation <- methylation
+  if (identical(active_methylation, "auto")) {
+    active_methylation <- if (nrow(reference_profiles)) "dam_dcm" else "none"
+  }
+  if (nrow(out)) {
+    explicit_status <- !is.na(out$methylation_status) &
+      nzchar(out$methylation_status)
+    if (identical(active_methylation, "none")) {
+      inferred <- ifelse(is.na(out$blocked_by),
+        "unknown", "unblocked")
+      out$methylation_status[!explicit_status] <- inferred[!explicit_status]
+    } else {
+      target_by_id <- stats::setNames(seqs, ids)
+      context_matches <- vapply(seq_len(nrow(out)), function(i) {
+        if (is.na(out$blocked_by[i]) || is.na(out$methylation_motif[i])) {
+          return(FALSE)
+        }
+        blocker <- tolower(out$blocked_by[i])
+        if (!blocker %in% c("dam", "dcm")) return(FALSE)
+        target <- target_by_id[[as.character(out$accver[i])]]
+        len <- nchar(target)
+        positions <- ((seq.int(out$start[i] - 6L,
+          out$start[i] + out$motif_length[i] + 5L) - 1L) %% len) + 1L
+        window <- paste0(strsplit(target, "", fixed = TRUE)[[1L]][positions],
+          collapse = "")
+        grepl(ggchord_iupac_regex(out$methylation_motif[i]), window,
+          perl = TRUE)
+      }, logical(1L))
+      known <- !is.na(out$blocked_by)
+      out$methylation_status[known & !explicit_status] <- "unblocked"
+      out$methylation_status[context_matches & !explicit_status] <- "blocked"
+      inferred_warning <- context_matches & !explicit_status
+      out$display_warning[inferred_warning] <- "methylation_blocked"
+    }
+  }
   attr(out,"enzyme_database_version")<-unique(defs$database_version)
   attr(out,"reference_enzyme_profiles")<-reference_profiles
+  attr(out,"methylation")<-methylation
   out
 }
 
@@ -1213,6 +1281,11 @@ ggchord_restriction_geometry <- function(data, params, layout, seq_data) {
     site_enzyme <- vapply(site_members, function(rows) paste(
       unique(as.character(data$enzyme[rows])), collapse = " - "
     ), character(1))
+    site_warning <- vapply(site_members, function(rows) {
+      "display_warning" %in% names(data) &&
+        any(data$display_warning[rows] %in% "methylation_blocked", na.rm = TRUE)
+    }, logical(1L))
+    site_enzyme[site_warning] <- paste0(site_enzyme[site_warning], " *")
     unique_cutters <- if ("enzyme_site_count" %in% names(data)) {
       unique(as.character(data$enzyme[all_idx])[
         data$enzyme_site_count[all_idx] == 1L])
@@ -1587,5 +1660,15 @@ ggchord_restriction_geometry <- function(data, params, layout, seq_data) {
       stringsAsFactors = FALSE
     ))
   }
-  ggchord_rbind_fill(output)
+  rendered <- ggchord_rbind_fill(output)
+  if ("display_warning" %in% names(data) && nrow(rendered)) {
+    blocked <- vapply(rendered$source_rows, function(rows) {
+      rows <- as.integer(rows)
+      rows <- rows[is.finite(rows) & rows >= 1L & rows <= nrow(data)]
+      length(rows) && any(data$display_warning[rows] %in%
+        "methylation_blocked", na.rm = TRUE)
+    }, logical(1L))
+    rendered$colour <- ifelse(blocked, "#858585", "#202020")
+  }
+  rendered
 }

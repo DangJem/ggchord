@@ -20,7 +20,7 @@ test_that("primer search derives strand and circular origin", {
   expect_equal(hits$aliases[[1L]], "test")
 })
 
-test_that("primer geometry uses the shared feature engine", {
+test_that("primer geometry uses a backbone arc and dedicated unboxed labels", {
   sequence <- data.frame(accver = "circle", length = 1000)
   primers <- data.frame(
     accver = "circle", start = 100L, end = 119L,
@@ -29,7 +29,21 @@ test_that("primer geometry uses the shared feature engine", {
   layer <- geom_primer(data = primers)
   expect_identical(layer$ggchord_params$feature_role, "primer")
   expect_true(layer$ggchord_params$is_primer)
+  expect_identical(layer$ggchord_params$feature_shape, "primer_arc")
+  expect_false(isTRUE(layer$ggchord_params$feature_position$ggchord_feature_stack))
   plot <- ggchord(sequence, validate = "none") + geom_seq() + layer +
+    geom_primer_label_repel(data = primers) +
     coord_circular()
   expect_s3_class(ggplot2::ggplot_build(plot), "ggplot_built")
+  registry <- export_ggchord_layout(plot)$annotation_registry
+  expect_true(any(registry$kind == "primer_label"))
+  expect_true(all(registry$annotation_class[registry$kind == "primer_label"] ==
+    "primer"))
+})
+
+test_that("reference primer coordinates are one-based inclusive", {
+  data(plasmid_example_pSB1C3)
+  primers <- find_primer_bindings(plasmid_example_pSB1C3, set = "reference")
+  expect_equal(primers$start, c(155L, 1931L))
+  expect_equal(primers$end, c(174L, 1950L))
 })

@@ -611,7 +611,9 @@ read_binary_plasmid_reference <- function(path) {
             value_or(primer_attrs["recentID"], sprintf("%04d", i)), ":", j),
           name = unname(primer_attrs["name"]),
           sequence = toupper(unname(primer_attrs["sequence"])),
-          start = bounds[1L], end = bounds[2L],
+          # SnapGene Primer binding-site locations are zero-based inclusive;
+          # ggchord's public coordinate contract is one-based inclusive.
+          start = bounds[1L] + 1L, end = bounds[2L] + 1L,
           strand = if (value_or(site_attrs["boundStrand"], "0") == "0")
             "+" else "-",
           annealed_bases = toupper(unname(value_or(
@@ -722,6 +724,7 @@ ggchord_common_feature_database <- list(
     source_file_sha256 = as.character(source_metadata[["SHA256"]]),
     export_version = as.integer(source_metadata[["export-format version"]]),
     import_version = as.integer(source_metadata[["import-format version"]]),
+    primer_coordinate_system = "one_based_inclusive",
     record_counts = c(features = nrow(features), segments = nrow(segments),
       qualifiers = nrow(qualifiers), qualifier_links = nrow(qualifier_links),
       source_sequence_bp = nchar(current_sequence), primers = 0L,

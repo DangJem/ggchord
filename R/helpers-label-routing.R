@@ -43,15 +43,6 @@ ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
   all_metrics <- ggchord_text_boxes(
     gl, units_per_inch = units_per_inch, box_padding = 0
   )
-  anchor_angle <- atan2(gl$anchor_y, gl$anchor_x)
-  local_density <- vapply(seq_len(n), function(i) {
-    delta <- abs(atan2(sin(anchor_angle - anchor_angle[i]),
-      cos(anchor_angle - anchor_angle[i])))
-    sum(gl$accver == gl$accver[i] & delta <= .25)
-  }, integer(1L))
-  dense_short_cluster <- n >= 15L & local_density >= 5L &
-    !(gl$feature_label_inside %in% TRUE)
-
   # Derive real annotation tracks from feature-band geometry. A label track is
   # either an inter-band gutter or a shared label-only circle below the deepest
   # feature; individual labels cannot invent arbitrary radial offsets.
@@ -107,7 +98,7 @@ ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
       }
     }
     deepest <- min(bands$min)
-    label_only <- deepest - radial_clearance - label_step * 0:3
+    label_only <- deepest - radial_clearance - label_step * 0:7
     label_radii <- unique(c(gutters, label_only[label_only > .28]))
     internal_tracks[[sid]] <- label_radii
     # One physical circular-track index is shared by feature bands and text
@@ -164,7 +155,7 @@ ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
     # Slots beyond four remain emergency fallbacks after nearer radial tracks;
     # they preserve all internal labels in very compact cloning-site clusters
     # without making large angular movement the normal solution.
-    tangent_candidates <- c(0L, as.vector(rbind(-1:-10, 1:10)))
+    tangent_candidates <- c(0L, as.vector(rbind(-1:-6, 1:6)))
     if (concentric_circle) {
       track_radii <- sid_tracks
       if (length(bounds) == 2L) {
@@ -175,12 +166,6 @@ ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
       track_radii <- unique(track_radii)
       track_radii <- track_radii[order(abs(track_radii - feature_radius),
         -track_radii)]
-      # Dense short-feature clusters should not consume an arbitrary number of
-      # inward tracks. After the nearest association track, an exterior
-      # callout is easier to associate and leaves the centre readable.
-      if (dense_short_cluster[i] && length(track_radii) > 1L) {
-        track_radii <- track_radii[1L]
-      }
       candidates <- expand.grid(
         track = seq_along(track_radii), tangent = tangent_candidates
       )
@@ -193,11 +178,11 @@ ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
         track = radial_indices + 1L, tangent = tangent_candidates
       )
     }
-    # Prefer bounded local spreading on the nearest track before consuming a
-    # new centre-facing track.  Two tangent slots cost less than one additional
-    # radial track; wider angular moves remain late emergency fallbacks.
-    candidates$score <- (candidates$track - 1L) * 1.80 +
-      abs(candidates$tangent) * .62
+    # One tiny tangent adjustment is acceptable, but a neighbouring radial
+    # track is preferred to a visibly detached same-track label. This produces
+    # the compact multi-level stacks used by dense operator/MCS clusters.
+    candidates$score <- (candidates$track - 1L) * .92 +
+      abs(candidates$tangent) * .74
     candidates <- candidates[order(candidates$score,
       abs(candidates$tangent), candidates$tangent < 0), , drop = FALSE]
     if (starts_inside) {

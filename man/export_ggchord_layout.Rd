@@ -26,7 +26,8 @@ An object of class \code{ggchord_layout_export}. Selected component
   names contain data frames. Circular layouts additionally contain an
   \code{annotation_registry} data frame. Its inner rows expose the physical
   track, radial width and boundaries; outer rows expose region, sector,
-  band, slot, bounding box and leader corridor. The \code{metadata} member
+  annotation class, dominant and actual band, spill reason, leader-crossing
+  count, slot, bounding box and leader corridor. The \code{metadata} member
   records rotation, aspect ratio, limits, coordinate units and
   transformation state.
 }

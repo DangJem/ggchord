@@ -288,6 +288,8 @@ ggchord_common_candidate <- function(accver, feature, method, start, end,
   feature_fill <- if ("segment_colors" %in% names(feature)) {
     strsplit(as.character(feature$segment_colors)[1L], ",", fixed = TRUE)[[1L]][1L]
   } else NA_character_
+  no_colour <- !is.na(feature_fill) &&
+    tolower(trimws(feature_fill)) == "nocolor"
   if (!is.na(feature_fill) && tolower(feature_fill) == "nocolor") {
     feature_fill <- "#FFFFFF"
   }
@@ -297,7 +299,9 @@ ggchord_common_candidate <- function(accver, feature, method, start, end,
   # Curated records may provide a type-aware geometry hint. The generic geom
   # still honours explicit feature_shape values and user scales first.
   feature_type <- tolower(as.character(feature$type))
-  feature_shape <- if (strand == ".") {
+  feature_shape <- if (isTRUE(no_colour)) {
+    "capped_line"
+  } else if (strand == ".") {
     "block"
   } else if (feature_type == "promoter") {
     "promoter_arrow"
