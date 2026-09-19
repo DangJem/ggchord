@@ -897,6 +897,12 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   layout$seq_ring_radius <- if (is.null(seq_ring)) NULL else seqRadius
   layout$ribbon_stat_data <- ribbon_stat_data
   layout$ribbon_stat_report <- ribbon_stat_report
+  layout$backbone_bounds <- data.frame(
+    accver = names(seqRadius), center = as.numeric(seqRadius),
+    inner = as.numeric(seqRadius) - seqBackboneOuter,
+    outer = as.numeric(seqRadius) + seqBackboneOuter,
+    stringsAsFactors = FALSE
+  )
   if (!is.null(seq_ring) && length(layout$seq_arcs)) {
     layout$seq_arcs <- lapply(names(layout$seq_arcs), function(id) {
       arc <- layout$seq_arcs[[id]]
@@ -1058,16 +1064,10 @@ compute_chord_geometry <- function(plot) {
       seq_layer_params <- if (length(seq_rows)) {
         plot$layers[[seq_rows[1L]]]$ggchord_params
       } else list()
-      seq_style <- seq_layer_params$seq_style %||% "auto"
-      if (identical(seq_style, "auto")) {
-        seq_style <- if (isTRUE(primary$circular)) "double" else "single"
-      }
-      backbone_outer <- switch(
-        seq_style,
-        double = (seq_layer_params$seq_backbone_gap %||% .025) / 2,
-        band = (seq_layer_params$seq_backbone_width %||% .035) / 2,
-        0
-      )
+      backbone <- primary$backbone_bounds
+      backbone_outer <- if (is.data.frame(backbone) && nrow(backbone)) {
+        max(backbone$outer - backbone$center)
+      } else 0
       site_layer$ggchord_params$backbone_outer_offset <- backbone_outer
       sub_layout$restriction_sites <- ggchord_restriction_geometry(
         site_input, site_layer$ggchord_params, primary, chord$data$seq_data
@@ -1131,7 +1131,17 @@ compute_chord_geometry <- function(plot) {
       )
     }
   }
-  registry <- ggchord_share_external_annotations(registry, primary)
+  if (isTRUE(plot$coordinates$ggchord_circular) &&
+      is.function(plot$coordinates$resolve_annotation_registry)) {
+    resolved_annotations <- plot$coordinates$resolve_annotation_registry(
+      registry, primary
+    )
+    registry <- resolved_annotations$layer_geometry
+    primary$circular_annotation_registry <-
+      resolved_annotations$annotation_registry
+  } else {
+    registry <- ggchord_share_external_annotations(registry, primary)
+  }
   primary$layer_geometry <- registry
   primary$layer_inputs <- inputs
   primary$layer_layouts <- layouts

@@ -156,6 +156,21 @@ test_that("feature callouts do not rewrite restriction polar placement", {
   restriction <- exported$restriction[
     exported$restriction$.component == "label", , drop = FALSE
   ]
+  expect_true(all(c(
+    "annotation_region", "annotation_sector", "annotation_band",
+    "annotation_slot", "bbox_xmin", "bbox_xmax", "bbox_ymin",
+    "bbox_ymax", "leader_corridor"
+  ) %in% names(restriction)))
+  expect_true(all(is.finite(as.matrix(restriction[, c(
+    "bbox_xmin", "bbox_xmax", "bbox_ymin", "bbox_ymax"
+  )]))))
+  expect_true(all(restriction$annotation_region %in%
+    c("left", "right", "top", "bottom")))
+  expect_true(all(restriction$annotation_sector >= 1L))
+  expect_true(all(restriction$annotation_band >= 1L))
+  expect_true(all(restriction$annotation_slot >= 1L))
+  expect_true(all(exported$annotation_registry$side %in% c("inner", "outer")))
+  expect_true(any(exported$annotation_registry$kind == "restriction_label"))
   restriction_only <- export_ggchord_layout(
     ggchord(seq, validate = "none") + geom_seq() +
       geom_restriction_site(data = sites) + coord_circular(rotation = 90),

@@ -220,6 +220,15 @@ test_that("dense plasmid feature labels avoid labels and feature glyphs", {
   expect_true(any(labels$feature_label_mode != "inside"))
   expect_false(any(labels$feature_label_mode == "external"))
   expect_true(any(labels$label_track > 1L))
+  registry <- first$annotation_registry
+  resources <- registry[
+    registry$side == "inner" & registry$component == "resource", ,
+    drop = FALSE
+  ]
+  expect_equal(resources$track[resources$kind == "backbone"], 0L)
+  expect_false(any(duplicated(resources$track)))
+  expect_true(all(resources$radius_inner <= resources$radius_outer))
+  expect_setequal(resources$lane[resources$kind == "feature_band"], 0:2)
   feature_lanes <- unique(first$feature[
     first$feature$.component == "polygon", c("anno", "lane")
   ])
@@ -233,6 +242,9 @@ test_that("dense plasmid feature labels avoid labels and feature glyphs", {
   )]), rep(1L, 6L))
   expect_equal(unname(lane_of[c("KS primer", "SK primer")]), c(2L, 2L))
   polygon <- first$feature[first$feature$.component == "polygon", ]
+  expect_true(all(c(
+    "physical_track", "track_radius", "track_inner", "track_outer"
+  ) %in% names(polygon)))
   polygon$radius <- sqrt(polygon$x^2 + polygon$y^2)
   band_bounds <- lapply(split(polygon, polygon$lane), function(x) {
     range(x$radius)

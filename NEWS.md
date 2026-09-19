@@ -1,5 +1,16 @@
 # ggchord 0.13.0
 
+* Added a `CoordCircular`-owned annotation registry as the common final layout
+  fact for circular maps. Position lanes are now exported separately from
+  globally unique physical inner tracks: track 0 records the visible sequence
+  backbone, while variable-width feature bands, curved-text tracks, inner
+  leader corridors and the axis reserve record their radius and radial
+  boundaries. The independent restriction-site fan and feature-callout
+  candidate systems are retained, but their final exterior occupancy is
+  reconciled through shared cardinal regions, natural-angle sectors, radial
+  bands, globally assigned slots, measured bounding boxes and leader
+  corridors. `export_ggchord_layout()` exposes the registry and copies the
+  resolved track or exterior allocation fields onto affected geometry rows.
 * Added a reproducible bundled sequencing-primer catalogue generated from the
   reviewed Addgene workbook: 137 distinct oligonucleotides and all 163 source
   alias rows are retained separately. `primer_catalog()` exposes either view,

@@ -1,6 +1,13 @@
 # Dedicated coordinate contract for one circular sequence.
 
-CoordCircular <- ggplot2::ggproto("CoordCircular", CoordGgchord)
+CoordCircular <- ggplot2::ggproto(
+  "CoordCircular", CoordGgchord,
+  resolve_annotation_registry = function(self, layer_geometry, layout) {
+    ggchord_resolve_circular_annotation_registry(
+      layer_geometry, layout, coord = self
+    )
+  }
+)
 
 #' Single-sequence circular coordinate system
 #'
