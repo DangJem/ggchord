@@ -193,6 +193,8 @@ for (name in names(fixtures)) {
   stopifnot(all(is.finite(layout$feature$x)), all(is.finite(layout$feature$y)))
   stopifnot(all(c("annotation_class", "dominant_band", "spill_reason",
     "leader_crossing_count") %in% names(layout$annotation_registry)))
+  measured_crossings <- layout$annotation_registry$leader_crossing_count
+  stopifnot(all(measured_crossings[!is.na(measured_crossings)] >= 0L))
   restriction_registry <- layout$annotation_registry[
     !is.na(layout$annotation_registry$annotation_class) &
       layout$annotation_registry$annotation_class == "restriction", ,

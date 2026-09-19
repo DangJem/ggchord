@@ -164,6 +164,89 @@ ggchord_shift_restriction_callout <- function(sites, row, candidate) {
   sites
 }
 
+ggchord_external_leader_crosses <- function(a, b, tolerance = 1e-9) {
+  cross2 <- function(x, y) x[1L] * y[2L] - x[2L] * y[1L]
+  p <- c(a$x1, a$y1)
+  r <- c(a$x2 - a$x1, a$y2 - a$y1)
+  q <- c(b$x1, b$y1)
+  s <- c(b$x2 - b$x1, b$y2 - b$y1)
+  denominator <- cross2(r, s)
+  if (!is.finite(denominator) || abs(denominator) <= tolerance) return(FALSE)
+  t <- cross2(q - p, s) / denominator
+  u <- cross2(q - p, r) / denominator
+  # Shared roots and label attachments are intentional contacts, not crossings.
+  t > tolerance && t < 1 - tolerance &&
+    u > tolerance && u < 1 - tolerance
+}
+
+ggchord_measure_external_leader_crossings <- function(registry) {
+  leaders <- list()
+  add_leader <- function(id, component, source, segments) {
+    finite <- stats::complete.cases(segments[, c("x1", "y1", "x2", "y2")])
+    segments <- segments[finite, , drop = FALSE]
+    if (nrow(segments)) leaders[[length(leaders) + 1L]] <<- list(
+      id = id, component = component, source = source,
+      segments = segments, crossings = 0L
+    )
+  }
+  for (id in names(registry)) {
+    geometry <- registry[[id]]$gene_label_repel
+    if (is.data.frame(geometry) && nrow(geometry)) {
+      rows <- which(geometry$.component %in% "segment" &
+        is.finite(geometry$source_row))
+      for (source in unique(geometry$source_row[rows])) {
+        index <- rows[geometry$source_row[rows] == source]
+        add_leader(id, "gene_label_repel", source, data.frame(
+          x1 = geometry$x[index], y1 = geometry$y[index],
+          x2 = geometry$xend[index], y2 = geometry$yend[index]
+        ))
+      }
+    }
+    sites <- registry[[id]]$restriction_site
+    if (is.data.frame(sites) && nrow(sites)) {
+      rows <- which(sites$restriction_component %in% "leader" &
+        is.finite(sites$source_row))
+      for (source in unique(sites$source_row[rows])) {
+        index <- rows[sites$source_row[rows] == source]
+        if (length(index) < 2L) next
+        radius <- sqrt(sites$x[index]^2 + sites$y[index]^2)
+        index <- index[order(radius, seq_along(index))]
+        add_leader(id, "restriction_site", source, data.frame(
+          x1 = sites$x[index[-length(index)]],
+          y1 = sites$y[index[-length(index)]],
+          x2 = sites$x[index[-1L]], y2 = sites$y[index[-1L]]
+        ))
+      }
+    }
+  }
+  if (length(leaders) > 1L) {
+    pairs <- utils::combn(seq_along(leaders), 2L)
+    for (column in seq_len(ncol(pairs))) {
+      i <- pairs[1L, column]
+      j <- pairs[2L, column]
+      crosses <- any(vapply(seq_len(nrow(leaders[[i]]$segments)), function(a) {
+        any(vapply(seq_len(nrow(leaders[[j]]$segments)), function(b) {
+          ggchord_external_leader_crosses(
+            leaders[[i]]$segments[a, ], leaders[[j]]$segments[b, ]
+          )
+        }, logical(1L)))
+      }, logical(1L)))
+      if (crosses) {
+        leaders[[i]]$crossings <- leaders[[i]]$crossings + 1L
+        leaders[[j]]$crossings <- leaders[[j]]$crossings + 1L
+      }
+    }
+  }
+  for (leader in leaders) {
+    geometry <- registry[[leader$id]][[leader$component]]
+    rows <- is.finite(geometry$source_row) &
+      geometry$source_row == leader$source
+    geometry$leader_crossing_count[rows] <- leader$crossings
+    registry[[leader$id]][[leader$component]] <- geometry
+  }
+  registry
+}
+
 # Resolve every exterior annotation against one measured occupancy table.
 # Each class retains its candidate semantics, but all classes see the same
 # boxes. Feature/primer callouts keep their natural anchors; restriction labels
@@ -264,5 +347,5 @@ ggchord_share_external_annotations <- function(registry, layout) {
     }
     registry[[id]]$restriction_site <- sites
   }
-  registry
+  ggchord_measure_external_leader_crossings(registry)
 }
