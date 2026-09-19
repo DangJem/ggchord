@@ -69,6 +69,8 @@
   Extremely dense circular perimeters use a count-derived wide preview and a
   smaller relative backbone instead of shrinking annotation text into a
   square canvas.
+  `examples/plasmid/plot-13-reference-maps.R` provides the complete runnable
+  code used to render all 13 reference maps through this adaptive preview.
 * Circular feature bands now use non-uniform radial spacing: the transition
   from the backbone-near band to the nested cluster reserves a two-line main
   text corridor, each deeper pair of feature bands reserves at least one label
