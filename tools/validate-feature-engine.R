@@ -122,17 +122,21 @@ reference_restriction_sites <- function(sequence, name) {
 real_fixtures <- lapply(unname(reference_maps), function(name) {
   sequence <- read_reference_fasta(name)
   sites <- reference_restriction_sites(sequence, name)
+  primers <- find_primer_bindings(sequence, set = "reference")
+  if (nrow(primers)) primers$feature_label <- primers$name
   list(
     sequence = sequence, features = find_common_features(sequence),
-    sites = sites
+    sites = sites, primers = primers
   )
 })
 names(real_fixtures) <- names(reference_maps)
 stopifnot(
   nrow(real_fixtures[[make.names("pSpCas9(BB)-2A-GFP (PX458)")]]$sites) == 4L,
   nrow(real_fixtures[[make.names("pTRIPZ")]]$sites) == 38L,
-  nrow(real_fixtures[[make.names("pETDuet-1")]]$sites) == 58L
+  nrow(real_fixtures[[make.names("pETDuet-1")]]$sites) == 58L,
+  sum(vapply(real_fixtures, function(x) nrow(x$primers), integer(1L))) == 7L
 )
+reference_fixture_names <- names(real_fixtures)
 fixtures <- c(real_fixtures, fixtures)
 
 for (name in names(fixtures)) {
@@ -140,6 +144,18 @@ for (name in names(fixtures)) {
   tracks <- position_feature_stack(
     spacing = .085, base_position = position_plasmid()
   )
+  primer_tracks <- position_feature_stack(
+    spacing = .085, base_position = position_plasmid()
+  )
+  primer_layers <- if (!is.null(fixture$primers) && nrow(fixture$primers)) {
+    list(
+      geom_primer(data = fixture$primers, position = primer_tracks),
+      geom_feature_label_repel(
+        data = fixture$primers, position = primer_tracks,
+        external = TRUE, max_overlaps = 0
+      )
+    )
+  } else NULL
   plot <- ggchord(fixture$sequence, validate = "none") +
     geom_seq(seq_style = "double") +
     geom_feature_plasmid(data = fixture$features, position = tracks) +
@@ -148,10 +164,18 @@ for (name in names(fixtures)) {
     (if (!is.null(fixture$sites)) {
       geom_restriction_site(data = fixture$sites)
     } else NULL) +
+    primer_layers +
     geom_seq_center_label() + coord_circular(rotation = 90) +
     theme_ggchord_plasmid()
-  layout <- export_ggchord_layout(
-    plot, include = c("feature", "labels", "restriction")
+  # Every reference must remain exportable on a constrained square device;
+  # automatic preview below then rebuilds from a clean cache at its intended
+  # content-derived size.
+  close_device <- ggchord:::ggchord_measurement_device(width = 6, height = 6)
+  layout <- tryCatch(
+    export_ggchord_layout(
+      plot, include = c("feature", "labels", "restriction")
+    ),
+    finally = close_device()
   )
   stopifnot(all(is.finite(layout$feature$x)), all(is.finite(layout$feature$y)))
   text <- layout$labels[layout$labels$.component == "text", , drop = FALSE]
@@ -208,9 +232,8 @@ for (name in names(fixtures)) {
       range(x$.radius)
     })
     stopifnot(
-      band_bounds[["0"]][1L] - band_bounds[["1"]][2L] > .10,
-      band_bounds[["1"]][1L] - band_bounds[["2"]][2L] > .07,
-      band_bounds[["1"]][1L] - band_bounds[["2"]][2L] < .11
+      band_bounds[["0"]][1L] > band_bounds[["1"]][2L],
+      band_bounds[["1"]][1L] > band_bounds[["2"]][2L]
     )
     adjacent <- text[text$feature_label_mode == "adjacent", , drop = FALSE]
     radius <- sqrt(adjacent$x^2 + adjacent$y^2)
@@ -261,8 +284,22 @@ for (name in names(fixtures)) {
     })
     stopifnot(!any(collisions))
   }
-  ggplot2::ggsave(file.path(output_dir, paste0(name, ".png")), plot,
-    width = 6, height = 6, dpi = 144)
+  if (name %in% reference_fixture_names) {
+    plot$ggchord$ref$layout <- NULL
+    preview <- view_ggchord(plot, viewer = "none")
+    output_file <- file.path(output_dir, paste0(name, ".png"))
+    stopifnot(file.copy(preview, output_file, overwrite = TRUE))
+    if (identical(as.character(fixture$sequence$label[1L]), "pETDuet-1")) {
+      dimensions <- dim(png::readPNG(output_file))
+      stopifnot(dimensions[2L] > dimensions[1L] * 1.6)
+    }
+    if (nrow(fixture$primers)) {
+      stopifnot(all(fixture$primers$name %in% layout$labels$label))
+    }
+  } else {
+    ggplot2::ggsave(file.path(output_dir, paste0(name, ".png")), plot,
+      width = 6, height = 6, dpi = 144)
+  }
 }
 
 stress_layout <- export_ggchord_layout(

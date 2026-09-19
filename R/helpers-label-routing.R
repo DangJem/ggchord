@@ -158,6 +158,12 @@ ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
     # feature. This prevents a lane-2 primer name from climbing back through
     # lane 1 or the backbone while still allowing lane-0 labels to occupy the
     # first real gutter.
+    # Keep association local: a few small angular slots on the nearest track
+    # are preferable to opening a deep radial ladder, but labels must not drift
+    # far enough to look detached from their genomic anchor.
+    # Slots beyond four remain emergency fallbacks after nearer radial tracks;
+    # they preserve all internal labels in very compact cloning-site clusters
+    # without making large angular movement the normal solution.
     tangent_candidates <- c(0L, as.vector(rbind(-1:-10, 1:10)))
     if (concentric_circle) {
       track_radii <- sid_tracks
@@ -187,11 +193,11 @@ ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
         track = radial_indices + 1L, tangent = tangent_candidates
       )
     }
-    # The nearest inward text track is the primary association cue. Only use
-    # tangential movement as a tie-breaker within a track; if that track is
-    # crowded, moving inward preserves the genomic angle more faithfully.
-    candidates$score <- (candidates$track - 1L) * .82 +
-      abs(candidates$tangent) * 1.05
+    # Prefer bounded local spreading on the nearest track before consuming a
+    # new centre-facing track.  Two tangent slots cost less than one additional
+    # radial track; wider angular moves remain late emergency fallbacks.
+    candidates$score <- (candidates$track - 1L) * 1.80 +
+      abs(candidates$tangent) * .62
     candidates <- candidates[order(candidates$score,
       abs(candidates$tangent), candidates$tangent < 0), , drop = FALSE]
     if (starts_inside) {

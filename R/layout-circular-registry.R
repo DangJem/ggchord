@@ -65,6 +65,25 @@ ggchord_annotation_text_boxes <- function(x, rows, units_per_inch) {
     box_padding = .015)
 }
 
+# Registry joins cross geom-owned tables whose rows may legitimately be absent
+# on a particular device (for example, a hidden short-feature label has no
+# label-only resource).  Named-vector indexing returns length zero when the key
+# itself is missing, which must never leak into an `if` condition.  Keep every
+# lookup scalar and use an explicit fallback supplied by the originating label
+# geometry when one is available.
+ggchord_registry_track <- function(index, key, fallback = NA_integer_) {
+  value <- if (length(key) == 1L && !is.na(key) && nzchar(key)) {
+    unname(index[as.character(key)])
+  } else integer()
+  value <- value[is.finite(value)]
+  if (!length(value)) {
+    fallback <- as.integer(fallback)
+    fallback <- fallback[is.finite(fallback)]
+    value <- fallback
+  }
+  if (length(value)) as.integer(value[1L]) else NA_integer_
+}
+
 # Build physical inner bands from the final geometry. Position lanes remain
 # local hints; only this coord pass assigns globally meaningful track IDs.
 ggchord_resolve_inner_tracks <- function(layer_geometry, layout) {
@@ -254,13 +273,26 @@ ggchord_resolve_inner_tracks <- function(layer_geometry, layout) {
       if (is.null(label)) next
       rows <- geometry$source_row == source & geometry$annotation_side == "inner"
       if (!any(rows)) next
-      label_track <- unname(track_by_key[label$key])
-      feature_track <- unname(track_by_key[label$feature_key])
+      source_label_track <- unique(geometry$label_track[rows])
+      source_label_track <- source_label_track[is.finite(source_label_track)]
+      source_feature_track <- unique(geometry$feature_track[rows])
+      source_feature_track <- source_feature_track[
+        is.finite(source_feature_track)
+      ]
+      label_track <- ggchord_registry_track(
+        track_by_key, label$key, source_label_track
+      )
+      feature_track <- ggchord_registry_track(
+        track_by_key, label$feature_key, source_feature_track
+      )
       geometry$label_track[rows] <- label_track
       geometry$feature_track[rows] <- feature_track
       segment_rows <- rows & geometry$.component %in% "segment"
-      if (any(segment_rows) && is.finite(feature_track) &&
-          is.finite(label_track)) {
+      corridor_valid <- isTRUE(any(segment_rows)) &&
+        length(feature_track) == 1L && is.finite(feature_track) &&
+        length(label_track) == 1L && is.finite(label_track) &&
+        label_track > feature_track + 1L
+      if (corridor_valid) {
         geometry$leader_track_start[segment_rows] <- feature_track + 1L
         geometry$leader_track_end[segment_rows] <- label_track - 1L
         geometry$leader_corridor[segment_rows] <- paste0(
@@ -277,7 +309,7 @@ ggchord_resolve_inner_tracks <- function(layer_geometry, layout) {
           bbox = label$bbox
         )
       }
-      if (any(segment_rows)) {
+      if (corridor_valid) {
         registry[[length(registry) + 1L]] <- ggchord_registry_row(
           paste0("inner-leader-", owner, "-", source), "inner", "leader",
           owner, "gene_label_repel", source_row = source,
@@ -289,6 +321,33 @@ ggchord_resolve_inner_tracks <- function(layer_geometry, layout) {
       }
     }
     layer_geometry[[owner]]$gene_label_repel <- geometry
+  }
+
+  # The centre title is a real measured obstacle, not a hard-coded radius.
+  # Feature candidate generation already keeps a conservative centre reserve;
+  # registering the final box here makes the actual occupied area available to
+  # fitting, diagnostics and the next allocator stage without inventing a
+  # concentric track for a Cartesian title block.
+  for (owner in names(layer_geometry)) {
+    centre <- layer_geometry[[owner]]$seq_center_label
+    if (!is.data.frame(centre) || !nrow(centre) ||
+        !all(c("x", "y", "label") %in% names(centre))) next
+    labels <- centre
+    labels$text <- labels$label
+    labels$text_x <- labels$x
+    labels$text_y <- labels$y
+    labels$text_angle <- labels$angle %||% 0
+    boxes <- ggchord_text_boxes(
+      labels, units_per_inch = units_per_inch, box_padding = .025
+    )
+    combined <- data.frame(
+      xmin = min(boxes$xmin), xmax = max(boxes$xmax),
+      ymin = min(boxes$ymin), ymax = max(boxes$ymax)
+    )
+    registry[[length(registry) + 1L]] <- ggchord_registry_row(
+      paste0("inner-centre-", owner), "inner", "center_reserved",
+      owner, "seq_center_label", bbox = combined
+    )
   }
 
   list(layer_geometry = layer_geometry,
@@ -369,7 +428,15 @@ ggchord_resolve_outer_annotations <- function(layer_geometry, layout) {
       geometry$leader_corridor[rows] <- corridor
 
       for (j in seq_along(rows)) {
-        source <- geometry$source_row[rows[j]]
+        source <- as.integer(geometry$source_row[rows[j]])
+        # Generated label fragments can lack an attached input row.  They still
+        # need a stable build-local identity so their leader and registry row
+        # can be joined without NA comparisons poisoning the logical mask.
+        generated_source <- length(source) != 1L || is.na(source)
+        if (generated_source) {
+          source <- rows[j]
+          geometry$source_row[rows[j]] <- source
+        }
         id <- paste("outer", owner, component, source, sep = "-")
         registry[[length(registry) + 1L]] <- ggchord_registry_row(
           id, "outer", geometry$annotation_kind[rows[j]], owner, component,
@@ -377,13 +444,22 @@ ggchord_resolve_outer_annotations <- function(layer_geometry, layout) {
           band = band[j], slot = slot[j], bbox = boxes[j, , drop = FALSE],
           leader_corridor = corridor[j]
         )
-        leader_rows <- geometry$source_row == source &
-          (geometry$.component %in% c("segment", "path"))
+        leader_rows <- if (generated_source && "group" %in% names(geometry)) {
+          geometry$group == geometry$group[rows[j]] &
+            (geometry$.component %in% c("segment", "path"))
+        } else {
+          !is.na(geometry$source_row) & geometry$source_row == source &
+            (geometry$.component %in% c("segment", "path"))
+        }
+        leader_rows[is.na(leader_rows)] <- FALSE
+        if (generated_source && any(leader_rows)) {
+          geometry$source_row[leader_rows] <- source
+        }
         if (identical(component, "restriction_site") &&
             "restriction_component" %in% names(geometry)) {
           leader_rows <- leader_rows & geometry$restriction_component == "leader"
         }
-        if (any(leader_rows)) {
+        if (isTRUE(any(leader_rows))) {
           geometry$annotation_side[leader_rows] <- "outer"
           geometry$annotation_kind[leader_rows] <- "leader"
           geometry$annotation_region[leader_rows] <- region[j]
@@ -422,7 +498,8 @@ ggchord_resolve_outer_annotations <- function(layer_geometry, layout) {
     component <- registry$component[i]
     geometry <- layer_geometry[[owner]][[component]]
     if (!is.data.frame(geometry) || !nrow(geometry)) next
-    rows <- geometry$source_row == registry$source_row[i] &
+    rows <- !is.na(geometry$source_row) &
+      geometry$source_row == registry$source_row[i] &
       geometry$annotation_side %in% "outer"
     geometry$annotation_slot[rows] <- registry$slot[i]
     layer_geometry[[owner]][[component]] <- geometry

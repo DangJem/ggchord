@@ -11,6 +11,12 @@
   bands, globally assigned slots, measured bounding boxes and leader
   corridors. `export_ggchord_layout()` exposes the registry and copies the
   resolved track or exterior allocation fields onto affected geometry rows.
+  Registry joins now guarantee scalar track identities even when a
+  device-specific fallback omits a local resource, fixing circular layout
+  export failures on dense short-feature maps. Dense restriction perimeters
+  open ordered horizontal fan corridors while retaining their backbone roots
+  and genomic order; feature and primer callouts use the remaining measured
+  exterior slots.
 * Added a reproducible bundled sequencing-primer catalogue generated from the
   reviewed Addgene workbook: 137 distinct oligonucleotides and all 163 source
   alias rows are retained separately. `primer_catalog()` exposes either view,
@@ -60,6 +66,9 @@
   `coord_circular()` from its measured annotation envelope while preserving a
   readable physical backbone diameter. Explicit output dimensions still take
   priority, and `height = NULL` retains one-dimensional content fitting.
+  Extremely dense circular perimeters use a count-derived wide preview and a
+  smaller relative backbone instead of shrinking annotation text into a
+  square canvas.
 * Circular feature bands now use non-uniform radial spacing: the transition
   from the backbone-near band to the nested cluster reserves a two-line main
   text corridor, each deeper pair of feature bands reserves at least one label

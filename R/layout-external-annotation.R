@@ -1,5 +1,59 @@
 # Perimeter annotation coordination for circular maps.
 
+# Open a horizontal fan corridor only for genuinely dense restriction
+# perimeters.  Sparse and medium maps keep their natural polar contour.  For a
+# dense map, every leader retains its backbone root and genomic order while its
+# outer points progressively follow the label into wider left/right space.
+ggchord_expand_dense_restriction_fans <- function(registry) {
+  label_count <- sum(vapply(registry, function(owner) {
+    sites <- owner$restriction_site
+    if (!is.data.frame(sites) || !nrow(sites)) return(0L)
+    as.integer(sum(sites$.component %in% "label" & !is.na(sites$label)))
+  }, integer(1L)))
+  if (label_count <= 53L) return(registry)
+
+  horizontal_gain <- min(1.25, .90 + .08 * (label_count - 54L))
+  for (id in names(registry)) {
+    sites <- registry[[id]]$restriction_site
+    if (!is.data.frame(sites) || !nrow(sites)) next
+    label_rows <- which(sites$.component %in% "label" & !is.na(sites$label))
+    if (!length(label_rows)) next
+    for (row in label_rows) {
+      original_x <- sites$x[row]
+      original_y <- sites$y[row]
+      radius <- sqrt(original_x^2 + original_y^2)
+      if (!is.finite(radius) || radius <= 0) next
+      # Top/bottom labels receive less horizontal motion than side labels, so
+      # the natural polar region remains recognizable.
+      side_weight <- abs(original_x) / radius
+      dx <- original_x * horizontal_gain * (.35 + .65 * side_weight)
+      if (!is.finite(dx) || abs(dx) < 1e-8) next
+      source <- sites$source_row[row]
+      leader_rows <- which(
+        !is.na(sites$source_row) & sites$source_row == source &
+          sites$restriction_component %in% "leader"
+      )
+      if (length(leader_rows)) {
+        leader_radius <- sqrt(
+          sites$x[leader_rows]^2 + sites$y[leader_rows]^2
+        )
+        spread <- diff(range(leader_radius, na.rm = TRUE))
+        progress <- if (is.finite(spread) && spread > 1e-8) {
+          (leader_radius - min(leader_radius, na.rm = TRUE)) / spread
+        } else seq(0, 1, length.out = length(leader_rows))
+        sites$x[leader_rows] <- sites$x[leader_rows] + dx * progress
+      }
+      sites$x[row] <- original_x + dx
+      if ("label_attachment_x" %in% names(sites) &&
+          is.finite(sites$label_attachment_x[row])) {
+        sites$label_attachment_x[row] <- sites$label_attachment_x[row] + dx
+      }
+    }
+    registry[[id]]$restriction_site <- sites
+  }
+  registry
+}
+
 # Restriction-site labels already own a polar contour/fan solver that keeps
 # sparse labels at their natural angles and opens dense clusters locally. Do
 # not flatten those labels onto Cartesian side rails when feature callouts are
@@ -9,6 +63,7 @@
 # colliding feature callouts to the nearest free outer track.
 ggchord_share_external_annotations <- function(registry, layout) {
   if (!isTRUE(layout$circular) || !length(registry)) return(registry)
+  registry <- ggchord_expand_dense_restriction_fans(registry)
   units_per_inch <- layout$text_units_per_inch %||% .30
 
   restriction_boxes <- data.frame()
@@ -68,11 +123,14 @@ ggchord_share_external_annotations <- function(registry, layout) {
       chosen_track <- 1L
       candidate <- geometry[row, , drop = FALSE]
       candidates <- expand.grid(
-        track = 1:5,
-        tangent = c(0L, as.vector(rbind(1:8, -1:-8)))
+        track = 1:8,
+        tangent = c(0L, as.vector(rbind(1:10, -1:-10)))
       )
-      candidates$score <- (candidates$track - 1L) * 1.15 +
-        abs(candidates$tangent) * .72
+      # Stay in the natural polar sector while space is available.  A new
+      # radial band is more disruptive than a nearby fan slot, but the bounded
+      # tangent search prevents a callout from migrating around the circle.
+      candidates$score <- (candidates$track - 1L) * 1.65 +
+        abs(candidates$tangent) * .58
       candidates <- candidates[order(candidates$score,
         abs(candidates$tangent), candidates$tangent < 0), , drop = FALSE]
       chosen_tangent <- 0L

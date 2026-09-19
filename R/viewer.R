@@ -63,8 +63,27 @@ ggchord_preview_height <- function(plot, width_inches) {
 # and expanding the canvas for the annotation envelope. The returned gtable is
 # frozen at the measurement device so exporting it does not trigger a second
 # size-dependent track solution.
+ggchord_preview_outer_density <- function(plot) {
+  counts <- vapply(plot$layers, function(layer) {
+    type <- layer$ggchord_type %||% ""
+    data <- layer$ggchord_input_data
+    if (!is.data.frame(data) || !nrow(data)) return(0L)
+    if (identical(type, "restriction_site")) return(nrow(data))
+    0L
+  }, integer(1L))
+  sum(counts)
+}
+
 ggchord_preview_circular_layout <- function(plot) {
-  baseline <- c(width = 12.39, height = 9.71)
+  outer_density <- ggchord_preview_outer_density(plot)
+  # Extremely dense perimeter annotation needs a different physical strategy:
+  # keep readable text and a roughly eight-inch backbone, then provide wide
+  # fan corridors instead of compressing everything into a square.  The
+  # threshold is based only on annotation count, never on a sequence name.
+  dense_width <- if (outer_density > 54L) {
+    min(24, 20 + .50 * (outer_density - 54L))
+  } else 12.39
+  baseline <- c(width = dense_width, height = 9.71)
   close_device <- ggchord_measurement_device(
     width = baseline[["width"]], height = baseline[["height"]]
   )
@@ -87,7 +106,7 @@ ggchord_preview_circular_layout <- function(plot) {
   )
   list(
     plot = table,
-    width = max(8, panel[1] + fixed[1]),
+    width = max(8, dense_width, panel[1] + fixed[1]),
     height = max(8, panel[2] + fixed[2])
   )
 }
