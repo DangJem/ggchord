@@ -2,13 +2,15 @@
 
 #' Draw primer binding ranges on a circular sequence
 #'
-#' Primers are slender directional arcs attached to a sequence-backbone edge,
-#' not arrows in the feature stack. Add [geom_primer_label_repel()] for the
-#' matching unboxed label and leader.
+#' Primers are slender directional arcs drawn between the two lines of a
+#' double sequence backbone by default, not arrows in the feature stack. Add
+#' [geom_primer_label_repel()] for the matching unboxed label and leader.
 #'
 #' @param mapping,data Standard layer inputs.
-#' @param side Backbone edge used by the primer arc.
-#' @param arc_offset Distance from the backbone centre.
+#' @param side Backbone lane used by the primer arc. `"between"` uses the
+#'   backbone centre line; `"outside"` and `"inside"` use `arc_offset`.
+#' @param arc_offset Distance from the backbone centre when `side` is
+#'   `"outside"` or `"inside"`.
 #' @param arc_linewidth Radial width of the primer arc.
 #' @param colour Primer arc colour.
 #' @param position,show.legend,inherit.aes Standard layer arguments.
@@ -24,10 +26,10 @@
 #'   geom_seq() + geom_primer(data = primer) +
 #'   geom_primer_label_repel(data = primer) + coord_circular()
 geom_primer <- function(mapping = NULL, data = NULL,
-                        side = c("outside", "inside"),
+                        side = c("between", "outside", "inside"),
                         arc_offset = .045,
                         arc_linewidth = .026,
-                        colour = "#8A2BE2",
+                        colour = "#A020F0",
                         position = NULL,
                         show.legend = FALSE,
                         inherit.aes = FALSE, ...) {
@@ -38,9 +40,12 @@ geom_primer <- function(mapping = NULL, data = NULL,
     ggchord_stop("geom_primer(): arc_offset and arc_linewidth must be finite non-negative/positive values")
   }
   if (is.null(position)) {
-    position <- position_plasmid(
-      if (identical(side, "outside")) arc_offset else -arc_offset
+    offset <- switch(side,
+      between = 0,
+      outside = arc_offset,
+      inside = -arc_offset
     )
+    position <- position_plasmid(offset)
   }
   layer <- geom_feature(
     mapping = mapping, data = data, feature_shape = "primer_arc",
@@ -67,9 +72,11 @@ geom_primer <- function(mapping = NULL, data = NULL,
 #' Arrange primer labels and leaders
 #'
 #' Primer labels are unboxed, use the primer colour, and show one-based
-#' inclusive binding coordinates by default.
+#' inclusive binding coordinates by default. Their leaders start at the
+#' directional primer arc's arrow tip (the primer 3-prime end).
 #'
 #' @inheritParams geom_primer
+#' @param side Side on which the external primer label is arranged.
 #' @param show_location Include the binding range in the label.
 #' @param max_overlaps Maximum unresolved overlaps.
 #' @return A composite text and leader-line layer.
@@ -78,7 +85,7 @@ geom_primer_label_repel <- function(
     mapping = NULL, data = NULL,
     side = c("outside", "inside"),
     show_location = TRUE,
-    colour = "#8A2BE2",
+    colour = "#A020F0",
     max_overlaps = Inf,
     position = NULL,
     show.legend = FALSE, inherit.aes = FALSE, ...) {
@@ -88,7 +95,9 @@ geom_primer_label_repel <- function(
     ggchord_stop("geom_primer_label_repel(): show_location must be TRUE or FALSE")
   }
   if (is.null(position)) {
-    position <- position_plasmid(if (side == "outside") .045 else -.045)
+    # `side` selects the exterior label field, not a second biological anchor.
+    # Keep the label's source on the primer arc between the backbone lines.
+    position <- position_plasmid(0)
   }
   layer <- geom_feature_label_repel(
     mapping = mapping, data = data, label_layout = "callout",
@@ -112,6 +121,7 @@ geom_primer_label_repel <- function(
     x$primer_start <- as.integer(x$start)
     x$primer_end <- as.integer(x$end)
     x$primer_show_location <- show_location
+    x$.feature_label_anchor <- "head"
     x$feature_label_mode <- "external"
     x$feature_label_fill <- NA_character_
     ggchord_feature_label_data(x)

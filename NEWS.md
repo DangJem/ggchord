@@ -29,9 +29,12 @@
   annealing and the seven authoritative reference-plasmid annotations are
   explicit modes. Reference `.dna` primer coordinates are converted from
   zero-based storage to one-based inclusive ranges. `geom_primer()` now draws
-  an independent purple directional arc at a backbone edge; the new
+  an independent purple directional arc between the two lines of a double
+  backbone by default; the new
   `geom_primer_label_repel()` draws unboxed purple labels and leaders and can
-  include the binding range. Primers no longer consume an inner feature lane.
+  include the binding range. Its leader starts at the directional arc's arrow
+  tip (the primer 3-prime end). The default primer colour follows the visual
+  reference (`#A020F0`). Primers no longer consume an inner feature lane.
 * Increased the plasmid feature-label size and darkened its internal leaders
   so feature names remain legible beside restriction-site annotations. Labels
   placed on a feature and labels moved to an inner track both follow their

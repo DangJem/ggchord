@@ -315,7 +315,12 @@ ggchord_layout_annotation_step <- quote({
         } else {
           (sp + ep) / 2
         }
-        frac_mid <- feature_midpoint_position / seq_len
+        feature_anchor_position <- if (
+            identical(as.character(gene$.feature_label_anchor %||% "midpoint"),
+              "head")) {
+          if (identical(strand, "-")) gene$start else gene$end
+        } else feature_midpoint_position
+        frac_mid <- feature_anchor_position / seq_len
 
         circum_ratio <- geneLabelCircumOffset[[sid]][strand]
         if (geneLabelCircumLimit[[sid]][strand]) {
@@ -514,7 +519,7 @@ ggchord_layout_annotation_step <- quote({
           accver = sid,
           group = i,
           source_row = gene$.source_row,
-          anchor_position = feature_midpoint_position,
+          anchor_position = feature_anchor_position,
           sequence_length = seq_len,
           position_name = as.character(gene$.position_name %||% "identity"),
           base_offset = as.numeric(gene$.position_base_offset %||% 0),

@@ -9,7 +9,7 @@ geom_primer_label_repel(
   data = NULL,
   side = c("outside", "inside"),
   show_location = TRUE,
-  colour = "#8A2BE2",
+  colour = "#A020F0",
   max_overlaps = Inf,
   position = NULL,
   show.legend = FALSE,
@@ -20,7 +20,7 @@ geom_primer_label_repel(
 \arguments{
 \item{mapping, data}{Standard layer inputs.}
 
-\item{side}{Backbone edge used by the primer arc.}
+\item{side}{Side on which the external primer label is arranged.}
 
 \item{show_location}{Include the binding range in the label.}
 
@@ -37,5 +37,6 @@ A composite text and leader-line layer.
 }
 \description{
 Primer labels are unboxed, use the primer colour, and show one-based
-inclusive binding coordinates by default.
+inclusive binding coordinates by default. Their leaders start at the
+directional primer arc's arrow tip (the primer 3-prime end).
 }

@@ -7,10 +7,10 @@
 geom_primer(
   mapping = NULL,
   data = NULL,
-  side = c("outside", "inside"),
+  side = c("between", "outside", "inside"),
   arc_offset = 0.045,
   arc_linewidth = 0.026,
-  colour = "#8A2BE2",
+  colour = "#A020F0",
   position = NULL,
   show.legend = FALSE,
   inherit.aes = FALSE,
@@ -20,9 +20,11 @@ geom_primer(
 \arguments{
 \item{mapping, data}{Standard layer inputs.}
 
-\item{side}{Backbone edge used by the primer arc.}
+\item{side}{Backbone lane used by the primer arc. \code{"between"} uses the
+backbone centre line; \code{"outside"} and \code{"inside"} use \code{arc_offset}.}
 
-\item{arc_offset}{Distance from the backbone centre.}
+\item{arc_offset}{Distance from the backbone centre when \code{side} is
+\code{"outside"} or \code{"inside"}.}
 
 \item{arc_linewidth}{Radial width of the primer arc.}
 
@@ -36,9 +38,9 @@ geom_primer(
 A ggplot2 layer.
 }
 \description{
-Primers are slender directional arcs attached to a sequence-backbone edge,
-not arrows in the feature stack. Add [geom_primer_label_repel()] for the
-matching unboxed label and leader.
+Primers are slender directional arcs drawn between the two lines of a
+double sequence backbone by default, not arrows in the feature stack. Add
+[geom_primer_label_repel()] for the matching unboxed label and leader.
 }
 \examples{
 primer <- data.frame(
