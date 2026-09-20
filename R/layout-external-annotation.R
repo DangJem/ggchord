@@ -121,49 +121,6 @@ ggchord_shift_feature_callout <- function(geometry, row, candidate) {
   geometry
 }
 
-ggchord_shift_restriction_callout <- function(sites, row, candidate) {
-  original <- c(sites$x[row], sites$y[row])
-  target <- c(candidate$row$text_x, candidate$row$text_y)
-  dx <- target[1L] - original[1L]
-  dy <- target[2L] - original[2L]
-  sites$x[row] <- target[1L]
-  sites$y[row] <- target[2L]
-  sites$outer_annotation_region[row] <- "restriction"
-  sites$outer_track[row] <- candidate$band
-  sites$outer_slot[row] <- candidate$slot
-  sites$dominant_outer_band[row] <- 1L
-  sites$outer_spill_reason[row] <- if (candidate$band > 1L) {
-    "bbox_collision"
-  } else NA_character_
-  sites$leader_crossing_count[row] <- 0L
-  if ("label_attachment_x" %in% names(sites)) {
-    direction <- target / max(sqrt(sum(target^2)), 1e-8)
-    sites$label_attachment_x[row] <- target[1L] -
-      direction[1L] * candidate$radial_half
-    sites$label_attachment_y[row] <- target[2L] -
-      direction[2L] * candidate$radial_half
-  }
-  leader_rows <- which(!is.na(sites$source_row) &
-    sites$source_row == sites$source_row[row] &
-    sites$restriction_component %in% "leader")
-  if (length(leader_rows)) {
-    leader_radius <- sqrt(sites$x[leader_rows]^2 + sites$y[leader_rows]^2)
-    spread <- diff(range(leader_radius, na.rm = TRUE))
-    progress <- if (is.finite(spread) && spread > 1e-8) {
-      (leader_radius - min(leader_radius, na.rm = TRUE)) / spread
-    } else seq(0, 1, length.out = length(leader_rows))
-    sites$x[leader_rows] <- sites$x[leader_rows] + dx * progress
-    sites$y[leader_rows] <- sites$y[leader_rows] + dy * progress
-    sites$outer_annotation_region[leader_rows] <- "restriction_leader"
-    sites$outer_track[leader_rows] <- candidate$band
-    sites$outer_slot[leader_rows] <- candidate$slot
-    sites$dominant_outer_band[leader_rows] <- 1L
-    sites$outer_spill_reason[leader_rows] <- sites$outer_spill_reason[row]
-    sites$leader_crossing_count[leader_rows] <- 0L
-  }
-  sites
-}
-
 ggchord_external_leader_crosses <- function(a, b, tolerance = 1e-9) {
   cross2 <- function(x, y) x[1L] * y[2L] - x[2L] * y[1L]
   p <- c(a$x1, a$y1)
@@ -248,17 +205,61 @@ ggchord_measure_external_leader_crossings <- function(registry) {
 }
 
 # Resolve every exterior annotation against one measured occupancy table.
-# Each class retains its candidate semantics, but all classes see the same
-# boxes. Feature/primer callouts keep their natural anchors; restriction labels
-# then maximise occupancy of a shared dominant perimeter band and spill only
-# when a measured collision proves the band unavailable.
+# Restriction sites already own a four-sided, order-preserving contour solver
+# in restriction-sites.R.  That geometry is the fixed perimeter scaffold:
+# flattening it back onto polar bands here recreates the very "flower" layout
+# the contour solver was designed to avoid.  Feature and primer callouts are
+# therefore placed against the measured restriction boxes and against one
+# another, while the restriction rail itself remains unchanged.
 ggchord_share_external_annotations <- function(registry, layout) {
   if (!isTRUE(layout$circular) || !length(registry)) return(registry)
   units_per_inch <- layout$text_units_per_inch %||% .30
   occupied <- data.frame()
 
-  # High-semantic-cost feature and primer labels are placed first, in circular
-  # order opened at the largest real gap rather than at a fixed quadrant.
+  # Register the already solved restriction contours first.  Their exact
+  # rendered boxes (including justification) become obstacles for both other
+  # annotation classes.
+  for (id in names(registry)) {
+    sites <- registry[[id]]$restriction_site
+    if (!is.data.frame(sites) || !nrow(sites)) next
+    rows <- which(sites$.component %in% "label" &
+      !is.na(sites$label) & nzchar(sites$label))
+    if (!length(rows)) next
+    for (nm in c("outer_annotation_region", "outer_spill_reason")) {
+      if (!nm %in% names(sites)) sites[[nm]] <- NA_character_
+    }
+    for (nm in c("outer_track", "outer_slot", "dominant_outer_band",
+        "leader_crossing_count")) {
+      if (!nm %in% names(sites)) sites[[nm]] <- NA_integer_
+    }
+    sites$outer_annotation_region[rows] <- "restriction"
+    sites$dominant_outer_band[rows] <- 1L
+    sites$leader_crossing_count[rows] <- 0L
+    used_bands <- sort(unique(sites$outer_track[rows]))
+    used_bands <- used_bands[is.finite(used_bands)]
+    if (length(used_bands)) {
+      remap <- stats::setNames(seq_along(used_bands), used_bands)
+      affected <- is.finite(sites$outer_track)
+      sites$outer_track[affected] <- unname(remap[
+        as.character(sites$outer_track[affected])
+      ])
+    }
+    measured <- sites[rows, , drop = FALSE]
+    measured$text <- measured$label
+    measured$text_x <- measured$x
+    measured$text_y <- measured$y
+    measured$text_angle <- measured$angle %||% 0
+    boxes <- ggchord_text_boxes(
+      measured, units_per_inch = units_per_inch, box_padding = .045
+    )
+    occupied <- if (!nrow(occupied)) boxes else
+      ggchord_rbind_fill(list(occupied, boxes))
+    registry[[id]]$restriction_site <- sites
+  }
+
+  # Place feature and primer labels in stable circular order.  Candidate bands
+  # are local to the callout rail, but every candidate sees the fixed
+  # restriction contour through `occupied`.
   for (id in names(registry)) {
     geometry <- registry[[id]]$gene_label_repel
     if (!is.data.frame(geometry) || !nrow(geometry)) next
@@ -279,17 +280,21 @@ ggchord_share_external_annotations <- function(registry, layout) {
       if (!nm %in% names(geometry)) geometry[[nm]] <- NA_integer_
     }
     angle <- atan2(geometry$text_y[rows], geometry$text_x[rows])
-    rows <- rows[ggchord_open_circular_order(angle,
-      geometry$anchor_position[rows] %||% rows)]
+    rows <- rows[ggchord_open_circular_order(
+      angle, geometry$anchor_position[rows] %||% rows
+    )]
     for (row in rows) {
+      class <- if ("annotation_class" %in% names(geometry) &&
+        identical(as.character(geometry$annotation_class[row]), "primer")) {
+        "primer"
+      } else "feature"
       candidate <- ggchord_external_place(
         geometry[row, , drop = FALSE], occupied, units_per_inch,
-        class = if ("annotation_class" %in% names(geometry) &&
-          identical(as.character(geometry$annotation_class[row]), "primer"))
-          "primer" else "feature"
+        class = class
       )
       geometry <- ggchord_shift_feature_callout(geometry, row, candidate)
-      occupied <- rbind(occupied, candidate$box)
+      occupied <- if (!nrow(occupied)) candidate$box else
+        ggchord_rbind_fill(list(occupied, candidate$box))
     }
     used_bands <- sort(unique(geometry$outer_track[rows]))
     used_bands <- used_bands[is.finite(used_bands)]
@@ -297,55 +302,10 @@ ggchord_share_external_annotations <- function(registry, layout) {
       remap <- stats::setNames(seq_along(used_bands), used_bands)
       affected <- is.finite(geometry$outer_track)
       geometry$outer_track[affected] <- unname(remap[
-        as.character(geometry$outer_track[affected])])
+        as.character(geometry$outer_track[affected])
+      ])
     }
     registry[[id]]$gene_label_repel <- geometry
-  }
-
-  for (id in names(registry)) {
-    sites <- registry[[id]]$restriction_site
-    if (!is.data.frame(sites) || !nrow(sites)) next
-    rows <- which(sites$.component %in% "label" &
-      !is.na(sites$label) & nzchar(sites$label))
-    if (!length(rows)) next
-    for (nm in c("outer_annotation_region", "outer_spill_reason")) {
-      if (!nm %in% names(sites)) sites[[nm]] <- NA_character_
-    }
-    for (nm in c("outer_track", "outer_slot", "dominant_outer_band",
-        "leader_crossing_count")) {
-      if (!nm %in% names(sites)) sites[[nm]] <- NA_integer_
-    }
-    attachment_x <- sites$label_attachment_x[rows] %||% sites$x[rows]
-    attachment_y <- sites$label_attachment_y[rows] %||% sites$y[rows]
-    invalid <- !is.finite(attachment_x) | !is.finite(attachment_y)
-    attachment_x[invalid] <- sites$x[rows][invalid]
-    attachment_y[invalid] <- sites$y[rows][invalid]
-    angle <- atan2(attachment_y, attachment_x)
-    rows <- rows[ggchord_open_circular_order(angle,
-      sites$anchor_position[rows] %||% rows)]
-    contour <- sites$label_contour_radius[rows]
-    contour <- contour[is.finite(contour)]
-    base_edge <- if (length(contour)) stats::median(contour) else {
-      radius <- sqrt(sites$x[rows]^2 + sites$y[rows]^2)
-      stats::quantile(radius[is.finite(radius)], .15, names = FALSE)
-    }
-    for (row in rows) {
-      candidate <- ggchord_external_place(
-        sites[row, , drop = FALSE], occupied, units_per_inch,
-        base_edge_radius = base_edge, class = "restriction"
-      )
-      sites <- ggchord_shift_restriction_callout(sites, row, candidate)
-      occupied <- rbind(occupied, candidate$box)
-    }
-    used_bands <- sort(unique(sites$outer_track[rows]))
-    used_bands <- used_bands[is.finite(used_bands)]
-    if (length(used_bands)) {
-      remap <- stats::setNames(seq_along(used_bands), used_bands)
-      affected <- is.finite(sites$outer_track)
-      sites$outer_track[affected] <- unname(remap[
-        as.character(sites$outer_track[affected])])
-    }
-    registry[[id]]$restriction_site <- sites
   }
   ggchord_measure_external_leader_crossings(registry)
 }

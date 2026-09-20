@@ -6,20 +6,20 @@
   backbone, while variable-width feature bands, curved-text tracks, inner
   leader corridors and the axis reserve record their radius and radial
   boundaries. Restriction sites, external feature labels and primer labels
-  retain their own visual semantics, but now register complete requests before
-  one exterior allocation pass. The allocator opens circular order at the
-  largest real gap, selects a dominant perimeter band, spills only to
-  consecutive bands after a measured collision, and shares bounding boxes and
-  leader occupancy across annotation classes. `export_ggchord_layout()` exposes
+  retain their own visual semantics in one shared exterior registry. Sparse
+  restriction clusters keep local circular fans; dense clusters use measured,
+  order-preserving top/right/bottom/left perimeter rails, with cross-cardinal
+  clusters split before same-side fans are merged. Feature and primer callouts
+  then use the resolved restriction boxes as fixed obstacles and spill only to
+  consecutive local bands. `export_ggchord_layout()` exposes
   annotation class, dominant/actual band, spill reason and leader-crossing
   count together with the registry, and copies the
-  resolved track or exterior allocation fields onto affected geometry rows.
+  resolved track, perimeter-rail, or exterior allocation fields onto affected geometry rows.
   Registry joins now guarantee scalar track identities even when a
   device-specific fallback omits a local resource, fixing circular layout
   export failures on dense short-feature maps. Dense restriction perimeters
-  open ordered horizontal fan corridors while retaining their backbone roots
-  and genomic order; feature and primer callouts use the remaining measured
-  exterior slots.
+  retain their backbone roots and genomic order; feature and primer callouts
+  use the remaining measured exterior slots.
 * Added a reproducible bundled sequencing-primer catalogue generated from the
   reviewed Addgene workbook: 137 distinct oligonucleotides and all 163 source
   alias rows are retained separately. `primer_catalog()` exposes either view,
@@ -63,9 +63,10 @@
   not guessed. The pSB1C3 reference now reproduces the Dcm-blocked `PflMI *`
   state without a plasmid-name rendering branch.
 * Refined the pBluescript II SK(+) circular-map layout against the supplied
-  visual reference. Restriction labels again retain their close polar contour
-  and local ordered fans instead of being flattened onto shared left/right
-  rails with feature callouts. Feature labels now exhaust internal feature
+  visual reference. Sparse restriction labels retain their close polar contour
+  and local ordered fans, while only the genuinely dense right-side MCS uses a
+  shared vertical perimeter rail; the short upper-left group is not forced
+  into a column. Feature labels now exhaust internal feature
   gutters and deeper label tracks before becoming external, with short leaders
   whenever an intervening physical track separates a feature and its label.
   Compact, promoter and primer arrows use the same annular-arrow factory and

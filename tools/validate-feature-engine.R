@@ -158,7 +158,16 @@ stopifnot(identical(axis_steps, c(250, 500, 500, 1000, 1000, 2000)))
 reference_fixture_names <- names(real_fixtures)
 fixtures <- c(real_fixtures, fixtures)
 
-for (name in names(fixtures)) {
+fixture_names <- names(fixtures)
+requested_maps <- commandArgs(trailingOnly = TRUE)[2L]
+if (!is.na(requested_maps) && nzchar(requested_maps)) {
+  requested_maps <- trimws(strsplit(requested_maps, ",", fixed = TRUE)[[1L]])
+  requested_names <- unique(c(requested_maps, make.names(requested_maps)))
+  fixture_names <- fixture_names[fixture_names %in% requested_names]
+  if (!length(fixture_names)) stop("No requested validation map was found")
+}
+
+for (name in fixture_names) {
   fixture <- fixtures[[name]]
   tracks <- position_feature_stack(
     spacing = .085, base_position = position_plasmid()
@@ -203,6 +212,41 @@ for (name in names(fixtures)) {
   if (nrow(restriction_registry)) {
     used_bands <- sort(unique(restriction_registry$band))
     stopifnot(identical(used_bands, seq_len(max(used_bands))))
+  }
+  restriction_labels <- layout$restriction[
+    layout$restriction$restriction_component == "label", , drop = FALSE
+  ]
+  sequence_label <- as.character(fixture$sequence$label[1L])
+  if (sequence_label == "pBR322") {
+    bottom <- restriction_labels$anchor_position >= 2060 &
+      restriction_labels$anchor_position <= 2360
+    stopifnot(
+      sum(bottom) >= 8L,
+      all(restriction_labels$label_layout[bottom] == "perimeter_rail"),
+      all(restriction_labels$label_connection_side[bottom] == "bottom")
+    )
+  }
+  if (sequence_label == "pBluescript II SK(+)") {
+    right <- restriction_labels$anchor_position >= 650 &
+      restriction_labels$anchor_position <= 760
+    upper_left <- restriction_labels$anchor_position >= 2520 &
+      restriction_labels$anchor_position <= 2650
+    stopifnot(
+      sum(right) >= 12L,
+      all(restriction_labels$label_layout[right] == "perimeter_rail"),
+      all(restriction_labels$label_connection_side[right] == "right"),
+      !any(restriction_labels$label_layout[upper_left] == "perimeter_rail")
+    )
+  }
+  if (sequence_label == "pETDuet-1") {
+    dense <- restriction_labels$anchor_position <= 451
+    dense_sides <- unique(restriction_labels$label_direction[
+      dense
+    ])
+    stopifnot(
+      all(c("top", "right") %in% dense_sides),
+      any(dense & restriction_labels$label_layout == "perimeter_rail")
+    )
   }
   text <- layout$labels[layout$labels$.component == "text", , drop = FALSE]
   if (identical(as.character(fixture$sequence$label[1L]),
