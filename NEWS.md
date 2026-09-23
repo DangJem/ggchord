@@ -40,6 +40,13 @@ not a completed release.
   candidate search can resolve nearby mixed callout crossings without a
   Cartesian rail; an unresolved spill reason is exported when no noncrossing
   placement exists.
+  Moved feature and primer callouts now rebuild a continuous leader against
+  the final measured text box, attach to its root-facing edge, and collapse
+  unused route rows at that endpoint instead of leaving detached stale
+  coordinates. Labelled restriction sites now draw one continuous connector
+  from the real backbone boundary, either straight or with one fan bend;
+  their former standalone tick remains only as anchor metadata, while
+  unlabelled sites still draw the normal short tick.
   Registry joins now guarantee scalar track identities even when a
   device-specific fallback omits a local resource, fixing circular layout
   export failures on dense short-feature maps. Dense restriction perimeters

@@ -40,8 +40,8 @@ position first.}
 
 \item{leader}{Leader routing style. The default `"radial"` measures actual
 text boxes, separates site anchors from final radial label positions,
-and routes either a direct connector or an independent radial stub plus
-fan segment.
+and routes either a direct connector or one continuous polyline from the
+backbone boundary, with at most one radial-to-fan bend.
 All enzyme-facing text edges follow one close circular contour in genomic
 order. Dense lateral clusters use evenly spaced contour fans, while sparse
 clusters retain their natural angular positions. `"trunk"` is retained

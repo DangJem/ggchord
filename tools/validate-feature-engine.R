@@ -316,6 +316,33 @@ for (name in fixture_names) {
   restriction_labels <- layout$restriction[
     layout$restriction$restriction_component == "label", , drop = FALSE
   ]
+  restriction_ticks <- layout$restriction[
+    layout$restriction$restriction_component == "tick", , drop = FALSE
+  ]
+  restriction_leaders <- layout$restriction[
+    layout$restriction$restriction_component == "leader", , drop = FALSE
+  ]
+  if (nrow(restriction_labels)) {
+    leader_points <- vapply(split(restriction_leaders,
+      restriction_leaders$group), nrow, integer(1L))
+    stopifnot(
+      ".path_visible" %in% names(restriction_ticks),
+      !any(restriction_ticks$.path_visible),
+      all(leader_points %in% 2:3)
+    )
+    tick_roots <- restriction_ticks[
+      !duplicated(restriction_ticks$source_row), , drop = FALSE
+    ]
+    leader_roots <- restriction_leaders[
+      !duplicated(restriction_leaders$source_row), , drop = FALSE
+    ]
+    matched <- match(leader_roots$source_row, tick_roots$source_row)
+    stopifnot(
+      all(is.finite(matched)),
+      all(abs(leader_roots$x - tick_roots$x[matched]) < 1e-8),
+      all(abs(leader_roots$y - tick_roots$y[matched]) < 1e-8)
+    )
+  }
   sequence_label <- as.character(fixture$sequence$label[1L])
   if (sequence_label == "pBR322") {
     bottom <- restriction_labels$anchor_position >= 2060 &

@@ -2,6 +2,7 @@
 
 ggchord_external_candidates <- function(max_band = 16L, max_slot = 20L,
                                          class = "restriction") {
+  if (class %in% c("feature", "primer")) max_slot <- max(max_slot, 40L)
   candidates <- expand.grid(
     band = seq_len(max_band),
     slot = c(0L, as.vector(rbind(seq_len(max_slot), -seq_len(max_slot))))
@@ -28,6 +29,45 @@ ggchord_open_circular_order <- function(angle, tie = seq_along(angle)) {
   cut <- which.max(gaps)
   c(if (cut < length(sorted)) sorted[seq.int(cut + 1L, length(sorted))]
     else integer(), sorted[seq_len(cut)])
+}
+
+ggchord_external_route_to_label <- function(route, box) {
+  if (!is.data.frame(route) || !nrow(route)) return(route)
+  if (!is.data.frame(box) || !nrow(box) ||
+      any(!is.finite(unlist(box[1L, c("cx", "cy", "w", "h", "angle")])))) {
+    return(route)
+  }
+  centre <- c(box$cx[1L], box$cy[1L])
+  elbows <- if (nrow(route) > 1L) {
+    as.matrix(route[seq_len(nrow(route) - 1L), c("x2", "y2"), drop = FALSE])
+  } else matrix(numeric(), ncol = 2L)
+  start <- if (nrow(elbows)) elbows[nrow(elbows), ] else
+    c(route$x1[1L], route$y1[1L])
+  angle <- box$angle[1L]
+  cos_a <- cos(angle)
+  sin_a <- sin(angle)
+  relative <- start - centre
+  local <- c(
+    relative[1L] * cos_a + relative[2L] * sin_a,
+    -relative[1L] * sin_a + relative[2L] * cos_a
+  )
+  half <- c(box$w[1L], box$h[1L]) / 2
+  entry <- max(c(0, if (abs(local[1L]) > half[1L]) {
+    1 - half[1L] / abs(local[1L])
+  } else 0, if (abs(local[2L]) > half[2L]) {
+    1 - half[2L] / abs(local[2L])
+  } else 0))
+  local_endpoint <- local * (1 - entry)
+  endpoint <- centre + c(
+    local_endpoint[1L] * cos_a - local_endpoint[2L] * sin_a,
+    local_endpoint[1L] * sin_a + local_endpoint[2L] * cos_a
+  )
+  points <- rbind(c(route$x1[1L], route$y1[1L]), elbows, endpoint)
+  data.frame(
+    x1 = points[-nrow(points), 1L], y1 = points[-nrow(points), 2L],
+    x2 = points[-1L, 1L], y2 = points[-1L, 2L],
+    move_endpoint = FALSE
+  )
 }
 
 ggchord_external_place <- function(row, occupied, units_per_inch,
@@ -116,6 +156,9 @@ ggchord_external_place <- function(row, occupied, units_per_inch,
         candidate_leaders$x2[moving] <- candidate_leaders$x2[moving] + dx
         candidate_leaders$y2[moving] <- candidate_leaders$y2[moving] + dy
       }
+      candidate_leaders <- ggchord_external_route_to_label(
+        candidate_leaders, box
+      )
       if (nrow(occupied_leaders)) {
         leader_collision <- ggchord_external_route_crosses(
           candidate_leaders, occupied_leader_matrix
@@ -166,8 +209,11 @@ ggchord_external_place <- function(row, occupied, units_per_inch,
               y2 = c(elbow[2L], endpoint[2L]),
               move_endpoint = c(FALSE, FALSE)
             )
-            if (!route_crosses(route)) {
-              routed <- route
+            final_route <- ggchord_external_route_to_label(
+              route, box
+            )
+            if (!route_crosses(final_route)) {
+              routed <- final_route
               break
             }
           }
@@ -435,6 +481,15 @@ ggchord_shift_feature_callout <- function(geometry, row, candidate) {
       geometry$y[target_rows] <- routed$y1[use]
       geometry$xend[target_rows] <- routed$x2[use]
       geometry$yend[target_rows] <- routed$y2[use]
+    }
+    unused <- setdiff(segment_rows, if (length(use)) target_rows else
+      integer())
+    if (length(unused) && nrow(routed)) {
+      endpoint <- routed[nrow(routed), c("x2", "y2")]
+      geometry$x[unused] <- endpoint$x2
+      geometry$y[unused] <- endpoint$y2
+      geometry$xend[unused] <- endpoint$x2
+      geometry$yend[unused] <- endpoint$y2
     }
     if ("x1" %in% names(geometry)) {
       geometry$x1[segment_rows] <- geometry$xend[segment_rows]
