@@ -251,8 +251,17 @@ ggchord_allocate_feature_lanes <- function(data, base, direction, spacing,
 }
 
 ggchord_feature_lane_offsets <- function(data, lane, base, direction,
-                                          spacing) {
+                                          spacing, circular = FALSE,
+                                          lengths = NULL, label_size = 2.5) {
   offsets <- numeric(nrow(data))
+  label_text <- if ("anno" %in% names(data)) as.character(data$anno) else
+    if ("label" %in% names(data)) as.character(data$label) else
+      rep(NA_character_, nrow(data))
+  label_metrics <- if (isTRUE(circular) && any(!is.na(label_text) &
+      nzchar(label_text))) ggchord_text_boxes(data.frame(
+        text = label_text, text_x = 0, text_y = 0,
+        size = label_size
+      ), units_per_inch = .35) else NULL
   band <- paste(
     data$accver,
     format(base, digits = 15, scientific = FALSE, trim = TRUE),
@@ -271,12 +280,49 @@ ggchord_feature_lane_offsets <- function(data, lane, base, direction,
     }, numeric(1))
     centres <- numeric(length(lane_width))
     if (length(centres) > 1L) {
+      sid <- as.character(data$accver[idx[1L]])
+      sequence_length <- if (!is.null(lengths)) unname(lengths[sid]) else
+        NA_real_
+      lane_demand <- rep(1L, length(lane_width))
+      if (isTRUE(circular) && !is.null(label_metrics) &&
+          length(sequence_length) == 1L && is.finite(sequence_length) &&
+          sequence_length > 0) {
+        span <- ifelse(data$start[idx] <= data$end[idx],
+          data$end[idx] - data$start[idx] + 1,
+          sequence_length - data$start[idx] + data$end[idx] + 1)
+        midpoint <- ((data$start[idx] - 1 + span / 2) %%
+          sequence_length) / sequence_length
+        radius <- pmax(.35, abs(1 + base[idx]))
+        arc_width <- 2 * pi * radius * span / sequence_length
+        needs_gutter <- is.finite(label_metrics$w[idx]) &
+          nzchar(label_text[idx]) &
+          label_metrics$w[idx] > arc_width * .85
+        needs_gutter[is.na(needs_gutter)] <- FALSE
+        for (lane_value in seq_len(length(lane_width) - 1L) - 1L) {
+          members <- which(local_lanes == lane_value & needs_gutter)
+          if (!length(members)) next
+          half_span <- pmin(.25, label_metrics$w[idx[members]] /
+            (4 * pi * radius[members]))
+          overlap <- vapply(seq_along(members), function(j) {
+            delta <- abs(midpoint[members] - midpoint[members[j]])
+            delta <- pmin(delta, 1 - delta)
+            sum(delta < half_span[j] + half_span + .004)
+          }, integer(1L))
+          lane_demand[lane_value + 1L] <- max(overlap)
+        }
+      }
       for (i in 2:length(centres)) {
-        # The first transition owns the main two-line label corridor. Every
-        # deeper feature band still reserves at least one measured-label-sized
-        # corridor so a feature can own an immediately adjacent inner label
-        # track instead of sending all text below the deepest glyph band.
-        label_gutter <- if (i == 2L) {
+        # Reserve only the corridor demanded by labels that cannot fit their
+        # own arrows.  Fixed wide gutters made mostly empty outer bands push
+        # the innermost annotations into the centre or even outside the map.
+        label_gutter <- if (isTRUE(circular)) {
+          base_gutter <- if (i == 2L) max(.125, spacing * 1.20) else
+            max(.035, spacing * .40)
+          step <- if (!is.null(label_metrics)) max(.05,
+            max(label_metrics$h[idx], na.rm = TRUE) * 1.12) else .05
+          min(if (i == 2L) .26 else .22,
+            base_gutter + (lane_demand[i - 1L] - 1L) * step)
+        } else if (i == 2L) {
           max(.125, spacing * 1.20)
         } else {
           max(.080, spacing * .85)
@@ -293,6 +339,7 @@ ggchord_feature_lane_offsets <- function(data, lane, base, direction,
 
 ggchord_apply_feature_position <- function(data, position, seqs, lengths,
                                             circular = FALSE,
+                                            label_size = 2.5,
                                             legacy_offset = NULL,
                                             legacy_name = "gene_offset") {
   if (is.null(data) || !nrow(data)) return(data)
@@ -355,7 +402,8 @@ ggchord_apply_feature_position <- function(data, position, seqs, lengths,
       circular = circular, lengths = lengths
     )
     lane_offset <- ggchord_feature_lane_offsets(
-      out, lane, base, direction, position$spacing %||% 0.10
+      out, lane, base, direction, position$spacing %||% 0.10,
+      circular = circular, lengths = lengths, label_size = label_size
     )
   }
   out$.position_name <- position_name

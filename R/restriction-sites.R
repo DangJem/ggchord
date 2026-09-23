@@ -664,6 +664,16 @@ ggchord_restriction_label_lanes <- function(
   labels$.radial_parameter <- NA_real_
   directions <- rep(NA_character_, nrow(gl))
   tracks <- rep(NA_integer_, nrow(gl))
+  provisional_boxes <- ggchord_text_boxes(
+    labels, units_per_inch = units_per_inch
+  )
+  collision_boxes <- provisional_boxes
+  # The final restriction label is drawn as separate bold enzyme and regular
+  # coordinate grobs.  Reserve a modest composite-text margin during the
+  # circular solve so the later exact metrics do not turn an apparently valid
+  # main-track fan into many unnecessary radial spill tracks.
+  provisional_boxes$w <- provisional_boxes$w * 1.18
+  provisional_boxes$h <- provisional_boxes$h * 1.08
   arc_ids <- vapply(seq_arcs, function(arc) as.character(arc$accver[1L]),
     character(1))
 
@@ -701,24 +711,23 @@ ggchord_restriction_label_lanes <- function(
     # occupies substantial tangential width. Solve such neighbours as one
     # ordered contour fan instead of allowing independently centred fans to
     # overlap.
-    fan_gap <- max(.025, min_label_gap %||% .014) * total
-    fan <- cumsum(c(TRUE, diff(opened) > fan_gap))
-    local <- split(rows[ord], fan)
-    groups <- c(groups, local)
+    base_fan_gap <- max(.025, min_label_gap %||% .014) * total
+    theta <- atan2(gl$anchor_y[rows[ord]], gl$anchor_x[rows[ord]])
+    tangent_half_extent <-
+      abs(sin(theta)) * provisional_boxes$w[rows[ord]] / 2 +
+      abs(cos(theta)) * provisional_boxes$h[rows[ord]] / 2
+    adaptive_gap <- if (length(opened) > 1L) {
+      pmax(
+        base_fan_gap,
+        tangent_half_extent[-length(tangent_half_extent)] +
+          tangent_half_extent[-1L] + .025
+      )
+    } else numeric()
+    groups[[length(groups) + 1L]] <- rows[ord]
   }
-  # A genomic cluster can cross a cardinal boundary (most visibly the dense
-  # MCS of pETDuet-1).  Split only at actual nearest-side changes so its top
-  # members use the top rail and its lateral members use the right/left rail.
-  groups <- unlist(lapply(groups, function(rows) {
-    radius <- sqrt(gl$anchor_x[rows]^2 + gl$anchor_y[rows]^2)
-    cardinal <- ifelse(
-      abs(gl$anchor_x[rows]) >= .28 * radius,
-      ifelse(gl$anchor_x[rows] >= 0, "right", "left"),
-      ifelse(gl$anchor_y[rows] >= 0, "top", "bottom")
-    )
-    run <- cumsum(c(TRUE, cardinal[-1L] != cardinal[-length(cardinal)]))
-    split(rows, run)
-  }), recursive = FALSE)
+  # Groups remain genomic/circular clusters.  Do not split them at Cartesian
+  # top/right/bottom/left boundaries: the exterior resource is a circular
+  # anchor track, not four independent text rails.
 
   # The final restriction layout has its own circular packing pass below.  It
   # does not need the gene-label solver's independent radial tracks; starting
@@ -732,7 +741,7 @@ ggchord_restriction_label_lanes <- function(
   directions <- ifelse(gl$anchor_x < 0, "left", "right")
   tracks[] <- 1L
   labels$text <- gl$text
-  boxes <- ggchord_text_boxes(labels, units_per_inch = units_per_inch)
+  boxes <- provisional_boxes
   labels$.restriction_column <- FALSE
   labels$.restriction_column_edge <- NA_real_
   labels$.restriction_column_radius <- NA_real_
@@ -744,19 +753,20 @@ ggchord_restriction_label_lanes <- function(
   labels$.restriction_rail_edge_x <- NA_real_
   labels$.restriction_rail_edge_y <- NA_real_
 
-  # Dense clusters switch to one of four Cartesian perimeter rails.  SnapGene-
-  # style maps use vertical columns at left/right and horizontal rows at
-  # top/bottom; retaining a circular text contour at the cardinal points is
-  # what creates the familiar flower-like spread and bottom-label pile-up.
-  if (!identical(side, "inside")) for (column_group in seq_along(groups)) {
+  # Retained fields keep the layout schema stable.  Four-sided Cartesian rails
+  # were an intermediate experiment and are deliberately disabled: horizontal
+  # text may extend beyond its circular anchor track, while its measured box is
+  # used only for collision detection and local outward stacking.
+  if (FALSE && !identical(side, "inside")) for (column_group in seq_along(groups)) {
     rows <- groups[[column_group]]
-    if (length(rows) < 4L) next
+    if (length(rows) < 3L) next
     radius <- sqrt(gl$anchor_x[rows]^2 + gl$anchor_y[rows]^2)
     radius[radius <= 1e-10] <- 1
     x_score <- mean(abs(gl$anchor_x[rows]) / radius)
     y_score <- mean(abs(gl$anchor_y[rows]) / radius)
-    vertical <- all(abs(gl$anchor_x[rows]) >= .28 * radius)
-    if (vertical && length(rows) < 8L) next
+    vertical_cut <- .70
+    vertical <- all(abs(gl$anchor_x[rows]) >= vertical_cut * radius)
+    if (vertical && length(rows) < 5L) next
     cardinal <- if (vertical) x_score else y_score
     half_coordinate <- if (vertical) gl$anchor_x[rows] else gl$anchor_y[rows]
     one_half <- length(unique(sign(half_coordinate))) == 1L
@@ -772,23 +782,13 @@ ggchord_restriction_label_lanes <- function(
     ordered <- rows[ord]
     axis_anchor <- if (vertical) gl$anchor_y[ordered] else
       gl$anchor_x[ordered]
-    axis_direction <- suppressWarnings(sign(stats::cor(
-      genomic[ord], axis_anchor
-    )))
-    if (!is.finite(axis_direction) || axis_direction == 0) {
-      axis_direction <- sign(tail(axis_anchor, 1L) - axis_anchor[1L])
-    }
-    if (!is.finite(axis_direction) || axis_direction == 0) axis_direction <- 1
     half_extent <- if (vertical) boxes$h[ordered] / 2 else
       boxes$w[ordered] / 2
-    axis_position <- numeric(length(ordered))
-    if (length(ordered) > 1L) for (j in 2:length(ordered)) {
-      axis_position[j] <- axis_position[j - 1L] +
-        half_extent[j - 1L] + half_extent[j] +
-        if (vertical) .023 else .045
-    }
-    axis_position <- axis_direction *
-      (axis_position - mean(range(axis_position))) + mean(range(axis_anchor))
+    axis_position <- ggchord_pack_label_axis_outward(
+      axis_anchor, axis_anchor, half_extent, half_extent,
+      centre = 0,
+      gap = if (vertical) .023 else .045
+    )
 
     displacement <- abs(axis_position - axis_anchor)
     displacement_scale <- max(displacement)
@@ -841,24 +841,26 @@ ggchord_restriction_label_lanes <- function(
   # Adjacent genomic fans on the same physical side must share one measured
   # rail.  Repack them together after local classification; otherwise two
   # individually valid top fans can overlap at the origin seam.
-  for (id in unique(as.character(gl$accver))) {
+  if (FALSE) for (id in unique(as.character(gl$accver))) {
     for (rail_side in c("left", "right", "top", "bottom")) {
       rows <- which(as.character(gl$accver) == id &
         labels$.restriction_rail_side %in% rail_side)
       if (length(rows) < 2L) next
       vertical <- rail_side %in% c("left", "right")
-      current <- if (vertical) labels$text_y[rows] else labels$text_x[rows]
-      ordered <- rows[order(current, gl$genomic_position[rows], rows)]
+      anchor_axis <- if (vertical) gl$anchor_y[rows] else gl$anchor_x[rows]
+      # The rail order follows the roots' projected physical order.  Around a
+      # circular origin, sorting by the raw genomic coordinate can reverse one
+      # side of the fan even though every local group is internally ordered.
+      ordered <- rows[order(anchor_axis, gl$genomic_position[rows], rows)]
       half_extent <- if (vertical) boxes$h[ordered] / 2 else
         boxes$w[ordered] / 2
-      axis_position <- numeric(length(ordered))
-      for (j in 2:length(ordered)) {
-        axis_position[j] <- axis_position[j - 1L] +
-          half_extent[j - 1L] + half_extent[j] +
-          if (vertical) .023 else .045
-      }
-      axis_position <- axis_position - mean(range(axis_position)) +
-        mean(range(current))
+      axis_position <- ggchord_pack_label_axis_outward(
+        anchor_axis[order(anchor_axis, gl$genomic_position[rows], rows)],
+        anchor_axis[order(anchor_axis, gl$genomic_position[rows], rows)],
+        half_extent, half_extent,
+        centre = 0,
+        gap = if (vertical) .023 else .045
+      )
       boundary <- max(labels$.restriction_column_radius[ordered], na.rm = TRUE)
       if (rail_side == "right") {
         edge_x <- rep(boundary, length(ordered))
@@ -897,15 +899,42 @@ ggchord_restriction_label_lanes <- function(
   labels$.restriction_contour_x <- NA_real_
   labels$.restriction_contour_y <- NA_real_
   labels$.restriction_contour_radius <- NA_real_
+  labels$.restriction_base_contour_radius <- NA_real_
   labels$.restriction_fan_group <- NA_integer_
+  labels$.restriction_fan_index <- NA_integer_
+  labels$.restriction_fan_size <- NA_integer_
   labels$.restriction_orientation <- NA_real_
   labels$.restriction_text_sign <- NA_real_
+  labels$.restriction_cut_spill <- FALSE
   radial_sign <- if (identical(side, "inside")) -1 else 1
   contour_radius_by_id <- vapply(unique(as.character(gl$accver)), function(id) {
     rows <- which(as.character(gl$accver) == id)
     base <- if (radial_sign > 0) max(anchor_radius[rows], na.rm = TRUE) else
       min(anchor_radius[rows], na.rm = TRUE)
-    base + radial_sign * max(.040, .30 * label_offset)
+    nominal <- base + radial_sign * max(.040, .30 * label_offset)
+    if (radial_sign < 0 || length(rows) < 2L) return(nominal)
+    # Horizontal labels can rotate from top/bottom into lateral sectors during
+    # packing, where their full width becomes tangential. Size the dominant
+    # track conservatively from that complete measured width; the bbox may
+    # still extend beyond the track and remains the collision authority.
+    anchor_theta <- atan2(gl$anchor_y[rows], gl$anchor_x[rows])
+    tangential_width <- abs(sin(anchor_theta)) * collision_boxes$w[rows] +
+      abs(cos(anchor_theta)) * collision_boxes$h[rows]
+    required_arc <- sum(tangential_width + .010)
+    measured <- required_arc / (2 * pi * .90)
+    # Moderate maps retain a close dominant ring and let local conflicts
+    # spill; very heavily annotated maps expand one common ring first. This
+    # is a load class, not an identifier-specific layout branch.
+    full_measured <- sum(collision_boxes$w[rows] + .010) /
+      (2 * pi * .90)
+    compact_radius <- min(base + .32, full_measured)
+    anchor_angles <- (anchor_theta + 2 * pi) %% (2 * pi)
+    quarter_fraction <- max(vapply(anchor_angles, function(angle) {
+      sum(((anchor_angles - angle) %% (2 * pi)) < pi / 2)
+    }, integer(1L))) / length(rows)
+    dominant_radius <- if (full_measured < 2.48) compact_radius else if (
+        quarter_fraction > .55) full_measured else measured
+    max(nominal, dominant_radius)
   }, numeric(1))
   for (g in seq_along(groups)) {
     rows <- groups[[g]]
@@ -929,9 +958,16 @@ ggchord_restriction_label_lanes <- function(
     contour_radius <- contour_radius_by_id[id]
     preferred_angle <- numeric(length(ordered))
     if (length(ordered) > 1L) {
-      ordered_genomic <- gl$genomic_position[ordered]
-      preferred_angle <- 2 * pi *
-        ((ordered_genomic - ordered_genomic[1L]) %% total) / total
+      # `ordered` is opened in the physical arc order.  Derive its unwrapped
+      # angular parameter from that physical order rather than from raw genomic
+      # subtraction: after rotation or reversed path direction the latter can
+      # jump at the origin and silently reverse a subset of packed endpoints.
+      angular_step <- orientation * atan2(
+        sin(diff(theta)), cos(diff(theta))
+      )
+      angular_step[angular_step < 0] <- angular_step[angular_step < 0] +
+        2 * pi
+      preferred_angle <- c(0, cumsum(angular_step))
     }
 
     dense_fan <- all(!is.na(labels$.restriction_rail_side[ordered]))
@@ -957,6 +993,14 @@ ggchord_restriction_label_lanes <- function(
           half_extent, half_extent, gap = .010
         )
       }
+      crowding_ratio <- sum(collision_boxes$w[ordered]) /
+        (2 * pi * contour_radius)
+      if (crowding_ratio > 1.25) {
+        preferred_distance <- preferred_angle * contour_radius
+        max_tangent_shift <- .35 * contour_radius
+        packed <- pmax(preferred_distance - max_tangent_shift,
+          pmin(preferred_distance + max_tangent_shift, packed))
+      }
       packed_theta <- theta[1L] + orientation * packed / contour_radius
       edge_x <- contour_radius * cos(packed_theta)
       edge_y <- contour_radius * sin(packed_theta)
@@ -973,7 +1017,10 @@ ggchord_restriction_label_lanes <- function(
     labels$.restriction_contour_x[ordered] <- edge_x
     labels$.restriction_contour_y[ordered] <- edge_y
     labels$.restriction_contour_radius[ordered] <- sqrt(edge_x^2 + edge_y^2)
+    labels$.restriction_base_contour_radius[ordered] <- contour_radius
     labels$.restriction_fan_group[ordered] <- g
+    labels$.restriction_fan_index[ordered] <- seq_along(ordered)
+    labels$.restriction_fan_size[ordered] <- length(ordered)
     labels$.restriction_orientation[ordered] <- orientation
     labels$.restriction_text_sign[ordered] <- text_sign
     dense <- labels$.restriction_column[ordered]
@@ -1000,7 +1047,7 @@ ggchord_restriction_label_lanes <- function(
   # when its actual horizontal text boxes overlap a previously placed fan, and
   # it moves forward as one rigid unit. This preserves both the internal rhythm
   # and genomic order without letting one dense region drag distant labels.
-  for (id in unique(as.character(gl$accver))) {
+  if (FALSE) for (id in unique(as.character(gl$accver))) {
     fan_ids <- which(vapply(groups, function(rows) {
       identical(as.character(gl$accver[rows[1L]]), id)
     }, logical(1)))
@@ -1017,7 +1064,7 @@ ggchord_restriction_label_lanes <- function(
         next
       }
       orientation <- labels$.restriction_orientation[members[1L]]
-      for (attempt in 0:400) {
+      for (attempt in 0:0) {
         side_sign <- labels$.restriction_text_sign[members]
         centre_x <- labels$.restriction_contour_x[members] +
           side_sign * boxes$w[members] / 2
@@ -1072,18 +1119,50 @@ ggchord_restriction_label_lanes <- function(
   # Moving only the later genomic label radially outward retains each fan's
   # polar position and is much more compact than forcing all labels onto one
   # ever-growing global contour.
+  # Restore the real horizontal text extent before collision/track assignment.
+  # The enlarged provisional boxes above are packing slack, not visible ink.
+  labels$text_x <- labels$.restriction_contour_x +
+    labels$.restriction_text_sign * collision_boxes$w / 2
+  labels$text_y <- labels$.restriction_contour_y
+  boxes <- collision_boxes
   labels$.restriction_outer_track <- 1L
+  shifted_box <- function(row, text_x, text_y,
+                          padding = .045 * units_per_inch) {
+    # Text metrics do not change when only the circular anchor moves. Reuse
+    # the measured glyph box instead of opening a grid device for every
+    # candidate track of every dense restriction label.
+    box <- collision_boxes[row, , drop = FALSE]
+    dx <- text_x - box$x
+    dy <- text_y - box$y
+    for (column in c("x", "cx", "xmin", "xmax")) {
+      box[[column]] <- box[[column]] + dx
+    }
+    for (column in c("y", "cy", "ymin", "ymax")) {
+      box[[column]] <- box[[column]] + dy
+    }
+    for (column in c("ow", "oh", "bw", "bh")) {
+      box[[column]] <- box[[column]] + 2 * padding
+    }
+    box$xmin <- box$xmin - padding
+    box$xmax <- box$xmax + padding
+    box$ymin <- box$ymin - padding
+    box$ymax <- box$ymax + padding
+    box
+  }
   for (id in unique(as.character(gl$accver))) {
     rows <- which(as.character(gl$accver) == id)
     if (length(rows) < 2L) next
+    base_radius <- unique(labels$.restriction_contour_radius[rows])
+    base_radius <- base_radius[is.finite(base_radius)][1L]
+    crowding_ratio <- sum(collision_boxes$w[rows]) /
+      (2 * pi * base_radius)
+    if (!is.finite(crowding_ratio) || crowding_ratio <= 1.25) next
     ordered <- rows[order(gl$genomic_position[rows], rows)]
     placed <- data.frame()
     for (row in ordered) {
       if (!is.na(labels$.restriction_rail_side[row])) {
-        candidate <- labels[row, , drop = FALSE]
-        candidate_box <- ggchord_text_boxes(
-          candidate, units_per_inch = units_per_inch, box_padding = .045
-        )
+        candidate_box <- shifted_box(row, labels$text_x[row],
+          labels$text_y[row])
         placed <- if (!nrow(placed)) candidate_box else
           rbind(placed, candidate_box)
         next
@@ -1094,20 +1173,35 @@ ggchord_restriction_label_lanes <- function(
       chosen <- NULL
       for (track in 1:12) {
         radius <- base_radius + (track - 1L) * max(.050, boxes$h[row] * .82)
-        edge_x <- radius * cos(theta)
-        edge_y <- radius * sin(theta)
+        candidate_theta <- if (track > 1L &&
+            labels$.restriction_fan_index[row] == 1L) {
+          members <- which(labels$.restriction_fan_group ==
+            labels$.restriction_fan_group[row])
+          next_row <- members[which.min(abs(
+            labels$.restriction_fan_index[members] - 2L
+          ))]
+          last_row <- members[which.max(
+            labels$.restriction_fan_index[members]
+          )]
+          next_theta <- atan2(labels$.restriction_contour_y[next_row],
+            labels$.restriction_contour_x[next_row])
+          last_theta <- atan2(labels$.restriction_contour_y[last_row],
+            labels$.restriction_contour_x[last_row])
+          orientation <- labels$.restriction_orientation[row]
+          gap_angle <- (orientation * (next_theta - last_theta)) %% (2 * pi)
+          last_theta + orientation * gap_angle * .5
+        } else theta
+        edge_x <- radius * cos(candidate_theta)
+        edge_y <- radius * sin(candidate_theta)
         text_sign <- radial_sign * ifelse(edge_x < 0, -1, 1)
-        candidate <- labels[row, , drop = FALSE]
-        candidate$text_x <- edge_x + text_sign * boxes$w[row] / 2
-        candidate$text_y <- edge_y
-        candidate_box <- ggchord_text_boxes(
-          candidate, units_per_inch = units_per_inch, box_padding = .045
-        )
+        candidate_x <- edge_x + text_sign * boxes$w[row] / 2
+        candidate_y <- edge_y
+        candidate_box <- shifted_box(row, candidate_x, candidate_y)
         collision <- nrow(placed) &&
           any(ggchord_oriented_box_overlaps(candidate_box, placed))
         chosen <- list(radius = radius, edge_x = edge_x, edge_y = edge_y,
-          text_sign = text_sign, text_x = candidate$text_x,
-          text_y = candidate$text_y, box = candidate_box, track = track)
+          text_sign = text_sign, text_x = candidate_x,
+          text_y = candidate_y, box = candidate_box, track = track)
         if (!collision) break
       }
       labels$.restriction_contour_x[row] <- chosen$edge_x
@@ -1518,7 +1612,11 @@ ggchord_restriction_geometry <- function(data, params, layout, seq_data) {
     connection_side[contour_pre] <- ifelse(
       labels$.restriction_text_sign[contour_pre] > 0, "left", "right"
     )
-    connection_side[rail] <- labels$.restriction_rail_side[rail]
+    rail_side <- labels$.restriction_rail_side
+    connection_side[rail] <- ifelse(
+      rail_side[rail] == "right", "left",
+      ifelse(rail_side[rail] == "left", "right", rail_side[rail])
+    )
     order_values <- rep(params$label_order, length(idx))
     if (params$label_order == "auto") {
       order_values <- ifelse(connection_side == "right",
@@ -1597,8 +1695,22 @@ ggchord_restriction_geometry <- function(data, params, layout, seq_data) {
           metrics$width[ordinary_contour] / 2
       centre_y[ordinary_contour] <-
         labels$.restriction_contour_y[ordinary_contour]
-      centre_x[rail] <- labels$text_x[rail]
-      centre_y[rail] <- labels$text_y[rail]
+      right_rail <- rail & rail_side == "right"
+      left_rail <- rail & rail_side == "left"
+      top_rail <- rail & rail_side == "top"
+      bottom_rail <- rail & rail_side == "bottom"
+      centre_x[right_rail] <- labels$.restriction_rail_edge_x[right_rail] +
+        metrics$width[right_rail] / 2
+      centre_x[left_rail] <- labels$.restriction_rail_edge_x[left_rail] -
+        metrics$width[left_rail] / 2
+      centre_y[c(top_rail | bottom_rail)] <-
+        labels$.restriction_rail_edge_y[c(top_rail | bottom_rail)] +
+        ifelse(top_rail[c(top_rail | bottom_rail)], 1, -1) *
+          metrics$height[c(top_rail | bottom_rail)] / 2
+      centre_x[top_rail | bottom_rail] <-
+        labels$.restriction_rail_edge_x[top_rail | bottom_rail]
+      centre_y[right_rail | left_rail] <-
+        labels$.restriction_rail_edge_y[right_rail | left_rail]
     }
     routing_half_width <- metrics$width / 2 + .003
     routing_half_height <- metrics$height / 2 + .003
@@ -1635,12 +1747,19 @@ ggchord_restriction_geometry <- function(data, params, layout, seq_data) {
       centre_y - routing_half_height,
       pmin(bend_y, centre_y + routing_half_height)
     )
+    # Horizontal exterior labels attach at the midpoint of their circle-facing
+    # edge. Clamping that endpoint to an old bend y-coordinate can exchange the
+    # order of two adjacent labels after one spills outward, creating a tiny
+    # but real crossing at the dominant track boundary.
+    endpoint_y[lateral_connection] <- centre_y[lateral_connection]
     endpoint_y[connection_side == "top"] <-
       centre_y[connection_side == "top"] -
       routing_half_height[connection_side == "top"]
     endpoint_y[connection_side == "bottom"] <-
       centre_y[connection_side == "bottom"] +
       routing_half_height[connection_side == "bottom"]
+    endpoint_x[rail] <- labels$.restriction_rail_edge_x[rail]
+    endpoint_y[rail] <- labels$.restriction_rail_edge_y[rail]
     # Keep the rendered label centred on the box used by the routing solver.
     # The leader endpoint is a separate bbox intersection, so justification no
     # longer shifts the visible edge after routing has been computed.
@@ -1664,6 +1783,8 @@ ggchord_restriction_geometry <- function(data, params, layout, seq_data) {
         max(0, min(1, -sum(p0 * delta) / denom))
       sqrt(sum((p0 + parameter * delta)^2))
     }
+    fan_size <- tabulate(labels$.restriction_fan_group)
+    ordered_fan <- fan_size[labels$.restriction_fan_group] > 1L
     leader_paths <- lapply(seq_along(idx), function(member) {
       vector <- c(endpoint_x[member] - tips$x[member],
         endpoint_y[member] - tips$y[member])
@@ -1678,52 +1799,164 @@ ggchord_restriction_geometry <- function(data, params, layout, seq_data) {
         sum(centre_vector * radial) > 0 &&
         abs(centre_vector[1] * radial[2] - centre_vector[2] * radial[1]) /
           centre_length < .02
-      # A label still on its natural radial ray uses one segment. Tangentially
-      # displaced labels use exactly the bend selected by the radial solver.
       start <- c(tips$x[member], tips$y[member])
       endpoint <- c(endpoint_x[member], endpoint_y[member])
-      safe_radius <- sqrt(sum(start^2)) - 1e-6
+      # The leader may pass inside its own tick tip, but never inside the
+      # visible sequence boundary where that tick begins.  Treating the tip
+      # radius as the forbidden circle forces harmless chords into elbows;
+      # those elbows can then cross an adjacent, correctly ordered leader.
+      base <- unlist(bases[member, c("x", "y")])
+      safe_radius <- sqrt(sum(base^2)) + 1e-6
       direct_is_safe <- point_segment_radius(start, endpoint) >= safe_radius
-      if ((identical(params$leader, "straight") || aligned) && direct_is_safe) {
+      # The shortest exterior segment is also the only order-preserving route
+      # shared by circular fans and Cartesian rails.  Adding independently
+      # sized radial stubs before an otherwise safe chord can make adjacent,
+      # correctly ordered leaders cross one another.  Keep a bend only when a
+      # direct chord would enter the plasmid interior.
+      if (direct_is_safe && !ordered_fan[member]) {
         return(data.frame(x = c(start[1], endpoint[1]),
           y = c(start[2], endpoint[2])))
       }
+      if (ordered_fan[member]) {
+        endpoint_angle <- atan2(endpoint[2], endpoint[1])
+        main_radius <- labels$.restriction_base_contour_radius[member]
+        if (!is.finite(main_radius)) main_radius <- sqrt(sum(endpoint^2))
+        elbow <- main_radius * c(cos(endpoint_angle), sin(endpoint_angle))
+        if (point_segment_radius(start, elbow) >= safe_radius &&
+            point_segment_radius(elbow, endpoint) >= safe_radius) {
+          return(data.frame(x = c(start[1], elbow[1], endpoint[1]),
+            y = c(start[2], elbow[2], endpoint[2])))
+        }
+      }
       bend <- c(labels$.radial_bend_x[member],
         labels$.radial_bend_y[member])
-      if (any(!is.finite(bend)) || sqrt(sum((bend - unlist(tips[member, ]))^2)) <
-          1e-8) {
+      if (any(!is.finite(bend)) ||
+          sqrt(sum((bend - unlist(tips[member, ]))^2)) < 1e-8) {
         distance <- sqrt(sum(vector^2))
         shoulder <- min(.085, max(.045, distance * .30))
-        bend <- c(
-          tips$x[member] + radial[1] * shoulder,
-          tips$y[member] + radial[2] * shoulder
-        )
+        bend <- c(tips$x[member] + radial[1] * shoulder,
+          tips$y[member] + radial[2] * shoulder)
       }
-      if (point_segment_radius(bend, endpoint) >= safe_radius) {
+      if (point_segment_radius(start, bend) >= safe_radius &&
+          point_segment_radius(bend, endpoint) >= safe_radius) {
         return(data.frame(x = c(start[1], bend[1], endpoint[1]),
           y = c(start[2], bend[2], endpoint[2])))
       }
+      # Never turn an exterior site leader into a sampled circular arc.  When
+      # the direct chord would enter the sequence circle, move one elbow out
+      # along the root radius until the second straight segment clears it.
+      # This preserves the reference convention: a straight leader whenever
+      # possible, otherwise a simple two-segment polyline.
+      start_radius <- sqrt(sum(start^2))
+      endpoint_radius <- sqrt(sum(endpoint^2))
+      root_direction <- if (start_radius > 1e-12) start / start_radius else radial
+      search_limit <- max(endpoint_radius,
+        labels$.restriction_base_contour_radius[member], safe_radius) + .60
+      search_radii <- seq(max(start_radius + .012, safe_radius + .012),
+        search_limit, length.out = 80L)
+      candidates <- lapply(search_radii, function(radius) root_direction * radius)
+      valid <- vapply(candidates, function(candidate) {
+        point_segment_radius(start, candidate) >= safe_radius &&
+          point_segment_radius(candidate, endpoint) >= safe_radius
+      }, logical(1))
+      if (any(valid)) {
+        elbow <- candidates[[which(valid)[1L]]]
+        return(data.frame(x = c(start[1], elbow[1], endpoint[1]),
+          y = c(start[2], elbow[2], endpoint[2])))
+      }
 
-      # A long fan chord can cut through the plasmid even when both endpoints
-      # are outside it. Route such leaders along a safe exterior radius before
-      # approaching the label. This is especially important on very wide
-      # devices, where a dense top cluster may otherwise connect to a distant
-      # bottom slot through the map interior.
-      route_radius <- max(safe_radius + .012, sqrt(sum(bend^2)))
-      start_angle <- atan2(bend[2], bend[1])
+      # Numerical last resort: retain a single, visibly angular elbow.  The
+      # larger radius keeps both segments outside the sequence boundary even
+      # for an unusually displaced user-supplied label.
+      start_angle <- atan2(start[2], start[1])
       end_angle <- atan2(endpoint[2], endpoint[1])
       delta_angle <- atan2(sin(end_angle - start_angle),
         cos(end_angle - start_angle))
-      arc_count <- max(2L, ceiling(abs(delta_angle) / (.035 * pi)))
-      angles <- seq(start_angle, start_angle + delta_angle,
-        length.out = arc_count)
-      route <- data.frame(
-        x = route_radius * cos(angles),
-        y = route_radius * sin(angles)
-      )
-      rbind(data.frame(x = start[1], y = start[2]), route,
-        data.frame(x = endpoint[1], y = endpoint[2]))
+      elbow_angle <- start_angle + delta_angle / 2
+      elbow_radius <- search_limit + .60
+      elbow <- elbow_radius * c(cos(elbow_angle), sin(elbow_angle))
+      data.frame(x = c(start[1], elbow[1], endpoint[1]),
+        y = c(start[2], elbow[2], endpoint[2]))
     })
+
+    # Resolve the rare intersections that remain between straight chords near
+    # a dense root cluster.  Search only angular one-elbow polylines; sampled
+    # arcs are intentionally excluded.  Earlier accepted paths are fixed, so
+    # this pass is deterministic and preserves the label solver's order.
+    path_segments <- function(path) {
+      if (!is.data.frame(path) || nrow(path) < 2L) return(data.frame())
+      data.frame(
+        x1 = path$x[-nrow(path)], y1 = path$y[-nrow(path)],
+        x2 = path$x[-1L], y2 = path$y[-1L]
+      )
+    }
+    segments_cross <- function(a, b, tolerance = 1e-9) {
+      cross2 <- function(x, y) x[1L] * y[2L] - x[2L] * y[1L]
+      p <- c(a$x1, a$y1)
+      r <- c(a$x2 - a$x1, a$y2 - a$y1)
+      q <- c(b$x1, b$y1)
+      s <- c(b$x2 - b$x1, b$y2 - b$y1)
+      denominator <- cross2(r, s)
+      if (!is.finite(denominator) || abs(denominator) <= tolerance) return(FALSE)
+      t <- cross2(q - p, s) / denominator
+      u <- cross2(q - p, r) / denominator
+      t > tolerance && t < 1 - tolerance &&
+        u > tolerance && u < 1 - tolerance
+    }
+    path_crosses <- function(path, accepted) {
+      candidate_segments <- path_segments(path)
+      if (!nrow(candidate_segments) || !length(accepted)) return(FALSE)
+      any(vapply(accepted, function(other) {
+        other_segments <- path_segments(other)
+        any(vapply(seq_len(nrow(candidate_segments)), function(i) {
+          any(vapply(seq_len(nrow(other_segments)), function(j) {
+            segments_cross(candidate_segments[i, ], other_segments[j, ])
+          }, logical(1L)))
+        }, logical(1L)))
+      }, logical(1L)))
+    }
+    accepted <- list()
+    for (member in seq_along(leader_paths)) {
+      current <- leader_paths[[member]]
+      if (path_crosses(current, accepted)) {
+        start <- c(tips$x[member], tips$y[member])
+        endpoint <- c(endpoint_x[member], endpoint_y[member])
+        base <- unlist(bases[member, c("x", "y")])
+        safe_radius <- sqrt(sum(base^2)) + 1e-6
+        start_angle <- atan2(start[2], start[1])
+        endpoint_angle <- atan2(endpoint[2], endpoint[1])
+        delta_angle <- atan2(sin(endpoint_angle - start_angle),
+          cos(endpoint_angle - start_angle))
+        main_radius <- labels$.restriction_base_contour_radius[member]
+        if (!is.finite(main_radius)) main_radius <- sqrt(sum(endpoint^2))
+        outer_radius <- max(main_radius, sqrt(sum(endpoint^2)))
+        candidate_angles <- start_angle + delta_angle *
+          c(1, .875, .75, .625, .5, .375, .25, .125, 0)
+        candidate_radii <- outer_radius + c(0, .025, .05, .085, .13,
+          .19, .27, .38, .52)
+        alternatives <- list()
+        for (radius in candidate_radii) for (angle in candidate_angles) {
+          elbow <- radius * c(cos(angle), sin(angle))
+          if (point_segment_radius(start, elbow) < safe_radius ||
+              point_segment_radius(elbow, endpoint) < safe_radius) next
+          alternative <- data.frame(
+            x = c(start[1], elbow[1], endpoint[1]),
+            y = c(start[2], elbow[2], endpoint[2])
+          )
+          if (!path_crosses(alternative, accepted)) {
+            alternatives[[length(alternatives) + 1L]] <- alternative
+          }
+        }
+        if (length(alternatives)) {
+          lengths <- vapply(alternatives, function(path) sum(sqrt(
+            diff(path$x)^2 + diff(path$y)^2
+          )), numeric(1L))
+          current <- alternatives[[which.min(lengths)]]
+          leader_paths[[member]] <- current
+        }
+      }
+      accepted[[length(accepted) + 1L]] <- current
+    }
     for (member in seq_along(leader_paths)) {
       row <- idx[member]
       append_path(

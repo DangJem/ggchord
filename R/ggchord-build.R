@@ -625,6 +625,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
       active_position,
       seqs = seqs, lengths = lens,
       circular = isTRUE(plot$coordinates$ggchord_circular),
+      label_size = gene_lsz,
       legacy_offset = if (isTRUE(lbl$position_supplied)) NULL else gene_params$legacy_offset,
       legacy_name = if (isTRUE(gene_params$is_feature)) "feature_offset" else "gene_offset"
     )
@@ -1166,8 +1167,22 @@ compute_chord_geometry <- function(plot) {
   }
   repel_labels <- collect("gene_text_repel")
   fixed_labels <- collect("gene_text")
+  callout_labels <- collect("gene_label_repel")
+  if (nrow(callout_labels) && ".component" %in% names(callout_labels)) {
+    callout_labels <- callout_labels[
+      callout_labels$.component %in% "text", , drop = FALSE
+    ]
+  }
+  if (nrow(callout_labels)) {
+    callout_labels$text <- if ("feature_label" %in% names(callout_labels)) {
+      ifelse(!is.na(callout_labels$feature_label) &
+        nzchar(callout_labels$feature_label), callout_labels$feature_label,
+        callout_labels$label)
+    } else callout_labels$label
+    callout_labels$text_angle <- callout_labels$angle %||% 0
+  }
   all_gene_labels <- Filter(function(x) nrow(x) > 0,
-                            list(fixed_labels, repel_labels))
+                            list(fixed_labels, repel_labels, callout_labels))
   if (length(all_gene_labels)) {
     primary$gene_labels <- ggchord_rbind_fill(all_gene_labels)
   }

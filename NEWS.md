@@ -7,14 +7,35 @@
   leader corridors and the axis reserve record their radius and radial
   boundaries. Restriction sites, external feature labels and primer labels
   retain their own visual semantics in one shared exterior registry. Sparse
-  restriction clusters keep local circular fans; dense clusters use measured,
-  order-preserving top/right/bottom/left perimeter rails, with cross-cardinal
-  clusters split before same-side fans are merged. Feature and primer callouts
-  then use the resolved restriction boxes as fixed obstacles and spill only to
-  consecutive local bands. `export_ggchord_layout()` exposes
+  restriction labels keep horizontal text on measured circular anchor tracks;
+  their complete text boxes participate in collision detection but are not
+  forced inside Cartesian top/right/bottom/left rails. Feature and primer
+  callouts then use the resolved restriction boxes as fixed obstacles and
+  spill only to consecutive local circular bands. `export_ggchord_layout()` exposes
   annotation class, dominant/actual band, spill reason and leader-crossing
   count together with the registry, and copies the
-  resolved track, perimeter-rail, or exterior allocation fields onto affected geometry rows.
+  resolved inner-track or circular exterior-allocation fields onto affected geometry rows.
+  Adaptive plot bounds now include external feature and primer callout text,
+  so these labels remain visible after the shared outer-track solver moves them.
+  Primer callout leaders now inherit the primer colour instead of the generic
+  grey feature-leader theme.
+  Circular feature bands now size inter-arrow gutters from measured label
+  demand instead of widening every gap, and displaced inner labels prefer
+  the nearest valid track with a small local adjustment before moving deeper.
+  Labels from an outer feature band cannot use the next feature band or any
+  deeper text track; those gutters are widened instead.
+  Compact runs of repeated short features on the outermost band now enter the
+  external allocator as a complete cluster instead of splitting between
+  crowded inner labels and isolated outer callouts.
+  External feature and primer callouts are now placed across layers in their
+  real circular root order, independent of the order in which the layers were
+  added.
+  When a dense mixed fan has no free exterior slot, fallback now ranks the
+  measured candidate positions by text overlap and leader crossings instead
+  of inadvertently keeping the final position scanned. A wider circular
+  candidate search can resolve nearby mixed callout crossings without a
+  Cartesian rail; an unresolved spill reason is exported when no noncrossing
+  placement exists.
   Registry joins now guarantee scalar track identities even when a
   device-specific fallback omits a local resource, fixing circular layout
   export failures on dense short-feature maps. Dense restriction perimeters
@@ -63,10 +84,10 @@
   not guessed. The pSB1C3 reference now reproduces the Dcm-blocked `PflMI *`
   state without a plasmid-name rendering branch.
 * Refined the pBluescript II SK(+) circular-map layout against the supplied
-  visual reference. Sparse restriction labels retain their close polar contour
-  and local ordered fans, while only the genuinely dense right-side MCS uses a
-  shared vertical perimeter rail; the short upper-left group is not forced
-  into a column. Feature labels now exhaust internal feature
+  visual reference. Restriction labels retain horizontal text on close circular
+  anchor tracks; dense local MCS labels are packed in genomic order and only
+  genuine bbox conflicts spill to adjacent outer tracks, while the short
+  upper-left group stays close to its natural sites. Feature labels now exhaust internal feature
   gutters and deeper label tracks before becoming external, with short leaders
   whenever an intervening physical track separates a feature and its label.
   Compact, promoter and primer arrows use the same annular-arrow factory and

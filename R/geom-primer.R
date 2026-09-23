@@ -143,5 +143,9 @@ geom_primer_label_repel <- function(
   )$primer_show_location
   layer$ggchord_params$is_primer_label <- TRUE
   layer$ggchord_params$feature_label_external <- TRUE
+  # The composite label geom styles its segment separately from its text.
+  # A text colour alone would leave the primer leader in the feature-theme
+  # grey, even though both are one purple annotation in the reference.
+  layer$geom_params$segment_params$colour <- colour
   layer
 }

@@ -8,6 +8,13 @@
 
 devtools::load_all(quiet = TRUE)
 
+crossing_probe <- data.frame(x1 = 0, y1 = 0, x2 = 2, y2 = 0)
+occupied_probe <- matrix(c(.5, -1, .5, 1, 1.5, -1, 1.5, 1),
+  nrow = 2L, byrow = TRUE)
+stopifnot(ggchord:::ggchord_external_route_crossing_count(
+  crossing_probe, occupied_probe
+) == 2L)
+
 reference_maps <- c(
   "pBR322", "pUC19", "pBluescript II SK(+)", "pSB1C3", "pET-28a(+)",
   "pETDuet-1", "pcDNA3.1(+)", "pTRE-Tight-BI",
@@ -20,6 +27,16 @@ reference_paths <- lapply(c(".fna", ".dna", ".png"), function(extension) {
 })
 stopifnot(all(vapply(reference_paths, function(path) all(file.exists(path)),
   logical(1L))))
+
+requested_map_arg <- commandArgs(trailingOnly = TRUE)[2L]
+requested_names <- if (!is.na(requested_map_arg) && nzchar(requested_map_arg)) {
+  requested_maps <- trimws(strsplit(requested_map_arg, ",", fixed = TRUE)[[1L]])
+  unique(c(requested_maps, make.names(requested_maps)))
+} else names(reference_maps)
+selected_reference_maps <- reference_maps[
+  names(reference_maps) %in% requested_names |
+    unname(reference_maps) %in% requested_names
+]
 
 output_dir <- commandArgs(trailingOnly = TRUE)[1]
 if (is.na(output_dir) || !nzchar(output_dir)) {
@@ -119,7 +136,7 @@ reference_restriction_sites <- function(sequence, name) {
   filter_restriction_sites(sites, set = "reference",
     parent_set = "commercial_nonredundant")
 }
-real_fixtures <- lapply(unname(reference_maps), function(name) {
+real_fixtures <- lapply(unname(selected_reference_maps), function(name) {
   sequence <- read_reference_fasta(name)
   sites <- reference_restriction_sites(sequence, name)
   primers <- find_primer_bindings(sequence, set = "reference")
@@ -128,23 +145,31 @@ real_fixtures <- lapply(unname(reference_maps), function(name) {
     sites = sites, primers = primers
   )
 })
-names(real_fixtures) <- names(reference_maps)
-stopifnot(
-  nrow(real_fixtures[[make.names("pSpCas9(BB)-2A-GFP (PX458)")]]$sites) == 4L,
-  nrow(real_fixtures[[make.names("pTRIPZ")]]$sites) == 38L,
-  nrow(real_fixtures[[make.names("pETDuet-1")]]$sites) == 58L,
-  sum(vapply(real_fixtures, function(x) nrow(x$primers), integer(1L))) == 7L
-)
-psb_sites <- real_fixtures[[make.names("pSB1C3")]]$sites
-stopifnot(any(psb_sites$enzyme == "PflMI" &
-  psb_sites$display_warning == "methylation_blocked"))
-px_features <- real_fixtures[[make.names(
-  "pSpCas9(BB)-2A-GFP (PX458)")]]$features
-stopifnot(px_features$feature_shape[px_features$anno == "hybrid intron"] ==
-  "capped_line")
-tre_features <- real_fixtures[[make.names("pTRE-Tight-BI")]]$features
-stopifnot(tre_features$strand[tre_features$anno ==
-  "bidirectional TRE promoter"] == "+/-")
+names(real_fixtures) <- names(selected_reference_maps)
+if (identical(names(selected_reference_maps), names(reference_maps))) {
+  stopifnot(
+    nrow(real_fixtures[[make.names("pSpCas9(BB)-2A-GFP (PX458)")]]$sites) == 4L,
+    nrow(real_fixtures[[make.names("pTRIPZ")]]$sites) == 38L,
+    nrow(real_fixtures[[make.names("pETDuet-1")]]$sites) == 58L,
+    sum(vapply(real_fixtures, function(x) nrow(x$primers), integer(1L))) == 7L
+  )
+}
+if ("pSB1C3" %in% names(real_fixtures)) {
+  psb_sites <- real_fixtures[["pSB1C3"]]$sites
+  stopifnot(any(psb_sites$enzyme == "PflMI" &
+    psb_sites$display_warning == "methylation_blocked"))
+}
+if (make.names("pSpCas9(BB)-2A-GFP (PX458)") %in% names(real_fixtures)) {
+  px_features <- real_fixtures[[make.names(
+    "pSpCas9(BB)-2A-GFP (PX458)")]]$features
+  stopifnot(px_features$feature_shape[px_features$anno == "hybrid intron"] ==
+    "capped_line")
+}
+if ("pTRE.Tight.BI" %in% names(real_fixtures)) {
+  tre_features <- real_fixtures[["pTRE.Tight.BI"]]$features
+  stopifnot(tre_features$strand[tre_features$anno ==
+    "bidirectional TRE promoter"] == "+/-")
+}
 bidirectional_promoter <- ggchord:::ggchord_feature_geometry(
   "promoter_arrow", 0, .08, .9, .07, 1, ref = list(),
   draw_head = TRUE, draw_start_head = TRUE, bidirectional = TRUE
@@ -159,15 +184,14 @@ reference_fixture_names <- names(real_fixtures)
 fixtures <- c(real_fixtures, fixtures)
 
 fixture_names <- names(fixtures)
-requested_maps <- commandArgs(trailingOnly = TRUE)[2L]
-if (!is.na(requested_maps) && nzchar(requested_maps)) {
-  requested_maps <- trimws(strsplit(requested_maps, ",", fixed = TRUE)[[1L]])
-  requested_names <- unique(c(requested_maps, make.names(requested_maps)))
+if (!is.na(commandArgs(trailingOnly = TRUE)[2L]) &&
+    nzchar(commandArgs(trailingOnly = TRUE)[2L])) {
   fixture_names <- fixture_names[fixture_names %in% requested_names]
   if (!length(fixture_names)) stop("No requested validation map was found")
 }
 
 for (name in fixture_names) {
+  message("Validating ", name, "...")
   fixture <- fixtures[[name]]
   tracks <- position_feature_stack(
     spacing = .085, base_position = position_plasmid()
@@ -199,11 +223,71 @@ for (name in fixture_names) {
     ),
     finally = close_device()
   )
+  message("Exported geometry for ", name)
   stopifnot(all(is.finite(layout$feature$x)), all(is.finite(layout$feature$y)))
+  if (identical(unname(reference_maps[name]), "pTRIPZ")) stopifnot(
+    sum(layout$labels$.component == "text" &
+      layout$labels$anno == "tet operator" &
+      layout$labels$feature_label_mode == "external", na.rm = TRUE) == 6L
+  )
+  if (identical(unname(reference_maps[name]), "pTRE-Tight-BI")) stopifnot(
+    sum(layout$labels$.component == "text" &
+      layout$labels$anno == "tet operator" &
+      layout$labels$feature_label_mode == "external", na.rm = TRUE) == 0L
+  )
+  inner_text <- layout$labels[
+    layout$labels$.component == "text" &
+      layout$labels$feature_label_mode %in% c("inside", "adjacent") &
+      is.finite(layout$labels$feature_track) &
+      is.finite(layout$labels$label_track), , drop = FALSE
+  ]
+  for (sid in unique(inner_text$accver)) {
+    rows <- which(inner_text$accver == sid)
+    feature_tracks <- sort(unique(inner_text$feature_track[rows]))
+    for (row in rows) {
+      next_track <- feature_tracks[
+        feature_tracks > inner_text$feature_track[row]
+      ][1L]
+      if (is.finite(next_track)) stopifnot(
+        inner_text$label_track[row] < next_track
+      )
+    }
+  }
   stopifnot(all(c("annotation_class", "dominant_band", "spill_reason",
     "leader_crossing_count") %in% names(layout$annotation_registry)))
+  visible_boxes <- layout$annotation_registry[
+    is.finite(layout$annotation_registry$bbox_xmin) &
+      is.finite(layout$annotation_registry$bbox_xmax) &
+      is.finite(layout$annotation_registry$bbox_ymin) &
+      is.finite(layout$annotation_registry$bbox_ymax), , drop = FALSE
+  ]
+  if (nrow(visible_boxes)) stopifnot(
+    all(visible_boxes$bbox_xmin >= layout$metadata$xlim[1L] - 1e-5),
+    all(visible_boxes$bbox_xmax <= layout$metadata$xlim[2L] + 1e-5),
+    all(visible_boxes$bbox_ymin >= layout$metadata$ylim[1L] - 1e-5),
+    all(visible_boxes$bbox_ymax <= layout$metadata$ylim[2L] + 1e-5)
+  )
   measured_crossings <- layout$annotation_registry$leader_crossing_count
-  stopifnot(all(measured_crossings[!is.na(measured_crossings)] >= 0L))
+  positive_crossings <- measured_crossings[is.finite(measured_crossings) &
+    measured_crossings > 0L]
+  leader_error <- NULL
+  if (length(positive_crossings)) {
+    bad <- layout$annotation_registry[
+      is.finite(measured_crossings) & measured_crossings > 0L, , drop = FALSE
+    ]
+    bad_labels <- layout$restriction[
+      layout$restriction$restriction_component == "label" &
+        layout$restriction$source_row %in% bad$source_row,
+      c("source_row", "anchor_position", "label"), drop = FALSE
+    ]
+    leader_error <- paste0(
+      as.character(fixture$sequence$label[1L]),
+      " has ", length(positive_crossings),
+      " registry rows on crossing leaders (max ", max(positive_crossings),
+      "): ", paste(paste0(bad_labels$source_row, "@",
+        bad_labels$anchor_position, " ", bad_labels$label), collapse = "; ")
+    )
+  }
   restriction_registry <- layout$annotation_registry[
     !is.na(layout$annotation_registry$annotation_class) &
       layout$annotation_registry$annotation_class == "restriction", ,
@@ -222,8 +306,14 @@ for (name in fixture_names) {
       restriction_labels$anchor_position <= 2360
     stopifnot(
       sum(bottom) >= 8L,
-      all(restriction_labels$label_layout[bottom] == "perimeter_rail"),
-      all(restriction_labels$label_connection_side[bottom] == "bottom")
+      !any(restriction_labels$label_layout[bottom] == "perimeter_rail"),
+      any(restriction_labels$outer_track[bottom] > 1L)
+    )
+  }
+  if (sequence_label == "pUC19") {
+    stopifnot(
+      !any(restriction_labels$label_layout == "perimeter_rail"),
+      mean(restriction_labels$outer_track == 1L) >= .80
     )
   }
   if (sequence_label == "pBluescript II SK(+)") {
@@ -233,19 +323,16 @@ for (name in fixture_names) {
       restriction_labels$anchor_position <= 2650
     stopifnot(
       sum(right) >= 12L,
-      all(restriction_labels$label_layout[right] == "perimeter_rail"),
-      all(restriction_labels$label_connection_side[right] == "right"),
+      !any(restriction_labels$label_layout[right] == "perimeter_rail"),
       !any(restriction_labels$label_layout[upper_left] == "perimeter_rail")
     )
   }
   if (sequence_label == "pETDuet-1") {
     dense <- restriction_labels$anchor_position <= 451
-    dense_sides <- unique(restriction_labels$label_direction[
-      dense
-    ])
     stopifnot(
-      all(c("top", "right") %in% dense_sides),
-      any(dense & restriction_labels$label_layout == "perimeter_rail")
+      sum(dense) >= 10L,
+      !any(restriction_labels$label_layout == "perimeter_rail"),
+      mean(restriction_labels$outer_track[dense] == 1L) >= .80
     )
   }
   text <- layout$labels[layout$labels$.component == "text", , drop = FALSE]
@@ -285,7 +372,13 @@ for (name in fixture_names) {
     expected_leaders <- text$anno[
       text$label_track > text$feature_track + 1L
     ]
-    stopifnot(setequal(leader_features, expected_leaders))
+    # A visibly wide immediate gutter may itself need a short connector;
+    # long cross-track moves must have one, but adjacent-track leaders are
+    # permitted when their real radial gap warrants it.
+    stopifnot(all(expected_leaders %in% leader_features))
+    stopifnot(all(leader_features %in% text$anno[
+      text$feature_label_mode %in% c("adjacent", "external")
+    ]))
     boundary_features <- table(layout$feature$anno[
       layout$feature$.component == "boundary"
     ])
@@ -362,17 +455,19 @@ for (name in fixture_names) {
         boxes[pair[2L], , drop = FALSE]
       )
     })
-    stopifnot(!any(collisions))
+    if (any(collisions)) {
+      leader_error <- paste0(
+        leader_error %||% "", " External feature/primer labels overlap in ",
+        as.character(fixture$sequence$label[1L]), ": ",
+        paste(which(collisions), collapse = ", ")
+      )
+    }
   }
   if (name %in% reference_fixture_names) {
     plot$ggchord$ref$layout <- NULL
     preview <- view_ggchord(plot, viewer = "none")
     output_file <- file.path(output_dir, paste0(name, ".png"))
     stopifnot(file.copy(preview, output_file, overwrite = TRUE))
-    if (identical(as.character(fixture$sequence$label[1L]), "pETDuet-1")) {
-      dimensions <- dim(png::readPNG(output_file))
-      stopifnot(dimensions[2L] > dimensions[1L] * 1.6)
-    }
     if (nrow(fixture$primers)) {
       primer_registry <- layout$annotation_registry[
         !is.na(layout$annotation_registry$annotation_class) &
@@ -395,22 +490,25 @@ for (name in fixture_names) {
     ggplot2::ggsave(file.path(output_dir, paste0(name, ".png")), plot,
       width = 6, height = 6, dpi = 144)
   }
+  if (!is.null(leader_error)) stop(leader_error)
 }
 
-stress_layout <- export_ggchord_layout(
-  ggchord(stress$sequence, validate = "none") + geom_seq() +
-    geom_feature_plasmid(data = stress$features) + coord_circular(),
-  include = "feature"
-)$feature
-stress_lanes <- unique(stress_layout[, c("anno", "lane")])
-stopifnot(
-  stress_lanes$lane[stress_lanes$anno == "prioritized short"] == 0L,
-  unique(stress_layout$.component[stress_layout$anno == "point"]) == "point",
-  length(unique(stress_layout$lane[stress_layout$anno == "segmented"])) == 1L
-)
+if (is.na(requested_map_arg) || !nzchar(requested_map_arg)) {
+  stress_layout <- export_ggchord_layout(
+    ggchord(stress$sequence, validate = "none") + geom_seq() +
+      geom_feature_plasmid(data = stress$features) + coord_circular(),
+    include = "feature"
+  )$feature
+  stress_lanes <- unique(stress_layout[, c("anno", "lane")])
+  stopifnot(
+    stress_lanes$lane[stress_lanes$anno == "prioritized short"] == 0L,
+    unique(stress_layout$.component[stress_layout$anno == "point"]) == "point",
+    length(unique(stress_layout$lane[stress_layout$anno == "segmented"])) == 1L
+  )
+}
 
 writeLines(c(
   "Reference maps inspected from examples/plasmid:",
-  unname(reference_maps),
+  unname(selected_reference_maps),
   paste0("Rendered fixtures: ", output_dir)
 ))
