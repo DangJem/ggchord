@@ -1,4 +1,4 @@
-# Explicit visual acceptance for the v0.13.0 circular Feature Engine.
+# Explicit visual acceptance for the v0.13.1 circular Feature Engine.
 # Run from the package root with:
 #   Rscript tools/validate-feature-engine.R [output-directory]
 #

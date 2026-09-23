@@ -1,4 +1,8 @@
-# ggchord 0.13.0
+# ggchord 0.13.1
+
+The unreleased v0.13.0 development work continues in v0.13.1; v0.13.0 was
+not published. The changes below describe the current development branch,
+not a completed release.
 
 * Added a `CoordCircular`-owned annotation registry as the common final layout
   fact for circular maps. Position lanes are now exported separately from

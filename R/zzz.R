@@ -154,7 +154,7 @@ ggchord_capture_layer_input <- function(lyr, data, mapping, roles) {
 ggchord_normalize_mapping <- function(mapping) {
   if (is.null(mapping)) return(mapping)
   if ("seq_id" %in% names(mapping)) {
-    ggchord_stop("`seq_id` mapping was removed in v0.13.0; use `accver`")
+    ggchord_stop("`seq_id` mapping was removed in v0.13.1; use `accver`")
   }
   if (anyDuplicated(names(mapping))) {
     duplicated_names <- unique(names(mapping)[duplicated(names(mapping))])

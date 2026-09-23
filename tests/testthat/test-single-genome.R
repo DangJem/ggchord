@@ -1,7 +1,7 @@
 test_that("v0.13 removes legacy sequence and ribbon entries", {
   old <- data.frame(seq_id = "A", length = 100)
-  expect_error(ggchord(old), "removed in v0.13.0")
-  expect_error(geom_seq(aes(seq_id = id)), "removed in v0.13.0")
+  expect_error(ggchord(old), "removed in v0.13.1")
+  expect_error(geom_seq(aes(seq_id = id)), "removed in v0.13.1")
   expect_false("geom_ribbon" %in% getNamespaceExports("ggchord"))
 })
 

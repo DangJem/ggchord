@@ -1,6 +1,6 @@
 Package: ggchord
 Title: Multi-Sequence Alignment Chord Diagram Visualization Tool
-Version: 0.13.0
+Version: 0.13.1
 Authors@R: person(given = "Jem", family = "Dang", email = "dangjem0730@gmail.com", role = c("aut", "cre"))
 Description: A 'ggplot2'-based package for multi-sequence alignment chord
     diagrams and single circular sequence maps. A layered grammar combines
