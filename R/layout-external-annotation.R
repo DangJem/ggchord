@@ -9,7 +9,11 @@ ggchord_external_candidates <- function(max_band = 16L, max_slot = 20L,
   # A shared dominant band is the first objective. Small local tangential
   # movements are cheaper than opening a new band, but remain bounded so an
   # annotation cannot migrate around the circle.
-  radial_cost <- .9
+  radial_cost <- switch(class,
+    feature = 2.40,
+    primer = 2.00,
+    .9
+  )
   candidates$score <- (candidates$band - 1L) * radial_cost +
     abs(candidates$slot) * 1.60
   candidates[order(candidates$score, candidates$band,

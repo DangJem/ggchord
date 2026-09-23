@@ -217,11 +217,20 @@ ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
         track = radial_indices + 1L, tangent = tangent_candidates
       )
     }
-    # One tiny tangent adjustment is acceptable, but a neighbouring radial
-    # track is preferred to a visibly detached same-track label. This produces
-    # the compact multi-level stacks used by dense operator/MCS clusters.
-    candidates$score <- (candidates$track - 1L) * .92 +
-      abs(candidates$tangent) * if (concentric_circle) .36 else .74
+    # Keep a label in the nearest legal corridor while a modest tangential
+    # displacement can resolve the collision.  Moving to a deeper circle is a
+    # larger ownership change than sliding a few glyph heights along the same
+    # circle; the old linear score reversed that relationship after only two
+    # slots and produced empty neighbouring corridors beside centre-stranded
+    # labels.  The convex slot cost still prevents a label from wandering far
+    # around the plasmid merely to avoid opening one genuinely needed track.
+    tangent_distance <- abs(candidates$tangent)
+    tangent_cost <- if (concentric_circle) {
+      .16 * tangent_distance + .035 * tangent_distance^2
+    } else .74 * tangent_distance
+    radial_cost <- if (concentric_circle) 1.35 else .92
+    candidates$score <- (candidates$track - 1L) * radial_cost +
+      tangent_cost
     candidates <- candidates[order(candidates$score,
       abs(candidates$tangent), candidates$tangent < 0), , drop = FALSE]
     if (starts_inside) {

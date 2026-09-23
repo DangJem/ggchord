@@ -14,6 +14,22 @@ occupied_probe <- matrix(c(.5, -1, .5, 1, 1.5, -1, 1.5, 1),
 stopifnot(ggchord:::ggchord_external_route_crossing_count(
   crossing_probe, occupied_probe
 ) == 2L)
+feature_candidates <- ggchord:::ggchord_external_candidates(
+  max_band = 2L, max_slot = 1L, class = "feature"
+)
+restriction_candidates <- ggchord:::ggchord_external_candidates(
+  max_band = 2L, max_slot = 1L, class = "restriction"
+)
+stopifnot(
+  which(feature_candidates$band == 1L &
+    feature_candidates$slot == 1L) <
+    which(feature_candidates$band == 2L &
+      feature_candidates$slot == 0L),
+  which(restriction_candidates$band == 2L &
+    restriction_candidates$slot == 0L) <
+    which(restriction_candidates$band == 1L &
+      restriction_candidates$slot == 1L)
+)
 
 reference_maps <- c(
   "pBR322", "pUC19", "pBluescript II SK(+)", "pSB1C3", "pET-28a(+)",
