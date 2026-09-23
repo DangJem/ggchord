@@ -9,7 +9,8 @@ find_restriction_sites(
   enzymes = NULL,
   patterns = NULL,
   circular = TRUE,
-  database = NULL
+  database = NULL,
+  methylation = c("auto", "none", "dam_dcm")
 )
 }
 \arguments{
@@ -24,9 +25,21 @@ spelling for `patterns`.}
 \item{circular}{Allow recognition and cleavage coordinates to wrap origin.}
 
 \item{database}{Optional parsed pattern database.}
+
+\item{methylation}{Methylation context. `"auto"` uses the audited context
+for recognized reference plasmids and otherwise makes no blocked-site
+claim; `"none"` disables blocking; `"dam_dcm"` evaluates source-backed
+Dam/Dcm sensitivities against the supplied sequence.}
 }
 \value{
 One row per pattern match without display filtering or deduplication.
+  Methylation-aware columns include `methylation_status`, `blocked_by`,
+  `display_warning`, `methylation_motif`, and `sensitivity_source`.
+  `enzyme_site_count` records the number of distinct cleavage/display
+  positions for that enzyme on the complete supplied sequence, so it remains
+  stable after display filtering. For an exactly recognized bundled
+  reference sequence, the `reference_enzyme_profiles` attribute records its
+  saved display set for use by [filter_restriction_sites()].
 }
 \description{
 Find restriction pattern matches and cleavage coordinates

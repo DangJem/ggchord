@@ -6,24 +6,39 @@
 \usage{
 filter_restriction_sites(
   sites,
-  set = c("all", "unique", "unique_dual", "six_plus", "unique_6plus", "commercial"),
+  set = c("all", "unique", "unique_dual", "six_plus", "unique_6plus", "commercial",
+    "reference"),
   enzymes = NULL,
   min_site_length = NULL,
   cuts = NULL,
   window = NULL,
-  commercial_only = FALSE
+  commercial_only = FALSE,
+  parent_set = c("all", "commercial_all", "commercial_nonredundant")
 )
 }
 \arguments{
 \item{sites}{Result from [find_restriction_sites()].}
 
-\item{set}{Display preset.}
+\item{set}{Display preset. `"reference"` reuses the enzyme-set profile
+stored for an exactly recognized reference sequence. It errors when no
+such profile is available. A saved `"None"` profile returns no sites.}
 
 \item{enzymes, min_site_length, cuts, window, commercial_only}{Additional filters.}
+
+\item{parent_set}{Enzyme catalogue subset. `"commercial_nonredundant"`
+keeps one stable commercial representative per equivalent recognition
+group and site, preferring the database's preferred enzyme when present.}
 }
 \value{
 A row subset whose biological coordinates are unchanged.
 }
 \description{
 Filter restriction sites for display
+}
+\examples{
+data(plasmid_example_pSpCas9_BB_2A_GFP_PX458)
+sites <- find_restriction_sites(
+  plasmid_example_pSpCas9_BB_2A_GFP_PX458
+)
+reference_sites <- filter_restriction_sites(sites, set = "reference")
 }

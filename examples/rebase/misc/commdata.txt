@@ -1,0 +1,1373 @@
+ 
+REBASE version 609                                              commdata.609
+ 
+    =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+    REBASE, The Restriction Enzyme Database   http://rebase.neb.com
+    Copyright (c)  Dr. Richard J. Roberts, 2024.   All rights reserved.
+    =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+ 
+Rich Roberts                                                    Aug 27 2026
+ 
+ 
+                    ::::::::::::::::::::::::::::::
+                         RESTRICTION ENZYMES
+                                 AND
+                             METHYLASES
+                       COMMERCIALLY AVAILABLE
+                                AS OF 
+                          Thu, Aug 27, 2026
+                    ::::::::::::::::::::::::::::::
+ 
+ 
+
+
+----------------------------------------------------------------------
+
+Agilent Technologies                                 (REBASE abbr: E)
+
+Life Sciences and Chemical Analysis Group, 5301 Stevens Creek Blvd., Santa Clara, CA 95051-7201
+USA
+
+Tel:   800-227-9770
+WWW:   www.genomics.agilent.com
+
+As of: Aug 29 2020 12:17AM
+
+No Type II restriction enzymes listed for this organization in REBASE.
+
+
+Restriction Endonucleases - Type II (methylated DNA)
+
+DpnI      
+
+
+
+Distributors for Agilent Technologies:
+
+Agilent Technologies (China)
+No.3, Wang Jing Bei Lu, Chao Yang District, Beijing, 100102
+China
+
+Agilent Technologies (Shanghai) Co., Ltd.
+No. 412 Ying Lun Road, Pu Dong, Shanghai, 200131
+China
+
+Agilent Technologies (Germany)
+Life Sciences and Chemical Analysis, Hewlett-Packard Strasse 8, Waldbronn, BW 76337
+Germany
+
+Agilent Technologies (India)
+Plot No. D-90, Sector-18, Udyog Vihar, Gurgaon, Haryana - 122 015
+India
+
+Agilent Technologies (Japan)
+9-1, Takakura-Cho, Hachioji-Shi, Tokyo 192-8510
+Japan
+
+Agilent Technologies Singapore (Sales) Pte Ltd.
+Life Sciences and Chemical Analysis, 1 Yishun Avenue 7, Singapore, 768923
+Singapore
+
+Agilent Technologies (Schweiz) AG
+Life Sciences & Chemical Analysis, Lautengartenstrasse 6, CH-4052 Basel
+Switzerland
+
+Agilent Technologies, Inc.
+Life Sciences and Chemical Analysis, 2850 Centerville Road, Wilmington, DE 19808-1610
+USA
+
+
+
+----------------------------------------------------------------------
+
+EURx Ltd.                                            (REBASE abbr: X)
+
+ul. Jaskowa Dolina 29, 80-286 Gdansk
+Poland
+
+Tel:   (58) 524 06 97
+Fax:   (58) 341 74 23
+Email: support@eurx.com.pl
+WWW:   eurx.com.pl
+
+As of: May 29 2023  6:46PM
+
+Restriction Endonucleases - Type II
+
+AccI       AcvI       AluI       ApaI       AvaI       AvaII      AvrII     
+BalI       BamHI      BanII      BglI       BglII      BsiHKCI    BspHI     
+BssHII     BstXI      ClaI       CviJI      DdeI       DraI       EcoRI     
+EcoRV      FokI       HaeIII     HhaI       HincII     HindIII    HinfI     
+HpaI       HpaII      KpnI       MboI       MboII      MluI       MnlI      
+MspI       NarI       NcoI       NdeI       NheI       NotI       NruI      
+NsiI       PinAI      PstI       PvuI       PvuII      RsaI       RsrII     
+SacI       SacII      SalI       Sau3AI     ScaI       ScrFI      SfiI      
+SmaI       SpeI       SphI       SspI       StuI       TaqI       TaqII     
+TspDTI     TspGWI     Tth111I    XbaI       XhoI      
+
+Restriction Endonucleases - Type II (methylated DNA)
+
+DpnI      
+
+Methyltransferases
+
+RM.TaqII   RM.TspGWI 
+
+
+----------------------------------------------------------------------
+
+Molecular Biology Resources - CHIMERx                (REBASE abbr: Q)
+
+6143 North 60th Street, Milwaukee, WI 53218
+USA
+
+Tel:   800-626-7873
+Fax:   414-535-9508
+Email: info@chimerx.com
+WWW:   www.chimerx.com
+
+As of: Oct 28 2022  8:53AM
+
+Restriction Endonucleases - Type II
+
+AccI       AcvI       AluI       ApaI       AvaI       BalI       BamHI     
+BglI       BglII      BsiHKCI    BssHII     BstXI      ClaI       CviJI     
+DdeI       DraI       EcoRI      EcoRV      HaeIII     HhaI       HincII    
+HindIII    HinfI      HpaI       HpaII      KpnI       MboI       MboII     
+MluI       MnlI       MspI       NarI       NcoI       NdeI       NheI      
+NotI       NruI       NsiI       PinAI      PstI       PvuI       PvuII     
+RsaI       RsrII      SacI       SacII      SalI       ScaI       SfiI      
+SmaI       SpeI       SphI       SspI       StuI       TaqI       TaqII     
+TspDTI     TspGWI     Tth111I    XbaI       XhoI      
+
+Restriction Endonucleases - Type II (methylated DNA)
+
+DpnI      
+
+Methyltransferases
+
+RM.TaqII   RM.TspGWI 
+
+
+----------------------------------------------------------------------
+
+New England Biolabs                                  (REBASE abbr: N)
+
+240 County Road, Ipswich, MA 01938-2723
+USA
+
+Tel:   1-800-632-5227
+Email: info@neb.com
+WWW:   www.neb.com
+
+As of: Aug 23 2024  4:55PM
+
+Restriction Endonucleases - Type II
+
+AatII      AccI       Acc65I     AciI       AclI       AcuI       AfeI      
+AflII      AflIII     AgeI       AhdI       AleI       AluI       AlwI      
+AlwNI      ApaI       ApaLI      ApeKI      ApoI       AscI       AseI      
+AsiSI      AvaI       AvaII      AvrII      BaeI       BaeGI      BamHI     
+BanI       BanII      BbsI       BbvI       BbvCI      BccI       BceAI     
+BcgI       BciVI      BclI       BcoDI      BfaI       BfuAI      BglI      
+BglII      BlpI       BmgBI      BmrI       BmtI       BpmI       Bpu10I    
+BpuEI      BsaI       BsaAI      BsaBI      BsaHI      BsaJI      BsaWI     
+BsaXI      BseRI      BseYI      BsgI       BsiEI      BsiHKAI    BsiWI     
+BslI       BsmI       BsmAI      BsmBI      BsmFI      BsoBI      Bsp1286I  
+BspCNI     BspDI      BspEI      BspHI      BspMI      BspQI      BsrI      
+BsrBI      BsrDI      BsrFI      BsrGI      BssHII     BssSI      BstAPI    
+BstBI      BstEII     BstNI      BstUI      BstXI      BstYI      BstZ17I   
+Bsu36I     BtgI       BtgZI      BtsI       BtsIMutI   BtsCI      Cac8I     
+ClaI       CspCI      CviKI-1    CviQI      DdeI       DpnII      DraI      
+DraIII     DrdI       EaeI       EagI       EarI       EciI       EcoNI     
+EcoO109I   EcoRI      EcoRV      Eco53kI    Esp3I      FatI       FauI      
+Fnu4HI     FokI       FseI       FspI       HaeII      HaeIII     HgaI      
+HhaI       HinP1I     HincII     HindIII    HinfI      HpaI       HpaII     
+HphI       Hpy99I     Hpy166II   Hpy188I    Hpy188III  HpyAV      HpyCH4III 
+HpyCH4IV   HpyCH4V    KasI       KpnI       MboI       MboII      MfeI      
+MluI       MluCI      MlyI       MmeI       MnlI       MscI       MseI      
+MslI       MspI       MspA1I     MwoI       NaeI       NarI       NciI      
+NcoI       NdeI       NgoMIV     NheI       NlaIII     NlaIV      NmeAIII   
+NotI       NruI       NsiI       NspI       PacI       PaeR7I     PaqCI     
+PciI       PflFI      PflMI      PleI       PluTI      PmeI       PmlI      
+PpuMI      PshAI      PsiI       PspGI      PspOMI     PspXI      PstI      
+PvuI       PvuII      RsaI       RsrII      SacI       SacII      SalI      
+SapI       Sau96I     Sau3AI     SbfI       ScaI       ScrFI      SexAI     
+SfaNI      SfcI       SfiI       SfoI       SgrAI      SmaI       SmlI      
+SnaBI      SpeI       SphI       SrfI       SspI       StuI       StyI      
+StyD4I     SwaI       TaqI       TfiI       TseI       Tsp45I     TspMI     
+TspRI      Tth111I    XbaI       XcmI       XhoI       XmaI       XmnI      
+ZraI      
+
+Restriction Endonucleases - Type II (methylated DNA)
+
+DpnI       MspJI     
+
+Restriction Endonucleases - Type III
+
+EcoP15I   
+
+Methyltransferases
+
+RM.AcuI    M.AluI     RM.BaeI    M.BamHI    RM.BcgI    RM.BpmI    RM.BpuEI  
+RM.BseRI   RM.BsgI    RM.BsmFI   RM.BspCNI  RM.BtgZI   RM.CspCI   M.CviPI   
+M.EcoGII   M.EcoKDam  M.EcoRI    M.HaeIII   M.HhaI     M.HpaII    RM.MmeI   
+M.MspI     RM.NmeAIII M.SssI     M.TaqI    
+
+Homing Endonucleases
+
+I-CeuI     PI-PspI    I-SceI     PI-SceI   
+
+Nicking Enzymes
+
+Nt.AlwI    Nb.BbvCI   Nt.BbvCI   Nb.BsmI    Nt.BsmAI   Nt.BspQI   Nb.BsrDI  
+Nb.BssSI   Nt.BstNBI  Nb.BtsI    Nt.CviPII 
+
+
+
+Distributors for New England Biolabs:
+
+BioNordika Finland OY
+Sinikalliontie 10, 02630 Espoo
+Tel:   Tel: +358 9 42 500 710
+Fax:   +358 9 42 500 711
+Email: info@bionordika.fi
+WWW:   www.bionordika.fi
+
+MIGLIORE LACLAUSTRA S.R.L.
+Cordoba Avenue, 1470, 6 Floor/ Room 12, (1055) Buenos Aires
+Argentina
+Tel:   (11) 4372 9045
+Fax:   (11) 4373 8052
+Email: info@migliorelaclaustra.com.ar
+
+GENESEARCH PTY. LTD.
+14 Technology Drive, Arundel, Queensland 4214
+Australia
+Tel:   (07) 55940299
+Fax:   (07) 55940562
+Email: info@genesearch.com.au
+WWW:   www.genesearch.com.au
+
+UNISCIENCE DO BRASIL
+Av. candido Portinari 933/937, 05114-001 Sao Paulo- SP
+Brazil
+Tel:   11 3622 23 20
+Fax:   11 3622 23 33
+Email: info@uniscience.com
+WWW:   www.uniscience.com
+
+New England Biolabs Ltd.
+1815 Ironstone Manor, Unit 6, Pickering, Ontario, L1W 3W9
+Canada
+Tel:   1-800-387-1095
+Fax:   1-800-563-3789
+Email: info@ca.neb.com
+WWW:   www.neb.ca
+
+New England Biolabs (Beijing) Ltd.
+Wangzhuang Lu No. 1, Tsinghua Tong Fang Science Building B, 6th Floor B, Haidian District, Beijing 100083
+China
+Tel:   010-82378266/82378267
+Fax:   010-82378265-815
+Email: support@neb-china.com
+WWW:   www.neb-china.com
+
+BIO PRODUCTS INC. dba SUBIOTEC LTDA.
+Carrera 35 # 105-02, Santafe de Bogota D.C
+Colombia
+Tel:   601-1994
+Fax:   601-1994
+Email: ncastro@bioproducts.net
+WWW:   www.bioproducts.net
+
+BIOTECH a.s.
+Sluzeb 4, 108 52 Praha 10
+Czech Republic
+Tel:   (Toll Free)0800 124683
+Fax:   02 72701742
+Email: biotech@biotech.cz
+WWW:   www.biotech.cz
+
+BioNordika Denmark A/S
+Produktionsvej 26, DK-2600 Glostrup
+Denmark
+Tel:   +45 3956 2000
+Fax:   +45 3956 1942
+Email: info@bionordika.dk
+WWW:   www.bionordika.dk
+
+Lab Technology
+16 Ammar Ben Yasser Street, Heliopolis West, 11351, Cairo
+Egypt
+Tel:   ++202 2622 6761
+Fax:   ++ 202 2622 6760
+Email: info@labtechnology.net
+
+FINNZYMES OY
+Keilaranta 16 A, 02150 Espoo, FIN-02201 Espoo
+Finland
+Tel:   +358  9 2472 3010
+Fax:   +358  9 2472 3200
+Email: fz@finnzymes.fi
+WWW:   www.finnzymes.fi
+
+OZYME
+BP 268, 78053 Saint Quentin Yvelines CEDEX
+France
+Tel:   (1) 34 60 24 24
+Fax:   (1) 34 60 92 12
+Email: info@ozyme.fr
+WWW:   www.ozyme.fr
+
+New England Biolabs GmbH
+Bruningstrasse 50, Geb.G810, 65926 Frankfurt am Main
+Germany
+Tel:   0800/246 5227 (0800 BIOLABS)
+Fax:   0800/246 5229 (0800 BIOLABX)
+Email: info@de.neb.com
+WWW:   www.neb-online.de
+
+BIOLINE SCIENTIFIC
+1, Meg. Alexandrou Str., 10437 Athens
+Greece
+Tel:   210 5226547
+Fax:   210 5244744
+Email: demagos@hol.gr
+
+Eastwin International Trading Limited
+Unit 1808, Kodak House II, 39 Healthy Street East, North Point
+Hong Kong
+Tel:   (852) 2887-1786
+Fax:   (852) 2887-7369
+Email: info@eastwinhk.com
+
+TWC Biosearch International
+Suite 1116, Metropole Square, No.2, On Yiu Street, Shatin P.O. Box 50, Shatin
+Hong Kong
+Tel:   852-2649-9988
+Fax:   852-2635-0379
+Email: twc@twcbiosearch.com
+WWW:   www.twcbiosearch.com
+
+Groco ehf
+Lynghals 13, 110 Reykjavik, Iceland
+Iceland
+Tel:   +354-568-8533
+Fax:   +354-568-0304
+Email: groco@groco.is
+WWW:   www.groco.is
+
+LabMate Asia Pvt. Ltd.
+1 Floor, C Block, 183 Mount Road, Madras - 600 015
+India
+Tel:   44 220 0066/220 0166
+Fax:   44 220 0056/220 0156
+Email: labmate@vsnl.com
+WWW:   www.labmateasia.com
+
+PT. GeneCraft Labs
+Taman Meruya M29, Jl. Batu Mulia, Meruya Ilir, Jakarta 11620
+Indonesia
+Tel:   +62-21-5890-3119
+Fax:   +62-21-5890-3151
+Email: sales@genecraftlabs.com
+WWW:   www.genecraftlabs.com
+
+ISIS Ltd.
+Unit 1 and 2, Ballywaltrim Business Centre, Boghall Road, Bray, Co. Wicklow
+Ireland
+Tel:   +353 1 286 7777
+Fax:   +353 1 286 7766
+Email: enquiries@isisco.ie
+WWW:   www.isisco.ie
+
+Eldan Electronic Instrument Co Ltd.
+6 Hashiloach Street, Petach-Tikva, 49170
+Israel
+Tel:   03-9371132
+Fax:   03-9371121
+Email: bio_orders@eldan.biz
+WWW:   www.eldan.biz
+
+CELBIO S.P.A.
+Via Figino 20/22, 20016 Pero (Milan)
+Italy
+Tel:   (02) 381951
+Fax:   (02) 38101465
+Email: celbio@celbio.it
+WWW:   www.celbio.it
+
+DAIICHI PURE CHEMICALS CO. LTD.
+13-5, Nihombashi, 3-Chome, Chuo-Ku, Tokyo 103-0027
+Japan
+Tel:   (03) 3272-0676
+Fax:   (03) 3272-0779
+Email: shiyaku@daiichichem.co.jp
+WWW:   www.shiyaku-daiichi.jp/daiichi-p/
+
+New England Biolabs Japan, Inc.
+Kuramochi Bldg., 2nd 5F, 2-3 Kotobashi 2-chome, Sumidaku, Tokyo 130-0022
+Japan
+Tel:   (0) 3 5669 6191
+Fax:   (0) 3 5669 6192
+Email: info@neb-japan.com
+WWW:   www.nebj.jp
+
+Research Biolabs Sdn Bhd
+3, Jalan 1/116B, Kuchai Entrepreneurs Park, Off Jalan Kuchai Lama, 58200 Kuala Lumpur
+Malaysia
+Tel:   +603-7981 5510
+Fax:   +603-7981 5511
+Email: biolabs@tm.net.my
+WWW:   www.researchbiolabs.com
+
+Quimica Valaner S.A. de C.V.
+Jalapa 77 Col. Roma, 06700 D.F.
+Mexico
+Tel:   (52) 5525 5725
+Fax:   (52) 5525 5625
+Email: servicioaclientes@valaner.com
+WWW:   www.valaner.com
+
+BIOLAB LTD.(Biosciences division)
+Private Bag 102 922, North Shore Mail Centre, Auckland
+New Zealand
+Tel:   64 9 980-6700
+Fax:   64 9 980 6788
+Email: biosciences@nzl.biolabgroup.com
+WWW:   www.biolabgroup.com/nzhome.asp
+
+Sigma-Aldrich Norway AS
+P.O. Box 188 Leirdal, 1011 Oslo
+Norway
+Tel:   23 17 60 00
+Fax:   23 17 60 10
+Email: nororder@sial.com
+WWW:   www.sigma-aldrich.com/norway
+
+Pakistan Microbiological Associates
+# 9, 2nd Floor, Mall Plaza, Mall Road, Rawalpindi
+Pakistan
+Tel:   0092-51-5113210
+Fax:   0092-51-5514134
+Email: yasiraziz@dslplus.net.pk
+
+IZASA LISBON
+Rua do Proletariado 1, Quinta do Paizinho, 2795-648 Carnaxide
+Portugal
+Tel:   (21) 424.73.12
+Fax:   (21) 424.26.74
+Email: ipsa.dac@izasa.pt
+
+KORAM BIOTECH CORP.
+7F Koram Venture BLDG, 907-1 Dae Chi-Dong, Kangnam-Ku, Seoul 135-280
+Republic of Korea
+Tel:   82-2-556-0311
+Fax:   82-2-556-0828
+Email: koram@korambiotech.com
+WWW:   www.korambiotech.com
+
+RESEARCH BIOLABS PTE LTD
+73 Ayer Rajah Crescent #04-14, Ayer Rajah Industrial Estate, 139952
+Singapore
+Tel:   65 - 6777 5366
+Fax:   65 - 6778 5177
+Email: sales@researchbiolabs.com
+WWW:   www.researchbiolabs.com
+
+BIOTECH s.r.o.
+Dubravska cesta 9, 845 13 Bratislava 35
+Slovak
+Tel:   421 254 774 488
+Fax:   421 254 774 488
+Email: biotech@biotech.sk
+
+Laboratory Specialist Services (LSS)
+Unit 9, Greenwich Place, Capricorn Crescent, Muizenberg 7945, Cape Town
+South Africa
+Tel:   27 (0)21 7887755
+Fax:   27 (0)21 7887762
+Email: sue@lss.co.za
+WWW:   www.lss.co.za
+
+IZASA, S.A.
+Aragon 90, 08015 Barcelona
+Spain
+Tel:   902.20.30.70
+Fax:   902.20.30.71
+Email: consultasbiotec@izasa.es
+WWW:   www.izasa.com
+
+BioNordika Sweden AB
+Box 21160, 100 31 Stockholm
+Sweden
+Tel:   +46 8 30 60 10
+Fax:   +46 8 30 60 15
+Email: info@bionordika.se
+WWW:   www.bionordika.se
+
+BIOCONCEPT
+Paradiesrain 14, Postfach 427, CH 4123 Allschwil 1
+Switzerland
+Tel:   (061) 486 80 80
+Fax:   (061) 486 80 00
+Email: info@bioconcept.ch
+WWW:   www.bioconcept.ch
+
+TAIGEN BIOSCIENCE CORP.
+3F, No. 150, Section 4, Chen-Der Road, Shi-Lin, Taipei
+Taiwan
+Tel:   (02) 28802913
+Fax:   (02) 28802916
+Email: order@taigen.com
+
+THEERA TRADING CO. LTD.
+64 Charan Sanit Wong Road, (Charan 13), Bangkokyai Bangkok 10600
+Thailand
+Tel:   (02) 412-5672
+Fax:   (02) 412-3244
+Email: theetrad@samart.co.th
+
+WESTBURG BV
+P.O. Box 214, 3830 AE Leusden
+The Netherlands
+Tel:   (NL) (033) 495 00 94
+Fax:   (033) 495 12 22
+Email: info@westburg.eu
+WWW:   www.westburg.eu
+
+New England Biolabs (UK) Ltd.
+75/77 Knowl Piece, Wilbury Way, Hitchin, Herts. SG4 0TY
+United Kingdom
+Tel:   01462 420616
+Fax:   0800 435682
+Email: info@uk.neb.com
+WWW:   www.neb.uk.com
+
+Bionova Ltda
+Amazonas 1572, CP11400, Montevideo
+Uruguay
+Tel:   598 2 6130442
+Fax:   598 2 6142592
+Email: jlfalu@internet.com.uy
+WWW:   www.bionovaltda.com
+
+Bionova Ltda.
+Amazonas 1572, CP11400, Montevideo
+Uruguay
+Tel:   598 2 6130442
+Fax:   598 2 6142592
+WWW:   www.bionovaltda.com
+
+BIO PRODUCTS INC. dba CORPOINTER
+Calle Milan, Edificio Mejor, Piso 2, Of. 2-1, Los Ruices Sur- Caracas
+Venezuela
+Tel:   256-5303
+Fax:   257-7976
+Email: ncastro@bioproducts.net
+WWW:   www.bioproducts.net
+
+VN BIOLAB CO., LTD
+303, K10B, BACH KHOA, HANOI
+Vietnam
+Tel:   84-04-8695269
+Fax:   84-04-8683801
+Email: vnbiolab@hn.vnn.vn
+
+
+
+----------------------------------------------------------------------
+
+Nippon Gene Co., Ltd.                                (REBASE abbr: J)
+
+1-29, Ton-ya-machi, Toyama 930
+Japan
+
+Tel:   +81 764-51-6548
+Fax:   +81 764-51-6547
+WWW:   www.nippongene.com
+
+As of: Oct 28 2022  8:53AM
+
+Restriction Endonucleases - Type II
+
+AccI       AccII      AccIII     AcyI       AflII      AgeI       AluI      
+Alw44I     ApaI       AseI       AvaI       AvaII      AxyI       BalI      
+BamHI      BclI       BglI       BglII      BsmI       Bsp1286I   BssHII    
+BstEII     BstXI      DraI       EcoO109I   EcoRI      EcoRII     EcoRV     
+EcoT38I    FokI       FspI       HaeII      HaeIII     HhaI       HincII    
+HindIII    HinfI      HpaI       KpnI       MboII      MluI       MspI      
+NarI       NciI       NcoI       NdeI       NdeII      NheI       NotI      
+NruI       NsiI       NspV       PstI       PvuII      RsaI       SacI      
+SacII      SalI       Sau96I     Sau3AI     ScaI       ScrFI      SfiI      
+SmaI       SpeI       SphI       SspI       StuI       StyI       SwaI      
+TaqI       XbaI       XhoI      
+
+
+----------------------------------------------------------------------
+
+Promega Corporation                                  (REBASE abbr: R)
+
+2800 Woods Hollow Road, Madison, WI 53711-5399
+USA
+
+Tel:   1-800-356-9526, 608-274-4330
+Fax:   1-608-277-2601
+Email: custserv@promega.com
+WWW:   www.promega.com
+
+As of: Nov 29 2020  5:40PM
+
+Restriction Endonucleases - Type II
+
+AatII      AccI       AccIII     Acc65I     AccB7I     AgeI       AluI      
+Alw44I     ApaI       AvaI       AvaII      BalI       BamHI      BanI      
+BanII      BbuI       BclI       BglI       BglII      BsaMI      Bsp1286I  
+BsrSI      BssHII     Bst98I     BstEII     BstOI      BstXI      BstZI     
+Bsu36I     CfoI       ClaI       CspI       Csp45I     DdeI       DraI      
+EclHKI     Eco47III   EcoICRI    EcoRI      EcoRV      HaeII      HaeIII    
+HhaI       HincII     HindIII    HinfI      HpaI       HpaII      Hsp92I    
+Hsp92II    KpnI       MboI       MboII      MluI       MspI       MspA1I    
+NaeI       NarI       NciI       NcoI       NdeI       NdeII      NheI      
+NotI       NruI       NsiI       PstI       PvuI       PvuII      RsaI      
+SacI       SacII      SalI       Sau3AI     ScaI       SfiI       SgfI      
+SinI       SmaI       SnaBI      SpeI       SphI       SspI       StuI      
+StyI       TaqI       Tru9I      Tth111I    VspI       XbaI       XhoI      
+XhoII      XmaI       XmnI      
+
+Restriction Endonucleases - Type II (methylated DNA)
+
+DpnI      
+
+Homing Endonucleases
+
+I-PpoI    
+
+
+
+Distributors for Promega Corporation:
+
+Biodynamics, Srl.
+Av. de Mayo 1370, piso 15, of. 384/385, 1362 Capital Federal, Buenos Aires
+Argentina
+Tel:   54-1-383-3000
+Fax:   54-1-384-7316
+Email: info@biodynamics.com.ar
+WWW:   www.biodynamics.com.ar
+
+Promega Corporation
+37 Nelson Street, Annandale NSW 2038
+Australia
+Tel:   800 22 5123
+Fax:   800 626 017
+
+Promega Corporation
+Sydney
+Australia
+Tel:   800-22-5123, 61-2-9565-1100
+Fax:   61-2-9550-4454
+Email: aus_custserv@au.promega.com
+WWW:   www.promega.com/au/
+
+Promega Corporation
+Melbourne
+Australia
+Tel:   800-335-435, 61-03-9818-1466
+Fax:   61-03-9818-1244
+Email: aus_custserv@au.promega.com
+WWW:   www.promega.com/au/
+
+Promega GmbH
+Austria
+Tel:   0660-311587, (0049)621-8501-0
+Fax:   0660-311589, (0049)621-8501-222
+Email: de_custserv@dc.promega
+WWW:   www.promega.com/de/
+
+Promicro - Comercio e Repres de Produtos Microbiologicos Ltda
+Rua Bartolomeu Da Ribeira, 173, Jaguare - Sao Paulo - S.P., Cep 05331-030
+Brazil
+Tel:   55 11 869 06 99
+Fax:   55 11 869 06 99
+Email: promicro@originet.com.br
+
+Fisher Scientific, Ltd.
+112 Colonnade Road, Nepean Ontario K2E 7L6
+Canada
+Tel:   1-800-234-7437, 1-613-226-8874
+Fax:   1-613-226-8639
+Email: help@fishersci.ca
+WWW:   www.fishersci.ca
+
+FERMELO S.A.
+Casilla 16393, Correo 9, Santiago
+Chile
+Tel:   56-2-334-0253
+Fax:   56-2-334-0253
+
+Promega Beijing
+No. 27 Zhong Guan Cun., Beijing 100080
+China
+Tel:   86-10-6256-3159
+Fax:   86-10-6255-9444
+Email: prombs@bj.col.com.cn
+
+SABC Beijing
+10 Hua Yan Bei Li, Qi Jia Huo Zi, Chaoyang District, Beijing 100029
+China
+Tel:   86-10-6205-4578
+Fax:   86-10-6202-0354
+
+SABC Shanghai
+288 Fenglin Road, Shanghai 200032
+China
+Tel:   86-21-6404-2371
+Fax:   86-21-6404-3824
+Email: sabcsh@public1.sta.net.cn
+
+Shanghai Promega Biological Products, Ltd.
+500 Caobao Road, Shanghai 200233
+China
+Tel:   86-21-6483-5136
+Fax:   86-21-6470-0176
+Email: huyusp@sunm.shcnc.ac.cn
+
+Biologia Molecular Ltda. (BioMol)
+Calle 124 No. 43-81, Santa Fe de Bogota, Bogota
+Colombia
+Tel:   011 (571) 271 5319
+Fax:   011 (571) 271 5319
+Email: biomol@hotmail.com
+
+Bie & Berntsen A-S
+Sandbaekvej 7, Roedovre DK-2610
+Denmark
+Tel:   45-44-94-88-22
+Fax:   45-44-94-27-09
+
+Electromedics
+Lino Curima 290, Quito
+Ecuador
+Tel:   011 (593) 258-2483
+Fax:   011 (593) 251-9363
+Email: gleoro@pi.pro.ec
+
+YA-Kemia Oy
+Teerisuonkuja 4, 00700 Helsinki
+Finland
+Tel:   358-09-350-9250
+Fax:   358-09-350-92555
+Email: info@ya-kemia.fi
+
+Promega France
+24 Rue Benoit Bennier, Charbonnieres les Bains 69260
+France
+Tel:   04-78-87-81-74
+Fax:   04-78-87-81-10
+Email: fr_custserv@fr.promega.com
+WWW:   www.promega.com/fr/
+
+Promega GmbH
+High-Tech-Park, Schildkrautstrasse 15, Mannheim D-68199
+Germany
+Tel:   011-49-621-85010
+Fax:   011-49-621-8501-222
+
+Promega GmbH
+Germany
+Tel:   0130-914067, (0621)8501-0
+Fax:   0130-914068, (0621)8501-222
+Email: de_custserv@de.promega.com
+WWW:   www.promega.com/de/
+
+BioAnalytica, S.A.
+11, Laskareos Street, Athens 114 71
+Greece
+Tel:   30-1-643-6138, 30-1-643-0568
+Fax:   30-1-646-2748
+Email: bioanalyt@hol.gr
+
+Bio-Gene Technology Ltd.
+Unite 42, 14/F., Block D, Wan Lok Industrial Centre, Shan Mei Street, Fo Tan
+Hong Kong
+Tel:   (852)-2646-6101
+Fax:   (852)-2686-8806
+Email: Biogene@speednet.net
+
+East Port Scientific
+Mogyorodi ut 108.II.4, 1141 Budapest
+Hungary
+Tel:   36-1-251-0344
+Fax:   36-1-183-3787
+Email: eastport@mail.datanet.hu
+
+HYSEL INDIA
+41DDA Shopping Centre, Sukhdev Vihar, Okhla-Mathura Road, New Delhi 110025
+India
+Tel:   91-11-684-6565
+Fax:   91-11-691-5917
+Email: hysel@del2.vsnl.net.in
+
+PT Diastika Biotekindo
+Rukan Sentra Pemuda Kav. 30-31, Jalan Pemuda No. 61, Jakarta 13220
+Indonesia
+Tel:   62-21-489-1718, 62-21-475-4716
+Fax:   62-21-475-4707
+Email: diastika@dnet.net.id
+
+Medical Supply Co. Ltd.
+Damastown, Mulhuddart, Dublin 15
+Ireland
+Tel:   353 1 822 4222
+Fax:   353 1 822 4100
+Email: msc@internet-ireland.ie
+
+ORNAT Biochemicals & Laboratory Equipment
+4 Pekeris Street, Rabin Park, Rehovot 76702
+Israel
+Tel:   011-972-8-9477077
+Fax:   011-972-8-9363034
+Email: ornatbio@ornat.co.il
+WWW:   www.ornat.co.il
+
+Promega Italia
+Via Manuzio, N7, 20124 Milano
+Italy
+Tel:   02 290 6651, verde: 167 69 1818
+Fax:   02 2901 7365
+
+Promega KK
+HANY Horidome Bldg. 7F, 6-18, Higashi-Nihonbashi 3 Chome, Chuo-Ku, Tokyo 103
+Japan
+Tel:   81-3-3669-7981
+Fax:   81-3-3669-7982
+
+Seoulin Scientific Co., Ltd.
+Seoulin Bldg., 452-2 Songnae-dong, Kangdong-ku, Seoul 134-030
+Korea
+Tel:   82-2-478-5911
+Fax:   82-2-478-5572
+
+Research Instruments SDN. BHD.
+No. 2A SS 21/35, Damansara Utama, 47400 Petaling Jaya, Selangor
+Malaysia
+Tel:   603-718-3600
+Fax:   603-718-3618
+Email: resinst@po.jaring.my
+
+UNIPARTS, S.A.
+Galileo 92, Colonia Polanco, 11550 Mexico, D. F.
+Mexico
+Tel:   011-525-281-4718
+Fax:   011-525-281-4722
+Email: uniparts@spin.com.mx
+
+Promega Benelux BV
+Kenauweg 34, PO Box 391, 2300 AJ Leiden
+Netherlands
+Tel:   31-71-5324244
+Fax:   31-71-5324907
+Email: bnl_custserv@nl.promega.com
+WWW:   www.promega.com/nl/
+
+Dade Behring Diagnostics New Zealand
+49 George St, Auckland
+New Zealand
+Tel:   011 64 9 3664784
+Fax:   011 64 9 3798308
+
+Biomedical Research Products AS
+Skien
+Norway
+Tel:   35 50 57 70 or 22 33 30 75
+Fax:   35 50 57 01
+Email: brp@sn.no
+
+S.S. Diagnostics
+62/53-3rd Floor, Bank Road, Cantt. Saddar., Rawalpindi
+Pakistan
+Tel:   (92-51) 518-469
+Fax:   (92-51) 522-243
+
+Symbios
+ul. Saperow 16/1, 80-431 Gdansk
+Poland
+Tel:   011 48 58 341 47 26
+Fax:   011 48 58 301 28 07
+Email: huber@biotech.univ.gda.pl
+
+Biocontec Biotecnologia e Ambiente Ltda.
+Apartado 185, 2777 Carcavelos Codex, Portugal
+Portugal
+Tel:   011-351-1-3613-620
+Fax:   011-351-1-3625-615
+Email: biocontec@mail.eunet.pt
+
+Bion
+Institute of General Genetics, Gubkina 3, Moscow 117809
+Russia
+Tel:   7-095-135-4206
+Fax:   7-095-135-4206
+Email: BION@GLAS.APC.ORG
+
+Research Instruments
+26 Ayer Rajah Crescent, #3-10, Ayer Rajah, Industrial Estate, Singapore 0513
+Singapore
+Tel:   65-775-7284
+Fax:   65-775-9228
+Email: resinst@singnet.com.sg
+
+East Port Scientific s.r.o.
+Letna 45, 040 01 Kosice
+Slovak Republic
+Tel:   421-95-6324729
+Fax:   421-95-6324728
+Email: eastport@novitech.sk
+
+Whitehead Scientific
+89 Buitenkant Street, Brackenfell, Cape Town 7560
+South Africa
+Tel:   27-21-981-1560
+Fax:   27-21-981-5789
+Email: whitesci@iafrica.com
+
+Ingelheim Diagnostica y Tecnologia, S.A.
+Pau Alcover, 31-33, Barcelona 08017
+Spain
+Tel:   34-3-404-52-14
+Fax:   34-3-404-54-85
+Email: garrell@boehringer-ingelheim.es
+
+SDS Scandinavian Diagnostic Services
+Igeldammsvagen 10, Falkenberg S-311 35
+Sweden
+Tel:   46-346-83050
+Fax:   46-346-84840
+Email: info@sdsscan.se
+WWW:   www.sdsscan.se
+
+Catalys AG
+Industriestrasse 28, CH-8304 Wallisellen
+Switzerland
+Tel:   41-1-830-70-37
+Fax:   41-1-830-55-78
+Email: catalys_custserv@catalys.promega.com
+WWW:   www.promega.com/ch/
+
+Genelabs Life Science Corp.
+2 Flr, No. 370, Yen-Ping S. Road, Taipei
+Taiwan
+Tel:   886 2 238 25378
+Fax:   886 2 231 18524
+Email: genelabs@ms1.hinet.net
+WWW:   www.gene-labs.com
+
+Diagnostic Biotechnology Co. Ltd.
+BIOPEX BUILDING, 749/12 Soi Prasarnjai, Off Sol Pradoo, Sathupradlt Road, Yannawa, Bangkok 10120
+Thailand
+Tel:   662-295-2532
+Fax:   662-295-3632
+
+ERMANAK MISKCIYAN
+Tunel Cad. No. 38, Kut Han 201, 80000 Karakoy, Istanbul
+Turkey
+Tel:   90-216-385-8321
+Fax:   90-216-385-4649
+
+Promega UK
+Delta House, Enterprise Road, Chilworth Research Centre, Southampton SO1 7NS
+U.K.
+Tel:   0800 378994, 44-1-703-760225
+Fax:   44-1-703-767014
+Email: uktechserve@uk.promega.com
+WWW:   www.promega.com/uk/
+
+BioPharmaceutical Training Center
+5445 East Cheryl Parkway, Madison WI 53711
+USA
+Tel:   1-800-356-9526, 1-608-274-4330
+Fax:   1-608-277-2516
+WWW:   www.btci.org
+
+Fisher Scientific
+2000 Park Lane, Pittsburgh PA 15275
+USA
+Tel:   1-800-766-7000
+Fax:   1-800-926-1166
+WWW:   www.fisher1.com
+
+VWR/Scientific Products
+Goshen Corporate Parkway West, 1310 Goshen Parkway, West Chester PA 19380
+USA
+Tel:   1-800-932-5000, 1-610-429-2850
+Fax:   1-610-429-9340
+WWW:   www.vwrsp.com
+
+Vargas Scientific Supplies, C.A.
+Av. Francisco de Miranda, Edf. Centro Peru, Torre B, Piso 7, Oficina 73, Chacao 1060, Caracas
+Venezuela
+Tel:   58-2-265-0891
+Fax:   58-2-263-0924
+Email: vss@ven.net
+
+
+
+----------------------------------------------------------------------
+
+Roche Custom Biotech                                 (REBASE abbr: M)
+
+Roche Diagnostics GmbH, Sandhoferstrasse 116, D68305 Mannheim
+Germany
+
+Tel:   1-800-428-5433
+WWW:   custombiotech.roche.com
+
+As of: Mar  4 2025  3:07PM
+
+Restriction Endonucleases - Type II
+
+XbaI      
+
+
+----------------------------------------------------------------------
+
+SibEnzyme Ltd.                                       (REBASE abbr: I)
+
+Ak. Timakov str. 9, Novosibirsk-117, 630117
+Russia
+
+Tel:   383-233-5499
+Fax:   383-233-6853
+Email: info@sibenzyme.com
+WWW:   www.sibenzyme.com
+
+As of: Dec 27 2021  2:02PM
+
+Restriction Endonucleases - Type II
+
+AatII      AbsI       Acc16I     Acc36I     Acc65I     AccB1I     AccB7I    
+AccBSI     AclI       AclWI      AcoI       AcsI       AcuI       AfeI      
+AgsI       AhlI       AjnI       AleI       AluI       AluBI      Ama87I    
+ApaI       ArsI       AsiGI      AsiSI      AspA2I     AspLEI     AspS9I    
+AsuC2I     AsuHPI     AsuNHI     BamHI      BarI       Bbv12I     BglI      
+BglII      Bme18I     BmtI       BmuI       BpmI       Bpu10I     Bpu14I    
+Bsa29I     Bsc4I      Bse1I      Bse8I      Bse21I     Bse118I    Bse3DI    
+BsePI      BseX3I     BslFI      Bso31I     Bsp13I     Bsp19I     Bsp1720I  
+BspACI     BspFNI     BssECI     BssNAI     BssT1I     Bst6I      BstACI    
+BstAFI     BstAPI     BstAUI     Bst2BI     BstBAI     Bst4CI     BstC8I    
+BstDEI     BstDSI     BstENI     BstF5I     BstFNI     BstH2I     BstHHI    
+BstKTI     BstMAI     BstMBI     BstMCI     BstMWI     BstNSI     BstPAI    
+BstSCI     BstSFI     BstSLI     BstSNI     Bst2UI     BstV1I     BstV2I    
+BstXI      BstX2I     BsuI       BsuRI      BtrI       CciI       CciNI     
+DraI       DraIII     DriI       DseDI      EcoICRI    EcoRI      EcoRV     
+EgeI       ErhI       FaeI       FaiI       FalI       FatI       FauI      
+FauNDI     FblI       FokI       FriOI      Fsp4HI     GsaI       HaeIII    
+HgaI       HindII     HindIII    HinfI      HpaI       HpaII      HpySE526I 
+HspAI      KpnI       KroNI      Ksp22I     Kzo9I      LmnI       MabI      
+MboII      MfeI       MhlI       MluI       Mly113I    MnlI       Mox20I    
+MroNI      MroXI      MspI       MspA1I     MspR9I     NruI       PalAI     
+PceI       PciI       PciSI      PctI       PecI       Ple19I     PpsI      
+Pse31I     PsiI       Psp6I      Psp124BI   PspCI      PspEI      PspLI     
+PspN4I     PspOMI     PspPPI     PspXI      PsrI       PstI       PstNI     
+PvuII      RgaI       RigI       RsaI       RsaNI      Rsr2I      SalI      
+SbfI       SetI       SfaNI      SfiI       Sfr274I    Sfr303I    SmaI      
+SmiI       SmiMI      SphI       Sse9I      SspI       SspMI      TaqI      
+Tru9I      TseFI      Tth111I    VneI       VspI       XbaI       XmaI      
+ZraI       ZrmI      
+
+Restriction Endonucleases - Type II (methylated DNA)
+
+AoxI       BlsI       GlaI       GluI       KroI       MalI       MteI      
+PcsI       PkrI      
+
+Methyltransferases
+
+RM.AcuI    RM.BpmI    M3.BstF5I  M.Fsp4HI   M.HspAI   
+
+
+----------------------------------------------------------------------
+
+Sigma Chemical Corporation                           (REBASE abbr: S)
+
+P.O. Box 14508, St. Louis, MO 63178-9916
+USA
+
+Tel:   1-800-325-8070
+WWW:   www.sigmaaldrich.com
+
+As of: Mar 27 2025 10:43AM
+
+Restriction Endonucleases - Type II
+
+AgeI       ApaLI      AscI       AvrII      BamHI      BclI       BglII     
+BsaI       BsmBI      BsrGI      BstBI      BstEII     ClaI       DpnII     
+DraI       EagI       Eco47III   EcoRI      EcoRII     EcoRV      Esp3I     
+FspI       HindIII    HinfI      HpaI       HpaII      KpnI       KspI      
+MluI       MnlI       MspI       NcoI       NdeI       NotI       NruI      
+NsiI       PacI       PmeI       PspGI      PstI       PvuII      SacI      
+SacII      SalI       SbfI       SfiI       SmaI       SphI       SspI      
+StuI       XbaI      
+
+Restriction Endonucleases - Type II (methylated DNA)
+
+DpnI       PvuRts1I  
+
+
+----------------------------------------------------------------------
+
+Takara Bio Inc.                                      (REBASE abbr: K)
+
+SETA3-4-1, OTSU, SHIGA, 520-2193
+Japan
+
+Tel:   +81 77-543-7247
+Fax:   +81 775-43-9254
+WWW:   www.takara-bio.com
+
+As of: Mar  2 2022  4:46PM
+
+Restriction Endonucleases - Type II
+
+BspQI     
+
+
+
+Distributors for Takara Bio Inc.:
+
+China Takara Biotechnology (Dalian) Co., Ltd.
+19-No.2 Dongbei St., Dalian Economic and Tech. Devel. Zone, Dalian, 116600
+China
+Tel:   +86 411 8761 9944
+Fax:   +86 411 8761 9946
+Email: service@takara.com.cn
+WWW:   www.takara.com.cn
+
+Europe Takara Bio Europe S.A.
+Europarc des Barbanniers, 6, Place du Village, 92230 Gennevilliers
+France
+Tel:   +33 (1) 41 47 23 70
+Fax:   +33 (1) 41 47 23 71
+Email: info@takarabioeurope.com
+WWW:   www.takarabioeurope.com
+
+Korea Takara Korea Biomedical Inc.
+Biotechnology Community - Bio 21 1F, 66-2, Sangdaewon-Dong, Jungwon-Gu, Seongnam-Si, Gyeonggi-Do, 460-120
+Korea
+Tel:   +82 31 739 3300
+Fax:   +82 31 739 3311
+Email: help@takara.co.kr
+WWW:   www.takara.co.kr
+
+North and South America Takara Mirus Bio Inc.
+505 South Rosa Rd., Madison, Wisconsin 53719
+USA
+Tel:   +1 608 441 2844
+Fax:   +1 608 441 2845
+Email: techserv@takaramirusbio.com
+WWW:   www.takaramirusbio.com
+
+
+
+----------------------------------------------------------------------
+
+Thermo Fisher Scientific                             (REBASE abbr: B)
+
+168 Third Avenue, Waltham, MA USA 02451
+USA
+
+Tel:   800-556-2323
+WWW:   www.thermofisher.com
+
+As of: May 29 2023  6:46PM
+
+Restriction Endonucleases - Type II
+
+AanI       AarI       AatII      Acc65I     AdeI       AjiI       AjuI      
+AlfI       AloI       AluI       Alw21I     Alw26I     Alw44I     ApaI      
+BamHI      BauI       BclI       BcnI       BcuI       BfmI       BfuI      
+BglI       BglII      Bme1390I   BoxI       BpiI       BplI       Bpu10I    
+Bpu1102I   BseDI      BseGI      BseJI      BseLI      BseMI      BseMII    
+BseNI      BseSI      BseXI      Bsh1236I   Bsh1285I   BshNI      BshTI     
+Bsp68I     Bsp119I    Bsp120I    Bsp143I    Bsp1407I   BspLI      BspOI     
+BspPI      BspTI      Bst1107I   BstXI      Bsu15I     BsuRI      BveI      
+CaiI       Cfr9I      Cfr10I     Cfr13I     Cfr42I     CpoI       CseI      
+Csp6I      DraI       Eam1104I   Eam1105I   Ecl136II   Eco24I     Eco31I    
+Eco32I     Eco47I     Eco47III   Eco52I     Eco57I     Eco72I     Eco81I    
+Eco88I     Eco91I     Eco105I    Eco130I    Eco147I    EcoO109I   EcoRI     
+EcoRII     EheI       Esp3I      FaqI       FspAI      FspBI      GsuI      
+HhaI       Hin1I      Hin1II     Hin6I      HincII     HindIII    HinfI     
+HpaII      HphI       Hpy8I      HpyF3I     HpyF10VI   KpnI       Kpn2I     
+KspAI      LguI       Lsp1109I   LweI       MauBI      MbiI       MboI      
+MboII      MlsI       MluI       MnlI       Mph1103I   MreI       MspI      
+MssI       MunI       MvaI       Mva1269I   NcoI       NdeI       NheI      
+NmuCI      NotI       NsbI       OliI       PacI       PaeI       PagI      
+PasI       PauI       PdiI       PdmI       PfeI       Pfl23II    PfoI      
+Ppu21I     PscI       Psp5II     Psp1406I   PstI       PsuI       PsyI      
+PvuI       PvuII      RsaI       RseI       SacI       SalI       SatI      
+ScaI       SchI       SdaI       SduI       SfaAI      SfiI       SgrDI     
+SgsI       SmaI       SmiI       SmoI       SsiI       SspI       SspDI     
+TaaI       TaiI       TaqI       TasI       TatI       TauI       Tru1I     
+TscAI      Van91I     VspI       XagI       XapI       XbaI       XceI      
+XhoI       XmaJI      XmiI      
+
+Restriction Endonucleases - Type II (methylated DNA)
+
+DpnI       SgeI      
+
+Methyltransferases
+
+RM.AloI    RM.BseMII  RM.Eco57I 
+
+Homing Endonucleases
+
+I-SceI    
+
+Nicking Enzymes
+
+Nb.Bpu10I  Nt.Bpu10I  Nb.Mva1269I
+
+
+----------------------------------------------------------------------
+
+Toyobo Biochemicals                                  (REBASE abbr: O)
+
+c/o Shinko American, Inc., 1450 Broadway, New York, NY 10018
+USA
+
+Tel:   212-398-0550
+Fax:   212-398-9726
+WWW:   www.toyobo.co.jp
+
+As of: Aug 28 2014  7:23AM
+
+No Type II restriction enzymes listed for this organization in REBASE.
+
+
+Restriction Endonucleases - Type II (methylated DNA)
+
+DpnI      
+
+
+
+Distributors for Toyobo Biochemicals:
+
+Trace Scientific Pty. Ltd.
+Crayton, Victoria 8168
+Australia
+Tel:   61 2 899 1122
+Fax:   61 2 899 1354
+
+Getter Photo Supplies (2000) Ltd.
+P.O. Box 3500, Ramat-Gun
+Israel
+Tel:   972 3 5781555
+Fax:   972 3 7523620
+
+Duk San Pharmaceutical Co., Ltd.
+58-3 Yang Pyung-Dong, Young Deung Po-Ku, Seoul
+Korea
+Tel:   82 2 671 6272
+Fax:   82 2 679 4255
+
+Trans Techno Enterprise
+No. 15-3, Jalan 9A/55A, Taman Setiawan GSA, 54200 Kuala Lumpur
+Malaysia
+Tel:   60 3 3413994
+Fax:   60 3 4513966
+
+Integro B.V.
+Klokbaai 2-4, 1506 VH Zaandam
+Netherlands
+Tel:   31 75 310558
+Fax:   31 75 170564
+
+SciMed (Asia) Ptd. Ltd.
+8 Pandan Avenue, 2260
+Singapore
+Tel:   65 266 1884
+Fax:   65 266 3086
+
+Cold Spring Biotechnology
+No. 17 Alley 20, Lane 365, Fu Te Ist Road, Hsichih Chen 221, Taipei Hsien ROC
+Taiwan
+Tel:   886 2 694 0066
+Fax:   886 2 694 3204
+
+Cambridge Bioscience
+24-25 Signet Court, Newmarket Road, Cambridge CB5 8LA
+U.K.
+Tel:   44 1223 316855
+Fax:   44 1223 360732
+
+Clontech
+1020 East Meadow Circle, Palo Alto, CA  94303-4280
+USA
+Tel:   415 424 8222
+Fax:   415 424 1088
+
+
+
+----------------------------------------------------------------------
+
+Vivantis Technologies                                (REBASE abbr: V)
+
+2B, No.23. Jalan U1/15, Hicom-Glenmarie Industrial Park, 40150, Shah Alam, Selangor DE
+Malaysia
+
+Tel:   +603-5569 5785
+WWW:   www.vivantechnologies.com
+
+As of: Jan 29 2018  1:21PM
+
+Restriction Endonucleases - Type II
+
+AatII      AccI       Acc16I     Acc65I     AccB1I     AccB7I     AccBSI    
+AclI       AcsI       AcyI       AfiI       AgeI       AhdI       AhlI      
+AluI       Alw21I     Alw26I     Alw44I     Ama87I     Aor13HI    ApaI      
+ApaLI      ApoI       AseI       AsiGI      AspA2I     AspEI      AspLEI    
+AspS9I     AsuII      AsuHPI     AsuNHI     AvaI       AvaII      AviII     
+AvrII      BalI       BamHI      BanI       BanII      BbrPI      BbsI      
+BclI       BlpI       BmcAI      Bme18I     BmeRI      BmiI       BmrFI     
+BmtI       BmyI       BoxI       Bpu10I     Bpu14I     BpuMI      BsaI      
+BsaAI      BsaBI      BsaHI      BsaMI      Bsc4I      Bse1I      Bse8I     
+Bse118I    BseBI      BsePI      BseX3I     BshVI      BsiEI      BsiHKAI   
+BslI       BsmI       BsmAI      BsnI       Bso31I     Bsp13I     Bsp19I    
+Bsp143I    Bsp1720I   BspEI      BsrI       BsrBI      BsrDI      BssHII    
+BssMI      BssNI      BssNAI     BssT1I     Bst6I      Bst98I     Bst1107I  
+BstAUI     BstBAI     Bst4CI     BstDEI     BstDSI     BstEII     BstENI    
+BstFI      BstFNI     BstH2I     BstHHI     BstMAI     BstMBI     BstMCI    
+BstNI      BstNSI     BstPAI     BstSNI     BstUI      Bst2UI     BstV2I    
+BstXI      BstX2I     BsuRI      BtuMI      CciNI      CelII      Cfr10I    
+Cfr13I     Cfr42I     ClaI       DdeI       DinI       DraI       DraIII    
+DsaI       DseDI      EagI       Eam1105I   EarI       Eco31I     EcoICRI   
+EcoNI      EcoRI      EcoRII     EcoRV      EgeI       FauNDI     FokI      
+FriOI      HaeII      HaeIII     HhaI       Hin1I      HincII     HindIII   
+HinfI      HpaI       HpaII      HphI       HspAI      KpnI       Ksp22I    
+KspAI      Kzo9I      MamI       MbiI       MboI       MboII      MhlI      
+MlsI       MluI       MnlI       MroI       MroNI      MroXI      MseI      
+MspI       Msp20I     MspA1I     NarI       NciI       NcoI       NdeI      
+NheI       NlaIV      NotI       NruI       NsiI       NspI       PaeR7I    
+PceI       PflFI      PflMI      PinAI      PmlI       PshAI      Psp124BI  
+PspCI      PspEI      PspOMI     PstI       PvuII      RsaI       Rsr2I     
+SacI       SacII      SalI       Sau96I     Sau3AI     SbfI       ScaI      
+ScrFI      SdaI       SfaNI      SfiI       SfoI       Sfr274I    Sfr303I   
+SfuI       SmaI       SmiI       SmiMI      SpeI       SphI       Sse9I     
+SspI       TaqI       TasI       Tru9I      Tth111I    Van91I     Vha464I   
+VneI       VspI       XagI       XapI       XbaI       XceI       XhoI      
+XhoII      XmaI       XmaCI      XmaJI      XmiI       XmnI       ZraI      
+ZrmI       Zsp2I     
+
+
+
+Distributors for Vivantis Technologies:
+
+Europa Bioproducts Ltd.
+15-7 North Street, Ely, Cambs, CB7 5XW
+U.K.
+Tel:   01353 721118
+Fax:   01353-624589
+Email: info@europa-bioproducts.com
+WWW:   www.europa-bioproducts.com
+
+

@@ -1,5 +1,62 @@
 # Shared interval and shape helpers for geom_gene() and geom_feature().
 
+ggchord_feature_classes <- function(type) {
+  key <- tolower(trimws(as.character(type)))
+  key <- gsub("[^a-z0-9]+", "_", key)
+  key <- gsub("^_+|_+$", "", key)
+  aliases <- c(
+    gene = "gene", cds = "gene", resistance_gene = "resistance_gene",
+    rep_origin = "origin", replication_origin = "origin", ori = "origin",
+    origin = "origin", promoter = "promoter",
+    primer = "primer", primer_bind = "primer",
+    protein_bind = "binding_site", binding_site = "binding_site",
+    operator = "operator", regulatory = "regulatory",
+    regulatory_region = "regulatory", mcs = "mcs",
+    misc_feature = "misc_feature", repeat_region = "misc_feature",
+    ltr = "misc_feature", misc_rna = "regulatory",
+    terminator = "regulatory", rbs = "regulatory",
+    polya_signal = "regulatory", poly_a_signal = "regulatory",
+    enhancer = "regulatory"
+  )
+  out <- unname(aliases[key])
+  out[is.na(out) | !nzchar(out)] <- "misc_feature"
+  out
+}
+
+ggchord_feature_width_factor <- function(shape) {
+  # Shape changes topology, not radial emphasis. Every feature type occupies
+  # the same band width so promoters, primers and markers remain legible beside
+  # long arrows and do not imply a weaker semantic hierarchy.
+  rep(1, length(shape))
+}
+
+# Minimum visible arc length for a directional glyph. Short biological
+# intervals keep their real anchor and metadata, but their drawing interval is
+# symmetrically widened just enough to retain direction. The shape factory then
+# contracts its head and thickness to produce a compressed glyph instead of
+# making a few-base interval look like a conventional long feature.
+ggchord_arrow_minimum_length <- function(width, head_length = .04,
+                                          heads = 1L) {
+  if (heads > 1L) {
+    max(.70 * head_length, .55 * width)
+  } else {
+    max(.32 * head_length, .35 * width)
+  }
+}
+
+ggchord_arrow_display_interval <- function(a_start, a_end, r0, width,
+                                            head_length = .04,
+                                            heads = 1L) {
+  span <- a_end - a_start
+  direction <- if (span < 0) -1 else 1
+  minimum_angle <- ggchord_arrow_minimum_length(
+    width, head_length, heads
+  ) / max(abs(r0), .1)
+  if (abs(span) >= minimum_angle) return(c(a_start, a_end))
+  midpoint <- (a_start + a_end) / 2
+  midpoint + direction * c(-.5, .5) * minimum_angle
+}
+
 ggchord_feature_intervals <- function(start, end, length, strand,
                                       circular = FALSE) {
   if (isTRUE(circular) && start > end) {
@@ -42,6 +99,18 @@ ggchord_shape_wedge <- function(a_start, a_end, r0, width) {
   ))
 }
 
+ggchord_shape_marker <- function(a_start, a_end, r0, width) {
+  mid <- (a_start + a_end) / 2
+  half <- min(abs(a_end - a_start) / 2,
+    width * .34 / max(abs(r0), .1))
+  direction <- if (a_end < a_start) -1 else 1
+  half <- direction * max(half, abs(a_end - a_start) * .22)
+  list(list(
+    angle = c(mid - half, mid, mid + half, mid),
+    radius = c(r0, r0 + width / 2, r0, r0 - width / 2)
+  ))
+}
+
 ggchord_shape_arrow <- function(a_start, a_end, r0, width,
                                 head_length = 0.04,
                                 head_width = 1,
@@ -56,12 +125,11 @@ ggchord_shape_arrow <- function(a_start, a_end, r0, width,
   if (available < head_length) {
     fallback <- short_feature
     if (identical(fallback, "auto")) {
-      # Preserve a visible rectangular body and shrink only the head. A full
-      # wedge makes short plasmid features look like detached triangles.
-      if (available < width * .18) {
-        return(ggchord_shape_block(a_start, a_end, r0, width))
-      }
-      head_length <- available * .36
+      # Preserve the nominal radial band.  A short biological interval may
+      # compress its longitudinal body/head, but must not become visually
+      # thinner than neighbouring features merely because it is short.
+      head_width <- min(head_width, 1)
+      head_length <- min(available * .36, width * .45)
       fallback <- "arrow"
     }
     if (identical(fallback, "block")) {
@@ -93,14 +161,21 @@ ggchord_shape_bidirectional_arrow <- function(a_start, a_end, r0, width,
   direction <- if (span < 0) -1 else 1
   available <- abs(span) * max(abs(r0), 0.1)
   if (available < 2 * head_length) {
-    if (identical(short_feature, "block") || identical(short_feature, "auto")) {
+    if (identical(short_feature, "block")) {
       return(ggchord_shape_block(a_start, a_end, r0, width))
     }
-    mid <- (a_start + a_end) / 2
-    return(list(list(
-      angle = c(a_start, mid, a_end, mid),
-      radius = c(r0, r0 + width / 2, r0, r0 - width / 2)
-    )))
+    if (identical(short_feature, "auto")) {
+      # Preserve two visible directions and the nominal radial band.  Only the
+      # longitudinal head/body dimensions are compressed.
+      head_width <- min(head_width, 1)
+      head_length <- min(available * .22, width * .42)
+    } else {
+      mid <- (a_start + a_end) / 2
+      return(list(list(
+        angle = c(a_start, mid, a_end, mid),
+        radius = c(r0, r0 + width / 2, r0, r0 - width / 2)
+      )))
+    }
   }
   head_angle <- min(abs(span) * .225,
     head_length / max(abs(r0), .1))
@@ -168,11 +243,85 @@ ggchord_feature_geometry <- function(shape, a_start, a_end, r0, width,
                                      arrow_head_style = "shouldered",
                                      short_feature = "auto",
                                      draw_head = TRUE,
+                                     draw_start_head = FALSE,
                                      bidirectional = FALSE) {
-  if (identical(shape, "arrow") && isTRUE(bidirectional) &&
-      isTRUE(draw_head)) {
+  if (identical(shape, "marker")) {
+    return(ggchord_shape_marker(a_start, a_end, r0, width))
+  }
+  if (identical(shape, "capped_line")) {
+    mid <- (a_start + a_end) / 2
+    cap_half_angle <- min(abs(a_end - a_start) / 4,
+      width * .28 / max(abs(r0), .1))
+    line_width <- max(width * .055, .0015)
+    body <- ggchord_shape_block(a_start, a_end, r0, line_width)
+    start_cap <- ggchord_shape_block(
+      a_start - cap_half_angle, a_start + cap_half_angle, r0, width * .48
+    )
+    end_cap <- ggchord_shape_block(
+      a_end - cap_half_angle, a_end + cap_half_angle, r0, width * .48
+    )
+    return(c(body, start_cap, end_cap))
+  }
+  if (identical(shape, "primer_arc")) {
+    line_width <- max(width * .24, .0015)
+    body <- ggchord_shape_block(a_start, a_end, r0, line_width)
+    if (!isTRUE(draw_head)) return(body)
+    head_span <- min(abs(a_end - a_start) * .28,
+      width * .55 / max(abs(r0), .1))
+    direction <- if (a_end < a_start) -1 else 1
+    shoulder <- a_end - direction * head_span
+    head <- ggchord_shape_wedge(shoulder, a_end, r0, width * .62)
+    return(c(body, head))
+  }
+  if (shape %in% c("compact_arrow", "promoter_arrow", "primer_arrow")) {
+    # Compact glyphs need a visible stem and a restrained head. Reusing the
+    # long-feature head verbatim turns very short promoters and primers into
+    # chunky pentagons once their display interval is widened.
+    head_length_factor <- c(
+      compact_arrow = .76, promoter_arrow = .66, primer_arrow = .60
+    )[[shape]]
+    head_width_factor <- c(
+      compact_arrow = .92, promoter_arrow = .86, primer_arrow = .82
+    )[[shape]]
+    compact_head_length <- min(
+      arrow_head_length * head_length_factor, width * 1.05
+    )
+    compact_head_width <- max(1, arrow_head_width * head_width_factor)
+    if (isTRUE(bidirectional) && isTRUE(draw_head) &&
+        isTRUE(draw_start_head)) {
+      interval <- if (identical(short_feature, "auto")) {
+        ggchord_arrow_display_interval(
+          a_start, a_end, r0, width, compact_head_length, heads = 2L
+        )
+      } else c(a_start, a_end)
+      return(ggchord_shape_bidirectional_arrow(
+        interval[1L], interval[2L], r0, width,
+        head_length = compact_head_length,
+        head_width = compact_head_width,
+        short_feature = short_feature
+      ))
+    }
+    interval <- if (identical(short_feature, "auto") && isTRUE(draw_head)) {
+      ggchord_arrow_display_interval(
+        a_start, a_end, r0, width, compact_head_length, heads = 1L
+      )
+    } else c(a_start, a_end)
+    return(ggchord_shape_arrow(
+      interval[1L], interval[2L], r0, width,
+      head_length = compact_head_length,
+      head_width = compact_head_width,
+      short_feature = "auto", draw_head = draw_head
+    ))
+  }
+  if (isTRUE(bidirectional) &&
+      isTRUE(draw_head) && isTRUE(draw_start_head)) {
+    interval <- if (identical(short_feature, "auto")) {
+      ggchord_arrow_display_interval(
+        a_start, a_end, r0, width, arrow_head_length, heads = 2L
+      )
+    } else c(a_start, a_end)
     return(ggchord_shape_bidirectional_arrow(
-      a_start, a_end, r0, width,
+      interval[1L], interval[2L], r0, width,
       head_length = arrow_head_length,
       head_width = if (identical(arrow_head_style, "flush")) 1 else
         arrow_head_width,
@@ -186,11 +335,29 @@ ggchord_feature_geometry <- function(shape, a_start, a_end, r0, width,
     lollipop = ggchord_shape_lollipop(
       a_start, a_end, r0, width, sequence_radius, ref
     ),
-    if (identical(arrow_head_style, "triangle") && isTRUE(draw_head)) {
+    if (isTRUE(draw_start_head) && !isTRUE(draw_head)) {
+      interval <- if (identical(short_feature, "auto")) {
+        ggchord_arrow_display_interval(
+          a_end, a_start, r0, width, arrow_head_length, heads = 1L
+        )
+      } else c(a_end, a_start)
+      ggchord_shape_arrow(
+        interval[1L], interval[2L], r0, width,
+        head_length = arrow_head_length,
+        head_width = if (identical(arrow_head_style, "flush")) 1 else
+          arrow_head_width,
+        short_feature = short_feature, draw_head = TRUE
+      )
+    } else if (identical(arrow_head_style, "triangle") && isTRUE(draw_head)) {
       ggchord_shape_wedge(a_start, a_end, r0, width * arrow_head_width)
     } else {
+      interval <- if (identical(short_feature, "auto") && isTRUE(draw_head)) {
+        ggchord_arrow_display_interval(
+          a_start, a_end, r0, width, arrow_head_length, heads = 1L
+        )
+      } else c(a_start, a_end)
       ggchord_shape_arrow(
-        a_start, a_end, r0, width,
+        interval[1L], interval[2L], r0, width,
         head_length = arrow_head_length,
         head_width = if (identical(arrow_head_style, "flush")) 1 else
           arrow_head_width,

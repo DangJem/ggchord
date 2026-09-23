@@ -470,11 +470,11 @@ The coordinate owns genomic-origin rotation and direction. Since v0.13,
 former strand-separated default, or `position = "plasmid"` for a shared inner
 band.
 
-A basic pUC19c map needs only the circular backbone and centre metadata:
+A basic pUC19 map needs only the circular backbone and centre metadata:
 
 ```{r puc19c-map, eval=FALSE}
-data(plasmid_example_pUC19c)
-puc <- plasmid_example_pUC19c
+data(plasmid_example_pUC19)
+puc <- plasmid_example_pUC19
 ggchord(puc) +
   geom_seq() +
   geom_seq_center_label() +
@@ -505,6 +505,20 @@ ggchord(seq) +
   theme_ggchord_plasmid()
 ```
 
+`find_common_features()` supplies semantic classes, glyph hints, and preferred
+lanes for its built-in annotations. Long genes and origins remain shouldered
+arrows; promoters and primers use thinner dedicated arrows; binding sites,
+operators, and MCS regions use compact blocks. These are defaults rather than
+name-based rules, so explicit aesthetics and manual scales always win.
+
+With the default `label_layout = "feature"`, text is measured with its final
+font settings and tried inside the usable feature body first. Labels that do
+not fit are placed adjacent to the glyph or in a short callout. Dense clusters
+stagger mainly along the local tangent, then across radial lanes, while avoiding
+other feature polygons and label boxes. The exported label layout records the
+resolved `feature_label_mode` (`inside`, `adjacent`, or `callout`). Restriction
+labels are deliberately solved by their separate layer.
+
 The dense pBluescript II SK(+) multiple-cloning region is a restriction-label
 stress test. Real sites retain their anchors. Every enzyme-facing label edge
 follows one close circular contour in genomic order. Sparse labels retain their
@@ -513,16 +527,29 @@ uniform measured spacing. Each dense site keeps
 a short independent radial root before fanning out in genomic order; sparse
 sites may use a direct connector. Leaders are clipped to the actual text edge:
 
+The parent enzyme catalogue is part of the display definition, not part of
+sequence matching. The explicit list below reproduces the supplied reference
+map. For a database-derived general-purpose view, search all patterns and use
+`parent_set = "commercial_nonredundant"` in `filter_restriction_sites()`.
+Coordinates can still expose database-version differences: REBASE 609 defines
+NmeAIII as `GCCGAG(21/19)`, giving 2195 here, whereas the supplied older
+reference image labels that cut as 2194.
+
 ```{r pbluescript-restriction-map, eval=FALSE}
 data(plasmid_example_pBluescript_II_SK_plus)
 blue <- plasmid_example_pBluescript_II_SK_plus
-blue_sites <- find_restriction_sites(blue,
-  enzymes = c("PsiI", "BsaAI", "DraIII", "BtgZI", "NgoMIV", "NaeI",
-    "Acc65I", "KpnI", "PspOMI", "EcoO109I", "ApaI", "XhoI", "SalI",
-    "AccI", "HincII", "ClaI", "HindIII", "EcoRV", "EcoRI", "PstI",
-    "XmaI", "SmaI", "BamHI", "SpeI", "XbaI", "NotI", "BspQI",
-    "SapI", "AflIII", "PciI", "NspI", "BseYI", "PspFI", "AlwNI",
-    "BsaI", "NmeAIII", "ScaI", "TatI", "BsaHI", "XmnI"))
+blue_parent_enzymes <- c(
+  "PsiI", "BsaAI", "DraIII", "BtgZI", "NgoMIV", "NaeI", "Acc65I",
+  "KpnI", "PspOMI", "EcoO109I", "ApaI", "AbsI", "PaeR7I", "PspXI",
+  "XhoI", "SalI", "AccI", "HincII", "BspDI", "ClaI", "HindIII",
+  "EcoRV", "EcoRI", "PstI", "TspMI", "XmaI", "SmaI", "BamHI",
+  "SpeI", "XbaI", "EagI", "NotI", "BtgI", "AleI", "SacII", "BstXI",
+  "Eco53kI", "SacI", "BspQI", "SapI", "AflIII", "PciI", "NspI",
+  "AlwNI", "PspFI", "BseYI", "AhdI", "BsaI", "NmeAIII", "ScaI",
+  "TatI", "BsaHI", "XmnI"
+)
+blue_sites <- find_restriction_sites(blue, enzymes = blue_parent_enzymes) |>
+  filter_restriction_sites(set = "unique_6plus")
 blue_features <- find_common_features(blue)
 blue_tracks <- position_feature_stack(
   spacing = 0.10, base_position = position_plasmid()

@@ -1,5 +1,134 @@
 # ggchord 0.13.0
 
+* Added a `CoordCircular`-owned annotation registry as the common final layout
+  fact for circular maps. Position lanes are now exported separately from
+  globally unique physical inner tracks: track 0 records the visible sequence
+  backbone, while variable-width feature bands, curved-text tracks, inner
+  leader corridors and the axis reserve record their radius and radial
+  boundaries. Restriction sites, external feature labels and primer labels
+  retain their own visual semantics in one shared exterior registry. Sparse
+  restriction labels keep horizontal text on measured circular anchor tracks;
+  their complete text boxes participate in collision detection but are not
+  forced inside Cartesian top/right/bottom/left rails. Feature and primer
+  callouts then use the resolved restriction boxes as fixed obstacles and
+  spill only to consecutive local circular bands. `export_ggchord_layout()` exposes
+  annotation class, dominant/actual band, spill reason and leader-crossing
+  count together with the registry, and copies the
+  resolved inner-track or circular exterior-allocation fields onto affected geometry rows.
+  Adaptive plot bounds now include external feature and primer callout text,
+  so these labels remain visible after the shared outer-track solver moves them.
+  Primer callout leaders now inherit the primer colour instead of the generic
+  grey feature-leader theme.
+  Circular feature bands now size inter-arrow gutters from measured label
+  demand instead of widening every gap, and displaced inner labels prefer
+  the nearest valid track with a small local adjustment before moving deeper.
+  Labels from an outer feature band cannot use the next feature band or any
+  deeper text track; those gutters are widened instead.
+  Compact runs of repeated short features on the outermost band now enter the
+  external allocator as a complete cluster instead of splitting between
+  crowded inner labels and isolated outer callouts.
+  External feature and primer callouts are now placed across layers in their
+  real circular root order, independent of the order in which the layers were
+  added.
+  When a dense mixed fan has no free exterior slot, fallback now ranks the
+  measured candidate positions by text overlap and leader crossings instead
+  of inadvertently keeping the final position scanned. A wider circular
+  candidate search can resolve nearby mixed callout crossings without a
+  Cartesian rail; an unresolved spill reason is exported when no noncrossing
+  placement exists.
+  Registry joins now guarantee scalar track identities even when a
+  device-specific fallback omits a local resource, fixing circular layout
+  export failures on dense short-feature maps. Dense restriction perimeters
+  retain their backbone roots and genomic order; feature and primer callouts
+  use the remaining measured exterior slots.
+* Added a reproducible bundled sequencing-primer catalogue generated from the
+  reviewed Addgene workbook: 137 distinct oligonucleotides and all 163 source
+  alias rows are retained separately. `primer_catalog()` exposes either view,
+  while `find_primer_bindings()` searches each distinct sequence once on both
+  strands, reports circular-origin matches and uniqueness, and preserves every
+  biological alias. Exact matching is the default; longest exact 3-prime
+  annealing and the seven authoritative reference-plasmid annotations are
+  explicit modes. Reference `.dna` primer coordinates are converted from
+  zero-based storage to one-based inclusive ranges. `geom_primer()` now draws
+  an independent purple directional arc between the two lines of a double
+  backbone by default; the new
+  `geom_primer_label_repel()` draws unboxed purple labels and leaders and can
+  include the binding range. Its leader starts at the directional arc's arrow
+  tip (the primer 3-prime end). The default primer colour follows the visual
+  reference (`#A020F0`). Primers no longer consume an inner feature lane.
+* Increased the plasmid feature-label size and darkened its internal leaders
+  so feature names remain legible beside restriction-site annotations. Labels
+  placed on a feature and labels moved to an inner track both follow their
+  selected radius glyph by glyph. The nearest inner track is tried first;
+  deeper tracks are used only when the local curved envelopes collide.
+  Feature-leader line styling is now independent of the mapped text colour,
+  fixing leaders that were present in layout data but rendered with an `NA`
+  colour and therefore disappeared from the image.
+  All feature shapes now preserve one nominal radial body width, including
+  very short directional intervals; only the along-sequence body and head
+  lengths contract. The plasmid preset keeps the regular band only slightly taller
+  than its enlarged text. Long arrows retain
+  clear heads and shoulders; compact and promoter arrows constrain their
+  head dimensions so very short features keep a visible stem instead of
+  becoming chunky pentagons.
+* Added `capped_line`, an unfilled interval with short terminal caps, for
+  source records with line-only/`noColor` display semantics such as introns.
+  Directionality is now resolved before shape-specific single-head fallbacks,
+  so `+/-` promoters and other directional features keep symmetric heads.
+  Curved feature text chooses its reading direction once per complete string,
+  preventing individual characters from flipping midway around a label.
+* `find_restriction_sites()` now accepts `methylation = "auto"`, `"none"`, or
+  `"dam_dcm"` and returns `methylation_status`, `blocked_by`,
+  `display_warning`, and provenance fields. Source-backed blocked sites are
+  shown with a grey label/leader and an appended asterisk; unknown contexts are
+  not guessed. The pSB1C3 reference now reproduces the Dcm-blocked `PflMI *`
+  state without a plasmid-name rendering branch.
+* Refined the pBluescript II SK(+) circular-map layout against the supplied
+  visual reference. Restriction labels retain horizontal text on close circular
+  anchor tracks; dense local MCS labels are packed in genomic order and only
+  genuine bbox conflicts spill to adjacent outer tracks, while the short
+  upper-left group stays close to its natural sites. Feature labels now exhaust internal feature
+  gutters and deeper label tracks before becoming external, with short leaders
+  whenever an intervening physical track separates a feature and its label.
+  Compact, promoter and primer arrows use the same annular-arrow factory and
+  radial body width as other directional features. Extremely short arrows are widened
+  symmetrically around their real midpoint for display, retaining a body,
+  shoulders and a head without changing their genomic start/end or leader
+  anchor. Contiguous source-segment joins again produce dotted internal marks;
+  cleavage coordinates at the same join are merged instead of overdrawn.
+  Short dotted/dashed segment boundaries are emitted as explicit broken
+  geometry so graphics devices cannot silently render them solid. Plasmid axis
+  ticks now start at the visible inner backbone boundary and extend towards
+  the centre. Parallel labels follow the inner-ring tangent beside their tick,
+  with the leading text edge separated from the radial line instead of the
+  string being centred across it. Automatic plasmid steps now use the smallest
+  `1/2/2.5/5 × 10^k` interval producing at most ten major ticks; the origin
+  seam is not labelled twice. Major ticks and label clearance are longer.
+  Restriction-site ticks likewise
+  begin at the visible outer edge rather than the sequence centreline.
+* With no explicit dimensions, `view_ggchord()` keeps the 12.39 by 9.71 inch
+  canvas for `coord_chord()` and now derives both dimensions for
+  `coord_circular()` from its measured annotation envelope while preserving a
+  readable physical backbone diameter. Explicit output dimensions still take
+  priority, and `height = NULL` retains one-dimensional content fitting.
+  Extremely dense circular perimeters use a count-derived wide preview and a
+  smaller relative backbone instead of shrinking annotation text into a
+  square canvas.
+* Circular feature bands now use non-uniform radial spacing: the transition
+  from the backbone-near band to the nested cluster reserves a two-line main
+  text corridor, each deeper pair of feature bands reserves at least one label
+  track, and the deepest band owns shared label-only tracks. Feature labels select a
+  radius before deriving their position and tangent. The exported physical
+  track index counts the backbone as track 0 and interleaves feature and text
+  tracks by radius; labels crossing intervening tracks use a leader clipped to
+  the curved glyph envelope.
+* Circular feature-track labels now use a genuinely curved baseline. After a
+  track radius is selected, the renderer measures individual glyph advances,
+  distributes the characters along that circle, and derives a separate local
+  tangent angle for every character. Collision detection and leader clipping
+  use the union of those same per-character envelopes rather than a straight
+  whole-string box; this applies both inside a feature and on a neighbouring
+  inner label track. The original row remains metadata and is not drawn.
 * Added `coord_circular()` as an independent coordinate contract for one
   circular sequence. It supports a closed circle (`gap = 0`), a degree-based
   opening, genomic-origin rotation, clockwise/counterclockwise direction,
@@ -40,12 +169,36 @@
   Features crossing the circular origin retain one source identity and split
   into drawable arc pieces without losing strand direction.
 * Added `geom_feature_plasmid()` as a compact circular-map preset over the
-  generic feature engine. Continuous database segments share one outline and
-  one arrowhead; their internal joins are rendered as short dashed dividers.
-  The plasmid fill/shape presets now use a SnapGene-like biological palette
-  and protruding shouldered block arrows. Its default position assigns
-  overlapping intervals to deterministic radial lanes. `preferred_lane` can
-  request a biological track and `feature_group` keeps related rows together.
+  generic feature engine. Multi-segment records remain one biological feature
+  during stacking and labelling; visible segment runs share one track and one
+  label, preserve gaps and per-segment colours, and draw arrowheads only at the
+  biological feature ends. Contiguous segment joins use dotted internal
+  dividers, an explicit non-solid `line_style` can override the join style, and
+  source cleavage arrows add or merge biological cut marks.
+  Its default position assigns overlapping intervals to generic collision
+  slots: explicit `display_priority`/`prioritized_display` comes first,
+  then the longest intervals are allocated first and each subsequent interval
+  takes the nearest collision-free lane. Non-overlapping neighbours may share
+  a lane, but continuity never carries a cassette beyond its covering parent.
+  Feature type, name, and colour no longer choose a radial lane, and
+  `find_common_features()` no longer emits semantic `preferred_lane` hints.
+  The feature-shape vocabulary includes `compact_arrow`,
+  `promoter_arrow`, `primer_arrow`, and `marker`. The three directional arrow
+  variants share one outline and width algorithm. Default common-feature geometry now follows the
+  feature's own nondirectional/forward/reverse/bidirectional value rather than
+  its biological type. Extremely short directional intervals retain a
+  restrained direction mark whose head and thickness contract with available
+  display length; zero-length point features draw a radial tick rather than a
+  minimum-width polygon. Small glyphs receive a lighter outline unless
+  linewidth is explicit. Lane collision checks use the true rendered interval
+  rather than a type-specific fabricated span. The plasmid preset now uses the visual
+  reference's semantic feature colours and type-aware default shape hints while
+  retaining user scale and explicit geometry priority. The minimum display span
+  for very short directional features is substantially smaller: a few-base
+  feature now appears as a compressed arrow with contracted head and thickness,
+  instead of being enlarged to roughly a full feature-band width. Short
+  bidirectional features likewise retain two compact heads rather than falling
+  back to a nondirectional block.
 * `geom_seq()` adds `seq_style = "single" | "double" | "band"`,
   `seq_backbone_gap`, and `seq_backbone_width` for circular backbones. Under
   `coord_circular()`, the implicit chord-direction arrow and redundant
@@ -58,25 +211,59 @@
   width with usable feature arc length, uses tangent text inside intervals that
   can contain it, and places compact-feature text nearby. Nearby collisions are
   nudged deterministically and only materially displaced labels receive a light
-  leader; explicit radial/auto/callout layouts remain available.
+  leader; explicit radial/auto/callout layouts remain available. The feature
+  mode now exports `feature_label_mode = "inside" | "adjacent" | "external"`,
+  measures the final font family, face, size and line height, and checks
+  oriented label boxes against other labels, rendered feature polygons, the
+  centre reserve and the circular backbone. It searches feature-band gutters
+  and deeper internal label tracks before unresolved labels become horizontal
+  external callouts; setting
+  `external = FALSE` hides them instead of pushing them indefinitely towards
+  the centre. Label-aware coordinate fitting includes their measured boxes.
+  Feature thickness responds to final label size within bounded limits, never
+  to unbounded label length. Inside text automatically uses black or white from
+  the final fill luminance unless its colour is explicitly supplied. External
+  feature labels use rounded pastel callouts derived from their resolved fill.
+  Dense short-feature clusters stop after their nearest useful internal label
+  track and use the external fallback instead of consuming the centre.
+  Restriction-site polar placement remains independent and is never rewritten
+  into shared Cartesian side rails by the presence of a feature callout. A
+  coordinate-owned exterior occupancy pass now registers both layers' final
+  boxes and moves a colliding feature callout to the nearest free radial or
+  tangential slot without changing either layer's visual semantics.
 * Added `find_restriction_sites()` as a calculation-only API. It preserves one
   row per pattern match, stable pattern identity, multiple motifs per enzyme,
   overlapping/IUPAC/reverse-complement matches, circular-origin matches,
   negative and out-of-motif cleavage offsets, Type IIS, 1/2/4-cut records and
   unknown cleavage (`ncuts = 0`). Custom motifs may be a data frame or named
-  character vector.
+  character vector. Overlapping fixed anchors inside degenerate IUPAC motifs
+  are now enumerated without consumption, fixing missed sites such as
+  EcoO109I in pBluescript II SK(+). REBASE source motif casing is retained for
+  auditability and lower-case reverse-cleavage definitions are oriented before
+  calculating display positions.
 * Added `filter_restriction_sites()` for display subsets (`all`, `unique`,
-  `unique_dual`, `six_plus`, `unique_6plus`, and `commercial`) and intersecting
+  `unique_dual`, `six_plus`, `unique_6plus`, `commercial`, and `reference`) and intersecting
   enzyme, motif-length, site-count, window and commercial filters. Filtering
-  never rewrites biological coordinates.
+  never rewrites biological coordinates. `parent_set` additionally selects all
+  enzymes, all commercial enzymes, or a stable nonredundant commercial subset;
+  equivalence groups and preferred representatives come from the bundled
+  REBASE `embossre.equ` source. For the thirteen exact plasmid references,
+  `set = "reference"` reuses the enzyme-set name and any custom enzyme list
+  saved in the source `.dna` record. This fixes reference renders such as PX458
+  (`BbsI + EcoRI`) and pTRIPZ (`Unique Cutters + BamHI`) that were previously
+  forced through the unrelated `unique_6plus` preset. A file-saved `None`
+  profile deliberately returns no sites.
 * `geom_restriction_site()` draws ticks, labels and independent radial leaders
   in one deterministic layer. Real site anchors are separated from final
-  label positions. All enzyme-facing text edges follow one close circular
-  contour in genomic order. Sparse callouts retain their natural angles, while
+  label positions. Enzyme-facing text edges begin on a close circular
+  contour in genomic order; remaining boundary collisions move only to the
+  nearest local exterior track. Sparse callouts retain their natural angles, while
   dense lateral clusters switch deterministically to a compact ordered fan
   with uniform measured spacing rather than a rigid Cartesian text wall.
-  Natural sparse callouts use a direct connector; displaced callouts
-  use exactly two segments, an independent radial stub and fan connector.
+  Natural sparse callouts use a direct connector; displaced callouts normally
+  use a radial stub and fan connector. If that connector would enter the
+  sequence circle, it follows a sampled safe exterior arc before approaching
+  the label, so wide-device fans cannot cut through the plasmid interior.
   Enzymes sharing one cleavage coordinate are combined
   into one stable callout while all contributing rows remain in `source_rows`.
   Each connector ends on the enzyme-bearing left or right edge of the measured
@@ -88,19 +275,54 @@
   only as a compatibility alias and no longer creates a shared trunk.
   Dense-fan leaders retain individual site anchors, use a short radial root,
   and then fan out in genomic order from a narrow bundle. Default composite
-  labels are rendered as two coordinated grobs, with bold enzyme names and
-  regular-weight coordinates; adjacent but distinct bp sites are never merged.
+  labels are rendered as two coordinated grobs. Only unique cutters use bold
+  enzyme names; repeated cutters and coordinates use regular weight. Adjacent
+  but distinct bp sites are never merged.
 * Added `geom_seq_center_label()`, `theme_ggchord_plasmid()`,
   `scale_feature_fill_plasmid()`, and `scale_feature_shape_plasmid()`. Manual
   feature scales take priority over presets regardless of addition order. The
-  plasmid theme places coordinate ticks and labels inside the backbone.
-* Added reproducible one-row pUC19c, pBR322 and pBluescript II SK(+) sequence
-  fixtures generated byte-for-byte from unchanged FASTA files. Added a bundled
+  plasmid theme places coordinate ticks and labels inside the backbone. The
+  automatic circular-origin tick is longer and does not repeat a `0` label.
+* Added reproducible one-row sequence fixtures for all thirteen reference
+  plasmids under `examples/plasmid/`, generated from the FASTA sequences
+  without biological modification. Their `accver` and display `label` now
+  consistently use the full file stem, and deterministic `plasmid_example_*`
+  names cover every reference plasmid. Added a bundled
   normalized common-feature database with provenance metadata and dynamic
-  exact/approximate DNA and six-frame protein matching. Complete REBASE 609
+  exact DNA and six-frame protein matching. In `mode = "auto"`, records now
+  follow their stored detection mode: `exactProteinMatch` uses exact protein
+  followed by near-exact DNA, while other records use exact DNA. Audited
+  SnapGene 8.2.3 data are now the current source release: 1,454 features,
+  1,970 segments, 5,216 qualifier values, 548 hyperlink occurrences and a
+  903,397 bp backing sequence. The normalized database stores source-local
+  IDs separately from stable ggchord IDs, keeps standard and gap segments as
+  the authoritative structure, derives DNA from 1-based inclusive coordinates
+  plus the backing sequence, and derives protein from typed `translation`
+  qualifiers. Qualifier links retain occurrence order and anchor text without
+  URL deduplication. Version provenance records additions, modifications,
+  type reclassifications, the `Csy4 Site` name normalization and the tPA
+  signal/propeptide split; legacy wide-table DNA, protein and `q_*` columns are
+  no longer authoritative storage. Protein detection eligibility is independent
+  of feature type, including the new `sig_peptide` exact-protein records.
+  The removed legacy workbook is represented by a compact, immutable migration
+  provenance snapshot, so regenerating the database does not restore or depend
+  on the obsolete wide-table source.
+  Separately, audited annotations embedded in thirteen reference `.dna` files
+  provide an exact
+  known-sequence layer for pBR322, pUC19, pBluescript II SK(+), pSB1C3,
+  pET-28a(+), pETDuet-1, pcDNA3.1(+), pTRE-Tight-BI,
+  pSpCas9(BB)-2A-GFP (PX458), pDONR221, pCAMBIA1300, pEarleyGate 201, and
+  pTRIPZ. The generated database currently contains 201 biological features and
+  218 segments, plus seven true primer binding-site records from pSB1C3 and
+  pETDuet-1 in a separate internal reference table rather than the Feature
+  table. It records each source SHA-256 and record count. The former
+  `plasmid_example_pUC19c` object remains as a pre-release compatibility alias
+  of `plasmid_example_pUC19`. Complete REBASE 609
   pattern data are embedded for working-directory-independent restriction-site
   search and remain reproducible from `VERSION` plus the three `embossa_*.txt`
-  source files.
+  source files and `misc/embossre.equ`. Other files in the extracted
+  `examples/rebase/misc/` directory remain supplemental verification sources;
+  runtime searches do not depend on that directory.
 * Removed the v0.12 `seq_id` data/mapping compatibility entry. Rename it to
   `accver` before calling ggchord functions.
 * Removed `ggchord::geom_ribbon()` after its v0.12 deprecation. Use
@@ -146,7 +368,7 @@
 * Clarified why direct printing in a small RStudio Plots pane can differ from
   export-size rendering, and recommends `view_ggchord()` for composition with
   an explicit matching `ggsave()` size for final files.
-* Archived previous-release design records in DESIGN-HISTORY.md.
+* Archived previous-release design records in `design-roadmap/DESIGN-HISTORY.md`.
 
 # ggchord 0.11.0
 

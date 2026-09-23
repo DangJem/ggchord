@@ -92,28 +92,11 @@ ggchord_layout_label_step <- quote({
           units_per_inch = layout_units
         )
         if (identical(gene_label_layout, "feature")) {
-          candidate <- ggchord_label_deoverlap(
-            base_gene_labels, units_per_inch = layout_units,
-            max_overlaps = gene_label_repel_max_overlaps
-          )
-          dx <- candidate$text_x - base_gene_labels$text_x
-          dy <- candidate$text_y - base_gene_labels$text_y
-          displacement <- sqrt(dx^2 + dy^2)
-          moved <- displacement >= max(.04, .16 * layout_units)
-          direction <- ifelse(abs(dx) >= abs(dy),
-            ifelse(dx < 0, "left", "right"),
-            ifelse(dy < 0, "bottom", "top"))
-          direction[!moved] <- ifelse(
-            abs(candidate$text_x) >= abs(candidate$text_y),
-            ifelse(candidate$text_x < 0, "left", "right"),
-            ifelse(candidate$text_y < 0, "bottom", "top")
-          )[!moved]
-          layout_result <- list(
-            labels = candidate,
-            lanes = paste(candidate$accver, direction, sep = "\r"),
-            directions = direction,
-            tracks = ifelse(moved, 2L, 1L),
-            draw_segment = moved
+          layout_result <- ggchord_feature_label_lanes(
+            base_gene_labels, gene_polys, seq_arcs,
+            units_per_inch = layout_units,
+            max_overlaps = gene_label_repel_max_overlaps,
+            allow_external = feature_label_external
           )
         } else if (gene_label_layout %in% c("auto", "callout")) {
           layout_result <- ggchord_auto_label_lanes(
@@ -153,12 +136,14 @@ ggchord_layout_label_step <- quote({
         seq_labels_df, axis_ticks, show_axis,
         units_per_inch = layout_units
       )
-      gene_labels <- ggchord_hide_conflicted_labels(
-        gene_labels,
-        max_overlaps = gene_label_repel_max_overlaps,
-        units_per_inch = layout_units,
-        repel_boxes = final_obstacles
-      )
+      if (!identical(gene_label_layout, "feature")) {
+        gene_labels <- ggchord_hide_conflicted_labels(
+          gene_labels,
+          max_overlaps = gene_label_repel_max_overlaps,
+          units_per_inch = layout_units,
+          repel_boxes = final_obstacles
+        )
+      }
       draw_segment <- draw_segment & !is.na(gene_labels$text) &
         nzchar(gene_labels$text)
 
@@ -171,6 +156,16 @@ ggchord_layout_label_step <- quote({
           y1 = c(gene_labels$.radial_bend_y[rows], gene_labels$text_y[rows]),
           group = rep(rows, 2L))
       } else if (identical(gene_label_layout, "arc")) {
+        rows <- which(draw_segment)
+        gene_label_segments <- data.frame(
+          x0 = gene_labels$anchor_x[rows],
+          y0 = gene_labels$anchor_y[rows],
+          x1 = gene_labels$text_x[rows],
+          y1 = gene_labels$text_y[rows],
+          group = rows,
+          stringsAsFactors = FALSE
+        )
+      } else if (identical(gene_label_layout, "feature")) {
         rows <- which(draw_segment)
         gene_label_segments <- data.frame(
           x0 = gene_labels$anchor_x[rows],
@@ -227,7 +222,7 @@ ggchord_layout_label_step <- quote({
         gene_label_segments <- ggchord_clip_segments_to_labels(
           gene_label_segments, gene_labels,
           units_per_inch = gene_label_clip_units,
-          include_own = identical(gene_label_layout, "arc"),
+          include_own = gene_label_layout %in% c("arc", "feature"),
           overlap = gene_label_segment_overlap,
           overlap_alpha = gene_label_segment_overlap_alpha
         )

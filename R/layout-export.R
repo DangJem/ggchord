@@ -16,8 +16,13 @@
 #'   under \code{original_data}, default \code{FALSE}.
 #'
 #' @return An object of class \code{ggchord_layout_export}. Selected component
-#'   names contain data frames. The \code{metadata} member records rotation,
-#'   aspect ratio, limits, coordinate units and transformation state.
+#'   names contain data frames. Circular layouts additionally contain an
+#'   \code{annotation_registry} data frame. Its inner rows expose the physical
+#'   track, radial width and boundaries; outer rows expose region, sector,
+#'   annotation class, dominant and actual band, spill reason, leader-crossing
+#'   count, slot, bounding box and leader corridor. The \code{metadata} member
+#'   records rotation, aspect ratio, limits, coordinate units and
+#'   transformation state.
 #' @export
 #'
 #' @examples
@@ -169,6 +174,9 @@ export_ggchord_layout <- function(
     metadata$coordinate <- "circular"
     metadata$gap <- coord$circular_gap
     metadata$direction <- coord$circular_direction
+    exported$annotation_registry <-
+      layout$circular_annotation_registry %||%
+      ggchord_empty_circular_annotation_registry()
   } else {
     metadata$coordinate <- "chord"
   }

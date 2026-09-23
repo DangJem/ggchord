@@ -31,7 +31,9 @@ both aesthetics describe the same feature categories. Supply
 A ggplot2 discrete scale for the `feature_shape` aesthetic.
 }
 \description{
-Maps feature categories to the four geometry types understood by
-[geom_feature()]: `"arrow"`, `"block"`, `"chevron"`, and `"lollipop"`.
+Maps feature categories to the geometry types understood by
+[geom_feature()], including full/compact/promoter/primer arrows, markers,
+blocks, capped lines, chevrons, and lollipops. `capped_line` is an
+unfilled interval with short terminal caps.
 Shape values affect the actual feature geometry as well as its legend key.
 }

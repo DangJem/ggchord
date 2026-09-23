@@ -59,6 +59,58 @@ ggchord_preview_height <- function(plot, width_inches) {
   ggchord_preview_layout(plot, width_inches)$height
 }
 
+# Fit a circular preview by preserving a readable physical backbone diameter
+# and expanding the canvas for the annotation envelope. The returned gtable is
+# frozen at the measurement device so exporting it does not trigger a second
+# size-dependent track solution.
+ggchord_preview_outer_density <- function(plot) {
+  counts <- vapply(plot$layers, function(layer) {
+    type <- layer$ggchord_type %||% ""
+    data <- layer$ggchord_input_data
+    if (!is.data.frame(data) || !nrow(data)) return(0L)
+    if (identical(type, "restriction_site")) return(nrow(data))
+    0L
+  }, integer(1L))
+  sum(counts)
+}
+
+ggchord_preview_circular_layout <- function(plot) {
+  outer_density <- ggchord_preview_outer_density(plot)
+  # Extremely dense perimeter annotation needs a different physical strategy:
+  # keep readable text and a roughly eight-inch backbone, then provide wide
+  # fan corridors instead of compressing everything into a square.  The
+  # threshold is based only on annotation count, never on a sequence name.
+  dense_width <- if (outer_density > 54L) {
+    min(24, 20 + .50 * (outer_density - 54L))
+  } else 12.39
+  baseline <- c(width = dense_width, height = 9.71)
+  close_device <- ggchord_measurement_device(
+    width = baseline[["width"]], height = baseline[["height"]]
+  )
+  on.exit(close_device())
+  table <- ggplot2::ggplotGrob(plot)
+  layout <- plot$ggchord$ref$layout %||% plot$ggchord$layout
+  limits <- if (is.null(layout)) {
+    list(xlim = c(-1, 1), ylim = c(-1, 1))
+  } else ggchord_adaptive_limits(layout)
+  span <- c(diff(limits$xlim), diff(limits$ylim))
+  span[!is.finite(span) | span <= 0] <- 2
+
+  # Four inches per data unit gives an uncluttered eight-inch backbone for a
+  # sparse unit circle. Dense asymmetric annotations enlarge only the sides
+  # that need room instead of reducing the text to fit a fixed canvas.
+  panel <- pmax(7.6, 4 * span)
+  fixed <- c(
+    grid::convertWidth(sum(table$widths), "inches", valueOnly = TRUE),
+    grid::convertHeight(sum(table$heights), "inches", valueOnly = TRUE)
+  )
+  list(
+    plot = table,
+    width = max(8, dense_width, panel[1] + fixed[1]),
+    height = max(8, panel[2] + fixed[2])
+  )
+}
+
 #' Preview a ggchord plot at its intended export size
 #'
 #' Renders a plot with \code{ggsave()} into a temporary PNG or SVG and opens a
@@ -81,15 +133,19 @@ ggchord_preview_height <- function(plot, width_inches) {
 #' previously active graphics device.
 #'
 #' @param plot A ggchord or ggplot object, default \code{last_plot()}.
-#' @param width Positive output width, default 11 inches when \code{units = "in"}.
-#' @param height Positive output height, or \code{NULL} (default) to fit the
+#' @param width Positive output width. With no explicit dimensions,
+#'   \code{coord_chord()} uses 12.39 inches while \code{coord_circular()}
+#'   derives its width from the annotation envelope.
+#' @param height Positive output height. With no explicit dimensions,
+#'   \code{coord_chord()} uses 9.71 inches while \code{coord_circular()}
+#'   derives both dimensions. Use \code{NULL} to fit the
 #'   sequence, labels and legends while preserving equal coordinate units.
 #'   Explicit width/height values are always respected.
 #' @param units Output units: \code{"in"}, \code{"cm"}, \code{"mm"}, or
 #'   \code{"px"}.
 #' @param device Preview device, \code{"png"} or \code{"svg"}. SVG output
 #'   requires the optional svglite package or a working base Cairo SVG device.
-#' @param dpi Positive raster resolution, default 150.
+#' @param dpi Positive raster resolution, default 144.
 #' @param bg Optional background colour passed to \code{ggsave()}.
 #' @param viewer How to open the preview: \code{"auto"} prefers
 #'   \code{getOption("viewer")} and falls back to a browser in interactive
@@ -104,13 +160,15 @@ ggchord_preview_height <- function(plot, width_inches) {
 #' if (interactive()) view_ggchord(p)
 view_ggchord <- function(
     plot = ggplot2::last_plot(),
-    width = 11,
-    height = NULL,
+    width = 12.39,
+    height = 9.71,
     units = c("in", "cm", "mm", "px"),
     device = c("png", "svg"),
-    dpi = 150,
+    dpi = 144,
     bg = NULL,
     viewer = c("auto", "ide", "browser", "none")) {
+  width_missing <- missing(width)
+  height_missing <- missing(height)
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
 
@@ -136,7 +194,16 @@ view_ggchord <- function(
   }
 
   preview_plot <- plot
-  if (is.null(height)) {
+  circular_auto <- width_missing && height_missing &&
+    isTRUE(plot$coordinates$ggchord_circular)
+  if (circular_auto) {
+    fitted <- ggchord_preview_circular_layout(plot)
+    preview_plot <- fitted$plot
+    width <- switch(units, "in" = fitted$width, cm = fitted$width * 2.54,
+      mm = fitted$width * 25.4, px = fitted$width * dpi)
+    height <- switch(units, "in" = fitted$height, cm = fitted$height * 2.54,
+      mm = fitted$height * 25.4, px = fitted$height * dpi)
+  } else if (is.null(height)) {
     width_inches <- ggchord_preview_pixels(width, units, dpi) / dpi
     fitted <- ggchord_preview_layout(plot, width_inches)
     height_inches <- fitted$height

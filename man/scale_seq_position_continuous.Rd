@@ -13,13 +13,14 @@ scale_seq_position_continuous(
   expand = ggplot2::waiver(),
   oob = scales::censor,
   transform = "identity",
+  n.breaks = 6,
   ...
 )
 }
 \arguments{
 \item{name}{Scale name; position guides are disabled by default.}
 
-\item{breaks, minor_breaks, labels, limits, expand, oob, transform}{Standard
+\item{breaks, minor_breaks, labels, limits, expand, oob, transform, n.breaks}{Standard
 continuous-scale controls.}
 
 \item{...}{Additional arguments passed to [ggplot2::continuous_scale()].}

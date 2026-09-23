@@ -110,11 +110,34 @@ ggchord_common_feature_columns <- function(features) {
   features
 }
 
-ggchord_common_pattern_parts <- function(segments) {
+ggchord_common_source_sequence_map <- function(database) {
+  if (!"source_sequences" %in% names(database) ||
+      !is.data.frame(database$source_sequences) ||
+      !all(c("source_sequence_id", "sequence") %in%
+        names(database$source_sequences))) return(character())
+  stats::setNames(as.character(database$source_sequences$sequence),
+    as.character(database$source_sequences$source_sequence_id))
+}
+
+ggchord_common_pattern_parts <- function(segments,
+                                         source_sequences = character()) {
   segments <- segments[order(segments$segment_index), , drop = FALSE]
-  dna <- toupper(gsub(
-    "[[:space:]]", "", as.character(segments$dna_sequence_top_strand)
-  ))
+  if ("dna_sequence_top_strand" %in% names(segments)) {
+    dna <- as.character(segments$dna_sequence_top_strand)
+  } else if (all(c("source_sequence_id", "start_1based_inclusive",
+      "end_1based_inclusive") %in% names(segments))) {
+    dna <- mapply(function(source_sequence_id, start, end, type) {
+      if (type == "gap") return("")
+      sequence <- unname(source_sequences[as.character(source_sequence_id)])
+      if (!length(sequence) || is.na(sequence)) return(NA_character_)
+      substr(sequence, as.integer(start), as.integer(end))
+    }, segments$source_sequence_id, segments$start_1based_inclusive,
+      segments$end_1based_inclusive, segments$segment_type,
+      USE.NAMES = FALSE)
+  } else {
+    dna <- rep(NA_character_, nrow(segments))
+  }
+  dna <- toupper(gsub("[[:space:]]", "", dna))
   dna[is.na(dna)] <- ""
   length_bp <- as.integer(segments$length_bp)
   length_bp[is.na(length_bp)] <- nchar(dna[is.na(length_bp)])
@@ -130,6 +153,68 @@ ggchord_common_pattern_parts <- function(segments) {
       as.logical(segments$translated) else FALSE,
     stringsAsFactors = FALSE
   )
+}
+
+ggchord_common_runtime_features <- function(features, split_segments,
+                                             qualifiers,
+                                             source_sequences) {
+  ids <- as.character(features$common_feature_id)
+  parts <- lapply(ids, function(id) {
+    rows <- split_segments[[id]]
+    if (is.null(rows)) return(data.frame())
+    ggchord_common_pattern_parts(rows, source_sequences)
+  })
+  if (!"reference_dna_feature_5to3" %in% names(features)) {
+    features$reference_dna_feature_5to3 <- vapply(seq_along(parts), function(i) {
+      rows <- parts[[i]]
+      if (!nrow(rows)) return(NA_character_)
+      dna <- paste0(rows$dna[rows$segment_type != "gap"], collapse = "")
+      directionality <- tolower(as.character(
+        features$directionality_label[i] %||% "forward"))
+      if (identical(directionality, "reverse"))
+        ggchord_reverse_complement(dna) else dna
+    }, character(1))
+  }
+  if (!"segment_colors" %in% names(features)) {
+    features$segment_colors <- vapply(parts, function(rows) {
+      if (!nrow(rows)) return(NA_character_)
+      colors <- as.character(rows$color)
+      colors[is.na(colors)] <- ""
+      value <- paste(colors, collapse = ",")
+      if (nzchar(gsub(",", "", value, fixed = TRUE))) value else NA_character_
+    }, character(1))
+  }
+  if (!"translated_any" %in% names(features)) {
+    features$translated_any <- vapply(parts, function(rows) {
+      nrow(rows) && any(!is.na(rows$translated) & rows$translated)
+    }, logical(1))
+  }
+  if (!"reference_protein" %in% names(features)) {
+    features$reference_protein <- NA_character_
+  }
+  if (is.data.frame(qualifiers) && nrow(qualifiers) &&
+      "qualifier_name" %in% names(qualifiers)) {
+    qualifier_id <- intersect(c("common_feature_id", "feature_id"),
+      names(qualifiers))[1L]
+    value_column <- intersect(c("text", "value_text", "value_display"),
+      names(qualifiers))[1L]
+    if (!is.na(qualifier_id) && !is.na(value_column)) {
+      translation <- qualifiers[
+        qualifiers$qualifier_name == "translation", , drop = FALSE]
+      if (nrow(translation)) {
+        translation <- translation[order(translation[[qualifier_id]],
+          translation$value_index), , drop = FALSE]
+        first <- !duplicated(translation[[qualifier_id]])
+        protein <- stats::setNames(as.character(translation[[value_column]][first]),
+          as.character(translation[[qualifier_id]][first]))
+        hit <- match(ids, names(protein))
+        fill <- !is.na(hit) & (is.na(features$reference_protein) |
+          !nzchar(features$reference_protein))
+        features$reference_protein[fill] <- unname(protein[hit[fill]])
+      }
+    }
+  }
+  features
 }
 
 ggchord_common_regex <- function(parts, reverse = FALSE) {
@@ -203,19 +288,35 @@ ggchord_common_candidate <- function(accver, feature, method, start, end,
   feature_fill <- if ("segment_colors" %in% names(feature)) {
     strsplit(as.character(feature$segment_colors)[1L], ",", fixed = TRUE)[[1L]][1L]
   } else NA_character_
+  no_colour <- !is.na(feature_fill) &&
+    tolower(trimws(feature_fill)) == "nocolor"
+  if (!is.na(feature_fill) && tolower(feature_fill) == "nocolor") {
+    feature_fill <- "#FFFFFF"
+  }
   if (is.na(feature_fill) || !nzchar(feature_fill)) feature_fill <- "#B8BDC3"
-  rgb <- grDevices::col2rgb(feature_fill)[, 1L] / 255
-  feature_label_colour <- if (sum(rgb * c(.2126, .7152, .0722)) < .48) {
-    "#FFFFFF"
-  } else "#202020"
-  feature_shape <- if (strand == ".") "block" else "arrow"
+  feature_label_colour <- ggchord_contrast_colour(feature_fill)
+  feature_class <- ggchord_feature_classes(feature$type)
+  # Curated records may provide a type-aware geometry hint. The generic geom
+  # still honours explicit feature_shape values and user scales first.
+  feature_type <- tolower(as.character(feature$type))
+  feature_shape <- if (isTRUE(no_colour)) {
+    "capped_line"
+  } else if (strand == ".") {
+    "block"
+  } else if (feature_type == "promoter") {
+    "promoter_arrow"
+  } else if (feature_type == "primer_bind") {
+    "primer_arrow"
+  } else if (feature_type == "protein_bind") {
+    "compact_arrow"
+  } else "arrow"
   data.frame(
     accver = accver,
     start = as.integer(start), end = as.integer(end), strand = strand,
     cross_origin = isTRUE(cross_origin),
     type = as.character(feature$type), anno = as.character(feature$name),
     feature_color = feature_fill, feature_label_colour = feature_label_colour,
-    feature_shape = feature_shape,
+    feature_class = feature_class, feature_shape = feature_shape,
     common_feature_id = id,
     match_id = paste(accver, id, strand, start, end, method, sep = ":"),
     match_method = method, identity = as.numeric(identity),
@@ -230,9 +331,54 @@ ggchord_common_candidate <- function(accver, feature, method, start, end,
   )
 }
 
+ggchord_common_reference_candidates <- function(target, accver, database,
+                                                 types = NULL,
+                                                 features = NULL) {
+  if (!all(c("reference_sequences", "reference_features") %in%
+      names(database))) return(list())
+  sequence_rows <- database$reference_sequences[
+    database$reference_sequences$sequence == target, , drop = FALSE]
+  if (!nrow(sequence_rows)) return(list())
+  reference_ids <- sequence_rows$reference_id
+  annotations <- database$reference_features[
+    database$reference_features$reference_id %in% reference_ids, , drop = FALSE]
+  if (!is.null(types)) {
+    annotations <- annotations[tolower(annotations$type) %in%
+      tolower(types), , drop = FALSE]
+  }
+  if (!is.null(features)) {
+    annotations <- annotations[
+      tolower(annotations$name) %in% tolower(features) |
+        annotations$common_feature_id %in% features, , drop = FALSE]
+  }
+  if (!nrow(annotations)) return(list())
+  lapply(seq_len(nrow(annotations)), function(i) {
+    annotation <- annotations[i, , drop = FALSE]
+    feature <- data.frame(
+      common_feature_id = annotation$common_feature_id,
+      name = annotation$name, type = annotation$type,
+      segment_colors = annotation$color, stringsAsFactors = FALSE
+    )
+    candidate <- ggchord_common_candidate(
+      accver, feature, "reference_exact", annotation$start, annotation$end,
+      annotation$strand, annotation$start > annotation$end,
+      annotation$segments[[1L]], metadata = database$metadata
+    )
+    candidate$cleavage_arrows <- if (
+        "cleavage_arrows" %in% names(annotation)) {
+      I(list(annotation$cleavage_arrows[[1L]]))
+    } else I(list(numeric()))
+    source_row <- sequence_rows[
+      match(annotation$reference_id, sequence_rows$reference_id), , drop = FALSE]
+    candidate$source_sha256 <- source_row$source_sha256
+    candidate
+  })
+}
+
 ggchord_match_common_dna <- function(target, accver, feature, segments,
-                                     circular, metadata) {
-  parts <- ggchord_common_pattern_parts(segments)
+                                     circular, metadata,
+                                     source_sequences = character()) {
+  parts <- ggchord_common_pattern_parts(segments, source_sequences)
   if (!nrow(parts) || any(parts$length_bp < 0L) ||
       any(parts$segment_type != "gap" & !nzchar(parts$dna))) return(list())
   span <- sum(parts$length_bp)
@@ -384,7 +530,7 @@ ggchord_common_approx_hits <- function(reference, target,
     b <- strsplit(substr(target, tar_lo, tar_lo + overlap - 1L), "", fixed = TRUE)[[1L]]
     identity <- mean(a == b)
     coverage <- overlap / nr
-    if (round(identity, 2L) < min_identity || coverage < min_coverage) return(NULL)
+    if (identity < min_identity || coverage < min_coverage) return(NULL)
     data.frame(start = tar_lo, identity = identity, coverage = coverage,
       aa_length = overlap, ref_lo = ref_lo)
   })
@@ -398,7 +544,7 @@ ggchord_common_approx_hits <- function(reference, target,
       (aligned_reference - counts[1L, 1L, "sub"]) / aligned_reference
     } else 0
     coverage <- aligned_reference / nr
-    if (round(identity, 2L) >= min_identity && coverage >= min_coverage) {
+    if (identity >= min_identity && coverage >= min_coverage) {
       rows[[1L]] <- data.frame(
         start = offsets[1L, 1L, "first"], identity = identity,
         coverage = coverage,
@@ -415,8 +561,9 @@ ggchord_common_approx_hits <- function(reference, target,
 ggchord_match_common_protein <- function(target, accver, feature, frames,
                                          approximate, min_identity,
                                          min_coverage, metadata) {
-  reference <- ggchord_normalize_protein(feature$reference_protein)
-  if (!nzchar(reference)) return(list())
+  reference_with_stop <- ggchord_normalize_protein(feature$reference_protein)
+  if (!nzchar(reference_with_stop)) return(list())
+  reference <- reference_with_stop
   reference <- sub("\\*$", "", reference)
   out <- list(); target_length <- nchar(target)
   for (frame in frames) {
@@ -436,13 +583,19 @@ ggchord_match_common_protein <- function(target, accver, feature, frames,
     }
     if (!nrow(matches)) next
     for (i in seq_len(nrow(matches))) {
+      include_stop <- !approximate && endsWith(reference_with_stop, "*") &&
+        isTRUE(as.logical(feature$hitsStopCodon %||% FALSE)) &&
+        substr(frame$protein,
+          matches$start[i] + matches$aa_length[i],
+          matches$start[i] + matches$aa_length[i]) == "*"
+      matched_aa_length <- matches$aa_length[i] + as.integer(include_stop)
       coords <- ggchord_common_protein_coordinates(
-        frame, matches$start[i], matches$aa_length[i], target_length
+        frame, matches$start[i], matched_aa_length, target_length
       )
       seg <- data.frame(
         segment_index = 1L, segment_type = "standard",
         start = as.integer(coords["start"]), end = as.integer(coords["end"]),
-        length_bp = as.integer(matches$aa_length[i] * 3L), translated = TRUE,
+        length_bp = as.integer(matched_aa_length * 3L), translated = TRUE,
         segment_name = NA_character_,
         color = if ("segment_colors" %in% names(feature)) {
           strsplit(as.character(feature$segment_colors)[1L], ",", fixed = TRUE)[[1L]][1L]
@@ -477,7 +630,8 @@ ggchord_common_overlap <- function(a, b, length) {
 ggchord_resolve_common_candidates <- function(candidates, lengths) {
   if (!nrow(candidates)) return(candidates)
   method_rank <- match(candidates$match_method,
-    c("dna_exact", "protein_exact", "protein_approx"))
+    c("reference_exact", "dna_exact", "protein_exact", "dna_near_exact",
+      "protein_approx"))
   span <- vapply(seq_len(nrow(candidates)), function(i) {
     if (candidates$start[i] <= candidates$end[i])
       candidates$end[i] - candidates$start[i] + 1 else
@@ -506,7 +660,8 @@ ggchord_empty_common_features <- function() {
     accver = character(), start = integer(), end = integer(),
     strand = character(), cross_origin = logical(), type = character(),
     anno = character(), feature_color = character(),
-    feature_label_colour = character(), feature_shape = character(),
+    feature_label_colour = character(), feature_class = character(),
+    feature_shape = character(),
     common_feature_id = character(),
     match_id = character(), match_method = character(), identity = numeric(),
     coverage = numeric(), confidence = character(), segment_count = integer(),
@@ -519,8 +674,9 @@ ggchord_empty_common_features <- function() {
 #' Find common biological features in DNA sequences
 #'
 #' Searches the built-in common-feature database (or a compatible custom
-#' database) using exact DNA, segment-aware protein and high-confidence
-#' protein matching. Restriction sites are intentionally outside this API; use
+#' database) using curated exact-sequence annotations, exact DNA, and the
+#' detection mode stored for each database record. Restriction sites are
+#' intentionally outside this API; use
 #' [find_restriction_sites()] for those.
 #'
 #' @param sequence DNA text, a named character vector, or a data frame with
@@ -528,14 +684,19 @@ ggchord_empty_common_features <- function() {
 #' @param database Optional normalized database list or custom data frame.
 #' @param types,features Optional feature-type and feature-name/ID filters.
 #' @param circular Search across the sequence origin.
-#' @param mode Matching mode. `"auto"` tries DNA, protein exact, then protein
-#'   approximate matching.
+#' @param mode Matching mode. `"auto"` first uses curated annotations for an
+#'   exactly known sequence, then follows each record's detection mode. Records
+#'   marked `exactProteinMatch` use exact protein followed by near-exact DNA;
+#'   other records use exact DNA. `"protein"` explicitly enables exact and
+#'   approximate protein matching.
 #' @param min_protein_identity,min_protein_coverage Approximate protein
 #'   thresholds in `[0, 1]`.
 #' @param resolve Return deterministic best annotations or every candidate.
 #' @return A data frame directly usable by [geom_feature()] and
-#'   [geom_feature_label_repel()]. Its `segments` list-column preserves the
-#'   biological feature's segment structure.
+#'   [geom_feature_label_repel()]. `feature_class` and `feature_shape` provide
+#'   semantic metadata and a geometry hint; neither affects radial stacking.
+#'   Explicit user aesthetics and scales still take priority. Its `segments` list-column
+#'   preserves the biological feature's segment structure.
 #' @export
 find_common_features <- function(
     sequence, database = NULL, types = NULL, features = NULL,
@@ -557,10 +718,21 @@ find_common_features <- function(
     as.data.frame(db$features, stringsAsFactors = FALSE)
   )
   segment_table <- as.data.frame(db$segments, stringsAsFactors = FALSE)
+  segment_id_column <- intersect(c("common_feature_id", "feature_id"),
+    names(segment_table))[1L]
+  coordinate_backed <- all(c("source_sequence_id",
+    "start_1based_inclusive", "end_1based_inclusive") %in%
+    names(segment_table))
+  embedded_dna <- "dna_sequence_top_strand" %in% names(segment_table)
   if (!all(c("common_feature_id", "name", "type") %in% names(feature_table)) ||
-      !all(c("feature_id", "segment_index", "segment_type", "length_bp",
-             "dna_sequence_top_strand") %in% names(segment_table))) {
+      is.na(segment_id_column) ||
+      !all(c("segment_index", "segment_type", "length_bp") %in%
+        names(segment_table)) || (!coordinate_backed && !embedded_dna)) {
     ggchord_stop("find_common_features(): malformed feature database")
+  }
+  source_sequences <- ggchord_common_source_sequence_map(db)
+  if (coordinate_backed && !length(source_sequences)) {
+    ggchord_stop("find_common_features(): source sequence is missing")
   }
   if (!is.null(types)) {
     if (!is.character(types) || anyNA(types))
@@ -577,38 +749,41 @@ find_common_features <- function(
   }
   if (!nrow(feature_table)) return(ggchord_empty_common_features())
   split_segments <- split(segment_table,
-    factor(segment_table$feature_id, levels = unique(segment_table$feature_id)))
+    factor(segment_table[[segment_id_column]],
+      levels = unique(segment_table[[segment_id_column]])))
+  feature_table <- ggchord_common_runtime_features(feature_table,
+    split_segments, db$qualifiers %||% data.frame(), source_sequences)
   candidates <- list()
   for (s in seq_along(input$sequences)) {
     target <- input$sequences[s]; accver <- input$ids[s]
+    if (mode == "auto") {
+      reference_hits <- ggchord_common_reference_candidates(
+        target, accver, db, types = types, features = features
+      )
+      if (length(reference_hits)) {
+        candidates <- c(candidates, reference_hits)
+        next
+      }
+    }
     frames <- NULL
     dna_matched <- character(); protein_exact_matched <- character()
     if (mode %in% c("auto", "dna")) {
       for (i in seq_len(nrow(feature_table))) {
         feature <- feature_table[i, , drop = FALSE]
+        protein_mode <- identical(
+          as.character(feature$detectionMode %||% NA_character_),
+          "exactProteinMatch"
+        )
+        if (mode == "auto" && protein_mode) next
         seg <- split_segments[[as.character(feature$common_feature_id)]]
         if (is.null(seg)) next
         hit <- ggchord_match_common_dna(
-          target, accver, feature, seg, circular, db$metadata
+          target, accver, feature, seg, circular, db$metadata,
+          source_sequences
         )
         if (length(hit)) {
           candidates <- c(candidates, hit)
           dna_matched <- c(dna_matched, as.character(feature$common_feature_id))
-        }
-      }
-    }
-    if (mode == "auto") {
-      near_rows <- which(feature_table$type != "CDS" &
-        !feature_table$common_feature_id %in% dna_matched)
-      for (i in near_rows) {
-        feature <- feature_table[i, , drop = FALSE]
-        hit <- ggchord_match_common_dna_near_exact(
-          target, accver, feature, db$metadata
-        )
-        if (length(hit)) {
-          candidates <- c(candidates, hit)
-          dna_matched <- c(dna_matched,
-            as.character(feature$common_feature_id))
         }
       }
     }
@@ -617,6 +792,11 @@ find_common_features <- function(
       for (i in seq_len(nrow(feature_table))) {
         feature <- feature_table[i, , drop = FALSE]
         id <- as.character(feature$common_feature_id)
+        protein_mode <- identical(
+          as.character(feature$detectionMode %||% NA_character_),
+          "exactProteinMatch"
+        )
+        if (mode == "auto" && !protein_mode) next
         if (mode == "auto" && id %in% dna_matched) next
         hit <- ggchord_match_common_protein(
           target, accver, feature, frames, FALSE,
@@ -627,18 +807,29 @@ find_common_features <- function(
           protein_exact_matched <- c(protein_exact_matched, id)
         }
       }
-      translated <- if ("translated_any" %in% names(feature_table)) {
-        !is.na(feature_table$translated_any) & feature_table$translated_any
-      } else feature_table$type == "CDS"
-      approximate_rows <- which(feature_table$type == "CDS" & translated)
+      protein_modes <- !is.na(feature_table$detectionMode) &
+        feature_table$detectionMode == "exactProteinMatch"
+      if (mode == "auto") {
+        approximate_rows <- which(protein_modes)
+      } else {
+        translated <- !is.na(feature_table$translated_any) &
+          feature_table$translated_any
+        approximate_rows <- which(translated)
+      }
       for (i in approximate_rows) {
         feature <- feature_table[i, , drop = FALSE]
         id <- as.character(feature$common_feature_id)
         if (id %in% c(dna_matched, protein_exact_matched)) next
-        hit <- ggchord_match_common_protein(
-          target, accver, feature, frames, TRUE,
-          min_protein_identity, min_protein_coverage, db$metadata
-        )
+        hit <- if (mode == "auto") {
+          ggchord_match_common_dna_near_exact(
+            target, accver, feature, db$metadata
+          )
+        } else {
+          ggchord_match_common_protein(
+            target, accver, feature, frames, TRUE,
+            min_protein_identity, min_protein_coverage, db$metadata
+          )
+        }
         if (length(hit)) candidates <- c(candidates, hit)
       }
     }
@@ -665,6 +856,33 @@ ggchord_expand_feature_segments <- function(data) {
     if (!is.data.frame(segments) || !nrow(segments)) {
       row <- data[i, , drop = FALSE]
       row$.biological_source_row <- i
+      rows[[length(rows) + 1L]] <- row
+      next
+    }
+    cleavage_arrows <- if ("cleavage_arrows" %in% names(data)) {
+      value <- data$cleavage_arrows[[i]]
+      as.numeric(value[is.finite(as.numeric(value))])
+    } else numeric()
+    # Origin-crossing features stay one biological and geometric interval.
+    # Segment tables are still retained on the source row, but flattening
+    # them with pmin()/pmax() would turn the circular seam into a false gap.
+    if (is.finite(data$start[i]) && is.finite(data$end[i]) &&
+        data$start[i] > data$end[i]) {
+      row <- data[i, , drop = FALSE]
+      row$.biological_source_row <- i
+      run <- data.frame(
+        start = data$start[i], end = data$end[i],
+        segment_index = min(segments$segment_index),
+        color = as.character(segments$color[which.max(
+          !is.na(segments$color) & nzchar(as.character(segments$color))
+        )]),
+        draw_head = data$strand[i] != ".",
+        draw_start_head = data$strand[i] == "+/-",
+        stringsAsFactors = FALSE
+      )
+      run$boundaries <- I(list(cleavage_arrows))
+      run$boundary_styles <- I(list(rep("dotted", length(cleavage_arrows))))
+      row$.feature_runs <- I(list(run))
       rows[[length(rows) + 1L]] <- row
       next
     }
@@ -708,25 +926,93 @@ ggchord_expand_feature_segments <- function(data) {
     }
     if (length(current)) runs[[length(runs) + 1L]] <- current
 
+    biological_direction <- as.character(data$strand[i] %||% "+")
+    visible_runs <- list()
     for (j in seq_along(runs)) {
       run <- segments[runs[[j]], , drop = FALSE]
-      row <- data[i, , drop = FALSE]
-      row$start <- min(run$.lo)
-      row$end <- max(run$.hi)
-      row$.biological_source_row <- i
-      row$.segment_index <- min(run$segment_index)
-      boundaries <- sort(unique(run$.lo[-1L]))
-      boundaries <- boundaries[boundaries > row$start & boundaries < row$end]
-      row$.feature_boundaries <- I(list(as.numeric(boundaries)))
-      boundary_styles <- rep(NA_character_, length(boundaries))
+      run_start <- min(run$.lo)
+      run_end <- max(run$.hi)
+      # Contiguous source segments remain one outline, but their joins are
+      # visible dotted boundaries. A non-solid style on the following segment
+      # overrides that default. Use the preceding segment end so a cleavage at
+      # the same biological join de-duplicates cleanly.
+      boundaries <- if (nrow(run) > 1L) {
+        as.numeric(head(run$.hi, -1L))
+      } else numeric()
+      boundary_styles <- rep("dotted", length(boundaries))
       if (length(boundaries) && "line_style" %in% names(run)) {
-        style_rows <- match(boundaries, run$.lo)
-        boundary_styles <- as.character(run$line_style[style_rows])
+        following_style <- as.character(run$line_style[-1L])
+        explicit <- !is.na(following_style) & nzchar(following_style) &
+          following_style != "solid"
+        boundary_styles[explicit] <- following_style[explicit]
       }
-      row$.feature_boundary_styles <- I(list(boundary_styles))
+      cleavage <- cleavage_arrows[
+        cleavage_arrows > run_start & cleavage_arrows < run_end
+      ]
+      boundaries <- c(boundaries, cleavage)
+      boundary_styles <- c(boundary_styles, rep("dotted", length(cleavage)))
+      if (length(boundaries)) {
+        order_boundary <- order(boundaries, boundary_styles == "dotted")
+        boundaries <- boundaries[order_boundary]
+        boundary_styles <- boundary_styles[order_boundary]
+        keep <- !duplicated(boundaries)
+        boundaries <- boundaries[keep]
+        boundary_styles <- boundary_styles[keep]
+      }
+      run_colour <- NA_character_
       if ("color" %in% names(run)) {
-        run_colour <- run$color[!is.na(run$color) & nzchar(run$color)][1L]
-        if (length(run_colour)) row$feature_color <- run_colour
+        colour_values <- run$color[!is.na(run$color) & nzchar(run$color)]
+        colour_values[tolower(colour_values) == "nocolor"] <- "#FFFFFF"
+        if (length(colour_values)) run_colour <- as.character(colour_values[1L])
+      }
+      visible_runs[[j]] <- data.frame(
+        start = run_start, end = run_end,
+        segment_index = min(run$segment_index),
+        color = run_colour,
+        draw_head = if (biological_direction == "-") {
+          j == 1L
+        } else biological_direction != "." && j == length(runs),
+        draw_start_head = biological_direction == "+/-" && j == 1L,
+        stringsAsFactors = FALSE
+      )
+      visible_runs[[j]]$boundaries <- I(list(as.numeric(boundaries)))
+      visible_runs[[j]]$boundary_styles <- I(list(boundary_styles))
+    }
+    row <- data[i, , drop = FALSE]
+    row$.biological_source_row <- i
+    row$.feature_runs <- I(list(ggchord_rbind_fill(visible_runs)))
+    rows[[length(rows) + 1L]] <- row
+  }
+  out <- ggchord_rbind_fill(rows)
+  rownames(out) <- NULL
+  out
+}
+
+# Expand renderer runs only after track assignment. The layout and label
+# stages continue to see one row per biological feature.
+ggchord_expand_feature_render_runs <- function(data) {
+  if (!".feature_runs" %in% names(data) || !is.list(data$.feature_runs) ||
+      !nrow(data)) return(data)
+  rows <- list()
+  for (i in seq_len(nrow(data))) {
+    runs <- data$.feature_runs[[i]]
+    if (!is.data.frame(runs) || !nrow(runs)) {
+      rows[[length(rows) + 1L]] <- data[i, , drop = FALSE]
+      next
+    }
+    for (j in seq_len(nrow(runs))) {
+      row <- data[i, , drop = FALSE]
+      row$start <- runs$start[j]
+      row$end <- runs$end[j]
+      row$.segment_index <- runs$segment_index[j]
+      row$.feature_draw_head <- runs$draw_head[j]
+      row$.feature_draw_start_head <- runs$draw_start_head[j]
+      row$.feature_boundaries <- I(list(runs$boundaries[[j]]))
+      row$.feature_boundary_styles <- I(list(runs$boundary_styles[[j]]))
+      if (!is.na(runs$color[j]) && nzchar(runs$color[j])) {
+        row$feature_color <- if (tolower(runs$color[j]) == "nocolor") {
+          "#FFFFFF"
+        } else runs$color[j]
       }
       rows[[length(rows) + 1L]] <- row
     }

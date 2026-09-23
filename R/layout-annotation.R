@@ -88,6 +88,7 @@ ggchord_layout_annotation_step <- quote({
     valid_gene_rows <- which(gene_data$accver %in% seqs)
     valid_genes <- gene_data[valid_gene_rows, , drop = FALSE]
     valid_genes$.source_row <- valid_gene_rows
+    geometry_genes <- ggchord_expand_feature_render_runs(valid_genes)
 
     # Process gene colors
     gene_pal <- NULL
@@ -116,27 +117,58 @@ ggchord_layout_annotation_step <- quote({
     # for polygons that will never be drawn.
     gene_poly_list <- list()
     gene_rows_to_draw <- if (isTRUE(draw_gene_geometry)) {
-      seq_len(nrow(valid_genes))
+      seq_len(nrow(geometry_genes))
     } else {
       integer(0)
     }
     for (i in gene_rows_to_draw) {
-      gene <- valid_genes[i, ]
+      gene <- geometry_genes[i, ]
       sid <- gene$accver
       strand <- gene$strand
       anno <- gene$anno
 
       width <- geneWidth[[sid]][strand]
+      width <- width * as.numeric(gene$.feature_width_factor %||% 1)
       if (!is.numeric(width) || width <= 0) width <- 0.1
 
       sequence_length <- lens[sid]
-      if (!is.finite(gene$start) || !is.finite(gene$end) ||
-          gene$start == gene$end) next
+      if (!is.finite(gene$start) || !is.finite(gene$end)) next
       ref <- seq_refs[[sid]]
       feature_shape <- if (".feature_shape" %in% names(gene)) {
         as.character(gene[[".feature_shape"]])
       } else {
         "arrow"
+      }
+      if (gene$start == gene$end) {
+        point_piece <- list(start = gene$start, end = gene$end)
+        point_angle <- ggchord_feature_angle_interval(
+          point_piece, sequence_length, orientation[sid], starts[sid], ends[sid]
+        )[1L]
+        # Point features are backbone annotations, not artificially widened
+        # intervals. Keep the short radial mark centred on the DNA backbone.
+        r0 <- unname(seqRadius[sid])
+        tick_half <- max(.014, min(.028, width * .36))
+        mapped <- map_to_curve_many(
+          rep(point_angle, 2L), c(r0 - tick_half, r0 + tick_half), ref
+        )
+        gene_poly_list[[length(gene_poly_list) + 1L]] <- data.frame(
+          x = mapped[, 1L], y = mapped[, 2L], group = i * 100L + 1L,
+          anno = anno, strand = strand, feature_shape = "point",
+          biological_strand = as.character(
+            gene$.feature_biological_strand %||% strand
+          ),
+          feature_fill_explicit = as.character(
+            gene$feature_color %||% NA_character_
+          ),
+          position_name = as.character(gene$.position_name %||% "identity"),
+          base_offset = as.numeric(gene$.position_base_offset %||% 0),
+          lane = as.integer(gene$.feature_stack_lane %||% 0L),
+          lane_offset = as.numeric(gene$.position_lane_offset %||% 0),
+          normal_offset = as.numeric(gene$.normal_offset %||% 0),
+          source_row = gene$.source_row, ord = 1:2,
+          .component = "point", stringsAsFactors = FALSE
+        )
+        next
       }
       pieces <- ggchord_feature_intervals(
         gene$start, gene$end, sequence_length, strand,
@@ -157,7 +189,14 @@ ggchord_layout_annotation_step <- quote({
           arrow_head_width = arrow_head_width,
           arrow_head_style = arrow_head_style,
           short_feature = short_feature,
-          draw_head = piece$draw_head,
+          draw_head = piece$draw_head && isTRUE(
+            gene$.feature_draw_head %||% TRUE
+          ),
+          draw_start_head = isTRUE(
+            gene$.feature_draw_start_head %||% identical(
+              as.character(gene$.feature_biological_strand %||% strand), "+/-"
+            )
+          ),
           bidirectional = identical(
             as.character(gene$.feature_biological_strand %||% strand), "+/-"
           )
@@ -215,24 +254,37 @@ ggchord_layout_annotation_step <- quote({
               boundary_piece, sequence_length, orientation[sid],
               starts[sid], ends[sid]
             )[1L]
-            boundary_xy <- map_to_curve_many(
-              rep(boundary_angle, 2L),
-              c(r0 - width / 2, r0 + width / 2), ref
-            )
-            part_index <- part_index + 1L
-            gene_poly_list[[length(gene_poly_list) + 1L]] <- data.frame(
-              x = boundary_xy[, 1L], y = boundary_xy[, 2L],
-              group = i * 100L + part_index, anno = anno,
-              strand = strand, feature_shape = feature_shape,
-              position_name = as.character(gene$.position_name %||% "identity"),
-              base_offset = as.numeric(gene$.position_base_offset %||% 0),
-              lane = as.integer(gene$.feature_stack_lane %||% 0L),
-              lane_offset = as.numeric(gene$.position_lane_offset %||% 0),
-              normal_offset = as.numeric(gene$.normal_offset %||% 0),
-              boundary_linetype = boundary_styles[boundary_index],
-              source_row = gene$.source_row, ord = seq_len(nrow(boundary_xy)),
-              .component = "boundary", stringsAsFactors = FALSE
-            )
+            boundary_style <- boundary_styles[boundary_index]
+            pattern <- if (identical(boundary_style, "dotted")) {
+              matrix(c(0, .13, .29, .42, .58, .71, .87, 1), ncol = 2,
+                byrow = TRUE)
+            } else if (identical(boundary_style, "dashed")) {
+              matrix(c(0, .38, .62, 1), ncol = 2, byrow = TRUE)
+            } else matrix(c(0, 1), ncol = 2)
+            for (pattern_row in seq_len(nrow(pattern))) {
+              radii <- r0 - width / 2 + pattern[pattern_row, ] * width
+              boundary_xy <- map_to_curve_many(
+                rep(boundary_angle, 2L), radii, ref
+              )
+              part_index <- part_index + 1L
+              gene_poly_list[[length(gene_poly_list) + 1L]] <- data.frame(
+                x = boundary_xy[, 1L], y = boundary_xy[, 2L],
+                group = i * 100L + part_index, anno = anno,
+                strand = strand, feature_shape = feature_shape,
+                position_name = as.character(gene$.position_name %||% "identity"),
+                base_offset = as.numeric(gene$.position_base_offset %||% 0),
+                lane = as.integer(gene$.feature_stack_lane %||% 0L),
+                lane_offset = as.numeric(gene$.position_lane_offset %||% 0),
+                normal_offset = as.numeric(gene$.normal_offset %||% 0),
+                boundary_linetype = boundary_style,
+                boundary_draw_linetype = if (
+                  boundary_style %in% c("dotted", "dashed")) "solid" else
+                    boundary_style,
+                source_row = gene$.source_row,
+                ord = seq_len(nrow(boundary_xy)),
+                .component = "boundary", stringsAsFactors = FALSE
+              )
+            }
           }
         }
       }
@@ -257,12 +309,18 @@ ggchord_layout_annotation_step <- quote({
 
         sp <- min(gene$start, gene$end)
         ep <- max(gene$start, gene$end)
-        frac_mid <- if (isTRUE(circular) && gene$start > gene$end) {
-          ((gene$start + ((seq_len - gene$start) + gene$end) / 2) %% seq_len) /
-            seq_len
+        feature_midpoint_position <- if (
+            isTRUE(circular) && gene$start > gene$end) {
+          (gene$start + ((seq_len - gene$start) + gene$end) / 2) %% seq_len
         } else {
-          (sp + ep) / (2 * seq_len)
+          (sp + ep) / 2
         }
+        feature_anchor_position <- if (
+            identical(as.character(gene$.feature_label_anchor %||% "midpoint"),
+              "head")) {
+          if (identical(strand, "-")) gene$start else gene$end
+        } else feature_midpoint_position
+        frac_mid <- feature_anchor_position / seq_len
 
         circum_ratio <- geneLabelCircumOffset[[sid]][strand]
         if (geneLabelCircumLimit[[sid]][strand]) {
@@ -290,10 +348,13 @@ ggchord_layout_annotation_step <- quote({
         dy <- dy * orient
 
         width <- geneWidth[[sid]][strand]
+        width <- width * as.numeric(gene$.feature_width_factor %||% 1)
 
         r0 <- gene_track_radius(gene, sid, strand, ref$angles[idx])
 
-        center_r <- r0
+        center_r <- if (gene$start == gene$end) {
+          unname(seqRadius[sid])
+        } else r0
         center_pt <- map_to_curve(angle = ref$angles[idx], radius = center_r, ref = ref)
 
         normal_x <- -dy
@@ -347,15 +408,26 @@ ggchord_layout_annotation_step <- quote({
           measured_label <- ggchord_text_boxes(data.frame(
             text = as.character(gene$anno), text_x = 0, text_y = 0,
             text_angle = 0, hjust = .5, vjust = .5,
-            size = gene_label_size
+            size = gene_label_size, family = gene_label_family,
+            fontface = gene_label_fontface,
+            lineheight = gene_label_lineheight
           ), units_per_inch = label_measure_units)
           shape <- as.character(gene$.feature_shape %||% "arrow")
           head_reserve <- if (shape == "arrow") {
-            arrow_head_length * max(abs(r0), .5)
+            arrow_head_length
+          } else if (shape == "compact_arrow") {
+            arrow_head_length * .76
+          } else if (shape == "promoter_arrow") {
+            arrow_head_length * .66
+          } else if (shape == "primer_arrow") {
+            arrow_head_length * .60
           } else 0
+          body_padding <- max(.008, measured_label$h * .24)
           available_length <- max(0,
-            feature_arc_length - head_reserve - .08)
-          feature_label_inside <- measured_label$w <= available_length
+            feature_arc_length - head_reserve - 2 * body_padding)
+          # Keep a safety margin inside the rectangular body; text that only
+          # fits by touching a shoulder belongs on the adjacent inner track.
+          feature_label_inside <- measured_label$w <= available_length * .90
           # Plasmid feature text follows the interval direction whether it is
           # inside the polygon or immediately adjacent to it. Compact labels
           # move toward the map centre instead of changing to radial text.
@@ -363,9 +435,18 @@ ggchord_layout_annotation_step <- quote({
           if (!isTRUE(feature_label_inside)) {
             centre_length <- sqrt(sum(center_pt^2))
             if (is.finite(centre_length) && centre_length > 1e-8) {
-              adjacent_offset <- width / 2 + measured_label$h * .60 + .012
-              text_x <- text_x - center_pt[1L] / centre_length * adjacent_offset
-              text_y <- text_y - center_pt[2L] / centre_length * adjacent_offset
+              compact_shape <- shape %in% c(
+                "compact_arrow", "promoter_arrow", "primer_arrow", "marker"
+              )
+              adjacent_gap <- measured_label$h *
+                if (compact_shape) 1.05 else .64
+              adjacent_offset <- width / 2 + adjacent_gap + .014
+              inward_x <- -center_pt[1L] / centre_length
+              inward_y <- -center_pt[2L] / centre_length
+              anchor_x <- center_pt[1L] + inward_x * width / 2
+              anchor_y <- center_pt[2L] + inward_y * width / 2
+              text_x <- text_x + inward_x * adjacent_offset
+              text_y <- text_y + inward_y * adjacent_offset
             }
           }
         }
@@ -388,12 +469,9 @@ ggchord_layout_annotation_step <- quote({
           hjust <- 1
         }
 
-        text_angle <- (text_angle + 360) %% 360
-        if (text_angle > 90 && text_angle < 270) {
-          text_angle <- text_angle + 180
-          hjust <- 1 - hjust
-        }
-        text_angle <- text_angle %% 360
+        upright <- ggchord_normalize_text_orientation(text_angle, hjust)
+        text_angle <- upright$angle
+        hjust <- upright$hjust
         vjust <- 0.5
 
         if (identical(resolved_label_orientation, "tangent")) {
@@ -435,9 +513,14 @@ ggchord_layout_annotation_step <- quote({
           hjust = hjust,
           vjust = vjust,
           size = gene_label_size,
+          family = gene_label_family,
+          fontface = gene_label_fontface,
+          lineheight = gene_label_lineheight,
           accver = sid,
           group = i,
           source_row = gene$.source_row,
+          anchor_position = feature_anchor_position,
+          sequence_length = seq_len,
           position_name = as.character(gene$.position_name %||% "identity"),
           base_offset = as.numeric(gene$.position_base_offset %||% 0),
           lane = as.integer(gene$.feature_stack_lane %||% 0L),
@@ -447,8 +530,12 @@ ggchord_layout_annotation_step <- quote({
           anchor_y = anchor_y,
           side_flipped = side_flipped,
           feature_label_colour = feature_label_colour,
+          feature_label_fill = as.character(
+            gene$feature_label_fill %||% "#F2F3F4"
+          ),
           feature_label_orientation = resolved_label_orientation,
           feature_label_inside = feature_label_inside,
+          .feature_width = width,
           stringsAsFactors = FALSE
         )
       }))

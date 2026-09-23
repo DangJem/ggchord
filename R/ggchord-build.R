@@ -385,6 +385,9 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     gene_params$label_size_override %||%
     gene_params$gene_label_size %||%
     ggchord_theme_text_size(plot, label_theme_element, 2.5)
+  gene_lfamily <- lbl$gene_label_family %||% ""
+  gene_lfontface <- lbl$gene_label_fontface %||% 1
+  gene_llineheight <- lbl$gene_label_lineheight %||% 1.2
   # Repelled labels now use mode-owned deterministic positioning. Manual
   # rotation and offsets remain available through geom_gene_label(), but are
   # intentionally not inherited by geom_gene_label_repel().
@@ -419,6 +422,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   gene_lrepel_layer <- gene_repel_layer
   gene_lrepel_maxov <- gene_repel_params$max_overlaps %||% Inf
   gene_lrepel_layout <- gene_repel_params$gene_label_layout %||% "radial"
+  feature_label_external <- gene_repel_params$feature_label_external %||% TRUE
   gene_lrepel_fit    <- gene_repel_params$gene_label_fit %||% "wrap"
   gene_lrepel_lines  <- gene_repel_params$gene_label_max_lines %||% 2L
   gene_lrepel_side   <- if (gene_repel_layer) {
@@ -449,6 +453,17 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   }
 
   geneWidth  <- process_gene_param(gene_w, seqs, "gene_width", 0.05, FALSE)
+  if (isTRUE(gene_params$is_feature) && isTRUE(lbl$is_feature_label) &&
+      isTRUE(plot$coordinates$ggchord_circular)) {
+    # Feature bands accommodate the actual label font size within bounded
+    # limits. This is a modest physical adjustment, not a response to label
+    # length; long text must still use adjacent/external fallback.
+    width_factor <- pmin(1.42, pmax(.78, .82 + .072 * gene_lsz))
+    geneWidth <- lapply(geneWidth, function(value) {
+      adjusted <- as.numeric(value) * width_factor
+      stats::setNames(pmin(.095, pmax(.032, adjusted)), names(value))
+    })
+  }
 
   # Feature geometry is resolved before coordinate generation because these
   # values change the actual polygon, not only its appearance. A user-supplied
@@ -480,7 +495,10 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
         shape_scale$train(raw_shape)
         mapped_shape <- as.character(shape_scale$map(raw_shape))
       } else {
-        allowed_shape <- c("arrow", "block", "chevron", "lollipop")
+        allowed_shape <- c(
+          "arrow", "compact_arrow", "promoter_arrow", "primer_arrow",
+          "marker", "block", "capped_line", "primer_arc", "chevron", "lollipop"
+        )
         if (all(feature_shape_order %in% allowed_shape)) {
           feature_shape_pal <- stats::setNames(
             feature_shape_order, feature_shape_order
@@ -496,12 +514,14 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     } else {
       mapped_shape <- raw_shape
     }
-    allowed_shape <- c("arrow", "block", "chevron", "lollipop")
+    allowed_shape <- c(
+      "arrow", "compact_arrow", "promoter_arrow", "primer_arrow",
+      "marker", "block", "capped_line", "primer_arc", "chevron", "lollipop"
+    )
     mapped_shape[is.na(mapped_shape)] <- "arrow"
     if (any(!mapped_shape %in% allowed_shape)) {
       ggchord_stop(
-        "feature_shape scale values must use 'arrow', 'block', ",
-        "'chevron', or 'lollipop'"
+        "feature_shape scale contains an unknown geometry"
       )
     }
     if (is.null(feature_shape_pal) &&
@@ -513,6 +533,78 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     }
     gene_data_layout <- as.data.frame(gene_data_layout, stringsAsFactors = FALSE)
     gene_data_layout$.feature_shape <- mapped_shape
+    gene_data_layout$.feature_width_factor <-
+      ggchord_feature_width_factor(mapped_shape)
+    # Resolve the visible feature fill once so polygon text contrast and the
+    # pastel background of an external callout share exactly the same semantic
+    # colour. Explicit source colours and user scales remain authoritative.
+    fill_values <- if ("feature_color" %in% names(gene_data_layout)) {
+      as.character(gene_data_layout$feature_color)
+    } else rep(NA_character_, nrow(gene_data_layout))
+    unresolved_fill <- is.na(fill_values) | !nzchar(fill_values)
+    fixed_fill <- gene_params$feature_fill_fixed
+    if (any(unresolved_fill) && !is.null(fixed_fill) &&
+        length(fixed_fill) == 1L) {
+      fill_values[unresolved_fill] <- as.character(fixed_fill)
+    }
+    raw_fill <- as.character(gene_data_layout$anno)
+    fill_mapping <- gene_params$feature_fill_mapping
+    if (any(unresolved_fill) && !is.null(fill_mapping)) {
+      mapped_input <- tryCatch(
+        rlang::eval_tidy(fill_mapping, data = gene_data_layout),
+        error = function(e) NULL
+      )
+      if (!is.null(mapped_input)) {
+        if (length(mapped_input) == 1L) {
+          mapped_input <- rep(mapped_input, nrow(gene_data_layout))
+        }
+        if (length(mapped_input) == nrow(gene_data_layout)) {
+          raw_fill <- as.character(mapped_input)
+        }
+      }
+    }
+    fill_scale <- plot$scales$get_scales("feature_fill")
+    if (any(unresolved_fill) && !is.null(fill_scale)) {
+      trained_fill <- fill_scale$clone()
+      trained_fill$train(raw_fill)
+      fill_values[unresolved_fill] <- as.character(trained_fill$map(
+        raw_fill[unresolved_fill]
+      ))
+    }
+    unresolved_fill <- is.na(fill_values) | !nzchar(fill_values)
+    if (any(unresolved_fill) &&
+        isTRUE(plot$coordinates$ggchord_circular)) {
+      preset <- ggchord_plasmid_feature_colours()
+      fill_values[unresolved_fill] <- unname(preset[
+        as.character(gene_data_layout$anno[unresolved_fill])
+      ])
+    }
+    fill_values[is.na(fill_values) | !nzchar(fill_values)] <- "#B8BDC3"
+    gene_data_layout$feature_label_fill <-
+      ggchord_feature_callout_fill(fill_values)
+    existing_label_colour <- if (
+        "feature_label_colour" %in% names(gene_data_layout)) {
+      as.character(gene_data_layout$feature_label_colour)
+    } else rep(NA_character_, nrow(gene_data_layout))
+    unresolved_labels <- is.na(existing_label_colour) |
+      !nzchar(existing_label_colour)
+    if (any(unresolved_labels)) {
+      existing_label_colour[unresolved_labels] <- ggchord_contrast_colour(
+        fill_values[unresolved_labels]
+      )
+    }
+    gene_data_layout$feature_label_colour <- existing_label_colour
+  }
+  if (!is.null(gene_data_layout) && nrow(gene_data_layout)) {
+    gene_data_layout$.feature_width <- vapply(seq_len(nrow(gene_data_layout)),
+      function(i) {
+        sid <- as.character(gene_data_layout$accver[i])
+        strand <- as.character(gene_data_layout$strand[i])
+        base_width <- geneWidth[[sid]][strand]
+        base_width * as.numeric(
+          gene_data_layout$.feature_width_factor[i] %||% 1
+        )
+      }, numeric(1))
   }
   if (!is.null(gene_data_layout)) {
     if (!isTRUE(plot$coordinates$ggchord_circular) &&
@@ -533,6 +625,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
       active_position,
       seqs = seqs, lengths = lens,
       circular = isTRUE(plot$coordinates$ggchord_circular),
+      label_size = gene_lsz,
       legacy_offset = if (isTRUE(lbl$position_supplied)) NULL else gene_params$legacy_offset,
       legacy_name = if (isTRUE(gene_params$is_feature)) "feature_offset" else "gene_offset"
     )
@@ -554,8 +647,8 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   axis_unit_data <- ggchord_unit_inches
   axisGap    <- process_sequence_param(axis_unit_data(axis_theme$gap),
                                        seqs, "axis.gap", 0.04)
-  axisMaj    <- process_sequence_param(axis_params$axis_tick_major_number %||% 3,
-                                       seqs, "axis_tick_major_number", 3)
+  axisMaj    <- process_sequence_param(axis_params$axis_tick_major_number %||% 5,
+                                       seqs, "axis_tick_major_number", 5)
   axisMajLen <- process_sequence_param(axis_unit_data(axis_theme$ticks.length),
                                        seqs, "axis.ticks.length", 0.02)
   axisMin    <- process_sequence_param(axis_params$axis_tick_minor_number %||% 4,
@@ -576,6 +669,16 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   axisLabelHide <- isTRUE(axis_theme$text.check.overlap)
   axisLabelOri <- process_axis_orientation(
     axis_theme$text.orientation, seqs
+  )
+  seq_style <- seq_params$seq_style %||% "auto"
+  if (identical(seq_style, "auto")) {
+    seq_style <- if (isTRUE(plot$coordinates$ggchord_circular)) "double" else "single"
+  }
+  seqBackboneOuter <- switch(
+    seq_style,
+    double = (seq_params$seq_backbone_gap %||% .025) / 2,
+    band = (seq_params$seq_backbone_width %||% .035) / 2,
+    0
   )
   if (!is.logical(show_axis) || length(show_axis) != 1 || is.na(show_axis)) {
     ggchord_stop("show_axis must be TRUE or FALSE")
@@ -750,6 +853,9 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     geneLabelCircumLimit = geneLabelCircumLimit,
     geneLabelRotation = geneLabelRotation,
     gene_label_show = gene_ls, gene_label_size = gene_lsz,
+    gene_label_family = gene_lfamily,
+    gene_label_fontface = gene_lfontface,
+    gene_label_lineheight = gene_llineheight,
     gene_label_wrap = gene_lwrap,
     gene_label_fit = gene_lrepel_fit,
     gene_label_max_lines = gene_lrepel_lines,
@@ -758,6 +864,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     gene_label_repel_layer = gene_lrepel_layer,
     gene_label_repel_max_overlaps = gene_lrepel_maxov,
     gene_label_layout = gene_lrepel_layout,
+    feature_label_external = feature_label_external,
     gene_label_side = gene_lrepel_side,
     gene_label_segment_overlap = gene_lrepel_segment_overlap,
     gene_label_segment_overlap_alpha = gene_lrepel_segment_overlap_alpha,
@@ -777,6 +884,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     axisMin = axisMin, axisMinLen = axisMinLen,
     labelSize = labelSize, labelOffset = labelOffset,
     axisLabelOrientation = axisLabelOri,
+    seqBackboneOuter = seqBackboneOuter,
     axis_breaks = axis_breaks,
     axis_minor_breaks = axis_minor_breaks,
     axis_labels = axis_labels,
@@ -790,6 +898,12 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   layout$seq_ring_radius <- if (is.null(seq_ring)) NULL else seqRadius
   layout$ribbon_stat_data <- ribbon_stat_data
   layout$ribbon_stat_report <- ribbon_stat_report
+  layout$backbone_bounds <- data.frame(
+    accver = names(seqRadius), center = as.numeric(seqRadius),
+    inner = as.numeric(seqRadius) - seqBackboneOuter,
+    outer = as.numeric(seqRadius) + seqBackboneOuter,
+    stringsAsFactors = FALSE
+  )
   if (!is.null(seq_ring) && length(layout$seq_arcs)) {
     layout$seq_arcs <- lapply(names(layout$seq_arcs), function(id) {
       arc <- layout$seq_arcs[[id]]
@@ -897,6 +1011,40 @@ compute_chord_geometry <- function(plot) {
     sub_layout <- primary
     if (isTRUE(needs_own)) {
       deps <- seq_dep
+      if (main_type %in% c("gene_label", "gene_label_repel")) {
+        label_rows <- idx[vapply(idx, function(j) {
+          isTRUE(plot$layers[[j]]$ggchord_params$is_feature_label)
+        }, logical(1))]
+        if (length(label_rows)) {
+          label_layer <- plot$layers[[label_rows[length(label_rows)]]]
+          label_input <- ggchord_resolve_layer_input(
+            label_layer, chord$data$gene_data
+          )
+          for (gene_row in gene_geometry_dep) {
+            feature_layer <- plot$layers[[gene_row]]
+            if (!isTRUE(feature_layer$ggchord_params$is_feature)) next
+            feature_input <- ggchord_resolve_layer_input(
+              feature_layer, chord$data$gene_data
+            )
+            compare <- intersect(
+              c("accver", "start", "end", "strand", "anno", "label"),
+              intersect(names(label_input), names(feature_input))
+            )
+            same_input <- nrow(label_input) == nrow(feature_input) &&
+              all(c("accver", "start", "end", "strand") %in% compare) &&
+              identical(label_input[compare], feature_input[compare])
+            label_position <- label_layer$ggchord_params$feature_position
+            feature_position <- feature_layer$ggchord_params$feature_position
+            same_position <- !isTRUE(
+              label_layer$ggchord_params$position_supplied
+            ) || identical(label_position, feature_position)
+            if (same_input && same_position) {
+              deps <- c(deps, gene_row)
+              break
+            }
+          }
+        }
+      }
       if (main_type == "ribbon") deps <- c(deps, gene_geometry_dep)
       sub_plot <- plot
       sub_plot$layers <- plot$layers[sort(unique(c(deps, idx)))]
@@ -911,6 +1059,17 @@ compute_chord_geometry <- function(plot) {
     if (main_type == "restriction_site") {
       site_layer <- plot$layers[[idx[1L]]]
       site_input <- ggchord_resolve_layer_input(site_layer)
+      seq_rows <- which(vapply(plot$layers, function(layer) {
+        identical(layer$ggchord_params$type %||% "", "seq")
+      }, logical(1L)))
+      seq_layer_params <- if (length(seq_rows)) {
+        plot$layers[[seq_rows[1L]]]$ggchord_params
+      } else list()
+      backbone <- primary$backbone_bounds
+      backbone_outer <- if (is.data.frame(backbone) && nrow(backbone)) {
+        max(backbone$outer - backbone$center)
+      } else 0
+      site_layer$ggchord_params$backbone_outer_offset <- backbone_outer
       sub_layout$restriction_sites <- ggchord_restriction_geometry(
         site_input, site_layer$ggchord_params, primary, chord$data$seq_data
       )
@@ -973,6 +1132,17 @@ compute_chord_geometry <- function(plot) {
       )
     }
   }
+  if (isTRUE(plot$coordinates$ggchord_circular) &&
+      is.function(plot$coordinates$resolve_annotation_registry)) {
+    resolved_annotations <- plot$coordinates$resolve_annotation_registry(
+      registry, primary
+    )
+    registry <- resolved_annotations$layer_geometry
+    primary$circular_annotation_registry <-
+      resolved_annotations$annotation_registry
+  } else {
+    registry <- ggchord_share_external_annotations(registry, primary)
+  }
   primary$layer_geometry <- registry
   primary$layer_inputs <- inputs
   primary$layer_layouts <- layouts
@@ -997,8 +1167,22 @@ compute_chord_geometry <- function(plot) {
   }
   repel_labels <- collect("gene_text_repel")
   fixed_labels <- collect("gene_text")
+  callout_labels <- collect("gene_label_repel")
+  if (nrow(callout_labels) && ".component" %in% names(callout_labels)) {
+    callout_labels <- callout_labels[
+      callout_labels$.component %in% "text", , drop = FALSE
+    ]
+  }
+  if (nrow(callout_labels)) {
+    callout_labels$text <- if ("feature_label" %in% names(callout_labels)) {
+      ifelse(!is.na(callout_labels$feature_label) &
+        nzchar(callout_labels$feature_label), callout_labels$feature_label,
+        callout_labels$label)
+    } else callout_labels$label
+    callout_labels$text_angle <- callout_labels$angle %||% 0
+  }
   all_gene_labels <- Filter(function(x) nrow(x) > 0,
-                            list(fixed_labels, repel_labels))
+                            list(fixed_labels, repel_labels, callout_labels))
   if (length(all_gene_labels)) {
     primary$gene_labels <- ggchord_rbind_fill(all_gene_labels)
   }

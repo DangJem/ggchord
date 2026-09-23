@@ -30,7 +30,10 @@ ggchord_restriction_match_starts <- function(search, query, max_start) {
   anchor_start <- runs[chosen]; anchor <- substr(
     query,anchor_start,anchor_start+run_lengths[chosen]-1L
   )
-  hits <- gregexpr(anchor,search,fixed=TRUE)[[1L]]
+  # gregexpr(..., fixed = TRUE) consumes a match, so overlapping anchors such
+  # as GGG in GGGG were previously skipped.  A zero-width look-ahead retains
+  # every possible anchor start while keeping the inexpensive fixed anchor.
+  hits <- gregexpr(paste0("(?=", anchor, ")"), search, perl=TRUE)[[1L]]
   if (length(hits)==1L && hits[1L]<0L) return(integer())
   starts <- unique(hits-anchor_start+1L)
   starts <- starts[starts>=1L & starts<=max_start]
@@ -52,10 +55,12 @@ ggchord_parse_rebase <- function(path) {
   fields <- strsplit(trimws(enzyme_lines[source_rows]), "[[:space:]]+")
   if (any(lengths(fields) != 9L)) ggchord_stop("Invalid embossa_e.txt row width")
   mat <- do.call(rbind, fields)
+  source_motif <- mat[,2L]
   defs <- data.frame(
     pattern_id = sprintf("rebase%s:e:%06d", version, source_rows),
     pattern_source_row = source_rows,
-    enzyme = mat[,1L], motif = toupper(mat[,2L]),
+    enzyme = mat[,1L], motif = toupper(source_motif),
+    source_motif = source_motif,
     motif_length = as.integer(mat[,3L]), ncuts = as.integer(mat[,4L]),
     blunt = as.logical(as.integer(mat[,5L])),
     cut_offset_1 = as.integer(mat[,6L]), cut_offset_2 = as.integer(mat[,7L]),
@@ -65,6 +70,22 @@ ggchord_parse_rebase <- function(path) {
   if (any(nchar(defs$motif) != defs$motif_length) ||
       any(!defs$ncuts %in% c(0L,1L,2L,4L))) {
     ggchord_stop("Invalid REBASE pattern lengths or cut counts")
+  }
+  # EMBOSS uses a lower-case recognition sequence when an equivalent enzyme's
+  # cleavage orientation is reversed relative to the normalized motif.  Keep
+  # the source spelling, but orient the top/bottom cut pairs consistently for
+  # downstream coordinate calculation.
+  reverse_cleavage <- source_motif == tolower(source_motif) &
+    source_motif != toupper(source_motif)
+  if (any(reverse_cleavage)) {
+    first <- defs$cut_offset_1[reverse_cleavage]
+    defs$cut_offset_1[reverse_cleavage] <-
+      defs$cut_offset_2[reverse_cleavage]
+    defs$cut_offset_2[reverse_cleavage] <- first
+    third <- defs$cut_offset_3[reverse_cleavage]
+    defs$cut_offset_3[reverse_cleavage] <-
+      defs$cut_offset_4[reverse_cleavage]
+    defs$cut_offset_4[reverse_cleavage] <- third
   }
 
   supplier_lines <- readLines(file.path(path, "embossa_s.txt"), warn = FALSE)
@@ -99,6 +120,24 @@ ggchord_parse_rebase <- function(path) {
   defs$suppliers <- info$suppliers[matched]
   defs$commercial <- info$commercial[matched]
   defs$commercial[is.na(defs$commercial)] <- FALSE
+
+  equivalence_path <- file.path(path, "misc", "embossre.equ")
+  preferred <- stats::setNames(character(), character())
+  if (file.exists(equivalence_path)) {
+    equivalence_lines <- readLines(equivalence_path, warn = FALSE)
+    equivalence_lines <- equivalence_lines[
+      nzchar(trimws(equivalence_lines)) & !grepl("^#", equivalence_lines)
+    ]
+    equivalence_fields <- strsplit(trimws(equivalence_lines), "[[:space:]]+")
+    if (any(lengths(equivalence_fields) != 2L)) {
+      ggchord_stop("Invalid misc/embossre.equ row width")
+    }
+    equivalence <- do.call(rbind, equivalence_fields)
+    preferred <- stats::setNames(equivalence[, 2L], equivalence[, 1L])
+  }
+  mapped <- unname(preferred[defs$enzyme])
+  defs$preferred_enzyme <- ifelse(is.na(mapped), defs$enzyme, mapped)
+  defs$is_preferred_enzyme <- defs$enzyme == defs$preferred_enzyme
   defs$database_version <- version
   defs$source <- paste0("REBASE ", version)
   rownames(defs) <- NULL
@@ -110,6 +149,20 @@ ggchord_builtin_rebase <- function() {
     ggchord_stop("The internal REBASE database is missing; reinstall ggchord")
   }
   get("ggchord_rebase_database", inherits = TRUE)
+}
+
+# Source-backed methylation sensitivities used by the generic site-status
+# evaluator.  This is enzyme metadata, never a plasmid/name rendering special
+# case. Unknown enzymes remain unknown rather than being guessed.
+ggchord_restriction_methylation_sensitivity <- function() {
+  data.frame(
+    enzyme = "PflMI", blocked_by = "Dcm", methylation_motif = "CCWGG",
+    sensitivity_source = paste0(
+      "https://www.snapgene.com/plasmids/fluorescent_protein_genes_and_plasmids/",
+      "DsRed-Express"
+    ),
+    stringsAsFactors = FALSE
+  )
 }
 
 ggchord_normalize_restriction_patterns <- function(patterns) {
@@ -135,9 +188,21 @@ ggchord_normalize_restriction_patterns <- function(patterns) {
     out$ncuts[out$ncuts==0L] <- 2L
   }
   for(i in 1:4){nm<-paste0("cut_offset_",i);if(!nm%in%names(out))out[[nm]]<-0L}
-  defaults <- list(organism=NA_character_,supplier_codes=NA_character_,
-    suppliers=NA_character_,commercial=FALSE,database_version="custom",source="custom")
+  defaults <- list(source_motif=out$motif,organism=NA_character_,
+    supplier_codes=NA_character_,suppliers=NA_character_,commercial=FALSE,
+    preferred_enzyme=out$enzyme,is_preferred_enzyme=TRUE,
+    database_version="custom",source="custom", blocked_by=NA_character_,
+    methylation_motif=NA_character_, sensitivity_source=NA_character_,
+    methylation_status=NA_character_, display_warning=NA_character_)
   for(nm in names(defaults))if(!nm%in%names(out))out[[nm]]<-defaults[[nm]]
+  sensitivity <- ggchord_restriction_methylation_sensitivity()
+  sensitivity_row <- match(out$enzyme, sensitivity$enzyme)
+  for (nm in c("blocked_by", "methylation_motif", "sensitivity_source")) {
+    missing_value <- is.na(out[[nm]]) | !nzchar(as.character(out[[nm]]))
+    fill <- sensitivity[[nm]][sensitivity_row]
+    use <- missing_value & !is.na(fill)
+    out[[nm]][use] <- fill[use]
+  }
   out$enzyme<-as.character(out$enzyme);out$motif<-toupper(as.character(out$motif))
   if(anyNA(out$enzyme)||any(!nzchar(out$enzyme))||anyNA(out$motif)||
      any(!nzchar(out$motif))||anyDuplicated(out$pattern_id))
@@ -175,10 +240,23 @@ ggchord_normalize_restriction_patterns <- function(patterns) {
 #' @param patterns Optional custom definitions.
 #' @param circular Allow recognition and cleavage coordinates to wrap origin.
 #' @param database Optional parsed pattern database.
+#' @param methylation Methylation context. `"auto"` uses the audited context
+#'   for recognized reference plasmids and otherwise makes no blocked-site
+#'   claim; `"none"` disables blocking; `"dam_dcm"` evaluates source-backed
+#'   Dam/Dcm sensitivities against the supplied sequence.
 #' @return One row per pattern match without display filtering or deduplication.
+#'   Methylation-aware columns include `methylation_status`, `blocked_by`,
+#'   `display_warning`, `methylation_motif`, and `sensitivity_source`.
+#'   `enzyme_site_count` records the number of distinct cleavage/display
+#'   positions for that enzyme on the complete supplied sequence, so it remains
+#'   stable after display filtering. For an exactly recognized bundled
+#'   reference sequence, the `reference_enzyme_profiles` attribute records its
+#'   saved display set for use by [filter_restriction_sites()].
 #' @export
 find_restriction_sites <- function(sequence,enzymes=NULL,patterns=NULL,
-                                   circular=TRUE,database=NULL){
+                                   circular=TRUE,database=NULL,
+                                   methylation=c("auto","none","dam_dcm")){
+  methylation <- match.arg(methylation)
   normalized <- ggchord_normalize_sequence_input(
     sequence, "find_restriction_sites()"
   )
@@ -195,7 +273,7 @@ find_restriction_sites <- function(sequence,enzymes=NULL,patterns=NULL,
     defs<-defs[order(match(defs$enzyme,enzymes),seq_len(nrow(defs))),,drop=FALSE]
   }
   empty_template <- function(){
-    out<-data.frame(accver=character(),match_id=character(),pattern_id=character(),pattern_source_row=integer(),enzyme=character(),motif=character(),motif_length=integer(),recognition_sequence=character(),start=integer(),end=integer(),crosses_origin=logical(),strand=character(),ncuts=integer(),blunt=logical(),end_type=character(),position=numeric(),display_position=numeric(),anchor_kind=character(),organism=character(),supplier_codes=character(),suppliers=character(),commercial=logical(),database_version=character(),source=character(),stringsAsFactors=FALSE)
+    out<-data.frame(accver=character(),match_id=character(),pattern_id=character(),pattern_source_row=integer(),enzyme=character(),preferred_enzyme=character(),is_preferred_enzyme=logical(),motif=character(),source_motif=character(),motif_length=integer(),recognition_sequence=character(),start=integer(),end=integer(),crosses_origin=logical(),strand=character(),ncuts=integer(),blunt=logical(),end_type=character(),position=numeric(),display_position=numeric(),enzyme_site_count=integer(),anchor_kind=character(),organism=character(),supplier_codes=character(),suppliers=character(),commercial=logical(),database_version=character(),source=character(),blocked_by=character(),methylation_motif=character(),sensitivity_source=character(),methylation_status=character(),display_warning=character(),stringsAsFactors=FALSE)
     for(k in 1:4){out[[paste0("cut_offset_",k)]]<-numeric();out[[paste0("cut_",k,"_unwrapped")]]<-numeric();out[[paste0("cut_",k)]]<-numeric()};out
   }
   rows<-list();match_number<-0L
@@ -230,27 +308,150 @@ find_restriction_sites <- function(sequence,enzymes=NULL,patterns=NULL,
         known_indices<-which(known);has_cut<-length(known_indices)>0L
         first_known<-if(has_cut)known_indices[1L] else NA_integer_
         position<-if(has_cut)cuts[,first_known] else starts
-        row<-data.frame(accver=rep(ids[s],count),match_id=sprintf("%s:%s:%s:%d:%06d",ids[s],defs$pattern_id[d],site_strand,starts,numbers),pattern_id=rep(defs$pattern_id[d],count),pattern_source_row=rep(defs$pattern_source_row[d],count),enzyme=rep(defs$enzyme[d],count),motif=rep(motif,count),motif_length=rep(m,count),recognition_sequence=substring(search,starts,starts+m-1L),start=starts,end=finish,crosses_origin=finish_unwrapped>len,strand=rep(site_strand,count),ncuts=rep(defs$ncuts[d],count),blunt=rep(defs$blunt[d],count),end_type=rep(end_type,count),position=position,display_position=position,anchor_kind=rep(if(has_cut)"cut" else "recognition",count),organism=rep(defs$organism[d],count),supplier_codes=rep(defs$supplier_codes[d],count),suppliers=rep(defs$suppliers[d],count),commercial=rep(defs$commercial[d],count),database_version=rep(defs$database_version[d],count),source=rep(defs$source[d],count),stringsAsFactors=FALSE)
+        row<-data.frame(accver=rep(ids[s],count),match_id=sprintf("%s:%s:%s:%d:%06d",ids[s],defs$pattern_id[d],site_strand,starts,numbers),pattern_id=rep(defs$pattern_id[d],count),pattern_source_row=rep(defs$pattern_source_row[d],count),enzyme=rep(defs$enzyme[d],count),preferred_enzyme=rep(defs$preferred_enzyme[d],count),is_preferred_enzyme=rep(defs$is_preferred_enzyme[d],count),motif=rep(motif,count),source_motif=rep(defs$source_motif[d],count),motif_length=rep(m,count),recognition_sequence=substring(search,starts,starts+m-1L),start=starts,end=finish,crosses_origin=finish_unwrapped>len,strand=rep(site_strand,count),ncuts=rep(defs$ncuts[d],count),blunt=rep(defs$blunt[d],count),end_type=rep(end_type,count),position=position,display_position=position,anchor_kind=rep(if(has_cut)"cut" else "recognition",count),organism=rep(defs$organism[d],count),supplier_codes=rep(defs$supplier_codes[d],count),suppliers=rep(defs$suppliers[d],count),commercial=rep(defs$commercial[d],count),database_version=rep(defs$database_version[d],count),source=rep(defs$source[d],count),blocked_by=rep(defs$blocked_by[d],count),methylation_motif=rep(defs$methylation_motif[d],count),sensitivity_source=rep(defs$sensitivity_source[d],count),methylation_status=rep(defs$methylation_status[d],count),display_warning=rep(defs$display_warning[d],count),stringsAsFactors=FALSE)
         for(k in 1:4){row[[paste0("cut_offset_",k)]]<-rep(as.numeric(defs[[paste0("cut_offset_",k)]][d]),count);row[[paste0("cut_",k,"_unwrapped")]]<-unwrapped[,k];row[[paste0("cut_",k)]]<-cuts[,k]}
         rows[[length(rows)+1L]]<-row
       }
     }
   }}
   out<-if(length(rows))ggchord_rbind_fill(rows)else empty_template();rownames(out)<-NULL
-  attr(out,"enzyme_database_version")<-unique(defs$database_version);out
+  if(nrow(out)){
+    enzyme_key<-paste(out$accver,out$enzyme,sep="\r")
+    count_by_enzyme<-vapply(split(out$position,enzyme_key),function(x)
+      length(unique(x[is.finite(x)])),integer(1L))
+    out$enzyme_site_count<-unname(count_by_enzyme[enzyme_key])
+  }
+  reference_profiles <- data.frame()
+  common_db <- tryCatch(ggchord_builtin_common_features(),
+    error = function(e) NULL)
+  if (!is.null(common_db) && all(c("reference_sequences",
+      "reference_enzyme_profiles") %in% names(common_db))) {
+    profile_rows <- lapply(seq_along(seqs), function(i) {
+      matched <- common_db$reference_sequences$reference_id[
+        common_db$reference_sequences$sequence == seqs[i]]
+      if (!length(matched)) return(NULL)
+      profile_index <- match(matched[1L],
+        common_db$reference_enzyme_profiles$reference_id)
+      if (is.na(profile_index)) return(NULL)
+      profile <- common_db$reference_enzyme_profiles[
+        profile_index, , drop = FALSE]
+      profile$accver <- ids[i]
+      profile
+    })
+    profile_rows <- Filter(Negate(is.null), profile_rows)
+    if (length(profile_rows)) reference_profiles <-
+      ggchord_rbind_fill(profile_rows)
+  }
+  active_methylation <- methylation
+  if (identical(active_methylation, "auto")) {
+    active_methylation <- if (nrow(reference_profiles)) "dam_dcm" else "none"
+  }
+  if (nrow(out)) {
+    explicit_status <- !is.na(out$methylation_status) &
+      nzchar(out$methylation_status)
+    if (identical(active_methylation, "none")) {
+      inferred <- ifelse(is.na(out$blocked_by),
+        "unknown", "unblocked")
+      out$methylation_status[!explicit_status] <- inferred[!explicit_status]
+    } else {
+      target_by_id <- stats::setNames(seqs, ids)
+      context_matches <- vapply(seq_len(nrow(out)), function(i) {
+        if (is.na(out$blocked_by[i]) || is.na(out$methylation_motif[i])) {
+          return(FALSE)
+        }
+        blocker <- tolower(out$blocked_by[i])
+        if (!blocker %in% c("dam", "dcm")) return(FALSE)
+        target <- target_by_id[[as.character(out$accver[i])]]
+        len <- nchar(target)
+        positions <- ((seq.int(out$start[i] - 6L,
+          out$start[i] + out$motif_length[i] + 5L) - 1L) %% len) + 1L
+        window <- paste0(strsplit(target, "", fixed = TRUE)[[1L]][positions],
+          collapse = "")
+        grepl(ggchord_iupac_regex(out$methylation_motif[i]), window,
+          perl = TRUE)
+      }, logical(1L))
+      known <- !is.na(out$blocked_by)
+      out$methylation_status[known & !explicit_status] <- "unblocked"
+      out$methylation_status[context_matches & !explicit_status] <- "blocked"
+      inferred_warning <- context_matches & !explicit_status
+      out$display_warning[inferred_warning] <- "methylation_blocked"
+    }
+  }
+  attr(out,"enzyme_database_version")<-unique(defs$database_version)
+  attr(out,"reference_enzyme_profiles")<-reference_profiles
+  attr(out,"methylation")<-methylation
+  out
 }
 
 #' Filter restriction sites for display
 #' @param sites Result from [find_restriction_sites()].
-#' @param set Display preset.
+#' @param set Display preset. `"reference"` reuses the enzyme-set profile
+#'   stored for an exactly recognized reference sequence. It errors when no
+#'   such profile is available. A saved `"None"` profile returns no sites.
 #' @param enzymes,min_site_length,cuts,window,commercial_only Additional filters.
+#' @param parent_set Enzyme catalogue subset. `"commercial_nonredundant"`
+#'   keeps one stable commercial representative per equivalent recognition
+#'   group and site, preferring the database's preferred enzyme when present.
 #' @return A row subset whose biological coordinates are unchanged.
+#' @examples
+#' data(plasmid_example_pSpCas9_BB_2A_GFP_PX458)
+#' sites <- find_restriction_sites(
+#'   plasmid_example_pSpCas9_BB_2A_GFP_PX458
+#' )
+#' reference_sites <- filter_restriction_sites(sites, set = "reference")
 #' @export
-filter_restriction_sites<-function(sites,set=c("all","unique","unique_dual","six_plus","unique_6plus","commercial"),enzymes=NULL,min_site_length=NULL,cuts=NULL,window=NULL,commercial_only=FALSE){
+filter_restriction_sites<-function(sites,set=c("all","unique","unique_dual","six_plus","unique_6plus","commercial","reference"),enzymes=NULL,min_site_length=NULL,cuts=NULL,window=NULL,commercial_only=FALSE,parent_set=c("all","commercial_all","commercial_nonredundant")){
   if(!is.data.frame(sites))ggchord_stop("filter_restriction_sites(): sites must be a data frame")
-  set<-match.arg(set);if(!nrow(sites))return(sites)
+  set<-match.arg(set);parent_set<-match.arg(parent_set);if(!nrow(sites))return(sites)
   ggchord_require_columns(sites,c("accver","enzyme","motif_length","position"),"filter_restriction_sites()")
-  key<-paste(sites$accver,sites$enzyme,sep="\r");site_count<-as.integer(table(key)[key]);keep<-rep(TRUE,nrow(sites))
+  if (set == "reference") {
+    profiles <- attr(sites, "reference_enzyme_profiles")
+    if (!is.data.frame(profiles) || !nrow(profiles)) {
+      ggchord_stop(
+        "filter_restriction_sites(set = \"reference\"): no exact reference ",
+        "enzyme profile is available"
+      )
+    }
+    missing_profiles <- setdiff(unique(as.character(sites$accver)),
+      as.character(profiles$accver))
+    if (length(missing_profiles)) {
+      ggchord_stop(
+        "filter_restriction_sites(set = \"reference\"): no profile for ",
+        paste(missing_profiles, collapse = ", ")
+      )
+    }
+    filtered <- lapply(unique(as.character(sites$accver)), function(id) {
+      part <- sites[as.character(sites$accver) == id, , drop = FALSE]
+      profile <- profiles[match(id, profiles$accver), , drop = FALSE]
+      if (profile$profile_type == "none") return(part[FALSE, , drop = FALSE])
+      if (profile$profile_type == "custom") {
+        return(filter_restriction_sites(part, set = "all",
+          enzymes = profile$enzymes[[1L]], min_site_length = min_site_length,
+          cuts = cuts, window = window, commercial_only = commercial_only,
+          parent_set = "all"))
+      }
+      preset <- c(
+        "Unique Cutters" = "unique",
+        "Unique & Dual Cutters" = "unique_dual",
+        "6+ Cutters" = "six_plus",
+        "Unique 6+ Cutters" = "unique_6plus"
+      )[[profile$set_name]]
+      if (is.null(preset)) {
+        ggchord_stop("Unsupported reference enzyme set: ", profile$set_name)
+      }
+      filter_restriction_sites(part, set = preset,
+        min_site_length = min_site_length, cuts = cuts, window = window,
+        commercial_only = commercial_only, parent_set = parent_set)
+    })
+    attrs<-attributes(sites);out<-ggchord_rbind_fill(filtered);rownames(out)<-NULL
+    for(nm in setdiff(names(attrs),c("names","row.names","class")))
+      attr(out,nm)<-attrs[[nm]]
+    return(out)
+  }
+  key<-paste(sites$accver,sites$enzyme,sep="\r")
+  site_count<-if("enzyme_site_count"%in%names(sites))
+    as.integer(sites$enzyme_site_count) else as.integer(table(key)[key])
+  keep<-rep(TRUE,nrow(sites))
   if(set=="unique")keep<-keep&site_count==1L
   if(set=="unique_dual")keep<-keep&site_count%in%c(1L,2L)
   if(set=="six_plus")keep<-keep&sites$motif_length>=6L
@@ -280,6 +481,24 @@ filter_restriction_sites<-function(sites,set=c("all","unique","unique_dual","six
     if(!"commercial"%in%names(sites))ggchord_stop("filter_restriction_sites(): sites is missing commercial")
     keep<-keep&!is.na(sites$commercial)&sites$commercial
   }
+  if(parent_set!="all"){
+    if(!"commercial"%in%names(sites))ggchord_stop("filter_restriction_sites(): sites is missing commercial")
+    keep<-keep&!is.na(sites$commercial)&sites$commercial
+  }
+  if(parent_set=="commercial_nonredundant"){
+    ggchord_require_columns(sites,c("preferred_enzyme","is_preferred_enzyme"),"filter_restriction_sites()")
+    candidate<-which(keep)
+    if(length(candidate)){
+      group<-paste(sites$accver[candidate],sites$preferred_enzyme[candidate],
+        sites$start[candidate],sep="\r")
+      source_order<-if("pattern_source_row"%in%names(sites))
+        sites$pattern_source_row[candidate] else candidate
+      rank<-order(group,!sites$is_preferred_enzyme[candidate],source_order,
+        sites$enzyme[candidate])
+      chosen<-candidate[rank][!duplicated(group[rank])]
+      keep[candidate]<-FALSE;keep[chosen]<-TRUE
+    }
+  }
   attrs<-attributes(sites);out<-sites[keep,,drop=FALSE];rownames(out)<-NULL
   for(nm in setdiff(names(attrs),c("names","row.names","class")))attr(out,nm)<-attrs[[nm]];out
 }
@@ -290,7 +509,7 @@ GeomRestrictionSite <- ggplot2::ggproto(
   default_aes = ggplot2::aes(
     xend = NA_real_, yend = NA_real_, label = NA_character_,
     enzyme_label = NA_character_, coordinate_label = NA_character_,
-    label_order = NA_character_,
+    label_order = NA_character_, enzyme_fontface = "plain",
     .component = NA_character_, group = NA_integer_, colour = "#202020",
     alpha = 1, linewidth = .28, linetype = 1, size = 2.9, angle = 0,
     hjust = .5, vjust = .5, family = "", fontface = 1, lineheight = 1.2
@@ -328,10 +547,14 @@ GeomRestrictionSite <- ggplot2::ggproto(
             fontsize = placed$size[i] * (72.27 / 25.4),
             fontfamily = placed$family[i], lineheight = placed$lineheight[i]
           )
+          enzyme_face <- if ("enzyme_fontface" %in% names(placed) &&
+              !is.na(placed$enzyme_fontface[i])) {
+            placed$enzyme_fontface[i]
+          } else "plain"
           enzyme <- grid::textGrob(
             placed$enzyme_label[i], y = grid::unit(placed$y[i], "native"),
             vjust = placed$vjust[i],
-            gp = do.call(grid::gpar, c(common_gp, list(fontface = "bold")))
+            gp = do.call(grid::gpar, c(common_gp, list(fontface = enzyme_face)))
           )
           coordinate <- grid::textGrob(
             placed$coordinate_label[i],
@@ -399,7 +622,10 @@ GeomRestrictionSite <- ggplot2::ggproto(
 #' @param min_label_gap Minimum genomic fraction between label slots. `NULL`
 #'   derives a compact device-aware default from the rendered labels.
 #' @param tick_length,label_offset Local-normal distances.
-#' @param colour,linewidth,label_size,fontface,family Fixed appearance.
+#' @param colour,linewidth,label_size,fontface,family Fixed appearance. With
+#'   the default `fontface = NULL`, enzyme names are bold only when that enzyme
+#'   cuts once in the supplied sequence; coordinates remain regular. An
+#'   explicit `fontface` disables this automatic distinction.
 #' @param label_order Automatic mirrored label order, enzyme first, or
 #'   position first.
 #' @param position,show.legend,inherit.aes Standard layer arguments.
@@ -418,7 +644,7 @@ geom_restriction_site<-function(mapping=NULL,data=NULL,label=TRUE,label_style=c(
   if(label_size_supplied)text_params$size<-label_size
   if(fontface_supplied)text_params$fontface<-fontface
   if(family_supplied)text_params$family<-family
-  lyr<-ggplot2::layer(data=data.frame(x=numeric(),y=numeric()),mapping=ggplot2::aes(x=x,y=y,group=group,label=label,.component=I(.component),enzyme_label=I(enzyme_label),coordinate_label=I(coordinate_label),label_order=I(label_order)),stat="identity",geom=GeomRestrictionSite,position=position,show.legend=show.legend,inherit.aes=inherit.aes,check.aes=FALSE,check.param=FALSE,params=c(list(na.rm=FALSE,colour=colour,linewidth=linewidth,size=label_size,segment_params=segment_params,text_params=text_params,composite_labels=!fontface_supplied),list(...)))
+  lyr<-ggplot2::layer(data=data.frame(x=numeric(),y=numeric()),mapping=ggplot2::aes(x=x,y=y,group=group,label=label,.component=I(.component),enzyme_label=I(enzyme_label),coordinate_label=I(coordinate_label),label_order=I(label_order),enzyme_fontface=I(enzyme_fontface)),stat="identity",geom=GeomRestrictionSite,position=position,show.legend=show.legend,inherit.aes=inherit.aes,check.aes=FALSE,check.param=FALSE,params=c(list(na.rm=FALSE,colour=colour,linewidth=linewidth,size=label_size,segment_params=segment_params,text_params=text_params,composite_labels=!fontface_supplied),list(...)))
   lyr$ggchord_type<-"restriction_site";lyr$ggchord_theme_components<-c(segment_params="ggchord.restriction.label.segment",text_params="ggchord.restriction.label")
   lyr$ggchord_params<-list(type="restriction_site",label=label,label_style=label_style,label_order=label_order,label_side=label_side,leader=leader,min_label_gap=min_label_gap,tick_length=tick_length,label_offset=label_offset,label_size=label_size)
   ggchord_capture_layer_input(lyr,data,mapping,c("accver","position","enzyme"))
@@ -438,6 +664,16 @@ ggchord_restriction_label_lanes <- function(
   labels$.radial_parameter <- NA_real_
   directions <- rep(NA_character_, nrow(gl))
   tracks <- rep(NA_integer_, nrow(gl))
+  provisional_boxes <- ggchord_text_boxes(
+    labels, units_per_inch = units_per_inch
+  )
+  collision_boxes <- provisional_boxes
+  # The final restriction label is drawn as separate bold enzyme and regular
+  # coordinate grobs.  Reserve a modest composite-text margin during the
+  # circular solve so the later exact metrics do not turn an apparently valid
+  # main-track fan into many unnecessary radial spill tracks.
+  provisional_boxes$w <- provisional_boxes$w * 1.18
+  provisional_boxes$h <- provisional_boxes$h * 1.08
   arc_ids <- vapply(seq_arcs, function(arc) as.character(arc$accver[1L]),
     character(1))
 
@@ -475,11 +711,23 @@ ggchord_restriction_label_lanes <- function(
     # occupies substantial tangential width. Solve such neighbours as one
     # ordered contour fan instead of allowing independently centred fans to
     # overlap.
-    fan_gap <- max(.025, min_label_gap %||% .014) * total
-    fan <- cumsum(c(TRUE, diff(opened) > fan_gap))
-    local <- split(rows[ord], fan)
-    groups <- c(groups, local)
+    base_fan_gap <- max(.025, min_label_gap %||% .014) * total
+    theta <- atan2(gl$anchor_y[rows[ord]], gl$anchor_x[rows[ord]])
+    tangent_half_extent <-
+      abs(sin(theta)) * provisional_boxes$w[rows[ord]] / 2 +
+      abs(cos(theta)) * provisional_boxes$h[rows[ord]] / 2
+    adaptive_gap <- if (length(opened) > 1L) {
+      pmax(
+        base_fan_gap,
+        tangent_half_extent[-length(tangent_half_extent)] +
+          tangent_half_extent[-1L] + .025
+      )
+    } else numeric()
+    groups[[length(groups) + 1L]] <- rows[ord]
   }
+  # Groups remain genomic/circular clusters.  Do not split them at Cartesian
+  # top/right/bottom/left boundaries: the exterior resource is a circular
+  # anchor track, not four independent text rails.
 
   # The final restriction layout has its own circular packing pass below.  It
   # does not need the gene-label solver's independent radial tracks; starting
@@ -493,7 +741,7 @@ ggchord_restriction_label_lanes <- function(
   directions <- ifelse(gl$anchor_x < 0, "left", "right")
   tracks[] <- 1L
   labels$text <- gl$text
-  boxes <- ggchord_text_boxes(labels, units_per_inch = units_per_inch)
+  boxes <- provisional_boxes
   labels$.restriction_column <- FALSE
   labels$.restriction_column_edge <- NA_real_
   labels$.restriction_column_radius <- NA_real_
@@ -501,41 +749,48 @@ ggchord_restriction_label_lanes <- function(
   labels$.restriction_column_group <- NA_integer_
   labels$.restriction_column_index <- NA_real_
   labels$.restriction_column_center_y <- NA_real_
+  labels$.restriction_rail_side <- NA_character_
+  labels$.restriction_rail_edge_x <- NA_real_
+  labels$.restriction_rail_edge_y <- NA_real_
 
-  # Dense lateral site clusters switch from free radial placement to a strict
-  # label fan. The true anchors still determine the line roots, while measured
-  # text rows are distributed on one shared-radius inner contour. Sorting never
-  # changes genomic order, so the fan remains deterministic and non-crossing.
-  if (!identical(side, "inside")) for (column_group in seq_along(groups)) {
+  # Retained fields keep the layout schema stable.  Four-sided Cartesian rails
+  # were an intermediate experiment and are deliberately disabled: horizontal
+  # text may extend beyond its circular anchor track, while its measured box is
+  # used only for collision detection and local outward stacking.
+  if (FALSE && !identical(side, "inside")) for (column_group in seq_along(groups)) {
     rows <- groups[[column_group]]
-    if (length(rows) < 5L) next
+    if (length(rows) < 3L) next
     radius <- sqrt(gl$anchor_x[rows]^2 + gl$anchor_y[rows]^2)
     radius[radius <= 1e-10] <- 1
-    lateral_score <- mean(abs(gl$anchor_x[rows]) / radius)
-    one_half <- length(unique(sign(gl$anchor_x[rows]))) == 1L
-    if (!one_half || lateral_score < .55) next
+    x_score <- mean(abs(gl$anchor_x[rows]) / radius)
+    y_score <- mean(abs(gl$anchor_y[rows]) / radius)
+    vertical_cut <- .70
+    vertical <- all(abs(gl$anchor_x[rows]) >= vertical_cut * radius)
+    if (vertical && length(rows) < 5L) next
+    cardinal <- if (vertical) x_score else y_score
+    half_coordinate <- if (vertical) gl$anchor_x[rows] else gl$anchor_y[rows]
+    one_half <- length(unique(sign(half_coordinate))) == 1L
+    if (!one_half || cardinal < .55) next
+    rail_side <- if (vertical) {
+      if (mean(gl$anchor_x[rows]) >= 0) "right" else "left"
+    } else if (mean(gl$anchor_y[rows]) >= 0) "top" else "bottom"
 
     genomic <- if ("genomic_position" %in% names(gl)) {
       gl$genomic_position[rows]
     } else seq_along(rows)
     ord <- order(genomic, rows)
     ordered <- rows[ord]
-    y_direction <- suppressWarnings(sign(stats::cor(
-      genomic[ord], gl$anchor_y[ordered]
-    )))
-    if (!is.finite(y_direction) || y_direction == 0) {
-      y_direction <- sign(tail(gl$anchor_y[ordered], 1L) -
-        gl$anchor_y[ordered[1L]])
-    }
-    if (!is.finite(y_direction) || y_direction == 0) y_direction <- -1
+    axis_anchor <- if (vertical) gl$anchor_y[ordered] else
+      gl$anchor_x[ordered]
+    half_extent <- if (vertical) boxes$h[ordered] / 2 else
+      boxes$w[ordered] / 2
+    axis_position <- ggchord_pack_label_axis_outward(
+      axis_anchor, axis_anchor, half_extent, half_extent,
+      centre = 0,
+      gap = if (vertical) .023 else .045
+    )
 
-    row_pitch <- max(boxes$h[rows], na.rm = TRUE) * 1.32 + .009
-    row_index <- seq_along(ordered) - (length(ordered) + 1) / 2
-    column_center_y <- mean(range(gl$anchor_y[rows]))
-    column_y <- column_center_y +
-      y_direction * row_index * row_pitch
-
-    displacement <- abs(column_y - gl$anchor_y[ordered])
+    displacement <- abs(axis_position - axis_anchor)
     displacement_scale <- max(displacement)
     if (!is.finite(displacement_scale) || displacement_scale <= 1e-10) {
       displacement_scale <- 1
@@ -548,29 +803,91 @@ ggchord_restriction_label_lanes <- function(
       frame$outward_x[ordered] * stub
     labels$.radial_bend_y[ordered] <- gl$anchor_y[ordered] +
       frame$outward_y[ordered] * stub
-    column_side <- if (mean(gl$anchor_x[rows]) >= 0) "right" else "left"
-    label_radius <- max(sqrt(
-      labels$.radial_bend_x[rows]^2 + labels$.radial_bend_y[rows]^2
-    )) + .085
-    label_radius <- max(label_radius, max(abs(column_y)) + .04)
-    boundary <- sqrt(pmax(.001, label_radius^2 - column_y^2))
-    if (column_side == "right") {
-      edge <- boundary
-      labels$text_x[ordered] <- edge + boxes$w[ordered] / 2
+    boundary <- max(radius, na.rm = TRUE) + max(.075, .55 * label_offset)
+    if (rail_side == "right") {
+      edge_x <- rep(boundary, length(ordered))
+      edge_y <- axis_position
+      labels$text_x[ordered] <- edge_x + boxes$w[ordered] / 2
+      labels$text_y[ordered] <- edge_y
+    } else if (rail_side == "left") {
+      edge_x <- rep(-boundary, length(ordered))
+      edge_y <- axis_position
+      labels$text_x[ordered] <- edge_x - boxes$w[ordered] / 2
+      labels$text_y[ordered] <- edge_y
+    } else if (rail_side == "top") {
+      edge_x <- axis_position
+      edge_y <- rep(boundary, length(ordered))
+      labels$text_x[ordered] <- edge_x
+      labels$text_y[ordered] <- edge_y + boxes$h[ordered] / 2
     } else {
-      edge <- -boundary
-      labels$text_x[ordered] <- edge - boxes$w[ordered] / 2
+      edge_x <- axis_position
+      edge_y <- rep(-boundary, length(ordered))
+      labels$text_x[ordered] <- edge_x
+      labels$text_y[ordered] <- edge_y - boxes$h[ordered] / 2
     }
-    labels$text_y[ordered] <- column_y
     labels$.restriction_column[rows] <- TRUE
-    labels$.restriction_column_edge[ordered] <- edge
-    labels$.restriction_column_radius[rows] <- label_radius
-    labels$.restriction_column_side[rows] <- column_side
+    labels$.restriction_column_edge[ordered] <- if (vertical) edge_x else edge_y
+    labels$.restriction_column_radius[rows] <- boundary
+    labels$.restriction_column_side[rows] <- rail_side
     labels$.restriction_column_group[rows] <- column_group
-    labels$.restriction_column_index[ordered] <- y_direction * row_index
-    labels$.restriction_column_center_y[rows] <- column_center_y
-    directions[rows] <- column_side
+    labels$.restriction_column_index[ordered] <- seq_along(ordered)
+    labels$.restriction_column_center_y[rows] <- mean(labels$text_y[ordered])
+    labels$.restriction_rail_side[ordered] <- rail_side
+    labels$.restriction_rail_edge_x[ordered] <- edge_x
+    labels$.restriction_rail_edge_y[ordered] <- edge_y
+    directions[rows] <- rail_side
     tracks[rows] <- 1L
+  }
+  # Adjacent genomic fans on the same physical side must share one measured
+  # rail.  Repack them together after local classification; otherwise two
+  # individually valid top fans can overlap at the origin seam.
+  if (FALSE) for (id in unique(as.character(gl$accver))) {
+    for (rail_side in c("left", "right", "top", "bottom")) {
+      rows <- which(as.character(gl$accver) == id &
+        labels$.restriction_rail_side %in% rail_side)
+      if (length(rows) < 2L) next
+      vertical <- rail_side %in% c("left", "right")
+      anchor_axis <- if (vertical) gl$anchor_y[rows] else gl$anchor_x[rows]
+      # The rail order follows the roots' projected physical order.  Around a
+      # circular origin, sorting by the raw genomic coordinate can reverse one
+      # side of the fan even though every local group is internally ordered.
+      ordered <- rows[order(anchor_axis, gl$genomic_position[rows], rows)]
+      half_extent <- if (vertical) boxes$h[ordered] / 2 else
+        boxes$w[ordered] / 2
+      axis_position <- ggchord_pack_label_axis_outward(
+        anchor_axis[order(anchor_axis, gl$genomic_position[rows], rows)],
+        anchor_axis[order(anchor_axis, gl$genomic_position[rows], rows)],
+        half_extent, half_extent,
+        centre = 0,
+        gap = if (vertical) .023 else .045
+      )
+      boundary <- max(labels$.restriction_column_radius[ordered], na.rm = TRUE)
+      if (rail_side == "right") {
+        edge_x <- rep(boundary, length(ordered))
+        edge_y <- axis_position
+        labels$text_x[ordered] <- edge_x + boxes$w[ordered] / 2
+        labels$text_y[ordered] <- edge_y
+      } else if (rail_side == "left") {
+        edge_x <- rep(-boundary, length(ordered))
+        edge_y <- axis_position
+        labels$text_x[ordered] <- edge_x - boxes$w[ordered] / 2
+        labels$text_y[ordered] <- edge_y
+      } else if (rail_side == "top") {
+        edge_x <- axis_position
+        edge_y <- rep(boundary, length(ordered))
+        labels$text_x[ordered] <- edge_x
+        labels$text_y[ordered] <- edge_y + boxes$h[ordered] / 2
+      } else {
+        edge_x <- axis_position
+        edge_y <- rep(-boundary, length(ordered))
+        labels$text_x[ordered] <- edge_x
+        labels$text_y[ordered] <- edge_y - boxes$h[ordered] / 2
+      }
+      labels$.restriction_rail_edge_x[ordered] <- edge_x
+      labels$.restriction_rail_edge_y[ordered] <- edge_y
+      labels$.restriction_column_edge[ordered] <- if (vertical) edge_x else edge_y
+      labels$.restriction_column_radius[ordered] <- boundary
+    }
   }
   # Put every enzyme-facing text edge on one compact circular contour.  The
   # labels are packed only along that contour, in genomic order.  Horizontal
@@ -582,15 +899,42 @@ ggchord_restriction_label_lanes <- function(
   labels$.restriction_contour_x <- NA_real_
   labels$.restriction_contour_y <- NA_real_
   labels$.restriction_contour_radius <- NA_real_
+  labels$.restriction_base_contour_radius <- NA_real_
   labels$.restriction_fan_group <- NA_integer_
+  labels$.restriction_fan_index <- NA_integer_
+  labels$.restriction_fan_size <- NA_integer_
   labels$.restriction_orientation <- NA_real_
   labels$.restriction_text_sign <- NA_real_
+  labels$.restriction_cut_spill <- FALSE
   radial_sign <- if (identical(side, "inside")) -1 else 1
   contour_radius_by_id <- vapply(unique(as.character(gl$accver)), function(id) {
     rows <- which(as.character(gl$accver) == id)
     base <- if (radial_sign > 0) max(anchor_radius[rows], na.rm = TRUE) else
       min(anchor_radius[rows], na.rm = TRUE)
-    base + radial_sign * max(.040, .30 * label_offset)
+    nominal <- base + radial_sign * max(.040, .30 * label_offset)
+    if (radial_sign < 0 || length(rows) < 2L) return(nominal)
+    # Horizontal labels can rotate from top/bottom into lateral sectors during
+    # packing, where their full width becomes tangential. Size the dominant
+    # track conservatively from that complete measured width; the bbox may
+    # still extend beyond the track and remains the collision authority.
+    anchor_theta <- atan2(gl$anchor_y[rows], gl$anchor_x[rows])
+    tangential_width <- abs(sin(anchor_theta)) * collision_boxes$w[rows] +
+      abs(cos(anchor_theta)) * collision_boxes$h[rows]
+    required_arc <- sum(tangential_width + .010)
+    measured <- required_arc / (2 * pi * .90)
+    # Moderate maps retain a close dominant ring and let local conflicts
+    # spill; very heavily annotated maps expand one common ring first. This
+    # is a load class, not an identifier-specific layout branch.
+    full_measured <- sum(collision_boxes$w[rows] + .010) /
+      (2 * pi * .90)
+    compact_radius <- min(base + .32, full_measured)
+    anchor_angles <- (anchor_theta + 2 * pi) %% (2 * pi)
+    quarter_fraction <- max(vapply(anchor_angles, function(angle) {
+      sum(((anchor_angles - angle) %% (2 * pi)) < pi / 2)
+    }, integer(1L))) / length(rows)
+    dominant_radius <- if (full_measured < 2.48) compact_radius else if (
+        quarter_fraction > .55) full_measured else measured
+    max(nominal, dominant_radius)
   }, numeric(1))
   for (g in seq_along(groups)) {
     rows <- groups[[g]]
@@ -614,23 +958,25 @@ ggchord_restriction_label_lanes <- function(
     contour_radius <- contour_radius_by_id[id]
     preferred_angle <- numeric(length(ordered))
     if (length(ordered) > 1L) {
-      ordered_genomic <- gl$genomic_position[ordered]
-      preferred_angle <- 2 * pi *
-        ((ordered_genomic - ordered_genomic[1L]) %% total) / total
+      # `ordered` is opened in the physical arc order.  Derive its unwrapped
+      # angular parameter from that physical order rather than from raw genomic
+      # subtraction: after rotation or reversed path direction the latter can
+      # jump at the origin and silently reverse a subset of packed endpoints.
+      angular_step <- orientation * atan2(
+        sin(diff(theta)), cos(diff(theta))
+      )
+      angular_step[angular_step < 0] <- angular_step[angular_step < 0] +
+        2 * pi
+      preferred_angle <- c(0, cumsum(angular_step))
     }
 
-    dense_fan <- all(labels$.restriction_column[ordered])
+    dense_fan <- all(!is.na(labels$.restriction_rail_side[ordered]))
     if (dense_fan) {
-      # At the lateral cardinal points a dense fan is most legible with an
-      # even vertical rhythm. Its inner edge is nevertheless projected back to
-      # the contour, producing a staircase rather than a fixed-x text wall.
-      edge_y <- labels$text_y[ordered]
-      contour_radius <- max(contour_radius, max(abs(edge_y)) + .04)
-      edge_x <- if (mean(gl$anchor_x[ordered]) >= 0) {
-        sqrt(pmax(.001, contour_radius^2 - edge_y^2))
-      } else {
-        -sqrt(pmax(.001, contour_radius^2 - edge_y^2))
-      }
+      # Four-sided rails are already packed in measured text units.  Their
+      # connection edge, rather than the text centre, is the leader target.
+      edge_x <- labels$.restriction_rail_edge_x[ordered]
+      edge_y <- labels$.restriction_rail_edge_y[ordered]
+      contour_radius <- max(sqrt(edge_x^2 + edge_y^2))
       packed_theta <- atan2(edge_y, edge_x)
       packed <- orientation * (packed_theta - theta[1L]) * contour_radius
     } else {
@@ -647,24 +993,41 @@ ggchord_restriction_label_lanes <- function(
           half_extent, half_extent, gap = .010
         )
       }
+      crowding_ratio <- sum(collision_boxes$w[ordered]) /
+        (2 * pi * contour_radius)
+      if (crowding_ratio > 1.25) {
+        preferred_distance <- preferred_angle * contour_radius
+        max_tangent_shift <- .35 * contour_radius
+        packed <- pmax(preferred_distance - max_tangent_shift,
+          pmin(preferred_distance + max_tangent_shift, packed))
+      }
       packed_theta <- theta[1L] + orientation * packed / contour_radius
       edge_x <- contour_radius * cos(packed_theta)
       edge_y <- contour_radius * sin(packed_theta)
     }
-    text_side <- ifelse(edge_x < 0, "left", "right")
+    text_side <- if (dense_fan) labels$.restriction_rail_side[ordered] else
+      ifelse(edge_x < 0, "left", "right")
     text_sign <- radial_sign * ifelse(edge_x < 0, -1, 1)
-    labels$text_x[ordered] <- edge_x +
-      text_sign * boxes$w[ordered] / 2
-    labels$text_y[ordered] <- edge_y
+    if (!dense_fan) {
+      labels$text_x[ordered] <- edge_x +
+        text_sign * boxes$w[ordered] / 2
+      labels$text_y[ordered] <- edge_y
+    }
     labels$.restriction_contour[ordered] <- TRUE
     labels$.restriction_contour_x[ordered] <- edge_x
     labels$.restriction_contour_y[ordered] <- edge_y
-    labels$.restriction_contour_radius[ordered] <- contour_radius
+    labels$.restriction_contour_radius[ordered] <- sqrt(edge_x^2 + edge_y^2)
+    labels$.restriction_base_contour_radius[ordered] <- contour_radius
     labels$.restriction_fan_group[ordered] <- g
+    labels$.restriction_fan_index[ordered] <- seq_along(ordered)
+    labels$.restriction_fan_size[ordered] <- length(ordered)
     labels$.restriction_orientation[ordered] <- orientation
     labels$.restriction_text_sign[ordered] <- text_sign
     dense <- labels$.restriction_column[ordered]
-    labels$.restriction_column_edge[ordered[dense]] <- edge_x[dense]
+    vertical_dense <- dense & labels$.restriction_rail_side[ordered] %in%
+      c("left", "right")
+    labels$.restriction_column_edge[ordered[vertical_dense]] <-
+      edge_x[vertical_dense]
     directions[ordered] <- text_side
 
     angular_displacement <- abs(packed / contour_radius - preferred_angle)
@@ -684,19 +1047,24 @@ ggchord_restriction_label_lanes <- function(
   # when its actual horizontal text boxes overlap a previously placed fan, and
   # it moves forward as one rigid unit. This preserves both the internal rhythm
   # and genomic order without letting one dense region drag distant labels.
-  for (id in unique(as.character(gl$accver))) {
+  if (FALSE) for (id in unique(as.character(gl$accver))) {
     fan_ids <- which(vapply(groups, function(rows) {
       identical(as.character(gl$accver[rows[1L]]), id)
     }, logical(1)))
     placed <- integer()
     for (fan_id in fan_ids) {
       members <- which(labels$.restriction_fan_group == fan_id)
+      if (length(members) && all(!is.na(
+          labels$.restriction_rail_side[members]))) {
+        placed <- c(placed, members)
+        next
+      }
       if (!length(placed)) {
         placed <- members
         next
       }
       orientation <- labels$.restriction_orientation[members[1L]]
-      for (attempt in 0:400) {
+      for (attempt in 0:0) {
         side_sign <- labels$.restriction_text_sign[members]
         centre_x <- labels$.restriction_contour_x[members] +
           side_sign * boxes$w[members] / 2
@@ -746,6 +1114,110 @@ ggchord_restriction_label_lanes <- function(
       placed <- c(placed, members)
     }
   }
+
+  # Reconcile the remaining boundary collisions with local exterior tracks.
+  # Moving only the later genomic label radially outward retains each fan's
+  # polar position and is much more compact than forcing all labels onto one
+  # ever-growing global contour.
+  # Restore the real horizontal text extent before collision/track assignment.
+  # The enlarged provisional boxes above are packing slack, not visible ink.
+  labels$text_x <- labels$.restriction_contour_x +
+    labels$.restriction_text_sign * collision_boxes$w / 2
+  labels$text_y <- labels$.restriction_contour_y
+  boxes <- collision_boxes
+  labels$.restriction_outer_track <- 1L
+  shifted_box <- function(row, text_x, text_y,
+                          padding = .045 * units_per_inch) {
+    # Text metrics do not change when only the circular anchor moves. Reuse
+    # the measured glyph box instead of opening a grid device for every
+    # candidate track of every dense restriction label.
+    box <- collision_boxes[row, , drop = FALSE]
+    dx <- text_x - box$x
+    dy <- text_y - box$y
+    for (column in c("x", "cx", "xmin", "xmax")) {
+      box[[column]] <- box[[column]] + dx
+    }
+    for (column in c("y", "cy", "ymin", "ymax")) {
+      box[[column]] <- box[[column]] + dy
+    }
+    for (column in c("ow", "oh", "bw", "bh")) {
+      box[[column]] <- box[[column]] + 2 * padding
+    }
+    box$xmin <- box$xmin - padding
+    box$xmax <- box$xmax + padding
+    box$ymin <- box$ymin - padding
+    box$ymax <- box$ymax + padding
+    box
+  }
+  for (id in unique(as.character(gl$accver))) {
+    rows <- which(as.character(gl$accver) == id)
+    if (length(rows) < 2L) next
+    base_radius <- unique(labels$.restriction_contour_radius[rows])
+    base_radius <- base_radius[is.finite(base_radius)][1L]
+    crowding_ratio <- sum(collision_boxes$w[rows]) /
+      (2 * pi * base_radius)
+    if (!is.finite(crowding_ratio) || crowding_ratio <= 1.25) next
+    ordered <- rows[order(gl$genomic_position[rows], rows)]
+    placed <- data.frame()
+    for (row in ordered) {
+      if (!is.na(labels$.restriction_rail_side[row])) {
+        candidate_box <- shifted_box(row, labels$text_x[row],
+          labels$text_y[row])
+        placed <- if (!nrow(placed)) candidate_box else
+          rbind(placed, candidate_box)
+        next
+      }
+      base_radius <- labels$.restriction_contour_radius[row]
+      theta <- atan2(labels$.restriction_contour_y[row],
+        labels$.restriction_contour_x[row])
+      chosen <- NULL
+      for (track in 1:12) {
+        radius <- base_radius + (track - 1L) * max(.050, boxes$h[row] * .82)
+        candidate_theta <- if (track > 1L &&
+            labels$.restriction_fan_index[row] == 1L) {
+          members <- which(labels$.restriction_fan_group ==
+            labels$.restriction_fan_group[row])
+          next_row <- members[which.min(abs(
+            labels$.restriction_fan_index[members] - 2L
+          ))]
+          last_row <- members[which.max(
+            labels$.restriction_fan_index[members]
+          )]
+          next_theta <- atan2(labels$.restriction_contour_y[next_row],
+            labels$.restriction_contour_x[next_row])
+          last_theta <- atan2(labels$.restriction_contour_y[last_row],
+            labels$.restriction_contour_x[last_row])
+          orientation <- labels$.restriction_orientation[row]
+          gap_angle <- (orientation * (next_theta - last_theta)) %% (2 * pi)
+          last_theta + orientation * gap_angle * .5
+        } else theta
+        edge_x <- radius * cos(candidate_theta)
+        edge_y <- radius * sin(candidate_theta)
+        text_sign <- radial_sign * ifelse(edge_x < 0, -1, 1)
+        candidate_x <- edge_x + text_sign * boxes$w[row] / 2
+        candidate_y <- edge_y
+        candidate_box <- shifted_box(row, candidate_x, candidate_y)
+        collision <- nrow(placed) &&
+          any(ggchord_oriented_box_overlaps(candidate_box, placed))
+        chosen <- list(radius = radius, edge_x = edge_x, edge_y = edge_y,
+          text_sign = text_sign, text_x = candidate_x,
+          text_y = candidate_y, box = candidate_box, track = track)
+        if (!collision) break
+      }
+      labels$.restriction_contour_x[row] <- chosen$edge_x
+      labels$.restriction_contour_y[row] <- chosen$edge_y
+      labels$.restriction_contour_radius[row] <- chosen$radius
+      labels$.restriction_text_sign[row] <- chosen$text_sign
+      labels$text_x[row] <- chosen$text_x
+      labels$text_y[row] <- chosen$text_y
+      labels$.restriction_outer_track[row] <- chosen$track
+      directions[row] <- if (chosen$text_sign < 0) "left" else "right"
+      if (labels$.restriction_column[row]) {
+        labels$.restriction_column_edge[row] <- chosen$edge_x
+      }
+      placed <- rbind(placed, chosen$box)
+    }
+  }
   boxes <- ggchord_text_boxes(labels, units_per_inch = units_per_inch)
   labels$.text_width <- boxes$w
   labels$.text_height <- boxes$h
@@ -761,6 +1233,7 @@ ggchord_restriction_text_metrics <- function(text, size, units_per_inch,
                                              fontface = "plain") {
   n <- length(text)
   size <- rep_len(size, n)
+  fontface <- rep_len(fontface, n)
   width <- height <- numeric(n)
   valid <- !is.na(text) & nzchar(text)
   if (!any(valid)) return(data.frame(width = width, height = height))
@@ -771,7 +1244,7 @@ ggchord_restriction_text_metrics <- function(text, size, units_per_inch,
       error = function(e) text[i]) else text[i]
     grob <- grid::textGrob(
       label, gp = grid::gpar(
-        fontsize = size[i] * (72.27 / 25.4), fontface = fontface
+        fontsize = size[i] * (72.27 / 25.4), fontface = fontface[i]
       )
     )
     width[i] <- grid::convertWidth(
@@ -998,32 +1471,55 @@ ggchord_restriction_geometry <- function(data, params, layout, seq_data) {
     # tolerance: adjacent bp always remain separate callouts. Enzymes sharing
     # one anchor may have different second-strand cuts and still describe the
     # same displayed restriction site.
-    site_key <- sprintf("%.17g", data$position[idx])
+    all_idx <- idx
+    site_key <- sprintf("%.17g", data$position[all_idx])
     site_members <- unname(split(idx,
       factor(site_key, levels = unique(site_key))))
     idx <- vapply(site_members, `[`, integer(1), 1L)
     site_enzyme <- vapply(site_members, function(rows) paste(
       unique(as.character(data$enzyme[rows])), collapse = " - "
     ), character(1))
+    site_warning <- vapply(site_members, function(rows) {
+      "display_warning" %in% names(data) &&
+        any(data$display_warning[rows] %in% "methylation_blocked", na.rm = TRUE)
+    }, logical(1L))
+    site_enzyme[site_warning] <- paste0(site_enzyme[site_warning], " *")
+    unique_cutters <- if ("enzyme_site_count" %in% names(data)) {
+      unique(as.character(data$enzyme[all_idx])[
+        data$enzyme_site_count[all_idx] == 1L])
+    } else names(which(vapply(
+      split(data$position[all_idx], as.character(data$enzyme[all_idx])),
+      function(position) length(unique(position)) == 1L,
+      logical(1L)
+    )))
+    site_enzyme_fontface <- vapply(site_members, function(rows) {
+      enzymes <- unique(as.character(data$enzyme[rows]))
+      if (length(enzymes) && all(enzymes %in% unique_cutters)) "bold" else "plain"
+    }, character(1L))
     arc <- layout$seq_arcs[[id]]
     n <- nrow(arc)
     frac <- data$position[idx] / lens[id]
 
     point_at <- function(fraction, offset = 0) {
       fraction <- fraction %% 1
-      k <- pmax(1L, pmin(n, round(1 + fraction * (n - 1))))
+      continuous_index <- 1 + fraction * (n - 1)
+      k <- pmax(1L, pmin(n - 1L, floor(continuous_index)))
+      knext <- pmin(n, k + 1L)
+      weight <- continuous_index - k
+      base_x <- arc$x[k] + weight * (arc$x[knext] - arc$x[k])
+      base_y <- arc$y[k] + weight * (arc$y[knext] - arc$y[k])
       kp <- pmax(1L, k - 1L)
-      kn <- pmin(n, k + 1L)
+      kn <- pmin(n, knext + 1L)
       tx <- arc$x[kn] - arc$x[kp]
       ty <- arc$y[kn] - arc$y[kp]
       tangent_length <- sqrt(tx^2 + ty^2)
       tangent_length[tangent_length <= 1e-12] <- 1
       nx <- -ty / tangent_length
       ny <- tx / tangent_length
-      flip <- nx * arc$x[k] + ny * arc$y[k] < 0
+      flip <- nx * base_x + ny * base_y < 0
       nx[flip] <- -nx[flip]
       ny[flip] <- -ny[flip]
-      data.frame(x = arc$x[k] + offset * nx, y = arc$y[k] + offset * ny)
+      data.frame(x = base_x + offset * nx, y = base_y + offset * ny)
     }
 
     side_sign <- if (params$label_side == "inside") -1 else 1
@@ -1054,7 +1550,9 @@ ggchord_restriction_geometry <- function(data, params, layout, seq_data) {
     }
     cluster_names <- paste0(id, ":cluster:", sprintf("%03d", cluster))
     junction_names <- paste0(id, ":site:", sprintf("%06d", idx))
-    bases <- point_at(frac, 0)
+    # Restriction leaders attach to the visible outer boundary of the sequence
+    # backbone, rather than disappearing underneath a double line or band.
+    bases <- point_at(frac, params$backbone_outer_offset %||% 0)
     tips <- point_at(frac, side_sign * params$tick_length)
 
     for (member in seq_along(idx)) {
@@ -1108,13 +1606,26 @@ ggchord_restriction_geometry <- function(data, params, layout, seq_data) {
     contour_pre <- if (".restriction_contour" %in% names(labels)) {
       labels$.restriction_contour %in% TRUE
     } else rep(FALSE, length(idx))
+    rail <- if (".restriction_rail_side" %in% names(labels)) {
+      !is.na(labels$.restriction_rail_side)
+    } else rep(FALSE, length(idx))
     connection_side[contour_pre] <- ifelse(
       labels$.restriction_text_sign[contour_pre] > 0, "left", "right"
+    )
+    rail_side <- labels$.restriction_rail_side
+    connection_side[rail] <- ifelse(
+      rail_side[rail] == "right", "left",
+      ifelse(rail_side[rail] == "left", "right", rail_side[rail])
     )
     order_values <- rep(params$label_order, length(idx))
     if (params$label_order == "auto") {
       order_values <- ifelse(connection_side == "right",
         "position_enzyme", "enzyme_position")
+      horizontal_rail <- rail & connection_side %in% c("top", "bottom")
+      order_values[horizontal_rail] <- ifelse(
+        centre_x[horizontal_rail] < 0,
+        "position_enzyme", "enzyme_position"
+      )
     }
     quote_text <- function(x) paste0("'", gsub("'", "\\\\'", x,
       fixed = TRUE), "'")
@@ -1128,13 +1639,16 @@ ggchord_restriction_geometry <- function(data, params, layout, seq_data) {
         enzyme = site_enzyme[member], position = coordinate[member])
     }, character(1))
     plotmath <- vapply(seq_along(idx), function(member) {
+      enzyme_expression <- if (site_enzyme_fontface[member] == "bold") {
+        paste0("bold(", quote_text(site_enzyme[member]), ")")
+      } else quote_text(site_enzyme[member])
       switch(params$label_style,
         enzyme_position = if (order_values[member] == "position_enzyme")
           paste0(quote_text(paste0("(", coordinate[member], ")")),
-            "~bold(", quote_text(site_enzyme[member]), ")") else
-          paste0("bold(", quote_text(site_enzyme[member]), ")~",
+            "~", enzyme_expression) else
+          paste0(enzyme_expression, "~",
             quote_text(paste0("(", coordinate[member], ")"))),
-        enzyme = paste0("bold(", quote_text(site_enzyme[member]), ")"),
+        enzyme = enzyme_expression,
         position = quote_text(coordinate[member]))
     }, character(1))
     enzyme_label <- if (params$label_style %in% c("enzyme_position", "enzyme"))
@@ -1145,7 +1659,7 @@ ggchord_restriction_geometry <- function(data, params, layout, seq_data) {
       rep("", length(idx))
     enzyme_metrics <- ggchord_restriction_text_metrics(
       enzyme_label, params$label_size %||% 2.9, units_per_inch,
-      parse = FALSE, fontface = "bold"
+      parse = FALSE, fontface = site_enzyme_fontface
     )
     coordinate_metrics <- ggchord_restriction_text_metrics(
       coordinate_label, params$label_size %||% 2.9, units_per_inch,
@@ -1170,20 +1684,45 @@ ggchord_restriction_geometry <- function(data, params, layout, seq_data) {
       labels$.restriction_contour %in% TRUE
     } else rep(FALSE, length(idx))
     if (any(contour)) {
-      positive_text <- contour & labels$.restriction_text_sign > 0
-      negative_text <- contour & labels$.restriction_text_sign < 0
+      ordinary_contour <- contour & !rail
+      positive_text <- ordinary_contour & labels$.restriction_text_sign > 0
+      negative_text <- ordinary_contour & labels$.restriction_text_sign < 0
       connection_side[positive_text] <- "left"
       connection_side[negative_text] <- "right"
-      centre_x[contour] <- labels$.restriction_contour_x[contour] +
-        labels$.restriction_text_sign[contour] * metrics$width[contour] / 2
-      centre_y[contour] <- labels$.restriction_contour_y[contour]
-      labels$.restriction_column_edge[column] <-
-        labels$.restriction_contour_x[column]
+      centre_x[ordinary_contour] <-
+        labels$.restriction_contour_x[ordinary_contour] +
+        labels$.restriction_text_sign[ordinary_contour] *
+          metrics$width[ordinary_contour] / 2
+      centre_y[ordinary_contour] <-
+        labels$.restriction_contour_y[ordinary_contour]
+      right_rail <- rail & rail_side == "right"
+      left_rail <- rail & rail_side == "left"
+      top_rail <- rail & rail_side == "top"
+      bottom_rail <- rail & rail_side == "bottom"
+      centre_x[right_rail] <- labels$.restriction_rail_edge_x[right_rail] +
+        metrics$width[right_rail] / 2
+      centre_x[left_rail] <- labels$.restriction_rail_edge_x[left_rail] -
+        metrics$width[left_rail] / 2
+      centre_y[c(top_rail | bottom_rail)] <-
+        labels$.restriction_rail_edge_y[c(top_rail | bottom_rail)] +
+        ifelse(top_rail[c(top_rail | bottom_rail)], 1, -1) *
+          metrics$height[c(top_rail | bottom_rail)] / 2
+      centre_x[top_rail | bottom_rail] <-
+        labels$.restriction_rail_edge_x[top_rail | bottom_rail]
+      centre_y[right_rail | left_rail] <-
+        labels$.restriction_rail_edge_y[right_rail | left_rail]
     }
     routing_half_width <- metrics$width / 2 + .003
     routing_half_height <- metrics$height / 2 + .003
-    endpoint_x <- centre_x + ifelse(
-      connection_side == "left", -routing_half_width, routing_half_width
+    lateral_connection <- connection_side %in% c("left", "right")
+    endpoint_x <- pmax(
+      centre_x - routing_half_width,
+      pmin(bend_x, centre_x + routing_half_width)
+    )
+    endpoint_x[lateral_connection] <- centre_x[lateral_connection] + ifelse(
+      connection_side[lateral_connection] == "left",
+      -routing_half_width[lateral_connection],
+      routing_half_width[lateral_connection]
     )
     # A selected left edge must lie to the right of its bend, and a selected
     # right edge to the left.  Bottom/top packing can otherwise leave a wide
@@ -1195,6 +1734,7 @@ ggchord_restriction_geometry <- function(data, params, layout, seq_data) {
       pmax(0, bend_x + route_clearance - endpoint_x),
       pmin(0, bend_x - route_clearance - endpoint_x)
     )
+    shift_x[!lateral_connection] <- 0
     # The shared contour is the layout invariant. Do not move a label off that
     # contour merely to regularise the final approach angle; the selected edge
     # is already the enzyme-facing edge and remains the correct attachment.
@@ -1203,14 +1743,23 @@ ggchord_restriction_geometry <- function(data, params, layout, seq_data) {
     endpoint_x <- endpoint_x + shift_x
     labels$.text_center_x <- centre_x
     labels$text_x <- labels$text_x + shift_x
-    # SnapGene-style site labels always connect at the enzyme-bearing left or
-    # right edge, never at the middle of the top/bottom edge. Along that chosen
-    # vertical edge, use the point nearest the bend; a top label therefore
-    # naturally connects at its lower-left/lower-right corner.
     endpoint_y <- pmax(
       centre_y - routing_half_height,
       pmin(bend_y, centre_y + routing_half_height)
     )
+    # Horizontal exterior labels attach at the midpoint of their circle-facing
+    # edge. Clamping that endpoint to an old bend y-coordinate can exchange the
+    # order of two adjacent labels after one spills outward, creating a tiny
+    # but real crossing at the dominant track boundary.
+    endpoint_y[lateral_connection] <- centre_y[lateral_connection]
+    endpoint_y[connection_side == "top"] <-
+      centre_y[connection_side == "top"] -
+      routing_half_height[connection_side == "top"]
+    endpoint_y[connection_side == "bottom"] <-
+      centre_y[connection_side == "bottom"] +
+      routing_half_height[connection_side == "bottom"]
+    endpoint_x[rail] <- labels$.restriction_rail_edge_x[rail]
+    endpoint_y[rail] <- labels$.restriction_rail_edge_y[rail]
     # Keep the rendered label centred on the box used by the routing solver.
     # The leader endpoint is a separate bbox intersection, so justification no
     # longer shifts the visible edge after routing has been computed.
@@ -1227,7 +1776,16 @@ ggchord_restriction_geometry <- function(data, params, layout, seq_data) {
     }, numeric(1))
 
     leader_frame <- ggchord_label_curve_frame(gl, layout$seq_arcs)
-    segments <- lapply(seq_along(idx), function(member) {
+    point_segment_radius <- function(p0, p1) {
+      delta <- p1 - p0
+      denom <- sum(delta^2)
+      parameter <- if (denom <= 1e-16) 0 else
+        max(0, min(1, -sum(p0 * delta) / denom))
+      sqrt(sum((p0 + parameter * delta)^2))
+    }
+    fan_size <- tabulate(labels$.restriction_fan_group)
+    ordered_fan <- fan_size[labels$.restriction_fan_group] > 1L
+    leader_paths <- lapply(seq_along(idx), function(member) {
       vector <- c(endpoint_x[member] - tips$x[member],
         endpoint_y[member] - tips$y[member])
       radial <- c(leader_frame$outward_x[member] * side_sign,
@@ -1241,37 +1799,168 @@ ggchord_restriction_geometry <- function(data, params, layout, seq_data) {
         sum(centre_vector * radial) > 0 &&
         abs(centre_vector[1] * radial[2] - centre_vector[2] * radial[1]) /
           centre_length < .02
-      # A label still on its natural radial ray uses one segment. Tangentially
-      # displaced labels use exactly the bend selected by the radial solver.
-      if (identical(params$leader, "straight") || aligned) {
-        return(data.frame(x0 = tips$x[member], y0 = tips$y[member],
-          x1 = endpoint_x[member], y1 = endpoint_y[member], group = member))
+      start <- c(tips$x[member], tips$y[member])
+      endpoint <- c(endpoint_x[member], endpoint_y[member])
+      # The leader may pass inside its own tick tip, but never inside the
+      # visible sequence boundary where that tick begins.  Treating the tip
+      # radius as the forbidden circle forces harmless chords into elbows;
+      # those elbows can then cross an adjacent, correctly ordered leader.
+      base <- unlist(bases[member, c("x", "y")])
+      safe_radius <- sqrt(sum(base^2)) + 1e-6
+      direct_is_safe <- point_segment_radius(start, endpoint) >= safe_radius
+      # The shortest exterior segment is also the only order-preserving route
+      # shared by circular fans and Cartesian rails.  Adding independently
+      # sized radial stubs before an otherwise safe chord can make adjacent,
+      # correctly ordered leaders cross one another.  Keep a bend only when a
+      # direct chord would enter the plasmid interior.
+      if (direct_is_safe && !ordered_fan[member]) {
+        return(data.frame(x = c(start[1], endpoint[1]),
+          y = c(start[2], endpoint[2])))
+      }
+      if (ordered_fan[member]) {
+        endpoint_angle <- atan2(endpoint[2], endpoint[1])
+        main_radius <- labels$.restriction_base_contour_radius[member]
+        if (!is.finite(main_radius)) main_radius <- sqrt(sum(endpoint^2))
+        elbow <- main_radius * c(cos(endpoint_angle), sin(endpoint_angle))
+        if (point_segment_radius(start, elbow) >= safe_radius &&
+            point_segment_radius(elbow, endpoint) >= safe_radius) {
+          return(data.frame(x = c(start[1], elbow[1], endpoint[1]),
+            y = c(start[2], elbow[2], endpoint[2])))
+        }
       }
       bend <- c(labels$.radial_bend_x[member],
         labels$.radial_bend_y[member])
-      if (any(!is.finite(bend)) || sqrt(sum((bend - unlist(tips[member, ]))^2)) <
-          1e-8) {
+      if (any(!is.finite(bend)) ||
+          sqrt(sum((bend - unlist(tips[member, ]))^2)) < 1e-8) {
         distance <- sqrt(sum(vector^2))
         shoulder <- min(.085, max(.045, distance * .30))
-        bend <- c(
-          tips$x[member] + radial[1] * shoulder,
-          tips$y[member] + radial[2] * shoulder
-        )
+        bend <- c(tips$x[member] + radial[1] * shoulder,
+          tips$y[member] + radial[2] * shoulder)
       }
-      data.frame(
-        x0 = c(tips$x[member], bend[1]),
-        y0 = c(tips$y[member], bend[2]),
-        x1 = c(bend[1], endpoint_x[member]),
-        y1 = c(bend[2], endpoint_y[member]), group = member
-      )
+      if (point_segment_radius(start, bend) >= safe_radius &&
+          point_segment_radius(bend, endpoint) >= safe_radius) {
+        return(data.frame(x = c(start[1], bend[1], endpoint[1]),
+          y = c(start[2], bend[2], endpoint[2])))
+      }
+      # Never turn an exterior site leader into a sampled circular arc.  When
+      # the direct chord would enter the sequence circle, move one elbow out
+      # along the root radius until the second straight segment clears it.
+      # This preserves the reference convention: a straight leader whenever
+      # possible, otherwise a simple two-segment polyline.
+      start_radius <- sqrt(sum(start^2))
+      endpoint_radius <- sqrt(sum(endpoint^2))
+      root_direction <- if (start_radius > 1e-12) start / start_radius else radial
+      search_limit <- max(endpoint_radius,
+        labels$.restriction_base_contour_radius[member], safe_radius) + .60
+      search_radii <- seq(max(start_radius + .012, safe_radius + .012),
+        search_limit, length.out = 80L)
+      candidates <- lapply(search_radii, function(radius) root_direction * radius)
+      valid <- vapply(candidates, function(candidate) {
+        point_segment_radius(start, candidate) >= safe_radius &&
+          point_segment_radius(candidate, endpoint) >= safe_radius
+      }, logical(1))
+      if (any(valid)) {
+        elbow <- candidates[[which(valid)[1L]]]
+        return(data.frame(x = c(start[1], elbow[1], endpoint[1]),
+          y = c(start[2], elbow[2], endpoint[2])))
+      }
+
+      # Numerical last resort: retain a single, visibly angular elbow.  The
+      # larger radius keeps both segments outside the sequence boundary even
+      # for an unusually displaced user-supplied label.
+      start_angle <- atan2(start[2], start[1])
+      end_angle <- atan2(endpoint[2], endpoint[1])
+      delta_angle <- atan2(sin(end_angle - start_angle),
+        cos(end_angle - start_angle))
+      elbow_angle <- start_angle + delta_angle / 2
+      elbow_radius <- search_limit + .60
+      elbow <- elbow_radius * c(cos(elbow_angle), sin(elbow_angle))
+      data.frame(x = c(start[1], elbow[1], endpoint[1]),
+        y = c(start[2], elbow[2], endpoint[2]))
     })
-    segments <- do.call(rbind, segments)
-    for (segment in seq_len(nrow(segments))) {
-      member <- segments$group[segment]
+
+    # Resolve the rare intersections that remain between straight chords near
+    # a dense root cluster.  Search only angular one-elbow polylines; sampled
+    # arcs are intentionally excluded.  Earlier accepted paths are fixed, so
+    # this pass is deterministic and preserves the label solver's order.
+    path_segments <- function(path) {
+      if (!is.data.frame(path) || nrow(path) < 2L) return(data.frame())
+      data.frame(
+        x1 = path$x[-nrow(path)], y1 = path$y[-nrow(path)],
+        x2 = path$x[-1L], y2 = path$y[-1L]
+      )
+    }
+    segments_cross <- function(a, b, tolerance = 1e-9) {
+      cross2 <- function(x, y) x[1L] * y[2L] - x[2L] * y[1L]
+      p <- c(a$x1, a$y1)
+      r <- c(a$x2 - a$x1, a$y2 - a$y1)
+      q <- c(b$x1, b$y1)
+      s <- c(b$x2 - b$x1, b$y2 - b$y1)
+      denominator <- cross2(r, s)
+      if (!is.finite(denominator) || abs(denominator) <= tolerance) return(FALSE)
+      t <- cross2(q - p, s) / denominator
+      u <- cross2(q - p, r) / denominator
+      t > tolerance && t < 1 - tolerance &&
+        u > tolerance && u < 1 - tolerance
+    }
+    path_crosses <- function(path, accepted) {
+      candidate_segments <- path_segments(path)
+      if (!nrow(candidate_segments) || !length(accepted)) return(FALSE)
+      any(vapply(accepted, function(other) {
+        other_segments <- path_segments(other)
+        any(vapply(seq_len(nrow(candidate_segments)), function(i) {
+          any(vapply(seq_len(nrow(other_segments)), function(j) {
+            segments_cross(candidate_segments[i, ], other_segments[j, ])
+          }, logical(1L)))
+        }, logical(1L)))
+      }, logical(1L)))
+    }
+    accepted <- list()
+    for (member in seq_along(leader_paths)) {
+      current <- leader_paths[[member]]
+      if (path_crosses(current, accepted)) {
+        start <- c(tips$x[member], tips$y[member])
+        endpoint <- c(endpoint_x[member], endpoint_y[member])
+        base <- unlist(bases[member, c("x", "y")])
+        safe_radius <- sqrt(sum(base^2)) + 1e-6
+        start_angle <- atan2(start[2], start[1])
+        endpoint_angle <- atan2(endpoint[2], endpoint[1])
+        delta_angle <- atan2(sin(endpoint_angle - start_angle),
+          cos(endpoint_angle - start_angle))
+        main_radius <- labels$.restriction_base_contour_radius[member]
+        if (!is.finite(main_radius)) main_radius <- sqrt(sum(endpoint^2))
+        outer_radius <- max(main_radius, sqrt(sum(endpoint^2)))
+        candidate_angles <- start_angle + delta_angle *
+          c(1, .875, .75, .625, .5, .375, .25, .125, 0)
+        candidate_radii <- outer_radius + c(0, .025, .05, .085, .13,
+          .19, .27, .38, .52)
+        alternatives <- list()
+        for (radius in candidate_radii) for (angle in candidate_angles) {
+          elbow <- radius * c(cos(angle), sin(angle))
+          if (point_segment_radius(start, elbow) < safe_radius ||
+              point_segment_radius(elbow, endpoint) < safe_radius) next
+          alternative <- data.frame(
+            x = c(start[1], elbow[1], endpoint[1]),
+            y = c(start[2], elbow[2], endpoint[2])
+          )
+          if (!path_crosses(alternative, accepted)) {
+            alternatives[[length(alternatives) + 1L]] <- alternative
+          }
+        }
+        if (length(alternatives)) {
+          lengths <- vapply(alternatives, function(path) sum(sqrt(
+            diff(path$x)^2 + diff(path$y)^2
+          )), numeric(1L))
+          current <- alternatives[[which.min(lengths)]]
+          leader_paths[[member]] <- current
+        }
+      }
+      accepted[[length(accepted) + 1L]] <- current
+    }
+    for (member in seq_along(leader_paths)) {
       row <- idx[member]
       append_path(
-        data.frame(x = c(segments$x0[segment], segments$x1[segment]),
-          y = c(segments$y0[segment], segments$y1[segment])),
+        leader_paths[[member]],
         "leader", row, data$position[row], slot_positions[member],
         site_members[[member]],
         cluster_names[member], junction_names[member], directions[member],
@@ -1296,13 +1985,18 @@ ggchord_restriction_geometry <- function(data, params, layout, seq_data) {
         junction_id = junction_names[member],
         label_direction = direction, label_order = order_value,
         label_connection_side = connection_side[member],
-        label_layout = if (column[member]) "contour_fan" else "contour",
+        label_layout = if (rail[member]) "perimeter_rail" else if (
+          column[member]) "contour_fan" else "contour",
         label_boundary = if (column[member])
           labels$.restriction_column_edge[member] else NA_real_,
         label_attachment_x = labels$.restriction_contour_x[member],
         label_attachment_y = labels$.restriction_contour_y[member],
         label_contour_radius = labels$.restriction_contour_radius[member],
+        outer_annotation_region = "restriction",
+        outer_track = labels$.restriction_outer_track[member],
+        outer_slot = 0L,
         enzyme_label = enzyme_label[member],
+        enzyme_fontface = site_enzyme_fontface[member],
         coordinate_label = coordinate_label[member],
         size = params$label_size %||% 2.9, angle = 0,
         hjust = labels$hjust[member], vjust = labels$vjust[member],
@@ -1322,8 +2016,20 @@ ggchord_restriction_geometry <- function(data, params, layout, seq_data) {
       label_layout = character(), label_boundary = numeric(),
       label_attachment_x = numeric(), label_attachment_y = numeric(),
       label_contour_radius = numeric(),
+      outer_annotation_region = character(), outer_track = integer(),
+      outer_slot = integer(),
       stringsAsFactors = FALSE
     ))
   }
-  ggchord_rbind_fill(output)
+  rendered <- ggchord_rbind_fill(output)
+  if ("display_warning" %in% names(data) && nrow(rendered)) {
+    blocked <- vapply(rendered$source_rows, function(rows) {
+      rows <- as.integer(rows)
+      rows <- rows[is.finite(rows) & rows >= 1L & rows <= nrow(data)]
+      length(rows) && any(data$display_warning[rows] %in%
+        "methylation_blocked", na.rm = TRUE)
+    }, logical(1L))
+    rendered$colour <- ifelse(blocked, "#858585", "#202020")
+  }
+  rendered
 }

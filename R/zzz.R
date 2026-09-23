@@ -419,9 +419,36 @@ ggchord_axis_layer <- function(layout) {
 
 #' Combine automatic label components for GeomChordGeneLabelRepel
 #' @noRd
+ggchord_feature_arc_text <- function(text, units_per_inch) {
+  if (!nrow(text)) return(data.frame())
+  # Every internal feature label follows the radius selected by the track
+  # solver. This includes labels moved off the feature into an inner track.
+  eligible <- text$feature_label_mode %in% c("inside", "adjacent") &
+    !grepl("\n", text$text, fixed = TRUE) &
+    !is.na(text$text) & nzchar(text$text)
+  text$.draw_as_arc <- eligible
+  curved <- ggchord_arc_text_layout(
+    text[eligible, , drop = FALSE], units_per_inch = units_per_inch
+  )
+  if (nrow(curved$glyphs)) curved$glyphs$.component <- "arc_text"
+  list(text = text, glyphs = curved$glyphs)
+}
+
+#' @noRd
 ggchord_repel_geometry <- function(layout) {
   segment <- layout$gene_label_segments %||% data.frame()
   text <- layout$gene_labels %||% data.frame()
+  arc_text <- data.frame()
+  if (nrow(text) && identical(layout$gene_label_layout, "feature")) {
+    curved <- ggchord_feature_arc_text(
+      text, layout$text_units_per_inch %||% .35
+    )
+    text <- curved$text
+    arc_text <- curved$glyphs
+  }
+  if (nrow(text) && !".draw_as_arc" %in% names(text)) {
+    text$.draw_as_arc <- FALSE
+  }
   if (nrow(segment)) {
     if ("occluded" %in% names(segment)) {
       segment <- segment[
@@ -435,8 +462,14 @@ ggchord_repel_geometry <- function(layout) {
     if (nrow(text) && "group" %in% names(segment) &&
         "group" %in% names(text)) {
       label_index <- match(segment$group, text$group)
-      for (nm in intersect(c("source_row", "accver"), names(text))) {
+      for (nm in intersect(
+          c("source_row", "accver", "feature_track", "label_track"),
+          names(text))) {
         segment[[nm]] <- text[[nm]][label_index]
+      }
+      if (all(c("feature_track", "label_track") %in% names(segment))) {
+        segment$leader_track_start <- segment$feature_track + 1L
+        segment$leader_track_end <- segment$label_track - 1L
       }
     }
     segment$.component <- "segment"
@@ -456,7 +489,17 @@ ggchord_repel_geometry <- function(layout) {
     text$linetype <- "solid"
     text$alpha <- 1
   }
-  values <- Filter(nrow, list(segment, text))
+  if (nrow(arc_text)) {
+    arc_text$x <- arc_text$text_x
+    arc_text$y <- arc_text$text_y
+    arc_text$xend <- NA_real_
+    arc_text$yend <- NA_real_
+    arc_text$label <- arc_text$text
+    arc_text$angle <- arc_text$text_angle
+    arc_text$linetype <- "solid"
+    arc_text$alpha <- 1
+  }
+  values <- Filter(nrow, list(segment, text, arc_text))
   if (!length(values)) {
     return(data.frame(x = numeric(), y = numeric(), .component = character()))
   }

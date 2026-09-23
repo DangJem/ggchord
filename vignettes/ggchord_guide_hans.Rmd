@@ -447,11 +447,11 @@ gene_label_rotation = list(20)
 管理。v0.13 起 `geom_gene()` 默认为 `position = "identity"`；旧版分链布局
 使用 `position = "strand"`，plasmid 共享内侧 band 使用 `position = "plasmid"`。
 
-pUC19c 的基础图只需要 circular backbone 和中心信息：
+pUC19 的基础图只需要 circular backbone 和中心信息：
 
 ```{r puc19c-map, eval=FALSE}
-data(plasmid_example_pUC19c)
-puc <- plasmid_example_pUC19c
+data(plasmid_example_pUC19)
+puc <- plasmid_example_pUC19
 ggchord(puc) +
   geom_seq() +
   geom_seq_center_label() +
@@ -482,22 +482,45 @@ ggchord(seq) +
   theme_ggchord_plasmid()
 ```
 
+`find_common_features()` 会为内置注释提供语义分类、glyph 提示和首选 lane。
+长 gene 与 origin 保持肩式箭头；promoter、primer 使用更窄的专用箭头；binding
+site、operator 与 MCS 使用紧凑 block。这些只是缺省规则，不按名称硬编码，用户
+显式 aesthetic 和手动 scale 始终优先。
+
+默认 `label_layout = "feature"` 使用最终字体属性实测文字 bbox，先尝试放进
+feature 的可用 body；放不下时选择相邻标签或短 callout。密集簇优先沿局部切线
+错层，其次才改变 radial lane，并避开其他 feature polygon 与标签框。布局导出中的
+`feature_label_mode` 记录最终的 `inside`、`adjacent` 或 `callout`。限制性酶切标签
+仍由独立图层求解，不参与本轮联合避碰。
+
 pBluescript II SK(+) 的密集 MCS 区域用于压力测试限制酶标签。真实位点的
 anchor 保持不动；所有标签的酶名侧边缘按 genomic order 落在同一贴近
 质粒的圆弧上。稀疏标签保持自然角度，侧面密集簇使用均匀间距的紧凑标签扇。
 密集引线先以短径向根段靠近圆环成束，
 再按 genomic order 展开到标签列：
 
+父级酶目录属于显示定义，不属于序列匹配。下面的显式列表用来复现
+已提供的参考图；通用场景可搜索全部 pattern，再在
+`filter_restriction_sites()` 中使用
+`parent_set = "commercial_nonredundant"`。
+坐标仍可反映数据库版本差异：REBASE 609 将 NmeAIII 定义为
+`GCCGAG(21/19)`，因此此处结果为 2195，而已提供的较旧参考图标为 2194。
+
 ```{r pbluescript-restriction-map, eval=FALSE}
 data(plasmid_example_pBluescript_II_SK_plus)
 blue <- plasmid_example_pBluescript_II_SK_plus
-blue_sites <- find_restriction_sites(blue,
-  enzymes = c("PsiI", "BsaAI", "DraIII", "BtgZI", "NgoMIV", "NaeI",
-    "Acc65I", "KpnI", "PspOMI", "EcoO109I", "ApaI", "XhoI", "SalI",
-    "AccI", "HincII", "ClaI", "HindIII", "EcoRV", "EcoRI", "PstI",
-    "XmaI", "SmaI", "BamHI", "SpeI", "XbaI", "NotI", "BspQI",
-    "SapI", "AflIII", "PciI", "NspI", "BseYI", "PspFI", "AlwNI",
-    "BsaI", "NmeAIII", "ScaI", "TatI", "BsaHI", "XmnI"))
+blue_parent_enzymes <- c(
+  "PsiI", "BsaAI", "DraIII", "BtgZI", "NgoMIV", "NaeI", "Acc65I",
+  "KpnI", "PspOMI", "EcoO109I", "ApaI", "AbsI", "PaeR7I", "PspXI",
+  "XhoI", "SalI", "AccI", "HincII", "BspDI", "ClaI", "HindIII",
+  "EcoRV", "EcoRI", "PstI", "TspMI", "XmaI", "SmaI", "BamHI",
+  "SpeI", "XbaI", "EagI", "NotI", "BtgI", "AleI", "SacII", "BstXI",
+  "Eco53kI", "SacI", "BspQI", "SapI", "AflIII", "PciI", "NspI",
+  "AlwNI", "PspFI", "BseYI", "AhdI", "BsaI", "NmeAIII", "ScaI",
+  "TatI", "BsaHI", "XmnI"
+)
+blue_sites <- find_restriction_sites(blue, enzymes = blue_parent_enzymes) |>
+  filter_restriction_sites(set = "unique_6plus")
 blue_features <- find_common_features(blue)
 blue_tracks <- position_feature_stack(
   spacing = 0.10, base_position = position_plasmid()

@@ -156,6 +156,23 @@ ggchord_resolve_legacy_offset <- function(offset, seqs, name) {
   lapply(old, function(x) c("+" = unname(x["+"]), "-" = -unname(x["-"])))
 }
 
+ggchord_feature_display_priority <- function(data, rows) {
+  priority <- rep(0, length(rows))
+  if ("display_priority" %in% names(data)) {
+    value <- data$display_priority[rows]
+    if (is.logical(value)) value <- as.numeric(value)
+    value <- suppressWarnings(as.numeric(value))
+    value[!is.finite(value)] <- 0
+    priority <- value
+  }
+  if ("prioritized_display" %in% names(data)) {
+    prioritized <- data$prioritized_display[rows]
+    prioritized[is.na(prioritized)] <- FALSE
+    priority[as.logical(prioritized)] <- Inf
+  }
+  priority
+}
+
 ggchord_allocate_feature_lanes <- function(data, base, direction, spacing,
                                             circular = FALSE, lengths = NULL) {
   lane <- integer(nrow(data))
@@ -171,15 +188,27 @@ ggchord_allocate_feature_lanes <- function(data, base, direction, spacing,
     len <- if (!is.null(lengths)) unname(lengths[sid]) else NA_real_
     row_intervals <- lapply(idx, function(i) {
       a <- as.numeric(data$start[i]); b <- as.numeric(data$end[i])
+      pad <- 0
+      shape <- as.character(data$.feature_shape[i] %||%
+        data$.feature_shape_raw[i] %||% "arrow")
+      if (isTRUE(is.finite(len)) && identical(shape, "marker")) {
+        glyph_width <- as.numeric(data$.feature_width[i] %||% 0)
+        radius <- max(.1, abs(1 + base[i]))
+        display_bp <- glyph_width * 3 / radius / (2 * pi) * len
+        pad <- max(0, display_bp - abs(b - a)) / 2
+      }
       if (isTRUE(circular) && is.finite(len) && a > b) {
-        rbind(c(a, len), c(1, b))
-      } else matrix(c(min(a, b), max(a, b)), nrow = 1L)
+        rbind(c(max(1, a - pad), len), c(1, min(len, b + pad)))
+      } else matrix(c(max(1, min(a, b) - pad),
+        if (is.finite(len)) min(len, max(a, b) + pad) else max(a, b) + pad),
+        nrow = 1L)
     })
-    group_value <- if ("feature_group" %in% names(data)) {
-      as.character(data$feature_group[idx])
-    } else rep(NA_character_, length(idx))
-    missing_group <- is.na(group_value) | !nzchar(group_value)
-    group_value[missing_group] <- paste0(".row.", idx[missing_group])
+    # Only renderer-created rows from one multi-segment biological feature are
+    # co-allocated. User-facing feature names/groups never collapse collisions:
+    # local overlap itself is the grouping model.
+    group_value <- if (".biological_source_row" %in% names(data)) {
+      paste0(".feature.", data$.biological_source_row[idx])
+    } else paste0(".row.", idx)
     entity_members <- split(seq_along(idx),
       factor(group_value, levels = unique(group_value)))
     intervals <- lapply(entity_members, function(members) {
@@ -187,9 +216,17 @@ ggchord_allocate_feature_lanes <- function(data, base, direction, spacing,
     })
     entity_source <- vapply(entity_members, function(members) idx[members[1L]],
       integer(1))
-    ord <- order(vapply(intervals, function(x) min(x[, 1]), numeric(1)),
-                 vapply(intervals, function(x) max(x[, 2]), numeric(1)),
-                 entity_source)
+    entity_priority <- vapply(entity_members, function(members) {
+      max(ggchord_feature_display_priority(data, idx[members]))
+    }, numeric(1))
+    entity_span <- vapply(intervals, function(x) {
+      sum(pmax(0, x[, 2] - x[, 1]))
+    }, numeric(1))
+    entity_start <- vapply(intervals, function(x) min(x[, 1]), numeric(1))
+    # Longest/highest-priority first, then always reuse the nearest available
+    # lane. Non-overlapping neighbours may therefore share a lane, but no
+    # cassette-continuity preference may carry them past a parent interval.
+    ord <- order(-entity_priority, -entity_span, entity_start, entity_source)
     lane_intervals <- list()
     overlaps <- function(a, occupied) {
       any(vapply(occupied, function(b) any(
@@ -200,16 +237,7 @@ ggchord_allocate_feature_lanes <- function(data, base, direction, spacing,
     }
     for (local in ord) {
       members <- entity_members[[local]]
-      preferred <- if ("preferred_lane" %in% names(data)) {
-        suppressWarnings(as.integer(data$preferred_lane[idx[members[1L]]]))
-      } else NA_integer_
-      if (!is.finite(preferred) || preferred < 0L) preferred <- 0L
-      candidates <- unique(c(
-        preferred + 1L,
-        as.vector(rbind(preferred + seq_len(nrow(data)) + 1L,
-          preferred - seq_len(nrow(data)) + 1L))
-      ))
-      candidates <- candidates[candidates >= 1L]
+      candidates <- seq_len(nrow(data) + 1L)
       chosen <- candidates[which(vapply(candidates, function(candidate) {
         candidate > length(lane_intervals) ||
           !overlaps(intervals[[local]], lane_intervals[[candidate]])
@@ -222,8 +250,96 @@ ggchord_allocate_feature_lanes <- function(data, base, direction, spacing,
   lane
 }
 
+ggchord_feature_lane_offsets <- function(data, lane, base, direction,
+                                          spacing, circular = FALSE,
+                                          lengths = NULL, label_size = 2.5) {
+  offsets <- numeric(nrow(data))
+  label_text <- if ("anno" %in% names(data)) as.character(data$anno) else
+    if ("label" %in% names(data)) as.character(data$label) else
+      rep(NA_character_, nrow(data))
+  label_metrics <- if (isTRUE(circular) && any(!is.na(label_text) &
+      nzchar(label_text))) ggchord_text_boxes(data.frame(
+        text = label_text, text_x = 0, text_y = 0,
+        size = label_size
+      ), units_per_inch = .35) else NULL
+  band <- paste(
+    data$accver,
+    format(base, digits = 15, scientific = FALSE, trim = TRUE),
+    direction, sep = "\r"
+  )
+  groups <- split(seq_len(nrow(data)), factor(band, levels = unique(band)))
+  for (idx in groups) {
+    local_lanes <- lane[idx]
+    widths <- if (".feature_width" %in% names(data)) {
+      as.numeric(data$.feature_width[idx])
+    } else rep(0, length(idx))
+    widths[!is.finite(widths) | widths < 0] <- 0
+    lane_width <- vapply(seq.int(0L, max(local_lanes)), function(value) {
+      used <- widths[local_lanes == value]
+      if (length(used)) max(used) else 0
+    }, numeric(1))
+    centres <- numeric(length(lane_width))
+    if (length(centres) > 1L) {
+      sid <- as.character(data$accver[idx[1L]])
+      sequence_length <- if (!is.null(lengths)) unname(lengths[sid]) else
+        NA_real_
+      lane_demand <- rep(1L, length(lane_width))
+      if (isTRUE(circular) && !is.null(label_metrics) &&
+          length(sequence_length) == 1L && is.finite(sequence_length) &&
+          sequence_length > 0) {
+        span <- ifelse(data$start[idx] <= data$end[idx],
+          data$end[idx] - data$start[idx] + 1,
+          sequence_length - data$start[idx] + data$end[idx] + 1)
+        midpoint <- ((data$start[idx] - 1 + span / 2) %%
+          sequence_length) / sequence_length
+        radius <- pmax(.35, abs(1 + base[idx]))
+        arc_width <- 2 * pi * radius * span / sequence_length
+        needs_gutter <- is.finite(label_metrics$w[idx]) &
+          nzchar(label_text[idx]) &
+          label_metrics$w[idx] > arc_width * .85
+        needs_gutter[is.na(needs_gutter)] <- FALSE
+        for (lane_value in seq_len(length(lane_width) - 1L) - 1L) {
+          members <- which(local_lanes == lane_value & needs_gutter)
+          if (!length(members)) next
+          half_span <- pmin(.25, label_metrics$w[idx[members]] /
+            (4 * pi * radius[members]))
+          overlap <- vapply(seq_along(members), function(j) {
+            delta <- abs(midpoint[members] - midpoint[members[j]])
+            delta <- pmin(delta, 1 - delta)
+            sum(delta < half_span[j] + half_span + .004)
+          }, integer(1L))
+          lane_demand[lane_value + 1L] <- max(overlap)
+        }
+      }
+      for (i in 2:length(centres)) {
+        # Reserve only the corridor demanded by labels that cannot fit their
+        # own arrows.  Fixed wide gutters made mostly empty outer bands push
+        # the innermost annotations into the centre or even outside the map.
+        label_gutter <- if (isTRUE(circular)) {
+          base_gutter <- if (i == 2L) max(.125, spacing * 1.20) else
+            max(.035, spacing * .40)
+          step <- if (!is.null(label_metrics)) max(.05,
+            max(label_metrics$h[idx], na.rm = TRUE) * 1.12) else .05
+          min(if (i == 2L) .26 else .22,
+            base_gutter + (lane_demand[i - 1L] - 1L) * step)
+        } else if (i == 2L) {
+          max(.125, spacing * 1.20)
+        } else {
+          max(.080, spacing * .85)
+        }
+        glyph_clearance <- lane_width[i - 1L] / 2 +
+          lane_width[i] / 2 + label_gutter
+        centres[i] <- centres[i - 1L] + max(spacing, glyph_clearance)
+      }
+    }
+    offsets[idx] <- direction[idx] * centres[local_lanes + 1L]
+  }
+  offsets
+}
+
 ggchord_apply_feature_position <- function(data, position, seqs, lengths,
                                             circular = FALSE,
+                                            label_size = 2.5,
                                             legacy_offset = NULL,
                                             legacy_name = "gene_offset") {
   if (is.null(data) || !nrow(data)) return(data)
@@ -285,7 +401,10 @@ ggchord_apply_feature_position <- function(data, position, seqs, lengths,
       out, base, direction, position$spacing %||% 0.10,
       circular = circular, lengths = lengths
     )
-    lane_offset <- direction * lane * (position$spacing %||% 0.10)
+    lane_offset <- ggchord_feature_lane_offsets(
+      out, lane, base, direction, position$spacing %||% 0.10,
+      circular = circular, lengths = lengths, label_size = label_size
+    )
   }
   out$.position_name <- position_name
   out$.position_base_offset <- base

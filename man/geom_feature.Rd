@@ -33,12 +33,15 @@ generated.}
 
 \item{data}{data.frame with \code{accver}, \code{start}, \code{end} and
 \code{strand}; optional \code{type}, \code{category} and \code{label}.
-As an alternative to \code{strand}, \code{direction} may contain
+`display_priority` or logical `prioritized_display`. As an alternative to
+\code{strand}, \code{directionality} or \code{direction} may contain
 \code{"forward"}, \code{"reverse"}, \code{"bidirectional"}, or
 \code{"none"}.}
 
 \item{feature_shape}{Fixed feature geometry used when \code{feature_shape}
-is not mapped in \code{aes()}: \code{"arrow"}, \code{"block"},
+is not mapped in \code{aes()}: \code{"arrow"},
+\code{"compact_arrow"}, \code{"promoter_arrow"},
+\code{"primer_arrow"}, \code{"marker"}, \code{"block"},
 \code{"chevron"}, or \code{"lollipop"}. The default is \code{"arrow"}.
 Use \code{aes(feature_shape = type)} together with
 \code{scale_feature_shape_manual()} to map categories to geometry.}
@@ -47,7 +50,8 @@ Use \code{aes(feature_shape = type)} together with
 both is an error.}
 
 \item{feature_width}{Optional numeric/vector/list controlling width in the
-shared feature geometry engine.}
+shared feature geometry engine. In a circular feature-label composition,
+the base width responds to final label size within bounded limits.}
 
 \item{feature_offset}{Deprecated placement input. Explicit values are
 translated to the former strand-separated geometry and emit a warning.}
@@ -61,11 +65,13 @@ requested protruding head, `"flush"` keeps it level with the body, and
 `"triangle"` draws a full triangular wedge.}
 
 \item{short_feature}{Fallback for arrows too short to hold their requested
-head: automatic wedge/block selection, a wedge, or a block.}
+head: an automatically compressed directional glyph, a wedge, or a block.}
 
-\item{segment_boundaries}{Draw joins inside continuous segmented features.
-These joins never create additional arrowheads. A segment-level
-\code{line_style} column overrides the fallback boundary linetype.}
+\item{segment_boundaries}{Draw explicit internal marks carried by a
+segmented feature. Contiguous source-segment joins use dotted dividers;
+a non-solid segment-level \code{line_style} may override them, while a
+`cleavage_arrows` coordinate adds or merges a biological cut mark. These
+marks never create additional arrowheads.}
 
 \item{boundary_colour, boundary_linewidth, boundary_linetype}{Appearance of
 internal segment joins.}

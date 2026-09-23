@@ -13,6 +13,7 @@ geom_feature_label_repel(
   label_max_lines = 2L,
   label_side = c("outside", "inside", "auto"),
   max_overlaps = Inf,
+  external = TRUE,
   position = "identity",
   show.legend = FALSE,
   inherit.aes = FALSE,
@@ -24,8 +25,11 @@ geom_feature_label_repel(
 
 \item{label_layout}{One of `"feature"`, `"radial"`, `"auto"`, or
 `"callout"`. The default `"feature"` follows plasmid-map convention:
-tangent text is tried inside first, then placed adjacent and nudged along
-the local tangent. A light leader appears only after material movement.
+text is tried inside first, then assigned to a fixed-radius internal
+track. All non-external text is laid out character by character along its
+selected track radius rather than rotated as one straight string. A light
+leader appears when one or more intervening tracks separate the feature
+and its label.
 Choose another mode for unrestricted external callouts.}
 
 \item{label_wrap, label_fit, label_max_lines}{Text fitting controls.}
@@ -33,6 +37,15 @@ Choose another mode for unrestricted external callouts.}
 \item{label_side}{One of `"inside"`, `"outside"`, or `"auto"`.}
 
 \item{max_overlaps}{Maximum unresolved overlaps.}
+
+\item{external}{Whether the staged feature layout may place a label outside
+the circular backbone after inside and adjacent placement fail. When
+`FALSE`, unresolved labels are hidden instead of pushing inward forever.
+External labels are rendered as rounded callouts using a lightened form
+of the feature's resolved fill. When restriction-site labels coexist on a
+circular map, both retain their own layout semantics but register final
+boxes in one coordinate-owned exterior track region so they cannot occupy
+the same space.}
 
 \item{position}{Feature Position used for the label anchor.}
 
@@ -45,4 +58,19 @@ A composite text and leader-line layer.
 }
 \description{
 Automatically arrange generic feature labels
+}
+\examples{
+seq <- data.frame(accver = "circle", length = 1000)
+features <- data.frame(
+  accver = "circle", start = c(100, 130), end = c(360, 155),
+  directionality = c("forward", "nondirectional"),
+  anno = c("long feature", "short feature")
+)
+tracks <- position_feature_stack(base_position = position_plasmid())
+ggchord(seq, validate = "none") +
+  geom_seq() +
+  geom_feature_plasmid(data = features, position = tracks) +
+  geom_feature_label_repel(data = features, position = tracks,
+    external = TRUE) +
+  coord_circular()
 }

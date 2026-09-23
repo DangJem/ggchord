@@ -11,7 +11,10 @@ position_feature_stack(
 )
 }
 \arguments{
-\item{spacing}{Positive radial distance between adjacent lanes.}
+\item{spacing}{Positive minimum radial distance between adjacent feature
+lanes. Circular plasmid layout enlarges the first transition into a main
+label corridor and reserves at least one label track between deeper
+overlapping feature lanes.}
 
 \item{side}{Legacy track-side selector retained for compatibility when
 `base_position` is `NULL`. Its historical names retain their existing
@@ -24,8 +27,10 @@ before interval-overlap detection and lane allocation.}
 A ggplot2 Position object for `geom_gene()` or `geom_feature()`.
 }
 \description{
-Assigns overlapping intervals on the same sequence and side to the minimum
-number of radial lanes. Non-overlapping intervals reuse the nearest lane.
+Assigns overlapping intervals on the same sequence and side to radial lanes.
+Explicit display priority is ordered first, then intervals by decreasing
+length. Every interval takes the nearest collision-free lane; feature type,
+name and colour never choose a lane.
 The resulting anchors are shared with gene label layers because stacking is
 solved before polygons and labels are generated.
 }

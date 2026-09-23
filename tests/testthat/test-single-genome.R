@@ -49,10 +49,29 @@ test_that("coord_circular owns a one-sequence circular contract", {
       theme_ggchord_plasmid()
   )
   major <- plasmid_axis$axis_ticks[plasmid_axis$axis_ticks$is_major, ]
-  expect_lt(
-    mean(sqrt(major$label_x^2 + major$label_y^2)),
-    mean(sqrt(plasmid_axis$seq_arcs[[1L]]$x^2 +
-      plasmid_axis$seq_arcs[[1L]]$y^2))
+  expect_equal(nrow(major), 10L)
+  expect_true(all(
+    sqrt(major$x1^2 + major$y1^2) < sqrt(major$x0^2 + major$y0^2)
+  ))
+  expect_equal(sqrt(major$x0^2 + major$y0^2),
+    rep(1 - .025 / 2, nrow(major)), tolerance = 1e-6)
+  labelled_major <- major[!is.na(major$label), ]
+  expect_true(all(labelled_major$label_along_axis))
+  expect_equal(labelled_major$label_hjust, rep(0, nrow(labelled_major)))
+  expect_equal(labelled_major$label_vjust, rep(.5, nrow(labelled_major)))
+  expect_true(all(sqrt(
+    (labelled_major$label_x - labelled_major$x1)^2 +
+      (labelled_major$label_y - labelled_major$y1)^2
+  ) > 0))
+  ccw_axis <- get_chord_layout(
+    ggchord(seq, validate = "none") + geom_seq() + coord_circular(
+      direction = "counterclockwise"
+    ) + theme_ggchord_plasmid()
+  )
+  expect_equal(
+    range(sqrt(ccw_axis$axis_lines$x^2 + ccw_axis$axis_lines$y^2)),
+    range(sqrt(plasmid_axis$axis_lines$x^2 + plasmid_axis$axis_lines$y^2)),
+    tolerance = 1e-6
   )
 
   two <- rbind(seq, transform(seq, accver = "other"))
@@ -113,6 +132,71 @@ test_that("centre labels use sequence metadata", {
   expect_s3_class(ggplot2::ggplotGrob(styled), "gtable")
 })
 
+test_that("feature callouts do not rewrite restriction polar placement", {
+  seq <- data.frame(accver = "circle", length = 1000)
+  features <- data.frame(
+    accver = "circle", start = c(95, 120, 145), end = c(101, 127, 153),
+    strand = "+", anno = paste("short feature", 1:3),
+    feature_color = c("#31849B", "#FF0000", "#FFFFFF")
+  )
+  sites <- data.frame(
+    accver = "circle", position = c(90, 135, 160, 650),
+    enzyme = c("OnceA", "OnceB", "Repeat", "Repeat")
+  )
+  tracks <- position_feature_stack(base_position = position_plasmid())
+  plot <- ggchord(seq, validate = "none") + geom_seq() +
+    geom_feature_plasmid(data = features, position = tracks) +
+    geom_feature_label_repel(data = features, position = tracks) +
+    geom_restriction_site(data = sites) + coord_circular(rotation = 90)
+  exported <- export_ggchord_layout(
+    plot, include = c("labels", "restriction")
+  )
+  restriction <- exported$restriction[
+    exported$restriction$.component == "label", , drop = FALSE
+  ]
+  expect_true(all(c(
+    "annotation_region", "annotation_sector", "annotation_band",
+    "annotation_slot", "bbox_xmin", "bbox_xmax", "bbox_ymin",
+    "bbox_ymax", "leader_corridor"
+  ) %in% names(restriction)))
+  expect_true(all(is.finite(as.matrix(restriction[, c(
+    "bbox_xmin", "bbox_xmax", "bbox_ymin", "bbox_ymax"
+  )]))))
+  expect_true(all(restriction$annotation_region %in%
+    c("left", "right", "top", "bottom")))
+  expect_true(all(restriction$annotation_sector >= 1L))
+  expect_true(all(restriction$annotation_band >= 1L))
+  expect_true(all(restriction$annotation_slot >= 1L))
+  expect_true(all(exported$annotation_registry$side %in% c("inner", "outer")))
+  expect_true(any(exported$annotation_registry$kind == "restriction_label"))
+  restriction_only <- export_ggchord_layout(
+    ggchord(seq, validate = "none") + geom_seq() +
+      geom_restriction_site(data = sites) + coord_circular(rotation = 90),
+    include = "restriction"
+  )$restriction
+  restriction_only <- restriction_only[
+    restriction_only$.component == "label", , drop = FALSE
+  ]
+  overlap_count <- 0L
+  if (nrow(restriction) > 1L) for (i in seq_len(nrow(restriction) - 1L)) {
+    other <- seq.int(i + 1L, nrow(restriction))
+    overlap_count <- overlap_count + sum(
+      restriction$bbox_xmin[i] < restriction$bbox_xmax[other] &
+      restriction$bbox_xmax[i] > restriction$bbox_xmin[other] &
+      restriction$bbox_ymin[i] < restriction$bbox_ymax[other] &
+      restriction$bbox_ymax[i] > restriction$bbox_ymin[other]
+    )
+  }
+  expect_equal(overlap_count, 0L)
+  expect_false("shared_external_side" %in% names(restriction))
+  expect_true(all(restriction$enzyme_fontface[
+    restriction$enzyme_label %in% c("OnceA", "OnceB")
+  ] == "bold"))
+  expect_true(all(restriction$enzyme_fontface[
+    restriction$enzyme_label == "Repeat"
+  ] == "plain"))
+})
+
 test_that("restriction search preserves biological pattern rows", {
   patterns <- data.frame(
     pattern_id = c("eco", "multi-a", "multi-b", "unknown", "type-iis", "four"),
@@ -133,7 +217,8 @@ test_that("restriction search preserves biological pattern rows", {
   expect_true(all(c(
     "match_id", "pattern_id", "pattern_source_row", "motif_length",
     "crosses_origin", "ncuts", "cut_offset_4", "cut_4_unwrapped",
-    "cut_4", "display_position", "anchor_kind", "database_version"
+    "cut_4", "display_position", "enzyme_site_count", "anchor_kind",
+    "database_version"
   ) %in% names(sites)))
   expect_equal(length(unique(sites$pattern_id[sites$enzyme == "Multi"])), 2L)
   expect_true(any(sites$ncuts == 4L))
@@ -172,6 +257,15 @@ test_that("restriction search preserves biological pattern rows", {
   dup_sites <- find_restriction_sites("GAATTC", patterns = duplicate)
   expect_equal(nrow(dup_sites), 2L)
   expect_equal(length(unique(dup_sites$pattern_id)), 2L)
+
+  overlapping <- find_restriction_sites(
+    "GGGG", patterns = c(Overlap = "GGG"), circular = FALSE
+  )
+  expect_equal(overlapping$start, 1:2)
+  expect_equal(unique(overlapping$enzyme_site_count), 2L)
+  one_visible <- filter_restriction_sites(overlapping, window = c(1, 1))
+  expect_equal(nrow(one_visible), 1L)
+  expect_equal(one_visible$enzyme_site_count, 2L)
 })
 
 test_that("REBASE parser uses stable pattern rows when source files exist", {
@@ -186,7 +280,22 @@ test_that("REBASE parser uses stable pattern rows when source files exist", {
   expect_equal(sum(parsed$ncuts == 0L), 3264L)
   expect_true(any(parsed$cut_offset_1 < 0))
   expect_true(any(parsed$cut_offset_2 > parsed$motif_length))
+  expect_true(all(c("source_motif", "preferred_enzyme",
+    "is_preferred_enzyme") %in% names(parsed)))
+  expect_identical(parsed$preferred_enzyme[parsed$enzyme == "PspFI"], "BseYI")
+  expect_true(any(parsed$source_motif != parsed$motif))
+  expect_equal(parsed$cut_offset_1[parsed$enzyme == "PspFI"], 5L)
+  expect_equal(parsed$cut_offset_2[parsed$enzyme == "PspFI"], 1L)
   expect_true(all(grepl("^rebase609:e:[0-9]{6}$", parsed$pattern_id)))
+})
+
+test_that("pBluescript IUPAC and reverse-cleavage sites match references", {
+  data(plasmid_example_pBluescript_II_SK_plus)
+  sites <- find_restriction_sites(plasmid_example_pBluescript_II_SK_plus,
+    enzymes = c("EcoO109I", "PspFI", "BseYI"))
+  observed <- sites$position[match(c("EcoO109I", "PspFI", "BseYI"),
+    sites$enzyme)]
+  expect_equal(observed, c(660, 1461, 1457))
 })
 
 test_that("restriction filters only subset rows", {
@@ -205,6 +314,54 @@ test_that("restriction filters only subset rows", {
   )
   expect_equal(out$marker, 2:3)
   expect_equal(out$position, sites$position[out$marker])
+
+  equivalent <- data.frame(
+    accver = "g", enzyme = c("Alias", "Preferred", "Other"),
+    preferred_enzyme = c("Preferred", "Preferred", "Other"),
+    is_preferred_enzyme = c(FALSE, TRUE, TRUE),
+    pattern_source_row = 1:3, motif_length = 6L, start = c(10L, 10L, 20L),
+    position = c(10, 11, 20), commercial = TRUE
+  )
+  reduced <- filter_restriction_sites(equivalent,
+    parent_set = "commercial_nonredundant")
+  expect_equal(reduced$enzyme, c("Preferred", "Other"))
+})
+
+test_that("reference restriction profiles preserve saved enzyme sets", {
+  data(plasmid_example_pSpCas9_BB_2A_GFP_PX458)
+  sites <- find_restriction_sites(plasmid_example_pSpCas9_BB_2A_GFP_PX458)
+  profile <- attr(sites, "reference_enzyme_profiles")
+  expect_equal(profile$set_name, "BbsI + EcoRI")
+  reference <- filter_restriction_sites(sites, set = "reference")
+  expect_setequal(unique(reference$enzyme), c("BbsI", "EcoRI"))
+  expect_equal(nrow(reference), 4L)
+
+  unknown <- find_restriction_sites("AAAAGAATTCTTT")
+  expect_error(filter_restriction_sites(unknown, set = "reference"),
+    "no exact reference enzyme profile")
+})
+
+test_that("methylation-blocked sites carry generic warning metadata", {
+  data(plasmid_example_pSB1C3)
+  sites <- find_restriction_sites(plasmid_example_pSB1C3,
+    enzymes = "PflMI", methylation = "dam_dcm")
+  expect_true(any(sites$methylation_status == "blocked"))
+  expect_true(any(sites$display_warning == "methylation_blocked"))
+  plot <- ggchord(plasmid_example_pSB1C3, validate = "none") + geom_seq() +
+    geom_restriction_site(data = sites) + coord_circular()
+  labels <- export_ggchord_layout(plot, include = "restriction")$restriction
+  labels <- labels[labels$.component == "label", ]
+  expect_true(any(grepl("PflMI [*]", labels$label)))
+  expect_true(any(labels$colour == "#858585"))
+})
+
+test_that("plasmid axis uses the audited nice-step cadence", {
+  lengths <- c(2070, 2686, 4361, 5369, 9288, 13320)
+  expected <- c(250, 500, 500, 1000, 1000, 2000)
+  observed <- vapply(lengths, function(x) {
+    diff(ggchord:::breakPointsFunc(x))[1L]
+  }, numeric(1L))
+  expect_equal(observed, expected)
 })
 
 test_that("restriction layout is deterministic and never moves site anchors", {
@@ -286,12 +443,22 @@ test_that("restriction layout is deterministic and never moves site anchors", {
   origin_radius <- sqrt(origin_labels$x^2 + origin_labels$y^2)
   expect_lt(diff(range(origin_radius)), .04)
 
-  sparse <- export_ggchord_layout(
+  sparse_all <- export_ggchord_layout(
     ggchord(seq, validate = "none") + geom_seq() +
       geom_restriction_site(data = sites[4, , drop = FALSE]) +
       coord_circular(), include = "restriction"
   )$restriction
-  sparse <- sparse[sparse$restriction_component == "leader", , drop = FALSE]
+  sparse_tick <- sparse_all[
+    sparse_all$restriction_component == "tick", , drop = FALSE
+  ]
+  sparse_tick <- sparse_tick[!duplicated(sparse_tick$group), , drop = FALSE]
+  expect_equal(
+    sqrt(sparse_tick$x^2 + sparse_tick$y^2),
+    1 + .025 / 2, tolerance = 1e-5
+  )
+  sparse <- sparse_all[
+    sparse_all$restriction_component == "leader", , drop = FALSE
+  ]
   expect_lte(length(unique(sparse$group)), 2L)
 
   dense_sites <- data.frame(
@@ -304,10 +471,29 @@ test_that("restriction layout is deterministic and never moves site anchors", {
     include = "restriction"
   )$restriction
   dense_leaders <- dense[dense$restriction_component == "leader", ]
-  segments_per_site <- vapply(split(dense_leaders, dense_leaders$source_row),
+  paths_per_site <- vapply(split(dense_leaders, dense_leaders$source_row),
     function(x) length(unique(x$group)), integer(1))
-  expect_true(all(segments_per_site <= 2L))
-  expect_true(any(segments_per_site == 2L))
+  expect_true(all(paths_per_site == 1L))
+
+  # Every outside leader remains outside the radius at which it leaves the
+  # backbone. Long fan connections may follow a sampled exterior arc rather
+  # than cutting across the plasmid interior.
+  segment_radius <- function(p0, p1) {
+    delta <- p1 - p0
+    denominator <- sum(delta^2)
+    parameter <- if (denominator <= 1e-16) 0 else
+      max(0, min(1, -sum(p0 * delta) / denominator))
+    sqrt(sum((p0 + parameter * delta)^2))
+  }
+  for (path in split(dense_leaders, dense_leaders$group)) {
+    if (nrow(path) < 2L) next
+    departure_radius <- sqrt(path$x[1L]^2 + path$y[1L]^2)
+    clearance <- vapply(seq_len(nrow(path) - 1L), function(i) {
+      segment_radius(c(path$x[i], path$y[i]),
+        c(path$x[i + 1L], path$y[i + 1L]))
+    }, numeric(1))
+    expect_gte(min(clearance), departure_radius - 1e-5)
+  }
 
   lateral_sites <- data.frame(
     accver = "g", position = seq(220, 248, by = 4),

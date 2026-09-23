@@ -1,3 +1,420 @@
+ggchord_normalize_text_orientation <- function(angle, hjust = .5) {
+  angle <- (angle + 360) %% 360
+  flip <- angle > 90 & angle < 270
+  angle[flip] <- (angle[flip] + 180) %% 360
+  hjust[flip] <- 1 - hjust[flip]
+  list(angle = angle, hjust = hjust)
+}
+
+ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
+                                         units_per_inch = .35,
+                                         max_overlaps = Inf,
+                                         allow_external = TRUE) {
+  n <- nrow(gl)
+  if (!n) return(list(
+    labels = gl, lanes = character(), directions = character(),
+    tracks = integer(), draw_segment = logical()
+  ))
+  polygon_rows <- gene_polys$.component %||% rep("polygon", nrow(gene_polys))
+  polygon_rows <- is.na(polygon_rows) | polygon_rows == "polygon"
+  polygons <- if (nrow(gene_polys) && any(polygon_rows)) {
+    split(gene_polys[polygon_rows, , drop = FALSE],
+      gene_polys$group[polygon_rows])
+  } else list()
+  sequence_radius <- if (length(seq_arcs)) {
+    max(vapply(seq_arcs, function(path) {
+      max(sqrt(path$x^2 + path$y^2), na.rm = TRUE)
+    }, numeric(1)), na.rm = TRUE)
+  } else Inf
+  concentric_circle <- FALSE
+  if (length(seq_arcs) == 1L && length(unique(gl$accver)) == 1L) {
+    arc_radius <- sqrt(seq_arcs[[1L]]$x^2 + seq_arcs[[1L]]$y^2)
+    concentric_circle <- all(is.finite(arc_radius)) &&
+      diff(range(arc_radius)) <= max(mean(arc_radius) * .02, 1e-6)
+  }
+  frame <- ggchord_label_curve_frame(gl, seq_arcs)
+  placed <- ggchord_text_boxes(data.frame())
+  result <- gl
+  mode <- ifelse(gl$feature_label_inside %in% TRUE, "inside", "adjacent")
+  tracks <- integer(n)
+  feature_tracks <- integer(n)
+  moved <- logical(n)
+  directions <- character(n)
+  all_metrics <- ggchord_text_boxes(
+    gl, units_per_inch = units_per_inch, box_padding = 0
+  )
+  # Derive real annotation tracks from feature-band geometry. A label track is
+  # either an inter-band gutter or a shared label-only circle below the deepest
+  # feature; individual labels cannot invent arbitrary radial offsets.
+  source_bounds <- list()
+  if (nrow(gene_polys) && any(polygon_rows)) {
+    poly <- gene_polys[polygon_rows, , drop = FALSE]
+    poly$.radius <- sqrt(poly$x^2 + poly$y^2)
+    source_bounds <- lapply(split(poly, as.character(poly$source_row)),
+      function(x) c(min = min(x$.radius), max = max(x$.radius)))
+  }
+  internal_tracks <- stats::setNames(
+    vector("list", length(unique(gl$accver))), unique(gl$accver)
+  )
+  feature_track_ids <- stats::setNames(
+    vector("list", length(unique(gl$accver))), unique(gl$accver)
+  )
+  label_track_ids <- stats::setNames(
+    vector("list", length(unique(gl$accver))), unique(gl$accver)
+  )
+  feature_bands <- stats::setNames(
+    vector("list", length(unique(gl$accver))), unique(gl$accver)
+  )
+  for (sid in names(internal_tracks)) {
+    if (!concentric_circle) next
+    rows <- which(gl$accver == sid)
+    band_rows <- lapply(sort(unique(gl$lane[rows])), function(lane_value) {
+      sources <- unique(as.character(gl$source_row[
+        rows[gl$lane[rows] == lane_value]
+      ]))
+      bounds <- source_bounds[sources]
+      bounds <- bounds[vapply(bounds, length, integer(1L)) == 2L]
+      if (!length(bounds)) return(NULL)
+      values <- do.call(rbind, bounds)
+      data.frame(lane = lane_value, min = min(values[, "min"]),
+        max = max(values[, "max"]), mid = mean(range(values)))
+    })
+    band_rows <- band_rows[!vapply(band_rows, is.null, logical(1L))]
+    if (!length(band_rows)) next
+    bands <- do.call(rbind, band_rows)
+    bands <- bands[order(-bands$mid), , drop = FALSE]
+    feature_bands[[sid]] <- bands
+    gutters <- numeric()
+    label_step <- max(.046, max(all_metrics$h[rows], na.rm = TRUE) * 1.08)
+    radial_clearance <- max(all_metrics$h[rows], na.rm = TRUE) / 2 + .012
+    if (nrow(bands) > 1L) {
+      for (j in seq_len(nrow(bands) - 1L)) {
+        upper <- bands$min[j] - radial_clearance
+        lower <- bands$max[j + 1L] + radial_clearance
+        if (upper >= lower) {
+          count <- max(1L, floor((upper - lower) / label_step) + 1L)
+          # Each corridor owns one or more explicit radii. The label solver
+          # chooses among these radii before deriving any angular position.
+          gutters <- c(gutters, if (count == 1L) {
+            (upper + lower) / 2
+          } else seq(upper, lower, length.out = count))
+        }
+      }
+    }
+    deepest <- min(bands$min)
+    label_only <- deepest - radial_clearance - label_step * 0:9
+    label_radii <- unique(c(gutters, label_only[label_only > .22]))
+    internal_tracks[[sid]] <- label_radii
+    # One physical circular-track index is shared by feature bands and text
+    # bands. Track 0 is the sequence backbone; indices increase inward.
+    registry <- data.frame(
+      kind = c(rep("feature", nrow(bands)), rep("label", length(label_radii))),
+      key = c(as.character(bands$lane), as.character(seq_along(label_radii))),
+      radius = c(bands$mid, label_radii), stringsAsFactors = FALSE
+    )
+    registry <- registry[order(-registry$radius, registry$kind), , drop = FALSE]
+    registry$track <- seq_len(nrow(registry))
+    feature_rows <- registry$kind == "feature"
+    label_rows <- registry$kind == "label"
+    feature_track_ids[[sid]] <- stats::setNames(
+      registry$track[feature_rows], registry$key[feature_rows]
+    )
+    label_track_ids[[sid]] <- registry$track[label_rows][
+      match(as.character(seq_along(label_radii)), registry$key[label_rows])
+    ]
+  }
+  order_rows <- order(!(gl$feature_label_inside %in% TRUE),
+    -gl$lane, -all_metrics$w, gl$source_row, seq_len(n))
+  grouped_external <- rep(FALSE, n)
+  if (concentric_circle && isTRUE(allow_external)) {
+    same_label <- split(seq_len(n), paste(gl$accver, gl$lane, gl$text,
+      sep = "\r"))
+    for (members in same_label) {
+      if (length(members) < 4L ||
+          any(!is.finite(gl$lane[members]) | gl$lane[members] != 0L) ||
+          any(is.na(gl$text[members])) ||
+          !nzchar(gl$text[members[1L]])) next
+      angles <- sort((atan2(gl$anchor_y[members],
+        gl$anchor_x[members]) + 2 * pi) %% (2 * pi))
+      angular_span <- 2 * pi - max(diff(c(angles, angles[1L] + 2 * pi)))
+      if (is.finite(angular_span) && angular_span < .45) {
+        # A compact run of repeated, short outer-band features is one visual
+        # annotation cluster.  Send the complete run to the shared exterior
+        # solver; greedy per-label inner placement gives a half-inside,
+        # half-outside ladder even though neither form is readable as a set.
+        grouped_external[members] <- TRUE
+      }
+    }
+  }
+
+  for (i in order_rows) {
+    outward <- c(frame$outward_x[i], frame$outward_y[i])
+    if (any(!is.finite(outward)) || sqrt(sum(outward^2)) < 1e-8) {
+      radial <- c(gl$text_x[i], gl$text_y[i])
+      radial_length <- sqrt(sum(radial^2))
+      outward <- if (radial_length > 1e-8) radial / radial_length else c(0, 1)
+    }
+    outward <- outward / sqrt(sum(outward^2))
+    inward <- -outward
+    tangent <- c(-inward[2], inward[1])
+    measured <- ggchord_text_boxes(
+      gl[i, , drop = FALSE], units_per_inch = units_per_inch,
+      box_padding = .04
+    )
+    radial_step <- max(.052, measured$h * .82 + .024)
+    tangent_step <- max(.040, measured$h * .68)
+    starts_inside <- gl$feature_label_inside[i] %in% TRUE
+    polar_angle <- atan2(gl$anchor_y[i], gl$anchor_x[i])
+    sid_tracks <- internal_tracks[[as.character(gl$accver[i])]]
+    if (!length(sid_tracks)) sid_tracks <- numeric()
+    bounds <- source_bounds[[as.character(gl$source_row[i])]]
+    feature_radius <- if (length(bounds) == 2L) mean(bounds) else
+      sqrt(gl$anchor_x[i]^2 + gl$anchor_y[i]^2)
+    # Labels may use only tracks on the centre-facing side of their own
+    # feature. This prevents a lane-2 primer name from climbing back through
+    # lane 1 or the backbone while still allowing lane-0 labels to occupy the
+    # first real gutter.
+    # Keep association local: a few small angular slots on the nearest track
+    # are preferable to opening a deep radial ladder, but labels must not drift
+    # far enough to look detached from their genomic anchor.
+    # Slots beyond four remain emergency fallbacks after nearer radial tracks;
+    # they preserve all internal labels in very compact cloning-site clusters
+    # without making large angular movement the normal solution.
+    # Prefer the nearest band and a small local slot before a much deeper
+    # track.  A full radial sweep made empty-looking neighbouring corridors
+    # coexist with labels stranded near the centre.
+    tangent_candidates <- c(0L, as.vector(rbind(-1:-6, 1:6)))
+    if (concentric_circle) {
+      track_radii <- sid_tracks
+      if (length(bounds) == 2L) {
+        track_radii <- track_radii[
+          track_radii + measured$h / 2 + .012 < bounds["min"]
+        ]
+      }
+      # A feature may use its own band or the gutter immediately below it,
+      # never the next feature's band or a still deeper label-only track.
+      # Deep tracks remain available to the innermost feature band.
+      bands <- feature_bands[[as.character(gl$accver[i])]]
+      own <- which(bands$lane == gl$lane[i])
+      if (length(own) && own[1L] < nrow(bands)) {
+        inner_edge <- bands$max[own[1L] + 1L]
+        track_radii <- track_radii[
+          track_radii - measured$h / 2 - .012 > inner_edge
+        ]
+      }
+      track_radii <- unique(track_radii)
+      track_radii <- track_radii[order(abs(track_radii - feature_radius),
+        -track_radii)]
+      candidates <- expand.grid(
+        track = seq_along(track_radii), tangent = tangent_candidates
+      )
+    } else {
+      # Curved multi-sequence layouts keep the established local-frame search;
+      # origin-centred radii are meaningful only for a circular plasmid map.
+      radial_indices <- if (starts_inside) 1:2 else 0:2
+      track_radii <- radial_indices
+      candidates <- expand.grid(
+        track = radial_indices + 1L, tangent = tangent_candidates
+      )
+    }
+    # One tiny tangent adjustment is acceptable, but a neighbouring radial
+    # track is preferred to a visibly detached same-track label. This produces
+    # the compact multi-level stacks used by dense operator/MCS clusters.
+    candidates$score <- (candidates$track - 1L) * .92 +
+      abs(candidates$tangent) * if (concentric_circle) .36 else .74
+    candidates <- candidates[order(candidates$score,
+      abs(candidates$tangent), candidates$tangent < 0), , drop = FALSE]
+    if (starts_inside) {
+      candidates <- rbind(data.frame(track = 0L, tangent = 0L, score = -1),
+        candidates)
+    }
+    chosen <- NULL
+    chosen_box <- NULL
+    chosen_track <- 0L
+    chosen_radius <- NA_real_
+
+    for (candidate_index in if (grouped_external[i]) integer() else
+        seq_len(nrow(candidates))) {
+      track_index <- candidates$track[candidate_index]
+      tangent_index <- candidates$tangent[candidate_index]
+      candidate <- gl[i, , drop = FALSE]
+      if (track_index == 0L) {
+        candidate$text_x <- gl$text_x[i]
+        candidate$text_y <- gl$text_y[i]
+      } else if (concentric_circle) {
+        target_radius <- track_radii[track_index]
+        shifted_angle <- polar_angle +
+          tangent_index * tangent_step / max(target_radius, .1)
+        candidate$text_x <- target_radius * cos(shifted_angle)
+        candidate$text_y <- target_radius * sin(shifted_angle)
+        tangent_angle <- shifted_angle * 180 / pi + 90
+        upright <- ggchord_normalize_text_orientation(tangent_angle, .5)
+        candidate$text_angle <- upright$angle
+        candidate$hjust <- .5
+        candidate$vjust <- .5
+      } else {
+        radial_index <- track_index - 1L
+        if (starts_inside) {
+          base <- max(.045, as.numeric(gl$.feature_width[i] %||% .07))
+          candidate$text_x <- gl$anchor_x[i] +
+            inward[1] * (base + radial_index * radial_step) +
+            tangent[1] * tangent_index * tangent_step
+          candidate$text_y <- gl$anchor_y[i] +
+            inward[2] * (base + radial_index * radial_step) +
+            tangent[2] * tangent_index * tangent_step
+        } else {
+          candidate$text_x <- gl$text_x[i] +
+            inward[1] * radial_index * radial_step +
+            tangent[1] * tangent_index * tangent_step
+          candidate$text_y <- gl$text_y[i] +
+            inward[2] * radial_index * radial_step +
+            tangent[2] * tangent_index * tangent_step
+        }
+      }
+      box <- if (concentric_circle) {
+        ggchord_arc_text_layout(
+          candidate, units_per_inch = units_per_inch, box_padding = .04
+        )$boxes
+      } else ggchord_text_boxes(
+        candidate, units_per_inch = units_per_inch, box_padding = .04
+      )
+      label_collision <- ggchord_boxes_overlap_any(box, placed)
+      feature_collision <- ggchord_boxes_hit_features(
+        box, polygons, source_row = gl$source_row[i],
+        allow_own = starts_inside && track_index == 0L
+      )
+      corners <- ggchord_boxes_corners(box)
+      central_collision <- length(seq_arcs) == 1L &&
+        min(sqrt(rowSums(corners^2))) < .20
+      backbone_collision <- !(starts_inside && track_index == 0L) &&
+        is.finite(sequence_radius) &&
+        max(sqrt(rowSums(corners^2))) > sequence_radius - .018
+      if (!label_collision && !feature_collision && !central_collision &&
+          !backbone_collision) {
+        chosen <- candidate
+        chosen_box <- box
+        chosen_track <- track_index
+        chosen_radius <- if (concentric_circle && track_index > 0L) {
+          target_radius
+        } else feature_radius
+        break
+      }
+    }
+    if (is.null(chosen) && grouped_external[i]) {
+      candidate <- gl[i, , drop = FALSE]
+      candidate$text_x <- frame$curve_x[i] + outward[1] *
+        max(.09, measured$h * 1.5)
+      candidate$text_y <- frame$curve_y[i] + outward[2] *
+        max(.09, measured$h * 1.5)
+      candidate$text_angle <- 0
+      candidate$hjust <- if (candidate$text_x >= 0) 0 else 1
+      candidate$vjust <- .5
+      chosen <- candidate
+      chosen_box <- ggchord_text_boxes(candidate,
+        units_per_inch = units_per_inch, box_padding = .04)
+      chosen_track <- -1L
+    }
+    if (is.null(chosen) && isTRUE(allow_external)) {
+      for (external_index in 1:5) {
+        candidate <- gl[i, , drop = FALSE]
+        external_gap <- max(.035, measured$h * .58)
+        candidate$text_x <- frame$curve_x[i] + outward[1] *
+          (external_gap + external_index * radial_step)
+        candidate$text_y <- frame$curve_y[i] + outward[2] *
+          (external_gap + external_index * radial_step)
+        candidate$text_angle <- 0
+        candidate$hjust <- if (candidate$text_x >= 0) 0 else 1
+        candidate$vjust <- .5
+        box <- ggchord_text_boxes(candidate, units_per_inch = units_per_inch,
+          box_padding = .04)
+        label_collision <- nrow(placed) &&
+          any(ggchord_oriented_box_overlaps(box, placed))
+        feature_collision <- ggchord_label_hits_features(
+          box, polygons, source_row = gl$source_row[i], allow_own = FALSE
+        )
+        if (!label_collision && !feature_collision) {
+          chosen <- candidate
+          chosen_box <- box
+          chosen_track <- -external_index
+          break
+        }
+      }
+    }
+    if (is.null(chosen)) {
+      chosen <- gl[i, , drop = FALSE]
+      chosen_box <- ggchord_text_boxes(
+        chosen, units_per_inch = units_per_inch, box_padding = .04
+      )
+      chosen$text <- NA_character_
+    }
+    result$text_x[i] <- chosen$text_x
+    result$text_y[i] <- chosen$text_y
+    result$text[i] <- chosen$text
+    result$text_angle[i] <- chosen$text_angle
+    result$hjust[i] <- chosen$hjust
+    result$vjust[i] <- chosen$vjust
+    placed <- rbind(placed, chosen_box)
+    displacement <- sqrt(
+      (result$text_x[i] - gl$text_x[i])^2 +
+      (result$text_y[i] - gl$text_y[i])^2
+    )
+    if (chosen_track < 0L) {
+      mode[i] <- "external"
+    } else if (starts_inside && chosen_track == 0L) {
+      mode[i] <- "inside"
+    } else {
+      mode[i] <- "adjacent"
+    }
+    sid <- as.character(gl$accver[i])
+    source_feature_track <- unname(
+      feature_track_ids[[sid]][as.character(gl$lane[i])]
+    )
+    if (!length(source_feature_track) || !is.finite(source_feature_track)) {
+      source_feature_track <- as.integer(gl$lane[i]) + 1L
+    }
+    tracks[i] <- if (chosen_track < 0L) {
+      abs(chosen_track) + length(sid_tracks) + 1L
+    } else if (chosen_track == 0L) {
+      source_feature_track
+    } else if (concentric_circle) {
+      label_track_ids[[sid]][match(chosen_radius, sid_tracks)]
+    } else {
+      chosen_track
+    }
+    feature_tracks[i] <- source_feature_track
+    label_corners <- ggchord_boxes_corners(chosen_box)
+    label_outer_radius <- if (nrow(label_corners)) {
+      max(sqrt(rowSums(label_corners^2)))
+    } else sqrt(result$text_x[i]^2 + result$text_y[i]^2)
+    radial_gap <- if (length(bounds) == 2L) {
+      as.numeric(bounds["min"]) - label_outer_radius
+    } else displacement
+    moved[i] <- identical(mode[i], "external") ||
+      (identical(mode[i], "adjacent") &&
+        (if (concentric_circle) {
+          tracks[i] > feature_tracks[i] + 1L
+        } else {
+          radial_gap >= .012 ||
+            displacement >= max(.05, measured$h * 1.2)
+        }))
+    delta <- c(result$text_x[i] - gl$anchor_x[i],
+      result$text_y[i] - gl$anchor_y[i])
+    directions[i] <- if (abs(delta[1]) >= abs(delta[2])) {
+      if (delta[1] < 0) "left" else "right"
+    } else if (delta[2] < 0) "bottom" else "top"
+  }
+  result$feature_label_mode <- mode
+  result$feature_track <- feature_tracks
+  result$outer_cluster_key <- ifelse(grouped_external,
+    paste(result$accver, result$lane, result$text, sep = "\r"),
+    NA_character_)
+  list(
+    labels = result,
+    lanes = paste(result$accver, mode, tracks, sep = "\r"),
+    directions = directions, tracks = tracks, draw_segment = moved
+  )
+}
+
 ggchord_uncross_labels <- function(gl, lanes = NULL, max_swaps = NULL,
                                    endpoint_fun = NULL) {
   n <- nrow(gl)

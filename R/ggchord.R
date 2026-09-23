@@ -18,8 +18,9 @@ globalVariables(c(
   "feature_shape", "seq_ring", "bundle_n", "bundle_weight", "density",
   "region_fill", ".bundle_n", ".bundle_weight", ".bundle_density",
   ".feature_shape_raw", ".feature_boundaries", "feature_label_colour",
+  "feature_label_fill", "feature_label_mode",
   "feature_label_orientation", "plotmath_label", "combined_label",
-  "enzyme_label", "coordinate_label", "label_order"
+  "enzyme_label", "coordinate_label", "label_order", "enzyme_fontface"
 ))
 
 #' ggchord: layered multi-sequence alignment chord diagrams for ggplot2

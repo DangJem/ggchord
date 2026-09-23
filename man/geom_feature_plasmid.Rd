@@ -9,9 +9,9 @@ geom_feature_plasmid(
   data = NULL,
   feature_shape = "arrow",
   shape = NULL,
-  feature_width = 0.07,
-  arrow_head_length = 0.055,
-  arrow_head_width = 1.55,
+  feature_width = 0.058,
+  arrow_head_length = 0.068,
+  arrow_head_width = 1.42,
   arrow_head_style = "shouldered",
   short_feature = "auto",
   segment_boundaries = TRUE,
@@ -32,12 +32,15 @@ generated.}
 
 \item{data}{data.frame with \code{accver}, \code{start}, \code{end} and
 \code{strand}; optional \code{type}, \code{category} and \code{label}.
-As an alternative to \code{strand}, \code{direction} may contain
+`display_priority` or logical `prioritized_display`. As an alternative to
+\code{strand}, \code{directionality} or \code{direction} may contain
 \code{"forward"}, \code{"reverse"}, \code{"bidirectional"}, or
 \code{"none"}.}
 
 \item{feature_shape}{Fixed feature geometry used when \code{feature_shape}
-is not mapped in \code{aes()}: \code{"arrow"}, \code{"block"},
+is not mapped in \code{aes()}: \code{"arrow"},
+\code{"compact_arrow"}, \code{"promoter_arrow"},
+\code{"primer_arrow"}, \code{"marker"}, \code{"block"},
 \code{"chevron"}, or \code{"lollipop"}. The default is \code{"arrow"}.
 Use \code{aes(feature_shape = type)} together with
 \code{scale_feature_shape_manual()} to map categories to geometry.}
@@ -57,11 +60,13 @@ requested protruding head, `"flush"` keeps it level with the body, and
 `"triangle"` draws a full triangular wedge.}
 
 \item{short_feature}{Fallback for arrows too short to hold their requested
-head: automatic wedge/block selection, a wedge, or a block.}
+head: an automatically compressed directional glyph, a wedge, or a block.}
 
-\item{segment_boundaries}{Draw joins inside continuous segmented features.
-These joins never create additional arrowheads. A segment-level
-\code{line_style} column overrides the fallback boundary linetype.}
+\item{segment_boundaries}{Draw explicit internal marks carried by a
+segmented feature. Contiguous source-segment joins use dotted dividers;
+a non-solid segment-level \code{line_style} may override them, while a
+`cleavage_arrows` coordinate adds or merges a biological cut mark. These
+marks never create additional arrowheads.}
 
 \item{boundary_colour, boundary_linewidth, boundary_linetype}{Appearance of
 internal segment joins.}
@@ -69,9 +74,9 @@ internal segment joins.}
 \item{position}{Feature position. `NULL` (the default) automatically stacks
 overlapping features on compact lanes inside the plasmid backbone. Reuse
 the same explicit [position_feature_stack()] object for a separate label
-layer so polygons and labels share their lanes. Optional data columns
-`preferred_lane` and `feature_group` request a lane and keep related rows
-on one shared lane, respectively.}
+layer so polygons and labels share their lanes. Optional numeric
+`display_priority` (larger first) or logical `prioritized_display` can
+override the default longest-first ordering for overlapping features.}
 
 \item{show.legend, inherit.aes}{Standard ggplot2 layer arguments.}
 

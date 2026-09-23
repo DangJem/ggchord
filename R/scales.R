@@ -163,8 +163,10 @@ scale_feature_fill_manual <- function(..., values, limits = NULL) {
 
 #' Feature shape scale
 #'
-#' Maps feature categories to the four geometry types understood by
-#' [geom_feature()]: `"arrow"`, `"block"`, `"chevron"`, and `"lollipop"`.
+#' Maps feature categories to the geometry types understood by
+#' [geom_feature()], including full/compact/promoter/primer arrows, markers,
+#' blocks, capped lines, chevrons, and lollipops. `capped_line` is an
+#' unfilled interval with short terminal caps.
 #' Shape values affect the actual feature geometry as well as its legend key.
 #'
 #' @param ... Arguments passed to [ggplot2::discrete_scale()].
@@ -180,12 +182,14 @@ scale_feature_fill_manual <- function(..., values, limits = NULL) {
 #' @export
 scale_feature_shape_manual <- function(..., values, name = "Feature",
                                        limits = NULL, guide = "none") {
-  allowed <- c("arrow", "block", "chevron", "lollipop")
+  allowed <- c(
+    "arrow", "compact_arrow", "promoter_arrow", "primer_arrow", "marker",
+    "block", "capped_line", "primer_arc", "chevron", "lollipop"
+  )
   if (!is.character(values) || length(values) == 0L || anyNA(values) ||
       any(!values %in% allowed)) {
     ggchord_stop(
-      "scale_feature_shape_manual(): values must use 'arrow', 'block', ",
-      "'chevron', or 'lollipop'"
+      "scale_feature_shape_manual(): values contain an unknown geometry"
     )
   }
   if (is.null(limits) && !is.null(names(values))) limits <- names(values)
@@ -198,6 +202,44 @@ scale_feature_shape_manual <- function(..., values, name = "Feature",
   out
 }
 
+ggchord_plasmid_feature_colours <- function() {
+  c(
+    CDS="#993366", gene="#993366", resistance_gene="#CCFFCC",
+    selection_marker="#CCFFCC", reporter="#05FD14",
+    peptide="#CC99B2", tag="#CC99B2",
+    promoter="#FFFFFF", rep_origin="#FFFF00", replication_origin="#FFFF00",
+    ori="#FFFF00", origin="#FFFF00", primer_bind="#A020F0",
+    primer="#A020F0", terminator="#FFFFFF", enhancer="#FFFFFF",
+    protein_bind="#31849B", binding_site="#31849B", operator="#31849B",
+    RBS="#A6ACB3", polyA_signal="#A6ACB3", poly_a_signal="#A6ACB3",
+    regulatory="#A6ACB3", LTR="#FFE4C4", repeat_region="#FFE4C4",
+    misc_RNA="#00CCFF", MCS="#99CCFF", misc_feature="#A6ACB3"
+  )
+}
+
+#' Lighten a feature colour for an external callout
+#' @noRd
+ggchord_feature_callout_fill <- function(fill, amount = .78) {
+  vapply(as.character(fill), function(value) {
+    rgb <- tryCatch(
+      grDevices::col2rgb(value, alpha = TRUE)[, 1L] / 255,
+      error = function(e) c(184, 189, 195, 255) / 255
+    )
+    mixed <- rgb[1:3] + (1 - rgb[1:3]) * amount
+    grDevices::rgb(mixed[1L], mixed[2L], mixed[3L], alpha = rgb[4L])
+  }, character(1L), USE.NAMES = FALSE)
+}
+
+ggchord_contrast_colour <- function(fill) {
+  vapply(as.character(fill), function(value) {
+    rgb <- tryCatch(grDevices::col2rgb(value)[, 1L] / 255,
+      error = function(e) c(1, 1, 1))
+    linear <- ifelse(rgb <= .04045, rgb / 12.92,
+      ((rgb + .055) / 1.055)^2.4)
+    if (sum(linear * c(.2126, .7152, .0722)) < .36) "#FFFFFF" else "#202020"
+  }, character(1), USE.NAMES = FALSE)
+}
+
 #' Plasmid-map feature presets
 #' @param ... Additional scale arguments.
 #' @param limits Optional feature-type order.
@@ -205,9 +247,7 @@ scale_feature_shape_manual <- function(..., values, name = "Feature",
 #' @return A feature fill or shape scale.
 #' @export
 scale_feature_fill_plasmid <- function(..., limits = NULL) {
-  values <- c(CDS="#CCFFCC",promoter="#FFFFFF",rep_origin="#FFFF00",
-    terminator="#993366",protein_bind="#A6ACB3",RBS="#FFFFFF",
-    repeat_region="#C8CDD2",misc_feature="#A6ACB3")
+  values <- ggchord_plasmid_feature_colours()
   if (is.null(limits)) limits <- names(values)
   out <- ggplot2::scale_fill_manual(
     ..., values=values, limits=limits, aesthetics="feature_fill", na.value="#B8BDC3"
@@ -219,9 +259,18 @@ scale_feature_fill_plasmid <- function(..., limits = NULL) {
 #' @rdname scale_feature_fill_plasmid
 #' @export
 scale_feature_shape_plasmid <- function(..., limits = NULL, guide = "none") {
-  values <- c(CDS="arrow",promoter="arrow",rep_origin="arrow",
-    terminator="lollipop",protein_bind="block",RBS="chevron",
-    repeat_region="block",misc_feature="block")
+  values <- c(
+    CDS="arrow", gene="arrow", resistance_gene="arrow",
+    selection_marker="arrow", reporter="arrow", peptide="compact_arrow",
+    tag="compact_arrow",
+    rep_origin="arrow", replication_origin="arrow", ori="arrow",
+    promoter="promoter_arrow", primer_bind="primer_arrow",
+    primer="primer_arrow", protein_bind="block", binding_site="block",
+    operator="block", terminator="block", enhancer="block",
+    regulatory="compact_arrow", RBS="block", polyA_signal="block",
+    poly_a_signal="block", LTR="block", repeat_region="block",
+    misc_RNA="block", intron="capped_line", MCS="block", misc_feature="block"
+  )
   if (is.null(limits)) limits <- names(values)
   out <- ggplot2::discrete_scale(
     aesthetics="feature_shape",palette=scales::manual_pal(values),
@@ -244,7 +293,7 @@ scale_region_fill_manual <- function(..., values) {
 #' range during chord layout.
 #'
 #' @param name Scale name; position guides are disabled by default.
-#' @param breaks,minor_breaks,labels,limits,expand,oob,transform Standard
+#' @param breaks,minor_breaks,labels,limits,expand,oob,transform,n.breaks Standard
 #'   continuous-scale controls.
 #' @param ... Additional arguments passed to [ggplot2::continuous_scale()].
 #' @return A ggplot2 continuous scale for the `seq_position` role.
@@ -253,12 +302,12 @@ scale_seq_position_continuous <- function(
     name = ggplot2::waiver(), breaks = ggplot2::waiver(),
     minor_breaks = ggplot2::waiver(), labels = ggplot2::waiver(),
     limits = NULL, expand = ggplot2::waiver(), oob = scales::censor,
-    transform = "identity", ...) {
+    transform = "identity", n.breaks = 6, ...) {
   ggplot2::continuous_scale(
     aesthetics = "seq_position",
     palette = function(x) x,
     name = name, breaks = breaks, minor_breaks = minor_breaks,
     labels = labels, limits = limits, expand = expand, oob = oob,
-    transform = transform, guide = "none", ...
+    transform = transform, n.breaks = n.breaks, guide = "none", ...
   )
 }

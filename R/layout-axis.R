@@ -11,6 +11,8 @@ ggchord_layout_axis_step <- quote({
                            label_y = numeric(0), size = numeric(0),
                            label_angle = numeric(0),
                            label_angle_relative = logical(0),
+                           label_along_axis = logical(0),
+                           label_gap = numeric(0),
                            accver = character(0),
                            stringsAsFactors = FALSE)
 
@@ -29,10 +31,14 @@ ggchord_layout_axis_step <- quote({
       ref <- seq_refs[[id]]
       r0 <- ref$r0 - axisGap[id]
 
-      automatic_majors <- is.null(axis_breaks[[id]])
       majors <- axis_breaks[[id]] %||% breakPointsFunc(lens[id], axisMaj[id])
-      if (isTRUE(circular) && automatic_majors) {
-        majors <- majors[majors < lens[id]]
+      major_labels <- axis_labels[[id]]
+      if (isTRUE(circular) && any(abs(majors) < sqrt(.Machine$double.eps))) {
+        # Zero and sequence length are the same circular seam. Keep only the
+        # zero-side tick even when a default ggplot2 scale supplied both.
+        keep_major <- abs(majors - lens[id]) >= sqrt(.Machine$double.eps)
+        majors <- majors[keep_major]
+        if (!is.null(major_labels)) major_labels <- major_labels[keep_major]
       }
       minors <- axis_minor_breaks[[id]]
       if (is.null(minors)) {
@@ -40,12 +46,18 @@ ggchord_layout_axis_step <- quote({
           seq(majors[i], majors[i + 1], length.out = axisMin[id] + 2)[-c(1, axisMin[id] + 2)]
         }))
       }
-      major_labels <- axis_labels[[id]] %||% as.character(majors)
+      major_labels <- major_labels %||% as.character(majors)
       pts <- data.frame(
         pos = c(majors, minors),
         is_major = c(rep(TRUE, length(majors)), rep(FALSE, length(minors))),
         display_label = c(as.character(major_labels), rep(NA_character_, length(minors)))
       )
+      origin_tick <- isTRUE(circular) &
+        pts$is_major & abs(pts$pos) < sqrt(.Machine$double.eps)
+      # Circular maps use the seam itself as the origin cue. A longer radial
+      # mark is clearer than printing a redundant zero over the 12-o'clock
+      # feature stack.
+      pts$display_label[origin_tick] <- NA_character_
 
       # Label orientation for this sequence. "horizontal" keeps the text
       # horizontal in the rendered plot; "parallel" aligns the text with the
@@ -55,6 +67,8 @@ ggchord_layout_axis_step <- quote({
       orient_val <- axisLabelOrientation[[id]]
       relative_angle <- is.character(orient_val) &&
         tolower(orient_val) %in% c("parallel", "perpendicular")
+      along_axis <- is.character(orient_val) &&
+        tolower(orient_val) == "parallel"
 
       frac <- if (orientation[id] == 1) pts$pos / lens[id] else 1 - pts$pos / lens[id]
       angle <- starts[id] + frac * (ends[id] - starts[id])
@@ -92,9 +106,30 @@ ggchord_layout_axis_step <- quote({
 
       dir <- if (axisGap[id] >= 0) -1 else 1
       len <- ifelse(pts$is_major, axisMajLen[id], axisMinLen[id])
-      base <- map_to_curve_many(angle, r0, ref)
-      tip <- map_to_curve_many(angle, r0 + len * dir, ref)
-      lbl <- map_to_curve_many(angle, r0 + (len + labelOffset[id]) * dir, ref)
+      len[origin_tick] <- len[origin_tick] * 2.2
+      if (isTRUE(circular)) {
+        # Circular tick marks begin at the visible inner edge of the backbone
+        # and extend towards the centre. Restriction-site leaders use the outer
+        # edge instead; these are deliberately separate attachment contracts.
+        # The curve mapper's radius parameter follows its left normal; for the
+        # circular reference this means subtracting a signed outward offset.
+        at_offset <- function(offset) map_to_curve_many(
+          angle, ref$r0 - offset, ref
+        )
+        base <- at_offset(-seqBackboneOuter)
+        tip <- at_offset(-seqBackboneOuter - len)
+        # Parallel text is attached beside the radial tick in the transform
+        # step, after its final readable tangent direction is known. Other
+        # orientations retain the historical radial offset.
+        lbl <- if (along_axis) tip else
+          at_offset(-seqBackboneOuter - len - labelOffset[id])
+      } else {
+        base <- map_to_curve_many(angle, r0, ref)
+        tip <- map_to_curve_many(angle, r0 + len * dir, ref)
+        lbl <- map_to_curve_many(
+          angle, r0 + (len + labelOffset[id]) * dir, ref
+        )
+      }
 
       data.frame(
         x0 = base[, 1], y0 = base[, 2],
@@ -104,7 +139,10 @@ ggchord_layout_axis_step <- quote({
         size = labelSize[[id]],
         label_angle = label_angle,
         label_angle_relative = relative_angle,
+        label_along_axis = rep(along_axis, nrow(pts)),
+        label_gap = rep(labelOffset[id], nrow(pts)),
         is_major = pts$is_major,
+        is_origin = origin_tick,
         accver = id,
         stringsAsFactors = FALSE
       )
