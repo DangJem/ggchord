@@ -510,7 +510,8 @@ GeomRestrictionSite <- ggplot2::ggproto(
     xend = NA_real_, yend = NA_real_, label = NA_character_,
     enzyme_label = NA_character_, coordinate_label = NA_character_,
     label_order = NA_character_, enzyme_fontface = "plain",
-    .component = NA_character_, group = NA_integer_, colour = "#202020",
+    .component = NA_character_, .path_visible = TRUE,
+    group = NA_integer_, colour = "#202020",
     alpha = 1, linewidth = .28, linetype = 1, size = 2.9, angle = 0,
     hjust = .5, vjust = .5, family = "", fontface = 1, lineheight = 1.2
   ),
@@ -648,7 +649,7 @@ geom_restriction_site<-function(mapping=NULL,data=NULL,label=TRUE,label_style=c(
   if(label_size_supplied)text_params$size<-label_size
   if(fontface_supplied)text_params$fontface<-fontface
   if(family_supplied)text_params$family<-family
-  lyr<-ggplot2::layer(data=data.frame(x=numeric(),y=numeric()),mapping=ggplot2::aes(x=x,y=y,group=group,label=label,.component=I(.component),enzyme_label=I(enzyme_label),coordinate_label=I(coordinate_label),label_order=I(label_order),enzyme_fontface=I(enzyme_fontface)),stat="identity",geom=GeomRestrictionSite,position=position,show.legend=show.legend,inherit.aes=inherit.aes,check.aes=FALSE,check.param=FALSE,params=c(list(na.rm=FALSE,colour=colour,linewidth=linewidth,size=label_size,segment_params=segment_params,text_params=text_params,composite_labels=!fontface_supplied),list(...)))
+  lyr<-ggplot2::layer(data=data.frame(x=numeric(),y=numeric()),mapping=ggplot2::aes(x=x,y=y,group=group,label=label,.component=I(.component),.path_visible=I(.path_visible),enzyme_label=I(enzyme_label),coordinate_label=I(coordinate_label),label_order=I(label_order),enzyme_fontface=I(enzyme_fontface)),stat="identity",geom=GeomRestrictionSite,position=position,show.legend=show.legend,inherit.aes=inherit.aes,check.aes=FALSE,check.param=FALSE,params=c(list(na.rm=FALSE,colour=colour,linewidth=linewidth,size=label_size,segment_params=segment_params,text_params=text_params,composite_labels=!fontface_supplied),list(...)))
   lyr$ggchord_type<-"restriction_site";lyr$ggchord_theme_components<-c(segment_params="ggchord.restriction.label.segment",text_params="ggchord.restriction.label")
   lyr$ggchord_params<-list(type="restriction_site",label=label,label_style=label_style,label_order=label_order,label_side=label_side,leader=leader,min_label_gap=min_label_gap,tick_length=tick_length,label_offset=label_offset,label_size=label_size)
   ggchord_capture_layer_input(lyr,data,mapping,c("accver","position","enzyme"))
@@ -2033,6 +2034,13 @@ ggchord_restriction_geometry <- function(data, params, layout, seq_data) {
     ))
   }
   rendered <- ggchord_rbind_fill(output)
+  label_defaults <- list(
+    enzyme_label = NA_character_, coordinate_label = NA_character_,
+    label_order = NA_character_, enzyme_fontface = NA_character_
+  )
+  for (column in names(label_defaults)) {
+    if (!column %in% names(rendered)) rendered[[column]] <- label_defaults[[column]]
+  }
   if ("display_warning" %in% names(data) && nrow(rendered)) {
     blocked <- vapply(rendered$source_rows, function(rows) {
       rows <- as.integer(rows)

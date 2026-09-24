@@ -73,7 +73,10 @@ geom_primer <- function(mapping = NULL, data = NULL,
 #'
 #' Primer labels are unboxed, use the primer colour, and show one-based
 #' inclusive binding coordinates by default. Their leaders start at the
-#' directional primer arc's arrow tip (the primer 3-prime end).
+#' directional primer arc's arrow tip (the primer 3-prime end), follow the
+#' shared exterior straight-or-single-bend routing rule, and attach to the
+#' root-facing side of the primer name. The parenthesized coordinates remain
+#' outside that attachment.
 #'
 #' @inheritParams geom_primer
 #' @param side Side on which the external primer label is arranged.

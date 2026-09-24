@@ -31,13 +31,16 @@ ggchord_open_circular_order <- function(angle, tie = seq_along(angle)) {
     else integer(), sorted[seq_len(cut)])
 }
 
-ggchord_external_route_to_label <- function(route, box) {
+ggchord_external_route_to_label <- function(
+    route, box, attachment = c("approach", "primer_side")) {
+  attachment <- match.arg(attachment)
   if (!is.data.frame(route) || !nrow(route)) return(route)
   if (!is.data.frame(box) || !nrow(box) ||
       any(!is.finite(unlist(box[1L, c("cx", "cy", "w", "h", "angle")])))) {
     return(route)
   }
   centre <- c(box$cx[1L], box$cy[1L])
+  root <- c(route$x1[1L], route$y1[1L])
   elbows <- if (nrow(route) > 1L) {
     as.matrix(route[seq_len(nrow(route) - 1L), c("x2", "y2"), drop = FALSE])
   } else matrix(numeric(), ncol = 2L)
@@ -46,27 +49,48 @@ ggchord_external_route_to_label <- function(route, box) {
   angle <- box$angle[1L]
   cos_a <- cos(angle)
   sin_a <- sin(angle)
-  relative <- start - centre
-  local <- c(
-    relative[1L] * cos_a + relative[2L] * sin_a,
-    -relative[1L] * sin_a + relative[2L] * cos_a
-  )
   half <- c(box$w[1L], box$h[1L]) / 2
-  entry <- max(c(0, if (abs(local[1L]) > half[1L]) {
-    1 - half[1L] / abs(local[1L])
-  } else 0, if (abs(local[2L]) > half[2L]) {
-    1 - half[2L] / abs(local[2L])
-  } else 0))
-  local_endpoint <- local * (1 - entry)
-  endpoint <- centre + c(
-    local_endpoint[1L] * cos_a - local_endpoint[2L] * sin_a,
-    local_endpoint[1L] * sin_a + local_endpoint[2L] * cos_a
-  )
+  intersection <- function(point) {
+    relative <- point - centre
+    local <- c(
+      relative[1L] * cos_a + relative[2L] * sin_a,
+      -relative[1L] * sin_a + relative[2L] * cos_a
+    )
+    ratio <- abs(local) / pmax(half, 1e-12)
+    edge <- which.max(ratio)
+    scale <- if (max(ratio) > 1) 1 / max(ratio) else 1
+    local_endpoint <- local * scale
+    list(
+      point = centre + c(
+        local_endpoint[1L] * cos_a - local_endpoint[2L] * sin_a,
+        local_endpoint[1L] * sin_a + local_endpoint[2L] * cos_a
+      ),
+      face = paste0(if (edge == 1L) "x" else "y",
+        if (local[edge] < 0) "-" else "+")
+    )
+  }
+  approach_intersection <- intersection(start)
+  attachment_valid <- TRUE
+  endpoint <- approach_intersection$point
+  if (identical(attachment, "primer_side")) {
+    root_relative <- root - centre
+    root_local_x <- root_relative[1L] * cos_a + root_relative[2L] * sin_a
+    side <- if (root_local_x < 0) -1 else 1
+    local_endpoint <- c(side * half[1L], 0)
+    endpoint <- centre + c(
+      local_endpoint[1L] * cos_a - local_endpoint[2L] * sin_a,
+      local_endpoint[1L] * sin_a + local_endpoint[2L] * cos_a
+    )
+    attachment_valid <- identical(
+      approach_intersection$face, paste0("x", if (side < 0) "-" else "+")
+    )
+  }
   points <- rbind(c(route$x1[1L], route$y1[1L]), elbows, endpoint)
   data.frame(
     x1 = points[-nrow(points), 1L], y1 = points[-nrow(points), 2L],
     x2 = points[-1L, 1L], y2 = points[-1L, 2L],
-    move_endpoint = FALSE
+    move_endpoint = FALSE,
+    attachment_valid = attachment_valid
   )
 }
 
@@ -157,15 +181,20 @@ ggchord_external_place <- function(row, occupied, units_per_inch,
         candidate_leaders$y2[moving] <- candidate_leaders$y2[moving] + dy
       }
       candidate_leaders <- ggchord_external_route_to_label(
-        candidate_leaders, box
+        candidate_leaders, box,
+        attachment = if (identical(class, "primer")) "primer_side" else
+          "approach"
       )
+      attachment_valid <- !"attachment_valid" %in% names(candidate_leaders) ||
+        all(candidate_leaders$attachment_valid %in% TRUE)
+      leader_collision <- !attachment_valid
       if (nrow(occupied_leaders)) {
-        leader_collision <- ggchord_external_route_crosses(
+        leader_collision <- leader_collision || ggchord_external_route_crosses(
           candidate_leaders, occupied_leader_matrix
         )
       }
       if (!box_collision && leader_collision && nrow(candidate_leaders) &&
-          nrow(occupied_leaders)) {
+          (nrow(occupied_leaders) || !attachment_valid)) {
         # A label can have a collision-free bbox while its straight leader
         # cuts across a dense restriction fan. Search a single angular elbow
         # outside the backbone before rejecting that circular-track slot.
@@ -210,9 +239,13 @@ ggchord_external_place <- function(row, occupied, units_per_inch,
               move_endpoint = c(FALSE, FALSE)
             )
             final_route <- ggchord_external_route_to_label(
-              route, box
+              route, box,
+              attachment = if (identical(class, "primer")) "primer_side" else
+                "approach"
             )
-            if (!route_crosses(final_route)) {
+            valid_attachment <- !"attachment_valid" %in% names(final_route) ||
+              all(final_route$attachment_valid %in% TRUE)
+            if (valid_attachment && !route_crosses(final_route)) {
               routed <- final_route
               break
             }

@@ -30,6 +30,46 @@ stopifnot(
     which(restriction_candidates$band == 1L &
       restriction_candidates$slot == 1L)
 )
+attachment_probe <- data.frame(cx = 0, cy = 0, w = 2, h = 1, angle = 0)
+straight_probe <- ggchord:::ggchord_external_route_to_label(
+  data.frame(x1 = -3, y1 = 0, x2 = 0, y2 = 0), attachment_probe,
+  attachment = "primer_side"
+)
+bent_probe <- ggchord:::ggchord_external_route_to_label(
+  data.frame(
+    x1 = c(-3, 0), y1 = c(0, 2),
+    x2 = c(0, 0), y2 = c(2, 0), move_endpoint = FALSE
+  ), attachment_probe, attachment = "primer_side"
+)
+stopifnot(
+  all(straight_probe$attachment_valid),
+  abs(straight_probe$x2[1L] + 1) < 1e-8,
+  !any(bent_probe$attachment_valid)
+)
+visibility_probe <- ggchord(
+  data.frame(accver = "visibility-probe", length = 1000), validate = "none"
+) + geom_seq() + geom_restriction_site(data = data.frame(
+  accver = "visibility-probe", position = c(100, 110), enzyme = c("A", "B")
+)) + coord_circular()
+visibility_layer <- which(vapply(visibility_probe$layers, function(layer) {
+  identical(layer$ggchord_type, "restriction_site")
+}, logical(1L)))
+visibility_build <- ggplot2::ggplot_build(visibility_probe)$data[[visibility_layer]]
+stopifnot(
+  ".path_visible" %in% names(visibility_build),
+  any(visibility_build$.component == "path" &
+    !visibility_build$.path_visible)
+)
+tick_probe <- ggchord(
+  data.frame(accver = "tick-probe", length = 1000), validate = "none"
+) + geom_seq() + geom_restriction_site(data = data.frame(
+  accver = "tick-probe", position = 100, enzyme = "E"
+), label = FALSE) + coord_circular()
+tick_layer <- which(vapply(tick_probe$layers, function(layer) {
+  identical(layer$ggchord_type, "restriction_site")
+}, logical(1L)))
+tick_build <- ggplot2::ggplot_build(tick_probe)$data[[tick_layer]]
+stopifnot(all(tick_build$.path_visible[tick_build$.component == "path"]))
 
 reference_maps <- c(
   "pBR322", "pUC19", "pBluescript II SK(+)", "pSB1C3", "pET-28a(+)",
@@ -528,6 +568,17 @@ for (name in fixture_names) {
         all(primer_text$primer_show_location),
         all(grepl("\\([0-9]+ \\.\\. [0-9]+\\)", primer_text$feature_label))
       )
+      primer_segments <- layout$labels[
+        layout$labels$.component == "segment" &
+          !is.na(layout$labels$annotation_class) &
+          layout$labels$annotation_class == "primer", , drop = FALSE
+      ]
+      visible_segment_count <- vapply(split(primer_segments,
+        primer_segments$source_row), function(rows) {
+        sum(sqrt((rows$xend - rows$x)^2 +
+          (rows$yend - rows$y)^2) > 1e-8)
+      }, integer(1L))
+      stopifnot(all(visible_segment_count %in% 1:2))
     }
   } else {
     ggplot2::ggsave(file.path(output_dir, paste0(name, ".png")), plot,
