@@ -283,7 +283,8 @@ ggchord_outer_candidates <- function(task, registry, units_per_inch,
     c(0, .06, -.06, .13, -.13, .22, -.22)
   } else if (identical(task$class, "restriction")) {
     c(0, .07, -.07, .14, -.14)
-  } else c(0, .05, -.05, .10, -.10, .15, -.15)
+  } else c(0, .05, -.05, .10, -.10, .15, -.15, .22, -.22,
+    .30, -.30)
   port_sides <- if (identical(task$class, "primer")) c(-1, 1) else NA_real_
   track_count <- max_tracks
   candidates <- vector(

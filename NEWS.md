@@ -39,7 +39,10 @@ not a completed release.
   deeper text track; those gutters are widened instead.
   Compact runs of repeated short features on the outermost band now enter the
   external allocator as a complete cluster instead of splitting between
-  crowded inner labels and isolated outer callouts.
+  crowded inner labels and isolated outer callouts. External feature callouts
+  may use a wider local tangential search when their nearest positions are
+  blocked; the pTRIPZ representative plot retains all six tet-operator labels
+  and its other external feature labels without changing biological anchors.
   External feature and primer callouts are now placed across layers in their
   real circular root order, independent of the order in which the layers were
   added.
