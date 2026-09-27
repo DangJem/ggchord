@@ -59,10 +59,10 @@ ggchord_preview_height <- function(plot, width_inches) {
   ggchord_preview_layout(plot, width_inches)$height
 }
 
-# Fit a circular preview by preserving a readable physical backbone diameter
-# and expanding the canvas for the annotation envelope. The returned gtable is
-# frozen at the measurement device so exporting it does not trigger a second
-# size-dependent track solution.
+# Fit a circular preview to its annotation envelope. Dense restriction maps
+# use a compact backbone and wider fan corridors at a readable text size.
+# The returned gtable is frozen at the measurement device so exporting it does
+# not trigger a second size-dependent track solution.
 ggchord_preview_outer_density <- function(plot) {
   counts <- vapply(plot$layers, function(layer) {
     type <- layer$ggchord_type %||% ""
@@ -76,14 +76,12 @@ ggchord_preview_outer_density <- function(plot) {
 
 ggchord_preview_circular_layout <- function(plot) {
   outer_density <- ggchord_preview_outer_density(plot)
-  # Extremely dense perimeter annotation needs a different physical strategy:
-  # keep readable text and a roughly eight-inch backbone, then provide wide
-  # fan corridors instead of compressing everything into a square.  The
-  # threshold is based only on annotation count, never on a sequence name.
+  # The threshold is based only on annotation count, never on a sequence name.
   dense_width <- if (outer_density > 54L) {
-    min(24, 20 + .50 * (outer_density - 54L))
+    min(20, 17 + .25 * (outer_density - 54L))
   } else 12.39
-  baseline <- c(width = dense_width, height = 9.71)
+  dense <- outer_density > 54L
+  baseline <- c(width = dense_width, height = if (dense) 7 else 9.71)
   close_device <- ggchord_measurement_device(
     width = baseline[["width"]], height = baseline[["height"]]
   )
@@ -96,10 +94,9 @@ ggchord_preview_circular_layout <- function(plot) {
   span <- c(diff(limits$xlim), diff(limits$ylim))
   span[!is.finite(span) | span <= 0] <- 2
 
-  # Four inches per data unit gives an uncluttered eight-inch backbone for a
-  # sparse unit circle. Dense asymmetric annotations enlarge only the sides
-  # that need room instead of reducing the text to fit a fixed canvas.
-  panel <- pmax(7.6, 4 * span)
+  # Sparse circles retain their usual physical scale. A dense fan uses a
+  # smaller backbone so its labels can occupy more of the available page.
+  panel <- if (dense) pmax(5, 2.4 * span) else pmax(7.6, 4 * span)
   fixed <- c(
     grid::convertWidth(sum(table$widths), "inches", valueOnly = TRUE),
     grid::convertHeight(sum(table$heights), "inches", valueOnly = TRUE)
@@ -147,6 +144,8 @@ ggchord_preview_circular_layout <- function(plot) {
 #'   requires the optional svglite package or a working base Cairo SVG device.
 #' @param dpi Positive raster resolution, default 144.
 #' @param bg Optional background colour passed to \code{ggsave()}.
+#'   When omitted, a specified plot background fill also fills the whole
+#'   preview canvas; pass \code{NULL} explicitly for a transparent canvas.
 #' @param viewer How to open the preview: \code{"auto"} prefers
 #'   \code{getOption("viewer")} and falls back to a browser in interactive
 #'   sessions; \code{"ide"}, \code{"browser"}, and \code{"none"} select an
@@ -191,6 +190,15 @@ view_ggchord <- function(
   if (!is.null(bg) &&
       (!is.character(bg) || length(bg) != 1L || is.na(bg))) {
     ggchord_stop(caller, ": bg must be NULL or one colour string")
+  }
+  if (missing(bg)) {
+    theme_background <- plot$theme$plot.background
+    fill <- if (inherits(theme_background, "element_rect")) {
+      theme_background$fill
+    } else NULL
+    if (is.character(fill) && length(fill) == 1L && !is.na(fill)) {
+      bg <- fill
+    }
   }
 
   preview_plot <- plot

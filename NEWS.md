@@ -19,6 +19,12 @@ not a completed release.
   geometry back to each independent layer. It skips provisional distant-pair
   checks during beam expansion and still audits the complete solution, reducing
   repeated work on dense exterior maps without changing the selected layout.
+  Very dense restriction perimeters now pre-pack a broad polar fan and offer
+  more radial candidates, preserving substantially more labels in crowded
+  areas. Automatic previews of these maps use a smaller physical backbone
+  and more of the canvas for exterior annotation at a readable text size.
+  When `view_ggchord()` is called without `bg`, a plot theme's background fill
+  now covers the full preview canvas; explicit `bg = NULL` retains transparency.
   Sparse restriction labels keep
   horizontal text on measured circular control tracks; complete text boxes
   may extend beyond a track and are not forced into Cartesian side rails.

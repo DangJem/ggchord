@@ -36,7 +36,9 @@ requires the optional svglite package or a working base Cairo SVG device.}
 
 \item{dpi}{Positive raster resolution, default 144.}
 
-\item{bg}{Optional background colour passed to \code{ggsave()}.}
+\item{bg}{Optional background colour passed to \code{ggsave()}.
+When omitted, a specified plot background fill also fills the whole
+preview canvas; pass \code{NULL} explicitly for a transparent canvas.}
 
 \item{viewer}{How to open the preview: \code{"auto"} prefers
 \code{getOption("viewer")} and falls back to a browser in interactive

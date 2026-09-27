@@ -262,7 +262,7 @@ ggchord_outer_route <- function(root, port, backbone_outer) {
 ggchord_outer_candidates <- function(task, registry, units_per_inch,
                                      backbone_outer, preferred_unwrapped,
                                      natural_unwrapped,
-                                     max_tracks = 12L) {
+                                     max_tracks = 12L, track_step = .052) {
   row <- ggchord_outer_task_row(task, registry)
   row_left <- row
   if (identical(task$class, "primer")) {
@@ -301,7 +301,7 @@ ggchord_outer_candidates <- function(task, registry, units_per_inch,
         direction[1L] < 0) row_left else row
     radial_half <- abs(direction[1L]) * measured$w[1L] / 2 +
       abs(direction[2L]) * measured$h[1L] / 2
-    control_radius <- backbone_outer + .035 + (track - 1L) * .052
+    control_radius <- backbone_outer + .035 + (track - 1L) * track_step
     centre_radius <- control_radius + radial_half
     centre <- centre_radius * direction
     box <- ggchord_outer_translate_box(measured, centre[1L], centre[2L])
@@ -397,11 +397,13 @@ ggchord_outer_candidate_compatible <- function(candidate, state) {
 ggchord_outer_solve_block <- function(tasks, preferred, natural, registry,
                                       units_per_inch, backbone_outer,
                                       beam_width = 512L,
-                                      occupied = list()) {
+                                      occupied = list(),
+                                      max_tracks = 12L, track_step = .052) {
   candidate_sets <- lapply(seq_along(tasks), function(i) {
     ggchord_outer_candidates(
       tasks[[i]], registry, units_per_inch, backbone_outer,
-      preferred[i], natural[i]
+      preferred[i], natural[i], max_tracks = max_tracks,
+      track_step = track_step
     )
   })
   occupied_angles <- vapply(occupied, function(candidate) {
@@ -603,7 +605,13 @@ ggchord_outer_solve_sequence <- function(tasks, registry, units_per_inch,
     )
   })
   measured <- ggchord_rbind_fill(measured)
-  packing_radius <- backbone_outer + .10
+  # A crowded perimeter needs a broad polar fan. Packing every label at the
+  # backbone radius and clipping the resulting angles collapses a dense run
+  # into one narrow wedge, so the solver can only hide the excess labels.
+  dense_fan <- sum(vapply(tasks, function(task) {
+    identical(task$class, "restriction")
+  }, logical(1L))) >= 50L
+  packing_radius <- backbone_outer + if (dense_fan) 1.95 else .10
   preferred <- unwrapped
   for (iteration in seq_len(3L)) {
     half_extent <- abs(sin(preferred)) * measured$w / 2 +
@@ -613,11 +621,13 @@ ggchord_outer_solve_sequence <- function(tasks, registry, units_per_inch,
       half_extent, half_extent, gap = .012
     ) / packing_radius
   }
-  preferred <- pmax(unwrapped - .35, pmin(unwrapped + .35, preferred))
+  if (!dense_fan) {
+    preferred <- pmax(unwrapped - .35, pmin(unwrapped + .35, preferred))
+  }
   feature_rows <- which(vapply(tasks, function(task) {
     identical(task$class, "feature")
   }, logical(1L)))
-  if (length(feature_rows)) {
+  if (length(feature_rows) && !dense_fan) {
     # Repeated short features form a local callout fan.  Packing every class
     # from the circular cut forward accumulates displacement from unrelated
     # restriction labels, eventually pinning the entire feature fan against
@@ -649,7 +659,9 @@ ggchord_outer_solve_sequence <- function(tasks, registry, units_per_inch,
   # the ordinary soft visibility preference instead of failing the plot.
   solve <- function(task_set) ggchord_outer_solve_block(
     task_set, preferred, unwrapped, registry,
-    units_per_inch, backbone_outer
+    units_per_inch, backbone_outer,
+    max_tracks = if (dense_fan) 20L else 12L,
+    track_step = if (dense_fan) .10 else .052
   )
   tryCatch(solve(tasks), error = function(error) {
     has_required <- any(vapply(tasks, function(task) isTRUE(task$required),
