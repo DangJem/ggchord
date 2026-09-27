@@ -167,13 +167,6 @@ GeomChordGeneLabelRepel <- ggplot2::ggproto(
       )
     }
     if (nrow(text)) {
-      # Hidden callouts remain in exported geometry for diagnostics, but a
-      # missing label is not a drawable resource.  GeomLabel otherwise turns
-      # the scalar NA into a visible boxed "NA" when draw_panel() is invoked
-      # directly rather than through the usual layer missing-value filter.
-      text <- text[!is.na(text$label) & nzchar(text$label), , drop = FALSE]
-    }
-    if (nrow(text)) {
       primer <- if ("annotation_class" %in% names(text)) {
         !is.na(text$annotation_class) & text$annotation_class == "primer"
       } else rep(FALSE, nrow(text))

@@ -2,7 +2,9 @@
 
 The unreleased v0.13.0 development work continues in v0.13.1; v0.13.0 was
 not published. The changes below describe the current development branch,
-not a completed release.
+not a completed release. The experimental global exterior-label solver was
+withdrawn after `view_ggchord()` comparisons showed severe visual regressions;
+the current rendering baseline uses the v0.13.0 perimeter layout.
 
 * Added a `CoordCircular`-owned annotation registry as the common final layout
   fact for circular maps. Position lanes are now exported separately from
@@ -10,37 +12,19 @@ not a completed release.
   backbone, while variable-width feature bands, curved-text tracks, inner
   leader corridors and the axis reserve record their radius and radial
   boundaries. Restriction sites, external feature labels and primer labels
-  retain their own visual semantics in one shared exterior registry and are
-  now solved together instead of fixing restriction geometry first. Every
-  exterior candidate contains its measured text box, control-point track,
-  legal attachment and complete straight-or-single-bend leader. The global
-  solver preserves circular order, rejects text/leader collisions, retains
-  mandatory primers and compares visibility levels before writing the chosen
-  geometry back to each independent layer. It skips provisional distant-pair
-  checks during beam expansion and still audits the complete solution, reducing
-  repeated work on dense exterior maps without changing the selected layout.
-  Very dense restriction perimeters now pre-pack a broad polar fan and offer
-  more radial candidates, preserving substantially more labels in crowded
-  areas. Automatic previews of these maps use a smaller physical backbone
-  and more of the canvas for exterior annotation at a readable text size.
-  When `view_ggchord()` is called without `bg`, a plot theme's background fill
-  now covers the full preview canvas; explicit `bg = NULL` retains transparency.
-  Hidden restriction labels and leaders no longer enlarge automatic plot
-  bounds. This keeps previews compact when multiple real enzyme names share
-  one cut site and the label solver hides an infeasible callout.
-  Sparse restriction labels keep
-  horizontal text on measured circular control tracks; complete text boxes
-  may extend beyond a track and are not forced into Cartesian side rails.
-  `export_ggchord_layout()` exposes
+  retain their own visual semantics in one shared exterior registry. Sparse
+  restriction labels keep horizontal text on measured circular anchor tracks;
+  their complete text boxes participate in collision detection but are not
+  forced inside Cartesian top/right/bottom/left rails. Feature and primer
+  callouts then use the resolved restriction boxes as fixed obstacles and
+  spill only to consecutive local circular bands. `export_ggchord_layout()` exposes
   annotation class, dominant/actual band, spill reason and leader-crossing
   count together with the registry, and copies the
   resolved inner-track or circular exterior-allocation fields onto affected geometry rows.
   Adaptive plot bounds now include external feature and primer callout text,
   so these labels remain visible after the shared outer-track solver moves them.
   Primer callout leaders now inherit the primer colour instead of the generic
-  grey feature-leader theme. Their exported attachment point is measured
-  against the primer-name fragment only; parenthesized coordinates remain on
-  the outside and are not a legal attachment target.
+  grey feature-leader theme.
   Circular feature bands now size inter-arrow gutters from measured label
   demand instead of widening every gap, and displaced inner labels prefer
   the nearest valid track with a small local adjustment before moving deeper.
@@ -48,10 +32,7 @@ not a completed release.
   deeper text track; those gutters are widened instead.
   Compact runs of repeated short features on the outermost band now enter the
   external allocator as a complete cluster instead of splitting between
-  crowded inner labels and isolated outer callouts. External feature callouts
-  may use a wider local tangential search when their nearest positions are
-  blocked; the pTRIPZ representative plot retains all six tet-operator labels
-  and its other external feature labels without changing biological anchors.
+  crowded inner labels and isolated outer callouts.
   External feature and primer callouts are now placed across layers in their
   real circular root order, independent of the order in which the layers were
   added.
@@ -61,29 +42,11 @@ not a completed release.
   candidate search can resolve nearby mixed callout crossings without a
   Cartesian rail; an unresolved spill reason is exported when no noncrossing
   placement exists.
-  Moved feature and primer callouts now rebuild a continuous leader against
-  the final measured text box, attach to its root-facing edge, and collapse
-  unused route rows at that endpoint instead of leaving detached stale
-  coordinates. Primer callouts follow the same straight-or-single-bend rule
-  as other exterior callouts, but attach to the root-facing side of the primer
-  name; parenthesized coordinates remain outside the attachment. Labelled
-  restriction sites now draw one continuous connector
-  from the real backbone boundary, either straight or with one fan bend;
-  their former standalone tick remains only as anchor metadata and its hidden
-  state is preserved through the actual geom aesthetic mapping, while unlabelled
-  sites keep a complete path schema and still draw the normal short tick.
   Registry joins now guarantee scalar track identities even when a
   device-specific fallback omits a local resource, fixing circular layout
   export failures on dense short-feature maps. Dense restriction perimeters
-  retain their backbone roots and genomic order while feature and primer
-  callouts share the same candidate sequence. Hidden composite restriction
-  labels now suppress their enzyme, coordinate and leader resources together,
-  and hidden boxed feature callouts no longer render a literal `NA` label.
-  Closely spaced exterior feature runs now receive a centred contour
-  preference and are first tried as complete visible groups; an infeasible
-  complete-group solve falls back to ordinary soft visibility. This retains
-  all six pTRIPZ tet-operator callouts in the current representative export,
-  while further visual refinement and broader validation remain pending.
+  retain their backbone roots and genomic order; feature and primer callouts
+  use the remaining measured exterior slots.
 * Added a reproducible bundled sequencing-primer catalogue generated from the
   reviewed Addgene workbook: 137 distinct oligonucleotides and all 163 source
   alias rows are retained separately. `primer_catalog()` exposes either view,

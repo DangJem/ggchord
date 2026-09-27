@@ -2,7 +2,6 @@
 
 ggchord_external_candidates <- function(max_band = 16L, max_slot = 20L,
                                          class = "restriction") {
-  if (class %in% c("feature", "primer")) max_slot <- max(max_slot, 40L)
   candidates <- expand.grid(
     band = seq_len(max_band),
     slot = c(0L, as.vector(rbind(seq_len(max_slot), -seq_len(max_slot))))
@@ -10,11 +9,7 @@ ggchord_external_candidates <- function(max_band = 16L, max_slot = 20L,
   # A shared dominant band is the first objective. Small local tangential
   # movements are cheaper than opening a new band, but remain bounded so an
   # annotation cannot migrate around the circle.
-  radial_cost <- switch(class,
-    feature = 2.40,
-    primer = 2.00,
-    .9
-  )
+  radial_cost <- .9
   candidates$score <- (candidates$band - 1L) * radial_cost +
     abs(candidates$slot) * 1.60
   candidates[order(candidates$score, candidates$band,
@@ -29,69 +24,6 @@ ggchord_open_circular_order <- function(angle, tie = seq_along(angle)) {
   cut <- which.max(gaps)
   c(if (cut < length(sorted)) sorted[seq.int(cut + 1L, length(sorted))]
     else integer(), sorted[seq_len(cut)])
-}
-
-ggchord_external_route_to_label <- function(
-    route, box, attachment = c("approach", "primer_side")) {
-  attachment <- match.arg(attachment)
-  if (!is.data.frame(route) || !nrow(route)) return(route)
-  if (!is.data.frame(box) || !nrow(box) ||
-      any(!is.finite(unlist(box[1L, c("cx", "cy", "w", "h", "angle")])))) {
-    return(route)
-  }
-  centre <- c(box$cx[1L], box$cy[1L])
-  root <- c(route$x1[1L], route$y1[1L])
-  elbows <- if (nrow(route) > 1L) {
-    as.matrix(route[seq_len(nrow(route) - 1L), c("x2", "y2"), drop = FALSE])
-  } else matrix(numeric(), ncol = 2L)
-  start <- if (nrow(elbows)) elbows[nrow(elbows), ] else
-    c(route$x1[1L], route$y1[1L])
-  angle <- box$angle[1L]
-  cos_a <- cos(angle)
-  sin_a <- sin(angle)
-  half <- c(box$w[1L], box$h[1L]) / 2
-  intersection <- function(point) {
-    relative <- point - centre
-    local <- c(
-      relative[1L] * cos_a + relative[2L] * sin_a,
-      -relative[1L] * sin_a + relative[2L] * cos_a
-    )
-    ratio <- abs(local) / pmax(half, 1e-12)
-    edge <- which.max(ratio)
-    scale <- if (max(ratio) > 1) 1 / max(ratio) else 1
-    local_endpoint <- local * scale
-    list(
-      point = centre + c(
-        local_endpoint[1L] * cos_a - local_endpoint[2L] * sin_a,
-        local_endpoint[1L] * sin_a + local_endpoint[2L] * cos_a
-      ),
-      face = paste0(if (edge == 1L) "x" else "y",
-        if (local[edge] < 0) "-" else "+")
-    )
-  }
-  approach_intersection <- intersection(start)
-  attachment_valid <- TRUE
-  endpoint <- approach_intersection$point
-  if (identical(attachment, "primer_side")) {
-    root_relative <- root - centre
-    root_local_x <- root_relative[1L] * cos_a + root_relative[2L] * sin_a
-    side <- if (root_local_x < 0) -1 else 1
-    local_endpoint <- c(side * half[1L], 0)
-    endpoint <- centre + c(
-      local_endpoint[1L] * cos_a - local_endpoint[2L] * sin_a,
-      local_endpoint[1L] * sin_a + local_endpoint[2L] * cos_a
-    )
-    attachment_valid <- identical(
-      approach_intersection$face, paste0("x", if (side < 0) "-" else "+")
-    )
-  }
-  points <- rbind(c(route$x1[1L], route$y1[1L]), elbows, endpoint)
-  data.frame(
-    x1 = points[-nrow(points), 1L], y1 = points[-nrow(points), 2L],
-    x2 = points[-1L, 1L], y2 = points[-1L, 2L],
-    move_endpoint = FALSE,
-    attachment_valid = attachment_valid
-  )
 }
 
 ggchord_external_place <- function(row, occupied, units_per_inch,
@@ -180,21 +112,13 @@ ggchord_external_place <- function(row, occupied, units_per_inch,
         candidate_leaders$x2[moving] <- candidate_leaders$x2[moving] + dx
         candidate_leaders$y2[moving] <- candidate_leaders$y2[moving] + dy
       }
-      candidate_leaders <- ggchord_external_route_to_label(
-        candidate_leaders, box,
-        attachment = if (identical(class, "primer")) "primer_side" else
-          "approach"
-      )
-      attachment_valid <- !"attachment_valid" %in% names(candidate_leaders) ||
-        all(candidate_leaders$attachment_valid %in% TRUE)
-      leader_collision <- !attachment_valid
       if (nrow(occupied_leaders)) {
-        leader_collision <- leader_collision || ggchord_external_route_crosses(
+        leader_collision <- ggchord_external_route_crosses(
           candidate_leaders, occupied_leader_matrix
         )
       }
       if (!box_collision && leader_collision && nrow(candidate_leaders) &&
-          (nrow(occupied_leaders) || !attachment_valid)) {
+          nrow(occupied_leaders)) {
         # A label can have a collision-free bbox while its straight leader
         # cuts across a dense restriction fan. Search a single angular elbow
         # outside the backbone before rejecting that circular-track slot.
@@ -238,15 +162,8 @@ ggchord_external_place <- function(row, occupied, units_per_inch,
               y2 = c(elbow[2L], endpoint[2L]),
               move_endpoint = c(FALSE, FALSE)
             )
-            final_route <- ggchord_external_route_to_label(
-              route, box,
-              attachment = if (identical(class, "primer")) "primer_side" else
-                "approach"
-            )
-            valid_attachment <- !"attachment_valid" %in% names(final_route) ||
-              all(final_route$attachment_valid %in% TRUE)
-            if (valid_attachment && !route_crosses(final_route)) {
-              routed <- final_route
+            if (!route_crosses(route)) {
+              routed <- route
               break
             }
           }
@@ -515,15 +432,6 @@ ggchord_shift_feature_callout <- function(geometry, row, candidate) {
       geometry$xend[target_rows] <- routed$x2[use]
       geometry$yend[target_rows] <- routed$y2[use]
     }
-    unused <- setdiff(segment_rows, if (length(use)) target_rows else
-      integer())
-    if (length(unused) && nrow(routed)) {
-      endpoint <- routed[nrow(routed), c("x2", "y2")]
-      geometry$x[unused] <- endpoint$x2
-      geometry$y[unused] <- endpoint$y2
-      geometry$xend[unused] <- endpoint$x2
-      geometry$yend[unused] <- endpoint$y2
-    }
     if ("x1" %in% names(geometry)) {
       geometry$x1[segment_rows] <- geometry$xend[segment_rows]
       geometry$y1[segment_rows] <- geometry$yend[segment_rows]
@@ -639,11 +547,8 @@ ggchord_measure_external_leader_crossings <- function(registry) {
     }
     sites <- registry[[id]]$restriction_site
     if (is.data.frame(sites) && nrow(sites)) {
-      visible <- if (".path_visible" %in% names(sites)) {
-        sites$.path_visible %in% TRUE
-      } else rep(TRUE, nrow(sites))
       rows <- which(sites$restriction_component %in% "leader" &
-        is.finite(sites$source_row) & visible)
+        is.finite(sites$source_row))
       for (source in unique(sites$source_row[rows])) {
         index <- rows[sites$source_row[rows] == source]
         if (length(index) < 2L) next
@@ -693,7 +598,7 @@ ggchord_measure_external_leader_crossings <- function(registry) {
 # callouts then use the same measured occupancy table and the same circular
 # band semantics. Horizontal text may leave the nominal annulus; its complete
 # box is a collision body, not a requirement to join a Cartesian side rail.
-ggchord_share_external_annotations_legacy <- function(registry, layout) {
+ggchord_share_external_annotations <- function(registry, layout) {
   if (!isTRUE(layout$circular) || !length(registry)) return(registry)
   units_per_inch <- layout$text_units_per_inch %||% .30
   backbone_outer <- if (is.data.frame(layout$backbone_bounds) &&

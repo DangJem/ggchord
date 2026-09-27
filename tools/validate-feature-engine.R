@@ -1,4 +1,4 @@
-# Explicit visual acceptance for the v0.13.1 circular Feature Engine.
+# Explicit visual acceptance for the v0.13.0 circular Feature Engine.
 # Run from the package root with:
 #   Rscript tools/validate-feature-engine.R [output-directory]
 #
@@ -14,73 +14,6 @@ occupied_probe <- matrix(c(.5, -1, .5, 1, 1.5, -1, 1.5, 1),
 stopifnot(ggchord:::ggchord_external_route_crossing_count(
   crossing_probe, occupied_probe
 ) == 2L)
-feature_candidates <- ggchord:::ggchord_external_candidates(
-  max_band = 2L, max_slot = 1L, class = "feature"
-)
-restriction_candidates <- ggchord:::ggchord_external_candidates(
-  max_band = 2L, max_slot = 1L, class = "restriction"
-)
-stopifnot(
-  which(feature_candidates$band == 1L &
-    feature_candidates$slot == 1L) <
-    which(feature_candidates$band == 2L &
-      feature_candidates$slot == 0L),
-  which(restriction_candidates$band == 2L &
-    restriction_candidates$slot == 0L) <
-    which(restriction_candidates$band == 1L &
-      restriction_candidates$slot == 1L)
-)
-attachment_probe <- data.frame(cx = 0, cy = 0, w = 2, h = 1, angle = 0)
-straight_probe <- ggchord:::ggchord_external_route_to_label(
-  data.frame(x1 = -3, y1 = 0, x2 = 0, y2 = 0), attachment_probe,
-  attachment = "primer_side"
-)
-bent_probe <- ggchord:::ggchord_external_route_to_label(
-  data.frame(
-    x1 = c(-3, 0), y1 = c(0, 2),
-    x2 = c(0, 0), y2 = c(2, 0), move_endpoint = FALSE
-  ), attachment_probe, attachment = "primer_side"
-)
-stopifnot(
-  all(straight_probe$attachment_valid),
-  abs(straight_probe$x2[1L] + 1) < 1e-8,
-  !any(bent_probe$attachment_valid)
-)
-visibility_probe <- ggchord(
-  data.frame(accver = "visibility-probe", length = 1000), validate = "none"
-) + geom_seq() + geom_restriction_site(data = data.frame(
-  accver = "visibility-probe", position = c(100, 110), enzyme = c("A", "B")
-)) + coord_circular()
-visibility_layer <- which(vapply(visibility_probe$layers, function(layer) {
-  identical(layer$ggchord_type, "restriction_site")
-}, logical(1L)))
-visibility_build <- ggplot2::ggplot_build(visibility_probe)$data[[visibility_layer]]
-stopifnot(
-  ".path_visible" %in% names(visibility_build),
-  any(visibility_build$.component == "path" &
-    !visibility_build$.path_visible)
-)
-tick_probe <- ggchord(
-  data.frame(accver = "tick-probe", length = 1000), validate = "none"
-) + geom_seq() + geom_restriction_site(data = data.frame(
-  accver = "tick-probe", position = 100, enzyme = "E"
-), label = FALSE) + coord_circular()
-tick_layer <- which(vapply(tick_probe$layers, function(layer) {
-  identical(layer$ggchord_type, "restriction_site")
-}, logical(1L)))
-tick_build <- ggplot2::ggplot_build(tick_probe)$data[[tick_layer]]
-stopifnot(all(tick_build$.path_visible[tick_build$.component == "path"]))
-hidden_extent_probe <- data.frame(
-  x = c(1, 99, 88), y = c(1, 99, 88),
-  restriction_component = c("leader", "label", "leader"),
-  .component = c("path", "label", "path"),
-  label = c(NA_character_, NA_character_, NA_character_),
-  .path_visible = c(TRUE, NA, FALSE)
-)
-visible_extent <- ggchord:::get_plot_extremes(
-  allRibbon = hidden_extent_probe
-)
-stopifnot(visible_extent$x_max == 1, visible_extent$y_max == 1)
 
 reference_maps <- c(
   "pBR322", "pUC19", "pBluescript II SK(+)", "pSB1C3", "pET-28a(+)",
@@ -195,11 +128,10 @@ reference_restriction_sites <- function(sequence, name) {
   sites <- find_restriction_sites(sequence)
   if (identical(name, "pETDuet-1")) {
     # The saved .dna profile is "None", but the checked-in PNG was exported
-    # with a dense unique-6+ display containing multiple commercial enzymes
-    # at shared cut sites. The visual fixture owns this explicit override; it
-    # must not be presented as recovered file metadata.
+    # with a dense unique-6+ display. The visual fixture therefore owns this
+    # explicit override; it must not be presented as recovered file metadata.
     return(filter_restriction_sites(sites, set = "unique_6plus",
-      parent_set = "commercial_all"))
+      parent_set = "commercial_nonredundant"))
   }
   filter_restriction_sites(sites, set = "reference",
     parent_set = "commercial_nonredundant")
@@ -218,7 +150,7 @@ if (identical(names(selected_reference_maps), names(reference_maps))) {
   stopifnot(
     nrow(real_fixtures[[make.names("pSpCas9(BB)-2A-GFP (PX458)")]]$sites) == 4L,
     nrow(real_fixtures[[make.names("pTRIPZ")]]$sites) == 38L,
-    nrow(real_fixtures[[make.names("pETDuet-1")]]$sites) == 139L,
+    nrow(real_fixtures[[make.names("pETDuet-1")]]$sites) == 58L,
     sum(vapply(real_fixtures, function(x) nrow(x$primers), integer(1L))) == 7L
   )
 }
@@ -292,31 +224,12 @@ for (name in fixture_names) {
     finally = close_device()
   )
   message("Exported geometry for ", name)
-  if (nrow(layout$restriction)) {
-    site_label_rows <- layout$restriction$.component == "label"
-    message("  Visible restriction labels: ",
-      sum(site_label_rows & !is.na(layout$restriction$label), na.rm = TRUE),
-      "/", sum(site_label_rows, na.rm = TRUE))
-  }
-  external_rows <- layout$labels$.component %in% "text" &
-    layout$labels$feature_label_mode %in% "external"
-  if (any(external_rows, na.rm = TRUE)) {
-    message("  Visible external feature labels: ", sum(external_rows &
-      !is.na(layout$labels$label), na.rm = TRUE), "/",
-      sum(external_rows, na.rm = TRUE))
-    hidden_external <- which(external_rows & is.na(layout$labels$label))
-    if (length(hidden_external)) message("  Hidden external features: ",
-      paste(layout$labels$anno[hidden_external], collapse = ", "))
-  }
   stopifnot(all(is.finite(layout$feature$x)), all(is.finite(layout$feature$y)))
-  if (identical(unname(reference_maps[name]), "pTRIPZ")) {
-    visible_operators <- sum(layout$labels$.component == "text" &
+  if (identical(unname(reference_maps[name]), "pTRIPZ")) stopifnot(
+    sum(layout$labels$.component == "text" &
       layout$labels$anno == "tet operator" &
-      layout$labels$feature_label_mode == "external" &
-      !is.na(layout$labels$label), na.rm = TRUE)
-    message("  Visible tet operators: ", visible_operators, "/6")
-    stopifnot(visible_operators == 6L)
-  }
+      layout$labels$feature_label_mode == "external", na.rm = TRUE) == 6L
+  )
   if (identical(unname(reference_maps[name]), "pTRE-Tight-BI")) stopifnot(
     sum(layout$labels$.component == "text" &
       layout$labels$anno == "tet operator" &
@@ -382,38 +295,11 @@ for (name in fixture_names) {
   ]
   if (nrow(restriction_registry)) {
     used_bands <- sort(unique(restriction_registry$band))
-    stopifnot(all(is.finite(used_bands)), all(used_bands >= 1L))
+    stopifnot(identical(used_bands, seq_len(max(used_bands))))
   }
   restriction_labels <- layout$restriction[
     layout$restriction$restriction_component == "label", , drop = FALSE
   ]
-  restriction_ticks <- layout$restriction[
-    layout$restriction$restriction_component == "tick", , drop = FALSE
-  ]
-  restriction_leaders <- layout$restriction[
-    layout$restriction$restriction_component == "leader", , drop = FALSE
-  ]
-  if (nrow(restriction_labels)) {
-    leader_points <- vapply(split(restriction_leaders,
-      restriction_leaders$group), nrow, integer(1L))
-    stopifnot(
-      ".path_visible" %in% names(restriction_ticks),
-      !any(restriction_ticks$.path_visible),
-      all(leader_points %in% 2:3)
-    )
-    tick_roots <- restriction_ticks[
-      !duplicated(restriction_ticks$source_row), , drop = FALSE
-    ]
-    leader_roots <- restriction_leaders[
-      !duplicated(restriction_leaders$source_row), , drop = FALSE
-    ]
-    matched <- match(leader_roots$source_row, tick_roots$source_row)
-    stopifnot(
-      all(is.finite(matched)),
-      all(abs(leader_roots$x - tick_roots$x[matched]) < 1e-8),
-      all(abs(leader_roots$y - tick_roots$y[matched]) < 1e-8)
-    )
-  }
   sequence_label <- as.character(fixture$sequence$label[1L])
   if (sequence_label == "pBR322") {
     bottom <- restriction_labels$anchor_position >= 2060 &
@@ -446,7 +332,7 @@ for (name in fixture_names) {
     stopifnot(
       sum(dense) >= 10L,
       !any(restriction_labels$label_layout == "perimeter_rail"),
-      length(unique(restriction_labels$outer_track[dense])) >= 2L
+      mean(restriction_labels$outer_track[dense] == 1L) >= .80
     )
   }
   text <- layout$labels[layout$labels$.component == "text", , drop = FALSE]
@@ -570,15 +456,10 @@ for (name in fixture_names) {
       )
     })
     if (any(collisions)) {
-      collided <- pairs[, collisions, drop = FALSE]
-      collided_labels <- apply(collided, 2L, function(pair) {
-        paste0("`", external_text[pair[1L]], "` / `",
-          external_text[pair[2L]], "`")
-      })
       leader_error <- paste0(
         leader_error %||% "", " External feature/primer labels overlap in ",
         as.character(fixture$sequence$label[1L]), ": ",
-        paste(collided_labels, collapse = "; ")
+        paste(which(collisions), collapse = ", ")
       )
     }
   }
@@ -602,55 +483,8 @@ for (name in fixture_names) {
       stopifnot(
         all(fixture$primers$name %in% primer_text$primer_name),
         all(primer_text$primer_show_location),
-        all(grepl("\\([0-9]+ \\.\\. [0-9]+\\)", primer_text$feature_label)),
-        all(is.finite(primer_text$label_attachment_x)),
-        all(is.finite(primer_text$label_attachment_y))
+        all(grepl("\\([0-9]+ \\.\\. [0-9]+\\)", primer_text$feature_label))
       )
-      full_display <- ifelse(
-        primer_text$x < 0,
-        paste0("(", primer_text$primer_start, " .. ",
-          primer_text$primer_end, ") ", primer_text$primer_name),
-        paste0(primer_text$primer_name, " (", primer_text$primer_start,
-          " .. ", primer_text$primer_end, ")")
-      )
-      full_boxes <- ggchord:::ggchord_text_boxes(data.frame(
-        text_x = primer_text$x, text_y = primer_text$y,
-        text = full_display, text_angle = 0,
-        size = primer_text$size, hjust = .5, vjust = .5
-      ), units_per_inch = 1)
-      name_boxes <- ggchord:::ggchord_text_boxes(data.frame(
-        text_x = primer_text$x, text_y = primer_text$y,
-        text = primer_text$primer_name, text_angle = 0,
-        size = primer_text$size, hjust = .5, vjust = .5
-      ), units_per_inch = 1)
-      stopifnot(all(is.finite(primer_text$outer_text_units_per_inch)))
-      full_width <- full_boxes$w * primer_text$outer_text_units_per_inch
-      name_width <- name_boxes$w * primer_text$outer_text_units_per_inch
-      name_offset <- (full_width - name_width) / 2
-      name_centre <- primer_text$x + ifelse(
-        primer_text$x < 0, name_offset, -name_offset
-      )
-      attachment_error <- pmin(
-        abs(primer_text$label_attachment_x -
-          (name_centre - name_width / 2)),
-        abs(primer_text$label_attachment_x -
-          (name_centre + name_width / 2))
-      )
-      stopifnot(
-        all(attachment_error < 1e-6),
-        all(abs(primer_text$label_attachment_y - primer_text$y) < 1e-6)
-      )
-      primer_segments <- layout$labels[
-        layout$labels$.component == "segment" &
-          !is.na(layout$labels$annotation_class) &
-          layout$labels$annotation_class == "primer", , drop = FALSE
-      ]
-      visible_segment_count <- vapply(split(primer_segments,
-        primer_segments$source_row), function(rows) {
-        sum(sqrt((rows$xend - rows$x)^2 +
-          (rows$yend - rows$y)^2) > 1e-8)
-      }, integer(1L))
-      stopifnot(all(visible_segment_count %in% 1:2))
     }
   } else {
     ggplot2::ggsave(file.path(output_dir, paste0(name, ".png")), plot,

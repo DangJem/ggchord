@@ -510,8 +510,7 @@ GeomRestrictionSite <- ggplot2::ggproto(
     xend = NA_real_, yend = NA_real_, label = NA_character_,
     enzyme_label = NA_character_, coordinate_label = NA_character_,
     label_order = NA_character_, enzyme_fontface = "plain",
-    .component = NA_character_, .path_visible = TRUE,
-    group = NA_integer_, colour = "#202020",
+    .component = NA_character_, group = NA_integer_, colour = "#202020",
     alpha = 1, linewidth = .28, linetype = 1, size = 2.9, angle = 0,
     hjust = .5, vjust = .5, family = "", fontface = 1, lineheight = 1.2
   ),
@@ -520,10 +519,6 @@ GeomRestrictionSite <- ggplot2::ggproto(
                         segment_params = list(), text_params = list(),
                         composite_labels = TRUE) {
     paths <- data[data$.component == "path", , drop = FALSE]
-    if (".path_visible" %in% names(paths)) {
-      paths <- paths[is.na(paths$.path_visible) | paths$.path_visible,
-        , drop = FALSE]
-    }
     labels <- data[data$.component == "label", , drop = FALSE]
     for (nm in names(segment_params)) {
       if (nm %in% names(paths)) paths[[nm]] <- segment_params[[nm]]
@@ -617,8 +612,8 @@ GeomRestrictionSite <- ggplot2::ggproto(
 #' @param label_side Draw labels outside, inside, or automatically.
 #' @param leader Leader routing style. The default `"radial"` measures actual
 #'   text boxes, separates site anchors from final radial label positions,
-#'   and routes either a direct connector or one continuous polyline from the
-#'   backbone boundary, with at most one radial-to-fan bend.
+#'   and routes either a direct connector or an independent radial stub plus
+#'   fan segment.
 #'   All enzyme-facing text edges follow one close circular contour in genomic
 #'   order. Dense lateral clusters use evenly spaced contour fans, while sparse
 #'   clusters retain their natural angular positions. `"trunk"` is retained
@@ -649,7 +644,7 @@ geom_restriction_site<-function(mapping=NULL,data=NULL,label=TRUE,label_style=c(
   if(label_size_supplied)text_params$size<-label_size
   if(fontface_supplied)text_params$fontface<-fontface
   if(family_supplied)text_params$family<-family
-  lyr<-ggplot2::layer(data=data.frame(x=numeric(),y=numeric()),mapping=ggplot2::aes(x=x,y=y,group=group,label=label,.component=I(.component),.path_visible=I(.path_visible),enzyme_label=I(enzyme_label),coordinate_label=I(coordinate_label),label_order=I(label_order),enzyme_fontface=I(enzyme_fontface)),stat="identity",geom=GeomRestrictionSite,position=position,show.legend=show.legend,inherit.aes=inherit.aes,check.aes=FALSE,check.param=FALSE,params=c(list(na.rm=FALSE,colour=colour,linewidth=linewidth,size=label_size,segment_params=segment_params,text_params=text_params,composite_labels=!fontface_supplied),list(...)))
+  lyr<-ggplot2::layer(data=data.frame(x=numeric(),y=numeric()),mapping=ggplot2::aes(x=x,y=y,group=group,label=label,.component=I(.component),enzyme_label=I(enzyme_label),coordinate_label=I(coordinate_label),label_order=I(label_order),enzyme_fontface=I(enzyme_fontface)),stat="identity",geom=GeomRestrictionSite,position=position,show.legend=show.legend,inherit.aes=inherit.aes,check.aes=FALSE,check.param=FALSE,params=c(list(na.rm=FALSE,colour=colour,linewidth=linewidth,size=label_size,segment_params=segment_params,text_params=text_params,composite_labels=!fontface_supplied),list(...)))
   lyr$ggchord_type<-"restriction_site";lyr$ggchord_theme_components<-c(segment_params="ggchord.restriction.label.segment",text_params="ggchord.restriction.label")
   lyr$ggchord_params<-list(type="restriction_site",label=label,label_style=label_style,label_order=label_order,label_side=label_side,leader=leader,min_label_gap=min_label_gap,tick_length=tick_length,label_offset=label_offset,label_size=label_size)
   ggchord_capture_layer_input(lyr,data,mapping,c("accver","position","enzyme"))
@@ -1444,11 +1439,9 @@ ggchord_restriction_geometry <- function(data, params, layout, seq_data) {
                           junction_id = NA_character_,
                           label_direction = NA_character_,
                           label_order = NA_character_,
-                          label_connection_side = NA_character_,
-                          path_visible = TRUE) {
+                          label_connection_side = NA_character_) {
     gid <<- gid + 1L
     points$.component <- "path"
-    points$.path_visible <- path_visible
     points$restriction_component <- component
     points$group <- gid
     points$label <- NA_character_
@@ -1568,8 +1561,7 @@ ggchord_restriction_geometry <- function(data, params, layout, seq_data) {
         rbind(bases[member, , drop = FALSE], tips[member, , drop = FALSE]),
         "tick", row, data$position[row], data$position[row],
         site_members[[member]],
-        cluster_names[member], junction_names[member],
-        path_visible = !isTRUE(params$label)
+        cluster_names[member], junction_names[member]
       )
     }
     if (!isTRUE(params$label)) next
@@ -1807,18 +1799,14 @@ ggchord_restriction_geometry <- function(data, params, layout, seq_data) {
         sum(centre_vector * radial) > 0 &&
         abs(centre_vector[1] * radial[2] - centre_vector[2] * radial[1]) /
           centre_length < .02
-      start <- unlist(bases[member, c("x", "y")])
-      tip <- unlist(tips[member, c("x", "y")])
+      start <- c(tips$x[member], tips$y[member])
       endpoint <- c(endpoint_x[member], endpoint_y[member])
-      # A labelled site is one continuous visible path rooted at the actual
-      # backbone boundary.  Its former standalone tick is retained only as
-      # hidden anchor metadata; the visible route has no more than one bend.
-      # With a double backbone, the short departure may traverse the narrow
-      # inter-strand corridor but must not enter the feature interior.  This
-      # lets a single fan shoulder replace the former tick + two-segment
-      # leader without sacrificing the established circular order.
-      backbone_corridor <- 2 * abs(params$backbone_outer_offset %||% 0)
-      safe_radius <- sqrt(sum(start^2)) - max(1e-6, backbone_corridor)
+      # The leader may pass inside its own tick tip, but never inside the
+      # visible sequence boundary where that tick begins.  Treating the tip
+      # radius as the forbidden circle forces harmless chords into elbows;
+      # those elbows can then cross an adjacent, correctly ordered leader.
+      base <- unlist(bases[member, c("x", "y")])
+      safe_radius <- sqrt(sum(base^2)) + 1e-6
       direct_is_safe <- point_segment_radius(start, endpoint) >= safe_radius
       # The shortest exterior segment is also the only order-preserving route
       # shared by circular fans and Cartesian rails.  Adding independently
@@ -1843,10 +1831,11 @@ ggchord_restriction_geometry <- function(data, params, layout, seq_data) {
       bend <- c(labels$.radial_bend_x[member],
         labels$.radial_bend_y[member])
       if (any(!is.finite(bend)) ||
-          sqrt(sum((bend - tip)^2)) < 1e-8) {
+          sqrt(sum((bend - unlist(tips[member, ]))^2)) < 1e-8) {
         distance <- sqrt(sum(vector^2))
         shoulder <- min(.085, max(.045, distance * .30))
-        bend <- tip + radial * shoulder
+        bend <- c(tips$x[member] + radial[1] * shoulder,
+          tips$y[member] + radial[2] * shoulder)
       }
       if (point_segment_radius(start, bend) >= safe_radius &&
           point_segment_radius(bend, endpoint) >= safe_radius) {
@@ -1930,10 +1919,10 @@ ggchord_restriction_geometry <- function(data, params, layout, seq_data) {
     for (member in seq_along(leader_paths)) {
       current <- leader_paths[[member]]
       if (path_crosses(current, accepted)) {
-        start <- unlist(bases[member, c("x", "y")])
+        start <- c(tips$x[member], tips$y[member])
         endpoint <- c(endpoint_x[member], endpoint_y[member])
-        backbone_corridor <- 2 * abs(params$backbone_outer_offset %||% 0)
-        safe_radius <- sqrt(sum(start^2)) - max(1e-6, backbone_corridor)
+        base <- unlist(bases[member, c("x", "y")])
+        safe_radius <- sqrt(sum(base^2)) + 1e-6
         start_angle <- atan2(start[2], start[1])
         endpoint_angle <- atan2(endpoint[2], endpoint[1])
         delta_angle <- atan2(sin(endpoint_angle - start_angle),
@@ -2019,7 +2008,6 @@ ggchord_restriction_geometry <- function(data, params, layout, seq_data) {
     return(data.frame(
       x = numeric(), y = numeric(), label = character(),
       .component = character(), restriction_component = character(),
-      .path_visible = logical(),
       group = integer(), source_row = integer(),
       anchor_position = numeric(), slot_position = numeric(),
       source_rows = I(list()), cluster_id = character(),
@@ -2034,13 +2022,6 @@ ggchord_restriction_geometry <- function(data, params, layout, seq_data) {
     ))
   }
   rendered <- ggchord_rbind_fill(output)
-  label_defaults <- list(
-    enzyme_label = NA_character_, coordinate_label = NA_character_,
-    label_order = NA_character_, enzyme_fontface = NA_character_
-  )
-  for (column in names(label_defaults)) {
-    if (!column %in% names(rendered)) rendered[[column]] <- label_defaults[[column]]
-  }
   if ("display_warning" %in% names(data) && nrow(rendered)) {
     blocked <- vapply(rendered$source_rows, function(rows) {
       rows <- as.integer(rows)
