@@ -462,12 +462,21 @@ ggchord_outer_solve_block <- function(tasks, preferred, natural, registry,
     states <- list(list(indices = integer(), cost = 0, hidden = 0L,
       feature_hidden = 0L))
     failed_at <- NA_integer_
+    # Most distant pairs are provisionally compatible and need no lookup in
+    # the inner beam loop. The complete-solution audit below can promote any
+    # distant conflict to a matrix before the next search pass.
+    active_previous <- lapply(seq_along(tasks), function(current) {
+      if (current <= 1L) return(integer())
+      which(!vapply(compatibility[[current]], function(cache) {
+        length(cache) == 1L && isTRUE(cache)
+      }, logical(1L)))
+    })
     for (i in seq_along(tasks)) {
       expanded <- list()
       for (state in states) for (candidate_index in
           seq_along(candidate_sets[[i]])) {
         compatible <- TRUE
-        if (i > 1L) for (previous in seq_len(i - 1L)) {
+        for (previous in active_previous[[i]]) {
           if (!pair_compatible(previous, i, state$indices[previous],
               candidate_index)) {
             compatible <- FALSE

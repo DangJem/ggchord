@@ -16,7 +16,10 @@ not a completed release.
   legal attachment and complete straight-or-single-bend leader. The global
   solver preserves circular order, rejects text/leader collisions, retains
   mandatory primers and compares visibility levels before writing the chosen
-  geometry back to each independent layer. Sparse restriction labels keep
+  geometry back to each independent layer. It skips provisional distant-pair
+  checks during beam expansion and still audits the complete solution, reducing
+  repeated work on dense exterior maps without changing the selected layout.
+  Sparse restriction labels keep
   horizontal text on measured circular control tracks; complete text boxes
   may extend beyond a track and are not forced into Cartesian side rails.
   `export_ggchord_layout()` exposes
