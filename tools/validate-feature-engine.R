@@ -70,6 +70,17 @@ tick_layer <- which(vapply(tick_probe$layers, function(layer) {
 }, logical(1L)))
 tick_build <- ggplot2::ggplot_build(tick_probe)$data[[tick_layer]]
 stopifnot(all(tick_build$.path_visible[tick_build$.component == "path"]))
+hidden_extent_probe <- data.frame(
+  x = c(1, 99, 88), y = c(1, 99, 88),
+  restriction_component = c("leader", "label", "leader"),
+  .component = c("path", "label", "path"),
+  label = c(NA_character_, NA_character_, NA_character_),
+  .path_visible = c(TRUE, NA, FALSE)
+)
+visible_extent <- ggchord:::get_plot_extremes(
+  allRibbon = hidden_extent_probe
+)
+stopifnot(visible_extent$x_max == 1, visible_extent$y_max == 1)
 
 reference_maps <- c(
   "pBR322", "pUC19", "pBluescript II SK(+)", "pSB1C3", "pET-28a(+)",
@@ -184,10 +195,11 @@ reference_restriction_sites <- function(sequence, name) {
   sites <- find_restriction_sites(sequence)
   if (identical(name, "pETDuet-1")) {
     # The saved .dna profile is "None", but the checked-in PNG was exported
-    # with a dense unique-6+ display. The visual fixture therefore owns this
-    # explicit override; it must not be presented as recovered file metadata.
+    # with a dense unique-6+ display containing multiple commercial enzymes
+    # at shared cut sites. The visual fixture owns this explicit override; it
+    # must not be presented as recovered file metadata.
     return(filter_restriction_sites(sites, set = "unique_6plus",
-      parent_set = "commercial_nonredundant"))
+      parent_set = "commercial_all"))
   }
   filter_restriction_sites(sites, set = "reference",
     parent_set = "commercial_nonredundant")
@@ -206,7 +218,7 @@ if (identical(names(selected_reference_maps), names(reference_maps))) {
   stopifnot(
     nrow(real_fixtures[[make.names("pSpCas9(BB)-2A-GFP (PX458)")]]$sites) == 4L,
     nrow(real_fixtures[[make.names("pTRIPZ")]]$sites) == 38L,
-    nrow(real_fixtures[[make.names("pETDuet-1")]]$sites) == 58L,
+    nrow(real_fixtures[[make.names("pETDuet-1")]]$sites) == 139L,
     sum(vapply(real_fixtures, function(x) nrow(x$primers), integer(1L))) == 7L
   )
 }

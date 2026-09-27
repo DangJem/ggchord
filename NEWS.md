@@ -25,6 +25,9 @@ not a completed release.
   and more of the canvas for exterior annotation at a readable text size.
   When `view_ggchord()` is called without `bg`, a plot theme's background fill
   now covers the full preview canvas; explicit `bg = NULL` retains transparency.
+  Hidden restriction labels and leaders no longer enlarge automatic plot
+  bounds. This keeps previews compact when multiple real enzyme names share
+  one cut site and the label solver hides an infeasible callout.
   Sparse restriction labels keep
   horizontal text on measured circular control tracks; complete text boxes
   may extend beyond a track and are not forced into Cartesian side rails.

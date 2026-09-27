@@ -71,7 +71,22 @@ get_plot_extremes <- function(allRibbon = NULL, seqArcs = NULL,
   }
 
   if (!is.null(allRibbon) && nrow(allRibbon) > 0) {
-    include(allRibbon$x, allRibbon$y)
+    visible <- rep(TRUE, nrow(allRibbon))
+    if (all(c("restriction_component", ".component") %in%
+        names(allRibbon))) {
+      restriction <- !is.na(allRibbon$restriction_component)
+      label_rows <- restriction & allRibbon$.component %in% "label"
+      if ("label" %in% names(allRibbon)) {
+        visible[label_rows] <- !is.na(allRibbon$label[label_rows]) &
+          nzchar(allRibbon$label[label_rows])
+      }
+      path_rows <- restriction & allRibbon$.component %in% "path"
+      if (".path_visible" %in% names(allRibbon)) {
+        visible[path_rows] <- is.na(allRibbon$.path_visible[path_rows]) |
+          allRibbon$.path_visible[path_rows]
+      }
+    }
+    include(allRibbon$x[visible], allRibbon$y[visible])
   }
   if (!is.null(seqArcs) && length(seqArcs) > 0) {
     for (arc in seqArcs) {
