@@ -10,19 +10,25 @@ not a completed release.
   backbone, while variable-width feature bands, curved-text tracks, inner
   leader corridors and the axis reserve record their radius and radial
   boundaries. Restriction sites, external feature labels and primer labels
-  retain their own visual semantics in one shared exterior registry. Sparse
-  restriction labels keep horizontal text on measured circular anchor tracks;
-  their complete text boxes participate in collision detection but are not
-  forced inside Cartesian top/right/bottom/left rails. Feature and primer
-  callouts then use the resolved restriction boxes as fixed obstacles and
-  spill only to consecutive local circular bands. `export_ggchord_layout()` exposes
+  retain their own visual semantics in one shared exterior registry and are
+  now solved together instead of fixing restriction geometry first. Every
+  exterior candidate contains its measured text box, control-point track,
+  legal attachment and complete straight-or-single-bend leader. The global
+  solver preserves circular order, rejects text/leader collisions, retains
+  mandatory primers and compares visibility levels before writing the chosen
+  geometry back to each independent layer. Sparse restriction labels keep
+  horizontal text on measured circular control tracks; complete text boxes
+  may extend beyond a track and are not forced into Cartesian side rails.
+  `export_ggchord_layout()` exposes
   annotation class, dominant/actual band, spill reason and leader-crossing
   count together with the registry, and copies the
   resolved inner-track or circular exterior-allocation fields onto affected geometry rows.
   Adaptive plot bounds now include external feature and primer callout text,
   so these labels remain visible after the shared outer-track solver moves them.
   Primer callout leaders now inherit the primer colour instead of the generic
-  grey feature-leader theme.
+  grey feature-leader theme. Their exported attachment point is measured
+  against the primer-name fragment only; parenthesized coordinates remain on
+  the outside and are not a legal attachment target.
   Circular feature bands now size inter-arrow gutters from measured label
   demand instead of widening every gap, and displaced inner labels prefer
   the nearest valid track with a small local adjustment before moving deeper.
@@ -54,8 +60,15 @@ not a completed release.
   Registry joins now guarantee scalar track identities even when a
   device-specific fallback omits a local resource, fixing circular layout
   export failures on dense short-feature maps. Dense restriction perimeters
-  retain their backbone roots and genomic order; feature and primer callouts
-  use the remaining measured exterior slots.
+  retain their backbone roots and genomic order while feature and primer
+  callouts share the same candidate sequence. Hidden composite restriction
+  labels now suppress their enzyme, coordinate and leader resources together,
+  and hidden boxed feature callouts no longer render a literal `NA` label.
+  Closely spaced exterior feature runs now receive a centred contour
+  preference and are first tried as complete visible groups; an infeasible
+  complete-group solve falls back to ordinary soft visibility. This retains
+  all six pTRIPZ tet-operator callouts in the current representative export,
+  while further visual refinement and broader validation remain pending.
 * Added a reproducible bundled sequencing-primer catalogue generated from the
   reviewed Addgene workbook: 137 distinct oligonucleotides and all 163 source
   alias rows are retained separately. `primer_catalog()` exposes either view,

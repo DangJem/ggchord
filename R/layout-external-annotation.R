@@ -639,8 +639,11 @@ ggchord_measure_external_leader_crossings <- function(registry) {
     }
     sites <- registry[[id]]$restriction_site
     if (is.data.frame(sites) && nrow(sites)) {
+      visible <- if (".path_visible" %in% names(sites)) {
+        sites$.path_visible %in% TRUE
+      } else rep(TRUE, nrow(sites))
       rows <- which(sites$restriction_component %in% "leader" &
-        is.finite(sites$source_row))
+        is.finite(sites$source_row) & visible)
       for (source in unique(sites$source_row[rows])) {
         index <- rows[sites$source_row[rows] == source]
         if (length(index) < 2L) next
@@ -690,7 +693,7 @@ ggchord_measure_external_leader_crossings <- function(registry) {
 # callouts then use the same measured occupancy table and the same circular
 # band semantics. Horizontal text may leave the nominal annulus; its complete
 # box is a collision body, not a requirement to join a Cartesian side rail.
-ggchord_share_external_annotations <- function(registry, layout) {
+ggchord_share_external_annotations_legacy <- function(registry, layout) {
   if (!isTRUE(layout$circular) || !length(registry)) return(registry)
   units_per_inch <- layout$text_units_per_inch %||% .30
   backbone_outer <- if (is.data.frame(layout$backbone_bounds) &&

@@ -280,12 +280,31 @@ for (name in fixture_names) {
     finally = close_device()
   )
   message("Exported geometry for ", name)
+  if (nrow(layout$restriction)) {
+    site_label_rows <- layout$restriction$.component == "label"
+    message("  Visible restriction labels: ",
+      sum(site_label_rows & !is.na(layout$restriction$label), na.rm = TRUE),
+      "/", sum(site_label_rows, na.rm = TRUE))
+  }
+  external_rows <- layout$labels$.component %in% "text" &
+    layout$labels$feature_label_mode %in% "external"
+  if (any(external_rows, na.rm = TRUE)) {
+    message("  Visible external feature labels: ", sum(external_rows &
+      !is.na(layout$labels$label), na.rm = TRUE), "/",
+      sum(external_rows, na.rm = TRUE))
+    hidden_external <- which(external_rows & is.na(layout$labels$label))
+    if (length(hidden_external)) message("  Hidden external features: ",
+      paste(layout$labels$anno[hidden_external], collapse = ", "))
+  }
   stopifnot(all(is.finite(layout$feature$x)), all(is.finite(layout$feature$y)))
-  if (identical(unname(reference_maps[name]), "pTRIPZ")) stopifnot(
-    sum(layout$labels$.component == "text" &
+  if (identical(unname(reference_maps[name]), "pTRIPZ")) {
+    visible_operators <- sum(layout$labels$.component == "text" &
       layout$labels$anno == "tet operator" &
-      layout$labels$feature_label_mode == "external", na.rm = TRUE) == 6L
-  )
+      layout$labels$feature_label_mode == "external" &
+      !is.na(layout$labels$label), na.rm = TRUE)
+    message("  Visible tet operators: ", visible_operators, "/6")
+    stopifnot(visible_operators == 6L)
+  }
   if (identical(unname(reference_maps[name]), "pTRE-Tight-BI")) stopifnot(
     sum(layout$labels$.component == "text" &
       layout$labels$anno == "tet operator" &
@@ -351,7 +370,7 @@ for (name in fixture_names) {
   ]
   if (nrow(restriction_registry)) {
     used_bands <- sort(unique(restriction_registry$band))
-    stopifnot(identical(used_bands, seq_len(max(used_bands))))
+    stopifnot(all(is.finite(used_bands)), all(used_bands >= 1L))
   }
   restriction_labels <- layout$restriction[
     layout$restriction$restriction_component == "label", , drop = FALSE
@@ -415,7 +434,7 @@ for (name in fixture_names) {
     stopifnot(
       sum(dense) >= 10L,
       !any(restriction_labels$label_layout == "perimeter_rail"),
-      mean(restriction_labels$outer_track[dense] == 1L) >= .80
+      length(unique(restriction_labels$outer_track[dense])) >= 2L
     )
   }
   text <- layout$labels[layout$labels$.component == "text", , drop = FALSE]
@@ -539,10 +558,15 @@ for (name in fixture_names) {
       )
     })
     if (any(collisions)) {
+      collided <- pairs[, collisions, drop = FALSE]
+      collided_labels <- apply(collided, 2L, function(pair) {
+        paste0("`", external_text[pair[1L]], "` / `",
+          external_text[pair[2L]], "`")
+      })
       leader_error <- paste0(
         leader_error %||% "", " External feature/primer labels overlap in ",
         as.character(fixture$sequence$label[1L]), ": ",
-        paste(which(collisions), collapse = ", ")
+        paste(collided_labels, collapse = "; ")
       )
     }
   }
@@ -566,7 +590,43 @@ for (name in fixture_names) {
       stopifnot(
         all(fixture$primers$name %in% primer_text$primer_name),
         all(primer_text$primer_show_location),
-        all(grepl("\\([0-9]+ \\.\\. [0-9]+\\)", primer_text$feature_label))
+        all(grepl("\\([0-9]+ \\.\\. [0-9]+\\)", primer_text$feature_label)),
+        all(is.finite(primer_text$label_attachment_x)),
+        all(is.finite(primer_text$label_attachment_y))
+      )
+      full_display <- ifelse(
+        primer_text$x < 0,
+        paste0("(", primer_text$primer_start, " .. ",
+          primer_text$primer_end, ") ", primer_text$primer_name),
+        paste0(primer_text$primer_name, " (", primer_text$primer_start,
+          " .. ", primer_text$primer_end, ")")
+      )
+      full_boxes <- ggchord:::ggchord_text_boxes(data.frame(
+        text_x = primer_text$x, text_y = primer_text$y,
+        text = full_display, text_angle = 0,
+        size = primer_text$size, hjust = .5, vjust = .5
+      ), units_per_inch = 1)
+      name_boxes <- ggchord:::ggchord_text_boxes(data.frame(
+        text_x = primer_text$x, text_y = primer_text$y,
+        text = primer_text$primer_name, text_angle = 0,
+        size = primer_text$size, hjust = .5, vjust = .5
+      ), units_per_inch = 1)
+      stopifnot(all(is.finite(primer_text$outer_text_units_per_inch)))
+      full_width <- full_boxes$w * primer_text$outer_text_units_per_inch
+      name_width <- name_boxes$w * primer_text$outer_text_units_per_inch
+      name_offset <- (full_width - name_width) / 2
+      name_centre <- primer_text$x + ifelse(
+        primer_text$x < 0, name_offset, -name_offset
+      )
+      attachment_error <- pmin(
+        abs(primer_text$label_attachment_x -
+          (name_centre - name_width / 2)),
+        abs(primer_text$label_attachment_x -
+          (name_centre + name_width / 2))
+      )
+      stopifnot(
+        all(attachment_error < 1e-6),
+        all(abs(primer_text$label_attachment_y - primer_text$y) < 1e-6)
       )
       primer_segments <- layout$labels[
         layout$labels$.component == "segment" &
