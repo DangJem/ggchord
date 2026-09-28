@@ -43,11 +43,12 @@ make_plot <- function(sites, boxed_primers) {
 audit_plot <- function(plot) {
   exported <- export_ggchord_layout(plot,
     include = c("feature", "labels", "restriction"))
-  boxes <- exported$annotation_registry
-  boxes <- boxes[boxes$side == "outer" &
-    is.finite(boxes$bbox_xmin) & is.finite(boxes$bbox_xmax) &
-    is.finite(boxes$bbox_ymin) & is.finite(boxes$bbox_ymax), ,
-    drop = FALSE]
+  all_boxes <- exported$annotation_registry
+  all_boxes <- all_boxes[is.finite(all_boxes$bbox_xmin) &
+    is.finite(all_boxes$bbox_xmax) &
+    is.finite(all_boxes$bbox_ymin) &
+    is.finite(all_boxes$bbox_ymax), , drop = FALSE]
+  boxes <- all_boxes[all_boxes$side == "outer", , drop = FALSE]
   overlap <- 0L
   if (nrow(boxes) > 1L) {
     pairs <- utils::combn(seq_len(nrow(boxes)), 2L)
@@ -116,8 +117,8 @@ audit_plot <- function(plot) {
   }
   leader_text_hits <- character()
   for (leader in leaders) {
-    for (k in seq_len(nrow(boxes))) {
-      box <- boxes[k, , drop = FALSE]
+    for (k in seq_len(nrow(all_boxes))) {
+      box <- all_boxes[k, , drop = FALSE]
       if (identical(as.character(leader$owner),
           as.character(box$owner)) &&
           identical(as.integer(leader$source_row),
