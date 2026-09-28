@@ -142,6 +142,21 @@ ggchord_adaptive_limits <- function(layout) {
     }
   }
 
+  resources <- layout$circular_annotation_registry
+  if (is.data.frame(resources) && nrow(resources) &&
+      all(c("side", "bbox_xmin", "bbox_xmax", "bbox_ymin",
+        "bbox_ymax") %in% names(resources))) {
+    outer <- resources[resources$side %in% "outer" &
+      is.finite(resources$bbox_xmin) &
+      is.finite(resources$bbox_xmax) &
+      is.finite(resources$bbox_ymin) &
+      is.finite(resources$bbox_ymax), , drop = FALSE]
+    if (nrow(outer)) add_boxes(data.frame(
+      xmin = outer$bbox_xmin, xmax = outer$bbox_xmax,
+      ymin = outer$bbox_ymin, ymax = outer$bbox_ymax
+    ))
+  }
+
   # Rounded feature callouts and bold enzyme fragments extend slightly beyond
   # the bare text metrics. Keep a modest physical-looking safety margin so a
   # dense annotation perimeter shrinks the map instead of clipping its last row.

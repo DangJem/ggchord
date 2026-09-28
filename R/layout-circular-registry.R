@@ -69,8 +69,30 @@ ggchord_annotation_text_boxes <- function(x, rows, units_per_inch) {
   if (!"text_angle" %in% names(labels)) {
     labels$text_angle <- labels$angle %||% 0
   }
-  ggchord_text_boxes(labels, units_per_inch = units_per_inch,
+  boxes <- ggchord_text_boxes(labels, units_per_inch = units_per_inch,
     box_padding = .015)
+  callout <- if ("feature_label_mode" %in% names(labels)) {
+    labels$feature_label_mode %in% "external" &
+      if ("annotation_class" %in% names(labels)) {
+        !(labels$annotation_class %in% "primer")
+      } else rep(TRUE, nrow(labels))
+  } else rep(FALSE, nrow(labels))
+  if (any(callout)) {
+    lineheight <- if ("lineheight" %in% names(labels)) {
+      as.numeric(labels$lineheight[callout])
+    } else rep(1.2, sum(callout))
+    lineheight[!is.finite(lineheight) | lineheight <= 0] <- 1.2
+    size <- labels$size %||% rep(2.5, nrow(labels))
+    padding <- .12 * size[callout] / 25.4 *
+      lineheight * units_per_inch
+    boxes$xmin[callout] <- boxes$xmin[callout] - padding
+    boxes$xmax[callout] <- boxes$xmax[callout] + padding
+    boxes$ymin[callout] <- boxes$ymin[callout] - padding
+    boxes$ymax[callout] <- boxes$ymax[callout] + padding
+    boxes$bw[callout] <- boxes$bw[callout] + 2 * padding
+    boxes$bh[callout] <- boxes$bh[callout] + 2 * padding
+  }
+  boxes
 }
 
 # Registry joins cross geom-owned tables whose rows may legitimately be absent

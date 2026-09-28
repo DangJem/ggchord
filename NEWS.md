@@ -4,7 +4,23 @@ The unreleased v0.13.0 development work continues in v0.13.1; v0.13.0 was
 not published. The changes below describe the current development branch,
 not a completed release. The experimental global exterior-label solver was
 withdrawn after `view_ggchord()` comparisons showed severe visual regressions;
-the current rendering baseline uses the v0.13.0 perimeter layout.
+the current sparse-map rendering keeps the v0.13.0 perimeter layout.
+
+* Reproduced the reported pETDuet-1 rendering from the original 5,420 bp
+  sequence, 54 displayed restriction cuts and five reference primers. For
+  crowded single-sequence circular maps, exterior restriction, feature and
+  primer labels now share measured local tangent queues. The solver accounts
+  for full composite enzyme names, multiline primer text and feature callout
+  padding, preserves actual cut and feature anchors, and uses a short radial
+  shoulder when a callout begins inside the backbone. Explicit inside-site
+  layouts and multi-sequence maps retain their previous layout path. Automatic
+  `view_ggchord()` sizing no longer jumps to a very wide canvas solely because
+  the input restriction table exceeds a row-count threshold. Its circular
+  panel scale was reduced modestly after full-size reference comparison,
+  while retaining default automatic sizing; the preview also
+  fills its export canvas with the plot background colour when one is set.
+  `theme_ggchord_plasmid()` now uses a white background to match the reference
+  maps' publication surface.
 
 * Added a `CoordCircular`-owned annotation registry as the common final layout
   fact for circular maps. Position lanes are now exported separately from
@@ -44,9 +60,9 @@ the current rendering baseline uses the v0.13.0 perimeter layout.
   placement exists.
   Registry joins now guarantee scalar track identities even when a
   device-specific fallback omits a local resource, fixing circular layout
-  export failures on dense short-feature maps. Dense restriction perimeters
-  retain their backbone roots and genomic order; feature and primer callouts
-  use the remaining measured exterior slots.
+  export failures on dense short-feature maps. On sparse maps, restriction
+  labels retain their backbone roots and genomic order while feature and
+  primer callouts use the remaining measured exterior slots.
 * Added a reproducible bundled sequencing-primer catalogue generated from the
   reviewed Addgene workbook: 137 distinct oligonucleotides and all 163 source
   alias rows are retained separately. `primer_catalog()` exposes either view,
@@ -117,9 +133,8 @@ the current rendering baseline uses the v0.13.0 perimeter layout.
   `coord_circular()` from its measured annotation envelope while preserving a
   readable physical backbone diameter. Explicit output dimensions still take
   priority, and `height = NULL` retains one-dimensional content fitting.
-  Extremely dense circular perimeters use a count-derived wide preview and a
-  smaller relative backbone instead of shrinking annotation text into a
-  square canvas.
+  Circular previews use the measured envelope rather than a count-derived
+  width jump.
 * Circular feature bands now use non-uniform radial spacing: the transition
   from the backbone-near band to the nested cluster reserves a two-line main
   text corridor, each deeper pair of feature bands reserves at least one label

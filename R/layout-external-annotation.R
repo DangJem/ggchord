@@ -601,6 +601,23 @@ ggchord_measure_external_leader_crossings <- function(registry) {
 ggchord_share_external_annotations <- function(registry, layout) {
   if (!isTRUE(layout$circular) || !length(registry)) return(registry)
   units_per_inch <- layout$text_units_per_inch %||% .30
+  restriction_count <- sum(vapply(registry, function(geometry) {
+    sites <- geometry$restriction_site
+    if (!is.data.frame(sites) || !nrow(sites)) return(0L)
+    sum(sites$restriction_component %in% "label" &
+      !is.na(sites$label) & nzchar(sites$label))
+  }, integer(1L)))
+  if (restriction_count >= 30L && length(layout$seq_arcs) == 1L) {
+    dense_tasks <- ggchord_perimeter_tasks(registry, units_per_inch)
+    sites <- dense_tasks[dense_tasks$kind == "restriction", ,
+      drop = FALSE]
+    if (nrow(sites) >= 30L && all(
+        sqrt(sites$text_x^2 + sites$text_y^2) >=
+          sqrt(sites$root_x^2 + sites$root_y^2) - .01)) {
+      return(ggchord_place_dense_perimeter(registry, layout,
+        tasks = dense_tasks))
+    }
+  }
   backbone_outer <- if (is.data.frame(layout$backbone_bounds) &&
       nrow(layout$backbone_bounds)) {
     max(layout$backbone_bounds$outer, na.rm = TRUE) + .040

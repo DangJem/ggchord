@@ -63,27 +63,12 @@ ggchord_preview_height <- function(plot, width_inches) {
 # and expanding the canvas for the annotation envelope. The returned gtable is
 # frozen at the measurement device so exporting it does not trigger a second
 # size-dependent track solution.
-ggchord_preview_outer_density <- function(plot) {
-  counts <- vapply(plot$layers, function(layer) {
-    type <- layer$ggchord_type %||% ""
-    data <- layer$ggchord_input_data
-    if (!is.data.frame(data) || !nrow(data)) return(0L)
-    if (identical(type, "restriction_site")) return(nrow(data))
-    0L
-  }, integer(1L))
-  sum(counts)
-}
-
 ggchord_preview_circular_layout <- function(plot) {
-  outer_density <- ggchord_preview_outer_density(plot)
-  # Extremely dense perimeter annotation needs a different physical strategy:
-  # keep readable text and a roughly eight-inch backbone, then provide wide
-  # fan corridors instead of compressing everything into a square.  The
-  # threshold is based only on annotation count, never on a sequence name.
-  dense_width <- if (outer_density > 54L) {
-    min(24, 20 + .50 * (outer_density - 54L))
-  } else 12.39
-  baseline <- c(width = dense_width, height = 9.71)
+  # Input rows are not rendered labels: several enzymes may share one cut,
+  # and a single long name can need more room than many short ones. Measure
+  # the actual annotation envelope instead of opening a huge canvas when a
+  # row-count threshold is crossed.
+  baseline <- c(width = 10.8, height = 8.5)
   close_device <- ggchord_measurement_device(
     width = baseline[["width"]], height = baseline[["height"]]
   )
@@ -96,17 +81,14 @@ ggchord_preview_circular_layout <- function(plot) {
   span <- c(diff(limits$xlim), diff(limits$ylim))
   span[!is.finite(span) | span <= 0] <- 2
 
-  # Four inches per data unit gives an uncluttered eight-inch backbone for a
-  # sparse unit circle. Dense asymmetric annotations enlarge only the sides
-  # that need room instead of reducing the text to fit a fixed canvas.
-  panel <- pmax(7.6, 4 * span)
+  panel <- pmax(6.7, 3.5 * span)
   fixed <- c(
     grid::convertWidth(sum(table$widths), "inches", valueOnly = TRUE),
     grid::convertHeight(sum(table$heights), "inches", valueOnly = TRUE)
   )
   list(
     plot = table,
-    width = max(8, dense_width, panel[1] + fixed[1]),
+    width = max(8, panel[1] + fixed[1]),
     height = max(8, panel[2] + fixed[2])
   )
 }
@@ -199,6 +181,15 @@ view_ggchord <- function(
   if (circular_auto) {
     fitted <- ggchord_preview_circular_layout(plot)
     preview_plot <- fitted$plot
+    if (is.null(bg)) {
+      plot_background <- plot$theme$plot.background
+      if (inherits(plot_background, "element_rect") &&
+          is.character(plot_background$fill) &&
+          length(plot_background$fill) == 1L &&
+          !is.na(plot_background$fill)) {
+        bg <- plot_background$fill
+      }
+    }
     width <- switch(units, "in" = fitted$width, cm = fitted$width * 2.54,
       mm = fitted$width * 25.4, px = fitted$width * dpi)
     height <- switch(units, "in" = fitted$height, cm = fitted$height * 2.54,

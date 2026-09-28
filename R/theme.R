@@ -186,8 +186,8 @@ ggchord_theme_from_environment <- function(preset, env, dots) {
         margin = ggplot2::margin(b = 4)),
       plot.subtitle = ggplot2::element_text(size = ggplot2::rel(.9)),
       plot.caption = ggplot2::element_text(size = ggplot2::rel(.72)),
-      plot.background = ggplot2::element_rect(fill = if (preset == "plasmid") "#FFFCF5" else bg, colour = NA),
-      panel.background = ggplot2::element_rect(fill = if (preset == "plasmid") "#FFFCF5" else bg, colour = NA),
+      plot.background = ggplot2::element_rect(fill = bg, colour = NA),
+      panel.background = ggplot2::element_rect(fill = bg, colour = NA),
       plot.margin = if (preset == "plasmid") {
         ggplot2::margin(6, 6, 6, 6)
       } else ggplot2::margin(3, 2, 3, 2),
