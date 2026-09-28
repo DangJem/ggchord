@@ -1,7 +1,6 @@
-# Dense circular maps use four local tangent queues. A queue is chosen from
-# each annotation's real root, and every class shares its measured text space.
-# The queues are not global text walls: sparse maps retain the usual nearby
-# polar layout, while a crowded side is packed only along its own tangent.
+# Dense circular maps share measured tangent space between annotation classes.
+# A crowded upper arc may use several short rows; sparse maps keep their
+# nearby polar layout.
 
 ggchord_perimeter_side <- function(x, y) {
   radius <- sqrt(x^2 + y^2)
@@ -9,7 +8,7 @@ ggchord_perimeter_side <- function(x, y) {
   x <- x / radius
   y <- y / radius
   if (y < -.75 && abs(x) < .7) return("bottom")
-  if (x > .13) return("right")
+  if (x > .215) return("right")
   if (x < -.05) return("left")
   if (y >= 0) "top" else "bottom"
 }
@@ -165,8 +164,147 @@ ggchord_perimeter_rail_crossings <- function(tasks, rows, edge_x, edge_y) {
   crossings
 }
 
+ggchord_perimeter_line_hits_box <- function(line, box) {
+  t_min <- 1e-5
+  t_max <- 1 - 1e-5
+  for (axis in c("x", "y")) {
+    start <- line[[paste0("root_", axis)]]
+    delta <- line[[paste0("edge_", axis)]] - start
+    low <- box[[paste0("target_", axis)]] -
+      box[[if (axis == "x") "w" else "h"]] / 2
+    high <- box[[paste0("target_", axis)]] +
+      box[[if (axis == "x") "w" else "h"]] / 2
+    if (abs(delta) <= 1e-9) {
+      if (start <= low || start >= high) return(FALSE)
+    } else {
+      hits <- sort(c((low - start) / delta,
+        (high - start) / delta))
+      t_min <- max(t_min, hits[1L])
+      t_max <- min(t_max, hits[2L])
+    }
+  }
+  t_min + 1e-7 < t_max
+}
+
+ggchord_perimeter_pair_blocked <- function(a, b, gap) {
+  boxes_meet <- abs(a$target_x - b$target_x) <
+    (a$w + b$w) / 2 + gap &&
+    abs(a$target_y - b$target_y) < (a$h + b$h) / 2 + gap
+  if (boxes_meet) return(TRUE)
+  if (ggchord_perimeter_line_hits_box(a, b) ||
+      ggchord_perimeter_line_hits_box(b, a)) return(TRUE)
+  rx <- a$edge_x - a$root_x
+  ry <- a$edge_y - a$root_y
+  sx <- b$edge_x - b$root_x
+  sy <- b$edge_y - b$root_y
+  denominator <- rx * sy - ry * sx
+  if (!is.finite(denominator) || abs(denominator) <= 1e-9) {
+    return(FALSE)
+  }
+  dx <- b$root_x - a$root_x
+  dy <- b$root_y - a$root_y
+  t <- (dx * sy - dy * sx) / denominator
+  u <- (dx * ry - dy * rx) / denominator
+  t > 1e-9 && t < 1 - 1e-9 && u > 1e-9 && u < 1 - 1e-9
+}
+
+# Compress a crowded upper arc into several nearby rows. The root order is
+# retained along the tangent; a bounded search assigns height only where a
+# real text box or leader needs the extra room. A single horizontal row would
+# need the sum of all text widths and turn a local cluster into long rays.
+ggchord_perimeter_top_fan <- function(tasks, rows, side_rows,
+                                     backbone_outer, gap) {
+  if (length(rows) < 8L) return(NULL)
+  order <- order(tasks$target_x[rows], tasks$root_x[rows])
+  rows <- rows[order]
+  span <- diff(range(tasks$target_x[rows]))
+  side_limit <- if (length(side_rows)) {
+    min(abs(tasks$edge_x[side_rows]), na.rm = TRUE) - .20
+  } else Inf
+  half_width <- min(.72 * backbone_outer, side_limit)
+  if (!is.finite(half_width) || half_width <= .4 ||
+      span <= 2.3 * half_width) return(NULL)
+  n <- length(rows)
+  x <- seq(-half_width, half_width, length.out = n)
+  base <- max(backbone_outer + .14,
+    max(tasks$root_y[rows], na.rm = TRUE) + .08)
+  step <- max(.055, .18 * max(tasks$h[rows], na.rm = TRUE))
+  levels <- seq_len(17L) - 1L
+  fan_gap <- min(gap, .004)
+  best <- NULL
+  for (base_offset in c(0, step, 2 * step)) {
+    candidates <- lapply(seq_len(n), function(k) {
+      lapply(levels, function(level) {
+        candidate <- tasks[rows[k], , drop = FALSE]
+        candidate$target_x <- x[k]
+        candidate$edge_x <- x[k]
+        candidate$edge_y <- base + base_offset + level * step
+        candidate$target_y <- candidate$edge_y + candidate$h / 2
+        candidate
+      })
+    })
+    allowed <- lapply(candidates, function(options) {
+      vapply(options, function(candidate) {
+        !any(vapply(side_rows, function(j) {
+          ggchord_perimeter_pair_blocked(candidate,
+            tasks[j, , drop = FALSE], fan_gap)
+        }, logical(1L)))
+      }, logical(1L))
+    })
+    blocked <- vector("list", n)
+    for (k in seq_len(n)) {
+      blocked[[k]] <- vector("list", k - 1L)
+      if (k == 1L) next
+      for (j in seq_len(k - 1L)) {
+        blocked[[k]][[j]] <- outer(seq_along(levels),
+          seq_along(levels), Vectorize(function(a, b) {
+            ggchord_perimeter_pair_blocked(candidates[[k]][[a]],
+              candidates[[j]][[b]], fan_gap)
+          }))
+      }
+    }
+    beam <- list(list(levels = integer(), max_y = -Inf,
+      total_y = 0))
+    for (k in seq_len(n)) {
+      next_beam <- list()
+      for (state in beam) {
+        for (option in which(allowed[[k]])) {
+          if (k > 1L && any(vapply(seq_len(k - 1L), function(j) {
+              blocked[[k]][[j]][option, state$levels[j]]
+            }, logical(1L)))) next
+          y <- candidates[[k]][[option]]$target_y
+          next_beam[[length(next_beam) + 1L]] <- list(
+            levels = c(state$levels, option),
+            max_y = max(state$max_y, y),
+            total_y = state$total_y + y
+          )
+        }
+      }
+      if (!length(next_beam)) {
+        beam <- list()
+        break
+      }
+      rank <- order(vapply(next_beam, function(state) {
+        10 * state$max_y + state$total_y / k
+      }, numeric(1L)))
+      beam <- next_beam[head(rank, 180L)]
+    }
+    if (!length(beam)) next
+    chosen <- beam[[1L]]
+    score <- 10 * chosen$max_y + chosen$total_y / n
+    if (is.null(best) || score < best$score) {
+      best <- list(score = score, rows = rows,
+        selected = lapply(seq_len(n), function(k) {
+          candidates[[k]][[chosen$levels[k]]]
+        }))
+    }
+  }
+  best
+}
+
 ggchord_place_dense_perimeter <- function(registry, layout,
-                                          tasks = NULL) {
+                                          tasks = NULL,
+                                          allow_top_fan = TRUE) {
   units_per_inch <- layout$text_units_per_inch %||% .30
   if (is.null(tasks)) {
     tasks <- ggchord_perimeter_tasks(registry, units_per_inch)
@@ -232,12 +370,46 @@ ggchord_place_dense_perimeter <- function(registry, layout,
     )
     boundary <- max(backbone_outer + .14,
       max(abs(tasks$root_y[rows]), na.rm = TRUE) + .08)
-    if (side == "top" && length(side_rows)) {
-      boundary <- max(boundary,
-        max(tasks$edge_y[side_rows] + tasks$h[side_rows] / 2,
-          na.rm = TRUE) + gap)
+    # A small, dense upper arc uses height only where measured text or leader
+    # conflicts require it. The ordinary one-row route remains the fallback.
+    if (side == "top") {
+      proposed <- tasks
+      proposed$target_x[rows] <- axis
+      proposed$edge_x[rows] <- axis
+      fan <- if (allow_top_fan) {
+        ggchord_perimeter_top_fan(proposed, rows, side_rows,
+          backbone_outer, gap)
+      } else NULL
+      if (!is.null(fan)) {
+        for (k in seq_along(fan$rows)) {
+          i <- fan$rows[k]
+          candidate <- fan$selected[[k]]
+          tasks$target_x[i] <- candidate$target_x
+          tasks$target_y[i] <- candidate$target_y
+          tasks$edge_x[i] <- candidate$edge_x
+          tasks$edge_y[i] <- candidate$edge_y
+        }
+        next
+      }
+      # Very long composite enzyme names can leave no measured short-fan
+      # placement. Reassign the upper-right roots to the adjacent tangent
+      # queue and solve the whole perimeter again, before writing any geom.
+      if (allow_top_fan && length(rows) >= 8L &&
+          diff(range(axis)) > 2.3 * .72 * backbone_outer) {
+        retry <- tasks
+        move <- retry$side == "top" & retry$direction_x > .13
+        if (any(move)) {
+          retry$side[move] <- "right"
+          return(ggchord_place_dense_perimeter(registry, layout,
+            tasks = retry, allow_top_fan = FALSE))
+        }
+      }
+      if (length(side_rows)) {
+        boundary <- max(boundary,
+          max(tasks$edge_y[side_rows] + tasks$h[side_rows] / 2,
+            na.rm = TRUE) + gap)
+      }
     }
-    # Keep a horizontal queue clear of the measured ends of a lateral queue.
     local_boundary <- rep(boundary, length(rows))
     if (length(side_rows)) {
       for (k in seq_along(rows)) {

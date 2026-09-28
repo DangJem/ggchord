@@ -62,10 +62,77 @@ audit_plot <- function(plot) {
   site_labels <- exported$restriction
   site_labels <- site_labels[site_labels$.component == "label" &
     !is.na(site_labels$label), , drop = FALSE]
+  hits_box <- function(segment, box) {
+    lower <- 1e-5
+    upper <- 1 - 1e-5
+    for (axis in c("x", "y")) {
+      start <- segment[[paste0(axis, "1")]]
+      delta <- segment[[paste0(axis, "2")]] - start
+      edge <- box[[paste0("bbox_", axis, "min")]]
+      limit <- box[[paste0("bbox_", axis, "max")]]
+      if (abs(delta) <= 1e-9) {
+        if (start <= edge || start >= limit) return(FALSE)
+      } else {
+        interval <- sort(c((edge - start) / delta,
+          (limit - start) / delta))
+        lower <- max(lower, interval[1L])
+        upper <- min(upper, interval[2L])
+      }
+    }
+    lower + 1e-7 < upper
+  }
+  leaders <- list()
+  restriction <- exported$restriction
+  restriction <- restriction[restriction$restriction_component == "leader" &
+    is.finite(restriction$source_row), , drop = FALSE]
+  if (nrow(restriction)) {
+    key <- paste(restriction$layer_id, restriction$source_row)
+    for (name in unique(key)) {
+      path <- restriction[key == name, , drop = FALSE]
+      if (nrow(path) < 2L) next
+      for (k in seq_len(nrow(path) - 1L)) {
+        leaders[[length(leaders) + 1L]] <- data.frame(
+          owner = path$layer_id[k], source_row = path$source_row[k],
+          x1 = path$x[k], y1 = path$y[k],
+          x2 = path$x[k + 1L], y2 = path$y[k + 1L]
+        )
+      }
+    }
+  }
+  labels <- exported$labels
+  if (nrow(labels) && all(c(".component", "xend", "yend") %in%
+      names(labels))) {
+    segments <- labels[labels$.component == "segment" &
+      labels$annotation_side %in% "outer" &
+      is.finite(labels$source_row), , drop = FALSE]
+    for (k in seq_len(nrow(segments))) {
+      leaders[[length(leaders) + 1L]] <- data.frame(
+        owner = segments$layer_id[k],
+        source_row = segments$source_row[k],
+        x1 = segments$x[k], y1 = segments$y[k],
+        x2 = segments$xend[k], y2 = segments$yend[k]
+      )
+    }
+  }
+  leader_text_hits <- character()
+  for (leader in leaders) {
+    for (k in seq_len(nrow(boxes))) {
+      box <- boxes[k, , drop = FALSE]
+      if (identical(as.character(leader$owner),
+          as.character(box$owner)) &&
+          identical(as.integer(leader$source_row),
+            as.integer(box$source_row))) next
+      if (hits_box(leader, box)) {
+        leader_text_hits <- c(leader_text_hits,
+          paste(leader$owner, leader$source_row, box$registry_id))
+      }
+    }
+  }
   data.frame(
     sites = nrow(site_labels), outer_labels = nrow(boxes),
     bbox_overlaps = overlap,
-    leader_crossings = sum(boxes$leader_crossing_count, na.rm = TRUE) / 2
+    leader_crossings = sum(boxes$leader_crossing_count, na.rm = TRUE) / 2,
+    leader_text_hits = length(unique(leader_text_hits))
   )
 }
 
@@ -91,7 +158,8 @@ for (name in names(configurations)) {
   result$configuration <- name
   result$image <- destination
   stopifnot(result$sites == config$expected_sites,
-    result$bbox_overlaps == 0L, result$leader_crossings == 0L)
+    result$bbox_overlaps == 0L, result$leader_crossings == 0L,
+    result$leader_text_hits == 0L)
   results[[name]] <- result
 }
 print(do.call(rbind, results), row.names = FALSE)

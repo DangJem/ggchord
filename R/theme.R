@@ -177,7 +177,8 @@ ggchord_theme_from_environment <- function(preset, env, dots) {
   base_size <- if (preset == "publication") 9 else if (preset == "plasmid") 10 else 11
   dark <- preset == "dark"
   fg <- if (dark) "#F1F3F5" else "#30353A"
-  bg <- if (dark) "#17191C" else "white"
+  bg <- if (dark) "#17191C" else if (preset == "plasmid")
+    "#FFFCF5" else "white"
   out <- ggplot2::theme_void(base_size = base_size, base_family = "") +
     ggplot2::theme(
       text = ggplot2::element_text(size = base_size, family = "", colour = fg),

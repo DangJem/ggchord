@@ -9,8 +9,11 @@ the current sparse-map rendering keeps the v0.13.0 perimeter layout.
 * Reproduced the reported pETDuet-1 rendering from the original 5,420 bp
   sequence, 54 displayed restriction cuts and five reference primers. For
   crowded single-sequence circular maps, exterior restriction, feature and
-  primer labels now share measured local tangent queues. The solver accounts
-  for full composite enzyme names, multiline primer text and feature callout
+  primer labels now share measured local tangent space. A crowded upper arc
+  can place labels on several nearby rows while checking complete text boxes,
+  crossing leaders and leaders passing through other labels. Longer composite
+  enzyme names use a wider ordered perimeter when the short fan has no clear
+  placement. The solver measures multiline primer text and feature callout
   padding, preserves actual cut and feature anchors, and uses a short radial
   shoulder when a callout begins inside the backbone. Explicit inside-site
   layouts and multi-sequence maps retain their previous layout path. Automatic
@@ -19,8 +22,7 @@ the current sparse-map rendering keeps the v0.13.0 perimeter layout.
   panel scale was reduced modestly after full-size reference comparison,
   while retaining default automatic sizing; the preview also
   fills its export canvas with the plot background colour when one is set.
-  `theme_ggchord_plasmid()` now uses a white background to match the reference
-  maps' publication surface.
+  The plasmid theme retains its existing warm-white background.
 
 * Added a `CoordCircular`-owned annotation registry as the common final layout
   fact for circular maps. Position lanes are now exported separately from
