@@ -214,7 +214,8 @@ the current sparse-map rendering keeps the v0.13.0 perimeter layout.
 * Explicit `gene_offset` and `feature_offset` remain temporarily accepted,
   translate through the former flexible accver/strand resolver, and emit a
   migration warning. Combining a legacy offset with a non-identity Position is
-  an error.
+  an error. Use `position = position_strand(offset = ...)`; removal of these
+  deprecated arguments is planned for v1.0.0.
 * Refactored `geom_gene()` into a gene-specific convenience layer over the same
   neutral feature geometry pipeline as `geom_feature(shape = "arrow")`.
   Circular splitting, local tangent/normal calculations, arrow heads and

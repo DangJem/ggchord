@@ -19,7 +19,8 @@ gene_geom <- rename_geom_aes(GeomChordFeatureBase, renames = c(fill = "gene_fill
 #' @param mapping Default NULL (uses pre-computed data)
 #' @param data Default NULL (retrieved automatically from the layout)
 #' @param gene_offset Deprecated placement input. Explicit values are translated
-#'   to the former strand-separated geometry and emit a migration warning.
+#'   to the former strand-separated geometry and emit a migration warning. Use
+#'   `position = position_strand(offset = ...)`; removal is planned for v1.0.0.
 #' @param gene_width Optional numeric/vector/list. Width of gene arrows, default 0.05
 #' @param arrow_head_length,arrow_head_width Shared arrow-head dimensions in
 #'   the sequence-local frame.

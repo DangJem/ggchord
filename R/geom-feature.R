@@ -218,6 +218,8 @@ ggchord_feature_data <- function(data, fixed_shape = "arrow",
 #'   the base width responds to final label size within bounded limits.
 #' @param feature_offset Deprecated placement input. Explicit values are
 #'   translated to the former strand-separated geometry and emit a warning.
+#'   Use `position = position_strand(offset = ...)`; removal is planned for
+#'   v1.0.0.
 #' @param arrow_head_length,arrow_head_width Arrow-head dimensions in the
 #'   sequence-local frame, shared with [geom_gene()]. Values above one for
 #'   `arrow_head_width` create a protruding block-arrow head.

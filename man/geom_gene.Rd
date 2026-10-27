@@ -25,7 +25,8 @@ geom_gene(
 \item{data}{Default NULL (retrieved automatically from the layout)}
 
 \item{gene_offset}{Deprecated placement input. Explicit values are translated
-to the former strand-separated geometry and emit a migration warning.}
+to the former strand-separated geometry and emit a migration warning. Use
+\code{position = position_strand(offset = ...)}; removal is planned for v1.0.0.}
 
 \item{gene_width}{Optional numeric/vector/list. Width of gene arrows, default 0.05}
 

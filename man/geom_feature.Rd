@@ -54,7 +54,9 @@ shared feature geometry engine. In a circular feature-label composition,
 the base width responds to final label size within bounded limits.}
 
 \item{feature_offset}{Deprecated placement input. Explicit values are
-translated to the former strand-separated geometry and emit a warning.}
+translated to the former strand-separated geometry and emit a warning.
+Use \code{position = position_strand(offset = ...)}; removal is planned for
+v1.0.0.}
 
 \item{arrow_head_length, arrow_head_width}{Arrow-head dimensions in the
 sequence-local frame, shared with [geom_gene()]. Values above one for
