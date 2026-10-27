@@ -176,12 +176,6 @@ geom_feature_label_repel <- function(
       colour = I(feature_label_colour)
     )$colour
   }
-  lyr$mapping[["feature_label_mode"]] <- ggplot2::aes(
-    feature_label_mode = I(feature_label_mode)
-  )$feature_label_mode
-  lyr$mapping[["feature_label_fill"]] <- ggplot2::aes(
-    feature_label_fill = I(feature_label_fill)
-  )$feature_label_fill
   lyr
 }
 

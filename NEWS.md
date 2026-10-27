@@ -1,10 +1,14 @@
 # ggchord 0.13.1
 
-The unreleased v0.13.0 development work continues in v0.13.1; v0.13.0 was
-not published. The changes below describe the current development branch,
-not a completed release. The experimental global exterior-label solver was
+The v0.13.0 development work continues in v0.13.1; v0.13.0 was not published.
+The experimental global exterior-label solver was
 withdrawn after `view_ggchord()` comparisons showed severe visual regressions;
 the current sparse-map rendering keeps the v0.13.0 perimeter layout.
+
+* Fixed a rendering error when `geom_feature_label_repel()` uses `"callout"`,
+  `"radial"` or `"auto"` instead of the default `"feature"` layout.
+  The English and 汉语 vignettes now explain how to select a Unicode-capable
+  PDF device when labels contain characters unsupported by the base device.
 
 * Automatic circular previews now adapt the physical backbone diameter to the
   printed width of displayed restriction labels, then solve labels again at

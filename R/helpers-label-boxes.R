@@ -332,7 +332,7 @@ ggchord_arc_text_layout <- function(text, units_per_inch = .35,
     advance[!is.finite(advance) | advance <= 0] <- fallback
     tracking <- max(.0008, median(metrics$h, na.rm = TRUE) * .018)
     total <- sum(advance) + tracking * max(0, length(chars) - 1L)
-    along <- cumsum(c(0, head(advance + tracking, -1L))) + advance / 2 -
+    along <- cumsum(c(0, utils::head(advance + tracking, -1L))) + advance / 2 -
       total / 2
     radius <- sqrt(text$text_x[i]^2 + text$text_y[i]^2)
     centre_angle <- atan2(text$text_y[i], text$text_x[i])

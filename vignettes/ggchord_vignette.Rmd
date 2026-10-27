@@ -604,3 +604,20 @@ p <- ggchord(s) + geom_seq() +
     arrow = arrow(length = unit(2, "mm")))
 invisible(export_ggchord_layout(p, include = "link"))
 ```
+
+## Saving PDF files with Unicode labels
+
+The base `pdf()` device can replace characters such as Greek letters when its
+font encoding cannot represent them. Choose a PDF device with suitable Unicode
+font support and inspect the saved file. On macOS, for example:
+
+```{r unicode-pdf, eval=FALSE}
+quartz_pdf <- function(filename, width, height, ...) {
+  grDevices::quartz(type = "pdf", file = filename,
+    width = width, height = height, ...)
+}
+ggplot2::ggsave("plot.pdf", p, device = quartz_pdf, width = 8, height = 7)
+```
+
+A working `grDevices::cairo_pdf` device is another option where Cairo is
+installed and its system libraries can be loaded.

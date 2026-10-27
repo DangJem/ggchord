@@ -12,7 +12,8 @@ test_that("internal common-feature database is complete and self-contained", {
     "feature_identities", "features", "segments", "qualifiers",
     "qualifier_links", "feature_type_summary", "legacy_feature_records",
     "feature_correspondence", "source_audit", "reference_sequences",
-    "reference_features", "reference_primers", "search_indexes"))
+    "reference_features", "reference_primers", "reference_enzyme_profiles",
+    "search_indexes"))
   expect_equal(nrow(db$source_releases), 2L)
   expect_equal(nrow(db$source_sequences), 1L)
   expect_equal(db$source_sequences$length_bp, 903397L)
@@ -56,7 +57,7 @@ test_that("internal common-feature database is complete and self-contained", {
 
 test_that("common-feature migration provenance distinguishes source identities", {
   db <- ggchord:::ggchord_builtin_common_features()
-  expect_false(anyDuplicated(db$features$common_feature_id))
+  expect_equal(anyDuplicated(db$features$common_feature_id), 0L)
   expect_false(any(db$features$common_feature_id ==
     db$features$source_feature_id))
   expect_equal(length(unique(na.omit(
@@ -66,10 +67,10 @@ test_that("common-feature migration provenance distinguishes source identities",
   expect_equal(sum(db$feature_correspondence$relationship == "unresolved"),
     268L)
   expect_false(any(db$feature_correspondence$relationship == "removed"))
-  expect_equal(table(db$feature_identities$created_in_release),
-    structure(c(448L, 1006L), names = c(
-      "snapgene-common-features-8.2.3-export15",
-      "snapgene-common-features-legacy-export13")))
+  created <- table(db$feature_identities$created_in_release)
+  expect_equal(as.integer(created), c(448L, 1006L))
+  expect_equal(names(created), c("snapgene-common-features-8.2.3-export15",
+    "snapgene-common-features-legacy-export13"))
   tpa <- subset(db$feature_correspondence,
     old_name == "tPA signal/pro sequence")
   expect_equal(tpa$relationship, rep("split", 2L))
@@ -222,14 +223,14 @@ test_that("plasmid data objects exactly reproduce every reference FASTA", {
     testthat::test_path("..", "..", "examples", "plasmid"),
     pattern = "\\.fna$", full.names = TRUE
   ))
-  skip_if_not(all(file.exists(paths)))
+  skip_if_not(length(paths) > 0L && all(file.exists(paths)))
   labels <- tools::file_path_sans_ext(basename(paths))
   suffixes <- gsub("\\(\\+\\)", "_plus", labels)
   suffixes <- gsub("[^[:alnum:]]+", "_", suffixes)
   suffixes <- gsub("^_+|_+$", "", suffixes)
   objects <- paste0("plasmid_example_", suffixes)
   expect_length(objects, 13L)
-  expect_false(anyDuplicated(objects))
+  expect_equal(anyDuplicated(objects), 0L)
   for (i in seq_along(paths)) {
     env <- new.env(parent = emptyenv())
     utils::data(list = objects[i], envir = env)

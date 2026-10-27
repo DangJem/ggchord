@@ -137,7 +137,7 @@ ggchord_reference_primer_bindings <- function(ids, sequences) {
     hit$tm_method <- "source"
     hit$match_type <- ifelse(hit$annealed_length == nchar(hit$sequence),
       "reference_exact", "reference_partial")
-    hit$binding_count <- ave(hit$primer_id, hit$primer_id, FUN = length)
+    hit$binding_count <- stats::ave(hit$primer_id, hit$primer_id, FUN = length)
     hit$is_unique <- hit$binding_count == 1L
     rows[[length(rows) + 1L]] <- hit
   }
@@ -244,7 +244,7 @@ find_primer_bindings <- function(sequence, primers = NULL,
   }
   out <- do.call(rbind, rows)
   key <- paste(out$accver, out$primer_id, sep = "\r")
-  out$binding_count <- ave(seq_along(key), key, FUN = length)
+  out$binding_count <- stats::ave(seq_along(key), key, FUN = length)
   out$is_unique <- out$binding_count == 1L
   alias_map <- split(definitions$aliases$name, definitions$aliases$primer_id)
   out$aliases <- I(lapply(out$primer_id, function(id) unique(as.character(alias_map[[id]]))))

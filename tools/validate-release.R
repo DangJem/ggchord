@@ -68,6 +68,12 @@ label_metrics <- function(layout, expected) {
 }
 base_plot <- function() ggchord(seq_data_example, ribbon_data_example,
   gene_data_example, validate = "none") + geom_seq() + geom_link_ribbon() + geom_gene()
+pdf_device <- if (isTRUE(capabilities("aqua"))) {
+  function(filename, width, height, ...) {
+    grDevices::quartz(type = "pdf", file = filename,
+      width = width, height = height, ...)
+  }
+} else if (isTRUE(capabilities("cairo"))) grDevices::cairo_pdf else grDevices::pdf
 
 if (mode == "genome") {
   p <- ggchord(single_genome_example, gene_data = single_gene_example,
@@ -90,7 +96,7 @@ if (mode == "genome") {
   ggplot2::ggsave(file.path(out, "single-genome.png"), p,
                   width = 8, height = 7, dpi = 120)
   ggplot2::ggsave(file.path(out, "single-genome.pdf"), p,
-                  width = 8, height = 7)
+                  width = 8, height = 7, device = pdf_device)
   if (requireNamespace("svglite", quietly = TRUE)) {
     ggplot2::ggsave(file.path(out, "single-genome.svg"), p,
                     width = 8, height = 7)
@@ -112,8 +118,13 @@ if (mode == "genome") {
       geom_seq_center_label() + scale_seq_position_continuous() +
       coord_circular(rotation = 90) + theme_ggchord_plasmid()
     layout <- with_device(get_chord_layout(p), 7, 7)
-    finite_geometry(list(layout$gene_polys, layout$gene_labels,
-      layout$gene_label_segments))
+    # Text rows carry optional segment columns filled with NA; validate the
+    # coordinates actually drawn by each geometry rather than those unused
+    # fields.
+    text_coordinates <- intersect(c("x", "y", "text_x", "text_y"),
+      names(layout$gene_labels))
+    finite_geometry(list(layout$gene_polys,
+      layout$gene_labels[text_coordinates], layout$gene_label_segments))
     stopifnot(all(layout$gene_labels$feature_label_mode %in%
       c("inside", "adjacent", "external")),
       any(layout$gene_labels$feature_label_mode == "inside"),
@@ -169,7 +180,7 @@ if (mode == "genome") {
     ggplot2::ggsave(file.path(out, paste0(files[i], ".png")), p,
       width = 7, height = 7, dpi = 150)
     ggplot2::ggsave(file.path(out, paste0(files[i], ".pdf")), p,
-      width = 7, height = 7)
+      width = 7, height = 7, device = pdf_device)
     if (requireNamespace("svglite", quietly = TRUE)) {
       ggplot2::ggsave(file.path(out, paste0(files[i], ".svg")), p,
         width = 7, height = 7)
@@ -246,7 +257,8 @@ if (mode == "genome") {
     finite_geometry(layout)
     for (extension in c("png", "pdf", "svg")) {
       ggplot2::ggsave(file.path(out, paste0(name, ".", extension)),
-        plots[[name]], width = 8, height = 6, dpi = 120)
+        plots[[name]], width = 8, height = 6, dpi = 120,
+        device = if (extension == "pdf") pdf_device else extension)
     }
   }
 } else if (mode == "labels") {
@@ -298,7 +310,8 @@ if (mode == "genome") {
     file <- view_ggchord(sample, width = 6, viewer = "none")
     file.copy(file, file.path(out, paste0("legend-", position, ".png")))
   }
-  ggplot2::ggsave(file.path(out, "explicit.pdf"), p, width = 11, height = 7)
+  ggplot2::ggsave(file.path(out, "explicit.pdf"), p, width = 11, height = 7,
+    device = pdf_device)
   stopifnot(grDevices::dev.cur() == original_device)
 } else if (mode == "benchmark") {
   results <- list()

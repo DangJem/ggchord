@@ -573,3 +573,19 @@ p <- ggchord(s) + geom_seq() +
     arrow = arrow(length = unit(2, "mm")))
 invisible(export_ggchord_layout(p, include = "link"))
 ```
+
+## 保存含 Unicode 标签的 PDF
+
+基本 `pdf()` 设备在字体编码无法表示希腊字母等字符时可能将其替换。请选择
+支持所需 Unicode 字体的 PDF 设备，并检查保存后的文件。例如，在 macOS 上：
+
+```{r unicode-pdf, eval=FALSE}
+quartz_pdf <- function(filename, width, height, ...) {
+  grDevices::quartz(type = "pdf", file = filename,
+    width = width, height = height, ...)
+}
+ggplot2::ggsave("plot.pdf", p, device = quartz_pdf, width = 8, height = 7)
+```
+
+在已安装 Cairo 且系统库可以加载的平台上，也可使用可正常工作的
+`grDevices::cairo_pdf` 设备。

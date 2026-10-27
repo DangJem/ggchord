@@ -937,7 +937,7 @@ ggchord_expand_feature_segments <- function(data) {
       # overrides that default. Use the preceding segment end so a cleavage at
       # the same biological join de-duplicates cleanly.
       boundaries <- if (nrow(run) > 1L) {
-        as.numeric(head(run$.hi, -1L))
+        as.numeric(utils::head(run$.hi, -1L))
       } else numeric()
       boundary_styles <- rep("dotted", length(boundaries))
       if (length(boundaries) && "line_style" %in% names(run)) {

@@ -447,7 +447,7 @@ ggchord_perimeter_top_fan <- function(tasks, rows, side_rows,
       rank <- order(vapply(next_beam, function(state) {
         10 * state$max_y + state$total_y / k
       }, numeric(1L)))
-      beam <- next_beam[head(rank, 180L)]
+      beam <- next_beam[utils::head(rank, 180L)]
     }
     if (!length(beam)) next
     chosen <- beam[[1L]]

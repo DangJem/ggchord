@@ -629,7 +629,7 @@ ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
         # number of single-task turns, in stable source order, and stop at the
         # first solution that retains every previously readable label.
         alternatives <- hidden[order(gl$source_row[hidden], hidden)]
-        for (row in head(alternatives, 5L)) {
+        for (row in utils::head(alternatives, 5L)) {
           retry <- ggchord_feature_label_lanes(gl, gene_polys, seq_arcs,
             units_per_inch = units_per_inch, max_overlaps = max_overlaps,
             allow_external = allow_external, priority_rows = row)
