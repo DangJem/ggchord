@@ -6,6 +6,36 @@ not a completed release. The experimental global exterior-label solver was
 withdrawn after `view_ggchord()` comparisons showed severe visual regressions;
 the current sparse-map rendering keeps the v0.13.0 perimeter layout.
 
+* Automatic circular previews now adapt the physical backbone diameter to the
+  printed width of displayed restriction labels, then solve labels again at
+  that size. Measurement and output use the same physical coordinate scale.
+  Dense exterior annotations enter their fan from one shared departure circle,
+  preserving their real feature, primer and cut roots with a short radial
+  segment. Ordered least-squares packing keeps congestion local; sparse upper
+  left sites and compact lower right runs no longer span an entire side or
+  bottom queue. Upper cut clusters follow their real angular gaps, with
+  feature and primer labels joining the same interval. Two ordered fan arms
+  replace an unnecessarily tall single staircase where possible. Layout
+  padding now matches the final annotation registry instead of adding a
+  second large row margin; complete glyph and leader constraints remain.
+  Composite restriction metrics include the actual font family and line height.
+  Primer name/range occupancy now matches the rendered horizontal composite.
+  Displaced exterior feature labels with a missing leader participate in the
+  shared layout with their own source data and styles.
+  External feature callout colours retain more of their source hue instead
+  of being uniformly washed out. The focused preview audit now checks the
+  exact frozen layout and individual curved glyphs.
+  Inner labels share measured local arc length on their nearest legal track;
+  both new and existing leaders are checked against actual glyph envelopes
+  and one another. Bounded retries give initially hidden tasks an earlier
+  placement opportunity, first together and then at most five single-task
+  alternatives; a result is accepted only when every previously visible
+  label remains visible and additional labels fit all constraints.
+  The same two-way line/text check now covers sparse outer
+  callouts. Centre titles use their resolved component fonts and a physical
+  reading gap, so shrinking the backbone no longer collapses the name and
+  sequence-length lines.
+
 * Reproduced the reported pETDuet-1 rendering from the original 5,420 bp
   sequence, 54 displayed restriction cuts and five reference primers. For
   crowded single-sequence circular maps, exterior restriction, feature and
@@ -13,7 +43,7 @@ the current sparse-map rendering keeps the v0.13.0 perimeter layout.
   can place labels on several nearby rows while checking complete text boxes,
   crossing leaders and leaders passing through other labels. Longer composite
   enzyme names use a wider ordered perimeter when the short fan has no clear
-  placement. The solver measures multiline primer text and feature callout
+  placement. The solver measures horizontal primer text and feature callout
   padding, preserves actual cut and feature anchors, and uses a short radial
   shoulder when a callout begins inside the backbone. Explicit inside-site
   layouts and multi-sequence maps retain their previous layout path. Automatic

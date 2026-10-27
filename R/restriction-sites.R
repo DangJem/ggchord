@@ -1230,10 +1230,13 @@ ggchord_restriction_label_lanes <- function(
 
 ggchord_restriction_text_metrics <- function(text, size, units_per_inch,
                                              parse = TRUE,
-                                             fontface = "plain") {
+                                             fontface = "plain",
+                                             family = "", lineheight = 1.2) {
   n <- length(text)
   size <- rep_len(size, n)
   fontface <- rep_len(fontface, n)
+  family <- rep_len(family, n)
+  lineheight <- rep_len(lineheight, n)
   width <- height <- numeric(n)
   valid <- !is.na(text) & nzchar(text)
   if (!any(valid)) return(data.frame(width = width, height = height))
@@ -1244,7 +1247,8 @@ ggchord_restriction_text_metrics <- function(text, size, units_per_inch,
       error = function(e) text[i]) else text[i]
     grob <- grid::textGrob(
       label, gp = grid::gpar(
-        fontsize = size[i] * (72.27 / 25.4), fontface = fontface[i]
+        fontsize = size[i] * (72.27 / 25.4), fontface = fontface[i],
+        fontfamily = family[i], lineheight = lineheight[i]
       )
     )
     width[i] <- grid::convertWidth(

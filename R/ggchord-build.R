@@ -1080,7 +1080,10 @@ compute_chord_geometry <- function(plot) {
         center_layer, chord$data$seq_data
       )
       sub_layout$seq_center_label <- ggchord_seq_center_label_geometry(
-        center_input, center_layer$ggchord_params
+        center_input, center_layer$ggchord_params,
+        units_per_inch = primary$text_units_per_inch %||% .30,
+        styles = ggchord_seq_center_label_styles(center_layer, plot,
+          center_input)
       )
     }
     layouts[[id]] <- sub_layout

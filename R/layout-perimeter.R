@@ -63,7 +63,13 @@ ggchord_perimeter_tasks <- function(registry, units_per_inch) {
         (geometry$x[leaders] - geometry$text_x[row])^2 +
           (geometry$y[leaders] - geometry$text_y[row])^2
       )]
-      label <- geometry$label[row]
+      is_primer <- "annotation_class" %in% names(geometry) &&
+        geometry$annotation_class[row] %in% "primer"
+      label <- if (is_primer && "feature_label" %in% names(geometry) &&
+          !is.na(geometry$feature_label[row]) &&
+          nzchar(geometry$feature_label[row])) {
+        geometry$feature_label[row]
+      } else geometry$label[row]
       tasks[[length(tasks) + 1L]] <- data.frame(
         id = id, kind = if ("annotation_class" %in% names(geometry) &&
             geometry$annotation_class[row] %in% "primer") "primer" else
@@ -102,7 +108,7 @@ ggchord_perimeter_tasks <- function(registry, units_per_inch) {
   tasks$lineheight[!is.finite(tasks$lineheight) |
     tasks$lineheight <= 0] <- 1.2
   boxes <- ggchord_text_boxes(
-    tasks, units_per_inch = units_per_inch, box_padding = .035
+    tasks, units_per_inch = units_per_inch, box_padding = .015
   )
   tasks$w <- boxes$bw
   tasks$h <- boxes$bh
@@ -111,19 +117,23 @@ ggchord_perimeter_tasks <- function(registry, units_per_inch) {
     enzyme <- ggchord_restriction_text_metrics(
       tasks$enzyme_label[restriction], tasks$size[restriction],
       units_per_inch, parse = FALSE,
-      fontface = tasks$enzyme_fontface[restriction]
+      fontface = tasks$enzyme_fontface[restriction],
+      family = tasks$family[restriction],
+      lineheight = tasks$lineheight[restriction]
     )
     coordinate <- ggchord_restriction_text_metrics(
       tasks$coordinate_label[restriction], tasks$size[restriction],
-      units_per_inch, parse = FALSE
+      units_per_inch, parse = FALSE,
+      family = tasks$family[restriction],
+      lineheight = tasks$lineheight[restriction]
     )
     both <- nzchar(tasks$enzyme_label[restriction]) &
       nzchar(tasks$coordinate_label[restriction])
     tasks$w[restriction] <- enzyme$width + coordinate$width +
       ifelse(both, .65 / 25.4 * units_per_inch, 0) +
-      .07 * units_per_inch
+      .03 * units_per_inch
     tasks$h[restriction] <- pmax(enzyme$height, coordinate$height) +
-      .07 * units_per_inch
+      .03 * units_per_inch
   }
   callout <- which(tasks$kind == "feature")
   if (length(callout)) {
@@ -149,13 +159,13 @@ ggchord_perimeter_rail_crossings <- function(tasks, rows, edge_x, edge_y) {
   crossings <- 0L
   for (a in seq_len(length(rows) - 1L)) {
     i <- rows[a]
-    first <- data.frame(x1 = tasks$root_x[i], y1 = tasks$root_y[i],
+    first <- data.frame(x1 = tasks$route_x[i], y1 = tasks$route_y[i],
       x2 = edge_x, y2 = edge_y[a])
     for (b in seq.int(a + 1L, length(rows))) {
       j <- rows[b]
-      if (abs(tasks$root_x[i] - tasks$root_x[j]) < 1e-8 &&
-          abs(tasks$root_y[i] - tasks$root_y[j]) < 1e-8) next
-      second <- data.frame(x1 = tasks$root_x[j], y1 = tasks$root_y[j],
+      if (abs(tasks$route_x[i] - tasks$route_x[j]) < 1e-8 &&
+          abs(tasks$route_y[i] - tasks$route_y[j]) < 1e-8) next
+      second <- data.frame(x1 = tasks$route_x[j], y1 = tasks$route_y[j],
         x2 = edge_x, y2 = edge_y[b])
       crossings <- crossings + as.integer(
         ggchord_external_leader_crosses(first, second))
@@ -168,7 +178,9 @@ ggchord_perimeter_line_hits_box <- function(line, box) {
   t_min <- 1e-5
   t_max <- 1 - 1e-5
   for (axis in c("x", "y")) {
-    start <- line[[paste0("root_", axis)]]
+    route <- line[[paste0("route_", axis)]]
+    start <- if (length(route) && is.finite(route)) route else
+      line[[paste0("root_", axis)]]
     delta <- line[[paste0("edge_", axis)]] - start
     low <- box[[paste0("target_", axis)]] -
       box[[if (axis == "x") "w" else "h"]] / 2
@@ -193,19 +205,167 @@ ggchord_perimeter_pair_blocked <- function(a, b, gap) {
   if (boxes_meet) return(TRUE)
   if (ggchord_perimeter_line_hits_box(a, b) ||
       ggchord_perimeter_line_hits_box(b, a)) return(TRUE)
-  rx <- a$edge_x - a$root_x
-  ry <- a$edge_y - a$root_y
-  sx <- b$edge_x - b$root_x
-  sy <- b$edge_y - b$root_y
+  ax <- if (length(a$route_x) && is.finite(a$route_x)) a$route_x else a$root_x
+  ay <- if (length(a$route_y) && is.finite(a$route_y)) a$route_y else a$root_y
+  bx <- if (length(b$route_x) && is.finite(b$route_x)) b$route_x else b$root_x
+  by <- if (length(b$route_y) && is.finite(b$route_y)) b$route_y else b$root_y
+  rx <- a$edge_x - ax
+  ry <- a$edge_y - ay
+  sx <- b$edge_x - bx
+  sy <- b$edge_y - by
   denominator <- rx * sy - ry * sx
   if (!is.finite(denominator) || abs(denominator) <= 1e-9) {
     return(FALSE)
   }
-  dx <- b$root_x - a$root_x
-  dy <- b$root_y - a$root_y
+  dx <- bx - ax
+  dy <- by - ay
   t <- (dx * sy - dy * sx) / denominator
   u <- (dx * ry - dy * rx) / denominator
   t > 1e-9 && t < 1 - 1e-9 && u > 1e-9 && u < 1 - 1e-9
+}
+
+# Keep a dense, nearly coincident upper cluster above its own roots. Text
+# extends to the left of each ordered attachment while attachment heights
+# rise, leaving a clear corridor for later leaders. Centring every long name
+# on a narrow fixed x grid made later leaders pass through earlier names and
+# forced the whole cluster onto the right-side queue.
+ggchord_perimeter_top_steps <- function(tasks, rows, side_rows,
+                                           backbone_outer, gap) {
+  if (length(rows) < 8L) return(NULL)
+  rows <- rows[order(tasks$route_x[rows], tasks$route_y[rows])]
+  spread <- diff(range(tasks$target_x[rows]))
+  if (!is.finite(spread) || spread <= 1.4 * backbone_outer) return(NULL)
+  x <- seq(
+    max(-.68 * backbone_outer,
+      min(tasks$root_x[rows]) - .22 * backbone_outer),
+    min(1.35 * backbone_outer,
+      max(tasks$root_x[rows]) + 1.1 * backbone_outer),
+    length.out = length(rows)
+  )
+  base <- max(backbone_outer + .13,
+    max(tasks$root_y[rows], na.rm = TRUE) + .07)
+  placed <- list()
+  fan_gap <- min(gap, .004)
+  for (k in seq_along(rows)) {
+    row <- rows[k]
+    found <- NULL
+    start_y <- if (length(placed)) {
+      previous <- placed[[length(placed)]]
+      previous$target_y + previous$h / 2 + fan_gap
+    } else base
+    step <- max(.009, .15 * tasks$h[row])
+    for (candidate_offset in 0:100) {
+      candidate <- tasks[row, , drop = FALSE]
+      candidate$edge_x <- x[k]
+      candidate$edge_y <- start_y + candidate_offset * step
+      candidate$target_x <- candidate$edge_x - candidate$w / 2
+      candidate$target_y <- candidate$edge_y + candidate$h / 2
+      blocked_side <- any(vapply(side_rows, function(j) {
+        ggchord_perimeter_pair_blocked(
+          candidate, tasks[j, , drop = FALSE], fan_gap
+        )
+      }, logical(1L)))
+      blocked_fan <- any(vapply(placed, function(other) {
+        ggchord_perimeter_pair_blocked(candidate, other, fan_gap)
+      }, logical(1L)))
+      if (!blocked_side && !blocked_fan) {
+        found <- candidate
+        break
+      }
+    }
+    if (is.null(found)) return(NULL)
+    placed[[k]] <- found
+  }
+  list(rows = rows, selected = placed)
+}
+
+# Grow two ordered arms towards a shared upper apex. Each word extends away
+# from the centre, so a nearby cluster can use both halves of its fan instead
+# of forcing every successive label onto one ever higher staircase.
+ggchord_perimeter_top_staircase <- function(tasks, rows, side_rows,
+                                           backbone_outer, gap) {
+  if (length(rows) < 8L) return(NULL)
+  rows <- rows[order(tasks$route_x[rows], tasks$route_y[rows])]
+  if (diff(range(tasks$target_x[rows])) <=
+      1.4 * backbone_outer) return(NULL)
+  straddles_axis <- min(tasks$route_x[rows]) < -.025 * backbone_outer &&
+    max(tasks$route_x[rows]) > .025 * backbone_outer
+  preferred_split <- if (straddles_axis) floor(length(rows) / 2) else
+    sum(tasks$route_x[rows] < -.025 * backbone_outer)
+  splits <- unique(pmax(1L, pmin(length(rows) - 1L,
+    c(preferred_split, floor(length(rows) * c(.5, .25, .75))))))
+  base <- max(backbone_outer + .13,
+    max(tasks$route_y[rows]) + .06)
+  fan_gap <- min(gap, .004)
+  solve_split <- function(split) {
+    branches <- list(rows[seq_len(split)],
+      rev(rows[seq.int(split + 1L, length(rows))]))
+    placed <- list()
+    selected_rows <- integer()
+    for (branch in seq_along(branches)) {
+      members <- branches[[branch]]
+      direction <- if (branch == 1L) -1 else 1
+      x <- direction * if (length(members) == 1L) {
+        .08 * backbone_outer
+      } else seq(.60, .08, length.out = length(members)) * backbone_outer
+      previous <- NULL
+      branch_base <- if (length(members) == 1L && length(placed)) {
+        max(base, max(vapply(placed, function(candidate)
+          candidate$target_y, numeric(1L))))
+      } else base
+      for (k in seq_along(members)) {
+        row <- members[k]
+        start_y <- if (is.null(previous)) branch_base else
+          previous$target_y + previous$h / 2 + fan_gap
+        step <- max(.009, .15 * tasks$h[row])
+        found <- NULL
+        for (offset in 0:100) {
+          candidate <- tasks[row, , drop = FALSE]
+          candidate$edge_x <- x[k]
+          candidate$edge_y <- start_y + offset * step
+          candidate$target_x <- candidate$edge_x +
+            direction * candidate$w / 2
+          candidate$target_y <- candidate$edge_y + candidate$h / 2
+          blocked_side <- any(vapply(side_rows, function(j) {
+            ggchord_perimeter_pair_blocked(candidate,
+              tasks[j, , drop = FALSE], fan_gap)
+          }, logical(1L)))
+          blocked_fan <- any(vapply(placed, function(other) {
+            ggchord_perimeter_pair_blocked(candidate, other, fan_gap)
+          }, logical(1L)))
+          if (!blocked_side && !blocked_fan) {
+            found <- candidate
+            break
+          }
+        }
+        if (is.null(found)) return(NULL)
+        placed[[length(placed) + 1L]] <- found
+        selected_rows <- c(selected_rows, row)
+        previous <- found
+      }
+    }
+    list(rows = selected_rows, selected = placed)
+  }
+  # A cluster entirely to one side of the axis can still use both arms.
+  # Trying only its axis split sent almost all names up one arm, and an early
+  # failure discarded the balanced alternatives in favour of a tall stack.
+  options <- lapply(splits, solve_split)
+  if (is.null(options[[1L]])) {
+    options <- c(options, list(ggchord_perimeter_top_steps(
+      tasks, rows, side_rows, backbone_outer, gap)))
+  }
+  options <- Filter(Negate(is.null), options)
+  if (!length(options)) return(NULL)
+  height <- vapply(options, function(option) {
+    max(vapply(option$selected, function(candidate)
+      candidate$target_y + candidate$h / 2, numeric(1L)))
+  }, numeric(1L))
+  leader_length <- vapply(options, function(option) {
+    sum(vapply(option$selected, function(candidate)
+      sqrt((candidate$edge_x - candidate$route_x)^2 +
+        (candidate$edge_y - candidate$route_y)^2), numeric(1L)))
+  }, numeric(1L))
+  options[[order(height, leader_length)[1L]]]
 }
 
 # Compress a crowded upper arc into several nearby rows. The root order is
@@ -315,6 +475,65 @@ ggchord_place_dense_perimeter <- function(registry, layout,
     max(layout$backbone_bounds$outer, na.rm = TRUE)
   } else 1
   if (!is.finite(backbone_outer)) backbone_outer <- 1
+  root_radius <- sqrt(tasks$root_x^2 + tasks$root_y^2)
+  # Every annotation joins the fan from the same physical circle. Mixing
+  # inner feature shoulders, backbone primers and outer restriction tips
+  # inverted their order in a shared column despite correct genomic angles.
+  route_radius <- max(backbone_outer + .055, root_radius, na.rm = TRUE)
+  tasks$route_x <- tasks$direction_x * route_radius
+  tasks$route_y <- tasks$direction_y * route_radius
+  if (allow_top_fan) {
+    # A fixed side boundary can split one tightly spaced origin cluster and
+    # make the side queue lift the upper fan. Group actual cuts first; feature
+    # and primer roots join that angular interval without bridging cut gaps.
+    angle <- atan2(tasks$direction_x, tasks$direction_y)
+    upper <- which(abs(angle) < .8 & tasks$kind == "restriction")
+    upper <- upper[order(angle[upper])]
+    if (length(upper) >= 8L) {
+      runs <- split(upper, cumsum(c(TRUE, diff(angle[upper]) >= .10)))
+      runs <- Filter(function(members) length(members) >= 8L, runs)
+      if (length(runs)) {
+        distance <- vapply(runs, function(members)
+          min(abs(angle[members])), numeric(1L))
+        cluster <- runs[[which.min(distance)]]
+        bounds <- range(c(0, angle[cluster]))
+        members <- which(angle >= bounds[1L] - .04 &
+          angle <= bounds[2L] + .04)
+        old_top <- which(tasks$side == "top")
+        tasks$side[old_top] <- ifelse(
+          tasks$direction_x[old_top] < 0, "left", "right")
+        tasks$side[members] <- "top"
+      }
+    }
+  }
+  crowded_top <- sum(tasks$side == "top" &
+    tasks$kind == "restriction") >= 8L
+  if (!crowded_top) {
+    angle <- atan2(tasks$direction_y, tasks$direction_x)
+    neighbours <- vapply(seq_along(angle), function(i) {
+      sum(abs(atan2(sin(angle - angle[i]),
+        cos(angle - angle[i]))) < .16)
+    }, integer(1L))
+    vertical <- abs(tasks$direction_y) >= abs(tasks$direction_x)
+    natural_side <- ifelse(vertical,
+      ifelse(tasks$direction_y >= 0, "top", "bottom"),
+      ifelse(tasks$direction_x >= 0, "right", "left"))
+    upper_left <- tasks$direction_x < 0 &
+      tasks$direction_y > 0
+    tasks$side[upper_left] <- natural_side[upper_left]
+    # A compact lower-right run reads as a short side fan; packing its wide
+    # labels across the whole bottom edge detached them from their roots.
+    lower_right <- tasks$direction_x > .20 &
+      tasks$direction_y < -.70
+    if (any(neighbours[lower_right] >= 4L)) {
+      tasks$side[lower_right] <- "right"
+    }
+    crowded_top <- sum(tasks$side == "top" &
+      tasks$kind == "restriction") >= 8L
+  }
+  top_rows <- which(tasks$side == "top")
+  wide_top <- crowded_top && length(top_rows) &&
+    max(tasks$w[top_rows]) > .8 * backbone_outer
 
   # A tangent is the axis along which physical label order is monotone.
   # Packing every annotation class together prevents primers from being
@@ -323,22 +542,21 @@ ggchord_place_dense_perimeter <- function(registry, layout,
   tasks$target_y <- NA_real_
   tasks$edge_x <- NA_real_
   tasks$edge_y <- NA_real_
-  gap <- max(.014, .045 * units_per_inch)
+  # The task envelopes already include the registry's physical safety pad.
+  # Adding another large row margin doubled the printed pitch in dense maps.
+  gap <- max(.006, .012 * units_per_inch)
   for (side in c("right", "left")) {
     rows <- which(tasks$side == side)
     if (!length(rows)) next
-    # Restriction ticks and primer tips can start at slightly different
-    # radii. A small physical-y term breaks near-equal angular ties without
-    # reversing the broader order around the right side of the circle.
-    axis <- ggchord_pack_label_axis(
-      tasks$root_y[rows], if (side == "left")
-        tasks$root_y[rows] else
-          tasks$direction_y[rows] + .15 *
-            (tasks$root_y[rows] - tasks$direction_y[rows]),
+    # A shared departure circle makes this physical order unambiguous for
+    # feature, primer and restriction leaders alike.
+    axis <- ggchord_pack_ordered_axis(
+      tasks$route_y[rows], tasks$route_y[rows],
       tasks$h[rows] / 2, tasks$h[rows] / 2, gap = gap
     )
-    boundary <- max(backbone_outer + .12,
+    boundary <- max(backbone_outer + .12, route_radius + .07,
       max(abs(tasks$root_x[rows]), na.rm = TRUE) + .07)
+    if (wide_top) boundary <- max(boundary, 1.80 * backbone_outer)
     boundary <- if (side == "right") boundary else -boundary
     if (ggchord_perimeter_rail_crossings(
         tasks, rows, boundary, axis) > 0L) {
@@ -363,12 +581,12 @@ ggchord_place_dense_perimeter <- function(registry, layout,
   for (side in c("top", "bottom")) {
     rows <- which(tasks$side == side)
     if (!length(rows)) next
-    axis <- ggchord_pack_label_axis(
+    axis <- ggchord_pack_ordered_axis(
       tasks$root_x[rows], tasks$direction_x[rows],
       tasks$pack_w[rows] / 2, tasks$pack_w[rows] / 2,
       gap = gap
     )
-    boundary <- max(backbone_outer + .14,
+    boundary <- max(backbone_outer + .14, route_radius + .08,
       max(abs(tasks$root_y[rows]), na.rm = TRUE) + .08)
     # A small, dense upper arc uses height only where measured text or leader
     # conflicts require it. The ordinary one-row route remains the fallback.
@@ -376,10 +594,25 @@ ggchord_place_dense_perimeter <- function(registry, layout,
       proposed <- tasks
       proposed$target_x[rows] <- axis
       proposed$edge_x[rows] <- axis
-      fan <- if (allow_top_fan) {
-        ggchord_perimeter_top_fan(proposed, rows, side_rows,
-          backbone_outer, gap)
-      } else NULL
+      fan <- NULL
+      if (allow_top_fan) {
+        long_names <- max(tasks$w[rows]) > .8 * backbone_outer
+        if (long_names) {
+          fan <- ggchord_perimeter_top_staircase(
+            proposed, rows, side_rows, backbone_outer, gap
+          )
+        }
+        if (is.null(fan)) {
+          fan <- ggchord_perimeter_top_fan(
+            proposed, rows, side_rows, backbone_outer, gap
+          )
+        }
+        if (is.null(fan) && !long_names) {
+          fan <- ggchord_perimeter_top_staircase(
+            proposed, rows, side_rows, backbone_outer, gap
+          )
+        }
+      }
       if (!is.null(fan)) {
         for (k in seq_along(fan$rows)) {
           i <- fan$rows[k]
@@ -472,8 +705,15 @@ ggchord_place_dense_perimeter <- function(registry, layout,
       leaders <- which(sites$restriction_component %in% "leader" &
         sites$source_row == task$source)
       if (length(leaders) >= 2L) {
-        sites$x[leaders[-1L]] <- task$edge_x
-        sites$y[leaders[-1L]] <- task$edge_y
+        if (length(leaders) < 3L) {
+          extra <- sites[tail(leaders, 1L), , drop = FALSE]
+          sites <- rbind(sites, extra)
+          leaders <- c(leaders, nrow(sites))
+        }
+        sites$x[leaders] <- task$edge_x
+        sites$y[leaders] <- task$edge_y
+        sites$x[leaders[1:2]] <- c(task$root_x, task$route_x)
+        sites$y[leaders[1:2]] <- c(task$root_y, task$route_y)
       }
       registry[[id]]$restriction_site <- sites
     } else {
@@ -490,19 +730,13 @@ ggchord_place_dense_perimeter <- function(registry, layout,
         x2 = task$edge_x, y2 = task$edge_y,
         move_endpoint = FALSE
       )
-      root_radius <- sqrt(task$root_x^2 + task$root_y^2)
-      if (is.finite(root_radius) && root_radius > 1e-8 &&
-          root_radius < backbone_outer - .05) {
-        # A callout originating on an inner feature must pass the backbone
-        # before it joins the exterior fan. A short radial shoulder preserves
-        # the source angle and keeps it clear of nearby restriction ticks.
-        bend <- c(task$root_x, task$root_y) *
-          (backbone_outer + .055) / root_radius
+      if (sqrt((task$route_x - task$root_x)^2 +
+          (task$route_y - task$root_y)^2) > 1e-8) {
         route <- data.frame(
-          x1 = c(task$root_x, bend[1L]),
-          y1 = c(task$root_y, bend[2L]),
-          x2 = c(bend[1L], task$edge_x),
-          y2 = c(bend[2L], task$edge_y),
+          x1 = c(task$root_x, task$route_x),
+          y1 = c(task$root_y, task$route_y),
+          x2 = c(task$route_x, task$edge_x),
+          y2 = c(task$route_y, task$edge_y),
           move_endpoint = c(FALSE, FALSE)
         )
       }
@@ -515,6 +749,12 @@ ggchord_place_dense_perimeter <- function(registry, layout,
       candidate$row$text_x <- task$target_x
       candidate$row$text_y <- task$target_y
       geometry <- ggchord_shift_feature_callout(geometry, row, candidate)
+      if (task$kind == "primer") {
+        # The primer geom renders its name and range on one horizontal line.
+        # Keep the final occupancy text consistent with that composite grob.
+        geometry$label[row] <- task$text
+        if ("text" %in% names(geometry)) geometry$text[row] <- task$text
+      }
       # The shared queue measures a centred rectangle. Retaining the
       # natural callout's directional hjust/vjust would move the rendered
       # glyph box after the solve, creating false clearance and collisions.

@@ -59,29 +59,67 @@ ggchord_preview_height <- function(plot, width_inches) {
   ggchord_preview_layout(plot, width_inches)$height
 }
 
-# Fit a circular preview by preserving a readable physical backbone diameter
-# and expanding the canvas for the annotation envelope. The returned gtable is
-# frozen at the measurement device so exporting it does not trigger a second
-# size-dependent track solution.
+# A dense set of long site names needs physical room outside the backbone, not
+# just a larger canvas around an unchanged map. Measure the names that actually
+# survived cut-site grouping. Their total printed width relative to one
+# backbone circumference estimates how strongly the map should yield space to
+# the annotation perimeter. This controls only the automatic preview; an
+# explicitly requested export size remains the caller's decision.
+ggchord_preview_backbone_inches <- function(layout, baseline = 7) {
+  if (!isTRUE(layout$circular) ||
+      length(layout$seq_arcs) != 1L ||
+      !is.list(layout$layer_geometry) ||
+      length(layout$text_units_per_inch) != 1L ||
+      !is.finite(layout$text_units_per_inch) ||
+      layout$text_units_per_inch <= 0) return(baseline)
+  tasks <- ggchord_perimeter_tasks(
+    layout$layer_geometry, layout$text_units_per_inch
+  )
+  sites <- tasks[tasks$kind == "restriction" &
+    is.finite(tasks$w), , drop = FALSE]
+  if (nrow(sites) < 24L) return(baseline)
+  printed_inches <- sum(sites$w) / layout$text_units_per_inch
+  pressure <- printed_inches / (pi * baseline)
+  if (!is.finite(pressure) || pressure <= 1.35) return(baseline)
+  max(4, baseline * sqrt(1.35 / pressure))
+}
+
+# Fit a circular preview by measuring both the annotation envelope and the
+# physical backbone diameter. A second measurement pass is needed when the
+# backbone shrinks: text boxes, label decisions and leaders must all be solved
+# at that physical size before the selected gtable is frozen for export.
 ggchord_preview_circular_layout <- function(plot) {
-  # Input rows are not rendered labels: several enzymes may share one cut,
-  # and a single long name can need more room than many short ones. Measure
-  # the actual annotation envelope instead of opening a huge canvas when a
-  # row-count threshold is crossed.
-  baseline <- c(width = 10.8, height = 8.5)
+  baseline <- c(width = 10.8, height = 8.25)
   close_device <- ggchord_measurement_device(
     width = baseline[["width"]], height = baseline[["height"]]
   )
   on.exit(close_device())
   table <- ggplot2::ggplotGrob(plot)
   layout <- plot$ggchord$ref$layout %||% plot$ggchord$layout
+  backbone_inches <- if (is.null(layout)) 7 else
+    ggchord_preview_backbone_inches(layout)
+  if (backbone_inches < 6.95) {
+    close_device()
+    close_device <- ggchord_measurement_device(
+      width = backbone_inches + 3.8,
+      height = backbone_inches + 1.25
+    )
+    table <- ggplot2::ggplotGrob(plot)
+    layout <- plot$ggchord$ref$layout %||% plot$ggchord$layout
+  }
   limits <- if (is.null(layout)) {
     list(xlim = c(-1, 1), ylim = c(-1, 1))
   } else ggchord_adaptive_limits(layout)
   span <- c(diff(limits$xlim), diff(limits$ylim))
   span[!is.finite(span) | span <= 0] <- 2
 
-  panel <- pmax(6.7, 3.5 * span)
+  inches_per_unit <- if (!is.null(layout) &&
+      length(layout$text_units_per_inch) == 1L &&
+      is.finite(layout$text_units_per_inch) &&
+      layout$text_units_per_inch > 0) {
+    1 / layout$text_units_per_inch
+  } else backbone_inches / 2
+  panel <- pmax(.95 * backbone_inches, inches_per_unit * span)
   fixed <- c(
     grid::convertWidth(sum(table$widths), "inches", valueOnly = TRUE),
     grid::convertHeight(sum(table$heights), "inches", valueOnly = TRUE)

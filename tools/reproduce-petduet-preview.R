@@ -41,14 +41,71 @@ make_plot <- function(sites, boxed_primers) {
 }
 
 audit_plot <- function(plot) {
-  exported <- export_ggchord_layout(plot,
-    include = c("feature", "labels", "restriction"))
+  # view_ggchord() has already frozen a device-sized layout on this plot.
+  # Rebuilding via export_ggchord_layout() on R's null device would audit a
+  # different physical label solution from the image just saved.
+  layout <- plot$ggchord$ref$layout
+  component <- function(name) {
+    pieces <- lapply(names(layout$layer_geometry), function(id) {
+      geometry <- layout$layer_geometry[[id]][[name]]
+      if (!is.data.frame(geometry) || !nrow(geometry)) return(NULL)
+      geometry$layer_id <- id
+      geometry
+    })
+    pieces <- Filter(Negate(is.null), pieces)
+    if (!length(pieces)) return(data.frame())
+    ggchord:::ggchord_rbind_fill(pieces)
+  }
+  exported <- list(
+    annotation_registry = layout$circular_annotation_registry,
+    restriction = component("restriction_site"),
+    labels = component("gene_label_repel")
+  )
   all_boxes <- exported$annotation_registry
   all_boxes <- all_boxes[is.finite(all_boxes$bbox_xmin) &
     is.finite(all_boxes$bbox_xmax) &
     is.finite(all_boxes$bbox_ymin) &
     is.finite(all_boxes$bbox_ymax), , drop = FALSE]
-  boxes <- all_boxes[all_boxes$side == "outer", , drop = FALSE]
+  boxes <- all_boxes[all_boxes$side %in% "outer", , drop = FALSE]
+  text_boxes <- data.frame(
+    registry_id = all_boxes$registry_id, owner = all_boxes$owner,
+    source_row = all_boxes$source_row,
+    cx = (all_boxes$bbox_xmin + all_boxes$bbox_xmax) / 2,
+    cy = (all_boxes$bbox_ymin + all_boxes$bbox_ymax) / 2,
+    w = all_boxes$bbox_xmax - all_boxes$bbox_xmin,
+    h = all_boxes$bbox_ymax - all_boxes$bbox_ymin,
+    angle = 0
+  )
+  labels <- exported$labels
+  if (nrow(labels) && all(c(".component", "text", "text_x", "text_y",
+      "text_angle", "annotation_side") %in% names(labels))) {
+    glyphs <- labels[labels$.component %in% "arc_text" &
+      labels$annotation_side %in% "inner" &
+      !is.na(labels$text) & nzchar(trimws(labels$text)) &
+      is.finite(labels$text_x) & is.finite(labels$text_y) &
+      is.finite(labels$text_angle), , drop = FALSE]
+    if (nrow(glyphs)) {
+      # The registry keeps one axis-aligned envelope for each whole label.
+      # Around curved text its empty corners are not visible obstacles:
+      # audit the final rendered glyph positions and rotations instead.
+      measured <- ggchord:::ggchord_text_boxes(glyphs,
+        units_per_inch = layout$text_units_per_inch, box_padding = 0)
+      parent_key <- paste(all_boxes$owner, all_boxes$source_row, sep = "\r")
+      glyph_key <- paste(glyphs$layer_id, glyphs$source_row, sep = "\r")
+      parent <- match(glyph_key, parent_key)
+      glyph_boxes <- data.frame(
+        registry_id = ifelse(is.na(parent),
+          paste0("arc-label-", glyphs$layer_id, "-", glyphs$source_row),
+          all_boxes$registry_id[parent]),
+        owner = glyphs$layer_id, source_row = glyphs$source_row,
+        cx = measured$cx, cy = measured$cy, w = measured$w,
+        h = measured$h, angle = measured$angle
+      )
+      replace <- all_boxes$side %in% "inner" &
+        all_boxes$kind %in% "label" & parent_key %in% glyph_key
+      text_boxes <- rbind(text_boxes[!replace, , drop = FALSE], glyph_boxes)
+    }
+  }
   overlap <- 0L
   if (nrow(boxes) > 1L) {
     pairs <- utils::combn(seq_len(nrow(boxes)), 2L)
@@ -61,21 +118,31 @@ audit_plot <- function(plot) {
     }, logical(1L)))
   }
   site_labels <- exported$restriction
-  site_labels <- site_labels[site_labels$.component == "label" &
+  site_labels <- site_labels[site_labels$.component %in% "label" &
     !is.na(site_labels$label), , drop = FALSE]
   hits_box <- function(segment, box) {
+    # Intersect in the measured box's own coordinate system so a diagonal
+    # glyph is not replaced by the larger axis-aligned rectangle around it.
+    cos_a <- cos(box$angle)
+    sin_a <- sin(box$angle)
+    rel_x <- segment$x1 - box$cx
+    rel_y <- segment$y1 - box$cy
+    dx <- segment$x2 - segment$x1
+    dy <- segment$y2 - segment$y1
+    origin <- c(rel_x * cos_a + rel_y * sin_a,
+      -rel_x * sin_a + rel_y * cos_a)
+    delta <- c(dx * cos_a + dy * sin_a,
+      -dx * sin_a + dy * cos_a)
+    half <- c(box$w, box$h) / 2
     lower <- 1e-5
     upper <- 1 - 1e-5
-    for (axis in c("x", "y")) {
-      start <- segment[[paste0(axis, "1")]]
-      delta <- segment[[paste0(axis, "2")]] - start
-      edge <- box[[paste0("bbox_", axis, "min")]]
-      limit <- box[[paste0("bbox_", axis, "max")]]
-      if (abs(delta) <= 1e-9) {
-        if (start <= edge || start >= limit) return(FALSE)
+    for (axis in seq_len(2L)) {
+      if (abs(delta[axis]) <= 1e-9) {
+        if (origin[axis] <= -half[axis] ||
+            origin[axis] >= half[axis]) return(FALSE)
       } else {
-        interval <- sort(c((edge - start) / delta,
-          (limit - start) / delta))
+        interval <- sort(c((-half[axis] - origin[axis]) / delta[axis],
+          (half[axis] - origin[axis]) / delta[axis]))
         lower <- max(lower, interval[1L])
         upper <- min(upper, interval[2L])
       }
@@ -84,7 +151,7 @@ audit_plot <- function(plot) {
   }
   leaders <- list()
   restriction <- exported$restriction
-  restriction <- restriction[restriction$restriction_component == "leader" &
+  restriction <- restriction[restriction$restriction_component %in% "leader" &
     is.finite(restriction$source_row), , drop = FALSE]
   if (nrow(restriction)) {
     key <- paste(restriction$layer_id, restriction$source_row)
@@ -100,11 +167,9 @@ audit_plot <- function(plot) {
       }
     }
   }
-  labels <- exported$labels
   if (nrow(labels) && all(c(".component", "xend", "yend") %in%
       names(labels))) {
-    segments <- labels[labels$.component == "segment" &
-      labels$annotation_side %in% "outer" &
+    segments <- labels[labels$.component %in% "segment" &
       is.finite(labels$source_row), , drop = FALSE]
     for (k in seq_len(nrow(segments))) {
       leaders[[length(leaders) + 1L]] <- data.frame(
@@ -115,10 +180,49 @@ audit_plot <- function(plot) {
       )
     }
   }
+  leaders <- Filter(function(segment) {
+    coordinates <- unlist(segment[c("x1", "y1", "x2", "y2")],
+      use.names = FALSE)
+    all(is.finite(coordinates)) &&
+      (segment$x2 - segment$x1)^2 +
+        (segment$y2 - segment$y1)^2 > 1e-16
+  }, leaders)
+  source_key <- function(segment) {
+    paste(segment$owner, segment$source_row, sep = "\r")
+  }
+  crosses <- function(first, second) {
+    rx <- first$x2 - first$x1
+    ry <- first$y2 - first$y1
+    sx <- second$x2 - second$x1
+    sy <- second$y2 - second$y1
+    denominator <- rx * sy - ry * sx
+    if (abs(denominator) <= 1e-12) return(FALSE)
+    dx <- second$x1 - first$x1
+    dy <- second$y1 - first$y1
+    t <- (dx * sy - dy * sx) / denominator
+    u <- (dx * ry - dy * rx) / denominator
+    # Shared endpoints and a route's own bend are not line crossings.
+    t > 1e-9 && t < 1 - 1e-9 && u > 1e-9 && u < 1 - 1e-9
+  }
+  crossing_pairs <- list()
+  if (length(leaders) > 1L) {
+    for (i in seq_len(length(leaders) - 1L)) {
+      first <- leaders[[i]]
+      for (j in seq.int(i + 1L, length(leaders))) {
+        second <- leaders[[j]]
+        if (identical(source_key(first), source_key(second)) ||
+            !crosses(first, second)) next
+        sources <- sort(c(source_key(first), source_key(second)))
+        key <- paste(sources, collapse = "\n")
+        crossing_pairs[[key]] <- paste(gsub("\r", " ", sources,
+          fixed = TRUE), collapse = " <-> ")
+      }
+    }
+  }
   leader_text_hits <- character()
   for (leader in leaders) {
-    for (k in seq_len(nrow(all_boxes))) {
-      box <- all_boxes[k, , drop = FALSE]
+    for (k in seq_len(nrow(text_boxes))) {
+      box <- text_boxes[k, , drop = FALSE]
       if (identical(as.character(leader$owner),
           as.character(box$owner)) &&
           identical(as.integer(leader$source_row),
@@ -129,10 +233,14 @@ audit_plot <- function(plot) {
       }
     }
   }
+  if (length(crossing_pairs)) print(unname(unlist(crossing_pairs)))
+  if (length(leader_text_hits)) {
+    print(unique(leader_text_hits))
+  }
   data.frame(
     sites = nrow(site_labels), outer_labels = nrow(boxes),
     bbox_overlaps = overlap,
-    leader_crossings = sum(boxes$leader_crossing_count, na.rm = TRUE) / 2,
+    leader_crossings = length(crossing_pairs),
     leader_text_hits = length(unique(leader_text_hits))
   )
 }
@@ -158,6 +266,7 @@ for (name in names(configurations)) {
   result <- audit_plot(plot)
   result$configuration <- name
   result$image <- destination
+  print(result, row.names = FALSE)
   stopifnot(result$sites == config$expected_sites,
     result$bbox_overlaps == 0L, result$leader_crossings == 0L,
     result$leader_text_hits == 0L)

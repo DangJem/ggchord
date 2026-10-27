@@ -219,13 +219,30 @@ ggchord_plasmid_feature_colours <- function() {
 
 #' Lighten a feature colour for an external callout
 #' @noRd
-ggchord_feature_callout_fill <- function(fill, amount = .78) {
+ggchord_feature_callout_fill <- function(fill, luminance = .56) {
   vapply(as.character(fill), function(value) {
     rgb <- tryCatch(
       grDevices::col2rgb(value, alpha = TRUE)[, 1L] / 255,
       error = function(e) c(184, 189, 195, 255) / 255
     )
-    mixed <- rgb[1:3] + (1 - rgb[1:3]) * amount
+    brightness <- function(colour) {
+      linear <- ifelse(colour <= .04045, colour / 12.92,
+        ((colour + .055) / 1.055)^2.4)
+      sum(linear * c(.2126, .7152, .0722))
+    }
+    # Preserve already light colours. Dark fills are mixed with just enough
+    # white for readable dark callout text; one large fixed blend washed out
+    # operators and reporter colours into nearly identical grey boxes.
+    low <- 0
+    high <- 1
+    if (brightness(rgb[1:3]) < luminance) {
+      for (i in seq_len(18L)) {
+        amount <- (low + high) / 2
+        mixed <- rgb[1:3] + (1 - rgb[1:3]) * amount
+        if (brightness(mixed) < luminance) low <- amount else high <- amount
+      }
+    } else high <- 0
+    mixed <- rgb[1:3] + (1 - rgb[1:3]) * high
     grDevices::rgb(mixed[1L], mixed[2L], mixed[3L], alpha = rgb[4L])
   }, character(1L), USE.NAMES = FALSE)
 }

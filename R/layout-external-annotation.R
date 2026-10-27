@@ -26,6 +26,15 @@ ggchord_open_circular_order <- function(angle, tie = seq_along(angle)) {
     else integer(), sorted[seq_len(cut)])
 }
 
+# The sparse contour uses the same measured word envelopes as the dense
+# solver. A clear label box alone does not make its connecting route clear.
+ggchord_external_route_hits_boxes <- function(routes, boxes) {
+  if (!nrow(routes) || !nrow(boxes)) return(FALSE)
+  segments <- data.frame(x0 = routes$x1, y0 = routes$y1,
+    x1 = routes$x2, y1 = routes$y2)
+  ggchord_inner_leader_hits(segments, boxes)
+}
+
 ggchord_external_place <- function(row, occupied, units_per_inch,
                                     base_edge_radius = NULL,
                                     class = "restriction",
@@ -90,6 +99,10 @@ ggchord_external_place <- function(row, occupied, units_per_inch,
     }
     box_collision <- nrow(occupied) &&
       any(ggchord_oriented_box_overlaps(box, occupied))
+    # Moving a word onto an existing route is a box collision: changing this
+    # word's own elbow cannot clear a line that was already placed.
+    box_collision <- box_collision ||
+      ggchord_external_route_hits_boxes(occupied_leaders, box)
     backbone_collision <- FALSE
     if (!is.null(base_edge_radius) && is.finite(base_edge_radius)) {
       nearest_x <- if (box$xmin[1L] > 0) box$xmin[1L] else if (
@@ -117,8 +130,10 @@ ggchord_external_place <- function(row, occupied, units_per_inch,
           candidate_leaders, occupied_leader_matrix
         )
       }
+      leader_collision <- leader_collision ||
+        ggchord_external_route_hits_boxes(candidate_leaders, occupied)
       if (!box_collision && leader_collision && nrow(candidate_leaders) &&
-          nrow(occupied_leaders)) {
+          (nrow(occupied_leaders) || nrow(occupied))) {
         # A label can have a collision-free bbox while its straight leader
         # cuts across a dense restriction fan. Search a single angular elbow
         # outside the backbone before rejecting that circular-track slot.
@@ -141,7 +156,8 @@ ggchord_external_place <- function(row, occupied, units_per_inch,
           sqrt(sum((p0 + parameter * delta)^2))
         }
         route_crosses <- function(route) {
-          ggchord_external_route_crosses(route, occupied_leader_matrix)
+          ggchord_external_route_crosses(route, occupied_leader_matrix) ||
+            ggchord_external_route_hits_boxes(route, occupied)
         }
         safe_radius <- max(0, min(root_radius,
           base_edge_radius %||% root_radius) - .004)
@@ -436,6 +452,18 @@ ggchord_shift_feature_callout <- function(geometry, row, candidate) {
       geometry$x1[segment_rows] <- geometry$xend[segment_rows]
       geometry$y1[segment_rows] <- geometry$yend[segment_rows]
     }
+    if ("x0" %in% names(geometry)) {
+      geometry$x0[segment_rows] <- geometry$x[segment_rows]
+      geometry$y0[segment_rows] <- geometry$y[segment_rows]
+    }
+    # These are newly solved routes. Clipped fragments from the local pass
+    # must not leave their old occlusion fade on a now clear exterior leader.
+    if ("occluded" %in% names(geometry)) {
+      geometry$occluded[segment_rows] <- FALSE
+    }
+    if ("alpha" %in% names(geometry)) {
+      geometry$alpha[segment_rows] <- geometry$alpha[row]
+    }
     geometry$outer_annotation_region[segment_rows] <-
       paste0(geometry$outer_annotation_region[row], "_leader")
     geometry$outer_track[segment_rows] <- candidate$band
@@ -593,6 +621,60 @@ ggchord_measure_external_leader_crossings <- function(registry) {
   registry
 }
 
+# An exterior feature label can leave its feature band without having received
+# a segment from the earlier local label pass. Give such a displaced label a
+# real leader before the shared perimeter solver runs, so its box and route
+# participate in the same collision decisions as restriction sites.
+ggchord_complete_external_leaders <- function(registry) {
+  for (id in names(registry)) {
+    geometry <- registry[[id]]$gene_label_repel
+    if (!is.data.frame(geometry) || !nrow(geometry) ||
+        !all(c(".component", "source_row", "label", "anchor_x", "anchor_y",
+          "text_x", "text_y", "feature_label_mode",
+          "xend", "yend") %in% names(geometry))) next
+    text_rows <- which(geometry$.component %in% "text" &
+      geometry$feature_label_mode %in% "external" &
+      !is.na(geometry$label) & nzchar(geometry$label) &
+      is.finite(geometry$source_row) &
+      is.finite(geometry$anchor_x) & is.finite(geometry$anchor_y) &
+      is.finite(geometry$text_x) & is.finite(geometry$text_y))
+    for (row in text_rows) {
+      linked <- which(geometry$.component %in% "segment" &
+        is.finite(geometry$source_row) &
+        geometry$source_row == geometry$source_row[row])
+      displacement <- sqrt(
+        (geometry$text_x[row] - geometry$anchor_x[row])^2 +
+        (geometry$text_y[row] - geometry$anchor_y[row])^2
+      )
+      if (length(linked) || displacement < .08) next
+      # The text row owns this source's group and attached input columns.
+      # Copying a different source's segment also copies its mapping values,
+      # group and any alpha/linetype left by that route's clipping pass.
+      extra <- geometry[row, , drop = FALSE]
+      extra$.component <- "segment"
+      extra$source_row <- geometry$source_row[row]
+      extra$x <- geometry$anchor_x[row]
+      extra$y <- geometry$anchor_y[row]
+      extra$xend <- geometry$text_x[row]
+      extra$yend <- geometry$text_y[row]
+      if ("x0" %in% names(extra)) extra$x0 <- extra$x
+      if ("y0" %in% names(extra)) extra$y0 <- extra$y
+      if ("x1" %in% names(extra)) extra$x1 <- extra$xend
+      if ("y1" %in% names(extra)) extra$y1 <- extra$yend
+      if ("occluded" %in% names(extra)) extra$occluded <- FALSE
+      if (".draw_as_arc" %in% names(extra)) extra$.draw_as_arc <- FALSE
+      if ("label" %in% names(extra)) extra$label <- NA_character_
+      if ("text" %in% names(extra)) extra$text <- NA_character_
+      if ("annotation_side" %in% names(extra)) {
+        extra$annotation_side <- "outer"
+      }
+      geometry <- rbind(geometry, extra)
+    }
+    registry[[id]]$gene_label_repel <- geometry
+  }
+  registry
+}
+
 # Resolve every exterior annotation against one measured occupancy table.
 # Restriction sites first establish circular anchor tracks. Feature and primer
 # callouts then use the same measured occupancy table and the same circular
@@ -608,6 +690,7 @@ ggchord_share_external_annotations <- function(registry, layout) {
       !is.na(sites$label) & nzchar(sites$label))
   }, integer(1L)))
   if (restriction_count >= 30L && length(layout$seq_arcs) == 1L) {
+    registry <- ggchord_complete_external_leaders(registry)
     dense_tasks <- ggchord_perimeter_tasks(registry, units_per_inch)
     sites <- dense_tasks[dense_tasks$kind == "restriction", ,
       drop = FALSE]
