@@ -1,3 +1,31 @@
+# ggchord 0.14.0 (development)
+
+* Added `coord_collinear()` for horizontal multi-sequence comparisons using
+  the existing sequence, gene, feature, region, ribbon and point-link layers.
+  All sequences share one bp scale. Sequence order, reversed orientation,
+  role-specific visual scales and focused input tables retain their meanings.
+  Position offsets become upward/downward distances; feature-stack lanes stay
+  separate from physical sequence rows. Axes and labels use linear strategies.
+  Gene/feature labels share obstacles across layers; `label_diagnostics`
+  records placement and hiding decisions. Labels moved off a feature use
+  readable dark text rather than retaining a light internal contrast colour.
+* In linear coordinates, `geom_seq(seq_gap = ...)` sets consecutive backbone
+  spacing as a proportion of the longest backbone width (default 0.3). Explicit
+  sequence radius, curvature, ring mappings/scales and sequence-label radius
+  now produce an actionable conflict when combined with `coord_collinear()`.
+  Remove those circular settings before switching coordinates. Circular-only
+  primer, restriction-site and centre-label layers require `coord_circular()`;
+  generic linear annotations use `geom_feature()` and its label layers.
+  The circular feature-label restriction `external = FALSE` also requires
+  removal or `coord_circular()` when switching to linear label rows.
+* Linear ribbon and point-link endpoints face their destination track and
+  inspect feature obstacles on that side. Default controls come from their
+  endpoints; explicit controls use linear layout units. Cross-track links may
+  cross intervening backbones. Layout exports identify the coordinate as
+  `"collinear"` and include `sequence_layout` with real backbone y, horizontal
+  ranges, orientation and units per bp, without circular radii or track IDs.
+  See `examples/collinear.R` for a runnable teaching example.
+
 # ggchord 0.13.1
 
 The v0.13.0 development work continues in v0.13.1; v0.13.0 was not published.

@@ -5,6 +5,9 @@ ggchord_empty_obstacles <- function() data.frame(accver = character(), start = n
   priority = numeric(), source_layer = character())
 
 ggchord_entity_obstacles <- function(layer, layout, input) {
+  if (isTRUE(layout$collinear)) {
+    return(ggchord_collinear_entity_obstacles(layer, layout, input))
+  }
   polys <- layout$gene_polys
   if (is.null(input) || !nrow(input) || !nrow(polys)) return(ggchord_empty_obstacles())
   refs <- layout$sequence_reference

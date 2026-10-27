@@ -104,6 +104,9 @@ ggchord_link_controls <- function(control, row, fallback) {
 }
 
 ggchord_link_geometry <- function(data, params, layout) {
+  if (isTRUE(layout$collinear)) {
+    return(ggchord_collinear_link_geometry(data, params, layout))
+  }
   if (is.null(data)) ggchord_stop("geom_link_line(): supply data with qaccver/saccver/qpos/spos")
   ggchord_require_columns(data, c("qaccver", "saccver", "qpos", "spos"), "geom_link_line()")
   ref <- layout$sequence_reference

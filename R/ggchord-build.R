@@ -113,8 +113,9 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
                                           "seq_radius", 1.0)
   orientation   <- process_sequence_param(seq_params$seq_orientation, seqs,
                                           "seq_orientation", 1)
+  collinear <- isTRUE(plot$coordinates$ggchord_collinear)
   seq_gap       <- process_sequence_param(seq_params$seq_gap, seqs,
-                                          "seq_gap", 0.03)
+                                          "seq_gap", if (collinear) 0.3 else 0.03)
   seq_curvature <- process_sequence_param(seq_params$seq_curvature, seqs,
                                           "seq_curvature", 1.0)
 
@@ -183,11 +184,15 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     ggchord_stop("seq_orientation can only be 1 or -1")
   }
   gap_limit <- if (isTRUE(plot$coordinates$ggchord_circular)) 1 else 0.5
-  if (!is.numeric(seq_gap) || any(!is.finite(seq_gap)) ||
-      any(seq_gap < 0 | seq_gap >= gap_limit)) {
+  invalid_gap <- !is.numeric(seq_gap) || any(!is.finite(seq_gap))
+  if (!invalid_gap) invalid_gap <- if (collinear) any(seq_gap <= 0) else
+    any(seq_gap < 0 | seq_gap >= gap_limit)
+  if (invalid_gap) {
     ggchord_stop(
       if (isTRUE(plot$coordinates$ggchord_circular)) {
         "coord_circular() gap must leave some drawable circumference"
+      } else if (collinear) {
+        "coord_collinear(): seq_gap must contain finite positive track spacings"
       } else "seq_gap must be in the [0, 0.5) range"
     )
   }
@@ -215,7 +220,8 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   ribbon_alpha    <- ribbon_params$ribbon_alpha %||% 0.42
   ribbon_alpha_by <- ribbon_params$ribbon_alpha_by
   ribbon_alpha_range <- ribbon_params$ribbon_alpha_range %||% c(0.15, 0.9)
-  ribbon_ctrl_pt  <- ribbon_params$ribbon_ctrl_point %||% c(0, 0)
+  ribbon_ctrl_pt  <- if (collinear) ribbon_params$ribbon_ctrl_point else
+    ribbon_params$ribbon_ctrl_point %||% c(0, 0)
   ribbon_outline_by   <- ribbon_params$ribbon_outline_by
   ribbon_outline_colors <- ribbon_params$ribbon_outline_colors
   ribbon_linetype_by  <- ribbon_params$ribbon_linetype_by
@@ -712,15 +718,22 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     )
     for (id in seqs) {
       sc <- position_scale$clone()
-      sc$train(c(0, lens[[id]]))
+      if (collinear) {
+        domain <- suppressWarnings(sc$transform(c(0, 1, lens[[id]])))
+        sc$train(domain[is.finite(domain)])
+      } else sc$train(c(0, lens[[id]]))
       br <- sc$get_breaks()
-      br <- br[is.finite(br) & br >= 0 & br <= lens[[id]]]
-      axis_breaks[[id]] <- br
+      break_labels <- if (collinear) sc$get_labels(br) else NULL
+      raw_br <- if (collinear) sc$get_transformation()$inverse(br) else br
+      keep <- is.finite(raw_br) & raw_br >= 0 & raw_br <= lens[[id]]
+      br <- br[keep]
+      axis_breaks[[id]] <- raw_br[keep]
       minor <- sc$get_breaks_minor()
+      if (collinear) minor <- sc$get_transformation()$inverse(minor)
       axis_minor_breaks[[id]] <- minor[
         is.finite(minor) & minor >= 0 & minor <= lens[[id]]
       ]
-      axis_labels[[id]] <- sc$get_labels(br)
+      axis_labels[[id]] <- if (collinear) break_labels[keep] else sc$get_labels(br)
     }
   }
 
@@ -753,7 +766,9 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     )
     seq_label_orientation <- seq_label_params$seq_label_orientation %||% "arc"
     seq_label_hjust <- if (is.null(seq_label_params$seq_label_hjust)) {
-      if (identical(seq_label_orientation, "arc")) {
+      if (collinear) {
+        process_sequence_param(1, seqs, "seq_label_hjust", 1)
+      } else if (identical(seq_label_orientation, "arc")) {
         process_sequence_param(-0.2, seqs, "seq_label_hjust", -0.2)
       } else {
         NULL
@@ -807,7 +822,8 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     global$rotation
   }
 
-  layout <- compute_chord_layout(
+  layout_strategy <- if (collinear) compute_collinear_layout else compute_chord_layout
+  layout <- layout_strategy(
     seqs = seqs, lens = lens, seq_labels = seq_labels,
     seq_colors = seq_colors, seqRadius = seqRadius,
     seq_curvature = seq_curvature, orientation = orientation,
@@ -898,7 +914,12 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   layout$seq_ring_radius <- if (is.null(seq_ring)) NULL else seqRadius
   layout$ribbon_stat_data <- ribbon_stat_data
   layout$ribbon_stat_report <- ribbon_stat_report
-  layout$backbone_bounds <- data.frame(
+  layout$backbone_bounds <- if (collinear) data.frame(
+    accver = seqs, center = unname(layout$sequence_reference$y[seqs]),
+    lower = unname(layout$sequence_reference$y[seqs]) - seqBackboneOuter,
+    upper = unname(layout$sequence_reference$y[seqs]) + seqBackboneOuter,
+    stringsAsFactors = FALSE
+  ) else data.frame(
     accver = names(seqRadius), center = as.numeric(seqRadius),
     inner = as.numeric(seqRadius) - seqBackboneOuter,
     outer = as.numeric(seqRadius) + seqBackboneOuter,
@@ -944,6 +965,7 @@ ggchord_layout_component <- function(layout, type, fallback = data.frame()) {
 #' Compute a plot-owned, per-layer geometry registry
 #' @noRd
 compute_chord_geometry <- function(plot) {
+  ggchord_validate_coord_contract(plot)
   chord <- plot$ggchord
   if (is.null(chord)) {
     ggchord_stop("Not a valid ggchord object: no data stored on the plot")
@@ -1143,6 +1165,11 @@ compute_chord_geometry <- function(plot) {
     registry <- resolved_annotations$layer_geometry
     primary$circular_annotation_registry <-
       resolved_annotations$annotation_registry
+  } else if (isTRUE(primary$collinear)) {
+    registry <- ggchord_collinear_share_labels(registry, primary)
+    primary$collinear_label_diagnostics <-
+      attr(registry, "collinear_label_diagnostics")
+    attr(registry, "collinear_label_diagnostics") <- NULL
   } else {
     registry <- ggchord_share_external_annotations(registry, primary)
   }
@@ -1171,6 +1198,19 @@ compute_chord_geometry <- function(plot) {
   repel_labels <- collect("gene_text_repel")
   fixed_labels <- collect("gene_text")
   callout_labels <- collect("gene_label_repel")
+  if (isTRUE(primary$collinear)) {
+    primary$gene_labels <- data.frame()
+    segments <- list(collect("gene_label_segment"))
+    if (nrow(callout_labels) && ".component" %in% names(callout_labels)) {
+      segments[[2L]] <- callout_labels[
+        callout_labels$.component %in% "segment", , drop = FALSE
+      ]
+    }
+    segments <- Filter(function(d) nrow(d) > 0L, segments)
+    primary$gene_label_segments <- if (length(segments)) {
+      ggchord_rbind_fill(segments)
+    } else data.frame()
+  }
   if (nrow(callout_labels) && ".component" %in% names(callout_labels)) {
     callout_labels <- callout_labels[
       callout_labels$.component %in% "text", , drop = FALSE
@@ -1214,7 +1254,9 @@ compute_chord_geometry <- function(plot) {
   }
   primary$extremes <- get_plot_extremes(
     allRibbon = ggchord_rbind_fill(Filter(Negate(is.null), list(
-      primary$ribbon_polys, primary$link_lines, primary$restriction_sites
+      primary$ribbon_polys, primary$link_lines, primary$restriction_sites,
+      if (isTRUE(primary$collinear) && nrow(primary$region_polys)) primary$region_polys,
+      if (isTRUE(primary$collinear) && nrow(collect("seq"))) collect("seq")
     ))),
     seqArcs = primary$seq_arcs,
     axisLines = primary$axis_lines,

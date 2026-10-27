@@ -2,7 +2,7 @@
 % Please edit documentation in R/position-feature-stack.R
 \name{position_feature_stack}
 \alias{position_feature_stack}
-\title{Stack overlapping genes or features on radial tracks}
+\title{Stack overlapping genes or features on local lanes}
 \usage{
 position_feature_stack(
   spacing = 0.1,
@@ -33,4 +33,6 @@ length. Every interval takes the nearest collision-free lane; feature type,
 name and colour never choose a lane.
 The resulting anchors are shared with gene label layers because stacking is
 solved before polygons and labels are generated.
+In [coord_collinear()], these local lanes become parallel horizontal bands;
+they do not represent circular physical tracks or radii.
 }

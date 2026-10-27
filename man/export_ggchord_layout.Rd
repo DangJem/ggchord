@@ -30,6 +30,11 @@ An object of class \code{ggchord_layout_export}. Selected component
   count, slot, bounding box and leader corridor. The \code{metadata} member
   records rotation, aspect ratio, limits, coordinate units and
   transformation state.
+  Collinear layouts instead include `sequence_layout`, containing each
+  sequence's horizontal range, backbone y, orientation and units per bp.
+  Position lanes remain local offsets and are not circular physical tracks.
+  Their `label_diagnostics` records placed or hidden labels after shared
+  linear collision handling, including source layer, row and reason.
 }
 \description{
 Builds a ggchord plot and returns selected computed geometry in a stable,

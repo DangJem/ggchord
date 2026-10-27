@@ -31,7 +31,10 @@ geom_seq(
 
 \item{seq_orientation}{Optional numeric (1 or -1). Sequence orientation, default 1}
 
-\item{seq_gap}{Optional numeric. Gap proportion between sequences, default 0.03}
+\item{seq_gap}{Optional numeric. Gap proportion between sequences, default
+0.03 in chord coordinates. In [coord_collinear()], a positive distance
+between consecutive backbones as a proportion of the longest backbone's
+width, default 0.3. The final sequence's gap is unused in linear layouts.}
 
 \item{seq_radius}{Optional numeric (> 0). Sequence arc radius, default 1.0}
 

@@ -15,6 +15,8 @@ PositionGgchordFeature <- ggplot2::ggproto(
 #' offsets point inward.  A scalar is expanded to `+ = offset` and
 #' `- = -offset`; explicitly strand-named values are already signed and are
 #' not flipped again.
+#' In [coord_collinear()], the positive local normal points upward and the
+#' negative local normal downward, regardless of sequence orientation.
 #'
 #' @param offset A finite scalar or a flexible per-sequence/per-strand
 #'   specification.

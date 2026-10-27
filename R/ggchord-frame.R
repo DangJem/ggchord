@@ -40,6 +40,15 @@ set_ggchord_coord <- function(plot, layout) {
     resolved$circular_gap <- coord$circular_gap
     resolved$circular_direction <- coord$circular_direction
   }
+  if (isTRUE(coord$ggchord_collinear)) {
+    resolved <- new_ggchord_coord(
+      CoordCollinear, rotation = 0, ratio = coord$ratio %||% 1,
+      xlim = xlim, ylim = ylim, expand = coord$expand %||% FALSE,
+      clip = coord$clip %||% "off", fit = coord$fit %||% "labels",
+      user_xlim = coord$user_xlim, user_ylim = coord$user_ylim
+    )
+    resolved$ggchord_collinear <- TRUE
+  }
   plot$coordinates <- resolved
   plot
 }

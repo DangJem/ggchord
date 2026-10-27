@@ -23,6 +23,11 @@
 #'   count, slot, bounding box and leader corridor. The \code{metadata} member
 #'   records rotation, aspect ratio, limits, coordinate units and
 #'   transformation state.
+#'   Collinear layouts instead include `sequence_layout`, containing each
+#'   sequence's horizontal range, backbone y, orientation and units per bp.
+#'   Position lanes remain local offsets and are not circular physical tracks.
+#'   Their `label_diagnostics` records placed or hidden labels after shared
+#'   linear collision handling, including source layer, row and reason.
 #' @export
 #'
 #' @examples
@@ -156,7 +161,9 @@ export_ggchord_layout <- function(
   }
 
   coord <- plot$coordinates
-  fitted <- ggchord_adaptive_limits(layout)
+  fitted <- if (isTRUE(layout$collinear) && identical(coord$fit, "geometry")) {
+    ggchord_geometry_limits(layout)
+  } else ggchord_adaptive_limits(layout)
   metadata <- list(
     coordinate_space = "ggchord_layout",
     units = "data",
@@ -177,6 +184,12 @@ export_ggchord_layout <- function(
     exported$annotation_registry <-
       layout$circular_annotation_registry %||%
       ggchord_empty_circular_annotation_registry()
+  } else if (isTRUE(coord$ggchord_collinear)) {
+    metadata$coordinate <- "collinear"
+    metadata$genomic_scale <- "linear"
+    metadata$normal_direction <- "positive_up"
+    exported$sequence_layout <- layout$sequence_layout
+    exported$label_diagnostics <- layout$collinear_label_diagnostics %||% data.frame()
   } else {
     metadata$coordinate <- "chord"
   }

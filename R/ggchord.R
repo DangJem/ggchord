@@ -232,6 +232,7 @@ ggchord <- function(
   } else {
     p <- NextMethod()
   }
+  ggchord_validate_coord_contract(p)
   # Invalidate the plot-owned layout after adding any component.
   if (!is.null(e1$ggchord$ref)) e1$ggchord$ref$layout <- NULL
   attr(p$theme, "ggchord.settings") <- new_settings %||% old_settings
