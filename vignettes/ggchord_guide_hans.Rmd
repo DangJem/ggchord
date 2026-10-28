@@ -612,13 +612,15 @@ linear_plot
 
 线性 ribbon 默认只连接相邻的显示序列。上例的 A/C 记录仍保留在输入中，绘图时
 省略，导出的 `connection_report` 会记录这一决定。跨非相邻序列的 ribbon
-可显式启用，并可能穿过中间骨架。所有坐标下的 ribbon 默认外框均为虚线；固定
-样式、映射和用户 scale 仍优先。
+可显式启用，并可能穿过中间骨架。ribbon 默认在相邻显示序列之间使用实线边框，
+非相邻序列之间使用虚线边框。邻接按最终显示顺序判断：线性坐标为相邻行，弦图中
+首尾序列也相邻。显式线型、映射和用户 scale 仍优先。
 
 ```{r v014-ribbon-options, eval=FALSE}
-geom_link_ribbon(adjacent_only = FALSE)  # 保留非相邻序列比较
+geom_link_ribbon(adjacent_only = FALSE)  # 非相邻连接使用虚线边框
 geom_link_ribbon(pairs = data.frame(qaccver = "A", saccver = "C"))
-geom_link_ribbon(adjacent_only = FALSE, linetype = "solid")  # 恢复原默认选择
+geom_link_ribbon(linetype = "solid")  # 强制所有保留连接使用实线边框
+geom_link_ribbon(adjacent_only = FALSE, linetype = "solid")  # 全部比较，统一实线
 ```
 
 focus 保持为显式数据准备，保留来源区间和截断端，并同步处理复合 feature 的

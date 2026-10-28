@@ -16,7 +16,7 @@ geom_link_ribbon(
   alpha = 0.42,
   colour = "#59636D",
   linewidth = 0.08,
-  linetype = "dashed",
+  linetype = NULL,
   adjacent_only = NULL,
   pairs = NULL,
   position = "identity",
@@ -57,9 +57,16 @@ avoidance uses one clearance across an endpoint.}
 \item{fill}{Optional fixed ribbon fill. `NULL` keeps the default Identity
 mapping.}
 
-\item{alpha, colour, linewidth, linetype}{Standard fixed ribbon styles.
-The default outline is dashed; use `linetype = "solid"` for the former
-appearance.}
+\item{alpha, colour, linewidth}{Standard fixed ribbon styles.}
+
+\item{linetype}{Fixed outline line type. The default `NULL` uses solid
+outlines for adjacent displayed sequences and dashed outlines for
+non-adjacent sequences. Chord adjacency includes the first/last pair.
+This follows the final display order, independently of alignment direction.
+Explicit fixed styles or `aes(ribbon_linetype = ...)` (also
+`aes(linetype = ...)`) replace the automatic styles. Use a matching scale
+for data mappings; automatic styles do not train a linetype scale.
+Global line-type mappings are used when `inherit.aes = TRUE`.}
 
 \item{adjacent_only}{Whether only neighbouring sequences are connected.
 `NULL` uses TRUE in [coord_collinear()] and FALSE in [coord_chord()].
@@ -95,7 +102,7 @@ p
 
 # Cross-track connections remain available explicitly in linear layouts.
 ggchord(seq_data_example, ribbon_data_example) + geom_seq() +
-  geom_link_ribbon(adjacent_only = FALSE, linetype = "solid") +
+  geom_link_ribbon(adjacent_only = FALSE) +
   coord_collinear()
 ggchord(seq_data_example, ribbon_data_example) + geom_seq() +
   geom_link_ribbon(pairs = data.frame(

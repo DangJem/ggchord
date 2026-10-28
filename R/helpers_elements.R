@@ -150,6 +150,7 @@ key_glyph_ribbon <- function(data, params, size) {
   data$fill <- data$ribbon_fill %||% data$fill
   data$colour <- data$ribbon_colour %||% data$colour
   data$alpha <- data$ribbon_alpha %||% data$alpha
+  data$linetype <- data$ribbon_linetype %||% data$linetype
   if (is.null(data$fill)) return(ggplot2::zeroGrob())
   ggplot2::draw_key_polygon(data, params, size)
 }

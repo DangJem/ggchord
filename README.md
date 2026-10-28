@@ -8,7 +8,9 @@
 >
 > v0.14.0 adds linear comparisons with
 > `coord_collinear(anchor = ..., orientation = "auto")` using ordinary `+`
-> composition, adjacent ribbons by default, and optional Bioconductor inputs.
+> composition and optional Bioconductor inputs. Linear ribbons connect adjacent
+> displayed sequences by default. Adjacent outlines are solid; retained
+> non-adjacent outlines are dashed, unless explicitly styled.
 > See the runnable [linear workflow](examples/collinear-workflow.R),
 > [interval-input example](examples/bioc-inputs.R), and [version changes](NEWS.md).
 

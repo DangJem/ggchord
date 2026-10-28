@@ -246,8 +246,11 @@ ggchord <- function(
     p <- NextMethod()
   }
   ggchord_validate_coord_contract(p)
-  # Invalidate the plot-owned layout after adding any component.
-  if (!is.null(e1$ggchord$ref)) e1$ggchord$ref$layout <- NULL
+  # ggplot2 copies plot metadata, but environments remain shared references.
+  # A new composition owns a new lazy cache; invalidating e1's environment
+  # would clear the base plot and let sibling plots reuse each other's layout.
+  p$ggchord$ref <- new.env(parent = emptyenv())
+  p$ggchord$layout <- NULL
   attr(p$theme, "ggchord.settings") <- new_settings %||% old_settings
   class(p) <- unique(c("ggchord", class(p)))
   p

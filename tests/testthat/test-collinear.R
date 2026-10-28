@@ -40,3 +40,27 @@ test_that("collinear labels preserve feature stacking and their own text", {
   expect_equal(lapply(unique(text[placement]), unname),
     lapply(unique(after$feature[placement]), unname))
 })
+
+test_that("ribbon outline defaults follow display adjacency without changing mapped layers", {
+  seq <- data.frame(accver = LETTERS[1:4], length = 1000)
+  ribbon <- data.frame(qaccver = "A", saccver = c("B", "C", "D"),
+    qstart = 100, qend = 200, sstart = c(400, 300, 600),
+    send = c(300, 400, 500), kind = c("a", "b", "c"))
+  base <- ggchord(seq, ribbon, validate = "none") + geom_seq()
+  styles <- function(data) {
+    value <- if ("ribbon_linetype" %in% names(data)) {
+      data$ribbon_linetype
+    } else data$linetype
+    unname(vapply(split(as.character(value), data$group), unique, character(1L)))
+  }
+  linear <- ggplot2::ggplot_build(base +
+    geom_link_ribbon(adjacent_only = FALSE) + coord_collinear())
+  expect_equal(styles(linear$data[[2L]]), c("solid", "dashed", "dashed"))
+  mapped <- ggplot2::ggplot_build(base + aes(linetype = "chosen") +
+    geom_link_ribbon(adjacent_only = FALSE) +
+    geom_link_ribbon(adjacent_only = FALSE, inherit.aes = TRUE) +
+    ggplot2::scale_linetype_manual(values = c(chosen = "dotdash")) +
+    coord_collinear())
+  expect_equal(styles(mapped$data[[2L]]), c("solid", "dashed", "dashed"))
+  expect_equal(styles(mapped$data[[3L]]), rep("dotdash", 3L))
+})

@@ -51,9 +51,15 @@ make_ribbon_geom <- function(outline = FALSE, linetype = FALSE) {
 #' @inheritParams geom_link_line
 #' @param fill Optional fixed ribbon fill. `NULL` keeps the default Identity
 #'   mapping.
-#' @param alpha,colour,linewidth,linetype Standard fixed ribbon styles.
-#'   The default outline is dashed; use `linetype = "solid"` for the former
-#'   appearance.
+#' @param alpha,colour,linewidth Standard fixed ribbon styles.
+#' @param linetype Fixed outline line type. The default `NULL` uses solid
+#'   outlines for adjacent displayed sequences and dashed outlines for
+#'   non-adjacent sequences. Chord adjacency includes the first/last pair.
+#'   This follows the final display order, independently of alignment direction.
+#'   Explicit fixed styles or `aes(ribbon_linetype = ...)` (also
+#'   `aes(linetype = ...)`) replace the automatic styles. Use a matching scale
+#'   for data mappings; automatic styles do not train a linetype scale.
+#'   Global line-type mappings are used when `inherit.aes = TRUE`.
 #' @param adjacent_only Whether only neighbouring sequences are connected.
 #'   `NULL` uses TRUE in [coord_collinear()] and FALSE in [coord_chord()].
 #'   Set FALSE to retain cross-track ribbons. Chord neighbours include the
@@ -78,7 +84,7 @@ make_ribbon_geom <- function(outline = FALSE, linetype = FALSE) {
 #'
 #' # Cross-track connections remain available explicitly in linear layouts.
 #' ggchord(seq_data_example, ribbon_data_example) + geom_seq() +
-#'   geom_link_ribbon(adjacent_only = FALSE, linetype = "solid") +
+#'   geom_link_ribbon(adjacent_only = FALSE) +
 #'   coord_collinear()
 #' ggchord(seq_data_example, ribbon_data_example) + geom_seq() +
 #'   geom_link_ribbon(pairs = data.frame(
@@ -94,7 +100,7 @@ geom_link_ribbon <- function(mapping = NULL, data = NULL,
                         alpha = 0.42,
                         colour = "#59636D",
                         linewidth = 0.08,
-                        linetype = "dashed",
+                        linetype = NULL,
                         adjacent_only = NULL,
                         pairs = NULL,
                         position = "identity",
@@ -145,6 +151,12 @@ geom_link_ribbon <- function(mapping = NULL, data = NULL,
   dots <- alias$dots
   outline_mapped <- !is.null(mapping) && "ribbon_colour" %in% names(mapping)
   linetype_mapped <- !is.null(mapping) && "ribbon_linetype" %in% names(mapping)
+  plain_linetype_mapped <- !is.null(mapping) && "linetype" %in% names(mapping)
+  if (linetype_mapped && plain_linetype_mapped) ggchord_stop(
+    "geom_link_ribbon(): map only one of linetype and ribbon_linetype"
+  )
+  automatic_linetype <- is.null(linetype) &&
+    !linetype_mapped && !plain_linetype_mapped
 
   empty_polys <- data.frame(
     x = numeric(0), y = numeric(0),
@@ -162,11 +174,18 @@ geom_link_ribbon <- function(mapping = NULL, data = NULL,
   if (is.null(fill)) mapping_base[["ribbon_fill"]] <- as.name("pident")
   if (isTRUE(outline_mapped)) mapping_base[["ribbon_colour"]] <- as.name("outline_col")
   if (isTRUE(linetype_mapped)) mapping_base[["ribbon_linetype"]] <- as.name("linetype_val")
+  if (automatic_linetype) {
+    # A per-ribbon geom default must not add categories to another layer's
+    # mapped scale. Explicit mappings replace this ordinary AsIs aesthetic.
+    mapping_base[["linetype"]] <- ggplot2::aes(linetype = I(linetype_val))[["linetype"]]
+  }
 
   fixed <- list(linewidth = linewidth)
   if (!is.null(fill)) fixed$ribbon_fill <- fill
   if (!outline_mapped) fixed$colour <- colour
-  if (!linetype_mapped) fixed$linetype <- linetype
+  if (!linetype_mapped && !plain_linetype_mapped && !is.null(linetype)) {
+    fixed$linetype <- linetype
+  }
 
   lyr <- ggplot2::layer(
     data        = empty_polys,
@@ -221,4 +240,36 @@ geom_link_ribbon <- function(mapping = NULL, data = NULL,
       "sstart", "send")
   )
   lyr
+}
+
+# Plot mappings are not available when a layer is constructed. For an
+# explicitly inheriting ribbon, resolve its line type before binding data so
+# the automatic AsIs default does not mask an inherited ggplot2 mapping.
+ggchord_inherit_ribbon_linetype <- function(layer, mapping) {
+  if (!identical(layer$ggchord_type, "ribbon") ||
+      !isTRUE(layer$inherit.aes) ||
+      !is.null(layer$ggchord_params$ribbon_outline_linetype) ||
+      any(c("linetype", "ribbon_linetype") %in%
+        names(layer$ggchord_input_mapping))) return(layer)
+  inherited <- intersect(c("linetype", "ribbon_linetype"), names(mapping))
+  if (!length(inherited)) return(layer)
+  if (length(inherited) > 1L) ggchord_stop(
+    "geom_link_ribbon(): map only one of linetype and ribbon_linetype"
+  )
+  # Clone the layer so preparing a plot never stores an inherited mapping on
+  # the original reusable layer or a later plot with another global mapping.
+  layer <- reconstruct_layer(layer, layer$data)
+  layer$mapping$linetype <- NULL
+  input_mapping <- layer$ggchord_input_mapping %||% ggplot2::aes()
+  input_mapping[[inherited]] <- mapping[[inherited]]
+  layer$ggchord_input_mapping <- input_mapping
+  if (identical(inherited, "ribbon_linetype")) {
+    draw_key <- layer$geom$draw_key
+    layer$geom <- make_ribbon_geom(
+      outline = "ribbon_colour" %in% names(layer$geom$default_aes),
+      linetype = TRUE
+    )
+    layer$geom$draw_key <- draw_key
+  }
+  layer
 }

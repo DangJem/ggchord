@@ -43,6 +43,7 @@ ggchord_select_ribbons <- function(data, seqs, params, collinear = FALSE) {
     stringsAsFactors = FALSE)
   out <- data[keep, , drop = FALSE]
   out$.ggchord_source_row <- which(keep)
+  out$.ggchord_adjacent <- adjacent[keep]
   list(data = out, report = report)
 }
 

@@ -237,7 +237,7 @@ ggchord_resolve_layer_input <- function(lyr, fallback = NULL) {
   mapping <- lyr$ggchord_input_mapping
   roles <- intersect(lyr$ggchord_role_aes %||% character(0), names(mapping))
   for (role in roles) {
-    expr <- rlang::quo_get_expr(mapping[[role]])
+    expr <- rlang::get_expr(mapping[[role]])
     contains_stage <- function(x) {
       if (!is.call(x)) return(FALSE)
       if (identical(as.character(x[[1L]]), "after_stat") ||
@@ -263,7 +263,7 @@ ggchord_resolve_layer_input <- function(lyr, fallback = NULL) {
     data[[role]] <- value
   }
   for (nm in setdiff(names(mapping), roles)) {
-    expr <- rlang::quo_get_expr(mapping[[nm]])
+    expr <- rlang::get_expr(mapping[[nm]])
     text <- rlang::as_label(expr)
     if (!grepl("after_stat|after_scale", text)) {
       columns <- intersect(all.vars(expr), c("pident", "length", "anno", "type", "label"))
@@ -416,13 +416,18 @@ ggchord_axis_geometry <- function(layout) {
 #' @noRd
 ggchord_axis_layer <- function(layout) {
   data <- ggchord_axis_geometry(layout)
+  mapping <- ggplot2::aes(
+    x = x, y = y, xend = xend, yend = yend, label = label,
+    group = group, size = I(size), angle = angle,
+    hjust = hjust, vjust = vjust, .component = I(.component)
+  )
+  # A line-only axis has no tick endpoints or text columns. Let the geom's
+  # existing defaults supply unused aesthetics rather than evaluating absent
+  # columns when breaks or labels were explicitly disabled.
+  mapping <- mapping[names(mapping) %in% names(data)]
   lyr <- ggplot2::layer(
     data = data,
-    mapping = ggplot2::aes(
-      x = x, y = y, xend = xend, yend = yend, label = label,
-      group = group, size = I(size), angle = angle,
-      hjust = hjust, vjust = vjust, .component = I(.component)
-    ),
+    mapping = mapping,
     stat = "identity", geom = GeomChordAxis, position = "identity",
     show.legend = FALSE, inherit.aes = FALSE, check.aes = FALSE,
     check.param = FALSE,

@@ -188,6 +188,8 @@ ggchord_adaptive_limits <- function(layout) {
 prepare_ggchord_plot <- function(plot) {
   plot$scales$scales <- Filter(function(s) is.null(s$ggchord_managed),
                                plot$scales$scales)
+  plot$layers <- lapply(plot$layers, ggchord_inherit_ribbon_linetype,
+    mapping = plot$mapping)
   layout <- compute_chord_geometry(plot)
   cls <- classify_ggchord_layers(plot)
   new_layers <- plot$layers

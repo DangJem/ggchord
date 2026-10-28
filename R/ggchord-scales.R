@@ -225,7 +225,7 @@ ggchord_mapping_info <- function(plot, aesthetic) {
   for (lyr in plot$layers) {
     mapping <- lyr$ggchord_input_mapping
     if (is.null(mapping) || !aesthetic %in% names(mapping)) next
-    expr <- rlang::quo_get_expr(mapping[[aesthetic]])
+    expr <- rlang::get_expr(mapping[[aesthetic]])
     label <- rlang::as_label(expr)
     staged <- grepl("after_stat\\s*\\(", label)
     value <- if (staged) NULL else tryCatch(

@@ -8,7 +8,8 @@
 >
 > v0.14.0 增加直线共线性比较，使用普通 `+` 组合与
 > `coord_collinear(anchor = ..., orientation = "auto")` 配置锚定和方向，
-> 默认绘制相邻序列 ribbon，并支持可选 Bioconductor 输入。可运行示例见
+> 支持可选 Bioconductor 输入。线性 ribbon 默认仅连接相邻显示序列；相邻连接
+> 默认实线边框，保留的非相邻连接默认虚线边框，显式样式优先。可运行示例见
 > [直线比较工作流](examples/collinear-workflow.R)、[区间对象输入](examples/bioc-inputs.R)
 > 和[版本变更](NEWS.md)。
 

@@ -32,6 +32,8 @@
   See `examples/collinear.R` for a runnable teaching example.
 * Linear position scales now respect `breaks = NULL`, `minor_breaks = NULL`
   and `labels = NULL`, allowing ticks or their text to be explicitly hidden.
+  Axes also render correctly with all ticks or tick labels disabled, retaining
+  the axis line without evaluating absent component columns.
 * Private text measurement now uses a Unicode-capable graphics backend for
   non-ASCII annotations such as `lacZα`, avoiding conversion errors from
   single-byte base PDF encodings. Requests known to contain only ASCII retain
@@ -42,6 +44,9 @@
 * Fixed two-line circular centre labels disappearing outside the plot on
   devices with a reversed native y axis, including SVG and some screen/PDF
   devices. The sequence name and length retain their intended order and spacing.
+* Plots derived from a shared base now own independent layout caches. Layout
+  exports retain each plot's ribbon rows without first rendering it, while
+  adding a sibling plot preserves the base plot's existing cached layout.
 
 
 * Added coordinate-owned display alignment: `coord_collinear(align = ...)`
@@ -57,8 +62,12 @@
   `pairs = data.frame(qaccver = ..., saccver = ...)` selects explicit unordered
   comparisons. The exported `connection_report` identifies each retained or
   omitted source row and its reason. Chord coordinates retain all comparisons
-  by default. Ribbon outlines are now dashed in every coordinate system;
-  explicit fixed styles, mappings and user scales retain precedence.
+  by default. Ribbon outlines are solid for adjacent displayed sequences and
+  dashed for non-adjacent sequences. Adjacency follows the final display order;
+  chord neighbours also include the first/last pair. Explicit fixed styles
+  and data mappings with their user scales retain precedence. Ribbon line-type
+  mappings also respect `inherit.aes = TRUE`, including valid constant mappings,
+  without changing an automatic or differently mapped ribbon layer.
 * Fixed narrow linear channels whose default ribbon or point-link endpoints
   could extend past the opposite backbone. Automatic baseline gaps now fit
   the available channel; an impossible fixed gap or feature clearance produces
@@ -105,7 +114,8 @@
 | Previous intent | Explicit current form |
 | --- | --- |
 | Include non-adjacent linear ribbons | `geom_link_ribbon(adjacent_only = FALSE)` |
-| Use the former solid ribbon outline | `geom_link_ribbon(linetype = "solid")` |
+| Force solid outlines for every ribbon | `geom_link_ribbon(linetype = "solid")` |
+| Force dashed outlines for every ribbon | `geom_link_ribbon(linetype = "dashed")` |
 | Restore both former ribbon choices | `geom_link_ribbon(adjacent_only = FALSE, linetype = "solid")` |
 | Display original genomic axis labels after focus | `scale_seq_position_continuous(coordinates = "source")` |
 | Align or orient linear sequences | Add `coord_collinear(anchor = ..., align = "center", orientation = "auto")`; remove explicit `seq_orientation` when using automatic direction |

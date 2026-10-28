@@ -18,7 +18,14 @@ stopifnot(setequal(unique(default$ribbon$source_row), c(1L, 3L)),
   identical(default$connection_report$retained, c(TRUE, FALSE, TRUE)),
   default$connection_report$reason[2L] == "non_adjacent")
 drawn <- ggplot2::ggplot_build(default_plot)$data[[2L]]
-stopifnot(all(drawn$linetype == "dashed"))
+stopifnot(all(drawn$linetype == "solid"))
+automatic_all <- base + geom_link_ribbon(adjacent_only = FALSE) +
+  coord_collinear()
+automatic_lines <- unique(export_ggchord_layout(automatic_all)$ribbon[
+  c("source_row", "linetype_val")])
+stopifnot(identical(as.character(automatic_lines$linetype_val[
+  match(seq_len(nrow(links)), automatic_lines$source_row)]),
+  c("solid", "dashed", "solid")))
 all_plot <- base + geom_link_ribbon(adjacent_only = FALSE,
   linetype = "solid") + coord_collinear()
 all_links <- export_ggchord_layout(all_plot)

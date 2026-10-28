@@ -157,7 +157,7 @@ ggchord_collinear_ribbons <- function(p, layout) {
       linetype_map[as.character(input[[p$ribbon_linetype_by]][i])]
     } else if (identical(p$ribbon_direction, "linetype")) {
       p$ribbon_direction_linetypes[biological_direction]
-    } else "solid"
+    } else if (isTRUE(input$.ggchord_adjacent[i])) "solid" else "dashed"
     out <- data.frame(x = xy[, 1L], y = xy[, 2L], group = j,
       source_row = input$.ggchord_source_row[i] %||% i,
       alpha = unname(opacity), outline_col = unname(outline),

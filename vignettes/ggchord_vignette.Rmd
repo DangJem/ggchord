@@ -650,14 +650,17 @@ switching coordinates.
 Linear ribbons connect adjacent displayed sequences by default. The A/C
 record above remains in the input but is omitted from drawing; the exported
 `connection_report` records that decision. Non-adjacent ribbons remain an
-explicit option and may cross intervening backbones. Ribbon outlines are
-dashed in all coordinate systems. Fixed styles, mapped aesthetics and user
-scales retain precedence.
+explicit option and may cross intervening backbones. Default ribbon outlines
+are solid between adjacent displayed sequences and dashed between non-adjacent
+sequences. Adjacency follows the final display order: neighbouring rows in a
+linear plot, with the first and last sequences also adjacent in a chord plot.
+Fixed line types, mapped aesthetics and user scales retain precedence.
 
 ```{r v014-ribbon-options, eval=FALSE}
-geom_link_ribbon(adjacent_only = FALSE)  # retain non-adjacent comparisons
+geom_link_ribbon(adjacent_only = FALSE)  # non-adjacent outlines are dashed
 geom_link_ribbon(pairs = data.frame(qaccver = "A", saccver = "C"))
-geom_link_ribbon(adjacent_only = FALSE, linetype = "solid")  # former defaults
+geom_link_ribbon(linetype = "solid")  # force all retained outlines to solid
+geom_link_ribbon(adjacent_only = FALSE, linetype = "solid")  # all comparisons, solid
 ```
 
 Focus remains explicit data preparation. It retains source intervals and
