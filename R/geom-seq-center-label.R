@@ -219,10 +219,15 @@ GeomSeqCenterLabel <- ggplot2::ggproto(
       shifts <- c((heights[2L] + gap) / 2,
         -(heights[1L] + gap) / 2)
       for (i in seq_along(grobs)) {
-        centre <- (grid::grobY(grobs[[i]], 90) +
-          grid::grobY(grobs[[i]], 270)) / 2
-        offset <- grid::convertHeight(centre - grobs[[i]]$y,
+        # grobY() is a location, not a height. Convert each location before
+        # subtracting: device-native y axes may run in the opposite direction,
+        # so convertHeight(grobY(...) - y) can add a whole device height.
+        bounds <- vapply(c(90, 270), function(angle) grid::convertY(
+          grid::grobY(grobs[[i]], angle), "inches", valueOnly = TRUE
+        ), numeric(1L))
+        anchor <- grid::convertY(grobs[[i]]$y,
           "inches", valueOnly = TRUE)
+        offset <- mean(bounds) - anchor
         grobs[[i]]$y <- grobs[[i]]$y +
           grid::unit(shifts[i] - offset, "inches")
       }
