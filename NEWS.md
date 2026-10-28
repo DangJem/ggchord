@@ -33,6 +33,77 @@
 * Linear position scales now respect `breaks = NULL`, `minor_breaks = NULL`
   and `labels = NULL`, allowing ticks or their text to be explicitly hidden.
 
+
+* Added coordinate-owned display alignment: `coord_collinear(align = ...)`
+  supports left, centre and right alignment, while `anchor` aligns explicitly
+  selected positions or intervals. `orientation = "auto"` uses directional
+  interval-link support, controlled by `min_support`. It preserves sequence
+  order and exports support, conflicting evidence and unresolved cases; it is
+  a display heuristic rather than a biological strand inference. Explicit
+  `geom_seq(seq_orientation = ...)` conflicts with automatic orientation.
+  These settings compose with the usual `+` grammar; no `sync()` step is needed.
+* Linear ribbons now connect adjacent displayed sequences by default.
+  `geom_link_ribbon(adjacent_only = FALSE)` retains non-adjacent ribbons, and
+  `pairs = data.frame(qaccver = ..., saccver = ...)` selects explicit unordered
+  comparisons. The exported `connection_report` identifies each retained or
+  omitted source row and its reason. Chord coordinates retain all comparisons
+  by default. Ribbon outlines are now dashed in every coordinate system;
+  explicit fixed styles, mappings and user scales retain precedence.
+* Fixed narrow linear channels whose default ribbon or point-link endpoints
+  could extend past the opposite backbone. Automatic baseline gaps now fit
+  the available channel; an impossible fixed gap or feature clearance produces
+  an actionable spacing error. Duplicate IDs in `seq_order` are rejected while
+  sequence subsets remain supported.
+* `focus_ggchord_data()` now clips and relocates composite feature segments,
+  derived runs and cleavage-arrow positions consistently, including repeated
+  focus operations. Source coordinates and truncated ends are retained for
+  sequences, features and links. Clipped alignment endpoints remain a linear
+  display projection; estimated lengths and retained source identity values
+  are marked rather than represented as a newly computed alignment.
+* Linear short arrows now compress their heads inside the true interval
+  instead of applying the circular minimum display width. Truncated heads are
+  suppressed at the cropped genomic end, and exports identify display bounds,
+  deliberate symbol extensions and truncation. Circular arrow rendering keeps
+  its existing geometry.
+* Added `geom_seq_break()` for cropped linear sequence ends and
+  `scale_seq_position_continuous(coordinates = "source")` for original genomic
+  axis coordinates after focus. `map_ggchord_position()` converts relative or
+  source bp to layout x/y, and layout x back to bp, for ordinary ggplot2
+  annotations. Linear layout exports retain the corresponding reversible
+  translation, orientation, bp scale and source origin.
+* Linear label inheritance now matches unique `feature_id` values, allowing
+  filtered or reordered label tables to retain their source feature's lane.
+  Conflicting IDs/intervals are diagnosed; explicit label Positions remain
+  independent. Multiple matching entity layers require an explicit label
+  Position or unambiguous IDs. Labels that fit inside a feature are considered
+  before wrapping text for adjacent positions. Shared placement checks leaders
+  against other text, features, backbones and leaders, with unresolved routes recorded as hidden labels in
+  `label_diagnostics` rather than drawn through occupied geometry.
+* Added `as_ggchord_seq()`, `as_ggchord_feature()` and `as_ggchord_link()` for
+  ordinary tables and optional Bioconductor inputs, addressing GitHub issue #2.
+  Supported `Seqinfo`, `GRanges` and `GInteractions` objects can also be supplied
+  directly to the appropriate constructor/layer input. Conversion retains
+  metadata, source rows and query/subject identities, uses known full sequence
+  lengths, and does not invent identity scores or biological direction for
+  unknown-strand intervals. Unknown strands use neutral feature geometry;
+  directed gene arrows require explicit known strand information. Optional
+  packages are loaded only for their supplied objects. Conversion provenance
+  is available in exported `conversion_reports`. See `examples/bioc-inputs.R`.
+
+### Migration from earlier defaults and v0.14.0 development snapshots
+
+| Previous intent | Explicit current form |
+| --- | --- |
+| Include non-adjacent linear ribbons | `geom_link_ribbon(adjacent_only = FALSE)` |
+| Use the former solid ribbon outline | `geom_link_ribbon(linetype = "solid")` |
+| Restore both former ribbon choices | `geom_link_ribbon(adjacent_only = FALSE, linetype = "solid")` |
+| Display original genomic axis labels after focus | `scale_seq_position_continuous(coordinates = "source")` |
+| Align or orient linear sequences | Add `coord_collinear(anchor = ..., align = "center", orientation = "auto")`; remove explicit `seq_orientation` when using automatic direction |
+
+These are explicit defaults and new opt-in controls; no legacy entry point is
+being deprecated or scheduled for removal in this change. The development
+version is not yet formally released.
+
 # ggchord 0.13.1
 
 The v0.13.0 development work continues in v0.13.1; v0.13.0 was not published.

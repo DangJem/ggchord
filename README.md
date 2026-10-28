@@ -2,9 +2,15 @@
 
 # ggchord: Layered Multi-Sequence Chord Diagrams for ggplot2
 
-> Development v0.11.0: this README and its figures describe earlier APIs.
+> This README and its figures describe earlier APIs.
 > Use the current [tutorial source](vignettes/ggchord_vignette.Rmd) and
 > [migration table](NEWS.md#breaking-api-cleanup). The full rewrite is planned for v1.0.0.
+>
+> The unreleased v0.14.0 branch adds linear comparisons with
+> `coord_collinear(anchor = ..., orientation = "auto")` using ordinary `+`
+> composition, adjacent ribbons by default, and optional Bioconductor inputs.
+> See the runnable [linear workflow](examples/collinear-workflow.R),
+> [interval-input example](examples/bioc-inputs.R), and [development changes](NEWS.md).
 
 ## Overview
 
