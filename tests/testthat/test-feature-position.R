@@ -71,7 +71,7 @@ test_that("flexible sequence and strand Position specifications survive", {
 test_that("plasmid Position shares one band without changing strand", {
   plasmid <- feature_position_export("plasmid")
   expect_equal(unique(plasmid$normal_offset), -.1)
-  expect_equal(sort(unique(plasmid$strand)), c("-", "+"))
+  expect_setequal(unique(plasmid$strand), c("-", "+"))
 
   x <- -.15
   shortcut <- feature_position_export(position_plasmid(x))

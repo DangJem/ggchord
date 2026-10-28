@@ -225,7 +225,7 @@ ggchord_hide_text_overlaps <- function(df, content_pts,
   if (nrow(content_pts) == 0) {
     content_pts <- data.frame(x = numeric(0), y = numeric(0))
   }
-  close_device <- ggchord_measurement_device()
+  close_device <- ggchord_measurement_device(text = df$label[idx])
   on.exit(close_device())
   sizes <- df$size[idx] %||% rep(3, length(idx))
   w <- suppressWarnings(graphics::strwidth(df$label[idx], units = "inches",

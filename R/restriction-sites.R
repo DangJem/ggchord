@@ -1240,7 +1240,7 @@ ggchord_restriction_text_metrics <- function(text, size, units_per_inch,
   width <- height <- numeric(n)
   valid <- !is.na(text) & nzchar(text)
   if (!any(valid)) return(data.frame(width = width, height = height))
-  close_device <- ggchord_measurement_device()
+  close_device <- ggchord_measurement_device(text = text[valid])
   on.exit(close_device())
   for (i in which(valid)) {
     label <- if (isTRUE(parse)) tryCatch(parse(text = text[i])[[1L]],

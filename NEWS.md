@@ -32,6 +32,13 @@
   See `examples/collinear.R` for a runnable teaching example.
 * Linear position scales now respect `breaks = NULL`, `minor_breaks = NULL`
   and `labels = NULL`, allowing ticks or their text to be explicitly hidden.
+* Private text measurement now uses a Unicode-capable graphics backend for
+  non-ASCII annotations such as `lacZα`, avoiding conversion errors from
+  single-byte base PDF encodings. Requests known to contain only ASCII retain
+  their existing measurement path. Preview title and legend measurement also
+  prefers the Unicode backend when available, which may slightly change font
+  metrics. Cleanup restores the caller's device after nested measurements and
+  is safe to call more than once.
 
 
 * Added coordinate-owned display alignment: `coord_collinear(align = ...)`
