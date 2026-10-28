@@ -31,11 +31,18 @@ and alignments; `"drop"` keeps only rows fully contained in selected loci.}
 }
 \value{
 A list of focused `seq_data`, `ribbon_data`, `gene_data`, normalized
-  `loci`, and a compact `report`.
+  `loci`, and a compact `report` including retained/dropped source rows and
+  truncated output rows. `.source_origin` is the original genomic position
+  corresponding to local position one, including after repeated focusing.
 }
 \description{
 Crops sequence, gene and ribbon tables together and relocates retained
 coordinates to start at one in each output locus. Multiple loci from the
 same source sequence are supported; provide a unique `locus_id` column to
 control their output sequence IDs.
+Segmented annotations, cleavage positions and cached feature runs are
+cropped and relocated together. Source intervals, source origins and
+genomic left/right truncation flags are retained on the returned tables.
+Alignment cropping is a linear display projection, not a new alignment:
+identity is retained, and a scaled alignment length is marked as estimated.
 }
