@@ -68,7 +68,10 @@ label_metrics <- function(layout, expected) {
 }
 base_plot <- function() ggchord(seq_data_example, ribbon_data_example,
   gene_data_example, validate = "none") + geom_seq() + geom_link_ribbon() + geom_gene()
-pdf_device <- if (isTRUE(capabilities("aqua"))) {
+# The known feature fixtures contain Unicode. Other matrix fixtures are ASCII
+# and use standard PDF: Quartz PDF can invert raster colour bars on some R/macOS
+# builds, including native ggplot2 colour bars. Do not reverse scales to hide it.
+pdf_device <- if (mode != "feature") grDevices::pdf else if (isTRUE(capabilities("aqua"))) {
   function(filename, width, height, ...) {
     grDevices::quartz(type = "pdf", file = filename,
       width = width, height = height, ...)
@@ -199,8 +202,9 @@ if (mode == "genome") {
     p <- ggchord(sequences, ribbons, genes, validate = "none") +
       geom_seq(seq_radius = c(2.5, 1.8), seq_curvature = c(curvature, 1),
         seq_orientation = c(1, -1), seq_gap = c(0.04, 0.08)) +
-      geom_gene(gene_offset = 0.15) +
-      geom_feature(aes(feature_shape = type), data = features, feature_offset = -0.15) +
+      geom_gene(position = position_strand(0.15)) +
+      geom_feature(aes(feature_shape = type), data = features,
+        position = position_strand(-0.15)) +
       scale_feature_shape_manual(values = setNames(unique(features$type), unique(features$type))) +
       geom_seq_region(data = features[1, ], region_side = "outside") +
       geom_link_ribbon() +

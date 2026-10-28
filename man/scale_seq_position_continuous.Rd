@@ -25,18 +25,18 @@ scale_seq_position_continuous(
 continuous-scale controls.}
 
 \item{coordinates}{In linear layouts, use relative locus coordinates or
-original source coordinates retained by [focus_ggchord_data()]. This
+original source coordinates retained by \code{\link[=focus_ggchord_data]{focus_ggchord_data()}}. This
 affects axis breaks and labels, not the underlying genomic geometry.}
 
-\item{...}{Additional arguments passed to [ggplot2::continuous_scale()].}
+\item{...}{Additional arguments passed to \code{\link[ggplot2:continuous_scale]{ggplot2::continuous_scale()}}.}
 }
 \value{
-A ggplot2 continuous scale for the `seq_position` role.
+A ggplot2 continuous scale for the \code{seq_position} role.
 }
 \description{
 Controls major/minor genomic position breaks and labels independently for
-every sequence. The scale is trained against each sequence's `[0, length]`
-range during chord layout.
+every sequence. The default domain is each sequence's \verb{[0, length]} range;
+linear source-coordinate axes use the retained original genomic interval.
 }
 \examples{
 focused <- focus_ggchord_data(data.frame(accver = "A", length = 1000),

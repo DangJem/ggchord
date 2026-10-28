@@ -30,11 +30,12 @@ data(gene_data_example)
 ```
 
 本教程完整介绍 `ggchord` 的工作流程：准备输入数据、在 R 中导入文件、
-校验与清理数据，以及逐层构建图形。本文对应 **v0.11.0**。
+校验与清理数据，以及逐层构建图形。基础内容与图片保留早期版本的说明，
+后文的 v0.13、v0.14 章节介绍新增契约与工作流程。
 
-> 代码示例已迁移至 v0.11.0；图片保留旧版示意，不代表当前默认外观。
+> 图片保留旧版示意，不代表当前默认外观。
 > 坐标轴现在自动显示，使用 `theme_ggchord(axis = element_blank())` 隐藏。
-> 完整说明与图片重构将在正式版发布后单独进行。
+> 完整说明与图片重构安排在 v1.0.0。
 
 ## 1. 前期数据准备
 
@@ -376,7 +377,7 @@ knitr::include_graphics("../man/figures/combined_fine.png")
 
 ## 6. 灵活的参数格式
 
-序列级参数（`seq_radius`、`seq_gap`、`seq_curvature` 等）支持**单值、无名向量、按序列 ID 命名的向量/列表、按序列顺序命名的列表（`"1"`、`"2"`...）或无名列表**。固定位置图层 `geom_gene_label()` 的基因级参数（`gene_label_rotation`、`gene_offset` 等）还额外支持按链方向（`+`/`-`）指定；自动布局 `geom_gene_label_repel()` 会自行管理旋转与偏移。以下写法适用于固定标签：
+序列级参数（`seq_radius`、`seq_gap`、`seq_curvature` 等）支持**单值、无名向量、按序列 ID 命名的向量/列表、按序列顺序命名的列表（`"1"`、`"2"`...）或无名列表**。固定位置图层 `geom_gene_label()` 的基因级参数（`gene_label_rotation` 等）还额外支持按链方向（`+`/`-`）指定；自动布局 `geom_gene_label_repel()` 会自行管理旋转与偏移。feature 偏移使用 `position_strand()` 或 `position_feature_stack()`，旧 `gene_offset` 参数已弃用。以下写法适用于固定标签：
 
 ```{r flexible-formats, eval=FALSE}
 # 1. 全部使用同一个值
@@ -574,6 +575,85 @@ p <- ggchord(s) + geom_seq() +
 invisible(export_ggchord_layout(p, include = "link"))
 ```
 
+## v0.14 直线共线性比较
+
+添加 `coord_collinear()` 后，序列使用共享 bp 比例的水平骨架。对齐与自动显示方向
+由坐标系配置，并通过普通 `+` 组合，不需要额外的 `sync()` 步骤。自动方向需要
+显式启用，按较早显示序列的区间连接证据选择方向，保持序列顺序不变。平票或证据
+不足时保留初始方向；可检查 `orientation_diagnostics`，不能把显示启发式当作
+生物学链方向推断。
+
+```{r v014-linear}
+linear_seqs <- data.frame(accver = c("A", "B", "C"),
+  length = c(1000, 800, 1200))
+linear_links <- data.frame(
+  qaccver = c("A", "A", "B"), saccver = c("B", "C", "C"),
+  qstart = c(100, 100, 200), qend = c(300, 300, 400),
+  sstart = c(400, 100, 500), send = c(200, 300, 300))
+linear_features <- data.frame(
+  feature_id = c("a", "b", "c"), accver = c("A", "B", "C"),
+  start = c(100, 200, 300), end = c(300, 400, 500),
+  strand = c("+", "-", "+"), type = "CDS",
+  label = c("target A", "target B", "target C"))
+linear_plot <- ggchord(linear_seqs, linear_links) +
+  geom_link_ribbon(alpha = .25) + geom_seq() + geom_seq_label() +
+  geom_feature(data = linear_features, position = position_strand(.12)) +
+  geom_feature_label_repel(data = linear_features, label_side = "auto") +
+  coord_collinear(anchor = linear_features[c("accver", "start", "end")],
+    align = "center", orientation = "auto", min_support = .1)
+linear_plot
+```
+
+每条显示序列都需要一个明确锚点，也可以用按 `accver` 命名的数值向量提供位置。
+不指定 `anchor` 时，`align` 对齐整条序列的左端、中心或右端。启用自动方向时，
+需移除显式的 `geom_seq(seq_orientation = ...)`。`seq_gap` 在线性坐标中表示
+相邻骨架间距占最长骨架宽度的比例；切换坐标前应移除圆图专用半径、曲率和 ring
+设置。
+
+线性 ribbon 默认只连接相邻的显示序列。上例的 A/C 记录仍保留在输入中，绘图时
+省略，导出的 `connection_report` 会记录这一决定。跨非相邻序列的 ribbon
+可显式启用，并可能穿过中间骨架。所有坐标下的 ribbon 默认外框均为虚线；固定
+样式、映射和用户 scale 仍优先。
+
+```{r v014-ribbon-options, eval=FALSE}
+geom_link_ribbon(adjacent_only = FALSE)  # 保留非相邻序列比较
+geom_link_ribbon(pairs = data.frame(qaccver = "A", saccver = "C"))
+geom_link_ribbon(adjacent_only = FALSE, linetype = "solid")  # 恢复原默认选择
+```
+
+focus 保持为显式数据准备，保留来源区间和截断端，并同步处理复合 feature 的
+segments。可显示原始坐标刻度和截断装饰，不必改写局部绘图坐标：
+
+```{r v014-source-axis}
+linear_focus <- focus_ggchord_data(linear_seqs,
+  ribbon_data = linear_links, gene_data = linear_features,
+  loci = data.frame(accver = c("A", "B", "C"),
+    start = c(50, 150, 250), end = c(600, 650, 900)))
+focused_plot <- ggchord(linear_focus$seq_data, linear_focus$ribbon_data,
+  linear_focus$gene_data) + geom_link_ribbon(alpha = .25) +
+  geom_seq() + geom_seq_break() + geom_seq_label() +
+  geom_gene(position = position_strand(.12)) +
+  scale_seq_position_continuous(coordinates = "source") +
+  coord_collinear(orientation = "auto")
+linear_mark <- map_ggchord_position(focused_plot, "A", 400, source = TRUE)
+focused_plot + geom_point(data = linear_mark, aes(x, y),
+  inherit.aes = FALSE, colour = "#CC6677", size = 2)
+map_ggchord_position(focused_plot, "A", linear_mark$x,
+  inverse = TRUE, source = TRUE)
+```
+
+唯一的 `feature_id` 允许筛选或重排后的标签表继承源 feature 的堆叠 lane；显式
+标签 Position 仍独立计算。布局导出包含可逆的 `sequence_layout` 变换，以及
+标签放置、隐藏和原因诊断。
+
+`as_ggchord_seq()`、`as_ggchord_feature()` 和 `as_ggchord_link()` 可以把普通表
+及受支持的可选 `Seqinfo`、`GRanges`、`GInteractions` 对象转换为标准 ggchord
+表；合适的构造器或图层也可直接接收这些对象。序列全长必须已知或显式提供，
+不能用 feature 末端推测。转换保留 query/subject anchor 顺序和 metadata，
+未知链与 interaction 区间不产生虚构方向、相似度或比对长度。未知链使用中性的
+`geom_feature()`，仅在提供相应对象时才需要安装 Bioconductor 包。可运行示例见
+[区间对象输入](https://github.com/DangJem/ggchord/blob/v0.14.0/examples/bioc-inputs.R)。
+
 ## 保存含 Unicode 标签的 PDF
 
 基本 `pdf()` 设备在字体编码无法表示希腊字母等字符时可能将其替换。请选择
@@ -589,3 +669,20 @@ ggplot2::ggsave("plot.pdf", p, device = quartz_pdf, width = 8, height = 7)
 
 在已安装 Cairo 且系统库可以加载的平台上，也可使用可正常工作的
 `grDevices::cairo_pdf` 设备。
+
+本次发布验收所用的 macOS Quartz 构建会将 raster 连续色条上下翻转，原生
+ggplot2 图也能复现。对于连续 `ribbon_fill` 图例，下列矩形色条写法已验证能够
+在 Quartz PDF 中同时保留正确的颜色/数值方向和原始 Unicode 文字：
+
+```{r unicode-pdf-colourbar, eval=FALSE}
+pdf_plot <- p + ggplot2::guides(
+  ribbon_fill = guide_ggchord_colourbar(display = "rectangles")
+)
+ggplot2::ggsave("plot.pdf", pdf_plot,
+  device = quartz_pdf, width = 8, height = 7)
+```
+
+应针对图中实际使用的连续 aesthetic 设置 guide；原生 ggplot2 填充使用
+`fill = ggplot2::guide_colourbar(display = "rectangles")`。请检查导出的色条，
+不要通过反转数据 scale 来补偿设备问题。同一验收环境中的 PNG、SVG 和 base
+PDF 未出现这种翻转；base PDF 仍需合适字体才能保留 Unicode 文字。

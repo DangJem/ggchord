@@ -379,9 +379,11 @@ ggchord_linear_line_hits <- function(a, b, x, y) {
   dx <- diff(x); dy <- diff(y); r <- b - a
   denominator <- r[1] * dy - r[2] * dx
   valid <- abs(denominator) > 1e-12
-  t <- ((head(x, -1L) - a[1]) * dy - (head(y, -1L) - a[2]) * dx) /
+  t <- ((utils::head(x, -1L) - a[1]) * dy -
+    (utils::head(y, -1L) - a[2]) * dx) /
     ifelse(valid, denominator, 1)
-  u <- ((head(x, -1L) - a[1]) * r[2] - (head(y, -1L) - a[2]) * r[1]) /
+  u <- ((utils::head(x, -1L) - a[1]) * r[2] -
+    (utils::head(y, -1L) - a[2]) * r[1]) /
     ifelse(valid, denominator, 1)
   any(valid & t > 1e-7 & t < 1 - 1e-7 & u >= 0 & u <= 1)
 }

@@ -7,11 +7,11 @@
 map_ggchord_position(plot, accver, position, inverse = FALSE, source = FALSE)
 }
 \arguments{
-\item{plot}{A ggchord plot using [coord_collinear()].}
+\item{plot}{A ggchord plot using \code{\link[=coord_collinear]{coord_collinear()}}.}
 
 \item{accver}{Sequence identifiers, scalar or one per position.}
 
-\item{position}{Numeric genomic positions, or layout x when `inverse = TRUE`.}
+\item{position}{Numeric genomic positions, or layout x when \code{inverse = TRUE}.}
 
 \item{inverse}{Convert layout x back to bp.}
 

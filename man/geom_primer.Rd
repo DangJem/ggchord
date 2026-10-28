@@ -32,7 +32,7 @@ backbone centre line; \code{"outside"} and \code{"inside"} use \code{arc_offset}
 
 \item{position, show.legend, inherit.aes}{Standard layer arguments.}
 
-\item{...}{Additional parameters passed to [geom_feature()].}
+\item{...}{Additional parameters passed to \code{\link[=geom_feature]{geom_feature()}}.}
 }
 \value{
 A ggplot2 layer.
@@ -40,7 +40,7 @@ A ggplot2 layer.
 \description{
 Primers are slender directional arcs drawn between the two lines of a
 double sequence backbone by default, not arrows in the feature stack. Add
-[geom_primer_label_repel()] for the matching unboxed label and leader.
+\code{\link[=geom_primer_label_repel]{geom_primer_label_repel()}} for the matching unboxed label and leader.
 }
 \examples{
 primer <- data.frame(

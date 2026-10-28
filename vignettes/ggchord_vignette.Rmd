@@ -31,9 +31,11 @@ data(gene_data_example)
 
 This tutorial walks through the complete `ggchord` workflow: preparing input
 data, importing files in R, validating and cleaning data, and building plots
-layer by layer. Code examples target **v0.11.0**. Figures are retained from earlier versions
-and illustrate the concepts, not the current default appearance. The full
-documentation and figure redesign will follow in a separate post-release update.
+layer by layer. Introductory material and figures are retained from earlier
+versions; the v0.13 and v0.14 sections below describe the added contracts and
+workflows. Older figures illustrate the concepts rather than the current
+default appearance. The full documentation and figure redesign is planned for
+v1.0.0.
 
 ## 1. Data preparation
 
@@ -391,10 +393,11 @@ Sequence-level parameters (`seq_radius`, `seq_gap`, `seq_curvature`, ...)
 accept **a single value, an unnamed vector, a vector/list named by sequence ID,
 a list named by sequence order (`"1"`, `"2"`, ...), or an unnamed list**.
 Gene-level parameters of the fixed-position `geom_gene_label()` layer
-(`gene_label_rotation`, `gene_offset`, ...) additionally accept per-strand
+(`gene_label_rotation`, ...) additionally accept per-strand
 (`+`/`-`) values. The automatic `geom_gene_label_repel()` modes intentionally
 manage their own rotation and offsets. All of the following are valid for
-fixed labels:
+fixed labels. Use `position_strand()` or `position_feature_stack()` for feature
+offsets; the legacy `gene_offset` argument is deprecated:
 
 ```{r flexible-formats, eval=FALSE}
 # 1. One value for everything
@@ -605,6 +608,97 @@ p <- ggchord(s) + geom_seq() +
 invisible(export_ggchord_layout(p, include = "link"))
 ```
 
+## v0.14 linear comparisons
+
+Add `coord_collinear()` to use horizontal backbones with a shared bp scale.
+Alignment and automatic display direction are coordinate settings composed
+with `+`; a separate `sync()` step is unnecessary. Automatic direction is
+opt-in and uses interval-link support against earlier displayed sequences.
+It preserves sequence order, and ties or weak evidence retain the initial
+direction. Inspect `orientation_diagnostics` rather than treating this display
+heuristic as a biological strand assignment.
+
+```{r v014-linear}
+linear_seqs <- data.frame(accver = c("A", "B", "C"),
+  length = c(1000, 800, 1200))
+linear_links <- data.frame(
+  qaccver = c("A", "A", "B"), saccver = c("B", "C", "C"),
+  qstart = c(100, 100, 200), qend = c(300, 300, 400),
+  sstart = c(400, 100, 500), send = c(200, 300, 300))
+linear_features <- data.frame(
+  feature_id = c("a", "b", "c"), accver = c("A", "B", "C"),
+  start = c(100, 200, 300), end = c(300, 400, 500),
+  strand = c("+", "-", "+"), type = "CDS",
+  label = c("target A", "target B", "target C"))
+linear_plot <- ggchord(linear_seqs, linear_links) +
+  geom_link_ribbon(alpha = .25) + geom_seq() + geom_seq_label() +
+  geom_feature(data = linear_features, position = position_strand(.12)) +
+  geom_feature_label_repel(data = linear_features, label_side = "auto") +
+  coord_collinear(anchor = linear_features[c("accver", "start", "end")],
+    align = "center", orientation = "auto", min_support = .1)
+linear_plot
+```
+
+Every displayed sequence needs one explicit anchor. Positions can also be
+supplied as a numeric vector named by `accver`. Without `anchor`, `align`
+selects the left edge, centre or right edge of the complete sequence. Remove
+explicit `geom_seq(seq_orientation = ...)` when using automatic direction.
+`seq_gap` becomes consecutive row spacing as a proportion of the longest
+backbone width; remove circular radius, curvature and ring settings before
+switching coordinates.
+
+Linear ribbons connect adjacent displayed sequences by default. The A/C
+record above remains in the input but is omitted from drawing; the exported
+`connection_report` records that decision. Non-adjacent ribbons remain an
+explicit option and may cross intervening backbones. Ribbon outlines are
+dashed in all coordinate systems. Fixed styles, mapped aesthetics and user
+scales retain precedence.
+
+```{r v014-ribbon-options, eval=FALSE}
+geom_link_ribbon(adjacent_only = FALSE)  # retain non-adjacent comparisons
+geom_link_ribbon(pairs = data.frame(qaccver = "A", saccver = "C"))
+geom_link_ribbon(adjacent_only = FALSE, linetype = "solid")  # former defaults
+```
+
+Focus remains explicit data preparation. It retains source intervals and
+truncated ends, including composite feature segments. Use source-coordinate
+axis labels and endpoint marks without changing the plotted local geometry:
+
+```{r v014-source-axis}
+linear_focus <- focus_ggchord_data(linear_seqs,
+  ribbon_data = linear_links, gene_data = linear_features,
+  loci = data.frame(accver = c("A", "B", "C"),
+    start = c(50, 150, 250), end = c(600, 650, 900)))
+focused_plot <- ggchord(linear_focus$seq_data, linear_focus$ribbon_data,
+  linear_focus$gene_data) + geom_link_ribbon(alpha = .25) +
+  geom_seq() + geom_seq_break() + geom_seq_label() +
+  geom_gene(position = position_strand(.12)) +
+  scale_seq_position_continuous(coordinates = "source") +
+  coord_collinear(orientation = "auto")
+linear_mark <- map_ggchord_position(focused_plot, "A", 400, source = TRUE)
+focused_plot + geom_point(data = linear_mark, aes(x, y),
+  inherit.aes = FALSE, colour = "#CC6677", size = 2)
+map_ggchord_position(focused_plot, "A", linear_mark$x,
+  inverse = TRUE, source = TRUE)
+```
+
+Unique `feature_id` values let a filtered or reordered label table inherit
+its source feature's stack lane. An explicit label Position remains
+independent. Layout exports include reversible `sequence_layout` transforms
+and label placement/hiding diagnostics.
+
+`as_ggchord_seq()`, `as_ggchord_feature()` and `as_ggchord_link()` convert
+ordinary tables and supported optional `Seqinfo`, `GRanges` or
+`GInteractions` objects into standard ggchord tables. Supported objects also
+work directly in the appropriate constructor or layer. Full sequence lengths
+must be known or supplied explicitly; feature endpoints do not establish the
+sequence length. Query/subject anchor order and metadata are retained, and
+unknown strand or interaction intervals do not invent biological direction,
+identity scores or alignment lengths. Use neutral `geom_feature()` geometry
+for unknown strands. Bioconductor packages are needed only for their supplied
+objects. See the runnable
+[interval-input example](https://github.com/DangJem/ggchord/blob/v0.14.0/examples/bioc-inputs.R).
+
 ## Saving PDF files with Unicode labels
 
 The base `pdf()` device can replace characters such as Greek letters when its
@@ -621,3 +715,23 @@ ggplot2::ggsave("plot.pdf", p, device = quartz_pdf, width = 8, height = 7)
 
 A working `grDevices::cairo_pdf` device is another option where Cairo is
 installed and its system libraries can be loaded.
+
+In the macOS Quartz build used for release acceptance, raster colour bars
+were vertically inverted, including in a native ggplot2 plot. For a continuous
+`ribbon_fill` legend, the following rectangle-based guide preserved both the
+colour/value direction and the original Unicode text in the saved Quartz PDF:
+
+```{r unicode-pdf-colourbar, eval=FALSE}
+pdf_plot <- p + ggplot2::guides(
+  ribbon_fill = guide_ggchord_colourbar(display = "rectangles")
+)
+ggplot2::ggsave("plot.pdf", pdf_plot,
+  device = quartz_pdf, width = 8, height = 7)
+```
+
+Apply this guide to the actual continuous aesthetic in your plot; native
+ggplot2 fill scales use `fill = ggplot2::guide_colourbar(display = "rectangles")`.
+Inspect the exported colour bar instead of reversing the data scale to
+compensate for a device issue. PNG, SVG and base PDF did not show this inversion
+in the same acceptance environment; base PDF still requires suitable fonts
+for Unicode text.

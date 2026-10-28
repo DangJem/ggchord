@@ -6,11 +6,11 @@
 > [汉语教程源码](vignettes/ggchord_guide_hans.Rmd)和 [迁移表](NEWS.md#breaking-api-cleanup)。
 > 完整重写安排在 v1.0.0。
 >
-> 尚未发布的 v0.14.0 分支增加直线共线性比较，使用普通 `+` 组合与
+> v0.14.0 增加直线共线性比较，使用普通 `+` 组合与
 > `coord_collinear(anchor = ..., orientation = "auto")` 配置锚定和方向，
 > 默认绘制相邻序列 ribbon，并支持可选 Bioconductor 输入。可运行示例见
 > [直线比较工作流](examples/collinear-workflow.R)、[区间对象输入](examples/bioc-inputs.R)
-> 和[开发版变更](NEWS.md)。
+> 和[版本变更](NEWS.md)。
 
 ## 概述
 

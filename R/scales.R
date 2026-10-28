@@ -306,8 +306,8 @@ scale_region_fill_manual <- function(..., values) {
 #' Genomic sequence position scale
 #'
 #' Controls major/minor genomic position breaks and labels independently for
-#' every sequence. The scale is trained against each sequence's `[0, length]`
-#' range during chord layout.
+#' every sequence. The default domain is each sequence's `[0, length]` range;
+#' linear source-coordinate axes use the retained original genomic interval.
 #'
 #' @param name Scale name; position guides are disabled by default.
 #' @param breaks,minor_breaks,labels,limits,expand,oob,transform,n.breaks Standard
@@ -317,6 +317,7 @@ scale_region_fill_manual <- function(..., values) {
 #'   original source coordinates retained by [focus_ggchord_data()]. This
 #'   affects axis breaks and labels, not the underlying genomic geometry.
 #' @return A ggplot2 continuous scale for the `seq_position` role.
+#' @md
 #' @export
 #' @examples
 #' focused <- focus_ggchord_data(data.frame(accver = "A", length = 1000),

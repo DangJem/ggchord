@@ -16,6 +16,7 @@
 #' @param position,show.legend,inherit.aes Standard layer arguments.
 #' @param ... Additional parameters passed to [geom_feature()].
 #' @return A ggplot2 layer.
+#' @md
 #' @export
 #' @examples
 #' primer <- data.frame(

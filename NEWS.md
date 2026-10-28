@@ -1,4 +1,4 @@
-# ggchord 0.14.0 (development)
+# ggchord 0.14.0
 
 * Added `coord_collinear()` for horizontal multi-sequence comparisons using
   the existing sequence, gene, feature, region, ribbon and point-link layers.
@@ -39,6 +39,9 @@
   prefers the Unicode backend when available, which may slightly change font
   metrics. Cleanup restores the caller's device after nested measurements and
   is safe to call more than once.
+* Fixed two-line circular centre labels disappearing outside the plot on
+  devices with a reversed native y axis, including SVG and some screen/PDF
+  devices. The sequence name and length retain their intended order and spacing.
 
 
 * Added coordinate-owned display alignment: `coord_collinear(align = ...)`

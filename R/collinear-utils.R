@@ -94,6 +94,7 @@ ggchord_match_feature_rows <- function(labels, features) {
 #' @param inverse Convert layout x back to bp.
 #' @param source Use original source coordinates after focusing.
 #' @return A data frame with accver, position, x and backbone y.
+#' @md
 #' @export
 #' @examples
 #' p <- ggchord(data.frame(accver = "A", length = 1000)) +

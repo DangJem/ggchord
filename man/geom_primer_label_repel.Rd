@@ -30,7 +30,7 @@ geom_primer_label_repel(
 
 \item{position, show.legend, inherit.aes}{Standard layer arguments.}
 
-\item{...}{Additional parameters passed to [geom_feature()].}
+\item{...}{Additional parameters passed to \code{\link[=geom_feature]{geom_feature()}}.}
 }
 \value{
 A composite text and leader-line layer.
