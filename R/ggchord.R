@@ -33,12 +33,16 @@ globalVariables(c(
 #' The layout is computed lazily when the plot is built (e.g. via \code{print()},
 #' \code{ggsave()}, or \code{ggplot_build()}).
 #'
-#' @param seq_data data.frame/tibble with accver and length.
+#' @param seq_data data.frame/tibble with accver and length, or a `GRanges`,
+#'   `Seqinfo` or `GInteractions` object with known full sequence lengths.
+#'   Optional S4 inputs use [as_ggchord_seq()].
 #' @param ribbon_data Optional alignment table with qaccver, saccver, qstart,
 #'   qend, sstart and send. length and pident are optional unless requested
-#'   by a mapping, filter or statistic.
+#'   by a mapping, filter or statistic. A `GInteractions` object uses
+#'   [as_ggchord_link()] without inventing identity or alignment length.
 #' @param gene_data Optional table with accver, start, end and strand.
-#'   Annotation (anno) may be omitted.
+#'   Annotation (anno) may be omitted. Directional `GRanges` are accepted;
+#'   use `geom_feature(data = ...)` for unknown-strand intervals.
 #' @param debug Logical. Whether to output debug information, default FALSE
 #' @param validate Character, default \code{"warn"}. How to run the structured
 #'   input-data validation (see \code{\link{validate_ggchord_data}}):
@@ -78,6 +82,15 @@ ggchord <- function(
     validate = c("warn", "error", "none"),
     ...
 ) {
+  if (inherits(seq_data, "GRanges") || inherits(seq_data, "Seqinfo") ||
+      inherits(seq_data, "GInteractions")) seq_data <- as_ggchord_seq(seq_data)
+  if (inherits(ribbon_data, "GInteractions")) ribbon_data <- as_ggchord_link(ribbon_data)
+  if (inherits(gene_data, "GRanges")) {
+    gene_data <- as_ggchord_feature(gene_data)
+    if (any(!gene_data$strand %in% c("+", "-"))) ggchord_stop(
+      "ggchord(): nondirectional GRanges belong in geom_feature(data = ...), not gene_data"
+    )
+  }
   seq_data <- ggchord_normalize_accver(seq_data)
   gene_data <- ggchord_normalize_accver(gene_data)
 

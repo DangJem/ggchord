@@ -14,14 +14,18 @@ ggchord(
 )
 }
 \arguments{
-\item{seq_data}{data.frame/tibble with accver and length.}
+\item{seq_data}{data.frame/tibble with accver and length, or a `GRanges`,
+`Seqinfo` or `GInteractions` object with known full sequence lengths.
+Optional S4 inputs use [as_ggchord_seq()].}
 
 \item{ribbon_data}{Optional alignment table with qaccver, saccver, qstart,
 qend, sstart and send. length and pident are optional unless requested
-by a mapping, filter or statistic.}
+by a mapping, filter or statistic. A `GInteractions` object uses
+[as_ggchord_link()] without inventing identity or alignment length.}
 
 \item{gene_data}{Optional table with accver, start, end and strand.
-Annotation (anno) may be omitted.}
+Annotation (anno) may be omitted. Directional `GRanges` are accepted;
+use `geom_feature(data = ...)` for unknown-strand intervals.}
 
 \item{debug}{Logical. Whether to output debug information, default FALSE}
 

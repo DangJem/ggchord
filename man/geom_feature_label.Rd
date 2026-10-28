@@ -33,7 +33,12 @@ tangent to the feature direction; compact labels move beside the feature.}
 \item{position}{Feature Position used for the label anchor.
 In \code{coord_collinear()}, an omitted Position shares the matching
 feature layer's lanes; an explicit Position changes only label anchors,
-leaving feature polygons in their own Position.}
+leaving feature polygons in their own Position.
+If both inputs contain unique `feature_id` values, label inputs may be
+subsets or reordered; their accession, interval and strand must still
+agree. Without IDs, inheritance requires the same interval rows in order.
+Multiple matching geometry layers require an explicit label Position or
+unambiguous feature IDs.}
 
 \item{show.legend, inherit.aes}{Standard ggplot2 layer arguments.}
 

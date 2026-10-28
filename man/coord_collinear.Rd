@@ -10,7 +10,11 @@ coord_collinear(
   ylim = NULL,
   expand = FALSE,
   clip = "off",
-  fit = c("labels", "geometry", "manual")
+  fit = c("labels", "geometry", "manual"),
+  align = c("left", "center", "right"),
+  anchor = NULL,
+  orientation = c("manual", "auto"),
+  min_support = 0.1
 )
 }
 \arguments{
@@ -28,6 +32,24 @@ additional ggplot2 coordinate expansion.}
 \item{fit}{Fitting strategy: \code{"labels"} includes measured label boxes,
 \code{"geometry"} fits geometric elements only, and \code{"manual"}
 requires explicit \code{xlim} and \code{ylim}.}
+
+\item{align}{Display alignment: \code{"left"} (default), \code{"center"}, or
+\code{"right"}. Applied to the full sequence or the interval supplied by
+\code{anchor}.}
+
+\item{anchor}{Optional anchor positions as a numeric vector named by
+\code{accver}, or a data frame with \code{accver} and either \code{position} or
+\code{start}/\code{end}. Every displayed sequence must have exactly one anchor.
+Missing and duplicate anchors are errors; multiple-copy targets must be
+selected explicitly before constructing the coordinate system.}
+
+\item{orientation}{\code{"manual"} (default) uses sequence directions supplied
+by \code{geom_seq()}. \code{"auto"} derives display directions from interval-link
+evidence and records support and unresolved cases.}
+
+\item{min_support}{Minimum directional imbalance in \verb{[0, 1]} for an automatic
+change. It is the absolute difference between forward and reverse
+support divided by their sum, default 0.1. A tie is always unresolved.}
 }
 \value{
 A ggplot2 Coord object for composition with a ggchord plot.
@@ -57,6 +79,22 @@ the longest backbone has width 2.
 The circular \code{external = FALSE} feature-label constraint cannot be converted;
 remove it to use linear label rows. Gene/feature repel layout modes share
 the linear row strategy rather than selecting circular label tracks.
+
+\code{align} and \code{anchor} control a reversible display translation. With no
+anchor, the selected edge or centre of each complete sequence is placed at
+x = 0. With an anchor, the selected edge or centre of each anchor interval
+is placed at x = 0 instead. Left and right refer to the displayed interval,
+after orientation has been applied. Genomic input coordinates stay unchanged.
+Sequence order is never changed by alignment or automatic orientation.
+
+\code{orientation = "auto"} evaluates interval links against earlier displayed
+sequences and chooses the direction supported by the larger aligned-interval
+weight. The first sequence fixes the reference direction. Ambiguous,
+insufficiently supported and unconnected sequences retain their initial
+direction, with evidence recorded in the exported layout diagnostics. This
+is a display heuristic, not a biological strand assignment or a guarantee
+of a global optimum. It cannot be combined with an explicit
+\code{geom_seq(seq_orientation = ...)}.
 }
 \examples{
 seqs <- data.frame(accver = c("A", "B"), length = c(1000, 800))
@@ -64,4 +102,9 @@ links <- data.frame(qaccver = "A", saccver = "B",
                     qstart = 100, qend = 400, sstart = 200, send = 500)
 ggchord(seqs, links) + geom_seq() + geom_link_ribbon() +
   geom_seq_label() + coord_collinear()
+
+anchors <- data.frame(accver = c("A", "B"), start = c(100, 200),
+                      end = c(400, 500))
+ggchord(seqs, links) + geom_seq() + geom_link_ribbon() +
+  coord_collinear(anchor = anchors, align = "center", orientation = "auto")
 }

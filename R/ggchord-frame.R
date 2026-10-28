@@ -48,6 +48,8 @@ set_ggchord_coord <- function(plot, layout) {
       user_xlim = coord$user_xlim, user_ylim = coord$user_ylim
     )
     resolved$ggchord_collinear <- TRUE
+    for (field in c("collinear_align", "collinear_anchor", "collinear_orientation",
+        "collinear_min_support")) resolved[[field]] <- coord[[field]]
   }
   plot$coordinates <- resolved
   plot

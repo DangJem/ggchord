@@ -313,18 +313,31 @@ scale_region_fill_manual <- function(..., values) {
 #' @param breaks,minor_breaks,labels,limits,expand,oob,transform,n.breaks Standard
 #'   continuous-scale controls.
 #' @param ... Additional arguments passed to [ggplot2::continuous_scale()].
+#' @param coordinates In linear layouts, use relative locus coordinates or
+#'   original source coordinates retained by [focus_ggchord_data()]. This
+#'   affects axis breaks and labels, not the underlying genomic geometry.
 #' @return A ggplot2 continuous scale for the `seq_position` role.
 #' @export
+#' @examples
+#' focused <- focus_ggchord_data(data.frame(accver = "A", length = 1000),
+#'   loci = data.frame(accver = "A", start = 200, end = 700))
+#' ggchord(focused$seq_data) + geom_seq() + geom_seq_break() +
+#'   scale_seq_position_continuous(coordinates = "source",
+#'     breaks = c(200, 400, 600)) + coord_collinear()
 scale_seq_position_continuous <- function(
     name = ggplot2::waiver(), breaks = ggplot2::waiver(),
     minor_breaks = ggplot2::waiver(), labels = ggplot2::waiver(),
     limits = NULL, expand = ggplot2::waiver(), oob = scales::censor,
-    transform = "identity", n.breaks = 6, ...) {
-  ggplot2::continuous_scale(
+    transform = "identity", n.breaks = 6,
+    coordinates = c("relative", "source"), ...) {
+  coordinates <- match.arg(coordinates)
+  sc <- ggplot2::continuous_scale(
     aesthetics = "seq_position",
     palette = function(x) x,
     name = name, breaks = breaks, minor_breaks = minor_breaks,
     labels = labels, limits = limits, expand = expand, oob = oob,
     transform = transform, n.breaks = n.breaks, guide = "none", ...
   )
+  sc$ggchord_position_coordinates <- coordinates
+  sc
 }

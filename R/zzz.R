@@ -214,8 +214,24 @@ ggchord_resolve_layer_input <- function(lyr, fallback = NULL) {
       )
     )
   }
+  type <- lyr$ggchord_params$type %||% ""
+  if (inherits(data, "GRanges") || inherits(data, "Seqinfo")) {
+    data <- if (type %in% c("seq", "seq_label", "seq_break", "seq_center_label")) {
+      as_ggchord_seq(data)
+    } else if (inherits(data, "GRanges")) as_ggchord_feature(data) else {
+      ggchord_stop("Seqinfo supplies sequence lengths; use GRanges for feature layers")
+    }
+  } else if (inherits(data, "GInteractions")) {
+    data <- as_ggchord_link(data)
+    if (identical(type, "link")) {
+      data$qpos <- (data$qstart + data$qend) / 2
+      data$spos <- (data$sstart + data$send) / 2
+      data$.point_projection <- "anchor_midpoint"
+    }
+  }
   if (!is.data.frame(data)) {
-    ggchord_stop("ggchord layer data must be a data.frame or a function returning one")
+    ggchord_stop("ggchord layer data must be a data.frame, a supported interval object, ",
+      "or a function returning supported data")
   }
   data <- ggchord_normalize_accver(as.data.frame(data, stringsAsFactors = FALSE))
   mapping <- lyr$ggchord_input_mapping
@@ -256,6 +272,10 @@ ggchord_resolve_layer_input <- function(lyr, fallback = NULL) {
   }
   transform <- lyr$ggchord_input_transform
   if (!is.null(transform)) data <- transform(data)
+  if (identical(type, "gene") && !isTRUE(lyr$ggchord_params$is_feature) &&
+      any(!data$strand %in% c("+", "-"))) ggchord_stop(
+    "geom_gene(): directional genes need '+'/'-' strand; use geom_feature() for nondirectional intervals"
+  )
   data
 }
 
@@ -337,6 +357,7 @@ extract_ggchord_layer_data <- function(lyr, layout) {
     gene_text_repel = if (nrow(layout$gene_labels) > 0) layout$gene_labels else fallback,
     gene_label_segment = if (nrow(layout$gene_label_segments) > 0) layout$gene_label_segments else fallback,
     seq_label = if (nrow(layout$seq_labels_df) > 0) layout$seq_labels_df else fallback,
+    seq_break = layout$seq_breaks %||% fallback,
     seq_region = if (nrow(layout$region_polys) > 0) layout$region_polys else fallback,
     axis_line = if (nrow(layout$axis_lines) > 0) layout$axis_lines else fallback,
     axis_seg  = if (nrow(layout$axis_ticks) > 0) layout$axis_ticks else fallback,

@@ -205,6 +205,10 @@ geom_gene <- function(mapping = NULL, data = NULL,
 #'   In \code{coord_collinear()}, labels without an explicit Position share
 #'   a matching geometry layer's lanes; explicit label Positions do not move
 #'   the geometry layer.
+#'   Unique `feature_id` columns allow label subsets and reordered labels when
+#'   their accession, interval and strand agree with the geometry input.
+#'   Multiple matching geometry layers require an explicit label Position or
+#'   unambiguous feature IDs.
 #' @param show.legend,inherit.aes Standard ggplot2 layer arguments.
 #' @param ... Additional arguments passed to \code{geom_text()}
 #'

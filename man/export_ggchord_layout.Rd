@@ -31,10 +31,17 @@ An object of class \code{ggchord_layout_export}. Selected component
   records rotation, aspect ratio, limits, coordinate units and
   transformation state.
   Collinear layouts instead include `sequence_layout`, containing each
-  sequence's horizontal range, backbone y, orientation and units per bp.
+  sequence's horizontal range, backbone y, orientation, units per bp,
+  reversible x offset, anchor and source origin. `orientation_diagnostics`
+  records directional support, confidence and unresolved cases.
   Position lanes remain local offsets and are not circular physical tracks.
   Their `label_diagnostics` records placed or hidden labels after shared
-  linear collision handling, including source layer, row and reason.
+  linear collision handling, including source layer, row, reason and leader
+  collisions. `connection_report` records retained and omitted ribbon input
+  rows with a selection reason. When converted inputs are present,
+  `conversion_reports` retains their conversion attributes, including source
+  class, column renaming, sequence information and object metadata.
+  Sequence break marks are included under `seq`.
 }
 \description{
 Builds a ggchord plot and returns selected computed geometry in a stable,

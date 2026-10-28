@@ -43,6 +43,8 @@ make_ribbon_geom <- function(outline = FALSE, linetype = FALSE) {
 #'   changes only next to \code{geom_gene()} and \code{geom_feature()} polygons,
 #'   or \code{"none"} for fixed spacing 0.035. Text and leader lines are ignored.
 #'   Supplying a number disables the automatic rule and uses that exact spacing.
+#'   Linear layouts reduce automatic baseline clearance to fit narrow channels;
+#'   an explicit gap or feature clearance that cannot fit raises an error.
 #' @param link_avoid One of \code{"uniform"} (default), \code{"none"}, or
 #'   \code{"smooth"}. Smooth avoidance changes clearance locally; uniform
 #'   avoidance uses one clearance across an endpoint.
@@ -50,6 +52,16 @@ make_ribbon_geom <- function(outline = FALSE, linetype = FALSE) {
 #' @param fill Optional fixed ribbon fill. `NULL` keeps the default Identity
 #'   mapping.
 #' @param alpha,colour,linewidth,linetype Standard fixed ribbon styles.
+#'   The default outline is dashed; use `linetype = "solid"` for the former
+#'   appearance.
+#' @param adjacent_only Whether only neighbouring sequences are connected.
+#'   `NULL` uses TRUE in [coord_collinear()] and FALSE in [coord_chord()].
+#'   Set FALSE to retain cross-track ribbons. Chord neighbours include the
+#'   first/last sequence pair.
+#' @param pairs Optional data frame with `qaccver` and `saccver` selecting
+#'   unordered comparison pairs. With `adjacent_only = NULL`, explicit pairs
+#'   take precedence over the coordinate default. Omitted rows are reported
+#'   by [export_ggchord_layout()].
 #' @param position,show.legend,inherit.aes Standard ggplot2 layer arguments.
 #' @param ... Additional arguments passed to \code{geom_polygon()}
 #'
@@ -63,6 +75,15 @@ make_ribbon_geom <- function(outline = FALSE, linetype = FALSE) {
 #' p <- ggchord(seq_data_example, ribbon_data_example) +
 #'   geom_seq() + geom_link_ribbon()
 #' p
+#'
+#' # Cross-track connections remain available explicitly in linear layouts.
+#' ggchord(seq_data_example, ribbon_data_example) + geom_seq() +
+#'   geom_link_ribbon(adjacent_only = FALSE, linetype = "solid") +
+#'   coord_collinear()
+#' ggchord(seq_data_example, ribbon_data_example) + geom_seq() +
+#'   geom_link_ribbon(pairs = data.frame(
+#'     qaccver = seq_data_example$accver[1],
+#'     saccver = seq_data_example$accver[3])) + coord_collinear()
 geom_link_ribbon <- function(mapping = NULL, data = NULL,
                         ribbon_ctrl_point = NULL,
                         ribbon_gap = NULL,
@@ -73,7 +94,9 @@ geom_link_ribbon <- function(mapping = NULL, data = NULL,
                         alpha = 0.42,
                         colour = "#59636D",
                         linewidth = 0.08,
-                        linetype = 1,
+                        linetype = "dashed",
+                        adjacent_only = NULL,
+                        pairs = NULL,
                         position = "identity",
                         show.legend = TRUE,
                         inherit.aes = FALSE,
@@ -82,6 +105,12 @@ geom_link_ribbon <- function(mapping = NULL, data = NULL,
   on.exit(options(error = old_error), add = TRUE)
   link_avoid <- match.arg(link_avoid)
   link_branch <- match.arg(link_branch)
+  if (!is.null(adjacent_only) && (!is.logical(adjacent_only) ||
+      length(adjacent_only) != 1L || is.na(adjacent_only))) {
+    ggchord_stop("geom_link_ribbon(): adjacent_only must be NULL, TRUE or FALSE")
+  }
+  if (!is.null(pairs)) ggchord_require_columns(pairs,
+    c("qaccver", "saccver"), "geom_link_ribbon(pairs)")
   ggchord_check_branch_fraction(link_branch_fraction)
   mapping <- ggchord_normalize_mapping(mapping)
   dots <- list(...)
@@ -158,6 +187,7 @@ geom_link_ribbon <- function(mapping = NULL, data = NULL,
   lyr$ggchord_type <- "ribbon"
   lyr$ggchord_params <- list(
     type                      = "ribbon",
+    adjacent_only = adjacent_only, pairs = pairs,
     link_avoid = link_avoid, link_branch = link_branch, link_branch_fraction = link_branch_fraction,
     ribbon_color_scheme       = "pident",
     ribbon_colors             = NULL,

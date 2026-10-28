@@ -101,8 +101,10 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   lens     <- setNames(seq_data$length, seqs)
 
   if (!is.null(seq_params$seq_order)) {
-    if (!all(seq_params$seq_order %in% seqs)) {
-      ggchord_stop("seq_order contains unknown sequence IDs")
+    if (!is.character(seq_params$seq_order) || !length(seq_params$seq_order) ||
+        anyNA(seq_params$seq_order) || anyDuplicated(seq_params$seq_order) ||
+        !all(seq_params$seq_order %in% seqs)) {
+      ggchord_stop("seq_order must contain non-repeated known sequence IDs")
     }
     seqs <- seq_params$seq_order
     lens <- lens[seqs]
@@ -274,6 +276,11 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   } else {
     NULL
   }
+  collinear_transform <- if (collinear) ggchord_collinear_transform(
+    seqs, lens, orientation, chord$collinear_evidence %||% ribbon_data %||%
+      data_list$ribbon_data, plot$coordinates
+  ) else NULL
+  if (collinear) orientation <- collinear_transform$orientation
   ribbon_stat_report <- NULL
   ribbon_stat_data <- NULL
   ribbon_stat <- ribbon_params$ribbon_stat
@@ -306,6 +313,8 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     ribbon_stat_data <- computed$data
     ribbon_stat_report <- computed$report
   }
+  ribbon_selection <- ggchord_select_ribbons(ribbon_data, seqs, ribbon_params, collinear)
+  ribbon_data <- ribbon_selection$data
   has_ribbon_data <- !is.null(ribbon_data) && nrow(ribbon_data) > 0
 
   if (has_ribbon_data) {
@@ -642,6 +651,12 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
       legacy_offset = if (isTRUE(lbl$position_supplied)) NULL else gene_params$legacy_offset,
       legacy_name = if (isTRUE(gene_params$is_feature)) "feature_offset" else "gene_offset"
     )
+    # Allocate on the complete entity table before selecting/reordering labels;
+    # a label subset must not cause the remaining entities to change lanes.
+    if (collinear && !is.null(chord$matched_feature_rows)) {
+      gene_data_layout <- gene_data_layout[chord$matched_feature_rows$rows, , drop = FALSE]
+      rownames(gene_data_layout) <- NULL
+    }
   }
   geneLabelRadialOffset <- process_gene_param(gene_lro, seqs,
                                               "gene_label_radial_offset", 0, FALSE)
@@ -719,14 +734,25 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   }
   axis_breaks <- axis_minor_breaks <- axis_labels <- NULL
   position_scale <- plot$scales$get_scales("seq_position")
+  if (!collinear && !is.null(position_scale) &&
+      identical(position_scale$ggchord_position_coordinates, "source")) ggchord_stop(
+    "scale_seq_position_continuous(coordinates = 'source') requires coord_collinear()"
+  )
   if (!is.null(position_scale)) {
     axis_breaks <- axis_minor_breaks <- axis_labels <- setNames(
       vector("list", length(seqs)), seqs
     )
     for (id in seqs) {
       sc <- position_scale$clone()
+      source_axis <- collinear && identical(position_scale$ggchord_position_coordinates, "source")
+      origin <- if (source_axis && ".source_origin" %in% names(seq_data)) {
+        seq_data$.source_origin[match(id, seq_data$accver)]
+      } else if (source_axis && ".focus_start" %in% names(seq_data)) {
+        seq_data$.focus_start[match(id, seq_data$accver)]
+      } else 1
       if (collinear) {
-        domain <- suppressWarnings(sc$transform(c(0, 1, lens[[id]])))
+        domain <- if (source_axis) c(origin, origin + lens[[id]] - 1) else c(0, 1, lens[[id]])
+        domain <- suppressWarnings(sc$transform(domain))
         sc$train(domain[is.finite(domain)])
       } else sc$train(c(0, lens[[id]]))
       br <- sc$get_breaks()
@@ -735,12 +761,14 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
       if (collinear) {
         raw_br <- raw_br %||% numeric()
         break_labels <- break_labels %||% rep(NA_character_, length(raw_br))
+        if (source_axis) raw_br <- raw_br - origin + 1
       }
       keep <- is.finite(raw_br) & raw_br >= 0 & raw_br <= lens[[id]]
       br <- br[keep]
       axis_breaks[[id]] <- raw_br[keep]
       minor <- sc$get_breaks_minor()
       if (collinear) minor <- sc$get_transformation()$inverse(minor) %||% numeric()
+      if (source_axis) minor <- minor - origin + 1
       axis_minor_breaks[[id]] <- minor[
         is.finite(minor) & minor >= 0 & minor <= lens[[id]]
       ]
@@ -834,7 +862,8 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   }
 
   layout_strategy <- if (collinear) {
-    function(...) compute_collinear_layout(..., gene_label_text = lbl$label_text)
+    function(...) compute_collinear_layout(..., gene_label_text = lbl$label_text,
+      collinear_transform = collinear_transform)
   } else compute_chord_layout
   layout <- layout_strategy(
     seqs = seqs, lens = lens, seq_labels = seq_labels,
@@ -927,6 +956,22 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   layout$seq_ring_radius <- if (is.null(seq_ring)) NULL else seqRadius
   layout$ribbon_stat_data <- ribbon_stat_data
   layout$ribbon_stat_report <- ribbon_stat_report
+  layout$ribbon_selection <- ribbon_selection$report
+  if (collinear) {
+    source_rows <- match(seqs, as.character(seq_data$accver))
+    layout$sequence_layout$source_origin <- if (".source_origin" %in% names(seq_data)) {
+      seq_data$.source_origin[source_rows]
+    } else if (".focus_start" %in% names(seq_data)) seq_data$.focus_start[source_rows] else 1
+    layout$sequence_layout$source_accver <- if (".source_accver" %in% names(seq_data)) {
+      seq_data$.source_accver[source_rows]
+    } else seqs
+    for (side in c("left", "right")) {
+      field <- paste0(".truncated_", side)
+      layout$sequence_layout[[paste0("truncated_", side)]] <- if (field %in% names(seq_data)) {
+        seq_data[[field]][source_rows]
+      } else FALSE
+    }
+  }
   layout$backbone_bounds <- if (collinear) data.frame(
     accver = seqs, center = unname(layout$sequence_reference$y[seqs]),
     lower = unname(layout$sequence_reference$y[seqs]) - seqBackboneOuter,
@@ -963,6 +1008,7 @@ ggchord_layout_component <- function(layout, type, fallback = data.frame()) {
     gene_label_repel = ggchord_repel_geometry(layout),
     seq_label = layout$seq_labels_df %||% fallback,
     seq_region = layout$region_polys %||% fallback,
+    seq_break = layout$seq_breaks %||% fallback,
     restriction_site = layout$restriction_sites %||% fallback,
     axis_line = layout$axis_lines %||% fallback,
     axis_seg = layout$axis_ticks %||% fallback,
@@ -996,6 +1042,17 @@ compute_chord_geometry <- function(plot) {
     next_id <- next_id + 1L
   }
 
+  if (isTRUE(plot$coordinates$ggchord_collinear)) {
+    evidence <- lapply(plot$layers, function(layer) {
+      if (!identical(layer$ggchord_params$type, "ribbon")) return(NULL)
+      ggchord_resolve_layer_input(layer, chord$data$ribbon_data)
+    })
+    evidence <- Filter(function(d) is.data.frame(d) && nrow(d), evidence)
+    plot$ggchord$collinear_evidence <- if (length(evidence)) {
+      unique(ggchord_rbind_fill(evidence))
+    } else chord$data$ribbon_data
+  }
+
   geometry_cache <- new.env(parent = emptyenv())
   avoid_requested <- any(vapply(plot$layers, function(layer) {
     params <- layer$ggchord_params
@@ -1018,7 +1075,7 @@ compute_chord_geometry <- function(plot) {
                     character(1))
     main <- types[types %in% c(
       "seq", "ribbon", "link", "gene", "gene_label", "gene_label_repel", "axis",
-      "seq_label", "seq_region", "restriction_site", "seq_center_label"
+      "seq_label", "seq_region", "seq_break", "restriction_site", "seq_center_label"
     )]
     if (length(main)) main[length(main)] else ""
   }, character(1))
@@ -1050,6 +1107,7 @@ compute_chord_geometry <- function(plot) {
     sub_layout <- primary
     if (isTRUE(needs_own)) {
       deps <- seq_dep
+      matched_feature_rows <- NULL
       if (main_type %in% c("gene_label", "gene_label_repel")) {
         label_rows <- idx[vapply(idx, function(j) {
           isTRUE(primary$collinear) ||
@@ -1061,6 +1119,9 @@ compute_chord_geometry <- function(plot) {
             label_layer, chord$data$gene_data
           )
           for (gene_row in gene_geometry_dep) {
+            if (isTRUE(primary$collinear) && isTRUE(
+                label_layer$ggchord_params$position_explicit %||%
+                  label_layer$ggchord_params$position_supplied)) break
             feature_layer <- plot$layers[[gene_row]]
             if (isTRUE(primary$collinear)) {
               if (isTRUE(feature_layer$ggchord_params$is_feature) !=
@@ -1077,6 +1138,10 @@ compute_chord_geometry <- function(plot) {
             same_input <- nrow(label_input) == nrow(feature_input) &&
               all(c("accver", "start", "end", "strand") %in% compare) &&
               identical(label_input[compare], feature_input[compare])
+            matched_rows <- if (isTRUE(primary$collinear)) {
+              ggchord_match_feature_rows(label_input, feature_input)
+            } else NULL
+            if (isTRUE(primary$collinear)) same_input <- !is.null(matched_rows)
             label_position <- label_layer$ggchord_params$feature_position
             feature_position <- feature_layer$ggchord_params$feature_position
             position_supplied <- if (isTRUE(primary$collinear)) {
@@ -1087,14 +1152,21 @@ compute_chord_geometry <- function(plot) {
               position_supplied
             ) || identical(label_position, feature_position)
             if (same_input && same_position) {
+              if (isTRUE(primary$collinear) && !is.null(matched_feature_rows)) ggchord_stop(
+                "Multiple geometry layers match these labels; supply an explicit label Position ",
+                "or unambiguous feature_id values"
+              )
               deps <- c(deps, gene_row)
-              break
+              if (isTRUE(primary$collinear)) matched_feature_rows <- list(
+                layer_id = feature_layer$ggchord_layer_id, rows = matched_rows)
+              if (!isTRUE(primary$collinear)) break
             }
           }
         }
       }
       if (main_type == "ribbon") deps <- c(deps, gene_geometry_dep)
       sub_plot <- plot
+      sub_plot$ggchord$matched_feature_rows <- matched_feature_rows
       sub_plot$layers <- plot$layers[sort(unique(c(deps, idx)))]
       sub_layout <- compute_chord_geometry_single(sub_plot, geometry_cache)
     }
@@ -1103,6 +1175,12 @@ compute_chord_geometry <- function(plot) {
       link_input <- ggchord_resolve_layer_input(link_layer)
       sub_layout$link_lines <- ggchord_attach_input_columns(
         ggchord_link_geometry(link_input, link_layer$ggchord_params, primary), link_input)
+    }
+    if (main_type == "seq_break") {
+      break_layer <- plot$layers[[idx[1L]]]
+      sub_layout$seq_breaks <- ggchord_seq_break_geometry(
+        ggchord_resolve_layer_input(break_layer, chord$data$seq_data),
+        break_layer$ggchord_params, primary)
     }
     if (main_type == "restriction_site") {
       site_layer <- plot$layers[[idx[1L]]]
@@ -1161,6 +1239,7 @@ compute_chord_geometry <- function(plot) {
         axis_text = chord$data$seq_data,
         axis = chord$data$seq_data,
         seq_label = chord$data$seq_data,
+        seq_break = chord$data$seq_data,
         ribbon = chord$data$ribbon_data,
         gene_poly = chord$data$gene_data,
         gene_text = chord$data$gene_data,
@@ -1202,6 +1281,14 @@ compute_chord_geometry <- function(plot) {
   primary$layer_geometry <- registry
   primary$layer_inputs <- inputs
   primary$layer_layouts <- layouts
+  connection_reports <- lapply(names(layouts), function(id) {
+    if (!identical(group_type[[id]], "ribbon")) return(NULL)
+    d <- layouts[[id]]$ribbon_selection
+    if (is.null(d) || !nrow(d)) return(NULL)
+    d$layer_id <- id
+    d
+  })
+  primary$connection_report <- ggchord_rbind_fill(connection_reports) %||% data.frame()
 
   # Plot limits must see all independent layers, not only the compatibility
   # fields in the primary layout.
@@ -1214,6 +1301,7 @@ compute_chord_geometry <- function(plot) {
     c("ribbon_polys", "ribbon"), c("link_lines", "link"), c("gene_polys", "gene_poly"),
     c("gene_labels", "gene_text"), c("gene_label_segments", "gene_label_segment"),
     c("seq_labels_df", "seq_label"), c("region_polys", "seq_region"),
+    c("seq_breaks", "seq_break"),
     c("axis_lines", "axis_line"), c("axis_ticks", "axis_seg"),
     c("restriction_sites", "restriction_site"),
     c("seq_center_label", "seq_center_label")
@@ -1282,7 +1370,8 @@ compute_chord_geometry <- function(plot) {
     allRibbon = ggchord_rbind_fill(Filter(Negate(is.null), list(
       primary$ribbon_polys, primary$link_lines, primary$restriction_sites,
       if (isTRUE(primary$collinear) && nrow(primary$region_polys)) primary$region_polys,
-      if (isTRUE(primary$collinear) && nrow(collect("seq"))) collect("seq")
+      if (isTRUE(primary$collinear) && nrow(collect("seq"))) collect("seq"),
+      if (isTRUE(primary$collinear) && nrow(collect("seq_break"))) collect("seq_break")
     ))),
     seqArcs = primary$seq_arcs,
     axisLines = primary$axis_lines,

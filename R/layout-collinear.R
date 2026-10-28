@@ -5,7 +5,8 @@ ggchord_collinear_x <- function(pos, id, ref) {
   sequence_length <- unname(ref$lens[id])
   orientation <- unname(ref$orientation[id])
   ifelse(rep_len(orientation, length(pos)) == 1,
-    pos, rep_len(sequence_length, length(pos)) - pos) * ref$x_scale
+    pos, rep_len(sequence_length, length(pos)) - pos) * ref$x_scale +
+    rep_len(unname(ref$x_offset[id] %||% 0), length(pos))
 }
 
 # Obstacles record signed distances from a horizontal backbone. Only entities
@@ -100,6 +101,7 @@ ggchord_collinear_ribbons <- function(p, layout) {
     q <- as.character(input$qaccver[i]); s <- as.character(input$saccver[i])
     direction_q <- sign(ref$y[s] - ref$y[q])
     direction_s <- -direction_q
+    channel <- abs(unname(ref$y[q] - ref$y[s]))
     make_front <- function(id, start, end, direction) {
       positions <- seq(start, end, length.out = 50L)
       configured <- unname(p$ribbonGap[[id]])
@@ -117,7 +119,7 @@ ggchord_collinear_ribbons <- function(p, layout) {
       }
       gap <- if (automatic) ggchord_collinear_gap_profile(
         positions, id, direction, obstacles, avoid,
-        close_gap = min(configured, .035)
+        close_gap = min(configured, .035, channel * .2)
       ) else rep(configured, length(positions))
       list(xy = cbind(x = ggchord_collinear_x(positions, id, ref),
         y = unname(ref$y[id]) + direction * gap), gap = max(gap))
@@ -125,6 +127,8 @@ ggchord_collinear_ribbons <- function(p, layout) {
     q_front <- make_front(q, input$qstart[i], input$qend[i], direction_q)
     s_front <- make_front(s, input$sstart[i], input$send[i], direction_s)
     q_xy <- q_front$xy; s_xy <- s_front$xy
+    ggchord_collinear_check_gap(q, s, q_front$gap, s_front$gap, ref,
+      "geom_link_ribbon()")
     edge <- function(index, control_edge) {
       from <- q_xy[index[1L], ]; to <- s_xy[index[2L], ]
       cp <- ggchord_collinear_controls(from, to, p$ribbon_ctrl_point,
@@ -155,7 +159,8 @@ ggchord_collinear_ribbons <- function(p, layout) {
       p$ribbon_direction_linetypes[biological_direction]
     } else "solid"
     out <- data.frame(x = xy[, 1L], y = xy[, 2L], group = j,
-      source_row = i, alpha = unname(opacity), outline_col = unname(outline),
+      source_row = input$.ggchord_source_row[i] %||% i,
+      alpha = unname(opacity), outline_col = unname(outline),
       linetype_val = unname(linetype), direction = biological_direction,
       .q_n = nrow(q_xy), .s_n = nrow(s_xy),
       q_gap = q_front$gap, s_gap = s_front$gap, stringsAsFactors = FALSE)
@@ -199,12 +204,16 @@ ggchord_collinear_link_geometry <- function(data, params, layout) {
     endpoint <- function(id, pos, destination) {
       direction <- sign(ref$y[destination] - ref$y[id])
       gap <- unname(gaps[[id]])
+      if (is.null(params$link_gap)) gap <- min(gap,
+        abs(unname(ref$y[destination] - ref$y[id])) * .2)
       if (is.null(params$link_gap)) gap <- ggchord_collinear_gap_profile(
         pos, id, direction, layout$obstacles, params$link_avoid %||% "none", gap)
       c(ggchord_collinear_x(pos, id, ref), unname(ref$y[id]) + direction * gap)
     }
     q <- endpoint(q_id, data$qpos[i], s_id)
     s <- endpoint(s_id, data$spos[i], q_id)
+    ggchord_collinear_check_gap(q_id, s_id, abs(q[2] - ref$y[q_id]),
+      abs(s[2] - ref$y[s_id]), ref, "geom_link_line()")
     controls <- ggchord_collinear_controls(q, s, params$link_ctrl_point, i)
     xy <- if (identical(params$link_type, "straight")) rbind(q, s) else
       bezier_pts(q, s, controls[[1L]], controls[[2L]], n = 60L)
@@ -225,8 +234,9 @@ ggchord_collinear_entity_obstacles <- function(layer, layout, input) {
   pieces <- lapply(split(polygons, polygons$group), function(d) {
     row <- input[d$source_row[1L], , drop = FALSE]
     id <- as.character(row$accver)
-    positions <- if (ref$orientation[id] == 1) d$x / ref$x_scale else
-      unname(ref$lens[id]) - d$x / ref$x_scale
+    local_x <- (d$x - unname(ref$x_offset[id] %||% 0)) / ref$x_scale
+    positions <- if (ref$orientation[id] == 1) local_x else
+      unname(ref$lens[id]) - local_x
     offsets <- d$y - unname(ref$y[id])
     low <- min(offsets); high <- max(offsets)
     data.frame(accver = id, start = max(1, min(positions)),
@@ -244,7 +254,8 @@ compute_collinear_layout <- function(...) {
   y <- stats::setNames(if (n > 1L) c(0, -2 * cumsum(p$seq_gap[-n])) else 0,
     seqs)
   ref <- list(mode = "collinear", lens = lens, orientation = p$orientation,
-    x_scale = 2 / max(lens), y = y)
+    x_scale = 2 / max(lens), y = y,
+    x_offset = p$collinear_transform$offset %||% stats::setNames(rep(0, n), seqs))
   seq_arcs <- stats::setNames(lapply(seqs, function(id) {
     data.frame(x = ggchord_collinear_x(c(0, lens[[id]]), id, ref),
       y = unname(y[id]), accver = id, stringsAsFactors = FALSE)
@@ -252,10 +263,9 @@ compute_collinear_layout <- function(...) {
   empty <- data.frame()
   layout <- list(
     sequence_reference = ref,
-    sequence_layout = data.frame(accver = seqs, order = seq_len(n), xmin = 0,
-      xmax = unname(lens[seqs]) * ref$x_scale, y = unname(y),
-      orientation = unname(p$orientation[seqs]), units_per_bp = ref$x_scale,
-      stringsAsFactors = FALSE),
+    sequence_layout = cbind(p$collinear_transform$table,
+      order = seq_len(n), y = unname(y)),
+    orientation_diagnostics = p$collinear_transform$diagnostics,
     seq_arcs = seq_arcs, ribbon_polys = NULL, link_lines = NULL,
     region_polys = empty, gene_polys = empty, gene_labels = empty,
     gene_label_segments = empty, gene_label_clip_units = NA_real_,

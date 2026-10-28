@@ -277,7 +277,8 @@ ggchord_layout_ribbon_step <- quote({
       m <- do.call(rbind, ribbon_polys_list)
       polygon_sizes <- vapply(ribbon_polys_list, nrow, integer(1))
       group_vals <- rep(ribbon_group, times = polygon_sizes)
-      source_row_vals <- rep(valid_idx, times = polygon_sizes)
+      source_row_vals <- rep(ribbon_data$.ggchord_source_row[valid_idx] %||% valid_idx,
+        times = polygon_sizes)
       alpha_vals <- rep(ribbon_alpha_vec, times = polygon_sizes)
       outline_vals <- rep(ribbon_outline_vec, times = polygon_sizes)
       linetype_vals <- rep(ribbon_linetype_vec, times = polygon_sizes)

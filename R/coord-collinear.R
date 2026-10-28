@@ -27,6 +27,36 @@ CoordCollinear <- ggplot2::ggproto("CoordCollinear", CoordGgchord)
 #' remove it to use linear label rows. Gene/feature repel layout modes share
 #' the linear row strategy rather than selecting circular label tracks.
 #'
+#' `align` and `anchor` control a reversible display translation. With no
+#' anchor, the selected edge or centre of each complete sequence is placed at
+#' x = 0. With an anchor, the selected edge or centre of each anchor interval
+#' is placed at x = 0 instead. Left and right refer to the displayed interval,
+#' after orientation has been applied. Genomic input coordinates stay unchanged.
+#' Sequence order is never changed by alignment or automatic orientation.
+#'
+#' `orientation = "auto"` evaluates interval links against earlier displayed
+#' sequences and chooses the direction supported by the larger aligned-interval
+#' weight. The first sequence fixes the reference direction. Ambiguous,
+#' insufficiently supported and unconnected sequences retain their initial
+#' direction, with evidence recorded in the exported layout diagnostics. This
+#' is a display heuristic, not a biological strand assignment or a guarantee
+#' of a global optimum. It cannot be combined with an explicit
+#' `geom_seq(seq_orientation = ...)`.
+#'
+#' @param align Display alignment: `"left"` (default), `"center"`, or
+#'   `"right"`. Applied to the full sequence or the interval supplied by
+#'   `anchor`.
+#' @param anchor Optional anchor positions as a numeric vector named by
+#'   `accver`, or a data frame with `accver` and either `position` or
+#'   `start`/`end`. Every displayed sequence must have exactly one anchor.
+#'   Missing and duplicate anchors are errors; multiple-copy targets must be
+#'   selected explicitly before constructing the coordinate system.
+#' @param orientation `"manual"` (default) uses sequence directions supplied
+#'   by `geom_seq()`. `"auto"` derives display directions from interval-link
+#'   evidence and records support and unresolved cases.
+#' @param min_support Minimum directional imbalance in `[0, 1]` for an automatic
+#'   change. It is the absolute difference between forward and reverse
+#'   support divided by their sum, default 0.1. A tie is always unresolved.
 #' @inheritParams coord_chord
 #' @return A ggplot2 Coord object for composition with a ggchord plot.
 #' @md
@@ -37,11 +67,25 @@ CoordCollinear <- ggplot2::ggproto("CoordCollinear", CoordGgchord)
 #'                     qstart = 100, qend = 400, sstart = 200, send = 500)
 #' ggchord(seqs, links) + geom_seq() + geom_link_ribbon() +
 #'   geom_seq_label() + coord_collinear()
+#'
+#' anchors <- data.frame(accver = c("A", "B"), start = c(100, 200),
+#'                       end = c(400, 500))
+#' ggchord(seqs, links) + geom_seq() + geom_link_ribbon() +
+#'   coord_collinear(anchor = anchors, align = "center", orientation = "auto")
 coord_collinear <- function(
     ratio = 1, xlim = NULL, ylim = NULL,
     expand = FALSE, clip = "off",
-    fit = c("labels", "geometry", "manual")) {
+    fit = c("labels", "geometry", "manual"),
+    align = c("left", "center", "right"), anchor = NULL,
+    orientation = c("manual", "auto"), min_support = 0.1) {
   fit <- match.arg(fit)
+  align <- match.arg(align)
+  orientation <- match.arg(orientation)
+  if (!is.numeric(min_support) || length(min_support) != 1L ||
+      !is.finite(min_support) || min_support < 0 || min_support > 1) {
+    ggchord_stop("coord_collinear(): min_support must be one finite number in [0, 1]")
+  }
+  ggchord_validate_collinear_anchor(anchor)
   validated <- coord_chord(
     rotation = 0, ratio = ratio, xlim = xlim, ylim = ylim,
     expand = expand, clip = clip, fit = fit
@@ -51,6 +95,10 @@ coord_collinear <- function(
     validated$user_xlim, validated$user_ylim
   )
   coord$ggchord_collinear <- TRUE
+  coord$collinear_align <- align
+  coord$collinear_anchor <- anchor
+  coord$collinear_orientation <- orientation
+  coord$collinear_min_support <- as.numeric(min_support)
   coord
 }
 
@@ -60,6 +108,12 @@ ggchord_validate_coord_contract <- function(plot) {
     params <- layer$ggchord_params
     if (is.null(params)) next
     if (identical(params$type, "seq")) {
+      if (identical(plot$coordinates$collinear_orientation, "auto") &&
+          !is.null(params$seq_orientation)) ggchord_stop(
+        "coord_collinear(): orientation = 'auto' cannot be combined with ",
+        "geom_seq(seq_orientation = ...); remove the manual direction or ",
+        "use orientation = 'manual'"
+      )
       for (name in c("seq_radius", "seq_curvature")) {
         if (!is.null(params[[name]])) ggchord_stop(
           "coord_collinear(): explicit `", name, "` cannot be converted; ",

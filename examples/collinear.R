@@ -37,7 +37,7 @@ collinear_example <- ggchord(
   collinear_sequences, collinear_alignments, collinear_genes,
   validate = "none"
 ) +
-  geom_link_ribbon(alpha = 0.24) +
+  geom_link_ribbon(alpha = 0.24, adjacent_only = FALSE) +
   geom_seq(
     seq_order = c("cluster_C", "cluster_A", "cluster_B"),
     seq_orientation = c(cluster_A = 1, cluster_B = -1, cluster_C = 1),

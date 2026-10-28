@@ -57,7 +57,11 @@ labels narrower and less prone to overlap.}
 drawn from separate data or without a geometry layer.
 In \code{coord_collinear()}, labels without an explicit Position share
 a matching geometry layer's lanes; explicit label Positions do not move
-the geometry layer.}
+the geometry layer.
+Unique `feature_id` columns allow label subsets and reordered labels when
+their accession, interval and strand agree with the geometry input.
+Multiple matching geometry layers require an explicit label Position or
+unambiguous feature IDs.}
 
 \item{show.legend, inherit.aes}{Standard ggplot2 layer arguments.}
 
