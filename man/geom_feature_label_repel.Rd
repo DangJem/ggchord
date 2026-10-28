@@ -47,7 +47,10 @@ circular map, both retain their own layout semantics but register final
 boxes in one coordinate-owned exterior track region so they cannot occupy
 the same space.}
 
-\item{position}{Feature Position used for the label anchor.}
+\item{position}{Feature Position used for the label anchor.
+In \code{coord_collinear()}, an omitted Position shares the matching
+feature layer's lanes; an explicit Position changes only label anchors,
+leaving feature polygons in their own Position.}
 
 \item{show.legend, inherit.aes}{Standard ggplot2 layer arguments.}
 

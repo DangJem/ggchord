@@ -54,7 +54,10 @@ labels narrower and less prone to overlap.}
 
 \item{position}{Position adjustment. Supply the same
 [position_feature_stack()] used by a gene/feature layer when labels are
-drawn from separate data or without a geometry layer.}
+drawn from separate data or without a geometry layer.
+In \code{coord_collinear()}, labels without an explicit Position share
+a matching geometry layer's lanes; explicit label Positions do not move
+the geometry layer.}
 
 \item{show.legend, inherit.aes}{Standard ggplot2 layer arguments.}
 

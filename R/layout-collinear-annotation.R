@@ -242,7 +242,8 @@ ggchord_collinear_gene_labels <- function(p, layout) {
     row <- d[i, , drop = FALSE]
     id <- as.character(row$accver); strand <- as.character(row$strand)
     if (!id %in% p$seqs) return(NULL)
-    text <- as.character(row$anno)
+    text <- as.character(if (is.null(p$gene_label_text)) row$anno else
+      p$gene_label_text[i])
     if (is.na(text) || !nzchar(text)) return(NULL)
     fields <- ggchord_collinear_position_fields(row)
     width <- as.numeric(p$geneWidth[[id]][strand])
@@ -286,6 +287,8 @@ ggchord_collinear_gene_labels <- function(p, layout) {
       feature_label_inside = FALSE, feature_label_mode = "adjacent",
       label_layout = "collinear", label_lane = 0L, .feature_width = width,
       label_side = side, label_overlap = p$gene_label_overlap,
+      label_segment_linetype = rep_len(
+        p$gene_label_segment_linetype %||% "auto", nrow(d))[i],
       label_segment_overlap = p$gene_label_segment_overlap,
       label_segment_overlap_alpha = p$gene_label_segment_overlap_alpha,
       .feature_mode = feature_mode, .label_side = side,
@@ -325,7 +328,7 @@ ggchord_collinear_gene_labels <- function(p, layout) {
         accver = gl$accver[rows], alpha = 1, occluded = FALSE,
         linetype = if (identical(p$gene_label_segment_linetype, "auto"))
           ifelse(gl$side_flipped[rows], "dashed", "solid") else
-            p$gene_label_segment_linetype,
+            gl$label_segment_linetype[rows],
         stringsAsFactors = FALSE)
       # Keep group identities usable by the shared composite label renderer.
       group_map <- match(segment$group, gl$group)
@@ -468,7 +471,10 @@ ggchord_collinear_share_labels <- function(registry, layout) {
       base$source_row <- gl$source_row[i]
       base$alpha <- 1
       base$occluded <- FALSE
-      base$linetype <- if (nrow(template)) template$linetype[1L] else
+      requested_linetype <- gl$label_segment_linetype[i] %||% "auto"
+      base$linetype <- if (!identical(requested_linetype, "auto")) {
+        requested_linetype
+      } else if (nrow(template)) template$linetype[1L] else
         if (isTRUE(gl$side_flipped[i])) "dashed" else "solid"
       rebuilt[[length(rebuilt) + 1L]] <- base
     }

@@ -202,6 +202,9 @@ geom_gene <- function(mapping = NULL, data = NULL,
 #' @param position Position adjustment. Supply the same
 #'   [position_feature_stack()] used by a gene/feature layer when labels are
 #'   drawn from separate data or without a geometry layer.
+#'   In \code{coord_collinear()}, labels without an explicit Position share
+#'   a matching geometry layer's lanes; explicit label Positions do not move
+#'   the geometry layer.
 #' @param show.legend,inherit.aes Standard ggplot2 layer arguments.
 #' @param ... Additional arguments passed to \code{geom_text()}
 #'

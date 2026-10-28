@@ -9,6 +9,11 @@
   Gene/feature labels share obstacles across layers; `label_diagnostics`
   records placement and hiding decisions. Labels moved off a feature use
   readable dark text rather than retaining a light internal contrast colour.
+  Adding a linear label layer preserves each gene/feature layer's own
+  Position and stacking. Omitted label Positions share matching geometry
+  lanes even when feature categories and label text differ; explicit label
+  Positions affect only label anchors. Automatic feature labels retain the
+  requested side, and newly displaced leaders retain explicit line types.
 * In linear coordinates, `geom_seq(seq_gap = ...)` sets consecutive backbone
   spacing as a proportion of the longest backbone width (default 0.3). Explicit
   sequence radius, curvature, ring mappings/scales and sequence-label radius
@@ -25,6 +30,8 @@
   `"collinear"` and include `sequence_layout` with real backbone y, horizontal
   ranges, orientation and units per bp, without circular radii or track IDs.
   See `examples/collinear.R` for a runnable teaching example.
+* Linear position scales now respect `breaks = NULL`, `minor_breaks = NULL`
+  and `labels = NULL`, allowing ticks or their text to be explicitly hidden.
 
 # ggchord 0.13.1
 

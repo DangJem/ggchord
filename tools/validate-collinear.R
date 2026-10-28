@@ -88,6 +88,45 @@ independent <- export_ggchord_layout(separate, include = "feature",
 stopifnot(length(unique(independent$feature$layer_id)) == 2L,
   setequal(independent$feature$feature_shape, c("block", "chevron")))
 
+# Labels keep their own Position and text without moving the feature polygons.
+label_features <- data.frame(accver = "cluster_A", start = c(100, 150),
+  end = c(600, 700), strand = "+", type = "CDS", label = c("gene A", "gene B"))
+feature_position <- position_feature_stack(base_position = position_strand(.2), spacing = .2)
+feature_base <- ggchord(collinear_sequences, validate = "none") + geom_seq() +
+  geom_feature(data = label_features, position = feature_position) + coord_collinear()
+feature_before <- export_ggchord_layout(feature_base, include = "feature")
+feature_after <- export_ggchord_layout(feature_base +
+  geom_feature_label_repel(data = label_features, label_side = "outside"),
+  include = c("feature", "labels"))
+placement_columns <- c("source_row", "lane", "normal_offset")
+stopifnot(identical(unique(feature_before$feature[placement_columns]),
+  unique(feature_after$feature[placement_columns])))
+label_rows <- feature_after$labels[feature_after$labels$.component %in% "text", , drop = FALSE]
+stopifnot(identical(as.character(label_rows$label), label_features$label),
+  all(label_rows$label_side > 0),
+  identical(lapply(unique(label_rows[placement_columns]), unname),
+    lapply(unique(feature_after$feature[placement_columns]), unname)))
+explicit_labels <- export_ggchord_layout(feature_base +
+  geom_feature_label(data = label_features, position = position_strand(.8),
+    label_overlap = "allow"), include = c("feature", "labels"))
+stopifnot(identical(unique(feature_before$feature[placement_columns]),
+  unique(explicit_labels$feature[placement_columns])),
+  all(explicit_labels$labels$normal_offset > explicit_labels$feature$normal_offset[1L]))
+
+# A newly displaced automatic label retains its explicit leader line style.
+leader_feature <- data.frame(accver = "cluster_A", start = 100, end = 900,
+  strand = "+", type = "CDS", label = "foo")
+leader_position <- position_strand(.2)
+leader_out <- export_ggchord_layout(ggchord(collinear_sequences, validate = "none") +
+  geom_seq() + geom_feature(data = leader_feature, feature_width = .15,
+    position = leader_position) +
+  geom_feature_label(data = leader_feature, position = leader_position,
+    label_overlap = "allow") +
+  geom_feature_label_repel(data = leader_feature, position = leader_position,
+    gene_label_segment_linetype = "dotted") + coord_collinear(), include = "labels")
+leader_segments <- leader_out$labels[leader_out$labels$.component %in% "segment", , drop = FALSE]
+stopifnot(nrow(leader_segments) > 0L, all(leader_segments$linetype == "dotted"))
+
 # The same source tables also remain valid in the default chord coordinate.
 chord <- ggchord(collinear_sequences, collinear_alignments, collinear_genes,
   validate = "none") + geom_seq() + geom_link_ribbon() + geom_gene()
@@ -152,6 +191,16 @@ static_axis <- export_ggchord_layout(base + geom_seq() +
 stopifnot("one" %in% static_axis$axis$label,
   !any(static_axis$axis$accver == "cluster_B" &
     static_axis$axis$label %in% "thousand"))
+
+# NULL scale controls deliberately remove ticks or labels, rather than using defaults.
+no_ticks <- export_ggchord_layout(base + geom_seq() + coord_collinear() +
+  scale_seq_position_continuous(breaks = NULL, minor_breaks = NULL), include = "axis")
+stopifnot(!any(no_ticks$axis$.component %in% c("major_tick", "minor_tick", "text")))
+ticks_only <- export_ggchord_layout(base + geom_seq() + coord_collinear() +
+  scale_seq_position_continuous(breaks = c(0, 500), minor_breaks = NULL, labels = NULL),
+  include = "axis")
+stopifnot(any(ticks_only$axis$.component %in% "major_tick"),
+  !any(ticks_only$axis$.component %in% c("minor_tick", "text")))
 
 # Fitting includes the actual region band and styled backbone vertices.
 region_bounds <- export_ggchord_layout(base + geom_seq() +

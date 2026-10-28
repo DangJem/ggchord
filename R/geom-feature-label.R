@@ -11,6 +11,9 @@
 #' @param label_overlap Fixed-label collision policy.
 #' @param label_wrap Optional character wrapping width.
 #' @param position Feature Position used for the label anchor.
+#'   In \code{coord_collinear()}, an omitted Position shares the matching
+#'   feature layer's lanes; an explicit Position changes only label anchors,
+#'   leaving feature polygons in their own Position.
 #' @param show.legend,inherit.aes Standard ggplot2 layer arguments.
 #' @param ... Additional text parameters.
 #' @return A ggplot2 layer.
@@ -23,6 +26,7 @@ geom_feature_label <- function(
     label_wrap = NULL,
     position = "identity",
     show.legend = FALSE, inherit.aes = FALSE, ...) {
+  position_explicit <- !missing(position)
   dots <- list(...)
   label_orientation <- match.arg(label_orientation)
   label_side <- match.arg(label_side)
@@ -43,6 +47,7 @@ geom_feature_label <- function(
   ))
   lyr$ggchord_theme_element <- "ggchord.feature.label"
   lyr$ggchord_params$is_feature_label <- TRUE
+  lyr$ggchord_params$position_explicit <- position_explicit
   lyr$ggchord_params$gene_label_orientation <- label_orientation
   if (!any(c("colour", "color") %in% names(mapping)) &&
       !any(c("colour", "color") %in% names(dots))) {
@@ -102,6 +107,7 @@ geom_feature_label_repel <- function(
     external = TRUE,
     position = "identity",
     show.legend = FALSE, inherit.aes = FALSE, ...) {
+  position_explicit <- !missing(position)
   dots <- list(...)
   label_layout <- match.arg(label_layout)
   label_fit <- match.arg(label_fit)
@@ -124,6 +130,8 @@ geom_feature_label_repel <- function(
     # real radial gap separates the curved glyph envelope from its feature.
     lyr$ggchord_params$gene_label_layout <- "feature"
     lyr$ggchord_params$is_feature_label <- TRUE
+    lyr$ggchord_params$position_explicit <- position_explicit
+    lyr$ggchord_params$label_side_requested <- label_side
     lyr$ggchord_params$feature_label_external <- external
     lyr$ggchord_input_transform <- ggchord_feature_label_data
     lyr$ggchord_role_aes <- unique(c(
@@ -161,6 +169,7 @@ geom_feature_label_repel <- function(
   )
   lyr$ggchord_params$gene_label_layout <- label_layout
   lyr$ggchord_params$is_feature_label <- TRUE
+  lyr$ggchord_params$position_explicit <- position_explicit
   lyr$ggchord_params$feature_label_external <- external
   lyr$ggchord_input_transform <- ggchord_feature_label_data
   lyr$ggchord_role_aes <- unique(c(

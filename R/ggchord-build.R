@@ -66,6 +66,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
         gene_label_params <- pp
         gene_label_layer <- TRUE
         label_data <- ggchord_resolve_layer_input(lyr, data_list$gene_data)
+        gene_label_params$label_text <- label_data$anno
         if (!isTRUE(gene_geometry_layer_requested) &&
             (!is.null(lyr$ggchord_input_data) ||
             length(intersect(names(lyr$ggchord_input_mapping),
@@ -77,6 +78,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
         gene_repel_params <- pp
         gene_repel_layer <- TRUE
         label_data <- ggchord_resolve_layer_input(lyr, data_list$gene_data)
+        gene_repel_params$label_text <- label_data$anno
         if (!isTRUE(gene_geometry_layer_requested) &&
             (!is.null(lyr$ggchord_input_data) ||
             length(intersect(names(lyr$ggchord_input_mapping),
@@ -381,6 +383,9 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   # the legacy geom_gene() arguments as fallback.
   # The repel layer takes priority over the fixed label layer
   lbl <- if (gene_repel_layer) gene_repel_params else gene_label_params
+  if (collinear && !is.null(lbl$position_explicit)) {
+    lbl$position_supplied <- lbl$position_explicit
+  }
   gene_ls   <- gene_label_layer || gene_repel_layer ||
     isTRUE(gene_params$show_label_override) ||
     isTRUE(gene_params$gene_label_show)
@@ -432,7 +437,9 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   gene_lrepel_fit    <- gene_repel_params$gene_label_fit %||% "wrap"
   gene_lrepel_lines  <- gene_repel_params$gene_label_max_lines %||% 2L
   gene_lrepel_side   <- if (gene_repel_layer) {
-    gene_repel_params$gene_label_side %||% "outside"
+    if (collinear) gene_repel_params$label_side_requested %||%
+      gene_repel_params$gene_label_side %||% "outside" else
+        gene_repel_params$gene_label_side %||% "outside"
   } else {
     lbl$gene_label_side %||% "outside"
   }
@@ -725,11 +732,15 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
       br <- sc$get_breaks()
       break_labels <- if (collinear) sc$get_labels(br) else NULL
       raw_br <- if (collinear) sc$get_transformation()$inverse(br) else br
+      if (collinear) {
+        raw_br <- raw_br %||% numeric()
+        break_labels <- break_labels %||% rep(NA_character_, length(raw_br))
+      }
       keep <- is.finite(raw_br) & raw_br >= 0 & raw_br <= lens[[id]]
       br <- br[keep]
       axis_breaks[[id]] <- raw_br[keep]
       minor <- sc$get_breaks_minor()
-      if (collinear) minor <- sc$get_transformation()$inverse(minor)
+      if (collinear) minor <- sc$get_transformation()$inverse(minor) %||% numeric()
       axis_minor_breaks[[id]] <- minor[
         is.finite(minor) & minor >= 0 & minor <= lens[[id]]
       ]
@@ -822,7 +833,9 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     global$rotation
   }
 
-  layout_strategy <- if (collinear) compute_collinear_layout else compute_chord_layout
+  layout_strategy <- if (collinear) {
+    function(...) compute_collinear_layout(..., gene_label_text = lbl$label_text)
+  } else compute_chord_layout
   layout <- layout_strategy(
     seqs = seqs, lens = lens, seq_labels = seq_labels,
     seq_colors = seq_colors, seqRadius = seqRadius,
@@ -1030,12 +1043,17 @@ compute_chord_geometry <- function(plot) {
     main_type <- group_type[[id]]
     needs_own <- nzchar(main_type) && (type_counts[[main_type]] > 1 ||
       main_type %in% c("gene_label", "gene_label_repel"))
+    # A label layer owns its Position independently of the entity polygons.
+    # Do not reuse a primary layout whose active Position came from a label.
+    if (isTRUE(primary$collinear) && main_type == "gene" &&
+        any(group_type %in% c("gene_label", "gene_label_repel"))) needs_own <- TRUE
     sub_layout <- primary
     if (isTRUE(needs_own)) {
       deps <- seq_dep
       if (main_type %in% c("gene_label", "gene_label_repel")) {
         label_rows <- idx[vapply(idx, function(j) {
-          isTRUE(plot$layers[[j]]$ggchord_params$is_feature_label)
+          isTRUE(primary$collinear) ||
+            isTRUE(plot$layers[[j]]$ggchord_params$is_feature_label)
         }, logical(1))]
         if (length(label_rows)) {
           label_layer <- plot$layers[[label_rows[length(label_rows)]]]
@@ -1044,12 +1062,16 @@ compute_chord_geometry <- function(plot) {
           )
           for (gene_row in gene_geometry_dep) {
             feature_layer <- plot$layers[[gene_row]]
-            if (!isTRUE(feature_layer$ggchord_params$is_feature)) next
+            if (isTRUE(primary$collinear)) {
+              if (isTRUE(feature_layer$ggchord_params$is_feature) !=
+                  isTRUE(label_layer$ggchord_params$is_feature_label)) next
+            } else if (!isTRUE(feature_layer$ggchord_params$is_feature)) next
             feature_input <- ggchord_resolve_layer_input(
               feature_layer, chord$data$gene_data
             )
             compare <- intersect(
-              c("accver", "start", "end", "strand", "anno", "label"),
+              if (isTRUE(primary$collinear)) c("accver", "start", "end", "strand") else
+                c("accver", "start", "end", "strand", "anno", "label"),
               intersect(names(label_input), names(feature_input))
             )
             same_input <- nrow(label_input) == nrow(feature_input) &&
@@ -1057,8 +1079,12 @@ compute_chord_geometry <- function(plot) {
               identical(label_input[compare], feature_input[compare])
             label_position <- label_layer$ggchord_params$feature_position
             feature_position <- feature_layer$ggchord_params$feature_position
+            position_supplied <- if (isTRUE(primary$collinear)) {
+              label_layer$ggchord_params$position_explicit %||%
+                label_layer$ggchord_params$position_supplied
+            } else label_layer$ggchord_params$position_supplied
             same_position <- !isTRUE(
-              label_layer$ggchord_params$position_supplied
+              position_supplied
             ) || identical(label_position, feature_position)
             if (same_input && same_position) {
               deps <- c(deps, gene_row)

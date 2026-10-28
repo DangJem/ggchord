@@ -21,3 +21,22 @@ test_that("collinear coordinates reuse public sequence, ribbon and gene layers",
     "seq_radius"
   )
 })
+
+test_that("collinear labels preserve feature stacking and their own text", {
+  seq <- data.frame(accver = "A", length = 1000)
+  features <- data.frame(accver = "A", start = c(100, 150), end = c(600, 700),
+    strand = "+", type = "CDS", label = c("gene A", "gene B"))
+  p <- ggchord(seq, validate = "none") + geom_seq() +
+    geom_feature(data = features,
+      position = position_feature_stack(base_position = position_strand(.2))) +
+    coord_collinear()
+  before <- export_ggchord_layout(p, include = "feature")
+  after <- export_ggchord_layout(p + geom_feature_label_repel(data = features),
+    include = c("feature", "labels"))
+  placement <- c("source_row", "lane", "normal_offset")
+  expect_equal(unique(after$feature[placement]), unique(before$feature[placement]))
+  text <- after$labels[after$labels$.component %in% "text", , drop = FALSE]
+  expect_equal(as.character(text$label), features$label)
+  expect_equal(lapply(unique(text[placement]), unname),
+    lapply(unique(after$feature[placement]), unname))
+})
