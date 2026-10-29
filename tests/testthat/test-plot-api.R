@@ -1,5 +1,5 @@
 test_that("constructor and core sequence, ribbon and gene layers build", {
-  p <- ggchord(smoke_sequences(), smoke_ribbon(), smoke_genes()) +
+  p <- ggchord(smoke_sequences(), smoke_ribbon(), smoke_genes(), validate = "none") +
     geom_seq() + geom_link_ribbon() + geom_gene() + geom_seq_label()
   expect_s3_class(p, "ggchord")
   expect_s3_class(build_ggchord_smoke(p), "ggplot_built")

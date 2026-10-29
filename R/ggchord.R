@@ -35,9 +35,11 @@ globalVariables(c(
 #'
 #' @param seq_data data.frame/tibble with accver and length, or a `GRanges`,
 #'   `Seqinfo` or `GInteractions` object with known full sequence lengths,
-#'   or a named Biostrings `XStringSet`. Unnamed sequence objects must first
+#'   or a named nucleotide Biostrings `XStringSet`. Unnamed sequence objects must first
 #'   use [as_ggchord_seq()] with explicit `ids`.
-#'   Optional S4 inputs use [as_ggchord_seq()].
+#'   Optional S4 inputs use [as_ggchord_seq()]. When present,
+#'   \code{sequence_unit} must be \code{"bp"}; amino-acid intervals require an
+#'   explicit CDS projection, and arbitrary character widths are not bp lengths.
 #' @param ribbon_data Optional alignment table with qaccver, saccver, qstart,
 #'   qend, sstart and send. length and pident are optional unless requested
 #'   by a mapping, filter or statistic. A `GInteractions` object uses
@@ -96,6 +98,16 @@ ggchord <- function(
   }
   seq_data <- ggchord_normalize_accver(seq_data)
   gene_data <- ggchord_normalize_accver(gene_data)
+  if (is.data.frame(seq_data) && "sequence_unit" %in% names(seq_data)) {
+    units <- as.character(seq_data$sequence_unit)
+    if (any(units %in% "aa")) ggchord_stop(
+      "ggchord(): amino-acid sequence widths are not nucleotide coordinates; ",
+      "use build_ggchord_cds() with project_ggchord_features() or ",
+      "project_ggchord_links(), then supply known nucleotide sequence lengths")
+    if (anyNA(units) || any(units != "bp")) ggchord_stop(
+      "ggchord(): sequence_unit must be 'bp'; supply DNA/RNA sequences or ",
+      "an explicit table of known nucleotide lengths rather than character widths")
+  }
 
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)

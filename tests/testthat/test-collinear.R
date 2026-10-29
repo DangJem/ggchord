@@ -1,5 +1,5 @@
 test_that("collinear coordinates preserve sequence direction and source identity", {
-  p <- ggchord(smoke_sequences(), smoke_ribbon(), smoke_genes()) +
+  p <- ggchord(smoke_sequences(), smoke_ribbon(), smoke_genes(), validate = "none") +
     geom_seq(seq_orientation = c(A = 1, B = -1)) + geom_link_ribbon() +
     geom_gene(position = position_strand()) + coord_collinear()
   out <- export_ggchord_layout(p, include = c("seq", "ribbon", "gene"))
@@ -53,7 +53,7 @@ test_that("ribbon outline defaults follow display adjacency without changing map
 
 
 test_that("narrow linear channels retain ribbon endpoints between backbones", {
-  p <- ggchord(smoke_sequences(), smoke_ribbon()) +
+  p <- ggchord(smoke_sequences(), smoke_ribbon(), validate = "none") +
     geom_seq(seq_gap = .01) + geom_link_ribbon() + coord_collinear()
   out <- export_ggchord_layout(p, include = "ribbon")
   expect_true(all(out$ribbon$y >= min(out$sequence_layout$y) &

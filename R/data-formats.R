@@ -129,7 +129,7 @@ read_bed <- function(file = NULL, files = NULL, source_file = FALSE) {
           ends <- offsets + sizes[[i]]
           width <- raw$chromEnd[i] - raw$chromStart[i]
           if (offsets[1L] != 0 || tail(ends, 1L) != width || any(ends > width) ||
-              (length(offsets) > 1L && any(offsets[-1L] < head(ends, -1L)))) {
+              (length(offsets) > 1L && any(offsets[-1L] < utils::head(ends, -1L)))) {
             ggchord_stop(caller, ": BED12 blocks must be ordered, non-overlapping, ",
               "within the feature, and span its first/last bases")
           }
@@ -185,7 +185,7 @@ read_paf <- function(file = NULL, files = NULL, source_file = FALSE) {
   tables <- lapply(paths, function(path) {
     input <- ggchord_format_lines(path, caller)
     if (any(lengths(input$fields) < 12L)) ggchord_stop(caller, ": PAF requires at least 12 tab-separated fields: ", path)
-    raw <- as.data.frame(do.call(rbind, lapply(input$fields, head, 12L)), stringsAsFactors = FALSE)
+    raw <- as.data.frame(do.call(rbind, lapply(input$fields, utils::head, 12L)), stringsAsFactors = FALSE)
     names(raw) <- c("qaccver", "qlen", "query_start0", "query_end0", "relative_strand",
       "saccver", "slen", "target_start0", "target_end0", "nmatch", "length", "source_mapq")
     for (field in setdiff(names(raw), c("qaccver", "saccver", "relative_strand"))) {

@@ -209,11 +209,11 @@ ggchord_segmented_transform <- function(seqs, lens, coord) {
   left_break <- right_break <- stats::setNames(rep(FALSE, length(seqs)), seqs)
   for (i in seq_along(groups)) {
     ids <- groups[[i]]
-    offset[ids] <- (c(0, head(cumsum(lens[ids] + coord$collinear_segment_gap), -1L)) -
+    offset[ids] <- (c(0, utils::head(cumsum(lens[ids] + coord$collinear_segment_gap), -1L)) -
       totals[i] * fraction) * scale
     slot[ids] <- seq_along(ids)
     if (length(ids) > 1L) {
-      left_break[ids[-1L]] <- TRUE; right_break[head(ids, -1L)] <- TRUE
+      left_break[ids[-1L]] <- TRUE; right_break[utils::head(ids, -1L)] <- TRUE
     }
   }
   data <- data[match(seqs, data$accver), , drop = FALSE]

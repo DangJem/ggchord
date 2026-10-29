@@ -16,11 +16,14 @@ local({
     geom_feature_label_repel(data = features, label_fit = "shrink",
       label_min_size = 1.5, size = 5) + coordinate
   for (coordinate in list(coord_collinear(), coord_circular(), coord_chord())) {
-    geometry <- export_ggchord_layout(make_plot(coordinate), include = "labels")$labels
+    exported <- export_ggchord_layout(make_plot(coordinate), include = "labels")
+    geometry <- exported$labels
     text <- geometry[geometry$.component %in% "text", , drop = FALSE]
     stopifnot(nrow(text) > 0L, all(text$label_text_original == features$label),
       all(text$size >= 1.5 & text$size <= 5), any(text$size < 5),
-      all(text$label_size_final == text$size))
+      all(text$label_size_final == text$size),
+      nrow(exported$label_fit_diagnostics) == nrow(features),
+      setequal(exported$label_fit_diagnostics$layer_id, unique(text$layer_id)))
   }
   # A rendered text grob must retain its resolved size rather than have the
   # original fixed size reapplied by the composite text-style wrapper.

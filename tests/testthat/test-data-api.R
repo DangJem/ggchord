@@ -10,6 +10,7 @@ test_that("validation, cleaning and one malformed input have public outcomes", {
   expect_equal(nrow(cleaned$gene_data), nrow(genes))
   expect_equal(cleaned$ribbon_data$direction, "reverse")
   expect_error(ggchord(transform(seq, length = "bad")), "numeric")
+  expect_error(ggchord(transform(seq, sequence_unit = "aa"), validate = "none"), "not nucleotide")
 })
 
 test_that("import helpers parse minimal files with explicit coordinate conventions", {

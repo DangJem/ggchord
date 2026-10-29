@@ -16,9 +16,11 @@ ggchord(
 \arguments{
 \item{seq_data}{data.frame/tibble with accver and length, or a `GRanges`,
 `Seqinfo` or `GInteractions` object with known full sequence lengths,
-or a named Biostrings `XStringSet`. Unnamed sequence objects must first
+or a named nucleotide Biostrings `XStringSet`. Unnamed sequence objects must first
 use [as_ggchord_seq()] with explicit `ids`.
-Optional S4 inputs use [as_ggchord_seq()].}
+Optional S4 inputs use [as_ggchord_seq()]. When present,
+\code{sequence_unit} must be \code{"bp"}; amino-acid intervals require an
+explicit CDS projection, and arbitrary character widths are not bp lengths.}
 
 \item{ribbon_data}{Optional alignment table with qaccver, saccver, qstart,
 qend, sstart and send. length and pident are optional unless requested

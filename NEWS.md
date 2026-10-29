@@ -88,6 +88,13 @@
 * Fixed `clean_ggchord_data()` dropping valid one-base inclusive gene and
   ribbon intervals. Entirely out-of-range intervals are still reported and
   dropped when clipping, while a retained one-base overlap survives.
+* Plot construction now rejects explicitly non-nucleotide `sequence_unit`
+  values instead of labelling amino-acid or generic character widths as bp.
+  Sequence adapters still retain these widths and units for preparation;
+  protein features require an explicit CDS projection before genomic plotting.
+* Exported shrink diagnostics now belong only to their actual text layer.
+  Dependency layouts no longer duplicate them under backbone/feature layers,
+  and completely hidden labels retain an explicit final hiding reason.
 * Reduced the default tests to minimal public behavior and focused serious
   regressions. Detailed geometry, output and performance checks remain
   explicitly invoked development/release tools.

@@ -133,6 +133,6 @@ compute_chord_layout <- function(
   eval(ggchord_layout_transform_step, envir = context)
   eval(ggchord_layout_label_step, envir = context)
   layout <- eval(ggchord_layout_finalize_step, envir = context)
-  layout$label_fit_diagnostics <- label_fit_diagnostics %||% data.frame()
+  layout$label_fit_diagnostics <- context$label_fit_diagnostics %||% data.frame()
   layout
 }

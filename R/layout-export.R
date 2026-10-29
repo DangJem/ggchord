@@ -196,6 +196,11 @@ export_ggchord_layout <- function(
   exported$axis_selection <- layout$axis_selection %||% data.frame()
   exported$render_context <- layout$render_context %||% ggchord_estimated_render_context(layout)
   fits <- lapply(names(layout$layer_layouts), function(id) {
+    # Dependency sub-layouts may carry compatibility label diagnostics even
+    # when their owner only draws a backbone or feature. Export only the
+    # actual text owner's diagnostics, including owners whose text was hidden.
+    if (!any(names(layout$layer_geometry[[id]]) %in%
+        c("gene_text", "gene_text_repel", "gene_label_repel"))) return(NULL)
     d <- layout$layer_layouts[[id]]$label_fit_diagnostics
     if (!is.data.frame(d) || !nrow(d)) return(NULL)
     resolved <- lapply(layout$layer_geometry[[id]], function(g) {
@@ -210,7 +215,7 @@ export_ggchord_layout <- function(
       for (field in intersect(c("label_size_final", "label_fit_reason"), names(resolved)))
         d[[field]][!is.na(at)] <- resolved[[field]][at[!is.na(at)]]
       d$label_fit_reason[is.na(at)] <- "hidden_after_layout"
-    }
+    } else d$label_fit_reason <- "hidden_after_layout"
     d$layer_id <- id
     d
   })

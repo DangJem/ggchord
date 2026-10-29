@@ -1,5 +1,20 @@
 # Run explicitly from the repository root. No package test/check is performed.
+# Set R_LIBS to an existing optional library. GGCHORD_REQUIRE_BIOC=true makes
+# missing dependencies a failure rather than silently omitting their checks.
 pkgload::load_all(quiet = TRUE)
+local({
+previous <- grDevices::dev.cur()
+grDevices::pdf(NULL)
+owned <- grDevices::dev.cur()
+on.exit({
+  if (owned %in% grDevices::dev.list()) grDevices::dev.off(owned)
+  if (previous %in% grDevices::dev.list()) grDevices::dev.set(previous)
+}, add = TRUE)
+packages <- c("GenomicRanges", "InteractionSet", "Biostrings")
+available <- vapply(packages, requireNamespace, logical(1), quietly = TRUE)
+if (identical(Sys.getenv("GGCHORD_REQUIRE_BIOC"), "true") && any(!available))
+  stop("Required real-object validation dependencies unavailable: ",
+    paste(packages[!available], collapse = ", "))
 
 seqs <- as_ggchord_seq(data.frame(chrom = c("host", "virus"), size = c(1000, 300)),
   mapping = c(accver = "chrom", length = "size"))
@@ -55,10 +70,12 @@ if (requireNamespace("GenomicRanges", quietly = TRUE) &&
     geom_seq() + geom_link_ribbon() + geom_feature(data = gr) +
     geom_feature_label_repel(data = gr) + geom_link_line(data = gi) +
     coord_collinear(orientation = "auto")
-  exported <- export_ggchord_layout(direct, original_data = TRUE)
+  exported <- export_ggchord_layout(direct,
+    include = c("seq", "ribbon", "feature", "labels", "link"), original_data = TRUE)
   stopifnot(nrow(exported$feature) > 0L, nrow(exported$ribbon) > 0L,
     nrow(exported$link) > 0L, length(exported$conversion_reports) > 0L,
     exported$orientation_diagnostics$status[2L] == "no_evidence")
+  grid::grid.draw(ggplot2::ggplotGrob(direct))
   unknown <- GenomicRanges::GRanges(seqnames = c("host", "virus"),
     ranges = IRanges::IRanges(start = c(100, 10), end = c(120, 30)))
   error <- tryCatch(as_ggchord_seq(unknown), error = identity)
@@ -67,4 +84,36 @@ if (requireNamespace("GenomicRanges", quietly = TRUE) &&
       c(1000, 300)))
   cat("Real GRanges/GInteractions conversion checks passed.\n")
 } else cat("Optional GRanges/GInteractions checks skipped: dependencies unavailable.\n")
+if (available[["Biostrings"]]) {
+  dna <- Biostrings::DNAStringSet(c("A.2" = paste(rep("ACGT", 25), collapse = ""),
+    "B" = paste(rep("AT", 40), collapse = "")))
+  S4Vectors::mcols(dna)$label <- c("host DNA", "viral DNA")
+  S4Vectors::metadata(dna)$source <- "explicit synthetic adapter validation"
+  converted <- as_ggchord_seq(dna)
+  single <- as_ggchord_seq(Biostrings::DNAString("ACGT"), ids = "explicit")
+  protein <- as_ggchord_seq(Biostrings::AAString("MKTW"), ids = "protein")
+  characters <- as_ggchord_seq(Biostrings::BString("xY-1"), ids = "characters")
+  stopifnot(identical(converted$accver, c("A.2", "B")),
+    identical(converted$length, c(100, 80)), all(converted$sequence_unit == "bp"),
+    identical(converted$label, c("host DNA", "viral DNA")),
+    attr(converted, "ggchord_conversion")$source_metadata$source ==
+      "explicit synthetic adapter validation",
+    single$accver == "explicit", single$length == 4,
+    protein$sequence_unit == "aa", protein$length == 4,
+    characters$sequence_unit == "character", characters$length == 4)
+  conflict <- tryCatch(as_ggchord_seq(dna, ids = c("renamed", "B")), error = identity)
+  stopifnot(inherits(conflict, "error"))
+  protein_plot <- tryCatch(ggchord(protein), error = identity)
+  character_plot <- tryCatch(ggchord(characters), error = identity)
+  stopifnot(inherits(protein_plot, "error"),
+    grepl("project_ggchord_features", conditionMessage(protein_plot)),
+    inherits(character_plot, "error"),
+    grepl("known nucleotide lengths", conditionMessage(character_plot)))
+  direct <- ggchord(dna) + geom_seq() + geom_seq_label() + coord_collinear()
+  stopifnot(nrow(export_ggchord_layout(direct, include = "seq")$seq) > 0L)
+  grid::grid.draw(ggplot2::ggplotGrob(direct))
+  cat("Real XStringSet/XString names, widths, units, metadata and drawing checks passed.\n")
+} else cat("Optional Biostrings checks skipped: dependency unavailable.\n")
+for (name in packages[available]) cat(name, as.character(utils::packageVersion(name)), "\n")
 cat("Data conversion development checks passed.\n")
+})
