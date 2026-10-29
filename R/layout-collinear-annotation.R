@@ -314,6 +314,8 @@ ggchord_collinear_gene_labels <- function(p, layout) {
   labels <- Filter(Negate(is.null), labels)
   if (!length(labels)) return(layout)
   gl <- do.call(rbind, labels)
+  gl$label_text_original <- gl$text
+  gl$label_size_requested <- gl$size
   gl$text <- ggchord_label_wrap_text(gl$text, p$gene_label_wrap)
   units <- layout$text_units_per_inch
   obstacles <- ggchord_text_obstacle_boxes(layout$seq_labels_df,
@@ -321,6 +323,11 @@ ggchord_collinear_gene_labels <- function(p, layout) {
   fits_inside <- function(metric) gl$.feature_mode & metric$w < pmax(0,
     gl$.feature_span - (p$arrow_head_length %||% .04) - .02) &
     metric$h < gl$.feature_width * .9
+  if (identical(p$gene_label_fit, "shrink")) gl <- ggchord_shrink_label_text(
+    gl, available_width = pmax(0,
+      gl$.feature_span - (p$arrow_head_length %||% .04) - .02),
+    available_height = gl$.feature_width * .9,
+    min_size = p$gene_label_min_size %||% 1.5, units_per_inch = units)
   initial_inside <- fits_inside(ggchord_text_boxes(gl,
     units_per_inch = units, box_padding = .025))
   gl$text_y[initial_inside] <- gl$anchor_y[initial_inside]
@@ -338,6 +345,10 @@ ggchord_collinear_gene_labels <- function(p, layout) {
   gl$feature_label_inside[inside] <- TRUE
   gl$feature_label_mode[inside] <- "inside"
   gl$feature_label_colour[inside] <- gl$.inside_colour[inside]
+  gl <- ggchord_label_fit_metadata(gl)
+  layout$label_fit_diagnostics <- gl[intersect(c("source_row", "accver",
+    "label_text_original", "label_size_requested", "label_size_final",
+    "label_size_min", "label_fit_reason", "feature_label_mode"), names(gl))]
   # Final collision placement is shared across all layer registries below.
   gl <- gl[!is.na(gl$text) & nzchar(gl$text), , drop = FALSE]
   if (nrow(gl) && isTRUE(p$gene_label_repel_layer)) {
@@ -421,6 +432,25 @@ ggchord_collinear_share_labels <- function(registry, layout) {
       item <- list(layer_id = id, component = component, labels = d)
       if (identical(component, "gene_text")) fixed[[length(fixed) + 1L]] <- item else
         automatic[[length(automatic) + 1L]] <- item
+    }
+  }
+  # Quantitative tracks reserve their complete physical band, including line
+  # tracks between samples. Keep these temporary obstacles separate from the
+  # public gene/feature registry and from source-owned polygon exemptions.
+  track_bands <- layout$track_registry
+  if (is.data.frame(track_bands) && nrow(track_bands) &&
+      all(c("accver", "normal_min", "normal_max") %in% names(track_bands))) {
+    for (i in seq_len(nrow(track_bands))) {
+      id <- as.character(track_bands$accver[i])
+      if (!id %in% layout$seqs) next
+      limits <- range(ggchord_collinear_x(c(0, ref$lens[id]), id, ref))
+      lower <- unname(ref$y[id]) + track_bands$normal_min[i]
+      upper <- unname(ref$y[id]) + track_bands$normal_max[i]
+      if (!all(is.finite(c(limits, lower, upper)))) next
+      polygons[[length(polygons) + 1L]] <- data.frame(
+        x = limits[c(1L, 2L, 2L, 1L, 1L)],
+        y = c(lower, lower, upper, upper, lower),
+        accver = id, .is_track = TRUE, stringsAsFactors = FALSE)
     }
   }
   if (!length(fixed) && !length(automatic)) return(registry)
@@ -521,6 +551,7 @@ ggchord_collinear_share_labels <- function(registry, layout) {
           break
         }
       }
+      row <- ggchord_label_fit_metadata(row)
       if (found) {
         row$label_lane <- as.integer(row$label_lane %||% 0L) + lane
         if ("x" %in% names(row)) row$x <- row$text_x
@@ -534,6 +565,11 @@ ggchord_collinear_share_labels <- function(registry, layout) {
       } else visible[i] <- FALSE
       diagnostics[[length(diagnostics) + 1L]] <<- data.frame(
         layer_id = item$layer_id, source_row = row$source_row,
+        label_text_original = as.character(row$label_text_original %||% row$text),
+        label_size_requested = as.numeric(row$label_size_requested %||% row$size),
+        label_size_final = row$size,
+        label_fit_reason = if (found) row$label_fit_reason else
+          if (row$label_fit_reason == "minimum_size_exceeded") "minimum_size_exceeded_hidden" else "layout_hidden",
         status = if (found) "placed" else "hidden",
         reason = if (found) {
           if (lane > 0L) "shared_obstacle" else NA_character_

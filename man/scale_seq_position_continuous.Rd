@@ -15,6 +15,7 @@ scale_seq_position_continuous(
   transform = "identity",
   n.breaks = 6,
   coordinates = c("relative", "source"),
+  sequences = NULL,
   ...
 )
 }
@@ -27,6 +28,12 @@ continuous-scale controls.}
 \item{coordinates}{In linear layouts, use relative locus coordinates or
 original source coordinates retained by \code{\link[=focus_ggchord_data]{focus_ggchord_data()}}. This
 affects axis breaks and labels, not the underlying genomic geometry.}
+
+\item{sequences}{Optional character vector selecting sequence axes by their
+displayed \code{accver}. \code{NULL} keeps all axes; \code{character()} hides every axis.
+Focused or segmented views use window IDs, not parent source accessions.
+Unknown or undisplayed identifiers produce an error. This controls axis
+lines, ticks and labels together without dropping sequence geometry.}
 
 \item{...}{Additional arguments passed to \code{\link[ggplot2:continuous_scale]{ggplot2::continuous_scale()}}.}
 }
@@ -44,4 +51,7 @@ focused <- focus_ggchord_data(data.frame(accver = "A", length = 1000),
 ggchord(focused$seq_data) + geom_seq() + geom_seq_break() +
   scale_seq_position_continuous(coordinates = "source",
     breaks = c(200, 400, 600)) + coord_collinear()
+ggchord(data.frame(accver = c("A", "B"), length = c(1000, 800))) +
+  geom_seq() + scale_seq_position_continuous(sequences = "B") +
+  coord_collinear()
 }

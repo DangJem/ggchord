@@ -6,7 +6,7 @@
 \usage{
 export_ggchord_layout(
   plot,
-  include = c("seq", "ribbon", "gene", "feature", "labels", "axis"),
+  include = c("seq", "ribbon", "gene", "feature", "labels", "axis", "track"),
   original_data = FALSE
 )
 }
@@ -15,7 +15,7 @@ export_ggchord_layout(
 
 \item{include}{Character vector selecting any of \code{"seq"},
 \code{"ribbon"}, \code{"gene"}, \code{"feature"}, \code{"labels"},
-\code{"link"}, \code{"restriction"}, and \code{"axis"}. Point links and
+\code{"link"}, \code{"restriction"}, \code{"track"}, and \code{"axis"}. Point links and
 restriction sites require explicit selection.}
 
 \item{original_data}{Logical. Include the resolved per-layer input tables
@@ -23,31 +23,40 @@ under \code{original_data}, default \code{FALSE}.}
 }
 \value{
 An object of class \code{ggchord_layout_export}. Selected component
-  names contain data frames. Circular layouts additionally contain an
-  \code{annotation_registry} data frame. Its inner rows expose the physical
-  track, radial width and boundaries; outer rows expose region, sector,
-  annotation class, dominant and actual band, spill reason, leader-crossing
-  count, slot, bounding box and leader corridor. The \code{metadata} member
-  records rotation, aspect ratio, limits, coordinate units and
-  transformation state.
-  Collinear layouts instead include `sequence_layout`, containing each
-  sequence's horizontal range, backbone y, orientation, units per bp,
-  reversible x offset, anchor and source origin. `orientation_diagnostics`
-  records directional support, confidence and unresolved cases.
-  Position lanes remain local offsets and are not circular physical tracks.
-  Their `label_diagnostics` records placed or hidden labels after shared
-  linear collision handling, including source layer, row, reason and leader
-  collisions. `connection_report` records retained and omitted ribbon input
-  rows with a selection reason. When converted inputs are present,
-  `conversion_reports` retains their conversion attributes, including source
-  class, column renaming, sequence information and object metadata.
-  Sequence break marks are included under `seq`.
-  Segmented linear displays retain one `sequence_layout` row per window,
-  including `row_id`, segment order, break flags and display `gap_bp`.
-  Source accession, origin/end/full length, local orientation, x offset and
-  units per bp describe each reversible piece; gaps have no source mapping.
-  Automatic segment break paths have `.decoration = "segment_break"` in
-  the sequence geometry. `gap_bp` is display spacing, not omitted length.
+names contain data frames. Circular layouts additionally contain an
+\code{annotation_registry} data frame. Its inner rows expose the physical
+track, radial width and boundaries; outer rows expose region, sector,
+annotation class, dominant and actual band, spill reason, leader-crossing
+count, slot, bounding box and leader corridor. The \code{metadata} member
+records rotation, aspect ratio, limits, coordinate units and
+transformation state.
+Collinear layouts instead include \code{sequence_layout}, containing each
+sequence's horizontal range, backbone y, orientation, units per bp,
+reversible x offset, anchor and source origin. \code{orientation_diagnostics}
+records directional support, confidence and unresolved cases.
+Position lanes remain local offsets and are not circular physical tracks.
+Their \code{label_diagnostics} records placed or hidden labels after shared
+linear collision handling, including source layer, row, reason and leader
+collisions. \code{connection_report} records retained and omitted ribbon input
+rows with a selection reason. When converted inputs are present,
+\code{conversion_reports} retains their conversion attributes, including source
+class, column renaming, sequence information and object metadata.
+Sequence break marks are included under \code{seq}.
+Segmented linear displays retain one \code{sequence_layout} row per window,
+including \code{row_id}, segment order, break flags and display \code{gap_bp}.
+Source accession, origin/end/full length, local orientation, x offset and
+units per bp describe each reversible piece; gaps have no source mapping.
+Automatic segment break paths have \code{.decoration = "segment_break"} in
+the sequence geometry. \code{gap_bp} is display spacing, not omitted length.
+Quantitative geometry is selected with \code{track}; \code{track_registry} records
+each ID/sequence band, source layers, numerical limits, unit and physical
+measurement status. \code{track_diagnostics} records retained/missing/clipped
+source rows. Numerical track axes and explicit bp reference bars are
+included under \code{axis}; \code{axis_selection} records selected sequence axes.
+Explicit label shrinking adds \code{label_fit_diagnostics}, preserving original
+text, requested/minimum/final sizes and fallback or hiding reasons.
+\code{render_context} distinguishes layout-only estimates from actual panel
+measurements. For a target-size measured report use \code{\link[=diagnose_ggchord]{diagnose_ggchord()}}.
 }
 \description{
 Builds a ggchord plot and returns selected computed geometry in a stable,

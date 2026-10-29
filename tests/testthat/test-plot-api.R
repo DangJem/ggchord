@@ -13,6 +13,9 @@ test_that("the three label strategies retain representative annotations", {
       geom_gene_label_repel(gene_label_layout = mode))
     expect_setequal(layout$gene_labels$label, smoke_genes()$anno)
   }
+  shrink <- get_chord_layout(base + geom_gene_label_repel(
+    gene_label_fit = "shrink", gene_label_min_size = 1.5))
+  expect_true(all(shrink$gene_labels$label_size_final >= 1.5))
 })
 
 test_that("region, feature and point-link layers retain their source rows", {

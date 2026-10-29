@@ -1,5 +1,6 @@
 # Automatic and fixed gene-label layout.
 ggchord_layout_label_step <- quote({
+  label_fit_diagnostics <- data.frame()
   # ====================================================================
   # Step 8b: wrap gene labels; optionally arrange them automatically
   # ====================================================================
@@ -259,6 +260,10 @@ ggchord_layout_label_step <- quote({
     }
     # Drop hidden labels and remap segment group IDs so every segment keeps a
     # valid reference after max_overlaps removes an interior label row.
+    gene_labels <- ggchord_label_fit_metadata(gene_labels)
+    label_fit_diagnostics <- gene_labels[intersect(c("source_row", "accver",
+      "label_text_original", "label_size_requested", "label_size_final",
+      "label_size_min", "label_fit_reason", "feature_label_mode"), names(gene_labels))]
     visible_labels <- !is.na(gene_labels$text) & nzchar(gene_labels$text)
     if (nrow(gene_label_segments) > 0) {
       group_map <- match(seq_len(nrow(gene_labels)), which(visible_labels))

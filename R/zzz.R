@@ -122,6 +122,9 @@ get_chord_layout <- function(plot, build = TRUE) {
   if (missing(plot) || !inherits(plot, "ggchord") || is.null(plot$ggchord)) {
     ggchord_stop("get_chord_layout(): plot must be supplied as a ggchord object")
   }
+  if (ggchord_physical_requested(plot) &&
+      !identical(plot$ggchord$ref$context_key, ggchord_render_cache_key()))
+    plot$ggchord$ref$layout <- NULL
   layout <- plot$ggchord$ref$layout
   if (is.null(layout) && isTRUE(build)) {
     branching <- any(vapply(plot$layers, function(l) (l$ggchord_params$link_branch %||% "none") != "none", logical(1)))
@@ -314,7 +317,9 @@ ggchord_attach_input_columns <- function(geometry, input) {
     "zlinetype", "outline_col", "linetype_val", "seq_colour",
     "ribbon_fill", "ribbon_alpha", "ribbon_colour",
     "ribbon_linetype", "gene_fill", "feature_fill", "feature_shape",
-    "feature_label_colour", "feature_label_orientation", "region_fill"
+    "feature_label_colour", "feature_label_orientation", "region_fill", ".component",
+    "track_id", "label_text_original", "label_size_requested", "label_size_final",
+    "label_size_min", "label_fit_reason", ".ggchord_resolved_size"
   )
   if ("source_row" %in% names(geometry)) {
     idx <- geometry$source_row

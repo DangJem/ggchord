@@ -93,6 +93,7 @@ compute_chord_layout <- function(
     gene_label_lineheight = 1.2,
     gene_label_wrap = NULL,
     gene_label_fit = "wrap",
+    gene_label_min_size = 1.5,
     gene_label_max_lines = 2L,
     gene_label_orientation = "horizontal",
     gene_label_overlap = "hide",
@@ -131,5 +132,7 @@ compute_chord_layout <- function(
   eval(ggchord_layout_annotation_step, envir = context)
   eval(ggchord_layout_transform_step, envir = context)
   eval(ggchord_layout_label_step, envir = context)
-  eval(ggchord_layout_finalize_step, envir = context)
+  layout <- eval(ggchord_layout_finalize_step, envir = context)
+  layout$label_fit_diagnostics <- label_fit_diagnostics %||% data.frame()
+  layout
 }

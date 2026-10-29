@@ -108,6 +108,10 @@ ggchord_device_units_per_inch <- function(x, y,
                                           fallback_inches = 6,
                                           margin_inches = 1.25,
                                           device_inches = NULL) {
+  context <- ggchord_render_context()
+  if (!is.null(context) && identical(context$status, "measured") &&
+      length(context$units_per_inch) == 1L && is.finite(context$units_per_inch) &&
+      context$units_per_inch > 0) return(context$units_per_inch)
   x <- x[is.finite(x)]
   y <- y[is.finite(y)]
   x_span <- if (length(x) > 1) diff(range(x)) else 0

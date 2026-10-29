@@ -9,7 +9,7 @@ geom_feature_label_repel(
   data = NULL,
   label_layout = c("feature", "radial", "auto", "callout"),
   label_wrap = NULL,
-  label_fit = c("wrap", "none", "ellipsis", "auto"),
+  label_fit = c("wrap", "none", "ellipsis", "auto", "shrink"),
   label_max_lines = 2L,
   label_side = c("outside", "inside", "auto"),
   max_overlaps = Inf,
@@ -17,6 +17,7 @@ geom_feature_label_repel(
   position = "identity",
   show.legend = FALSE,
   inherit.aes = FALSE,
+  label_min_size = 1.5,
   ...
 )
 }
@@ -32,7 +33,11 @@ leader appears when one or more intervening tracks separate the feature
 and its label.
 Choose another mode for unrestricted external callouts.}
 
-\item{label_wrap, label_fit, label_max_lines}{Text fitting controls.}
+\item{label_wrap, label_fit, label_max_lines}{Text fitting controls.
+`label_fit = "shrink"` explicitly uses internal-first placement without
+truncating the text. Text size is bounded by `label_min_size`; unresolved
+labels keep their requested font and use adjacent/external placement or
+hiding. Other fitting modes retain their existing behavior.}
 
 \item{label_side}{One of `"inside"`, `"outside"`, or `"auto"`.}
 
@@ -59,6 +64,10 @@ unambiguous feature IDs.}
 
 \item{show.legend, inherit.aes}{Standard ggplot2 layer arguments.}
 
+\item{label_min_size}{Minimum text size in millimetres for explicit shrink,
+default 1.5. Must not exceed the requested text size. Original text,
+requested/final sizes and fitting reason are exported with the label.}
+
 \item{...}{Additional text parameters.}
 }
 \value{
@@ -81,4 +90,11 @@ ggchord(seq, validate = "none") +
   geom_feature_label_repel(data = features, position = tracks,
     external = TRUE) +
   coord_circular()
+
+# Explicitly fit complete text inside a feature with a readable lower bound.
+features$label <- c("A longer feature annotation", "short feature")
+ggchord(seq, validate = "none") + geom_seq() +
+  geom_feature(data = features, feature_width = .12) +
+  geom_feature_label_repel(data = features, label_fit = "shrink",
+    label_min_size = 1.5, size = 4) + coord_collinear()
 }

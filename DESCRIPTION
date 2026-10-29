@@ -6,16 +6,16 @@ Description: A 'ggplot2'-based package for multi-sequence alignment chord
     diagrams, linear collinearity plots and single circular sequence maps.
     A layered grammar combines
     sequence backbones, interval links, genes, general biological features,
-    labels, genomic axes and restriction sites. Feature placement is expressed
-    with composable Position objects, while role-specific scales and themes
-    keep data mapping separate from geometry and appearance.
+    labels, quantitative tracks, genomic axes and restriction sites. Feature
+    placement is expressed with composable Position objects, while role-specific
+    scales and themes keep data mapping separate from geometry and appearance.
 License: MIT + file LICENSE
 Depends: R (>= 4.1.0)
 Imports: ggplot2 (>= 4.0.0), grDevices, grid, rlang, scales
 VignetteBuilder: knitr
 Suggests: knitr, rmarkdown, qpdf, dplyr, svglite, testthat (>= 3.0.0),
     readxl, digest, GenomicRanges, InteractionSet, IRanges, S4Vectors,
-    jsonlite, Biostrings
+    jsonlite, Biostrings, colorspace
 Encoding: UTF-8
 LazyData: true
 URL: https://github.com/DangJem/ggchord, https://dangjem.github.io/ggchord/

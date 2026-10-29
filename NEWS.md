@@ -52,6 +52,39 @@
   Ribbon adjacency follows display rows. Unsupported same-row connections
   produce a selection report or actionable error. These settings are opt-in;
   ordinary coordinate defaults retain their behavior.
+* Added explicit quantitative bands with `position_track()` and
+  `geom_track_tile()`, `geom_track_line()` and `geom_track_bar()`. Named tracks
+  share numerical domains across sequences, windows and layers; independent
+  scoped value/fill/colour scales preserve user scales and fixed styles.
+  Baselines, negative values, transforms, missing samples, clipping and closed
+  circular lines have explicit semantics. Bands use local normals in all three
+  coordinates and reject layouts that fold or collide with other backbones or
+  bands. Values are never implicitly averaged, resampled or aggregated.
+* Added `focus_ggchord_track()` for quantitative source windows. It retains
+  source lineage, trims intervals explicitly and never invents edge samples
+  or connects separate windows across omitted regions. Exported track geometry,
+  band registries and row diagnostics retain domains and omission reasons.
+* Physical track placement, explicit label shrinking and shared bp reference
+  bars now use render-local measurements of the actual panel during standard
+  printing/saving. Refinement is bounded and caches respect size changes;
+  device-free or unresolved geometry remains explicitly estimated. Existing
+  defaults keep their layout behavior.
+* Feature and gene repel labels support explicit `label_fit = "shrink"` or
+  `gene_label_fit = "shrink"` with a minimum size. Full source text, requested
+  and final sizes and fallback reasons are exported. Labels that cannot fit at
+  the lower bound use the existing external/hiding strategy. Default fitting
+  and text sizes are unchanged.
+* `scale_seq_position_continuous(sequences = ...)` selects sequence/window
+  axes. Added `geom_seq_scale()` for an independent shared bp reference in
+  linear displays, including segmented and reversed windows. Display gaps
+  do not become genomic distances. Track numerical axes remain separate from
+  genomic position axes.
+* Added opt-in `diagnose_ggchord()` for one target device and canvas size. It
+  reports panel measurements, canvas bounds, small text/lines, guide sizes,
+  existing layout diagnostics and optional colour-vision hints. Unsupported
+  evidence, including font embedding/fallback and transparency in other
+  applications, is explicitly unchecked. Reports never certify all formats
+  or change plot styles; saving continues to use standard `ggsave()`.
 * Fixed `clean_ggchord_data()` dropping valid one-base inclusive gene and
   ribbon intervals. Entirely out-of-range intervals are still reported and
   dropped when clipping, while a retained one-base overlap survives.

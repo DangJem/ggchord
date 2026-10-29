@@ -10,7 +10,7 @@
 #' @param plot A ggchord plot.
 #' @param include Character vector selecting any of \code{"seq"},
 #'   \code{"ribbon"}, \code{"gene"}, \code{"feature"}, \code{"labels"},
-#'   \code{"link"}, \code{"restriction"}, and \code{"axis"}. Point links and
+#'   \code{"link"}, \code{"restriction"}, \code{"track"}, and \code{"axis"}. Point links and
 #'   restriction sites require explicit selection.
 #' @param original_data Logical. Include the resolved per-layer input tables
 #'   under \code{original_data}, default \code{FALSE}.
@@ -41,6 +41,16 @@
 #'   units per bp describe each reversible piece; gaps have no source mapping.
 #'   Automatic segment break paths have `.decoration = "segment_break"` in
 #'   the sequence geometry. `gap_bp` is display spacing, not omitted length.
+#'   Quantitative geometry is selected with `track`; `track_registry` records
+#'   each ID/sequence band, source layers, numerical limits, unit and physical
+#'   measurement status. `track_diagnostics` records retained/missing/clipped
+#'   source rows. Numerical track axes and explicit bp reference bars are
+#'   included under `axis`; `axis_selection` records selected sequence axes.
+#'   Explicit label shrinking adds `label_fit_diagnostics`, preserving original
+#'   text, requested/minimum/final sizes and fallback or hiding reasons.
+#'   `render_context` distinguishes layout-only estimates from actual panel
+#'   measurements. For a target-size measured report use [diagnose_ggchord()].
+#' @md
 #' @export
 #'
 #' @examples
@@ -53,7 +63,7 @@
 #' names(exported)
 export_ggchord_layout <- function(
     plot,
-    include = c("seq", "ribbon", "gene", "feature", "labels", "axis"),
+    include = c("seq", "ribbon", "gene", "feature", "labels", "axis", "track"),
     original_data = FALSE) {
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
@@ -62,7 +72,7 @@ export_ggchord_layout <- function(
     ggchord_stop("export_ggchord_layout(): plot must be a ggchord object")
   }
   allowed <- c("seq", "link", "ribbon", "gene", "feature", "labels",
-               "restriction", "axis")
+               "restriction", "axis", "track")
   if (!is.character(include) || anyNA(include) ||
       any(!include %in% allowed)) {
     ggchord_stop(
@@ -85,6 +95,8 @@ export_ggchord_layout <- function(
     switch(component,
       seq = "seq",
       seq_break = "seq",
+      seq_scale = "axis",
+      track = "track",
       ribbon = "ribbon",
       link = "link",
       gene_poly = if (isTRUE(layer$ggchord_params$is_feature)) {
@@ -164,15 +176,45 @@ export_ggchord_layout <- function(
   # The sequence axis is now an automatic decoration rather than a public
   # layer, so export it directly from the computed layout under a stable
   # synthetic layer id.
-  if ("axis" %in% include && nrow(exported$axis) == 0L) {
+  if ("axis" %in% include && !any(exported$axis$component %in%
+      c("axis", "axis_line", "axis_seg", "axis_text"))) {
     automatic_axis <- ggchord_axis_geometry(layout)
     if (nrow(automatic_axis) > 0L) {
       automatic_axis$source_row <- NA_integer_
       automatic_axis$layer_id <- ".automatic-axis"
       automatic_axis$component <- automatic_axis$.component
-      exported$axis <- automatic_axis
+      exported$axis <- ggchord_rbind_fill(list(exported$axis, automatic_axis))
     }
   }
+  if ("axis" %in% include && is.data.frame(layout$track_axes) && nrow(layout$track_axes)) {
+    d <- layout$track_axes
+    d$layer_id <- ".track-axes"; d$component <- "track_axis"
+    exported$axis <- ggchord_rbind_fill(list(exported$axis, d))
+  }
+  exported$track_registry <- layout$track_registry %||% data.frame()
+  exported$track_diagnostics <- layout$track_diagnostics %||% data.frame()
+  exported$axis_selection <- layout$axis_selection %||% data.frame()
+  exported$render_context <- layout$render_context %||% ggchord_estimated_render_context(layout)
+  fits <- lapply(names(layout$layer_layouts), function(id) {
+    d <- layout$layer_layouts[[id]]$label_fit_diagnostics
+    if (!is.data.frame(d) || !nrow(d)) return(NULL)
+    resolved <- lapply(layout$layer_geometry[[id]], function(g) {
+      if (!is.data.frame(g) || !nrow(g) || !"label_size_requested" %in% names(g)) return(NULL)
+      if (".component" %in% names(g)) g <- g[g$.component %in% c("text", "arc_text"), , drop = FALSE]
+      if (!nrow(g)) return(NULL)
+      unique(g[intersect(c("source_row", "label_size_final", "label_fit_reason"), names(g))])
+    })
+    resolved <- ggchord_rbind_fill(resolved)
+    if (is.data.frame(resolved) && nrow(resolved)) {
+      at <- match(d$source_row, resolved$source_row)
+      for (field in intersect(c("label_size_final", "label_fit_reason"), names(resolved)))
+        d[[field]][!is.na(at)] <- resolved[[field]][at[!is.na(at)]]
+      d$label_fit_reason[is.na(at)] <- "hidden_after_layout"
+    }
+    d$layer_id <- id
+    d
+  })
+  exported$label_fit_diagnostics <- ggchord_rbind_fill(fits) %||% data.frame()
 
   coord <- plot$coordinates
   exported$connection_report <- layout$connection_report %||% data.frame()

@@ -66,7 +66,8 @@ ggchord_rbind_fill <- function(xs) {
     if (length(miss) > 0) {
       for (m in miss) {
         src <- Find(function(x) m %in% names(x), template)
-        d[[m]] <- if (!is.null(src)) src[[m]][NA_integer_] else NA
+        d[[m]] <- rep(if (!is.null(src)) src[[m]][NA_integer_] else NA,
+          length.out = nrow(d))
       }
     }
     d[, cols, drop = FALSE]

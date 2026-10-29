@@ -446,6 +446,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   gene_lrepel_layout <- gene_repel_params$gene_label_layout %||% "radial"
   feature_label_external <- gene_repel_params$feature_label_external %||% TRUE
   gene_lrepel_fit    <- gene_repel_params$gene_label_fit %||% "wrap"
+  gene_label_min_size <- gene_repel_params$gene_label_min_size %||% 1.5
   gene_lrepel_lines  <- gene_repel_params$gene_label_max_lines %||% 2L
   gene_lrepel_side   <- if (gene_repel_layer) {
     if (collinear) gene_repel_params$label_side_requested %||%
@@ -918,6 +919,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     gene_label_lineheight = gene_llineheight,
     gene_label_wrap = gene_lwrap,
     gene_label_fit = gene_lrepel_fit,
+    gene_label_min_size = gene_label_min_size,
     gene_label_max_lines = gene_lrepel_lines,
     gene_label_orientation = gene_lorientation,
     gene_label_overlap = gene_loverlap,
@@ -997,6 +999,9 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
       stats::setNames(names(layout$seq_arcs))
   }
 
+  position_scale <- plot$scales$get_scales("seq_position")
+  if (!is.null(position_scale$ggchord_axis_sequences))
+    layout <- ggchord_filter_sequence_axes(layout, position_scale$ggchord_axis_sequences)
   layout
 }
 #' Extract one drawable component from a computed layout
@@ -1029,6 +1034,7 @@ ggchord_layout_component <- function(layout, type, fallback = data.frame()) {
 #' Compute a plot-owned, per-layer geometry registry
 #' @noRd
 compute_chord_geometry <- function(plot) {
+  plot <- ggchord_prepare_track_layers(plot)
   ggchord_validate_coord_contract(plot)
   chord <- plot$ggchord
   if (is.null(chord)) {
@@ -1065,7 +1071,8 @@ compute_chord_geometry <- function(plot) {
       !identical(params$link_avoid %||% "none", "none") &&
       is.null(params$ribbon_gap %||% params$link_gap)
   }, logical(1)))
-  plot$ggchord$obstacles <- if (avoid_requested) {
+  has_tracks <- any(vapply(plot$layers, function(layer) identical(layer$ggchord_type, "track"), logical(1)))
+  plot$ggchord$obstacles <- if (avoid_requested || has_tracks) {
     ggchord_collect_obstacles(plot, geometry_cache)
   } else {
     ggchord_empty_obstacles()
@@ -1080,7 +1087,7 @@ compute_chord_geometry <- function(plot) {
                     character(1))
     main <- types[types %in% c(
       "seq", "ribbon", "link", "gene", "gene_label", "gene_label_repel", "axis",
-      "seq_label", "seq_region", "seq_break", "restriction_site", "seq_center_label"
+      "seq_label", "seq_region", "seq_break", "seq_scale", "track", "restriction_site", "seq_center_label"
     )]
     if (length(main)) main[length(main)] else ""
   }, character(1))
@@ -1103,6 +1110,7 @@ compute_chord_geometry <- function(plot) {
   for (id in names(groups)) {
     idx <- groups[[id]]
     main_type <- group_type[[id]]
+    if (main_type == "track") next
     needs_own <- nzchar(main_type) && (type_counts[[main_type]] > 1 ||
       main_type %in% c("gene_label", "gene_label_repel"))
     # A label layer owns its Position independently of the entity polygons.
@@ -1187,6 +1195,12 @@ compute_chord_geometry <- function(plot) {
         ggchord_resolve_layer_input(break_layer, chord$data$seq_data),
         break_layer$ggchord_params, primary)
     }
+    if (main_type == "seq_scale") {
+      scale_layer <- plot$layers[[idx[1L]]]
+      sub_layout$sequence_scales <- ggchord_seq_scale_geometry(
+        ggchord_resolve_layer_input(scale_layer, chord$data$seq_data),
+        scale_layer$ggchord_params, primary)
+    }
     if (main_type == "restriction_site") {
       site_layer <- plot$layers[[idx[1L]]]
       site_input <- ggchord_resolve_layer_input(site_layer)
@@ -1232,6 +1246,8 @@ compute_chord_geometry <- function(plot) {
               ggchord_segment_break_geometry(sub_layout) else NULL
           ))
         )
+      } else if (identical(component, "seq_scale")) {
+        sub_layout$sequence_scales
       } else if (identical(component, "seq_center_label")) {
         sub_layout$seq_center_label
       } else {
@@ -1247,6 +1263,7 @@ compute_chord_geometry <- function(plot) {
         axis = chord$data$seq_data,
         seq_label = chord$data$seq_data,
         seq_break = chord$data$seq_data,
+        seq_scale = chord$data$seq_data,
         ribbon = chord$data$ribbon_data,
         gene_poly = chord$data$gene_data,
         gene_text = chord$data$gene_data,
@@ -1269,8 +1286,48 @@ compute_chord_geometry <- function(plot) {
       )
     }
   }
+  circular_resolved <- FALSE
+  external_resolved <- FALSE
+  if (has_tracks && isTRUE(plot$coordinates$ggchord_circular)) {
+    resolved_annotations <- plot$coordinates$resolve_annotation_registry(registry, primary)
+    registry <- resolved_annotations$layer_geometry
+    primary$circular_annotation_registry <- resolved_annotations$annotation_registry
+    circular_resolved <- TRUE
+  }
+  if (has_tracks && !isTRUE(primary$collinear) && !circular_resolved) {
+    registry <- ggchord_share_external_annotations(registry, primary)
+    external_resolved <- TRUE
+  }
+  if (has_tracks) {
+    tracks <- ggchord_layout_tracks(plot, primary, registry, inputs)
+    primary <- tracks$layout; registry <- tracks$registry; inputs <- tracks$inputs
+    axes <- ggchord_track_axes(primary, registry)
+    registry <- axes$registry; primary$track_axes <- axes$axes
+    primary$obstacles <- ggchord_rbind_fill(list(primary$obstacles, primary$track_obstacles))
+    # Only requested automatic avoidance consumes the newly registered bands.
+    for (id in names(groups)) {
+      idx <- groups[[id]]; layer <- plot$layers[[idx[1L]]]
+      params <- layer$ggchord_params
+      if (params$type == "seq_scale") {
+        registry[[id]]$seq_scale <- ggchord_attach_input_columns(
+          ggchord_seq_scale_geometry(inputs[[id]]$seq_scale, params, primary), inputs[[id]]$seq_scale)
+        next
+      }
+      if (!params$type %in% c("ribbon", "link") ||
+          identical(params$link_avoid %||% "none", "none") ||
+          !is.null(params$ribbon_gap %||% params$link_gap)) next
+      if (params$type == "ribbon") {
+        sub <- plot; sub$ggchord$obstacles <- primary$obstacles
+        sub$layers <- plot$layers[sort(unique(c(seq_dep, gene_geometry_dep, idx)))]
+        updated <- compute_chord_geometry_single(sub, geometry_cache)
+        layouts[[id]] <- updated
+        registry[[id]]$ribbon <- ggchord_attach_input_columns(updated$ribbon_polys, inputs[[id]]$ribbon)
+      } else registry[[id]]$link <- ggchord_attach_input_columns(
+        ggchord_link_geometry(inputs[[id]]$link, params, primary), inputs[[id]]$link)
+    }
+  }
   if (isTRUE(plot$coordinates$ggchord_circular) &&
-      is.function(plot$coordinates$resolve_annotation_registry)) {
+      is.function(plot$coordinates$resolve_annotation_registry) && !circular_resolved) {
     resolved_annotations <- plot$coordinates$resolve_annotation_registry(
       registry, primary
     )
@@ -1282,8 +1339,13 @@ compute_chord_geometry <- function(plot) {
     primary$collinear_label_diagnostics <-
       attr(registry, "collinear_label_diagnostics")
     attr(registry, "collinear_label_diagnostics") <- NULL
-  } else {
+  } else if (!circular_resolved && !external_resolved) {
     registry <- ggchord_share_external_annotations(registry, primary)
+  }
+  for (id in names(registry)) for (component in names(registry[[id]])) {
+    d <- registry[[id]][[component]]
+    if (is.data.frame(d) && "label_size_requested" %in% names(d))
+      registry[[id]][[component]] <- ggchord_label_fit_metadata(d)
   }
   primary$layer_geometry <- registry
   primary$layer_inputs <- inputs
@@ -1309,6 +1371,7 @@ compute_chord_geometry <- function(plot) {
     c("gene_labels", "gene_text"), c("gene_label_segments", "gene_label_segment"),
     c("seq_labels_df", "seq_label"), c("region_polys", "seq_region"),
     c("seq_breaks", "seq_break"),
+    c("sequence_scales", "seq_scale"),
     c("axis_lines", "axis_line"), c("axis_ticks", "axis_seg"),
     c("restriction_sites", "restriction_site"),
     c("seq_center_label", "seq_center_label")
@@ -1379,6 +1442,8 @@ compute_chord_geometry <- function(plot) {
       if (isTRUE(primary$collinear) && nrow(primary$region_polys)) primary$region_polys,
       if (isTRUE(primary$collinear) && nrow(collect("seq"))) collect("seq"),
       if (isTRUE(primary$collinear) && nrow(collect("seq_break"))) collect("seq_break")
+      , if (nrow(collect("track"))) collect("track")
+      , if (nrow(collect("seq_scale"))) collect("seq_scale")
     ))),
     seqArcs = primary$seq_arcs,
     axisLines = primary$axis_lines,
@@ -1389,7 +1454,10 @@ compute_chord_geometry <- function(plot) {
     show_axis = primary$show_axis
   )
 
-  if (!is.null(plot$ggchord$ref)) plot$ggchord$ref$layout <- primary
+  if (!is.null(plot$ggchord$ref)) {
+    plot$ggchord$ref$layout <- primary
+    plot$ggchord$ref$context_key <- ggchord_render_cache_key()
+  }
   plot$ggchord$layout <- primary
   primary
 }

@@ -339,7 +339,16 @@ geom_gene_label <- function(mapping = NULL, data = NULL,
 #'   \code{"wrap"} preserves the complete annotation over multiple lines,
 #'   \code{"ellipsis"} uses a single shortened line, \code{"auto"} wraps and
 #'   adds an ellipsis only if text exceeds \code{gene_label_max_lines}, and
-#'   \code{"none"} disables adaptive fitting.
+#'   \code{"none"} disables adaptive fitting. Explicit \code{"shrink"} uses
+#'   internal-first feature placement and reduces the complete text only as
+#'   far as \code{gene_label_min_size}. Labels that still cannot fit use the
+#'   existing adjacent/external placement or hiding policy, at their requested
+#'   size. This choice uses feature placement rather than the external layout
+#'   selected by \code{gene_label_layout}; other fitting modes are unchanged.
+#' @param gene_label_min_size Minimum text size in millimetres for explicit
+#'   \code{gene_label_fit = "shrink"}, default 1.5. It must not exceed the
+#'   requested text size. Source text, requested/final size and fitting reason
+#'   are retained in exported label geometry.
 #' @param gene_label_max_lines Positive integer, default 2. Maximum number of
 #'   lines used by adaptive \code{"wrap"} or \code{"auto"} fitting.
 #' @param max_overlaps Numeric, default Inf. Hide labels that still overlap
@@ -380,6 +389,10 @@ geom_gene_label <- function(mapping = NULL, data = NULL,
 #' p <- ggchord(seq_data_example, gene_data = gene_data_example) +
 #'   geom_seq() + geom_gene() + geom_gene_label_repel()
 #' p
+#' ggchord(seq_data_example, gene_data = gene_data_example) +
+#'   geom_seq() + geom_gene() +
+#'   geom_gene_label_repel(gene_label_fit = "shrink", gene_label_min_size = 1.5,
+#'     size = 4) + coord_collinear()
 geom_gene_label_repel <- function(mapping = NULL, data = NULL,
                                   gene_label_layout = "radial",
                                   gene_label_wrap = NULL,
@@ -393,6 +406,7 @@ geom_gene_label_repel <- function(mapping = NULL, data = NULL,
                                   position = "identity",
                                   show.legend = FALSE,
                                   inherit.aes = FALSE,
+                                  gene_label_min_size = 1.5,
                                   ...) {
   position_missing <- missing(position)
   old_error <- ggchord_disable_debug()
@@ -440,8 +454,12 @@ geom_gene_label_repel <- function(mapping = NULL, data = NULL,
     gene_label_layout, c("radial", "auto", "arc")
   )
   gene_label_fit <- match.arg(
-    gene_label_fit, c("wrap", "none", "ellipsis", "auto")
+    gene_label_fit, c("wrap", "none", "ellipsis", "auto", "shrink")
   )
+  if (!is.numeric(gene_label_min_size) || length(gene_label_min_size) != 1L ||
+      !is.finite(gene_label_min_size) || gene_label_min_size <= 0) ggchord_stop(
+    "gene_label_min_size must be one finite positive text size in millimetres")
+  if (identical(gene_label_fit, "shrink")) gene_label_layout <- "feature"
   if (!is.numeric(gene_label_max_lines) ||
       length(gene_label_max_lines) != 1L ||
       !is.finite(gene_label_max_lines) || gene_label_max_lines < 1 ||
@@ -490,7 +508,8 @@ geom_gene_label_repel <- function(mapping = NULL, data = NULL,
     check.param = FALSE,
     params = list(
       segment_params = list(),
-      text_params = dots,
+      text_params = utils::modifyList(dots, list(
+        .ggchord_resolved_size = identical(gene_label_fit, "shrink"))),
       na.rm = dots$na.rm %||% FALSE
     )
   )
@@ -508,6 +527,7 @@ geom_gene_label_repel <- function(mapping = NULL, data = NULL,
     gene_label_lineheight    = dots$lineheight %||% 1.2,
     gene_label_wrap          = gene_label_wrap,
     gene_label_fit           = gene_label_fit,
+    gene_label_min_size      = gene_label_min_size,
     gene_label_max_lines     = gene_label_max_lines,
     max_overlaps             = max_overlaps,
     gene_label_side          = gene_label_side,

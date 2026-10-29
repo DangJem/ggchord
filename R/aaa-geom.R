@@ -143,17 +143,19 @@ GeomChordGeneLabelRepel <- ggplot2::ggproto(
     segment <- data[data$.component %in% "segment", , drop = FALSE]
     text <- data[data$.component %in% "text", , drop = FALSE]
     arc_text <- data[data$.component %in% "arc_text", , drop = FALSE]
+    text_styles <- c("colour", "alpha", if (!isTRUE(text_params$.ggchord_resolved_size)) "size",
+      "family", "fontface", "lineheight")
     segment <- ggchord_component_style(
       segment, segment_params,
       c("colour", "alpha", "linewidth", "linetype")
     )
     text <- ggchord_component_style(
       text, text_params,
-      c("colour", "alpha", "size", "family", "fontface", "lineheight")
+      text_styles
     )
     arc_text <- ggchord_component_style(
       arc_text, text_params,
-      c("colour", "alpha", "size", "family", "fontface", "lineheight")
+      text_styles
     )
     grobs <- list()
     if (nrow(segment)) {

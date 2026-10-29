@@ -154,6 +154,17 @@ ggchord_adaptive_limits <- function(layout) {
   }
 
   resources <- layout$circular_annotation_registry
+  for (entry in list(list(data = layout$track_axes, size = 2.2),
+      list(data = layout$sequence_scales, size = 3))) {
+    text <- entry$data
+    if (!is.data.frame(text) || !nrow(text) || !"label" %in% names(text)) next
+    text <- text[!is.na(text$label) & nzchar(as.character(text$label)), , drop = FALSE]
+    if (!nrow(text)) next
+    text$size <- text$size %||% entry$size
+    text$hjust <- .5; text$vjust <- .5
+    add_boxes(ggchord_text_boxes(text, x_col = "x", y_col = "y", text_col = "label",
+      units_per_inch = units_per_inch, box_padding = .03))
+  }
   if (is.data.frame(resources) && nrow(resources) &&
       all(c("side", "bbox_xmin", "bbox_xmax", "bbox_ymin",
         "bbox_ymax") %in% names(resources))) {
@@ -186,6 +197,7 @@ ggchord_adaptive_limits <- function(layout) {
 #' callers that need a fully prepared ggplot object.
 #' @noRd
 prepare_ggchord_plot <- function(plot) {
+  if (exists("ggchord_prepare_track_layers", mode = "function")) plot <- ggchord_prepare_track_layers(plot)
   plot$scales$scales <- Filter(function(s) is.null(s$ggchord_managed),
                                plot$scales$scales)
   plot$layers <- lapply(plot$layers, ggchord_inherit_ribbon_linetype,
@@ -237,12 +249,15 @@ prepare_ggchord_plot <- function(plot) {
   plot <- rename_ribbon_layers(plot, cls$ribbon, sc$ribbon_aes, layout)
   plot <- attach_ggchord_scales(plot, sc$scales)
   plot <- ggchord_add_link_scales(plot)
+  if (exists("ggchord_add_track_scales", mode = "function")) plot <- ggchord_add_track_scales(plot)
   if (!isTRUE(ggchord_plot_settings(plot)$axis$hidden) &&
       nrow(layout$axis_lines %||% data.frame()) > 0L) {
     plot$layers[[length(plot$layers) + 1L]] <- ggchord_axis_layer(layout)
   }
   plot <- set_ggchord_coord(plot, layout)
   plot <- ggchord_apply_theme_styles(plot)
+  layout$render_context <- ggchord_render_context() %||% ggchord_estimated_render_context(layout)
+  plot$ggchord$ref$layout <- layout
   plot
 }
 
@@ -255,7 +270,11 @@ ggplot_build.ggchord <- function(plot, ...) {
     ggchord_stop("Not a valid ggchord object: no data stored on the plot. ",
          "Please build the plot with ggchord().")
   }
+  source <- plot
   plot <- prepare_ggchord_plot(plot)
   class(plot) <- setdiff(class(plot), "ggchord")
-  ggchord_branch_built(ggplot2::ggplot_build(plot))
+  built <- ggchord_branch_built(ggplot2::ggplot_build(plot))
+  attr(built, "ggchord_source_plot") <- source
+  class(built) <- unique(c("ggchord_built", class(built)))
+  built
 }

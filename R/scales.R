@@ -316,6 +316,11 @@ scale_region_fill_manual <- function(..., values) {
 #' @param coordinates In linear layouts, use relative locus coordinates or
 #'   original source coordinates retained by [focus_ggchord_data()]. This
 #'   affects axis breaks and labels, not the underlying genomic geometry.
+#' @param sequences Optional character vector selecting sequence axes by their
+#'   displayed `accver`. `NULL` keeps all axes; `character()` hides every axis.
+#'   Focused or segmented views use window IDs, not parent source accessions.
+#'   Unknown or undisplayed identifiers produce an error. This controls axis
+#'   lines, ticks and labels together without dropping sequence geometry.
 #' @return A ggplot2 continuous scale for the `seq_position` role.
 #' @md
 #' @export
@@ -325,13 +330,19 @@ scale_region_fill_manual <- function(..., values) {
 #' ggchord(focused$seq_data) + geom_seq() + geom_seq_break() +
 #'   scale_seq_position_continuous(coordinates = "source",
 #'     breaks = c(200, 400, 600)) + coord_collinear()
+#' ggchord(data.frame(accver = c("A", "B"), length = c(1000, 800))) +
+#'   geom_seq() + scale_seq_position_continuous(sequences = "B") +
+#'   coord_collinear()
 scale_seq_position_continuous <- function(
     name = ggplot2::waiver(), breaks = ggplot2::waiver(),
     minor_breaks = ggplot2::waiver(), labels = ggplot2::waiver(),
     limits = NULL, expand = ggplot2::waiver(), oob = scales::censor,
     transform = "identity", n.breaks = 6,
-    coordinates = c("relative", "source"), ...) {
+    coordinates = c("relative", "source"), sequences = NULL, ...) {
   coordinates <- match.arg(coordinates)
+  if (!is.null(sequences) && (!is.character(sequences) || anyNA(sequences) ||
+      any(!nzchar(sequences)) || anyDuplicated(sequences))) ggchord_stop(
+    "scale_seq_position_continuous(): sequences must be NULL or distinct nonempty displayed sequence IDs")
   sc <- ggplot2::continuous_scale(
     aesthetics = "seq_position",
     palette = function(x) x,
@@ -340,5 +351,30 @@ scale_seq_position_continuous <- function(
     transform = transform, n.breaks = n.breaks, guide = "none", ...
   )
   sc$ggchord_position_coordinates <- coordinates
+  sc$ggchord_axis_sequences <- sequences
   sc
+}
+
+# Axis selection changes decorations, never source sequence membership.
+ggchord_filter_sequence_axes <- function(layout, selection = NULL) {
+  seqs <- as.character(layout$seqs %||% character())
+  if (!is.null(selection)) {
+    if (!is.character(selection) || anyNA(selection) || any(!nzchar(selection)) ||
+        anyDuplicated(selection)) ggchord_stop(
+      "scale_seq_position_continuous(): sequences must name distinct displayed sequence IDs")
+    unknown <- setdiff(selection, seqs)
+    if (length(unknown)) ggchord_stop(
+      "scale_seq_position_continuous(): unknown or undisplayed axis sequence ID(s): ",
+      paste(unknown, collapse = ", "), "; focused/segmented views require window IDs")
+    for (component in c("axis_lines", "axis_ticks")) {
+      data <- layout[[component]]
+      if (is.data.frame(data) && nrow(data) && "accver" %in% names(data)) {
+        layout[[component]] <- data[data$accver %in% selection, , drop = FALSE]
+      }
+    }
+  }
+  layout$axis_selection <- data.frame(accver = seqs,
+    selected = if (is.null(selection)) rep(TRUE, length(seqs)) else seqs %in% selection,
+    stringsAsFactors = FALSE)
+  layout
 }

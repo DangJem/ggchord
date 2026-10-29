@@ -51,13 +51,13 @@ ggchord_label_conflict_counts <- function(gl, units_per_inch = 0.35,
 # another force/layout parameter: the selected layout remains deterministic and
 # is rerun after the text dimensions change.
 ggchord_fit_label_text <- function(gl,
-                                   fit = c("wrap", "none", "ellipsis", "auto"),
+                                   fit = c("wrap", "none", "ellipsis", "auto", "shrink"),
                                    max_lines = 2L,
                                    units_per_inch = 0.35,
                                    box_padding = 0.18,
                                    repel_boxes = NULL) {
   fit <- match.arg(fit)
-  if (identical(fit, "none") || nrow(gl) == 0L) return(gl)
+  if (fit %in% c("none", "shrink") || nrow(gl) == 0L) return(gl)
   crowded <- ggchord_label_conflict_counts(
     gl,
     units_per_inch = units_per_inch,
@@ -108,6 +108,77 @@ ggchord_fit_label_text <- function(gl,
   }
 
   gl$text[rows] <- vapply(gl$text[rows], fit_one, character(1), USE.NAMES = FALSE)
+  gl
+}
+
+# Fit complete text into a declared feature body. Only explicit shrink uses
+# this path; it never shortens the text or lets a minimum become a target size.
+ggchord_shrink_label_text <- function(gl, available_width, available_height,
+                                      min_size = 1.5, units_per_inch = .35) {
+  if (!nrow(gl)) return(gl)
+  if (!is.numeric(min_size) || length(min_size) != 1L ||
+      !is.finite(min_size) || min_size <= 0) ggchord_stop(
+    "label_min_size must be one finite positive text size in millimetres")
+  if (any(!is.finite(gl$size)) || any(gl$size < min_size)) ggchord_stop(
+    "label_min_size cannot exceed the requested text size")
+  if (!"label_text_original" %in% names(gl)) gl$label_text_original <- as.character(gl$text)
+  gl$label_size_requested <- gl$size
+  gl$label_size_min <- min_size
+  gl$label_fit_reason <- "inside_unchanged"
+  gl$label_inside_fit <- FALSE
+  available_width <- rep_len(available_width, nrow(gl))
+  available_height <- rep_len(available_height, nrow(gl))
+  fits <- function(row, index) {
+    box <- ggchord_text_boxes(row, units_per_inch = units_per_inch,
+      box_padding = 0)
+    all(is.finite(c(available_width[index], available_height[index]))) &&
+      available_width[index] > 0 && available_height[index] > 0 &&
+      box$w <= available_width[index] && box$h <= available_height[index]
+  }
+  for (i in seq_len(nrow(gl))) {
+    row <- gl[i, , drop = FALSE]
+    if (is.na(row$text) || !nzchar(row$text)) next
+    if (fits(row, i)) {
+      gl$label_inside_fit[i] <- TRUE
+      next
+    }
+    row$size <- min_size
+    if (!fits(row, i)) {
+      # External fallback keeps the requested font for readability. Failure to
+      # fit at the lower bound is reported rather than shrinking past it.
+      gl$label_fit_reason[i] <- "minimum_size_exceeded"
+      next
+    }
+    lower <- min_size; upper <- gl$size[i]
+    # Physical glyph metrics can be quantized by the backend. A bounded binary
+    # search is sufficient and is remeasured on each chosen device/context.
+    for (iteration in seq_len(10L)) {
+      middle <- (lower + upper) / 2
+      row$size <- middle
+      if (fits(row, i)) lower <- middle else upper <- middle
+    }
+    gl$size[i] <- lower
+    gl$label_inside_fit[i] <- TRUE
+    gl$label_fit_reason[i] <- "inside_shrunk"
+  }
+  gl$label_size_final <- gl$size
+  gl
+}
+
+ggchord_label_fit_metadata <- function(gl) {
+  if (!nrow(gl)) return(gl)
+  if (!"label_text_original" %in% names(gl)) gl$label_text_original <- gl$text
+  if (!"label_size_requested" %in% names(gl)) gl$label_size_requested <- gl$size
+  gl$label_size_final <- gl$size
+  if (!"label_fit_reason" %in% names(gl)) gl$label_fit_reason <- "unchanged"
+  if ("feature_label_mode" %in% names(gl)) {
+    outside <- !gl$feature_label_mode %in% "inside"
+    gl$label_fit_reason[outside & gl$label_fit_reason %in% c("inside_shrunk", "inside_unchanged")] <-
+      "collision_repositioned"
+  }
+  hidden <- is.na(gl$text) | !nzchar(gl$text)
+  gl$label_fit_reason[hidden] <- ifelse(gl$label_fit_reason[hidden] == "minimum_size_exceeded",
+    "minimum_size_exceeded_hidden", "layout_hidden")
   gl
 }
 

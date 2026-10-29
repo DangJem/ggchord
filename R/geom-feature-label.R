@@ -75,6 +75,13 @@ geom_feature_label <- function(
 #'   Choose another mode for unrestricted external callouts.
 #' @param label_side One of `"inside"`, `"outside"`, or `"auto"`.
 #' @param label_wrap,label_fit,label_max_lines Text fitting controls.
+#'   `label_fit = "shrink"` explicitly uses internal-first placement without
+#'   truncating the text. Text size is bounded by `label_min_size`; unresolved
+#'   labels keep their requested font and use adjacent/external placement or
+#'   hiding. Other fitting modes retain their existing behavior.
+#' @param label_min_size Minimum text size in millimetres for explicit shrink,
+#'   default 1.5. Must not exceed the requested text size. Original text,
+#'   requested/final sizes and fitting reason are exported with the label.
 #' @param max_overlaps Maximum unresolved overlaps.
 #' @param external Whether the staged feature layout may place a label outside
 #'   the circular backbone after inside and adjacent placement fail. When
@@ -100,18 +107,26 @@ geom_feature_label <- function(
 #'   geom_feature_label_repel(data = features, position = tracks,
 #'     external = TRUE) +
 #'   coord_circular()
+#'
+#' # Explicitly fit complete text inside a feature with a readable lower bound.
+#' features$label <- c("A longer feature annotation", "short feature")
+#' ggchord(seq, validate = "none") + geom_seq() +
+#'   geom_feature(data = features, feature_width = .12) +
+#'   geom_feature_label_repel(data = features, label_fit = "shrink",
+#'     label_min_size = 1.5, size = 4) + coord_collinear()
 #' @export
 geom_feature_label_repel <- function(
     mapping = NULL, data = NULL,
     label_layout = c("feature", "radial", "auto", "callout"),
     label_wrap = NULL,
-    label_fit = c("wrap", "none", "ellipsis", "auto"),
+    label_fit = c("wrap", "none", "ellipsis", "auto", "shrink"),
     label_max_lines = 2L,
     label_side = c("outside", "inside", "auto"),
     max_overlaps = Inf,
     external = TRUE,
     position = "identity",
-    show.legend = FALSE, inherit.aes = FALSE, ...) {
+    show.legend = FALSE, inherit.aes = FALSE,
+    label_min_size = 1.5, ...) {
   position_explicit <- !missing(position)
   dots <- list(...)
   label_layout <- match.arg(label_layout)
@@ -125,6 +140,7 @@ geom_feature_label_repel <- function(
       mapping = mapping, data = data,
       gene_label_layout = "radial", gene_label_side = "inside",
       gene_label_wrap = label_wrap, gene_label_fit = label_fit,
+      gene_label_min_size = label_min_size,
       gene_label_max_lines = label_max_lines,
       max_overlaps = max_overlaps,
       position = position, show.legend = show.legend,
@@ -166,13 +182,14 @@ geom_feature_label_repel <- function(
     gene_label_layout = core_layout,
     gene_label_wrap = label_wrap,
     gene_label_fit = label_fit,
+    gene_label_min_size = label_min_size,
     gene_label_max_lines = label_max_lines,
     gene_label_side = label_side,
     max_overlaps = max_overlaps,
     position = position,
     show.legend = show.legend, inherit.aes = inherit.aes, ...
   )
-  lyr$ggchord_params$gene_label_layout <- label_layout
+  lyr$ggchord_params$gene_label_layout <- if (label_fit == "shrink") "feature" else label_layout
   lyr$ggchord_params$is_feature_label <- TRUE
   lyr$ggchord_params$position_explicit <- position_explicit
   lyr$ggchord_params$feature_label_external <- external

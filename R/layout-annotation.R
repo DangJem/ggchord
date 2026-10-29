@@ -398,6 +398,13 @@ ggchord_layout_annotation_step <- quote({
         base_angle <- atan2(dy, dx) * 180 / pi
         resolved_label_orientation <- gene_label_orientation
         feature_label_inside <- NA
+        label_size_resolved <- gene_label_size
+        label_fit_reason <- "unchanged"
+        label_text_resolved <- as.character(gene$anno)
+        if (identical(gene_label_fit, "shrink") && !is.null(gene_label_wrap)) {
+          label_text_resolved <- ggchord_label_wrap_text(label_text_resolved,
+            gene_label_wrap)
+        }
         if (identical(resolved_label_orientation, "feature")) {
           feature_fraction <- if (isTRUE(circular) && gene$start > gene$end) {
             ((seq_len - gene$start) + gene$end) / seq_len
@@ -406,7 +413,7 @@ ggchord_layout_annotation_step <- quote({
             diff(ref$path$x)^2 + diff(ref$path$y)^2
           ))
           measured_label <- ggchord_text_boxes(data.frame(
-            text = as.character(gene$anno), text_x = 0, text_y = 0,
+            text = label_text_resolved, text_x = 0, text_y = 0,
             text_angle = 0, hjust = .5, vjust = .5,
             size = gene_label_size, family = gene_label_family,
             fontface = gene_label_fontface,
@@ -425,9 +432,30 @@ ggchord_layout_annotation_step <- quote({
           body_padding <- max(.008, measured_label$h * .24)
           available_length <- max(0,
             feature_arc_length - head_reserve - 2 * body_padding)
+          if (identical(gene_label_fit, "shrink")) {
+            fitted_label <- ggchord_shrink_label_text(data.frame(
+              text = label_text_resolved, text_x = 0, text_y = 0,
+              text_angle = 0, hjust = .5, vjust = .5,
+              size = gene_label_size, family = gene_label_family,
+              fontface = gene_label_fontface, lineheight = gene_label_lineheight),
+              available_width = available_length * .90,
+              available_height = width * .90,
+              min_size = gene_label_min_size, units_per_inch = label_measure_units)
+            label_size_resolved <- fitted_label$size
+            label_fit_reason <- fitted_label$label_fit_reason
+            measured_label <- ggchord_text_boxes(fitted_label,
+              units_per_inch = label_measure_units)
+          }
           # Keep a safety margin inside the rectangular body; text that only
           # fits by touching a shoulder belongs on the adjacent inner track.
           feature_label_inside <- measured_label$w <= available_length * .90
+          if (identical(gene_label_fit, "shrink")) {
+            feature_label_inside <- isTRUE(fitted_label$label_inside_fit)
+            if (feature_label_inside) {
+              text_x <- center_pt[1L]; text_y <- center_pt[2L]
+              anchor_x <- text_x; anchor_y <- text_y
+            }
+          }
           # Plasmid feature text follows the interval direction whether it is
           # inside the polygon or immediately adjacent to it. Compact labels
           # move toward the map centre instead of changing to radial text.
@@ -506,13 +534,18 @@ ggchord_layout_annotation_step <- quote({
         } else "#202020"
 
         data.frame(
-          text = gene$anno,
+          text = label_text_resolved,
           text_x = text_x,
           text_y = text_y,
           text_angle = text_angle,
           hjust = hjust,
           vjust = vjust,
-          size = gene_label_size,
+          size = label_size_resolved,
+          label_text_original = as.character(gene$anno),
+          label_size_requested = gene_label_size,
+          label_size_final = label_size_resolved,
+          label_size_min = if (identical(gene_label_fit, "shrink")) gene_label_min_size else NA_real_,
+          label_fit_reason = label_fit_reason,
           family = gene_label_family,
           fontface = gene_label_fontface,
           lineheight = gene_label_lineheight,
