@@ -7,6 +7,13 @@
 * Cleaning reversed ribbon endpoints now records the original and sorted
   coordinates separately in the report. The existing sorting policy,
   direction handling and returned coordinates are unchanged.
+* Cleaning missing or empty sequence IDs in ribbon/gene tables now follows
+  the documented `unknown_id = "drop"`, `"error"` or `"keep"` policy, just
+  like other IDs absent from the sequence reference. Reports retain original
+  values and row numbers. `"keep"` does not invent IDs or clean coordinates
+  without a reference length; sequence-reference IDs must still be non-missing,
+  non-empty and unique. Preparation adapters retain their stricter inputs;
+  clean malformed IDs explicitly before passing tables to preparation.
 * `geom_feature_plasmid(shape = ...)` now accepts the documented concise
   shape alias when `feature_shape` is omitted. Explicitly supplying both
   shape arguments still produces the existing conflict error; defaults and

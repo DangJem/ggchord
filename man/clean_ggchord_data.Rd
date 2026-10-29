@@ -18,7 +18,9 @@ clean_ggchord_data(
 }
 \arguments{
 \item{seq_data}{data.frame/tibble, required. Must contain \code{accver} and
-\code{length}; used as the coordinate reference for clipping.}
+\code{length}; used as the coordinate reference for clipping. Reference
+IDs must always be non-missing, non-empty and unique, regardless of
+\code{unknown_id}.}
 
 \item{ribbon_data}{data.frame/tibble or \code{NULL}, optional. Alignment
 results. Other input types are rejected rather than treated as absent.}
@@ -27,8 +29,13 @@ results. Other input types are rejected rather than treated as absent.}
 data. Other input types are rejected rather than treated as absent.}
 
 \item{unknown_id}{Character, default \code{"drop"}. Policy for rows whose
-sequence ID is missing, empty or unknown: \code{"drop"} removes them,
-\code{"error"} stops with a message, \code{"keep"} leaves them unchanged.}
+sequence ID in \code{ribbon_data} or \code{gene_data} is missing, empty or
+unknown: \code{"drop"} removes them,
+\code{"error"} stops with a message, \code{"keep"} leaves them unchanged.
+A kept row without a reference sequence is reported, but its coordinates
+and annotations are not cleaned and it is not guaranteed to be drawable.
+IDs are never guessed or replaced. Other structural checks, including
+finite numeric coordinates and valid gene strands, still apply.}
 
 \item{out_of_range}{Character, default \code{"clip"}. Policy for coordinates
 outside \code{[1, sequence length]}: \code{"clip"} clamps them,

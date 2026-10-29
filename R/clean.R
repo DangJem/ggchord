@@ -14,14 +14,21 @@
 #' original row number, the reason, the original value(s) and the new value(s).
 #'
 #' @param seq_data data.frame/tibble, required. Must contain \code{accver} and
-#'   \code{length}; used as the coordinate reference for clipping.
+#'   \code{length}; used as the coordinate reference for clipping. Reference
+#'   IDs must always be non-missing, non-empty and unique, regardless of
+#'   \code{unknown_id}.
 #' @param ribbon_data data.frame/tibble or \code{NULL}, optional. Alignment
 #'   results. Other input types are rejected rather than treated as absent.
 #' @param gene_data data.frame/tibble or \code{NULL}, optional. Gene annotation
 #'   data. Other input types are rejected rather than treated as absent.
 #' @param unknown_id Character, default \code{"drop"}. Policy for rows whose
-#'   sequence ID is missing, empty or unknown: \code{"drop"} removes them,
+#'   sequence ID in \code{ribbon_data} or \code{gene_data} is missing, empty or
+#'   unknown: \code{"drop"} removes them,
 #'   \code{"error"} stops with a message, \code{"keep"} leaves them unchanged.
+#'   A kept row without a reference sequence is reported, but its coordinates
+#'   and annotations are not cleaned and it is not guaranteed to be drawable.
+#'   IDs are never guessed or replaced. Other structural checks, including
+#'   finite numeric coordinates and valid gene strands, still apply.
 #' @param out_of_range Character, default \code{"clip"}. Policy for coordinates
 #'   outside \code{[1, sequence length]}: \code{"clip"} clamps them,
 #'   \code{"drop"} removes the row, \code{"error"} stops, \code{"keep"} leaves
@@ -138,6 +145,12 @@ clean_ggchord_data <- function(
       stringsAsFactors = FALSE
     )
   }
+  describe_unknown_ids <- function(ids, missing_id) {
+    labels <- ids
+    labels[missing_id] <- "<NA>"
+    labels[!missing_id & !nzchar(ids)] <- "<empty>"
+    paste(unique(labels), collapse = ", ")
+  }
 
   # -------------------------------------------------------------------------
   # ribbon_data
@@ -168,27 +181,22 @@ clean_ggchord_data <- function(
       ggchord_stop("clean_ggchord_data(): ribbon_data$length must be positive",
            call. = FALSE)
     }
-    if (anyNA(ribbon_out$qaccver) || anyNA(ribbon_out$saccver) ||
-        any(!nzchar(as.character(ribbon_out$qaccver))) ||
-        any(!nzchar(as.character(ribbon_out$saccver)))) {
-      ggchord_stop("clean_ggchord_data(): ribbon_data sequence IDs must be non-missing and non-empty",
-           call. = FALSE)
-    }
-
     drop <- rep(FALSE, nrow(ribbon_out))
     n <- nrow(ribbon_out)
 
     for (colname in c("qaccver", "saccver")) {
-      id <- as.character(ribbon_out[[colname]])
-      bad <- !id %in% names(seq_lens)
+      raw_id <- ribbon_out[[colname]]
+      id <- as.character(raw_id)
+      missing_id <- is.na(raw_id) | is.na(id)
+      bad <- missing_id | !nzchar(id) | !id %in% names(seq_lens)
       if (any(bad)) {
         rows <- which(bad)
         if (unknown_id == "error") {
-          ggchord_stop(sprintf(paste0("clean_ggchord_data(): unknown sequence ID(s) in ",
+          ggchord_stop(sprintf(paste0("clean_ggchord_data(): missing, empty or unknown sequence ID(s) in ",
                               "ribbon_data row(s) %s (column %s): %s; choose ",
                               "unknown_id = 'drop' or 'keep'"),
                        paste(rows, collapse = ", "), colname,
-                       paste(unique(id[bad]), collapse = ", ")), call. = FALSE)
+                       describe_unknown_ids(id[bad], missing_id[bad])), call. = FALSE)
         } else if (unknown_id == "drop") {
           drop[bad] <- TRUE
           report_chunk("ribbon", rows, colname, "unknown sequence ID",
@@ -205,7 +213,8 @@ clean_ggchord_data <- function(
       row <- ribbon_out[i, ]
       qid <- as.character(row$qaccver)
       sid_ <- as.character(row$saccver)
-      if (!qid %in% names(seq_lens) || !sid_ %in% names(seq_lens)) {
+      if (anyNA(row$qaccver) || anyNA(row$saccver) ||
+          !qid %in% names(seq_lens) || !sid_ %in% names(seq_lens)) {
         # unknown IDs were kept by policy; their coordinates cannot be
         # validated or clipped against a sequence length, so leave the row
         # untouched (it was already reported under unknown_id = 'keep').
@@ -376,24 +385,21 @@ clean_ggchord_data <- function(
       ggchord_stop("clean_ggchord_data(): gene_data$strand can only be '+' or '-'",
            call. = FALSE)
     }
-    if (anyNA(gene_out$accver) || any(!nzchar(as.character(gene_out$accver)))) {
-      ggchord_stop("clean_ggchord_data(): gene_data$accver must be non-missing and non-empty",
-           call. = FALSE)
-    }
-
     drop <- rep(FALSE, nrow(gene_out))
     n <- nrow(gene_out)
 
-    id <- as.character(gene_out$accver)
-    bad <- !id %in% names(seq_lens)
+    raw_id <- gene_out$accver
+    id <- as.character(raw_id)
+    missing_id <- is.na(raw_id) | is.na(id)
+    bad <- missing_id | !nzchar(id) | !id %in% names(seq_lens)
     if (any(bad)) {
       rows <- which(bad)
       if (unknown_id == "error") {
-        ggchord_stop(sprintf(paste0("clean_ggchord_data(): unknown sequence ID(s) in ",
+        ggchord_stop(sprintf(paste0("clean_ggchord_data(): missing, empty or unknown sequence ID(s) in ",
                             "gene_data row(s) %s (column accver): %s; choose ",
                             "unknown_id = 'drop' or 'keep'"),
                      paste(rows, collapse = ", "),
-                     paste(unique(id[bad]), collapse = ", ")), call. = FALSE)
+                     describe_unknown_ids(id[bad], missing_id[bad])), call. = FALSE)
       } else if (unknown_id == "drop") {
         drop[bad] <- TRUE
         report_chunk("gene", rows, "accver", "unknown sequence ID",
@@ -407,7 +413,7 @@ clean_ggchord_data <- function(
     for (i in which(!drop)) {
       row <- gene_out[i, ]
       sid_ <- as.character(row$accver)
-      if (!sid_ %in% names(seq_lens)) {
+      if (anyNA(row$accver) || !sid_ %in% names(seq_lens)) {
         # unknown_id = "keep": without a reference length there is no safe
         # coordinate operation to perform. The row was already reported.
         next

@@ -30,6 +30,33 @@ test_that("cleaning rejects unsupported optional input types instead of dropping
     "gene_data must be a data.frame or NULL", fixed = TRUE)
 })
 
+test_that("unknown-ID policies include missing and empty optional-table IDs", {
+  ribbon <- transform(smoke_ribbon(), qaccver = NA_character_, saccver = "")
+  genes <- transform(smoke_genes(), accver = c(NA_character_, ""),
+    start = -10, end = -5, anno = NA_character_)
+  dropped <- clean_ggchord_data(smoke_sequences(), ribbon, genes)
+  expect_equal(nrow(dropped$ribbon_data), 0L)
+  expect_equal(nrow(dropped$gene_data), 0L)
+  expect_equal(dropped$report$column, c("qaccver", "saccver", "accver", "accver"))
+  expect_equal(dropped$report$row, c(1L, 1L, 1L, 2L))
+  expect_equal(dropped$report$original_value, c(NA_character_, "", NA_character_, ""))
+  kept <- clean_ggchord_data(smoke_sequences(), ribbon, genes,
+    unknown_id = "keep", empty_annotation = "replace")
+  expect_equal(kept$ribbon_data, ribbon)
+  expect_equal(kept$gene_data, genes)
+  expect_error(clean_ggchord_data(smoke_sequences(), ribbon,
+    unknown_id = "error"), "missing, empty or unknown", fixed = TRUE)
+  expect_error(clean_ggchord_data(smoke_sequences(), gene_data = genes,
+    unknown_id = "error"), "missing, empty or unknown", fixed = TRUE)
+  numeric_ribbon <- transform(ribbon, qaccver = NaN, saccver = "B")
+  numeric_gene <- transform(genes[1, ], accver = NaN)
+  reference <- transform(smoke_sequences(), accver = c("NaN", "B"))
+  missing_kept <- clean_ggchord_data(reference, numeric_ribbon, numeric_gene,
+    unknown_id = "keep", empty_annotation = "replace")
+  expect_equal(missing_kept$ribbon_data, numeric_ribbon)
+  expect_equal(missing_kept$gene_data, numeric_gene)
+})
+
 test_that("import helpers parse minimal files with explicit coordinate conventions", {
   fasta <- tempfile(fileext = ".fna")
   blast <- tempfile(fileext = ".tsv")
