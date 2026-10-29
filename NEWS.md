@@ -1,4 +1,4 @@
-# ggchord 0.15.0.9000 (development)
+# ggchord 0.15.0
 
 * Added `prepare_ggchord_data()` for explicit conversion, named feature/link
   collections and optional preparation steps. Defaults preserve rows and
@@ -221,9 +221,8 @@
 | Display original genomic axis labels after focus | `scale_seq_position_continuous(coordinates = "source")` |
 | Align or orient linear sequences | Add `coord_collinear(anchor = ..., align = "center", orientation = "auto")`; remove explicit `seq_orientation` when using automatic direction |
 
-These are explicit defaults and new opt-in controls; no legacy entry point is
-being deprecated or scheduled for removal in this change. The development
-version is not yet formally released.
+These are explicit defaults and new opt-in controls in v0.14.0; no legacy entry
+point is deprecated or scheduled for removal in that release.
 
 # ggchord 0.13.1
 
