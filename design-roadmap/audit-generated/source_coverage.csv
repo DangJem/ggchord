@@ -1,6 +1,6 @@
 "source_file","top_level_expressions","function_tokens","visited_functions","call_nodes","parse_status"
 "R/aaa-geom.R",4,8,8,409,"OK"
-"R/clean.R",2,3,3,823,"OK"
+"R/clean.R",2,4,4,833,"OK"
 "R/collinear-utils.R",4,5,5,459,"OK"
 "R/common-features.R",29,40,40,2356,"OK"
 "R/coord-chord.R",5,4,4,102,"OK"

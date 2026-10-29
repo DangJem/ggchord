@@ -4,7 +4,7 @@
 "R/aaa-geom.R",60,"R/aaa-geom.R:60:16","do.call","do.call(grid::grobTree, grobs)",FALSE,"AST_SYNTAX_CANDIDATE"
 "R/aaa-geom.R",129,"<top-level>","ggproto","ggplot2::ggproto(""GeomChordGeneLabelRepel"", ggplot2::Geom, required_aes = c(""x"", ""y""), default_aes = ggplot2::aes(xend = NA_real_, yend = NA_real_, label = NA_character_, .component = NA_character_, colour = ""#2B3035"", a [TRUNCATED]",FALSE,"AST_SYNTAX_CANDIDATE"
 "R/aaa-geom.R",141,"R/aaa-geom.R:141:16","do.call","do.call(grid::grobTree, grobs)",FALSE,"AST_SYNTAX_CANDIDATE"
-"R/clean.R",76,"R/clean.R:76:23","do.call","do.call(rbind, report_rows)",FALSE,"AST_SYNTAX_CANDIDATE"
+"R/clean.R",83,"R/clean.R:83:23","do.call","do.call(rbind, report_rows)",FALSE,"AST_SYNTAX_CANDIDATE"
 "R/common-features.R",31,"R/common-features.R:31:36","get","get(""ggchord_common_feature_database"", inherits = TRUE)",FALSE,"AST_SYNTAX_CANDIDATE"
 "R/common-features.R",509,"R/common-features.R:509:31","do.call","do.call(rbind, rows)",FALSE,"AST_SYNTAX_CANDIDATE"
 "R/coord-chord.R",5,"<top-level>","ggproto","ggplot2::ggproto(""CoordGgchord"", ggplot2::CoordCartesian, ggchord_coord = TRUE)",FALSE,"AST_SYNTAX_CANDIDATE"

@@ -2,8 +2,8 @@
 
 此目录由 `tools/audit-ggchord-api.R` 生成。完整记录见 manifest.csv；不代表逐项语义审计已完成。
 
-起始提交：`69b907a6ddffea60a73ed1d4b1392c8cc5f7da22`；生成时 HEAD：`cf0dadd0da7b3125fd8a8ae14a0436958b837436`。
-输入指纹（MD5，仅作可重复性标识）：`2e4e8b038088de7aa1eb897abdd9290f`。
+起始提交：`69b907a6ddffea60a73ed1d4b1392c8cc5f7da22`；生成时 HEAD：`2c90371ce2a27ee4083c07a396150e78c46040b0`。
+输入指纹（MD5，仅作可重复性标识）：`3e2d3affc91c2bc96df7854606d59d2c`。
 源码、已保存 Rd 与人工复核输入的逐文件散列见 source_hashes.csv；工作树状态单独记录，不能把带改动源码冒充原始提交。
 解析前固定输入文件列表、散列与 HEAD，写表前再次核对；并发改动会使生成失败并要求重跑，不写入不一致的新产物。
 
@@ -17,9 +17,9 @@ Rscript tools/audit-ggchord-api.R . design-roadmap/audit-generated 69b907a6ddffe
 
 ## 覆盖
 
-- 83 个 R 文件全部成功解析；895 个 FUNCTION token 与访问数逐文件相等。
+- 83 个 R 文件全部成功解析；896 个 FUNCTION token 与访问数逐文件相等。
 - 130 个导出名称，22 个重导出，9 个 S3 注册；导出不等于独立函数。
-- 895 个函数语法定义（含匿名、嵌套及 ggproto 方法）；3299 行参数含导出别名/预设的签名视图。
+- 896 个函数语法定义（含匿名、嵌套及 ggproto 方法）；3301 行参数含导出别名/预设的签名视图。
 - api_objects.csv 补充顶层绑定、别名、ggproto 构造和工厂调用；api_dynamic_registration.csv 标记 quote/eval、注册、函数体/环境修改等。
 - 颜色拼写别名通过源绑定追踪；theme 预设的签名来自已核对工厂复制源码，仍标为需要运行时复核。
 - api_arguments.csv 保存全部计划字段、默认表达式及 Rd 参数说明；未知语义显式 REVIEW_REQUIRED，文档说明不等于行为证据。

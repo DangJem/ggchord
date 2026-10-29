@@ -487,7 +487,7 @@
 "R/zzz.R:81:27","%||%",FALSE,1
 "R/aaa-geom.R:141:16","%in%",FALSE,11
 "R/aaa-geom.R:60:16","%in%",FALSE,5
-"R/clean.R:76:23","%in%",FALSE,8
+"R/clean.R:83:23","%in%",FALSE,8
 "R/collinear-utils.R:126:25","%in%",FALSE,3
 "R/collinear-utils.R:2:27","%in%",FALSE,3
 "R/collinear-utils.R:73:31","%in%",FALSE,6
@@ -865,7 +865,7 @@
 "R/data-relations.R:53:12","absent",FALSE,3
 "R/restriction-sites.R:1427:33","accepted",FALSE,5
 "R/restriction-sites.R:1910:21","accepted",FALSE,2
-"R/clean.R:76:23","accver",FALSE,8
+"R/clean.R:83:23","accver",FALSE,7
 "R/collinear-utils.R:126:25","accver",FALSE,3
 "R/collinear-utils.R:73:31","accver",FALSE,4
 "R/common-features.R:279:29","accver",FALSE,2
@@ -969,7 +969,7 @@
 "R/zzz.R:386:26","accver",FALSE,1
 "R/data-relations.R:41:31","accvers",FALSE,4
 "R/helpers_elements.R:18:28","across",FALSE,3
-"R/clean.R:132:19","action",FALSE,1
+"R/clean.R:139:19","action",FALSE,1
 "R/geom-track.R:12:14","active",FALSE,2
 "R/helpers-label-boxes.R:14:34","active",FALSE,2
 "R/helpers-label-boxes.R:259:33","active",FALSE,5
@@ -1080,7 +1080,7 @@
 "R/restriction-sites.R:1792:44","aligned",FALSE,1
 "R/common-features.R:509:31","aligned_reference",FALSE,5
 "R/aaa-geom.R:141:16","all",FALSE,1
-"R/clean.R:76:23","all",FALSE,1
+"R/clean.R:83:23","all",FALSE,1
 "R/collinear-utils.R:73:31","all",FALSE,5
 "R/common-features.R:113:39","all",FALSE,1
 "R/common-features.R:122:33","all",FALSE,1
@@ -1337,7 +1337,7 @@
 "R/primers.R:108:38","annealed_bases",FALSE,1
 "R/primers.R:108:38","annealed_length",FALSE,2
 "R/primers.R:178:25","annealed_length",FALSE,8
-"R/clean.R:76:23","anno",FALSE,12
+"R/clean.R:83:23","anno",FALSE,12
 "R/common-features.R:103:35","anno",FALSE,1
 "R/data-formats.R:79:27","anno",FALSE,1
 "R/data-import.R:272:21","anno",FALSE,2
@@ -1385,7 +1385,7 @@
 "R/common-features.R:355:38","annotations",FALSE,1
 "R/data-genbank.R:147:17","annotations",FALSE,2
 "R/aaa-geom.R:141:16","any",FALSE,1
-"R/clean.R:76:23","any",FALSE,13
+"R/clean.R:83:23","any",FALSE,10
 "R/collinear-utils.R:126:25","any",FALSE,3
 "R/collinear-utils.R:2:27","any",FALSE,4
 "R/collinear-utils.R:62:32","any",FALSE,2
@@ -1562,7 +1562,7 @@
 "R/zzz.R:115:21","any",FALSE,1
 "R/zzz.R:208:32","any",FALSE,1
 "R/zzz.R:244:23","any",FALSE,1
-"R/clean.R:76:23","anyDuplicated",FALSE,1
+"R/clean.R:83:23","anyDuplicated",FALSE,1
 "R/collinear-utils.R:73:31","anyDuplicated",FALSE,2
 "R/common-features.R:3:37","anyDuplicated",FALSE,1
 "R/data-convert.R:10:31","anyDuplicated",FALSE,1
@@ -1589,7 +1589,7 @@
 "R/scales.R:336:34","anyDuplicated",FALSE,1
 "R/scales.R:359:33","anyDuplicated",FALSE,1
 "R/zzz.R:157:30","anyDuplicated",FALSE,1
-"R/clean.R:76:23","anyNA",FALSE,5
+"R/clean.R:83:23","anyNA",FALSE,5
 "R/collinear-utils.R:126:25","anyNA",FALSE,1
 "R/collinear-utils.R:2:27","anyNA",FALSE,2
 "R/collinear-utils.R:73:31","anyNA",FALSE,5
@@ -1757,7 +1757,7 @@
 "R/geom-track.R:308:37","as_label",FALSE,1
 "R/ggchord-scales.R:223:25","as_label",FALSE,1
 "R/zzz.R:208:32","as_label",FALSE,1
-"R/clean.R:76:23","as.character",FALSE,25
+"R/clean.R:83:23","as.character",FALSE,22
 "R/collinear-utils.R:126:25","as.character",FALSE,1
 "R/collinear-utils.R:2:27","as.character",FALSE,8
 "R/collinear-utils.R:73:31","as.character",FALSE,6
@@ -1930,7 +1930,7 @@
 "R/ribbon-layout.R:74:21","as.Date",FALSE,1
 "R/data-relations.R:173:26","as.double",FALSE,2
 "R/data-segment.R:44:25","as.double",FALSE,3
-"R/clean.R:132:19","as.integer",FALSE,1
+"R/clean.R:139:19","as.integer",FALSE,1
 "R/common-features.R:122:33","as.integer",FALSE,2
 "R/common-features.R:129:19","as.integer",FALSE,2
 "R/common-features.R:279:29","as.integer",FALSE,3
@@ -2335,7 +2335,7 @@
 "R/ggchord-build.R:1036:27","backbone_outer_offset",FALSE,1
 "R/restriction-sites.R:1427:33","backbone_outer_offset",FALSE,1
 "R/layout-circular-registry.R:119:33","backbone_row",FALSE,3
-"R/clean.R:76:23","bad",FALSE,16
+"R/clean.R:83:23","bad",FALSE,18
 "R/data-convert.R:177:19","bad",FALSE,2
 "R/data-prepare.R:23:35","bad",FALSE,2
 "R/helpers-label-routing.R:1313:36","bad",FALSE,7
@@ -2701,7 +2701,7 @@
 "<top-level>","c",FALSE,18
 "R/aaa-geom.R:141:16","c",FALSE,3
 "R/aaa-geom.R:60:16","c",FALSE,4
-"R/clean.R:76:23","c",FALSE,16
+"R/clean.R:83:23","c",FALSE,16
 "R/collinear-utils.R:126:25","c",FALSE,1
 "R/collinear-utils.R:62:32","c",FALSE,2
 "R/collinear-utils.R:73:31","c",FALSE,2
@@ -3209,7 +3209,7 @@
 "R/diagnostics.R:4:30","capabilities",FALSE,1
 "R/helpers-device.R:5:31","capabilities",FALSE,2
 "R/restriction-sites.R:657:36","cardinal",FALSE,2
-"R/clean.R:551:24","cat",FALSE,8
+"R/clean.R:557:24","cat",FALSE,8
 "R/diagnostics.R:289:30","cat",FALSE,3
 "R/ggchord.R:81:12","cat",FALSE,2
 "R/validate.R:856:29","cat",FALSE,9
@@ -3294,13 +3294,13 @@
 "R/restriction-sites.R:657:36","centre_x",FALSE,3
 "R/restriction-sites.R:1427:33","centre_y",FALSE,10
 "R/position-feature.R:255:33","centres",FALSE,6
-"R/clean.R:76:23","changed",FALSE,6
+"R/clean.R:83:23","changed",FALSE,6
 "R/helpers-label-routing.R:1313:36","changed",FALSE,3
 "R/helpers-label-routing.R:649:27","changed",FALSE,5
 "R/link-branch.R:4:25","changed",FALSE,3
 "R/layout-collinear.R:105:19","channel",FALSE,1
 "R/layout-collinear.R:99:38","channel",FALSE,1
-"R/clean.R:76:23","character",FALSE,6
+"R/clean.R:83:23","character",FALSE,6
 "R/common-features.R:113:39","character",FALSE,1
 "R/common-features.R:122:33","character",FALSE,1
 "R/common-features.R:158:36","character",FALSE,2
@@ -3518,7 +3518,7 @@
 "R/ggchord-frame.R:3:22","clip",FALSE,3
 "R/layout-export.R:64:26","clip",FALSE,1
 "R/layout-collinear-annotation.R:523:12","clip_text",FALSE,3
-"R/clean.R:76:23","clipped",FALSE,3
+"R/clean.R:83:23","clipped",FALSE,3
 "R/focus.R:214:23","clipped",FALSE,10
 "R/layout-track.R:113:26","clipped",FALSE,4
 "R/focus.R:106:35","clipped_lower",FALSE,5
@@ -3642,10 +3642,10 @@
 "R/restriction-sites.R:910:67","collision_boxes",FALSE,3
 "R/link-branch.R:4:25","colMeans",FALSE,2
 "R/link-branch.R:97:45","colMeans",FALSE,1
-"R/clean.R:76:23","colname",FALSE,5
+"R/clean.R:83:23","colname",FALSE,5
 "R/aaa-geom.R:17:25","colnames",FALSE,2
 "R/aaa-geom.R:24:24","colnames",FALSE,2
-"R/clean.R:76:23","colnames",FALSE,3
+"R/clean.R:83:23","colnames",FALSE,3
 "R/ggchord-build.R:9:34","colnames",FALSE,4
 "R/ribbon-utils.R:177:29","colnames",FALSE,1
 "R/ribbon-utils.R:319:32","colnames",FALSE,1
@@ -3725,7 +3725,7 @@
 "R/link-branch.R:67:13","cols",FALSE,1
 "R/zzz.R:308:33","cols",FALSE,2
 "R/diagnostics.R:79:31","colSums",FALSE,1
-"R/clean.R:132:19","column",FALSE,1
+"R/clean.R:139:19","column",FALSE,1
 "R/collinear-utils.R:73:31","column",FALSE,4
 "R/data-convert.R:84:35","column",FALSE,3
 "R/data-prepare.R:123:25","column",FALSE,2
@@ -3969,7 +3969,7 @@
 "R/layout-track.R:113:26","coordinates",FALSE,1
 "R/scales.R:336:34","coordinates",FALSE,3
 "R/viewer.R:181:17","coordinates",FALSE,1
-"R/clean.R:76:23","coords",FALSE,46
+"R/clean.R:83:23","coords",FALSE,46
 "R/common-features.R:561:33","coords",FALSE,5
 "R/focus-track.R:26:24","coords",FALSE,4
 "R/validate.R:135:25","coords",FALSE,3
@@ -4339,8 +4339,8 @@
 "R/ggchord-build.R:9:34","data_list",FALSE,10
 "R/validate.R:856:29","data_summary",FALSE,1
 "R/validate.R:894:31","data_summary",FALSE,1
-"R/clean.R:132:19","data.frame",FALSE,1
-"R/clean.R:76:23","data.frame",FALSE,1
+"R/clean.R:139:19","data.frame",FALSE,1
+"R/clean.R:83:23","data.frame",FALSE,1
 "R/collinear-utils.R:126:25","data.frame",FALSE,1
 "R/collinear-utils.R:2:27","data.frame",FALSE,2
 "R/common-features.R:122:33","data.frame",FALSE,1
@@ -4595,6 +4595,7 @@
 "R/ggchord-build.R:1036:27","deps",FALSE,6
 "R/ribbon-utils.R:177:29","desc",FALSE,4
 "R/ribbon-utils.R:193:30","desc",FALSE,1
+"R/clean.R:83:23","describe_unknown_ids",FALSE,3
 "R/data-genbank.R:147:17","description",FALSE,1
 "R/primers.R:37:31","description",FALSE,1
 "R/helpers-label-routing.R:893:31","desired_x",FALSE,2
@@ -4672,7 +4673,7 @@
 "R/viewer.R:181:17","dir.exists",FALSE,1
 "R/restriction-sites.R:1792:44","direct_is_safe",FALSE,2
 "R/layout-collinear-transform.R:134:32","directed",FALSE,3
-"R/clean.R:76:23","direction",FALSE,3
+"R/clean.R:83:23","direction",FALSE,3
 "R/coord-circular.R:20:19","direction",FALSE,3
 "R/data-convert.R:285:23","direction",FALSE,8
 "R/data-convert.R:355:20","direction",FALSE,1
@@ -4793,7 +4794,7 @@
 "R/common-features.R:122:33","dna_sequence_top_strand",FALSE,1
 "R/aaa-geom.R:141:16","do.call",FALSE,1
 "R/aaa-geom.R:60:16","do.call",FALSE,1
-"R/clean.R:76:23","do.call",FALSE,1
+"R/clean.R:83:23","do.call",FALSE,1
 "R/common-features.R:509:31","do.call",FALSE,1
 "R/data-formats.R:185:27","do.call",FALSE,1
 "R/data-formats.R:79:27","do.call",FALSE,1
@@ -4936,7 +4937,7 @@
 "R/geom-feature.R:21:16","draw_style",FALSE,3
 "R/guides.R:87:28","draw.llim",FALSE,1
 "R/guides.R:87:28","draw.ulim",FALSE,1
-"R/clean.R:76:23","drop",FALSE,19
+"R/clean.R:83:23","drop",FALSE,19
 "R/ribbon-utils.R:57:27","drop_self_links",FALSE,1
 "R/validate.R:736:26","ds",FALSE,2
 "R/validate.R:856:29","ds",FALSE,7
@@ -5079,7 +5080,7 @@
 "R/validate.R:135:25","empty",FALSE,3
 "R/validate.R:18:34","empty",FALSE,3
 "R/validate.R:456:23","empty",FALSE,3
-"R/clean.R:76:23","empty_annotation",FALSE,4
+"R/clean.R:83:23","empty_annotation",FALSE,4
 "R/validate.R:53:22","empty_ids",FALSE,3
 "R/geom-region.R:39:20","empty_polys",FALSE,2
 "R/geom-ribbon.R:93:21","empty_polys",FALSE,2
@@ -5089,11 +5090,11 @@
 "R/ggchord.R:212:16","emptyenv",FALSE,1
 "R/render-context.R:21:29","emptyenv",FALSE,1
 "R/restriction-sites.R:256:27","emptyenv",FALSE,1
-"R/clean.R:76:23","en",FALSE,23
+"R/clean.R:83:23","en",FALSE,23
 "R/validate.R:456:23","en",FALSE,3
 "R/geom-track.R:2:22","enc2utf8",FALSE,1
 "R/helpers-label-boxes.R:381:28","enc2utf8",FALSE,1
-"R/clean.R:76:23","end",FALSE,3
+"R/clean.R:83:23","end",FALSE,3
 "R/common-features.R:129:19","end",FALSE,1
 "R/common-features.R:279:29","end",FALSE,2
 "R/common-features.R:355:38","end",FALSE,2
@@ -5959,8 +5960,8 @@
 "R/layout-collinear-annotation.R:640:34","gene_colors",FALSE,2
 "R/ggchord-build.R:9:34","gene_cols",FALSE,2
 "R/ggchord-build.R:9:34","gene_cs",FALSE,3
-"R/clean.R:551:24","gene_data",FALSE,2
-"R/clean.R:76:23","gene_data",FALSE,3
+"R/clean.R:557:24","gene_data",FALSE,2
+"R/clean.R:83:23","gene_data",FALSE,3
 "R/data-prepare.R:123:25","gene_data",FALSE,8
 "R/data-prepare.R:166:15","gene_data",FALSE,1
 "R/data-segment.R:44:25","gene_data",FALSE,9
@@ -6103,7 +6104,7 @@
 "R/ggchord-build.R:9:34","gene_order",FALSE,1
 "R/helpers_params.R:429:26","gene_order",FALSE,4
 "R/layout-collinear-annotation.R:640:34","gene_order",FALSE,2
-"R/clean.R:76:23","gene_out",FALSE,22
+"R/clean.R:83:23","gene_out",FALSE,20
 "R/focus.R:214:23","gene_out",FALSE,8
 "R/ggchord-build.R:1036:27","gene_pal",FALSE,1
 "R/ggchord-build.R:1417:31","gene_pal",FALSE,1
@@ -6638,8 +6639,8 @@
 "<top-level>","ggchord_diagnostic_text",FALSE,1
 "R/diagnostics.R:165:21","ggchord_diagnostic_text",FALSE,1
 "<top-level>","ggchord_disable_debug",FALSE,1
-"R/clean.R:551:24","ggchord_disable_debug",FALSE,1
-"R/clean.R:76:23","ggchord_disable_debug",FALSE,1
+"R/clean.R:557:24","ggchord_disable_debug",FALSE,1
+"R/clean.R:83:23","ggchord_disable_debug",FALSE,1
 "R/coord-chord.R:59:16","ggchord_disable_debug",FALSE,1
 "R/data-formats.R:180:13","ggchord_disable_debug",FALSE,1
 "R/data-formats.R:74:13","ggchord_disable_debug",FALSE,1
@@ -6953,7 +6954,7 @@
 "R/viewer.R:28:27","ggchord_measurement_device",FALSE,1
 "R/viewer.R:91:36","ggchord_measurement_device",FALSE,2
 "<top-level>","ggchord_normalize_accver",FALSE,1
-"R/clean.R:76:23","ggchord_normalize_accver",FALSE,2
+"R/clean.R:83:23","ggchord_normalize_accver",FALSE,2
 "R/focus.R:214:23","ggchord_normalize_accver",FALSE,3
 "R/ggchord.R:81:12","ggchord_normalize_accver",FALSE,2
 "R/ribbon-layout.R:112:27","ggchord_normalize_accver",FALSE,1
@@ -7339,7 +7340,7 @@
 "<top-level>","ggchord_ribbon_density",FALSE,1
 "R/ggchord-build.R:9:34","ggchord_ribbon_density",FALSE,1
 "<top-level>","ggchord_ribbon_required_columns",FALSE,1
-"R/clean.R:76:23","ggchord_ribbon_required_columns",FALSE,1
+"R/clean.R:83:23","ggchord_ribbon_required_columns",FALSE,1
 "R/data-import.R:124:22","ggchord_ribbon_required_columns",FALSE,1
 "R/ribbon-layout.R:7:32","ggchord_ribbon_required_columns",FALSE,1
 "R/ribbon-utils.R:319:32","ggchord_ribbon_required_columns",FALSE,1
@@ -7427,7 +7428,7 @@
 "R/stat-ribbon.R:132:23","ggchord_stat_ribbon_layer",FALSE,1
 "R/stat-ribbon.R:158:24","ggchord_stat_ribbon_layer",FALSE,1
 "<top-level>","ggchord_stop",FALSE,1
-"R/clean.R:76:23","ggchord_stop",FALSE,24
+"R/clean.R:83:23","ggchord_stop",FALSE,22
 "R/collinear-utils.R:126:25","ggchord_stop",FALSE,5
 "R/collinear-utils.R:2:27","ggchord_stop",FALSE,3
 "R/collinear-utils.R:62:32","ggchord_stop",FALSE,1
@@ -8278,7 +8279,7 @@
 "R/ggchord-scales.R:4:24","has_seq",FALSE,1
 "R/ggchord-build.R:1036:27","has_tracks",FALSE,5
 "R/helpers-plot.R:15:26","hcl.colors",FALSE,1
-"R/clean.R:551:24","head",FALSE,1
+"R/clean.R:557:24","head",FALSE,1
 "R/common-features.R:245:35","head",FALSE,1
 "R/common-features.R:849:36","head",FALSE,1
 "R/data-formats.R:127:54","head",FALSE,1
@@ -8421,7 +8422,7 @@
 "R/viewer.R:181:17","html",FALSE,2
 "R/viewer.R:3:28","html",FALSE,7
 "R/viewer.R:181:17","html_file",FALSE,8
-"R/clean.R:76:23","i",FALSE,50
+"R/clean.R:83:23","i",FALSE,50
 "R/common-features.R:168:69","i",FALSE,2
 "R/common-features.R:228:39","i",FALSE,3
 "R/common-features.R:355:38","i",FALSE,1
@@ -8597,7 +8598,7 @@
 "R/restriction-sites.R:635:24","I",FALSE,5
 "R/validate.R:642:25","I",FALSE,3
 "R/zzz.R:422:23","I",FALSE,2
-"R/clean.R:76:23","id",FALSE,12
+"R/clean.R:83:23","id",FALSE,16
 "R/common-features.R:162:24","id",FALSE,1
 "R/common-features.R:279:29","id",FALSE,3
 "R/common-features.R:701:25","id",FALSE,5
@@ -8773,7 +8774,8 @@
 "R/common-features.R:630:38","identity",FALSE,1
 "R/geom-track.R:249:33","identity",FALSE,1
 "R/helpers-label-radial.R:253:29","identity",FALSE,1
-"R/clean.R:76:23","idof",FALSE,2
+"R/clean.R:83:23","idof",FALSE,2
+"R/clean.R:148:27","ids",FALSE,2
 "R/collinear-utils.R:126:25","ids",FALSE,12
 "R/common-features.R:158:36","ids",FALSE,3
 "R/common-features.R:3:37","ids",FALSE,11
@@ -8837,7 +8839,7 @@
 "<top-level>","if_null_else",FALSE,1
 "R/helpers_elements.R:100:24","if_null_else",FALSE,4
 "R/aaa-geom.R:141:16","ifelse",FALSE,1
-"R/clean.R:76:23","ifelse",FALSE,4
+"R/clean.R:83:23","ifelse",FALSE,4
 "R/collinear-utils.R:126:25","ifelse",FALSE,1
 "R/collinear-utils.R:2:27","ifelse",FALSE,1
 "R/common-features.R:40:28","ifelse",FALSE,2
@@ -9040,7 +9042,7 @@
 "R/ribbon-layout.R:314:25","inside_hi",FALSE,2
 "R/helpers-label-clipping.R:1:36","inside_interval",FALSE,3
 "R/ribbon-layout.R:314:25","inside_lo",FALSE,2
-"R/clean.R:76:23","integer",FALSE,1
+"R/clean.R:83:23","integer",FALSE,1
 "R/common-features.R:235:37","integer",FALSE,1
 "R/common-features.R:509:31","integer",FALSE,1
 "R/common-features.R:658:34","integer",FALSE,3
@@ -9135,7 +9137,7 @@
 "R/helpers-label-radial.R:4:31","interpolate",FALSE,5
 "R/layout-track.R:14:24","interpolate",FALSE,5
 "R/aaa-geom.R:35:28","intersect",FALSE,1
-"R/clean.R:76:23","intersect",FALSE,1
+"R/clean.R:83:23","intersect",FALSE,1
 "R/common-features.R:158:36","intersect",FALSE,2
 "R/common-features.R:40:28","intersect",FALSE,4
 "R/common-features.R:701:25","intersect",FALSE,1
@@ -9192,11 +9194,11 @@
 "R/data-relations.R:66:11","invalid",FALSE,3
 "R/restriction-sites.R:1427:33","invalid_bend",FALSE,5
 "R/ggchord-build.R:9:34","invalid_gap",FALSE,4
-"R/clean.R:76:23","invalid_pident",FALSE,5
+"R/clean.R:83:23","invalid_pident",FALSE,5
 "R/collinear-utils.R:126:25","inverse",FALSE,4
 "R/ggchord-build.R:9:34","inverse",FALSE,2
 "R/layout-track.R:113:26","inverse",FALSE,1
-"R/clean.R:551:24","invisible",FALSE,1
+"R/clean.R:557:24","invisible",FALSE,1
 "R/collinear-utils.R:62:32","invisible",FALSE,2
 "R/coord-chord.R:73:21","invisible",FALSE,1
 "R/coord-collinear.R:133:36","invisible",FALSE,2
@@ -9260,7 +9262,7 @@
 "R/data-relations.R:66:11","is.atomic",FALSE,1
 "R/geom-track.R:12:14","is.call",FALSE,1
 "R/zzz.R:244:23","is.call",FALSE,1
-"R/clean.R:76:23","is.character",FALSE,1
+"R/clean.R:83:23","is.character",FALSE,1
 "R/common-features.R:3:37","is.character",FALSE,1
 "R/common-features.R:701:25","is.character",FALSE,2
 "R/data-convert.R:10:31","is.character",FALSE,1
@@ -9305,7 +9307,7 @@
 "R/stat-ribbon.R:28:27","is.character",FALSE,1
 "R/theme.R:275:27","is.character",FALSE,2
 "R/viewer.R:181:17","is.character",FALSE,2
-"R/clean.R:76:23","is.data.frame",FALSE,3
+"R/clean.R:83:23","is.data.frame",FALSE,3
 "R/common-features.R:113:39","is.data.frame",FALSE,1
 "R/common-features.R:158:36","is.data.frame",FALSE,1
 "R/common-features.R:3:37","is.data.frame",FALSE,1
@@ -9382,7 +9384,7 @@
 "R/data-project.R:33:26","is.factor",FALSE,1
 "R/ggchord-scales.R:223:25","is.factor",FALSE,1
 "R/ribbon-layout.R:74:21","is.factor",FALSE,1
-"R/clean.R:76:23","is.finite",FALSE,4
+"R/clean.R:83:23","is.finite",FALSE,4
 "R/collinear-utils.R:126:25","is.finite",FALSE,1
 "R/collinear-utils.R:62:32","is.finite",FALSE,1
 "R/common-features.R:701:25","is.finite",FALSE,1
@@ -9592,7 +9594,7 @@
 "R/ribbon-utils.R:238:25","is.matrix",FALSE,1
 "R/aaa-geom.R:141:16","is.na",FALSE,2
 "R/aaa-geom.R:60:16","is.na",FALSE,1
-"R/clean.R:76:23","is.na",FALSE,6
+"R/clean.R:83:23","is.na",FALSE,10
 "R/collinear-utils.R:126:25","is.na",FALSE,2
 "R/collinear-utils.R:2:27","is.na",FALSE,5
 "R/common-features.R:122:33","is.na",FALSE,3
@@ -9738,8 +9740,8 @@
 "R/zzz.R:386:26","is.na",FALSE,1
 "R/zzz.R:453:29","is.na",FALSE,1
 "R/aaa-geom.R:35:28","is.null",FALSE,1
-"R/clean.R:551:24","is.null",FALSE,2
-"R/clean.R:76:23","is.null",FALSE,2
+"R/clean.R:557:24","is.null",FALSE,2
+"R/clean.R:83:23","is.null",FALSE,2
 "R/collinear-utils.R:2:27","is.null",FALSE,6
 "R/collinear-utils.R:73:31","is.null",FALSE,2
 "R/common-features.R:162:24","is.null",FALSE,1
@@ -9959,7 +9961,7 @@
 "R/zzz.R:308:33","is.null",FALSE,1
 "R/zzz.R:351:31","is.null",FALSE,3
 "R/zzz.R:553:11","is.null",FALSE,1
-"R/clean.R:76:23","is.numeric",FALSE,4
+"R/clean.R:83:23","is.numeric",FALSE,4
 "R/collinear-utils.R:126:25","is.numeric",FALSE,1
 "R/common-features.R:701:25","is.numeric",FALSE,1
 "R/coord-chord.R:59:16","is.numeric",FALSE,2
@@ -10508,6 +10510,7 @@
 "R/zzz.R:386:26","label_y",FALSE,1
 "R/ggchord-build.R:9:34","labelOffset",FALSE,3
 "R/layout-collinear-annotation.R:173:27","labelOffset",FALSE,2
+"R/clean.R:148:27","labels",FALSE,4
 "R/collinear-utils.R:73:31","labels",FALSE,11
 "R/data-genbank.R:147:17","labels",FALSE,7
 "R/geom-seq-center-label.R:125:38","labels",FALSE,10
@@ -10899,7 +10902,7 @@
 "R/guides.R:136:28","legend.ticks.length",FALSE,1
 "R/guides.R:136:28","legend.title",FALSE,2
 "R/guides.R:136:28","legends",FALSE,1
-"R/clean.R:76:23","len",FALSE,14
+"R/clean.R:83:23","len",FALSE,14
 "R/helpers_params.R:393:26","len",FALSE,3
 "R/helpers_params.R:429:26","len",FALSE,7
 "R/layout-collinear-annotation.R:173:27","len",FALSE,3
@@ -10912,8 +10915,8 @@
 "R/aaa-geom.R:141:16","length",FALSE,4
 "R/aaa-geom.R:35:28","length",FALSE,1
 "R/aaa-geom.R:60:16","length",FALSE,4
-"R/clean.R:132:19","length",FALSE,1
-"R/clean.R:76:23","length",FALSE,13
+"R/clean.R:139:19","length",FALSE,1
+"R/clean.R:83:23","length",FALSE,13
 "R/collinear-utils.R:126:25","length",FALSE,7
 "R/collinear-utils.R:2:27","length",FALSE,3
 "R/common-features.R:129:19","length",FALSE,1
@@ -11446,7 +11449,7 @@
 "R/data-prepare.R:123:25","links",FALSE,6
 "R/aaa-geom.R:141:16","list",FALSE,3
 "R/aaa-geom.R:60:16","list",FALSE,5
-"R/clean.R:76:23","list",FALSE,2
+"R/clean.R:83:23","list",FALSE,2
 "R/collinear-utils.R:2:27","list",FALSE,2
 "R/common-features.R:279:29","list",FALSE,2
 "R/common-features.R:3:37","list",FALSE,1
@@ -11974,7 +11977,7 @@
 "R/common-features.R:701:25","match_method",FALSE,1
 "R/restriction-sites.R:256:27","match_number",FALSE,5
 "R/primers.R:108:38","match_type",FALSE,1
-"R/clean.R:76:23","match.arg",FALSE,5
+"R/clean.R:83:23","match.arg",FALSE,5
 "R/common-features.R:701:25","match.arg",FALSE,2
 "R/coord-chord.R:59:16","match.arg",FALSE,1
 "R/coord-circular.R:20:19","match.arg",FALSE,2
@@ -12045,7 +12048,7 @@
 "R/link-obstacles.R:23:42","matrix",FALSE,1
 "R/position-feature.R:191:34","matrix",FALSE,1
 "R/restriction-sites.R:256:27","matrix",FALSE,1
-"R/clean.R:76:23","max",FALSE,10
+"R/clean.R:83:23","max",FALSE,10
 "R/collinear-utils.R:62:32","max",FALSE,2
 "R/common-features.R:415:40","max",FALSE,2
 "R/common-features.R:509:31","max",FALSE,3
@@ -12302,7 +12305,7 @@
 "R/position-feature.R:255:33","midpoint",FALSE,1
 "R/position-feature.R:308:49","midpoint",FALSE,2
 "R/zzz.R:81:27","migrations",FALSE,2
-"R/clean.R:76:23","min",FALSE,10
+"R/clean.R:83:23","min",FALSE,10
 "R/common-features.R:415:40","min",FALSE,2
 "R/common-features.R:509:31","min",FALSE,1
 "R/common-features.R:523:26","min",FALSE,1
@@ -12437,7 +12440,7 @@
 "R/primers.R:108:38","mismatch_count",FALSE,1
 "R/data-import.R:64:20","miss",FALSE,3
 "R/validate.R:456:23","miss_anno",FALSE,3
-"R/clean.R:76:23","missing",FALSE,6
+"R/clean.R:83:23","missing",FALSE,6
 "R/data-convert.R:10:31","missing",FALSE,3
 "R/data-import.R:124:22","missing",FALSE,3
 "R/data-prepare.R:23:35","missing",FALSE,3
@@ -12474,6 +12477,8 @@
 "R/validate.R:53:22","missing",FALSE,3
 "R/viewer.R:181:17","missing",FALSE,2
 "R/zzz.R:115:21","missing",FALSE,1
+"R/clean.R:148:27","missing_id",FALSE,2
+"R/clean.R:83:23","missing_id",FALSE,6
 "R/common-features.R:3:37","missing_ids",FALSE,3
 "R/restriction-sites.R:403:27","missing_profiles",FALSE,3
 "R/restriction-sites.R:168:43","missing_value",FALSE,2
@@ -12519,7 +12524,7 @@
 "R/ggchord-scales.R:351:25","mp_names",FALSE,4
 "R/viewer.R:3:28","mtime",FALSE,1
 "R/layout-track.R:2:28","multiplier",FALSE,2
-"R/clean.R:76:23","n",FALSE,2
+"R/clean.R:83:23","n",FALSE,2
 "R/collinear-utils.R:2:27","n",FALSE,3
 "R/geom-seq-break.R:91:28","n",FALSE,1
 "R/geom-seq-break.R:93:13","n",FALSE,1
@@ -12657,7 +12662,7 @@
 "R/aaa-geom.R:35:28","names",FALSE,1
 "R/aaa-geom.R:5:20","names",FALSE,3
 "R/aaa-geom.R:60:16","names",FALSE,1
-"R/clean.R:76:23","names",FALSE,18
+"R/clean.R:83:23","names",FALSE,18
 "R/collinear-utils.R:126:25","names",FALSE,1
 "R/collinear-utils.R:73:31","names",FALSE,6
 "R/common-features.R:103:35","names",FALSE,3
@@ -12944,7 +12949,7 @@
 "<top-level>","new_coord_chord",FALSE,1
 "R/coord-chord.R:59:16","new_coord_chord",FALSE,1
 "R/ggchord-frame.R:3:22","new_coord_chord",FALSE,1
-"R/clean.R:76:23","new_coords",FALSE,6
+"R/clean.R:83:23","new_coords",FALSE,6
 "R/aaa-geom.R:5:20","new_geom",FALSE,6
 "<top-level>","new_ggchord_coord",FALSE,1
 "R/coord-chord.R:26:20","new_ggchord_coord",FALSE,1
@@ -12958,7 +12963,7 @@
 "R/ggchord.R:212:16","new_settings",FALSE,6
 "<top-level>","new_validation_collector",FALSE,1
 "R/validate.R:736:26","new_validation_collector",FALSE,1
-"R/clean.R:132:19","new_value",FALSE,1
+"R/clean.R:139:19","new_value",FALSE,1
 "<top-level>","new.env",FALSE,1
 "R/ggchord-build.R:1036:27","new.env",FALSE,1
 "R/ggchord.R:212:16","new.env",FALSE,1
@@ -12978,7 +12983,7 @@
 "R/helpers-curve.R:2:22","nl",FALSE,4
 "R/helpers-curve.R:35:17","nl",FALSE,3
 "R/aaa-geom.R:35:28","nm",FALSE,3
-"R/clean.R:76:23","nm",FALSE,18
+"R/clean.R:83:23","nm",FALSE,18
 "R/data-import.R:124:22","nm",FALSE,6
 "R/geom-link-line.R:63:16","nm",FALSE,3
 "R/geom-link-line.R:82:14","nm",FALSE,3
@@ -13063,8 +13068,8 @@
 "R/aaa-geom.R:141:16","nrow",FALSE,9
 "R/aaa-geom.R:35:28","nrow",FALSE,1
 "R/aaa-geom.R:60:16","nrow",FALSE,5
-"R/clean.R:551:24","nrow",FALSE,7
-"R/clean.R:76:23","nrow",FALSE,5
+"R/clean.R:557:24","nrow",FALSE,7
+"R/clean.R:83:23","nrow",FALSE,5
 "R/collinear-utils.R:2:27","nrow",FALSE,1
 "R/collinear-utils.R:73:31","nrow",FALSE,3
 "R/common-features.R:122:33","nrow",FALSE,1
@@ -13303,7 +13308,7 @@
 "R/aaa-geom.R:140:14","nullGrob",FALSE,1
 "R/aaa-geom.R:59:14","nullGrob",FALSE,1
 "R/restriction-sites.R:518:16","nullGrob",FALSE,1
-"R/clean.R:76:23","num_cols",FALSE,2
+"R/clean.R:83:23","num_cols",FALSE,2
 "R/data-import.R:124:22","num_cols",FALSE,2
 "R/validate.R:135:25","num_cols",FALSE,4
 "R/helpers_params.R:322:29","num_val",FALSE,8
@@ -13409,7 +13414,8 @@
 "R/helpers-label-routing.R:762:30","ny",FALSE,3
 "R/layout-track.R:14:24","ny",FALSE,2
 "R/restriction-sites.R:1507:17","ny",FALSE,5
-"R/clean.R:76:23","nzchar",FALSE,5
+"R/clean.R:148:27","nzchar",FALSE,1
+"R/clean.R:83:23","nzchar",FALSE,4
 "R/collinear-utils.R:73:31","nzchar",FALSE,4
 "R/common-features.R:158:36","nzchar",FALSE,1
 "R/common-features.R:179:46","nzchar",FALSE,1
@@ -13609,8 +13615,8 @@
 "R/aaa-geom.R:24:24","old_draw_key",FALSE,1
 "R/aaa-geom.R:5:20","old_draw_key",FALSE,1
 "R/layout-external-annotation.R:38:27","old_endpoint",FALSE,3
-"R/clean.R:551:24","old_error",FALSE,2
-"R/clean.R:76:23","old_error",FALSE,2
+"R/clean.R:557:24","old_error",FALSE,2
+"R/clean.R:83:23","old_error",FALSE,2
 "R/coord-chord.R:59:16","old_error",FALSE,2
 "R/data-formats.R:180:13","old_error",FALSE,2
 "R/data-formats.R:74:13","old_error",FALSE,2
@@ -13657,8 +13663,8 @@
 "R/data-prepare.R:199:56","old_source",FALSE,1
 "R/viewer.R:3:28","old_stems",FALSE,3
 "R/layout-perimeter.R:465:34","old_top",FALSE,3
-"R/clean.R:551:24","on.exit",FALSE,1
-"R/clean.R:76:23","on.exit",FALSE,1
+"R/clean.R:557:24","on.exit",FALSE,1
+"R/clean.R:83:23","on.exit",FALSE,1
 "R/coord-chord.R:59:16","on.exit",FALSE,1
 "R/data-formats.R:180:13","on.exit",FALSE,1
 "R/data-formats.R:74:13","on.exit",FALSE,1
@@ -13725,8 +13731,8 @@
 "R/layout-perimeter.R:363:36","option",FALSE,1
 "R/layout-perimeter.R:375:30","option",FALSE,3
 "R/layout-perimeter.R:432:53","option",FALSE,1
-"R/clean.R:551:24","options",FALSE,1
-"R/clean.R:76:23","options",FALSE,1
+"R/clean.R:557:24","options",FALSE,1
+"R/clean.R:83:23","options",FALSE,1
 "R/coord-chord.R:59:16","options",FALSE,1
 "R/data-formats.R:180:13","options",FALSE,1
 "R/data-formats.R:74:13","options",FALSE,1
@@ -13903,10 +13909,10 @@
 "R/link-branch.R:34:33","original",FALSE,2
 "R/link-branch.R:4:25","original",FALSE,3
 "R/link-branch.R:67:13","original",FALSE,1
-"R/clean.R:76:23","original_coords",FALSE,3
+"R/clean.R:83:23","original_coords",FALSE,3
 "R/layout-export.R:64:26","original_data",FALSE,6
 "R/ribbon-layout.R:381:28","original_order",FALSE,6
-"R/clean.R:132:19","original_value",FALSE,1
+"R/clean.R:139:19","original_value",FALSE,1
 "R/helpers-label-routing.R:77:35","origins",FALSE,4
 "R/helpers-device.R:5:31","OS.type",FALSE,1
 "R/geom-track.R:308:37","other",FALSE,4
@@ -14030,7 +14036,7 @@
 "R/zzz.R:287:30","out",FALSE,7
 "R/ribbon-utils.R:502:26","out_chunks",FALSE,2
 "R/ribbon-utils.R:593:15","out_chunks",FALSE,3
-"R/clean.R:76:23","out_of_range",FALSE,13
+"R/clean.R:83:23","out_of_range",FALSE,13
 "R/ribbon-layout.R:112:27","out_rows",FALSE,4
 "R/ribbon-layout.R:195:20","out_rows",FALSE,2
 "R/ribbon-layout.R:203:20","out_rows",FALSE,2
@@ -14166,7 +14172,7 @@
 "R/helpers-label-clipping.R:1:36","owners",FALSE,1
 "R/helpers-label-boxes.R:192:28","ox",FALSE,5
 "R/helpers-label-boxes.R:192:28","oy",FALSE,5
-"R/clean.R:76:23","p",FALSE,14
+"R/clean.R:83:23","p",FALSE,14
 "R/ggchord.R:212:16","p",FALSE,10
 "R/ggchord.R:81:12","p",FALSE,5
 "R/helpers-label-clipping.R:1:36","p",FALSE,3
@@ -14366,7 +14372,8 @@
 "R/render-context.R:103:25","pass",FALSE,2
 "R/render-context.R:103:25","passes",FALSE,3
 "R/aaa-geom.R:141:16","paste",FALSE,2
-"R/clean.R:76:23","paste",FALSE,15
+"R/clean.R:148:27","paste",FALSE,1
+"R/clean.R:83:23","paste",FALSE,13
 "R/collinear-utils.R:45:17","paste",FALSE,1
 "R/collinear-utils.R:73:31","paste",FALSE,2
 "R/common-features.R:179:46","paste",FALSE,1
@@ -14443,7 +14450,7 @@
 "R/zzz.R:81:27","paste",FALSE,2
 "R/aaa-geom.R:141:16","paste0",FALSE,1
 "R/aaa-geom.R:5:20","paste0",FALSE,1
-"R/clean.R:76:23","paste0",FALSE,4
+"R/clean.R:83:23","paste0",FALSE,4
 "R/common-features.R:168:69","paste0",FALSE,1
 "R/common-features.R:220:25","paste0",FALSE,1
 "R/common-features.R:228:39","paste0",FALSE,1
@@ -14611,7 +14618,7 @@
 "R/validate.R:135:25","pid",FALSE,4
 "R/validate.R:135:25","pid_bad",FALSE,3
 "R/ribbon-utils.R:502:26","pid_ok",FALSE,2
-"R/clean.R:76:23","pident",FALSE,1
+"R/clean.R:83:23","pident",FALSE,1
 "R/data-formats.R:185:27","pident",FALSE,1
 "R/focus.R:214:23","pident",FALSE,1
 "R/layout-collinear.R:99:38","pident",FALSE,2
@@ -15032,7 +15039,7 @@
 "R/geom-primer.R:85:28","primer_start",FALSE,2
 "R/primers.R:178:25","primers",FALSE,2
 "R/primers.R:37:31","primers",FALSE,29
-"R/clean.R:551:24","print",FALSE,1
+"R/clean.R:557:24","print",FALSE,1
 "R/validate.R:856:29","print",FALSE,2
 "R/validate.R:906:37","print.data.frame",FALSE,1
 "<top-level>","print.ggchord_clean",FALSE,1
@@ -15124,7 +15131,7 @@
 "R/layout-collinear.R:99:38","q_xy",FALSE,4
 "R/data-project.R:463:26","q0",FALSE,4
 "R/ribbon-utils.R:502:26","qA",FALSE,7
-"R/clean.R:76:23","qaccver",FALSE,3
+"R/clean.R:83:23","qaccver",FALSE,2
 "R/collinear-utils.R:2:27","qaccver",FALSE,5
 "R/data-convert.R:355:20","qaccver",FALSE,2
 "R/data-formats.R:185:27","qaccver",FALSE,2
@@ -15158,7 +15165,7 @@
 "R/ribbon-layout.R:203:20","qdir",FALSE,2
 "R/ribbon-utils.R:502:26","qdir",FALSE,4
 "R/validate.R:357:33","qe",FALSE,10
-"R/clean.R:76:23","qend",FALSE,1
+"R/clean.R:83:23","qend",FALSE,1
 "R/data-prepare.R:47:30","qend",FALSE,1
 "R/data-project.R:463:26","qend",FALSE,2
 "R/data-segment.R:44:25","qend",FALSE,4
@@ -15187,7 +15194,7 @@
 "R/focus.R:214:23","qhits",FALSE,3
 "R/collinear-utils.R:2:27","qi",FALSE,8
 "R/data-project.R:463:26","qi",FALSE,6
-"R/clean.R:76:23","qid",FALSE,5
+"R/clean.R:83:23","qid",FALSE,5
 "R/data-relations.R:173:26","qid",FALSE,6
 "R/data-relations.R:195:39","qid",FALSE,1
 "R/data-relations.R:293:84","qid",FALSE,1
@@ -15215,7 +15222,7 @@
 "R/data-relations.R:173:26","qrow",FALSE,3
 "R/validate.R:357:33","qs",FALSE,10
 "R/data-relations.R:173:26","qsegments",FALSE,1
-"R/clean.R:76:23","qstart",FALSE,1
+"R/clean.R:83:23","qstart",FALSE,1
 "R/data-prepare.R:47:30","qstart",FALSE,1
 "R/data-project.R:463:26","qstart",FALSE,2
 "R/data-segment.R:44:25","qstart",FALSE,4
@@ -15392,12 +15399,13 @@
 "R/geom-gene.R:396:26","raw_argument_names",FALSE,2
 "R/ggchord-build.R:9:34","raw_br",FALSE,10
 "R/ggchord-build.R:9:34","raw_fill",FALSE,4
+"R/clean.R:83:23","raw_id",FALSE,6
 "R/restriction-sites.R:1427:33","raw_labels",FALSE,2
 "R/ggchord-build.R:9:34","raw_ring",FALSE,6
 "R/ggchord-build.R:9:34","raw_shape",FALSE,7
 "R/guides.R:136:28","raw_text",FALSE,7
 "R/guides.R:136:28","raw_title",FALSE,7
-"R/clean.R:76:23","rbind",FALSE,1
+"R/clean.R:83:23","rbind",FALSE,1
 "R/common-features.R:509:31","rbind",FALSE,1
 "R/common-features.R:616:16","rbind",FALSE,1
 "R/data-convert.R:24:30","rbind",FALSE,1
@@ -15506,7 +15514,7 @@
 "R/data-import.R:448:30","readLines",FALSE,1
 "R/data-import.R:81:30","readLines",FALSE,1
 "R/restriction-sites.R:45:25","readLines",FALSE,5
-"R/clean.R:132:19","reason",FALSE,1
+"R/clean.R:139:19","reason",FALSE,1
 "R/collinear-utils.R:2:27","reason",FALSE,5
 "R/data-genbank.R:147:17","reason",FALSE,13
 "R/data-relations.R:173:26","reason",FALSE,3
@@ -15693,7 +15701,7 @@
 "R/render-context.R:103:25","render_context",FALSE,1
 "R/restriction-sites.R:1427:33","rendered",FALSE,5
 "R/aaa-geom.R:141:16","rep",FALSE,4
-"R/clean.R:76:23","rep",FALSE,2
+"R/clean.R:83:23","rep",FALSE,2
 "R/collinear-utils.R:126:25","rep",FALSE,1
 "R/collinear-utils.R:2:27","rep",FALSE,1
 "R/common-features.R:122:33","rep",FALSE,1
@@ -15816,12 +15824,12 @@
 "R/helpers-label-routing.R:893:31","repel_boxes",FALSE,10
 "R/ggchord-build.R:1036:27","repel_labels",FALSE,2
 "R/geom-gene.R:396:26","replacement",FALSE,2
-"R/clean.R:76:23","replacement_annotation",FALSE,5
+"R/clean.R:83:23","replacement_annotation",FALSE,5
 "R/geom-track.R:12:14","replacements",FALSE,2
 "R/geom-track.R:8:32","replacements",FALSE,1
 "R/ribbon-utils.R:57:27","replicate",FALSE,1
-"R/clean.R:551:24","report",FALSE,5
-"R/clean.R:76:23","report",FALSE,2
+"R/clean.R:557:24","report",FALSE,5
+"R/clean.R:83:23","report",FALSE,2
 "R/collinear-utils.R:2:27","report",FALSE,2
 "R/data-prepare.R:123:25","report",FALSE,3
 "R/data-segment.R:44:25","report",FALSE,1
@@ -15830,13 +15838,13 @@
 "R/ribbon-layout.R:381:28","report",FALSE,2
 "R/ribbon-utils.R:502:26","report",FALSE,2
 "R/ribbon-utils.R:593:15","report",FALSE,2
-"R/clean.R:76:23","report_chunk",FALSE,28
-"R/clean.R:132:19","report_rows",FALSE,2
-"R/clean.R:76:23","report_rows",FALSE,3
+"R/clean.R:83:23","report_chunk",FALSE,28
+"R/clean.R:139:19","report_rows",FALSE,2
+"R/clean.R:83:23","report_rows",FALSE,3
 "R/data-relations.R:173:26","representative",FALSE,4
 "R/data-relations.R:232:52","representative",FALSE,1
 "R/data-relations.R:235:51","representative",FALSE,1
-"R/clean.R:76:23","req",FALSE,4
+"R/clean.R:83:23","req",FALSE,4
 "R/data-import.R:124:22","req",FALSE,4
 "R/ribbon-utils.R:319:32","req",FALSE,2
 "R/ribbon-utils.R:502:26","req",FALSE,2
@@ -16209,7 +16217,7 @@
 "R/helpers-label-radial.R:4:31","reverse",FALSE,6
 "R/restriction-sites.R:45:25","reverse_cleavage",FALSE,10
 "R/layout-collinear-transform.R:72:40","reverse_support",FALSE,2
-"R/clean.R:76:23","reversed_interval",FALSE,8
+"R/clean.R:83:23","reversed_interval",FALSE,8
 "R/data-prepare.R:123:25","reversed_interval",FALSE,5
 "R/geom-track.R:12:14","rewrite",FALSE,1
 "R/geom-track.R:8:32","rewrite",FALSE,2
@@ -16263,8 +16271,8 @@
 "R/layout-collinear.R:132:13","ribbon_ctrl_point",FALSE,1
 "R/link-branch.R:34:33","ribbon_ctrl_point",FALSE,1
 "R/ggchord-build.R:9:34","ribbon_ctrl_pt",FALSE,2
-"R/clean.R:551:24","ribbon_data",FALSE,2
-"R/clean.R:76:23","ribbon_data",FALSE,1
+"R/clean.R:557:24","ribbon_data",FALSE,2
+"R/clean.R:83:23","ribbon_data",FALSE,1
 "R/data-prepare.R:123:25","ribbon_data",FALSE,23
 "R/data-prepare.R:166:15","ribbon_data",FALSE,1
 "R/data-segment.R:44:25","ribbon_data",FALSE,42
@@ -16329,7 +16337,7 @@
 "R/ggchord-scales.R:4:24","ribbon_name",FALSE,2
 "R/ggchord-build.R:9:34","ribbon_obstacles",FALSE,2
 "R/layout-collinear.R:105:19","ribbon_obstacles",FALSE,1
-"R/clean.R:76:23","ribbon_out",FALSE,24
+"R/clean.R:83:23","ribbon_out",FALSE,20
 "R/focus.R:214:23","ribbon_out",FALSE,7
 "R/ggchord-build.R:9:34","ribbon_outline_by",FALSE,6
 "R/layout-collinear.R:253:29","ribbon_outline_by",FALSE,1
@@ -16494,8 +16502,8 @@
 "R/layout-external-annotation.R:31:38","routes",FALSE,5
 "R/restriction-sites.R:1427:33","routing_half_height",FALSE,5
 "R/restriction-sites.R:1427:33","routing_half_width",FALSE,5
-"R/clean.R:132:19","row",FALSE,1
-"R/clean.R:76:23","row",FALSE,13
+"R/clean.R:139:19","row",FALSE,1
+"R/clean.R:83:23","row",FALSE,16
 "R/common-features.R:849:36","row",FALSE,11
 "R/common-features.R:993:39","row",FALSE,10
 "R/data-genbank.R:147:17","row",FALSE,37
@@ -16588,7 +16596,7 @@
 "R/restriction-sites.R:256:27","rownames",FALSE,1
 "R/restriction-sites.R:403:27","rownames",FALSE,2
 "R/restriction-sites.R:45:25","rownames",FALSE,1
-"R/clean.R:76:23","rows",FALSE,8
+"R/clean.R:83:23","rows",FALSE,8
 "R/common-features.R:162:24","rows",FALSE,3
 "R/common-features.R:168:69","rows",FALSE,4
 "R/common-features.R:179:46","rows",FALSE,2
@@ -16727,7 +16735,7 @@
 "R/data-convert.R:355:20","S4Vectors",FALSE,2
 "R/data-convert.R:95:30","S4Vectors",FALSE,2
 "R/ribbon-utils.R:502:26","sA",FALSE,7
-"R/clean.R:76:23","saccver",FALSE,3
+"R/clean.R:83:23","saccver",FALSE,2
 "R/collinear-utils.R:2:27","saccver",FALSE,5
 "R/data-convert.R:355:20","saccver",FALSE,2
 "R/data-formats.R:185:27","saccver",FALSE,2
@@ -17034,7 +17042,7 @@
 "R/coord-circular.R:5:33","self",FALSE,1
 "R/validate.R:135:25","self",FALSE,3
 "R/geom-feature.R:89:25","semantic_source",FALSE,2
-"R/clean.R:76:23","send",FALSE,1
+"R/clean.R:83:23","send",FALSE,1
 "R/data-prepare.R:47:30","send",FALSE,1
 "R/data-project.R:463:26","send",FALSE,3
 "R/data-segment.R:44:25","send",FALSE,4
@@ -17193,8 +17201,8 @@
 "R/helpers_elements.R:125:18","seq_colour",FALSE,1
 "R/geom-seq.R:126:13","seq_curvature",FALSE,1
 "R/ggchord-build.R:9:34","seq_curvature",FALSE,5
-"R/clean.R:551:24","seq_data",FALSE,1
-"R/clean.R:76:23","seq_data",FALSE,14
+"R/clean.R:557:24","seq_data",FALSE,1
+"R/clean.R:83:23","seq_data",FALSE,14
 "R/data-genbank.R:147:17","seq_data",FALSE,5
 "R/data-prepare.R:123:25","seq_data",FALSE,13
 "R/data-prepare.R:166:15","seq_data",FALSE,1
@@ -17410,7 +17418,7 @@
 "R/ribbon-layout.R:7:32","seq_lengths",FALSE,5
 "R/validate.R:135:25","seq_lengths_ok",FALSE,2
 "R/validate.R:456:23","seq_lengths_ok",FALSE,2
-"R/clean.R:76:23","seq_lens",FALSE,10
+"R/clean.R:83:23","seq_lens",FALSE,10
 "R/data-relations.R:41:31","seq_ok",FALSE,3
 "R/geom-seq.R:126:13","seq_order",FALSE,1
 "R/ggchord-build.R:9:34","seq_order",FALSE,7
@@ -17421,7 +17429,7 @@
 "R/ggchord-build.R:9:34","seq_orientation",FALSE,2
 "R/ribbon-layout.R:262:32","seq_orientation",FALSE,10
 "R/ribbon-layout.R:381:28","seq_orientation",FALSE,1
-"R/clean.R:76:23","seq_out",FALSE,2
+"R/clean.R:83:23","seq_out",FALSE,2
 "R/focus.R:214:23","seq_out",FALSE,20
 "R/ggchord-build.R:9:34","seq_params",FALSE,22
 "R/layout-circular-registry.R:119:33","seq_radii",FALSE,10
@@ -17582,7 +17590,7 @@
 "<top-level>","set_ggchord_coord",FALSE,1
 "R/ggchord-frame.R:199:25","set_ggchord_coord",FALSE,1
 "R/restriction-sites.R:423:60","set_name",FALSE,2
-"R/clean.R:76:23","setdiff",FALSE,2
+"R/clean.R:83:23","setdiff",FALSE,2
 "R/data-convert.R:10:31","setdiff",FALSE,1
 "R/data-convert.R:355:20","setdiff",FALSE,1
 "R/data-convert.R:38:29","setdiff",FALSE,1
@@ -17637,7 +17645,7 @@
 "R/data-project.R:44:31","setequal",FALSE,1
 "R/ribbon-layout.R:381:28","setequal",FALSE,1
 "<top-level>","setNames",FALSE,1
-"R/clean.R:76:23","setNames",FALSE,1
+"R/clean.R:83:23","setNames",FALSE,1
 "R/common-features.R:113:39","setNames",FALSE,1
 "R/common-features.R:158:36","setNames",FALSE,1
 "R/common-features.R:701:25","setNames",FALSE,1
@@ -17804,7 +17812,7 @@
 "R/stat-ribbon.R:28:27","sid",FALSE,4
 "R/validate.R:456:23","sid",FALSE,7
 "R/validate.R:53:22","sid",FALSE,8
-"R/clean.R:76:23","sid_",FALSE,8
+"R/clean.R:83:23","sid_",FALSE,8
 "R/helpers-label-routing.R:151:32","sid_tracks",FALSE,7
 "R/data-segment.R:44:25","side",FALSE,13
 "R/geom-primer.R:29:16","side",FALSE,4
@@ -18218,8 +18226,8 @@
 "R/helpers-label-radial.R:4:31","spread",FALSE,2
 "R/layout-perimeter.R:232:32","spread",FALSE,3
 "R/layout-perimeter.R:465:34","spread",FALSE,3
-"R/clean.R:551:24","sprintf",FALSE,5
-"R/clean.R:76:23","sprintf",FALSE,25
+"R/clean.R:557:24","sprintf",FALSE,5
+"R/clean.R:83:23","sprintf",FALSE,25
 "R/common-features.R:40:28","sprintf",FALSE,1
 "R/data-import.R:10:26","sprintf",FALSE,4
 "R/data-import.R:124:22","sprintf",FALSE,4
@@ -18286,7 +18294,7 @@
 "R/data-relations.R:173:26","srow",FALSE,3
 "R/validate.R:357:33","ss",FALSE,10
 "R/data-relations.R:173:26","ssegments",FALSE,1
-"R/clean.R:76:23","sstart",FALSE,1
+"R/clean.R:83:23","sstart",FALSE,1
 "R/data-prepare.R:47:30","sstart",FALSE,1
 "R/data-project.R:463:26","sstart",FALSE,3
 "R/data-segment.R:44:25","sstart",FALSE,4
@@ -18306,7 +18314,7 @@
 "R/validate.R:357:33","sstart",FALSE,2
 "R/zzz.R:208:32","sstart",FALSE,1
 "R/data-convert.R:355:20","sstrand",FALSE,2
-"R/clean.R:76:23","st",FALSE,23
+"R/clean.R:83:23","st",FALSE,23
 "R/helpers_params.R:192:18","st",FALSE,4
 "R/position-feature.R:93:23","st",FALSE,3
 "R/validate.R:456:23","st",FALSE,3
@@ -18320,7 +18328,7 @@
 "R/restriction-sites.R:1266:46","stair_step",FALSE,3
 "R/common-features.R:849:36","standard",FALSE,3
 "R/theme.R:150:35","standard",FALSE,2
-"R/clean.R:76:23","start",FALSE,3
+"R/clean.R:83:23","start",FALSE,3
 "R/common-features.R:129:19","start",FALSE,1
 "R/common-features.R:279:29","start",FALSE,2
 "R/common-features.R:355:38","start",FALSE,2
@@ -18435,7 +18443,7 @@
 "<top-level>","StatGgchordRibbonDensity",FALSE,1
 "R/stat-ribbon.R:88:30","StatGgchordRibbonDensity",FALSE,1
 "<top-level>","stats",FALSE,1
-"R/clean.R:76:23","stats",FALSE,1
+"R/clean.R:83:23","stats",FALSE,1
 "R/common-features.R:113:39","stats",FALSE,1
 "R/common-features.R:158:36","stats",FALSE,1
 "R/common-features.R:701:25","stats",FALSE,1
@@ -18525,7 +18533,7 @@
 "R/zzz.R:61:17","stop",FALSE,1
 "R/layout-perimeter.R:285:36","straddles_axis",FALSE,2
 "R/helpers-label-clipping.R:1:36","straight",FALSE,4
-"R/clean.R:76:23","strand",FALSE,2
+"R/clean.R:83:23","strand",FALSE,2
 "R/common-features.R:279:29","strand",FALSE,3
 "R/common-features.R:355:38","strand",FALSE,1
 "R/common-features.R:488:34","strand",FALSE,4
@@ -18602,7 +18610,7 @@
 "R/validate.R:832:41","structural",FALSE,1
 "R/validate.R:849:41","structural",FALSE,1
 "R/ggchord.R:81:12","structural_errors",FALSE,3
-"R/clean.R:76:23","structure",FALSE,1
+"R/clean.R:83:23","structure",FALSE,1
 "R/data-project.R:185:22","structure",FALSE,1
 "R/diagnostics.R:165:21","structure",FALSE,1
 "R/validate.R:736:26","structure",FALSE,1
@@ -18832,7 +18840,7 @@
 "R/layout-perimeter.R:177:36","t_max",FALSE,4
 "R/layout-perimeter.R:177:36","t_min",FALSE,4
 "R/validate.R:612:29","tab",FALSE,5
-"R/clean.R:132:19","table",FALSE,1
+"R/clean.R:139:19","table",FALSE,1
 "R/data-prepare.R:25:10","table",FALSE,1
 "R/data-relations.R:46:10","table",FALSE,1
 "R/data-relations.R:53:12","table",FALSE,3
@@ -19208,7 +19216,7 @@
 "R/layout-track.R:357:23","title",FALSE,7
 "R/layout-track.R:357:23","title_row",FALSE,2
 "R/primers.R:108:38","tm_method",FALSE,1
-"R/clean.R:76:23","tmp",FALSE,6
+"R/clean.R:83:23","tmp",FALSE,6
 "R/data-project.R:296:28","to",FALSE,3
 "R/layout-collinear.R:132:13","to",FALSE,3
 "R/layout-collinear.R:42:31","to",FALSE,3
@@ -19456,7 +19464,7 @@
 "R/helpers-label-routing.R:893:31","uncrossed",FALSE,3
 "R/data-project.R:463:26","ungapped",FALSE,1
 "R/helpers-device.R:5:31","unicode",FALSE,2
-"R/clean.R:76:23","unique",FALSE,2
+"R/clean.R:148:27","unique",FALSE,1
 "R/common-features.R:415:40","unique",FALSE,1
 "R/common-features.R:509:31","unique",FALSE,2
 "R/common-features.R:701:25","unique",FALSE,1
@@ -19647,7 +19655,7 @@
 "R/restriction-sites.R:256:27","unknown",FALSE,3
 "R/ribbon-layout.R:7:32","unknown",FALSE,3
 "R/scales.R:359:33","unknown",FALSE,3
-"R/clean.R:76:23","unknown_id",FALSE,6
+"R/clean.R:83:23","unknown_id",FALSE,6
 "R/data-relations.R:173:26","unknown_pair",FALSE,3
 "R/data-genbank.R:147:17","unlink",FALSE,1
 "R/diagnostics.R:165:21","unlink",FALSE,1
@@ -19803,7 +19811,7 @@
 "R/coord-collinear.R:91:20","user_ylim",FALSE,1
 "R/ggchord-frame.R:3:22","user_ylim",FALSE,5
 "R/layout-export.R:64:26","user_ylim",FALSE,1
-"R/clean.R:551:24","utils",FALSE,1
+"R/clean.R:557:24","utils",FALSE,1
 "R/common-features.R:245:35","utils",FALSE,1
 "R/common-features.R:415:40","utils",FALSE,1
 "R/common-features.R:509:31","utils",FALSE,1
@@ -19837,7 +19845,7 @@
 "R/link-obstacles.R:82:26","v",FALSE,3
 "R/ribbon-utils.R:193:30","v",FALSE,7
 "R/validate.R:135:25","v",FALSE,6
-"R/clean.R:76:23","val",FALSE,8
+"R/clean.R:83:23","val",FALSE,8
 "R/helpers_params.R:168:23","val",FALSE,2
 "R/helpers_params.R:177:18","val",FALSE,6
 "R/helpers_params.R:217:34","val",FALSE,2
@@ -20233,7 +20241,7 @@
 "R/ribbon-layout.R:381:28","weights",FALSE,2
 "R/helpers_params.R:177:18","where",FALSE,3
 "R/helpers_params.R:192:18","where",FALSE,4
-"R/clean.R:76:23","which",FALSE,4
+"R/clean.R:83:23","which",FALSE,4
 "R/collinear-utils.R:2:27","which",FALSE,1
 "R/common-features.R:3:37","which",FALSE,1
 "R/common-features.R:630:38","which",FALSE,1
@@ -20408,7 +20416,7 @@
 "R/data-genbank.R:147:17","writeLines",FALSE,1
 "R/viewer.R:181:17","writeLines",FALSE,1
 "R/aaa-geom.R:141:16","x",FALSE,1
-"R/clean.R:551:24","x",FALSE,11
+"R/clean.R:557:24","x",FALSE,11
 "R/collinear-utils.R:126:25","x",FALSE,3
 "R/common-features.R:241:26","x",FALSE,2
 "R/common-features.R:40:28","x",FALSE,30
