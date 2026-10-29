@@ -1,3 +1,37 @@
+# ggchord 0.15.0.9000 (development)
+
+* Added `prepare_ggchord_data()` for explicit conversion, named feature/link
+  collections and optional preparation steps. Defaults preserve rows and
+  coordinates; reports retain validation, import/conversion provenance, stage
+  reports and original ribbon source rows. Optional genome membership stays
+  metadata, with globally unique contig IDs. Layout optimization returns a
+  suggestion rather than changing the plot. Preparation cleaning preserves
+  directional endpoints by default; explicit endpoint sorting conflicts with
+  later direction-dependent ribbon steps. Standalone cleaning defaults remain
+  unchanged. Nondirectional features use named feature tables rather than the
+  constructor's directional gene table.
+* Added `read_bed()` for BED3–12, including BED12 segments, and `read_paf()` for
+  PAF mappings. Both explicitly convert zero-based half-open intervals to
+  one-based inclusive coordinates and retain original fields and file
+  provenance. PAF identity is a ratio of reported match/block counts, which
+  may be approximate, and mapping quality 255 is marked unavailable.
+  Zero-width BED records and unsupported BED extensions produce explicit
+  errors instead of guessed intervals.
+* `read_gff3()` now retains decoded feature IDs and multiple parent IDs,
+  including repeated IDs for discontinuous features. Use the new
+  `unstranded = "keep"` with generic feature layers to retain nondirectional
+  records. The legacy default `"plus"` is unchanged. All readers now retain
+  file and per-file row counts in import provenance, carried through adapters.
+* Added `find_ggchord_loci()` to select explicit feature IDs and extend their
+  windows upstream/downstream according to strand. It reports clipping and
+  source rows, and composes with the existing independent-window focus helper.
+* Fixed `clean_ggchord_data()` dropping valid one-base inclusive gene and
+  ribbon intervals. Entirely out-of-range intervals are still reported and
+  dropped when clipping, while a retained one-base overlap survives.
+* Reduced the default tests to minimal public behavior and focused serious
+  regressions. Detailed geometry, output and performance checks remain
+  explicitly invoked development/release tools.
+
 # ggchord 0.14.0
 
 * Added `coord_collinear()` for horizontal multi-sequence comparisons using

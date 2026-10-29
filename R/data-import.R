@@ -236,6 +236,8 @@ read_blast_single <- function(file, format = c("auto", "outfmt6", "outfmt7", "cu
 #'
 #' @return A data.frame with the required ribbon columns first
 #'   (`qaccver`, `saccver`, `qstart`, `qend`, `sstart`, `send`) followed by any preserved optional columns.
+#'   A `ggchord_import` attribute records files, per-file output row counts and
+#'   the one-based inclusive coordinate convention.
 #' @export
 #'
 #' @examples
@@ -260,14 +262,15 @@ read_blast <- function(file = NULL, files = NULL,
                               comment = comment, ...)
     ggchord_add_source_file(data, f, source_file)
   })
-  ggchord_rbind_fill(out)
+  ggchord_format_import(ggchord_rbind_fill(out), paths, "BLAST",
+    vapply(out, nrow, integer(1)), "1-based-inclusive")
 }
 
 # Internal single-file reader; the public read_gff3() wrapper resolves
 # `file` / `files` and combines the result.
 read_gff3_single <- function(file, feature_types = "CDS",
                               anno_from = c("product", "Name", "gene", "ID"),
-                              unstranded = c("plus", "drop")) {
+                              unstranded = c("plus", "drop", "keep")) {
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
 
@@ -314,10 +317,15 @@ read_gff3_single <- function(file, feature_types = "CDS",
                  paste(feature_types, collapse = ", "), file), call. = FALSE)
   }
 
+  source_strand <- sub$strand
   if (unstranded == "plus") {
     sub$strand[!sub$strand %in% c("+", "-")] <- "+"
+  } else if (unstranded == "drop") {
+    keep <- sub$strand %in% c("+", "-")
+    sub <- sub[keep, , drop = FALSE]
+    source_strand <- source_strand[keep]
   } else {
-    sub <- sub[sub$strand %in% c("+", "-"), , drop = FALSE]
+    sub$strand[!sub$strand %in% c("+", "-")] <- "."
   }
   if (nrow(sub) == 0) {
     ggchord_stop("read_gff3(): no features with a '+' or '-' strand remain after filtering",
@@ -328,7 +336,7 @@ read_gff3_single <- function(file, feature_types = "CDS",
     extract_gff3_attr(a, anno_from)
   }, character(1), USE.NAMES = FALSE)
 
-  data.frame(
+  out <- data.frame(
     accver = sub$seqid,
     start = sub$start,
     end = sub$end,
@@ -341,6 +349,17 @@ read_gff3_single <- function(file, feature_types = "CDS",
     attributes = sub$attributes,
     stringsAsFactors = FALSE
   )
+  out$source_strand <- source_strand
+  out$feature_id <- vapply(sub$attributes, extract_gff3_attr, character(1), keys = "ID")
+  # Split before decoding: an escaped comma is part of one identifier.
+  out$parent_ids <- I(lapply(sub$attributes, function(a) {
+    parts <- strsplit(a, ";", fixed = TRUE)[[1]]
+    hit <- parts[startsWith(parts, "Parent=")]
+    if (!length(hit) || !nzchar(substring(hit[1L], 8L))) return(character())
+    vapply(strsplit(substring(hit[1L], 8L), ",", fixed = TRUE)[[1]],
+      gff3_percent_decode, character(1), USE.NAMES = FALSE)
+  }))
+  out
 }
 
 #' Read one or more GFF3 files into gene_data format
@@ -356,12 +375,19 @@ read_gff3_single <- function(file, feature_types = "CDS",
 #'   `"CDS"`.
 #' @param anno_from Character vector of GFF3 attribute keys, tried in order to
 #'   fill the `anno` column.
-#' @param unstranded Character, default `"plus"`.
+#' @param unstranded `"plus"` (legacy default) assigns unknown strands to `+`;
+#'   `"drop"` removes them. Use `"keep"` with [geom_feature()] to retain them
+#'   as nondirectional `.` intervals. `source_strand` always records the input.
 #' @param source_file Logical. Add a `.source_file` column when reading one or
 #'   more files, default `FALSE`.
 #'
 #' @return A data.frame with `accver`, `start`, `end`, `strand`, `anno`
-#'   followed by `type`, `source`, `score`, `phase` and `attributes`.
+#'   followed by `type`, `source`, `score`, `phase`, `attributes`,
+#'   `source_strand`, `feature_id` (decoded GFF3 ID, or missing) and a
+#'   `parent_ids` list-column. Repeated IDs for discontinuous features and
+#'   multiple parents are retained; selecting feature types may omit parents.
+#'   A `ggchord_import` attribute records files, per-file output row counts and
+#'   the one-based inclusive coordinate convention.
 #' @export
 #'
 #' @examples
@@ -373,9 +399,10 @@ read_gff3_single <- function(file, feature_types = "CDS",
 #'          "ID=cds1;product=hypothetical protein")
 #' ), gff)
 #' read_gff3(gff)
+#' read_gff3(gff, unstranded = "keep")
 read_gff3 <- function(file = NULL, files = NULL, feature_types = "CDS",
                       anno_from = c("product", "Name", "gene", "ID"),
-                      unstranded = c("plus", "drop"), source_file = FALSE) {
+                      unstranded = c("plus", "drop", "keep"), source_file = FALSE) {
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
 
@@ -386,7 +413,8 @@ read_gff3 <- function(file = NULL, files = NULL, feature_types = "CDS",
                              anno_from = anno_from, unstranded = unstranded)
     ggchord_add_source_file(data, f, source_file)
   })
-  ggchord_rbind_fill(out)
+  ggchord_format_import(ggchord_rbind_fill(out), paths, "GFF3",
+    vapply(out, nrow, integer(1)), "1-based-inclusive")
 }
 
 #' Extract a GFF3 attribute value by key
@@ -395,10 +423,10 @@ extract_gff3_attr <- function(attrs, keys) {
   if (is.na(attrs) || !nzchar(attrs)) return(NA_character_)
   parts <- strsplit(attrs, ";", fixed = TRUE)[[1]]
   for (k in keys) {
-    pat <- paste0("^", k, "=")
-    hit <- parts[grepl(pat, parts)]
+    prefix <- paste0(k, "=")
+    hit <- parts[startsWith(parts, prefix)]
     if (length(hit) > 0) {
-      v <- sub(pat, "", hit[1])
+      v <- substring(hit[1], nchar(prefix) + 1L)
       if (nzchar(v)) return(gff3_percent_decode(v))
     }
   }
@@ -475,6 +503,7 @@ read_fasta_lengths_single <- function(file, header_delim = NULL) {
 #'   more files, default `FALSE`.
 #'
 #' @return A data.frame with columns `accver` and `length`.
+#'   A `ggchord_import` attribute records files and per-file output row counts.
 #' @export
 #'
 #' @examples
@@ -499,5 +528,6 @@ read_fasta_lengths <- function(file = NULL, files = NULL, header_delim = NULL,
     warning("read_fasta_lengths(): duplicate sequence IDs found: ",
             paste(dup, collapse = ", "), call. = FALSE)
   }
-  res
+  ggchord_format_import(res, paths, "FASTA", vapply(out, nrow, integer(1)),
+    "sequence-lengths")
 }

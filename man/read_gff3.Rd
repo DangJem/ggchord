@@ -9,7 +9,7 @@ read_gff3(
   files = NULL,
   feature_types = "CDS",
   anno_from = c("product", "Name", "gene", "ID"),
-  unstranded = c("plus", "drop"),
+  unstranded = c("plus", "drop", "keep"),
   source_file = FALSE
 )
 }
@@ -25,14 +25,21 @@ wildcard patterns). All matched files are read and combined.}
 \item{anno_from}{Character vector of GFF3 attribute keys, tried in order to
 fill the `anno` column.}
 
-\item{unstranded}{Character, default `"plus"`.}
+\item{unstranded}{`"plus"` (legacy default) assigns unknown strands to `+`;
+`"drop"` removes them. Use `"keep"` with [geom_feature()] to retain them
+as nondirectional `.` intervals. `source_strand` always records the input.}
 
 \item{source_file}{Logical. Add a `.source_file` column when reading one or
 more files, default `FALSE`.}
 }
 \value{
 A data.frame with `accver`, `start`, `end`, `strand`, `anno`
-  followed by `type`, `source`, `score`, `phase` and `attributes`.
+  followed by `type`, `source`, `score`, `phase`, `attributes`,
+  `source_strand`, `feature_id` (decoded GFF3 ID, or missing) and a
+  `parent_ids` list-column. Repeated IDs for discontinuous features and
+  multiple parents are retained; selecting feature types may omit parents.
+  A `ggchord_import` attribute records files, per-file output row counts and
+  the one-based inclusive coordinate convention.
 }
 \description{
 `file` reads a single GFF3 file; `files` reads multiple files at once and
@@ -48,4 +55,5 @@ writeLines(c(
          "ID=cds1;product=hypothetical protein")
 ), gff)
 read_gff3(gff)
+read_gff3(gff, unstranded = "keep")
 }

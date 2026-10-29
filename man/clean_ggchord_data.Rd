@@ -31,8 +31,10 @@ sequence ID is missing, empty or unknown: \code{"drop"} removes them,
 \item{out_of_range}{Character, default \code{"clip"}. Policy for coordinates
 outside \code{[1, sequence length]}: \code{"clip"} clamps them,
 \code{"drop"} removes the row, \code{"error"} stops, \code{"keep"} leaves
-them unchanged. After clipping, intervals that become invalid (degenerate)
-are removed explicitly and reported.}
+them unchanged. Coordinates are one-based inclusive, so \code{start == end}
+is a valid single-base interval and is retained. With \code{"clip"}, intervals
+wholly outside their sequence are removed and reported; partially
+overlapping intervals retain their intersection, even a single base.}
 
 \item{reversed_interval}{Character, default \code{"sort"}. Policy for
 intervals with \code{start > end}: \code{"sort"} swaps the endpoints so

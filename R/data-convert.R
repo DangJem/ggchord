@@ -66,7 +66,9 @@ ggchord_conversion_finish <- function(out, x, map, metadata = NULL) {
     input_rows = if (is.data.frame(x)) nrow(x) else length(x),
     output_rows = nrow(out), column_map = map, source_metadata = metadata,
     source_names = if (is.data.frame(x)) rownames(x) else names(x),
-    sequence_info = sequence_info
+    sequence_info = sequence_info,
+    source_import = attr(x, "ggchord_import"),
+    source_conversion = attr(x, "ggchord_conversion")
   )
   out
 }
@@ -145,7 +147,8 @@ ggchord_conversion_seqinfo <- function(x, caller) {
 #'   Fills unknown lengths and must agree with any known source lengths.
 #' @return An ordinary data frame with `accver`, `length` and retained metadata.
 #'   Its `ggchord_conversion` attribute records input class, coordinate system,
-#'   column renaming and object-level metadata. No genomic coordinates or
+#'   column renaming, object-level metadata, and upstream import/conversion
+#'   provenance when present. No genomic coordinates or
 #'   accession versions are guessed or rewritten.
 #' @md
 #' @export
@@ -235,7 +238,7 @@ as_ggchord_feature <- function(x, mapping = NULL) {
   caller <- "as_ggchord_feature()"
   metadata <- NULL
   if (is.data.frame(x)) {
-    roles <- c("accver", "start", "end", "strand", "directionality", "feature_id",
+    roles <- c("accver", "start", "end", "strand", "directionality", "feature_id", "parent_ids",
       "type", "label", "anno", "feature_color", "display_priority")
     converted <- ggchord_conversion_frame(x, mapping, roles, caller)
   } else if (inherits(x, "GRanges")) {

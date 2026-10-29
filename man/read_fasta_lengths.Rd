@@ -25,6 +25,7 @@ more files, default `FALSE`.}
 }
 \value{
 A data.frame with columns `accver` and `length`.
+  A `ggchord_import` attribute records files and per-file output row counts.
 }
 \description{
 `file` reads a single FASTA file; `files` reads multiple files at once and

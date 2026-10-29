@@ -18,7 +18,8 @@ Fills unknown lengths and must agree with any known source lengths.}
 \value{
 An ordinary data frame with \code{accver}, \code{length} and retained metadata.
 Its \code{ggchord_conversion} attribute records input class, coordinate system,
-column renaming and object-level metadata. No genomic coordinates or
+column renaming, object-level metadata, and upstream import/conversion
+provenance when present. No genomic coordinates or
 accession versions are guessed or rewritten.
 }
 \description{

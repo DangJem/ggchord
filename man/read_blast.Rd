@@ -41,6 +41,8 @@ more files, default `FALSE`.}
 \value{
 A data.frame with the required ribbon columns first
   (`qaccver`, `saccver`, `qstart`, `qend`, `sstart`, `send`) followed by any preserved optional columns.
+  A `ggchord_import` attribute records files, per-file output row counts and
+  the one-based inclusive coordinate convention.
 }
 \description{
 `file` reads a single BLAST tabular output file; `files` reads multiple

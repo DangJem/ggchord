@@ -23,8 +23,10 @@
 #' @param out_of_range Character, default \code{"clip"}. Policy for coordinates
 #'   outside \code{[1, sequence length]}: \code{"clip"} clamps them,
 #'   \code{"drop"} removes the row, \code{"error"} stops, \code{"keep"} leaves
-#'   them unchanged. After clipping, intervals that become invalid (degenerate)
-#'   are removed explicitly and reported.
+#'   them unchanged. Coordinates are one-based inclusive, so \code{start == end}
+#'   is a valid single-base interval and is retained. With \code{"clip"}, intervals
+#'   wholly outside their sequence are removed and reported; partially
+#'   overlapping intervals retain their intersection, even a single base.
 #' @param reversed_interval Character, default \code{"sort"}. Policy for
 #'   intervals with \code{start > end}: \code{"sort"} swaps the endpoints so
 #'   the feature draws stably (the original direction is recorded in the
@@ -196,7 +198,7 @@ clean_ggchord_data <- function(
       }
     }
 
-    # Coordinate out-of-range / reversed / degenerate handling, row by row.
+    # Coordinate out-of-range and reversed handling, row by row.
     for (i in which(!drop)) {
       row <- ribbon_out[i, ]
       qid <- as.character(row$qaccver)
@@ -210,6 +212,20 @@ clean_ggchord_data <- function(
       coords <- c(qstart = row$qstart, qend = row$qend,
                   sstart = row$sstart, send = row$send)
       idof <- c(qstart = qid, qend = qid, sstart = sid_, send = sid_)
+      # Clamping two outside endpoints to the same boundary must not invent
+      # a single-base hit where the original interval had no overlap.
+      if (out_of_range == "clip" &&
+          (max(coords[c("qstart", "qend")]) < 1 ||
+           min(coords[c("qstart", "qend")]) > seq_lens[[qid]] ||
+           max(coords[c("sstart", "send")]) < 1 ||
+           min(coords[c("sstart", "send")]) > seq_lens[[sid_]])) {
+        drop[i] <- TRUE
+        report_chunk("ribbon", i, "qstart/qend/sstart/send",
+                     "query or subject interval has no overlap with its sequence",
+                     paste(sprintf("%s=%s", names(coords), coords), collapse = ", "),
+                     NA_character_, "drop")
+        next
+      }
       new_coords <- coords
       clipped <- FALSE
       for (nm in names(coords)) {
@@ -305,18 +321,6 @@ clean_ggchord_data <- function(
         }
       }
 
-      # Degenerate interval after clipping (cannot be drawn meaningfully).
-      if (coords[["qstart"]] == coords[["qend"]] ||
-          coords[["sstart"]] == coords[["send"]]) {
-        drop[i] <- TRUE
-        report_chunk("ribbon", i, "qstart/qend/sstart/send",
-                     "degenerate (zero-length) interval after clipping",
-                     paste(sprintf("%s=%s", names(coords), coords),
-                           collapse = ", "),
-                     NA_character_, "drop")
-        next
-      }
-
       # pident
       p <- row$pident
       if (length(p) && (p < 0 || p > 100)) {
@@ -410,6 +414,14 @@ clean_ggchord_data <- function(
       en <- row$end
       changed <- FALSE
 
+      if (out_of_range == "clip" && (max(st, en) < 1 || min(st, en) > len)) {
+        drop[i] <- TRUE
+        report_chunk("gene", i, "start/end",
+                     "interval has no overlap with its sequence",
+                     sprintf("start=%s, end=%s", st, en), NA_character_, "drop")
+        next
+      }
+
       if (st < 1 || st > len) {
         if (out_of_range == "error") {
           ggchord_stop(sprintf("clean_ggchord_data(): gene_data$start row %d is %s (outside [1, %d]); choose out_of_range = 'clip', 'drop' or 'keep'",
@@ -474,14 +486,6 @@ clean_ggchord_data <- function(
                        sprintf("start=%s, end=%s", st, en), "keep")
         }
       }
-      if (st == en) {
-        drop[i] <- TRUE
-        report_chunk("gene", i, "start/end",
-                     "degenerate (zero-length) feature after clipping",
-                     sprintf("start=%s, end=%s", st, en), NA_character_, "drop")
-        next
-      }
-
       anno <- as.character(row$anno)
       if (length(anno) && (is.na(anno) || !nzchar(anno))) {
         if (empty_annotation == "drop") {
