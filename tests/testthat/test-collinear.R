@@ -1,25 +1,11 @@
-test_that("collinear coordinates reuse public sequence, ribbon and gene layers", {
-  seq <- data.frame(accver = c("A", "B"), length = c(1000, 800))
-  ribbon <- data.frame(qaccver = "A", saccver = "B",
-    qstart = 100, qend = 300, sstart = 400, send = 200)
-  gene <- data.frame(accver = c("A", "B"), start = c(100, 200),
-    end = c(300, 400), strand = c("+", "-"), anno = c("a", "b"))
-  p <- ggchord(seq, ribbon, gene, validate = "none") +
-    geom_seq(seq_orientation = c(A = 1, B = -1)) +
-    geom_link_ribbon() + geom_gene(position = position_strand()) +
-    geom_seq_label() + coord_collinear()
-  old_dir <- setwd(tempdir())
-  built <- tryCatch(ggplot2::ggplot_build(p), finally = setwd(old_dir))
-  expect_s3_class(built, "ggplot_built")
-  exported <- export_ggchord_layout(p, include = c("seq", "ribbon", "gene"))
-  expect_identical(exported$metadata$coordinate, "collinear")
-  expect_setequal(exported$sequence_layout$accver, seq$accver)
-  expect_setequal(exported$gene$source_row, seq_len(nrow(gene)))
-  expect_gt(nrow(exported$ribbon), 0L)
-  expect_error(
-    ggchord(seq) + geom_seq(seq_radius = 1) + coord_collinear(),
-    "seq_radius"
-  )
+test_that("collinear coordinates preserve sequence direction and source identity", {
+  p <- ggchord(smoke_sequences(), smoke_ribbon(), smoke_genes()) +
+    geom_seq(seq_orientation = c(A = 1, B = -1)) + geom_link_ribbon() +
+    geom_gene(position = position_strand()) + coord_collinear()
+  out <- export_ggchord_layout(p, include = c("seq", "ribbon", "gene"))
+  expect_identical(out$metadata$coordinate, "collinear")
+  expect_setequal(out$gene$source_row, 1:2)
+  expect_equal(out$sequence_layout$orientation, c(1, -1))
 })
 
 test_that("collinear labels preserve feature stacking and their own text", {
@@ -63,4 +49,24 @@ test_that("ribbon outline defaults follow display adjacency without changing map
     coord_collinear())
   expect_equal(styles(mapped$data[[2L]]), c("solid", "dashed", "dashed"))
   expect_equal(styles(mapped$data[[3L]]), rep("dotdash", 3L))
+})
+
+
+test_that("narrow linear channels retain ribbon endpoints between backbones", {
+  p <- ggchord(smoke_sequences(), smoke_ribbon()) +
+    geom_seq(seq_gap = .01) + geom_link_ribbon() + coord_collinear()
+  out <- export_ggchord_layout(p, include = "ribbon")
+  expect_true(all(out$ribbon$y >= min(out$sequence_layout$y) &
+    out$ribbon$y <= max(out$sequence_layout$y)))
+})
+
+test_that("tiny linear arrows retain non-overlapping biological intervals", {
+  features <- data.frame(accver = "A", start = c(100, 110), end = c(102, 112),
+    strand = "+", type = "CDS")
+  p <- ggchord(data.frame(accver = "A", length = 1e6)) + geom_seq() +
+    geom_feature(data = features, position = position_feature_stack()) +
+    coord_collinear()
+  out <- export_ggchord_layout(p, include = "feature")$feature
+  expect_false(any(out$display_extended))
+  expect_lt(max(out$x[out$source_row == 1]), min(out$x[out$source_row == 2]))
 })

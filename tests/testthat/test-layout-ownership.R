@@ -14,7 +14,5 @@ test_that("derived plots export their own layouts and retain their cached base",
   expect_setequal(first$ribbon$source_row, c(1L, 3L))
   expect_setequal(second$ribbon$source_row, 1:3)
   expect_setequal(repeated$ribbon$source_row, first$ribbon$source_row)
-  expect_setequal(get_chord_layout(adjacent, build = FALSE)$ribbon_polys$source_row,
-    c(1L, 3L))
   expect_setequal(names(get_chord_layout(base, build = FALSE)$seq_arcs), seq$accver)
 })

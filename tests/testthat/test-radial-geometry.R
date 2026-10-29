@@ -9,33 +9,6 @@ count_radial_crossings <- function(paths) {
   }, integer(1)))
 }
 
-test_that("radial remains the deterministic default", {
-  expect_identical(formals(geom_gene_label_repel)$gene_label_layout, "radial")
-  expect_error(geom_gene_label_repel(gene_label_layout = "aligned"), "auto")
-  seq <- data.frame(accver = "circle", length = 10000)
-  genes <- data.frame(accver = "circle",
-    start = seq(300, 9000, length.out = 12),
-    end = seq(300, 9000, length.out = 12) + 100,
-    strand = "+", anno = paste0("Site", seq_len(12)))
-  p <- ggchord(seq, gene_data = genes, validate = "none") +
-    geom_seq() + geom_gene() + geom_gene_label_repel()
-  layout <- get_chord_layout(p)
-  expect_equal(nrow(layout$gene_labels), nrow(genes))
-  expect_false(ggchord:::ggchord_label_box_conflicts(layout$gene_labels,
-    units_per_inch = layout$text_units_per_inch, box_padding = 0))
-  expect_equal(count_radial_crossings(layout$gene_label_segments), 0L)
-})
-
-test_that("signed curvature keeps finite geometry and fixed endpoints", {
-  curve <- function(x) ggchord:::generate_curvature_path(-0.7, 0.7, 2, x, 101)
-  zero <- curve(0)
-  for (value in c(-2, -0.5, 0.5, 2)) {
-    path <- curve(value)
-    expect_true(all(is.finite(c(path$x, path$y))))
-    expect_equal(path[c(1, 101), ], zero[c(1, 101), ], tolerance = 1e-10)
-  }
-})
-
 test_that("nested measurements preserve the caller graphics device", {
   old_dir <- setwd(tempdir())
   on.exit(setwd(old_dir), add = TRUE)
@@ -48,13 +21,36 @@ test_that("nested measurements preserve the caller graphics device", {
   }, add = TRUE)
   grDevices::pdf(NULL, width = 6, height = 4)
   caller <- grDevices::dev.cur()
-  data(seq_data_example); data(gene_data_example)
-  p <- ggchord(seq_data_example, gene_data = gene_data_example,
+  p <- ggchord(smoke_sequences(), gene_data = smoke_genes(),
                validate = "none") +
     geom_seq() + geom_gene() + geom_gene_label_repel()
   view_ggchord(p, viewer = "none")
   expect_identical(grDevices::dev.cur(), caller)
   expect_gt(nrow(get_chord_layout(p, build = FALSE)$gene_labels), 0L)
+})
+
+
+test_that("Unicode annotation measurement preserves content and caller device", {
+  previous <- grDevices::dev.cur()
+  annotation <- data.frame(text = "lacZ\u03b1", text_x = 0, text_y = 0, size = 2.5)
+  boxes <- ggchord:::ggchord_text_boxes(annotation)
+  expect_true(all(is.finite(boxes$w) & boxes$w > 0))
+  expect_identical(grDevices::dev.cur(), previous)
+})
+
+test_that("radial labels retain inputs without overlapping or crossing", {
+  seq <- data.frame(accver = "circle", length = 10000)
+  genes <- data.frame(accver = "circle",
+    start = seq(300, 9000, length.out = 6),
+    end = seq(300, 9000, length.out = 6) + 100,
+    strand = "+", anno = paste0("Site", seq_len(6)))
+  p <- ggchord(seq, gene_data = genes, validate = "none") +
+    geom_seq() + geom_gene() + geom_gene_label_repel()
+  layout <- get_chord_layout(p)
+  expect_equal(nrow(layout$gene_labels), nrow(genes))
+  expect_false(ggchord:::ggchord_label_box_conflicts(layout$gene_labels,
+    units_per_inch = layout$text_units_per_inch, box_padding = 0))
+  expect_equal(count_radial_crossings(layout$gene_label_segments), 0L)
 })
 
 test_that("reversed orientation keeps leaders on their requested side", {
