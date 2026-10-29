@@ -75,6 +75,14 @@ test_that("focus composes nested segment coordinates and keeps reverse links", {
 test_that("preparation and target loci compose without changing source identities", {
   sequences <- transform(smoke_sequences(), genome = c("isolate1", "isolate2"))
   genes <- transform(smoke_genes(), feature_id = c("gA", "gB"))
+  hierarchy <- validate_ggchord_hierarchy(sequences,
+    data.frame(genome = c("isolate1", "isolate2")))
+  expect_true(hierarchy$valid)
+  homologs <- link_ggchord_clusters(genes,
+    data.frame(feature_id = c("gA", "gB"), cluster_id = "family"),
+    data.frame(qaccver = "A", saccver = "B"))
+  expect_equal(nrow(homologs$data), 1L)
+  expect_false(any(c("pident", "length") %in% names(homologs$data)))
   prepared <- prepare_ggchord_data(sequences,
     rbind(smoke_ribbon(), smoke_ribbon()), features = list(genes = genes),
     steps = list(deduplicate = list(keep = "first")))
@@ -94,6 +102,18 @@ test_that("preparation and target loci compose without changing source identitie
     steps = list(clean = list(), bundle = list(bins = 1, weight = "count")))
   expect_equal(nrow(bundled$ribbon_data), 2L)
   expect_setequal(bundled$ribbon_data$direction, c("same", "reverse"))
+})
+
+test_that("spliced CDS domains project and retain their parent identity", {
+  coding <- data.frame(feature_id = "cds", accver = "A", start = c(100, 200),
+    end = c(103, 204), strand = "+", phase = c(0, 2))
+  cds <- build_ggchord_cds(coding)
+  domain <- data.frame(feature_id = "domain", parent_id = "cds", start = 2, end = 3)
+  genomic <- project_ggchord_features(domain, cds)
+  expect_equal(genomic$parent_id, "cds")
+  expect_equal(nrow(genomic$segments[[1L]]), 2L)
+  protein <- project_ggchord_features(genomic, cds, from = "genome")
+  expect_equal(protein[c("feature_id", "start", "end")], domain[c("feature_id", "start", "end")])
 })
 
 test_that("cleaning retains one-base inclusive gene and ribbon intervals", {

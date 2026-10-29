@@ -25,6 +25,33 @@
 * Added `find_ggchord_loci()` to select explicit feature IDs and extend their
   windows upstream/downstream according to strand. It reports clipping and
   source rows, and composes with the existing independent-window focus helper.
+* Added `validate_ggchord_hierarchy()` for explicit genome/contig primary and
+  foreign keys, and `link_ggchord_clusters()` for supplied cluster membership
+  and comparison pairs. Multicopy comparisons are omitted with a report by
+  default; explicit Cartesian expansion is bounded before allocation. Homology
+  anchors retain segments and source rows without inventing alignment scores.
+* Added `build_ggchord_cds()`, `project_ggchord_features()` and
+  `project_ggchord_links()` for explicit spliced CDS maps, bidirectional
+  domain-coordinate projection and confirmed ungapped protein links. Phase,
+  strand, partial codons and declared segment order govern projection. Genetic
+  codes remain supplied metadata; no translation or alignment is run. Disjoint
+  domains retain their gaps on round trips; projected protein statistics are
+  source metadata rather than nucleotide identity or alignment length.
+* Added `read_genbank()` for local GenBank/GBFF records through an explicitly
+  selected Python environment with optional Biopython and R jsonlite. Record
+  IDs, joined locations, qualifiers, uncertain boundaries and raw metadata are
+  retained; unsupported locations stop or remain explicitly unplaced. No
+  environment is installed or modified. `as_ggchord_seq()` also accepts optional
+  Biostrings sequence objects, requiring explicit IDs for unnamed input and
+  preserving nucleotide/amino-acid units rather than converting widths.
+* Added `segment_ggchord_data()` and explicit `coord_collinear(segments = ...,
+  segment_gap = ...)` for separate windows on one display row and local
+  reversals. Gaps have break marks and no invented source coordinates. Interval
+  links are split or dropped at omitted regions, point links retain their
+  sources, and exported window transforms support reversible position mapping.
+  Ribbon adjacency follows display rows. Unsupported same-row connections
+  produce a selection report or actionable error. These settings are opt-in;
+  ordinary coordinate defaults retain their behavior.
 * Fixed `clean_ggchord_data()` dropping valid one-base inclusive gene and
   ribbon intervals. Entirely out-of-range intervals are still reported and
   dropped when clipping, while a retained one-base overlap survives.

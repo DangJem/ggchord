@@ -70,3 +70,18 @@ test_that("tiny linear arrows retain non-overlapping biological intervals", {
   expect_false(any(out$display_extended))
   expect_lt(max(out$x[out$source_row == 1]), min(out$x[out$source_row == 2]))
 })
+
+test_that("segmented rows retain local reversal and reversible source positions", {
+  windows <- data.frame(accver = "A", start = c(100, 700), end = c(300, 900),
+    locus_id = c("left", "right"), row_id = "isolate", orientation = c(1, -1))
+  view <- segment_ggchord_data(smoke_sequences()[1L, ], windows = windows)
+  plot <- ggchord(view$seq_data) + geom_seq() +
+    coord_collinear(segments = view$segments, segment_gap = 50)
+  mapped <- map_ggchord_position(plot, c("left", "right", "right"),
+    c(150, 750, 760), source = TRUE)
+  expect_length(unique(mapped$y), 1L)
+  expect_lt(mapped$x[3L], mapped$x[2L])
+  restored <- map_ggchord_position(plot, mapped$accver, mapped$x,
+    inverse = TRUE, source = TRUE)
+  expect_equal(restored$position, c(150, 750, 760))
+})
