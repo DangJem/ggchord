@@ -15,8 +15,10 @@
 #'
 #' @param seq_data data.frame/tibble, required. Must contain \code{accver} and
 #'   \code{length}; used as the coordinate reference for clipping.
-#' @param ribbon_data data.frame/tibble, optional. Alignment results.
-#' @param gene_data data.frame/tibble, optional. Gene annotation data.
+#' @param ribbon_data data.frame/tibble or \code{NULL}, optional. Alignment
+#'   results. Other input types are rejected rather than treated as absent.
+#' @param gene_data data.frame/tibble or \code{NULL}, optional. Gene annotation
+#'   data. Other input types are rejected rather than treated as absent.
 #' @param unknown_id Character, default \code{"drop"}. Policy for rows whose
 #'   sequence ID is missing, empty or unknown: \code{"drop"} removes them,
 #'   \code{"error"} stops with a message, \code{"keep"} leaves them unchanged.
@@ -123,8 +125,8 @@ clean_ggchord_data <- function(
 
   # Copies: the user's objects are never modified.
   seq_out <- seq_data
-  ribbon_out <- if (is.data.frame(ribbon_data)) ribbon_data else NULL
-  gene_out <- if (is.data.frame(gene_data)) gene_data else NULL
+  ribbon_out <- ribbon_data
+  gene_out <- gene_data
 
   report_rows <- list()
   report_chunk <- function(table, row, column, reason,
@@ -142,7 +144,7 @@ clean_ggchord_data <- function(
   # -------------------------------------------------------------------------
   if (!is.null(ribbon_out)) {
     if (!is.data.frame(ribbon_out)) {
-      ggchord_stop("clean_ggchord_data(): ribbon_data must be a data.frame", call. = FALSE)
+      ggchord_stop("clean_ggchord_data(): ribbon_data must be a data.frame or NULL", call. = FALSE)
     }
     req <- ggchord_ribbon_required_columns()
     missing <- setdiff(req, colnames(ribbon_out))
@@ -295,13 +297,7 @@ clean_ggchord_data <- function(
                        NA_character_, "drop")
           next
         } else if (reversed_interval == "sort") {
-          report_chunk("ribbon", i, "qstart/qend/sstart/send",
-                       "reversed interval sorted (original direction recorded)",
-                       paste(sprintf("%s=%s", names(coords), coords),
-                             collapse = ", "),
-                       paste(sprintf("%s=%s", names(coords), coords),
-                             collapse = ", "),
-                       "sort")
+          original_coords <- coords
           if (coords[["qstart"]] > coords[["qend"]]) {
             tmp <- coords[["qstart"]]; coords[["qstart"]] <- coords[["qend"]]
             coords[["qend"]] <- tmp
@@ -310,6 +306,13 @@ clean_ggchord_data <- function(
             tmp <- coords[["sstart"]]; coords[["sstart"]] <- coords[["send"]]
             coords[["send"]] <- tmp
           }
+          report_chunk("ribbon", i, "qstart/qend/sstart/send",
+                       "reversed interval sorted (original direction recorded)",
+                       paste(sprintf("%s=%s", names(original_coords), original_coords),
+                             collapse = ", "),
+                       paste(sprintf("%s=%s", names(coords), coords),
+                             collapse = ", "),
+                       "sort")
         } else {
           report_chunk("ribbon", i, "qstart/qend/sstart/send",
                        "reversed interval (kept)",
@@ -356,7 +359,7 @@ clean_ggchord_data <- function(
   # -------------------------------------------------------------------------
   if (!is.null(gene_out)) {
     if (!is.data.frame(gene_out)) {
-      ggchord_stop("clean_ggchord_data(): gene_data must be a data.frame", call. = FALSE)
+      ggchord_stop("clean_ggchord_data(): gene_data must be a data.frame or NULL", call. = FALSE)
     }
     req <- c("accver", "start", "end", "strand")
     missing <- setdiff(req, colnames(gene_out))

@@ -20,9 +20,11 @@ clean_ggchord_data(
 \item{seq_data}{data.frame/tibble, required. Must contain \code{accver} and
 \code{length}; used as the coordinate reference for clipping.}
 
-\item{ribbon_data}{data.frame/tibble, optional. Alignment results.}
+\item{ribbon_data}{data.frame/tibble or \code{NULL}, optional. Alignment
+results. Other input types are rejected rather than treated as absent.}
 
-\item{gene_data}{data.frame/tibble, optional. Gene annotation data.}
+\item{gene_data}{data.frame/tibble or \code{NULL}, optional. Gene annotation
+data. Other input types are rejected rather than treated as absent.}
 
 \item{unknown_id}{Character, default \code{"drop"}. Policy for rows whose
 sequence ID is missing, empty or unknown: \code{"drop"} removes them,

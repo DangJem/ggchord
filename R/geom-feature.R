@@ -456,6 +456,12 @@ geom_feature_plasmid <- function(mapping = NULL, data = NULL,
                                  position = NULL,
                                  show.legend = FALSE,
                                  inherit.aes = FALSE, ...) {
+  # Resolve the concise alias before forwarding: the wrapper's default would
+  # otherwise look like an explicitly supplied second shape to geom_feature().
+  if (!is.null(shape) && missing(feature_shape)) {
+    feature_shape <- shape
+    shape <- NULL
+  }
   if (is.null(position)) {
     position <- position_feature_stack(
       spacing = .10, base_position = position_plasmid()

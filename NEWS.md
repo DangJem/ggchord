@@ -1,3 +1,17 @@
+# ggchord 0.16.0 (development)
+
+* `clean_ggchord_data()` now rejects non-NULL `ribbon_data` and `gene_data`
+  that are not data frames, rather than silently treating them as absent.
+  Supply a data frame/tibble, use the explicit adapters for supported interval
+  objects, or pass `NULL` when the optional table is intentionally absent.
+* Cleaning reversed ribbon endpoints now records the original and sorted
+  coordinates separately in the report. The existing sorting policy,
+  direction handling and returned coordinates are unchanged.
+* `geom_feature_plasmid(shape = ...)` now accepts the documented concise
+  shape alias when `feature_shape` is omitted. Explicitly supplying both
+  shape arguments still produces the existing conflict error; defaults and
+  user-supplied scales keep their behavior.
+
 # ggchord 0.15.0
 
 * Added `prepare_ggchord_data()` for explicit conversion, named feature/link

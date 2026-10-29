@@ -9,8 +9,25 @@ test_that("validation, cleaning and one malformed input have public outcomes", {
   expect_equal(nrow(cleaned$ribbon_data), 1L)
   expect_equal(nrow(cleaned$gene_data), nrow(genes))
   expect_equal(cleaned$ribbon_data$direction, "reverse")
+  sorted <- cleaned$report[cleaned$report$table == "ribbon" &
+    cleaned$report$action == "sort", ]
+  expect_equal(nrow(sorted), 1L)
+  coordinate_columns <- c("qstart", "qend", "sstart", "send")
+  describe_coordinates <- function(data) {
+    paste(sprintf("%s=%s", coordinate_columns,
+      unlist(data[coordinate_columns], use.names = FALSE)), collapse = ", ")
+  }
+  expect_equal(sorted$original_value, describe_coordinates(ribbon))
+  expect_equal(sorted$new_value, describe_coordinates(cleaned$ribbon_data))
   expect_error(ggchord(transform(seq, length = "bad")), "numeric")
   expect_error(ggchord(transform(seq, sequence_unit = "aa"), validate = "none"), "not nucleotide")
+})
+
+test_that("cleaning rejects unsupported optional input types instead of dropping them", {
+  expect_error(clean_ggchord_data(smoke_sequences(), ribbon_data = "not a table"),
+    "ribbon_data must be a data.frame or NULL", fixed = TRUE)
+  expect_error(clean_ggchord_data(smoke_sequences(), gene_data = "not a table"),
+    "gene_data must be a data.frame or NULL", fixed = TRUE)
 })
 
 test_that("import helpers parse minimal files with explicit coordinate conventions", {
