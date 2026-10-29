@@ -1,0 +1,31 @@
+﻿issue_id,priority_and_evidence,source,affected_api_or_module,finding_and_required_review
+F01,P1/C,`R/clean.R`,`clean_ggchord_data()`,`ribbon_out <- if (is.data.frame(ribbon_data)) ribbon_data else NULL`，`gene_out` 同理；非 NULL 但不合类型的输入可能被静默当作未提供。改成显式检查并给出可行动错误；验证 tibble/GRanges/NULL 的预期行为。
+F02,P1/C,`R/clean.R`,"`reversed_interval=""sort""`",报告 `original_value`/`new_value` 在交换端点之前填入，可能无法区分变更前后。交换后再写新值，并验证方向记录。
+F03,P1/H,"`R/data-prepare.R`,`R/clean.R`",清洗默认值,独立清洗默认排序反向端点，prepare 中默认为 `keep`；差异有正确性原因，但 UI 不一致，应给出公开契约和是否调整默认值的决策。
+F04,P1/C,`R/layout.R`,`compute_chord_layout()`,"巨型签名并通过 `eval(ggchord_layout_*_step, envir=context)` 使用共享词法环境。输入/输出和阶段依赖隐式，重构为显式上下文与阶段函数前须画出状态依赖图；不能贸然改数值/绘图。"
+F05,P1/H,`R/ggchord-build.R`,`compute_chord_geometry_single()`,按图层 `ggchord_params$type` 汇集状态，旧式局部变量与新图层可能交叉耦合；审查同类多层、图层顺序、clone 与缓存所有权。
+F06,P2/D,`R/theme.R`,`theme_ggchord()`,庞大显式参数集合；审查哪些属于 ggplot2 基础元素、真正自定义元素、角色图例，并制定清晰分组/文档；不简单拆分成多个无法组合的 theme。
+F07,P2/D,"`R/zzz.R`,`R/layout-export.R`",`get_chord_layout()` / `export_ggchord_layout()`,原始内部布局列表与受控表格导出的公共边界混合。建议优先把受控 export 作为稳定接口，评估旧 getter 是否转为内部调试入口、迁移助手或明确不稳定接口。
+F08,P2/C,`R/geom-feature.R`,`geom_feature_plasmid()`,已是 `geom_feature()` 的预设薄封装，区别在 position 和默认外观。可保留便利入口，但保证只有一个语义实现与明确文档，不要独立复制绘图逻辑。
+F09,P2/D,"`R/geom-gene.R`,`R/geom-feature.R`",gene / feature,检查哪些几何、标签、审美角色确需分离；可以共享内部实现，公开入口是否保留须通过代表性使用案例判断。
+F10,P2/C,"`R/geom-gene.R`,`R/geom-feature.R`",`gene_offset`、`feature_offset`,已有弃用警告，Position 是新机制。建立迁移表与删除阶段，并检查旧示例是否还引用。
+F11,P2/C,`R/geom-feature.R`,`shape` / `feature_shape`,同一形状固定设置有双参数入口，且同时提供时报错；决定唯一首选，别名弃用后删除。区分固定形状参数与映射 `feature_shape` aesthetic。
+F12,P2/H,"`R/geom-feature-label.R`,`R/geom-gene.R`",label 命名,`gene_label_*` 与 `label_*` 参数有语义相近却命名体系不同的部分，仔细比较默认值/返回属性，制定命名统一与迁移策略。
+F13,P2/H,"`R/geom-ribbon.R`,`R/geom-link-line.R`",link / ribbon 几何参数,`ribbon_gap`/`link_gap`、`ribbon_ctrl_point`/`link_ctrl_point` 与共同 `link_avoid/branch` 需定义统一意义；不因名字相近合并几何入口。
+F14,P2/D,"`R/scales.R`,`R/link-scales.R`,`R/guides.R`",color / colour,存在别名；推荐保留 ggplot2 规范 `colour` 为标准，`color` 的保留/删除须测用户负担及迁移。
+F15,P2/D,"`R/reexports.R`,`NAMESPACE`",22 个重导出,逐一判断便利价值、IDE 自动补全污染和外部依赖风险。`PositionIdentity`、`last_plot()` 等优先审查，不代表可立即删。
+F16,P2/H,"`R/data-import.R`,`R/data-formats.R`,`R/data-genbank.R`",`file`/`files`,统一多文件的输入规范，兼顾路径向量、glob、来源追溯，避免多对同义参数。
+F17,P2/H,`R/data-genbank.R`,`read_genbank()`,当前生成/调用 Python/Biopython 解析脚本，审查用户环境依赖、外部进程风险、离线场景、字符编码、严格位置/反向互补契约及失败信息；不是说必须删除该方法。
+F18,P2/H,"`R/geom-track.R`,`R/layout-track.R`",track,检查多 track 同 ID 声明冲突、`bounds`、`closed`、`baseline` 的坐标语义、不同设备的带宽、多个同 ID 图层及 scale 独立性。
+F19,P2/H,"`R/coord-chord.R`,`R/coord-circular.R`,`R/coord-collinear.R`",coord 共有参数,`ratio`/`fit`/`expand`/`clip`/`xlim`/`ylim` 的共同定义与不同行为差异需要一张参数矩阵。
+F20,P2/H,"`R/data-convert.R`,`R/data-relations.R`",Bioconductor 适配,`GRanges`、`Seqinfo`、`GInteractions` 的元数据、NA strand、seqlevels、坐标端点保真；避免强依赖和隐式生物学推断。
+F21,P2/H,"`R/layout-circular-registry.R`,`R/layout-external-annotation.R`,`R/helpers-label-routing.R`",annotation registry,比较圆图/线性图标签冲突算法共享程度，评估 registry 的内部稳定性；不公开候选定位中间态。
+F22,P2/H,"`R/layout-export.R`,`R/diagnostics.R`,`R/viewer.R`",导出/预览/诊断,分离绘图 geometry export、视觉尺寸预览、诊断信息；统一单位、稳定字段、来源追踪与 cache 的生命期。
+F23,P3/D,"`R/ggchord.R`,`DESCRIPTION`",包的定位,`ggchord` 软件包名称可保留；DESCRIPTION Title、网站首页、README 需由“仅弦图”改为涵盖三类模式，避免过度包装成万能组学可视化。
+F24,P3/H,`R/zzz.R` 等,迁移错误分支,大量拒绝过时参数的逻辑需要统一清单，审查是否在稳定版中继续保留无谓兼容检查或提供错误提示。
+F25,P2/H,全部 `R/`,内部未用函数,必须由源码调用图 + 动态反射/注册检索 + ggproto 回调 + `quote()` 间接引用共同确认；绝不凭 `grep` 零引用删除。
+F26,P2/H,"`R/ggchord-frame.R`,`R/render-context.R`",缓存/设备状态,`+` 组合后、重复绘制、复制图、改变设备尺寸、多图并存时必须独立且可复现；任何缓存都属于图对象，不泄漏成全局状态。
+F27,P2/H,`R/stat-ribbon.R`,统计图层,检查 `after_stat()` staged mapping 真正遵循 ggplot2 契约，不要把已聚合数据误当原始行坐标。
+F28,P2/H,多个源文件,`...` 透传,逐个检查 `...` 是向 ggplot2 参数合法透传，还是掩盖未知参数、拼写错误与弃用行为；定义严格错误策略。
+F29,P2/H,"`R/geom-seq-scale.R`,`R/scales.R`",名称可发现性,`geom_seq_scale()` 是独立比例尺图元，`scale_seq_position_continuous()` 是坐标映射，用户可能混淆；需要命名或文档中的显著区别。
+F30,P2/H,"`R/common-features.R`,`R/restriction-sites.R`,`R/primers.R`",内置序列识别算法,明确搜索算法和静态绘图的界限、许可/数据库来源、结果置信度、性能、图形输入格式；避免用户误当实验验证。
