@@ -14,7 +14,9 @@ coord_collinear(
   align = c("left", "center", "right"),
   anchor = NULL,
   orientation = c("manual", "auto"),
-  min_support = 0.1
+  min_support = 0.1,
+  segments = NULL,
+  segment_gap = 100
 )
 }
 \arguments{
@@ -50,6 +52,13 @@ evidence and records support and unresolved cases.}
 \item{min_support}{Minimum directional imbalance in \verb{[0, 1]} for an automatic
 change. It is the absolute difference between forward and reverse
 support divided by their sum, default 0.1. A tie is always unresolved.}
+
+\item{segments}{Optional data frame with unique window \code{accver}, \code{row_id}
+and \code{orientation} (1 or -1). Every displayed accession must be declared.
+Each window has its own local coordinates and reversible source metadata.}
+
+\item{segment_gap}{Positive display gap in bp scale units when \code{segments}
+is supplied, default 100. It never implies genomic continuity.}
 }
 \value{
 A ggplot2 Coord object for composition with a ggchord plot.
@@ -75,7 +84,8 @@ when switching from \code{\link[=coord_chord]{coord_chord()}}. Circular-only pri
 and centre-label layers require \code{\link[=coord_circular]{coord_circular()}}; use \code{\link[=geom_feature]{geom_feature()}} for
 general linear annotations. Cross-track links may cross intervening tracks.
 Explicit link control points use the exported linear layout x/y units;
-the longest backbone has width 2.
+the longest backbone has width 2 (the longest complete display row when
+\code{segments} is supplied).
 The circular \code{external = FALSE} feature-label constraint cannot be converted;
 remove it to use linear label rows. Gene/feature repel layout modes share
 the linear row strategy rather than selecting circular label tracks.
@@ -95,6 +105,16 @@ direction, with evidence recorded in the exported layout diagnostics. This
 is a display heuristic, not a biological strand assignment or a guarantee
 of a global optimum. It cannot be combined with an explicit
 \code{geom_seq(seq_orientation = ...)}.
+
+With \code{segments}, each accession remains an independent window but windows
+sharing \code{row_id} occupy one display row. Their table order is left to right;
+\code{align} applies to the whole row. \code{segment_gap} reserves display space in bp
+scale units, independently of omitted genomic length. Internal ends receive
+break marks. Use \code{\link[=segment_ggchord_data]{segment_ggchord_data()}} to crop/split input first. Local
+reversal comes from the table's \code{orientation}, so automatic orientation,
+explicit sequence orientation and \code{anchor} conflict with this mode. Ribbon
+adjacency follows display rows; same-row ribbons are omitted with a report,
+and explicit same-row pairs or point links are unsupported.
 }
 \examples{
 seqs <- data.frame(accver = c("A", "B"), length = c(1000, 800))

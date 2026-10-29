@@ -15,7 +15,9 @@ ggchord(
 }
 \arguments{
 \item{seq_data}{data.frame/tibble with accver and length, or a `GRanges`,
-`Seqinfo` or `GInteractions` object with known full sequence lengths.
+`Seqinfo` or `GInteractions` object with known full sequence lengths,
+or a named Biostrings `XStringSet`. Unnamed sequence objects must first
+use [as_ggchord_seq()] with explicit `ids`.
 Optional S4 inputs use [as_ggchord_seq()].}
 
 \item{ribbon_data}{Optional alignment table with qaccver, saccver, qstart,

@@ -34,7 +34,9 @@ globalVariables(c(
 #' \code{ggsave()}, or \code{ggplot_build()}).
 #'
 #' @param seq_data data.frame/tibble with accver and length, or a `GRanges`,
-#'   `Seqinfo` or `GInteractions` object with known full sequence lengths.
+#'   `Seqinfo` or `GInteractions` object with known full sequence lengths,
+#'   or a named Biostrings `XStringSet`. Unnamed sequence objects must first
+#'   use [as_ggchord_seq()] with explicit `ids`.
 #'   Optional S4 inputs use [as_ggchord_seq()].
 #' @param ribbon_data Optional alignment table with qaccver, saccver, qstart,
 #'   qend, sstart and send. length and pident are optional unless requested
@@ -83,7 +85,8 @@ ggchord <- function(
     ...
 ) {
   if (inherits(seq_data, "GRanges") || inherits(seq_data, "Seqinfo") ||
-      inherits(seq_data, "GInteractions")) seq_data <- as_ggchord_seq(seq_data)
+      inherits(seq_data, "GInteractions") || inherits(seq_data, "XStringSet") ||
+      inherits(seq_data, "XString")) seq_data <- as_ggchord_seq(seq_data)
   if (inherits(ribbon_data, "GInteractions")) ribbon_data <- as_ggchord_link(ribbon_data)
   if (inherits(gene_data, "GRanges")) {
     gene_data <- as_ggchord_feature(gene_data)

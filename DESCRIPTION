@@ -14,7 +14,8 @@ Depends: R (>= 4.1.0)
 Imports: ggplot2 (>= 4.0.0), grDevices, grid, rlang, scales
 VignetteBuilder: knitr
 Suggests: knitr, rmarkdown, qpdf, dplyr, svglite, testthat (>= 3.0.0),
-    readxl, digest, GenomicRanges, InteractionSet, IRanges, S4Vectors
+    readxl, digest, GenomicRanges, InteractionSet, IRanges, S4Vectors,
+    jsonlite, Biostrings
 Encoding: UTF-8
 LazyData: true
 URL: https://github.com/DangJem/ggchord, https://dangjem.github.io/ggchord/

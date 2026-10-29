@@ -63,11 +63,12 @@ ggchord_conversion_finish <- function(out, x, map, metadata = NULL) {
   }
   attr(out, "ggchord_conversion") <- list(
     source_class = class(x), coordinate_system = "1-based-inclusive",
-    input_rows = if (is.data.frame(x)) nrow(x) else length(x),
+    input_rows = if (is.data.frame(x)) nrow(x) else if (inherits(x, "XString")) 1L else length(x),
     output_rows = nrow(out), column_map = map, source_metadata = metadata,
     source_names = if (is.data.frame(x)) rownames(x) else names(x),
     sequence_info = sequence_info,
     source_import = attr(x, "ggchord_import"),
+    source_projection = attr(x, "ggchord_projection"),
     source_conversion = attr(x, "ggchord_conversion")
   )
   out
@@ -140,11 +141,21 @@ ggchord_conversion_seqinfo <- function(x, caller) {
 #' supplied intervals are returned; a `Seqinfo` object returns all its entries.
 #' Unknown lengths require explicit `lengths` or corrected source information.
 #'
-#' @param x A data frame, `GRanges`, `Seqinfo`, or `GInteractions` object.
+#' `XStringSet` and `XString` inputs use their stored sequence widths.
+#' Set names are identifiers; unnamed sequences require explicit `ids`.
+#' Explicit IDs must agree with existing nonempty names, so identifiers and
+#' accession versions are never silently rewritten. `sequence_unit` records
+#' `"bp"`, `"aa"`, or `"character"`; amino-acid widths are not nucleotide
+#' coordinates. Empty sequences are rejected like other zero lengths.
+#'
+#' @param x A data frame, `GRanges`, `Seqinfo`, `GInteractions`, or a
+#'   Biostrings `XStringSet`/`XString` object.
 #' @param mapping Optional named character vector `output_role = "input_column"`
 #'   for data-frame inputs. For example `c(accver = "chrom", length = "size")`.
 #' @param lengths Optional named numeric vector of known sequence lengths.
 #'   Fills unknown lengths and must agree with any known source lengths.
+#' @param ids Optional character vector of explicit identifiers for unnamed
+#'   `XStringSet`/`XString` inputs only. Existing source names must agree.
 #' @return An ordinary data frame with `accver`, `length` and retained metadata.
 #'   Its `ggchord_conversion` attribute records input class, coordinate system,
 #'   column renaming, object-level metadata, and upstream import/conversion
@@ -155,10 +166,17 @@ ggchord_conversion_seqinfo <- function(x, caller) {
 #' @examples
 #' as_ggchord_seq(data.frame(chrom = c("host", "virus"), size = c(1000, 300)),
 #'   mapping = c(accver = "chrom", length = "size"))
-as_ggchord_seq <- function(x, mapping = NULL, lengths = NULL) {
+#' if (requireNamespace("Biostrings", quietly = TRUE)) {
+#'   as_ggchord_seq(Biostrings::DNAStringSet(c(host = "ACGT", virus = "AT")))
+#'   as_ggchord_seq(Biostrings::DNAString("ACGT"), ids = "explicit_id")
+#' }
+as_ggchord_seq <- function(x, mapping = NULL, lengths = NULL, ids = NULL) {
   caller <- "as_ggchord_seq()"
   map <- data.frame(source = character(), output = character(), stringsAsFactors = FALSE)
   metadata <- NULL
+  sequence_object <- inherits(x, "XStringSet") || inherits(x, "XString")
+  if (!is.null(ids) && !sequence_object) ggchord_stop(caller,
+    ": ids is only for XStringSet/XString inputs; use data columns or source names otherwise")
   if (is.data.frame(x)) {
     converted <- ggchord_conversion_frame(x, mapping, c("accver", "length"), caller)
     out <- converted$data; map <- converted$map
@@ -166,7 +184,33 @@ as_ggchord_seq <- function(x, mapping = NULL, lengths = NULL) {
     if (!"length" %in% names(out)) out$length <- rep(NA_real_, nrow(out))
   } else {
     if (!is.null(mapping)) ggchord_stop(caller, ": mapping is for data-frame inputs")
-    if (inherits(x, "GInteractions")) {
+    if (sequence_object) {
+      ggchord_conversion_require("Biostrings", caller)
+      count <- if (inherits(x, "XString")) 1L else length(x)
+      if (!count) ggchord_stop(caller, ": sequence input must contain at least one sequence")
+      source_ids <- if (inherits(x, "XString")) NULL else names(x)
+      if (is.null(ids)) ids <- source_ids
+      if (is.null(ids) || !is.character(ids) || length(ids) != count ||
+          anyNA(ids) || any(!nzchar(ids))) ggchord_stop(caller,
+        ": unnamed sequence objects require one explicit nonempty ids value per sequence")
+      if (!is.null(source_ids)) {
+        known <- !is.na(source_ids) & nzchar(source_ids)
+        if (any(source_ids[known] != ids[known])) ggchord_stop(caller,
+          ": ids disagree with existing source sequence names; identifiers are not renamed")
+      }
+      widths <- if (inherits(x, "XString")) length(x) else Biostrings::width(x)
+      out <- data.frame(accver = ids, length = as.numeric(widths),
+        sequence_unit = if (inherits(x, "AAString") || inherits(x, "AAStringSet")) "aa" else
+          if (inherits(x, "DNAString") || inherits(x, "DNAStringSet") ||
+              inherits(x, "RNAString") || inherits(x, "RNAStringSet")) "bp" else "character",
+        .source_row = seq_len(count), stringsAsFactors = FALSE)
+      if (inherits(x, "Annotated")) metadata <- S4Vectors::metadata(x)
+      if (inherits(x, "XStringSet")) {
+        appended <- ggchord_conversion_append(out,
+          as.data.frame(S4Vectors::mcols(x), stringsAsFactors = FALSE))
+        out <- appended$data; map <- appended$map
+      }
+    } else if (inherits(x, "GInteractions")) {
       ggchord_conversion_require("InteractionSet", caller)
       first <- InteractionSet::anchors(x, type = "first", id = FALSE)
       second <- InteractionSet::anchors(x, type = "second", id = FALSE)
@@ -182,7 +226,7 @@ as_ggchord_seq <- function(x, mapping = NULL, lengths = NULL) {
         out <- out[match(used, out$accver), , drop = FALSE]
       }
       metadata <- if (inherits(x, "GRanges")) S4Vectors::metadata(x) else NULL
-    } else ggchord_stop(caller, ": x must be a data.frame, GRanges, Seqinfo or GInteractions")
+    } else ggchord_stop(caller, ": x must be a data.frame, GRanges, Seqinfo, GInteractions, XStringSet or XString")
   }
   out$accver <- ggchord_conversion_ids(out$accver, caller)
   if (anyDuplicated(out$accver)) ggchord_stop(caller, ": every sequence ID must occur once")

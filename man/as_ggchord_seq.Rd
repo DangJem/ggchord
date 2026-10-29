@@ -4,16 +4,20 @@
 \alias{as_ggchord_seq}
 \title{Convert sequence information to ggchord input}
 \usage{
-as_ggchord_seq(x, mapping = NULL, lengths = NULL)
+as_ggchord_seq(x, mapping = NULL, lengths = NULL, ids = NULL)
 }
 \arguments{
-\item{x}{A data frame, \code{GRanges}, \code{Seqinfo}, or \code{GInteractions} object.}
+\item{x}{A data frame, \code{GRanges}, \code{Seqinfo}, \code{GInteractions}, or a
+Biostrings \code{XStringSet}/\code{XString} object.}
 
 \item{mapping}{Optional named character vector \code{output_role = "input_column"}
 for data-frame inputs. For example \code{c(accver = "chrom", length = "size")}.}
 
 \item{lengths}{Optional named numeric vector of known sequence lengths.
 Fills unknown lengths and must agree with any known source lengths.}
+
+\item{ids}{Optional character vector of explicit identifiers for unnamed
+\code{XStringSet}/\code{XString} inputs only. Existing source names must agree.}
 }
 \value{
 An ordinary data frame with \code{accver}, \code{length} and retained metadata.
@@ -34,8 +38,19 @@ maximum observed feature endpoint. A \code{GInteractions} object uses the same
 information from its common regions. Only sequence names used by the
 supplied intervals are returned; a \code{Seqinfo} object returns all its entries.
 Unknown lengths require explicit \code{lengths} or corrected source information.
+
+\code{XStringSet} and \code{XString} inputs use their stored sequence widths.
+Set names are identifiers; unnamed sequences require explicit \code{ids}.
+Explicit IDs must agree with existing nonempty names, so identifiers and
+accession versions are never silently rewritten. \code{sequence_unit} records
+\code{"bp"}, \code{"aa"}, or \code{"character"}; amino-acid widths are not nucleotide
+coordinates. Empty sequences are rejected like other zero lengths.
 }
 \examples{
 as_ggchord_seq(data.frame(chrom = c("host", "virus"), size = c(1000, 300)),
   mapping = c(accver = "chrom", length = "size"))
+if (requireNamespace("Biostrings", quietly = TRUE)) {
+  as_ggchord_seq(Biostrings::DNAStringSet(c(host = "ACGT", virus = "AT")))
+  as_ggchord_seq(Biostrings::DNAString("ACGT"), ids = "explicit_id")
+}
 }

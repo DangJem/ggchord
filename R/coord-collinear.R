@@ -22,7 +22,8 @@ CoordCollinear <- ggplot2::ggproto("CoordCollinear", CoordGgchord)
 #' and centre-label layers require [coord_circular()]; use [geom_feature()] for
 #' general linear annotations. Cross-track links may cross intervening tracks.
 #' Explicit link control points use the exported linear layout x/y units;
-#' the longest backbone has width 2.
+#' the longest backbone has width 2 (the longest complete display row when
+#' `segments` is supplied).
 #' The circular `external = FALSE` feature-label constraint cannot be converted;
 #' remove it to use linear label rows. Gene/feature repel layout modes share
 #' the linear row strategy rather than selecting circular label tracks.
@@ -43,6 +44,16 @@ CoordCollinear <- ggplot2::ggproto("CoordCollinear", CoordGgchord)
 #' of a global optimum. It cannot be combined with an explicit
 #' `geom_seq(seq_orientation = ...)`.
 #'
+#' With `segments`, each accession remains an independent window but windows
+#' sharing `row_id` occupy one display row. Their table order is left to right;
+#' `align` applies to the whole row. `segment_gap` reserves display space in bp
+#' scale units, independently of omitted genomic length. Internal ends receive
+#' break marks. Use [segment_ggchord_data()] to crop/split input first. Local
+#' reversal comes from the table's `orientation`, so automatic orientation,
+#' explicit sequence orientation and `anchor` conflict with this mode. Ribbon
+#' adjacency follows display rows; same-row ribbons are omitted with a report,
+#' and explicit same-row pairs or point links are unsupported.
+#'
 #' @param align Display alignment: `"left"` (default), `"center"`, or
 #'   `"right"`. Applied to the full sequence or the interval supplied by
 #'   `anchor`.
@@ -57,6 +68,11 @@ CoordCollinear <- ggplot2::ggproto("CoordCollinear", CoordGgchord)
 #' @param min_support Minimum directional imbalance in `[0, 1]` for an automatic
 #'   change. It is the absolute difference between forward and reverse
 #'   support divided by their sum, default 0.1. A tie is always unresolved.
+#' @param segments Optional data frame with unique window `accver`, `row_id`
+#'   and `orientation` (1 or -1). Every displayed accession must be declared.
+#'   Each window has its own local coordinates and reversible source metadata.
+#' @param segment_gap Positive display gap in bp scale units when `segments`
+#'   is supplied, default 100. It never implies genomic continuity.
 #' @inheritParams coord_chord
 #' @return A ggplot2 Coord object for composition with a ggchord plot.
 #' @md
@@ -77,7 +93,8 @@ coord_collinear <- function(
     expand = FALSE, clip = "off",
     fit = c("labels", "geometry", "manual"),
     align = c("left", "center", "right"), anchor = NULL,
-    orientation = c("manual", "auto"), min_support = 0.1) {
+    orientation = c("manual", "auto"), min_support = 0.1,
+    segments = NULL, segment_gap = 100) {
   fit <- match.arg(fit)
   align <- match.arg(align)
   orientation <- match.arg(orientation)
@@ -86,6 +103,15 @@ coord_collinear <- function(
     ggchord_stop("coord_collinear(): min_support must be one finite number in [0, 1]")
   }
   ggchord_validate_collinear_anchor(anchor)
+  if (!is.null(segments)) {
+    ggchord_validate_display_segments(segments)
+    if (!is.null(anchor) || orientation != "manual") ggchord_stop(
+      "coord_collinear(): segments conflicts with anchor or automatic orientation; ",
+      "set window directions in segments and remove anchor")
+    if (!is.numeric(segment_gap) || length(segment_gap) != 1L ||
+        !is.finite(segment_gap) || segment_gap <= 0) ggchord_stop(
+      "coord_collinear(): segment_gap must be one positive finite display distance in bp units")
+  }
   validated <- coord_chord(
     rotation = 0, ratio = ratio, xlim = xlim, ylim = ylim,
     expand = expand, clip = clip, fit = fit
@@ -99,6 +125,8 @@ coord_collinear <- function(
   coord$collinear_anchor <- anchor
   coord$collinear_orientation <- orientation
   coord$collinear_min_support <- as.numeric(min_support)
+  coord$collinear_segments <- segments
+  coord$collinear_segment_gap <- segment_gap
   coord
 }
 
@@ -108,6 +136,9 @@ ggchord_validate_coord_contract <- function(plot) {
     params <- layer$ggchord_params
     if (is.null(params)) next
     if (identical(params$type, "seq")) {
+      if (!is.null(plot$coordinates$collinear_segments) &&
+          !is.null(params$seq_orientation)) ggchord_stop(
+        "coord_collinear(): segments owns window orientation; remove geom_seq(seq_orientation = ...)")
       if (identical(plot$coordinates$collinear_orientation, "auto") &&
           !is.null(params$seq_orientation)) ggchord_stop(
         "coord_collinear(): orientation = 'auto' cannot be combined with ",

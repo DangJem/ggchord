@@ -201,6 +201,8 @@ ggchord_collinear_link_geometry <- function(data, params, layout) {
   }
   pieces <- lapply(seq_len(nrow(data)), function(i) {
     q_id <- as.character(data$qaccver[i]); s_id <- as.character(data$saccver[i])
+    if ("row_id" %in% names(layout$sequence_layout) && ref$y[q_id] == ref$y[s_id]) ggchord_stop(
+      "geom_link_line(): point links within one display row are unsupported; use distinct row_id values")
     endpoint <- function(id, pos, destination) {
       direction <- sign(ref$y[destination] - ref$y[id])
       gap <- unname(gaps[[id]])
@@ -253,8 +255,21 @@ compute_collinear_layout <- function(...) {
   seqs <- p$seqs; lens <- p$lens; n <- length(seqs)
   y <- stats::setNames(if (n > 1L) c(0, -2 * cumsum(p$seq_gap[-n])) else 0,
     seqs)
+  segment_table <- p$collinear_transform$table
+  if ("row_index" %in% names(segment_table)) {
+    first <- which(!duplicated(segment_table$row_index))
+    rows <- length(first)
+    gap <- p$seq_gap[first]
+    for (i in unique(segment_table$row_index)) {
+      values <- p$seq_gap[segment_table$row_index == i]
+      if (length(unique(values)) > 1L) ggchord_stop(
+        "coord_collinear(): windows in one display row require the same seq_gap")
+    }
+    row_y <- if (rows > 1L) c(0, -2 * cumsum(gap[-rows])) else 0
+    y <- stats::setNames(row_y[segment_table$row_index], seqs)
+  }
   ref <- list(mode = "collinear", lens = lens, orientation = p$orientation,
-    x_scale = 2 / max(lens), y = y,
+    x_scale = p$collinear_transform$table$units_per_bp[1L], y = y,
     x_offset = p$collinear_transform$offset %||% stats::setNames(rep(0, n), seqs))
   seq_arcs <- stats::setNames(lapply(seqs, function(id) {
     data.frame(x = ggchord_collinear_x(c(0, lens[[id]]), id, ref),

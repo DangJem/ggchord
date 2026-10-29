@@ -15,6 +15,7 @@ GeomChordSeq <- ggplot2::ggproto(
     grobs <- list()
     paths <- data[data$.component == "path", , drop = FALSE]
     bands <- data[data$.component == "band", , drop = FALSE]
+    breaks <- data[data$.component == "break", , drop = FALSE]
     if (nrow(paths)) {
       paths$colour <- paths$seq_colour
       grobs[[length(grobs) + 1L]] <- ggplot2::GeomPath$draw_panel(
@@ -28,6 +29,12 @@ GeomChordSeq <- ggplot2::ggproto(
       grobs[[length(grobs) + 1L]] <- ggplot2::GeomPolygon$draw_panel(
         bands, panel_params, coord, na.rm = na.rm
       )
+    }
+    if (nrow(breaks)) {
+      breaks$colour <- breaks$seq_colour
+      grobs[[length(grobs) + 1L]] <- ggplot2::GeomPath$draw_panel(
+        breaks, panel_params, coord, lineend = "butt", arrow = NULL,
+        na.rm = na.rm)
     }
     do.call(grid::grobTree, grobs)
   }
@@ -76,7 +83,10 @@ ggchord_seq_style_geometry <- function(seq_arcs, params) {
       }
     )
   })
-  do.call(rbind, pieces)
+  out <- do.call(rbind, pieces)
+  breaks <- params$segment_breaks
+  if (!is.null(breaks) && nrow(breaks)) out <- ggchord_rbind_fill(list(out, breaks))
+  out
 }
 
 #' Add a sequence arc layer
@@ -92,6 +102,9 @@ ggchord_seq_style_geometry <- function(seq_arcs, params) {
 #'   0.03 in chord coordinates. In [coord_collinear()], a positive distance
 #'   between consecutive backbones as a proportion of the longest backbone's
 #'   width, default 0.3. The final sequence's gap is unused in linear layouts.
+#'   Segmented linear displays measure it against the longest display row;
+#'   windows in one row must request the same gap, and only gaps between rows
+#'   affect vertical placement.
 #' @param seq_radius Optional numeric (> 0). Sequence arc radius, default 1.0
 #' @param seq_curvature Optional numeric. Signed arc bow (0=straight, 1=standard arc, negative=opposite bow), default 1.0. Finite positive and negative values are accepted without clipping; magnitudes above 1 amplify the bow.
 #' @param seq_style Backbone geometry. `"auto"` uses a double backbone in

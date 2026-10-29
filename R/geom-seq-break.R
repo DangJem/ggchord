@@ -66,6 +66,28 @@ ggchord_empty_seq_break_geometry <- function() data.frame(
   accver = character(), source_end = character(), display_end = character(),
   .component = character(), stringsAsFactors = FALSE)
 
+# Automatic structural discontinuities are part of the sequence path style,
+# independent of an optional user geom_seq_break() decoration layer.
+ggchord_segment_break_geometry <- function(layout) {
+  data <- layout$sequence_layout
+  if (!"row_id" %in% names(data)) return(NULL)
+  result <- list()
+  for (i in seq_len(nrow(data))) for (side in c("left", "right")) {
+    if (!isTRUE(data[[paste0("break_", side)]][i])) next
+    x <- data[[if (side == "left") "xmin" else "xmax"]][i]
+    width <- min(.02, data$gap_bp[i] * data$units_per_bp[i] * .4)
+    for (stroke in c(-1, 1)) {
+      result[[length(result) + 1L]] <- data.frame(
+        x = x + stroke * width / 4 + c(-1, 1) * width / 4,
+        y = data$y[i] + c(-1, 1) * .02,
+        accver = data$accver[i],
+        group = paste(data$accver[i], "segment-break", side, stroke, sep = "\r"),
+        .component = "break", .decoration = "segment_break", stringsAsFactors = FALSE)
+    }
+  }
+  if (length(result)) do.call(rbind, result) else NULL
+}
+
 ggchord_seq_break_flags <- function(data) {
   n <- nrow(data)
   number <- function(name) {

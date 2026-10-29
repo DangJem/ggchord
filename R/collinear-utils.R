@@ -1,9 +1,15 @@
 # Explicit selection retains the row identity of the full resolved layer input.
-ggchord_select_ribbons <- function(data, seqs, params, collinear = FALSE) {
+ggchord_select_ribbons <- function(data, seqs, params, collinear = FALSE, display_rows = NULL) {
   if (is.null(data)) return(list(data = NULL, report = data.frame()))
   n <- nrow(data)
   qi <- match(as.character(data$qaccver), seqs)
   si <- match(as.character(data$saccver), seqs)
+  same_row <- rep(FALSE, n)
+  if (!is.null(display_rows)) {
+    qi <- unname(display_rows[as.character(data$qaccver)])
+    si <- unname(display_rows[as.character(data$saccver)])
+    same_row <- !is.na(qi) & !is.na(si) & qi == si
+  }
   adjacent <- abs(qi - si) == 1L
   if (!collinear && length(seqs) > 1L) {
     adjacent <- adjacent | abs(qi - si) == length(seqs) - 1L
@@ -15,6 +21,7 @@ ggchord_select_ribbons <- function(data, seqs, params, collinear = FALSE) {
     (isTRUE(collinear) && is.null(explicit_pairs))
   keep <- valid
   reason <- ifelse(valid, NA_character_, "outside_sequence_set_or_self")
+  reason[same_row] <- "same_display_row"
   if (only_adjacent) {
     keep <- keep & adjacent
     reason[valid & !adjacent] <- "non_adjacent"
@@ -25,8 +32,11 @@ ggchord_select_ribbons <- function(data, seqs, params, collinear = FALSE) {
     if (anyNA(q) || anyNA(s) || any(!q %in% seqs | !s %in% seqs) || any(q == s)) {
       ggchord_stop("geom_link_ribbon(): pairs must name distinct displayed sequences")
     }
+    if (!is.null(display_rows) && any(display_rows[q] == display_rows[s])) ggchord_stop(
+      "geom_link_ribbon(): explicit pairs in one display row are unsupported; use distinct row_id values")
     if (isTRUE(params$adjacent_only)) {
-      d <- abs(match(q, seqs) - match(s, seqs))
+      d <- if (is.null(display_rows)) abs(match(q, seqs) - match(s, seqs)) else
+        abs(display_rows[q] - display_rows[s])
       allowed <- d == 1L | (!collinear & d == length(seqs) - 1L)
       if (any(!allowed)) ggchord_stop(
         "geom_link_ribbon(): non-adjacent pairs conflict with adjacent_only = TRUE; use FALSE"
@@ -64,19 +74,28 @@ ggchord_match_feature_rows <- function(labels, features) {
   if (is.null(labels) || is.null(features)) return(NULL)
   if ("feature_id" %in% names(labels) && "feature_id" %in% names(features)) {
     a <- as.character(labels$feature_id); b <- as.character(features$feature_id)
-    if (anyNA(a) || anyNA(b) || any(!nzchar(a)) || any(!nzchar(b)) ||
-        anyDuplicated(a) || anyDuplicated(b)) ggchord_stop(
-      "Linear label inheritance requires unique, non-missing feature_id values"
-    )
-    index <- match(a, b)
-    if (anyNA(index)) return(NULL)
-    for (column in c("accver", "start", "end", "strand")) {
-      if (!all(as.character(labels[[column]]) == as.character(features[[column]][index]))) {
-        ggchord_stop("Matching feature_id has conflicting ", column,
-          "; keep label/source intervals consistent or use distinct feature IDs")
+    complete_ids <- !anyNA(a) && !anyNA(b) && all(nzchar(a)) && all(nzchar(b))
+    if (complete_ids) {
+      # One source feature may occur in several explicitly focused windows.
+      # Identity for label placement is local to the displayed accession.
+      if ("accver" %in% names(labels) && "accver" %in% names(features)) {
+        a <- paste(nchar(as.character(labels$accver)), labels$accver, a, sep = ":")
+        b <- paste(nchar(as.character(features$accver)), features$accver, b, sep = ":")
       }
+      if (anyNA(a) || anyNA(b) || any(!nzchar(a)) || any(!nzchar(b)) ||
+          anyDuplicated(a) || anyDuplicated(b)) ggchord_stop(
+        "Linear label inheritance requires unique, non-missing feature_id values within each displayed accession"
+      )
+      index <- match(a, b)
+      if (anyNA(index)) return(NULL)
+      for (column in c("accver", "start", "end", "strand")) {
+        if (!all(as.character(labels[[column]]) == as.character(features[[column]][index]))) {
+          ggchord_stop("Matching feature_id has conflicting ", column,
+            "; keep label/source intervals consistent or use distinct feature IDs")
+        }
+      }
+      return(index)
     }
-    return(index)
   }
   columns <- c("accver", "start", "end", "strand")
   if (nrow(labels) == nrow(features) && all(columns %in% names(labels)) &&
@@ -89,6 +108,9 @@ ggchord_match_feature_rows <- function(labels, features) {
 #'
 #' Maps positions for ordinary ggplot2 annotation layers without modifying
 #' source tables. Inverse mapping returns the chosen relative or source bp.
+#' In a segmented layout, specify the window accession rather than its parent
+#' source accession. Positions outside that window, including display gaps,
+#' produce an error instead of being extrapolated into omitted sequence.
 #' @param plot A ggchord plot using [coord_collinear()].
 #' @param accver Sequence identifiers, scalar or one per position.
 #' @param position Numeric genomic positions, or layout x when `inverse = TRUE`.
@@ -130,6 +152,9 @@ map_ggchord_position <- function(plot, accver, position, inverse = FALSE, source
     x <- ggchord_collinear_x(local, ids, ref)
     bp <- position
   }
+  if ("row_id" %in% names(layout$sequence_layout) &&
+      any(local < 1 - 1e-7 | local > unname(ref$lens[ids]) + 1e-7)) ggchord_stop(
+    "map_ggchord_position(): position lies outside the specified window or in an omitted display gap")
   data.frame(accver = ids, position = unname(bp), x = unname(x),
     y = unname(ref$y[ids]), stringsAsFactors = FALSE)
 }

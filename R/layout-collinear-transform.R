@@ -141,6 +141,8 @@ ggchord_collinear_transform <- function(seqs, lens, orientation, ribbon_data, co
       any(!is.finite(orientation)) || any(!orientation %in% c(-1, 1))) {
     ggchord_stop("coord_collinear(): sequence lengths and directions must be valid")
   }
+  if (!is.null(coord$collinear_segments)) return(
+    ggchord_segmented_transform(seqs, lens, coord))
   mode <- coord$collinear_orientation %||% "manual"
   diagnostics <- data.frame(accver = seqs, forward_support = 0,
     reverse_support = 0, confidence = NA_real_, status = "manual",
@@ -171,4 +173,71 @@ ggchord_collinear_transform <- function(seqs, lens, orientation, ribbon_data, co
     anchor_x = 0, align = align, stringsAsFactors = FALSE)
   list(orientation = orientation, offset = offset, table = table,
     diagnostics = diagnostics)
+}
+
+ggchord_validate_display_segments <- function(segments) {
+  caller <- "coord_collinear(segments = ...)"
+  if (!is.data.frame(segments) || !nrow(segments)) ggchord_stop(caller, ": supply a nonempty table")
+  ggchord_require_columns(segments, c("accver", "row_id", "orientation"), caller)
+  ids <- ggchord_conversion_ids(segments$accver, caller)
+  ggchord_conversion_ids(segments$row_id, caller)
+  if (anyDuplicated(ids) || !is.numeric(segments$orientation) ||
+      anyNA(segments$orientation) || any(!segments$orientation %in% c(1, -1)))
+    ggchord_stop(caller, ": accessions must be unique and orientation must be 1 or -1")
+  invisible(segments)
+}
+
+ggchord_segmented_transform <- function(seqs, lens, coord) {
+  data <- coord$collinear_segments
+  ggchord_validate_display_segments(data)
+  if (any(!seqs %in% as.character(data$accver))) ggchord_stop(
+    "coord_collinear(): segments must declare every displayed accession")
+  # Row order follows the first occurrence in seq_order; within-row order is
+  # the explicit segment table order, independently of source coordinates.
+  row_id <- as.character(data$row_id[match(seqs, data$accver)])
+  rows <- unique(row_id)
+  data <- data[data$accver %in% seqs, , drop = FALSE]
+  data$accver <- as.character(data$accver); data$row_id <- as.character(data$row_id)
+  groups <- lapply(rows, function(row) data$accver[data$row_id == row])
+  totals <- vapply(groups, function(ids) sum(lens[ids]) +
+    max(0, length(ids) - 1L) * coord$collinear_segment_gap, numeric(1))
+  if (any(!is.finite(totals))) ggchord_stop("coord_collinear(): segmented display widths must remain finite")
+  scale <- 2 / max(totals)
+  fraction <- switch(coord$collinear_align, left = 0, center = .5, right = 1)
+  offset <- stats::setNames(numeric(length(seqs)), seqs)
+  slot <- stats::setNames(integer(length(seqs)), seqs)
+  left_break <- right_break <- stats::setNames(rep(FALSE, length(seqs)), seqs)
+  for (i in seq_along(groups)) {
+    ids <- groups[[i]]
+    offset[ids] <- (c(0, head(cumsum(lens[ids] + coord$collinear_segment_gap), -1L)) -
+      totals[i] * fraction) * scale
+    slot[ids] <- seq_along(ids)
+    if (length(ids) > 1L) {
+      left_break[ids[-1L]] <- TRUE; right_break[head(ids, -1L)] <- TRUE
+    }
+  }
+  data <- data[match(seqs, data$accver), , drop = FALSE]
+  orientation <- stats::setNames(data$orientation, seqs)
+  for (physical in c("left", "right")) {
+    flag <- rep(FALSE, length(seqs))
+    for (biological in c("left", "right")) {
+      value <- data[[paste0(".truncated_", biological)]]
+      if (is.null(value)) next
+      if (!is.logical(value)) ggchord_stop("coord_collinear(): segment truncation flags must be logical")
+      corresponding <- if (physical == biological) orientation == 1 else orientation == -1
+      flag <- flag | (corresponding & !is.na(value) & value)
+    }
+    if (physical == "left") left_break <- left_break | flag else right_break <- right_break | flag
+  }
+  table <- data.frame(accver = seqs, orientation = unname(orientation),
+    x_offset = unname(offset), units_per_bp = scale,
+    xmin = unname(offset), xmax = unname(offset + lens[seqs] * scale),
+    anchor_start = NA_real_, anchor_end = NA_real_, anchor_position = NA_real_,
+    anchor_x = NA_real_, align = coord$collinear_align,
+    row_id = row_id, row_index = match(row_id, rows), segment_index = unname(slot),
+    break_left = unname(left_break), break_right = unname(right_break),
+    gap_bp = coord$collinear_segment_gap, stringsAsFactors = FALSE)
+  list(orientation = orientation, offset = offset, table = table,
+    diagnostics = data.frame(accver = seqs, orientation = unname(orientation),
+      status = "explicit_segment", stringsAsFactors = FALSE))
 }

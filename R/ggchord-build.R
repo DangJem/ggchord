@@ -313,7 +313,9 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     ribbon_stat_data <- computed$data
     ribbon_stat_report <- computed$report
   }
-  ribbon_selection <- ggchord_select_ribbons(ribbon_data, seqs, ribbon_params, collinear)
+  display_rows <- if (collinear && "row_index" %in% names(collinear_transform$table))
+    stats::setNames(collinear_transform$table$row_index, seqs) else NULL
+  ribbon_selection <- ggchord_select_ribbons(ribbon_data, seqs, ribbon_params, collinear, display_rows)
   ribbon_data <- ribbon_selection$data
   has_ribbon_data <- !is.null(ribbon_data) && nrow(ribbon_data) > 0
 
@@ -965,6 +967,9 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     layout$sequence_layout$source_accver <- if (".source_accver" %in% names(seq_data)) {
       seq_data$.source_accver[source_rows]
     } else seqs
+    layout$sequence_layout$source_end <- layout$sequence_layout$source_origin + unname(lens[seqs]) - 1
+    layout$sequence_layout$source_length <- if (".source_length" %in% names(seq_data))
+      seq_data$.source_length[source_rows] else unname(lens[seqs])
     for (side in c("left", "right")) {
       field <- paste0(".truncated_", side)
       layout$sequence_layout[[paste0("truncated_", side)]] <- if (field %in% names(seq_data)) {
@@ -1222,7 +1227,9 @@ compute_chord_geometry <- function(plot) {
         ggchord_seq_style_geometry(
           sub_layout$seq_arcs,
           utils::modifyList(lyr$ggchord_params, list(
-            circular = isTRUE(sub_layout$circular)
+            circular = isTRUE(sub_layout$circular),
+            segment_breaks = if (isTRUE(sub_layout$collinear))
+              ggchord_segment_break_geometry(sub_layout) else NULL
           ))
         )
       } else if (identical(component, "seq_center_label")) {

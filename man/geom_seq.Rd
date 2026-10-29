@@ -34,7 +34,10 @@ geom_seq(
 \item{seq_gap}{Optional numeric. Gap proportion between sequences, default
 0.03 in chord coordinates. In [coord_collinear()], a positive distance
 between consecutive backbones as a proportion of the longest backbone's
-width, default 0.3. The final sequence's gap is unused in linear layouts.}
+width, default 0.3. The final sequence's gap is unused in linear layouts.
+Segmented linear displays measure it against the longest display row;
+windows in one row must request the same gap, and only gaps between rows
+affect vertical placement.}
 
 \item{seq_radius}{Optional numeric (> 0). Sequence arc radius, default 1.0}
 

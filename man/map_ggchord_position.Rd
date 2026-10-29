@@ -23,6 +23,9 @@ A data frame with accver, position, x and backbone y.
 \description{
 Maps positions for ordinary ggplot2 annotation layers without modifying
 source tables. Inverse mapping returns the chosen relative or source bp.
+In a segmented layout, specify the window accession rather than its parent
+source accession. Positions outside that window, including display gaps,
+produce an error instead of being extrapolated into omitted sequence.
 }
 \examples{
 p <- ggchord(data.frame(accver = "A", length = 1000)) +

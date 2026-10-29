@@ -35,6 +35,12 @@
 #'   `conversion_reports` retains their conversion attributes, including source
 #'   class, column renaming, sequence information and object metadata.
 #'   Sequence break marks are included under `seq`.
+#'   Segmented linear displays retain one `sequence_layout` row per window,
+#'   including `row_id`, segment order, break flags and display `gap_bp`.
+#'   Source accession, origin/end/full length, local orientation, x offset and
+#'   units per bp describe each reversible piece; gaps have no source mapping.
+#'   Automatic segment break paths have `.decoration = "segment_break"` in
+#'   the sequence geometry. `gap_bp` is display spacing, not omitted length.
 #' @export
 #'
 #' @examples
