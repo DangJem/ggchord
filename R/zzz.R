@@ -1,6 +1,6 @@
 # zzz.R - package environment and infrastructure
-# The package keeps no global rendering or layout state. Plot data, parameters
-# and any computed layout cache belong to the plot object itself.
+# Plot data, parameters and persistent layout caches belong to each plot.
+# Temporary render measurement context is scoped and restored in render-context.R.
 
 # Register package-specific theme elements with ggplot2. These elements affect
 # annotations drawn by ggchord; data-dependent fill and colour remain scales.

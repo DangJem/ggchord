@@ -93,3 +93,20 @@ getter 与 export 的推荐关系、gene/feature 入口、shape 双入口、标�
 link/ribbon 角色、颜色拼写别名、重导出、文件输入形式及清洗默认均未冻结。
 先看真实科研场景与已有契约，再比较保留便利入口、共享内核或渐进迁移的代价。
 本轮修复只是恢复已有输入/报告契约，不借此决定上述命名和删除问题。
+
+## 已补齐的共享帧依赖与状态证据
+
+七个现有阶段的逐项输入/输出、顺序、状态归属与风险见
+[audit-reviewed-details/layout-stages.csv](audit-reviewed-details/layout-stages.csv)。
+这是现状合同，未实施阶段拆分：序列参考先于axis/ribbon/annotation，统一旋转先于
+自动标签与裁剪，最终边界与返回装配最后执行。`compute_chord_layout()` 的形参由
+被eval的表达式读取，直接函数体零引用不说明未使用；文字尺度还可能由标签阶段
+更新，不应未经比较直接把各阶段改为互不影响的纯函数。
+
+多层外部编排位于`compute_chord_geometry()`，各组保留输入、几何与子布局，之后做
+track/障碍/跨层标签协调。`compute_chord_geometry_single()`内的最后一次赋值不是
+“所有同类层必然覆盖”的证据；反过来，存在registry也不证明任意组合已运行隔离。
+
+有限脚本确认context嵌套报错恢复和副本ref/scale容器隔离；源码仍有layer ggproto
+引用语义及未穷举设备路径。状态审计按持久plot ref、当次geometry_cache、临时动态
+render context、上游ggplot2注册/设备四类分别归属，不宣称整包没有全局副作用。

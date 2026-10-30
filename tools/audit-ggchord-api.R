@@ -500,6 +500,74 @@ if (!is.null(coordinate_reviews)) {
   compat$review_source_revision <- d$source_revision
   compat$review_input_path <- attr(coordinate_reviews, "input_path")
 }
+function_reviews <- read_detail("internal-functions", "function_id", c("role", "return_contract",
+  "state_ownership", "dynamic_dependency", "decision", "rationale", "unknowns_next_phase", "evidence"))
+if (!is.null(function_reviews)) {
+  ix <- match(function_reviews$function_id, functions$function_id)
+  if (anyNA(ix)) stop("Unknown function_id in internal function review")
+  if (any(functions$is_exported[ix])) stop("Internal function review must not overwrite public entry evidence")
+  fields <- c("role", "return_contract", "state_ownership", "dynamic_dependency", "decision",
+    "rationale", "unknowns_next_phase")
+  for (field in fields) {
+    functions[[field]] <- "REVIEW_REQUIRED"
+    functions[[field]][ix] <- function_reviews[[field]]
+  }
+  functions$semantic_review[ix] <- function_reviews$review_status
+  functions$review_source_revision <- "NONE"
+  functions$review_source_revision[ix] <- function_reviews$source_revision
+  functions$review_evidence <- "NOT_REVIEWED"
+  functions$review_evidence[ix] <- function_reviews$evidence
+  functions$review_input_path <- "NONE"
+  functions$review_input_path[ix] <- attr(function_reviews, "input_path")
+  hit <- match(s3$function_id, function_reviews$function_id)
+  s3$review_status <- ifelse(is.na(hit), "REVIEW_REQUIRED", function_reviews$review_status[hit])
+}
+if (!is.null(entry_reviews)) {
+  # Only direct exported function definitions have a matching syntax row.
+  # Alias/factory entry views retain their separate entry provenance.
+  ix <- which(functions$is_exported)
+  hit <- match(functions$name[ix], entry_reviews[["function"]])
+  if (anyNA(hit)) stop("Exported function syntax lacks an entry review")
+  for (field in c("return_contract", "decision", "rationale", "unknowns_next_phase")) {
+    if (is.null(functions[[field]])) functions[[field]] <- "REVIEW_REQUIRED"
+    functions[[field]][ix] <- entry_reviews[[field]][hit]
+  }
+  for (field in c("review_source_revision", "review_evidence", "review_input_path"))
+    if (is.null(functions[[field]])) functions[[field]] <- "NONE"
+  functions$semantic_review[ix] <- entry_reviews$review_status[hit]
+  functions$review_source_revision[ix] <- entry_reviews$source_revision[hit]
+  functions$review_evidence[ix] <- entry_reviews$evidence[hit]
+  functions$review_input_path[ix] <- attr(entry_reviews, "input_path")
+}
+stage_reviews <- read_detail("layout-stages", "stage", c("source_file", "reads", "writes",
+  "upstream", "state_owner", "risk", "evidence"))
+if (!is.null(stage_reviews)) {
+  for (field in c("review_status", "stage_contract", "review_source_revision")) {
+    objects[[field]] <- if (field == "review_status") "REVIEW_REQUIRED" else "NONE"
+    dynamic[[field]] <- if (field == "review_status") "REVIEW_REQUIRED" else "NONE"
+  }
+  for (i in seq_len(nrow(stage_reviews))) {
+    d <- stage_reviews[i, , drop = FALSE]
+    hit <- which(objects$name == d$stage & objects$source_file == d$source_file &
+                 objects$binding_context == "TOP_LEVEL_EXPRESSION")
+    if (length(hit) != 1L) stop("Layout stage must match a unique top-level binding: ", d$stage)
+    objects$review_status[hit] <- d$review_status
+    objects$stage_contract[hit] <- paste0("audit-reviewed-details/layout-stages.csv#", d$stage)
+    objects$review_source_revision[hit] <- d$source_revision
+    hit <- which(dynamic$source_file == d$source_file & dynamic$operation == "quote")
+    if (length(hit) != 1L) stop("Layout stage must match a unique quote: ", d$stage)
+    dynamic$review_status[hit] <- d$review_status
+    dynamic$stage_contract[hit] <- paste0("audit-reviewed-details/layout-stages.csv#", d$stage)
+    dynamic$review_source_revision[hit] <- d$source_revision
+    # eval calls are keyed by the exact called stage, not by nearby line.
+    hit <- which(dynamic$source_file == "R/layout.R" & dynamic$operation == "eval" &
+                 startsWith(dynamic$expression, paste0("eval(", d$stage, ",")))
+    if (length(hit) != 1L) stop("Layout stage must match a unique eval: ", d$stage)
+    dynamic$review_status[hit] <- d$review_status
+    dynamic$stage_contract[hit] <- paste0("audit-reviewed-details/layout-stages.csv#", d$stage)
+    dynamic$review_source_revision[hit] <- d$source_revision
+  }
+}
 ref_summary <- aggregate(row(function_id = references$function_id),
                          list(function_id = references$function_id, symbol = references$symbol,
                               quoted = references$quoted), length)
@@ -523,7 +591,7 @@ manifest <- row(key = c("audit_start_revision", "git_head_at_generation", "sourc
   "source_file_count", "export_names", "own_export_names", "reexports", "S3_registrations",
   "function_syntax_tokens", "function_rows", "anonymous_or_method_rows", "argument_rows_including_export_signature_views",
   "unresolved_own_export_signatures", "review_input_files", "human_reviewed_argument_rows", "human_reviewed_export_names",
-  "entry_decision_rows", "coordinate_review_rows",
+  "entry_decision_rows", "coordinate_review_rows", "internal_function_review_rows", "layout_stage_review_rows",
   "semantic_review_status", "package_execution", "rebuild_command"),
  value = c(audit_start, head_revision, source_fingerprint,
    if (length(source_dirty)) paste(source_dirty, collapse = "; ") else "CLEAN_SOURCE_INPUTS",
@@ -534,6 +602,8 @@ manifest <- row(key = c("audit_start_revision", "git_head_at_generation", "sourc
    length(review_files), reviewed_argument_rows, reviewed_export_names,
    if (is.null(entry_reviews)) 0L else nrow(entry_reviews),
    if (is.null(coordinate_reviews)) 0L else nrow(coordinate_reviews),
+   if (is.null(function_reviews)) 0L else nrow(function_reviews),
+   if (is.null(stage_reviews)) 0L else nrow(stage_reviews),
    "OPEN; syntax coverage and partial semantic review are not whole-audit completion", "NOT_LOADED_OR_EXECUTED",
    paste("Rscript tools/audit-ggchord-api.R . design-roadmap/audit-generated", audit_start)))
 write_table(manifest, "manifest")
@@ -561,6 +631,8 @@ readme <- c("# ggchord API 静态审计基线", "",
   "- 默认表达式、形参顺序、签名证据、当前 source_revision 不接受覆盖；原始 static_confidence/static_actual_usage 与语义复核分列。",
   "- review_source_revision、review_input_path、review_status、review_evidence 保留人工复核来源；复核提交与当前提交不同须核查相关源文件差异，不能自动把旧证据升级为当前行为。",
   "- audit-reviewed-details/ 下的 export-decisions 与 coordinate-compatibility 按不同键合并返回、去留和兼容记录；要求完整且无多余键，保留独立 review SHA。",
+  "- internal-functions 按私有 function_id 合并角色、返回、状态与动态依赖证据；未覆盖的函数仍保留 REVIEW_REQUIRED，不将整文件解析冒充语义复核。",
+  "- layout-stages 记录七个共享帧阶段的读写、顺序、状态和风险；精确挂接对应的 top-level quote 绑定及 eval 调用，其他动态记录仍待查。",
   "- 没有相应人工覆盖文件时照常生成，语义保持 REVIEW_REQUIRED；两个人工目录均纳入输入快照校验。", "",
   "## 局限与后续工作", "",
   "- 全部文件被解析不等于全部动态对象被穷举。运行生成的函数、动态注册、字符串回调、NSE、ggproto 继承及语言对象注入必须人工/定向运行复核。",

@@ -241,7 +241,13 @@ H 是待验证假设，D 是设计取舍。这里另列本地静态结论、缺�
   `R/geom-gene.R:416–450` 特别检查 R 部分匹配和已删除取值。
 - **建议与缺证**：KEEP 有用错误方向，DEFER 清理；先列每项旧参数、已删除版本、
   替代和触发路径。不能以“兼容分支太多”删除会防止静默误配的保护。
-- **阶段**：v0.16.0 建清单，v0.16.4 收敛；需代表性拼写/部分匹配运行证据。
+- **本轮补证**：`audit-reviewed-details/retired-entries.csv` 已登记130条旧参数、旧
+  取值/映射事实，含既有替代写法、guard路径和删除/计划版本依据。两个offset仍是
+  弃用警告，未误列为已删除；没有把NEWS类别表当成逐tag最早删除证明。
+- **有限运行**：constructor rotation与repel aligned取值均给出正确迁移方向；旧
+  `gene_label_segment` 因R在函数体前执行歧义匹配，先得到R的错误，未触及自定义
+  guard。该路径的具体提示改善在v0.16.1比较，不据此恢复旧参数或修改当前签名。
+- **阶段**：v0.16.0 清单与代表性补证；v0.16.4 收敛。完整逐项触发未运行。
 
 ### F25 — P2/H：内部无用函数尚无充分证据
 
@@ -250,7 +256,14 @@ H 是待验证假设，D 是设计取舍。这里另列本地静态结论、缺�
   `NAMESPACE:3–11` S3 均说明词法直接调用图不能覆盖全部使用。
 - **建议与缺证**：DEFER REMOVE/INTERNALIZE；必须联合直接调用、对象字段、注册、
   字符串引用、延迟表达式、文档/示例及潜在下游。当前未认定任何内部函数“确定无用”。
-- **阶段**：v0.16.0 盘点，v0.16.3 按证据处理。
+- **本轮补证**：七个quote阶段的输入、输出和共享frame依赖已写入
+  `audit-reviewed-details/layout-stages.csv`；compute_chord_layout的103个形参不能因
+  主函数体零引用删除。theme通过environment()/get读取formals，read系列在lapply
+  子闭包中读取source_file等，process_gene_param的default/is_logical也由子闭包读取。
+- **真实忽略与兼容签名**：breakPointsFunc的n/tol确实未读取且noRd已说明；
+  部分draw_key/S3/error回调为上游协议保留参数。if_null_else与%||%当前重复语义。
+  这些是有证据的整理候选，不是已批准删除或整套调用图已完成。
+- **阶段**：v0.16.0 盘点，v0.16.3 按证据处理；剩余内部模块继续审计。
 
 ### F26 — P2/H：有临时全局上下文，不能等同全局布局缓存
 
@@ -261,7 +274,11 @@ H 是待验证假设，D 是设计取舍。这里另列本地静态结论、缺�
 - **建议与缺证**：DEFER 泄漏定性；分别记录临时动态上下文与图对象持有的缓存。
   需嵌套、异常退出、多图、复制、尺寸变化和重复渲染验证，不能宣称“完全无全局状态”，
   也不能仅因这个 environment 就认定已发生串扰。
-- **阶段**：v0.16.3；可先修正文档性绝对表述，行为改变需对应证据。
+- **本轮补证**：已将zzz开头绝对化注释改为“持久缓存归plot，临时测量context在
+  render-context中恢复”，未改代码行为。一次最小脚本确认嵌套/错误退出恢复context，
+  render副本的ref/scale容器隔离，见`audit-validation/internal-state-evidence.md`。
+  layer/coord深复制、所有设备及重复渲染仍未作全域证明。
+- **阶段**：v0.16.3；只纠正注释和取得有限状态证据，未提前实施缓存架构重写。
 
 ### F27 — P2/H：Stat 在布局前计算，再暴露 staged 值
 
@@ -454,6 +471,23 @@ resolver 没有传入该 fallback，须提供自己的点连接输入。没有�
 - 单一最小脚本对照factor/数值输入，确认同一几何、source_row=2、accver=A、
   start/end=100/300，原factor表不变。复用既有region/feature/link来源保留案例；
   未扩张等价格式或运行完整testthat。源码、roxygen/Rd、NEWS与迁移同步。
+
+### F39 — P3/H：restriction leader取值被保存，但路由未按取值分派
+
+- 基线`08f753d5b1061fdbaa9ee4eeb91b41f5c8c6782f`的公开签名允许radial/elbow/
+  straight/trunk，constructor把trunk转radial并保存params$leader；后续路由源码没有
+  读取该字段。帮助详细描述radial，不足以认定其他两种取值已有独立布局合同。
+- DEFER：未改默认、删取值或声称用户选择已生效。v0.16.1先用同一有限site输入对照
+  三策略的公开几何，比较按现行为澄清兼容别名与真正实现分派，说明默认/迁移影响后
+  提交取舍。当前源码结论不代替跨布局运行；不阻塞本轮既有修复的安全实施。
+
+### F40 — P3/H：轴方向规范化的等长命名向量先走位置分支
+
+- `R/helpers_params.R::process_axis_orientation()`先处理length==n的普通向量，再
+  处理命名向量。因此等长、重排names的输入在源码上按位置读取，部分命名输入则
+  按accver补值。未据内部helper差异直接定性为已复现的公开坐标缺陷。
+- DEFER到v0.16.1：在theme方向实际支持格式内做一个名称重排对照，核对公开帮助
+  允许域，之后决定是否修复优先级或明确限制。当前不改默认方向或扩大theme列表语法。
 
 ## 待用户选择的跨模块方案
 
