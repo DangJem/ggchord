@@ -480,6 +480,16 @@ read_detail <- function(name, keys, required) {
   attr(d, "input_path") <- relpath(path)
   d
 }
+import_reviews <- read_detail("import-contracts", c("package", "symbol"),
+  c("import_role", "decision", "rationale", "evidence", "unknowns_next_phase"))
+if (!is.null(import_reviews)) {
+  key <- function(x) paste(x$package, x$symbol, sep = "\t")
+  if (!setequal(key(imports), key(import_reviews))) stop("Import review must cover exactly all declarations")
+  d <- import_reviews[match(key(imports), key(import_reviews)), , drop = FALSE]
+  for (field in c("import_role", "decision", "rationale", "evidence", "unknowns_next_phase", "review_status"))
+    imports[[field]] <- d[[field]]
+  imports$review_source_revision <- d$source_revision
+}
 entry_reviews <- read_detail("export-decisions", "function", c("decision", "rationale", "return_contract",
   "source_tracking", "mutation_and_cache_ownership", "coordinate_scope", "evidence", "unknowns_next_phase"))
 returns <- do.call(rbind, return_rows)
@@ -551,6 +561,9 @@ if (!is.null(entry_reviews)) {
   for (field in c("review_source_revision", "review_evidence", "review_input_path"))
     if (is.null(functions[[field]])) functions[[field]] <- "NONE"
   functions$semantic_review[ix] <- entry_reviews$review_status[hit]
+  functions$role[ix] <- paste0("公开入口 ", functions$name[ix], "；职责见返回合同和逐参数 actual_usage")
+  functions$state_ownership[ix] <- entry_reviews$mutation_and_cache_ownership[hit]
+  functions$dynamic_dependency[ix] <- paste0("公开调用边界；别名/工厂、NSE与延迟求值见逐参数合同；", entry_reviews$coordinate_scope[hit])
   functions$review_source_revision[ix] <- entry_reviews$source_revision[hit]
   functions$review_evidence[ix] <- entry_reviews$evidence[hit]
   functions$review_input_path[ix] <- attr(entry_reviews, "input_path")
@@ -642,6 +655,18 @@ if (!is.null(entry_reviews)) for (i in seq_len(nrow(entry_reviews))) {
   objects$review_source_revision[hit] <- d$source_revision
   objects$unknowns_next_phase[hit] <- d$unknowns_next_phase
 }
+object_reviews <- read_detail("object-contracts", c("source_file", "name", "binding_context"),
+  c("binding_semantics", "decision", "unknowns_next_phase", "evidence"))
+if (!is.null(object_reviews)) {
+  binding_key <- function(x) paste(x$source_file, x$name, x$binding_context, sep = "\t")
+  ix <- match(binding_key(object_reviews), binding_key(objects))
+  if (anyNA(ix) || anyDuplicated(binding_key(objects)[ix])) stop("Unknown or ambiguous reviewed object binding")
+  if (any(objects$review_status[ix] != "REVIEW_REQUIRED")) stop("Object detail must not overwrite another review scope")
+  for (field in c("binding_semantics", "unknowns_next_phase", "review_status"))
+    objects[[field]][ix] <- object_reviews[[field]]
+  objects$review_evidence[ix] <- object_reviews$evidence
+  objects$review_source_revision[ix] <- object_reviews$source_revision
+}
 for (name in c("internal", "dynamic")) {
   value <- get(name)
   key <- if (name == "internal") value$caller else value$function_id
@@ -652,6 +677,37 @@ for (name in c("internal", "dynamic")) {
   value$runtime_scope <- "SYNTAX_ONLY; caller review does not certify dynamic exhaustiveness or unusedness"
   assign(name, value)
 }
+# All call candidates keep syntax-only scope. Attach the already reviewed
+# enclosing contract, never infer execution, purity or unusedness from it.
+ix <- which(dynamic$review_status == "REVIEW_REQUIRED" &
+  dynamic$caller_review_status %in% c("SOURCE_REVIEWED", "RUNTIME_REVIEWED"))
+hit <- match(dynamic$function_id[ix], functions$function_id)
+dynamic$review_status[ix] <- "CALLER_SOURCE_SCOPE_REVIEWED"
+dynamic$stage_contract[ix] <- dynamic$caller_contract[ix]
+dynamic$review_source_revision[ix] <- functions$review_source_revision[hit]
+if (!is.null(stage_reviews)) for (i in seq_len(nrow(stage_reviews))) {
+  d <- stage_reviews[i, , drop = FALSE]
+  ix <- which(dynamic$review_status == "REVIEW_REQUIRED" & dynamic$quoted &
+    dynamic$source_file == d$source_file & dynamic$function_id == "<top-level>")
+  dynamic$review_status[ix] <- "DELAYED_STAGE_SCOPE_REVIEWED"
+  dynamic$stage_contract[ix] <- paste0("audit-reviewed-details/layout-stages.csv#", d$stage)
+  dynamic$review_source_revision[ix] <- d$source_revision
+}
+if (!is.null(object_reviews)) for (i in seq_len(nrow(object_reviews))) {
+  d <- object_reviews[i, , drop = FALSE]
+  at <- which(objects$source_file == d$source_file & objects$name == d$name &
+    objects$binding_context == d$binding_context)
+  ix <- which(dynamic$review_status == "REVIEW_REQUIRED" & dynamic$function_id == "<top-level>" &
+    dynamic$source_file == d$source_file & dynamic$source_line == objects$source_line[at])
+  dynamic$review_status[ix] <- "OBJECT_CONSTRUCTION_SCOPE_REVIEWED"
+  dynamic$stage_contract[ix] <- paste0("audit-reviewed-details/object-contracts.csv#", d$name)
+  dynamic$review_source_revision[ix] <- d$source_revision
+}
+source_review_complete <- reviewed_argument_rows == nrow(arguments) &&
+  all(functions$semantic_review %in% c("SOURCE_REVIEWED", "RUNTIME_REVIEWED")) &&
+  all(objects$review_status != "REVIEW_REQUIRED") &&
+  all(dynamic$review_status != "REVIEW_REQUIRED") &&
+  !is.null(entry_reviews) && !is.null(coordinate_reviews) && !is.null(aes_reviews) && !is.null(import_reviews)
 ref_summary <- aggregate(row(function_id = references$function_id),
                          list(function_id = references$function_id, symbol = references$symbol,
                               quoted = references$quoted), length)
@@ -693,11 +749,12 @@ manifest <- row(key = c("audit_start_revision", "git_head_at_generation", "sourc
    nrow(aesthetics), if (is.null(aes_reviews)) 0L else nrow(aes_reviews),
    sum(objects$review_status != "REVIEW_REQUIRED"),
    if (is.null(s3$review_status)) 0L else sum(s3$review_status != "REVIEW_REQUIRED"),
-   "OPEN; syntax coverage and partial semantic review are not whole-audit completion", "NOT_LOADED_OR_EXECUTED",
+   if (source_review_complete) "SOURCE_REVIEW_COVERED; runtime unknowns and deferred decisions remain explicit; NOT_RELEASE_ACCEPTANCE" else
+     "OPEN; syntax coverage and partial semantic review are not whole-audit completion", "NOT_LOADED_OR_EXECUTED",
    paste("Rscript tools/audit-ggchord-api.R . design-roadmap/audit-generated", audit_start)))
 write_table(manifest, "manifest")
 readme <- c("# ggchord API 静态审计基线", "",
-  "此目录由 `tools/audit-ggchord-api.R` 生成。完整记录见 manifest.csv；不代表逐项语义审计已完成。", "",
+  "此目录由 `tools/audit-ggchord-api.R` 生成。完整覆盖状态见 manifest.csv；源码复核、局部运行验证与发布验收分别记录。", "",
   paste0("起始提交：`", audit_start, "`；生成时 HEAD：`", head_revision, "`。"),
   paste0("输入指纹（MD5，仅作可重复性标识）：`", source_fingerprint, "`。"),
   "源码、已保存 Rd 与人工复核输入的逐文件散列见 source_hashes.csv；工作树状态单独记录，不能把带改动源码冒充原始提交。",
@@ -708,7 +765,7 @@ readme <- c("# ggchord API 静态审计基线", "",
   paste0("- ", length(exports), " 个导出名称，", length(reexport_names), " 个重导出，", nrow(s3), " 个 S3 注册；导出不等于独立函数。"),
   paste0("- ", nrow(functions), " 个函数语法定义（含匿名、嵌套及 ggproto 方法）；", nrow(arguments), " 行参数含导出别名/预设的签名视图。"),
   "- api_objects.csv 补充顶层绑定、别名、ggproto 构造和工厂调用；api_dynamic_registration.csv 标记 quote/eval、注册、函数体/环境修改等。",
-  "- 颜色拼写别名通过源绑定追踪；theme 预设的签名来自已核对工厂复制源码，仍标为需要运行时复核。",
+  "- 颜色拼写别名通过源绑定追踪；theme 预设的签名来自工厂复制源码，运行时形参另由108入口签名脚本核对。",
   "- api_arguments.csv 保存全部计划字段、默认表达式及 Rd 参数说明；未知语义显式 REVIEW_REQUIRED，文档说明不等于行为证据。",
   "- 默认表达式占位：<required> 表示无语法默认值，真实是否必填仍须核查 missing() 等分支；<ellipsis> 表示可为空的 ...，不标为必填。",
   "- api_aesthetics.csv 记录静态美学声明/映射或待查表达式；api_return_contracts.csv 保留文档返回说明及语法尾表达式，不推定稳定字段。",
@@ -724,6 +781,7 @@ readme <- c("# ggchord API 静态审计基线", "",
   "- layout-stages 记录七个共享帧阶段的读写、顺序、状态和风险；精确挂接对应的 top-level quote 绑定及 eval 调用，其他动态记录仍待查。",
   "- aesthetic-contracts 按文件/owner/声明种类/美学或占位/表达式精确对应当前声明；input_role、draw aesthetic与动态default集合分开，源码复核不等于所有运行集合已穷举。",
   "- 对象表区分已复核函数绑定、公开别名/工厂和延迟阶段内的局部赋值语法；依赖/动态表只挂接caller合同，保持SYNTAX_ONLY，不将其变成删除或运行可达性结论。",
+  "- object-contracts逐项记录非函数原型/常量/环境及local临时绑定；动态记录分别挂接函数、延迟阶段或原型构造作用域。状态表示源码拥有者已审，不表示动态结果已穷举。",
   "- 没有相应人工覆盖文件时照常生成，语义保持 REVIEW_REQUIRED；两个人工目录均纳入输入快照校验。", "",
   "## 局限与后续工作", "",
   "- 全部文件被解析不等于全部动态对象被穷举。运行生成的函数、动态注册、字符串回调、NSE、ggproto 继承及语言对象注入必须人工/定向运行复核。",

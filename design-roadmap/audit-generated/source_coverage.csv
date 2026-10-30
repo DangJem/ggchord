@@ -70,7 +70,7 @@
 "R/loci.R",1,3,3,170,"OK"
 "R/position-feature-stack.R",2,1,1,43,"OK"
 "R/position-feature.R",12,28,28,997,"OK"
-"R/primers.R",7,9,9,516,"OK"
+"R/primers.R",7,9,9,519,"OK"
 "R/reexports.R",24,0,0,22,"OK"
 "R/render-context.R",13,14,14,373,"OK"
 "R/restriction-sites.R",15,56,56,5601,"OK"

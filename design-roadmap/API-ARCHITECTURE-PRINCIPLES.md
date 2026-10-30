@@ -1,6 +1,6 @@
 # API 目标架构与边界
 
-**状态：v0.16.0 首轮源码审计提案；不是已完成的架构重构或接口冻结。**
+**状态：v0.16.0 全量源码审计的目标架构与边界；后续重构和接口冻结仍待分阶段实施。**
 
 沿用 [`AGENTS.md`](../AGENTS.md) 的长期规则。本文件记录当前源码观察、目标边界
 及待决策设计；具体问题和证据见 [决策台账](API-AUDIT-DECISIONS.md)。
@@ -127,3 +127,21 @@ branch在scale与after_scale后按可见样式及源端点分组；trunk保留�
 不宣称某一个目标或统计值。当前实现依赖受支持stat/Position保持顶点行顺序；行数
 改变会warning并回退，任意相同行数重排尚未得到保证。障碍provider投影实际polygons，
 不将文字/leader作为gene实体；curve mapper法线正向也不恒等于相对全局原点的outward。
+
+## 数据流程、圆图资源和输出的补充边界
+
+read/as保留文件或对象来源，validate只报告，clean仅按显式策略处理constructor表；
+prepare按固定stage顺序编排，source_rows逐阶段映回最初输入。focus/segment不拼成
+连续基因组，省略间隔没有source mapping；CDS projection只映完整observed codons，
+保留真实exon pieces与初始phase，不从outer envelope补造编码碱基。
+
+圆图资源表由最终几何生成，backbone track0、physical bands、标签slots和leader
+corridors属于当次build。source_row通常追输入，但某些generated片段的缺省编号仅
+为build-local identity；同anchor限制位点和branch trunk另有source_rows集合。
+export的original_data为所选非空组件的resolved inputs，自动装饰没有业务源行；
+conversion_reports保留独立上游来源。不能把这些编号解释成统一的原文件物理行。
+
+有限packing或leader搜索可能保留最低代价/最后候选，外部协调另写spill/collision
+诊断，不能从“存在避障算法”推断全域无碰撞。元数据schema、可达性和状态生命周期
+的完整来源见audit-reviewed-details；运行设备/任意staged mapping组合仍按F26等
+风险定向验收，未在本版扩大用户接口或改默认图形。

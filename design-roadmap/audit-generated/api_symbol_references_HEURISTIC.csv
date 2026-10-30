@@ -1073,7 +1073,7 @@
 "R/helpers-feature-geometry.R:3:28","aliases",FALSE,2
 "R/primers.R:178:25","aliases",FALSE,5
 "R/primers.R:24:19","aliases",FALSE,5
-"R/primers.R:37:31","aliases",FALSE,13
+"R/primers.R:37:31","aliases",FALSE,14
 "R/zzz.R:157:30","aliases",FALSE,3
 "R/coord-collinear.R:91:20","align",FALSE,3
 "R/layout-collinear-transform.R:134:32","align",FALSE,3
@@ -2969,6 +2969,7 @@
 "R/primers.R:108:38","c",FALSE,1
 "R/primers.R:178:25","c",FALSE,4
 "R/primers.R:24:19","c",FALSE,1
+"R/primers.R:37:31","c",FALSE,1
 "R/render-context.R:28:30","c",FALSE,2
 "R/render-context.R:31:13","c",FALSE,1
 "R/render-context.R:35:37","c",FALSE,3
@@ -3219,7 +3220,7 @@
 "R/validate.R:906:37","cat",FALSE,4
 "R/primers.R:178:25","catalog",FALSE,4
 "R/primers.R:24:19","catalog",FALSE,1
-"R/primers.R:37:31","catalog",FALSE,11
+"R/primers.R:37:31","catalog",FALSE,10
 "R/data-prepare.R:25:10","category",FALSE,1
 "R/data-relations.R:46:10","category",FALSE,1
 "R/geom-feature-label.R:217:31","category",FALSE,1
@@ -19546,7 +19547,7 @@
 "R/position-feature.R:255:33","unique",FALSE,1
 "R/position-feature.R:342:35","unique",FALSE,1
 "R/primers.R:250:42","unique",FALSE,1
-"R/primers.R:37:31","unique",FALSE,1
+"R/primers.R:37:31","unique",FALSE,2
 "R/restriction-sites.R:1266:46","unique",FALSE,3
 "R/restriction-sites.R:1427:33","unique",FALSE,3
 "R/restriction-sites.R:1483:41","unique",FALSE,1

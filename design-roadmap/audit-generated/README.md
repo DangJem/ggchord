@@ -1,9 +1,9 @@
 # ggchord API 静态审计基线
 
-此目录由 `tools/audit-ggchord-api.R` 生成。完整记录见 manifest.csv；不代表逐项语义审计已完成。
+此目录由 `tools/audit-ggchord-api.R` 生成。完整覆盖状态见 manifest.csv；源码复核、局部运行验证与发布验收分别记录。
 
-起始提交：`69b907a6ddffea60a73ed1d4b1392c8cc5f7da22`；生成时 HEAD：`e5aadc62534724be6eecb8db926515bb00759322`。
-输入指纹（MD5，仅作可重复性标识）：`1872fd55839880aa24916647cab28b4d`。
+起始提交：`69b907a6ddffea60a73ed1d4b1392c8cc5f7da22`；生成时 HEAD：`4724092f5fdc03e7bb0367537faf6fdb52f8c794`。
+输入指纹（MD5，仅作可重复性标识）：`4cc5474f5dd8ea45b1347b7d5857ef06`。
 源码、已保存 Rd 与人工复核输入的逐文件散列见 source_hashes.csv；工作树状态单独记录，不能把带改动源码冒充原始提交。
 解析前固定输入文件列表、散列与 HEAD，写表前再次核对；并发改动会使生成失败并要求重跑，不写入不一致的新产物。
 
@@ -21,7 +21,7 @@ Rscript tools/audit-ggchord-api.R . design-roadmap/audit-generated 69b907a6ddffe
 - 130 个导出名称，22 个重导出，9 个 S3 注册；导出不等于独立函数。
 - 897 个函数语法定义（含匿名、嵌套及 ggproto 方法）；3302 行参数含导出别名/预设的签名视图。
 - api_objects.csv 补充顶层绑定、别名、ggproto 构造和工厂调用；api_dynamic_registration.csv 标记 quote/eval、注册、函数体/环境修改等。
-- 颜色拼写别名通过源绑定追踪；theme 预设的签名来自已核对工厂复制源码，仍标为需要运行时复核。
+- 颜色拼写别名通过源绑定追踪；theme 预设的签名来自工厂复制源码，运行时形参另由108入口签名脚本核对。
 - api_arguments.csv 保存全部计划字段、默认表达式及 Rd 参数说明；未知语义显式 REVIEW_REQUIRED，文档说明不等于行为证据。
 - 默认表达式占位：<required> 表示无语法默认值，真实是否必填仍须核查 missing() 等分支；<ellipsis> 表示可为空的 ...，不标为必填。
 - api_aesthetics.csv 记录静态美学声明/映射或待查表达式；api_return_contracts.csv 保留文档返回说明及语法尾表达式，不推定稳定字段。
@@ -29,7 +29,7 @@ Rscript tools/audit-ggchord-api.R . design-roadmap/audit-generated 69b907a6ddffe
 
 ## 人工语义复核
 
-- 本次纳入 31 份 audit-reviewed/*.csv，2813 行参数、108 个公开入口标记为已做来源或运行复核；其余语义仍待复核。
+- 本次纳入 37 份 audit-reviewed/*.csv，3302 行参数、108 个公开入口标记为已做来源或运行复核；其余语义仍待复核。
 - 参数表按 function+parameter 匹配公开参数；有 function_id 时必须精确匹配唯一内部函数及其参数。重复键、未知字段、签名字段或未定位键使生成失败。
 - 默认表达式、形参顺序、签名证据、当前 source_revision 不接受覆盖；原始 static_confidence/static_actual_usage 与语义复核分列。
 - review_source_revision、review_input_path、review_status、review_evidence 保留人工复核来源；复核提交与当前提交不同须核查相关源文件差异，不能自动把旧证据升级为当前行为。
@@ -38,6 +38,7 @@ Rscript tools/audit-ggchord-api.R . design-roadmap/audit-generated 69b907a6ddffe
 - layout-stages 记录七个共享帧阶段的读写、顺序、状态和风险；精确挂接对应的 top-level quote 绑定及 eval 调用，其他动态记录仍待查。
 - aesthetic-contracts 按文件/owner/声明种类/美学或占位/表达式精确对应当前声明；input_role、draw aesthetic与动态default集合分开，源码复核不等于所有运行集合已穷举。
 - 对象表区分已复核函数绑定、公开别名/工厂和延迟阶段内的局部赋值语法；依赖/动态表只挂接caller合同，保持SYNTAX_ONLY，不将其变成删除或运行可达性结论。
+- object-contracts逐项记录非函数原型/常量/环境及local临时绑定；动态记录分别挂接函数、延迟阶段或原型构造作用域。状态表示源码拥有者已审，不表示动态结果已穷举。
 - 没有相应人工覆盖文件时照常生成，语义保持 REVIEW_REQUIRED；两个人工目录均纳入输入快照校验。
 
 ## 局限与后续工作
