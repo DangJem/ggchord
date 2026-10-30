@@ -33,7 +33,8 @@ geom_link_ribbon(
 \item{ribbon_ctrl_point}{Optional vector/list of Bezier edge controls.
 Two numbers specify one shared control; four numbers specify controls for
 the two ribbon edges. A per-row list may contain pairs of coordinate vectors.
-NULL derives controls from the sequence endpoints. With shared branches,
+NULL uses the origin \code{c(0, 0)} in chord layouts and derives controls
+from the sequence endpoints in collinear layouts. With shared branches,
 controls shape the far ends while the junction follows the shared trunk.}
 
 \item{ribbon_gap}{Optional numeric/vector controlling spacing between

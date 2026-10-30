@@ -1,5 +1,8 @@
 # ggchord 0.16.0 (development)
 
+* Clarified `ribbon_ctrl_point = NULL`: chord layouts retain their historical
+  origin control `c(0, 0)`; collinear layouts derive controls from endpoints.
+  Ribbon geometry and defaults are unchanged.
 * Input metadata columns are now retained for visual mappings when expanded
   geometry does not already contain the reserved column. For example,
   `geom_gene(aes(gene_fill = label), ...)` can use a source `label` column
