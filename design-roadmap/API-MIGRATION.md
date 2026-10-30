@@ -21,6 +21,8 @@
 | F37 | 默认连续ribbon alpha scale的NULL range导致palette调用错误 | NULL使用ggplot2原生默认range | 直接使用scale_ribbon_alpha_continuous()；已有显式range调用不变 | 不适用 |
 | F38 | region过滤后可能附回错误源行的ID/坐标，factor坐标按等级码绘制 | 保留过滤前来源行，factor按数值标签解释 | 既有调用恢复真实坐标与来源，不需要重编码；被过滤的行不会替换保留几何的元数据 | 不适用 |
 
+| F41 | 自定义引物同ID不同DNA时，后者被丢弃且name错配 | 完整aliases检测ID/sequence冲突并报原错误 | 不同oligo显式提供不同ID；同DNA别名仍共ID | 不适用 |
+
 ### F01：明确输入，而不是丢弃数据
 
 以下示例的 seqs/ribbons 是完整教学输入；不代表实际科研数据。
@@ -188,6 +190,23 @@ F37 恢复无参 `scale_ribbon_alpha_continuous()` 的正常构造与映射；�
 F38 的 `geom_seq_region(data = regions)` 调用不变。factor 起止列应具有真实数值
 标签；未知序列或无效坐标仍按既有布局规则过滤，保留行的 source_row 指向过滤前
 输入位置，原表不被修改。没有将 region 的过滤策略推广成所有 geom 的共同政策。
+
+### F41：自定义引物先明确ID与DNA的一一对应
+
+旧输入若把不同DNA都标为同一个primer_id，现在会得到原有说明
+`each primer_id must identify one distinct sequence`，不再静默丢失序列或错配name。
+确为不同oligo时为各行提供不同ID；同一oligo的别名可共用ID和相同DNA。
+
+```r
+custom_primers <- data.frame(primer_id = c("oligo1", "oligo2"),
+  name = c("one", "two"), sequence = c("ACGTACGT", "TTTTGGGG"))
+primer_matches <- find_primer_bindings(c(target = "ACGTACGTAAAATTTTGGGG"),
+  primers = custom_primers, set = "all", circular = FALSE,
+  min_annealed_bases = 8)
+stopifnot(all(c("oligo1", "oligo2") %in% primer_matches$primer_id))
+```
+
+没有自动生成替代ID、改原始DNA或设定新的删除版本；这是恢复已有检查的修复。
 
 ## 尚未实施的迁移
 

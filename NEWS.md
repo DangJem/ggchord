@@ -1,5 +1,8 @@
 # ggchord 0.16.0 (development)
 
+* Custom primer definitions now reject a shared `primer_id` with different
+  sequences, instead of silently losing one sequence and assigning its aliases
+  to another binding. Multiple names for the same ID and sequence remain valid.
 * Region highlights retain their original input row after invalid or unknown
   rows are filtered, preventing geometry from acquiring another row's ID or
   metadata. Factor start/end coordinates use numeric labels instead of level

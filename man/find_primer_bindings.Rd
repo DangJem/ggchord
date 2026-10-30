@@ -19,7 +19,7 @@ find_primer_bindings(
 `accver` and `sequence`.}
 
 \item{primers}{Optional custom primers with `sequence` and optional `name`
-and `primer_id`, or a named character vector.}
+and `primer_id` (one ID per distinct sequence), or a named character vector.}
 
 \item{set}{Bundled catalogue subset. `reference` returns authoritative primer
 annotations from a recognized bundled reference plasmid.}

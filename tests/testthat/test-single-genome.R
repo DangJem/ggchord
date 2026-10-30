@@ -34,6 +34,10 @@ test_that("biological searches retain circular origin, strand and site identity"
     primers = c(test = "ACGTTGCA"), circular = TRUE, min_annealed_bases = 8L)
   expect_true(primers$crosses_origin)
   expect_equal(primers$strand, "+")
+  expect_error(find_primer_bindings(c(A = "ACGTACGTAAAATTTTGGGG"),
+    primers = data.frame(primer_id = c("same", "same"),
+      name = c("one", "two"), sequence = c("ACGTACGT", "TTTTGGGG"))),
+    "each primer_id must identify one distinct sequence")
   db <- data.frame(common_feature_id = "gene", name = "gene", type = "CDS",
     directionality_label = "forward", sequence = "ATGAAA")
   hit <- find_common_features("TTTCAT", database = db, circular = FALSE)

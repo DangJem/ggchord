@@ -81,7 +81,7 @@ ggchord_primer_definitions <- function(primers, set) {
     sequence = aliases$sequence[first], length = nchar(aliases$sequence[first]),
     is_universal = FALSE, source = "custom", stringsAsFactors = FALSE
   )
-  if (anyDuplicated(catalog$primer_id) || anyDuplicated(catalog$sequence)) {
+  if (anyDuplicated(unique(aliases[c("primer_id", "sequence")])$primer_id) || anyDuplicated(catalog$sequence)) {
     ggchord_stop("find_primer_bindings(): each primer_id must identify one distinct sequence")
   }
   list(catalog = catalog, aliases = aliases)
@@ -159,7 +159,7 @@ ggchord_reference_primer_bindings <- function(ids, sequences) {
 #' @param sequence DNA text, a named character vector, or a data frame with
 #'   `accver` and `sequence`.
 #' @param primers Optional custom primers with `sequence` and optional `name`
-#'   and `primer_id`, or a named character vector.
+#'   and `primer_id` (one ID per distinct sequence), or a named character vector.
 #' @param set Bundled catalogue subset. `reference` returns authoritative primer
 #'   annotations from a recognized bundled reference plasmid.
 #' @param match Full exact matching or longest exact 3-prime annealing.

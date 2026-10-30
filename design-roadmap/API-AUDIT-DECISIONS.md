@@ -489,6 +489,17 @@ resolver 没有传入该 fallback，须提供自己的点连接输入。没有�
 - DEFER到v0.16.1：在theme方向实际支持格式内做一个名称重排对照，核对公开帮助
   允许域，之后决定是否修复优先级或明确限制。当前不改默认方向或扩大theme列表语法。
 
+### F41 — P2/C：自定义引物共用ID但序列冲突导致错误别名关联
+
+- 基线`d348a1458b84cc2650b724375bc746ba75e1fa7c`。custom definitions先按primer_id
+  取首行catalog，再检查catalog的ID重复，因此无法发现同ID的第二条不同DNA。
+  公开最小输入复现：第二条DNA被丢弃，其name却附到第一条DNA的binding aliases。
+- FIX：在完整aliases的去重(ID,sequence)对上检查ID冲突；沿用原有“一ID一distinct
+  sequence”错误提示，不自动改名/选首条/合并序列。同ID同sequence的多个name保留。
+  默认内置库与正常搜索不变，没有新增参数或删除版本。
+- 单个直接脚本确认冲突报错、合法alias保留、原输入不变。复用既有生物搜索成功案例
+  添加一个必要回归；未运行testthat。NEWS、roxygen/Rd、迁移与版本记录同步。
+
 ## 待用户选择的跨模块方案
 
 以下均为尚待确认方案，不产生立即改名、合并、删除或默认变化。F31 已选择并实现，见上节。
