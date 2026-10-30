@@ -69,7 +69,7 @@ stopifnot(all(channel$ribbon$y >= min(channel$sequence_layout$y)),
   all(channel$ribbon$y <= max(channel$sequence_layout$y)))
 expect_conflict(export_ggchord_layout(ggchord(narrow_seqs, narrow_links,
   validate = "none") + geom_seq(seq_gap = .01) +
-    geom_link_ribbon(ribbon_gap = .03) + coord_collinear()), "do not fit")
+    geom_link_ribbon(link_gap = .03) + coord_collinear()), "do not fit")
 expect_conflict(export_ggchord_layout(ggchord(seqs, validate = "none") +
   geom_seq(seq_order = c("A", "A", "B")) + coord_collinear()), "non-repeated")
 

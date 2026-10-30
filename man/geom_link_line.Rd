@@ -45,7 +45,10 @@ Explicit gap takes precedence.}
 
 \item{arrow}{A grid arrow specification, or NULL.}
 
-\item{colour, alpha, linewidth, linetype}{Fixed styles; mappings use link_* aesthetics.}
+\item{colour, alpha, linewidth, linetype}{Fixed styles; mappings use link_* aesthetics.
+An explicitly supplied fixed value takes precedence over the matching
+mapping. Omit the fixed argument to retain a mapped style, including an
+inherited mapping when `inherit.aes = TRUE`.}
 
 \item{position, show.legend, inherit.aes}{Standard ggplot2 layer arguments.}
 

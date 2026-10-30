@@ -50,13 +50,13 @@ collinear_example <- ggchord(
   geom_gene(aes(gene_fill = anno), position = position_strand(0.08)) +
   geom_gene_label(
     position = position_strand(0.08),
-    gene_label_orientation = "horizontal", gene_label_side = "auto",
-    gene_label_overlap = "nudge"
+    label_orientation = "horizontal", label_side = "auto",
+    label_overlap = "nudge"
   ) +
   geom_feature(
     aes(feature_fill = type, feature_shape = type),
     data = collinear_features, position = collinear_lanes,
-    feature_width = 0.045
+    width = 0.045
   ) +
   geom_feature_label_repel(
     data = collinear_features, position = collinear_lanes

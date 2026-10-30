@@ -18,6 +18,9 @@ geom_feature_label_repel(
   show.legend = FALSE,
   inherit.aes = FALSE,
   label_min_size = 1.5,
+  label_segment_overlap = "fade",
+  label_segment_overlap_alpha = 0.18,
+  label_segment_linetype = "auto",
   ...
 )
 }
@@ -68,6 +71,22 @@ unambiguous feature IDs.}
 default 1.5. Must not exceed the requested text size. Original text,
 requested/final sizes and fitting reason are exported with the label.}
 
+\item{label_segment_overlap}{Character, default \code{"fade"}.
+How portions of a leader line covered by another label are drawn:
+\code{"fade"} keeps them at reduced opacity, \code{"clip"} removes them,
+and \code{"show"} leaves the complete leader visible. This does not affect
+text wrapping, ellipsis or label hiding.}
+
+\item{label_segment_overlap_alpha}{Numeric in \code{[0, 1]}, default
+0.18. Relative opacity applied only to covered leader-line portions when
+\code{label_segment_overlap = "fade"}.}
+
+\item{label_segment_linetype}{Character or numeric, default "auto".
+Leader-line linetype. \code{"auto"} draws solid lines, except for labels
+that were moved to the other side of their arc, which are drawn dashed.
+Any other valid ggplot2 linetype (e.g. \code{"solid"}, \code{"dashed"},
+\code{"dotted"}, or a numeric dash pattern) is used for all leader lines.}
+
 \item{...}{Additional text parameters.}
 }
 \value{
@@ -94,7 +113,7 @@ ggchord(seq, validate = "none") +
 # Explicitly fit complete text inside a feature with a readable lower bound.
 features$label <- c("A longer feature annotation", "short feature")
 ggchord(seq, validate = "none") + geom_seq() +
-  geom_feature(data = features, feature_width = .12) +
+  geom_feature(data = features, width = .12) +
   geom_feature_label_repel(data = features, label_fit = "shrink",
     label_min_size = 1.5, size = 4) + coord_collinear()
 }

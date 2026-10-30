@@ -7,8 +7,7 @@
 geom_gene(
   mapping = NULL,
   data = NULL,
-  gene_offset = NULL,
-  gene_width = NULL,
+  width = NULL,
   arrow_head_length = 0.04,
   arrow_head_width = 1,
   arrow_head_style = c("shouldered", "flush", "triangle"),
@@ -24,11 +23,7 @@ geom_gene(
 
 \item{data}{Default NULL (retrieved automatically from the layout)}
 
-\item{gene_offset}{Deprecated placement input. Explicit values are translated
-to the former strand-separated geometry and emit a migration warning. Use
-`position = position_strand(offset = ...)`; removal is planned for v1.0.0.}
-
-\item{gene_width}{Optional numeric/vector/list. Width of gene arrows, default 0.05}
+\item{width}{Optional numeric/vector/list. Width of gene arrows, default 0.05}
 
 \item{arrow_head_length, arrow_head_width}{Shared arrow-head dimensions in
 the sequence-local frame.}
@@ -52,8 +47,10 @@ A ggplot2 layer. To annotate the genes with their labels,
   add a \code{\link{geom_gene_label}()} layer.
 }
 \description{
-Draws gene annotation arrows on the chord diagram. Gene layout parameters
-(offset, width, color scheme, etc.) are specified here.
+A directed-gene shortcut using the generic \code{\link{geom_feature}()}
+constructor with arrow geometry and the independent \code{gene_fill} role.
+Gene input still requires a known \code{+} or \code{-} strand; use
+\code{\link{geom_feature}()} for unknown strands.
 The gene fill scale is kept independent from the ribbon's fill scale via a
 separate internal aesthetic used by the ribbon layer.
 }
@@ -62,6 +59,6 @@ library(ggchord)
 data(seq_data_example)
 data(gene_data_example)
 p <- ggchord(seq_data_example, gene_data = gene_data_example) +
-  geom_seq() + geom_gene()
+  geom_seq() + geom_gene(width = .05)
 p
 }

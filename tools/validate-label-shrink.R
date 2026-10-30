@@ -12,7 +12,7 @@ local({
   features <- data.frame(accver = "A", start = 100, end = 350,
     strand = "+", type = "CDS", label = "LONG GENE LABEL")
   make_plot <- function(coordinate) ggchord(sequences, validate = "none") +
-    geom_seq() + geom_feature(data = features, feature_width = .12) +
+    geom_seq() + geom_feature(data = features, width = .12) +
     geom_feature_label_repel(data = features, label_fit = "shrink",
       label_min_size = 1.5, size = 5) + coordinate
   for (coordinate in list(coord_collinear(), coord_circular(), coord_chord())) {
@@ -40,7 +40,7 @@ local({
   short <- transform(features, end = 102,
     label = "A long annotation that cannot fit inside a two-base feature")
   fallback <- ggchord(sequences, validate = "none") + geom_seq() +
-    geom_feature(data = short, feature_width = .08) +
+    geom_feature(data = short, width = .08) +
     geom_feature_label_repel(data = short, label_fit = "shrink", size = 5,
       external = FALSE) + coord_circular()
   layout <- get_chord_layout(fallback)
@@ -51,8 +51,8 @@ local({
 
   genes <- transform(features, anno = label)
   gene_plot <- ggchord(sequences, gene_data = genes, validate = "none") +
-    geom_seq() + geom_gene(gene_width = .12) +
-    geom_gene_label_repel(gene_label_fit = "shrink", size = 5) + coord_collinear()
+    geom_seq() + geom_gene(width = .12) +
+    geom_gene_label_repel(label_fit = "shrink", size = 5) + coord_collinear()
   text <- export_ggchord_layout(gene_plot, include = "labels")$labels
   text <- text[text$.component %in% "text", , drop = FALSE]
   stopifnot(any(text$size < 5), all(text$label_text_original == genes$anno))

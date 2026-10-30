@@ -223,6 +223,7 @@ attach_ggchord_scales <- function(plot, scales) {
 ggchord_mapping_info <- function(plot, aesthetic) {
   infos <- list()
   for (lyr in plot$layers) {
+    if (aesthetic %in% names(lyr$aes_params)) next
     mapping <- lyr$ggchord_input_mapping
     if (is.null(mapping) || !aesthetic %in% names(mapping)) next
     expr <- rlang::get_expr(mapping[[aesthetic]])

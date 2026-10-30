@@ -213,22 +213,17 @@ ggchord_feature_data <- function(data, fixed_shape = "arrow",
 #'   \code{strand}, \code{directionality} or \code{direction} may contain
 #'   \code{"forward"}, \code{"reverse"}, \code{"bidirectional"}, or
 #'   \code{"none"}.
-#' @param feature_shape Fixed feature geometry used when \code{feature_shape}
-#'   is not mapped in \code{aes()}: \code{"arrow"},
+#' @param shape Fixed feature geometry. An explicitly supplied shape takes
+#'   precedence over \code{aes(feature_shape = ...)}: \code{"arrow"},
 #'   \code{"compact_arrow"}, \code{"promoter_arrow"},
 #'   \code{"primer_arrow"}, \code{"marker"}, \code{"block"},
-#'   \code{"chevron"}, or \code{"lollipop"}. The default is \code{"arrow"}.
+#'   \code{"capped_line"}, \code{"primer_arc"}, \code{"chevron"}, or
+#'   \code{"lollipop"}. The default is \code{"arrow"}.
 #'   Use \code{aes(feature_shape = type)} together with
 #'   \code{scale_feature_shape_manual()} to map categories to geometry.
-#' @param shape Optional concise alias for fixed `feature_shape`. Supplying
-#'   both is an error.
-#' @param feature_width Optional numeric/vector/list controlling width in the
+#' @param width Optional numeric/vector/list controlling width in the
 #'   shared feature geometry engine. In a circular feature-label composition,
 #'   the base width responds to final label size within bounded limits.
-#' @param feature_offset Deprecated placement input. Explicit values are
-#'   translated to the former strand-separated geometry and emit a warning.
-#'   Use `position = position_strand(offset = ...)`; removal is planned for
-#'   v1.0.0.
 #' @param arrow_head_length,arrow_head_width Arrow-head dimensions in the
 #'   sequence-local frame, shared with [geom_gene()]. Values above one for
 #'   `arrow_head_width` create a protruding block-arrow head.
@@ -260,13 +255,11 @@ ggchord_feature_data <- function(data, fixed_shape = "arrow",
 #'                        start = 1000, end = 4000,
 #'                        strand = "+", type = "CDS")
 #' p <- ggchord(seq_data_example) + geom_seq() +
-#'   geom_feature(data = features)
+#'   geom_feature(data = features, shape = "block", width = .08)
 #' p
 geom_feature <- function(mapping = NULL, data = NULL,
-                         feature_shape = "arrow",
-                         shape = NULL,
-                         feature_width = NULL,
-                         feature_offset = NULL,
+                         shape = "arrow",
+                         width = NULL,
                          arrow_head_length = 0.04,
                          arrow_head_width = 1,
                          arrow_head_style = c("shouldered", "flush", "triangle"),
@@ -281,27 +274,19 @@ geom_feature <- function(mapping = NULL, data = NULL,
                          ...) {
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
-  feature_shape_missing <- missing(feature_shape)
+  shape_explicit <- !missing(shape)
+  feature_shape <- shape
+  feature_width <- width
   mapping <- ggchord_normalize_mapping(mapping)
-  dots <- list(...)
-  if (!is.null(shape)) {
-    if (!feature_shape_missing) {
-      ggchord_stop("geom_feature(): supply only one of `shape` and `feature_shape`")
-    }
-    feature_shape <- shape
-  }
+  if (shape_explicit && !is.null(mapping)) mapping$feature_shape <- NULL
+  dots <- ggchord_colour_dots(list(...), "geom_feature()")
+  ggchord_reject_retired(dots, "geom_feature()", c(
+    feature_shape = "shape (fixed) or aes(feature_shape = ...) (mapped)",
+    feature_width = "width",
+    feature_offset = "position = position_strand(offset = ...)"))
   arrow_head_style <- match.arg(arrow_head_style)
   short_feature <- match.arg(short_feature)
   position_object <- ggchord_as_feature_position(position, "geom_feature()")
-  if (!is.null(feature_offset)) {
-    if (!ggchord_is_identity_position(position_object)) {
-      ggchord_stop("geom_feature(): `feature_offset` cannot be combined with a non-identity position")
-    }
-    warning(
-      "`feature_offset` placement is deprecated. Use a feature Position instead.",
-      call. = FALSE
-    )
-  }
   if (!is.numeric(arrow_head_length) || length(arrow_head_length) != 1L ||
       !is.finite(arrow_head_length) || arrow_head_length < 0 ||
       !is.numeric(arrow_head_width) || length(arrow_head_width) != 1L ||
@@ -334,7 +319,7 @@ geom_feature <- function(mapping = NULL, data = NULL,
       (!is.character(feature_shape) || length(feature_shape) != 1L ||
        is.na(feature_shape) || !feature_shape %in% allowed_shapes)) {
     ggchord_stop(
-      "geom_feature(): unknown feature_shape"
+      "geom_feature(): unknown shape"
     )
   }
   roles <- c(
@@ -385,14 +370,15 @@ geom_feature <- function(mapping = NULL, data = NULL,
   )
   lyr$ggchord_type <- "gene_poly"
   lyr$ggchord_params <- list(
-    type = "gene", gene_offset = feature_offset,
+    type = "gene",
+    style_defaults = c(colour = !"colour" %in% names(dots),
+      linewidth = !"linewidth" %in% names(dots)),
     gene_width = feature_width,
     arrow_head_length = as.numeric(arrow_head_length),
     arrow_head_width = as.numeric(arrow_head_width),
     arrow_head_style = arrow_head_style,
     short_feature = short_feature,
     feature_position = position_object,
-    legacy_offset = feature_offset,
     feature_role = "feature",
     gene_color_scheme = "manual",
     gene_colors = NULL, gene_order = NULL,
@@ -416,6 +402,7 @@ geom_feature <- function(mapping = NULL, data = NULL,
   lyr <- ggchord_capture_layer_input(lyr, data, mapping, roles)
   fixed_shape <- if (shape_mapped) NULL else feature_shape
   lyr$ggchord_input_transform <- function(x) {
+    if (shape_explicit) x$feature_shape <- rep(feature_shape, nrow(x))
     ggchord_feature_data(x, fixed_shape = fixed_shape)
   }
   lyr$ggchord_params$gene_data_override <- NULL
@@ -441,7 +428,7 @@ geom_feature <- function(mapping = NULL, data = NULL,
 #' protruding shouldered block arrows, and dashed internal segment joins.
 #'
 #' @inheritParams geom_feature
-#' @param feature_width Track width; the default matches the compact feature
+#' @param width Track width; the default matches the compact feature
 #'   bands used by desktop plasmid editors.
 #' @param position Feature position. `NULL` (the default) automatically stacks
 #'   overlapping features on compact lanes inside the plasmid backbone. Reuse
@@ -452,8 +439,8 @@ geom_feature <- function(mapping = NULL, data = NULL,
 #' @return A ggplot2 layer.
 #' @export
 geom_feature_plasmid <- function(mapping = NULL, data = NULL,
-                                 feature_shape = "arrow", shape = NULL,
-                                 feature_width = .058,
+                                 shape = "arrow",
+                                 width = .058,
                                  arrow_head_length = .068,
                                  arrow_head_width = 1.42,
                                  arrow_head_style = "shouldered",
@@ -465,20 +452,13 @@ geom_feature_plasmid <- function(mapping = NULL, data = NULL,
                                  position = NULL,
                                  show.legend = FALSE,
                                  inherit.aes = FALSE, ...) {
-  # Resolve the concise alias before forwarding: the wrapper's default would
-  # otherwise look like an explicitly supplied second shape to geom_feature().
-  if (!is.null(shape) && missing(feature_shape)) {
-    feature_shape <- shape
-    shape <- NULL
-  }
   if (is.null(position)) {
     position <- position_feature_stack(
       spacing = .10, base_position = position_plasmid()
     )
   }
-  geom_feature(
-    mapping = mapping, data = data, feature_shape = feature_shape,
-    shape = shape, feature_width = feature_width,
+  args <- list(
+    mapping = mapping, data = data, shape = shape, width = width,
     arrow_head_length = arrow_head_length,
     arrow_head_width = arrow_head_width,
     arrow_head_style = arrow_head_style,
@@ -490,4 +470,6 @@ geom_feature_plasmid <- function(mapping = NULL, data = NULL,
     position = position, show.legend = show.legend,
     inherit.aes = inherit.aes, ...
   )
+  if (missing(shape)) args$shape <- NULL
+  do.call(geom_feature, args)
 }

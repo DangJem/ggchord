@@ -7,10 +7,8 @@
 geom_feature(
   mapping = NULL,
   data = NULL,
-  feature_shape = "arrow",
-  shape = NULL,
-  feature_width = NULL,
-  feature_offset = NULL,
+  shape = "arrow",
+  width = NULL,
   arrow_head_length = 0.04,
   arrow_head_width = 1,
   arrow_head_style = c("shouldered", "flush", "triangle"),
@@ -40,25 +38,18 @@ their internal level codes. Coordinates must resolve to finite numbers.
 \code{"forward"}, \code{"reverse"}, \code{"bidirectional"}, or
 \code{"none"}.}
 
-\item{feature_shape}{Fixed feature geometry used when \code{feature_shape}
-is not mapped in \code{aes()}: \code{"arrow"},
+\item{shape}{Fixed feature geometry. An explicitly supplied shape takes
+precedence over \code{aes(feature_shape = ...)}: \code{"arrow"},
 \code{"compact_arrow"}, \code{"promoter_arrow"},
 \code{"primer_arrow"}, \code{"marker"}, \code{"block"},
-\code{"chevron"}, or \code{"lollipop"}. The default is \code{"arrow"}.
+\code{"capped_line"}, \code{"primer_arc"}, \code{"chevron"}, or
+\code{"lollipop"}. The default is \code{"arrow"}.
 Use \code{aes(feature_shape = type)} together with
 \code{scale_feature_shape_manual()} to map categories to geometry.}
 
-\item{shape}{Optional concise alias for fixed `feature_shape`. Supplying
-both is an error.}
-
-\item{feature_width}{Optional numeric/vector/list controlling width in the
+\item{width}{Optional numeric/vector/list controlling width in the
 shared feature geometry engine. In a circular feature-label composition,
 the base width responds to final label size within bounded limits.}
-
-\item{feature_offset}{Deprecated placement input. Explicit values are
-translated to the former strand-separated geometry and emit a warning.
-Use `position = position_strand(offset = ...)`; removal is planned for
-v1.0.0.}
 
 \item{arrow_head_length, arrow_head_width}{Arrow-head dimensions in the
 sequence-local frame, shared with [geom_gene()]. Values above one for
@@ -104,6 +95,6 @@ features <- data.frame(accver = "MT108731.1",
                        start = 1000, end = 4000,
                        strand = "+", type = "CDS")
 p <- ggchord(seq_data_example) + geom_seq() +
-  geom_feature(data = features)
+  geom_feature(data = features, shape = "block", width = .08)
 p
 }

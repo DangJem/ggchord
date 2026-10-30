@@ -252,9 +252,9 @@ base <- ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
            seq_orientation = c(1, -1, 1, -1)) +
   geom_link_ribbon() + geom_gene()
 
-base + geom_gene_label_repel(gene_label_layout = "auto")
-base + geom_gene_label_repel(gene_label_layout = "radial")
-base + geom_gene_label_repel(gene_label_layout = "arc")
+base + geom_gene_label_repel(label_layout = "auto")
+base + geom_gene_label_repel(label_layout = "radial")
+base + geom_gene_label_repel(label_layout = "arc")
 ```
 
 Every mode uses the real `seq_radius`, `seq_curvature`, `seq_gap`,
@@ -267,9 +267,9 @@ ggchord uses generic mode names and an independent implementation. Use
 `geom_gene_label()` is also the compact fixed-label option. Its v0.10.0
 defaults keep text horizontal and outside the chord, then retain labels in
 input-row order while omitting later collisions. Set
-`gene_label_orientation = "radial"` or `"tangent"`, choose
-`gene_label_side = "auto"` or `"inside"`, and use
-`gene_label_overlap = "nudge"` or `"allow"` when preserving every requested
+`label_orientation = "radial"` or `"tangent"`, choose
+`label_side = "auto"` or `"inside"`, and use
+`label_overlap = "nudge"` or `"allow"` when preserving every requested
 label is more important than a sparse default. This keeps manual rotation and
 per-sequence/per-strand offsets in one fixed-label layer rather than adding a
 separate manual geom.
@@ -335,7 +335,7 @@ features <- data.frame(accver = rep("MT108731.1", 4),
 ggchord(seq_data_example, ribbon_data_example) +
   geom_seq() + geom_link_ribbon() +
   geom_feature(aes(feature_shape = type), data = features,
-               feature_width = 0.10) +
+               width = 0.10) +
   scale_feature_shape_manual(values = c(
     CDS = "arrow", tRNA = "block", "repeat" = "chevron",
     promoter = "lollipop"
@@ -377,7 +377,7 @@ ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
   geom_link_ribbon(alpha = 0.45) +
   geom_gene() +
   geom_gene_label_repel(size = 2,
-                        gene_label_layout = "auto") +
+                        label_layout = "auto") +
   geom_seq_label() +
   theme(plot.background = element_rect(fill = "#FBF9F6", colour = NA),
         panel.background = element_rect(fill = "#FBF9F6", colour = NA))
@@ -393,7 +393,7 @@ Sequence-level parameters (`seq_radius`, `seq_gap`, `seq_curvature`, ...)
 accept **a single value, an unnamed vector, a vector/list named by sequence ID,
 a list named by sequence order (`"1"`, `"2"`, ...), or an unnamed list**.
 Gene-level parameters of the fixed-position `geom_gene_label()` layer
-(`gene_label_rotation`, ...) additionally accept per-strand
+(`label_rotation`, ...) additionally accept per-strand
 (`+`/`-`) values. The automatic `geom_gene_label_repel()` modes intentionally
 manage their own rotation and offsets. All of the following are valid for
 fixed labels. Use `position_strand()` or `position_feature_stack()` for feature
@@ -401,13 +401,13 @@ offsets; the legacy `gene_offset` argument is deprecated:
 
 ```{r flexible-formats, eval=FALSE}
 # 1. One value for everything
-gene_label_rotation = 20
+label_rotation = 20
 
 # 2. One value per strand, for every sequence
-gene_label_rotation = c("+" = -15, "-" = -45)
+label_rotation = c("+" = -15, "-" = -45)
 
 # 3. By sequence ID
-gene_label_rotation = list(
+label_rotation = list(
   "MT118296.1" = c("+" = -15, "-" = -45),
   "OR222515.1" = c("+" = 30, "-" = -30),
   "MT108731.1" = c("+" = 15, "-" = -15),
@@ -415,7 +415,7 @@ gene_label_rotation = list(
 )
 
 # 4. By sequence order ("1" = first sequence)
-gene_label_rotation = list(
+label_rotation = list(
   "1" = c("+" = -15, "-" = -45),
   "2" = c("+" = 30, "-" = -30),
   "3" = c("+" = 15, "-" = -15),
@@ -423,7 +423,7 @@ gene_label_rotation = list(
 )
 
 # 5. Unnamed list: follows the sequence order (same as #4)
-gene_label_rotation = list(
+label_rotation = list(
   c("+" = -15, "-" = -45),
   c("+" = 30, "-" = -30),
   c("+" = 15, "-" = -15),
@@ -431,7 +431,7 @@ gene_label_rotation = list(
 )
 
 # 6. A length-one list recycles to every sequence
-gene_label_rotation = list(20)
+label_rotation = list(20)
 ```
 
 ## 7. Layer reference

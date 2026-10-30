@@ -1,5 +1,35 @@
-# ggchord 0.16.1 (development)
+# ggchord 0.16.1 (unreleased)
 
+* Breaking: fixed feature geometry uses `shape`, and both gene/feature widths
+  use `width`. Removed fixed `feature_shape`, `feature_width` and `gene_width`
+  arguments now report their replacements. The mapped aesthetic remains
+  `aes(feature_shape = ...)`.
+* Breaking: gene label geometry parameters use the shared `label_*` names;
+  ribbon endpoint settings use `link_gap` and `link_ctrl_point`, matching
+  point links. Old names report migration errors in this version.
+* Removed `gene_offset` and `feature_offset`; use
+  `position = position_strand(offset = ...)`. The former v1.0.0 removal date
+  is superseded. Explicit strand-named Position offsets are signed; negate
+  the old minus-strand magnitude when migrating that format.
+* `geom_gene()` is now a directed-arrow shortcut over the feature constructor,
+  retaining strict known strands, its independent `gene_fill` role and default
+  appearance. Gene and feature labels share internal constructors.
+* Theme signatures now expose ggchord appearance settings for argument
+  completion. Standard text, plot and common legend settings remain available
+  by name through `...`; all five presets retain their defaults.
+* Geometry-role mappings explicitly reject late `stage()` expressions and
+  namespaced `after_stat()`/`after_scale()` calls. Fixed visual styles bypass
+  unused mappings during input checks and automatic scale inference.
+* Restriction-site `leader = "straight"` now draws direct connectors, and
+  `"elbow"` draws one-bend connectors. These explicit selections previously
+  used the radial router. Default `"radial"` geometry is unchanged; the redundant
+  `"trunk"` alias is removed with a migration error directing users to `"radial"`.
+  Label slots and source rows are shared by the three routing styles.
+* Explicit fixed styles now take precedence over matching visual mappings.
+  Omitted style defaults retain user mappings, including inherited point-link
+  styles. Omit a fixed argument to use its mapped value. Feature presets
+  preserve whether their shape argument was actually supplied. Explicit
+  sequence `colour`/`color` now sets the backbone's `seq_colour` aesthetic.
 * Clarified the distinct tasks of sequence position scales and linear bp
   reference bars, theme appearance groups, and the provenance and uses of
   re-exported ggplot2/grid helpers.

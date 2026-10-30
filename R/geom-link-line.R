@@ -16,6 +16,9 @@
 #' @param link_branch_fraction Shared length relative to the shortest member, in (0, 0.5].
 #' @param arrow A grid arrow specification, or NULL.
 #' @param colour,alpha,linewidth,linetype Fixed styles; mappings use link_* aesthetics.
+#'   An explicitly supplied fixed value takes precedence over the matching
+#'   mapping. Omit the fixed argument to retain a mapped style, including an
+#'   inherited mapping when `inherit.aes = TRUE`.
 #' @param position,show.legend,inherit.aes Standard ggplot2 layer arguments.
 #' @param ... Additional path parameters.
 #' @return A ggplot2 layer.
@@ -31,6 +34,8 @@ geom_link_line <- function(mapping = NULL, data = NULL,
     link_branch = c("none", "query", "subject"), link_branch_fraction = 0.15,
     arrow = NULL, colour = "#59636D", alpha = 0.6, linewidth = 0.4,
     linetype = 1, position = "identity", show.legend = NA, inherit.aes = FALSE, ...) {
+  style_defaults <- c(link_colour = missing(colour), link_alpha = missing(alpha),
+    link_linewidth = missing(linewidth), link_linetype = missing(linetype))
   link_type <- match.arg(link_type)
   link_avoid <- match.arg(link_avoid)
   link_branch <- match.arg(link_branch)
@@ -40,9 +45,9 @@ geom_link_line <- function(mapping = NULL, data = NULL,
   if (!is.null(arrow) && !inherits(arrow, "arrow")) ggchord_stop("arrow must be a grid::arrow() object")
   mapping <- ggchord_normalize_mapping(mapping)
   alias <- ggchord_colour_alias(colour, list(...), "geom_link_line()", sys.call())
+  if ("color" %in% names(list(...))) style_defaults[["link_colour"]] <- FALSE
   styles <- list(link_colour = alias$colour, link_alpha = alpha,
                  link_linewidth = linewidth, link_linetype = linetype)
-  styles[names(styles) %in% names(mapping)] <- NULL
   lyr <- ggplot2::layer(
     data = data.frame(x = numeric(), y = numeric(), group = integer()),
     mapping = ggplot2::aes(x = x, y = y, group = group), geom = GeomChordLinkLine,
@@ -50,7 +55,8 @@ geom_link_line <- function(mapping = NULL, data = NULL,
     show.legend = show.legend, check.aes = FALSE,
     params = c(styles, list(arrow = arrow), alias$dots))
   lyr$ggchord_type <- "link"
-  lyr$ggchord_params <- list(type = "link", link_type = link_type, link_gap = link_gap,
+  lyr$ggchord_params <- list(type = "link", style_defaults = style_defaults,
+    link_type = link_type, link_gap = link_gap,
     link_ctrl_point = link_ctrl_point, link_avoid = link_avoid,
     link_branch = link_branch, link_branch_fraction = link_branch_fraction)
   ggchord_capture_layer_input(lyr, data, mapping, c("qaccver", "saccver", "qpos", "spos"))

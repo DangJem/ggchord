@@ -17,11 +17,13 @@
 #' scalar absolute \code{grid::unit()} values; \code{axis.text.orientation} is scalar.
 #' The preset themes share this signature and provide appearance defaults.
 #'
-#' @param text,plot.title,plot.subtitle,plot.caption,plot.tag Text elements.
-#' @param plot.title.position,plot.caption.position,plot.tag.position Standard
-#'   ggplot2 title, caption and tag positions.
-#' @param plot.background,panel.background Background elements.
-#' @param plot.margin Plot margin.
+#' @section Standard ggplot2 settings:
+#' Standard text, plot title/caption/tag, backgrounds, plot margins and common
+#' legend settings remain available through \code{...}, for example
+#' \code{theme_ggchord(text = element_text(size = 12))}.
+#' Only ggchord-specific settings appear as explicit formals for IDE argument
+#' completion. An IDE that additionally expands upstream dots may still offer
+#' upstream suggestions; this package controls its own function signature.
 #' @param axis `NULL` to show automatic sequence axes, or
 #'   [ggplot2::element_blank()] to hide the complete axis decoration.
 #' @param axis.line,axis.ticks,axis.minor.ticks Axis line elements.
@@ -38,7 +40,6 @@
 #'   centre labels.
 #' @param gene.label.segment,feature.label.segment,restriction.label.segment
 #'   Line elements for gene, feature and restriction-site leader lines.
-#' @param legend.position,legend.justification,legend.direction,legend.box,legend.box.just,legend.box.margin,legend.box.background,legend.box.spacing,legend.background,legend.margin,legend.spacing,legend.spacing.x,legend.spacing.y,legend.key,legend.key.size,legend.key.width,legend.key.height,legend.text,legend.text.position,legend.title,legend.title.position Standard legend theme settings inherited by roles.
 #' @param legend.link,legend.link.position,legend.link.direction,legend.link.background,legend.link.key,legend.link.key.size,legend.link.key.width,legend.link.key.height,legend.link.text,legend.link.text.position,legend.link.title,legend.link.title.position,legend.link.margin,legend.link.spacing Point-link guide appearance; follows the same role-specific rules.
 #' @param legend.seq,legend.ribbon,legend.gene,legend.feature,legend.region
 #'   `NULL` to show and inherit common settings, or [ggplot2::element_blank()]
@@ -56,16 +57,12 @@
 #' @param legend.seq.spacing,legend.ribbon.spacing,legend.gene.spacing,legend.feature.spacing,legend.region.spacing Per-role spacing.
 #' @param legend.ribbon.ticks,legend.ribbon.axis.line Ribbon colourbar lines.
 #' @param legend.ribbon.ticks.length Ribbon colourbar tick length.
-#' @param ... Additional arguments passed only to [ggplot2::theme()]. Removed
-#'   underscore-style arguments produce a migration error.
+#' @param ... Standard ggplot2 theme arguments, including common text, plot
+#'   and legend settings. Common legend settings also supply role inheritance.
+#'   Removed underscore-style arguments produce a migration error.
 #' @return A complete ggplot2 theme carrying ggchord appearance settings.
 #' @export
 theme_ggchord <- function(
-    text = NULL,
-    plot.title = NULL, plot.subtitle = NULL, plot.caption = NULL,
-    plot.tag = NULL, plot.title.position = NULL,
-    plot.caption.position = NULL, plot.tag.position = NULL,
-    plot.background = NULL, panel.background = NULL, plot.margin = NULL,
     axis = NULL, axis.line = NULL, axis.ticks = NULL,
     axis.minor.ticks = NULL, axis.text = NULL,
     axis.gap = NULL, axis.ticks.length = NULL,
@@ -75,15 +72,6 @@ theme_ggchord <- function(
     feature.label = NULL, feature.label.segment = NULL,
     restriction.label = NULL, restriction.label.segment = NULL,
     seq.center.label = NULL, seq.center.name = NULL, seq.center.length = NULL,
-    legend.position = NULL, legend.justification = NULL,
-    legend.direction = NULL, legend.box = NULL, legend.box.just = NULL,
-    legend.box.margin = NULL, legend.box.background = NULL,
-    legend.box.spacing = NULL, legend.background = NULL,
-    legend.margin = NULL, legend.spacing = NULL, legend.spacing.x = NULL,
-    legend.spacing.y = NULL, legend.key = NULL, legend.key.size = NULL,
-    legend.key.width = NULL, legend.key.height = NULL, legend.text = NULL,
-    legend.text.position = NULL, legend.title = NULL,
-    legend.title.position = NULL,
     legend.seq = NULL, legend.seq.position = NULL,
     legend.seq.direction = NULL, legend.seq.background = NULL,
     legend.seq.key = NULL, legend.seq.key.size = NULL,
@@ -169,6 +157,9 @@ ggchord_theme_from_environment <- function(preset, env, dots) {
   ggchord_reject_retired(dots, caller, old)
   nms <- setdiff(names(formals(theme_ggchord)), "...")
   values <- stats::setNames(lapply(nms, get, envir = env), nms)
+  # Standard settings remain usable through dots and participate in role inheritance.
+  values <- c(values, dots)
+  dots <- list()
   if (preset == "plasmid" && is.null(values$legend.feature)) {
     values$legend.feature <- ggplot2::element_blank()
   }
@@ -274,6 +265,7 @@ ggchord_theme_from_environment <- function(preset, env, dots) {
     "legend.spacing.y", "legend.key", "legend.key.size", "legend.key.width",
     "legend.key.height", "legend.text", "legend.text.position", "legend.title",
     "legend.title.position")
+  dots <- values[setdiff(names(values), c(nms, standard))]
   overrides <- c(values[standard], custom, dots)
   overrides <- overrides[!vapply(overrides, is.null, logical(1))]
   if (length(overrides)) out <- out + do.call(ggplot2::theme, overrides)

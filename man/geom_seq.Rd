@@ -54,7 +54,9 @@ affect vertical placement.}
 
 \item{position, show.legend, inherit.aes}{Standard ggplot2 layer arguments.}
 
-\item{...}{Additional arguments passed to \code{geom_path()}}
+\item{...}{Additional fixed path aesthetics. `colour` (or `color`) sets
+`seq_colour`. Explicit fixed values take precedence over matching mappings;
+omit fixed arguments to retain mapped styles.}
 }
 \value{
 A ggplot2 layer.

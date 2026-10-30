@@ -208,7 +208,7 @@ if (mode == "genome") {
       scale_feature_shape_manual(values = setNames(unique(features$type), unique(features$type))) +
       geom_seq_region(data = features[1, ], region_side = "outside") +
       geom_link_ribbon() +
-      geom_gene_label(size = 2, gene_label_overlap = "allow") +
+      geom_gene_label(size = 2, label_overlap = "allow") +
       coord_chord(rotation = 35)
     layout <- with_device(get_chord_layout(p))
     finite_geometry(c(layout$seq_arcs, list(layout$gene_polys, layout$ribbon_polys,
@@ -274,7 +274,7 @@ if (mode == "genome") {
     x <- cases[[name]]
     p <- ggchord(seq_data_example, ribbon_data_example, gene_data_example, validate = "none") +
       geom_seq(seq_radius = x$radius, seq_curvature = x$curvature, seq_orientation = x$orientation) +
-      geom_link_ribbon() + geom_gene() + geom_gene_label_repel(gene_label_layout = layout_mode) +
+      geom_link_ribbon() + geom_gene() + geom_gene_label_repel(label_layout = layout_mode) +
       coord_chord(rotation = x$rotation)
     elapsed <- system.time(layout <- with_device(get_chord_layout(p)))[["elapsed"]]
     metrics <- label_metrics(layout, nrow(gene_data_example))

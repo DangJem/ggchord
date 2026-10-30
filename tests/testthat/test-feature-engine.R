@@ -1,4 +1,4 @@
-test_that("feature presets accept the shape alias and preserve explicit scales", {
+test_that("feature presets accept fixed shape and preserve explicit scales", {
   features <- transform(smoke_genes()[1, ], type = "CDS")
   p <- ggchord(smoke_sequences()[1, ]) + geom_seq() +
     scale_feature_fill_manual(values = c(CDS = "black")) +
@@ -12,7 +12,7 @@ test_that("feature factor coordinates retain genomic labels rather than level co
     start = factor("100", levels = c("100", "300")),
     end = factor("300", levels = c("100", "300")), strand = "+", type = "CDS")
   p <- ggchord(smoke_sequences()[1, ]) + geom_seq() +
-    geom_feature(data = features, feature_shape = "block") + coord_collinear()
+    geom_feature(data = features, shape = "block") + coord_collinear()
   out <- export_ggchord_layout(p, include = "feature")
   expect_equal(unique(out$feature$start), 100)
   expect_equal(unique(out$feature$end), 300)

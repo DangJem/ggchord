@@ -113,7 +113,9 @@ ggchord_seq_style_geometry <- function(seq_arcs, params) {
 #' @param seq_backbone_width Width of a band backbone.
 #' @param linewidth Arc line width, default 0.9
 #' @param position,show.legend,inherit.aes Standard ggplot2 layer arguments.
-#' @param ... Additional arguments passed to \code{geom_path()}
+#' @param ... Additional fixed path aesthetics. `colour` (or `color`) sets
+#'   `seq_colour`. Explicit fixed values take precedence over matching mappings;
+#'   omit fixed arguments to retain mapped styles.
 #'
 #' @return A ggplot2 layer.
 #' @export
@@ -138,6 +140,7 @@ geom_seq <- function(mapping = NULL, data = NULL,
                      inherit.aes = FALSE,
                      ...) {
   show_legend_supplied <- !missing(show.legend)
+  linewidth_default <- missing(linewidth)
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
   dots <- list(...)
@@ -150,6 +153,12 @@ geom_seq <- function(mapping = NULL, data = NULL,
     ggchord_stop("geom_seq(): backbone gap/width must be finite non-negative/positive numbers")
   }
   dots <- ggchord_colour_dots(dots, "geom_seq()")
+  if ("colour" %in% names(dots)) {
+    if ("seq_colour" %in% names(dots)) ggchord_stop(
+      "geom_seq(): supply only one of colour and seq_colour")
+    dots$seq_colour <- dots$colour
+    dots$colour <- NULL
+  }
   ggchord_reject_retired(dots, "geom_seq()", c(
     seq_labels = "geom_seq_label(labels = ...) or a label scale",
     seq_colors = "scale_seq_colour_manual(values = ...)",
@@ -207,6 +216,7 @@ geom_seq <- function(mapping = NULL, data = NULL,
   lyr$ggchord_type <- "seq"
   lyr$ggchord_params <- list(
     type                  = "seq",
+    style_defaults = c(linewidth = linewidth_default),
     seq_order             = seq_order,
     seq_labels            = NULL,
     seq_orientation       = seq_orientation,

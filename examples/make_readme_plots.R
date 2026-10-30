@@ -1,3 +1,7 @@
+# Historical figure generator using retired APIs; retained to trace existing
+# assets, not a runnable example of the current API. Replacement with a shared
+# current image source belongs to the v0.16.5 documentation/website work.
+
 # ============================================================================
 # make_readme_plots.R
 # Regenerates every image referenced by README.md / README-Hans.md into

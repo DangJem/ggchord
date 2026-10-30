@@ -215,7 +215,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   # --- Process ribbons ---
   ribbon_gap_auto <- is.null(ribbon_params$ribbon_gap)
   ribbonGap  <- process_sequence_param(ribbon_params$ribbon_gap %||% 0.15,
-                                       seqs, "ribbon_gap", 0.15)
+                                       seqs, "link_gap", 0.15)
   ribbon_color_scheme <- ribbon_params$ribbon_color_scheme %||% "pident"
   ribbon_color_by     <- ribbon_params$ribbon_color_by
   ribbon_color_limits <- ribbon_params$ribbon_color_limits
@@ -248,7 +248,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     ggchord_stop("ribbon_alpha must be in the [0, 1] range")
   }
   if (!is.numeric(ribbonGap) || any(!is.finite(ribbonGap))) {
-    ggchord_stop("ribbon_gap must contain finite numbers")
+    ggchord_stop("link_gap must contain finite numbers")
   }
   if (!is.null(ribbon_color_limits) &&
       (!is.numeric(ribbon_color_limits) || length(ribbon_color_limits) != 2 ||
@@ -466,18 +466,18 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   }
   if (!is.numeric(gene_lsz) || length(gene_lsz) != 1 || !is.finite(gene_lsz) ||
       gene_lsz <= 0) {
-    ggchord_stop("gene_label_size must be a finite positive number")
+    ggchord_stop("size must be a finite positive number")
   }
   if (!is.null(gene_lwrap) && (!is.numeric(gene_lwrap) ||
       length(gene_lwrap) != 1 || !is.finite(gene_lwrap) || gene_lwrap < 0)) {
-    ggchord_stop("gene_label_wrap must be NULL or a finite non-negative number")
+    ggchord_stop("label_wrap must be NULL or a finite non-negative number")
   }
   if (!is.numeric(gene_lrepel_maxov) || length(gene_lrepel_maxov) != 1 ||
       is.na(gene_lrepel_maxov) || gene_lrepel_maxov < 0) {
     ggchord_stop("max_overlaps must be a non-negative number or Inf")
   }
 
-  geneWidth  <- process_gene_param(gene_w, seqs, "gene_width", 0.05, FALSE)
+  geneWidth  <- process_gene_param(gene_w, seqs, "width", 0.05, FALSE)
   if (isTRUE(gene_params$is_feature) && isTRUE(lbl$is_feature_label) &&
       isTRUE(plot$coordinates$ggchord_circular)) {
     # Feature bands accommodate the actual label font size within bounded
@@ -651,8 +651,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
       seqs = seqs, lengths = lens,
       circular = isTRUE(plot$coordinates$ggchord_circular),
       label_size = gene_lsz,
-      legacy_offset = if (isTRUE(lbl$position_supplied)) NULL else gene_params$legacy_offset,
-      legacy_name = if (isTRUE(gene_params$is_feature)) "feature_offset" else "gene_offset"
+      caller = if (isTRUE(gene_params$is_feature)) "geom_feature()" else "geom_gene()"
     )
     # Allocate on the complete entity table before selecting/reordering labels;
     # a label subset must not cause the remaining entities to change lanes.

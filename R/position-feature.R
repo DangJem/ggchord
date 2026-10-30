@@ -153,11 +153,6 @@ ggchord_resolve_position_offset <- function(offset, seqs, placement,
   ggchord_stop(caller, ": invalid flexible offset specification")
 }
 
-ggchord_resolve_legacy_offset <- function(offset, seqs, name) {
-  old <- process_gene_param(offset, seqs, name, 0, FALSE)
-  lapply(old, function(x) c("+" = unname(x["+"]), "-" = -unname(x["-"])))
-}
-
 ggchord_feature_display_priority <- function(data, rows) {
   priority <- rep(0, length(rows))
   if ("display_priority" %in% names(data)) {
@@ -342,28 +337,24 @@ ggchord_feature_lane_offsets <- function(data, lane, base, direction,
 ggchord_apply_feature_position <- function(data, position, seqs, lengths,
                                             circular = FALSE,
                                             label_size = 2.5,
-                                            legacy_offset = NULL,
-                                            legacy_name = "gene_offset") {
+                                            caller = "feature position") {
   if (is.null(data) || !nrow(data)) return(data)
   ggchord_require_columns(
-    data, c("accver", "start", "end", "strand"), legacy_name
+    data, c("accver", "start", "end", "strand"), caller
   )
   unknown <- setdiff(unique(as.character(data$accver)), seqs)
   if (length(unknown)) {
-    ggchord_stop(legacy_name, ": unknown accver: ", paste(unknown, collapse = ", "))
+    ggchord_stop(caller, ": unknown accver: ", paste(unknown, collapse = ", "))
   }
   if (anyNA(data$strand) || any(!as.character(data$strand) %in% c("+", "-"))) {
-    ggchord_stop(legacy_name, ": strand must contain only '+' or '-'")
+    ggchord_stop(caller, ": strand must contain only '+' or '-'")
   }
   if (!is.numeric(data$start) || !is.numeric(data$end) ||
       any(!is.finite(data$start)) || any(!is.finite(data$end))) {
-    ggchord_stop(legacy_name, ": start and end must be finite numeric values")
+    ggchord_stop(caller, ": start and end must be finite numeric values")
   }
   position <- position %||% ggplot2::position_identity()
-  if (!is.null(legacy_offset)) {
-    resolved <- ggchord_resolve_legacy_offset(legacy_offset, seqs, legacy_name)
-    position_name <- "legacy_strand"
-  } else if (isTRUE(position$ggchord_feature_stack)) {
+  if (isTRUE(position$ggchord_feature_stack)) {
     base_position <- position$base_position
     if (is.null(base_position)) {
       side <- position$side %||% "strand"

@@ -7,14 +7,14 @@
 geom_gene_label(
   mapping = NULL,
   data = NULL,
-  gene_label_orientation = "horizontal",
-  gene_label_side = "outside",
-  gene_label_overlap = "hide",
-  gene_label_rotation = NULL,
-  gene_label_radial_offset = 0.04,
-  gene_label_circum_offset = NULL,
-  gene_label_circum_limit = NULL,
-  gene_label_wrap = NULL,
+  label_orientation = "horizontal",
+  label_side = "outside",
+  label_overlap = "hide",
+  label_rotation = NULL,
+  label_radial_offset = 0.04,
+  label_circum_offset = NULL,
+  label_circum_limit = NULL,
+  label_wrap = NULL,
   position = "identity",
   show.legend = FALSE,
   inherit.aes = FALSE,
@@ -26,29 +26,29 @@ geom_gene_label(
 
 \item{data}{Default NULL (retrieved automatically from the layout)}
 
-\item{gene_label_orientation}{Character, default \code{"horizontal"}. Text
+\item{label_orientation}{Character, default \code{"horizontal"}. Text
 orientation relative to each sequence path: \code{"radial"},
 \code{"tangent"}, or \code{"horizontal"}.}
 
-\item{gene_label_side}{Character, default \code{"outside"}. Place labels
+\item{label_side}{Character, default \code{"outside"}. Place labels
 outside the chord, use the strand-based \code{"auto"} side, or force
 \code{"inside"} placement.}
 
-\item{gene_label_overlap}{Character, default \code{"hide"}. Fixed-label
+\item{label_overlap}{Character, default \code{"hide"}. Fixed-label
 collision policy: omit later conflicting labels (\code{"hide"}), apply
 the legacy gentle adjustment (\code{"nudge"}), or keep all requested
 positions (\code{"allow"}). Input row order therefore provides a simple
 way to prioritize labels in \code{"hide"} mode.}
 
-\item{gene_label_rotation}{Optional numeric/vector/list. Label rotation angle, default 0}
+\item{label_rotation}{Optional numeric/vector/list. Label rotation angle, default 0}
 
-\item{gene_label_radial_offset}{Optional numeric/vector/list. Radial offset of labels, default 0.04}
+\item{label_radial_offset}{Optional numeric/vector/list. Radial offset of labels, default 0.04}
 
-\item{gene_label_circum_offset}{Optional numeric/vector/list. Circumferential offset of labels, default 0}
+\item{label_circum_offset}{Optional numeric/vector/list. Circumferential offset of labels, default 0}
 
-\item{gene_label_circum_limit}{Optional logical/vector/list. Whether to limit circumferential offset, default TRUE}
+\item{label_circum_limit}{Optional logical/vector/list. Whether to limit circumferential offset, default TRUE}
 
-\item{gene_label_wrap}{Numeric or NULL, default NULL. When set, long gene
+\item{label_wrap}{Numeric or NULL, default NULL. When set, long gene
 annotations are wrapped at this many characters (e.g. 15), which makes the
 labels narrower and less prone to overlap.}
 
@@ -80,7 +80,7 @@ to annotate the gene arrows with their texts.
 \details{
 This is the deterministic, fixed-position label layer. By default labels
 sit outside their sequence and labels that would collide are omitted in
-input-row order. Use \code{gene_label_overlap = "nudge"} to retain the
+input-row order. Use \code{label_overlap = "nudge"} to retain the
 legacy gentle adjustment, or \code{"allow"} to draw every label at its
 requested position. For automatic arrangement with leader lines, use
 \code{\link{geom_gene_label_repel}()} instead.
@@ -90,6 +90,6 @@ library(ggchord)
 data(seq_data_example)
 data(gene_data_example)
 p <- ggchord(seq_data_example, gene_data = gene_data_example) +
-  geom_seq() + geom_gene() + geom_gene_label()
+  geom_seq() + geom_gene() + geom_gene_label(label_side = "auto")
 p
 }

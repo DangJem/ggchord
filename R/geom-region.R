@@ -48,10 +48,13 @@ geom_seq_region <- function(mapping = NULL, data = NULL,
                             show.legend = FALSE,
                             inherit.aes = FALSE,
                             ...) {
+  supplied <- c(region_fill = !missing(fill), colour = !missing(colour),
+    alpha = !missing(alpha))
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
 
   dots <- list(...)
+  if ("color" %in% names(dots)) supplied[["colour"]] <- TRUE
   alias <- ggchord_colour_alias(colour, dots, "geom_seq_region()", sys.call())
   colour <- alias$colour
   dots <- alias$dots
@@ -97,7 +100,8 @@ geom_seq_region <- function(mapping = NULL, data = NULL,
     inherit.aes = inherit.aes,
     check.aes   = FALSE,
     check.param = FALSE,
-    params      = dots
+    params      = c(dots, list(region_fill = fill, colour = colour,
+      alpha = alpha)[supplied])
   )
   lyr$ggchord_type <- "seq_region"
   lyr$ggchord_params <- list(

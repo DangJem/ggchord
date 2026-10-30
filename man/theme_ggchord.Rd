@@ -9,17 +9,6 @@
 \title{ggchord themes}
 \usage{
 theme_ggchord(
-  text = NULL,
-  plot.title = NULL,
-  plot.subtitle = NULL,
-  plot.caption = NULL,
-  plot.tag = NULL,
-  plot.title.position = NULL,
-  plot.caption.position = NULL,
-  plot.tag.position = NULL,
-  plot.background = NULL,
-  panel.background = NULL,
-  plot.margin = NULL,
   axis = NULL,
   axis.line = NULL,
   axis.ticks = NULL,
@@ -41,27 +30,6 @@ theme_ggchord(
   seq.center.label = NULL,
   seq.center.name = NULL,
   seq.center.length = NULL,
-  legend.position = NULL,
-  legend.justification = NULL,
-  legend.direction = NULL,
-  legend.box = NULL,
-  legend.box.just = NULL,
-  legend.box.margin = NULL,
-  legend.box.background = NULL,
-  legend.box.spacing = NULL,
-  legend.background = NULL,
-  legend.margin = NULL,
-  legend.spacing = NULL,
-  legend.spacing.x = NULL,
-  legend.spacing.y = NULL,
-  legend.key = NULL,
-  legend.key.size = NULL,
-  legend.key.width = NULL,
-  legend.key.height = NULL,
-  legend.text = NULL,
-  legend.text.position = NULL,
-  legend.title = NULL,
-  legend.title.position = NULL,
   legend.seq = NULL,
   legend.seq.position = NULL,
   legend.seq.direction = NULL,
@@ -153,17 +121,6 @@ theme_ggchord(
 )
 
 theme_ggchord_minimal(
-  text = NULL,
-  plot.title = NULL,
-  plot.subtitle = NULL,
-  plot.caption = NULL,
-  plot.tag = NULL,
-  plot.title.position = NULL,
-  plot.caption.position = NULL,
-  plot.tag.position = NULL,
-  plot.background = NULL,
-  panel.background = NULL,
-  plot.margin = NULL,
   axis = NULL,
   axis.line = NULL,
   axis.ticks = NULL,
@@ -185,27 +142,6 @@ theme_ggchord_minimal(
   seq.center.label = NULL,
   seq.center.name = NULL,
   seq.center.length = NULL,
-  legend.position = NULL,
-  legend.justification = NULL,
-  legend.direction = NULL,
-  legend.box = NULL,
-  legend.box.just = NULL,
-  legend.box.margin = NULL,
-  legend.box.background = NULL,
-  legend.box.spacing = NULL,
-  legend.background = NULL,
-  legend.margin = NULL,
-  legend.spacing = NULL,
-  legend.spacing.x = NULL,
-  legend.spacing.y = NULL,
-  legend.key = NULL,
-  legend.key.size = NULL,
-  legend.key.width = NULL,
-  legend.key.height = NULL,
-  legend.text = NULL,
-  legend.text.position = NULL,
-  legend.title = NULL,
-  legend.title.position = NULL,
   legend.seq = NULL,
   legend.seq.position = NULL,
   legend.seq.direction = NULL,
@@ -297,17 +233,6 @@ theme_ggchord_minimal(
 )
 
 theme_ggchord_dark(
-  text = NULL,
-  plot.title = NULL,
-  plot.subtitle = NULL,
-  plot.caption = NULL,
-  plot.tag = NULL,
-  plot.title.position = NULL,
-  plot.caption.position = NULL,
-  plot.tag.position = NULL,
-  plot.background = NULL,
-  panel.background = NULL,
-  plot.margin = NULL,
   axis = NULL,
   axis.line = NULL,
   axis.ticks = NULL,
@@ -329,27 +254,6 @@ theme_ggchord_dark(
   seq.center.label = NULL,
   seq.center.name = NULL,
   seq.center.length = NULL,
-  legend.position = NULL,
-  legend.justification = NULL,
-  legend.direction = NULL,
-  legend.box = NULL,
-  legend.box.just = NULL,
-  legend.box.margin = NULL,
-  legend.box.background = NULL,
-  legend.box.spacing = NULL,
-  legend.background = NULL,
-  legend.margin = NULL,
-  legend.spacing = NULL,
-  legend.spacing.x = NULL,
-  legend.spacing.y = NULL,
-  legend.key = NULL,
-  legend.key.size = NULL,
-  legend.key.width = NULL,
-  legend.key.height = NULL,
-  legend.text = NULL,
-  legend.text.position = NULL,
-  legend.title = NULL,
-  legend.title.position = NULL,
   legend.seq = NULL,
   legend.seq.position = NULL,
   legend.seq.direction = NULL,
@@ -441,17 +345,6 @@ theme_ggchord_dark(
 )
 
 theme_ggchord_publication(
-  text = NULL,
-  plot.title = NULL,
-  plot.subtitle = NULL,
-  plot.caption = NULL,
-  plot.tag = NULL,
-  plot.title.position = NULL,
-  plot.caption.position = NULL,
-  plot.tag.position = NULL,
-  plot.background = NULL,
-  panel.background = NULL,
-  plot.margin = NULL,
   axis = NULL,
   axis.line = NULL,
   axis.ticks = NULL,
@@ -473,27 +366,6 @@ theme_ggchord_publication(
   seq.center.label = NULL,
   seq.center.name = NULL,
   seq.center.length = NULL,
-  legend.position = NULL,
-  legend.justification = NULL,
-  legend.direction = NULL,
-  legend.box = NULL,
-  legend.box.just = NULL,
-  legend.box.margin = NULL,
-  legend.box.background = NULL,
-  legend.box.spacing = NULL,
-  legend.background = NULL,
-  legend.margin = NULL,
-  legend.spacing = NULL,
-  legend.spacing.x = NULL,
-  legend.spacing.y = NULL,
-  legend.key = NULL,
-  legend.key.size = NULL,
-  legend.key.width = NULL,
-  legend.key.height = NULL,
-  legend.text = NULL,
-  legend.text.position = NULL,
-  legend.title = NULL,
-  legend.title.position = NULL,
   legend.seq = NULL,
   legend.seq.position = NULL,
   legend.seq.direction = NULL,
@@ -585,17 +457,6 @@ theme_ggchord_publication(
 )
 
 theme_ggchord_plasmid(
-  text = NULL,
-  plot.title = NULL,
-  plot.subtitle = NULL,
-  plot.caption = NULL,
-  plot.tag = NULL,
-  plot.title.position = NULL,
-  plot.caption.position = NULL,
-  plot.tag.position = NULL,
-  plot.background = NULL,
-  panel.background = NULL,
-  plot.margin = NULL,
   axis = NULL,
   axis.line = NULL,
   axis.ticks = NULL,
@@ -617,27 +478,6 @@ theme_ggchord_plasmid(
   seq.center.label = NULL,
   seq.center.name = NULL,
   seq.center.length = NULL,
-  legend.position = NULL,
-  legend.justification = NULL,
-  legend.direction = NULL,
-  legend.box = NULL,
-  legend.box.just = NULL,
-  legend.box.margin = NULL,
-  legend.box.background = NULL,
-  legend.box.spacing = NULL,
-  legend.background = NULL,
-  legend.margin = NULL,
-  legend.spacing = NULL,
-  legend.spacing.x = NULL,
-  legend.spacing.y = NULL,
-  legend.key = NULL,
-  legend.key.size = NULL,
-  legend.key.width = NULL,
-  legend.key.height = NULL,
-  legend.text = NULL,
-  legend.text.position = NULL,
-  legend.title = NULL,
-  legend.title.position = NULL,
   legend.seq = NULL,
   legend.seq.position = NULL,
   legend.seq.direction = NULL,
@@ -729,15 +569,6 @@ theme_ggchord_plasmid(
 )
 }
 \arguments{
-\item{text, plot.title, plot.subtitle, plot.caption, plot.tag}{Text elements.}
-
-\item{plot.title.position, plot.caption.position, plot.tag.position}{Standard
-ggplot2 title, caption and tag positions.}
-
-\item{plot.background, panel.background}{Background elements.}
-
-\item{plot.margin}{Plot margin.}
-
 \item{axis}{`NULL` to show automatic sequence axes, or
 [ggplot2::element_blank()] to hide the complete axis decoration.}
 
@@ -758,8 +589,6 @@ ring; the plasmid preset uses this convention.}
 centre labels.}
 
 \item{gene.label.segment, feature.label.segment, restriction.label.segment}{Line elements for gene, feature and restriction-site leader lines.}
-
-\item{legend.position, legend.justification, legend.direction, legend.box, legend.box.just, legend.box.margin, legend.box.background, legend.box.spacing, legend.background, legend.margin, legend.spacing, legend.spacing.x, legend.spacing.y, legend.key, legend.key.size, legend.key.width, legend.key.height, legend.text, legend.text.position, legend.title, legend.title.position}{Standard legend theme settings inherited by roles.}
 
 \item{legend.seq, legend.ribbon, legend.gene, legend.feature, legend.region}{`NULL` to show and inherit common settings, or [ggplot2::element_blank()]
 to hide every guide for that role.}
@@ -792,8 +621,9 @@ to hide every guide for that role.}
 
 \item{legend.ribbon.ticks.length}{Ribbon colourbar tick length.}
 
-\item{...}{Additional arguments passed only to [ggplot2::theme()]. Removed
-underscore-style arguments produce a migration error.}
+\item{...}{Standard ggplot2 theme arguments, including common text, plot
+and legend settings. Common legend settings also supply role inheritance.
+Removed underscore-style arguments produce a migration error.}
 }
 \value{
 A complete ggplot2 theme carrying ggchord appearance settings.
@@ -814,4 +644,14 @@ settings inherit common legend appearance, while scale and guide objects
 continue to own palettes, breaks and ordering. Physical spacings require
 scalar absolute \code{grid::unit()} values; \code{axis.text.orientation} is scalar.
 The preset themes share this signature and provide appearance defaults.
+}
+
+\section{Standard ggplot2 settings}{
+
+Standard text, plot title/caption/tag, backgrounds, plot margins and common
+legend settings remain available through \code{...}, for example
+\code{theme_ggchord(text = element_text(size = 12))}.
+Only ggchord-specific settings appear as explicit formals for IDE argument
+completion. An IDE that additionally expands upstream dots may still offer
+upstream suggestions; this package controls its own function signature.
 }

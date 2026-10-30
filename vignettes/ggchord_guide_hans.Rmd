@@ -244,9 +244,9 @@ base <- ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
            seq_orientation = c(1, -1, 1, -1)) +
   geom_link_ribbon() + geom_gene()
 
-base + geom_gene_label_repel(gene_label_layout = "auto")
-base + geom_gene_label_repel(gene_label_layout = "radial")
-base + geom_gene_label_repel(gene_label_layout = "arc")
+base + geom_gene_label_repel(label_layout = "auto")
+base + geom_gene_label_repel(label_layout = "radial")
+base + geom_gene_label_repel(label_layout = "arc")
 ```
 
 三种模式都会使用实际的 `seq_radius`、`seq_curvature`、`seq_gap`、
@@ -258,9 +258,9 @@ base + geom_gene_label_repel(gene_label_layout = "arc")
 
 `geom_gene_label()` 也是紧凑的固定标签方案。v0.10.0 默认将文字水平放在
 弦图外侧，按输入行顺序保留标签并省略后续冲突项。可以用
-`gene_label_orientation = "radial"` 或 `"tangent"` 改变文字方向，用
-`gene_label_side = "auto"` 或 `"inside"` 选择侧向，并用
-`gene_label_overlap = "nudge"` 或 `"allow"` 优先保留全部文字。手工旋转和逐序列/
+`label_orientation = "radial"` 或 `"tangent"` 改变文字方向，用
+`label_side = "auto"` 或 `"inside"` 选择侧向，并用
+`label_overlap = "nudge"` 或 `"allow"` 优先保留全部文字。手工旋转和逐序列/
 逐链偏移仍集中在这一个固定标签图层中，不新增重复的手动 geom。
 
 整体信息层级还借鉴了 [Circos](https://genome.cshlp.org/content/19/9/1639)、
@@ -323,7 +323,7 @@ features <- data.frame(accver = rep("MT108731.1", 4),
 ggchord(seq_data_example, ribbon_data_example) +
   geom_seq() + geom_link_ribbon() +
   geom_feature(aes(feature_shape = type), data = features,
-               feature_width = 0.10) +
+               width = 0.10) +
   scale_feature_shape_manual(values = c(
     CDS = "arrow", tRNA = "block", "repeat" = "chevron",
     promoter = "lollipop"
@@ -365,7 +365,7 @@ ggchord(seq_data_example, ribbon_data_example, gene_data_example) +
   geom_link_ribbon(alpha = 0.45) +
   geom_gene() +
   geom_gene_label_repel(size = 2,
-                        gene_label_layout = "auto") +
+                        label_layout = "auto") +
   geom_seq_label() +
   theme(plot.background = element_rect(fill = "#FBF9F6", colour = NA),
         panel.background = element_rect(fill = "#FBF9F6", colour = NA))
@@ -377,17 +377,17 @@ knitr::include_graphics("../man/figures/combined_fine.png")
 
 ## 6. 灵活的参数格式
 
-序列级参数（`seq_radius`、`seq_gap`、`seq_curvature` 等）支持**单值、无名向量、按序列 ID 命名的向量/列表、按序列顺序命名的列表（`"1"`、`"2"`...）或无名列表**。固定位置图层 `geom_gene_label()` 的基因级参数（`gene_label_rotation` 等）还额外支持按链方向（`+`/`-`）指定；自动布局 `geom_gene_label_repel()` 会自行管理旋转与偏移。feature 偏移使用 `position_strand()` 或 `position_feature_stack()`，旧 `gene_offset` 参数已弃用。以下写法适用于固定标签：
+序列级参数（`seq_radius`、`seq_gap`、`seq_curvature` 等）支持**单值、无名向量、按序列 ID 命名的向量/列表、按序列顺序命名的列表（`"1"`、`"2"`...）或无名列表**。固定位置图层 `geom_gene_label()` 的基因级参数（`label_rotation` 等）还额外支持按链方向（`+`/`-`）指定；自动布局 `geom_gene_label_repel()` 会自行管理旋转与偏移。feature 偏移使用 `position_strand()` 或 `position_feature_stack()`，旧 `gene_offset` 参数已弃用。以下写法适用于固定标签：
 
 ```{r flexible-formats, eval=FALSE}
 # 1. 全部使用同一个值
-gene_label_rotation = 20
+label_rotation = 20
 
 # 2. 每条序列按链方向分别指定
-gene_label_rotation = c("+" = -15, "-" = -45)
+label_rotation = c("+" = -15, "-" = -45)
 
 # 3. 按序列 ID 名称指定
-gene_label_rotation = list(
+label_rotation = list(
   "MT118296.1" = c("+" = -15, "-" = -45),
   "OR222515.1" = c("+" = 30, "-" = -30),
   "MT108731.1" = c("+" = 15, "-" = -15),
@@ -395,7 +395,7 @@ gene_label_rotation = list(
 )
 
 # 4. 按序列顺序指定（"1" 表示第一条序列）
-gene_label_rotation = list(
+label_rotation = list(
   "1" = c("+" = -15, "-" = -45),
   "2" = c("+" = 30, "-" = -30),
   "3" = c("+" = 15, "-" = -15),
@@ -403,7 +403,7 @@ gene_label_rotation = list(
 )
 
 # 5. 无名列表：按序列顺序（与 #4 等价）
-gene_label_rotation = list(
+label_rotation = list(
   c("+" = -15, "-" = -45),
   c("+" = 30, "-" = -30),
   c("+" = 15, "-" = -15),
@@ -411,7 +411,7 @@ gene_label_rotation = list(
 )
 
 # 6. 长度为一的列表会循环应用到每条序列
-gene_label_rotation = list(20)
+label_rotation = list(20)
 ```
 
 ## 7. 图层参考

@@ -10,11 +10,11 @@ test_that("the three label strategies retain representative annotations", {
     geom_seq() + geom_gene()
   for (mode in c("radial", "auto", "arc")) {
     layout <- get_chord_layout(base +
-      geom_gene_label_repel(gene_label_layout = mode))
+      geom_gene_label_repel(label_layout = mode))
     expect_setequal(layout$gene_labels$label, smoke_genes()$anno)
   }
   shrink <- get_chord_layout(base + geom_gene_label_repel(
-    gene_label_fit = "shrink", gene_label_min_size = 1.5))
+    label_fit = "shrink", label_min_size = 1.5))
   expect_true(all(shrink$gene_labels$label_size_final >= 1.5))
 })
 
@@ -25,7 +25,7 @@ test_that("region, feature and point-link layers retain their source rows", {
     end = factor(c("100", "300"), levels = c("1", "100", "300")))
   points <- data.frame(qaccver = "A", saccver = "B", qpos = 500, spos = 600)
   p <- ggchord(smoke_sequences()) + geom_seq() +
-    geom_feature(data = features, feature_shape = "block") +
+    geom_feature(data = features, shape = "block") +
     geom_seq_region(data = regions) +
     geom_link_line(data = points)
   out <- export_ggchord_layout(p, include = c("feature", "link"))
@@ -44,12 +44,14 @@ test_that("independent ribbon layers retain their data and manual styles", {
   second <- transform(first, qstart = 500, qend = 600)
   p <- ggchord(smoke_sequences()) + geom_seq() +
     geom_link_ribbon(aes(ribbon_alpha = pident), data = first, fill = "orange") +
-    geom_link_ribbon(data = function(x) second, fill = "navy") +
+    geom_link_ribbon(aes(ribbon_alpha = pident),
+      data = function(x) second, fill = "navy", alpha = .7) +
     scale_ribbon_alpha_continuous()
   built <- build_ggchord_smoke(p)
   expect_true(all(built$data[[2]]$ribbon_fill == "orange"))
   expect_true(all(is.finite(built$data[[2]]$ribbon_alpha)))
   expect_true(all(built$data[[3]]$ribbon_fill == "navy"))
+  expect_true(all(built$data[[3]]$ribbon_alpha == .7))
   out <- get_chord_layout(p)$layer_inputs
   inputs <- lapply(Filter(function(x) !is.null(x$ribbon), out), function(x) x$ribbon)
   expect_setequal(vapply(inputs, function(x) x$qstart[1], numeric(1)), c(100, 500))

@@ -60,7 +60,7 @@ test_that("reversed orientation keeps leaders on their requested side", {
     strand = c("+", "-", "+", "-"), anno = letters[1:4])
   p <- ggchord(seq, gene_data = genes, validate = "none") +
     geom_seq(seq_orientation = c(1, -1)) + geom_gene() +
-    geom_gene_label_repel(gene_label_side = "outside")
+    geom_gene_label_repel(label_side = "outside")
   layout <- get_chord_layout(p)
   frame <- ggchord:::ggchord_label_curve_frame(layout$gene_labels,
                                                 layout$seq_arcs)

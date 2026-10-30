@@ -29,6 +29,21 @@ test_that("centre label lines stay in the panel with a reversed device y axis", 
 })
 
 
+test_that("restriction leader selections retain direct and one-bend routes", {
+  sites <- data.frame(accver = "A", position = c(100, 120, 140, 450),
+    enzyme = c("one", "two", "three", "four"))
+  base <- ggchord(data.frame(accver = "A", length = 1000)) +
+    geom_seq() + coord_circular()
+  counts <- lapply(c("straight", "elbow"), function(style) {
+    geometry <- get_chord_layout(base +
+      geom_restriction_site(data = sites, leader = style))$restriction_sites
+    paths <- geometry[geometry$restriction_component == "leader", ]
+    lengths(split(paths$x, paths$group))
+  })
+  expect_true(length(counts[[1]]) > 0L && all(counts[[1]] == 2L))
+  expect_true(length(counts[[2]]) > 0L && all(counts[[2]] == 3L))
+})
+
 test_that("biological searches retain circular origin, strand and site identity", {
   primers <- find_primer_bindings(c(A = "TTGCAAAAACG"),
     primers = c(test = "ACGTTGCA"), circular = TRUE, min_annealed_bases = 8L)

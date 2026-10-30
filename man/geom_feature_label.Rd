@@ -11,6 +11,10 @@ geom_feature_label(
   label_side = c("outside", "inside", "auto"),
   label_overlap = c("hide", "nudge", "allow"),
   label_wrap = NULL,
+  label_rotation = NULL,
+  label_radial_offset = 0.04,
+  label_circum_offset = NULL,
+  label_circum_limit = NULL,
   position = "identity",
   show.legend = FALSE,
   inherit.aes = FALSE,
@@ -29,6 +33,14 @@ tangent to the feature direction; compact labels move beside the feature.}
 \item{label_overlap}{Fixed-label collision policy.}
 
 \item{label_wrap}{Optional character wrapping width.}
+
+\item{label_rotation}{Optional numeric/vector/list. Label rotation angle, default 0}
+
+\item{label_radial_offset}{Optional numeric/vector/list. Radial offset of labels, default 0.04}
+
+\item{label_circum_offset}{Optional numeric/vector/list. Circumferential offset of labels, default 0}
+
+\item{label_circum_limit}{Optional logical/vector/list. Whether to limit circumferential offset, default TRUE}
 
 \item{position}{Feature Position used for the label anchor.
 In \code{coord_collinear()}, an omitted Position shares the matching

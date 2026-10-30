@@ -24,7 +24,7 @@ for (mode in c("chord", "circular", "collinear")) {
       anno = category, gene_fill = category), data = g2,
       position = position_strand(offset = .16)))
   p <- ggchord(seqs) + geom_seq() + scale + layers +
-    geom_feature(data = features, feature_shape = "block") +
+    geom_feature(data = features, shape = "block") +
     geom_gene_label(data = g1) + geom_feature_label(data = features) +
     geom_feature_label_repel(data = features) + coord
   b <- ggplot2::ggplot_build(p)
@@ -66,9 +66,21 @@ sites <- data.frame(accver = "A", position = c(100, 120, 140, 450),
 geometry <- lapply(c("radial", "elbow", "straight"), function(style)
   get_chord_layout(ggchord(s[1, ]) + geom_seq() +
     geom_restriction_site(data = sites, leader = style) + coord_circular())[["restriction_sites"]])
-stopifnot(nrow(geometry[[1]]) > 0, identical(geometry[[1]], geometry[[2]]),
-  identical(geometry[[1]], geometry[[3]]))
-record("F39_leader_current_behavior", "radial/elbow/straight produce identical public geometry")
+leaders <- lapply(geometry, function(x) x[x$restriction_component == "leader", ])
+vertices <- lapply(leaders, function(x) lengths(split(x$x, x$group)))
+stopifnot(nrow(geometry[[1]]) > 0, all(vertices[[2]] == 3L),
+  all(vertices[[3]] == 2L),
+  identical(unique(leaders[[2]]$source_row), unique(leaders[[3]]$source_row)))
+record("F39_leader_dispatch", "straight paths are direct; elbow paths bend once; source rows retained")
+inside <- get_chord_layout(ggchord(s[1, ]) + geom_seq() +
+  geom_restriction_site(data = sites, leader = "elbow", label_side = "inside") +
+  coord_circular(direction = "counterclockwise", gap = 20))$restriction_sites
+inside <- inside[inside$restriction_component == "leader", ]
+paths <- split(inside, inside$group)
+stopifnot(length(paths) > 0, all(vapply(paths, nrow, integer(1)) == 3L))
+for (path in paths) stopifnot(sum(path[2, c("x", "y")]^2) <=
+  sum(path[1, c("x", "y")]^2) + 1e-8)
+record("F39_interior_elbow", "Interior elbow departs inward with reversed direction and a circular gap")
 err <- tryCatch(theme_ggchord(axis.text.orientation = c(A = 0, B = 90)),
   error = identity)
 stopifnot(inherits(err, "error"))

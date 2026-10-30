@@ -7,8 +7,8 @@
 geom_link_ribbon(
   mapping = NULL,
   data = NULL,
-  ribbon_ctrl_point = NULL,
-  ribbon_gap = NULL,
+  link_ctrl_point = NULL,
+  link_gap = NULL,
   link_avoid = c("uniform", "none", "smooth"),
   link_branch = c("none", "query", "subject"),
   link_branch_fraction = 0.15,
@@ -30,14 +30,14 @@ geom_link_ribbon(
 
 \item{data}{Default NULL (retrieved automatically from the layout)}
 
-\item{ribbon_ctrl_point}{Optional vector/list of Bezier edge controls.
+\item{link_ctrl_point}{Optional vector/list of Bezier edge controls.
 Two numbers specify one shared control; four numbers specify controls for
 the two ribbon edges. A per-row list may contain pairs of coordinate vectors.
 NULL uses the origin \code{c(0, 0)} in chord layouts and derives controls
 from the sequence endpoints in collinear layouts. With shared branches,
 controls shape the far ends while the junction follows the shared trunk.}
 
-\item{ribbon_gap}{Optional numeric/vector controlling spacing between
+\item{link_gap}{Optional numeric/vector controlling spacing between
 sequences and ribbon endpoints. With the default
 \code{link_avoid = "uniform"}, \code{NULL} uses one obstacle-aware
 clearance across each endpoint. Use \code{"smooth"} for clearance that
@@ -58,7 +58,9 @@ avoidance uses one clearance across an endpoint.}
 \item{fill}{Optional fixed ribbon fill. `NULL` keeps the default Identity
 mapping.}
 
-\item{alpha, colour, linewidth}{Standard fixed ribbon styles.}
+\item{alpha, colour, linewidth}{Standard fixed ribbon styles. Explicit values
+take precedence over matching mappings; omitted defaults do not suppress
+user mappings. For example, omit `alpha` when mapping `ribbon_alpha`.}
 
 \item{linetype}{Fixed outline line type. The default `NULL` uses solid
 outlines for adjacent displayed sequences and dashed outlines for

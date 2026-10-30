@@ -243,8 +243,17 @@ ggchord_resolve_layer_input <- function(lyr, fallback = NULL) {
     expr <- rlang::get_expr(mapping[[role]])
     contains_stage <- function(x) {
       if (!is.call(x)) return(FALSE)
-      if (identical(as.character(x[[1L]]), "after_stat") ||
-          identical(as.character(x[[1L]]), "after_scale")) return(TRUE)
+      head <- x[[1L]]
+      name <- if (is.symbol(head)) as.character(head) else if (
+        is.call(head) && as.character(head[[1L]]) %in% c("::", ":::")) {
+        as.character(head[[3L]])
+      } else ""
+      if (name %in% c("after_stat", "after_scale")) return(TRUE)
+      if (identical(name, "stage")) {
+        args <- as.list(x)[-1L]
+        late <- args[intersect(names(args), c("after_stat", "after_scale"))]
+        if (any(!vapply(late, is.null, logical(1)))) return(TRUE)
+      }
       any(vapply(as.list(x)[-1L], contains_stage, logical(1)))
     }
     if (contains_stage(expr)) {
@@ -265,7 +274,7 @@ ggchord_resolve_layer_input <- function(lyr, fallback = NULL) {
     }
     data[[role]] <- value
   }
-  for (nm in setdiff(names(mapping), roles)) {
+  for (nm in setdiff(names(mapping), c(roles, names(lyr$aes_params)))) {
     expr <- rlang::get_expr(mapping[[nm]])
     text <- rlang::as_label(expr)
     if (!grepl("after_stat|after_scale", text)) {
@@ -280,6 +289,38 @@ ggchord_resolve_layer_input <- function(lyr, fallback = NULL) {
     "geom_gene(): directional genes need '+'/'-' strand; use geom_feature() for nondirectional intervals"
   )
   data
+}
+
+#' Resolve omitted fixed styles against local and inherited user mappings
+#' @noRd
+ggchord_resolve_style_defaults <- function(layer, mapping) {
+  defaults <- layer$ggchord_params$style_defaults
+  if (is.null(defaults)) return(layer)
+  user <- layer$ggchord_input_mapping
+  if (isTRUE(layer$inherit.aes)) {
+    inherited <- ggchord_normalize_mapping(mapping)
+    for (nm in setdiff(names(inherited), names(user))) user[[nm]] <- inherited[[nm]]
+  }
+  layer <- reconstruct_layer(layer, layer$data)
+  # Ribbon outlines and line types use role names only when that role is mapped.
+  if (identical(layer$ggchord_type, "ribbon")) {
+    for (nm in c("colour", "linetype")) {
+      role <- paste0("ribbon_", nm)
+      if (role %in% names(user) && nm %in% names(layer$aes_params)) {
+        layer$aes_params[role] <- layer$aes_params[nm]
+        layer$aes_params[nm] <- NULL
+        names(defaults)[names(defaults) == nm] <- role
+      }
+    }
+    old_key <- layer$geom$draw_key
+    layer$geom <- make_ribbon_geom(
+      outline = "ribbon_colour" %in% names(user),
+      linetype = "ribbon_linetype" %in% names(user))
+    layer$geom$draw_key <- old_key
+  }
+  mapped_defaults <- intersect(names(defaults)[defaults], names(user))
+  layer$aes_params[mapped_defaults] <- NULL
+  layer
 }
 
 #' Combine computed and user visual mappings
@@ -297,9 +338,12 @@ ggchord_effective_mapping <- function(lyr) {
     if (!"gene_fill" %in% names(user)) out$gene_fill <- NULL
     if (!"feature_fill" %in% names(user)) out$feature_fill <- NULL
   }
-  if (is.null(user)) return(out)
-  visual <- setdiff(names(user), lyr$ggchord_role_aes %||% character(0))
-  for (nm in visual) out[[nm]] <- user[[nm]]
+  if (!is.null(user)) {
+    visual <- setdiff(names(user), lyr$ggchord_role_aes %||% character(0))
+    for (nm in visual) out[[nm]] <- user[[nm]]
+  }
+  # Fixed aesthetics bypass scales, including automatically supplied mappings.
+  out[intersect(names(out), names(lyr$aes_params))] <- NULL
   out
 }
 

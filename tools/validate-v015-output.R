@@ -31,7 +31,7 @@ add_tracks <- function(plot, bars, line, tiles) {
     scale_track_fill_manual("sites", values = c(site = "#468C86", reference = "#D1AB59"))
 }
 linear <- ggchord(sequences) + geom_seq(seq_gap = .6) +
-  geom_feature(data = features, feature_width = .12, position = position_plasmid(.15)) +
+  geom_feature(data = features, width = .12, position = position_plasmid(.15)) +
   geom_feature_label_repel(data = features, label_fit = "shrink", label_min_size = 1.5,
     position = position_plasmid(.15), size = 4)
 linear <- add_tracks(linear, bins, points, sites) +
@@ -41,7 +41,7 @@ curved <- function(coordinate, curvature = 1) {
     geom_seq(seq_radius = 1.2, seq_curvature = curvature, seq_orientation = -1)
   plot <- ggchord(sequences[1L, ]) +
     sequence_layer +
-    geom_feature(data = features[1L, ], feature_width = .12, position = position_plasmid(-.2)) +
+    geom_feature(data = features[1L, ], width = .12, position = position_plasmid(-.2)) +
     geom_feature_label_repel(data = features[1L, ], label_fit = "shrink",
       position = position_plasmid(-.2), size = 4)
   add_tracks(plot, bins[bins$accver == "A", ], points[points$accver == "A", ], sites[1L, ]) + coordinate

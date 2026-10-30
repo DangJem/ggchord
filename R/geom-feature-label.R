@@ -10,6 +10,7 @@
 #' @param label_side One of `"inside"`, `"outside"`, or `"auto"`.
 #' @param label_overlap Fixed-label collision policy.
 #' @param label_wrap Optional character wrapping width.
+#' @inheritParams geom_gene_label
 #' @param position Feature Position used for the label anchor.
 #'   In \code{coord_collinear()}, an omitted Position shares the matching
 #'   feature layer's lanes; an explicit Position changes only label anchors,
@@ -29,20 +30,27 @@ geom_feature_label <- function(
     label_side = c("outside", "inside", "auto"),
     label_overlap = c("hide", "nudge", "allow"),
     label_wrap = NULL,
+    label_rotation = NULL, label_radial_offset = .04,
+    label_circum_offset = NULL, label_circum_limit = NULL,
     position = "identity",
     show.legend = FALSE, inherit.aes = FALSE, ...) {
   position_explicit <- !missing(position)
   dots <- list(...)
+  ggchord_reject_label_prefix(dots, "geom_feature_label()")
   label_orientation <- match.arg(label_orientation)
   label_side <- match.arg(label_side)
   label_overlap <- match.arg(label_overlap)
-  lyr <- geom_gene_label(
+  lyr <- ggchord_label_layer(
     mapping = mapping, data = data,
     gene_label_orientation = if (label_orientation == "feature")
       "tangent" else label_orientation,
     gene_label_side = label_side,
     gene_label_overlap = label_overlap,
     gene_label_wrap = label_wrap,
+    gene_label_rotation = label_rotation,
+    gene_label_radial_offset = label_radial_offset,
+    gene_label_circum_offset = label_circum_offset,
+    gene_label_circum_limit = label_circum_limit,
     position = position,
     show.legend = show.legend, inherit.aes = inherit.aes, ...
   )
@@ -92,6 +100,7 @@ geom_feature_label <- function(
 #'   boxes in one coordinate-owned exterior track region so they cannot occupy
 #'   the same space.
 #' @inheritParams geom_feature_label
+#' @inheritParams geom_gene_label_repel
 #' @return A composite text and leader-line layer.
 #' @examples
 #' seq <- data.frame(accver = "circle", length = 1000)
@@ -111,7 +120,7 @@ geom_feature_label <- function(
 #' # Explicitly fit complete text inside a feature with a readable lower bound.
 #' features$label <- c("A longer feature annotation", "short feature")
 #' ggchord(seq, validate = "none") + geom_seq() +
-#'   geom_feature(data = features, feature_width = .12) +
+#'   geom_feature(data = features, width = .12) +
 #'   geom_feature_label_repel(data = features, label_fit = "shrink",
 #'     label_min_size = 1.5, size = 4) + coord_collinear()
 #' @export
@@ -126,9 +135,11 @@ geom_feature_label_repel <- function(
     external = TRUE,
     position = "identity",
     show.legend = FALSE, inherit.aes = FALSE,
-    label_min_size = 1.5, ...) {
+    label_min_size = 1.5, label_segment_overlap = "fade",
+    label_segment_overlap_alpha = .18, label_segment_linetype = "auto", ...) {
   position_explicit <- !missing(position)
   dots <- list(...)
+  ggchord_reject_label_prefix(dots, "geom_feature_label_repel()")
   label_layout <- match.arg(label_layout)
   label_fit <- match.arg(label_fit)
   label_side <- match.arg(label_side)
@@ -136,13 +147,16 @@ geom_feature_label_repel <- function(
     ggchord_stop("geom_feature_label_repel(): external must be TRUE or FALSE")
   }
   if (identical(label_layout, "feature")) {
-    lyr <- geom_gene_label_repel(
+    lyr <- ggchord_label_repel_layer(
       mapping = mapping, data = data,
       gene_label_layout = "radial", gene_label_side = "inside",
       gene_label_wrap = label_wrap, gene_label_fit = label_fit,
       gene_label_min_size = label_min_size,
       gene_label_max_lines = label_max_lines,
       max_overlaps = max_overlaps,
+      gene_label_segment_overlap = label_segment_overlap,
+      gene_label_segment_overlap_alpha = label_segment_overlap_alpha,
+      gene_label_segment_linetype = label_segment_linetype,
       position = position, show.legend = show.legend,
       inherit.aes = inherit.aes, ...
     )
@@ -177,7 +191,7 @@ geom_feature_label_repel <- function(
     return(lyr)
   }
   core_layout <- if (identical(label_layout, "callout")) "auto" else label_layout
-  lyr <- geom_gene_label_repel(
+  lyr <- ggchord_label_repel_layer(
     mapping = mapping, data = data,
     gene_label_layout = core_layout,
     gene_label_wrap = label_wrap,
@@ -186,6 +200,9 @@ geom_feature_label_repel <- function(
     gene_label_max_lines = label_max_lines,
     gene_label_side = label_side,
     max_overlaps = max_overlaps,
+    gene_label_segment_overlap = label_segment_overlap,
+    gene_label_segment_overlap_alpha = label_segment_overlap_alpha,
+    gene_label_segment_linetype = label_segment_linetype,
     position = position,
     show.legend = show.legend, inherit.aes = inherit.aes, ...
   )

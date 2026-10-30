@@ -7,19 +7,19 @@
 geom_gene_label_repel(
   mapping = NULL,
   data = NULL,
-  gene_label_layout = "radial",
-  gene_label_wrap = NULL,
-  gene_label_fit = "wrap",
-  gene_label_max_lines = 2L,
-  gene_label_side = "outside",
+  label_layout = "radial",
+  label_wrap = NULL,
+  label_fit = "wrap",
+  label_max_lines = 2L,
+  label_side = "outside",
   max_overlaps = Inf,
-  gene_label_segment_overlap = "fade",
-  gene_label_segment_overlap_alpha = 0.18,
-  gene_label_segment_linetype = "auto",
+  label_segment_overlap = "fade",
+  label_segment_overlap_alpha = 0.18,
+  label_segment_linetype = "auto",
   position = "identity",
   show.legend = FALSE,
   inherit.aes = FALSE,
-  gene_label_min_size = 1.5,
+  label_min_size = 1.5,
   ...
 )
 }
@@ -28,7 +28,7 @@ geom_gene_label_repel(
 
 \item{data}{Default NULL (retrieved automatically from the layout)}
 
-\item{gene_label_layout}{Character, default \code{"radial"}. Label layout:
+\item{label_layout}{Character, default \code{"radial"}. Label layout:
 \code{"radial"} arranges horizontal external labels along sequence-relative
 contours, with straight normal leaders or a short normal departure followed
 by a long connector when displaced; \code{"auto"} uses shared vertical
@@ -36,47 +36,47 @@ columns on the left/right and radial placement elsewhere; \code{"arc"}
 rotates text along the sequence tangent. The former \code{"aligned"}
 mode has been removed; use \code{"auto"} for side columns.}
 
-\item{gene_label_wrap}{Numeric or NULL, default NULL. When set, long gene
+\item{label_wrap}{Numeric or NULL, default NULL. When set, long gene
 annotations are wrapped at this many characters (e.g. 15), overriding
-\code{gene_label_fit}.}
+\code{label_fit}.}
 
-\item{gene_label_fit}{Character, default \code{"wrap"}. How labels whose
+\item{label_fit}{Character, default \code{"wrap"}. How labels whose
 initial boxes are crowded or unusually wide are fitted before deterministic layout:
 \code{"wrap"} preserves the complete annotation over multiple lines,
 \code{"ellipsis"} uses a single shortened line, \code{"auto"} wraps and
-adds an ellipsis only if text exceeds \code{gene_label_max_lines}, and
+adds an ellipsis only if text exceeds \code{label_max_lines}, and
 \code{"none"} disables adaptive fitting. Explicit \code{"shrink"} uses
 internal-first feature placement and reduces the complete text only as
-far as \code{gene_label_min_size}. Labels that still cannot fit use the
+far as \code{label_min_size}. Labels that still cannot fit use the
 existing adjacent/external placement or hiding policy, at their requested
 size. This choice uses feature placement rather than the external layout
-selected by \code{gene_label_layout}; other fitting modes are unchanged.}
+selected by \code{label_layout}; other fitting modes are unchanged.}
 
-\item{gene_label_max_lines}{Positive integer, default 2. Maximum number of
+\item{label_max_lines}{Positive integer, default 2. Maximum number of
 lines used by adaptive \code{"wrap"} or \code{"auto"} fitting.}
 
-\item{gene_label_side}{Character, default "outside". Which side of the arc
+\item{label_side}{Character, default "outside". Which side of the arc
 the labels sit on. \code{"auto"} keeps the strand-based placement
 (same as before); \code{"outside"} moves labels that would be inside the
 chord (where they can overlap the ribbons) to the outside of their arc;
 \code{"inside"} does the opposite. Labels moved to the other side are
-connected with a dashed leader line (see \code{gene_label_segment_linetype}).}
+connected with a dashed leader line (see \code{label_segment_linetype}).}
 
 \item{max_overlaps}{Numeric, default Inf. Hide labels that still overlap
 more than this many other labels after repulsion (ggrepel-style
 decluttering). Use a finite value to clean up crowded plots.}
 
-\item{gene_label_segment_overlap}{Character, default \code{"fade"}.
+\item{label_segment_overlap}{Character, default \code{"fade"}.
 How portions of a leader line covered by another label are drawn:
 \code{"fade"} keeps them at reduced opacity, \code{"clip"} removes them,
 and \code{"show"} leaves the complete leader visible. This does not affect
 text wrapping, ellipsis or label hiding.}
 
-\item{gene_label_segment_overlap_alpha}{Numeric in \code{[0, 1]}, default
+\item{label_segment_overlap_alpha}{Numeric in \code{[0, 1]}, default
 0.18. Relative opacity applied only to covered leader-line portions when
-\code{gene_label_segment_overlap = "fade"}.}
+\code{label_segment_overlap = "fade"}.}
 
-\item{gene_label_segment_linetype}{Character or numeric, default "auto".
+\item{label_segment_linetype}{Character or numeric, default "auto".
 Leader-line linetype. \code{"auto"} draws solid lines, except for labels
 that were moved to the other side of their arc, which are drawn dashed.
 Any other valid ggplot2 linetype (e.g. \code{"solid"}, \code{"dashed"},
@@ -88,8 +88,8 @@ drawn from separate data or without a geometry layer.}
 
 \item{show.legend, inherit.aes}{Standard ggplot2 layer arguments.}
 
-\item{gene_label_min_size}{Minimum text size in millimetres for explicit
-\code{gene_label_fit = "shrink"}, default 1.5. It must not exceed the
+\item{label_min_size}{Minimum text size in millimetres for explicit
+\code{label_fit = "shrink"}, default 1.5. It must not exceed the
 requested text size. Source text, requested/final size and fitting reason
 are retained in exported label geometry.}
 
@@ -115,7 +115,7 @@ and
 
 Low-level force, padding, orientation and segment arguments used by earlier
 releases have been removed and now produce an error. Use
-\code{gene_label_layout} for automatic placement, or
+\code{label_layout} for automatic placement, or
 \code{\link{geom_gene_label}()} for manual rotation and offsets.
 }
 \examples{
@@ -127,6 +127,6 @@ p <- ggchord(seq_data_example, gene_data = gene_data_example) +
 p
 ggchord(seq_data_example, gene_data = gene_data_example) +
   geom_seq() + geom_gene() +
-  geom_gene_label_repel(gene_label_fit = "shrink", gene_label_min_size = 1.5,
+  geom_gene_label_repel(label_fit = "shrink", label_min_size = 1.5,
     size = 4) + coord_collinear()
 }

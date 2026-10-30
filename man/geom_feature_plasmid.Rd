@@ -7,9 +7,8 @@
 geom_feature_plasmid(
   mapping = NULL,
   data = NULL,
-  feature_shape = "arrow",
-  shape = NULL,
-  feature_width = 0.058,
+  shape = "arrow",
+  width = 0.058,
   arrow_head_length = 0.068,
   arrow_head_width = 1.42,
   arrow_head_style = "shouldered",
@@ -39,18 +38,16 @@ their internal level codes. Coordinates must resolve to finite numbers.
 \code{"forward"}, \code{"reverse"}, \code{"bidirectional"}, or
 \code{"none"}.}
 
-\item{feature_shape}{Fixed feature geometry used when \code{feature_shape}
-is not mapped in \code{aes()}: \code{"arrow"},
+\item{shape}{Fixed feature geometry. An explicitly supplied shape takes
+precedence over \code{aes(feature_shape = ...)}: \code{"arrow"},
 \code{"compact_arrow"}, \code{"promoter_arrow"},
 \code{"primer_arrow"}, \code{"marker"}, \code{"block"},
-\code{"chevron"}, or \code{"lollipop"}. The default is \code{"arrow"}.
+\code{"capped_line"}, \code{"primer_arc"}, \code{"chevron"}, or
+\code{"lollipop"}. The default is \code{"arrow"}.
 Use \code{aes(feature_shape = type)} together with
 \code{scale_feature_shape_manual()} to map categories to geometry.}
 
-\item{shape}{Optional concise alias for fixed `feature_shape`. Supplying
-both is an error.}
-
-\item{feature_width}{Track width; the default matches the compact feature
+\item{width}{Track width; the default matches the compact feature
 bands used by desktop plasmid editors.}
 
 \item{arrow_head_length, arrow_head_width}{Arrow-head dimensions in the

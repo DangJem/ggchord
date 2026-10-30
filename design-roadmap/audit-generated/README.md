@@ -1,5 +1,10 @@
 # ggchord API 静态审计基线
 
+本页及原 `api_*.csv`/manifest 是 v0.16.0 的完整审计快照，保留其原提交、行号与
+来源散列。v0.16.1 重构后的当前绘图签名、职责、美学与兼容性另见本目录
+`grammar-*-v0.16.1.csv`，由 `Rscript tools/audit-grammar.R` 重建；本版运行证据和
+边界见 `../API-GRAMMAR-COMPLETION-v0.16.1.md`。不要用旧签名快照认证当前源码。
+
 此目录由 `tools/audit-ggchord-api.R` 生成。完整覆盖状态见 manifest.csv；源码复核、局部运行验证与发布验收分别记录。
 
 起始提交：`69b907a6ddffea60a73ed1d4b1392c8cc5f7da22`；生成时 HEAD：`4724092f5fdc03e7bb0367537faf6fdb52f8c794`。

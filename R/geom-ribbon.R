@@ -1,6 +1,6 @@
 # geom-ribbon.R - alignment ribbon layer
-# Fetches pre-computed ribbon polygon data from the package environment and renders it with geom_polygon
-# Ribbon parameters are specified in this layer and stored for use at print time
+# Layer-owned inputs and parameters are resolved into ribbon polygons by the
+# plot-owned layout calculation, then drawn through the polygon geom.
 
 # ---------------------------------------------------------------------------
 # Internal helper: clone a polygon geom and expose selected aesthetics under
@@ -31,13 +31,13 @@ make_ribbon_geom <- function(outline = FALSE, linetype = FALSE) {
 #'
 #' @param mapping Default NULL (uses pre-computed data)
 #' @param data Default NULL (retrieved automatically from the layout)
-#' @param ribbon_ctrl_point Optional vector/list of Bezier edge controls.
+#' @param link_ctrl_point Optional vector/list of Bezier edge controls.
 #'   Two numbers specify one shared control; four numbers specify controls for
 #'   the two ribbon edges. A per-row list may contain pairs of coordinate vectors.
 #'   NULL uses the origin \code{c(0, 0)} in chord layouts and derives controls
 #'   from the sequence endpoints in collinear layouts. With shared branches,
 #'   controls shape the far ends while the junction follows the shared trunk.
-#' @param ribbon_gap Optional numeric/vector controlling spacing between
+#' @param link_gap Optional numeric/vector controlling spacing between
 #'   sequences and ribbon endpoints. With the default
 #'   \code{link_avoid = "uniform"}, \code{NULL} uses one obstacle-aware
 #'   clearance across each endpoint. Use \code{"smooth"} for clearance that
@@ -52,7 +52,9 @@ make_ribbon_geom <- function(outline = FALSE, linetype = FALSE) {
 #' @inheritParams geom_link_line
 #' @param fill Optional fixed ribbon fill. `NULL` keeps the default Identity
 #'   mapping.
-#' @param alpha,colour,linewidth Standard fixed ribbon styles.
+#' @param alpha,colour,linewidth Standard fixed ribbon styles. Explicit values
+#'   take precedence over matching mappings; omitted defaults do not suppress
+#'   user mappings. For example, omit `alpha` when mapping `ribbon_alpha`.
 #' @param linetype Fixed outline line type. The default `NULL` uses solid
 #'   outlines for adjacent displayed sequences and dashed outlines for
 #'   non-adjacent sequences. Chord adjacency includes the first/last pair.
@@ -92,8 +94,8 @@ make_ribbon_geom <- function(outline = FALSE, linetype = FALSE) {
 #'     qaccver = seq_data_example$accver[1],
 #'     saccver = seq_data_example$accver[3])) + coord_collinear()
 geom_link_ribbon <- function(mapping = NULL, data = NULL,
-                        ribbon_ctrl_point = NULL,
-                        ribbon_gap = NULL,
+                        link_ctrl_point = NULL,
+                        link_gap = NULL,
                         link_avoid = c("uniform", "none", "smooth"),
                         link_branch = c("none", "query", "subject"),
                         link_branch_fraction = 0.15,
@@ -108,6 +110,10 @@ geom_link_ribbon <- function(mapping = NULL, data = NULL,
                         show.legend = TRUE,
                         inherit.aes = FALSE,
                         ...) {
+  ribbon_ctrl_point <- link_ctrl_point
+  ribbon_gap <- link_gap
+  style_defaults <- c(colour = missing(colour), linewidth = missing(linewidth))
+  alpha_supplied <- !missing(alpha)
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
   link_avoid <- match.arg(link_avoid)
@@ -121,7 +127,9 @@ geom_link_ribbon <- function(mapping = NULL, data = NULL,
   ggchord_check_branch_fraction(link_branch_fraction)
   mapping <- ggchord_normalize_mapping(mapping)
   dots <- list(...)
+  if ("color" %in% names(dots)) style_defaults[["colour"]] <- FALSE
   ggchord_reject_retired(dots, "geom_link_ribbon()", c(
+    ribbon_gap = "link_gap", ribbon_ctrl_point = "link_ctrl_point",
     ribbon_color_scheme = "aes(ribbon_fill = ...) and scale_ribbon_fill_*()",
     ribbon_colors = "scale_ribbon_fill_*()",
     ribbon_color_by = "aes(ribbon_fill = ...)",
@@ -182,11 +190,13 @@ geom_link_ribbon <- function(mapping = NULL, data = NULL,
   }
 
   fixed <- list(linewidth = linewidth)
+  if (alpha_supplied) fixed$ribbon_alpha <- alpha
   if (!is.null(fill)) fixed$ribbon_fill <- fill
-  if (!outline_mapped) fixed$colour <- colour
-  if (!linetype_mapped && !plain_linetype_mapped && !is.null(linetype)) {
-    fixed$linetype <- linetype
+  if (outline_mapped) fixed$ribbon_colour <- colour else fixed$colour <- colour
+  if (!is.null(linetype)) {
+    if (linetype_mapped) fixed$ribbon_linetype <- linetype else fixed$linetype <- linetype
   }
+  if (outline_mapped) names(style_defaults)[names(style_defaults) == "colour"] <- "ribbon_colour"
 
   lyr <- ggplot2::layer(
     data        = empty_polys,
@@ -207,6 +217,7 @@ geom_link_ribbon <- function(mapping = NULL, data = NULL,
   lyr$ggchord_type <- "ribbon"
   lyr$ggchord_params <- list(
     type                      = "ribbon",
+    style_defaults = style_defaults,
     adjacent_only = adjacent_only, pairs = pairs,
     link_avoid = link_avoid, link_branch = link_branch, link_branch_fraction = link_branch_fraction,
     ribbon_color_scheme       = "pident",

@@ -7,6 +7,32 @@
 后续改动应按函数名定位并在实际实施记录中注明新的源码状态。
 范围与版本编号见 [分阶段重构计划](API-REFACTOR-PLAN.md)。
 
+## v0.16.1 当前实施结论
+
+本节覆盖下方 v0.16.0 历史证据中的待定方案；历史编号和当时源码事实保留，
+不把当时 DEFER 当作本版仍未决定。用户已授权自主整理具体接口，并取消旧 v1.0.0
+删除期限。详细调用迁移见 API-MIGRATION.md，职责与有限验证见 API-GRAMMAR-v0.16.1.md。
+
+| 问题 | 本版结论 | 实施与验证边界 |
+| --- | --- | --- |
+| F05 | KEEP 每层独立；内部生命周期留 v0.16.3 | 三坐标同类双层与交换图层/scale 顺序通过，非全域状态证明 |
+| F06 | FIX 显式签名的补全范围 | 专属设置显式，通用 ggplot2 设置走 dots；五个预设默认及标准覆盖直接对照一致，未认证各 IDE 插件行为 |
+| F08/F09 | KEEP 语义快捷入口，MERGE 构造内核 | gene 调用 feature 构造器，保留 gene_fill、定向链和默认几何；plasmid 是不同默认的便利组合 |
+| F10 | REMOVE 旧 offset | v0.16.1 删除 gene_offset/feature_offset 及内部旧解析分支，迁移 Position；逐链负值要保留符号 |
+| F11 | REMOVE 同义固定入口 | 固定参数唯一为 shape，映射美学仍为 feature_shape；wrapper 保留调用者是否显式给值 |
+| F12 | RENAME 同义标签参数 | gene/feature 均为 label_*；共享内部标签构造器，保留合理的默认方向/布局差异 |
+| F13 | RENAME 共有端点参数，KEEP 不同几何 | link_gap/link_ctrl_point 共用名字；line/ribbon avoid 和控制点默认不变 |
+| F14/F15 | KEEP 拼写别名与22个重导出 | 拼写差异由用户明确豁免；重导出各有独立职责，帮助注明来源和用途 |
+| F19 | KEEP 三坐标语义边界、FIX 旋转文案 | 参数/支持矩阵和代表组合可复核，未实施全参数或设备矩阵 |
+| F27 | FIX 显式固定值优先与 staged 角色检查 | 默认不压制映射，覆盖的映射不训练默认 scale；chord/collinear staged density 和局部/继承样式通过 |
+| F28 | KEEP ggplot2 dots 传递与明确迁移错误 | 删除的旧名在本版直接报替代；未知 geom 样式仍由上游处理，不伪称全部 fail-fast |
+| F29 | FIX 文档可发现性 | 序列轴 scale 与仅 collinear 的独立 bp 参照条互相指引，无需改名 |
+| F39 | FIX 分派、REMOVE 冗余值 | straight 直线、elbow 一个折点；默认 radial 与旧源码对照不变，trunk 在本版删除指向 radial |
+| F40 | KEEP 公开标量域 | 公开入口已拒绝向量，未复现公开缺陷；不借内部 helper 扩展 theme 语法 |
+
+没有删除任何有独立任务语义的公开函数或重导出，也没有把数据、引擎、输出的
+后续阶段问题挪入本版承诺。本版范围没有尚待用户选择的阻塞项。
+
 附件的 30 项记录保留原编号、优先级及 C/H/D：C 是报告声称已经源码定位的事实，
 H 是待验证假设，D 是设计取舍。这里另列本地静态结论、缺少的运行证据和建议；
 “事实吻合”不等于“缺陷已复现”，建议 FIX/KEEP/DEFER 也不等于用户已批准改名或删除。

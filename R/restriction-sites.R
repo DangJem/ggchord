@@ -616,9 +616,12 @@ GeomRestrictionSite <- ggplot2::ggproto(
 #'   fan segment.
 #'   All enzyme-facing text edges follow one close circular contour in genomic
 #'   order. Dense lateral clusters use evenly spaced contour fans, while sparse
-#'   clusters retain their natural angular positions. `"trunk"` is retained
-#'   only as a compatibility
-#'   alias.
+#'   clusters retain their natural angular positions. The former `"trunk"`
+#'   alias was removed in v0.16.1; use `"radial"`.
+#'   `"straight"` connects the tick tip directly to the final label edge,
+#'   without detours around the sequence or other leaders. `"elbow"` uses
+#'   one bend, starting with a local-normal departure where possible.
+#'   Label positions and grouping are shared by all routing styles.
 #' @param min_label_gap Minimum genomic fraction between label slots. `NULL`
 #'   derives a compact device-aware default from the rendered labels.
 #' @param tick_length,label_offset Local-normal distances.
@@ -632,11 +635,12 @@ GeomRestrictionSite <- ggplot2::ggproto(
 #' @param ... Additional geom parameters.
 #' @return A ggplot2 layer.
 #' @export
-geom_restriction_site<-function(mapping=NULL,data=NULL,label=TRUE,label_style=c("enzyme_position","enzyme","position"),label_order=c("auto","enzyme_position","position_enzyme"),label_side=c("outside","inside","auto"),leader=c("radial","elbow","straight","trunk"),min_label_gap=NULL,tick_length=.04,label_offset=.18,colour="#202020",linewidth=.28,label_size=3.2,fontface=NULL,family=NULL,position="identity",show.legend=FALSE,inherit.aes=FALSE,...){
+geom_restriction_site<-function(mapping=NULL,data=NULL,label=TRUE,label_style=c("enzyme_position","enzyme","position"),label_order=c("auto","enzyme_position","position_enzyme"),label_side=c("outside","inside","auto"),leader=c("radial","elbow","straight"),min_label_gap=NULL,tick_length=.04,label_offset=.18,colour="#202020",linewidth=.28,label_size=3.2,fontface=NULL,family=NULL,position="identity",show.legend=FALSE,inherit.aes=FALSE,...){
   colour_supplied<-!missing(colour);linewidth_supplied<-!missing(linewidth);label_size_supplied<-!missing(label_size);fontface_supplied<-!missing(fontface)&&!is.null(fontface);family_supplied<-!missing(family)&&!is.null(family)
   if(is.null(data))ggchord_stop("geom_restriction_site(): supply restriction-site data")
+  if (identical(leader, "trunk")) ggchord_stop(
+    "geom_restriction_site(): leader = 'trunk' was removed in v0.16.1; use leader = 'radial'")
   label_style<-match.arg(label_style);label_order<-match.arg(label_order);label_side<-match.arg(label_side);leader<-match.arg(leader)
-  if (identical(leader, "trunk")) leader <- "radial"
   vals<-c(tick_length,label_offset);if(!is.numeric(vals)||any(!is.finite(vals))||any(vals<0)||(!is.null(min_label_gap)&&(!is.numeric(min_label_gap)||length(min_label_gap)!=1L||!is.finite(min_label_gap)||min_label_gap<0)))ggchord_stop("geom_restriction_site(): invalid gaps or offsets")
   segment_params<-list();text_params<-list()
   if(colour_supplied){segment_params$colour<-colour;text_params$colour<-colour}
@@ -1805,6 +1809,18 @@ ggchord_restriction_geometry <- function(data, params, layout, seq_data) {
           centre_length < .02
       start <- c(tips$x[member], tips$y[member])
       endpoint <- c(endpoint_x[member], endpoint_y[member])
+      if (identical(params$leader, "straight")) {
+        return(data.frame(x = c(start[1], endpoint[1]),
+          y = c(start[2], endpoint[2])))
+      }
+      if (identical(params$leader, "elbow") && side_sign < 0) {
+        # Interior callouts must not enter the exterior-circle clearance
+        # search: their tick roots are already inside that forbidden radius.
+        shoulder <- min(.085, sqrt(sum(vector^2)) * .30)
+        bend <- start + radial * shoulder
+        return(data.frame(x = c(start[1], bend[1], endpoint[1]),
+          y = c(start[2], bend[2], endpoint[2])))
+      }
       # The leader may pass inside its own tick tip, but never inside the
       # visible sequence boundary where that tick begins.  Treating the tip
       # radius as the forbidden circle forces harmless chords into elbows;
@@ -1817,11 +1833,12 @@ ggchord_restriction_geometry <- function(data, params, layout, seq_data) {
       # sized radial stubs before an otherwise safe chord can make adjacent,
       # correctly ordered leaders cross one another.  Keep a bend only when a
       # direct chord would enter the plasmid interior.
-      if (direct_is_safe && !ordered_fan[member]) {
+      if (!identical(params$leader, "elbow") &&
+          direct_is_safe && !ordered_fan[member]) {
         return(data.frame(x = c(start[1], endpoint[1]),
           y = c(start[2], endpoint[2])))
       }
-      if (ordered_fan[member]) {
+      if (!identical(params$leader, "elbow") && ordered_fan[member]) {
         endpoint_angle <- atan2(endpoint[2], endpoint[1])
         main_radius <- labels$.restriction_base_contour_radius[member]
         if (!is.finite(main_radius)) main_radius <- sqrt(sum(endpoint^2))
@@ -1922,7 +1939,9 @@ ggchord_restriction_geometry <- function(data, params, layout, seq_data) {
     accepted <- list()
     for (member in seq_along(leader_paths)) {
       current <- leader_paths[[member]]
-      if (path_crosses(current, accepted)) {
+      if (!identical(params$leader, "straight") &&
+          !(identical(params$leader, "elbow") && side_sign < 0) &&
+          path_crosses(current, accepted)) {
         start <- c(tips$x[member], tips$y[member])
         endpoint <- c(endpoint_x[member], endpoint_y[member])
         base <- unlist(bases[member, c("x", "y")])

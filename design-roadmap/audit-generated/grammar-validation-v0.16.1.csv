@@ -10,5 +10,6 @@
 "collinear_layer_and_scale_order","PASS","Reversing same-role layers and placing manual scale last retains each colour"
 "chord_staged_density","PASS","after_stat density and staged after_scale evaluate on ribbon geometry"
 "collinear_staged_density","PASS","after_stat density and staged after_scale evaluate on ribbon geometry"
-"F39_leader_current_behavior","PASS","radial/elbow/straight produce identical public geometry"
+"F39_leader_dispatch","PASS","straight paths are direct; elbow paths bend once; source rows retained"
+"F39_interior_elbow","PASS","Interior elbow departs inward with reversed direction and a circular gap"
 "F40_public_orientation_domain","PASS","Public theme rejects vectors; helper branch is outside public contract"

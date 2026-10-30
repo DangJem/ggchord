@@ -2,14 +2,65 @@
 
 ## v0.16.1 开发中
 
+以下为本版实际迁移；所有删除均发生在 **v0.16.1**，旧调用明确报错，不再执行兼容
+分支。用户已明确取消此前“等到 v1.0.0 才删除”的期限。保留 colour/color 拼写别名。
+
+| 旧调用中的参数/取值 | 当前写法 | 影响 |
+| --- | --- | --- |
+| `geom_feature(feature_shape = "block")`（含 plasmid） | `shape = "block"` | 固定值只有一个名称；`aes(feature_shape = type)` 仍为映射 |
+| `gene_width`、`feature_width` | `width` | gene/feature/预设共用宽度名称和既有单位 |
+| gene 标签 `gene_label_*` | 对应的 `label_*` | orientation/side/overlap/rotation/offset/wrap/layout/fit/max_lines/min_size/segment 参数统一；`max_overlaps` 和固定 `size` 不变 |
+| ribbon 的 `ribbon_gap`、`ribbon_ctrl_point` | `link_gap`、`link_ctrl_point` | 与 point link 共用名称，保留各自默认与几何 |
+| `gene_offset = .1`、`feature_offset = .1` | `position = position_strand(offset = .1)` | 放置统一由 Position 负责 |
+| `leader = "trunk"` | `leader = "radial"` | 删除无独立路由语义的兼容取值 |
+
+旧逐链 offset 将负链值作为幅度再翻转；Position 的显式逐链值已经是有符号距离。
+例如旧 `gene_offset = c("+" = .1, "-" = .2)` 应改为
+`position_strand(offset = c("+" = .1, "-" = -.2))`。逐序列嵌套链设置同样转换负链值；
+单个正标量直接迁移。不能把旧正幅度原样作为负链的正距离。
+
+theme 的 `text`、`plot.*` 和通用 `legend.*` 移出显式签名，原来的命名调用仍可通过
+`...` 使用，如 `theme_ggchord(text = element_text(size = 12), legend.position = "bottom")`。
+IDE 是否展开上游 dots 由 IDE 决定；本包能保证自身 formals 仅列专属设置。
+这些签名整理后的调用应使用参数名，不依赖旧的位置匹配顺序。
+
+以下为完整教学输入，不代表真实科研数据：
+
+```r
+library(ggchord)
+seqs <- data.frame(accver = c("A", "B"), length = c(1000, 1000))
+genes <- data.frame(accver = "A", start = 100, end = 300,
+  strand = "+", anno = "gene")
+features <- transform(genes, type = "CDS", label = "feature")
+links <- data.frame(qaccver = "A", saccver = "B", qstart = 100,
+  qend = 300, sstart = 400, send = 600, pident = 90)
+ggchord(seqs, links, genes) + geom_seq() +
+  geom_gene(width = .05, position = position_strand(.1)) +
+  geom_feature(data = features, shape = "block", width = .08) +
+  geom_gene_label_repel(label_layout = "radial", label_fit = "wrap") +
+  geom_link_ribbon(link_gap = .03, link_ctrl_point = c(0, 0))
+```
+
+- 固定样式优先：旧调用 `geom_link_line(aes(link_colour = group), colour = "red")`
+  以前显示映射颜色，现在显示 red；要继续映射，写
+  `geom_link_line(aes(link_colour = group))`。ribbon 的 alpha/colour/linetype、feature
+  形状采用同一规则；省略固定参数不会以默认值压住映射。未删除参数，无删除版本。
+- `geom_restriction_site(leader = "straight")` 现在使用直接连线，`leader = "elbow"`
+  使用一个折点；这两种旧调用曾使用 radial 路由。需要保留旧图形时改用
+  `leader = "radial"`；默认 radial 不变。直线可能穿越骨架或其他连线，
+  不自动改为折线；没有承诺任意密度下无相交。
 - `coord_chord(rotation = 45)` 调用与几何保持不变，帮助修正为从正 x 轴逆时针旋转；
   原来的 clockwise 文案与源码旋转矩阵不符。无需取反参数迁移。
 - `scale_seq_position_continuous(breaks = ...)` 配置序列轴；
   `geom_seq_scale(length = 200)` 为 collinear 添加独立 bp 参照条。二者不互为别名，
   没有重命名或删除版本。
-- 图层入口、形状、颜色拼写和样式优先级取舍仍待用户选择，未实施批量改名删除。
+- gene 是共享 feature 构造内核的定向箭头快捷入口，仍保留 gene 独立美学和严格
+  正负链要求。未知链继续使用 feature；未删除便利入口或22个第三方重导出。
 
-**状态：v0.16.0 本地开发完成，实际修复与迁移示例已作局部直接验证；尚未正式发布。**
+## v0.16.0 历史修复记录
+
+**状态：v0.16.0 本地开发完成，尚未正式发布。以下行为表描述该版当时事实；
+v0.16.1 的参数迁移以前节为准。**
 
 本文件只列实际变化与有明确标记的待决策事项。没有新增、删除或重命名公开函数，
 也没有改变参数默认值；完整发布验收仍须用户明确授权后执行。

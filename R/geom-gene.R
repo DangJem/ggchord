@@ -1,7 +1,6 @@
 # geom-gene.R - gene arrow layer and gene label layer
-# Fetches pre-computed gene arrow polygons / label data from the package
-# environment. Gene parameters are specified in this layer and stored for use
-# at print time.
+# The gene shortcut shares feature construction; layer-owned inputs and
+# parameters are resolved by the plot-owned layout calculation at build time.
 
 # ---------------------------------------------------------------------------
 # geom_gene(): gene arrow polygons
@@ -11,17 +10,16 @@ gene_geom <- rename_geom_aes(GeomChordFeatureBase, renames = c(fill = "gene_fill
 
 #' Add a gene arrow layer
 #'
-#' Draws gene annotation arrows on the chord diagram. Gene layout parameters
-#' (offset, width, color scheme, etc.) are specified here.
+#' A directed-gene shortcut using the generic \code{\link{geom_feature}()}
+#' constructor with arrow geometry and the independent \code{gene_fill} role.
+#' Gene input still requires a known \code{+} or \code{-} strand; use
+#' \code{\link{geom_feature}()} for unknown strands.
 #' The gene fill scale is kept independent from the ribbon's fill scale via a
 #' separate internal aesthetic used by the ribbon layer.
 #'
 #' @param mapping Default NULL (uses pre-computed data)
 #' @param data Default NULL (retrieved automatically from the layout)
-#' @param gene_offset Deprecated placement input. Explicit values are translated
-#'   to the former strand-separated geometry and emit a migration warning. Use
-#'   `position = position_strand(offset = ...)`; removal is planned for v1.0.0.
-#' @param gene_width Optional numeric/vector/list. Width of gene arrows, default 0.05
+#' @param width Optional numeric/vector/list. Width of gene arrows, default 0.05
 #' @param arrow_head_length,arrow_head_width Shared arrow-head dimensions in
 #'   the sequence-local frame.
 #' @param arrow_head_style Arrowhead construction: shouldered, flush, or a
@@ -43,123 +41,66 @@ gene_geom <- rename_geom_aes(GeomChordFeatureBase, renames = c(fill = "gene_fill
 #' data(seq_data_example)
 #' data(gene_data_example)
 #' p <- ggchord(seq_data_example, gene_data = gene_data_example) +
-#'   geom_seq() + geom_gene()
+#'   geom_seq() + geom_gene(width = .05)
 #' p
 geom_gene <- function(mapping = NULL, data = NULL,
-                      gene_offset = NULL,
-                      gene_width = NULL,
-                      arrow_head_length = 0.04,
-                      arrow_head_width = 1,
+                      width = NULL,
+                      arrow_head_length = 0.04, arrow_head_width = 1,
                       arrow_head_style = c("shouldered", "flush", "triangle"),
                       short_feature = c("auto", "wedge", "block"),
-                      position = "identity",
-                      show.legend = TRUE,
-                      inherit.aes = FALSE,
-                      ...) {
-  old_error <- ggchord_disable_debug()
-  on.exit(options(error = old_error), add = TRUE)
-  dots <- list(...)
-  arrow_head_style <- match.arg(arrow_head_style)
-  short_feature <- match.arg(short_feature)
-  position_object <- ggchord_as_feature_position(position, "geom_gene()")
-  if (!is.null(gene_offset)) {
-    if (!ggchord_is_identity_position(position_object)) {
-      ggchord_stop("geom_gene(): `gene_offset` cannot be combined with a non-identity position")
-    }
-    warning(
-      "`gene_offset` placement is deprecated. Use `position = position_strand(offset = ...)` instead.",
-      call. = FALSE
-    )
-  }
-  if (!is.numeric(arrow_head_length) || length(arrow_head_length) != 1L ||
-      !is.finite(arrow_head_length) || arrow_head_length < 0 ||
-      !is.numeric(arrow_head_width) || length(arrow_head_width) != 1L ||
-      !is.finite(arrow_head_width) || arrow_head_width <= 0) {
-    ggchord_stop("geom_gene(): arrow head dimensions must be finite non-negative/positive numbers")
-  }
+                      position = "identity", show.legend = TRUE,
+                      inherit.aes = FALSE, ...) {
+  dots <- ggchord_colour_dots(list(...), "geom_gene()")
   ggchord_reject_retired(dots, "geom_gene()", c(
+    gene_width = "width",
+    gene_offset = "position = position_strand(offset = ...)",
     gene_color_scheme = "aes(gene_fill = ...) and scale_gene_fill_manual()",
     gene_colors = "scale_gene_fill_manual(values = ...)",
     gene_order = "scale_gene_fill_manual(limits = ...)",
     show_legend = "show.legend",
     legend_position = "guides(gene_fill = guide_ggchord_legend(position = ...))"
   ))
-  dots <- ggchord_colour_dots(dots, "geom_gene()")
-  # Backward compatibility: gene label parameters used to live here. Point the
-  # user to the dedicated layer instead of silently ignoring them.
-  legacy_label_args <- intersect(
-    names(dots),
-    c("gene_label_show", "gene_label_size", "gene_label_rotation",
-      "gene_label_radial_offset", "gene_label_circum_offset",
-      "gene_label_circum_limit", "gene_label_repel", "gene_label_wrap",
-      "gene_label_max_overlaps", "gene_label_seed", "show_label", "label_size")
-  )
-  if (length(legacy_label_args) > 0) {
-    ggchord_stop(
-      "Removed geom_gene() label argument(s): ",
-      paste(legacy_label_args, collapse = ", "),
-      ". Add geom_gene_label() or geom_gene_label_repel() as a separate layer."
-    )
+  labels <- names(dots)[grepl("^gene_label_|^label_", names(dots)) |
+    names(dots) == "show_label"]
+  if (length(labels)) ggchord_stop(
+    "Removed geom_gene() label arguments: ", paste(labels, collapse = ", "),
+    ". Add geom_gene_label() or geom_gene_label_repel().")
+  mapping <- ggchord_normalize_mapping(mapping)
+  feature_mapping <- mapping
+  if ("gene_fill" %in% names(feature_mapping)) {
+    names(feature_mapping)[names(feature_mapping) == "gene_fill"] <- "feature_fill"
   }
-
-  # Manual colors map by annotation; default colors map by strand.
-  gene_scheme <- if (!is.null(mapping) && "gene_fill" %in% names(mapping)) {
-    "manual"
-  } else {
-    "strand"
+  if ("gene_fill" %in% names(dots)) {
+    names(dots)[names(dots) == "gene_fill"] <- "feature_fill"
   }
-  fill_mapping <- if (identical(gene_scheme, "manual")) {
+  layer <- do.call(geom_feature, c(list(
+    mapping = feature_mapping, data = data, shape = "arrow", width = width,
+    arrow_head_length = arrow_head_length,
+    arrow_head_width = arrow_head_width, arrow_head_style = match.arg(arrow_head_style),
+    short_feature = match.arg(short_feature), position = position,
+    show.legend = show.legend, inherit.aes = inherit.aes), dots))
+  # A directed-gene shortcut retains its independent role scale and strict
+  # biological input contract while sharing the generic feature constructor.
+  layer$geom <- gene_geom
+  layer$geom_params[c("segment_boundaries", "boundary_colour", "boundary_linewidth",
+    "boundary_linetype", "adaptive_outline")] <- NULL
+  layer$aes_params$feature_shape <- NULL
+  if ("feature_fill" %in% names(layer$aes_params)) {
+    names(layer$aes_params)[names(layer$aes_params) == "feature_fill"] <- "gene_fill"
+  }
+  mapped <- "gene_fill" %in% names(mapping)
+  layer$mapping <- if (mapped) {
     ggplot2::aes(x = x, y = y, group = group, gene_fill = anno)
-  } else {
-    ggplot2::aes(x = x, y = y, group = group, gene_fill = strand)
-  }
-
-  # The polygon layer carries the gene parameters so that the plot object is
-  # self-contained (scales are added at build time by ggplot_build.ggchord).
-  poly_layer <- ggplot2::layer(
-    data        = data.frame(x = numeric(0), y = numeric(0),
-                             group = integer(0),
-                             strand = factor(character(0), levels = c("+", "-")),
-                             anno = character(0), ord = integer(0)),
-    mapping     = fill_mapping,
-    stat        = "identity",
-    geom        = gene_geom,
-    position    = position_object,
-    show.legend = if (identical(show.legend, TRUE)) {
-                    c(gene_fill = TRUE, colour = FALSE)
-                  } else show.legend,
-    inherit.aes = inherit.aes,
-    check.param = FALSE,
-    key_glyph   = key_glyph_gene,
-    params      = c(
-      if (!("colour" %in% names(dots))) list(colour = "#353A3E") else list(),
-      if (!("linewidth" %in% names(dots))) list(linewidth = 0.25) else list(),
-      dots
-    )
-  )
-  poly_layer$ggchord_type <- "gene_poly"
-  poly_layer$ggchord_params <- list(
-    type              = "gene",
-    gene_offset       = gene_offset,
-    gene_width        = gene_width,
-    arrow_head_length = as.numeric(arrow_head_length),
-    arrow_head_width  = as.numeric(arrow_head_width),
-    arrow_head_style  = arrow_head_style,
-    short_feature     = short_feature,
-    feature_position  = position_object,
-    legacy_offset     = gene_offset,
-    feature_role      = "gene",
-    gene_color_scheme = gene_scheme,
-    gene_colors       = NULL,
-    gene_order        = NULL,
-    legend_position   = NULL
-  )
-  poly_layer <- ggchord_capture_layer_input(
-    poly_layer, data, mapping,
-    c("accver", "start", "end", "strand", "anno")
-  )
-  poly_layer$ggchord_obstacle_provider <- ggchord_entity_obstacles
-  poly_layer
+  } else ggplot2::aes(x = x, y = y, group = group, gene_fill = strand)
+  layer$show.legend <- if (identical(show.legend, TRUE)) {
+    c(gene_fill = TRUE, colour = FALSE)
+  } else show.legend
+  layer$ggchord_params$is_feature <- FALSE
+  layer$ggchord_params$feature_role <- "gene"
+  layer$ggchord_params$gene_color_scheme <- if (mapped) "manual" else "strand"
+  layer$ggchord_input_transform <- NULL
+  ggchord_capture_layer_input(layer, data, mapping,
+    c("accver", "start", "end", "strand", "anno"))
 }
 
 # ---------------------------------------------------------------------------
@@ -174,29 +115,29 @@ geom_gene <- function(mapping = NULL, data = NULL,
 #'
 #' This is the deterministic, fixed-position label layer. By default labels
 #' sit outside their sequence and labels that would collide are omitted in
-#' input-row order. Use \code{gene_label_overlap = "nudge"} to retain the
+#' input-row order. Use \code{label_overlap = "nudge"} to retain the
 #' legacy gentle adjustment, or \code{"allow"} to draw every label at its
 #' requested position. For automatic arrangement with leader lines, use
 #' \code{\link{geom_gene_label_repel}()} instead.
 #'
 #' @param mapping Default NULL (uses pre-computed data)
 #' @param data Default NULL (retrieved automatically from the layout)
-#' @param gene_label_orientation Character, default \code{"horizontal"}. Text
+#' @param label_orientation Character, default \code{"horizontal"}. Text
 #'   orientation relative to each sequence path: \code{"radial"},
 #'   \code{"tangent"}, or \code{"horizontal"}.
-#' @param gene_label_side Character, default \code{"outside"}. Place labels
+#' @param label_side Character, default \code{"outside"}. Place labels
 #'   outside the chord, use the strand-based \code{"auto"} side, or force
 #'   \code{"inside"} placement.
-#' @param gene_label_overlap Character, default \code{"hide"}. Fixed-label
+#' @param label_overlap Character, default \code{"hide"}. Fixed-label
 #'   collision policy: omit later conflicting labels (\code{"hide"}), apply
 #'   the legacy gentle adjustment (\code{"nudge"}), or keep all requested
 #'   positions (\code{"allow"}). Input row order therefore provides a simple
 #'   way to prioritize labels in \code{"hide"} mode.
-#' @param gene_label_rotation Optional numeric/vector/list. Label rotation angle, default 0
-#' @param gene_label_radial_offset Optional numeric/vector/list. Radial offset of labels, default 0.04
-#' @param gene_label_circum_offset Optional numeric/vector/list. Circumferential offset of labels, default 0
-#' @param gene_label_circum_limit Optional logical/vector/list. Whether to limit circumferential offset, default TRUE
-#' @param gene_label_wrap Numeric or NULL, default NULL. When set, long gene
+#' @param label_rotation Optional numeric/vector/list. Label rotation angle, default 0
+#' @param label_radial_offset Optional numeric/vector/list. Radial offset of labels, default 0.04
+#' @param label_circum_offset Optional numeric/vector/list. Circumferential offset of labels, default 0
+#' @param label_circum_limit Optional logical/vector/list. Whether to limit circumferential offset, default TRUE
+#' @param label_wrap Numeric or NULL, default NULL. When set, long gene
 #'   annotations are wrapped at this many characters (e.g. 15), which makes the
 #'   labels narrower and less prone to overlap.
 #' @param position Position adjustment. Supply the same
@@ -222,9 +163,29 @@ geom_gene <- function(mapping = NULL, data = NULL,
 #' data(seq_data_example)
 #' data(gene_data_example)
 #' p <- ggchord(seq_data_example, gene_data = gene_data_example) +
-#'   geom_seq() + geom_gene() + geom_gene_label()
+#'   geom_seq() + geom_gene() + geom_gene_label(label_side = "auto")
 #' p
 geom_gene_label <- function(mapping = NULL, data = NULL,
+    label_orientation = "horizontal", label_side = "outside",
+    label_overlap = "hide", label_rotation = NULL,
+    label_radial_offset = 0.04, label_circum_offset = NULL,
+    label_circum_limit = NULL, label_wrap = NULL,
+    position = "identity", show.legend = FALSE, inherit.aes = FALSE, ...) {
+  dots <- list(...)
+  ggchord_reject_label_prefix(dots, "geom_gene_label()")
+  args <- c(list(mapping = mapping, data = data,
+    gene_label_orientation = label_orientation, gene_label_side = label_side,
+    gene_label_overlap = label_overlap, gene_label_rotation = label_rotation,
+    gene_label_radial_offset = label_radial_offset,
+    gene_label_circum_offset = label_circum_offset,
+    gene_label_circum_limit = label_circum_limit, gene_label_wrap = label_wrap,
+    position = position, show.legend = show.legend, inherit.aes = inherit.aes), dots)
+  if (missing(position)) args$position <- NULL
+  do.call(ggchord_label_layer, args)
+}
+
+#' @noRd
+ggchord_label_layer <- function(mapping = NULL, data = NULL,
                             gene_label_orientation = "horizontal",
                             gene_label_side = "outside",
                             gene_label_overlap = "hide",
@@ -319,60 +280,60 @@ geom_gene_label <- function(mapping = NULL, data = NULL,
 #'
 #' Low-level force, padding, orientation and segment arguments used by earlier
 #' releases have been removed and now produce an error. Use
-#' \code{gene_label_layout} for automatic placement, or
+#' \code{label_layout} for automatic placement, or
 #' \code{\link{geom_gene_label}()} for manual rotation and offsets.
 #'
 #' @param mapping Default NULL (uses pre-computed data)
 #' @param data Default NULL (retrieved automatically from the layout)
-#' @param gene_label_layout Character, default \code{"radial"}. Label layout:
+#' @param label_layout Character, default \code{"radial"}. Label layout:
 #'   \code{"radial"} arranges horizontal external labels along sequence-relative
 #'   contours, with straight normal leaders or a short normal departure followed
 #'   by a long connector when displaced; \code{"auto"} uses shared vertical
 #'   columns on the left/right and radial placement elsewhere; \code{"arc"}
 #'   rotates text along the sequence tangent. The former \code{"aligned"}
 #'   mode has been removed; use \code{"auto"} for side columns.
-#' @param gene_label_wrap Numeric or NULL, default NULL. When set, long gene
+#' @param label_wrap Numeric or NULL, default NULL. When set, long gene
 #'   annotations are wrapped at this many characters (e.g. 15), overriding
-#'   \code{gene_label_fit}.
-#' @param gene_label_fit Character, default \code{"wrap"}. How labels whose
+#'   \code{label_fit}.
+#' @param label_fit Character, default \code{"wrap"}. How labels whose
 #'   initial boxes are crowded or unusually wide are fitted before deterministic layout:
 #'   \code{"wrap"} preserves the complete annotation over multiple lines,
 #'   \code{"ellipsis"} uses a single shortened line, \code{"auto"} wraps and
-#'   adds an ellipsis only if text exceeds \code{gene_label_max_lines}, and
+#'   adds an ellipsis only if text exceeds \code{label_max_lines}, and
 #'   \code{"none"} disables adaptive fitting. Explicit \code{"shrink"} uses
 #'   internal-first feature placement and reduces the complete text only as
-#'   far as \code{gene_label_min_size}. Labels that still cannot fit use the
+#'   far as \code{label_min_size}. Labels that still cannot fit use the
 #'   existing adjacent/external placement or hiding policy, at their requested
 #'   size. This choice uses feature placement rather than the external layout
-#'   selected by \code{gene_label_layout}; other fitting modes are unchanged.
-#' @param gene_label_min_size Minimum text size in millimetres for explicit
-#'   \code{gene_label_fit = "shrink"}, default 1.5. It must not exceed the
+#'   selected by \code{label_layout}; other fitting modes are unchanged.
+#' @param label_min_size Minimum text size in millimetres for explicit
+#'   \code{label_fit = "shrink"}, default 1.5. It must not exceed the
 #'   requested text size. Source text, requested/final size and fitting reason
 #'   are retained in exported label geometry.
-#' @param gene_label_max_lines Positive integer, default 2. Maximum number of
+#' @param label_max_lines Positive integer, default 2. Maximum number of
 #'   lines used by adaptive \code{"wrap"} or \code{"auto"} fitting.
 #' @param max_overlaps Numeric, default Inf. Hide labels that still overlap
 #'   more than this many other labels after repulsion (ggrepel-style
 #'   decluttering). Use a finite value to clean up crowded plots.
-#' @param gene_label_side Character, default "outside". Which side of the arc
+#' @param label_side Character, default "outside". Which side of the arc
 #'   the labels sit on. \code{"auto"} keeps the strand-based placement
 #'   (same as before); \code{"outside"} moves labels that would be inside the
 #'   chord (where they can overlap the ribbons) to the outside of their arc;
 #'   \code{"inside"} does the opposite. Labels moved to the other side are
-#'   connected with a dashed leader line (see \code{gene_label_segment_linetype}).
-#' @param gene_label_segment_linetype Character or numeric, default "auto".
+#'   connected with a dashed leader line (see \code{label_segment_linetype}).
+#' @param label_segment_linetype Character or numeric, default "auto".
 #'   Leader-line linetype. \code{"auto"} draws solid lines, except for labels
 #'   that were moved to the other side of their arc, which are drawn dashed.
 #'   Any other valid ggplot2 linetype (e.g. \code{"solid"}, \code{"dashed"},
 #'   \code{"dotted"}, or a numeric dash pattern) is used for all leader lines.
-#' @param gene_label_segment_overlap Character, default \code{"fade"}.
+#' @param label_segment_overlap Character, default \code{"fade"}.
 #'   How portions of a leader line covered by another label are drawn:
 #'   \code{"fade"} keeps them at reduced opacity, \code{"clip"} removes them,
 #'   and \code{"show"} leaves the complete leader visible. This does not affect
 #'   text wrapping, ellipsis or label hiding.
-#' @param gene_label_segment_overlap_alpha Numeric in \code{[0, 1]}, default
+#' @param label_segment_overlap_alpha Numeric in \code{[0, 1]}, default
 #'   0.18. Relative opacity applied only to covered leader-line portions when
-#'   \code{gene_label_segment_overlap = "fade"}.
+#'   \code{label_segment_overlap = "fade"}.
 #' @param position Position adjustment. Supply the same
 #'   [position_feature_stack()] used by a gene/feature layer when labels are
 #'   drawn from separate data or without a geometry layer.
@@ -391,9 +352,31 @@ geom_gene_label <- function(mapping = NULL, data = NULL,
 #' p
 #' ggchord(seq_data_example, gene_data = gene_data_example) +
 #'   geom_seq() + geom_gene() +
-#'   geom_gene_label_repel(gene_label_fit = "shrink", gene_label_min_size = 1.5,
+#'   geom_gene_label_repel(label_fit = "shrink", label_min_size = 1.5,
 #'     size = 4) + coord_collinear()
 geom_gene_label_repel <- function(mapping = NULL, data = NULL,
+    label_layout = "radial", label_wrap = NULL, label_fit = "wrap",
+    label_max_lines = 2L, label_side = "outside", max_overlaps = Inf,
+    label_segment_overlap = "fade", label_segment_overlap_alpha = 0.18,
+    label_segment_linetype = "auto", position = "identity",
+    show.legend = FALSE, inherit.aes = FALSE, label_min_size = 1.5, ...) {
+  dots <- list(...)
+  ggchord_reject_label_prefix(dots, "geom_gene_label_repel()")
+  args <- c(list(mapping = mapping, data = data,
+    gene_label_layout = label_layout, gene_label_wrap = label_wrap,
+    gene_label_fit = label_fit, gene_label_max_lines = label_max_lines,
+    gene_label_side = label_side, max_overlaps = max_overlaps,
+    gene_label_segment_overlap = label_segment_overlap,
+    gene_label_segment_overlap_alpha = label_segment_overlap_alpha,
+    gene_label_segment_linetype = label_segment_linetype,
+    position = position, show.legend = show.legend, inherit.aes = inherit.aes,
+    gene_label_min_size = label_min_size), dots)
+  if (missing(position)) args$position <- NULL
+  do.call(ggchord_label_repel_layer, args)
+}
+
+#' @noRd
+ggchord_label_repel_layer <- function(mapping = NULL, data = NULL,
                                   gene_label_layout = "radial",
                                   gene_label_wrap = NULL,
                                   gene_label_fit = "wrap",
@@ -434,7 +417,7 @@ geom_gene_label_repel <- function(mapping = NULL, data = NULL,
     replacement <- if (length(positioning) > 0) {
       " Use geom_gene_label() when manual rotation or offsets are required."
     } else {
-      " Repulsion and leader geometry are now selected by gene_label_layout."
+      " Repulsion and leader geometry are now selected by label_layout."
     }
     ggchord_stop(
       "Removed geom_gene_label_repel() argument(s): ",
@@ -448,7 +431,7 @@ geom_gene_label_repel <- function(mapping = NULL, data = NULL,
 
   if (identical(gene_label_layout, "aligned")) {
     ggchord_stop("geom_gene_label_repel(): removed argument value 'aligned'; ",
-      "use gene_label_layout = 'auto' for side columns")
+      "use label_layout = 'auto' for side columns")
   }
   gene_label_layout <- match.arg(
     gene_label_layout, c("radial", "auto", "arc")
@@ -458,13 +441,13 @@ geom_gene_label_repel <- function(mapping = NULL, data = NULL,
   )
   if (!is.numeric(gene_label_min_size) || length(gene_label_min_size) != 1L ||
       !is.finite(gene_label_min_size) || gene_label_min_size <= 0) ggchord_stop(
-    "gene_label_min_size must be one finite positive text size in millimetres")
+    "label_min_size must be one finite positive text size in millimetres")
   if (identical(gene_label_fit, "shrink")) gene_label_layout <- "feature"
   if (!is.numeric(gene_label_max_lines) ||
       length(gene_label_max_lines) != 1L ||
       !is.finite(gene_label_max_lines) || gene_label_max_lines < 1 ||
       gene_label_max_lines != as.integer(gene_label_max_lines)) {
-    ggchord_stop("gene_label_max_lines must be one positive integer")
+    ggchord_stop("label_max_lines must be one positive integer")
   }
   gene_label_max_lines <- as.integer(gene_label_max_lines)
   gene_label_side <- match.arg(gene_label_side, c("auto", "inside", "outside"))
@@ -477,7 +460,7 @@ geom_gene_label_repel <- function(mapping = NULL, data = NULL,
       gene_label_segment_overlap_alpha < 0 ||
       gene_label_segment_overlap_alpha > 1) {
     ggchord_stop(
-      "gene_label_segment_overlap_alpha must be one finite number in [0, 1]"
+      "label_segment_overlap_alpha must be one finite number in [0, 1]"
     )
   }
   gene_label_segment_linetype <- validate_gene_segment_linetype(
@@ -542,4 +525,21 @@ geom_gene_label_repel <- function(mapping = NULL, data = NULL,
     c("accver", "start", "end", "strand", "anno")
   )
   lyr
+}
+
+#' Reject renamed public label parameters with an executable migration path
+#' @noRd
+ggchord_reject_label_prefix <- function(dots, caller) {
+  old <- names(dots)[grepl("^gene_label_", names(dots))]
+  if (!length(old)) return(invisible(NULL))
+  replacements <- sub("^gene_", "", old)
+  replacements[old == "gene_label_size"] <- "size"
+  replacements[old == "gene_label_max_overlaps"] <- "max_overlaps"
+  replacements[old == "gene_label_segment"] <- "label_layout"
+  manual <- old %in% c("gene_label_rotation", "gene_label_radial_offset",
+    "gene_label_circum_offset", "gene_label_circum_limit", "gene_label_orientation")
+  if (grepl("repel", caller)) replacements[manual] <- paste0(
+    "geom_gene_label(", replacements[manual], " = ...) for manual placement")
+  ggchord_stop(caller, ": parameters removed in v0.16.1: ",
+    paste(paste0(old, " -> ", replacements), collapse = "; "))
 }

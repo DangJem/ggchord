@@ -80,9 +80,9 @@ stopifnot(length(unique(fixed_text$layer_id)) == 1L,
 # Additional layers retain their own data functions, mapping and source rows.
 separate <- ggchord(collinear_sequences, validate = "none") +
   geom_seq() +
-  geom_feature(data = collinear_features[1L, ], feature_shape = "block") +
+  geom_feature(data = collinear_features[1L, ], shape = "block") +
   geom_feature(data = function(x) collinear_features[2L, ],
-    feature_shape = "chevron") + coord_collinear()
+    shape = "chevron") + coord_collinear()
 independent <- export_ggchord_layout(separate, include = "feature",
   original_data = TRUE)
 stopifnot(length(unique(independent$feature$layer_id)) == 2L,
@@ -118,12 +118,12 @@ leader_feature <- data.frame(accver = "cluster_A", start = 100, end = 900,
   strand = "+", type = "CDS", label = "foo")
 leader_position <- position_strand(.2)
 leader_out <- export_ggchord_layout(ggchord(collinear_sequences, validate = "none") +
-  geom_seq() + geom_feature(data = leader_feature, feature_width = .15,
+  geom_seq() + geom_feature(data = leader_feature, width = .15,
     position = leader_position) +
   geom_feature_label(data = leader_feature, position = leader_position,
     label_overlap = "allow") +
   geom_feature_label_repel(data = leader_feature, position = leader_position,
-    gene_label_segment_linetype = "dotted") + coord_collinear(), include = "labels")
+    label_segment_linetype = "dotted") + coord_collinear(), include = "labels")
 leader_segments <- leader_out$labels[leader_out$labels$.component %in% "segment", , drop = FALSE]
 stopifnot(nrow(leader_segments) > 0L, all(leader_segments$linetype == "dotted"))
 

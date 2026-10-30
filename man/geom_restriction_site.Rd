@@ -11,7 +11,7 @@ geom_restriction_site(
   label_style = c("enzyme_position", "enzyme", "position"),
   label_order = c("auto", "enzyme_position", "position_enzyme"),
   label_side = c("outside", "inside", "auto"),
-  leader = c("radial", "elbow", "straight", "trunk"),
+  leader = c("radial", "elbow", "straight"),
   min_label_gap = NULL,
   tick_length = 0.04,
   label_offset = 0.18,
@@ -44,9 +44,12 @@ and routes either a direct connector or an independent radial stub plus
 fan segment.
 All enzyme-facing text edges follow one close circular contour in genomic
 order. Dense lateral clusters use evenly spaced contour fans, while sparse
-clusters retain their natural angular positions. `"trunk"` is retained
-only as a compatibility
-alias.}
+clusters retain their natural angular positions. The former `"trunk"`
+alias was removed in v0.16.1; use `"radial"`.
+`"straight"` connects the tick tip directly to the final label edge,
+without detours around the sequence or other leaders. `"elbow"` uses
+one bend, starting with a local-normal departure where possible.
+Label positions and grouping are shared by all routing styles.}
 
 \item{min_label_gap}{Minimum genomic fraction between label slots. `NULL`
 derives a compact device-aware default from the rendered labels.}

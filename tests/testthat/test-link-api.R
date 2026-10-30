@@ -19,7 +19,7 @@ test_that("shared ribbons retain explicit edge control points", {
   r <- data.frame(qaccver = "A", saccver = c("B", "C"),
     qstart = 100, qend = 300, sstart = 400, send = 600)
   p <- ggchord(s, r) + geom_seq() + geom_link_ribbon(
-    fill = "orange", link_branch = "query", ribbon_ctrl_point = c(4, 4))
+    fill = "orange", link_branch = "query", link_ctrl_point = c(4, 4))
   d <- export_ggchord_layout(p, include = "ribbon")$ribbon
   expect_true(any(d$.component == "trunk"))
   # A deliberately external control must pull the branches beyond the tracks.

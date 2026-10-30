@@ -49,8 +49,8 @@ geom_primer <- function(mapping = NULL, data = NULL,
     position <- position_plasmid(offset)
   }
   layer <- geom_feature(
-    mapping = mapping, data = data, feature_shape = "primer_arc",
-    feature_width = arc_linewidth, arrow_head_length = arc_linewidth,
+    mapping = mapping, data = data, shape = "primer_arc",
+    width = arc_linewidth, arrow_head_length = arc_linewidth,
     arrow_head_width = 1, short_feature = "auto", position = position,
     show.legend = show.legend, inherit.aes = inherit.aes,
     feature_fill = colour, colour = colour, ...

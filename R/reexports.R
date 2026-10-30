@@ -5,16 +5,16 @@
 #' plot. Cartesian geoms, coordinates, facets, generic scales, and complete
 #' theme presets remain in ggplot2 so IDE completion stays focused.
 #'
-#' Mapping helpers are `aes()`, `after_stat()` and `after_scale()`;
-#' `ggplot2::stage()` combines stages of one aesthetic. Use `labs()` and
-#' `ggtitle()` for titles, `guides()` for guide selection, and `theme()` with
-#' the `element_*()` helpers for appearance. `annotate()` adds fixed annotations.
-#' `margin()` and `rel()` specify theme sizes; `waiver()` and `expansion()`
-#' specify automatic or expanded scale settings. `position_identity()` and
-#' `PositionIdentity` are the upstream identity placement helpers.
-#' `ggsave()` saves a supplied plot; `last_plot()` retrieves ggplot2's last plot.
+#' Mapping helpers are \code{aes()}, \code{after_stat()} and \code{after_scale()};
+#' \code{ggplot2::stage()} combines stages of one aesthetic. Use \code{labs()} and
+#' \code{ggtitle()} for titles, \code{guides()} for guide selection, and \code{theme()} with
+#' the \code{element_*()} helpers for appearance. \code{annotate()} adds fixed annotations.
+#' \code{margin()} and \code{rel()} specify theme sizes; \code{waiver()} and \code{expansion()}
+#' specify automatic or expanded scale settings. \code{position_identity()} and
+#' \code{PositionIdentity} are the upstream identity placement helpers.
+#' \code{ggsave()} saves a supplied plot; \code{last_plot()} retrieves ggplot2's last plot.
 #' Each symbol is the original ggplot2 function or object, and can also be
-#' called with its `ggplot2::` namespace. `unit()` and `arrow()` come from grid.
+#' called with its \code{ggplot2::} namespace. \code{unit()} and \code{arrow()} come from grid.
 #'
 #' @name ggplot2-helpers
 NULL

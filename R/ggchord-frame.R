@@ -202,6 +202,8 @@ prepare_ggchord_plot <- function(plot) {
                                plot$scales$scales)
   plot$layers <- lapply(plot$layers, ggchord_inherit_ribbon_linetype,
     mapping = plot$mapping)
+  plot$layers <- lapply(plot$layers, ggchord_resolve_style_defaults,
+    mapping = plot$mapping)
   layout <- compute_chord_geometry(plot)
   cls <- classify_ggchord_layers(plot)
   new_layers <- plot$layers
@@ -234,7 +236,8 @@ prepare_ggchord_plot <- function(plot) {
     "gene_fill" %in% names(x$mapping)
   }, logical(1)))
   sc <- make_ggchord_scales(layout,
-                            has_seq = length(cls$seq) > 0,
+                            has_seq = any(vapply(plot$layers, function(x)
+                              "seq_colour" %in% names(x$mapping), logical(1))),
                             has_gene = has_gene,
                             has_feature = has_feature,
                             has_feature_shape = has_feature_shape,
