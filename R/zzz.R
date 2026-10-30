@@ -331,7 +331,9 @@ ggchord_attach_input_columns <- function(geometry, input) {
     return(geometry)
   }
   valid <- !is.na(idx) & idx >= 1 & idx <= nrow(input)
-  cols <- setdiff(names(input), protected)
+  # Protect computed geometry, not names that the geometry does not contain.
+  # A source column such as label may still supply an ordinary visual mapping.
+  cols <- setdiff(names(input), intersect(protected, names(geometry)))
   for (nm in cols) {
     source <- input[[nm]]
     if (is.list(source) && !is.data.frame(source)) {
