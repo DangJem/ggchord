@@ -23,7 +23,8 @@ source_input_paths <- function() c(
   file.path(repo, "DESCRIPTION"), file.path(repo, "NAMESPACE"),
   sort(list.files(file.path(repo, "R"), "\\.R$", full.names = TRUE)),
   sort(list.files(file.path(repo, "man"), "\\.Rd$", full.names = TRUE)),
-  sort(list.files(file.path(repo, "design-roadmap/audit-reviewed"), "\\.csv$", full.names = TRUE))
+  sort(list.files(file.path(repo, "design-roadmap/audit-reviewed"), "\\.csv$", full.names = TRUE)),
+  sort(list.files(file.path(repo, "design-roadmap/audit-reviewed-details"), "\\.csv$", full.names = TRUE))
 )
 # Freeze the input set before the first read. A concurrent edit must abort the
 # run before output is written, rather than attach new hashes to an older AST.
@@ -367,8 +368,8 @@ for (i in seq_len(nrow(arguments))) {
   if (is.na(n)) n <- 0L
   arguments$actual_usage[[i]] <- paste0("AST body/default symbol occurrences=", n, "; runtime use REVIEW_REQUIRED")
 }
-# Apply curated semantic evidence only to unique public function+parameter
-# rows. AST defaults, order, signature evidence and current source provenance
+# Apply curated evidence to unique public function+parameter rows, or private
+# function_id+parameter rows. AST defaults, order and current source provenance
 # are immutable; historical review provenance is recorded in separate columns.
 arguments$static_confidence <- arguments$confidence
 arguments$static_actual_usage <- arguments$actual_usage
@@ -376,7 +377,8 @@ arguments$review_status <- "REVIEW_REQUIRED"
 arguments$review_evidence <- "NOT_REVIEWED"
 arguments$review_input_path <- "NONE"
 arguments$review_source_revision <- "NONE"
-review_allowed <- c("function", "parameter", semantic_cols, "actual_usage", "confidence",
+review_allowed <- c("function", "function_id", "parameter", semantic_cols, "actual_usage", "confidence",
+                    "missing_semantics", "auto_none_semantics",
                     "review_status", "review_evidence", "source_revision")
 review_required <- c("function", "parameter", "review_status", "review_evidence", "source_revision")
 review_inputs <- lapply(review_files, function(file) {
@@ -393,18 +395,27 @@ review_inputs <- lapply(review_files, function(file) {
     stop("Review source_revision must be a full commit SHA in ", relpath(file))
   list(path = relpath(file), data = d)
 })
-review_keys <- unlist(lapply(review_inputs, function(x)
-  paste(x$data[["function"]], x$data$parameter, sep = "\t")), use.names = FALSE)
+review_keys <- unlist(lapply(review_inputs, function(x) {
+  d <- x$data
+  key <- if ("function_id" %in% names(d)) paste0("id:", d$function_id) else paste0("export:", d[["function"]])
+  paste(key, d$parameter, sep = "\t")
+}), use.names = FALSE)
 if (anyDuplicated(review_keys))
   stop("Duplicate function+parameter review keys: ", paste(unique(review_keys[duplicated(review_keys)]), collapse = ", "))
 for (input in review_inputs) {
   d <- input$data
-  fields <- intersect(names(d), c(semantic_cols, "actual_usage", "confidence", "review_status", "review_evidence"))
+  fields <- intersect(names(d), c(semantic_cols, "actual_usage", "confidence", "review_status", "review_evidence",
+                                  "missing_semantics", "auto_none_semantics"))
   for (i in seq_len(nrow(d))) {
-    target <- which(arguments$is_exported & arguments[["function"]] == d[["function"]][[i]] &
-                    arguments$parameter == d$parameter[[i]])
+    target <- if ("function_id" %in% names(d)) {
+      which(!arguments$is_exported & arguments$function_id == d$function_id[[i]] &
+            arguments[["function"]] == d[["function"]][[i]] & arguments$parameter == d$parameter[[i]])
+    } else {
+      which(arguments$is_exported & arguments[["function"]] == d[["function"]][[i]] &
+            arguments$parameter == d$parameter[[i]])
+    }
     if (length(target) != 1L)
-      stop("Review key must match exactly one exported parameter: ", d[["function"]][[i]], " / ",
+      stop("Review key must match exactly one parameter in its declared scope: ", d[["function"]][[i]], " / ",
            d$parameter[[i]], " in ", input$path, "; matches=", length(target))
     for (field in fields) arguments[[field]][[target]] <- d[[field]][[i]]
     arguments$review_input_path[[target]] <- input$path
@@ -438,6 +449,57 @@ reexports <- imports[imports$symbol %in% reexport_names, , drop = FALSE]
 reexports$retention_decision <- "REVIEW_REQUIRED"
 reexports$replacement_call <- paste0(reexports$package, "::", reexports$symbol)
 reexports$runtime_signature_scope <- "EXTERNAL_PACKAGE_NOT_EVALUATED"
+# Reviewed entry contracts use their own key space, not parameter overlays.
+# Keep current syntax/documentation and historical review provenance separate.
+read_detail <- function(name, keys, required) {
+  path <- file.path(repo, "design-roadmap/audit-reviewed-details", paste0(name, ".csv"))
+  if (!file.exists(path)) return(NULL)
+  d <- read.csv(path, check.names = FALSE, na.strings = character(), colClasses = "character")
+  needed <- unique(c(keys, required, "review_status", "source_revision"))
+  if (anyDuplicated(names(d)) || length(setdiff(needed, names(d)))) stop("Invalid detail schema: ", path)
+  if (nrow(d) && (any(!nzchar(as.matrix(d[, needed, drop = FALSE]))) ||
+                 any(!grepl("^[0-9a-f]{40}$", d$source_revision)))) stop("Empty detail or invalid provenance: ", path)
+  key <- do.call(paste, c(d[keys], sep = "\t"))
+  if (anyDuplicated(key)) stop("Duplicate detail key: ", path)
+  attr(d, "input_path") <- relpath(path)
+  d
+}
+entry_reviews <- read_detail("export-decisions", "function", c("decision", "rationale", "return_contract",
+  "source_tracking", "mutation_and_cache_ownership", "coordinate_scope", "evidence", "unknowns_next_phase"))
+returns <- do.call(rbind, return_rows)
+if (!is.null(entry_reviews)) {
+  if (!setequal(entry_reviews[["function"]], exports)) stop("Entry decisions must cover exactly all exports")
+  d <- entry_reviews[match(exports, entry_reviews[["function"]]), , drop = FALSE]
+  for (field in c("decision", "rationale", "coordinate_scope", "unknowns_next_phase")) export_table[[field]] <- d[[field]]
+  export_table$confidence <- d$review_status
+  for (x in c("export_table", "returns")) {
+    value <- get(x)
+    value$review_status <- d$review_status
+    value$review_evidence <- d$evidence
+    value$review_source_revision <- d$source_revision
+    value$review_input_path <- attr(entry_reviews, "input_path")
+    assign(x, value)
+  }
+  returns$stable_fields <- d$return_contract
+  returns$source_tracking <- d$source_tracking
+  returns$mutation_and_cache_ownership <- d$mutation_and_cache_ownership
+  returns$unknowns_next_phase <- d$unknowns_next_phase
+  returns$confidence <- d$review_status
+  ix <- match(reexports$symbol, d[["function"]])
+  reexports$retention_decision <- d$decision[ix]
+  reexports$rationale <- d$rationale[ix]
+  reexports$review_source_revision <- d$source_revision[ix]
+}
+coordinate_reviews <- read_detail("coordinate-compatibility", c("layer", "coordinate"),
+  c("support_status", "evidence", "runtime_validation"))
+if (!is.null(coordinate_reviews)) {
+  key <- function(x) paste(x$layer, x$coordinate, sep = "\t")
+  if (!setequal(key(compat), key(coordinate_reviews))) stop("Coordinate review must cover exactly the layer/coordinate matrix")
+  d <- coordinate_reviews[match(key(compat), key(coordinate_reviews)), , drop = FALSE]
+  for (field in c("support_status", "evidence", "runtime_validation", "review_status")) compat[[field]] <- d[[field]]
+  compat$review_source_revision <- d$source_revision
+  compat$review_input_path <- attr(coordinate_reviews, "input_path")
+}
 ref_summary <- aggregate(row(function_id = references$function_id),
                          list(function_id = references$function_id, symbol = references$symbol,
                               quoted = references$quoted), length)
@@ -449,18 +511,19 @@ source_fingerprint <- unname(tools::md5sum(tmp)); unlink(tmp)
 write_table(export_table, "api_exports"); write_table(imports, "api_imports"); write_table(s3, "api_s3")
 write_table(functions, "api_functions"); write_table(arguments, "api_arguments")
 write_table(objects, "api_objects"); write_table(aesthetics, "api_aesthetics")
-write_table(do.call(rbind, return_rows), "api_return_contracts")
+write_table(returns, "api_return_contracts")
 write_table(internal, "api_internal_dependencies"); write_table(reexports, "api_reexports")
 write_table(compat, "api_compatibility_matrix"); write_table(dynamic, "api_dynamic_registration")
 write_table(ref_summary, "api_symbol_references_HEURISTIC")
 write_table(coverage, "source_coverage"); write_table(hashes, "source_hashes")
 source_dirty <- git("status", "--short", "--", "R", "NAMESPACE", "DESCRIPTION", "man",
-  shQuote("design-roadmap/audit-reviewed/*.csv"))
+  shQuote("design-roadmap/audit-reviewed/*.csv"), shQuote("design-roadmap/audit-reviewed-details/*.csv"))
 manifest <- row(key = c("audit_start_revision", "git_head_at_generation", "source_fingerprint_md5",
   "source_worktree_status", "source_snapshot_status", "generator_md5", "package_version", "R_version",
   "source_file_count", "export_names", "own_export_names", "reexports", "S3_registrations",
   "function_syntax_tokens", "function_rows", "anonymous_or_method_rows", "argument_rows_including_export_signature_views",
   "unresolved_own_export_signatures", "review_input_files", "human_reviewed_argument_rows", "human_reviewed_export_names",
+  "entry_decision_rows", "coordinate_review_rows",
   "semantic_review_status", "package_execution", "rebuild_command"),
  value = c(audit_start, head_revision, source_fingerprint,
    if (length(source_dirty)) paste(source_dirty, collapse = "; ") else "CLEAN_SOURCE_INPUTS",
@@ -469,6 +532,8 @@ manifest <- row(key = c("audit_start_revision", "git_head_at_generation", "sourc
    sum(coverage$function_tokens), nrow(functions), sum(!functions$is_top_level), nrow(arguments),
    sum(!export_table$is_third_party_reexport & !nzchar(export_table$signature_function_id)),
    length(review_files), reviewed_argument_rows, reviewed_export_names,
+   if (is.null(entry_reviews)) 0L else nrow(entry_reviews),
+   if (is.null(coordinate_reviews)) 0L else nrow(coordinate_reviews),
    "OPEN; syntax coverage and partial semantic review are not whole-audit completion", "NOT_LOADED_OR_EXECUTED",
    paste("Rscript tools/audit-ggchord-api.R . design-roadmap/audit-generated", audit_start)))
 write_table(manifest, "manifest")
@@ -488,14 +553,15 @@ readme <- c("# ggchord API 静态审计基线", "",
   "- api_arguments.csv 保存全部计划字段、默认表达式及 Rd 参数说明；未知语义显式 REVIEW_REQUIRED，文档说明不等于行为证据。",
   "- 默认表达式占位：<required> 表示无语法默认值，真实是否必填仍须核查 missing() 等分支；<ellipsis> 表示可为空的 ...，不标为必填。",
   "- api_aesthetics.csv 记录静态美学声明/映射或待查表达式；api_return_contracts.csv 保留文档返回说明及语法尾表达式，不推定稳定字段。",
-  "- api_compatibility_matrix.csv 仅建立三坐标与 geom/stat 的待验证矩阵，没有执行绘图。", "",
+  "- api_compatibility_matrix.csv 合并人工三坐标源码合同；runtime_validation 单独说明有限例子或 NOT_RUN，没有自动执行绘图。", "",
   "## 人工语义复核", "",
   paste0("- 本次纳入 ", length(review_files), " 份 audit-reviewed/*.csv，", reviewed_argument_rows,
          " 行参数、", reviewed_export_names, " 个公开入口标记为已做来源或运行复核；其余语义仍待复核。"),
-  "- 覆盖文件按 function+parameter 唯一键，只能匹配唯一 exported 参数；重复键、未知字段、签名字段或未定位键会使生成失败。",
+  "- 参数表按 function+parameter 匹配公开参数；有 function_id 时必须精确匹配唯一内部函数及其参数。重复键、未知字段、签名字段或未定位键使生成失败。",
   "- 默认表达式、形参顺序、签名证据、当前 source_revision 不接受覆盖；原始 static_confidence/static_actual_usage 与语义复核分列。",
   "- review_source_revision、review_input_path、review_status、review_evidence 保留人工复核来源；复核提交与当前提交不同须核查相关源文件差异，不能自动把旧证据升级为当前行为。",
-  "- 没有人工覆盖文件时照常生成，语义保持 REVIEW_REQUIRED；人工文件也纳入前后快照校验。", "",
+  "- audit-reviewed-details/ 下的 export-decisions 与 coordinate-compatibility 按不同键合并返回、去留和兼容记录；要求完整且无多余键，保留独立 review SHA。",
+  "- 没有相应人工覆盖文件时照常生成，语义保持 REVIEW_REQUIRED；两个人工目录均纳入输入快照校验。", "",
   "## 局限与后续工作", "",
   "- 全部文件被解析不等于全部动态对象被穷举。运行生成的函数、动态注册、字符串回调、NSE、ggproto 继承及语言对象注入必须人工/定向运行复核。",
   "- 函数行号为 FUNCTION token 起点；顶层绑定和调用证据行号为所属表达式/函数的起点，location_precision 或证据类型说明精度。",
