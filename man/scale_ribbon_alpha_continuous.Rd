@@ -21,7 +21,8 @@ scale_ribbon_linetype_manual(..., values)
 \arguments{
 \item{...}{Arguments passed to the corresponding ggplot2 scale.}
 
-\item{range}{Output alpha range for a continuous scale.}
+\item{range}{Output alpha range for a continuous scale. NULL uses the
+corresponding ggplot2 scale's default range.}
 
 \item{values}{Manual aesthetic values.}
 }

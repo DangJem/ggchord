@@ -1,5 +1,8 @@
 # ggchord 0.16.0 (development)
 
+* `scale_ribbon_alpha_continuous()` now uses ggplot2's default output range
+  when `range = NULL`, instead of creating an unusable palette. Explicit
+  non-NULL ranges retain their existing behavior.
 * Sequence-position scales now inverse-transform chord/circular axis breaks
   before placing them at genomic positions, matching the existing linear
   behavior. Explicit `breaks = NULL` and `minor_breaks = NULL` remain empty

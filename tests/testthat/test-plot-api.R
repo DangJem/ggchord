@@ -35,10 +35,12 @@ test_that("independent ribbon layers retain their data and manual styles", {
   first <- smoke_ribbon()
   second <- transform(first, qstart = 500, qend = 600)
   p <- ggchord(smoke_sequences()) + geom_seq() +
-    geom_link_ribbon(data = first, fill = "orange") +
-    geom_link_ribbon(data = function(x) second, fill = "navy")
+    geom_link_ribbon(aes(ribbon_alpha = pident), data = first, fill = "orange") +
+    geom_link_ribbon(data = function(x) second, fill = "navy") +
+    scale_ribbon_alpha_continuous()
   built <- build_ggchord_smoke(p)
   expect_true(all(built$data[[2]]$ribbon_fill == "orange"))
+  expect_true(all(is.finite(built$data[[2]]$ribbon_alpha)))
   expect_true(all(built$data[[3]]$ribbon_fill == "navy"))
   out <- get_chord_layout(p)$layer_inputs
   inputs <- lapply(Filter(function(x) !is.null(x$ribbon), out), function(x) x$ribbon)

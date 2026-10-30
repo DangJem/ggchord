@@ -18,6 +18,7 @@
 | F34 | NULL 控制点帮助未区分坐标，错误暗示 chord 也从端点推导 | 帮助明确 chord 用 c(0, 0)，collinear 从端点推导 | 调用与图形不变；chord 想显式表达既有默认可写 ribbon_ctrl_point = c(0, 0) | 不适用，文档修正 |
 | F35 | chord 变换后的轴 break 被当成原 bp，刻度标注与位置不一致 | 主/次 break 反变换后按原 bp 放置 | 原调用自动恢复正确位置，无需重编码 breaks；序列几何不变 | 不适用 |
 | F36 | NULL 主/次刻度可能被自动刻度回退覆盖 | 显式空值保持空 tick 集合，轴线保留 | 继续用 breaks=NULL/minor_breaks=NULL 关闭相应刻度 | 不适用 |
+| F37 | 默认连续ribbon alpha scale的NULL range导致palette调用错误 | NULL使用ggplot2原生默认range | 直接使用scale_ribbon_alpha_continuous()；已有显式range调用不变 | 不适用 |
 
 ### F01：明确输入，而不是丢弃数据
 
@@ -180,7 +181,11 @@ stopifnot(nrow(axis_ticks) == 2L,
 变换控制轴的 break 选择和标签；几何位置仍对应原始 bp，不能自行先把 breaks
 改成 log 值。上述图形只用于验证轴设置，未改动输入序列长度或生物学注释。
 
+F37 恢复无参 `scale_ribbon_alpha_continuous()` 的正常构造与映射；若需要确定的
+输出范围，仍可显式写 `scale_ribbon_alpha_continuous(range = c(.2, .9))`。
+
 ## 尚未实施的迁移
+
 
 F34 已按用户选择保留历史默认并澄清帮助，不再待决策。F03 默认差异、F07 getter/export、F09 gene/feature、F10 既有偏移弃用、F11 唯一
 形状入口、标签及连接命名、颜色别名和重导出均尚未新增删除决定。后续若改变，

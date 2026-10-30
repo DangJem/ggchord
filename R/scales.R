@@ -103,11 +103,15 @@ scale_ribbon_fill_identity <- function(...) {
 #' Ribbon alpha, outline and linetype scales
 #'
 #' @param ... Arguments passed to the corresponding ggplot2 scale.
-#' @param range Output alpha range for a continuous scale.
+#' @param range Output alpha range for a continuous scale. NULL uses the
+#'   corresponding ggplot2 scale's default range.
 #' @param values Manual aesthetic values.
 #' @return A ggplot2 scale.
 #' @export
 scale_ribbon_alpha_continuous <- function(..., range = NULL) {
+  if (is.null(range)) {
+    return(ggplot2::scale_alpha_continuous(..., aesthetics = "ribbon_alpha"))
+  }
   ggplot2::scale_alpha_continuous(
     ..., range = range, aesthetics = "ribbon_alpha"
   )

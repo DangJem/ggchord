@@ -433,6 +433,17 @@ resolver 没有传入该 fallback，须提供自己的点连接输入。没有�
 - 与 F35 同一局部脚本直接验证：NULL 主/次 break 均为空、轴线仍存在。
   roxygen/Rd、NEWS、迁移和本版记录同步；没有改动公开签名或默认值。
 
+### F37 — P2/C：连续 ribbon alpha 默认 range=NULL 产生不可用 palette
+
+- 基线 `c33ea741efef4f33b5e2fd357906604b57096803`，wrapper 将 range=NULL
+  显式传给 ggplot2，scale train 后 map 报 attempt to apply non-function。
+  默认构造的 scale 因此无法用于普通 ribbon_alpha 映射。
+- FIX：NULL 时省略上游 range 参数，使用对应 ggplot2 的原生默认；显式非NULL
+  路径不变。没有改变本包形参默认值，未添加参数、猜测数据或改动未使用此scale的图。
+- 单一公开 ribbon build 确认默认scale成功且透明度有限、处于[0,1]；复用现有多层
+  ribbon 案例的alpha映射做必要回归，不新增参数格式矩阵。roxygen/Rd、NEWS、
+  迁移与本版记录同步；未运行完整testthat或发布设备验收。
+
 ## 待用户选择的跨模块方案
 
 以下均为尚待确认方案，不产生立即改名、合并、删除或默认变化。F31 已选择并实现，见上节。
