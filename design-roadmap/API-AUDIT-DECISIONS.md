@@ -189,6 +189,11 @@ H 是待验证假设，D 是设计取舍。这里另列本地静态结论、缺�
 - **建议与缺证**：KEEP 共同校验的暂行结构，DEFER 语义改动；生成参数矩阵并核对
   labels/geometry/manual、用户 limits、实际 aspect 和 clip 的代表输出。
 - **阶段**：v0.16.1；不能把共用参数“完全没有统一”当作已确认缺陷。
+- **本轮补充证据**：当前 ggplot2 4.0.3 的 CoordCartesian 已实现读取 ratio 的
+  aspect 方法。一次手动限域的成对 build/gtable 核对确认 ratio 1/2 分别产生
+  不同面板高宽约束，排除“只保存字段、完全不生效”的假设；不据此保证其他依赖版本。
+  rotation 顺逆时针文案与标准正角矩阵的口径，以及重建 Coord 时 segments 字段
+  的可见性，保留为待核查事项；未取得用户可见错误证据前不改几何或复制状态逻辑。
 
 ### F20 — P2/H：Bioconductor 适配已有保真约定
 
@@ -264,6 +269,10 @@ H 是待验证假设，D 是设计取舍。这里另列本地静态结论、缺�
 - **建议与缺证**：DEFER Stat 重构；验证 after_stat/after_scale、固定和映射优先级、
   grouping 及源坐标使用。结构不同于常见 Stat 不能直接证明 staged mapping 不兼容。
 - **阶段**：v0.16.1。
+- **有限运行证据**：本轮一次 chord 组合包含 point link、原始 ribbon、bundle 和
+  density，手动 link_colour scale 保留；bundle 为两组且 bundle_n 为 1/2，density
+  保留三组，after_stat(density) 基础映射得到有限值。不外推到 collinear、branch、
+  全部计算字段、after_scale 或完整 staged mapping 契约。
 
 ### F28 — P2/H：dots 并非统一吞掉未知参数
 
@@ -293,7 +302,7 @@ H 是待验证假设，D 是设计取舍。这里另列本地静态结论、缺�
   审阅，算法 high 不能理解成实验已验证或概率置信区间。
 - **阶段**：v0.16.2；任何新增分析能力须另过真实需求准入。
 
-## 首组公开入口与逐参数核查
+## 公开入口与逐参数核查进展
 
 已为四个入口的 29 个参数建立独立人工记录，放在 `audit-reviewed/` 并合并到生成
 参数表。标记 SOURCE_REVIEWED，表示已阅读相关源码；不将 NOT_RUN 场景写成通过。
@@ -308,6 +317,15 @@ H 是待验证假设，D 是设计取舍。这里另列本地静态结论、缺�
 记录逐项区分 NULL、NA、缺参、单位、嵌套参数、验证位置和透传路径。例如 prepare
 顶层 mapping/steps 的 NULL 被拒绝，而 features/links 的 NULL 表示空集合；不能
 为了“一致”在本轮直接统一。其余公开参数和内部参数仍须继续复核。
+
+后续新增三坐标的 28 行、四种自有 Position 的 10 行，以及 feature/preset 的 data
+两行，共 69 行 SOURCE_REVIEWED，涉及 13 个入口；这里的“涉及”不表示每个入口的
+全部参数均已复核。feature 数据两行记录 F32 修复，其他 core geom 与 link/stat
+参数的完整人工台账仍未完成，不能把有限运行例子当成逐参数审计已结束。
+
+Position 的一次 collinear 公开导出确认：两条序列显示方向相反时，+/- 链 feature
+仍分别位于各自骨架上/下。stack 的 legacy side 历史名称与 track 的法线 side
+不是同一个契约，本轮只登记差异，不静默翻转几何或删除便利入口。
 
 ## 后续逐参数核查新增事项
 
@@ -329,6 +347,20 @@ H 是待验证假设，D 是设计取舍。这里另列本地静态结论、缺�
   单一 F31 案例中；未运行包级 testthat 或发布验收。
 - **边界与阶段**：v0.16.0。seq_data 本身作为坐标参考仍必须具有非空、唯一的 ID；
   不猜测或生成 ID，keep 不保证可绘图。prepare 仍先严格适配，需要先独立清洗。
+
+### F32 — P1/C：feature 的 factor 坐标被静默转为等级码
+
+- **修复前基线**：`e44f1f76a3041e1ebe271b3dc30024bdcce4f50a` 的
+  `R/geom-feature.R::ggchord_feature_data()` 直接 as.numeric(start/end)。公开
+  geom_feature 的 collinear 布局导出证实：factor 标签 100/300 变成 1/2，并真的
+  使用错误坐标绘制；不是仅函数名、类型风格或未使用参数的假设。
+- **决定与修复**：FIX，提交 `4adab67f5ea680eb825a50f226dff119837e0923`。仅将
+  顶层 factor start/end 先按数值标签转换，再交给既有展开/规范化路径；既有 numeric
+  和 numeric-text 路径不变。修复恢复真实坐标，不新增函数或改变默认布局。
+- **直接验证**：修复后公开 export 返回 start=100、end=300，原始 factor 输入保持
+  不变。新增单一公开数据保留回归，不以私有 ggproto 字段或精确几何浮点坐标锁定实现。
+- **文档与边界**：feature 和 plasmid preset 的 data 帮助、NEWS 与迁移已同步。
+  子 segment 表自身仍遵循既有数值坐标合同；不声称所有 factor/复合区间格式均已验收。
 
 ## 待用户选择的跨模块方案
 
@@ -354,6 +386,6 @@ H 是待验证假设，D 是设计取舍。这里另列本地静态结论、缺�
 这不意味着已动态确认所有假设或已完成全部函数/参数审计。
 
 下一步继续以机读全量清单补上其余入口和参数证据，优先解决影响实施安全的未知；
-F01/F02/F11/F31 的局部复现与修复已单独取得直接验证，其他项仍按各卡片缺证范围推进。
+F01/F02/F11/F31/F32 的局部复现与修复已单独取得直接验证，其他项仍按各卡片缺证范围推进。
 未运行包级 testthat、打包/check、vignette
 或设备矩阵，未根据本表执行批量 API 改名删除。

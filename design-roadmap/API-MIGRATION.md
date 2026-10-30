@@ -13,6 +13,7 @@
 | F02 | 反向 ribbon 排序报告的 original_value/new_value 相同 | 分别记录交换前后值 | 调用不变；读取 report 时得到真实变更；数据排序和 direction 语义不变 | 不适用 |
 | F11 关联修复 | plasmid wrapper 的 shape 单参被误判为双形状参数 | 单参别名正常转发 | 既有 shape 调用恢复；显式两参仍报原冲突 | 不适用 |
 | F31 | ribbon/gene 的缺失或空 ID 在 unknown_id 策略前报错 | 遵循已公开的 drop/error/keep，并保留原值/原行报告 | 默认 drop 会移除这些行；需立即停止时显式 error；keep 仅保留供审计，不保证可绘图 | 不适用，未删除参数 |
+| F32 | feature 的 factor 起止标签被当成等级码，例如 100/300 变 1/2 | 按数值标签解释 factor 顶层起止列 | 既有调用恢复真实坐标；无需按等级重编码；非数值标签不是有效坐标 | 不适用 |
 
 ### F01：明确输入，而不是丢弃数据
 
@@ -105,6 +106,26 @@ stopifnot(identical(kept_ids$ribbon_data, bad_links),
 序列的行不清坐标/注释，也不保证通过后续验证。seq_data 的 ID 仍须非缺失、非空且唯一，
 数值有限性和 gene strand 检查仍适用。prepare 的适配器仍在清洗步骤前拒绝缺失 ID；
 因此需先独立 clean/drop 或显式修正 ID，再调用 prepare，而不是依赖其 steps$clean。
+
+### F32：feature 因子列保留坐标标签
+
+修复前，下面的标签可能被静默绘成 factor 等级 1/2；现在直接使用 100/300，
+无需更改调用或修改原始数据。数值列及既有数值文本转换路径保持原义。
+
+```r
+factor_features <- data.frame(accver = "A",
+  start = factor("100", levels = c("100", "300")),
+  end = factor("300", levels = c("100", "300")), strand = "+", type = "CDS")
+factor_plot <- ggchord(data.frame(accver = "A", length = 1000)) + geom_seq() +
+  geom_feature(data = factor_features, feature_shape = "block") + coord_collinear()
+factor_export <- export_ggchord_layout(factor_plot, include = "feature")
+stopifnot(identical(unique(factor_export$feature$start), 100),
+  identical(unique(factor_export$feature$end), 300),
+  is.factor(factor_features$start), is.factor(factor_features$end))
+```
+
+这修正顶层起止列，不把任意类别标签猜成坐标，也不放宽已有有限数值要求。
+复合 segment 子表的类型仍按其原有合同提供。
 
 ## 尚未实施的迁移
 

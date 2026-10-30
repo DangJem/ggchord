@@ -1,8 +1,9 @@
 # 逐参数人工复核输入
 
 本目录保存以具体源码为依据的人工语义记录，不是静态脚本根据参数名称推测的合同。
-当前首组覆盖 ggchord、clean_ggchord_data、prepare_ggchord_data 和
-validate_ggchord_data。来源提交、复核证据、实际验证范围均保存在各 CSV 行中。
+当前包括构造/数据四入口、三个坐标入口、四种自有 Position，以及两个 feature
+入口的 data 参数。部分入口只复核了部分参数；来源提交、复核证据和实际验证范围
+均保存在各 CSV 行中，不能据一个参数有记录便将整个函数标为完成。
 
 `SOURCE_REVIEWED` 表示已经阅读相关源码路径，不能解释为所有组合均运行通过。
 `test_case` 标记 NOT_RUN 的场景仍待验证；KEEP 只表示本轮建议保留对应现状，不是
