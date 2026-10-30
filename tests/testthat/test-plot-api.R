@@ -20,14 +20,22 @@ test_that("the three label strategies retain representative annotations", {
 
 test_that("region, feature and point-link layers retain their source rows", {
   features <- smoke_genes()
+  regions <- data.frame(accver = c("missing", "A"),
+    start = factor(c("1", "100"), levels = c("1", "100", "300")),
+    end = factor(c("100", "300"), levels = c("1", "100", "300")))
   points <- data.frame(qaccver = "A", saccver = "B", qpos = 500, spos = 600)
   p <- ggchord(smoke_sequences()) + geom_seq() +
     geom_feature(data = features, feature_shape = "block") +
-    geom_seq_region(data = features[1, c("accver", "start", "end")]) +
+    geom_seq_region(data = regions) +
     geom_link_line(data = points)
   out <- export_ggchord_layout(p, include = c("feature", "link"))
   expect_setequal(out$feature$source_row, 1:2)
   expect_true(any(out$feature$component == "seq_region"))
+  region <- out$feature[out$feature$component == "seq_region", ]
+  expect_setequal(region$source_row, 2L)
+  expect_setequal(region$accver, "A")
+  expect_equal(unique(region$start), 100)
+  expect_equal(unique(region$end), 300)
   expect_setequal(out$link$source_row, 1L)
 })
 

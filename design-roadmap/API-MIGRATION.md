@@ -19,6 +19,7 @@
 | F35 | chord 变换后的轴 break 被当成原 bp，刻度标注与位置不一致 | 主/次 break 反变换后按原 bp 放置 | 原调用自动恢复正确位置，无需重编码 breaks；序列几何不变 | 不适用 |
 | F36 | NULL 主/次刻度可能被自动刻度回退覆盖 | 显式空值保持空 tick 集合，轴线保留 | 继续用 breaks=NULL/minor_breaks=NULL 关闭相应刻度 | 不适用 |
 | F37 | 默认连续ribbon alpha scale的NULL range导致palette调用错误 | NULL使用ggplot2原生默认range | 直接使用scale_ribbon_alpha_continuous()；已有显式range调用不变 | 不适用 |
+| F38 | region过滤后可能附回错误源行的ID/坐标，factor坐标按等级码绘制 | 保留过滤前来源行，factor按数值标签解释 | 既有调用恢复真实坐标与来源，不需要重编码；被过滤的行不会替换保留几何的元数据 | 不适用 |
 
 ### F01：明确输入，而不是丢弃数据
 
@@ -183,6 +184,10 @@ stopifnot(nrow(axis_ticks) == 2L,
 
 F37 恢复无参 `scale_ribbon_alpha_continuous()` 的正常构造与映射；若需要确定的
 输出范围，仍可显式写 `scale_ribbon_alpha_continuous(range = c(.2, .9))`。
+
+F38 的 `geom_seq_region(data = regions)` 调用不变。factor 起止列应具有真实数值
+标签；未知序列或无效坐标仍按既有布局规则过滤，保留行的 source_row 指向过滤前
+输入位置，原表不被修改。没有将 region 的过滤策略推广成所有 geom 的共同政策。
 
 ## 尚未实施的迁移
 

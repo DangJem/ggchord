@@ -9,6 +9,7 @@ ggchord_layout_annotation_step <- quote({
     if (!all(req %in% colnames(region_data))) {
       ggchord_stop("regions must contain accver, start and end columns")
     }
+    region_data$.source_row <- seq_len(nrow(region_data))
     region_data$start <- as.numeric(region_data$start)
     region_data$end <- as.numeric(region_data$end)
     ok_rows <- is.finite(region_data$start) & is.finite(region_data$end) &
@@ -67,7 +68,7 @@ ggchord_layout_annotation_step <- quote({
           alpha = region_alpha,
           label = if ("label" %in% colnames(region_data)) as.character(row$label) else NA_character_,
           category = if ("category" %in% colnames(region_data)) as.character(row$category) else NA_character_,
-          source_row = i,
+          source_row = row$.source_row,
           stringsAsFactors = FALSE
         )
       })

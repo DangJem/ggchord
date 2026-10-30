@@ -1,5 +1,9 @@
 # ggchord 0.16.0 (development)
 
+* Region highlights retain their original input row after invalid or unknown
+  rows are filtered, preventing geometry from acquiring another row's ID or
+  metadata. Factor start/end coordinates use numeric labels instead of level
+  codes, consistently with feature inputs. Original input tables are unchanged.
 * `scale_ribbon_alpha_continuous()` now uses ggplot2's default output range
   when `range = NULL`, instead of creating an unusable palette. Explicit
   non-NULL ranges retain their existing behavior.

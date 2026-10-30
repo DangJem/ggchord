@@ -23,7 +23,8 @@ geom_seq_region(
 \item{mapping}{Default NULL (uses pre-computed data)}
 
 \item{data}{data.frame with at least \code{accver}, \code{start},
-\code{end}; optional \code{label}, \code{category} and \code{color}.}
+\code{end}; optional \code{label}, \code{category} and \code{color}.
+Factor start/end columns use their numeric labels, not level codes.}
 
 \item{fill}{Character. Default fill colour for regions, default
 \code{"#F59E0B"}.}

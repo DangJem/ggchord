@@ -13,6 +13,7 @@ region_geom <- rename_geom_aes(
 #' @param mapping Default NULL (uses pre-computed data)
 #' @param data data.frame with at least \code{accver}, \code{start},
 #'   \code{end}; optional \code{label}, \code{category} and \code{color}.
+#'   Factor start/end columns use their numeric labels, not level codes.
 #' @param fill Character. Default fill colour for regions, default
 #'   \code{"#F59E0B"}.
 #' @param colour Outline colour, default \code{"#B45309"}.
@@ -112,5 +113,13 @@ geom_seq_region <- function(mapping = NULL, data = NULL,
   lyr <- ggchord_capture_layer_input(
     lyr, data, mapping, c("accver", "start", "end")
   )
+  lyr$ggchord_input_transform <- function(x) {
+    for (name in intersect(c("start", "end"), names(x))) {
+      if (is.factor(x[[name]])) {
+        x[[name]] <- suppressWarnings(as.numeric(as.character(x[[name]])))
+      }
+    }
+    x
+  }
   lyr
 }

@@ -444,6 +444,17 @@ resolver 没有传入该 fallback，须提供自己的点连接输入。没有�
   ribbon 案例的alpha映射做必要回归，不新增参数格式矩阵。roxygen/Rd、NEWS、
   迁移与本版记录同步；未运行完整testthat或发布设备验收。
 
+### F38 — P1/C：region 过滤后附回错误来源，且 factor 坐标误用等级码
+
+- 基线 `3c93844`，region 环形布局过滤未知ID/非有限坐标后，以过滤后行号写入
+  source_row。后续按这个行号附回原输入列，导致A的几何被标成前一条missing ID
+  的元数据。factor start/end也在布局中直接as.numeric，误用等级码。
+- FIX：在过滤前保存来源行号并写入geometry；region输入转换只对factor顶层起止
+  按数值标签规范化，numeric和numeric-text原有布局路径不变。未猜测或补造业务值。
+- 单一最小脚本对照factor/数值输入，确认同一几何、source_row=2、accver=A、
+  start/end=100/300，原factor表不变。复用既有region/feature/link来源保留案例；
+  未扩张等价格式或运行完整testthat。源码、roxygen/Rd、NEWS与迁移同步。
+
 ## 待用户选择的跨模块方案
 
 以下均为尚待确认方案，不产生立即改名、合并、删除或默认变化。F31 已选择并实现，见上节。
