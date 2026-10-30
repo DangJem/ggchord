@@ -221,10 +221,19 @@ for (file in source_r_files) {
         add("dynamic", source_file = file_rel, source_line = line, function_id = scope,
             operation = "FUNCTION_MUTATION", expression = paste0(lhs, " <- ", fmt(rhs, 180L)),
             quoted = quoted, evidence = "AST_SYNTAX_CANDIDATE")
-      if (grepl("[$]", lhs) && grepl("default_aes|geom_defaults", lhs))
-        add("aesthetics", source_file = file_rel, source_line = line, owner = owner,
-            declaration = "default_aes_assignment", aesthetic = sub("^.*[$]", "", lhs),
-            default_or_expression = fmt(rhs, 180L), review_status = "REVIEW_REQUIRED")
+      if (grepl("[$]", lhs) && grepl("default_aes|geom_defaults", lhs)) {
+        # names(geom$default_aes)[...] is a collection transformation, not an
+        # aesthetic called 'default_aes)' or a deparsed subscript fragment.
+        lhs_expr <- x[[2L]]
+        direct_field <- is.call(lhs_expr) && call_name(lhs_expr) == "$" &&
+          is.symbol(lhs_expr[[3L]]) && !as.character(lhs_expr[[3L]]) %in% c("default_aes", "geom_defaults")
+        aes_owner <- if (nzchar(owner)) owner else if (is.call(lhs_expr) && call_name(lhs_expr) == "$")
+          fmt(lhs_expr[[2L]], 160L) else "<top-level-transform>"
+        add("aesthetics", source_file = file_rel, source_line = line, owner = aes_owner,
+            declaration = if (direct_field) "default_aes_assignment" else "default_aes_dynamic_transform",
+            aesthetic = if (direct_field) as.character(lhs_expr[[3L]]) else "<dynamic:default_aes_transform>",
+            default_or_expression = paste0(lhs, " <- ", fmt(rhs, 180L)), review_status = "REVIEW_REQUIRED")
+      }
       walk(x[[2L]], scope, owner, line, quoted)
       walk(rhs, scope, if (scope == "<top-level>") lhs else owner, line, quoted,
            label = lhs, assigned = lhs, top = top)
@@ -237,6 +246,13 @@ for (file in source_r_files) {
       add("dynamic", source_file = file_rel, source_line = line, function_id = scope,
           operation = leaf, expression = fmt(x, 220L), quoted = quoted,
           evidence = "AST_SYNTAX_CANDIDATE")
+    if (leaf == "ggchord_capture_layer_input" && length(x) >= 5L) {
+      role_names <- literal_chars(x[[5L]])
+      if (!length(role_names)) role_names <- "<dynamic:input_roles>"
+      for (ae in role_names) add("aesthetics", source_file = file_rel,
+        source_line = line, owner = owner, declaration = "input_role",
+        aesthetic = ae, default_or_expression = fmt(x[[5L]], 220L), review_status = "REVIEW_REQUIRED")
+    }
     names_x <- names(x)
     children <- if (length(x) >= 2L) seq.int(2L, length(x)) else integer()
     for (j in children) {
@@ -568,6 +584,74 @@ if (!is.null(stage_reviews)) {
     dynamic$review_source_revision[hit] <- d$source_revision
   }
 }
+aes_keys <- c("source_file", "owner", "declaration", "aesthetic", "default_or_expression")
+aes_fields <- c("semantic_role", "type_contract", "unit", "evaluation_stage", "null_na_semantics",
+  "scale_or_geometry_owner", "decision", "rationale", "unknowns_next_phase")
+aes_reviews <- read_detail("aesthetic-contracts", aes_keys, c(aes_fields, "evidence"))
+if (!is.null(aes_reviews)) {
+  key <- function(x) do.call(paste, c(x[aes_keys], sep = "\t"))
+  if (!setequal(key(aesthetics), key(aes_reviews))) stop("Aesthetic review must match exactly current syntax records")
+  d <- aes_reviews[match(key(aesthetics), key(aes_reviews)), , drop = FALSE]
+  for (field in c(aes_fields, "review_status")) aesthetics[[field]] <- d[[field]]
+  aesthetics$review_evidence <- d$evidence
+  aesthetics$review_source_revision <- d$source_revision
+  aesthetics$review_input_path <- attr(aes_reviews, "input_path")
+}
+# Attach reviewed ownership to binding/call views without converting syntax
+# candidates into a runtime call graph or a deletion decision.
+if (is.null(objects$review_status)) objects$review_status <- "REVIEW_REQUIRED"
+if (is.null(objects$review_source_revision)) objects$review_source_revision <- "NONE"
+objects$binding_semantics <- "AST_BINDING_ONLY; semantic ownership not reviewed yet"
+objects$review_evidence <- "NOT_REVIEWED"
+objects$unknowns_next_phase <- "本版仍须核查所属模块与间接使用；不能依据零引用删除"
+if (!is.null(stage_reviews)) for (i in seq_len(nrow(stage_reviews))) {
+  d <- stage_reviews[i, , drop = FALSE]
+  hit <- which(objects$source_file == d$source_file & objects$binding_context == "QUOTED_SYNTAX")
+  objects$review_status[hit] <- "DELAYED_STAGE_SCOPE_REVIEWED"
+  objects$binding_semantics[hit] <- paste0("延迟表达式中的赋值语法，eval后属于当次共享frame；阶段：", d$stage,
+    "；不是独立namespace对象或已冻结返回字段")
+  objects$review_evidence[hit] <- d$evidence
+  objects$review_source_revision[hit] <- d$source_revision
+  objects$unknowns_next_phase[hit] <- paste0("v0.16.3拆阶段时核查具体临时值的生产/消费与失效；", d$risk)
+  hit <- which(objects$source_file == d$source_file & objects$name == d$stage &
+               objects$binding_context == "TOP_LEVEL_EXPRESSION")
+  objects$binding_semantics[hit] <- paste0("quote表达式绑定；由compute_chord_layout eval到当次共享frame；阶段：", d$stage)
+  objects$review_evidence[hit] <- d$evidence
+  objects$unknowns_next_phase[hit] <- paste0("v0.16.3阶段拆分前保持当前读写/顺序可比；", d$risk)
+}
+for (i in which(functions$is_top_level & functions$semantic_review %in% c("SOURCE_REVIEWED", "RUNTIME_REVIEWED"))) {
+  f <- functions[i, , drop = FALSE]
+  hit <- which(objects$name == f$name & objects$source_file == f$source_file &
+               objects$binding_context == "TOP_LEVEL_EXPRESSION" & objects$binding_kind == "function_literal")
+  if (length(hit) != 1L) stop("Reviewed top-level function must have one binding: ", f$function_id)
+  objects$review_status[hit] <- "FUNCTION_CONTRACT_REVIEWED"
+  objects$binding_semantics[hit] <- paste0("函数绑定；契约见api_functions.csv#", f$function_id)
+  objects$review_evidence[hit] <- f$review_evidence
+  objects$review_source_revision[hit] <- f$review_source_revision
+  objects$unknowns_next_phase[hit] <- f$unknowns_next_phase
+}
+if (!is.null(entry_reviews)) for (i in seq_len(nrow(entry_reviews))) {
+  d <- entry_reviews[i, , drop = FALSE]
+  hit <- which(objects$name == d[["function"]] & objects$binding_context == "TOP_LEVEL_EXPRESSION" &
+               objects$binding_kind != "function_literal")
+  if (!length(hit)) next
+  if (length(hit) != 1L) stop("Export alias/factory must have one top-level binding: ", d[["function"]])
+  objects$review_status[hit] <- "ENTRY_ALIAS_OR_FACTORY_REVIEWED"
+  objects$binding_semantics[hit] <- d$return_contract
+  objects$review_evidence[hit] <- d$evidence
+  objects$review_source_revision[hit] <- d$source_revision
+  objects$unknowns_next_phase[hit] <- d$unknowns_next_phase
+}
+for (name in c("internal", "dynamic")) {
+  value <- get(name)
+  key <- if (name == "internal") value$caller else value$function_id
+  ix <- match(key, functions$function_id)
+  value$caller_review_status <- ifelse(is.na(ix), "NO_FUNCTION_OWNER", functions$semantic_review[ix])
+  value$caller_contract <- ifelse(is.na(ix), "TOP_LEVEL_OR_DYNAMIC_CONTEXT",
+    paste0("api_functions.csv#", functions$function_id[ix]))
+  value$runtime_scope <- "SYNTAX_ONLY; caller review does not certify dynamic exhaustiveness or unusedness"
+  assign(name, value)
+}
 ref_summary <- aggregate(row(function_id = references$function_id),
                          list(function_id = references$function_id, symbol = references$symbol,
                               quoted = references$quoted), length)
@@ -592,6 +676,8 @@ manifest <- row(key = c("audit_start_revision", "git_head_at_generation", "sourc
   "function_syntax_tokens", "function_rows", "anonymous_or_method_rows", "argument_rows_including_export_signature_views",
   "unresolved_own_export_signatures", "review_input_files", "human_reviewed_argument_rows", "human_reviewed_export_names",
   "entry_decision_rows", "coordinate_review_rows", "internal_function_review_rows", "layout_stage_review_rows",
+  "aesthetic_syntax_rows", "aesthetic_review_rows",
+  "bindings_with_reviewed_contract_or_scope", "S3_with_reviewed_function_contract",
   "semantic_review_status", "package_execution", "rebuild_command"),
  value = c(audit_start, head_revision, source_fingerprint,
    if (length(source_dirty)) paste(source_dirty, collapse = "; ") else "CLEAN_SOURCE_INPUTS",
@@ -604,6 +690,9 @@ manifest <- row(key = c("audit_start_revision", "git_head_at_generation", "sourc
    if (is.null(coordinate_reviews)) 0L else nrow(coordinate_reviews),
    if (is.null(function_reviews)) 0L else nrow(function_reviews),
    if (is.null(stage_reviews)) 0L else nrow(stage_reviews),
+   nrow(aesthetics), if (is.null(aes_reviews)) 0L else nrow(aes_reviews),
+   sum(objects$review_status != "REVIEW_REQUIRED"),
+   if (is.null(s3$review_status)) 0L else sum(s3$review_status != "REVIEW_REQUIRED"),
    "OPEN; syntax coverage and partial semantic review are not whole-audit completion", "NOT_LOADED_OR_EXECUTED",
    paste("Rscript tools/audit-ggchord-api.R . design-roadmap/audit-generated", audit_start)))
 write_table(manifest, "manifest")
@@ -633,6 +722,8 @@ readme <- c("# ggchord API 静态审计基线", "",
   "- audit-reviewed-details/ 下的 export-decisions 与 coordinate-compatibility 按不同键合并返回、去留和兼容记录；要求完整且无多余键，保留独立 review SHA。",
   "- internal-functions 按私有 function_id 合并角色、返回、状态与动态依赖证据；未覆盖的函数仍保留 REVIEW_REQUIRED，不将整文件解析冒充语义复核。",
   "- layout-stages 记录七个共享帧阶段的读写、顺序、状态和风险；精确挂接对应的 top-level quote 绑定及 eval 调用，其他动态记录仍待查。",
+  "- aesthetic-contracts 按文件/owner/声明种类/美学或占位/表达式精确对应当前声明；input_role、draw aesthetic与动态default集合分开，源码复核不等于所有运行集合已穷举。",
+  "- 对象表区分已复核函数绑定、公开别名/工厂和延迟阶段内的局部赋值语法；依赖/动态表只挂接caller合同，保持SYNTAX_ONLY，不将其变成删除或运行可达性结论。",
   "- 没有相应人工覆盖文件时照常生成，语义保持 REVIEW_REQUIRED；两个人工目录均纳入输入快照校验。", "",
   "## 局限与后续工作", "",
   "- 全部文件被解析不等于全部动态对象被穷举。运行生成的函数、动态注册、字符串回调、NSE、ggproto 继承及语言对象注入必须人工/定向运行复核。",

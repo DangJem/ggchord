@@ -257,7 +257,7 @@ H 是待验证假设，D 是设计取舍。这里另列本地静态结论、缺�
 - **建议与缺证**：DEFER REMOVE/INTERNALIZE；必须联合直接调用、对象字段、注册、
   字符串引用、延迟表达式、文档/示例及潜在下游。当前未认定任何内部函数“确定无用”。
 - **本轮补证**：七个quote阶段的输入、输出和共享frame依赖已写入
-  `audit-reviewed-details/layout-stages.csv`；compute_chord_layout的103个形参不能因
+  `audit-reviewed-details/layout-stages.csv`；compute_chord_layout的98个形参不能因
   主函数体零引用删除。theme通过environment()/get读取formals，read系列在lapply
   子闭包中读取source_file等，process_gene_param的default/is_logical也由子闭包读取。
 - **真实忽略与兼容签名**：breakPointsFunc的n/tol确实未读取且noRd已说明；

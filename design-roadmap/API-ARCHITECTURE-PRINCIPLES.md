@@ -110,3 +110,20 @@ track/障碍/跨层标签协调。`compute_chord_geometry_single()`内的最后�
 有限脚本确认context嵌套报错恢复和副本ref/scale容器隔离；源码仍有layer ggproto
 引用语义及未穷举设备路径。状态审计按持久plot ref、当次geometry_cache、临时动态
 render context、上游ggplot2注册/设备四类分别归属，不宣称整包没有全局副作用。
+
+## 特征、连接和来源的现状边界
+
+短feature可为可读性对称扩大glyph的显示角度，但输入start/end及source_row应保持；
+point feature单独绘制标记。跨原点feature按circular开关拆piece，反链改变piece顺序，
+不改变原始生物学链。Position先产生signed normal和lane，再由曲线局部法线或linear
+坐标转换；lane号本身不带物理单位，spacing在lane_offsets阶段决定距离。
+
+chord现状存在不同端点约定：feature/axis的角度比例用pos/lens，point link/ribbon
+用(pos-1)/lens。这里只登记实际源码，未决定统一或修复；v0.16.2需对单bp、首尾和
+跨原点的生物学解释提出明确方案后迁移。linear映射还有窗口source origin与x_offset，
+不能只替换一个比例公式就宣称三模式合同统一。
+
+branch在scale与after_scale后按可见样式及源端点分组；trunk保留所有source_rows，
+不宣称某一个目标或统计值。当前实现依赖受支持stat/Position保持顶点行顺序；行数
+改变会warning并回退，任意相同行数重排尚未得到保证。障碍provider投影实际polygons，
+不将文字/leader作为gene实体；curve mapper法线正向也不恒等于相对全局原点的outward。

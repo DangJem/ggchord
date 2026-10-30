@@ -2,8 +2,8 @@
 
 此目录由 `tools/audit-ggchord-api.R` 生成。完整记录见 manifest.csv；不代表逐项语义审计已完成。
 
-起始提交：`69b907a6ddffea60a73ed1d4b1392c8cc5f7da22`；生成时 HEAD：`08f753d5b1061fdbaa9ee4eeb91b41f5c8c6782f`。
-输入指纹（MD5，仅作可重复性标识）：`ba0d8f37a3587630da835dd44406cf4d`。
+起始提交：`69b907a6ddffea60a73ed1d4b1392c8cc5f7da22`；生成时 HEAD：`d884acf36e6d16ef31aa09763f7f773fd7e98e70`。
+输入指纹（MD5，仅作可重复性标识）：`21e2f2e9a3ec6dcd963606be68173799`。
 源码、已保存 Rd 与人工复核输入的逐文件散列见 source_hashes.csv；工作树状态单独记录，不能把带改动源码冒充原始提交。
 解析前固定输入文件列表、散列与 HEAD，写表前再次核对；并发改动会使生成失败并要求重跑，不写入不一致的新产物。
 
@@ -29,13 +29,15 @@ Rscript tools/audit-ggchord-api.R . design-roadmap/audit-generated 69b907a6ddffe
 
 ## 人工语义复核
 
-- 本次纳入 17 份 audit-reviewed/*.csv，1744 行参数、108 个公开入口标记为已做来源或运行复核；其余语义仍待复核。
+- 本次纳入 23 份 audit-reviewed/*.csv，2238 行参数、108 个公开入口标记为已做来源或运行复核；其余语义仍待复核。
 - 参数表按 function+parameter 匹配公开参数；有 function_id 时必须精确匹配唯一内部函数及其参数。重复键、未知字段、签名字段或未定位键使生成失败。
 - 默认表达式、形参顺序、签名证据、当前 source_revision 不接受覆盖；原始 static_confidence/static_actual_usage 与语义复核分列。
 - review_source_revision、review_input_path、review_status、review_evidence 保留人工复核来源；复核提交与当前提交不同须核查相关源文件差异，不能自动把旧证据升级为当前行为。
 - audit-reviewed-details/ 下的 export-decisions 与 coordinate-compatibility 按不同键合并返回、去留和兼容记录；要求完整且无多余键，保留独立 review SHA。
 - internal-functions 按私有 function_id 合并角色、返回、状态与动态依赖证据；未覆盖的函数仍保留 REVIEW_REQUIRED，不将整文件解析冒充语义复核。
 - layout-stages 记录七个共享帧阶段的读写、顺序、状态和风险；精确挂接对应的 top-level quote 绑定及 eval 调用，其他动态记录仍待查。
+- aesthetic-contracts 按文件/owner/声明种类/美学或占位/表达式精确对应当前声明；input_role、draw aesthetic与动态default集合分开，源码复核不等于所有运行集合已穷举。
+- 对象表区分已复核函数绑定、公开别名/工厂和延迟阶段内的局部赋值语法；依赖/动态表只挂接caller合同，保持SYNTAX_ONLY，不将其变成删除或运行可达性结论。
 - 没有相应人工覆盖文件时照常生成，语义保持 REVIEW_REQUIRED；两个人工目录均纳入输入快照校验。
 
 ## 局限与后续工作
