@@ -2,8 +2,8 @@
 
 此目录由 `tools/audit-ggchord-api.R` 生成。完整记录见 manifest.csv；不代表逐项语义审计已完成。
 
-起始提交：`69b907a6ddffea60a73ed1d4b1392c8cc5f7da22`；生成时 HEAD：`aa02ad42827270a5bbbedff7e9b2559197407834`。
-输入指纹（MD5，仅作可重复性标识）：`f4a36232b9c5217c5b9e7b8a89e083ca`。
+起始提交：`69b907a6ddffea60a73ed1d4b1392c8cc5f7da22`；生成时 HEAD：`7da736ed86bcdf8a1f67fb3a4463817e57be33d8`。
+输入指纹（MD5，仅作可重复性标识）：`50708de33b1b75aae238de92ef7f5998`。
 源码、已保存 Rd 与人工复核输入的逐文件散列见 source_hashes.csv；工作树状态单独记录，不能把带改动源码冒充原始提交。
 解析前固定输入文件列表、散列与 HEAD，写表前再次核对；并发改动会使生成失败并要求重跑，不写入不一致的新产物。
 
@@ -29,7 +29,7 @@ Rscript tools/audit-ggchord-api.R . design-roadmap/audit-generated 69b907a6ddffe
 
 ## 人工语义复核
 
-- 本次纳入 8 份 audit-reviewed/*.csv，183 行参数、19 个公开入口标记为已做来源或运行复核；其余语义仍待复核。
+- 本次纳入 11 份 audit-reviewed/*.csv，1050 行参数、64 个公开入口标记为已做来源或运行复核；其余语义仍待复核。
 - 覆盖文件按 function+parameter 唯一键，只能匹配唯一 exported 参数；重复键、未知字段、签名字段或未定位键会使生成失败。
 - 默认表达式、形参顺序、签名证据、当前 source_revision 不接受覆盖；原始 static_confidence/static_actual_usage 与语义复核分列。
 - review_source_revision、review_input_path、review_status、review_evidence 保留人工复核来源；复核提交与当前提交不同须核查相关源文件差异，不能自动把旧证据升级为当前行为。
