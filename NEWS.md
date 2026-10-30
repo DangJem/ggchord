@@ -3,8 +3,8 @@
 * Input metadata columns are now retained for visual mappings when expanded
   geometry does not already contain the reserved column. For example,
   `geom_gene(aes(gene_fill = label), ...)` can use a source `label` column
-  again. Existing computed coordinates, text and style columns remain protected
-  from replacement by raw input metadata.
+  again. Computed coordinate, text and style fields on the protection list still
+  take precedence over matching input columns.
 * Feature layers now interpret factor `start`/`end` columns through their
   numeric labels instead of silently drawing factor level codes as genomic
   positions. Existing numeric and numeric-text inputs retain their behavior;

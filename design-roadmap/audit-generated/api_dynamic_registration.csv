@@ -157,4 +157,4 @@
 "R/validate.R",357,"R/validate.R:357:33","do.call","do.call(rbind, near_rows)",FALSE,"AST_SYNTAX_CANDIDATE"
 "R/validate.R",357,"R/validate.R:357:33","do.call","do.call(rbind, overlap_rows)",FALSE,"AST_SYNTAX_CANDIDATE"
 "R/zzz.R",7,"R/zzz.R:7:12","register_theme_elements","ggplot2::register_theme_elements(ggchord.axis.line = ggplot2::element_line(), ggchord.axis.ticks = ggplot2::element_line(), ggchord.axis.minor.ticks = ggplot2::element_line(), ggchord.axis.text = ggplot2::element_text(), [TRUNCATED]",FALSE,"AST_SYNTAX_CANDIDATE"
-"R/zzz.R",351,"R/zzz.R:351:31","do.call","do.call(rbind, layout$seq_arcs)",FALSE,"AST_SYNTAX_CANDIDATE"
+"R/zzz.R",353,"R/zzz.R:353:31","do.call","do.call(rbind, layout$seq_arcs)",FALSE,"AST_SYNTAX_CANDIDATE"

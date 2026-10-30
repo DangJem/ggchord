@@ -454,7 +454,8 @@ write_table(internal, "api_internal_dependencies"); write_table(reexports, "api_
 write_table(compat, "api_compatibility_matrix"); write_table(dynamic, "api_dynamic_registration")
 write_table(ref_summary, "api_symbol_references_HEURISTIC")
 write_table(coverage, "source_coverage"); write_table(hashes, "source_hashes")
-source_dirty <- git("status", "--short", "--", "R", "NAMESPACE", "DESCRIPTION", "man")
+source_dirty <- git("status", "--short", "--", "R", "NAMESPACE", "DESCRIPTION", "man",
+  shQuote("design-roadmap/audit-reviewed/*.csv"))
 manifest <- row(key = c("audit_start_revision", "git_head_at_generation", "source_fingerprint_md5",
   "source_worktree_status", "source_snapshot_status", "generator_md5", "package_version", "R_version",
   "source_file_count", "export_names", "own_export_names", "reexports", "S3_registrations",

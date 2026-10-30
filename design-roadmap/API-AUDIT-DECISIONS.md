@@ -136,6 +136,8 @@ H 是待验证假设，D 是设计取舍。这里另列本地静态结论、缺�
 - **建议与缺证**：DEFER 统一命名；先比较端点间隔/边缘控制及正反方向的含义，
   保留必要几何差异。缺少跨半径、曲率、避障与 branch 的代表性等义比较。
 - **阶段**：v0.16.1；不据相近参数名合并两个 geom。
+- **后续逐参数证据**：line/ribbon 的固定样式与映射优先级确有差异，见 F27
+  补充记录；NULL ribbon 控制点的 chord 行为与帮助不一致，另列 F34，未修改默认。
 
 ### F14 — P2/D：color/colour 是直接别名
 
@@ -273,6 +275,13 @@ H 是待验证假设，D 是设计取舍。这里另列本地静态结论、缺�
   density，手动 link_colour scale 保留；bundle 为两组且 bundle_n 为 1/2，density
   保留三组，after_stat(density) 基础映射得到有限值。不外推到 collinear、branch、
   全部计算字段、after_scale 或完整 staged mapping 契约。
+- **后续样式对照**：一次 chord build 中，line 的 link_colour/link_alpha/
+  link_linewidth/link_linetype 映射均胜过同时提供的固定值；ribbon 的固定 fill、
+  linewidth 胜出，而 ribbon_colour/ribbon_alpha/ribbon_linetype 映射胜出。
+  一次两层 feature 的 collinear build 中，feature_shape 映射胜过固定形状，
+  固定 feature_fill/colour/linewidth 胜过同名映射。这里只记录特定入口、局部映射
+  与同一次构建下的实际结果，未验证所有全局继承、draw 或 after_scale 组合。
+  统一优先规则属于 v0.16.1 待确认取舍，未借审计改动现有外观。
 
 ### F28 — P2/H：dots 并非统一吞掉未知参数
 
@@ -321,11 +330,22 @@ H 是待验证假设，D 是设计取舍。这里另列本地静态结论、缺�
 后续新增三坐标的 28 行、四种自有 Position 的 10 行，以及 feature/preset 的 data
 两行，共 69 行 SOURCE_REVIEWED，涉及 13 个入口；这里的“涉及”不表示每个入口的
 全部参数均已复核。feature 数据两行记录 F32 修复，其他 core geom 与 link/stat
-参数的完整人工台账仍未完成，不能把有限运行例子当成逐参数审计已结束。
+参数的完整人工台账当时尚未完成，不能把有限运行例子当成逐参数审计已结束。
 
 Position 的一次 collinear 公开导出确认：两条序列显示方向相反时，+/- 链 feature
 仍分别位于各自骨架上/下。stack 的 legacy side 历史名称与 track 的法线 side
 不是同一个契约，本轮只登记差异，不静默翻转几何或删除便利入口。
+
+本批又补入 seq/gene 的 27 行、feature/preset 除既有 data 以外的 33 行，以及
+point link/ribbon/bundle/density 的 54 行。累计 183 行、19 个入口的当前显式形参
+已有 SOURCE_REVIEWED 记录；其余 1,210 行公开参数视图仍待审阅，内部参数亦未
+完成语义核查。每行具体单位、NULL/NA、透传和未运行场景以 CSV 为准。
+
+一次 collinear build/export 确认两个 gene 层的独立输入、映射、Position、导出
+layer_id，以及在 geom 前后提供的用户 scale；一次两层 feature build 记录了上述
+固定/映射优先级。这些例子不代替全部坐标、staged mapping 与低频格式验收。
+另纠正构造器 ribbon_data 的人工说明：ribbon/stat 会使用它回退，point link 的
+resolver 没有传入该 fallback，须提供自己的点连接输入。没有因此改动代码。
 
 ## 后续逐参数核查新增事项
 
@@ -362,6 +382,35 @@ Position 的一次 collinear 公开导出确认：两条序列显示方向相反
 - **文档与边界**：feature 和 plasmid preset 的 data 帮助、NEWS 与迁移已同步。
   子 segment 表自身仍遵循既有数值坐标合同；不声称所有 factor/复合区间格式均已验收。
 
+### F33 — P1/C：几何未占用的输入元数据因保护名单而丢失
+
+- **修复前基线与复现**：`74c9b7bc1b038ace96852a19987cef97589dce65` 的
+  `R/zzz.R::ggchord_attach_input_columns()` 无条件过滤 protected 中的名字，即使
+  geometry 并没有该列。公开 gene 图层使用角色重命名，并同时映射 anno=label、
+  gene_fill=label 时，build 报找不到 label；换成普通 annotation_tag 后可成功。
+- **决定与修复**：FIX，提交 `aa02ad42827270a5bbbedff7e9b2559197407834`。仅过滤
+  geometry 中实际已有的 protected 列；未占用的 label 等源列可以附加，已有的
+  受保护计算坐标、文本与样式仍优先。不改变公开签名、默认值或固定/映射优先级。
+- **直接验证**：单一公开组合 build 确认 gene_fill=label 得到用户手动颜色，源 x=NA
+  不覆盖已计算坐标，另一标签层的源 label 不覆盖按 annotation_tag 计算的文本；
+  原输入不变。必要回归集中为一个案例，未运行包级 testthat 或发布验收。
+- **边界**：共享 helper 涉及多个图层；本轮运行证据限于该 gene/label 例子，其他
+  入口的相关 mapping/data 行只在修复后重读源码并分别更新来源。未声称所有原始
+  同名字段与计算字段冲突均已解决。NEWS、迁移及本版记录同步。
+
+### F34 — P2/C：NULL ribbon 控制点的 chord 默认与帮助冲突
+
+- **源码与文档证据**：在 `aa02ad42827270a5bbbedff7e9b2559197407834`，
+  `R/geom-ribbon.R` 的 ribbon_ctrl_point 帮助称 NULL 从序列端点推导控制点；
+  `R/ggchord-build.R:227–228` 在 chord 中实际先将 NULL 改成 c(0, 0)。collinear
+  保留 NULL，交后续端点推导。不能将两种坐标的当前行为写成同一语义。
+- **有限运行证据**：一次 chord build 中，NULL 与显式 c(0, 0) 的 ribbon 几何
+  相同，支持上述分支的实际消费；未据此承诺所有曲率、分支和控制点格式。
+- **状态与方案**：DEFER，待用户选择。A 保留 chord 的历史原点控制，并明确按
+  坐标区分帮助；B 让 chord 的 NULL 真正自动推导，并记录默认外观变化和迁移。
+  倾向先比较 A，以保持默认绘图稳定；这只是建议，尚未实施或修改公开帮助。
+- **阶段**：v0.16.0 记录冲突，v0.16.1 在语法/默认契约整理前确认取舍。
+
 ## 待用户选择的跨模块方案
 
 以下均为尚待确认方案，不产生立即改名、合并、删除或默认变化。F31 已选择并实现，见上节。
@@ -378,6 +427,7 @@ Position 的一次 collinear 公开导出确认：两条序列显示方向相反
 | clean 默认（F03） | 独立 sort，pipeline keep 且有方向保护 | 保留任务相关默认并强化文档/报告 | 统一显式策略或统一默认，给出现有调用影响 | 先验证方向依赖，不静默统一为 sort |
 | file/files（F16） | 共享 resolver、允许同时提供，两路径解析不对称 | 保留兼容双入口并统一解析/来源规则 | 选择一个支持路径向量/glob 的入口并迁移另一项 | 先最小验证实际差异，v0.16.2 选择接口 |
 | offset 删除（F10） | 帮助原承诺 v1.0.0 删除，Position 已可替代 | 保留至原定删除点，在此前完成迁移 | 在候选冻结前删除，明确修订原承诺并给迁移版本 | 具体删除时间仍待确认，不能把总体路线当作单项删除授权 |
+| ribbon NULL 控制点（F34） | chord 实际用原点，帮助称端点推导；collinear 确实保留自动推导 | 保留 chord 历史默认，帮助按坐标写清 | chord NULL 改为端点推导，配默认外观变化记录和迁移 | 待确认；倾向先比较 A，不随局部修复静默改默认 |
 
 ## 本轮交付的边界
 
@@ -386,6 +436,7 @@ Position 的一次 collinear 公开导出确认：两条序列显示方向相反
 这不意味着已动态确认所有假设或已完成全部函数/参数审计。
 
 下一步继续以机读全量清单补上其余入口和参数证据，优先解决影响实施安全的未知；
-F01/F02/F11/F31/F32 的局部复现与修复已单独取得直接验证，其他项仍按各卡片缺证范围推进。
+F01/F02/F11/F31/F32/F33 的局部复现与修复已单独取得直接验证，F34 待选择，
+其他项仍按各卡片缺证范围推进。
 未运行包级 testthat、打包/check、vignette
 或设备矩阵，未根据本表执行批量 API 改名删除。

@@ -14,6 +14,7 @@
 | F11 关联修复 | plasmid wrapper 的 shape 单参被误判为双形状参数 | 单参别名正常转发 | 既有 shape 调用恢复；显式两参仍报原冲突 | 不适用 |
 | F31 | ribbon/gene 的缺失或空 ID 在 unknown_id 策略前报错 | 遵循已公开的 drop/error/keep，并保留原值/原行报告 | 默认 drop 会移除这些行；需立即停止时显式 error；keep 仅保留供审计，不保证可绘图 | 不适用，未删除参数 |
 | F32 | feature 的 factor 起止标签被当成等级码，例如 100/300 变 1/2 | 按数值标签解释 factor 顶层起止列 | 既有调用恢复真实坐标；无需按等级重编码；非数值标签不是有效坐标 | 不适用 |
+| F33 | 原始 label 等列仅因名字在保护名单中而被丢弃，gene_fill = label 报找不到列 | 几何尚无同名受保护字段时保留原列供映射 | 原有映射调用恢复；几何已经计算的受保护字段仍优先，未解决所有同名列冲突 | 不适用 |
 
 ### F01：明确输入，而不是丢弃数据
 
@@ -127,9 +128,39 @@ stopifnot(identical(unique(factor_export$feature$start), 100),
 这修正顶层起止列，不把任意类别标签猜成坐标，也不放宽已有有限数值要求。
 复合 segment 子表的类型仍按其原有合同提供。
 
+### F33：恢复缺失的输入元数据映射
+
+修复 `aa02ad42827270a5bbbedff7e9b2559197407834` 前，下例的 `gene_fill = label`
+会因展开后的几何缺少原始 label 列而报错；当前无需改名即可使用。数据角色映射
+仍在输入表上求值，视觉映射随后在展开几何上求值。
+
+```r
+metadata_genes <- data.frame(id = "A", lo = 100, hi = 260, direction = "+",
+  label = "alpha", annotation_tag = "shown", x = NA_real_)
+metadata_original <- metadata_genes
+metadata_plot <- ggchord(data.frame(accver = "A", length = 1000)) + geom_seq() +
+  geom_gene(aes(accver = id, start = lo, end = hi, strand = direction,
+    anno = label, gene_fill = label), data = metadata_genes) +
+  geom_gene_label(aes(accver = id, start = lo, end = hi, strand = direction,
+    anno = annotation_tag), data = metadata_genes) +
+  scale_gene_fill_manual(values = c(alpha = "#113355")) + coord_collinear()
+metadata_build <- ggplot2::ggplot_build(metadata_plot)
+stopifnot(nrow(metadata_build$data[[2]]) > 0L,
+  all(metadata_build$data[[2]]$gene_fill == "#113355"),
+  all(is.finite(metadata_build$data[[2]]$x)),
+  nrow(metadata_build$data[[3]]) > 0L,
+  all(metadata_build$data[[3]]$label == "shown"),
+  identical(metadata_genes, metadata_original))
+```
+
+输入 x 不替换已计算坐标，输入 label 不替换标签图层已经计算的 shown 文本。
+保护只针对几何实际已具备的受保护列；本次修复不承诺同名原始字段与计算字段
+总能同时用于视觉映射，也不改变固定样式与映射的优先规则。
+
 ## 尚未实施的迁移
 
 F03 默认差异、F07 getter/export、F09 gene/feature、F10 既有偏移弃用、F11 唯一
-形状入口、标签及连接命名、颜色别名和重导出均尚未新增删除决定。后续若改变，
+形状入口、标签及连接命名、颜色别名和重导出均尚未新增删除决定。F34 的 ribbon
+NULL 控制点文案与 chord 历史默认冲突仍待选择，尚未改变行为或文档契约。后续若改变，
 必须补入旧/新调用、替代方案、影响、错误提示、用户确认状态及确切删除版本；
 不能将待确认的删除日期写成承诺。详细方案见 [决策台账](API-AUDIT-DECISIONS.md)。
