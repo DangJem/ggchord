@@ -36,7 +36,9 @@ new_coord_chord <- function(rotation, ratio, xlim, ylim, expand, clip, fit,
 #' Controls global rotation, aspect ratio, coordinate limits, clipping and the
 #' strategy used to fit chord geometry and labels.
 #'
-#' @param rotation Global clockwise layout rotation in degrees, default 45.
+#' @param rotation Global counterclockwise layout rotation in degrees,
+#'   default 45, measured from the positive x axis. This rotates the complete
+#'   layout; it does not change the biological strand or sequence orientation.
 #' @param ratio Fixed y/x aspect ratio, default 1.
 #' @param xlim,ylim Optional user limits. Explicit limits take priority over
 #'   automatically fitted limits.

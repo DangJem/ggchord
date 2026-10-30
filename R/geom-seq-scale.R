@@ -43,6 +43,10 @@ ggchord_empty_seq_scale_geometry <- function() data.frame(
 #' reference is chosen from displayed window lengths. No source coordinates
 #' are modified and no missing genomic region is manufactured.
 #'
+#' To change ticks and labels on sequence axes instead, use
+#' [scale_seq_position_continuous()]. A position scale configures existing
+#' axes; this geom adds an independent distance reference.
+#'
 #' @param mapping,data Standard ggplot2 layer inputs. Optional `scale_length`
 #'   maps one positive integer bp length per bar; `label` supplies its text.
 #'   Multiple bars require explicit `x` and `y` layout positions in `data`

@@ -804,3 +804,14 @@ elements, these functions control automatic sequence axes, chord labels and
 the appearance and placement of guides belonging to each ggchord role.
 Palettes, breaks, labels and guide ordering remain scale/guide concerns.
 }
+\section{Appearance settings}{
+
+Ordinary text, panel, title and shared legend settings follow ggplot2.
+Sequence-axis settings control automatic axis decoration, not genomic
+break selection; use \code{\link{scale_seq_position_continuous}()} for breaks and labels.
+Role text and leader elements style non-data annotation. Role legend
+settings inherit common legend appearance, while scale and guide objects
+continue to own palettes, breaks and ordering. Physical spacings require
+scalar absolute \code{grid::unit()} values; \code{axis.text.orientation} is scalar.
+The preset themes share this signature and provide appearance defaults.
+}

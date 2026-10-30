@@ -15,7 +15,9 @@ coord_chord(
 )
 }
 \arguments{
-\item{rotation}{Global clockwise layout rotation in degrees, default 45.}
+\item{rotation}{Global counterclockwise layout rotation in degrees,
+default 45, measured from the positive x axis. This rotates the complete
+layout; it does not change the biological strand or sequence orientation.}
 
 \item{ratio}{Fixed y/x aspect ratio, default 1.}
 

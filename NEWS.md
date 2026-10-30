@@ -1,4 +1,12 @@
-# ggchord 0.16.0 (development)
+# ggchord 0.16.1 (development)
+
+* Clarified the distinct tasks of sequence position scales and linear bp
+  reference bars, theme appearance groups, and the provenance and uses of
+  re-exported ggplot2/grid helpers.
+* Corrected `coord_chord(rotation = ...)` documentation to counterclockwise
+  rotation from the positive x axis. Geometry and defaults are unchanged.
+
+# ggchord 0.16.0 (unreleased)
 
 * Custom primer definitions now reject a shared `primer_id` with different
   sequences, instead of silently losing one sequence and assigning its aliases

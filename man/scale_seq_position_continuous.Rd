@@ -47,6 +47,8 @@ A ggplot2 continuous scale for the \code{seq_position} role.
 Controls major/minor genomic position breaks and labels independently for
 every sequence. The default domain is each sequence's \verb{[0, length]} range;
 linear source-coordinate axes use the retained original genomic interval.
+This scale configures sequence axes in all three coordinate modes. To add
+an independent bp reference bar in a linear display, use \code{\link[=geom_seq_scale]{geom_seq_scale()}}.
 }
 \examples{
 focused <- focus_ggchord_data(data.frame(accver = "A", length = 1000),

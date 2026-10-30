@@ -474,6 +474,10 @@ resolver 没有传入该 fallback，须提供自己的点连接输入。没有�
 
 ### F39 — P3/H：restriction leader取值被保存，但路由未按取值分派
 
+- v0.16.1 直接证据：四个位点的 circular 输入下，三取值返回相同且非空的
+  restriction_sites 几何。见 `tools/validate-grammar.R` 与本版运行 CSV。
+  已向用户提交“兼容别名澄清”与“独立路由实现”两方案，等待选择。
+
 - 基线`08f753d5b1061fdbaa9ee4eeb91b41f5c8c6782f`的公开签名允许radial/elbow/
   straight/trunk，constructor把trunk转radial并保存params$leader；后续路由源码没有
   读取该字段。帮助详细描述radial，不足以认定其他两种取值已有独立布局合同。
@@ -482,6 +486,10 @@ resolver 没有传入该 fallback，须提供自己的点连接输入。没有�
   提交取舍。当前源码结论不代替跨布局运行；不阻塞本轮既有修复的安全实施。
 
 ### F40 — P3/H：轴方向规范化的等长命名向量先走位置分支
+
+- v0.16.1 结论：公开 theme 帮助和 `ggchord_theme_settings()` 均仅允许单个方向
+  或有限角度；最小公开调用确认向量被拒绝。因此没有已复现的公开命名向量缺陷。
+  KEEP 公开标量域，不扩大 theme 格式；内部 helper 候选不作为本版坐标修复。
 
 - `R/helpers_params.R::process_axis_orientation()`先处理length==n的普通向量，再
   处理命名向量。因此等长、重排names的输入在源码上按位置读取，部分命名输入则

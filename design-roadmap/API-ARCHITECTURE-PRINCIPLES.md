@@ -46,6 +46,10 @@ read、as、validate、clean、prepare、focus/segment/project 的职责分别�
 
 ## 绘图职责
 
+v0.16.1 的职责、单位与实际运行边界见 [绘图语法核查](API-GRAMMAR-v0.16.1.md)。
+本版已直接验证三坐标的独立 gene 双层、feature 与固定/repel 标签组合，以及
+chord/collinear 的 density staged mapping；这不升级其他源码矩阵项的证据等级。
+
 | 层级 | 目标职责 | 审计重点 |
 | --- | --- | --- |
 | constructor | 基础数据与全局验证 | 是否需要新容器仍待真实用例，不先加入口 |

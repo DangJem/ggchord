@@ -71,6 +71,10 @@ therefore exceed a single window and still be a valid distance reference
 in the shared linear metric. With no length, a small whole-number 1/2/5
 reference is chosen from displayed window lengths. No source coordinates
 are modified and no missing genomic region is manufactured.
+
+To change ticks and labels on sequence axes instead, use
+\code{\link[=scale_seq_position_continuous]{scale_seq_position_continuous()}}. A position scale configures existing
+axes; this geom adds an independent distance reference.
 }
 \examples{
 sequences <- data.frame(accver = c("A", "B"), length = c(1000, 800))
