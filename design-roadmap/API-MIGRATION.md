@@ -16,6 +16,8 @@
 | F32 | feature 的 factor 起止标签被当成等级码，例如 100/300 变 1/2 | 按数值标签解释 factor 顶层起止列 | 既有调用恢复真实坐标；无需按等级重编码；非数值标签不是有效坐标 | 不适用 |
 | F33 | 原始 label 等列仅因名字在保护名单中而被丢弃，gene_fill = label 报找不到列 | 几何尚无同名受保护字段时保留原列供映射 | 原有映射调用恢复；几何已经计算的受保护字段仍优先，未解决所有同名列冲突 | 不适用 |
 | F34 | NULL 控制点帮助未区分坐标，错误暗示 chord 也从端点推导 | 帮助明确 chord 用 c(0, 0)，collinear 从端点推导 | 调用与图形不变；chord 想显式表达既有默认可写 ribbon_ctrl_point = c(0, 0) | 不适用，文档修正 |
+| F35 | chord 变换后的轴 break 被当成原 bp，刻度标注与位置不一致 | 主/次 break 反变换后按原 bp 放置 | 原调用自动恢复正确位置，无需重编码 breaks；序列几何不变 | 不适用 |
+| F36 | NULL 主/次刻度可能被自动刻度回退覆盖 | 显式空值保持空 tick 集合，轴线保留 | 继续用 breaks=NULL/minor_breaks=NULL 关闭相应刻度 | 不适用 |
 
 ### F01：明确输入，而不是丢弃数据
 
@@ -157,6 +159,26 @@ stopifnot(nrow(metadata_build$data[[2]]) > 0L,
 输入 x 不替换已计算坐标，输入 label 不替换标签图层已经计算的 shown 文本。
 保护只针对几何实际已具备的受保护列；本次修复不承诺同名原始字段与计算字段
 总能同时用于视觉映射，也不改变固定样式与映射的优先规则。
+
+### F35/F36：变换轴和关闭刻度使用标准写法
+
+```r
+axis_sequences <- data.frame(accver = "A", length = 1000)
+axis_base <- ggchord(axis_sequences) + geom_seq()
+axis_logged <- axis_base + scale_seq_position_continuous(
+  breaks = c(10, 100), minor_breaks = NULL, transform = "log10")
+axis_empty <- axis_base + scale_seq_position_continuous(
+  breaks = NULL, minor_breaks = NULL)
+axis_ticks <- get_chord_layout(axis_logged)$axis_ticks
+axis_no_ticks <- get_chord_layout(axis_empty)
+stopifnot(nrow(axis_ticks) == 2L,
+  identical(as.character(axis_ticks$label), c("10", "100")),
+  nrow(axis_no_ticks$axis_ticks) == 0L,
+  nrow(axis_no_ticks$axis_lines) > 0L)
+```
+
+变换控制轴的 break 选择和标签；几何位置仍对应原始 bp，不能自行先把 breaks
+改成 log 值。上述图形只用于验证轴设置，未改动输入序列长度或生物学注释。
 
 ## 尚未实施的迁移
 

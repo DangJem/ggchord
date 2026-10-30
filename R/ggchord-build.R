@@ -753,29 +753,25 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
       } else if (source_axis && ".focus_start" %in% names(seq_data)) {
         seq_data$.focus_start[match(id, seq_data$accver)]
       } else 1
-      if (collinear) {
-        domain <- if (source_axis) c(origin, origin + lens[[id]] - 1) else c(0, 1, lens[[id]])
-        domain <- suppressWarnings(sc$transform(domain))
-        sc$train(domain[is.finite(domain)])
-      } else sc$train(c(0, lens[[id]]))
+      domain <- if (source_axis) c(origin, origin + lens[[id]] - 1) else
+        c(0, min(1, lens[[id]]), lens[[id]])
+      domain <- suppressWarnings(sc$transform(domain))
+      sc$train(domain[is.finite(domain)])
       br <- sc$get_breaks()
-      break_labels <- if (collinear) sc$get_labels(br) else NULL
-      raw_br <- if (collinear) sc$get_transformation()$inverse(br) else br
-      if (collinear) {
-        raw_br <- raw_br %||% numeric()
-        break_labels <- break_labels %||% rep(NA_character_, length(raw_br))
-        if (source_axis) raw_br <- raw_br - origin + 1
-      }
+      break_labels <- sc$get_labels(br)
+      raw_br <- sc$get_transformation()$inverse(br) %||% numeric()
+      break_labels <- break_labels %||% rep(NA_character_, length(raw_br))
+      if (source_axis) raw_br <- raw_br - origin + 1
       keep <- is.finite(raw_br) & raw_br >= 0 & raw_br <= lens[[id]]
       br <- br[keep]
-      axis_breaks[[id]] <- raw_br[keep]
+      axis_breaks[id] <- list(raw_br[keep])
       minor <- sc$get_breaks_minor()
-      if (collinear) minor <- sc$get_transformation()$inverse(minor) %||% numeric()
+      minor <- sc$get_transformation()$inverse(minor) %||% numeric()
       if (source_axis) minor <- minor - origin + 1
-      axis_minor_breaks[[id]] <- minor[
+      axis_minor_breaks[id] <- list(minor[
         is.finite(minor) & minor >= 0 & minor <= lens[[id]]
-      ]
-      axis_labels[[id]] <- if (collinear) break_labels[keep] else sc$get_labels(br)
+      ])
+      axis_labels[id] <- list(break_labels[keep])
     }
   }
 

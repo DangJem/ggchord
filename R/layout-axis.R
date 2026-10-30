@@ -52,6 +52,7 @@ ggchord_layout_axis_step <- quote({
         is_major = c(rep(TRUE, length(majors)), rep(FALSE, length(minors))),
         display_label = c(as.character(major_labels), rep(NA_character_, length(minors)))
       )
+      if (!nrow(pts)) return(axis_ticks)
       origin_tick <- isTRUE(circular) &
         pts$is_major & abs(pts$pos) < sqrt(.Machine$double.eps)
       # Circular maps use the seam itself as the origin cue. A longer radial

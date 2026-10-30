@@ -1,5 +1,10 @@
 # ggchord 0.16.0 (development)
 
+* Sequence-position scales now inverse-transform chord/circular axis breaks
+  before placing them at genomic positions, matching the existing linear
+  behavior. Explicit `breaks = NULL` and `minor_breaks = NULL` remain empty
+  instead of falling back to automatic ticks. An axis with no ticks still
+  retains its backbone decoration.
 * Clarified `ribbon_ctrl_point = NULL`: chord layouts retain their historical
   origin control `c(0, 0)`; collinear layouts derive controls from endpoints.
   Ribbon geometry and defaults are unchanged.

@@ -27,7 +27,10 @@ continuous-scale controls.}
 
 \item{coordinates}{In linear layouts, use relative locus coordinates or
 original source coordinates retained by \code{\link[=focus_ggchord_data]{focus_ggchord_data()}}. This
-affects axis breaks and labels, not the underlying genomic geometry.}
+affects axis breaks and labels, not the underlying genomic geometry.
+Breaks returned in transformed scale space are converted back to genomic
+positions in every coordinate mode. Explicit \code{breaks = NULL} and
+\code{minor_breaks = NULL} suppress the corresponding ticks.}
 
 \item{sequences}{Optional character vector selecting sequence axes by their
 displayed \code{accver}. \code{NULL} keeps all axes; \code{character()} hides every axis.

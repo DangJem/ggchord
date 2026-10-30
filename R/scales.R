@@ -316,6 +316,9 @@ scale_region_fill_manual <- function(..., values) {
 #' @param coordinates In linear layouts, use relative locus coordinates or
 #'   original source coordinates retained by [focus_ggchord_data()]. This
 #'   affects axis breaks and labels, not the underlying genomic geometry.
+#'   Breaks returned in transformed scale space are converted back to genomic
+#'   positions in every coordinate mode. Explicit `breaks = NULL` and
+#'   `minor_breaks = NULL` suppress the corresponding ticks.
 #' @param sequences Optional character vector selecting sequence axes by their
 #'   displayed `accver`. `NULL` keeps all axes; `character()` hides every axis.
 #'   Focused or segmented views use window IDs, not parent source accessions.
