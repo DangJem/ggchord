@@ -103,6 +103,13 @@ ggchord_feature_data <- function(data, fixed_shape = "arrow",
     }
     data$strand <- unname(direction_map[direction])
   }
+  # Factor levels are labels for genomic coordinates, never integer codes.
+  # Normalize them before segment expansion also examines the parent interval.
+  for (coordinate in intersect(c("start", "end"), names(data))) {
+    if (is.factor(data[[coordinate]])) {
+      data[[coordinate]] <- as.numeric(as.character(data[[coordinate]]))
+    }
+  }
   if (isTRUE(expand_segments)) data <- ggchord_expand_feature_segments(data)
   required <- c("accver", "start", "end", "strand")
   missing <- setdiff(required, names(data))
@@ -200,6 +207,8 @@ ggchord_feature_data <- function(data, fixed_shape = "arrow",
 #'   generated.
 #' @param data data.frame with \code{accver}, \code{start}, \code{end} and
 #'   \code{strand}; optional \code{type}, \code{category} and \code{label}.
+#'   Factor \code{start}/\code{end} columns use their numeric labels, not
+#'   their internal level codes. Coordinates must resolve to finite numbers.
 #'   `display_priority` or logical `prioritized_display`. As an alternative to
 #'   \code{strand}, \code{directionality} or \code{direction} may contain
 #'   \code{"forward"}, \code{"reverse"}, \code{"bidirectional"}, or

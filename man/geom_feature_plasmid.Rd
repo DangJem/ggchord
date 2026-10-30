@@ -32,6 +32,8 @@ generated.}
 
 \item{data}{data.frame with \code{accver}, \code{start}, \code{end} and
 \code{strand}; optional \code{type}, \code{category} and \code{label}.
+Factor \code{start}/\code{end} columns use their numeric labels, not
+their internal level codes. Coordinates must resolve to finite numbers.
 `display_priority` or logical `prioritized_display`. As an alternative to
 \code{strand}, \code{directionality} or \code{direction} may contain
 \code{"forward"}, \code{"reverse"}, \code{"bidirectional"}, or

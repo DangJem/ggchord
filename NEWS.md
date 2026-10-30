@@ -1,5 +1,9 @@
 # ggchord 0.16.0 (development)
 
+* Feature layers now interpret factor `start`/`end` columns through their
+  numeric labels instead of silently drawing factor level codes as genomic
+  positions. Existing numeric and numeric-text inputs retain their behavior;
+  source input objects are not modified.
 * `clean_ggchord_data()` now rejects non-NULL `ribbon_data` and `gene_data`
   that are not data frames, rather than silently treating them as absent.
   Supply a data frame/tibble, use the explicit adapters for supported interval
