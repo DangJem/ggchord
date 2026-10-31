@@ -77,3 +77,16 @@ Rscript tools/audit-ggchord-api.R . design-roadmap/audit-generated 69b907a6ddffe
 人工去留理由见 `audit-reviewed-details/engine-unused-review-v0.16.3.csv`；
 直接调用/S3/ggproto/字符串/quote证据必须合看，REMOVE不是零计数自动结论。
 全部本版结果和边界见 `API-ENGINE-COMPLETION-v0.16.3.md`，不是正式发布验收。
+
+## v0.16.4 候选基线
+
+`candidate-*-v0.16.4.csv` 是当前整合入口：130导出、1,236个自有参数、130返回说明、
+49个角色/美学、69个坐标合同、9项S3、200条迁移/错误记录及来源MD5。
+原审计和grammar/data/engine表保留原版本，不被本次覆盖；当前字段和旧review分列。
+shape别名及固定优先等已变化语义显式覆盖，不能只换表名就把旧语义当成新合同。
+
+`Rscript tools/freeze-api.R check`默认只读核对公开签名/默认、别名/原样重导出和S3；
+变更已审阅后才用`snapshot`显式更新。迁移目录由`tools/catalog-api-migrations.R`
+读取当前literal guards、公开formals和已有历史审阅生成，保留首删版本证据界限。
+`candidate-validation`仅由实际六项直接检查写PASS，不由静态脚本认证所有组合。
+完整解释见`API-CANDIDATE-v0.16.4.md`和对应完成记录。

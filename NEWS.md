@@ -1,5 +1,11 @@
 # ggchord 0.16.4 (unreleased)
 
+* Consolidated the existing 130 exports into a candidate API baseline with
+  current defaults, reviewed units/NULL/NA semantics, coordinate support,
+  result contracts and migration records. Added `ggchord_api_contract` help.
+  Existing public signatures, spelling aliases, reexports and documented
+  return fields are retained. This is not v1.0.0 or release validation.
+
 * Automatic gene/feature label layers now reject manual `label_rotation`,
   radial/circumferential offsets, orientation and overlap controls that were
   previously accepted through `...` and ignored. Use the corresponding

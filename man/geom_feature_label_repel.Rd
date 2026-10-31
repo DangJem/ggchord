@@ -44,10 +44,7 @@ hiding. Other fitting modes retain their existing behavior.}
 
 \item{label_side}{One of \code{"inside"}, \code{"outside"}, or \code{"auto"}.}
 
-\item{max_overlaps}{Maximum unresolved overlaps.
-Manual label rotation, offsets, orientation and overlap policy belong to
-\code{\link[=geom_feature_label]{geom_feature_label()}}. Their \verb{label_*} controls are rejected by automatic
-layers rather than silently ignored.}
+\item{max_overlaps}{Maximum unresolved overlaps.}
 
 \item{external}{Whether the staged feature layout may place a label outside
 the circular backbone after inside and adjacent placement fail. When
@@ -97,6 +94,11 @@ A composite text and leader-line layer.
 }
 \description{
 Automatically arrange generic feature labels
+}
+\details{
+Manual label rotation, offsets, orientation and overlap policy belong to
+\code{\link[=geom_feature_label]{geom_feature_label()}}. Their \verb{label_*} controls are rejected by automatic
+layers rather than silently ignored.
 }
 \examples{
 seq <- data.frame(accver = "circle", length = 1000)

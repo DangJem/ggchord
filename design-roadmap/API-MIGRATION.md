@@ -1,5 +1,35 @@
 # API 变化与迁移记录
 
+## v0.16.4 当前候选与迁移入口
+
+当前唯一推荐清单见 [API候选基线](API-CANDIDATE-v0.16.4.md) 与
+`audit-generated/candidate-migrations-v0.16.4.csv`。200条记录分别标明当前替代、
+删除上界、首删版本证据、守卫和原审阅；不将旧DEFER当作当前等待删除的决定。
+此前已删除的offset不再沿用v1.0.0期限；colour/color、22个重导出和getter均保留。
+
+| F51旧调用/行为 | 当前写法/结果 | 变更版本 |
+| --- | --- | --- |
+| 自动标签的 `label_rotation`、径向/周向offset、orientation或overlap控制被忽略 | 改用对应固定标签层 `geom_gene_label(label_rotation=...)` / `geom_feature_label(...)`，或删手动项并选择label_layout；现明确报错 | v0.16.4纠正忽略路径；未删除受支持的形参 |
+| `gene_label_layout="aligned"`先只建议改名字 | 一步迁移到 `label_layout="auto"` | 取值已于旧版移除；v0.16.4改进提示 |
+| 未知 `gene_label_mystery` 被建议为不存在的 `label_mystery` | 明确为未知名称，查当前已记录参数；不编造替代 | v0.16.4 |
+
+没有新增、删除或改名公开函数/形参，没有改变有效默认布局。shape当前是唯一固定
+入口，显式NULL/NA不是旧版“不使用简写”的含义；需要映射时省略固定shape。
+本版整合表已覆盖旧shape别名说明和ribbon alpha旧优先描述，历史记录仍保留其原出处。
+
+```r
+library(ggchord)
+s <- data.frame(accver="A", length=1000)
+f <- data.frame(accver="A", start=100, end=350, strand=".", type="misc", label="annotation")
+p <- ggchord(s) + geom_seq() + geom_feature(data=f, shape="block", width=.06) +
+  geom_feature_label(data=f, label_orientation="horizontal", label_rotation=45) + coord_collinear()
+export_ggchord_layout(p, include=c("feature","labels"))
+```
+
+以下各小节保留各版本当时事实。v0.16.0历史示例里的固定feature_shape等旧参数不应
+直接在当前版本运行；应按v0.16.1迁移表和上述候选入口使用shape、width、label_*和link_*。
+
+
 ## v0.16.3 本地开发变化
 
 本版保留 getter/export/preview/diagnose 四个入口、原签名和全部已描述字段，

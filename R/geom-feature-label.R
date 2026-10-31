@@ -92,6 +92,7 @@ geom_feature_label <- function(
 #'   default 1.5. Must not exceed the requested text size. Original text,
 #'   requested/final sizes and fitting reason are exported with the label.
 #' @param max_overlaps Maximum unresolved overlaps.
+#' @details
 #' Manual label rotation, offsets, orientation and overlap policy belong to
 #' [geom_feature_label()]. Their `label_*` controls are rejected by automatic
 #' layers rather than silently ignored.
