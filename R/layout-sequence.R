@@ -1,5 +1,7 @@
 # Sequence allocation, references and track geometry.
-ggchord_layout_sequence_step <- quote({
+ggchord_layout_sequence_step <- function(
+    axisGap, axisMajLen, axisMinLen, circular, geometry_cache, labelOffset, lens, orientation,
+    rotation, seq_curvature, seq_gap, seqRadius, seqs) {
   n <- length(seqs)
 
   # ====================================================================
@@ -113,4 +115,8 @@ ggchord_layout_sequence_step <- quote({
   labelOffset <- labelOffset * axis_units_per_inch
 
   # ====================================================================
-})
+  list(n = n, starts = starts, ends = ends, rot_rad = rot_rad, nSeg = nSeg, seq_refs = seq_refs,
+    gene_track_radius = gene_track_radius, seq_arcs = seq_arcs,
+    axis_units_per_inch = axis_units_per_inch, axisGap = axisGap, axisMajLen = axisMajLen,
+    axisMinLen = axisMinLen, labelOffset = labelOffset)
+}

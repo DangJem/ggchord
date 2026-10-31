@@ -1,5 +1,14 @@
 # Region, gene and fixed sequence-label geometry.
-ggchord_layout_annotation_step <- quote({
+ggchord_layout_annotation_step <- function(
+    arrow_head_length, arrow_head_style, arrow_head_width, circular, draw_gene_geometry, ends,
+    gene_color_scheme, gene_colors, gene_data, gene_label_family, gene_label_fit,
+    gene_label_fontface, gene_label_lineheight, gene_label_min_size, gene_label_orientation,
+    gene_label_show, gene_label_side, gene_label_size, gene_label_wrap, gene_order,
+    gene_track_radius, geneLabelCircumLimit, geneLabelCircumOffset, geneLabelRadialOffset,
+    geneLabelRotation, geneWidth, lens, orientation, region_alpha, region_color, region_data,
+    region_fill, region_offset, region_side, region_width, rotation, seq_arcs, seq_label_hjust,
+    seq_label_radius, seq_label_rotation, seq_label_size, seq_label_text, seq_label_vjust, seq_refs,
+    seqRadius, seqs, short_feature, starts) {
   # ====================================================================
   # Step 6b: generate sequence-region bands
   # ====================================================================
@@ -545,7 +554,8 @@ ggchord_layout_annotation_step <- quote({
           label_text_original = as.character(gene$anno),
           label_size_requested = gene_label_size,
           label_size_final = label_size_resolved,
-          label_size_min = if (identical(gene_label_fit, "shrink")) gene_label_min_size else NA_real_,
+          label_size_min = if (identical(gene_label_fit,
+    "shrink")) gene_label_min_size else NA_real_,
           label_fit_reason = label_fit_reason,
           family = gene_label_family,
           fontface = gene_label_fontface,
@@ -624,4 +634,6 @@ ggchord_layout_annotation_step <- quote({
     }))
   }
 
-})
+  list(region_polys = region_polys, gene_polys = gene_polys, gene_labels = gene_labels,
+    gene_pal = gene_pal, final_gene_order = final_gene_order, seq_labels_df = seq_labels_df)
+}

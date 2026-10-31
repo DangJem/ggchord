@@ -1,5 +1,7 @@
 # Common geometry rotation and text measurement scale.
-ggchord_layout_transform_step <- quote({
+ggchord_layout_transform_step <- function(
+    axis_lines, axis_ticks, circular, gene_labels, gene_polys, region_polys, ribbon_polys, rot_rad,
+    rotation, seq_arcs, seq_label_hjust, seq_label_orientation, seq_labels_df) {
   # ====================================================================
   # Step 8: rotate all elements uniformly
   # ====================================================================
@@ -147,4 +149,8 @@ ggchord_layout_transform_step <- quote({
   text_units_per_inch <- ggchord_device_units_per_inch(compact_x, compact_y)
 
 
-})
+  list(seq_arcs = seq_arcs, axis_lines = axis_lines, axis_ticks = axis_ticks,
+    ribbon_polys = ribbon_polys, region_polys = region_polys, gene_labels = gene_labels,
+    seq_labels_df = seq_labels_df, gene_polys = gene_polys, compact_x = compact_x,
+    compact_y = compact_y, text_units_per_inch = text_units_per_inch)
+}

@@ -123,16 +123,30 @@ compute_chord_layout <- function(
     rotation, debug = FALSE,
     geometry_cache = NULL
 ) {
-  # Each focused module contributes one delayed expression. Evaluating them
-  # in this frame preserves the original local state and layout contract.
-  context <- environment()
-  eval(ggchord_layout_sequence_step, envir = context)
-  eval(ggchord_layout_axis_step, envir = context)
-  eval(ggchord_layout_ribbon_step, envir = context)
-  eval(ggchord_layout_annotation_step, envir = context)
-  eval(ggchord_layout_transform_step, envir = context)
-  eval(ggchord_layout_label_step, envir = context)
-  layout <- eval(ggchord_layout_finalize_step, envir = context)
-  layout$label_fit_diagnostics <- context$label_fit_diagnostics %||% data.frame()
+  # Only declared stage results enter the next context. Each stage has its
+  # own frame; temporary loops and closures cannot write into another stage.
+  context <- mget(names(formals(compute_chord_layout)), envir = environment(),
+    inherits = FALSE)
+  for (stage in list(ggchord_layout_sequence_step, ggchord_layout_axis_step,
+      ggchord_layout_ribbon_step, ggchord_layout_annotation_step,
+      ggchord_layout_transform_step, ggchord_layout_label_step,
+      ggchord_layout_finalize_step)) {
+    context <- ggchord_layout_run_stage(context, stage)
+  }
+  layout <- context$layout
+  layout$label_fit_diagnostics <- context$label_fit_diagnostics
   layout
+}
+
+# A value-owned context, with an explicit input contract from stage formals.
+# Reference-path reuse is the only mutable member and belongs to this outer
+# compute_chord_geometry call, never the namespace or another plot.
+ggchord_layout_run_stage <- function(context, stage) {
+  required <- names(formals(stage))
+  missing <- setdiff(required, names(context))
+  if (length(missing)) ggchord_stop("Missing layout stage input: ",
+    paste(missing, collapse = ", "))
+  updates <- do.call(stage, context[required])
+  context[names(updates)] <- updates
+  context
 }

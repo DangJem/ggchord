@@ -1,5 +1,10 @@
 # Automatic and fixed gene-label layout.
-ggchord_layout_label_step <- quote({
+ggchord_layout_label_step <- function(
+    axis_ticks, compact_x, compact_y, feature_label_external, gene_label_fit, gene_label_layout,
+    gene_label_max_lines, gene_label_overlap, gene_label_repel_layer, gene_label_repel_max_overlaps,
+    gene_label_segment_linetype, gene_label_segment_overlap, gene_label_segment_overlap_alpha,
+    gene_label_side, gene_label_wrap, gene_labels, gene_polys, seq_arcs, seq_labels_df, show_axis,
+    text_units_per_inch) {
   label_fit_diagnostics <- data.frame()
   # ====================================================================
   # Step 8b: wrap gene labels; optionally arrange them automatically
@@ -274,4 +279,7 @@ ggchord_layout_label_step <- quote({
     gene_labels <- gene_labels[visible_labels, , drop = FALSE]
   }
 
-})
+  list(gene_labels = gene_labels, gene_label_segments = gene_label_segments,
+    gene_label_clip_units = gene_label_clip_units, text_units_per_inch = text_units_per_inch,
+    label_fit_diagnostics = label_fit_diagnostics)
+}

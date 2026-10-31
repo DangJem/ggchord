@@ -1,0 +1,7 @@
+"case","result","detail"
+"chord","PASS","Representative public build/export, data retention and source ownership"
+"curved","PASS","Representative public build/export, data retention and source ownership"
+"auto","PASS","Representative public build/export, data retention and source ownership"
+"circular","PASS","Representative public build/export, data retention and source ownership"
+"collinear","PASS","Representative public build/export, data retention and source ownership"
+"segmented","PASS","Representative public build/export, data retention and source ownership"

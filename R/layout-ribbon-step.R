@@ -1,5 +1,10 @@
 # Alignment ribbon geometry and mapped ribbon metadata.
-ggchord_layout_ribbon_step <- quote({
+ggchord_layout_ribbon_step <- function(
+    debug, ends, lens, link_avoid, orientation, ribbon_alpha, ribbon_alpha_by, ribbon_alpha_range,
+    ribbon_color_by, ribbon_color_scheme, ribbon_colors, ribbon_ctrl_point, ribbon_data,
+    ribbon_direction, ribbon_direction_alpha, ribbon_direction_colors, ribbon_direction_linetypes,
+    ribbon_gap_auto, ribbon_linetype_by, ribbon_linetypes, ribbon_obstacles, ribbon_outline_by,
+    ribbon_outline_colors, ribbonGap, seq_refs, seqRadius, seqs, starts) {
   # ====================================================================
   # Step 6: generate ribbon polygons
   # ====================================================================
@@ -168,18 +173,22 @@ ggchord_layout_ribbon_step <- quote({
         }
         result <- front(positions)
         if (ribbon_gap_auto && link_avoid == "smooth" && ggchord_front_invalid(result$xy,result$baseline)) {
-          positions <- sort(unique(c(positions, (head(positions,-1)+tail(positions,-1))/2)), decreasing=end<start)
+          positions <- sort(unique(c(positions, (head(positions,-1)+tail(positions,-1))/2)),
+    decreasing=end<start)
           result <- front(positions)
           if (ggchord_front_invalid(result$xy,result$baseline)) {
-            angles <- if (end == start) rep(a0, length(positions)) else a0+(positions-start)/(end-start)*(a1-a0)
+            angles <- if (end == start) rep(a0,
+    length(positions)) else a0+(positions-start)/(end-start)*(a1-a0)
             result$xy <- map_to_curve_many(angles,seqRadius[id]+gap,ref)
             front_fallbacks <<- front_fallbacks + 1L
           }
         }
         result$xy
       }
-      q_coords <- make_front(q, rib_qstart[i], rib_qend[i], q_ref, q_angle_start, q_angle_end, q_gap)
-      s_coords <- make_front(s, rib_sstart[i], rib_send[i], s_ref, s_angle_start, s_angle_end, s_gap)
+      q_coords <- make_front(q, rib_qstart[i], rib_qend[i], q_ref, q_angle_start, q_angle_end,
+    q_gap)
+      s_coords <- make_front(s, rib_sstart[i], rib_send[i], s_ref, s_angle_start, s_angle_end,
+    s_gap)
 
       ribbon_q_n[j] <- nrow(q_coords)
       ribbon_s_n[j] <- nrow(s_coords)
@@ -289,7 +298,8 @@ ggchord_layout_ribbon_step <- quote({
       s_gap_vals <- rep(ribbon_s_gap, times = polygon_sizes)
 
       if (ribbon_color_scheme == "pident") {
-        if (front_fallbacks > 0L) warning(sprintf("Smooth avoidance used uniform fallback at %d endpoint(s)", front_fallbacks), call. = FALSE)
+        if (front_fallbacks > 0L) warning(sprintf("Smooth avoidance used uniform fallback at %d endpoint(s)",
+    front_fallbacks), call. = FALSE)
     ribbon_polys <- data.frame(
           x = m[, 1], y = m[, 2],
           pident = rep(ribbon_pident, times = polygon_sizes),
@@ -340,4 +350,6 @@ ggchord_layout_ribbon_step <- quote({
     }
   }
 
-})
+  list(ribbon_polys = ribbon_polys, ribbon_use_outline = ribbon_use_outline,
+    ribbon_use_linetype = ribbon_use_linetype)
+}

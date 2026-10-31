@@ -1,5 +1,13 @@
 # Axis-label pruning, plot bounds and the final layout contract.
-ggchord_layout_finalize_step <- quote({
+ggchord_layout_finalize_step <- function(
+    axis_label_hide_overlaps, axis_lines, axis_ticks, axisLabelOrientation, circular, ends,
+    feature_shape_order, feature_shape_pal, final_gene_order, gene_color_scheme,
+    gene_label_clip_units, gene_label_layout, gene_label_segments, gene_label_show, gene_label_size,
+    gene_labels, gene_pal, gene_polys, lens, n, orientation, region_polys, ribbon_alpha,
+    ribbon_color_breaks, ribbon_color_by, ribbon_color_limits, ribbon_color_name,
+    ribbon_color_scheme, ribbon_colors, ribbon_polys, ribbon_use_linetype, ribbon_use_outline,
+    rotation, seq_arcs, seq_colors, seq_labels, seq_labels_df, seq_refs, seqRadius, seqs, show_axis,
+    starts, text_units_per_inch) {
   # ====================================================================
   # Step 8c: optionally hide axis labels that overlap other elements
   # ====================================================================
@@ -88,5 +96,5 @@ ggchord_layout_finalize_step <- quote({
   )
 
   class(layout) <- "chord_layout"
-  layout
-})
+  list(layout = layout)
+}
