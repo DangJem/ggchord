@@ -1,5 +1,29 @@
 # API 变化与迁移记录
 
+## v0.16.3 本地开发变化
+
+本版保留 getter/export/preview/diagnose 四个入口、原签名和全部已描述字段，
+无公开入口或参数删除版本。推荐消费表格用 export，完整布局用 getter；不是弃用。
+
+| 问题 | 原行为 | 当前行为与迁移 |
+| --- | --- | --- |
+| F48 构建后空导出 | `ggplot_build(p); export_ggchord_layout(p)` 可返回空组件，复用 layer 还可能共 ID | 原调用修复，无需删除 build 或先 export；每次出现的 layer 均独立注册，原图层不改写 |
+| F26 缓存 | 普通标签可能沿用另一设备的估计 | 所有布局检查设备/context；`get_chord_layout(p, build=FALSE)` 在上下文变更后明确失败，需要 `get_chord_layout(p)` 重建 |
+| F49 预览 | `view_ggchord(p)` 可覆盖 p 的布局缓存 | 原调用返回相同类型的临时图片路径，改用渲染副本；正式保存仍用 ggsave |
+
+```r
+library(ggchord)
+s <- data.frame(accver="A", length=1000)
+p <- ggchord(s) + geom_seq()
+invisible(ggplot2::ggplot_build(p))
+# 原先此顺序可能为空；现在直接保留序列几何。
+out <- export_ggchord_layout(p, include="seq")
+stopifnot(nrow(out$seq) > 0)
+```
+
+字段、单位、来源和有限验证见 [引擎契约](API-ENGINE-CONTRACTS-v0.16.3.md)；
+没有将 registry 字段降为内部后删除。
+
 ## v0.16.2 本地开发变化
 
 本版不删除、重命名或新增公开函数参数，删除版本均不适用。保留 file/files 双入口、

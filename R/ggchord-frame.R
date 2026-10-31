@@ -197,6 +197,8 @@ ggchord_adaptive_limits <- function(layout) {
 #' callers that need a fully prepared ggplot object.
 #' @noRd
 prepare_ggchord_plot <- function(plot) {
+  plot <- ggchord_register_layers(plot)
+  plot$scales <- plot$scales$clone()
   if (exists("ggchord_prepare_track_layers", mode = "function")) plot <- ggchord_prepare_track_layers(plot)
   plot$scales$scales <- Filter(function(s) is.null(s$ggchord_managed),
                                plot$scales$scales)

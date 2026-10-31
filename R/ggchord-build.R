@@ -1029,23 +1029,12 @@ ggchord_layout_component <- function(layout, type, fallback = data.frame()) {
 #' Compute a plot-owned, per-layer geometry registry
 #' @noRd
 compute_chord_geometry <- function(plot) {
+  plot <- ggchord_register_layers(plot)
   plot <- ggchord_prepare_track_layers(plot)
   ggchord_validate_coord_contract(plot)
   chord <- plot$ggchord
   if (is.null(chord)) {
     ggchord_stop("Not a valid ggchord object: no data stored on the plot")
-  }
-  # Layers added through ordinary ggplot2 mechanisms may not have passed the
-  # list branch of +.ggchord. Assign deterministic IDs before grouping.
-  next_id <- 1L
-  for (i in seq_along(plot$layers)) {
-    lyr <- plot$layers[[i]]
-    if (is.null(lyr$ggchord_type)) next
-    if (is.null(lyr$ggchord_layer_id)) {
-      lyr$ggchord_layer_id <- sprintf("layer-%04d", next_id)
-      plot$layers[[i]] <- lyr
-    }
-    next_id <- next_id + 1L
   }
 
   if (isTRUE(plot$coordinates$ggchord_collinear)) {
@@ -1209,9 +1198,10 @@ compute_chord_geometry <- function(plot) {
       backbone_outer <- if (is.data.frame(backbone) && nrow(backbone)) {
         max(backbone$outer - backbone$center)
       } else 0
-      site_layer$ggchord_params$backbone_outer_offset <- backbone_outer
+      site_params <- site_layer$ggchord_params
+      site_params$backbone_outer_offset <- backbone_outer
       sub_layout$restriction_sites <- ggchord_restriction_geometry(
-        site_input, site_layer$ggchord_params, primary, chord$data$seq_data
+        site_input, site_params, primary, chord$data$seq_data
       )
     }
     if (main_type == "seq_center_label") {
@@ -1507,4 +1497,19 @@ classify_ggchord_layers <- function(plot) {
     if (type %in% names(idx)) idx[[type]] <- c(idx[[type]], i)
   }
   idx
+}
+
+# Register a plot-local copy, including repeated uses of the same layer object.
+# IDs describe component order in this plot, never mutate the user's ggproto.
+ggchord_register_layers <- function(plot) {
+  next_id <- 0L
+  plot$layers <- lapply(plot$layers, function(layer) {
+    copy <- reconstruct_layer(layer, layer$data, mapping = layer$mapping)
+    if (!is.null(copy$ggchord_type)) {
+      next_id <<- next_id + 1L
+      copy$ggchord_layer_id <- sprintf("layer-%04d", next_id)
+    }
+    copy
+  })
+  plot
 }

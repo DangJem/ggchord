@@ -37,7 +37,8 @@ both in millimetres. These do not modify the supplied style.}
 A \code{ggchord_diagnostics} list with \code{measurement}, \code{checks}, text and
 guide measurements, colour suggestions, existing \code{label_diagnostics},
 \code{annotation_registry}, \code{track_registry}, \code{track_diagnostics}, and captured
-device warnings. \code{measurement$status} concerns panel measurement only;
+device warnings. Field units and provenance are described in
+\link{ggchord_layout_contract}. \code{measurement$status} concerns panel measurement only;
 it never means that all quality or portability checks passed.
 }
 \description{

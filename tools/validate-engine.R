@@ -3,6 +3,16 @@
 # The RDS is temporary evidence, not a checked-in numerical snapshot contract.
 pkgload::load_all(quiet = TRUE)
 args <- commandArgs(trailingOnly = TRUE)
+if (length(args) && args[1] == 'capture') {
+  # Recover the actual pre-extraction stages without another checkout.
+  baseline <- new.env(parent = asNamespace('ggchord'))
+  for (file in c('layout.R', paste0('layout-', c('sequence','axis','ribbon-step',
+      'annotation','transform','label','finalize'), '.R'))) {
+    source <- system2('git', c('show', paste0('723575a:R/',file)), stdout=TRUE)
+    eval(parse(text=source), baseline)
+  }
+  assignInNamespace('compute_chord_layout', baseline$compute_chord_layout, ns='ggchord')
+}
 local({
   path <- tempfile(fileext = '.pdf')
   grDevices::pdf(path, width = 8, height = 6, family = 'Helvetica')
@@ -29,8 +39,8 @@ local({
   focused <- focus_ggchord_track(points, s, windows)
   plots <- list(
     chord = entities() + geom_link_ribbon() + geom_gene_label(data = g),
-    curved = ggchord(s, r) + geom_seq(radius = c(A=1.1,B=.9),
-      curvature = c(A=-.6,B=.8), orientation = c(A=-1,B=1)) +
+    curved = ggchord(s, r) + geom_seq(seq_radius = c(A=1.1,B=.9),
+      seq_curvature = c(A=-.6,B=.8), seq_orientation = c(A=-1,B=1)) +
       geom_gene(data = g) + geom_gene_label_repel(data = g, label_layout='radial') +
       geom_link_ribbon(avoid='uniform') + coord_chord(rotation=135),
     auto = entities() + geom_gene_label_repel(data=g, label_layout='auto'),

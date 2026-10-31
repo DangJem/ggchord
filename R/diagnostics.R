@@ -153,7 +153,8 @@ ggchord_diagnostic_colours <- function(built, colour_vision) {
 #' @return A `ggchord_diagnostics` list with `measurement`, `checks`, text and
 #'   guide measurements, colour suggestions, existing `label_diagnostics`,
 #'   `annotation_registry`, `track_registry`, `track_diagnostics`, and captured
-#'   device warnings. `measurement$status` concerns panel measurement only;
+#'   device warnings. Field units and provenance are described in
+#'   [ggchord_layout_contract]. `measurement$status` concerns panel measurement only;
 #'   it never means that all quality or portability checks passed.
 #' @md
 #' @export

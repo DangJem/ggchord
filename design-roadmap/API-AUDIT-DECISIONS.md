@@ -7,6 +7,29 @@
 后续改动应按函数名定位并在实际实施记录中注明新的源码状态。
 范围与版本编号见 [分阶段重构计划](API-REFACTOR-PLAN.md)。
 
+## v0.16.3 当前实施结论
+
+- F04：七个共享 quote 阶段已分两批改为显式形参与返回更新；六个原版/候选版
+  公开 export 在相同尺寸/seed/字体下比较一致，不改已正确几何。
+- F05/F26：当前 build/getter/导出在局部重建 layer，副本 scale 训练；
+  八项有限状态验证见 `engine-state-validation-v0.16.3.csv`。
+- F07：KEEP 两个入口及已有文档字段，推荐 export 消费分层表、getter 访问完整布局；
+  没有弃用、删除或把旧公开字段改成内部。稳定合同在本版进一步明确。
+
+### F48 — P1/C：build 后公开 export 为空与图层状态写回
+
+基线 `723575a` 的基础序列图先 build 再 export 为 0 行，直接 export 为 500 行。
+prepare 中部分 layer 被重建后才分配 ID，但 export 按原图层 ID 读取；复用同一
+layer 也可能共用 ID。getter 还会给原 restriction layer 写派生参数。
+已统一局部副本注册和出口 ID，参数保持局部；公开严重回归复用
+`test-layout-ownership.R` 增加一个案例，直接脚本通过，未运行 testthat。
+
+### F49 — P2/C：preview 覆盖源 plot 缓存
+
+明确尺寸 preview 在其保存设备构建源图，回到原设备时 cache-only getter 失败；
+与帮助“原图不变”不符。已使用独立 render copy，返回路径和保存 API 不变；
+直接 PNG 预览验证原缓存、层参数和 context 保留，设备失败路径恢复通过。
+
 ## v0.16.2 当前实施结论
 
 本节覆盖下面历史审计中的数据阶段 DEFER；详细逐入口合同、来源与非目标见

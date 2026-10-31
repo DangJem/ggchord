@@ -1,3 +1,16 @@
+# ggchord 0.16.3 (unreleased)
+
+* Layout stages now declare their inputs and results explicitly instead of
+  evaluating quoted stages in a shared function frame. Representative public
+  geometry remains unchanged, including historical coordinate anchor rules.
+* Fixed an order-dependent empty export after building a plot. Layer IDs are
+  now assigned consistently on build-local copies, including repeated use of
+  the same layer object. Rendering no longer writes derived IDs, restriction
+  offsets or circular styles into source layer objects or trains source scales.
+* Static previews now render a private plot copy, preserving the original
+  layout cache. Cached layout estimates are invalidated on device/context
+  changes for ordinary labels as well as physical tracks.
+
 # ggchord 0.16.2 (unreleased)
 
 * Added a shared `ggchord_data_contract` help topic covering reading, adaptation,

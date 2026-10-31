@@ -98,6 +98,10 @@ ggchord_reject_retired <- function(dots, caller, migrations,
 #'
 #' Returns the layout owned by an explicit ggchord plot. This avoids ambiguous
 #' cross-talk when several plots are built in one R session.
+#' For layer-aware tabular results, prefer [export_ggchord_layout()]. See
+#' [ggchord_layout_contract] for fields, units and cache ownership.
+#' Device/context changes invalidate cached estimates, including ordinary
+#' label layouts. `build = FALSE` then reports that no current layout is cached.
 #'
 #' @param plot A ggchord plot.
 #' @param build Logical. Build the layout when it is not cached, default TRUE.
@@ -122,8 +126,7 @@ get_chord_layout <- function(plot, build = TRUE) {
   if (missing(plot) || !inherits(plot, "ggchord") || is.null(plot$ggchord)) {
     ggchord_stop("get_chord_layout(): plot must be supplied as a ggchord object")
   }
-  if (ggchord_physical_requested(plot) &&
-      !identical(plot$ggchord$ref$context_key, ggchord_render_cache_key()))
+  if (!identical(plot$ggchord$ref$context_key, ggchord_render_cache_key()))
     plot$ggchord$ref$layout <- NULL
   layout <- plot$ggchord$ref$layout
   if (is.null(layout) && isTRUE(build)) {

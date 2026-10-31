@@ -16,3 +16,17 @@ test_that("derived plots export their own layouts and retain their cached base",
   expect_setequal(repeated$ribbon$source_row, first$ribbon$source_row)
   expect_setequal(names(get_chord_layout(base, build = FALSE)$seq_arcs), seq$accver)
 })
+
+test_that("build then export retains independently reused layers", {
+  s <- data.frame(accver = "A", length = 1000)
+  d <- data.frame(accver = "A", start = 100, end = 300,
+    strand = "+", anno = "one")
+  shared <- geom_gene(data = d)
+  p <- ggchord(s) + geom_seq() + shared + shared
+  invisible(ggplot2::ggplot_build(p))
+  out <- export_ggchord_layout(p, include = c("seq", "gene"))
+  expect_gt(nrow(out$seq), 0L)
+  expect_gt(nrow(out$gene), 0L)
+  expect_length(unique(out$gene$layer_id), 2L)
+  expect_setequal(out$gene$source_row, 1L)
+})

@@ -43,11 +43,34 @@ transform 按紧凑几何估计文字尺度，label 可更新尺度，finalize �
 输入为脚本内明确教学数据，包括未知链、不同映射、反向端点、同类独立层、
 不同 radius/curvature/rotation、圆图资源与分段 track；不是所有几何/设备穷举。
 
-## 当前已复现的状态问题
+## 已复现并修复的状态问题
 
 - F48：基础图先 build 再 export 返回 0 行序列，直接 export 返回 500 行。
   layer ID 只在部分构建副本赋值，出口又依赖原图层 ID，导致调用顺序改变结果。
 - 同一路径还会给用户 layer ggproto 写入 ID 和 restriction 的派生参数。
-  这违反检查/渲染副本的所有权边界，须在后续独立修复批次处理。
+  已改为每次构建局部重建 layer，并用一致的注册顺序供 build/export 使用。
+- F49：明确尺寸 preview 会覆盖原图缓存，返回原设备后 cache-only getter 失败；
+  已改为渲染副本。所有布局在设备/context 变化后失效，普通标签不再跳过检查。
 
-运行记录和完整状态/输出合同随本版实施补齐；本地开发仍在进行。
+`tools/validate-engine-state.R` 的八项有限检查通过：构建后导出/复用 layer、
+多图/副本、restriction 参数、context 嵌套报错、两个 PNG 尺寸的物理轨道、
+静态预览、设备构建失败和普通标签缓存失效。原图的业务表、mapping、固定参数、
+图层参数与缓存由对应检查保留；不是任意用户 quosure 都无副作用的保证。
+
+## 状态所有权与生命周期
+
+| 对象 | 拥有者与有效期 | 更新规则 |
+| --- | --- | --- |
+| 用户 data/mapping/参数 | 每个原始 layer；constructor 的三表仅作对应 fallback | 构建时解析副本；同一 layer 重复加入也独立注册，不写原 layer |
+| layer ID/几何 registry/子布局 | 当前 plot 规格的一次 geometry 计算 | 确定性按图层位置分配；export 在局部副本使用同一规则；ID 不是跨编辑的永久主键 |
+| plot ref | constructor/新组合拥有；普通 R 赋值可共享引用 | 普通 build/getter 可填充缓存；新组合和 render copy 分配新 ref |
+| scale 训练 | 几何计算或 ggplot build 副本 | 手动 scale 优先；位置/shape/track scale 显式 clone 后训练；原 scale 不被训练 |
+| reference cache | 一次外层 compute_chord_geometry | 多个子布局可复用同一曲线 key；调用结束不跨图保留 |
+| render context | 动态调用栈临时持有 | on.exit 嵌套/异常还原；不是全局布局缓存 |
+| 设备/gtable 度量 | 一次目标 render | 尺寸/context 改变使估计失效；diagnose/preview 使用独立副本，不覆盖源缓存 |
+
+普通 R 赋值保留 ggplot2 的 ggproto 引用语义，不能承诺用户直接修改共享
+`p$layers[[i]]` 环境后，另一个赋值副本完全不受影响。支持的组合 `q <- p + ...`、
+重复 build、内部 render copy 的隔离已经定向验证；不宣称任意手工内部突变有自动追踪。
+
+本地开发仍在进行，轨道、registry 和稳定输出合同在后续批次补齐。

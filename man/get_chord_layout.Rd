@@ -18,6 +18,10 @@ A chord layout list containing the computed geometry (sequence
 \description{
 Returns the layout owned by an explicit ggchord plot. This avoids ambiguous
 cross-talk when several plots are built in one R session.
+For layer-aware tabular results, prefer [export_ggchord_layout()]. See
+[ggchord_layout_contract] for fields, units and cache ownership.
+Device/context changes invalidate cached estimates, including ordinary
+label layouts. `build = FALSE` then reports that no current layout is cached.
 }
 \examples{
 library(ggchord)

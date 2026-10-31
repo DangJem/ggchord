@@ -19,6 +19,7 @@ ggchord_with_render_context <- function(context, expr) {
 }
 
 ggchord_render_plot_copy <- function(plot) {
+  plot <- ggchord_register_layers(plot)
   plot$ggchord$ref <- new.env(parent = emptyenv())
   plot$ggchord$layout <- NULL
   plot$scales <- plot$scales$clone()

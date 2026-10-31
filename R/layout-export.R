@@ -6,6 +6,10 @@
 #' layer-aware structure. Every exported row records its source layer and,
 #' where applicable, its source input row. Original mapped columns already
 #' attached to the geometry are preserved.
+#' This is the recommended entrance for consuming layout tables;
+#' [get_chord_layout()] remains available for the complete layout list.
+#' Both retain their documented fields. See [ggchord_layout_contract] for
+#' units, provenance and stability boundaries.
 #'
 #' @param plot A ggchord plot.
 #' @param include Character vector selecting any of \code{"seq"},
@@ -86,6 +90,7 @@ export_ggchord_layout <- function(
     ggchord_stop("export_ggchord_layout(): original_data must be TRUE or FALSE")
   }
 
+  plot <- ggchord_register_layers(plot)
   layout <- get_chord_layout(plot, build = TRUE)
   exported <- stats::setNames(vector("list", length(include)), include)
   for (nm in include) exported[[nm]] <- data.frame()
