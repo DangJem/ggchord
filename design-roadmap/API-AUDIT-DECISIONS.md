@@ -1,11 +1,81 @@
 # API 审计证据与决策台账
 
-**状态：v0.16.0 全量源码合同已覆盖；运行证据与待确认取舍分别记录。本地完成记录与最终一致性核对均已保存。**
+**状态：v0.16.0 全量源码合同已覆盖，v0.16.1 绘图与 v0.16.2 数据开发已本地完成；运行证据、历史候选和后续阶段取舍分别记录。**
 
 审计起始提交为 `69b907a6ddffea60a73ed1d4b1392c8cc5f7da22`，其 R 源码与附件所用
 `bdbb3326847fcbb71928eed41647c209bd545871` 一致。下列行号固定指向这个修复前基线；
 后续改动应按函数名定位并在实际实施记录中注明新的源码状态。
 范围与版本编号见 [分阶段重构计划](API-REFACTOR-PLAN.md)。
+
+## v0.16.2 当前实施结论
+
+本节覆盖下面历史审计中的数据阶段 DEFER；详细逐入口合同、来源与非目标见
+[数据契约](API-DATA-CONTRACTS-v0.16.2.md)。不是将历史源码候选自动认定为缺陷。
+
+| 问题 | 当前结论 | 证据与边界 |
+| --- | --- | --- |
+| F01/F02/F31 | KEEP 既有修复 | 最小 clipping/单bp/类型/缺ID策略、prepare顺序与方向报告已定向复核；prepare先适配仍需先独立清洗不良ID |
+| F03 | KEEP 不同默认，FIX 说明 | clean sort、prepare keep 对应不同任务；方向敏感管线验证通过，不为名字一致而改默认 |
+| F16/F24/F28 | KEEP 双入口，FIX 共用解析和错误 | file/files均支持向量/glob；规范化路径按首次顺序去重；UTF-8与畸形字段明确失败，默认保留数字式/字面NA ID及源行 |
+| F17 | KEEP 可选成熟解析器 | 实际Python/Biopython离线解析与joined/remote/partial等有限输入通过；明确UTF-8；缺解释器/缺模块/位置不可放置均有说明，不安装不下载 |
+| F20 | KEEP 对象保真 | 真实GRanges/GInteractions/XString对象路径保留metadata/未知链/两端顺序及Seqinfo；类依赖保持可选 |
+| F30 | KEEP 搜索边界，FIX 说明与已复现缺陷 | cluster为声明成员；primer匹配不是实验；common-feature只作标准码六框架，不解释source geneticCode；置信词是启发式 |
+| bundle候选 | KEEP 相对方向桶 | 同时翻转两端可归同桶，源行集合保持；包络沿首行绝对方向，不声称重算alignment |
+
+### F42 — P1/C：互惠重叠误删包含区间并漏检降序
+
+- 基线 `4510d3686fcb18ac9e691a37b17c1ac08fc211f6`。1..1000与101..200在两端
+  都被报告为reciprocal≥0.9；200..101与199..100反向近重叠却得到0。
+- FIX：归一化边界，分母取两区间最大长度（等同两边比例均达阈值）；deduplicate
+  保留不同相对方向，validator只诊断不改数据。无坐标上下文的反向feature可能跨原点，
+  因而跳过线性overlap而仍查exact。cleanable对缺失/空ID沿用F31，gene重复不再误导到ribbon helper。
+- 单个严重回归覆盖包含、降序与方向；轻量直接断言已通过，未运行testthat。
+
+### F43 — P1/C：merge覆盖未合并统计并可能跨关系合并
+
+- 同一基线，1..1000但alignment length=1100的单行经merge变成1000；
+  q1..10/s11..20与q11..20/s1..10两条同向但顺序交叉的连接变成一个同向包络。
+  自定义group_by省略pair还可跨不同序列对合并，违反同一pair合同。
+- FIX：单行不改length；pair始终独立，默认保留不合相对方向的block顺序；合并包络
+  维持历史显示span但标`.length_estimated`，report保存source_length/source_pident列表。
+  不是生成新的alignment统计，重叠和gap对加权值的限制明确记入帮助。
+- 修复前函数直接对照交叉区块为1行，修复后2行；singleton、合并来源和prepare组合通过。
+
+### F44 — P1/C：linear甲基化上下文虚构末首邻接
+
+- 教学DNA `AGGACGTCC`、motif ACGT、Dcm上下文CCWGG：基线在circular=FALSE
+  时也经模运算接成末尾CC+开头AGG，误标blocked。原序列并无这个线性上下文。
+- FIX：仅circular折返；linear裁到真实端点。有限直接输入确认linear unblocked、
+  circular blocked，来源与DNA不变。未扩展甲基化目录或声称完整酶反应模型。
+
+### F45 — P1/C：primer标签保留factor等级码
+
+- factor标签100/300的公开primer label导出得到primer_start/end=1/2及错误标签。
+- FIX：transform先取数值标签，与feature几何一致；源表保留。公开导出与严重回归
+  已写，直接验证得到100/300；没有硬编码文字框或布局浮点。
+
+### F46 — P2/C（标识改写部分P1）：读取解析不对称与来源缺失
+
+- file/files并存时file的glob未展开，缺失路径也绕过统一检查；BLAST/GFF3原read.table
+  会把001变1、字面NA变缺失。旧fill路径还允许短行填充而缺乏物理源行诊断。
+- FIX：共享对称展开/规范化去重、明确UTF-8、字段数检查、默认字符保留ID，数值字段
+  单独解析；BLAST/GFF3/FASTA增加物理源行，GenBank显式以UTF-8打开。保留可检查的
+  数值NA与警告，不猜业务值；可选统计/phase既有数值类型在可解析时保持。
+- paths/glob/重复/源行/编码/单bp/原ID直接验证；更宽松旧读取依赖必须先修复文件，
+  不提供静默猜测开关。未改函数名、参数默认或可选依赖关系。
+
+### F47 — P1/C：单碱基端点被误当作方向证据
+
+- 单bp正反链连接带direction=reverse时，prepare的endpoint乘积为0，却被当作非反向
+  而拒绝；多个单点bundle/merge又可按首行零符号扩成两端同向包络。相同单点坐标
+  的不同显式相对方向也可被exact去重丢弃。
+- FIX：零端点没有升降序，prepare不再据0否定已有方向；dedup/density在零端点时
+  使用已提供strand/direction，orientation_known=FALSE仍为unknown。merge/bundle
+  保留有单bp端点的行独立，不猜哪一端应翻转以制造包络。
+- clean使用裁剪前的方向证据，避免clip折叠成单点后把reverse变same；未知链或
+  orientation_known的缺测仍为unknown，不从递增显示坐标补出生物学方向。
+- 单个公开prepare→merge→bundle教学输入保留两条reverse单点，direction与源行可追踪；
+  同坐标不同方向在exact下也分别保留。严重回归和轻量脚本已补；未运行testthat。
 
 ## v0.16.1 当前实施结论
 

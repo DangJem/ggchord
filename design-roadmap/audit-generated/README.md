@@ -7,6 +7,13 @@
 
 此目录由 `tools/audit-ggchord-api.R` 生成。完整覆盖状态见 manifest.csv；源码复核、局部运行验证与发布验收分别记录。
 
+v0.16.2 数据阶段另存 `data-parameters-v0.16.2.csv`（34个公开入口、195行当前参数）、
+`data-return-contracts-v0.16.2.csv`、`data-source-hashes-v0.16.2.csv` 和
+`data-validation-v0.16.2.csv`。前三项由 `Rscript tools/audit-data-contracts.R` 重建；
+validation 表只登记实际完成的有限运行及未运行边界，不由静态脚本伪造 PASS。
+逐参数旧审阅路径/SHA/rationale 单独保留，本版契约以 `API-DATA-CONTRACTS-v0.16.2.md`
+及当前 formals 为准；runtime 列不宣称195个参数分别运行通过。
+
 起始提交：`69b907a6ddffea60a73ed1d4b1392c8cc5f7da22`；生成时 HEAD：`4724092f5fdc03e7bb0367537faf6fdb52f8c794`。
 输入指纹（MD5，仅作可重复性标识）：`4cc5474f5dd8ea45b1347b7d5857ef06`。
 源码、已保存 Rd 与人工复核输入的逐文件散列见 source_hashes.csv；工作树状态单独记录，不能把带改动源码冒充原始提交。

@@ -1,6 +1,76 @@
 # API 变化与迁移记录
 
-## v0.16.1 开发中
+## v0.16.2 本地开发变化
+
+本版不删除、重命名或新增公开函数参数，删除版本均不适用。保留 file/files 双入口、
+clean 的 sort 和 prepare 的 keep 默认；完整职责见
+[数据契约](API-DATA-CONTRACTS-v0.16.2.md)。以下调用均为明确标注的教学输入。
+
+| 问题 | 原行为 | 当前行为与迁移 |
+| --- | --- | --- |
+| F42 互惠重叠 | 用短分母会删除被包含的小区块；降序端点漏检 | 调用不变，交集必须覆盖每个区间的阈值；降序有效，opposite 关系保留。若研究意图确是删除任意包含关系，请自行显式筛选，不再借 reciprocal overlap 实现 |
+| F43 merge 来源与关系 | 未合并行的 alignment length 被包络覆盖；自定义分组可能跨 pair，顺序交叉可误合并 | 调用不变；原行统计保留，pair 始终分组，默认保留交叉区块；合并结果 `.length_estimated=TRUE`，report 新增 source_length/source_pident 列表。不把合并 length 当新比对统计 |
+| F44 线性甲基化上下文 | linear 也把末端接到开头，可能虚构阻断上下文 | `circular=FALSE` 原调用恢复线性含义；确为环形才显式 TRUE，不能为了恢复旧误报而改 DNA |
+| F45 引物标签 factor | 标签位置和 primer_start/end 显示等级码 | 调用不变，按 factor 的真实数值标签；原表不变 |
+| F46 读取与来源 | 混用 file/files 时 file glob 不展开；数字式 ID 可被自动转换；缺物理源行 | 两参数均统一解析，规范化路径去重且保持首次顺序；ID 原样，新增 `.source_line`。有意重复文件时请读取一次后显式 rbind 并标注复制来源 |
+| F46 输入失败 | 畸形行可填充/错位，编码未明确，错误阈值可能 recycling | 不齐字段、无效 UTF-8/路径和非法单值阈值给明确错误；需先修复输入或按已知源编码转成 UTF-8。不是通过清洗猜值 |
+| F47 单bp方向 | 零端点顺序会否定已有reverse，或被聚成假同向包络；exact可丢显式不同方向 | 原调用恢复方向保留；merge/bundle保留单bp端点独立，dedup/density使用已有方向证据，否则unknown；不要求伪造非零端点 |
+
+```r
+library(ggchord)
+seqs <- data.frame(accver = c("A", "B"), length = 1000)
+blocks <- data.frame(qaccver = "A", saccver = "B", qstart = c(1, 101),
+  qend = c(1000, 200), sstart = c(1, 101), send = c(1000, 200),
+  length = c(1100, 100), pident = 95)
+# 旧调用不改；过去小区块可能被移除，现在两条均保留。
+distinct <- deduplicate_ggchord_ribbons(blocks, by = "overlap")
+stopifnot(nrow(distinct$data) == 2L)
+unchanged <- merge_ggchord_ribbons(blocks[1, ])
+stopifnot(unchanged$data$length == 1100, !unchanged$data$.length_estimated)
+adjacent <- transform(blocks, qend = c(100, 200), send = c(100, 200),
+  length = c(120, 130))
+merged <- merge_ggchord_ribbons(adjacent)
+stopifnot(merged$data$.length_estimated,
+  identical(merged$report$source_length[[1]], c(120, 130)))
+
+f <- tempfile(fileext = ".blast")
+writeLines(c("# source comment",
+  "001\tNA\t95\t10\t0\t0\t1\t10\t10\t1\t0\t1"), f)
+# file/files 指向同一文件时只读一次；无需迁移到单一名字。
+imported <- read_blast(file = f, files = f, source_file = TRUE)
+stopifnot(nrow(imported) == 1L, imported$qaccver == "001",
+  imported$saccver == "NA", imported$.source_line == 2L)
+unlink(f)
+
+patterns <- data.frame(enzyme = "custom", motif = "ACGT", blocked_by = "Dcm",
+  methylation_motif = "CCWGG")
+linear <- find_restriction_sites(c(A = "AGGACGTCC"), database = patterns,
+  circular = FALSE, methylation = "dam_dcm")
+stopifnot(all(linear$methylation_status == "unblocked"))
+
+primers <- data.frame(accver = "A", start = factor("100", levels = c("100", "300")),
+  end = factor("300", levels = c("100", "300")), strand = "+", name = "primer")
+labels <- export_ggchord_layout(ggchord(seqs[1, ]) + geom_seq() +
+  geom_primer_label_repel(data = primers) + coord_circular(), include = "labels")$labels
+stopifnot(all(stats::na.omit(labels$primer_start) == 100),
+  all(stats::na.omit(labels$primer_end) == 300))
+```
+
+`.source_line` 是物理文件行，`as_*()` 的 `.source_row` 是本次对象输入行；
+GenBank 使用 `.source_record`/`.source_feature`。不要把这几类来源当成同一个索引。
+如果旧代码按固定列数或数字列序号取输入，应改为按字段名取列。
+BLAST `na.strings`/`colClasses` 仍可通过 dots 显式提供；调用者自定义转换会影响保真。
+
+非 UTF-8 文件须明确其真实编码后转换；例如已知 Latin-1 时可用
+`writeLines(enc2utf8(readLines(old_file, encoding = "latin1")), utf8_file, useBytes = TRUE)`，
+再调用 reader。不猜测未知编码。解析失败先检查路径、源行或选定解释器的错误输出。
+
+bundle 绝对端点分组与标准遗传码候选未构成新增算法承诺。bundle 保留相对方向聚合，
+需保留绝对来源方向时使用实际存在的 qstrand/sstrand 等 group_by 列。common-feature
+protein 模式明确只作标准码六框架搜索；source geneticCode 元数据不选择翻译表，
+非标准码用 `mode="dna"` 或外部 code-aware 分析，不能把无命中解释为生物学不存在。
+
+## v0.16.1 本地开发变化
 
 以下为本版实际迁移；所有删除均发生在 **v0.16.1**，旧调用明确报错，不再执行兼容
 分支。用户已明确取消此前“等到 v1.0.0 才删除”的期限。保留 colour/color 拼写别名。
@@ -270,7 +340,8 @@ stopifnot(all(c("oligo1", "oligo2") %in% primer_matches$primer_id))
 ## 尚未实施的迁移
 
 
-F34 已按用户选择保留历史默认并澄清帮助，不再待决策。F03 默认差异、F07 getter/export、F09 gene/feature、F10 既有偏移弃用、F11 唯一
-形状入口、标签及连接命名、颜色别名和重导出均尚未新增删除决定。后续若改变，
+F34 已按用户选择保留历史默认并澄清帮助。F03 在 v0.16.2 保留任务相关默认；
+F09–F15 的 v0.16.1 取舍见上文，不再列为待决定。F07 getter/export 仍归 v0.16.3。
+其他后续契约若改变，
 必须补入旧/新调用、替代方案、影响、错误提示、用户确认状态及确切删除版本；
 不能将待确认的删除日期写成承诺。详细方案见 [决策台账](API-AUDIT-DECISIONS.md)。

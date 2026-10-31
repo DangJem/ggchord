@@ -1,0 +1,17 @@
+command_or_evidence,status,scope,limits
+tools/validate-data-contracts.R,PASS,F42-F47; input errors; single-base direction; staged density; provenance,Synthetic representative inputs; not parameter exhaustive
+tools/validate-clean-intervals.R,PASS,Inclusive single-base and clipping,No package-wide test
+tools/validate-data-formats.R,PASS,BED/PAF coordinates; metadata; invalid intervals,No complete format validator
+tools/validate-data-convert.R with R_LIBS=/private/tmp/ggchord-bioc-lib,PASS,Real GRanges/GInteractions/XStringSet/XString,Installed optional versions only
+Direct Seqinfo script,PASS,Unused levels; circular/genome metadata; collisions; explicit length conflicts,Finite synthetic object
+tools/validate-genbank.R with existing Python 3.12/Biopython 1.86 + NumPy cache,PASS,Offline records; joins; fuzzy/remote; origin; Unicode/spaced path,Biostrings part skipped here; real objects passed separately
+Direct GenBank failure script,PASS,Missing interpreter and missing optional Bio module,Current selected environments; no installation
+tools/validate-data-prepare.R,PASS,Stages; original inputs; direction; GFF Parent; representative build,Not arbitrary pipeline combinations
+tools/validate-data-project.R,PASS,CDS phase; strand; partial; domains; ungapped links,No translation or new alignment
+tools/validate-data-relations.R,PASS,Explicit hierarchy/cluster membership; paralogs; limits; sources,No inferred homology
+tools/validate-focus-coordinates.R,PASS,Nested segments; clipping; earliest sources; reverse links,Linear display projection
+tools/validate-segments.R,PASS,Independent windows; gaps; inverse mapping; point sources,Representative collinear build
+Baseline source function comparison at 4510d3686fcb18ac9e691a37b17c1ac08fc211f6,PASS,Confirmed before/after counterexamples for F42-F47,Not an old-version full package execution
+Direct F01/F02 script,PASS,Invalid optional type and directional sort old/new report,F31 keep/drop paths also covered by targeted scripts
+R/Rd parse and roxygen rd/namespace generation,PASS,All current R/Rd parsed without warnings,No build/check/vignette generation
+testthat; devtools::test; R CMD build/check; vignette/device matrix,NOT_RUN,Requires explicit GitHub release authorization,Local development completion is not release acceptance
