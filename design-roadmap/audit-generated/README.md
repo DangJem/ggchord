@@ -61,3 +61,19 @@ Rscript tools/audit-ggchord-api.R . design-roadmap/audit-generated 69b907a6ddffe
 - 声明型 default/required aesthetic 可提取；经运行修改/继承得来的最终集合仍待复核，重复声明不机械合并。
 - 不加载包，不解析或执行原始业务数据，不运行测试、包检查、vignette 或设备矩阵。语义、验证路径、NULL/NA、单位、迁移及去留决定仍需逐项证据。
 - 部分公开参数通过外部 ggplot2/grid 的 ... 透传，其完整外部签名不由本仓库静态函数列表重建。
+
+## v0.16.3 引擎证据
+
+当前引擎产物为 `engine-*-v0.16.3.csv`，结构表由 `Rscript tools/audit-engine.R`
+重建：七个阶段/逐字段来源、1,224条内部依赖语法、34项低调用候选联合复核、
+四个输出入口22个参数、16组返回字段，以及源文件/生成器/人工review/Rd的MD5。
+表内 source_revision 指向该次生成的 HEAD，未提交变化以逐文件散列为准；不能
+把同一HEAD当作工作树完全相同的证明。公开formals、旧语义review与当前所有权分列。
+
+`engine-baseline`、`engine-state-validation`、`engine-track-validation` 和
+`engine-registry-validation` 只由对应有限运行脚本写出；静态生成器不写PASS。
+原版几何基线可用 `validate-engine.R capture <临时RDS>` 从 `723575a` 的原阶段
+重建，然后 `compare` 比较；不创建另一个checkout，不跟踪浮点快照。
+人工去留理由见 `audit-reviewed-details/engine-unused-review-v0.16.3.csv`；
+直接调用/S3/ggproto/字符串/quote证据必须合看，REMOVE不是零计数自动结论。
+全部本版结果和边界见 `API-ENGINE-COMPLETION-v0.16.3.md`，不是正式发布验收。

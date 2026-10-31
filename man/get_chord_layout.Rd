@@ -13,15 +13,15 @@ get_chord_layout(plot, build = TRUE)
 }
 \value{
 A chord layout list containing the computed geometry (sequence
-  arcs, ribbon polygons, gene arrows, axis elements, extremes, colors, etc.)
+arcs, ribbon polygons, gene arrows, axis elements, extremes, colors, etc.)
 }
 \description{
 Returns the layout owned by an explicit ggchord plot. This avoids ambiguous
 cross-talk when several plots are built in one R session.
-For layer-aware tabular results, prefer [export_ggchord_layout()]. See
-[ggchord_layout_contract] for fields, units and cache ownership.
+For layer-aware tabular results, prefer \code{\link[=export_ggchord_layout]{export_ggchord_layout()}}. See
+\link{ggchord_layout_contract} for fields, units and cache ownership.
 Device/context changes invalidate cached estimates, including ordinary
-label layouts. `build = FALSE` then reports that no current layout is cached.
+label layouts. \code{build = FALSE} then reports that no current layout is cached.
 }
 \examples{
 library(ggchord)

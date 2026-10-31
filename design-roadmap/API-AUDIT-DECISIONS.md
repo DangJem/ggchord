@@ -14,7 +14,15 @@
 - F05/F26：当前 build/getter/导出在局部重建 layer，副本 scale 训练；
   八项有限状态验证见 `engine-state-validation-v0.16.3.csv`。
 - F07：KEEP 两个入口及已有文档字段，推荐 export 消费分层表、getter 访问完整布局；
-  没有弃用、删除或把旧公开字段改成内部。稳定合同在本版进一步明确。
+  没有弃用、删除或把旧公开字段改成内部。用户帮助/16组字段合同已明确。
+- F18：KEEP 既有 band/domain/scale clone/NA/bounds/closed，五项定向核查通过。
+- F21：KEEP 坐标专属 registry 和路由，共享低层度量与障碍协议；四项 owner/来源/
+  leader/track 避障与分支核查通过，不重写全部几何。
+- F22：KEEP 四类结果的职责，22参数和16组字段的单位/来源/状态/缓存已登记。
+- F25：34个低调用候选联合直接调用、S3、ggproto/函数值、字符串/quote和开发来源
+  复核，29 KEEP、5 REMOVE；未按词法零引用删方法或开发工具。详见本版机读表。
+- F26：临时动态 context 保留 on.exit 嵌套还原；所有布局检查设备/context 缓存键；
+  preview/diagnose 副本隔离，有限验证无已知严重状态串扰，不声称任意用户代码纯性。
 
 ### F48 — P1/C：build 后公开 export 为空与图层状态写回
 
@@ -23,6 +31,12 @@ prepare 中部分 layer 被重建后才分配 ID，但 export 按原图层 ID �
 layer 也可能共用 ID。getter 还会给原 restriction layer 写派生参数。
 已统一局部副本注册和出口 ID，参数保持局部；公开严重回归复用
 `test-layout-ownership.R` 增加一个案例，直接脚本通过，未运行 testthat。
+
+### F50 — P3/C：缺失标签触发空框警告
+
+六场景基线中的缺失 feature text 进入圆图候选，arc-text 返回空 box，min/max(empty)
+触发 Inf/-Inf 警告。已添加空框保护；公开导出六场景与原版一致，可见布局未改变。
+没有为此低影响保护扩张默认 testthat；直接基线脚本保留对应输入。
 
 ### F49 — P2/C：preview 覆盖源 plot 缓存
 
@@ -634,7 +648,7 @@ resolver 没有传入该 fallback，须提供自己的点连接输入。没有�
 
 | 事项 | 现状 | 方案 A | 方案 B | 当前建议与下一步 |
 | --- | --- | --- | --- | --- |
-| getter/export（F07） | 一个返回内部布局，一个受选输出，但 export 也公开说明了多种 registry 字段 | export 作为稳定推荐入口，getter 暂留并明确调试性质；收窄字段走迁移 | 两者都保留明确分层的公开契约，分别稳定必要字段 | 先列字段与用途，v0.16.3 决策；不能直接删除 getter |
+| getter/export（F07，v0.16.3 已收束） | 两者均保留已描述字段 | export 推荐作表格消费，getter 返回完整布局 | 未选择删除/收窄 | 本版已明确字段/单位/来源/缓存；无公开弃用 |
 | gene/feature（F09） | 有向基因与通用/未知链 feature，部分内部共享 | 保留语义便利入口，进一步共享内部实现 | 单一通用 geom 加显式角色，配完整迁移 | 优先比较真实生物学输入；尚不推荐公开合并 |
 | 固定形状（F11） | shape 是 feature_shape 的简写，映射名仍 feature_shape | feature_shape 为首选，shape 保留或分阶段弃用 | shape 为固定参数首选，feature_shape 保留为映射名且迁移固定调用 | wrapper 透传错误已独立修复；选名不与该修复绑定 |
 | 标签命名（F12） | label_* 与 gene_label_* 并存，默认方向/布局不同 | 各 geom 统一短 label_*，保留角色美学，迁移旧参数 | 保留角色前缀，提供清晰横向说明并共享实现 | 比较默认与跨坐标后在 v0.16.1 选择，不能仅文本替换 |

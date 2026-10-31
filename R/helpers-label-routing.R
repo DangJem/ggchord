@@ -443,9 +443,10 @@ ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
         allow_own = starts_inside && track_index == 0L
       )
       corners <- ggchord_boxes_corners(box)
-      central_collision <- length(seq_arcs) == 1L &&
+      central_collision <- nrow(corners) > 0L && length(seq_arcs) == 1L &&
         min(sqrt(rowSums(corners^2))) < .20
-      backbone_collision <- !(starts_inside && track_index == 0L) &&
+      backbone_collision <- nrow(corners) > 0L &&
+        !(starts_inside && track_index == 0L) &&
         is.finite(sequence_radius) &&
         max(sqrt(rowSums(corners^2))) > sequence_radius - .018
       leader <- placed_leaders[0, , drop = FALSE]
@@ -809,25 +810,6 @@ ggchord_label_curve_frame <- function(gl, seq_arcs) {
     }
   }
   frame
-}
-
-ggchord_enforce_label_side <- function(gl, seq_arcs, side = "auto") {
-  if (nrow(gl) == 0 || identical(side, "auto")) return(gl)
-  frame <- ggchord_label_curve_frame(gl, seq_arcs)
-  want_inside <- identical(side, "inside")
-  flip <- (frame$signed_distance < 0) != want_inside
-  flip[!is.finite(frame$signed_distance)] <- FALSE
-  if (!any(flip)) return(gl)
-
-  # Reflect across the actual local tangent of the sequence curve. Unlike a
-  # radius-from-origin approximation, this remains correct when seq_radius,
-  # seq_curvature, seq_gap, seq_order or global rotation change the geometry.
-  correction <- 2 * frame$signed_distance[flip]
-  gl$text_x[flip] <- gl$text_x[flip] -
-    correction * frame$outward_x[flip]
-  gl$text_y[flip] <- gl$text_y[flip] -
-    correction * frame$outward_y[flip]
-  gl
 }
 
 # Pack one-dimensional label anchors while preserving their gene order.

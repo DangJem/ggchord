@@ -1,0 +1,6 @@
+"case","result","detail"
+"same_id_domain","PASS","Bar baseline and two independent layers/sequences train one cloned numerical domain/band"
+"same_id_conflict","PASS","Inconsistent physical declarations are rejected before drawing"
+"transform_oob_baseline","PASS","Transformed limits censor outliers; an OOB policy cannot escape its band; valid baseline remains explicit"
+"bounds_missing_source","PASS","Clipping/omission/NA are reported separately and source coordinates remain unchanged"
+"closed_na_seam","PASS","Complete circular series explicitly close; NA prevents seam closure; gapped circles reject closed"

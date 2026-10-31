@@ -52,7 +52,7 @@ small static preview page in the configured IDE viewer or web browser. This
 is an export-size preview, not an interactive plot conversion; the original
 plot and its standard \code{ggsave()} workflow remain unchanged.
 ggchord inputs are rendered on a private copy, preserving their layout cache.
-See [ggchord_layout_contract] for the distinct preview/export/diagnostic results.
+See \link{ggchord_layout_contract} for the distinct preview/export/diagnostic results.
 Automatic height fitting does not resize an overwide legend. If decorations
 exceed the requested width, increase \code{width} or use, for example,
 \code{guides(seq_colour = guide_ggchord_legend(nrow = 2))}.

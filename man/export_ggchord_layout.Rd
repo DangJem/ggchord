@@ -63,7 +63,7 @@ Builds a ggchord plot and returns selected computed geometry in a stable,
 layer-aware structure. Every exported row records its source layer and,
 where applicable, its source input row. Original mapped columns already
 attached to the geometry are preserved.
-This is the recommended entrance for consuming layout tables;
+This is the recommended interface for consuming layout tables;
 \code{\link[=get_chord_layout]{get_chord_layout()}} remains available for the complete layout list.
 Both retain their documented fields. See \link{ggchord_layout_contract} for
 units, provenance and stability boundaries.

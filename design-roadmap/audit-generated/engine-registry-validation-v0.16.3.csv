@@ -1,0 +1,5 @@
+"case","result","detail"
+"F21_circular_ownership","PASS","Same source-row numbers across independent feature/label owners retain text and circular resource provenance"
+"F21_linear_ownership","PASS","Linear shared solver retains each owner and reports placement/hiding and leader evidence"
+"F18_F21_link_band_avoidance","PASS","Requested automatic avoidance consumes registered bands; explicit endpoint gap remains authoritative"
+"F05_F22_branch_membership","PASS","Post-scale ribbon trunks retain source sets; varying staged path styles stay separate"

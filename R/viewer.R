@@ -55,10 +55,6 @@ ggchord_preview_layout <- function(plot, width_inches, height_inches = 8) {
   list(plot = table, height = fitted_height)
 }
 
-ggchord_preview_height <- function(plot, width_inches) {
-  ggchord_preview_layout(plot, width_inches)$height
-}
-
 # A dense set of long site names needs physical room outside the backbone, not
 # just a larger canvas around an unchanged map. Measure the names that actually
 # survived cut-site grouping. Their total printed width relative to one
@@ -175,6 +171,7 @@ ggchord_preview_circular_layout <- function(plot) {
 #'   explicit destination. \code{"none"} is useful in scripts and tests.
 #'
 #' @return The normalized temporary image path, invisibly.
+#' @md
 #' @export
 #' @examples
 #' data(seq_data_example)

@@ -155,17 +155,6 @@ key_glyph_ribbon <- function(data, params, size) {
   ggplot2::draw_key_polygon(data, params, size)
 }
 
-#' Key glyph for gene arrow legends
-#'
-#' Draws the gene arrow only when the key data contains fill; otherwise returns a blank.
-#' @keywords internal
-#' @noRd
-key_glyph_gene <- function(data, params, size) {
-  data$fill <- data$gene_fill %||% data$feature_fill %||% data$fill
-  if (is.null(data$fill)) return(ggplot2::zeroGrob())
-  draw_key_gene_arrow(data, params, size)
-}
-
 #' Key glyph for generic genomic features
 #' @keywords internal
 #' @noRd

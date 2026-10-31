@@ -1,5 +1,12 @@
 # ggchord 0.16.3 (unreleased)
 
+* Added the `ggchord_layout_contract` help topic describing retained output
+  fields, units, provenance, measurement status and cache ownership. Prefer
+  `export_ggchord_layout()` for layer-aware tables; the complete-layout getter
+  remains supported with its documented members.
+* Missing feature-label text no longer triggers empty-box collision warnings;
+  visible geometry and label placement are unchanged.
+
 * Layout stages now declare their inputs and results explicitly instead of
   evaluating quoted stages in a shared function frame. Representative public
   geometry remains unchanged, including historical coordinate anchor rules.

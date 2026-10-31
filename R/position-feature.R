@@ -67,12 +67,6 @@ ggchord_as_feature_position <- function(position, caller = "feature layer") {
   )
 }
 
-ggchord_is_identity_position <- function(position) {
-  inherits(position, "PositionIdentity") &&
-    !isTRUE(position$ggchord_feature_position) &&
-    !isTRUE(position$ggchord_feature_stack)
-}
-
 ggchord_validate_offset_value <- function(x, caller) {
   if (!is.numeric(x) || length(x) != 1L || !is.finite(x)) {
     ggchord_stop(caller, ": offsets must be finite numeric scalars")

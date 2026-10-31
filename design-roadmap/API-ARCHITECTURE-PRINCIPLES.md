@@ -1,6 +1,6 @@
 # API 目标架构与边界
 
-**状态：v0.16.0 审计基线、v0.16.1 绘图语法及 v0.16.2 数据契约实施边界；长期冻结仍待后续阶段。**
+**状态：v0.16.0 审计基线及 v0.16.1–v0.16.3 绘图、数据、显式引擎与输出契约；长期冻结仍待后续阶段。**
 
 沿用 [`AGENTS.md`](../AGENTS.md) 的长期规则。本文件记录当前源码观察、目标边界
 及待决策设计；具体问题和证据见 [决策台账](API-AUDIT-DECISIONS.md)。
@@ -13,8 +13,9 @@
   `ggchord_resolve_layer_input()` 处理回退输入。构造器并不是所有图层的数据入口。
 - `R/ggchord-build.R::compute_chord_geometry()` 按 layer_id 分组，构建 layer_inputs /
   layer_geometry，并组织障碍物、轨道和跨图层标签；不是只有一个最终图层状态。
-- `R/layout.R::compute_chord_layout()` 仍在一个函数环境内依次 eval 各 quote 阶段。
-  这是需要显式依赖图的现状，单凭这一结构不能认定几何结果错误。
+- `R/layout.R::compute_chord_layout()` 在 v0.16.3 改为值上下文和七个显式函数阶段；
+  每个阶段按 formals 读取、按命名返回更新，不再 eval quote 或向共享函数帧注入变量。
+  曲线参考缓存只归外层当次 geometry 调用；同条件六场景公开导出与原版一致。
 - Coord 类提供不同坐标行为；`ggplot_build.ggchord` 和
   `ggplot_gtable.ggchord_built` 将布局与设备测量接入普通 ggplot2 流程。
 - `R/render-context.R` 有模块级临时上下文 `.ggchord_render_state`，由
@@ -77,9 +78,10 @@ chord/collinear 的 density staged mapping；这不升级其他源码矩阵项�
 - 公开返回结构区分文档承诺、实际返回但未承诺的附加字段、纯内部中间态。现有
   Rd 已描述的字段先按公开事实登记；收窄导出需评估迁移，不能只改分类绕过兼容。
 
-## 内部阶段与状态的候选设计
+## 内部阶段与状态的实施边界
 
-v0.16.3 再实施显式阶段化，当前只提出以下依赖方向：
+v0.16.3 已实施显式阶段化；详细逐字段依赖和状态所有权见
+[引擎契约](API-ENGINE-CONTRACTS-v0.16.3.md)与 `engine-stages-v0.16.3.csv`。依赖方向为：
 
 ```text
 原始输入/映射 -> 验证与适配 -> 全局序列/窗口布局
@@ -94,7 +96,9 @@ v0.16.3 再实施显式阶段化，当前只提出以下依赖方向：
 
 ## 尚未确定的取舍
 
-getter 与 export 的推荐关系仍归 v0.16.3；v0.16.2 已保留 file/files 双入口并统一解析，
+getter/export 已在 v0.16.3 保留各自已有文档字段，export 推荐消费分层表，getter
+继续返回完整布局；未弃用或收窄。四个输出入口的单位/来源/缓存合同见
+`ggchord_layout_contract`；v0.16.2 已保留 file/files 双入口并统一解析，
 保留 clean sort / prepare keep 的任务相关默认，明确来源、方向与失败行为。
 v0.16.1 已决定：feature 为通用构造内核，gene 为严格定向快捷入口；保留角色美学，
 固定形状使用 shape、宽度使用 width、标签使用 label_*、连接端点使用 link_*。
@@ -105,19 +109,20 @@ theme 显式 formals 聚焦专属设置，通用设置由 dots 传递并参与�
 
 ## 已补齐的共享帧依赖与状态证据
 
-七个现有阶段的逐项输入/输出、顺序、状态归属与风险见
+v0.16.0 的共享帧现状记录保留在
 [audit-reviewed-details/layout-stages.csv](audit-reviewed-details/layout-stages.csv)。
-这是现状合同，未实施阶段拆分：序列参考先于axis/ribbon/annotation，统一旋转先于
-自动标签与裁剪，最终边界与返回装配最后执行。`compute_chord_layout()` 的形参由
-被eval的表达式读取，直接函数体零引用不说明未使用；文字尺度还可能由标签阶段
-更新，不应未经比较直接把各阶段改为互不影响的纯函数。
+v0.16.3 已将这些依赖转为显式函数的形参与命名返回，当前逐字段表为
+`audit-generated/engine-stage-fields-v0.16.3.csv`；文字尺度仍可由 label 阶段更新并
+显式传到 finalize，不假定阶段互不影响。七个普通函数经函数值列表调度，零直接调用
+不是未使用证据。布局候选、闭包临时变量和迭代状态不作为新增公开字段。
 
 多层外部编排位于`compute_chord_geometry()`，各组保留输入、几何与子布局，之后做
 track/障碍/跨层标签协调。`compute_chord_geometry_single()`内的最后一次赋值不是
 “所有同类层必然覆盖”的证据；反过来，存在registry也不证明任意组合已运行隔离。
 
-有限脚本确认context嵌套报错恢复和副本ref/scale容器隔离；源码仍有layer ggproto
-引用语义及未穷举设备路径。状态审计按持久plot ref、当次geometry_cache、临时动态
+v0.16.3 有限脚本确认 context 嵌套报错/设备失败恢复，副本 ref/scale/layer 隔离，
+多图、复用 layer、重复 build、两个 PNG 尺寸与 preview 源缓存保留。普通 R 赋值仍有
+ggplot2 的 ggproto 引用语义，任意用户手动修改共享环境不在自动追踪保证内；未穷举设备路径。状态审计按持久plot ref、当次geometry_cache、临时动态
 render context、上游ggplot2注册/设备四类分别归属，不宣称整包没有全局副作用。
 
 ## 特征、连接和来源的现状边界
@@ -154,3 +159,18 @@ conversion_reports保留独立上游来源。不能把这些编号解释成统�
 诊断，不能从“存在避障算法”推断全域无碰撞。元数据schema、可达性和状态生命周期
 的完整来源见audit-reviewed-details；运行设备/任意staged mapping组合仍按F26等
 风险定向验收，未在本版扩大用户接口或改默认图形。
+
+## v0.16.3 稳定输出与内部候选
+
+保留 getter/export/preview/diagnose 的已有签名和已描述字段；不将 registry 字段
+改称内部后删除。原 bp、layout data 单位、物理 mm、角度、数值域和 build-local
+资源号分别说明。original_data 是 resolved inputs，source_row 不是统一文件物理行；
+聚合 source_rows、装饰 NA、conversion 和文件/record 来源有各自定义。
+
+四个入口的22个参数和16组返回字段见本版机读表；设备测量 status 与 geometry 精度
+分开，不从“measured”推断所有视觉质量通过。preview/diagnose 使用独立副本，
+普通 build/getter 可填充 plot-owned cache，设备/context 改变时全部布局估计失效。
+
+F25 的34候选已联合直接调用、函数值/ggproto/provider、S3/生命周期、字符串/quote
+及开发来源复核，保留29项，删除5个无调用私有 helper；依赖语法不是完整运行图。
+未观察到需算法优化的实测退化，不声称性能收益，不以代码行数或固定耗时作目标。

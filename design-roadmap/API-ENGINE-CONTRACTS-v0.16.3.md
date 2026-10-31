@@ -73,4 +73,59 @@ transform 按紧凑几何估计文字尺度，label 可更新尺度，finalize �
 `p$layers[[i]]` 环境后，另一个赋值副本完全不受影响。支持的组合 `q <- p + ...`、
 重复 build、内部 render copy 的隔离已经定向验证；不宣称任意手工内部突变有自动追踪。
 
-本地开发仍在进行，轨道、registry 和稳定输出合同在后续批次补齐。
+## 轨道、registry 与共享边界
+
+F18 保留既有轨道实现：同 track ID 的 side/order/width/gap 必须一致，数值域跨
+层/序列/窗口联合训练并包含 bar baseline；数值 scale clone 后训练，limits 记录原值域。
+物理 mm 与 native 布局距离分开保存，value 域不决定 band 的空间位置。
+`tools/validate-tracks.R` 复用既有三坐标/分段/NA 场景并补五项风险检查：同 ID 域、
+声明冲突、log10/OOB/baseline、bounds/NA/来源、closed/NA seam。全部通过。
+没有据“已有保护”推断任意组合无缺陷，也没有另建一套轨道算法。
+
+F21 保留三种模式的显式差异：圆图 registry 分配内侧物理带与外侧 slot/corridor；
+chord 共享外侧注释障碍；linear 在水平骨架/窗口 frame 内协调固定/自动文字与 leader。
+共享的是文本度量、框/线相交和原始来源协议，不强行合并坐标专属资源或候选算法。
+`tools/validate-engine-registry.R` 核查独立层重复 source_row 的 owner、圆图资源、
+线性 placed/hidden/leader 诊断、track band 自动避障与显式 gap 优先，以及分支的
+源行集合/可见 staged 样式；四项通过。
+缺失文字会产生空候选框，旧 min/max 触发 Inf/-Inf 警告；现加空框保护，六场景
+公开导出与基线一致。没有改变可见标签的候选顺序或布局数值。
+
+## getter、export、preview 与 diagnose 的结果合同
+
+保留四个入口和当前签名；22 个参数的当前 formals/旧语义来源与所有权另存
+`engine-parameters-v0.16.3.csv`，16 组返回字段的类型/单位/来源/作用域见
+`engine-return-contracts-v0.16.3.csv`。完整用户帮助为 `ggchord_layout_contract`。
+推荐表格消费用 export，完整布局用 getter；不是弃用/收窄，没有公开删除版本。
+已有 Rd 中 annotation_registry、sequence_layout、轨道、诊断和来源字段全部保留。
+
+- 几何与 bbox 是布局 data 单位，原 bp 不重编码；文字与物理贡献为 mm，角度为度。
+  metadata 明确已应用 layout rotation、尚未应用 ggplot2 coord transform。
+- source_row 是该层 resolved input 的位置；源文件物理行、GenBank record/feature、
+  聚合 source_rows 与自动装饰的 NA 来源分别解释，不伪称统一原文件行号。
+- original_data 只返回所选非空组件的 resolved inputs，含角色映射/适配；conversion
+  属性保留上游对象 provenance，不是原始业务文件归档。
+- 物理 track registry 的 `_mm`/native/normal 字段和数值 limits/unit 各有意义；
+  圆图 track/slot/sector 是 build-local 资源号，不是命名定量 track ID 或生物 ID。
+- render context 的 panel status 与 geometry_metric_status/converged 分开；实测 panel
+  不意味着字体嵌入、任意 grob、跨软件透明度或所有碰撞均已通过。迭代次数/私有缓存
+  不作为稳定返回合同；缺测字段与空表保持既有语义，不用固定列数取数据。
+- preview 是临时静态图片路径；diagnose 是单个目标设备的有限证据；正式保存仍用 ggsave。
+
+## F25 内部候选与性能政策
+
+当前源码 AST 产生 1,224 条去重的具名内部依赖语法和 34 个低直接调用候选。
+联合 NAMESPACE S3、ggproto/provider/函数值回调、字符串与引用表达式，以及
+`tools/`、`tests/`、`data-raw/`、示例/帮助证据复核，29 项 KEEP、5 项 REMOVE。
+完整人工理由在 `audit-reviewed-details/engine-unused-review-v0.16.3.csv`，生成表
+在 `engine-unused-candidates-v0.16.3.csv`；依赖图仍标 SYNTAX_ONLY，不冒充完整运行图。
+
+删除的是 key_glyph_gene、ggchord_enforce_label_side、ggchord_is_identity_position、
+ggchord_restriction_label_lanes_cartesian、ggchord_preview_height 五个私有无调用 helper。
+保留 .onLoad、9 个 S3 方法、stage/legend/provider 回调、REBASE 数据生成器、验证器的
+label_box_conflicts 和确有直接调用的 if_null_else；不是按零词法计数自动删除。
+没有新增公开函数/参数或删除原有导出；帮助主题不增加导出名称。
+
+未观察到需要几何算法优化的实测性能/内存退化，本版不声称加速或省内存，也没有
+极端压力/固定秒数目标。复杂几何质量、平台、字体和完整设备矩阵继续留给显式
+候选/正式发布验收；不把本次有限正常输入当作性能基准或全域几何保证。

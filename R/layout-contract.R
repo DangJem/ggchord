@@ -92,6 +92,7 @@
 #' live in a temporary directory and may be removed by cleanup; use ordinary
 #' [ggplot2::ggsave()] to keep a final file.
 #'
+#' @md
 #' @name ggchord_layout_contract
 #' @family layout results
 #' @seealso [ggchord_data_contract], [export_ggchord_layout()],

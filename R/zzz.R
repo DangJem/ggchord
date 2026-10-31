@@ -107,6 +107,7 @@ ggchord_reject_retired <- function(dots, caller, migrations,
 #' @param build Logical. Build the layout when it is not cached, default TRUE.
 #' @return A chord layout list containing the computed geometry (sequence
 #'   arcs, ribbon polygons, gene arrows, axis elements, extremes, colors, etc.)
+#' @md
 #' @export
 #'
 #' @examples
