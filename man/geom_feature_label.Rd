@@ -22,13 +22,13 @@ geom_feature_label(
 )
 }
 \arguments{
-\item{mapping, data}{Standard layer inputs. Map feature text with `label`.}
+\item{mapping, data}{Standard layer inputs. Map feature text with \code{label}.}
 
-\item{label_orientation}{One of `"feature"`, `"horizontal"`, `"radial"`,
-or `"tangent"`. `"feature"` keeps both internal and adjacent labels
+\item{label_orientation}{One of \code{"feature"}, \code{"horizontal"}, \code{"radial"},
+or \code{"tangent"}. \code{"feature"} keeps both internal and adjacent labels
 tangent to the feature direction; compact labels move beside the feature.}
 
-\item{label_side}{One of `"inside"`, `"outside"`, or `"auto"`.}
+\item{label_side}{One of \code{"inside"}, \code{"outside"}, or \code{"auto"}.}
 
 \item{label_overlap}{Fixed-label collision policy.}
 
@@ -46,7 +46,7 @@ tangent to the feature direction; compact labels move beside the feature.}
 In \code{coord_collinear()}, an omitted Position shares the matching
 feature layer's lanes; an explicit Position changes only label anchors,
 leaving feature polygons in their own Position.
-If both inputs contain unique `feature_id` values, label inputs may be
+If both inputs contain unique \code{feature_id} values, label inputs may be
 subsets or reordered; their accession, interval and strand must still
 agree. Without IDs, inheritance requires the same interval rows in order.
 Multiple matching geometry layers require an explicit label Position or

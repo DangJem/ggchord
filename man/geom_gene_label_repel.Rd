@@ -83,7 +83,7 @@ Any other valid ggplot2 linetype (e.g. \code{"solid"}, \code{"dashed"},
 \code{"dotted"}, or a numeric dash pattern) is used for all leader lines.}
 
 \item{position}{Position adjustment. Supply the same
-[position_feature_stack()] used by a gene/feature layer when labels are
+\code{\link[=position_feature_stack]{position_feature_stack()}} used by a gene/feature layer when labels are
 drawn from separate data or without a geometry layer.}
 
 \item{show.legend, inherit.aes}{Standard ggplot2 layer arguments.}
@@ -93,7 +93,11 @@ drawn from separate data or without a geometry layer.}
 requested text size. Source text, requested/final size and fitting reason
 are retained in exported label geometry.}
 
-\item{...}{Additional arguments passed to \code{geom_text()}}
+\item{...}{Additional text styles and drawing options. Automatic layouts
+own rotation, offsets, orientation and overlap policy; use
+\code{\link[=geom_gene_label]{geom_gene_label()}} for manual \code{label_rotation}, \code{label_radial_offset},
+\code{label_circum_offset}, \code{label_circum_limit}, \code{label_orientation} or
+\code{label_overlap}. These manual controls are rejected here.}
 }
 \value{
 A ggplot2 layer that draws labels and leader lines together.

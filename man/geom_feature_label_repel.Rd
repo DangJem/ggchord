@@ -25,10 +25,10 @@ geom_feature_label_repel(
 )
 }
 \arguments{
-\item{mapping, data}{Standard layer inputs. Map feature text with `label`.}
+\item{mapping, data}{Standard layer inputs. Map feature text with \code{label}.}
 
-\item{label_layout}{One of `"feature"`, `"radial"`, `"auto"`, or
-`"callout"`. The default `"feature"` follows plasmid-map convention:
+\item{label_layout}{One of \code{"feature"}, \code{"radial"}, \code{"auto"}, or
+\code{"callout"}. The default \code{"feature"} follows plasmid-map convention:
 text is tried inside first, then assigned to a fixed-radius internal
 track. All non-external text is laid out character by character along its
 selected track radius rather than rotated as one straight string. A light
@@ -37,18 +37,21 @@ and its label.
 Choose another mode for unrestricted external callouts.}
 
 \item{label_wrap, label_fit, label_max_lines}{Text fitting controls.
-`label_fit = "shrink"` explicitly uses internal-first placement without
-truncating the text. Text size is bounded by `label_min_size`; unresolved
+\code{label_fit = "shrink"} explicitly uses internal-first placement without
+truncating the text. Text size is bounded by \code{label_min_size}; unresolved
 labels keep their requested font and use adjacent/external placement or
 hiding. Other fitting modes retain their existing behavior.}
 
-\item{label_side}{One of `"inside"`, `"outside"`, or `"auto"`.}
+\item{label_side}{One of \code{"inside"}, \code{"outside"}, or \code{"auto"}.}
 
-\item{max_overlaps}{Maximum unresolved overlaps.}
+\item{max_overlaps}{Maximum unresolved overlaps.
+Manual label rotation, offsets, orientation and overlap policy belong to
+\code{\link[=geom_feature_label]{geom_feature_label()}}. Their \verb{label_*} controls are rejected by automatic
+layers rather than silently ignored.}
 
 \item{external}{Whether the staged feature layout may place a label outside
 the circular backbone after inside and adjacent placement fail. When
-`FALSE`, unresolved labels are hidden instead of pushing inward forever.
+\code{FALSE}, unresolved labels are hidden instead of pushing inward forever.
 External labels are rendered as rounded callouts using a lightened form
 of the feature's resolved fill. When restriction-site labels coexist on a
 circular map, both retain their own layout semantics but register final
@@ -59,7 +62,7 @@ the same space.}
 In \code{coord_collinear()}, an omitted Position shares the matching
 feature layer's lanes; an explicit Position changes only label anchors,
 leaving feature polygons in their own Position.
-If both inputs contain unique `feature_id` values, label inputs may be
+If both inputs contain unique \code{feature_id} values, label inputs may be
 subsets or reordered; their accession, interval and strand must still
 agree. Without IDs, inheritance requires the same interval rows in order.
 Multiple matching geometry layers require an explicit label Position or

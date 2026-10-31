@@ -1,3 +1,16 @@
+# ggchord 0.16.4 (unreleased)
+
+* Automatic gene/feature label layers now reject manual `label_rotation`,
+  radial/circumferential offsets, orientation and overlap controls that were
+  previously accepted through `...` and ignored. Use the corresponding
+  `geom_gene_label()` or `geom_feature_label()` layer for manual placement,
+  or `label_layout` for automatic geometry. Supported formals and defaults
+  are unchanged.
+* Migration errors for old `gene_label_*` names now identify the correct
+  gene/feature fixed-label layer. The old `"aligned"` request points directly
+  to `label_layout = "auto"`; unknown legacy prefixes no longer suggest
+  nonexistent replacement arguments.
+
 # ggchord 0.16.3 (unreleased)
 
 * Added the `ggchord_layout_contract` help topic describing retained output

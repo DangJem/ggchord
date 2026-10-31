@@ -23,6 +23,7 @@
 #' @param show.legend,inherit.aes Standard ggplot2 layer arguments.
 #' @param ... Additional text parameters.
 #' @return A ggplot2 layer.
+#' @md
 #' @export
 geom_feature_label <- function(
     mapping = NULL, data = NULL,
@@ -91,6 +92,10 @@ geom_feature_label <- function(
 #'   default 1.5. Must not exceed the requested text size. Original text,
 #'   requested/final sizes and fitting reason are exported with the label.
 #' @param max_overlaps Maximum unresolved overlaps.
+#' Manual label rotation, offsets, orientation and overlap policy belong to
+#' [geom_feature_label()]. Their `label_*` controls are rejected by automatic
+#' layers rather than silently ignored.
+#'
 #' @param external Whether the staged feature layout may place a label outside
 #'   the circular backbone after inside and adjacent placement fail. When
 #'   `FALSE`, unresolved labels are hidden instead of pushing inward forever.
@@ -123,6 +128,7 @@ geom_feature_label <- function(
 #'   geom_feature(data = features, width = .12) +
 #'   geom_feature_label_repel(data = features, label_fit = "shrink",
 #'     label_min_size = 1.5, size = 4) + coord_collinear()
+#' @md
 #' @export
 geom_feature_label_repel <- function(
     mapping = NULL, data = NULL,
@@ -140,6 +146,7 @@ geom_feature_label_repel <- function(
   position_explicit <- !missing(position)
   dots <- list(...)
   ggchord_reject_label_prefix(dots, "geom_feature_label_repel()")
+  ggchord_reject_manual_label_args(dots, "geom_feature_label_repel()")
   label_layout <- match.arg(label_layout)
   label_fit <- match.arg(label_fit)
   label_side <- match.arg(label_side)

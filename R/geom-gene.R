@@ -156,6 +156,7 @@ geom_gene <- function(mapping = NULL, data = NULL,
 #' @return A ggplot2 layer. To let the labels avoid each other and the
 #'   genes (with leader lines), use \code{\link{geom_gene_label_repel}()}
 #'   instead.
+#' @md
 #' @export
 #'
 #' @examples
@@ -338,9 +339,14 @@ ggchord_label_layer <- function(mapping = NULL, data = NULL,
 #'   [position_feature_stack()] used by a gene/feature layer when labels are
 #'   drawn from separate data or without a geometry layer.
 #' @param show.legend,inherit.aes Standard ggplot2 layer arguments.
-#' @param ... Additional arguments passed to \code{geom_text()}
+#' @param ... Additional text styles and drawing options. Automatic layouts
+#'   own rotation, offsets, orientation and overlap policy; use
+#'   [geom_gene_label()] for manual `label_rotation`, `label_radial_offset`,
+#'   `label_circum_offset`, `label_circum_limit`, `label_orientation` or
+#'   `label_overlap`. These manual controls are rejected here.
 #'
 #' @return A ggplot2 layer that draws labels and leader lines together.
+#' @md
 #' @export
 #'
 #' @examples
@@ -362,6 +368,7 @@ geom_gene_label_repel <- function(mapping = NULL, data = NULL,
     show.legend = FALSE, inherit.aes = FALSE, label_min_size = 1.5, ...) {
   dots <- list(...)
   ggchord_reject_label_prefix(dots, "geom_gene_label_repel()")
+  ggchord_reject_manual_label_args(dots, "geom_gene_label_repel()")
   args <- c(list(mapping = mapping, data = data,
     gene_label_layout = label_layout, gene_label_wrap = label_wrap,
     gene_label_fit = label_fit, gene_label_max_lines = label_max_lines,
@@ -536,10 +543,35 @@ ggchord_reject_label_prefix <- function(dots, caller) {
   replacements[old == "gene_label_size"] <- "size"
   replacements[old == "gene_label_max_overlaps"] <- "max_overlaps"
   replacements[old == "gene_label_segment"] <- "label_layout"
+  aligned <- grepl("repel", caller) & old == "gene_label_layout" &
+    identical(dots$gene_label_layout, "aligned")
+  if (any(aligned)) {
+    replacements[old == "gene_label_layout"] <- "label_layout = 'auto'"
+  }
   manual <- old %in% c("gene_label_rotation", "gene_label_radial_offset",
     "gene_label_circum_offset", "gene_label_circum_limit", "gene_label_orientation")
+  fixed <- if (grepl("feature", caller)) "geom_feature_label" else "geom_gene_label"
+  target <- get(sub("\\(\\)$", "", caller), mode = "function")
+  recognized <- replacements %in% c(names(formals(target)), "size") |
+    (grepl("repel", caller) & manual) | aligned
   if (grepl("repel", caller)) replacements[manual] <- paste0(
-    "geom_gene_label(", replacements[manual], " = ...) for manual placement")
-  ggchord_stop(caller, ": parameters removed in v0.16.1: ",
-    paste(paste0(old, " -> ", replacements), collapse = "; "))
+    fixed, "(", replacements[manual], " = ...) for manual placement")
+  advice <- if (any(recognized)) paste0("parameters removed in v0.16.1: ",
+    paste(paste0(old[recognized], " -> ", replacements[recognized]), collapse = "; "))
+  unknown <- if (any(!recognized)) paste0("unknown label argument(s): ",
+    paste(old[!recognized], collapse = ", "), "; use documented label_* parameters")
+  ggchord_stop(caller, ": ", paste(c(advice, unknown), collapse = ". "))
+}
+
+# Manual label geometry belongs to the fixed-label layer, even when its
+# current short name accidentally arrives through the automatic layer's dots.
+ggchord_reject_manual_label_args <- function(dots, caller) {
+  supplied <- intersect(names(dots), c("label_rotation", "label_radial_offset",
+    "label_circum_offset", "label_circum_limit", "label_orientation", "label_overlap"))
+  if (!length(supplied)) return(invisible(NULL))
+  fixed <- if (grepl("feature", caller)) "geom_feature_label" else "geom_gene_label"
+  ggchord_stop(caller, ": manual label argument(s) are not supported: ",
+    paste(supplied, collapse = ", "), ". Use ", fixed, "(",
+    paste(paste0(supplied, " = ..."), collapse = ", "), ") for manual placement, ",
+    "or select automatic geometry with label_layout.")
 }

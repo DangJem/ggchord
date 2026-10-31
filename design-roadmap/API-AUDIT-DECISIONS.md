@@ -7,6 +7,25 @@
 后续改动应按函数名定位并在实际实施记录中注明新的源码状态。
 范围与版本编号见 [分阶段重构计划](API-REFACTOR-PLAN.md)。
 
+## v0.16.4 当前实施结论
+
+用户于2026-10-31明确选择独立开发本版，覆盖v0.16.3“建议跳过”的未采纳建议。
+当前导出、formals、语义、aesthetic、兼容与返回合同正在合并为候选基线；
+历史证据不覆盖新版本事实，候选冻结不等于v1.0.0长期兼容承诺。
+
+### F51 — P2/C：自动标签手动控制被忽略，迁移提示可能指向不存在参数
+
+基线6d8e94a的公开自动gene标签，label_rotation=0/90导出完全相同；
+该名进入text_params后没有被消费。gene_label_mystery的错误还建议label_mystery，
+后者并不存在。现对自动gene/feature标签中的六个手动label_*控制明确给固定标签
+替代；有效文本样式不变，普通geom未知参数继续委派上游。未知旧前缀不再构造假参数，
+原gene_label_layout="aligned"直接提示label_layout="auto"，feature手动迁移指向
+geom_feature_label而非严格定向gene层。
+
+`tools/validate-api-candidate.R`六项有限验证通过，包括正确替代的组合build、
+正常自动标签与基线wrapper的公开导出比较、代表旧守卫、错误职责及别名/重导出。
+不为该P2错误提示缺口扩张默认testthat，未运行包级检查或设备矩阵。
+
 ## v0.16.3 当前实施结论
 
 - F04：七个共享 quote 阶段已分两批改为显式形参与返回更新；六个原版/候选版

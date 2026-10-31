@@ -1,0 +1,7 @@
+"case","result","detail"
+"F51_manual_and_unknown_label_controls","PASS","Ignored manual geometry now gives an executable fixed-label route; unknown legacy prefixes do not invent parameters"
+"current_migration_targets","PASS","Unified width/shape/Position and fixed gene/unknown-strand feature labels build together"
+"automatic_default_preserved","PASS","Normal automatic labels and explicit supported text styles match the previous implementation"
+"retired_guards","PASS","Representative constructor/geom/Position/leader/theme migrations retain clear replacement errors"
+"error_responsibilities","PASS","Constructor and retired identifiers stop; ordinary geom extras retain ggplot2 delegation"
+"aliases_and_reexports","PASS","Representative spelling aliases and all 22 upstream reexports retain identity"

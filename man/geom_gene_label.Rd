@@ -53,12 +53,12 @@ annotations are wrapped at this many characters (e.g. 15), which makes the
 labels narrower and less prone to overlap.}
 
 \item{position}{Position adjustment. Supply the same
-[position_feature_stack()] used by a gene/feature layer when labels are
+\code{\link[=position_feature_stack]{position_feature_stack()}} used by a gene/feature layer when labels are
 drawn from separate data or without a geometry layer.
 In \code{coord_collinear()}, labels without an explicit Position share
 a matching geometry layer's lanes; explicit label Positions do not move
 the geometry layer.
-Unique `feature_id` columns allow label subsets and reordered labels when
+Unique \code{feature_id} columns allow label subsets and reordered labels when
 their accession, interval and strand agree with the geometry input.
 Multiple matching geometry layers require an explicit label Position or
 unambiguous feature IDs.}
@@ -69,8 +69,8 @@ unambiguous feature IDs.}
 }
 \value{
 A ggplot2 layer. To let the labels avoid each other and the
-  genes (with leader lines), use \code{\link{geom_gene_label_repel}()}
-  instead.
+genes (with leader lines), use \code{\link{geom_gene_label_repel}()}
+instead.
 }
 \description{
 Draws the gene annotation labels on a chord diagram. This layer is
