@@ -44,3 +44,6 @@ w <- data.frame(accver = "A", start = c(50, 700), end = c(200, 900),
   locus_id = c("left", "right"))
 focus_ggchord_track(d, s, w, type = "point")
 }
+\seealso{
+\code{\link{ggchord_data_contract}}
+}

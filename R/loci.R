@@ -36,6 +36,7 @@
 #'   for each target. Coordinates refer to the supplied sequence table; no
 #'   implicit change from focused coordinates to an earlier source is made.
 #' @md
+#' @seealso \code{\link{ggchord_data_contract}}
 #' @export
 #' @examples
 #' sequences <- data.frame(accver = "contig", length = 1000, genome = "isolate")

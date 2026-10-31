@@ -210,6 +210,7 @@ ggchord_focus_feature_parts <- function(row, lo, hi, origin, caller) {
 #'   `loci`, and a compact `report` including retained/dropped source rows and
 #'   truncated output rows. `.source_origin` is the original genomic position
 #'   corresponding to local position one, including after repeated focusing.
+#' @seealso \code{\link{ggchord_data_contract}}
 #' @export
 focus_ggchord_data <- function(
     seq_data,

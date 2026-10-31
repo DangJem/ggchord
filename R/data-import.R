@@ -8,23 +8,13 @@
 # Resolve `file` and `files` into a character vector of paths. `files` may
 # contain wildcard patterns (e.g. "examples/fasta/*.fna") and/or literal paths.
 ggchord_resolve_files <- function(file, files, fun) {
-  if (is.null(files)) {
-    if (is.null(file) || length(file) == 0) {
-      ggchord_stop(sprintf("%s(): provide `file` or `files`", fun),
-           call. = FALSE)
-    }
-    if (!is.character(file)) {
-      ggchord_stop(sprintf("%s(): `file` must be a character path", fun),
-           call. = FALSE)
-    }
-    paths <- as.character(file)
-  } else {
-    if (!is.character(files)) {
-      ggchord_stop(sprintf("%s(): `files` must be a character vector", fun),
-           call. = FALSE)
-    }
-    paths <- as.character(files)
+  for (name in c("file", "files")) {
+    value <- get(name)
+    if (!is.null(value) && (!is.character(value) || anyNA(value) || any(!nzchar(value))))
+      ggchord_stop(fun, "(): `", name, "` must contain non-missing, nonempty character paths")
   }
+  paths <- c(file, files)
+  if (!length(paths)) ggchord_stop(fun, "(): provide `file` or `files`")
 
   expanded <- unlist(lapply(paths, function(x) {
     if (grepl("[*?[]", x)) {
@@ -35,7 +25,7 @@ ggchord_resolve_files <- function(file, files, fun) {
       }
       g
     } else {
-      if (!file.exists(x)) {
+      if (!file.exists(x) || dir.exists(x)) {
         ggchord_stop(sprintf("%s(): file not found: %s", fun, x),
              call. = FALSE)
       }
@@ -43,14 +33,21 @@ ggchord_resolve_files <- function(file, files, fun) {
     }
   }), use.names = FALSE)
 
-  # Allow both `file` and `files` to be supplied; `file` is read first.
-  if (!is.null(file) && length(file) > 0 && !is.null(files)) {
-    expanded <- unique(c(as.character(file), expanded))
-  }
+  if (any(dir.exists(expanded))) ggchord_stop(fun, "(): expected files, not directories")
   if (length(expanded) == 0) {
     ggchord_stop(sprintf("%s(): no files to read", fun), call. = FALSE)
   }
-  expanded
+  expanded[!duplicated(normalizePath(expanded, mustWork = TRUE))]
+}
+
+# All text readers use UTF-8; reject invalid bytes instead of rewriting IDs.
+ggchord_read_text <- function(file, caller) {
+  lines <- readLines(file, warn = FALSE, encoding = "UTF-8")
+  invalid <- which(is.na(iconv(lines, from = "UTF-8", to = "UTF-8", sub = NA)))
+  if (length(invalid)) ggchord_stop(caller, ": invalid UTF-8 in ", file,
+    " at line ", invalid[1L], "; convert the file to UTF-8 explicitly")
+  if (length(lines)) lines[1L] <- sub("^\ufeff", "", lines[1L])
+  lines
 }
 
 # Combine data.frames that may have different columns (e.g. BLAST outfmt 6 and
@@ -78,8 +75,8 @@ ggchord_rbind_fill <- function(xs) {
 # Translate labels emitted by BLAST outfmt 7's `# Fields:` header to the
 # conventional ggchord/BLAST column names. Unknown fields are retained using a
 # stable snake-case name rather than being discarded.
-ggchord_blast_field_names <- function(file) {
-  lines <- readLines(file, warn = FALSE)
+ggchord_blast_field_names <- function(file, lines = NULL) {
+  if (is.null(lines)) lines <- ggchord_read_text(file, "read_blast()")
   headers <- grep("^# Fields:", lines, value = TRUE)
   if (length(headers) == 0) return(NULL)
   parsed <- lapply(headers, function(x) {
@@ -131,13 +128,29 @@ read_blast_single <- function(file, format = c("auto", "outfmt6", "outfmt7", "cu
     ggchord_stop("read_blast(): file not found: ", file, call. = FALSE)
   }
 
-  header_names <- ggchord_blast_field_names(file)
-
-  raw <- utils::read.table(
-    file, sep = "\t", header = FALSE, quote = "",
-    comment.char = comment, fill = TRUE,
-    stringsAsFactors = FALSE, ...
-  )
+  lines <- ggchord_read_text(file, "read_blast()")
+  header_names <- ggchord_blast_field_names(file, lines)
+  dots <- list(...)
+  if (!is.character(comment) || length(comment) != 1L || is.na(comment) || nchar(comment) > 1L)
+    ggchord_stop("read_blast(): comment must be one character or an empty string")
+  content <- if (nzchar(comment)) vapply(strsplit(paste0(lines, "\t"), comment, fixed = TRUE),
+    `[`, character(1), 1L) else lines
+  source_line <- which(nzchar(trimws(content)))
+  if (!is.null(dots$skip)) source_line <- source_line[source_line > dots$skip]
+  if (!is.null(dots$nrows) && dots$nrows >= 0) source_line <- head(source_line, dots$nrows)
+  if (!length(source_line)) ggchord_stop("read_blast(): no data rows parsed from ", file)
+  widths <- lengths(strsplit(content[source_line], "\t", fixed = TRUE))
+  if (length(unique(widths)) != 1L) ggchord_stop(
+    "read_blast(): inconsistent field counts in ", file, " at source lines ",
+    paste(source_line[widths != widths[1L]], collapse = ", "))
+  classes <- dots$colClasses %||% "character"
+  dots$colClasses <- NULL
+  missing_values <- dots$na.strings %||% character()
+  dots$na.strings <- NULL
+  raw <- do.call(utils::read.table, c(list(
+    text = paste(lines, collapse = "\n"), sep = "\t", header = FALSE, quote = "",
+    comment.char = comment, fill = FALSE,
+    stringsAsFactors = FALSE, colClasses = classes, na.strings = missing_values), dots))
   if (ncol(raw) == 0 || nrow(raw) == 0) {
     ggchord_stop("read_blast(): no data rows parsed from ", file, call. = FALSE)
   }
@@ -184,7 +197,11 @@ read_blast_single <- function(file, format = c("auto", "outfmt6", "outfmt7", "cu
       "read_blast(): the declared field list has %d entries but data rows have %d columns",
       length(col_names), ncol(raw)))
   }
+  if (!is.character(col_names) || anyNA(col_names) || any(!nzchar(col_names)) ||
+      anyDuplicated(col_names) || ".source_line" %in% col_names)
+    ggchord_stop("read_blast(): col_names must be unique nonempty names; .source_line is reserved for file provenance")
   names(raw) <- col_names
+  raw$.source_line <- source_line[seq_len(nrow(raw))]
 
   req <- ggchord_ribbon_required_columns()
   missing <- setdiff(req, col_names)
@@ -199,16 +216,21 @@ read_blast_single <- function(file, format = c("auto", "outfmt6", "outfmt7", "cu
                         col_names)
   for (nm in num_cols) {
     if (!is.numeric(raw[[nm]])) {
-      converted <- suppressWarnings(as.numeric(raw[[nm]]))
-      if (anyNA(converted) && !anyNA(raw[[nm]])) {
+      value <- if (is.factor(raw[[nm]])) as.character(raw[[nm]]) else raw[[nm]]
+      converted <- suppressWarnings(as.numeric(value))
+      if (any(is.na(converted) & !is.na(raw[[nm]]))) {
         warning(sprintf("read_blast(): column '%s' contains non-numeric values that were coerced to NA",
                         nm), call. = FALSE)
       }
       raw[[nm]] <- converted
     }
   }
+  for (nm in setdiff(col_names, c(num_cols, "qaccver", "saccver"))) {
+    if (is.character(raw[[nm]])) raw[[nm]] <- utils::type.convert(raw[[nm]], as.is = TRUE,
+      na.strings = character())
+  }
 
-  extra <- setdiff(col_names, req)
+  extra <- setdiff(names(raw), req)
   raw[, c(req, extra), drop = FALSE]
 }
 
@@ -218,7 +240,7 @@ read_blast_single <- function(file, format = c("auto", "outfmt6", "outfmt7", "cu
 #' files at once and combines them. `files` accepts a character vector of
 #' literal paths and/or wildcard patterns (e.g. `"examples/blastn/*.o7"`).
 #'
-#' @param file Optional path to a single BLAST tabular output file.
+#' @param file Optional path vector or glob patterns; read before `files`.
 #' @param files Optional character vector of BLAST tabular output files
 #'   (literal paths and/or wildcard patterns). All matched files are read and
 #'   combined into one data.frame.
@@ -239,6 +261,7 @@ read_blast_single <- function(file, format = c("auto", "outfmt6", "outfmt7", "cu
 #'   (`qaccver`, `saccver`, `qstart`, `qend`, `sstart`, `send`) followed by any preserved optional columns.
 #'   A `ggchord_import` attribute records files, per-file output row counts and
 #'   the one-based inclusive coordinate convention.
+#' @seealso \code{\link{ggchord_data_contract}}
 #' @export
 #'
 #' @examples
@@ -284,19 +307,24 @@ read_gff3_single <- function(file, feature_types = "CDS",
     ggchord_stop("read_gff3(): file not found: ", file, call. = FALSE)
   }
 
-  lines <- readLines(file, warn = FALSE)
+  lines <- ggchord_read_text(file, "read_gff3()")
   fasta <- which(lines == "##FASTA")
   if (length(fasta) > 0) {
     lines <- if (fasta[1] > 1) lines[seq_len(fasta[1] - 1L)] else character(0)
   }
-  data_lines <- lines[!grepl("^#", lines)]
+  source_line <- which(nzchar(trimws(lines)) & !grepl("^#", lines))
+  data_lines <- lines[source_line]
   if (length(data_lines) == 0) {
     ggchord_stop("read_gff3(): no feature rows found in ", file)
   }
+  if (any(lengths(strsplit(data_lines, "\t", fixed = TRUE)) != 9L))
+    ggchord_stop("read_gff3(): expected exactly 9 tab-separated fields in ", file)
   raw <- utils::read.table(text = paste(data_lines, collapse = "\n"),
                            sep = "\t", header = FALSE, quote = "",
                            comment.char = "", fill = TRUE,
-                           stringsAsFactors = FALSE)
+                           stringsAsFactors = FALSE, colClasses = "character",
+                           na.strings = character())
+  raw$.source_line <- source_line
   if (ncol(raw) < 9) {
     ggchord_stop(sprintf("read_gff3(): expected 9 GFF3 columns but found %d in %s",
                  ncol(raw), file), call. = FALSE)
@@ -306,6 +334,8 @@ read_gff3_single <- function(file, feature_types = "CDS",
 
   raw$start <- suppressWarnings(as.numeric(raw$start))
   raw$end <- suppressWarnings(as.numeric(raw$end))
+  for (column in c("score", "phase")) raw[[column]] <- utils::type.convert(
+    raw[[column]], as.is = TRUE, na.strings = character())
   if (anyNA(raw$start) || anyNA(raw$end)) {
     warning("read_gff3(): some start/end values could not be parsed as numbers",
             call. = FALSE)
@@ -348,6 +378,7 @@ read_gff3_single <- function(file, feature_types = "CDS",
     score = sub$score,
     phase = sub$phase,
     attributes = sub$attributes,
+    .source_line = sub$.source_line,
     stringsAsFactors = FALSE
   )
   out$source_strand <- source_strand
@@ -369,7 +400,7 @@ read_gff3_single <- function(file, feature_types = "CDS",
 #' combines them. `files` accepts a character vector of literal paths and/or
 #' wildcard patterns (e.g. `"examples/gff3/*.gff3"`).
 #'
-#' @param file Optional path to a single GFF3 file.
+#' @param file Optional path vector or glob patterns; read before `files`.
 #' @param files Optional character vector of GFF3 files (literal paths and/or
 #'   wildcard patterns). All matched files are read and combined.
 #' @param feature_types Character vector of feature types to keep, default
@@ -389,6 +420,7 @@ read_gff3_single <- function(file, feature_types = "CDS",
 #'   multiple parents are retained; selecting feature types may omit parents.
 #'   A `ggchord_import` attribute records files, per-file output row counts and
 #'   the one-based inclusive coordinate convention.
+#' @seealso \code{\link{ggchord_data_contract}}
 #' @export
 #'
 #' @examples
@@ -452,7 +484,7 @@ read_fasta_lengths_single <- function(file, header_delim = NULL) {
   if (is.character(file) && length(file) == 1 && !file.exists(file)) {
     ggchord_stop("read_fasta_lengths(): file not found: ", file, call. = FALSE)
   }
-  lines <- readLines(file, warn = FALSE)
+  lines <- ggchord_read_text(file, "read_fasta_lengths()")
   if (length(lines) == 0) {
     ggchord_stop("read_fasta_lengths(): file is empty", call. = FALSE)
   }
@@ -461,6 +493,8 @@ read_fasta_lengths_single <- function(file, header_delim = NULL) {
     ggchord_stop("read_fasta_lengths(): no FASTA headers (lines starting with '>') found",
          call. = FALSE)
   }
+  if (any(nzchar(trimws(lines[seq_len(which(is_header)[1L] - 1L)]))))
+    ggchord_stop("read_fasta_lengths(): sequence text before the first FASTA header in ", file)
   ids <- sub("^>", "", lines[is_header])
   ids <- trimws(ids)
   if (!is.null(header_delim)) {
@@ -470,6 +504,8 @@ read_fasta_lengths_single <- function(file, header_delim = NULL) {
     ids <- vapply(strsplit(ids, "[[:space:]]+"),
                   function(x) x[1], character(1))
   }
+  if (anyNA(ids) || any(!nzchar(ids))) ggchord_stop(
+    "read_fasta_lengths(): empty sequence identifier in ", file)
 
   header_pos <- which(is_header)
   starts <- header_pos + 1L
@@ -480,6 +516,7 @@ read_fasta_lengths_single <- function(file, header_delim = NULL) {
   }, integer(1))
 
   out <- data.frame(accver = ids, length = as.numeric(lens),
+                    .source_line = header_pos,
                     stringsAsFactors = FALSE)
   dup <- unique(ids[duplicated(ids)])
   if (length(dup) > 0) {
@@ -495,7 +532,7 @@ read_fasta_lengths_single <- function(file, header_delim = NULL) {
 #' combines them. `files` accepts a character vector of literal paths and/or
 #' wildcard patterns (e.g. `"examples/fasta/*.fna"`).
 #'
-#' @param file Optional path to a single FASTA file.
+#' @param file Optional path vector or glob patterns; read before `files`.
 #' @param files Optional character vector of FASTA files (literal paths and/or
 #'   wildcard patterns). All matched files are read and combined.
 #' @param header_delim Optional character. When given, each header is split at
@@ -505,6 +542,7 @@ read_fasta_lengths_single <- function(file, header_delim = NULL) {
 #'
 #' @return A data.frame with columns `accver` and `length`.
 #'   A `ggchord_import` attribute records files and per-file output row counts.
+#' @seealso \code{\link{ggchord_data_contract}}
 #' @export
 #'
 #' @examples

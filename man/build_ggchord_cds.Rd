@@ -71,4 +71,6 @@ cds$models
 }
 \seealso{
 \url{https://github.com/The-Sequence-Ontology/Specifications/blob/master/gff3.md}
+
+\code{\link{ggchord_data_contract}}
 }

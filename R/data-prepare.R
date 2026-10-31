@@ -48,7 +48,7 @@ ggchord_prepare_direction <- function(data, caller) {
   if (is.null(data) || !"direction" %in% names(data)) return(invisible(NULL))
   endpoint <- sign(data$qend - data$qstart) * sign(data$send - data$sstart)
   direction <- as.character(data$direction)
-  conflict <- (direction %in% c("reverse", "opposite") & endpoint >= 0) |
+  conflict <- (direction %in% c("reverse", "opposite") & endpoint > 0) |
     (direction %in% "same" & endpoint < 0)
   if (any(conflict)) ggchord_stop(caller, ": direction contradicts or cannot be represented by endpoint order; ",
     "supply original directional endpoints rather than previously sorted links")
@@ -106,6 +106,7 @@ ggchord_prepare_direction <- function(data, caller) {
 #'   reference/bounds errors remain in the report and are never repaired by
 #'   default. Helper stage reports number rows in that stage's input.
 #' @md
+#' @seealso \code{\link{ggchord_data_contract}}
 #' @export
 #' @examples
 #' seqs <- data.frame(accver = c("A", "B"), length = c(100, 100),

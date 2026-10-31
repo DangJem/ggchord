@@ -65,13 +65,16 @@ test_that("import helpers parse minimal files with explicit coordinate conventio
   paf <- tempfile(fileext = ".paf")
   on.exit(unlink(c(fasta, blast, gff, bed, paf)), add = TRUE)
   writeLines(c(">A", "ACGTACGT"), fasta)
-  writeLines(paste("A", "B", 98, 100, 0, 0, 1, 100, 1, 100, "1e-20", 200,
+  writeLines(paste("001", "NA", 98, 100, 0, 0, 1, 100, 1, 100, "1e-20", 200,
     sep = "\t"), blast)
   writeLines(c("##gff-version 3",
     "A\tsource\tCDS\t1\t8\t.\t+\t0\tID=cds1;product=test%20protein",
     "##FASTA", ">A", "ACGTACGT"), gff)
   expect_equal(read_fasta_lengths(fasta)$length, 8L)
-  expect_equal(nrow(read_blast(blast, format = "outfmt6")), 1L)
+  imported <- read_blast(blast, format = "outfmt6")
+  expect_equal(nrow(imported), 1L)
+  expect_equal(imported$qaccver, "001")
+  expect_equal(imported$saccver, "NA")
   expect_equal(read_gff3(gff)$anno, "test protein")
   writeLines("A\t0\t1\tpoint\t0\t.", bed)
   expect_equal(unname(unlist(read_bed(bed)[c("start", "end")])), c(1, 1))
@@ -88,6 +91,61 @@ test_that("ribbon filter, deduplication and merge each have one success path", {
   blocks <- rbind(ribbon, transform(ribbon,
     qstart = 201, qend = 301, sstart = 299, send = 199))
   expect_equal(nrow(merge_ggchord_ribbons(blocks)$data), 1L)
+})
+
+test_that("reciprocal overlap retains contained blocks and handles reverse endpoints", {
+  blocks <- data.frame(qaccver = "A", saccver = "B", qstart = c(1, 101),
+    qend = c(1000, 200), sstart = c(1, 101), send = c(1000, 200), pident = 95)
+  expect_false(any(validate_ggchord_data(smoke_sequences(), blocks)$warnings$category == "overlapping"))
+  expect_equal(nrow(deduplicate_ggchord_ribbons(blocks, by = "overlap")$data), 2L)
+  reverse <- transform(blocks[2, ], qstart = 200, qend = 101, sstart = 200, send = 101)
+  shifted <- transform(reverse, qstart = 199, qend = 100, sstart = 199, send = 100)
+  expect_equal(nrow(deduplicate_ggchord_ribbons(rbind(reverse, shifted), by = "overlap")$data), 1L)
+  expect_equal(nrow(deduplicate_ggchord_ribbons(rbind(reverse,
+    transform(reverse, sstart = 101, send = 200)), by = "overlap")$data), 2L)
+})
+
+test_that("merge preserves unmerged alignment lengths and reports estimated envelopes", {
+  block <- transform(smoke_ribbon(), length = 120, pident = 95)
+  single <- merge_ggchord_ribbons(block)
+  expect_equal(single$data$length, block$length)
+  expect_false(single$data$.length_estimated)
+  merged <- merge_ggchord_ribbons(rbind(block, transform(block,
+    qstart = 201, qend = 301, sstart = 299, send = 199, length = 130)))
+  expect_true(merged$data$.length_estimated)
+  expect_equal(merged$report$source_length[[1]], c(120, 130))
+})
+
+test_that("single-base links retain supplied relative direction through preparation", {
+  points <- data.frame(qaccver = "A", saccver = "B", qstart = c(101, 102),
+    qend = c(101, 102), sstart = c(900, 899), send = c(900, 899),
+    qstrand = "+", sstrand = "-", direction = "reverse", orientation_known = TRUE,
+    length = 1, pident = 100)
+  prepared <- prepare_ggchord_data(smoke_sequences(), points,
+    steps = list(clean = list(), merge = list(), bundle = list(bins = 1, weight = "count")))
+  expect_equal(nrow(prepared$ribbon_data), 2L)
+  expect_true(all(prepared$ribbon_data$direction == "reverse"))
+  expect_true(all(prepared$ribbon_data$.bundle_n == 1L))
+  distinct <- rbind(points[1, ], transform(points[1, ], sstrand = "+", direction = "same"))
+  expect_equal(nrow(deduplicate_ggchord_ribbons(distinct)$data), 2L)
+})
+
+test_that("linear methylation context does not join sequence ends", {
+  pattern <- data.frame(enzyme = "custom", motif = "ACGT", blocked_by = "Dcm",
+    methylation_motif = "CCWGG")
+  sites <- find_restriction_sites(c(A = "AGGACGTCC"), database = pattern,
+    circular = FALSE, methylation = "dam_dcm")
+  expect_true(all(sites$methylation_status == "unblocked"))
+})
+
+test_that("primer label coordinates retain numeric factor labels", {
+  primers <- data.frame(accver = "A", start = factor("100", levels = c("100", "300")),
+    end = factor("300", levels = c("100", "300")), strand = "+", name = "primer")
+  plot <- ggchord(smoke_sequences()[1, ]) + geom_seq() +
+    geom_primer_label_repel(data = primers) + coord_circular()
+  labels <- export_ggchord_layout(plot, include = "labels")$labels
+  expect_true(all(stats::na.omit(labels$primer_start) == 100))
+  expect_true(all(stats::na.omit(labels$primer_end) == 300))
 })
 
 test_that("explicit bundling and layout suggestions preserve sequence membership", {

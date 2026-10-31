@@ -12,7 +12,7 @@ read_fasta_lengths(
 )
 }
 \arguments{
-\item{file}{Optional path to a single FASTA file.}
+\item{file}{Optional path vector or glob patterns; read before `files`.}
 
 \item{files}{Optional character vector of FASTA files (literal paths and/or
 wildcard patterns). All matched files are read and combined.}
@@ -38,4 +38,7 @@ fasta <- tempfile(fileext = ".fna")
 writeLines(c(">seqA some description", "ACGTACGTACGTACGT", "ACGTACGT",
              ">seqB", "TTTTGGGG"), fasta)
 read_fasta_lengths(fasta)
+}
+\seealso{
+\code{\link{ggchord_data_contract}}
 }

@@ -23,11 +23,12 @@ blocks on both sequences for them to be merged.}
 only merged when their pident difference is <= this value.}
 
 \item{require_same_orientation}{Logical, default \code{TRUE}. Only merge
-blocks whose query/subject direction is the same (both ascending or both
-descending, i.e. collinear or both inverted in the same way).}
+blocks with the same relative query/subject direction and compatible
+progression of their bounds. Reversing both endpoints preserves relative
+direction. \code{FALSE} explicitly permits a coarser mixed-direction summary.}
 
 \item{group_by}{Character vector, default \code{c("qaccver", "saccver")}.
-Columns used to identify the same sequence pair.}
+Additional grouping columns; query/subject IDs always remain grouping keys.}
 
 \item{extra_columns}{How to handle columns other than the required ribbon
 fields when multiple rows are merged. \code{"consistent"} (default)
@@ -37,16 +38,30 @@ missing value; \code{"first"} retains the first source row's value.}
 \value{
 A list with \code{data} (merged data frame with \code{source_rows}
   attribute) and \code{report} (data.frame with \code{output_row},
-  \code{from_rows} and \code{n_merged} for every output row).
+  \code{from_rows}, \code{n_merged}, and list-columns \code{source_length}
+  and \code{source_pident} for every output row).
 }
 \description{
 Merges alignment blocks that belong to the same (query, subject) pair, are
 adjacent (gap <= \code{max_gap}) or overlapping on both sequences, and are
 compatible. The merged pident is weighted by alignment length. Merging is
 deliberately conservative: blocks whose merged query and subject spans would
-be inconsistent (unequal), whose pident differs by more than
+differ by more than \code{max(max_gap, 1)}, whose pident differs by more than
 \code{min_pident_difference}, or whose orientation differs (when
 \code{require_same_orientation}) are left unmerged.
+With the default orientation check, subject bounds must also progress in
+the order implied by the relative direction; crossing block orders remain
+separate.
+Query/subject identifiers always define separate groups, even when
+\code{group_by} selects additional metadata. An unmerged row retains its
+original alignment length. For a merged row, \code{length} is the query
+envelope span, not a newly computed alignment length; \code{.length_estimated}
+marks this display summary. Source lengths and identities are retained in
+the report. Overlap can count aligned bases more than once in the weighted
+identity; gaps can add unaligned bases to the envelope. Use the original
+blocks for alignment statistics.
+Rows with a single-base endpoint remain independent: endpoint order cannot
+define an absolute direction for an aggregate envelope.
 }
 \examples{
 library(ggchord)
@@ -60,4 +75,7 @@ rb <- data.frame(
 out <- merge_ggchord_ribbons(rb, max_gap = 0)
 out$data
 out$report
+}
+\seealso{
+\code{\link{ggchord_data_contract}}
 }

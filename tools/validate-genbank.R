@@ -63,6 +63,13 @@ local({
   stopifnot(default$features$annotation$codon_start == 1L,
     default$features$annotation$codon_start_source == "format-default",
     build_ggchord_cds(default$features$annotation)$models$codon_count == 3)
+  # A non-ASCII path with a space crosses the same optional process boundary.
+  unicode <- file.path(tempdir(), "local record-\u6ce8\u91ca.gbff")
+  on.exit(unlink(unicode), add = TRUE)
+  stopifnot(file.copy(path, unicode, overwrite = TRUE))
+  encoded <- read_genbank(unicode, python = Sys.getenv("GGCHORD_PYTHON", "python3"))
+  stopifnot(identical(encoded$seq_data$accver, default$seq_data$accver),
+    length(encoded$report$raw_files) == 1L)
   # Missing/remote topology is retained as an explicit unplaced source record.
   remote <- c(header("recordC", 90), "     misc_feature    REMOTE.1:10..20", "ORIGIN", "//")
   writeLines(remote, path)

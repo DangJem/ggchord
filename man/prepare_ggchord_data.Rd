@@ -87,3 +87,6 @@ ggchord(prepared$seq_data, prepared$ribbon_data) + geom_seq() +
   geom_link_ribbon() + geom_feature(data = prepared$features$sites) +
   coord_collinear()
 }
+\seealso{
+\code{\link{ggchord_data_contract}}
+}

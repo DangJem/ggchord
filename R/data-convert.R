@@ -166,6 +166,7 @@ ggchord_conversion_seqinfo <- function(x, caller) {
 #'   provenance when present. No genomic coordinates or
 #'   accession versions are guessed or rewritten.
 #' @md
+#' @seealso \code{\link{ggchord_data_contract}}
 #' @export
 #' @examples
 #' as_ggchord_seq(data.frame(chrom = c("host", "virus"), size = c(1000, 300)),
@@ -274,6 +275,7 @@ as_ggchord_seq <- function(x, mapping = NULL, lengths = NULL, ids = NULL) {
 #'   Conflicting metadata names receive a `metadata_` prefix; the attribute's
 #'   `column_map` records the output name.
 #' @md
+#' @seealso \code{\link{ggchord_data_contract}}
 #' @export
 #' @examples
 #' features <- as_ggchord_feature(data.frame(chrom = "host", from = 100,
@@ -346,6 +348,7 @@ as_ggchord_feature <- function(x, mapping = NULL) {
 #'   indices, source row/name, anchor strands, anchor metadata prefixed with
 #'   `query_`/`subject_`, and object-level metadata in the conversion attribute.
 #' @md
+#' @seealso \code{\link{ggchord_data_contract}}
 #' @export
 #' @examples
 #' as_ggchord_link(data.frame(host = "host", virus = "virus",

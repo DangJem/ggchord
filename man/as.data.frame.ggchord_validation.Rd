@@ -24,3 +24,6 @@ Combines the \code{errors} and \code{warnings} tables into a single
 data.frame and adds a \code{severity} column, which is convenient for
 filtering, exporting or printing the full report programmatically.
 }
+\seealso{
+\code{\link{ggchord_data_contract}}
+}

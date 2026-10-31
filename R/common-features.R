@@ -678,6 +678,13 @@ ggchord_empty_common_features <- function() {
 #' detection mode stored for each database record. Restriction sites are
 #' intentionally outside this API; use
 #' [find_restriction_sites()] for those.
+#' Protein matching uses a standard-code six-frame translation, without
+#' alternative initiation, splicing or origin-crossing protein matches.
+#' Source `geneticCode` metadata does not select a translation table. For
+#' nonstandard codes use `mode = "dna"` or external code-aware analysis.
+#' `confidence` is a deterministic heuristic label, not a probability or
+#' experimental confirmation. `identity` and `coverage` describe the reported
+#' match method, not independently validated biological function.
 #'
 #' @param sequence DNA text, a named character vector, or a data frame with
 #'   `accver` and `sequence`.
@@ -690,13 +697,14 @@ ggchord_empty_common_features <- function() {
 #'   other records use exact DNA. `"protein"` explicitly enables exact and
 #'   approximate protein matching.
 #' @param min_protein_identity,min_protein_coverage Approximate protein
-#'   thresholds in `[0, 1]`.
+#'   thresholds, each one finite number in `[0, 1]`.
 #' @param resolve Return deterministic best annotations or every candidate.
 #' @return A data frame directly usable by [geom_feature()] and
 #'   [geom_feature_label_repel()]. `feature_class` and `feature_shape` provide
 #'   semantic metadata and a geometry hint; neither affects radial stacking.
 #'   Explicit user aesthetics and scales still take priority. Its `segments` list-column
 #'   preserves the biological feature's segment structure.
+#' @seealso \code{\link{ggchord_data_contract}}
 #' @export
 find_common_features <- function(
     sequence, database = NULL, types = NULL, features = NULL,
@@ -708,9 +716,11 @@ find_common_features <- function(
     ggchord_stop("find_common_features(): circular must be TRUE or FALSE")
   }
   thresholds <- c(min_protein_identity, min_protein_coverage)
-  if (!is.numeric(thresholds) || any(!is.finite(thresholds)) ||
+  if (length(min_protein_identity) != 1L || length(min_protein_coverage) != 1L ||
+      !is.numeric(min_protein_identity) || !is.numeric(min_protein_coverage) ||
+      any(!is.finite(thresholds)) ||
       any(thresholds < 0 | thresholds > 1)) {
-    ggchord_stop("find_common_features(): protein thresholds must lie in [0, 1]")
+    ggchord_stop("find_common_features(): protein thresholds must each be one finite number in [0, 1]")
   }
   input <- ggchord_normalize_sequence_input(sequence, "find_common_features()")
   db <- ggchord_common_database(database)

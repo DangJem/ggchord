@@ -63,3 +63,6 @@ view <- segment_ggchord_data(s, windows = w)
 ggchord(view$seq_data) + geom_seq() +
   coord_collinear(segments = view$segments, segment_gap = 50)
 }
+\seealso{
+\code{\link{ggchord_data_contract}}
+}

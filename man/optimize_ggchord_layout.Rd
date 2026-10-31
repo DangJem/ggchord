@@ -55,3 +55,6 @@ optimized_plot <- ggchord(seq_data_example, ribbon_data_example) +
   ) +
   geom_link_ribbon()
 }
+\seealso{
+\code{\link{ggchord_data_contract}}
+}

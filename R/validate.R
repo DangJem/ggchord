@@ -363,9 +363,10 @@ validation_ribbon_duplicates <- function(ribbon_data, near_tol = 5,
   skipped <- data.frame(pair = character(0), n = integer(0),
                         stringsAsFactors = FALSE)
 
+  direction <- ggchord_ribbon_direction(ribbon_data)
   key <- paste(ribbon_data$qaccver, ribbon_data$saccver,
                ribbon_data$qstart, ribbon_data$qend,
-               ribbon_data$sstart, ribbon_data$send, sep = "\r")
+               ribbon_data$sstart, ribbon_data$send, direction, sep = "\r")
   dup_idx <- which(duplicated(key))
   if (length(dup_idx) > 0) {
     first <- match(key[dup_idx], key)
@@ -394,18 +395,18 @@ validation_ribbon_duplicates <- function(ribbon_data, near_tol = 5,
     finite_rows <- is.finite(qs) & is.finite(qe) &
       is.finite(ss) & is.finite(se)
     g <- g[finite_rows]
-    qs <- qs[finite_rows]
-    qe <- qe[finite_rows]
-    ss <- ss[finite_rows]
-    se <- se[finite_rows]
+    qs0 <- qs[finite_rows]; qe0 <- qe[finite_rows]
+    ss0 <- ss[finite_rows]; se0 <- se[finite_rows]
+    qs <- pmin(qs0, qe0); qe <- pmax(qs0, qe0)
+    ss <- pmin(ss0, se0); se <- pmax(ss0, se0)
     if (length(g) < 2) next
     k <- length(g)
     for (i in seq_len(k - 1L)) {
       j <- (i + 1L):k
 
-      d <- pmax(abs(qs[i] - qs[j]), abs(qe[i] - qe[j]),
-                abs(ss[i] - ss[j]), abs(se[i] - se[j]))
-      near_j <- j[d <= near_tol]
+      d <- pmax(abs(qs0[i] - qs0[j]), abs(qe0[i] - qe0[j]),
+                abs(ss0[i] - ss0[j]), abs(se0[i] - se0[j]))
+      near_j <- j[d <= near_tol & direction[g[i]] == direction[g[j]]]
       if (length(near_j) > 0L) {
         near_rows[[length(near_rows) + 1L]] <- cbind(g[near_j], g[i])
       }
@@ -413,14 +414,14 @@ validation_ribbon_duplicates <- function(ribbon_data, near_tol = 5,
       qlo <- pmax(qs[i], qs[j])
       qhi <- pmin(qe[i], qe[j])
       qovl <- pmax(0, qhi - qlo + 1)
-      qden <- pmin(abs(qe[i] - qs[i]) + 1, abs(qe[j] - qs[j]) + 1)
+      qden <- pmax(qe[i] - qs[i] + 1, qe[j] - qs[j] + 1)
       qr <- qovl / qden
       qr[qden <= 0] <- 0
 
       slo <- pmax(ss[i], ss[j])
       shi <- pmin(se[i], se[j])
       sovl <- pmax(0, shi - slo + 1)
-      sden <- pmin(abs(se[i] - ss[i]) + 1, abs(se[j] - ss[j]) + 1)
+      sden <- pmax(se[i] - ss[i] + 1, se[j] - ss[j] + 1)
       sr <- sovl / sden
       sr[sden <= 0] <- 0
 
@@ -445,10 +446,10 @@ validation_ribbon_duplicates <- function(ribbon_data, near_tol = 5,
 #' Reciprocal overlap of two 1-based closed intervals
 #' @noRd
 interval_recip_overlap <- function(a1, a2, b1, b2) {
-  lo <- max(a1, b1)
-  hi <- min(a2, b2)
+  lo <- max(min(a1, a2), min(b1, b2))
+  hi <- min(max(a1, a2), max(b1, b2))
   ovl <- max(0, hi - lo + 1)
-  denom <- min(abs(a2 - a1) + 1, abs(b2 - b1) + 1)
+  denom <- max(abs(a2 - a1) + 1, abs(b2 - b1) + 1)
   if (denom <= 0) return(0)
   ovl / denom
 }
@@ -582,7 +583,10 @@ validate_gene_data <- function(gene_data, seq_data, col,
     # duplicate reporting above remains useful even when coordinates are bad.
     ov_rows <- integer(0)
     if (coords_ok) {
-      grp <- split(seq_len(nrow(gene_data)), gene_data$accver)
+      # Reversed feature bounds can mean a circular origin join. Without a
+      # coordinate context there is no safe linear overlap interpretation.
+      ordered <- which(gene_data$start <= gene_data$end)
+      grp <- split(ordered, gene_data$accver[ordered])
       for (g in grp) {
         if (length(g) < 2 || length(g) > 1000) next
         st <- gene_data$start[g]
@@ -656,6 +660,10 @@ validation_cleanable <- function(errors, warnings) {
     overlapping = "deduplicate_ggchord_ribbons(by = 'overlap') or filter manually"
   )
   cats$suggestion <- suggestions[cats$category]
+  id_issue <- cats$table != "seq" & cats$category %in% c("missing_id", "empty_id")
+  cats$suggestion[id_issue] <- suggestions[["unknown_id"]]
+  gene_duplicate <- cats$table == "gene" & cats$category %in% c("exact_duplicate", "overlapping")
+  cats$suggestion[gene_duplicate] <- "Inspect and filter gene rows explicitly; ribbon deduplication does not accept gene tables"
   cats <- cats[!is.na(cats$suggestion), , drop = FALSE]
   if (nrow(cats) == 0) {
     return(data.frame(table = character(0), category = character(0),
@@ -690,13 +698,17 @@ validation_cleanable <- function(errors, warnings) {
 #'   \code{qaccver}, \code{saccver}, \code{qstart}, \code{qend}, \code{sstart}, \code{send}).
 #' @param gene_data data.frame/tibble, optional. Gene annotation data (columns
 #'   \code{accver}, \code{start}, \code{end}, \code{strand}; \code{anno} is optional).
-#' @param strict Logical. When \code{TRUE}, stop with an error as soon as any
+#' @param strict Logical. When \code{TRUE}, collect issues and then stop if any
 #'   severe problem is found. When \code{FALSE} (default), return the full
 #'   diagnostic report without stopping.
 #' @param check_coordinates Logical, default \code{TRUE}. Whether to check that
 #'   ribbon/gene coordinates stay inside \code{[1, sequence length]}.
 #' @param check_duplicates Logical, default \code{TRUE}. Whether to look for
 #'   fully duplicated, near-duplicated and highly overlapping records.
+#'   Reciprocal overlap requires the intersection to cover at least 90 percent
+#'   of each interval, including descending ribbon endpoints. Reversed feature
+#'   bounds may cross a circular origin and are excluded from linear overlap
+#'   diagnostics; exact duplicates are still reported.
 #' @param check_self_links Logical, default \code{TRUE}. Whether to flag
 #'   alignment rows where \code{qaccver == saccver}.
 #'
@@ -715,6 +727,7 @@ validation_cleanable <- function(errors, warnings) {
 #'       actions.}
 #'   }
 #'   \code{print()} and \code{summary()} methods are provided.
+#' @seealso \code{\link{ggchord_data_contract}}
 #' @export
 #'
 #' @examples
@@ -732,7 +745,7 @@ validation_cleanable <- function(errors, warnings) {
 #' # Introduce a problem: unknown sequence ID in the ribbons
 #' bad <- transform(ribbon_data_example, saccver = "NOT_A_SEQUENCE")
 #' v <- validate_ggchord_data(seq_data_example, bad)
-#' v$invalid_rows$ribbon_unknown_id
+#' v$invalid_rows$unknown_id
 validate_ggchord_data <- function(seq_data,
                                   ribbon_data = NULL,
                                   gene_data = NULL,
@@ -852,6 +865,7 @@ ggchord_structural_validation_errors <- function(validation) {
   errors[keep, , drop = FALSE]
 }
 
+#' @seealso \code{\link{ggchord_data_contract}}
 #' @export
 print.ggchord_validation <- function(x, ...) {
   old_error <- ggchord_disable_debug()
@@ -890,6 +904,7 @@ print.ggchord_validation <- function(x, ...) {
   invisible(x)
 }
 
+#' @seealso \code{\link{ggchord_data_contract}}
 #' @export
 summary.ggchord_validation <- function(object, ...) {
   old_error <- ggchord_disable_debug()
@@ -902,6 +917,7 @@ summary.ggchord_validation <- function(object, ...) {
   out
 }
 
+#' @seealso \code{\link{ggchord_data_contract}}
 #' @export
 print.ggchord_validation_summary <- function(x, ...) {
   old_error <- ggchord_disable_debug()
@@ -934,6 +950,7 @@ print.ggchord_validation_summary <- function(x, ...) {
 #' @param ... Ignored.
 #' @return A data.frame with columns \code{table}, \code{category},
 #'   \code{row}, \code{column}, \code{message} and \code{severity}.
+#' @seealso \code{\link{ggchord_data_contract}}
 #' @export
 as.data.frame.ggchord_validation <- function(x, row.names = NULL,
                                              optional = FALSE, ...) {

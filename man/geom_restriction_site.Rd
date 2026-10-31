@@ -71,3 +71,6 @@ A ggplot2 layer.
 \description{
 Draw restriction sites, labels and deterministic leaders
 }
+\seealso{
+\code{\link{ggchord_data_contract}}
+}

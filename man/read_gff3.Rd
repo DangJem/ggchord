@@ -14,7 +14,7 @@ read_gff3(
 )
 }
 \arguments{
-\item{file}{Optional path to a single GFF3 file.}
+\item{file}{Optional path vector or glob patterns; read before `files`.}
 
 \item{files}{Optional character vector of GFF3 files (literal paths and/or
 wildcard patterns). All matched files are read and combined.}
@@ -56,4 +56,7 @@ writeLines(c(
 ), gff)
 read_gff3(gff)
 read_gff3(gff, unstranded = "keep")
+}
+\seealso{
+\code{\link{ggchord_data_contract}}
 }

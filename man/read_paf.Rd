@@ -7,7 +7,7 @@
 read_paf(file = NULL, files = NULL, source_file = FALSE)
 }
 \arguments{
-\item{file}{Optional path to one tab-delimited PAF file.}
+\item{file}{Optional path vector or glob patterns; read before \code{files}.}
 
 \item{files}{Optional paths or wildcard patterns for multiple PAF files.}
 
@@ -44,4 +44,6 @@ unlink(paf)
 }
 \seealso{
 \url{https://github.com/lh3/miniasm/blob/master/PAF.md}
+
+\code{\link{ggchord_data_contract}}
 }

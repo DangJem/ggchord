@@ -53,3 +53,6 @@ genomic <- project_ggchord_features(domains, cds)
 genomic$segments[[1]]
 project_ggchord_features(genomic, cds, from = "genome")
 }
+\seealso{
+\code{\link{ggchord_data_contract}}
+}

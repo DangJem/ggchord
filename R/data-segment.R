@@ -33,6 +33,7 @@
 #'   output connection and omitted input rows. Each window retains its own
 #'   source accession, origin, full length and truncation flags.
 #' @md
+#' @seealso \code{\link{ggchord_data_contract}}
 #' @export
 #' @examples
 #' s <- data.frame(accver = "A", length = 1000)

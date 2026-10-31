@@ -58,3 +58,6 @@ if (requireNamespace("Biostrings", quietly = TRUE)) {
   as_ggchord_seq(Biostrings::DNAString("ACGT"), ids = "explicit_id")
 }
 }
+\seealso{
+\code{\link{ggchord_data_contract}}
+}

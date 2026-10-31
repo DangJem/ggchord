@@ -12,6 +12,10 @@
 #' original data frames are never modified. Nothing is dropped silently: every
 #' change (including every dropped row) is recorded in \code{report} with the
 #' original row number, the reason, the original value(s) and the new value(s).
+#' Its historical sorting default differs deliberately from preparation's
+#' direction-preserving default. Use \code{reversed_interval = "keep"} for
+#' directional links and circular-origin features; sorting endpoints loses
+#' information that a later workflow cannot reconstruct.
 #'
 #' @param seq_data data.frame/tibble, required. Must contain \code{accver} and
 #'   \code{length}; used as the coordinate reference for clipping. Reference
@@ -57,6 +61,7 @@
 #'   columns \code{table}, \code{row} (original row number), \code{column},
 #'   \code{reason}, \code{original_value}, \code{new_value} and
 #'   \code{action}).
+#' @seealso \code{\link{ggchord_data_contract}}
 #' @export
 #'
 #' @examples
@@ -183,6 +188,7 @@ clean_ggchord_data <- function(
     }
     drop <- rep(FALSE, nrow(ribbon_out))
     n <- nrow(ribbon_out)
+    input_direction <- ggchord_ribbon_direction(ribbon_out)
 
     for (colname in c("qaccver", "saccver")) {
       raw_id <- ribbon_out[[colname]]
@@ -278,12 +284,8 @@ clean_ggchord_data <- function(
       # Preserve the relationship between query and subject directions before
       # sorting endpoints. Sorting must not silently turn a reverse alignment
       # into a same-direction alignment.
-      direction <- if ((coords[["qend"]] - coords[["qstart"]]) *
-                       (coords[["send"]] - coords[["sstart"]]) >= 0) {
-        "same"
-      } else {
-        "reverse"
-      }
+      direction <- if (input_direction[i] == "same") "same" else
+        if (input_direction[i] == "opposite") "reverse" else NA_character_
       if (!"direction" %in% names(ribbon_out)) {
         ribbon_out$direction <- NA_character_
       }
@@ -553,6 +555,7 @@ clean_ggchord_data <- function(
 #' @param x A \code{"ggchord_clean"} object.
 #' @param ... Ignored.
 #' @return The object invisibly.
+#' @seealso \code{\link{ggchord_data_contract}}
 #' @export
 print.ggchord_clean <- function(x, ...) {
   old_error <- ggchord_disable_debug()

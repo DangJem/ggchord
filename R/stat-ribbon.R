@@ -55,10 +55,7 @@ ggchord_ribbon_density <- function(ribbon_data, seq_data, bins, weight,
   smid <- (input$sstart + input$send) / 2
   qbin <- pmin(bins, pmax(1L, floor((qmid - 1) / lengths[qid] * bins) + 1L))
   sbin <- pmin(bins, pmax(1L, floor((smid - 1) / lengths[sid] * bins) + 1L))
-  direction <- ifelse(
-    sign(input$qend - input$qstart) == sign(input$send - input$sstart),
-    "same", "opposite"
-  )
+  direction <- ggchord_ribbon_direction(input)
   parts <- list(qid, sid, direction, qbin, sbin)
   if (length(group_by)) parts <- c(parts, lapply(input[group_by], as.character))
   key <- do.call(paste, c(parts, sep = "\r"))
@@ -128,6 +125,7 @@ ggchord_stat_ribbon_layer <- function(
 #' @param ... Ribbon geometry and appearance arguments passed to
 #'   [geom_link_ribbon()].
 #' @return A ggchord ribbon layer.
+#' @seealso \code{\link{ggchord_data_contract}}
 #' @export
 stat_ribbon_bundle <- function(
     mapping = NULL, data = NULL,
@@ -154,6 +152,7 @@ stat_ribbon_bundle <- function(
 #' @param weight Density weight: `"length"`, `"count"`, or `"pident"`.
 #' @param group_by Optional columns that define independent density groups.
 #' @return A ggchord ribbon layer.
+#' @seealso \code{\link{ggchord_data_contract}}
 #' @export
 stat_ribbon_density <- function(
     mapping = NULL, data = NULL,

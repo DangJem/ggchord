@@ -41,3 +41,6 @@ hierarchy <- validate_ggchord_hierarchy(sequences, genomes)
 hierarchy$valid
 hierarchy$contigs
 }
+\seealso{
+\code{\link{ggchord_data_contract}}
+}

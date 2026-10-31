@@ -42,3 +42,6 @@ sites <- find_restriction_sites(
 )
 reference_sites <- filter_restriction_sites(sites, set = "reference")
 }
+\seealso{
+\code{\link{ggchord_data_contract}}
+}

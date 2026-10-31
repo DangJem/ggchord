@@ -24,3 +24,6 @@ descriptive hint; binding strand is determined from the target sequence.
 head(primer_catalog("universal"))
 head(primer_catalog("universal", aliases = TRUE))
 }
+\seealso{
+\code{\link{ggchord_data_contract}}
+}

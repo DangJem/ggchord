@@ -36,3 +36,6 @@ A layer form of [bundle_ggchord_ribbons()] that computes bundles before the
 shared chord geometry and exposes `after_stat(bundle_n)`,
 `after_stat(bundle_weight)`, and `after_stat(density)`.
 }
+\seealso{
+\code{\link{ggchord_data_contract}}
+}

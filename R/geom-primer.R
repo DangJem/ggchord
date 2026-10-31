@@ -75,6 +75,8 @@ geom_primer <- function(mapping = NULL, data = NULL,
 #' Primer labels are unboxed, use the primer colour, and show one-based
 #' inclusive binding coordinates by default. Their leaders start at the
 #' directional primer arc's arrow tip (the primer 3-prime end).
+#' Factor start/end columns use their numeric labels for both displayed text
+#' and retained binding-coordinate metadata, matching feature geometry.
 #'
 #' @inheritParams geom_primer
 #' @param side Side on which the external primer label is arranged.
@@ -110,6 +112,13 @@ geom_primer_label_repel <- function(
     ggchord_require_columns(
       x, c("start", "end"), "geom_primer_label_repel()"
     )
+    # Labels and source metadata must use the same numeric factor labels as
+    # feature geometry, never the integer level codes.
+    for (column in c("start", "end")) {
+      value <- x[[column]]
+      if (is.factor(value)) value <- as.character(value)
+      x[[column]] <- suppressWarnings(as.numeric(value))
+    }
     name <- if ("label" %in% names(x)) x$label else if (
       "name" %in% names(x)) x$name else rep("primer", nrow(x))
     range <- paste0("(", as.integer(x$start), " .. ",

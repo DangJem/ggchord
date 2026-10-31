@@ -26,7 +26,8 @@ annotations from a recognized bundled reference plasmid.}
 
 \item{match}{Full exact matching or longest exact 3-prime annealing.}
 
-\item{min_annealed_bases}{Minimum suffix length for `three_prime` matching.}
+\item{min_annealed_bases}{One finite integer of at least 8, the minimum
+suffix length for `three_prime` matching. Fractional values are rejected.}
 
 \item{circular}{Allow matches to cross the sequence origin.}
 
@@ -42,6 +43,9 @@ attaches all catalogue aliases. Exact matching is the default. Optional
 `three_prime` matching uses the longest exact 3-prime suffix available, with
 no mismatches, and is intended for inspecting partial annealing rather than
 silently treating it as a full match.
+Binding hits are sequence-search results, not experimental validation.
+`melting_temperature` uses the Wallace composition estimate unless source
+annotations supply it; ambiguous bases do not contribute to that estimate.
 }
 \examples{
 target <- c(circle = "TTGCAAAAACG")
@@ -49,4 +53,7 @@ find_primer_bindings(
   target, primers = c(test = "ACGTTGCA"),
   min_annealed_bases = 8
 )
+}
+\seealso{
+\code{\link{ggchord_data_contract}}
 }

@@ -64,3 +64,6 @@ loci
 focused <- focus_ggchord_data(sequences, gene_data = features, loci = loci)
 focused$seq_data
 }
+\seealso{
+\code{\link{ggchord_data_contract}}
+}

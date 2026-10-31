@@ -24,7 +24,11 @@ two rows to count as coordinate duplicates (used with
 with identical pair and coordinates; \code{"coordinates"} additionally
 treats rows within \code{tolerance} bp as duplicates;
 \code{"overlap"} treats blocks whose reciprocal overlap is at least
-\code{min_reciprocal_overlap} on both sequences as duplicates.}
+\code{min_reciprocal_overlap} on both sequences as duplicates. Each
+interval must meet the threshold, not only the shorter one. Opposite
+relative endpoint directions are kept as distinct relationships by all
+methods. Single-base endpoints use supplied strand/direction evidence;
+otherwise their direction is unknown.}
 
 \item{keep}{Character, default \code{"best_pident"}. Which representative to
 keep: \code{"best_pident"} (highest pident), \code{"longest"} (longest
@@ -50,4 +54,7 @@ data(ribbon_data_example)
 dup <- rbind(ribbon_data_example, ribbon_data_example[1, ])
 out <- deduplicate_ggchord_ribbons(dup, by = "exact")
 out$report
+}
+\seealso{
+\code{\link{ggchord_data_contract}}
 }

@@ -77,6 +77,10 @@ ggchord tables and returns the cleaned copies plus a full report. The
 original data frames are never modified. Nothing is dropped silently: every
 change (including every dropped row) is recorded in \code{report} with the
 original row number, the reason, the original value(s) and the new value(s).
+Its historical sorting default differs deliberately from preparation's
+direction-preserving default. Use \code{reversed_interval = "keep"} for
+directional links and circular-origin features; sorting endpoints loses
+information that a later workflow cannot reconstruct.
 }
 \examples{
 library(ggchord)
@@ -99,4 +103,7 @@ head(out$report)
 p <- ggchord(out$seq_data, out$ribbon_data, out$gene_data) +
   geom_seq() + geom_link_ribbon() + geom_gene()
 }
+}
+\seealso{
+\code{\link{ggchord_data_contract}}
 }

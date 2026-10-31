@@ -33,3 +33,6 @@ features <- as_ggchord_feature(data.frame(chrom = "host", from = 100,
 ggchord(data.frame(accver = "host", length = 1000)) + geom_seq() +
   geom_feature(data = features) + coord_collinear()
 }
+\seealso{
+\code{\link{ggchord_data_contract}}
+}

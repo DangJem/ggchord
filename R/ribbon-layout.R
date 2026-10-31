@@ -4,6 +4,26 @@ ggchord_ribbon_required_columns <- function() {
   c("qaccver", "saccver", "qstart", "qend", "sstart", "send")
 }
 
+# Endpoint equality carries no direction. Use supplied biological/relative
+# evidence only for that ambiguous case, and honour explicit unknown status.
+ggchord_ribbon_direction <- function(data) {
+  endpoint <- sign(data$qend - data$qstart) * sign(data$send - data$sstart)
+  out <- ifelse(endpoint > 0, "same", ifelse(endpoint < 0, "opposite", "unknown"))
+  ambiguous <- endpoint == 0
+  if (all(c("qstrand", "sstrand") %in% names(data))) {
+    known <- data$qstrand %in% c("+", "-") & data$sstrand %in% c("+", "-")
+    use <- ambiguous & known
+    out[use] <- ifelse(data$qstrand[use] == data$sstrand[use], "same", "opposite")
+  }
+  if ("direction" %in% names(data)) {
+    declared <- as.character(data$direction)
+    out[ambiguous & declared %in% "same"] <- "same"
+    out[ambiguous & declared %in% c("reverse", "opposite")] <- "opposite"
+  }
+  if ("orientation_known" %in% names(data)) out[!data$orientation_known %in% TRUE] <- "unknown"
+  out
+}
+
 ggchord_check_ribbon_tables <- function(seq_data, ribbon_data, caller) {
   seq_data <- ggchord_normalize_accver(seq_data)
 
@@ -83,6 +103,15 @@ ggchord_typed_na <- function(x) {
 #' Aggregates nearby alignment ribbons on a normalized query/subject grid.
 #' Bundling is always explicit: \code{geom_link_ribbon()} continues to draw one
 #' ribbon per input row unless the returned data are supplied by the user.
+#' Groups use relative endpoint direction, so reversing both ends can remain
+#' in the same group. The envelope follows the first row's absolute directions;
+#' length and identity are length-weighted source means (length is rounded),
+#' not statistics of a newly computed alignment. Conflicting extra metadata
+#' become typed missing values. Use \code{group_by} to keep source categories
+#' separate and retain the original input with the source-row report.
+#' Single-base endpoint rows stay independent because their endpoint order
+#' cannot define an absolute aggregate direction. Density can still count
+#' them without merging their geometry.
 #'
 #' @param ribbon_data Alignment data in ggchord ribbon format.
 #' @param seq_data Sequence data containing \code{accver} and \code{length}.
@@ -99,6 +128,7 @@ ggchord_typed_na <- function(x) {
 #' @return A list with \code{data} and \code{report}. The data include
 #'   \code{.bundle_n}, \code{.bundle_weight}, and \code{.bundle_density}; the
 #'   report maps each output row back to its source rows.
+#' @seealso \code{\link{ggchord_data_contract}}
 #' @export
 #' @examples
 #' data(seq_data_example)
@@ -177,10 +207,11 @@ bundle_ggchord_ribbons <- function(
   sbin <- pmin(bins, pmax(1L, floor((smid - 1) / lengths[sid] * bins) + 1L))
   qdir <- sign(input$qend - input$qstart)
   sdir <- sign(input$send - input$sstart)
-  direction <- ifelse(qdir == sdir, "same", "opposite")
+  direction <- ggchord_ribbon_direction(input)
   row_weight <- ggchord_ribbon_weights(input, weight)
 
-  key_parts <- list(qid, sid, direction, qbin, sbin)
+  point_key <- ifelse(qdir == 0 | sdir == 0, paste0("point:", seq_len(n_input)), "interval")
+  key_parts <- list(qid, sid, direction, qbin, sbin, point_key)
   if (length(group_by)) {
     key_parts <- c(key_parts, lapply(input[group_by], as.character))
   }
@@ -231,7 +262,7 @@ bundle_ggchord_ribbons <- function(
   }
 
   for (idx in groups) {
-    if (length(idx) < min_bundle) {
+    if (length(idx) < min_bundle || any(qdir[idx] == 0 | sdir[idx] == 0)) {
       for (i in idx) append_single(i)
     } else {
       append_bundle(idx)
@@ -366,6 +397,7 @@ ggchord_layout_score <- function(scored, seq_order, orientation, lengths) {
 #'
 #' @return An object of class \code{ggchord_layout_optimization} containing
 #'   \code{seq_order}, \code{seq_orientation}, before/after scores and a report.
+#' @seealso \code{\link{ggchord_data_contract}}
 #' @export
 #' @examples
 #' data(seq_data_example)

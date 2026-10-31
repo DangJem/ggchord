@@ -33,9 +33,13 @@ def boundary(value, start=False):
     return {'coordinate': coordinate, 'source': str(value),
             'source_class': type(value).__name__}
 
+def parse_local(path):
+    with open(path, encoding='utf-8-sig') as handle:
+        yield from SeqIO.parse(handle, 'genbank')
+
 records = []
 for path in config['files']:
-    for index, record in enumerate(SeqIO.parse(path, 'genbank'), 1):
+    for index, record in enumerate(parse_local(path), 1):
         features = []
         for number, feature in enumerate(record.features, 1):
             location = feature.location
@@ -94,7 +98,7 @@ with open(sys.argv[2], 'w', encoding='utf-8') as handle:
 #' are never used to infer full lengths. Protein records require an explicit
 #' protein-coordinate workflow instead of this nucleotide reader.
 #'
-#' @param file Optional path to one local GenBank/GBFF file.
+#' @param file Optional path vector or glob patterns; read before `files`.
 #' @param files Optional paths or wildcard patterns for several files.
 #' @param feature_types Optional feature types to select. `NULL` retains all.
 #' @param lengths Optional named numeric vector of known full sequence lengths,
@@ -124,6 +128,7 @@ with open(sys.argv[2], 'w', encoding='utf-8') as handle:
 #'   identifies every selected feature not placed under `"report"`.
 #' @seealso <https://biopython.org/docs/latest/api/Bio.SeqIO.html>
 #' @md
+#' @seealso \code{\link{ggchord_data_contract}}
 #' @export
 #' @examples
 #' if (requireNamespace("jsonlite", quietly = TRUE) &&

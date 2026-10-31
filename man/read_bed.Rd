@@ -7,7 +7,7 @@
 read_bed(file = NULL, files = NULL, source_file = FALSE)
 }
 \arguments{
-\item{file}{Optional path to one BED file.}
+\item{file}{Optional path vector or glob patterns; read before \code{files}.}
 
 \item{files}{Optional paths or wildcard patterns for multiple BED files.}
 
@@ -47,4 +47,6 @@ unlink(bed)
 }
 \seealso{
 \url{https://genome.ucsc.edu/FAQ/FAQformat.html#format1}
+
+\code{\link{ggchord_data_contract}}
 }

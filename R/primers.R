@@ -17,6 +17,7 @@ ggchord_builtin_primers <- function() {
 #' @param set Return all records or only the commonly used universal subset.
 #' @param aliases Return source alias records instead of the sequence catalogue.
 #' @return A data frame.
+#' @seealso \code{\link{ggchord_data_contract}}
 #' @export
 #' @examples
 #' head(primer_catalog("universal"))
@@ -155,6 +156,9 @@ ggchord_reference_primer_bindings <- function(ids, sequences) {
 #' `three_prime` matching uses the longest exact 3-prime suffix available, with
 #' no mismatches, and is intended for inspecting partial annealing rather than
 #' silently treating it as a full match.
+#' Binding hits are sequence-search results, not experimental validation.
+#' `melting_temperature` uses the Wallace composition estimate unless source
+#' annotations supply it; ambiguous bases do not contribute to that estimate.
 #'
 #' @param sequence DNA text, a named character vector, or a data frame with
 #'   `accver` and `sequence`.
@@ -163,11 +167,13 @@ ggchord_reference_primer_bindings <- function(ids, sequences) {
 #' @param set Bundled catalogue subset. `reference` returns authoritative primer
 #'   annotations from a recognized bundled reference plasmid.
 #' @param match Full exact matching or longest exact 3-prime annealing.
-#' @param min_annealed_bases Minimum suffix length for `three_prime` matching.
+#' @param min_annealed_bases One finite integer of at least 8, the minimum
+#'   suffix length for `three_prime` matching. Fractional values are rejected.
 #' @param circular Allow matches to cross the sequence origin.
 #' @param unique_only Keep only primer sequences with one binding site per target.
 #' @return One row per binding site. The `aliases` list-column preserves every
 #'   catalogue name associated with the matched oligonucleotide.
+#' @seealso \code{\link{ggchord_data_contract}}
 #' @export
 #' @examples
 #' target <- c(circle = "TTGCAAAAACG")
@@ -187,10 +193,12 @@ find_primer_bindings <- function(sequence, primers = NULL,
       !is.logical(unique_only) || length(unique_only) != 1L || is.na(unique_only)) {
     ggchord_stop("find_primer_bindings(): circular and unique_only must be TRUE or FALSE")
   }
-  min_annealed_bases <- as.integer(min_annealed_bases)
-  if (length(min_annealed_bases) != 1L || is.na(min_annealed_bases) || min_annealed_bases < 8L) {
+  if (!is.numeric(min_annealed_bases) || length(min_annealed_bases) != 1L ||
+      !is.finite(min_annealed_bases) || min_annealed_bases < 8L ||
+      min_annealed_bases != floor(min_annealed_bases) || min_annealed_bases > .Machine$integer.max) {
     ggchord_stop("find_primer_bindings(): min_annealed_bases must be an integer of at least 8")
   }
+  min_annealed_bases <- as.integer(min_annealed_bases)
   if (set == "reference") {
     if (!is.null(primers)) ggchord_stop("find_primer_bindings(): primers cannot be combined with set = 'reference'")
     out <- ggchord_reference_primer_bindings(normalized$ids, normalized$sequences)

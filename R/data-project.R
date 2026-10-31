@@ -176,6 +176,7 @@ ggchord_project_intervals <- function(row, caller) {
 #'   genomic coordinates and original row numbers remain available.
 #' @seealso <https://github.com/The-Sequence-Ontology/Specifications/blob/master/gff3.md>
 #' @md
+#' @seealso \code{\link{ggchord_data_contract}}
 #' @export
 #' @examples
 #' coding <- data.frame(feature_id = "cdsA", accver = "contig",
@@ -334,6 +335,7 @@ ggchord_project_genomic <- function(segment, lower, upper) {
 #'   `strand`, `directionality`, `segments`, parent IDs, genetic-code metadata,
 #'   source coordinates and a `ggchord_projection` provenance attribute.
 #' @md
+#' @seealso \code{\link{ggchord_data_contract}}
 #' @export
 #' @examples
 #' coding <- data.frame(feature_id = "cdsA", accver = "contig",
@@ -452,6 +454,7 @@ project_ggchord_features <- function(feature_data, cds, from = c("protein", "gen
 #'   piece number, genomic strands, `projected_bases`, source-prefixed input
 #'   metadata and projection provenance. No alignment identity is computed.
 #' @md
+#' @seealso \code{\link{ggchord_data_contract}}
 #' @export
 #' @examples
 #' coding <- data.frame(feature_id = c("a", "b"), accver = c("A", "B"),

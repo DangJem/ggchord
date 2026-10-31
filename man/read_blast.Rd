@@ -15,7 +15,7 @@ read_blast(
 )
 }
 \arguments{
-\item{file}{Optional path to a single BLAST tabular output file.}
+\item{file}{Optional path vector or glob patterns; read before `files`.}
 
 \item{files}{Optional character vector of BLAST tabular output files
 (literal paths and/or wildcard patterns). All matched files are read and
@@ -57,4 +57,7 @@ writeLines(c(
   "seqA	seqB	98.5	1200	18	0	1	1200	1	1200	1e-180	2400"
 ), blast_file)
 read_blast(blast_file)
+}
+\seealso{
+\code{\link{ggchord_data_contract}}
 }

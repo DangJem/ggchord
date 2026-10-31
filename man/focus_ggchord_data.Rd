@@ -46,3 +46,6 @@ genomic left/right truncation flags are retained on the returned tables.
 Alignment cropping is a linear display projection, not a new alignment:
 identity is retained, and a scaled alignment length is marked as estimated.
 }
+\seealso{
+\code{\link{ggchord_data_contract}}
+}

@@ -3,7 +3,7 @@
 # https://github.com/lh3/miniasm/blob/master/PAF.md
 
 ggchord_format_lines <- function(file, caller, bed = FALSE) {
-  lines <- readLines(file, warn = FALSE)
+  lines <- ggchord_read_text(file, caller)
   keep <- nzchar(trimws(lines)) & !grepl("^[[:space:]]*#", lines)
   if (bed) keep <- keep & !grepl("^[[:space:]]*(track|browser)([[:space:]]|$)", lines)
   index <- which(keep)
@@ -55,7 +55,7 @@ ggchord_format_import <- function(out, paths, format, rows_per_file,
 #' inferred from BED display fields. BED extensions beyond column 12 require an
 #' explicit data-frame conversion with [as_ggchord_feature()].
 #'
-#' @param file Optional path to one BED file.
+#' @param file Optional path vector or glob patterns; read before `files`.
 #' @param files Optional paths or wildcard patterns for multiple BED files.
 #' @param source_file Logical. Add a `.source_file` column, default `FALSE`.
 #' @return A feature data frame with `accver`, `start`, `end`, `strand`,
@@ -64,6 +64,7 @@ ggchord_format_import <- function(out, paths, format, rows_per_file,
 #'   records the input/output coordinate conventions and files.
 #' @seealso <https://genome.ucsc.edu/FAQ/FAQformat.html#format1>
 #' @md
+#' @seealso \code{\link{ggchord_data_contract}}
 #' @export
 #' @examples
 #' bed <- tempfile(fileext = ".bed")
@@ -161,7 +162,7 @@ read_bed <- function(file = NULL, files = NULL, source_file = FALSE) {
 #' `source_mapq` retains the original value. Optional typed tags are retained
 #' verbatim in the `tags` list-column, including unknown tags and their order.
 #'
-#' @param file Optional path to one tab-delimited PAF file.
+#' @param file Optional path vector or glob patterns; read before `files`.
 #' @param files Optional paths or wildcard patterns for multiple PAF files.
 #' @param source_file Logical. Add a `.source_file` column, default `FALSE`.
 #' @return A link data frame with canonical endpoints, `qlen`, `slen`,
@@ -170,6 +171,7 @@ read_bed <- function(file = NULL, files = NULL, source_file = FALSE) {
 #'   attribute records input/output coordinate conventions and files.
 #' @seealso <https://github.com/lh3/miniasm/blob/master/PAF.md>
 #' @md
+#' @seealso \code{\link{ggchord_data_contract}}
 #' @export
 #' @examples
 #' paf <- tempfile(fileext = ".paf")

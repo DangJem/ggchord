@@ -39,4 +39,6 @@ A composite text and leader-line layer.
 Primer labels are unboxed, use the primer colour, and show one-based
 inclusive binding coordinates by default. Their leaders start at the
 directional primer arc's arrow tip (the primer 3-prime end).
+Factor start/end columns use their numeric labels for both displayed text
+and retained binding-coordinate metadata, matching feature geometry.
 }

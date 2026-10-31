@@ -40,3 +40,6 @@ query/subject midpoint bins. The computed variables are the same as
 [stat_ribbon_bundle()], so density can be mapped with
 `aes(ribbon_alpha = after_stat(density))`.
 }
+\seealso{
+\code{\link{ggchord_data_contract}}
+}

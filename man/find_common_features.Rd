@@ -33,7 +33,7 @@ other records use exact DNA. `"protein"` explicitly enables exact and
 approximate protein matching.}
 
 \item{min_protein_identity, min_protein_coverage}{Approximate protein
-thresholds in `[0, 1]`.}
+thresholds, each one finite number in `[0, 1]`.}
 
 \item{resolve}{Return deterministic best annotations or every candidate.}
 }
@@ -50,4 +50,14 @@ database) using curated exact-sequence annotations, exact DNA, and the
 detection mode stored for each database record. Restriction sites are
 intentionally outside this API; use
 [find_restriction_sites()] for those.
+Protein matching uses a standard-code six-frame translation, without
+alternative initiation, splicing or origin-crossing protein matches.
+Source `geneticCode` metadata does not select a translation table. For
+nonstandard codes use `mode = "dna"` or external code-aware analysis.
+`confidence` is a deterministic heuristic label, not a probability or
+experimental confirmation. `identity` and `coverage` describe the reported
+match method, not independently validated biological function.
+}
+\seealso{
+\code{\link{ggchord_data_contract}}
 }

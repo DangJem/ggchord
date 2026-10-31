@@ -30,6 +30,7 @@ ggchord_relation_ids <- function(x, name, caller) {
 #'   and `contigs`, a genome-order table with `genome`, `n_contigs`, and
 #'   `sequence_rows`/`accvers` list-columns for each valid unique genome key.
 #' @md
+#' @seealso \code{\link{ggchord_data_contract}}
 #' @export
 #' @examples
 #' sequences <- data.frame(accver = c("sample1_c1", "sample1_c2", "sample2_c1"),
@@ -162,6 +163,7 @@ validate_ggchord_hierarchy <- function(seq_data, genomes, strict = FALSE) {
 #'   `report$members` retains membership metadata with resolution status.
 #'   `report$valid` is false when membership contains unknown feature IDs.
 #' @md
+#' @seealso \code{\link{ggchord_data_contract}}
 #' @export
 #' @examples
 #' genes <- data.frame(feature_id = c("gA", "gB"), accver = c("A", "B"),

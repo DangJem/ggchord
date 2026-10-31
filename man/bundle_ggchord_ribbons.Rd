@@ -40,6 +40,15 @@ A list with \code{data} and \code{report}. The data include
 Aggregates nearby alignment ribbons on a normalized query/subject grid.
 Bundling is always explicit: \code{geom_link_ribbon()} continues to draw one
 ribbon per input row unless the returned data are supplied by the user.
+Groups use relative endpoint direction, so reversing both ends can remain
+in the same group. The envelope follows the first row's absolute directions;
+length and identity are length-weighted source means (length is rounded),
+not statistics of a newly computed alignment. Conflicting extra metadata
+become typed missing values. Use \code{group_by} to keep source categories
+separate and retain the original input with the source-row report.
+Single-base endpoint rows stay independent because their endpoint order
+cannot define an absolute aggregate direction. Density can still count
+them without merging their geometry.
 }
 \examples{
 data(seq_data_example)
@@ -50,4 +59,7 @@ bundled_plot <- ggchord(seq_data_example, bundled$data) +
   geom_seq() +
   geom_link_ribbon(ggplot2::aes(ribbon_alpha = .bundle_density)) +
   scale_ribbon_alpha_continuous()
+}
+\seealso{
+\code{\link{ggchord_data_contract}}
 }

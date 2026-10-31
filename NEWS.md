@@ -1,3 +1,40 @@
+# ggchord 0.16.2 (unreleased)
+
+* Added a shared `ggchord_data_contract` help topic covering reading, adaptation,
+  validation, explicit cleaning, preparation, coordinate projection and search
+  limitations. Existing public function names and cleaning defaults are retained.
+* Corrected reciprocal-overlap diagnostics and deduplication: both intervals must
+  meet the overlap threshold, descending ribbon endpoints work, and overlap
+  deduplication keeps distinct relative directions. Circular-origin feature
+  bounds are excluded from context-free linear overlap diagnostics.
+* Ribbon merging preserves alignment length for unmerged rows. Merged envelopes
+  carry `.length_estimated`, with source lengths/identities in report list-columns.
+  Pair IDs always remain grouping keys, and default merging retains crossing
+  block orders separately. Envelope spans and weighted identities are display
+  summaries, not newly computed alignment statistics.
+* Single-base link endpoints no longer contradict a supplied reverse direction
+  during preparation. Cleaning retains pre-clipping direction evidence rather
+  than inferring direction from a collapsed endpoint. Merge/bundle keep these rows independent; deduplication
+  and density use supplied direction evidence and preserve unknown orientation.
+* File readers apply the same path-vector/glob handling to `file` and `files`,
+  read each normalized path once in first-occurrence order, and reject malformed
+  paths. Text input is explicitly UTF-8; invalid encoding and inconsistent
+  tabular field counts fail clearly. BLAST/GFF3 preserve literal identifiers
+  such as `001` and `NA`; BLAST/GFF3/FASTA now retain physical `.source_line`.
+  GenBank parsing opens UTF-8 files explicitly in the selected optional parser.
+* Linear restriction methylation context no longer wraps across sequence ends.
+  Primer labels use numeric factor labels for binding coordinates and metadata.
+* Ribbon utilities reject malformed required numeric inputs and nonscalar
+  filter thresholds with specific errors. Primer annealing lengths reject
+  fractional values, and protein-search thresholds require scalar values.
+  Validation suggestions now distinguish
+  gene-row filtering from ribbon deduplication and include missing/empty IDs
+  under their existing cleaning policy.
+* Clarified that bundle statistics are source summaries, density is relative bin
+  weight, common-feature confidence is heuristic, and six-frame protein matching
+  uses the standard code without interpreting source genetic-code metadata.
+  Nonstandard translation requires DNA matching or an external code-aware workflow.
+
 # ggchord 0.16.1 (unreleased)
 
 * Breaking: fixed feature geometry uses `shape`, and both gene/feature widths

@@ -44,3 +44,6 @@ One row per pattern match without display filtering or deduplication.
 \description{
 Find restriction pattern matches and cleavage coordinates
 }
+\seealso{
+\code{\link{ggchord_data_contract}}
+}

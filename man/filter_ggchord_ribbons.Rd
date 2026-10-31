@@ -67,6 +67,8 @@ Keeps the ribbon rows that satisfy all requested criteria and optionally
 sorts them. The returned data frame keeps every extra column and the
 original column order; the original row numbers are attached as the
 \code{source_rows} attribute.
+Each non-NULL numeric threshold must be one finite number. Columns used by
+a numeric criterion must be numeric; missing values fail that criterion.
 }
 \examples{
 library(ggchord)
@@ -78,4 +80,7 @@ out <- filter_ggchord_ribbons(
   sort_by = c("pident", "-length")
 )
 out$report
+}
+\seealso{
+\code{\link{ggchord_data_contract}}
 }

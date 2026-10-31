@@ -15,7 +15,7 @@ read_genbank(
 )
 }
 \arguments{
-\item{file}{Optional path to one local GenBank/GBFF file.}
+\item{file}{Optional path vector or glob patterns; read before \code{files}.}
 
 \item{files}{Optional paths or wildcard patterns for several files.}
 
@@ -103,4 +103,6 @@ if (requireNamespace("jsonlite", quietly = TRUE) &&
 }
 \seealso{
 \url{https://biopython.org/docs/latest/api/Bio.SeqIO.html}
+
+\code{\link{ggchord_data_contract}}
 }

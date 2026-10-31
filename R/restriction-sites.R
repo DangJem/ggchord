@@ -252,6 +252,7 @@ ggchord_normalize_restriction_patterns <- function(patterns) {
 #'   stable after display filtering. For an exactly recognized bundled
 #'   reference sequence, the `reference_enzyme_profiles` attribute records its
 #'   saved display set for use by [filter_restriction_sites()].
+#' @seealso \code{\link{ggchord_data_contract}}
 #' @export
 find_restriction_sites <- function(sequence,enzymes=NULL,patterns=NULL,
                                    circular=TRUE,database=NULL,
@@ -363,8 +364,10 @@ find_restriction_sites <- function(sequence,enzymes=NULL,patterns=NULL,
         if (!blocker %in% c("dam", "dcm")) return(FALSE)
         target <- target_by_id[[as.character(out$accver[i])]]
         len <- nchar(target)
-        positions <- ((seq.int(out$start[i] - 6L,
-          out$start[i] + out$motif_length[i] + 5L) - 1L) %% len) + 1L
+        positions <- seq.int(out$start[i] - 6L,
+          out$start[i] + out$motif_length[i] + 5L)
+        positions <- if (circular) ((positions - 1L) %% len) + 1L else
+          positions[positions >= 1L & positions <= len]
         window <- paste0(strsplit(target, "", fixed = TRUE)[[1L]][positions],
           collapse = "")
         grepl(ggchord_iupac_regex(out$methylation_motif[i]), window,
@@ -399,6 +402,7 @@ find_restriction_sites <- function(sequence,enzymes=NULL,patterns=NULL,
 #'   plasmid_example_pSpCas9_BB_2A_GFP_PX458
 #' )
 #' reference_sites <- filter_restriction_sites(sites, set = "reference")
+#' @seealso \code{\link{ggchord_data_contract}}
 #' @export
 filter_restriction_sites<-function(sites,set=c("all","unique","unique_dual","six_plus","unique_6plus","commercial","reference"),enzymes=NULL,min_site_length=NULL,cuts=NULL,window=NULL,commercial_only=FALSE,parent_set=c("all","commercial_all","commercial_nonredundant")){
   if(!is.data.frame(sites))ggchord_stop("filter_restriction_sites(): sites must be a data frame")
@@ -634,6 +638,7 @@ GeomRestrictionSite <- ggplot2::ggproto(
 #' @param position,show.legend,inherit.aes Standard layer arguments.
 #' @param ... Additional geom parameters.
 #' @return A ggplot2 layer.
+#' @seealso \code{\link{ggchord_data_contract}}
 #' @export
 geom_restriction_site<-function(mapping=NULL,data=NULL,label=TRUE,label_style=c("enzyme_position","enzyme","position"),label_order=c("auto","enzyme_position","position_enzyme"),label_side=c("outside","inside","auto"),leader=c("radial","elbow","straight"),min_label_gap=NULL,tick_length=.04,label_offset=.18,colour="#202020",linewidth=.28,label_size=3.2,fontface=NULL,family=NULL,position="identity",show.legend=FALSE,inherit.aes=FALSE,...){
   colour_supplied<-!missing(colour);linewidth_supplied<-!missing(linewidth);label_size_supplied<-!missing(label_size);fontface_supplied<-!missing(fontface)&&!is.null(fontface);family_supplied<-!missing(family)&&!is.null(family)

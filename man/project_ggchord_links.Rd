@@ -39,3 +39,6 @@ link <- data.frame(qfeature_id = "a", sfeature_id = "b",
   qstart = 1, qend = 2, sstart = 2, send = 3)
 project_ggchord_links(link, cds, ungapped = TRUE)
 }
+\seealso{
+\code{\link{ggchord_data_contract}}
+}

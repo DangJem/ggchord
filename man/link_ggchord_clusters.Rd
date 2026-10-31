@@ -77,3 +77,6 @@ pairs <- data.frame(qaccver = "A", saccver = "B")
 homologs <- link_ggchord_clusters(genes, membership, pairs)
 homologs$data[, c("qaccver", "saccver", "qstart", "qend", "sstart", "send")]
 }
+\seealso{
+\code{\link{ggchord_data_contract}}
+}

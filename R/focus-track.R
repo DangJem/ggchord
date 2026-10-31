@@ -16,6 +16,7 @@
 #'   `ggchord_track_focus` attribute reports output-to-input rows and omitted
 #'   input rows; `.source_*` columns retain earliest source coordinates.
 #' @md
+#' @seealso \code{\link{ggchord_data_contract}}
 #' @export
 #' @examples
 #' s <- data.frame(accver = "A", length = 1000)

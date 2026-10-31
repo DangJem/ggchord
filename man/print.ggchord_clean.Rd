@@ -18,3 +18,6 @@ The object invisibly.
 Shows the dimensions of the cleaned tables and the first rows of the change
 report.
 }
+\seealso{
+\code{\link{ggchord_data_contract}}
+}

@@ -35,3 +35,6 @@ as_ggchord_link(data.frame(host = "host", virus = "virus",
   mapping = c(qaccver = "host", saccver = "virus", qstart = "host_start",
     qend = "host_end", sstart = "virus_start", send = "virus_end"))
 }
+\seealso{
+\code{\link{ggchord_data_contract}}
+}
