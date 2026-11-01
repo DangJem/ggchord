@@ -20,7 +20,9 @@ geom_primer_label_repel(
 \arguments{
 \item{mapping, data}{Standard layer inputs.}
 
-\item{side}{Side on which the external primer label is arranged.}
+\item{side}{Side of the backbone on which the primer callout is arranged.
+\code{"inside"} retains the inner label layout, including when exterior
+restriction or feature labels share the map. The default is \code{"outside"}.}
 
 \item{show_location}{Include the binding range in the label.}
 

@@ -98,3 +98,20 @@ test_that("sparse restriction and primer leaders share circular root order", {
   }
   expect_equal(count_radial_crossings(do.call(rbind,paths)),0L)
 })
+
+test_that("explicit inside primer labels stay inside mixed circular maps", {
+  s <- plasmid_example_pUC19
+  primers <- find_primer_bindings(s, set = "universal")
+  sites <- find_restriction_sites(s, enzymes = c("EcoRI", "BamHI", "HindIII"))
+  p <- ggchord(s[c("accver", "length")]) + geom_seq() +
+    geom_primer(data = primers) +
+    geom_primer_label_repel(data = primers, side = "inside") +
+    geom_restriction_site(data = sites) + coord_circular(rotation = 90)
+  out <- export_ggchord_layout(p, include = "labels")
+  text <- out$labels[out$labels$.component %in% "text", ]
+  expect_setequal(text$source_row, seq_len(nrow(primers)))
+  expect_true(all(sqrt(text$text_x^2 + text$text_y^2) <
+    sqrt(text$anchor_x^2 + text$anchor_y^2)))
+  registry <- out$annotation_registry
+  expect_equal(sum(registry$kind == "primer_label" & registry$side == "inner"), nrow(primers))
+})

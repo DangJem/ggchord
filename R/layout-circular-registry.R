@@ -286,6 +286,25 @@ ggchord_resolve_inner_tracks <- function(layer_geometry, layout) {
         !"feature_label_mode" %in% names(geometry)) next
     geometry$annotation_side <- ifelse(
       geometry$feature_label_mode %in% "external", "outer", "inner")
+    inside_primer <- if (".ggchord_primer_inside" %in% names(geometry)) {
+      geometry$.ggchord_primer_inside %in% TRUE
+    } else rep(FALSE, nrow(geometry))
+    geometry$annotation_side[inside_primer] <- "inner"
+    inside_rows <- which(inside_primer & geometry$.component %in% "text" &
+      !is.na(geometry$label) & nzchar(geometry$label))
+    # Preserve the existing inner callout solver's placement. These Cartesian
+    # labels own measured boxes, not a new feature track or exterior slot.
+    inside_boxes <- ggchord_annotation_text_boxes(geometry, inside_rows,
+      units_per_inch)
+    for (j in seq_along(inside_rows)) {
+      row <- inside_rows[j]
+      registry[[length(registry) + 1L]] <- ggchord_registry_row(
+        paste0("inner-primer-", owner, "-", geometry$source_row[row]),
+        "inner", "primer_label", owner, "gene_label_repel",
+        source_row = geometry$source_row[row],
+        annotation_class = "primer", bbox = inside_boxes[j, , drop = FALSE]
+      )
+    }
     geometry$annotation_kind <- ifelse(geometry$.component %in% "segment",
       "leader", ifelse(geometry$.component %in% "arc_text", "label_glyph",
         "label"))
@@ -353,6 +372,29 @@ ggchord_resolve_inner_tracks <- function(layer_geometry, layout) {
     layer_geometry[[owner]]$gene_label_repel <- geometry
   }
 
+  # Explicit inner restriction labels keep their geom-owned routes; they are
+  # measured inner resources, not exterior bands/slots.
+  for (owner in names(layer_geometry)) {
+    geometry <- layer_geometry[[owner]]$restriction_site
+    if (!is.data.frame(geometry) || !nrow(geometry) ||
+        !".ggchord_restriction_inside" %in% names(geometry)) next
+    inside <- geometry$.ggchord_restriction_inside %in% TRUE
+    geometry$annotation_side[inside] <- "inner"
+    rows <- which(inside & geometry$restriction_component %in% "label" &
+      !is.na(geometry$label) & nzchar(geometry$label))
+    boxes <- ggchord_annotation_text_boxes(geometry, rows, units_per_inch)
+    for (j in seq_along(rows)) {
+      row <- rows[j]
+      registry[[length(registry) + 1L]] <- ggchord_registry_row(
+        paste0("inner-restriction-", owner, "-", geometry$source_row[row]),
+        "inner", "restriction_label", owner, "restriction_site",
+        source_row = geometry$source_row[row], annotation_class = "restriction",
+        bbox = boxes[j, , drop = FALSE]
+      )
+    }
+    layer_geometry[[owner]]$restriction_site <- geometry
+  }
+
   # The centre title is a real measured obstacle, not a hard-coded radius.
   # Feature candidate generation already keeps a conservative centre reserve;
   # registering the final box here makes the actual occupied area available to
@@ -393,14 +435,9 @@ ggchord_resolve_outer_annotations <- function(layer_geometry, layout) {
       geometry <- layer_geometry[[owner]][[component]]
       if (!is.data.frame(geometry) || !nrow(geometry)) next
       rows <- if (identical(component, "restriction_site")) {
-        which(geometry$.component %in% "label" & !is.na(geometry$label))
+        which(ggchord_outer_site_labels(geometry) & !is.na(geometry$label))
       } else {
-        external <- if ("feature_label_mode" %in% names(geometry)) {
-          geometry$feature_label_mode %in% "external"
-        } else rep(FALSE, nrow(geometry))
-        if ("annotation_class" %in% names(geometry)) {
-          external <- external | geometry$annotation_class %in% "primer"
-        }
+        external <- ggchord_outer_callouts(geometry)
         which(geometry$.component %in% "text" & external &
           !is.na(geometry$label) & nzchar(geometry$label))
       }

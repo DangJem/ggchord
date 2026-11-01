@@ -1,3 +1,13 @@
+# ggchord 0.16.6 (development)
+
+* Fixed circular primer callouts with `side = "inside"` being moved outside by
+  the shared exterior allocator. Inner labels now retain their existing layout
+  and register their actual inner boxes. The outside default, public signatures
+  and sparse mixed exterior root ordering are retained.
+* Corrected inside restriction-label registry rows being marked as exterior
+  resources. Their existing inner geometry is retained and their measured boxes
+  now carry the inner side, without acquiring exterior slots.
+
 # ggchord 0.16.5
 
 * Sparse circular maps containing primers and restriction labels now use the

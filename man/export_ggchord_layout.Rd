@@ -27,7 +27,10 @@ names contain data frames. Circular layouts additionally contain an
 \code{annotation_registry} data frame. Its inner rows expose the physical
 track, radial width and boundaries; outer rows expose region, sector,
 annotation class, dominant and actual band, spill reason, leader-crossing
-count, slot, bounding box and leader corridor. The \code{metadata} member
+count, slot, bounding box and leader corridor.
+Explicitly inside primer and restriction callouts
+register measured inner boxes rather than exterior bands or slots.
+The \code{metadata} member
 records rotation, aspect ratio, limits, coordinate units and
 transformation state.
 Collinear layouts instead include \code{sequence_layout}, containing each

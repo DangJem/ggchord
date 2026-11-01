@@ -1269,6 +1269,17 @@ compute_chord_geometry <- function(plot) {
       registry[[id]][[component]] <- ggchord_attach_input_columns(
         registry[[id]][[component]], inputs[[id]][[component]]
       )
+      if (identical(component, "gene_label_repel") &&
+          isTRUE(lyr$ggchord_params$is_primer_label) &&
+          identical(lyr$ggchord_params$gene_label_side, "inside") &&
+          nrow(registry[[id]][[component]])) {
+        registry[[id]][[component]]$.ggchord_primer_inside <- TRUE
+      }
+      if (identical(component, "restriction_site") &&
+          identical(lyr$ggchord_params$label_side, "inside") &&
+          nrow(registry[[id]][[component]])) {
+        registry[[id]][[component]]$.ggchord_restriction_inside <- TRUE
+      }
     }
   }
   circular_resolved <- FALSE

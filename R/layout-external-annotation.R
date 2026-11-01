@@ -1,5 +1,28 @@
 # Coord-owned perimeter annotation coordination for circular maps.
 
+# External-to-feature callouts can still be explicitly inside the backbone.
+# Primer class alone must not opt those labels into the exterior allocator.
+ggchord_outer_callouts <- function(geometry) {
+  external <- if ("feature_label_mode" %in% names(geometry)) {
+    geometry$feature_label_mode %in% "external"
+  } else rep(FALSE, nrow(geometry))
+  if ("annotation_class" %in% names(geometry)) {
+    external <- external | geometry$annotation_class %in% "primer"
+  }
+  if (".ggchord_primer_inside" %in% names(geometry)) {
+    external <- external & !(geometry$.ggchord_primer_inside %in% TRUE)
+  }
+  external
+}
+
+ggchord_outer_site_labels <- function(sites) {
+  labels <- sites$restriction_component %in% "label"
+  if (".ggchord_restriction_inside" %in% names(sites)) {
+    labels <- labels & !(sites$.ggchord_restriction_inside %in% TRUE)
+  }
+  labels
+}
+
 ggchord_external_candidates <- function(max_band = 16L, max_slot = 20L,
                                          class = "restriction") {
   candidates <- expand.grid(
@@ -633,7 +656,7 @@ ggchord_complete_external_leaders <- function(registry) {
           "text_x", "text_y", "feature_label_mode",
           "xend", "yend") %in% names(geometry))) next
     text_rows <- which(geometry$.component %in% "text" &
-      geometry$feature_label_mode %in% "external" &
+      ggchord_outer_callouts(geometry) &
       !is.na(geometry$label) & nzchar(geometry$label) &
       is.finite(geometry$source_row) &
       is.finite(geometry$anchor_x) & is.finite(geometry$anchor_y) &
@@ -686,13 +709,13 @@ ggchord_share_external_annotations <- function(registry, layout) {
   restriction_count <- sum(vapply(registry, function(geometry) {
     sites <- geometry$restriction_site
     if (!is.data.frame(sites) || !nrow(sites)) return(0L)
-    sum(sites$restriction_component %in% "label" &
+    sum(ggchord_outer_site_labels(sites) &
       !is.na(sites$label) & nzchar(sites$label))
   }, integer(1L)))
   mixed_primers <- restriction_count > 0L && any(vapply(registry, function(layer) {
     x <- layer$gene_label_repel
     is.data.frame(x) && "annotation_class" %in% names(x) &&
-      any(x$annotation_class %in% "primer")
+      any(x$annotation_class %in% "primer" & ggchord_outer_callouts(x))
   }, logical(1)))
   if ((restriction_count >= 30L || mixed_primers) && length(layout$seq_arcs) == 1L) {
     registry <- ggchord_complete_external_leaders(registry)
@@ -724,7 +747,7 @@ ggchord_share_external_annotations <- function(registry, layout) {
   for (id in names(registry)) {
     sites <- registry[[id]]$restriction_site
     if (!is.data.frame(sites) || !nrow(sites)) next
-    rows <- which(sites$.component %in% "label" &
+    rows <- which(ggchord_outer_site_labels(sites) &
       !is.na(sites$label) & nzchar(sites$label))
     if (!length(rows)) next
     for (nm in c("outer_annotation_region", "outer_spill_reason")) {
@@ -790,12 +813,7 @@ ggchord_share_external_annotations <- function(registry, layout) {
   for (id in names(registry)) {
     geometry <- registry[[id]]$gene_label_repel
     if (!is.data.frame(geometry) || !nrow(geometry)) next
-    external <- if ("feature_label_mode" %in% names(geometry)) {
-      geometry$feature_label_mode %in% "external"
-    } else rep(FALSE, nrow(geometry))
-    if ("annotation_class" %in% names(geometry)) {
-      external <- external | geometry$annotation_class %in% "primer"
-    }
+    external <- ggchord_outer_callouts(geometry)
     rows <- which(geometry$.component %in% "text" & external &
       !is.na(geometry$label) & nzchar(geometry$label))
     if (!length(rows)) next

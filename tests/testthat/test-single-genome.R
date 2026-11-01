@@ -42,6 +42,9 @@ test_that("restriction leader selections retain direct and one-bend routes", {
   })
   expect_true(length(counts[[1]]) > 0L && all(counts[[1]] == 2L))
   expect_true(length(counts[[2]]) > 0L && all(counts[[2]] == 3L))
+  inner <- export_ggchord_layout(base + geom_restriction_site(
+    data = sites, label_side = "inside"), include = "restriction")$annotation_registry
+  expect_equal(sum(inner$kind == "restriction_label" & inner$side == "inner"), nrow(sites))
 })
 
 test_that("biological searches retain circular origin, strand and site identity", {

@@ -82,7 +82,9 @@ geom_primer <- function(mapping = NULL, data = NULL,
 #' and retained binding-coordinate metadata, matching feature geometry.
 #'
 #' @inheritParams geom_primer
-#' @param side Side on which the external primer label is arranged.
+#' @param side Side of the backbone on which the primer callout is arranged.
+#'   `"inside"` retains the inner label layout, including when exterior
+#'   restriction or feature labels share the map. The default is `"outside"`.
 #' @param show_location Include the binding range in the label.
 #' @param max_overlaps Maximum unresolved overlaps.
 #' @return A composite text and leader-line layer.

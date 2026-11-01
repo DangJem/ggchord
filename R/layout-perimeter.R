@@ -18,7 +18,7 @@ ggchord_perimeter_tasks <- function(registry, units_per_inch) {
   for (id in names(registry)) {
     sites <- registry[[id]]$restriction_site
     if (is.data.frame(sites) && nrow(sites)) {
-      rows <- which(sites$restriction_component %in% "label" &
+      rows <- which(ggchord_outer_site_labels(sites) &
         !is.na(sites$label) & nzchar(sites$label))
       for (row in rows) {
         leaders <- which(sites$restriction_component %in% "leader" &
@@ -47,12 +47,7 @@ ggchord_perimeter_tasks <- function(registry, units_per_inch) {
     }
     geometry <- registry[[id]]$gene_label_repel
     if (!is.data.frame(geometry) || !nrow(geometry)) next
-    external <- if ("feature_label_mode" %in% names(geometry)) {
-      geometry$feature_label_mode %in% "external"
-    } else rep(FALSE, nrow(geometry))
-    if ("annotation_class" %in% names(geometry)) {
-      external <- external | geometry$annotation_class %in% "primer"
-    }
+    external <- ggchord_outer_callouts(geometry)
     rows <- which(geometry$.component %in% "text" & external &
       !is.na(geometry$label) & nzchar(geometry$label))
     for (row in rows) {
