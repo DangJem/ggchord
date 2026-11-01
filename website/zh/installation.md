@@ -32,6 +32,13 @@ packageVersion("ggchord")
 选择与你手中源码相符的加载方式，不需要同时运行两条安装路径。复现图时记录包版本。
 本教程不需要可选的 Bioconductor 或 Biopython 依赖。
 
+### 开发 checkout 与支持证据 {#support-evidence}
+当前正式版仍为 **v0.16.5**，本源码 checkout 为尚未发布的 **0.16.6.9000** RC
+开发版。本轮有限本地检查使用 arm64 macOS 上的 R 4.6.0、ggplot2 4.0.3，
+未实际验证声明下限 R 4.1.0、ggplot2 4.0.0。v0.16.5 的 Windows/macOS/Ubuntu
+release 及 Ubuntu devel CI 仅为历史证据，不是本版结果。可选 reader/adapter 需
+安装其帮助中列明的依赖；当前 checkout 的完整发布检查及其他设备/平台组合仍未验证。
+
 ## 2. 看懂绘图需要的三张表 {#input}
 我们选择 `MT108731.1` 和 `MT118296.1` 两条序列。完整随包对象保留原始字段，
 下面的代码只选本例需要的列。先复制运行整个代码块：

@@ -7,6 +7,10 @@
 * Corrected inside restriction-label registry rows being marked as exterior
   resources. Their existing inner geometry is retained and their measured boxes
   now carry the inner side, without acquiring exterior slots.
+* Completed current-source RC contract coverage and documented retained flexible
+  parameter forms, support evidence and finite visual/build benchmarks. No new
+  deprecation or migration is introduced. Explicit inside callouts can still be
+  crowded across feature layers; the audit does not certify global zero overlap.
 
 # ggchord 0.16.5
 

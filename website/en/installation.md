@@ -32,6 +32,15 @@ packageVersion("ggchord")
 Use the loading route appropriate to your source; you do not need both installation paths.
 Record the version when reproducing a plot. This lesson needs neither optional Bioconductor packages nor Biopython.
 
+### Development checkout and support evidence {#support-evidence}
+The formal release remains **v0.16.5**. This source checkout is the unreleased
+**0.16.6.9000** RC development version. Its finite local checks used R 4.6.0 and
+ggplot2 4.0.3 on arm64 macOS. The declared lower bounds (R 4.1.0, ggplot2 4.0.0)
+have not been exercised by these checks. Earlier v0.16.5 Windows/macOS/Ubuntu
+release and Ubuntu devel CI is historical evidence, not a v0.16.6 result.
+Optional readers/adapters need their documented dependencies; full release tests
+and other device/platform combinations remain unverified for this checkout.
+
 ## 2. Inspect the three input tables {#input}
 Select the bundled sequences `MT108731.1` and `MT118296.1`. Keep the complete source objects;
 the code below selects only the columns used here. Run the complete block first:

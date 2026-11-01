@@ -14,7 +14,7 @@ named by `accver` when values differ, and name strand pairs `+`/`-`.
 
 {{code:parameters}}
 
-Run this page’s preparation code below. first. Named radii survive sequence
+Run this page’s preparation code first. Named radii survive sequence
 reordering; unnamed entries follow current positions. These are layout/geometry
 values, not a universal extension to colours or themes.
 
@@ -41,11 +41,16 @@ unnamed lists remain compatible. Gene/feature entries can additionally contain
 strand pairs. Each parameter still validates its own type, length, range and units.
 This does not make a list a valid container for any argument.
 
-Avoid expanding low-frequency equivalent forms: positional lists can silently
-follow a new order after filtering; nested lists are harder to read. This version
-does not remove them. The planned v0.16.6 audit will evaluate convergence;
-any breaking decision needs explicit migration and removal timing. This design
-recommendation is not an announced deprecation.
+The v0.16.6 RC audit retains these equivalent forms: no deletion or deprecation
+is announced. Positional forms follow the current displayed sequence order after
+filtering; names take precedence when they match accession IDs. In width/fixed-label
+lists, a per-sequence entry is a strand pair; `list(value)` is the scalar recycling
+form. Position offsets also accept scalar entries per sequence. Explicit
+strand-named Position offsets are signed; an omitted strand or sequence uses zero.
+`position_plasmid()` uses one shared offset and rejects strand pairs.
+Use unique keys: accession IDs `"1"`, `"+"` or `"-"` can be ambiguous with index/strand
+shorthand, so prefer sequence-named nested lists for strand values. Native track
+width/gap must cover all displayed sequences. These rules do not extend to themes.
 
 Numeric values do not all share one unit: `seq_gap` is a proportion, rotations
 are degrees, and physical track sizes use explicit `unit()` values. `seq_backbone_gap`

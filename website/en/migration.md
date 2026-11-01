@@ -1,6 +1,9 @@
 ## Scope and timing {#scope}
 These are current candidate replacements, not a v1.0.0 compatibility promise.
-Earlier 0.16.x versions are locally completed but unreleased. Old calls in this
+The 0.16.0–0.16.4 phases were delivered together in v0.16.5. The current
+0.16.6.9000 checkout is unreleased; the formal installation tag remains v0.16.5.
+The RC audit retains flexible parameter formats, spelling aliases, reexports and
+getter/export entry points without a new deprecation. Old calls in this
 table explain migration and must not be executed as current examples. Exact
 first-removal tags are not guessed where historical evidence gives only an upper bound.
 

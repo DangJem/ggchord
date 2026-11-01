@@ -54,6 +54,17 @@
 直接提供注释表，无需再次运行识别。[堆叠与形状](annotations.html)说明几何，
 [标签](labels.html)说明适配，[输出](output.html)说明设备与尺寸。
 
+`geom_primer_label_repel(side = "inside")` 将引物引出标签保留在骨架内侧，
+包括同时存在外侧酶切及注释标签时。尚未发布的 0.16.6.9000 checkout 已修复此行为；
+v0.16.5 可能将请求内侧的标签移到外侧。外侧默认布局和原始坐标不变。
+
+内侧酶切标签继续保留内侧几何，导出 annotation registry 现在也正确记录内侧；
+早期版本将这些诊断行误标为外侧资源。
+
+完整内侧场景仍可能出现长引物文字与其他 feature 区域交叠；默认
+`max_overlaps = Inf` 不认证跨 feature 图层的零交叠。空间不足时优先使用默认外侧，
+或通过 `show_location = FALSE` 缩短显示文字，并在最终尺寸检查结果。
+
 ## 完成后检查 {#check-result}
 从中心的名称与长度开始，沿骨架读位置，再读类别色、箭头方向和外侧标签。核对 display_sites 的酶名；删减显示不会改变 plasmid_sites。
 

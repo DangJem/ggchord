@@ -1,3 +1,8 @@
+## 尚未发布的 RC checkout {#rc-development}
+0.16.6.9000 源码 checkout 审计现有候选合同，保留灵活参数、别名及重导出，
+修复圆图外侧分配器将内侧引物标签移到外侧的问题。内侧酶切 registry 行也已修正，与实际几何侧别一致。本轮有限本地检查和基准
+不等于发布或平台认证；正式安装标签仍为 v0.16.5。没有新增迁移或弃用。
+
 ## 当前版本 {#status}
 本页对应 **ggchord 0.16.5**，包含 0.16.0–0.16.4 开发阶段的累积改动。
 正式标签、附件和发布时间以 [GitHub Releases](https://github.com/DangJem/ggchord/releases) 为准。

@@ -1,3 +1,10 @@
+## Unreleased RC checkout {#rc-development}
+The 0.16.6.9000 source checkout audits the existing candidate contracts and retains
+flexible parameter forms, aliases and reexports. It fixes inside primer callouts
+being moved outside by the circular exterior allocator. Inside restriction registry rows are also corrected to match their inner geometry. Local finite checks and
+benchmarks are distinct from release/platform certification; v0.16.5 remains the
+formal install tag. No new migration or deprecation is introduced.
+
 ## Current version {#status}
 These pages document **ggchord 0.16.5**, including cumulative changes from the 0.16.0–0.16.4 development phases.
 Consult [GitHub Releases](https://github.com/DangJem/ggchord/releases) for formal tags, assets and publication dates.

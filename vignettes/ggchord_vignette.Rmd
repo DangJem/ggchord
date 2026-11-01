@@ -54,6 +54,15 @@ packageVersion("ggchord")
 Use the loading route appropriate to your source; you do not need both installation paths.
 Record the version when reproducing a plot. This lesson needs neither optional Bioconductor packages nor Biopython.
 
+#### Development checkout and support evidence {#installation-support-evidence}
+The formal release remains **v0.16.5**. This source checkout is the unreleased
+**0.16.6.9000** RC development version. Its finite local checks used R 4.6.0 and
+ggplot2 4.0.3 on arm64 macOS. The declared lower bounds (R 4.1.0, ggplot2 4.0.0)
+have not been exercised by these checks. Earlier v0.16.5 Windows/macOS/Ubuntu
+release and Ubuntu devel CI is historical evidence, not a v0.16.6 result.
+Optional readers/adapters need their documented dependencies; full release tests
+and other device/platform combinations remain unverified for this checkout.
+
 ### 2. Inspect the three input tables {#installation-input}
 Select the bundled sequences `MT108731.1` and `MT118296.1`. Keep the complete source objects;
 the code below selects only the columns used here. Run the complete block first:
@@ -840,6 +849,20 @@ before adding geoms. For externally curated annotations, pass your feature table
 instead of running recognition. Use [stacking and shapes](#annotations) for
 geometry, [labels](#labels) for fitting, and [output](#output) for devices.
 
+`geom_primer_label_repel(side = "inside")` keeps callouts inside the backbone,
+even alongside exterior restriction and feature labels. This is corrected in the
+unreleased 0.16.6.9000 checkout; v0.16.5 can move those requested inside labels
+outside. The default outside placement and existing source coordinates are unchanged.
+
+Inside restriction labels also retain their inner geometry and now report the
+inner side in the exported annotation registry; earlier versions mislabelled
+those diagnostic rows as exterior resources.
+
+The full inside scene can still place long primer text over other feature regions.
+The default `max_overlaps = Inf` does not certify zero overlap across feature
+layers. Prefer the default outside field when space is tight, or use
+`show_location = FALSE` to shorten the display; inspect the result at its final size.
+
 ### Check your result {#plasmids-check-result}
 Start with the centre name and length, then read positions, category colours, arrow directions and outer labels. Check enzyme names in display_sites; selecting a display subset leaves plasmid_sites intact.
 
@@ -1026,7 +1049,7 @@ p_parameters
 ```
 
 
-Run this page’s preparation code below. first. Named radii survive sequence
+Run this page’s preparation code first. Named radii survive sequence
 reordering; unnamed entries follow current positions. These are layout/geometry
 values, not a universal extension to colours or themes.
 
@@ -1053,11 +1076,16 @@ unnamed lists remain compatible. Gene/feature entries can additionally contain
 strand pairs. Each parameter still validates its own type, length, range and units.
 This does not make a list a valid container for any argument.
 
-Avoid expanding low-frequency equivalent forms: positional lists can silently
-follow a new order after filtering; nested lists are harder to read. This version
-does not remove them. The planned v0.16.6 audit will evaluate convergence;
-any breaking decision needs explicit migration and removal timing. This design
-recommendation is not an announced deprecation.
+The v0.16.6 RC audit retains these equivalent forms: no deletion or deprecation
+is announced. Positional forms follow the current displayed sequence order after
+filtering; names take precedence when they match accession IDs. In width/fixed-label
+lists, a per-sequence entry is a strand pair; `list(value)` is the scalar recycling
+form. Position offsets also accept scalar entries per sequence. Explicit
+strand-named Position offsets are signed; an omitted strand or sequence uses zero.
+`position_plasmid()` uses one shared offset and rejects strand pairs.
+Use unique keys: accession IDs `"1"`, `"+"` or `"-"` can be ambiguous with index/strand
+shorthand, so prefer sequence-named nested lists for strand values. Native track
+width/gap must cover all displayed sequences. These rules do not extend to themes.
 
 Numeric values do not all share one unit: `seq_gap` is a proportion, rotations
 are degrees, and physical track sizes use explicit `unit()` values. `seq_backbone_gap`
@@ -2312,7 +2340,10 @@ Avoid attaching private sequence data; a synthetic reproduction is usually enoug
 
 ### Scope and timing {#migration-scope}
 These are current candidate replacements, not a v1.0.0 compatibility promise.
-Earlier 0.16.x versions are locally completed but unreleased. Old calls in this
+The 0.16.0–0.16.4 phases were delivered together in v0.16.5. The current
+0.16.6.9000 checkout is unreleased; the formal installation tag remains v0.16.5.
+The RC audit retains flexible parameter formats, spelling aliases, reexports and
+getter/export entry points without a new deprecation. Old calls in this
 table explain migration and must not be executed as current examples. Exact
 first-removal tags are not guessed where historical evidence gives only an upper bound.
 
