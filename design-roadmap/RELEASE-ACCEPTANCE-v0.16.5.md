@@ -25,4 +25,16 @@
 - [四平台检查](https://github.com/DangJem/ggchord/actions/runs/41325331082)：Windows release、macOS release、Ubuntu release/devel 全部成功。
 - [最终网站部署](https://github.com/DangJem/ggchord/actions/runs/41325563287)：源/产物检查、构建与部署成功。线上浏览器确认界面译文、语言切换、语言内帮助链接与放大 logo。
 - R 包远端候选为 4d67400；最终站点提交 ba7f4c5 不改 R/man/DESCRIPTION/NAMESPACE/NEWS/vignette/data/inst。最终打包从 ba7f4c5 执行，本地标准 R CMD check 为 OK。
-- [正式 Release](https://github.com/DangJem/ggchord/releases/tag/v0.16.5)：非草稿、非预发布，tag 指向 ba7f4c5；附件服务端摘要与回读结果一致。
+- [首次正式 Release](https://github.com/DangJem/ggchord/releases/tag/v0.16.5)：非草稿、非预发布，首次 tag 指向 ba7f4c5；附件服务端摘要与回读结果一致。
+
+## README 修订与同版本重发（2026-11-02）
+
+用户明确要求移除 README 中 reallinear.png 并重发 v0.16.5。两份 README 和生成源
+同步删除指定图及专属图注，保留其他教程使用的图片资产；保留上一轮顶部 320 px
+图标、逐图代码/结果布局及网站指南链接。标签按此次授权更新至 README 修订提交，
+双语 Release 增补同等重发说明。首次发布事实不覆盖。
+
+对比原标签，R、man、DESCRIPTION、NAMESPACE、NEWS、data、inst、vignettes 和
+.Rbuildignore 均无差异。README、工具和版本记录不进入 R 源码包；因此继续使用
+原来已验收且回读校验的源码包及 SHA256SUMS.txt，SHA-256 保持上述值。
+本轮运行生成同步检查、双语文档源检查与 Git 差异检查，未重复运行完整发布矩阵。

@@ -21,11 +21,6 @@ remotes::install_github("DangJem/ggchord@v0.16.5")
 
 For a checkout of this version, use `pkgload::load_all(".")` from its root. A CRAN release is not claimed.
 
-![Collinear case with real sequences and all annotations](man/figures/reallinear.png)
-
-Original repository FASTA, GFF3 and BLAST inputs; see the [real-data workflow](https://dangjem.github.io/ggchord/en/real-data.html) for complete import, filtering code and interpretation.
-
-
 ## Three views
 
 Select only the required fields from the bundled source-backed data before plotting; keep original metadata in the source objects.

@@ -21,11 +21,6 @@ remotes::install_github("DangJem/ggchord@v0.16.5")
 
 如已检出本版源码，在仓库根目录使用 `pkgload::load_all(".")`。不声称存在 CRAN 发布。
 
-![真实序列与全部注释的共线性案例](man/figures/reallinear.png)
-
-图中使用仓库原始 FASTA、GFF3 与 BLAST；完整读取、筛选代码与解释见[真实数据专题](https://dangjem.github.io/ggchord/zh/real-data.html)。
-
-
 ## 三种模式
 
 下列代码先从随包数据中选出必需列，再绘图；原始数据与来源信息保留在原对象中。

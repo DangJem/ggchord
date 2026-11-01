@@ -111,7 +111,6 @@ remotes::install_github("DangJem/ggchord@v0.16.5")
 '''
     text += ('如已检出本版源码，在仓库根目录使用 `pkgload::load_all(".")`。不声称存在 CRAN 发布。' if zh else
         'For a checkout of this version, use `pkgload::load_all(".")` from its root. A CRAN release is not claimed.')
-    text += ('\n\n![真实序列与全部注释的共线性案例](man/figures/reallinear.png)\n\n图中使用仓库原始 FASTA、GFF3 与 BLAST；完整读取、筛选代码与解释见[真实数据专题]('+site+'real-data.html)。\n' if zh else '\n\n![Collinear case with real sequences and all annotations](man/figures/reallinear.png)\n\nOriginal repository FASTA, GFF3 and BLAST inputs; see the [real-data workflow]('+site+'real-data.html) for complete import, filtering code and interpretation.\n')
     text += f'\n\n## {quick}\n\n'
     text += ('下列代码先从随包数据中选出必需列，再绘图；原始数据与来源信息保留在原对象中。' if zh else 'Select only the required fields from the bundled source-backed data before plotting; keep original metadata in the source objects.')+'\n\n'
     def preparation(keys, label):
