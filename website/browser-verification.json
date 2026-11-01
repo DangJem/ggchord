@@ -2,9 +2,16 @@
   "date": "2026-11-01",
   "renderer": "pkgdown 2.2.1 + Bootstrap 5",
   "surface": "Local HTTP in-app browser",
-  "desktop_viewport": [
-    1280,
-    720
+  "build_commit": "89c745fe1cf1b7a3f3990e00c1c137093fbd74d5",
+  "desktop_viewports": [
+    [
+      1280,
+      720
+    ],
+    [
+      1440,
+      900
+    ]
   ],
   "mobile_viewport": [
     390,
@@ -12,72 +19,85 @@
   ],
   "checks": [
     {
+      "case": "Task-oriented entry pages",
+      "result": "PASS",
+      "evidence": "Home selects three real plot questions; gallery figures link to preparation, code and interpretation."
+    },
+    {
+      "case": "Independent first plot",
+      "result": "PASS",
+      "evidence": "Install/version choice, 2/4/6-column selection, draw, interpret, save and troubleshooting are present."
+    },
+    {
+      "case": "Page-local preparation",
+      "result": "PASS",
+      "evidence": "AmpR preparation contains only package/theme/axis setup, with no unrelated phage IDs; disclosure opens and closes."
+    },
+    {
       "case": "Han search",
       "result": "PASS",
-      "evidence": "标签 returns 14 pages and the labels topic; position_track returns 7 pages including full help."
+      "evidence": "蛋白 returns 18 pages, prioritizing alignment and projection topics; chapter navigation is excluded from the index."
     },
     {
-      "case": "Article language and anchor",
+      "case": "Article language anchor",
       "result": "PASS",
-      "evidence": "zh/real-data.html#read switches to en/real-data.html#read."
+      "evidence": "zh/installation.html#first-plot switches to en/installation.html#first-plot."
     },
     {
-      "case": "Reference language and anchor",
+      "case": "Reference language anchor",
       "result": "PASS",
-      "evidence": "zh/reference/position_track.html#arguments switches to its English counterpart; native translated heading IDs are normalized."
+      "evidence": "zh/reference/read_blast.html#arguments switches to English and back with the anchor retained."
     },
     {
-      "case": "Rendered executable code",
+      "case": "Translated compact outline",
       "result": "PASS",
-      "evidence": "First real-data pre contains complete FASTA/GFF3/BLAST/validation calls; Enter on summary closes it. Static comparison verifies every custom page code block."
+      "evidence": "Use/arguments/return/details/see-also/examples match natural Han headings: 用法、参数、返回值、详细说明、另见、示例."
     },
     {
-      "case": "Keyboard skip",
+      "case": "Persistent desktop navigation",
       "result": "PASS",
-      "evidence": "Enter on skip link focuses main#main."
+      "evidence": "Long-page header remains at top 0; wide-screen TOC has 170 px instead of an inherited 80 px left margin."
     },
     {
-      "case": "Native theme",
+      "case": "Exact code copying",
       "result": "PASS",
-      "evidence": "Light and dark visually inspected; Auto selected, then restored Light."
+      "evidence": "Copied first-data and first-plot blocks; clipboard equals rendered pre text exactly, without disclosure labels."
     },
     {
-      "case": "Mobile navigation/language",
+      "case": "Keyboard disclosure and viewer",
       "result": "PASS",
-      "evidence": "At 390 x 844 language control remains visible outside collapsed navbar; hamburger expands and collapses."
+      "evidence": "Enter toggles code/chapters; Escape closes the image viewer and returns focus to its invoking link."
     },
     {
-      "case": "Mobile overflow",
+      "case": "Actual-size image",
       "result": "PASS",
-      "evidence": "Document width 390 at viewport 390; migration table content 473 px scrolls in its 366 px container."
+      "evidence": "1440 × 720 first plot renders at its natural dimensions; fit mode remains available."
     },
     {
-      "case": "Artwork and notices",
+      "case": "Mobile navigation",
       "result": "PASS",
-      "evidence": "Supplied artwork on home and native reference; development notice visible below fixed navbar."
+      "evidence": "Language control remains outside the collapsed navbar; hamburger exposes navigation/search; chapter drawer expands."
     },
     {
-      "case": "Fresh console",
+      "case": "Mobile width",
       "result": "PASS",
-      "evidence": "New preview tab visits corrected Han/English reference and home: no warn/error logs. Earlier punctuation-anchor warning was corrected; old tab logs are historical."
+      "evidence": "Home, first-plot lesson and BLAST reference stay within 390 px; actual-size image scrolls inside its own canvas."
+    },
+    {
+      "case": "Light and dark",
+      "result": "PASS",
+      "evidence": "Both reference appearances inspected; restored Light. Temporary viewport overrides reset."
+    },
+    {
+      "case": "Intrinsic image dimensions",
+      "result": "PASS",
+      "evidence": "Shared plots reserve manifest-derived width/height before lazy loading; previously zero-height image links now open correctly."
     }
   ],
   "screenshots": [
-    {
-      "filename": "ggchord-v0165-pkgdown-en.jpg",
-      "sha256": "f03eb3c2da47c9d48b20a8b3d2a9b5cad48ff433363003887fa7bb49bb6c1561",
-      "location": "Local chat artifact; not a runtime dependency"
-    },
-    {
-      "filename": "ggchord-v0165-pkgdown-mobile.jpg",
-      "sha256": "4f7f3077d05a1e5f3361d0a425add802d2447687a7ba2e33ad106b003e232d47",
-      "location": "Local chat artifact; not a runtime dependency"
-    },
-    {
-      "filename": "ggchord-v0165-pkgdown-zh.jpg",
-      "sha256": "bd23ddf6cb9d1a4590b3ae3e44d955fd90bc1d25f7847182dcae223358c87b0d",
-      "location": "Local chat artifact; not a runtime dependency"
-    }
+    "ggchord-v0165-redesign-home.png",
+    "ggchord-v0165-redesign-mobile.png",
+    "ggchord-v0165-redesign-first-plot.png"
   ],
-  "limits": "Finite local checks, not release validation, exhaustive browser/accessibility certification or deployment verification."
+  "scope": "Representative reader paths and local appearance only; not full browser/device/font or package release certification. No deployment."
 }
