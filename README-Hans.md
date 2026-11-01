@@ -75,7 +75,7 @@ ggsave("comparison.png", p_collinear, width = 8, height = 5, units = "in", dpi =
 
 ## 继续阅读
 
-- [完整教程](vignettes/ggchord_guide_hans.Rmd)：安装 → 数据 → 最小出图 → 常用调整 → 进阶 → FAQ。
+- [入门教程](vignettes/ggchord_guide_hans.Rmd)：安装 → 数据 → 最小出图 → 常用调整 → 进阶 → FAQ。
 - [迁移指南](MIGRATION-Hans.md)与 [NEWS](NEWS.md)。
 - [本地网站构建与预览](website/README.md)，含函数分类、术语、图集与部署方案。
 

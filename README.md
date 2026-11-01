@@ -75,7 +75,7 @@ ggsave("comparison.png", p_collinear, width = 8, height = 5, units = "in", dpi =
 
 ## Continue
 
-- [Full tutorial](vignettes/ggchord_vignette.Rmd): install → data → first plot → adjustments → advanced topics → FAQ.
+- [Starter tutorial](vignettes/ggchord_vignette.Rmd): install → data → first plot → adjustments → advanced topics → FAQ.
 - [Migration guide](MIGRATION.md) and [NEWS](NEWS.md).
 - [Build and preview the local website](website/README.md), including reference categories, terminology, gallery and deployment design.
 

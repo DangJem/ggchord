@@ -111,10 +111,10 @@ remotes::install_github("DangJem/ggchord")
     text += '\n\n```r\nview_ggchord(p_collinear, width = 8, height = 5, units = "in")\n'+code['save']+'\n```\n'
     text += f'\n## {onwards}\n\n'
     tutorial_name = 'ggchord_guide_hans.Rmd' if zh else 'ggchord_vignette.Rmd'
-    text += ('- [完整教程](vignettes/'+tutorial_name+')：安装 → 数据 → 最小出图 → 常用调整 → 进阶 → FAQ。\n'
+    text += ('- [入门教程](vignettes/'+tutorial_name+')：安装 → 数据 → 最小出图 → 常用调整 → 进阶 → FAQ。\n'
         '- [迁移指南](MIGRATION-Hans.md)与 [NEWS](NEWS.md)。\n'
         '- [本地网站构建与预览](website/README.md)，含函数分类、术语、图集与部署方案。\n' if zh else
-        '- [Full tutorial](vignettes/'+tutorial_name+'): install → data → first plot → adjustments → advanced topics → FAQ.\n'
+        '- [Starter tutorial](vignettes/'+tutorial_name+'): install → data → first plot → adjustments → advanced topics → FAQ.\n'
         '- [Migration guide](MIGRATION.md) and [NEWS](NEWS.md).\n'
         '- [Build and preview the local website](website/README.md), including reference categories, terminology, gallery and deployment design.\n')
     text += '\n[Issues](https://github.com/DangJem/ggchord/issues) · [MIT license](LICENSE)\n'

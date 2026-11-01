@@ -1,3 +1,5 @@
+> This first documentation prototype is under revision. Complete reference coverage does not mean all task tutorials are complete.
+
 An R package built on ggplot2 for **multi-sequence chord diagrams, single circular
 sequence maps and linear collinearity plots**. Use the same layered grammar to
 move from interval tables to readable comparisons.

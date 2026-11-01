@@ -6,6 +6,19 @@
 Local development documentation for 0.16.5, based on the 0.16.4 API candidate.
 **Not deployed.** The formal release remains 0.15.0. Frozen `docs/` is untouched.
 
+## 2026-11-01 复核状态 / Review status
+
+当前网站是首轮文档原型。用户要求参考成熟 ggplot2 扩展包网站重做风格并补足内容，
+复核确认 reference 入口齐全不等于完整任务教程已完成。v0.16.5 已重新打开，当前
+缺口与技术建议见[复核记录](../design-roadmap/DOCUMENTATION-REVIEW-v0.16.5.md)。
+推荐的 pkgdown 方案尚未替换下方自制生成器；不要把两者误认为同时完成的正式方案。
+
+This is the first documentation prototype. Review confirmed that complete
+reference coverage does not establish complete task tutorials. Version 0.16.5
+has been reopened for package-documentation styling and deeper content; see the
+[review](../design-roadmap/DOCUMENTATION-REVIEW-v0.16.5.md). The recommended pkgdown
+migration has not replaced the generator described below.
+
 ## 本地生成 / Local build
 
 在仓库根目录准备已安装的 R、Python ≥ 3.9、Pandoc（rmarkdown 可发现）及包开发依赖
