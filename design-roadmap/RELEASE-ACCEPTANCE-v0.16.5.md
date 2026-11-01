@@ -16,3 +16,13 @@
 远端首轮 R-devel 的 162 测试通过，默认帮助 PDF 设备在 α 处失败；已为帮助
 示例明确创建 ASCII 显示副本，并拆分长示例行。此修订不改运行时表达式或原始数据，
 正式发布等待修订候选的远端检查结果。
+
+源码包 SHA-256：`df099086bdde877a7e5c5ab87697bac909e8c0aa659fd70230a0716b372f9729`。
+附件已下载回读并通过 SHA256SUMS.txt；发布时刻为 2026-11-02 00:27:49（Asia/Shanghai）。
+
+## 远端与发布核对
+
+- [四平台检查](https://github.com/DangJem/ggchord/actions/runs/41325331082)：Windows release、macOS release、Ubuntu release/devel 全部成功。
+- [最终网站部署](https://github.com/DangJem/ggchord/actions/runs/41325563287)：源/产物检查、构建与部署成功。线上浏览器确认界面译文、语言切换、语言内帮助链接与放大 logo。
+- R 包远端候选为 4d67400；最终站点提交 ba7f4c5 不改 R/man/DESCRIPTION/NAMESPACE/NEWS/vignette/data/inst。最终打包从 ba7f4c5 执行，本地标准 R CMD check 为 OK。
+- [正式 Release](https://github.com/DangJem/ggchord/releases/tag/v0.16.5)：非草稿、非预发布，tag 指向 ba7f4c5；附件服务端摘要与回读结果一致。
