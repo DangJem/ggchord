@@ -10,7 +10,7 @@ template:
     base_font: system-ui
     heading_font: system-ui
     code_font: monospace
-    primary: "#39785F"
+    primary: "#2855C7"
 navbar:
   structure:
     left: [start, reference, articles, gallery, news]

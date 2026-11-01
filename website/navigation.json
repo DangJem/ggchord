@@ -1,0 +1,59 @@
+[
+  {
+    "title": {
+      "zh": "从这里开始",
+      "en": "Start here"
+    },
+    "pages": [
+      "installation",
+      "modes",
+      "data"
+    ]
+  },
+  {
+    "title": {
+      "zh": "完整工作流",
+      "en": "Workflows"
+    },
+    "pages": [
+      "real-data",
+      "plasmids",
+      "homology",
+      "tracks"
+    ]
+  },
+  {
+    "title": {
+      "zh": "解决具体问题",
+      "en": "How-to guides"
+    },
+    "pages": [
+      "formats",
+      "alignments",
+      "annotations",
+      "labels",
+      "views",
+      "ribbons",
+      "styling",
+      "adjustments",
+      "parameters",
+      "projection",
+      "recognition",
+      "output"
+    ]
+  },
+  {
+    "title": {
+      "zh": "查阅与维护",
+      "en": "Reference and updates"
+    },
+    "pages": [
+      "reference",
+      "gallery",
+      "migration",
+      "faq",
+      "glossary",
+      "news"
+    ]
+  }
+]

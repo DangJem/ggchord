@@ -1,5 +1,12 @@
+<div class="task-intro"><p>Draw real annotations as independent layers, choose suitable shapes and share stacking positions between overlapping intervals and text.</p></div>
+
+## Prepare this page {#prepare}
+In a fresh R session, run the code below, then follow this page in order. Colours and layout are optional display choices; inputs select only the fields needed.
+
+{{prepare:setup,docstyle,plasmiddata}}
+
 ## Preserve feature semantics {#stack}
-Run the [shared setup](index.html#quick-start) and [circular example](modes.html#circular).
+Run this page’s preparation code below. and [circular example](modes.html#circular).
 This table retains actual overlapping pUC19 annotations and unknown strands. Geometry and fill map separately
 from the same category; an explicit fixed `shape` would override shape mapping.
 
@@ -35,3 +42,8 @@ independent bp reference bar for collinear plots; it differs from
 `scale_seq_position_continuous()`, which controls genomic axes on sequences.
 An ordinary ggplot2 annotation should use [position mapping](views.html#mapping)
 instead of treating bp as Cartesian x/y.
+
+## Check your result {#check-result}
+Check intervals and strands before shapes and labels. Unknown strands remain in general features; stacking changes display placement, not genomic coordinates.
+
+<div class="next-step">Continue: <a href="labels.html">Labels and local placement →</a></div>

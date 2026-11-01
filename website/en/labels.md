@@ -1,10 +1,17 @@
+<div class="task-intro"><p>Arrange text while retaining annotation geometry: choose export dimensions and a label subset before choosing automatic or fixed placement.</p></div>
+
+## Prepare this page {#prepare}
+In a fresh R session, run the code below, then follow this page in order. Colours and layout are optional display choices; inputs select only the fields needed.
+
+{{prepare:setup,docstyle}}
+
 ## Select a layout {#layout}
 Gene labels offer `"auto"`, `"radial"` and `"arc"` layouts. General feature
 labels additionally support the internal-first `"feature"` default and external
 `"callout"` layout. Choose the documented values for the layer you use; they are
 not interchangeable presets.
 
-After the [shared setup](index.html#quick-start):
+After this page’s preparation code:
 
 {{code:labels}}
 {{figure:labels}}
@@ -42,3 +49,8 @@ its explicit rotation does not belong in an automatic repel layer.
 General feature labels have additional internal-first/callout choices; see the
 [complete circular workflow](plasmids.html) for dense mixed annotation and
 [stacking](annotations.html#stack) for inherited or explicit Position anchors.
+
+## Check your result {#check-result}
+The three layout comparisons share the same input. Assess text direction, leaders and hiding reasons together; missing text does not mean a feature was lost.
+
+<div class="next-step">Continue: <a href="output.html">Export, preview and diagnostics →</a></div>

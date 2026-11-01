@@ -1,5 +1,12 @@
+<div class="task-intro"><p>把真实注释画为独立图层，选择合适形状，并让重叠区间和文字共享堆叠位置。</p></div>
+
+## 本页准备 {#prepare}
+在新的 R 会话中先运行下方代码，再按页面顺序继续。配色和排版是可选的显示设置，输入只选择需要的列。
+
+{{prepare:setup,docstyle,plasmiddata}}
+
 ## 保留注释语义 {#stack}
-先运行[共享准备代码](index.html#quick-start)和[圆图例子](modes.html#circular)。
+本页准备代码已加载 pUC19 的实际注释。
 这里保留 pUC19 中实际重叠的注释和原本未知的链方向。
 几何和填色分别映射同一类别；显式固定 `shape` 会覆盖 shape 映射。
 
@@ -31,3 +38,8 @@
 分段末端。`geom_seq_scale()` 是仅用于共线性图的独立 bp 参照条，与控制序列基因组轴
 的 `scale_seq_position_continuous()` 不同。普通 ggplot2 注释应使用
 [位置映射](views.html#mapping)，不能把 bp 直接当作笛卡尔 x/y。
+
+## 完成后检查 {#check-result}
+先检查区间与链，再看形状与标签。未知链仍保留在通用注释中；堆叠改变显示位置，不改变原始基因组坐标。
+
+<div class="next-step">继续：<a href="labels.html">放置和调整标签 →</a></div>

@@ -1,3 +1,11 @@
+<p class="lesson-intro">Choose an example by the question it answers. Thumbnails help you navigate; click for full size. Every figure links to preparation, code and interpretation.</p>
+
+## Find a figure by task {#tasks}
+| Overall relationships | One annotated sequence | Local positions | Quantities and text |
+| --- | --- | --- | --- |
+| [Chord](#realchord) | [Plasmid](#plasmid) | [CDS neighbourhood](#homologs) | [GC tracks](#multitrack) |
+| [Point links](#pointlinks) | [Feature stacking](#featurestack) | [Focus](#focus) | [Label layouts](#labelauto) |
+
 ## One source for both languages {#source}
 All figures use bundled source-backed data or attributed real input records, defined in the shared
 [documentation example source](../assets/documentation-examples.R).

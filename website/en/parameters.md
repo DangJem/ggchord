@@ -1,3 +1,10 @@
+<div class="task-intro"><p>Adjust geometry by sequence or strand, retaining useful flexible parameter formats while making their scope explicit.</p></div>
+
+## Prepare this page {#prepare}
+In a fresh R session, run the code below, then follow this page in order. Colours and layout are optional display choices; inputs select only the fields needed.
+
+{{prepare:setup,docstyle}}
+
 ## The capability remains supported {#recommendation}
 Sequence-local geometry often needs one value per sequence or strand; duplicating
 whole layers would obscure that intent. Keep scalars as the default, use vectors
@@ -5,7 +12,7 @@ named by `accver` when values differ, and name strand pairs `+`/`-`.
 
 {{code:parameters}}
 
-Run the [shared setup](index.html#quick-start) first. Named radii survive sequence
+Run this page’s preparation code below. first. Named radii survive sequence
 reordering; unnamed entries follow current positions. These are layout/geometry
 values, not a universal extension to colours or themes.
 
@@ -43,3 +50,8 @@ are degrees, and physical track sizes use explicit `unit()` values. `seq_backbon
 and `seq_backbone_width` are scalar style controls, not members of the list rule.
 Automatic collinear orientation belongs to `coord_collinear(orientation = "auto")`;
 `geom_seq(seq_orientation = ...)` supplies numerical +1/-1 sequence directions.
+
+## Check your result {#check-result}
+Named-vector keys must match actual accver values or +/− strands. Recheck matching after reordering; list rules do not extend to themes, scales or aesthetics.
+
+<div class="next-step">Continue: <a href="styling.html">Mappings, scales, guides and themes →</a></div>

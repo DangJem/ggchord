@@ -23,6 +23,12 @@ def table(headers, rows):
 
 def expand(text, lang, *, figures='assets', reference=''):
     chunks = snippets()
+    def preparation(match):
+        keys=match[1].split(',')
+        label='Preparation code — run once on this page' if lang=='en' else '准备代码 · 在本页运行一次'
+        code='\n\n'.join(chunks[key] for key in keys)
+        return '<details class="preparation"><summary>'+label+'</summary>\n\n```r\n'+code+'\n```\n\n</details>'
+    text=re.sub(r'\{\{prepare:([\w,]+)\}\}',preparation,text)
     def figure(key):
         caption=html.escape(CAPTIONS[key][lang])
         hint='Click to enlarge' if lang=='en' else '点击放大查看'
@@ -47,11 +53,21 @@ def expand(text, lang, *, figures='assets', reference=''):
     with (WEB / 'assets/plots.csv').open() as f:
         assets = list(csv.DictReader(f))
     gallery = []
+    destinations={'chord':'modes#chord','circular':'modes#circular','collinear':'modes#collinear',
+        'first':'installation#first-plot','realchord':'real-data#chord','reallinear':'real-data#linear',
+        'plasmid':'plasmids#input','homologs':'homology#membership','tracks':'tracks#domain',
+        'multitrack':'tracks#multiple','density':'ribbons#density','pointlinks':'ribbons#points',
+        'featurestack':'annotations#stack','decorations':'annotations#decoration','focus':'views#focus',
+        'labels':'labels#layout','labelauto':'labels#comparison','labelradial':'labels#comparison',
+        'labelarc':'labels#comparison','styling':'styling#roles','paf':'formats#zero-based'}
     for asset in assets:
         key = asset['id']
-        gallery.append(f'### {CAPTIONS[key][lang]} {{#{key}}}\n\n{figure(key)}\n\n'
-            f'`{asset["object"]}` · {asset["width"]} × {asset["height"]} in · '
-            f'{asset["dpi"]} dpi · PNG · `{key}`')
+        page,anchor=destinations[key].split('#')
+        label='Data, code and interpretation →' if lang=='en' else '数据、代码与读图说明 →'
+        gallery.append(f'<section class="gallery-card"><h3 id="{key}">{html.escape(CAPTIONS[key][lang])}</h3>'
+            f'{figure(key)}<p><a href="{page}.html#{anchor}">{label}</a></p>'
+            f'<p class="asset-size"><code>{asset["object"]}</code> · {asset["width"]} × {asset["height"]} in · '
+            f'{asset["dpi"]} dpi</p></section>')
     results_path = WEB/'assets/example-results.json'
     if results_path.is_file():
         results = json.loads(results_path.read_text())
@@ -67,7 +83,7 @@ def expand(text, lang, *, figures='assets', reference=''):
         ['Capability','Read','Executable source / output'] if lang=='en' else ['功能','使用教程','代码与结果'],
         [[c['title'][lang],', '.join(f'[{titles[k]}]({k}.html)' for k in c['articles']),
           ', '.join('`'+k+'`' for k in c['snippets'])+(' · '+', '.join(c['figures']) if c['figures'] else '')] for c in coverage]))
-    text = text.replace('{{gallery}}', '\n\n'.join(gallery)).replace('{{reference}}', reference)
+    text = text.replace('{{gallery}}', '<div class="gallery-grid">'+''.join(gallery)+'</div>').replace('{{reference}}', reference)
     return text
 
 def category(name):

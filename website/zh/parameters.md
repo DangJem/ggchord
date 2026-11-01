@@ -1,3 +1,10 @@
+<div class="task-intro"><p>按序列或链调整几何，保留旧版灵活参数的实用性，同时明确它不适用于所有参数。</p></div>
+
+## 本页准备 {#prepare}
+在新的 R 会话中先运行下方代码，再按页面顺序继续。配色和排版是可选的显示设置，输入只选择需要的列。
+
+{{prepare:setup,docstyle}}
+
 ## 这个能力仍然保留 {#recommendation}
 同一图里常要单独调整某条序列，或分别调整正负链。为这些几何参数保留简洁的
 逐序列/逐链写法是合理的；没有必要为了多一条序列而复制整个图层。
@@ -5,7 +12,7 @@
 
 {{code:parameters}}
 
-先运行[共享准备代码](index.html#quick-start)。`radii` 的名称对应实际序列 ID，
+`radii` 的名称对应实际序列 ID，
 `widths` 和位移对应链。重新排序时，命名值仍能找到原序列；无名值只按当前位置对应。
 这个例子修改的是布局和几何，未把颜色或 theme 参数当成同一套扩展语法。
 
@@ -38,3 +45,8 @@ axis/theme、aesthetic、标度、图例不继承这套列表扩展规则。手�
 明确的 `unit()`。`seq_backbone_gap`、`seq_backbone_width` 是单值样式参数，不在
 上述列表规则中。共线性自动方向用 `coord_collinear(orientation = "auto")`；
 `geom_seq(seq_orientation = ...)` 指定的是 +1/-1 数值方向。
+
+## 完成后检查 {#check-result}
+命名向量的键应对应实际 accver 或 +/− 链。重排后再次检查匹配；不要将列表规则推广到 theme、scale 或 aesthetic。
+
+<div class="next-step">继续：<a href="styling.html">设置配色、图例和主题 →</a></div>

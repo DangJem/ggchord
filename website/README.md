@@ -106,3 +106,30 @@ redirect; unmatched URLs receive a historical notice rather than invented aliase
 The Han Rd adapter uses pkgdown 2.2.1 classed parsing with explicit structural
 guards. Recheck this one adapter when upgrading pkgdown; page generation uses
 public builders. Generated reference prose and code are checked.
+
+## 阅读架构与局部验证 / Reading structure and scoped verification
+
+`navigation.json` 将入门、完整工作流、任务指南及参考分组。桌面保留章节导航，宽屏显示
+右侧页内目录；中等及窄屏使用可展开目录。文章的 `prepare` 标记将该页实际依赖的共享
+代码就地展开，避免跳回首页寻找变量。首页按科研问题选择三类真实案例，图集每张图
+链接其准备、代码及解释。调研依据与取舍见
+[跨产品调研](../design-roadmap/WEBSITE-RESEARCH-v0.16.5.md)。
+
+`navigation.json` groups learning, complete workflows, task guides and reference.
+A persistent chapter sidebar and responsive page outlines support long articles.
+Page-local `prepare` markers expand their actual shared-code prerequisites.
+The home page selects real cases by scientific question; every gallery figure
+links to preparation, code and interpretation. Research and decisions are recorded
+in the linked design document.
+
+```sh
+# 只检查文档任务的独立准备，不运行包检查 / Independent lesson objects only
+Rscript tools/check-documentation-lessons.R
+```
+
+检查 20 页的共享准备与步骤，使用独立环境，不保存用户输出、不打开预览，也不执行
+完整 testthat、vignette 或包发布检查。准备代码默认折叠，展开后可按页顺序复制运行。
+
+The scoped script checks 20 pages in separate environments, without user exports,
+interactive previews, test suites, vignette rendering or package release checks.
+Preparation is initially folded and can be expanded to copy in page order.

@@ -1,5 +1,12 @@
+<div class="task-intro"><p>为已有输入选择局部窗口或分段视图，同时保留原始位置与显示变换的区别。</p></div>
+
+## 本页准备 {#prepare}
+在新的 R 会话中先运行下方代码，再按页面顺序继续。配色和排版是可选的显示设置，输入只选择需要的列。
+
+{{prepare:setup,docstyle}}
+
 ## 保留来源的局部聚焦 {#focus}
-先运行[共享准备代码](index.html#quick-start)：
+
 
 {{code:focus}}
 {{figure:focus}}
@@ -28,3 +35,8 @@ focus 把保留位置移到局部一基坐标，同时保留源原点、截断�
 先运行[focus 例子](views.html#focus)。辅助函数返回第一个所选窗口起点后 100 bp 位置的笛卡尔 x/y，
 不把全部普通 ggplot2 坐标变成基因组 bp。分段视图应选窗口 ID，检查落在省略间隙
 的位置，不跨间隙外推。区域 选择来自明确注释/同源分组 证据时见[显式同源关系](homology.html)。
+
+## 完成后检查 {#check-result}
+关注裁剪报告、断点与源坐标。被省略的间隙没有映射；显示翻转不应直接解释为生物学倒位。
+
+<div class="next-step">继续：<a href="homology.html">连接同源基因 →</a></div>

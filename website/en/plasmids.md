@@ -1,10 +1,24 @@
-Run the [shared setup](index.html#quick-start) for the explicit palette first.
+<div class="task-intro"><p>Build a readable plasmid map from bundled pUC19 DNA, with separate annotation, primer and restriction layers. Keep display choices separate from complete results.</p></div>
+
+## Prepare this page {#prepare}
+In a fresh R session, run the code below, then follow this page in order. Colours and layout are optional display choices; inputs select only the fields needed.
+
+{{prepare:docstyle}}
+
+Run this page’s preparation code below. for the explicit palette first.
 
 ## Use a source-backed sequence {#input}
 The bundled `plasmid_example_pUC19` is copied from the repository's original
 `examples/plasmid/pUC19.fna`; bases and sequence identity are not edited for display.
 The workflow uses the package's source-backed recognition catalogues. It needs no
 network request or experimental measurements fabricated for the figure.
+
+{{code:plasmidinput}}
+
+Inspect `plasmid_features`, `plasmid_primers` and `display_sites` to distinguish complete search results from display choices.
+
+## Compose independent layers {#draw}
+Add the backbone, annotations, labels, primers and restriction sites in that order. Features and their labels share one Position; each layer reads its own data.
 
 {{code:plasmid}}
 {{figure:plasmid}}
@@ -43,3 +57,15 @@ For your own named DNA sequence, replace the input and inspect search results
 before adding geoms. For externally curated annotations, pass your feature table
 instead of running recognition. Use [stacking and shapes](annotations.html) for
 geometry, [labels](labels.html) for fitting, and [output](output.html) for devices.
+
+## Check your result {#check-result}
+Start with the centre name and length, then read positions, category colours, arrow directions and outer labels. Check enzyme names in display_sites; selecting a display subset leaves plasmid_sites intact.
+
+<div class="next-step">Continue: <a href="labels.html">Labels and local placement →</a></div>
+
+## Save this result {#save-result}
+Save the plot just created to the working directory; use matching dimensions for preview.
+
+```r
+ggsave("pUC19-map.png", p_plasmid, width = 10, height = 9, units = "in", dpi = 144)
+```

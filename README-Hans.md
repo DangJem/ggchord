@@ -37,12 +37,17 @@ seqs <- seq_data_example[c("accver", "length")]
 links <- ribbon_data_example[c("qaccver", "saccver", "qstart", "qend", "sstart", "send")]
 # The fixture preserves biological strands separately from its old display strands.
 genes <- transform(gene_data_example, strand = source_strand)[c("accver", "start", "end", "strand")]
+```
+
+```r
 # Optional appearance choices; none of these columns or scales is required input.
-seq_palette <- setNames(c("#487A70", "#B48A61", "#637E9D", "#A16E7D"), seqs$accver)
-gene_palette <- c("+" = "#56887C", "-" = "#B58169", "." = "#AAB9AE")
-feature_palette <- c(CDS = "#6E9A8A", promoter = "#8798B2", rep_origin = "#C4A46A",
-  primer_bind = "#A28EAA", misc_feature = "#CDD5CE", protein_bind = "#A9B9C4")
-doc_theme <- theme_ggchord_publication(axis.text = element_text(size = 9),
+library(ggchord)
+seq_palette <- setNames(c("#3867D6", "#E58A28", "#219B83", "#9B59B6"),
+  c("MT108731.1", "MT118296.1", "OQ646790.1", "OR222515.1"))
+gene_palette <- c("+" = "#3B6FD8", "-" = "#E1812C", "." = "#8291A6")
+feature_palette <- c(CDS = "#3973CB", promoter = "#8B5EC4", rep_origin = "#E8A42D",
+  primer_bind = "#168F86", misc_feature = "#A0ADBD", protein_bind = "#CC6485")
+doc_theme <- theme_ggchord_publication(axis.text = element_text(size = 11),
   axis.text.check.overlap = TRUE) + theme(legend.position = "bottom")
 doc_axis <- function(coordinates = "relative") scale_seq_position_continuous(
   coordinates = coordinates, n.breaks = 3, minor_breaks = NULL,
@@ -51,10 +56,12 @@ doc_axis <- function(coordinates = "relative") scale_seq_position_continuous(
 
 ```r
 p_chord <- ggchord(seq_data = seqs, ribbon_data = links, gene_data = genes) +
-  geom_link_ribbon(fill = "#AFC7C0", alpha = .45) + geom_seq(show.legend = FALSE) + geom_gene(position = position_strand(.1), width = .04) +
+  geom_link_ribbon(aes(ribbon_fill = qaccver), alpha = .7) +
+  scale_ribbon_fill_manual(values = seq_palette, guide = "none") + geom_seq(show.legend = FALSE) + geom_gene(position = position_strand(.1), width = .04) +
   geom_seq_label(size = 4, seq_label_radius = .84, seq_label_hjust = .5) + coord_chord() +
   scale_seq_colour_manual(values = seq_palette) +
   scale_gene_fill_manual(values = gene_palette) + doc_theme
+p_chord
 ```
 
 ```r
@@ -62,13 +69,16 @@ data(plasmid_example_pUC19)
 plasmid_seq <- plasmid_example_pUC19[c("accver", "length")]
 feature_source <- find_common_features(plasmid_example_pUC19)
 features <- feature_source[c("accver", "start", "end", "strand", "type", "anno")]
+```
 
+```r
 circle_features <- features[features$type %in% c("CDS", "rep_origin"), ]
 p_circular <- ggchord(seq_data = plasmid_seq) + geom_seq() +
   geom_feature(aes(feature_fill = type), data = circle_features, position = position_plasmid()) +
-  geom_feature_label_repel(data = circle_features, position = position_plasmid(), size = 3.3) +
+  geom_feature_label_repel(data = circle_features, position = position_plasmid(), size = 4) +
   geom_seq_center_label() + scale_feature_fill_manual(values = feature_palette, breaks = unique(circle_features$type)) +
-  coord_circular() + theme_ggchord_publication(axis.text = element_text(size = 9))
+  coord_circular() + theme_ggchord_publication(axis.text = element_text(size = 11))
+p_circular
 ```
 
 ```r
@@ -76,11 +86,13 @@ anchor_rows <- unlist(lapply(split(seq_len(nrow(genes)), genes$accver), function
   i[which.max(genes$end[i] - genes$start[i])]))
 anchors <- genes[anchor_rows, c("accver", "start", "end")]
 p_collinear <- ggchord(seq_data = seqs, ribbon_data = links, gene_data = genes) +
-  geom_link_ribbon(fill = "#AFC7C0", alpha = .4) + geom_seq() +
+  geom_link_ribbon(aes(ribbon_fill = qaccver), alpha = .7) +
+  scale_ribbon_fill_manual(values = seq_palette, guide = "none") + geom_seq() +
   geom_gene(position = position_strand(.1)) + geom_seq_label(size = 4) +
   coord_collinear(anchor = anchors, align = "center", orientation = "auto") + doc_axis() +
   scale_seq_colour_manual(values = seq_palette) +
   scale_gene_fill_manual(values = gene_palette) + doc_theme
+p_collinear
 ```
 
 | Chord / 弦图 | Circular / 圆图 | Collinear / 共线性图 |

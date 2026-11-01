@@ -1,3 +1,10 @@
+<div class="task-intro"><p>把常见调整放到正确的 ggplot2 组件：数据映射、几何位置、坐标和主题各负其责。</p></div>
+
+## 本页准备 {#prepare}
+在新的 R 会话中先运行下方代码，再按页面顺序继续。配色和排版是可选的显示设置，输入只选择需要的列。
+
+{{prepare:setup,docstyle}}
+
 ## 职责分配 {#grammar}
 | 任务 | 接口 |
 | --- | --- |
@@ -15,7 +22,7 @@
 显式 `shape = NULL` 无效，不表示改用映射。
 
 ## 映射连接相似度 {#mapping}
-先运行[共享准备代码](index.html#quick-start)：
+
 
 {{code:adjustments}}
 
@@ -28,3 +35,8 @@
 每层独立拥有 `data`、`mapping` 和参数，同类注释/连接层不会互相替换。
 `show.legend` 和 `inherit.aes` 遵循 ggplot2。输入角色映射在几何生成前处理，
 后期视觉映射遵循 ggplot2 求值。详见 [接口说明](reference/ggchord_api_contract.html)。
+
+## 完成后检查 {#check-result}
+旋转整体图形使用 coord；逐序列几何使用明确命名值；颜色随数据变化时使用映射和标度。
+
+<div class="next-step">继续：<a href="parameters.html">按序列和链设置参数 →</a></div>

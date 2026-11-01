@@ -14,8 +14,20 @@ from documentation_lib import ROOT, WEB, PAGES, CAPTIONS, expand
 
 class PageText(__import__('html.parser',fromlist=['HTMLParser']).HTMLParser):
     def __init__(self,text):
-        super().__init__();self.parts=[];self.feed(text)
-    def handle_data(self,data):self.parts.append(data)
+        super().__init__();self.parts=[];self.stack=[];self.ignored=0;self.feed(text)
+    def handle_starttag(self,tag,attrs):
+        values=dict(attrs)
+        excluded=bool(self.ignored) or tag in ['nav','script','style'] or bool(
+            {'chapter-drawer','page-outline'} & set(values.get('class','').split()))
+        if tag not in ['area','base','br','col','embed','hr','img','input','link','meta','param','source','track','wbr']:
+            self.stack.append((tag,excluded));self.ignored+=int(excluded)
+    def handle_endtag(self,tag):
+        for i in range(len(self.stack)-1,-1,-1):
+            if self.stack[i][0]==tag:
+                self.ignored-=sum(int(skip) for _,skip in self.stack[i:])
+                del self.stack[i:];break
+    def handle_data(self,data):
+        if not self.ignored:self.parts.append(data)
 
 def main():
     parser=argparse.ArgumentParser()

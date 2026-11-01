@@ -1,5 +1,12 @@
+<div class="task-intro"><p>Convert tables, BED, PAF or GenBank into ggchord inputs while retaining record identity and converting coordinate conventions only once.</p></div>
+
+## Prepare this page {#prepare}
+In a fresh R session, run the code below, then follow this page in order. Colours and layout are optional display choices; inputs select only the fields needed. For file-based examples, first extract the [input bundle](../assets/tutorial-inputs.zip) so the working directory contains `examples/`.
+
+{{prepare:setup,docstyle,plasmiddata}}
+
 ## Adapt an existing table {#adapters}
-Run the [shared setup](index.html#quick-start). These examples rename columns of
+Run this page’s preparation code below. These examples rename columns of
 bundled source-backed sequences, links and genes; they do not invent alignments.
 
 {{code:adapters}}
@@ -41,3 +48,8 @@ sequence/length context. Missing dependencies are marked skipped, not validated
 by source presence. See the [data contract](reference/ggchord_data_contract.html).
 SAM/BAM CIGAR is not parsed directly: use an alignment-aware tool before table
 adaptation; renaming columns alone cannot resolve splicing.
+
+## Check your result {#check-result}
+Inspect returned fields and conversion reports before selecting plotting fields. Preserve endpoint direction for reverse PAF hits; do not rename a GenBank record to pretend it is a different bundled plasmid.
+
+<div class="next-step">Continue: <a href="alignments.html">Import nucleotide and protein alignments →</a></div>

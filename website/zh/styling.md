@@ -1,5 +1,12 @@
+<div class="task-intro"><p>让颜色表达明确含义：先决定类别或连续数值，再选择映射、标度和图例。网站强调色不决定数据配色。</p></div>
+
+## 本页准备 {#prepare}
+在新的 R 会话中先运行下方代码，再按页面顺序继续。配色和排版是可选的显示设置，输入只选择需要的列。
+
+{{prepare:setup,docstyle}}
+
 ## 从数据角色构建样式 {#roles}
-先运行[共享准备代码](index.html#quick-start)。例子明确声明类别：区间连接填色映射
+例子明确声明类别：区间连接填色映射
 query ID，序列颜色映射序列 ID，基因填色映射链。手动标度的名称与实际取值匹配。
 
 {{code:styling}}
@@ -31,3 +38,8 @@ query ID，序列颜色映射序列 ID，基因填色映射链。手动标度的
 主题控制非数据外观，不选择坐标系，也不替代数据驱动的填色标度。
 文字外观用 `theme(text = element_text(...))`；已删除的 `base_size` 式快捷参数见
 [迁移指南](migration.html)。
+
+## 完成后检查 {#check-result}
+同一 query 的连接颜色一致；连续相似度应使用连续标度。固定颜色放在 aes() 外，图例必须能说明映射。
+
+<div class="next-step">继续：<a href="adjustments.html">调整图形 →</a></div>

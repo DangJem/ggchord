@@ -1,3 +1,10 @@
+<div class="task-intro"><p>减少连接拥挤，同时保留每一步的来源：筛选、去重、合并和聚束有不同含义。</p></div>
+
+## 本页准备 {#prepare}
+在新的 R 会话中先运行下方代码，再按页面顺序继续。配色和排版是可选的显示设置，输入只选择需要的列。 涉及文件时，先解压[教学输入](../assets/tutorial-inputs.zip)，使工作目录包含 `examples/`。
+
+{{prepare:setup,docstyle,realimport,realprepare}}
+
 ## 从原始连接表开始 {#input}
 先用[真实记录工作流](real-data.html#selection)创建 `seq_real`、`link_real` 和
 `real_filtered`，保留原表及筛选报告。
@@ -20,7 +27,7 @@
 相等就获得聚合方向。
 
 ## 选择区间区间连接或点连接 {#points}
-先运行[共享准备代码](index.html#quick-start)：
+
 
 {{code:pointlinks}}
 {{figure:pointlinks}}
@@ -31,3 +38,8 @@ query 指向 subject。点连接默认避障为 `none`，区间连接为 `unifor
 
 点连接的颜色条明确指定 `available_aes = "link_colour"`。普通 ggplot2 颜色条和
 包装器默认值不接受全部扩展角色；自定义图例时应明确选择对应美学角色。
+
+## 完成后检查 {#check-result}
+先检查各步骤 report 和成员行，再读图。聚合带的范围不是新比对；点连接是已有 HSP 中点的摘要。
+
+<div class="next-step">继续：<a href="views.html">查看局部和分段区域 →</a></div>

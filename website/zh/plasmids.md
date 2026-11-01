@@ -1,9 +1,23 @@
-先运行[共享准备代码](index.html#quick-start)，其中定义了本例使用的配色。
+<div class="task-intro"><p>用随包 pUC19 DNA 完成一张可阅读的质粒图：注释、引物和酶切分别成层，显示选择与完整结果分开保存。</p></div>
+
+## 本页准备 {#prepare}
+在新的 R 会话中先运行下方代码，再按页面顺序继续。配色和排版是可选的显示设置，输入只选择需要的列。
+
+{{prepare:docstyle}}
+
+其中定义了本例使用的配色。
 
 ## 使用有来源的序列 {#input}
 随包 `plasmid_example_pUC19` 原样来自仓库 `examples/plasmid/pUC19.fna`，不会为显示
 修改碱基或序列标识。本流程使用包中有来源记录的识别目录，不需要网络请求，也不
 为图形伪造实验测量值。
+
+{{code:plasmidinput}}
+
+先查看 `plasmid_features`、`plasmid_primers` 与 `display_sites`，区分完整搜索与显示选择。
+
+## 组合独立图层 {#draw}
+下面按骨架、注释、标签、引物和酶切的顺序添加图层。注释与标签共享同一个 Position；每个图层只读取自己的数据。
 
 {{code:plasmid}}
 {{figure:plasmid}}
@@ -34,3 +48,15 @@
 将输入替换成有明确名称的 DNA 序列，先检查搜索结果再添加几何层。已有整理注释时，
 直接提供注释表，无需再次运行识别。[堆叠与形状](annotations.html)说明几何，
 [标签](labels.html)说明适配，[输出](output.html)说明设备与尺寸。
+
+## 完成后检查 {#check-result}
+从中心的名称与长度开始，沿骨架读位置，再读类别色、箭头方向和外侧标签。核对 display_sites 的酶名；删减显示不会改变 plasmid_sites。
+
+<div class="next-step">继续：<a href="labels.html">放置和调整标签 →</a></div>
+
+## 保存本页结果 {#save-result}
+在工作目录中保存刚刚创建的图；预览时使用相同宽高。
+
+```r
+ggsave("pUC19-map.png", p_plasmid, width = 10, height = 9, units = "in", dpi = 144)
+```

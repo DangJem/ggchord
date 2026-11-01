@@ -1,5 +1,12 @@
+<div class="task-intro"><p>Select local windows or segments while keeping source positions distinct from display transformations.</p></div>
+
+## Prepare this page {#prepare}
+In a fresh R session, run the code below, then follow this page in order. Colours and layout are optional display choices; inputs select only the fields needed.
+
+{{prepare:setup,docstyle}}
+
 ## Focus without losing origins {#focus}
-After the [shared setup](index.html#quick-start):
+After this page’s preparation code:
 
 {{code:focus}}
 {{figure:focus}}
@@ -34,3 +41,8 @@ for a source position 100 bp inside the first selected window. It does not make 
 become genomic bp. In segmented views choose the window ID, and check positions
 in omitted gaps rather than extrapolating across them. Use [explicit homologs](homology.html)
 when the locus selection comes from declared feature/cluster evidence.
+
+## Check your result {#check-result}
+Inspect cropping reports, break markers and source coordinates. Omitted gaps have no mapping; a display flip alone is not evidence of inversion.
+
+<div class="next-step">Continue: <a href="homology.html">Explicit homologs and coding-coordinate links →</a></div>

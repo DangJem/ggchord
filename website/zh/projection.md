@@ -1,5 +1,12 @@
+<div class="task-intro"><p>把已知蛋白区间投影到真实 CDS 的基因组位置，显式保留 phase、链与分段关系。</p></div>
+
+## 本页准备 {#prepare}
+在新的 R 会话中先运行下方代码，再按页面顺序继续。配色和排版是可选的显示设置，输入只选择需要的列。
+
+{{prepare:docstyle,homologinput,homologmembership,homologs}}
+
 ## 先准备有来源的 CDS {#cds}
-先运行[完全相同 CDS 的比较](homology.html#membership)。它使用随包质粒的真实注释
+本页准备代码包含[完全相同 CDS 的比较](homology.html#membership)，使用随包质粒的真实注释
 和 DNA。完整 CDS 的 phase 明确为 0，翻译表显式设为 11。
 
 {{code:projection}}
@@ -21,3 +28,8 @@ DNA 匹配、氨基酸区间投影和真实翻译/比对是不同步骤，绘图
 真实 BLASTp 输入可以有 gap；查询区间仍能投影，但双端连接还需要 subject 的 CDS
 和无缺口对应证据。请阅读[真实 BLASTp 读取与投影](alignments.html#protein)。
 本版不把 aa 单位伪装成 bp，也不新增原生蛋白坐标绘图。
+
+## 完成后检查 {#check-result}
+检查父 CDS ID、投影报告及返回分段。选择的残基区间只是显示例子，不能将其描述为检测到的结构域。
+
+<div class="next-step">继续：<a href="alignments.html">导入核酸和蛋白比对 →</a></div>

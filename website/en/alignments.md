@@ -1,3 +1,12 @@
+<div class="task-intro"><p>Use standard BLAST tabular output without the historical custom 17-column layout. Distinguish file fields, minimal plotting roles and nucleotide versus protein units.</p></div>
+
+## Prepare this page {#prepare}
+In a fresh R session, run the code below, then follow this page in order. Colours and layout are optional display choices; inputs select only the fields needed. For file-based examples, first extract the [input bundle](../assets/tutorial-inputs.zip) so the working directory contains `examples/`.
+
+```r
+library(ggchord)
+```
+
 ## Use the default tabular columns {#standard}
 The historical custom list of 17 fields is unnecessary. Use standard tabular output:
 
@@ -15,7 +24,7 @@ See the [NCBI format documentation](https://www.ncbi.nlm.nih.gov/sites/books/NBK
 
 ## File layout and minimal plotting fields differ {#minimal}
 Twelve file columns do not require twelve plotting columns. After the
-[shared setup](index.html#quick-start), try the source-backed records:
+preparation code above, try the source-backed records:
 
 {{code:standardblast}}
 
@@ -60,3 +69,8 @@ Only data records are reused; all figures are drawn with ggchord, without copyin
 upstream figures or plotting code. The input bundle's `sources.json` records URLs,
 archive members, line ranges, hashes and selection. Parsing neither reruns
 alignments nor establishes biological function.
+
+## Check your result {#check-result}
+A basic link table needs six fields. BLASTp reading retains aa coordinates; use a supported CDS mapping before drawing on this version’s bp axes.
+
+<div class="next-step">Continue: <a href="projection.html">CDS coordinate projection →</a></div>

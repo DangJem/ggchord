@@ -1,3 +1,12 @@
+<div class="task-intro"><p>Search known DNA for primers, restriction sites and common features, then choose a display. Computational matches and experimental validation are different.</p></div>
+
+## Prepare this page {#prepare}
+In a fresh R session, run the code below, then follow this page in order. Colours and layout are optional display choices; inputs select only the fields needed.
+
+```r
+library(ggchord)
+```
+
 ## Search and display are separate {#search}
 Use the bundled pUC19 DNA for exact catalogue-primer and selected restriction searches:
 
@@ -32,3 +41,8 @@ matching, site display filtering, primer labels and feature stacking together.
 Changing only a sequence name does not make it a recognized reference; sequence
 content determines source-backed recognition. Read the result methods and
 methylation provenance instead of assigning reference claims to an unknown sample.
+
+## Check your result {#check-result}
+Inspect match positions, methods and provenance. Restriction filtering is a display choice; methylation search conditions are not a measurement of an unknown sample.
+
+<div class="next-step">Continue: <a href="plasmids.html">A complete circular annotation workflow →</a></div>

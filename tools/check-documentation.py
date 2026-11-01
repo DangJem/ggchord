@@ -124,7 +124,7 @@ def main():
     # README/vignette resources and links are source paths, not the frozen site.
     for path in [ROOT/'README.md',ROOT/'README-Hans.md',ROOT/'MIGRATION.md',ROOT/'MIGRATION-Hans.md',*(ROOT/'vignettes').glob('*.Rmd')]:
         text = path.read_text()
-        ids = set(re.findall(r'\{#([^}]+)\}',text))
+        ids = set(re.findall(r'\{#([^}]+)\}',text)) | set(re.findall(r'\bid="([^"]+)"',text))
         for url in re.findall(r'\]\(([^)\s]+)\)',text):
             split = urlsplit(url)
             if split.scheme or split.netloc: continue

@@ -10,40 +10,40 @@
   {
     "slug": "installation",
     "title": {
-      "en": "Install and start",
-      "zh": "开始使用"
+      "zh": "开始使用：绘制第一张图",
+      "en": "Get started: your first plot"
     },
     "group": "start"
   },
   {
     "slug": "data",
     "title": {
-      "en": "Data and coordinates",
-      "zh": "数据与坐标"
+      "zh": "数据与坐标",
+      "en": "Prepare tables and coordinates"
     },
     "group": "start"
   },
   {
     "slug": "formats",
     "title": {
-      "en": "File formats and explicit adapters",
-      "zh": "导入和转换数据"
+      "zh": "导入和转换数据",
+      "en": "Import and convert data"
     },
     "group": "article"
   },
   {
     "slug": "modes",
     "title": {
-      "en": "Three coordinate systems",
-      "zh": "画出三类图"
+      "zh": "选择合适的图",
+      "en": "Choose a plot"
     },
     "group": "start"
   },
   {
     "slug": "real-data",
     "title": {
-      "en": "From original records to sequence comparisons",
-      "zh": "从原始文件开始绘图"
+      "zh": "从原始文件开始绘图",
+      "en": "Compare sequences from original files"
     },
     "group": "article"
   },
@@ -114,16 +114,16 @@
   {
     "slug": "homology",
     "title": {
-      "en": "Explicit homologs and coding-coordinate links",
-      "zh": "连接同源基因"
+      "zh": "比较基因邻域",
+      "en": "Compare CDS neighbourhoods"
     },
     "group": "article"
   },
   {
     "slug": "projection",
     "title": {
-      "en": "CDS coordinate projection",
-      "zh": "将蛋白坐标转换为基因组坐标"
+      "zh": "将蛋白区间转换为基因组坐标",
+      "en": "Project protein intervals to genomic coordinates"
     },
     "group": "guide"
   },

@@ -7,7 +7,9 @@
 {{migration}}
 
 ## 运行当前替代 {#replacement}
-先运行[准备代码](index.html#quick-start)及[圆图](modes.html#circular)中的 `features` 表：
+在新会话中运行下面的准备代码，再执行当前替代写法：
+
+{{prepare:setup,docstyle,plasmiddata}}
 
 {{code:migration}}
 

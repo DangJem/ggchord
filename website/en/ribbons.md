@@ -1,3 +1,10 @@
+<div class="task-intro"><p>Reduce link clutter while retaining provenance: filtering, deduplication, merging and bundling have different meanings.</p></div>
+
+## Prepare this page {#prepare}
+In a fresh R session, run the code below, then follow this page in order. Colours and layout are optional display choices; inputs select only the fields needed. For file-based examples, first extract the [input bundle](../assets/tutorial-inputs.zip) so the working directory contains `examples/`.
+
+{{prepare:setup,docstyle,realimport,realprepare}}
+
 ## Begin with the original link table {#input}
 Use the [real-record workflow](real-data.html#selection) to create `seq_real`,
 `link_real` and `real_filtered`. Keep its original tables and filter report.
@@ -25,7 +32,7 @@ homology. A point anchor without direction evidence cannot acquire an aggregate
 orientation merely because its endpoints are equal.
 
 ## Choose interval ribbons or point links {#points}
-After the [shared setup](index.html#quick-start):
+After this page’s preparation code:
 
 {{code:pointlinks}}
 {{figure:pointlinks}}
@@ -39,3 +46,8 @@ plots are covered in [three modes](modes.html#collinear).
 The point-link colour scale supplies `available_aes = "link_colour"` to its
 colourbar explicitly. Ordinary ggplot2 colourbars and the wrapper default do not
 accept every extended role; choose the matching role when making a custom guide.
+
+## Check your result {#check-result}
+Inspect each report and member rows before reading the plot. Aggregated bands are not new alignments; point links summarize midpoints of existing HSPs.
+
+<div class="next-step">Continue: <a href="views.html">Focus, segments and homology →</a></div>

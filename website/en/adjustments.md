@@ -1,3 +1,10 @@
+<div class="task-intro"><p>Put common adjustments in the appropriate ggplot2 component: mappings, geometry, positions, coordinates and themes have distinct roles.</p></div>
+
+## Prepare this page {#prepare}
+In a fresh R session, run the code below, then follow this page in order. Colours and layout are optional display choices; inputs select only the fields needed.
+
+{{prepare:setup,docstyle}}
+
 ## Assign each responsibility {#grammar}
 | Task | Interface |
 | --- | --- |
@@ -16,7 +23,7 @@ fixed argument preserves the mapping. User scales override inferred defaults.
 mapped role. Explicit `shape = NULL` is invalid, not a request to use a mapping.
 
 ## Map link identity {#mapping}
-After the [shared setup](index.html#quick-start):
+After this page’s preparation code:
 
 {{code:adjustments}}
 
@@ -31,3 +38,8 @@ Each layer owns its own `data`, `mapping` and parameters. Repeated feature or
 link layers do not replace one another. Use ordinary ggplot2 `show.legend` and
 `inherit.aes`; role input mappings precede geometry, while staged visual mappings
 follow ggplot2 evaluation. See the [API contract](reference/ggchord_api_contract.html).
+
+## Check your result {#check-result}
+Use a coordinate for global rotation, named values for per-sequence geometry, and mappings plus scales for data-dependent colour.
+
+<div class="next-step">Continue: <a href="parameters.html">Set values by sequence and strand →</a></div>

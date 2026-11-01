@@ -8,8 +8,9 @@ first-removal tags are not guessed where historical evidence gives only an upper
 {{migration}}
 
 ## Run the replacement {#replacement}
-After [setup](index.html#quick-start) and the `features` table in
-[circular mode](modes.html#circular):
+In a fresh session, run this preparation before the current replacements:
+
+{{prepare:setup,docstyle,plasmiddata}}
 
 {{code:migration}}
 

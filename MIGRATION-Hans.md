@@ -24,7 +24,40 @@
 | `theme_ggchord(base_size = 10)` | `theme_ggchord() + theme(text = element_text(size = 10))` | ≤ 0.16.1 | 文字外观属于 theme 元素。 |
 
 ## 运行当前替代 {#replacement}
-先运行[准备代码](README-Hans.md)及[圆图](README-Hans.md)中的 `features` 表：
+在新会话中运行下面的准备代码，再执行当前替代写法：
+
+<details class="preparation"><summary>准备代码 · 在本页运行一次</summary>
+
+```r
+library(ggchord)
+data(seq_data_example)
+data(ribbon_data_example)
+data(gene_data_example)
+seqs <- seq_data_example[c("accver", "length")]
+links <- ribbon_data_example[c("qaccver", "saccver", "qstart", "qend", "sstart", "send")]
+# The fixture preserves biological strands separately from its old display strands.
+genes <- transform(gene_data_example, strand = source_strand)[c("accver", "start", "end", "strand")]
+
+# Optional appearance choices; none of these columns or scales is required input.
+library(ggchord)
+seq_palette <- setNames(c("#3867D6", "#E58A28", "#219B83", "#9B59B6"),
+  c("MT108731.1", "MT118296.1", "OQ646790.1", "OR222515.1"))
+gene_palette <- c("+" = "#3B6FD8", "-" = "#E1812C", "." = "#8291A6")
+feature_palette <- c(CDS = "#3973CB", promoter = "#8B5EC4", rep_origin = "#E8A42D",
+  primer_bind = "#168F86", misc_feature = "#A0ADBD", protein_bind = "#CC6485")
+doc_theme <- theme_ggchord_publication(axis.text = element_text(size = 11),
+  axis.text.check.overlap = TRUE) + theme(legend.position = "bottom")
+doc_axis <- function(coordinates = "relative") scale_seq_position_continuous(
+  coordinates = coordinates, n.breaks = 3, minor_breaks = NULL,
+  labels = function(x) format(x, scientific = FALSE, big.mark = ",", trim = TRUE))
+
+data(plasmid_example_pUC19)
+plasmid_seq <- plasmid_example_pUC19[c("accver", "length")]
+feature_source <- find_common_features(plasmid_example_pUC19)
+features <- feature_source[c("accver", "start", "end", "strand", "type", "anno")]
+```
+
+</details>
 
 
 ```r

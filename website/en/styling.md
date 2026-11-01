@@ -1,5 +1,12 @@
+<div class="task-intro"><p>Give colours a clear meaning: identify categories or continuous quantities, then choose mappings, scales and guides. Website accents do not dictate data colours.</p></div>
+
+## Prepare this page {#prepare}
+In a fresh R session, run the code below, then follow this page in order. Colours and layout are optional display choices; inputs select only the fields needed.
+
+{{prepare:setup,docstyle}}
+
 ## Build styles from data roles {#roles}
-Run the [shared setup](index.html#quick-start). The example declares categories
+Run this page’s preparation code below. The example declares categories
 explicitly: ribbon fill maps query ID; sequence colour maps sequence ID; gene fill
 maps strand. Manual scale names match those values exactly.
 
@@ -36,3 +43,8 @@ objects style non-data appearance. They do not choose a coordinate system or
 replace data-driven fill scales. Use `theme(text = element_text(...))` for text
 appearance; removed `base_size` constructor-style shortcuts have a
 [migration route](migration.html).
+
+## Check your result {#check-result}
+Links from the same query share a colour; continuous identity needs a continuous scale. Put fixed colours outside aes() and make each guide explain its mapping.
+
+<div class="next-step">Continue: <a href="adjustments.html">Common adjustments and grammar →</a></div>

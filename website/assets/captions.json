@@ -52,8 +52,8 @@
     "zh": "pUC19 GC 比例、三点滑动均值和注释类型带"
   },
   "homologs": {
-    "en": "Two plasmids sharing an identical oriented AmpR coding sequence",
-    "zh": "两种质粒中编码 DNA 完全一致的 AmpR"
+    "zh": "两条质粒的 AmpR 邻域：相同 CDS、200 bp 侧翼与源坐标",
+    "en": "AmpR neighbourhoods: identical CDS, 200 bp flanks and source coordinates"
   },
   "decorations": {
     "en": "Highlighting the query interval of an observed alignment",
@@ -78,5 +78,9 @@
   "paf": {
     "en": "A real minimap2 PAF comparison between two EMALE genomes",
     "zh": "从真实 minimap2 PAF 结果绘制的两条 EMALE 序列"
+  },
+  "first": {
+    "zh": "第一张图：两条真实随包序列、基因箭头及已有比对区间",
+    "en": "Your first plot: two bundled sequences, gene arrows and observed alignment intervals"
   }
 }

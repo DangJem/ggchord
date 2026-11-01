@@ -1,3 +1,12 @@
+<div class="task-intro"><p>使用 BLAST 标准表格输出，无需早期自定义 17 列。区分“文件有哪些列”“绘图需要哪些列”及核酸/蛋白单位。</p></div>
+
+## 本页准备 {#prepare}
+在新的 R 会话中先运行下方代码，再按页面顺序继续。配色和排版是可选的显示设置，输入只选择需要的列。 涉及文件时，先解压[教学输入](../assets/tutorial-inputs.zip)，使工作目录包含 `examples/`。
+
+```r
+library(ggchord)
+```
+
 ## 默认表格列就够用 {#standard}
 不需要早期教程中的 17 列自定义字段。使用 BLAST 标准表格输出即可：
 
@@ -14,8 +23,7 @@ sstart、send、evalue、bitscore。读取器将两个 ID 的角色命名为 `qa
 [NCBI 格式说明](https://www.ncbi.nlm.nih.gov/sites/books/NBK279684/table/appendices.T.options_common_to_all_blast/)。
 
 ## 文件布局与绘图最小列是两回事 {#minimal}
-文件里有 12 列，不表示绘图必须接收 12 列。先从[共享准备代码](index.html#quick-start)
-加载包，然后运行真实记录的例子：
+文件里有 12 列，不表示绘图必须接收 12 列。运行本页准备代码加载包后，使用下面的真实记录：
 
 {{code:standardblast}}
 
@@ -52,3 +60,8 @@ EMALE 原始输出来自 [gggenomes 的公开数据与教程](https://thackl.git
 本项目只复用数据记录，用 ggchord 自行绘图；没有复制上游图或绘图代码。
 下载、原始成员、行号范围、SHA256 和筛选规则见教学输入包的 `sources.json`。
 表格解析不重新运行比对，也不验证命中的生物学功能。
+
+## 完成后检查 {#check-result}
+基础连接表只需六列。BLASTp 读取后仍是 aa 坐标，必须通过有证据的 CDS 映射转换后才能用于本版 bp 绘图。
+
+<div class="next-step">继续：<a href="projection.html">将蛋白坐标转换为基因组坐标 →</a></div>

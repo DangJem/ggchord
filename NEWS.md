@@ -1,5 +1,13 @@
 # ggchord 0.16.5 (unreleased)
 
+* Reorganized the documentation around first-use learning, complete workflows,
+  task guides and reference lookup. The first-plot lesson now covers installation,
+  minimal tables, interpretation and saving. Task pages prepare their own objects;
+  desktop chapter navigation and compact page outlines support long articles.
+  Redesigned the reading grid, typography, contrast and plot gallery.
+* Reworked plot selection and encoding: local source-coordinate CDS comparisons,
+  distinct sequence/feature categories, reported identity gradients, wider GC
+  tracks and larger annotation text. Documented the evidence behind each choice.
 * Added complete Han website reference prose for all current Rd topics, bound to
   canonical source hashes; stale or missing translations prevent site generation.
   Code, signatures and original identifiers remain unchanged.
@@ -9,7 +17,7 @@
   checked coding-sequence identity. Native amino-acid axes remain a separate
   proposal; existing readers/adapters and flexible parameter forms are retained.
 * Added three full home-page plot types, larger documentation exports, explicit
-  muted example palettes and an accessible image viewer with actual-size mode.
+  semantic categorical and continuous example palettes and an accessible image viewer with actual-size mode.
   These styles are declared in examples rather than changing package defaults.
 
 * Four-column gene tables now retain the default strand fill mapping and honour

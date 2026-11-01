@@ -1,5 +1,12 @@
+<div class="task-intro"><p>将已有表格、BED、PAF 或 GenBank 转成 ggchord 输入，保留记录身份，并且只转换一次坐标约定。</p></div>
+
+## 本页准备 {#prepare}
+在新的 R 会话中先运行下方代码，再按页面顺序继续。配色和排版是可选的显示设置，输入只选择需要的列。 涉及文件时，先解压[教学输入](../assets/tutorial-inputs.zip)，使工作目录包含 `examples/`。
+
+{{prepare:setup,docstyle,plasmiddata}}
+
 ## 把已有表格转换成需要的列 {#adapters}
-先运行[共享准备代码](index.html#quick-start)。这里使用随包的实际序列、连接和基因，
+这里使用随包的实际序列、连接和基因，
 只重命名列来演示角色映射；没有额外生成示意序列或比对。
 
 {{code:adapters}}
@@ -37,3 +44,8 @@ PAF 的负相对方向表现为递减的 subject 端点，这是合法反向命�
 两端序列及长度。缺少可选依赖时结果会标记跳过，不把源码存在当作运行通过。
 详见[数据格式说明](reference/ggchord_data_contract.html)。当前不直接解析 SAM/BAM 的
 CIGAR；需先由相应工具正确解析，再通过表格角色映射转换，不能仅靠改列名处理剪接。
+
+## 完成后检查 {#check-result}
+先查看返回列与转换报告，再选绘图列。PAF 反向命中保留端点方向；GenBank 记录身份不能因为展示需要而改成另一条随包质粒。
+
+<div class="next-step">继续：<a href="alignments.html">导入核酸和蛋白比对 →</a></div>

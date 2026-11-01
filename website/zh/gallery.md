@@ -1,3 +1,11 @@
+<p class="lesson-intro">按要回答的问题选择案例；缩略图用于找到方向，点击可查看完整尺寸。每张图都链接到数据准备、代码和读图说明。</p>
+
+## 按任务找图 {#tasks}
+| 总体关系 | 单序列注释 | 局部位置 | 定量与排版 |
+| --- | --- | --- | --- |
+| [弦图](#realchord) | [质粒](#plasmid) | [CDS 邻域](#homologs) | [GC 轨道](#multitrack) |
+| [点连接](#pointlinks) | [注释堆叠](#featurestack) | [聚焦](#focus) | [标签布局](#labelauto) |
+
 ## 两种语言共用一个来源 {#source}
 所有图均使用随包数据或有来源的真实记录，见[共享文档示例源码](../assets/documentation-examples.R)
 。未为改善外观改写任何原始 FASTA/GFF3/BLAST 记录。

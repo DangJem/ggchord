@@ -35,7 +35,7 @@ knitr::opts_chunk$set(eval = FALSE, collapse = TRUE, comment = "#>")
 {intro}
 
 '''
-    text += expand('{{code:setup}}', lang, figures='../man/figures') + '\n'
+    text += expand('{{code:setup}}\n{{code:docstyle}}', lang, figures='../man/figures') + '\n'
     for p in CHAPTERS:
         body = expand((WEB/lang/(p['slug']+'.md')).read_text(), lang, figures='../man/figures')
         body = re.sub(r'^(#{2,5}) (.*?)(?: \{#([^}]+)\})?$',
@@ -44,6 +44,14 @@ knitr::opts_chunk$set(eval = FALSE, collapse = TRUE, comment = "#>")
             lambda m: f'{m[1]} (`help("{m[2]}", package = "ggchord")`)', body)
         body = re.sub(r'\[([^\]]+)\]\(([a-z-]+)\.html(?:#([^)]*))?\)',
             lambda m: f'[{m[1]}](#{m[2]}' + (f'-{m[3]}' if m[3] else '')+')', body)
+        # HTML cards use the same vignette chapter URLs as Markdown links.
+        body = re.sub(r'href="([a-z-]+)\.html(?:#([^"]*))?"',
+            lambda m: 'href="#'+m[1]+('-'+m[2] if m[2] else '')+'"', body)
+        if p['slug']=='gallery':
+            gallery_ids=re.findall(r'<h3 id="([^"]+)"',body)
+            for anchor in gallery_ids:
+                body=body.replace('id="'+anchor+'"','id="gallery-'+anchor+'"')
+                body=body.replace('](#'+anchor+')','](#gallery-'+anchor+')')
         body = body.replace('](#index-quick-start)', '](#shared-setup)')
         body = body.replace('](#reference)', '](#glossary)')
         # Website downloads become source paths in an installed vignette.
@@ -103,7 +111,7 @@ remotes::install_github("DangJem/ggchord")
     text += ('\n\n![真实序列与全部注释的共线性案例](man/figures/reallinear.png)\n\n图中使用仓库原始 FASTA、GFF3 与 BLAST；完整读取、筛选代码与解释见[真实数据专题](vignettes/ggchord_guide_hans.Rmd#real-data)。\n' if zh else '\n\n![Collinear case with real sequences and all annotations](man/figures/reallinear.png)\n\nOriginal repository FASTA, GFF3 and BLAST inputs; see the [real-data workflow](vignettes/ggchord_vignette.Rmd#real-data) for complete import, filtering code and interpretation.\n')
     text += f'\n\n## {quick}\n\n'
     text += ('下列代码先从随包数据中选出必需列，再绘图；原始数据与来源信息保留在原对象中。' if zh else 'Select only the required fields from the bundled source-backed data before plotting; keep original metadata in the source objects.')+'\n\n'
-    for key in ['setup', 'chord', 'circular', 'collinear']:
+    for key in ['setup', 'docstyle', 'chord', 'plasmiddata', 'circular', 'collinear']:
         text += '```r\n'+code[key]+'\n```\n\n'
     text += '| Chord / 弦图 | Circular / 圆图 | Collinear / 共线性图 |\n| --- | --- | --- |\n'
     text += '| ![Chord](man/figures/chord.png) | ![Circular](man/figures/circular.png) | ![Collinear](man/figures/collinear.png) |\n\n'

@@ -6,7 +6,7 @@ chunks <- setNames(lapply(seq_len(length(markers)-1L), function(i)
   text[seq.int(markers[i]+1L,markers[i+1L]-1L)]),
   sub('^# ---- ([a-z]+) ----$','\\1',text[markers[-length(markers)]]))
 env <- new.env(parent=globalenv())
-for(name in setdiff(names(chunks),c('save','preview','imports'))) {
+for(name in setdiff(names(chunks),c('save','preview','imports','firstsave'))) {
   cat('Example:',name,'\n')
   eval(parse(text=chunks[[name]]),env)
 }
@@ -21,6 +21,7 @@ assets <- data.frame(
  width=c(10,9,10,9,10,10,10,10,10,10,10,10,9,10,10,10,10,10,10,10),
  height=c(8,8,6,8,6,6,8,6,9,8,8,5,8,5,6,8,8,8,6,5),
  units='in',dpi=144,device='png',background='white',generator='tools/documentation-plots.R')
+assets <- rbind(assets, transform(assets[1, ], id="first", object="p_first", width=10, height=5))
 assets$input <- ifelse(assets$id=='paf','Public source-backed EMALE minimap2 PAF pair; original row values and tags retained',ifelse(assets$id %in% c('realchord','reallinear','density'),
  'Original repository FASTA/GFF3; unchanged HSPs converted to the standard BLAST 12-column layout',
  ifelse(assets$id %in% c('plasmid','circular','tracks','multitrack','featurestack'),

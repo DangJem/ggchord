@@ -8,6 +8,8 @@ alias_topics<-unlist(lapply(topic_files,function(path) {
   function(x) paste(unlist(x),collapse=''),'')
  setNames(rep(sub('\\.Rd$','',basename(path)),length(aliases)),aliases)
 }))
+navigation <- jsonlite::fromJSON('website/navigation.json', simplifyVector=FALSE)
+page_index <- jsonlite::fromJSON('website/pages.json', simplifyVector=FALSE)
 for(lang in c('en','zh')) {
  root<-file.path('.site',lang)
  for(path in list.files(root,'\\.html$',recursive=TRUE,full.names=TRUE)) {
@@ -21,6 +23,36 @@ for(lang in c('en','zh')) {
   if(!inherits(og,'xml_missing')) xml2::xml_set_attr(og,'content','https://dangjem.github.io/ggchord/assets/logo.png')
   main<-xml2::xml_find_first(doc,'//main')
   xml2::xml_set_attr(main,'tabindex','-1')
+  slug <- sub('\\.html$','',basename(relative))
+  xml2::xml_set_attr(xml2::xml_find_first(doc,'//body'),'data-page',if(startsWith(relative,'reference/')) 'reference' else slug)
+  layout <- xml2::xml_parent(main)
+  xml2::xml_set_attr(layout,'class',paste(xml2::xml_attr(layout,'class'),'doc-layout'))
+  prefix <- paste(rep('../',deep),collapse='')
+  chapter_links <- paste(vapply(navigation,function(group) {
+    links <- paste(vapply(group$pages,function(key) {
+      page <- Filter(function(x) identical(x$slug,key),page_index)[[1]]
+      target <- if(key=='reference') 'reference/index.html' else paste0(key,'.html')
+      active <- key==slug || (key=='reference' && startsWith(relative,'reference/'))
+      paste0('<a ',if(active)'aria-current="page" ' else '', 'href="',prefix,target,'">',
+        htmltools::htmlEscape(page$title[[lang]]),'</a>')
+    },''),collapse='')
+    paste0('<section><p class="chapter-group">',group$title[[lang]],'</p>',links,'</section>')
+  },''),collapse='')
+  nav_fragment <- function(html) xml2::xml_find_first(xml2::read_html(paste0('<html><body>',html,'</body></html>')),'//body/*')
+  xml2::xml_add_sibling(main,nav_fragment(paste0('<nav class="chapter-nav" aria-label="',
+    if(lang=='zh')'文档章节' else 'Documentation chapters','">',chapter_links,'</nav>')),.where='before')
+  xml2::xml_add_child(main,nav_fragment(paste0('<details class="chapter-drawer"><summary>',
+    if(lang=='zh')'浏览文档' else 'Browse documentation','</summary><nav>',chapter_links,'</nav></details>')),.where=0L)
+  outline <- xml2::xml_find_first(doc,'//aside//ul[contains(@class,"toc-list")]')
+  if(inherits(outline,'xml_missing')) outline <- xml2::xml_find_first(doc,'//aside//nav')
+  if(!inherits(outline,'xml_missing')) {
+    first_heading <- xml2::xml_find_first(main,'.//h1')
+    toc_fragment <- nav_fragment(paste0('<details class="page-outline"><summary>',
+      if(lang=='zh')'本页目录' else 'On this page','</summary>',as.character(outline),'</details>'))
+    for(node in xml2::xml_find_all(toc_fragment,'.//*[@id]')) xml2::xml_set_attr(node,'id',NULL)
+    xml2::xml_add_sibling(first_heading,toc_fragment,.where='after')
+  }
+
   for(logo in xml2::xml_find_all(main,'.//img[@src]')) {
    if(grepl('(^|/)logo\\.(svg|png)$',xml2::xml_attr(logo,'src'))) {
     xml2::xml_set_attr(logo,'src',paste0(base,'logo.webp'))
@@ -53,7 +85,7 @@ for(lang in c('en','zh')) {
   if(startsWith(relative,'reference/')) {
    info<-if(lang=='zh') '本页完整说明已译为现代汉语；函数、参数、代码和原始数据标识保留原样。' else 'Complete canonical API text; task articles explain the workflows.'
    link<-paste0(paste(rep('../',deep),collapse=''),'articles.html')
-   xml2::xml_add_child(main,fragment(paste0('<p class="reference-language-note">',info,' <a href="',link,'">',if(lang=='zh')'专题' else 'Articles','</a></p>')),.where=1L)
+   xml2::xml_add_child(main,fragment(paste0('<p class="reference-language-note">',info,' <a href="',link,'">',if(lang=='zh')'使用教程' else 'Tutorials','</a></p>')),.where=1L)
   }
   for(pre in xml2::xml_find_all(main,'.//pre')) {
    parent<-xml2::xml_parent(pre)

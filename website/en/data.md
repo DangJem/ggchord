@@ -1,3 +1,10 @@
+<div class="task-intro"><p>Turn file observations into plotting roles. Check minimal fields and coordinates, then use validation reports to decide on cleaning; do not guess missing lengths or strands.</p></div>
+
+## Prepare this page {#prepare}
+In a fresh R session, run the code below, then follow this page in order. Colours and layout are optional display choices; inputs select only the fields needed. For file-based examples, first extract the [input bundle](../assets/tutorial-inputs.zip) so the working directory contains `examples/`.
+
+{{prepare:setup}}
+
 ## Tables {#tables}
 | Input | Required fields | Meaning |
 | --- | --- | --- |
@@ -35,7 +42,7 @@ are read once in first-occurrence order. Choose one clear entry for a workflow. 
 homology data must be supplied by the analyst, not invented by the plotting layer.
 
 ## Validate, clean, prepare {#validation}
-After the [shared setup](index.html#quick-start):
+After this page’s preparation code:
 
 {{code:validation}}
 
@@ -75,3 +82,8 @@ The second positional constructor argument is `ribbon_data`, not `gene_data`.
 Use explicit argument names as in the shared examples. Optional identity, length
 and coverage fields are needed only by operations that consume them. See
 [standard BLAST/protein input](alignments.html) and [parameter formats](parameters.html).
+
+## Check your result {#check-result}
+Input IDs must match complete sequence records. Keep original records separate from repaired copies. Decreasing endpoints can be legitimate reverse hits; warnings do not all mean rows must be removed.
+
+<div class="next-step">Continue: <a href="formats.html">File formats and explicit adapters →</a></div>

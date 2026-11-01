@@ -1,3 +1,10 @@
+<div class="task-intro"><p>Inspect figures at their actual export dimensions, save with standard ggsave(), and understand what layout tables and diagnostics establish.</p></div>
+
+## Prepare this page {#prepare}
+In a fresh R session, run the code below, then follow this page in order. Colours and layout are optional display choices; inputs select only the fields needed.
+
+{{prepare:setup,docstyle,collinear}}
+
 ## Save the intended size {#size}
 After creating `p_collinear` in [three modes](modes.html):
 
@@ -46,3 +53,8 @@ the minimal plotting table deliberately omits alignment-length statistics. It re
 for explicit use in sequence settings; it does not mutate the plot or establish
 biological orientation. Save the choice and compare the result before adopting it.
 The export [asset manifest](../assets/plots.csv) records exact documentation sizes.
+
+## Check your result {#check-result}
+Use matching dimensions for preview and saving. Inspect text, guides and warnings; a successful measurement does not certify fonts or release quality across devices.
+
+<div class="next-step">Continue: <a href="faq.html">Frequently asked questions →</a></div>

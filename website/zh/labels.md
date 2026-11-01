@@ -1,9 +1,16 @@
+<div class="task-intro"><p>在保持注释几何的前提下安排文字：先选输出尺寸和标签子集，再选择自动或固定位置。</p></div>
+
+## 本页准备 {#prepare}
+在新的 R 会话中先运行下方代码，再按页面顺序继续。配色和排版是可选的显示设置，输入只选择需要的列。
+
+{{prepare:setup,docstyle}}
+
 ## 选择布局 {#layout}
 基因标签提供 `"auto"`、`"radial"`、`"arc"` 布局。通用注释标签还支持优先
 内部放置的默认 `"feature"` 和外部 `"callout"`。应按实际图层选择已记录的取值，
 这些布局并不是可在所有入口互换的预设。
 
-先运行[共享准备代码](index.html#quick-start)：
+
 
 {{code:labels}}
 {{figure:labels}}
@@ -35,3 +42,8 @@
 `p_manual_labels` 展示独立固定标签入口，显式旋转不属于自动 repel 图层。
 通用注释标签还可选内部优先/callout，密集混合注释见[完整圆图](plasmids.html)，
 继承或显式 Position 锚点见[堆叠](annotations.html#stack)。
+
+## 完成后检查 {#check-result}
+三张布局对照使用同一输入。判断可读性时同时看文字方向、连线和隐藏原因；没有标签不等于注释丢失。
+
+<div class="next-step">继续：<a href="output.html">预览和保存图形 →</a></div>
