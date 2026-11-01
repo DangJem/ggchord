@@ -24,7 +24,11 @@ def table(headers, rows):
 def expand(text, lang, *, figures='assets', reference=''):
     chunks = snippets()
     def figure(key):
-        return f'![{CAPTIONS[key][lang]}]({figures}/{key}.png)'
+        caption=html.escape(CAPTIONS[key][lang])
+        hint='Click to enlarge' if lang=='en' else '点击放大查看'
+        return (f'<figure class="documentation-figure"><a class="figure-link" href="{figures}/{key}.png" '
+            f'title="{hint}"><img src="{figures}/{key}.png" alt="{caption}" loading="lazy"></a>'
+            f'<figcaption>{caption} · <span class="figure-hint">{hint}</span></figcaption></figure>')
     text = re.sub(r'\{\{code:(\w+)\}\}', lambda m: '\n```r\n' + chunks[m[1]] + '\n```\n', text)
     text = re.sub(r'\{\{figure:(\w+)\}\}', lambda m: figure(m[1]), text)
     modes = '<div class="mode-grid">' + ''.join(
@@ -51,15 +55,16 @@ def expand(text, lang, *, figures='assets', reference=''):
     results_path = WEB/'assets/example-results.json'
     if results_path.is_file():
         results = json.loads(results_path.read_text())
+        result_labels=json.loads((WEB/'assets/result-labels.json').read_text())
         text = re.sub(r'\{\{results:(\w+)\}\}', lambda m: table(
-            ['Metric','Observed output'] if lang=='en' else ['指标（代码字段）','实际输出'],
-            [[f'`{k}`',v] for k,v in results[m[1]].items()]),text)
+            ['Metric','Observed output'] if lang=='en' else ['项目','结果'],
+            [[result_labels.get(k,{}).get(lang,k), ('依赖未安装，已跳过' if lang=='zh' and isinstance(v,str) and v.startswith('SKIP:') else v)] for k,v in results[m[1]].items()]),text)
     coverage=json.loads((WEB/'coverage.json').read_text())
     titles={p['slug']:p['title'][lang] for p in PAGES}
-    article_slugs=['real-data','plasmids','modes','data','formats','ribbons','annotations','labels','tracks','homology','projection','views','styling','adjustments','output','migration','faq']
+    article_slugs=['real-data','plasmids','modes','data','formats','alignments','parameters','ribbons','annotations','labels','tracks','homology','projection','views','styling','adjustments','output','migration','faq']
     text=text.replace('{{articles}}','\n'.join(f'- [{titles[k]}]({k}.html)' for k in article_slugs))
     text=text.replace('{{coverage}}',table(
-        ['Capability','Read','Executable source / output'] if lang=='en' else ['能力','阅读入口','可运行来源 / 输出'],
+        ['Capability','Read','Executable source / output'] if lang=='en' else ['功能','使用教程','代码与结果'],
         [[c['title'][lang],', '.join(f'[{titles[k]}]({k}.html)' for k in c['articles']),
           ', '.join('`'+k+'`' for k in c['snippets'])+(' · '+', '.join(c['figures']) if c['figures'] else '')] for c in coverage]))
     text = text.replace('{{gallery}}', '\n\n'.join(gallery)).replace('{{reference}}', reference)

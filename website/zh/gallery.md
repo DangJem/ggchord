@@ -1,10 +1,11 @@
 ## 两种语言共用一个来源 {#source}
-图形使用有来源的仓库序列/注释或明确声明的合成教学输入，见[共享文档示例源码](../assets/documentation-examples.R)
+所有图均使用随包数据或有来源的真实记录，见[共享文档示例源码](../assets/documentation-examples.R)
 。未为改善外观改写任何原始 FASTA/GFF3/BLAST 记录。
 两种语言、README 和 vignette 引用相同图片字节，图注分别说明含义。
 源码及资产 hash 记录在[资产清单](../assets/plots.csv)中。
 
-真实数据与质粒专题明确列出显示筛选；合成轨道值、cluster 归属和小表不代表生物学观测。
+各专题说明显示筛选。GC 来自实际 DNA 计算，同源分组例子核对实际编码序列；
+只有诊断示例会故意修改原始记录的副本，并明确标注，不把错误副本当作生物学数据。
 
 ## 图片与尺寸 {#figures}
 {{gallery}}

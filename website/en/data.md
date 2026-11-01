@@ -51,8 +51,8 @@ when filtering or merging links.
 {{code:cleaning}}
 {{results:cleaning}}
 
-The demonstration intentionally includes an unknown ID, reversed interval and
-identity outside 0–100. These explicit repairs are not a recommendation to clip
+The demonstration intentionally includes an unknown ID and
+identity outside 0–100 in copied source rows. These explicit repairs are not a recommendation to clip
 scientific observations silently. Inspect `problem_report` and `repaired$report`,
 retain the original table, and choose policies appropriate to actual evidence.
 A legitimate reverse alignment can keep endpoint order instead of being sorted.
@@ -67,3 +67,11 @@ No membership is inferred from an accession prefix. Provide globally unique IDs
 when separate samples reuse local contig names. Use [file formats and adapters](formats.html)
 for format/optional-object details, and the [real-record tutorial](real-data.html)
 to carry reports into a complete figure.
+
+## Minimal input and protein alignments {#minimal}
+{{results:minimal}}
+
+The second positional constructor argument is `ribbon_data`, not `gene_data`.
+Use explicit argument names as in the shared examples. Optional identity, length
+and coverage fields are needed only by operations that consume them. See
+[standard BLAST/protein input](alignments.html) and [parameter formats](parameters.html).

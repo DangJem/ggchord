@@ -169,12 +169,10 @@ ggchord_conversion_seqinfo <- function(x, caller) {
 #' @seealso \code{\link{ggchord_data_contract}}
 #' @export
 #' @examples
-#' as_ggchord_seq(data.frame(chrom = c("host", "virus"), size = c(1000, 300)),
-#'   mapping = c(accver = "chrom", length = "size"))
-#' if (requireNamespace("Biostrings", quietly = TRUE)) {
-#'   as_ggchord_seq(Biostrings::DNAStringSet(c(host = "ACGT", virus = "AT")))
-#'   as_ggchord_seq(Biostrings::DNAString("ACGT"), ids = "explicit_id")
-#' }
+#' data(seq_data_example)
+#' seqs <- seq_data_example[c("accver", "length")]
+#' renamed <- setNames(seqs, c("chrom", "size"))
+#' as_ggchord_seq(renamed, mapping = c(accver = "chrom", length = "size"))
 as_ggchord_seq <- function(x, mapping = NULL, lengths = NULL, ids = NULL) {
   caller <- "as_ggchord_seq()"
   map <- data.frame(source = character(), output = character(), stringsAsFactors = FALSE)
@@ -278,12 +276,15 @@ as_ggchord_seq <- function(x, mapping = NULL, lengths = NULL, ids = NULL) {
 #' @seealso \code{\link{ggchord_data_contract}}
 #' @export
 #' @examples
-#' features <- as_ggchord_feature(data.frame(chrom = "host", from = 100,
-#'   to = 200, orientation = "*", label = "integration site"),
-#'   mapping = c(accver = "chrom", start = "from", end = "to",
-#'     strand = "orientation"))
-#' ggchord(data.frame(accver = "host", length = 1000)) + geom_seq() +
-#'   geom_feature(data = features) + coord_collinear()
+#' data(seq_data_example)
+#' seqs <- seq_data_example[c("accver", "length")]
+#' data(gene_data_example)
+#' genes <- transform(gene_data_example, strand = source_strand)[
+#'   c("accver", "start", "end", "strand")]
+#' renamed <- setNames(genes, c("chrom", "left", "right", "strand"))
+#' features <- as_ggchord_feature(renamed,
+#'   mapping = c(accver = "chrom", start = "left", end = "right"))
+#' ggchord(seq_data = seqs) + geom_seq() + geom_feature(data = features)
 as_ggchord_feature <- function(x, mapping = NULL) {
   caller <- "as_ggchord_feature()"
   metadata <- NULL
@@ -351,10 +352,9 @@ as_ggchord_feature <- function(x, mapping = NULL) {
 #' @seealso \code{\link{ggchord_data_contract}}
 #' @export
 #' @examples
-#' as_ggchord_link(data.frame(host = "host", virus = "virus",
-#'   host_start = 100, host_end = 120, virus_start = 10, virus_end = 30),
-#'   mapping = c(qaccver = "host", saccver = "virus", qstart = "host_start",
-#'     qend = "host_end", sstart = "virus_start", send = "virus_end"))
+#' data(ribbon_data_example)
+#' links <- ribbon_data_example[c("qaccver", "saccver", "qstart", "qend", "sstart", "send")]
+#' as_ggchord_link(links)
 as_ggchord_link <- function(x, mapping = NULL) {
   caller <- "as_ggchord_link()"
   required <- c("qaccver", "saccver", "qstart", "qend", "sstart", "send")

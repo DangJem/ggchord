@@ -66,8 +66,7 @@ Draws arcs (or straight lines, depending on the curvature setting) representing 
 Sequence layout parameters (order, orientation, radius, curvature, colors, etc.) are specified here.
 }
 \examples{
-library(ggchord)
 data(seq_data_example)
-p <- ggchord(seq_data_example) + geom_seq()
-p
+seqs <- seq_data_example[c("accver", "length")]
+ggchord(seq_data = seqs) + geom_seq()
 }

@@ -25,5 +25,5 @@ pkgload::load_all(".")
 入门例子直接在 R 中构造小型数据框，安装后即可使用。
 
 ## 开始使用 {#first-steps}
-先读[数据契约](data.html)，复制[共享准备代码](index.html#quick-start)，再选择
+先读[数据格式说明](data.html)，复制[共享准备代码](index.html#quick-start)，再选择
 [坐标系](modes.html)。保存时显式指定宽高；调整 RStudio Plots 面板会使标签重新排列。

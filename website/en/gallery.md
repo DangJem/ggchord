@@ -1,13 +1,13 @@
 ## One source for both languages {#source}
-Figures use repository-backed sequences/annotations or explicitly synthetic
-teaching inputs, defined in the shared
+All figures use bundled source-backed data or attributed real input records, defined in the shared
 [documentation example source](../assets/documentation-examples.R).
 No raw FASTA/GFF3/BLAST record was changed to improve appearance. The same image
 bytes are used by both languages, README and vignette; captions provide localized
 interpretation. The source and asset hashes are recorded in the [asset manifest](../assets/plots.csv).
 
-Real-data and plasmid articles state each display filter; synthetic track
-values, cluster membership and small input tables are not biological observations.
+Display filters are stated in the relevant articles. GC is computed from actual
+DNA; exact-CDS membership is checked from sequence content. Deliberate corruption
+is confined to diagnostic examples and is never presented as biological data.
 
 ## Figures and dimensions {#figures}
 {{gallery}}

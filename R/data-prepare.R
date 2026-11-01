@@ -109,18 +109,15 @@ ggchord_prepare_direction <- function(data, caller) {
 #' @seealso \code{\link{ggchord_data_contract}}
 #' @export
 #' @examples
-#' seqs <- data.frame(accver = c("A", "B"), length = c(100, 100),
-#'   genome = c("genome1", "genome2"))
-#' sites <- data.frame(accver = "A", start = 10, end = 20,
-#'   feature_id = "site1")
-#' rb <- data.frame(qaccver = "A", saccver = "B", qstart = 1,
-#'   qend = 20, sstart = 50, send = 31)
-#' prepared <- prepare_ggchord_data(seqs, rb, features = list(sites = sites),
-#'   steps = list(deduplicate = list(keep = "first")))
-#' prepared$report$valid
-#' ggchord(prepared$seq_data, prepared$ribbon_data) + geom_seq() +
-#'   geom_link_ribbon() + geom_feature(data = prepared$features$sites) +
-#'   coord_collinear()
+#' data(seq_data_example)
+#' seqs <- seq_data_example[c("accver", "length")]
+#' data(ribbon_data_example)
+#' links <- ribbon_data_example[c("qaccver", "saccver", "qstart", "qend", "sstart", "send")]
+#' data(gene_data_example)
+#' genes <- transform(gene_data_example, strand = source_strand)[
+#'   c("accver", "start", "end", "strand")]
+#' prepared <- prepare_ggchord_data(seqs, links, features = list(genes = genes))
+#' prepared$report
 prepare_ggchord_data <- function(seq_data, ribbon_data = NULL, gene_data = NULL,
     features = list(), links = list(), mapping = list(), steps = list()) {
   caller <- "prepare_ggchord_data()"

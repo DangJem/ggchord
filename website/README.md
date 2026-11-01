@@ -20,14 +20,12 @@ counterpart, preserving matching anchors, including on mobile. The root entry
 remembers the chosen language when browser storage is available.
 
 成对 Markdown 经 Pandoc 转换，展示已有代码、结果与图，不执行其中的 R。完整
-reference 从当前 Rd 生成，不运行帮助示例。帮助正文保留完整英语原文；汉语页面
-提供本地化导航、分类和任务说明，不声称全文帮助已翻译。首次原型的自制页面壳和
+reference 从当前 Rd 生成，不运行帮助示例。帮助正文从英语 Rd 生成，汉语函数参考逐项翻译并绑定源摘要，缺译或过期会阻止构建。首次原型的自制页面壳和
 Rd 转换器已退役，不同时维护另一套网站实现。
 
 Paired Markdown is converted by Pandoc using existing code, outputs and figures;
 R chunks are not executed. Current Rd generates the complete reference without
-running examples. Canonical help remains English with localized Han navigation
-and workflow framing. The first prototype's custom page shell/Rd renderer is retired.
+running examples. Canonical R help remains English; the Han website reference translates every prose section and checks source hashes. The first prototype's custom page shell/Rd renderer is retired.
 
 ## 本地生成 / Local build
 
@@ -67,17 +65,17 @@ python3 -m http.server 8765 --directory .site --bind 127.0.0.1
 | `coverage.json` | 18 个功能簇的章节、代码及输出证据 / Article/code/output evidence for 18 capability families |
 | `tools/sync-tutorials.py` | 从同源同步 README、迁移和双语 Rmd / Synchronize README, migration guides and paired Rmd sources |
 | `tools/render-website.R` | pkgdown 原生页面与 Rd 参考生成 / Native pages and Rd reference |
-| `tools/finalize-website.R`、`assets/site.*` | 同页语言切换、代码折叠和本地全文搜索 / Language switching, code disclosure and local full-text search |
+| `website/reference-zh/*.json`、`tools/reference-translations.py` | 完整汉语 Rd 说明与源摘要校验 / Complete Han prose with source-hash validation |
+| `tools/finalize-website.R`、`assets/site.*` | 同页语言切换、代码折叠、全文搜索及图片放大 / Language switching, code disclosure, search and image viewing |
 | `tools/check-documentation.py` | 配对、代码、图 hash、功能簇、链接、锚点和搜索覆盖 / Pairing, code, figures, capability evidence, links, anchors and search |
 
 真实案例使用仓库原始 FASTA/GFF3/BLAST；选择显示记录的规则写入代码和正文，原表
-不变。质粒来自随包 pUC19 原始序列。其余小表、轨道数值与 cluster 归属明确为合成
-教学输入。构建产物提供原始输入 ZIP、SHA256 清单、共享 R 脚本和构建来源清单。
+不变。质粒来自随包 pUC19 原始序列。小型教程也使用随包记录，GC 由实际 DNA 计算，同源分组核对真实编码序列。构建产物提供原始输入 ZIP、SHA256 清单、共享 R 脚本和构建来源清单。
 可选 Biopython/GenomicRanges 例子在环境已有依赖时才执行，结果注明 PASS 或 SKIP。
 
 Real workflows use original repository FASTA/GFF3/BLAST records with explicit
 display filters; source tables remain unchanged. The plasmid uses source-backed
-pUC19. Other small tables, track values and membership are declared synthetic.
+pUC19. Other examples also use bundled records; GC is calculated from DNA and membership checks actual coding sequences.
 Builds include an original-input ZIP, SHA256 list, shared script and provenance
 manifest. Optional Biopython/GenomicRanges examples report PASS or SKIP.
 
@@ -101,3 +99,10 @@ artifacts and default to no deployment. Explicit cutover authorization is needed
 before enabling deployment. `--publication` only changes preview labeling;
 the builder never deploys, pushes or releases. Exact historical counterparts
 redirect; unmatched URLs receive a historical notice rather than invented aliases.
+
+汉语 Rd 接入使用 pkgdown 2.2.1 的 classed Rd 解析适配；该单点通过显式类检查和生成页
+正文/代码检查保护。升级 pkgdown 时需复核解析适配，其余生成使用公开接口。
+
+The Han Rd adapter uses pkgdown 2.2.1 classed parsing with explicit structural
+guards. Recheck this one adapter when upgrading pkgdown; page generation uses
+public builders. Generated reference prose and code are checked.

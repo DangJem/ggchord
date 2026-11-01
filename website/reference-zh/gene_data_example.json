@@ -1,0 +1,8 @@
+{
+  "source_sha256": "5ee372a62e46a3cbbd9f8057a08544ba125e67f8364486236c0835f3c6410941",
+  "translations": {
+    "0": "示例基因注释数据",
+    "1": "数据框包含：\\itemize{ \\item accver：序列 accession/version 或原样自定义标识 \\item start：基因起点 \\item end：基因终点 \\item strand：链方向（+/-） \\item anno：基因注释类别 \\item source_strand：源注释文件的链方向 }",
+    "2": "从 ⟦0⟧ 确定性生成的紧凑绘图示例。每条序列分布八个可见长度不同、优先含信息性注释的特征。源记录链偏向明显，因此展示列 ⟦1⟧ 在 ⟦2⟧、⟦3⟧ 间交替，真实生物学值保存在 ⟦4⟧。"
+  }
+}

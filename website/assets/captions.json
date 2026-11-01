@@ -1,78 +1,82 @@
 {
   "chord": {
-    "en": "Chord comparison of three synthetic sequences",
-    "zh": "三条合成序列的弦图比较"
+    "en": "Bundled sequences and alignment intervals in a chord view",
+    "zh": "随包序列与已有比对区间的弦图"
   },
   "circular": {
-    "en": "Circular annotation with known and unknown strands",
-    "zh": "包含已知链与未知链注释的单序列圆图"
+    "en": "pUC19 annotations in a circular map",
+    "zh": "pUC19 注释的单序列圆图"
   },
   "collinear": {
-    "en": "Anchored linear sequence comparison",
-    "zh": "按锚点对齐的直线序列比较"
+    "en": "Bundled records aligned to explicitly selected annotation anchors",
+    "zh": "按选定注释锚定的随包序列共线性图"
   },
   "tracks": {
-    "en": "Synthetic signal in an explicit quantitative track",
-    "zh": "显式定量轨道中的合成信号"
+    "en": "GC fractions computed from the bundled pUC19 DNA",
+    "zh": "从随包 pUC19 DNA 计算的 GC 比例"
   },
   "focus": {
-    "en": "Focused comparisons with source-coordinate axes",
-    "zh": "带源坐标轴的局部序列比较"
+    "en": "Focused sequence windows with source-coordinate axes",
+    "zh": "保留原始坐标刻度的局部序列视图"
   },
   "labels": {
-    "en": "Automatic labels on a linear gene comparison",
-    "zh": "直线基因比较的自动标签"
+    "en": "Automatic placement of informative source gene annotations",
+    "zh": "实际基因注释的自动标签布局"
   },
   "realchord": {
-    "en": "Original sequence comparison with an explicit CDS display subset",
-    "zh": "按明确 CDS 显示子集绘制的原始序列弦图"
+    "en": "Original sequences with explicitly selected CDS and alignment links",
+    "zh": "原始序列、选定 CDS 与已有比对的弦图"
   },
   "reallinear": {
-    "en": "Original sequences, all imported CDS and filtered alignment links",
+    "en": "Original sequences, all imported CDS and filtered links",
     "zh": "原始序列、全部导入 CDS 与筛选连接的线性图"
   },
   "plasmid": {
-    "en": "pUC19 with source-backed features, primers and restriction sites",
-    "zh": "pUC19 的有来源 feature、引物与酶切位点"
+    "en": "pUC19 features, exact primer hits and three selected restriction sites",
+    "zh": "pUC19 注释、精确引物命中与三个选定酶切位点"
   },
   "density": {
-    "en": "Explicit density summary of original alignment links",
-    "zh": "原始比对连接的显式密度汇总"
+    "en": "Interval density from the original alignment observations",
+    "zh": "原始比对记录的区间密度"
   },
   "pointlinks": {
-    "en": "Point-to-point links with declared synthetic support values",
-    "zh": "映射合成支持值的点到点连接"
+    "en": "Midpoint links derived from existing HSP intervals",
+    "zh": "从已有 HSP 区间计算中点的点连接"
   },
   "featurestack": {
-    "en": "Stacked synthetic features with mapped shapes and fills",
-    "zh": "映射形状与填色的合成 feature 堆叠"
+    "en": "Stacked overlapping annotations from the pUC19 reference",
+    "zh": "pUC19 中重叠注释的分层显示"
   },
   "multitrack": {
-    "en": "Shared-domain bar and line with an independent categorical track",
-    "zh": "共域柱形与折线及独立类别轨道"
+    "en": "pUC19 GC fractions, a three-bin moving mean and annotation bands",
+    "zh": "pUC19 GC 比例、三点滑动均值和注释类型带"
   },
   "homologs": {
-    "en": "Declared synthetic cluster links, not a computed alignment",
-    "zh": "显式合成 cluster 连接，不是重新计算的比对"
+    "en": "Two plasmids sharing an identical oriented AmpR coding sequence",
+    "zh": "两种质粒中编码 DNA 完全一致的 AmpR"
   },
   "decorations": {
-    "en": "Region highlights and an independent bp reference bar",
-    "zh": "区域高亮与独立 bp 参照条"
+    "en": "Highlighting the query interval of an observed alignment",
+    "zh": "突出显示一条实际比对的查询区间"
   },
   "labelauto": {
-    "en": "Gene labels using auto placement",
-    "zh": "使用 auto 放置的基因标签"
+    "en": "Informative gene annotations with automatic side placement",
+    "zh": "实际基因注释的自动侧边标签"
   },
   "labelradial": {
-    "en": "Gene labels using radial placement",
-    "zh": "使用 radial 放置的基因标签"
+    "en": "The same gene annotations with radial placement",
+    "zh": "同一组基因注释的径向标签"
   },
   "labelarc": {
-    "en": "Gene labels following sequence tangents",
-    "zh": "跟随序列切线的 arc 基因标签"
+    "en": "The same gene annotations with arc-oriented text",
+    "zh": "同一组基因注释的沿弧标签"
   },
   "styling": {
-    "en": "Explicit manual scales and grouped legends",
-    "zh": "显式手动标度与图例组织"
+    "en": "Explicit sequence, strand and query-category colour scales",
+    "zh": "显式设置序列、链方向和查询类别的颜色标度"
+  },
+  "paf": {
+    "en": "A real minimap2 PAF comparison between two EMALE genomes",
+    "zh": "从真实 minimap2 PAF 结果绘制的两条 EMALE 序列"
   }
 }

@@ -7,10 +7,14 @@ payload <- jsonlite::fromJSON('.site/page-content.json', simplifyVector = FALSE)
 languages <- commandArgs(trailingOnly=TRUE)
 if(!length(languages)) languages <- c('en','zh')
 stopifnot(all(languages %in% c('en','zh')))
+if('zh' %in% languages) {
+ status <- system2('python3',c('tools/reference-translations.py','--output','.site/reference-zh'))
+ if(status != 0L) stop('Han reference translations are incomplete or stale')
+}
 for (lang in languages) {
   is_han <- lang == 'zh'
   Sys.setenv(LANGUAGE=if(is_han)'zh_CN' else 'en')
-  nav_names <- if(is_han) c('入门','函数参考','专题','图集','变更') else
+  nav_names <- if(is_han) c('开始使用','函数文档','使用教程','示例图集','更新日志') else
     c('Get started','Reference','Articles','Gallery','Changelog')
   keys <- c('start','reference','articles','gallery','news')
   components <- setNames(lapply(seq_along(keys),function(i) list(text=nav_names[i])),keys)
@@ -20,12 +24,26 @@ for (lang in languages) {
   source <- yaml::read_yaml('_pkgdown.yml')
   cfg$url <- paste0(source$url,lang,'/')
   if(is_han) {
-    titles <- c('构建与契约','输入与校验','几何与标签','位置、标度、主题与图例',
-      '定量轨道','序列识别','投影与比较工作流','输出与诊断','方法、教学数据与上游重导出')
+    titles <- c('创建图形','读取和整理数据','图层和标签','配色、图例和布局调整',
+      '添加数据轨道','查找序列注释','投影和局部比较','保存与检查图形','方法、示例数据和通用工具')
     cfg$reference <- source$reference
     for(i in seq_along(cfg$reference)) cfg$reference[[i]]$title <- titles[i]
   }
   pkg <- pkgdown::as_pkgdown('.',override=cfg)
+  if(is_han) {
+    for(i in seq_len(nrow(pkg$topics))) {
+      path <- file.path('.site/reference-zh',pkg$topics$file_in[i])
+      raw <- tools::parse_Rd(path)
+      # pkgdown topics require its classed Rd nodes, not tools::parse_Rd output.
+      # Keep this one parser adapter explicit; generation uses public builders.
+      reader <- getFromNamespace('rd_file','pkgdown')
+      rd <- reader(path, pkg_path = '.')
+      stopifnot(inherits(rd,'tag'), any(vapply(rd,inherits,logical(1),'tag_title')))
+      pkg$topics$rd[[i]] <- rd
+      title <- Filter(function(x) identical(attr(x,'Rd_tag'),'\\title'),raw)
+      pkg$topics$title[i] <- paste(unlist(title),collapse='')
+    }
+  }
   pkgdown::init_site(pkg)
   pkgdown::build_home(pkg, preview=FALSE)
   # build_home also converts development Markdown from the repository root.

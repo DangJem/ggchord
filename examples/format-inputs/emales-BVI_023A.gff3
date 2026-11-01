@@ -1,0 +1,124 @@
+##gff-version 3
+##sequence-region BVI_023A 1 19600
+##sequence-region Cflag_131 1 32544
+##sequence-region RCC970_025 1 20006
+##sequence-region RCC970_122 1 5473
+##sequence-region BVI_055A 1 23989
+##sequence-region BVI_055B 1 19849
+##sequence-region Cflag_215 1 12202
+##sequence-region RCC970_016A 1 19438
+##sequence-region RCC970_016B 1 20152
+##sequence-region E4-10_053 1 19840
+##sequence-region E4-10_023 1 19652
+##sequence-region BVI_008A 1 26820
+##sequence-region RCC970_029 1 20253
+##sequence-region E4-10_086 1 20642
+##sequence-region E4-10_133 1 20015
+##sequence-region BVI_002 1 20583
+##sequence-region BVI_096B 1 26330
+##sequence-region BVI_001A 1 18957
+##sequence-region Cflag_040 1 26766
+##sequence-region Cflag_151 1 25176
+##sequence-region BVI_101 1 19432
+##sequence-region BVI_069 1 26808
+##sequence-region E4-10_001 1 32732
+##sequence-region BVI_029 1 26000
+##sequence-region BVI_056 1 19815
+##sequence-region BVI_058 1 18948
+##sequence-region RCC970_095 1 19352
+##sequence-region BVI_005 1 13185
+##sequence-region Cflag_017A 1 21485
+##sequence-region Cflag_017B 1 21311
+##sequence-region Cflag_017C 1 19426
+##sequence-region E4-10_008 1 18276
+##sequence-region E4-10_112 1 26856
+# Sequence Data: seqnum=1;seqlen=19600;seqhdr="BVI_023A emale_type=EMALE05 is_typespecies=FALSE"
+# Model Data: version=Prodigal.v2.6.3;run_type=Single;model="Ab initio";gc_cont=44.35;transl_table=11;uses_sd=0
+BVI_023A	Prodigal_v2.6.3	CDS	143	346	0.5	-	0	ID=BVI_023A_0001;Name=1_1;partial=00;start_type=ATG;rbs_motif=TAT;rbs_spacer=6bp;gc_cont=0.348;conf=52.60;score=0.45;cscore=-1.46;sscore=1.91;rscore=1.65;uscore=-1.90;tscore=3.30;
+BVI_023A	Prodigal_v2.6.3	CDS	495	596	5.9	+	0	ID=BVI_023A_0002;Name=1_2;partial=00;start_type=ATG;rbs_motif=TAT;rbs_spacer=4bp;gc_cont=0.441;conf=79.66;score=5.94;cscore=0.34;sscore=5.60;rscore=3.56;uscore=0.41;tscore=1.63;
+BVI_023A	Prodigal_v2.6.3	CDS	1130	1726	52.1	+	0	ID=BVI_023A_0003;Name=1_3;partial=00;start_type=ATG;rbs_motif=TAG;rbs_spacer=4bp;gc_cont=0.363;conf=100.00;score=52.08;cscore=42.15;sscore=9.93;rscore=8.86;uscore=-2.39;tscore=4.11;
+BVI_023A	Prodigal_v2.6.3	CDS	1768	2376	44.6	+	0	ID=BVI_023A_0004;Name=1_4;partial=00;start_type=ATG;rbs_motif=TAT;rbs_spacer=15bp;gc_cont=0.483;conf=100.00;score=44.63;cscore=33.34;sscore=11.28;rscore=0.60;uscore=5.74;tscore=4.11;
+BVI_023A	Prodigal_v2.6.3	CDS	2378	3454	76.4	-	0	ID=BVI_023A_0005;Name=1_5;partial=00;start_type=ATG;rbs_motif=None;rbs_spacer=None;gc_cont=0.523;conf=100.00;score=76.39;cscore=82.87;sscore=-6.48;rscore=-5.72;uscore=-4.21;tscore=4.11;
+BVI_023A	Prodigal_v2.6.3	CDS	3707	5533	218.6	-	0	ID=BVI_023A_0006;Name=1_6;partial=00;start_type=ATG;rbs_motif=TAG;rbs_spacer=5bp;gc_cont=0.550;conf=99.99;score=218.60;cscore=204.47;sscore=14.12;rscore=6.76;uscore=3.26;tscore=4.11;
+BVI_023A	Prodigal_v2.6.3	CDS	5664	6566	69.4	-	0	ID=BVI_023A_0007;Name=1_7;partial=00;start_type=ATG;rbs_motif=TAG;rbs_spacer=9bp;gc_cont=0.506;conf=100.00;score=69.38;cscore=59.29;sscore=10.10;rscore=6.76;uscore=-1.92;tscore=4.11;
+BVI_023A	Prodigal_v2.6.3	CDS	6579	7154	42.3	-	0	ID=BVI_023A_0008;Name=1_8;partial=00;start_type=ATG;rbs_motif=None;rbs_spacer=None;gc_cont=0.488;conf=99.99;score=42.32;cscore=36.72;sscore=5.59;rscore=-5.72;uscore=5.95;tscore=4.11;
+BVI_023A	Prodigal_v2.6.3	CDS	7157	8047	115.8	-	0	ID=BVI_023A_0009;Name=1_9;partial=00;start_type=ATG;rbs_motif=TAT;rbs_spacer=13bp;gc_cont=0.458;conf=100.00;score=115.83;cscore=103.47;sscore=12.35;rscore=0.60;uscore=6.65;tscore=4.11;
+BVI_023A	Prodigal_v2.6.3	CDS	8074	8874	99.3	-	0	ID=BVI_023A_0010;Name=1_10;partial=00;start_type=ATG;rbs_motif=TAG;rbs_spacer=5bp;gc_cont=0.492;conf=100.00;score=99.33;cscore=84.20;sscore=15.13;rscore=6.76;uscore=4.91;tscore=4.11;
+BVI_023A	Prodigal_v2.6.3	CDS	8900	9877	122.7	+	0	ID=BVI_023A_0011;Name=1_11;partial=00;start_type=ATG;rbs_motif=TAG;rbs_spacer=6bp;gc_cont=0.530;conf=100.00;score=122.68;cscore=108.08;sscore=14.60;rscore=6.76;uscore=3.73;tscore=4.11;
+BVI_023A	Prodigal_v2.6.3	CDS	9908	10516	52.5	+	0	ID=BVI_023A_0012;Name=1_12;partial=00;start_type=ATG;rbs_motif=None;rbs_spacer=None;gc_cont=0.532;conf=100.00;score=52.52;cscore=49.07;sscore=3.45;rscore=-5.72;uscore=4.12;tscore=4.11;
+BVI_023A	Prodigal_v2.6.3	CDS	10739	12064	131.0	+	0	ID=BVI_023A_0013;Name=1_13;partial=00;start_type=ATG;rbs_motif=TAG;rbs_spacer=8bp;gc_cont=0.534;conf=100.00;score=131.01;cscore=122.52;sscore=8.49;rscore=6.76;uscore=-1.73;tscore=4.11;
+BVI_023A	Prodigal_v2.6.3	CDS	12253	13050	79.7	+	0	ID=BVI_023A_0014;Name=1_14;partial=00;start_type=ATG;rbs_motif=None;rbs_spacer=None;gc_cont=0.506;conf=100.00;score=79.68;cscore=77.68;sscore=2.01;rscore=-5.72;uscore=4.27;tscore=4.11;
+BVI_023A	Prodigal_v2.6.3	CDS	13092	13181	2.0	-	0	ID=BVI_023A_0015;Name=1_15;partial=00;start_type=ATG;rbs_motif=None;rbs_spacer=None;gc_cont=0.478;conf=61.42;score=2.02;cscore=-0.20;sscore=2.22;rscore=-16.44;uscore=-28.12;tscore=1.43;
+BVI_023A	Prodigal_v2.6.3	CDS	13178	13498	30.4	-	0	ID=BVI_023A_0016;Name=1_16;partial=00;start_type=ATG;rbs_motif=TAG;rbs_spacer=9bp;gc_cont=0.520;conf=99.91;score=30.43;cscore=15.64;sscore=14.79;rscore=6.76;uscore=4.57;tscore=4.11;
+BVI_023A	Prodigal_v2.6.3	CDS	13625	14188	56.0	+	0	ID=BVI_023A_0017;Name=1_17;partial=00;start_type=ATG;rbs_motif=TAG;rbs_spacer=4bp;gc_cont=0.566;conf=100.00;score=56.03;cscore=41.53;sscore=14.50;rscore=8.86;uscore=1.53;tscore=4.11;
+BVI_023A	Prodigal_v2.6.3	CDS	14603	15118	38.6	-	0	ID=BVI_023A_0018;Name=1_18;partial=00;start_type=ATG;rbs_motif=None;rbs_spacer=None;gc_cont=0.473;conf=99.99;score=38.61;cscore=37.86;sscore=0.75;rscore=-5.72;uscore=3.02;tscore=4.11;
+BVI_023A	Prodigal_v2.6.3	CDS	15285	15473	25.6	+	0	ID=BVI_023A_0019;Name=1_19;partial=00;start_type=ATG;rbs_motif=TAG;rbs_spacer=10bp;gc_cont=0.540;conf=99.72;score=25.61;cscore=13.56;sscore=12.05;rscore=5.03;uscore=3.96;tscore=3.06;
+BVI_023A	Prodigal_v2.6.3	CDS	15534	16841	130.5	+	0	ID=BVI_023A_0020;Name=1_20;partial=00;start_type=ATG;rbs_motif=TAG;rbs_spacer=3bp;gc_cont=0.472;conf=100.00;score=130.46;cscore=112.69;sscore=17.78;rscore=8.86;uscore=4.80;tscore=4.11;
+BVI_023A	Prodigal_v2.6.3	CDS	16883	18595	170.3	+	0	ID=BVI_023A_0021;Name=1_21;partial=00;start_type=GTG;rbs_motif=None;rbs_spacer=None;gc_cont=0.491;conf=100.00;score=170.25;cscore=186.29;sscore=-16.03;rscore=-5.72;uscore=-2.68;tscore=-8.45;
+BVI_023A	Prodigal_v2.6.3	CDS	19093	19194	4.6	-	0	ID=BVI_023A_0022;Name=1_22;partial=00;start_type=ATG;rbs_motif=TAT;rbs_spacer=4bp;gc_cont=0.471;conf=74.03;score=4.56;cscore=-0.55;sscore=5.10;rscore=3.56;uscore=0.41;tscore=1.63;
+BVI_023A	Prodigal_v2.6.3	CDS	19169	19336	6.9	-	0	ID=BVI_023A_0023;Name=1_23;partial=00;start_type=ATG;rbs_motif=TAT;rbs_spacer=3bp;gc_cont=0.375;conf=83.03;score=6.91;cscore=3.54;sscore=3.37;rscore=5.94;uscore=-5.28;tscore=2.71;
+BVI_023A	Prodigal_v2.6.3	CDS	19473	19574	0.6	-	0	ID=BVI_023A_0024;Name=1_24;partial=00;start_type=ATG;rbs_motif=TAT;rbs_spacer=10bp;gc_cont=0.333;conf=53.25;score=0.57;cscore=-2.53;sscore=3.09;rscore=0.81;uscore=1.15;tscore=1.63;
+# Sequence Data: seqnum=2;seqlen=32544;seqhdr="Cflag_131 emale_type=EMALE03 is_typespecies=FALSE"
+# Model Data: version=Prodigal.v2.6.3;run_type=Single;model="Ab initio";gc_cont=44.35;transl_table=11;uses_sd=0
+# Sequence Data: seqnum=3;seqlen=20006;seqhdr="RCC970_025 emale_type=EMALE05 is_typespecies=FALSE"
+# Model Data: version=Prodigal.v2.6.3;run_type=Single;model="Ab initio";gc_cont=44.35;transl_table=11;uses_sd=0
+# Sequence Data: seqnum=4;seqlen=5473;seqhdr="RCC970_122 emale_type=EMALE04 is_typespecies=FALSE"
+# Model Data: version=Prodigal.v2.6.3;run_type=Single;model="Ab initio";gc_cont=44.35;transl_table=11;uses_sd=0
+# Sequence Data: seqnum=5;seqlen=23989;seqhdr="BVI_055A emale_type=EMALE02 is_typespecies=FALSE"
+# Model Data: version=Prodigal.v2.6.3;run_type=Single;model="Ab initio";gc_cont=44.35;transl_table=11;uses_sd=0
+# Sequence Data: seqnum=6;seqlen=19849;seqhdr="BVI_055B emale_type=EMALE04 is_typespecies=TRUE"
+# Model Data: version=Prodigal.v2.6.3;run_type=Single;model="Ab initio";gc_cont=44.35;transl_table=11;uses_sd=0
+# Sequence Data: seqnum=7;seqlen=12202;seqhdr="Cflag_215 emale_type=EMALE04 is_typespecies=FALSE"
+# Model Data: version=Prodigal.v2.6.3;run_type=Single;model="Ab initio";gc_cont=44.35;transl_table=11;uses_sd=0
+# Sequence Data: seqnum=8;seqlen=19438;seqhdr="RCC970_016A emale_type=EMALE03 is_typespecies=TRUE"
+# Model Data: version=Prodigal.v2.6.3;run_type=Single;model="Ab initio";gc_cont=44.35;transl_table=11;uses_sd=0
+# Sequence Data: seqnum=9;seqlen=20152;seqhdr="RCC970_016B emale_type=EMALE01 is_typespecies=FALSE"
+# Model Data: version=Prodigal.v2.6.3;run_type=Single;model="Ab initio";gc_cont=44.35;transl_table=11;uses_sd=0
+# Sequence Data: seqnum=10;seqlen=19840;seqhdr="E4-10_053 emale_type=EMALE05 is_typespecies=FALSE"
+# Model Data: version=Prodigal.v2.6.3;run_type=Single;model="Ab initio";gc_cont=44.35;transl_table=11;uses_sd=0
+# Sequence Data: seqnum=11;seqlen=19652;seqhdr="E4-10_023 emale_type=EMALE06 is_typespecies=FALSE"
+# Model Data: version=Prodigal.v2.6.3;run_type=Single;model="Ab initio";gc_cont=44.35;transl_table=11;uses_sd=0
+# Sequence Data: seqnum=12;seqlen=26820;seqhdr="BVI_008A emale_type=EMALE01 is_typespecies=FALSE"
+# Model Data: version=Prodigal.v2.6.3;run_type=Single;model="Ab initio";gc_cont=44.35;transl_table=11;uses_sd=0
+# Sequence Data: seqnum=13;seqlen=20253;seqhdr="RCC970_029 emale_type=EMALE05 is_typespecies=FALSE"
+# Model Data: version=Prodigal.v2.6.3;run_type=Single;model="Ab initio";gc_cont=44.35;transl_table=11;uses_sd=0
+# Sequence Data: seqnum=14;seqlen=20642;seqhdr="E4-10_086 emale_type=EMALE01 is_typespecies=FALSE"
+# Model Data: version=Prodigal.v2.6.3;run_type=Single;model="Ab initio";gc_cont=44.35;transl_table=11;uses_sd=0
+# Sequence Data: seqnum=15;seqlen=20015;seqhdr="E4-10_133 emale_type=EMALE05 is_typespecies=FALSE"
+# Model Data: version=Prodigal.v2.6.3;run_type=Single;model="Ab initio";gc_cont=44.35;transl_table=11;uses_sd=0
+# Sequence Data: seqnum=16;seqlen=20583;seqhdr="BVI_002 emale_type=EMALE04 is_typespecies=FALSE"
+# Model Data: version=Prodigal.v2.6.3;run_type=Single;model="Ab initio";gc_cont=44.35;transl_table=11;uses_sd=0
+# Sequence Data: seqnum=17;seqlen=26330;seqhdr="BVI_096B emale_type=EMALE04 is_typespecies=FALSE"
+# Model Data: version=Prodigal.v2.6.3;run_type=Single;model="Ab initio";gc_cont=44.35;transl_table=11;uses_sd=0
+# Sequence Data: seqnum=18;seqlen=18957;seqhdr="BVI_001A emale_type=EMALE05 is_typespecies=TRUE"
+# Model Data: version=Prodigal.v2.6.3;run_type=Single;model="Ab initio";gc_cont=44.35;transl_table=11;uses_sd=0
+# Sequence Data: seqnum=19;seqlen=26766;seqhdr="Cflag_040 emale_type=EMALE05 is_typespecies=FALSE"
+# Model Data: version=Prodigal.v2.6.3;run_type=Single;model="Ab initio";gc_cont=44.35;transl_table=11;uses_sd=0
+# Sequence Data: seqnum=20;seqlen=25176;seqhdr="Cflag_151 emale_type=EMALE06 is_typespecies=FALSE"
+# Model Data: version=Prodigal.v2.6.3;run_type=Single;model="Ab initio";gc_cont=44.35;transl_table=11;uses_sd=0
+# Sequence Data: seqnum=21;seqlen=19432;seqhdr="BVI_101 emale_type=EMALE03 is_typespecies=FALSE"
+# Model Data: version=Prodigal.v2.6.3;run_type=Single;model="Ab initio";gc_cont=44.35;transl_table=11;uses_sd=0
+# Sequence Data: seqnum=22;seqlen=26808;seqhdr="BVI_069 emale_type=EMALE01 is_typespecies=FALSE"
+# Model Data: version=Prodigal.v2.6.3;run_type=Single;model="Ab initio";gc_cont=44.35;transl_table=11;uses_sd=0
+# Sequence Data: seqnum=23;seqlen=32732;seqhdr="E4-10_001 emale_type=EMALE07 is_typespecies=TRUE"
+# Model Data: version=Prodigal.v2.6.3;run_type=Single;model="Ab initio";gc_cont=44.35;transl_table=11;uses_sd=0
+# Sequence Data: seqnum=24;seqlen=26000;seqhdr="BVI_029 emale_type=EMALE06 is_typespecies=FALSE"
+# Model Data: version=Prodigal.v2.6.3;run_type=Single;model="Ab initio";gc_cont=44.35;transl_table=11;uses_sd=0
+# Sequence Data: seqnum=25;seqlen=19815;seqhdr="BVI_056 emale_type=EMALE03 is_typespecies=FALSE"
+# Model Data: version=Prodigal.v2.6.3;run_type=Single;model="Ab initio";gc_cont=44.35;transl_table=11;uses_sd=0
+# Sequence Data: seqnum=26;seqlen=18948;seqhdr="BVI_058 emale_type=EMALE06 is_typespecies=TRUE"
+# Model Data: version=Prodigal.v2.6.3;run_type=Single;model="Ab initio";gc_cont=44.35;transl_table=11;uses_sd=0
+# Sequence Data: seqnum=27;seqlen=19352;seqhdr="RCC970_095 emale_type=EMALE06 is_typespecies=FALSE"
+# Model Data: version=Prodigal.v2.6.3;run_type=Single;model="Ab initio";gc_cont=44.35;transl_table=11;uses_sd=0
+# Sequence Data: seqnum=28;seqlen=13185;seqhdr="BVI_005 emale_type=EMALE08 is_typespecies=TRUE"
+# Model Data: version=Prodigal.v2.6.3;run_type=Single;model="Ab initio";gc_cont=44.35;transl_table=11;uses_sd=0
+# Sequence Data: seqnum=29;seqlen=21485;seqhdr="Cflag_017A emale_type=EMALE05 is_typespecies=FALSE"
+# Model Data: version=Prodigal.v2.6.3;run_type=Single;model="Ab initio";gc_cont=44.35;transl_table=11;uses_sd=0
+# Sequence Data: seqnum=30;seqlen=21311;seqhdr="Cflag_017B emale_type=EMALE01 is_typespecies=TRUE"
+# Model Data: version=Prodigal.v2.6.3;run_type=Single;model="Ab initio";gc_cont=44.35;transl_table=11;uses_sd=0
+# Sequence Data: seqnum=31;seqlen=19426;seqhdr="Cflag_017C emale_type=EMALE03 is_typespecies=FALSE"
+# Model Data: version=Prodigal.v2.6.3;run_type=Single;model="Ab initio";gc_cont=44.35;transl_table=11;uses_sd=0
+# Sequence Data: seqnum=32;seqlen=18276;seqhdr="E4-10_008 emale_type=EMALE02 is_typespecies=TRUE"
+# Model Data: version=Prodigal.v2.6.3;run_type=Single;model="Ab initio";gc_cont=44.35;transl_table=11;uses_sd=0
+# Sequence Data: seqnum=33;seqlen=26856;seqhdr="E4-10_112 emale_type=EMALE01 is_typespecies=FALSE"
+# Model Data: version=Prodigal.v2.6.3;run_type=Single;model="Ab initio";gc_cont=44.35;transl_table=11;uses_sd=0

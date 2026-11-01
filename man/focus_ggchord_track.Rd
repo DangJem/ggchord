@@ -38,11 +38,38 @@ cannot be joined by a line. Source coordinates and original row lineage
 survive repeated focusing.
 }
 \examples{
-s <- data.frame(accver = "A", length = 1000)
-d <- data.frame(accver = "A", pos = c(100, 500, 800), value = c(1, NA, 2))
-w <- data.frame(accver = "A", start = c(50, 700), end = c(200, 900),
-  locus_id = c("left", "right"))
-focus_ggchord_track(d, s, w, type = "point")
+library(ggchord)
+data(seq_data_example)
+data(ribbon_data_example)
+data(gene_data_example)
+seqs <- seq_data_example[c("accver", "length")]
+links <- ribbon_data_example[c("qaccver", "saccver", "qstart", "qend", "sstart", "send")]
+# The fixture preserves biological strands separately from its old display strands.
+genes <- transform(gene_data_example, strand = source_strand)[c("accver", "start", "end", "strand")]
+# Optional appearance choices; none of these columns or scales is required input.
+seq_palette <- setNames(c("#487A70", "#B48A61", "#637E9D", "#A16E7D"), seqs$accver)
+gene_palette <- c("+" = "#56887C", "-" = "#B58169", "." = "#AAB9AE")
+feature_palette <- c(CDS = "#6E9A8A", promoter = "#8798B2", rep_origin = "#C4A46A",
+  primer_bind = "#A28EAA", misc_feature = "#CDD5CE", protein_bind = "#A9B9C4")
+doc_theme <- theme_ggchord_publication(axis.text = element_text(size = 9),
+  axis.text.check.overlap = TRUE) + theme(legend.position = "bottom")
+data(plasmid_example_pUC19)
+track_seq <- plasmid_example_pUC19[c("accver", "length")]
+starts <- seq.int(1L, track_seq$length, by = 100L)
+bins <- data.frame(accver = track_seq$accver, start = starts,
+  end = pmin(starts + 99L, track_seq$length))
+bins$gc <- vapply(seq_len(nrow(bins)), function(i) {
+  bases <- strsplit(substr(plasmid_example_pUC19$sequence, bins$start[i], bins$end[i]), "")[[1]]
+  mean(bases \%in\% c("G", "C"))
+}, numeric(1))
+p_tracks <- ggchord(seq_data = track_seq) + geom_seq() + geom_seq_center_label() +
+  geom_track_bar(aes(track_value = gc, track_fill = gc), data = bins,
+    position = position_track("gc", width = unit(6, "mm"))) +
+  scale_track_value_continuous("gc", limits = c(0, 1), unit = "GC fraction") +
+  scale_track_fill_gradientn("gc", colours = c("#EDF1EA", "#8AAE9C", "#345F58")) +
+  coord_circular() + doc_theme
+loci <- data.frame(accver = track_seq$accver, start = 501, end = 2000)
+focus_ggchord_track(bins, track_seq, loci, type = "interval")
 }
 \seealso{
 \code{\link{ggchord_data_contract}}

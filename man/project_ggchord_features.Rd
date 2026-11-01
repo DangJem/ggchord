@@ -45,13 +45,18 @@ inconsistent-strand and ambiguous codon-boundary input produce errors.
 partial codons and reports this expansion; it does not modify source bases.
 }
 \examples{
-coding <- data.frame(feature_id = "cdsA", accver = "contig",
-  start = c(100, 200), end = c(103, 204), strand = "+", phase = c(0, 2))
+data(plasmid_example_pUC19)
+seqs <- plasmid_example_pUC19[c("accver", "length")]
+feature_source <- find_common_features(plasmid_example_pUC19)
+features <- feature_source[c("accver", "start", "end", "strand", "type", "anno")]
+coding <- features[features$anno == "AmpR" & features$type == "CDS",
+  c("accver", "start", "end", "strand")]
+coding$feature_id <- paste(coding$accver, "AmpR", sep = ":")
+coding$phase <- 0
 cds <- build_ggchord_cds(coding, genetic_code = 11)
-domains <- data.frame(feature_id = "domainA", parent_id = "cdsA", start = 2, end = 3)
-genomic <- project_ggchord_features(domains, cds)
-genomic$segments[[1]]
-project_ggchord_features(genomic, cds, from = "genome")
+# Select residues for display; this is not a detected domain.
+selected <- data.frame(feature_id = "selected_residues", parent_id = coding$feature_id, start = 2, end = 20)
+project_ggchord_features(selected, cds)
 }
 \seealso{
 \code{\link{ggchord_data_contract}}

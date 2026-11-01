@@ -64,10 +64,16 @@ triplet map and are rejected
 when declared. No full protein length or identity is inferred.
 }
 \examples{
-coding <- data.frame(feature_id = "cdsA", accver = "contig",
-  start = c(100, 200), end = c(103, 204), strand = "+", phase = c(0, 2))
+data(plasmid_example_pUC19)
+seqs <- plasmid_example_pUC19[c("accver", "length")]
+feature_source <- find_common_features(plasmid_example_pUC19)
+features <- feature_source[c("accver", "start", "end", "strand", "type", "anno")]
+coding <- features[features$anno == "AmpR" & features$type == "CDS",
+  c("accver", "start", "end", "strand")]
+coding$feature_id <- paste(coding$accver, "AmpR", sep = ":")
+coding$phase <- 0
 cds <- build_ggchord_cds(coding, genetic_code = 11)
-cds$models
+cds$features
 }
 \seealso{
 \url{https://github.com/The-Sequence-Ontology/Specifications/blob/master/gff3.md}

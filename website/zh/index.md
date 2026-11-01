@@ -1,26 +1,36 @@
 <img class="package-logo" src="../assets/logo.webp" alt="ggchord" width="150" height="150">
 
-面向**弦图比较、单序列圆图注释及直线共线性图**的图形语法。
-ggchord 将序列骨架、区间/点连接、基因、通用 feature、标签、基因组轴和定量轨道
-组合进 ggplot2 工作流。
+用 ggplot2 的方式绘制**弦图、单序列圆图和共线性图**。序列、连接、基因、标签和定量数据可以逐层叠加；每层的数据、配色和摆放方式都能单独设置。
 
-## 阅读一张完整序列比较图 {#showcase}
+## 弦图：比较多条序列 {#chord}
+{{figure:realchord}}
+
+连接表示已有比对，外侧箭头表示选出的注释。示例来自仓库中的四条原始序列。
+[查看完整代码和数据筛选过程](real-data.html#chord)。
+
+## 圆图：注释一条质粒 {#circular}
+{{figure:plasmid}}
+
+pUC19 的基因、复制起点、引物和选定酶切位点放在同一张图中。
+[学习绘制质粒图](plasmids.html)。
+
+## 共线性图：逐行查看局部关系 {#collinear}
 {{figure:reallinear}}
 
-四条原始序列、GFF3 注释及已有 BLAST 连接，不重编码源链方向。
-[完整的数据到图形流程](real-data.html)提供筛选、报告、来源追踪及弦图视图。
-另一个[完整圆图流程](plasmids.html)组合参考 feature、引物、酶切位点、堆叠与标签。
+序列按行排列，便于比较位置、方向和区间连接。
+[从原始文件开始](real-data.html#linear)，或先试[三类图的简短示例](modes.html)。
 
-## 选择下一步 {#learn}
-- [安装](installation.html)，再绘制[三种最小视图](modes.html)。
-- 学习[数据契约](data.html)、[文件格式](formats.html)及[图形语法](adjustments.html)。
-- 浏览[任务专题](articles.html)、[函数参考](reference.html)和[图集](gallery.html)。
-- 查找当前[迁移方向](migration.html)、[FAQ](faq.html)和[版本变化](news.html)。
+## 开始使用 {#learn}
+- [安装与加载](installation.html)，了解[最小输入表](data.html#tables)。
+- 阅读[使用教程](articles.html)、[函数文档](reference.html)和[示例图集](gallery.html)。
+- 调整[标签](labels.html)、[数据轨道](tracks.html)与[配色](styling.html)。
+- 查阅[迁移指南](migration.html)、[常见问题](faq.html)和[更新日志](news.html)。
 
-## 从小型可复现例子开始 {#quick-start}
+## 一个简短例子 {#quick-start}
+先从随包数据中选出本例需要的列，再交给绘图函数。绘图不要求带上原始表的所有列。
+
 {{code:setup}}
 {{code:chord}}
 
-打印 `p_chord`，再[按相同显式尺寸预览和保存](output.html)。小例子使用合成输入，
-上方综合图使用原始来源记录。此文档描述基于 0.16.4 候选 API 的 0.16.5 开发版本，
-正式发布版仍为 0.15.0。匹配 checkout 与旧安装版本的区别见[安装](installation.html#source)。
+打印 `p_chord`，再[按指定尺寸预览和保存](output.html)。当前文档对应本地 0.16.5
+开发版本，正式发布版仍为 0.15.0；[安装说明](installation.html#source)解释两者区别。

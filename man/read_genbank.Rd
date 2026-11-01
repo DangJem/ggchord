@@ -82,23 +82,10 @@ are never used to infer full lengths. Protein records require an explicit
 protein-coordinate workflow instead of this nucleotide reader.
 }
 \examples{
-if (requireNamespace("jsonlite", quietly = TRUE) &&
-    nzchar(Sys.which("python3"))) {
-  available <- suppressWarnings(system2("python3",
-    c("-c", shQuote("from Bio import SeqIO")), stdout = FALSE, stderr = FALSE))
-  if (identical(available, 0L)) {
-    path <- tempfile(fileext = ".gb")
-    writeLines(c(
-      "LOCUS       demo                      12 bp    DNA     linear   BCT 01-JAN-2000",
-      "DEFINITION  Demonstration record.", "ACCESSION   demo", "VERSION     demo.1",
-      "FEATURES             Location/Qualifiers",
-      "     misc_feature    2..8", "                     /note=\"site\"",
-      "ORIGIN", "        1 acgtacgtacgt", "//"), path)
-    imported <- read_genbank(path)
-    prepared <- prepare_ggchord_data(imported$seq_data, features = imported$features)
-    prepared$seq_data
-    unlink(path)
-  }
+\dontrun{
+# Requires the source checkout or tutorial input bundle and optional Biopython.
+imported <- read_genbank("examples/format-inputs/pUC19c-L09137.2.gb")
+imported$report
 }
 }
 \seealso{

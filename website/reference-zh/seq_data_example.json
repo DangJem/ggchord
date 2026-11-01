@@ -1,0 +1,8 @@
+{
+  "source_sha256": "1b853297928b0d3cccfd6e6645f6dd3c5de08979635f326ffd9e51dd346075da",
+  "translations": {
+    "0": "示例序列数据",
+    "1": "含 accver、length 列的数据框。",
+    "2": "用于 ggchord 教学的序列长度数据。"
+  }
+}

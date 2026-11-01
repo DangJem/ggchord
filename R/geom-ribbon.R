@@ -78,21 +78,11 @@ make_ribbon_geom <- function(outline = FALSE, linetype = FALSE) {
 #' @export
 #'
 #' @examples
-#' library(ggchord)
 #' data(seq_data_example)
+#' seqs <- seq_data_example[c("accver", "length")]
 #' data(ribbon_data_example)
-#' p <- ggchord(seq_data_example, ribbon_data_example) +
-#'   geom_seq() + geom_link_ribbon()
-#' p
-#'
-#' # Cross-track connections remain available explicitly in linear layouts.
-#' ggchord(seq_data_example, ribbon_data_example) + geom_seq() +
-#'   geom_link_ribbon(adjacent_only = FALSE) +
-#'   coord_collinear()
-#' ggchord(seq_data_example, ribbon_data_example) + geom_seq() +
-#'   geom_link_ribbon(pairs = data.frame(
-#'     qaccver = seq_data_example$accver[1],
-#'     saccver = seq_data_example$accver[3])) + coord_collinear()
+#' links <- ribbon_data_example[c("qaccver", "saccver", "qstart", "qend", "sstart", "send")]
+#' ggchord(seq_data = seqs, ribbon_data = links) + geom_seq() + geom_link_ribbon()
 geom_link_ribbon <- function(mapping = NULL, data = NULL,
                         link_ctrl_point = NULL,
                         link_gap = NULL,

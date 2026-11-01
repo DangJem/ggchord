@@ -63,8 +63,8 @@ These heuristic thresholds ignore spatial context, alpha compositing and
 viewing conditions, and never automatically change the plot or fail a run.
 }
 \examples{
-p <- ggchord(data.frame(accver = "A", length = 1000)) +
-  geom_seq() + coord_collinear()
-report <- diagnose_ggchord(p, width = 7, height = 4, device = "pdf")
-report$measurement$status
+data(seq_data_example)
+seqs <- seq_data_example[c("accver", "length")]
+p <- ggchord(seq_data = seqs) + geom_seq()
+diagnose_ggchord(p, width = 8, height = 6, units = "in", device = "png")
 }

@@ -96,19 +96,9 @@ Alternative mappings and legends are controlled with \code{aes()}, \verb{scale_*
 and \code{guides()}.
 }
 \examples{
-library(ggchord)
 data(seq_data_example)
+seqs <- seq_data_example[c("accver", "length")]
 data(ribbon_data_example)
-p <- ggchord(seq_data_example, ribbon_data_example) +
-  geom_seq() + geom_link_ribbon()
-p
-
-# Cross-track connections remain available explicitly in linear layouts.
-ggchord(seq_data_example, ribbon_data_example) + geom_seq() +
-  geom_link_ribbon(adjacent_only = FALSE) +
-  coord_collinear()
-ggchord(seq_data_example, ribbon_data_example) + geom_seq() +
-  geom_link_ribbon(pairs = data.frame(
-    qaccver = seq_data_example$accver[1],
-    saccver = seq_data_example$accver[3])) + coord_collinear()
+links <- ribbon_data_example[c("qaccver", "saccver", "qstart", "qend", "sstart", "send")]
+ggchord(seq_data = seqs, ribbon_data = links) + geom_seq() + geom_link_ribbon()
 }

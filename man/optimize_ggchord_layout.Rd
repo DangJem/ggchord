@@ -45,15 +45,11 @@ above 2,000 ribbons use a deterministic 64-bin approximation and record
 }
 \examples{
 data(seq_data_example)
+seqs <- seq_data_example[c("accver", "length")]
 data(ribbon_data_example)
-optimized <- optimize_ggchord_layout(seq_data_example, ribbon_data_example)
-optimized$seq_order
-optimized_plot <- ggchord(seq_data_example, ribbon_data_example) +
-  geom_seq(
-    seq_order = optimized$seq_order,
-    seq_orientation = optimized$seq_orientation
-  ) +
-  geom_link_ribbon()
+links <- ribbon_data_example[c("qaccver", "saccver", "qstart", "qend", "sstart", "send")]
+suggestion <- optimize_ggchord_layout(seqs, links, weight = "count")
+suggestion$seq_order
 }
 \seealso{
 \code{\link{ggchord_data_contract}}

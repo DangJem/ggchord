@@ -101,24 +101,11 @@ Manual label rotation, offsets, orientation and overlap policy belong to
 layers rather than silently ignored.
 }
 \examples{
-seq <- data.frame(accver = "circle", length = 1000)
-features <- data.frame(
-  accver = "circle", start = c(100, 130), end = c(360, 155),
-  directionality = c("forward", "nondirectional"),
-  anno = c("long feature", "short feature")
-)
-tracks <- position_feature_stack(base_position = position_plasmid())
-ggchord(seq, validate = "none") +
-  geom_seq() +
-  geom_feature_plasmid(data = features, position = tracks) +
-  geom_feature_label_repel(data = features, position = tracks,
-    external = TRUE) +
-  coord_circular()
-
-# Explicitly fit complete text inside a feature with a readable lower bound.
-features$label <- c("A longer feature annotation", "short feature")
-ggchord(seq, validate = "none") + geom_seq() +
-  geom_feature(data = features, width = .12) +
-  geom_feature_label_repel(data = features, label_fit = "shrink",
-    label_min_size = 1.5, size = 4) + coord_collinear()
+data(plasmid_example_pUC19)
+seqs <- plasmid_example_pUC19[c("accver", "length")]
+feature_source <- find_common_features(plasmid_example_pUC19)
+features <- feature_source[c("accver", "start", "end", "strand", "type", "anno")]
+ggchord(seq_data = seqs) + geom_seq() +
+  geom_feature(data = features, position = position_plasmid()) +
+  geom_feature_label_repel(data = features, position = position_plasmid()) + coord_circular()
 }

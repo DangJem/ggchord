@@ -30,7 +30,7 @@ After [setup](README.md) and the `features` table in
 
 
 ```r
-p_migrated <- ggchord(seqs[1, ]) + geom_seq() +
+p_migrated <- ggchord(plasmid_seq) + geom_seq() +
   geom_feature(data = features, shape = "block", width = .05) +
   geom_feature_label(data = features, label_rotation = 0) + coord_circular()
 p_offsets <- ggchord(seqs, gene_data = genes) + geom_seq() +

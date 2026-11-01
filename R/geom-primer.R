@@ -19,13 +19,13 @@
 #' @md
 #' @export
 #' @examples
-#' primer <- data.frame(
-#'   accver = "circle", start = 100, end = 120,
-#'   strand = "+", name = "sequencing primer"
-#' )
-#' ggchord(data.frame(accver = "circle", length = 1000)) +
-#'   geom_seq() + geom_primer(data = primer) +
-#'   geom_primer_label_repel(data = primer) + coord_circular()
+#' data(plasmid_example_pUC19)
+#' seqs <- plasmid_example_pUC19[c("accver", "length")]
+#' feature_source <- find_common_features(plasmid_example_pUC19)
+#' features <- feature_source[c("accver", "start", "end", "strand", "type", "anno")]
+#' primers <- find_primer_bindings(plasmid_example_pUC19, set = "universal")
+#' ggchord(seq_data = seqs) + geom_seq() + geom_primer(data = primers) +
+#'   geom_primer_label_repel(data = primers) + coord_circular()
 geom_primer <- function(mapping = NULL, data = NULL,
                         side = c("between", "outside", "inside"),
                         arc_offset = .045,

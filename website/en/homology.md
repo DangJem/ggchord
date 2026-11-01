@@ -1,24 +1,24 @@
-## Membership is supplied evidence {#membership}
-After the [shared setup](index.html#quick-start), this declared synthetic cluster
-connects one feature on each sequence. It is a teaching assertion, not an
-inference from the repeated gene annotation text.
+## Derive membership from actual coding sequences {#membership}
+After the [shared setup](index.html#quick-start), select AmpR annotations from
+bundled pUC19 and pETDuet-1, extract actual DNA and correct for strand. Group only
+identical oriented CDS sequences; sharing the label AmpR is not itself evidence.
 
 {{code:homologs}}
 {{figure:homologs}}
 
-Inspect `homologs$report$comparisons` and `$members`. Unknown members are omitted
-and reported; ambiguous paralogs default to omission. `paralogs = "all"` explicitly
-requests bounded Cartesian products. Repeated feature IDs require an explicit
-segment policy, and an outer span is an anchor, not an exon alignment.
-`find_ggchord_loci()` selects exact feature IDs and expands in biological direction;
-unknown direction requires symmetric extensions. Continue with [focus](views.html).
+This strict example demonstrates identical CDS, not a requirement that all
+homologs be identical. General memberships should come from reliable external
+analysis. Inspect `homologs$report$comparisons` and `$members`; unknown members
+and ambiguous paralogs are reported. `paralogs = "all"` requests bounded Cartesian
+products explicitly. A segmented feature's outer span is an anchor, not an exon
+alignment. `find_ggchord_loci()` selects exact IDs and extends biologically.
 
-## Project a declared protein correspondence {#projection}
+## Project an evidenced protein interval to both CDS {#projection}
 {{code:linkprojection}}
 {{results:projection}}
 
-Equal protein endpoint spans are not evidence of ungapped alignment. The explicit
-`ungapped = TRUE` assertion is required. The helper splits where either CDS crosses
-a coding-segment boundary and preserves source protein metadata. It does not emit
-protein identity as nucleotide identity or invent nucleotide alignment length.
-For domains and partial/phase policies, see [CDS projection](projection.html).
+The first 20 residues of identical CDS justify `ungapped = TRUE`. Equal spans in
+an ordinary BLASTp HSP do not. Projection splits at CDS segment boundaries and
+retains protein metadata without inventing nucleotide identity. For a real
+BLASTp query-span example see [alignment input](alignments.html#protein); see
+[coordinate projection](projection.html) for the feature workflow.

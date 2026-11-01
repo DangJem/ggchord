@@ -23,8 +23,7 @@ pkgload::load_all(".")
 ```
 
 Repository paths used in the [file-import example](data.html#import) are not
-installed package data. The introductory examples instead construct small data
-frames in R and work after installation.
+installed package data. The introductory examples select minimal columns from bundled data and work after installation.
 
 ## First steps {#first-steps}
 Read the [data contract](data.html), copy the [shared setup](index.html#quick-start),

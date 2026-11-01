@@ -51,12 +51,10 @@ intervals with \code{\link[=build_ggchord_cds]{build_ggchord_cds()}} and \code{\
 Empty sequences are rejected like other zero lengths.
 }
 \examples{
-as_ggchord_seq(data.frame(chrom = c("host", "virus"), size = c(1000, 300)),
-  mapping = c(accver = "chrom", length = "size"))
-if (requireNamespace("Biostrings", quietly = TRUE)) {
-  as_ggchord_seq(Biostrings::DNAStringSet(c(host = "ACGT", virus = "AT")))
-  as_ggchord_seq(Biostrings::DNAString("ACGT"), ids = "explicit_id")
-}
+data(seq_data_example)
+seqs <- seq_data_example[c("accver", "length")]
+renamed <- setNames(seqs, c("chrom", "size"))
+as_ggchord_seq(renamed, mapping = c(accver = "chrom", length = "size"))
 }
 \seealso{
 \code{\link{ggchord_data_contract}}

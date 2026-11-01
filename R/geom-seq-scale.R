@@ -73,10 +73,9 @@ ggchord_empty_seq_scale_geometry <- function() data.frame(
 #' @md
 #' @export
 #' @examples
-#' sequences <- data.frame(accver = c("A", "B"), length = c(1000, 800))
-#' ggchord(sequences) + geom_seq(seq_orientation = c(A = 1, B = -1)) +
-#'   scale_seq_position_continuous(sequences = "B") +
-#'   geom_seq_scale(length = 200) + coord_collinear()
+#' data(seq_data_example)
+#' seqs <- seq_data_example[c("accver", "length")]
+#' ggchord(seq_data = seqs) + geom_seq() + coord_collinear() + geom_seq_scale(length = 10000)
 geom_seq_scale <- function(mapping = NULL, data = NULL, length = NULL, label = NULL,
     location = c("bottomleft", "bottomright", "topleft", "topright"),
     offset = grid::unit(c(2, 6), "mm"), tick_height = grid::unit(1.5, "mm"),

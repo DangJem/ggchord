@@ -26,41 +26,61 @@ remotes::install_github("DangJem/ggchord")
 
 ## 三种模式
 
-下列为合成教学输入，不代表生物学观测。
+下列代码先从随包数据中选出必需列，再绘图；原始数据与来源信息保留在原对象中。
 
 ```r
 library(ggchord)
-seqs <- data.frame(accver = c("A", "B", "C"), length = c(1000, 800, 1200))
-links <- data.frame(qaccver = c("A", "B"), saccver = c("B", "C"),
-  qstart = c(100, 200), qend = c(350, 500),
-  sstart = c(150, 400), send = c(400, 700), pident = c(96, 89))
-genes <- data.frame(accver = c("A", "B", "C"),
-  start = c(150, 200, 400), end = c(300, 350, 650),
-  strand = c("+", "+", "-"), anno = c("target", "target", "target"))
+data(seq_data_example)
+data(ribbon_data_example)
+data(gene_data_example)
+seqs <- seq_data_example[c("accver", "length")]
+links <- ribbon_data_example[c("qaccver", "saccver", "qstart", "qend", "sstart", "send")]
+# The fixture preserves biological strands separately from its old display strands.
+genes <- transform(gene_data_example, strand = source_strand)[c("accver", "start", "end", "strand")]
+# Optional appearance choices; none of these columns or scales is required input.
+seq_palette <- setNames(c("#487A70", "#B48A61", "#637E9D", "#A16E7D"), seqs$accver)
+gene_palette <- c("+" = "#56887C", "-" = "#B58169", "." = "#AAB9AE")
+feature_palette <- c(CDS = "#6E9A8A", promoter = "#8798B2", rep_origin = "#C4A46A",
+  primer_bind = "#A28EAA", misc_feature = "#CDD5CE", protein_bind = "#A9B9C4")
+doc_theme <- theme_ggchord_publication(axis.text = element_text(size = 9),
+  axis.text.check.overlap = TRUE) + theme(legend.position = "bottom")
+doc_axis <- function(coordinates = "relative") scale_seq_position_continuous(
+  coordinates = coordinates, n.breaks = 3, minor_breaks = NULL,
+  labels = function(x) format(x, scientific = FALSE, big.mark = ",", trim = TRUE))
 ```
 
 ```r
-p_chord <- ggchord(seqs, links, genes) +
-  geom_seq() + geom_link_ribbon() + geom_gene() + geom_seq_label() +
-  coord_chord()
+p_chord <- ggchord(seq_data = seqs, ribbon_data = links, gene_data = genes) +
+  geom_link_ribbon(fill = "#AFC7C0", alpha = .45) + geom_seq(show.legend = FALSE) + geom_gene(position = position_strand(.1), width = .04) +
+  geom_seq_label(size = 4, seq_label_radius = .84, seq_label_hjust = .5) + coord_chord() +
+  scale_seq_colour_manual(values = seq_palette) +
+  scale_gene_fill_manual(values = gene_palette) + doc_theme
 ```
 
 ```r
-features <- data.frame(accver = "A", start = c(80, 380, 700),
-  end = c(280, 610, 850), strand = c("+", "-", "."),
-  type = c("CDS", "CDS", "region"), label = c("alpha", "beta", "origin"))
-p_circular <- ggchord(seqs[1, ]) + geom_seq() +
-  geom_feature(data = features) +
-  geom_feature_label_repel(data = features) + coord_circular() +
-  theme_ggchord(axis = element_blank())
+data(plasmid_example_pUC19)
+plasmid_seq <- plasmid_example_pUC19[c("accver", "length")]
+feature_source <- find_common_features(plasmid_example_pUC19)
+features <- feature_source[c("accver", "start", "end", "strand", "type", "anno")]
+
+circle_features <- features[features$type %in% c("CDS", "rep_origin"), ]
+p_circular <- ggchord(seq_data = plasmid_seq) + geom_seq() +
+  geom_feature(aes(feature_fill = type), data = circle_features, position = position_plasmid()) +
+  geom_feature_label_repel(data = circle_features, position = position_plasmid(), size = 3.3) +
+  geom_seq_center_label() + scale_feature_fill_manual(values = feature_palette, breaks = unique(circle_features$type)) +
+  coord_circular() + theme_ggchord_publication(axis.text = element_text(size = 9))
 ```
 
 ```r
-p_collinear <- ggchord(seqs, links, genes) +
-  geom_link_ribbon(alpha = .3) + geom_seq() +
-  geom_gene(position = position_strand(.1)) + geom_seq_label() +
-  coord_collinear(anchor = genes[c("accver", "start", "end")],
-    align = "center", orientation = "auto")
+anchor_rows <- unlist(lapply(split(seq_len(nrow(genes)), genes$accver), function(i)
+  i[which.max(genes$end[i] - genes$start[i])]))
+anchors <- genes[anchor_rows, c("accver", "start", "end")]
+p_collinear <- ggchord(seq_data = seqs, ribbon_data = links, gene_data = genes) +
+  geom_link_ribbon(fill = "#AFC7C0", alpha = .4) + geom_seq() +
+  geom_gene(position = position_strand(.1)) + geom_seq_label(size = 4) +
+  coord_collinear(anchor = anchors, align = "center", orientation = "auto") + doc_axis() +
+  scale_seq_colour_manual(values = seq_palette) +
+  scale_gene_fill_manual(values = gene_palette) + doc_theme
 ```
 
 | Chord / 弦图 | Circular / 圆图 | Collinear / 共线性图 |

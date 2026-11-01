@@ -1,0 +1,7 @@
+"source","file","rows","source_md5","file_md5","transformation"
+"examples/blastn/MT108731.1__MT118296.1.o7","examples/blastn-standard/MT108731.1__MT118296.1.tsv",7,"e727d8f1dbc4323e75b0033e4e1f1100","99d9ff642d56d04f587041d6f4ef3b4a","First 12 standard BLAST fields; source HSP rows unchanged; not a rerun"
+"examples/blastn/MT108731.1__OQ646790.1.o7","examples/blastn-standard/MT108731.1__OQ646790.1.tsv",15,"8dba574f2c9ad9756a7bdad622b2fd75","1af0d944c76561b3d969ec19cde80f4f","First 12 standard BLAST fields; source HSP rows unchanged; not a rerun"
+"examples/blastn/MT108731.1__OR222515.1.o7","examples/blastn-standard/MT108731.1__OR222515.1.tsv",1,"cd0fcc8c951d3833abc269616b033085","7971cf077374f1356866db725bf872b5","First 12 standard BLAST fields; source HSP rows unchanged; not a rerun"
+"examples/blastn/MT118296.1__OQ646790.1.o7","examples/blastn-standard/MT118296.1__OQ646790.1.tsv",6,"d2decb6bb676f210c955529ccb64642c","fb79d79b04a77ce9e8c209483c062f1b","First 12 standard BLAST fields; source HSP rows unchanged; not a rerun"
+"examples/blastn/MT118296.1__OR222515.1.o7","examples/blastn-standard/MT118296.1__OR222515.1.tsv",1,"4f3c31783785fbe08b45ea24cb636a8c","76a348982f151b407de3784167de0cfe","First 12 standard BLAST fields; source HSP rows unchanged; not a rerun"
+"examples/blastn/OQ646790.1__OR222515.1.o7","examples/blastn-standard/OQ646790.1__OR222515.1.tsv",2,"86907b5a89784b182dcd1108ec596d68","c78c8b3c1ce5765b2542c694fa77ed18","First 12 standard BLAST fields; source HSP rows unchanged; not a rerun"

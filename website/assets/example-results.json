@@ -5,7 +5,7 @@
     "displayed_chord_features": 24,
     "raw_links": 32,
     "displayed_links": 8,
-    "labelled_features": 8
+    "labelled_features": 6
   },
   "cleaning": {
     "input_rows": 2,
@@ -19,7 +19,7 @@
   },
   "plasmid": {
     "sequence_length": 2686,
-    "features": 9,
+    "features": 7,
     "primers": 6,
     "all_sites": 49845,
     "display_sites": 3
@@ -27,6 +27,19 @@
   "projection": {
     "genomic_features": 1,
     "projected_links": 1
+  },
+  "minimal": {
+    "sequence_columns": 2,
+    "link_columns": 6,
+    "gene_columns": 4
+  },
+  "protein": {
+    "input_HSPs": 2948,
+    "complete_query_CDS": 24,
+    "retained_query_HSPs": 3,
+    "query_aa_start": 50,
+    "query_aa_end": 289,
+    "projected_regions": 1
   },
   "optional": {
     "genbank": "SKIP: Biopython unavailable",

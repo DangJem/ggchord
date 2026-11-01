@@ -6,16 +6,16 @@
 API 清理已删除旧别名的执行路径，见[迁移表](migration.html)。同一语义不要混用新旧
 写法。colour/color 函数拼写别名仍保留，文档优先使用 `colour`。
 
-## feature 为什么不能作为 gene 绘制？ {#strand}
-基因快捷层要求已知 `+`/`-` 链。未知链保留在通用 feature 层，不要猜成 `+`。
+## 注释为什么不能作为 gene 绘制？ {#strand}
+基因快捷层要求已知 `+`/`-` 链。未知链保留在通用注释层，不要猜成 `+`。
 氨基酸区间需要显式投影。
 
-## 直线模式的 ribbon 为什么没显示？ {#ribbons}
+## 直线模式的区间连接为什么没显示？ {#ribbons}
 默认只连接相邻显示序列。应检查序列对选择、裁剪和校验结果，再有意使用明确 `pairs`
 或 `adjacent_only = FALSE`。这个默认规则不删除原始输入记录。
 
 ## 包会计算比对或验证引物实验吗？ {#biology}
-包可视化已有比对和计算搜索结果，不运行 BLAST、不由名称推断 cluster，也不验证湿实验
+包可视化已有比对和计算搜索结果，不运行 BLAST、不由名称推断同源分组，也不验证湿实验
 结果。搜索 confidence 不是概率。详见[识别能力边界](recognition.html)。
 
 ## 已测量诊断等于发布认证吗？ {#quality}
@@ -23,5 +23,5 @@ API 清理已删除旧别名的执行路径，见[迁移表](migration.html)。�
 后的发布流程。此开发版只进行了范围有限的文档验证。
 
 ## 在哪里报告问题？ {#report}
-在 [issue tracker](https://github.com/DangJem/ggchord/issues) 提供小型输入、包与 ggplot2
+在 [问题反馈页](https://github.com/DangJem/ggchord/issues) 提供小型输入、包与 ggplot2
 版本、代码、目标宽高、设备和诊断结果。避免附带私有序列，通常可用合成数据复现。

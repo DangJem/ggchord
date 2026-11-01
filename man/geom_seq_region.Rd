@@ -53,12 +53,11 @@ intervals. This is useful for marking loci, repeats, CRISPR arrays, or other
 user-defined regions without turning them into gene arrows.
 }
 \examples{
-library(ggchord)
 data(seq_data_example)
-regions <- data.frame(accver = "MT108731.1",
-                      start = 1000, end = 4000,
-                      color = "orange")
-p <- ggchord(seq_data_example) + geom_seq() +
-  geom_seq_region(data = regions)
-p
+seqs <- seq_data_example[c("accver", "length")]
+data(ribbon_data_example)
+links <- ribbon_data_example[c("qaccver", "saccver", "qstart", "qend", "sstart", "send")]
+region <- data.frame(accver = links$qaccver[1], start = min(links$qstart[1], links$qend[1]),
+  end = max(links$qstart[1], links$qend[1]))
+ggchord(seq_data = seqs) + geom_seq() + geom_seq_region(data = region)
 }

@@ -1,0 +1,118 @@
+{
+  "sequences": {
+    "en": "Sequences",
+    "zh": "序列数"
+  },
+  "features": {
+    "en": "Annotation rows",
+    "zh": "注释记录数"
+  },
+  "displayed_chord_features": {
+    "en": "CDS selected for the chord view",
+    "zh": "弦图中选出的 CDS 数"
+  },
+  "raw_links": {
+    "en": "Original HSPs",
+    "zh": "原始比对记录数"
+  },
+  "displayed_links": {
+    "en": "HSPs retained by the display filter",
+    "zh": "通过显示筛选的比对数"
+  },
+  "labelled_features": {
+    "en": "Selected text labels",
+    "zh": "选出的文字标签数"
+  },
+  "input_rows": {
+    "en": "Input rows",
+    "zh": "输入行数"
+  },
+  "retained_rows": {
+    "en": "Rows retained after explicit cleaning",
+    "zh": "明确清理后保留的行数"
+  },
+  "filtered": {
+    "en": "Filtered HSPs",
+    "zh": "筛选后的比对数"
+  },
+  "deduplicated": {
+    "en": "After overlap deduplication",
+    "zh": "重叠去重后数量"
+  },
+  "merged": {
+    "en": "Merged display intervals",
+    "zh": "合并后的显示区间数"
+  },
+  "bundled": {
+    "en": "Bundle output rows",
+    "zh": "聚束输出行数"
+  },
+  "sequence_length": {
+    "en": "Full sequence length (bp)",
+    "zh": "完整序列长度（bp）"
+  },
+  "primers": {
+    "en": "Exact primer hit records",
+    "zh": "精确引物命中记录数"
+  },
+  "all_sites": {
+    "en": "Enzyme match records (not distinct positions)",
+    "zh": "酶条目匹配记录数（非独立位置数）"
+  },
+  "display_sites": {
+    "en": "Restriction records selected for display",
+    "zh": "选定显示的酶切记录数"
+  },
+  "genomic_features": {
+    "en": "Projected genomic feature rows",
+    "zh": "投影到基因组的注释行数"
+  },
+  "projected_links": {
+    "en": "Projected nucleotide link rows",
+    "zh": "投影后的核苷酸连接行数"
+  },
+  "sequence_columns": {
+    "en": "Sequence columns passed to the plot",
+    "zh": "传入绘图的序列列数"
+  },
+  "link_columns": {
+    "en": "Link columns passed to the plot",
+    "zh": "传入绘图的连接列数"
+  },
+  "gene_columns": {
+    "en": "Gene columns passed to the plot",
+    "zh": "传入绘图的基因列数"
+  },
+  "input_HSPs": {
+    "en": "Original BLASTp HSPs",
+    "zh": "原始 BLASTp 比对记录数"
+  },
+  "complete_query_CDS": {
+    "en": "Complete query CDS records",
+    "zh": "具有完整注释的查询 CDS 数"
+  },
+  "retained_query_HSPs": {
+    "en": "Query HSPs retained by the explicit filter",
+    "zh": "明确筛选后保留的查询 HSP 数"
+  },
+  "query_aa_start": {
+    "en": "Selected query start (aa)",
+    "zh": "所选查询起点（aa）"
+  },
+  "query_aa_end": {
+    "en": "Selected query end (aa)",
+    "zh": "所选查询终点（aa）"
+  },
+  "projected_regions": {
+    "en": "Projected query-span rows",
+    "zh": "投影后的查询范围行数"
+  },
+  "genbank": {
+    "en": "GenBank optional reader",
+    "zh": "GenBank 可选读取器"
+  },
+  "ranges": {
+    "en": "Optional interval adapter",
+    "zh": "可选区间对象适配器"
+  }
+}

@@ -82,10 +82,10 @@
 #' @md
 #' @seealso [ggchord_data_contract], [ggchord_layout_contract]
 #' @examples
-#' s <- data.frame(accver = "A", length = 1000)
-#' f <- data.frame(accver = "A", start = 100, end = 350,
-#'   strand = ".", type = "misc", label = "annotation")
-#' p <- ggchord(s) + geom_seq() + geom_feature(data = f, shape = "block") +
-#'   geom_feature_label(data = f, label_orientation = "horizontal") + coord_collinear()
-#' export_ggchord_layout(p, include = c("feature", "labels"))$metadata$coordinate
+#' data(plasmid_example_pUC19)
+#' seqs <- plasmid_example_pUC19[c("accver", "length")]
+#' feature_source <- find_common_features(plasmid_example_pUC19)
+#' features <- feature_source[c("accver", "start", "end", "strand", "type", "anno")]
+#' p <- ggchord(seq_data = seqs) + geom_seq() + geom_feature(data = features) + coord_circular()
+#' export_ggchord_layout(p, include = "feature")$metadata$coordinate
 NULL

@@ -1,20 +1,18 @@
-## Development status {#status}
-The latest formal release is 0.15.0. Versions 0.16.0–0.16.4 completed local
-implementation without formal release. This site describes local 0.16.5 work,
-not an installed CRAN version or a new GitHub Release.
+## Current version {#status}
+The formal release remains 0.15.0. These local 0.16.5 development docs have not
+been deployed or released; 0.16.0–0.16.4 also remain unreleased local development.
 
-## Documentation changes {#changes}
-- Positioning and entry examples now cover chord, circular and collinear views.
-- Paired English/Han topics, tutorials and README share executable snippets and
-  fixed-size figure assets; reference comes directly from current Rd.
-- Search, language switching, keyboard navigation, mobile layout and theme controls
-  are implemented in a separate static source tree.
-- The user-supplied ggchord icon is used on the home page and entry documents,
-  with full-resolution lossless encodings and a separate navigation thumbnail.
-- Canonical API signatures, defaults and result fields remain frozen at 0.16.4.
-  The old website remains untouched; deployment and release are separate actions.
+## Changes in this version {#changes}
+- Native pkgdown / Bootstrap 5 package-documentation layout with same-page language switching, search, contents and code disclosure.
+- Chord, circular and collinear home-page examples; every documentation figure supports enlargement and actual-size viewing.
+- Bundled or attributed real inputs, with explicit row/column selection before function calls.
+- GC tracks computed from actual DNA and CDS membership checked by sequence identity.
+- Standard 12-column BLAST workflows, real PAF/BLASTp input, CDS projection and format adaptation.
+- Sequence/strand parameter formats, supported scope, recommendations and compatibility; native aa plotting remains a separate proposal.
+- Fixes for empty primer layers and lost strand/user colours when gene tables omit optional annotation text.
+- Full-resolution user artwork with lossless RGBA-preserving encoding. Candidate signatures and default palettes are unchanged; documentation palettes are explicit in code.
 
-## Full change history {#history}
-The [complete NEWS source](../assets/NEWS.md) preserves the recorded history,
-including executable migration directions. Earlier names in historical entries
-are not current tutorial examples. See [migration](migration.html) for current calls.
+## History and migration {#history}
+The [complete NEWS source](../assets/NEWS.md) retains past changes.
+Historical calls are not current examples; use the [migration guide](migration.html).
+Local development checks do not constitute formal release validation.

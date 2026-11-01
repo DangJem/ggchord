@@ -10,10 +10,10 @@ def tutorial(lang):
     title = 'ggchord: chord, circular and collinear tutorial' if lang == 'en' else 'ggchord：弦图、圆图与共线性图教程'
     intro = ('This paired tutorial is generated from the same sources as the website. '
         'Code blocks are shown without executing during vignette rendering; the shared '
-        'documentation script verifies the examples directly. Inputs are synthetic unless '
-        'explicitly marked as repository files. Run the setup once before the workflows.' if lang == 'en' else
+        'documentation script verifies the examples directly. Examples prefer bundled or source-backed data; deliberate diagnostic errors are labelled. Inputs marked '
+        'as repository files require the checkout or input bundle. Run the setup once before the workflows.' if lang == 'en' else
         '本教程与英语教程、网站从同一组来源生成。vignette 渲染时只展示代码，不自动执行；'
-        '共享文档脚本直接验证相关例子。除明确标注的仓库文件外，输入均为合成教学数据。'
+        '共享文档脚本直接验证相关例子。示例优先使用随包数据和有来源的原始记录；人为构造的诊断错误会明确标注。'
         '先运行一次准备代码，再运行各专题工作流。')
     text = f'''---
 title: "{title}"
@@ -102,7 +102,7 @@ remotes::install_github("DangJem/ggchord")
         'For a checkout of this version, use `pkgload::load_all(".")` from its root. A CRAN release is not claimed.')
     text += ('\n\n![真实序列与全部注释的共线性案例](man/figures/reallinear.png)\n\n图中使用仓库原始 FASTA、GFF3 与 BLAST；完整读取、筛选代码与解释见[真实数据专题](vignettes/ggchord_guide_hans.Rmd#real-data)。\n' if zh else '\n\n![Collinear case with real sequences and all annotations](man/figures/reallinear.png)\n\nOriginal repository FASTA, GFF3 and BLAST inputs; see the [real-data workflow](vignettes/ggchord_vignette.Rmd#real-data) for complete import, filtering code and interpretation.\n')
     text += f'\n\n## {quick}\n\n'
-    text += ('下列为合成教学输入，不代表生物学观测。' if zh else 'These are synthetic teaching inputs, not biological observations.')+'\n\n'
+    text += ('下列代码先从随包数据中选出必需列，再绘图；原始数据与来源信息保留在原对象中。' if zh else 'Select only the required fields from the bundled source-backed data before plotting; keep original metadata in the source objects.')+'\n\n'
     for key in ['setup', 'chord', 'circular', 'collinear']:
         text += '```r\n'+code[key]+'\n```\n\n'
     text += '| Chord / 弦图 | Circular / 圆图 | Collinear / 共线性图 |\n| --- | --- | --- |\n'

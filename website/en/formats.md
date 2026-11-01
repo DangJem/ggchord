@@ -1,42 +1,43 @@
-## Start with canonical roles {#adapters}
-Run the [shared setup](index.html#quick-start). A renamed column is an explicit
-role mapping, not a request to rewrite accession versions or infer full lengths.
+## Adapt an existing table {#adapters}
+Run the [shared setup](index.html#quick-start). These examples rename columns of
+bundled source-backed sequences, links and genes; they do not invent alignments.
 
 {{code:adapters}}
 
-Inspect the ordinary returned tables and `ggchord_conversion` attributes.
-`as_ggchord_seq()` requires known full lengths; `as_ggchord_feature()` preserves
-unknown strands; `as_ggchord_link()` preserves anchors and available metadata.
-The same adapters are used by supported direct S4 inputs to layers.
+Adapters return ordinary frames with `ggchord_conversion` provenance. IDs remain
+unchanged. Supply reliable full lengths rather than using maximum feature ends.
+See [alignment input](alignments.html) for minimal fields and coordinate units.
 
-## BED and PAF: convert once {#zero-based}
-These files are deliberately synthetic. They demonstrate format conversion,
-not a measured alignment or annotation of a real sequence.
+## BED and PAF: convert coordinates once {#zero-based}
+The BED example writes known pUC19 intervals as minimal BED3 and reads them back.
+PAF comes directly from real minimap2 output in the public tutorial, with original
+optional tags/values. The display retains mapq ≥30 and receives only six endpoint roles.
 
 {{code:formats}}
+{{figure:paf}}
 
-The BED interval `[0,100)` becomes one-based inclusive `1..100`. PAF negative
-relative strand yields decreasing subject endpoints; mapq 255 is unavailable,
-retained separately from the converted missing value. PAF identity is derived
-from producer-reported counts, not recomputed from bases. Keep import attributes
-and source-line columns; do not subtract or add one again before drawing.
+The reader converts BED zero-based half-open intervals to one-based inclusive
+coordinates; do not add one again. BED3 has no strand, so it returns unknown
+strand; use a strand-bearing format when needed. Negative PAF relative direction
+becomes decreasing subject endpoints. These are valid reverse hits, not values
+to sort indiscriminately. Quality/identity use producer fields, not new alignments.
 
-## GenBank: records, segments and provenance {#genbank}
+## GenBank: retain record identity {#genbank}
 {{code:genbank}}
 
-This optional example runs only if the selected Python already has Biopython.
-The function installs nothing. Its result contains `seq_data`, named
-`features$annotation` and `report`; joined locations retain real segments and
-source record/feature indices. Unknown lengths are not inferred from feature
-ends. Use `unsupported = "report"` to retain unsupported locations in a report,
-not to flatten them into guessed local intervals.
+This is the original NCBI L09137.2 record, named pUC19c; do not rename it to the
+bundled pUC19. Results include `seq_data`, `features$annotation` and `report`,
+retaining segmented locations and record/feature provenance. The selected Python
+needs Biopython already installed; no automatic installation occurs.
+`unsupported = "report"` records unsupported locations rather than guessing bounds.
 
 ## Optional interval objects {#ranges}
 {{code:optionalranges}}
 {{results:optional}}
 
-The unknown strand `*` remains unknown. Known seqlengths come from Seqinfo,
-not the largest observed interval. InteractionSet `GInteractions` additionally
-adapts to links; keep a common region/length context and explicit biological
-membership. Missing optional packages are reported as skipped in the example
-record, not as validated support. See the complete [data contract](reference/ggchord_data_contract.html).
+An originally unknown-strand pUC19 annotation remains unknown as `*`. Known full
+lengths populate Seqinfo. `GInteractions` can become links but still needs explicit
+sequence/length context. Missing dependencies are marked skipped, not validated
+by source presence. See the [data contract](reference/ggchord_data_contract.html).
+SAM/BAM CIGAR is not parsed directly: use an alignment-aware tool before table
+adaptation; renaming columns alone cannot resolve splicing.

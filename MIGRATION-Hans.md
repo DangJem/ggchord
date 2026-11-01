@@ -28,7 +28,7 @@
 
 
 ```r
-p_migrated <- ggchord(seqs[1, ]) + geom_seq() +
+p_migrated <- ggchord(plasmid_seq) + geom_seq() +
   geom_feature(data = features, shape = "block", width = .05) +
   geom_feature_label(data = features, label_rotation = 0) + coord_circular()
 p_offsets <- ggchord(seqs, gene_data = genes) + geom_seq() +
@@ -37,11 +37,11 @@ p_offsets <- ggchord(seqs, gene_data = genes) + geom_seq() +
 
 
 旧负链 offset 幅度在显式 Position 中需要负号。映射仍使用
-`aes(feature_shape = type)` 配合 shape scale，固定参数则为 `shape`。
+`aes(feature_shape = type)` 配合 shape 标度，固定参数则为 `shape`。
 自动标签使用 `label_layout`，手动几何控制使用相应固定标签层。
 `label_layout = "aligned"` 改为 `"auto"`。已删除名称明确报错，不保留静默执行路径。
 
 ## 保留的支持 {#retained}
-五个 colour/color 拼写别名、全部上游重导出、gene/feature/plasmid 快捷入口及 getter/export
+五个 colour/color 拼写别名、全部上游重导出、gene/注释/plasmid 快捷入口及 getter/export
 两类几何接口均保留。各坐标默认差异和已记录结果字段保持。NULL/NA/缺参语义应查阅
-API 契约 (`help("ggchord_api_contract", package = "ggchord")`)和当前参考；NULL 不统一表示关闭。
+接口说明 (`help("ggchord_api_contract", package = "ggchord")`)和当前参考；NULL 不统一表示关闭。

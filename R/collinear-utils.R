@@ -120,9 +120,10 @@ ggchord_match_feature_rows <- function(labels, features) {
 #' @md
 #' @export
 #' @examples
-#' p <- ggchord(data.frame(accver = "A", length = 1000)) +
-#'   geom_seq() + coord_collinear()
-#' map_ggchord_position(p, "A", 500)
+#' data(seq_data_example)
+#' seqs <- seq_data_example[c("accver", "length")]
+#' p <- ggchord(seq_data = seqs) + geom_seq() + coord_collinear()
+#' map_ggchord_position(p, seqs$accver[1], position = 100)
 map_ggchord_position <- function(plot, accver, position, inverse = FALSE, source = FALSE) {
   if (!inherits(plot, "ggchord") || !isTRUE(plot$coordinates$ggchord_collinear)) {
     ggchord_stop("map_ggchord_position(): use a ggchord plot with coord_collinear()")

@@ -82,15 +82,20 @@
       "zh": "文件格式与适配器"
     },
     "articles": [
-      "formats"
+      "formats",
+      "alignments"
     ],
     "snippets": [
       "adapters",
       "formats",
       "genbank",
-      "optionalranges"
+      "optionalranges",
+      "standardblast",
+      "protein"
     ],
-    "figures": [],
+    "figures": [
+      "paf"
+    ],
     "result": "optional"
   },
   {
@@ -285,11 +290,13 @@
     },
     "articles": [
       "styling",
-      "adjustments"
+      "adjustments",
+      "parameters"
     ],
     "snippets": [
       "styling",
-      "adjustments"
+      "adjustments",
+      "parameters"
     ],
     "figures": [
       "styling"

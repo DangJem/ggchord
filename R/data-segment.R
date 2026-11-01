@@ -36,12 +36,13 @@
 #' @seealso \code{\link{ggchord_data_contract}}
 #' @export
 #' @examples
-#' s <- data.frame(accver = "A", length = 1000)
-#' w <- data.frame(accver = "A", start = c(100, 700), end = c(300, 900),
-#'   locus_id = c("left", "right"), row_id = "isolate", orientation = c(1, -1))
-#' view <- segment_ggchord_data(s, windows = w)
-#' ggchord(view$seq_data) + geom_seq() +
-#'   coord_collinear(segments = view$segments, segment_gap = 50)
+#' data(seq_data_example)
+#' seqs <- seq_data_example[c("accver", "length")]
+#' windows <- data.frame(accver = rep(seqs$accver[1], 2),
+#'   start = c(1, floor(seqs$length[1] * .65)),
+#'   end = c(floor(seqs$length[1] * .4), seqs$length[1]),
+#'   locus_id = c("left_window", "right_window"), row_id = seqs$accver[1])
+#' segment_ggchord_data(seqs[1, ], windows = windows)
 segment_ggchord_data <- function(seq_data, ribbon_data = NULL, gene_data = NULL,
     windows, point_data = NULL, cross_gap = c("split", "drop"), max_links = 10000) {
   caller <- "segment_ggchord_data()"

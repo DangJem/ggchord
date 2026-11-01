@@ -4,7 +4,7 @@
 ## 设计与资产来源 {#sources}
 语法参考 [ggplot2](https://ggplot2.tidyverse.org/)，映射、标度、几何、位置、坐标与主题
 分别承担不同职责。紧凑的 query/subject 字段参考 BLAST 风格表格，ggchord 绘图时
-不运行比对工具。环形层次和 feature 可读性与 Circos、clinker、DNA Features Viewer
+不运行比对工具。环形层次和注释可读性与 Circos、clinker、DNA Features Viewer
 进行比较，具体边界记录在仓库设计文档中；这些是概念借鉴，不是复制 API。
 
 精细的 ggchord 图标由用户于 2026-11-01 提供，授权用于网站和说明文档。

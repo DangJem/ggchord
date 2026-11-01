@@ -33,6 +33,7 @@ size; resizing the Plots pane changes the available space.
 {{figure:labelradial}}
 {{figure:labelarc}}
 
+Keep at most the first and last informative labels per sequence, retaining all gene arrows, to compare text orientation.
 Print `label_plots$auto`, `$radial` or `$arc` to inspect a candidate. The inputs and
 requested font size are identical; only the layout choice changes. Auto uses
 shared columns where applicable, radial follows local contours and arc follows

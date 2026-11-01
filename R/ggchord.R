@@ -71,10 +71,15 @@ globalVariables(c(
 #' data(ribbon_data_example)
 #' data(gene_data_example)
 #'
+#' seqs <- seq_data_example[c("accver", "length")]
+#' links <- ribbon_data_example[c("qaccver", "saccver",
+#'   "qstart", "qend", "sstart", "send")]
+#' genes <- gene_data_example[c("accver", "start", "end", "strand")]
+#' genes$strand <- gene_data_example$source_strand
 #' p <- ggchord(
-#'   seq_data = seq_data_example,
-#'   ribbon_data = ribbon_data_example,
-#'   gene_data = gene_data_example
+#'   seq_data = seqs,
+#'   ribbon_data = links,
+#'   gene_data = genes
 #' ) +
 #'   geom_seq() +
 #'   geom_link_ribbon() +

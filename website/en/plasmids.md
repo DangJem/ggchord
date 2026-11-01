@@ -1,3 +1,5 @@
+Run the [shared setup](index.html#quick-start) for the explicit palette first.
+
 ## Use a source-backed sequence {#input}
 The bundled `plasmid_example_pUC19` is copied from the repository's original
 `examples/plasmid/pUC19.fna`; bases and sequence identity are not edited for display.
@@ -7,6 +9,10 @@ network request or experimental measurements fabricated for the figure.
 {{code:plasmid}}
 {{figure:plasmid}}
 {{results:plasmid}}
+
+The original annotation table is retained in `plasmid_feature_source`. Dedicated
+primer layers replace duplicate `primer_bind` annotations in the displayed feature
+table; only geometry, type and annotation text are passed to feature layers.
 
 ## Read the annotation layers {#layers}
 The double backbone establishes one circular sequence. General features use a

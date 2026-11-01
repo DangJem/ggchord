@@ -30,7 +30,7 @@ After the [shared setup](index.html#quick-start):
 {{code:pointlinks}}
 {{figure:pointlinks}}
 
-Here `support` is a declared synthetic demonstration value. Lines use `qpos/spos`,
+Point positions are integer midpoints of real bundled HSPs; identity remains the reported `pident`. Lines use `qpos/spos`,
 not interval ends, and an arrow points from query to subject. The line default
 avoidance is `none`; ribbon avoidance is `uniform`. Global chord rotation belongs
 to the coordinate system. Pair selection and adjacent-row defaults in linear

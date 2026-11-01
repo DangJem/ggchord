@@ -1,35 +1,39 @@
-## 从标准角色开始 {#adapters}
-先运行[共享准备代码](index.html#quick-start)。列重命名是明确的角色映射，不要求改写
-accession version，也不能借此推断完整序列长度。
+## 把已有表格转换成需要的列 {#adapters}
+先运行[共享准备代码](index.html#quick-start)。这里使用随包的实际序列、连接和基因，
+只重命名列来演示角色映射；没有额外生成示意序列或比对。
 
 {{code:adapters}}
 
-检查返回的普通表格和 `ggchord_conversion` 属性。`as_ggchord_seq()` 要求已知完整长度，
-`as_ggchord_feature()` 保留未知链，`as_ggchord_link()` 保留锚点及已有元数据。
-图层接受的直接 S4 输入使用同一组适配器。
+转换返回普通数据框，并记录 `ggchord_conversion` 信息。标识原样保留；缺少完整
+序列长度时应补充可靠来源，不能把最大注释端点当作全长。核酸与蛋白比对的最小列
+和单位见[导入比对结果](alignments.html)。
 
-## BED 与 PAF：只转换一次 {#zero-based}
-这里的文件均为显式合成输入，用来演示格式转换，不代表真实序列上的实测比对或注释。
+## BED 和 PAF：坐标只转换一次 {#zero-based}
+BED 例子把已知 pUC19 注释写为最小 BED3，再读回；PAF 直接读取公开教程中的真实
+minimap2 输出，保留原始可选标签和值。显示筛选保留 mapq ≥30 的记录，绘图只接收六个端点角色。
 
 {{code:formats}}
+{{figure:paf}}
 
-BED `[0,100)` 转为一基闭区间 `1..100`。PAF 相对负方向产生递减的 subject 端点，
-mapq 255 表示不可用，原值与转换后的缺失值分别保留。PAF 相似度来自工具报告计数，
-不重新按碱基计算。保留导入属性和物理来源行，绘图前不要再加一或减一。
+BED 的零起点半开区间由读取器转成一基包含坐标；不要再手工加一次 1。
+BED3 没有链列，读回时链为未知；需要链方向时应使用含 strand 的原始格式。
+PAF 的负相对方向表现为递减的 subject 端点，这是合法反向命中，不能一律排序去掉方向。
+比对质量和 `pident` 来自生产工具报告的字段，不在绘图时重新计算碱基比对。
 
-## GenBank：记录、分段与来源 {#genbank}
+## GenBank：保留记录身份 {#genbank}
 {{code:genbank}}
 
-只有所选 Python 已安装 Biopython 时才执行这个可选例子，函数本身不安装环境。
-结果含 `seq_data`、命名的 `features$annotation` 和 `report`。joined location
-保留真实片段及记录/feature 来源索引。未知长度不能由 feature 末端推断。
-`unsupported = "report"` 把不支持位置保留在报告中，而不是猜测并压平为本地区间。
+这个文件是 NCBI 的原始 L09137.2 记录，名称是 pUC19c；不要把它强行改成随包 pUC19。
+返回值包括 `seq_data`、`features$annotation` 与 `report`，分段位置及记录/注释来源
+保留。这里需要所选 Python 已安装 Biopython；函数不自动安装依赖。
+`unsupported = "report"` 将不支持的位置记入报告，不把远端或复杂位置猜成区间。
 
-## 可选区间对象 {#ranges}
+## 可选的区间对象 {#ranges}
 {{code:optionalranges}}
 {{results:optional}}
 
-未知链 `*` 保持未知。完整长度来自 Seqinfo，而非最大观测区间。
-InteractionSet 的 `GInteractions` 还可适配为连接，须保留统一的区域/长度背景及
-显式生物学归属。缺少可选依赖的例子在记录中标为跳过，不声称已经验证。
-详见完整[数据契约](reference/ggchord_data_contract.html)。
+这里选择 pUC19 中原本未知链的注释；转换后的 `*` 仍表示未知。
+完整长度来自已知序列长度和 Seqinfo。`GInteractions` 可以转换成连接，但仍需明确
+两端序列及长度。缺少可选依赖时结果会标记跳过，不把源码存在当作运行通过。
+详见[数据格式说明](reference/ggchord_data_contract.html)。当前不直接解析 SAM/BAM 的
+CIGAR；需先由相应工具正确解析，再通过表格角色映射转换，不能仅靠改列名处理剪接。

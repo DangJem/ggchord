@@ -12,11 +12,11 @@
 {{code:migration}}
 
 旧负链 offset 幅度在显式 Position 中需要负号。映射仍使用
-`aes(feature_shape = type)` 配合 shape scale，固定参数则为 `shape`。
+`aes(feature_shape = type)` 配合 shape 标度，固定参数则为 `shape`。
 自动标签使用 `label_layout`，手动几何控制使用相应固定标签层。
 `label_layout = "aligned"` 改为 `"auto"`。已删除名称明确报错，不保留静默执行路径。
 
 ## 保留的支持 {#retained}
-五个 colour/color 拼写别名、全部上游重导出、gene/feature/plasmid 快捷入口及 getter/export
+五个 colour/color 拼写别名、全部上游重导出、gene/注释/plasmid 快捷入口及 getter/export
 两类几何接口均保留。各坐标默认差异和已记录结果字段保持。NULL/NA/缺参语义应查阅
-[API 契约](reference/ggchord_api_contract.html)和当前参考；NULL 不统一表示关闭。
+[接口说明](reference/ggchord_api_contract.html)和当前参考；NULL 不统一表示关闭。

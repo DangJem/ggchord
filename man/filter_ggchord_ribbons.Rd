@@ -71,14 +71,9 @@ Each non-NULL numeric threshold must be one finite number. Columns used by
 a numeric criterion must be numeric; missing values fail that criterion.
 }
 \examples{
-library(ggchord)
 data(ribbon_data_example)
-out <- filter_ggchord_ribbons(
-  ribbon_data_example,
-  min_pident = 95,
-  drop_self_links = TRUE,
-  sort_by = c("pident", "-length")
-)
+links <- ribbon_data_example[c("qaccver", "saccver", "qstart", "qend", "sstart", "send", "pident", "length")]
+out <- filter_ggchord_ribbons(links, min_pident = 95, min_length = 500)
 out$report
 }
 \seealso{

@@ -15,20 +15,30 @@ knitr::opts_chunk$set(eval = FALSE, collapse = TRUE, comment = "#>")
 
 <img src="../man/figures/logo.png" alt="ggchord" width="150">
 
-This paired tutorial is generated from the same sources as the website. Code blocks are shown without executing during vignette rendering; the shared documentation script verifies the examples directly. Inputs are synthetic unless explicitly marked as repository files. Run the setup once before the workflows.
+This paired tutorial is generated from the same sources as the website. Code blocks are shown without executing during vignette rendering; the shared documentation script verifies the examples directly. Examples prefer bundled or source-backed data; deliberate diagnostic errors are labelled. Inputs marked as repository files require the checkout or input bundle. Run the setup once before the workflows.
 
 ## Shared setup {#shared-setup}
 
 
 ```{r example-1, eval=FALSE}
 library(ggchord)
-seqs <- data.frame(accver = c("A", "B", "C"), length = c(1000, 800, 1200))
-links <- data.frame(qaccver = c("A", "B"), saccver = c("B", "C"),
-  qstart = c(100, 200), qend = c(350, 500),
-  sstart = c(150, 400), send = c(400, 700), pident = c(96, 89))
-genes <- data.frame(accver = c("A", "B", "C"),
-  start = c(150, 200, 400), end = c(300, 350, 650),
-  strand = c("+", "+", "-"), anno = c("target", "target", "target"))
+data(seq_data_example)
+data(ribbon_data_example)
+data(gene_data_example)
+seqs <- seq_data_example[c("accver", "length")]
+links <- ribbon_data_example[c("qaccver", "saccver", "qstart", "qend", "sstart", "send")]
+# The fixture preserves biological strands separately from its old display strands.
+genes <- transform(gene_data_example, strand = source_strand)[c("accver", "start", "end", "strand")]
+# Optional appearance choices; none of these columns or scales is required input.
+seq_palette <- setNames(c("#487A70", "#B48A61", "#637E9D", "#A16E7D"), seqs$accver)
+gene_palette <- c("+" = "#56887C", "-" = "#B58169", "." = "#AAB9AE")
+feature_palette <- c(CDS = "#6E9A8A", promoter = "#8798B2", rep_origin = "#C4A46A",
+  primer_bind = "#A28EAA", misc_feature = "#CDD5CE", protein_bind = "#A9B9C4")
+doc_theme <- theme_ggchord_publication(axis.text = element_text(size = 9),
+  axis.text.check.overlap = TRUE) + theme(legend.position = "bottom")
+doc_axis <- function(coordinates = "relative") scale_seq_position_continuous(
+  coordinates = coordinates, n.breaks = 3, minor_breaks = NULL,
+  labels = function(x) format(x, scientific = FALSE, big.mark = ",", trim = TRUE))
 ```
 
 
@@ -59,8 +69,7 @@ pkgload::load_all(".")
 ```
 
 Repository paths used in the [file-import example](#data-import) are not
-installed package data. The introductory examples instead construct small data
-frames in R and work after installation.
+installed package data. The introductory examples select minimal columns from bundled data and work after installation.
 
 ### First steps {#installation-first-steps}
 Read the [data contract](#data), copy the [shared setup](#shared-setup),
@@ -100,7 +109,7 @@ Run this repository-only example from its root. Original files are not rewritten
 
 ```{r example-4, eval=FALSE}
 seq_files <- read_fasta_lengths(files = "examples/fasta/*.fna", source_file = TRUE)
-link_files <- read_blast(files = "examples/blastn/*.o7", source_file = TRUE)
+link_files <- read_blast(files = "examples/blastn-standard/*.tsv", source_file = TRUE)
 feature_files <- read_gff3(files = "examples/gff3/*.gff3", unstranded = "keep", source_file = TRUE)
 ```
 
@@ -134,21 +143,21 @@ when filtering or merging links.
 ### Inspect a problematic input and its repair report {#data-repairs}
 
 ```{r example-6, eval=FALSE}
-problem_links <- data.frame(qaccver = c("A", "absent"), saccver = "B",
-  qstart = c(80, 20), qend = c(20, 40), sstart = 50, send = 120, pident = c(103, 90))
+# Deliberately corrupt copies to demonstrate diagnostics; original rows remain intact.
+problem_links <- ribbon_data_example[1:2, c("qaccver", "saccver", "qstart", "qend", "sstart", "send", "pident")]
+problem_links$qaccver[2] <- "absent"
+problem_links$pident[1] <- 103
 problem_report <- validate_ggchord_data(seqs, problem_links)
-repaired <- clean_ggchord_data(seqs, problem_links, unknown_id = "drop",
-  reversed_interval = "sort", invalid_pident = "clip")
-# Deliberate teaching repairs, not a recommendation to clip scientific values silently.
+repaired <- clean_ggchord_data(seqs, problem_links, unknown_id = "drop", invalid_pident = "clip")
 ```
 
 | Metric | Observed output |
 | --- | --- |
-| `input_rows` | 2 |
-| `retained_rows` | 1 |
+| Input rows | 2 |
+| Rows retained after explicit cleaning | 1 |
 
-The demonstration intentionally includes an unknown ID, reversed interval and
-identity outside 0–100. These explicit repairs are not a recommendation to clip
+The demonstration intentionally includes an unknown ID and
+identity outside 0–100 in copied source rows. These explicit repairs are not a recommendation to clip
 scientific observations silently. Inspect `problem_report` and `repaired$report`,
 retain the original table, and choose policies appropriate to actual evidence.
 A legitimate reverse alignment can keep endpoint order instead of being sorted.
@@ -158,8 +167,9 @@ standalone cleaning and preparation should not be assumed identical.
 ### Declare genome and contig keys {#data-hierarchy}
 
 ```{r example-7, eval=FALSE}
-contigs <- transform(seqs, genome = c("sample1", "sample1", "sample2"))
-genomes <- data.frame(genome = c("sample1", "sample2"))
+# Each source record represents a separate complete phage genome.
+contigs <- transform(seqs, genome = accver)
+genomes <- data.frame(genome = seqs$accver)
 hierarchy <- validate_ggchord_hierarchy(contigs, genomes, strict = TRUE)
 ```
 
@@ -170,96 +180,114 @@ when separate samples reuse local contig names. Use [file formats and adapters](
 for format/optional-object details, and the [real-record tutorial](#real-data)
 to carry reports into a complete figure.
 
+### Minimal input and protein alignments {#data-minimal}
+| Metric | Observed output |
+| --- | --- |
+| Sequence columns passed to the plot | 2 |
+| Link columns passed to the plot | 6 |
+| Gene columns passed to the plot | 4 |
+
+The second positional constructor argument is `ribbon_data`, not `gene_data`.
+Use explicit argument names as in the shared examples. Optional identity, length
+and coverage fields are needed only by operations that consume them. See
+[standard BLAST/protein input](#alignments) and [parameter formats](#parameters).
+
 
 ## File formats and explicit adapters {#formats}
 
-### Start with canonical roles {#formats-adapters}
-Run the [shared setup](#shared-setup). A renamed column is an explicit
-role mapping, not a request to rewrite accession versions or infer full lengths.
+### Adapt an existing table {#formats-adapters}
+Run the [shared setup](#shared-setup). These examples rename columns of
+bundled source-backed sequences, links and genes; they do not invent alignments.
 
 
 ```{r example-8, eval=FALSE}
-sequence_input <- as_ggchord_seq(data.frame(chrom = "A", size = 1000),
-  mapping = c(accver = "chrom", length = "size"))
-feature_input <- as_ggchord_feature(data.frame(chrom = "A", left = 10,
-  right = 100, strand = "+"), mapping = c(accver = "chrom", start = "left", end = "right"))
+renamed_sequences <- setNames(seqs, c("chrom", "size"))
+sequence_input <- as_ggchord_seq(renamed_sequences, mapping = c(accver = "chrom", length = "size"))
+renamed_features <- setNames(genes, c("chrom", "left", "right", "strand"))
+feature_input <- as_ggchord_feature(renamed_features,
+  mapping = c(accver = "chrom", start = "left", end = "right"))
 link_input <- as_ggchord_link(links)
 ```
 
 
-Inspect the ordinary returned tables and `ggchord_conversion` attributes.
-`as_ggchord_seq()` requires known full lengths; `as_ggchord_feature()` preserves
-unknown strands; `as_ggchord_link()` preserves anchors and available metadata.
-The same adapters are used by supported direct S4 inputs to layers.
+Adapters return ordinary frames with `ggchord_conversion` provenance. IDs remain
+unchanged. Supply reliable full lengths rather than using maximum feature ends.
+See [alignment input](#alignments) for minimal fields and coordinate units.
 
-### BED and PAF: convert once {#formats-zero-based}
-These files are deliberately synthetic. They demonstrate format conversion,
-not a measured alignment or annotation of a real sequence.
+### BED and PAF: convert coordinates once {#formats-zero-based}
+The BED example writes known pUC19 intervals as minimal BED3 and reads them back.
+PAF comes directly from real minimap2 output in the public tutorial, with original
+optional tags/values. The display retains mapq ≥30 and receives only six endpoint roles.
 
 
 ```{r example-9, eval=FALSE}
+# BED3 carries intervals only; the source annotations remain in features.
 bed_path <- tempfile(fileext = ".bed")
-writeLines("A\t0\t100\tdemo\t0\t-", bed_path)
+bed_rows <- data.frame(accver = features$accver, start0 = features$start - 1L, end = features$end)
+write.table(bed_rows, bed_path, sep = "\t", quote = FALSE, row.names = FALSE, col.names = FALSE)
 bed_features <- read_bed(bed_path)
-paf_path <- tempfile(fileext = ".paf")
-writeLines("A\t1000\t0\t100\t-\tB\t800\t200\t300\t95\t100\t255", paf_path)
-paf_links <- read_paf(paf_path)
-unlink(c(bed_path, paf_path))
+unlink(bed_path)
+# Unchanged PAF rows from the public EMALE tutorial, not a simulated alignment.
+paf_source <- read_paf("examples/format-inputs/emales-pair.paf")
+paf_selected <- paf_source[!is.na(paf_source$mapq) & paf_source$mapq >= 30, ]
+paf_links <- paf_selected[c("qaccver", "saccver", "qstart", "qend", "sstart", "send")]
+paf_seqs <- unique(rbind(data.frame(accver = paf_source$qaccver, length = paf_source$qlen),
+  data.frame(accver = paf_source$saccver, length = paf_source$slen)))
+p_paf <- ggchord(seq_data = paf_seqs, ribbon_data = paf_links) +
+  geom_link_ribbon(fill = "#ADC5BA", alpha = .5) + geom_seq(colour = "#547D73") +
+  geom_seq_label(size = 4) + coord_collinear() + doc_axis() + doc_theme
 ```
 
+<figure class="documentation-figure"><a class="figure-link" href="../man/figures/paf.png" title="Click to enlarge"><img src="../man/figures/paf.png" alt="A real minimap2 PAF comparison between two EMALE genomes" loading="lazy"></a><figcaption>A real minimap2 PAF comparison between two EMALE genomes · <span class="figure-hint">Click to enlarge</span></figcaption></figure>
 
-The BED interval `0,100)` becomes one-based inclusive `1..100`. PAF negative
-relative strand yields decreasing subject endpoints; mapq 255 is unavailable,
-retained separately from the converted missing value. PAF identity is derived
-from producer-reported counts, not recomputed from bases. Keep import attributes
-and source-line columns; do not subtract or add one again before drawing.
+The reader converts BED zero-based half-open intervals to one-based inclusive
+coordinates; do not add one again. BED3 has no strand, so it returns unknown
+strand; use a strand-bearing format when needed. Negative PAF relative direction
+becomes decreasing subject endpoints. These are valid reverse hits, not values
+to sort indiscriminately. Quality/identity use producer fields, not new alignments.
 
-### GenBank: records, segments and provenance {#formats-genbank}
+### GenBank: retain record identity {#formats-genbank}
 
 ```{r example-10, eval=FALSE}
-# Optional reader: the selected Python must already contain Biopython.
+# The original NCBI L09137.2 record identifies pUC19c; keep that identity.
 genbank_result <- NULL
 if (nzchar(Sys.which("python3")) && identical(suppressWarnings(system2("python3",
   c("-c", shQuote("from Bio import SeqIO")), stdout = FALSE, stderr = FALSE)), 0L)) {
-  gb_path <- tempfile(fileext = ".gb")
-  writeLines(c("LOCUS       demo                      12 bp    DNA     linear   BCT 01-JAN-2000",
-    "DEFINITION  Synthetic teaching record.", "ACCESSION   demo", "VERSION     demo.1",
-    "FEATURES             Location/Qualifiers", "     misc_feature    2..8",
-    "                     /note=\"site\"", "ORIGIN", "        1 acgtacgtacgt", "//"), gb_path)
-  genbank_result <- read_genbank(gb_path)
-  unlink(gb_path)
+  genbank_result <- read_genbank("examples/format-inputs/pUC19c-L09137.2.gb")
 }
 ```
 
 
-This optional example runs only if the selected Python already has Biopython.
-The function installs nothing. Its result contains `seq_data`, named
-`features$annotation` and `report`; joined locations retain real segments and
-source record/feature indices. Unknown lengths are not inferred from feature
-ends. Use `unsupported = "report"` to retain unsupported locations in a report,
-not to flatten them into guessed local intervals.
+This is the original NCBI L09137.2 record, named pUC19c; do not rename it to the
+bundled pUC19. Results include `seq_data`, `features$annotation` and `report`,
+retaining segmented locations and record/feature provenance. The selected Python
+needs Biopython already installed; no automatic installation occurs.
+`unsupported = "report"` records unsupported locations rather than guessing bounds.
 
 ### Optional interval objects {#formats-ranges}
 
 ```{r example-11, eval=FALSE}
 range_inputs <- NULL
 if (requireNamespace("GenomicRanges", quietly = TRUE)) {
-  ranges <- GenomicRanges::GRanges(seqnames = "A", ranges = IRanges::IRanges(10, 100),
-    strand = "*", seqlengths = c(A = 1000L))
+  unknown <- features[features$strand == ".", ][1, ]
+  ranges <- GenomicRanges::GRanges(seqnames = unknown$accver,
+    ranges = IRanges::IRanges(unknown$start, unknown$end), strand = "*",
+    seqlengths = setNames(plasmid_seq$length, plasmid_seq$accver))
   range_inputs <- list(seq_data = as_ggchord_seq(ranges), features = as_ggchord_feature(ranges))
 }
 ```
 
 | Metric | Observed output |
 | --- | --- |
-| `genbank` | SKIP: Biopython unavailable |
-| `ranges` | SKIP: GenomicRanges unavailable |
+| GenBank optional reader | SKIP: Biopython unavailable |
+| Optional interval adapter | SKIP: GenomicRanges unavailable |
 
-The unknown strand `*` remains unknown. Known seqlengths come from Seqinfo,
-not the largest observed interval. InteractionSet `GInteractions` additionally
-adapts to links; keep a common region/length context and explicit biological
-membership. Missing optional packages are reported as skipped in the example
-record, not as validated support. See the complete [data contract (`help("ggchord_data_contract", package = "ggchord")`).
+An originally unknown-strand pUC19 annotation remains unknown as `*`. Known full
+lengths populate Seqinfo. `GInteractions` can become links but still needs explicit
+sequence/length context. Missing dependencies are marked skipped, not validated
+by source presence. See the data contract (`help("ggchord_data_contract", package = "ggchord")`).
+SAM/BAM CIGAR is not parsed directly: use an alignment-aware tool before table
+adaptation; renaming columns alone cannot resolve splicing.
 
 
 ## Three coordinate systems {#modes}
@@ -270,12 +298,14 @@ composable ggplot; print it or use `ggsave()`.
 ### Chord: compare multiple sequences {#modes-chord}
 
 ```{r example-12, eval=FALSE}
-p_chord <- ggchord(seqs, links, genes) +
-  geom_seq() + geom_link_ribbon() + geom_gene() + geom_seq_label() +
-  coord_chord()
+p_chord <- ggchord(seq_data = seqs, ribbon_data = links, gene_data = genes) +
+  geom_link_ribbon(fill = "#AFC7C0", alpha = .45) + geom_seq(show.legend = FALSE) + geom_gene(position = position_strand(.1), width = .04) +
+  geom_seq_label(size = 4, seq_label_radius = .84, seq_label_hjust = .5) + coord_chord() +
+  scale_seq_colour_manual(values = seq_palette) +
+  scale_gene_fill_manual(values = gene_palette) + doc_theme
 ```
 
-![Chord comparison of three synthetic sequences](../man/figures/chord.png)
+<figure class="documentation-figure"><a class="figure-link" href="../man/figures/chord.png" title="Click to enlarge"><img src="../man/figures/chord.png" alt="Bundled sequences and alignment intervals in a chord view" loading="lazy"></a><figcaption>Bundled sequences and alignment intervals in a chord view · <span class="figure-hint">Click to enlarge</span></figcaption></figure>
 `coord_chord()` controls global rotation and fitting. Sequence-local radius,
 curvature, gap and orientation belong to `geom_seq()`. A NULL link control point
 uses the historical origin-based chord route; it does not mean a universal
@@ -284,17 +314,21 @@ straight link. Ribbon avoidance defaults to `uniform`, line avoidance to `none`.
 ### Circular: annotate one sequence {#modes-circular}
 
 ```{r example-13, eval=FALSE}
-features <- data.frame(accver = "A", start = c(80, 380, 700),
-  end = c(280, 610, 850), strand = c("+", "-", "."),
-  type = c("CDS", "CDS", "region"), label = c("alpha", "beta", "origin"))
-p_circular <- ggchord(seqs[1, ]) + geom_seq() +
-  geom_feature(data = features) +
-  geom_feature_label_repel(data = features) + coord_circular() +
-  theme_ggchord(axis = element_blank())
+data(plasmid_example_pUC19)
+plasmid_seq <- plasmid_example_pUC19[c("accver", "length")]
+feature_source <- find_common_features(plasmid_example_pUC19)
+features <- feature_source[c("accver", "start", "end", "strand", "type", "anno")]
+
+circle_features <- features[features$type %in% c("CDS", "rep_origin"), ]
+p_circular <- ggchord(seq_data = plasmid_seq) + geom_seq() +
+  geom_feature(aes(feature_fill = type), data = circle_features, position = position_plasmid()) +
+  geom_feature_label_repel(data = circle_features, position = position_plasmid(), size = 3.3) +
+  geom_seq_center_label() + scale_feature_fill_manual(values = feature_palette, breaks = unique(circle_features$type)) +
+  coord_circular() + theme_ggchord_publication(axis.text = element_text(size = 9))
 ```
 
-![Circular annotation with known and unknown strands](../man/figures/circular.png)
-This example explicitly hides the axis to leave the feature labels clear.
+<figure class="documentation-figure"><a class="figure-link" href="../man/figures/circular.png" title="Click to enlarge"><img src="../man/figures/circular.png" alt="pUC19 annotations in a circular map" loading="lazy"></a><figcaption>pUC19 annotations in a circular map · <span class="figure-hint">Click to enlarge</span></figcaption></figure>
+This example selects CDS and the replication origin for display, retaining the full sequence bp axis.
 `coord_circular()` requires a single sequence. General features can carry unknown
 strand. `geom_feature_plasmid()` is a convenience preset with its own defaults;
 choose it explicitly when those defaults fit the task. Primer and restriction
@@ -303,14 +337,19 @@ layers are described in [recognition](#recognition).
 ### Collinear: align local comparisons {#modes-collinear}
 
 ```{r example-14, eval=FALSE}
-p_collinear <- ggchord(seqs, links, genes) +
-  geom_link_ribbon(alpha = .3) + geom_seq() +
-  geom_gene(position = position_strand(.1)) + geom_seq_label() +
-  coord_collinear(anchor = genes[c("accver", "start", "end")],
-    align = "center", orientation = "auto")
+anchor_rows <- unlist(lapply(split(seq_len(nrow(genes)), genes$accver), function(i)
+  i[which.max(genes$end[i] - genes$start[i])]))
+anchors <- genes[anchor_rows, c("accver", "start", "end")]
+p_collinear <- ggchord(seq_data = seqs, ribbon_data = links, gene_data = genes) +
+  geom_link_ribbon(fill = "#AFC7C0", alpha = .4) + geom_seq() +
+  geom_gene(position = position_strand(.1)) + geom_seq_label(size = 4) +
+  coord_collinear(anchor = anchors, align = "center", orientation = "auto") + doc_axis() +
+  scale_seq_colour_manual(values = seq_palette) +
+  scale_gene_fill_manual(values = gene_palette) + doc_theme
 ```
 
-![Anchored linear sequence comparison](../man/figures/collinear.png)
+<figure class="documentation-figure"><a class="figure-link" href="../man/figures/collinear.png" title="Click to enlarge"><img src="../man/figures/collinear.png" alt="Bundled records aligned to explicitly selected annotation anchors" loading="lazy"></a><figcaption>Bundled records aligned to explicitly selected annotation anchors · <span class="figure-hint">Click to enlarge</span></figcaption></figure>
+Each sequence is anchored to its own longest known gene for display; this does not assert homology.
 `anchor` aligns specified intervals; `orientation = "auto"` chooses supported
 orientations using available evidence. Inspect orientation diagnostics rather
 than assuming biological inversion. Ribbons connect adjacent displayed rows by
@@ -331,9 +370,12 @@ version and [build manifest](https://github.com/DangJem/ggchord/tree/main/websit
 ### Read and inspect original records {#real-data-read}
 
 ```{r example-15, eval=FALSE}
-seq_real <- read_fasta_lengths(files = "examples/fasta/*.fna", source_file = TRUE)
-feature_real <- read_gff3(files = "examples/gff3/*.gff3", unstranded = "keep", source_file = TRUE)
-link_real <- read_blast(files = "examples/blastn/*.o7", source_file = TRUE)
+sequence_source <- read_fasta_lengths(files = "examples/fasta/*.fna", source_file = TRUE)
+seq_real <- sequence_source[c("accver", "length")]
+annotation_source <- read_gff3(files = "examples/gff3/*.gff3", unstranded = "keep", source_file = TRUE)
+feature_real <- annotation_source[c("accver", "start", "end", "strand", "type", "anno")]
+alignment_source <- read_blast(files = "examples/blastn-standard/*.tsv", source_file = TRUE)
+link_real <- alignment_source[c("qaccver", "saccver", "qstart", "qend", "sstart", "send", "pident", "length")]
 real_validation <- validate_ggchord_data(seq_real, link_real)
 ```
 
@@ -355,22 +397,22 @@ display_rows <- unlist(lapply(split(seq_len(nrow(feature_real)), feature_real$ac
   function(i) head(i[order(-(feature_real$end[i] - feature_real$start[i] + 1))], 6)))
 real_display_features <- feature_real[display_rows, , drop = FALSE]
 label_rows <- unlist(lapply(split(seq_len(nrow(real_display_features)), real_display_features$accver),
-  function(i) head(i, 2)))
+  function(i) head(i[real_display_features$anno[i] != "hypothetical protein"], 2)))
 real_labels <- real_display_features[label_rows, , drop = FALSE]
 ```
 
 | Metric | Observed output |
 | --- | --- |
-| `sequences` | 4 |
-| `features` | 266 |
-| `displayed_chord_features` | 24 |
-| `raw_links` | 32 |
-| `displayed_links` | 8 |
-| `labelled_features` | 8 |
+| Sequences | 4 |
+| Annotation rows | 266 |
+| CDS selected for the chord view | 24 |
+| Original HSPs | 32 |
+| HSPs retained by the display filter | 8 |
+| Selected text labels | 6 |
 
 The link display retains identity ≥80% and reported alignment length ≥500 bp.
-The chord view selects the six longest imported CDS per sequence, labelling the
-two longest of those. These are display rules, not biological findings or a claim
+The chord view selects the six longest imported CDS per sequence, labelling at most two selected CDS with informative annotations (excluding
+hypothetical protein). These are display rules, not biological findings or a claim
 that omitted genes are absent. Raw `feature_real` and `link_real` remain intact;
 `real_prepared$report` and `real_filtered$report` retain preparation/filter evidence.
 No display strands are recoded. This differs from the small packaged teaching
@@ -379,17 +421,20 @@ fixture whose documented generation includes display-strand recoding.
 ### Build a chord comparison {#real-data-chord}
 
 ```{r example-17, eval=FALSE}
-p_real_chord <- ggchord(seq_real, real_filtered$data, validate = "none") +
-  geom_link_ribbon(aes(ribbon_fill = pident), alpha = .35) + geom_seq() +
+p_real_chord <- ggchord(seq_data = seq_real, ribbon_data = real_filtered$data, validate = "none") +
+  geom_link_ribbon(aes(ribbon_fill = pident), alpha = .65) + geom_seq(show.legend = FALSE) +
   geom_feature(aes(feature_fill = strand), data = real_display_features,
     width = .045, position = position_strand(.08)) +
   geom_feature_label_repel(data = real_labels, label_layout = "radial",
-    label_wrap = 20, size = 2.5, position = position_strand(.08)) +
-  geom_seq_label() + coord_chord() + theme_ggchord_publication() +
-  theme(legend.position = "bottom")
+    label_wrap = 20, size = 3.4, position = position_strand(.08)) +
+  geom_seq_label(size = 4, seq_label_radius = .84, seq_label_hjust = .5) + coord_chord() +
+  scale_seq_colour_manual(values = seq_palette) +
+  scale_feature_fill_manual(values = gene_palette, breaks = c("+", "-")) +
+  scale_ribbon_fill_gradientn(colours = c("#DFEAE5", "#8BAA9C", "#395D55")) +
+  doc_theme
 ```
 
-![Original sequence comparison with an explicit CDS display subset](../man/figures/realchord.png)
+<figure class="documentation-figure"><a class="figure-link" href="../man/figures/realchord.png" title="Click to enlarge"><img src="../man/figures/realchord.png" alt="Original sequences with explicitly selected CDS and alignment links" loading="lazy"></a><figcaption>Original sequences with explicitly selected CDS and alignment links · <span class="figure-hint">Click to enlarge</span></figcaption></figure>
 
 Read sequence labels first, then source-strand feature arrows and interval links.
 Ribbons encode existing aligned intervals and mapped identity; their crossing is
@@ -401,13 +446,14 @@ scientific interpretation needs annotations outside this display subset.
 
 ```{r example-18, eval=FALSE}
 p_real_linear <- ggchord(seq_real, real_filtered$data, validate = "none") +
-  geom_link_ribbon(alpha = .25) + geom_seq() + geom_seq_label() +
-  geom_feature(data = feature_real, position = position_strand(.08)) +
-  geom_seq_scale(length = 10000) + coord_collinear() +
-  theme_ggchord_publication() + theme(legend.position = "bottom")
+  geom_link_ribbon(fill = "#ADC5B9", alpha = .45) + geom_seq() + geom_seq_label(size = 4) +
+  geom_feature(data = feature_real, feature_fill = "#71988A", show.legend = FALSE, position = position_strand(.18)) +
+  geom_seq_scale(length = 10000) + doc_axis() +
+  coord_collinear() + doc_axis() +
+  scale_seq_colour_manual(values = seq_palette) + doc_theme
 ```
 
-![Original sequences, all imported CDS and filtered alignment links](../man/figures/reallinear.png)
+<figure class="documentation-figure"><a class="figure-link" href="../man/figures/reallinear.png" title="Click to enlarge"><img src="../man/figures/reallinear.png" alt="Original sequences, all imported CDS and filtered links" loading="lazy"></a><figcaption>Original sequences, all imported CDS and filtered links · <span class="figure-hint">Click to enlarge</span></figcaption></figure>
 
 This view draws all imported annotations. Ribbons connect adjacent displayed
 sequences by default; retaining every comparison is an explicit layer decision.
@@ -421,8 +467,19 @@ and the shared example script. The plot manifest records the code hash, PNG devi
 width, height and dpi. The accession names identify source records; a drawing is
 not a replacement for the original annotations or alignment evidence.
 
+### Select fields before passing data {#real-data-minimal-fields}
+The `*_source` objects keep original fields and provenance; `seq_real` has two
+columns, `feature_real` only geometry/type/text, and `link_real` adds identity and
+reported length only because this workflow filters and colours by them. Standard
+12-column BLAST conversions are used, not a requirement for the historical 17 fields.
+The bundled gene fixture preserves its original strand in `source_strand`; the
+short examples restore that biological strand before selecting four gene columns.
+See [alignment input](#alignments) for exact format and unit boundaries.
+
 
 ## A complete circular annotation workflow {#plasmids}
+
+Run the [shared setup](#shared-setup) for the explicit palette first.
 
 ### Use a source-backed sequence {#plasmids-input}
 The bundled `plasmid_example_pUC19` is copied from the repository's original
@@ -433,32 +490,39 @@ network request or experimental measurements fabricated for the figure.
 
 ```{r example-19, eval=FALSE}
 data(plasmid_example_pUC19)
-plasmid_features <- find_common_features(plasmid_example_pUC19)
+plasmid_seq <- plasmid_example_pUC19[c("accver", "length")]
+plasmid_feature_source <- find_common_features(plasmid_example_pUC19)
+# Dedicated primer layers already show bindings; avoid duplicate primer annotations.
+plasmid_features <- plasmid_feature_source[plasmid_feature_source$type != "primer_bind",
+  c("accver", "start", "end", "strand", "type", "anno")]
 plasmid_primers <- find_primer_bindings(plasmid_example_pUC19, set = "universal")
 plasmid_sites <- find_restriction_sites(plasmid_example_pUC19)
-display_sites <- filter_restriction_sites(plasmid_sites,
-  enzymes = c("EcoRI", "BamHI", "HindIII"))
+display_sites <- filter_restriction_sites(plasmid_sites, enzymes = c("EcoRI", "BamHI", "HindIII"))
 primer_names <- primer_catalog(set = "universal")
-plasmid_position <- position_feature_stack(spacing = .085,
-  base_position = position_plasmid())
-p_plasmid <- ggchord(plasmid_example_pUC19) + geom_seq(seq_style = "double") +
-  geom_feature_plasmid(data = plasmid_features, position = plasmid_position) +
+plasmid_position <- position_feature_stack(spacing = .085, base_position = position_plasmid())
+p_plasmid <- ggchord(seq_data = plasmid_seq) + geom_seq(seq_style = "double") +
+  geom_feature_plasmid(aes(feature_fill = type), data = plasmid_features, position = plasmid_position) +
   geom_feature_label_repel(data = plasmid_features, position = plasmid_position,
-    label_fit = "shrink", label_min_size = 1.8) +
-  geom_primer(data = plasmid_primers) +
-  geom_primer_label_repel(data = plasmid_primers, max_overlaps = 0) +
-  geom_restriction_site(data = display_sites) + geom_seq_center_label() +
-  coord_circular(rotation = 90) + theme_ggchord_plasmid()
+    label_fit = "shrink", label_min_size = 2.4, size = 3.3) +
+  geom_primer(data = plasmid_primers, colour = "#7C83A2") +
+  geom_primer_label_repel(data = plasmid_primers, colour = "#656F92", max_overlaps = 0, size = 3) +
+  geom_restriction_site(data = display_sites, colour = "#455651", label_size = 3) + geom_seq_center_label() +
+  scale_feature_fill_manual(values = feature_palette) +
+  coord_circular(rotation = 90) + theme_ggchord_publication(axis.text = element_text(size = 9))
 ```
 
-![pUC19 with source-backed features, primers and restriction sites](../man/figures/plasmid.png)
+<figure class="documentation-figure"><a class="figure-link" href="../man/figures/plasmid.png" title="Click to enlarge"><img src="../man/figures/plasmid.png" alt="pUC19 features, exact primer hits and three selected restriction sites" loading="lazy"></a><figcaption>pUC19 features, exact primer hits and three selected restriction sites · <span class="figure-hint">Click to enlarge</span></figcaption></figure>
 | Metric | Observed output |
 | --- | --- |
-| `sequence_length` | 2686 |
-| `features` | 9 |
-| `primers` | 6 |
-| `all_sites` | 49845 |
-| `display_sites` | 3 |
+| Full sequence length (bp) | 2686 |
+| Annotation rows | 7 |
+| Exact primer hit records | 6 |
+| Enzyme match records (not distinct positions) | 49845 |
+| Restriction records selected for display | 3 |
+
+The original annotation table is retained in `plasmid_feature_source`. Dedicated
+primer layers replace duplicate `primer_bind` annotations in the displayed feature
+table; only geometry, type and annotation text are passed to feature layers.
 
 ### Read the annotation layers {#plasmids-layers}
 The double backbone establishes one circular sequence. General features use a
@@ -491,6 +555,169 @@ instead of running recognition. Use [stacking and shapes](#annotations) for
 geometry, [labels](#labels) for fitting, and [output](#output) for devices.
 
 
+## Import nucleotide and protein alignments {#alignments}
+
+### Use the default tabular columns {#alignments-standard}
+The historical custom list of 17 fields is unnecessary. Use standard tabular output:
+
+```sh
+blastn -query query.fna -subject subject.fna -outfmt 6 -out result.tsv
+blastp -query proteins.faa -subject reference.faa -outfmt 7 -out result.tsv
+```
+
+Format `6` is a table; `7` adds comments. Without a custom field list both use
+12 default fields. Omitting `-outfmt` entirely produces pairwise text, which this
+tabular reader does not parse. Fields are query ID, subject ID, pident, length,
+mismatch, gapopen, qstart, qend, sstart, send, evalue, bitscore. Their identifier
+roles become `qaccver`/`saccver`; values are preserved and need not be accession versions.
+See the [NCBI format documentation](https://www.ncbi.nlm.nih.gov/sites/books/NBK279684/table/appendices.T.options_common_to_all_blast/).
+
+### File layout and minimal plotting fields differ {#alignments-minimal}
+Twelve file columns do not require twelve plotting columns. After the
+[shared setup](#shared-setup), try the source-backed records:
+
+
+```{r example-20, eval=FALSE}
+blast_source <- read_blast("examples/blastn-standard/MT108731.1__MT118296.1.tsv")
+blast_links <- blast_source[c("qaccver", "saccver", "qstart", "qend", "sstart", "send")]
+# A six-column table is sufficient for drawing; extra fields stay in blast_source.
+custom_path <- tempfile(fileext = ".tsv")
+write.table(blast_links, custom_path, sep = "\t", quote = FALSE, row.names = FALSE, col.names = FALSE)
+custom_source <- read_blast(custom_path, format = "custom", col_names = names(blast_links))
+custom_links <- custom_source[names(blast_links)]
+unlink(custom_path)
+```
+
+
+`blast_source` retains statistics and provenance; `blast_links` has six endpoint roles.
+Identity requires `pident` only when mapped/filtered; alignment-length filters or
+weights require `length`. `qlen`/`slen` support the corresponding coverage calculations.
+They are not general plotting requirements. A custom headerless layout requires
+explicit `col_names`; arbitrary six-column meanings are not guessed.
+Use `as_ggchord_link(x, mapping = ...)` for an already-read non-BLAST table;
+see [format conversion](#formats-adapters).
+
+Files in `examples/blastn-standard/` retain historical HSP rows and their first
+12 values. They are column conversions, not new BLAST runs. Old `.o7` inputs are
+unchanged; the conversion script and hashes record that distinction.
+
+### Read BLASTp with explicit coordinate units {#alignments-protein}
+This real BLASTP 2.9.0+ output and query CDS annotation come from the public
+EMALE tutorial. Retain the original table, then select sufficiently long,
+low-evalue query HSPs with complete known CDS mappings.
+
+
+```{r example-21, eval=FALSE}
+protein_source <- read_blast("examples/format-inputs/emales-mavirus-blastp.tsv", source_file = TRUE)
+emale_source <- read_gff3("examples/format-inputs/emales-BVI_023A.gff3", source_file = TRUE)
+# The source declares complete Prodigal CDS and translation table 11.
+emale_coding <- emale_source[grepl("partial=00", emale_source$attributes),
+  c("feature_id", "accver", "start", "end", "strand", "phase")]
+emale_cds <- build_ggchord_cds(emale_coding, genetic_code = 11)
+# Keep strong HSPs whose query protein has a known complete CDS.
+# Gaps are retained: projecting one query span does not assert an ungapped pair.
+protein_kept <- protein_source[protein_source$qaccver %in% emale_coding$feature_id &
+  protein_source$evalue <= 1e-10 & protein_source$length >= 50, ]
+protein_kept <- protein_kept[order(-protein_kept$bitscore), ]
+selected_hsp <- protein_kept[1, ]
+query_interval <- data.frame(feature_id = "query_HSP", parent_id = selected_hsp$qaccver,
+  start = selected_hsp$qstart, end = selected_hsp$qend)
+projected_query <- project_ggchord_features(query_interval, emale_cds)
+# Subject projection additionally requires its own CDS map; it is not guessed from an accession.
+```
+
+| Metric | Observed output |
+| --- | --- |
+| Original BLASTp HSPs | 2948 |
+| Complete query CDS records | 24 |
+| Query HSPs retained by the explicit filter | 3 |
+| Selected query start (aa) | 50 |
+| Selected query end (aa) | 289 |
+| Projected query-span rows | 1 |
+
+BLASTp endpoints are amino-acid coordinates. This example projects the query HSP
+span into the known CDS's genomic coordinates, retaining strand and phase.
+A gapped HSP still has a projectable query span; that envelope is not a base-by-base
+nucleotide correspondence. Weak hits, gap counts and statistics remain in the source.
+
+Projecting both ends requires the subject's own CDS map. It cannot be inferred
+from an accession, maximum endpoint or annotation name. The `ungapped = TRUE`
+assertion for `project_ggchord_links()` needs evidence. The [projection tutorial](#projection)
+uses two real plasmid CDS with identical oriented DNA to demonstrate a justified
+ungapped two-ended case.
+
+Native protein backbones with aa axes are outside this version. For `blastx` and
+`tblastn`, check each endpoint's units independently. Parsing does not establish
+that a table can be drawn directly in genomic bp coordinates.
+
+### Sources and limits {#alignments-source}
+Original EMALE records come from the [public gggenomes data/tutorial](https://thackl.github.io/gggenomes/articles/emales.html).
+Only data records are reused; all figures are drawn with ggchord, without copying
+upstream figures or plotting code. The input bundle's `sources.json` records URLs,
+archive members, line ranges, hashes and selection. Parsing neither reruns
+alignments nor establishes biological function.
+
+
+## Set values by sequence and strand {#parameters}
+
+### The capability remains supported {#parameters-recommendation}
+Sequence-local geometry often needs one value per sequence or strand; duplicating
+whole layers would obscure that intent. Keep scalars as the default, use vectors
+named by `accver` when values differ, and name strand pairs `+`/`-`.
+
+
+```{r example-22, eval=FALSE}
+# Sequence IDs remain stable when the data is reordered; positional lists do not.
+radii <- setNames(c(1.1, 1, 1, 1), seqs$accver)
+widths <- c("+" = .045, "-" = .065)
+p_parameters <- ggchord(seq_data = seqs, gene_data = genes) +
+  geom_seq(seq_radius = radii) + geom_gene(width = widths,
+    position = position_strand(c("+" = .08, "-" = -.1))) +
+  geom_seq_label(size = 4) + scale_seq_colour_manual(values = seq_palette) +
+  scale_gene_fill_manual(values = gene_palette) + coord_chord() + doc_theme
+```
+
+
+Run the [shared setup](#shared-setup) first. Named radii survive sequence
+reordering; unnamed entries follow current positions. These are layout/geometry
+values, not a universal extension to colours or themes.
+
+### Supported parameters {#parameters-scope}
+| Interface | Parameters | Matching scope |
+| --- | --- | --- |
+| `geom_seq()` | `seq_radius`, `seq_curvature`, `seq_gap`, `seq_orientation` | Sequence; radius/curvature effects depend on coordinates |
+| `geom_seq_label()` | `labels`, `seq_label_radius`, `seq_label_rotation`, `size`, `seq_label_hjust`, `seq_label_vjust` | Sequence; `seq_label_orientation` is one mode choice |
+| `geom_link_ribbon()` / `geom_link_line()` | `link_gap` | Endpoint sequence; Cartesian control points are not per-sequence scalars |
+| `geom_gene()` / `geom_feature()` | `width` | Sequence and/or `+`/`-` strand |
+| `position_strand()` / `position_plasmid()` | `offset` | Sequence/strand; prefer Positions over compatibility offset inputs |
+| Fixed `geom_gene_label()` / `geom_feature_label()` | `label_radial_offset`, `label_circum_offset`, `label_circum_limit`, `label_rotation` | Sequence/strand, not every text setting |
+| `position_track()` | Numeric `width`, `gap` | Native numeric placement by sequence; physical `unit()` is a scalar absolute size |
+
+`seq_order` is itself an ordering. Automatic `label_layout` is a mode; manual angles
+and offsets belong to fixed label layers rather than automatic-label `...`.
+Axes/themes, aesthetics, scales and guides do not inherit the list extension.
+Manual scales do accept vectors named by **data categories**, under ordinary
+ggplot2 scale semantics; see [styling](#styling).
+
+### Compatibility and design tradeoffs {#parameters-compatibility}
+Equal-length unnamed vectors, sequence-named lists, position-named lists and
+unnamed lists remain compatible. Gene/feature entries can additionally contain
+strand pairs. Each parameter still validates its own type, length, range and units.
+This does not make a list a valid container for any argument.
+
+Avoid expanding low-frequency equivalent forms: positional lists can silently
+follow a new order after filtering; nested lists are harder to read. This version
+does not remove them. The planned v0.16.6 audit will evaluate convergence;
+any breaking decision needs explicit migration and removal timing. This design
+recommendation is not an announced deprecation.
+
+Numeric values do not all share one unit: `seq_gap` is a proportion, rotations
+are degrees, and physical track sizes use explicit `unit()` values. `seq_backbone_gap`
+and `seq_backbone_width` are scalar style controls, not members of the list rule.
+Automatic collinear orientation belongs to `coord_collinear(orientation = "auto")`;
+`geom_seq(seq_orientation = ...)` supplies numerical +1/-1 sequence directions.
+
+
 ## Prepare and summarize alignment links {#ribbons}
 
 ### Begin with the original link table {#ribbons-input}
@@ -498,24 +725,27 @@ Use the [real-record workflow](#real-data-selection) to create `seq_real`,
 `link_real` and `real_filtered`. Keep its original tables and filter report.
 
 
-```{r example-20, eval=FALSE}
+```{r example-23, eval=FALSE}
 unique_links <- deduplicate_ggchord_ribbons(real_filtered$data, by = "overlap",
   min_reciprocal_overlap = .9)
 merged_links <- merge_ggchord_ribbons(unique_links$data, max_gap = 100,
   min_pident_difference = 2)
 bundled_links <- bundle_ggchord_ribbons(link_real, seq_real, bins = 30)
 p_density <- ggchord(seq_real, link_real, validate = "none") + geom_seq() +
-  stat_ribbon_density(aes(ribbon_alpha = after_stat(density))) + coord_chord()
+  stat_ribbon_density(aes(ribbon_alpha = after_stat(density)), fill = "#71958A") +
+  scale_ribbon_alpha_continuous(name = "Relative density", range = c(.1, .6),
+    guide = guide_ggchord_legend(position = "bottom", nrow = 1)) +
+  scale_seq_colour_manual(values = seq_palette) + coord_chord() + doc_theme
 p_bundle <- ggchord(seq_real, link_real, validate = "none") + geom_seq() +
-  stat_ribbon_bundle(bins = 30) + coord_chord()
+  stat_ribbon_bundle(bins = 30, fill = "#71958A") + coord_chord() + doc_theme
 ```
 
 | Metric | Observed output |
 | --- | --- |
-| `filtered` | 8 |
-| `deduplicated` | 8 |
-| `merged` | 8 |
-| `bundled` | 28 |
+| Filtered HSPs | 8 |
+| After overlap deduplication | 8 |
+| Merged display intervals | 8 |
+| Bundle output rows | 28 |
 
 ### Understand each transformation {#ribbons-transformations}
 Filtering keeps observations meeting declared thresholds. Reciprocal-overlap
@@ -527,7 +757,7 @@ The merged or bundled envelope is not a newly computed nucleotide alignment.
 Estimated lengths retain their flags; unobserved identity is never invented.
 
 ### Density is an explicit statistic {#ribbons-density}
-![Explicit density summary of original alignment links](../man/figures/density.png)
+<figure class="documentation-figure"><a class="figure-link" href="../man/figures/density.png" title="Click to enlarge"><img src="../man/figures/density.png" alt="Interval density from the original alignment observations" loading="lazy"></a><figcaption>Interval density from the original alignment observations · <span class="figure-hint">Click to enlarge</span></figcaption></figure>
 
 `stat_ribbon_density()` maps a computed density, and `stat_ribbon_bundle()` performs
 its explicit aggregation during build. The ordinary ribbon geom still draws one
@@ -540,19 +770,25 @@ orientation merely because its endpoints are equal.
 After the [shared setup](#shared-setup):
 
 
-```{r example-21, eval=FALSE}
-points <- data.frame(qaccver = c("A", "A"), saccver = c("B", "C"),
-  qpos = c(200, 200), spos = c(400, 600), support = c(4, 10))
-p_points <- ggchord(seqs) + geom_seq() + geom_seq_label() +
-  geom_link_line(aes(link_colour = support, link_linewidth = support), data = points,
-    arrow = arrow(length = unit(2, "mm"))) +
-  scale_link_colour_gradientn(colours = c("#BBCFC8", "#265E55"), guide = guide_ggchord_colourbar(available_aes = "link_colour")) +
-  scale_link_linewidth_continuous(range = c(.3, 1)) + coord_chord()
+```{r example-24, eval=FALSE}
+# Midpoints summarize existing HSPs for display; they are not new alignments.
+points <- ribbon_data_example[c("qaccver", "saccver", "qstart", "qend", "sstart", "send", "pident")]
+points$qpos <- floor((points$qstart + points$qend) / 2)
+points$spos <- floor((points$sstart + points$send) / 2)
+points <- points[c("qaccver", "saccver", "qpos", "spos", "pident")]
+p_points <- ggchord(seq_data = seqs) + geom_seq() + geom_seq_label(size = 4) +
+  geom_link_line(aes(link_colour = pident), data = points,
+    arrow = arrow(length = unit(2, "mm")), linewidth = .7) +
+  scale_link_colour_gradientn(colours = c("#CCDCD3", "#355F58"),
+    name = "Identity (%)", guide = guide_ggchord_colourbar(available_aes = "link_colour",
+      position = "bottom", direction = "horizontal",
+      theme = theme(legend.key.width = unit(35, "mm"), legend.key.height = unit(3, "mm")))) +
+  scale_seq_colour_manual(values = seq_palette) + coord_chord() + doc_theme
 ```
 
-![Point-to-point links with declared synthetic support values](../man/figures/pointlinks.png)
+<figure class="documentation-figure"><a class="figure-link" href="../man/figures/pointlinks.png" title="Click to enlarge"><img src="../man/figures/pointlinks.png" alt="Midpoint links derived from existing HSP intervals" loading="lazy"></a><figcaption>Midpoint links derived from existing HSP intervals · <span class="figure-hint">Click to enlarge</span></figcaption></figure>
 
-Here `support` is a declared synthetic demonstration value. Lines use `qpos/spos`,
+Point positions are integer midpoints of real bundled HSPs; identity remains the reported `pident`. Lines use `qpos/spos`,
 not interval ends, and an arrow points from query to subject. The line default
 avoidance is `none`; ribbon avoidance is `uniform`. Global chord rotation belongs
 to the coordinate system. Pair selection and adjacent-row defaults in linear
@@ -566,26 +802,24 @@ accept every extended role; choose the matching role when making a custom guide.
 ## Features, stacking and genomic decoration {#annotations}
 
 ### Preserve feature semantics {#annotations-stack}
-Run the [shared setup](#shared-setup). This synthetic table contains
-overlapping CDS/regions and an unknown strand. Geometry and fill map separately
+Run the [shared setup](#shared-setup) and [circular example](#modes-circular).
+This table retains actual overlapping pUC19 annotations and unknown strands. Geometry and fill map separately
 from the same category; an explicit fixed `shape` would override shape mapping.
 
 
-```{r example-22, eval=FALSE}
-stack_features <- data.frame(feature_id = paste0("f", 1:4), accver = "A",
-  start = c(100, 150, 300, 650), end = c(350, 450, 550, 800),
-  strand = c("+", "+", "-", "."), type = c("CDS", "region", "CDS", "region"),
-  label = c("coding alpha", "overlap", "coding beta", "unstranded"))
+```{r example-25, eval=FALSE}
+stack_features <- features[c("accver", "start", "end", "strand", "type", "anno")]
 stack_position <- position_feature_stack(spacing = .12)
-p_stack <- ggchord(seqs[1, ]) + geom_seq() +
+feature_shapes <- setNames(ifelse(names(feature_palette) == "CDS", "arrow", "block"), names(feature_palette))
+p_stack <- ggchord(seq_data = plasmid_seq) + geom_seq() +
   geom_feature(aes(feature_fill = type, feature_shape = type), data = stack_features,
     position = stack_position) +
-  geom_feature_label_repel(data = stack_features, position = stack_position) +
-  scale_feature_shape_manual(values = c(CDS = "arrow", region = "block")) +
-  scale_feature_fill_manual(values = c(CDS = "#4C8C7C", region = "#D3A05A")) + coord_collinear()
+  geom_feature_label_repel(data = stack_features, position = stack_position, size = 3.2) +
+  scale_feature_shape_manual(values = feature_shapes) +
+  scale_feature_fill_manual(values = feature_palette) + coord_collinear() + doc_axis() + doc_theme
 ```
 
-![Stacked synthetic features with mapped shapes and fills](../man/figures/featurestack.png)
+<figure class="documentation-figure"><a class="figure-link" href="../man/figures/featurestack.png" title="Click to enlarge"><img src="../man/figures/featurestack.png" alt="Stacked overlapping annotations from the pUC19 reference" loading="lazy"></a><figcaption>Stacked overlapping annotations from the pUC19 reference · <span class="figure-hint">Click to enlarge</span></figcaption></figure>
 
 `position_feature_stack()` resolves overlapping annotation lanes. The label layer
 uses the same Position, so text anchors follow those lanes. Prefer unique
@@ -607,16 +841,18 @@ coordinate mode.
 
 ### Highlight an interval without rewriting observations {#annotations-decoration}
 
-```{r example-23, eval=FALSE}
-regions <- data.frame(accver = "A", start = 80, end = 420, category = "selected")
-p_decorated <- ggchord(seqs, links) +
-  geom_seq_region(aes(region_fill = category), data = regions) +
-  geom_link_ribbon(alpha = .25) + geom_seq() + geom_seq_label() +
-  scale_region_fill_manual(values = c(selected = "#E1B566")) +
-  geom_seq_scale(length = 200) + coord_collinear()
+```{r example-26, eval=FALSE}
+regions <- data.frame(accver = links$qaccver[1], start = min(links$qstart[1], links$qend[1]),
+  end = max(links$qstart[1], links$qend[1]), category = "alignment interval")
+p_decorated <- ggchord(seq_data = seqs, ribbon_data = links) +
+  geom_seq_region(aes(region_fill = category), data = regions, colour = NA) +
+  geom_link_ribbon(fill = "#ADC5B9", alpha = .4) + geom_seq() + geom_seq_label(size = 4) +
+  scale_region_fill_manual(values = c("alignment interval" = "#E3D0A5")) +
+  scale_seq_colour_manual(values = seq_palette) + geom_seq_scale(length = 10000) +
+  coord_collinear() + doc_axis() + doc_theme
 ```
 
-![Region highlights and an independent bp reference bar](../man/figures/decorations.png)
+<figure class="documentation-figure"><a class="figure-link" href="../man/figures/decorations.png" title="Click to enlarge"><img src="../man/figures/decorations.png" alt="Highlighting the query interval of an observed alignment" loading="lazy"></a><figcaption>Highlighting the query interval of an observed alignment · <span class="figure-hint">Click to enlarge</span></figcaption></figure>
 
 A region overlay uses its own table and `region_fill` scale. `geom_seq_label()`
 names sequences, `geom_seq_center_label()` supplies name/length in a single circle,
@@ -638,13 +874,17 @@ not interchangeable presets.
 After the [shared setup](#shared-setup):
 
 
-```{r example-24, eval=FALSE}
-p_labels <- ggchord(seqs, gene_data = genes) + geom_seq() +
-  geom_gene() + geom_gene_label_repel(label_layout = "auto", size = 3) +
-  coord_collinear()
+```{r example-27, eval=FALSE}
+label_data <- transform(gene_data_example, strand = source_strand)
+label_data <- label_data[label_data$anno != "hypothetical protein",
+  c("accver", "start", "end", "strand", "anno")]
+p_labels <- ggchord(seq_data = seqs, gene_data = genes) + geom_seq() + geom_gene() +
+  geom_gene_label_repel(data = label_data, label_layout = "auto", size = 3.4, label_wrap = 22) +
+  geom_seq_label(size = 4) + coord_collinear() + doc_axis() +
+  scale_seq_colour_manual(values = seq_palette) + scale_gene_fill_manual(values = gene_palette) + doc_theme
 ```
 
-![Automatic labels on a linear gene comparison](../man/figures/labels.png)
+<figure class="documentation-figure"><a class="figure-link" href="../man/figures/labels.png" title="Click to enlarge"><img src="../man/figures/labels.png" alt="Automatic placement of informative source gene annotations" loading="lazy"></a><figcaption>Automatic placement of informative source gene annotations · <span class="figure-hint">Click to enlarge</span></figcaption></figure>
 
 ### Fixed and automatic placement {#labels-fixed}
 Use `geom_gene_label()` or `geom_feature_label()` for manual `label_rotation`,
@@ -666,20 +906,27 @@ size; resizing the Plots pane changes the available space.
 
 ### Compare the three gene layouts {#labels-comparison}
 
-```{r example-25, eval=FALSE}
+```{r example-28, eval=FALSE}
+# Compare layouts with at most the first and last informative label per sequence.
+comparison_labels <- do.call(rbind, lapply(split(label_data, label_data$accver),
+  function(x) x[unique(c(1L, nrow(x))), , drop = FALSE]))
 label_plots <- lapply(c("auto", "radial", "arc"), function(layout)
-  ggchord(seqs, gene_data = genes) + geom_seq() + geom_gene() +
-    geom_gene_label_repel(label_layout = layout, size = 3) + coord_chord() +
-    labs(title = layout))
+  ggchord(seq_data = seqs, gene_data = genes) + geom_seq() + geom_gene() +
+    geom_gene_label_repel(data = comparison_labels, label_layout = layout, size = 3.4, label_wrap = 22) +
+    geom_seq_label(size = 4) + scale_seq_colour_manual(values = seq_palette) +
+    scale_gene_fill_manual(values = gene_palette) +
+    coord_chord(xlim = c(-1.8, 1.8), ylim = c(-1.6, 1.6)) +
+    theme_ggchord_publication(axis = element_blank()) + labs(title = layout))
 names(label_plots) <- c("auto", "radial", "arc")
-p_manual_labels <- ggchord(seqs, gene_data = genes) + geom_seq() + geom_gene() +
-  geom_gene_label(label_rotation = 30) + coord_collinear()
+p_manual_labels <- ggchord(seq_data = seqs, gene_data = genes) + geom_seq() + geom_gene() +
+  geom_gene_label(data = label_data, label_rotation = 30) + coord_collinear()
 ```
 
-![Gene labels using auto placement](../man/figures/labelauto.png)
-![Gene labels using radial placement](../man/figures/labelradial.png)
-![Gene labels following sequence tangents](../man/figures/labelarc.png)
+<figure class="documentation-figure"><a class="figure-link" href="../man/figures/labelauto.png" title="Click to enlarge"><img src="../man/figures/labelauto.png" alt="Informative gene annotations with automatic side placement" loading="lazy"></a><figcaption>Informative gene annotations with automatic side placement · <span class="figure-hint">Click to enlarge</span></figcaption></figure>
+<figure class="documentation-figure"><a class="figure-link" href="../man/figures/labelradial.png" title="Click to enlarge"><img src="../man/figures/labelradial.png" alt="The same gene annotations with radial placement" loading="lazy"></a><figcaption>The same gene annotations with radial placement · <span class="figure-hint">Click to enlarge</span></figcaption></figure>
+<figure class="documentation-figure"><a class="figure-link" href="../man/figures/labelarc.png" title="Click to enlarge"><img src="../man/figures/labelarc.png" alt="The same gene annotations with arc-oriented text" loading="lazy"></a><figcaption>The same gene annotations with arc-oriented text · <span class="figure-hint">Click to enlarge</span></figcaption></figure>
 
+Keep at most the first and last informative labels per sequence, retaining all gene arrows, to compare text orientation.
 Print `label_plots$auto`, `$radial` or `$arc` to inspect a candidate. The inputs and
 requested font size are identical; only the layout choice changes. Auto uses
 shared columns where applicable, radial follows local contours and arc follows
@@ -692,98 +939,98 @@ General feature labels have additional internal-first/callout choices; see the
 
 ## Quantitative tracks {#tracks}
 
-### Declare position and numerical domain {#tracks-domain}
-After the [shared setup](#shared-setup):
+### Compute a track from actual DNA {#tracks-domain}
+After the [shared setup](#shared-setup), compute GC fraction in 100 bp
+windows of bundled pUC19. The final shorter window uses its actual base count.
 
 
-```{r example-26, eval=FALSE}
-bins <- data.frame(accver = "A", start = seq(1, 951, 50),
-  end = seq(50, 1000, 50), signal = sin(seq(0, 2 * pi, length.out = 20)))
-p_tracks <- ggchord(seqs[1, ]) + geom_seq() +
-  geom_track_bar(aes(track_value = signal, track_fill = signal), data = bins,
-    position = position_track("signal", width = unit(5, "mm"))) +
-  scale_track_value_continuous("signal", limits = c(-1, 1), unit = "arbitrary units") +
-  scale_track_fill_gradientn("signal", colours = c("#31537D", "#F3F4EE", "#D26B38")) +
-  coord_circular()
+
+```{r example-29, eval=FALSE}
+data(plasmid_example_pUC19)
+track_seq <- plasmid_example_pUC19[c("accver", "length")]
+starts <- seq.int(1L, track_seq$length, by = 100L)
+bins <- data.frame(accver = track_seq$accver, start = starts,
+  end = pmin(starts + 99L, track_seq$length))
+bins$gc <- vapply(seq_len(nrow(bins)), function(i) {
+  bases <- strsplit(substr(plasmid_example_pUC19$sequence, bins$start[i], bins$end[i]), "")[[1]]
+  mean(bases %in% c("G", "C"))
+}, numeric(1))
+p_tracks <- ggchord(seq_data = track_seq) + geom_seq() + geom_seq_center_label() +
+  geom_track_bar(aes(track_value = gc, track_fill = gc), data = bins,
+    position = position_track("gc", width = unit(6, "mm"))) +
+  scale_track_value_continuous("gc", limits = c(0, 1), unit = "GC fraction") +
+  scale_track_fill_gradientn("gc", colours = c("#EDF1EA", "#8AAE9C", "#345F58")) +
+  coord_circular() + doc_theme
 ```
 
-![Synthetic signal in an explicit quantitative track](../man/figures/tracks.png)
+<figure class="documentation-figure"><a class="figure-link" href="../man/figures/tracks.png" title="Click to enlarge"><img src="../man/figures/tracks.png" alt="GC fractions computed from the bundled pUC19 DNA" loading="lazy"></a><figcaption>GC fractions computed from the bundled pUC19 DNA · <span class="figure-hint">Click to enlarge</span></figcaption></figure>
 
-The signal is a synthetic sine wave in arbitrary units, not measured coverage or
-GC skew. ggchord renders supplied values; it does not compute sequence composition.
-Replace it with your measured bins and declare their actual unit.
+The domain is 0–1, in fractions. Replace it with the actual unit/range of other
+measurements. `position_track()` controls placement/physical width;
+`scale_track_value_continuous()` controls numerical mapping.
 
 ### Share an ID deliberately {#tracks-sharing}
-`position_track("signal", ...)` chooses placement and physical width.
-`scale_track_value_continuous("signal", ...)` defines the numerical domain;
-it is not spatial placement. Layers sharing an ID train one joint domain,
-including the bar baseline, and must declare consistent track settings.
-Fill/colour scales are separately scoped to that ID. `geom_track_tile()` encodes
-categories, `geom_track_line()` connects numeric observations, and
-`geom_track_bar()` shows intervals relative to a baseline.
+Same-ID layers share a numerical domain, including bar baselines, and must agree
+on width/placement. Colour scales are scoped independently by track ID. Tiles
+show interval categories, lines connect observations, bars encode interval values
+relative to a baseline. Sharing a domain does not require sharing a spatial band.
 
-### Inspect retention {#tracks-diagnostics}
-Use `export_ggchord_layout()` to inspect `track_registry` and `track_diagnostics`.
-Their original value limits, physical mm contributions and native offsets have
-different units. Focus tracks with `focus_ggchord_track()` alongside the same loci;
-check clipped or omitted rows rather than treating an absent bar as zero.
+### Inspect retention and limits {#tracks-diagnostics}
+The export's `track_registry` and `track_diagnostics` record domains, physical
+sizes, native offsets and clipping. Omitted/clipped rows do not mean zero values.
+Focus tracks with `focus_ggchord_track()` using the same windows.
 
-### Combine bars, a line and categorical tiles {#tracks-multiple}
+### Combine bars, a moving mean and annotation bands {#tracks-multiple}
+Run the [circular example](#modes-circular) to obtain real `features` first.
 
-```{r example-27, eval=FALSE}
-line_bins <- transform(bins, pos = floor((start + end) / 2), signal = signal / 2)
-categories <- data.frame(accver = "A", start = c(100, 500, 800),
-  end = c(250, 700, 950), category = c("one", "two", "one"))
-p_multitrack <- ggchord(seqs[1, ]) + geom_seq() +
-  geom_track_bar(aes(track_value = signal, track_fill = signal), data = bins,
-    position = position_track("signal", width = unit(5, "mm"))) +
-  geom_track_line(aes(track_value = signal), data = line_bins,
-    position = position_track("signal", width = unit(5, "mm")), colour = "#244B68") +
-  scale_track_value_continuous("signal", limits = c(-1, 1), unit = "arbitrary units") +
-  scale_track_fill_gradientn("signal", colours = c("#31537D", "#F3F4EE", "#D26B38")) +
-  geom_track_tile(aes(track_fill = category), data = categories,
-    position = position_track("sites", side = "outside", order = 2, width = unit(2, "mm"))) +
-  scale_track_fill_manual("sites", values = c(one = "#6E9E88", two = "#DCBA66")) +
-  coord_circular()
-focused_bins <- focus_ggchord_track(bins, seqs[1, ],
-  loci = data.frame(accver = "A", start = 100, end = 700), type = "interval")
+
+```{r example-30, eval=FALSE}
+line_bins <- transform(bins, pos = floor((start + end) / 2),
+  gc_mean = as.numeric(stats::filter(gc, rep(1 / 3, 3), sides = 2)))
+line_bins <- line_bins[is.finite(line_bins$gc_mean), c("accver", "pos", "gc_mean")]
+categories <- features[c("accver", "start", "end", "type")]
+p_multitrack <- ggchord(seq_data = track_seq) + geom_seq() + geom_seq_center_label() +
+  geom_track_bar(aes(track_value = gc, track_fill = gc), data = bins,
+    position = position_track("gc", width = unit(6, "mm"))) +
+  geom_track_line(aes(track_value = gc_mean), data = line_bins,
+    position = position_track("gc", width = unit(6, "mm")), colour = "#454D65") +
+  scale_track_value_continuous("gc", limits = c(0, 1), unit = "GC fraction") +
+  scale_track_fill_gradientn("gc", colours = c("#EDF1EA", "#8AAE9C", "#345F58")) +
+  geom_track_tile(aes(track_fill = type), data = categories,
+    position = position_track("features", order = 2, width = unit(2, "mm"))) +
+  scale_track_fill_manual("features", values = feature_palette) + coord_circular() + doc_theme
+focused_bins <- focus_ggchord_track(bins, track_seq,
+  loci = data.frame(accver = track_seq$accver, start = 500, end = 1500), type = "interval")
 ```
 
-![Shared-domain bar and line with an independent categorical track](../man/figures/multitrack.png)
+<figure class="documentation-figure"><a class="figure-link" href="../man/figures/multitrack.png" title="Click to enlarge"><img src="../man/figures/multitrack.png" alt="pUC19 GC fractions, a three-bin moving mean and annotation bands" loading="lazy"></a><figcaption>pUC19 GC fractions, a three-bin moving mean and annotation bands · <span class="figure-hint">Click to enlarge</span></figcaption></figure>
 
-The bar and line deliberately share `signal` and one domain; the line is half the
-bar's synthetic signal, not another measured sample. Both declare the same width.
-The categorical `sites` lane has an independent ID and fill scale. Baseline zero
-participates in domain training. Explicit limits must represent the intended
-measurement domain; changing a value scale does not move the track in space.
-`focused_bins` retains interval clipping/source mapping for the selected locus.
-Inspect track diagnostics for bounds clipping instead of treating omitted rows
-as zero. See [styling](#styling-roles) for track colour versus fill roles.
-
-The line uses integer bin midpoints rounded down. The second categorical band
-is explicitly outside and ordered after the numeric band; narrow inside bands
-may fold at small radii and are rejected rather than drawn through the centre.
+Bars and line use the same actual GC measurements; the line is a three-window
+moving mean. Incomplete end windows are omitted, not filled with invented values.
+Line positions use integer bin midpoints. Annotation bands have an independent ID
+and palette. Bands are explicitly ordered outside; overly wide inner bands at
+small radii can fold and are rejected.
 
 
 ## Primers, restriction and feature search {#recognition}
 
 ### Search and display are separate {#recognition-search}
-A tiny synthetic sequence demonstrates exact primer and restriction searches:
+Use the bundled pUC19 DNA for exact catalogue-primer and selected restriction searches:
 
 
-```{r example-28, eval=FALSE}
-target <- c(circle = "TTGCAAAAAGAATTCACG")
-primers <- find_primer_bindings(target, primers = c(test = "ACGTTGCA"),
-  min_annealed_bases = 8)
-sites <- find_restriction_sites(target, enzymes = "EcoRI", methylation = "none")
-p_sites <- ggchord(data.frame(accver = "circle", length = nchar(target))) +
-  geom_seq() + geom_primer(data = primers) +
-  geom_restriction_site(data = sites) + coord_circular()
+```{r example-31, eval=FALSE}
+data(plasmid_example_pUC19)
+target <- setNames(plasmid_example_pUC19$sequence, plasmid_example_pUC19$accver)
+primers <- find_primer_bindings(target, set = "universal")
+sites <- find_restriction_sites(target, enzymes = c("EcoRI", "BamHI", "HindIII"), methylation = "none")
+p_sites <- ggchord(seq_data = plasmid_example_pUC19[c("accver", "length")]) + geom_seq() +
+  geom_primer(data = primers, colour = "#7C83A2") +
+  geom_restriction_site(data = sites, colour = "#455651") + coord_circular()
 ```
 
 
-The primer crosses the circular origin. Set `circular = FALSE` for a linear
-sequence. Search hits are computational matches, not experimental validation.
+Search supports circular-origin binding; set `circular = FALSE` for a linear sequence.
+The actual pUC19 hits shown here should be inspected in the returned table. Search hits are computational matches, not experimental validation.
 Primer `"three_prime"` mode finds an exact suffix, with no mismatch model;
 its Wallace melting-temperature estimate is a composition heuristic.
 
@@ -792,8 +1039,8 @@ its Wallace melting-temperature estimate is a composition heuristic.
 `filter_restriction_sites()` selects a display set. Enzyme site counts refer to
 the full supplied sequence and remain stable after filtering. `methylation =
 "auto"` uses audited context only for exactly recognized bundled references;
-it does not claim unknown samples are unblocked. This synthetic example explicitly
-uses `"none"`. `geom_restriction_site(leader = "radial")` is the default route.
+it does not claim unknown samples are unblocked. This example explicitly uses `"none"`; this is a search assumption, not a measurement
+of methylation in a physical sample. `geom_restriction_site(leader = "radial")` is the default route.
 
 ### General feature recognition {#recognition-features}
 `find_common_features()` supports curated exact-reference annotations, DNA and
@@ -805,7 +1052,7 @@ code-aware analysis. Confidence is a heuristic label, not a probability.
 Use [explicit CDS projection](#projection) for known protein/genome maps.
 
 ### Follow an annotated reference workflow {#recognition-reference}
-The short synthetic sequence isolates search mechanics. The [complete pUC19
+This short workflow uses the same source-backed plasmid as the complete map. The [complete pUC19
 workflow](#plasmids) demonstrates catalogue annotations, exact reference
 matching, site display filtering, primer labels and feature stacking together.
 Changing only a sequence name does not make it a recognized reference; sequence
@@ -815,98 +1062,122 @@ methylation provenance instead of assigning reference claims to an unknown sampl
 
 ## Explicit homologs and coding-coordinate links {#homology}
 
-### Membership is supplied evidence {#homology-membership}
-After the [shared setup](#shared-setup), this declared synthetic cluster
-connects one feature on each sequence. It is a teaching assertion, not an
-inference from the repeated gene annotation text.
+### Derive membership from actual coding sequences {#homology-membership}
+After the [shared setup](#shared-setup), select AmpR annotations from
+bundled pUC19 and pETDuet-1, extract actual DNA and correct for strand. Group only
+identical oriented CDS sequences; sharing the label AmpR is not itself evidence.
 
 
-```{r example-29, eval=FALSE}
-cluster_features <- transform(genes, feature_id = paste0("gene", 1:3))
-membership <- data.frame(feature_id = cluster_features$feature_id, cluster_id = "demo_cluster")
+```{r example-32, eval=FALSE}
+data(plasmid_example_pUC19)
+data(plasmid_example_pETDuet_1)
+homolog_source <- rbind(plasmid_example_pUC19, plasmid_example_pETDuet_1)
+homolog_seq <- homolog_source[c("accver", "length")]
+cluster_features <- do.call(rbind, lapply(seq_len(nrow(homolog_source)), function(i) {
+  f <- find_common_features(homolog_source[i, ])
+  f[f$type == "CDS" & f$anno == "AmpR", c("accver", "start", "end", "strand", "anno")]
+}))
+cluster_features$feature_id <- with(cluster_features, paste(accver, start, end, sep = ":"))
+# Membership is computed from exact strand-corrected CDS DNA equality, not gene names.
+cds_dna <- vapply(seq_len(nrow(cluster_features)), function(i) {
+  f <- cluster_features[i, ]; dna <- homolog_source$sequence[match(f$accver, homolog_source$accver)]
+  dna <- substr(dna, f$start, f$end)
+  if (f$strand == "-") dna <- chartr("ACGT", "TGCA", paste(rev(strsplit(dna, "")[[1]]), collapse = ""))
+  dna
+}, "")
+membership <- data.frame(feature_id = cluster_features$feature_id,
+  cluster_id = paste0("exact_CDS_", match(cds_dna, unique(cds_dna))))
 homologs <- link_ggchord_clusters(cluster_features, membership,
-  pairs = data.frame(qaccver = c("A", "B"), saccver = c("B", "C")))
-loci <- find_ggchord_loci(seqs, cluster_features, targets = "gene1", upstream = 50, downstream = 100)
-p_homologs <- ggchord(seqs) + geom_link_ribbon(data = homologs$data, fill = "#9CBBAF") +
-  geom_seq() + geom_gene(data = genes) + geom_seq_label() + coord_collinear()
+  pairs = data.frame(qaccver = homolog_seq$accver[1], saccver = homolog_seq$accver[2]))
+loci <- find_ggchord_loci(homolog_seq, cluster_features,
+  targets = cluster_features$feature_id[cluster_features$anno == "AmpR"][1], upstream = 100, downstream = 100)
+p_homologs <- ggchord(seq_data = homolog_seq) +
+  geom_link_ribbon(data = homologs$data, fill = "#ADC5B9", alpha = .6) + geom_seq() +
+  geom_gene(data = cluster_features) + geom_seq_label(size = 4) +
+  coord_collinear() + doc_axis() + scale_gene_fill_manual(values = gene_palette) + doc_theme
 ```
 
-![Declared synthetic cluster links, not a computed alignment](../man/figures/homologs.png)
+<figure class="documentation-figure"><a class="figure-link" href="../man/figures/homologs.png" title="Click to enlarge"><img src="../man/figures/homologs.png" alt="Two plasmids sharing an identical oriented AmpR coding sequence" loading="lazy"></a><figcaption>Two plasmids sharing an identical oriented AmpR coding sequence · <span class="figure-hint">Click to enlarge</span></figcaption></figure>
 
-Inspect `homologs$report$comparisons` and `$members`. Unknown members are omitted
-and reported; ambiguous paralogs default to omission. `paralogs = "all"` explicitly
-requests bounded Cartesian products. Repeated feature IDs require an explicit
-segment policy, and an outer span is an anchor, not an exon alignment.
-`find_ggchord_loci()` selects exact feature IDs and expands in biological direction;
-unknown direction requires symmetric extensions. Continue with [focus](#views).
+This strict example demonstrates identical CDS, not a requirement that all
+homologs be identical. General memberships should come from reliable external
+analysis. Inspect `homologs$report$comparisons` and `$members`; unknown members
+and ambiguous paralogs are reported. `paralogs = "all"` requests bounded Cartesian
+products explicitly. A segmented feature's outer span is an anchor, not an exon
+alignment. `find_ggchord_loci()` selects exact IDs and extends biologically.
 
-### Project a declared protein correspondence {#homology-projection}
+### Project an evidenced protein interval to both CDS {#homology-projection}
 
-```{r example-30, eval=FALSE}
-paired_coding <- data.frame(feature_id = c("a", "b"), accver = c("A", "B"),
-  start = c(10, 100), end = c(18, 108), strand = c("+", "-"), phase = 0)
+```{r example-33, eval=FALSE}
+# Exact CDS DNA equality supplies evidence for these selected ungapped residues.
+matching <- homologs$data[1, ]
+paired_coding <- transform(cluster_features, phase = 0)
 paired_cds <- build_ggchord_cds(paired_coding)
-protein_link <- data.frame(qfeature_id = "a", sfeature_id = "b",
-  qstart = 1, qend = 2, sstart = 2, send = 3)
+protein_link <- data.frame(qfeature_id = matching$qfeature_id, sfeature_id = matching$sfeature_id,
+  qstart = 1, qend = 20, sstart = 1, send = 20)
 projected_links <- project_ggchord_links(protein_link, paired_cds, ungapped = TRUE)
 ```
 
 | Metric | Observed output |
 | --- | --- |
-| `genomic_features` | 1 |
-| `projected_links` | 1 |
+| Projected genomic feature rows | 1 |
+| Projected nucleotide link rows | 1 |
 
-Equal protein endpoint spans are not evidence of ungapped alignment. The explicit
-`ungapped = TRUE` assertion is required. The helper splits where either CDS crosses
-a coding-segment boundary and preserves source protein metadata. It does not emit
-protein identity as nucleotide identity or invent nucleotide alignment length.
-For domains and partial/phase policies, see [CDS projection](#projection).
+The first 20 residues of identical CDS justify `ungapped = TRUE`. Equal spans in
+an ordinary BLASTp HSP do not. Projection splits at CDS segment boundaries and
+retains protein metadata without inventing nucleotide identity. For a real
+BLASTp query-span example see [alignment input](#alignments-protein); see
+[coordinate projection](#projection) for the feature workflow.
 
 
 ## CDS coordinate projection {#projection}
 
-### Build an explicit coding map {#projection-map}
-This synthetic split codon spans two coding segments:
+### Start with source-backed CDS {#projection-cds}
+Run the [identical-CDS comparison](#homology-membership) first. It uses real
+bundled plasmid annotations and DNA. Complete CDS use explicit phase 0 and
+translation table 11.
 
 
-```{r example-31, eval=FALSE}
-coding <- data.frame(feature_id = "cdsA", accver = "A", start = c(100, 200),
-  end = c(103, 204), strand = "+", phase = c(0, 2))
+```{r example-34, eval=FALSE}
+# Run the exact-CDS comparison first; these are complete source-backed CDS.
+coding <- transform(cluster_features, phase = 0)
 cds <- build_ggchord_cds(coding, genetic_code = 11)
-domains <- data.frame(feature_id = "domainA", parent_id = "cdsA", start = 2, end = 3)
+# This selects residues for a display example; it does not claim a detected domain.
+domains <- data.frame(feature_id = "selected_residues", parent_id = coding$feature_id[1], start = 2, end = 20)
 genomic <- project_ggchord_features(domains, cds)
 ```
 
 
-`genomic$segments` preserves the actual coding pieces, not an envelope including
-introns. `project_ggchord_links()` similarly projects explicit protein links;
-it does not compute new homology or translate DNA.
+This example selects residues 2–20 for display; it does not claim a detected
+protein domain. Projection returns genomic intervals with strand/segment context.
+Actual domains require exact parent CDS IDs and amino-acid ranges; annotation
+names or maximum feature endpoints cannot supply missing evidence.
 
-### Phase, partial ends and exceptions {#projection-phase}
-CDS segments share `feature_id`, one sequence and a known strand. GFF3 `phase`
-counts from each biological 5-prime end to the next codon boundary. Only the
-first phase is skipped; later phases check accumulated coding length, retaining
-codons split across segments. Explicit `segment_order` can declare an origin join.
+### Segments, phase and partial regions {#projection-boundaries}
+`build_ggchord_cds()` constructs a segment map; `project_ggchord_features()` then
+splits amino-acid intervals through it. Crossing a boundary can return several
+rows; multiplying coordinates by three is insufficient. Inspect policies/reports
+for partial CDS, phase and truncation. DNA matching, interval projection and
+actual translation/alignment are distinct operations.
 
-Partial ends default to an error. `partial = "trim"` explicitly excludes bases
-without complete codons; residue one means the first complete observed codon.
-Genetic-code IDs are metadata for coordinate projection, not translation choices.
-Declared frameshifts, slippage, translation exceptions and unsupported location
-operators are rejected. No unobserved protein length or identity is inferred.
+### BLASTp query spans and two-ended links {#projection-links}
 
-### Inverse mapping {#projection-inverse}
-Use `project_ggchord_features(genomic, cds, from = "genome")` to map back.
-Non-codon boundaries require an explicit `codon_boundary` policy. Source
-coordinates, parents and projection provenance remain attached. Read the full
-function reference (`help("project_ggchord_features", package = "ggchord")`) before applying
-this to partial or multi-segment biological models.
+```{r example-35, eval=FALSE}
+# Exact CDS DNA equality supplies evidence for these selected ungapped residues.
+matching <- homologs$data[1, ]
+paired_coding <- transform(cluster_features, phase = 0)
+paired_cds <- build_ggchord_cds(paired_coding)
+protein_link <- data.frame(qfeature_id = matching$qfeature_id, sfeature_id = matching$sfeature_id,
+  qstart = 1, qend = 20, sstart = 1, send = 20)
+projected_links <- project_ggchord_links(protein_link, paired_cds, ungapped = TRUE)
+```
 
-### Project feature links as well as domains {#projection-links}
-The domain example above maps an observed residue interval through explicit CDS
-segments. [Coding-coordinate links](#homology-projection) adds a paired model
-and demonstrates the separate ungapped assertion. Neither helper translates DNA,
-validates genetic code or creates a new alignment. Compare the retained segment
-pieces and source metadata before drawing discontinuous genomic anchors.
+
+This ungapped case relies on [verified identical coding DNA](#homology).
+Real BLASTp HSPs may contain gaps: query spans can still be projected, but paired
+links need the subject CDS and justified ungapped correspondence. See
+[real BLASTp import/projection](#alignments-protein). This version does not
+reinterpret aa as bp or add native protein-coordinate plotting.
 
 
 ## Focus, segments and homology {#views}
@@ -915,16 +1186,19 @@ pieces and source metadata before drawing discontinuous genomic anchors.
 After the [shared setup](#shared-setup):
 
 
-```{r example-32, eval=FALSE}
-focused <- focus_ggchord_data(seqs, links, genes,
-  loci = data.frame(accver = c("A", "B", "C"),
-    start = c(50, 100, 300), end = c(600, 600, 950)))
-p_focus <- ggchord(focused$seq_data, focused$ribbon_data, focused$gene_data) +
-  geom_seq() + geom_link_ribbon() + geom_gene() + geom_seq_break() +
-  scale_seq_position_continuous(coordinates = "source") + coord_collinear()
+```{r example-36, eval=FALSE}
+focus_loci <- data.frame(accver = seqs$accver,
+  start = floor(seqs$length * .25), end = floor(seqs$length * .75))
+focused <- focus_ggchord_data(seqs, links, genes, loci = focus_loci)
+p_focus <- ggchord(seq_data = focused$seq_data, ribbon_data = focused$ribbon_data,
+  gene_data = focused$gene_data) + geom_seq() +
+  geom_link_ribbon(fill = "#ADC5B9", alpha = .5) + geom_gene() + geom_seq_break() +
+  geom_seq_label(size = 4) + scale_seq_colour_manual(values = seq_palette) +
+  scale_gene_fill_manual(values = gene_palette) +
+  doc_axis("source") + coord_collinear() + doc_axis() + doc_theme
 ```
 
-![Focused comparisons with source-coordinate axes](../man/figures/focus.png)
+<figure class="documentation-figure"><a class="figure-link" href="../man/figures/focus.png" title="Click to enlarge"><img src="../man/figures/focus.png" alt="Focused sequence windows with source-coordinate axes" loading="lazy"></a><figcaption>Focused sequence windows with source-coordinate axes · <span class="figure-hint">Click to enlarge</span></figcaption></figure>
 
 Focus relocates retained positions to local one-based coordinates and retains
 source origins, truncation flags and a report. `boundary = "trim"` can clip
@@ -934,13 +1208,13 @@ source axis labels, including after repeated focusing.
 
 ### Independent windows and local reversal {#views-segments}
 
-```{r example-33, eval=FALSE}
-windows <- data.frame(accver = c("A", "A"), start = c(50, 650),
-  end = c(400, 950), locus_id = c("A_left", "A_right"),
-  row_id = "A", orientation = c(1, -1))
+```{r example-37, eval=FALSE}
+windows <- data.frame(accver = rep(seqs$accver[1], 2),
+  start = c(1, floor(seqs$length[1] * .65)), end = c(floor(seqs$length[1] * .4), seqs$length[1]),
+  locus_id = c("left_window", "right_window"), row_id = seqs$accver[1], orientation = c(1, -1))
 segmented <- segment_ggchord_data(seqs[1, ], windows = windows)
-p_segments <- ggchord(segmented$seq_data) + geom_seq() +
-  coord_collinear(segments = segmented$segments, segment_gap = 80)
+p_segments <- ggchord(seq_data = segmented$seq_data) + geom_seq() +
+  coord_collinear(segments = segmented$segments, segment_gap = 2000)
 ```
 
 
@@ -959,15 +1233,16 @@ provided links rather than creating new sequence alignments.
 
 ### Map an annotation back to source coordinates {#views-mapping}
 
-```{r example-34, eval=FALSE}
-source_mark <- map_ggchord_position(p_focus, "A", 200, source = TRUE)
+```{r example-38, eval=FALSE}
+source_position <- focus_loci$start[1] + 100
+source_mark <- map_ggchord_position(p_focus, seqs$accver[1], source_position, source = TRUE)
 p_marked <- p_focus + ggplot2::geom_point(data = source_mark, aes(x, y),
-  inherit.aes = FALSE, colour = "#A23B40", size = 2)
+  inherit.aes = FALSE, colour = "#A16E7D", size = 3)
 ```
 
 
 Run the [focus example](#views-focus) first. The helper returns Cartesian x/y
-for source position 200 on A. It does not make all ordinary ggplot2 coordinates
+for a source position 100 bp inside the first selected window. It does not make all ordinary ggplot2 coordinates
 become genomic bp. In segmented views choose the window ID, and check positions
 in omitted gaps rather than extrapolating across them. Use [explicit homologs](#homology)
 when the locus selection comes from declared feature/cluster evidence.
@@ -981,20 +1256,17 @@ explicitly: ribbon fill maps query ID; sequence colour maps sequence ID; gene fi
 maps strand. Manual scale names match those values exactly.
 
 
-```{r example-35, eval=FALSE}
-p_styled <- ggchord(seqs, links, genes) + geom_seq() +
-  geom_link_ribbon(aes(ribbon_fill = qaccver), alpha = .3) + geom_gene() +
-  geom_seq_label() + coord_collinear() +
-  scale_seq_colour_manual(values = c(A = "#487A6A", B = "#B68048", C = "#637DA0")) +
-  scale_gene_fill_manual(values = c("+" = "#B68048", "-" = "#637DA0")) +
-  scale_ribbon_fill_manual(values = c("A" = "#D4E5D8", "B" = "#E3D9C8", "C" = "#D4DFEB")) +
-  guides(gene_fill = guide_ggchord_legend(nrow = 1)) +
-  theme_ggchord_publication() + theme(legend.position = "bottom")
-theme_variants <- list(minimal = theme_ggchord_minimal(), dark = theme_ggchord_dark(),
-  plasmid = theme_ggchord_plasmid())
+```{r example-39, eval=FALSE}
+p_styled <- ggchord(seq_data = seqs, ribbon_data = links, gene_data = genes) + geom_seq() +
+  geom_link_ribbon(aes(ribbon_fill = qaccver), alpha = .5) + geom_gene() +
+  geom_seq_label(size = 4) + coord_collinear() + doc_axis() +
+  scale_seq_colour_manual(values = seq_palette) + scale_gene_fill_manual(values = gene_palette) +
+  scale_ribbon_fill_manual(values = setNames(c("#D4E3DC", "#E5DCCB", "#D8DFE9", "#E4D8DC"), seqs$accver)) +
+  guides(gene_fill = guide_ggchord_legend(nrow = 1)) + doc_theme
+theme_variants <- list(minimal = theme_ggchord_minimal(), dark = theme_ggchord_dark(), plasmid = theme_ggchord_plasmid())
 ```
 
-![Explicit manual scales and grouped legends](../man/figures/styling.png)
+<figure class="documentation-figure"><a class="figure-link" href="../man/figures/styling.png" title="Click to enlarge"><img src="../man/figures/styling.png" alt="Explicit sequence, strand and query-category colour scales" loading="lazy"></a><figcaption>Explicit sequence, strand and query-category colour scales · <span class="figure-hint">Click to enlarge</span></figcaption></figure>
 
 | Role | Mapped data | Useful scale family |
 | --- | --- | --- |
@@ -1051,12 +1323,13 @@ mapped role. Explicit `shape = NULL` is invalid, not a request to use a mapping.
 After the [shared setup](#shared-setup):
 
 
-```{r example-36, eval=FALSE}
-p_mapped <- ggchord(seqs, links) + geom_seq() +
-  geom_link_ribbon(aes(ribbon_fill = pident)) +
-  scale_ribbon_fill_gradientn(colours = c("#E7EFEA", "#246D68")) +
-  coord_chord(rotation = 20) + labs(title = "Sequence comparison") +
-  theme_ggchord() + theme(legend.position = "bottom")
+```{r example-40, eval=FALSE}
+identity_links <- ribbon_data_example[c("qaccver", "saccver", "qstart", "qend", "sstart", "send", "pident")]
+p_mapped <- ggchord(seq_data = seqs, ribbon_data = identity_links) + geom_seq() +
+  geom_link_ribbon(aes(ribbon_fill = pident), alpha = .6) +
+  scale_ribbon_fill_gradientn(colours = c("#E1EBE5", "#83A99B", "#315F59")) +
+  scale_seq_colour_manual(values = seq_palette) +
+  coord_chord(rotation = 20) + labs(title = "Sequence comparison") + doc_theme
 ```
 
 
@@ -1079,7 +1352,7 @@ follow ggplot2 evaluation. See the API contract (`help("ggchord_api_contract", p
 After creating `p_collinear` in [three modes](#modes):
 
 
-```{r example-37, eval=FALSE}
+```{r example-41, eval=FALSE}
 ggsave("comparison.png", p_collinear, width = 8, height = 5, units = "in", dpi = 144)
 ```
 
@@ -1088,7 +1361,7 @@ RStudio's Plots pane uses the current panel size and can rearrange labels and
 guides. Preview at the same explicit dimensions before final `ggsave()`:
 
 
-```{r example-38, eval=FALSE}
+```{r example-42, eval=FALSE}
 view_ggchord(p_collinear, width = 8, height = 5, units = "in")
 diagnosis <- diagnose_ggchord(p_collinear, width = 8, height = 5, units = "in")
 ```
@@ -1102,7 +1375,7 @@ final vector output; font availability and embedding remain device-dependent.
 
 ### Consume geometry by name {#output-geometry}
 
-```{r example-39, eval=FALSE}
+```{r example-43, eval=FALSE}
 geometry <- export_ggchord_layout(p_collinear, include = "seq")
 rows <- unique(geometry$seq[c("layer_id", "component", "source_row")])
 ```
@@ -1125,7 +1398,7 @@ reference semantics; it is not an automatically isolated edit.
 
 ### Complete layout, tables and opt-in ordering {#output-consumption}
 
-```{r example-40, eval=FALSE}
+```{r example-44, eval=FALSE}
 full_layout <- get_chord_layout(p_collinear)
 layer_tables <- export_ggchord_layout(p_collinear, include = c("seq", "gene"), original_data = TRUE)
 layout_choice <- optimize_ggchord_layout(seqs, links, optimize = c("order", "orientation"), weight = "count")
@@ -1139,7 +1412,7 @@ archive. Layer IDs and source-row roles distinguish independent same-kind layers
 Empty components can lack a fixed column prototype. Select fields by name.
 
 `layout_choice` optimizes declared order/orientation using count weighting because
-the synthetic links have no reported alignment-length column. It returns a choice
+the minimal plotting table deliberately omits alignment-length statistics. It returns a choice
 for explicit use in sequence settings; it does not mutate the plot or establish
 biological orientation. Save the choice and compare the result before adopting it.
 The export asset manifest (`website/assets/plots.csv` in the source repository) records exact documentation sizes.
@@ -1210,8 +1483,8 @@ After [setup](#shared-setup) and the `features` table in
 [circular mode](#modes-circular):
 
 
-```{r example-41, eval=FALSE}
-p_migrated <- ggchord(seqs[1, ]) + geom_seq() +
+```{r example-45, eval=FALSE}
+p_migrated <- ggchord(plasmid_seq) + geom_seq() +
   geom_feature(data = features, shape = "block", width = .05) +
   geom_feature_label(data = features, label_rotation = 0) + coord_circular()
 p_offsets <- ggchord(seqs, gene_data = genes) + geom_seq() +
@@ -1236,130 +1509,136 @@ NULL/NA/missing semantics; NULL does not universally mean disabled.
 ## Reproducible gallery {#gallery}
 
 ### One source for both languages {#gallery-source}
-Figures use repository-backed sequences/annotations or explicitly synthetic
-teaching inputs, defined in the shared
+All figures use bundled source-backed data or attributed real input records, defined in the shared
 [documentation example source](https://github.com/DangJem/ggchord/blob/main/tools/documentation-examples.R).
 No raw FASTA/GFF3/BLAST record was changed to improve appearance. The same image
 bytes are used by both languages, README and vignette; captions provide localized
 interpretation. The source and asset hashes are recorded in the asset manifest (`website/assets/plots.csv` in the source repository).
 
-Real-data and plasmid articles state each display filter; synthetic track
-values, cluster membership and small input tables are not biological observations.
+Display filters are stated in the relevant articles. GC is computed from actual
+DNA; exact-CDS membership is checked from sequence content. Deliberate corruption
+is confined to diagnostic examples and is never presented as biological data.
 
 ### Figures and dimensions {#gallery-figures}
-#### Chord comparison of three synthetic sequences {#gallery-chord}
+#### Bundled sequences and alignment intervals in a chord view {#gallery-chord}
 
-![Chord comparison of three synthetic sequences](../man/figures/chord.png)
+<figure class="documentation-figure"><a class="figure-link" href="../man/figures/chord.png" title="Click to enlarge"><img src="../man/figures/chord.png" alt="Bundled sequences and alignment intervals in a chord view" loading="lazy"></a><figcaption>Bundled sequences and alignment intervals in a chord view · <span class="figure-hint">Click to enlarge</span></figcaption></figure>
 
-`p_chord` · 7 × 6 in · 144 dpi · PNG · `chord`
+`p_chord` · 10 × 8 in · 144 dpi · PNG · `chord`
 
-#### Circular annotation with known and unknown strands {#gallery-circular}
+#### pUC19 annotations in a circular map {#gallery-circular}
 
-![Circular annotation with known and unknown strands](../man/figures/circular.png)
+<figure class="documentation-figure"><a class="figure-link" href="../man/figures/circular.png" title="Click to enlarge"><img src="../man/figures/circular.png" alt="pUC19 annotations in a circular map" loading="lazy"></a><figcaption>pUC19 annotations in a circular map · <span class="figure-hint">Click to enlarge</span></figcaption></figure>
 
-`p_circular` · 7 × 6 in · 144 dpi · PNG · `circular`
+`p_circular` · 9 × 8 in · 144 dpi · PNG · `circular`
 
-#### Anchored linear sequence comparison {#gallery-collinear}
+#### Bundled records aligned to explicitly selected annotation anchors {#gallery-collinear}
 
-![Anchored linear sequence comparison](../man/figures/collinear.png)
+<figure class="documentation-figure"><a class="figure-link" href="../man/figures/collinear.png" title="Click to enlarge"><img src="../man/figures/collinear.png" alt="Bundled records aligned to explicitly selected annotation anchors" loading="lazy"></a><figcaption>Bundled records aligned to explicitly selected annotation anchors · <span class="figure-hint">Click to enlarge</span></figcaption></figure>
 
-`p_collinear` · 8 × 5 in · 144 dpi · PNG · `collinear`
+`p_collinear` · 10 × 6 in · 144 dpi · PNG · `collinear`
 
-#### Synthetic signal in an explicit quantitative track {#gallery-tracks}
+#### GC fractions computed from the bundled pUC19 DNA {#gallery-tracks}
 
-![Synthetic signal in an explicit quantitative track](../man/figures/tracks.png)
+<figure class="documentation-figure"><a class="figure-link" href="../man/figures/tracks.png" title="Click to enlarge"><img src="../man/figures/tracks.png" alt="GC fractions computed from the bundled pUC19 DNA" loading="lazy"></a><figcaption>GC fractions computed from the bundled pUC19 DNA · <span class="figure-hint">Click to enlarge</span></figcaption></figure>
 
-`p_tracks` · 7 × 6 in · 144 dpi · PNG · `tracks`
+`p_tracks` · 9 × 8 in · 144 dpi · PNG · `tracks`
 
-#### Focused comparisons with source-coordinate axes {#gallery-focus}
+#### Focused sequence windows with source-coordinate axes {#gallery-focus}
 
-![Focused comparisons with source-coordinate axes](../man/figures/focus.png)
+<figure class="documentation-figure"><a class="figure-link" href="../man/figures/focus.png" title="Click to enlarge"><img src="../man/figures/focus.png" alt="Focused sequence windows with source-coordinate axes" loading="lazy"></a><figcaption>Focused sequence windows with source-coordinate axes · <span class="figure-hint">Click to enlarge</span></figcaption></figure>
 
-`p_focus` · 8 × 5 in · 144 dpi · PNG · `focus`
+`p_focus` · 10 × 6 in · 144 dpi · PNG · `focus`
 
-#### Automatic labels on a linear gene comparison {#gallery-labels}
+#### Automatic placement of informative source gene annotations {#gallery-labels}
 
-![Automatic labels on a linear gene comparison](../man/figures/labels.png)
+<figure class="documentation-figure"><a class="figure-link" href="../man/figures/labels.png" title="Click to enlarge"><img src="../man/figures/labels.png" alt="Automatic placement of informative source gene annotations" loading="lazy"></a><figcaption>Automatic placement of informative source gene annotations · <span class="figure-hint">Click to enlarge</span></figcaption></figure>
 
-`p_labels` · 8 × 5 in · 144 dpi · PNG · `labels`
+`p_labels` · 10 × 6 in · 144 dpi · PNG · `labels`
 
-#### Original sequence comparison with an explicit CDS display subset {#gallery-realchord}
+#### Original sequences with explicitly selected CDS and alignment links {#gallery-realchord}
 
-![Original sequence comparison with an explicit CDS display subset](../man/figures/realchord.png)
+<figure class="documentation-figure"><a class="figure-link" href="../man/figures/realchord.png" title="Click to enlarge"><img src="../man/figures/realchord.png" alt="Original sequences with explicitly selected CDS and alignment links" loading="lazy"></a><figcaption>Original sequences with explicitly selected CDS and alignment links · <span class="figure-hint">Click to enlarge</span></figcaption></figure>
 
 `p_real_chord` · 10 × 8 in · 144 dpi · PNG · `realchord`
 
-#### Original sequences, all imported CDS and filtered alignment links {#gallery-reallinear}
+#### Original sequences, all imported CDS and filtered links {#gallery-reallinear}
 
-![Original sequences, all imported CDS and filtered alignment links](../man/figures/reallinear.png)
+<figure class="documentation-figure"><a class="figure-link" href="../man/figures/reallinear.png" title="Click to enlarge"><img src="../man/figures/reallinear.png" alt="Original sequences, all imported CDS and filtered links" loading="lazy"></a><figcaption>Original sequences, all imported CDS and filtered links · <span class="figure-hint">Click to enlarge</span></figcaption></figure>
 
 `p_real_linear` · 10 × 6 in · 144 dpi · PNG · `reallinear`
 
-#### pUC19 with source-backed features, primers and restriction sites {#gallery-plasmid}
+#### pUC19 features, exact primer hits and three selected restriction sites {#gallery-plasmid}
 
-![pUC19 with source-backed features, primers and restriction sites](../man/figures/plasmid.png)
+<figure class="documentation-figure"><a class="figure-link" href="../man/figures/plasmid.png" title="Click to enlarge"><img src="../man/figures/plasmid.png" alt="pUC19 features, exact primer hits and three selected restriction sites" loading="lazy"></a><figcaption>pUC19 features, exact primer hits and three selected restriction sites · <span class="figure-hint">Click to enlarge</span></figcaption></figure>
 
-`p_plasmid` · 9 × 8 in · 144 dpi · PNG · `plasmid`
+`p_plasmid` · 10 × 9 in · 144 dpi · PNG · `plasmid`
 
-#### Explicit density summary of original alignment links {#gallery-density}
+#### Interval density from the original alignment observations {#gallery-density}
 
-![Explicit density summary of original alignment links](../man/figures/density.png)
+<figure class="documentation-figure"><a class="figure-link" href="../man/figures/density.png" title="Click to enlarge"><img src="../man/figures/density.png" alt="Interval density from the original alignment observations" loading="lazy"></a><figcaption>Interval density from the original alignment observations · <span class="figure-hint">Click to enlarge</span></figcaption></figure>
 
 `p_density` · 10 × 8 in · 144 dpi · PNG · `density`
 
-#### Point-to-point links with declared synthetic support values {#gallery-pointlinks}
+#### Midpoint links derived from existing HSP intervals {#gallery-pointlinks}
 
-![Point-to-point links with declared synthetic support values](../man/figures/pointlinks.png)
+<figure class="documentation-figure"><a class="figure-link" href="../man/figures/pointlinks.png" title="Click to enlarge"><img src="../man/figures/pointlinks.png" alt="Midpoint links derived from existing HSP intervals" loading="lazy"></a><figcaption>Midpoint links derived from existing HSP intervals · <span class="figure-hint">Click to enlarge</span></figcaption></figure>
 
-`p_points` · 7 × 6 in · 144 dpi · PNG · `pointlinks`
+`p_points` · 10 × 8 in · 144 dpi · PNG · `pointlinks`
 
-#### Stacked synthetic features with mapped shapes and fills {#gallery-featurestack}
+#### Stacked overlapping annotations from the pUC19 reference {#gallery-featurestack}
 
-![Stacked synthetic features with mapped shapes and fills](../man/figures/featurestack.png)
+<figure class="documentation-figure"><a class="figure-link" href="../man/figures/featurestack.png" title="Click to enlarge"><img src="../man/figures/featurestack.png" alt="Stacked overlapping annotations from the pUC19 reference" loading="lazy"></a><figcaption>Stacked overlapping annotations from the pUC19 reference · <span class="figure-hint">Click to enlarge</span></figcaption></figure>
 
-`p_stack` · 9 × 4 in · 144 dpi · PNG · `featurestack`
+`p_stack` · 10 × 5 in · 144 dpi · PNG · `featurestack`
 
-#### Shared-domain bar and line with an independent categorical track {#gallery-multitrack}
+#### pUC19 GC fractions, a three-bin moving mean and annotation bands {#gallery-multitrack}
 
-![Shared-domain bar and line with an independent categorical track](../man/figures/multitrack.png)
+<figure class="documentation-figure"><a class="figure-link" href="../man/figures/multitrack.png" title="Click to enlarge"><img src="../man/figures/multitrack.png" alt="pUC19 GC fractions, a three-bin moving mean and annotation bands" loading="lazy"></a><figcaption>pUC19 GC fractions, a three-bin moving mean and annotation bands · <span class="figure-hint">Click to enlarge</span></figcaption></figure>
 
-`p_multitrack` · 7 × 6 in · 144 dpi · PNG · `multitrack`
+`p_multitrack` · 9 × 8 in · 144 dpi · PNG · `multitrack`
 
-#### Declared synthetic cluster links, not a computed alignment {#gallery-homologs}
+#### Two plasmids sharing an identical oriented AmpR coding sequence {#gallery-homologs}
 
-![Declared synthetic cluster links, not a computed alignment](../man/figures/homologs.png)
+<figure class="documentation-figure"><a class="figure-link" href="../man/figures/homologs.png" title="Click to enlarge"><img src="../man/figures/homologs.png" alt="Two plasmids sharing an identical oriented AmpR coding sequence" loading="lazy"></a><figcaption>Two plasmids sharing an identical oriented AmpR coding sequence · <span class="figure-hint">Click to enlarge</span></figcaption></figure>
 
-`p_homologs` · 8 × 5 in · 144 dpi · PNG · `homologs`
+`p_homologs` · 10 × 5 in · 144 dpi · PNG · `homologs`
 
-#### Region highlights and an independent bp reference bar {#gallery-decorations}
+#### Highlighting the query interval of an observed alignment {#gallery-decorations}
 
-![Region highlights and an independent bp reference bar](../man/figures/decorations.png)
+<figure class="documentation-figure"><a class="figure-link" href="../man/figures/decorations.png" title="Click to enlarge"><img src="../man/figures/decorations.png" alt="Highlighting the query interval of an observed alignment" loading="lazy"></a><figcaption>Highlighting the query interval of an observed alignment · <span class="figure-hint">Click to enlarge</span></figcaption></figure>
 
-`p_decorated` · 8 × 5 in · 144 dpi · PNG · `decorations`
+`p_decorated` · 10 × 6 in · 144 dpi · PNG · `decorations`
 
-#### Gene labels using auto placement {#gallery-labelauto}
+#### Informative gene annotations with automatic side placement {#gallery-labelauto}
 
-![Gene labels using auto placement](../man/figures/labelauto.png)
+<figure class="documentation-figure"><a class="figure-link" href="../man/figures/labelauto.png" title="Click to enlarge"><img src="../man/figures/labelauto.png" alt="Informative gene annotations with automatic side placement" loading="lazy"></a><figcaption>Informative gene annotations with automatic side placement · <span class="figure-hint">Click to enlarge</span></figcaption></figure>
 
-`p_labelauto` · 8 × 5 in · 144 dpi · PNG · `labelauto`
+`p_labelauto` · 12 × 10 in · 144 dpi · PNG · `labelauto`
 
-#### Gene labels using radial placement {#gallery-labelradial}
+#### The same gene annotations with radial placement {#gallery-labelradial}
 
-![Gene labels using radial placement](../man/figures/labelradial.png)
+<figure class="documentation-figure"><a class="figure-link" href="../man/figures/labelradial.png" title="Click to enlarge"><img src="../man/figures/labelradial.png" alt="The same gene annotations with radial placement" loading="lazy"></a><figcaption>The same gene annotations with radial placement · <span class="figure-hint">Click to enlarge</span></figcaption></figure>
 
-`p_labelradial` · 8 × 5 in · 144 dpi · PNG · `labelradial`
+`p_labelradial` · 12 × 10 in · 144 dpi · PNG · `labelradial`
 
-#### Gene labels following sequence tangents {#gallery-labelarc}
+#### The same gene annotations with arc-oriented text {#gallery-labelarc}
 
-![Gene labels following sequence tangents](../man/figures/labelarc.png)
+<figure class="documentation-figure"><a class="figure-link" href="../man/figures/labelarc.png" title="Click to enlarge"><img src="../man/figures/labelarc.png" alt="The same gene annotations with arc-oriented text" loading="lazy"></a><figcaption>The same gene annotations with arc-oriented text · <span class="figure-hint">Click to enlarge</span></figcaption></figure>
 
-`p_labelarc` · 8 × 5 in · 144 dpi · PNG · `labelarc`
+`p_labelarc` · 12 × 10 in · 144 dpi · PNG · `labelarc`
 
-#### Explicit manual scales and grouped legends {#gallery-styling}
+#### Explicit sequence, strand and query-category colour scales {#gallery-styling}
 
-![Explicit manual scales and grouped legends](../man/figures/styling.png)
+<figure class="documentation-figure"><a class="figure-link" href="../man/figures/styling.png" title="Click to enlarge"><img src="../man/figures/styling.png" alt="Explicit sequence, strand and query-category colour scales" loading="lazy"></a><figcaption>Explicit sequence, strand and query-category colour scales · <span class="figure-hint">Click to enlarge</span></figcaption></figure>
 
-`p_styled` · 8 × 5 in · 144 dpi · PNG · `styling`
+`p_styled` · 10 × 6 in · 144 dpi · PNG · `styling`
+
+#### A real minimap2 PAF comparison between two EMALE genomes {#gallery-paf}
+
+<figure class="documentation-figure"><a class="figure-link" href="../man/figures/paf.png" title="Click to enlarge"><img src="../man/figures/paf.png" alt="A real minimap2 PAF comparison between two EMALE genomes" loading="lazy"></a><figcaption>A real minimap2 PAF comparison between two EMALE genomes · <span class="figure-hint">Click to enlarge</span></figcaption></figure>
+
+`p_paf` · 10 × 5 in · 144 dpi · PNG · `paf`
 
 ### Reproduce {#gallery-reproduce}
 From the source repository, with its suggested development dependencies available:

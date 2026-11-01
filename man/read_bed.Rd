@@ -39,10 +39,14 @@ inferred from BED display fields. BED extensions beyond column 12 require an
 explicit data-frame conversion with \code{\link[=as_ggchord_feature]{as_ggchord_feature()}}.
 }
 \examples{
+data(plasmid_example_pUC19)
+seqs <- plasmid_example_pUC19[c("accver", "length")]
+feature_source <- find_common_features(plasmid_example_pUC19)
+features <- feature_source[c("accver", "start", "end", "strand", "type", "anno")]
 bed <- tempfile(fileext = ".bed")
-writeLines("host\t0\t100\tregulatory region\t0\t.", bed)
-features <- read_bed(bed)
-features[, c("accver", "start", "end", "strand")]
+write.table(data.frame(features$accver, features$start - 1L, features$end), bed,
+  sep = "\t", quote = FALSE, row.names = FALSE, col.names = FALSE)
+read_bed(bed)
 unlink(bed)
 }
 \seealso{

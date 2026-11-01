@@ -33,11 +33,11 @@ combines them. \code{files} accepts a character vector of literal paths and/or
 wildcard patterns (e.g. \code{"examples/fasta/*.fna"}).
 }
 \examples{
-library(ggchord)
-fasta <- tempfile(fileext = ".fna")
-writeLines(c(">seqA some description", "ACGTACGTACGTACGT", "ACGTACGT",
-             ">seqB", "TTTTGGGG"), fasta)
-read_fasta_lengths(fasta)
+\dontrun{
+# Requires the source checkout or tutorial input bundle.
+source <- read_fasta_lengths("examples/fasta/MT108731.1.fna")
+seqs <- source[c("accver", "length")]
+}
 }
 \seealso{
 \code{\link{ggchord_data_contract}}

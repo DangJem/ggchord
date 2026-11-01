@@ -2,9 +2,9 @@ name: Documentation
 
 on:
   push:
-    paths: ['website/**', 'tools/**', 'R/**', 'man/**', 'vignettes/**', 'README*', 'DESCRIPTION', 'NAMESPACE', '_pkgdown.yml', 'NEWS.md', '.github/workflows/documentation.yaml']
+    paths: ['website/**', 'tools/**', 'data-raw/**', 'examples/**', 'data/**', 'R/**', 'man/**', 'vignettes/**', 'README*', 'DESCRIPTION', 'NAMESPACE', '_pkgdown.yml', 'NEWS.md', '.github/workflows/documentation.yaml']
   pull_request:
-    paths: ['website/**', 'tools/**', 'R/**', 'man/**', 'vignettes/**', 'README*', 'DESCRIPTION', 'NAMESPACE', '_pkgdown.yml', 'NEWS.md', '.github/workflows/documentation.yaml']
+    paths: ['website/**', 'tools/**', 'data-raw/**', 'examples/**', 'data/**', 'R/**', 'man/**', 'vignettes/**', 'README*', 'DESCRIPTION', 'NAMESPACE', '_pkgdown.yml', 'NEWS.md', '.github/workflows/documentation.yaml']
   workflow_dispatch:
     inputs:
       deploy:

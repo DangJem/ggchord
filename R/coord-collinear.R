@@ -78,16 +78,12 @@ CoordCollinear <- ggplot2::ggproto("CoordCollinear", CoordGgchord)
 #' @md
 #' @export
 #' @examples
-#' seqs <- data.frame(accver = c("A", "B"), length = c(1000, 800))
-#' links <- data.frame(qaccver = "A", saccver = "B",
-#'                     qstart = 100, qend = 400, sstart = 200, send = 500)
-#' ggchord(seqs, links) + geom_seq() + geom_link_ribbon() +
-#'   geom_seq_label() + coord_collinear()
-#'
-#' anchors <- data.frame(accver = c("A", "B"), start = c(100, 200),
-#'                       end = c(400, 500))
-#' ggchord(seqs, links) + geom_seq() + geom_link_ribbon() +
-#'   coord_collinear(anchor = anchors, align = "center", orientation = "auto")
+#' data(seq_data_example)
+#' seqs <- seq_data_example[c("accver", "length")]
+#' data(ribbon_data_example)
+#' links <- ribbon_data_example[c("qaccver", "saccver", "qstart", "qend", "sstart", "send")]
+#' ggchord(seq_data = seqs, ribbon_data = links) + geom_seq() + geom_link_ribbon() +
+#'   geom_seq_label() + coord_collinear(orientation = "auto")
 coord_collinear <- function(
     ratio = 1, xlim = NULL, ylim = NULL,
     expand = FALSE, clip = "off",

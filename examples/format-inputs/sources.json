@@ -1,0 +1,231 @@
+[
+  {
+    "file": "examples/format-inputs/pUC19c-L09137.2.gb",
+    "accession": "L09137.2",
+    "record_definition": "Cloning vector pUC19c, complete sequence.",
+    "url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&id=L09137.2&rettype=gbwithparts&retmode=text",
+    "retrieved": "2026-11-01",
+    "sha256": "9498daed1c3703dd739c684a3a7bcd6770823aa4a500cf9b57cf59bbdc38f72a",
+    "transformation": "None; NCBI record retained unchanged. This is pUC19c, not silently renamed to pUC19."
+  },
+  {
+    "file": "examples/format-inputs/emales-pair.paf",
+    "url": "https://github.com/thackl/gggenomes/raw/master/data-raw/emales.tgz",
+    "archive_sha256": "e31189a7450ebcd4c5b2a797e22759e6b797147ed6f4b072c973411043a23ec4",
+    "member": "emales/emales.paf",
+    "member_sha256": "5394b68a89d69141375edb336e700c43f77527018d7cf5aa26deefbbebe6396a",
+    "sha256": "a1b7d6820056403bd78e612f25df905fb8886dae3ec2f80f164e61a1ed1bc371",
+    "source_line_ranges": [
+      [
+        4,
+        4
+      ],
+      [
+        17,
+        17
+      ],
+      [
+        36,
+        36
+      ],
+      [
+        58,
+        60
+      ],
+      [
+        63,
+        63
+      ],
+      [
+        79,
+        79
+      ],
+      [
+        81,
+        81
+      ],
+      [
+        91,
+        91
+      ],
+      [
+        95,
+        95
+      ]
+    ],
+    "retrieved": "2026-11-01",
+    "rule": "Keep BVI_023A -> Cflag_017A records, including original optional tags."
+  },
+  {
+    "file": "examples/format-inputs/emales-mavirus-blastp.tsv",
+    "url": "https://github.com/thackl/gggenomes/raw/master/data-raw/emales.tgz",
+    "archive_sha256": "e31189a7450ebcd4c5b2a797e22759e6b797147ed6f4b072c973411043a23ec4",
+    "member": "emales/emales_mavirus-blastp.tsv",
+    "member_sha256": "04b6927762d5370a3fc4044114672c582c39c8a8537ac17b85f4077eebeab19a",
+    "sha256": "04b6927762d5370a3fc4044114672c582c39c8a8537ac17b85f4077eebeab19a",
+    "source_line_ranges": [
+      [
+        1,
+        6881
+      ]
+    ],
+    "retrieved": "2026-11-01",
+    "rule": "Unchanged complete member"
+  },
+  {
+    "file": "examples/format-inputs/emales-BVI_023A.gff3",
+    "url": "https://github.com/thackl/gggenomes/raw/master/data-raw/emales.tgz",
+    "archive_sha256": "e31189a7450ebcd4c5b2a797e22759e6b797147ed6f4b072c973411043a23ec4",
+    "member": "emales/emales.gff",
+    "member_sha256": "73695517d290735fc49537c03293d024aac128f045f88b5734eaaa2038de36d7",
+    "sha256": "2643802b44ab80e5dbcafd2adab8d0259d6ab9795e682462445422176e6d2f1b",
+    "source_line_ranges": [
+      [
+        1,
+        62
+      ],
+      [
+        96,
+        97
+      ],
+      [
+        128,
+        129
+      ],
+      [
+        135,
+        136
+      ],
+      [
+        165,
+        166
+      ],
+      [
+        192,
+        193
+      ],
+      [
+        207,
+        208
+      ],
+      [
+        231,
+        232
+      ],
+      [
+        263,
+        264
+      ],
+      [
+        292,
+        293
+      ],
+      [
+        316,
+        317
+      ],
+      [
+        347,
+        348
+      ],
+      [
+        376,
+        377
+      ],
+      [
+        400,
+        401
+      ],
+      [
+        427,
+        428
+      ],
+      [
+        450,
+        451
+      ],
+      [
+        484,
+        485
+      ],
+      [
+        506,
+        507
+      ],
+      [
+        544,
+        545
+      ],
+      [
+        571,
+        572
+      ],
+      [
+        596,
+        597
+      ],
+      [
+        629,
+        630
+      ],
+      [
+        661,
+        662
+      ],
+      [
+        689,
+        690
+      ],
+      [
+        711,
+        712
+      ],
+      [
+        731,
+        732
+      ],
+      [
+        751,
+        752
+      ],
+      [
+        761,
+        762
+      ],
+      [
+        795,
+        796
+      ],
+      [
+        820,
+        821
+      ],
+      [
+        843,
+        844
+      ],
+      [
+        866,
+        867
+      ]
+    ],
+    "retrieved": "2026-11-01",
+    "rule": "Keep original GFF headers and BVI_023A annotations."
+  },
+  {
+    "file": "examples/format-inputs/emales-BVI_023A.fna",
+    "url": "https://github.com/thackl/gggenomes/raw/master/data-raw/emales.tgz",
+    "archive_sha256": "e31189a7450ebcd4c5b2a797e22759e6b797147ed6f4b072c973411043a23ec4",
+    "member": "emales/emales.fna.split/emales.id_BVI_023A.fna",
+    "member_sha256": "7abe89f4acd4d223cf789d46be60e8df9838b17f543cad4b54c1f74c7e5f9cb4",
+    "sha256": "7abe89f4acd4d223cf789d46be60e8df9838b17f543cad4b54c1f74c7e5f9cb4",
+    "source_line_ranges": [
+      [
+        1,
+        328
+      ]
+    ],
+    "retrieved": "2026-11-01",
+    "rule": "Unchanged complete member"
+  }
+]

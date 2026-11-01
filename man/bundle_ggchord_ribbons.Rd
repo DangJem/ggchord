@@ -52,13 +52,11 @@ them without merging their geometry.
 }
 \examples{
 data(seq_data_example)
+seqs <- seq_data_example[c("accver", "length")]
 data(ribbon_data_example)
-bundled <- bundle_ggchord_ribbons(ribbon_data_example, seq_data_example)
-nrow(bundled$data)
-bundled_plot <- ggchord(seq_data_example, bundled$data) +
-  geom_seq() +
-  geom_link_ribbon(ggplot2::aes(ribbon_alpha = .bundle_density)) +
-  scale_ribbon_alpha_continuous()
+links <- ribbon_data_example[c("qaccver", "saccver", "qstart", "qend", "sstart", "send", "pident", "length")]
+out <- bundle_ggchord_ribbons(links, seqs, bins = 30)
+out$report
 }
 \seealso{
 \code{\link{ggchord_data_contract}}

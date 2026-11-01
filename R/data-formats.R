@@ -67,10 +67,14 @@ ggchord_format_import <- function(out, paths, format, rows_per_file,
 #' @seealso \code{\link{ggchord_data_contract}}
 #' @export
 #' @examples
+#' data(plasmid_example_pUC19)
+#' seqs <- plasmid_example_pUC19[c("accver", "length")]
+#' feature_source <- find_common_features(plasmid_example_pUC19)
+#' features <- feature_source[c("accver", "start", "end", "strand", "type", "anno")]
 #' bed <- tempfile(fileext = ".bed")
-#' writeLines("host\t0\t100\tregulatory region\t0\t.", bed)
-#' features <- read_bed(bed)
-#' features[, c("accver", "start", "end", "strand")]
+#' write.table(data.frame(features$accver, features$start - 1L, features$end), bed,
+#'   sep = "\t", quote = FALSE, row.names = FALSE, col.names = FALSE)
+#' read_bed(bed)
 #' unlink(bed)
 read_bed <- function(file = NULL, files = NULL, source_file = FALSE) {
   old_error <- ggchord_disable_debug()
@@ -174,11 +178,11 @@ read_bed <- function(file = NULL, files = NULL, source_file = FALSE) {
 #' @seealso \code{\link{ggchord_data_contract}}
 #' @export
 #' @examples
-#' paf <- tempfile(fileext = ".paf")
-#' writeLines("query\t100\t0\t90\t-\ttarget\t200\t20\t110\t85\t90\t255", paf)
-#' links <- read_paf(paf)
-#' links[, c("qstart", "qend", "sstart", "send", "mapq")]
-#' unlink(paf)
+#' \dontrun{
+#' # Requires the source checkout or tutorial input bundle.
+#' links <- read_paf("examples/format-inputs/emales-pair.paf")
+#' links[c("qaccver", "saccver", "qstart", "qend", "sstart", "send")]
+#' }
 read_paf <- function(file = NULL, files = NULL, source_file = FALSE) {
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)

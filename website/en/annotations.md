@@ -1,6 +1,6 @@
 ## Preserve feature semantics {#stack}
-Run the [shared setup](index.html#quick-start). This synthetic table contains
-overlapping CDS/regions and an unknown strand. Geometry and fill map separately
+Run the [shared setup](index.html#quick-start) and [circular example](modes.html#circular).
+This table retains actual overlapping pUC19 annotations and unknown strands. Geometry and fill map separately
 from the same category; an explicit fixed `shape` would override shape mapping.
 
 {{code:featurestack}}

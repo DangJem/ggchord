@@ -36,11 +36,11 @@ Mapping quality 255 means unavailable: \code{mapq} becomes \code{NA}, while
 verbatim in the \code{tags} list-column, including unknown tags and their order.
 }
 \examples{
-paf <- tempfile(fileext = ".paf")
-writeLines("query\t100\t0\t90\t-\ttarget\t200\t20\t110\t85\t90\t255", paf)
-links <- read_paf(paf)
-links[, c("qstart", "qend", "sstart", "send", "mapq")]
-unlink(paf)
+\dontrun{
+# Requires the source checkout or tutorial input bundle.
+links <- read_paf("examples/format-inputs/emales-pair.paf")
+links[c("qaccver", "saccver", "qstart", "qend", "sstart", "send")]
+}
 }
 \seealso{
 \url{https://github.com/lh3/miniasm/blob/master/PAF.md}

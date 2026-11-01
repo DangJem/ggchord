@@ -179,10 +179,16 @@ ggchord_project_intervals <- function(row, caller) {
 #' @seealso \code{\link{ggchord_data_contract}}
 #' @export
 #' @examples
-#' coding <- data.frame(feature_id = "cdsA", accver = "contig",
-#'   start = c(100, 200), end = c(103, 204), strand = "+", phase = c(0, 2))
+#' data(plasmid_example_pUC19)
+#' seqs <- plasmid_example_pUC19[c("accver", "length")]
+#' feature_source <- find_common_features(plasmid_example_pUC19)
+#' features <- feature_source[c("accver", "start", "end", "strand", "type", "anno")]
+#' coding <- features[features$anno == "AmpR" & features$type == "CDS",
+#'   c("accver", "start", "end", "strand")]
+#' coding$feature_id <- paste(coding$accver, "AmpR", sep = ":")
+#' coding$phase <- 0
 #' cds <- build_ggchord_cds(coding, genetic_code = 11)
-#' cds$models
+#' cds$features
 build_ggchord_cds <- function(cds_data, genetic_code = NULL,
                               partial = c("error", "trim")) {
   caller <- "build_ggchord_cds()"
@@ -338,13 +344,18 @@ ggchord_project_genomic <- function(segment, lower, upper) {
 #' @seealso \code{\link{ggchord_data_contract}}
 #' @export
 #' @examples
-#' coding <- data.frame(feature_id = "cdsA", accver = "contig",
-#'   start = c(100, 200), end = c(103, 204), strand = "+", phase = c(0, 2))
+#' data(plasmid_example_pUC19)
+#' seqs <- plasmid_example_pUC19[c("accver", "length")]
+#' feature_source <- find_common_features(plasmid_example_pUC19)
+#' features <- feature_source[c("accver", "start", "end", "strand", "type", "anno")]
+#' coding <- features[features$anno == "AmpR" & features$type == "CDS",
+#'   c("accver", "start", "end", "strand")]
+#' coding$feature_id <- paste(coding$accver, "AmpR", sep = ":")
+#' coding$phase <- 0
 #' cds <- build_ggchord_cds(coding, genetic_code = 11)
-#' domains <- data.frame(feature_id = "domainA", parent_id = "cdsA", start = 2, end = 3)
-#' genomic <- project_ggchord_features(domains, cds)
-#' genomic$segments[[1]]
-#' project_ggchord_features(genomic, cds, from = "genome")
+#' # Select residues for display; this is not a detected domain.
+#' selected <- data.frame(feature_id = "selected_residues", parent_id = coding$feature_id, start = 2, end = 20)
+#' project_ggchord_features(selected, cds)
 project_ggchord_features <- function(feature_data, cds, from = c("protein", "genome"),
                                      codon_boundary = c("error", "expand")) {
   caller <- "project_ggchord_features()"
@@ -457,12 +468,20 @@ project_ggchord_features <- function(feature_data, cds, from = c("protein", "gen
 #' @seealso \code{\link{ggchord_data_contract}}
 #' @export
 #' @examples
-#' coding <- data.frame(feature_id = c("a", "b"), accver = c("A", "B"),
-#'   start = c(10, 100), end = c(18, 108), strand = c("+", "-"), phase = 0)
-#' cds <- build_ggchord_cds(coding)
-#' link <- data.frame(qfeature_id = "a", sfeature_id = "b",
-#'   qstart = 1, qend = 2, sstart = 2, send = 3)
-#' project_ggchord_links(link, cds, ungapped = TRUE)
+#' data(plasmid_example_pUC19)
+#' seqs <- plasmid_example_pUC19[c("accver", "length")]
+#' feature_source <- find_common_features(plasmid_example_pUC19)
+#' features <- feature_source[c("accver", "start", "end", "strand", "type", "anno")]
+#' coding <- features[features$anno == "AmpR" & features$type == "CDS",
+#'   c("accver", "start", "end", "strand")]
+#' coding$feature_id <- paste(coding$accver, "AmpR", sep = ":")
+#' coding$phase <- 0
+#' cds <- build_ggchord_cds(coding, genetic_code = 11)
+#' # Self-correspondence of one real CDS, solely to demonstrate coordinate conversion.
+#' # The same observed residues are paired, so the correspondence is ungapped.
+#' selected <- data.frame(qaccver = coding$feature_id, saccver = coding$feature_id,
+#'   qstart = 1, qend = 20, sstart = 1, send = 20)
+#' project_ggchord_links(selected, cds, ungapped = TRUE)
 project_ggchord_links <- function(link_data, cds, ungapped = FALSE) {
   caller <- "project_ggchord_links()"
   cds <- ggchord_project_model(cds, caller)

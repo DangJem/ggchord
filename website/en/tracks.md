@@ -1,41 +1,34 @@
-## Declare position and numerical domain {#domain}
-After the [shared setup](index.html#quick-start):
+## Compute a track from actual DNA {#domain}
+After the [shared setup](index.html#quick-start), compute GC fraction in 100 bp
+windows of bundled pUC19. The final shorter window uses its actual base count.
+
 
 {{code:tracks}}
 {{figure:tracks}}
 
-The signal is a synthetic sine wave in arbitrary units, not measured coverage or
-GC skew. ggchord renders supplied values; it does not compute sequence composition.
-Replace it with your measured bins and declare their actual unit.
+The domain is 0–1, in fractions. Replace it with the actual unit/range of other
+measurements. `position_track()` controls placement/physical width;
+`scale_track_value_continuous()` controls numerical mapping.
 
 ## Share an ID deliberately {#sharing}
-`position_track("signal", ...)` chooses placement and physical width.
-`scale_track_value_continuous("signal", ...)` defines the numerical domain;
-it is not spatial placement. Layers sharing an ID train one joint domain,
-including the bar baseline, and must declare consistent track settings.
-Fill/colour scales are separately scoped to that ID. `geom_track_tile()` encodes
-categories, `geom_track_line()` connects numeric observations, and
-`geom_track_bar()` shows intervals relative to a baseline.
+Same-ID layers share a numerical domain, including bar baselines, and must agree
+on width/placement. Colour scales are scoped independently by track ID. Tiles
+show interval categories, lines connect observations, bars encode interval values
+relative to a baseline. Sharing a domain does not require sharing a spatial band.
 
-## Inspect retention {#diagnostics}
-Use `export_ggchord_layout()` to inspect `track_registry` and `track_diagnostics`.
-Their original value limits, physical mm contributions and native offsets have
-different units. Focus tracks with `focus_ggchord_track()` alongside the same loci;
-check clipped or omitted rows rather than treating an absent bar as zero.
+## Inspect retention and limits {#diagnostics}
+The export's `track_registry` and `track_diagnostics` record domains, physical
+sizes, native offsets and clipping. Omitted/clipped rows do not mean zero values.
+Focus tracks with `focus_ggchord_track()` using the same windows.
 
-## Combine bars, a line and categorical tiles {#multiple}
+## Combine bars, a moving mean and annotation bands {#multiple}
+Run the [circular example](modes.html#circular) to obtain real `features` first.
+
 {{code:multitrack}}
 {{figure:multitrack}}
 
-The bar and line deliberately share `signal` and one domain; the line is half the
-bar's synthetic signal, not another measured sample. Both declare the same width.
-The categorical `sites` lane has an independent ID and fill scale. Baseline zero
-participates in domain training. Explicit limits must represent the intended
-measurement domain; changing a value scale does not move the track in space.
-`focused_bins` retains interval clipping/source mapping for the selected locus.
-Inspect track diagnostics for bounds clipping instead of treating omitted rows
-as zero. See [styling](styling.html#roles) for track colour versus fill roles.
-
-The line uses integer bin midpoints rounded down. The second categorical band
-is explicitly outside and ordered after the numeric band; narrow inside bands
-may fold at small radii and are rejected rather than drawn through the centre.
+Bars and line use the same actual GC measurements; the line is a three-window
+moving mean. Incomplete end windows are omitted, not filled with invented values.
+Line positions use integer bin midpoints. Annotation bands have an independent ID
+and palette. Bands are explicitly ordered outside; overly wide inner bands at
+small radii can fold and are rejected.

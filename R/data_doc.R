@@ -69,6 +69,10 @@ NULL
 #'
 #' @format A one-row data frame with `accver`, display `label`, `length`, and
 #'   the DNA `sequence`.
+#' The historical `plasmid_example_pUC19c` spelling is a compatibility alias
+#' of `plasmid_example_pUC19`, including its `accver`. It must not be confused
+#' with an independently imported GenBank pUC19c record such as L09137.2.
+#'
 #' @source `examples/plasmid/`.
 #' @name plasmid_example_pUC19
 NULL

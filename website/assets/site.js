@@ -50,3 +50,65 @@
     if (event.key === 'Escape') { input.value = ''; results.replaceChildren(); }
   });
 })();
+
+/* Progressive image viewer; plain links remain usable without JavaScript. */
+(() => {
+  const zh = document.documentElement.lang.startsWith('zh');
+  const links = [...document.querySelectorAll('a.figure-link')];
+  if (!links.length) return;
+  const backdrop = document.createElement('div');
+  backdrop.className = 'figure-backdrop';
+  backdrop.hidden = true;
+  backdrop.innerHTML = '<div class="figure-viewer" role="dialog" aria-modal="true" aria-labelledby="figure-viewer-title"><div class="figure-toolbar"><strong id="figure-viewer-title"></strong><button type="button" class="figure-size"></button><a class="figure-original" target="_blank" rel="noopener"></a><button type="button" class="figure-close"></button></div><div class="figure-canvas" tabindex="0"><img alt=""></div></div>';
+  document.body.append(backdrop);
+  const viewer = backdrop.querySelector('.figure-viewer');
+  const image = viewer.querySelector('img');
+  const size = viewer.querySelector('.figure-size');
+  const original = viewer.querySelector('.figure-original');
+  const close = viewer.querySelector('.figure-close');
+  let invoker, overflow, background = [];
+  original.textContent = zh ? '打开原图' : 'Open original';
+  close.textContent = zh ? '关闭' : 'Close';
+  const fit = () => { viewer.classList.remove('native-size'); size.textContent = zh ? '原始大小' : 'Actual size'; };
+  const hide = () => {
+    backdrop.hidden = true;
+    document.body.style.overflow = overflow;
+    for (const [element, previous] of background) {
+      if (previous === null) element.removeAttribute('aria-hidden');
+      else element.setAttribute('aria-hidden',previous);
+    }
+    background = [];
+    invoker?.focus();
+  };
+  size.addEventListener('click', () => {
+    const native = viewer.classList.toggle('native-size');
+    size.textContent = native ? (zh ? '适应窗口' : 'Fit window') : (zh ? '原始大小' : 'Actual size');
+  });
+  close.addEventListener('click',hide);
+  backdrop.addEventListener('click',event => { if (event.target === backdrop) hide(); });
+  viewer.addEventListener('keydown',event => {
+    if (event.key === 'Escape') { event.preventDefault(); hide(); }
+    if (event.key === 'Tab') {
+      const items = [...viewer.querySelectorAll('button,a[href],[tabindex="0"]')];
+      const first = items[0], last = items[items.length-1];
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+    }
+  });
+  for (const link of links) link.addEventListener('click',event => {
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    event.preventDefault();
+    invoker = link;
+    image.src = link.href;
+    image.alt = link.querySelector('img').alt;
+    viewer.querySelector('#figure-viewer-title').textContent = image.alt;
+    original.href = link.href;
+    fit();
+    background = [...document.body.children].filter(e=>e!==backdrop).map(e=>[e,e.getAttribute('aria-hidden')]);
+    for (const [element] of background) element.setAttribute('aria-hidden','true');
+    overflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    backdrop.hidden = false;
+    close.focus();
+  });
+})();

@@ -32,8 +32,8 @@ for(lang in c('en','zh')) {
   xml2::xml_add_child(head,fragment(paste0('<link rel="alternate" hreflang="',if(lang=='en')'zh-Hans' else 'en','" href="',partner,'">')))
   xml2::xml_add_child(head,fragment(paste0('<link rel="icon" href="',base,'favicon.png">')))
   # Add style and script separately so neither can be lost by first-node extraction.
-  xml2::xml_add_child(head,fragment(paste0('<link rel="stylesheet" href="',base,'site.css">')))
-  xml2::xml_add_child(head,fragment(paste0('<script src="',base,'site.js" defer></script>')))
+  xml2::xml_add_child(head,fragment(paste0('<link rel="stylesheet" href="',base,'site.css?v=',unname(tools::md5sum('website/assets/site.css')),'">')))
+  xml2::xml_add_child(head,fragment(paste0('<script src="',base,'site.js?v=',unname(tools::md5sum('website/assets/site.js')),'" defer></script>')))
   toggle<-xml2::xml_find_first(doc,'//button[contains(@class,"navbar-toggler")]')
   language<-fragment(paste0('<a id="site-language" class="language-control" href="',partner,
    '" lang="',if(lang=='en')'zh-Hans' else 'en','">',if(lang=='en')'现代汉语' else 'English','</a>'))
@@ -47,11 +47,11 @@ for(lang in c('en','zh')) {
   body<-xml2::xml_find_first(doc,'//body')
   xml2::xml_set_attr(body,'data-lang',lang)
   xml2::xml_set_attr(body,'data-search',paste0(paste(rep('../',deep),collapse=''),'search.json'))
-  notice<-if(lang=='zh') '0.16.5 开发文档 · 候选 API 0.16.4' else '0.16.5 development documentation · API candidate 0.16.4'
+  notice<-if(lang=='zh') '0.16.5 开发版文档 · 尚未正式发布' else '0.16.5 development documentation · unreleased'
   if(!publication) notice<-paste(notice,if(lang=='zh')'· 本地预览，尚未部署' else '· local preview, not deployed')
   xml2::xml_add_child(main,fragment(paste0('<div class="candidate-note">',notice,'</div>')),.where=0L)
   if(startsWith(relative,'reference/')) {
-   info<-if(lang=='zh') '完整 API 正文保留英语原文；汉语专题提供对应工作流说明。' else 'Complete canonical API text; task articles explain the workflows.'
+   info<-if(lang=='zh') '本页完整说明已译为现代汉语；函数、参数、代码和原始数据标识保留原样。' else 'Complete canonical API text; task articles explain the workflows.'
    link<-paste0(paste(rep('../',deep),collapse=''),'articles.html')
    xml2::xml_add_child(main,fragment(paste0('<p class="reference-language-note">',info,' <a href="',link,'">',if(lang=='zh')'专题' else 'Articles','</a></p>')),.where=1L)
   }
@@ -65,6 +65,8 @@ for(lang in c('en','zh')) {
   # pkgdown rewrites Markdown links to HTML; these are downloadable source files.
   for(a in xml2::xml_find_all(main,'.//a[@href]')) {
    href<-xml2::xml_attr(a,'href')
+   if(grepl('^https://github.com/DangJem/ggchord/blob/HEAD/R/',href))
+    xml2::xml_set_attr(a,'href',paste0(base,'source/',basename(href)))
    if(grepl('/assets/(NEWS|ASSET-SOURCES)\\.html$',href))
     xml2::xml_set_attr(a,'href',sub('\\.html$','.md',href))
    if(grepl('^https?://rdrr\\.io/pkg/ggchord/man/[^#]+\\.html',href)) {
@@ -74,6 +76,16 @@ for(lang in c('en','zh')) {
     if(is.na(topic)) stop('Unresolved current-package autolink: ',href)
     fragment<-if(grepl('#',href,fixed=TRUE)) sub('^[^#]+','',href) else ''
     xml2::xml_set_attr(a,'href',paste0(paste(rep('../',deep),collapse=''),'reference/',topic,'.html',fragment))
+   }
+  }
+  if(lang=='zh') {
+   translations<-c('值'='返回值','范例'='示例','该页面'='本页目录')
+   for(h in xml2::xml_find_all(doc,'//h2')) {
+    children<-xml2::xml_contents(h)
+    for(t in children) if(xml2::xml_type(t)=='text') {
+     text<-trimws(xml2::xml_text(t))
+     if(text %in% names(translations)) xml2::xml_set_text(t,translations[[text]])
+    }
    }
   }
   # Translated native headings otherwise receive punctuation-only IDs. Match

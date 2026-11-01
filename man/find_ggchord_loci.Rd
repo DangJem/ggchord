@@ -55,14 +55,13 @@ The returned \code{locus_id} equals \code{target_id}. Pass the returned table as
 named by those IDs, including multiple windows from one source sequence.
 }
 \examples{
-sequences <- data.frame(accver = "contig", length = 1000, genome = "isolate")
-features <- data.frame(feature_id = c("geneA", "geneB"), accver = "contig",
-  start = c(100, 700), end = c(200, 800), strand = c("+", "-"))
-loci <- find_ggchord_loci(sequences, features, c("geneA", "geneB"),
-  upstream = 50, downstream = 20)
-loci
-focused <- focus_ggchord_data(sequences, gene_data = features, loci = loci)
-focused$seq_data
+data(seq_data_example)
+seqs <- seq_data_example[c("accver", "length")]
+data(gene_data_example)
+genes <- transform(gene_data_example, strand = source_strand)[
+  c("accver", "start", "end", "strand")]
+genes$feature_id <- with(genes, paste(accver, start, end, sep = ":"))
+find_ggchord_loci(seqs, genes, targets = genes$feature_id[1], upstream = 100, downstream = 100)
 }
 \seealso{
 \code{\link{ggchord_data_contract}}

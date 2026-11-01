@@ -30,10 +30,9 @@ Interval interactions do not imply a pairwise alignment: identity and
 alignment length are not inferred from anchor widths.
 }
 \examples{
-as_ggchord_link(data.frame(host = "host", virus = "virus",
-  host_start = 100, host_end = 120, virus_start = 10, virus_end = 30),
-  mapping = c(qaccver = "host", saccver = "virus", qstart = "host_start",
-    qend = "host_end", sstart = "virus_start", send = "virus_end"))
+data(ribbon_data_example)
+links <- ribbon_data_example[c("qaccver", "saccver", "qstart", "qend", "sstart", "send")]
+as_ggchord_link(links)
 }
 \seealso{
 \code{\link{ggchord_data_contract}}

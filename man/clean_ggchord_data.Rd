@@ -83,26 +83,15 @@ directional links and circular-origin features; sorting endpoints loses
 information that a later workflow cannot reconstruct.
 }
 \examples{
-library(ggchord)
 data(seq_data_example)
+seqs <- seq_data_example[c("accver", "length")]
 data(ribbon_data_example)
-data(gene_data_example)
-
-# Introduce a few typical problems
-bad_r <- transform(ribbon_data_example,
-                   qstart = pmin(qstart, 1),
-                   pident = pmin(pident, 150))
-bad_g <- transform(gene_data_example,
-                   anno = ifelse(seq_len(nrow(gene_data_example)) == 1,
-                                 NA_character_, anno))
-
-out <- clean_ggchord_data(seq_data_example, bad_r, bad_g)
-head(out$report)
-# The cleaned tables are ready for ggchord()
-\donttest{
-p <- ggchord(out$seq_data, out$ribbon_data, out$gene_data) +
-  geom_seq() + geom_link_ribbon() + geom_gene()
-}
+links <- ribbon_data_example[c("qaccver", "saccver", "qstart", "qend", "sstart", "send", "pident", "length")]
+# Deliberate diagnostic error in a copy; source observations remain unchanged.
+problem <- links[1:2, ]
+problem$qaccver[2] <- "absent"
+cleaned <- clean_ggchord_data(seqs, problem, unknown_id = "drop")
+cleaned$report
 }
 \seealso{
 \code{\link{ggchord_data_contract}}

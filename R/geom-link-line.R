@@ -24,10 +24,14 @@
 #' @return A ggplot2 layer.
 #' @export
 #' @examples
-#' s <- data.frame(accver = c("A", "B"), length = c(1000, 1000))
-#' d <- data.frame(qaccver = "A", saccver = "B", qpos = 200, spos = 600)
-#' ggchord(s) + geom_seq() + geom_link_line(data = d,
-#'   arrow = arrow(length = unit(2, "mm")))
+#' data(seq_data_example)
+#' seqs <- seq_data_example[c("accver", "length")]
+#' data(ribbon_data_example)
+#' links <- ribbon_data_example[c("qaccver", "saccver", "qstart", "qend", "sstart", "send", "pident", "length")]
+#' points <- data.frame(qaccver = links$qaccver, saccver = links$saccver,
+#'   qpos = floor((links$qstart + links$qend) / 2),
+#'   spos = floor((links$sstart + links$send) / 2))
+#' ggchord(seq_data = seqs) + geom_seq() + geom_link_line(data = points)
 geom_link_line <- function(mapping = NULL, data = NULL,
     link_type = c("curve", "straight"), link_gap = NULL, link_ctrl_point = NULL,
     link_avoid = c("none", "smooth", "uniform"),

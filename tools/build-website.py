@@ -33,8 +33,10 @@ def main():
         shutil.copy2(ROOT/'tools'/name,assets/name)
     shutil.copy2(ROOT/'NEWS.md',assets/'NEWS.md')
     shutil.copy2(WEB/'ASSET-SOURCES.md',assets/'ASSET-SOURCES.md')
+    shutil.copytree(ROOT/'R',assets/'source')
     inputs=sorted([*ROOT.glob('examples/fasta/*.fna'),*ROOT.glob('examples/gff3/*.gff3'),
-        *ROOT.glob('examples/blastn/*.o7'),ROOT/'examples/plasmid/pUC19.fna'])
+        *ROOT.glob('examples/blastn/*.o7'),*ROOT.glob('examples/blastn-standard/*'),
+        *ROOT.glob('examples/format-inputs/*'),ROOT/'examples/plasmid/pUC19.fna'])
     input_hashes={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in inputs}
     (assets/'input-hashes.json').write_text(json.dumps(input_hashes,indent=2)+'\n')
     with zipfile.ZipFile(assets/'tutorial-inputs.zip','w',compression=zipfile.ZIP_DEFLATED) as archive:
@@ -101,6 +103,7 @@ def main():
     for name,data in [('legacy-routes',routes),('retired-routes',retired)]:
         (out/(name+'.json')).write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n')
     files=[p for base in [WEB,ROOT/'R',ROOT/'man',ROOT/'tools',ROOT/'vignettes'] for p in base.rglob('*') if p.is_file() and '__pycache__' not in p.parts]
+    files += inputs + [ROOT/'data'/n for n in ['seq_data_example.rda','gene_data_example.rda','ribbon_data_example.rda','plasmid_example_pUC19.rda','plasmid_example_pETDuet_1.rda']]
     files += [ROOT/p for p in ['DESCRIPTION','NAMESPACE','NEWS.md','README.md','README-Hans.md','MIGRATION.md','MIGRATION-Hans.md','_pkgdown.yml','.github/workflows/documentation.yaml']]
     manifest=dict(version='0.16.5',api_candidate='0.16.4',generator='pkgdown + paired Markdown + shared static assets',
         commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
@@ -109,6 +112,7 @@ def main():
         source_sha256={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in files})
     (out/'build-manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n')
     (out/'page-content.json').unlink()
+    shutil.rmtree(out/'reference-zh')
     print(f'Built {len(PAGES)} paired entries with pkgdown and {len(topics)} reference topics; no deployment, examples or vignette execution.')
 
 if __name__=='__main__':main()

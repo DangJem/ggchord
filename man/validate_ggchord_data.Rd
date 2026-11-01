@@ -68,21 +68,15 @@ counts, a data summary, the original row numbers of every problem, and a
 list of automatically fixable issues.
 }
 \examples{
-library(ggchord)
 data(seq_data_example)
+seqs <- seq_data_example[c("accver", "length")]
 data(ribbon_data_example)
+links <- ribbon_data_example[c("qaccver", "saccver", "qstart", "qend", "sstart", "send")]
 data(gene_data_example)
-
-res <- validate_ggchord_data(seq_data_example, ribbon_data_example,
-                             gene_data_example)
-res$valid
-print(res)
-summary(res)
-
-# Introduce a problem: unknown sequence ID in the ribbons
-bad <- transform(ribbon_data_example, saccver = "NOT_A_SEQUENCE")
-v <- validate_ggchord_data(seq_data_example, bad)
-v$invalid_rows$unknown_id
+genes <- transform(gene_data_example, strand = source_strand)[
+  c("accver", "start", "end", "strand")]
+result <- validate_ggchord_data(seqs, links, genes)
+result$valid
 }
 \seealso{
 \code{\link{ggchord_data_contract}}

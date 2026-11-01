@@ -55,10 +55,10 @@ The gene fill scale is kept independent from the ribbon's fill scale via a
 separate internal aesthetic used by the ribbon layer.
 }
 \examples{
-library(ggchord)
 data(seq_data_example)
+seqs <- seq_data_example[c("accver", "length")]
 data(gene_data_example)
-p <- ggchord(seq_data_example, gene_data = gene_data_example) +
-  geom_seq() + geom_gene(width = .05)
-p
+genes <- transform(gene_data_example, strand = source_strand)[
+  c("accver", "start", "end", "strand")]
+ggchord(seq_data = seqs, gene_data = genes) + geom_seq() + geom_gene()
 }

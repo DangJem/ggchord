@@ -121,10 +121,9 @@ ggchord_seq_style_geometry <- function(seq_arcs, params) {
 #' @export
 #'
 #' @examples
-#' library(ggchord)
 #' data(seq_data_example)
-#' p <- ggchord(seq_data_example) + geom_seq()
-#' p
+#' seqs <- seq_data_example[c("accver", "length")]
+#' ggchord(seq_data = seqs) + geom_seq()
 geom_seq <- function(mapping = NULL, data = NULL,
                      seq_order = NULL,
                      seq_orientation = NULL,

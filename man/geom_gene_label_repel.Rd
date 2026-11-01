@@ -123,14 +123,11 @@ releases have been removed and now produce an error. Use
 \code{\link{geom_gene_label}()} for manual rotation and offsets.
 }
 \examples{
-library(ggchord)
 data(seq_data_example)
+seqs <- seq_data_example[c("accver", "length")]
 data(gene_data_example)
-p <- ggchord(seq_data_example, gene_data = gene_data_example) +
-  geom_seq() + geom_gene() + geom_gene_label_repel()
-p
-ggchord(seq_data_example, gene_data = gene_data_example) +
-  geom_seq() + geom_gene() +
-  geom_gene_label_repel(label_fit = "shrink", label_min_size = 1.5,
-    size = 4) + coord_collinear()
+genes <- transform(gene_data_example, strand = source_strand)[
+  c("accver", "start", "end", "strand", "anno")]
+ggchord(seq_data = seqs, gene_data = genes) + geom_seq() +
+  geom_gene() + geom_gene_label_repel(label_wrap = 20)
 }

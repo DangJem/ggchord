@@ -44,9 +44,10 @@ each mark to the corresponding displayed end. These marks are decorations
 and do not change the source sequence or feature coordinates.
 }
 \examples{
-seqs <- data.frame(accver = "A", length = 1000)
-focused <- focus_ggchord_data(seqs,
-  loci = data.frame(accver = "A", start = 200, end = 700))
-ggchord(focused$seq_data) + geom_seq() + geom_seq_break() +
-  coord_collinear()
+data(seq_data_example)
+seqs <- seq_data_example[c("accver", "length")]
+loci <- data.frame(accver = seqs$accver, start = floor(seqs$length * .25),
+  end = floor(seqs$length * .75))
+focused <- focus_ggchord_data(seqs, loci = loci)
+ggchord(seq_data = focused$seq_data) + geom_seq() + geom_seq_break() + coord_collinear()
 }

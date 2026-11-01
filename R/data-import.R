@@ -236,9 +236,17 @@ read_blast_single <- function(file, format = c("auto", "outfmt6", "outfmt7", "cu
 
 #' Read one or more BLAST tabular output files into ribbon_data format
 #'
-#' `file` reads a single BLAST tabular output file; `files` reads multiple
-#' files at once and combines them. `files` accepts a character vector of
-#' literal paths and/or wildcard patterns (e.g. `"examples/blastn/*.o7"`).
+#' Both `file` and `files` accept literal path vectors or wildcard patterns.
+#' Repeated resolved paths are read once, in first-occurrence order.
+#' Standard `-outfmt 6` and `-outfmt 7` use the default 12 tabular fields;
+#' the historical extended 17-column format is optional. Omitting `-outfmt`
+#' entirely produces pairwise text, which this tabular reader does not parse.
+#'
+#' The reader also parses BLASTp tabular output. It preserves the producer's
+#' numeric endpoints and does not infer or convert amino-acid/nucleotide units.
+#' Protein intervals require an explicit CDS projection before genomic plotting;
+#' reading a protein HSP does not establish an ungapped nucleotide correspondence.
+#' See [project_ggchord_features()] and [project_ggchord_links()].
 #'
 #' @param file Optional path vector or glob patterns; read before `files`.
 #' @param files Optional character vector of BLAST tabular output files
@@ -265,13 +273,11 @@ read_blast_single <- function(file, format = c("auto", "outfmt6", "outfmt7", "cu
 #' @export
 #'
 #' @examples
-#' library(ggchord)
-#' blast_file <- tempfile(fileext = ".o7")
-#' writeLines(c(
-#'   "# BLASTN 2.13.0+",
-#'   "seqA	seqB	98.5	1200	18	0	1	1200	1	1200	1e-180	2400"
-#' ), blast_file)
-#' read_blast(blast_file)
+#' \dontrun{
+#' # Standard 12-column records; requires the source checkout or tutorial input bundle.
+#' source <- read_blast("examples/blastn-standard/MT108731.1__MT118296.1.tsv")
+#' links <- source[c("qaccver", "saccver", "qstart", "qend", "sstart", "send")]
+#' }
 read_blast <- function(file = NULL, files = NULL,
                        format = c("auto", "outfmt6", "outfmt7", "custom"),
                        col_names = NULL, comment = "#", source_file = FALSE,
@@ -424,15 +430,11 @@ read_gff3_single <- function(file, feature_types = "CDS",
 #' @export
 #'
 #' @examples
-#' library(ggchord)
-#' gff <- tempfile(fileext = ".gff3")
-#' writeLines(c(
-#'   "##gff-version 3",
-#'   paste0("seqA	source	CDS	101	500	.	+	0	",
-#'          "ID=cds1;product=hypothetical protein")
-#' ), gff)
-#' read_gff3(gff)
-#' read_gff3(gff, unstranded = "keep")
+#' \dontrun{
+#' # Requires the source checkout or tutorial input bundle.
+#' source <- read_gff3("examples/gff3/MT108731.1.gff3", unstranded = "keep")
+#' features <- source[c("accver", "start", "end", "strand", "anno")]
+#' }
 read_gff3 <- function(file = NULL, files = NULL, feature_types = "CDS",
                       anno_from = c("product", "Name", "gene", "ID"),
                       unstranded = c("plus", "drop", "keep"), source_file = FALSE) {
@@ -546,11 +548,11 @@ read_fasta_lengths_single <- function(file, header_delim = NULL) {
 #' @export
 #'
 #' @examples
-#' library(ggchord)
-#' fasta <- tempfile(fileext = ".fna")
-#' writeLines(c(">seqA some description", "ACGTACGTACGTACGT", "ACGTACGT",
-#'              ">seqB", "TTTTGGGG"), fasta)
-#' read_fasta_lengths(fasta)
+#' \dontrun{
+#' # Requires the source checkout or tutorial input bundle.
+#' source <- read_fasta_lengths("examples/fasta/MT108731.1.fna")
+#' seqs <- source[c("accver", "length")]
+#' }
 read_fasta_lengths <- function(file = NULL, files = NULL, header_delim = NULL,
                                source_file = FALSE) {
   old_error <- ggchord_disable_debug()

@@ -1,33 +1,30 @@
-## 声明位置与数值域 {#domain}
-先运行[共享准备代码](index.html#quick-start)：
+## 从实际 DNA 计算数据轨道 {#domain}
+先运行[共享准备代码](index.html#quick-start)。本例读取随包 pUC19，每 100 bp 计算
+一次 GC 比例；末尾不足 100 bp 的窗口按实际碱基数计算。
 
 {{code:tracks}}
 {{figure:tracks}}
 
-信号是任意单位的合成正弦波，不是测量得到的覆盖度或 GC skew。
-ggchord 绘制已提供的数值，不计算序列组成。替换成实际区间值后应声明真实单位。
+值域为 0–1，单位是比例。换成其他测量值时，要声明对应单位和有效范围。
+`position_track()` 决定放置与物理宽度，`scale_track_value_continuous()` 决定数值映射，
+二者不能互相替代。
 
-## 有意共享轨道 ID {#sharing}
-`position_track("signal", ...)` 选择位置与物理宽度，
-`scale_track_value_continuous("signal", ...)` 定义数值域，不负责空间放置。
-同 ID 图层联合训练一个数值域，包括柱形基线，且轨道声明必须一致。
-填色/颜色 scale 另按该 ID 限定作用域。`geom_track_tile()` 表达类别，
-`geom_track_line()` 连接数值观测，`geom_track_bar()` 表达相对于基线的区间值。
+## 同一 ID 共享同一条轨道 {#sharing}
+同名轨道上的各层共享数值域，bar 的基线也参与范围计算；它们必须声明一致的宽度和
+放置方式。颜色标度按轨道 ID 独立设置。tile 表示区间类别，line 连接观测位置，
+bar 表示相对基线的区间值。不要把相同数值域误认为必须位于同一条轨道。
 
-## 检查保留结果 {#diagnostics}
-通过 `export_ggchord_layout()` 查看 `track_registry`、`track_diagnostics`。
-原始数值范围、物理 mm 贡献与原生位移的单位各不相同。
-使用 `focus_ggchord_track()` 按相同 loci 裁剪轨道，检查裁剪或遗漏行，不能把未显示的柱形当成零。
+## 检查裁剪和数值范围 {#diagnostics}
+`export_ggchord_layout()` 的 `track_registry` 与 `track_diagnostics` 记录值域、
+物理尺寸、原生位移及裁剪情况。被裁剪或省略的行不等于测量值为零。
+局部视图使用 `focus_ggchord_track()` 并共享相同窗口。
 
-## 组合柱形、折线与类别 tile {#multiple}
+## 叠加柱、滑动均值和注释带 {#multiple}
+先运行[圆图例子](modes.html#circular)得到实际注释 `features`，再继续：
+
 {{code:multitrack}}
 {{figure:multitrack}}
 
-柱形和折线有意共享 `signal` 及一个数值域；折线是合成信号的一半，不是另一份实测
-样本。两层声明相同宽度。类别轨道 `sites` 有独立 ID 和填色标度，零基线参与数值域
-训练。显式 limits 应表达目标测量范围，调整数值 scale 不移动轨道空间位置。
-`focused_bins` 为选定 locus 保留区间裁剪和源映射。检查轨道诊断中的边界裁剪，
-不能把遗漏行当作零。轨道颜色与填色角色见[样式](styling.html#roles)。
-
-折线位置使用向下取整的整数 bin 中点。第二条分类带明确位于外侧，排在数值带之后；
-小半径下过宽的内侧轨道可能折叠，此时会报错，不会穿过圆心继续绘制。
+柱和线都来自同一组实际 GC 值，线使用三个窗口的滑动均值；两端没有完整窗口时省略，
+不填造观测值。折线位置是整数窗口中点。注释类型带有独立 ID 和配色。
+轨道放在圆外并按顺序排列；小半径下过宽的内侧带可能折叠，此时会明确报错。

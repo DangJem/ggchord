@@ -1,28 +1,23 @@
-## 建立显式编码映射 {#map}
-这个合成例子的一个密码子跨越两段编码区间：
+## 先准备有来源的 CDS {#cds}
+先运行[完全相同 CDS 的比较](homology.html#membership)。它使用随包质粒的真实注释
+和 DNA。完整 CDS 的 phase 明确为 0，翻译表显式设为 11。
 
 {{code:projection}}
 
-`genomic$segments` 保留实际编码片段，不使用包含内含子的外包区间。
-`project_ggchord_links()` 同样投影显式蛋白连接，不计算新的同源关系或翻译 DNA。
+这个例子选择第 2–20 个残基作显示范围，不声称它是检测到的蛋白结构域。
+投影结果是基因组区间，保留正负链与分段关系。真实检测到的 domain 也应提供确切
+父 CDS ID 及氨基酸范围；不能通过同名注释或注释最大端点猜测。
 
-## phase、不完整末端与例外 {#phase}
-同一 CDS 的片段共享 `feature_id`，位于同一序列且链已知。GFF3 `phase` 从各段
-生物学 5' 端计数到下一个密码子边界。只有第一段 phase 被跳过；后续 phase 校验
-累计编码长度，保留跨片段密码子的碱基。显式 `segment_order` 可声明跨原点连接。
+## 分段、phase 和部分区域 {#boundaries}
+`build_ggchord_cds()` 先建立 CDS 分段映射，`project_ggchord_features()` 再将氨基酸
+区间按映射切分。跨剪接边界可能返回多行；不要简单把坐标乘以 3。
+不完整 CDS、phase、截断或不支持的位置必须按文档策略处理并检查报告。
+DNA 匹配、氨基酸区间投影和真实翻译/比对是不同步骤，绘图库不会代为推断缺失证据。
 
-默认拒绝不完整末端。显式 `partial = "trim"` 排除不能组成完整密码子的碱基，
-残基一表示第一个完整观测密码子。投影中遗传密码 ID 是元数据，不是翻译选择。
-已声明的移码、滑移、翻译例外和不支持的位置运算符会被拒绝，不能推断未观测蛋白的
-长度或相似度。
+## BLASTp 查询范围与双端连接 {#links}
+{{code:linkprojection}}
 
-## 逆向映射 {#inverse}
-使用 `project_ggchord_features(genomic, cds, from = "genome")` 反向投影。
-非密码子边界需要明确 `codon_boundary` 策略。结果保留源坐标、父对象与投影来源。
-处理不完整或多段生物学模型前，应阅读完整[函数参考](reference/project_ggchord_features.html)。
-
-## 同时投影 domain 与 feature 连接 {#links}
-上面的 domain 例子沿显式 CDS 片段映射已观测残基区间。
-[编码坐标连接](homology.html#projection)增加配对模型，演示单独的无 gap 声明。
-两类辅助函数都不翻译 DNA、验证遗传密码或创建新比对。绘制不连续基因组锚点前，
-应对照保留的分段片段和来源元数据。
+这个无缺口例子依赖[同源专题](homology.html)中已核对的相同编码序列。
+真实 BLASTp 输入可以有 gap；查询区间仍能投影，但双端连接还需要 subject 的 CDS
+和无缺口对应证据。请阅读[真实 BLASTp 读取与投影](alignments.html#protein)。
+本版不把 aa 单位伪装成 bp，也不新增原生蛋白坐标绘图。

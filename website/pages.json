@@ -11,7 +11,7 @@
     "slug": "installation",
     "title": {
       "en": "Install and start",
-      "zh": "安装与入门"
+      "zh": "开始使用"
     },
     "group": "start"
   },
@@ -27,7 +27,7 @@
     "slug": "formats",
     "title": {
       "en": "File formats and explicit adapters",
-      "zh": "文件格式与显式适配器"
+      "zh": "导入和转换数据"
     },
     "group": "article"
   },
@@ -35,7 +35,7 @@
     "slug": "modes",
     "title": {
       "en": "Three coordinate systems",
-      "zh": "三种坐标模式"
+      "zh": "画出三类图"
     },
     "group": "start"
   },
@@ -43,7 +43,7 @@
     "slug": "real-data",
     "title": {
       "en": "From original records to sequence comparisons",
-      "zh": "从原始记录到序列比较"
+      "zh": "从原始文件开始绘图"
     },
     "group": "article"
   },
@@ -51,7 +51,23 @@
     "slug": "plasmids",
     "title": {
       "en": "A complete circular annotation workflow",
-      "zh": "完整的单序列圆图工作流"
+      "zh": "绘制完整质粒图"
+    },
+    "group": "article"
+  },
+  {
+    "slug": "alignments",
+    "title": {
+      "en": "Import nucleotide and protein alignments",
+      "zh": "导入核酸和蛋白比对"
+    },
+    "group": "article"
+  },
+  {
+    "slug": "parameters",
+    "title": {
+      "en": "Set values by sequence and strand",
+      "zh": "按序列和链设置参数"
     },
     "group": "article"
   },
@@ -59,7 +75,7 @@
     "slug": "ribbons",
     "title": {
       "en": "Prepare and summarize alignment links",
-      "zh": "准备和汇总比对连接"
+      "zh": "筛选和整理连接"
     },
     "group": "article"
   },
@@ -67,7 +83,7 @@
     "slug": "annotations",
     "title": {
       "en": "Features, stacking and genomic decoration",
-      "zh": "Feature、堆叠与基因组装饰"
+      "zh": "绘制注释与处理重叠"
     },
     "group": "article"
   },
@@ -75,7 +91,7 @@
     "slug": "labels",
     "title": {
       "en": "Labels and local placement",
-      "zh": "标签与局部放置"
+      "zh": "放置和调整标签"
     },
     "group": "guide"
   },
@@ -83,7 +99,7 @@
     "slug": "tracks",
     "title": {
       "en": "Quantitative tracks",
-      "zh": "定量轨道"
+      "zh": "添加数据轨道"
     },
     "group": "guide"
   },
@@ -91,7 +107,7 @@
     "slug": "recognition",
     "title": {
       "en": "Primers, restriction and feature search",
-      "zh": "引物、酶切与 feature 搜索"
+      "zh": "查找引物、酶切位点和常见注释"
     },
     "group": "guide"
   },
@@ -99,7 +115,7 @@
     "slug": "homology",
     "title": {
       "en": "Explicit homologs and coding-coordinate links",
-      "zh": "显式同源关系与编码坐标连接"
+      "zh": "连接同源基因"
     },
     "group": "article"
   },
@@ -107,7 +123,7 @@
     "slug": "projection",
     "title": {
       "en": "CDS coordinate projection",
-      "zh": "CDS 坐标投影"
+      "zh": "将蛋白坐标转换为基因组坐标"
     },
     "group": "guide"
   },
@@ -115,7 +131,7 @@
     "slug": "views",
     "title": {
       "en": "Focus, segments and homology",
-      "zh": "局部视图、分段与同源关系"
+      "zh": "查看局部和分段区域"
     },
     "group": "guide"
   },
@@ -123,7 +139,7 @@
     "slug": "styling",
     "title": {
       "en": "Mappings, scales, guides and themes",
-      "zh": "映射、标度、图例与主题"
+      "zh": "设置配色、图例和主题"
     },
     "group": "article"
   },
@@ -131,7 +147,7 @@
     "slug": "adjustments",
     "title": {
       "en": "Common adjustments and grammar",
-      "zh": "常用调整与图形语法"
+      "zh": "调整图形"
     },
     "group": "guide"
   },
@@ -139,7 +155,7 @@
     "slug": "output",
     "title": {
       "en": "Export, preview and diagnostics",
-      "zh": "导出、预览与诊断"
+      "zh": "预览和保存图形"
     },
     "group": "guide"
   },
@@ -163,7 +179,7 @@
     "slug": "articles",
     "title": {
       "en": "Articles and complete workflows",
-      "zh": "专题与完整工作流"
+      "zh": "使用教程"
     },
     "group": "start"
   },
@@ -171,7 +187,7 @@
     "slug": "gallery",
     "title": {
       "en": "Reproducible gallery",
-      "zh": "可复现图集"
+      "zh": "示例图集"
     },
     "group": "guide"
   },
@@ -179,7 +195,7 @@
     "slug": "glossary",
     "title": {
       "en": "Terminology and design sources",
-      "zh": "术语与设计来源"
+      "zh": "术语说明"
     },
     "group": "guide"
   },
@@ -187,7 +203,7 @@
     "slug": "reference",
     "title": {
       "en": "Function reference",
-      "zh": "函数参考"
+      "zh": "函数文档"
     },
     "group": "reference"
   },
@@ -195,7 +211,7 @@
     "slug": "news",
     "title": {
       "en": "Development status and changes",
-      "zh": "开发状态与变更"
+      "zh": "更新日志"
     },
     "group": "reference"
   }

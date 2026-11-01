@@ -45,18 +45,25 @@ A \code{ggchord_import} attribute records files, per-file output row counts and
 the one-based inclusive coordinate convention.
 }
 \description{
-\code{file} reads a single BLAST tabular output file; \code{files} reads multiple
-files at once and combines them. \code{files} accepts a character vector of
-literal paths and/or wildcard patterns (e.g. \code{"examples/blastn/*.o7"}).
+Both \code{file} and \code{files} accept literal path vectors or wildcard patterns.
+Repeated resolved paths are read once, in first-occurrence order.
+Standard \verb{-outfmt 6} and \verb{-outfmt 7} use the default 12 tabular fields;
+the historical extended 17-column format is optional. Omitting \code{-outfmt}
+entirely produces pairwise text, which this tabular reader does not parse.
+}
+\details{
+The reader also parses BLASTp tabular output. It preserves the producer's
+numeric endpoints and does not infer or convert amino-acid/nucleotide units.
+Protein intervals require an explicit CDS projection before genomic plotting;
+reading a protein HSP does not establish an ungapped nucleotide correspondence.
+See \code{\link[=project_ggchord_features]{project_ggchord_features()}} and \code{\link[=project_ggchord_links]{project_ggchord_links()}}.
 }
 \examples{
-library(ggchord)
-blast_file <- tempfile(fileext = ".o7")
-writeLines(c(
-  "# BLASTN 2.13.0+",
-  "seqA	seqB	98.5	1200	18	0	1	1200	1	1200	1e-180	2400"
-), blast_file)
-read_blast(blast_file)
+\dontrun{
+# Standard 12-column records; requires the source checkout or tutorial input bundle.
+source <- read_blast("examples/blastn-standard/MT108731.1__MT118296.1.tsv")
+links <- source[c("qaccver", "saccver", "qstart", "qend", "sstart", "send")]
+}
 }
 \seealso{
 \code{\link{ggchord_data_contract}}

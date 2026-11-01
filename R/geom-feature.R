@@ -249,14 +249,11 @@ ggchord_feature_data <- function(data, fixed_shape = "arrow",
 #' @export
 #'
 #' @examples
-#' library(ggchord)
-#' data(seq_data_example)
-#' features <- data.frame(accver = "MT108731.1",
-#'                        start = 1000, end = 4000,
-#'                        strand = "+", type = "CDS")
-#' p <- ggchord(seq_data_example) + geom_seq() +
-#'   geom_feature(data = features, shape = "block", width = .08)
-#' p
+#' data(plasmid_example_pUC19)
+#' seqs <- plasmid_example_pUC19[c("accver", "length")]
+#' feature_source <- find_common_features(plasmid_example_pUC19)
+#' features <- feature_source[c("accver", "start", "end", "strand", "type", "anno")]
+#' ggchord(seq_data = seqs) + geom_seq() + geom_feature(data = features, shape = "block") + coord_circular()
 geom_feature <- function(mapping = NULL, data = NULL,
                          shape = "arrow",
                          width = NULL,

@@ -12,7 +12,7 @@ straight link. Ribbon avoidance defaults to `uniform`, line avoidance to `none`.
 ## Circular: annotate one sequence {#circular}
 {{code:circular}}
 {{figure:circular}}
-This example explicitly hides the axis to leave the feature labels clear.
+This example selects CDS and the replication origin for display, retaining the full sequence bp axis.
 `coord_circular()` requires a single sequence. General features can carry unknown
 strand. `geom_feature_plasmid()` is a convenience preset with its own defaults;
 choose it explicitly when those defaults fit the task. Primer and restriction
@@ -21,6 +21,7 @@ layers are described in [recognition](recognition.html).
 ## Collinear: align local comparisons {#collinear}
 {{code:collinear}}
 {{figure:collinear}}
+Each sequence is anchored to its own longest known gene for display; this does not assert homology.
 `anchor` aligns specified intervals; `orientation = "auto"` chooses supported
 orientations using available evidence. Inspect orientation diagnostics rather
 than assuming biological inversion. Ribbons connect adjacent displayed rows by

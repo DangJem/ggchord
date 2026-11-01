@@ -20,10 +20,13 @@ class Document(HTMLParser):
         self.images = []
         self.codeblocks = []
         self._code_parts = None
+        self.main_text = []
+        self._in_main = False
         self.lang = None
         self.feed(path.read_text())
     def handle_starttag(self, tag, attrs):
         a = dict(attrs)
+        if tag == 'main': self._in_main = True
         if tag == 'pre': self._code_parts = []
         if 'id' in a: self.ids.append(a['id'])
         if tag == 'html': self.lang = a.get('lang')
@@ -32,8 +35,10 @@ class Document(HTMLParser):
                 if a.get(key): self.links.append(a[key])
         if tag == 'img': self.images.append(a)
     def handle_data(self, data):
+        if self._in_main: self.main_text.append(data)
         if self._code_parts is not None: self._code_parts.append(data)
     def handle_endtag(self, tag):
+        if tag == 'main': self._in_main = False
         if tag == 'pre' and self._code_parts is not None:
             self.codeblocks.append(''.join(self._code_parts))
             self._code_parts = None
@@ -60,6 +65,7 @@ def main():
         require(blocks(expand(texts[0], 'en')) == blocks(expand(texts[1], 'zh')), f'{p["slug"]}: mismatched executable code')
     for lang in ['en','zh']:
         require({f.stem for f in (WEB/lang).glob('*.md')} == set(slugs), f'{lang}: orphan or missing source page')
+    subprocess.run(['python3','tools/reference-translations.py','--check'],cwd=ROOT,check=True)
     subprocess.run(['python3','tools/sync-tutorials.py','--check'],cwd=ROOT,check=True)
     with (WEB/'assets/plots.csv').open() as f:
         assets = list(csv.DictReader(f))
@@ -170,6 +176,10 @@ def main():
             if path.is_relative_to(out/'en') and path.name!='reference.html':
                 partner=(out/'zh'/path.relative_to(out/'en')).resolve()
                 require(partner in docs and set(doc.ids)==set(docs[partner].ids),f'{path.relative_to(out)}: counterpart anchors differ')
+                if path.parent.name=='reference' and path.name!='index.html' and partner in docs:
+                    require(list(map(normalize,doc.codeblocks))==list(map(normalize,docs[partner].codeblocks)),f'{path.name}: reference usage/examples differ by language')
+                    require(len(re.findall('[\u3400-\u9fff]', ''.join(docs[partner].main_text)))>=10,f'{path.name}: translated reference body is missing')
+                    require(bool(doc.codeblocks) or 'usage' not in doc.ids,f'{path.name}: missing usage code')
         require(any('标签' in p['text'] for p in json.loads((out/'zh/search.json').read_text())), 'Han search content absent')
     if errors:
         raise SystemExit('\n'.join(errors))

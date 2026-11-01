@@ -1,0 +1,10 @@
+{
+  "source_sha256": "0809ade68f224bac6d78348ce3c7afefa50918d84866c7060e0d90eaa6c96192",
+  "translations": {
+    "0": "点连接标度",
+    "1": "传给对应 ggplot2 标度的参数。",
+    "2": "手动 aesthetic 值。",
+    "3": "一个 ggplot2 标度。",
+    "4": "点连接 aesthetic 独立于序列及区间连接 aesthetic。"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "source_sha256": "11bdd9cf65706422b3486c5321d8bdbebcfe80e06ac6e109c729bf9db21c929b",
+  "translations": {
+    "0": "将 ggchord 图与 ggplot2 组件组合",
+    "1": "一个 ggchord 对象。",
+    "2": "一个 ggplot2 组件。",
+    "3": "一个 ggchord 对象。",
+    "4": "使用 ggplot2 标准组合语义添加图层、标度、主题、坐标系及注释。"
+  }
+}

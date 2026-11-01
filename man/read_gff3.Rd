@@ -47,15 +47,11 @@ combines them. \code{files} accepts a character vector of literal paths and/or
 wildcard patterns (e.g. \code{"examples/gff3/*.gff3"}).
 }
 \examples{
-library(ggchord)
-gff <- tempfile(fileext = ".gff3")
-writeLines(c(
-  "##gff-version 3",
-  paste0("seqA	source	CDS	101	500	.	+	0	",
-         "ID=cds1;product=hypothetical protein")
-), gff)
-read_gff3(gff)
-read_gff3(gff, unstranded = "keep")
+\dontrun{
+# Requires the source checkout or tutorial input bundle.
+source <- read_gff3("examples/gff3/MT108731.1.gff3", unstranded = "keep")
+features <- source[c("accver", "start", "end", "strand", "anno")]
+}
 }
 \seealso{
 \code{\link{ggchord_data_contract}}

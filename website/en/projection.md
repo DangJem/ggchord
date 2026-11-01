@@ -1,34 +1,27 @@
-## Build an explicit coding map {#map}
-This synthetic split codon spans two coding segments:
+## Start with source-backed CDS {#cds}
+Run the [identical-CDS comparison](homology.html#membership) first. It uses real
+bundled plasmid annotations and DNA. Complete CDS use explicit phase 0 and
+translation table 11.
 
 {{code:projection}}
 
-`genomic$segments` preserves the actual coding pieces, not an envelope including
-introns. `project_ggchord_links()` similarly projects explicit protein links;
-it does not compute new homology or translate DNA.
+This example selects residues 2–20 for display; it does not claim a detected
+protein domain. Projection returns genomic intervals with strand/segment context.
+Actual domains require exact parent CDS IDs and amino-acid ranges; annotation
+names or maximum feature endpoints cannot supply missing evidence.
 
-## Phase, partial ends and exceptions {#phase}
-CDS segments share `feature_id`, one sequence and a known strand. GFF3 `phase`
-counts from each biological 5-prime end to the next codon boundary. Only the
-first phase is skipped; later phases check accumulated coding length, retaining
-codons split across segments. Explicit `segment_order` can declare an origin join.
+## Segments, phase and partial regions {#boundaries}
+`build_ggchord_cds()` constructs a segment map; `project_ggchord_features()` then
+splits amino-acid intervals through it. Crossing a boundary can return several
+rows; multiplying coordinates by three is insufficient. Inspect policies/reports
+for partial CDS, phase and truncation. DNA matching, interval projection and
+actual translation/alignment are distinct operations.
 
-Partial ends default to an error. `partial = "trim"` explicitly excludes bases
-without complete codons; residue one means the first complete observed codon.
-Genetic-code IDs are metadata for coordinate projection, not translation choices.
-Declared frameshifts, slippage, translation exceptions and unsupported location
-operators are rejected. No unobserved protein length or identity is inferred.
+## BLASTp query spans and two-ended links {#links}
+{{code:linkprojection}}
 
-## Inverse mapping {#inverse}
-Use `project_ggchord_features(genomic, cds, from = "genome")` to map back.
-Non-codon boundaries require an explicit `codon_boundary` policy. Source
-coordinates, parents and projection provenance remain attached. Read the full
-[function reference](reference/project_ggchord_features.html) before applying
-this to partial or multi-segment biological models.
-
-## Project feature links as well as domains {#links}
-The domain example above maps an observed residue interval through explicit CDS
-segments. [Coding-coordinate links](homology.html#projection) adds a paired model
-and demonstrates the separate ungapped assertion. Neither helper translates DNA,
-validates genetic code or creates a new alignment. Compare the retained segment
-pieces and source metadata before drawing discontinuous genomic anchors.
+This ungapped case relies on [verified identical coding DNA](homology.html).
+Real BLASTp HSPs may contain gaps: query spans can still be projected, but paired
+links need the subject CDS and justified ungapped correspondence. See
+[real BLASTp import/projection](alignments.html#protein). This version does not
+reinterpret aa as bp or add native protein-coordinate plotting.

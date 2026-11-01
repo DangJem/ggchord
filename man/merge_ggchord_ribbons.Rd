@@ -64,16 +64,9 @@ Rows with a single-base endpoint remain independent: endpoint order cannot
 define an absolute direction for an aggregate envelope.
 }
 \examples{
-library(ggchord)
-# Two adjacent, collinear blocks of the same pair -> one merged block
-rb <- data.frame(
-  qaccver = c("A", "A"), saccver = c("B", "B"),
-  length = c(100, 100), pident = c(95, 97),
-  qstart = c(1, 101), qend = c(100, 200),
-  sstart = c(501, 601), send = c(600, 700)
-)
-out <- merge_ggchord_ribbons(rb, max_gap = 0)
-out$data
+data(ribbon_data_example)
+links <- ribbon_data_example[c("qaccver", "saccver", "qstart", "qend", "sstart", "send", "pident", "length")]
+out <- merge_ggchord_ribbons(links, max_gap = 100)
 out$report
 }
 \seealso{

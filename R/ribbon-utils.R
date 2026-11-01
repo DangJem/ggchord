@@ -58,14 +58,9 @@ ggchord_ribbon_numeric_input <- function(data, columns, caller) {
 #' @export
 #'
 #' @examples
-#' library(ggchord)
 #' data(ribbon_data_example)
-#' out <- filter_ggchord_ribbons(
-#'   ribbon_data_example,
-#'   min_pident = 95,
-#'   drop_self_links = TRUE,
-#'   sort_by = c("pident", "-length")
-#' )
+#' links <- ribbon_data_example[c("qaccver", "saccver", "qstart", "qend", "sstart", "send", "pident", "length")]
+#' out <- filter_ggchord_ribbons(links, min_pident = 95, min_length = 500)
 #' out$report
 filter_ggchord_ribbons <- function(
     ribbon_data,
@@ -348,10 +343,9 @@ normalize_keep_pairs <- function(pairs) {
 #' @export
 #'
 #' @examples
-#' library(ggchord)
 #' data(ribbon_data_example)
-#' dup <- rbind(ribbon_data_example, ribbon_data_example[1, ])
-#' out <- deduplicate_ggchord_ribbons(dup, by = "exact")
+#' links <- ribbon_data_example[c("qaccver", "saccver", "qstart", "qend", "sstart", "send", "pident", "length")]
+#' out <- deduplicate_ggchord_ribbons(links, by = "overlap")
 #' out$report
 deduplicate_ggchord_ribbons <- function(
     ribbon_data,
@@ -545,16 +539,9 @@ deduplicate_ggchord_ribbons <- function(
 #' @export
 #'
 #' @examples
-#' library(ggchord)
-#' # Two adjacent, collinear blocks of the same pair -> one merged block
-#' rb <- data.frame(
-#'   qaccver = c("A", "A"), saccver = c("B", "B"),
-#'   length = c(100, 100), pident = c(95, 97),
-#'   qstart = c(1, 101), qend = c(100, 200),
-#'   sstart = c(501, 601), send = c(600, 700)
-#' )
-#' out <- merge_ggchord_ribbons(rb, max_gap = 0)
-#' out$data
+#' data(ribbon_data_example)
+#' links <- ribbon_data_example[c("qaccver", "saccver", "qstart", "qend", "sstart", "send", "pident", "length")]
+#' out <- merge_ggchord_ribbons(links, max_gap = 100)
 #' out$report
 merge_ggchord_ribbons <- function(
     ribbon_data,

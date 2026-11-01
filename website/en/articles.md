@@ -1,7 +1,7 @@
 Choose a task, then follow its input → code → result → interpretation path.
 The [full function reference](reference.html) remains the precise API source;
 articles explain how the pieces work together. Both languages share code and
-figure bytes. Reference parameter text is the complete canonical English source.
+figure bytes. The Han reference translates the complete prose, parameters and return descriptions from canonical English R help.
 
 ## Follow a workflow {#workflows}
 {{articles}}

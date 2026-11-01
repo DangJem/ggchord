@@ -1,5 +1,17 @@
 # ggchord 0.16.5 (unreleased)
 
+* Added complete Han website reference prose for all current Rd topics, bound to
+  canonical source hashes; stale or missing translations prevent site generation.
+  Code, signatures and original identifiers remain unchanged.
+* Reworked documentation examples around bundled or attributed real records,
+  explicit minimum input columns, standard BLAST 12-column tables, PAF and
+  BLASTp CDS projection. GC comes from actual DNA and homology membership from
+  checked coding-sequence identity. Native amino-acid axes remain a separate
+  proposal; existing readers/adapters and flexible parameter forms are retained.
+* Added three full home-page plot types, larger documentation exports, explicit
+  muted example palettes and an accessible image viewer with actual-size mode.
+  These styles are declared in examples rather than changing package defaults.
+
 * Four-column gene tables now retain the default strand fill mapping and honour
   user gene scales without an optional `anno` column. Annotation absence no
   longer drops the mapping and paints genes with a fallback colour.

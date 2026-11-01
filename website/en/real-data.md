@@ -18,8 +18,8 @@ Never turn unknown annotation strands into `+` to make a gene shortcut accept th
 {{results:real}}
 
 The link display retains identity ≥80% and reported alignment length ≥500 bp.
-The chord view selects the six longest imported CDS per sequence, labelling the
-two longest of those. These are display rules, not biological findings or a claim
+The chord view selects the six longest imported CDS per sequence, labelling at most two selected CDS with informative annotations (excluding
+hypothetical protein). These are display rules, not biological findings or a claim
 that omitted genes are absent. Raw `feature_real` and `link_real` remain intact;
 `real_prepared$report` and `real_filtered$report` retain preparation/filter evidence.
 No display strands are recoded. This differs from the small packaged teaching
@@ -50,3 +50,12 @@ The input archive contains unmodified FASTA/GFF3/BLAST files, a SHA256 manifest
 and the shared example script. The plot manifest records the code hash, PNG device,
 width, height and dpi. The accession names identify source records; a drawing is
 not a replacement for the original annotations or alignment evidence.
+
+## Select fields before passing data {#minimal-fields}
+The `*_source` objects keep original fields and provenance; `seq_real` has two
+columns, `feature_real` only geometry/type/text, and `link_real` adds identity and
+reported length only because this workflow filters and colours by them. Standard
+12-column BLAST conversions are used, not a requirement for the historical 17 fields.
+The bundled gene fixture preserves its original strand in `source_strand`; the
+short examples restore that biological strand before selecting four gene columns.
+See [alignment input](alignments.html) for exact format and unit boundaries.

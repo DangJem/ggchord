@@ -30,7 +30,7 @@ provided links rather than creating new sequence alignments.
 {{code:mappingposition}}
 
 Run the [focus example](views.html#focus) first. The helper returns Cartesian x/y
-for source position 200 on A. It does not make all ordinary ggplot2 coordinates
+for a source position 100 bp inside the first selected window. It does not make all ordinary ggplot2 coordinates
 become genomic bp. In segmented views choose the window ID, and check positions
 in omitted gaps rather than extrapolating across them. Use [explicit homologs](homology.html)
 when the locus selection comes from declared feature/cluster evidence.
