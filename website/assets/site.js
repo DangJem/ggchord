@@ -112,3 +112,51 @@
     close.focus();
   });
 })();
+
+/* Copy only executable text; disclosure labels are outside the copied range. */
+(() => {
+  const zh = document.documentElement.lang.startsWith('zh');
+  for (const disclosure of document.querySelectorAll('details.code-disclosure')) {
+    const code = disclosure.querySelector('pre code') || disclosure.querySelector('pre');
+    if (!code) continue;
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'copy-code';
+    const label = zh ? '复制代码' : 'Copy code';
+    button.textContent = label;
+    button.setAttribute('aria-label', label);
+    button.setAttribute('aria-live', 'polite');
+    disclosure.querySelector('summary').after(button);
+    button.addEventListener('click', async () => {
+      const text = code.textContent;
+      let copied = false;
+      try {
+        if (navigator.clipboard?.writeText) {
+          await navigator.clipboard.writeText(text);
+          copied = true;
+        }
+      } catch (_) { /* Fall back to the document copy action. */ }
+      if (!copied) {
+        const field = document.createElement('textarea');
+        field.value = text;
+        field.readOnly = true;
+        field.setAttribute('aria-hidden', 'true');
+        field.style.cssText = 'position:fixed;opacity:0;left:0;top:0';
+        document.body.append(field);
+        field.select();
+        try { copied = document.execCommand('copy'); } catch (_) { /* Select code below. */ }
+        field.remove();
+        button.focus();
+      }
+      if (!copied) {
+        const range = document.createRange();
+        range.selectNodeContents(code);
+        const selection = getSelection();
+        selection.removeAllRanges();
+        selection.addRange(range);
+      }
+      button.textContent = copied ? (zh ? '已复制' : 'Copied') : (zh ? '已选中，请复制' : 'Selected; copy manually');
+      setTimeout(() => { button.textContent = label; }, 2500);
+    });
+  }
+})();

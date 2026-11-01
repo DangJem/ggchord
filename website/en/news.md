@@ -6,7 +6,7 @@ been deployed or released; 0.16.0–0.16.4 also remain unreleased local developm
 - Reorganized learning, complete workflows, task guides and reference entry points. The first-plot lesson covers installation, minimal inputs, interpretation, saving and troubleshooting; task pages prepare their own objects.
 - Complete Han function reference, including arguments, returns and explanatory prose, with same-page English switching and source-hash checks.
 - Redesigned typography, chapter navigation, gallery and data encodings. Choose overall chord, single-sequence circular or local CDS views by question. Persistent navigation, mobile outlines and reserved image dimensions support long-page reading.
-- Native pkgdown / Bootstrap 5 package-documentation layout with same-page language switching, search, contents and code disclosure.
+- Native pkgdown / Bootstrap 5 package-documentation layout with same-page language switching, search, contents, code disclosure and exact code copying.
 - Chord, circular and collinear home-page examples; every documentation figure supports enlargement and actual-size viewing.
 - Bundled or attributed real inputs, with explicit row/column selection before function calls.
 - GC tracks computed from actual DNA and CDS membership checked by sequence identity.

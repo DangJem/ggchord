@@ -43,6 +43,16 @@ for(lang in c('en','zh')) {
     if(lang=='zh')'文档章节' else 'Documentation chapters','">',chapter_links,'</nav>')),.where='before')
   xml2::xml_add_child(main,nav_fragment(paste0('<details class="chapter-drawer"><summary>',
     if(lang=='zh')'浏览文档' else 'Browse documentation','</summary><nav>',chapter_links,'</nav></details>')),.where=0L)
+  if(lang=='zh') {
+   translations<-c('值'='返回值','范例'='示例','该页面'='本页目录','细节'='详细说明','相关话题'='另见')
+   for(h in xml2::xml_find_all(doc,'//h2')) {
+    children<-xml2::xml_contents(h)
+    for(t in children) if(xml2::xml_type(t)=='text') {
+     text<-trimws(xml2::xml_text(t))
+     if(text %in% names(translations)) xml2::xml_set_text(t,translations[[text]])
+    }
+   }
+  }
   # Native reference TOCs are populated later by JavaScript. Build the compact
   # outline from actual headings, rather than cloning their initially empty nav.
   outline_headings <- xml2::xml_find_all(main,'.//*[self::h2 or self::h3][@id]')
@@ -121,16 +131,7 @@ for(lang in c('en','zh')) {
     xml2::xml_set_attr(a,'href',paste0(paste(rep('../',deep),collapse=''),'reference/',topic,'.html',fragment))
    }
   }
-  if(lang=='zh') {
-   translations<-c('值'='返回值','范例'='示例','该页面'='本页目录')
-   for(h in xml2::xml_find_all(doc,'//h2')) {
-    children<-xml2::xml_contents(h)
-    for(t in children) if(xml2::xml_type(t)=='text') {
-     text<-trimws(xml2::xml_text(t))
-     if(text %in% names(translations)) xml2::xml_set_text(t,translations[[text]])
-    }
-   }
-  }
+
   # Translated native headings otherwise receive punctuation-only IDs. Match
   # paired heading positions to the finalized English page's stable URLs.
   if(lang=='zh') {

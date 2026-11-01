@@ -37,3 +37,5 @@ body{background:var(--canvas);color:var(--body-ink);font-family:Inter,ui-sans-se
 body:is([data-page=index],[data-page=gallery],[data-page=articles]) .page-outline{display:none}
 main table{display:table;width:100%}body[data-page=gallery] main h2{margin-top:1.5rem;padding-top:1rem}
 @media(max-width:700px){main table{display:block}}
+/* Keep code copying independent of collapsible labels and native wrappers. */
+.btn-copy-ex{display:none!important}details.code-disclosure{position:relative}.copy-code{position:absolute;right:8px;top:3px;border:1px solid var(--rule);border-radius:3px;background:var(--paper);color:var(--body-ink);font-size:.72rem;line-height:1.5;padding:3px 9px;cursor:pointer}details.code-disclosure>summary{padding-right:100px}.copy-code:focus-visible{outline:2px solid var(--accent);outline-offset:2px}

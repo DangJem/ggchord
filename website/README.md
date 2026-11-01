@@ -142,3 +142,6 @@ Compact outlines are generated from actual headings, including reference topics.
 Intrinsic figure dimensions reserve their aspect ratios before lazy loading.
 The documentation header stays visible; narrow layouts remove inherited negative
 row margins. Figures remain responsive with an actual-size canvas available.
+
+代码复制按钮只复制 `pre code` 正文，避免把折叠标题一并写入剪贴板；反馈随页面语种显示。
+Copy controls use only `pre code` text, excluding disclosure labels, with localized feedback.
