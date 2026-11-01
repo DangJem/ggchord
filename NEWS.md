@@ -1,5 +1,9 @@
 # ggchord 0.16.6 (development)
 
+* Refreshed the curated documentation spelling wordlist and added an explicit
+  `tools/check-spelling.R` review command. It does not add a package test or
+  automatic CI step; remaining candidates still require contextual review.
+
 * Fixed circular primer callouts with `side = "inside"` being moved outside by
   the shared exterior allocator. Inner labels now retain their existing layout
   and register their actual inner boxes. The outside default, public signatures
