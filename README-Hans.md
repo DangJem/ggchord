@@ -1,6 +1,8 @@
-[English](README.md) · [现代汉语](README-Hans.md)
+<p align="center">
+  <a href="https://dangjem.github.io/ggchord/zh/index.html"><img src="man/figures/logo.png" alt="ggchord" width="320"></a>
+</p>
 
-<img src="man/figures/logo.png" alt="ggchord" width="200" align="right">
+[English](README.md) · [现代汉语](README-Hans.md)
 
 # ggchord：弦图、圆图与共线性图
 
@@ -21,12 +23,15 @@ remotes::install_github("DangJem/ggchord@v0.16.5")
 
 ![真实序列与全部注释的共线性案例](man/figures/reallinear.png)
 
-图中使用仓库原始 FASTA、GFF3 与 BLAST；完整读取、筛选代码与解释见[真实数据专题](vignettes/ggchord_guide_hans.Rmd#real-data)。
+图中使用仓库原始 FASTA、GFF3 与 BLAST；完整读取、筛选代码与解释见[真实数据专题](https://dangjem.github.io/ggchord/zh/real-data.html)。
 
 
 ## 三种模式
 
 下列代码先从随包数据中选出必需列，再绘图；原始数据与来源信息保留在原对象中。
+
+<details>
+<summary>先运行：弦图与共线性图共用的数据和样式</summary>
 
 ```r
 library(ggchord)
@@ -49,18 +54,18 @@ gene_palette <- c("+" = "#3B6FD8", "-" = "#E1812C", "." = "#8291A6")
 
 ```r
 library(ggchord)
-feature_palette <- c(CDS = "#3973CB", promoter = "#8B5EC4", rep_origin = "#E8A42D",
-  primer_bind = "#168F86", misc_feature = "#A0ADBD", protein_bind = "#CC6485")
-```
-
-```r
-library(ggchord)
 doc_theme <- theme_ggchord_publication(axis.text = element_text(size = 11),
   axis.text.check.overlap = TRUE) + theme(legend.position = "bottom")
 doc_axis <- function(coordinates = "relative") scale_seq_position_continuous(
   coordinates = coordinates, n.breaks = 3, minor_breaks = NULL,
   labels = function(x) format(x, scientific = FALSE, big.mark = ",", trim = TRUE))
 ```
+
+</details>
+
+### 弦图：查看序列间的总体连接
+
+展示区间之间的对应关系。
 
 ```r
 p_chord <- ggchord(seq_data = seqs, ribbon_data = links, gene_data = genes) +
@@ -72,12 +77,31 @@ p_chord <- ggchord(seq_data = seqs, ribbon_data = links, gene_data = genes) +
 p_chord
 ```
 
+![弦图：查看序列间的总体连接](man/figures/chord.png)
+
+[查看完整教程 →](https://dangjem.github.io/ggchord/zh/real-data.html)
+
+### 圆图：读取单条序列的注释
+
+先准备 pUC19 注释，再组合骨架与特征层。
+
+<details>
+<summary>先运行：圆图的数据和配色</summary>
+
 ```r
 data(plasmid_example_pUC19)
 plasmid_seq <- plasmid_example_pUC19[c("accver", "length")]
 feature_source <- find_common_features(plasmid_example_pUC19)
 features <- feature_source[c("accver", "start", "end", "strand", "type", "anno")]
 ```
+
+```r
+library(ggchord)
+feature_palette <- c(CDS = "#3973CB", promoter = "#8B5EC4", rep_origin = "#E8A42D",
+  primer_bind = "#168F86", misc_feature = "#A0ADBD", protein_bind = "#CC6485")
+```
+
+</details>
 
 ```r
 circle_features <- features[features$type %in% c("CDS", "rep_origin"), ]
@@ -88,6 +112,14 @@ p_circular <- ggchord(seq_data = plasmid_seq) + geom_seq() +
   coord_circular() + theme_ggchord_publication(axis.text = element_text(size = 11))
 p_circular
 ```
+
+![圆图：读取单条序列的注释](man/figures/circular.png)
+
+[查看完整教程 →](https://dangjem.github.io/ggchord/zh/plasmids.html)
+
+### 共线性图：对齐并比较位置
+
+复用第一节的数据和样式，按明确选择的基因锚点对齐。
 
 ```r
 anchor_rows <- unlist(lapply(split(seq_len(nrow(genes)), genes$accver), function(i)
@@ -103,9 +135,9 @@ p_collinear <- ggchord(seq_data = seqs, ribbon_data = links, gene_data = genes) 
 p_collinear
 ```
 
-| Chord / 弦图 | Circular / 圆图 | Collinear / 共线性图 |
-| --- | --- | --- |
-| ![Chord](man/figures/chord.png) | ![Circular](man/figures/circular.png) | ![Collinear](man/figures/collinear.png) |
+![共线性图：对齐并比较位置](man/figures/collinear.png)
+
+[查看完整教程 →](https://dangjem.github.io/ggchord/zh/modes.html)
 
 `aes()` 映射数据，`scale_*()` 定义映射和图例，geom 定义几何与固定样式，Position 负责局部放置，coord 负责全局坐标，theme 负责非数据外观。
 
@@ -120,8 +152,11 @@ ggsave("comparison.png", p_collinear, width = 8, height = 5, units = "in", dpi =
 
 ## 继续阅读
 
-- [完整用户教程](vignettes/ggchord_guide_hans.Rmd)：真实数据、质粒、输入格式、连接、标签、轨道、投影与同源、样式、输出和 FAQ。
-- [迁移指南](MIGRATION-Hans.md)与 [NEWS](NEWS.md)。
-- [本地网站构建与预览](website/README.md)，含函数分类、术语、图集与部署方案。
+- [开始使用](https://dangjem.github.io/ggchord/zh/installation.html)
+- [按任务查找教程](https://dangjem.github.io/ggchord/zh/articles.html)
+- [函数文档](https://dangjem.github.io/ggchord/zh/reference/index.html)
+- [示例图集](https://dangjem.github.io/ggchord/zh/gallery.html)
+- [迁移指南](https://dangjem.github.io/ggchord/zh/migration.html)
+- [更新日志](https://dangjem.github.io/ggchord/zh/news.html)
 
 [Issues](https://github.com/DangJem/ggchord/issues) · [MIT license](LICENSE)

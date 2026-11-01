@@ -1,6 +1,8 @@
-[English](README.md) · [现代汉语](README-Hans.md)
+<p align="center">
+  <a href="https://dangjem.github.io/ggchord/en/index.html"><img src="man/figures/logo.png" alt="ggchord" width="320"></a>
+</p>
 
-<img src="man/figures/logo.png" alt="ggchord" width="200" align="right">
+[English](README.md) · [现代汉语](README-Hans.md)
 
 # ggchord: chord, circular and collinear sequence plots
 
@@ -21,12 +23,15 @@ For a checkout of this version, use `pkgload::load_all(".")` from its root. A CR
 
 ![Collinear case with real sequences and all annotations](man/figures/reallinear.png)
 
-Original repository FASTA, GFF3 and BLAST inputs; see the [real-data workflow](vignettes/ggchord_vignette.Rmd#real-data) for complete import, filtering code and interpretation.
+Original repository FASTA, GFF3 and BLAST inputs; see the [real-data workflow](https://dangjem.github.io/ggchord/en/real-data.html) for complete import, filtering code and interpretation.
 
 
 ## Three views
 
 Select only the required fields from the bundled source-backed data before plotting; keep original metadata in the source objects.
+
+<details>
+<summary>Run first: shared data and appearance for chord and collinear views</summary>
 
 ```r
 library(ggchord)
@@ -49,18 +54,18 @@ gene_palette <- c("+" = "#3B6FD8", "-" = "#E1812C", "." = "#8291A6")
 
 ```r
 library(ggchord)
-feature_palette <- c(CDS = "#3973CB", promoter = "#8B5EC4", rep_origin = "#E8A42D",
-  primer_bind = "#168F86", misc_feature = "#A0ADBD", protein_bind = "#CC6485")
-```
-
-```r
-library(ggchord)
 doc_theme <- theme_ggchord_publication(axis.text = element_text(size = 11),
   axis.text.check.overlap = TRUE) + theme(legend.position = "bottom")
 doc_axis <- function(coordinates = "relative") scale_seq_position_continuous(
   coordinates = coordinates, n.breaks = 3, minor_breaks = NULL,
   labels = function(x) format(x, scientific = FALSE, big.mark = ",", trim = TRUE))
 ```
+
+</details>
+
+### Chord: compare overall sequence relationships
+
+Show relationships between aligned intervals.
 
 ```r
 p_chord <- ggchord(seq_data = seqs, ribbon_data = links, gene_data = genes) +
@@ -72,12 +77,31 @@ p_chord <- ggchord(seq_data = seqs, ribbon_data = links, gene_data = genes) +
 p_chord
 ```
 
+![Chord: compare overall sequence relationships](man/figures/chord.png)
+
+[Read the full guide →](https://dangjem.github.io/ggchord/en/real-data.html)
+
+### Circular: read annotations on one sequence
+
+Prepare the pUC19 annotations, then combine backbone and feature layers.
+
+<details>
+<summary>Run first: circular-map data and colours</summary>
+
 ```r
 data(plasmid_example_pUC19)
 plasmid_seq <- plasmid_example_pUC19[c("accver", "length")]
 feature_source <- find_common_features(plasmid_example_pUC19)
 features <- feature_source[c("accver", "start", "end", "strand", "type", "anno")]
 ```
+
+```r
+library(ggchord)
+feature_palette <- c(CDS = "#3973CB", promoter = "#8B5EC4", rep_origin = "#E8A42D",
+  primer_bind = "#168F86", misc_feature = "#A0ADBD", protein_bind = "#CC6485")
+```
+
+</details>
 
 ```r
 circle_features <- features[features$type %in% c("CDS", "rep_origin"), ]
@@ -88,6 +112,14 @@ p_circular <- ggchord(seq_data = plasmid_seq) + geom_seq() +
   coord_circular() + theme_ggchord_publication(axis.text = element_text(size = 11))
 p_circular
 ```
+
+![Circular: read annotations on one sequence](man/figures/circular.png)
+
+[Read the full guide →](https://dangjem.github.io/ggchord/en/plasmids.html)
+
+### Collinear: align and compare positions
+
+Reuse the first section’s data and appearance, aligning at explicitly selected gene anchors.
 
 ```r
 anchor_rows <- unlist(lapply(split(seq_len(nrow(genes)), genes$accver), function(i)
@@ -103,9 +135,9 @@ p_collinear <- ggchord(seq_data = seqs, ribbon_data = links, gene_data = genes) 
 p_collinear
 ```
 
-| Chord / 弦图 | Circular / 圆图 | Collinear / 共线性图 |
-| --- | --- | --- |
-| ![Chord](man/figures/chord.png) | ![Circular](man/figures/circular.png) | ![Collinear](man/figures/collinear.png) |
+![Collinear: align and compare positions](man/figures/collinear.png)
+
+[Read the full guide →](https://dangjem.github.io/ggchord/en/modes.html)
 
 `aes()` maps data; scales define mapping and guides; geoms define geometry and fixed styles; Positions place local geometry; coords select the global view; themes style non-data elements.
 
@@ -120,8 +152,11 @@ ggsave("comparison.png", p_collinear, width = 8, height = 5, units = "in", dpi =
 
 ## Continue
 
-- [User guide](vignettes/ggchord_vignette.Rmd): real data, plasmids, formats, links, labels, tracks, projection, homology, styling, output and FAQ.
-- [Migration guide](MIGRATION.md) and [NEWS](NEWS.md).
-- [Build and preview the local website](website/README.md), including reference categories, terminology, gallery and deployment design.
+- [Get started](https://dangjem.github.io/ggchord/en/installation.html)
+- [Task guides](https://dangjem.github.io/ggchord/en/articles.html)
+- [Function reference](https://dangjem.github.io/ggchord/en/reference/index.html)
+- [Gallery](https://dangjem.github.io/ggchord/en/gallery.html)
+- [Migration guide](https://dangjem.github.io/ggchord/en/migration.html)
+- [Changelog](https://dangjem.github.io/ggchord/en/news.html)
 
 [Issues](https://github.com/DangJem/ggchord/issues) · [MIT license](LICENSE)

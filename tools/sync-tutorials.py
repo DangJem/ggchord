@@ -86,9 +86,12 @@ def readme(lang):
     quick = '三种模式' if zh else 'Three views'
     sizing = '预览与保存' if zh else 'Preview and save'
     onwards = '继续阅读' if zh else 'Continue'
-    text = f'''[English](README.md) · [现代汉语](README-Hans.md)
+    site = f'https://dangjem.github.io/ggchord/{lang}/'
+    text = f'''<p align="center">
+  <a href="{site}index.html"><img src="man/figures/logo.png" alt="ggchord" width="320"></a>
+</p>
 
-<img src="man/figures/logo.png" alt="ggchord" width="200" align="right">
+[English](README.md) · [现代汉语](README-Hans.md)
 
 # {title}
 
@@ -108,13 +111,32 @@ remotes::install_github("DangJem/ggchord@v0.16.5")
 '''
     text += ('如已检出本版源码，在仓库根目录使用 `pkgload::load_all(".")`。不声称存在 CRAN 发布。' if zh else
         'For a checkout of this version, use `pkgload::load_all(".")` from its root. A CRAN release is not claimed.')
-    text += ('\n\n![真实序列与全部注释的共线性案例](man/figures/reallinear.png)\n\n图中使用仓库原始 FASTA、GFF3 与 BLAST；完整读取、筛选代码与解释见[真实数据专题](vignettes/ggchord_guide_hans.Rmd#real-data)。\n' if zh else '\n\n![Collinear case with real sequences and all annotations](man/figures/reallinear.png)\n\nOriginal repository FASTA, GFF3 and BLAST inputs; see the [real-data workflow](vignettes/ggchord_vignette.Rmd#real-data) for complete import, filtering code and interpretation.\n')
+    text += ('\n\n![真实序列与全部注释的共线性案例](man/figures/reallinear.png)\n\n图中使用仓库原始 FASTA、GFF3 与 BLAST；完整读取、筛选代码与解释见[真实数据专题]('+site+'real-data.html)。\n' if zh else '\n\n![Collinear case with real sequences and all annotations](man/figures/reallinear.png)\n\nOriginal repository FASTA, GFF3 and BLAST inputs; see the [real-data workflow]('+site+'real-data.html) for complete import, filtering code and interpretation.\n')
     text += f'\n\n## {quick}\n\n'
     text += ('下列代码先从随包数据中选出必需列，再绘图；原始数据与来源信息保留在原对象中。' if zh else 'Select only the required fields from the bundled source-backed data before plotting; keep original metadata in the source objects.')+'\n\n'
-    for key in ['setup', 'sequencepalette', 'featurepalette', 'docstyle', 'chord', 'plasmiddata', 'circular', 'collinear']:
+    def preparation(keys, label):
+        return '<details>\n<summary>'+label+'</summary>\n\n'+''.join(
+            '```r\n'+code[key]+'\n```\n\n' for key in keys)+'</details>\n\n'
+    text += preparation(['setup', 'sequencepalette', 'docstyle'],
+        '先运行：弦图与共线性图共用的数据和样式' if zh else
+        'Run first: shared data and appearance for chord and collinear views')
+    views = [
+        ('chord', '弦图：查看序列间的总体连接' if zh else 'Chord: compare overall sequence relationships',
+         'real-data', '展示区间之间的对应关系。' if zh else 'Show relationships between aligned intervals.'),
+        ('circular', '圆图：读取单条序列的注释' if zh else 'Circular: read annotations on one sequence',
+         'plasmids', '先准备 pUC19 注释，再组合骨架与特征层。' if zh else
+         'Prepare the pUC19 annotations, then combine backbone and feature layers.'),
+        ('collinear', '共线性图：对齐并比较位置' if zh else 'Collinear: align and compare positions',
+         'modes', '复用第一节的数据和样式，按明确选择的基因锚点对齐。' if zh else
+         'Reuse the first section’s data and appearance, aligning at explicitly selected gene anchors.')]
+    for key, heading, lesson, purpose in views:
+        text += '### '+heading+'\n\n'+purpose+'\n\n'
+        if key == 'circular':
+            text += preparation(['plasmiddata', 'featurepalette'],
+                '先运行：圆图的数据和配色' if zh else 'Run first: circular-map data and colours')
         text += '```r\n'+code[key]+'\n```\n\n'
-    text += '| Chord / 弦图 | Circular / 圆图 | Collinear / 共线性图 |\n| --- | --- | --- |\n'
-    text += '| ![Chord](man/figures/chord.png) | ![Circular](man/figures/circular.png) | ![Collinear](man/figures/collinear.png) |\n\n'
+        text += '!['+heading+'](man/figures/'+key+'.png)\n\n'
+        text += ('[查看完整教程 →](' if zh else '[Read the full guide →](')+site+lesson+'.html)\n\n'
     text += ('`aes()` 映射数据，`scale_*()` 定义映射和图例，geom 定义几何与固定样式，Position 负责局部放置，coord 负责全局坐标，theme 负责非数据外观。'
         if zh else '`aes()` maps data; scales define mapping and guides; geoms define geometry and fixed styles; Positions place local geometry; coords select the global view; themes style non-data elements.')
     text += f'\n\n## {sizing}\n\n'
@@ -122,13 +144,13 @@ remotes::install_github("DangJem/ggchord@v0.16.5")
         'RStudio Plots can rearrange labels when its panel changes. Preview and save at the same explicit dimensions:')
     text += '\n\n```r\nview_ggchord(p_collinear, width = 8, height = 5, units = "in")\n'+code['save']+'\n```\n'
     text += f'\n## {onwards}\n\n'
-    tutorial_name = 'ggchord_guide_hans.Rmd' if zh else 'ggchord_vignette.Rmd'
-    text += ('- [完整用户教程](vignettes/'+tutorial_name+')：真实数据、质粒、输入格式、连接、标签、轨道、投影与同源、样式、输出和 FAQ。\n'
-        '- [迁移指南](MIGRATION-Hans.md)与 [NEWS](NEWS.md)。\n'
-        '- [本地网站构建与预览](website/README.md)，含函数分类、术语、图集与部署方案。\n' if zh else
-        '- [User guide](vignettes/'+tutorial_name+'): real data, plasmids, formats, links, labels, tracks, projection, homology, styling, output and FAQ.\n'
-        '- [Migration guide](MIGRATION.md) and [NEWS](NEWS.md).\n'
-        '- [Build and preview the local website](website/README.md), including reference categories, terminology, gallery and deployment design.\n')
+    guides = ([('开始使用', 'installation'), ('按任务查找教程', 'articles'),
+        ('函数文档', 'reference/index'), ('示例图集', 'gallery'),
+        ('迁移指南', 'migration'), ('更新日志', 'news')] if zh else
+        [('Get started', 'installation'), ('Task guides', 'articles'),
+         ('Function reference', 'reference/index'), ('Gallery', 'gallery'),
+         ('Migration guide', 'migration'), ('Changelog', 'news')])
+    text += '\n'.join('- ['+label+']('+site+slug+'.html)' for label, slug in guides)+'\n'
     text += '\n[Issues](https://github.com/DangJem/ggchord/issues) · [MIT license](LICENSE)\n'
     return text.rstrip()+"\n"
 
