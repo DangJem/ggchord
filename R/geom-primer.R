@@ -57,6 +57,7 @@ geom_primer <- function(mapping = NULL, data = NULL,
   )
   inherited_transform <- layer$ggchord_input_transform
   layer$ggchord_input_transform <- function(x) {
+    if (is.data.frame(x) && !nrow(x)) return(x)
     if (!"feature_type" %in% names(x)) x$feature_type <- "primer"
     if (!"feature_label" %in% names(x) && "name" %in% names(x)) {
       x$feature_label <- x$name
@@ -109,6 +110,7 @@ geom_primer_label_repel <- function(
     inherit.aes = inherit.aes, colour = colour, ...
   )
   layer$ggchord_input_transform <- function(x) {
+    if (is.data.frame(x) && !nrow(x)) return(x)
     ggchord_require_columns(
       x, c("start", "end"), "geom_primer_label_repel()"
     )

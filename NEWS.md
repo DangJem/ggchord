@@ -1,5 +1,9 @@
 # ggchord 0.16.5 (unreleased)
 
+* Empty primer search results now compose with primer geometry and label layers
+  without failing on scalar assignment to a zero-row table. Nonempty styles and
+  public signatures are unchanged.
+
 * Updated the package title and entry documentation to cover chord, single
   circular sequence and collinear views. Rewrote paired English/Han README and
   tutorial sources around the 0.16.4 candidate API, with shared runnable code,

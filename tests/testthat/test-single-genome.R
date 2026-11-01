@@ -61,3 +61,13 @@ test_that("biological searches retain circular origin, strand and site identity"
   expect_equal(sites$enzyme, "EcoRI")
   expect_equal(sites$start, 2L)
 })
+
+test_that("empty primer hits compose with geometry and labels", {
+  hits <- find_primer_bindings(c(A = "AAAAAAAAAAAAAAAAAAAA"),
+    primers = c(test = "ACGTTGCA"), min_annealed_bases = 8)
+  p <- ggchord(data.frame(accver = "A", length = 20)) + geom_seq() +
+    geom_primer(data = hits) + geom_primer_label_repel(data = hits) + coord_circular()
+  built <- ggplot2::ggplot_build(p)
+  expect_gt(nrow(built$data[[1]]), 0)
+  expect_equal(nrow(built$data[[2]]) + nrow(built$data[[3]]), 0)
+})

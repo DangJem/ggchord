@@ -223,9 +223,14 @@ prepare_ggchord_plot <- function(plot) {
       lyr$show.legend <- FALSE
     }
     lyr$ggchord_resolved_input <- layout$layer_inputs[[lyr$ggchord_layer_id]][[lyr$ggchord_type]]
-    new_layers[[i]] <- reconstruct_layer(
-      lyr, extract_ggchord_layer_data(lyr, layout)
-    )
+    geometry <- extract_ggchord_layer_data(lyr, layout)
+    # An absent component can have no column prototype in the public layout.
+    # Draw its empty build-local layer without evaluating nonexistent x/text
+    # mappings. Keep the source layer and exported component unchanged.
+    empty <- is.data.frame(geometry) && !nrow(geometry)
+    new_layers[[i]] <- reconstruct_layer(lyr, geometry,
+      mapping = if (empty) ggplot2::aes() else NULL)
+    if (empty) new_layers[[i]]$inherit.aes <- FALSE
   }
   plot$layers <- new_layers
   has_feature <- any(vapply(plot$layers, function(x) {
