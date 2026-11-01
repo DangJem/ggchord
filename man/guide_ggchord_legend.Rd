@@ -95,7 +95,7 @@ export device; direct calls default to 1.}
 A ggplot2 guide object.
 }
 \description{
-Thin wrappers around [ggplot2::guide_legend()] and
-[ggplot2::guide_colourbar()] with compact defaults suitable for
+Thin wrappers around \code{\link[ggplot2:guide_legend]{ggplot2::guide_legend()}} and
+\code{\link[ggplot2:guide_colourbar]{ggplot2::guide_colourbar()}} with compact defaults suitable for
 chord diagrams. All ordinary ggplot2 guide arguments remain available.
 }

@@ -1,0 +1,70 @@
+{
+  "date": "2026-11-01",
+  "surface": "Codex in-app browser, local HTTP only",
+  "desktop_viewport": [
+    1280,
+    720
+  ],
+  "mobile_viewport": [
+    390,
+    844
+  ],
+  "checks": [
+    {
+      "case": "Han full-text search",
+      "result": "PASS",
+      "evidence": "标签 returns 10 matching pages; labels topic is visible"
+    },
+    {
+      "case": "API identifier search",
+      "result": "PASS",
+      "evidence": "position_track returns 7 pages including its complete help topic"
+    },
+    {
+      "case": "Language counterpart and anchor",
+      "result": "PASS",
+      "evidence": "zh/index.html#quick-start switches to en/index.html#quick-start"
+    },
+    {
+      "case": "System/light/dark theme",
+      "result": "PASS",
+      "evidence": "Theme controls cycle; light and dark layouts visually inspected"
+    },
+    {
+      "case": "Keyboard skip link",
+      "result": "PASS",
+      "evidence": "Enter on skip link focuses main#content"
+    },
+    {
+      "case": "Keyboard code disclosure",
+      "result": "PASS",
+      "evidence": "Enter on native summary closes an initially open code block"
+    },
+    {
+      "case": "Mobile navigation",
+      "result": "PASS",
+      "evidence": "Collapsed on load; Enter expands native summary and navigation follows to migration"
+    },
+    {
+      "case": "Mobile horizontal overflow",
+      "result": "PASS",
+      "evidence": "Document scrollWidth = viewport = 390; wide table scrolls within 321 px container (360 px content)"
+    },
+    {
+      "case": "Supplied artwork",
+      "result": "PASS",
+      "evidence": "Desktop side illustration, centered mobile artwork and navigation thumbnail visually inspected"
+    },
+    {
+      "case": "Console",
+      "result": "PASS",
+      "evidence": "No error/warn entries in the tested preview tab"
+    }
+  ],
+  "screenshot": {
+    "filename": "ggchord-v0165-home.jpg",
+    "sha256": "09c4ce53c65fdf8ceea4f546c4c4d2ad33ec30609d8f58150aff10c9f76d9507",
+    "location": "Local chat deliverable; not a site runtime dependency"
+  },
+  "limits": "Finite local UI checks, not a multi-browser/accessibility certification or remote deployment verification. No remote workflow was run."
+}

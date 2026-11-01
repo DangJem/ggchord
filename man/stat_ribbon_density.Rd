@@ -22,14 +22,14 @@ stat_ribbon_density(
 \item{bins}{Positive integer number of normalized midpoint bins per
 sequence.}
 
-\item{weight}{Density weight: `"length"`, `"count"`, or `"pident"`.}
+\item{weight}{Density weight: \code{"length"}, \code{"count"}, or \code{"pident"}.}
 
 \item{group_by}{Optional columns that define independent density groups.}
 
 \item{position, show.legend, inherit.aes}{Standard ggplot2 layer arguments.}
 
 \item{...}{Ribbon geometry and appearance arguments passed to
-[geom_link_ribbon()].}
+\code{\link[=geom_link_ribbon]{geom_link_ribbon()}}.}
 }
 \value{
 A ggchord ribbon layer.
@@ -37,8 +37,8 @@ A ggchord ribbon layer.
 \description{
 Keeps one output ribbon per input row while measuring density in normalized
 query/subject midpoint bins. The computed variables are the same as
-[stat_ribbon_bundle()], so density can be mapped with
-`aes(ribbon_alpha = after_stat(density))`.
+\code{\link[=stat_ribbon_bundle]{stat_ribbon_bundle()}}, so density can be mapped with
+\code{aes(ribbon_alpha = after_stat(density))}.
 }
 \seealso{
 \code{\link{ggchord_data_contract}}

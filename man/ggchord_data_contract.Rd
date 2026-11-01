@@ -10,46 +10,46 @@ length from features, verifies homology experimentally, or adds plot layers.
 }
 \details{
 \describe{
-  \item{Read}{The six \code{read_*()} functions parse local files. Both
-    \code{file} and \code{files} accept path vectors and glob patterns. When
-    both are supplied, \code{file} precedes \code{files}; matches expand in
-    pattern order, and each normalized path is read once, retaining its first
-    supplied spelling. Missing, empty, unmatched or directory paths fail.
-    Text input must be UTF-8 (an initial BOM is accepted by table readers).
-    Convert other encodings explicitly before reading. Import attributes
-    record format, files and output counts. Tabular readers and FASTA lengths
-    retain physical \code{.source_line}; optional \code{.source_file} gives
-    row-level file identity. GenBank instead retains record/feature indices
-    and source text in its report. Malformed field counts stop, rather than
-    shifting fields between rows. Numeric conversion problems in BLAST/GFF3
-    warn and retain missing values for inspection and validation.}
-  \item{Adapt}{\code{as_ggchord_*()} accepts documented tables or optional
-    interval/sequence objects. Required IDs and positive integral coordinates
-    are checked immediately; zero-based tables must be converted explicitly.
-    Metadata name collisions receive prefixes and a column map. Required
-    coordinate NA is an error, while unrelated metadata NA survives. Seqinfo,
-    object metadata, names and upstream provenance are retained in the
-    conversion attribute. Optional packages are never installed automatically.}
-  \item{Validate}{\code{validate_ggchord_data()} reports all collected issues
-    without changing input. \code{strict = TRUE} stops after collection if
-    errors exist. Logical argument errors stop immediately. This validator
-    describes constructor seq/ribbon/gene tables; generic unknown-strand
-    features belong in preparation's named feature collections. Coordinate
-    checks do not prove an alignment or a biological annotation.}
-  \item{Clean}{\code{clean_ggchord_data()} explicitly applies selected
-    policies and reports original rows and old/new values. Its historical
-    \code{reversed_interval = "sort"} is retained; use \code{"keep"} for
-    directional links or circular-origin features. Sorting cannot recover
-    their original meaning later. Unknown-ID \code{"keep"} is an audit
-    policy, not a guarantee that the result is drawable. NULL means an absent
-    optional table, and an empty table remains a table.}
-  \item{Prepare}{\code{prepare_ggchord_data()} adapts first, validates, then
-    runs only requested steps in the documented order. Its cleaning default
-    is \code{reversed_interval = "keep"}, because downstream operations use
-    endpoint directions. Adaptation errors therefore occur before cleaning;
-    clean/drop malformed IDs separately when needed. Named features/links
-    remain independent collections. Reports distinguish stage-local rows from
-    composed original ribbon source sets.}
+\item{Read}{The six \code{read_*()} functions parse local files. Both
+\code{file} and \code{files} accept path vectors and glob patterns. When
+both are supplied, \code{file} precedes \code{files}; matches expand in
+pattern order, and each normalized path is read once, retaining its first
+supplied spelling. Missing, empty, unmatched or directory paths fail.
+Text input must be UTF-8 (an initial BOM is accepted by table readers).
+Convert other encodings explicitly before reading. Import attributes
+record format, files and output counts. Tabular readers and FASTA lengths
+retain physical \code{.source_line}; optional \code{.source_file} gives
+row-level file identity. GenBank instead retains record/feature indices
+and source text in its report. Malformed field counts stop, rather than
+shifting fields between rows. Numeric conversion problems in BLAST/GFF3
+warn and retain missing values for inspection and validation.}
+\item{Adapt}{\code{as_ggchord_*()} accepts documented tables or optional
+interval/sequence objects. Required IDs and positive integral coordinates
+are checked immediately; zero-based tables must be converted explicitly.
+Metadata name collisions receive prefixes and a column map. Required
+coordinate NA is an error, while unrelated metadata NA survives. Seqinfo,
+object metadata, names and upstream provenance are retained in the
+conversion attribute. Optional packages are never installed automatically.}
+\item{Validate}{\code{validate_ggchord_data()} reports all collected issues
+without changing input. \code{strict = TRUE} stops after collection if
+errors exist. Logical argument errors stop immediately. This validator
+describes constructor seq/ribbon/gene tables; generic unknown-strand
+features belong in preparation's named feature collections. Coordinate
+checks do not prove an alignment or a biological annotation.}
+\item{Clean}{\code{clean_ggchord_data()} explicitly applies selected
+policies and reports original rows and old/new values. Its historical
+\code{reversed_interval = "sort"} is retained; use \code{"keep"} for
+directional links or circular-origin features. Sorting cannot recover
+their original meaning later. Unknown-ID \code{"keep"} is an audit
+policy, not a guarantee that the result is drawable. NULL means an absent
+optional table, and an empty table remains a table.}
+\item{Prepare}{\code{prepare_ggchord_data()} adapts first, validates, then
+runs only requested steps in the documented order. Its cleaning default
+is \code{reversed_interval = "keep"}, because downstream operations use
+endpoint directions. Adaptation errors therefore occur before cleaning;
+clean/drop malformed IDs separately when needed. Named features/links
+remain independent collections. Reports distinguish stage-local rows from
+composed original ribbon source sets.}
 }
 }
 \section{Coordinates and direction}{
@@ -130,5 +130,5 @@ mode or an external code-aware analysis for nonstandard translation.
 
 \seealso{
 \code{\link{prepare_ggchord_data}}, \code{\link{read_genbank}},
-  \code{\link{as_ggchord_feature}}, \code{\link{project_ggchord_links}}
+\code{\link{as_ggchord_feature}}, \code{\link{project_ggchord_links}}
 }

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 208" role="img" aria-labelledby="title desc">
+  <title id="title">ggchord</title><desc id="desc">A hexagon containing sequence arcs, links and a gene arrow</desc>
+  <path d="M90 4 176 54v100l-86 50L4 154V54Z" fill="#123E3D" stroke="#E6A665" stroke-width="4"/>
+  <g fill="none" stroke-linecap="round">
+    <path d="M39 69Q90 27 141 69" stroke="#F7F2E8" stroke-width="8"/>
+    <path d="M33 85Q22 130 64 148M147 85q12 45-31 63" stroke="#8FC4B0" stroke-width="8"/>
+    <path d="M48 63Q69 100 50 135M129 61Q110 100 132 132M52 136Q90 112 128 136" stroke="#E6A665" stroke-opacity=".64" stroke-width="9"/>
+  </g>
+  <path d="M64 88h37v-9l21 16-21 16v-9H64Z" fill="#F7F2E8"/>
+  <text x="90" y="177" text-anchor="middle" font-family="sans-serif" font-size="21" font-weight="600" fill="#F7F2E8">ggchord</text>
+</svg>

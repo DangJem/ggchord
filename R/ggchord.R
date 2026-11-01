@@ -25,11 +25,13 @@ globalVariables(c(
   "primer_end", "primer_show_location"
 ))
 
-#' ggchord: layered multi-sequence alignment chord diagrams for ggplot2
+#' Layered chord, circular and collinear sequence plots
 #'
-#' ggchord visualizes multi-sequence alignment results using ggplot2's layered grammar.
-#' The \code{ggchord()} constructor handles data validation and global settings;
-#' the \code{geom_*} layers are stacked as needed, each responsible for its own layout parameters and visual rendering.
+#' Visualize multi-sequence alignments, a single circular sequence or linear
+#' collinearity using ggplot2's layered grammar. The constructor supplies data
+#' and validation. Add geometry with `geom_*()`, select a global view with
+#' [coord_chord()], [coord_circular()] or [coord_collinear()], and use
+#' mappings/scales for data-driven styles and themes for non-data appearance.
 #' The layout is computed lazily when the plot is built (e.g. via \code{print()},
 #' \code{ggsave()}, or \code{ggplot_build()}).
 #'
@@ -59,6 +61,8 @@ globalVariables(c(
 #'   arguments. Use [labs()], [coord_chord()] and [theme()] for presentation.
 #'
 #' @return A ggchord object (inherits from ggplot) to which geom_* layers can be added with +
+#' @seealso [ggchord_api_contract], [ggchord_data_contract],
+#'   [ggchord_layout_contract], [view_ggchord()]
 #' @export
 #'
 #' @examples

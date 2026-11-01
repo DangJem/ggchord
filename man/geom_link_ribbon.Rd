@@ -55,31 +55,31 @@ avoidance uses one clearance across an endpoint.}
 
 \item{link_branch_fraction}{Shared length relative to the shortest member, in (0, 0.5].}
 
-\item{fill}{Optional fixed ribbon fill. `NULL` keeps the default Identity
+\item{fill}{Optional fixed ribbon fill. \code{NULL} keeps the default Identity
 mapping.}
 
 \item{alpha, colour, linewidth}{Standard fixed ribbon styles. Explicit values
 take precedence over matching mappings; omitted defaults do not suppress
-user mappings. For example, omit `alpha` when mapping `ribbon_alpha`.}
+user mappings. For example, omit \code{alpha} when mapping \code{ribbon_alpha}.}
 
-\item{linetype}{Fixed outline line type. The default `NULL` uses solid
+\item{linetype}{Fixed outline line type. The default \code{NULL} uses solid
 outlines for adjacent displayed sequences and dashed outlines for
 non-adjacent sequences. Chord adjacency includes the first/last pair.
 This follows the final display order, independently of alignment direction.
-Explicit fixed styles or `aes(ribbon_linetype = ...)` (also
-`aes(linetype = ...)`) replace the automatic styles. Use a matching scale
+Explicit fixed styles or \code{aes(ribbon_linetype = ...)} (also
+\code{aes(linetype = ...)}) replace the automatic styles. Use a matching scale
 for data mappings; automatic styles do not train a linetype scale.
-Global line-type mappings are used when `inherit.aes = TRUE`.}
+Global line-type mappings are used when \code{inherit.aes = TRUE}.}
 
 \item{adjacent_only}{Whether only neighbouring sequences are connected.
-`NULL` uses TRUE in [coord_collinear()] and FALSE in [coord_chord()].
+\code{NULL} uses TRUE in \code{\link[=coord_collinear]{coord_collinear()}} and FALSE in \code{\link[=coord_chord]{coord_chord()}}.
 Set FALSE to retain cross-track ribbons. Chord neighbours include the
 first/last sequence pair.}
 
-\item{pairs}{Optional data frame with `qaccver` and `saccver` selecting
-unordered comparison pairs. With `adjacent_only = NULL`, explicit pairs
+\item{pairs}{Optional data frame with \code{qaccver} and \code{saccver} selecting
+unordered comparison pairs. With \code{adjacent_only = NULL}, explicit pairs
 take precedence over the coordinate default. Omitted rows are reported
-by [export_ggchord_layout()].}
+by \code{\link[=export_ggchord_layout]{export_ggchord_layout()}}.}
 
 \item{position, show.legend, inherit.aes}{Standard ggplot2 layer arguments.}
 
@@ -89,11 +89,11 @@ by [export_ggchord_layout()].}
 A ggplot2 layer.
 }
 \description{
-Draws alignment ribbons. Identity is mapped to `ribbon_fill` by default;
+Draws alignment ribbons. Identity is mapped to \code{ribbon_fill} by default;
 When pident is absent, the default is a fixed grey fill with no Identity
 guide. Alignment length and identity are never inferred from endpoints.
-Alternative mappings and legends are controlled with `aes()`, `scale_*()`
-and `guides()`.
+Alternative mappings and legends are controlled with \code{aes()}, \verb{scale_*()}
+and \code{guides()}.
 }
 \examples{
 library(ggchord)

@@ -1,85 +1,125 @@
+# Reference fallback only; frozen docs/ is not rebuilt by this file.
 url: https://dangjem.github.io/ggchord
 template:
   bootstrap: 5
 navbar:
-  title: "ggchord"
+  title: ggchord
   left:
-    - text: "Tutorial"
-      href: "articles/ggchord_vignette.html"
-    - text: "汉语指南"
-      href: "articles/ggchord_guide_hans.html"
-    - text: "Functions"
-      href: "reference/index.html"
-    - text: "News"
-      href: "news/index.html"
-articles:
-  - title: "Tutorials"
-    contents:
-      - ggchord_vignette
-      - ggchord_guide_hans
+    - text: English tutorial
+      href: articles/ggchord_vignette.html
+    - text: 汉语教程
+      href: articles/ggchord_guide_hans.html
+    - text: Reference
+      href: reference/index.html
 reference:
-  - title: "Plot construction"
-    desc: "Build and inspect ggchord plots."
+  - title: "Construction and contracts / 构建与契约"
     contents:
-      - ggchord
       - coord_chord
-      - get_chord_layout
-      - export_ggchord_layout
-      - view_ggchord
-  - title: "Methods and datasets"
-    desc: "S3 methods and example data shipped with ggchord."
+      - coord_circular
+      - coord_collinear
+      - ggchord
+      - ggchord_api_contract
+      - ggchord_layout_contract
+  - title: "Input and validation / 输入与校验"
     contents:
-      - as.data.frame.ggchord_validation
-      - print.ggchord_clean
-      - seq_data_example
-      - ribbon_data_example
-      - gene_data_example
-  - title: "Layers"
-    desc: "Stack geometry, annotation, axis and label layers."
+      - as_ggchord_feature
+      - as_ggchord_link
+      - as_ggchord_seq
+      - clean_ggchord_data
+      - ggchord_data_contract
+      - prepare_ggchord_data
+      - read_bed
+      - read_blast
+      - read_fasta_lengths
+      - read_genbank
+      - read_gff3
+      - read_paf
+      - validate_ggchord_data
+      - validate_ggchord_hierarchy
+  - title: "Geometry and labels / 几何与标签"
     contents:
-      - geom_seq
-      - geom_link_ribbon
-      - geom_link_line
+      - geom_feature
+      - geom_feature_label
+      - geom_feature_label_repel
+      - geom_feature_plasmid
       - geom_gene
       - geom_gene_label
       - geom_gene_label_repel
+      - geom_link_line
+      - geom_link_ribbon
+      - geom_primer
+      - geom_primer_label_repel
+      - geom_restriction_site
+      - geom_seq
+      - geom_seq_break
+      - geom_seq_center_label
       - geom_seq_label
       - geom_seq_region
-      - geom_feature
-  - title: "Compatibility"
-    desc: "Deprecated names retained temporarily for migration."
+      - geom_seq_scale
+  - title: "Positions, scales, themes and guides / 位置、标度、主题与图例"
     contents:
-      - geom_ribbon
-  - title: "Scales"
-    desc: "Control sequence, ribbon, feature and genomic-position aesthetics."
-    contents:
-      - scale_seq_colour_manual
-      - scale_ribbon_fill_stepsn
-      - scale_ribbon_alpha_continuous
-      - scale_gene_fill_manual
-      - scale_feature_shape_manual
-      - scale_link_colour_manual
-      - scale_seq_position_continuous
-  - title: "Themes and guides"
-    desc: "Apply publication-ready themes and legend defaults."
-    contents:
-      - theme_ggchord
       - guide_ggchord_legend
-      - unit
-  - title: "Data import"
-    desc: "Read FASTA, BLAST and GFF3 files in R."
+      - position_feature_stack
+      - position_plasmid
+      - position_strand
+      - scale_feature_fill_plasmid
+      - scale_feature_shape_manual
+      - scale_gene_fill_manual
+      - scale_link
+      - scale_ribbon_alpha_continuous
+      - scale_ribbon_fill_stepsn
+      - scale_seq_colour_manual
+      - scale_seq_position_continuous
+      - scale_seq_ring_manual
+      - theme_ggchord
+  - title: "Quantitative tracks / 定量轨道"
     contents:
-      - read_fasta_lengths
-      - read_blast
-      - read_gff3
-  - title: "Validation and cleaning"
-    desc: "Check and repair ggchord input tables before plotting."
+      - geom_track_tile
+      - position_track
+      - scale_track_fill_gradientn
+      - scale_track_value_continuous
+  - title: "Sequence recognition / 序列识别"
     contents:
-      - validate_ggchord_data
-      - clean_ggchord_data
-  - title: "Ribbon preparation"
-    desc: "Filter, deduplicate and merge alignment blocks."
+      - filter_restriction_sites
+      - find_common_features
+      - find_ggchord_loci
+      - find_primer_bindings
+      - find_restriction_sites
+      - primer_catalog
+  - title: "Projection and comparison workflows / 投影与比较工作流"
     contents:
-      - filter_ggchord_ribbons
+      - build_ggchord_cds
+      - bundle_ggchord_ribbons
       - deduplicate_ggchord_ribbons
+      - filter_ggchord_ribbons
+      - focus_ggchord_data
+      - focus_ggchord_track
+      - link_ggchord_clusters
+      - map_ggchord_position
       - merge_ggchord_ribbons
+      - project_ggchord_features
+      - project_ggchord_links
+      - segment_ggchord_data
+      - stat_ribbon_bundle
+      - stat_ribbon_density
+  - title: "Output and diagnostics / 输出与诊断"
+    contents:
+      - diagnose_ggchord
+      - export_ggchord_layout
+      - get_chord_layout
+      - optimize_ggchord_layout
+      - view_ggchord
+  - title: "Methods, teaching data and upstream reexports / 方法、教学数据与上游重导出"
+    contents:
+      - as.data.frame.ggchord_validation
+      - gene_data_example
+      - ggplot2-helpers
+      - grid-helpers
+      - plasmid_example_pUC19
+      - plus-.ggchord
+      - print.ggchord_clean
+      - restriction_site_example
+      - ribbon_data_example
+      - seq_data_example
+      - single_gene_example
+      - single_genome_example

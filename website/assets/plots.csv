@@ -1,0 +1,7 @@
+"id","object","width","height","units","dpi","device","background","input","generator","file","md5","code_md5"
+"chord","p_chord",7,6,"in",144,"png","white","tools/documentation-examples.R (synthetic teaching inputs)","tools/documentation-plots.R","man/figures/chord.png","4cfcc3d580d00c14ef4a36c5b3ee4d2d","c28486b51dceadc09e69b24ff3a58120"
+"circular","p_circular",7,6,"in",144,"png","white","tools/documentation-examples.R (synthetic teaching inputs)","tools/documentation-plots.R","man/figures/circular.png","a1c877bcbc67caa0e3337bc8e966ced7","c28486b51dceadc09e69b24ff3a58120"
+"collinear","p_collinear",8,5,"in",144,"png","white","tools/documentation-examples.R (synthetic teaching inputs)","tools/documentation-plots.R","man/figures/collinear.png","69fb837a4b3e31b450766963b4a10f6e","c28486b51dceadc09e69b24ff3a58120"
+"tracks","p_tracks",7,6,"in",144,"png","white","tools/documentation-examples.R (synthetic teaching inputs)","tools/documentation-plots.R","man/figures/tracks.png","67e7e040d1df2ed64a41b30cb38ff04d","c28486b51dceadc09e69b24ff3a58120"
+"focus","p_focus",8,5,"in",144,"png","white","tools/documentation-examples.R (synthetic teaching inputs)","tools/documentation-plots.R","man/figures/focus.png","6206821079d46f56444be077534a7fa1","c28486b51dceadc09e69b24ff3a58120"
+"labels","p_labels",8,5,"in",144,"png","white","tools/documentation-examples.R (synthetic teaching inputs)","tools/documentation-plots.R","man/figures/labels.png","0e24e323902bd3eb7b089d0abb464285","c28486b51dceadc09e69b24ff3a58120"

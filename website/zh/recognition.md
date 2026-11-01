@@ -1,0 +1,22 @@
+## 搜索与显示分开 {#search}
+用一个很短的合成序列演示精确引物和酶切搜索：
+
+{{code:recognition}}
+
+引物跨越圆形原点。线性序列应设置 `circular = FALSE`。搜索命中是计算匹配，
+不等于实验验证。引物 `"three_prime"` 模式寻找精确后缀，没有错配模型；
+Wallace 熔解温度估计是基于组成的启发式值。
+
+## 解释酶切结果 {#restriction}
+`find_restriction_sites()` 返回未筛选匹配和切割坐标，`filter_restriction_sites()`
+选择显示集合。酶位点计数针对完整输入序列，筛选后保持不变。
+`methylation = "auto"` 仅为精确识别的内置参考使用已审计背景，不能据此声称未知
+样品不受阻断。这个合成例子显式选择 `"none"`。
+`geom_restriction_site(leader = "radial")` 是默认连线方式。
+
+## 通用 feature 识别 {#features}
+`find_common_features()` 支持精确参考的整理注释、DNA 匹配及逐记录检测模式。
+蛋白搜索采用标准遗传密码六框翻译，不处理剪接、替代起始或跨原点蛋白匹配。
+来源中的遗传密码元数据不选择另一套翻译表；非标准遗传密码应使用 DNA 匹配或外部
+支持相应遗传密码的分析。confidence 是启发式标签，不是概率。
+已知蛋白/基因组对应关系应使用[显式 CDS 投影](projection.html)。

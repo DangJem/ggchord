@@ -4,11 +4,11 @@
 \alias{restriction_site_example}
 \title{Restriction sites for the minimal single-genome fixture}
 \format{
-A data frame returned by [find_restriction_sites()].
+A data frame returned by \code{\link[=find_restriction_sites]{find_restriction_sites()}}.
 }
 \source{
-Generated from `examples/single-genome/minimal.fasta` by
-  `data-raw/generate_example_data.R`.
+Generated from \code{examples/single-genome/minimal.fasta} by
+\code{data-raw/generate_example_data.R}.
 }
 \description{
 Restriction sites for the minimal single-genome fixture

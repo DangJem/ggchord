@@ -1,0 +1,21 @@
+{
+  "scope": "Documentation only: three original-file readers and one target-size PNG preview/diagnostic",
+  "source": "tools/documentation-examples.R",
+  "code_md5": "c28486b51dceadc09e69b24ff3a58120",
+  "R": "R version 4.6.0 (2026-04-24)",
+  "ggplot2": "4.0.3",
+  "input_rows": {
+    "sequences": 4,
+    "links": 32,
+    "features": 266
+  },
+  "preview": {
+    "width": 8,
+    "height": 5,
+    "units": "in",
+    "device": "png",
+    "result": "PASS"
+  },
+  "panel_status": "measured",
+  "limitations": "No complete vignette rendering, package check or release-device matrix; measured panel is not visual certification"
+}

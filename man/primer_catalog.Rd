@@ -16,7 +16,7 @@ A data frame.
 }
 \description{
 The catalogue stores one searchable record per distinct oligonucleotide.
-Set `aliases = TRUE` to obtain the source rows, including multiple biological
+Set \code{aliases = TRUE} to obtain the source rows, including multiple biological
 names that share one sequence. The source direction is retained only as a
 descriptive hint; binding strand is determined from the target sequence.
 }

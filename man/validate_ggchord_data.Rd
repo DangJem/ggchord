@@ -43,20 +43,20 @@ alignment rows where \code{qaccver == saccver}.}
 }
 \value{
 A \code{"ggchord_validation"} object (a list) with at least:
-  \describe{
-    \item{\code{valid}}{Logical: \code{TRUE} when there are no severe errors.}
-    \item{\code{errors}}{data.frame of severe issues (table, category, row,
-      column, message).}
-    \item{\code{warnings}}{data.frame of non-severe issues (same columns).}
-    \item{\code{summary}}{Per-category counts (table, category, severity, n).}
-    \item{\code{data_summary}}{Counts of sequences/ribbons/genes, unknown
-      IDs, out-of-range rows, etc.}
-    \item{\code{invalid_rows}}{Named list of original row numbers per
-      problem category.}
-    \item{\code{cleanable}}{data.frame of fixable issues with suggested
-      actions.}
-  }
-  \code{print()} and \code{summary()} methods are provided.
+\describe{
+\item{\code{valid}}{Logical: \code{TRUE} when there are no severe errors.}
+\item{\code{errors}}{data.frame of severe issues (table, category, row,
+column, message).}
+\item{\code{warnings}}{data.frame of non-severe issues (same columns).}
+\item{\code{summary}}{Per-category counts (table, category, severity, n).}
+\item{\code{data_summary}}{Counts of sequences/ribbons/genes, unknown
+IDs, out-of-range rows, etc.}
+\item{\code{invalid_rows}}{Named list of original row numbers per
+problem category.}
+\item{\code{cleanable}}{data.frame of fixable issues with suggested
+actions.}
+}
+\code{print()} and \code{summary()} methods are provided.
 }
 \description{
 Performs structured validation of \code{seq_data}, \code{ribbon_data} and

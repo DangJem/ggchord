@@ -39,9 +39,9 @@ threshold used with \code{by = "overlap"}.}
 }
 \value{
 A list with \code{data} (deduplicated data frame with
-  \code{source_rows} attribute) and \code{report} (n_input/n_kept/n_removed
-  plus a data.frame of removed rows with \code{row}, \code{duplicate_of} and
-  \code{reason}).
+\code{source_rows} attribute) and \code{report} (n_input/n_kept/n_removed
+plus a data.frame of removed rows with \code{row}, \code{duplicate_of} and
+\code{reason}).
 }
 \description{
 Removes fully duplicated, coordinate-near-duplicated or highly overlapping

@@ -66,10 +66,10 @@ Replacement annotation used when \code{empty_annotation = "replace"}.}
 }
 \value{
 A list with four components: \code{seq_data}, \code{ribbon_data},
-  \code{gene_data} (cleaned copies) and \code{report} (a data.frame with
-  columns \code{table}, \code{row} (original row number), \code{column},
-  \code{reason}, \code{original_value}, \code{new_value} and
-  \code{action}).
+\code{gene_data} (cleaned copies) and \code{report} (a data.frame with
+columns \code{table}, \code{row} (original row number), \code{column},
+\code{reason}, \code{original_value}, \code{new_value} and
+\code{action}).
 }
 \description{
 Applies a conservative, predictable set of cleaning policies to the three

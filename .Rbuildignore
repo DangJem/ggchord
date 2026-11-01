@@ -16,3 +16,6 @@
 ^\.codex-tmp$
 ^\.git$
 ^tools$
+^website$
+^\.site$
+^MIGRATION.*\.md$

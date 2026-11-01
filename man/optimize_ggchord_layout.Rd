@@ -34,7 +34,7 @@ complete vector, or named vector.}
 }
 \value{
 An object of class \code{ggchord_layout_optimization} containing
-  \code{seq_order}, \code{seq_orientation}, before/after scores and a report.
+\code{seq_order}, \code{seq_orientation}, before/after scores and a report.
 }
 \description{
 Searches deterministic sequence-order and orientation changes that reduce

@@ -4,10 +4,10 @@
 \alias{single_genome_example}
 \title{Minimal single-genome sequence fixture}
 \format{
-A one-row data frame with `accver` and `length`.
+A one-row data frame with \code{accver} and \code{length}.
 }
 \source{
-`examples/single-genome/minimal.fasta`.
+\code{examples/single-genome/minimal.fasta}.
 }
 \description{
 Minimal single-genome sequence fixture

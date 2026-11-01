@@ -13,7 +13,7 @@ scale_seq_ring_manual(
 )
 }
 \arguments{
-\item{...}{Arguments passed to [ggplot2::discrete_scale()].}
+\item{...}{Arguments passed to \code{\link[ggplot2:discrete_scale]{ggplot2::discrete_scale()}}.}
 
 \item{values}{A named or unnamed numeric vector of positive radii.}
 
@@ -22,13 +22,13 @@ controls geometry rather than a visible legend aesthetic.}
 
 \item{limits}{Optional ring order.}
 
-\item{guide}{Guide specification, default `"none"`.}
+\item{guide}{Guide specification, default \code{"none"}.}
 }
 \value{
-A ggplot2 discrete scale for the `seq_ring` role.
+A ggplot2 discrete scale for the \code{seq_ring} role.
 }
 \description{
 Maps user-defined ring identifiers to positive sequence radii. Ring
-membership is supplied with `geom_seq(aes(seq_ring = ...))`; ggchord never
+membership is supplied with \code{geom_seq(aes(seq_ring = ...))}; ggchord never
 guesses the number, order, or spacing of rings.
 }

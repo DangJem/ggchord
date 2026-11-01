@@ -4,10 +4,10 @@
 \alias{single_gene_example}
 \title{Minimal single-genome gene fixture}
 \format{
-A data frame with `accver`, `start`, `end`, `strand`, and `anno`.
+A data frame with \code{accver}, \code{start}, \code{end}, \code{strand}, and \code{anno}.
 }
 \source{
-`examples/single-genome/features.tsv`.
+\code{examples/single-genome/features.tsv}.
 }
 \description{
 Minimal single-genome gene fixture

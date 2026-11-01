@@ -59,8 +59,8 @@ with \code{"-"} or \code{"desc:"} for descending order (e.g.
 }
 \value{
 A list with \code{data} (the filtered data frame, with
-  \code{source_rows} attribute) and \code{report} (n_input/n_kept/n_removed,
-  removed_by_reason, removed_rows and kept_rows).
+\code{source_rows} attribute) and \code{report} (n_input/n_kept/n_removed,
+removed_by_reason, removed_rows and kept_rows).
 }
 \description{
 Keeps the ribbon rows that satisfy all requested criteria and optionally

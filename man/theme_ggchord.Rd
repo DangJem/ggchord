@@ -569,19 +569,19 @@ theme_ggchord_plasmid(
 )
 }
 \arguments{
-\item{axis}{`NULL` to show automatic sequence axes, or
-[ggplot2::element_blank()] to hide the complete axis decoration.}
+\item{axis}{\code{NULL} to show automatic sequence axes, or
+\code{\link[ggplot2:element_blank]{ggplot2::element_blank()}} to hide the complete axis decoration.}
 
 \item{axis.line, axis.ticks, axis.minor.ticks}{Axis line elements.}
 
 \item{axis.text}{Axis text element.}
 
-\item{axis.gap, axis.ticks.length, axis.minor.ticks.length, axis.text.offset}{Scalar [grid::unit()] objects controlling physical axis spacing. A
-negative `axis.gap` moves circular ticks and labels inside the sequence
+\item{axis.gap, axis.ticks.length, axis.minor.ticks.length, axis.text.offset}{Scalar \code{\link[grid:unit]{grid::unit()}} objects controlling physical axis spacing. A
+negative \code{axis.gap} moves circular ticks and labels inside the sequence
 ring; the plasmid preset uses this convention.}
 
-\item{axis.text.orientation}{One of `"horizontal"`, `"parallel"`,
-`"perpendicular"`, or a finite numeric angle.}
+\item{axis.text.orientation}{One of \code{"horizontal"}, \code{"parallel"},
+\code{"perpendicular"}, or a finite numeric angle.}
 
 \item{axis.text.check.overlap}{Whether overlapping axis labels are hidden.}
 
@@ -590,7 +590,7 @@ centre labels.}
 
 \item{gene.label.segment, feature.label.segment, restriction.label.segment}{Line elements for gene, feature and restriction-site leader lines.}
 
-\item{legend.seq, legend.ribbon, legend.gene, legend.feature, legend.region}{`NULL` to show and inherit common settings, or [ggplot2::element_blank()]
+\item{legend.seq, legend.ribbon, legend.gene, legend.feature, legend.region}{\code{NULL} to show and inherit common settings, or \code{\link[ggplot2:element_blank]{ggplot2::element_blank()}}
 to hide every guide for that role.}
 
 \item{legend.seq.position, legend.ribbon.position, legend.gene.position, legend.feature.position, legend.region.position}{Per-role guide positions.}

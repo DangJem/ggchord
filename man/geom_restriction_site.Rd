@@ -38,28 +38,28 @@ position first.}
 
 \item{label_side}{Draw labels outside, inside, or automatically.}
 
-\item{leader}{Leader routing style. The default `"radial"` measures actual
+\item{leader}{Leader routing style. The default \code{"radial"} measures actual
 text boxes, separates site anchors from final radial label positions,
 and routes either a direct connector or an independent radial stub plus
 fan segment.
 All enzyme-facing text edges follow one close circular contour in genomic
 order. Dense lateral clusters use evenly spaced contour fans, while sparse
-clusters retain their natural angular positions. The former `"trunk"`
-alias was removed in v0.16.1; use `"radial"`.
-`"straight"` connects the tick tip directly to the final label edge,
-without detours around the sequence or other leaders. `"elbow"` uses
+clusters retain their natural angular positions. The former \code{"trunk"}
+alias was removed in v0.16.1; use \code{"radial"}.
+\code{"straight"} connects the tick tip directly to the final label edge,
+without detours around the sequence or other leaders. \code{"elbow"} uses
 one bend, starting with a local-normal departure where possible.
 Label positions and grouping are shared by all routing styles.}
 
-\item{min_label_gap}{Minimum genomic fraction between label slots. `NULL`
+\item{min_label_gap}{Minimum genomic fraction between label slots. \code{NULL}
 derives a compact device-aware default from the rendered labels.}
 
 \item{tick_length, label_offset}{Local-normal distances.}
 
 \item{colour, linewidth, label_size, fontface, family}{Fixed appearance. With
-the default `fontface = NULL`, enzyme names are bold only when that enzyme
+the default \code{fontface = NULL}, enzyme names are bold only when that enzyme
 cuts once in the supplied sequence; coordinates remain regular. An
-explicit `fontface` disables this automatic distinction.}
+explicit \code{fontface} disables this automatic distinction.}
 
 \item{position, show.legend, inherit.aes}{Standard layer arguments.}
 

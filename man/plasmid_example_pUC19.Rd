@@ -17,16 +17,16 @@
 \alias{plasmid_example_pTRIPZ}
 \title{Circular plasmid sequence examples}
 \format{
-A one-row data frame with `accver`, display `label`, `length`, and
-  the DNA `sequence`.
+A one-row data frame with \code{accver}, display \code{label}, \code{length}, and
+the DNA \code{sequence}.
 }
 \source{
-`examples/plasmid/`.
+\verb{examples/plasmid/}.
 }
 \description{
 Thirteen one-row data frames generated from every reference FASTA record
-under `examples/plasmid/`. The file stem is used unchanged as both `accver`
-and the display `label`; the DNA sequence is copied without biological
+under \verb{examples/plasmid/}. The file stem is used unchanged as both \code{accver}
+and the display \code{label}; the DNA sequence is copied without biological
 modification. Feature and restriction annotations are generated at run time
-with [find_common_features()] and [find_restriction_sites()].
+with \code{\link[=find_common_features]{find_common_features()}} and \code{\link[=find_restriction_sites]{find_restriction_sites()}}.
 }

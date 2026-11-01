@@ -1,0 +1,69 @@
+name: Documentation
+
+on:
+  push:
+    paths: ['website/**', 'tools/**', 'R/**', 'man/**', 'vignettes/**', 'README*', 'DESCRIPTION', 'NAMESPACE', '_pkgdown.yml', 'NEWS.md', '.github/workflows/documentation.yaml']
+  pull_request:
+    paths: ['website/**', 'tools/**', 'R/**', 'man/**', 'vignettes/**', 'README*', 'DESCRIPTION', 'NAMESPACE', '_pkgdown.yml', 'NEWS.md', '.github/workflows/documentation.yaml']
+  workflow_dispatch:
+    inputs:
+      deploy:
+        description: 'Deploy only after explicit website cutover authorization'
+        type: boolean
+        required: true
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  source-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - run: python3 tools/check-documentation.py --source-only
+
+  preview:
+    if: github.event_name == 'workflow_dispatch'
+    needs: source-check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - uses: r-lib/actions/setup-r@v2
+      - uses: r-lib/actions/setup-pandoc@v2
+      - name: Install documentation build dependencies only
+        run: Rscript -e 'install.packages(c("ggplot2", "rlang", "scales", "pkgload", "rmarkdown", "jsonlite"))'
+      - run: python3 tools/build-website.py ${{ inputs.deploy && '--publication' || '' }}
+      - run: python3 tools/check-documentation.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: documentation-preview
+          path: .site/
+          include-hidden-files: true
+      - uses: actions/upload-pages-artifact@v4
+        if: inputs.deploy
+        with:
+          path: .site/
+
+  deploy:
+    if: github.event_name == 'workflow_dispatch' && inputs.deploy
+    needs: preview
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/configure-pages@v5
+      - name: Deploy the reviewed documentation artifact
+        id: deployment
+        uses: actions/deploy-pages@v4

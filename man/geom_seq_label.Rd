@@ -29,7 +29,7 @@ geom_seq_label(
 labels as a multiplier of the sequence arc radius: \code{1} is on the arc,
 \code{> 1} places the label outside (away from the chord center) and
 \code{< 1} places it inside, default 1
-Explicit values are incompatible with [coord_collinear()], which places
+Explicit values are incompatible with \code{\link[=coord_collinear]{coord_collinear()}}, which places
 sequence labels beside the left endpoint of each horizontal track.}
 
 \item{seq_label_rotation}{Optional numeric/vector. Additional label rotation

@@ -16,35 +16,35 @@ find_primer_bindings(
 }
 \arguments{
 \item{sequence}{DNA text, a named character vector, or a data frame with
-`accver` and `sequence`.}
+\code{accver} and \code{sequence}.}
 
-\item{primers}{Optional custom primers with `sequence` and optional `name`
-and `primer_id` (one ID per distinct sequence), or a named character vector.}
+\item{primers}{Optional custom primers with \code{sequence} and optional \code{name}
+and \code{primer_id} (one ID per distinct sequence), or a named character vector.}
 
-\item{set}{Bundled catalogue subset. `reference` returns authoritative primer
+\item{set}{Bundled catalogue subset. \code{reference} returns authoritative primer
 annotations from a recognized bundled reference plasmid.}
 
 \item{match}{Full exact matching or longest exact 3-prime annealing.}
 
 \item{min_annealed_bases}{One finite integer of at least 8, the minimum
-suffix length for `three_prime` matching. Fractional values are rejected.}
+suffix length for \code{three_prime} matching. Fractional values are rejected.}
 
 \item{circular}{Allow matches to cross the sequence origin.}
 
 \item{unique_only}{Keep only primer sequences with one binding site per target.}
 }
 \value{
-One row per binding site. The `aliases` list-column preserves every
-  catalogue name associated with the matched oligonucleotide.
+One row per binding site. The \code{aliases} list-column preserves every
+catalogue name associated with the matched oligonucleotide.
 }
 \description{
 Searches each distinct oligonucleotide once on both target strands and then
 attaches all catalogue aliases. Exact matching is the default. Optional
-`three_prime` matching uses the longest exact 3-prime suffix available, with
+\code{three_prime} matching uses the longest exact 3-prime suffix available, with
 no mismatches, and is intended for inspecting partial annealing rather than
 silently treating it as a full match.
 Binding hits are sequence-search results, not experimental validation.
-`melting_temperature` uses the Wallace composition estimate unless source
+\code{melting_temperature} uses the Wallace composition estimate unless source
 annotations supply it; ambiguous bases do not contribute to that estimate.
 }
 \examples{

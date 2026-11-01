@@ -13,7 +13,7 @@ scale_feature_fill_manual(..., values, limits = NULL)
 scale_region_fill_manual(..., values)
 }
 \arguments{
-\item{...}{Arguments passed to [ggplot2::scale_fill_manual()].}
+\item{...}{Arguments passed to \code{\link[ggplot2:scale_fill_manual]{ggplot2::scale_fill_manual()}}.}
 
 \item{values}{A set of fill values to map data values to.}
 

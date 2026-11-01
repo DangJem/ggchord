@@ -1,113 +1,82 @@
-🌐 Language Switch: 【[现代汉语（Hans）](README-Hans.md) | [English](README.md)】
+[English](README.md) · [现代汉语](README-Hans.md)
 
-# ggchord: Layered Multi-Sequence Chord Diagrams for ggplot2
+<img src="man/figures/logo.png" alt="ggchord" width="180" align="right">
 
-> This README and its figures describe earlier APIs.
-> Use the current [tutorial source](vignettes/ggchord_vignette.Rmd) and
-> [migration table](NEWS.md#breaking-api-cleanup). The full rewrite is planned for v1.0.0.
->
-> v0.14.0 adds linear comparisons with
-> `coord_collinear(anchor = ..., orientation = "auto")` using ordinary `+`
-> composition and optional Bioconductor inputs. Linear ribbons connect adjacent
-> displayed sequences by default. Adjacent outlines are solid; retained
-> non-adjacent outlines are dashed, unless explicitly styled.
-> See the runnable [linear workflow](examples/collinear-workflow.R),
-> [interval-input example](examples/bioc-inputs.R), and [version changes](NEWS.md).
+# ggchord: chord, circular and collinear sequence plots
 
-## Overview
+An R package built on ggplot2. Combine independent layers for sequence backbones, interval links, genes, general features, labels and quantitative tracks.
 
-`ggchord` is an R package built on `ggplot2` that draws **chord diagrams for
-multi-sequence data** using the layered grammar of graphics. Instead of a single
-monolithic function, you build a plot by stacking layers — `ggchord()` supplies
-the data and global options, and each `geom_*` layer is responsible for one
-kind of element (sequence arcs, alignment ribbons, gene annotations, axes,
-labels). Every layer has sensible defaults, so a complete diagram can be drawn
-in one line, and every layer can be fine-tuned independently when you need more
-control.
+This README describes the local **0.16.5 candidate API**. The latest formal release remains 0.15.0. The new website source has not been deployed.
 
-It is a general tool for comparing sequences, gene neighbourhoods, phage–host
-relationships, pangenome blocks, synteny, and more — you only need three tidy
-data frames.
+## Install
 
-## Key Features
-
-- **True `ggplot2` layered style** — data and global options live in
-  `ggchord()`; each `geom_*` layer manages its own layout parameters.
-- **Everything has defaults** — `ggchord(data) + geom_seq() + geom_link_ribbon() +
-  geom_gene() + geom_axis()` already produces a complete diagram.
-- **Multi-sequence support** — two, three, four or more sequences in one plot.
-- **Flexible parameters** — per-sequence and per-strand values using single
-  values, vectors, named vectors, and lists.
-- **Full ggplot2 integration** — `theme()`, `scale_*()`, `ggsave()`, and
-  `ggplot_build()` all work.
-- **Three deterministic gene-label layouts** — orderly aligned rails, compact
-  local radial tracks, or tangent-following arc labels.
-
-## Installation
-
-`ggchord` requires R (≥ 4.1.0) and `ggplot2` (≥ 4.0.0).
+R ≥ 4.1.0 · ggplot2 ≥ 4.0.0
 
 ```r
-install.packages("ggplot2")   # if needed
+install.packages("remotes")
+remotes::install_github("DangJem/ggchord")
 ```
 
-From CRAN:
+For a checkout of this version, use `pkgload::load_all(".")` from its root. A CRAN release is not claimed.
 
-```r
-install.packages("ggchord")
-```
+## Three views
 
-From GitHub:
-
-```r
-devtools::install_github("DangJem/ggchord")
-```
-
-## Quick Start
-
-The package ships with three example data sets, so you can run the code below
-as-is:
+These are synthetic teaching inputs, not biological observations.
 
 ```r
 library(ggchord)
-
-# Load the built-in example data
-data(seq_data_example)
-data(ribbon_data_example)
-data(gene_data_example)
-
-# Stack the layers like you would in ggplot2
-ggchord(
-  seq_data     = seq_data_example,
-  ribbon_data  = ribbon_data_example,
-  gene_data    = gene_data_example
-) +
-  geom_seq() +      # sequence arcs
-  geom_link_ribbon() +   # alignment ribbons
-  geom_gene() +     # gene annotations
-  geom_axis()       # position axes
+seqs <- data.frame(accver = c("A", "B", "C"), length = c(1000, 800, 1200))
+links <- data.frame(qaccver = c("A", "B"), saccver = c("B", "C"),
+  qstart = c(100, 200), qend = c(350, 500),
+  sstart = c(150, 400), send = c(400, 700), pident = c(96, 89))
+genes <- data.frame(accver = c("A", "B", "C"),
+  start = c(150, 200, 400), end = c(300, 350, 650),
+  strand = c("+", "+", "-"), anno = c("target", "target", "target"))
 ```
 
-![Basic chord diagram with all default parameters](man/figures/combined_default.png)
+```r
+p_chord <- ggchord(seqs, links, genes) +
+  geom_seq() + geom_link_ribbon() + geom_gene() + geom_seq_label() +
+  coord_chord()
+```
 
-That is the whole idea: **data in `ggchord()`, styling in the layers**.
+```r
+features <- data.frame(accver = "A", start = c(80, 380, 700),
+  end = c(280, 610, 850), strand = c("+", "-", "."),
+  type = c("CDS", "CDS", "region"), label = c("alpha", "beta", "origin"))
+p_circular <- ggchord(seqs[1, ]) + geom_seq() +
+  geom_feature(data = features) +
+  geom_feature_label_repel(data = features) + coord_circular() +
+  theme_ggchord(axis = element_blank())
+```
 
-## Where to go next
+```r
+p_collinear <- ggchord(seqs, links, genes) +
+  geom_link_ribbon(alpha = .3) + geom_seq() +
+  geom_gene(position = position_strand(.1)) + geom_seq_label() +
+  coord_collinear(anchor = genes[c("accver", "start", "end")],
+    align = "center", orientation = "auto")
+```
 
-| Need | Resource |
-| --- | --- |
-| Full walkthrough: data preparation, import, validation, cleaning, examples and flexible parameter formats | [**ggchord tutorial**](https://dangjem.github.io/ggchord/articles/ggchord_vignette.html) ([source](vignettes/ggchord_vignette.Rmd)) |
-| 汉语完整使用指南 | [**ggchord 汉语指南**](https://dangjem.github.io/ggchord/articles/ggchord_guide_hans.html) ([source](vignettes/ggchord_guide_hans.Rmd)) |
-| Complete function and parameter reference | [**Function reference**](https://dangjem.github.io/ggchord/reference/index.html) |
-| Version history | [**NEWS.md**](NEWS.md) |
+| Chord / 弦图 | Circular / 圆图 | Collinear / 共线性图 |
+| --- | --- | --- |
+| ![Chord](man/figures/chord.png) | ![Circular](man/figures/circular.png) | ![Collinear](man/figures/collinear.png) |
 
-## Contributions & Feedback
+`aes()` maps data; scales define mapping and guides; geoms define geometry and fixed styles; Positions place local geometry; coords select the global view; themes style non-data elements.
 
-Bug reports and feature requests are welcome via
-[GitHub issues](https://github.com/DangJem/ggchord/issues). Pull requests are
-also appreciated.
+## Preview and save
 
-## License
+RStudio Plots can rearrange labels when its panel changes. Preview and save at the same explicit dimensions:
 
-This project is licensed under the MIT License — see the
-[LICENSE](LICENSE) file for details.
+```r
+view_ggchord(p_collinear, width = 8, height = 5, units = "in")
+ggsave("comparison.png", p_collinear, width = 8, height = 5, units = "in", dpi = 144)
+```
+
+## Continue
+
+- [Full tutorial](vignettes/ggchord_vignette.Rmd): install → data → first plot → adjustments → advanced topics → FAQ.
+- [Migration guide](MIGRATION.md) and [NEWS](NEWS.md).
+- [Build and preview the local website](website/README.md), including reference categories, terminology, gallery and deployment design.
+
+[Issues](https://github.com/DangJem/ggchord/issues) · [MIT license](LICENSE)

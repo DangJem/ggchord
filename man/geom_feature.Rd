@@ -33,7 +33,7 @@ generated.}
 \code{strand}; optional \code{type}, \code{category} and \code{label}.
 Factor \code{start}/\code{end} columns use their numeric labels, not
 their internal level codes. Coordinates must resolve to finite numbers.
-`display_priority` or logical `prioritized_display`. As an alternative to
+\code{display_priority} or logical \code{prioritized_display}. As an alternative to
 \code{strand}, \code{directionality} or \code{direction} may contain
 \code{"forward"}, \code{"reverse"}, \code{"bidirectional"}, or
 \code{"none"}.}
@@ -52,12 +52,12 @@ shared feature geometry engine. In a circular feature-label composition,
 the base width responds to final label size within bounded limits.}
 
 \item{arrow_head_length, arrow_head_width}{Arrow-head dimensions in the
-sequence-local frame, shared with [geom_gene()]. Values above one for
-`arrow_head_width` create a protruding block-arrow head.}
+sequence-local frame, shared with \code{\link[=geom_gene]{geom_gene()}}. Values above one for
+\code{arrow_head_width} create a protruding block-arrow head.}
 
-\item{arrow_head_style}{Arrowhead construction: `"shouldered"` keeps the
-requested protruding head, `"flush"` keeps it level with the body, and
-`"triangle"` draws a full triangular wedge.}
+\item{arrow_head_style}{Arrowhead construction: \code{"shouldered"} keeps the
+requested protruding head, \code{"flush"} keeps it level with the body, and
+\code{"triangle"} draws a full triangular wedge.}
 
 \item{short_feature}{Fallback for arrows too short to hold their requested
 head: an automatically compressed directional glyph, a wedge, or a block.}
@@ -65,15 +65,15 @@ head: an automatically compressed directional glyph, a wedge, or a block.}
 \item{segment_boundaries}{Draw explicit internal marks carried by a
 segmented feature. Contiguous source-segment joins use dotted dividers;
 a non-solid segment-level \code{line_style} may override them, while a
-`cleavage_arrows` coordinate adds or merges a biological cut mark. These
+\code{cleavage_arrows} coordinate adds or merges a biological cut mark. These
 marks never create additional arrowheads.}
 
 \item{boundary_colour, boundary_linewidth, boundary_linetype}{Appearance of
 internal segment joins.}
 
-\item{position}{Feature placement. Use `"identity"`, `"strand"`,
-`"plasmid"`, [position_strand()], [position_plasmid()], or
-[position_feature_stack()].}
+\item{position}{Feature placement. Use \code{"identity"}, \code{"strand"},
+\code{"plasmid"}, \code{\link[=position_strand]{position_strand()}}, \code{\link[=position_plasmid]{position_plasmid()}}, or
+\code{\link[=position_feature_stack]{position_feature_stack()}}.}
 
 \item{show.legend, inherit.aes}{Standard ggplot2 layer arguments.}
 

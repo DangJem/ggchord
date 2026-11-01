@@ -13,27 +13,27 @@ scale_feature_shape_manual(
 )
 }
 \arguments{
-\item{...}{Arguments passed to [ggplot2::discrete_scale()].}
+\item{...}{Arguments passed to \code{\link[ggplot2:discrete_scale]{ggplot2::discrete_scale()}}.}
 
 \item{values}{A named or unnamed character vector of feature geometry names.}
 
-\item{name}{Scale and guide title, default `"Feature"`.}
+\item{name}{Scale and guide title, default \code{"Feature"}.}
 
-\item{limits}{Optional category order. Named `values` use their name order
+\item{limits}{Optional category order. Named \code{values} use their name order
 by default so shape and fill guides can merge cleanly.}
 
-\item{guide}{Guide specification. The default is `"none"` because
-[geom_feature()] combines shape silhouettes into its fill legend when
+\item{guide}{Guide specification. The default is \code{"none"} because
+\code{\link[=geom_feature]{geom_feature()}} combines shape silhouettes into its fill legend when
 both aesthetics describe the same feature categories. Supply
-[guide_ggchord_legend()] for a separate shape guide.}
+\code{\link[=guide_ggchord_legend]{guide_ggchord_legend()}} for a separate shape guide.}
 }
 \value{
-A ggplot2 discrete scale for the `feature_shape` aesthetic.
+A ggplot2 discrete scale for the \code{feature_shape} aesthetic.
 }
 \description{
 Maps feature categories to the geometry types understood by
-[geom_feature()], including full/compact/promoter/primer arrows, markers,
-blocks, capped lines, chevrons, and lollipops. `capped_line` is an
+\code{\link[=geom_feature]{geom_feature()}}, including full/compact/promoter/primer arrows, markers,
+blocks, capped lines, chevrons, and lollipops. \code{capped_line} is an
 unfilled interval with short terminal caps.
 Shape values affect the actual feature geometry as well as its legend key.
 }

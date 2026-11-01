@@ -33,8 +33,8 @@ can be bundled.}
 }
 \value{
 A list with \code{data} and \code{report}. The data include
-  \code{.bundle_n}, \code{.bundle_weight}, and \code{.bundle_density}; the
-  report maps each output row back to its source rows.
+\code{.bundle_n}, \code{.bundle_weight}, and \code{.bundle_density}; the
+report maps each output row back to its source rows.
 }
 \description{
 Aggregates nearby alignment ribbons on a normalized query/subject grid.

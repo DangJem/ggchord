@@ -1,0 +1,112 @@
+[
+  [
+    "sequence",
+    "序列",
+    "accver / length"
+  ],
+  [
+    "chord diagram",
+    "弦图",
+    "coord_chord()"
+  ],
+  [
+    "circular sequence map",
+    "单序列圆图",
+    "coord_circular()"
+  ],
+  [
+    "collinearity plot",
+    "共线性图",
+    "coord_collinear()"
+  ],
+  [
+    "interval link / ribbon",
+    "区间连接 / 连接带",
+    "qaccver / saccver"
+  ],
+  [
+    "feature",
+    "通用注释特征（feature）",
+    "geom_feature()"
+  ],
+  [
+    "gene",
+    "已知链的基因",
+    "geom_gene()"
+  ],
+  [
+    "strand",
+    "链方向",
+    "+ / - / unknown"
+  ],
+  [
+    "aesthetic mapping",
+    "美学属性映射",
+    "aes()"
+  ],
+  [
+    "scale",
+    "标度",
+    "scale_*()"
+  ],
+  [
+    "guide",
+    "图例 / 标度指南",
+    "guides()"
+  ],
+  [
+    "position",
+    "局部位置调整",
+    "position_*()"
+  ],
+  [
+    "track",
+    "定量轨道",
+    "position_track()"
+  ],
+  [
+    "genomic position",
+    "基因组位置",
+    "one-based inclusive bp / 一基闭区间"
+  ],
+  [
+    "layout units",
+    "原生布局单位",
+    "not bp or mm / 不等于 bp 或 mm"
+  ],
+  [
+    "source row",
+    "已解析输入来源行",
+    "source_row"
+  ],
+  [
+    "physical file line",
+    "物理文件行",
+    ".source_line"
+  ],
+  [
+    "focus",
+    "局部聚焦",
+    "focus_ggchord_data()"
+  ],
+  [
+    "segment",
+    "分段窗口",
+    "segment_ggchord_data()"
+  ],
+  [
+    "leader",
+    "标签引导线",
+    "label / connection"
+  ],
+  [
+    "CDS projection",
+    "编码序列坐标投影",
+    "build_ggchord_cds()"
+  ],
+  [
+    "measured panel",
+    "已测量面板",
+    "not visual certification / 不等于视觉认证"
+  ]
+]

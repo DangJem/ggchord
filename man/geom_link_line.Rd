@@ -48,7 +48,7 @@ Explicit gap takes precedence.}
 \item{colour, alpha, linewidth, linetype}{Fixed styles; mappings use link_* aesthetics.
 An explicitly supplied fixed value takes precedence over the matching
 mapping. Omit the fixed argument to retain a mapped style, including an
-inherited mapping when `inherit.aes = TRUE`.}
+inherited mapping when \code{inherit.aes = TRUE}.}
 
 \item{position, show.legend, inherit.aes}{Standard ggplot2 layer arguments.}
 
@@ -60,7 +60,7 @@ A ggplot2 layer.
 \description{
 Requires qaccver, saccver, qpos and spos. Positions use the same genomic
 coordinates as sequence tracks. Curves run from query to subject; an arrow
-supplied by [arrow()] therefore points to the subject by default.
+supplied by \code{\link[=arrow]{arrow()}} therefore points to the subject by default.
 }
 \examples{
 s <- data.frame(accver = c("A", "B"), length = c(1000, 1000))

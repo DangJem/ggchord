@@ -27,12 +27,12 @@ geom_seq_center_label(
 \item{separator}{Separator between name and length.}
 
 \item{name_style, length_style}{Named lists of fixed text-style overrides
-for the name and length grobs. Supported fields are `colour`, `size`,
-`family`, `fontface`, and `lineheight`.}
+for the name and length grobs. Supported fields are \code{colour}, \code{size},
+\code{family}, \code{fontface}, and \code{lineheight}.}
 
 \item{show.legend, inherit.aes}{Standard ggplot2 layer arguments.}
 
-\item{...}{Additional arguments passed to `geom_text()`.}
+\item{...}{Additional arguments passed to \code{geom_text()}.}
 }
 \value{
 A ggplot2 layer.

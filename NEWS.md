@@ -1,3 +1,24 @@
+# ggchord 0.16.5 (unreleased)
+
+* Updated the package title and entry documentation to cover chord, single
+  circular sequence and collinear views. Rewrote paired English/Han README and
+  tutorial sources around the 0.16.4 candidate API, with shared runnable code,
+  terminology, migration, FAQ and a reproducible gallery.
+* Added separate static website sources with paired navigation, complete Rd
+  reference, local search, accessible code disclosure, responsive navigation and
+  system/light/dark themes. Source CI and a manual preview/deployment workflow
+  keep generated output separate from main. Frozen `docs/` and the live site are
+  unchanged; no deployment or formal release is implied.
+* Documentation figures now share explicit ggsave dimensions and an asset/hash
+  manifest across languages. Retired unreferenced source figures were removed
+  after checking references; frozen website assets remain intact.
+* Added the user-designed ggchord artwork to the home page, README and tutorial
+  entry points, with full-resolution lossless PNG/WebP and an explicitly resized
+  navigation thumbnail. No redraw, palette reduction or loss of RGBA pixels.
+* Enabled Markdown parsing for existing roxygen comments so code names and help
+  links render correctly in Rd. Public signatures, supported defaults, geometry
+  and return fields remain unchanged from the candidate baseline.
+
 # ggchord 0.16.4 (unreleased)
 
 * Consolidated the existing 130 exports into a candidate API baseline with

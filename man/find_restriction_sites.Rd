@@ -15,10 +15,10 @@ find_restriction_sites(
 }
 \arguments{
 \item{sequence}{DNA text, a named character vector, or a data frame with
-`accver` and `sequence`.}
+\code{accver} and \code{sequence}.}
 
 \item{enzymes}{Optional enzyme names. A data frame is a compatibility
-spelling for `patterns`.}
+spelling for \code{patterns}.}
 
 \item{patterns}{Optional custom definitions.}
 
@@ -26,20 +26,20 @@ spelling for `patterns`.}
 
 \item{database}{Optional parsed pattern database.}
 
-\item{methylation}{Methylation context. `"auto"` uses the audited context
+\item{methylation}{Methylation context. \code{"auto"} uses the audited context
 for recognized reference plasmids and otherwise makes no blocked-site
-claim; `"none"` disables blocking; `"dam_dcm"` evaluates source-backed
+claim; \code{"none"} disables blocking; \code{"dam_dcm"} evaluates source-backed
 Dam/Dcm sensitivities against the supplied sequence.}
 }
 \value{
 One row per pattern match without display filtering or deduplication.
-  Methylation-aware columns include `methylation_status`, `blocked_by`,
-  `display_warning`, `methylation_motif`, and `sensitivity_source`.
-  `enzyme_site_count` records the number of distinct cleavage/display
-  positions for that enzyme on the complete supplied sequence, so it remains
-  stable after display filtering. For an exactly recognized bundled
-  reference sequence, the `reference_enzyme_profiles` attribute records its
-  saved display set for use by [filter_restriction_sites()].
+Methylation-aware columns include \code{methylation_status}, \code{blocked_by},
+\code{display_warning}, \code{methylation_motif}, and \code{sensitivity_source}.
+\code{enzyme_site_count} records the number of distinct cleavage/display
+positions for that enzyme on the complete supplied sequence, so it remains
+stable after display filtering. For an exactly recognized bundled
+reference sequence, the \code{reference_enzyme_profiles} attribute records its
+saved display set for use by \code{\link[=filter_restriction_sites]{filter_restriction_sites()}}.
 }
 \description{
 Find restriction pattern matches and cleavage coordinates

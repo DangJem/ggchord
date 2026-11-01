@@ -15,39 +15,39 @@ read_blast(
 )
 }
 \arguments{
-\item{file}{Optional path vector or glob patterns; read before `files`.}
+\item{file}{Optional path vector or glob patterns; read before \code{files}.}
 
 \item{files}{Optional character vector of BLAST tabular output files
 (literal paths and/or wildcard patterns). All matched files are read and
 combined into one data.frame.}
 
-\item{format}{Character. `"auto"` (default) detects the column layout
-from the file; `"outfmt6"` requires the standard 12-column layout,
-`"outfmt7"` parses its `# Fields:` declaration, and `"custom"` requires
-`col_names`.}
+\item{format}{Character. \code{"auto"} (default) detects the column layout
+from the file; \code{"outfmt6"} requires the standard 12-column layout,
+\code{"outfmt7"} parses its \verb{# Fields:} declaration, and \code{"custom"} requires
+\code{col_names}.}
 
 \item{col_names}{Optional character vector naming the columns in the file,
-used with `format = "custom"` or to override auto-detection.}
+used with \code{format = "custom"} or to override auto-detection.}
 
-\item{comment}{Character comment character, default `"#"` (BLAST
-outfmt 7 header lines start with `#`).}
+\item{comment}{Character comment character, default \code{"#"} (BLAST
+outfmt 7 header lines start with \verb{#}).}
 
-\item{source_file}{Logical. Add a `.source_file` column when reading one or
-more files, default `FALSE`.}
+\item{source_file}{Logical. Add a \code{.source_file} column when reading one or
+more files, default \code{FALSE}.}
 
-\item{...}{Additional arguments passed to [utils::read.table()]
-(e.g. `na.strings`).}
+\item{...}{Additional arguments passed to \code{\link[utils:read.table]{utils::read.table()}}
+(e.g. \code{na.strings}).}
 }
 \value{
 A data.frame with the required ribbon columns first
-  (`qaccver`, `saccver`, `qstart`, `qend`, `sstart`, `send`) followed by any preserved optional columns.
-  A `ggchord_import` attribute records files, per-file output row counts and
-  the one-based inclusive coordinate convention.
+(\code{qaccver}, \code{saccver}, \code{qstart}, \code{qend}, \code{sstart}, \code{send}) followed by any preserved optional columns.
+A \code{ggchord_import} attribute records files, per-file output row counts and
+the one-based inclusive coordinate convention.
 }
 \description{
-`file` reads a single BLAST tabular output file; `files` reads multiple
-files at once and combines them. `files` accepts a character vector of
-literal paths and/or wildcard patterns (e.g. `"examples/blastn/*.o7"`).
+\code{file} reads a single BLAST tabular output file; \code{files} reads multiple
+files at once and combines them. \code{files} accepts a character vector of
+literal paths and/or wildcard patterns (e.g. \code{"examples/blastn/*.o7"}).
 }
 \examples{
 library(ggchord)

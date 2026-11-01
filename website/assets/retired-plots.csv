@@ -1,0 +1,11 @@
+file,md5,bytes,original_generator,disposition,frozen_copies
+man/figures/axis_seq_label.png,fb38bbef8bfe4acd7545cd1c4288a0b1,89439,24930b0:examples/make_readme_plots.R,Removed from active source figures; frozen website copies retained,docs/reference/figures/axis_seq_label.png
+man/figures/combined_default.png,1699517a2152665b8cbe788a1ad52454,217148,24930b0:examples/make_readme_plots.R,Removed from active source figures; frozen website copies retained,docs/reference/figures/combined_default.png
+man/figures/combined_fine.png,1ab1cf7c24f53272ad62081ce64a03c1,190800,24930b0:examples/make_readme_plots.R,Removed from active source figures; frozen website copies retained,docs/reference/figures/combined_fine.png
+man/figures/gene_repel.png,97030e520042a5226cb9957f53a860ca,88580,24930b0:examples/make_readme_plots.R,Removed from active source figures; frozen website copies retained,docs/reference/figures/gene_repel.png
+man/figures/legend_bottom.png,a97d1cc4e040173da2ce22b2cd7ff49f,222720,24930b0:examples/make_readme_plots.R,Removed from active source figures; frozen website copies retained,docs/reference/figures/legend_bottom.png
+man/figures/ribbon_pident.png,3bf06f8c724ccbaf966f0310bf31ea0c,161873,24930b0:examples/make_readme_plots.R,Removed from active source figures; frozen website copies retained,docs/reference/figures/ribbon_pident.png
+man/figures/seq_only_default.png,a0ad70d915ec19a0891696d6d1257e7b,43584,24930b0:examples/make_readme_plots.R,Removed from active source figures; frozen website copies retained,docs/reference/figures/seq_only_default.png
+man/figures/tutorial_features.png,5f0519ca4cc9e6b816511dfe189f8928,274803,24930b0:examples/make_readme_plots.R,Removed from active source figures; frozen website copies retained,docs/reference/figures/tutorial_features.png
+man/figures/tutorial_highlights.png,e69fca87f20879088a16904a8f00f10b,173340,24930b0:examples/make_readme_plots.R,Removed from active source figures; frozen website copies retained,docs/reference/figures/tutorial_highlights.png
+man/figures/tutorial_ribbon_mapping.png,40a9dc8c9d8e6dc3a943ebbd93a4d082,165876,24930b0:examples/make_readme_plots.R,Removed from active source figures; frozen website copies retained,docs/reference/figures/tutorial_ribbon_mapping.png

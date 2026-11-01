@@ -7,12 +7,12 @@
 \format{
 A data frame containing the following columns:
 \itemize{
-  \item accver: Sequence accession/version or an unchanged custom identifier
-  \item start: Gene start position
-  \item end: Gene end position
-  \item strand: Strand direction (+/-)
-  \item anno: Gene annotation category
-  \item source_strand: Strand direction in the source annotation file
+\item accver: Sequence accession/version or an unchanged custom identifier
+\item start: Gene start position
+\item end: Gene end position
+\item strand: Strand direction (+/-)
+\item anno: Gene annotation category
+\item source_strand: Strand direction in the source annotation file
 }
 }
 \usage{

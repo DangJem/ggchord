@@ -1,0 +1,138 @@
+[
+  {
+    "slug": "index",
+    "title": {
+      "en": "Sequence stories, layer by layer",
+      "zh": "用图层讲述序列关系"
+    },
+    "group": "start"
+  },
+  {
+    "slug": "installation",
+    "title": {
+      "en": "Install and start",
+      "zh": "安装与入门"
+    },
+    "group": "start"
+  },
+  {
+    "slug": "data",
+    "title": {
+      "en": "Data and coordinates",
+      "zh": "数据与坐标"
+    },
+    "group": "start"
+  },
+  {
+    "slug": "modes",
+    "title": {
+      "en": "Three coordinate systems",
+      "zh": "三种坐标模式"
+    },
+    "group": "start"
+  },
+  {
+    "slug": "adjustments",
+    "title": {
+      "en": "Common adjustments and grammar",
+      "zh": "常用调整与图形语法"
+    },
+    "group": "guide"
+  },
+  {
+    "slug": "tracks",
+    "title": {
+      "en": "Quantitative tracks",
+      "zh": "定量轨道"
+    },
+    "group": "guide"
+  },
+  {
+    "slug": "labels",
+    "title": {
+      "en": "Labels and local placement",
+      "zh": "标签与局部放置"
+    },
+    "group": "guide"
+  },
+  {
+    "slug": "recognition",
+    "title": {
+      "en": "Primers, restriction and feature search",
+      "zh": "引物、酶切与 feature 搜索"
+    },
+    "group": "guide"
+  },
+  {
+    "slug": "projection",
+    "title": {
+      "en": "CDS coordinate projection",
+      "zh": "CDS 坐标投影"
+    },
+    "group": "guide"
+  },
+  {
+    "slug": "views",
+    "title": {
+      "en": "Focus, segments and homology",
+      "zh": "局部视图、分段与同源关系"
+    },
+    "group": "guide"
+  },
+  {
+    "slug": "output",
+    "title": {
+      "en": "Export, preview and diagnostics",
+      "zh": "导出、预览与诊断"
+    },
+    "group": "guide"
+  },
+  {
+    "slug": "faq",
+    "title": {
+      "en": "Frequently asked questions",
+      "zh": "常见问题"
+    },
+    "group": "guide"
+  },
+  {
+    "slug": "migration",
+    "title": {
+      "en": "Migrate to the candidate API",
+      "zh": "迁移到候选 API"
+    },
+    "group": "guide"
+  },
+  {
+    "slug": "gallery",
+    "title": {
+      "en": "Reproducible gallery",
+      "zh": "可复现图集"
+    },
+    "group": "guide"
+  },
+  {
+    "slug": "glossary",
+    "title": {
+      "en": "Terminology and design sources",
+      "zh": "术语与设计来源"
+    },
+    "group": "guide"
+  },
+  {
+    "slug": "reference",
+    "title": {
+      "en": "Function reference",
+      "zh": "函数参考"
+    },
+    "group": "reference"
+  },
+  {
+    "slug": "news",
+    "title": {
+      "en": "Development status and changes",
+      "zh": "开发状态与变更"
+    },
+    "group": "reference"
+  }
+]

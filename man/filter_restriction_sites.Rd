@@ -17,15 +17,15 @@ filter_restriction_sites(
 )
 }
 \arguments{
-\item{sites}{Result from [find_restriction_sites()].}
+\item{sites}{Result from \code{\link[=find_restriction_sites]{find_restriction_sites()}}.}
 
-\item{set}{Display preset. `"reference"` reuses the enzyme-set profile
+\item{set}{Display preset. \code{"reference"} reuses the enzyme-set profile
 stored for an exactly recognized reference sequence. It errors when no
-such profile is available. A saved `"None"` profile returns no sites.}
+such profile is available. A saved \code{"None"} profile returns no sites.}
 
 \item{enzymes, min_site_length, cuts, window, commercial_only}{Additional filters.}
 
-\item{parent_set}{Enzyme catalogue subset. `"commercial_nonredundant"`
+\item{parent_set}{Enzyme catalogue subset. \code{"commercial_nonredundant"}
 keeps one stable commercial representative per equivalent recognition
 group and site, preferring the database's preferred enzyme when present.}
 }

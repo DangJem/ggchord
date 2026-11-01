@@ -15,3 +15,6 @@ R/.Rhistory
 .*/
 !.github/
 !.github/**
+
+/.site/
+__pycache__/

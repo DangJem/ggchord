@@ -1,0 +1,35 @@
+{
+  "provided": "User-supplied ggchord artwork, 2026-11-01",
+  "source_filename": "codex-clipboard-8bfaa3ca-1a8d-4002-b368-1fb03c2c0e25.png",
+  "source_sha256": "f68bcf8a4cc1e78972888955660790aa32b1332f5c30fce6a526439533aa27ac",
+  "source_bytes": 3195879,
+  "width": 1254,
+  "height": 1254,
+  "mode": "RGBA",
+  "rgba_sha256": "85d36ae6f6e618f64e4c5d909314bd64072b0087bf093d24f2d41ac4dab133b3",
+  "encoding": "PNG optimization and exact lossless WebP; no crop, palette reduction or resampling of full artwork",
+  "permission": "User authorized use in ggchord website and documentation; no third-party license inferred",
+  "assets": [
+    {
+      "file": "man/figures/logo.png",
+      "bytes": 3048867,
+      "sha256": "04729c47eaef1280363d7f9dd5ea6552d66e72bcb8d3a301d4c5cc63fdfd7742",
+      "reduction_percent": 4.6
+    },
+    {
+      "file": "website/assets/logo.webp",
+      "bytes": 2127126,
+      "sha256": "7a670250dbf53d8d82bc10cc22bdfdd317a3dd70ac3ca1453bd1ef7f5f884037",
+      "reduction_percent": 33.44
+    }
+  ],
+  "favicon": {
+    "file": "website/assets/favicon.png",
+    "size": [
+      64,
+      64
+    ],
+    "purpose": "navigation thumbnail only",
+    "sha256": "a23b3b1ec0d4462e53e9b82f0e15a5812852b382c255b7d9cf4ebf75245f2a16"
+  }
+}

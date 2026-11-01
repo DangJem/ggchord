@@ -17,7 +17,7 @@
 }
 \value{
 A data.frame with columns \code{table}, \code{category},
-  \code{row}, \code{column}, \code{message} and \code{severity}.
+\code{row}, \code{column}, \code{message} and \code{severity}.
 }
 \description{
 Combines the \code{errors} and \code{warnings} tables into a single

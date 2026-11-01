@@ -37,9 +37,9 @@ missing value; \code{"first"} retains the first source row's value.}
 }
 \value{
 A list with \code{data} (merged data frame with \code{source_rows}
-  attribute) and \code{report} (data.frame with \code{output_row},
-  \code{from_rows}, \code{n_merged}, and list-columns \code{source_length}
-  and \code{source_pident} for every output row).
+attribute) and \code{report} (data.frame with \code{output_row},
+\code{from_rows}, \code{n_merged}, and list-columns \code{source_length}
+and \code{source_pident} for every output row).
 }
 \description{
 Merges alignment blocks that belong to the same (query, subject) pair, are

@@ -21,20 +21,20 @@ stat_ribbon_bundle(
 \item{mapping, data}{Standard layer mapping and data arguments.}
 
 \item{bins, min_bundle, weight, group_by}{Passed to
-[bundle_ggchord_ribbons()].}
+\code{\link[=bundle_ggchord_ribbons]{bundle_ggchord_ribbons()}}.}
 
 \item{position, show.legend, inherit.aes}{Standard ggplot2 layer arguments.}
 
 \item{...}{Ribbon geometry and appearance arguments passed to
-[geom_link_ribbon()].}
+\code{\link[=geom_link_ribbon]{geom_link_ribbon()}}.}
 }
 \value{
 A ggchord ribbon layer.
 }
 \description{
-A layer form of [bundle_ggchord_ribbons()] that computes bundles before the
-shared chord geometry and exposes `after_stat(bundle_n)`,
-`after_stat(bundle_weight)`, and `after_stat(density)`.
+A layer form of \code{\link[=bundle_ggchord_ribbons]{bundle_ggchord_ribbons()}} that computes bundles before the
+shared chord geometry and exposes \code{after_stat(bundle_n)},
+\code{after_stat(bundle_weight)}, and \code{after_stat(density)}.
 }
 \seealso{
 \code{\link{ggchord_data_contract}}

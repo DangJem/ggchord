@@ -1,0 +1,86 @@
+[
+  [
+    "geom_ribbon()",
+    "geom_link_ribbon()",
+    "≤ 0.16.1",
+    "Renamed link layer; not ggplot2::geom_ribbon().",
+    "连接图层改名，不影响 ggplot2::geom_ribbon()。"
+  ],
+  [
+    "ggchord(..., rotation = 20)",
+    "ggchord(...) + coord_chord(rotation = 20)",
+    "≤ 0.16.1",
+    "Global coordinates are composed with +.",
+    "全局坐标使用 + 组合。"
+  ],
+  [
+    "geom_feature(feature_shape = \"block\", feature_width = .05)",
+    "geom_feature(shape = \"block\", width = .05)",
+    "0.16.1",
+    "Mapped feature_shape is retained.",
+    "映射角色 feature_shape 保留。"
+  ],
+  [
+    "geom_gene(gene_offset = c(\"+\" = .1, \"-\" = .2))",
+    "geom_gene(position = position_strand(c(\"+\" = .1, \"-\" = -.2)))",
+    "0.16.1",
+    "Explicit Position values are signed.",
+    "显式 Position 值带符号。"
+  ],
+  [
+    "geom_feature(feature_offset = .1)",
+    "geom_feature(position = position_strand(.1))",
+    "0.16.1",
+    "Use a Position object.",
+    "使用 Position 对象。"
+  ],
+  [
+    "geom_gene(gene_width = .05)",
+    "geom_gene(width = .05)",
+    "0.16.1",
+    "Fixed geometry uses the shared width name.",
+    "固定几何统一使用 width。"
+  ],
+  [
+    "geom_link_ribbon(ribbon_gap = .01)",
+    "geom_link_ribbon(link_gap = .01)",
+    "0.16.1",
+    "Use link_gap; likewise use link_ctrl_point.",
+    "使用 link_gap，控制点同样使用 link_ctrl_point。"
+  ],
+  [
+    "geom_gene_label_repel(gene_label_layout = \"aligned\")",
+    "geom_gene_label_repel(label_layout = \"auto\")",
+    "0.16.1",
+    "Migrate both the name and value.",
+    "同时迁移参数名和取值。"
+  ],
+  [
+    "geom_gene_label_repel(label_rotation = 90)",
+    "geom_gene_label(label_rotation = 90)",
+    "0.16.4 guard",
+    "Previously ignored manual control now errors; alternatively remove it.",
+    "原先忽略的手动控制现报错，也可删除它使用自动布局。"
+  ],
+  [
+    "geom_feature_label_repel(label_orientation = \"horizontal\")",
+    "geom_feature_label(label_orientation = \"horizontal\")",
+    "0.16.4 guard",
+    "Use the fixed feature-label layer for unknown-strand features.",
+    "未知链 feature 使用固定 feature 标签层。"
+  ],
+  [
+    "geom_restriction_site(leader = \"trunk\")",
+    "geom_restriction_site(leader = \"radial\")",
+    "0.16.1",
+    "The radial default remains.",
+    "radial 默认值保持。"
+  ],
+  [
+    "theme_ggchord(base_size = 10)",
+    "theme_ggchord() + theme(text = element_text(size = 10))",
+    "≤ 0.16.1",
+    "Text appearance belongs to theme elements.",
+    "文字外观属于 theme 元素。"
+  ]
+]

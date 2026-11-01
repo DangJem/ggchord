@@ -1,94 +1,82 @@
-🌐 语言切换：【[现代汉语（Hans）](README-Hans.md) | [English](README.md)】
+[English](README.md) · [现代汉语](README-Hans.md)
 
-# ggchord：基于 ggplot2 的多序列弦图可视化工具
+<img src="man/figures/logo.png" alt="ggchord" width="180" align="right">
 
-> 本 README 与图片保留旧版接口说明；当前可运行示例请见
-> [汉语教程源码](vignettes/ggchord_guide_hans.Rmd)和 [迁移表](NEWS.md#breaking-api-cleanup)。
-> 完整重写安排在 v1.0.0。
->
-> v0.14.0 增加直线共线性比较，使用普通 `+` 组合与
-> `coord_collinear(anchor = ..., orientation = "auto")` 配置锚定和方向，
-> 支持可选 Bioconductor 输入。线性 ribbon 默认仅连接相邻显示序列；相邻连接
-> 默认实线边框，保留的非相邻连接默认虚线边框，显式样式优先。可运行示例见
-> [直线比较工作流](examples/collinear-workflow.R)、[区间对象输入](examples/bioc-inputs.R)
-> 和[版本变更](NEWS.md)。
+# ggchord：弦图、圆图与共线性图
 
-## 概述
+基于 ggplot2 的 R 包。用独立图层组合序列骨架、区间连接、基因、通用注释、标签和定量轨道。
 
-`ggchord` 是一个基于 `ggplot2` 的 R 语言包，采用**分层的图形语法**将多序列数据绘制为直观的弦图。与“一个大函数”不同，你通过叠加图层来构建图形：`ggchord()` 负责提供数据与全局选项，每个 `geom_*` 图层负责绘制一类元素（序列弧线、比对连接带、基因注释、坐标轴、标签）。每个图层都有合理的默认值，因此**一行代码即可画出完整的弦图**，需要精细控制时也可以分别微调每个图层。
-
-该包是通用的多序列比较工具，可用于序列比较、基因邻域分析、噬菌体-宿主关系、泛基因组区块、共线性分析等——你只需要准备三张规整的数据表。
-
-## 主要功能
-
-- **真正的 `ggplot2` 分层风格**：数据与全局选项交给 `ggchord()`，每个 `geom_*` 图层管理自己的布局参数。
-- **开箱即用**：`ggchord(data) + geom_seq() + geom_link_ribbon() + geom_gene()` 即可得到完整图形。
-- **多序列支持**：可同时展示两条、三条、四条或更多序列。
-- **灵活的参数**：支持单值、向量、命名向量与列表，可按序列或链方向分别设置。
-- **与 ggplot2 生态无缝衔接**：`theme()`、`scale_*()`、`ggsave()`、`ggplot_build()` 均可使用。
-- **三种确定性基因标签布局**：规则对齐轨道、紧凑局部径向轨道和沿弧线切线放置的标签。
+这里展示本地开发的 **0.16.5 候选 API**，当前正式发布版仍为 0.15.0。源码中的新网站尚未部署。
 
 ## 安装
 
-`ggchord` 需要 R（≥ 4.1.0）和 `ggplot2`（≥ 4.0.0）。
+R ≥ 4.1.0 · ggplot2 ≥ 4.0.0
 
 ```r
-install.packages("ggplot2")   # 如需要
+install.packages("remotes")
+remotes::install_github("DangJem/ggchord")
 ```
 
-从 CRAN 安装：
+如已检出本版源码，在仓库根目录使用 `pkgload::load_all(".")`。不声称存在 CRAN 发布。
 
-```r
-install.packages("ggchord")
-```
+## 三种模式
 
-从 GitHub 安装：
-
-```r
-devtools::install_github("DangJem/ggchord")
-```
-
-## 快速开始
-
-包内自带三份示例数据，直接运行以下代码即可：
+下列为合成教学输入，不代表生物学观测。
 
 ```r
 library(ggchord)
-
-# 加载内置示例数据
-data(seq_data_example)
-data(ribbon_data_example)
-data(gene_data_example)
-
-# 像 ggplot2 一样叠加图层
-ggchord(
-  seq_data     = seq_data_example,
-  ribbon_data  = ribbon_data_example,
-  gene_data    = gene_data_example
-) +
-  geom_seq() +      # 序列弧线
-  geom_link_ribbon() +   # 比对连接带
-  geom_gene() +     # 基因注释
-  geom_axis()       # 位置坐标轴
+seqs <- data.frame(accver = c("A", "B", "C"), length = c(1000, 800, 1200))
+links <- data.frame(qaccver = c("A", "B"), saccver = c("B", "C"),
+  qstart = c(100, 200), qend = c(350, 500),
+  sstart = c(150, 400), send = c(400, 700), pident = c(96, 89))
+genes <- data.frame(accver = c("A", "B", "C"),
+  start = c(150, 200, 400), end = c(300, 350, 650),
+  strand = c("+", "+", "-"), anno = c("target", "target", "target"))
 ```
 
-![使用全部默认参数的弦图](man/figures/combined_default.png)
+```r
+p_chord <- ggchord(seqs, links, genes) +
+  geom_seq() + geom_link_ribbon() + geom_gene() + geom_seq_label() +
+  coord_chord()
+```
 
-核心思想就一句话：**数据交给 `ggchord()`，样式交给各图层**。
+```r
+features <- data.frame(accver = "A", start = c(80, 380, 700),
+  end = c(280, 610, 850), strand = c("+", "-", "."),
+  type = c("CDS", "CDS", "region"), label = c("alpha", "beta", "origin"))
+p_circular <- ggchord(seqs[1, ]) + geom_seq() +
+  geom_feature(data = features) +
+  geom_feature_label_repel(data = features) + coord_circular() +
+  theme_ggchord(axis = element_blank())
+```
 
-## 延伸阅读
+```r
+p_collinear <- ggchord(seqs, links, genes) +
+  geom_link_ribbon(alpha = .3) + geom_seq() +
+  geom_gene(position = position_strand(.1)) + geom_seq_label() +
+  coord_collinear(anchor = genes[c("accver", "start", "end")],
+    align = "center", orientation = "auto")
+```
 
-| 需求 | 资源 |
-| --- | --- |
-| 完整教程：数据准备、导入、校验、清理、示例与灵活参数格式 | [**ggchord 教程**](https://dangjem.github.io/ggchord/articles/ggchord_vignette.html)（[源文件](vignettes/ggchord_vignette.Rmd)） |
-| 汉语完整使用指南 | [**ggchord 汉语指南**](https://dangjem.github.io/ggchord/articles/ggchord_guide_hans.html)（[源文件](vignettes/ggchord_guide_hans.Rmd)） |
-| 完整的函数与参数参考 | [**函数参考**](https://dangjem.github.io/ggchord/reference/index.html) |
-| 版本更新记录 | [**NEWS.md**](NEWS.md) |
+| Chord / 弦图 | Circular / 圆图 | Collinear / 共线性图 |
+| --- | --- | --- |
+| ![Chord](man/figures/chord.png) | ![Circular](man/figures/circular.png) | ![Collinear](man/figures/collinear.png) |
 
-## 贡献与反馈
+`aes()` 映射数据，`scale_*()` 定义映射和图例，geom 定义几何与固定样式，Position 负责局部放置，coord 负责全局坐标，theme 负责非数据外观。
 
-欢迎通过 [GitHub Issues](https://github.com/DangJem/ggchord/issues) 提交 Bug 报告与功能建议，也欢迎提交 Pull Request。
+## 预览与保存
 
-## 许可证
+RStudio Plots 会按面板尺寸重新排列标签。按相同显式宽高预览并保存：
 
-本项目基于 MIT 许可证发布，详见 [LICENSE](LICENSE) 文件。
+```r
+view_ggchord(p_collinear, width = 8, height = 5, units = "in")
+ggsave("comparison.png", p_collinear, width = 8, height = 5, units = "in", dpi = 144)
+```
+
+## 继续阅读
+
+- [完整教程](vignettes/ggchord_guide_hans.Rmd)：安装 → 数据 → 最小出图 → 常用调整 → 进阶 → FAQ。
+- [迁移指南](MIGRATION-Hans.md)与 [NEWS](NEWS.md)。
+- [本地网站构建与预览](website/README.md)，含函数分类、术语、图集与部署方案。
+
+[Issues](https://github.com/DangJem/ggchord/issues) · [MIT license](LICENSE)

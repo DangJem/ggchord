@@ -12,7 +12,7 @@ read_fasta_lengths(
 )
 }
 \arguments{
-\item{file}{Optional path vector or glob patterns; read before `files`.}
+\item{file}{Optional path vector or glob patterns; read before \code{files}.}
 
 \item{files}{Optional character vector of FASTA files (literal paths and/or
 wildcard patterns). All matched files are read and combined.}
@@ -20,17 +20,17 @@ wildcard patterns). All matched files are read and combined.}
 \item{header_delim}{Optional character. When given, each header is split at
 every occurrence of this delimiter and only the first piece is kept.}
 
-\item{source_file}{Logical. Add a `.source_file` column when reading one or
-more files, default `FALSE`.}
+\item{source_file}{Logical. Add a \code{.source_file} column when reading one or
+more files, default \code{FALSE}.}
 }
 \value{
-A data.frame with columns `accver` and `length`.
-  A `ggchord_import` attribute records files and per-file output row counts.
+A data.frame with columns \code{accver} and \code{length}.
+A \code{ggchord_import} attribute records files and per-file output row counts.
 }
 \description{
-`file` reads a single FASTA file; `files` reads multiple files at once and
-combines them. `files` accepts a character vector of literal paths and/or
-wildcard patterns (e.g. `"examples/fasta/*.fna"`).
+\code{file} reads a single FASTA file; \code{files} reads multiple files at once and
+combines them. \code{files} accepts a character vector of literal paths and/or
+wildcard patterns (e.g. \code{"examples/fasta/*.fna"}).
 }
 \examples{
 library(ggchord)

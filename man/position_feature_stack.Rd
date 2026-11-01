@@ -17,14 +17,14 @@ label corridor and reserves at least one label track between deeper
 overlapping feature lanes.}
 
 \item{side}{Legacy track-side selector retained for compatibility when
-`base_position` is `NULL`. Its historical names retain their existing
+\code{base_position} is \code{NULL}. Its historical names retain their existing
 geometry.}
 
 \item{base_position}{Optional identity, strand, or plasmid Position applied
 before interval-overlap detection and lane allocation.}
 }
 \value{
-A ggplot2 Position object for `geom_gene()` or `geom_feature()`.
+A ggplot2 Position object for \code{geom_gene()} or \code{geom_feature()}.
 }
 \description{
 Assigns overlapping intervals on the same sequence and side to radial lanes.
@@ -33,6 +33,6 @@ length. Every interval takes the nearest collision-free lane; feature type,
 name and colour never choose a lane.
 The resulting anchors are shared with gene label layers because stacking is
 solved before polygons and labels are generated.
-In [coord_collinear()], these local lanes become parallel horizontal bands;
+In \code{\link[=coord_collinear]{coord_collinear()}}, these local lanes become parallel horizontal bands;
 they do not represent circular physical tracks or radii.
 }

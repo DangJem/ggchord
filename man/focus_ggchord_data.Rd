@@ -14,31 +14,31 @@ focus_ggchord_data(
 )
 }
 \arguments{
-\item{seq_data}{Sequence table containing `accver` and `length`.}
+\item{seq_data}{Sequence table containing \code{accver} and \code{length}.}
 
 \item{ribbon_data}{Optional ggchord alignment table.}
 
 \item{gene_data}{Optional gene or feature table.}
 
-\item{loci}{Data frame containing `accver`, `start`, and `end`, and
-optionally `locus_id`.}
+\item{loci}{Data frame containing \code{accver}, \code{start}, and \code{end}, and
+optionally \code{locus_id}.}
 
 \item{expand}{Non-negative number of bases added on both sides, scalar or
 one value per locus.}
 
-\item{boundary}{Boundary policy. `"trim"` clips partially overlapping genes
-and alignments; `"drop"` keeps only rows fully contained in selected loci.}
+\item{boundary}{Boundary policy. \code{"trim"} clips partially overlapping genes
+and alignments; \code{"drop"} keeps only rows fully contained in selected loci.}
 }
 \value{
-A list of focused `seq_data`, `ribbon_data`, `gene_data`, normalized
-  `loci`, and a compact `report` including retained/dropped source rows and
-  truncated output rows. `.source_origin` is the original genomic position
-  corresponding to local position one, including after repeated focusing.
+A list of focused \code{seq_data}, \code{ribbon_data}, \code{gene_data}, normalized
+\code{loci}, and a compact \code{report} including retained/dropped source rows and
+truncated output rows. \code{.source_origin} is the original genomic position
+corresponding to local position one, including after repeated focusing.
 }
 \description{
 Crops sequence, gene and ribbon tables together and relocates retained
 coordinates to start at one in each output locus. Multiple loci from the
-same source sequence are supported; provide a unique `locus_id` column to
+same source sequence are supported; provide a unique \code{locus_id} column to
 control their output sequence IDs.
 Segmented annotations, cleavage positions and cached feature runs are
 cropped and relocated together. Source intervals, source origins and

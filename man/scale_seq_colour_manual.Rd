@@ -10,7 +10,7 @@ scale_seq_colour_manual(..., values)
 scale_seq_color_manual(..., values)
 }
 \arguments{
-\item{...}{Arguments passed to [ggplot2::scale_colour_manual()].}
+\item{...}{Arguments passed to \code{\link[ggplot2:scale_colour_manual]{ggplot2::scale_colour_manual()}}.}
 
 \item{values}{A set of aesthetic values to map data values to.}
 }

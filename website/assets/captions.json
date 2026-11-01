@@ -1,0 +1,26 @@
+{
+  "chord": {
+    "en": "Chord comparison of three synthetic sequences",
+    "zh": "三条合成序列的弦图比较"
+  },
+  "circular": {
+    "en": "Circular annotation with known and unknown strands",
+    "zh": "包含已知链与未知链注释的单序列圆图"
+  },
+  "collinear": {
+    "en": "Anchored linear sequence comparison",
+    "zh": "按锚点对齐的直线序列比较"
+  },
+  "tracks": {
+    "en": "Synthetic signal in an explicit quantitative track",
+    "zh": "显式定量轨道中的合成信号"
+  },
+  "focus": {
+    "en": "Focused comparisons with source-coordinate axes",
+    "zh": "带源坐标轴的局部序列比较"
+  },
+  "labels": {
+    "en": "Automatic labels on a linear gene comparison",
+    "zh": "直线基因比较的自动标签"
+  }
+}

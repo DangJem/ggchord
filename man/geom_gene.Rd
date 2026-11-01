@@ -34,9 +34,9 @@ full triangular wedge.}
 \item{short_feature}{Fallback for arrows too short to hold their requested
 head: automatic wedge/block selection, a wedge, or a block.}
 
-\item{position}{Feature placement. Use `"identity"`, `"strand"`,
-`"plasmid"`, [position_strand()], [position_plasmid()], or
-[position_feature_stack()].}
+\item{position}{Feature placement. Use \code{"identity"}, \code{"strand"},
+\code{"plasmid"}, \code{\link[=position_strand]{position_strand()}}, \code{\link[=position_plasmid]{position_plasmid()}}, or
+\code{\link[=position_feature_stack]{position_feature_stack()}}.}
 
 \item{show.legend, inherit.aes}{Standard ggplot2 layer arguments.}
 
@@ -44,7 +44,7 @@ head: automatic wedge/block selection, a wedge, or a block.}
 }
 \value{
 A ggplot2 layer. To annotate the genes with their labels,
-  add a \code{\link{geom_gene_label}()} layer.
+add a \code{\link{geom_gene_label}()} layer.
 }
 \description{
 A directed-gene shortcut using the generic \code{\link{geom_feature}()}

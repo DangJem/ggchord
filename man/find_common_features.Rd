@@ -18,7 +18,7 @@ find_common_features(
 }
 \arguments{
 \item{sequence}{DNA text, a named character vector, or a data frame with
-`accver` and `sequence`.}
+\code{accver} and \code{sequence}.}
 
 \item{database}{Optional normalized database list or custom data frame.}
 
@@ -26,36 +26,36 @@ find_common_features(
 
 \item{circular}{Search across the sequence origin.}
 
-\item{mode}{Matching mode. `"auto"` first uses curated annotations for an
+\item{mode}{Matching mode. \code{"auto"} first uses curated annotations for an
 exactly known sequence, then follows each record's detection mode. Records
-marked `exactProteinMatch` use exact protein followed by near-exact DNA;
-other records use exact DNA. `"protein"` explicitly enables exact and
+marked \code{exactProteinMatch} use exact protein followed by near-exact DNA;
+other records use exact DNA. \code{"protein"} explicitly enables exact and
 approximate protein matching.}
 
 \item{min_protein_identity, min_protein_coverage}{Approximate protein
-thresholds, each one finite number in `[0, 1]`.}
+thresholds, each one finite number in \verb{[0, 1]}.}
 
 \item{resolve}{Return deterministic best annotations or every candidate.}
 }
 \value{
-A data frame directly usable by [geom_feature()] and
-  [geom_feature_label_repel()]. `feature_class` and `feature_shape` provide
-  semantic metadata and a geometry hint; neither affects radial stacking.
-  Explicit user aesthetics and scales still take priority. Its `segments` list-column
-  preserves the biological feature's segment structure.
+A data frame directly usable by \code{\link[=geom_feature]{geom_feature()}} and
+\code{\link[=geom_feature_label_repel]{geom_feature_label_repel()}}. \code{feature_class} and \code{feature_shape} provide
+semantic metadata and a geometry hint; neither affects radial stacking.
+Explicit user aesthetics and scales still take priority. Its \code{segments} list-column
+preserves the biological feature's segment structure.
 }
 \description{
 Searches the built-in common-feature database (or a compatible custom
 database) using curated exact-sequence annotations, exact DNA, and the
 detection mode stored for each database record. Restriction sites are
 intentionally outside this API; use
-[find_restriction_sites()] for those.
+\code{\link[=find_restriction_sites]{find_restriction_sites()}} for those.
 Protein matching uses a standard-code six-frame translation, without
 alternative initiation, splicing or origin-crossing protein matches.
-Source `geneticCode` metadata does not select a translation table. For
-nonstandard codes use `mode = "dna"` or external code-aware analysis.
-`confidence` is a deterministic heuristic label, not a probability or
-experimental confirmation. `identity` and `coverage` describe the reported
+Source \code{geneticCode} metadata does not select a translation table. For
+nonstandard codes use \code{mode = "dna"} or external code-aware analysis.
+\code{confidence} is a deterministic heuristic label, not a probability or
+experimental confirmation. \code{identity} and \code{coverage} describe the reported
 match method, not independently validated biological function.
 }
 \seealso{

@@ -35,7 +35,7 @@ scale_ribbon_fill_identity(...)
 \item{values}{Manual values, or positions for gradient colours where
 supported by the corresponding ggplot2 scale.}
 
-\item{guide}{A guide object; defaults accept the `ribbon_fill` aesthetic.}
+\item{guide}{A guide object; defaults accept the \code{ribbon_fill} aesthetic.}
 }
 \value{
 A ggplot2 scale.

@@ -15,9 +15,9 @@ A ggplot2 Position object.
 }
 \description{
 Positive signed offsets point away from the plot centre and negative
-offsets point inward.  A scalar is expanded to `+ = offset` and
-`- = -offset`; explicitly strand-named values are already signed and are
+offsets point inward.  A scalar is expanded to \verb{+ = offset} and
+\verb{- = -offset}; explicitly strand-named values are already signed and are
 not flipped again.
-In [coord_collinear()], the positive local normal points upward and the
+In \code{\link[=coord_collinear]{coord_collinear()}}, the positive local normal points upward and the
 negative local normal downward, regardless of sequence orientation.
 }
