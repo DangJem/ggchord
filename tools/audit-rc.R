@@ -109,10 +109,38 @@ write(migrations[c("function_name", "old_entry", "entry_kind", "current_status",
   "removed_by_version", "first_removed_version", "rejection_change_version", "guard", "decision", "review")], "migrations")
 compat <- read("compatibility")
 compat$rc_evidence <- "NOT_RUN_IN_RC; inherited source contract / finite evidence retained"
+behavior_file <- file.path(out, "rc-behavior-v0.16.6.csv")
+if (file.exists(behavior_file)) {
+  behavior <- read.csv(behavior_file)
+  scenes <- list(
+    layers = list(coord = "coord_chord", layers = c("geom_seq", "geom_gene", "geom_feature", "geom_link_ribbon", "geom_link_line")),
+    circular = list(coord = "coord_circular", layers = c("geom_seq", "geom_feature", "geom_feature_label_repel", "geom_primer", "geom_primer_label_repel", "geom_restriction_site")),
+    linear = list(coord = "coord_collinear", layers = c("geom_seq", "geom_feature", "geom_feature_label_repel", "geom_link_ribbon")),
+    labels = list(coord = "coord_chord", layers = "geom_gene_label_repel"),
+    output = list(coord = "coord_circular", layers = "geom_track_bar"))
+  for (case in names(scenes)) if (any(behavior$case == case & behavior$status == "PASS_FINITE")) {
+    scene <- scenes[[case]]
+    selected <- compat$coordinate == scene$coord & compat$layer %in% scene$layers
+    compat$rc_evidence[selected] <- paste0("FINITE_SCENE_ONLY: tools/validate-rc.R ", case,
+      "; rc-behavior-v0.16.6.csv; not all parameters or platforms")
+  }
+}
 write(compat, "compatibility")
+for (family in c("data", "engine")) {
+  file <- paste0(family, "-return-contracts-v0.16.", if (family == "data") "2" else "3", ".csv")
+  fields <- read.csv(file.path(out, file), na.strings = character())
+  fields$baseline <- file
+  fields$current_review <- "RETAIN_DOCUMENTED_FIELDS; R/data-* or layout-export/layout-contract/diagnostics/zzz; source contract, not exhaustive runtime"
+  write(fields, paste0(family, "-fields"))
+}
 inputs <- sort(unique(c(list.files("R", "[.]R$", full.names = TRUE),
   list.files("man", "[.]Rd$", full.names = TRUE), "DESCRIPTION", "NAMESPACE", "NEWS.md",
-  "tools/audit-rc.R", list.files(out, "^candidate-.*[.]csv$", full.names = TRUE))))
+  list.files("data", "[.]rda$", full.names = TRUE), "R/sysdata.rda",
+  list.files("examples/blastn-standard", "[.]tsv$", full.names = TRUE),
+  c("tools/audit-rc.R", "tools/audit-rc-support.R", "tools/validate-rc.R",
+    "tools/validate-rc-formats.R", "tools/benchmark-rc.R", "tools/render-rc.R", "tools/rc-fixtures.R"),
+  c("tests/testthat/test-radial-geometry.R", "tests/testthat/test-single-genome.R"),
+  list.files(out, "^candidate-.*[.]csv$", full.names = TRUE))))
 write(data.frame(path = inputs, md5 = unname(tools::md5sum(inputs)),
   revision = revision, state = "HEAD plus file hashes; working bytes, not behavior evidence"), "source-hashes")
 cat(length(exports), "exports;", nrow(parameters), "parameters;", nrow(aesthetics),

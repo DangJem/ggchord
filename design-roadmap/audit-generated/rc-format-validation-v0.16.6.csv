@@ -1,0 +1,2 @@
+"case","status","detail","source","R","ggplot2"
+"named_reordering_and_nested_strands","PASS_FINITE","Named radius follows accver across reversal; one nested strand width/offset composes with all true gene rows; other forms source-reviewed, not enumerated","R/helpers_params.R; R/position-feature.R; tools/validate-rc-formats.R","R version 4.6.0 (2026-04-24)","4.0.3"
