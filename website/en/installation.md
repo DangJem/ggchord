@@ -14,15 +14,14 @@ Skip installation if ggchord is already installed and loads successfully.
 
 ```r
 install.packages("remotes")
-remotes::install_github("DangJem/ggchord")
+remotes::install_github("DangJem/ggchord@v0.16.5")
 library(ggchord)
 packageVersion("ggchord")
 ```
 
 ### Which version are you using? {#source}
-This site describes the local **0.16.5 development version**; the latest formal release remains 0.15.0.
-GitHub installation uses the remote repository and cannot include local changes that have not been pushed.
-If you have this version's source checkout, run from its repository root:
+This tutorial documents **ggchord 0.16.5**. The installation above pins its formal tag; see [GitHub Releases](https://github.com/DangJem/ggchord/releases/tag/v0.16.5) for release assets.
+For a source checkout, run from its repository root:
 
 ```r
 install.packages("pkgload")
@@ -104,7 +103,7 @@ view_ggchord(p_first, width = 10, height = 5, units = "in")
 | Symptom | Check first |
 | --- | --- |
 | `first_sequences` or `p_first` is missing | Run the blocks in order from step 2, rather than copying only the last line |
-| A function is unavailable | Check that the loaded development version matches this tutorial with `packageVersion()` |
+| A function is unavailable | Check that the loaded version matches this tutorial with `packageVersion()` |
 | Links are missing | Check that both IDs occur in the sequence table and that the selected link table is nonempty |
 | The plot is small or labels differ | Preview at the explicit 10 × 5 in size; see [output and sizing](output.html) |
 | You cannot find the saved file | Check the working directory with `getwd()` |

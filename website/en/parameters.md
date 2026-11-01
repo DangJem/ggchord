@@ -1,5 +1,7 @@
 <div class="task-intro"><p>Adjust geometry by sequence or strand, retaining useful flexible parameter formats while making their scope explicit.</p></div>
 
+Previously described as “flexible parameter formats”, this feature configures geometry per sequence or strand.
+
 ## Prepare this page {#prepare}
 In a fresh R session, run the code below, then follow this page in order. Colours and layout are optional display choices; inputs select only the fields needed.
 

@@ -1,12 +1,12 @@
 [English](README.md) · [现代汉语](README-Hans.md)
 
-<img src="man/figures/logo.png" alt="ggchord" width="150" align="right">
+<img src="man/figures/logo.png" alt="ggchord" width="200" align="right">
 
 # ggchord: chord, circular and collinear sequence plots
 
 An R package built on ggplot2. Combine independent layers for sequence backbones, interval links, genes, general features, labels and quantitative tracks.
 
-This README describes the local **0.16.5 development version, based on the 0.16.4 candidate API**. The latest formal release remains 0.15.0. The new website source has not been deployed.
+This README documents **ggchord 0.16.5**. Read the migration guide when updating older code; formal release assets are listed on GitHub Releases.
 
 ## Install
 
@@ -14,7 +14,7 @@ R ≥ 4.1.0 · ggplot2 ≥ 4.0.0
 
 ```r
 install.packages("remotes")
-remotes::install_github("DangJem/ggchord")
+remotes::install_github("DangJem/ggchord@v0.16.5")
 ```
 
 For a checkout of this version, use `pkgload::load_all(".")` from its root. A CRAN release is not claimed.

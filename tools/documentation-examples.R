@@ -245,16 +245,17 @@ plasmid_sites <- find_restriction_sites(plasmid_example_pUC19)
 display_sites <- filter_restriction_sites(plasmid_sites, enzymes = c("EcoRI", "BamHI", "HindIII"))
 primer_names <- primer_catalog(set = "universal")
 # ---- plasmid ----
-plasmid_position <- position_feature_stack(spacing = .085, base_position = position_plasmid())
+plasmid_position <- position_feature_stack(spacing = .10, base_position = position_plasmid())
 p_plasmid <- ggchord(seq_data = plasmid_seq) + geom_seq(seq_style = "double") +
   geom_feature_plasmid(aes(feature_fill = type), data = plasmid_features, position = plasmid_position) +
   geom_feature_label_repel(data = plasmid_features, position = plasmid_position,
-    label_fit = "shrink", label_min_size = 2.4, size = 4) +
+    size = 4) +
   geom_primer(data = plasmid_primers, colour = "#168F86") +
   geom_primer_label_repel(data = plasmid_primers, colour = "#167F80", max_overlaps = 0, size = 3) +
-  geom_restriction_site(data = display_sites, colour = "#29364B", label_size = 3) + geom_seq_center_label() +
+  geom_restriction_site(data = display_sites, colour = "#29364B", label_size = 3, leader = "radial") + geom_seq_center_label() +
   scale_feature_fill_manual(values = feature_palette) +
-  coord_circular(rotation = 90) + theme_ggchord_publication(axis.text = element_text(size = 11))
+  scale_seq_position_continuous() +
+  coord_circular(rotation = 90) + theme_ggchord_plasmid()
 p_plasmid
 # ---- cleaning ----
 # Deliberately corrupt copies to demonstrate diagnostics; original rows remain intact.

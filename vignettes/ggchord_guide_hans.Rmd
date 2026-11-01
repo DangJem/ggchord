@@ -13,7 +13,7 @@ vignette: >
 knitr::opts_chunk$set(eval = FALSE, collapse = TRUE, comment = "#>")
 ```
 
-<img src="../man/figures/logo.png" alt="ggchord" width="150">
+<img src="../man/figures/logo.png" alt="ggchord" width="200">
 
 本教程与英语教程、网站从同一组来源生成。vignette 渲染时只展示代码，不自动执行；共享文档脚本直接验证相关例子。示例优先使用随包数据和有来源的原始记录；人为构造的诊断错误会明确标注。每章提供本页准备代码；第一次使用请从首图教程开始。
 
@@ -36,14 +36,14 @@ knitr::opts_chunk$set(eval = FALSE, collapse = TRUE, comment = "#>")
 
 ```{r example-1, eval=FALSE}
 install.packages("remotes")
-remotes::install_github("DangJem/ggchord")
+remotes::install_github("DangJem/ggchord@v0.16.5")
 library(ggchord)
 packageVersion("ggchord")
 ```
 
 #### 你正在使用哪个版本？ {#installation-source}
-本网站介绍本地 **0.16.5 开发版本**；当前正式发布版仍是 0.15.0。GitHub 安装得到远端仓库的版本，
-不会自动包含尚未推送的本地修改。如果你正在使用本版源码 checkout，在仓库根目录运行：
+本教程对应 **ggchord 0.16.5**。上面的安装命令固定到该版本的正式标签；发布资产可在 [GitHub Releases](https://github.com/DangJem/ggchord/releases/tag/v0.16.5) 查阅。
+如果你使用的是源码 checkout，在仓库根目录运行：
 
 ```{r example-2, eval=FALSE}
 install.packages("pkgload")
@@ -156,7 +156,7 @@ view_ggchord(p_first, width = 10, height = 5, units = "in")
 | 现象 | 先检查什么 |
 | --- | --- |
 | 找不到 `first_sequences` 或 `p_first` | 是否从本页第 2 步开始依次运行，而非只复制最后一行 |
-| 提示没有某个函数 | 是否加载了与本教程对应的开发版本；先查看 `packageVersion()` |
+| 提示没有某个函数 | 是否加载了与本教程对应的版本；先查看 `packageVersion()` |
 | 没有连接 | 两端 ID 是否都出现在序列表，筛选后连接表是否为空 |
 | 图很小或文字布局不同 | 先按上面的 10 × 5 in 尺寸预览，见[输出与尺寸](#output) |
 | 保存后找不到图片 | 用 `getwd()` 确认当前工作目录 |
@@ -745,16 +745,17 @@ primer_names <- primer_catalog(set = "universal")
 
 
 ```{r example-31, eval=FALSE}
-plasmid_position <- position_feature_stack(spacing = .085, base_position = position_plasmid())
+plasmid_position <- position_feature_stack(spacing = .10, base_position = position_plasmid())
 p_plasmid <- ggchord(seq_data = plasmid_seq) + geom_seq(seq_style = "double") +
   geom_feature_plasmid(aes(feature_fill = type), data = plasmid_features, position = plasmid_position) +
   geom_feature_label_repel(data = plasmid_features, position = plasmid_position,
-    label_fit = "shrink", label_min_size = 2.4, size = 4) +
+    size = 4) +
   geom_primer(data = plasmid_primers, colour = "#168F86") +
   geom_primer_label_repel(data = plasmid_primers, colour = "#167F80", max_overlaps = 0, size = 3) +
-  geom_restriction_site(data = display_sites, colour = "#29364B", label_size = 3) + geom_seq_center_label() +
+  geom_restriction_site(data = display_sites, colour = "#29364B", label_size = 3, leader = "radial") + geom_seq_center_label() +
   scale_feature_fill_manual(values = feature_palette) +
-  coord_circular(rotation = 90) + theme_ggchord_publication(axis.text = element_text(size = 11))
+  scale_seq_position_continuous() +
+  coord_circular(rotation = 90) + theme_ggchord_plasmid()
 p_plasmid
 ```
 
@@ -766,6 +767,11 @@ p_plasmid
 | 精确引物命中记录数 | 6 |
 | 酶条目匹配记录数（非独立位置数） | 49845 |
 | 选定显示的酶切记录数 | 3 |
+
+混合的圈外标签按锚点顺序共同排版，包括少量酶切标签与引物共存的情况。
+本例使用质粒专用主题和默认 feature 适配；默认先尝试内部文字，再使用相邻或
+外侧位置。不要通过不断缩小文字或强制手动偏移掩盖交叉；请在相同导出尺寸下检查。
+
 
 原始注释保留在 `plasmid_feature_source`。显示表去掉 `primer_bind` 注释，交由独立
 引物层表达，避免重复；注释层只接收几何、类型和注释文字。
@@ -948,6 +954,8 @@ doc_axis <- function(coordinates = "relative") scale_seq_position_continuous(
 ```
 
 </details>
+
+旧版称为“灵活的参数格式”。本页用“按序列和链设置参数”明确其用途与边界。
 
 ### 这个能力仍然保留 {#parameters-recommendation}
 同一图里常要单独调整某条序列，或分别调整正负链。为这些几何参数保留简洁的

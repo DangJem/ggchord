@@ -1,12 +1,12 @@
 [English](README.md) · [现代汉语](README-Hans.md)
 
-<img src="man/figures/logo.png" alt="ggchord" width="150" align="right">
+<img src="man/figures/logo.png" alt="ggchord" width="200" align="right">
 
 # ggchord：弦图、圆图与共线性图
 
 基于 ggplot2 的 R 包。用独立图层组合序列骨架、区间连接、基因、通用注释、标签和定量轨道。
 
-这里展示**0.16.5 开发版本（基于 0.16.4 候选 API）**，当前正式发布版仍为 0.15.0。源码中的新网站尚未部署。
+本说明对应 **ggchord 0.16.5**。从旧版本迁移时，请先阅读迁移指南；正式发布资产见 GitHub Releases。
 
 ## 安装
 
@@ -14,7 +14,7 @@ R ≥ 4.1.0 · ggplot2 ≥ 4.0.0
 
 ```r
 install.packages("remotes")
-remotes::install_github("DangJem/ggchord")
+remotes::install_github("DangJem/ggchord@v0.16.5")
 ```
 
 如已检出本版源码，在仓库根目录使用 `pkgload::load_all(".")`。不声称存在 CRAN 发布。

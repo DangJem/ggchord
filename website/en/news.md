@@ -1,6 +1,6 @@
 ## Current version {#status}
-The formal release remains 0.15.0. These local 0.16.5 development docs have not
-been deployed or released; 0.16.0–0.16.4 also remain unreleased local development.
+These pages document **ggchord 0.16.5**, including cumulative changes from the 0.16.0–0.16.4 development phases.
+Consult [GitHub Releases](https://github.com/DangJem/ggchord/releases) for formal tags, assets and publication dates.
 
 ## Changes in this version {#changes}
 - Reorganized learning, complete workflows, task guides and reference entry points. The first-plot lesson covers installation, minimal inputs, interpretation, saving and troubleshooting; task pages prepare their own objects.

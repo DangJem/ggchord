@@ -46,7 +46,7 @@ test_that("region, feature and point-link layers retain their source rows", {
 })
 
 test_that("independent ribbon layers retain their data and manual styles", {
-  first <- smoke_ribbon()
+  first <- transform(smoke_ribbon(), pident = 95)
   second <- transform(first, qstart = 500, qend = 600)
   p <- ggchord(smoke_sequences()) + geom_seq() +
     geom_link_ribbon(aes(ribbon_alpha = pident), data = first, fill = "orange") +

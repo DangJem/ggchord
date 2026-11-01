@@ -1,10 +1,10 @@
 # ggchord 文档网站源 / Documentation source
 
-本地开发版本 0.16.5，API 基线为 0.16.4；**尚未部署**。正式发布版仍是 0.15.0。
+文档版本 0.16.5，API 基线为 0.16.4。实际发布与部署状态以 GitHub Release/Actions 为准。
 冻结的 `docs/` 保持原样。网站生成物不作为当前 R 接口的事实来源。
 
-Local development documentation for 0.16.5, based on the 0.16.4 candidate API.
-**Not deployed.** The formal release remains 0.15.0. Frozen `docs/` is untouched.
+Documentation for 0.16.5, based on the 0.16.4 candidate API.
+Consult GitHub Releases/Actions for publication and deployment status. Frozen `docs/` is untouched.
 
 ## 生成基础 / Generator
 

@@ -30,7 +30,7 @@ vignette: >
 knitr::opts_chunk$set(eval = FALSE, collapse = TRUE, comment = "#>")
 ```
 
-<img src="../man/figures/logo.png" alt="ggchord" width="150">
+<img src="../man/figures/logo.png" alt="ggchord" width="200">
 
 {intro}
 
@@ -80,15 +80,15 @@ def readme(lang):
     title = 'ggchord：弦图、圆图与共线性图' if zh else 'ggchord: chord, circular and collinear sequence plots'
     intro = ('基于 ggplot2 的 R 包。用独立图层组合序列骨架、区间连接、基因、通用注释、标签和定量轨道。'
         if zh else 'An R package built on ggplot2. Combine independent layers for sequence backbones, interval links, genes, general features, labels and quantitative tracks.')
-    status = ('这里展示**0.16.5 开发版本（基于 0.16.4 候选 API）**，当前正式发布版仍为 0.15.0。源码中的新网站尚未部署。'
-        if zh else 'This README describes the local **0.16.5 development version, based on the 0.16.4 candidate API**. The latest formal release remains 0.15.0. The new website source has not been deployed.')
+    status = ('本说明对应 **ggchord 0.16.5**。从旧版本迁移时，请先阅读迁移指南；正式发布资产见 GitHub Releases。'
+        if zh else 'This README documents **ggchord 0.16.5**. Read the migration guide when updating older code; formal release assets are listed on GitHub Releases.')
     install = '安装' if zh else 'Install'
     quick = '三种模式' if zh else 'Three views'
     sizing = '预览与保存' if zh else 'Preview and save'
     onwards = '继续阅读' if zh else 'Continue'
     text = f'''[English](README.md) · [现代汉语](README-Hans.md)
 
-<img src="man/figures/logo.png" alt="ggchord" width="150" align="right">
+<img src="man/figures/logo.png" alt="ggchord" width="200" align="right">
 
 # {title}
 
@@ -102,7 +102,7 @@ R ≥ 4.1.0 · ggplot2 ≥ 4.0.0
 
 ```r
 install.packages("remotes")
-remotes::install_github("DangJem/ggchord")
+remotes::install_github("DangJem/ggchord@v0.16.5")
 ```
 
 '''

@@ -1,4 +1,17 @@
-# ggchord 0.16.5 (unreleased)
+# ggchord 0.16.5
+
+* Sparse circular maps containing primers and restriction labels now use the
+  shared root-ordered exterior allocator, preventing mixed-class leader
+  crossings even below the former 30-site density threshold. The documentation
+  plasmid workflow uses its dedicated theme and default feature fitting.
+* Restored the roxygen export declaration for `geom_feature_label_repel()`,
+  corrected the CDS link-projection example to use feature IDs, and completed
+  argument documentation for the selected ggplot2 re-exports.
+
+* Includes cumulative implementation and migration changes from the unreleased
+  0.16.0–0.16.4 development phases listed below.
+* Enlarged the home-page artwork to 320 px on desktop and 220 px on mobile,
+  and README/tutorial entry artwork to 200 px, retaining the lossless source.
 
 * Reorganized the documentation around first-use learning, complete workflows,
   task guides and reference lookup. The first-plot lesson now covers installation,
@@ -38,8 +51,8 @@
   disclosure, executable-text copy controls and light/dark themes. Expanded real-record and pUC19 workflows,
   formats/adapters, links/statistics, feature stacking, labels, multiple tracks,
   projection/homology, scales/guides and result consumption. Source CI and a manual preview/deployment workflow
-  keep generated output separate from main. Frozen `docs/` and the live site are
-  unchanged; no deployment or formal release is implied.
+  keep generated output separate from main. Website cutover uses GitHub Pages
+  Actions after explicit deployment authorization.
 * Documentation figures now share explicit ggsave dimensions and an asset/hash
   manifest across languages. Retired unreferenced source figures were removed
   after checking references; frozen website assets remain intact.

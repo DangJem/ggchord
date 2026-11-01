@@ -24,6 +24,9 @@ Add the backbone, annotations, labels, primers and restriction sites in that ord
 {{figure:plasmid}}
 {{results:plasmid}}
 
+Mixed exterior annotations share root-ordered placement, including sparse restriction labels beside primers. This example uses the dedicated plasmid theme and default feature fitting: internal text is tried before adjacent/external placement. Inspect at the final export dimensions instead of hiding crossings by shrinking text or forcing offsets.
+
+
 The original annotation table is retained in `plasmid_feature_source`. Dedicated
 primer layers replace duplicate `primer_bind` annotations in the displayed feature
 table; only geometry, type and annotation text are passed to feature layers.

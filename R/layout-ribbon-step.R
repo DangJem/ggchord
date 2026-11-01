@@ -173,7 +173,7 @@ ggchord_layout_ribbon_step <- function(
         }
         result <- front(positions)
         if (ribbon_gap_auto && link_avoid == "smooth" && ggchord_front_invalid(result$xy,result$baseline)) {
-          positions <- sort(unique(c(positions, (head(positions,-1)+tail(positions,-1))/2)),
+          positions <- sort(unique(c(positions, (utils::head(positions,-1)+utils::tail(positions,-1))/2)),
     decreasing=end<start)
           result <- front(positions)
           if (ggchord_front_invalid(result$xy,result$baseline)) {

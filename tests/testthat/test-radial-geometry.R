@@ -24,9 +24,11 @@ test_that("nested measurements preserve the caller graphics device", {
   p <- ggchord(smoke_sequences(), gene_data = smoke_genes(),
                validate = "none") +
     geom_seq() + geom_gene() + geom_gene_label_repel()
+  before <- get_chord_layout(p)
   view_ggchord(p, viewer = "none")
   expect_identical(grDevices::dev.cur(), caller)
-  expect_gt(nrow(get_chord_layout(p, build = FALSE)$gene_labels), 0L)
+  expect_identical(get_chord_layout(p, build = FALSE)$gene_labels$label,
+    before$gene_labels$label)
 })
 
 
@@ -66,4 +68,33 @@ test_that("reversed orientation keeps leaders on their requested side", {
                                                 layout$seq_arcs)
   expect_true(all(frame$signed_distance > 0))
   expect_equal(count_radial_crossings(layout$gene_label_segments), 0L)
+})
+
+test_that("sparse restriction and primer leaders share circular root order", {
+  s <- plasmid_example_pUC19
+  primers <- find_primer_bindings(s, set = "universal")
+  sites <- filter_restriction_sites(find_restriction_sites(s),
+    enzymes = c("EcoRI", "BamHI", "HindIII"))
+  p <- ggchord(s[c("accver", "length")]) + geom_seq() +
+    geom_primer(data = primers) + geom_primer_label_repel(data = primers) +
+    geom_restriction_site(data = sites) + coord_circular(rotation = 90)
+  l <- get_chord_layout(p)
+  paths <- list()
+  for (id in names(l$layer_geometry)) {
+    layer <- l$layer_geometry[[id]]
+    g <- layer$gene_label_repel
+    if (is.data.frame(g)) {
+      g <- g[g$.component == "segment", ]
+      if(nrow(g)) paths[[length(paths)+1L]] <- data.frame(x0=g$x,y0=g$y,
+        x1=g$xend,y1=g$yend,group=paste(id,g$source_row))
+    }
+    g <- layer$restriction_site
+    if (is.data.frame(g)) for (source in unique(g$source_row)) {
+      z <- g[g$source_row == source & g$restriction_component == "leader", ]
+      if(nrow(z)>1L) paths[[length(paths)+1L]] <- data.frame(
+        x0=head(z$x,-1),y0=head(z$y,-1),x1=tail(z$x,-1),y1=tail(z$y,-1),
+        group=paste(id,source))
+    }
+  }
+  expect_equal(count_radial_crossings(do.call(rbind,paths)),0L)
 })

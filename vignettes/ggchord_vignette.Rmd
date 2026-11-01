@@ -13,7 +13,7 @@ vignette: >
 knitr::opts_chunk$set(eval = FALSE, collapse = TRUE, comment = "#>")
 ```
 
-<img src="../man/figures/logo.png" alt="ggchord" width="150">
+<img src="../man/figures/logo.png" alt="ggchord" width="200">
 
 This paired tutorial is generated from the same sources as the website. Code blocks are shown without executing during vignette rendering; the shared documentation script verifies the examples directly. Examples prefer bundled or source-backed data; deliberate diagnostic errors are labelled. Inputs marked as repository files require the checkout or input bundle. Each chapter provides its own preparation; start with the first-plot lesson.
 
@@ -36,15 +36,14 @@ Skip installation if ggchord is already installed and loads successfully.
 
 ```{r example-1, eval=FALSE}
 install.packages("remotes")
-remotes::install_github("DangJem/ggchord")
+remotes::install_github("DangJem/ggchord@v0.16.5")
 library(ggchord)
 packageVersion("ggchord")
 ```
 
 #### Which version are you using? {#installation-source}
-This site describes the local **0.16.5 development version**; the latest formal release remains 0.15.0.
-GitHub installation uses the remote repository and cannot include local changes that have not been pushed.
-If you have this version's source checkout, run from its repository root:
+This tutorial documents **ggchord 0.16.5**. The installation above pins its formal tag; see [GitHub Releases](https://github.com/DangJem/ggchord/releases/tag/v0.16.5) for release assets.
+For a source checkout, run from its repository root:
 
 ```{r example-2, eval=FALSE}
 install.packages("pkgload")
@@ -158,7 +157,7 @@ view_ggchord(p_first, width = 10, height = 5, units = "in")
 | Symptom | Check first |
 | --- | --- |
 | `first_sequences` or `p_first` is missing | Run the blocks in order from step 2, rather than copying only the last line |
-| A function is unavailable | Check that the loaded development version matches this tutorial with `packageVersion()` |
+| A function is unavailable | Check that the loaded version matches this tutorial with `packageVersion()` |
 | Links are missing | Check that both IDs occur in the sequence table and that the selected link table is nonempty |
 | The plot is small or labels differ | Preview at the explicit 10 × 5 in size; see [output and sizing](#output) |
 | You cannot find the saved file | Check the working directory with `getwd()` |
@@ -781,16 +780,17 @@ Add the backbone, annotations, labels, primers and restriction sites in that ord
 
 
 ```{r example-31, eval=FALSE}
-plasmid_position <- position_feature_stack(spacing = .085, base_position = position_plasmid())
+plasmid_position <- position_feature_stack(spacing = .10, base_position = position_plasmid())
 p_plasmid <- ggchord(seq_data = plasmid_seq) + geom_seq(seq_style = "double") +
   geom_feature_plasmid(aes(feature_fill = type), data = plasmid_features, position = plasmid_position) +
   geom_feature_label_repel(data = plasmid_features, position = plasmid_position,
-    label_fit = "shrink", label_min_size = 2.4, size = 4) +
+    size = 4) +
   geom_primer(data = plasmid_primers, colour = "#168F86") +
   geom_primer_label_repel(data = plasmid_primers, colour = "#167F80", max_overlaps = 0, size = 3) +
-  geom_restriction_site(data = display_sites, colour = "#29364B", label_size = 3) + geom_seq_center_label() +
+  geom_restriction_site(data = display_sites, colour = "#29364B", label_size = 3, leader = "radial") + geom_seq_center_label() +
   scale_feature_fill_manual(values = feature_palette) +
-  coord_circular(rotation = 90) + theme_ggchord_publication(axis.text = element_text(size = 11))
+  scale_seq_position_continuous() +
+  coord_circular(rotation = 90) + theme_ggchord_plasmid()
 p_plasmid
 ```
 
@@ -802,6 +802,9 @@ p_plasmid
 | Exact primer hit records | 6 |
 | Enzyme match records (not distinct positions) | 49845 |
 | Restriction records selected for display | 3 |
+
+Mixed exterior annotations share root-ordered placement, including sparse restriction labels beside primers. This example uses the dedicated plasmid theme and default feature fitting: internal text is tried before adjacent/external placement. Inspect at the final export dimensions instead of hiding crossings by shrinking text or forcing offsets.
+
 
 The original annotation table is retained in `plasmid_feature_source`. Dedicated
 primer layers replace duplicate `primer_bind` annotations in the displayed feature
@@ -970,6 +973,8 @@ A basic link table needs six fields. BLASTp reading retains aa coordinates; use 
 ## Set values by sequence and strand {#parameters}
 
 <div class="task-intro"><p>Adjust geometry by sequence or strand, retaining useful flexible parameter formats while making their scope explicit.</p></div>
+
+Previously described as “flexible parameter formats”, this feature configures geometry per sequence or strand.
 
 ### Prepare this page {#parameters-prepare}
 In a fresh R session, run the code below, then follow this page in order. Colours and layout are optional display choices; inputs select only the fields needed.

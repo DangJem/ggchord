@@ -1,5 +1,5 @@
 <div class="home-intro">
-<img class="package-logo" src="../assets/logo.webp" alt="ggchord" width="150" height="150">
+<img class="package-logo" src="../assets/logo.webp" alt="ggchord" width="320" height="320">
 <p class="eyebrow">GENOMIC VISUALIZATION · R / GGPLOT2</p>
 <p class="home-lead">Make sequence relationships visible.</p>
 <p>Compose <strong>chord comparisons, circular maps and collinear plots</strong> with ggplot2 layers. Turn existing sequences, annotations and alignments into interpretable, reproducible genomic figures.</p>
@@ -56,4 +56,4 @@ ggchord(seq_data = sequences) +
 
 [Get started](installation.html#input) provides independent preparation code: just two sequence fields, four gene fields and six link fields enter the plot. You can draw before learning every layer or handling historical metadata.
 
-Updating older code? Read the [migration guide](migration.html). These pages describe local 0.16.5 development; the formal release remains 0.15.0. See the [version and installation notes](installation.html#source).
+Updating older code? Read the [migration guide](migration.html). These pages document ggchord 0.16.5. See the [version and installation notes](installation.html#source).

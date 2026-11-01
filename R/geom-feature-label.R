@@ -74,6 +74,8 @@ geom_feature_label <- function(
 
 #' Automatically arrange generic feature labels
 #'
+#' @export
+#'
 #' @param label_layout One of `"feature"`, `"radial"`, `"auto"`, or
 #'   `"callout"`. The default `"feature"` follows plasmid-map convention:
 #'   text is tried inside first, then assigned to a fixed-radius internal

@@ -689,12 +689,17 @@ ggchord_share_external_annotations <- function(registry, layout) {
     sum(sites$restriction_component %in% "label" &
       !is.na(sites$label) & nzchar(sites$label))
   }, integer(1L)))
-  if (restriction_count >= 30L && length(layout$seq_arcs) == 1L) {
+  mixed_primers <- restriction_count > 0L && any(vapply(registry, function(layer) {
+    x <- layer$gene_label_repel
+    is.data.frame(x) && "annotation_class" %in% names(x) &&
+      any(x$annotation_class %in% "primer")
+  }, logical(1)))
+  if ((restriction_count >= 30L || mixed_primers) && length(layout$seq_arcs) == 1L) {
     registry <- ggchord_complete_external_leaders(registry)
     dense_tasks <- ggchord_perimeter_tasks(registry, units_per_inch)
     sites <- dense_tasks[dense_tasks$kind == "restriction", ,
       drop = FALSE]
-    if (nrow(sites) >= 30L && all(
+    if (nrow(sites) > 0L && all(
         sqrt(sites$text_x^2 + sites$text_y^2) >=
           sqrt(sites$root_x^2 + sites$root_y^2) - .01)) {
       return(ggchord_place_dense_perimeter(registry, layout,

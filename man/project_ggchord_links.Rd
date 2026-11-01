@@ -43,7 +43,7 @@ coding$phase <- 0
 cds <- build_ggchord_cds(coding, genetic_code = 11)
 # Self-correspondence of one real CDS, solely to demonstrate coordinate conversion.
 # The same observed residues are paired, so the correspondence is ungapped.
-selected <- data.frame(qaccver = coding$feature_id, saccver = coding$feature_id,
+selected <- data.frame(qfeature_id = coding$feature_id, sfeature_id = coding$feature_id,
   qstart = 1, qend = 20, sstart = 1, send = 20)
 project_ggchord_links(selected, cds, ungapped = TRUE)
 }

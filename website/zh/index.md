@@ -1,5 +1,5 @@
 <div class="home-intro">
-<img class="package-logo" src="../assets/logo.webp" alt="ggchord" width="150" height="150">
+<img class="package-logo" src="../assets/logo.webp" alt="ggchord" width="320" height="320">
 <p class="eyebrow">GENOMIC VISUALIZATION · R / GGPLOT2</p>
 <p class="home-lead">让序列关系，清晰可见。</p>
 <p>用 ggplot2 图层组合<strong>弦图、单序列圆图与共线性图</strong>。从已有的序列、注释和比对出发，逐步构建可解释、可复现的基因组图形。</p>
@@ -56,4 +56,4 @@ ggchord(seq_data = sequences) +
 
 [开始使用](installation.html#input)给出独立可运行的准备代码，只将序列两列、基因四列和连接六列传入绘图函数。无需先学习全部图层或整理历史元数据。
 
-已有旧版本代码？先看[迁移指南](migration.html)。当前文档对应本地 0.16.5 开发版；正式发布版仍为 0.15.0，安装差异见[版本说明](installation.html#source)。
+已有旧版本代码？先看[迁移指南](migration.html)。本页对应 ggchord 0.16.5，版本与安装方式见[版本说明](installation.html#source)。

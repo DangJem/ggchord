@@ -137,7 +137,7 @@ read_blast_single <- function(file, format = c("auto", "outfmt6", "outfmt7", "cu
     `[`, character(1), 1L) else lines
   source_line <- which(nzchar(trimws(content)))
   if (!is.null(dots$skip)) source_line <- source_line[source_line > dots$skip]
-  if (!is.null(dots$nrows) && dots$nrows >= 0) source_line <- head(source_line, dots$nrows)
+  if (!is.null(dots$nrows) && dots$nrows >= 0) source_line <- utils::head(source_line, dots$nrows)
   if (!length(source_line)) ggchord_stop("read_blast(): no data rows parsed from ", file)
   widths <- lengths(strsplit(content[source_line], "\t", fixed = TRUE))
   if (length(unique(widths)) != 1L) ggchord_stop(

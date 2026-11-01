@@ -14,14 +14,14 @@
 
 ```r
 install.packages("remotes")
-remotes::install_github("DangJem/ggchord")
+remotes::install_github("DangJem/ggchord@v0.16.5")
 library(ggchord)
 packageVersion("ggchord")
 ```
 
 ### 你正在使用哪个版本？ {#source}
-本网站介绍本地 **0.16.5 开发版本**；当前正式发布版仍是 0.15.0。GitHub 安装得到远端仓库的版本，
-不会自动包含尚未推送的本地修改。如果你正在使用本版源码 checkout，在仓库根目录运行：
+本教程对应 **ggchord 0.16.5**。上面的安装命令固定到该版本的正式标签；发布资产可在 [GitHub Releases](https://github.com/DangJem/ggchord/releases/tag/v0.16.5) 查阅。
+如果你使用的是源码 checkout，在仓库根目录运行：
 
 ```r
 install.packages("pkgload")
@@ -102,7 +102,7 @@ view_ggchord(p_first, width = 10, height = 5, units = "in")
 | 现象 | 先检查什么 |
 | --- | --- |
 | 找不到 `first_sequences` 或 `p_first` | 是否从本页第 2 步开始依次运行，而非只复制最后一行 |
-| 提示没有某个函数 | 是否加载了与本教程对应的开发版本；先查看 `packageVersion()` |
+| 提示没有某个函数 | 是否加载了与本教程对应的版本；先查看 `packageVersion()` |
 | 没有连接 | 两端 ID 是否都出现在序列表，筛选后连接表是否为空 |
 | 图很小或文字布局不同 | 先按上面的 10 × 5 in 尺寸预览，见[输出与尺寸](output.html) |
 | 保存后找不到图片 | 用 `getwd()` 确认当前工作目录 |
