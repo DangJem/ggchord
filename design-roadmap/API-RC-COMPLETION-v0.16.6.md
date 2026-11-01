@@ -1,7 +1,8 @@
 # v0.16.6 RC 本地开发完成记录
 
-2026-11-02（Asia/Shanghai）。**全部已授权本地开发完成并本地整合 main；没有正式
-发布、push、部署网站或创建v1.0.0分支。** 开发包标识 `0.16.6.9000`，正式版及安装
+2026-11-02（Asia/Shanghai）。**前阶段六个工作包已完成；其本地main整合随后按用户
+要求撤回，当前继续在 `codex/v0.16.6` 开发。没有正式发布、push、部署网站或创建
+v1.0.0分支。** 本记录保留前阶段证据，新增要求见版本文档。开发包标识 `0.16.6.9000`，正式版及安装
 tag仍为v0.16.5。[合同审计](API-RC-CONTRACTS-v0.16.6.md)与本版rc表记录具体边界。
 
 ## 六个工作包
@@ -13,7 +14,7 @@ tag仍为v0.16.5。[合同审计](API-RC-CONTRACTS-v0.16.6.md)与本版rc表记�
 | 3 行为修复 | 六组有限行为；F54内侧引物不再被移到外侧；F55内侧酶切registry纠正；两个最小回归体直接验证 | rc-behavior/regressions；R/ggchord-build.R、layout-external-annotation.R、layout-perimeter.R、layout-circular-registry.R；现有两份回归文件 |
 | 4 支持基准 | 声明/实际/未知分开；四种真实输入的小型build基准；两个PNG场景与显式场景清单 | rc-support/benchmark/scenes/compatibility/tools-review；tools/benchmark-rc.R、render-rc.R、rc-fixtures.R、audit-rc-support.R |
 | 5 文档候选 | NEWS、相关roxygen/Rd及汉语参考摘要、双语参数/安装/质粒/迁移/版本页、双语Rmd源同步 | NEWS、R/geom-primer.R、R/layout-export.R、man、website、MIGRATION两份、vignettes两份 |
-| 6 完成整合 | 本记录、问题/限制、提交和验证对应；无未解决确证严重正确性问题；版本分支完成后本地fast-forward main | 本文件、versions/v0.16.6.md、DESIGN-ROADMAP；main与codex/v0.16.6同一最终提交 |
+| 6 完成核对 | 前阶段问题/限制、提交和验证对应；曾本地fast-forward main，用户随后撤回该整合；全部成果留在版本分支 | 本文件、versions/v0.16.6.md、DESIGN-ROADMAP；main恢复d697345，版本分支继续开发 |
 
 当前帮助相对候选有149处参数文案、11处返回文案差异，包含本版侧别修复的澄清；
 逐项保留，不冒称149个新行为。69个原支持合同中，17个geom/coord对被本次有限场景
@@ -85,5 +86,7 @@ tag仍为v0.16.5。[合同审计](API-RC-CONTRACTS-v0.16.6.md)与本版rc表记�
 - 最终文档提交：本记录、路线图、NEWS、相关双语源和同步的教程/迁移。
 
 原OneDrive checkout直接操作，无worktree、仓库复制或子代理。全部实现、测试源及
-文档在版本分支完成后，用 `git switch main`、`git merge --ff-only codex/v0.16.6`
-本地整合，main与版本分支同一最终提交。没有push、Release、部署或新版本分支。
+文档在版本分支完成后，曾按旧规则本地fast-forward main至 `5c83015`；用户随后明确
+取消整合。切回 `codex/v0.16.6` 后，main指针恢复至 `d697345`，版本分支保留全部
+开发提交。新的长期规则是不经用户明确批准不整合main。没有push、Release、部署
+或新版本分支。
