@@ -63,7 +63,7 @@
   ],
   "screenshot": {
     "filename": "ggchord-v0165-home.jpg",
-    "sha256": "09c4ce53c65fdf8ceea4f546c4c4d2ad33ec30609d8f58150aff10c9f76d9507",
+    "sha256": "ef2e6272fcc506bb9351aa3a2ccdad5cdcea5c291660d4e56dfaabdc68f3b405",
     "location": "Local chat deliverable; not a site runtime dependency"
   },
   "limits": "Finite local UI checks, not a multi-browser/accessibility certification or remote deployment verification. No remote workflow was run."
