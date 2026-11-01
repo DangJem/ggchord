@@ -339,7 +339,8 @@ ggchord_effective_mapping <- function(lyr) {
   }
   if (lyr$ggchord_type %in% c("gene_poly") && !is.null(input) &&
       (!"anno" %in% names(input) || all(is.na(input$anno)))) {
-    if (!"gene_fill" %in% names(user)) out$gene_fill <- NULL
+    # Gene fill defaults to strand, which remains valid without optional anno.
+    # Only the annotation-based feature default needs to disappear here.
     if (!"feature_fill" %in% names(user)) out$feature_fill <- NULL
   }
   if (!is.null(user)) {

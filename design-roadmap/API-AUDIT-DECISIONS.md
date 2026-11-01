@@ -717,3 +717,16 @@ bundle相对方向分组与绝对端点方向、merge的envelope length；识别
 映射与继承，不再求值不存在的 x/y，源图层及导出登记不变，主序列仍绘制。
 直接单次 build 验证，并保留一个
 最小公开回归案例；本轮未运行 testthat。非空路径和公开形参不变，NEWS 已记录。
+
+
+### F53 — P2：精简基因表丢失默认链配色
+
+2026-11-01 按用户要求将教程基因输入精简为 accver/start/end/strand 后复现：
+`ggchord_effective_mapping()` 在缺少可选 anno 时同时清除 gene_fill 与 feature_fill，
+误把默认按 strand 的 gene_fill 当成了注释映射。四列输入可以 build，却回退为黑色，
+用户的 +/- 命名手工标度也无法训练，产生 no shared levels 警告。
+
+现在仅清除确实依赖缺失 anno 的 feature 默认映射，保留基因链映射；固定值和显式
+映射优先级不变。一次最小公开 build 已验证用户两种颜色均保留；复用原有基础
+组合测试并增加该回归断言，未执行 testthat。公开形参、非缺失路径及默认调色板不变，
+只恢复缺少可选注释列时本应具有的按链行为，NEWS 已记录。

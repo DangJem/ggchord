@@ -1,8 +1,14 @@
 test_that("constructor and core sequence, ribbon and gene layers build", {
-  p <- ggchord(smoke_sequences(), smoke_ribbon(), smoke_genes(), validate = "none") +
-    geom_seq() + geom_link_ribbon() + geom_gene() + geom_seq_label()
+  genes <- smoke_genes()[c("accver", "start", "end", "strand")]
+  colours <- c("+" = "#56887C", "-" = "#B58169")
+  p <- ggchord(smoke_sequences(), smoke_ribbon(), genes, validate = "none") +
+    geom_seq() + geom_link_ribbon() + geom_gene() + geom_seq_label() +
+    scale_gene_fill_manual(values = colours)
   expect_s3_class(p, "ggchord")
-  expect_s3_class(build_ggchord_smoke(p), "ggplot_built")
+  built <- build_ggchord_smoke(p)
+  expect_s3_class(built, "ggplot_built")
+  # F53: optional annotation text must not disable the strand fill mapping.
+  expect_setequal(unique(built$data[[3]]$gene_fill), unname(colours))
 })
 
 test_that("the three label strategies retain representative annotations", {

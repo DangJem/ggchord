@@ -1,5 +1,9 @@
 # ggchord 0.16.5 (unreleased)
 
+* Four-column gene tables now retain the default strand fill mapping and honour
+  user gene scales without an optional `anno` column. Annotation absence no
+  longer drops the mapping and paints genes with a fallback colour.
+
 * Empty primer search results now compose with primer geometry and label layers
   without failing on scalar assignment to a zero-row table. Nonempty styles and
   public signatures are unchanged.
