@@ -105,8 +105,7 @@ def main():
         extra='<script>try{if(localStorage.getItem("ggchord-language")==="zh")location.replace("zh/index.html");else location.replace("en/index.html")}catch(e){location.replace("en/index.html")}</script>' if old=='index.html' else f'<meta http-equiv="refresh" content="0;url={dest}">'
         path.write_text(f'<!doctype html><html lang="en"><head><meta charset="utf-8"><title>ggchord</title>{extra}</head><body><a href="{dest}">English</a> · <a href="{os.path.relpath(out/"zh/index.html",path.parent)}">现代汉语</a></body></html>')
     retired=[]
-    for old in sorted((ROOT/'docs').rglob('*.html')):
-        rel=str(old.relative_to(ROOT/'docs'))
+    for rel in json.loads((WEB/'historical-pages.json').read_text()):
         if rel in routes:continue
         path=out/rel;path.parent.mkdir(parents=True,exist_ok=True)
         en=os.path.relpath(out/'en/reference/index.html',path.parent);zh=os.path.relpath(out/'zh/reference/index.html',path.parent)

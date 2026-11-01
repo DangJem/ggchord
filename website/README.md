@@ -1,10 +1,10 @@
 # ggchord 文档网站源 / Documentation source
 
 文档版本 0.16.5，API 基线为 0.16.4。实际发布与部署状态以 GitHub Release/Actions 为准。
-冻结的 `docs/` 保持原样。网站生成物不作为当前 R 接口的事实来源。
+旧 `docs/` 保留为历史归档，不再作为 Pages 部署源；历史地址由版本化清单生成跳转。网站生成物不作为当前 R 接口的事实来源。
 
 Documentation for 0.16.5, based on the 0.16.4 candidate API.
-Consult GitHub Releases/Actions for publication and deployment status. Frozen `docs/` is untouched.
+Consult GitHub Releases/Actions for publication and deployment status. Legacy `docs/` is retained as an archive; Pages uses Actions and versioned historical redirects.
 
 ## 生成基础 / Generator
 

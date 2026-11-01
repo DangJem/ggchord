@@ -44,6 +44,22 @@ for(lang in c('en','zh')) {
   xml2::xml_add_child(main,nav_fragment(paste0('<details class="chapter-drawer"><summary>',
     if(lang=='zh')'浏览文档' else 'Browse documentation','</summary><nav>',chapter_links,'</nav></details>')),.where=0L)
   if(lang=='zh') {
+   # Finalize native interface prose independently of runner gettext locales.
+   ui <- c('Skip to contents'='跳到正文','Site navigation'='网站导航',
+     'Toggle navigation'='展开导航','Light'='浅色','Dark'='深色','Auto'='自动',
+     'On this page'='本页目录','Usage'='用法','Arguments'='参数',
+     'Value'='返回值','Details'='详细说明','Examples'='示例','See also'='另见',
+     'Format'='格式','Source'='来源','References'='参考资料','Author'='作者')
+   for(node in xml2::xml_find_all(doc,'//text()[not(ancestor::pre or ancestor::script or ancestor::style)]')) {
+    value <- trimws(xml2::xml_text(node))
+    if(value %in% names(ui)) xml2::xml_set_text(node,ui[[value]])
+    else if(grepl('^Developed by ',value)) xml2::xml_set_text(node,sub('Developed by ','开发者：',value,fixed=TRUE))
+    else if(grepl('^Site built with',value)) xml2::xml_set_text(node,sub('Site built with','网站构建工具：',value,fixed=TRUE))
+   }
+   for(node in xml2::xml_find_all(doc,'//*[@aria-label or @title]')) for(attr in c('aria-label','title')) {
+    value <- xml2::xml_attr(node,attr)
+    if(!is.na(value) && value %in% names(ui)) xml2::xml_set_attr(node,attr,ui[[value]])
+   }
    translations<-c('值'='返回值','范例'='示例','该页面'='本页目录','细节'='详细说明','相关话题'='另见')
    for(h in xml2::xml_find_all(doc,'//h2')) {
     children<-xml2::xml_contents(h)
@@ -122,6 +138,7 @@ for(lang in c('en','zh')) {
     xml2::xml_set_attr(a,'href',paste0(base,'source/',basename(href)))
    if(grepl('/assets/(NEWS|ASSET-SOURCES)\\.html$',href))
     xml2::xml_set_attr(a,'href',sub('\\.html$','.md',href))
+   href <- sub('^https://dangjem.github.io/ggchord/reference/', 'https://rdrr.io/pkg/ggchord/man/', href)
    if(grepl('^https?://rdrr\\.io/pkg/ggchord/man/[^#]+\\.html',href)) {
     name<-utils::URLdecode(sub('\\.html.*$','',sub('^.*/man/','',href)))
     topic<-if(name %in% names(alias_topics)) alias_topics[[name]] else
