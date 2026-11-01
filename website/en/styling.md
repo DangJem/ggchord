@@ -3,7 +3,7 @@
 ## Prepare this page {#prepare}
 In a fresh R session, run the code below, then follow this page in order. Colours and layout are optional display choices; inputs select only the fields needed.
 
-{{prepare:setup,docstyle}}
+{{prepare:setup,sequencepalette,docstyle}}
 
 ## Build styles from data roles {#roles}
 Run this page’s preparation code below. The example declares categories

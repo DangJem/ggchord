@@ -3,7 +3,7 @@
 ## 本页准备 {#prepare}
 在新的 R 会话中先运行下方代码，再按页面顺序继续。配色和排版是可选的显示设置，输入只选择需要的列。 涉及文件时，先解压[教学输入](../assets/tutorial-inputs.zip)，使工作目录包含 `examples/`。
 
-{{prepare:docstyle}}
+{{prepare:sequencepalette,docstyle}}
 
 这条完整工作流使用源码仓库已有的四条序列记录，不需要重新比对或预测基因。
 使用匹配的开发 checkout，或[下载教学输入](../assets/tutorial-inputs.zip)，解压后让

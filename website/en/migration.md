@@ -10,7 +10,7 @@ first-removal tags are not guessed where historical evidence gives only an upper
 ## Run the replacement {#replacement}
 In a fresh session, run this preparation before the current replacements:
 
-{{prepare:setup,docstyle,plasmiddata}}
+{{prepare:setup,plasmiddata}}
 
 {{code:migration}}
 

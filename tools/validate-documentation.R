@@ -7,7 +7,7 @@ chunks <- setNames(lapply(seq_len(length(markers)-1L),function(i)
   text[seq.int(markers[i]+1L, markers[i+1L]-1L)]),
   sub('^# ---- ([a-z]+) ----$', '\\1', text[markers[-length(markers)]]))
 env <- new.env(parent = globalenv())
-for (name in c('setup','docstyle','collinear','imports')) eval(parse(text=chunks[[name]]),env)
+for (name in c('setup','sequencepalette','docstyle','collinear','imports')) eval(parse(text=chunks[[name]]),env)
 stopifnot(nrow(env$seq_files)>0L, nrow(env$link_files)>0L, nrow(env$feature_files)>0L,
   all(env$link_files$qaccver %in% env$seq_files$accver),
   all(env$link_files$saccver %in% env$seq_files$accver))

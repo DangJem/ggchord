@@ -43,14 +43,16 @@ for(lang in c('en','zh')) {
     if(lang=='zh')'文档章节' else 'Documentation chapters','">',chapter_links,'</nav>')),.where='before')
   xml2::xml_add_child(main,nav_fragment(paste0('<details class="chapter-drawer"><summary>',
     if(lang=='zh')'浏览文档' else 'Browse documentation','</summary><nav>',chapter_links,'</nav></details>')),.where=0L)
-  outline <- xml2::xml_find_first(doc,'//aside//ul[contains(@class,"toc-list")]')
-  if(inherits(outline,'xml_missing')) outline <- xml2::xml_find_first(doc,'//aside//nav')
-  if(!inherits(outline,'xml_missing')) {
-    first_heading <- xml2::xml_find_first(main,'.//h1')
+  # Native reference TOCs are populated later by JavaScript. Build the compact
+  # outline from actual headings, rather than cloning their initially empty nav.
+  outline_headings <- xml2::xml_find_all(main,'.//*[self::h2 or self::h3][@id]')
+  if(length(outline_headings)) {
+    outline_links <- paste(vapply(outline_headings,function(h) paste0('<li><a href="#',
+      htmltools::htmlEscape(xml2::xml_attr(h,'id'),attribute=TRUE),'">',
+      htmltools::htmlEscape(xml2::xml_text(h)),'</a></li>'),''),collapse='')
     toc_fragment <- nav_fragment(paste0('<details class="page-outline"><summary>',
-      if(lang=='zh')'本页目录' else 'On this page','</summary>',as.character(outline),'</details>'))
-    for(node in xml2::xml_find_all(toc_fragment,'.//*[@id]')) xml2::xml_set_attr(node,'id',NULL)
-    xml2::xml_add_sibling(first_heading,toc_fragment,.where='after')
+      if(lang=='zh')'本页目录' else 'On this page','</summary><ul>',outline_links,'</ul></details>'))
+    xml2::xml_add_sibling(xml2::xml_find_first(main,'.//h1'),toc_fragment,.where='after')
   }
 
   for(logo in xml2::xml_find_all(main,'.//img[@src]')) {
@@ -86,6 +88,15 @@ for(lang in c('en','zh')) {
    info<-if(lang=='zh') '本页完整说明已译为现代汉语；函数、参数、代码和原始数据标识保留原样。' else 'Complete canonical API text; task articles explain the workflows.'
    link<-paste0(paste(rep('../',deep),collapse=''),'articles.html')
    xml2::xml_add_child(main,fragment(paste0('<p class="reference-language-note">',info,' <a href="',link,'">',if(lang=='zh')'使用教程' else 'Tutorials','</a></p>')),.where=1L)
+  }
+  # Native locale messages add a translated S3 preamble to usage code. Keep
+  # this generated comment canonical too, while translating surrounding prose.
+  if(lang=='zh') for(comment in xml2::xml_find_all(main,'.//pre//span[@class="co"]')) {
+   value <- xml2::xml_text(comment)
+   if(grepl('^# .+ 类的 S3 方法$',value)) {
+    class_name <- sub(' 类的 S3 方法$','',sub('^# ','',value))
+    xml2::xml_set_text(comment,paste0("# S3 method for class '",class_name,"'"))
+   }
   }
   for(pre in xml2::xml_find_all(main,'.//pre')) {
    parent<-xml2::xml_parent(pre)

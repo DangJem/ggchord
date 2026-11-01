@@ -29,3 +29,7 @@ body{background:var(--canvas);color:var(--body-ink);font-family:Inter,ui-sans-se
 @media(max-width:700px){.route-grid,.gallery-grid{grid-template-columns:1fr}.gallery-card .documentation-figure img{height:auto}.home-lead{font-size:1.85rem}.home-actions{gap:16px}.home-actions .primary-action{flex-basis:100%;text-align:center}}
 .page-outline{display:none;border:1px solid var(--rule);border-radius:4px;margin:0 0 25px;font-size:.82rem}.page-outline summary{padding:9px 13px;cursor:pointer;color:var(--ink)}.page-outline ul,.page-outline nav{padding:0 20px 15px 30px}.page-outline li{margin:5px 0}.home-intro+h2{border-top:0;padding-top:0}main>p{max-width:78ch}
 @media(max-width:1439px){.page-outline{display:block}}
+/* Documentation controls stay available while reading long workflows. */
+.navbar.headroom{transform:none!important}main pre a{text-decoration:none}main pre a:hover{text-decoration:underline}
+.doc-layout>aside.col-md-3{margin:0!important;padding:35px 0 0!important}
+.doc-layout{margin-inline:0}body:not([data-page=index]) main img.logo{display:none}

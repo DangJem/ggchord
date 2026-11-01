@@ -3,7 +3,7 @@
 ## 本页准备 {#prepare}
 在新的 R 会话中先运行下方代码，再按页面顺序继续。配色和排版是可选的显示设置，输入只选择需要的列。 涉及文件时，先解压[教学输入](../assets/tutorial-inputs.zip)，使工作目录包含 `examples/`。
 
-{{prepare:setup,docstyle,realimport,realprepare}}
+{{prepare:setup,sequencepalette,docstyle,realimport,realprepare}}
 
 ## 从原始连接表开始 {#input}
 先用[真实记录工作流](real-data.html#selection)创建 `seq_real`、`link_real` 和

@@ -3,7 +3,7 @@
 ## Prepare this page {#prepare}
 In a fresh R session, run the code below, then follow this page in order. Colours and layout are optional display choices; inputs select only the fields needed.
 
-{{prepare:setup,docstyle}}
+{{prepare:setup,sequencepalette,docstyle}}
 
 ## Select a layout {#layout}
 Gene labels offer `"auto"`, `"radial"` and `"arc"` layouts. General feature

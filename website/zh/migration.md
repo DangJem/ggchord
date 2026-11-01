@@ -9,7 +9,7 @@
 ## 运行当前替代 {#replacement}
 在新会话中运行下面的准备代码，再执行当前替代写法：
 
-{{prepare:setup,docstyle,plasmiddata}}
+{{prepare:setup,plasmiddata}}
 
 {{code:migration}}
 

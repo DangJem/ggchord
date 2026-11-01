@@ -3,7 +3,7 @@
 ## Prepare this page {#prepare}
 In a fresh R session, run the code below, then follow this page in order. Colours and layout are optional display choices; inputs select only the fields needed. For file-based examples, first extract the [input bundle](../assets/tutorial-inputs.zip) so the working directory contains `examples/`.
 
-{{prepare:setup,docstyle,realimport,realprepare}}
+{{prepare:setup,sequencepalette,docstyle,realimport,realprepare}}
 
 ## Begin with the original link table {#input}
 Use the [real-record workflow](real-data.html#selection) to create `seq_real`,

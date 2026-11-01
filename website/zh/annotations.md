@@ -3,7 +3,7 @@
 ## 本页准备 {#prepare}
 在新的 R 会话中先运行下方代码，再按页面顺序继续。配色和排版是可选的显示设置，输入只选择需要的列。
 
-{{prepare:setup,docstyle,plasmiddata}}
+{{prepare:setup,sequencepalette,featurepalette,docstyle,plasmiddata}}
 
 ## 保留注释语义 {#stack}
 本页准备代码已加载 pUC19 的实际注释。

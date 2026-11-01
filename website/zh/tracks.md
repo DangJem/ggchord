@@ -3,7 +3,7 @@
 ## 本页准备 {#prepare}
 在新的 R 会话中先运行下方代码，再按页面顺序继续。配色和排版是可选的显示设置，输入只选择需要的列。
 
-{{prepare:docstyle,plasmiddata}}
+{{prepare:featurepalette,docstyle,plasmiddata}}
 
 ## 从实际 DNA 计算数据轨道 {#domain}
 本例读取随包 pUC19，每 100 bp 计算
@@ -13,7 +13,7 @@
 
 `bins` 的每一行是一段实际序列窗口；先检查起止位置及 `gc`，再把数值映射到轨道高度与颜色。
 
-### 绘制 GC 比例
+### 绘制 GC 比例 {#draw-gc}
 
 {{code:tracks}}
 {{figure:tracks}}

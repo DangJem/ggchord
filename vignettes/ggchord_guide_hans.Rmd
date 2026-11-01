@@ -15,37 +15,7 @@ knitr::opts_chunk$set(eval = FALSE, collapse = TRUE, comment = "#>")
 
 <img src="../man/figures/logo.png" alt="ggchord" width="150">
 
-本教程与英语教程、网站从同一组来源生成。vignette 渲染时只展示代码，不自动执行；共享文档脚本直接验证相关例子。示例优先使用随包数据和有来源的原始记录；人为构造的诊断错误会明确标注。先运行一次准备代码，再运行各专题工作流。
-
-## 共享准备代码 {#shared-setup}
-
-
-```{r example-1, eval=FALSE}
-library(ggchord)
-data(seq_data_example)
-data(ribbon_data_example)
-data(gene_data_example)
-seqs <- seq_data_example[c("accver", "length")]
-links <- ribbon_data_example[c("qaccver", "saccver", "qstart", "qend", "sstart", "send")]
-# The fixture preserves biological strands separately from its old display strands.
-genes <- transform(gene_data_example, strand = source_strand)[c("accver", "start", "end", "strand")]
-```
-
-
-```{r example-2, eval=FALSE}
-# Optional appearance choices; none of these columns or scales is required input.
-library(ggchord)
-seq_palette <- setNames(c("#3867D6", "#E58A28", "#219B83", "#9B59B6"),
-  c("MT108731.1", "MT118296.1", "OQ646790.1", "OR222515.1"))
-gene_palette <- c("+" = "#3B6FD8", "-" = "#E1812C", "." = "#8291A6")
-feature_palette <- c(CDS = "#3973CB", promoter = "#8B5EC4", rep_origin = "#E8A42D",
-  primer_bind = "#168F86", misc_feature = "#A0ADBD", protein_bind = "#CC6485")
-doc_theme <- theme_ggchord_publication(axis.text = element_text(size = 11),
-  axis.text.check.overlap = TRUE) + theme(legend.position = "bottom")
-doc_axis <- function(coordinates = "relative") scale_seq_position_continuous(
-  coordinates = coordinates, n.breaks = 3, minor_breaks = NULL,
-  labels = function(x) format(x, scientific = FALSE, big.mark = ",", trim = TRUE))
-```
+本教程与英语教程、网站从同一组来源生成。vignette 渲染时只展示代码，不自动执行；共享文档脚本直接验证相关例子。示例优先使用随包数据和有来源的原始记录；人为构造的诊断错误会明确标注。每章提供本页准备代码；第一次使用请从首图教程开始。
 
 
 ## 开始使用：绘制第一张图 {#installation}
@@ -64,7 +34,7 @@ doc_axis <- function(coordinates = "relative") scale_seq_position_continuous(
 需要 R ≥4.1.0 和 ggplot2 ≥4.0.0。先打开 R 或 RStudio，在控制台运行安装命令。
 已经安装并能加载 ggchord 时，可以跳过安装。
 
-```{r example-3, eval=FALSE}
+```{r example-1, eval=FALSE}
 install.packages("remotes")
 remotes::install_github("DangJem/ggchord")
 library(ggchord)
@@ -75,7 +45,7 @@ packageVersion("ggchord")
 本网站介绍本地 **0.16.5 开发版本**；当前正式发布版仍是 0.15.0。GitHub 安装得到远端仓库的版本，
 不会自动包含尚未推送的本地修改。如果你正在使用本版源码 checkout，在仓库根目录运行：
 
-```{r example-4, eval=FALSE}
+```{r example-2, eval=FALSE}
 install.packages("pkgload")
 pkgload::load_all(".")
 packageVersion("ggchord")
@@ -89,7 +59,7 @@ packageVersion("ggchord")
 下面的代码只选本例需要的列。先复制运行整个代码块：
 
 
-```{r example-5, eval=FALSE}
+```{r example-3, eval=FALSE}
 library(ggchord)
 data(seq_data_example)
 data(gene_data_example)
@@ -114,7 +84,7 @@ first_links <- ribbon_data_example[ribbon_data_example$qaccver %in% ids &
 
 运行下面的检查。先看列名，再看每张表的前几行：
 
-```{r example-6, eval=FALSE}
+```{r example-4, eval=FALSE}
 names(first_sequences)
 names(first_genes)
 names(first_links)
@@ -132,7 +102,7 @@ head(first_genes)
 使用参数名可避免误把基因表传入第二个位置参数 `ribbon_data`。
 
 
-```{r example-7, eval=FALSE}
+```{r example-5, eval=FALSE}
 first_colours <- setNames(c("#3264D6", "#E18428"), ids)
 p_first <- ggchord(seq_data = first_sequences, ribbon_data = first_links,
   gene_data = first_genes) +
@@ -147,7 +117,7 @@ p_first <- ggchord(seq_data = first_sequences, ribbon_data = first_links,
 p_first
 ```
 
-<figure class="documentation-figure"><a class="figure-link" href="../man/figures/first.png" title="点击放大查看"><img src="../man/figures/first.png" alt="第一张图：两条真实随包序列、基因箭头及已有比对区间" loading="lazy"></a><figcaption>第一张图：两条真实随包序列、基因箭头及已有比对区间 · <span class="figure-hint">点击放大查看</span></figcaption></figure>
+<figure class="documentation-figure"><a class="figure-link" href="../man/figures/first.png" title="点击放大查看"><img src="../man/figures/first.png" alt="第一张图：两条真实随包序列、基因箭头及已有比对区间" width="1440" height="720" loading="lazy"></a><figcaption>第一张图：两条真实随包序列、基因箭头及已有比对区间 · <span class="figure-hint">点击放大查看</span></figcaption></figure>
 
 两种颜色区分基因所属序列，**不表示它们已经被分入同源基因组**。
 本例将连接保留为中性灰色，使基因及位置关系更突出。
@@ -166,19 +136,19 @@ p_first
 `p_first` 是普通的 ggplot 对象。下面将它保存到当前工作目录：
 
 
-```{r example-8, eval=FALSE}
+```{r example-6, eval=FALSE}
 ggsave("first-comparison.png", p_first, width = 10, height = 5, units = "in", dpi = 144)
 ```
 
 
-```{r example-9, eval=FALSE}
+```{r example-7, eval=FALSE}
 file.exists("first-comparison.png")
 ```
 
 返回 `TRUE` 表示文件已经生成。RStudio 的 Plots 面板会随窗口大小改变布局；
 需要预览最终排版时，用与导出相同的尺寸：
 
-```{r example-10, eval=FALSE}
+```{r example-8, eval=FALSE}
 view_ggchord(p_first, width = 10, height = 5, units = "in")
 ```
 
@@ -210,7 +180,7 @@ view_ggchord(p_first, width = 10, height = 5, units = "in")
 
 <details class="preparation"><summary>准备代码 · 在本页运行一次</summary>
 
-```{r example-11, eval=FALSE}
+```{r example-9, eval=FALSE}
 library(ggchord)
 data(seq_data_example)
 data(ribbon_data_example)
@@ -246,7 +216,7 @@ genes <- transform(gene_data_example, strand = source_strand)[c("accver", "start
 在仓库根目录运行这个仅用于源码仓库的例子，不改写原始文件。
 
 
-```{r example-12, eval=FALSE}
+```{r example-10, eval=FALSE}
 seq_files <- read_fasta_lengths(files = "examples/fasta/*.fna", source_file = TRUE)
 link_files <- read_blast(files = "examples/blastn-standard/*.tsv", source_file = TRUE)
 feature_files <- read_gff3(files = "examples/gff3/*.gff3", unstranded = "keep", source_file = TRUE)
@@ -264,7 +234,7 @@ feature_files <- read_gff3(files = "examples/gff3/*.gff3", unstranded = "keep", 
 
 
 
-```{r example-13, eval=FALSE}
+```{r example-11, eval=FALSE}
 validation <- validate_ggchord_data(seqs, links, genes)
 cleaned <- clean_ggchord_data(seqs, links, genes)
 prepared <- prepare_ggchord_data(seqs, links, features = list(genes = genes))
@@ -278,7 +248,7 @@ prepared <- prepare_ggchord_data(seqs, links, features = list(genes = genes))
 
 ### 检查问题输入及修复报告 {#data-repairs}
 
-```{r example-14, eval=FALSE}
+```{r example-12, eval=FALSE}
 # Deliberately corrupt copies to demonstrate diagnostics; original rows remain intact.
 problem_links <- ribbon_data_example[1:2, c("qaccver", "saccver", "qstart", "qend", "sstart", "send", "pident")]
 problem_links$qaccver[2] <- "absent"
@@ -299,7 +269,7 @@ repaired <- clean_ggchord_data(seqs, problem_links, unknown_id = "drop", invalid
 
 ### 声明 genome 与 contig 键 {#data-hierarchy}
 
-```{r example-15, eval=FALSE}
+```{r example-13, eval=FALSE}
 # Each source record represents a separate complete phage genome.
 contigs <- transform(seqs, genome = accver)
 genomes <- data.frame(genome = seqs$accver)
@@ -339,7 +309,7 @@ hierarchy <- validate_ggchord_hierarchy(contigs, genomes, strict = TRUE)
 
 <details class="preparation"><summary>准备代码 · 在本页运行一次</summary>
 
-```{r example-16, eval=FALSE}
+```{r example-14, eval=FALSE}
 library(ggchord)
 data(seq_data_example)
 data(ribbon_data_example)
@@ -349,13 +319,7 @@ links <- ribbon_data_example[c("qaccver", "saccver", "qstart", "qend", "sstart",
 # The fixture preserves biological strands separately from its old display strands.
 genes <- transform(gene_data_example, strand = source_strand)[c("accver", "start", "end", "strand")]
 
-# Optional appearance choices; none of these columns or scales is required input.
 library(ggchord)
-seq_palette <- setNames(c("#3867D6", "#E58A28", "#219B83", "#9B59B6"),
-  c("MT108731.1", "MT118296.1", "OQ646790.1", "OR222515.1"))
-gene_palette <- c("+" = "#3B6FD8", "-" = "#E1812C", "." = "#8291A6")
-feature_palette <- c(CDS = "#3973CB", promoter = "#8B5EC4", rep_origin = "#E8A42D",
-  primer_bind = "#168F86", misc_feature = "#A0ADBD", protein_bind = "#CC6485")
 doc_theme <- theme_ggchord_publication(axis.text = element_text(size = 11),
   axis.text.check.overlap = TRUE) + theme(legend.position = "bottom")
 doc_axis <- function(coordinates = "relative") scale_seq_position_continuous(
@@ -375,7 +339,7 @@ features <- feature_source[c("accver", "start", "end", "strand", "type", "anno")
 只重命名列来演示角色映射；没有额外生成示意序列或比对。
 
 
-```{r example-17, eval=FALSE}
+```{r example-15, eval=FALSE}
 renamed_sequences <- setNames(seqs, c("chrom", "size"))
 sequence_input <- as_ggchord_seq(renamed_sequences, mapping = c(accver = "chrom", length = "size"))
 renamed_features <- setNames(genes, c("chrom", "left", "right", "strand"))
@@ -394,7 +358,7 @@ BED 例子把已知 pUC19 注释写为最小 BED3，再读回；PAF 直接读取
 minimap2 输出，保留原始可选标签和值。显示筛选保留 mapq ≥30 的记录，绘图只接收六个端点角色。
 
 
-```{r example-18, eval=FALSE}
+```{r example-16, eval=FALSE}
 # BED3 carries intervals only; the source annotations remain in features.
 bed_path <- tempfile(fileext = ".bed")
 bed_rows <- data.frame(accver = features$accver, start0 = features$start - 1L, end = features$end)
@@ -413,7 +377,7 @@ p_paf <- ggchord(seq_data = paf_seqs, ribbon_data = paf_links) +
 p_paf
 ```
 
-<figure class="documentation-figure"><a class="figure-link" href="../man/figures/paf.png" title="点击放大查看"><img src="../man/figures/paf.png" alt="从真实 minimap2 PAF 结果绘制的两条 EMALE 序列" loading="lazy"></a><figcaption>从真实 minimap2 PAF 结果绘制的两条 EMALE 序列 · <span class="figure-hint">点击放大查看</span></figcaption></figure>
+<figure class="documentation-figure"><a class="figure-link" href="../man/figures/paf.png" title="点击放大查看"><img src="../man/figures/paf.png" alt="从真实 minimap2 PAF 结果绘制的两条 EMALE 序列" width="1440" height="720" loading="lazy"></a><figcaption>从真实 minimap2 PAF 结果绘制的两条 EMALE 序列 · <span class="figure-hint">点击放大查看</span></figcaption></figure>
 
 BED 的零起点半开区间由读取器转成一基包含坐标；不要再手工加一次 1。
 BED3 没有链列，读回时链为未知；需要链方向时应使用含 strand 的原始格式。
@@ -422,7 +386,7 @@ PAF 的负相对方向表现为递减的 subject 端点，这是合法反向命�
 
 ### GenBank：保留记录身份 {#formats-genbank}
 
-```{r example-19, eval=FALSE}
+```{r example-17, eval=FALSE}
 # The original NCBI L09137.2 record identifies pUC19c; keep that identity.
 genbank_result <- NULL
 if (nzchar(Sys.which("python3")) && identical(suppressWarnings(system2("python3",
@@ -439,7 +403,7 @@ if (nzchar(Sys.which("python3")) && identical(suppressWarnings(system2("python3"
 
 ### 可选的区间对象 {#formats-ranges}
 
-```{r example-20, eval=FALSE}
+```{r example-18, eval=FALSE}
 range_inputs <- NULL
 if (requireNamespace("GenomicRanges", quietly = TRUE)) {
   unknown <- features[features$strand == ".", ][1, ]
@@ -485,7 +449,7 @@ CIGAR；需先由相应工具正确解析，再通过表格角色映射转换，
 
 <details class="preparation"><summary>准备代码 · 在本页运行一次</summary>
 
-```{r example-21, eval=FALSE}
+```{r example-19, eval=FALSE}
 library(ggchord)
 data(seq_data_example)
 data(ribbon_data_example)
@@ -500,8 +464,12 @@ library(ggchord)
 seq_palette <- setNames(c("#3867D6", "#E58A28", "#219B83", "#9B59B6"),
   c("MT108731.1", "MT118296.1", "OQ646790.1", "OR222515.1"))
 gene_palette <- c("+" = "#3B6FD8", "-" = "#E1812C", "." = "#8291A6")
+
+library(ggchord)
 feature_palette <- c(CDS = "#3973CB", promoter = "#8B5EC4", rep_origin = "#E8A42D",
   primer_bind = "#168F86", misc_feature = "#A0ADBD", protein_bind = "#CC6485")
+
+library(ggchord)
 doc_theme <- theme_ggchord_publication(axis.text = element_text(size = 11),
   axis.text.check.overlap = TRUE) + theme(legend.position = "bottom")
 doc_axis <- function(coordinates = "relative") scale_seq_position_continuous(
@@ -521,7 +489,7 @@ features <- feature_source[c("accver", "start", "end", "strand", "type", "anno")
 
 ### 弦图：比较多条序列 {#modes-chord}
 
-```{r example-22, eval=FALSE}
+```{r example-20, eval=FALSE}
 p_chord <- ggchord(seq_data = seqs, ribbon_data = links, gene_data = genes) +
   geom_link_ribbon(aes(ribbon_fill = qaccver), alpha = .7) +
   scale_ribbon_fill_manual(values = seq_palette, guide = "none") + geom_seq(show.legend = FALSE) + geom_gene(position = position_strand(.1), width = .04) +
@@ -531,7 +499,7 @@ p_chord <- ggchord(seq_data = seqs, ribbon_data = links, gene_data = genes) +
 p_chord
 ```
 
-<figure class="documentation-figure"><a class="figure-link" href="../man/figures/chord.png" title="点击放大查看"><img src="../man/figures/chord.png" alt="随包序列与已有比对区间的弦图" loading="lazy"></a><figcaption>随包序列与已有比对区间的弦图 · <span class="figure-hint">点击放大查看</span></figcaption></figure>
+<figure class="documentation-figure"><a class="figure-link" href="../man/figures/chord.png" title="点击放大查看"><img src="../man/figures/chord.png" alt="随包序列与已有比对区间的弦图" width="1440" height="1152" loading="lazy"></a><figcaption>随包序列与已有比对区间的弦图 · <span class="figure-hint">点击放大查看</span></figcaption></figure>
 
 连接按 query 序列标识配色，与骨架使用同一类别色板；这不表示相似度或同源基因分组。按真实相似度配色见[原始记录教程](#real-data-chord)。
 `coord_chord()` 控制全局旋转和拟合。逐序列半径、曲率、间隙和方向属于 `geom_seq()`。
@@ -540,7 +508,7 @@ p_chord
 
 ### 圆图：注释单条序列 {#modes-circular}
 
-```{r example-23, eval=FALSE}
+```{r example-21, eval=FALSE}
 circle_features <- features[features$type %in% c("CDS", "rep_origin"), ]
 p_circular <- ggchord(seq_data = plasmid_seq) + geom_seq() +
   geom_feature(aes(feature_fill = type), data = circle_features, position = position_plasmid()) +
@@ -550,7 +518,7 @@ p_circular <- ggchord(seq_data = plasmid_seq) + geom_seq() +
 p_circular
 ```
 
-<figure class="documentation-figure"><a class="figure-link" href="../man/figures/circular.png" title="点击放大查看"><img src="../man/figures/circular.png" alt="pUC19 注释的单序列圆图" loading="lazy"></a><figcaption>pUC19 注释的单序列圆图 · <span class="figure-hint">点击放大查看</span></figcaption></figure>
+<figure class="documentation-figure"><a class="figure-link" href="../man/figures/circular.png" title="点击放大查看"><img src="../man/figures/circular.png" alt="pUC19 注释的单序列圆图" width="1296" height="1152" loading="lazy"></a><figcaption>pUC19 注释的单序列圆图 · <span class="figure-hint">点击放大查看</span></figcaption></figure>
 本例只选 CDS 与复制起点显示，保留完整序列的 bp 刻度。
 `coord_circular()` 要求单条序列。通用注释可带未知链。
 `geom_feature_plasmid()` 是有独立默认值的便利预设，应在需要这些默认值时显式选择。
@@ -558,7 +526,7 @@ p_circular
 
 ### 共线性图：对齐局部比较 {#modes-collinear}
 
-```{r example-24, eval=FALSE}
+```{r example-22, eval=FALSE}
 anchor_rows <- unlist(lapply(split(seq_len(nrow(genes)), genes$accver), function(i)
   i[which.max(genes$end[i] - genes$start[i])]))
 anchors <- genes[anchor_rows, c("accver", "start", "end")]
@@ -572,7 +540,7 @@ p_collinear <- ggchord(seq_data = seqs, ribbon_data = links, gene_data = genes) 
 p_collinear
 ```
 
-<figure class="documentation-figure"><a class="figure-link" href="../man/figures/collinear.png" title="点击放大查看"><img src="../man/figures/collinear.png" alt="按选定注释锚定的随包序列共线性图" loading="lazy"></a><figcaption>按选定注释锚定的随包序列共线性图 · <span class="figure-hint">点击放大查看</span></figcaption></figure>
+<figure class="documentation-figure"><a class="figure-link" href="../man/figures/collinear.png" title="点击放大查看"><img src="../man/figures/collinear.png" alt="按选定注释锚定的随包序列共线性图" width="1440" height="864" loading="lazy"></a><figcaption>按选定注释锚定的随包序列共线性图 · <span class="figure-hint">点击放大查看</span></figcaption></figure>
 本例分别选每条序列最长的已知基因作显示锚点，不将它们当作同源基因。
 `anchor` 对齐指定区间，`orientation = "auto"` 按现有证据选择支持的显示方向。
 应查看方向诊断，不能直接把显示翻转解释为生物学倒位。区间连接默认连接相邻显示行；
@@ -595,14 +563,14 @@ p_collinear
 
 <details class="preparation"><summary>准备代码 · 在本页运行一次</summary>
 
-```{r example-25, eval=FALSE}
+```{r example-23, eval=FALSE}
 # Optional appearance choices; none of these columns or scales is required input.
 library(ggchord)
 seq_palette <- setNames(c("#3867D6", "#E58A28", "#219B83", "#9B59B6"),
   c("MT108731.1", "MT118296.1", "OQ646790.1", "OR222515.1"))
 gene_palette <- c("+" = "#3B6FD8", "-" = "#E1812C", "." = "#8291A6")
-feature_palette <- c(CDS = "#3973CB", promoter = "#8B5EC4", rep_origin = "#E8A42D",
-  primer_bind = "#168F86", misc_feature = "#A0ADBD", protein_bind = "#CC6485")
+
+library(ggchord)
 doc_theme <- theme_ggchord_publication(axis.text = element_text(size = 11),
   axis.text.check.overlap = TRUE) + theme(legend.position = "bottom")
 doc_axis <- function(coordinates = "relative") scale_seq_position_continuous(
@@ -618,7 +586,7 @@ doc_axis <- function(coordinates = "relative") scale_seq_position_continuous(
 
 ### 1. 读取并检查原始记录 {#real-data-read}
 
-```{r example-26, eval=FALSE}
+```{r example-24, eval=FALSE}
 sequence_source <- read_fasta_lengths(files = "examples/fasta/*.fna", source_file = TRUE)
 seq_real <- sequence_source[c("accver", "length")]
 annotation_source <- read_gff3(files = "examples/gff3/*.gff3", unstranded = "keep", source_file = TRUE)
@@ -636,7 +604,7 @@ BLAST 文件提供已有比对；读取器不运行 BLAST。继续前检查 `rea
 
 ### 2. 明确显示筛选规则 {#real-data-selection}
 
-```{r example-27, eval=FALSE}
+```{r example-25, eval=FALSE}
 real_prepared <- prepare_ggchord_data(seq_real, link_real,
   features = list(annotation = feature_real))
 real_filtered <- filter_ggchord_ribbons(link_real, min_pident = 80, min_length = 500)
@@ -667,7 +635,7 @@ real_filtered$report
 
 ### 3. 构建弦图比较 {#real-data-chord}
 
-```{r example-28, eval=FALSE}
+```{r example-26, eval=FALSE}
 p_real_chord <- ggchord(seq_data = seq_real, ribbon_data = real_filtered$data, validate = "none") +
   geom_link_ribbon(aes(ribbon_fill = pident), alpha = .65) + geom_seq(show.legend = FALSE) +
   geom_feature(aes(feature_fill = strand), data = real_display_features,
@@ -682,7 +650,7 @@ p_real_chord <- ggchord(seq_data = seq_real, ribbon_data = real_filtered$data, v
 p_real_chord
 ```
 
-<figure class="documentation-figure"><a class="figure-link" href="../man/figures/realchord.png" title="点击放大查看"><img src="../man/figures/realchord.png" alt="原始序列、选定 CDS 与已有比对的弦图" loading="lazy"></a><figcaption>原始序列、选定 CDS 与已有比对的弦图 · <span class="figure-hint">点击放大查看</span></figcaption></figure>
+<figure class="documentation-figure"><a class="figure-link" href="../man/figures/realchord.png" title="点击放大查看"><img src="../man/figures/realchord.png" alt="原始序列、选定 CDS 与已有比对的弦图" width="1440" height="1152" loading="lazy"></a><figcaption>原始序列、选定 CDS 与已有比对的弦图 · <span class="figure-hint">点击放大查看</span></figcaption></figure>
 
 先读序列名称，再读真实链方向的注释箭头及区间连接。区间连接表达已有比对区间
 和映射的相似度，连接交叉本身不构成重排证据。选定注释与更宽的比对区间分开阅读。
@@ -690,7 +658,7 @@ p_real_chord
 
 ### 4. 在线性视图检查全部注释 {#real-data-linear}
 
-```{r example-29, eval=FALSE}
+```{r example-27, eval=FALSE}
 p_real_linear <- ggchord(seq_real, real_filtered$data, validate = "none") +
   geom_link_ribbon(fill = "#7199DF", alpha = .45) + geom_seq() + geom_seq_label(size = 4) +
   geom_feature(data = feature_real, feature_fill = "#3B6FD8", show.legend = FALSE, position = position_strand(.18)) +
@@ -700,7 +668,7 @@ p_real_linear <- ggchord(seq_real, real_filtered$data, validate = "none") +
 p_real_linear
 ```
 
-<figure class="documentation-figure"><a class="figure-link" href="../man/figures/reallinear.png" title="点击放大查看"><img src="../man/figures/reallinear.png" alt="原始序列、全部导入 CDS 与筛选连接的线性图" loading="lazy"></a><figcaption>原始序列、全部导入 CDS 与筛选连接的线性图 · <span class="figure-hint">点击放大查看</span></figcaption></figure>
+<figure class="documentation-figure"><a class="figure-link" href="../man/figures/reallinear.png" title="点击放大查看"><img src="../man/figures/reallinear.png" alt="原始序列、全部导入 CDS 与筛选连接的线性图" width="1440" height="864" loading="lazy"></a><figcaption>原始序列、全部导入 CDS 与筛选连接的线性图 · <span class="figure-hint">点击放大查看</span></figcaption></figure>
 
 这张图绘制全部导入注释。区间连接默认只连接相邻显示序列，保留所有比较需要显式
 图层设置。bp 参照条属于共线性坐标。裁剪、源坐标轴与独立窗口见[局部视图](#views)，
@@ -726,7 +694,7 @@ p_real_linear
 ### 保存本页结果 {#real-data-save-result}
 在工作目录中保存刚刚创建的图；预览时使用相同宽高。
 
-```{r example-30, eval=FALSE}
+```{r example-28, eval=FALSE}
 ggsave("phage-comparison.png", p_real_chord, width = 10, height = 8, units = "in", dpi = 144)
 ```
 
@@ -740,19 +708,10 @@ ggsave("phage-comparison.png", p_real_chord, width = 10, height = 8, units = "in
 
 <details class="preparation"><summary>准备代码 · 在本页运行一次</summary>
 
-```{r example-31, eval=FALSE}
-# Optional appearance choices; none of these columns or scales is required input.
+```{r example-29, eval=FALSE}
 library(ggchord)
-seq_palette <- setNames(c("#3867D6", "#E58A28", "#219B83", "#9B59B6"),
-  c("MT108731.1", "MT118296.1", "OQ646790.1", "OR222515.1"))
-gene_palette <- c("+" = "#3B6FD8", "-" = "#E1812C", "." = "#8291A6")
 feature_palette <- c(CDS = "#3973CB", promoter = "#8B5EC4", rep_origin = "#E8A42D",
   primer_bind = "#168F86", misc_feature = "#A0ADBD", protein_bind = "#CC6485")
-doc_theme <- theme_ggchord_publication(axis.text = element_text(size = 11),
-  axis.text.check.overlap = TRUE) + theme(legend.position = "bottom")
-doc_axis <- function(coordinates = "relative") scale_seq_position_continuous(
-  coordinates = coordinates, n.breaks = 3, minor_breaks = NULL,
-  labels = function(x) format(x, scientific = FALSE, big.mark = ",", trim = TRUE))
 ```
 
 </details>
@@ -765,7 +724,7 @@ doc_axis <- function(coordinates = "relative") scale_seq_position_continuous(
 为图形伪造实验测量值。
 
 
-```{r example-32, eval=FALSE}
+```{r example-30, eval=FALSE}
 data(plasmid_example_pUC19)
 plasmid_seq <- plasmid_example_pUC19[c("accver", "length")]
 plasmid_feature_source <- find_common_features(plasmid_example_pUC19)
@@ -785,7 +744,7 @@ primer_names <- primer_catalog(set = "universal")
 下面按骨架、注释、标签、引物和酶切的顺序添加图层。注释与标签共享同一个 Position；每个图层只读取自己的数据。
 
 
-```{r example-33, eval=FALSE}
+```{r example-31, eval=FALSE}
 plasmid_position <- position_feature_stack(spacing = .085, base_position = position_plasmid())
 p_plasmid <- ggchord(seq_data = plasmid_seq) + geom_seq(seq_style = "double") +
   geom_feature_plasmid(aes(feature_fill = type), data = plasmid_features, position = plasmid_position) +
@@ -799,7 +758,7 @@ p_plasmid <- ggchord(seq_data = plasmid_seq) + geom_seq(seq_style = "double") +
 p_plasmid
 ```
 
-<figure class="documentation-figure"><a class="figure-link" href="../man/figures/plasmid.png" title="点击放大查看"><img src="../man/figures/plasmid.png" alt="pUC19 注释、精确引物命中与三个选定酶切位点" loading="lazy"></a><figcaption>pUC19 注释、精确引物命中与三个选定酶切位点 · <span class="figure-hint">点击放大查看</span></figcaption></figure>
+<figure class="documentation-figure"><a class="figure-link" href="../man/figures/plasmid.png" title="点击放大查看"><img src="../man/figures/plasmid.png" alt="pUC19 注释、精确引物命中与三个选定酶切位点" width="1440" height="1296" loading="lazy"></a><figcaption>pUC19 注释、精确引物命中与三个选定酶切位点 · <span class="figure-hint">点击放大查看</span></figcaption></figure>
 | 项目 | 结果 |
 | --- | --- |
 | 完整序列长度（bp） | 2686 |
@@ -842,7 +801,7 @@ p_plasmid
 ### 保存本页结果 {#plasmids-save-result}
 在工作目录中保存刚刚创建的图；预览时使用相同宽高。
 
-```{r example-34, eval=FALSE}
+```{r example-32, eval=FALSE}
 ggsave("pUC19-map.png", p_plasmid, width = 10, height = 9, units = "in", dpi = 144)
 ```
 
@@ -854,7 +813,7 @@ ggsave("pUC19-map.png", p_plasmid, width = 10, height = 9, units = "in", dpi = 1
 ### 本页准备 {#alignments-prepare}
 在新的 R 会话中先运行下方代码，再按页面顺序继续。配色和排版是可选的显示设置，输入只选择需要的列。 涉及文件时，先解压[教学输入](https://github.com/DangJem/ggchord/tree/main/examples)，使工作目录包含 `examples/`。
 
-```{r example-35, eval=FALSE}
+```{r example-33, eval=FALSE}
 library(ggchord)
 ```
 
@@ -877,7 +836,7 @@ sstart、send、evalue、bitscore。读取器将两个 ID 的角色命名为 `qa
 文件里有 12 列，不表示绘图必须接收 12 列。运行本页准备代码加载包后，使用下面的真实记录：
 
 
-```{r example-36, eval=FALSE}
+```{r example-34, eval=FALSE}
 blast_source <- read_blast("examples/blastn-standard/MT108731.1__MT118296.1.tsv")
 blast_links <- blast_source[c("qaccver", "saccver", "qstart", "qend", "sstart", "send")]
 # A six-column table is sufficient for drawing; extra fields stay in blast_source.
@@ -903,7 +862,7 @@ unlink(custom_path)
 先保留完整输入，再选择有完整 CDS 映射、足够长度和较小 evalue 的查询 HSP。
 
 
-```{r example-37, eval=FALSE}
+```{r example-35, eval=FALSE}
 protein_source <- read_blast("examples/format-inputs/emales-mavirus-blastp.tsv", source_file = TRUE)
 emale_source <- read_gff3("examples/format-inputs/emales-BVI_023A.gff3", source_file = TRUE)
 # The source declares complete Prodigal CDS and translation table 11.
@@ -964,7 +923,7 @@ EMALE 原始输出来自 [gggenomes 的公开数据与教程](https://thackl.git
 
 <details class="preparation"><summary>准备代码 · 在本页运行一次</summary>
 
-```{r example-38, eval=FALSE}
+```{r example-36, eval=FALSE}
 library(ggchord)
 data(seq_data_example)
 data(ribbon_data_example)
@@ -979,8 +938,8 @@ library(ggchord)
 seq_palette <- setNames(c("#3867D6", "#E58A28", "#219B83", "#9B59B6"),
   c("MT108731.1", "MT118296.1", "OQ646790.1", "OR222515.1"))
 gene_palette <- c("+" = "#3B6FD8", "-" = "#E1812C", "." = "#8291A6")
-feature_palette <- c(CDS = "#3973CB", promoter = "#8B5EC4", rep_origin = "#E8A42D",
-  primer_bind = "#168F86", misc_feature = "#A0ADBD", protein_bind = "#CC6485")
+
+library(ggchord)
 doc_theme <- theme_ggchord_publication(axis.text = element_text(size = 11),
   axis.text.check.overlap = TRUE) + theme(legend.position = "bottom")
 doc_axis <- function(coordinates = "relative") scale_seq_position_continuous(
@@ -996,7 +955,7 @@ doc_axis <- function(coordinates = "relative") scale_seq_position_continuous(
 推荐先用单值，确实需要差异时用按 `accver` 命名的向量；正负链使用 `+`/`-` 命名向量。
 
 
-```{r example-39, eval=FALSE}
+```{r example-37, eval=FALSE}
 # Sequence IDs remain stable when the data is reordered; positional lists do not.
 radii <- setNames(c(1.1, 1, 1, 1), seqs$accver)
 widths <- c("+" = .045, "-" = .065)
@@ -1058,7 +1017,7 @@ axis/theme、aesthetic、标度、图例不继承这套列表扩展规则。手�
 
 <details class="preparation"><summary>准备代码 · 在本页运行一次</summary>
 
-```{r example-40, eval=FALSE}
+```{r example-38, eval=FALSE}
 library(ggchord)
 data(seq_data_example)
 data(ribbon_data_example)
@@ -1073,8 +1032,8 @@ library(ggchord)
 seq_palette <- setNames(c("#3867D6", "#E58A28", "#219B83", "#9B59B6"),
   c("MT108731.1", "MT118296.1", "OQ646790.1", "OR222515.1"))
 gene_palette <- c("+" = "#3B6FD8", "-" = "#E1812C", "." = "#8291A6")
-feature_palette <- c(CDS = "#3973CB", promoter = "#8B5EC4", rep_origin = "#E8A42D",
-  primer_bind = "#168F86", misc_feature = "#A0ADBD", protein_bind = "#CC6485")
+
+library(ggchord)
 doc_theme <- theme_ggchord_publication(axis.text = element_text(size = 11),
   axis.text.check.overlap = TRUE) + theme(legend.position = "bottom")
 doc_axis <- function(coordinates = "relative") scale_seq_position_continuous(
@@ -1110,7 +1069,7 @@ real_filtered$report
 `real_filtered`，保留原表及筛选报告。
 
 
-```{r example-41, eval=FALSE}
+```{r example-39, eval=FALSE}
 unique_links <- deduplicate_ggchord_ribbons(real_filtered$data, by = "overlap",
   min_reciprocal_overlap = .9)
 merged_links <- merge_ggchord_ribbons(unique_links$data, max_gap = 100,
@@ -1141,7 +1100,7 @@ p_density
 合并或聚束范围不是重新计算的核苷酸比对，估计长度保留标记，不凭空生成相似度。
 
 ### 密度是显式统计 {#ribbons-density}
-<figure class="documentation-figure"><a class="figure-link" href="../man/figures/density.png" title="点击放大查看"><img src="../man/figures/density.png" alt="原始比对记录的区间密度" loading="lazy"></a><figcaption>原始比对记录的区间密度 · <span class="figure-hint">点击放大查看</span></figcaption></figure>
+<figure class="documentation-figure"><a class="figure-link" href="../man/figures/density.png" title="点击放大查看"><img src="../man/figures/density.png" alt="原始比对记录的区间密度" width="1440" height="1152" loading="lazy"></a><figcaption>原始比对记录的区间密度 · <span class="figure-hint">点击放大查看</span></figcaption></figure>
 
 `stat_ribbon_density()` 映射计算后的密度，`stat_ribbon_bundle()` 在 build 时执行
 明确聚合，普通区间连接几何层仍逐行绘制。计数、已报告长度和相似度加权有各自单位，
@@ -1152,7 +1111,7 @@ p_density
 
 
 
-```{r example-42, eval=FALSE}
+```{r example-40, eval=FALSE}
 # Midpoints summarize existing HSPs for display; they are not new alignments.
 points <- ribbon_data_example[c("qaccver", "saccver", "qstart", "qend", "sstart", "send", "pident")]
 points$qpos <- floor((points$qstart + points$qend) / 2)
@@ -1169,7 +1128,7 @@ p_points <- ggchord(seq_data = seqs) + geom_seq() + geom_seq_label(size = 4) +
 p_points
 ```
 
-<figure class="documentation-figure"><a class="figure-link" href="../man/figures/pointlinks.png" title="点击放大查看"><img src="../man/figures/pointlinks.png" alt="从已有 HSP 区间计算中点的点连接" loading="lazy"></a><figcaption>从已有 HSP 区间计算中点的点连接 · <span class="figure-hint">点击放大查看</span></figcaption></figure>
+<figure class="documentation-figure"><a class="figure-link" href="../man/figures/pointlinks.png" title="点击放大查看"><img src="../man/figures/pointlinks.png" alt="从已有 HSP 区间计算中点的点连接" width="1440" height="1152" loading="lazy"></a><figcaption>从已有 HSP 区间计算中点的点连接 · <span class="figure-hint">点击放大查看</span></figcaption></figure>
 
 点位置由随包真实 HSP 的中点向下取整得到，颜色使用已报告的 `pident`。line 使用 `qpos/spos`，而非区间端点，箭头由
 query 指向 subject。点连接默认避障为 `none`，区间连接为 `uniform`。
@@ -1193,7 +1152,7 @@ query 指向 subject。点连接默认避障为 `none`，区间连接为 `unifor
 
 <details class="preparation"><summary>准备代码 · 在本页运行一次</summary>
 
-```{r example-43, eval=FALSE}
+```{r example-41, eval=FALSE}
 library(ggchord)
 data(seq_data_example)
 data(ribbon_data_example)
@@ -1208,8 +1167,12 @@ library(ggchord)
 seq_palette <- setNames(c("#3867D6", "#E58A28", "#219B83", "#9B59B6"),
   c("MT108731.1", "MT118296.1", "OQ646790.1", "OR222515.1"))
 gene_palette <- c("+" = "#3B6FD8", "-" = "#E1812C", "." = "#8291A6")
+
+library(ggchord)
 feature_palette <- c(CDS = "#3973CB", promoter = "#8B5EC4", rep_origin = "#E8A42D",
   primer_bind = "#168F86", misc_feature = "#A0ADBD", protein_bind = "#CC6485")
+
+library(ggchord)
 doc_theme <- theme_ggchord_publication(axis.text = element_text(size = 11),
   axis.text.check.overlap = TRUE) + theme(legend.position = "bottom")
 doc_axis <- function(coordinates = "relative") scale_seq_position_continuous(
@@ -1230,7 +1193,7 @@ features <- feature_source[c("accver", "start", "end", "strand", "type", "anno")
 几何和填色分别映射同一类别；显式固定 `shape` 会覆盖 shape 映射。
 
 
-```{r example-44, eval=FALSE}
+```{r example-42, eval=FALSE}
 stack_features <- features[c("accver", "start", "end", "strand", "type", "anno")]
 stack_position <- position_feature_stack(spacing = .12)
 feature_shapes <- setNames(ifelse(names(feature_palette) == "CDS", "arrow", "block"), names(feature_palette))
@@ -1243,7 +1206,7 @@ p_stack <- ggchord(seq_data = plasmid_seq) + geom_seq(show.legend = FALSE) +
 p_stack
 ```
 
-<figure class="documentation-figure"><a class="figure-link" href="../man/figures/featurestack.png" title="点击放大查看"><img src="../man/figures/featurestack.png" alt="pUC19 中重叠注释的分层显示" loading="lazy"></a><figcaption>pUC19 中重叠注释的分层显示 · <span class="figure-hint">点击放大查看</span></figcaption></figure>
+<figure class="documentation-figure"><a class="figure-link" href="../man/figures/featurestack.png" title="点击放大查看"><img src="../man/figures/featurestack.png" alt="pUC19 中重叠注释的分层显示" width="1440" height="720" loading="lazy"></a><figcaption>pUC19 中重叠注释的分层显示 · <span class="figure-hint">点击放大查看</span></figcaption></figure>
 
 `position_feature_stack()` 解决注释轨道重叠。标签层使用同一 Position，让文字锚点
 跟随轨道。标签子集或重排时优先提供唯一 `feature_id`。严格的 gene 快捷层要求
@@ -1263,7 +1226,7 @@ p_stack
 
 ### 高亮区间而不改写观测 {#annotations-decoration}
 
-```{r example-45, eval=FALSE}
+```{r example-43, eval=FALSE}
 regions <- data.frame(accver = links$qaccver[1], start = min(links$qstart[1], links$qend[1]),
   end = max(links$qstart[1], links$qend[1]), category = "alignment interval")
 p_decorated <- ggchord(seq_data = seqs, ribbon_data = links) +
@@ -1275,7 +1238,7 @@ p_decorated <- ggchord(seq_data = seqs, ribbon_data = links) +
 p_decorated
 ```
 
-<figure class="documentation-figure"><a class="figure-link" href="../man/figures/decorations.png" title="点击放大查看"><img src="../man/figures/decorations.png" alt="突出显示一条实际比对的查询区间" loading="lazy"></a><figcaption>突出显示一条实际比对的查询区间 · <span class="figure-hint">点击放大查看</span></figcaption></figure>
+<figure class="documentation-figure"><a class="figure-link" href="../man/figures/decorations.png" title="点击放大查看"><img src="../man/figures/decorations.png" alt="突出显示一条实际比对的查询区间" width="1440" height="864" loading="lazy"></a><figcaption>突出显示一条实际比对的查询区间 · <span class="figure-hint">点击放大查看</span></figcaption></figure>
 
 区域叠层有自己的数据和 `region_fill` 标度。`geom_seq_label()` 命名序列，
 `geom_seq_center_label()` 在单圆图中心提供名称/长度，`geom_seq_break()` 标记裁剪或
@@ -1298,7 +1261,7 @@ p_decorated
 
 <details class="preparation"><summary>准备代码 · 在本页运行一次</summary>
 
-```{r example-46, eval=FALSE}
+```{r example-44, eval=FALSE}
 library(ggchord)
 data(seq_data_example)
 data(ribbon_data_example)
@@ -1313,8 +1276,8 @@ library(ggchord)
 seq_palette <- setNames(c("#3867D6", "#E58A28", "#219B83", "#9B59B6"),
   c("MT108731.1", "MT118296.1", "OQ646790.1", "OR222515.1"))
 gene_palette <- c("+" = "#3B6FD8", "-" = "#E1812C", "." = "#8291A6")
-feature_palette <- c(CDS = "#3973CB", promoter = "#8B5EC4", rep_origin = "#E8A42D",
-  primer_bind = "#168F86", misc_feature = "#A0ADBD", protein_bind = "#CC6485")
+
+library(ggchord)
 doc_theme <- theme_ggchord_publication(axis.text = element_text(size = 11),
   axis.text.check.overlap = TRUE) + theme(legend.position = "bottom")
 doc_axis <- function(coordinates = "relative") scale_seq_position_continuous(
@@ -1332,7 +1295,7 @@ doc_axis <- function(coordinates = "relative") scale_seq_position_continuous(
 
 
 
-```{r example-47, eval=FALSE}
+```{r example-45, eval=FALSE}
 label_data <- transform(gene_data_example, strand = source_strand)
 label_data <- label_data[label_data$anno != "hypothetical protein",
   c("accver", "start", "end", "strand", "anno")]
@@ -1343,7 +1306,7 @@ p_labels <- ggchord(seq_data = seqs, gene_data = genes) + geom_seq() + geom_gene
 p_labels
 ```
 
-<figure class="documentation-figure"><a class="figure-link" href="../man/figures/labels.png" title="点击放大查看"><img src="../man/figures/labels.png" alt="实际基因注释的自动标签布局" loading="lazy"></a><figcaption>实际基因注释的自动标签布局 · <span class="figure-hint">点击放大查看</span></figcaption></figure>
+<figure class="documentation-figure"><a class="figure-link" href="../man/figures/labels.png" title="点击放大查看"><img src="../man/figures/labels.png" alt="实际基因注释的自动标签布局" width="1440" height="864" loading="lazy"></a><figcaption>实际基因注释的自动标签布局 · <span class="figure-hint">点击放大查看</span></figcaption></figure>
 
 ### 固定与自动放置 {#labels-fixed}
 手动 `label_rotation`、径向/周向位移和方向控制使用 `geom_gene_label()` 或
@@ -1362,7 +1325,7 @@ p_labels
 
 ### 对照三种基因标签布局 {#labels-comparison}
 
-```{r example-48, eval=FALSE}
+```{r example-46, eval=FALSE}
 # Compare layouts with at most the first and last informative label per sequence.
 comparison_labels <- do.call(rbind, lapply(split(label_data, label_data$accver),
   function(x) x[unique(c(1L, nrow(x))), , drop = FALSE]))
@@ -1379,9 +1342,9 @@ p_manual_labels <- ggchord(seq_data = seqs, gene_data = genes) + geom_seq() + ge
 label_plots$auto
 ```
 
-<figure class="documentation-figure"><a class="figure-link" href="../man/figures/labelauto.png" title="点击放大查看"><img src="../man/figures/labelauto.png" alt="实际基因注释的自动侧边标签" loading="lazy"></a><figcaption>实际基因注释的自动侧边标签 · <span class="figure-hint">点击放大查看</span></figcaption></figure>
-<figure class="documentation-figure"><a class="figure-link" href="../man/figures/labelradial.png" title="点击放大查看"><img src="../man/figures/labelradial.png" alt="同一组基因注释的径向标签" loading="lazy"></a><figcaption>同一组基因注释的径向标签 · <span class="figure-hint">点击放大查看</span></figcaption></figure>
-<figure class="documentation-figure"><a class="figure-link" href="../man/figures/labelarc.png" title="点击放大查看"><img src="../man/figures/labelarc.png" alt="同一组基因注释的沿弧标签" loading="lazy"></a><figcaption>同一组基因注释的沿弧标签 · <span class="figure-hint">点击放大查看</span></figcaption></figure>
+<figure class="documentation-figure"><a class="figure-link" href="../man/figures/labelauto.png" title="点击放大查看"><img src="../man/figures/labelauto.png" alt="实际基因注释的自动侧边标签" width="1728" height="1440" loading="lazy"></a><figcaption>实际基因注释的自动侧边标签 · <span class="figure-hint">点击放大查看</span></figcaption></figure>
+<figure class="documentation-figure"><a class="figure-link" href="../man/figures/labelradial.png" title="点击放大查看"><img src="../man/figures/labelradial.png" alt="同一组基因注释的径向标签" width="1728" height="1440" loading="lazy"></a><figcaption>同一组基因注释的径向标签 · <span class="figure-hint">点击放大查看</span></figcaption></figure>
+<figure class="documentation-figure"><a class="figure-link" href="../man/figures/labelarc.png" title="点击放大查看"><img src="../man/figures/labelarc.png" alt="同一组基因注释的沿弧标签" width="1728" height="1440" loading="lazy"></a><figcaption>同一组基因注释的沿弧标签 · <span class="figure-hint">点击放大查看</span></figcaption></figure>
 
 每条序列最多选最前和最后两个有信息的标签，保留全部基因箭头，便于比较文字方向。
 打印 `label_plots$auto`、`$radial` 或 `$arc` 查看候选图。三图输入和请求字号相同，
@@ -1405,14 +1368,12 @@ label_plots$auto
 
 <details class="preparation"><summary>准备代码 · 在本页运行一次</summary>
 
-```{r example-49, eval=FALSE}
-# Optional appearance choices; none of these columns or scales is required input.
+```{r example-47, eval=FALSE}
 library(ggchord)
-seq_palette <- setNames(c("#3867D6", "#E58A28", "#219B83", "#9B59B6"),
-  c("MT108731.1", "MT118296.1", "OQ646790.1", "OR222515.1"))
-gene_palette <- c("+" = "#3B6FD8", "-" = "#E1812C", "." = "#8291A6")
 feature_palette <- c(CDS = "#3973CB", promoter = "#8B5EC4", rep_origin = "#E8A42D",
   primer_bind = "#168F86", misc_feature = "#A0ADBD", protein_bind = "#CC6485")
+
+library(ggchord)
 doc_theme <- theme_ggchord_publication(axis.text = element_text(size = 11),
   axis.text.check.overlap = TRUE) + theme(legend.position = "bottom")
 doc_axis <- function(coordinates = "relative") scale_seq_position_continuous(
@@ -1432,7 +1393,7 @@ features <- feature_source[c("accver", "start", "end", "strand", "type", "anno")
 一次 GC 比例；末尾不足 100 bp 的窗口按实际碱基数计算。
 
 
-```{r example-50, eval=FALSE}
+```{r example-48, eval=FALSE}
 data(plasmid_example_pUC19)
 track_seq <- plasmid_example_pUC19[c("accver", "length")]
 starts <- seq.int(1L, track_seq$length, by = 100L)
@@ -1448,10 +1409,10 @@ head(bins)
 
 `bins` 的每一行是一段实际序列窗口；先检查起止位置及 `gc`，再把数值映射到轨道高度与颜色。
 
-#### 绘制 GC 比例
+#### 绘制 GC 比例 {#tracks-draw-gc}
 
 
-```{r example-51, eval=FALSE}
+```{r example-49, eval=FALSE}
 p_tracks <- ggchord(seq_data = track_seq) + geom_seq() + geom_seq_center_label() +
   geom_track_bar(aes(track_value = gc, track_fill = gc), data = bins,
     position = position_track("gc", width = unit(10, "mm"))) +
@@ -1461,7 +1422,7 @@ p_tracks <- ggchord(seq_data = track_seq) + geom_seq() + geom_seq_center_label()
 p_tracks
 ```
 
-<figure class="documentation-figure"><a class="figure-link" href="../man/figures/tracks.png" title="点击放大查看"><img src="../man/figures/tracks.png" alt="从随包 pUC19 DNA 计算的 GC 比例" loading="lazy"></a><figcaption>从随包 pUC19 DNA 计算的 GC 比例 · <span class="figure-hint">点击放大查看</span></figcaption></figure>
+<figure class="documentation-figure"><a class="figure-link" href="../man/figures/tracks.png" title="点击放大查看"><img src="../man/figures/tracks.png" alt="从随包 pUC19 DNA 计算的 GC 比例" width="1296" height="1152" loading="lazy"></a><figcaption>从随包 pUC19 DNA 计算的 GC 比例 · <span class="figure-hint">点击放大查看</span></figcaption></figure>
 
 值域为 0–1，单位是比例。换成其他测量值时，要声明对应单位和有效范围。
 `position_track()` 决定放置与物理宽度，`scale_track_value_continuous()` 决定数值映射，
@@ -1481,7 +1442,7 @@ bar 表示相对基线的区间值。不要把相同数值域误认为必须位�
 本页准备代码已创建实际注释 `features`，完成上面的 GC 计算后继续：
 
 
-```{r example-52, eval=FALSE}
+```{r example-50, eval=FALSE}
 line_bins <- transform(bins, pos = floor((start + end) / 2),
   gc_mean = as.numeric(stats::filter(gc, rep(1 / 3, 3), sides = 2)))
 line_bins <- line_bins[is.finite(line_bins$gc_mean), c("accver", "pos", "gc_mean")]
@@ -1502,7 +1463,7 @@ focused_bins <- focus_ggchord_track(bins, track_seq,
 p_multitrack
 ```
 
-<figure class="documentation-figure"><a class="figure-link" href="../man/figures/multitrack.png" title="点击放大查看"><img src="../man/figures/multitrack.png" alt="pUC19 GC 比例、三点滑动均值和注释类型带" loading="lazy"></a><figcaption>pUC19 GC 比例、三点滑动均值和注释类型带 · <span class="figure-hint">点击放大查看</span></figcaption></figure>
+<figure class="documentation-figure"><a class="figure-link" href="../man/figures/multitrack.png" title="点击放大查看"><img src="../man/figures/multitrack.png" alt="pUC19 GC 比例、三点滑动均值和注释类型带" width="1296" height="1152" loading="lazy"></a><figcaption>pUC19 GC 比例、三点滑动均值和注释类型带 · <span class="figure-hint">点击放大查看</span></figcaption></figure>
 
 柱和线都来自同一组实际 GC 值，线使用三个窗口的滑动均值；两端没有完整窗口时省略，
 不填造观测值。折线位置是整数窗口中点。注释类型带有独立 ID 和配色。
@@ -1516,7 +1477,7 @@ bins 的 gc 在 0–1 之间，每行对应一个实际窗口；最后窗口可�
 ### 保存本页结果 {#tracks-save-result}
 在工作目录中保存刚刚创建的图；预览时使用相同宽高。
 
-```{r example-53, eval=FALSE}
+```{r example-51, eval=FALSE}
 ggsave("pUC19-tracks.png", p_multitrack, width = 9, height = 8, units = "in", dpi = 144)
 ```
 
@@ -1528,7 +1489,7 @@ ggsave("pUC19-tracks.png", p_multitrack, width = 9, height = 8, units = "in", dp
 ### 本页准备 {#recognition-prepare}
 在新的 R 会话中先运行下方代码，再按页面顺序继续。配色和排版是可选的显示设置，输入只选择需要的列。
 
-```{r example-54, eval=FALSE}
+```{r example-52, eval=FALSE}
 library(ggchord)
 ```
 
@@ -1536,7 +1497,7 @@ library(ggchord)
 直接使用随包 pUC19 DNA，查找目录引物的精确命中与选定酶切位点：
 
 
-```{r example-55, eval=FALSE}
+```{r example-53, eval=FALSE}
 data(plasmid_example_pUC19)
 target <- setNames(plasmid_example_pUC19$sequence, plasmid_example_pUC19$accver)
 primers <- find_primer_bindings(target, set = "universal")
@@ -1587,14 +1548,8 @@ Wallace 熔解温度估计是基于组成的启发式值。
 
 <details class="preparation"><summary>准备代码 · 在本页运行一次</summary>
 
-```{r example-56, eval=FALSE}
-# Optional appearance choices; none of these columns or scales is required input.
+```{r example-54, eval=FALSE}
 library(ggchord)
-seq_palette <- setNames(c("#3867D6", "#E58A28", "#219B83", "#9B59B6"),
-  c("MT108731.1", "MT118296.1", "OQ646790.1", "OR222515.1"))
-gene_palette <- c("+" = "#3B6FD8", "-" = "#E1812C", "." = "#8291A6")
-feature_palette <- c(CDS = "#3973CB", promoter = "#8B5EC4", rep_origin = "#E8A42D",
-  primer_bind = "#168F86", misc_feature = "#A0ADBD", protein_bind = "#CC6485")
 doc_theme <- theme_ggchord_publication(axis.text = element_text(size = 11),
   axis.text.check.overlap = TRUE) + theme(legend.position = "bottom")
 doc_axis <- function(coordinates = "relative") scale_seq_position_continuous(
@@ -1608,7 +1563,7 @@ doc_axis <- function(coordinates = "relative") scale_seq_position_continuous(
 选择随包 pUC19 与 pETDuet-1 的 AmpR 注释，保留 ID、坐标、链和文字。按负链进行反向互补，保证比较的是同一生物学方向的 DNA，而非仅比较注释名称。
 
 
-```{r example-57, eval=FALSE}
+```{r example-55, eval=FALSE}
 data(plasmid_example_pUC19)
 data(plasmid_example_pETDuet_1)
 homolog_source <- rbind(plasmid_example_pUC19, plasmid_example_pETDuet_1)
@@ -1634,7 +1589,7 @@ cds_dna <- vapply(seq_len(nrow(cluster_features)), function(i) {
 用编码 DNA 的完全一致性建立成员表；不同 DNA 不会因为都叫 AmpR 就分入同一组。
 
 
-```{r example-58, eval=FALSE}
+```{r example-56, eval=FALSE}
 membership <- data.frame(feature_id = cluster_features$feature_id,
   cluster_id = paste0("exact_CDS_", match(cds_dna, unique(cds_dna))))
 homologs <- link_ggchord_clusters(cluster_features, membership,
@@ -1650,7 +1605,7 @@ loci <- find_ggchord_loci(homolog_seq, cluster_features,
 全长质粒图会把单个 CDS 压得很小。这里从两条真实 CDS 的源范围构建窗口，两侧各增加 200 bp；原始序列表与注释表保持不变。
 
 
-```{r example-59, eval=FALSE}
+```{r example-57, eval=FALSE}
 # Compare equivalent local windows instead of shrinking one gene on full plasmids.
 homolog_windows <- cluster_features[c("accver", "start", "end")]
 local_homologs <- focus_ggchord_data(homolog_seq, homologs$data, cluster_features,
@@ -1666,7 +1621,7 @@ p_homologs <- ggchord(seq_data = local_homologs$seq_data,
 p_homologs
 ```
 
-<figure class="documentation-figure"><a class="figure-link" href="../man/figures/homologs.png" title="点击放大查看"><img src="../man/figures/homologs.png" alt="两条质粒的 AmpR 邻域：相同 CDS、200 bp 侧翼与源坐标" loading="lazy"></a><figcaption>两条质粒的 AmpR 邻域：相同 CDS、200 bp 侧翼与源坐标 · <span class="figure-hint">点击放大查看</span></figcaption></figure>
+<figure class="documentation-figure"><a class="figure-link" href="../man/figures/homologs.png" title="点击放大查看"><img src="../man/figures/homologs.png" alt="两条质粒的 AmpR 邻域：相同 CDS、200 bp 侧翼与源坐标" width="1440" height="720" loading="lazy"></a><figcaption>两条质粒的 AmpR 邻域：相同 CDS、200 bp 侧翼与源坐标 · <span class="figure-hint">点击放大查看</span></figcaption></figure>
 
 两条金色箭头表示已核对的相同编码序列，紫色带连接对应 CDS 范围，内部文字直接标明 AmpR。刻度来自各自源序列，因此同一个横向位置可以显示不同源坐标。断点标记说明图中只保留了局部窗口。
 
@@ -1674,7 +1629,7 @@ p_homologs
 
 ### 4. 将有证据的蛋白区间投影到两端 CDS {#homology-projection}
 
-```{r example-60, eval=FALSE}
+```{r example-58, eval=FALSE}
 # Exact CDS DNA equality supplies evidence for these selected ungapped residues.
 matching <- homologs$data[1, ]
 paired_coding <- transform(cluster_features, phase = 0)
@@ -1700,7 +1655,7 @@ projected_links
 ### 保存本页结果 {#homology-save-result}
 在工作目录中保存刚刚创建的图；预览时使用相同宽高。
 
-```{r example-61, eval=FALSE}
+```{r example-59, eval=FALSE}
 ggsave("ampR-neighbourhood.png", p_homologs, width = 10, height = 5, units = "in", dpi = 144)
 ```
 
@@ -1714,14 +1669,8 @@ ggsave("ampR-neighbourhood.png", p_homologs, width = 10, height = 5, units = "in
 
 <details class="preparation"><summary>准备代码 · 在本页运行一次</summary>
 
-```{r example-62, eval=FALSE}
-# Optional appearance choices; none of these columns or scales is required input.
+```{r example-60, eval=FALSE}
 library(ggchord)
-seq_palette <- setNames(c("#3867D6", "#E58A28", "#219B83", "#9B59B6"),
-  c("MT108731.1", "MT118296.1", "OQ646790.1", "OR222515.1"))
-gene_palette <- c("+" = "#3B6FD8", "-" = "#E1812C", "." = "#8291A6")
-feature_palette <- c(CDS = "#3973CB", promoter = "#8B5EC4", rep_origin = "#E8A42D",
-  primer_bind = "#168F86", misc_feature = "#A0ADBD", protein_bind = "#CC6485")
 doc_theme <- theme_ggchord_publication(axis.text = element_text(size = 11),
   axis.text.check.overlap = TRUE) + theme(legend.position = "bottom")
 doc_axis <- function(coordinates = "relative") scale_seq_position_continuous(
@@ -1774,7 +1723,7 @@ p_homologs
 和 DNA。完整 CDS 的 phase 明确为 0，翻译表显式设为 11。
 
 
-```{r example-63, eval=FALSE}
+```{r example-61, eval=FALSE}
 # Run the exact-CDS comparison first; these are complete source-backed CDS.
 coding <- transform(cluster_features, phase = 0)
 cds <- build_ggchord_cds(coding, genetic_code = 11)
@@ -1797,7 +1746,7 @@ DNA 匹配、氨基酸区间投影和真实翻译/比对是不同步骤，绘图
 
 ### BLASTp 查询范围与双端连接 {#projection-links}
 
-```{r example-64, eval=FALSE}
+```{r example-62, eval=FALSE}
 # Exact CDS DNA equality supplies evidence for these selected ungapped residues.
 matching <- homologs$data[1, ]
 paired_coding <- transform(cluster_features, phase = 0)
@@ -1829,7 +1778,7 @@ projected_links
 
 <details class="preparation"><summary>准备代码 · 在本页运行一次</summary>
 
-```{r example-65, eval=FALSE}
+```{r example-63, eval=FALSE}
 library(ggchord)
 data(seq_data_example)
 data(ribbon_data_example)
@@ -1844,8 +1793,8 @@ library(ggchord)
 seq_palette <- setNames(c("#3867D6", "#E58A28", "#219B83", "#9B59B6"),
   c("MT108731.1", "MT118296.1", "OQ646790.1", "OR222515.1"))
 gene_palette <- c("+" = "#3B6FD8", "-" = "#E1812C", "." = "#8291A6")
-feature_palette <- c(CDS = "#3973CB", promoter = "#8B5EC4", rep_origin = "#E8A42D",
-  primer_bind = "#168F86", misc_feature = "#A0ADBD", protein_bind = "#CC6485")
+
+library(ggchord)
 doc_theme <- theme_ggchord_publication(axis.text = element_text(size = 11),
   axis.text.check.overlap = TRUE) + theme(legend.position = "bottom")
 doc_axis <- function(coordinates = "relative") scale_seq_position_continuous(
@@ -1859,7 +1808,7 @@ doc_axis <- function(coordinates = "relative") scale_seq_position_continuous(
 
 
 
-```{r example-66, eval=FALSE}
+```{r example-64, eval=FALSE}
 focus_loci <- data.frame(accver = seqs$accver,
   start = floor(seqs$length * .25), end = floor(seqs$length * .75))
 focused <- focus_ggchord_data(seqs, links, genes, loci = focus_loci)
@@ -1872,7 +1821,7 @@ p_focus <- ggchord(seq_data = focused$seq_data, ribbon_data = focused$ribbon_dat
 p_focus
 ```
 
-<figure class="documentation-figure"><a class="figure-link" href="../man/figures/focus.png" title="点击放大查看"><img src="../man/figures/focus.png" alt="保留原始坐标刻度的局部序列视图" loading="lazy"></a><figcaption>保留原始坐标刻度的局部序列视图 · <span class="figure-hint">点击放大查看</span></figcaption></figure>
+<figure class="documentation-figure"><a class="figure-link" href="../man/figures/focus.png" title="点击放大查看"><img src="../man/figures/focus.png" alt="保留原始坐标刻度的局部序列视图" width="1440" height="864" loading="lazy"></a><figcaption>保留原始坐标刻度的局部序列视图 · <span class="figure-hint">点击放大查看</span></figcaption></figure>
 
 focus 把保留位置移到局部一基坐标，同时保留源原点、截断标记与报告。
 `boundary = "trim"` 可按线性显示投影裁剪连接，不重新比对序列；缩放后的比对长度
@@ -1880,7 +1829,7 @@ focus 把保留位置移到局部一基坐标，同时保留源原点、截断�
 
 ### 独立窗口与局部翻转 {#views-segments}
 
-```{r example-67, eval=FALSE}
+```{r example-65, eval=FALSE}
 windows <- data.frame(accver = rep(seqs$accver[1], 2),
   start = c(1, floor(seqs$length[1] * .65)), end = c(floor(seqs$length[1] * .4), seqs$length[1]),
   locus_id = c("left_window", "right_window"), row_id = seqs$accver[1], orientation = c(1, -1))
@@ -1904,7 +1853,7 @@ p_segments
 
 ### 按源坐标放置普通注释 {#views-mapping}
 
-```{r example-68, eval=FALSE}
+```{r example-66, eval=FALSE}
 source_position <- focus_loci$start[1] + 100
 source_mark <- map_ggchord_position(p_focus, seqs$accver[1], source_position, source = TRUE)
 p_marked <- p_focus + ggplot2::geom_point(data = source_mark, aes(x, y),
@@ -1932,7 +1881,7 @@ p_marked
 
 <details class="preparation"><summary>准备代码 · 在本页运行一次</summary>
 
-```{r example-69, eval=FALSE}
+```{r example-67, eval=FALSE}
 library(ggchord)
 data(seq_data_example)
 data(ribbon_data_example)
@@ -1947,8 +1896,8 @@ library(ggchord)
 seq_palette <- setNames(c("#3867D6", "#E58A28", "#219B83", "#9B59B6"),
   c("MT108731.1", "MT118296.1", "OQ646790.1", "OR222515.1"))
 gene_palette <- c("+" = "#3B6FD8", "-" = "#E1812C", "." = "#8291A6")
-feature_palette <- c(CDS = "#3973CB", promoter = "#8B5EC4", rep_origin = "#E8A42D",
-  primer_bind = "#168F86", misc_feature = "#A0ADBD", protein_bind = "#CC6485")
+
+library(ggchord)
 doc_theme <- theme_ggchord_publication(axis.text = element_text(size = 11),
   axis.text.check.overlap = TRUE) + theme(legend.position = "bottom")
 doc_axis <- function(coordinates = "relative") scale_seq_position_continuous(
@@ -1963,7 +1912,7 @@ doc_axis <- function(coordinates = "relative") scale_seq_position_continuous(
 query ID，序列颜色映射序列 ID，基因填色映射链。手动标度的名称与实际取值匹配。
 
 
-```{r example-70, eval=FALSE}
+```{r example-68, eval=FALSE}
 p_styled <- ggchord(seq_data = seqs, ribbon_data = links, gene_data = genes) + geom_seq() +
   geom_link_ribbon(aes(ribbon_fill = qaccver), alpha = .5) + geom_gene() +
   geom_seq_label(size = 4) + coord_collinear() + doc_axis() +
@@ -1974,7 +1923,7 @@ theme_variants <- list(minimal = theme_ggchord_minimal(), dark = theme_ggchord_d
 p_styled
 ```
 
-<figure class="documentation-figure"><a class="figure-link" href="../man/figures/styling.png" title="点击放大查看"><img src="../man/figures/styling.png" alt="显式设置序列、链方向和查询类别的颜色标度" loading="lazy"></a><figcaption>显式设置序列、链方向和查询类别的颜色标度 · <span class="figure-hint">点击放大查看</span></figcaption></figure>
+<figure class="documentation-figure"><a class="figure-link" href="../man/figures/styling.png" title="点击放大查看"><img src="../man/figures/styling.png" alt="显式设置序列、链方向和查询类别的颜色标度" width="1440" height="864" loading="lazy"></a><figcaption>显式设置序列、链方向和查询类别的颜色标度 · <span class="figure-hint">点击放大查看</span></figcaption></figure>
 
 | 角色 | 映射数据 | 常用标度家族 |
 | --- | --- | --- |
@@ -2018,7 +1967,7 @@ p_styled
 
 <details class="preparation"><summary>准备代码 · 在本页运行一次</summary>
 
-```{r example-71, eval=FALSE}
+```{r example-69, eval=FALSE}
 library(ggchord)
 data(seq_data_example)
 data(ribbon_data_example)
@@ -2033,8 +1982,8 @@ library(ggchord)
 seq_palette <- setNames(c("#3867D6", "#E58A28", "#219B83", "#9B59B6"),
   c("MT108731.1", "MT118296.1", "OQ646790.1", "OR222515.1"))
 gene_palette <- c("+" = "#3B6FD8", "-" = "#E1812C", "." = "#8291A6")
-feature_palette <- c(CDS = "#3973CB", promoter = "#8B5EC4", rep_origin = "#E8A42D",
-  primer_bind = "#168F86", misc_feature = "#A0ADBD", protein_bind = "#CC6485")
+
+library(ggchord)
 doc_theme <- theme_ggchord_publication(axis.text = element_text(size = 11),
   axis.text.check.overlap = TRUE) + theme(legend.position = "bottom")
 doc_axis <- function(coordinates = "relative") scale_seq_position_continuous(
@@ -2064,7 +2013,7 @@ doc_axis <- function(coordinates = "relative") scale_seq_position_continuous(
 
 
 
-```{r example-72, eval=FALSE}
+```{r example-70, eval=FALSE}
 identity_links <- ribbon_data_example[c("qaccver", "saccver", "qstart", "qend", "sstart", "send", "pident")]
 p_mapped <- ggchord(seq_data = seqs, ribbon_data = identity_links) + geom_seq() +
   geom_link_ribbon(aes(ribbon_fill = pident), alpha = .6) +
@@ -2100,7 +2049,7 @@ p_mapped
 
 <details class="preparation"><summary>准备代码 · 在本页运行一次</summary>
 
-```{r example-73, eval=FALSE}
+```{r example-71, eval=FALSE}
 library(ggchord)
 data(seq_data_example)
 data(ribbon_data_example)
@@ -2115,8 +2064,8 @@ library(ggchord)
 seq_palette <- setNames(c("#3867D6", "#E58A28", "#219B83", "#9B59B6"),
   c("MT108731.1", "MT118296.1", "OQ646790.1", "OR222515.1"))
 gene_palette <- c("+" = "#3B6FD8", "-" = "#E1812C", "." = "#8291A6")
-feature_palette <- c(CDS = "#3973CB", promoter = "#8B5EC4", rep_origin = "#E8A42D",
-  primer_bind = "#168F86", misc_feature = "#A0ADBD", protein_bind = "#CC6485")
+
+library(ggchord)
 doc_theme <- theme_ggchord_publication(axis.text = element_text(size = 11),
   axis.text.check.overlap = TRUE) + theme(legend.position = "bottom")
 doc_axis <- function(coordinates = "relative") scale_seq_position_continuous(
@@ -2142,7 +2091,7 @@ p_collinear
 先在[三种模式](#modes)中创建 `p_collinear`：
 
 
-```{r example-74, eval=FALSE}
+```{r example-72, eval=FALSE}
 ggsave("comparison.png", p_collinear, width = 8, height = 5, units = "in", dpi = 144)
 ```
 
@@ -2151,7 +2100,7 @@ RStudio Plots 使用当前面板尺寸，标签与图例可能随面板调整而
 最终 `ggsave()` 前，按相同显式尺寸预览：
 
 
-```{r example-75, eval=FALSE}
+```{r example-73, eval=FALSE}
 view_ggchord(p_collinear, width = 8, height = 5, units = "in")
 diagnosis <- diagnose_ggchord(p_collinear, width = 8, height = 5, units = "in")
 ```
@@ -2164,7 +2113,7 @@ diagnosis <- diagnose_ggchord(p_collinear, width = 8, height = 5, units = "in")
 
 ### 按字段名消费几何 {#output-geometry}
 
-```{r example-76, eval=FALSE}
+```{r example-74, eval=FALSE}
 geometry <- export_ggchord_layout(p_collinear, include = "seq")
 rows <- unique(geometry$seq[c("layer_id", "component", "source_row")])
 ```
@@ -2184,7 +2133,7 @@ rows <- unique(geometry$seq[c("layer_id", "component", "source_row")])
 
 ### 完整布局、表格与主动选择的排序 {#output-consumption}
 
-```{r example-77, eval=FALSE}
+```{r example-75, eval=FALSE}
 full_layout <- get_chord_layout(p_collinear)
 layer_tables <- export_ggchord_layout(p_collinear, include = c("seq", "gene"), original_data = TRUE)
 layout_choice <- optimize_ggchord_layout(seqs, links, optimize = c("order", "orientation"), weight = "count")
@@ -2265,7 +2214,7 @@ API 清理已删除旧别名的执行路径，见[迁移表](#migration)。同�
 
 <details class="preparation"><summary>准备代码 · 在本页运行一次</summary>
 
-```{r example-78, eval=FALSE}
+```{r example-76, eval=FALSE}
 library(ggchord)
 data(seq_data_example)
 data(ribbon_data_example)
@@ -2274,19 +2223,6 @@ seqs <- seq_data_example[c("accver", "length")]
 links <- ribbon_data_example[c("qaccver", "saccver", "qstart", "qend", "sstart", "send")]
 # The fixture preserves biological strands separately from its old display strands.
 genes <- transform(gene_data_example, strand = source_strand)[c("accver", "start", "end", "strand")]
-
-# Optional appearance choices; none of these columns or scales is required input.
-library(ggchord)
-seq_palette <- setNames(c("#3867D6", "#E58A28", "#219B83", "#9B59B6"),
-  c("MT108731.1", "MT118296.1", "OQ646790.1", "OR222515.1"))
-gene_palette <- c("+" = "#3B6FD8", "-" = "#E1812C", "." = "#8291A6")
-feature_palette <- c(CDS = "#3973CB", promoter = "#8B5EC4", rep_origin = "#E8A42D",
-  primer_bind = "#168F86", misc_feature = "#A0ADBD", protein_bind = "#CC6485")
-doc_theme <- theme_ggchord_publication(axis.text = element_text(size = 11),
-  axis.text.check.overlap = TRUE) + theme(legend.position = "bottom")
-doc_axis <- function(coordinates = "relative") scale_seq_position_continuous(
-  coordinates = coordinates, n.breaks = 3, minor_breaks = NULL,
-  labels = function(x) format(x, scientific = FALSE, big.mark = ",", trim = TRUE))
 
 data(plasmid_example_pUC19)
 plasmid_seq <- plasmid_example_pUC19[c("accver", "length")]
@@ -2297,7 +2233,7 @@ features <- feature_source[c("accver", "start", "end", "strand", "type", "anno")
 </details>
 
 
-```{r example-79, eval=FALSE}
+```{r example-77, eval=FALSE}
 p_migrated <- ggchord(plasmid_seq) + geom_seq() +
   geom_feature(data = features, shape = "block", width = .05) +
   geom_feature_label(data = features, label_rotation = 0) + coord_circular()
@@ -2327,6 +2263,9 @@ p_offsets <- ggchord(seqs, gene_data = genes) + geom_seq() +
 | [弦图](#gallery-realchord) | [质粒](#gallery-plasmid) | [CDS 邻域](#gallery-homologs) | [GC 轨道](#gallery-multitrack) |
 | [点连接](#gallery-pointlinks) | [注释堆叠](#gallery-featurestack) | [聚焦](#gallery-focus) | [标签布局](#gallery-labelauto) |
 
+### 图片与尺寸 {#gallery-figures}
+<div class="gallery-grid"><section class="gallery-card"><h3 id="gallery-chord">随包序列与已有比对区间的弦图</h3><figure class="documentation-figure"><a class="figure-link" href="../man/figures/chord.png" title="点击放大查看"><img src="../man/figures/chord.png" alt="随包序列与已有比对区间的弦图" width="1440" height="1152" loading="lazy"></a><figcaption>随包序列与已有比对区间的弦图 · <span class="figure-hint">点击放大查看</span></figcaption></figure><p><a href="#modes-chord">数据、代码与读图说明 →</a></p><p class="asset-size"><code>p_chord</code> · 10 × 8 in · 144 dpi</p></section><section class="gallery-card"><h3 id="gallery-circular">pUC19 注释的单序列圆图</h3><figure class="documentation-figure"><a class="figure-link" href="../man/figures/circular.png" title="点击放大查看"><img src="../man/figures/circular.png" alt="pUC19 注释的单序列圆图" width="1296" height="1152" loading="lazy"></a><figcaption>pUC19 注释的单序列圆图 · <span class="figure-hint">点击放大查看</span></figcaption></figure><p><a href="#modes-circular">数据、代码与读图说明 →</a></p><p class="asset-size"><code>p_circular</code> · 9 × 8 in · 144 dpi</p></section><section class="gallery-card"><h3 id="gallery-collinear">按选定注释锚定的随包序列共线性图</h3><figure class="documentation-figure"><a class="figure-link" href="../man/figures/collinear.png" title="点击放大查看"><img src="../man/figures/collinear.png" alt="按选定注释锚定的随包序列共线性图" width="1440" height="864" loading="lazy"></a><figcaption>按选定注释锚定的随包序列共线性图 · <span class="figure-hint">点击放大查看</span></figcaption></figure><p><a href="#modes-collinear">数据、代码与读图说明 →</a></p><p class="asset-size"><code>p_collinear</code> · 10 × 6 in · 144 dpi</p></section><section class="gallery-card"><h3 id="gallery-tracks">从随包 pUC19 DNA 计算的 GC 比例</h3><figure class="documentation-figure"><a class="figure-link" href="../man/figures/tracks.png" title="点击放大查看"><img src="../man/figures/tracks.png" alt="从随包 pUC19 DNA 计算的 GC 比例" width="1296" height="1152" loading="lazy"></a><figcaption>从随包 pUC19 DNA 计算的 GC 比例 · <span class="figure-hint">点击放大查看</span></figcaption></figure><p><a href="#tracks-domain">数据、代码与读图说明 →</a></p><p class="asset-size"><code>p_tracks</code> · 9 × 8 in · 144 dpi</p></section><section class="gallery-card"><h3 id="gallery-focus">保留原始坐标刻度的局部序列视图</h3><figure class="documentation-figure"><a class="figure-link" href="../man/figures/focus.png" title="点击放大查看"><img src="../man/figures/focus.png" alt="保留原始坐标刻度的局部序列视图" width="1440" height="864" loading="lazy"></a><figcaption>保留原始坐标刻度的局部序列视图 · <span class="figure-hint">点击放大查看</span></figcaption></figure><p><a href="#views-focus">数据、代码与读图说明 →</a></p><p class="asset-size"><code>p_focus</code> · 10 × 6 in · 144 dpi</p></section><section class="gallery-card"><h3 id="gallery-labels">实际基因注释的自动标签布局</h3><figure class="documentation-figure"><a class="figure-link" href="../man/figures/labels.png" title="点击放大查看"><img src="../man/figures/labels.png" alt="实际基因注释的自动标签布局" width="1440" height="864" loading="lazy"></a><figcaption>实际基因注释的自动标签布局 · <span class="figure-hint">点击放大查看</span></figcaption></figure><p><a href="#labels-layout">数据、代码与读图说明 →</a></p><p class="asset-size"><code>p_labels</code> · 10 × 6 in · 144 dpi</p></section><section class="gallery-card"><h3 id="gallery-realchord">原始序列、选定 CDS 与已有比对的弦图</h3><figure class="documentation-figure"><a class="figure-link" href="../man/figures/realchord.png" title="点击放大查看"><img src="../man/figures/realchord.png" alt="原始序列、选定 CDS 与已有比对的弦图" width="1440" height="1152" loading="lazy"></a><figcaption>原始序列、选定 CDS 与已有比对的弦图 · <span class="figure-hint">点击放大查看</span></figcaption></figure><p><a href="#real-data-chord">数据、代码与读图说明 →</a></p><p class="asset-size"><code>p_real_chord</code> · 10 × 8 in · 144 dpi</p></section><section class="gallery-card"><h3 id="gallery-reallinear">原始序列、全部导入 CDS 与筛选连接的线性图</h3><figure class="documentation-figure"><a class="figure-link" href="../man/figures/reallinear.png" title="点击放大查看"><img src="../man/figures/reallinear.png" alt="原始序列、全部导入 CDS 与筛选连接的线性图" width="1440" height="864" loading="lazy"></a><figcaption>原始序列、全部导入 CDS 与筛选连接的线性图 · <span class="figure-hint">点击放大查看</span></figcaption></figure><p><a href="#real-data-linear">数据、代码与读图说明 →</a></p><p class="asset-size"><code>p_real_linear</code> · 10 × 6 in · 144 dpi</p></section><section class="gallery-card"><h3 id="gallery-plasmid">pUC19 注释、精确引物命中与三个选定酶切位点</h3><figure class="documentation-figure"><a class="figure-link" href="../man/figures/plasmid.png" title="点击放大查看"><img src="../man/figures/plasmid.png" alt="pUC19 注释、精确引物命中与三个选定酶切位点" width="1440" height="1296" loading="lazy"></a><figcaption>pUC19 注释、精确引物命中与三个选定酶切位点 · <span class="figure-hint">点击放大查看</span></figcaption></figure><p><a href="#plasmids-input">数据、代码与读图说明 →</a></p><p class="asset-size"><code>p_plasmid</code> · 10 × 9 in · 144 dpi</p></section><section class="gallery-card"><h3 id="gallery-density">原始比对记录的区间密度</h3><figure class="documentation-figure"><a class="figure-link" href="../man/figures/density.png" title="点击放大查看"><img src="../man/figures/density.png" alt="原始比对记录的区间密度" width="1440" height="1152" loading="lazy"></a><figcaption>原始比对记录的区间密度 · <span class="figure-hint">点击放大查看</span></figcaption></figure><p><a href="#ribbons-density">数据、代码与读图说明 →</a></p><p class="asset-size"><code>p_density</code> · 10 × 8 in · 144 dpi</p></section><section class="gallery-card"><h3 id="gallery-pointlinks">从已有 HSP 区间计算中点的点连接</h3><figure class="documentation-figure"><a class="figure-link" href="../man/figures/pointlinks.png" title="点击放大查看"><img src="../man/figures/pointlinks.png" alt="从已有 HSP 区间计算中点的点连接" width="1440" height="1152" loading="lazy"></a><figcaption>从已有 HSP 区间计算中点的点连接 · <span class="figure-hint">点击放大查看</span></figcaption></figure><p><a href="#ribbons-points">数据、代码与读图说明 →</a></p><p class="asset-size"><code>p_points</code> · 10 × 8 in · 144 dpi</p></section><section class="gallery-card"><h3 id="gallery-featurestack">pUC19 中重叠注释的分层显示</h3><figure class="documentation-figure"><a class="figure-link" href="../man/figures/featurestack.png" title="点击放大查看"><img src="../man/figures/featurestack.png" alt="pUC19 中重叠注释的分层显示" width="1440" height="720" loading="lazy"></a><figcaption>pUC19 中重叠注释的分层显示 · <span class="figure-hint">点击放大查看</span></figcaption></figure><p><a href="#annotations-stack">数据、代码与读图说明 →</a></p><p class="asset-size"><code>p_stack</code> · 10 × 5 in · 144 dpi</p></section><section class="gallery-card"><h3 id="gallery-multitrack">pUC19 GC 比例、三点滑动均值和注释类型带</h3><figure class="documentation-figure"><a class="figure-link" href="../man/figures/multitrack.png" title="点击放大查看"><img src="../man/figures/multitrack.png" alt="pUC19 GC 比例、三点滑动均值和注释类型带" width="1296" height="1152" loading="lazy"></a><figcaption>pUC19 GC 比例、三点滑动均值和注释类型带 · <span class="figure-hint">点击放大查看</span></figcaption></figure><p><a href="#tracks-multiple">数据、代码与读图说明 →</a></p><p class="asset-size"><code>p_multitrack</code> · 9 × 8 in · 144 dpi</p></section><section class="gallery-card"><h3 id="gallery-homologs">两条质粒的 AmpR 邻域：相同 CDS、200 bp 侧翼与源坐标</h3><figure class="documentation-figure"><a class="figure-link" href="../man/figures/homologs.png" title="点击放大查看"><img src="../man/figures/homologs.png" alt="两条质粒的 AmpR 邻域：相同 CDS、200 bp 侧翼与源坐标" width="1440" height="720" loading="lazy"></a><figcaption>两条质粒的 AmpR 邻域：相同 CDS、200 bp 侧翼与源坐标 · <span class="figure-hint">点击放大查看</span></figcaption></figure><p><a href="#homology-membership">数据、代码与读图说明 →</a></p><p class="asset-size"><code>p_homologs</code> · 10 × 5 in · 144 dpi</p></section><section class="gallery-card"><h3 id="gallery-decorations">突出显示一条实际比对的查询区间</h3><figure class="documentation-figure"><a class="figure-link" href="../man/figures/decorations.png" title="点击放大查看"><img src="../man/figures/decorations.png" alt="突出显示一条实际比对的查询区间" width="1440" height="864" loading="lazy"></a><figcaption>突出显示一条实际比对的查询区间 · <span class="figure-hint">点击放大查看</span></figcaption></figure><p><a href="#annotations-decoration">数据、代码与读图说明 →</a></p><p class="asset-size"><code>p_decorated</code> · 10 × 6 in · 144 dpi</p></section><section class="gallery-card"><h3 id="gallery-labelauto">实际基因注释的自动侧边标签</h3><figure class="documentation-figure"><a class="figure-link" href="../man/figures/labelauto.png" title="点击放大查看"><img src="../man/figures/labelauto.png" alt="实际基因注释的自动侧边标签" width="1728" height="1440" loading="lazy"></a><figcaption>实际基因注释的自动侧边标签 · <span class="figure-hint">点击放大查看</span></figcaption></figure><p><a href="#labels-comparison">数据、代码与读图说明 →</a></p><p class="asset-size"><code>p_labelauto</code> · 12 × 10 in · 144 dpi</p></section><section class="gallery-card"><h3 id="gallery-labelradial">同一组基因注释的径向标签</h3><figure class="documentation-figure"><a class="figure-link" href="../man/figures/labelradial.png" title="点击放大查看"><img src="../man/figures/labelradial.png" alt="同一组基因注释的径向标签" width="1728" height="1440" loading="lazy"></a><figcaption>同一组基因注释的径向标签 · <span class="figure-hint">点击放大查看</span></figcaption></figure><p><a href="#labels-comparison">数据、代码与读图说明 →</a></p><p class="asset-size"><code>p_labelradial</code> · 12 × 10 in · 144 dpi</p></section><section class="gallery-card"><h3 id="gallery-labelarc">同一组基因注释的沿弧标签</h3><figure class="documentation-figure"><a class="figure-link" href="../man/figures/labelarc.png" title="点击放大查看"><img src="../man/figures/labelarc.png" alt="同一组基因注释的沿弧标签" width="1728" height="1440" loading="lazy"></a><figcaption>同一组基因注释的沿弧标签 · <span class="figure-hint">点击放大查看</span></figcaption></figure><p><a href="#labels-comparison">数据、代码与读图说明 →</a></p><p class="asset-size"><code>p_labelarc</code> · 12 × 10 in · 144 dpi</p></section><section class="gallery-card"><h3 id="gallery-styling">显式设置序列、链方向和查询类别的颜色标度</h3><figure class="documentation-figure"><a class="figure-link" href="../man/figures/styling.png" title="点击放大查看"><img src="../man/figures/styling.png" alt="显式设置序列、链方向和查询类别的颜色标度" width="1440" height="864" loading="lazy"></a><figcaption>显式设置序列、链方向和查询类别的颜色标度 · <span class="figure-hint">点击放大查看</span></figcaption></figure><p><a href="#styling-roles">数据、代码与读图说明 →</a></p><p class="asset-size"><code>p_styled</code> · 10 × 6 in · 144 dpi</p></section><section class="gallery-card"><h3 id="gallery-paf">从真实 minimap2 PAF 结果绘制的两条 EMALE 序列</h3><figure class="documentation-figure"><a class="figure-link" href="../man/figures/paf.png" title="点击放大查看"><img src="../man/figures/paf.png" alt="从真实 minimap2 PAF 结果绘制的两条 EMALE 序列" width="1440" height="720" loading="lazy"></a><figcaption>从真实 minimap2 PAF 结果绘制的两条 EMALE 序列 · <span class="figure-hint">点击放大查看</span></figcaption></figure><p><a href="#formats-zero-based">数据、代码与读图说明 →</a></p><p class="asset-size"><code>p_paf</code> · 10 × 5 in · 144 dpi</p></section><section class="gallery-card"><h3 id="gallery-first">第一张图：两条真实随包序列、基因箭头及已有比对区间</h3><figure class="documentation-figure"><a class="figure-link" href="../man/figures/first.png" title="点击放大查看"><img src="../man/figures/first.png" alt="第一张图：两条真实随包序列、基因箭头及已有比对区间" width="1440" height="720" loading="lazy"></a><figcaption>第一张图：两条真实随包序列、基因箭头及已有比对区间 · <span class="figure-hint">点击放大查看</span></figcaption></figure><p><a href="#installation-first-plot">数据、代码与读图说明 →</a></p><p class="asset-size"><code>p_first</code> · 10 × 5 in · 144 dpi</p></section></div>
+
 ### 两种语言共用一个来源 {#gallery-source}
 所有图均使用随包数据或有来源的真实记录，见[共享文档示例源码](https://github.com/DangJem/ggchord/blob/main/tools/documentation-examples.R)
 。未为改善外观改写任何原始 FASTA/GFF3/BLAST 记录。
@@ -2335,9 +2274,6 @@ p_offsets <- ggchord(seqs, gene_data = genes) + geom_seq() +
 
 各专题说明显示筛选。GC 来自实际 DNA 计算，同源分组例子核对实际编码序列；
 只有诊断示例会故意修改原始记录的副本，并明确标注，不把错误副本当作生物学数据。
-
-### 图片与尺寸 {#gallery-figures}
-<div class="gallery-grid"><section class="gallery-card"><h3 id="gallery-chord">随包序列与已有比对区间的弦图</h3><figure class="documentation-figure"><a class="figure-link" href="../man/figures/chord.png" title="点击放大查看"><img src="../man/figures/chord.png" alt="随包序列与已有比对区间的弦图" loading="lazy"></a><figcaption>随包序列与已有比对区间的弦图 · <span class="figure-hint">点击放大查看</span></figcaption></figure><p><a href="#modes-chord">数据、代码与读图说明 →</a></p><p class="asset-size"><code>p_chord</code> · 10 × 8 in · 144 dpi</p></section><section class="gallery-card"><h3 id="gallery-circular">pUC19 注释的单序列圆图</h3><figure class="documentation-figure"><a class="figure-link" href="../man/figures/circular.png" title="点击放大查看"><img src="../man/figures/circular.png" alt="pUC19 注释的单序列圆图" loading="lazy"></a><figcaption>pUC19 注释的单序列圆图 · <span class="figure-hint">点击放大查看</span></figcaption></figure><p><a href="#modes-circular">数据、代码与读图说明 →</a></p><p class="asset-size"><code>p_circular</code> · 9 × 8 in · 144 dpi</p></section><section class="gallery-card"><h3 id="gallery-collinear">按选定注释锚定的随包序列共线性图</h3><figure class="documentation-figure"><a class="figure-link" href="../man/figures/collinear.png" title="点击放大查看"><img src="../man/figures/collinear.png" alt="按选定注释锚定的随包序列共线性图" loading="lazy"></a><figcaption>按选定注释锚定的随包序列共线性图 · <span class="figure-hint">点击放大查看</span></figcaption></figure><p><a href="#modes-collinear">数据、代码与读图说明 →</a></p><p class="asset-size"><code>p_collinear</code> · 10 × 6 in · 144 dpi</p></section><section class="gallery-card"><h3 id="gallery-tracks">从随包 pUC19 DNA 计算的 GC 比例</h3><figure class="documentation-figure"><a class="figure-link" href="../man/figures/tracks.png" title="点击放大查看"><img src="../man/figures/tracks.png" alt="从随包 pUC19 DNA 计算的 GC 比例" loading="lazy"></a><figcaption>从随包 pUC19 DNA 计算的 GC 比例 · <span class="figure-hint">点击放大查看</span></figcaption></figure><p><a href="#tracks-domain">数据、代码与读图说明 →</a></p><p class="asset-size"><code>p_tracks</code> · 9 × 8 in · 144 dpi</p></section><section class="gallery-card"><h3 id="gallery-focus">保留原始坐标刻度的局部序列视图</h3><figure class="documentation-figure"><a class="figure-link" href="../man/figures/focus.png" title="点击放大查看"><img src="../man/figures/focus.png" alt="保留原始坐标刻度的局部序列视图" loading="lazy"></a><figcaption>保留原始坐标刻度的局部序列视图 · <span class="figure-hint">点击放大查看</span></figcaption></figure><p><a href="#views-focus">数据、代码与读图说明 →</a></p><p class="asset-size"><code>p_focus</code> · 10 × 6 in · 144 dpi</p></section><section class="gallery-card"><h3 id="gallery-labels">实际基因注释的自动标签布局</h3><figure class="documentation-figure"><a class="figure-link" href="../man/figures/labels.png" title="点击放大查看"><img src="../man/figures/labels.png" alt="实际基因注释的自动标签布局" loading="lazy"></a><figcaption>实际基因注释的自动标签布局 · <span class="figure-hint">点击放大查看</span></figcaption></figure><p><a href="#labels-layout">数据、代码与读图说明 →</a></p><p class="asset-size"><code>p_labels</code> · 10 × 6 in · 144 dpi</p></section><section class="gallery-card"><h3 id="gallery-realchord">原始序列、选定 CDS 与已有比对的弦图</h3><figure class="documentation-figure"><a class="figure-link" href="../man/figures/realchord.png" title="点击放大查看"><img src="../man/figures/realchord.png" alt="原始序列、选定 CDS 与已有比对的弦图" loading="lazy"></a><figcaption>原始序列、选定 CDS 与已有比对的弦图 · <span class="figure-hint">点击放大查看</span></figcaption></figure><p><a href="#real-data-chord">数据、代码与读图说明 →</a></p><p class="asset-size"><code>p_real_chord</code> · 10 × 8 in · 144 dpi</p></section><section class="gallery-card"><h3 id="gallery-reallinear">原始序列、全部导入 CDS 与筛选连接的线性图</h3><figure class="documentation-figure"><a class="figure-link" href="../man/figures/reallinear.png" title="点击放大查看"><img src="../man/figures/reallinear.png" alt="原始序列、全部导入 CDS 与筛选连接的线性图" loading="lazy"></a><figcaption>原始序列、全部导入 CDS 与筛选连接的线性图 · <span class="figure-hint">点击放大查看</span></figcaption></figure><p><a href="#real-data-linear">数据、代码与读图说明 →</a></p><p class="asset-size"><code>p_real_linear</code> · 10 × 6 in · 144 dpi</p></section><section class="gallery-card"><h3 id="gallery-plasmid">pUC19 注释、精确引物命中与三个选定酶切位点</h3><figure class="documentation-figure"><a class="figure-link" href="../man/figures/plasmid.png" title="点击放大查看"><img src="../man/figures/plasmid.png" alt="pUC19 注释、精确引物命中与三个选定酶切位点" loading="lazy"></a><figcaption>pUC19 注释、精确引物命中与三个选定酶切位点 · <span class="figure-hint">点击放大查看</span></figcaption></figure><p><a href="#plasmids-input">数据、代码与读图说明 →</a></p><p class="asset-size"><code>p_plasmid</code> · 10 × 9 in · 144 dpi</p></section><section class="gallery-card"><h3 id="gallery-density">原始比对记录的区间密度</h3><figure class="documentation-figure"><a class="figure-link" href="../man/figures/density.png" title="点击放大查看"><img src="../man/figures/density.png" alt="原始比对记录的区间密度" loading="lazy"></a><figcaption>原始比对记录的区间密度 · <span class="figure-hint">点击放大查看</span></figcaption></figure><p><a href="#ribbons-density">数据、代码与读图说明 →</a></p><p class="asset-size"><code>p_density</code> · 10 × 8 in · 144 dpi</p></section><section class="gallery-card"><h3 id="gallery-pointlinks">从已有 HSP 区间计算中点的点连接</h3><figure class="documentation-figure"><a class="figure-link" href="../man/figures/pointlinks.png" title="点击放大查看"><img src="../man/figures/pointlinks.png" alt="从已有 HSP 区间计算中点的点连接" loading="lazy"></a><figcaption>从已有 HSP 区间计算中点的点连接 · <span class="figure-hint">点击放大查看</span></figcaption></figure><p><a href="#ribbons-points">数据、代码与读图说明 →</a></p><p class="asset-size"><code>p_points</code> · 10 × 8 in · 144 dpi</p></section><section class="gallery-card"><h3 id="gallery-featurestack">pUC19 中重叠注释的分层显示</h3><figure class="documentation-figure"><a class="figure-link" href="../man/figures/featurestack.png" title="点击放大查看"><img src="../man/figures/featurestack.png" alt="pUC19 中重叠注释的分层显示" loading="lazy"></a><figcaption>pUC19 中重叠注释的分层显示 · <span class="figure-hint">点击放大查看</span></figcaption></figure><p><a href="#annotations-stack">数据、代码与读图说明 →</a></p><p class="asset-size"><code>p_stack</code> · 10 × 5 in · 144 dpi</p></section><section class="gallery-card"><h3 id="gallery-multitrack">pUC19 GC 比例、三点滑动均值和注释类型带</h3><figure class="documentation-figure"><a class="figure-link" href="../man/figures/multitrack.png" title="点击放大查看"><img src="../man/figures/multitrack.png" alt="pUC19 GC 比例、三点滑动均值和注释类型带" loading="lazy"></a><figcaption>pUC19 GC 比例、三点滑动均值和注释类型带 · <span class="figure-hint">点击放大查看</span></figcaption></figure><p><a href="#tracks-multiple">数据、代码与读图说明 →</a></p><p class="asset-size"><code>p_multitrack</code> · 9 × 8 in · 144 dpi</p></section><section class="gallery-card"><h3 id="gallery-homologs">两条质粒的 AmpR 邻域：相同 CDS、200 bp 侧翼与源坐标</h3><figure class="documentation-figure"><a class="figure-link" href="../man/figures/homologs.png" title="点击放大查看"><img src="../man/figures/homologs.png" alt="两条质粒的 AmpR 邻域：相同 CDS、200 bp 侧翼与源坐标" loading="lazy"></a><figcaption>两条质粒的 AmpR 邻域：相同 CDS、200 bp 侧翼与源坐标 · <span class="figure-hint">点击放大查看</span></figcaption></figure><p><a href="#homology-membership">数据、代码与读图说明 →</a></p><p class="asset-size"><code>p_homologs</code> · 10 × 5 in · 144 dpi</p></section><section class="gallery-card"><h3 id="gallery-decorations">突出显示一条实际比对的查询区间</h3><figure class="documentation-figure"><a class="figure-link" href="../man/figures/decorations.png" title="点击放大查看"><img src="../man/figures/decorations.png" alt="突出显示一条实际比对的查询区间" loading="lazy"></a><figcaption>突出显示一条实际比对的查询区间 · <span class="figure-hint">点击放大查看</span></figcaption></figure><p><a href="#annotations-decoration">数据、代码与读图说明 →</a></p><p class="asset-size"><code>p_decorated</code> · 10 × 6 in · 144 dpi</p></section><section class="gallery-card"><h3 id="gallery-labelauto">实际基因注释的自动侧边标签</h3><figure class="documentation-figure"><a class="figure-link" href="../man/figures/labelauto.png" title="点击放大查看"><img src="../man/figures/labelauto.png" alt="实际基因注释的自动侧边标签" loading="lazy"></a><figcaption>实际基因注释的自动侧边标签 · <span class="figure-hint">点击放大查看</span></figcaption></figure><p><a href="#labels-comparison">数据、代码与读图说明 →</a></p><p class="asset-size"><code>p_labelauto</code> · 12 × 10 in · 144 dpi</p></section><section class="gallery-card"><h3 id="gallery-labelradial">同一组基因注释的径向标签</h3><figure class="documentation-figure"><a class="figure-link" href="../man/figures/labelradial.png" title="点击放大查看"><img src="../man/figures/labelradial.png" alt="同一组基因注释的径向标签" loading="lazy"></a><figcaption>同一组基因注释的径向标签 · <span class="figure-hint">点击放大查看</span></figcaption></figure><p><a href="#labels-comparison">数据、代码与读图说明 →</a></p><p class="asset-size"><code>p_labelradial</code> · 12 × 10 in · 144 dpi</p></section><section class="gallery-card"><h3 id="gallery-labelarc">同一组基因注释的沿弧标签</h3><figure class="documentation-figure"><a class="figure-link" href="../man/figures/labelarc.png" title="点击放大查看"><img src="../man/figures/labelarc.png" alt="同一组基因注释的沿弧标签" loading="lazy"></a><figcaption>同一组基因注释的沿弧标签 · <span class="figure-hint">点击放大查看</span></figcaption></figure><p><a href="#labels-comparison">数据、代码与读图说明 →</a></p><p class="asset-size"><code>p_labelarc</code> · 12 × 10 in · 144 dpi</p></section><section class="gallery-card"><h3 id="gallery-styling">显式设置序列、链方向和查询类别的颜色标度</h3><figure class="documentation-figure"><a class="figure-link" href="../man/figures/styling.png" title="点击放大查看"><img src="../man/figures/styling.png" alt="显式设置序列、链方向和查询类别的颜色标度" loading="lazy"></a><figcaption>显式设置序列、链方向和查询类别的颜色标度 · <span class="figure-hint">点击放大查看</span></figcaption></figure><p><a href="#styling-roles">数据、代码与读图说明 →</a></p><p class="asset-size"><code>p_styled</code> · 10 × 6 in · 144 dpi</p></section><section class="gallery-card"><h3 id="gallery-paf">从真实 minimap2 PAF 结果绘制的两条 EMALE 序列</h3><figure class="documentation-figure"><a class="figure-link" href="../man/figures/paf.png" title="点击放大查看"><img src="../man/figures/paf.png" alt="从真实 minimap2 PAF 结果绘制的两条 EMALE 序列" loading="lazy"></a><figcaption>从真实 minimap2 PAF 结果绘制的两条 EMALE 序列 · <span class="figure-hint">点击放大查看</span></figcaption></figure><p><a href="#formats-zero-based">数据、代码与读图说明 →</a></p><p class="asset-size"><code>p_paf</code> · 10 × 5 in · 144 dpi</p></section><section class="gallery-card"><h3 id="gallery-first">第一张图：两条真实随包序列、基因箭头及已有比对区间</h3><figure class="documentation-figure"><a class="figure-link" href="../man/figures/first.png" title="点击放大查看"><img src="../man/figures/first.png" alt="第一张图：两条真实随包序列、基因箭头及已有比对区间" loading="lazy"></a><figcaption>第一张图：两条真实随包序列、基因箭头及已有比对区间 · <span class="figure-hint">点击放大查看</span></figcaption></figure><p><a href="#installation-first-plot">数据、代码与读图说明 →</a></p><p class="asset-size"><code>p_first</code> · 10 × 5 in · 144 dpi</p></section></div>
 
 ### 重建 {#gallery-reproduce}
 在源码仓库中准备好建议的开发依赖后运行：

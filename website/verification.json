@@ -1,7 +1,7 @@
 {
   "scope": "Documentation only: three original-file readers and one target-size PNG preview/diagnostic",
   "source": "tools/documentation-examples.R",
-  "code_md5": "e5244f16463e2ea4a195c83ff620a2a8",
+  "code_md5": "7ca6d1efbb8f9a65a7e4cd89418a6a81",
   "R": "R version 4.6.0 (2026-04-24)",
   "ggplot2": "4.0.3",
   "input_rows": {

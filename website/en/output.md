@@ -3,7 +3,7 @@
 ## Prepare this page {#prepare}
 In a fresh R session, run the code below, then follow this page in order. Colours and layout are optional display choices; inputs select only the fields needed.
 
-{{prepare:setup,docstyle,collinear}}
+{{prepare:setup,sequencepalette,docstyle,collinear}}
 
 ## Save the intended size {#size}
 After creating `p_collinear` in [three modes](modes.html):

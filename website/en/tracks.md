@@ -3,7 +3,7 @@
 ## Prepare this page {#prepare}
 In a fresh R session, run the code below, then follow this page in order. Colours and layout are optional display choices; inputs select only the fields needed.
 
-{{prepare:docstyle,plasmiddata}}
+{{prepare:featurepalette,docstyle,plasmiddata}}
 
 ## Compute a track from actual DNA {#domain}
 After this page’s preparation code, compute GC fraction in 100 bp
@@ -14,7 +14,7 @@ windows of bundled pUC19. The final shorter window uses its actual base count.
 
 Each row of `bins` is an actual sequence window. Check its endpoints and `gc`, then map values to track height and colour.
 
-### Draw GC fractions
+### Draw GC fractions {#draw-gc}
 
 {{code:tracks}}
 {{figure:tracks}}

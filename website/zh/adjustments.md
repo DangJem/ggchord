@@ -3,7 +3,7 @@
 ## 本页准备 {#prepare}
 在新的 R 会话中先运行下方代码，再按页面顺序继续。配色和排版是可选的显示设置，输入只选择需要的列。
 
-{{prepare:setup,docstyle}}
+{{prepare:setup,sequencepalette,docstyle}}
 
 ## 职责分配 {#grammar}
 | 任务 | 接口 |

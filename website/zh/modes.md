@@ -12,7 +12,7 @@
 ## 本页准备 {#prepare}
 在新的 R 会话中先运行下方代码，再按页面顺序继续。配色和排版是可选的显示设置，输入只选择需要的列。
 
-{{prepare:setup,docstyle,plasmiddata}}
+{{prepare:setup,sequencepalette,featurepalette,docstyle,plasmiddata}}
 
 下列对象都可按普通 ggplot 组合，
 打印或使用 `ggsave()` 保存。

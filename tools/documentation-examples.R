@@ -9,14 +9,18 @@ seqs <- seq_data_example[c("accver", "length")]
 links <- ribbon_data_example[c("qaccver", "saccver", "qstart", "qend", "sstart", "send")]
 # The fixture preserves biological strands separately from its old display strands.
 genes <- transform(gene_data_example, strand = source_strand)[c("accver", "start", "end", "strand")]
-# ---- docstyle ----
+# ---- sequencepalette ----
 # Optional appearance choices; none of these columns or scales is required input.
 library(ggchord)
 seq_palette <- setNames(c("#3867D6", "#E58A28", "#219B83", "#9B59B6"),
   c("MT108731.1", "MT118296.1", "OQ646790.1", "OR222515.1"))
 gene_palette <- c("+" = "#3B6FD8", "-" = "#E1812C", "." = "#8291A6")
+# ---- featurepalette ----
+library(ggchord)
 feature_palette <- c(CDS = "#3973CB", promoter = "#8B5EC4", rep_origin = "#E8A42D",
   primer_bind = "#168F86", misc_feature = "#A0ADBD", protein_bind = "#CC6485")
+# ---- docstyle ----
+library(ggchord)
 doc_theme <- theme_ggchord_publication(axis.text = element_text(size = 11),
   axis.text.check.overlap = TRUE) + theme(legend.position = "bottom")
 doc_axis <- function(coordinates = "relative") scale_seq_position_continuous(

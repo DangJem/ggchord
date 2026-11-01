@@ -133,3 +133,12 @@ Rscript tools/check-documentation-lessons.R
 The scoped script checks 20 pages in separate environments, without user exports,
 interactive previews, test suites, vignette rendering or package release checks.
 Preparation is initially folded and can be expanded to copy in page order.
+
+折叠页内目录在生成时直接读取实际标题，完整参考页无需等待脚本填充目录。
+图片使用资产清单的固有宽高预留比例，懒加载不挤动章节。文档顶栏保持可见，
+窄屏移除模板行负边距；数据图形仍按页面宽度缩放，并支持原始尺寸画布。
+
+Compact outlines are generated from actual headings, including reference topics.
+Intrinsic figure dimensions reserve their aspect ratios before lazy loading.
+The documentation header stays visible; narrow layouts remove inherited negative
+row margins. Figures remain responsive with an actual-size canvas available.

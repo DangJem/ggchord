@@ -6,6 +6,9 @@
 | [Chord](#realchord) | [Plasmid](#plasmid) | [CDS neighbourhood](#homologs) | [GC tracks](#multitrack) |
 | [Point links](#pointlinks) | [Feature stacking](#featurestack) | [Focus](#focus) | [Label layouts](#labelauto) |
 
+## Figures and dimensions {#figures}
+{{gallery}}
+
 ## One source for both languages {#source}
 All figures use bundled source-backed data or attributed real input records, defined in the shared
 [documentation example source](../assets/documentation-examples.R).
@@ -16,9 +19,6 @@ interpretation. The source and asset hashes are recorded in the [asset manifest]
 Display filters are stated in the relevant articles. GC is computed from actual
 DNA; exact-CDS membership is checked from sequence content. Deliberate corruption
 is confined to diagnostic examples and is never presented as biological data.
-
-## Figures and dimensions {#figures}
-{{gallery}}
 
 ## Reproduce {#reproduce}
 From the source repository, with its suggested development dependencies available:

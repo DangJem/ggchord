@@ -3,7 +3,7 @@
 ## Prepare this page {#prepare}
 In a fresh R session, run the code below, then follow this page in order. Colours and layout are optional display choices; inputs select only the fields needed. For file-based examples, first extract the [input bundle](../assets/tutorial-inputs.zip) so the working directory contains `examples/`.
 
-{{prepare:docstyle}}
+{{prepare:sequencepalette,docstyle}}
 
 This complete workflow uses four sequence records already present in the source
 repository. It requires the matching development checkout or the tutorial input

@@ -23,6 +23,10 @@ def table(headers, rows):
 
 def expand(text, lang, *, figures='assets', reference=''):
     chunks = snippets()
+    with (WEB / 'assets/plots.csv').open() as f:
+        assets = list(csv.DictReader(f))
+    dimensions={a['id']:(round(float(a['width'])*float(a['dpi'])),
+        round(float(a['height'])*float(a['dpi']))) for a in assets}
     def preparation(match):
         keys=match[1].split(',')
         label='Preparation code — run once on this page' if lang=='en' else '准备代码 · 在本页运行一次'
@@ -32,8 +36,9 @@ def expand(text, lang, *, figures='assets', reference=''):
     def figure(key):
         caption=html.escape(CAPTIONS[key][lang])
         hint='Click to enlarge' if lang=='en' else '点击放大查看'
+        width,height=dimensions[key]
         return (f'<figure class="documentation-figure"><a class="figure-link" href="{figures}/{key}.png" '
-            f'title="{hint}"><img src="{figures}/{key}.png" alt="{caption}" loading="lazy"></a>'
+            f'title="{hint}"><img src="{figures}/{key}.png" alt="{caption}" width="{width}" height="{height}" loading="lazy"></a>'
             f'<figcaption>{caption} · <span class="figure-hint">{hint}</span></figcaption></figure>')
     text = re.sub(r'\{\{code:(\w+)\}\}', lambda m: '\n```r\n' + chunks[m[1]] + '\n```\n', text)
     text = re.sub(r'\{\{figure:(\w+)\}\}', lambda m: figure(m[1]), text)
@@ -50,8 +55,6 @@ def expand(text, lang, *, figures='assets', reference=''):
         ['旧写法（勿执行）', '当前写法', '删除 / 守卫', '含义'], rows))
     text = text.replace('{{terms}}', table(['English', '现代汉语', 'API / units'],
         json.loads((WEB / 'terms.json').read_text())))
-    with (WEB / 'assets/plots.csv').open() as f:
-        assets = list(csv.DictReader(f))
     gallery = []
     destinations={'chord':'modes#chord','circular':'modes#circular','collinear':'modes#collinear',
         'first':'installation#first-plot','realchord':'real-data#chord','reallinear':'real-data#linear',

@@ -12,7 +12,7 @@ All three consume existing data; none computes a new BLAST alignment. Try the mi
 ## Prepare this page {#prepare}
 In a fresh R session, run the code below, then follow this page in order. Colours and layout are optional display choices; inputs select only the fields needed.
 
-{{prepare:setup,docstyle,plasmiddata}}
+{{prepare:setup,sequencepalette,featurepalette,docstyle,plasmiddata}}
 
 Run this page’s preparation code below. once. Each object below is a normal
 composable ggplot; print it or use `ggsave()`.

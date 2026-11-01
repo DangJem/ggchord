@@ -3,7 +3,7 @@
 ## Prepare this page {#prepare}
 In a fresh R session, run the code below, then follow this page in order. Colours and layout are optional display choices; inputs select only the fields needed.
 
-{{prepare:setup,docstyle}}
+{{prepare:setup,sequencepalette,docstyle}}
 
 ## Focus without losing origins {#focus}
 After this page’s preparation code:

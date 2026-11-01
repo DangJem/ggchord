@@ -60,6 +60,8 @@ def main():
             require('中文' not in text, f'{lang}/{p["slug"]}: inconsistent language label')
             require(bool(p['title'][lang]), f'{p["slug"]}: missing localized title')
             require('{{' not in expand(text,lang),f'{lang}/{p["slug"]}: unexpanded source marker')
+            require(all(re.search(r'\{#[^}]+\}$',heading) for heading in re.findall(r'^#{2,4} .+$',text,re.M)),
+                f'{lang}/{p["slug"]}: headings need explicit paired anchors')
         require(re.findall(r'\{#([^}]+)\}', texts[0]) == re.findall(r'\{#([^}]+)\}', texts[1]), f'{p["slug"]}: unmatched anchors')
         require(re.findall(r'\{\{[^}]+\}\}', texts[0]) == re.findall(r'\{\{[^}]+\}\}', texts[1]), f'{p["slug"]}: unmatched shared code/asset markers')
         require(blocks(expand(texts[0], 'en')) == blocks(expand(texts[1], 'zh')), f'{p["slug"]}: mismatched executable code')
@@ -154,7 +156,11 @@ def main():
                 if Path(rel).name!='reference.html':
                     require('main' in doc.ids,f'{rel}: missing skip target')
                     require('site-language' in doc.ids and 'site-search' in doc.ids,f'{rel}: missing language/search navigation')
-            for img in doc.images: require('alt' in img,f'{rel}: image missing alt')
+            for img in doc.images:
+                require('alt' in img,f'{rel}: image missing alt')
+                if Path(urlsplit(img.get('src','')).path).stem in CAPTIONS:
+                    require(int(img.get('width','0'))>0 and int(img.get('height','0'))>0,
+                        f'{rel}: figure must reserve its intrinsic dimensions')
             for url in doc.links:
                 require('rdrr.io/pkg/ggchord/man/' not in url,f'{rel}: current API autolink escapes local reference {url}')
                 split = urlsplit(url)
