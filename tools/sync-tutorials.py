@@ -4,7 +4,7 @@ import argparse
 import re
 from documentation_lib import ROOT, WEB, PAGES, expand
 
-CHAPTERS = [p for p in PAGES if p['slug'] not in ['index', 'reference', 'news']]
+CHAPTERS = [p for p in PAGES if p['slug'] not in ['index', 'reference', 'news', 'articles']]
 
 def tutorial(lang):
     title = 'ggchord: chord, circular and collinear tutorial' if lang == 'en' else 'ggchord：弦图、圆图与共线性图教程'
@@ -30,7 +30,7 @@ vignette: >
 knitr::opts_chunk$set(eval = FALSE, collapse = TRUE, comment = "#>")
 ```
 
-<img src="../man/figures/logo.png" alt="ggchord" width="200">
+<img src="../man/figures/logo.png" alt="ggchord" width="150">
 
 {intro}
 
@@ -42,14 +42,17 @@ knitr::opts_chunk$set(eval = FALSE, collapse = TRUE, comment = "#>")
             lambda m: '#'+m[1]+' '+m[2]+(f' {{#{p["slug"]}-{m[3]}}}' if m[3] else ''), body, flags=re.M)
         body = re.sub(r'\[([^\]]+)\]\(reference/([^)#]+)\.html(?:#[^)]*)?\)',
             lambda m: f'{m[1]} (`help("{m[2]}", package = "ggchord")`)', body)
-        body = re.sub(r'\[([^\]]+)\]\(([a-z]+)\.html(?:#([^)]*))?\)',
+        body = re.sub(r'\[([^\]]+)\]\(([a-z-]+)\.html(?:#([^)]*))?\)',
             lambda m: f'[{m[1]}](#{m[2]}' + (f'-{m[3]}' if m[3] else '')+')', body)
         body = body.replace('](#index-quick-start)', '](#shared-setup)')
         body = body.replace('](#reference)', '](#glossary)')
         # Website downloads become source paths in an installed vignette.
         body = body.replace('../assets/logo.svg', '../man/figures/logo.svg')
-        body = re.sub(r'\[([^\]]+)\]\(\.\./assets/(plots\.csv|icon\.json)\)', lambda m: m[1]+' (`website/assets/'+m[2]+'` in the source repository)', body)
+        body = re.sub(r'\[([^\]]+)\]\(\.\./assets/(plots\.csv|icon\.json|input-hashes\.json|example-results\.json)\)', lambda m: m[1]+' (`website/assets/'+m[2]+'` in the source repository)', body)
         body = body.replace('../assets/documentation-examples.R', 'https://github.com/DangJem/ggchord/blob/main/tools/documentation-examples.R')
+        body = body.replace('../assets/ASSET-SOURCES.md', 'https://github.com/DangJem/ggchord/blob/main/website/ASSET-SOURCES.md')
+        body = body.replace('../assets/tutorial-inputs.zip', 'https://github.com/DangJem/ggchord/tree/main/examples')
+        body = body.replace('../build-manifest.json', 'https://github.com/DangJem/ggchord/tree/main/website')
         text += f'\n## {p["title"][lang]} {{#{p["slug"]}}}\n\n'+body+'\n'
     label = 'Shared setup' if lang == 'en' else '共享准备代码'
     text = text.replace(intro+'\n\n',intro+f'\n\n## {label} {{#shared-setup}}\n\n')
@@ -69,15 +72,15 @@ def readme(lang):
     title = 'ggchord：弦图、圆图与共线性图' if zh else 'ggchord: chord, circular and collinear sequence plots'
     intro = ('基于 ggplot2 的 R 包。用独立图层组合序列骨架、区间连接、基因、通用注释、标签和定量轨道。'
         if zh else 'An R package built on ggplot2. Combine independent layers for sequence backbones, interval links, genes, general features, labels and quantitative tracks.')
-    status = ('这里展示本地开发的 **0.16.5 候选 API**，当前正式发布版仍为 0.15.0。源码中的新网站尚未部署。'
-        if zh else 'This README describes the local **0.16.5 candidate API**. The latest formal release remains 0.15.0. The new website source has not been deployed.')
+    status = ('这里展示**0.16.5 开发版本（基于 0.16.4 候选 API）**，当前正式发布版仍为 0.15.0。源码中的新网站尚未部署。'
+        if zh else 'This README describes the local **0.16.5 development version, based on the 0.16.4 candidate API**. The latest formal release remains 0.15.0. The new website source has not been deployed.')
     install = '安装' if zh else 'Install'
     quick = '三种模式' if zh else 'Three views'
     sizing = '预览与保存' if zh else 'Preview and save'
     onwards = '继续阅读' if zh else 'Continue'
     text = f'''[English](README.md) · [现代汉语](README-Hans.md)
 
-<img src="man/figures/logo.png" alt="ggchord" width="180" align="right">
+<img src="man/figures/logo.png" alt="ggchord" width="150" align="right">
 
 # {title}
 
@@ -97,6 +100,7 @@ remotes::install_github("DangJem/ggchord")
 '''
     text += ('如已检出本版源码，在仓库根目录使用 `pkgload::load_all(".")`。不声称存在 CRAN 发布。' if zh else
         'For a checkout of this version, use `pkgload::load_all(".")` from its root. A CRAN release is not claimed.')
+    text += ('\n\n![真实序列与全部注释的共线性案例](man/figures/reallinear.png)\n\n图中使用仓库原始 FASTA、GFF3 与 BLAST；完整读取、筛选代码与解释见[真实数据专题](vignettes/ggchord_guide_hans.Rmd#real-data)。\n' if zh else '\n\n![Collinear case with real sequences and all annotations](man/figures/reallinear.png)\n\nOriginal repository FASTA, GFF3 and BLAST inputs; see the [real-data workflow](vignettes/ggchord_vignette.Rmd#real-data) for complete import, filtering code and interpretation.\n')
     text += f'\n\n## {quick}\n\n'
     text += ('下列为合成教学输入，不代表生物学观测。' if zh else 'These are synthetic teaching inputs, not biological observations.')+'\n\n'
     for key in ['setup', 'chord', 'circular', 'collinear']:
@@ -111,10 +115,10 @@ remotes::install_github("DangJem/ggchord")
     text += '\n\n```r\nview_ggchord(p_collinear, width = 8, height = 5, units = "in")\n'+code['save']+'\n```\n'
     text += f'\n## {onwards}\n\n'
     tutorial_name = 'ggchord_guide_hans.Rmd' if zh else 'ggchord_vignette.Rmd'
-    text += ('- [入门教程](vignettes/'+tutorial_name+')：安装 → 数据 → 最小出图 → 常用调整 → 进阶 → FAQ。\n'
+    text += ('- [完整用户教程](vignettes/'+tutorial_name+')：真实数据、质粒、输入格式、连接、标签、轨道、投影与同源、样式、输出和 FAQ。\n'
         '- [迁移指南](MIGRATION-Hans.md)与 [NEWS](NEWS.md)。\n'
         '- [本地网站构建与预览](website/README.md)，含函数分类、术语、图集与部署方案。\n' if zh else
-        '- [Starter tutorial](vignettes/'+tutorial_name+'): install → data → first plot → adjustments → advanced topics → FAQ.\n'
+        '- [User guide](vignettes/'+tutorial_name+'): real data, plasmids, formats, links, labels, tracks, projection, homology, styling, output and FAQ.\n'
         '- [Migration guide](MIGRATION.md) and [NEWS](NEWS.md).\n'
         '- [Build and preview the local website](website/README.md), including reference categories, terminology, gallery and deployment design.\n')
     text += '\n[Issues](https://github.com/DangJem/ggchord/issues) · [MIT license](LICENSE)\n'

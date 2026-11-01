@@ -20,3 +20,9 @@
 使用 `project_ggchord_features(genomic, cds, from = "genome")` 反向投影。
 非密码子边界需要明确 `codon_boundary` 策略。结果保留源坐标、父对象与投影来源。
 处理不完整或多段生物学模型前，应阅读完整[函数参考](reference/project_ggchord_features.html)。
+
+## 同时投影 domain 与 feature 连接 {#links}
+上面的 domain 例子沿显式 CDS 片段映射已观测残基区间。
+[编码坐标连接](homology.html#projection)增加配对模型，演示单独的无 gap 声明。
+两类辅助函数都不翻译 DNA、验证遗传密码或创建新比对。绘制不连续基因组锚点前，
+应对照保留的分段片段和来源元数据。

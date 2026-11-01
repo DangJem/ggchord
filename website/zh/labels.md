@@ -22,3 +22,15 @@
 唯一 `feature_id` 允许重排或取子集，但标识、区间、链仍须一致。
 多个匹配层需要明确 Position 或无歧义 ID。先选最终设备尺寸再预览；调整 Plots
 面板会改变可用空间。
+
+## 对照三种基因标签布局 {#comparison}
+{{code:labellayouts}}
+{{figure:labelauto}}
+{{figure:labelradial}}
+{{figure:labelarc}}
+
+打印 `label_plots$auto`、`$radial` 或 `$arc` 查看候选图。三图输入和请求字号相同，
+仅布局选择不同。auto 在适用处使用共享侧列，radial 跟随局部轮廓，arc 跟随序列切线。
+`p_manual_labels` 展示独立固定标签入口，显式旋转不属于自动 repel 图层。
+通用 feature 标签还可选内部优先/callout，密集混合注释见[完整圆图](plasmids.html)，
+继承或显式 Position 锚点见[堆叠](annotations.html#stack)。

@@ -30,8 +30,8 @@ Run this repository-only example from its root. Original files are not rewritten
 `read_genbank()` retains record/feature provenance and segmented locations.
 `read_bed()` and `read_paf()` retain their conversion metadata. `as_ggchord_seq()`,
 `as_ggchord_feature()` and `as_ggchord_link()` adapt supported S4 objects; provide
-full lengths and IDs explicitly when the object lacks them. `file` selects one
-file; `files` supports an explicitly expanded collection. Missing sequence or
+full lengths and IDs explicitly when the object lacks them. `file` and `files` both accept path vectors or globs; repeated resolved paths
+are read once in first-occurrence order. Choose one clear entry for a workflow. Missing sequence or
 homology data must be supplied by the analyst, not invented by the plotting layer.
 
 ## Validate, clean, prepare {#validation}
@@ -46,3 +46,24 @@ Inspect `validation`, `cleaned$report` and `prepared$report` before plotting.
 means a physical file line; GenBank has separate record/feature provenance.
 Aggregates may have `source_rows` and `.length_estimated` flags. Preserve these
 when filtering or merging links.
+
+## Inspect a problematic input and its repair report {#repairs}
+{{code:cleaning}}
+{{results:cleaning}}
+
+The demonstration intentionally includes an unknown ID, reversed interval and
+identity outside 0–100. These explicit repairs are not a recommendation to clip
+scientific observations silently. Inspect `problem_report` and `repaired$report`,
+retain the original table, and choose policies appropriate to actual evidence.
+A legitimate reverse alignment can keep endpoint order instead of being sorted.
+`prepare_ggchord_data()` therefore retains its workflow-specific default policy;
+standalone cleaning and preparation should not be assumed identical.
+
+## Declare genome and contig keys {#hierarchy}
+{{code:hierarchy}}
+
+`hierarchy$contigs` summarizes declared membership without concatenating contigs.
+No membership is inferred from an accession prefix. Provide globally unique IDs
+when separate samples reuse local contig names. Use [file formats and adapters](formats.html)
+for format/optional-object details, and the [real-record tutorial](real-data.html)
+to carry reports into a complete figure.

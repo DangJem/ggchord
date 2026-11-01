@@ -26,3 +26,18 @@ matching feature layer. Unique `feature_id` permits reordering or subsets, but
 accession, interval and strand must agree. Multiple matching layers need an
 explicit Position or unambiguous IDs. Preview after selecting the final device
 size; resizing the Plots pane changes the available space.
+
+## Compare the three gene layouts {#comparison}
+{{code:labellayouts}}
+{{figure:labelauto}}
+{{figure:labelradial}}
+{{figure:labelarc}}
+
+Print `label_plots$auto`, `$radial` or `$arc` to inspect a candidate. The inputs and
+requested font size are identical; only the layout choice changes. Auto uses
+shared columns where applicable, radial follows local contours and arc follows
+the sequence tangent. `p_manual_labels` shows the separate fixed-label route;
+its explicit rotation does not belong in an automatic repel layer.
+General feature labels have additional internal-first/callout choices; see the
+[complete circular workflow](plasmids.html) for dense mixed annotation and
+[stacking](annotations.html#stack) for inherited or explicit Position anchors.

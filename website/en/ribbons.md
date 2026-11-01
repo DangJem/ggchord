@@ -1,0 +1,41 @@
+## Begin with the original link table {#input}
+Use the [real-record workflow](real-data.html#selection) to create `seq_real`,
+`link_real` and `real_filtered`. Keep its original tables and filter report.
+
+{{code:ribbons}}
+{{results:ribbons}}
+
+## Understand each transformation {#transformations}
+Filtering keeps observations meeting declared thresholds. Reciprocal-overlap
+deduplication selects a representative existing observation; it does not sum
+identities. Merging combines nearby compatible intervals into a display envelope.
+Bundling groups nearby query/subject locations into an aggregate. Inspect each
+`$report` and source-row membership, especially when extra metadata conflict.
+The merged or bundled envelope is not a newly computed nucleotide alignment.
+Estimated lengths retain their flags; unobserved identity is never invented.
+
+## Density is an explicit statistic {#density}
+{{figure:density}}
+
+`stat_ribbon_density()` maps a computed density, and `stat_ribbon_bundle()` performs
+its explicit aggregation during build. The ordinary ribbon geom still draws one
+ribbon per row. Interpret count, reported length and identity weighting in their
+own units; more opaque ribbons need not mean stronger independently validated
+homology. A point anchor without direction evidence cannot acquire an aggregate
+orientation merely because its endpoints are equal.
+
+## Choose interval ribbons or point links {#points}
+After the [shared setup](index.html#quick-start):
+
+{{code:pointlinks}}
+{{figure:pointlinks}}
+
+Here `support` is a declared synthetic demonstration value. Lines use `qpos/spos`,
+not interval ends, and an arrow points from query to subject. The line default
+avoidance is `none`; ribbon avoidance is `uniform`. Global chord rotation belongs
+to the coordinate system. Pair selection and adjacent-row defaults in linear
+plots are covered in [three modes](modes.html#collinear).
+
+The point-link colour scale supplies `available_aes = "link_colour"` to its
+colourbar explicitly. Ordinary ggplot2 colourbars and the wrapper default do not
+accept every extended role; choose the matching role when making a custom guide.

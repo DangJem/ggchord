@@ -48,6 +48,20 @@ def expand(text, lang, *, figures='assets', reference=''):
         gallery.append(f'### {CAPTIONS[key][lang]} {{#{key}}}\n\n{figure(key)}\n\n'
             f'`{asset["object"]}` · {asset["width"]} × {asset["height"]} in · '
             f'{asset["dpi"]} dpi · PNG · `{key}`')
+    results_path = WEB/'assets/example-results.json'
+    if results_path.is_file():
+        results = json.loads(results_path.read_text())
+        text = re.sub(r'\{\{results:(\w+)\}\}', lambda m: table(
+            ['Metric','Observed output'] if lang=='en' else ['指标（代码字段）','实际输出'],
+            [[f'`{k}`',v] for k,v in results[m[1]].items()]),text)
+    coverage=json.loads((WEB/'coverage.json').read_text())
+    titles={p['slug']:p['title'][lang] for p in PAGES}
+    article_slugs=['real-data','plasmids','modes','data','formats','ribbons','annotations','labels','tracks','homology','projection','views','styling','adjustments','output','migration','faq']
+    text=text.replace('{{articles}}','\n'.join(f'- [{titles[k]}]({k}.html)' for k in article_slugs))
+    text=text.replace('{{coverage}}',table(
+        ['Capability','Read','Executable source / output'] if lang=='en' else ['能力','阅读入口','可运行来源 / 输出'],
+        [[c['title'][lang],', '.join(f'[{titles[k]}]({k}.html)' for k in c['articles']),
+          ', '.join('`'+k+'`' for k in c['snippets'])+(' · '+', '.join(c['figures']) if c['figures'] else '')] for c in coverage]))
     text = text.replace('{{gallery}}', '\n\n'.join(gallery)).replace('{{reference}}', reference)
     return text
 

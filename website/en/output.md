@@ -31,3 +31,18 @@ applications. Inspect warnings, text/guide measurements and placement reasons.
 and inspect the result. Previews and diagnostics use independent render copies.
 Direct mutation of shared ggproto layer environments retains ordinary ggplot2
 reference semantics; it is not an automatically isolated edit.
+
+## Complete layout, tables and opt-in ordering {#consumption}
+{{code:layoutresults}}
+
+Create `p_collinear` in [three modes](modes.html#collinear) first.
+`full_layout` retains the complete documented getter result. `layer_tables`
+selects sequence/gene tables and resolved original data; it is not a raw-file
+archive. Layer IDs and source-row roles distinguish independent same-kind layers.
+Empty components can lack a fixed column prototype. Select fields by name.
+
+`layout_choice` optimizes declared order/orientation using count weighting because
+the synthetic links have no reported alignment-length column. It returns a choice
+for explicit use in sequence settings; it does not mutate the plot or establish
+biological orientation. Save the choice and compare the result before adopting it.
+The export [asset manifest](../assets/plots.csv) records exact documentation sizes.

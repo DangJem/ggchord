@@ -17,5 +17,5 @@
 ^\.git$
 ^tools$
 ^website$
-^\.site$
+^\.site
 ^MIGRATION.*\.md$

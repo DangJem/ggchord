@@ -25,3 +25,10 @@ Non-codon boundaries require an explicit `codon_boundary` policy. Source
 coordinates, parents and projection provenance remain attached. Read the full
 [function reference](reference/project_ggchord_features.html) before applying
 this to partial or multi-segment biological models.
+
+## Project feature links as well as domains {#links}
+The domain example above maps an observed residue interval through explicit CDS
+segments. [Coding-coordinate links](homology.html#projection) adds a paired model
+and demonstrates the separate ungapped assertion. Neither helper translates DNA,
+validates genetic code or creates a new alignment. Compare the retained segment
+pieces and source metadata before drawing discontinuous genomic anchors.

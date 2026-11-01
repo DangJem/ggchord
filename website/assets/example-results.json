@@ -1,0 +1,35 @@
+{
+  "real": {
+    "sequences": 4,
+    "features": 266,
+    "displayed_chord_features": 24,
+    "raw_links": 32,
+    "displayed_links": 8,
+    "labelled_features": 8
+  },
+  "cleaning": {
+    "input_rows": 2,
+    "retained_rows": 1
+  },
+  "ribbons": {
+    "filtered": 8,
+    "deduplicated": 8,
+    "merged": 8,
+    "bundled": 28
+  },
+  "plasmid": {
+    "sequence_length": 2686,
+    "features": 9,
+    "primers": 6,
+    "all_sites": 49845,
+    "display_sites": 3
+  },
+  "projection": {
+    "genomic_features": 1,
+    "projected_links": 1
+  },
+  "optional": {
+    "genbank": "SKIP: Biopython unavailable",
+    "ranges": "SKIP: GenomicRanges unavailable"
+  }
+}

@@ -24,3 +24,11 @@ origin-crossing protein matches. Source genetic-code metadata does not select
 another translation table. For nonstandard codes use DNA matching or external
 code-aware analysis. Confidence is a heuristic label, not a probability.
 Use [explicit CDS projection](projection.html) for known protein/genome maps.
+
+## Follow an annotated reference workflow {#reference}
+The short synthetic sequence isolates search mechanics. The [complete pUC19
+workflow](plasmids.html) demonstrates catalogue annotations, exact reference
+matching, site display filtering, primer labels and feature stacking together.
+Changing only a sequence name does not make it a recognized reference; sequence
+content determines source-backed recognition. Read the result methods and
+methylation provenance instead of assigning reference claims to an unknown sample.

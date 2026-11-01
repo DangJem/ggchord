@@ -1,6 +1,7 @@
 {
   "date": "2026-11-01",
-  "surface": "Codex in-app browser, local HTTP only",
+  "renderer": "pkgdown 2.2.1 + Bootstrap 5",
+  "surface": "Local HTTP in-app browser",
   "desktop_viewport": [
     1280,
     720
@@ -11,60 +12,72 @@
   ],
   "checks": [
     {
-      "case": "Han full-text search",
+      "case": "Han search",
       "result": "PASS",
-      "evidence": "标签 returns 10 matching pages; labels topic is visible"
+      "evidence": "标签 returns 14 pages and the labels topic; position_track returns 7 pages including full help."
     },
     {
-      "case": "API identifier search",
+      "case": "Article language and anchor",
       "result": "PASS",
-      "evidence": "position_track returns 7 pages including its complete help topic"
+      "evidence": "zh/real-data.html#read switches to en/real-data.html#read."
     },
     {
-      "case": "Language counterpart and anchor",
+      "case": "Reference language and anchor",
       "result": "PASS",
-      "evidence": "zh/index.html#quick-start switches to en/index.html#quick-start"
+      "evidence": "zh/reference/position_track.html#arguments switches to its English counterpart; native translated heading IDs are normalized."
     },
     {
-      "case": "System/light/dark theme",
+      "case": "Rendered executable code",
       "result": "PASS",
-      "evidence": "Theme controls cycle; light and dark layouts visually inspected"
+      "evidence": "First real-data pre contains complete FASTA/GFF3/BLAST/validation calls; Enter on summary closes it. Static comparison verifies every custom page code block."
     },
     {
-      "case": "Keyboard skip link",
+      "case": "Keyboard skip",
       "result": "PASS",
-      "evidence": "Enter on skip link focuses main#content"
+      "evidence": "Enter on skip link focuses main#main."
     },
     {
-      "case": "Keyboard code disclosure",
+      "case": "Native theme",
       "result": "PASS",
-      "evidence": "Enter on native summary closes an initially open code block"
+      "evidence": "Light and dark visually inspected; Auto selected, then restored Light."
     },
     {
-      "case": "Mobile navigation",
+      "case": "Mobile navigation/language",
       "result": "PASS",
-      "evidence": "Collapsed on load; Enter expands native summary and navigation follows to migration"
+      "evidence": "At 390 x 844 language control remains visible outside collapsed navbar; hamburger expands and collapses."
     },
     {
-      "case": "Mobile horizontal overflow",
+      "case": "Mobile overflow",
       "result": "PASS",
-      "evidence": "Document scrollWidth = viewport = 390; wide table scrolls within 321 px container (360 px content)"
+      "evidence": "Document width 390 at viewport 390; migration table content 473 px scrolls in its 366 px container."
     },
     {
-      "case": "Supplied artwork",
+      "case": "Artwork and notices",
       "result": "PASS",
-      "evidence": "Desktop side illustration, centered mobile artwork and navigation thumbnail visually inspected"
+      "evidence": "Supplied artwork on home and native reference; development notice visible below fixed navbar."
     },
     {
-      "case": "Console",
+      "case": "Fresh console",
       "result": "PASS",
-      "evidence": "No error/warn entries in the tested preview tab"
+      "evidence": "New preview tab visits corrected Han/English reference and home: no warn/error logs. Earlier punctuation-anchor warning was corrected; old tab logs are historical."
     }
   ],
-  "screenshot": {
-    "filename": "ggchord-v0165-home.jpg",
-    "sha256": "ef2e6272fcc506bb9351aa3a2ccdad5cdcea5c291660d4e56dfaabdc68f3b405",
-    "location": "Local chat deliverable; not a site runtime dependency"
-  },
-  "limits": "Finite local UI checks, not a multi-browser/accessibility certification or remote deployment verification. No remote workflow was run."
+  "screenshots": [
+    {
+      "filename": "ggchord-v0165-pkgdown-en.jpg",
+      "sha256": "f03eb3c2da47c9d48b20a8b3d2a9b5cad48ff433363003887fa7bb49bb6c1561",
+      "location": "Local chat artifact; not a runtime dependency"
+    },
+    {
+      "filename": "ggchord-v0165-pkgdown-mobile.jpg",
+      "sha256": "4f7f3077d05a1e5f3361d0a425add802d2447687a7ba2e33ad106b003e232d47",
+      "location": "Local chat artifact; not a runtime dependency"
+    },
+    {
+      "filename": "ggchord-v0165-pkgdown-zh.jpg",
+      "sha256": "bd23ddf6cb9d1a4590b3ae3e44d955fd90bc1d25f7847182dcae223358c87b0d",
+      "location": "Local chat artifact; not a runtime dependency"
+    }
+  ],
+  "limits": "Finite local checks, not release validation, exhaustive browser/accessibility certification or deployment verification."
 }

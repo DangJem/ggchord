@@ -1,125 +1,145 @@
-# Reference fallback only; frozen docs/ is not rebuilt by this file.
-url: https://dangjem.github.io/ggchord
+url: https://dangjem.github.io/ggchord/
+destination: .site/en
+lang: en
+home:
+  sidebar: false
 template:
   bootstrap: 5
+  light-switch: true
+  bslib:
+    base_font: system-ui
+    heading_font: system-ui
+    code_font: monospace
+    primary: "#39785F"
 navbar:
-  title: ggchord
-  left:
-    - text: English tutorial
-      href: articles/ggchord_vignette.html
-    - text: 汉语教程
-      href: articles/ggchord_guide_hans.html
-    - text: Reference
+  structure:
+    left: [start, reference, articles, gallery, news]
+    right: [github, lightswitch]
+  components:
+    start:
+      text: Get started
+      href: installation.html
+    reference:
+      text: Reference
       href: reference/index.html
+    articles:
+      text: Articles
+      href: articles.html
+    gallery:
+      text: Gallery
+      href: gallery.html
+    news:
+      text: Changelog
+      href: news.html
 reference:
-  - title: "Construction and contracts / 构建与契约"
+  - title: Construction and contracts
     contents:
-      - coord_chord
-      - coord_circular
-      - coord_collinear
-      - ggchord
-      - ggchord_api_contract
-      - ggchord_layout_contract
-  - title: "Input and validation / 输入与校验"
+      - '`coord_chord`'
+      - '`coord_circular`'
+      - '`coord_collinear`'
+      - '`ggchord`'
+      - '`ggchord_api_contract`'
+      - '`ggchord_layout_contract`'
+  - title: Input and validation
     contents:
-      - as_ggchord_feature
-      - as_ggchord_link
-      - as_ggchord_seq
-      - clean_ggchord_data
-      - ggchord_data_contract
-      - prepare_ggchord_data
-      - read_bed
-      - read_blast
-      - read_fasta_lengths
-      - read_genbank
-      - read_gff3
-      - read_paf
-      - validate_ggchord_data
-      - validate_ggchord_hierarchy
-  - title: "Geometry and labels / 几何与标签"
+      - '`as_ggchord_feature`'
+      - '`as_ggchord_link`'
+      - '`as_ggchord_seq`'
+      - '`clean_ggchord_data`'
+      - '`ggchord_data_contract`'
+      - '`prepare_ggchord_data`'
+      - '`read_bed`'
+      - '`read_blast`'
+      - '`read_fasta_lengths`'
+      - '`read_genbank`'
+      - '`read_gff3`'
+      - '`read_paf`'
+      - '`validate_ggchord_data`'
+      - '`validate_ggchord_hierarchy`'
+  - title: Geometry and labels
     contents:
-      - geom_feature
-      - geom_feature_label
-      - geom_feature_label_repel
-      - geom_feature_plasmid
-      - geom_gene
-      - geom_gene_label
-      - geom_gene_label_repel
-      - geom_link_line
-      - geom_link_ribbon
-      - geom_primer
-      - geom_primer_label_repel
-      - geom_restriction_site
-      - geom_seq
-      - geom_seq_break
-      - geom_seq_center_label
-      - geom_seq_label
-      - geom_seq_region
-      - geom_seq_scale
-  - title: "Positions, scales, themes and guides / 位置、标度、主题与图例"
+      - '`geom_feature`'
+      - '`geom_feature_label`'
+      - '`geom_feature_label_repel`'
+      - '`geom_feature_plasmid`'
+      - '`geom_gene`'
+      - '`geom_gene_label`'
+      - '`geom_gene_label_repel`'
+      - '`geom_link_line`'
+      - '`geom_link_ribbon`'
+      - '`geom_primer`'
+      - '`geom_primer_label_repel`'
+      - '`geom_restriction_site`'
+      - '`geom_seq`'
+      - '`geom_seq_break`'
+      - '`geom_seq_center_label`'
+      - '`geom_seq_label`'
+      - '`geom_seq_region`'
+      - '`geom_seq_scale`'
+  - title: Positions, scales, themes and guides
     contents:
-      - guide_ggchord_legend
-      - position_feature_stack
-      - position_plasmid
-      - position_strand
-      - scale_feature_fill_plasmid
-      - scale_feature_shape_manual
-      - scale_gene_fill_manual
-      - scale_link
-      - scale_ribbon_alpha_continuous
-      - scale_ribbon_fill_stepsn
-      - scale_seq_colour_manual
-      - scale_seq_position_continuous
-      - scale_seq_ring_manual
-      - theme_ggchord
-  - title: "Quantitative tracks / 定量轨道"
+      - '`guide_ggchord_legend`'
+      - '`position_feature_stack`'
+      - '`position_plasmid`'
+      - '`position_strand`'
+      - '`scale_feature_fill_plasmid`'
+      - '`scale_feature_shape_manual`'
+      - '`scale_gene_fill_manual`'
+      - '`scale_link`'
+      - '`scale_ribbon_alpha_continuous`'
+      - '`scale_ribbon_fill_stepsn`'
+      - '`scale_seq_colour_manual`'
+      - '`scale_seq_position_continuous`'
+      - '`scale_seq_ring_manual`'
+      - '`theme_ggchord`'
+  - title: Quantitative tracks
     contents:
-      - geom_track_tile
-      - position_track
-      - scale_track_fill_gradientn
-      - scale_track_value_continuous
-  - title: "Sequence recognition / 序列识别"
+      - '`geom_track_tile`'
+      - '`position_track`'
+      - '`scale_track_fill_gradientn`'
+      - '`scale_track_value_continuous`'
+  - title: Sequence recognition
     contents:
-      - filter_restriction_sites
-      - find_common_features
-      - find_ggchord_loci
-      - find_primer_bindings
-      - find_restriction_sites
-      - primer_catalog
-  - title: "Projection and comparison workflows / 投影与比较工作流"
+      - '`filter_restriction_sites`'
+      - '`find_common_features`'
+      - '`find_ggchord_loci`'
+      - '`find_primer_bindings`'
+      - '`find_restriction_sites`'
+      - '`primer_catalog`'
+  - title: Projection and comparison workflows
     contents:
-      - build_ggchord_cds
-      - bundle_ggchord_ribbons
-      - deduplicate_ggchord_ribbons
-      - filter_ggchord_ribbons
-      - focus_ggchord_data
-      - focus_ggchord_track
-      - link_ggchord_clusters
-      - map_ggchord_position
-      - merge_ggchord_ribbons
-      - project_ggchord_features
-      - project_ggchord_links
-      - segment_ggchord_data
-      - stat_ribbon_bundle
-      - stat_ribbon_density
-  - title: "Output and diagnostics / 输出与诊断"
+      - '`build_ggchord_cds`'
+      - '`bundle_ggchord_ribbons`'
+      - '`deduplicate_ggchord_ribbons`'
+      - '`filter_ggchord_ribbons`'
+      - '`focus_ggchord_data`'
+      - '`focus_ggchord_track`'
+      - '`link_ggchord_clusters`'
+      - '`map_ggchord_position`'
+      - '`merge_ggchord_ribbons`'
+      - '`project_ggchord_features`'
+      - '`project_ggchord_links`'
+      - '`segment_ggchord_data`'
+      - '`stat_ribbon_bundle`'
+      - '`stat_ribbon_density`'
+  - title: Output and diagnostics
     contents:
-      - diagnose_ggchord
-      - export_ggchord_layout
-      - get_chord_layout
-      - optimize_ggchord_layout
-      - view_ggchord
-  - title: "Methods, teaching data and upstream reexports / 方法、教学数据与上游重导出"
+      - '`diagnose_ggchord`'
+      - '`export_ggchord_layout`'
+      - '`get_chord_layout`'
+      - '`optimize_ggchord_layout`'
+      - '`view_ggchord`'
+  - title: Methods, teaching data and upstream reexports
     contents:
-      - as.data.frame.ggchord_validation
-      - gene_data_example
-      - ggplot2-helpers
-      - grid-helpers
-      - plasmid_example_pUC19
-      - plus-.ggchord
-      - print.ggchord_clean
-      - restriction_site_example
-      - ribbon_data_example
-      - seq_data_example
-      - single_gene_example
-      - single_genome_example
+      - '`as.data.frame.ggchord_validation`'
+      - '`gene_data_example`'
+      - '`ggplot2-helpers`'
+      - '`grid-helpers`'
+      - '`plasmid_example_pUC19`'
+      - '`+.ggchord`'
+      - '`print.ggchord_clean`'
+      - '`restriction_site_example`'
+      - '`ribbon_data_example`'
+      - '`seq_data_example`'
+      - '`single_gene_example`'
+      - '`single_genome_example`'

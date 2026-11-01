@@ -13,7 +13,7 @@ vignette: >
 knitr::opts_chunk$set(eval = FALSE, collapse = TRUE, comment = "#>")
 ```
 
-<img src="../man/figures/logo.png" alt="ggchord" width="200">
+<img src="../man/figures/logo.png" alt="ggchord" width="150">
 
 本教程与英语教程、网站从同一组来源生成。vignette 渲染时只展示代码，不自动执行；共享文档脚本直接验证相关例子。除明确标注的仓库文件外，输入均为合成教学数据。先运行一次准备代码，再运行各专题工作流。
 
@@ -100,7 +100,8 @@ feature_files <- read_gff3(files = "examples/gff3/*.gff3", unstranded = "keep", 
 `read_genbank()` 保留记录/feature 来源和分段位置。`read_bed()`、`read_paf()` 保留
 坐标转换元数据。`as_ggchord_seq()`、`as_ggchord_feature()`、`as_ggchord_link()`
 适配支持的 S4 对象；对象缺少完整长度或标识时必须显式提供。
-`file` 选择单文件，`files` 支持显式展开的文件集合。缺失的序列或同源关系应由分析者
+`file` 与 `files` 均支持路径向量或 glob，重复解析路径按首次出现顺序只读一次。
+一个工作流选择一个清晰入口。缺失的序列或同源关系应由分析者
 提供，绘图层不生成这些业务数据。
 
 ### 校验、清理与准备 {#data-validation}
@@ -119,6 +120,125 @@ prepared <- prepare_ggchord_data(seqs, links, features = list(genes = genes))
 几何表的 `source_row` 指图层已解析输入行，`.source_line` 才是物理文件行；GenBank
 另有记录/feature 来源。聚合可带 `source_rows` 和 `.length_estimated`，筛选合并时应保留。
 
+### 检查问题输入及修复报告 {#data-repairs}
+
+```{r example-6, eval=FALSE}
+problem_links <- data.frame(qaccver = c("A", "absent"), saccver = "B",
+  qstart = c(80, 20), qend = c(20, 40), sstart = 50, send = 120, pident = c(103, 90))
+problem_report <- validate_ggchord_data(seqs, problem_links)
+repaired <- clean_ggchord_data(seqs, problem_links, unknown_id = "drop",
+  reversed_interval = "sort", invalid_pident = "clip")
+# Deliberate teaching repairs, not a recommendation to clip scientific values silently.
+```
+
+| 指标（代码字段） | 实际输出 |
+| --- | --- |
+| `input_rows` | 2 |
+| `retained_rows` | 1 |
+
+演示输入有意包含未知 ID、反向区间及超过 0–100 的相似度。明确修复不表示应该静默
+截断科学观测。检查 `problem_report`、`repaired$report`，保留原表，并按实际证据
+选择策略。合法反向比对可以保持端点顺序，而非排序。`prepare_ggchord_data()`
+因此有其工作流相关的默认策略，不能假定独立清理和准备函数完全相同。
+
+### 声明 genome 与 contig 键 {#data-hierarchy}
+
+```{r example-7, eval=FALSE}
+contigs <- transform(seqs, genome = c("sample1", "sample1", "sample2"))
+genomes <- data.frame(genome = c("sample1", "sample2"))
+hierarchy <- validate_ggchord_hierarchy(contigs, genomes, strict = TRUE)
+```
+
+
+`hierarchy$contigs` 汇总已声明归属，不拼接 contig，也不由 accession 前缀推断归属。
+不同样本重复局部 contig 名时须显式提供全局唯一标识。
+[文件格式与适配器](#formats)说明格式及可选对象，[真实记录教程](#real-data)
+把这些报告带入完整绘图流程。
+
+
+## 文件格式与显式适配器 {#formats}
+
+### 从标准角色开始 {#formats-adapters}
+先运行[共享准备代码](#shared-setup)。列重命名是明确的角色映射，不要求改写
+accession version，也不能借此推断完整序列长度。
+
+
+```{r example-8, eval=FALSE}
+sequence_input <- as_ggchord_seq(data.frame(chrom = "A", size = 1000),
+  mapping = c(accver = "chrom", length = "size"))
+feature_input <- as_ggchord_feature(data.frame(chrom = "A", left = 10,
+  right = 100, strand = "+"), mapping = c(accver = "chrom", start = "left", end = "right"))
+link_input <- as_ggchord_link(links)
+```
+
+
+检查返回的普通表格和 `ggchord_conversion` 属性。`as_ggchord_seq()` 要求已知完整长度，
+`as_ggchord_feature()` 保留未知链，`as_ggchord_link()` 保留锚点及已有元数据。
+图层接受的直接 S4 输入使用同一组适配器。
+
+### BED 与 PAF：只转换一次 {#formats-zero-based}
+这里的文件均为显式合成输入，用来演示格式转换，不代表真实序列上的实测比对或注释。
+
+
+```{r example-9, eval=FALSE}
+bed_path <- tempfile(fileext = ".bed")
+writeLines("A\t0\t100\tdemo\t0\t-", bed_path)
+bed_features <- read_bed(bed_path)
+paf_path <- tempfile(fileext = ".paf")
+writeLines("A\t1000\t0\t100\t-\tB\t800\t200\t300\t95\t100\t255", paf_path)
+paf_links <- read_paf(paf_path)
+unlink(c(bed_path, paf_path))
+```
+
+
+BED `0,100)` 转为一基闭区间 `1..100`。PAF 相对负方向产生递减的 subject 端点，
+mapq 255 表示不可用，原值与转换后的缺失值分别保留。PAF 相似度来自工具报告计数，
+不重新按碱基计算。保留导入属性和物理来源行，绘图前不要再加一或减一。
+
+### GenBank：记录、分段与来源 {#formats-genbank}
+
+```{r example-10, eval=FALSE}
+# Optional reader: the selected Python must already contain Biopython.
+genbank_result <- NULL
+if (nzchar(Sys.which("python3")) && identical(suppressWarnings(system2("python3",
+  c("-c", shQuote("from Bio import SeqIO")), stdout = FALSE, stderr = FALSE)), 0L)) {
+  gb_path <- tempfile(fileext = ".gb")
+  writeLines(c("LOCUS       demo                      12 bp    DNA     linear   BCT 01-JAN-2000",
+    "DEFINITION  Synthetic teaching record.", "ACCESSION   demo", "VERSION     demo.1",
+    "FEATURES             Location/Qualifiers", "     misc_feature    2..8",
+    "                     /note=\"site\"", "ORIGIN", "        1 acgtacgtacgt", "//"), gb_path)
+  genbank_result <- read_genbank(gb_path)
+  unlink(gb_path)
+}
+```
+
+
+只有所选 Python 已安装 Biopython 时才执行这个可选例子，函数本身不安装环境。
+结果含 `seq_data`、命名的 `features$annotation` 和 `report`。joined location
+保留真实片段及记录/feature 来源索引。未知长度不能由 feature 末端推断。
+`unsupported = "report"` 把不支持位置保留在报告中，而不是猜测并压平为本地区间。
+
+### 可选区间对象 {#formats-ranges}
+
+```{r example-11, eval=FALSE}
+range_inputs <- NULL
+if (requireNamespace("GenomicRanges", quietly = TRUE)) {
+  ranges <- GenomicRanges::GRanges(seqnames = "A", ranges = IRanges::IRanges(10, 100),
+    strand = "*", seqlengths = c(A = 1000L))
+  range_inputs <- list(seq_data = as_ggchord_seq(ranges), features = as_ggchord_feature(ranges))
+}
+```
+
+| 指标（代码字段） | 实际输出 |
+| --- | --- |
+| `genbank` | SKIP: Biopython unavailable |
+| `ranges` | SKIP: GenomicRanges unavailable |
+
+未知链 `*` 保持未知。完整长度来自 Seqinfo，而非最大观测区间。
+InteractionSet 的 `GInteractions` 还可适配为连接，须保留统一的区域/长度背景及
+显式生物学归属。缺少可选依赖的例子在记录中标为跳过，不声称已经验证。
+详见完整[数据契约 (`help("ggchord_data_contract", package = "ggchord")`)。
+
 
 ## 三种坐标模式 {#modes}
 
@@ -127,7 +247,7 @@ prepared <- prepare_ggchord_data(seqs, links, features = list(genes = genes))
 
 ### 弦图：比较多条序列 {#modes-chord}
 
-```{r example-6, eval=FALSE}
+```{r example-12, eval=FALSE}
 p_chord <- ggchord(seqs, links, genes) +
   geom_seq() + geom_link_ribbon() + geom_gene() + geom_seq_label() +
   coord_chord()
@@ -140,7 +260,7 @@ ribbon 默认避障为 `uniform`，line 默认避障为 `none`。
 
 ### 圆图：注释单条序列 {#modes-circular}
 
-```{r example-7, eval=FALSE}
+```{r example-13, eval=FALSE}
 features <- data.frame(accver = "A", start = c(80, 380, 700),
   end = c(280, 610, 850), strand = c("+", "-", "."),
   type = c("CDS", "CDS", "region"), label = c("alpha", "beta", "origin"))
@@ -158,7 +278,7 @@ p_circular <- ggchord(seqs[1, ]) + geom_seq() +
 
 ### 共线性图：对齐局部比较 {#modes-collinear}
 
-```{r example-8, eval=FALSE}
+```{r example-14, eval=FALSE}
 p_collinear <- ggchord(seqs, links, genes) +
   geom_link_ribbon(alpha = .3) + geom_seq() +
   geom_gene(position = position_strand(.1)) + geom_seq_label() +
@@ -174,46 +294,335 @@ p_collinear <- ggchord(seqs, links, genes) +
 保留源坐标。
 
 
-## 常用调整与图形语法 {#adjustments}
+## 从原始记录到序列比较 {#real-data}
 
-### 职责分配 {#adjustments-grammar}
-| 任务 | 接口 |
-| --- | --- |
-| 把数据列映射到 aesthetic | `aes()` |
-| 定义映射规则与图例 | `scale_*()`, `guides()` |
-| 几何与固定样式 | `geom_*()` |
-| 局部放置 | `position_*()` |
-| 全局坐标系 | `coord_*()` |
-| 非数据外观 | `theme_*()`, `theme()` |
-| 标题与说明 | `labs()` |
+这条完整工作流使用源码仓库已有的四条序列记录，不需要重新比对或预测基因。
+使用匹配的开发 checkout，或[下载教学输入](https://github.com/DangJem/ggchord/tree/main/examples)，解压后让
+工作目录下包含 `examples/`。保存图形时同时记录包版本与[构建清单](https://github.com/DangJem/ggchord/tree/main/website)。
 
-固定样式可直接传给 geom，数据驱动差异则使用映射和 scale。显式固定值优先于映射，
-省略固定参数则保留映射；用户 scale 优先于自动默认值。
-`shape` 是固定 feature 几何参数，`feature_shape` 仍是映射角色。
-显式 `shape = NULL` 无效，不表示改用映射。
+### 读取并检查原始记录 {#real-data-read}
 
-### 映射连接相似度 {#adjustments-mapping}
-先运行[共享准备代码](#shared-setup)：
-
-
-```{r example-9, eval=FALSE}
-p_mapped <- ggchord(seqs, links) + geom_seq() +
-  geom_link_ribbon(aes(ribbon_fill = pident)) +
-  scale_ribbon_fill_gradientn(colours = c("#E7EFEA", "#246D68")) +
-  coord_chord(rotation = 20) + labs(title = "Sequence comparison") +
-  theme_ggchord() + theme(legend.position = "bottom")
+```{r example-15, eval=FALSE}
+seq_real <- read_fasta_lengths(files = "examples/fasta/*.fna", source_file = TRUE)
+feature_real <- read_gff3(files = "examples/gff3/*.gff3", unstranded = "keep", source_file = TRUE)
+link_real <- read_blast(files = "examples/blastn/*.o7", source_file = TRUE)
+real_validation <- validate_ggchord_data(seq_real, link_real)
 ```
 
 
-### 放置 feature {#adjustments-position}
-使用 `position_strand(c("+" = .1, "-" = -.2))` 指定带符号的逐链位移。
-`position_feature_stack()` 处理重叠 feature，`position_track()` 分配命名定量轨道。
-逐序列几何参数可用单值、等长无名向量或按 `accver` 命名的向量；推荐命名向量。
-这套语法不扩展到 scale、guide 或 theme。
+FASTA 头部提供原样 accession version 与长度，GFF3 提供 CDS 区间和真实链方向，
+BLAST 文件提供已有比对；读取器不运行 BLAST。继续前检查 `real_validation`：
+连接端点递减可能是合法的反向命中。不能把未知注释链改成 `+` 来满足基因快捷层。
 
-每层独立拥有 `data`、`mapping` 和参数，同类 feature/连接层不会互相替换。
-`show.legend` 和 `inherit.aes` 遵循 ggplot2。输入角色映射在几何生成前处理，
-后期视觉映射遵循 ggplot2 求值。详见 API 契约 (`help("ggchord_api_contract", package = "ggchord")`)。
+### 明确显示筛选规则 {#real-data-selection}
+
+```{r example-16, eval=FALSE}
+real_prepared <- prepare_ggchord_data(seq_real, link_real,
+  features = list(annotation = feature_real))
+real_filtered <- filter_ggchord_ribbons(link_real, min_pident = 80, min_length = 500)
+# Explicit display subset: the six longest CDS per sequence; raw annotations stay intact.
+display_rows <- unlist(lapply(split(seq_len(nrow(feature_real)), feature_real$accver),
+  function(i) head(i[order(-(feature_real$end[i] - feature_real$start[i] + 1))], 6)))
+real_display_features <- feature_real[display_rows, , drop = FALSE]
+label_rows <- unlist(lapply(split(seq_len(nrow(real_display_features)), real_display_features$accver),
+  function(i) head(i, 2)))
+real_labels <- real_display_features[label_rows, , drop = FALSE]
+```
+
+| 指标（代码字段） | 实际输出 |
+| --- | --- |
+| `sequences` | 4 |
+| `features` | 266 |
+| `displayed_chord_features` | 24 |
+| `raw_links` | 32 |
+| `displayed_links` | 8 |
+| `labelled_features` | 8 |
+
+显示连接保留相似度 ≥80%、已报告比对长度 ≥500 bp 的记录。弦图每条序列选择最长
+六条已导入 CDS，并只标记其中最长两条。这是显示规则，不是生物学结论，未显示的
+基因不表示不存在。原始 `feature_real`、`link_real` 不变，`real_prepared$report`
+和 `real_filtered$report` 保留准备与筛选证据。链方向不重编码；这与生成说明中
+明确进行显示链重编码的小型随包教学 fixture 不同。
+
+### 构建弦图比较 {#real-data-chord}
+
+```{r example-17, eval=FALSE}
+p_real_chord <- ggchord(seq_real, real_filtered$data, validate = "none") +
+  geom_link_ribbon(aes(ribbon_fill = pident), alpha = .35) + geom_seq() +
+  geom_feature(aes(feature_fill = strand), data = real_display_features,
+    width = .045, position = position_strand(.08)) +
+  geom_feature_label_repel(data = real_labels, label_layout = "radial",
+    label_wrap = 20, size = 2.5, position = position_strand(.08)) +
+  geom_seq_label() + coord_chord() + theme_ggchord_publication() +
+  theme(legend.position = "bottom")
+```
+
+![按明确 CDS 显示子集绘制的原始序列弦图](../man/figures/realchord.png)
+
+先读序列名称，再读真实链方向的 feature 箭头及区间连接。ribbon 表达已有比对区间
+和映射的相似度，连接交叉本身不构成重排证据。选定注释与更宽的比对区间分开阅读。
+科学解释涉及显示子集之外的注释时，应使用完整输入表。
+
+### 在线性视图检查全部注释 {#real-data-linear}
+
+```{r example-18, eval=FALSE}
+p_real_linear <- ggchord(seq_real, real_filtered$data, validate = "none") +
+  geom_link_ribbon(alpha = .25) + geom_seq() + geom_seq_label() +
+  geom_feature(data = feature_real, position = position_strand(.08)) +
+  geom_seq_scale(length = 10000) + coord_collinear() +
+  theme_ggchord_publication() + theme(legend.position = "bottom")
+```
+
+![原始序列、全部导入 CDS 与筛选连接的线性图](../man/figures/reallinear.png)
+
+这张图绘制全部导入注释。ribbon 默认只连接相邻显示序列，保留所有比较需要显式
+图层设置。bp 参照条属于共线性坐标。裁剪、源坐标轴与独立窗口见[局部视图](#views)，
+按图集明确尺寸预览保存见[输出](#output)。
+
+### 随图保留证据 {#real-data-provenance}
+教学输入包包含未改写的 FASTA/GFF3/BLAST、SHA256 清单和共享示例脚本。
+绘图清单记录代码 hash、PNG 设备、宽高和 dpi。accession 名称标识来源记录，
+图片不替代原始注释或比对证据。
+
+
+## 完整的单序列圆图工作流 {#plasmids}
+
+### 使用有来源的序列 {#plasmids-input}
+随包 `plasmid_example_pUC19` 原样来自仓库 `examples/plasmid/pUC19.fna`，不会为显示
+修改碱基或序列标识。本流程使用包中有来源记录的识别目录，不需要网络请求，也不
+为图形伪造实验测量值。
+
+
+```{r example-19, eval=FALSE}
+data(plasmid_example_pUC19)
+plasmid_features <- find_common_features(plasmid_example_pUC19)
+plasmid_primers <- find_primer_bindings(plasmid_example_pUC19, set = "universal")
+plasmid_sites <- find_restriction_sites(plasmid_example_pUC19)
+display_sites <- filter_restriction_sites(plasmid_sites,
+  enzymes = c("EcoRI", "BamHI", "HindIII"))
+primer_names <- primer_catalog(set = "universal")
+plasmid_position <- position_feature_stack(spacing = .085,
+  base_position = position_plasmid())
+p_plasmid <- ggchord(plasmid_example_pUC19) + geom_seq(seq_style = "double") +
+  geom_feature_plasmid(data = plasmid_features, position = plasmid_position) +
+  geom_feature_label_repel(data = plasmid_features, position = plasmid_position,
+    label_fit = "shrink", label_min_size = 1.8) +
+  geom_primer(data = plasmid_primers) +
+  geom_primer_label_repel(data = plasmid_primers, max_overlaps = 0) +
+  geom_restriction_site(data = display_sites) + geom_seq_center_label() +
+  coord_circular(rotation = 90) + theme_ggchord_plasmid()
+```
+
+![pUC19 的有来源 feature、引物与酶切位点](../man/figures/plasmid.png)
+| 指标（代码字段） | 实际输出 |
+| --- | --- |
+| `sequence_length` | 2686 |
+| `features` | 9 |
+| `primers` | 6 |
+| `all_sites` | 49845 |
+| `display_sites` | 3 |
+
+### 阅读各注释层 {#plasmids-layers}
+双线骨架建立单条圆形序列，通用 feature 使用 plasmid 预设和显式 stacking Position，
+标签共享该 Position。引物弧线表达结合范围，酶切短线表达切割/显示位置，中心标签
+给出序列名称和长度。裁剪或筛选显示不改变完整序列的酶位点计数。
+
+### 有意选择显示位点 {#plasmids-sites}
+`find_restriction_sites()` 返回全部匹配。本图明确选择 EcoRI、BamHI 与 HindIII，
+使局部酶切簇保持可读；`plasmid_sites` 保留完整搜索结果。只有完整输入序列精确匹配参考时，
+`reference` 筛选才使用已保存的参考显示集合。其他任务可选 `unique`、`six_plus`
+或明确酶名。绘图前检查 `display_sites` 及甲基化/来源列。参考集合是显示选择，
+不表示未知样本的生物学状态已经确定。
+
+### 理解目录和标签的限制 {#plasmids-limits}
+`primer_names` 展示目录条目。本例精确搜索 universal 目录，参考引物注释与精确寡核苷酸搜索有不同来源。
+近似蛋白 feature 识别遵循[识别专题](#recognition)的限制，不验证生物学功能或
+引物实验。文字可以移位、在显式字号下限内缩小或隐藏。应保留几何并在最终尺寸
+检查导出标签原因，而不是要求每条注释必须显示文字。
+
+### 应用到自己的数据 {#plasmids-adapt}
+将输入替换成有明确名称的 DNA 序列，先检查搜索结果再添加 geom。已有整理注释时，
+直接提供 feature 表，无需再次运行识别。[堆叠与形状](#annotations)说明几何，
+[标签](#labels)说明适配，[输出](#output)说明设备与尺寸。
+
+
+## 准备和汇总比对连接 {#ribbons}
+
+### 从原始连接表开始 {#ribbons-input}
+先用[真实记录工作流](#real-data-selection)创建 `seq_real`、`link_real` 和
+`real_filtered`，保留原表及筛选报告。
+
+
+```{r example-20, eval=FALSE}
+unique_links <- deduplicate_ggchord_ribbons(real_filtered$data, by = "overlap",
+  min_reciprocal_overlap = .9)
+merged_links <- merge_ggchord_ribbons(unique_links$data, max_gap = 100,
+  min_pident_difference = 2)
+bundled_links <- bundle_ggchord_ribbons(link_real, seq_real, bins = 30)
+p_density <- ggchord(seq_real, link_real, validate = "none") + geom_seq() +
+  stat_ribbon_density(aes(ribbon_alpha = after_stat(density))) + coord_chord()
+p_bundle <- ggchord(seq_real, link_real, validate = "none") + geom_seq() +
+  stat_ribbon_bundle(bins = 30) + coord_chord()
+```
+
+| 指标（代码字段） | 实际输出 |
+| --- | --- |
+| `filtered` | 8 |
+| `deduplicated` | 8 |
+| `merged` | 8 |
+| `bundled` | 28 |
+
+### 理解每步转换 {#ribbons-transformations}
+筛选保留满足已声明阈值的观测；互惠重叠去重选择已有代表观测，不累加相似度；
+合并把邻近兼容区间组合为显示外包范围；聚束按邻近 query/subject 位置形成汇总。
+逐步检查 `$report` 和源行成员，特别注意冲突的额外元数据。
+合并或聚束范围不是重新计算的核苷酸比对，估计长度保留标记，不凭空生成相似度。
+
+### 密度是显式统计 {#ribbons-density}
+![原始比对连接的显式密度汇总](../man/figures/density.png)
+
+`stat_ribbon_density()` 映射计算后的密度，`stat_ribbon_bundle()` 在 build 时执行
+明确聚合，普通 ribbon geom 仍逐行绘制。计数、已报告长度和相似度加权有各自单位，
+更不透明的连接不一定表示更强的独立同源证据。没有方向证据的点锚，不能因端点
+相等就获得聚合方向。
+
+### 选择区间 ribbon 或点连接 {#ribbons-points}
+先运行[共享准备代码](#shared-setup)：
+
+
+```{r example-21, eval=FALSE}
+points <- data.frame(qaccver = c("A", "A"), saccver = c("B", "C"),
+  qpos = c(200, 200), spos = c(400, 600), support = c(4, 10))
+p_points <- ggchord(seqs) + geom_seq() + geom_seq_label() +
+  geom_link_line(aes(link_colour = support, link_linewidth = support), data = points,
+    arrow = arrow(length = unit(2, "mm"))) +
+  scale_link_colour_gradientn(colours = c("#BBCFC8", "#265E55"), guide = guide_ggchord_colourbar(available_aes = "link_colour")) +
+  scale_link_linewidth_continuous(range = c(.3, 1)) + coord_chord()
+```
+
+![映射合成支持值的点到点连接](../man/figures/pointlinks.png)
+
+`support` 是已声明的合成演示值。line 使用 `qpos/spos`，而非区间端点，箭头由
+query 指向 subject。line 默认避障为 `none`，ribbon 为 `uniform`。
+全局弦图旋转属于坐标系，直线模式选对与相邻行默认见[三种模式](#modes-collinear)。
+
+点连接的颜色条明确指定 `available_aes = "link_colour"`。普通 ggplot2 颜色条和
+包装器默认值不接受全部扩展角色；自定义 guide 时应明确选择对应美学角色。
+
+
+## Feature、堆叠与基因组装饰 {#annotations}
+
+### 保留 feature 语义 {#annotations-stack}
+先运行[共享准备代码](#shared-setup)。合成表包含重叠 CDS/区域及未知链。
+几何和填色分别映射同一类别；显式固定 `shape` 会覆盖 shape 映射。
+
+
+```{r example-22, eval=FALSE}
+stack_features <- data.frame(feature_id = paste0("f", 1:4), accver = "A",
+  start = c(100, 150, 300, 650), end = c(350, 450, 550, 800),
+  strand = c("+", "+", "-", "."), type = c("CDS", "region", "CDS", "region"),
+  label = c("coding alpha", "overlap", "coding beta", "unstranded"))
+stack_position <- position_feature_stack(spacing = .12)
+p_stack <- ggchord(seqs[1, ]) + geom_seq() +
+  geom_feature(aes(feature_fill = type, feature_shape = type), data = stack_features,
+    position = stack_position) +
+  geom_feature_label_repel(data = stack_features, position = stack_position) +
+  scale_feature_shape_manual(values = c(CDS = "arrow", region = "block")) +
+  scale_feature_fill_manual(values = c(CDS = "#4C8C7C", region = "#D3A05A")) + coord_collinear()
+```
+
+![映射形状与填色的合成 feature 堆叠](../man/figures/featurestack.png)
+
+`position_feature_stack()` 解决注释轨道重叠。标签层使用同一 Position，让文字锚点
+跟随轨道。标签子集或重排时优先提供唯一 `feature_id`。严格的 gene 快捷层要求
+已知 `+/-`，通用 feature 保留未知/双向语义。
+
+### 按含义选择形状 {#annotations-shapes}
+| 几何 | 常见用途 | 重要区别 |
+| --- | --- | --- |
+| `arrow`, `compact_arrow` | 有方向的编码/feature 区间 | 已知方向来自证据，不由显示猜测 |
+| `block`, `capped_line` | 区域或不填充区间 | 选择形状不推断生物学功能 |
+| `promoter_arrow`, `primer_arrow`, `primer_arc` | 已声明的启动子/引物式注释 | 计算匹配与绘图分开 |
+| `marker`, `chevron`, `lollipop` | 自定义区间/类点强调 | 保留真实区间元数据，显示形状属于映射 |
+
+`geom_gene()`、`geom_feature_plasmid()` 是有用预设，默认值并不相同。
+`position_strand()` 提供带符号位移，`position_plasmid()` 提供圆图放置预设，
+后者不构成第四类坐标模式。
+
+### 高亮区间而不改写观测 {#annotations-decoration}
+
+```{r example-23, eval=FALSE}
+regions <- data.frame(accver = "A", start = 80, end = 420, category = "selected")
+p_decorated <- ggchord(seqs, links) +
+  geom_seq_region(aes(region_fill = category), data = regions) +
+  geom_link_ribbon(alpha = .25) + geom_seq() + geom_seq_label() +
+  scale_region_fill_manual(values = c(selected = "#E1B566")) +
+  geom_seq_scale(length = 200) + coord_collinear()
+```
+
+![区域高亮与独立 bp 参照条](../man/figures/decorations.png)
+
+区域叠层有自己的数据和 `region_fill` 标度。`geom_seq_label()` 命名序列，
+`geom_seq_center_label()` 在单圆图中心提供名称/长度，`geom_seq_break()` 标记裁剪或
+分段末端。`geom_seq_scale()` 是仅用于共线性图的独立 bp 参照条，与控制序列基因组轴
+的 `scale_seq_position_continuous()` 不同。普通 ggplot2 注释应使用
+[位置映射](#views-mapping)，不能把 bp 直接当作笛卡尔 x/y。
+
+
+## 标签与局部放置 {#labels}
+
+### 选择布局 {#labels-layout}
+基因标签提供 `"auto"`、`"radial"`、`"arc"` 布局。通用 feature 标签还支持优先
+内部放置的默认 `"feature"` 和外部 `"callout"`。应按实际图层选择已记录的取值，
+这些布局并不是可在所有入口互换的预设。
+
+先运行[共享准备代码](#shared-setup)：
+
+
+```{r example-24, eval=FALSE}
+p_labels <- ggchord(seqs, gene_data = genes) + geom_seq() +
+  geom_gene() + geom_gene_label_repel(label_layout = "auto", size = 3) +
+  coord_collinear()
+```
+
+![直线基因比较的自动标签](../man/figures/labels.png)
+
+### 固定与自动放置 {#labels-fixed}
+手动 `label_rotation`、径向/周向位移和方向控制使用 `geom_gene_label()` 或
+`geom_feature_label()`。自动层拒绝这些手动控制，应选择 `label_layout` 或删除手动参数。
+固定文字样式使用受支持的 `size`、`colour`、`family`。
+
+在支持的入口中，`label_fit`、`label_wrap`、`label_max_lines`、`label_min_size`
+控制适配。缩小字号须显式选择且有下限。无法放置的标签可能移位或隐藏，feature
+几何仍保留。应在最终导出尺寸查看 `label_fit_diagnostics`、`label_diagnostics`。
+
+### 跨层匹配锚点 {#labels-anchors}
+共线性模式中，省略的 feature 标签 Position 可继承无歧义的匹配 feature 层。
+唯一 `feature_id` 允许重排或取子集，但标识、区间、链仍须一致。
+多个匹配层需要明确 Position 或无歧义 ID。先选最终设备尺寸再预览；调整 Plots
+面板会改变可用空间。
+
+### 对照三种基因标签布局 {#labels-comparison}
+
+```{r example-25, eval=FALSE}
+label_plots <- lapply(c("auto", "radial", "arc"), function(layout)
+  ggchord(seqs, gene_data = genes) + geom_seq() + geom_gene() +
+    geom_gene_label_repel(label_layout = layout, size = 3) + coord_chord() +
+    labs(title = layout))
+names(label_plots) <- c("auto", "radial", "arc")
+p_manual_labels <- ggchord(seqs, gene_data = genes) + geom_seq() + geom_gene() +
+  geom_gene_label(label_rotation = 30) + coord_collinear()
+```
+
+![使用 auto 放置的基因标签](../man/figures/labelauto.png)
+![使用 radial 放置的基因标签](../man/figures/labelradial.png)
+![跟随序列切线的 arc 基因标签](../man/figures/labelarc.png)
+
+打印 `label_plots$auto`、`$radial` 或 `$arc` 查看候选图。三图输入和请求字号相同，
+仅布局选择不同。auto 在适用处使用共享侧列，radial 跟随局部轮廓，arc 跟随序列切线。
+`p_manual_labels` 展示独立固定标签入口，显式旋转不属于自动 repel 图层。
+通用 feature 标签还可选内部优先/callout，密集混合注释见[完整圆图](#plasmids)，
+继承或显式 Position 锚点见[堆叠](#annotations-stack)。
 
 
 ## 定量轨道 {#tracks}
@@ -222,7 +631,7 @@ p_mapped <- ggchord(seqs, links) + geom_seq() +
 先运行[共享准备代码](#shared-setup)：
 
 
-```{r example-10, eval=FALSE}
+```{r example-26, eval=FALSE}
 bins <- data.frame(accver = "A", start = seq(1, 951, 50),
   end = seq(50, 1000, 50), signal = sin(seq(0, 2 * pi, length.out = 20)))
 p_tracks <- ggchord(seqs[1, ]) + geom_seq() +
@@ -250,39 +659,37 @@ ggchord 绘制已提供的数值，不计算序列组成。替换成实际区间
 原始数值范围、物理 mm 贡献与原生位移的单位各不相同。
 使用 `focus_ggchord_track()` 按相同 loci 裁剪轨道，检查裁剪或遗漏行，不能把未显示的柱形当成零。
 
+### 组合柱形、折线与类别 tile {#tracks-multiple}
 
-## 标签与局部放置 {#labels}
-
-### 选择布局 {#labels-layout}
-基因标签提供 `"auto"`、`"radial"`、`"arc"` 布局。通用 feature 标签还支持优先
-内部放置的默认 `"feature"` 和外部 `"callout"`。应按实际图层选择已记录的取值，
-这些布局并不是可在所有入口互换的预设。
-
-先运行[共享准备代码](#shared-setup)：
-
-
-```{r example-11, eval=FALSE}
-p_labels <- ggchord(seqs, gene_data = genes) + geom_seq() +
-  geom_gene() + geom_gene_label_repel(label_layout = "auto", size = 3) +
-  coord_collinear()
+```{r example-27, eval=FALSE}
+line_bins <- transform(bins, pos = floor((start + end) / 2), signal = signal / 2)
+categories <- data.frame(accver = "A", start = c(100, 500, 800),
+  end = c(250, 700, 950), category = c("one", "two", "one"))
+p_multitrack <- ggchord(seqs[1, ]) + geom_seq() +
+  geom_track_bar(aes(track_value = signal, track_fill = signal), data = bins,
+    position = position_track("signal", width = unit(5, "mm"))) +
+  geom_track_line(aes(track_value = signal), data = line_bins,
+    position = position_track("signal", width = unit(5, "mm")), colour = "#244B68") +
+  scale_track_value_continuous("signal", limits = c(-1, 1), unit = "arbitrary units") +
+  scale_track_fill_gradientn("signal", colours = c("#31537D", "#F3F4EE", "#D26B38")) +
+  geom_track_tile(aes(track_fill = category), data = categories,
+    position = position_track("sites", side = "outside", order = 2, width = unit(2, "mm"))) +
+  scale_track_fill_manual("sites", values = c(one = "#6E9E88", two = "#DCBA66")) +
+  coord_circular()
+focused_bins <- focus_ggchord_track(bins, seqs[1, ],
+  loci = data.frame(accver = "A", start = 100, end = 700), type = "interval")
 ```
 
-![直线基因比较的自动标签](../man/figures/labels.png)
+![共域柱形与折线及独立类别轨道](../man/figures/multitrack.png)
 
-### 固定与自动放置 {#labels-fixed}
-手动 `label_rotation`、径向/周向位移和方向控制使用 `geom_gene_label()` 或
-`geom_feature_label()`。自动层拒绝这些手动控制，应选择 `label_layout` 或删除手动参数。
-固定文字样式使用受支持的 `size`、`colour`、`family`。
+柱形和折线有意共享 `signal` 及一个数值域；折线是合成信号的一半，不是另一份实测
+样本。两层声明相同宽度。类别轨道 `sites` 有独立 ID 和填色标度，零基线参与数值域
+训练。显式 limits 应表达目标测量范围，调整数值 scale 不移动轨道空间位置。
+`focused_bins` 为选定 locus 保留区间裁剪和源映射。检查轨道诊断中的边界裁剪，
+不能把遗漏行当作零。轨道颜色与填色角色见[样式](#styling-roles)。
 
-在支持的入口中，`label_fit`、`label_wrap`、`label_max_lines`、`label_min_size`
-控制适配。缩小字号须显式选择且有下限。无法放置的标签可能移位或隐藏，feature
-几何仍保留。应在最终导出尺寸查看 `label_fit_diagnostics`、`label_diagnostics`。
-
-### 跨层匹配锚点 {#labels-anchors}
-共线性模式中，省略的 feature 标签 Position 可继承无歧义的匹配 feature 层。
-唯一 `feature_id` 允许重排或取子集，但标识、区间、链仍须一致。
-多个匹配层需要明确 Position 或无歧义 ID。先选最终设备尺寸再预览；调整 Plots
-面板会改变可用空间。
+折线位置使用向下取整的整数 bin 中点。第二条分类带明确位于外侧，排在数值带之后；
+小半径下过宽的内侧轨道可能折叠，此时会报错，不会穿过圆心继续绘制。
 
 
 ## 引物、酶切与 feature 搜索 {#recognition}
@@ -291,7 +698,7 @@ p_labels <- ggchord(seqs, gene_data = genes) + geom_seq() +
 用一个很短的合成序列演示精确引物和酶切搜索：
 
 
-```{r example-12, eval=FALSE}
+```{r example-28, eval=FALSE}
 target <- c(circle = "TTGCAAAAAGAATTCACG")
 primers <- find_primer_bindings(target, primers = c(test = "ACGTTGCA"),
   min_annealed_bases = 8)
@@ -320,6 +727,59 @@ Wallace 熔解温度估计是基于组成的启发式值。
 支持相应遗传密码的分析。confidence 是启发式标签，不是概率。
 已知蛋白/基因组对应关系应使用[显式 CDS 投影](#projection)。
 
+### 跟随完整参考注释流程 {#recognition-reference}
+短合成序列用于单独说明搜索机制。[完整 pUC19 流程](#plasmids)将目录注释、
+精确参考匹配、酶位点显示筛选、引物标签及 feature 堆叠组合起来。
+只修改序列名称不能让它成为已知参考，有来源的识别依据是序列内容。
+应读取结果方法及甲基化来源，不能把参考结论赋予未知样本。
+
+
+## 显式同源关系与编码坐标连接 {#homology}
+
+### 成员归属是输入证据 {#homology-membership}
+先运行[共享准备代码](#shared-setup)。已声明的合成 cluster 将每条序列一个
+feature 相连，用于教学，不由相同的基因注释文本推断关系。
+
+
+```{r example-29, eval=FALSE}
+cluster_features <- transform(genes, feature_id = paste0("gene", 1:3))
+membership <- data.frame(feature_id = cluster_features$feature_id, cluster_id = "demo_cluster")
+homologs <- link_ggchord_clusters(cluster_features, membership,
+  pairs = data.frame(qaccver = c("A", "B"), saccver = c("B", "C")))
+loci <- find_ggchord_loci(seqs, cluster_features, targets = "gene1", upstream = 50, downstream = 100)
+p_homologs <- ggchord(seqs) + geom_link_ribbon(data = homologs$data, fill = "#9CBBAF") +
+  geom_seq() + geom_gene(data = genes) + geom_seq_label() + coord_collinear()
+```
+
+![显式合成 cluster 连接，不是重新计算的比对](../man/figures/homologs.png)
+
+检查 `homologs$report$comparisons` 和 `$members`。未知成员会遗漏并报告，含糊的
+paralog 默认不连接；`paralogs = "all"` 显式请求有上限的笛卡尔积。
+重复 feature ID 需要明确分段策略，外包范围是锚点，不是外显子比对。
+`find_ggchord_loci()` 按精确 feature ID 选择，并沿生物学方向扩展；未知方向要求
+对称扩展。下一步可做[局部聚焦](#views)。
+
+### 投影已声明的蛋白对应 {#homology-projection}
+
+```{r example-30, eval=FALSE}
+paired_coding <- data.frame(feature_id = c("a", "b"), accver = c("A", "B"),
+  start = c(10, 100), end = c(18, 108), strand = c("+", "-"), phase = 0)
+paired_cds <- build_ggchord_cds(paired_coding)
+protein_link <- data.frame(qfeature_id = "a", sfeature_id = "b",
+  qstart = 1, qend = 2, sstart = 2, send = 3)
+projected_links <- project_ggchord_links(protein_link, paired_cds, ungapped = TRUE)
+```
+
+| 指标（代码字段） | 实际输出 |
+| --- | --- |
+| `genomic_features` | 1 |
+| `projected_links` | 1 |
+
+蛋白端点跨度相等不构成无 gap 证据，必须显式声明 `ungapped = TRUE`。
+任一 CDS 跨编码片段边界时，辅助函数拆分对应片段并保留源蛋白元数据。
+它不把蛋白相似度作为核苷酸相似度，也不生成核苷酸比对长度。
+domain、不完整末端及 phase 策略见 [CDS 投影](#projection)。
+
 
 ## CDS 坐标投影 {#projection}
 
@@ -327,7 +787,7 @@ Wallace 熔解温度估计是基于组成的启发式值。
 这个合成例子的一个密码子跨越两段编码区间：
 
 
-```{r example-13, eval=FALSE}
+```{r example-31, eval=FALSE}
 coding <- data.frame(feature_id = "cdsA", accver = "A", start = c(100, 200),
   end = c(103, 204), strand = "+", phase = c(0, 2))
 cds <- build_ggchord_cds(coding, genetic_code = 11)
@@ -354,6 +814,12 @@ genomic <- project_ggchord_features(domains, cds)
 非密码子边界需要明确 `codon_boundary` 策略。结果保留源坐标、父对象与投影来源。
 处理不完整或多段生物学模型前，应阅读完整函数参考 (`help("project_ggchord_features", package = "ggchord")`)。
 
+### 同时投影 domain 与 feature 连接 {#projection-links}
+上面的 domain 例子沿显式 CDS 片段映射已观测残基区间。
+[编码坐标连接](#homology-projection)增加配对模型，演示单独的无 gap 声明。
+两类辅助函数都不翻译 DNA、验证遗传密码或创建新比对。绘制不连续基因组锚点前，
+应对照保留的分段片段和来源元数据。
+
 
 ## 局部视图、分段与同源关系 {#views}
 
@@ -361,7 +827,7 @@ genomic <- project_ggchord_features(domains, cds)
 先运行[共享准备代码](#shared-setup)：
 
 
-```{r example-14, eval=FALSE}
+```{r example-32, eval=FALSE}
 focused <- focus_ggchord_data(seqs, links, genes,
   loci = data.frame(accver = c("A", "B", "C"),
     start = c(50, 100, 300), end = c(600, 600, 950)))
@@ -378,7 +844,7 @@ focus 把保留位置移到局部一基坐标，同时保留源原点、截断�
 
 ### 独立窗口与局部翻转 {#views-segments}
 
-```{r example-15, eval=FALSE}
+```{r example-33, eval=FALSE}
 windows <- data.frame(accver = c("A", "A"), start = c(50, 650),
   end = c(400, 950), locus_id = c("A_left", "A_right"),
   row_id = "A", orientation = c(1, -1))
@@ -399,6 +865,111 @@ p_segments <- ggchord(segmented$seq_data) + geom_seq() +
 `merge_ggchord_ribbons()` 整理已有比对，保留源成员和估计长度标记。
 聚束和密度统计汇总已提供连接，不创建新的序列比对。
 
+### 按源坐标放置普通注释 {#views-mapping}
+
+```{r example-34, eval=FALSE}
+source_mark <- map_ggchord_position(p_focus, "A", 200, source = TRUE)
+p_marked <- p_focus + ggplot2::geom_point(data = source_mark, aes(x, y),
+  inherit.aes = FALSE, colour = "#A23B40", size = 2)
+```
+
+
+先运行[focus 例子](#views-focus)。辅助函数返回 A 上源位置 200 的笛卡尔 x/y，
+不把全部普通 ggplot2 坐标变成基因组 bp。分段视图应选窗口 ID，检查落在省略间隙
+的位置，不跨间隙外推。locus 选择来自明确 feature/cluster 证据时见[显式同源关系](#homology)。
+
+
+## 映射、标度、图例与主题 {#styling}
+
+### 从数据角色构建样式 {#styling-roles}
+先运行[共享准备代码](#shared-setup)。例子明确声明类别：ribbon 填色映射
+query ID，序列颜色映射序列 ID，基因填色映射链。手动 scale 的名称与实际取值匹配。
+
+
+```{r example-35, eval=FALSE}
+p_styled <- ggchord(seqs, links, genes) + geom_seq() +
+  geom_link_ribbon(aes(ribbon_fill = qaccver), alpha = .3) + geom_gene() +
+  geom_seq_label() + coord_collinear() +
+  scale_seq_colour_manual(values = c(A = "#487A6A", B = "#B68048", C = "#637DA0")) +
+  scale_gene_fill_manual(values = c("+" = "#B68048", "-" = "#637DA0")) +
+  scale_ribbon_fill_manual(values = c("A" = "#D4E5D8", "B" = "#E3D9C8", "C" = "#D4DFEB")) +
+  guides(gene_fill = guide_ggchord_legend(nrow = 1)) +
+  theme_ggchord_publication() + theme(legend.position = "bottom")
+theme_variants <- list(minimal = theme_ggchord_minimal(), dark = theme_ggchord_dark(),
+  plasmid = theme_ggchord_plasmid())
+```
+
+![显式手动标度与图例组织](../man/figures/styling.png)
+
+| 角色 | 映射数据 | 常用 scale 家族 |
+| --- | --- | --- |
+| `seq_colour`, `seq_ring` | 序列/类别 | 序列颜色或 ring 手动标度 |
+| `ribbon_fill`, `ribbon_alpha`, `ribbon_colour`, `ribbon_linetype` | 比对元数据或统计 | 手动、渐变/分段/identity 和透明度标度 |
+| `feature_fill`, `feature_shape`, `gene_fill`, `region_fill` | 注释类别或链 | 相应角色的手动/预设标度 |
+| `link_colour`, `link_alpha`, `link_linewidth`, `link_linetype` | 点连接元数据 | 连续或手动 link 标度 |
+| `track_value`, `track_fill`, `track_colour` | 命名轨道的数值/类别 | 命名数值域与颜色/填色标度 |
+
+### 固定样式和用户 scale 优先 {#styling-priority}
+常量样式写在 `aes()` 外，变化样式写在映射中并配合合适的标度。
+显式 geom 固定值优先，省略该固定参数才保持映射。用户 scale 优先于自动默认。
+同类多层独立保留数据、映射和参数。按 `accver` 命名的几何向量，不表示 scale
+也接受逐序列列表。
+
+### 组织可读图例 {#styling-guides}
+`guide_ggchord_legend()` 控制离散角色图例，`guide_ggchord_colourbar()` 控制连续颜色
+图例。colour/color 拼写别名保留，本文优先用 `colour`。图层 `show.legend`
+决定显示，`guides()` 选择 guide，`theme(legend.position = ...)` 决定位置。
+过宽图例可分行或增加导出宽度，不需要删减生物学数据来迁就。
+
+### 为场景选择主题 {#styling-themes}
+例子在 `theme_variants` 中保存 minimal、dark 和 plasmid 备选，按场景添加到相应图中。
+上图使用 `theme_ggchord_publication()`，plasmid 预设用于圆图流程。
+主题控制非数据外观，不选择坐标系，也不替代数据驱动的填色 scale。
+文字外观用 `theme(text = element_text(...))`；已删除的 `base_size` 式快捷参数见
+[迁移指南](#migration)。
+
+
+## 常用调整与图形语法 {#adjustments}
+
+### 职责分配 {#adjustments-grammar}
+| 任务 | 接口 |
+| --- | --- |
+| 把数据列映射到 aesthetic | `aes()` |
+| 定义映射规则与图例 | `scale_*()`, `guides()` |
+| 几何与固定样式 | `geom_*()` |
+| 局部放置 | `position_*()` |
+| 全局坐标系 | `coord_*()` |
+| 非数据外观 | `theme_*()`, `theme()` |
+| 标题与说明 | `labs()` |
+
+固定样式可直接传给 geom，数据驱动差异则使用映射和 scale。显式固定值优先于映射，
+省略固定参数则保留映射；用户 scale 优先于自动默认值。
+`shape` 是固定 feature 几何参数，`feature_shape` 仍是映射角色。
+显式 `shape = NULL` 无效，不表示改用映射。
+
+### 映射连接相似度 {#adjustments-mapping}
+先运行[共享准备代码](#shared-setup)：
+
+
+```{r example-36, eval=FALSE}
+p_mapped <- ggchord(seqs, links) + geom_seq() +
+  geom_link_ribbon(aes(ribbon_fill = pident)) +
+  scale_ribbon_fill_gradientn(colours = c("#E7EFEA", "#246D68")) +
+  coord_chord(rotation = 20) + labs(title = "Sequence comparison") +
+  theme_ggchord() + theme(legend.position = "bottom")
+```
+
+
+### 放置 feature {#adjustments-position}
+使用 `position_strand(c("+" = .1, "-" = -.2))` 指定带符号的逐链位移。
+`position_feature_stack()` 处理重叠 feature，`position_track()` 分配命名定量轨道。
+逐序列几何参数可用单值、等长无名向量或按 `accver` 命名的向量；推荐命名向量。
+这套语法不扩展到 scale、guide 或 theme。
+
+每层独立拥有 `data`、`mapping` 和参数，同类 feature/连接层不会互相替换。
+`show.legend` 和 `inherit.aes` 遵循 ggplot2。输入角色映射在几何生成前处理，
+后期视觉映射遵循 ggplot2 求值。详见 API 契约 (`help("ggchord_api_contract", package = "ggchord")`)。
+
 
 ## 导出、预览与诊断 {#output}
 
@@ -406,7 +977,7 @@ p_segments <- ggchord(segmented$seq_data) + geom_seq() +
 先在[三种模式](#modes)中创建 `p_collinear`：
 
 
-```{r example-16, eval=FALSE}
+```{r example-37, eval=FALSE}
 ggsave("comparison.png", p_collinear, width = 8, height = 5, units = "in", dpi = 144)
 ```
 
@@ -415,7 +986,7 @@ RStudio Plots 使用当前面板尺寸，标签与图例可能随面板调整而
 最终 `ggsave()` 前，按相同显式尺寸预览：
 
 
-```{r example-17, eval=FALSE}
+```{r example-38, eval=FALSE}
 view_ggchord(p_collinear, width = 8, height = 5, units = "in")
 diagnosis <- diagnose_ggchord(p_collinear, width = 8, height = 5, units = "in")
 ```
@@ -428,7 +999,7 @@ diagnosis <- diagnose_ggchord(p_collinear, width = 8, height = 5, units = "in")
 
 ### 按字段名消费几何 {#output-geometry}
 
-```{r example-18, eval=FALSE}
+```{r example-39, eval=FALSE}
 geometry <- export_ggchord_layout(p_collinear, include = "seq")
 rows <- unique(geometry$seq[c("layer_id", "component", "source_row")])
 ```
@@ -445,6 +1016,24 @@ rows <- unique(geometry$seq[c("layer_id", "component", "source_row")])
 `optimize_ggchord_layout()` 按文档执行主动选择的调整，应保留副本并查看结果。
 预览和诊断使用独立渲染副本。直接改动共享 ggproto 图层环境仍遵循普通 ggplot2
 引用语义，不会自动隔离为一次独立编辑。
+
+### 完整布局、表格与主动选择的排序 {#output-consumption}
+
+```{r example-40, eval=FALSE}
+full_layout <- get_chord_layout(p_collinear)
+layer_tables <- export_ggchord_layout(p_collinear, include = c("seq", "gene"), original_data = TRUE)
+layout_choice <- optimize_ggchord_layout(seqs, links, optimize = c("order", "orientation"), weight = "count")
+```
+
+
+先在[三种模式](#modes-collinear)创建 `p_collinear`。
+`full_layout` 保留完整的已记录 getter 结果，`layer_tables` 选择序列/基因表与已解析
+原始数据，不是原始文件档案。layer ID 和源行角色区分独立同类图层。
+空组件可没有固定列原型，应按字段名读取。
+
+`layout_choice` 以计数权重选择顺序/方向，因为合成连接没有报告的比对长度列。
+返回的选择应显式用于序列设置，不修改原图，也不确立生物学方向。
+采用前应保存该选择并对照结果。文档精确尺寸见资产清单 (`website/assets/plots.csv` in the source repository)。
 
 
 ## 常见问题 {#faq}
@@ -505,7 +1094,7 @@ API 清理已删除旧别名的执行路径，见[迁移表](#migration)。同�
 先运行[准备代码](#shared-setup)及[圆图](#modes-circular)中的 `features` 表：
 
 
-```{r example-19, eval=FALSE}
+```{r example-41, eval=FALSE}
 p_migrated <- ggchord(seqs[1, ]) + geom_seq() +
   geom_feature(data = features, shape = "block", width = .05) +
   geom_feature_label(data = features, label_rotation = 0) + coord_circular()
@@ -528,10 +1117,12 @@ API 契约 (`help("ggchord_api_contract", package = "ggchord")`)和当前参考�
 ## 可复现图集 {#gallery}
 
 ### 两种语言共用一个来源 {#gallery-source}
-六张图均使用[共享文档示例源码](https://github.com/DangJem/ggchord/blob/main/tools/documentation-examples.R)
-中定义的**合成教学输入**。未为改善外观改写任何原始 FASTA/GFF3/BLAST 记录。
+图形使用有来源的仓库序列/注释或明确声明的合成教学输入，见[共享文档示例源码](https://github.com/DangJem/ggchord/blob/main/tools/documentation-examples.R)
+。未为改善外观改写任何原始 FASTA/GFF3/BLAST 记录。
 两种语言、README 和 vignette 引用相同图片字节，图注分别说明含义。
 源码及资产 hash 记录在资产清单 (`website/assets/plots.csv` in the source repository)中。
+
+真实数据与质粒专题明确列出显示筛选；合成轨道值、cluster 归属和小表不代表生物学观测。
 
 ### 图片与尺寸 {#gallery-figures}
 #### 三条合成序列的弦图比较 {#gallery-chord}
@@ -570,6 +1161,84 @@ API 契约 (`help("ggchord_api_contract", package = "ggchord")`)和当前参考�
 
 `p_labels` · 8 × 5 in · 144 dpi · PNG · `labels`
 
+#### 按明确 CDS 显示子集绘制的原始序列弦图 {#gallery-realchord}
+
+![按明确 CDS 显示子集绘制的原始序列弦图](../man/figures/realchord.png)
+
+`p_real_chord` · 10 × 8 in · 144 dpi · PNG · `realchord`
+
+#### 原始序列、全部导入 CDS 与筛选连接的线性图 {#gallery-reallinear}
+
+![原始序列、全部导入 CDS 与筛选连接的线性图](../man/figures/reallinear.png)
+
+`p_real_linear` · 10 × 6 in · 144 dpi · PNG · `reallinear`
+
+#### pUC19 的有来源 feature、引物与酶切位点 {#gallery-plasmid}
+
+![pUC19 的有来源 feature、引物与酶切位点](../man/figures/plasmid.png)
+
+`p_plasmid` · 9 × 8 in · 144 dpi · PNG · `plasmid`
+
+#### 原始比对连接的显式密度汇总 {#gallery-density}
+
+![原始比对连接的显式密度汇总](../man/figures/density.png)
+
+`p_density` · 10 × 8 in · 144 dpi · PNG · `density`
+
+#### 映射合成支持值的点到点连接 {#gallery-pointlinks}
+
+![映射合成支持值的点到点连接](../man/figures/pointlinks.png)
+
+`p_points` · 7 × 6 in · 144 dpi · PNG · `pointlinks`
+
+#### 映射形状与填色的合成 feature 堆叠 {#gallery-featurestack}
+
+![映射形状与填色的合成 feature 堆叠](../man/figures/featurestack.png)
+
+`p_stack` · 9 × 4 in · 144 dpi · PNG · `featurestack`
+
+#### 共域柱形与折线及独立类别轨道 {#gallery-multitrack}
+
+![共域柱形与折线及独立类别轨道](../man/figures/multitrack.png)
+
+`p_multitrack` · 7 × 6 in · 144 dpi · PNG · `multitrack`
+
+#### 显式合成 cluster 连接，不是重新计算的比对 {#gallery-homologs}
+
+![显式合成 cluster 连接，不是重新计算的比对](../man/figures/homologs.png)
+
+`p_homologs` · 8 × 5 in · 144 dpi · PNG · `homologs`
+
+#### 区域高亮与独立 bp 参照条 {#gallery-decorations}
+
+![区域高亮与独立 bp 参照条](../man/figures/decorations.png)
+
+`p_decorated` · 8 × 5 in · 144 dpi · PNG · `decorations`
+
+#### 使用 auto 放置的基因标签 {#gallery-labelauto}
+
+![使用 auto 放置的基因标签](../man/figures/labelauto.png)
+
+`p_labelauto` · 8 × 5 in · 144 dpi · PNG · `labelauto`
+
+#### 使用 radial 放置的基因标签 {#gallery-labelradial}
+
+![使用 radial 放置的基因标签](../man/figures/labelradial.png)
+
+`p_labelradial` · 8 × 5 in · 144 dpi · PNG · `labelradial`
+
+#### 跟随序列切线的 arc 基因标签 {#gallery-labelarc}
+
+![跟随序列切线的 arc 基因标签](../man/figures/labelarc.png)
+
+`p_labelarc` · 8 × 5 in · 144 dpi · PNG · `labelarc`
+
+#### 显式手动标度与图例组织 {#gallery-styling}
+
+![显式手动标度与图例组织](../man/figures/styling.png)
+
+`p_styled` · 8 × 5 in · 144 dpi · PNG · `styling`
+
 ### 重建 {#gallery-reproduce}
 在源码仓库中准备好建议的开发依赖后运行：
 
@@ -583,6 +1252,9 @@ python3 tools/check-documentation.py
 PNG 设备仅用于更新这些文档图片，不是输出设备矩阵或发布验收。
 源码和尺寸位于 `tools/documentation-plots.R`，参数变化后须重建清单。
 自己的图片导出方式见[输出](#output)。
+
+### 资产来源 {#gallery-assets}
+[原画、模板和依赖许可](https://github.com/DangJem/ggchord/blob/main/website/ASSET-SOURCES.md)。
 
 
 ## 术语与设计来源 {#glossary}

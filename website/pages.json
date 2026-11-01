@@ -2,8 +2,8 @@
   {
     "slug": "index",
     "title": {
-      "en": "Sequence stories, layer by layer",
-      "zh": "用图层讲述序列关系"
+      "en": "ggchord",
+      "zh": "ggchord"
     },
     "group": "start"
   },
@@ -24,6 +24,14 @@
     "group": "start"
   },
   {
+    "slug": "formats",
+    "title": {
+      "en": "File formats and explicit adapters",
+      "zh": "文件格式与显式适配器"
+    },
+    "group": "article"
+  },
+  {
     "slug": "modes",
     "title": {
       "en": "Three coordinate systems",
@@ -32,10 +40,42 @@
     "group": "start"
   },
   {
-    "slug": "adjustments",
+    "slug": "real-data",
     "title": {
-      "en": "Common adjustments and grammar",
-      "zh": "常用调整与图形语法"
+      "en": "From original records to sequence comparisons",
+      "zh": "从原始记录到序列比较"
+    },
+    "group": "article"
+  },
+  {
+    "slug": "plasmids",
+    "title": {
+      "en": "A complete circular annotation workflow",
+      "zh": "完整的单序列圆图工作流"
+    },
+    "group": "article"
+  },
+  {
+    "slug": "ribbons",
+    "title": {
+      "en": "Prepare and summarize alignment links",
+      "zh": "准备和汇总比对连接"
+    },
+    "group": "article"
+  },
+  {
+    "slug": "annotations",
+    "title": {
+      "en": "Features, stacking and genomic decoration",
+      "zh": "Feature、堆叠与基因组装饰"
+    },
+    "group": "article"
+  },
+  {
+    "slug": "labels",
+    "title": {
+      "en": "Labels and local placement",
+      "zh": "标签与局部放置"
     },
     "group": "guide"
   },
@@ -48,20 +88,20 @@
     "group": "guide"
   },
   {
-    "slug": "labels",
-    "title": {
-      "en": "Labels and local placement",
-      "zh": "标签与局部放置"
-    },
-    "group": "guide"
-  },
-  {
     "slug": "recognition",
     "title": {
       "en": "Primers, restriction and feature search",
       "zh": "引物、酶切与 feature 搜索"
     },
     "group": "guide"
+  },
+  {
+    "slug": "homology",
+    "title": {
+      "en": "Explicit homologs and coding-coordinate links",
+      "zh": "显式同源关系与编码坐标连接"
+    },
+    "group": "article"
   },
   {
     "slug": "projection",
@@ -76,6 +116,22 @@
     "title": {
       "en": "Focus, segments and homology",
       "zh": "局部视图、分段与同源关系"
+    },
+    "group": "guide"
+  },
+  {
+    "slug": "styling",
+    "title": {
+      "en": "Mappings, scales, guides and themes",
+      "zh": "映射、标度、图例与主题"
+    },
+    "group": "article"
+  },
+  {
+    "slug": "adjustments",
+    "title": {
+      "en": "Common adjustments and grammar",
+      "zh": "常用调整与图形语法"
     },
     "group": "guide"
   },
@@ -102,6 +158,14 @@
       "zh": "迁移到候选 API"
     },
     "group": "guide"
+  },
+  {
+    "slug": "articles",
+    "title": {
+      "en": "Articles and complete workflows",
+      "zh": "专题与完整工作流"
+    },
+    "group": "start"
   },
   {
     "slug": "gallery",

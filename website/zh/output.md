@@ -27,3 +27,15 @@ RStudio Plots 使用当前面板尺寸，标签与图例可能随面板调整而
 `optimize_ggchord_layout()` 按文档执行主动选择的调整，应保留副本并查看结果。
 预览和诊断使用独立渲染副本。直接改动共享 ggproto 图层环境仍遵循普通 ggplot2
 引用语义，不会自动隔离为一次独立编辑。
+
+## 完整布局、表格与主动选择的排序 {#consumption}
+{{code:layoutresults}}
+
+先在[三种模式](modes.html#collinear)创建 `p_collinear`。
+`full_layout` 保留完整的已记录 getter 结果，`layer_tables` 选择序列/基因表与已解析
+原始数据，不是原始文件档案。layer ID 和源行角色区分独立同类图层。
+空组件可没有固定列原型，应按字段名读取。
+
+`layout_choice` 以计数权重选择顺序/方向，因为合成连接没有报告的比对长度列。
+返回的选择应显式用于序列设置，不修改原图，也不确立生物学方向。
+采用前应保存该选择并对照结果。文档精确尺寸见[资产清单](../assets/plots.csv)。

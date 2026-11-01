@@ -1,0 +1,333 @@
+[
+  {
+    "id": "modes",
+    "title": {
+      "en": "Three coordinate modes",
+      "zh": "三种坐标模式"
+    },
+    "articles": [
+      "modes"
+    ],
+    "snippets": [
+      "chord",
+      "circular",
+      "collinear"
+    ],
+    "figures": [
+      "chord",
+      "circular",
+      "collinear"
+    ],
+    "result": null
+  },
+  {
+    "id": "real",
+    "title": {
+      "en": "Original-record comparisons",
+      "zh": "真实记录比较"
+    },
+    "articles": [
+      "real-data"
+    ],
+    "snippets": [
+      "realimport",
+      "realprepare",
+      "realchord",
+      "reallinear"
+    ],
+    "figures": [
+      "realchord",
+      "reallinear"
+    ],
+    "result": "real"
+  },
+  {
+    "id": "circular",
+    "title": {
+      "en": "Complete circular annotation",
+      "zh": "完整圆图注释"
+    },
+    "articles": [
+      "plasmids"
+    ],
+    "snippets": [
+      "plasmid"
+    ],
+    "figures": [
+      "plasmid"
+    ],
+    "result": "plasmid"
+  },
+  {
+    "id": "validation",
+    "title": {
+      "en": "Validation, cleaning and hierarchy",
+      "zh": "校验、清理与层次"
+    },
+    "articles": [
+      "data"
+    ],
+    "snippets": [
+      "validation",
+      "cleaning",
+      "hierarchy"
+    ],
+    "figures": [],
+    "result": "cleaning"
+  },
+  {
+    "id": "formats",
+    "title": {
+      "en": "Formats and adapters",
+      "zh": "文件格式与适配器"
+    },
+    "articles": [
+      "formats"
+    ],
+    "snippets": [
+      "adapters",
+      "formats",
+      "genbank",
+      "optionalranges"
+    ],
+    "figures": [],
+    "result": "optional"
+  },
+  {
+    "id": "preparation",
+    "title": {
+      "en": "Link preparation and statistics",
+      "zh": "连接准备与统计"
+    },
+    "articles": [
+      "ribbons"
+    ],
+    "snippets": [
+      "ribbons"
+    ],
+    "figures": [
+      "density"
+    ],
+    "result": "ribbons"
+  },
+  {
+    "id": "pointlinks",
+    "title": {
+      "en": "Interval and point links",
+      "zh": "区间与点连接"
+    },
+    "articles": [
+      "ribbons",
+      "modes"
+    ],
+    "snippets": [
+      "pointlinks",
+      "collinear"
+    ],
+    "figures": [
+      "pointlinks"
+    ],
+    "result": null
+  },
+  {
+    "id": "feature",
+    "title": {
+      "en": "Features and Position",
+      "zh": "Feature 与 Position"
+    },
+    "articles": [
+      "annotations"
+    ],
+    "snippets": [
+      "featurestack"
+    ],
+    "figures": [
+      "featurestack"
+    ],
+    "result": null
+  },
+  {
+    "id": "labels",
+    "title": {
+      "en": "Automatic and fixed labels",
+      "zh": "自动与固定标签"
+    },
+    "articles": [
+      "labels",
+      "plasmids"
+    ],
+    "snippets": [
+      "labellayouts",
+      "labels",
+      "plasmid"
+    ],
+    "figures": [
+      "labelauto",
+      "labelradial",
+      "labelarc"
+    ],
+    "result": null
+  },
+  {
+    "id": "decorations",
+    "title": {
+      "en": "Axes, scale bars and regions",
+      "zh": "轴、参照条与区域"
+    },
+    "articles": [
+      "annotations",
+      "views"
+    ],
+    "snippets": [
+      "decorations",
+      "focus"
+    ],
+    "figures": [
+      "decorations"
+    ],
+    "result": null
+  },
+  {
+    "id": "tracks",
+    "title": {
+      "en": "Quantitative tracks and domains",
+      "zh": "定量轨道与数值域"
+    },
+    "articles": [
+      "tracks"
+    ],
+    "snippets": [
+      "tracks",
+      "multitrack"
+    ],
+    "figures": [
+      "multitrack"
+    ],
+    "result": null
+  },
+  {
+    "id": "recognition",
+    "title": {
+      "en": "Primers, sites and feature search",
+      "zh": "引物、酶切及 feature 搜索"
+    },
+    "articles": [
+      "recognition",
+      "plasmids"
+    ],
+    "snippets": [
+      "recognition",
+      "plasmid"
+    ],
+    "figures": [
+      "plasmid"
+    ],
+    "result": null
+  },
+  {
+    "id": "projection",
+    "title": {
+      "en": "CDS and link projection",
+      "zh": "CDS 与连接投影"
+    },
+    "articles": [
+      "projection",
+      "homology"
+    ],
+    "snippets": [
+      "projection",
+      "linkprojection"
+    ],
+    "figures": [],
+    "result": "projection"
+  },
+  {
+    "id": "homologs",
+    "title": {
+      "en": "Explicit clusters and loci",
+      "zh": "显式 cluster 与 loci"
+    },
+    "articles": [
+      "homology"
+    ],
+    "snippets": [
+      "homologs"
+    ],
+    "figures": [
+      "homologs"
+    ],
+    "result": null
+  },
+  {
+    "id": "views",
+    "title": {
+      "en": "Focus, segments and source mapping",
+      "zh": "局部、分段与源映射"
+    },
+    "articles": [
+      "views"
+    ],
+    "snippets": [
+      "focus",
+      "segment",
+      "mappingposition"
+    ],
+    "figures": [
+      "focus"
+    ],
+    "result": null
+  },
+  {
+    "id": "styles",
+    "title": {
+      "en": "Scales, guides and themes",
+      "zh": "标度、图例与主题"
+    },
+    "articles": [
+      "styling",
+      "adjustments"
+    ],
+    "snippets": [
+      "styling",
+      "adjustments"
+    ],
+    "figures": [
+      "styling"
+    ],
+    "result": null
+  },
+  {
+    "id": "output",
+    "title": {
+      "en": "Preview, results and ordering",
+      "zh": "预览、结果与排序"
+    },
+    "articles": [
+      "output"
+    ],
+    "snippets": [
+      "save",
+      "preview",
+      "provenance",
+      "layoutresults"
+    ],
+    "figures": [],
+    "result": null
+  },
+  {
+    "id": "migration",
+    "title": {
+      "en": "Migration and FAQ",
+      "zh": "迁移与常见问题"
+    },
+    "articles": [
+      "migration",
+      "faq"
+    ],
+    "snippets": [
+      "migration"
+    ],
+    "figures": [],
+    "result": null
+  }
+]

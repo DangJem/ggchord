@@ -1,9 +1,13 @@
 ## One source for both languages {#source}
-All six figures use **synthetic teaching inputs**, defined in the shared
+Figures use repository-backed sequences/annotations or explicitly synthetic
+teaching inputs, defined in the shared
 [documentation example source](../assets/documentation-examples.R).
 No raw FASTA/GFF3/BLAST record was changed to improve appearance. The same image
 bytes are used by both languages, README and vignette; captions provide localized
 interpretation. The source and asset hashes are recorded in the [asset manifest](../assets/plots.csv).
+
+Real-data and plasmid articles state each display filter; synthetic track
+values, cluster membership and small input tables are not biological observations.
 
 ## Figures and dimensions {#figures}
 {{gallery}}
@@ -22,3 +26,6 @@ The PNG device is used only to update these documentation figures. This is not
 an output-device matrix or release validation. Source code and dimensions live
 in `tools/documentation-plots.R`; changing the figure parameters requires
 regenerating the manifest. See [output](output.html) for your own export.
+
+## Asset sources {#assets}
+[Artwork, template and dependency licenses](../assets/ASSET-SOURCES.md).

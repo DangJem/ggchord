@@ -8,9 +8,12 @@
   circular sequence and collinear views. Rewrote paired English/Han README and
   tutorial sources around the 0.16.4 candidate API, with shared runnable code,
   terminology, migration, FAQ and a reproducible gallery.
-* Added separate static website sources with paired navigation, complete Rd
-  reference, local search, accessible code disclosure, responsive navigation and
-  system/light/dark themes. Source CI and a manual preview/deployment workflow
+* Rebuilt the documentation website on native pkgdown / Bootstrap 5 templates,
+  with paired English/Han navigation, same-page language switching (including
+  anchors and mobile), complete Rd reference, local full-text search, code
+  disclosure and light/dark themes. Expanded real-record and pUC19 workflows,
+  formats/adapters, links/statistics, feature stacking, labels, multiple tracks,
+  projection/homology, scales/guides and result consumption. Source CI and a manual preview/deployment workflow
   keep generated output separate from main. Frozen `docs/` and the live site are
   unchanged; no deployment or formal release is implied.
 * Documentation figures now share explicit ggsave dimensions and an asset/hash

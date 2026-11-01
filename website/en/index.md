@@ -1,29 +1,30 @@
-> This first documentation prototype is under revision. Complete reference coverage does not mean all task tutorials are complete.
+<img class="package-logo" src="../assets/logo.webp" alt="ggchord" width="150" height="150">
 
-An R package built on ggplot2 for **multi-sequence chord diagrams, single circular
-sequence maps and linear collinearity plots**. Use the same layered grammar to
-move from interval tables to readable comparisons.
+A grammar of graphics for **chord comparisons, circular annotation maps and linear
+collinearity**. ggchord combines sequence backbones, interval/point links, genes,
+general features, labels, genomic axes and quantitative tracks with ggplot2.
 
-This is the **0.16.5 local development documentation**, based on the 0.16.4 API
-candidate. The latest formal release remains 0.15.0; these pages do not announce
-a formal package release. Website deployment is a separate authorized action.
+## See a complete sequence comparison {#showcase}
+{{figure:reallinear}}
 
-## Choose a view {#modes}
-{{modes}}
+Four original sequence records, their GFF3 annotations and existing BLAST links,
+without recoding source strands. Follow [the full data-to-figure workflow](real-data.html)
+for filters, reports, source provenance and the chord view. A separate
+[complete circular workflow](plasmids.html) combines reference features, primers,
+restriction sites, stacking and labels.
 
-## Draw your first comparison {#quick-start}
-Start with explicit synthetic teaching data. No accession names or measurements
-below refer to biological observations.
+## Choose your next step {#learn}
+- [Install](installation.html), then draw [three minimal views](modes.html).
+- Learn [data contracts](data.html), [file formats](formats.html) and [plot grammar](adjustments.html).
+- Browse [task articles](articles.html), [function reference](reference.html) and [gallery](gallery.html).
+- Find current [migration directions](migration.html), [FAQ](faq.html) and [changes](news.html).
 
+## A small reproducible start {#quick-start}
 {{code:setup}}
 {{code:chord}}
 
-Print `p_chord` in R, or [save at an explicit size](output.html). Continue through
-[installation](installation.html), [data and coordinates](data.html),
-[the three modes](modes.html), [common adjustments](adjustments.html), then
-[advanced topics](tracks.html) and [FAQ](faq.html).
-
-## Find the right tool {#discovery}
-[Reference](reference.html) lists every exported function, spelling alias and
-upstream reexport. [Migration](migration.html) gives current replacements for
-removed calls. The [gallery](gallery.html) links each figure to code and input.
+Print `p_chord`, then [preview and save at the same explicit size](output.html).
+These small inputs are synthetic; the showcase above uses original source records.
+The documentation describes 0.16.5 development against the 0.16.4 API candidate;
+0.15.0 remains the formal release. See [installation](installation.html#source)
+for the difference between a matching checkout and an older installed package.

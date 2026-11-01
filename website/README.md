@@ -1,109 +1,103 @@
 # ggchord 文档网站源 / Documentation source
 
 本地开发版本 0.16.5，API 基线为 0.16.4；**尚未部署**。正式发布版仍是 0.15.0。
-冻结的 `docs/` 保留原样。这里不使用旧站生成物作为当前接口来源。
+冻结的 `docs/` 保持原样。网站生成物不作为当前 R 接口的事实来源。
 
-Local development documentation for 0.16.5, based on the 0.16.4 API candidate.
+Local development documentation for 0.16.5, based on the 0.16.4 candidate API.
 **Not deployed.** The formal release remains 0.15.0. Frozen `docs/` is untouched.
 
-## 2026-11-01 复核状态 / Review status
+## 生成基础 / Generator
 
-当前网站是首轮文档原型。用户要求参考成熟 ggplot2 扩展包网站重做风格并补足内容，
-复核确认 reference 入口齐全不等于完整任务教程已完成。v0.16.5 已重新打开，当前
-缺口与技术建议见[复核记录](../design-roadmap/DOCUMENTATION-REVIEW-v0.16.5.md)。
-推荐的 pkgdown 方案尚未替换下方自制生成器；不要把两者误认为同时完成的正式方案。
+唯一正式生成基础为 **pkgdown + Bootstrap 5**：顶栏、文章布局、主题切换及完整
+函数参考使用 pkgdown 的模板和公开生成接口。英语与现代汉语分别位于 `en/` 和
+`zh/`；所有正文、专题、图集和函数页均有同页语言切换，保留对应锚点。手机端直接
+显示切换入口。根入口记忆上一次切换的语言，无法使用存储时仍可正常跳转。
 
-This is the first documentation prototype. Review confirmed that complete
-reference coverage does not establish complete task tutorials. Version 0.16.5
-has been reopened for package-documentation styling and deeper content; see the
-[review](../design-roadmap/DOCUMENTATION-REVIEW-v0.16.5.md). The recommended pkgdown
-migration has not replaced the generator described below.
+The sole generator is **pkgdown + Bootstrap 5**. Native templates provide the
+navigation, article layout, theme control and complete function reference.
+English and modern Han pages live in `en/` and `zh/`; each page switches to its
+counterpart, preserving matching anchors, including on mobile. The root entry
+remembers the chosen language when browser storage is available.
+
+成对 Markdown 经 Pandoc 转换，展示已有代码、结果与图，不执行其中的 R。完整
+reference 从当前 Rd 生成，不运行帮助示例。帮助正文保留完整英语原文；汉语页面
+提供本地化导航、分类和任务说明，不声称全文帮助已翻译。首次原型的自制页面壳和
+Rd 转换器已退役，不同时维护另一套网站实现。
+
+Paired Markdown is converted by Pandoc using existing code, outputs and figures;
+R chunks are not executed. Current Rd generates the complete reference without
+running examples. Canonical help remains English with localized Han navigation
+and workflow framing. The first prototype's custom page shell/Rd renderer is retired.
 
 ## 本地生成 / Local build
 
-在仓库根目录准备已安装的 R、Python ≥ 3.9、Pandoc（rmarkdown 可发现）及包开发依赖
-`pkgload`、`rmarkdown`、`jsonlite`。无需安装前端框架或 Python 第三方包。
+需要 R、Python ≥ 3.9、Pandoc（rmarkdown 可发现）、包依赖及 `pkgdown`、`pkgload`、
+`rmarkdown`、`jsonlite`。本轮使用 pkgdown 2.2.1。无 Python 第三方构建依赖。
+系统字体；依赖资产由 pkgdown 复制到产物，界面不依赖 CDN。构建禁用可选的远端
+favicon 服务，直接使用本地图标，禁用仓库外 Sass 缓存。
 
-From the repository root, use R, Python ≥ 3.9, Pandoc (discoverable by rmarkdown),
-package dependencies, and `pkgload`, `rmarkdown`, `jsonlite`. No frontend framework
-or third-party Python modules are needed.
+Requires R, Python ≥ 3.9, Pandoc (discoverable by rmarkdown), package dependencies,
+`pkgdown`, `pkgload`, `rmarkdown`, `jsonlite`. Developed with pkgdown 2.2.1. No
+third-party Python modules. System fonts and locally copied dependencies avoid
+CDN UI dependencies. The optional remote favicon service and external Sass cache
+are disabled; the existing local icon is used.
 
 ```sh
-# Only when changing shared plot code / 修改共享绘图代码后才运行
+# 修改共享例子后才更新 PNG / Only when changing shared examples
 Rscript tools/documentation-plots.R
-# Update paired source documents, without knitting / 同步双语源码，不渲染 vignette
+# 仅同步源码，不渲染 vignette / Sync sources, without knitting
 python3 tools/sync-tutorials.py
 python3 tools/build-website.py
 python3 tools/check-documentation.py
 python3 -m http.server 8765 --directory .site --bind 127.0.0.1
 ```
 
-打开 / Open `http://127.0.0.1:8765/`。英文与汉语首页分别为 `en/index.html`、
-`zh/index.html`。生成目录 `.site/` 被 Git 与包构建忽略；不会写入 `docs/`。
+打开 / Open `http://127.0.0.1:8765/`。产物位于忽略的 `.site/`，不会写入 `docs/`。
+这不是 `pkgdown::build_site()` 的完整 vignette 构建，也不是 R 包发布检查。
 
 ## 来源与维护 / Sources and maintenance
 
-- `pages.json`：配对导航和标题 / paired navigation and titles.
-- `en/`、`zh/`：相同章节锚点、代码标记的专题 / matched topic anchors and code markers.
-- `tools/documentation-examples.R`：共用可运行代码 / shared runnable code.
-- `tools/documentation-plots.R`、`assets/plots.csv`：显式尺寸、设备、输入、hash / dimensions, device, inputs, hashes.
-- `assets/captions.json`、`terms.json`、`migrations.json`：配对图注、术语、当前迁移 / paired captions, terminology, migration.
-- `R/` → `man/` → `tools/render-reference.R`：完整参考，API 正文为英语原文 / complete reference with canonical English API text.
-- `tools/sync-tutorials.py`：从网站专题与代码生成 README 和两份 vignette 源码 / source-only synchronization.
-- `.site/build-manifest.json`：版本、提交、dirty 状态及源 SHA256 / version, commit, dirty state, source SHA256.
+| 来源 / Source | 职责 / Role |
+| --- | --- |
+| `_pkgdown.yml` | Bootstrap、导航与完整 Rd 分类 / Template, navigation and complete reference categories |
+| `website/{en,zh}/*.md`、`pages.json` | 配对文章、显式锚点和标题 / Paired articles, matching anchors and titles |
+| `tools/documentation-examples.R` | 唯一共享可运行代码 / Shared executable source |
+| `tools/documentation-plots.R` | 图形尺寸、结果和输入声明 / Dimensions, outputs and input declarations |
+| `man/figures/*.png`、`assets/plots.csv` | 两种语言及 README/vignette 共用的图片字节和 hash / Shared figure bytes and hashes |
+| `coverage.json` | 18 个功能簇的章节、代码及输出证据 / Article/code/output evidence for 18 capability families |
+| `tools/sync-tutorials.py` | 从同源同步 README、迁移和双语 Rmd / Synchronize README, migration guides and paired Rmd sources |
+| `tools/render-website.R` | pkgdown 原生页面与 Rd 参考生成 / Native pages and Rd reference |
+| `tools/finalize-website.R`、`assets/site.*` | 同页语言切换、代码折叠和本地全文搜索 / Language switching, code disclosure and local full-text search |
+| `tools/check-documentation.py` | 配对、代码、图 hash、功能簇、链接、锚点和搜索覆盖 / Pairing, code, figures, capability evidence, links, anchors and search |
 
-修改专题应同时更新对应语种；代码只改共享来源；帮助只改 roxygen 源码后生成 Rd。
-日常不运行完整 vignette、包级检查或发布设备矩阵。网站生成只转换 Markdown/Rd，不执行
-reference examples。`_pkgdown.yml` 保留完整分类供未来需要，但本版新站不依赖 pkgdown。
+真实案例使用仓库原始 FASTA/GFF3/BLAST；选择显示记录的规则写入代码和正文，原表
+不变。质粒来自随包 pUC19 原始序列。其余小表、轨道数值与 cluster 归属明确为合成
+教学输入。构建产物提供原始输入 ZIP、SHA256 清单、共享 R 脚本和构建来源清单。
+可选 Biopython/GenomicRanges 例子在环境已有依赖时才执行，结果注明 PASS 或 SKIP。
 
-Update both topic languages together; edit code only in its shared source, and help
-only through roxygen/Rd. Ordinary development does not knit full vignettes, run
-package checks or a release device matrix. The site converts Markdown/Rd without
-executing reference examples. `_pkgdown.yml` retains complete fallback categories;
-the new site does not depend on pkgdown.
+Real workflows use original repository FASTA/GFF3/BLAST records with explicit
+display filters; source tables remain unchanged. The plasmid uses source-backed
+pUC19. Other small tables, track values and membership are declared synthetic.
+Builds include an original-input ZIP, SHA256 list, shared script and provenance
+manifest. Optional Biopython/GenomicRanges examples report PASS or SKIP.
 
-## 部署切换方案 / Deployment cutover
+原画无损优化、第三方模板与资产来源见[来源记录](ASSET-SOURCES.md)。用户原画用于
+首页、README 与教程入口，不替换为重新生成的图；`assets/icon.json` 保留逐像素
+RGBA 校验和体积记录。Pillow/cwebp 仅用于资产维护，不是构建依赖。
 
-使用 GitHub Pages Actions；`.github/workflows/documentation.yaml` 的普通 CI 只检查源码，
-手动运行生成预览 artifact。只有明确授权后才勾选部署，并在仓库 Pages 设置中选择
-GitHub Actions、确认 `github-pages` 环境保护和目标源提交。默认 `deploy=false`。
-该工作流不会在 push 时部署；无需向 main 写生成 HTML。
+See [asset sources](ASSET-SOURCES.md) for the lossless user artwork and third-party
+licenses. `assets/icon.json` records exact RGBA identity, sizes and provenance.
+Pillow/cwebp are optional asset-maintenance tools, not build dependencies.
 
-Use GitHub Pages Actions. Ordinary CI checks sources; a manual run builds a preview
-artifact. After explicit authorization, select deployment, configure the repository
-Pages source as GitHub Actions, confirm environment protections and the exact source
-commit. `deploy=false` is the default. Push events never deploy generated HTML.
+## CI 与上线边界 / CI and deployment
 
-上线前核对预览 artifact、双语路径、旧 URL 映射、资源与源 hash，记录部署 URL、run、
-commit。旧站 `docs/` 只在新站上线并完成链接核验后，于独立授权切换中移除。
-本轮不更改远端设置、不运行工作流、不 push、不部署、不删除旧站。
+普通 push/PR 只检查已跟踪源码。手动 workflow 构建预览 artifact，默认不部署；只有
+明确获得网站切换授权后才启用部署输入。`--publication` 只改变候选文档的预览标记，
+构建器本身不部署、不推送、不发 Release。旧 URL 有精确对应则重定向，否则明确
+显示历史文档提示，不凭空映射到新函数。发布与旧站删除仍需独立授权。
 
-Before cutover, inspect the preview artifact, language pairs, legacy URL mappings,
-assets and source hashes; record the deployment URL, run and commit. Remove frozen
-`docs/` only after successful deployment and link verification in an authorized
-cutover. This local task changes no remote settings, starts no workflow, pushes or
-deploys nothing, and retains the old site.
-
-方案依据 / Design sources:
-[GitHub Pages custom workflows](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages),
-[roxygen Markdown](https://roxygen2.r-lib.org/articles/markdown.html),
-[ggplot2 grammar](https://ggplot2.tidyverse.org/).
-
-## 图标 / Artwork
-
-用户于 2026-11-01 提供的图标用于首页、README 和教程入口，完整图像为 1254 × 1254。
-`man/figures/logo.png` 是保留透明度的无损 PNG，网页优先加载无损 WebP；两者与输入
-RGBA 逐像素一致。64 × 64 导航图像是另行注明的缩略图。输入/输出 hash 与体积见
-`assets/icon.json`。`tools/optimize-documentation-icon.py` 可从原始 PNG 重建，额外需要
-Pillow 和 cwebp；这些仅为资产维护工具，常规网站构建不依赖它们。
-
-The supplied 1254 × 1254 artwork appears on the home page, README and tutorial.
-Full PNG and WebP preserve identical decoded RGBA pixels; the 64 × 64 navigation
-image is an explicitly resized thumbnail. See `assets/icon.json` for provenance,
-hashes and sizes. Re-encoding with `tools/optimize-documentation-icon.py` requires
-Pillow and cwebp only for asset maintenance, not for normal site builds.
-
-手动授权部署使用 `--publication` 标识候选文档，仍不宣称 R 包正式发布；构建器自身
-不部署。授权构建清单注明应以 Pages run 核对实际部署结果。
-Authorized deployment builds use `--publication` to label unreleased candidate
-documentation. The builder does not deploy; verify actual deployment through the Pages run.
+Ordinary push/PR checks tracked sources. Manual workflows produce preview
+artifacts and default to no deployment. Explicit cutover authorization is needed
+before enabling deployment. `--publication` only changes preview labeling;
+the builder never deploys, pushes or releases. Exact historical counterparts
+redirect; unmatched URLs receive a historical notice rather than invented aliases.

@@ -10,7 +10,7 @@ from collections import Counter
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
-from documentation_lib import ROOT, WEB, PAGES, CAPTIONS, expand
+from documentation_lib import ROOT, WEB, PAGES, CAPTIONS, expand, snippets
 
 class Document(HTMLParser):
     def __init__(self, path):
@@ -18,16 +18,25 @@ class Document(HTMLParser):
         self.ids = []
         self.links = []
         self.images = []
+        self.codeblocks = []
+        self._code_parts = None
         self.lang = None
         self.feed(path.read_text())
     def handle_starttag(self, tag, attrs):
         a = dict(attrs)
+        if tag == 'pre': self._code_parts = []
         if 'id' in a: self.ids.append(a['id'])
         if tag == 'html': self.lang = a.get('lang')
         if tag in ['a', 'link', 'script', 'img']:
             for key in ['href', 'src']:
                 if a.get(key): self.links.append(a[key])
         if tag == 'img': self.images.append(a)
+    def handle_data(self, data):
+        if self._code_parts is not None: self._code_parts.append(data)
+    def handle_endtag(self, tag):
+        if tag == 'pre' and self._code_parts is not None:
+            self.codeblocks.append(''.join(self._code_parts))
+            self._code_parts = None
 
 def main():
     parser = argparse.ArgumentParser()
@@ -45,6 +54,7 @@ def main():
         for lang, text in zip(['en','zh'],texts):
             require('中文' not in text, f'{lang}/{p["slug"]}: inconsistent language label')
             require(bool(p['title'][lang]), f'{p["slug"]}: missing localized title')
+            require('{{' not in expand(text,lang),f'{lang}/{p["slug"]}: unexpanded source marker')
         require(re.findall(r'\{#([^}]+)\}', texts[0]) == re.findall(r'\{#([^}]+)\}', texts[1]), f'{p["slug"]}: unmatched anchors')
         require(re.findall(r'\{\{[^}]+\}\}', texts[0]) == re.findall(r'\{\{[^}]+\}\}', texts[1]), f'{p["slug"]}: unmatched shared code/asset markers')
         require(blocks(expand(texts[0], 'en')) == blocks(expand(texts[1], 'zh')), f'{p["slug"]}: mismatched executable code')
@@ -84,14 +94,27 @@ def main():
                     name = Path(split.path).name
                     origin = ROOT/'man/figures'/name if name.endswith(('.png','.svg')) else WEB/'assets'/name
                     if name=='NEWS.md': origin=ROOT/'NEWS.md'
+                    if name=='ASSET-SOURCES.md': origin=WEB/'ASSET-SOURCES.md'
                     if name=='documentation-examples.R': origin=ROOT/'tools/documentation-examples.R'
+                    if name in ['tutorial-inputs.zip','input-hashes.json']: origin=ROOT/'examples'
                     require(origin.exists(), f'{lang}/{p["slug"]}: unknown asset {url}')
     icon = json.loads((WEB/'assets/icon.json').read_text())
     for record in icon['assets']+[icon['favicon']]:
         path=ROOT/record['file']
         require(path.is_file() and hashlib.sha256(path.read_bytes()).hexdigest()==record['sha256'],f'Icon hash mismatch: {path}')
     config = (ROOT/'_pkgdown.yml').read_text()
-    require(all(re.search(r'^      - '+re.escape(t)+r'$',config,re.M) for t in rd_topics), 'Fallback pkgdown reference omits Rd topics')
+    names = [re.search(r'\\name\{([^}]+)\}',p.read_text())[1] for p in (ROOT/'man').glob('*.Rd')]
+    require(all('`'+name+'`' in config for name in names), 'Native pkgdown reference omits Rd topics')
+    coverage=json.loads((WEB/'coverage.json').read_text())
+    code=snippets()
+    require(len(coverage)==18,'Expected 18 reviewed capability families')
+    results=json.loads((WEB/'assets/example-results.json').read_text())
+    for family in coverage:
+        require(family['result'] is None or family['result'] in results,f'{family["id"]}: missing result record')
+        for lang in ['en','zh']:
+            prose='\n'.join((WEB/lang/(slug+'.md')).read_text() for slug in family['articles'])
+            require(all(key in code and '{{code:'+key+'}}' in prose for key in family['snippets']),f'{family["id"]}: missing shared example in {lang}')
+            require(all(key in CAPTIONS and '{{figure:'+key+'}}' in prose for key in family['figures']),f'{family["id"]}: missing output in {lang}')
     # README/vignette resources and links are source paths, not the frozen site.
     for path in [ROOT/'README.md',ROOT/'README-Hans.md',ROOT/'MIGRATION.md',ROOT/'MIGRATION-Hans.md',*(ROOT/'vignettes').glob('*.Rmd')]:
         text = path.read_text()
@@ -107,14 +130,27 @@ def main():
         out = ROOT/'.site'
         require(out.is_dir(), 'Build .site first')
         docs = {p.resolve():Document(p) for p in out.rglob('*.html')}
+        for asset in assets:
+            generated=out/'assets'/Path(asset['file']).name
+            require(generated.is_file() and hashlib.md5(generated.read_bytes()).hexdigest()==asset['md5'],f'Generated figure differs from source: {asset["id"]}')
+        normalize=lambda text: re.sub(r'\s+',' ',text.strip())
+        for lang in ['en','zh']:
+            for page in PAGES:
+                if page['slug']=='reference': continue
+                path=(out/lang/(page['slug']+'.html')).resolve()
+                expected=blocks(expand((WEB/lang/(page['slug']+'.md')).read_text(),lang))
+                require(path in docs and list(map(normalize,docs[path].codeblocks))==list(map(normalize,expected)),f'{lang}/{page["slug"]}: rendered code differs from shared source')
         for path,doc in docs.items():
             rel = str(path.relative_to(out))
             require(not [i for i,n in Counter(doc.ids).items() if n>1],f'{rel}: duplicate element IDs')
             if rel.startswith(('en/','zh/')):
                 require(doc.lang == ('zh-Hans' if rel.startswith('zh/') else 'en'),f'{rel}: language metadata')
-                require('content' in doc.ids,f'{rel}: missing skip target')
+                if Path(rel).name!='reference.html':
+                    require('main' in doc.ids,f'{rel}: missing skip target')
+                    require('site-language' in doc.ids and 'site-search' in doc.ids,f'{rel}: missing language/search navigation')
             for img in doc.images: require('alt' in img,f'{rel}: image missing alt')
             for url in doc.links:
+                require('rdrr.io/pkg/ggchord/man/' not in url,f'{rel}: current API autolink escapes local reference {url}')
                 split = urlsplit(url)
                 if split.scheme or split.netloc: continue
                 target = (path.parent/unquote(split.path)).resolve() if split.path else path
@@ -124,12 +160,16 @@ def main():
                 if split.fragment and target in docs:
                     require(unquote(split.fragment) in docs[target].ids,f'{rel}: broken anchor {url}')
         for lang in ['en','zh']:
-            expected = {f'{s}.html' for s in slugs} | {f'reference/{s}.html' for s in rd_topics}
+            expected = {f'{s}.html' for s in slugs} | {f'reference/{s}.html' for s in rd_topics} | {'reference/index.html','authors.html','LICENSE.html','LICENSE-text.html','404.html'}
             actual = {str(p.relative_to(out/lang)) for p in (out/lang).rglob('*.html')}
             require(actual==expected,f'{lang}: generated page coverage')
             index = json.loads((out/lang/'search.json').read_text())
-            require({p['url'] for p in index} == expected,f'{lang}: incomplete search coverage')
+            require({p['url'] for p in index} == expected-{'reference.html'},f'{lang}: incomplete search coverage')
             require(any('track' in p['text'] for p in index),f'{lang}: empty search content')
+        for path,doc in docs.items():
+            if path.is_relative_to(out/'en') and path.name!='reference.html':
+                partner=(out/'zh'/path.relative_to(out/'en')).resolve()
+                require(partner in docs and set(doc.ids)==set(docs[partner].ids),f'{path.relative_to(out)}: counterpart anchors differ')
         require(any('标签' in p['text'] for p in json.loads((out/'zh/search.json').read_text())), 'Han search content absent')
     if errors:
         raise SystemExit('\n'.join(errors))

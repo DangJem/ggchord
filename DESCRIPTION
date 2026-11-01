@@ -23,3 +23,4 @@ BugReports: https://github.com/DangJem/ggchord/issues
 NeedsCompilation: no
 Config/roxygen2/version: 8.0.0
 Roxygen: list(markdown = TRUE)
+Config/Needs/website: pkgdown, jsonlite, pkgload

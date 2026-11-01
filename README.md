@@ -1,12 +1,12 @@
 [English](README.md) · [现代汉语](README-Hans.md)
 
-<img src="man/figures/logo.png" alt="ggchord" width="180" align="right">
+<img src="man/figures/logo.png" alt="ggchord" width="150" align="right">
 
 # ggchord: chord, circular and collinear sequence plots
 
 An R package built on ggplot2. Combine independent layers for sequence backbones, interval links, genes, general features, labels and quantitative tracks.
 
-This README describes the local **0.16.5 candidate API**. The latest formal release remains 0.15.0. The new website source has not been deployed.
+This README describes the local **0.16.5 development version, based on the 0.16.4 candidate API**. The latest formal release remains 0.15.0. The new website source has not been deployed.
 
 ## Install
 
@@ -18,6 +18,11 @@ remotes::install_github("DangJem/ggchord")
 ```
 
 For a checkout of this version, use `pkgload::load_all(".")` from its root. A CRAN release is not claimed.
+
+![Collinear case with real sequences and all annotations](man/figures/reallinear.png)
+
+Original repository FASTA, GFF3 and BLAST inputs; see the [real-data workflow](vignettes/ggchord_vignette.Rmd#real-data) for complete import, filtering code and interpretation.
+
 
 ## Three views
 
@@ -75,7 +80,7 @@ ggsave("comparison.png", p_collinear, width = 8, height = 5, units = "in", dpi =
 
 ## Continue
 
-- [Starter tutorial](vignettes/ggchord_vignette.Rmd): install → data → first plot → adjustments → advanced topics → FAQ.
+- [User guide](vignettes/ggchord_vignette.Rmd): real data, plasmids, formats, links, labels, tracks, projection, homology, styling, output and FAQ.
 - [Migration guide](MIGRATION.md) and [NEWS](NEWS.md).
 - [Build and preview the local website](website/README.md), including reference categories, terminology, gallery and deployment design.
 

@@ -25,3 +25,12 @@ not establish homology. `filter_ggchord_ribbons()`, `deduplicate_ggchord_ribbons
 and `merge_ggchord_ribbons()` prepare existing alignments, preserving source
 membership and estimated-length flags. Bundle and density statistics summarize
 provided links rather than creating new sequence alignments.
+
+## Map an annotation back to source coordinates {#mapping}
+{{code:mappingposition}}
+
+Run the [focus example](views.html#focus) first. The helper returns Cartesian x/y
+for source position 200 on A. It does not make all ordinary ggplot2 coordinates
+become genomic bp. In segmented views choose the window ID, and check positions
+in omitted gaps rather than extrapolating across them. Use [explicit homologs](homology.html)
+when the locus selection comes from declared feature/cluster evidence.

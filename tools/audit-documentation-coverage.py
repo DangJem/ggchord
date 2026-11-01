@@ -47,13 +47,17 @@ def main():
             interpretation='Reference presence, prose mentions and source calls are separate evidence; none certifies tutorial depth or execution'))
     path=ROOT/'design-roadmap/audit-generated/documentation-coverage-v0.16.5.csv'
     with path.open('w') as f:
-        w=csv.DictWriter(f,fieldnames=output[0].keys());w.writeheader();w.writerows(output)
+        w=csv.DictWriter(f,fieldnames=output[0].keys(),lineterminator='\n');w.writeheader();w.writerows(output)
     owned=[row for row in output if row['ownership']=='ggchord']
     summary=dict(exports=len(output),owned=len(owned),upstream=len(output)-len(owned),
         reference_available=sum(row['rd_exists'] for row in output),
         owned_called_in_shared_source=sum(row['shared_code_has_call'] for row in owned),
         upstream_called_in_shared_source=sum(row['shared_code_has_call'] for row in output if row['ownership']!='ggchord'),
         scope='Source inventory only. Aliases and upstream objects do not each require an independent tutorial; task-level review remains necessary.')
+    families=json.loads((ROOT/'website/coverage.json').read_text())
+    summary['task_families']=len(families)
+    summary['paired_entries']=len(pages['en'])
+    summary['shared_figures']=len(json.loads((ROOT/'website/assets/captions.json').read_text()))
     print(json.dumps(summary,ensure_ascii=False,indent=2))
 
 if __name__=='__main__':

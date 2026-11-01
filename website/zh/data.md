@@ -25,7 +25,8 @@
 `read_genbank()` 保留记录/feature 来源和分段位置。`read_bed()`、`read_paf()` 保留
 坐标转换元数据。`as_ggchord_seq()`、`as_ggchord_feature()`、`as_ggchord_link()`
 适配支持的 S4 对象；对象缺少完整长度或标识时必须显式提供。
-`file` 选择单文件，`files` 支持显式展开的文件集合。缺失的序列或同源关系应由分析者
+`file` 与 `files` 均支持路径向量或 glob，重复解析路径按首次出现顺序只读一次。
+一个工作流选择一个清晰入口。缺失的序列或同源关系应由分析者
 提供，绘图层不生成这些业务数据。
 
 ## 校验、清理与准备 {#validation}
@@ -37,3 +38,20 @@
 归属。绘图前检查 `validation`、`cleaned$report` 和 `prepared$report`。
 几何表的 `source_row` 指图层已解析输入行，`.source_line` 才是物理文件行；GenBank
 另有记录/feature 来源。聚合可带 `source_rows` 和 `.length_estimated`，筛选合并时应保留。
+
+## 检查问题输入及修复报告 {#repairs}
+{{code:cleaning}}
+{{results:cleaning}}
+
+演示输入有意包含未知 ID、反向区间及超过 0–100 的相似度。明确修复不表示应该静默
+截断科学观测。检查 `problem_report`、`repaired$report`，保留原表，并按实际证据
+选择策略。合法反向比对可以保持端点顺序，而非排序。`prepare_ggchord_data()`
+因此有其工作流相关的默认策略，不能假定独立清理和准备函数完全相同。
+
+## 声明 genome 与 contig 键 {#hierarchy}
+{{code:hierarchy}}
+
+`hierarchy$contigs` 汇总已声明归属，不拼接 contig，也不由 accession 前缀推断归属。
+不同样本重复局部 contig 名时须显式提供全局唯一标识。
+[文件格式与适配器](formats.html)说明格式及可选对象，[真实记录教程](real-data.html)
+把这些报告带入完整绘图流程。

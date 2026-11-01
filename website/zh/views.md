@@ -21,3 +21,10 @@ focus 把保留位置移到局部一基坐标，同时保留源原点、截断�
 `filter_ggchord_ribbons()`、`deduplicate_ggchord_ribbons()`、
 `merge_ggchord_ribbons()` 整理已有比对，保留源成员和估计长度标记。
 聚束和密度统计汇总已提供连接，不创建新的序列比对。
+
+## 按源坐标放置普通注释 {#mapping}
+{{code:mappingposition}}
+
+先运行[focus 例子](views.html#focus)。辅助函数返回 A 上源位置 200 的笛卡尔 x/y，
+不把全部普通 ggplot2 坐标变成基因组 bp。分段视图应选窗口 ID，检查落在省略间隙
+的位置，不跨间隙外推。locus 选择来自明确 feature/cluster 证据时见[显式同源关系](homology.html)。
