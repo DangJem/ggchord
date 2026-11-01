@@ -33,3 +33,7 @@ body{background:var(--canvas);color:var(--body-ink);font-family:Inter,ui-sans-se
 .navbar.headroom{transform:none!important}main pre a{text-decoration:none}main pre a:hover{text-decoration:underline}
 .doc-layout>aside.col-md-3{margin:0!important;padding:35px 0 0!important}
 .doc-layout{margin-inline:0}body:not([data-page=index]) main img.logo{display:none}
+/* Entry pages prioritize task choices; outlines remain on learning/reference pages. */
+body:is([data-page=index],[data-page=gallery],[data-page=articles]) .page-outline{display:none}
+main table{display:table;width:100%}body[data-page=gallery] main h2{margin-top:1.5rem;padding-top:1rem}
+@media(max-width:700px){main table{display:block}}
