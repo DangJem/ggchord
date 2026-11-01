@@ -59,7 +59,8 @@ ggchord_ribbon_numeric_input <- function(data, columns, caller) {
 #'
 #' @examples
 #' data(ribbon_data_example)
-#' links <- ribbon_data_example[c("qaccver", "saccver", "qstart", "qend", "sstart", "send", "pident", "length")]
+#' links <- ribbon_data_example[c("qaccver", "saccver", "qstart", "qend", "sstart", "send",
+#'   "pident", "length")]
 #' out <- filter_ggchord_ribbons(links, min_pident = 95, min_length = 500)
 #' out$report
 filter_ggchord_ribbons <- function(
@@ -344,7 +345,8 @@ normalize_keep_pairs <- function(pairs) {
 #'
 #' @examples
 #' data(ribbon_data_example)
-#' links <- ribbon_data_example[c("qaccver", "saccver", "qstart", "qend", "sstart", "send", "pident", "length")]
+#' links <- ribbon_data_example[c("qaccver", "saccver", "qstart", "qend", "sstart", "send",
+#'   "pident", "length")]
 #' out <- deduplicate_ggchord_ribbons(links, by = "overlap")
 #' out$report
 deduplicate_ggchord_ribbons <- function(
@@ -540,7 +542,8 @@ deduplicate_ggchord_ribbons <- function(
 #'
 #' @examples
 #' data(ribbon_data_example)
-#' links <- ribbon_data_example[c("qaccver", "saccver", "qstart", "qend", "sstart", "send", "pident", "length")]
+#' links <- ribbon_data_example[c("qaccver", "saccver", "qstart", "qend", "sstart", "send",
+#'   "pident", "length")]
 #' out <- merge_ggchord_ribbons(links, max_gap = 100)
 #' out$report
 merge_ggchord_ribbons <- function(

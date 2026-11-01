@@ -50,7 +50,8 @@ representative per \code{keep}.
 }
 \examples{
 data(ribbon_data_example)
-links <- ribbon_data_example[c("qaccver", "saccver", "qstart", "qend", "sstart", "send", "pident", "length")]
+links <- ribbon_data_example[c("qaccver", "saccver", "qstart", "qend", "sstart", "send",
+  "pident", "length")]
 out <- deduplicate_ggchord_ribbons(links, by = "overlap")
 out$report
 }

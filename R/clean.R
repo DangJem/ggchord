@@ -68,7 +68,8 @@
 #' data(seq_data_example)
 #' seqs <- seq_data_example[c("accver", "length")]
 #' data(ribbon_data_example)
-#' links <- ribbon_data_example[c("qaccver", "saccver", "qstart", "qend", "sstart", "send", "pident", "length")]
+#' links <- ribbon_data_example[c("qaccver", "saccver", "qstart", "qend", "sstart", "send",
+#'   "pident", "length")]
 #' # Deliberate diagnostic error in a copy; source observations remain unchanged.
 #' problem <- links[1:2, ]
 #' problem$qaccver[2] <- "absent"

@@ -253,7 +253,10 @@ ggchord_feature_data <- function(data, fixed_shape = "arrow",
 #' seqs <- plasmid_example_pUC19[c("accver", "length")]
 #' feature_source <- find_common_features(plasmid_example_pUC19)
 #' features <- feature_source[c("accver", "start", "end", "strand", "type", "anno")]
-#' ggchord(seq_data = seqs) + geom_seq() + geom_feature(data = features, shape = "block") + coord_circular()
+#' # ASCII display copy for the default PDF help-example device.
+#' features$anno <- gsub("\u03b1", "alpha", features$anno, fixed = TRUE)
+#' ggchord(seq_data = seqs) + geom_seq() + geom_feature(data = features,
+#'   shape = "block") + coord_circular()
 geom_feature <- function(mapping = NULL, data = NULL,
                          shape = "arrow",
                          width = NULL,

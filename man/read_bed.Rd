@@ -43,6 +43,8 @@ data(plasmid_example_pUC19)
 seqs <- plasmid_example_pUC19[c("accver", "length")]
 feature_source <- find_common_features(plasmid_example_pUC19)
 features <- feature_source[c("accver", "start", "end", "strand", "type", "anno")]
+# ASCII display copy for the default PDF help-example device.
+features$anno <- gsub("\u03b1", "alpha", features$anno, fixed = TRUE)
 bed <- tempfile(fileext = ".bed")
 write.table(data.frame(features$accver, features$start - 1L, features$end), bed,
   sep = "\t", quote = FALSE, row.names = FALSE, col.names = FALSE)

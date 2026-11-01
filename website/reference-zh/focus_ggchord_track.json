@@ -1,5 +1,5 @@
 {
-  "source_sha256": "632f7225f532cb6d2a34ef3ae4ecf7f96e47f52cc3c2938ed7f7f5ff2710b071",
+  "source_sha256": "1c4b6137c955e821c0e0dc63a809de92fb4d98a7dd77b22805e6c5a5eba2117d",
   "translations": {
     "0": "聚焦定量区间或采样点而不跨越省略窗口",
     "1": "定量输入表，保留元数据和映射值。",

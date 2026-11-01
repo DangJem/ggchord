@@ -27,7 +27,8 @@
 #' data(seq_data_example)
 #' seqs <- seq_data_example[c("accver", "length")]
 #' data(ribbon_data_example)
-#' links <- ribbon_data_example[c("qaccver", "saccver", "qstart", "qend", "sstart", "send", "pident", "length")]
+#' links <- ribbon_data_example[c("qaccver", "saccver", "qstart", "qend", "sstart", "send",
+#'   "pident", "length")]
 #' points <- data.frame(qaccver = links$qaccver, saccver = links$saccver,
 #'   qpos = floor((links$qstart + links$qend) / 2),
 #'   spos = floor((links$sstart + links$send) / 2))

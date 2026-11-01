@@ -1,5 +1,5 @@
 {
-  "source_sha256": "749e527fb3b5ddcfd97dfefb977eaa7499342b5a0e4c175dad204f1777b2ccb5",
+  "source_sha256": "f1fdc6e495ed319ca97699a8b849b64a4c8fe650bb892a195c5646014aede2b0",
   "translations": {
     "0": "通过剪接 CDS 映射投影蛋白结构域或基因组注释",
     "1": "结构域/注释数据框，含 ⟦0⟧、⟦1⟧（或每项单值的 ⟦2⟧ 列表列）、⟦3⟧、⟦4⟧。",

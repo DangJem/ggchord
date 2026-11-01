@@ -1,5 +1,5 @@
 {
-  "source_sha256": "b62833ff6ed0667e3cda5a11e4ef639b6a41c6719a4cb0c269c36f4227719be9",
+  "source_sha256": "52435c93b59bbfbdf2feb53c27b70180a4beb33108820b549b82044f5eedb606",
   "translations": {
     "0": "合并同序列对的相邻或重叠比对块",
     "1": "连接格式的数据框。",

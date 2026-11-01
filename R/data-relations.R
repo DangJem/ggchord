@@ -172,7 +172,8 @@ validate_ggchord_hierarchy <- function(seq_data, genomes, strict = FALSE) {
 #' seqs <- seq_data_example[c("accver", "length")]
 #' links <- ribbon_data_example[c("qaccver", "saccver", "qstart", "qend", "sstart", "send")]
 #' # The fixture preserves biological strands separately from its old display strands.
-#' genes <- transform(gene_data_example, strand = source_strand)[c("accver", "start", "end", "strand")]
+#' genes <- transform(gene_data_example, strand = source_strand)[c("accver", "start", "end",
+#'   "strand")]
 #' # Optional appearance choices; none of these columns or scales is required input.
 #' seq_palette <- setNames(c("#487A70", "#B48A61", "#637E9D", "#A16E7D"), seqs$accver)
 #' gene_palette <- c("+" = "#56887C", "-" = "#B58169", "." = "#AAB9AE")
@@ -191,9 +192,11 @@ validate_ggchord_hierarchy <- function(seq_data, genomes, strict = FALSE) {
 #' cluster_features$feature_id <- with(cluster_features, paste(accver, start, end, sep = ":"))
 #' # Membership is computed from exact strand-corrected CDS DNA equality, not gene names.
 #' cds_dna <- vapply(seq_len(nrow(cluster_features)), function(i) {
-#'   f <- cluster_features[i, ]; dna <- homolog_source$sequence[match(f$accver, homolog_source$accver)]
+#'   f <- cluster_features[i, ]; dna <- homolog_source$sequence[match(f$accver,
+#'   homolog_source$accver)]
 #'   dna <- substr(dna, f$start, f$end)
-#'   if (f$strand == "-") dna <- chartr("ACGT", "TGCA", paste(rev(strsplit(dna, "")[[1]]), collapse = ""))
+#'   if (f$strand == "-") dna <- chartr("ACGT", "TGCA", paste(rev(strsplit(dna, "")[[1]]),
+#'   collapse = ""))
 #'   dna
 #' }, "")
 #' membership <- data.frame(feature_id = cluster_features$feature_id,
@@ -201,7 +204,8 @@ validate_ggchord_hierarchy <- function(seq_data, genomes, strict = FALSE) {
 #' homologs <- link_ggchord_clusters(cluster_features, membership,
 #'   pairs = data.frame(qaccver = homolog_seq$accver[1], saccver = homolog_seq$accver[2]))
 #' loci <- find_ggchord_loci(homolog_seq, cluster_features,
-#'   targets = cluster_features$feature_id[cluster_features$anno == "AmpR"][1], upstream = 100, downstream = 100)
+#'   targets = cluster_features$feature_id[cluster_features$anno == "AmpR"][1],
+#'   upstream = 100, downstream = 100)
 #' p_homologs <- ggchord(seq_data = homolog_seq) +
 #'   geom_link_ribbon(data = homologs$data, fill = "#ADC5B9", alpha = .6) + geom_seq() +
 #'   geom_gene(data = cluster_features) + geom_seq_label(size = 4) +

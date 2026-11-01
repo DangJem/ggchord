@@ -183,6 +183,8 @@ ggchord_project_intervals <- function(row, caller) {
 #' seqs <- plasmid_example_pUC19[c("accver", "length")]
 #' feature_source <- find_common_features(plasmid_example_pUC19)
 #' features <- feature_source[c("accver", "start", "end", "strand", "type", "anno")]
+#' # ASCII display copy for the default PDF help-example device.
+#' features$anno <- gsub("\u03b1", "alpha", features$anno, fixed = TRUE)
 #' coding <- features[features$anno == "AmpR" & features$type == "CDS",
 #'   c("accver", "start", "end", "strand")]
 #' coding$feature_id <- paste(coding$accver, "AmpR", sep = ":")
@@ -348,13 +350,16 @@ ggchord_project_genomic <- function(segment, lower, upper) {
 #' seqs <- plasmid_example_pUC19[c("accver", "length")]
 #' feature_source <- find_common_features(plasmid_example_pUC19)
 #' features <- feature_source[c("accver", "start", "end", "strand", "type", "anno")]
+#' # ASCII display copy for the default PDF help-example device.
+#' features$anno <- gsub("\u03b1", "alpha", features$anno, fixed = TRUE)
 #' coding <- features[features$anno == "AmpR" & features$type == "CDS",
 #'   c("accver", "start", "end", "strand")]
 #' coding$feature_id <- paste(coding$accver, "AmpR", sep = ":")
 #' coding$phase <- 0
 #' cds <- build_ggchord_cds(coding, genetic_code = 11)
 #' # Select residues for display; this is not a detected domain.
-#' selected <- data.frame(feature_id = "selected_residues", parent_id = coding$feature_id, start = 2, end = 20)
+#' selected <- data.frame(feature_id = "selected_residues", parent_id = coding$feature_id,
+#'   start = 2, end = 20)
 #' project_ggchord_features(selected, cds)
 project_ggchord_features <- function(feature_data, cds, from = c("protein", "genome"),
                                      codon_boundary = c("error", "expand")) {
@@ -472,6 +477,8 @@ project_ggchord_features <- function(feature_data, cds, from = c("protein", "gen
 #' seqs <- plasmid_example_pUC19[c("accver", "length")]
 #' feature_source <- find_common_features(plasmid_example_pUC19)
 #' features <- feature_source[c("accver", "start", "end", "strand", "type", "anno")]
+#' # ASCII display copy for the default PDF help-example device.
+#' features$anno <- gsub("\u03b1", "alpha", features$anno, fixed = TRUE)
 #' coding <- features[features$anno == "AmpR" & features$type == "CDS",
 #'   c("accver", "start", "end", "strand")]
 #' coding$feature_id <- paste(coding$accver, "AmpR", sep = ":")

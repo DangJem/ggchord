@@ -45,7 +45,8 @@ data(gene_data_example)
 seqs <- seq_data_example[c("accver", "length")]
 links <- ribbon_data_example[c("qaccver", "saccver", "qstart", "qend", "sstart", "send")]
 # The fixture preserves biological strands separately from its old display strands.
-genes <- transform(gene_data_example, strand = source_strand)[c("accver", "start", "end", "strand")]
+genes <- transform(gene_data_example, strand = source_strand)[c("accver", "start", "end",
+  "strand")]
 # Optional appearance choices; none of these columns or scales is required input.
 seq_palette <- setNames(c("#487A70", "#B48A61", "#637E9D", "#A16E7D"), seqs$accver)
 gene_palette <- c("+" = "#56887C", "-" = "#B58169", "." = "#AAB9AE")

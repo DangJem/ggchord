@@ -134,7 +134,8 @@ ggchord_typed_na <- function(x) {
 #' data(seq_data_example)
 #' seqs <- seq_data_example[c("accver", "length")]
 #' data(ribbon_data_example)
-#' links <- ribbon_data_example[c("qaccver", "saccver", "qstart", "qend", "sstart", "send", "pident", "length")]
+#' links <- ribbon_data_example[c("qaccver", "saccver", "qstart", "qend", "sstart", "send",
+#'   "pident", "length")]
 #' out <- bundle_ggchord_ribbons(links, seqs, bins = 30)
 #' out$report
 bundle_ggchord_ribbons <- function(

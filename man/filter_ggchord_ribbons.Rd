@@ -72,7 +72,8 @@ a numeric criterion must be numeric; missing values fail that criterion.
 }
 \examples{
 data(ribbon_data_example)
-links <- ribbon_data_example[c("qaccver", "saccver", "qstart", "qend", "sstart", "send", "pident", "length")]
+links <- ribbon_data_example[c("qaccver", "saccver", "qstart", "qend", "sstart", "send",
+  "pident", "length")]
 out <- filter_ggchord_ribbons(links, min_pident = 95, min_length = 500)
 out$report
 }

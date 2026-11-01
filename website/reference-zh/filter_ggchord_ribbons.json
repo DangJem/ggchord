@@ -1,5 +1,5 @@
 {
-  "source_sha256": "e4f5a1b40e7abfe1fb0523987a9bcdecc1ed711416acc3a1c945931df02df1d2",
+  "source_sha256": "91a72dcc790b8f50a4d5c8c3e23691ebe7bb393207f39272ff36246683bb9786",
   "translations": {
     "0": "绘图前筛选比对区间",
     "1": "数据框，至少含 ⟦0⟧、⟦1⟧，通常为完整连接格式。",
