@@ -3,6 +3,9 @@ The formal release remains 0.15.0. These local 0.16.5 development docs have not
 been deployed or released; 0.16.0–0.16.4 also remain unreleased local development.
 
 ## Changes in this version {#changes}
+- Reorganized learning, complete workflows, task guides and reference entry points. The first-plot lesson covers installation, minimal inputs, interpretation, saving and troubleshooting; task pages prepare their own objects.
+- Complete Han function reference, including arguments, returns and explanatory prose, with same-page English switching and source-hash checks.
+- Redesigned typography, chapter navigation, gallery and data encodings. Choose overall chord, single-sequence circular or local CDS views by question. Persistent navigation, mobile outlines and reserved image dimensions support long-page reading.
 - Native pkgdown / Bootstrap 5 package-documentation layout with same-page language switching, search, contents and code disclosure.
 - Chord, circular and collinear home-page examples; every documentation figure supports enlargement and actual-size viewing.
 - Bundled or attributed real inputs, with explicit row/column selection before function calls.
