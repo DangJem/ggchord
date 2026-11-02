@@ -1,5 +1,9 @@
 # ggchord 0.16.6
 
+* Post-release CRAN preparation reduces offline tutorial image duplication, fixes
+  installed image links and a long help-example line, and uses smaller real
+  inputs in slow help examples. Public plotting behaviour is unchanged.
+
 * Added progressive chord, collinear and plasmid learning paths, beginning with
   table schemas and import, then building independent layers before the full
   showcases. All 13 unique bundled plasmid references have current feature maps.

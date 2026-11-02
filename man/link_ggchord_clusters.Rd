@@ -105,7 +105,8 @@ homologs <- link_ggchord_clusters(cluster_features, membership,
   pairs = tibble(qaccver = homolog_seq$accver[1], saccver = homolog_seq$accver[2])
 )
 loci <- find_ggchord_loci(homolog_seq, cluster_features,
-  targets = cluster_features$feature_id[cluster_features$anno == "AmpR"][1], upstream = 100, downstream = 100
+  targets = cluster_features$feature_id[cluster_features$anno == "AmpR"][1],
+  upstream = 100, downstream = 100
 )
 gene_palette <- c("+" = "#56887C", "-" = "#B58169", "." = "#AAB9AE")
 doc_theme <- theme_ggchord_publication(

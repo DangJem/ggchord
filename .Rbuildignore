@@ -19,3 +19,4 @@
 ^website$
 ^\.site
 ^MIGRATION.*\.md$
+^man/figures$

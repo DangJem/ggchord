@@ -17,7 +17,10 @@ def tutorial(lang):
         '每章提供本页准备代码；第一次使用请从首图教程开始。')
     text = f'''---
 title: "{title}"
-output: rmarkdown::html_vignette
+output:
+  rmarkdown::html_vignette:
+    self_contained: true
+    css: vignette.css
 vignette: >
   %\\VignetteIndexEntry{{{title}}}
   %\\VignetteEngine{{knitr::rmarkdown}}
@@ -30,14 +33,16 @@ vignette: >
 knitr::opts_chunk$set(eval = FALSE, collapse = TRUE, comment = "#>")
 ```
 
-<img src="../man/figures/logo.png" alt="ggchord" width="200">
+<img data-external="1" src="tutorial-assets/logo.png" alt="ggchord" width="200">
 
 {intro}
 
 '''
 
     for p in CHAPTERS:
-        body = expand((WEB/lang/(p['slug']+'.md')).read_text(), lang, figures='../man/figures')
+        body = expand((WEB/lang/(p['slug']+'.md')).read_text(), lang, figures='tutorial-assets')
+        body = re.sub(r'(?<=tutorial-assets/)([a-z]+)\.png', r'\1.jpg', body)
+        body = body.replace('<img ', '<img data-external="1" ')
         body = re.sub(r'^(#{2,5}) (.*?)(?: \{#([^}]+)\})?$',
             lambda m: '#'+m[1]+' '+m[2]+(f' {{#{p["slug"]}-{m[3]}}}' if m[3] else ''), body, flags=re.M)
         body = re.sub(r'(\]\(#)([^)]+)(\))',
@@ -57,7 +62,7 @@ knitr::opts_chunk$set(eval = FALSE, collapse = TRUE, comment = "#>")
         body = body.replace('](#index-quick-start)', '](#shared-setup)')
         body = body.replace('](#reference)', '](#glossary)')
         # Website downloads become source paths in an installed vignette.
-        body = body.replace('../assets/logo.svg', '../man/figures/logo.svg')
+        body = body.replace('../assets/logo.svg', 'tutorial-assets/logo.svg')
         body = re.sub(r'\[([^\]]+)\]\(\.\./assets/(plots\.csv|icon\.json|input-hashes\.json|example-results\.json)\)', lambda m: m[1]+' (`website/assets/'+m[2]+'` in the source repository)', body)
         body = body.replace('../assets/documentation-examples.R', 'https://github.com/DangJem/ggchord/blob/main/tools/documentation-examples.R')
         body = body.replace('../assets/ASSET-SOURCES.md', 'https://github.com/DangJem/ggchord/blob/main/website/ASSET-SOURCES.md')

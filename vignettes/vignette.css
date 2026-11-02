@@ -1,0 +1,8 @@
+body { max-width: 960px; margin: 2rem auto; padding: 0 1.2rem; color: #24363b; background: #fffcf5; font: 16px/1.7 sans-serif; }
+img { max-width: 100%; height: auto; }
+pre { overflow-x: auto; padding: 1rem; background: #f0ede6; }
+code { font-size: .9em; }
+a { color: #136d87; }
+table { border-collapse: collapse; display: block; overflow-x: auto; }
+th, td { padding: .4rem .7rem; border-bottom: 1px solid #d4d1c9; }
+h1, h2, h3 { line-height: 1.3; }

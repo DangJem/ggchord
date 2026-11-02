@@ -107,6 +107,7 @@ seqs <- plasmid_example_pUC19 |>
   select(accver, length)
 feature_source <- find_common_features(plasmid_example_pUC19)
 features <- feature_source |>
+  slice_head(n = 4) |>
   select(accver, start, end, strand, type, anno)
 # ASCII display copy for the default PDF help-example device.
 features <- features |>

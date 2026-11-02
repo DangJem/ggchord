@@ -1,5 +1,5 @@
 Package: ggchord
-Title: Layered Chord, Circular and Collinear Sequence Visualization
+Title: Layered Chord, Circular and Linear Sequence Visualization
 Version: 0.16.6
 Authors@R: person(given = "Jem", family = "Dang", email = "dangjem0730@gmail.com", role = c("aut", "cre"))
 Description: A 'ggplot2'-based package for multi-sequence alignment chord
@@ -7,7 +7,7 @@ Description: A 'ggplot2'-based package for multi-sequence alignment chord
     A layered grammar combines
     sequence backbones, interval links, genes, general biological features,
     labels, quantitative tracks, genomic axes and restriction sites. Feature
-    placement is expressed with composable Position objects, while role-specific
+    placement is expressed with reusable Position objects, while role-specific
     scales and themes keep data mapping separate from geometry and appearance.
 License: MIT + file LICENSE
 Depends: R (>= 4.1.0)

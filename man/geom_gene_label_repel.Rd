@@ -129,6 +129,9 @@ seqs <- seq_data_example |>
   select(accver, length)
 data(gene_data_example)
 genes <- gene_data_example |>
+  group_by(accver) |>
+  slice_head(n = 2) |>
+  ungroup() |>
   transmute(accver, start, end, strand = source_strand, anno)
 ggchord(seq_data = seqs, gene_data = genes) +
   geom_seq() +

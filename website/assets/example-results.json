@@ -56,7 +56,7 @@
   },
   "optional": {
     "genbank": "SKIP: Biopython unavailable",
-    "ranges": "SKIP: GenomicRanges unavailable",
-    "interactions": "SKIP: InteractionSet or GenomicRanges unavailable"
+    "ranges": "PASS",
+    "interactions": "PASS"
   }
 }

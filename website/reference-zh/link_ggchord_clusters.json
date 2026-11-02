@@ -1,5 +1,5 @@
 {
-  "source_sha256": "f178bb1239fccbb0d45db1d9cf6ed5a6279d5c245c60f7137bfde46f7c22c01a",
+  "source_sha256": "4cd7b7d444115b6f24a82520de205daeafff9555d45e5268e6a8c645eb0a144a",
   "translations": {
     "0": "将显式同源分组成员转换为注释连接",
     "1": "注释数据框，含 ⟦0⟧、⟦1⟧、⟦2⟧、⟦3⟧，可选 ⟦4⟧，应符合 ⟦5⟧。",

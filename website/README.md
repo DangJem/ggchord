@@ -189,3 +189,13 @@ previews can choose different dimensions and should not be mixed with that layou
 三个模块从数据表、导入、骨架与图层逐步进入完整示例，顺序为弦图、共线性、质粒。13个独立质粒参考均由当前代码生成；共同数据/图层的coord替换示例与圆形专属参数限制分开说明。
 
 文档图像manifest保留每张PNG及实际生成时共享脚本的MD5，同时记录当前依赖摘要。R实现或共同准备变动会要求重新生成所有受影响图；已审阅的独立共线性/三种标签示例块可局部重绘。只有完整当前输出和实际PNG哈希全部匹配时，才允许为旧manifest补录依赖摘要，不能用补写哈希代替渲染。
+
+## 离线教程图片
+
+`python3 tools/prepare-vignette-figures.py`（需要开发工具Pillow）从当前PNG生成
+共享阅读资源到vignettes/tutorial-assets；原始PNG与网站输出不覆盖。先运行sync-tutorials.py，
+再准备图片。两份html_vignette内嵌脚本与样式，图像用data-external共用本地资源，放大链接也
+使用同一路径。发布前须核对源码包内inst/doc/tutorial-assets及两个HTML的实际资源闭包。
+
+源码包生成后运行 `python3 tools/check-vignette-resources.py ggchord_版本.tar.gz`，
+检查两个安装HTML中的全部本地src/href目标，而不只检查源Rmd路径。

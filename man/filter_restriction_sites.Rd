@@ -36,11 +36,10 @@ A row subset whose biological coordinates are unchanged.
 Filter restriction sites for display
 }
 \examples{
-data(plasmid_example_pSpCas9_BB_2A_GFP_PX458)
-sites <- find_restriction_sites(
-  plasmid_example_pSpCas9_BB_2A_GFP_PX458
-)
-reference_sites <- filter_restriction_sites(sites, set = "reference")
+data(plasmid_example_pUC19)
+sites <- find_restriction_sites(plasmid_example_pUC19,
+  enzymes = c("EcoRI", "BamHI", "HindIII"))
+unique_sites <- filter_restriction_sites(sites, set = "unique")
 }
 \seealso{
 \code{\link{ggchord_data_contract}}
