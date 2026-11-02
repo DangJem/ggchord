@@ -15,11 +15,11 @@
 R ≥ 4.1.0 · ggplot2 ≥ 4.0.0
 
 ```r
-install.packages("remotes")
+install.packages(c("remotes", "dplyr"))
 remotes::install_github("DangJem/ggchord@v0.16.5")
 ```
 
-如已检出本版源码，在仓库根目录使用 `pkgload::load_all(".")`。不声称存在 CRAN 发布。
+如已检出本版源码，在仓库根目录使用 `pkgload::load_all(".")`。不声称存在 CRAN 发布。 本例用 dplyr 和原生 `|>` 管道整理数据；dplyr 是示例依赖。
 
 ## 三种模式
 
@@ -30,30 +30,41 @@ remotes::install_github("DangJem/ggchord@v0.16.5")
 
 ```r
 library(ggchord)
+library(dplyr)
 data(seq_data_example)
 data(ribbon_data_example)
 data(gene_data_example)
-seqs <- seq_data_example[c("accver", "length")]
-links <- ribbon_data_example[c("qaccver", "saccver", "qstart", "qend", "sstart", "send")]
+seqs <- seq_data_example |>
+  select(accver, length)
+links <- ribbon_data_example |>
+  select(qaccver, saccver, qstart, qend, sstart, send)
 # The fixture preserves biological strands separately from its old display strands.
-genes <- transform(gene_data_example, strand = source_strand)[c("accver", "start", "end", "strand")]
+genes <- gene_data_example |>
+  transmute(accver, start, end, strand = source_strand)
 ```
 
 ```r
 # Optional appearance choices; none of these columns or scales is required input.
 library(ggchord)
-seq_palette <- setNames(c("#3867D6", "#E58A28", "#219B83", "#9B59B6"),
-  c("MT108731.1", "MT118296.1", "OQ646790.1", "OR222515.1"))
+seq_palette <- setNames(
+  c("#3867D6", "#E58A28", "#219B83", "#9B59B6"),
+  c("MT108731.1", "MT118296.1", "OQ646790.1", "OR222515.1")
+)
 gene_palette <- c("+" = "#3B6FD8", "-" = "#E1812C", "." = "#8291A6")
 ```
 
 ```r
 library(ggchord)
-doc_theme <- theme_ggchord_publication(axis.text = element_text(size = 11),
-  axis.text.check.overlap = TRUE) + theme(legend.position = "bottom")
-doc_axis <- function(coordinates = "relative") scale_seq_position_continuous(
-  coordinates = coordinates, n.breaks = 3, minor_breaks = NULL,
-  labels = function(x) format(x, scientific = FALSE, big.mark = ",", trim = TRUE))
+doc_theme <- theme_ggchord_publication(
+  axis.text = element_text(size = 11),
+  axis.text.check.overlap = TRUE
+) + theme(legend.position = "bottom")
+doc_axis <- function(coordinates = "relative") {
+  scale_seq_position_continuous(
+    coordinates = coordinates, n.breaks = 3, minor_breaks = NULL,
+    labels = function(x) format(x, scientific = FALSE, big.mark = ",", trim = TRUE)
+  )
+}
 ```
 
 </details>
@@ -65,10 +76,14 @@ doc_axis <- function(coordinates = "relative") scale_seq_position_continuous(
 ```r
 p_chord <- ggchord(seq_data = seqs, ribbon_data = links, gene_data = genes) +
   geom_link_ribbon(aes(ribbon_fill = qaccver), alpha = .7) +
-  scale_ribbon_fill_manual(values = seq_palette, guide = "none") + geom_seq(show.legend = FALSE) + geom_gene(position = position_strand(.1), width = .04) +
-  geom_seq_label(size = 4, seq_label_radius = .84, seq_label_hjust = .5) + coord_chord() +
+  scale_ribbon_fill_manual(values = seq_palette, guide = "none") +
+  geom_seq(show.legend = FALSE) +
+  geom_gene(position = position_strand(.1), width = .04) +
+  geom_seq_label(size = 4, seq_label_radius = .84, seq_label_hjust = .5) +
+  coord_chord() +
   scale_seq_colour_manual(values = seq_palette) +
-  scale_gene_fill_manual(values = gene_palette) + doc_theme
+  scale_gene_fill_manual(values = gene_palette) +
+  doc_theme
 p_chord
 ```
 
@@ -84,27 +99,36 @@ p_chord
 <summary>先运行：圆图的数据和配色</summary>
 
 ```r
+library(dplyr)
 data(plasmid_example_pUC19)
-plasmid_seq <- plasmid_example_pUC19[c("accver", "length")]
+plasmid_seq <- plasmid_example_pUC19 |>
+  select(accver, length)
 feature_source <- find_common_features(plasmid_example_pUC19)
-features <- feature_source[c("accver", "start", "end", "strand", "type", "anno")]
+features <- feature_source |>
+  select(accver, start, end, strand, type, anno)
 ```
 
 ```r
 library(ggchord)
-feature_palette <- c(CDS = "#3973CB", promoter = "#8B5EC4", rep_origin = "#E8A42D",
-  primer_bind = "#168F86", misc_feature = "#A0ADBD", protein_bind = "#CC6485")
+feature_palette <- c(
+  CDS = "#3973CB", promoter = "#8B5EC4", rep_origin = "#E8A42D",
+  primer_bind = "#168F86", misc_feature = "#A0ADBD", protein_bind = "#CC6485"
+)
 ```
 
 </details>
 
 ```r
-circle_features <- features[features$type %in% c("CDS", "rep_origin"), ]
-p_circular <- ggchord(seq_data = plasmid_seq) + geom_seq() +
+circle_features <- features |>
+  filter(type %in% c("CDS", "rep_origin"))
+p_circular <- ggchord(seq_data = plasmid_seq) +
+  geom_seq() +
   geom_feature(aes(feature_fill = type), data = circle_features, position = position_plasmid()) +
   geom_feature_label_repel(data = circle_features, position = position_plasmid(), size = 4) +
-  geom_seq_center_label() + scale_feature_fill_manual(values = feature_palette, breaks = unique(circle_features$type)) +
-  coord_circular() + theme_ggchord_publication(axis.text = element_text(size = 11))
+  geom_seq_center_label() +
+  scale_feature_fill_manual(values = feature_palette, breaks = unique(circle_features$type)) +
+  coord_circular() +
+  theme_ggchord_publication(axis.text = element_text(size = 11))
 p_circular
 ```
 
@@ -117,16 +141,22 @@ p_circular
 复用第一节的数据和样式，按明确选择的基因锚点对齐。
 
 ```r
-anchor_rows <- unlist(lapply(split(seq_len(nrow(genes)), genes$accver), function(i)
-  i[which.max(genes$end[i] - genes$start[i])]))
-anchors <- genes[anchor_rows, c("accver", "start", "end")]
+anchors <- genes |>
+  group_by(accver) |>
+  slice_max(end - start, n = 1, with_ties = FALSE) |>
+  ungroup() |>
+  select(accver, start, end)
 p_collinear <- ggchord(seq_data = seqs, ribbon_data = links, gene_data = genes) +
   geom_link_ribbon(aes(ribbon_fill = qaccver), alpha = .7) +
-  scale_ribbon_fill_manual(values = seq_palette, guide = "none") + geom_seq() +
-  geom_gene(position = position_strand(.1)) + geom_seq_label(size = 4) +
-  coord_collinear(anchor = anchors, align = "center", orientation = "auto") + doc_axis() +
+  scale_ribbon_fill_manual(values = seq_palette, guide = "none") +
+  geom_seq() +
+  geom_gene(position = position_strand(.1)) +
+  geom_seq_label(size = 4) +
+  coord_collinear(anchor = anchors, align = "center", orientation = "auto") +
+  doc_axis() +
   scale_seq_colour_manual(values = seq_palette) +
-  scale_gene_fill_manual(values = gene_palette) + doc_theme
+  scale_gene_fill_manual(values = gene_palette) +
+  doc_theme
 p_collinear
 ```
 

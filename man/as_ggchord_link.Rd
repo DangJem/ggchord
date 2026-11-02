@@ -30,8 +30,10 @@ Interval interactions do not imply a pairwise alignment: identity and
 alignment length are not inferred from anchor widths.
 }
 \examples{
+library(dplyr)
 data(ribbon_data_example)
-links <- ribbon_data_example[c("qaccver", "saccver", "qstart", "qend", "sstart", "send")]
+links <- ribbon_data_example |>
+  select(qaccver, saccver, qstart, qend, sstart, send)
 as_ggchord_link(links)
 }
 \seealso{

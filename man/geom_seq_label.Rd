@@ -70,7 +70,11 @@ offset from the arc. Labels can be styled via their radial offset, rotation,
 font size, text orientation and justification.
 }
 \examples{
+library(dplyr)
 data(seq_data_example)
-seqs <- seq_data_example[c("accver", "length")]
-ggchord(seq_data = seqs) + geom_seq() + geom_seq_label()
+seqs <- seq_data_example |>
+  select(accver, length)
+ggchord(seq_data = seqs) +
+  geom_seq() +
+  geom_seq_label()
 }

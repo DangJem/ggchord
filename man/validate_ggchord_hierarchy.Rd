@@ -34,10 +34,13 @@ function never prefixes or rewrites them. Genome rows with no contigs are
 reported as warnings, and remain in the returned genome table.
 }
 \examples{
+library(dplyr)
 data(seq_data_example)
-seqs <- seq_data_example[c("accver", "length")]
-contigs <- transform(seqs, genome = accver)
-genomes <- data.frame(genome = seqs$accver)
+seqs <- seq_data_example |>
+  select(accver, length)
+contigs <- seqs |>
+  mutate(genome = accver)
+genomes <- tibble(genome = seqs$accver)
 validate_ggchord_hierarchy(contigs, genomes)
 }
 \seealso{

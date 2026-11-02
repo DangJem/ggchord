@@ -68,13 +68,16 @@ counts, a data summary, the original row numbers of every problem, and a
 list of automatically fixable issues.
 }
 \examples{
+library(dplyr)
 data(seq_data_example)
-seqs <- seq_data_example[c("accver", "length")]
+seqs <- seq_data_example |>
+  select(accver, length)
 data(ribbon_data_example)
-links <- ribbon_data_example[c("qaccver", "saccver", "qstart", "qend", "sstart", "send")]
+links <- ribbon_data_example |>
+  select(qaccver, saccver, qstart, qend, sstart, send)
 data(gene_data_example)
-genes <- transform(gene_data_example, strand = source_strand)[
-  c("accver", "start", "end", "strand")]
+genes <- gene_data_example |>
+  transmute(accver, start, end, strand = source_strand)
 result <- validate_ggchord_data(seqs, links, genes)
 result$valid
 }

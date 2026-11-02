@@ -65,14 +65,17 @@
 #' @export
 #'
 #' @examples
+#' library(dplyr)
 #' data(seq_data_example)
-#' seqs <- seq_data_example[c("accver", "length")]
+#' seqs <- seq_data_example |>
+#'   select(accver, length)
 #' data(ribbon_data_example)
-#' links <- ribbon_data_example[c("qaccver", "saccver", "qstart", "qend", "sstart", "send",
-#'   "pident", "length")]
+#' links <- ribbon_data_example |>
+#'   select(qaccver, saccver, qstart, qend, sstart, send, pident, length)
 #' # Deliberate diagnostic error in a copy; source observations remain unchanged.
-#' problem <- links[1:2, ]
-#' problem$qaccver[2] <- "absent"
+#' problem <- links |>
+#'   slice_head(n = 2) |>
+#'   mutate(qaccver = replace(qaccver, 2, "absent"))
 #' cleaned <- clean_ggchord_data(seqs, problem, unknown_id = "drop")
 #' cleaned$report
 clean_ggchord_data <- function(

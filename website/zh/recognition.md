@@ -5,6 +5,7 @@
 
 ```r
 library(ggchord)
+library(dplyr)
 ```
 
 ## 搜索与显示分开 {#search}

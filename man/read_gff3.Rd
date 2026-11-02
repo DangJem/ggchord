@@ -48,9 +48,11 @@ wildcard patterns (e.g. \code{"examples/gff3/*.gff3"}).
 }
 \examples{
 \dontrun{
+library(dplyr)
 # Requires the source checkout or tutorial input bundle.
 source <- read_gff3("examples/gff3/MT108731.1.gff3", unstranded = "keep")
-features <- source[c("accver", "start", "end", "strand", "anno")]
+features <- source |>
+  select(accver, start, end, strand, anno)
 }
 }
 \seealso{

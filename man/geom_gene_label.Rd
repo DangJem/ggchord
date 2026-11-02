@@ -86,11 +86,15 @@ requested position. For automatic arrangement with leader lines, use
 \code{\link{geom_gene_label_repel}()} instead.
 }
 \examples{
+library(dplyr)
 data(seq_data_example)
-seqs <- seq_data_example[c("accver", "length")]
+seqs <- seq_data_example |>
+  select(accver, length)
 data(gene_data_example)
-genes <- transform(gene_data_example, strand = source_strand)[
-  c("accver", "start", "end", "strand", "anno")]
-ggchord(seq_data = seqs, gene_data = genes) + geom_seq() +
-  geom_gene() + geom_gene_label()
+genes <- gene_data_example |>
+  transmute(accver, start, end, strand = source_strand, anno)
+ggchord(seq_data = seqs, gene_data = genes) +
+  geom_seq() +
+  geom_gene() +
+  geom_gene_label()
 }

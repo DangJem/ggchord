@@ -60,9 +60,11 @@ See \code{\link[=project_ggchord_features]{project_ggchord_features()}} and \cod
 }
 \examples{
 \dontrun{
+library(dplyr)
 # Standard 12-column records; requires the source checkout or tutorial input bundle.
 source <- read_blast("examples/blastn-standard/MT108731.1__MT118296.1.tsv")
-links <- source[c("qaccver", "saccver", "qstart", "qend", "sstart", "send")]
+links <- source |>
+  select(qaccver, saccver, qstart, qend, sstart, send)
 }
 }
 \seealso{

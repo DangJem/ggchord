@@ -1,5 +1,5 @@
 {
-  "source_sha256": "7abe3f3bac2a05a4dbcbda64ca2dd29498a496af43a6374278593c725a8e5ce9",
+  "source_sha256": "6aca65e14fcc0912ff1450af00925f28bd3b1717abe6c03b52dcbc267ddd2948",
   "translations": {
     "0": "绘制序列间的点连接",
     "1": "标准 ggplot2 映射及图层数据，支持数据函数。",

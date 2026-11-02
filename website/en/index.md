@@ -46,8 +46,10 @@ Draw the four bundled sequence backbones to check IDs and complete lengths:
 
 ```r
 library(ggchord)
+library(dplyr)
 data(seq_data_example)
-sequences <- seq_data_example[c("accver", "length")]
+sequences <- seq_data_example |>
+  select(accver, length)
 ggchord(seq_data = sequences) +
   geom_seq() +
   geom_seq_label() +

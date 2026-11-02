@@ -105,11 +105,15 @@ live in a temporary directory and may be removed by cleanup; use ordinary
 }
 
 \examples{
+library(dplyr)
 data(seq_data_example)
-seqs <- seq_data_example[c("accver", "length")]
-p <- ggchord(seq_data = seqs) + geom_seq()
+seqs <- seq_data_example |>
+  select(accver, length)
+p <- ggchord(seq_data = seqs) +
+  geom_seq()
 geometry <- export_ggchord_layout(p, include = "seq")
-unique(geometry$seq[c("layer_id", "component", "source_row")])
+geometry$seq |>
+  distinct(layer_id, component, source_row)
 }
 \seealso{
 \link{ggchord_data_contract}, \code{\link[=export_ggchord_layout]{export_ggchord_layout()}},

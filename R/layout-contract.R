@@ -98,9 +98,13 @@
 #' @seealso [ggchord_data_contract], [export_ggchord_layout()],
 #'   [get_chord_layout()], [view_ggchord()], [diagnose_ggchord()]
 #' @examples
+#' library(dplyr)
 #' data(seq_data_example)
-#' seqs <- seq_data_example[c("accver", "length")]
-#' p <- ggchord(seq_data = seqs) + geom_seq()
+#' seqs <- seq_data_example |>
+#'   select(accver, length)
+#' p <- ggchord(seq_data = seqs) +
+#'   geom_seq()
 #' geometry <- export_ggchord_layout(p, include = "seq")
-#' unique(geometry$seq[c("layer_id", "component", "source_row")])
+#' geometry$seq |>
+#'   distinct(layer_id, component, source_row)
 NULL

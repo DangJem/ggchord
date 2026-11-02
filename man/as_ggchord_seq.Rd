@@ -51,9 +51,12 @@ intervals with \code{\link[=build_ggchord_cds]{build_ggchord_cds()}} and \code{\
 Empty sequences are rejected like other zero lengths.
 }
 \examples{
+library(dplyr)
 data(seq_data_example)
-seqs <- seq_data_example[c("accver", "length")]
-renamed <- setNames(seqs, c("chrom", "size"))
+seqs <- seq_data_example |>
+  select(accver, length)
+renamed <- seqs |>
+  rename(chrom = accver, size = length)
 as_ggchord_seq(renamed, mapping = c(accver = "chrom", length = "size"))
 }
 \seealso{

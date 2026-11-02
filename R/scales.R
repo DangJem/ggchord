@@ -334,9 +334,13 @@ scale_region_fill_manual <- function(..., values) {
 #' @md
 #' @export
 #' @examples
+#' library(dplyr)
 #' data(seq_data_example)
-#' seqs <- seq_data_example[c("accver", "length")]
-#' ggchord(seq_data = seqs) + geom_seq() + coord_collinear() +
+#' seqs <- seq_data_example |>
+#'   select(accver, length)
+#' ggchord(seq_data = seqs) +
+#'   geom_seq() +
+#'   coord_collinear() +
 #'   scale_seq_position_continuous(breaks = seq(0, 100000, by = 20000))
 scale_seq_position_continuous <- function(
     name = ggplot2::waiver(), breaks = ggplot2::waiver(),

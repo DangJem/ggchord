@@ -21,12 +21,19 @@
 #' @return A ggplot2 layer. Other ggchord coordinate systems are unsupported.
 #' @export
 #' @examples
+#' library(dplyr)
 #' data(seq_data_example)
-#' seqs <- seq_data_example[c("accver", "length")]
-#' loci <- data.frame(accver = seqs$accver, start = floor(seqs$length * .25),
-#'   end = floor(seqs$length * .75))
+#' seqs <- seq_data_example |>
+#'   select(accver, length)
+#' loci <- tibble(
+#'   accver = seqs$accver, start = floor(seqs$length * .25),
+#'   end = floor(seqs$length * .75)
+#' )
 #' focused <- focus_ggchord_data(seqs, loci = loci)
-#' ggchord(seq_data = focused$seq_data) + geom_seq() + geom_seq_break() + coord_collinear()
+#' ggchord(seq_data = focused$seq_data) +
+#'   geom_seq() +
+#'   geom_seq_break() +
+#'   coord_collinear()
 geom_seq_break <- function(mapping = NULL, data = NULL,
                            break_width = .02, break_height = .04,
                            linewidth = .4, colour = "#3D4348",

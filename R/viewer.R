@@ -174,8 +174,10 @@ ggchord_preview_circular_layout <- function(plot) {
 #' @md
 #' @export
 #' @examples
+#' library(dplyr)
 #' data(seq_data_example)
-#' p <- ggchord(seq_data_example) + geom_seq()
+#' p <- ggchord(seq_data_example) +
+#'   geom_seq()
 #' if (interactive()) view_ggchord(p)
 view_ggchord <- function(
     plot = ggplot2::last_plot(),

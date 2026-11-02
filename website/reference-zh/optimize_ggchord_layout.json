@@ -1,5 +1,5 @@
 {
-  "source_sha256": "a270242d725dc9e3f9c4774ddc402ba3a7f6865cecbd8da4171b9b364b6b1150",
+  "source_sha256": "7d7e14623b0e35df58ef0a0fe18e91c4009c11d1278c693fe753369175753ab0",
   "translations": {
     "0": "优化序列顺序和方向以改善连接可读性",
     "1": "含 ⟦0⟧、⟦1⟧ 的序列数据。",

@@ -66,16 +66,18 @@ globalVariables(c(
 #' @export
 #'
 #' @examples
+#' library(dplyr)
 #' library(ggchord)
 #' data(seq_data_example)
 #' data(ribbon_data_example)
 #' data(gene_data_example)
 #'
-#' seqs <- seq_data_example[c("accver", "length")]
-#' links <- ribbon_data_example[c("qaccver", "saccver",
-#'   "qstart", "qend", "sstart", "send")]
-#' genes <- gene_data_example[c("accver", "start", "end", "strand")]
-#' genes$strand <- gene_data_example$source_strand
+#' seqs <- seq_data_example |>
+#'   select(accver, length)
+#' links <- ribbon_data_example |>
+#'   select(qaccver, saccver, qstart, qend, sstart, send)
+#' genes <- gene_data_example |>
+#'   transmute(accver, start, end, strand = source_strand)
 #' p <- ggchord(
 #'   seq_data = seqs,
 #'   ribbon_data = links,
@@ -85,7 +87,6 @@ globalVariables(c(
 #'   geom_link_ribbon() +
 #'   geom_gene()
 #' print(p)
-#'
 #' @importFrom ggplot2 ggplot_build
 ggchord <- function(
     seq_data,

@@ -111,9 +111,12 @@ ggchord_reject_retired <- function(dots, caller, migrations,
 #' @export
 #'
 #' @examples
+#' library(dplyr)
 #' data(seq_data_example)
-#' seqs <- seq_data_example[c("accver", "length")]
-#' p <- ggchord(seq_data = seqs) + geom_seq()
+#' seqs <- seq_data_example |>
+#'   select(accver, length)
+#' p <- ggchord(seq_data = seqs) +
+#'   geom_seq()
 #' get_chord_layout(p)$seqs
 get_chord_layout <- function(plot, build = TRUE) {
   old_error <- ggchord_disable_debug()

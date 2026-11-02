@@ -67,15 +67,17 @@ ggchord_format_import <- function(out, paths, format, rows_per_file,
 #' @seealso \code{\link{ggchord_data_contract}}
 #' @export
 #' @examples
+#' library(dplyr)
 #' data(plasmid_example_pUC19)
-#' seqs <- plasmid_example_pUC19[c("accver", "length")]
 #' feature_source <- find_common_features(plasmid_example_pUC19)
-#' features <- feature_source[c("accver", "start", "end", "strand", "type", "anno")]
-#' # ASCII display copy for the default PDF help-example device.
-#' features$anno <- gsub("\u03b1", "alpha", features$anno, fixed = TRUE)
+#' features <- feature_source |>
+#'   select(accver, start, end, strand, type, anno)
 #' bed <- tempfile(fileext = ".bed")
-#' write.table(data.frame(features$accver, features$start - 1L, features$end), bed,
-#'   sep = "\t", quote = FALSE, row.names = FALSE, col.names = FALSE)
+#' bed_rows <- features |>
+#'   transmute(accver, start0 = start - 1L, end)
+#' write.table(bed_rows, bed,
+#'   sep = "\t", quote = FALSE, row.names = FALSE, col.names = FALSE
+#' )
 #' read_bed(bed)
 #' unlink(bed)
 read_bed <- function(file = NULL, files = NULL, source_file = FALSE) {
@@ -181,9 +183,11 @@ read_bed <- function(file = NULL, files = NULL, source_file = FALSE) {
 #' @export
 #' @examples
 #' \dontrun{
+#' library(dplyr)
 #' # Requires the source checkout or tutorial input bundle.
 #' links <- read_paf("examples/format-inputs/emales-pair.paf")
-#' links[c("qaccver", "saccver", "qstart", "qend", "sstart", "send")]
+#' links |>
+#'   select(qaccver, saccver, qstart, qend, sstart, send)
 #' }
 read_paf <- function(file = NULL, files = NULL, source_file = FALSE) {
   old_error <- ggchord_disable_debug()

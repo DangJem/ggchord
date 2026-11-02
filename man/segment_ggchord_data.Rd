@@ -56,13 +56,17 @@ identifies each copy, and \code{max_links} bounds the candidate expansion before
 allocation. Order in the window table is display order within each row.
 }
 \examples{
+library(dplyr)
 data(seq_data_example)
-seqs <- seq_data_example[c("accver", "length")]
-windows <- data.frame(accver = rep(seqs$accver[1], 2),
+seqs <- seq_data_example |>
+  select(accver, length)
+windows <- tibble(
+  accver = rep(seqs$accver[1], 2),
   start = c(1, floor(seqs$length[1] * .65)),
   end = c(floor(seqs$length[1] * .4), seqs$length[1]),
-  locus_id = c("left_window", "right_window"), row_id = seqs$accver[1])
-segment_ggchord_data(seqs[1, ], windows = windows)
+  locus_id = c("left_window", "right_window"), row_id = seqs$accver[1]
+)
+segment_ggchord_data(slice_head(seqs, n = 1), windows = windows)
 }
 \seealso{
 \code{\link{ggchord_data_contract}}

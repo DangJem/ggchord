@@ -3,7 +3,7 @@
 library(ggchord)
 
 if (!requireNamespace("GenomicRanges", quietly = TRUE) ||
-    !requireNamespace("InteractionSet", quietly = TRUE)) {
+  !requireNamespace("InteractionSet", quietly = TRUE)) {
   message("This example requires the optional GenomicRanges and InteractionSet packages.")
 } else {
   intervals <- GenomicRanges::GRanges(
@@ -26,10 +26,12 @@ if (!requireNamespace("GenomicRanges", quietly = TRUE) ||
   # The supplied negative-strand anchor is intentional; its decreasing link
   # endpoints preserve direction, so avoid the generic reversed-interval hint.
   bioc_example <- ggchord(GenomicRanges::seqinfo(intervals), interactions,
-    validate = "none") +
+    validate = "none"
+  ) +
     geom_link_ribbon(aes(ribbon_alpha = support)) +
     scale_ribbon_alpha_continuous(range = c(.2, .6)) +
-    geom_seq() + geom_seq_label() +
+    geom_seq() +
+    geom_seq_label() +
     geom_feature(data = intervals) +
     geom_feature_label_repel(data = intervals) +
     coord_collinear()

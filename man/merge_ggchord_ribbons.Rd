@@ -64,9 +64,10 @@ Rows with a single-base endpoint remain independent: endpoint order cannot
 define an absolute direction for an aggregate envelope.
 }
 \examples{
+library(dplyr)
 data(ribbon_data_example)
-links <- ribbon_data_example[c("qaccver", "saccver", "qstart", "qend", "sstart", "send",
-  "pident", "length")]
+links <- ribbon_data_example |>
+  select(qaccver, saccver, qstart, qend, sstart, send, pident, length)
 out <- merge_ggchord_ribbons(links, max_gap = 100)
 out$report
 }

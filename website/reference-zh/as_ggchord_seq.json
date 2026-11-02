@@ -1,5 +1,5 @@
 {
-  "source_sha256": "434cdd5e7690c6868b208fd923d1ca131b1f9b2b9285441ac9e8c8702a9f312e",
+  "source_sha256": "6d2f0a2d691157d880f38ff037b54308bc77c129589825060c3ef49f4d67c524",
   "translations": {
     "0": "将序列信息转换为 ggchord 输入",
     "1": "数据框、⟦0⟧、⟦1⟧、⟦2⟧，或 Biostrings 的 ⟦3⟧/⟦4⟧ 对象。",

@@ -37,9 +37,11 @@ verbatim in the \code{tags} list-column, including unknown tags and their order.
 }
 \examples{
 \dontrun{
+library(dplyr)
 # Requires the source checkout or tutorial input bundle.
 links <- read_paf("examples/format-inputs/emales-pair.paf")
-links[c("qaccver", "saccver", "qstart", "qend", "sstart", "send")]
+links |>
+  select(qaccver, saccver, qstart, qend, sstart, send)
 }
 }
 \seealso{

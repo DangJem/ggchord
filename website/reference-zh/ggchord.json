@@ -1,5 +1,5 @@
 {
-  "source_sha256": "e02afbb239222ad41ce7894873e2e16cc977dd2e447a5d4306c703f2441d64c5",
+  "source_sha256": "b7bae6450363905f9266f86859068de58e646dc333ed9c7ec3d8089eb4ce7ada",
   "translations": {
     "0": "用图层组合弦图、圆图和共线性图",
     "1": "含 accver 和 length 的 data.frame/tibble，或已知完整序列长度的 ⟦0⟧、⟦1⟧、⟦2⟧ 对象，或已命名的核苷酸 Biostrings ⟦3⟧。未命名序列须先通过 ⟦4⟧ 显式提供 ⟦5⟧。可选 S4 输入使用 ⟦6⟧。若存在 ⟦7⟧，其值必须为 ⟦8⟧；氨基酸区间须显式投影到 CDS，任意字符宽度不等于 bp 长度。",

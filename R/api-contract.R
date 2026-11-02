@@ -82,12 +82,19 @@
 #' @md
 #' @seealso [ggchord_data_contract], [ggchord_layout_contract]
 #' @examples
+#' library(dplyr)
 #' data(plasmid_example_pUC19)
-#' seqs <- plasmid_example_pUC19[c("accver", "length")]
+#' seqs <- plasmid_example_pUC19 |>
+#'   select(accver, length)
 #' feature_source <- find_common_features(plasmid_example_pUC19)
-#' features <- feature_source[c("accver", "start", "end", "strand", "type", "anno")]
+#' features <- feature_source |>
+#'   select(accver, start, end, strand, type, anno)
 #' # ASCII display copy for the default PDF help-example device.
-#' features$anno <- gsub("\u03b1", "alpha", features$anno, fixed = TRUE)
-#' p <- ggchord(seq_data = seqs) + geom_seq() + geom_feature(data = features) + coord_circular()
+#' features <- features |>
+#'   mutate(anno = gsub("\u03b1", "alpha", anno, fixed = TRUE))
+#' p <- ggchord(seq_data = seqs) +
+#'   geom_seq() +
+#'   geom_feature(data = features) +
+#'   coord_circular()
 #' export_ggchord_layout(p, include = "feature")$metadata$coordinate
 NULL

@@ -1,5 +1,5 @@
 {
-  "source_sha256": "b9ea44782abfaefa93d1fa92c35bb9fd5389a2cdf8ef86d3c86cd8ab301aaad2",
+  "source_sha256": "925d28ee63f65c75118285c45fc8e351ab300a90438bebf2e53b42f06a97f2a1",
   "translations": {
     "0": "围绕明确指定的注释查找基因组区域",
     "1": "序列表，含唯一 ⟦0⟧ 及正整数 ⟦1⟧。可选 ⟦2⟧、⟦3⟧ 保留在返回窗口中。",

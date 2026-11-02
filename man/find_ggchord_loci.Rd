@@ -55,12 +55,15 @@ The returned \code{locus_id} equals \code{target_id}. Pass the returned table as
 named by those IDs, including multiple windows from one source sequence.
 }
 \examples{
+library(dplyr)
 data(seq_data_example)
-seqs <- seq_data_example[c("accver", "length")]
+seqs <- seq_data_example |>
+  select(accver, length)
 data(gene_data_example)
-genes <- transform(gene_data_example, strand = source_strand)[
-  c("accver", "start", "end", "strand")]
-genes$feature_id <- with(genes, paste(accver, start, end, sep = ":"))
+genes <- gene_data_example |>
+  transmute(accver, start, end, strand = source_strand)
+genes <- genes |>
+  mutate(feature_id = paste(accver, start, end, sep = ":"))
 find_ggchord_loci(seqs, genes, targets = genes$feature_id[1], upstream = 100, downstream = 100)
 }
 \seealso{

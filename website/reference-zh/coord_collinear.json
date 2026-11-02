@@ -1,5 +1,5 @@
 {
-  "source_sha256": "e50c1389195ce2b93ec055a061f6085172625086c78d1df1593cd85ff3bb1a3e",
+  "source_sha256": "e5fc16d1152605c869183f8b260f1d0ae099b18dbb648ebf8b072af7cd7637dd",
   "translations": {
     "1": "固定 y/x 纵横比，默认 1。",
     "2": "可选的用户坐标范围；显式范围优先于自动拟合范围。",

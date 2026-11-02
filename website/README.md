@@ -30,12 +30,12 @@ running examples. Canonical R help remains English; the Han website reference tr
 ## 本地生成 / Local build
 
 需要 R、Python ≥ 3.9、Pandoc（rmarkdown 可发现）、包依赖及 `pkgdown`、`pkgload`、
-`rmarkdown`、`jsonlite`。本轮使用 pkgdown 2.2.1。无 Python 第三方构建依赖。
+`rmarkdown`、`jsonlite`、示例所需的 `dplyr`。本轮使用 pkgdown 2.2.1。无 Python 第三方构建依赖。
 系统字体；依赖资产由 pkgdown 复制到产物，界面不依赖 CDN。构建禁用可选的远端
 favicon 服务，直接使用本地图标，禁用仓库外 Sass 缓存。
 
 Requires R, Python ≥ 3.9, Pandoc (discoverable by rmarkdown), package dependencies,
-`pkgdown`, `pkgload`, `rmarkdown`, `jsonlite`. Developed with pkgdown 2.2.1. No
+`pkgdown`, `pkgload`, `rmarkdown`, `jsonlite`, and `dplyr` for examples. Developed with pkgdown 2.2.1. No
 third-party Python modules. System fonts and locally copied dependencies avoid
 CDN UI dependencies. The optional remote favicon service and external Sass cache
 are disabled; the existing local icon is used.
@@ -145,3 +145,12 @@ row margins. Figures remain responsive with an actual-size canvas available.
 
 代码复制按钮只复制 `pre code` 正文，避免把折叠标题一并写入剪贴板；反馈随页面语种显示。
 Copy controls use only `pre code` text, excluding disclosure labels, with localized feedback.
+
+当前示例优先使用 dplyr 动词和 R ≥4.1 的原生 `|>` 管道；保留清晰的向量计算与文件 I/O。
+安装示例依赖时不需要加载整个 tidyverse。共享例子改动后应实际重建相应 PNG，
+不得仅更新代码摘要来复用未验证的图片。
+
+Current examples prefer dplyr verbs and the native R ≥4.1 `|>` pipe. Keep direct
+vector calculations and file I/O where clearer; loading the entire tidyverse is
+unnecessary. Regenerate PNGs after shared example changes rather than changing
+code hashes without verified exports.

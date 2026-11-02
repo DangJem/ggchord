@@ -13,11 +13,13 @@ Use R ≥4.1.0 and ggplot2 ≥4.0.0. Open R or RStudio and run the installation 
 Skip installation if ggchord is already installed and loads successfully.
 
 ```r
-install.packages("remotes")
+install.packages(c("remotes", "dplyr"))
 remotes::install_github("DangJem/ggchord@v0.16.5")
 library(ggchord)
 packageVersion("ggchord")
 ```
+
+Examples use dplyr verbs and the native `|>` pipe for table preparation. Load `dplyr` where shown; it is an optional example dependency, not a requirement for using ggchord.
 
 ### Which version are you using? {#source}
 This tutorial documents **ggchord 0.16.5**. The installation above pins its formal tag; see [GitHub Releases](https://github.com/DangJem/ggchord/releases/tag/v0.16.5) for release assets.

@@ -13,11 +13,13 @@
 已经安装并能加载 ggchord 时，可以跳过安装。
 
 ```r
-install.packages("remotes")
+install.packages(c("remotes", "dplyr"))
 remotes::install_github("DangJem/ggchord@v0.16.5")
 library(ggchord)
 packageVersion("ggchord")
 ```
+
+示例使用 dplyr 动词与原生 `|>` 管道整理表格。按代码加载 `dplyr`；它是示例所需的可选依赖，使用 ggchord 本身不要求加载它。
 
 ### 你正在使用哪个版本？ {#source}
 本教程对应 **ggchord 0.16.5**。上面的安装命令固定到该版本的正式标签；发布资产可在 [GitHub Releases](https://github.com/DangJem/ggchord/releases/tag/v0.16.5) 查阅。

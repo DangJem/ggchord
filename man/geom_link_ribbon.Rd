@@ -96,9 +96,14 @@ Alternative mappings and legends are controlled with \code{aes()}, \verb{scale_*
 and \code{guides()}.
 }
 \examples{
+library(dplyr)
 data(seq_data_example)
-seqs <- seq_data_example[c("accver", "length")]
+seqs <- seq_data_example |>
+  select(accver, length)
 data(ribbon_data_example)
-links <- ribbon_data_example[c("qaccver", "saccver", "qstart", "qend", "sstart", "send")]
-ggchord(seq_data = seqs, ribbon_data = links) + geom_seq() + geom_link_ribbon()
+links <- ribbon_data_example |>
+  select(qaccver, saccver, qstart, qend, sstart, send)
+ggchord(seq_data = seqs, ribbon_data = links) +
+  geom_seq() +
+  geom_link_ribbon()
 }

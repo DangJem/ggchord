@@ -169,9 +169,12 @@ ggchord_conversion_seqinfo <- function(x, caller) {
 #' @seealso \code{\link{ggchord_data_contract}}
 #' @export
 #' @examples
+#' library(dplyr)
 #' data(seq_data_example)
-#' seqs <- seq_data_example[c("accver", "length")]
-#' renamed <- setNames(seqs, c("chrom", "size"))
+#' seqs <- seq_data_example |>
+#'   select(accver, length)
+#' renamed <- seqs |>
+#'   rename(chrom = accver, size = length)
 #' as_ggchord_seq(renamed, mapping = c(accver = "chrom", length = "size"))
 as_ggchord_seq <- function(x, mapping = NULL, lengths = NULL, ids = NULL) {
   caller <- "as_ggchord_seq()"
@@ -276,15 +279,21 @@ as_ggchord_seq <- function(x, mapping = NULL, lengths = NULL, ids = NULL) {
 #' @seealso \code{\link{ggchord_data_contract}}
 #' @export
 #' @examples
+#' library(dplyr)
 #' data(seq_data_example)
-#' seqs <- seq_data_example[c("accver", "length")]
+#' seqs <- seq_data_example |>
+#'   select(accver, length)
 #' data(gene_data_example)
-#' genes <- transform(gene_data_example, strand = source_strand)[
-#'   c("accver", "start", "end", "strand")]
-#' renamed <- setNames(genes, c("chrom", "left", "right", "strand"))
+#' genes <- gene_data_example |>
+#'   transmute(accver, start, end, strand = source_strand)
+#' renamed <- genes |>
+#'   rename(chrom = accver, left = start, right = end)
 #' features <- as_ggchord_feature(renamed,
-#'   mapping = c(accver = "chrom", start = "left", end = "right"))
-#' ggchord(seq_data = seqs) + geom_seq() + geom_feature(data = features)
+#'   mapping = c(accver = "chrom", start = "left", end = "right")
+#' )
+#' ggchord(seq_data = seqs) +
+#'   geom_seq() +
+#'   geom_feature(data = features)
 as_ggchord_feature <- function(x, mapping = NULL) {
   caller <- "as_ggchord_feature()"
   metadata <- NULL
@@ -352,8 +361,10 @@ as_ggchord_feature <- function(x, mapping = NULL) {
 #' @seealso \code{\link{ggchord_data_contract}}
 #' @export
 #' @examples
+#' library(dplyr)
 #' data(ribbon_data_example)
-#' links <- ribbon_data_example[c("qaccver", "saccver", "qstart", "qend", "sstart", "send")]
+#' links <- ribbon_data_example |>
+#'   select(qaccver, saccver, qstart, qend, sstart, send)
 #' as_ggchord_link(links)
 as_ggchord_link <- function(x, mapping = NULL) {
   caller <- "as_ggchord_link()"

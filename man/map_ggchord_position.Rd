@@ -28,8 +28,12 @@ source accession. Positions outside that window, including display gaps,
 produce an error instead of being extrapolated into omitted sequence.
 }
 \examples{
+library(dplyr)
 data(seq_data_example)
-seqs <- seq_data_example[c("accver", "length")]
-p <- ggchord(seq_data = seqs) + geom_seq() + coord_collinear()
+seqs <- seq_data_example |>
+  select(accver, length)
+p <- ggchord(seq_data = seqs) +
+  geom_seq() +
+  coord_collinear()
 map_ggchord_position(p, seqs$accver[1], position = 100)
 }

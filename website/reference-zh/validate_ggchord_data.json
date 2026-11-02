@@ -1,5 +1,5 @@
 {
-  "source_sha256": "25f132ece5960c0ae2010cad6e22f08cc1de177fc83ff76c5ee218f84bcb0a20",
+  "source_sha256": "93df30fed37a5d7dbe3e382fe3a77cc124ae00249811425649cc6f62a0833286",
   "translations": {
     "0": "绘图前校验 ggchord 输入",
     "1": "必需 data.frame/tibble，包含基本序列列 ⟦0⟧、⟦1⟧。",

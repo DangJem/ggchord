@@ -1,5 +1,5 @@
 {
-  "source_sha256": "8acd8ffd8041b66701b30f8024bea13e7be31c0657fbe80d547cc86ee3238219",
+  "source_sha256": "c6577b5f37fbef71549ff719d9e3303b7f2273c3cc2efe6f14e8d3acca43913f",
   "translations": {
     "1": "默认 NULL，使用预计算数据。",
     "9": "标准 ggplot2 图层参数。",

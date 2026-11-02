@@ -42,7 +42,11 @@ Controls global rotation, aspect ratio, coordinate limits, clipping and the
 strategy used to fit chord geometry and labels.
 }
 \examples{
+library(dplyr)
 data(seq_data_example)
-seqs <- seq_data_example[c("accver", "length")]
-ggchord(seq_data = seqs) + geom_seq() + coord_chord(rotation = 20)
+seqs <- seq_data_example |>
+  select(accver, length)
+ggchord(seq_data = seqs) +
+  geom_seq() +
+  coord_chord(rotation = 20)
 }

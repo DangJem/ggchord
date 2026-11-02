@@ -32,28 +32,38 @@
 
 ```r
 library(ggchord)
+library(dplyr)
 data(seq_data_example)
 data(ribbon_data_example)
 data(gene_data_example)
-seqs <- seq_data_example[c("accver", "length")]
-links <- ribbon_data_example[c("qaccver", "saccver", "qstart", "qend", "sstart", "send")]
+seqs <- seq_data_example |>
+  select(accver, length)
+links <- ribbon_data_example |>
+  select(qaccver, saccver, qstart, qend, sstart, send)
 # The fixture preserves biological strands separately from its old display strands.
-genes <- transform(gene_data_example, strand = source_strand)[c("accver", "start", "end", "strand")]
+genes <- gene_data_example |>
+  transmute(accver, start, end, strand = source_strand)
 
+library(dplyr)
 data(plasmid_example_pUC19)
-plasmid_seq <- plasmid_example_pUC19[c("accver", "length")]
+plasmid_seq <- plasmid_example_pUC19 |>
+  select(accver, length)
 feature_source <- find_common_features(plasmid_example_pUC19)
-features <- feature_source[c("accver", "start", "end", "strand", "type", "anno")]
+features <- feature_source |>
+  select(accver, start, end, strand, type, anno)
 ```
 
 </details>
 
 
 ```r
-p_migrated <- ggchord(plasmid_seq) + geom_seq() +
+p_migrated <- ggchord(plasmid_seq) +
+  geom_seq() +
   geom_feature(data = features, shape = "block", width = .05) +
-  geom_feature_label(data = features, label_rotation = 0) + coord_circular()
-p_offsets <- ggchord(seqs, gene_data = genes) + geom_seq() +
+  geom_feature_label(data = features, label_rotation = 0) +
+  coord_circular()
+p_offsets <- ggchord(seqs, gene_data = genes) +
+  geom_seq() +
   geom_gene(position = position_strand(c("+" = .1, "-" = -.2)))
 ```
 

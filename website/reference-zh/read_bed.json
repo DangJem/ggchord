@@ -1,5 +1,5 @@
 {
-  "source_sha256": "a2e082f9008524e620d79df5ff1981fea1dbbd4730e3e58334f6b65bf5d117b2",
+  "source_sha256": "39de3e6d0636cebeb83d3865ea4244ca7cfc194faaad2fb4a6bb06275559eca9",
   "translations": {
     "0": "将 BED 区间读为 ggchord 注释",
     "1": "可选路径向量或通配模式，在 ⟦0⟧ 之前读取。",

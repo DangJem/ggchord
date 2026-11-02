@@ -64,16 +64,15 @@ triplet map and are rejected
 when declared. No full protein length or identity is inferred.
 }
 \examples{
+library(dplyr)
 data(plasmid_example_pUC19)
-seqs <- plasmid_example_pUC19[c("accver", "length")]
 feature_source <- find_common_features(plasmid_example_pUC19)
-features <- feature_source[c("accver", "start", "end", "strand", "type", "anno")]
-# ASCII display copy for the default PDF help-example device.
-features$anno <- gsub("\u03b1", "alpha", features$anno, fixed = TRUE)
-coding <- features[features$anno == "AmpR" & features$type == "CDS",
-  c("accver", "start", "end", "strand")]
-coding$feature_id <- paste(coding$accver, "AmpR", sep = ":")
-coding$phase <- 0
+features <- feature_source |>
+  select(accver, start, end, strand, type, anno)
+coding <- features |>
+  filter(anno == "AmpR", type == "CDS") |>
+  select(accver, start, end, strand) |>
+  mutate(feature_id = paste(accver, "AmpR", sep = ":"), phase = 0)
 cds <- build_ggchord_cds(coding, genetic_code = 11)
 cds$features
 }

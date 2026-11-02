@@ -1,31 +1,32 @@
 # Synthetic teaching data, not records of a named biological sequence.
 # Run with the development version of ggchord loaded.
 library(ggchord)
+library(dplyr)
 
-collinear_sequences <- data.frame(
+collinear_sequences <- tibble(
   accver = c("cluster_A", "cluster_B", "cluster_C"),
   length = c(1000, 900, 1100)
 )
-collinear_genes <- data.frame(
+collinear_genes <- tibble(
   accver = rep(collinear_sequences$accver, each = 2),
   start = c(100, 350, 120, 310, 150, 510),
   end = c(280, 480, 260, 430, 320, 660),
   strand = rep(c("+", "-"), 3),
   anno = c("alpha", "beta", "alpha", "beta", "alpha", "gamma")
 )
-collinear_alignments <- data.frame(
+collinear_alignments <- tibble(
   qaccver = c("cluster_A", "cluster_B", "cluster_A"),
   saccver = c("cluster_B", "cluster_C", "cluster_C"),
   qstart = c(100, 310, 500), qend = c(280, 430, 620),
   sstart = c(110, 600, 680), send = c(290, 480, 800),
   pident = c(94, 87, 81)
 )
-collinear_features <- data.frame(
+collinear_features <- tibble(
   accver = "cluster_A", start = c(180, 220), end = c(330, 290),
   strand = "+", type = c("operator", "repeat"),
   label = c("operator", "repeat")
 )
-collinear_points <- data.frame(
+collinear_points <- tibble(
   qaccver = "cluster_A", saccver = "cluster_B",
   qpos = c(200, 700), spos = c(200, 700)
 )
@@ -44,7 +45,7 @@ collinear_example <- ggchord(
     seq_gap = 0.38
   ) +
   geom_seq_region(
-    data = data.frame(accver = "cluster_C", start = 700, end = 900),
+    data = tibble(accver = "cluster_C", start = 700, end = 900),
     region_offset = 0.10, region_side = "inside"
   ) +
   geom_gene(aes(gene_fill = anno), position = position_strand(0.08)) +

@@ -85,7 +85,7 @@ ggchord_focus_source <- function(seq_data) {
   }
   origin <- number(".source_origin",
     number(".source_start", number(".focus_start", rep(1, nrow(seq_data)))))
-  source_accver <- as.character(seq_data$.source_accver %||% seq_data$accver)
+  source_accver <- as.character(seq_data[[".source_accver"]] %||% seq_data$accver)
   source_length <- number(".source_length", if (".focus_start" %in% names(seq_data)) {
     rep(NA_real_, nrow(seq_data))
   } else as.numeric(seq_data$length))

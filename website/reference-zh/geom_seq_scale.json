@@ -1,5 +1,5 @@
 {
-  "source_sha256": "5343e65a4fc74f5f614c6fb07ba7610d8f4d180f107336d40728bfa264dfb587",
+  "source_sha256": "e90e987e546dfd57cc5bb85ca21f934e8b32a7d3b76253ab2b5181360ff9290a",
   "translations": {
     "8": "标准 ggplot2 图层参数。",
     "0": "为线性图添加共享 bp 比例尺",

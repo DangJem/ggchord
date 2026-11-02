@@ -1,5 +1,17 @@
 # ggchord 0.16.6 (development)
 
+* Optional-column checks in validation and focusing now accept tibble inputs
+  without spurious missing-column warnings. Required-column validation and data
+  results are unchanged.
+* Current website, README, tutorials, help examples and teaching scripts now
+  prefer dplyr verbs and the native `|>` pipe for table preparation, with explicit
+  optional example dependencies. Removed unrelated preparation from specialist
+  help examples and a duplicated coordinate scale from a documentation plot;
+  biological record values and selections are retained.
+* The standalone GFF3 conversion example now uses explicit package imports,
+  anchored file matching and product extraction that also accepts a final
+  attribute without a trailing semicolon. Original inputs are not rewritten.
+
 * Refreshed the curated documentation spelling wordlist and added an explicit
   `tools/check-spelling.R` review command. It does not add a package test or
   automatic CI step; remaining candidates still require contextual review.

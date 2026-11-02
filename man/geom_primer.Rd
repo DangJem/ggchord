@@ -43,13 +43,14 @@ double sequence backbone by default, not arrows in the feature stack. Add
 \code{\link[=geom_primer_label_repel]{geom_primer_label_repel()}} for the matching unboxed label and leader.
 }
 \examples{
+library(dplyr)
 data(plasmid_example_pUC19)
-seqs <- plasmid_example_pUC19[c("accver", "length")]
-feature_source <- find_common_features(plasmid_example_pUC19)
-features <- feature_source[c("accver", "start", "end", "strand", "type", "anno")]
-# ASCII display copy for the default PDF help-example device.
-features$anno <- gsub("\u03b1", "alpha", features$anno, fixed = TRUE)
+seqs <- plasmid_example_pUC19 |>
+  select(accver, length)
 primers <- find_primer_bindings(plasmid_example_pUC19, set = "universal")
-ggchord(seq_data = seqs) + geom_seq() + geom_primer(data = primers) +
-  geom_primer_label_repel(data = primers) + coord_circular()
+ggchord(seq_data = seqs) +
+  geom_seq() +
+  geom_primer(data = primers) +
+  geom_primer_label_repel(data = primers) +
+  coord_circular()
 }

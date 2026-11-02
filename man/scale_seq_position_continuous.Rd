@@ -51,8 +51,12 @@ This scale configures sequence axes in all three coordinate modes. To add
 an independent bp reference bar in a linear display, use \code{\link[=geom_seq_scale]{geom_seq_scale()}}.
 }
 \examples{
+library(dplyr)
 data(seq_data_example)
-seqs <- seq_data_example[c("accver", "length")]
-ggchord(seq_data = seqs) + geom_seq() + coord_collinear() +
+seqs <- seq_data_example |>
+  select(accver, length)
+ggchord(seq_data = seqs) +
+  geom_seq() +
+  coord_collinear() +
   scale_seq_position_continuous(breaks = seq(0, 100000, by = 20000))
 }

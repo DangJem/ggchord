@@ -117,10 +117,16 @@ adjacency follows display rows; same-row ribbons are omitted with a report,
 and explicit same-row pairs or point links are unsupported.
 }
 \examples{
+library(dplyr)
 data(seq_data_example)
-seqs <- seq_data_example[c("accver", "length")]
+seqs <- seq_data_example |>
+  select(accver, length)
 data(ribbon_data_example)
-links <- ribbon_data_example[c("qaccver", "saccver", "qstart", "qend", "sstart", "send")]
-ggchord(seq_data = seqs, ribbon_data = links) + geom_seq() + geom_link_ribbon() +
-  geom_seq_label() + coord_collinear(orientation = "auto")
+links <- ribbon_data_example |>
+  select(qaccver, saccver, qstart, qend, sstart, send)
+ggchord(seq_data = seqs, ribbon_data = links) +
+  geom_seq() +
+  geom_link_ribbon() +
+  geom_seq_label() +
+  coord_collinear(orientation = "auto")
 }

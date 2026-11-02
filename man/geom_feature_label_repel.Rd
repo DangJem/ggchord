@@ -101,13 +101,19 @@ Manual label rotation, offsets, orientation and overlap policy belong to
 layers rather than silently ignored.
 }
 \examples{
+library(dplyr)
 data(plasmid_example_pUC19)
-seqs <- plasmid_example_pUC19[c("accver", "length")]
+seqs <- plasmid_example_pUC19 |>
+  select(accver, length)
 feature_source <- find_common_features(plasmid_example_pUC19)
-features <- feature_source[c("accver", "start", "end", "strand", "type", "anno")]
+features <- feature_source |>
+  select(accver, start, end, strand, type, anno)
 # ASCII display copy for the default PDF help-example device.
-features$anno <- gsub("\u03b1", "alpha", features$anno, fixed = TRUE)
-ggchord(seq_data = seqs) + geom_seq() +
+features <- features |>
+  mutate(anno = gsub("\u03b1", "alpha", anno, fixed = TRUE))
+ggchord(seq_data = seqs) +
+  geom_seq() +
   geom_feature(data = features, position = position_plasmid()) +
-  geom_feature_label_repel(data = features, position = position_plasmid()) + coord_circular()
+  geom_feature_label_repel(data = features, position = position_plasmid()) +
+  coord_circular()
 }

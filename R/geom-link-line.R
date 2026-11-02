@@ -24,15 +24,21 @@
 #' @return A ggplot2 layer.
 #' @export
 #' @examples
+#' library(dplyr)
 #' data(seq_data_example)
-#' seqs <- seq_data_example[c("accver", "length")]
+#' seqs <- seq_data_example |>
+#'   select(accver, length)
 #' data(ribbon_data_example)
-#' links <- ribbon_data_example[c("qaccver", "saccver", "qstart", "qend", "sstart", "send",
-#'   "pident", "length")]
-#' points <- data.frame(qaccver = links$qaccver, saccver = links$saccver,
-#'   qpos = floor((links$qstart + links$qend) / 2),
-#'   spos = floor((links$sstart + links$send) / 2))
-#' ggchord(seq_data = seqs) + geom_seq() + geom_link_line(data = points)
+#' links <- ribbon_data_example |>
+#'   select(qaccver, saccver, qstart, qend, sstart, send, pident, length)
+#' points <- links |>
+#'   transmute(qaccver, saccver,
+#'     qpos = floor((qstart + qend) / 2),
+#'     spos = floor((sstart + send) / 2)
+#'   )
+#' ggchord(seq_data = seqs) +
+#'   geom_seq() +
+#'   geom_link_line(data = points)
 geom_link_line <- function(mapping = NULL, data = NULL,
     link_type = c("curve", "straight"), link_gap = NULL, link_ctrl_point = NULL,
     link_avoid = c("none", "smooth", "uniform"),

@@ -5,6 +5,7 @@
 
 ```r
 library(ggchord)
+library(dplyr)
 ```
 
 ## 默认表格列就够用 {#standard}

@@ -1,5 +1,5 @@
 {
-  "source_sha256": "e017df5757b25c57a3755f3ecb7d368ed9d5711f84dd4ae2f4508320f9336556",
+  "source_sha256": "850bdb3afab540700fc839dd515f00a1ec2c8a1333aa2259269f29ce013a87de",
   "translations": {
     "0": "按明确策略清理输入并返回报告",
     "1": "必需 data.frame/tibble，含 ⟦0⟧、⟦1⟧，作为裁剪坐标参照。不论 ⟦2⟧ 如何，参照 ID 均须非缺失、非空、唯一。",

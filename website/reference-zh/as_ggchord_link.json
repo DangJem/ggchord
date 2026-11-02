@@ -1,5 +1,5 @@
 {
-  "source_sha256": "3e2037fd4130aad0c6ec37f492ef4da160da4fbb7fcc600f914dbfd6541a0db9",
+  "source_sha256": "1bf57eaa7f268dc6be0dd3c9e2704088b7ce93f047ec992771518535091c2f36",
   "translations": {
     "0": "将成对基因组区间转换为 ggchord 连接",
     "1": "数据框或 ⟦0⟧ 对象。",

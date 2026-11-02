@@ -46,8 +46,10 @@ pUC19 与 pETDuet-1 中编码 DNA 完全相同的 AmpR CDS。两侧各保留 200
 
 ```r
 library(ggchord)
+library(dplyr)
 data(seq_data_example)
-sequences <- seq_data_example[c("accver", "length")]
+sequences <- seq_data_example |>
+  select(accver, length)
 ggchord(seq_data = sequences) +
   geom_seq() +
   geom_seq_label() +

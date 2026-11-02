@@ -24,8 +24,11 @@ Device/context changes invalidate cached estimates, including ordinary
 label layouts. \code{build = FALSE} then reports that no current layout is cached.
 }
 \examples{
+library(dplyr)
 data(seq_data_example)
-seqs <- seq_data_example[c("accver", "length")]
-p <- ggchord(seq_data = seqs) + geom_seq()
+seqs <- seq_data_example |>
+  select(accver, length)
+p <- ggchord(seq_data = seqs) +
+  geom_seq()
 get_chord_layout(p)$seqs
 }

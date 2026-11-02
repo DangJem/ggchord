@@ -1,5 +1,5 @@
 {
-  "source_sha256": "cf813b02a8cabd8e898cbcf01ad685a9411f51e8e8fa1f8f8f651294db8a167d",
+  "source_sha256": "c54c4f6046ef54dce7dd53f44b9d67e0f0dae89057bef2c3fb34fec0fdeb68d0",
   "translations": {
     "0": "将 PAF 比对读为 ggchord 连接",
     "1": "可选路径向量或通配模式，在 ⟦0⟧ 之前读取。",

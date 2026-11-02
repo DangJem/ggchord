@@ -42,9 +42,13 @@
 #' @export
 #'
 #' @examples
+#' library(dplyr)
 #' data(seq_data_example)
-#' seqs <- seq_data_example[c("accver", "length")]
-#' ggchord(seq_data = seqs) + geom_seq() + geom_seq_label()
+#' seqs <- seq_data_example |>
+#'   select(accver, length)
+#' ggchord(seq_data = seqs) +
+#'   geom_seq() +
+#'   geom_seq_label()
 geom_seq_label <- function(mapping = NULL, data = NULL,
                            seq_label_radius = 1,
                            seq_label_rotation = NULL,

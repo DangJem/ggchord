@@ -32,21 +32,22 @@ alignments require explicit per-column alignment information and cannot be
 projected by this endpoint-only helper.
 }
 \examples{
+library(dplyr)
 data(plasmid_example_pUC19)
-seqs <- plasmid_example_pUC19[c("accver", "length")]
 feature_source <- find_common_features(plasmid_example_pUC19)
-features <- feature_source[c("accver", "start", "end", "strand", "type", "anno")]
-# ASCII display copy for the default PDF help-example device.
-features$anno <- gsub("\u03b1", "alpha", features$anno, fixed = TRUE)
-coding <- features[features$anno == "AmpR" & features$type == "CDS",
-  c("accver", "start", "end", "strand")]
-coding$feature_id <- paste(coding$accver, "AmpR", sep = ":")
-coding$phase <- 0
+features <- feature_source |>
+  select(accver, start, end, strand, type, anno)
+coding <- features |>
+  filter(anno == "AmpR", type == "CDS") |>
+  select(accver, start, end, strand) |>
+  mutate(feature_id = paste(accver, "AmpR", sep = ":"), phase = 0)
 cds <- build_ggchord_cds(coding, genetic_code = 11)
 # Self-correspondence of one real CDS, solely to demonstrate coordinate conversion.
 # The same observed residues are paired, so the correspondence is ungapped.
-selected <- data.frame(qfeature_id = coding$feature_id, sfeature_id = coding$feature_id,
-  qstart = 1, qend = 20, sstart = 1, send = 20)
+selected <- tibble(
+  qfeature_id = coding$feature_id, sfeature_id = coding$feature_id,
+  qstart = 1, qend = 20, sstart = 1, send = 20
+)
 project_ggchord_links(selected, cds, ungapped = TRUE)
 }
 \seealso{

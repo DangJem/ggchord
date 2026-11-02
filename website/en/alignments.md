@@ -5,6 +5,7 @@ In a fresh R session, run the code below, then follow this page in order. Colour
 
 ```r
 library(ggchord)
+library(dplyr)
 ```
 
 ## Use the default tabular columns {#standard}

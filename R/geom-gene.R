@@ -37,12 +37,16 @@ gene_geom <- rename_geom_aes(GeomChordFeatureBase, renames = c(fill = "gene_fill
 #' @export
 #'
 #' @examples
+#' library(dplyr)
 #' data(seq_data_example)
-#' seqs <- seq_data_example[c("accver", "length")]
+#' seqs <- seq_data_example |>
+#'   select(accver, length)
 #' data(gene_data_example)
-#' genes <- transform(gene_data_example, strand = source_strand)[
-#'   c("accver", "start", "end", "strand")]
-#' ggchord(seq_data = seqs, gene_data = genes) + geom_seq() + geom_gene()
+#' genes <- gene_data_example |>
+#'   transmute(accver, start, end, strand = source_strand)
+#' ggchord(seq_data = seqs, gene_data = genes) +
+#'   geom_seq() +
+#'   geom_gene()
 geom_gene <- function(mapping = NULL, data = NULL,
                       width = NULL,
                       arrow_head_length = 0.04, arrow_head_width = 1,
@@ -160,13 +164,17 @@ geom_gene <- function(mapping = NULL, data = NULL,
 #' @export
 #'
 #' @examples
+#' library(dplyr)
 #' data(seq_data_example)
-#' seqs <- seq_data_example[c("accver", "length")]
+#' seqs <- seq_data_example |>
+#'   select(accver, length)
 #' data(gene_data_example)
-#' genes <- transform(gene_data_example, strand = source_strand)[
-#'   c("accver", "start", "end", "strand", "anno")]
-#' ggchord(seq_data = seqs, gene_data = genes) + geom_seq() +
-#'   geom_gene() + geom_gene_label()
+#' genes <- gene_data_example |>
+#'   transmute(accver, start, end, strand = source_strand, anno)
+#' ggchord(seq_data = seqs, gene_data = genes) +
+#'   geom_seq() +
+#'   geom_gene() +
+#'   geom_gene_label()
 geom_gene_label <- function(mapping = NULL, data = NULL,
     label_orientation = "horizontal", label_side = "outside",
     label_overlap = "hide", label_rotation = NULL,
@@ -351,13 +359,17 @@ ggchord_label_layer <- function(mapping = NULL, data = NULL,
 #' @export
 #'
 #' @examples
+#' library(dplyr)
 #' data(seq_data_example)
-#' seqs <- seq_data_example[c("accver", "length")]
+#' seqs <- seq_data_example |>
+#'   select(accver, length)
 #' data(gene_data_example)
-#' genes <- transform(gene_data_example, strand = source_strand)[
-#'   c("accver", "start", "end", "strand", "anno")]
-#' ggchord(seq_data = seqs, gene_data = genes) + geom_seq() +
-#'   geom_gene() + geom_gene_label_repel(label_wrap = 20)
+#' genes <- gene_data_example |>
+#'   transmute(accver, start, end, strand = source_strand, anno)
+#' ggchord(seq_data = seqs, gene_data = genes) +
+#'   geom_seq() +
+#'   geom_gene() +
+#'   geom_gene_label_repel(label_wrap = 20)
 geom_gene_label_repel <- function(mapping = NULL, data = NULL,
     label_layout = "radial", label_wrap = NULL, label_fit = "wrap",
     label_max_lines = 2L, label_side = "outside", max_overlaps = Inf,

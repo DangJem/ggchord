@@ -185,7 +185,7 @@ validate_ribbon_data <- function(ribbon_data, seq_data, col,
     }
   }
 
-  if (is.numeric(ribbon_data$length) && any(ribbon_data$length <= 0, na.rm = TRUE)) {
+  if (is.numeric(ribbon_data[["length"]]) && any(ribbon_data$length <= 0, na.rm = TRUE)) {
     rows <- which(ribbon_data$length <= 0)
     col <- add_validation_issue(
       col, "ribbon", "invalid_length", rows, "length",
@@ -236,7 +236,7 @@ validate_ribbon_data <- function(ribbon_data, seq_data, col,
     }
   }
 
-  if (is.numeric(ribbon_data$pident)) {
+  if (is.numeric(ribbon_data[["pident"]])) {
     pid <- ribbon_data$pident
     pid_bad <- !is.na(pid) & (pid < 0 | pid > 100)
     if (any(pid_bad)) {
@@ -731,13 +731,16 @@ validation_cleanable <- function(errors, warnings) {
 #' @export
 #'
 #' @examples
+#' library(dplyr)
 #' data(seq_data_example)
-#' seqs <- seq_data_example[c("accver", "length")]
+#' seqs <- seq_data_example |>
+#'   select(accver, length)
 #' data(ribbon_data_example)
-#' links <- ribbon_data_example[c("qaccver", "saccver", "qstart", "qend", "sstart", "send")]
+#' links <- ribbon_data_example |>
+#'   select(qaccver, saccver, qstart, qend, sstart, send)
 #' data(gene_data_example)
-#' genes <- transform(gene_data_example, strand = source_strand)[
-#'   c("accver", "start", "end", "strand")]
+#' genes <- gene_data_example |>
+#'   transmute(accver, start, end, strand = source_strand)
 #' result <- validate_ggchord_data(seqs, links, genes)
 #' result$valid
 validate_ggchord_data <- function(seq_data,

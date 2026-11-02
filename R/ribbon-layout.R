@@ -131,11 +131,13 @@ ggchord_typed_na <- function(x) {
 #' @seealso \code{\link{ggchord_data_contract}}
 #' @export
 #' @examples
+#' library(dplyr)
 #' data(seq_data_example)
-#' seqs <- seq_data_example[c("accver", "length")]
+#' seqs <- seq_data_example |>
+#'   select(accver, length)
 #' data(ribbon_data_example)
-#' links <- ribbon_data_example[c("qaccver", "saccver", "qstart", "qend", "sstart", "send",
-#'   "pident", "length")]
+#' links <- ribbon_data_example |>
+#'   select(qaccver, saccver, qstart, qend, sstart, send, pident, length)
 #' out <- bundle_ggchord_ribbons(links, seqs, bins = 30)
 #' out$report
 bundle_ggchord_ribbons <- function(
@@ -399,10 +401,13 @@ ggchord_layout_score <- function(scored, seq_order, orientation, lengths) {
 #' @seealso \code{\link{ggchord_data_contract}}
 #' @export
 #' @examples
+#' library(dplyr)
 #' data(seq_data_example)
-#' seqs <- seq_data_example[c("accver", "length")]
+#' seqs <- seq_data_example |>
+#'   select(accver, length)
 #' data(ribbon_data_example)
-#' links <- ribbon_data_example[c("qaccver", "saccver", "qstart", "qend", "sstart", "send")]
+#' links <- ribbon_data_example |>
+#'   select(qaccver, saccver, qstart, qend, sstart, send)
 #' suggestion <- optimize_ggchord_layout(seqs, links, weight = "count")
 #' suggestion$seq_order
 optimize_ggchord_layout <- function(

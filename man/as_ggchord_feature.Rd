@@ -26,15 +26,21 @@ Strand \code{*} is retained as \code{source_strand}, while the output uses
 requires directional gene input. No unknown strand is invented as \code{+}.
 }
 \examples{
+library(dplyr)
 data(seq_data_example)
-seqs <- seq_data_example[c("accver", "length")]
+seqs <- seq_data_example |>
+  select(accver, length)
 data(gene_data_example)
-genes <- transform(gene_data_example, strand = source_strand)[
-  c("accver", "start", "end", "strand")]
-renamed <- setNames(genes, c("chrom", "left", "right", "strand"))
+genes <- gene_data_example |>
+  transmute(accver, start, end, strand = source_strand)
+renamed <- genes |>
+  rename(chrom = accver, left = start, right = end)
 features <- as_ggchord_feature(renamed,
-  mapping = c(accver = "chrom", start = "left", end = "right"))
-ggchord(seq_data = seqs) + geom_seq() + geom_feature(data = features)
+  mapping = c(accver = "chrom", start = "left", end = "right")
+)
+ggchord(seq_data = seqs) +
+  geom_seq() +
+  geom_feature(data = features)
 }
 \seealso{
 \code{\link{ggchord_data_contract}}

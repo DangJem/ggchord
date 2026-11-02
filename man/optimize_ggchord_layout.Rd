@@ -44,10 +44,13 @@ above 2,000 ribbons use a deterministic 64-bin approximation and record
 \code{approximate = TRUE} in the returned report.
 }
 \examples{
+library(dplyr)
 data(seq_data_example)
-seqs <- seq_data_example[c("accver", "length")]
+seqs <- seq_data_example |>
+  select(accver, length)
 data(ribbon_data_example)
-links <- ribbon_data_example[c("qaccver", "saccver", "qstart", "qend", "sstart", "send")]
+links <- ribbon_data_example |>
+  select(qaccver, saccver, qstart, qend, sstart, send)
 suggestion <- optimize_ggchord_layout(seqs, links, weight = "count")
 suggestion$seq_order
 }

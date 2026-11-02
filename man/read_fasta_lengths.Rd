@@ -34,9 +34,11 @@ wildcard patterns (e.g. \code{"examples/fasta/*.fna"}).
 }
 \examples{
 \dontrun{
+library(dplyr)
 # Requires the source checkout or tutorial input bundle.
 source <- read_fasta_lengths("examples/fasta/MT108731.1.fna")
-seqs <- source[c("accver", "length")]
+seqs <- source |>
+  select(accver, length)
 }
 }
 \seealso{

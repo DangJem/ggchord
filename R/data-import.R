@@ -274,9 +274,11 @@ read_blast_single <- function(file, format = c("auto", "outfmt6", "outfmt7", "cu
 #'
 #' @examples
 #' \dontrun{
+#' library(dplyr)
 #' # Standard 12-column records; requires the source checkout or tutorial input bundle.
 #' source <- read_blast("examples/blastn-standard/MT108731.1__MT118296.1.tsv")
-#' links <- source[c("qaccver", "saccver", "qstart", "qend", "sstart", "send")]
+#' links <- source |>
+#'   select(qaccver, saccver, qstart, qend, sstart, send)
 #' }
 read_blast <- function(file = NULL, files = NULL,
                        format = c("auto", "outfmt6", "outfmt7", "custom"),
@@ -431,9 +433,11 @@ read_gff3_single <- function(file, feature_types = "CDS",
 #'
 #' @examples
 #' \dontrun{
+#' library(dplyr)
 #' # Requires the source checkout or tutorial input bundle.
 #' source <- read_gff3("examples/gff3/MT108731.1.gff3", unstranded = "keep")
-#' features <- source[c("accver", "start", "end", "strand", "anno")]
+#' features <- source |>
+#'   select(accver, start, end, strand, anno)
 #' }
 read_gff3 <- function(file = NULL, files = NULL, feature_types = "CDS",
                       anno_from = c("product", "Name", "gene", "ID"),
@@ -549,9 +553,11 @@ read_fasta_lengths_single <- function(file, header_delim = NULL) {
 #'
 #' @examples
 #' \dontrun{
+#' library(dplyr)
 #' # Requires the source checkout or tutorial input bundle.
 #' source <- read_fasta_lengths("examples/fasta/MT108731.1.fna")
-#' seqs <- source[c("accver", "length")]
+#' seqs <- source |>
+#'   select(accver, length)
 #' }
 read_fasta_lengths <- function(file = NULL, files = NULL, header_delim = NULL,
                                source_file = FALSE) {

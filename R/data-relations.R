@@ -33,10 +33,13 @@ ggchord_relation_ids <- function(x, name, caller) {
 #' @seealso \code{\link{ggchord_data_contract}}
 #' @export
 #' @examples
+#' library(dplyr)
 #' data(seq_data_example)
-#' seqs <- seq_data_example[c("accver", "length")]
-#' contigs <- transform(seqs, genome = accver)
-#' genomes <- data.frame(genome = seqs$accver)
+#' seqs <- seq_data_example |>
+#'   select(accver, length)
+#' contigs <- seqs |>
+#'   mutate(genome = accver)
+#' genomes <- tibble(genome = seqs$accver)
 #' validate_ggchord_hierarchy(contigs, genomes)
 validate_ggchord_hierarchy <- function(seq_data, genomes, strict = FALSE) {
   caller <- "validate_ggchord_hierarchy()"
@@ -166,50 +169,55 @@ validate_ggchord_hierarchy <- function(seq_data, genomes, strict = FALSE) {
 #' @export
 #' @examples
 #' library(ggchord)
-#' data(seq_data_example)
-#' data(ribbon_data_example)
-#' data(gene_data_example)
-#' seqs <- seq_data_example[c("accver", "length")]
-#' links <- ribbon_data_example[c("qaccver", "saccver", "qstart", "qend", "sstart", "send")]
-#' # The fixture preserves biological strands separately from its old display strands.
-#' genes <- transform(gene_data_example, strand = source_strand)[c("accver", "start", "end",
-#'   "strand")]
-#' # Optional appearance choices; none of these columns or scales is required input.
-#' seq_palette <- setNames(c("#487A70", "#B48A61", "#637E9D", "#A16E7D"), seqs$accver)
-#' gene_palette <- c("+" = "#56887C", "-" = "#B58169", "." = "#AAB9AE")
-#' feature_palette <- c(CDS = "#6E9A8A", promoter = "#8798B2", rep_origin = "#C4A46A",
-#'   primer_bind = "#A28EAA", misc_feature = "#CDD5CE", protein_bind = "#A9B9C4")
-#' doc_theme <- theme_ggchord_publication(axis.text = element_text(size = 9),
-#'   axis.text.check.overlap = TRUE) + theme(legend.position = "bottom")
+#' library(dplyr)
 #' data(plasmid_example_pUC19)
 #' data(plasmid_example_pETDuet_1)
-#' homolog_source <- rbind(plasmid_example_pUC19, plasmid_example_pETDuet_1)
-#' homolog_seq <- homolog_source[c("accver", "length")]
-#' cluster_features <- do.call(rbind, lapply(seq_len(nrow(homolog_source)), function(i) {
-#'   f <- find_common_features(homolog_source[i, ])
-#'   f[f$type == "CDS" & f$anno == "AmpR", c("accver", "start", "end", "strand", "anno")]
-#' }))
-#' cluster_features$feature_id <- with(cluster_features, paste(accver, start, end, sep = ":"))
+#' homolog_source <- bind_rows(plasmid_example_pUC19, plasmid_example_pETDuet_1)
+#' homolog_seq <- homolog_source |>
+#'   select(accver, length)
+#' cluster_features <- homolog_source |>
+#'   find_common_features() |>
+#'   filter(type == "CDS", anno == "AmpR") |>
+#'   select(accver, start, end, strand, anno) |>
+#'   arrange(match(accver, homolog_source$accver)) |>
+#'   mutate(feature_id = paste(accver, start, end, sep = ":"))
 #' # Membership is computed from exact strand-corrected CDS DNA equality, not gene names.
-#' cds_dna <- vapply(seq_len(nrow(cluster_features)), function(i) {
-#'   f <- cluster_features[i, ]; dna <- homolog_source$sequence[match(f$accver,
-#'   homolog_source$accver)]
-#'   dna <- substr(dna, f$start, f$end)
-#'   if (f$strand == "-") dna <- chartr("ACGT", "TGCA", paste(rev(strsplit(dna, "")[[1]]),
-#'   collapse = ""))
-#'   dna
-#' }, "")
-#' membership <- data.frame(feature_id = cluster_features$feature_id,
-#'   cluster_id = paste0("exact_CDS_", match(cds_dna, unique(cds_dna))))
+#' reverse_complement <- function(sequence) {
+#'   bases <- strsplit(sequence, "")[[1]]
+#'   chartr("ACGT", "TGCA", paste(rev(bases), collapse = ""))
+#' }
+#' coding_sequences <- cluster_features |>
+#'   left_join(select(homolog_source, accver, sequence), by = "accver") |>
+#'   rowwise() |>
+#'   mutate(
+#'     coding_dna = substr(sequence, start, end),
+#'     coding_dna = if (strand == "-") reverse_complement(coding_dna) else coding_dna
+#'   ) |>
+#'   ungroup()
+#' cds_dna <- pull(coding_sequences, coding_dna)
+#' membership <- tibble(
+#'   feature_id = cluster_features$feature_id,
+#'   cluster_id = paste0("exact_CDS_", match(cds_dna, unique(cds_dna)))
+#' )
 #' homologs <- link_ggchord_clusters(cluster_features, membership,
-#'   pairs = data.frame(qaccver = homolog_seq$accver[1], saccver = homolog_seq$accver[2]))
+#'   pairs = tibble(qaccver = homolog_seq$accver[1], saccver = homolog_seq$accver[2])
+#' )
 #' loci <- find_ggchord_loci(homolog_seq, cluster_features,
-#'   targets = cluster_features$feature_id[cluster_features$anno == "AmpR"][1],
-#'   upstream = 100, downstream = 100)
+#'   targets = cluster_features$feature_id[cluster_features$anno == "AmpR"][1], upstream = 100, downstream = 100
+#' )
+#' gene_palette <- c("+" = "#56887C", "-" = "#B58169", "." = "#AAB9AE")
+#' doc_theme <- theme_ggchord_publication(
+#'   axis.text = element_text(size = 9), axis.text.check.overlap = TRUE
+#' ) +
+#'   theme(legend.position = "bottom")
 #' p_homologs <- ggchord(seq_data = homolog_seq) +
-#'   geom_link_ribbon(data = homologs$data, fill = "#ADC5B9", alpha = .6) + geom_seq() +
-#'   geom_gene(data = cluster_features) + geom_seq_label(size = 4) +
-#'   coord_collinear() + scale_gene_fill_manual(values = gene_palette) + doc_theme
+#'   geom_link_ribbon(data = homologs$data, fill = "#ADC5B9", alpha = .6) +
+#'   geom_seq() +
+#'   geom_gene(data = cluster_features) +
+#'   geom_seq_label(size = 4) +
+#'   coord_collinear() +
+#'   scale_gene_fill_manual(values = gene_palette) +
+#'   doc_theme
 link_ggchord_clusters <- function(feature_data, membership, pairs,
     paralogs = c("drop", "all"), segment_policy = c("error", "span"), max_links = 10000) {
   caller <- "link_ggchord_clusters()"

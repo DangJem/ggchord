@@ -77,7 +77,12 @@ To change ticks and labels on sequence axes instead, use
 axes; this geom adds an independent distance reference.
 }
 \examples{
+library(dplyr)
 data(seq_data_example)
-seqs <- seq_data_example[c("accver", "length")]
-ggchord(seq_data = seqs) + geom_seq() + coord_collinear() + geom_seq_scale(length = 10000)
+seqs <- seq_data_example |>
+  select(accver, length)
+ggchord(seq_data = seqs) +
+  geom_seq() +
+  coord_collinear() +
+  geom_seq_scale(length = 10000)
 }
