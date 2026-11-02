@@ -135,7 +135,7 @@ for(lang in c('en','zh')) {
   body<-xml2::xml_find_first(doc,'//body')
   xml2::xml_set_attr(body,'data-lang',lang)
   xml2::xml_set_attr(body,'data-search',paste0(paste(rep('../',deep),collapse=''),'search.json'))
-  notice<-if(lang=='zh') '0.16.6 开发版文档' else '0.16.6 development documentation'
+  notice<-if(lang=='zh') '0.16.6 文档' else '0.16.6 documentation'
   if(!publication) notice<-paste(notice,if(lang=='zh')'· 本地预览，尚未部署' else '· local preview, not deployed')
   xml2::xml_add_child(main,fragment(paste0('<div class="candidate-note">',notice,'</div>')),.where=0L)
   if(startsWith(relative,'reference/')) {

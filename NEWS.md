@@ -1,4 +1,4 @@
-# ggchord 0.16.6 (development)
+# ggchord 0.16.6
 
 * Added progressive chord, collinear and plasmid learning paths, beginning with
   table schemas and import, then building independent layers before the full

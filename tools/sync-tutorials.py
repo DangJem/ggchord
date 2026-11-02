@@ -82,8 +82,8 @@ def readme(lang):
     title = 'ggchord：弦图、共线性图与质粒图' if zh else 'ggchord: chord, collinear and plasmid sequence plots'
     intro = ('基于 ggplot2 的 R 包。用独立图层组合序列骨架、区间连接、基因、通用注释、标签和定量轨道。'
         if zh else 'An R package built on ggplot2. Combine independent layers for sequence backbones, interval links, genes, general features, labels and quantitative tracks.')
-    status = ('当前正式版为 **ggchord 0.16.5**；以下展示来自尚未发布的 **v0.16.6 开发分支**。旧代码迁移见迁移指南，正式资产见 GitHub Releases。'
-        if zh else 'The formal release is **ggchord 0.16.5**; the examples below come from the unreleased **v0.16.6 development branch**. Read the migration guide for older code; formal assets are on GitHub Releases.')
+    status = ('本版为 **ggchord 0.16.6**；以下展示由本版代码生成。旧代码迁移见迁移指南，正式资产见 GitHub Releases。'
+        if zh else 'This is **ggchord 0.16.6**; the examples below are generated with this version. Read the migration guide for older code; formal assets are on GitHub Releases.')
     install = '安装' if zh else 'Install'
     quick = '三种模式' if zh else 'Three views'
     sizing = '预览与保存' if zh else 'Preview and save'
@@ -107,7 +107,7 @@ R ≥ 4.1.0 · ggplot2 ≥ 4.0.0
 
 ```r
 install.packages(c("remotes", "dplyr", "purrr", "tidyr"))
-remotes::install_github("DangJem/ggchord@v0.16.5")
+remotes::install_github("DangJem/ggchord@v0.16.6")
 ```
 
 '''
@@ -116,7 +116,7 @@ remotes::install_github("DangJem/ggchord@v0.16.5")
     text += (' 示例使用 dplyr、purrr、tidyr 和原生 `|>`，这些是示例可选依赖。' if zh else
         ' Examples use dplyr, purrr, tidyr and the native `|>` pipe as optional example dependencies.')
     text += f'\n\n## {quick}\n\n'
-    text += ('以下三张综合示例展示当前开发分支的组合能力。原始输入保持可追溯，完整准备代码和解释见对应教程；初次使用请从最小首图开始。' if zh else 'These three complete examples demonstrate the current development branch. Inputs are traceable; each guide provides preparation and interpretation. New users can begin with the minimal first-plot lesson.')+'\n\n'
+    text += ('以下三张综合示例展示本版的组合能力。原始输入保持可追溯，完整准备代码和解释见对应教程；初次使用请从最小首图开始。' if zh else 'These three complete examples demonstrate this version. Inputs are traceable; each guide provides preparation and interpretation. New users can begin with the minimal first-plot lesson.')+'\n\n'
     def preparation(keys, label):
         return '<details>\n<summary>'+label+'</summary>\n\n'+''.join(
             '```r\n'+code[key]+'\n```\n\n' for key in keys)+'</details>\n\n'

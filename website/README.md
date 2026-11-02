@@ -1,9 +1,9 @@
 # ggchord 文档网站源 / Documentation source
 
-当前文档源为0.16.6开发版，正式版仍为0.16.5；API候选基线为0.16.4。实际发布与部署状态以 GitHub Release/Actions 为准。
+当前文档源为0.16.6发布候选；API候选基线为0.16.4。实际发布与部署状态以 GitHub Release/Actions 为准。
 旧 `docs/` 保留为历史归档，不再作为 Pages 部署源；历史地址由版本化清单生成跳转。网站生成物不作为当前 R 接口的事实来源。
 
-Current documentation sources track 0.16.6 development; the formal release remains 0.16.5, based on the 0.16.4 candidate API.
+Current documentation sources track the 0.16.6 release candidate, based on the 0.16.4 candidate API.
 Consult GitHub Releases/Actions for publication and deployment status. Legacy `docs/` is retained as an archive; Pages uses Actions and versioned historical redirects.
 
 ## 生成基础 / Generator

@@ -63,7 +63,7 @@ geometry, [labels](labels.html) for fitting, and [output](output.html) for devic
 
 `geom_primer_label_repel(side = "inside")` keeps callouts inside the backbone,
 even alongside exterior restriction and feature labels. This is corrected in the
-unreleased 0.16.6.9000 checkout; v0.16.5 can move those requested inside labels
+0.16.6 release; v0.16.5 can move those requested inside labels
 outside. The default outside placement and existing source coordinates are unchanged.
 
 Inside restriction labels also retain their inner geometry and now report the

@@ -1,13 +1,12 @@
-## Unreleased RC checkout {#rc-development}
-The 0.16.6.9000 source checkout audits the existing candidate contracts and retains
-flexible parameter forms, aliases and reexports. It fixes inside primer callouts
-being moved outside by the circular exterior allocator. Inside restriction registry rows are also corrected to match their inner geometry. Local finite checks and
-benchmarks are distinct from release/platform certification; v0.16.5 remains the
-formal install tag. No new migration or deprecation is introduced.
-
 ## Current version {#status}
-These pages document **ggchord 0.16.5**, including cumulative changes from the 0.16.0–0.16.4 development phases.
+These pages document **ggchord 0.16.6**, including cumulative changes from the 0.16.0–0.16.4 development phases.
 Consult [GitHub Releases](https://github.com/DangJem/ggchord/releases) for formal tags, assets and publication dates.
+
+## RC fixes and progressive tutorials {#rc-development}
+- Progressive chord → collinear → plasmid modules, with schemas, import, layer construction and 13 source-backed plasmid cases.
+- Refined four-sequence showcases, unified backgrounds and readable arrow legends; explicit guide text sizes are respected.
+- Corrected inside primer placement and restriction registry side; tibble optional columns no longer cause spurious warnings.
+- Retained candidate signatures, flexible forms, aliases and reexports; no new migration or deprecation. Dense labels can still be hidden or overlap across layers.
 
 ## Changes in this version {#changes}
 - Reorganized learning, complete workflows, task guides and reference entry points. The first-plot lesson covers installation, minimal inputs, interpretation, saving and troubleshooting; task pages prepare their own objects.

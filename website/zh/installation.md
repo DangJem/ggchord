@@ -1,17 +1,17 @@
 <div class="lesson-intro">本页完成安装和环境确认，然后选择一个模块逐步学习；不要求先读完全部功能参考。</div>
 
 ## 安装并确认环境 {#requirements}
-需要R ≥4.1.0、ggplot2 ≥4.0.0。正式安装固定到v0.16.5；当前网站展示源包含未发布的v0.16.6调整，复现开发图时使用对应checkout。
+需要R ≥4.1.0、ggplot2 ≥4.0.0。安装和示例均对应v0.16.6。
 
 ```r
 install.packages(c("remotes", "dplyr", "purrr", "tidyr"))
-remotes::install_github("DangJem/ggchord@v0.16.5")
+remotes::install_github("DangJem/ggchord@v0.16.6")
 library(ggchord)
 packageVersion("ggchord")
 ```
 
 ### 你正在使用哪个版本？ {#source}
-基础安装对应 **ggchord 0.16.5**；当前示例源为开发版。上面的安装命令固定到该版本的正式标签；发布资产可在 [GitHub Releases](https://github.com/DangJem/ggchord/releases/tag/v0.16.5) 查阅。
+基础安装和示例对应 **ggchord 0.16.6**。上面的安装命令固定到该版本的正式标签；发布资产可在 [GitHub Releases](https://github.com/DangJem/ggchord/releases/tag/v0.16.6) 查阅。
 如果你使用的是源码 checkout，在仓库根目录运行：
 
 ```r
@@ -23,13 +23,8 @@ packageVersion("ggchord")
 选择与你手中源码相符的加载方式，不需要同时运行两条安装路径。复现图时记录包版本。
 本教程不需要可选的 Bioconductor 或 Biopython 依赖。
 
-### 开发 checkout 与支持证据 {#support-evidence}
-当前正式版仍为 **v0.16.5**，本源码 checkout 为尚未发布的 **0.16.6.9000** RC
-开发版。本轮有限本地检查使用 arm64 macOS 上的 R 4.6.0、ggplot2 4.0.3，
-未实际验证声明下限 R 4.1.0、ggplot2 4.0.0。v0.16.5 的 Windows/macOS/Ubuntu
-release 及 Ubuntu devel CI 仅为历史证据，不是本版结果。可选 reader/adapter 需
-安装其帮助中列明的依赖；当前 checkout 的完整发布检查及其他设备/平台组合仍未验证。
-
+### 支持证据 {#support-evidence}
+声明下限为 R 4.1.0、ggplot2 4.0.0。发布检查及实际平台版本记录在正式验收中，不代表所有依赖组合均获认证。可选读取器需要其文档列出的依赖。
 
 ## 选择一条学习路线 {#first-steps}
 1. [模块一『弦图』：先认识三张表](chord-data.html)，再读导入、骨架、图层与参数。

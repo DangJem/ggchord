@@ -23,8 +23,7 @@ is not a probability. See [recognition limitations](recognition.html).
 
 ## Is a measured diagnostic a release certification? {#quality}
 No. It describes a requested render. Platform/device/font checks, full vignettes
-and package checks belong to an explicitly authorized release. This development
-version has only scoped documentation verification.
+and package checks belong to an explicitly authorized release. See the release acceptance record for the actual scope of verification.
 
 ## Where should I report a problem? {#report}
 Use the [issue tracker](https://github.com/DangJem/ggchord/issues) with a small input,

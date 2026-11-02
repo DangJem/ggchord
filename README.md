@@ -8,7 +8,7 @@
 
 An R package built on ggplot2. Combine independent layers for sequence backbones, interval links, genes, general features, labels and quantitative tracks.
 
-The formal release is **ggchord 0.16.5**; the examples below come from the unreleased **v0.16.6 development branch**. Read the migration guide for older code; formal assets are on GitHub Releases.
+This is **ggchord 0.16.6**; the examples below are generated with this version. Read the migration guide for older code; formal assets are on GitHub Releases.
 
 ## Install
 
@@ -16,14 +16,14 @@ R ≥ 4.1.0 · ggplot2 ≥ 4.0.0
 
 ```r
 install.packages(c("remotes", "dplyr", "purrr", "tidyr"))
-remotes::install_github("DangJem/ggchord@v0.16.5")
+remotes::install_github("DangJem/ggchord@v0.16.6")
 ```
 
 For a checkout of this version, use `pkgload::load_all(".")` from its root. A CRAN release is not claimed. Examples use dplyr, purrr, tidyr and the native `|>` pipe as optional example dependencies.
 
 ## Three views
 
-These three complete examples demonstrate the current development branch. Inputs are traceable; each guide provides preparation and interpretation. New users can begin with the minimal first-plot lesson.
+These three complete examples demonstrate this version. Inputs are traceable; each guide provides preparation and interpretation. New users can begin with the minimal first-plot lesson.
 
 <details>
 <summary>Run first: shared appearance for all three views</summary>

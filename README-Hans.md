@@ -8,7 +8,7 @@
 
 基于 ggplot2 的 R 包。用独立图层组合序列骨架、区间连接、基因、通用注释、标签和定量轨道。
 
-当前正式版为 **ggchord 0.16.5**；以下展示来自尚未发布的 **v0.16.6 开发分支**。旧代码迁移见迁移指南，正式资产见 GitHub Releases。
+本版为 **ggchord 0.16.6**；以下展示由本版代码生成。旧代码迁移见迁移指南，正式资产见 GitHub Releases。
 
 ## 安装
 
@@ -16,14 +16,14 @@ R ≥ 4.1.0 · ggplot2 ≥ 4.0.0
 
 ```r
 install.packages(c("remotes", "dplyr", "purrr", "tidyr"))
-remotes::install_github("DangJem/ggchord@v0.16.5")
+remotes::install_github("DangJem/ggchord@v0.16.6")
 ```
 
 如已检出本版源码，在仓库根目录使用 `pkgload::load_all(".")`。不声称存在 CRAN 发布。 示例使用 dplyr、purrr、tidyr 和原生 `|>`，这些是示例可选依赖。
 
 ## 三种模式
 
-以下三张综合示例展示当前开发分支的组合能力。原始输入保持可追溯，完整准备代码和解释见对应教程；初次使用请从最小首图开始。
+以下三张综合示例展示本版的组合能力。原始输入保持可追溯，完整准备代码和解释见对应教程；初次使用请从最小首图开始。
 
 <details>
 <summary>先运行：三张图共用的样式</summary>

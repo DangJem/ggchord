@@ -1,17 +1,17 @@
 <div class="lesson-intro">Install and confirm the environment, then choose one progressive module. Reading the entire reference is not a prerequisite.</div>
 
 ## Install and inspect the environment {#requirements}
-R ≥4.1.0 and ggplot2 ≥4.0.0 are required. The formal installation is pinned to v0.16.5; current source examples include unreleased v0.16.6 work. Use the matching checkout to reproduce development figures.
+R ≥4.1.0 and ggplot2 ≥4.0.0 are required. Installation and examples target v0.16.6.
 
 ```r
 install.packages(c("remotes", "dplyr", "purrr", "tidyr"))
-remotes::install_github("DangJem/ggchord@v0.16.5")
+remotes::install_github("DangJem/ggchord@v0.16.6")
 library(ggchord)
 packageVersion("ggchord")
 ```
 
 ### Which version are you using? {#source}
-This tutorial documents **ggchord 0.16.5**. The installation above pins its formal tag; see [GitHub Releases](https://github.com/DangJem/ggchord/releases/tag/v0.16.5) for release assets.
+This tutorial documents **ggchord 0.16.6**. The installation above pins its formal tag; see [GitHub Releases](https://github.com/DangJem/ggchord/releases/tag/v0.16.6) for release assets.
 For a source checkout, run from its repository root:
 
 ```r
@@ -23,15 +23,8 @@ packageVersion("ggchord")
 Use the loading route appropriate to your source; you do not need both installation paths.
 Record the version when reproducing a plot. This lesson needs neither optional Bioconductor packages nor Biopython.
 
-### Development checkout and support evidence {#support-evidence}
-The formal release remains **v0.16.5**. This source checkout is the unreleased
-**0.16.6.9000** RC development version. Its finite local checks used R 4.6.0 and
-ggplot2 4.0.3 on arm64 macOS. The declared lower bounds (R 4.1.0, ggplot2 4.0.0)
-have not been exercised by these checks. Earlier v0.16.5 Windows/macOS/Ubuntu
-release and Ubuntu devel CI is historical evidence, not a v0.16.6 result.
-Optional readers/adapters need their documented dependencies; full release tests
-and other device/platform combinations remain unverified for this checkout.
-
+### Support evidence {#support-evidence}
+Declared lower bounds are R 4.1.0 and ggplot2 4.0.0. Release checks and actual platform versions are recorded in the release acceptance report; these do not certify every dependency combination. Optional readers require their documented dependencies.
 
 ## Choose a learning path {#first-steps}
 1. [Module I · Chord: learn the three tables](chord-data.html), then import, backbones, layers and geometry.
