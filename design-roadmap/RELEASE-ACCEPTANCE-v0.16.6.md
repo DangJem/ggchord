@@ -18,3 +18,21 @@
 macOS release、Windows release、Ubuntu release与Ubuntu devel。对应R包候选a3ffe41。
 29个文档准备环境通过（已安装Bioconductor可选依赖）；原始倒向HSP诊断保留。
 源码包SHA-256：`972b9aec161bf9c527e1569e68e46ac20a2d92383151f5ee2261c6b3f1860156`。
+
+## 正式Release
+
+[Release](https://github.com/DangJem/ggchord/releases/tag/v0.16.6)于2026-11-02
+16:48:23（Asia/Shanghai）正式发布。标签指向58f9ed9，双语说明现代汉语在前、English在后，
+非草稿、非预发布；源码包及SHA256SUMS.txt服务端摘要与本地文件一致。main已快进整合推送。
+[配套网站部署](https://github.com/DangJem/ggchord/actions/runs/41415616547)正在执行。
+
+正式Release两附件已下载回读，源码包SHA-256与SHA256SUMS.txt一致。
+
+## 配套网站最终结果
+
+[预发布网站验收](https://github.com/DangJem/ggchord/actions/runs/41415101818)成功。
+[正式Pages部署](https://github.com/DangJem/ggchord/actions/runs/41415616547)的source-check、
+preview（完整构建/产物检查）、deploy全部成功，来源58f9ed9。
+线上英语/汉语首页回读确认0.16.6、三张展示图及发布版标识。
+本地39对页面、865译文、130导出/93Rd与链接/锚点/搜索完整检查通过。
+后续仅发布记录与历史索引提交，不改变已验收R包、vignette或网站输入，发布标签不移动。
