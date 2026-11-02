@@ -1,9 +1,9 @@
 # ggchord 文档网站源 / Documentation source
 
-文档版本 0.16.5，API 基线为 0.16.4。实际发布与部署状态以 GitHub Release/Actions 为准。
+当前文档源为0.16.6开发版，正式版仍为0.16.5；API候选基线为0.16.4。实际发布与部署状态以 GitHub Release/Actions 为准。
 旧 `docs/` 保留为历史归档，不再作为 Pages 部署源；历史地址由版本化清单生成跳转。网站生成物不作为当前 R 接口的事实来源。
 
-Documentation for 0.16.5, based on the 0.16.4 candidate API.
+Current documentation sources track 0.16.6 development; the formal release remains 0.16.5, based on the 0.16.4 candidate API.
 Consult GitHub Releases/Actions for publication and deployment status. Legacy `docs/` is retained as an archive; Pages uses Actions and versioned historical redirects.
 
 ## 生成基础 / Generator
@@ -154,3 +154,38 @@ Current examples prefer dplyr verbs and the native R ≥4.1 `|>` pipe. Keep dire
 vector calculations and file I/O where clearer; loading the entire tidyverse is
 unnecessary. Regenerate PNGs after shared example changes rather than changing
 code hashes without verified exports.
+
+## 当前导航与展示 / Current navigation and showcases
+
+首页与README共用三张旗舰PNG，完整示例源仍只有documentation-examples.R。
+首页提供三张带图的模块入口和完整大图；README将长代码折叠保留，入门首图继续使用
+最小数据。桌面左侧是本页目录，右侧是全站目录；小屏分别折叠，不混成一个菜单。
+
+Home and README share three flagship PNGs from the same executable source.
+Home offers three illustrated task entries and full-size figures; README keeps
+long runnable code in disclosures. First-plot lessons remain minimal. The left
+outline describes the current page; the right guide covers the whole site.
+They become separate disclosures on compact screens.
+
+website/navigation.json是全站任务分类的单一来源。顶部“可视化”菜单读取其中的
+弦图/共线性/质粒模块，其他顶栏链接为首页、入门、教程总览和函数参考。全站目录
+列出各模块下的具体流程和通用技巧，不在顶栏重复全部页面。
+
+website/navigation.json owns the task taxonomy. The top Visualizations menu
+uses its chord/collinear/plasmid modules; Home, Get started, All guides and
+Reference are primary entry points. The right guide expands these paths into
+workflows and shared techniques rather than repeating every page in the header.
+
+综合示例使用dplyr、purrr、tidyr整理原始记录、展开GC窗口和逐窗口计算；这些包是
+Suggests中的可选文档依赖。密集pETDuet-1示例使用显式视野与label_fit="shrink"，
+按16.5×8英寸通过标准ggsave保存；自动view预览可以选择不同尺寸，不能混用其布局。
+
+Complete examples use dplyr, purrr and tidyr to prepare source records, expand
+GC windows and calculate per-window values. These are optional Suggests for
+documentation. The dense pETDuet-1 example uses an explicit viewport and
+label_fit="shrink", saved with standard ggsave at 16.5×8 inches; automatic view
+previews can choose different dimensions and should not be mixed with that layout.
+
+三个模块从数据表、导入、骨架与图层逐步进入完整示例，顺序为弦图、共线性、质粒。13个独立质粒参考均由当前代码生成；共同数据/图层的coord替换示例与圆形专属参数限制分开说明。
+
+文档图像manifest保留每张PNG及实际生成时共享脚本的MD5，同时记录当前依赖摘要。R实现或共同准备变动会要求重新生成所有受影响图；已审阅的独立共线性/三种标签示例块可局部重绘。只有完整当前输出和实际PNG哈希全部匹配时，才允许为旧manifest补录依赖摘要，不能用补写哈希代替渲染。

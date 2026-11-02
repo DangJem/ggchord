@@ -551,6 +551,31 @@ ggchord_collinear_share_labels <- function(registry, layout) {
           break
         }
       }
+      # A vertical leader can be trapped under an earlier label even when a
+      # nearby diagonal route is clear. Try small horizontal alternatives
+      # before hiding a repel label; retain all existing collision checks.
+      if (!found && repel) {
+        initial_x <- gl$text_x[i]
+        x_step <- max(measured$w * .6, .04)
+        for (shift in c(-1, 1, -2, 2, -3, 3, -4, 4)) {
+          row$text_x <- initial_x + shift * x_step
+          for (lane in 0:4) {
+            row$text_y <- initial_y + side * lane * step
+            row$feature_label_inside <- FALSE
+            row$feature_label_mode <- "adjacent"
+            row$feature_label_colour <- "#202020"
+            box <- ggchord_text_boxes(row, units_per_inch = units, box_padding = .025)
+            collision <- (!is.null(placed) && nrow(placed) &&
+              any(ggchord_oriented_box_overlaps(box, placed))) || geometry_hits(box, row)
+            route_hits <- route_conflicts(row, box, repel)
+            if (!collision && !any(route_hits > 0)) {
+              found <- TRUE
+              break
+            }
+          }
+          if (found) break
+        }
+      }
       row <- ggchord_label_fit_metadata(row)
       if (found) {
         row$label_lane <- as.integer(row$label_lane %||% 0L) + lane

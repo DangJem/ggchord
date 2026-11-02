@@ -1,5 +1,29 @@
 # ggchord 0.16.6 (development)
 
+* Added progressive chord, collinear and plasmid learning paths, beginning with
+  table schemas and import, then building independent layers before the full
+  showcases. All 13 unique bundled plasmid references have current feature maps.
+* Gene legends retain arrow glyphs when the gene shortcut replaces the generic
+  feature geom. Explicit legend title/text sizes in a plot theme now reach the
+  automatically generated guides instead of falling back to compact defaults.
+* Collinear repel labels try nearby horizontal placements when vertical leaders
+  are blocked by earlier labels, retaining the existing collision checks. Labels
+  can still be hidden when no permitted placement is found.
+
+* Replaced README and website entry figures with three complete, reproducible
+  showcases: mixed-curvature four-genome chord comparison, dense pETDuet-1
+  annotation and four-genome collinearity with centred rows, routed cross-row
+  links and strand-separated CDS.
+  Website figures now share explicit, coordinated scientific colours and a
+  common 0–100% identity scale. Documentation panels are transparent over a
+  uniform `#FFFCF5` plot background.
+* Reorganized documentation around chord, collinear and plasmid tasks. Added
+  a Home link, larger navigation, a visible language dropdown, a left page
+  outline and right site guide, with separate compact-screen disclosures.
+* Corrected untranslated Han reference-index categories and language-dependent
+  dropdown anchors. Expanded current examples with purrr and tidyr as optional
+  documentation dependencies; package runtime imports are unchanged.
+
 * Optional-column checks in validation and focusing now accept tibble inputs
   without spurious missing-column warnings. Required-column validation and data
   results are unchanged.

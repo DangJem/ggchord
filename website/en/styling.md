@@ -6,7 +6,7 @@ In a fresh R session, run the code below, then follow this page in order. Colour
 {{prepare:setup,sequencepalette,docstyle}}
 
 ## Build styles from data roles {#roles}
-Run this page’s preparation code below. The example declares categories
+The preparation above declares the inputs and shared appearance. The example declares categories
 explicitly: ribbon fill maps query ID; sequence colour maps sequence ID; gene fill
 maps strand. Manual scale names match those values exactly.
 

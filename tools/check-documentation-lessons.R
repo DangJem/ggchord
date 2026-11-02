@@ -6,9 +6,11 @@ markers <- grep('^# ---- [a-z]+ ----$', lines)
 chunks <- setNames(lapply(seq_len(length(markers)-1L), function(i)
   lines[seq.int(markers[i]+1L, markers[i+1L]-1L)]),
   sub('^# ---- ([a-z]+) ----$', '\\1', lines[markers[-length(markers)]]))
-pages <- c('installation','modes','data','formats','real-data','plasmids','alignments',
-  'homology','tracks','annotations','labels','projection','views','styling',
-  'ribbons','parameters','adjustments','recognition','output','migration')
+pages <- jsonlite::fromJSON("website/pages.json")$slug
+pages <- Filter(function(page) {
+  text <- paste(readLines(paste0("website/en/", page, ".md"), warn = FALSE), collapse = "\n")
+  grepl("\\{\\{(code|prepare):", text)
+}, pages)
 for(page in pages) {
   text <- paste(readLines(paste0('website/en/', page, '.md'), warn=FALSE), collapse='\n')
   matches <- regmatches(text, gregexpr('\\{\\{(code|prepare):[a-z,]+\\}\\}', text))[[1]]
@@ -22,4 +24,4 @@ for(page in pages) {
   }
   cat('PASS:', page, 'in a separate documentation environment\n')
 }
-cat('20 page preparations completed; no package checks or rendered exports.\n')
+cat(length(pages),'page preparations completed; no package checks or rendered exports.\n')

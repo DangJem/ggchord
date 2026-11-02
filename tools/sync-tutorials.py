@@ -4,10 +4,10 @@ import argparse
 import re
 from documentation_lib import ROOT, WEB, PAGES, expand
 
-CHAPTERS = [p for p in PAGES if p['slug'] not in ['index', 'reference', 'news', 'articles']]
+CHAPTERS = [p for p in PAGES if p['slug'] not in ['index', 'reference', 'news']]
 
 def tutorial(lang):
-    title = 'ggchord: chord, circular and collinear tutorial' if lang == 'en' else 'ggchord：弦图、圆图与共线性图教程'
+    title = 'ggchord: chord, collinear and plasmid tutorial' if lang == 'en' else 'ggchord：弦图、共线性图与质粒图教程'
     intro = ('This paired tutorial is generated from the same sources as the website. '
         'Code blocks are shown without executing during vignette rendering; the shared '
         'documentation script verifies the examples directly. Examples prefer bundled or source-backed data; deliberate diagnostic errors are labelled. Inputs marked '
@@ -40,6 +40,8 @@ knitr::opts_chunk$set(eval = FALSE, collapse = TRUE, comment = "#>")
         body = expand((WEB/lang/(p['slug']+'.md')).read_text(), lang, figures='../man/figures')
         body = re.sub(r'^(#{2,5}) (.*?)(?: \{#([^}]+)\})?$',
             lambda m: '#'+m[1]+' '+m[2]+(f' {{#{p["slug"]}-{m[3]}}}' if m[3] else ''), body, flags=re.M)
+        body = re.sub(r'(\]\(#)([^)]+)(\))',
+            lambda m: m[1]+p['slug']+'-'+m[2]+m[3], body)
         body = re.sub(r'\[([^\]]+)\]\(reference/([^)#]+)\.html(?:#[^)]*)?\)',
             lambda m: f'{m[1]} (`help("{m[2]}", package = "ggchord")`)', body)
         body = re.sub(r'\[([^\]]+)\]\(([a-z-]+)\.html(?:#([^)]*))?\)',
@@ -77,11 +79,11 @@ def readme(lang):
     from documentation_lib import snippets
     code = snippets()
     zh = lang == 'zh'
-    title = 'ggchord：弦图、圆图与共线性图' if zh else 'ggchord: chord, circular and collinear sequence plots'
+    title = 'ggchord：弦图、共线性图与质粒图' if zh else 'ggchord: chord, collinear and plasmid sequence plots'
     intro = ('基于 ggplot2 的 R 包。用独立图层组合序列骨架、区间连接、基因、通用注释、标签和定量轨道。'
         if zh else 'An R package built on ggplot2. Combine independent layers for sequence backbones, interval links, genes, general features, labels and quantitative tracks.')
-    status = ('本说明对应 **ggchord 0.16.5**。从旧版本迁移时，请先阅读迁移指南；正式发布资产见 GitHub Releases。'
-        if zh else 'This README documents **ggchord 0.16.5**. Read the migration guide when updating older code; formal release assets are listed on GitHub Releases.')
+    status = ('当前正式版为 **ggchord 0.16.5**；以下展示来自尚未发布的 **v0.16.6 开发分支**。旧代码迁移见迁移指南，正式资产见 GitHub Releases。'
+        if zh else 'The formal release is **ggchord 0.16.5**; the examples below come from the unreleased **v0.16.6 development branch**. Read the migration guide for older code; formal assets are on GitHub Releases.')
     install = '安装' if zh else 'Install'
     quick = '三种模式' if zh else 'Three views'
     sizing = '预览与保存' if zh else 'Preview and save'
@@ -104,46 +106,42 @@ def readme(lang):
 R ≥ 4.1.0 · ggplot2 ≥ 4.0.0
 
 ```r
-install.packages(c("remotes", "dplyr"))
+install.packages(c("remotes", "dplyr", "purrr", "tidyr"))
 remotes::install_github("DangJem/ggchord@v0.16.5")
 ```
 
 '''
     text += ('如已检出本版源码，在仓库根目录使用 `pkgload::load_all(".")`。不声称存在 CRAN 发布。' if zh else
         'For a checkout of this version, use `pkgload::load_all(".")` from its root. A CRAN release is not claimed.')
-    text += (' 本例用 dplyr 和原生 `|>` 管道整理数据；dplyr 是示例依赖。' if zh else
-        ' These examples prepare tables with dplyr and the native `|>` pipe; dplyr is an example dependency.')
+    text += (' 示例使用 dplyr、purrr、tidyr 和原生 `|>`，这些是示例可选依赖。' if zh else
+        ' Examples use dplyr, purrr, tidyr and the native `|>` pipe as optional example dependencies.')
     text += f'\n\n## {quick}\n\n'
-    text += ('下列代码先从随包数据中选出必需列，再绘图；原始数据与来源信息保留在原对象中。' if zh else 'Select only the required fields from the bundled source-backed data before plotting; keep original metadata in the source objects.')+'\n\n'
+    text += ('以下三张综合示例展示当前开发分支的组合能力。原始输入保持可追溯，完整准备代码和解释见对应教程；初次使用请从最小首图开始。' if zh else 'These three complete examples demonstrate the current development branch. Inputs are traceable; each guide provides preparation and interpretation. New users can begin with the minimal first-plot lesson.')+'\n\n'
     def preparation(keys, label):
         return '<details>\n<summary>'+label+'</summary>\n\n'+''.join(
             '```r\n'+code[key]+'\n```\n\n' for key in keys)+'</details>\n\n'
-    text += preparation(['setup', 'sequencepalette', 'docstyle'],
-        '先运行：弦图与共线性图共用的数据和样式' if zh else
-        'Run first: shared data and appearance for chord and collinear views')
+    text += preparation(['sequencepalette','docstyle'],
+        '先运行：三张图共用的样式' if zh else 'Run first: shared appearance for all three views')
     views = [
-        ('chord', '弦图：查看序列间的总体连接' if zh else 'Chord: compare overall sequence relationships',
-         'real-data', '展示区间之间的对应关系。' if zh else 'Show relationships between aligned intervals.'),
-        ('circular', '圆图：读取单条序列的注释' if zh else 'Circular: read annotations on one sequence',
-         'plasmids', '先准备 pUC19 注释，再组合骨架与特征层。' if zh else
-         'Prepare the pUC19 annotations, then combine backbone and feature layers.'),
-        ('collinear', '共线性图：对齐并比较位置' if zh else 'Collinear: align and compare positions',
-         'modes', '复用第一节的数据和样式，按明确选择的基因锚点对齐。' if zh else
-         'Reuse the first section’s data and appearance, aligning at explicitly selected gene anchors.')]
-    for key, heading, lesson, purpose in views:
+        ('showcasechord', 'showcasechord', '弦图：四基因组、混合曲率与相似度' if zh else 'Chord: four genomes, mixed curvature and identity',
+         'chord', '直线与弧形骨架、真实链方向基因、精选标签及筛选后的观测比对。' if zh else 'Straight and curved backbones, original gene strands, selected labels and observed alignments.', ['showcasedata']),
+        ('showcaseplasmid', 'showcaseplasmid', '质粒图：pETDuet-1密集注释' if zh else 'Plasmid: dense pETDuet-1 annotation',
+         'plasmids#complex', '双链骨架、20个特征、5个参考引物和58个合并切点；位置和名称来自真实输入。' if zh else 'A double backbone, 20 features, five reference primers and 58 grouped cut positions from real inputs.', ['showcaseplasmiddata']),
+        ('showcasecollinear', 'showcasecollinear', '共线性图：四序列与跨行连接' if zh else 'Collinear: four genomes with cross-row links',
+         'collinear', '正负链分列、逐一标注的精选CDS、局部避障、虚线跨行ribbon与右侧控制点路由。' if zh else 'Strand-separated selected CDS with labels, local clearance, dashed cross-row ribbons and right-side control-point routes.', ['showcasedata'])]
+    views.sort(key=lambda view: ['showcasechord','showcasecollinear','showcaseplasmid'].index(view[0]))
+    for key, figure, heading, lesson, purpose, setup in views:
         text += '### '+heading+'\n\n'+purpose+'\n\n'
-        if key == 'circular':
-            text += preparation(['plasmiddata', 'featurepalette'],
-                '先运行：圆图的数据和配色' if zh else 'Run first: circular-map data and colours')
-        text += '```r\n'+code[key]+'\n```\n\n'
-        text += '!['+heading+'](man/figures/'+key+'.png)\n\n'
-        text += ('[查看完整教程 →](' if zh else '[Read the full guide →](')+site+lesson+'.html)\n\n'
+        # Put the product result before the optional preparation, while retaining runnable code.
+        text += '!['+heading+'](man/figures/'+figure+'.png)\n\n'
+        text += preparation(setup+[key], '数据准备与绘图代码 · 展开运行' if zh else 'Preparation and plot code · expand to run')
+        text += ('[查看完整教程 →](' if zh else '[Read the full guide →](')+site+lesson.split('#')[0]+'.html'+('#'+lesson.split('#')[1] if '#' in lesson else '')+')\n\n'
     text += ('`aes()` 映射数据，`scale_*()` 定义映射和图例，geom 定义几何与固定样式，Position 负责局部放置，coord 负责全局坐标，theme 负责非数据外观。'
         if zh else '`aes()` maps data; scales define mapping and guides; geoms define geometry and fixed styles; Positions place local geometry; coords select the global view; themes style non-data elements.')
     text += f'\n\n## {sizing}\n\n'
     text += ('RStudio Plots 会按面板尺寸重新排列标签。按相同显式宽高预览并保存：' if zh else
         'RStudio Plots can rearrange labels when its panel changes. Preview and save at the same explicit dimensions:')
-    text += '\n\n```r\nview_ggchord(p_collinear, width = 8, height = 5, units = "in")\n'+code['save']+'\n```\n'
+    text += '\n\n```r\nview_ggchord(p_show_collinear, width = 12, height = 8, units = "in")\nggsave("comparison.png", p_show_collinear, width = 12, height = 8, units = "in", dpi = 144)\n```\n'
     text += f'\n## {onwards}\n\n'
     guides = ([('开始使用', 'installation'), ('按任务查找教程', 'articles'),
         ('函数文档', 'reference/index'), ('示例图集', 'gallery'),

@@ -6,7 +6,7 @@ In a fresh R session, run the code below, then follow this page in order. Colour
 {{prepare:setup,docstyle,plasmiddata}}
 
 ## Adapt an existing table {#adapters}
-Run this page’s preparation code below. These examples rename columns of
+The preparation above loads the input tables. These examples rename columns of
 bundled source-backed sequences, links and genes; they do not invent alignments.
 
 {{code:adapters}}
@@ -40,6 +40,8 @@ needs Biopython already installed; no automatic installation occurs.
 
 ## Optional interval objects {#ranges}
 {{code:optionalranges}}
+
+{{code:optionalinteractions}}
 {{results:optional}}
 
 An originally unknown-strand pUC19 annotation remains unknown as `*`. Known full

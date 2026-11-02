@@ -13,7 +13,7 @@ License: MIT + file LICENSE
 Depends: R (>= 4.1.0)
 Imports: ggplot2 (>= 4.0.0), grDevices, grid, rlang, scales
 VignetteBuilder: knitr
-Suggests: knitr, rmarkdown, qpdf, dplyr, svglite, testthat (>= 3.0.0),
+Suggests: knitr, rmarkdown, qpdf, dplyr, purrr, tidyr, svglite, testthat (>= 3.0.0),
     readxl, digest, GenomicRanges, InteractionSet, IRanges, S4Vectors,
     jsonlite, Biostrings, colorspace
 Encoding: UTF-8

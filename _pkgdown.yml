@@ -10,12 +10,26 @@ template:
     base_font: system-ui
     heading_font: system-ui
     code_font: monospace
-    primary: "#2855C7"
+    primary: "#087F75"
 navbar:
   structure:
-    left: [start, reference, articles, gallery, news]
+    left: [home, start, plots, articles, reference]
     right: [github, lightswitch]
   components:
+    home:
+      text: Home
+      href: index.html
+    plots:
+      text: Visualizations
+      menu:
+        - text: Chord comparisons
+          href: chord.html
+        - text: Collinear comparisons
+          href: collinear.html
+        - text: Plasmid maps
+          href: plasmids.html
+        - text: Gallery
+          href: gallery.html
     start:
       text: Get started
       href: installation.html

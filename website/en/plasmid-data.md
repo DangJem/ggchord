@@ -1,0 +1,27 @@
+A single-sequence circular map starts with two columns. Feature, primer and restriction searches additionally need real DNA; existing annotations can be drawn directly without running recognition again.
+
+## Tables and optional information {#tables}
+| Input | Required content | Optional content |
+| --- | --- | --- |
+| Backbone | accver, length; exactly one sequence | label for display; sequence for searches |
+| Features | accver, start, end and declared directionality | type, anno/label, feature_id and shape categories |
+| Primers | Computed binding interval, strand/name roles required by the geom | Recognition and provenance fields |
+| Restriction sites | Position/name roles required by the geom | Enzyme catalogue, methylation assumption and filter provenance |
+
+Backbones do not require DNA. Prefer search-result tables for the latter layers and consult their help for detailed fields. Unknown-strand annotations belong in generic feature layers.
+
+## Inspect bundled real records {#inspect}
+```r
+library(ggchord)
+library(dplyr)
+plasmid_example_pUC19 |> select(accver, length)
+find_common_features(plasmid_example_pUC19) |> select(accver, start, end, strand, type, anno) |> slice_head(n = 5)
+```
+
+The compact names retain ggchord's early BLAST workflow history. accver need not be a database accession. Full DNA and length must agree. Recognition is computational matching, not experimental validation.
+
+## Import your own plasmid {#import}
+`read_fasta_lengths()` reads IDs and full lengths only. Searches additionally need actual DNA, for example read with optional Biostrings `readDNAStringSet()` and `as.character()`, retaining matching IDs. GFF3/BED/GenBank or GRanges annotations follow the [format guide](formats.html), retaining provenance. Handle circular-origin and segmented records according to the reader contract; do not invent one continuous interval by merging every segment.
+
+## A progressive case sequence {#path}
+[3.2](plasmid-build.html) builds pUC19 layer by layer; [3.3](recognition.html) explains recognition, primers and restriction sites; [3.4](plasmid-catalog.html) uses all 13 unique repository plasmids; [3.5](plasmids.html#complex) completes the dense pETDuet-1 map. pUC19c is a compatibility alias, not a 14th case.

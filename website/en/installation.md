@@ -1,25 +1,14 @@
-<div class="lesson-intro">
-Build a sequence comparison from bundled data and save a figure. You do not need to run BLAST or prepare your own files first.
-</div>
+<div class="lesson-intro">Install and confirm the environment, then choose one progressive module. Reading the entire reference is not a prerequisite.</div>
 
-<div class="lesson-goal">
-By the end of this page, you will have a collinear plot containing sequence backbones, gene arrows and observed alignment intervals, saved as a PNG at an explicit size. The real-data tutorials use the same layer composition.
-</div>
-
-<div class="lesson-path">Install and load → inspect three tables → compose layers → read the result → save</div>
-
-## 1. Install and load {#requirements}
-Use R ≥4.1.0 and ggplot2 ≥4.0.0. Open R or RStudio and run the installation commands in its console.
-Skip installation if ggchord is already installed and loads successfully.
+## Install and inspect the environment {#requirements}
+R ≥4.1.0 and ggplot2 ≥4.0.0 are required. The formal installation is pinned to v0.16.5; current source examples include unreleased v0.16.6 work. Use the matching checkout to reproduce development figures.
 
 ```r
-install.packages(c("remotes", "dplyr"))
+install.packages(c("remotes", "dplyr", "purrr", "tidyr"))
 remotes::install_github("DangJem/ggchord@v0.16.5")
 library(ggchord)
 packageVersion("ggchord")
 ```
-
-Examples use dplyr verbs and the native `|>` pipe for table preparation. Load `dplyr` where shown; it is an optional example dependency, not a requirement for using ggchord.
 
 ### Which version are you using? {#source}
 This tutorial documents **ggchord 0.16.5**. The installation above pins its formal tag; see [GitHub Releases](https://github.com/DangJem/ggchord/releases/tag/v0.16.5) for release assets.
@@ -43,87 +32,32 @@ release and Ubuntu devel CI is historical evidence, not a v0.16.6 result.
 Optional readers/adapters need their documented dependencies; full release tests
 and other device/platform combinations remain unverified for this checkout.
 
-## 2. Inspect the three input tables {#input}
-Select the bundled sequences `MT108731.1` and `MT118296.1`. Keep the complete source objects;
-the code below selects only the columns used here. Run the complete block first:
 
-{{code:firstdata}}
+## Choose a learning path {#first-steps}
+1. [Module I · Chord: learn the three tables](chord-data.html), then import, backbones, layers and geometry.
+2. [Module II · Collinear: reuse the chord inputs](collinear-data.html), then switch coordinates, route links and focus locally.
+3. [Module III · Plasmid: start with one sequence and DNA](plasmid-data.html), then add layers and explore 13 reference cases.
 
-| Object | Required columns | One row represents |
-| --- | --- | --- |
-| `first_sequences` | `accver`, `length` | A sequence and its full length |
-| `first_genes` | `accver`, `start`, `end`, `strand` | A gene annotation |
-| `first_links` | Two IDs and four query/subject endpoints | An observed alignment interval between sequences |
+Starting with chord follows ggchord's development order. See the [learning map](articles.html). The two-sequence exercise below is an optional environment check rather than a substitute for the modules.
 
-`accver` joins the tables and must agree; it need not be a GenBank accession. Coordinates are one-based inclusive bp.
-The bundled gene fixture separately retains `source_strand`; restoring it uses biological direction rather than alternating strands for display.
+## Which columns come first? {#input}
+Sequences need accver/length; links need two IDs and four endpoints; genes need accver/start/end/strand. [Module I's first lesson](chord-data.html) explains real tables, optional fields and BLAST naming.
 
-Check column names, then inspect the first annotation rows:
+## Optional: check one complete plot {#first-plot}
+Run the whole folded block, then inspect the figure. Bundled source-backed records need no external files or BLAST run.
 
-```r
-names(first_sequences)
-names(first_genes)
-names(first_links)
-head(first_genes)
-```
-
-<div class="lesson-check">
-Checkpoint: the sequence table has 2 columns, genes 4 and links 6. Neither pident nor qlen is required for this basic plot;
-identity colouring or coverage calculations require their corresponding fields later.
-</div>
-
-## 3. Compose your first plot {#first-plot}
-Start with a linear view so genomic distances are easy to read.
-`ggchord()` supplies the data, three geometry layers draw links, backbones and genes, and the coordinate selects a linear arrangement.
-Named arguments avoid accidentally passing genes into the second positional argument, `ribbon_data`.
-
-{{code:firstplot}}
+{{prepare:firstdata,firstplot}}
 {{figure:first}}
 
-The two colours identify the sequence containing each gene; **they do not assert homology-cluster membership**.
-Neutral alignment bands keep attention on genes and positions.
+## Read the quick result {#read}
+Arrows retain biological strands; colours identify sequences only. Ribbons are existing comparison intervals, not new homology results. This small linear example makes positions easy to read; the full chord module starts with backbones.
 
-## 4. Read the result {#read}
-Inspect the plot in this order:
-
-1. Names on the left identify the sequences. Backbones and ticks show full lengths and bp positions.
-2. Arrows show selected bundled gene annotations and their source strands. An unshown gene is not evidence of absence.
-3. Bands between rows show supplied alignment intervals. They are neither newly computed alignments nor base-by-base alignment displays.
-
-This view teaches positions and links. Use a chord view for overall relationships among several sequences,
-or a single-sequence circular view for plasmid annotations. Choose the question before the geometry;
-see [which view to use](modes.html).
-
-## 5. Save at an explicit size {#save}
-`p_first` is an ordinary ggplot object. Save it to the current working directory:
+## Optional: save the quick result {#save}
+Run this only after the block above has created p_first:
 
 {{code:firstsave}}
 
-```r
-file.exists("first-comparison.png")
-```
+Use the same 10×5 in dimensions for preview and export; see [output](output.html).
 
-`TRUE` confirms that the file was created. RStudio's Plots pane can change the layout when resized.
-To inspect the intended export, preview at the same dimensions:
-
-```r
-view_ggchord(p_first, width = 10, height = 5, units = "in")
-```
-
-## 6. Troubleshoot a first run {#troubleshooting}
-| Symptom | Check first |
-| --- | --- |
-| `first_sequences` or `p_first` is missing | Run the blocks in order from step 2, rather than copying only the last line |
-| A function is unavailable | Check that the loaded version matches this tutorial with `packageVersion()` |
-| Links are missing | Check that both IDs occur in the sequence table and that the selected link table is nonempty |
-| The plot is small or labels differ | Preview at the explicit 10 × 5 in size; see [output and sizing](output.html) |
-| You cannot find the saved file | Check the working directory with `getwd()` |
-
-## Choose your next task {#first-steps}
-You have prepared data, composed layers and saved a figure. Continue according to your next task:
-
-- **Use your own records**: [import and adaptation](formats.html); BLAST users can continue with [standard tables and protein coordinates](alignments.html).
-- **Compare complete real records**: [the FASTA, GFF3 and alignment workflow](real-data.html).
-- **Make a plasmid map**: [pUC19 genes, primers and restriction annotations](plasmids.html).
-- **Control the appearance**: [colours and guides](styling.html), [label placement](labels.html).
-- **Look up a parameter**: [complete function reference](reference.html).
+## Common execution problems {#troubleshooting}
+For missing objects, run the preparation block. For missing functions, check the package version. getwd() determines the save directory. Optional readers need dependencies only in their own topics; basic modules do not require Bioconductor or Biopython.

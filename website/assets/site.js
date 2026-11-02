@@ -1,14 +1,25 @@
 /* Local search and paired-language navigation; Bootstrap/pkgdown owns theme/UI. */
 (() => {
   const lang = document.body.dataset.lang;
+  const language = document.querySelector('.language-control');
   const link = document.querySelector('#site-language');
   if (link) {
-    const base = link.href;
+    const base = link.href.split('#')[0];
     const sync = () => { link.href = base + location.hash; };
     sync();
     addEventListener('hashchange', sync);
-    link.addEventListener('click', () => {
-      try { localStorage.setItem('ggchord-language', lang === 'en' ? 'zh' : 'en'); } catch (_) { /* optional */ }
+  }
+  if (language) {
+    for (const option of language.querySelectorAll('a[data-language]')) {
+      option.addEventListener('click', () => {
+        try { localStorage.setItem('ggchord-language', option.dataset.language); } catch (_) { /* optional */ }
+      });
+    }
+    document.addEventListener('click', event => {
+      if (!language.contains(event.target)) language.open = false;
+    });
+    language.addEventListener('keydown', event => {
+      if (event.key === 'Escape') { language.open = false; language.querySelector('summary').focus(); }
     });
   }
   const input = document.querySelector('#site-search');
@@ -159,4 +170,20 @@
       setTimeout(() => { button.textContent = label; }, 2500);
     });
   }
+})();
+
+/* The left outline follows the current section; the right guide follows the task. */
+(() => {
+  const links = [...document.querySelectorAll('.page-nav a[href^="#"]')];
+  const targets = links.map(link => document.getElementById(decodeURIComponent(link.hash.slice(1)))).filter(Boolean);
+  if (!targets.length || !('IntersectionObserver' in window)) return;
+  const observer = new IntersectionObserver(entries => {
+    const visible = entries.filter(entry => entry.isIntersecting).sort((a,b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
+    if (!visible) return;
+    for (const link of links) {
+      if (link.hash === '#' + visible.target.id) link.setAttribute('aria-current','location');
+      else link.removeAttribute('aria-current');
+    }
+  }, {rootMargin: '-100px 0px -60% 0px'});
+  targets.forEach(target => observer.observe(target));
 })();

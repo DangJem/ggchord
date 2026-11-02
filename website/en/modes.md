@@ -14,7 +14,7 @@ In a fresh R session, run the code below, then follow this page in order. Colour
 
 {{prepare:setup,sequencepalette,featurepalette,docstyle,plasmiddata}}
 
-Run this page’s preparation code below. once. Each object below is a normal
+Run the preparation above once. Each object below is a normal
 composable ggplot; print it or use `ggsave()`.
 
 ## Chord: compare multiple sequences {#chord}
@@ -27,15 +27,6 @@ curvature, gap and orientation belong to `geom_seq()`. A NULL link control point
 uses the historical origin-based chord route; it does not mean a universal
 straight link. Ribbon avoidance defaults to `uniform`, line avoidance to `none`.
 
-## Circular: annotate one sequence {#circular}
-{{code:circular}}
-{{figure:circular}}
-This example selects CDS and the replication origin for display, retaining the full sequence bp axis.
-`coord_circular()` requires a single sequence. General features can carry unknown
-strand. `geom_feature_plasmid()` is a convenience preset with its own defaults;
-choose it explicitly when those defaults fit the task. Primer and restriction
-layers are described in [recognition](recognition.html).
-
 ## Collinear: align local comparisons {#collinear}
 {{code:collinear}}
 {{figure:collinear}}
@@ -47,6 +38,15 @@ default; use `adjacent_only = FALSE` or explicit `pairs` to retain others.
 Non-adjacent outlines default to dashed; explicit styles take priority. These
 rules differ from chord mode. [Focus and segments](views.html) preserve source
 coordinates for cropped or locally reversed views.
+
+## Circular: annotate one sequence {#circular}
+{{code:circular}}
+{{figure:circular}}
+This example selects CDS and the replication origin for display, retaining the full sequence bp axis.
+`coord_circular()` requires a single sequence. General features can carry unknown
+strand. `geom_feature_plasmid()` is a convenience preset with its own defaults;
+choose it explicitly when those defaults fit the task. Primer and restriction
+layers are described in [recognition](recognition.html).
 
 ## Check your result {#check-result}
 First count sequences: use circular for one annotated sequence, chord for the overall link pattern, and collinear for positions, distances or neighbourhoods.

@@ -48,7 +48,7 @@ def main():
     shutil.copytree(ROOT/'R',assets/'source')
     inputs=sorted([*ROOT.glob('examples/fasta/*.fna'),*ROOT.glob('examples/gff3/*.gff3'),
         *ROOT.glob('examples/blastn/*.o7'),*ROOT.glob('examples/blastn-standard/*'),
-        *ROOT.glob('examples/format-inputs/*'),ROOT/'examples/plasmid/pUC19.fna'])
+        *ROOT.glob('examples/format-inputs/*'),*ROOT.glob('examples/plasmid/*.fna')])
     input_hashes={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in inputs}
     (assets/'input-hashes.json').write_text(json.dumps(input_hashes,indent=2)+'\n')
     with zipfile.ZipFile(assets/'tutorial-inputs.zip','w',compression=zipfile.ZIP_DEFLATED) as archive:
@@ -114,9 +114,9 @@ def main():
     for name,data in [('legacy-routes',routes),('retired-routes',retired)]:
         (out/(name+'.json')).write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n')
     files=[p for base in [WEB,ROOT/'R',ROOT/'man',ROOT/'tools',ROOT/'vignettes'] for p in base.rglob('*') if p.is_file() and '__pycache__' not in p.parts]
-    files += inputs + [ROOT/'data'/n for n in ['seq_data_example.rda','gene_data_example.rda','ribbon_data_example.rda','plasmid_example_pUC19.rda','plasmid_example_pETDuet_1.rda']]
+    files += inputs + [ROOT/'data'/n for n in ['seq_data_example.rda','gene_data_example.rda','ribbon_data_example.rda']] + list((ROOT/'data').glob('plasmid_example_*.rda'))
     files += [ROOT/p for p in ['DESCRIPTION','NAMESPACE','NEWS.md','README.md','README-Hans.md','MIGRATION.md','MIGRATION-Hans.md','_pkgdown.yml','.github/workflows/documentation.yaml']]
-    manifest=dict(version='0.16.5',api_candidate='0.16.4',generator='pkgdown + paired Markdown + shared static assets',
+    manifest=dict(version=re.search(r'^Version: (.+)$',(ROOT/'DESCRIPTION').read_text(),re.M)[1],api_candidate='0.16.4',generator='pkgdown + paired Markdown + shared static assets',
         commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
         dirty=bool(subprocess.check_output(['git','status','--porcelain'],cwd=ROOT,text=True)),
         deployment='prepared for authorized deployment; builder does not deploy' if args.publication else 'local preview; not deployed',

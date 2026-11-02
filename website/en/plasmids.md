@@ -3,9 +3,9 @@
 ## Prepare this page {#prepare}
 In a fresh R session, run the code below, then follow this page in order. Colours and layout are optional display choices; inputs select only the fields needed.
 
-{{prepare:featurepalette}}
+{{prepare:featurepalette,docstyle}}
 
-Run this page’s preparation code below. for the explicit palette first.
+The preparation above declares the palette and shared appearance.
 
 ## Use a source-backed sequence {#input}
 The bundled `plasmid_example_pUC19` is copied from the repository's original
@@ -85,4 +85,22 @@ Save the plot just created to the working directory; use matching dimensions for
 
 ```r
 ggsave("pUC19-map.png", p_plasmid, width = 10, height = 9, units = "in", dpi = 144)
+```
+
+## Complete example: a dense pETDuet-1 map {#complex}
+
+Use the pUC19 example above to learn the layers, then move to the richer pETDuet-1 map. Inputs come from the bundled sequence, feature and reference-primer catalogues. The restriction subset retains unique six-base-or-longer recognition sites from commercial_all; it is not every cut made by every enzyme.
+
+{{code:showcaseplasmiddata}}
+
+{{code:showcaseplasmid}}
+
+{{figure:showcaseplasmid}}
+
+Inputs contain 20 features, five reference primers and 58 grouped cut positions. The feature preset retains plum coding regions, mint resistance genes, yellow origins and blue regulatory features; primers are purple, consistently across this site. Dense labels depend on export size; open the full image to read them.
+
+The explicit viewport keeps the dense map at the documented export size. `label_fit = "shrink"` allows short-feature labels to fit down to 2.5 mm; labels that do not fit remain callouts. Preview and save at the same 16.5 × 8 in size.
+
+```r
+ggsave("pETDuet-1-map.png", p_show_plasmid, width = 16.5, height = 8, units = "in", dpi = 144)
 ```

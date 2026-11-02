@@ -37,6 +37,8 @@ PAF 的负相对方向表现为递减的 subject 端点，这是合法反向命�
 
 ## 可选的区间对象 {#ranges}
 {{code:optionalranges}}
+
+{{code:optionalinteractions}}
 {{results:optional}}
 
 这里选择 pUC19 中原本未知链的注释；转换后的 `*` 仍表示未知。

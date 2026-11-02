@@ -3,7 +3,7 @@
 ## 本页准备 {#prepare}
 在新的 R 会话中先运行下方代码，再按页面顺序继续。配色和排版是可选的显示设置，输入只选择需要的列。
 
-{{prepare:featurepalette}}
+{{prepare:featurepalette,docstyle}}
 
 其中定义了本例使用的配色。
 
@@ -75,4 +75,22 @@ v0.16.5 可能将请求内侧的标签移到外侧。外侧默认布局和原始
 
 ```r
 ggsave("pUC19-map.png", p_plasmid, width = 10, height = 9, units = "in", dpi = 144)
+```
+
+## 完整示例：pETDuet-1 密集质粒图 {#complex}
+
+先用上面的 pUC19 掌握图层，再用 pETDuet-1 展示复杂注释。以下来自随包真实序列、常见特征与参考引物表；酶切输入保留 commercial_all 中唯一的六碱基及以上识别位点，不把筛选后的图误称为全部酶的所有切点。
+
+{{code:showcaseplasmiddata}}
+
+{{code:showcaseplasmid}}
+
+{{figure:showcaseplasmid}}
+
+20 个特征、5 个参考引物、58 个合并切点构成输入。默认 feature 配色保留紫红编码区域、浅绿抗性基因、黄色复制起点和蓝色调控注释；引物为紫色，与本站其他图的相同语义保持一致。密集标签对尺寸敏感，下载原图或打开大图阅读。
+
+显式视野将密集图固定在文档给出的导出尺寸。`label_fit = "shrink"` 允许短特征文字缩至 2.5 mm；仍放不下的文字保留为外置标签。预览和保存应使用相同的 16.5 × 8 in 尺寸。
+
+```r
+ggsave("pETDuet-1-map.png", p_show_plasmid, width = 16.5, height = 8, units = "in", dpi = 144)
 ```

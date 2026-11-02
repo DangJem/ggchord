@@ -6,7 +6,13 @@
 # geom_gene(): gene arrow polygons
 # ---------------------------------------------------------------------------
 
-gene_geom <- rename_geom_aes(GeomChordFeatureBase, renames = c(fill = "gene_fill"))
+gene_geom <- ggplot2::ggproto(
+  "GeomChordGene", rename_geom_aes(GeomChordFeatureBase, renames = c(fill = "gene_fill")),
+  draw_key = function(data, params, size) {
+    data$fill <- data$gene_fill %||% data$fill
+    draw_key_gene_arrow(data, params, size)
+  }
+)
 
 #' Add a gene arrow layer
 #'

@@ -6,7 +6,7 @@ In a fresh R session, run the code below, then follow this page in order. Colour
 {{prepare:setup,sequencepalette,featurepalette,docstyle,plasmiddata}}
 
 ## Preserve feature semantics {#stack}
-Run this page’s preparation code below. and [circular example](modes.html#circular).
+The preparation above loads the actual pUC19 annotations; the [circular example](modes.html#circular) introduces their roles.
 This table retains actual overlapping pUC19 annotations and unknown strands. Geometry and fill map separately
 from the same category; an explicit fixed `shape` would override shape mapping.
 

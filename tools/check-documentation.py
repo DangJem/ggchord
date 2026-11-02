@@ -11,6 +11,11 @@ from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
 from documentation_lib import ROOT, WEB, PAGES, CAPTIONS, expand, snippets
+import importlib.util
+
+fingerprint_spec = importlib.util.spec_from_file_location('plot_fingerprints', ROOT/'tools/documentation-fingerprints.py')
+fingerprint_module = importlib.util.module_from_spec(fingerprint_spec)
+fingerprint_spec.loader.exec_module(fingerprint_module)
 
 class Document(HTMLParser):
     def __init__(self, path):
@@ -23,9 +28,17 @@ class Document(HTMLParser):
         self.main_text = []
         self._in_main = False
         self.lang = None
+        self.classes = set()
+        self.headings = []
+        self._heading = None
+        self._heading_parts = []
         self.feed(path.read_text())
     def handle_starttag(self, tag, attrs):
         a = dict(attrs)
+        self.classes.update(a.get('class','').split())
+        if tag in ['h1','h2','h3']:
+            self._heading = tag
+            self._heading_parts = []
         if tag == 'main': self._in_main = True
         if tag == 'pre': self._code_parts = []
         if 'id' in a: self.ids.append(a['id'])
@@ -35,9 +48,13 @@ class Document(HTMLParser):
                 if a.get(key): self.links.append(a[key])
         if tag == 'img': self.images.append(a)
     def handle_data(self, data):
+        if self._heading is not None: self._heading_parts.append(data)
         if self._in_main: self.main_text.append(data)
         if self._code_parts is not None: self._code_parts.append(data)
     def handle_endtag(self, tag):
+        if tag == self._heading:
+            self.headings.append(''.join(self._heading_parts).strip())
+            self._heading = None
         if tag == 'main': self._in_main = False
         if tag == 'pre' and self._code_parts is not None:
             self.codeblocks.append(''.join(self._code_parts))
@@ -52,6 +69,12 @@ def main():
         if not ok: errors.append(message)
     slugs = [p['slug'] for p in PAGES]
     require(len(slugs) == len(set(slugs)), 'Duplicate page slug')
+    navigation = json.loads((WEB/'navigation.json').read_text())
+    entries = [slug for group in navigation for slug in group['pages']]
+    require(set(entries) == set(slugs) and len(entries) == len(set(entries)),
+            'Site guide must cover every current page once')
+    require({'chord','collinear','plasmid'} <= {group['id'] for group in navigation},
+            'Missing visualization task module')
     def blocks(text):
         return re.findall(r'```[^\n]*\n(.*?)\n```', text, re.S)
     for p in PAGES:
@@ -72,11 +95,13 @@ def main():
     with (WEB/'assets/plots.csv').open() as f:
         assets = list(csv.DictReader(f))
     require({a['id'] for a in assets} == set(CAPTIONS), 'Figure manifest/captions mismatch')
+    current_fingerprints = fingerprint_module.fingerprints()
     for a in assets:
         path = ROOT/a['file']
         require(path.is_file(),f'Missing figure {path}')
         if path.is_file(): require(hashlib.md5(path.read_bytes()).hexdigest() == a['md5'],f'Figure hash mismatch: {path}')
-        require(a['code_md5'] == hashlib.md5((ROOT/'tools/documentation-examples.R').read_bytes()).hexdigest(), 'Shared plot code changed: regenerate documentation figures')
+        require(a.get('dependency_md5') == current_fingerprints['assets'].get(a['id']),
+                f'Plot dependencies changed: regenerate {a["id"]}')
         require(float(a['width'])>0 and float(a['height'])>0 and a['units']=='in' and a['device']=='png', f'Invalid figure dimensions: {a["id"]}')
     aliases = set()
     rd_topics = set()
@@ -92,7 +117,7 @@ def main():
                 split = urlsplit(url)
                 if split.scheme or split.netloc: continue
                 if split.path.startswith('reference/'):
-                    require(Path(split.path).stem in rd_topics, f'{lang}/{p["slug"]}: unknown help target {url}')
+                    require(split.path == 'reference/index.html' or Path(split.path).stem in rd_topics, f'{lang}/{p["slug"]}: unknown help target {url}')
                 elif split.path.endswith('.html'):
                     slug = Path(split.path).stem
                     require(slug in targets,f'{lang}/{p["slug"]}: unknown topic {url}')
@@ -156,6 +181,13 @@ def main():
                 if Path(rel).name!='reference.html':
                     require('main' in doc.ids,f'{rel}: missing skip target')
                     require('site-language' in doc.ids and 'site-search' in doc.ids,f'{rel}: missing language/search navigation')
+                    require({'chapter-nav','chapter-drawer','language-control'} <= doc.classes,
+                            f'{rel}: missing site guide or language dropdown')
+                    if Path(rel).parent == Path('zh/reference'):
+                        for heading in doc.headings:
+                            if heading in aliases: continue
+                            require(not re.search('[A-Za-z]{3}',heading) or bool(re.search('[\u3400-\u9fff]',heading)),
+                                    f'{rel}: untranslated reference heading {heading}')
             for img in doc.images:
                 require('alt' in img,f'{rel}: image missing alt')
                 if Path(urlsplit(img.get('src','')).path).stem in CAPTIONS:

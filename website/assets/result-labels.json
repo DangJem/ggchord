@@ -114,5 +114,49 @@
   "ranges": {
     "en": "Optional interval adapter",
     "zh": "可选区间对象适配器"
+  },
+  "CDS": {
+    "en": "Source CDS",
+    "zh": "原始CDS数"
+  },
+  "observed_HSPs": {
+    "en": "Observed HSPs",
+    "zh": "原始HSP数"
+  },
+  "displayed_HSPs": {
+    "en": "Chord HSPs",
+    "zh": "弦图显示HSP数"
+  },
+  "selected_labels": {
+    "en": "Chord label candidates",
+    "zh": "弦图标签数"
+  },
+  "displayed_CDS": {
+    "en": "Chord displayed CDS",
+    "zh": "弦图显示CDS数"
+  },
+  "collinear_CDS": {
+    "en": "Collinear displayed CDS",
+    "zh": "共线性显示CDS数"
+  },
+  "collinear_HSPs": {
+    "en": "Collinear displayed HSPs",
+    "zh": "共线性显示HSP数"
+  },
+  "plasmid_features": {
+    "en": "pETDuet-1 features",
+    "zh": "pETDuet-1特征数"
+  },
+  "plasmid_primers": {
+    "en": "pETDuet-1 reference primers",
+    "zh": "pETDuet-1参考引物数"
+  },
+  "plasmid_cut_positions": {
+    "en": "pETDuet-1 cut positions",
+    "zh": "pETDuet-1合并切点数"
+  },
+  "interactions": {
+    "en": "Optional GInteractions adapter",
+    "zh": "可选GInteractions适配器"
   }
 }

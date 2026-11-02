@@ -46,8 +46,25 @@ def expand(text, lang, *, figures='assets', reference=''):
         f'<section class="mode-card"><h3 id="preview-{k}">{html.escape(CAPTIONS[k][lang])}</h3>'
         f'<img src="{figures}/{k}.png" alt="{html.escape(CAPTIONS[k][lang])}" loading="lazy">'
         f'<a href="modes.html#{k}">{"Code" if lang == "en" else "代码"}</a></section>'
-        for k in ['chord','circular','collinear'])+'</div>'
+        for k in ['chord','collinear','circular'])+'</div>'
     text = text.replace('{{modes}}', modes)
+    showcase_specs = [
+        ('showcasechord','chord-data','Chord comparisons','多序列弦图'),
+        ('showcasecollinear','collinear-data','Collinear comparisons','共线性图'),
+        ('showcaseplasmid','plasmid-data','Plasmid maps','质粒图')]
+    overview = '<div class="showcase-overview">' + ''.join(
+        f'<section class="showcase-card"><a href="{page}.html">'
+        f'<img src="{figures}/{key}.png" alt="{html.escape(CAPTIONS[key][lang])}" '
+        f'width="{dimensions[key][0]}" height="{dimensions[key][1]}">'
+        f'<strong>{title_en if lang=="en" else title_zh} →</strong></a></section>'
+        for key,page,title_en,title_zh in showcase_specs)+'</div>'
+    text = text.replace('{{showcases}}', overview)
+    if '{{plasmidcatalog}}' in text:
+        with (WEB/'assets/plasmid-catalog.csv').open() as source:
+            catalog = list(csv.DictReader(source))
+        text = text.replace('{{plasmidcatalog}}', table(
+            ['Reference', 'Length (bp)', 'Features'] if lang == 'en' else ['参考序列', '长度（bp）', '识别特征数'],
+            [[f'[{row["accver"]}](#{row["figure"]})', row['length'], row['features']] for row in catalog]))
     migration = json.loads((WEB / 'migrations.json').read_text())
     rows = [[f'`{r[0]}`', f'`{r[1]}`', r[2], r[3 if lang == 'en' else 4]] for r in migration]
     text = text.replace('{{migration}}', table(
@@ -56,13 +73,18 @@ def expand(text, lang, *, figures='assets', reference=''):
     text = text.replace('{{terms}}', table(['English', '现代汉语', 'API / units'],
         json.loads((WEB / 'terms.json').read_text())))
     gallery = []
-    destinations={'chord':'modes#chord','circular':'modes#circular','collinear':'modes#collinear',
+    destinations={'showcasechord':'chord#compose','showcasecollinear':'collinear#compose','showcaseplasmid':'plasmids#complex','chord':'modes#chord','circular':'modes#circular','collinear':'modes#collinear',
         'first':'installation#first-plot','realchord':'real-data#chord','reallinear':'real-data#linear',
         'plasmid':'plasmids#input','homologs':'homology#membership','tracks':'tracks#domain',
         'multitrack':'tracks#multiple','density':'ribbons#density','pointlinks':'ribbons#points',
         'featurestack':'annotations#stack','decorations':'annotations#decoration','focus':'views#focus',
         'labels':'labels#layout','labelauto':'labels#comparison','labelradial':'labels#comparison',
         'labelarc':'labels#comparison','styling':'styling#roles','paf':'formats#zero-based'}
+    destinations.update(dict(zip(
+        ['learnseq','learnlinks','learngenes','learnlabels','linearseq','linearlinks','linearlabels','plasmidbackbone','plasmidfeatures','plasmidtext'],
+        ['chord-build#backbones','chord-build#links','chord-build#genes','chord-build#labels','collinear-build#backbones','collinear-build#links','collinear-build#labels','plasmid-build#backbone','plasmid-build#features','plasmid-build#labels'])))
+    for key in CAPTIONS:
+        if key.startswith('catalog'): destinations[key] = 'plasmid-catalog#'+key
     for asset in assets:
         key = asset['id']
         page,anchor=destinations[key].split('#')
@@ -80,8 +102,14 @@ def expand(text, lang, *, figures='assets', reference=''):
             [[result_labels.get(k,{}).get(lang,k), ('依赖未安装，已跳过' if lang=='zh' and isinstance(v,str) and v.startswith('SKIP:') else v)] for k,v in results[m[1]].items()]),text)
     coverage=json.loads((WEB/'coverage.json').read_text())
     titles={p['slug']:p['title'][lang] for p in PAGES}
-    article_slugs=['real-data','plasmids','modes','data','formats','alignments','parameters','ribbons','annotations','labels','tracks','homology','projection','views','styling','adjustments','output','migration','faq']
-    text=text.replace('{{articles}}','\n'.join(f'- [{titles[k]}]({k}.html)' for k in article_slugs))
+    navigation=json.loads((WEB/'navigation.json').read_text())
+    article_groups=[]
+    for group in navigation:
+        entries=[slug for slug in group['pages'] if slug not in ['index','articles','reference','news']]
+        if entries:
+            article_groups.append('### '+group['title'][lang]+' {#path-'+group['id']+'}\n\n'+
+                '\n'.join(f'- [{titles[k]}]({k}.html)' for k in entries))
+    text=text.replace('{{articles}}','\n\n'.join(article_groups))
     text=text.replace('{{coverage}}',table(
         ['Capability','Read','Executable source / output'] if lang=='en' else ['功能','使用教程','代码与结果'],
         [[c['title'][lang],', '.join(f'[{titles[k]}]({k}.html)' for k in c['articles']),

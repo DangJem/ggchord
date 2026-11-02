@@ -82,5 +82,109 @@
   "first": {
     "zh": "第一张图：两条真实随包序列、基因箭头及已有比对区间",
     "en": "Your first plot: two bundled sequences, gene arrows and observed alignment intervals"
+  },
+  "showcasechord": {
+    "en": "Four-genome chord comparison with mixed backbone curvature and measured identity",
+    "zh": "四基因组弦图：混合骨架曲率与实测相似度"
+  },
+  "showcaseplasmid": {
+    "en": "Dense pETDuet-1 map: features, reference primers and grouped restriction sites",
+    "zh": "pETDuet-1密集质粒图：特征、参考引物与合并酶切位点"
+  },
+  "showcasecollinear": {
+    "zh": "四基因组共线性图：分链特征与绕行的跨行连接",
+    "en": "Four-genome collinearity: strand-separated features and routed cross-row links"
+  },
+  "learnseq": {
+    "zh": "弦图第一步：序列骨架",
+    "en": "Chord step1: sequence backbones"
+  },
+  "learnlinks": {
+    "zh": "弦图第二步：已有比对",
+    "en": "Chord step2: observed comparisons"
+  },
+  "learngenes": {
+    "zh": "弦图第三步：精选基因",
+    "en": "Chord step3: selected genes"
+  },
+  "learnlabels": {
+    "zh": "弦图第四步：逐一添加标签",
+    "en": "Chord step4: labels for selected features"
+  },
+  "linearseq": {
+    "zh": "相同骨架，仅替换坐标系",
+    "en": "The same backbones with linear coordinates"
+  },
+  "linearlinks": {
+    "zh": "相同连接，仅替换坐标系",
+    "en": "The same observed links with linear coordinates"
+  },
+  "linearlabels": {
+    "zh": "相同基因与标签，仅替换坐标系",
+    "en": "The same genes and labels with linear coordinates"
+  },
+  "plasmidbackbone": {
+    "zh": "pUC19第一步：双线骨架",
+    "en": "pUC19 step1: double backbone"
+  },
+  "plasmidfeatures": {
+    "zh": "pUC19第二步：特征",
+    "en": "pUC19 step2: features"
+  },
+  "plasmidtext": {
+    "zh": "pUC19第三步：标签",
+    "en": "pUC19 step3: labels"
+  },
+  "catalogpsb": {
+    "zh": "pSB1C3：参考特征图",
+    "en": "pSB1C3: source-backed feature map"
+  },
+  "catalogpuc": {
+    "zh": "pUC19：参考特征图",
+    "en": "pUC19: source-backed feature map"
+  },
+  "catalogpbr": {
+    "zh": "pBR322：参考特征图",
+    "en": "pBR322: source-backed feature map"
+  },
+  "catalogblue": {
+    "zh": "pBluescript II SK(+)：参考特征图",
+    "en": "pBluescript II SK(+): source-backed feature map"
+  },
+  "catalogpet": {
+    "zh": "pET-28a(+)：参考特征图",
+    "en": "pET-28a(+): source-backed feature map"
+  },
+  "catalogduet": {
+    "zh": "pETDuet-1：参考特征图",
+    "en": "pETDuet-1: source-backed feature map"
+  },
+  "catalogdonr": {
+    "zh": "pDONR221：参考特征图",
+    "en": "pDONR221: source-backed feature map"
+  },
+  "catalogpcdna": {
+    "zh": "pcDNA3.1(+)：参考特征图",
+    "en": "pcDNA3.1(+): source-backed feature map"
+  },
+  "catalogtre": {
+    "zh": "pTRE-Tight-BI：参考特征图",
+    "en": "pTRE-Tight-BI: source-backed feature map"
+  },
+  "catalogtripz": {
+    "zh": "pTRIPZ：参考特征图",
+    "en": "pTRIPZ: source-backed feature map"
+  },
+  "catalogcambia": {
+    "zh": "pCAMBIA1300：参考特征图",
+    "en": "pCAMBIA1300: source-backed feature map"
+  },
+  "catalogearley": {
+    "zh": "pEarleyGate 201：参考特征图",
+    "en": "pEarleyGate 201: source-backed feature map"
+  },
+  "catalogcas": {
+    "zh": "pSpCas9(BB)-2A-GFP (PX458)：参考特征图",
+    "en": "pSpCas9(BB)-2A-GFP (PX458): source-backed feature map"
   }
 }

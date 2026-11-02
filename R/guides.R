@@ -198,6 +198,10 @@ ggchord_role_guide_spec <- function(plot, role, colourbar = FALSE) {
       !is.null(plot_text@size) && !inherits(plot_text@size, "rel")) raw_text <- plot_text
   if (is.null(raw_title) && inherits(plot_title, "element_text") &&
       !is.null(plot_title@size) && !inherits(plot_title@size, "rel")) raw_title <- plot_title
+  # A concrete plot theme must reach the guide, whose compact defaults would
+  # otherwise override it after responsive sizing has correctly been skipped.
+  if (!is.null(raw_text)) vals$legend.text <- raw_text
+  if (!is.null(raw_title)) vals$legend.title <- raw_title
   responsive_text <- is.null(raw_text) ||
     (inherits(raw_text, "element_text") &&
        !is.null(raw_text@size) && inherits(raw_text@size, "rel"))

@@ -1,4 +1,17 @@
 {
+  "showcase": {
+    "sequences": 4,
+    "CDS": 266,
+    "observed_HSPs": 32,
+    "displayed_HSPs": 12,
+    "selected_labels": 18,
+    "displayed_CDS": 18,
+    "collinear_HSPs": 10,
+    "collinear_CDS": 16,
+    "plasmid_features": 20,
+    "plasmid_primers": 5,
+    "plasmid_cut_positions": 58
+  },
   "real": {
     "sequences": 4,
     "features": 266,
@@ -43,6 +56,7 @@
   },
   "optional": {
     "genbank": "SKIP: Biopython unavailable",
-    "ranges": "SKIP: GenomicRanges unavailable"
+    "ranges": "SKIP: GenomicRanges unavailable",
+    "interactions": "SKIP: InteractionSet or GenomicRanges unavailable"
   }
 }

@@ -21,6 +21,15 @@ for(lang in c('en','zh')) {
   xml2::xml_set_attr(xml2::xml_find_first(doc,'//html'),'lang',if(lang=='zh')'zh-Hans' else 'en')
   og<-xml2::xml_find_first(doc,'//meta[@property="og:image"]')
   if(!inherits(og,'xml_missing')) xml2::xml_set_attr(og,'content','https://dangjem.github.io/ggchord/assets/logo.png')
+  # Native dropdown IDs derive from translated text; keep paired URLs/ARIA stable.
+  for(menu in xml2::xml_find_all(doc,'//*[@data-bs-toggle="dropdown"]')) {
+    if(!trimws(xml2::xml_text(menu)) %in% c('可视化','Visualizations')) next
+    old_id <- xml2::xml_attr(menu,'id')
+    xml2::xml_set_attr(menu,'id','site-visualizations')
+    labelled <- xml2::xml_find_all(doc,'//*[@aria-labelledby]')
+    for(node in labelled) if(identical(xml2::xml_attr(node,'aria-labelledby'),old_id))
+      xml2::xml_set_attr(node,'aria-labelledby','site-visualizations')
+  }
   main<-xml2::xml_find_first(doc,'//main')
   xml2::xml_set_attr(main,'tabindex','-1')
   slug <- sub('\\.html$','',basename(relative))
@@ -32,24 +41,26 @@ for(lang in c('en','zh')) {
     links <- paste(vapply(group$pages,function(key) {
       page <- Filter(function(x) identical(x$slug,key),page_index)[[1]]
       target <- if(key=='reference') 'reference/index.html' else paste0(key,'.html')
-      active <- key==slug || (key=='reference' && startsWith(relative,'reference/'))
+      active <- if(startsWith(relative,'reference/')) key=='reference' else key==slug
       paste0('<a ',if(active)'aria-current="page" ' else '', 'href="',prefix,target,'">',
-        htmltools::htmlEscape(page$title[[lang]]),'</a>')
+        htmltools::htmlEscape(if(key=='index') {if(lang=='zh')'首页' else 'Home'} else page$title[[lang]]),'</a>')
     },''),collapse='')
     paste0('<section><p class="chapter-group">',group$title[[lang]],'</p>',links,'</section>')
   },''),collapse='')
   nav_fragment <- function(html) xml2::xml_find_first(xml2::read_html(paste0('<html><body>',html,'</body></html>')),'//body/*')
   xml2::xml_add_sibling(main,nav_fragment(paste0('<nav class="chapter-nav" aria-label="',
-    if(lang=='zh')'文档章节' else 'Documentation chapters','">',chapter_links,'</nav>')),.where='before')
+    if(lang=='zh')'全站目录' else 'Site guide','"><p class="navigation-title">',if(lang=='zh')'全站目录' else 'Site guide','</p>',chapter_links,'</nav>')),.where='before')
   xml2::xml_add_child(main,nav_fragment(paste0('<details class="chapter-drawer"><summary>',
-    if(lang=='zh')'浏览文档' else 'Browse documentation','</summary><nav>',chapter_links,'</nav></details>')),.where=0L)
+    if(lang=='zh')'全站目录 · 按任务查找' else 'Site guide · find your task','</summary><nav>',chapter_links,'</nav></details>')),.where=0L)
   if(lang=='zh') {
    # Finalize native interface prose independently of runner gettext locales.
    ui <- c('Skip to contents'='跳到正文','Site navigation'='网站导航',
      'Toggle navigation'='展开导航','Light'='浅色','Dark'='深色','Auto'='自动',
      'On this page'='本页目录','Usage'='用法','Arguments'='参数',
      'Value'='返回值','Details'='详细说明','Examples'='示例','See also'='另见',
-     'Format'='格式','Source'='来源','References'='参考资料','Author'='作者')
+     'Format'='格式','Source'='来源','References'='参考资料','Author'='作者',
+     'Note'='说明','Notes'='说明','Package index'='函数文档','包索引'='函数文档',
+     'Authors and Citation'='作者与引用','Citation'='引用','Contents'='目录')
    for(node in xml2::xml_find_all(doc,'//text()[not(ancestor::pre or ancestor::script or ancestor::style)]')) {
     value <- trimws(xml2::xml_text(node))
     if(value %in% names(ui)) xml2::xml_set_text(node,ui[[value]])
@@ -81,6 +92,15 @@ for(lang in c('en','zh')) {
     xml2::xml_add_sibling(xml2::xml_find_first(main,'.//h1'),toc_fragment,.where='after')
   }
 
+  native_sidebar <- xml2::xml_find_all(layout,'./aside')
+  xml2::xml_remove(native_sidebar)
+  if(length(outline_headings)) {
+    page_nav <- nav_fragment(paste0('<aside class="page-nav" aria-label="',
+      if(lang=='zh')'本页目录' else 'On this page','"><p class="navigation-title">',
+      if(lang=='zh')'本页目录' else 'On this page','</p><nav><ul>',outline_links,'</ul></nav></aside>'))
+    xml2::xml_add_sibling(main,page_nav,.where='before')
+  }
+
   for(logo in xml2::xml_find_all(main,'.//img[@src]')) {
    if(grepl('(^|/)logo\\.(svg|png)$',xml2::xml_attr(logo,'src'))) {
     xml2::xml_set_attr(logo,'src',paste0(base,'logo.webp'))
@@ -95,8 +115,16 @@ for(lang in c('en','zh')) {
   xml2::xml_add_child(head,fragment(paste0('<link rel="stylesheet" href="',base,'site.css?v=',unname(tools::md5sum('website/assets/site.css')),'">')))
   xml2::xml_add_child(head,fragment(paste0('<script src="',base,'site.js?v=',unname(tools::md5sum('website/assets/site.js')),'" defer></script>')))
   toggle<-xml2::xml_find_first(doc,'//button[contains(@class,"navbar-toggler")]')
-  language<-fragment(paste0('<a id="site-language" class="language-control" href="',partner,
-   '" lang="',if(lang=='en')'zh-Hans' else 'en','">',if(lang=='en')'现代汉语' else 'English','</a>'))
+  language<-fragment(paste0('<details class="language-control"><summary><span aria-hidden="true">🌐</span> ',
+   if(lang=='zh')'现代汉语' else 'English',' <span aria-hidden="true">▾</span></summary>',
+   '<nav aria-label="',if(lang=='zh')'选择语言' else 'Choose language','">',
+   '<a ',if(lang=='en')'aria-current="true" ' else '', 'href="',if(lang=='en') '' else partner,
+   '" lang="en" data-language="en">English</a>',
+   '<a ',if(lang=='zh')'aria-current="true" ' else '', 'href="',if(lang=='zh') '' else partner,
+   '" lang="zh-Hans" data-language="zh" ',if(lang=='en')'id="site-language"' else '',
+   '>现代汉语</a></nav></details>'))
+  # Keep one stable identifier for the other-language link on every page.
+  if(lang=='zh') xml2::xml_set_attr(xml2::xml_find_first(language,'.//a[@lang="en"]'),'id','site-language')
   xml2::xml_add_sibling(toggle,language,.where='before')
   target<-xml2::xml_find_first(doc,'(//div[@id="navbar"]/ul[contains(@class,"navbar-nav")])[last()]')
   label<-if(lang=='zh')'搜索文档' else 'Search documentation'
@@ -107,7 +135,7 @@ for(lang in c('en','zh')) {
   body<-xml2::xml_find_first(doc,'//body')
   xml2::xml_set_attr(body,'data-lang',lang)
   xml2::xml_set_attr(body,'data-search',paste0(paste(rep('../',deep),collapse=''),'search.json'))
-  notice<-if(lang=='zh') '0.16.5 文档' else '0.16.5 documentation'
+  notice<-if(lang=='zh') '0.16.6 开发版文档' else '0.16.6 development documentation'
   if(!publication) notice<-paste(notice,if(lang=='zh')'· 本地预览，尚未部署' else '· local preview, not deployed')
   xml2::xml_add_child(main,fragment(paste0('<div class="candidate-note">',notice,'</div>')),.where=0L)
   if(startsWith(relative,'reference/')) {

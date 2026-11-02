@@ -1,57 +1,93 @@
 [
   {
+    "id": "start",
     "title": {
-      "zh": "从这里开始",
-      "en": "Start here"
+      "zh": "安装与学习路线",
+      "en": "Setup and learning paths"
     },
     "pages": [
+      "index",
       "installation",
-      "modes",
-      "data"
+      "modes"
     ]
   },
   {
+    "id": "chord",
     "title": {
-      "zh": "完整工作流",
-      "en": "Workflows"
+      "zh": "模块一『弦图』部分",
+      "en": "Module I · Chord"
     },
     "pages": [
+      "chord-data",
+      "chord-import",
+      "chord-build",
+      "chord-tuning",
+      "ribbons",
       "real-data",
-      "plasmids",
-      "homology",
-      "tracks"
+      "chord"
     ]
   },
   {
+    "id": "collinear",
     "title": {
-      "zh": "解决具体问题",
-      "en": "How-to guides"
+      "zh": "模块二『共线性图』部分",
+      "en": "Module II · Collinear"
     },
     "pages": [
+      "collinear-data",
+      "collinear-build",
+      "collinear-routing",
+      "homology",
+      "views",
+      "collinear"
+    ]
+  },
+  {
+    "id": "plasmid",
+    "title": {
+      "zh": "模块三『质粒图』部分",
+      "en": "Module III · Plasmid"
+    },
+    "pages": [
+      "plasmid-data",
+      "plasmid-build",
+      "recognition",
+      "plasmid-catalog",
+      "plasmids"
+    ]
+  },
+  {
+    "id": "shared",
+    "title": {
+      "zh": "按需查阅：数据与图层",
+      "en": "Consult as needed · Data and layers"
+    },
+    "pages": [
+      "data",
       "formats",
       "alignments",
+      "projection",
       "annotations",
       "labels",
-      "views",
-      "ribbons",
+      "tracks",
       "styling",
-      "adjustments",
       "parameters",
-      "projection",
-      "recognition",
+      "adjustments",
       "output"
     ]
   },
   {
+    "id": "reference",
     "title": {
-      "zh": "查阅与维护",
-      "en": "Reference and updates"
+      "zh": "学习地图与函数查阅",
+      "en": "Learning map and reference"
     },
     "pages": [
+      "articles",
       "reference",
       "gallery",
-      "migration",
       "faq",
+      "migration",
       "glossary",
       "news"
     ]
