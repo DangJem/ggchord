@@ -1,7 +1,0 @@
-case,input_source,device,status,md5,geometry_evidence
-circular,tools/rc-fixtures.R; bundled source-backed data,PNG 9x8in 120dpi sans,REVIEWED_FINITE,ff3f2dbb578277433cef8f78e5f23c0d,rc-behavior circular; no leader crossings at PDF metric size
-inside,tools/rc-fixtures.R; bundled source-backed data,PNG 9x8in 120dpi sans,RENDERED_SIDE_CONTENT; VISUAL_LIMITATION_RC-R04,e327024841339213518aead356c19107,rc-behavior circular and rc-regressions; not zero text-feature overlap
-dense,tools/rc-fixtures.R; bundled source-backed data,PNG 9x8in 120dpi sans,NOT_RUN_VISUAL,,opt-in <=40 nonredundant true unique cuts; not rendered
-chord,tools/rc-fixtures.R; bundled source-backed data,PNG 9x8in 120dpi sans,NOT_RUN_VISUAL,,rc-behavior layers; visual scene not rendered
-collinear,tools/rc-fixtures.R; bundled source-backed data,PNG 9x8in 120dpi sans,NOT_RUN_VISUAL,,rc-behavior linear; visual scene not rendered
-track,tools/rc-fixtures.R; bundled source-backed data,PNG 9x8in 120dpi sans,NOT_RUN_VISUAL,,"rc-behavior output; diagnostics/preview, separate scene not rendered"
