@@ -12,7 +12,6 @@ Backbones do not require DNA. Prefer search-result tables for the latter layers 
 
 ## Inspect bundled real records {#inspect}
 ```r
-library(ggchord)
 library(dplyr)
 plasmid_example_pUC19 |> select(accver, length)
 find_common_features(plasmid_example_pUC19) |> select(accver, start, end, strand, type, anno) |> slice_head(n = 5)
@@ -24,4 +23,5 @@ The compact names retain ggchord's early BLAST workflow history. accver need not
 `read_fasta_lengths()` reads IDs and full lengths only. Searches additionally need actual DNA, for example read with optional Biostrings `readDNAStringSet()` and `as.character()`, retaining matching IDs. GFF3/BED/GenBank or GRanges annotations follow the [format guide](formats.html), retaining provenance. Handle circular-origin and segmented records according to the reader contract; do not invent one continuous interval by merging every segment.
 
 ## A progressive case sequence {#path}
-[3.2](plasmid-build.html) builds pUC19 layer by layer; [3.3](recognition.html) explains recognition, primers and restriction sites; [3.4](plasmid-catalog.html) uses all 13 unique repository plasmids; [3.5](plasmids.html#complex) completes the dense pETDuet-1 map. pUC19c is a compatibility alias, not a 14th case.
+
+Build pUC19 step by step in the [layer lesson](plasmid-build.html), then complete the [pUC19 and pETDuet-1 cases](plasmids.html). Consult [search assumptions](recognition.html) and the [13 reference maps](plasmid-catalog.html) as needed. The bundled pUC19c alias refers to the same example.

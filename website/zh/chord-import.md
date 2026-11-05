@@ -1,40 +1,37 @@
-先有序列与分析结果，再由ggchord读取；没有比对表时不应为了连线伪造同源关系。
+解压[教学输入包](../assets/tutorial-inputs.zip)，使工作目录包含 `examples/`。每次先读一种文件并检查返回的几行，再按序列 ID 对齐输入。
 
-## 从FASTA与GFF3开始 {#files}
-解压[教学输入包](../assets/tutorial-inputs.zip)，使当前目录包含 `examples/`。FASTA提供完整长度，GFF3提供区间和链；保留原始记录，在显示表中选择必要字段。
+## FASTA 长度与 GFF3 注释 {#files}
 
-{{prepare:sequencepalette,docstyle}}
-{{code:showcasedata}}
+{{code:frontimportseq}}
 
-`show_alignments` 保留32条原始HSP，`show_links` 明确筛为12条；`show_genes` 保留全部266条CDS，`show_features` 按长度至少500 bp、序列内注释顺序分四组各选一个，并补充有来源的负链首尾注释用于展示。筛选不是重跑比对，也不证明功能同源。
+{{output:frontimportseq}}
 
-坐标排查时可用tidyr将四个端点列转成长表，原始连接表保持原样：
+FASTA 给出完整长度。GFF3 返回区间、类型和原始链，绘图前可按需保留 CDS。
 
-{{code:inspectends}}
+{{code:frontimportgff}}
 
-## 用BLAST产生自己的结果 {#blast}
-以下命令是分析者在安装BLAST后对自己的文件执行的生产步骤，网站构建不运行它们。
+{{output:frontimportgff}}
 
-```sh
-blastn -query query.fna -subject subject.fna -outfmt 6 -out result.tsv
-```
+## 读取 BLAST 表 {#blast}
 
-```r
-library(ggchord)
-blast_source <- read_blast(file = "result.tsv")
-```
+{{code:frontimportblast}}
 
-无自定义字段列表的 `-outfmt 6` 为标准12列表，7另带注释；完全不写outfmt是其他格式。query/subject ID由读取器映射到qaccver/saccver。参见[NCBI字段说明](https://www.ncbi.nlm.nih.gov/sites/books/NBK279684/table/appendices.T.options_common_to_all_blast/)和[核酸/蛋白比对教程](alignments.html)。随站历史HSP只是格式转换，没有冒充本轮新BLAST结果。
+{{output:frontimportblast}}
 
-## 已有其他格式时 {#alternatives}
-| 来源 | 入口 | 注意 |
-| --- | --- | --- |
-| 已读表格 | as_ggchord_seq/feature/link | 显式mapping映射角色，保留原表 |
-| BED、PAF | read_bed、read_paf | 读取器只转换一次零基半开坐标 |
-| GenBank | read_genbank | 需要可用Biopython；保留记录与分段来源 |
-| GRanges、Seqinfo | as_ggchord_feature、as_ggchord_seq | 完整长度来自Seqinfo，未知链不转成正链 |
-| GInteractions | as_ggchord_link、as_ggchord_seq | 第一锚点为query；仍需可靠完整长度 |
+每一行是一对区间。保留两端坐标顺序，核对两列序列 ID 能在 FASTA 中找到。如何生成标准 BLAST 文件见[比对输入](alignments.html)。
 
-这些适配器对应[用户issue #2](https://github.com/DangJem/ggchord/issues/2)提出的需求。当前代码已有入口；issue中的历史“开发版未经测试”不等于现阶段所有组合均已验证。本地缺失可选包的路径会明确跳过。[格式专题](formats.html#ranges)给出可选对象的完整代码和限制。
+## 直接转换 Bioconductor 对象 {#alternatives}
 
-继续：[1.3 从骨架逐层画起](chord-build.html)。
+已安装 GenomicRanges 时，可从一条区间转换成特征表。已知完整长度写在 `seqlengths` 中，可另用 `as_ggchord_seq(gr)` 提取。
+
+{{code:frontimportgr}}
+
+{{output:frontimportgr}}
+
+GInteractions 的第一端是 query，第二端是 subject。下面的最小输入用两个区间构成一条连接。此示例另需 InteractionSet。
+
+{{code:frontimportgi}}
+
+{{output:frontimportgi}}
+
+其他输入对象见[导入与转换](formats.html#ranges)。用转换后的表[添加图层](chord-build.html)。

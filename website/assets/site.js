@@ -187,3 +187,17 @@
   }, {rootMargin: '-100px 0px -60% 0px'});
   targets.forEach(target => observer.observe(target));
 })();
+
+/* Old section links can land inside a collapsed optional case. */
+(() => {
+  function openLinkedCase() {
+    const target = document.getElementById(location.hash.slice(1));
+    const section = target?.closest('details.lesson-extension');
+    if (section && !section.open) {
+      section.open = true;
+      target.scrollIntoView();
+    }
+  }
+  openLinkedCase();
+  window.addEventListener('hashchange', openLinkedCase);
+})();

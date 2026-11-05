@@ -7,7 +7,12 @@ inst/doc
 R/.Rhistory
 /.Rhistory
 /tests/testthat/Rplots.pdf
-/examples/rebase/misc.zip
+/Rplots.pdf
+# Local source files for third-party catalogues and visual comparison
+/examples/rebase/
+/examples/plasmid/*.dna
+/examples/plasmid/*.png
+/examples/standardCommonFeatures_*_tables.xlsx
 /*.tar.gz
 /*.Rcheck/
 

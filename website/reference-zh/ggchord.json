@@ -1,8 +1,8 @@
 {
-  "source_sha256": "b7bae6450363905f9266f86859068de58e646dc333ed9c7ec3d8089eb4ce7ada",
+  "source_sha256": "61b7031dea5215bedda701521b021e0df717a8f6e5ce3f0ca20c675984dc86a1",
   "translations": {
     "0": "用图层组合弦图、圆图和共线性图",
-    "1": "含 accver 和 length 的 data.frame/tibble，或已知完整序列长度的 ⟦0⟧、⟦1⟧、⟦2⟧ 对象，或已命名的核苷酸 Biostrings ⟦3⟧。未命名序列须先通过 ⟦4⟧ 显式提供 ⟦5⟧。可选 S4 输入使用 ⟦6⟧。若存在 ⟦7⟧，其值必须为 ⟦8⟧；氨基酸区间须显式投影到 CDS，任意字符宽度不等于 bp 长度。",
+    "1": "含 accver 和 length 的 data.frame/tibble，或已知完整长度的 ⟦0⟧、⟦1⟧、⟦2⟧，或已命名的核酸或蛋白 Biostrings ⟦3⟧。未命名序列先通过 ⟦4⟧ 显式提供 ⟦5⟧。可选 S4 输入经 ⟦6⟧ 适配。⟦7⟧ 为 ⟦8⟧（省略时的默认值）或 ⟦9⟧，同一图使用一个单位。蛋白长度来自完整序列。aa 图接受连接和通用特征；基因、引物及酶切图层需要 bp。任意字符宽度不等于生物序列长度。",
     "2": "可选比对表，包含 qaccver、saccver、qstart、qend、sstart 和 send。只有映射、筛选或统计需要时，才要求 length 和 pident。⟦0⟧ 通过 ⟦1⟧ 转换，不编造相似度或比对长度。",
     "3": "可选基因表，包含 accver、start、end 和 strand；可省略注释 anno。接受有方向的 ⟦0⟧；未知链区间请使用 ⟦1⟧。",
     "4": "逻辑值，是否输出调试信息，默认 FALSE。",

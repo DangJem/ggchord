@@ -44,10 +44,11 @@ Set names are identifiers; unnamed sequences require explicit \code{ids}.
 Explicit IDs must agree with existing nonempty names, so identifiers and
 accession versions are never silently rewritten. \code{sequence_unit} records
 \code{"bp"}, \code{"aa"}, or \code{"character"}; amino-acid widths are not nucleotide
-coordinates. These non-nucleotide tables remain available for data workflows,
-but \code{ggchord()} rejects them as genomic sequence input. Project amino-acid
-intervals with \code{\link[=build_ggchord_cds]{build_ggchord_cds()}} and \code{\link[=project_ggchord_features]{project_ggchord_features()}} or
-\code{\link[=project_ggchord_links]{project_ggchord_links()}} before using known nucleotide sequence lengths.
+coordinates. AAString inputs can be plotted directly in native aa coordinates.
+Arbitrary character widths remain available for data workflows but are not
+accepted by \code{ggchord()}. To display protein intervals on a nucleotide
+genome instead, use \code{\link[=build_ggchord_cds]{build_ggchord_cds()}} and \code{\link[=project_ggchord_features]{project_ggchord_features()}} or
+\code{\link[=project_ggchord_links]{project_ggchord_links()}} with known nucleotide sequence lengths.
 Empty sequences are rejected like other zero lengths.
 }
 \examples{

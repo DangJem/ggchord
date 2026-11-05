@@ -103,12 +103,11 @@ if (available[["Biostrings"]]) {
     characters$sequence_unit == "character", characters$length == 4)
   conflict <- tryCatch(as_ggchord_seq(dna, ids = c("renamed", "B")), error = identity)
   stopifnot(inherits(conflict, "error"))
-  protein_plot <- tryCatch(ggchord(protein), error = identity)
+  protein_plot <- ggchord(protein) + geom_seq() + coord_collinear()
   character_plot <- tryCatch(ggchord(characters), error = identity)
-  stopifnot(inherits(protein_plot, "error"),
-    grepl("project_ggchord_features", conditionMessage(protein_plot)),
+  stopifnot(get_chord_layout(protein_plot)$sequence_unit == "aa",
     inherits(character_plot, "error"),
-    grepl("known nucleotide lengths", conditionMessage(character_plot)))
+    grepl("sequence_unit", conditionMessage(character_plot)))
   direct <- ggchord(dna) + geom_seq() + geom_seq_label() + coord_collinear()
   stopifnot(nrow(export_ggchord_layout(direct, include = "seq")$seq) > 0L)
   grid::grid.draw(ggplot2::ggplotGrob(direct))

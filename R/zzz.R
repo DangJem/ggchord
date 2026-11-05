@@ -367,6 +367,7 @@ ggchord_attach_input_columns <- function(geometry, input) {
     "zlinetype", "outline_col", "linetype_val", "seq_colour",
     "ribbon_fill", "ribbon_alpha", "ribbon_colour",
     "ribbon_linetype", "gene_fill", "feature_fill", "feature_shape",
+    "scale_length", "bp_length", "sequence_unit", ".ggchord_adjacent",
     "feature_label_colour", "feature_label_orientation", "region_fill", ".component",
     "track_id", "label_text_original", "label_size_requested", "label_size_final",
     "label_size_min", "label_fit_reason", ".ggchord_resolved_size"

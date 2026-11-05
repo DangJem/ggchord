@@ -577,13 +577,17 @@ theme_ggchord_plasmid(
 \item{axis.text}{Axis text element.}
 
 \item{axis.gap, axis.ticks.length, axis.minor.ticks.length, axis.text.offset}{Scalar \code{\link[grid:unit]{grid::unit()}} objects controlling physical axis spacing. A
-negative \code{axis.gap} moves circular ticks and labels inside the sequence
-ring; the plasmid preset uses this convention.}
+negative \code{axis.gap} places the circular axis inside the backbone; a
+positive value places it outside. Zero attaches ticks to the inner
+backbone edge and is the circular default, including the plasmid preset.
+Circular major/minor tick lengths default to 1.5/0.7 mm, or 2.2/0.8 mm
+with the plasmid preset. Their default line widths are 0.45/0.3 mm, or
+0.6/0.35 mm with that preset. Explicit length and line settings take priority.}
 
 \item{axis.text.orientation}{One of \code{"horizontal"}, \code{"parallel"},
 \code{"perpendicular"}, or a finite numeric angle.}
 
-\item{axis.text.check.overlap}{Whether overlapping axis labels are hidden.}
+\item{axis.text.check.overlap}{Whether overlapping axis labels are hidden. Defaults to TRUE.}
 
 \item{seq.label, gene.label, feature.label, restriction.label, seq.center.label, seq.center.name, seq.center.length}{Text elements for sequence, gene, feature, restriction-site and circular
 centre labels.}

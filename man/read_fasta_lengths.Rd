@@ -8,7 +8,8 @@ read_fasta_lengths(
   file = NULL,
   files = NULL,
   header_delim = NULL,
-  source_file = FALSE
+  source_file = FALSE,
+  sequence_unit = NULL
 )
 }
 \arguments{
@@ -22,9 +23,14 @@ every occurrence of this delimiter and only the first piece is kept.}
 
 \item{source_file}{Logical. Add a \code{.source_file} column when reading one or
 more files, default \code{FALSE}.}
+
+\item{sequence_unit}{Optional \code{"bp"} or \code{"aa"} declaration. When supplied,
+adds that column to the result; the alphabet is not inferred. Omitted
+units retain the existing output columns and ggchord interprets them as bp.}
 }
 \value{
-A data.frame with columns \code{accver} and \code{length}.
+A data.frame with columns \code{accver} and \code{length}, plus
+\code{sequence_unit} when explicitly requested.
 A \code{ggchord_import} attribute records files and per-file output row counts.
 }
 \description{

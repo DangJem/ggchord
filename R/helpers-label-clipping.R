@@ -208,55 +208,37 @@ ggchord_repel_points <- function(seq_arcs, gene_polys, axis_lines, axis_ticks,
 ggchord_hide_text_overlaps <- function(df, content_pts,
                                        units_per_inch = 0.35) {
   idx <- which(!is.na(df$label))
-  if (length(idx) < 1) return(df)
-  # keep the axis start/end labels of every sequence visible
-  protect <- logical(length(idx))
-  if ("accver" %in% names(df) && length(idx) > 1) {
-    for (sid in unique(df$accver[idx])) {
-      rows <- idx[df$accver[idx] == sid]
-      if (length(rows) > 1) {
-        protect[match(min(rows), idx)] <- TRUE
-        protect[match(max(rows), idx)] <- TRUE
-      } else if (length(rows) == 1) {
-        protect[match(rows, idx)] <- TRUE
+  if (!length(idx)) return(df)
+  boxes <- ggchord_text_boxes(df[idx, , drop = FALSE],
+    x_col = "label_x", y_col = "label_y", text_col = "label",
+    angle_col = "label_angle", hjust_col = "label_hjust",
+    vjust_col = "label_vjust", units_per_inch = units_per_inch, box_padding = .025)
+  hits_content <- vapply(seq_along(idx), function(k) {
+    dx <- content_pts$x - boxes$cx[k]
+    dy <- content_pts$y - boxes$cy[k]
+    cosine <- cos(boxes$angle[k])
+    sine <- sin(boxes$angle[k])
+    any(abs(dx * cosine + dy * sine) < boxes$ow[k] / 2 &
+        abs(-dx * sine + dy * cosine) < boxes$oh[k] / 2)
+  }, logical(1L))
+  groups <- split(seq_along(idx), df$accver[idx] %||% rep("", length(idx)))
+  hits_content[vapply(groups, `[[`, integer(1L), 1L)] <- FALSE
+  kept <- integer()
+  for (rows in groups) {
+    for (stride in seq_along(rows)) {
+      candidates <- rows[seq.int(1L, length(rows), by = stride)]
+      trial <- kept
+      for (k in candidates[!hits_content[candidates]]) {
+        if (ggchord_boxes_overlap_any(boxes[k, , drop = FALSE],
+                                     boxes[trial, , drop = FALSE])) break
+        trial <- c(trial, k)
+      }
+      if (length(trial) - length(kept) == sum(!hits_content[candidates])) {
+        kept <- trial
+        break
       }
     }
   }
-  if (nrow(content_pts) == 0) {
-    content_pts <- data.frame(x = numeric(0), y = numeric(0))
-  }
-  close_device <- ggchord_measurement_device(text = df$label[idx])
-  on.exit(close_device())
-  sizes <- df$size[idx] %||% rep(3, length(idx))
-  w <- suppressWarnings(graphics::strwidth(df$label[idx], units = "inches",
-                                           cex = sizes / 12)) * units_per_inch
-  h <- suppressWarnings(graphics::strheight(df$label[idx], units = "inches",
-                                            cex = sizes / 12)) * units_per_inch
-
-  hide <- logical(length(idx))
-  for (k in seq_along(idx)) {
-    i <- idx[k]
-    x <- df$label_x[i]
-    y <- df$label_y[i]
-    # overlap with content points: label center too close to an element
-    if (nrow(content_pts) > 0) {
-      d <- sqrt((x - content_pts$x)^2 + (y - content_pts$y)^2)
-      if (any(d < min(w[k], h[k]) * 0.5 + 0.05)) hide[k] <- TRUE
-    }
-    if (!hide[k]) {
-      # overlap with another label's box
-      for (k2 in seq_along(idx)) {
-        if (k2 == k) next
-        j <- idx[k2]
-        if (abs(x - df$label_x[j]) < (w[k] + w[k2]) / 2 &&
-            abs(y - df$label_y[j]) < (h[k] + h[k2]) / 2) {
-          hide[k] <- TRUE
-          break
-        }
-      }
-    }
-  }
-  hide <- hide & !protect
-  df$label[idx[hide]] <- NA
+  df$label[idx[setdiff(seq_along(idx), kept)]] <- NA_character_
   df
 }

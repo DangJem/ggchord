@@ -99,7 +99,8 @@ ggchord_seq_style_geometry <- function(seq_arcs, params) {
 #' @param seq_order Optional character vector. Specifies the drawing order of sequences
 #' @param seq_orientation Optional numeric (1 or -1). Sequence orientation, default 1
 #' @param seq_gap Optional numeric. Gap proportion between sequences, default
-#'   0.03 in chord coordinates. In [coord_collinear()], a positive distance
+#'   0.03 in chord coordinates. A named vector can set the gap after each
+#'   sequence; omitted IDs use the coordinate default. In [coord_collinear()], a positive distance
 #'   between consecutive backbones as a proportion of the longest backbone's
 #'   width, default 0.3. The final sequence's gap is unused in linear layouts.
 #'   Segmented linear displays measure it against the longest display row;
@@ -108,7 +109,7 @@ ggchord_seq_style_geometry <- function(seq_arcs, params) {
 #' @param seq_radius Optional numeric (> 0). Sequence arc radius, default 1.0
 #' @param seq_curvature Optional numeric. Signed arc bow (0=straight, 1=standard arc, negative=opposite bow), default 1.0. Finite positive and negative values are accepted without clipping; magnitudes above 1 amplify the bow.
 #' @param seq_style Backbone geometry. `"auto"` uses a double backbone in
-#'   [coord_circular()] and the historical single backbone in [coord_chord()].
+#'   [coord_circular()] and a single backbone in [coord_chord()].
 #' @param seq_backbone_gap Gap between double backbone lines.
 #' @param seq_backbone_width Width of a band backbone.
 #' @param linewidth Arc line width, default 0.9

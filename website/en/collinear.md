@@ -1,20 +1,22 @@
 <div class="lesson-intro">The complete Module II result: four real genomes, strand-separated features and outward-routed cross-row links.</div>
 
 ## Complete result {#overview}
+
 {{figure:showcasecollinear}}
 
-Collinearity extends the chord coordinate grammar; reusing data and layers is the goal. Read [inputs](collinear-data.html), [coordinate replacement](collinear-build.html) and [routes/ruler](collinear-routing.html), then run the complete example. The identity scale and feature candidates are shared with the chord example; this linear composition omits two crowded short candidates, displaying 16 CDS with labels, with positive and negative strands above/below backbones.
+Compare four backbones on a shared base-pair scale with 16 selected CDS placed on either side of the rows. Read gene positions along one row first, then follow a band to its matching interval. A solid outline marks adjacent rows, while a dashed outline marks rows with another displayed row between them. Start with the [four-backbone plot](collinear-start.html) and [alignment and CDS example](collinear-build.html) if you are new to the workflow.
 
 ## Prepare original records {#prepare}
 Extract the [input bundle](../assets/tutorial-inputs.zip) and install dplyr, purrr and tidyr first:
 
-{{prepare:sequencepalette,docstyle}}
-{{code:showcasedata}}
+Put the preparation script in your working directory. It contains the input, selection and display settings.
+
+{{recipe:collinear}}
 
 Retain four full FASTA records, 266 CDS and 32 original HSPs. Adjacent rows use the explicitly selected observations; each non-neighbour pair retains only its longest HSP to reduce overlap.
 
 ## Reserve space for connections and labels {#gc}
-The flagship no longer includes GC tracks; composition analysis remains in [tracks](tracks.html). This keeps two different reading tasks from competing in the entry figure.
+To compare sequence composition, see [tracks](tracks.html) for a GC track example.
 
 ## Compose the layers {#compose}
 {{code:showcasecollinear}}

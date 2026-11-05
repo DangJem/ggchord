@@ -6,16 +6,7 @@ In a fresh R session, run the code below, then follow this page in order. Colour
 {{prepare:setup}}
 
 ## Tables {#tables}
-| Input | Required fields | Meaning |
-| --- | --- | --- |
-| Sequence | `accver`, `length` | Unique ID; positive full length in bp |
-| Interval link | `qaccver`, `saccver`, `qstart`, `qend`, `sstart`, `send` | Query and subject anchors |
-| Gene | `accver`, `start`, `end`, `strand` | Known `+`/`-`; optional `anno` |
-| Feature | `accver`, `start`, `end`, `strand` or declared direction | May retain unknown strand; optional `type`, `label`, `feature_id` |
-
-Identifiers may be arbitrary strings. Accession versions are preserved exactly.
-`pident` and alignment `length` are optional unless a mapping, filter or statistic
-needs them. A feature interval does not imply a sequence's full length.
+[Basic input tables](chord-data.html#tables) shows the fields and actual rows for sequences, links and features. Use those fields to validate imported records below.
 
 ## Coordinate contract {#coordinates}
 Genomic coordinates are **one-based, inclusive bp**. BED/PAF readers convert their
@@ -24,7 +15,7 @@ strand stored separately; link endpoint order may encode direction. A one-bp
 link without direction evidence stays unknown. Unknown strand is never silently
 changed to `+`; use `geom_feature()` instead of the strict gene layer.
 
-Amino-acid coordinates require [explicit CDS projection](projection.html).
+Protein backbones use native aa coordinates; see [protein alignments](protein-alignments.html). Use [CDS projection](projection.html) to place protein intervals on nucleotide backbones.
 Native Cartesian layout units, genomic bp, angles in degrees, physical mm and
 track value units are different domains. See the full
 [data contract](reference/ggchord_data_contract.html).
@@ -33,6 +24,8 @@ track value units are different domains. See the full
 Run this repository-only example from its root. Original files are not rewritten.
 
 {{code:imports}}
+
+{{console:imports}}
 
 `read_genbank()` retains record/feature provenance and segmented locations.
 `read_bed()` and `read_paf()` retain their conversion metadata. `as_ggchord_seq()`,
@@ -45,6 +38,8 @@ homology data must be supplied by the analyst, not invented by the plotting laye
 After this page’s preparation code:
 
 {{code:validation}}
+
+{{console:validation}}
 
 Validation reports issues; cleaning makes explicit repairs with a report.
 Preparation combines workflow steps without inferring biological membership.
@@ -68,6 +63,8 @@ standalone cleaning and preparation should not be assumed identical.
 
 ## Declare genome and contig keys {#hierarchy}
 {{code:hierarchy}}
+
+{{console:hierarchy}}
 
 `hierarchy$contigs` summarizes declared membership without concatenating contigs.
 No membership is inferred from an accession prefix. Provide globally unique IDs

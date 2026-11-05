@@ -1,27 +1,32 @@
-Complete each small step before the flagship example. All four views reuse the same records, making the effect of each added layer visible.
+Add one alignment and one CDS to the same chord plot. Run the blocks in page order.
 
-## Prepare this page {#prepare}
-Extract the [input bundle](../assets/tutorial-inputs.zip) first.
-{{prepare:sequencepalette,docstyle,showcasedata}}
+## Start with four backbones {#bundled}
 
-## Step 1: sequence backbones {#backbones}
-{{code:learnseq}}
-{{figure:learnseq}}
-`geom_seq()` draws backbones, `geom_seq_label()` identifies sequences, and `coord_chord()` selects the global view. No links or genes are required yet.
+<span id="backbones"></span>Use the four sequences from the [previous section](chord-start.html). The code below recreates the four backbones .
 
-## Step 2: observed comparisons {#links}
-{{code:learnlinks}}
-{{figure:learnlinks}}
-Identity belongs in aes and a scale. Explicitly retaining non-neighbour links keeps the same link data when replacing coordinates later.
+{{code:frontbackbone}}
+{{figure:frontbackbone}}
 
-## Step 3: selected genes {#genes}
-{{code:learngenes}}
-{{figure:learngenes}}
-`position_strand()` separates positive and negative strands. Display selected real annotations while retaining every source CDS separately.
+## Add an alignment ribbon {#links}
 
-## Step 4: label every displayed feature {#labels}
-{{code:learnlabels}}
-{{figure:learnlabels}}
-The arrow and repel-label layers receive the same feature table without another label filter. Renaming, deleting or reordering records can change meaning; retain clear intermediate objects.
+Take the first row of the bundled alignment table. It connects two of the four sequences.
 
-Continue to [1.4 Direction, radius, curvature and clearance](chord-tuning.html).
+{{code:frontlinks,frontribbon}}
+
+{{figure:frontribbon}}
+
+Follow the ribbon to both ends. It spans 26,298–51,139 bp on `MT108731.1` and 7,121–31,959 bp on `MT118296.1`. Each end covers an interval, so this layer uses `geom_link_ribbon()`.
+
+The default colour reflects the alignment identity for this row, about 98.6%. The crossed shape comes from how the interval ends are joined. Use the alignment coordinates to assess inversion.
+
+## Add a CDS {#add-genes}
+
+<span id="prepare"></span><span id="inspect-genes"></span><span id="genes"></span>Select the original annotation starting at 43,765 bp on `OQ646790.1` and recover its biological strand.
+
+{{code:frontgenes,frontfeature}}
+
+{{figure:frontfeature}}
+
+Find the red arrow on green `OQ646790.1`. It marks the plus-strand integrase CDS from 43,765 to 46,140 bp. The ribbon and this CDS use independent input tables.
+
+<span id="labels"></span>To display the CDS name, add `geom_gene_label(data = chord_genes_example)`. It reads the label from `anno`. Next, use the same backbones to compare [rotation and gaps](chord-tuning.html).

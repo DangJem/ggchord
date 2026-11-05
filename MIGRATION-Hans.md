@@ -2,6 +2,18 @@
 
 # 迁移到 ggchord 候选 API
 
+## 0.16.7 跨行连接带边框
+
+`geom_link_ribbon()` 对共线性非相邻行采用 `nonadjacent_linewidth = 0.4`，
+独立于普通固定 `linewidth`。设为 `nonadjacent_linewidth = 0` 时，
+跨行带沿用图层的普通线宽。显式线宽映射由映射和标度控制。
+该参数只改变线宽，不改变默认的虚线线型。
+
+## 0.16.7 圆图起点
+
+`coord_circular()` 默认 `rotation = 90`，将起点放在 12 点钟。显式
+`rotation = 0` 保留三点钟起点。坐标默认仍顺时针增加；弦图默认旋转仍为 0 度。
+
 ## 范围与时间 {#scope}
 下列写法是当前候选替代，不是 v1.0.0 长期兼容承诺。0.16.0–0.16.4 阶段成果已随 v0.16.5 交付。
 当前安装标签为 v0.16.6。RC 审计保留
@@ -28,22 +40,20 @@
 ## 运行当前替代 {#replacement}
 在新会话中运行下面的准备代码，再执行当前替代写法：
 
-<details class="preparation"><summary>准备代码 · 在本页运行一次</summary>
 
 ```r
-library(ggchord)
 library(dplyr)
-data(seq_data_example)
-data(ribbon_data_example)
-data(gene_data_example)
 seqs <- seq_data_example |>
   select(accver, length)
 links <- ribbon_data_example |>
   select(qaccver, saccver, qstart, qend, sstart, send)
-# The fixture preserves biological strands separately from its old display strands.
+# 随包示例用 source_strand 单独保存原始注释链。
 genes <- gene_data_example |>
   transmute(accver, start, end, strand = source_strand)
+```
 
+
+```r
 library(dplyr)
 data(plasmid_example_pUC19)
 plasmid_seq <- plasmid_example_pUC19 |>
@@ -53,7 +63,6 @@ features <- feature_source |>
   select(accver, start, end, strand, type, anno)
 ```
 
-</details>
 
 
 ```r
@@ -77,3 +86,7 @@ p_offsets <- ggchord(seqs, gene_data = genes) +
 五个 colour/color 拼写别名、全部上游重导出、gene/注释/plasmid 快捷入口及 getter/export
 两类几何接口均保留。各坐标默认差异和已记录结果字段保持。NULL/NA/缺参语义应查阅
 接口说明 (`help("ggchord_api_contract", package = "ggchord")`)和当前参考；NULL 不统一表示关闭。
+
+## v0.16.7 的弦图默认旋转
+
+弦图默认旋转改为 0 度。需要 45 度布局时，显式添加 `coord_chord(rotation = 45)`。原生蛋白图声明 `sequence_unit = "aa"`，并提供完整蛋白长度。

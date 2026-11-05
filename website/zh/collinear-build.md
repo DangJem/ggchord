@@ -1,21 +1,32 @@
-先验证共同语法，再为直线视图调整排版。以下三个对象只在弦图教学对象上替换坐标系，不改表格、不重新计算比对。
+用相同的四条序列，先加一条比对，再加一个 CDS。本页代码依次运行即可。
 
-## 本页准备 {#prepare}
-先解压[教学输入](../assets/tutorial-inputs.zip)。
-{{prepare:sequencepalette,docstyle,showcasedata}}
-{{prepare:learnseq,learnlinks,learngenes,learnlabels}}
+## 重建四条骨架 {#bundled}
 
-## 替换coord {#switch}
-{{code:learnlinear}}
+<span id="prepare"></span><span id="switch"></span><span id="backbones"></span>
 
-## 从骨架看比例 {#backbones}
-{{figure:linearseq}}
-每一行共享同一bp比例。序列长度不同，行长也不同；不是将每行任意缩放成一样长。
+{{code:frontlinearbase}}
+{{figure:frontlinearbase}}
 
-## 加入连接 {#links}
-{{figure:linearlinks}}
-相同的HSP保留在图层中，跨行连接也保留，因此可直接看到默认路由的局限。长连接更适合在下一页明确路由。
+## 加入一条区间比对 {#links}
 
-## 加入上下分链与标签 {#labels}
-{{figure:linearlabels}}
-箭头和标签来自同一个筛选表。正负链不改写；显示翻转也不会更改原始strand。继续：[2.3 调整跨行路由](collinear-routing.html)。
+{{code:frontlinks,frontlinearlink}}
+
+{{figure:frontlinearlink}}
+
+连接带在第一行覆盖 26,298–51,139 bp，在第二行覆盖 7,121–31,959 bp。横向错开体现两个区间在各自序列上的位置。
+
+## 查看 CDS 并加上箭头 {#inspect-genes}
+
+{{code:frontgenes,frontselectedgene}}
+
+{{output:frontselectedgene}}
+
+这条原始正链 integrase CDS 位于第三行的 43,765–46,140 bp。表中 `anno` 保留原始注释名。
+
+### 加到图上 {#add-genes}
+
+{{code:frontlinearcds}}
+
+{{figure:frontlinearcds}}
+
+<span id="labels"></span>红色箭头位于第三条绿色骨架的右半部。需要显示名称时，可另加 `geom_gene_label(data = chord_genes_example)`。接下来[调整行距与标尺](collinear-tuning.html)。

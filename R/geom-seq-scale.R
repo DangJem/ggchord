@@ -28,13 +28,13 @@ ggchord_empty_seq_scale_geometry <- function() data.frame(
   bp_length = numeric(), measurement_status = character(),
   .component = character(), stringsAsFactors = FALSE)
 
-#' Add a shared base-pair scale bar to a linear display
+#' Add a shared sequence-position scale bar to a linear display
 #'
 #' Adds a free-standing reference bar in the empty space outside the sequence
-#' envelope. Its length uses the same bp-to-x conversion as every backbone in
+#' envelope. Its length uses the same sequence-position-to-x conversion as every backbone in
 #' [coord_collinear()], including independent windows on shared display rows.
 #' Display gaps are never interpreted as genomic length. Local reversals and
-#' original-source axis labels do not change the bar's bp scale. Chord and
+#' original-source axis labels do not change the bar's sequence scale. Chord and
 #' circular coordinates have local sequence axes instead and are rejected.
 #'
 #' The bar does not claim to span one source interval. An explicit length can
@@ -48,17 +48,18 @@ ggchord_empty_seq_scale_geometry <- function() data.frame(
 #' axes; this geom adds an independent distance reference.
 #'
 #' @param mapping,data Standard ggplot2 layer inputs. Optional `scale_length`
-#'   maps one positive integer bp length per bar; `label` supplies its text.
+#'   maps one positive integer length per bar, in the sequence unit; `label` supplies its text.
 #'   Multiple bars require explicit `x` and `y` layout positions in `data`
 #'   (or their role mappings), to avoid accidental overprinting.
-#' @param length Optional fixed positive integer length in bp. Cannot be
+#' @param length Optional fixed positive integer length in the sequence unit. Cannot be
 #'   combined with a `scale_length` mapping. `NULL` uses input lengths or an
 #'   automatic reference length.
 #' @param label Optional fixed character label, or a function receiving the
-#'   chosen bp lengths. `NULL` uses input labels or formatted `"... bp"` text.
+#'   chosen lengths. `NULL` uses input labels or formatted bp/aa text.
 #' @param location Corner of the sequence envelope used for automatic placement.
 #' @param offset Two non-negative distances, horizontal then vertical. Absolute
 #'   grid units are supported; plain numeric values are layout-unit distances.
+#'   The default is 0 mm horizontally and 6 mm vertically.
 #' @param tick_height,label_gap Non-negative absolute grid units or layout-unit
 #'   numbers for the end ticks and space between the bar and caption. Physical
 #'   conversion uses the current render context when available; device-free
@@ -69,7 +70,8 @@ ggchord_empty_seq_scale_geometry <- function() data.frame(
 #' @param position,show.legend,inherit.aes Standard ggplot2 layer arguments.
 #' @param ... Additional fixed aesthetics passed to [ggplot2::layer()].
 #' @return One independent ggplot2 layer. Exported axis geometry retains the
-#'   bp length, input row and measurement status for each bar.
+#'   length, sequence unit, input row and measurement status for each bar.
+#'   The compatibility field `bp_length` is NA for protein plots.
 #' @md
 #' @export
 #' @examples
@@ -83,7 +85,7 @@ ggchord_empty_seq_scale_geometry <- function() data.frame(
 #'   geom_seq_scale(length = 10000)
 geom_seq_scale <- function(mapping = NULL, data = NULL, length = NULL, label = NULL,
     location = c("bottomleft", "bottomright", "topleft", "topright"),
-    offset = grid::unit(c(2, 6), "mm"), tick_height = grid::unit(1.5, "mm"),
+    offset = grid::unit(c(0, 6), "mm"), tick_height = grid::unit(1.5, "mm"),
     label_gap = grid::unit(1.5, "mm"), linewidth = .4, colour = "#3D4348", size = 3,
     position = "identity", show.legend = FALSE, inherit.aes = FALSE, ...) {
   fixed <- c(linewidth = !missing(linewidth), colour = !missing(colour), size = !missing(size))
@@ -91,7 +93,7 @@ geom_seq_scale <- function(mapping = NULL, data = NULL, length = NULL, label = N
   mapping <- ggchord_normalize_mapping(mapping)
   if (!is.null(length) && (!is.numeric(length) || length(length) != 1L ||
       !is.finite(length) || length < 1 || length != floor(length))) ggchord_stop(
-    "geom_seq_scale(): length must be one positive integer number of base pairs")
+    "geom_seq_scale(): length must be one positive integer sequence positions")
   if (!is.null(length) && "scale_length" %in% names(mapping)) ggchord_stop(
     "geom_seq_scale(): use a fixed length or a scale_length mapping, not both")
   if (!is.null(label) && !is.function(label) &&
@@ -136,7 +138,8 @@ ggchord_seq_scale_geometry <- function(data, params, layout) {
       any(!is.finite(supplied)) || any(supplied < 1 | supplied != floor(supplied)))
     ggchord_stop(caller, ": each bar requires one positive integer scale_length")
   labels <- if (is.function(params$label)) params$label(supplied) else params$label %||% data$label
-  automatic_labels <- paste0(format(supplied, big.mark = ",", scientific = FALSE, trim = TRUE), " bp")
+  unit <- layout$sequence_unit %||% "bp"
+  automatic_labels <- paste(format(supplied, big.mark = ",", scientific = FALSE, trim = TRUE), unit)
   if (is.null(labels)) labels <- automatic_labels
   if (length(labels) == 1L) labels <- rep(labels, nrow(data))
   if (!is.character(labels) || length(labels) != nrow(data)) ggchord_stop(caller, ": labels must return one character string per bar")
@@ -178,7 +181,9 @@ ggchord_seq_scale_geometry <- function(data, params, layout) {
       yend = c(NA, NA, y + height / 2, y + height / 2, NA),
       label = c(NA_character_, NA_character_, NA_character_, NA_character_, labels[i]),
       group = group + c(1L, 1L, 2L, 3L, 4L), source_row = i,
-      bp_length = supplied[i], measurement_status = status,
+      scale_length = supplied[i], sequence_unit = unit,
+      bp_length = if (identical(unit, "bp")) supplied[i] else NA_real_,
+      measurement_status = status,
       .component = c("line", "line", "major_tick", "major_tick", "text"),
       stringsAsFactors = FALSE)
   })

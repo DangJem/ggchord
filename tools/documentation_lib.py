@@ -8,11 +8,28 @@ ROOT = Path(__file__).resolve().parent.parent
 WEB = ROOT / 'website'
 PAGES = json.loads((WEB / 'pages.json').read_text())
 CAPTIONS = json.loads((WEB / 'assets/captions.json').read_text())
+RECIPES = json.loads((WEB / 'showcase-recipes.json').read_text())
 
 def snippets():
     text = (ROOT / 'tools/documentation-examples.R').read_text()
     return dict((name, code.strip()) for name, code in re.findall(
         r'^# ---- (\w+) ----\n(.*?)(?=^# ---- \w+ ----)', text, re.M | re.S))
+
+
+def localize_r_comments(code, lang):
+    if lang != 'zh':
+        return code
+    translations = json.loads((WEB / 'r-comments-zh.json').read_text())
+    def translate(match):
+        indent, comment = match.groups()
+        if comment in translations:
+            return indent + '# ' + translations[comment]
+        if comment.startswith('----') or comment.startswith('ggsave('):
+            return match[0]
+        if re.search('[A-Za-z]{3}', comment) and not re.search('[\u3400-\u9fff]', comment):
+            raise ValueError('Missing Han code comment: ' + comment)
+        return match[0]
+    return re.sub(r'(?m)^([ \t]*)# ?(.*)$', translate, code)
 
 def table(headers, rows):
     def cell(x):
@@ -22,17 +39,25 @@ def table(headers, rows):
         ['| ' + ' | '.join(map(cell, row)) + ' |' for row in rows])
 
 def expand(text, lang, *, figures='assets', reference=''):
-    chunks = snippets()
+    chunks = {name: localize_r_comments(code, lang) for name, code in snippets().items()}
     with (WEB / 'assets/plots.csv').open() as f:
         assets = list(csv.DictReader(f))
     dimensions={a['id']:(round(float(a['width'])*float(a['dpi'])),
         round(float(a['height'])*float(a['dpi']))) for a in assets}
     def preparation(match):
         keys=match[1].split(',')
-        label='Preparation code — run once on this page' if lang=='en' else '准备代码 · 在本页运行一次'
-        code='\n\n'.join(chunks[key] for key in keys)
-        return '<details class="preparation"><summary>'+label+'</summary>\n\n```r\n'+code+'\n```\n\n</details>'
+        return '\n'.join(
+            '\n```r\n' + re.sub(r'\np_\w+$', '', chunks[key]) + '\n```\n'
+            for key in keys)
     text=re.sub(r'\{\{prepare:([\w,]+)\}\}',preparation,text)
+    def recipe(match):
+        key = match[1]
+        if key not in RECIPES:
+            raise ValueError(f'Unknown showcase recipe {key}')
+        name = f'prepare-{key}' + ('-zh' if lang == 'zh' else '') + '.R'
+        label = 'Download the preparation script' if lang == 'en' else '下载准备脚本'
+        return f'[{label}]({figures}/{name})\n\n```r\nsource("{name}")\n```\n'
+    text = re.sub(r'\{\{recipe:(\w+)\}\}', recipe, text)
     def figure(key):
         caption=html.escape(CAPTIONS[key][lang])
         hint='Click to enlarge' if lang=='en' else '点击放大查看'
@@ -40,7 +65,31 @@ def expand(text, lang, *, figures='assets', reference=''):
         return (f'<figure class="documentation-figure"><a class="figure-link" href="{figures}/{key}.png" '
             f'title="{hint}"><img src="{figures}/{key}.png" alt="{caption}" width="{width}" height="{height}" loading="lazy"></a>'
             f'<figcaption>{caption} · <span class="figure-hint">{hint}</span></figcaption></figure>')
-    text = re.sub(r'\{\{code:(\w+)\}\}', lambda m: '\n```r\n' + chunks[m[1]] + '\n```\n', text)
+    previews = {a['object']: (float(a['width']), float(a['height'])) for a in assets}
+    def preview_code(code):
+        lines = code.splitlines()
+        if lines[-1] in previews:
+            obj = lines[-1]
+            width, height = previews[obj]
+            lines[-1] = f'view_ggchord({obj}, width = {width:g}, height = {height:g}, units = "in")'
+        elif lines[-1] == 'label_plots$auto':
+            lines[-1] = 'view_ggchord(label_plots$auto, width = 12, height = 10, units = "in")'
+        elif re.fullmatch(r'p_\w+', lines[-1]):
+            lines[-1] = f'view_ggchord({lines[-1]})'
+        return '\n'.join(lines)
+
+    def render_code(match):
+        keys = match[1].split(',')
+        parts = []
+        for index, key in enumerate(keys):
+            code = chunks[key]
+            if index < len(keys) - 1:
+                code = re.sub(r'\np_\w+$', '', code)
+            else:
+                code = preview_code(code)
+            parts.append(code)
+        return '\n```r\n' + '\n\n'.join(parts) + '\n```\n'
+    text = re.sub(r'\{\{code:([\w,]+)\}\}', render_code, text)
     text = re.sub(r'\{\{figure:(\w+)\}\}', lambda m: figure(m[1]), text)
     modes = '<div class="mode-grid">' + ''.join(
         f'<section class="mode-card"><h3 id="preview-{k}">{html.escape(CAPTIONS[k][lang])}</h3>'
@@ -49,9 +98,9 @@ def expand(text, lang, *, figures='assets', reference=''):
         for k in ['chord','collinear','circular'])+'</div>'
     text = text.replace('{{modes}}', modes)
     showcase_specs = [
-        ('showcasechord','chord-data','Chord comparisons','多序列弦图'),
-        ('showcasecollinear','collinear-data','Collinear comparisons','共线性图'),
-        ('showcaseplasmid','plasmid-data','Plasmid maps','质粒图')]
+        ('showcasechord','chord-start','Chord comparisons','多序列弦图'),
+        ('showcasecollinear','collinear-start','Collinear comparisons','共线性图'),
+        ('showcaseplasmid','plasmid-start','Plasmid maps','质粒图')]
     overview = '<div class="showcase-overview">' + ''.join(
         f'<section class="showcase-card"><a href="{page}.html">'
         f'<img src="{figures}/{key}.png" alt="{html.escape(CAPTIONS[key][lang])}" '
@@ -74,15 +123,56 @@ def expand(text, lang, *, figures='assets', reference=''):
         json.loads((WEB / 'terms.json').read_text())))
     gallery = []
     destinations={'showcasechord':'chord#compose','showcasecollinear':'collinear#compose','showcaseplasmid':'plasmids#complex','chord':'modes#chord','circular':'modes#circular','collinear':'modes#collinear',
-        'first':'installation#first-plot','realchord':'real-data#chord','reallinear':'real-data#linear',
-        'plasmid':'plasmids#input','homologs':'homology#membership','tracks':'tracks#domain',
+        'first':'modes#collinear', 'firstchord':'chord-start#draw',
+        'firstlinear':'collinear-start#draw', 'firstcircle':'plasmid-start#draw',
+        'firstfeatures':'plasmid-build#features',
+        'practicechord':'chord-build#add-genes', 'practicelinear':'collinear-build#add-genes',
+        'practiceplasmid':'plasmid-build#add-label','realchord':'real-data#chord','reallinear':'real-data#linear',
+        'plasmid':'plasmids#draw','homologs':'homology#focus','recognition':'recognition#search','tracks':'tracks#domain',
         'multitrack':'tracks#multiple','density':'ribbons#density','pointlinks':'ribbons#points',
         'featurestack':'annotations#stack','decorations':'annotations#decoration','focus':'views#focus',
+        'segment':'views#segments','mappingposition':'views#mapping',
+        'nativeprotein':'protein-alignments#protein','nativeproteinchord':'protein-alignments#protein',
         'labels':'labels#layout','labelauto':'labels#comparison','labelradial':'labels#comparison',
         'labelarc':'labels#comparison','styling':'styling#roles','paf':'formats#zero-based'}
     destinations.update(dict(zip(
         ['learnseq','learnlinks','learngenes','learnlabels','linearseq','linearlinks','linearlabels','plasmidbackbone','plasmidfeatures','plasmidtext'],
         ['chord-build#backbones','chord-build#links','chord-build#genes','chord-build#labels','collinear-build#backbones','collinear-build#links','collinear-build#labels','plasmid-build#backbone','plasmid-build#features','plasmid-build#labels'])))
+    destinations.update({
+        'frontbackbone': 'chord-start#draw',
+        'frontribbon': 'chord-build#links',
+        'frontfeature': 'chord-build#add-genes',
+        'frontrotation': 'chord-tuning#orientation',
+        'frontgap': 'chord-tuning#parameters',
+        'frontradius': 'chord-geometry#shape',
+        'frontcurvature': 'chord-geometry#curvature',
+        'frontorientation': 'chord-geometry#direction',
+        'frontroute': 'chord-routing#control',
+        'frontnoavoid': 'chord-routing#clearance',
+        'frontsmooth': 'chord-routing#clearance',
+        'frontseqlabels': 'chord-labels#sequence-labels',
+        'frontgenelabels': 'chord-labels#gene-labels',
+        'frontmarkers': 'chord-routing#point-markers',
+        'frontlinearbase': 'collinear-start#draw',
+        'frontlinearlink': 'collinear-build#links',
+        'frontlinearcds': 'collinear-build#add-genes',
+        'frontlineargap': 'collinear-tuning#gap',
+        'frontlinearscale': 'collinear-tuning#scale',
+        'frontlinearcross': 'collinear-routing#routes',
+        'frontcirclestyle': 'plasmid-tuning#style',
+        'frontcirclerotation': 'plasmid-tuning#rotation',
+        'frontorder': 'chord-geometry#order',
+        'mappingexample': 'adjustments#mapping',
+        'parameterexample': 'parameters#recommendation',
+        'parameteruniform': 'parameters#scalar',
+        'parametervector': 'parameters#vector',
+        'parameterstrand': 'parameters#strand',
+        'parameterwidth': 'parameters#width',
+        'parameterlabels': 'parameters#labels',
+        'frontcrosswidth': 'collinear-routing#width',
+        'frontcrosssame': 'collinear-routing#width',
+        'manualgenelabels': 'labels#fixed',
+    })
     for key in CAPTIONS:
         if key.startswith('catalog'): destinations[key] = 'plasmid-catalog#'+key
     for asset in assets:
@@ -100,12 +190,19 @@ def expand(text, lang, *, figures='assets', reference=''):
         text = re.sub(r'\{\{results:(\w+)\}\}', lambda m: table(
             ['Metric','Observed output'] if lang=='en' else ['项目','结果'],
             [[result_labels.get(k,{}).get(lang,k), ('依赖未安装，已跳过' if lang=='zh' and isinstance(v,str) and v.startswith('SKIP:') else v)] for k,v in results[m[1]].items()]),text)
+    if '{{output:' in text or '{{console:' in text:
+        outputs = json.loads((WEB / 'assets/lesson-outputs.json').read_text())
+        text = re.sub(r'\{\{output:(\w+)\}\}', lambda m:
+            '<div class="data-output" tabindex="0" role="region" aria-label="R output">\n\n' +
+            table(outputs[m[1]]['columns'], outputs[m[1]]['rows']) + '\n\n</div>', text)
+        text = re.sub(r'\{\{console:(\w+)\}\}', lambda m:
+            '\n```text\n' + outputs[m[1]]['console'] + '\n```\n', text)
     coverage=json.loads((WEB/'coverage.json').read_text())
     titles={p['slug']:p['title'][lang] for p in PAGES}
     navigation=json.loads((WEB/'navigation.json').read_text())
     article_groups=[]
     for group in navigation:
-        entries=[slug for slug in group['pages'] if slug not in ['index','articles','reference','news']]
+        entries=[slug for slug in group['pages'] if slug not in ['index','about','reference']]
         if entries:
             article_groups.append('### '+group['title'][lang]+' {#path-'+group['id']+'}\n\n'+
                 '\n'.join(f'- [{titles[k]}]({k}.html)' for k in entries))

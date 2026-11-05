@@ -19,7 +19,7 @@
 \format{
 A one-row data frame with \code{accver}, display \code{label}, \code{length}, and
 the DNA \code{sequence}.
-The historical \code{plasmid_example_pUC19c} spelling is a compatibility alias
+The \code{plasmid_example_pUC19c} name is an alias
 of \code{plasmid_example_pUC19}, including its \code{accver}. It must not be confused
 with an independently imported GenBank pUC19c record such as L09137.2.
 }

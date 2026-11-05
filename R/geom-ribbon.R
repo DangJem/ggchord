@@ -55,9 +55,15 @@ make_ribbon_geom <- function(outline = FALSE, linetype = FALSE) {
 #' @param alpha,colour,linewidth Standard fixed ribbon styles. Explicit values
 #'   take precedence over matching mappings; omitted defaults do not suppress
 #'   user mappings. For example, omit `alpha` when mapping `ribbon_alpha`.
+#' @param nonadjacent_linewidth Fixed outline width for non-adjacent displayed
+#'   rows in [coord_collinear()], default 0.4 mm. These ribbons use dashed
+#'   outlines by default. Zero uses the layer's ordinary `linewidth` for every
+#'   ribbon. This changes width independently of line type. An explicit
+#'   `aes(linewidth = ...)` controls widths instead of this fixed default.
 #' @param linetype Fixed outline line type. The default `NULL` uses solid
 #'   outlines for adjacent displayed sequences and dashed outlines for
-#'   non-adjacent sequences. Chord adjacency includes the first/last pair.
+#'   non-adjacent sequences. Collinear outline widths use
+#'   `nonadjacent_linewidth`. Chord adjacency includes the first/last pair.
 #'   This follows the final display order, independently of alignment direction.
 #'   Explicit fixed styles or `aes(ribbon_linetype = ...)` (also
 #'   `aes(linetype = ...)`) replace the automatic styles. Use a matching scale
@@ -104,11 +110,15 @@ geom_link_ribbon <- function(mapping = NULL, data = NULL,
                         position = "identity",
                         show.legend = TRUE,
                         inherit.aes = FALSE,
+                        nonadjacent_linewidth = 0.4,
                         ...) {
   ribbon_ctrl_point <- link_ctrl_point
   ribbon_gap <- link_gap
   style_defaults <- c(colour = missing(colour), linewidth = missing(linewidth))
   alpha_supplied <- !missing(alpha)
+  if (!is.numeric(nonadjacent_linewidth) || length(nonadjacent_linewidth) != 1L ||
+      !is.finite(nonadjacent_linewidth) || nonadjacent_linewidth < 0) ggchord_stop(
+    "geom_link_ribbon(): nonadjacent_linewidth must be one finite non-negative number")
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
   link_avoid <- match.arg(link_avoid)
@@ -214,6 +224,7 @@ geom_link_ribbon <- function(mapping = NULL, data = NULL,
     type                      = "ribbon",
     style_defaults = style_defaults,
     adjacent_only = adjacent_only, pairs = pairs,
+    nonadjacent_linewidth = nonadjacent_linewidth,
     link_avoid = link_avoid, link_branch = link_branch, link_branch_fraction = link_branch_fraction,
     ribbon_color_scheme       = "pident",
     ribbon_colors             = NULL,

@@ -1,21 +1,32 @@
-Verify the shared grammar before tuning linear composition. These objects replace only the coordinates on the chord teaching objects: no table edits or new alignments.
+Use the same four sequences and add one alignment and one CDS. Run the blocks in order.
 
-## Prepare this page {#prepare}
-Extract the [input bundle](../assets/tutorial-inputs.zip) first.
-{{prepare:sequencepalette,docstyle,showcasedata}}
-{{prepare:learnseq,learnlinks,learngenes,learnlabels}}
+## Recreate the four backbones {#bundled}
 
-## Replace coord {#switch}
-{{code:learnlinear}}
+<span id="prepare"></span><span id="switch"></span><span id="backbones"></span>
 
-## Read backbone lengths {#backbones}
-{{figure:linearseq}}
-Rows share one bp scale. Different sequence lengths remain different rather than being stretched to equal width.
+{{code:frontlinearbase}}
+{{figure:frontlinearbase}}
 
-## Add comparisons {#links}
-{{figure:linearlinks}}
-The same observed HSPs and cross-row connections remain. This also exposes the limitations of default long routes, addressed on the next page.
+## Add an aligned interval pair {#links}
 
-## Add strand-separated genes and labels {#labels}
-{{figure:linearlabels}}
-Arrows and labels use the same selected table. Display flips do not rewrite source strands. Continue to [2.3 Route cross-row links](collinear-routing.html).
+{{code:frontlinks,frontlinearlink}}
+
+{{figure:frontlinearlink}}
+
+The ribbon spans 26,298–51,139 bp on the first row and 7,121–31,959 bp on the second. Its horizontal shift reflects the position of each interval on its own sequence.
+
+## Inspect the CDS and add an arrow {#inspect-genes}
+
+{{code:frontgenes,frontselectedgene}}
+
+{{output:frontselectedgene}}
+
+This plus-strand integrase CDS spans 43,765–46,140 bp on the third row. Its original annotation is in `anno`.
+
+### Add it to the plot {#add-genes}
+
+{{code:frontlinearcds}}
+
+{{figure:frontlinearcds}}
+
+<span id="labels"></span>The red arrow appears in the right half of the third, green backbone. Add `geom_gene_label(data = chord_genes_example)` to show its name. Next, [adjust row spacing and add a scale bar](collinear-tuning.html).

@@ -20,14 +20,14 @@ navbar:
       text: Home
       href: index.html
     plots:
-      text: Visualizations
+      text: Plot courses
       menu:
         - text: Chord comparisons
-          href: chord.html
+          href: chord-start.html
         - text: Collinear comparisons
-          href: collinear.html
+          href: collinear-start.html
         - text: Plasmid maps
-          href: plasmids.html
+          href: plasmid-start.html
         - text: Gallery
           href: gallery.html
     start:
@@ -38,13 +38,13 @@ navbar:
       href: reference/index.html
     articles:
       text: Articles
-      href: articles.html
+      href: about.html
     gallery:
       text: Gallery
       href: gallery.html
     news:
       text: Changelog
-      href: news.html
+      href: about.html#status
 reference:
   - title: Construction and contracts
     contents:
@@ -155,5 +155,7 @@ reference:
       - '`restriction_site_example`'
       - '`ribbon_data_example`'
       - '`seq_data_example`'
+      - '`protein_seq_data_example`'
+      - '`protein_ribbon_data_example`'
       - '`single_gene_example`'
       - '`single_genome_example`'

@@ -48,16 +48,16 @@
     "zh": "pUC19 中重叠注释的分层显示"
   },
   "multitrack": {
-    "en": "pUC19 GC fractions, a three-bin moving mean and annotation bands",
-    "zh": "pUC19 GC 比例、三点滑动均值和注释类型带"
+    "en": "pUC19 GC fractions and a three-window moving mean",
+    "zh": "pUC19 GC 比例与三窗口滑动均值"
   },
   "homologs": {
-    "zh": "两条质粒的 AmpR 邻域：相同 CDS、200 bp 侧翼与源坐标",
-    "en": "AmpR neighbourhoods: identical CDS, 200 bp flanks and source coordinates"
+    "en": "Blue reverse-strand AmpR arrows and a grey ribbon between identical coding intervals.",
+    "zh": "蓝色箭头标出负链 AmpR，灰色带连接两段完全一致的编码 DNA。"
   },
   "decorations": {
-    "en": "Highlighting the query interval of an observed alignment",
-    "zh": "突出显示一条实际比对的查询区间"
+    "en": "Highlighting the pUC19 replication-origin interval",
+    "zh": "突出显示 pUC19 复制起点的实际区间"
   },
   "labelauto": {
     "en": "Informative gene annotations with automatic side placement",
@@ -72,8 +72,8 @@
     "zh": "同一组基因注释的沿弧标签"
   },
   "styling": {
-    "en": "Explicit sequence, strand and query-category colour scales",
-    "zh": "显式设置序列、链方向和查询类别的颜色标度"
+    "en": "A query-category colour scale on four chord backbones",
+    "zh": "四条弦图骨架与查询类别的颜色标度"
   },
   "paf": {
     "en": "A real minimap2 PAF comparison between two EMALE genomes",
@@ -84,8 +84,8 @@
     "en": "Your first plot: two bundled sequences, gene arrows and observed alignment intervals"
   },
   "showcasechord": {
-    "en": "Four-genome chord comparison with mixed backbone curvature and measured identity",
-    "zh": "四基因组弦图：混合骨架曲率与实测相似度"
+    "en": "Four original genomes with CDS sampled separately by source strand",
+    "zh": "四条原始基因组，按各序列真实链分别抽样 CDS"
   },
   "showcaseplasmid": {
     "en": "Dense pETDuet-1 map: features, reference primers and grouped restriction sites",
@@ -186,5 +186,185 @@
   "catalogcas": {
     "zh": "pSpCas9(BB)-2A-GFP (PX458)：参考特征图",
     "en": "pSpCas9(BB)-2A-GFP (PX458): source-backed feature map"
+  },
+  "firstchord": {
+    "en": "Two bundled sequence backbones and their observed alignment ribbons",
+    "zh": "两条随包序列的骨架及已有比对连接带"
+  },
+  "firstlinear": {
+    "en": "Two sequence rows share a base-pair scale and are joined by aligned intervals",
+    "zh": "两条序列共享碱基坐标尺度，带状连接标示对应区间"
+  },
+  "firstcircle": {
+    "en": "A circular pUC19 backbone with its name and length",
+    "zh": "标有名称与长度的 pUC19 圆形骨架"
+  },
+  "firstfeatures": {
+    "en": "The pUC19 replication-origin interval on the circular backbone",
+    "zh": "pUC19 圆形骨架上的复制起点注释区间"
+  },
+  "practicechord": {
+    "zh": "两条序列的弦图，每条增加一个基因箭头和原始注释名",
+    "en": "Two-sequence chord plot with one gene arrow and source annotation per sequence"
+  },
+  "practicelinear": {
+    "zh": "两行共线性图，带基因箭头、注释名及 10 kb 比例尺",
+    "en": "Two-row collinear plot with gene arrows, annotations and a 10 kb scale bar"
+  },
+  "practiceplasmid": {
+    "zh": "pUC19 圆图上的复制起点及标签",
+    "en": "pUC19 circular map with its labelled replication origin"
+  },
+  "frontbackbone": {
+    "zh": "四条序列的默认弧形骨架",
+    "en": "Default arc backbones for four sequences"
+  },
+  "frontribbon": {
+    "zh": "加入一条区间比对带",
+    "en": "One alignment ribbon added"
+  },
+  "frontfeature": {
+    "en": "One integrase CDS added to the green backbone",
+    "zh": "在绿色骨架上加入一个 integrase CDS"
+  },
+  "frontrotation": {
+    "zh": "相对默认弦图逆时针旋转 90°",
+    "en": "Chord layout rotated 90 degrees counterclockwise from the default"
+  },
+  "frontgap": {
+    "zh": "增大相邻骨架之间的间隙",
+    "en": "Wider gaps between adjacent backbones"
+  },
+  "frontradius": {
+    "zh": "缩小 MT118296.1 骨架的半径",
+    "en": "Move the MT118296.1 backbone inward"
+  },
+  "frontcurvature": {
+    "zh": "把 MT118296.1 骨架画成直线",
+    "en": "Draw MT118296.1 as a straight segment"
+  },
+  "frontorientation": {
+    "zh": "反转 MT118296.1 的显示方向",
+    "en": "Reverse the display direction of MT118296.1"
+  },
+  "frontroute": {
+    "zh": "向上移动连接带的控制点",
+    "en": "Move the ribbon control upward"
+  },
+  "frontnoavoid": {
+    "zh": "固定间距下连接带与 CDS 重叠",
+    "en": "Fixed clearance overlaps the CDS"
+  },
+  "frontsmooth": {
+    "zh": "连接带在 CDS 附近平滑让位",
+    "en": "The ribbon leaves smooth clearance near the CDS"
+  },
+  "frontseqlabels": {
+    "zh": "把序列标签放到内侧并横排",
+    "en": "Move sequence labels inward and set them horizontally"
+  },
+  "frontgenelabels": {
+    "zh": "给 CDS 添加原始注释名",
+    "en": "Label the CDS with its original annotation"
+  },
+  "frontmarkers": {
+    "zh": "区间高亮与有向点连接",
+    "en": "An interval highlight and a directed point link"
+  },
+  "frontorder": {
+    "zh": "交换两条骨架的显示顺序",
+    "en": "Swap the display order of two backbones"
+  },
+  "frontlinearbase": {
+    "zh": "四条共线性骨架",
+    "en": "Four collinear backbones"
+  },
+  "frontlinearlink": {
+    "zh": "四行中加入一条比对带",
+    "en": "One alignment ribbon across four rows"
+  },
+  "frontlinearcds": {
+    "en": "A CDS arrow on the third, green row",
+    "zh": "在第三条绿色骨架上加入 CDS 箭头"
+  },
+  "frontlineargap": {
+    "zh": "增大共线性图行距",
+    "en": "Wider spacing between collinear rows"
+  },
+  "frontlinearscale": {
+    "zh": "添加 10 kb 标尺",
+    "en": "A 10 kb scale bar"
+  },
+  "frontcirclestyle": {
+    "zh": "pUC19 的单线骨架",
+    "en": "A single backbone for pUC19"
+  },
+  "frontcirclerotation": {
+    "zh": "序列坐标原点位于 9 点钟的 pUC19 圆图",
+    "en": "pUC19 with the sequence coordinate origin at 9 o’clock"
+  },
+  "frontlinearcross": {
+    "zh": "跨过第二行的连接带",
+    "en": "A ribbon crossing the second row"
+  },
+  "mappingexample": {
+    "zh": "将比对一致性映射到连接带颜色",
+    "en": "Map alignment identity to ribbon colour"
+  },
+  "parameterexample": {
+    "en": "Set one backbone radius by sequence name",
+    "zh": "按序列名称单独设置一个骨架半径"
+  },
+  "segment": {
+    "en": "Two windows on one sequence. The right window is displayed in reverse.",
+    "zh": "同一序列的两个窗口。右窗口反向显示。"
+  },
+  "mappingposition": {
+    "en": "The dot marks 10,100 bp on the first source sequence.",
+    "zh": "黑点对应第一条序列的源坐标 10,100 bp。"
+  },
+  "recognition": {
+    "en": "Known primer matches and selected restriction sites on pUC19.",
+    "zh": "pUC19 上的已知引物匹配和所选酶切位点。"
+  },
+  "nativeprotein": {
+    "en": "Four complete proteins and three adjacent BLASTp ribbons, with a 50-aa scale bar",
+    "zh": "四条完整蛋白与三条相邻 BLASTp 连接，比例尺为 50 aa"
+  },
+  "nativeproteinchord": {
+    "en": "Four complete proteins and all six pairwise BLASTp alignments",
+    "zh": "四条完整蛋白及六对实际 BLASTp 比对的弦图"
+  },
+  "parameteruniform": {
+    "en": "One gap value for every sequence",
+    "zh": "所有序列使用同一间隙"
+  },
+  "parametervector": {
+    "en": "Four radii in sequence-table order",
+    "zh": "按序列表顺序指定四个半径"
+  },
+  "parameterstrand": {
+    "en": "Opposite offsets for forward and reverse CDS",
+    "zh": "按正负链分别设置 CDS 偏移"
+  },
+  "parameterwidth": {
+    "en": "Different widths for forward and reverse CDS",
+    "zh": "按正负链分别设置 CDS 宽度"
+  },
+  "parameterlabels": {
+    "en": "Named label radii for selected sequences",
+    "zh": "按序列名称调整标签半径"
+  },
+  "frontcrosswidth": {
+    "en": "A dedicated width for cross-row outlines",
+    "zh": "单独加粗跨行连接带边框"
+  },
+  "frontcrosssame": {
+    "en": "Cross-row outlines inherit the ordinary width",
+    "zh": "跨行边框沿用普通线宽"
+  },
+  "manualgenelabels": {
+    "en": "Manual gene labels in a chord view",
+    "zh": "弦图中的固定基因标签"
   }
 }

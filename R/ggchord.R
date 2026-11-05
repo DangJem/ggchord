@@ -14,7 +14,7 @@ globalVariables(c(
   "linetype", "zcolour", "zregionfill", "zoutline", "zlinetype",
   "outline_col", "linetype_val", "value", "source_row", "direction",
   "seq_colour", "ribbon_fill", "ribbon_alpha",
-  "ribbon_colour", "ribbon_linetype", "gene_fill", "feature_fill",
+  "ribbon_colour", "ribbon_linetype", ".ggchord_ribbon_linewidth", "gene_fill", "feature_fill",
   "feature_shape", "seq_ring", "bundle_n", "bundle_weight", "density",
   "region_fill", ".bundle_n", ".bundle_weight", ".bundle_density",
   ".feature_shape_raw", ".feature_boundaries", "feature_label_colour",
@@ -37,11 +37,13 @@ globalVariables(c(
 #'
 #' @param seq_data data.frame/tibble with accver and length, or a `GRanges`,
 #'   `Seqinfo` or `GInteractions` object with known full sequence lengths,
-#'   or a named nucleotide Biostrings `XStringSet`. Unnamed sequence objects must first
-#'   use [as_ggchord_seq()] with explicit `ids`.
-#'   Optional S4 inputs use [as_ggchord_seq()]. When present,
-#'   \code{sequence_unit} must be \code{"bp"}; amino-acid intervals require an
-#'   explicit CDS projection, and arbitrary character widths are not bp lengths.
+#'   or a named nucleotide or protein Biostrings `XStringSet`. Unnamed sequence
+#'   objects must first use [as_ggchord_seq()] with explicit `ids`.
+#'   Optional S4 inputs use [as_ggchord_seq()]. The `sequence_unit` column is
+#'   `"bp"` (default when omitted) or `"aa"`. All rows use the same unit.
+#'   Protein lengths come from complete proteins. Native aa plots accept
+#'   links and generic features; gene, primer and restriction layers require bp.
+#'   Arbitrary character widths are not biological sequence lengths.
 #' @param ribbon_data Optional alignment table with qaccver, saccver, qstart,
 #'   qend, sstart and send. length and pident are optional unless requested
 #'   by a mapping, filter or statistic. A `GInteractions` object uses
@@ -108,16 +110,12 @@ ggchord <- function(
   }
   seq_data <- ggchord_normalize_accver(seq_data)
   gene_data <- ggchord_normalize_accver(gene_data)
-  if (is.data.frame(seq_data) && "sequence_unit" %in% names(seq_data)) {
-    units <- as.character(seq_data$sequence_unit)
-    if (any(units %in% "aa")) ggchord_stop(
-      "ggchord(): amino-acid sequence widths are not nucleotide coordinates; ",
-      "use build_ggchord_cds() with project_ggchord_features() or ",
-      "project_ggchord_links(), then supply known nucleotide sequence lengths")
-    if (anyNA(units) || any(units != "bp")) ggchord_stop(
-      "ggchord(): sequence_unit must be 'bp'; supply DNA/RNA sequences or ",
-      "an explicit table of known nucleotide lengths rather than character widths")
-  }
+  sequence_unit <- ggchord_sequence_unit(seq_data, "ggchord()")
+  ggchord_check_interval_unit(ribbon_data, sequence_unit, "ggchord()")
+  ggchord_check_interval_unit(gene_data, sequence_unit, "ggchord()")
+  if (identical(sequence_unit, "aa") && !is.null(gene_data)) ggchord_stop(
+    "ggchord(): gene_data requires bp coordinates; use geom_feature() for protein domains")
+
 
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
@@ -191,13 +189,13 @@ ggchord <- function(
   #    on the plot itself so the object is fully self-contained.
   # ====================================================================
   p <- ggplot2::ggplot() +
-    coord_chord(rotation = 45) +
+    coord_chord(rotation = 0) +
     theme_ggchord()
 
   p$ggchord <- list(
     data   = list(seq_data = seq_data, ribbon_data = ribbon_data,
                   gene_data = gene_data),
-    global = list(rotation = 45, debug = debug, validate = validate),
+    global = list(rotation = 0, debug = debug, validate = validate),
     validation = validation,
     # Shared reference environment for plot-owned layout caching.
     ref    = new.env(),

@@ -14,8 +14,8 @@ if('zh' %in% languages) {
 for (lang in languages) {
   is_han <- lang == 'zh'
   Sys.setenv(LANGUAGE=if(is_han)'zh_CN' else 'en')
-  nav_names <- if(is_han) c('首页','开始使用','可视化','全部教程','函数文档') else
-    c('Home','Get started','Visualizations','All guides','Reference')
+  nav_names <- if(is_han) c('首页','开始使用','绘图章节','专题','函数参考') else
+    c('Home','Get started','Plot chapters','Topics','Reference')
   keys <- c('home','start','plots','articles','reference')
   components <- setNames(lapply(seq_along(keys),function(i) list(text=nav_names[i])),keys)
   # The three task modules are shared by the top menu and the full site navigation.
@@ -23,8 +23,10 @@ for (lang in languages) {
   modules <- Filter(function(x) x$id %in% c('chord','collinear','plasmid'),groups)
   components$plots$menu <- lapply(modules,function(group) list(
     text=group$title[[lang]],href=paste0(group$pages[[1]],'.html')))
-  components$plots$menu <- c(components$plots$menu,list(list(
-    text=if(is_han)'示例图集' else 'Gallery',href='gallery.html')))
+  topics <- Filter(function(x) x$id %in% c('data','techniques','cases'), groups)
+  components$articles$menu <- c(list(list(
+    text=if(is_han) '章节目录' else 'Chapter index', href='about.html')),
+    lapply(topics, function(group) list(text=group$title[[lang]], href=paste0('about.html#path-',group$id))))
   cfg <- list(destination=paste0('.site/',lang),lang=if(is_han)'zh_CN' else 'en',
     navbar=list(components=components))
   # Localized category titles; topic bindings remain the exact source names.
@@ -41,6 +43,7 @@ for (lang in languages) {
   # Assign the reviewed localized sections before the public reference builder.
   if(is_han) pkg$meta$reference <- cfg$reference
   pkg$meta$navbar$components$plots$menu <- components$plots$menu
+  pkg$meta$navbar$components$articles <- components$articles
   if(is_han) {
     for(i in seq_len(nrow(pkg$topics))) {
       path <- file.path('.site/reference-zh',pkg$topics$file_in[i])

@@ -1,14 +1,11 @@
 <div class="task-intro"><p>把真实注释画为独立图层，选择合适形状，并让重叠区间和文字共享堆叠位置。</p></div>
 
-## 本页准备 {#prepare}
-在新的 R 会话中先运行下方代码，再按页面顺序继续。配色和排版是可选的显示设置，输入只选择需要的列。
-
-{{prepare:setup,sequencepalette,featurepalette,docstyle,plasmiddata}}
+<span id="prepare"></span>
 
 ## 保留注释语义 {#stack}
-本页准备代码已加载 pUC19 的实际注释。
+用 pUC19 识别结果的前六条区间绘制圆图。
 这里保留 pUC19 中实际重叠的注释和原本未知的链方向。
-几何和填色分别映射同一类别；显式固定 `shape` 会覆盖 shape 映射。
+两层使用同一个堆叠位置，文字跟随对应注释。
 
 {{code:featurestack}}
 {{figure:featurestack}}
@@ -33,9 +30,9 @@
 {{code:decorations}}
 {{figure:decorations}}
 
-区域叠层有自己的数据和 `region_fill` 标度。`geom_seq_label()` 命名序列，
+图中高亮 pUC19 复制起点的实际范围。区域叠层有自己的数据和 `region_fill` 标度。`geom_seq_label()` 命名序列，
 `geom_seq_center_label()` 在单圆图中心提供名称/长度，`geom_seq_break()` 标记裁剪或
-分段末端。`geom_seq_scale()` 是仅用于共线性图的独立 bp 参照条，与控制序列基因组轴
+分段末端。`geom_seq_scale()` 是仅用于共线性图的独立序列位置参照条，与控制序列基因组轴
 的 `scale_seq_position_continuous()` 不同。普通 ggplot2 注释应使用
 [位置映射](views.html#mapping)，不能把 bp 直接当作笛卡尔 x/y。
 

@@ -1,31 +1,15 @@
 <div class="task-intro"><p>Put common adjustments in the appropriate ggplot2 component: mappings, geometry, positions, coordinates and themes have distinct roles.</p></div>
 
-## Prepare this page {#prepare}
-In a fresh R session, run the code below, then follow this page in order. Colours and layout are optional display choices; inputs select only the fields needed.
-
-{{prepare:setup,sequencepalette,docstyle}}
+<span id="prepare"></span>
 
 ## Assign each responsibility {#grammar}
-| Task | Interface |
-| --- | --- |
-| Map a column to an aesthetic | `aes()` |
-| Define mapping and guide | `scale_*()`, `guides()` |
-| Geometry and fixed style | `geom_*()` |
-| Local placement | `position_*()` |
-| Global coordinate system | `coord_*()` |
-| Non-data appearance | `theme_*()`, `theme()` |
-| Titles and captions | `labs()` |
-
-Fixed styles may be supplied directly to geoms. Data-driven variation needs a
-mapping and scale. An explicit fixed value overrides its mapping; omitting the
-fixed argument preserves the mapping. User scales override inferred defaults.
-`shape` is the fixed feature geometry parameter; `feature_shape` remains the
-mapped role. Explicit `shape = NULL` is invalid, not a request to use a mapping.
+[Plotting concepts](modes.html#prepare) explains layers, mappings, scales and coordinates. The example below applies that distinction to alignment identity.
 
 ## Map link identity {#mapping}
-After this page’s preparation code:
 
 {{code:adjustments}}
+
+{{figure:mappingexample}}
 
 ## Place features {#position}
 Use `position_strand(c("+" = .1, "-" = -.2))` for signed strand offsets.

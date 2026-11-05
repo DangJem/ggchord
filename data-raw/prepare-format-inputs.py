@@ -6,7 +6,7 @@ p=argparse.ArgumentParser();p.add_argument('archive',type=Path);a=p.parse_args()
 root=Path(__file__).resolve().parent.parent;out=root/'examples/format-inputs';out.mkdir(exist_ok=True)
 archive_hash=hashlib.sha256(a.archive.read_bytes()).hexdigest()
 metadata=json.loads((out/'sources.json').read_text())
-metadata=[x for x in metadata if x.get('accession')=='L09137.2']
+metadata=[x for x in metadata if x.get('accession')=='L09137.2' or Path(x.get('file','')).name.startswith('protein-pair')]
 with tarfile.open(a.archive) as tar:
  def select(member,name,rule):
   original=tar.extractfile(member).read();lines=original.decode().splitlines(keepends=True)

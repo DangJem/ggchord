@@ -7,7 +7,7 @@ chunks <- setNames(lapply(seq_len(length(markers)-1L), function(i)
   text[seq.int(markers[i]+1L,markers[i+1L]-1L)]),
   sub('^# ---- ([a-z]+) ----$','\\1',text[markers[-length(markers)]]))
 env <- new.env(parent=globalenv())
-for(name in setdiff(names(chunks),c('save','preview','imports','firstsave'))) {
+for(name in setdiff(names(chunks),c('save','preview','frontsave','frontpreview','imports','firstsave','firstsavebasic'))) {
   cat('Example:',name,'\n')
   eval(parse(text=chunks[[name]]),env)
 }
@@ -37,9 +37,9 @@ assets <- rbind(assets, data.frame(
  width=c(12,16.5,12),height=c(10,8,8),units="in",dpi=144,device="png",
  background="#FFFCF5",generator="tools/documentation-plots.R",
  input=c(
-  "Four original FASTA/GFF3 genomes; at most three observed BLAST HSPs per pair, length >=900 bp and identity >=75%; explicit backbone curvature",
+  "Four original FASTA/GFF3 genomes; at most three observed BLAST HSPs per pair, length >=900 bp and identity >=75%; explicit backbone curvature and radii 0.82–1.18",
   "Bundled pETDuet-1; 20 curated features, five exact reference primers, commercial_all unique_6plus restriction subset",
-  "Same four original genomes and observed HSP subset; all CDS, selected long-CDS highlights and GC computed from original FASTA in 2 kb windows"
+  "Same four original genomes and observed HSP subset; selected CDS, separately routed cross-row links, and a base-pair scale bar"
  )
 ))
 learning_ids <- c("learnseq", "learnlinks", "learngenes", "learnlabels", "linearseq", "linearlinks", "linearlabels", "plasmidbackbone", "plasmidfeatures", "plasmidtext")
@@ -55,7 +55,79 @@ extra$width <- 10
 extra$height <- c(rep(8, 4), rep(6, 3), rep(8, 3), rep(8, 13))
 extra$input <- c(rep("Progressive layers using the same four repository FASTA/GFF3 records and explicitly selected observed HSPs/CDS", 7), rep("Bundled pUC19; stepwise backbone, source annotations and labels", 3), paste("Bundled source-backed reference", env$catalog_summary$accver, "with current feature recognition; see plasmid-catalog.csv"))
 assets <- rbind(assets, extra)
-assets$background <- "#FFFCF5"
+assets <- rbind(assets, data.frame(
+ id=c("firstchord", "firstlinear", "firstcircle", "firstfeatures",
+      "practicechord", "practicelinear", "practiceplasmid"),
+ object=c("p_first_chord", "p_first_linear", "p_first_circle", "p_first_features",
+          "p_annotated_chord", "p_annotated_linear", "p_annotated_plasmid"),
+ width=c(7, 8, 6, 6, 7, 8, 6), height=c(7, 5, 6, 6, 7, 5, 6), units="in", dpi=144, device="png",
+ background="white", generator="tools/documentation-plots.R",
+ input=c(rep("Two bundled real sequence records and their observed alignment intervals", 2),
+         "Bundled pUC19 full sequence length",
+         "Bundled pUC19 with its curated replication-origin annotation",
+         rep("Two bundled sequence records with a source-strand CDS annotation on each", 2),
+         "Bundled pUC19 with its labelled replication-origin annotation")
+))
+basic_ids <- c("firstchord", "firstlinear", "firstcircle", "firstfeatures",
+               "practicechord", "practicelinear", "practiceplasmid")
+chord_lesson_ids <- c("frontbackbone", "frontribbon", "frontfeature", "frontrotation", "frontgap",
+                      "frontradius", "frontcurvature", "frontorientation", "frontroute",
+                      "frontnoavoid", "frontsmooth", "frontseqlabels", "frontgenelabels", "frontmarkers", "frontorder")
+chord_lesson_assets <- assets[rep(match("firstchord", assets$id), length(chord_lesson_ids)), ]
+chord_lesson_assets$id <- chord_lesson_ids
+chord_lesson_assets$object <- c("p_chord_backbone", "p_chord_ribbon", "p_chord_feature",
+                               "p_chord_rotated", "p_chord_gap", "p_chord_radius",
+                               "p_chord_curvature", "p_chord_orientation", "p_chord_route",
+                               "p_chord_no_avoid", "p_chord_smooth", "p_chord_sequence_labels",
+                               "p_chord_gene_labels", "p_chord_markers", "p_chord_order")
+chord_lesson_assets$input <- "Four bundled sequences, with the first observed HSP and one original CDS annotation where shown"
+assets <- rbind(assets, chord_lesson_assets)
+basic_ids <- c(basic_ids, chord_lesson_ids)
+additional_ids <- c("frontlinearbase", "frontlinearlink", "frontlinearcds", "frontlineargap", "frontlinearscale", "frontcirclestyle", "frontcirclerotation", "frontlinearcross")
+additional_assets <- assets[match(c(rep("firstlinear", 5), rep("firstcircle", 2), "firstlinear"), assets$id), ]
+additional_assets$id <- additional_ids
+additional_assets$object <- c("p_linear_base", "p_linear_link", "p_linear_cds", "p_linear_gap", "p_linear_scale", "p_circle_single", "p_circle_rotated", "p_linear_cross")
+additional_assets$input <- c(rep("Four bundled sequences with one observed HSP and one original CDS where shown", 5),
+                             rep("Bundled pUC19 with its curated replication origin where shown", 2),
+                             "Four bundled sequences with an adjacent and a cross-row HSP")
+assets <- rbind(assets, additional_assets)
+basic_ids <- c(basic_ids, additional_ids)
+basic_ids <- c(basic_ids, "density", "pointlinks", "styling")
+assets$background[assets$id %in% c("density", "pointlinks", "styling")] <- "white"
+assets$background[!assets$id %in% basic_ids] <- "#FFFCF5"
+extra_native <- assets[rep(match("styling", assets$id), 2), ]
+extra_native$id <- c("mappingexample", "parameterexample")
+extra_native$object <- c("p_mapped", "p_parameters")
+extra_native$input <- "Bundled sequence and alignment or source-strand CDS inputs"
+assets <- rbind(assets, extra_native)
+basic_ids <- c(basic_ids, "labels", "featurestack", "tracks", "multitrack", "decorations",
+               "labelauto", "labelradial", "labelarc", "mappingexample", "parameterexample")
+view_assets <- assets[match(c("focus", "focus", "firstcircle"), assets$id), ]
+view_assets$id <- c("segment", "mappingposition", "recognition")
+view_assets$object <- c("p_segments", "p_marked", "p_sites")
+assets <- rbind(assets, view_assets)
+basic_ids <- c(basic_ids, "focus", "homologs", "segment", "mappingposition", "realchord", "reallinear", "plasmid", "paf", "recognition")
+assets$background[assets$id %in% basic_ids] <- "white"
+protein_assets <- assets[match(c("firstlinear", "firstchord"), assets$id), ]
+protein_assets$id <- c("nativeprotein", "nativeproteinchord")
+protein_assets$object <- c("p_native_protein", "p_native_chord")
+protein_assets$input <- "Four complete EMALE/Mavirus proteins and six observed BLASTp comparisons; sequence_unit = aa"
+protein_assets$background <- "white"
+assets <- rbind(assets, protein_assets)
+basic_ids <- c(basic_ids, protein_assets$id)
+tutorial_ids <- c("parameteruniform", "parametervector", "parameterstrand", "parameterwidth", "parameterlabels", "frontcrosswidth", "frontcrosssame", "manualgenelabels")
+tutorial_assets <- assets[match(c(rep("firstchord", 5), rep("firstlinear", 2), "firstchord"), assets$id), ]
+tutorial_assets$id <- tutorial_ids
+tutorial_assets$object <- c("p_parameter_uniform", "p_parameter_vector", "p_parameter_strand", "p_parameter_width", "p_parameter_labels", "p_cross_width", "p_cross_same", "p_manual_labels")
+tutorial_assets$input <- "Bundled sequence records and original source-strand CDS or observed HSPs; one parameter change per example"
+assets <- rbind(assets, tutorial_assets)
+basic_ids <- c(basic_ids, tutorial_ids)
+assets$width[assets$id %in% c("labels", "styling", "featurestack", "decorations")] <- 8
+assets$height[assets$id %in% c("labels", "styling", "featurestack", "decorations")] <- 8
+assets$coordinate <- vapply(assets$object, function(name) {
+ coord <- get(name, env)$coordinates
+ if (inherits(coord, "CoordCollinear")) "collinear" else if (inherits(coord, "CoordCircular")) "circular" else "chord"
+}, character(1))
 requested <- commandArgs(trailingOnly=TRUE)
 if(length(requested) && any(!requested %in% assets$id)) stop('Unknown documentation figure ID')
 if(length(requested)) {
@@ -69,10 +141,12 @@ selected <- if(length(requested)) which(assets$id %in% requested) else seq_len(n
 for(i in selected) {
  cat('Figure:',assets$id[i],'\n')
  plot <- get(assets$object[i],env)
- stopifnot(inherits(plot$theme$panel.background, 'element_blank'),
+ if (!assets$id[i] %in% basic_ids) stopifnot(inherits(plot$theme$panel.background, 'element_blank'),
    identical(toupper(plot$theme$plot.background$fill), '#FFFCF5'))
- ggplot2::ggsave(paste0('man/figures/',assets$id[i],'.png'),plot,
-   width=assets$width[i],height=assets$height[i],units='in',dpi=144,device='png',bg=assets$background[i])
+ preview <- view_ggchord(plot, width = assets$width[i], height = assets$height[i],
+   units = 'in', dpi = assets$dpi[i], device = 'png', bg = assets$background[i], viewer = 'none')
+ if (!file.copy(preview, file.path('man/figures', paste0(assets$id[i], '.png')), overwrite = TRUE))
+   stop('Could not copy preview for ', assets$id[i])
 }
 for(name in c('p_mapped','p_sites','p_segments','p_migrated','p_offsets','p_bundle','p_manual_labels','p_marked','p_parameters'))
  invisible(ggplot2::ggplot_build(get(name,env)))
@@ -90,15 +164,16 @@ write.csv(catalog, 'website/assets/plasmid-catalog.csv', row.names=FALSE)
 results<-list(
  showcase=list(sequences=nrow(env$show_sequences),CDS=nrow(env$show_genes),
    observed_HSPs=nrow(env$show_alignments),displayed_HSPs=nrow(env$show_links),
-   selected_labels=nrow(env$show_labels),displayed_CDS=nrow(env$show_features),
+   selected_labels=nrow(env$chord_labels),
+   displayed_CDS=nrow(env$chord_genes),
    collinear_HSPs=nrow(env$show_adjacent)+nrow(env$show_cross),
    collinear_CDS=nrow(env$show_linear_features),
    plasmid_features=nrow(env$show_plasmid_features),plasmid_primers=nrow(env$show_plasmid_primers),
    plasmid_cut_positions=length(unique(env$show_plasmid_sites$position))),
  real=list(sequences=nrow(env$seq_real),features=nrow(env$feature_real),displayed_chord_features=nrow(env$real_display_features),raw_links=nrow(env$link_real),
-   displayed_links=nrow(env$real_filtered$data),labelled_features=nrow(env$real_labels)),
+   displayed_links=nrow(env$real_filtered$data),labelled_features=0L),
  cleaning=list(input_rows=nrow(env$problem_links),retained_rows=nrow(env$repaired$ribbon_data)),
- ribbons=list(filtered=nrow(env$real_filtered$data),deduplicated=nrow(env$unique_links$data),
+ ribbons=list(filtered=nrow(env$selected_links$data),deduplicated=nrow(env$unique_links$data),
    merged=nrow(env$merged_links$data),bundled=nrow(env$bundled_links$data)),
  plasmid=list(sequence_length=get("plasmid_example_pUC19", envir = env)$length,features=nrow(env$plasmid_features),
    primers=nrow(env$plasmid_primers),all_sites=nrow(env$plasmid_sites),display_sites=nrow(env$display_sites)),

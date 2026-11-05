@@ -3,6 +3,8 @@
 ggchord_normalize_sequence_input <- function(sequence, caller) {
   if (is.data.frame(sequence)) {
     ggchord_require_columns(sequence, c("accver", "sequence"), caller)
+    if (identical(ggchord_sequence_unit(sequence, caller), "aa"))
+      ggchord_stop(caller, ": DNA sequence input is required; sequence_unit is 'aa'")
     ids <- as.character(sequence$accver)
     seqs <- as.character(sequence$sequence)
   } else if (is.character(sequence) && length(sequence)) {

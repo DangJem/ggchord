@@ -1,0 +1,38 @@
+{
+  "url": "https://raw.githubusercontent.com/thackl/gggenomes/master/data-raw/emales.tgz",
+  "archive_sha256": "e31189a7450ebcd4c5b2a797e22759e6b797147ed6f4b072c973411043a23ec4",
+  "members": [
+    {
+      "member": "emales/emales.faa",
+      "sha256": "8065dccf6658d1954621f90b12fcefa39e9c3468490e0086043fb8e63e3a9b10"
+    },
+    {
+      "member": "emales/mavirus.faa",
+      "sha256": "8094d2f3c874b1c13aa81450f0bad16b502b6ae9287d57680779d34ac3a85ee6"
+    }
+  ],
+  "protein_ids": [
+    "BVI_029_0020",
+    "BVI_058_0011",
+    "E4-10_023_0015",
+    "ADZ16414.1"
+  ],
+  "blastp_version": "ggchord-blastp: 2.17.0+\n Package: blast 2.17.0, build Jul  1 2025 08:59:26",
+  "blastp_arguments": [
+    "-query",
+    "four-proteins.faa",
+    "-subject",
+    "four-proteins.faa",
+    "-outfmt",
+    "6",
+    "-evalue",
+    "1e-5",
+    "-max_hsps",
+    "1",
+    "-out",
+    "all-vs-all-blastp.tsv"
+  ],
+  "fasta_sha256": "c87a6e981ae5ac323b355f753381dde6d515dd58f9d1b662c00e1faa28255e96",
+  "blastp_sha256": "2d55a043e83608cef0fb4d7d656b92adaa316f4d0dccacfeae5f1b31eaafc5b7",
+  "selection": "Three complete EMALE proteins from the cluster containing BVI_023A_0009, plus the matching complete Mavirus ADZ16414.1 protein. Bundled links retain one direction for each of six unordered pairs. All 16 computed rows are retained here."
+}

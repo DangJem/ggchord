@@ -10,7 +10,7 @@ from collections import Counter
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
-from documentation_lib import ROOT, WEB, PAGES, CAPTIONS, expand, snippets
+from documentation_lib import ROOT, WEB, PAGES, CAPTIONS, RECIPES, expand, snippets, localize_r_comments
 import importlib.util
 
 fingerprint_spec = importlib.util.spec_from_file_location('plot_fingerprints', ROOT/'tools/documentation-fingerprints.py')
@@ -71,12 +71,17 @@ def main():
     require(len(slugs) == len(set(slugs)), 'Duplicate page slug')
     navigation = json.loads((WEB/'navigation.json').read_text())
     entries = [slug for group in navigation for slug in group['pages']]
-    require(set(entries) == set(slugs) and len(entries) == len(set(entries)),
-            'Site guide must cover every current page once')
+    require(set(entries) == set(slugs) - {'index'} and len(entries) == len(set(entries)),
+            'Site guide must cover every current learning page once and exclude the home page')
     require({'chord','collinear','plasmid'} <= {group['id'] for group in navigation},
             'Missing visualization task module')
     def blocks(text):
         return re.findall(r'```[^\n]*\n(.*?)\n```', text, re.S)
+    def executable_text(block):
+        return '\n'.join(line for line in block.replace('-zh.R', '.R').splitlines()
+                          if not re.match(r'^\s*#', line))
+    def executable_blocks(text):
+        return [executable_text(block) for block in blocks(text)]
     for p in PAGES:
         texts = [(WEB/lang/(p['slug']+'.md')).read_text() for lang in ['en','zh']]
         for lang, text in zip(['en','zh'],texts):
@@ -87,7 +92,7 @@ def main():
                 f'{lang}/{p["slug"]}: headings need explicit paired anchors')
         require(re.findall(r'\{#([^}]+)\}', texts[0]) == re.findall(r'\{#([^}]+)\}', texts[1]), f'{p["slug"]}: unmatched anchors')
         require(re.findall(r'\{\{[^}]+\}\}', texts[0]) == re.findall(r'\{\{[^}]+\}\}', texts[1]), f'{p["slug"]}: unmatched shared code/asset markers')
-        require(blocks(expand(texts[0], 'en')) == blocks(expand(texts[1], 'zh')), f'{p["slug"]}: mismatched executable code')
+        require(executable_blocks(expand(texts[0], 'en')) == executable_blocks(expand(texts[1], 'zh')), f'{p["slug"]}: mismatched executable code')
     for lang in ['en','zh']:
         require({f.stem for f in (WEB/lang).glob('*.md')} == set(slugs), f'{lang}: orphan or missing source page')
     subprocess.run(['python3','tools/reference-translations.py','--check'],cwd=ROOT,check=True)
@@ -95,6 +100,21 @@ def main():
     with (WEB/'assets/plots.csv').open() as f:
         assets = list(csv.DictReader(f))
     require({a['id'] for a in assets} == set(CAPTIONS), 'Figure manifest/captions mismatch')
+    by_id = {a['id']: a for a in assets}
+    for group in navigation:
+        expected = {'chord': 'chord', 'collinear': 'collinear', 'plasmid': 'circular'}.get(group['id'])
+        if not expected: continue
+        for slug in group['pages']:
+            source = (WEB/'en'/(slug+'.md')).read_text()
+            for figure in re.findall(r'\{\{figure:([a-z]+)\}\}', source):
+                require(by_id.get(figure, {}).get('coordinate') == expected,
+                        f'{slug}: figure {figure} must use {expected} coordinates')
+    for page in PAGES:
+        source = (WEB/'en'/(page['slug']+'.md')).read_text()
+        for keys in re.findall(r'\{\{code:([a-z,]+)\}\}', source):
+            if keys in {'showcasechord', 'showcasecollinear', 'showcaseplasmid'}: continue
+            lines = sum(len(snippets()[key].splitlines()) for key in keys.split(','))
+            require(lines <= 22, f'{page["slug"]}: simplify long teaching block {keys} ({lines} lines)')
     current_fingerprints = fingerprint_module.fingerprints()
     for a in assets:
         path = ROOT/a['file']
@@ -113,7 +133,7 @@ def main():
     for lang in ['en','zh']:
         targets = {p['slug']: set(re.findall(r'\{#([^}]+)\}', (WEB/lang/(p['slug']+'.md')).read_text())) for p in PAGES}
         for p in PAGES:
-            for url in re.findall(r'\]\(([^)\s]+)\)', expand((WEB/lang/(p['slug']+'.md')).read_text(),lang)):
+            for url in re.findall(r'\]\(([^)\s]+)\)', expand((WEB/lang/(p['slug']+'.md')).read_text(),lang,figures='../assets')):
                 split = urlsplit(url)
                 if split.scheme or split.netloc: continue
                 if split.path.startswith('reference/'):
@@ -126,9 +146,10 @@ def main():
                 elif split.path.startswith('../assets/'):
                     name = Path(split.path).name
                     origin = ROOT/'man/figures'/name if name.endswith(('.png','.svg')) else WEB/'assets'/name
-                    if name=='NEWS.md': origin=ROOT/'NEWS.md'
+                    if name in ['NEWS.md', 'MIGRATION.md', 'MIGRATION-Hans.md']: origin=ROOT/name
                     if name=='ASSET-SOURCES.md': origin=WEB/'ASSET-SOURCES.md'
                     if name=='documentation-examples.R': origin=ROOT/'tools/documentation-examples.R'
+                    if name in {f'prepare-{key}{suffix}.R' for key in RECIPES for suffix in ['', '-zh']}: origin=WEB/'showcase-recipes.json'
                     if name in ['tutorial-inputs.zip','input-hashes.json']: origin=ROOT/'examples'
                     require(origin.exists(), f'{lang}/{p["slug"]}: unknown asset {url}')
     icon = json.loads((WEB/'assets/icon.json').read_text())
@@ -140,13 +161,14 @@ def main():
     require(all('`'+name+'`' in config for name in names), 'Native pkgdown reference omits Rd topics')
     coverage=json.loads((WEB/'coverage.json').read_text())
     code=snippets()
-    require(len(coverage)==18,'Expected 18 reviewed capability families')
+    require(len(coverage)==17,'Expected 17 reviewed capability families')
     results=json.loads((WEB/'assets/example-results.json').read_text())
     for family in coverage:
         require(family['result'] is None or family['result'] in results,f'{family["id"]}: missing result record')
         for lang in ['en','zh']:
             prose='\n'.join((WEB/lang/(slug+'.md')).read_text() for slug in family['articles'])
-            require(all(key in code and '{{code:'+key+'}}' in prose for key in family['snippets']),f'{family["id"]}: missing shared example in {lang}')
+            article_code = {key for marker in re.findall(r'\{\{(?:code|prepare):([a-z,]+)\}\}', prose) for key in marker.split(',')}
+            require(all(key in code and key in article_code for key in family['snippets']),f'{family["id"]}: missing shared example in {lang}')
             require(all(key in CAPTIONS and '{{figure:'+key+'}}' in prose for key in family['figures']),f'{family["id"]}: missing output in {lang}')
     # README/vignette resources and links are source paths, not the frozen site.
     for path in [ROOT/'README.md',ROOT/'README-Hans.md',ROOT/'MIGRATION.md',ROOT/'MIGRATION-Hans.md',*(ROOT/'vignettes').glob('*.Rmd')]:
@@ -160,6 +182,13 @@ def main():
             elif split.fragment:
                 require(unquote(split.fragment) in ids,f'{path.name}: missing chapter {url}')
     if not args.source_only:
+        for key, chunks in RECIPES.items():
+            for lang in ['en', 'zh']:
+                filename = f'prepare-{key}' + ('-zh' if lang == 'zh' else '') + '.R'
+                script = ROOT / '.site' / 'assets' / filename
+                expected = '\n\n'.join(localize_r_comments(code[name], lang) for name in chunks) + '\n'
+                require(script.is_file() and script.read_text() == expected,
+                        f'Preparation script differs from shared source: {key} / {lang}')
         out = ROOT/'.site'
         require(out.is_dir(), 'Build .site first')
         docs = {p.resolve():Document(p) for p in out.rglob('*.html')}
@@ -171,7 +200,7 @@ def main():
             for page in PAGES:
                 if page['slug']=='reference': continue
                 path=(out/lang/(page['slug']+'.html')).resolve()
-                expected=blocks(expand((WEB/lang/(page['slug']+'.md')).read_text(),lang))
+                expected=blocks(expand((WEB/lang/(page['slug']+'.md')).read_text(),lang,figures='../assets'))
                 require(path in docs and list(map(normalize,docs[path].codeblocks))==list(map(normalize,expected)),f'{lang}/{page["slug"]}: rendered code differs from shared source')
         for path,doc in docs.items():
             rel = str(path.relative_to(out))
@@ -215,13 +244,13 @@ def main():
                 partner=(out/'zh'/path.relative_to(out/'en')).resolve()
                 require(partner in docs and set(doc.ids)==set(docs[partner].ids),f'{path.relative_to(out)}: counterpart anchors differ')
                 if path.parent.name=='reference' and path.name!='index.html' and partner in docs:
-                    require(list(map(normalize,doc.codeblocks))==list(map(normalize,docs[partner].codeblocks)),f'{path.name}: reference usage/examples differ by language')
+                    require([normalize(executable_text(code)) for code in doc.codeblocks]==[normalize(executable_text(code)) for code in docs[partner].codeblocks],f'{path.name}: reference usage/examples differ by language')
                     require(len(re.findall('[\u3400-\u9fff]', ''.join(docs[partner].main_text)))>=10,f'{path.name}: translated reference body is missing')
                     require(bool(doc.codeblocks) or 'usage' not in doc.ids,f'{path.name}: missing usage code')
         require(any('标签' in p['text'] for p in json.loads((out/'zh/search.json').read_text())), 'Han search content absent')
     if errors:
         raise SystemExit('\n'.join(errors))
-    print(f'PASS: {len(PAGES)} language pairs, identical shared code, assets, {len(exports)} exports / {len(rd_topics)} Rd topics'+(' and generated links/anchors/search.' if not args.source_only else '.'))
+    print(f'PASS: {len(PAGES)} language pairs, equivalent executable code, assets, {len(exports)} exports / {len(rd_topics)} Rd topics'+(' and generated links/anchors/search.' if not args.source_only else '.'))
 
 if __name__ == '__main__':
     main()

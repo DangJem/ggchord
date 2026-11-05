@@ -5,6 +5,16 @@
     "accver / length"
   ],
   [
+    "sequence unit",
+    "序列坐标单位",
+    "sequence_unit = bp / aa"
+  ],
+  [
+    "amino-acid position",
+    "氨基酸位置",
+    "one-based inclusive aa / 一基闭区间"
+  ],
+  [
     "chord diagram",
     "弦图",
     "coord_chord()"
@@ -71,42 +81,12 @@
   ],
   [
     "layout units",
-    "原生布局单位",
+    "布局坐标单位",
     "not bp or mm / 不等于 bp 或 mm"
-  ],
-  [
-    "source row",
-    "已解析输入来源行",
-    "source_row"
-  ],
-  [
-    "physical file line",
-    "物理文件行",
-    ".source_line"
-  ],
-  [
-    "focus",
-    "局部聚焦",
-    "focus_ggchord_data()"
-  ],
-  [
-    "segment",
-    "分段窗口",
-    "segment_ggchord_data()"
-  ],
-  [
-    "leader",
-    "标签引导线",
-    "label / connection"
   ],
   [
     "CDS projection",
     "编码序列坐标投影",
     "build_ggchord_cds()"
-  ],
-  [
-    "measured panel",
-    "已测量面板",
-    "not visual certification / 不等于视觉认证"
   ]
 ]

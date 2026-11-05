@@ -1,0 +1,26 @@
+{
+  "chord": [
+    "sequencepalette",
+    "docstyle",
+    "showcasedata",
+    "chordshowcasegenes"
+  ],
+  "collinear": [
+    "sequencepalette",
+    "docstyle",
+    "showcasedata"
+  ],
+  "plasmid": [
+    "docstyle",
+    "showcaseplasmiddata"
+  ],
+  "catalog": [
+    "docstyle",
+    "catalogplots"
+  ],
+  "ampr": [
+    "homologinput",
+    "homologdna",
+    "homologmembership"
+  ]
+}

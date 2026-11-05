@@ -98,11 +98,11 @@ body {
 .page-nav ul { list-style: none; padding: 0; margin: 0; }
 .page-nav a { display: block; line-height: 1.55; padding: 6px 8px; color: var(--gg-muted); text-decoration: none; border-left: 2px solid var(--rule); }
 .page-nav a:hover, .page-nav a[aria-current] { color: var(--accent); border-left-color: var(--accent); background: var(--gg-soft); }
-.chapter-nav section, .chapter-drawer section { margin: 0 0 22px; }
-.chapter-group { color: var(--ink); font-size: .85rem; font-weight: 750; margin: 0 0 5px; }
-.chapter-nav section:nth-of-type(2) .chapter-group { color: var(--coral); }
-.chapter-nav section:nth-of-type(3) .chapter-group { color: var(--accent); }
-.chapter-nav section:nth-of-type(4) .chapter-group { color: var(--gold); }
+.chapter-section { margin-block: 0 10px; }
+.chapter-section summary { padding-block: 4px; cursor: pointer; color: var(--ink); font-weight: 700; }
+.chapter-section[open] summary { color: var(--accent); }
+.lesson-stage { color: var(--gg-muted); font-size: .9rem; }
+.lesson-pagination { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; border-top: 1px solid var(--rule); margin-top: 36px; padding-top: 16px; }
 .chapter-nav a, .chapter-drawer nav a { display: block; padding: 5px 9px; color: var(--gg-muted); line-height: 1.55; text-decoration: none; border-left: 2px solid transparent; }
 .chapter-nav a:hover, .chapter-drawer a:hover { color: var(--accent); background: var(--gg-soft); }
 .chapter-nav a[aria-current=page], .chapter-drawer a[aria-current=page] { font-weight: 700; color: var(--accent); border-color: var(--accent); background: var(--gg-soft); }
@@ -129,8 +129,8 @@ details.code-disclosure pre { margin: 0; border: 0; border-radius: 0; }
 .btn-copy-ex { display: none; }
 .copy-code { position: absolute; right: 8px; top: 4px; padding: 2px 9px; border: 1px solid var(--rule); border-radius: 4px; background: var(--paper); color: var(--ink); font-size: .75rem; }
 .copy-code:focus-visible, .figure-link:focus-visible, summary:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
-.preparation { border: 1px solid var(--rule); border-radius: 7px; padding: 14px 18px; background: var(--canvas); margin-block: 20px; }
-.preparation > summary { color: var(--ink); font-size: .9rem; font-weight: 700; cursor: pointer; }
+.preparation, .lesson-extension { border: 1px solid var(--rule); border-radius: 7px; padding: 14px 18px; background: var(--canvas); margin-block: 20px; }
+.preparation > summary, .lesson-extension > summary { color: var(--ink); font-size: .9rem; font-weight: 700; cursor: pointer; }
 main table { width: 100%; display: table; font-size: .9rem; border: 1px solid var(--rule); margin-block: 22px; }
 main th { background: var(--gg-soft); color: var(--ink); }
 main td, main th { padding: 10px !important; vertical-align: top; border-color: var(--rule) !important; overflow-wrap: anywhere; }
@@ -258,3 +258,8 @@ body[data-page=index] main > h1 {
   .showcase-card img { height: 100px; }
   .showcase-card strong { font-size: .75rem; }
 }
+
+/* Preserve identifiers and numeric values in wide R outputs. */
+.data-output { max-width: 100%; overflow-x: auto; }
+main .data-output table { width: max-content; min-width: 100%; }
+main .data-output td, main .data-output th { white-space: nowrap; overflow-wrap: normal; }

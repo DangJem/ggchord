@@ -25,7 +25,7 @@ wildcard patterns). All matched files are read and combined.}
 \item{anno_from}{Character vector of GFF3 attribute keys, tried in order to
 fill the \code{anno} column.}
 
-\item{unstranded}{\code{"plus"} (legacy default) assigns unknown strands to \code{+};
+\item{unstranded}{\code{"plus"} (the default) assigns unknown strands to \code{+};
 \code{"drop"} removes them. Use \code{"keep"} with \code{\link[=geom_feature]{geom_feature()}} to retain them
 as nondirectional \code{.} intervals. \code{source_strand} always records the input.}
 

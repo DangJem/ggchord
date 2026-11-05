@@ -1,31 +1,56 @@
-Learn the tables before selecting layers. Chord comparison was ggchord's original core view. Its early BLAST workflows explain the compact field names retained today. A multi-sequence chord view displays existing interval comparisons among sequences; drawing does not run a multiple-sequence alignment algorithm.
+`ggchord()` uses the sequence table to establish the backbones. Add links and features as needed. The rows below come from the bundled data. Run the code to reproduce them.
 
-## Minimal shapes of three tables {#tables}
-| Table | Required columns | One row represents |
-| --- | --- | --- |
-| seq_data | accver, length | One sequence and its full length in bp |
-| ribbon_data | qaccver, saccver, qstart, qend, sstart, send | One observed pair of aligned intervals |
-| gene_data | accver, start, end, strand | One directed gene interval |
+## Sequence table `seq_data` {#tables}
 
-Backbones alone need neither links nor genes. Use `geom_feature()` for annotations with unknown strand rather than assigning a direction.
+{{code:frontseqtable}}
 
-## Names and optional columns {#names}
-`accver` originated from accession.version, but any stable contig identifier is allowed; versions are not added or removed. `q` means query and `s` means subject. Both IDs must occur in the sequence table.
+{{output:frontseqtable}}
 
-`pident` is percentage identity, needed only for identity mapping/filtering. Alignment `length` differs from full sequence `length`. Keep `evalue`, `bitscore`, `qlen` and `slen` when required by an analysis. Gene `anno` is optional annotation text; supply it for labels. Additional category columns can feed `aes()` without becoming mandatory inputs.
+| Required column | Meaning |
+| --- | --- |
+| `accver` | Unique sequence ID. You can use your own contig names. Other tables match on this value. |
+| `length` | Full sequence length in bp. |
 
-## Inspect real tables {#inspect}
-```r
-library(ggchord)
-library(dplyr)
-seq_data_example |> select(accver, length) |> slice_head(n = 3)
-ribbon_data_example |> select(qaccver, saccver, qstart, qend, sstart, send) |> slice_head(n = 3)
-gene_data_example |> transmute(accver, start, end, strand = source_strand, anno) |> slice_head(n = 3)
-```
+**Optional columns** can support display or grouping, such as a separate short display name.
 
-These are bundled source-backed records. This historical teaching fixture stores biological strand separately in `source_strand`; restore it explicitly. Newly read GFF3 annotations use their ordinary `strand` column.
+## Link table `ribbon_data` {#inspect}
 
-## Coordinates and directions {#coordinates}
-Use one-based inclusive bp coordinates. Genes have ordered bounds with a separate strand. Endpoint order can represent reverse alignments; do not sort every link. Maximum feature endpoints do not establish full sequence lengths. See the [coordinate contract](data.html#coordinates).
+{{code:frontlinktable}}
 
-Continue to [1.2 From analysis results to input tables](chord-import.html).
+{{output:frontlinktable}}
+
+| Required column | Meaning |
+| --- | --- |
+| `qaccver`, `saccver` | IDs of the query and subject sequences. Both must occur in the sequence table. |
+| `qstart`, `qend` | The two interval endpoints on the query sequence. |
+| `sstart`, `send` | The two interval endpoints on the subject sequence. |
+
+**Optional column** `pident` is percent identity and can be used for filtering or colour. The first row is about 98.6%. A link table can also have a `length` column for the alignment length.
+
+## Genes and generic features {#names}
+
+{{code:frontgenetable}}
+
+{{output:frontgenetable}}
+
+| Column | Purpose |
+| --- | --- |
+| `accver` | Required. ID of the sequence containing the interval. |
+| `start`, `end` | Required. Interval start and end, with `start <= end`. |
+| `strand` | Gene arrows require `+` or `-`. Use a generic feature layer for annotations without known direction. |
+| `anno` | Optional. Can supply label text. |
+| `type` | Optional. Category of a generic feature, such as CDS, promoter or replication origin. |
+
+The bundled example stores the original annotated strand in `source_strand`. For your own imported GFF3 records, use their `strand` directly.
+
+## Reading coordinates {#coordinates}
+
+Input coordinates are 1-based and inclusive. For example, 10 through 12 covers three bases. Gene intervals carry direction in `strand`. Link intervals can encode direction in ascending or descending endpoint order, so preserve the order at each end after import.
+
+Continue to [Plotting concepts](modes.html), or see [Input formats and conversion](formats.html) when reading files.
+
+The BLAST-style fields reflect ggchord’s origins in alignment visualization. Query and subject use q/s prefixes, and custom IDs are accepted. See [alignment inputs](alignments.html) for actual BLAST rows.
+
+## Protein sequence units {#protein-unit}
+
+Nucleotide tables may omit the unit column and use bp. A complete protein length table declares `sequence_unit = "aa"`. A plot uses one unit. See [protein alignments](alignments.html#protein) for full inputs and figures.

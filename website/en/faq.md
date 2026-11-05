@@ -2,14 +2,12 @@
 The available physical space changed. Use [explicit-size preview and saving](output.html#size).
 Check hidden-label diagnostics; do not infer missing input rows from absent text.
 
-## Why did an old parameter stop working? {#removed}
-The API cleanup removed execution of old aliases. Use the [migration table](migration.html).
-Do not mix old and new spellings for one semantic setting. The colour/color
-function spelling aliases remain, with `colour` preferred in documentation.
+## How do I find supported parameters? {#removed}
+Use the [function reference](reference.html) to check argument meanings and defaults. Put mappings in `aes()`, fixed styles on the layer, and colour rules in `scale_*()`; see [plotting concepts](modes.html). Functions accept both `colour` and `color` spellings; examples use `colour`.
 
 ## Why is a feature rejected as a gene? {#strand}
 The gene shortcut requires known `+`/`-` strand. Keep unknown strand in a general
-feature layer; do not guess `+`. Amino-acid intervals require explicit projection.
+feature layer; do not guess `+`. Protein backbones accept native aa coordinates; CDS projection is needed to place those intervals on nucleotide backbones.
 
 ## Why is a ribbon missing in linear mode? {#ribbons}
 By default ribbons connect adjacent displayed sequences. Inspect pair selection,

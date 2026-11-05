@@ -1,33 +1,27 @@
 <div class="task-intro"><p>把文件中的观测整理成绘图角色。先检查最小字段与坐标，再使用校验报告决定是否清理；不要为了出图猜测缺失的长度或方向。</p></div>
 
 ## 本页准备 {#prepare}
-在新的 R 会话中先运行下方代码，再按页面顺序继续。配色和排版是可选的显示设置，输入只选择需要的列。 涉及文件时，先解压[教学输入](../assets/tutorial-inputs.zip)，使工作目录包含 `examples/`。
+先选出校验所需的列。运行文件示例前解压[教学输入](../assets/tutorial-inputs.zip)，使工作目录包含 `examples/`。
 
 {{prepare:setup}}
 
 ## 输入表 {#tables}
-| 输入 | 必需字段 | 含义 |
-| --- | --- | --- |
-| 序列 | `accver`, `length` | 唯一标识；正值的完整序列长度，单位 bp |
-|区间连接| `qaccver`, `saccver`, `qstart`, `qend`, `sstart`, `send` | query 与 subject 锚点 |
-| 基因 | `accver`, `start`, `end`, `strand` | 链为已知 `+`/`-`；`anno` 可选 |
-| 通用注释| `accver`, `start`, `end`, `strand` 或已声明方向 | 可保留未知链；`type`, `label`, `feature_id` 可选 |
-
-标识可以是任意字符串，accession version 原样保留。只有映射、筛选或统计需要时，
-才要求 `pident` 和比对 `length`。不能由注释的范围推断完整序列长度。
+[基本数据表](chord-data.html#tables)展示序列、连接和特征的字段与实际数据。接下来用这些字段校验导入结果。
 
 ## 坐标契约 {#coordinates}
 基因组坐标采用 **一基、闭区间 bp**。BED/PAF 读取器已转换源坐标约定，不要重复转换。
 基因起止坐标有序，链单独存储；连接端点的次序可表达方向。没有方向证据的单 bp
 连接保持未知。未知链不会被静默改成 `+`；应使用 `geom_feature()`，而非严格的基因层。
 
-氨基酸坐标需要[显式 CDS 投影](projection.html)。笛卡尔布局单位、基因组 bp、角度、
+蛋白骨架使用原生 aa 坐标，见[蛋白比对](protein-alignments.html)。显示在核酸骨架上时需要[CDS 投影](projection.html)。笛卡尔布局单位、基因组 bp、角度、
 物理 mm 和轨道数值单位是不同的域。详见完整的[数据格式说明](reference/ggchord_data_contract.html)。
 
 ## 导入原始记录 {#import}
 在仓库根目录运行这个仅用于源码仓库的例子，不改写原始文件。
 
 {{code:imports}}
+
+{{console:imports}}
 
 `read_genbank()` 保留记录/注释来源和分段位置。`read_bed()`、`read_paf()` 保留
 坐标转换元数据。`as_ggchord_seq()`、`as_ggchord_feature()`、`as_ggchord_link()`
@@ -40,6 +34,8 @@
 
 
 {{code:validation}}
+
+{{console:validation}}
 
 校验报告问题；清理执行明确修复并返回报告；准备函数组合工作流步骤，不推断生物学
 归属。绘图前检查 `validation`、`cleaned$report` 和 `prepared$report`。
@@ -57,6 +53,8 @@
 
 ## 声明 genome 与 contig 键 {#hierarchy}
 {{code:hierarchy}}
+
+{{console:hierarchy}}
 
 `hierarchy$contigs` 汇总已声明归属，不拼接 contig，也不由 accession 前缀推断归属。
 不同样本重复局部 contig 名时须显式提供全局唯一标识。

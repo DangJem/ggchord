@@ -69,7 +69,7 @@ NULL
 #'
 #' @format A one-row data frame with `accver`, display `label`, `length`, and
 #'   the DNA `sequence`.
-#' The historical `plasmid_example_pUC19c` spelling is a compatibility alias
+#' The `plasmid_example_pUC19c` name is an alias
 #' of `plasmid_example_pUC19`, including its `accver`. It must not be confused
 #' with an independently imported GenBank pUC19c record such as L09137.2.
 #'
@@ -128,3 +128,41 @@ NULL
 #' @rdname plasmid_example_pUC19
 #' @name plasmid_example_pTRIPZ
 NULL
+
+
+#' Four complete protein sequences for comparison
+#'
+#' Three EMALE proteins and one Mavirus protein selected from public complete
+#' FASTA records. Their six pairwise comparisons are in
+#' [protein_ribbon_data_example]. Lengths describe complete proteins.
+#'
+#' @format A data frame with four rows and columns:
+#' \describe{
+#'   \item{accver}{Unchanged protein identifier.}
+#'   \item{length}{Full length in amino acids.}
+#'   \item{sequence_unit}{The declared coordinate unit, `"aa"`.}
+#'   \item{sequence}{Complete protein residues retained from the source FASTA.}
+#' }
+#' @source Public EMALE/Mavirus FASTA records. Selection, source hashes,
+#'   BLASTp version and arguments are in `examples/protein/sources.json`.
+#'   Rebuild with `data-raw/prepare-bundled-proteins.py` and
+#'   `data-raw/generate_protein_data.R`.
+#' @seealso [protein_ribbon_data_example], [ggchord]
+"protein_seq_data_example"
+
+#' Six pairwise BLASTp alignments between the example proteins
+#'
+#' Observed BLASTp alignments between every unordered pair of the four
+#' complete proteins in [protein_seq_data_example]. The raw all-against-all
+#' output retains self hits and both query/subject directions. This teaching
+#' table retains one direction per pair, ordered by the sequence table.
+#'
+#' @format A data frame with six rows containing the twelve standard BLAST
+#'   fields, physical `.source_line` provenance and `sequence_unit = "aa"`.
+#'   Endpoints are one-based inclusive amino-acid positions.
+#' @source `examples/protein/all-vs-all-blastp.tsv`, generated with NCBI
+#'   BLASTp 2.17.0+ from unchanged complete protein records. The command,
+#'   source hashes and sequence selection are recorded in
+#'   `examples/protein/sources.json`.
+#' @seealso [protein_seq_data_example], [geom_link_ribbon]
+"protein_ribbon_data_example"

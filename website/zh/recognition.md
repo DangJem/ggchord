@@ -1,17 +1,15 @@
 <div class="task-intro"><p>从已知 DNA 搜索引物、限制酶和常见注释，再决定如何显示；计算命中与实验验证是不同事情。</p></div>
 
 ## 本页准备 {#prepare}
-在新的 R 会话中先运行下方代码，再按页面顺序继续。配色和排版是可选的显示设置，输入只选择需要的列。
-
-```r
-library(ggchord)
-library(dplyr)
-```
+本例使用随包 pUC19。
 
 ## 搜索与显示分开 {#search}
 直接使用随包 pUC19 DNA，查找目录引物的精确命中与选定酶切位点：
 
+本例整理序列表时使用 dplyr。先运行 `library(dplyr)`。
+
 {{code:recognition}}
+{{figure:recognition}}
 
 圆形搜索也检查跨原点的候选位置。线性序列应设置 `circular = FALSE`。搜索命中是计算匹配，
 不等于实验验证。引物 `"three_prime"` 模式寻找精确后缀，没有错配模型；

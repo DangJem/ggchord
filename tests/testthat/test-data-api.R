@@ -20,7 +20,12 @@ test_that("validation, cleaning and one malformed input have public outcomes", {
   expect_equal(sorted$original_value, describe_coordinates(ribbon))
   expect_equal(sorted$new_value, describe_coordinates(cleaned$ribbon_data))
   expect_error(ggchord(transform(seq, length = "bad")), "numeric")
-  expect_error(ggchord(transform(seq, sequence_unit = "aa"), validate = "none"), "not nucleotide")
+  protein <- transform(seq, sequence_unit = "aa")
+  plot <- ggchord(protein) + geom_seq() + coord_collinear() + geom_seq_scale(length = 10)
+  exported <- export_ggchord_layout(plot, include = "axis")
+  expect_equal(exported$metadata$sequence_unit, "aa")
+  expect_true(any(exported$axis$label == "10 aa", na.rm = TRUE))
+  expect_error(ggplot2::ggplot_build(plot + geom_gene()), "require bp")
 })
 
 test_that("cleaning rejects unsupported optional input types instead of dropping them", {

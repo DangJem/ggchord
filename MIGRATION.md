@@ -2,6 +2,20 @@
 
 # Migrate to the ggchord candidate API
 
+## Cross-row ribbon outlines in 0.16.7
+
+`geom_link_ribbon()` uses `nonadjacent_linewidth = 0.4` for non-adjacent
+collinear rows, independently of ordinary fixed `linewidth`. Set
+`nonadjacent_linewidth = 0` to make those ribbons inherit the layer
+linewidth. An explicit linewidth mapping controls the mapped widths.
+The parameter changes width without changing the automatic dashed line type.
+
+## Circular origin in 0.16.7
+
+`coord_circular()` places the origin at 12 o'clock by default (`rotation = 90`).
+Use `rotation = 0` to retain a 3-o'clock origin. Increasing coordinates remain
+clockwise by default. The chord rotation default stays at 0 degrees.
+
 ## Scope and timing {#scope}
 These are current candidate replacements, not a v1.0.0 compatibility promise.
 The 0.16.0–0.16.4 phases were delivered together in v0.16.5. The current installation tag is v0.16.6.
@@ -29,14 +43,9 @@ first-removal tags are not guessed where historical evidence gives only an upper
 ## Run the replacement {#replacement}
 In a fresh session, run this preparation before the current replacements:
 
-<details class="preparation"><summary>Preparation code — run once on this page</summary>
 
 ```r
-library(ggchord)
 library(dplyr)
-data(seq_data_example)
-data(ribbon_data_example)
-data(gene_data_example)
 seqs <- seq_data_example |>
   select(accver, length)
 links <- ribbon_data_example |>
@@ -44,7 +53,10 @@ links <- ribbon_data_example |>
 # The fixture preserves biological strands separately from its old display strands.
 genes <- gene_data_example |>
   transmute(accver, start, end, strand = source_strand)
+```
 
+
+```r
 library(dplyr)
 data(plasmid_example_pUC19)
 plasmid_seq <- plasmid_example_pUC19 |>
@@ -54,7 +66,6 @@ features <- feature_source |>
   select(accver, start, end, strand, type, anno)
 ```
 
-</details>
 
 
 ```r
@@ -81,3 +92,7 @@ shortcuts and both geometry getter/export interfaces remain. Coordinate-specific
 defaults and already documented result fields are retained. See the
 API contract (`help("ggchord_api_contract", package = "ggchord")`) and current reference for
 NULL/NA/missing semantics; NULL does not universally mean disabled.
+
+## Default chord rotation in v0.16.7
+
+Chord plots now default to 0 degrees. Use `coord_chord(rotation = 45)` to request the previous 45-degree layout explicitly. Native protein plots declare `sequence_unit = "aa"` and use complete protein lengths.

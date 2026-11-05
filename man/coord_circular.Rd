@@ -5,7 +5,7 @@
 \title{Single-sequence circular coordinate system}
 \usage{
 coord_circular(
-  rotation = 0,
+  rotation = 90,
   direction = c("clockwise", "counterclockwise"),
   gap = 0,
   ratio = 1,
@@ -17,7 +17,8 @@ coord_circular(
 )
 }
 \arguments{
-\item{rotation}{Angle in degrees at which the genomic origin is placed.}
+\item{rotation}{Angle in degrees at which the genomic origin is placed.
+The default 90 places it at 12 o'clock; 0 places it at 3 o'clock.}
 
 \item{direction}{Direction of increasing genomic coordinates.}
 

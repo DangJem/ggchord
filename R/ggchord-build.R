@@ -97,6 +97,22 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
 
   # --- Process sequences ---
   seq_data <- seq_data_override %||% data_list$seq_data
+  sequence_unit <- ggchord_sequence_unit(seq_data, "ggchord layout")
+  if (identical(sequence_unit, "aa")) {
+    if (any(seq_data$length != floor(seq_data$length))) ggchord_stop(
+      "ggchord(): protein lengths must be whole amino-acid counts")
+    for (layer in plot$layers) {
+      params <- layer$ggchord_params
+      if (is.null(params)) next
+      gene <- identical(params$type, "gene") && !isTRUE(params$is_feature)
+      gene_label <- params$type %in% c("gene_label", "gene_label_repel") &&
+        !isTRUE(params$is_feature_label)
+      if (gene || gene_label || isTRUE(params$is_primer) ||
+          isTRUE(params$is_primer_label) || identical(params$type, "restriction_site")) {
+        ggchord_stop("ggchord(): gene, primer and restriction layers require bp coordinates; use generic feature layers for protein domains")
+      }
+    }
+  }
   seqs     <- seq_data$accver
   lens     <- setNames(seq_data$length, seqs)
 
@@ -315,6 +331,14 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   }
   display_rows <- if (collinear && "row_index" %in% names(collinear_transform$table))
     stats::setNames(collinear_transform$table$row_index, seqs) else NULL
+  if (identical(sequence_unit, "aa") && !is.null(ribbon_data) && nrow(ribbon_data)) {
+    columns <- c("qstart", "qend", "sstart", "send")
+    ggchord_require_columns(ribbon_data, columns, "Protein alignments")
+    for (column in columns) ggchord_conversion_coordinates(ribbon_data, column, "Protein alignments")
+    if (any(ribbon_data$qstart > ribbon_data$qend | ribbon_data$sstart > ribbon_data$send))
+      ggchord_stop("Protein alignments require ascending amino-acid endpoints; set display orientation on the backbone")
+  }
+  ggchord_check_interval_unit(ribbon_data, sequence_unit, "Ribbon layer")
   ribbon_selection <- ggchord_select_ribbons(ribbon_data, seqs, ribbon_params, collinear, display_rows)
   ribbon_data <- ribbon_selection$data
   has_ribbon_data <- !is.null(ribbon_data) && nrow(ribbon_data) > 0
@@ -389,6 +413,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   gene_w    <- gene_params$gene_width %||% 0.05
   gene_cs   <- gene_params$gene_color_scheme %||% "strand"
   gene_cols <- gene_params$gene_colors
+  ggchord_check_interval_unit(gene_data_override %||% data_list$gene_data, sequence_unit, "Feature layer")
   gene_ord  <- gene_params$gene_order
   # Gene label settings come from the dedicated geom_gene_label() layer, with
   # the legacy geom_gene() arguments as fallback.
@@ -994,6 +1019,11 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
       stats::setNames(names(layout$seq_arcs))
   }
 
+  layout$sequence_unit <- sequence_unit
+  if (is.data.frame(layout$sequence_layout)) {
+    layout$sequence_layout$sequence_unit <- sequence_unit
+    layout$sequence_layout$units_per_position <- layout$sequence_layout$units_per_bp
+  }
   position_scale <- plot$scales$get_scales("seq_position")
   if (!is.null(position_scale$ggchord_axis_sequences))
     layout <- ggchord_filter_sequence_axes(layout, position_scale$ggchord_axis_sequences)
@@ -1450,6 +1480,13 @@ compute_chord_geometry <- function(plot) {
     show_axis = primary$show_axis
   )
 
+  if (identical(primary$sequence_unit, "aa") && is.data.frame(primary$sequence_layout)) {
+    primary$sequence_layout$units_per_bp <- NA_real_
+    if ("gap_bp" %in% names(primary$sequence_layout)) {
+      primary$sequence_layout$gap_positions <- primary$sequence_layout$gap_bp
+      primary$sequence_layout$gap_bp <- NA_real_
+    }
+  }
   if (!is.null(plot$ggchord$ref)) {
     plot$ggchord$ref$layout <- primary
     plot$ggchord$ref$context_key <- ggchord_render_cache_key()

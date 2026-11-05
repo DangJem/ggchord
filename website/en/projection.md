@@ -1,9 +1,9 @@
 <div class="task-intro"><p>Project known protein intervals to genomic positions through real CDS, retaining phase, strand and segmentation explicitly.</p></div>
 
 ## Prepare this page {#prepare}
-In a fresh R session, run the code below, then follow this page in order. Colours and layout are optional display choices; inputs select only the fields needed.
+Use the [verified AmpR input](homology.html) or save and run the preparation script below.
 
-{{prepare:docstyle,homologinput,homologmembership,homologs}}
+{{recipe:ampr}}
 
 ## Start with source-backed CDS {#cds}
 Run the [identical-CDS comparison](homology.html#membership) first. It uses real
@@ -11,6 +11,8 @@ bundled plasmid annotations and DNA. Complete CDS use explicit phase 0 and
 translation table 11.
 
 {{code:projection}}
+
+{{console:projection}}
 
 This example selects residues 2–20 for display; it does not claim a detected
 protein domain. Projection returns genomic intervals with strand/segment context.
@@ -27,11 +29,12 @@ actual translation/alignment are distinct operations.
 ## BLASTp query spans and two-ended links {#links}
 {{code:linkprojection}}
 
+{{console:linkprojection}}
+
 This ungapped case relies on [verified identical coding DNA](homology.html).
 Real BLASTp HSPs may contain gaps: query spans can still be projected, but paired
 links need the subject CDS and justified ungapped correspondence. See
-[real BLASTp import/projection](alignments.html#protein). This version does not
-reinterpret aa as bp or add native protein-coordinate plotting.
+[real BLASTp import/projection](alignments.html#protein). Genomic plots use the projected bp coordinates.
 
 ## Check your result {#check-result}
 Check parent CDS IDs, projection reports and returned segments. The selected residue range is a display example, not a detected domain.

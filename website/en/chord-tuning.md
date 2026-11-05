@@ -1,19 +1,29 @@
-These controls have different owners: geoms configure sequence geometry, Positions place local features, coords select the global view, and scales/guides control encodings.
+Use the same four sequences and change one parameter at a time. Compare the position of the backbones and the space between them with the default plot.
 
-## Inspect directional evidence first {#prepare}
-Extract the [input bundle](../assets/tutorial-inputs.zip) first.
-{{prepare:sequencepalette,docstyle,showcasedata}}
+## Default plot {#prepare}
 
-## Inspect directional evidence {#orientation}
-`show_optimization` optimizes display orientation only, preserving sequence order and weighting observed alignment lengths. Inspect seq_orientation and score_before/score_after. A display flip is not a new biological inversion result; the heuristic does not guarantee a global optimum.
+{{code:frontbackbone}}
 
-## Combine capabilities into a readable view {#parameters}
-{{code:showcasechord}}
-{{figure:showcasechord}}
-Named vectors match sequence IDs. Curvature 0 is straight, signed values bend in opposite directions, and magnitude changes bow depth. Radius changes sequence placement. The result combines automatic orientation, varying radius, zero/positive/negative curvature and local clearance without changing source coordinates.
+{{figure:frontbackbone}}
 
-## Why clearance modes look different {#clearance}
-`link_avoid = "uniform"` clears the whole endpoint interval. `"smooth"` retreats locally near feature polygons; `"none"` disables feature avoidance. Automatic clearance requires `link_gap = NULL`; a fixed number overrides it. Clearance considers feature geometry, not text, and does not automatically route around intervening sequence rows.
+## Rotate the plot {#orientation}
 
-## Guides and export {#guides}
-Identity uses a long left-side colourbar; sequence and strand keys remain below. Explicit strand overrides mirror the arrow glyphs. See [styling](styling.html) for guide responsibilities. Save at 12×10 in, then review [1.7 The complete showcase](chord.html).
+{{code:frontrotation}}
+
+{{figure:frontrotation}}
+
+`rotation` sets the counterclockwise angle and defaults to 0°. With `rotation = 90`, the backbones and labels turn 90° from the default plot. Compare the position of the gaps with the default plot. Rotation can free space on one side for layout while preserving coordinate order within each sequence.
+
+## Increase the space between backbones {#parameters}
+
+{{code:frontgap}}
+
+{{figure:frontgap}}
+
+`seq_gap` controls the gap proportion between adjacent backbones. The default is `0.03`. This example sets only the gap after MT108731.1 to `0.12`. Other gaps retain `0.03`. The last sequence’s gap closes the ring. Compare the space between adjacent arcs, then check that the longer sequence still has the longer arc.
+
+## When do you need further adjustments? {#clearance}
+
+If ribbons overlap arrows in a comparison, see [Ribbon clearance](chord-routing.html#clearance). To adjust the radius or bend of one backbone, see [Per-sequence parameters](parameters.html).
+
+<span id="guides"></span>Next, [adjust radius, curvature and display direction per sequence](chord-geometry.html).

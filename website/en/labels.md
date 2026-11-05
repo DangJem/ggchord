@@ -1,17 +1,13 @@
 <div class="task-intro"><p>Arrange text while retaining annotation geometry: choose export dimensions and a label subset before choosing automatic or fixed placement.</p></div>
 
-## Prepare this page {#prepare}
-In a fresh R session, run the code below, then follow this page in order. Colours and layout are optional display choices; inputs select only the fields needed.
+<span id="prepare"></span>
 
-{{prepare:setup,sequencepalette,docstyle}}
-
-## Select a layout {#layout}
+## Choose a chord label layout {#layout}
 Gene labels offer `"auto"`, `"radial"` and `"arc"` layouts. General feature
 labels additionally support the internal-first `"feature"` default and external
 `"callout"` layout. Choose the documented values for the layer you use; they are
 not interchangeable presets.
 
-After this page’s preparation code:
 
 {{code:labels}}
 {{figure:labels}}
@@ -27,12 +23,13 @@ where supported. Shrinking is explicit and bounded. Unresolved labels may move
 or hide; the feature geometry remains. Inspect `label_fit_diagnostics` and
 `label_diagnostics` at the final export size.
 
-## Match anchors across layers {#anchors}
-In collinear mode, an omitted feature-label Position inherits an unambiguous
-matching feature layer. Unique `feature_id` permits reordering or subsets, but
-accession, interval and strand must agree. Multiple matching layers need an
-explicit Position or unambiguous IDs. Preview after selecting the final device
-size; resizing the Plots pane changes the available space.
+{{code:manualgenelabels}}
+{{figure:manualgenelabels}}
+
+This fixes text rotation at 30 degrees. Fixed placement does not spread neighbouring labels; unresolved text may hide. One label is visible here while all four CDS arrows remain. Compare the automatic layouts below when more names need to be displayed.
+
+## Match labels to arrows {#anchors}
+Use the same CDS records for arrows and labels, preserving identifiers, intervals and biological strands. Filter labels from that table without changing source coordinates. Fixed layouts allow radial offsets and text rotation.
 
 ## Compare the three gene layouts {#comparison}
 {{code:labellayouts}}
@@ -40,8 +37,8 @@ size; resizing the Plots pane changes the available space.
 {{figure:labelradial}}
 {{figure:labelarc}}
 
-Keep at most the first and last informative labels per sequence, retaining all gene arrows, to compare text orientation.
-Print `label_plots$auto`, `$radial` or `$arc` to inspect a candidate. The inputs and
+Compare the same four named CDS in each layout.
+Pass `label_plots$radial` or `label_plots$arc` to `view_ggchord()` to inspect another layout at the same size. The inputs and
 requested font size are identical; only the layout choice changes. Auto uses
 shared columns where applicable, radial follows local contours and arc follows
 the sequence tangent. `p_manual_labels` shows the separate fixed-label route;

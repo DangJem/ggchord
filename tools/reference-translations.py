@@ -2,6 +2,7 @@
 """Versioned Han prose for canonical Rd; no code or API signature translation."""
 import argparse, hashlib, json, re
 from pathlib import Path
+from documentation_lib import localize_r_comments
 ROOT=Path(__file__).resolve().parents[1]
 DEST=ROOT/'website/reference-zh'
 PROSE={'title','description','details','value','format','note','source','references','author','seealso'}
@@ -102,6 +103,9 @@ def main():
         if set(translations)-{e['key'] for e in entries}:missing.append(path.stem+': orphan translations')
         if args.output:
             for b,c,value in reversed(replacements):text=text[:b]+value+text[c:]
+            if '\\examples{' in text:
+                before, examples = text.split('\\examples{', 1)
+                text = before + '\\examples{' + localize_r_comments(examples, 'zh')
             out=Path(args.output);out.mkdir(parents=True,exist_ok=True);(out/path.name).write_text(text)
     if missing:raise SystemExit('\n'.join(missing))
     if args.show is None:print(f'PASS: {count} translated prose blocks; code, identifiers and links preserved.')

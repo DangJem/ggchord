@@ -8,18 +8,17 @@
 
 基于 ggplot2 的 R 包。用独立图层组合序列骨架、区间连接、基因、通用注释、标签和定量轨道。
 
-本版为 **ggchord 0.16.6**；以下展示由本版代码生成。旧代码迁移见迁移指南，正式资产见 GitHub Releases。
+正式版为 **ggchord 0.16.6**；本文示例由本地 **v0.16.7** 开发源码生成。正式资产见 GitHub Releases。
 
 ## 安装
 
 R ≥ 4.1.0 · ggplot2 ≥ 4.0.0
 
 ```r
-install.packages(c("remotes", "dplyr", "purrr", "tidyr"))
-remotes::install_github("DangJem/ggchord@v0.16.6")
+install.packages("ggchord")
 ```
 
-如已检出本版源码，在仓库根目录使用 `pkgload::load_all(".")`。不声称存在 CRAN 发布。 示例使用 dplyr、purrr、tidyr 和原生 `|>`，这些是示例可选依赖。
+如已检出本版源码，在仓库根目录使用 `pkgload::load_all(".")`。正式版可从 CRAN 安装。 示例使用 dplyr（≥ 1.1.0）、purrr、tidyr 和原生 `|>`，这些是示例可选依赖。
 
 ## 三种模式
 
@@ -29,8 +28,7 @@ remotes::install_github("DangJem/ggchord@v0.16.6")
 <summary>先运行：三张图共用的样式</summary>
 
 ```r
-# Optional appearance choices; none of these columns or scales is required input.
-library(ggchord)
+# 以下为可选外观设置。
 seq_palette <- setNames(
   c("#E64B35", "#233E4A", "#269B82", "#D59B17"),
   c("MT108731.1", "MT118296.1", "OQ646790.1", "OR222515.1")
@@ -39,7 +37,6 @@ gene_palette <- c("+" = "#CE1536", "-" = "#346B9D", "." = "#8291A6")
 ```
 
 ```r
-library(ggchord)
 doc_background <- "#FFFCF5"
 identity_palette <- c("#303B71", "#36537D", "#269B82", "#A5D52C", "#ECEB31")
 identity_values <- c(0, 0.5, 0.8, 0.9, 1)
@@ -92,7 +89,7 @@ doc_axis <- function(coordinates = "relative") {
 
 ### 弦图：四基因组、混合曲率与相似度
 
-直线与弧形骨架、真实链方向基因、精选标签及筛选后的观测比对。
+按每条序列的真实正负链分别抽样，无 CDS 长度门槛。两条 MT 序列的原始注释只有正链 CDS。正链置于内侧，连接带在重叠端点局部避让。
 
 ![弦图：四基因组、混合曲率与相似度](man/figures/showcasechord.png)
 
@@ -100,11 +97,10 @@ doc_axis <- function(coordinates = "relative") {
 <summary>数据准备与绘图代码 · 展开运行</summary>
 
 ```r
-library(ggchord)
 library(dplyr)
 library(purrr)
 library(tidyr)
-# Original repository records; extract the tutorial input bundle first.
+# 使用仓库原始记录，先解压教学输入包。
 show_sequences <- read_fasta_lengths(files = "examples/fasta/*.fna") |>
   select(accver, length)
 show_annotations <- read_gff3(files = "examples/gff3/*.gff3", unstranded = "keep")
@@ -112,14 +108,14 @@ show_genes <- show_annotations |>
   filter(type == "CDS") |>
   select(accver, start, end, strand, anno)
 show_alignments <- read_blast(files = "examples/blastn-standard/*.tsv")
-# At most three substantial observed HSPs per pair; no coordinates are invented.
+# 每对序列最多保留三条较长的实际比对，使用原始坐标。
 show_links <- show_alignments |>
   filter(length >= 900, pident >= 75) |>
   group_by(qaccver, saccver) |>
   slice_max(length, n = 3, with_ties = FALSE) |>
   ungroup()
-# Select up to four source CDS per sequence, spread across annotation order.
-# No feature is moved or invented; keep complete source tables separately.
+# 每条序列沿注释顺序选取最多四条原始 CDS。
+# 特征保留原始位置，完整源表单独保存。
 show_features <- show_genes |>
   filter(end - start + 1 >= 500) |>
   group_by(accver) |>
@@ -130,12 +126,12 @@ show_features <- show_genes |>
   slice_head(n = 1) |>
   ungroup() |>
   select(accver, start, end, strand, anno)
-# Also retain well-separated negative-strand CDS, if not already represented.
+# 补充尚未入选且间隔较大的负链 CDS。
 show_reverse <- show_genes |>
   filter(strand == "-", end - start + 1 >= 500) |>
   group_by(accver) |>
   arrange(start, .by_group = TRUE) |>
-  slice(c(1, n())) |>
+  dplyr::slice(c(1, n())) |>
   ungroup()
 show_features <- bind_rows(show_features, show_reverse) |>
   distinct(accver, start, end, strand, .keep_all = TRUE) |>
@@ -148,45 +144,69 @@ show_optimization <- optimize_ggchord_layout(
 ```
 
 ```r
+# 沿源坐标对实际出现的正负链分别抽样。
+# 保留短 CDS 及其原始链和坐标。
+# 每个正链分组优先选择与已展示连接端点重叠的 CDS。
+chord_link_ends <- bind_rows(
+  transmute(show_links, accver = qaccver, lo = pmin(qstart, qend), hi = pmax(qstart, qend)),
+  transmute(show_links, accver = saccver, lo = pmin(sstart, send), hi = pmax(sstart, send))
+)
+chord_endpoint_genes <- show_genes |>
+  filter(strand == "+") |>
+  semi_join(chord_link_ends, by = join_by(accver, overlaps(start, end, lo, hi)))
+chord_genes <- show_genes |>
+  filter(strand %in% c("+", "-")) |>
+  left_join(mutate(chord_endpoint_genes, at_endpoint = TRUE),
+    by = c("accver", "start", "end", "strand", "anno")) |>
+  group_by(accver, strand) |>
+  arrange(start, .by_group = TRUE) |>
+  mutate(display_bin = ntile(row_number(), if (first(strand) == "+") 4L else 3L)) |>
+  group_by(accver, strand, display_bin) |>
+  arrange(desc(coalesce(at_endpoint, FALSE)), is.na(anno) | anno == "hypothetical protein",
+    start, .by_group = TRUE) |>
+  slice_head(n = 1) |>
+  ungroup() |>
+  select(accver, start, end, strand, anno)
+chord_labels <- chord_genes
+chord_position <- position_strand(c("+" = -0.030, "-" = 0.030))
+```
+
+```r
 show_curvature <- c(
-  "MT108731.1" = 0, "MT118296.1" = 0.85,
-  "OQ646790.1" = 1.1, "OR222515.1" = -0.4
+  "MT108731.1" = 0, "MT118296.1" = 1,
+  "OQ646790.1" = -0.65, "OR222515.1" = 0.75
 )
 show_radius <- c(
-  "MT108731.1" = 1, "MT118296.1" = 1.05,
-  "OQ646790.1" = 0.95, "OR222515.1" = 1.08
+  "MT108731.1" = 1.08, "MT118296.1" = 0.82,
+  "OQ646790.1" = 1.18, "OR222515.1" = 1.02
 )
-p_show_chord <- ggchord(show_sequences, show_links, show_features) +
-  geom_link_ribbon(aes(ribbon_fill = pident), link_avoid = "smooth", alpha = 0.58, linewidth = 0.18) +
+p_show_chord <- ggchord(seq_data = show_sequences, ribbon_data = show_links) +
+  geom_link_ribbon(link_avoid = "smooth", alpha = 0.46, linewidth = 0.14) +
   geom_seq(
     seq_orientation = show_optimization$seq_orientation,
     seq_curvature = show_curvature, seq_radius = show_radius,
     seq_gap = 0.06, linewidth = 1.1
   ) +
-  geom_gene(position = position_strand(0.07), width = 0.035) +
+  geom_gene(data = chord_genes, position = chord_position, width = 0.025) +
   geom_gene_label_repel(
-    data = show_labels, label_layout = "radial", label_wrap = 24,
-    size = 3.1, label_max_lines = 3, position = position_strand(0.07)
+    data = chord_labels, label_layout = "radial", label_wrap = 24,
+    size = 2.8, label_max_lines = 3, position = chord_position
   ) +
-  geom_seq_label(size = 4, seq_label_radius = 0.84, seq_label_hjust = 0.5) +
+  geom_seq_label(size = 4, seq_label_radius = 0.77, seq_label_hjust = 0.5) +
   scale_seq_colour_manual(
     values = seq_palette, name = "Sequence",
     guide = sequence_guide
   ) +
   scale_gene_fill_manual(values = gene_palette, breaks = c("+", "-"), name = "Strand") +
-  scale_ribbon_fill_gradientn(
-    colours = identity_palette, values = identity_values,
-    limits = c(0, 100), breaks = identity_breaks, name = "Identity (%)", guide = identity_guide
-  ) +
-  guides(gene_fill = strand_guide) +
+  guides(gene_fill = strand_guide, ribbon_fill = identity_guide) +
   scale_seq_position_continuous(breaks = c(0, 20000, 40000), minor_breaks = NULL) +
   coord_chord(rotation = 50) +
   doc_theme +
   labs(
     title = "Four genomes, one connected view",
-    subtitle = "Signed curvature and radius · selected strand-aware CDS · local ribbon clearance"
+    subtitle = "Mixed backbone geometry · CDS sampled by source strand"
   )
-p_show_chord
+view_ggchord(p_show_chord, width = 12, height = 10, units = "in")
 ```
 
 </details>
@@ -203,11 +223,10 @@ p_show_chord
 <summary>数据准备与绘图代码 · 展开运行</summary>
 
 ```r
-library(ggchord)
 library(dplyr)
 library(purrr)
 library(tidyr)
-# Original repository records; extract the tutorial input bundle first.
+# 使用仓库原始记录，先解压教学输入包。
 show_sequences <- read_fasta_lengths(files = "examples/fasta/*.fna") |>
   select(accver, length)
 show_annotations <- read_gff3(files = "examples/gff3/*.gff3", unstranded = "keep")
@@ -215,14 +234,14 @@ show_genes <- show_annotations |>
   filter(type == "CDS") |>
   select(accver, start, end, strand, anno)
 show_alignments <- read_blast(files = "examples/blastn-standard/*.tsv")
-# At most three substantial observed HSPs per pair; no coordinates are invented.
+# 每对序列最多保留三条较长的实际比对，使用原始坐标。
 show_links <- show_alignments |>
   filter(length >= 900, pident >= 75) |>
   group_by(qaccver, saccver) |>
   slice_max(length, n = 3, with_ties = FALSE) |>
   ungroup()
-# Select up to four source CDS per sequence, spread across annotation order.
-# No feature is moved or invented; keep complete source tables separately.
+# 每条序列沿注释顺序选取最多四条原始 CDS。
+# 特征保留原始位置，完整源表单独保存。
 show_features <- show_genes |>
   filter(end - start + 1 >= 500) |>
   group_by(accver) |>
@@ -233,12 +252,12 @@ show_features <- show_genes |>
   slice_head(n = 1) |>
   ungroup() |>
   select(accver, start, end, strand, anno)
-# Also retain well-separated negative-strand CDS, if not already represented.
+# 补充尚未入选且间隔较大的负链 CDS。
 show_reverse <- show_genes |>
   filter(strand == "-", end - start + 1 >= 500) |>
   group_by(accver) |>
   arrange(start, .by_group = TRUE) |>
-  slice(c(1, n())) |>
+  dplyr::slice(c(1, n())) |>
   ungroup()
 show_features <- bind_rows(show_features, show_reverse) |>
   distinct(accver, start, end, strand, .keep_all = TRUE) |>
@@ -251,11 +270,11 @@ show_optimization <- optimize_ggchord_layout(
 ```
 
 ```r
-# Omit two short, crowded candidates from this linear display only.
-# Both source rows remain in show_features and in the chord display.
+# 本张线性图省略两个较短且拥挤的候选特征。
+# 两条原始记录保留在 show_features 和弦图中。
 show_linear_features <- show_features |>
   filter(!anno %in% c("tail assembly protein", "gp4 protein"))
-# Separate adjacent and cross-row links, retaining original endpoint values.
+# 分别绘制相邻和跨行连接，保留原始端点。
 show_pair_rows <- show_links |>
   mutate(
     query_row = match(qaccver, show_sequences$accver),
@@ -263,18 +282,18 @@ show_pair_rows <- show_links |>
     span = abs(query_row - subject_row)
   )
 show_adjacent <- show_pair_rows |> filter(span == 1)
-# One longest observed HSP per non-neighbour pair keeps the long routes legible.
+# 每对非相邻序列选一条最长的实际比对，便于辨认长连接。
 show_cross <- show_pair_rows |>
   filter(span > 1) |>
   group_by(qaccver, saccver) |>
   slice_max(length, n = 1, with_ties = FALSE) |>
   ungroup()
-# Inspect a backbone-only layout using the same alignment and gap as the final view.
+# 用与最终图相同的对齐和间隙设置检查骨架布局。
 show_linear_coord <- coord_collinear(align = "center", orientation = "auto", ratio = 0.7)
 show_routing_base <- ggchord(show_sequences, show_links) +
   geom_seq(seq_gap = 0.42) + show_linear_coord
 show_reference <- get_chord_layout(show_routing_base)$sequence_reference
-# Shared controls sit just beyond the intervening backbones, rather than far away.
+# 共享控制点放在中间骨架稍外侧。
 show_cross_controls <- map2(show_cross$query_row, show_cross$subject_row, function(query_row, subject_row) {
   between <- seq(min(query_row, subject_row) + 1L, max(query_row, subject_row) - 1L)
   middle_ids <- show_sequences$accver[between]
@@ -308,11 +327,7 @@ p_show_collinear <- ggchord(show_sequences, gene_data = show_linear_features) +
     guide = sequence_guide
   ) +
   scale_gene_fill_manual(values = gene_palette, breaks = c("+", "-"), name = "Strand") +
-  scale_ribbon_fill_gradientn(
-    colours = identity_palette, values = identity_values,
-    limits = c(0, 100), breaks = identity_breaks, name = "Identity (%)", guide = identity_guide
-  ) +
-  guides(gene_fill = strand_guide) +
+  guides(gene_fill = strand_guide, ribbon_fill = identity_guide) +
   scale_seq_position_continuous(breaks = c(0, 20000, 40000, 60000, 80000), minor_breaks = NULL) +
   show_linear_coord +
   doc_theme +
@@ -320,7 +335,7 @@ p_show_collinear <- ggchord(show_sequences, gene_data = show_linear_features) +
     title = "Sequence architecture, across four genomes",
     subtitle = "Selected labelled CDS · strand-separated arrows · routed cross-row comparisons"
   )
-p_show_collinear
+view_ggchord(p_show_collinear, width = 12, height = 8, units = "in")
 ```
 
 </details>
@@ -337,7 +352,6 @@ p_show_collinear
 <summary>数据准备与绘图代码 · 展开运行</summary>
 
 ```r
-library(ggchord)
 library(dplyr)
 data(plasmid_example_pETDuet_1)
 show_plasmid <- plasmid_example_pETDuet_1 |>
@@ -369,10 +383,7 @@ p_show_plasmid <- ggchord(show_plasmid, validate = "none") +
   ) +
   geom_restriction_site(data = show_plasmid_sites, colour = "#252525") +
   geom_seq_center_label() +
-  coord_circular(
-    rotation = 90, fit = "manual",
-    xlim = c(-3.4, 4.6), ylim = c(-1.6, 2.4)
-  ) +
+  coord_circular(rotation = 90) +
   theme_ggchord_plasmid() +
   theme(
     legend.title = element_text(size = 13, face = "bold"),
@@ -381,7 +392,7 @@ p_show_plasmid <- ggchord(show_plasmid, validate = "none") +
     plot.background = element_rect(fill = doc_background, colour = NA),
     panel.background = element_blank()
   )
-p_show_plasmid
+view_ggchord(p_show_plasmid, width = 16.5, height = 8, units = "in")
 ```
 
 </details>
@@ -402,10 +413,9 @@ ggsave("comparison.png", p_show_collinear, width = 12, height = 8, units = "in",
 ## 继续阅读
 
 - [开始使用](https://dangjem.github.io/ggchord/zh/installation.html)
-- [按任务查找教程](https://dangjem.github.io/ggchord/zh/articles.html)
+- [章节索引](https://dangjem.github.io/ggchord/zh/about.html)
 - [函数文档](https://dangjem.github.io/ggchord/zh/reference/index.html)
 - [示例图集](https://dangjem.github.io/ggchord/zh/gallery.html)
-- [迁移指南](https://dangjem.github.io/ggchord/zh/migration.html)
-- [更新日志](https://dangjem.github.io/ggchord/zh/news.html)
+- [其他信息](https://dangjem.github.io/ggchord/zh/about.html)
 
 [Issues](https://github.com/DangJem/ggchord/issues) · [MIT license](LICENSE)

@@ -42,6 +42,12 @@ test_that("ribbon outline defaults follow display adjacency without changing map
   linear <- ggplot2::ggplot_build(base +
     geom_link_ribbon(adjacent_only = FALSE) + coord_collinear())
   expect_equal(styles(linear$data[[2L]]), c("solid", "dashed", "dashed"))
+  expect_gt(max(linear$data[[2L]]$linewidth), min(linear$data[[2L]]$linewidth))
+  uniform <- ggplot2::ggplot_build(base +
+    geom_link_ribbon(adjacent_only = FALSE, linewidth = .2,
+                     nonadjacent_linewidth = 0) + coord_collinear())
+  expect_equal(unique(uniform$data[[2L]]$linewidth), .2)
+
   mapped <- ggplot2::ggplot_build(base + aes(linetype = "chosen") +
     geom_link_ribbon(adjacent_only = FALSE) +
     geom_link_ribbon(adjacent_only = FALSE, inherit.aes = TRUE) +

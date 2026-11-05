@@ -28,10 +28,11 @@
 #'   Explicitly inside primer and restriction callouts
 #'   register measured inner boxes rather than exterior bands or slots.
 #'   The \code{metadata} member
-#'   records rotation, aspect ratio, limits, coordinate units and
+#'   records rotation, aspect ratio, limits, native `sequence_unit` (bp/aa), and
 #'   transformation state.
 #'   Collinear layouts instead include `sequence_layout`, containing each
-#'   sequence's horizontal range, backbone y, orientation, units per bp,
+#'   sequence's horizontal range, backbone y, orientation, `units_per_position`,
+#'   and `sequence_unit`. The compatibility field `units_per_bp` is NA for aa. It also records
 #'   reversible x offset, anchor and source origin. `orientation_diagnostics`
 #'   records directional support, confidence and unresolved cases.
 #'   Position lanes remain local offsets and are not circular physical tracks.
@@ -239,6 +240,7 @@ export_ggchord_layout <- function(
   metadata <- list(
     coordinate_space = "ggchord_layout",
     units = "data",
+    sequence_unit = layout$sequence_unit %||% "bp",
     rotation = layout$rotation %||%
       if (isTRUE(coord$ggchord_coord)) coord$rotation else 0,
     rotation_applied = TRUE,
@@ -261,6 +263,12 @@ export_ggchord_layout <- function(
     metadata$genomic_scale <- "linear"
     metadata$normal_direction <- "positive_up"
     exported$sequence_layout <- layout$sequence_layout
+    if (identical(layout$sequence_unit, "aa")) {
+      exported$sequence_layout$units_per_bp <- NA_real_
+      if ("gap_bp" %in% names(exported$sequence_layout)) {
+        exported$sequence_layout$gap_bp <- NA_real_
+      }
+    }
     exported$label_diagnostics <- layout$collinear_label_diagnostics %||% data.frame()
     exported$orientation_diagnostics <- layout$orientation_diagnostics %||% data.frame()
   } else {

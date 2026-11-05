@@ -1,31 +1,56 @@
-先认识表格，再决定使用哪些图层。弦图是ggchord最早的核心视图；早期工作流围绕BLAST比对表展开，因此保留了紧凑的BLAST风格字段。这里的“多序列比对弦图”展示多条序列间已有的区间比对，绘图本身不执行多序列比对算法。
+`ggchord()` 从序列表确定有哪些骨架。连接和特征按需加入。下列几行来自随包数据，运行代码可以看到同样的结果。
 
-## 三张表的最小形状 {#tables}
-| 表 | 必需列 | 每行的含义 |
-| --- | --- | --- |
-| seq_data | accver, length | 一条序列及其完整长度，bp |
-| ribbon_data | qaccver, saccver, qstart, qend, sstart, send | 两条序列上的一对已有比对区间 |
-| gene_data | accver, start, end, strand | 一个有已知正负链的基因区间 |
+## 序列表 `seq_data` {#tables}
 
-只画骨架时，后两张表都不需要。通用注释可保留未知链，请使用 `geom_feature()`，不要冒充有方向的基因。
+{{code:frontseqtable}}
 
-## 名称与可选列 {#names}
-`accver` 源于 accession.version，但值可为任意稳定字符串，例如自己的contig名称；不会自动添加或删除版本号。`q` 是query，`s` 是subject，所以 `qstart` 是query端起点。两个标识都必须能在序列表中找到。
+{{output:frontseqtable}}
 
-`pident` 是百分比相似度，仅映射或筛选相似度时需要；比对表的 `length` 是比对长度，序列表的 `length` 是完整序列长度，二者不能混用。`evalue`、`bitscore`、`qlen`、`slen` 按分析需求保留。基因的 `anno` 是可选注释文字；要画标签时提供它。其他类别列可供 `aes()` 映射，不是强制输入。
+| 必需列 | 含义 |
+| --- | --- |
+| `accver` | 唯一序列 ID。可以用自己的 contig 名称，其他表按该值匹配。 |
+| `length` | 完整序列长度，单位为 bp。 |
 
-## 查看真实表格 {#inspect}
-```r
-library(ggchord)
-library(dplyr)
-seq_data_example |> select(accver, length) |> slice_head(n = 3)
-ribbon_data_example |> select(qaccver, saccver, qstart, qend, sstart, send) |> slice_head(n = 3)
-gene_data_example |> transmute(accver, start, end, strand = source_strand, anno) |> slice_head(n = 3)
-```
+**可选列**可用于显示或分组，例如另存一个简短的显示名称。
 
-这些行来自随包真实记录；原始生物学链在该历史教学对象的 `source_strand` 中，因此显式恢复。自己的GFF3读入结果直接使用其 `strand`。
+## 连接表 `ribbon_data` {#inspect}
 
-## 坐标与方向 {#coordinates}
-使用一基闭区间bp坐标。基因 `start <= end`，方向另存于 `strand`。连接端点次序可表达反向比对；不要一律排序。未知完整长度不能由最大特征终点推断。详细契约见[数据与坐标](data.html#coordinates)。
+{{code:frontlinktable}}
 
-继续：[1.2 从分析结果到输入表](chord-import.html)。
+{{output:frontlinktable}}
+
+| 必需列 | 含义 |
+| --- | --- |
+| `qaccver`、`saccver` | 查询端（query）和目标端（subject）的序列 ID，都须出现在序列表中。 |
+| `qstart`、`qend` | 查询序列上的两个区间端点。 |
+| `sstart`、`send` | 目标序列上的两个区间端点。 |
+
+**可选列** `pident` 是比对一致性百分比，可用于筛选或配色。例如，首行约为 98.6%。比对表也可以有 `length`，它表示比对长度。
+
+## 基因与通用特征 {#names}
+
+{{code:frontgenetable}}
+
+{{output:frontgenetable}}
+
+| 列 | 用途 |
+| --- | --- |
+| `accver` | 必需。该区间所在的序列 ID。 |
+| `start`、`end` | 必需。区间的起点和终点，`start <= end`。 |
+| `strand` | 基因箭头需要 `+` 或 `-`。无方向或方向未知的注释可用通用特征图层。 |
+| `anno` | 可选。可以作为标签文字。 |
+| `type` | 可选。通用特征的类别，例如 CDS、启动子或复制起点。 |
+
+这里从随包示例的 `source_strand` 取出原始注释链。自己导入的 GFF3 数据可直接使用其中的 `strand`。
+
+## 坐标怎么读 {#coordinates}
+
+输入使用从 1 开始、两端均计入的 bp 坐标。例如，10 到 12 包含 3 个碱基。基因区间用 `strand` 表达方向，连接区间则可能通过端点的升降顺序表达方向，导入后应保留两端各自的顺序。
+
+继续阅读[绘图基本概念](modes.html)。需要从文件读取时可查阅[输入格式与转换](formats.html)。
+
+字段采用 BLAST 风格，是 ggchord 从比对可视化发展而来的命名沿革。query/subject 对应 q/s 前缀；自定义 ID 也可以使用。实际 BLAST 表见[比对输入](alignments.html)。
+
+## 蛋白序列的单位 {#protein-unit}
+
+核酸表可省略单位列，默认使用 bp。完整蛋白长度表应声明 `sequence_unit = "aa"`，同一图使用一个单位。[蛋白比对示例](alignments.html#protein)展示完整输入和配图。

@@ -3,18 +3,22 @@
 import hashlib
 import json
 import re
-import shutil
 from pathlib import Path
 from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[1]
 out = ROOT / 'vignettes/tutorial-assets'
 out.mkdir(exist_ok=True)
-shutil.copy2(ROOT / 'man/figures/logo.svg', out / 'logo.svg')
+manifest = ROOT / 'website/assets/vignette-figures.json'
+previous = json.loads(manifest.read_text()) if manifest.exists() else []
 records = []
 refs = set()
 for path in (ROOT / 'vignettes').glob('*.Rmd'):
     refs.update(re.findall(r'tutorial-assets/([a-z]+\.(?:png|jpg))', path.read_text()))
+for record in previous:
+    name = record['file']
+    if name not in refs:
+        (out / name).unlink(missing_ok=True)
 for name in sorted(refs):
     source = ROOT / 'man/figures' / (Path(name).stem + '.png')
     target = out / name
@@ -30,5 +34,5 @@ for name in sorted(refs):
     records.append(dict(file=name, source=str(source.relative_to(ROOT)),
         source_sha256=hashlib.sha256(source.read_bytes()).hexdigest(),
         sha256=hashlib.sha256(target.read_bytes()).hexdigest(), bytes=target.stat().st_size))
-(ROOT / 'website/assets/vignette-figures.json').write_text(json.dumps(records, indent=2)+'\n')
+manifest.write_text(json.dumps(records, indent=2)+'\n')
 print(f'{len(records)} offline figures, {sum(r["bytes"] for r in records):,} bytes; canonical PNGs unchanged.')

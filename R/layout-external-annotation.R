@@ -187,7 +187,7 @@ ggchord_external_place <- function(row, occupied, units_per_inch,
         elbow_angles <- root_angle + delta_angle *
           c(1, .875, .75, .625, .5, .375, .25, .125, 0)
         elbow_radii <- max(root_radius, endpoint_radius,
-          base_edge_radius %||% 0) + c(0, .03, .065, .11, .17, .25, .35, .48)
+          base_edge_radius %||% 0) + step * c(0, .5, 1)
         routed <- NULL
         for (elbow_radius in elbow_radii) {
           for (elbow_angle in elbow_angles) {

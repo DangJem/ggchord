@@ -81,12 +81,10 @@ make_ggchord_scales <- function(layout, has_seq = FALSE, has_gene = FALSE,
   gene_fill_scale <- NULL
   if (has_gene) {
     if (layout$gene_color_scheme == "strand") {
-      strand_breaks <- intersect(
-        c("+", "-"), unique(as.character(layout$gene_polys$strand))
-      )
-      if (length(strand_breaks) == 0L) strand_breaks <- c("+", "-")
+      strand_breaks <- c("+", "-")
       gene_fill_scale <- scale_gene_fill_manual(
         name   = "Strand",
+        limits = strand_breaks,
         breaks = strand_breaks,
         values = layout$gene_pal,
         guide  = role_guide("gene", order = 3,
@@ -257,7 +255,8 @@ ggchord_mapping_info <- function(plot, aesthetic) {
     )
   }
   values <- unlist(lapply(infos, `[[`, "value"), use.names = FALSE)
-  list(kind = kinds, values = values, label = infos[[1L]]$label)
+  list(kind = kinds, values = values, label = infos[[1L]]$label,
+    labels = unique(vapply(infos, `[[`, character(1), "label")))
 }
 
 #' Replace managed defaults when an explicit mapping needs another scale type
@@ -271,6 +270,9 @@ ggchord_infer_visual_scales <- function(plot, layout, scales) {
     if (plot$scales$has_scale(aesthetic)) next
     info <- ggchord_mapping_info(plot, aesthetic)
     if (is.null(info)) next
+    if (identical(aesthetic, "ribbon_fill") && info$kind == "continuous" &&
+        identical(layout$ribbon_color_scheme, "pident") &&
+        all(info$labels == "pident")) next
     scales <- Filter(function(s) !aesthetic %in% s$aesthetics, scales)
     if (info$kind == "discrete") {
       levels <- unique(as.character(info$values))

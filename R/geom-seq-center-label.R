@@ -138,7 +138,8 @@ ggchord_seq_center_label_geometry <- function(seq_data, params,
     } else as.character(seq_data$accver[1L])
   } else character()
   length_text <- if (isTRUE(params$length)) {
-    paste0(format(round(seq_data$length[1L]), big.mark = ",", scientific = FALSE), " bp")
+    paste(format(round(seq_data$length[1L]), big.mark = ",", scientific = FALSE),
+      ggchord_sequence_unit(seq_data, "geom_seq_center_label()"))
   } else character()
   text <- paste(c(name, length_text), collapse = params$separator %||% "\n")
   labels <- c(name = name, length = length_text)

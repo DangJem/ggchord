@@ -1,3 +1,71 @@
+# ggchord 0.16.7 (development)
+
+* `coord_circular()` defaults to `rotation = 90`, placing the sequence origin
+  at 12 o'clock with coordinates increasing clockwise. Explicit `rotation = 0`
+  retains a 3-o'clock origin; the chord default remains 0 degrees.
+
+* Circular axis ticks are longer and heavier by default, including the plasmid
+  preset. Tick roots remain attached to the same axis baseline; explicit lengths
+  and line styles retain priority.
+* The collinear showcase uses the same default Identity scale as the chord
+  showcase. Wide teaching data-frame outputs no longer split into column groups.
+
+* `geom_link_ribbon(nonadjacent_linewidth = 0.4)` controls the outline
+  width of non-adjacent collinear rows independently of `linewidth`. Zero
+  uses the layer's ordinary width for all ribbons. Explicit linewidth
+  mappings retain control of the mapped widths.
+* Added four complete source-backed protein records and six observed
+  unordered BLASTp comparisons as bundled teaching tables.
+
+* The default chord rotation is 0 degrees. Set `coord_chord(rotation = 45)`
+  to request a 45-degree display.
+
+* Native protein plots accept `sequence_unit = "aa"` with complete protein
+  lengths, BLASTp links and generic interval features. Layout exports, centre
+  length labels and scale bars retain the sequence unit. Mixed bp/aa native
+  plots and nucleotide-only layers on proteins are rejected.
+* `read_fasta_lengths(sequence_unit = "aa")` explicitly declares protein
+  lengths. Omitting the argument retains its existing output columns.
+
+* Circular ticks share their axis baseline and point away from the backbone.
+  The default circular axis and plasmid theme attach ticks to the inner
+  backbone edge. Explicit signed gaps move the complete axis together.
+* Explicit `aes(ribbon_fill = pident)` retains the default Identity scale
+  and guide, matching the implicit mapping. User scales take precedence.
+
+* Dense axes retain regularly spaced labels when possible, and ticks are
+  longer by default. Gene arrows use the chord showcase's red and blue for
+  forward and reverse strands, including when input annotations carry their
+  own feature colours. Explicit axis and fill settings take precedence.
+
+* Non-adjacent collinear ribbons have a heavier default dashed outline.
+  Set `nonadjacent_linewidth = 0` to inherit the ordinary fixed width;
+  explicit linewidth mappings retain control.
+* Single-line circular backbones retain axis ticks and labels without a second
+  concentric baseline.
+
+* Axis labels now hide overlaps by default, while retaining tick geometry.
+  Circular ticks and text respect the physical gap inside the backbone.
+  Set `theme_ggchord(axis.text.check.overlap = FALSE)` to keep all labels.
+
+* Automatic strand legends for gene arrows include both strand directions,
+  including plots whose gene layer only observes one strand.
+
+
+* The default collinear scale bar has no horizontal inset, aligning with
+  the left sequence envelope and the zero tick on left-aligned forward rows.
+  Use `offset = grid::unit(c(2, 6), "mm")` to retain the previous inset.
+
+* Added independent bilingual first lessons for chord, collinear and circular
+  views with bundled records. The site separates courses, data import, plotting
+  techniques, advanced workflows and complete cases. The offline tutorials cover
+  installation and first plots.
+* The four-genome chord showcase samples CDS separately by sequence and source
+  strand without a length cutoff. The plot retains the original annotation
+  coordinates and strand placement.
+* Embed the introductory vignette figures so they load when CRAN serves the HTML
+  separately from the package files.
+
 # ggchord 0.16.6
 
 * Post-release CRAN preparation reduces offline tutorial image duplication, fixes

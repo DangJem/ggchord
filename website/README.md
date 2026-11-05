@@ -1,9 +1,9 @@
 # ggchord 文档网站源 / Documentation source
 
-当前文档源为0.16.6发布候选；API候选基线为0.16.4。实际发布与部署状态以 GitHub Release/Actions 为准。
+当前文档源为 v0.16.7 本地维护版，教程使用 0.16.6 正式接口。发布与部署状态以 CRAN、GitHub Release 和 Actions 为准。
 旧 `docs/` 保留为历史归档，不再作为 Pages 部署源；历史地址由版本化清单生成跳转。网站生成物不作为当前 R 接口的事实来源。
 
-Current documentation sources track the 0.16.6 release candidate, based on the 0.16.4 candidate API.
+The v0.16.7 documentation uses the public API of the 0.16.6 release.
 Consult GitHub Releases/Actions for publication and deployment status. Legacy `docs/` is retained as an archive; Pages uses Actions and versioned historical redirects.
 
 ## 生成基础 / Generator
@@ -63,7 +63,7 @@ python3 -m http.server 8765 --directory .site --bind 127.0.0.1
 | `tools/documentation-plots.R` | 图形尺寸、结果和输入声明 / Dimensions, outputs and input declarations |
 | `man/figures/*.png`、`assets/plots.csv` | 两种语言及 README/vignette 共用的图片字节和 hash / Shared figure bytes and hashes |
 | `coverage.json` | 18 个功能簇的章节、代码及输出证据 / Article/code/output evidence for 18 capability families |
-| `tools/sync-tutorials.py` | 从同源同步 README、迁移和双语 Rmd / Synchronize README, migration guides and paired Rmd sources |
+| `tools/sync-tutorials.py` | 从同源同步 README 和双语 Rmd / Synchronize README and paired Rmd sources |
 | `tools/render-website.R` | pkgdown 原生页面与 Rd 参考生成 / Native pages and Rd reference |
 | `website/reference-zh/*.json`、`tools/reference-translations.py` | 完整汉语 Rd 说明与源摘要校验 / Complete Han prose with source-hash validation |
 | `tools/finalize-website.R`、`assets/site.*` | 同页语言切换、代码折叠、全文搜索及图片放大 / Language switching, code disclosure, search and image viewing |
@@ -109,30 +109,32 @@ public builders. Generated reference prose and code are checked.
 
 ## 阅读架构与局部验证 / Reading structure and scoped verification
 
-`navigation.json` 将入门、完整工作流、任务指南及参考分组。桌面保留章节导航，宽屏显示
-右侧页内目录；中等及窄屏使用可展开目录。文章的 `prepare` 标记将该页实际依赖的共享
-代码就地展开，避免跳回首页寻找变量。首页按科研问题选择三类真实案例，图集每张图
-链接其准备、代码及解释。调研依据与取舍见
-[跨产品调研](../design-roadmap/WEBSITE-RESEARCH-v0.16.5.md)。
+三种模块各自从随包数据开始，完成首图后再读表格并加图层。自备数据、常用技巧、
+专业专题和图库单独分组。全站导航折叠当前模块之外的分组，正文显示章节编号和前后章节。
+基础课将必要的几行输入放在使用它们的步骤中。`prepare` 用于文件、可选依赖或完整案例。
+`output` 紧跟同名检查代码，显示实际运行所得的小表。
 
-`navigation.json` groups learning, complete workflows, task guides and reference.
-A persistent chapter sidebar and responsive page outlines support long articles.
-Page-local `prepare` markers expand their actual shared-code prerequisites.
-The home page selects real cases by scientific question; every gallery figure
-links to preparation, code and interpretation. Research and decisions are recorded
-in the linked design document.
+Each module starts with bundled records, then explains its tables and layers.
+Separate groups cover user inputs, techniques, advanced workflows and the gallery.
+The current module opens in the site guide and shows its progress and section links.
+Opening lessons put their short inputs next to the step that uses them. Use `prepare` for files,
+optional dependencies or full cases. An `output` marker shows the table returned by the matching inspection code.
 
 ```sh
 # 只检查文档任务的独立准备，不运行包检查 / Independent lesson objects only
 Rscript tools/check-documentation-lessons.R
+# 共享检查代码或输入变化后刷新输出 / Refresh after inspection code or data changes
+Rscript tools/check-documentation-lessons.R --write-outputs
 ```
 
-检查 20 页的共享准备与步骤，使用独立环境，不保存用户输出、不打开预览，也不执行
-完整 testthat、vignette 或包发布检查。准备代码默认折叠，展开后可按页顺序复制运行。
+检查含共享代码的页面准备与步骤，使用独立环境，不保存用户输出、不打开预览，也不执行
+完整 testthat、vignette 或包发布检查。代码默认展开。重建 GenBank 输出时，
+请让 PATH 中的 python3 能导入 Biopython。
 
-The scoped script checks 20 pages in separate environments, without user exports,
+The scoped script checks pages with shared examples in separate environments, without user exports,
 interactive previews, test suites, vignette rendering or package release checks.
-Preparation is initially folded and can be expanded to copy in page order.
+Code is visible by default. To regenerate the GenBank output, use a python3 on PATH
+that can import Biopython.
 
 折叠页内目录在生成时直接读取实际标题，完整参考页无需等待脚本填充目录。
 图片使用资产清单的固有宽高预留比例，懒加载不挤动章节。文档顶栏保持可见，
@@ -186,7 +188,7 @@ documentation. The dense pETDuet-1 example uses an explicit viewport and
 label_fit="shrink", saved with standard ggsave at 16.5×8 inches; automatic view
 previews can choose different dimensions and should not be mixed with that layout.
 
-三个模块从数据表、导入、骨架与图层逐步进入完整示例，顺序为弦图、共线性、质粒。13个独立质粒参考均由当前代码生成；共同数据/图层的coord替换示例与圆形专属参数限制分开说明。
+三个模块独立从首图进入输入表、图层和完整案例。13个独立质粒参考均由当前代码生成；共同数据/图层的coord替换示例与圆形专属参数限制分开说明。
 
 文档图像manifest保留每张PNG及实际生成时共享脚本的MD5，同时记录当前依赖摘要。R实现或共同准备变动会要求重新生成所有受影响图；已审阅的独立共线性/三种标签示例块可局部重绘。只有完整当前输出和实际PNG哈希全部匹配时，才允许为旧manifest补录依赖摘要，不能用补写哈希代替渲染。
 
@@ -194,8 +196,10 @@ previews can choose different dimensions and should not be mixed with that layou
 
 `python3 tools/prepare-vignette-figures.py`（需要开发工具Pillow）从当前PNG生成
 共享阅读资源到vignettes/tutorial-assets；原始PNG与网站输出不覆盖。先运行sync-tutorials.py，
-再准备图片。两份html_vignette内嵌脚本与样式，图像用data-external共用本地资源，放大链接也
-使用同一路径。发布前须核对源码包内inst/doc/tutorial-assets及两个HTML的实际资源闭包。
+再准备图片。两份 html_vignette 将图片、脚本和样式一起内嵌，使 CRAN 单独提供 HTML 时
+也能显示图片。网站保留指向独立图文件的放大链接。发布前检查两个 HTML 的资源闭包。
 
 源码包生成后运行 `python3 tools/check-vignette-resources.py ggchord_版本.tar.gz`，
 检查两个安装HTML中的全部本地src/href目标，而不只检查源Rmd路径。
+
+汉语代码注释由 r-comments-zh.json 集中维护。汉语下载脚本使用 -zh.R 文件名；检查器比较可执行语句，并逐语言核对实际渲染代码。

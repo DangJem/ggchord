@@ -10,168 +10,216 @@
   {
     "slug": "installation",
     "title": {
-      "zh": "安装与环境准备",
-      "en": "Install and prepare the environment"
+      "zh": "下载与安装",
+      "en": "Download and install"
     },
     "group": "start"
   },
   {
     "slug": "modes",
     "title": {
-      "zh": "选择合适的学习模块",
-      "en": "Choose your learning module"
+      "zh": "绘图基本概念",
+      "en": "Plotting concepts"
     },
     "group": "start"
   },
   {
+    "slug": "chord-start",
+    "title": {
+      "zh": "绘制序列骨架",
+      "en": "Draw sequence backbones"
+    },
+    "group": "article"
+  },
+  {
     "slug": "chord-data",
     "title": {
-      "zh": "1.1 输入表与字段含义",
-      "en": "1.1 Tables and field meanings"
+      "zh": "基本数据表",
+      "en": "Basic input tables"
     },
     "group": "article"
   },
   {
     "slug": "chord-import",
     "title": {
-      "zh": "1.2 生成与导入比对数据",
-      "en": "1.2 Produce and import comparisons"
+      "zh": "导入 FASTA、GFF3 与 BLAST",
+      "en": "Import FASTA, GFF3 and BLAST"
     },
     "group": "article"
   },
   {
     "slug": "chord-build",
     "title": {
-      "zh": "1.3 从骨架逐层添加",
-      "en": "1.3 Build the layers step by step"
+      "zh": "添加连接和特征",
+      "en": "Add links and features"
     },
     "group": "article"
   },
   {
     "slug": "chord-tuning",
     "title": {
-      "zh": "1.4 方向、曲率与避障",
-      "en": "1.4 Direction, curvature and clearance"
+      "zh": "调整旋转与间隙",
+      "en": "Adjust rotation and gaps"
+    },
+    "group": "article"
+  },
+  {
+    "slug": "chord-geometry",
+    "title": {
+      "zh": "逐条调整骨架",
+      "en": "Adjust individual backbones"
+    },
+    "group": "article"
+  },
+  {
+    "slug": "chord-routing",
+    "title": {
+      "zh": "引导连接带与避障",
+      "en": "Route ribbons and avoid obstacles"
+    },
+    "group": "article"
+  },
+  {
+    "slug": "chord-labels",
+    "title": {
+      "zh": "放置序列和基因标签",
+      "en": "Place sequence and gene labels"
     },
     "group": "article"
   },
   {
     "slug": "ribbons",
     "title": {
-      "zh": "1.5 筛选与整理连接",
-      "en": "1.5 Filter and summarize links"
+      "zh": "筛选、合并与聚束连接",
+      "en": "Filter, merge and bundle links"
     },
     "group": "article"
   },
   {
     "slug": "real-data",
     "title": {
-      "zh": "1.6 原始文件完整流程",
-      "en": "1.6 Full source-file workflow"
+      "zh": "从源文件绘制序列比较图",
+      "en": "Sequence comparisons from source files"
     },
     "group": "article"
   },
   {
     "slug": "chord",
     "title": {
-      "zh": "1.7 弦图综合展示",
-      "en": "1.7 Complete chord showcase"
+      "zh": "四序列综合案例",
+      "en": "Four-sequence case study"
+    },
+    "group": "article"
+  },
+  {
+    "slug": "collinear-start",
+    "title": {
+      "zh": "绘制共线性骨架",
+      "en": "Draw your first collinear plot"
     },
     "group": "article"
   },
   {
     "slug": "collinear-data",
     "title": {
-      "zh": "2.1 复用弦图的数据",
-      "en": "2.1 Reuse chord input tables"
+      "zh": "共线性输入与端点方向",
+      "en": "Collinear inputs and endpoint direction"
     },
     "group": "article"
   },
   {
     "slug": "collinear-build",
     "title": {
-      "zh": "2.2 只替换坐标系，再逐层添加",
-      "en": "2.2 Switch coordinates and add layers"
+      "zh": "添加比较图层与坐标轴",
+      "en": "Add comparison layers and axes"
     },
     "group": "article"
   },
   {
     "slug": "collinear-routing",
     "title": {
-      "zh": "2.3 跨行连接、避障与比例尺",
-      "en": "2.3 Routes, clearance and the ruler"
+      "zh": "跨行路由、避障与比例尺",
+      "en": "Cross-row routes, clearance and scale bars"
     },
     "group": "article"
   },
   {
     "slug": "homology",
     "title": {
-      "zh": "2.4 比较基因邻域",
-      "en": "2.4 Compare CDS neighbourhoods"
+      "zh": "比较有证据的 CDS 邻域",
+      "en": "Compare source-backed CDS neighbourhoods"
     },
     "group": "article"
   },
   {
     "slug": "views",
     "title": {
-      "zh": "2.5 局部、锚定与分段",
-      "en": "2.5 Focus, anchors and segments"
+      "zh": "聚焦、锚定与分段",
+      "en": "Focus, anchor and segment"
     },
     "group": "guide"
   },
   {
     "slug": "collinear",
     "title": {
-      "zh": "2.6 共线性综合展示",
-      "en": "2.6 Complete collinear showcase"
+      "zh": "四基因组共线性案例",
+      "en": "Four-genome collinear case study"
+    },
+    "group": "article"
+  },
+  {
+    "slug": "plasmid-start",
+    "title": {
+      "zh": "绘制圆形骨架",
+      "en": "Draw your first circular map"
     },
     "group": "article"
   },
   {
     "slug": "plasmid-data",
     "title": {
-      "zh": "3.1 DNA、注释与13个参考序列",
-      "en": "3.1 DNA, annotations and 13 references"
+      "zh": "单序列长度、DNA 和注释",
+      "en": "Single-sequence length, DNA and annotations"
     },
     "group": "article"
   },
   {
     "slug": "plasmid-build",
     "title": {
-      "zh": "3.2 从圆圈到多层注释",
-      "en": "3.2 From a circle to annotation layers"
+      "zh": "添加特征、标签、引物和酶切位点",
+      "en": "Add features, labels, primers and restriction sites"
     },
     "group": "article"
   },
   {
     "slug": "recognition",
     "title": {
-      "zh": "3.3 识别特征、引物与酶切",
-      "en": "3.3 Features, primers and restriction"
+      "zh": "搜索特征、引物与酶切位点",
+      "en": "Find features, primers and restriction sites"
     },
     "group": "guide"
   },
   {
     "slug": "plasmid-catalog",
     "title": {
-      "zh": "3.4 13个质粒参考案例",
-      "en": "3.4 Thirteen plasmid references"
+      "zh": "13 个质粒参考案例",
+      "en": "Thirteen plasmid reference maps"
     },
     "group": "article"
   },
   {
     "slug": "plasmids",
     "title": {
-      "zh": "3.5 质粒综合实战",
-      "en": "3.5 Complete plasmid cases"
+      "zh": "pUC19 与 pETDuet-1 完整案例",
+      "en": "Complete pUC19 and pETDuet-1 cases"
     },
     "group": "article"
   },
   {
     "slug": "data",
     "title": {
-      "zh": "数据与坐标",
-      "en": "Prepare tables and coordinates"
+      "zh": "表格字段与坐标约定",
+      "en": "Table fields and coordinate conventions"
     },
     "group": "start"
   },
@@ -210,8 +258,8 @@
   {
     "slug": "labels",
     "title": {
-      "en": "Labels and local placement",
-      "zh": "放置和调整标签"
+      "zh": "自动布局与文字适配",
+      "en": "Automatic label layouts and text fitting"
     },
     "group": "guide"
   },
@@ -227,47 +275,39 @@
     "slug": "styling",
     "title": {
       "en": "Mappings, scales, guides and themes",
-      "zh": "设置配色、图例和主题"
+      "zh": "配置配色、图例和主题"
     },
     "group": "article"
   },
   {
     "slug": "parameters",
     "title": {
-      "en": "Set values by sequence and strand",
-      "zh": "按序列和链设置参数"
+      "zh": "灵活参数配置",
+      "en": "Flexible parameter configuration"
     },
     "group": "article"
   },
   {
     "slug": "adjustments",
     "title": {
-      "en": "Common adjustments and grammar",
-      "zh": "调整图形"
+      "zh": "映射相似度与图层职责",
+      "en": "Map identity and understand layer roles"
     },
     "group": "guide"
   },
   {
     "slug": "output",
     "title": {
-      "en": "Export, preview and diagnostics",
-      "zh": "预览和保存图形"
+      "zh": "按论文尺寸预览和导出",
+      "en": "Preview and export at publication size"
     },
     "group": "guide"
-  },
-  {
-    "slug": "articles",
-    "title": {
-      "en": "Articles and complete workflows",
-      "zh": "使用教程"
-    },
-    "group": "start"
   },
   {
     "slug": "reference",
     "title": {
       "en": "Function reference",
-      "zh": "函数文档"
+      "zh": "函数参考文档"
     },
     "group": "reference"
   },
@@ -288,27 +328,35 @@
     "group": "guide"
   },
   {
-    "slug": "migration",
+    "slug": "collinear-tuning",
     "title": {
-      "en": "Migrate to the candidate API",
-      "zh": "迁移到候选 API"
+      "zh": "调整行距与标尺",
+      "en": "Adjust row spacing and scale"
+    },
+    "group": "article"
+  },
+  {
+    "slug": "plasmid-tuning",
+    "title": {
+      "zh": "调整骨架样式与旋转",
+      "en": "Adjust backbone style and rotation"
+    },
+    "group": "article"
+  },
+  {
+    "slug": "about",
+    "title": {
+      "zh": "网站信息与章节索引",
+      "en": "Site information and chapter index"
     },
     "group": "guide"
   },
   {
-    "slug": "glossary",
+    "slug": "protein-alignments",
     "title": {
-      "en": "Terminology and design sources",
-      "zh": "术语说明"
+      "zh": "从 BLASTp 绘制蛋白比较图",
+      "en": "Protein comparisons from BLASTp"
     },
     "group": "guide"
-  },
-  {
-    "slug": "news",
-    "title": {
-      "en": "Development status and changes",
-      "zh": "更新日志"
-    },
-    "group": "reference"
   }
 ]

@@ -1,68 +1,64 @@
-<div class="task-intro"><p>使用 BLAST 标准表格输出，无需早期自定义 17 列。区分“文件有哪些列”“绘图需要哪些列”及核酸/蛋白单位。</p></div>
+<div class="task-intro"><p>用真实比对记录学习 BLAST 的默认列，并选出绘图所需的六个端点字段。</p></div>
 
-## 本页准备 {#prepare}
-在新的 R 会话中先运行下方代码，再按页面顺序继续。配色和排版是可选的显示设置，输入只选择需要的列。 涉及文件时，先解压[教学输入](../assets/tutorial-inputs.zip)，使工作目录包含 `examples/`。
+## 为什么从 BLAST 输入开始 {#prepare}
 
-```r
-library(ggchord)
-library(dplyr)
+ggchord 最初为 BLASTn 比对结果设计，用弦图展示核酸序列之间的对应区间。因此，BLAST 表格是 ggchord 的默认推荐比对输入，连接表也延续 query/subject 的字段风格。随着绘图能力扩展，这套命名继续用于弦图、共线性图及数据转换。
+
+绘图需要完整序列的长度和已计算的比对结果。FASTA 提供骨架长度，BLAST 提供区间对应关系；ggchord 将这些记录组织成图。下面先读懂默认 BLAST 表格，再分别绘制核酸与蛋白比对。
+
+`-outfmt 6` 输出无表头的制表符分隔数据，`-outfmt 7` 在相同数据行之外添加以 `#` 开头的注释。省略 `-outfmt` 时，BLAST 输出供阅读的配对文本。两个命令分别演示核酸与蛋白比对。
+
+```sh
+blastn -query query.fna -subject subject.fna -outfmt 6 -out hits-dna.tsv
+blastp -query proteins.faa -subject reference.faa -outfmt 7 -out hits-protein.tsv
 ```
 
 ## 默认表格列就够用 {#standard}
-不需要早期教程中的 17 列自定义字段。使用 BLAST 标准表格输出即可：
 
-```sh
-blastn -query query.fna -subject subject.fna -outfmt 6 -out result.tsv
-blastp -query proteins.faa -subject reference.faa -outfmt 7 -out result.tsv
-```
+不指定字段列表时，两种表格格式都按以下顺序输出 12 列。
 
-`6` 是无注释表格，`7` 加上注释头；不再列出自定义字段时，两者使用默认 12 列。
-完全省略 `-outfmt` 得到的是 pairwise 文本，当前表格读取器不解析该格式。
-默认列为 query ID、subject ID、pident、length、mismatch、gapopen、qstart、qend、
-sstart、send、evalue、bitscore。读取器将两个 ID 的角色命名为 `qaccver`、`saccver`，
-保留字符串原值，并不要求它们一定是 accession version。
-[NCBI 格式说明](https://www.ncbi.nlm.nih.gov/sites/books/NBK279684/table/appendices.T.options_common_to_all_blast/)。
+| 顺序 | 字段 | 读法 |
+| --- | --- | --- |
+| 1–2 | `qseqid`、`sseqid` | query 与 subject 的序列 ID，读入后名为 `qaccver`、`saccver`，值原样保留 |
+| 3–6 | `pident`、`length`、`mismatch`、`gapopen` | 一致性百分比、比对列数、错配数、缺口开启次数 |
+| 7–10 | `qstart`、`qend`、`sstart`、`send` | 两端的起止坐标，从 1 开始并包含两端。递减端点保留比对方向 |
+| 11–12 | `evalue`、`bitscore` | 期望值和以 bit 为单位的得分，通常前者越小、后者越大，命中证据越强 |
 
-## 文件布局与绘图最小列是两回事 {#minimal}
-文件里有 12 列，不表示绘图必须接收 12 列。运行本页准备代码加载包后，使用下面的真实记录：
+解压[教学输入](../assets/tutorial-inputs.zip)后，从包含 `examples/` 的目录运行。示例文件保存了实际 HSP 的前 12 列。
 
 {{code:standardblast}}
+{{output:standardblast}}
 
-`blast_source` 保留全部统计和来源信息；`blast_links` 只有六个端点角色。
-`pident` 只有在按相似度配色/筛选时才需要，`length` 只有按比对长度筛选/加权时才需要。
-`qlen`、`slen` 用于相应覆盖率计算，不能为了基础出图强制要求它们。
-无表头的自定义列须明确 `col_names`，读取器不猜测任意六列的含义。
-也可对任意已读入的表使用 `as_ggchord_link(x, mapping = ...)`，见[格式转换](formats.html#adapters)。
+读取器把绘图所需的六个端点字段排在表格前面。
 
-仓库 `examples/blastn-standard/` 的文件是历史原始 HSP 的前 12 列转换，保留行和值，
-不是本轮重新计算的 BLAST 结果。旧 `.o7` 文件保持原样，转换脚本和 hash 在来源清单中。
+## 选出绘图所需的六列 {#minimal}
 
-## BLASTp 可以读取，但坐标单位不同 {#protein}
-下面是真实 BLASTP 2.9.0+ 结果与对应查询 CDS 注释，来自公开 EMALE 教程。
-先保留完整输入，再选择有完整 CDS 映射、足够长度和较小 evalue 的查询 HSP。
+{{code:blastendpoints}}
+{{output:blastendpoints}}
 
-{{code:protein}}
-{{results:protein}}
+一条带由两条序列的 ID 和各自的起止坐标确定。要按一致性着色或筛选时保留 `pident`，要按比对长度筛选时保留 `length`。用自定义字段输出无表头文件时，在 `read_blast()` 中用 `col_names` 按实际顺序声明列。已经读入的其他表可用[连接格式转换](formats.html#adapters)。
 
-BLASTp 的 `qstart/qend/sstart/send` 是氨基酸坐标。这里将查询蛋白的 HSP 范围
-转换到已知 CDS 的基因组坐标，保留负链和 phase；有缺口的 HSP 仍可投影查询范围，
-但这只是范围，不能解释为逐个核苷酸的配对。原始弱命中、gapopen 和统计仍在原表中。
+## 先选择坐标单位 {#protein}
 
-要得到两端的核苷酸连接，还须提供 subject 的 CDS 映射。不能从蛋白 accession、
-最大端点或同名注释猜出来。`project_ggchord_links()` 的 `ungapped = TRUE` 必须有
-证据，不能为了让默认 BLASTp 文件通过而随意打开。[投影教程](projection.html)
-使用两条编码 DNA 完全一致的真实质粒 CDS，展示可证明无缺口的双端例子。
+| 想比较的对象 | 原生单位 | 比对输入 | 下一步 |
+| --- | --- | --- | --- |
+| 核酸序列 | bp | BLASTn | 将 FASTA 全长和连接表交给绘图层 |
+| 蛋白序列 | aa | BLASTp | 用完整蛋白全长声明 sequence_unit = "aa" |
+| 蛋白命中在基因组上的位置 | bp | BLASTp + CDS 模型 | 将蛋白区间投影到核酸坐标 |
 
-本版不直接绘制以 aa 为轴的蛋白骨架。`blastx`、`tblastn` 的两侧单位也可能不同，
-必须逐侧核对和转换；读取成功不代表可以直接用 bp 坐标绘图。
+一张图使用一个坐标单位。蛋白长度来自完整序列，命中端点仅描述参与比对的区间。BLASTx、tBLASTn 的两端单位不同，需要先选定统一的显示坐标。基因的正负链与蛋白的 N→C 顺序是不同的生物学含义。
+
+[查看 BLASTp 原生蛋白比较图](protein-alignments.html#protein)，或继续[了解三种绘图布局](modes.html)。
+
+<span id="projection"></span>要将蛋白命中定位到核酸基因组，可阅读[CDS 坐标投影](projection.html)。
 
 ## 来源与限制 {#source}
-EMALE 原始输出来自 [gggenomes 的公开数据与教程](https://thackl.github.io/gggenomes/articles/emales.html)。
+EMALE 原始输出来自 gggenomes 的公开 EMALE 数据。
 本项目只复用数据记录，用 ggchord 自行绘图；没有复制上游图或绘图代码。
 下载、原始成员、行号范围、SHA256 和筛选规则见教学输入包的 `sources.json`。
 表格解析不重新运行比对，也不验证命中的生物学功能。
 
 ## 完成后检查 {#check-result}
-基础连接表只需六列。BLASTp 读取后仍是 aa 坐标，必须通过有证据的 CDS 映射转换后才能用于本版 bp 绘图。
+先确认本次比较的对象是核酸还是蛋白，再检查表格列、完整长度与坐标单位。
 
 <div class="next-step">继续：<a href="projection.html">将蛋白坐标转换为基因组坐标 →</a></div>

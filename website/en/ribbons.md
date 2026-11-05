@@ -1,16 +1,14 @@
 <div class="task-intro"><p>Reduce link clutter while retaining provenance: filtering, deduplication, merging and bundling have different meanings.</p></div>
 
-## Prepare this page {#prepare}
-In a fresh R session, run the code below, then follow this page in order. Colours and layout are optional display choices; inputs select only the fields needed. For file-based examples, first extract the [input bundle](../assets/tutorial-inputs.zip) so the working directory contains `examples/`.
-
-{{prepare:setup,sequencepalette,docstyle,realimport,realprepare}}
+<span id="prepare"></span>
 
 ## Begin with the original link table {#input}
-Use the [real-record workflow](real-data.html#selection) to create `seq_real`,
-`link_real` and `real_filtered`. Keep its original tables and filter report.
 
-{{code:ribbons}}
+{{code:ribboninputs,ribbons}}
+
 {{results:ribbons}}
+
+The first three counts follow one pipeline. Bundling starts from the original table and has its own count.
 
 ## Understand each transformation {#transformations}
 Filtering keeps observations meeting declared thresholds. Reciprocal-overlap
@@ -22,30 +20,19 @@ The merged or bundled envelope is not a newly computed nucleotide alignment.
 Estimated lengths retain their flags; unobserved identity is never invented.
 
 ## Density is an explicit statistic {#density}
+{{code:ribbondensity}}
+
 {{figure:density}}
 
-`stat_ribbon_density()` maps a computed density, and `stat_ribbon_bundle()` performs
-its explicit aggregation during build. The ordinary ribbon geom still draws one
-ribbon per row. Interpret count, reported length and identity weighting in their
-own units; more opaque ribbons need not mean stronger independently validated
-homology. A point anchor without direction evidence cannot acquire an aggregate
-orientation merely because its endpoints are equal.
+Each end is divided into four position bins. Ribbons darken when more alignments share the same sequence pair, direction and bins. The legend shows the computed count from `after_stat(bundle_n)`. Each input row still gives one ribbon. Use `stat_ribbon_bundle()` to aggregate neighbouring ribbons.
 
 ## Choose interval ribbons or point links {#points}
-After this page’s preparation code:
 
 {{code:pointlinks}}
+
 {{figure:pointlinks}}
 
-Point positions are integer midpoints of real bundled HSPs; identity remains the reported `pident`. Lines use `qpos/spos`,
-not interval ends, and an arrow points from query to subject. The line default
-avoidance is `none`; ribbon avoidance is `uniform`. Global chord rotation belongs
-to the coordinate system. Pair selection and adjacent-row defaults in linear
-plots are covered in [three modes](modes.html#collinear).
-
-The point-link colour scale supplies `available_aes = "link_colour"` to its
-colourbar explicitly. Ordinary ggplot2 colourbars and the wrapper default do not
-accept every extended role; choose the matching role when making a custom guide.
+These arrows join the midpoints of the first three alignments and point toward the subject. Use ribbons to show complete intervals.
 
 ## Check your result {#check-result}
 Inspect each report and member rows before reading the plot. Aggregated bands are not new alignments; point links summarize midpoints of existing HSPs.

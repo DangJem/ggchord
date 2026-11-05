@@ -2,7 +2,7 @@
 % Please edit documentation in R/geom-seq-scale.R
 \name{geom_seq_scale}
 \alias{geom_seq_scale}
-\title{Add a shared base-pair scale bar to a linear display}
+\title{Add a shared sequence-position scale bar to a linear display}
 \usage{
 geom_seq_scale(
   mapping = NULL,
@@ -10,7 +10,7 @@ geom_seq_scale(
   length = NULL,
   label = NULL,
   location = c("bottomleft", "bottomright", "topleft", "topright"),
-  offset = grid::unit(c(2, 6), "mm"),
+  offset = grid::unit(c(0, 6), "mm"),
   tick_height = grid::unit(1.5, "mm"),
   label_gap = grid::unit(1.5, "mm"),
   linewidth = 0.4,
@@ -24,21 +24,22 @@ geom_seq_scale(
 }
 \arguments{
 \item{mapping, data}{Standard ggplot2 layer inputs. Optional \code{scale_length}
-maps one positive integer bp length per bar; \code{label} supplies its text.
+maps one positive integer length per bar, in the sequence unit; \code{label} supplies its text.
 Multiple bars require explicit \code{x} and \code{y} layout positions in \code{data}
 (or their role mappings), to avoid accidental overprinting.}
 
-\item{length}{Optional fixed positive integer length in bp. Cannot be
+\item{length}{Optional fixed positive integer length in the sequence unit. Cannot be
 combined with a \code{scale_length} mapping. \code{NULL} uses input lengths or an
 automatic reference length.}
 
 \item{label}{Optional fixed character label, or a function receiving the
-chosen bp lengths. \code{NULL} uses input labels or formatted \code{"... bp"} text.}
+chosen lengths. \code{NULL} uses input labels or formatted bp/aa text.}
 
 \item{location}{Corner of the sequence envelope used for automatic placement.}
 
 \item{offset}{Two non-negative distances, horizontal then vertical. Absolute
-grid units are supported; plain numeric values are layout-unit distances.}
+grid units are supported; plain numeric values are layout-unit distances.
+The default is 0 mm horizontally and 6 mm vertically.}
 
 \item{tick_height, label_gap}{Non-negative absolute grid units or layout-unit
 numbers for the end ticks and space between the bar and caption. Physical
@@ -55,14 +56,15 @@ and scales when not supplied as fixed arguments.}
 }
 \value{
 One independent ggplot2 layer. Exported axis geometry retains the
-bp length, input row and measurement status for each bar.
+length, sequence unit, input row and measurement status for each bar.
+The compatibility field \code{bp_length} is NA for protein plots.
 }
 \description{
 Adds a free-standing reference bar in the empty space outside the sequence
-envelope. Its length uses the same bp-to-x conversion as every backbone in
+envelope. Its length uses the same sequence-position-to-x conversion as every backbone in
 \code{\link[=coord_collinear]{coord_collinear()}}, including independent windows on shared display rows.
 Display gaps are never interpreted as genomic length. Local reversals and
-original-source axis labels do not change the bar's bp scale. Chord and
+original-source axis labels do not change the bar's sequence scale. Chord and
 circular coordinates have local sequence axes instead and are rejected.
 }
 \details{

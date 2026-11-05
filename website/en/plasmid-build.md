@@ -1,22 +1,32 @@
-Focus on the visual information added at each step. Preparation computes inputs; independent layers still control drawing.
+Add a replication origin and then its name to the same pUC19 plot.
 
-## Prepare this page {#prepare}
-{{prepare:featurepalette,docstyle,plasmidinput}}
-{{code:learnplasmid}}
+## Recreate the backbone {#origin}
 
-## Step 1: double backbone and centre name {#backbone}
-{{figure:plasmidbackbone}}
-Check name and full length first. `coord_circular()` accepts one sequence; the geom owns the double-line style.
+<span id="prepare"></span><span id="backbone"></span>
 
-## Step 2: feature shapes {#features}
-{{figure:plasmidfeatures}}
-`position_feature_stack()` separates overlaps; `geom_feature_plasmid()` selects shapes and colours by real category. Compact short-feature shapes do not imply missing data.
+{{code:firstcircle}}
+{{figure:firstcircle}}
 
-## Step 3: fitted feature labels {#labels}
-{{figure:plasmidtext}}
-Geometry and labels share a Position. Allow shrinking only above an explicit minimum and external placement when necessary; recheck after changing dimensions.
+## Add the replication origin {#features}
 
-## Step 4: primers and selected restriction sites {#details}
-{{code:plasmid}}
-{{figure:plasmid}}
-Only three selected enzyme sites are displayed; the full search table remains available. See [3.3](recognition.html) for recognition provenance and assumptions. Compare annotation densities across [13 references](plasmid-catalog.html), then finish the [dense pETDuet-1 showcase](plasmids.html#complex).
+{{code:firstfeatures,inspectorigin}}
+
+{{output:inspectorigin}}
+
+{{figure:firstfeatures}}
+
+The origin is the interval marked `rep_origin` in the table. Find its endpoints along the bp ticks to locate the new band.
+
+## Display the annotation name {#add-label}
+
+<span id="labels"></span>
+
+{{code:practiceplasmid}}
+
+{{figure:practiceplasmid}}
+
+The text comes from `anno`. Set `label_orientation` to horizontal and `label_side` to inside. The radial offset separates the label from its band.
+
+## Continue with your own annotations {#adapt}
+
+<span id="details"></span>Replace `origins` with your own annotations when available. See the [case study](plasmids.html#layers) for primers and restriction sites. Next, explore [backbone style and rotation](plasmid-tuning.html).

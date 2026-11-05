@@ -1,56 +1,30 @@
-<div class="lesson-intro">Install and confirm the environment, then choose one progressive module. Reading the entire reference is not a prerequisite.</div>
+## Download and install {#requirements}
 
-## Install and inspect the environment {#requirements}
-R ≥4.1.0 and ggplot2 ≥4.0.0 are required. Installation and examples target v0.16.6.
+Use R ≥ 4.1.0 and ggplot2 ≥ 4.0.0. Run these commands in R. CRAN supplies ggchord and its required dependencies.
 
 ```r
-install.packages(c("remotes", "dplyr", "purrr", "tidyr"))
-remotes::install_github("DangJem/ggchord@v0.16.6")
+install.packages("ggchord")
 library(ggchord)
 packageVersion("ggchord")
 ```
 
-### Which version are you using? {#source}
-This tutorial documents **ggchord 0.16.6**. The installation above pins its formal tag; see [GitHub Releases](https://github.com/DangJem/ggchord/releases/tag/v0.16.6) for release assets.
-For a source checkout, run from its repository root:
+The last line reports the installed version. This tutorial uses the public interface from 0.16.6.
 
-```r
-install.packages("pkgload")
-pkgload::load_all(".")
-packageVersion("ggchord")
-```
+### Source downloads {#source}
 
-Use the loading route appropriate to your source; you do not need both installation paths.
-Record the version when reproducing a plot. This lesson needs neither optional Bioconductor packages nor Biopython.
+Source packages are available from [CRAN](https://cran.r-project.org/web/packages/ggchord/index.html) and [GitHub v0.16.6](https://github.com/DangJem/ggchord/releases/tag/v0.16.6).
 
-### Support evidence {#support-evidence}
-Declared lower bounds are R 4.1.0 and ggplot2 4.0.0. Release checks and actual platform versions are recorded in the release acceptance report; these do not certify every dependency combination. Optional readers require their documented dependencies.
+### Optional dependencies {#support-evidence}
 
-## Choose a learning path {#first-steps}
-1. [Module I · Chord: learn the three tables](chord-data.html), then import, backbones, layers and geometry.
-2. [Module II · Collinear: reuse the chord inputs](collinear-data.html), then switch coordinates, route links and focus locally.
-3. [Module III · Plasmid: start with one sequence and DNA](plasmid-data.html), then add layers and explore 13 reference cases.
+Getting started and the basic chord lessons require only ggchord. The case study lists its extra dependencies.
 
-Starting with chord follows ggchord's development order. See the [learning map](articles.html). The two-sequence exercise below is an optional environment check rather than a substitute for the modules.
+## Confirm the installation {#troubleshooting}
 
-## Which columns come first? {#input}
-Sequences need accver/length; links need two IDs and four endpoints; genes need accver/start/end/strand. [Module I's first lesson](chord-data.html) explains real tables, optional fields and BLAST naming.
+Load the package in a new R session with `library(ggchord)`. If installation or loading fails, check the R or dependency version named in the error.
 
-## Optional: check one complete plot {#first-plot}
-Run the whole folded block, then inspect the figure. Bundled source-backed records need no external files or BLAST run.
+## Next steps {#first-steps}
 
-{{prepare:firstdata,firstplot}}
-{{figure:first}}
-
-## Read the quick result {#read}
-Arrows retain biological strands; colours identify sequences only. Ribbons are existing comparison intervals, not new homology results. This small linear example makes positions easy to read; the full chord module starts with backbones.
-
-## Optional: save the quick result {#save}
-Run this only after the block above has created p_first:
-
-{{code:firstsave}}
-
-Use the same 10×5 in dimensions for preview and export; see [output](output.html).
-
-## Common execution problems {#troubleshooting}
-For missing objects, run the preparation block. For missing functions, check the package version. getwd() determines the save directory. Optional readers need dependencies only in their own topics; basic modules do not require Bioconductor or Biopython.
+- [Basic input tables](chord-data.html) shows real sequence, link and feature rows and explains each column.
+- [Plotting concepts](modes.html) introduces backbones, layers and coordinate systems.
+- <span id="first-plot"></span><span id="input"></span><span id="read"></span>[Draw sequence backbones](chord-start.html) opens the chord chapter.
+- <span id="save"></span>[Save plots](output.html) explains dimensions and file formats.

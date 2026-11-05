@@ -32,7 +32,8 @@ geom_seq(
 \item{seq_orientation}{Optional numeric (1 or -1). Sequence orientation, default 1}
 
 \item{seq_gap}{Optional numeric. Gap proportion between sequences, default
-0.03 in chord coordinates. In \code{\link[=coord_collinear]{coord_collinear()}}, a positive distance
+0.03 in chord coordinates. A named vector can set the gap after each
+sequence; omitted IDs use the coordinate default. In \code{\link[=coord_collinear]{coord_collinear()}}, a positive distance
 between consecutive backbones as a proportion of the longest backbone's
 width, default 0.3. The final sequence's gap is unused in linear layouts.
 Segmented linear displays measure it against the longest display row;
@@ -44,7 +45,7 @@ affect vertical placement.}
 \item{seq_curvature}{Optional numeric. Signed arc bow (0=straight, 1=standard arc, negative=opposite bow), default 1.0. Finite positive and negative values are accepted without clipping; magnitudes above 1 amplify the bow.}
 
 \item{seq_style}{Backbone geometry. \code{"auto"} uses a double backbone in
-\code{\link[=coord_circular]{coord_circular()}} and the historical single backbone in \code{\link[=coord_chord]{coord_chord()}}.}
+\code{\link[=coord_circular]{coord_circular()}} and a single backbone in \code{\link[=coord_chord]{coord_chord()}}.}
 
 \item{seq_backbone_gap}{Gap between double backbone lines.}
 

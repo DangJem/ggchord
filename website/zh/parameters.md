@@ -1,22 +1,55 @@
-<div class="task-intro"><p>按序列或链调整几何，保留旧版灵活参数的实用性，同时明确它不适用于所有参数。</p></div>
+需要所有序列共用一个值、分别按序列指定，或按正负链设置时，可以沿用同一套写法。下面各图都使用四条随包序列。
 
-## 本页准备 {#prepare}
-在新的 R 会话中先运行下方代码，再按页面顺序继续。配色和排版是可选的显示设置，输入只选择需要的列。
+## 一个值应用到所有序列 {#scalar}
 
-{{prepare:setup,sequencepalette,docstyle}}
+{{code:parameteruniform}}
+{{figure:parameteruniform}}
 
-旧版称为“灵活的参数格式”。本页用“按序列和链设置参数”明确其用途与边界。
+四个骨架间隙都设为 0.08。单个数适用于所有序列。
 
-## 这个能力仍然保留 {#recommendation}
-同一图里常要单独调整某条序列，或分别调整正负链。为这些几何参数保留简洁的
-逐序列/逐链写法是合理的；没有必要为了多一条序列而复制整个图层。
-推荐先用单值，确实需要差异时用按 `accver` 命名的向量；正负链使用 `+`/`-` 命名向量。
+## 按名称只改一条序列 {#recommendation}
 
 {{code:parameters}}
+{{figure:parameterexample}}
 
-`radii` 的名称对应实际序列 ID，
-`widths` 和位移对应链。重新排序时，命名值仍能找到原序列；无名值只按当前位置对应。
-这个例子修改的是布局和几何，未把颜色或 theme 参数当成同一套扩展语法。
+命名向量把 MT118296.1 的半径设为 0.72，其余保留默认值 1。重排序列后，值仍按 ID 匹配。
+
+## 按显示顺序分别设置 {#vector}
+
+<span id="compatibility"></span>
+
+{{code:parametervector}}
+{{figure:parametervector}}
+
+四个半径依次对应序列表中的四条记录。无名向量必须与序列数等长；若经常调整顺序，使用命名向量更容易核对。
+
+## 为正负链准备两条真实 CDS {#genes}
+
+{{code:parametergenes}}
+{{output:parametergenes}}
+
+integrase 是 OQ646790.1 上的正链 CDS，Int 是 OR222515.1 上的负链 CDS。保留原始链来演示下面两种设置。
+
+## 分别设置链的位置 {#strand}
+
+{{code:parameterstrand}}
+{{figure:parameterstrand}}
+
+正链偏移为 0.08，负链为 −0.08。位置由 `position_strand()` 控制，表中的坐标与链不变。
+
+## 分别设置链的宽度 {#width}
+
+{{code:parameterwidth}}
+{{figure:parameterwidth}}
+
+正链箭头宽度为 0.03，负链为 0.08。箭头宽度改变显示厚度，基因区间长度仍由 start/end 决定。
+
+## 按序列放置名称 {#labels}
+
+{{code:parameterlabels}}
+{{figure:parameterlabels}}
+
+MT108731.1 的文字半径为骨架半径的 75%，OQ646790.1 为 115%；另外两条使用默认位置。每个支持的参数独立接收命名值。
 
 ## 哪些参数支持 {#scope}
 | 接口 | 支持参数 | 匹配范围 |
@@ -33,24 +66,6 @@
 是布局模式；手动角度和偏移请使用固定标签层，不把它们塞进自动标签的 `...`。
 axis/theme、aesthetic、标度、图例不继承这套列表扩展规则。手工标度本来就支持
 按**数据类别**命名的颜色向量，那属于 ggplot2 的标度语义，见[配色教程](styling.html)。
-
-## 兼容写法与取舍 {#compatibility}
-当前还兼容等长无名向量、按序列名的列表、按序号的列表及等长无名列表；gene/注释
-的一项还可包含 `+`/`-` 两个值。它们是现有几何接口的兼容形式，不是任意参数的
-通用容器。不同参数仍有自己的类型、长度、范围和单位检查。
-
-v0.16.6 RC 审计决定保留这些等价形式，没有新增删除或弃用。位置写法跟随筛选后
-当前显示序列顺序；名称匹配 accession ID 时优先按 ID。width/固定标签的逐序列
-列表元素应为链值对，单值循环用 `list(value)`；Position offset 还允许逐序列单值
-列表。显式按链命名的 Position offset 已带符号，未指定的链或序列补零；
-`position_plasmid()` 使用共享 offset，拒绝链值对。键应唯一；`"1"`、`"+"`、`"-"`
-这类序列 ID 可能与序号或链简写混淆，按链设置时宜使用按序列命名的嵌套列表。
-原生数值型 track width/gap 必须覆盖所有显示序列。这些规则不扩展到 theme。
-
-数值并不共用一个单位：`seq_gap` 是比例，旋转角度以度表示，物理轨道尺寸使用
-明确的 `unit()`。`seq_backbone_gap`、`seq_backbone_width` 是单值样式参数，不在
-上述列表规则中。共线性自动方向用 `coord_collinear(orientation = "auto")`；
-`geom_seq(seq_orientation = ...)` 指定的是 +1/-1 数值方向。
 
 ## 完成后检查 {#check-result}
 命名向量的键应对应实际 accver 或 +/− 链。重排后再次检查匹配；不要将列表规则推广到 theme、scale 或 aesthetic。

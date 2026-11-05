@@ -193,6 +193,8 @@ ggchord_project_intervals <- function(row, caller) {
 build_ggchord_cds <- function(cds_data, genetic_code = NULL,
                               partial = c("error", "trim")) {
   caller <- "build_ggchord_cds()"
+  if (identical(ggchord_sequence_unit(cds_data, caller), "aa"))
+    ggchord_stop(caller, ": CDS models require genomic bp coordinates")
   partial <- match.arg(partial)
   if (!is.data.frame(cds_data) || !nrow(cds_data)) ggchord_stop(caller, ": cds_data must be a nonempty data.frame")
   ggchord_require_columns(cds_data, c("feature_id", "accver", "start", "end", "strand"), caller)
@@ -428,6 +430,7 @@ project_ggchord_features <- function(feature_data, cds, from = c("protein", "gen
     row <- data.frame(feature_id = ids[i], parent_id = parents[i], accver = accver,
       start = lower, end = upper, strand = strand,
       directionality = if (strand == "+") "forward" else if (strand == "-") "reverse" else "none",
+      sequence_unit = if (from == "protein") "bp" else "aa",
       genetic_code = model$genetic_code, source_start = original$start, source_end = original$end,
       source_coordinate_system = if (from == "protein") "observed-protein-1-based-inclusive" else "genome-1-based-inclusive",
       source_row = i, excluded_bases = excluded, codon_expanded = expanded,
@@ -529,6 +532,7 @@ project_ggchord_links <- function(link_data, cds, ungapped = FALSE) {
         qstart = position(q, q0 + lower), qend = position(q, q0 + upper),
         sstart = position(s, s0 + lower), send = position(s, s0 + upper),
         qfeature_id = qids[i], sfeature_id = sids[i],
+        sequence_unit = "bp",
         qstrand = cds$models$strand[qi[i]], sstrand = cds$models$strand[si[i]],
         source_row = i, projection_piece = j, projected_bases = upper - lower + 1,
         orientation_known = TRUE, direction = if (cds$models$strand[qi[i]] == cds$models$strand[si[i]]) "same" else "reverse",

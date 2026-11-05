@@ -27,7 +27,7 @@ set_ggchord_coord <- function(plot, layout) {
   if (isTRUE(coord$ggchord_circular)) {
     resolved <- new_ggchord_coord(
       CoordCircular,
-      rotation = coord$rotation %||% 0,
+      rotation = coord$rotation %||% 90,
       ratio = coord$ratio %||% 1,
       xlim = xlim, ylim = ylim,
       expand = coord$expand %||% FALSE,
@@ -231,6 +231,17 @@ prepare_ggchord_plot <- function(plot) {
     new_layers[[i]] <- reconstruct_layer(lyr, geometry,
       mapping = if (empty) ggplot2::aes() else NULL)
     if (empty) new_layers[[i]]$inherit.aes <- FALSE
+    built <- new_layers[[i]]
+    cross_width <- lyr$ggchord_params$nonadjacent_linewidth %||% 0.4
+    if (isTRUE(layout$collinear) && identical(lyr$ggchord_type, "ribbon") &&
+        !empty && cross_width > 0 && !is.null(built$aes_params$linewidth)) {
+      built$data$.ggchord_ribbon_linewidth <- ifelse(
+        geometry$.ggchord_adjacent, built$aes_params$linewidth, cross_width)
+      built$aes_params$linewidth <- NULL
+      built$mapping$linewidth <- ggplot2::aes(
+        linewidth = I(.ggchord_ribbon_linewidth)
+      )$linewidth
+    }
   }
   plot$layers <- new_layers
   has_feature <- any(vapply(plot$layers, function(x) {
@@ -261,7 +272,8 @@ prepare_ggchord_plot <- function(plot) {
   plot <- ggchord_add_link_scales(plot)
   if (exists("ggchord_add_track_scales", mode = "function")) plot <- ggchord_add_track_scales(plot)
   if (!isTRUE(ggchord_plot_settings(plot)$axis$hidden) &&
-      nrow(layout$axis_lines %||% data.frame()) > 0L) {
+      (nrow(layout$axis_lines %||% data.frame()) > 0L ||
+       nrow(layout$axis_ticks %||% data.frame()) > 0L)) {
     plot$layers[[length(plot$layers) + 1L]] <- ggchord_axis_layer(layout)
   }
   plot <- set_ggchord_coord(plot, layout)

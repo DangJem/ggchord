@@ -47,15 +47,17 @@ the one-based inclusive coordinate convention.
 \description{
 Both \code{file} and \code{files} accept literal path vectors or wildcard patterns.
 Repeated resolved paths are read once, in first-occurrence order.
-Standard \verb{-outfmt 6} and \verb{-outfmt 7} use the default 12 tabular fields;
-the historical extended 17-column format is optional. Omitting \code{-outfmt}
+Standard \verb{-outfmt 6} and \verb{-outfmt 7} use the default 12 tabular fields.
+Omitting \code{-outfmt}
 entirely produces pairwise text, which this tabular reader does not parse.
 }
 \details{
 The reader also parses BLASTp tabular output. It preserves the producer's
 numeric endpoints and does not infer or convert amino-acid/nucleotide units.
-Protein intervals require an explicit CDS projection before genomic plotting;
-reading a protein HSP does not establish an ungapped nucleotide correspondence.
+Supply complete protein lengths with \code{sequence_unit = "aa"} for native
+protein plots. Protein intervals require an explicit CDS projection for
+plotting on a nucleotide genome. Reading a protein HSP does not establish
+an ungapped nucleotide correspondence.
 See \code{\link[=project_ggchord_features]{project_ggchord_features()}} and \code{\link[=project_ggchord_links]{project_ggchord_links()}}.
 }
 \examples{

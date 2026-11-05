@@ -1,18 +1,13 @@
 <div class="task-intro"><p>用随包 pUC19 DNA 完成一张可阅读的质粒图：注释、引物和酶切分别成层，显示选择与完整结果分开保存。</p></div>
 
-## 本页准备 {#prepare}
-在新的 R 会话中先运行下方代码，再按页面顺序继续。配色和排版是可选的显示设置，输入只选择需要的列。
-
-{{prepare:featurepalette,docstyle}}
-
-其中定义了本例使用的配色。
-
 ## 使用有来源的序列 {#input}
 随包 `plasmid_example_pUC19` 原样来自仓库 `examples/plasmid/pUC19.fna`，不会为显示
 修改碱基或序列标识。本流程使用包中有来源记录的识别目录，不需要网络请求，也不
 为图形伪造实验测量值。
 
-{{code:plasmidinput}}
+{{code:plasmidinput,frontplasmidsummary}}
+
+{{output:frontplasmidsummary}}
 
 先查看 `plasmid_features`、`plasmid_primers` 与 `display_sites`，区分完整搜索与显示选择。
 
@@ -22,6 +17,8 @@
 {{code:plasmid}}
 {{figure:plasmid}}
 {{results:plasmid}}
+
+先看“绘制酶切位点”一行。本例只把 3 个选定切点交给图层。完整搜索结果保存在 `plasmid_sites`，可以回查未画出的位点。
 
 混合的圈外标签按锚点顺序共同排版，包括少量酶切标签与引物共存的情况。
 本例使用质粒专用主题和默认 feature 适配；默认先尝试内部文字，再使用相邻或
@@ -44,7 +41,7 @@
 不表示未知样本的生物学状态已经确定。
 
 ## 理解目录和标签的限制 {#limits}
-`primer_names` 展示目录条目。本例精确搜索 universal 目录，参考引物注释与精确寡核苷酸搜索有不同来源。
+本例精确搜索 universal 目录，参考引物注释与精确寡核苷酸搜索有不同来源。
 近似蛋白注释识别遵循[识别专题](recognition.html)的限制，不验证生物学功能或
 引物实验。文字可以移位、在显式字号下限内缩小或隐藏。应保留几何并在最终尺寸
 检查导出标签原因，而不是要求每条注释必须显示文字。
@@ -54,12 +51,7 @@
 直接提供注释表，无需再次运行识别。[堆叠与形状](annotations.html)说明几何，
 [标签](labels.html)说明适配，[输出](output.html)说明设备与尺寸。
 
-`geom_primer_label_repel(side = "inside")` 将引物引出标签保留在骨架内侧，
-包括同时存在外侧酶切及注释标签时。0.16.6 已修复此行为；
-v0.16.5 可能将请求内侧的标签移到外侧。外侧默认布局和原始坐标不变。
-
-内侧酶切标签继续保留内侧几何，导出 annotation registry 现在也正确记录内侧；
-早期版本将这些诊断行误标为外侧资源。
+`geom_primer_label_repel(side = "inside")` 将引物引出标签放在骨架内侧。内侧酶切标签的几何与导出的注释布局表都记录内侧位置。
 
 完整内侧场景仍可能出现长引物文字与其他 feature 区域交叠；默认
 `max_overlaps = Inf` 不认证跨 feature 图层的零交叠。空间不足时优先使用默认外侧，
@@ -81,11 +73,19 @@ ggsave("pUC19-map.png", p_plasmid, width = 10, height = 9, units = "in", dpi = 1
 
 先用上面的 pUC19 掌握图层，再用 pETDuet-1 展示复杂注释。以下来自随包真实序列、常见特征与参考引物表；酶切输入保留 commercial_all 中唯一的六碱基及以上识别位点，不把筛选后的图误称为全部酶的所有切点。
 
-{{code:showcaseplasmiddata}}
+这个案例独立运行。将准备脚本放在当前工作目录。
+
+{{recipe:plasmid}}
+
+{{code:frontduetsummary}}
+
+{{output:frontduetsummary}}
 
 {{code:showcaseplasmid}}
 
 {{figure:showcaseplasmid}}
+
+这张图由相邻代码按 16.5 × 8 英寸预览生成。外圈同时排布酶名、引物和部分特征名，密集位点会把标签推远。这里让坐标系自动为标签留边；缩小预览时应重新检查引线与文字。
 
 20 个特征、5 个参考引物、58 个合并切点构成输入。默认 feature 配色保留紫红编码区域、浅绿抗性基因、黄色复制起点和蓝色调控注释；引物为紫色，与本站其他图的相同语义保持一致。密集标签对尺寸敏感，下载原图或打开大图阅读。
 

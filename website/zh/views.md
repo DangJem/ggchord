@@ -1,10 +1,5 @@
 <div class="task-intro"><p>为已有输入选择局部窗口或分段视图，同时保留原始位置与显示变换的区别。</p></div>
 
-## 本页准备 {#prepare}
-在新的 R 会话中先运行下方代码，再按页面顺序继续。配色和排版是可选的显示设置，输入只选择需要的列。
-
-{{prepare:setup,sequencepalette,docstyle}}
-
 ## 保留来源的局部聚焦 {#focus}
 
 
@@ -17,6 +12,9 @@ focus 把保留位置移到局部一基坐标，同时保留源原点、截断�
 
 ## 独立窗口与局部翻转 {#segments}
 {{code:segment}}
+{{figure:segment}}
+
+左窗口按源序列方向显示，右窗口翻转。中间省略 20,000–40,000 bp 之间的区间。
 
 各窗口有可逆的源映射，被省略的间隙没有映射。`map_ggchord_position()` 把显式源
 位置映射到图中，供普通 ggplot2 注释使用。多个窗口共享源序列时应指定窗口 ID。
@@ -31,6 +29,9 @@ focus 把保留位置移到局部一基坐标，同时保留源原点、截断�
 
 ## 按源坐标放置普通注释 {#mapping}
 {{code:mappingposition}}
+{{figure:mappingposition}}
+
+黑点标出第一条序列的 10,100 bp。
 
 先运行[focus 例子](views.html#focus)。辅助函数返回第一个所选窗口起点后 100 bp 位置的笛卡尔 x/y，
 不把全部普通 ggplot2 坐标变成基因组 bp。分段视图应选窗口 ID，检查落在省略间隙

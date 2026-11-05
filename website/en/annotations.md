@@ -1,14 +1,9 @@
 <div class="task-intro"><p>Draw real annotations as independent layers, choose suitable shapes and share stacking positions between overlapping intervals and text.</p></div>
 
-## Prepare this page {#prepare}
-In a fresh R session, run the code below, then follow this page in order. Colours and layout are optional display choices; inputs select only the fields needed.
-
-{{prepare:setup,sequencepalette,featurepalette,docstyle,plasmiddata}}
+<span id="prepare"></span>
 
 ## Preserve feature semantics {#stack}
-The preparation above loads the actual pUC19 annotations; the [circular example](modes.html#circular) introduces their roles.
-This table retains actual overlapping pUC19 annotations and unknown strands. Geometry and fill map separately
-from the same category; an explicit fixed `shape` would override shape mapping.
+Use the first six pUC19 annotations to see how overlapping intervals share stacked positions. Source strand is retained.
 
 {{code:featurestack}}
 {{figure:featurestack}}
@@ -35,10 +30,10 @@ coordinate mode.
 {{code:decorations}}
 {{figure:decorations}}
 
-A region overlay uses its own table and `region_fill` scale. `geom_seq_label()`
+The highlighted interval is the observed pUC19 replication origin. A region overlay uses its own table and `region_fill` scale. `geom_seq_label()`
 names sequences, `geom_seq_center_label()` supplies name/length in a single circle,
 and `geom_seq_break()` marks cropped/segmented ends. `geom_seq_scale()` is an
-independent bp reference bar for collinear plots; it differs from
+independent sequence-position reference bar for collinear plots; it differs from
 `scale_seq_position_continuous()`, which controls genomic axes on sequences.
 An ordinary ggplot2 annotation should use [position mapping](views.html#mapping)
 instead of treating bp as Cartesian x/y.

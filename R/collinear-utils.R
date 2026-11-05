@@ -161,5 +161,6 @@ map_ggchord_position <- function(plot, accver, position, inverse = FALSE, source
       any(local < 1 - 1e-7 | local > unname(ref$lens[ids]) + 1e-7)) ggchord_stop(
     "map_ggchord_position(): position lies outside the specified window or in an omitted display gap")
   data.frame(accver = ids, position = unname(bp), x = unname(x),
-    y = unname(ref$y[ids]), stringsAsFactors = FALSE)
+    y = unname(ref$y[ids]), sequence_unit = layout$sequence_unit %||% "bp",
+    stringsAsFactors = FALSE)
 }

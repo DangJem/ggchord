@@ -26,10 +26,57 @@ def fingerprints():
     engine = '\n'.join(str(p.relative_to(ROOT)) + ':' +
                        hashlib.md5(p.read_bytes()).hexdigest()
                        for p in sorted((ROOT / 'R').glob('*.R')))
+    engine += '\n' + '\n'.join(str(p.relative_to(ROOT)) + ':' +
+        hashlib.md5(p.read_bytes()).hexdigest()
+        for p in sorted((ROOT / 'data').glob('*.rda')) + [ROOT / 'R/sysdata.rda'])
     captions = json.loads((ROOT / 'website/assets/captions.json').read_text())
+    # Opening lessons and the chord showcase write separate objects. Existing
+    # plots still depend conservatively on the shared source and runtime.
+    starters = {'firstcomparison', 'firstchord', 'firstlinear', 'firstcircle', 'firstfeatures'}
+    exercises = {'practicegenes', 'practicechord', 'practicelinear', 'practiceplasmid', 'firstsavebasic',
+                 'inspectlinks', 'inspectgenes', 'inspectorigin'}
+    practice_figures = {
+        'practicechord': {'practicegenes', 'practicechord'},
+        'practicelinear': {'practicegenes', 'practicelinear'},
+        'practiceplasmid': {'practiceplasmid'},
+    }
+    front_chunks = {name for name in chunks if name.startswith('front')}
+    front_dependencies = {
+        'frontbackbone': {'frontbackbone'},
+        'frontribbon': {'frontbackbone', 'frontlinks', 'frontribbon'},
+        'frontfeature': {'frontbackbone', 'frontlinks', 'frontribbon', 'frontgenes', 'frontfeature'},
+        'frontrotation': {'frontbackbone', 'frontrotation'},
+        'frontgap': {'frontgap'},
+    }
+    for name in ('frontradius', 'frontcurvature', 'frontorientation', 'frontseqlabels', 'frontorder'):
+        front_dependencies[name] = {name}
+    for name in ('frontnoavoid', 'frontsmooth'):
+        front_dependencies[name] = {'frontbackbone', 'frontlinks', 'frontobstacle', name}
+    front_dependencies['frontroute'] = front_dependencies['frontribbon'] - {'frontribbon'} | {'frontroute'}
+    front_dependencies['frontgenelabels'] = front_dependencies['frontfeature'] | {'frontgenelabels'}
+    front_dependencies['frontmarkers'] = {'frontbackbone', 'frontlinks', 'frontmarkers'}
+    linear_base = {'frontlinearbase'}
+    linear_link = linear_base | {'frontlinks', 'frontlinearlink'}
+    front_dependencies.update({
+        'frontlinearbase': linear_base,
+        'frontlinearlink': linear_link,
+        'frontlinearcds': linear_link | {'frontgenes', 'frontlinearcds'},
+        'frontlineargap': {'frontlinks', 'frontlineargap'},
+        'frontlinearscale': linear_link | {'frontlinearscale'},
+        'frontlinearcross': linear_link | {'frontlinearcross'},
+        'frontcrosswidth': linear_link | {'frontlinearcross', 'frontcrosswidth'},
+        'frontcrosssame': linear_link | {'frontlinearcross', 'frontcrosssame'},
+        'frontcirclestyle': {'frontcirclestyle', 'firstcircle'},
+        'frontcirclerotation': {'frontcirclerotation', 'firstcircle', 'firstfeatures'},
+    })
     result = {}
     for key in captions:
-        excluded = set()
+        excluded = exercises - practice_figures.get(key, set())
+        excluded.update(front_chunks - front_dependencies.get(key, set()))
+        if key not in starters and key not in practice_figures:
+            excluded.update(starters - front_dependencies.get(key, set()))
+        if key != 'showcasechord':
+            excluded.update({'chordshowcasegenes', 'showcasechord'})
         if key != 'showcasecollinear':
             excluded.add('showcasecollinear')
         if key not in {'labelauto', 'labelradial', 'labelarc'}:

@@ -69,20 +69,31 @@ are not assigned a misleading common meaning. Collinear composition references
 [clinker](https://github.com/gamcil/clinker) and
 [gggenes](https://wilkox.org/gggenes/) without copying their plotting code.
 
-所有展示identity的当前图共享0–100%范围、0/50/80/90/100的颜色位置，以及0/50/80/100的色条刻度，
-避免相同相似度随页面的局部数据范围换色。这是文档显式标度，不改变包默认。
-All current identity examples share a 0–100% domain, colour positions at
-0/50/80/90/100 and readable breaks at 0/50/80/100, so the same identity value
-retains its colour across pages.
-These are explicit documentation scales; package defaults are unchanged.
+教学图优先使用包的默认标度和白底，以便读者复现。使用自定义色标或暖白背景的综合图在示例中明确设置这些选项。
 
-当前文档PNG的panel背景透明，plot背景显式统一为 `#FFFCF5`；
-截图中的白色feature或标签框仍按其自身语义保留，不做像素替换。
-All current documentation PNGs use transparent panel backgrounds over an
-explicit `#FFFCF5` plot background; intentional feature and label fills are retained.
+Teaching figures favour the default scales and white background for reproducibility. Showcase examples that use a custom scale or warm background set those options explicitly.
 
 本轮补充逐层绘图示例和13个独立质粒参考图。它们均来自当前代码，而不是examples/plasmid中的历史PNG。图库仅在图内适配标签，可隐藏拥挤文字，全部特征几何仍保留。弦图按原始注释顺序四分组抽样并补充负链端部特征，以保留中等密度；方向优化不修改原始链。
 
 Progressive layer examples and13 unique plasmid feature maps are current R outputs, not the historical PNG files in examples/plasmid. Gallery labels fit inside and may hide; feature geometry is retained. Chord features are sampled across annotation order with additional negative-strand endpoints. Orientation optimization changes display only.
 
 GRanges/GInteractions教程结合了[issue #2](https://github.com/DangJem/ggchord/issues/2)的原始需求、当时回复与当前适配器代码；不将仍开放的issue状态当作缺失功能证明，也不将可选依赖跳过计为通过。
+
+## 本地商业来源参考文件 / Local commercial source references
+
+REBASE 原始目录、SnapGene 特征工作簿、原始 `.dna` 文件和 SnapGene 对照图仅保留在维护者本地。包和教学网站使用随包运行库、派生序列与 ggchord 生成的图。重建 REBASE 或常见特征目录时，需要在本地恢复生成脚本声明的原始输入。Addgene 引物工作簿单独记录为引物目录来源。
+
+The original REBASE directory, the SnapGene feature workbook, and SnapGene `.dna` files and reference images are local maintainer inputs. The package and tutorial site use the bundled runtime catalogue, derived sequences and ggchord-rendered figures. Regenerating the REBASE or common-feature catalogues requires the source inputs declared by their scripts. The Addgene primer workbook is a separate primer catalogue source.
+
+原生蛋白示例保留 gggenomes 公开 EMALE 归档中的 BVI_023A_0009 与
+ADZ16414.1 完整蛋白和实际 BLASTp HSP。记录为 296、310 aa，
+query/subject 范围为 50–289 与 55–301，一致性 39.6%。
+筛选脚本和完整来源摘要位于 data-raw/prepare-protein-inputs.py 与教学输入包的 sources.json。
+BLASTn 设计背景由仓库初始源码 bd0e18f9dd1bc539aa0b20b6476b25eb97523c94 的函数说明核实。
+
+## Bundled protein comparisons
+
+Four complete EMALE/Mavirus proteins and six observed pairwise BLASTp comparisons
+are regenerated from `examples/protein/` using the two `data-raw/` scripts.
+Full identifiers, immutable source hashes, BLASTp version and command are retained
+in `examples/protein/sources.json`; no synthetic protein alignments are used.

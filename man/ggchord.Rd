@@ -16,11 +16,13 @@ ggchord(
 \arguments{
 \item{seq_data}{data.frame/tibble with accver and length, or a \code{GRanges},
 \code{Seqinfo} or \code{GInteractions} object with known full sequence lengths,
-or a named nucleotide Biostrings \code{XStringSet}. Unnamed sequence objects must first
-use \code{\link[=as_ggchord_seq]{as_ggchord_seq()}} with explicit \code{ids}.
-Optional S4 inputs use \code{\link[=as_ggchord_seq]{as_ggchord_seq()}}. When present,
-\code{sequence_unit} must be \code{"bp"}; amino-acid intervals require an
-explicit CDS projection, and arbitrary character widths are not bp lengths.}
+or a named nucleotide or protein Biostrings \code{XStringSet}. Unnamed sequence
+objects must first use \code{\link[=as_ggchord_seq]{as_ggchord_seq()}} with explicit \code{ids}.
+Optional S4 inputs use \code{\link[=as_ggchord_seq]{as_ggchord_seq()}}. The \code{sequence_unit} column is
+\code{"bp"} (default when omitted) or \code{"aa"}. All rows use the same unit.
+Protein lengths come from complete proteins. Native aa plots accept
+links and generic features; gene, primer and restriction layers require bp.
+Arbitrary character widths are not biological sequence lengths.}
 
 \item{ribbon_data}{Optional alignment table with qaccver, saccver, qstart,
 qend, sstart and send. length and pident are optional unless requested

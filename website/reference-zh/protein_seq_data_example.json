@@ -1,0 +1,9 @@
+{
+  "source_sha256": "f56ee27c0e4560e1fe5f54dc8c7921ede5d6682636c642fd5c81c061295d8a56",
+  "translations": {
+    "0": "用于比对的四条完整蛋白序列",
+    "1": "包含四行的数据框，字段含义如下：\\describe{ \\item{accver}{原始蛋白标识。} \\item{length}{完整蛋白的氨基酸长度。} \\item{sequence_unit}{显式坐标单位 ⟦0⟧。} \\item{sequence}{源 FASTA 中的完整氨基酸序列。} }",
+    "2": "公开 EMALE/Mavirus FASTA 记录。选择规则、来源哈希、BLASTp 版本和参数见 ⟦0⟧。使用 ⟦1⟧ 和 ⟦2⟧ 重建。",
+    "3": "从公开完整 FASTA 记录中选择的三条 EMALE 蛋白及一条 Mavirus 蛋白。六对比对见 ⟦0⟧，长度来自完整蛋白。"
+  }
+}

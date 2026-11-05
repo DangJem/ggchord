@@ -6,17 +6,20 @@
       "zh": "三种坐标模式"
     },
     "articles": [
-      "modes"
+      "modes",
+      "chord-start",
+      "collinear-start",
+      "plasmid-start"
     ],
     "snippets": [
-      "chord",
-      "circular",
-      "collinear"
+      "frontbackbone",
+      "frontlinearbase",
+      "firstcircle"
     ],
     "figures": [
-      "chord",
-      "circular",
-      "collinear"
+      "frontbackbone",
+      "frontlinearbase",
+      "firstcircle"
     ],
     "result": null
   },
@@ -83,20 +86,25 @@
     },
     "articles": [
       "formats",
-      "alignments"
+      "alignments",
+      "protein-alignments"
     ],
     "snippets": [
       "adapters",
       "formats",
       "genbank",
-      "optionalranges",
+      "frontimportgr",
       "standardblast",
-      "protein"
+      "protein",
+      "nativeproteininput",
+      "nativeproteinplot"
     ],
     "figures": [
-      "paf"
+      "paf",
+      "nativeprotein",
+      "nativeproteinchord"
     ],
-    "result": "optional"
+    "result": null
   },
   {
     "id": "preparation",
@@ -123,11 +131,11 @@
     },
     "articles": [
       "ribbons",
-      "modes"
+      "chord-build"
     ],
     "snippets": [
       "pointlinks",
-      "collinear"
+      "frontribbon"
     ],
     "figures": [
       "pointlinks"
@@ -225,7 +233,8 @@
       "plasmid"
     ],
     "figures": [
-      "plasmid"
+      "plasmid",
+      "recognition"
     ],
     "result": null
   },
@@ -313,26 +322,9 @@
       "output"
     ],
     "snippets": [
-      "save",
-      "preview",
-      "provenance",
-      "layoutresults"
-    ],
-    "figures": [],
-    "result": null
-  },
-  {
-    "id": "migration",
-    "title": {
-      "en": "Migration and FAQ",
-      "zh": "迁移与常见问题"
-    },
-    "articles": [
-      "migration",
-      "faq"
-    ],
-    "snippets": [
-      "migration"
+      "frontpreview",
+      "frontsave",
+      "frontgeometry"
     ],
     "figures": [],
     "result": null

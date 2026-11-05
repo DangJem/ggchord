@@ -3,26 +3,30 @@
 ## Prepare this page {#prepare}
 In a fresh R session, run the code below, then follow this page in order. Colours and layout are optional display choices; inputs select only the fields needed.
 
-{{prepare:setup,sequencepalette,docstyle,collinear}}
+{{code:frontlinearbase}}
+{{figure:frontlinearbase}}
 
 ## Save the intended size {#size}
-After creating `p_collinear` in [three modes](modes.html):
+The example uses `p_linear_base` from this page. If you already have a plot, use your plot object in its place.
 
-{{code:save}}
+{{code:frontpreview}}
 
-RStudio's Plots pane uses the current panel size and can rearrange labels and
-guides. Preview at the same explicit dimensions before final `ggsave()`:
+For circular plots, omit both dimensions to estimate the preview size. For chord and collinear plots, supply a width and use `height = NULL` to estimate height. A webpage also scales a thumbnail to its content column, so increasing dpi alone does not enlarge its text.
 
-{{code:preview}}
+After checking text, labels and legends, save at the same dimensions.
+
+{{code:frontsave}}
 
 `view_ggchord()` returns a temporary image path; it does not keep a final export.
-The website, README and vignettes share PNG assets exported through standard
-`ggsave()` at sizes listed in the [gallery](gallery.html). They do not capture an
+The website, README and vignettes share PNG previews generated with
+`view_ggchord()` at sizes listed in the [gallery](gallery.html). They do not capture an
 interactively resized panel. Use your intended PDF/SVG device explicitly for
 final vector output; font availability and embedding remain device-dependent.
 
 ## Consume geometry by name {#geometry}
-{{code:provenance}}
+{{code:frontgeometry}}
+
+{{output:frontgeometry}}
 
 `export_ggchord_layout()` is the recommended layer-aware table interface.
 `get_chord_layout()` retains the complete documented layout; neither is deprecated.
@@ -40,19 +44,8 @@ Direct mutation of shared ggproto layer environments retains ordinary ggplot2
 reference semantics; it is not an automatically isolated edit.
 
 ## Complete layout, tables and opt-in ordering {#consumption}
-{{code:layoutresults}}
 
-Create `p_collinear` in [three modes](modes.html#collinear) first.
-`full_layout` retains the complete documented getter result. `layer_tables`
-selects sequence/gene tables and resolved original data; it is not a raw-file
-archive. Layer IDs and source-row roles distinguish independent same-kind layers.
-Empty components can lack a fixed column prototype. Select fields by name.
-
-`layout_choice` optimizes declared order/orientation using count weighting because
-the minimal plotting table deliberately omits alignment-length statistics. It returns a choice
-for explicit use in sequence settings; it does not mutate the plot or establish
-biological orientation. Save the choice and compare the result before adopting it.
-The export [asset manifest](../assets/plots.csv) records exact documentation sizes.
+The preceding table identifies the backbone layer. Set `original_data = TRUE` in `export_ggchord_layout()` to include input rows. See the [layout contract](reference/ggchord_layout_contract.html) for the full layout and [order and orientation](reference/optimize_ggchord_layout.html) for reordering.
 
 ## Check your result {#check-result}
 Use matching dimensions for preview and saving. Inspect text, guides and warnings; a successful measurement does not certify fonts or release quality across devices.

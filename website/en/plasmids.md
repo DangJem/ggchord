@@ -1,19 +1,14 @@
 <div class="task-intro"><p>Build a readable plasmid map from bundled pUC19 DNA, with separate annotation, primer and restriction layers. Keep display choices separate from complete results.</p></div>
 
-## Prepare this page {#prepare}
-In a fresh R session, run the code below, then follow this page in order. Colours and layout are optional display choices; inputs select only the fields needed.
-
-{{prepare:featurepalette,docstyle}}
-
-The preparation above declares the palette and shared appearance.
-
 ## Use a source-backed sequence {#input}
 The bundled `plasmid_example_pUC19` is copied from the repository's original
 `examples/plasmid/pUC19.fna`; bases and sequence identity are not edited for display.
 The workflow uses the package's source-backed recognition catalogues. It needs no
 network request or experimental measurements fabricated for the figure.
 
-{{code:plasmidinput}}
+{{code:plasmidinput,frontplasmidsummary}}
+
+{{output:frontplasmidsummary}}
 
 Inspect `plasmid_features`, `plasmid_primers` and `display_sites` to distinguish complete search results from display choices.
 
@@ -23,6 +18,8 @@ Add the backbone, annotations, labels, primers and restriction sites in that ord
 {{code:plasmid}}
 {{figure:plasmid}}
 {{results:plasmid}}
+
+Start with the displayed cut-site count. The layer receives only three selected sites. The full search result remains in `plasmid_sites` for looking up sites outside the figure.
 
 Mixed exterior annotations share root-ordered placement, including sparse restriction labels beside primers. This example uses the dedicated plasmid theme and default feature fitting: internal text is tried before adjacent/external placement. Inspect at the final export dimensions instead of hiding crossings by shrinking text or forcing offsets.
 
@@ -48,7 +45,7 @@ Inspect `display_sites` and the site's methylation/source columns before drawing
 The reference set is a presentation choice, not a claim about an unknown sample.
 
 ## Understand catalogue and label limits {#limits}
-`primer_names` exposes catalogue entries. This example searches the universal catalogue exactly; reference primer
+This example searches the universal catalogue exactly; reference primer
 annotations and exact oligonucleotide searches have distinct provenance. Near-exact protein feature
 recognition has the limitations in [recognition](recognition.html); it does not
 validate biological function or a primer experiment. Text can move, shrink within
@@ -61,14 +58,7 @@ before adding geoms. For externally curated annotations, pass your feature table
 instead of running recognition. Use [stacking and shapes](annotations.html) for
 geometry, [labels](labels.html) for fitting, and [output](output.html) for devices.
 
-`geom_primer_label_repel(side = "inside")` keeps callouts inside the backbone,
-even alongside exterior restriction and feature labels. This is corrected in the
-0.16.6 release; v0.16.5 can move those requested inside labels
-outside. The default outside placement and existing source coordinates are unchanged.
-
-Inside restriction labels also retain their inner geometry and now report the
-inner side in the exported annotation registry; earlier versions mislabelled
-those diagnostic rows as exterior resources.
+`geom_primer_label_repel(side = "inside")` places primer callouts inside the backbone. Interior restriction labels appear inside the backbone and are recorded there in the exported annotation registry.
 
 The full inside scene can still place long primer text over other feature regions.
 The default `max_overlaps = Inf` does not certify zero overlap across feature
@@ -91,11 +81,19 @@ ggsave("pUC19-map.png", p_plasmid, width = 10, height = 9, units = "in", dpi = 1
 
 Use the pUC19 example above to learn the layers, then move to the richer pETDuet-1 map. Inputs come from the bundled sequence, feature and reference-primer catalogues. The restriction subset retains unique six-base-or-longer recognition sites from commercial_all; it is not every cut made by every enzyme.
 
-{{code:showcaseplasmiddata}}
+This example runs independently. Put the preparation script in your working directory.
+
+{{recipe:plasmid}}
+
+{{code:frontduetsummary}}
+
+{{output:frontduetsummary}}
 
 {{code:showcaseplasmid}}
 
 {{figure:showcaseplasmid}}
+
+The adjacent code renders this 16.5 × 8 inch preview. Restriction, primer and selected feature labels share the outer region, and dense sites can push their labels farther from the backbone. The coordinate system fits the labels automatically. Check the leaders and text again if you reduce the preview size.
 
 Inputs contain 20 features, five reference primers and 58 grouped cut positions. The feature preset retains plum coding regions, mint resistance genes, yellow origins and blue regulatory features; primers are purple, consistently across this site. Dense labels depend on export size; open the full image to read them.
 

@@ -108,6 +108,8 @@ geom_gene <- function(mapping = NULL, data = NULL,
   layer$ggchord_params$is_feature <- FALSE
   layer$ggchord_params$feature_role <- "gene"
   layer$ggchord_params$gene_color_scheme <- if (mapped) "manual" else "strand"
+  # Recognized features can carry annotation colours, keyed by name.
+  if (!mapped) layer$ggchord_params$gene_colors <- NULL
   layer$ggchord_input_transform <- NULL
   ggchord_capture_layer_input(layer, data, mapping,
     c("accver", "start", "end", "strand", "anno"))
@@ -126,7 +128,7 @@ geom_gene <- function(mapping = NULL, data = NULL,
 #' This is the deterministic, fixed-position label layer. By default labels
 #' sit outside their sequence and labels that would collide are omitted in
 #' input-row order. Use \code{label_overlap = "nudge"} to retain the
-#' legacy gentle adjustment, or \code{"allow"} to draw every label at its
+#' small position adjustment, or \code{"allow"} to draw every label at its
 #' requested position. For automatic arrangement with leader lines, use
 #' \code{\link{geom_gene_label_repel}()} instead.
 #'
@@ -140,7 +142,7 @@ geom_gene <- function(mapping = NULL, data = NULL,
 #'   \code{"inside"} placement.
 #' @param label_overlap Character, default \code{"hide"}. Fixed-label
 #'   collision policy: omit later conflicting labels (\code{"hide"}), apply
-#'   the legacy gentle adjustment (\code{"nudge"}), or keep all requested
+#'   the small position adjustment (\code{"nudge"}), or keep all requested
 #'   positions (\code{"allow"}). Input row order therefore provides a simple
 #'   way to prioritize labels in \code{"hide"} mode.
 #' @param label_rotation Optional numeric/vector/list. Label rotation angle, default 0

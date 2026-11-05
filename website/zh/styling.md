@@ -1,13 +1,10 @@
 <div class="task-intro"><p>让颜色表达明确含义：先决定类别或连续数值，再选择映射、标度和图例。网站强调色不决定数据配色。</p></div>
 
-## 本页准备 {#prepare}
-在新的 R 会话中先运行下方代码，再按页面顺序继续。配色和排版是可选的显示设置，输入只选择需要的列。
-
-{{prepare:setup,sequencepalette,docstyle}}
+<span id="prepare"></span>
 
 ## 从数据角色构建样式 {#roles}
-例子明确声明类别：区间连接填色映射
-query ID，序列颜色映射序列 ID，基因填色映射链。手动标度的名称与实际取值匹配。
+
+使用四条弦图骨架和一条实际比对。把连接带填色映射到 query ID，再用一个命名颜色值给该类别设色。序列颜色继续由默认序列标度处理。
 
 {{code:styling}}
 {{figure:styling}}
@@ -32,12 +29,8 @@ query ID，序列颜色映射序列 ID，基因填色映射链。手动标度的
 决定显示，`guides()` 选择图例，`theme(legend.position = ...)` 决定位置。
 过宽图例可分行或增加导出宽度，不需要删减生物学数据来迁就。
 
-## 为场景选择主题 {#themes}
-例子在 `theme_variants` 中保存 minimal、dark 和 plasmid 备选，按场景添加到相应图中。
-上图使用 `theme_ggchord_publication()`，plasmid 预设用于圆图流程。
-主题控制非数据外观，不选择坐标系，也不替代数据驱动的填色标度。
-文字外观用 `theme(text = element_text(...))`；已删除的 `base_size` 式快捷参数见
-[迁移指南](migration.html)。
+## 为图形选择主题 {#themes}
+本页使用默认主题。需要调整文字、图例或背景时，在图后添加 `theme()`；例如 `theme(text = element_text(size = 12))` 设置基础字号。`theme_ggchord_publication()` 提供出版样式，`theme_ggchord_plasmid()` 用于单序列圆图。这些主题控制非数据外观，不改变坐标或数据配色。
 
 ## 完成后检查 {#check-result}
 同一 query 的连接颜色一致；连续相似度应使用连续标度。固定颜色放在 aes() 外，图例必须能说明映射。

@@ -227,5 +227,32 @@
     ],
     "retrieved": "2026-11-01",
     "rule": "Unchanged complete member"
+  },
+  {
+    "file": "examples/format-inputs/protein-pair.faa",
+    "url": "https://raw.githubusercontent.com/thackl/gggenomes/master/data-raw/emales.tgz",
+    "archive_sha256": "e31189a7450ebcd4c5b2a797e22759e6b797147ed6f4b072c973411043a23ec4",
+    "members": [
+      {
+        "member": "emales/emales.faa",
+        "member_sha256": "8065dccf6658d1954621f90b12fcefa39e9c3468490e0086043fb8e63e3a9b10",
+        "id": "BVI_023A_0009"
+      },
+      {
+        "member": "emales/mavirus.faa",
+        "member_sha256": "8094d2f3c874b1c13aa81450f0bad16b502b6ae9287d57680779d34ac3a85ee6",
+        "id": "ADZ16414.1"
+      }
+    ],
+    "sha256": "52cb6db8466b3d35e117341eaf3c11342ca5295d4ebee98fc864cb2ba4d53679",
+    "transformation": "Two complete FASTA records selected by the query and subject IDs of the strongest BVI_023A_0009 BLASTp hit; headers and residues retained. Lengths are measured from complete proteins."
+  },
+  {
+    "file": "examples/format-inputs/protein-pair-blastp.tsv",
+    "source_file": "examples/format-inputs/emales-mavirus-blastp.tsv",
+    "source_line": 63,
+    "source_sha256": "04b6927762d5370a3fc4044114672c582c39c8a8537ac17b85f4077eebeab19a",
+    "sha256": "3b217273d7c811e45628adf9225ba9ea293dd82db1de6c049013aeac69dca6e0",
+    "transformation": "One observed HSP selected by ascending evalue then descending bitscore for BVI_023A_0009; original 12 fields retained; BLASTP program comment copied from the source."
   }
 ]

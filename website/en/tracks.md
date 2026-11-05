@@ -1,16 +1,15 @@
-<div class="task-intro"><p>Compute GC fractions from real DNA, then add bars, a moving mean and an annotation band. Each track has an explicit unit, window and baseline.</p></div>
+<div class="task-intro"><p>Compute GC fractions from real DNA, then compare bars with a moving mean. Each track has an explicit unit, window and baseline.</p></div>
 
-## Prepare this page {#prepare}
-In a fresh R session, run the code below, then follow this page in order. Colours and layout are optional display choices; inputs select only the fields needed.
-
-{{prepare:featurepalette,docstyle,plasmiddata}}
+<span id="prepare"></span>
 
 ## Compute a track from actual DNA {#domain}
-After this page’s preparation code, compute GC fraction in 100 bp
+Compute GC fraction in 100 bp
 windows of bundled pUC19. The final shorter window uses its actual base count.
 
 
-{{code:trackdata}}
+{{code:trackdata,frontgctable}}
+
+{{output:frontgctable}}
 
 Each row of `bins` is an actual sequence window. Check its endpoints and `gc`, then map values to track height and colour.
 
@@ -34,20 +33,18 @@ The export's `track_registry` and `track_diagnostics` record domains, physical
 sizes, native offsets and clipping. Omitted/clipped rows do not mean zero values.
 Focus tracks with `focus_ggchord_track()` using the same windows.
 
-## Combine bars, a moving mean and annotation bands {#multiple}
-Run the [circular example](modes.html#circular) to obtain real `features` first.
+## Combine bars and a moving mean {#multiple}
+Use the same GC windows and add a three-window moving mean.
 
 {{code:multitrack}}
 {{figure:multitrack}}
 
 Bars and line use the same actual GC measurements; the line is a three-window
 moving mean. Incomplete end windows are omitted, not filled with invented values.
-Line positions use integer bin midpoints. Annotation bands have an independent ID
-and palette. Bands are explicitly ordered outside; overly wide inner bands at
-small radii can fold and are rejected.
+Line positions use integer bin midpoints. Both layers use the same track ID.
 
 ## Check your result {#check-result}
-GC in bins lies between 0 and 1; each row is an actual window and the last may be shorter than 100 bp. Continuous colour expresses values; the category band expresses feature types, not GC magnitude.
+GC in bins lies between 0 and 1; each row is an actual window and the last may be shorter than 100 bp. Bars and line share the same 0–1 fraction scale.
 
 <div class="next-step">Continue: <a href="output.html">Export, preview and diagnostics →</a></div>
 

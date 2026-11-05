@@ -392,7 +392,7 @@ process_axis_orientation <- function(param, seqs) {
 #' @noRd
 process_strand_colors <- function(gene_colors) {
   # Default values
-  default <- c("+" = "#D55E00", "-" = "#0072B2")
+  default <- c("+" = "#CE1536", "-" = "#346B9D")
   if (is.null(gene_colors)) {
     return(default)
   }

@@ -10,7 +10,7 @@ import shutil
 import subprocess
 import zipfile
 from pathlib import Path
-from documentation_lib import ROOT, WEB, PAGES, CAPTIONS, expand
+from documentation_lib import ROOT, WEB, PAGES, CAPTIONS, RECIPES, expand, snippets, localize_r_comments
 
 class PageText(__import__('html.parser',fromlist=['HTMLParser']).HTMLParser):
     def __init__(self,text):
@@ -44,16 +44,26 @@ def main():
     for name in ['documentation-examples.R','documentation-plots.R']:
         shutil.copy2(ROOT/'tools'/name,assets/name)
     shutil.copy2(ROOT/'NEWS.md',assets/'NEWS.md')
+    for name in ['MIGRATION.md', 'MIGRATION-Hans.md']:
+        shutil.copy2(ROOT/name, assets/name)
     shutil.copy2(WEB/'ASSET-SOURCES.md',assets/'ASSET-SOURCES.md')
     shutil.copytree(ROOT/'R',assets/'source')
     inputs=sorted([*ROOT.glob('examples/fasta/*.fna'),*ROOT.glob('examples/gff3/*.gff3'),
         *ROOT.glob('examples/blastn/*.o7'),*ROOT.glob('examples/blastn-standard/*'),
-        *ROOT.glob('examples/format-inputs/*'),*ROOT.glob('examples/plasmid/*.fna')])
+        *ROOT.glob('examples/format-inputs/*'),*ROOT.glob('examples/protein/*'),*ROOT.glob('examples/plasmid/*.fna')])
     input_hashes={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in inputs}
     (assets/'input-hashes.json').write_text(json.dumps(input_hashes,indent=2)+'\n')
+    shared_code = snippets()
+    recipes = {}
+    for name, keys in RECIPES.items():
+        for lang in ['en', 'zh']:
+            filename = f'prepare-{name}' + ('-zh' if lang == 'zh' else '') + '.R'
+            recipes[filename] = '\n\n'.join(localize_r_comments(shared_code[key], lang) for key in keys) + '\n'
+            (assets / filename).write_text(recipes[filename])
     with zipfile.ZipFile(assets/'tutorial-inputs.zip','w',compression=zipfile.ZIP_DEFLATED) as archive:
         for p in inputs:archive.write(p,p.relative_to(ROOT))
         archive.write(ROOT/'tools/documentation-examples.R','tools/documentation-examples.R')
+        for name, code in recipes.items(): archive.writestr(name, code)
         archive.writestr('input-hashes.json',json.dumps(input_hashes,indent=2)+'\n')
     pandoc_dir=subprocess.check_output(['Rscript','-e','cat(rmarkdown::find_pandoc()$dir)'],cwd=ROOT,text=True).strip()
     payload={lang:[] for lang in ['en','zh']}
@@ -66,7 +76,7 @@ def main():
             headings=re.findall(r'<h[23] id="([^"]+)"[^>]*>(.*?)</h[23]>',body,re.S)
             toc=''.join(f'<li><a href="#{a}">{re.sub("<[^>]+>","",t)}</a></li>' for a,t in headings)
             sidebar=('<h2>本页目录</h2>' if lang=='zh' else '<h2>On this page</h2>')+'<ul class="toc-list">'+toc+'</ul>'
-            sidebar+=('<h2>项目资料</h2>' if lang=='zh' else '<h2>Project</h2>')+'<ul><li><a href="https://github.com/DangJem/ggchord">GitHub</a></li><li><a href="articles.html">'+('全部专题' if lang=='zh' else 'All articles')+'</a></li><li>MIT</li></ul>'
+            sidebar+=('<h2>项目资料</h2>' if lang=='zh' else '<h2>Project</h2>')+'<ul><li><a href="https://github.com/DangJem/ggchord">GitHub</a></li><li><a href="about.html">'+('全部专题' if lang=='zh' else 'All articles')+'</a></li><li>MIT</li></ul>'
             payload[lang].append(dict(slug=page['slug'],title=page['title'][lang],body=body,sidebar=sidebar))
     (out/'page-content.json').write_text(json.dumps(payload,ensure_ascii=False)+'\n')
     # Locales write separate destinations and share only immutable source files.
@@ -98,7 +108,7 @@ def main():
     # Stable historical paths remain usable after a future, separately authorized cutover.
     topics=[p.stem for p in (ROOT/'man').glob('*.Rd')]
     routes={'index.html':'en/index.html','articles/ggchord_vignette.html':'en/real-data.html',
-        'articles/ggchord_guide_hans.html':'zh/real-data.html','reference/index.html':'en/reference/index.html','news/index.html':'en/news.html'}
+        'articles/ggchord_guide_hans.html':'zh/real-data.html','reference/index.html':'en/reference/index.html','news/index.html':'en/about.html#status'}
     routes.update({'reference/'+s+'.html':'en/reference/'+s+'.html' for s in topics})
     for old,target in routes.items():
         path=out/old;path.parent.mkdir(parents=True,exist_ok=True);dest=os.path.relpath(out/target,path.parent)
@@ -114,7 +124,7 @@ def main():
     for name,data in [('legacy-routes',routes),('retired-routes',retired)]:
         (out/(name+'.json')).write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n')
     files=[p for base in [WEB,ROOT/'R',ROOT/'man',ROOT/'tools',ROOT/'vignettes'] for p in base.rglob('*') if p.is_file() and '__pycache__' not in p.parts]
-    files += inputs + [ROOT/'data'/n for n in ['seq_data_example.rda','gene_data_example.rda','ribbon_data_example.rda']] + list((ROOT/'data').glob('plasmid_example_*.rda'))
+    files += inputs + sorted((ROOT/'data').glob('*.rda'))
     files += [ROOT/p for p in ['DESCRIPTION','NAMESPACE','NEWS.md','README.md','README-Hans.md','MIGRATION.md','MIGRATION-Hans.md','_pkgdown.yml','.github/workflows/documentation.yaml']]
     manifest=dict(version=re.search(r'^Version: (.+)$',(ROOT/'DESCRIPTION').read_text(),re.M)[1],api_candidate='0.16.4',generator='pkgdown + paired Markdown + shared static assets',
         commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),

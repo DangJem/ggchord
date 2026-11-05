@@ -54,7 +54,13 @@ composed original ribbon source sets.}
 }
 \section{Coordinates and direction}{
 
-Genomic intervals are one-based inclusive: \code{start == end} is one base.
+Native coordinates are one-based inclusive. Sequence tables may declare
+\code{sequence_unit = "bp"} or \code{"aa"}; omitted units mean bp. A plot uses one unit.
+Full protein lengths must be provided; alignment endpoints do not establish
+full lengths. Protein annotations use generic feature layers. Gene, primer
+and restriction layers require nucleotide input. A circular protein layout
+is a visual arrangement and does not declare circular biological topology.
+\code{start == end} is one base or one residue in the declared unit.
 The explicit adapters enforce integral coordinates. Legacy constructor
 validation, cleaning and raw focus accept finite numeric positions; their
 success alone does not certify integral genomic coordinates. Prefer integral

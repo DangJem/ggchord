@@ -1,32 +1,18 @@
 <div class="task-intro"><p>把常见调整放到正确的 ggplot2 组件：数据映射、几何位置、坐标和主题各负其责。</p></div>
 
-## 本页准备 {#prepare}
-在新的 R 会话中先运行下方代码，再按页面顺序继续。配色和排版是可选的显示设置，输入只选择需要的列。
-
-{{prepare:setup,sequencepalette,docstyle}}
+<span id="prepare"></span>
 
 ## 职责分配 {#grammar}
-| 任务 | 接口 |
-| --- | --- |
-| 把数据列映射到 aesthetic | `aes()` |
-| 定义映射规则与图例 | `scale_*()`, `guides()` |
-| 几何与固定样式 | `geom_*()` |
-| 局部放置 | `position_*()` |
-| 全局坐标系 | `coord_*()` |
-| 非数据外观 | `theme_*()`, `theme()` |
-| 标题与说明 | `labs()` |
-
-固定样式可直接传给几何层，数据驱动差异则使用映射和标度。显式固定值优先于映射，
-省略固定参数则保留映射；用户标度优先于自动默认值。
-`shape` 是固定注释几何参数，`feature_shape` 仍是映射角色。
-显式 `shape = NULL` 无效，不表示改用映射。
+[绘图基本概念](modes.html#prepare)解释图层、映射、标度和坐标的分工。下面只演示如何把这种分工用到比对相似度。
 
 ## 映射连接相似度 {#mapping}
 
 
 {{code:adjustments}}
 
-## 放置注释{#position}
+{{figure:mappingexample}}
+
+## 放置注释 {#position}
 使用 `position_strand(c("+" = .1, "-" = -.2))` 指定带符号的逐链位移。
 `position_feature_stack()` 处理重叠注释，`position_track()` 分配命名定量轨道。
 逐序列几何参数可用单值、等长无名向量或按 `accver` 命名的向量；推荐命名向量。
@@ -39,4 +25,4 @@
 ## 完成后检查 {#check-result}
 旋转整体图形使用 coord；逐序列几何使用明确命名值；颜色随数据变化时使用映射和标度。
 
-<div class="next-step">继续：<a href="parameters.html">按序列和链设置参数 →</a></div>
+<div class="next-step">继续：<a href="parameters.html">灵活参数配置 →</a></div>

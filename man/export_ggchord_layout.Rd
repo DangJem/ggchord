@@ -31,10 +31,11 @@ count, slot, bounding box and leader corridor.
 Explicitly inside primer and restriction callouts
 register measured inner boxes rather than exterior bands or slots.
 The \code{metadata} member
-records rotation, aspect ratio, limits, coordinate units and
+records rotation, aspect ratio, limits, native \code{sequence_unit} (bp/aa), and
 transformation state.
 Collinear layouts instead include \code{sequence_layout}, containing each
-sequence's horizontal range, backbone y, orientation, units per bp,
+sequence's horizontal range, backbone y, orientation, \code{units_per_position},
+and \code{sequence_unit}. The compatibility field \code{units_per_bp} is NA for aa. It also records
 reversible x offset, anchor and source origin. \code{orientation_diagnostics}
 records directional support, confidence and unresolved cases.
 Position lanes remain local offsets and are not circular physical tracks.

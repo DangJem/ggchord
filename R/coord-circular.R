@@ -12,13 +12,14 @@ CoordCircular <- ggplot2::ggproto(
 #' Single-sequence circular coordinate system
 #'
 #' @param rotation Angle in degrees at which the genomic origin is placed.
+#'   The default 90 places it at 12 o'clock; 0 places it at 3 o'clock.
 #' @param direction Direction of increasing genomic coordinates.
 #' @param gap Opening in degrees. Zero draws a closed circle.
 #' @inheritParams coord_chord
 #' @return A Coord object for ggplot2 composition.
 #' @export
 coord_circular <- function(
-    rotation = 0,
+    rotation = 90,
     direction = c("clockwise", "counterclockwise"),
     gap = 0,
     ratio = 1,

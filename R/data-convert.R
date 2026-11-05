@@ -146,10 +146,11 @@ ggchord_conversion_seqinfo <- function(x, caller) {
 #' Explicit IDs must agree with existing nonempty names, so identifiers and
 #' accession versions are never silently rewritten. `sequence_unit` records
 #' `"bp"`, `"aa"`, or `"character"`; amino-acid widths are not nucleotide
-#' coordinates. These non-nucleotide tables remain available for data workflows,
-#' but `ggchord()` rejects them as genomic sequence input. Project amino-acid
-#' intervals with [build_ggchord_cds()] and [project_ggchord_features()] or
-#' [project_ggchord_links()] before using known nucleotide sequence lengths.
+#' coordinates. AAString inputs can be plotted directly in native aa coordinates.
+#' Arbitrary character widths remain available for data workflows but are not
+#' accepted by `ggchord()`. To display protein intervals on a nucleotide
+#' genome instead, use [build_ggchord_cds()] and [project_ggchord_features()] or
+#' [project_ggchord_links()] with known nucleotide sequence lengths.
 #' Empty sequences are rejected like other zero lengths.
 #'
 #' @param x A data frame, `GRanges`, `Seqinfo`, `GInteractions`, or a

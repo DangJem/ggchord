@@ -2,19 +2,17 @@
 """Generate paired vignette source files without knitting or rendering."""
 import argparse
 import re
-from documentation_lib import ROOT, WEB, PAGES, expand
+from documentation_lib import ROOT, WEB, PAGES, expand, localize_r_comments
 
-CHAPTERS = [p for p in PAGES if p['slug'] not in ['index', 'reference', 'news']]
+INTRO_CHAPTERS = ('installation', 'chord-start', 'collinear-start', 'plasmid-start')
+CHAPTERS = [next(p for p in PAGES if p['slug'] == slug) for slug in INTRO_CHAPTERS]
 
 def tutorial(lang):
     title = 'ggchord: chord, collinear and plasmid tutorial' if lang == 'en' else 'ggchord：弦图、共线性图与质粒图教程'
-    intro = ('This paired tutorial is generated from the same sources as the website. '
-        'Code blocks are shown without executing during vignette rendering; the shared '
-        'documentation script verifies the examples directly. Examples prefer bundled or source-backed data; deliberate diagnostic errors are labelled. Inputs marked '
-        'as repository files require the checkout or input bundle. Each chapter provides its own preparation; start with the first-plot lesson.' if lang == 'en' else
-        '本教程与英语教程、网站从同一组来源生成。vignette 渲染时只展示代码，不自动执行；'
-        '共享文档脚本直接验证相关例子。示例优先使用随包数据和有来源的原始记录；人为构造的诊断错误会明确标注。'
-        '每章提供本页准备代码；第一次使用请从首图教程开始。')
+    intro = ('Draw any of the three views with bundled records. Each opening lesson includes its own setup. '
+        'Continue online for data import, advanced workflows and complete research examples.' if lang == 'en' else
+        '用随包记录学习三种绘图模式，每种模式都提供独立的首图代码。'
+        '自备数据、专业专题和完整科研案例请继续查阅在线教程。')
     text = f'''---
 title: "{title}"
 output:
@@ -33,7 +31,7 @@ vignette: >
 knitr::opts_chunk$set(eval = FALSE, collapse = TRUE, comment = "#>")
 ```
 
-<img data-external="1" src="tutorial-assets/logo.png" alt="ggchord" width="200">
+<img src="tutorial-assets/logo.png" alt="ggchord" width="200">
 
 {intro}
 
@@ -42,34 +40,20 @@ knitr::opts_chunk$set(eval = FALSE, collapse = TRUE, comment = "#>")
     for p in CHAPTERS:
         body = expand((WEB/lang/(p['slug']+'.md')).read_text(), lang, figures='tutorial-assets')
         body = re.sub(r'(?<=tutorial-assets/)([a-z]+)\.png', r'\1.jpg', body)
-        body = body.replace('<img ', '<img data-external="1" ')
+        # The website opens a separate full-size file. CRAN serves the vignette
+        # HTML on its own, so retain only the image that Pandoc can embed.
+        body = re.sub(r'<a class="figure-link"[^>]*>(<img [^>]*>)</a>', r'\1', body)
+        body = re.sub(r' · <span class="figure-hint">[^<]*</span>', '', body)
         body = re.sub(r'^(#{2,5}) (.*?)(?: \{#([^}]+)\})?$',
             lambda m: '#'+m[1]+' '+m[2]+(f' {{#{p["slug"]}-{m[3]}}}' if m[3] else ''), body, flags=re.M)
-        body = re.sub(r'(\]\(#)([^)]+)(\))',
-            lambda m: m[1]+p['slug']+'-'+m[2]+m[3], body)
-        body = re.sub(r'\[([^\]]+)\]\(reference/([^)#]+)\.html(?:#[^)]*)?\)',
-            lambda m: f'{m[1]} (`help("{m[2]}", package = "ggchord")`)', body)
-        body = re.sub(r'\[([^\]]+)\]\(([a-z-]+)\.html(?:#([^)]*))?\)',
-            lambda m: f'[{m[1]}](#{m[2]}' + (f'-{m[3]}' if m[3] else '')+')', body)
-        # HTML cards use the same vignette chapter URLs as Markdown links.
-        body = re.sub(r'href="([a-z-]+)\.html(?:#([^"]*))?"',
-            lambda m: 'href="#'+m[1]+('-'+m[2] if m[2] else '')+'"', body)
-        if p['slug']=='gallery':
-            gallery_ids=re.findall(r'<h3 id="([^"]+)"',body)
-            for anchor in gallery_ids:
-                body=body.replace('id="'+anchor+'"','id="gallery-'+anchor+'"')
-                body=body.replace('](#'+anchor+')','](#gallery-'+anchor+')')
-        body = body.replace('](#index-quick-start)', '](#shared-setup)')
-        body = body.replace('](#reference)', '](#glossary)')
-        # Website downloads become source paths in an installed vignette.
-        body = body.replace('../assets/logo.svg', 'tutorial-assets/logo.svg')
-        body = re.sub(r'\[([^\]]+)\]\(\.\./assets/(plots\.csv|icon\.json|input-hashes\.json|example-results\.json)\)', lambda m: m[1]+' (`website/assets/'+m[2]+'` in the source repository)', body)
-        body = body.replace('../assets/documentation-examples.R', 'https://github.com/DangJem/ggchord/blob/main/tools/documentation-examples.R')
-        body = body.replace('../assets/ASSET-SOURCES.md', 'https://github.com/DangJem/ggchord/blob/main/website/ASSET-SOURCES.md')
-        body = body.replace('../assets/tutorial-inputs.zip', 'https://github.com/DangJem/ggchord/tree/main/examples')
-        body = body.replace('../build-manifest.json', 'https://github.com/DangJem/ggchord/tree/main/website')
+        def lesson_link(match):
+            label, slug, anchor = match.groups()
+            if slug in INTRO_CHAPTERS:
+                return f'[{label}](#{slug}' + (f'-{anchor}' if anchor else '') + ')'
+            target = f'https://dangjem.github.io/ggchord/{lang}/{slug}.html'
+            return f'[{label}]({target}' + (f'#{anchor}' if anchor else '') + ')'
+        body = re.sub(r'\[([^\]]+)\]\(([a-z-]+)\.html(?:#([^)]*))?\)', lesson_link, body)
         text += f'\n## {p["title"][lang]} {{#{p["slug"]}}}\n\n'+body+'\n'
-    label = 'Shared setup' if lang == 'en' else '共享准备代码'
 
     # R chunks share byte-identical code in both languages; never knit here.
     count = 0
@@ -87,8 +71,8 @@ def readme(lang):
     title = 'ggchord：弦图、共线性图与质粒图' if zh else 'ggchord: chord, collinear and plasmid sequence plots'
     intro = ('基于 ggplot2 的 R 包。用独立图层组合序列骨架、区间连接、基因、通用注释、标签和定量轨道。'
         if zh else 'An R package built on ggplot2. Combine independent layers for sequence backbones, interval links, genes, general features, labels and quantitative tracks.')
-    status = ('本版为 **ggchord 0.16.6**；以下展示由本版代码生成。旧代码迁移见迁移指南，正式资产见 GitHub Releases。'
-        if zh else 'This is **ggchord 0.16.6**; the examples below are generated with this version. Read the migration guide for older code; formal assets are on GitHub Releases.')
+    status = ('正式版为 **ggchord 0.16.6**；本文示例由本地 **v0.16.7** 开发源码生成。正式资产见 GitHub Releases。'
+        if zh else 'The stable release is **ggchord 0.16.6**. These examples are generated from the local **v0.16.7** development source. Formal assets are on GitHub Releases.')
     install = '安装' if zh else 'Install'
     quick = '三种模式' if zh else 'Three views'
     sizing = '预览与保存' if zh else 'Preview and save'
@@ -111,25 +95,24 @@ def readme(lang):
 R ≥ 4.1.0 · ggplot2 ≥ 4.0.0
 
 ```r
-install.packages(c("remotes", "dplyr", "purrr", "tidyr"))
-remotes::install_github("DangJem/ggchord@v0.16.6")
+install.packages("ggchord")
 ```
 
 '''
-    text += ('如已检出本版源码，在仓库根目录使用 `pkgload::load_all(".")`。不声称存在 CRAN 发布。' if zh else
-        'For a checkout of this version, use `pkgload::load_all(".")` from its root. A CRAN release is not claimed.')
-    text += (' 示例使用 dplyr、purrr、tidyr 和原生 `|>`，这些是示例可选依赖。' if zh else
-        ' Examples use dplyr, purrr, tidyr and the native `|>` pipe as optional example dependencies.')
+    text += ('如已检出本版源码，在仓库根目录使用 `pkgload::load_all(".")`。正式版可从 CRAN 安装。' if zh else
+        'For a checkout of this version, use `pkgload::load_all(".")` from its root. The stable release is available from CRAN.')
+    text += (' 示例使用 dplyr（≥ 1.1.0）、purrr、tidyr 和原生 `|>`，这些是示例可选依赖。' if zh else
+        ' Examples use dplyr (≥ 1.1.0), purrr, tidyr and the native `|>` pipe as optional example dependencies.')
     text += f'\n\n## {quick}\n\n'
     text += ('以下三张综合示例展示本版的组合能力。原始输入保持可追溯，完整准备代码和解释见对应教程；初次使用请从最小首图开始。' if zh else 'These three complete examples demonstrate this version. Inputs are traceable; each guide provides preparation and interpretation. New users can begin with the minimal first-plot lesson.')+'\n\n'
     def preparation(keys, label):
         return '<details>\n<summary>'+label+'</summary>\n\n'+''.join(
-            '```r\n'+code[key]+'\n```\n\n' for key in keys)+'</details>\n\n'
+            '```r\n'+localize_r_comments(code[key], lang)+'\n```\n\n' for key in keys)+'</details>\n\n'
     text += preparation(['sequencepalette','docstyle'],
         '先运行：三张图共用的样式' if zh else 'Run first: shared appearance for all three views')
     views = [
         ('showcasechord', 'showcasechord', '弦图：四基因组、混合曲率与相似度' if zh else 'Chord: four genomes, mixed curvature and identity',
-         'chord', '直线与弧形骨架、真实链方向基因、精选标签及筛选后的观测比对。' if zh else 'Straight and curved backbones, original gene strands, selected labels and observed alignments.', ['showcasedata']),
+         'chord', '按每条序列的真实正负链分别抽样，无 CDS 长度门槛。两条 MT 序列的原始注释只有正链 CDS。正链置于内侧，连接带在重叠端点局部避让。' if zh else 'CDS are sampled separately by source strand without a length threshold. The two MT records have only positive-strand CDS in the source annotations. Positive-strand arrows sit inside, where ribbons leave clearance at overlapping endpoints.', ['showcasedata','chordshowcasegenes']),
         ('showcaseplasmid', 'showcaseplasmid', '质粒图：pETDuet-1密集注释' if zh else 'Plasmid: dense pETDuet-1 annotation',
          'plasmids#complex', '双链骨架、20个特征、5个参考引物和58个合并切点；位置和名称来自真实输入。' if zh else 'A double backbone, 20 features, five reference primers and 58 grouped cut positions from real inputs.', ['showcaseplasmiddata']),
         ('showcasecollinear', 'showcasecollinear', '共线性图：四序列与跨行连接' if zh else 'Collinear: four genomes with cross-row links',
@@ -139,6 +122,11 @@ remotes::install_github("DangJem/ggchord@v0.16.6")
         text += '### '+heading+'\n\n'+purpose+'\n\n'
         # Put the product result before the optional preparation, while retaining runnable code.
         text += '!['+heading+'](man/figures/'+figure+'.png)\n\n'
+        width, height = {'showcasechord': (12, 10), 'showcasecollinear': (12, 8),
+                         'showcaseplasmid': (16.5, 8)}[key]
+        plot_name = code[key].splitlines()[-1]
+        code[key] = code[key].rsplit('\n', 1)[0] + (
+            f'\nview_ggchord({plot_name}, width = {width}, height = {height}, units = "in")')
         text += preparation(setup+[key], '数据准备与绘图代码 · 展开运行' if zh else 'Preparation and plot code · expand to run')
         text += ('[查看完整教程 →](' if zh else '[Read the full guide →](')+site+lesson.split('#')[0]+'.html'+('#'+lesson.split('#')[1] if '#' in lesson else '')+')\n\n'
     text += ('`aes()` 映射数据，`scale_*()` 定义映射和图例，geom 定义几何与固定样式，Position 负责局部放置，coord 负责全局坐标，theme 负责非数据外观。'
@@ -148,24 +136,15 @@ remotes::install_github("DangJem/ggchord@v0.16.6")
         'RStudio Plots can rearrange labels when its panel changes. Preview and save at the same explicit dimensions:')
     text += '\n\n```r\nview_ggchord(p_show_collinear, width = 12, height = 8, units = "in")\nggsave("comparison.png", p_show_collinear, width = 12, height = 8, units = "in", dpi = 144)\n```\n'
     text += f'\n## {onwards}\n\n'
-    guides = ([('开始使用', 'installation'), ('按任务查找教程', 'articles'),
+    guides = ([('开始使用', 'installation'), ('章节索引', 'about'),
         ('函数文档', 'reference/index'), ('示例图集', 'gallery'),
-        ('迁移指南', 'migration'), ('更新日志', 'news')] if zh else
-        [('Get started', 'installation'), ('Task guides', 'articles'),
+        ('其他信息', 'about')] if zh else
+        [('Get started', 'installation'), ('Chapter index', 'about'),
          ('Function reference', 'reference/index'), ('Gallery', 'gallery'),
-         ('Migration guide', 'migration'), ('Changelog', 'news')])
+         ('Further information', 'about')])
     text += '\n'.join('- ['+label+']('+site+slug+'.html)' for label, slug in guides)+'\n'
     text += '\n[Issues](https://github.com/DangJem/ggchord/issues) · [MIT license](LICENSE)\n'
     return text.rstrip()+"\n"
-
-def migration(lang):
-    title = '迁移到 ggchord 候选 API' if lang == 'zh' else 'Migrate to the ggchord candidate API'
-    text = expand((WEB/lang/'migration.md').read_text(), lang, figures='man/figures')
-    text = re.sub(r'\[([^\]]+)\]\(reference/([^)#]+)\.html(?:#[^)]*)?\)',
-        lambda m: f'{m[1]} (`help("{m[2]}", package = "ggchord")`)', text)
-    target = 'README-Hans.md' if lang == 'zh' else 'README.md'
-    text = re.sub(r'\[([^\]]+)\]\((?:index|modes)\.html(?:#[^)]*)?\)', lambda m: f'[{m[1]}]({target})', text)
-    return '[English](MIGRATION.md) · [现代汉语](MIGRATION-Hans.md)\n\n# '+title+'\n\n'+text.rstrip()+'\n'
 
 def main():
     parser = argparse.ArgumentParser()
@@ -187,15 +166,7 @@ def main():
                 raise SystemExit(f'Out-of-date README: {path}')
         else:
             path.write_text(content)
-    for lang, name in [('en', 'MIGRATION.md'), ('zh', 'MIGRATION-Hans.md')]:
-        path = ROOT/name
-        content = migration(lang)
-        if args.check:
-            if not path.is_file() or path.read_text() != content:
-                raise SystemExit(f'Out-of-date migration guide: {path}')
-        else:
-            path.write_text(content)
-    print('Paired tutorials, README and migration sources are synchronized; no vignette rendering performed.')
+    print('Paired tutorials and README sources are synchronized; no vignette rendering performed.')
 
 if __name__ == '__main__':
     main()

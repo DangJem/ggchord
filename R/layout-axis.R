@@ -20,12 +20,19 @@ ggchord_layout_axis_step <- function(
                            stringsAsFactors = FALSE)
 
   if (show_axis) {
-    # Axis lines
-    axis_lines <- do.call(rbind, lapply(seqs, function(id) {
+    # Circular backbones supply the baseline at zero gap. Explicit gaps move
+    # the axis to one side of the whole backbone, with ticks on that same side.
+    axis_radius <- function(id) {
       ref <- seq_refs[[id]]
-      r0 <- ref$r0 - axisGap[id]
+      if (!isTRUE(circular)) return(ref$r0 - axisGap[id])
+      side <- if (axisGap[id] > 0) 1 else -1
+      ref$r0 - side * seqBackboneOuter - axisGap[id]
+    }
+    axis_lines <- do.call(rbind, lapply(seqs, function(id) {
+      if (isTRUE(circular) && axisGap[id] == 0) return(axis_lines)
+      ref <- seq_refs[[id]]
       angles <- seq(starts[id], ends[id], length.out = nSeg)
-      pts <- map_to_curve_many(angles, r0, ref)
+      pts <- map_to_curve_many(angles, axis_radius(id), ref)
       data.frame(x = pts[, 1], y = pts[, 2], accver = id, stringsAsFactors = FALSE)
     }))
 
@@ -112,21 +119,13 @@ ggchord_layout_axis_step <- function(
       len <- ifelse(pts$is_major, axisMajLen[id], axisMinLen[id])
       len[origin_tick] <- len[origin_tick] * 2.2
       if (isTRUE(circular)) {
-        # Circular tick marks begin at the visible inner edge of the backbone
-        # and extend towards the centre. Restriction-site leaders use the outer
-        # edge instead; these are deliberately separate attachment contracts.
-        # The curve mapper's radius parameter follows its left normal; for the
-        # circular reference this means subtracting a signed outward offset.
-        at_offset <- function(offset) map_to_curve_many(
-          angle, ref$r0 - offset, ref
+        side <- if (axisGap[id] > 0) 1 else -1
+        r_axis <- axis_radius(id)
+        base <- map_to_curve_many(angle, r_axis, ref)
+        tip <- map_to_curve_many(angle, r_axis - side * len, ref)
+        lbl <- map_to_curve_many(
+          angle, r_axis - side * (len + labelOffset[id]), ref
         )
-        base <- at_offset(-seqBackboneOuter)
-        tip <- at_offset(-seqBackboneOuter - len)
-        # Parallel text is attached beside the radial tick in the transform
-        # step, after its final readable tangent direction is known. Other
-        # orientations retain the historical radial offset.
-        lbl <- if (along_axis) tip else
-          at_offset(-seqBackboneOuter - len - labelOffset[id])
       } else {
         base <- map_to_curve_many(angle, r0, ref)
         tip <- map_to_curve_many(angle, r0 + len * dir, ref)

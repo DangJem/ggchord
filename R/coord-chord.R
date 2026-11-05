@@ -37,7 +37,7 @@ new_coord_chord <- function(rotation, ratio, xlim, ylim, expand, clip, fit,
 #' strategy used to fit chord geometry and labels.
 #'
 #' @param rotation Global counterclockwise layout rotation in degrees,
-#'   default 45, measured from the positive x axis. This rotates the complete
+#'   default 0, measured from the positive x axis. This rotates the complete
 #'   layout; it does not change the biological strand or sequence orientation.
 #' @param ratio Fixed y/x aspect ratio, default 1.
 #' @param xlim,ylim Optional user limits. Explicit limits take priority over
@@ -61,7 +61,7 @@ new_coord_chord <- function(rotation, ratio, xlim, ylim, expand, clip, fit,
 #' ggchord(seq_data = seqs) +
 #'   geom_seq() +
 #'   coord_chord(rotation = 20)
-coord_chord <- function(rotation = 45, ratio = 1,
+coord_chord <- function(rotation = 0, ratio = 1,
                         xlim = NULL, ylim = NULL,
                         expand = FALSE, clip = "off",
                         fit = c("labels", "geometry", "manual")) {

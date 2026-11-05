@@ -1,17 +1,15 @@
 <div class="task-intro"><p>Search known DNA for primers, restriction sites and common features, then choose a display. Computational matches and experimental validation are different.</p></div>
 
 ## Prepare this page {#prepare}
-In a fresh R session, run the code below, then follow this page in order. Colours and layout are optional display choices; inputs select only the fields needed.
-
-```r
-library(ggchord)
-library(dplyr)
-```
+This example uses bundled pUC19.
 
 ## Search and display are separate {#search}
 Use the bundled pUC19 DNA for exact catalogue-primer and selected restriction searches:
 
+Run `library(dplyr)` to select the sequence fields.
+
 {{code:recognition}}
+{{figure:recognition}}
 
 Search supports circular-origin binding; set `circular = FALSE` for a linear sequence.
 The actual pUC19 hits shown here should be inspected in the returned table. Search hits are computational matches, not experimental validation.

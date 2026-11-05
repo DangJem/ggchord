@@ -30,11 +30,15 @@
 #' @param axis.text Axis text element.
 #' @param axis.gap,axis.ticks.length,axis.minor.ticks.length,axis.text.offset
 #'   Scalar [grid::unit()] objects controlling physical axis spacing. A
-#'   negative `axis.gap` moves circular ticks and labels inside the sequence
-#'   ring; the plasmid preset uses this convention.
+#'   negative `axis.gap` places the circular axis inside the backbone; a
+#'   positive value places it outside. Zero attaches ticks to the inner
+#'   backbone edge and is the circular default, including the plasmid preset.
+#'   Circular major/minor tick lengths default to 1.5/0.7 mm, or 2.2/0.8 mm
+#'   with the plasmid preset. Their default line widths are 0.45/0.3 mm, or
+#'   0.6/0.35 mm with that preset. Explicit length and line settings take priority.
 #' @param axis.text.orientation One of `"horizontal"`, `"parallel"`,
 #'   `"perpendicular"`, or a finite numeric angle.
-#' @param axis.text.check.overlap Whether overlapping axis labels are hidden.
+#' @param axis.text.check.overlap Whether overlapping axis labels are hidden. Defaults to TRUE.
 #' @param seq.label,gene.label,feature.label,restriction.label,seq.center.label,seq.center.name,seq.center.length
 #'   Text elements for sequence, gene, feature, restriction-site and circular
 #'   centre labels.
@@ -164,13 +168,13 @@ ggchord_theme_from_environment <- function(preset, env, dots) {
     values$legend.feature <- ggplot2::element_blank()
   }
   if (preset == "plasmid" && is.null(values$axis.gap)) {
-    values$axis.gap <- grid::unit(-.9, "mm")
+    values$axis.gap <- grid::unit(0, "mm")
   }
   if (preset == "plasmid" && is.null(values$axis.ticks.length)) {
-    values$axis.ticks.length <- grid::unit(1.8, "mm")
+    values$axis.ticks.length <- grid::unit(2.2, "mm")
   }
   if (preset == "plasmid" && is.null(values$axis.minor.ticks.length)) {
-    values$axis.minor.ticks.length <- grid::unit(.35, "mm")
+    values$axis.minor.ticks.length <- grid::unit(.8, "mm")
   }
   if (preset == "plasmid" && is.null(values$axis.text.offset)) {
     values$axis.text.offset <- grid::unit(1.15, "mm")
@@ -209,9 +213,9 @@ ggchord_theme_from_environment <- function(preset, env, dots) {
         linewidth = if (preset == "plasmid") .55 else if (preset == "minimal") .25 else .3),
       ggchord.axis.ticks = ggplot2::element_line(
         colour = if (dark) "#ADB5BD" else if (preset == "plasmid") "#252525" else if (preset == "minimal") "#A0A5AA" else "#8A9096",
-        linewidth = if (preset == "plasmid") .45 else if (preset == "minimal") .2 else .25),
+        linewidth = NULL),
       ggchord.axis.minor.ticks = ggplot2::element_line(
-        colour = if (dark) "#8F979F" else "#A5AAAF", linewidth = .2),
+        colour = if (dark) "#8F979F" else "#A5AAAF", linewidth = NULL),
       ggchord.axis.text = ggplot2::element_text(
         colour = if (dark) fg else if (preset == "plasmid") "#252525" else "#3D4348", size = ggplot2::rel(if (preset == "plasmid") .78 else .72)),
       ggchord.seq.label = ggplot2::element_text(
@@ -269,7 +273,14 @@ ggchord_theme_from_environment <- function(preset, env, dots) {
   overrides <- c(values[standard], custom, dots)
   overrides <- overrides[!vapply(overrides, is.null, logical(1))]
   if (length(overrides)) out <- out + do.call(ggplot2::theme, overrides)
-  attr(out, "ggchord.settings") <- ggchord_theme_settings(values)
+  settings <- ggchord_theme_settings(values)
+  settings$axis$tick.linewidth <- c(
+    major = if (preset == "plasmid") .45 else if (preset == "minimal") .2 else .25,
+    minor = .2)
+  settings$axis$circular.tick.linewidth <- c(
+    major = if (preset == "plasmid") .6 else .45,
+    minor = if (preset == "plasmid") .35 else .3)
+  attr(out, "ggchord.settings") <- settings
   out
 }
 
@@ -295,7 +306,7 @@ ggchord_theme_settings <- function(values) {
   } else if (!is.numeric(orientation) || length(orientation) != 1L || !is.finite(orientation)) {
     ggchord_stop("theme_ggchord(): axis.text.orientation must be a supported name or finite angle")
   }
-  overlap <- values$axis.text.check.overlap %||% FALSE
+  overlap <- values$axis.text.check.overlap %||% TRUE
   if (!is.logical(overlap) || length(overlap) != 1L || is.na(overlap))
     ggchord_stop("theme_ggchord(): axis.text.check.overlap must be TRUE or FALSE")
   fields <- c("position", "direction", "background", "key", "key.size",
@@ -329,8 +340,11 @@ ggchord_theme_settings <- function(values) {
   list(axis = list(
     hidden = inherits(values$axis, "element_blank"),
     gap = values$axis.gap %||% grid::unit(.8, "mm"),
-    ticks.length = values$axis.ticks.length %||% grid::unit(.5, "mm"),
-    minor.ticks.length = values$axis.minor.ticks.length %||% grid::unit(.25, "mm"),
+    gap.explicit = !is.null(values$axis.gap),
+    ticks.length = values$axis.ticks.length %||% grid::unit(.85, "mm"),
+    ticks.length.explicit = !is.null(values$axis.ticks.length),
+    minor.ticks.length = values$axis.minor.ticks.length %||% grid::unit(.4, "mm"),
+    minor.ticks.length.explicit = !is.null(values$axis.minor.ticks.length),
     text.offset = values$axis.text.offset %||% grid::unit(.8, "mm"),
     text.orientation = orientation, text.check.overlap = overlap),
     legend = common, legends = role_settings)
@@ -349,14 +363,35 @@ ggchord_unit_inches <- function(x) {
 #' @noRd
 ggchord_plot_settings <- function(plot) {
   found <- attr(plot$theme, "ggchord.settings")
-  if (!is.null(found)) return(found)
-  nms <- setdiff(names(formals(theme_ggchord)), "...")
-  ggchord_theme_settings(stats::setNames(rep(list(NULL), length(nms)), nms))
+  if (is.null(found)) {
+    nms <- setdiff(names(formals(theme_ggchord)), "...")
+    found <- ggchord_theme_settings(stats::setNames(rep(list(NULL), length(nms)), nms))
+  }
+  if (isTRUE(plot$coordinates$ggchord_circular)) {
+    if (!isTRUE(found$axis$gap.explicit)) found$axis$gap <- grid::unit(0, "mm")
+    if (!isTRUE(found$axis$ticks.length.explicit))
+      found$axis$ticks.length <- grid::unit(1.5, "mm")
+    if (!isTRUE(found$axis$minor.ticks.length.explicit))
+      found$axis$minor.ticks.length <- grid::unit(.7, "mm")
+  }
+  found
 }
 
 #' @noRd
 ggchord_theme_element <- function(plot, name) {
-  tryCatch(ggplot2::calc_element(name, plot$theme), error = function(e) NULL)
+  theme <- plot$theme
+  if (name %in% c("ggchord.axis.ticks", "ggchord.axis.minor.ticks")) {
+    element <- theme[[name]]
+    if (inherits(element, "element_line") && is.null(element@linewidth)) {
+      axis <- ggchord_plot_settings(plot)$axis
+      widths <- if (isTRUE(plot$coordinates$ggchord_circular)) {
+        axis$circular.tick.linewidth %||% c(major = .45, minor = .3)
+      } else axis$tick.linewidth %||% c(major = .25, minor = .2)
+      element@linewidth <- unname(widths[if (name == "ggchord.axis.ticks") "major" else "minor"])
+      theme[[name]] <- element
+    }
+  }
+  tryCatch(ggplot2::calc_element(name, theme), error = function(e) NULL)
 }
 #' @noRd
 ggchord_theme_text_size <- function(plot, name, fallback) {

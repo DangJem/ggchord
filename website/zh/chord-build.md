@@ -1,27 +1,32 @@
-先完成每个小步骤，再查看综合图。四步复用同一组数据，直接比较每次新增图层的作用。
+在同一张弦图上先加入一条比对，再加入一个 CDS。代码按本页顺序运行。
 
-## 本页准备 {#prepare}
-先解压[教学输入](../assets/tutorial-inputs.zip)。
-{{prepare:sequencepalette,docstyle,showcasedata}}
+## 从四条骨架开始 {#bundled}
 
-## 第一步：只有序列骨架 {#backbones}
-{{code:learnseq}}
-{{figure:learnseq}}
-`geom_seq()` 画骨架，`geom_seq_label()` 标识序列，`coord_chord()` 选择整体视图；此时不需要连接或基因输入。
+<span id="backbones"></span>用[上一节](chord-start.html)的四条序列。运行下方代码即可重现骨架。
 
-## 第二步：加入已有比对 {#links}
-{{code:learnlinks}}
-{{figure:learnlinks}}
-相似度由aes和scale表达；显式保留非相邻连接，让后面替换坐标时仍使用相同的连接数据。
+{{code:frontbackbone}}
+{{figure:frontbackbone}}
 
-## 第三步：加入精选基因 {#genes}
-{{code:learngenes}}
-{{figure:learngenes}}
-`position_strand()` 将正负链分到骨架两侧。仅展示真实筛选的注释，原表仍保留全部CDS。
+## 加入一条比对带 {#links}
 
-## 第四步：给每个展示特征加标签 {#labels}
-{{code:learnlabels}}
-{{figure:learnlabels}}
-同一特征表交给箭头层与repel标签层；标签层不另行筛选。与单独添加图层相比，改名、删行或排序会改变业务含义，应保留明确中间对象。
+取随包比对表的第一行。它连接四条骨架中的两条。
 
-继续：[1.4 方向、半径、曲率和避障](chord-tuning.html)。
+{{code:frontlinks,frontribbon}}
+
+{{figure:frontribbon}}
+
+沿着同一条带看两端。它在 `MT108731.1` 上覆盖 26,298–51,139 bp，在 `MT118296.1` 上覆盖 7,121–31,959 bp。两端都有跨度，因此这里使用 `geom_link_ribbon()`。
+
+默认图用颜色显示该行的比对一致性（约 98.6%）。带的交叉形状来自两个区间端点的连接方式，仅凭它不能判定倒位。
+
+## 加入一个 CDS {#add-genes}
+
+<span id="prepare"></span><span id="inspect-genes"></span><span id="genes"></span>选出 `OQ646790.1` 上从 43,765 bp 开始的原始注释，并取回它的真实链方向。
+
+{{code:frontgenes,frontfeature}}
+
+{{figure:frontfeature}}
+
+绿色的 `OQ646790.1` 上出现红色箭头。它是 integrase 的 CDS，范围为 43,765–46,140 bp，原始注释为正链。连接带和这个 CDS 使用各自的数据。
+
+<span id="labels"></span>如果需要显示 CDS 名称，可以加上 `geom_gene_label(data = chord_genes_example)`，标签来自 `anno` 列。下一节用相同骨架比较[旋转与间隙](chord-tuning.html)。

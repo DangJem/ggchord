@@ -1,0 +1,41 @@
+先用控制点改变带的走向，再用同一条比对带比较 CDS 附近的端点间距。这两种调整分别作用于路径中段和端点附近。
+
+## 改变连接带经过的位置 {#control}
+
+{{code:frontbackbone,frontlinks,frontribbon}}
+
+{{figure:frontribbon}}
+
+默认控制点在布局原点。将 `link_ctrl_point` 设为 `c(0, 0.8)`，让控制点在布局坐标中上移。对比带在图中央的走向，两端仍对应原来的区间。
+
+{{code:frontroute}}
+
+{{figure:frontroute}}
+
+控制点用旋转前的布局坐标。默认旋转为 0°，所以 (0, 0.8) 沿图的正上方牵引连接带。改变整图旋转后，控制点也随图一起转动。贝塞尔曲线由控制点牵引，曲线一般不经过该点。
+
+## 用一个真实 CDS 比较避障 {#clearance}
+
+取 `MT108731.1` 上的 48,053–49,111 bp CDS。它在这条比对的查询区间内。这里明确把正链箭头向内移 `0.05` 个布局单位，使箭头落在连接带一侧。
+
+{{code:frontobstacle,frontnoavoid}}
+
+{{figure:frontnoavoid}}
+
+`link_avoid = "none"` 使用固定端点间距。沿`MT108731.1` 骨架靠近 49 kb 的位置看，比对带会盖住部分箭头。
+
+{{code:frontsmooth}}
+
+{{figure:frontsmooth}}
+
+`link_avoid = "smooth"` 在 CDS 附近平滑增大间距。沿同一段`MT108731.1` 骨架看，带的边缘局部缩进去，给箭头腾出空间。默认的 `"uniform"` 会让同一个端点区间采用一致的避让间距。如果指定数值 `link_gap`，就直接使用该间距。
+
+## 用线连两个位置，用色带标区间 {#point-markers}
+
+{{code:frontmarkers}}
+
+{{figure:frontmarkers}}
+
+外侧色带标出查询序列的完整比对区间。 `region_side = "outside"` 将它放在骨架外侧。直线只连接两个区间的中点，`arrow` 指向目标端。需要看两端各覆盖多长时，使用比对带。
+
+下一节[放置序列和基因标签](chord-labels.html)。

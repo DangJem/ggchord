@@ -22,6 +22,7 @@ geom_link_ribbon(
   position = "identity",
   show.legend = TRUE,
   inherit.aes = FALSE,
+  nonadjacent_linewidth = 0.4,
   ...
 )
 }
@@ -64,7 +65,8 @@ user mappings. For example, omit \code{alpha} when mapping \code{ribbon_alpha}.}
 
 \item{linetype}{Fixed outline line type. The default \code{NULL} uses solid
 outlines for adjacent displayed sequences and dashed outlines for
-non-adjacent sequences. Chord adjacency includes the first/last pair.
+non-adjacent sequences. Collinear outline widths use
+\code{nonadjacent_linewidth}. Chord adjacency includes the first/last pair.
 This follows the final display order, independently of alignment direction.
 Explicit fixed styles or \code{aes(ribbon_linetype = ...)} (also
 \code{aes(linetype = ...)}) replace the automatic styles. Use a matching scale
@@ -82,6 +84,12 @@ take precedence over the coordinate default. Omitted rows are reported
 by \code{\link[=export_ggchord_layout]{export_ggchord_layout()}}.}
 
 \item{position, show.legend, inherit.aes}{Standard ggplot2 layer arguments.}
+
+\item{nonadjacent_linewidth}{Fixed outline width for non-adjacent displayed
+rows in \code{\link[=coord_collinear]{coord_collinear()}}, default 0.4 mm. These ribbons use dashed
+outlines by default. Zero uses the layer's ordinary \code{linewidth} for every
+ribbon. This changes width independently of line type. An explicit
+\code{aes(linewidth = ...)} controls widths instead of this fixed default.}
 
 \item{...}{Additional arguments passed to \code{geom_polygon()}}
 }

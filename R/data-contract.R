@@ -48,7 +48,13 @@
 #' }
 #'
 #' @section Coordinates and direction:
-#' Genomic intervals are one-based inclusive: \code{start == end} is one base.
+#' Native coordinates are one-based inclusive. Sequence tables may declare
+#' `sequence_unit = "bp"` or `"aa"`; omitted units mean bp. A plot uses one unit.
+#' Full protein lengths must be provided; alignment endpoints do not establish
+#' full lengths. Protein annotations use generic feature layers. Gene, primer
+#' and restriction layers require nucleotide input. A circular protein layout
+#' is a visual arrangement and does not declare circular biological topology.
+#' \code{start == end} is one base or one residue in the declared unit.
 #' The explicit adapters enforce integral coordinates. Legacy constructor
 #' validation, cleaning and raw focus accept finite numeric positions; their
 #' success alone does not certify integral genomic coordinates. Prefer integral
@@ -121,3 +127,25 @@
 #' @seealso \code{\link{prepare_ggchord_data}}, \code{\link{read_genbank}},
 #'   \code{\link{as_ggchord_feature}}, \code{\link{project_ggchord_links}}
 NULL
+
+
+# Resolve the native coordinate domain without inferring it from alphabet or IDs.
+ggchord_sequence_unit <- function(seq_data, caller = "ggchord") {
+  if (!is.data.frame(seq_data) || !"sequence_unit" %in% names(seq_data)) return("bp")
+  units <- as.character(seq_data$sequence_unit)
+  if (!length(units) || anyNA(units) || any(!units %in% c("bp", "aa"))) {
+    ggchord_stop(caller, ": sequence_unit must be 'bp' or 'aa'")
+  }
+  if (length(unique(units)) != 1L) ggchord_stop(caller,
+    ": bp and aa cannot share one native coordinate domain; project protein intervals to CDS coordinates or use separate plots")
+  units[1L]
+}
+
+# Apply explicit interval declarations to the sequence coordinate domain.
+ggchord_check_interval_unit <- function(data, unit, caller) {
+  if (is.data.frame(data) && nrow(data) && "sequence_unit" %in% names(data) &&
+      !identical(ggchord_sequence_unit(data, caller), unit)) {
+    ggchord_stop(caller, ": interval sequence_unit disagrees with the sequence table")
+  }
+  invisible(NULL)
+}

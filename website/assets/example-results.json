@@ -4,8 +4,8 @@
     "CDS": 266,
     "observed_HSPs": 32,
     "displayed_HSPs": 12,
-    "selected_labels": 18,
-    "displayed_CDS": 18,
+    "selected_labels": 20,
+    "displayed_CDS": 20,
     "collinear_HSPs": 10,
     "collinear_CDS": 16,
     "plasmid_features": 20,
@@ -18,17 +18,17 @@
     "displayed_chord_features": 24,
     "raw_links": 32,
     "displayed_links": 8,
-    "labelled_features": 6
+    "labelled_features": 0
   },
   "cleaning": {
     "input_rows": 2,
     "retained_rows": 1
   },
   "ribbons": {
-    "filtered": 8,
-    "deduplicated": 8,
-    "merged": 8,
-    "bundled": 28
+    "filtered": 4,
+    "deduplicated": 4,
+    "merged": 4,
+    "bundled": 13
   },
   "plasmid": {
     "sequence_length": 2686,
@@ -55,7 +55,7 @@
     "projected_regions": 1
   },
   "optional": {
-    "genbank": "SKIP: Biopython unavailable",
+    "genbank": "PASS",
     "ranges": "PASS",
     "interactions": "PASS"
   }

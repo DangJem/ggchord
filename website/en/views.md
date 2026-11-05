@@ -1,12 +1,6 @@
 <div class="task-intro"><p>Select local windows or segments while keeping source positions distinct from display transformations.</p></div>
 
-## Prepare this page {#prepare}
-In a fresh R session, run the code below, then follow this page in order. Colours and layout are optional display choices; inputs select only the fields needed.
-
-{{prepare:setup,sequencepalette,docstyle}}
-
 ## Focus without losing origins {#focus}
-After this page’s preparation code:
 
 {{code:focus}}
 {{figure:focus}}
@@ -19,6 +13,9 @@ source axis labels, including after repeated focusing.
 
 ## Independent windows and local reversal {#segments}
 {{code:segment}}
+{{figure:segment}}
+
+The left window follows source orientation and the right window is reversed. The interval between the windows is omitted.
 
 Each window has a reversible source mapping; omitted gaps have no mapping.
 `map_ggchord_position()` maps explicit source positions into a plot for ordinary
@@ -35,6 +32,9 @@ provided links rather than creating new sequence alignments.
 
 ## Map an annotation back to source coordinates {#mapping}
 {{code:mappingposition}}
+{{figure:mappingposition}}
+
+The dot marks source position 10,100 bp on the first sequence.
 
 Run the [focus example](views.html#focus) first. The helper returns Cartesian x/y
 for a source position 100 bp inside the first selected window. It does not make all ordinary ggplot2 coordinates

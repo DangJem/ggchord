@@ -8,18 +8,17 @@
 
 An R package built on ggplot2. Combine independent layers for sequence backbones, interval links, genes, general features, labels and quantitative tracks.
 
-This is **ggchord 0.16.6**; the examples below are generated with this version. Read the migration guide for older code; formal assets are on GitHub Releases.
+The stable release is **ggchord 0.16.6**. These examples are generated from the local **v0.16.7** development source. Formal assets are on GitHub Releases.
 
 ## Install
 
 R ≥ 4.1.0 · ggplot2 ≥ 4.0.0
 
 ```r
-install.packages(c("remotes", "dplyr", "purrr", "tidyr"))
-remotes::install_github("DangJem/ggchord@v0.16.6")
+install.packages("ggchord")
 ```
 
-For a checkout of this version, use `pkgload::load_all(".")` from its root. A CRAN release is not claimed. Examples use dplyr, purrr, tidyr and the native `|>` pipe as optional example dependencies.
+For a checkout of this version, use `pkgload::load_all(".")` from its root. The stable release is available from CRAN. Examples use dplyr (≥ 1.1.0), purrr, tidyr and the native `|>` pipe as optional example dependencies.
 
 ## Three views
 
@@ -30,7 +29,6 @@ These three complete examples demonstrate this version. Inputs are traceable; ea
 
 ```r
 # Optional appearance choices; none of these columns or scales is required input.
-library(ggchord)
 seq_palette <- setNames(
   c("#E64B35", "#233E4A", "#269B82", "#D59B17"),
   c("MT108731.1", "MT118296.1", "OQ646790.1", "OR222515.1")
@@ -39,7 +37,6 @@ gene_palette <- c("+" = "#CE1536", "-" = "#346B9D", "." = "#8291A6")
 ```
 
 ```r
-library(ggchord)
 doc_background <- "#FFFCF5"
 identity_palette <- c("#303B71", "#36537D", "#269B82", "#A5D52C", "#ECEB31")
 identity_values <- c(0, 0.5, 0.8, 0.9, 1)
@@ -92,7 +89,7 @@ doc_axis <- function(coordinates = "relative") {
 
 ### Chord: four genomes, mixed curvature and identity
 
-Straight and curved backbones, original gene strands, selected labels and observed alignments.
+CDS are sampled separately by source strand without a length threshold. The two MT records have only positive-strand CDS in the source annotations. Positive-strand arrows sit inside, where ribbons leave clearance at overlapping endpoints.
 
 ![Chord: four genomes, mixed curvature and identity](man/figures/showcasechord.png)
 
@@ -100,7 +97,6 @@ Straight and curved backbones, original gene strands, selected labels and observ
 <summary>Preparation and plot code · expand to run</summary>
 
 ```r
-library(ggchord)
 library(dplyr)
 library(purrr)
 library(tidyr)
@@ -135,7 +131,7 @@ show_reverse <- show_genes |>
   filter(strand == "-", end - start + 1 >= 500) |>
   group_by(accver) |>
   arrange(start, .by_group = TRUE) |>
-  slice(c(1, n())) |>
+  dplyr::slice(c(1, n())) |>
   ungroup()
 show_features <- bind_rows(show_features, show_reverse) |>
   distinct(accver, start, end, strand, .keep_all = TRUE) |>
@@ -148,45 +144,69 @@ show_optimization <- optimize_ggchord_layout(
 ```
 
 ```r
+# Sample each observed strand separately across the source coordinates.
+# Keep short CDS and retain the original strand and coordinates.
+# Prefer a CDS overlapping a displayed ribbon endpoint within each positive-strand bin.
+chord_link_ends <- bind_rows(
+  transmute(show_links, accver = qaccver, lo = pmin(qstart, qend), hi = pmax(qstart, qend)),
+  transmute(show_links, accver = saccver, lo = pmin(sstart, send), hi = pmax(sstart, send))
+)
+chord_endpoint_genes <- show_genes |>
+  filter(strand == "+") |>
+  semi_join(chord_link_ends, by = join_by(accver, overlaps(start, end, lo, hi)))
+chord_genes <- show_genes |>
+  filter(strand %in% c("+", "-")) |>
+  left_join(mutate(chord_endpoint_genes, at_endpoint = TRUE),
+    by = c("accver", "start", "end", "strand", "anno")) |>
+  group_by(accver, strand) |>
+  arrange(start, .by_group = TRUE) |>
+  mutate(display_bin = ntile(row_number(), if (first(strand) == "+") 4L else 3L)) |>
+  group_by(accver, strand, display_bin) |>
+  arrange(desc(coalesce(at_endpoint, FALSE)), is.na(anno) | anno == "hypothetical protein",
+    start, .by_group = TRUE) |>
+  slice_head(n = 1) |>
+  ungroup() |>
+  select(accver, start, end, strand, anno)
+chord_labels <- chord_genes
+chord_position <- position_strand(c("+" = -0.030, "-" = 0.030))
+```
+
+```r
 show_curvature <- c(
-  "MT108731.1" = 0, "MT118296.1" = 0.85,
-  "OQ646790.1" = 1.1, "OR222515.1" = -0.4
+  "MT108731.1" = 0, "MT118296.1" = 1,
+  "OQ646790.1" = -0.65, "OR222515.1" = 0.75
 )
 show_radius <- c(
-  "MT108731.1" = 1, "MT118296.1" = 1.05,
-  "OQ646790.1" = 0.95, "OR222515.1" = 1.08
+  "MT108731.1" = 1.08, "MT118296.1" = 0.82,
+  "OQ646790.1" = 1.18, "OR222515.1" = 1.02
 )
-p_show_chord <- ggchord(show_sequences, show_links, show_features) +
-  geom_link_ribbon(aes(ribbon_fill = pident), link_avoid = "smooth", alpha = 0.58, linewidth = 0.18) +
+p_show_chord <- ggchord(seq_data = show_sequences, ribbon_data = show_links) +
+  geom_link_ribbon(link_avoid = "smooth", alpha = 0.46, linewidth = 0.14) +
   geom_seq(
     seq_orientation = show_optimization$seq_orientation,
     seq_curvature = show_curvature, seq_radius = show_radius,
     seq_gap = 0.06, linewidth = 1.1
   ) +
-  geom_gene(position = position_strand(0.07), width = 0.035) +
+  geom_gene(data = chord_genes, position = chord_position, width = 0.025) +
   geom_gene_label_repel(
-    data = show_labels, label_layout = "radial", label_wrap = 24,
-    size = 3.1, label_max_lines = 3, position = position_strand(0.07)
+    data = chord_labels, label_layout = "radial", label_wrap = 24,
+    size = 2.8, label_max_lines = 3, position = chord_position
   ) +
-  geom_seq_label(size = 4, seq_label_radius = 0.84, seq_label_hjust = 0.5) +
+  geom_seq_label(size = 4, seq_label_radius = 0.77, seq_label_hjust = 0.5) +
   scale_seq_colour_manual(
     values = seq_palette, name = "Sequence",
     guide = sequence_guide
   ) +
   scale_gene_fill_manual(values = gene_palette, breaks = c("+", "-"), name = "Strand") +
-  scale_ribbon_fill_gradientn(
-    colours = identity_palette, values = identity_values,
-    limits = c(0, 100), breaks = identity_breaks, name = "Identity (%)", guide = identity_guide
-  ) +
-  guides(gene_fill = strand_guide) +
+  guides(gene_fill = strand_guide, ribbon_fill = identity_guide) +
   scale_seq_position_continuous(breaks = c(0, 20000, 40000), minor_breaks = NULL) +
   coord_chord(rotation = 50) +
   doc_theme +
   labs(
     title = "Four genomes, one connected view",
-    subtitle = "Signed curvature and radius · selected strand-aware CDS · local ribbon clearance"
+    subtitle = "Mixed backbone geometry · CDS sampled by source strand"
   )
-p_show_chord
+view_ggchord(p_show_chord, width = 12, height = 10, units = "in")
 ```
 
 </details>
@@ -203,7 +223,6 @@ Strand-separated selected CDS with labels, local clearance, dashed cross-row rib
 <summary>Preparation and plot code · expand to run</summary>
 
 ```r
-library(ggchord)
 library(dplyr)
 library(purrr)
 library(tidyr)
@@ -238,7 +257,7 @@ show_reverse <- show_genes |>
   filter(strand == "-", end - start + 1 >= 500) |>
   group_by(accver) |>
   arrange(start, .by_group = TRUE) |>
-  slice(c(1, n())) |>
+  dplyr::slice(c(1, n())) |>
   ungroup()
 show_features <- bind_rows(show_features, show_reverse) |>
   distinct(accver, start, end, strand, .keep_all = TRUE) |>
@@ -308,11 +327,7 @@ p_show_collinear <- ggchord(show_sequences, gene_data = show_linear_features) +
     guide = sequence_guide
   ) +
   scale_gene_fill_manual(values = gene_palette, breaks = c("+", "-"), name = "Strand") +
-  scale_ribbon_fill_gradientn(
-    colours = identity_palette, values = identity_values,
-    limits = c(0, 100), breaks = identity_breaks, name = "Identity (%)", guide = identity_guide
-  ) +
-  guides(gene_fill = strand_guide) +
+  guides(gene_fill = strand_guide, ribbon_fill = identity_guide) +
   scale_seq_position_continuous(breaks = c(0, 20000, 40000, 60000, 80000), minor_breaks = NULL) +
   show_linear_coord +
   doc_theme +
@@ -320,7 +335,7 @@ p_show_collinear <- ggchord(show_sequences, gene_data = show_linear_features) +
     title = "Sequence architecture, across four genomes",
     subtitle = "Selected labelled CDS · strand-separated arrows · routed cross-row comparisons"
   )
-p_show_collinear
+view_ggchord(p_show_collinear, width = 12, height = 8, units = "in")
 ```
 
 </details>
@@ -337,7 +352,6 @@ A double backbone, 20 features, five reference primers and 58 grouped cut positi
 <summary>Preparation and plot code · expand to run</summary>
 
 ```r
-library(ggchord)
 library(dplyr)
 data(plasmid_example_pETDuet_1)
 show_plasmid <- plasmid_example_pETDuet_1 |>
@@ -369,10 +383,7 @@ p_show_plasmid <- ggchord(show_plasmid, validate = "none") +
   ) +
   geom_restriction_site(data = show_plasmid_sites, colour = "#252525") +
   geom_seq_center_label() +
-  coord_circular(
-    rotation = 90, fit = "manual",
-    xlim = c(-3.4, 4.6), ylim = c(-1.6, 2.4)
-  ) +
+  coord_circular(rotation = 90) +
   theme_ggchord_plasmid() +
   theme(
     legend.title = element_text(size = 13, face = "bold"),
@@ -381,7 +392,7 @@ p_show_plasmid <- ggchord(show_plasmid, validate = "none") +
     plot.background = element_rect(fill = doc_background, colour = NA),
     panel.background = element_blank()
   )
-p_show_plasmid
+view_ggchord(p_show_plasmid, width = 16.5, height = 8, units = "in")
 ```
 
 </details>
@@ -402,10 +413,9 @@ ggsave("comparison.png", p_show_collinear, width = 12, height = 8, units = "in",
 ## Continue
 
 - [Get started](https://dangjem.github.io/ggchord/en/installation.html)
-- [Task guides](https://dangjem.github.io/ggchord/en/articles.html)
+- [Chapter index](https://dangjem.github.io/ggchord/en/about.html)
 - [Function reference](https://dangjem.github.io/ggchord/en/reference/index.html)
 - [Gallery](https://dangjem.github.io/ggchord/en/gallery.html)
-- [Migration guide](https://dangjem.github.io/ggchord/en/migration.html)
-- [Changelog](https://dangjem.github.io/ggchord/en/news.html)
+- [Further information](https://dangjem.github.io/ggchord/en/about.html)
 
 [Issues](https://github.com/DangJem/ggchord/issues) · [MIT license](LICENSE)

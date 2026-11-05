@@ -12,16 +12,16 @@
 
 ## 查看随包真实记录 {#inspect}
 ```r
-library(ggchord)
 library(dplyr)
 plasmid_example_pUC19 |> select(accver, length)
 find_common_features(plasmid_example_pUC19) |> select(accver, start, end, strand, type, anno) |> slice_head(n = 5)
 ```
 
-数据字段命名沿用ggchord早期的BLAST风格；单序列ID仍称accver，不要求来自数据库。完整DNA与长度必须一致。识别得到的是计算匹配，不是实验验证。
+单序列 ID 列叫 `accver`，可以使用自定义名称。完整DNA与长度必须一致。识别得到的是计算匹配，不是实验验证。
 
 ## 导入自己的质粒 {#import}
 `read_fasta_lengths()`只读取FASTA标识与完整长度。识别还需要额外读取实际DNA，例如用可选Biostrings的 `readDNAStringSet()` 和 `as.character()`，保留与表格一致的ID；有GFF3/BED/GenBank或GRanges时按[格式专题](formats.html)导入注释，保留来源。跨圆周起点与分段记录按对应导入契约处理，不手工把所有片段合成一个虚假的连续区间。
 
 ## 案例如何循序渐进 {#path}
-[3.2](plasmid-build.html)从pUC19双线骨架逐层添加；[3.3](recognition.html)解释识别目录和引物/酶切；[3.4](plasmid-catalog.html)覆盖仓库13个独立质粒；[3.5](plasmids.html#complex)完成pETDuet-1密集图。`pUC19c`只是兼容别名，不能冒充第14个案例。
+
+在[添加特征和标签](plasmid-build.html)逐步构建 pUC19，然后做[pUC19 与 pETDuet-1 完整案例](plasmids.html)。按需查阅[搜索条件](recognition.html)和[13 张参考图](plasmid-catalog.html)。

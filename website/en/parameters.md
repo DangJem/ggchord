@@ -1,22 +1,55 @@
-<div class="task-intro"><p>Adjust geometry by sequence or strand, retaining useful flexible parameter formats while making their scope explicit.</p></div>
+Use one value for every sequence, name individual sequences, or configure the two strands. Each figure uses the same four bundled sequences.
 
-Previously described as “flexible parameter formats”, this feature configures geometry per sequence or strand.
+## Apply one value to every sequence {#scalar}
 
-## Prepare this page {#prepare}
-In a fresh R session, run the code below, then follow this page in order. Colours and layout are optional display choices; inputs select only the fields needed.
+{{code:parameteruniform}}
+{{figure:parameteruniform}}
 
-{{prepare:setup,sequencepalette,docstyle}}
+All four backbone gaps use 0.08. A scalar applies to every sequence.
 
-## The capability remains supported {#recommendation}
-Sequence-local geometry often needs one value per sequence or strand; duplicating
-whole layers would obscure that intent. Keep scalars as the default, use vectors
-named by `accver` when values differ, and name strand pairs `+`/`-`.
+## Change one sequence by name {#recommendation}
 
 {{code:parameters}}
+{{figure:parameterexample}}
 
-Run this page’s preparation code first. Named radii survive sequence
-reordering; unnamed entries follow current positions. These are layout/geometry
-values, not a universal extension to colours or themes.
+The named vector sets MT118296.1 to radius 0.72 and leaves the others at 1. Values follow IDs after reordering.
+
+## Set values in display order {#vector}
+
+<span id="compatibility"></span>
+
+{{code:parametervector}}
+{{figure:parametervector}}
+
+The four radii follow the four sequence-table rows. An unnamed vector must match the number of sequences. Named values are easier to check when changing order.
+
+## Prepare two observed CDS on opposite strands {#genes}
+
+{{code:parametergenes}}
+{{output:parametergenes}}
+
+The integrase CDS is on the plus strand of OQ646790.1 and Int is on the minus strand of OR222515.1. Preserve these source strands for the next examples.
+
+## Set strand positions independently {#strand}
+
+{{code:parameterstrand}}
+{{figure:parameterstrand}}
+
+The plus-strand offset is 0.08 and the minus-strand offset is −0.08. `position_strand()` changes placement while retaining source positions and strands.
+
+## Set strand widths independently {#width}
+
+{{code:parameterwidth}}
+{{figure:parameterwidth}}
+
+Plus-strand arrows use width 0.03 and minus-strand arrows use 0.08. Width controls visual thickness; start/end still determine interval length.
+
+## Place labels by sequence {#labels}
+
+{{code:parameterlabels}}
+{{figure:parameterlabels}}
+
+MT108731.1 uses a text radius at 75% of its backbone radius and OQ646790.1 uses 115%. The other two keep their default positions. Each supported parameter accepts its own named values.
 
 ## Supported parameters {#scope}
 | Interface | Parameters | Matching scope |
@@ -34,29 +67,6 @@ and offsets belong to fixed label layers rather than automatic-label `...`.
 Axes/themes, aesthetics, scales and guides do not inherit the list extension.
 Manual scales do accept vectors named by **data categories**, under ordinary
 ggplot2 scale semantics; see [styling](styling.html).
-
-## Compatibility and design tradeoffs {#compatibility}
-Equal-length unnamed vectors, sequence-named lists, position-named lists and
-unnamed lists remain compatible. Gene/feature entries can additionally contain
-strand pairs. Each parameter still validates its own type, length, range and units.
-This does not make a list a valid container for any argument.
-
-The v0.16.6 RC audit retains these equivalent forms: no deletion or deprecation
-is announced. Positional forms follow the current displayed sequence order after
-filtering; names take precedence when they match accession IDs. In width/fixed-label
-lists, a per-sequence entry is a strand pair; `list(value)` is the scalar recycling
-form. Position offsets also accept scalar entries per sequence. Explicit
-strand-named Position offsets are signed; an omitted strand or sequence uses zero.
-`position_plasmid()` uses one shared offset and rejects strand pairs.
-Use unique keys: accession IDs `"1"`, `"+"` or `"-"` can be ambiguous with index/strand
-shorthand, so prefer sequence-named nested lists for strand values. Native track
-width/gap must cover all displayed sequences. These rules do not extend to themes.
-
-Numeric values do not all share one unit: `seq_gap` is a proportion, rotations
-are degrees, and physical track sizes use explicit `unit()` values. `seq_backbone_gap`
-and `seq_backbone_width` are scalar style controls, not members of the list rule.
-Automatic collinear orientation belongs to `coord_collinear(orientation = "auto")`;
-`geom_seq(seq_orientation = ...)` supplies numerical +1/-1 sequence directions.
 
 ## Check your result {#check-result}
 Named-vector keys must match actual accver values or +/− strands. Recheck matching after reordering; list rules do not extend to themes, scales or aesthetics.

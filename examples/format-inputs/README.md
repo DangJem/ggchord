@@ -25,3 +25,8 @@ archive: `python3 data-raw/prepare-format-inputs.py /path/to/emales.tgz`.
 这些文件保留真实记录，不为演示捏造 identity、长度、比对或链方向。原始文件与教程
 显示筛选分开；教程代码只将必要列传入绘图函数。GenBank 解析仍使用已安装的可选
 依赖；没有依赖时明确标记跳过，不自动安装。
+
+- `protein-pair.faa` retains the complete BVI_023A_0009 and ADZ16414.1 records.
+  `protein-pair-blastp.tsv` retains their strongest observed query HSP.
+  Rebuild with `python3 data-raw/prepare-protein-inputs.py /path/to/emales.tgz`.
+  Lengths are 296 and 310 residues, measured from the complete FASTA records.

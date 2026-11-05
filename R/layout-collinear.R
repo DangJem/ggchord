@@ -162,6 +162,7 @@ ggchord_collinear_ribbons <- function(p, layout) {
       source_row = input$.ggchord_source_row[i] %||% i,
       alpha = unname(opacity), outline_col = unname(outline),
       linetype_val = unname(linetype), direction = biological_direction,
+      .ggchord_adjacent = isTRUE(input$.ggchord_adjacent[i]),
       .q_n = nrow(q_xy), .s_n = nrow(s_xy),
       q_gap = q_front$gap, s_gap = s_front$gap, stringsAsFactors = FALSE)
     if (identical(scheme, "pident")) {

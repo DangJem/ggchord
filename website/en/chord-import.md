@@ -1,40 +1,37 @@
-Start with sequences and analysis results, then read them with ggchord. Missing comparisons must not be invented to populate a figure.
+Extract the [tutorial bundle](../assets/tutorial-inputs.zip) so the working directory contains `examples/`. Read one format at a time, inspect a few rows, then match sequence IDs.
 
-## Start with FASTA and GFF3 {#files}
-Extract the [tutorial bundle](../assets/tutorial-inputs.zip) so the working directory contains `examples/`. FASTA supplies full lengths; GFF3 supplies intervals and strands. Retain source records separately from display tables.
+## FASTA lengths and GFF3 annotations {#files}
 
-{{prepare:sequencepalette,docstyle}}
-{{code:showcasedata}}
+{{code:frontimportseq}}
 
-`show_alignments` retains 32 observed HSPs and `show_links` selects 12. `show_genes` retains 266 CDS; `show_features` selects CDS of at least 500 bp from four groups across annotation order per sequence, additionally retaining source-backed negative-strand endpoints. Selection neither reruns alignment nor establishes functional homology.
+{{output:frontimportseq}}
 
-For coordinate inspection, reshape the four endpoint columns with tidyr while retaining the original link table:
+FASTA supplies full lengths. GFF3 supplies intervals, types and source strands. Select CDS for plotting as needed.
 
-{{code:inspectends}}
+{{code:frontimportgff}}
 
-## Produce your own BLAST results {#blast}
-These producer commands are for analysts with BLAST installed and their own input files; the website builder does not execute them.
+{{output:frontimportgff}}
 
-```sh
-blastn -query query.fna -subject subject.fna -outfmt 6 -out result.tsv
-```
+## Read a BLAST table {#blast}
 
-```r
-library(ggchord)
-blast_source <- read_blast(file = "result.tsv")
-```
+{{code:frontimportblast}}
 
-Without a custom field list, outfmt 6 uses the standard 12-column table; 7 adds comments. Omitting outfmt entirely requests another format. Query/subject IDs map to qaccver/saccver. Consult the [NCBI field documentation](https://www.ncbi.nlm.nih.gov/sites/books/NBK279684/table/appendices.T.options_common_to_all_blast/) and [nucleotide/protein guide](alignments.html). Historical tutorial HSPs are converted records, not newly run BLAST results.
+{{output:frontimportblast}}
 
-## When another format already exists {#alternatives}
-| Source | Entry point | Check |
-| --- | --- | --- |
-| Existing table | as_ggchord_seq/feature/link | Explicit role mapping; retain the original |
-| BED, PAF | read_bed, read_paf | Convert zero-based half-open coordinates only once |
-| GenBank | read_genbank | Biopython required; preserve record and segmented-location provenance |
-| GRanges, Seqinfo | as_ggchord_feature, as_ggchord_seq | Full lengths from Seqinfo; unknown strand stays unknown |
-| GInteractions | as_ggchord_link, as_ggchord_seq | First anchor is query; full length context is still required |
+Each row contains two intervals. Keep their endpoint order and check both sequence IDs against the FASTA records. See [alignment inputs](alignments.html) for standard BLAST output.
 
-These adapters address the request in [issue #2](https://github.com/DangJem/ggchord/issues/2). Current code provides the entries; the historical discussion does not certify every current combination. Missing optional packages are explicitly skipped locally. See [format conversion](formats.html#ranges) for runnable optional-object examples and limitations.
+## Convert Bioconductor objects directly {#alternatives}
 
-Continue to [1.3 Build from backbones](chord-build.html).
+With GenomicRanges installed, convert one interval into a feature table. Known full lengths are supplied in `seqlengths` and can be extracted with `as_ggchord_seq(gr)`.
+
+{{code:frontimportgr}}
+
+{{output:frontimportgr}}
+
+The first GInteractions anchor is the query, and the second is the subject. This minimal example joins two intervals. It also requires InteractionSet.
+
+{{code:frontimportgi}}
+
+{{output:frontimportgi}}
+
+See [import and conversion](formats.html#ranges) for other inputs. Use the converted tables to [add layers](chord-build.html).

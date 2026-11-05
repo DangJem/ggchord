@@ -1,13 +1,14 @@
 [
   {
-    "id": "start",
+    "id": "techniques",
     "title": {
-      "zh": "安装与学习路线",
-      "en": "Setup and learning paths"
+      "zh": "ggchord 绘图原理",
+      "en": "ggchord plotting principles"
     },
     "pages": [
-      "index",
       "installation",
+      "chord-data",
+      "alignments",
       "modes"
     ]
   },
@@ -15,15 +16,21 @@
     "id": "chord",
     "title": {
       "zh": "模块一『弦图』部分",
-      "en": "Module I · Chord"
+      "en": "Module 1 · Chord"
     },
     "pages": [
-      "chord-data",
-      "chord-import",
+      "chord-start",
       "chord-build",
       "chord-tuning",
+      "chord-geometry",
+      "chord-routing",
+      "chord-labels",
+      "labels",
+      "parameters",
+      "adjustments",
+      "styling",
+      "chord-import",
       "ribbons",
-      "real-data",
       "chord"
     ]
   },
@@ -31,65 +38,81 @@
     "id": "collinear",
     "title": {
       "zh": "模块二『共线性图』部分",
-      "en": "Module II · Collinear"
+      "en": "Module 2 · Collinear"
     },
     "pages": [
+      "collinear-start",
       "collinear-data",
       "collinear-build",
+      "collinear-tuning",
       "collinear-routing",
-      "homology",
       "views",
+      "homology",
       "collinear"
     ]
   },
   {
     "id": "plasmid",
     "title": {
-      "zh": "模块三『质粒图』部分",
-      "en": "Module III · Plasmid"
+      "zh": "模块三『单序列圆图』部分",
+      "en": "Module 3 · Circular"
     },
     "pages": [
+      "plasmid-start",
       "plasmid-data",
       "plasmid-build",
+      "plasmid-tuning",
+      "annotations",
+      "tracks",
       "recognition",
       "plasmid-catalog",
       "plasmids"
     ]
   },
   {
-    "id": "shared",
+    "id": "data",
     "title": {
-      "zh": "按需查阅：数据与图层",
-      "en": "Consult as needed · Data and layers"
+      "zh": "导入与转换",
+      "en": "Import and conversion"
     },
     "pages": [
-      "data",
       "formats",
-      "alignments",
-      "projection",
-      "annotations",
-      "labels",
-      "tracks",
-      "styling",
-      "parameters",
-      "adjustments",
-      "output"
+      "data",
+      "protein-alignments",
+      "projection"
+    ]
+  },
+  {
+    "id": "cases",
+    "title": {
+      "zh": "完整案例与图库",
+      "en": "Case studies and gallery"
+    },
+    "pages": [
+      "gallery",
+      "real-data"
     ]
   },
   {
     "id": "reference",
     "title": {
-      "zh": "学习地图与函数查阅",
-      "en": "Learning map and reference"
+      "zh": "函数参考文档",
+      "en": "Function reference"
     },
     "pages": [
-      "articles",
-      "reference",
-      "gallery",
+      "reference"
+    ]
+  },
+  {
+    "id": "information",
+    "title": {
+      "zh": "其他信息",
+      "en": "Further information"
+    },
+    "pages": [
+      "output",
       "faq",
-      "migration",
-      "glossary",
-      "news"
+      "about"
     ]
   }
 ]

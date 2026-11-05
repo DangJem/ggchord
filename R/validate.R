@@ -70,6 +70,12 @@ validate_seq_data <- function(seq_data, col) {
               paste(missing, collapse = ", ")), "error"))
   }
 
+  unit_error <- tryCatch({
+    ggchord_sequence_unit(seq_data, "validate_ggchord_data()")
+    NULL
+  }, error = function(e) conditionMessage(e))
+  if (!is.null(unit_error)) col <- add_validation_issue(
+    col, "seq", "invalid_unit", NA_integer_, "sequence_unit", unit_error, "error")
   sid <- seq_data$accver
   if (anyNA(sid)) {
     rows <- which(is.na(sid))
