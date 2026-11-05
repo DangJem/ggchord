@@ -72,6 +72,9 @@ def fingerprints():
     result = {}
     for key in captions:
         excluded = exercises - practice_figures.get(key, set())
+        # These new chunks write only independent comparison objects.
+        if key not in {'alignleft', 'aligncenter', 'alignright', 'alignanchor', 'alignauto', 'tracktile'}:
+            excluded.update({'alignbase', 'aligncenter', 'alignright', 'alignanchor', 'alignauto', 'tracktile'})
         excluded.update(front_chunks - front_dependencies.get(key, set()))
         if key not in starters and key not in practice_figures:
             excluded.update(starters - front_dependencies.get(key, set()))

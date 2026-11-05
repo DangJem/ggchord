@@ -39,3 +39,17 @@
 外侧色带标出查询序列的完整比对区间。 `region_side = "outside"` 将它放在骨架外侧。直线只连接两个区间的中点，`arrow` 指向目标端。需要看两端各覆盖多长时，使用比对带。
 
 下一节[放置序列和基因标签](chord-labels.html)。
+
+## 分支、筛选与固定样式的边界 {#branch-contract}
+
+| 参数 | 当前默认 | 什么时候改变与注意事项 |
+| --- | --- | --- |
+| `link_branch` | `"none"` | query/subject 让相同端点共享主干；端点不相同不能凭空组成同源分支 |
+| `link_branch_fraction` | `0.15` | 主干相对最短成员的长度比例，范围 (0, 0.5]；仅启用分支时有意义 |
+| `pairs` | `NULL` | 显式选择序列对；不创建新比对记录 |
+| `link_gap` | `NULL` | 交给避障策略；显式数值覆盖自动间距 |
+| `link_avoid` | `"uniform"` | none 固定间距，smooth 局部避让；不避让文字与引线 |
+| `link_ctrl_point` | `NULL` | 弦图默认原点；共线性依据端点推导；不是 bp 坐标 |
+| `nonadjacent_linewidth` | `0.4` | 只控制共线性非相邻显示行边框，0 沿用普通 linewidth |
+
+固定 `fill/alpha/colour/linewidth` 放在 `aes()` 外；数据差异映射到 ribbon 专用属性并配匹配标度。显式固定值优先于相应映射，所以映射透明度时省略固定 alpha。改变颜色不能证明不同生物学关系。完整签名见 [`geom_link_ribbon()`](reference/geom_link_ribbon.html)。

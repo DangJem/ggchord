@@ -43,6 +43,29 @@ Bars and line use the same actual GC measurements; the line is a three-window
 moving mean. Incomplete end windows are omitted, not filled with invented values.
 Line positions use integer bin midpoints. Both layers use the same track ID.
 
+## Encode values with a tile track {#tile}
+
+Reuse `track_seq` and `bins`, computed from real DNA on this page. Tiles require `accver, start, end` and do not require numeric heights. Here the same `gc` values map to `track_fill`.
+
+{{code:tracktile}}
+{{figure:tracktile}}
+
+Use the same 9 × 8 inch dimensions and 100 bp windows as the bars. Bars encode value by height; tiles keep a fixed band width and encode GC fraction from 0 to 1 by colour. This is not another experimental observation and does not average overlapping intervals. It compares encodings, **not a single geometry parameter**.
+
+| Parameter or mapping | Default | Choice and constraints |
+| --- | --- | --- |
+| `position` | Required | `position_track("gc_colour")` declares an independent track |
+| `width` | 4 mm in `position_track()` | 10 mm here; physical band width |
+| `side` / `order` | outside / 1 | Lower order places a band nearer the backbone |
+| `gap` | 1 mm | Physical spacing from the preceding band, not a sequence gap |
+| `track_fill` | Never inferred | Map gc inside `aes()`; use `fill` for a fixed colour |
+| `bounds` | `"error"` | Out-of-range coordinates error; clip reports clipping |
+| `alpha` / `linewidth` | 1 / 0.25 | Fixed opacity and border width; border colour defaults to NA |
+
+Use `scale_track_fill_gradientn()` for continuous colours or `scale_track_fill_manual()` for categories, with the matching track ID. Do not label a fraction as a percentage. To combine with the bars, add this tile layer to `p_tracks` and retain separate IDs for separate bands. Layers sharing an ID must agree on side/order/width/gap.
+
+Change only tile width from 10 to 4 mm: colours stay the same while physical band width changes. Your own data must declare windows, units, NA handling and overlap policy. Check coordinate errors rather than hiding them with clip. See [`geom_track_tile()`](reference/geom_track_tile.html) and [`position_track()`](reference/position_track.html).
+
 ## Check your result {#check-result}
 GC in bins lies between 0 and 1; each row is an actual window and the last may be shorter than 100 bp. Bars and line share the same 0–1 fraction scale.
 

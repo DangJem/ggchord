@@ -39,3 +39,17 @@ Take the CDS at 48,053–49,111 bp on `MT108731.1`. It falls within the alignmen
 The outer band marks the full interval on the query sequence. `region_side = "outside"` places it outside the backbone. The straight line joins the two interval midpoints, and the arrow points to the subject. Use a ribbon to show the full span on both sides.
 
 Next, [place sequence and gene labels](chord-labels.html).
+
+## Branches, filtering and fixed-style boundaries {#branch-contract}
+
+| Parameter | Current default | When to change and constraints |
+| --- | --- | --- |
+| `link_branch` | `"none"` | query/subject share trunks for equal endpoints; unequal endpoints do not establish homology |
+| `link_branch_fraction` | `0.15` | Trunk length relative to the shortest member, in (0, 0.5]; only meaningful with branching |
+| `pairs` | `NULL` | Explicit sequence-pair selection; does not create alignments |
+| `link_gap` | `NULL` | Uses avoidance policy; an explicit number overrides automatic clearance |
+| `link_avoid` | `"uniform"` | none uses fixed clearance, smooth local avoidance; text and leaders are ignored |
+| `link_ctrl_point` | `NULL` | Origin in chord mode; endpoint-derived in collinear mode; not bp coordinates |
+| `nonadjacent_linewidth` | `0.4` | Only nonadjacent collinear borders; 0 reuses ordinary linewidth |
+
+Set fixed `fill/alpha/colour/linewidth` outside `aes()`. Map data differences to dedicated ribbon roles with matching scales. Explicit fixed values override matching mappings; omit fixed alpha when mapping opacity. Colour differences do not establish biological relationships. See [`geom_link_ribbon()`](reference/geom_link_ribbon.html) for the full signature.

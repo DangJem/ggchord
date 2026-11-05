@@ -1,0 +1,100 @@
+{
+  "coord_collinear": {
+    "level": "L3",
+    "page": "collinear-layout",
+    "anchor": "parameters",
+    "reason": "Independent input, six-parameter table, same-input comparisons, four directions, conflicts and adaptation",
+    "modes": "collinear",
+    "parameters": [
+      "align",
+      "anchor",
+      "orientation",
+      "min_support",
+      "segments",
+      "segment_gap"
+    ]
+  },
+  "geom_track_tile": {
+    "level": "L2",
+    "page": "tracks",
+    "anchor": "tile",
+    "reason": "Actual GC inputs, executable tile, encoding comparison, defaults and track boundaries; rendered single-width parameter contrast is still missing, so L3 is not certified",
+    "modes": "chord;collinear;circular",
+    "parameters": [
+      "position",
+      "bounds",
+      "alpha",
+      "linewidth"
+    ]
+  },
+  "position_track": {
+    "level": "L2",
+    "page": "tracks",
+    "anchor": "tile",
+    "reason": "Track identity, physical width, side/order/gap, shared declarations and independent bands; rendered single-width parameter contrast is still missing, so L3 is not certified",
+    "modes": "chord;collinear;circular",
+    "parameters": [
+      "track",
+      "side",
+      "order",
+      "width",
+      "gap"
+    ]
+  },
+  "geom_seq": {
+    "level": "L2",
+    "page": "chord-start",
+    "anchor": "draw",
+    "reason": "Independent bundled input, rendered backbone, reading, exercise and replacement input",
+    "modes": "chord;collinear;circular",
+    "parameters": []
+  },
+  "coord_circular": {
+    "level": "L2",
+    "page": "plasmid-tuning",
+    "anchor": "rotation",
+    "reason": "Same sequence, explicit rotation and rendered output; full fit/gap parameter comparison remains open",
+    "modes": "circular",
+    "parameters": []
+  },
+  "coord_chord": {
+    "level": "L2",
+    "page": "chord-tuning",
+    "anchor": "orientation",
+    "reason": "Same four sequence input, default and rotation images with explanation; full fit coverage remains open",
+    "modes": "chord",
+    "parameters": []
+  },
+  "geom_link_ribbon": {
+    "level": "L2",
+    "page": "chord-routing",
+    "anchor": "clearance",
+    "reason": "Same real HSP and CDS avoidance contrast; branch teaching still incomplete",
+    "modes": "chord;collinear",
+    "parameters": []
+  },
+  "geom_track_bar": {
+    "level": "L2",
+    "page": "tracks",
+    "anchor": "draw-gc",
+    "reason": "Real DNA, window computation, plotted values and explained 0-1 fraction",
+    "modes": "chord;collinear;circular",
+    "parameters": []
+  },
+  "geom_track_line": {
+    "level": "L2",
+    "page": "tracks",
+    "anchor": "multiple",
+    "reason": "Derived three-window moving mean, missing endpoints, band sharing and rendered output",
+    "modes": "chord;collinear;circular",
+    "parameters": []
+  },
+  "geom_link_line": {
+    "level": "L2",
+    "page": "chord-routing",
+    "anchor": "point-markers",
+    "reason": "Actual interval midpoint point-link with arrow and reading guide; full endpoint/curve teaching remains open",
+    "modes": "chord;collinear",
+    "parameters": []
+  }
+}

@@ -40,6 +40,29 @@ bar 表示相对基线的区间值。不要把相同数值域误认为必须位�
 柱和线都来自同一组实际 GC 值，线使用三个窗口的滑动均值；两端没有完整窗口时省略，
 不填造观测值。折线位置是整数窗口中点；柱与线共用同一个轨道 ID。
 
+## 用颜色绘制 tile 轨道 {#tile}
+
+沿用本页从真实 DNA 得到的 `track_seq` 与 `bins`。tile 要求 `accver, start, end`，并不要求数值高度；这里把同一个 `gc` 映射到 `track_fill`。
+
+{{code:tracktile}}
+{{figure:tracktile}}
+
+与柱图使用相同 9 × 8 英寸尺寸和 100 bp 窗口。柱高表示数值；tile 的固定带宽不随 GC 改变，颜色才表示 0–1 的 GC 比例。它不是另一组实验观测，也不会自动平均重叠区间。此图比较编码方式，**不是单参数几何对照**。
+
+| 参数或映射 | 默认值 | 本例选择与限制 |
+| --- | --- | --- |
+| `position` | 必须显式提供 | `position_track("gc_colour")` 声明独立轨道 |
+| `width` | `position_track()` 为 4 mm | 本例 10 mm；是物理带宽 |
+| `side` / `order` | outside / 1 | 多轨道按 order 排列，越小越靠近骨架 |
+| `gap` | 1 mm | 到前一带的物理间隔，不是序列缺口 |
+| `track_fill` | 不自动推断 | 在 `aes()` 映射 gc；固定颜色写 `fill` |
+| `bounds` | `"error"` | 越界默认报错；clip 会报告裁剪 |
+| `alpha` / `linewidth` | 1 / 0.25 | 固定透明度和边框线宽；默认边框 colour 为 NA |
+
+连续颜色用 `scale_track_fill_gradientn()`；类别用 `scale_track_fill_manual()`。二者都要填写对应轨道 ID。不要把比例误标为百分数。若要叠加本页柱图，把该 tile 图层加到 `p_tracks`，保留不同 ID：这是两条独立轨道。相同 ID 必须使用一致的 side/order/width/gap。
+
+试把 tile 的 width 从 10 改为 4 mm，其他设置不动；数值颜色不变，只有物理带宽变化。自备数据必须声明窗口、单位、NA 和重叠区间的处理。源坐标越界先查输入，不能用 clip 掩盖错误。更多见 [`geom_track_tile()`](reference/geom_track_tile.html) 和 [`position_track()`](reference/position_track.html)。
+
 ## 完成后检查 {#check-result}
 bins 的 gc 在 0–1 之间，每行对应一个实际窗口；最后窗口可短于 100 bp。柱高与折线共用 0–1 的比例尺度。
 

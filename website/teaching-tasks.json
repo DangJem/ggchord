@@ -1,0 +1,354 @@
+[
+  {
+    "task": {
+      "zh": "改变骨架样式",
+      "en": "Change backbone style"
+    },
+    "api": "geom_seq",
+    "parameters": "seq_style, seq_backbone_gap, seq_backbone_width",
+    "modes": "A / B / C",
+    "page": "plasmid-tuning#style",
+    "level": "basics"
+  },
+  {
+    "task": {
+      "zh": "指定半径与曲率",
+      "en": "Set radii and curvature"
+    },
+    "api": "geom_seq",
+    "parameters": "seq_radius, seq_curvature",
+    "modes": "A",
+    "page": "chord-geometry",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "改变序列顺序和方向",
+      "en": "Order and orient sequences"
+    },
+    "api": "geom_seq",
+    "parameters": "seq_order, seq_orientation",
+    "modes": "A / B",
+    "page": "chord-geometry",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "改变连接路径与避障",
+      "en": "Route links around features"
+    },
+    "api": "geom_link_ribbon",
+    "parameters": "link_ctrl_point, link_gap, link_avoid",
+    "modes": "A / B",
+    "page": "chord-routing",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "将色带改为有向点连接",
+      "en": "Connect points with arrows"
+    },
+    "api": "geom_link_line",
+    "parameters": "arrow",
+    "modes": "A / B",
+    "page": "chord-routing",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "调整基因箭头形状",
+      "en": "Change gene arrow shapes"
+    },
+    "api": "geom_gene",
+    "parameters": "arrow_head_style, short_feature",
+    "modes": "A / B / C (bp)",
+    "page": "annotations",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "强调一个局部区间",
+      "en": "Highlight an interval"
+    },
+    "api": "geom_seq_region",
+    "parameters": "region_side, region_width, region_offset",
+    "modes": "A / B / C",
+    "page": "chord-routing",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "根据相似度配色",
+      "en": "Colour by identity"
+    },
+    "api": "scale_ribbon_fill_stepsn",
+    "parameters": "ribbon_fill",
+    "modes": "A / B",
+    "page": "adjustments",
+    "level": "basics"
+  },
+  {
+    "task": {
+      "zh": "分类配色与图例",
+      "en": "Use categories and legends"
+    },
+    "api": "scale_seq_colour_manual",
+    "parameters": "values, guide",
+    "modes": "A / B / C",
+    "page": "styling",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "筛选、去重、合并比对",
+      "en": "Filter, deduplicate and merge HSPs"
+    },
+    "api": "filter_ggchord_ribbons",
+    "parameters": "min_pident, min_length",
+    "modes": "A / B",
+    "page": "ribbons",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "汇总连接密度",
+      "en": "Summarize link density"
+    },
+    "api": "stat_ribbon_density",
+    "parameters": "bins, weight",
+    "modes": "A / B",
+    "page": "ribbons",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "显式聚束连接",
+      "en": "Bundle existing links"
+    },
+    "api": "stat_ribbon_bundle",
+    "parameters": "min_bundle, group_by",
+    "modes": "A / B",
+    "page": "ribbons",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "左中右对齐序列",
+      "en": "Align sequences left, center or right"
+    },
+    "api": "coord_collinear",
+    "parameters": "align",
+    "modes": "B",
+    "page": "collinear-layout#alignment",
+    "level": "basics"
+  },
+  {
+    "task": {
+      "zh": "以共同位点锚定",
+      "en": "Anchor to common loci"
+    },
+    "api": "coord_collinear",
+    "parameters": "anchor",
+    "modes": "B",
+    "page": "collinear-layout#anchor",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "自动选择显示方向",
+      "en": "Choose display directions automatically"
+    },
+    "api": "coord_collinear",
+    "parameters": "orientation, min_support",
+    "modes": "B",
+    "page": "collinear-layout#orientation",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "连接非相邻行",
+      "en": "Connect nonadjacent rows"
+    },
+    "api": "geom_link_ribbon",
+    "parameters": "adjacent_only, pairs, nonadjacent_linewidth",
+    "modes": "B",
+    "page": "collinear-routing",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "显示局部窗口与断点",
+      "en": "Show local windows and breaks"
+    },
+    "api": "segment_ggchord_data",
+    "parameters": "loci; coord_collinear: segments, segment_gap",
+    "modes": "B",
+    "page": "views#segments",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "绘制固定长度标尺",
+      "en": "Draw a fixed-length scale bar"
+    },
+    "api": "geom_seq_scale",
+    "parameters": "length, location, offset",
+    "modes": "B",
+    "page": "collinear-tuning#scale",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "改变圆图朝向",
+      "en": "Rotate a circular view"
+    },
+    "api": "coord_circular",
+    "parameters": "rotation, direction, gap, fit",
+    "modes": "C",
+    "page": "plasmid-tuning",
+    "level": "basics"
+  },
+  {
+    "task": {
+      "zh": "堆叠特征注释",
+      "en": "Stack feature annotations"
+    },
+    "api": "position_feature_stack",
+    "parameters": "spacing, side, base_position",
+    "modes": "A / B / C",
+    "page": "annotations",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "自动排布特征文字",
+      "en": "Arrange feature labels automatically"
+    },
+    "api": "geom_feature_label_repel",
+    "parameters": "label_layout, label_fit, label_min_size",
+    "modes": "A / B / C (conditional)",
+    "page": "labels",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "搜索引物结合位置",
+      "en": "Find primer bindings"
+    },
+    "api": "find_primer_bindings",
+    "parameters": "set, circular",
+    "modes": "DNA",
+    "page": "recognition",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "绘制引物及文字",
+      "en": "Draw primers and labels"
+    },
+    "api": "geom_primer",
+    "parameters": "position",
+    "modes": "C (bp)",
+    "page": "plasmids",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "搜索和筛选酶切位点",
+      "en": "Search and filter restriction sites"
+    },
+    "api": "find_restriction_sites",
+    "parameters": "methylation, enzymes",
+    "modes": "DNA",
+    "page": "recognition#restriction",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "调整酶切文字引线",
+      "en": "Adjust restriction label leaders"
+    },
+    "api": "geom_restriction_site",
+    "parameters": "leader, label_style, label_side",
+    "modes": "C (bp)",
+    "page": "plasmids",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "绘制 GC 柱图与折线",
+      "en": "Draw GC bars and lines"
+    },
+    "api": "geom_track_bar",
+    "parameters": "track_value, baseline",
+    "modes": "A / B / C",
+    "page": "tracks",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "绘制 tile 色带",
+      "en": "Draw a tile colour band"
+    },
+    "api": "geom_track_tile",
+    "parameters": "track_fill, position",
+    "modes": "A / B / C",
+    "page": "tracks#tile",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "设置轨道宽度和次序",
+      "en": "Set track width and order"
+    },
+    "api": "position_track",
+    "parameters": "track, side, order, width, gap",
+    "modes": "A / B / C",
+    "page": "tracks#sharing",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "导入 FASTA、GFF3 和比对",
+      "en": "Import FASTA, GFF3 and alignments"
+    },
+    "api": "read_fasta_lengths",
+    "parameters": "sequence_unit",
+    "modes": "general",
+    "page": "formats",
+    "level": "basics"
+  },
+  {
+    "task": {
+      "zh": "绘制原生蛋白比较",
+      "en": "Plot native protein comparisons"
+    },
+    "api": "ggchord",
+    "parameters": "seq_data: sequence_unit",
+    "modes": "A / B (aa)",
+    "page": "protein-alignments",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "预览并导出论文图",
+      "en": "Preview and export publication figures"
+    },
+    "api": "view_ggchord",
+    "parameters": "width, height, units",
+    "modes": "general",
+    "page": "output",
+    "level": "basics"
+  },
+  {
+    "task": {
+      "zh": "诊断布局与导出坐标",
+      "en": "Diagnose and export layout"
+    },
+    "api": "export_ggchord_layout",
+    "parameters": "plot",
+    "modes": "general",
+    "page": "faq",
+    "level": "advanced"
+  }
+]

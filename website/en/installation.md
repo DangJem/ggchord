@@ -8,7 +8,17 @@ library(ggchord)
 packageVersion("ggchord")
 ```
 
-The last line reports the installed version. This tutorial uses the public interface from 0.16.6.
+The last line reports your installed version. **This site targets development version 0.16.7.9000**; CRAN provides 0.16.6 (checked 2026-11-05). They differ in bundled protein objects, dedicated cross-row border width, the circular zero-rotation reference and some default appearances.
+
+The development changes are not yet pushed or released. Install from the local source checkout matching this site; do not assume remote main includes them. From the repository root run:
+
+```r
+install.packages(".", repos = NULL, type = "source")
+library(ggchord)
+stopifnot(as.character(packageVersion("ggchord")) == "0.16.7.9000")
+```
+
+Install dependencies first, then use a fresh R session. A version number alone cannot distinguish commits; the site `build-manifest.json` and audit record retain source SHA. Readers using CRAN should use the [0.16.6 offline tutorials and reference](https://stat.ethz.ch/CRAN/web/packages/ggchord/index.html), and avoid development protein examples and `nonadjacent_linewidth`.
 
 ### Source downloads {#source}
 

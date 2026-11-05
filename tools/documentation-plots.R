@@ -128,6 +128,16 @@ assets$coordinate <- vapply(assets$object, function(name) {
  coord <- get(name, env)$coordinates
  if (inherits(coord, "CoordCollinear")) "collinear" else if (inherits(coord, "CoordCircular")) "circular" else "chord"
 }, character(1))
+teaching_assets <- assets[rep(1L, 6L), ]
+teaching_assets$id <- c("alignleft", "aligncenter", "alignright", "alignanchor", "alignauto", "tracktile")
+teaching_assets$object <- paste0("p_", teaching_assets$id)
+teaching_assets$coordinate <- c(rep("collinear", 5), "circular")
+teaching_assets$width <- c(rep(9, 5), 9)
+teaching_assets$height <- c(rep(6, 5), 8)
+teaching_assets$input <- c(rep("Same bundled complete sequences and observed HSPs; only coord_collinear arguments change", 5),
+  "Same pUC19 100 bp windows as bar/line lesson; GC fraction mapped to tile colour")
+assets <- rbind(assets, teaching_assets)
+basic_ids <- c(basic_ids, teaching_assets$id)
 requested <- commandArgs(trailingOnly=TRUE)
 if(length(requested) && any(!requested %in% assets$id)) stop('Unknown documentation figure ID')
 if(length(requested)) {

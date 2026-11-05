@@ -1255,4 +1255,36 @@ head(bins, 4)
 # ---- frontlayoutchoice ----
 data.frame(accver = names(layout_choice$seq_orientation),
            orientation = unname(layout_choice$seq_orientation))
+# ---- alignbase ----
+library(ggchord)
+seqs_align <- seq_data_example[c("accver", "length")]
+links_align <- ribbon_data_example[c("qaccver", "saccver", "qstart", "qend", "sstart", "send")]
+base_align <- ggchord(seqs_align, ribbon_data = links_align) +
+  geom_seq() +
+  geom_link_ribbon() +
+  geom_seq_label()
+p_alignleft <- base_align + coord_collinear(align = "left")
+p_alignleft
+# ---- aligncenter ----
+p_aligncenter <- base_align + coord_collinear(align = "center")
+p_aligncenter
+# ---- alignright ----
+p_alignright <- base_align + coord_collinear(align = "right")
+p_alignright
+# ---- alignanchor ----
+anchors <- setNames(seqs_align$length / 2, seqs_align$accver)
+p_alignanchor <- base_align + coord_collinear(align = "left", anchor = anchors)
+p_alignanchor
+# ---- alignauto ----
+p_alignauto <- base_align + coord_collinear(orientation = "auto", min_support = 0.1)
+p_alignauto
+# ---- tracktile ----
+p_tracktile <- ggchord(track_seq) +
+  geom_seq() +
+  geom_track_tile(aes(track_fill = gc), data = bins,
+    position = position_track("gc_colour", width = grid::unit(10, "mm"))) +
+  scale_track_fill_gradientn("gc_colour", colours = c("#F1E51D", "#31849B"),
+    limits = c(0, 1), name = "GC fraction") +
+  coord_circular()
+p_tracktile
 # ---- end ----

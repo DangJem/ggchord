@@ -1,5 +1,10 @@
 # ggchord 0.16.7 (development)
 
+* Added bilingual lessons on collinear alignment, anchors and display orientation,
+  a real GC tile-track example, task-based parameter lookup and coordinate
+  compatibility guidance. Installation instructions distinguish the local
+  development tutorial from the CRAN 0.16.6 documentation.
+
 * `coord_circular()` keeps `rotation = 0` with the sequence origin at 12 o'clock
   and coordinates increasing clockwise. Rotation is counterclockwise from this
   circular baseline; use `rotation = -90` for a 3-o'clock origin. To preserve

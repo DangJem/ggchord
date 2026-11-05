@@ -95,6 +95,7 @@ def main():
         require(executable_blocks(expand(texts[0], 'en')) == executable_blocks(expand(texts[1], 'zh')), f'{p["slug"]}: mismatched executable code')
     for lang in ['en','zh']:
         require({f.stem for f in (WEB/lang).glob('*.md')} == set(slugs), f'{lang}: orphan or missing source page')
+    subprocess.run(['python3','tools/generate-task-index.py','--check'],cwd=ROOT,check=True)
     subprocess.run(['python3','tools/reference-translations.py','--check'],cwd=ROOT,check=True)
     subprocess.run(['python3','tools/sync-tutorials.py','--check'],cwd=ROOT,check=True)
     with (WEB/'assets/plots.csv').open() as f:
@@ -161,7 +162,7 @@ def main():
     require(all('`'+name+'`' in config for name in names), 'Native pkgdown reference omits Rd topics')
     coverage=json.loads((WEB/'coverage.json').read_text())
     code=snippets()
-    require(len(coverage)==17,'Expected 17 reviewed capability families')
+    require(len(coverage)==18,'Expected 18 reviewed capability families')
     results=json.loads((WEB/'assets/example-results.json').read_text())
     for family in coverage:
         require(family['result'] is None or family['result'] in results,f'{family["id"]}: missing result record')

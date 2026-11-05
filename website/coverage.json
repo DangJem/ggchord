@@ -211,10 +211,12 @@
     ],
     "snippets": [
       "tracks",
-      "multitrack"
+      "multitrack",
+      "tracktile"
     ],
     "figures": [
-      "multitrack"
+      "multitrack",
+      "tracktile"
     ],
     "result": null
   },
@@ -327,6 +329,31 @@
       "frontgeometry"
     ],
     "figures": [],
+    "result": null
+  },
+  {
+    "id": "linear-layout",
+    "title": {
+      "zh": "共线性对齐与显示方向",
+      "en": "Collinear alignment and display orientation"
+    },
+    "articles": [
+      "collinear-layout"
+    ],
+    "snippets": [
+      "alignbase",
+      "aligncenter",
+      "alignright",
+      "alignanchor",
+      "alignauto"
+    ],
+    "figures": [
+      "alignleft",
+      "aligncenter",
+      "alignright",
+      "alignanchor",
+      "alignauto"
+    ],
     "result": null
   }
 ]

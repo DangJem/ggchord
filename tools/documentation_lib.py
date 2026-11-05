@@ -172,6 +172,12 @@ def expand(text, lang, *, figures='assets', reference=''):
         'frontcrosswidth': 'collinear-routing#width',
         'frontcrosssame': 'collinear-routing#width',
         'manualgenelabels': 'labels#fixed',
+        'alignleft': 'collinear-layout#baseline',
+        'aligncenter': 'collinear-layout#alignment',
+        'alignright': 'collinear-layout#alignment',
+        'alignanchor': 'collinear-layout#anchor',
+        'alignauto': 'collinear-layout#orientation',
+        'tracktile': 'tracks#tile',
     })
     for key in CAPTIONS:
         if key.startswith('catalog'): destinations[key] = 'plasmid-catalog#'+key

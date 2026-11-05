@@ -358,5 +358,29 @@
       "en": "Protein comparisons from BLASTp"
     },
     "group": "guide"
+  },
+  {
+    "slug": "collinear-layout",
+    "title": {
+      "zh": "对齐、锚点与显示方向",
+      "en": "Alignment, anchors and display directions"
+    },
+    "group": "article"
+  },
+  {
+    "slug": "task-index",
+    "title": {
+      "zh": "按任务查找功能与参数",
+      "en": "Find functions and parameters by task"
+    },
+    "group": "guide"
+  },
+  {
+    "slug": "compatibility",
+    "title": {
+      "zh": "图层与坐标模式的兼容边界",
+      "en": "Layer and coordinate compatibility"
+    },
+    "group": "guide"
   }
 ]

@@ -1,0 +1,434 @@
+{
+  "as_ggchord_feature": {
+    "rd": "man/as_ggchord_feature.Rd",
+    "matches": true
+  },
+  "as_ggchord_link": {
+    "rd": "man/as_ggchord_link.Rd",
+    "matches": true
+  },
+  "as_ggchord_seq": {
+    "rd": "man/as_ggchord_seq.Rd",
+    "matches": true
+  },
+  "build_ggchord_cds": {
+    "rd": "man/build_ggchord_cds.Rd",
+    "matches": true
+  },
+  "bundle_ggchord_ribbons": {
+    "rd": "man/bundle_ggchord_ribbons.Rd",
+    "matches": true
+  },
+  "clean_ggchord_data": {
+    "rd": "man/clean_ggchord_data.Rd",
+    "matches": true
+  },
+  "coord_chord": {
+    "rd": "man/coord_chord.Rd",
+    "matches": true
+  },
+  "coord_circular": {
+    "rd": "man/coord_circular.Rd",
+    "matches": true
+  },
+  "coord_collinear": {
+    "rd": "man/coord_collinear.Rd",
+    "matches": true
+  },
+  "deduplicate_ggchord_ribbons": {
+    "rd": "man/deduplicate_ggchord_ribbons.Rd",
+    "matches": true
+  },
+  "diagnose_ggchord": {
+    "rd": "man/diagnose_ggchord.Rd",
+    "matches": true
+  },
+  "export_ggchord_layout": {
+    "rd": "man/export_ggchord_layout.Rd",
+    "matches": true
+  },
+  "filter_ggchord_ribbons": {
+    "rd": "man/filter_ggchord_ribbons.Rd",
+    "matches": true
+  },
+  "filter_restriction_sites": {
+    "rd": "man/filter_restriction_sites.Rd",
+    "matches": true
+  },
+  "find_common_features": {
+    "rd": "man/find_common_features.Rd",
+    "matches": true
+  },
+  "find_ggchord_loci": {
+    "rd": "man/find_ggchord_loci.Rd",
+    "matches": true
+  },
+  "find_primer_bindings": {
+    "rd": "man/find_primer_bindings.Rd",
+    "matches": true
+  },
+  "find_restriction_sites": {
+    "rd": "man/find_restriction_sites.Rd",
+    "matches": true
+  },
+  "focus_ggchord_data": {
+    "rd": "man/focus_ggchord_data.Rd",
+    "matches": true
+  },
+  "focus_ggchord_track": {
+    "rd": "man/focus_ggchord_track.Rd",
+    "matches": true
+  },
+  "geom_feature_label_repel": {
+    "rd": "man/geom_feature_label_repel.Rd",
+    "matches": true
+  },
+  "geom_feature_label": {
+    "rd": "man/geom_feature_label.Rd",
+    "matches": true
+  },
+  "geom_feature_plasmid": {
+    "rd": "man/geom_feature_plasmid.Rd",
+    "matches": true
+  },
+  "geom_feature": {
+    "rd": "man/geom_feature.Rd",
+    "matches": true
+  },
+  "geom_gene_label_repel": {
+    "rd": "man/geom_gene_label_repel.Rd",
+    "matches": true
+  },
+  "geom_gene_label": {
+    "rd": "man/geom_gene_label.Rd",
+    "matches": true
+  },
+  "geom_gene": {
+    "rd": "man/geom_gene.Rd",
+    "matches": true
+  },
+  "geom_link_line": {
+    "rd": "man/geom_link_line.Rd",
+    "matches": true
+  },
+  "geom_link_ribbon": {
+    "rd": "man/geom_link_ribbon.Rd",
+    "matches": true
+  },
+  "geom_primer_label_repel": {
+    "rd": "man/geom_primer_label_repel.Rd",
+    "matches": true
+  },
+  "geom_primer": {
+    "rd": "man/geom_primer.Rd",
+    "matches": true
+  },
+  "geom_restriction_site": {
+    "rd": "man/geom_restriction_site.Rd",
+    "matches": true
+  },
+  "geom_seq_break": {
+    "rd": "man/geom_seq_break.Rd",
+    "matches": true
+  },
+  "geom_seq_center_label": {
+    "rd": "man/geom_seq_center_label.Rd",
+    "matches": true
+  },
+  "geom_seq_label": {
+    "rd": "man/geom_seq_label.Rd",
+    "matches": true
+  },
+  "geom_seq_region": {
+    "rd": "man/geom_seq_region.Rd",
+    "matches": true
+  },
+  "geom_seq_scale": {
+    "rd": "man/geom_seq_scale.Rd",
+    "matches": true
+  },
+  "geom_seq": {
+    "rd": "man/geom_seq.Rd",
+    "matches": true
+  },
+  "geom_track_tile": {
+    "rd": "man/geom_track_tile.Rd",
+    "matches": true
+  },
+  "geom_track_line": {
+    "rd": "man/geom_track_tile.Rd",
+    "matches": true
+  },
+  "geom_track_bar": {
+    "rd": "man/geom_track_tile.Rd",
+    "matches": true
+  },
+  "get_chord_layout": {
+    "rd": "man/get_chord_layout.Rd",
+    "matches": true
+  },
+  "ggchord": {
+    "rd": "man/ggchord.Rd",
+    "matches": true
+  },
+  "guide_ggchord_legend": {
+    "rd": "man/guide_ggchord_legend.Rd",
+    "matches": true
+  },
+  "guide_ggchord_colourbar": {
+    "rd": "man/guide_ggchord_legend.Rd",
+    "matches": true
+  },
+  "guide_ggchord_colorbar": {
+    "rd": "man/guide_ggchord_legend.Rd",
+    "matches": true
+  },
+  "link_ggchord_clusters": {
+    "rd": "man/link_ggchord_clusters.Rd",
+    "matches": true
+  },
+  "map_ggchord_position": {
+    "rd": "man/map_ggchord_position.Rd",
+    "matches": true
+  },
+  "merge_ggchord_ribbons": {
+    "rd": "man/merge_ggchord_ribbons.Rd",
+    "matches": true
+  },
+  "optimize_ggchord_layout": {
+    "rd": "man/optimize_ggchord_layout.Rd",
+    "matches": true
+  },
+  "position_feature_stack": {
+    "rd": "man/position_feature_stack.Rd",
+    "matches": true
+  },
+  "position_plasmid": {
+    "rd": "man/position_plasmid.Rd",
+    "matches": true
+  },
+  "position_strand": {
+    "rd": "man/position_strand.Rd",
+    "matches": true
+  },
+  "position_track": {
+    "rd": "man/position_track.Rd",
+    "matches": true
+  },
+  "prepare_ggchord_data": {
+    "rd": "man/prepare_ggchord_data.Rd",
+    "matches": true
+  },
+  "primer_catalog": {
+    "rd": "man/primer_catalog.Rd",
+    "matches": true
+  },
+  "project_ggchord_features": {
+    "rd": "man/project_ggchord_features.Rd",
+    "matches": true
+  },
+  "project_ggchord_links": {
+    "rd": "man/project_ggchord_links.Rd",
+    "matches": true
+  },
+  "read_bed": {
+    "rd": "man/read_bed.Rd",
+    "matches": true
+  },
+  "read_blast": {
+    "rd": "man/read_blast.Rd",
+    "matches": true
+  },
+  "read_fasta_lengths": {
+    "rd": "man/read_fasta_lengths.Rd",
+    "matches": true
+  },
+  "read_genbank": {
+    "rd": "man/read_genbank.Rd",
+    "matches": true
+  },
+  "read_gff3": {
+    "rd": "man/read_gff3.Rd",
+    "matches": true
+  },
+  "read_paf": {
+    "rd": "man/read_paf.Rd",
+    "matches": true
+  },
+  "scale_feature_fill_plasmid": {
+    "rd": "man/scale_feature_fill_plasmid.Rd",
+    "matches": true
+  },
+  "scale_feature_shape_plasmid": {
+    "rd": "man/scale_feature_fill_plasmid.Rd",
+    "matches": true
+  },
+  "scale_feature_shape_manual": {
+    "rd": "man/scale_feature_shape_manual.Rd",
+    "matches": true
+  },
+  "scale_gene_fill_manual": {
+    "rd": "man/scale_gene_fill_manual.Rd",
+    "matches": true
+  },
+  "scale_feature_fill_manual": {
+    "rd": "man/scale_gene_fill_manual.Rd",
+    "matches": true
+  },
+  "scale_region_fill_manual": {
+    "rd": "man/scale_gene_fill_manual.Rd",
+    "matches": true
+  },
+  "scale_link_colour_manual": {
+    "rd": "man/scale_link.Rd",
+    "matches": true
+  },
+  "scale_link_color_manual": {
+    "rd": "man/scale_link.Rd",
+    "matches": true
+  },
+  "scale_link_alpha_manual": {
+    "rd": "man/scale_link.Rd",
+    "matches": true
+  },
+  "scale_link_linewidth_manual": {
+    "rd": "man/scale_link.Rd",
+    "matches": true
+  },
+  "scale_link_linetype_manual": {
+    "rd": "man/scale_link.Rd",
+    "matches": true
+  },
+  "scale_link_colour_gradientn": {
+    "rd": "man/scale_link.Rd",
+    "matches": true
+  },
+  "scale_link_color_gradientn": {
+    "rd": "man/scale_link.Rd",
+    "matches": true
+  },
+  "scale_link_alpha_continuous": {
+    "rd": "man/scale_link.Rd",
+    "matches": true
+  },
+  "scale_link_linewidth_continuous": {
+    "rd": "man/scale_link.Rd",
+    "matches": true
+  },
+  "scale_ribbon_alpha_continuous": {
+    "rd": "man/scale_ribbon_alpha_continuous.Rd",
+    "matches": true
+  },
+  "scale_ribbon_alpha_manual": {
+    "rd": "man/scale_ribbon_alpha_continuous.Rd",
+    "matches": true
+  },
+  "scale_ribbon_colour_manual": {
+    "rd": "man/scale_ribbon_alpha_continuous.Rd",
+    "matches": true
+  },
+  "scale_ribbon_color_manual": {
+    "rd": "man/scale_ribbon_alpha_continuous.Rd",
+    "matches": true
+  },
+  "scale_ribbon_linetype_manual": {
+    "rd": "man/scale_ribbon_alpha_continuous.Rd",
+    "matches": true
+  },
+  "scale_ribbon_fill_stepsn": {
+    "rd": "man/scale_ribbon_fill_stepsn.Rd",
+    "matches": true
+  },
+  "scale_ribbon_fill_gradientn": {
+    "rd": "man/scale_ribbon_fill_stepsn.Rd",
+    "matches": true
+  },
+  "scale_ribbon_fill_manual": {
+    "rd": "man/scale_ribbon_fill_stepsn.Rd",
+    "matches": true
+  },
+  "scale_ribbon_fill_identity": {
+    "rd": "man/scale_ribbon_fill_stepsn.Rd",
+    "matches": true
+  },
+  "scale_seq_colour_manual": {
+    "rd": "man/scale_seq_colour_manual.Rd",
+    "matches": true
+  },
+  "scale_seq_color_manual": {
+    "rd": "man/scale_seq_colour_manual.Rd",
+    "matches": true
+  },
+  "scale_seq_position_continuous": {
+    "rd": "man/scale_seq_position_continuous.Rd",
+    "matches": true
+  },
+  "scale_seq_ring_manual": {
+    "rd": "man/scale_seq_ring_manual.Rd",
+    "matches": true
+  },
+  "scale_track_fill_gradientn": {
+    "rd": "man/scale_track_fill_gradientn.Rd",
+    "matches": true
+  },
+  "scale_track_fill_manual": {
+    "rd": "man/scale_track_fill_gradientn.Rd",
+    "matches": true
+  },
+  "scale_track_colour_gradientn": {
+    "rd": "man/scale_track_fill_gradientn.Rd",
+    "matches": true
+  },
+  "scale_track_colour_manual": {
+    "rd": "man/scale_track_fill_gradientn.Rd",
+    "matches": true
+  },
+  "scale_track_value_continuous": {
+    "rd": "man/scale_track_value_continuous.Rd",
+    "matches": true
+  },
+  "segment_ggchord_data": {
+    "rd": "man/segment_ggchord_data.Rd",
+    "matches": true
+  },
+  "stat_ribbon_bundle": {
+    "rd": "man/stat_ribbon_bundle.Rd",
+    "matches": true
+  },
+  "stat_ribbon_density": {
+    "rd": "man/stat_ribbon_density.Rd",
+    "matches": true
+  },
+  "theme_ggchord": {
+    "rd": "man/theme_ggchord.Rd",
+    "matches": true
+  },
+  "theme_ggchord_minimal": {
+    "rd": "man/theme_ggchord.Rd",
+    "matches": true
+  },
+  "theme_ggchord_dark": {
+    "rd": "man/theme_ggchord.Rd",
+    "matches": true
+  },
+  "theme_ggchord_publication": {
+    "rd": "man/theme_ggchord.Rd",
+    "matches": true
+  },
+  "theme_ggchord_plasmid": {
+    "rd": "man/theme_ggchord.Rd",
+    "matches": true
+  },
+  "validate_ggchord_data": {
+    "rd": "man/validate_ggchord_data.Rd",
+    "matches": true
+  },
+  "validate_ggchord_hierarchy": {
+    "rd": "man/validate_ggchord_hierarchy.Rd",
+    "matches": true
+  },
+  "view_ggchord": {
+    "rd": "man/view_ggchord.Rd",
+    "matches": true
+  }
+}

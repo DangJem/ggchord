@@ -45,6 +45,7 @@
       "collinear-data",
       "collinear-build",
       "collinear-tuning",
+      "collinear-layout",
       "collinear-routing",
       "views",
       "homology",
@@ -100,6 +101,8 @@
       "en": "Function reference"
     },
     "pages": [
+      "task-index",
+      "compatibility",
       "reference"
     ]
   },

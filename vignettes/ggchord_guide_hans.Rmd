@@ -33,7 +33,17 @@ library(ggchord)
 packageVersion("ggchord")
 ```
 
-最后一行显示已安装的版本。本教程使用 0.16.6 的公开接口。
+最后一行显示已安装版本。**本网站面向开发版 0.16.7.9000**，CRAN 正式版为 0.16.6（2026-11-05 核查）。两者不能视作完全相同：开发版新增蛋白教学对象、跨行连接专用线宽，并修改圆图零旋转基准和部分默认外观。
+
+开发版尚未推送或发布，请从本网站对应的本地源码 checkout 安装；不要假定远端 main 已包含这些修改。在仓库根目录执行：
+
+```{r example-2, eval=FALSE}
+install.packages(".", repos = NULL, type = "source")
+library(ggchord)
+stopifnot(as.character(packageVersion("ggchord")) == "0.16.7.9000")
+```
+
+先安装依赖，再在新的 R 会话运行以上代码。版本号不能识别同版本不同提交；构建清单 `build-manifest.json` 和审计记录保留源码 SHA。只有 CRAN 版的读者应使用 [0.16.6 对应离线教程与参考](https://stat.ethz.ch/CRAN/web/packages/ggchord/index.html)，不要运行开发版蛋白数据案例或 `nonadjacent_linewidth` 参数。
 
 #### 源码下载 {#installation-source}
 
@@ -62,7 +72,7 @@ packageVersion("ggchord")
 ### 绘制骨架 {#chord-start-draw}
 
 
-```{r example-2, eval=FALSE}
+```{r example-3, eval=FALSE}
 p_chord_backbone <- ggchord(seq_data = seq_data_example) +
   geom_seq() +
   geom_seq_label() +
@@ -95,7 +105,7 @@ view_ggchord(p_chord_backbone, width = 7, height = 7, units = "in")
 ### 绘制四条骨架 {#collinear-start-draw}
 
 
-```{r example-3, eval=FALSE}
+```{r example-4, eval=FALSE}
 p_linear_base <- ggchord(seq_data = seq_data_example) +
   geom_seq() +
   geom_seq_label() +
@@ -126,7 +136,7 @@ view_ggchord(p_linear_base, width = 8, height = 5, units = "in")
 ### 绘制骨架与中心名称 {#plasmid-start-draw}
 
 
-```{r example-4, eval=FALSE}
+```{r example-5, eval=FALSE}
 plasmid <- plasmid_example_pUC19
 p_first_circle <- ggchord(seq_data = plasmid) +
   geom_seq() +

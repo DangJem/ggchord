@@ -366,5 +366,29 @@
   "manualgenelabels": {
     "en": "Manual gene labels in a chord view",
     "zh": "弦图中的固定基因标签"
+  },
+  "alignleft": {
+    "zh": "相同四条序列和真实比对：左端对齐。",
+    "en": "Same four sequences and observed alignments: left alignment."
+  },
+  "aligncenter": {
+    "zh": "只将 align 改为 center：完整序列的显示中点对齐。",
+    "en": "Only align changes to center: complete sequence midpoints align."
+  },
+  "alignright": {
+    "zh": "只将 align 改为 right：完整序列的显示右端对齐。",
+    "en": "Only align changes to right: complete sequence right edges align."
+  },
+  "alignanchor": {
+    "zh": "保持 left，增加各序列中点锚定；此处锚点是几何示范，不表示同源位点。",
+    "en": "Keep left alignment and add midpoint anchors; these geometric anchors do not assert homology."
+  },
+  "alignauto": {
+    "zh": "只启用自动显示方向，采用默认支持阈值 0.1；行顺序和原始端点不变。",
+    "en": "Enable automatic display orientation at the default 0.1 support threshold; row order and source endpoints remain unchanged."
+  },
+  "tracktile": {
+    "zh": "同一批真实 GC 窗口：固定宽度色带用颜色表示比例，色带高度不编码 GC。",
+    "en": "The same real GC windows: a fixed-width band encodes fraction by colour, not height."
   }
 }

@@ -1,0 +1,6 @@
+R version 4.6.0 (2026-04-24) 
+ggplot2 4.0.3 
+pkgload 1.5.3 
+dplyr 1.2.1 
+jsonlite 2.0.0 
+pkgdown 2.2.1 
