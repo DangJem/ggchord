@@ -56,7 +56,7 @@ validate_unicode_measurement <- function() {
   plot <- ggchord(plasmid_example_pBluescript_II_SK_plus) + geom_seq() +
     geom_feature_plasmid(data = features, position = tracks) +
     geom_feature_label_repel(data = features, position = tracks) +
-    coord_circular(rotation = 90)
+    coord_circular(rotation = 0)
   layout <- export_ggchord_layout(plot, include = c("feature", "labels"))
   stopifnot(any(layout$labels$label == "lacZ\u03b1", na.rm = TRUE),
     all(is.finite(layout$feature$x)),

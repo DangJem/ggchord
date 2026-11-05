@@ -28,7 +28,7 @@ rc_fixtures <- function() {
       geom_primer(data = primers) + geom_primer_label_repel(data = primers, side = side) +
       geom_restriction_site(data = if (dense) dense_sites else sites,
         label_side = restriction_side) +
-      coord_circular(rotation = 90) + theme_ggchord_plasmid()
+      coord_circular(rotation = 0) + theme_ggchord_plasmid()
   }
   # Exact strand-corrected AmpR CDS equality supplies membership, not gene names.
   refs <- rbind(s, e$plasmid_example_pETDuet_1)

@@ -793,7 +793,7 @@ p_circle_single <- ggchord(seq_data = plasmid) +
   coord_circular()
 p_circle_single
 # ---- frontcirclerotation ----
-p_circle_rotated <- p_first_features + coord_circular(rotation = 180)
+p_circle_rotated <- p_first_features + coord_circular(rotation = 90)
 p_circle_rotated
 # ---- practicegenes ----
 # Restore the biological strand saved separately in this bundled teaching table.
@@ -1010,7 +1010,7 @@ p_show_plasmid <- ggchord(show_plasmid, validate = "none") +
   ) +
   geom_restriction_site(data = show_plasmid_sites, colour = "#252525") +
   geom_seq_center_label() +
-  coord_circular(rotation = 90) +
+  coord_circular(rotation = 0) +
   theme_ggchord_plasmid() +
   theme(
     legend.title = element_text(size = 13, face = "bold"),
@@ -1138,7 +1138,7 @@ plasmid_position <- position_feature_stack(spacing = 0.085, base_position = posi
 p_plasmid_backbone <- ggchord(seq_data = plasmid_seq) +
   geom_seq(seq_style = "double", colour = "#252525") +
   geom_seq_center_label() +
-  coord_circular(rotation = 90) +
+  coord_circular(rotation = 0) +
   theme_ggchord_plasmid() +
   theme(
     panel.background = element_blank(),
@@ -1192,7 +1192,7 @@ make_catalog_plot <- function(sequence, features) {
     ) +
     geom_restriction_site(data = sites, label_side = "outside", label_size = 2.5) +
     geom_seq_center_label() +
-    coord_circular(rotation = 90) +
+    coord_circular(rotation = 0) +
     theme_ggchord_plasmid() +
     theme(
       panel.background = element_blank(),

@@ -211,7 +211,7 @@ for (name in fixture_names) {
       geom_restriction_site(data = fixture$sites)
     } else NULL) +
     primer_layers +
-    geom_seq_center_label() + coord_circular(rotation = 90) +
+    geom_seq_center_label() + coord_circular(rotation = 0) +
     theme_ggchord_plasmid()
   # Every reference must remain exportable on a constrained square device;
   # automatic preview below then rebuilds from a clean cache at its intended

@@ -12,9 +12,12 @@ The parameter changes width without changing the automatic dashed line type.
 
 ## Circular origin in 0.16.7
 
-`coord_circular()` places the origin at 12 o'clock by default (`rotation = 90`).
-Use `rotation = 0` to retain a 3-o'clock origin. Increasing coordinates remain
-clockwise by default. The chord rotation default stays at 0 degrees.
+`coord_circular()` keeps `rotation = 0`, placing the origin at 12 o'clock.
+Rotation is counterclockwise from this baseline: 90 places the origin at
+9 o'clock, and -90 at 3 o'clock. To preserve an explicit angle from v0.16.6
+(or the earlier 0.16.7 development snapshot), subtract 90 degrees. Calls that
+omit rotation retain the current development appearance. Increasing coordinates
+remain clockwise by default. The chord rotation contract stays unchanged.
 
 ## Scope and timing {#scope}
 These are current candidate replacements, not a v1.0.0 compatibility promise.

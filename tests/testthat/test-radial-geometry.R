@@ -77,7 +77,7 @@ test_that("sparse restriction and primer leaders share circular root order", {
     enzymes = c("EcoRI", "BamHI", "HindIII"))
   p <- ggchord(s[c("accver", "length")]) + geom_seq() +
     geom_primer(data = primers) + geom_primer_label_repel(data = primers) +
-    geom_restriction_site(data = sites) + coord_circular(rotation = 90)
+    geom_restriction_site(data = sites) + coord_circular(rotation = 0)
   l <- get_chord_layout(p)
   paths <- list()
   for (id in names(l$layer_geometry)) {
@@ -106,7 +106,7 @@ test_that("explicit inside primer labels stay inside mixed circular maps", {
   p <- ggchord(s[c("accver", "length")]) + geom_seq() +
     geom_primer(data = primers) +
     geom_primer_label_repel(data = primers, side = "inside") +
-    geom_restriction_site(data = sites) + coord_circular(rotation = 90)
+    geom_restriction_site(data = sites) + coord_circular(rotation = 0)
   out <- export_ggchord_layout(p, include = "labels")
   text <- out$labels[out$labels$.component %in% "text", ]
   expect_setequal(text$source_row, seq_len(nrow(primers)))

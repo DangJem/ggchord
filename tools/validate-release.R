@@ -119,7 +119,7 @@ if (mode == "genome") {
       geom_feature_plasmid(data = features, position = tracks) +
       geom_feature_label_repel(data = features, position = tracks) +
       geom_seq_center_label() + scale_seq_position_continuous() +
-      coord_circular(rotation = 90) + theme_ggchord_plasmid()
+      coord_circular(rotation = 0) + theme_ggchord_plasmid()
     layout <- with_device(get_chord_layout(p), 7, 7)
     # Text rows carry optional segment columns filled with NA; validate the
     # coordinates actually drawn by each geometry rather than those unused

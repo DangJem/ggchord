@@ -383,7 +383,7 @@ p_show_plasmid <- ggchord(show_plasmid, validate = "none") +
   ) +
   geom_restriction_site(data = show_plasmid_sites, colour = "#252525") +
   geom_seq_center_label() +
-  coord_circular(rotation = 90) +
+  coord_circular(rotation = 0) +
   theme_ggchord_plasmid() +
   theme(
     legend.title = element_text(size = 13, face = "bold"),

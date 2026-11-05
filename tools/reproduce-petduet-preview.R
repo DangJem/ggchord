@@ -36,7 +36,7 @@ make_plot <- function(sites, boxed_primers) {
     geom_feature_label_repel(data = features, position = tracks,
       external = TRUE, max_overlaps = 0) +
     geom_restriction_site(data = sites) + primer_layers +
-    geom_seq_center_label() + coord_circular(rotation = 90) +
+    geom_seq_center_label() + coord_circular(rotation = 0) +
     theme_ggchord_plasmid()
 }
 

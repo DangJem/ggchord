@@ -1,8 +1,10 @@
 # ggchord 0.16.7 (development)
 
-* `coord_circular()` defaults to `rotation = 90`, placing the sequence origin
-  at 12 o'clock with coordinates increasing clockwise. Explicit `rotation = 0`
-  retains a 3-o'clock origin; the chord default remains 0 degrees.
+* `coord_circular()` keeps `rotation = 0` with the sequence origin at 12 o'clock
+  and coordinates increasing clockwise. Rotation is counterclockwise from this
+  circular baseline; use `rotation = -90` for a 3-o'clock origin. To preserve
+  an explicit angle from v0.16.6, subtract 90 degrees. The current development
+  default appearance and the chord rotation contract are unchanged.
 
 * Circular axis ticks are longer and heavier by default, including the plasmid
   preset. Tick roots remain attached to the same axis baseline; explicit lengths

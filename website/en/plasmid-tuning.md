@@ -20,4 +20,4 @@ Compare the default circular map with a single backbone and a rotated map.
 
 {{figure:frontcirclerotation}}
 
-The default `rotation = 90` places the sequence origin at 12 o’clock, with coordinates increasing clockwise. Here `rotation = 180` moves it to 9 o’clock, rotating the ticks and replication origin together. The annotation still covers the same source bp interval. Next, [prepare your own sequence and annotations](plasmid-data.html).
+The default `rotation = 0` places the sequence origin at 12 o’clock, with coordinates increasing clockwise. Here `rotation = 90` moves it to 9 o’clock, rotating the ticks and replication origin together. The annotation still covers the same source bp interval. Next, [prepare your own sequence and annotations](plasmid-data.html).

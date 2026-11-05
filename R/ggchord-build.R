@@ -884,6 +884,13 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     global$rotation
   }
 
+  # Circular zero rotation starts at noon; the shared geometry engine uses
+  # the positive x axis as its angular origin. Apply the basis offset once
+  # so backbones, ticks, annotations and labels share the same transform.
+  if (isTRUE(plot$coordinates$ggchord_circular)) {
+    coord_rotation <- coord_rotation + 90
+  }
+
   layout_strategy <- if (collinear) {
     function(...) compute_collinear_layout(..., gene_label_text = lbl$label_text,
       collinear_transform = collinear_transform)
