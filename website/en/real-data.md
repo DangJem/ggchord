@@ -1,5 +1,12 @@
 <div class="task-intro"><p>Combine original FASTA, GFF3 and standard BLAST tables into a traceable comparison. Inspect inputs, choose a display subset, then compare chord and full-length views.</p></div>
 
+
+## Question, data sources and licensing {#research-question}
+
+Starting with original files, compare observed similarity intervals and CDS across four source genomes. FASTA/GFF3 identifiers and sources match the [four-sequence case](chord.html#question). Standard BLAST tables retain original values; conversion and physical source rows are recorded in examples/blastn-standard/provenance.csv.
+
+Package code is MIT-licensed. Original database records and third-party catalogues retain their own source terms; package licensing does not automatically relicense every input. The tutorial archive carries unchanged files, SHA256 and provenance. The separate EMALE format examples retain gggenomes MIT source licensing in GGGENOMES-LICENSE.txt.
+
 ## Prepare this page {#prepare}
 Extract the [input bundle](../assets/tutorial-inputs.zip) so your working directory contains `examples/`.
 
@@ -59,3 +66,7 @@ Save the plot just created to the working directory; use matching dimensions for
 ```r
 ggsave("phage-comparison.png", p_real_chord, width = 10, height = 8, units = "in", dpi = 144)
 ```
+
+## Evidence checks before saving {#evidence-check}
+
+Preview with view_ggchord at the declared width/height and save with ggsave at matching dimensions. Check IDs, source strands, endpoint directions, selection reports, legend units and hidden-label reasons. A successful PNG does not certify font portability across PDF/SVG viewers. Keep complete source tables, display subsets, parameters, version and input hashes. Download the [asset/provenance record](../assets/ASSET-SOURCES.md).

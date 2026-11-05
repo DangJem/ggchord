@@ -1,0 +1,88 @@
+{
+  "date": "2026-11-06",
+  "version": "0.16.7.9000",
+  "status": "passed",
+  "runtime": {
+    "pages_in_separate_environments": 47,
+    "new_lessons_and_cases_in_fresh_processes": 11,
+    "first_lessons_in_fresh_processes": 3,
+    "first_lessons_across_stable_and_development": 6,
+    "documented_usages_matching_formals": 108,
+    "layer_mode_fixtures": 63,
+    "png_exports": 169,
+    "optional_genbank": "success with Biopython 1.85; L09137.2, 2686 bp, one annotation row",
+    "native_aa_centre_label_mode_renders": 2
+  },
+  "source_checks": {
+    "language_pairs": 59,
+    "exports": 130,
+    "formals": 1474,
+    "translated_prose_blocks": 875,
+    "result": "passed",
+    "individual_geom_compatibility_rows": 21
+  },
+  "browser": {
+    "result": "passed",
+    "surface": "local IAB preview",
+    "desktop": [
+      "circular-labels text, navigation and expanded code",
+      "parameter-atlas coord_chord expansion",
+      "English API curriculum"
+    ],
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "page_width": 390,
+      "checks": [
+        "readable headings and paragraphs",
+        "parameter details expand",
+        "page outline expands with nine anchors",
+        "chapter drawer includes new courses",
+        "search finds restriction-sites and navigates successfully"
+      ],
+      "viewport_restored": true
+    }
+  },
+  "actual_plot_review": [
+    "compareboneband",
+    "comparescalelinkcontinuous",
+    "comparecalloutfit",
+    "comparerestrictionelbow",
+    "comparetracktwo"
+  ],
+  "limitations": [
+    "47-page pass uses distinct environments; 11 focused lessons/cases and three first lessons additionally use fresh R processes",
+    "raw preview/save calls validate objects and arguments without writing files; actual 169 PNG exports run separately",
+    "existing Seqinfo warnings from optional interval-object adapters",
+    "pkgdown emits Pandoc --mathml deprecation warnings",
+    "testthat, package build/check, vignette knit and publication device matrix not run: no formal release authorization",
+    "no merge, push, deployment, tag or Release"
+  ],
+  "site": {
+    "result": "passed",
+    "paired_entries": 59,
+    "reference_topics": 95,
+    "checks": [
+      "generated code matches shared source",
+      "all local links and anchors",
+      "legacy routes",
+      "search coverage",
+      "paired language metadata",
+      "169 image checksums and dependency fingerprints"
+    ],
+    "scope": "local build only; no deployment"
+  },
+  "commands": [
+    "PATH=/tmp/ggchord-doc-python/bin:$PATH Rscript tools/documentation-plots.R",
+    "PATH=/tmp/ggchord-doc-python/bin:$PATH Rscript tools/check-documentation-lessons.R --write-outputs",
+    "Rscript --vanilla tools/check-documentation-lessons.R --page=<lesson>",
+    "python3 tools/check-first-lessons.py",
+    "python3 tools/check-documentation-versions.py --stable-library <temporary-library> --stable-archive <CRAN-source.tar.gz>",
+    "Rscript tools/check-layer-compatibility.R",
+    "Rscript tools/check-teaching-defaults.R",
+    "python3 tools/audit-teaching.py",
+    "python3 tools/check-documentation.py --source-only",
+    "python3 tools/build-website.py",
+    "python3 tools/check-documentation.py"
+  ]
+}

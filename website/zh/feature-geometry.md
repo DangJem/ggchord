@@ -8,6 +8,12 @@
 
 `gene_window` 保留裁剪与来源元数据。换用自己的 CDS 时，需要完整序列长度、匹配的 `accver`、一基闭区间 `start/end` 和证据支持的正负链；未知链用 `geom_feature()`。本页可在新 R 会话独立运行，需安装可选依赖 dplyr。
 
+## 用明确 ID 选出真实邻域 {#locus-selection}
+
+这里把来源 accession 与端点组合成工作流 target ID，不假称它是数据库基因 ID。find_ggchord_loci 按 ID 精确选取，再在生物学方向上下游各扩展 100 bp；负链上游向较大的源坐标扩展，未知/双向链需使用对称扩展。返回窗口可传给 focus_ggchord_data，截断标记说明是否触及完整序列边界。
+
+{{code:comparefindloci}}
+{{console:comparefindloci}}
 ## 三种箭头构造 {#arrow-heads}
 
 三图均为 9 × 4 英寸，使用相同输入、窗口和图层。为了看清肩部，三图共同显式设置 `arrow_head_width = 1.6`（默认 1），每次只改变 `arrow_head_style`。
@@ -26,6 +32,17 @@
 {{figure:comparegenetriangle}}
 
 `triangle` 将整个区间画成三角楔形，而不是给长方形箭身加箭头。不能把形状区别解释为不同功能或测量值。
+
+## 短特征放不下头部时 {#short-features}
+
+保留同一真实 integrase 与窗口，共同将请求头长设为 1.5，使区间相对请求头部变短。这里只改变 short_feature：auto 选择压缩的有向符号，wedge 使用楔形，block 使用无箭头的块。不要修改原始坐标把基因变长；无箭头显示也不表示源链未知。
+
+{{code:compareshortauto}}
+{{figure:compareshortauto}}
+{{code:compareshortwedge}}
+{{figure:compareshortwedge}}
+{{code:compareshortblock}}
+{{figure:compareshortblock}}
 
 ## 尺寸、短特征与预设 {#parameters}
 

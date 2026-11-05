@@ -117,7 +117,7 @@
     "api": "stat_ribbon_density",
     "parameters": "bins, weight",
     "modes": "A / B",
-    "page": "ribbons",
+    "page": "ribbon-statistics#density",
     "level": "advanced"
   },
   {
@@ -128,7 +128,7 @@
     "api": "stat_ribbon_bundle",
     "parameters": "min_bundle, group_by",
     "modes": "A / B",
-    "page": "ribbons",
+    "page": "ribbon-statistics#bundle",
     "level": "advanced"
   },
   {
@@ -238,7 +238,7 @@
     "api": "find_primer_bindings",
     "parameters": "set, circular",
     "modes": "DNA",
-    "page": "recognition",
+    "page": "primers#input",
     "level": "advanced"
   },
   {
@@ -249,7 +249,7 @@
     "api": "geom_primer",
     "parameters": "position",
     "modes": "C (bp)",
-    "page": "plasmids",
+    "page": "primers#primer-arcs",
     "level": "advanced"
   },
   {
@@ -271,7 +271,7 @@
     "api": "geom_restriction_site",
     "parameters": "leader, label_style, label_side",
     "modes": "C (bp)",
-    "page": "plasmids",
+    "page": "restriction-sites#restriction-labels",
     "level": "advanced"
   },
   {
@@ -360,6 +360,83 @@
     "parameters": "link_branch, link_branch_fraction",
     "modes": "A / B",
     "page": "chord-branches#branches",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "调整中心名称和长度",
+      "en": "Style centre names and lengths"
+    },
+    "api": "geom_seq_center_label",
+    "parameters": "name, length, separator, name_style, length_style",
+    "modes": "C",
+    "page": "circular-layers#center",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "固定标签方向与内外侧",
+      "en": "Set fixed label direction and side"
+    },
+    "api": "geom_feature_label",
+    "parameters": "label_orientation, label_side, label_rotation",
+    "modes": "A / B / C",
+    "page": "circular-labels#fixed-labels",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "自动标签缩放与省略",
+      "en": "Fit or abbreviate automatic labels"
+    },
+    "api": "geom_feature_label_repel",
+    "parameters": "label_fit, label_max_lines, external",
+    "modes": "A / B / C",
+    "page": "circular-labels#fitting",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "选择连续与分段角色标度",
+      "en": "Choose continuous and binned role scales"
+    },
+    "api": "scale_ribbon_fill_gradientn",
+    "parameters": "colours, values, limits, guide",
+    "modes": "A / B",
+    "page": "scale-families",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "诊断窗口和查询目录",
+      "en": "Inspect windows and built-in catalogs"
+    },
+    "api": "diagnose_ggchord",
+    "parameters": "plot, width, height; catalog: aliases",
+    "modes": "general",
+    "page": "workflow-tools",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "查看全部接口的主讲位置",
+      "en": "Locate every API lesson"
+    },
+    "api": "ggchord",
+    "parameters": "all exported APIs",
+    "modes": "general",
+    "page": "api-curriculum",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "查找参数类型与完整默认值",
+      "en": "Find parameter types and full defaults"
+    },
+    "api": "ggchord",
+    "parameters": "all public formals",
+    "modes": "general",
+    "page": "parameter-atlas",
     "level": "advanced"
   }
 ]

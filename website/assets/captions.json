@@ -426,5 +426,253 @@
   "comparetrackthin": {
     "zh": "同一 pUC19 GC 数据，只将 tile 带宽从 10 mm 改为 4 mm。",
     "en": "Same pUC19 GC values: only tile band width changes from 10 mm to 4 mm."
+  },
+  "comparecenter": {
+    "zh": "中心名称与长度使用独立的默认文字样式。",
+    "en": "Centre name and length use independent default text styles."
+  },
+  "comparecenternolength": {
+    "zh": "只隐藏中心长度，名称保留。",
+    "en": "Hide only centre length; retain the name."
+  },
+  "comparecenterstyle": {
+    "zh": "只增大中心名称字号，长度样式不变。",
+    "en": "Change only centre name size; length style stays fixed."
+  },
+  "comparebonedouble": {
+    "zh": "相同 pUC19 的双线骨架。",
+    "en": "Double backbone on the same pUC19."
+  },
+  "comparebonesingle": {
+    "zh": "只改为 single。",
+    "en": "Change only to single."
+  },
+  "compareboneband": {
+    "zh": "同一 pUC19，只将骨架样式改为 band；这是修复后实际渲染的骨架。",
+    "en": "Same pUC19 with only backbone style changed to band, rendered after the confirmed fix."
+  },
+  "comparebonegap": {
+    "zh": "双线间距从 0.025 改为 0.05。",
+    "en": "Double-line gap changes from 0.025 to 0.05."
+  },
+  "comparecirclecounter": {
+    "zh": "同一圆图，坐标改为逆时针增加。",
+    "en": "Same circle, with coordinates increasing counterclockwise."
+  },
+  "comparecirclegap": {
+    "zh": "只将圆图开口设为 25 度。",
+    "en": "Set only the circular opening to 25 degrees."
+  },
+  "comparefixedfeature": {
+    "zh": "固定标签沿特征方向放置。",
+    "en": "Fixed labels follow feature direction."
+  },
+  "comparefixedhorizontal": {
+    "zh": "只把固定文字改为横排。",
+    "en": "Change only fixed text orientation to horizontal."
+  },
+  "comparefixedinside": {
+    "zh": "只把固定标签放在内侧。",
+    "en": "Change only fixed label side to inside."
+  },
+  "comparefixedrotate": {
+    "zh": "只给固定标签增加 30 度旋转。",
+    "en": "Add only a 30-degree fixed-label rotation."
+  },
+  "comparefeaturefit": {
+    "zh": "同一批注释，feature 内部优先标签布局。",
+    "en": "Same annotations with feature-first label placement."
+  },
+  "compareradialfit": {
+    "zh": "只改为 radial 布局。",
+    "en": "Change only layout to radial."
+  },
+  "compareautofit": {
+    "zh": "只改为 auto 布局。",
+    "en": "Change only layout to auto."
+  },
+  "comparecalloutfit": {
+    "zh": "只改为 callout 布局。",
+    "en": "Change only layout to callout."
+  },
+  "compareshrinkfit": {
+    "zh": "只将适配策略改为 shrink，字号下限仍为默认 1.5。",
+    "en": "Change only fitting to shrink; retain the default 1.5 minimum size."
+  },
+  "comparewrapfit": {
+    "zh": "只指定 14 字符换行宽度，标签文字仍由源名称和坐标组成。",
+    "en": "Set only a 14-character wrap width; text remains source names plus coordinates."
+  },
+  "comparepositionidentity": {
+    "zh": "原始同一位置上的实际重叠注释。",
+    "en": "Actual overlapping annotations at their original common placement."
+  },
+  "comparepositionstack": {
+    "zh": "只替换共享 Position，特征和标签一起分层。",
+    "en": "Replace only the shared Position; features and labels follow the same lanes."
+  },
+  "compareprimerbetween": {
+    "zh": "同三条真实搜索命中，引物弧线位于双线之间。",
+    "en": "Same three computed bindings, with primer arcs between backbone lines."
+  },
+  "compareprimeroutside": {
+    "zh": "只把引物弧线移到外侧。",
+    "en": "Move only primer arcs outside."
+  },
+  "compareprimerinside": {
+    "zh": "只把引物弧线移到内侧。",
+    "en": "Move only primer arcs inside."
+  },
+  "compareprimerwidth": {
+    "zh": "只将引物弧宽从 0.026 改为 0.05。",
+    "en": "Change only primer arc width from 0.026 to 0.05."
+  },
+  "compareprimerlabel": {
+    "zh": "引物文字默认包含真实结合范围。",
+    "en": "Primer labels include actual binding ranges by default."
+  },
+  "compareprimernolocation": {
+    "zh": "只隐藏标签中的范围，弧线仍对应完整结合区间。",
+    "en": "Hide only range text; arcs still encode complete binding intervals."
+  },
+  "compareprimerlabelinside": {
+    "zh": "只把引物文字放到内侧。",
+    "en": "Move only primer text inside."
+  },
+  "comparerestrictionradial": {
+    "zh": "同一批真实酶切命中，默认 radial 引线。",
+    "en": "Same computed restriction sites with default radial leaders."
+  },
+  "comparerestrictionelbow": {
+    "zh": "只把引线改为 elbow。",
+    "en": "Change only leader routing to elbow."
+  },
+  "comparerestrictionstraight": {
+    "zh": "只把引线改为 straight。",
+    "en": "Change only leader routing to straight."
+  },
+  "comparerestrictionenzyme": {
+    "zh": "只显示酶名，切点坐标仍保留。",
+    "en": "Show only enzyme names; retain cut coordinates in data."
+  },
+  "comparerestrictionposition": {
+    "zh": "只显示位置，原始酶名不丢弃。",
+    "en": "Show only positions; source enzyme names are retained."
+  },
+  "comparerestrictionorder": {
+    "zh": "只将文字顺序固定为位置后接酶名。",
+    "en": "Change only text order to position then enzyme."
+  },
+  "comparerestrictioninside": {
+    "zh": "只把酶切文字放到内侧。",
+    "en": "Move only restriction labels inside."
+  },
+  "compareshortauto": {
+    "zh": "同一真实 CDS，请求较长头部以观察 auto 回退。",
+    "en": "Same observed CDS with an oversized requested head to demonstrate auto fallback."
+  },
+  "compareshortwedge": {
+    "zh": "同一真实 CDS，请求较长头部以观察 wedge 回退。",
+    "en": "Same observed CDS with an oversized requested head to demonstrate wedge fallback."
+  },
+  "compareshortblock": {
+    "zh": "同一真实 CDS，请求较长头部以观察 block 回退。",
+    "en": "Same observed CDS with an oversized requested head to demonstrate block fallback."
+  },
+  "compareseqlabelarc": {
+    "zh": "默认序列文字沿弧排布。",
+    "en": "Default sequence text follows each arc."
+  },
+  "compareseqlabelhorizontal": {
+    "zh": "只把序列文字改为横排。",
+    "en": "Change only sequence text orientation to horizontal."
+  },
+  "compareseqlabelrotation": {
+    "zh": "沿弧文字只增加 30 度旋转。",
+    "en": "Add only 30 degrees to arc-oriented sequence text."
+  },
+  "compareregioninside": {
+    "zh": "用实际 query 比对区间高亮内侧。",
+    "en": "Highlight the observed query interval inside."
+  },
+  "compareregionoutside": {
+    "zh": "只把同一区间高亮移到外侧。",
+    "en": "Move only the same interval highlight outside."
+  },
+  "comparescalegradient": {
+    "zh": "相同真实 HSP 的连续 Identity 渐变。",
+    "en": "Continuous identity gradient for the same observed HSPs."
+  },
+  "comparescalesteps": {
+    "zh": "只替换为显式分段填色，原始 identity 不变。",
+    "en": "Replace only the fill scale with explicit steps; source identity stays fixed."
+  },
+  "comparescalelinkcontinuous": {
+    "zh": "同一批真实 HSP 中点，以 identity 映射颜色、透明度与线宽。",
+    "en": "Same observed HSP midpoints with identity mapped to colour, opacity and width."
+  },
+  "comparethememinimal": {
+    "zh": "同一骨架与默认映射，minimal 主题只改非数据外观。",
+    "en": "Same backbones and default mapping; minimal theme changes non-data appearance."
+  },
+  "comparethemedark": {
+    "zh": "只替换为 dark 主题，序列与映射保留。",
+    "en": "Change only to the dark theme, retaining sequences and mappings."
+  },
+  "comparedensityfour": {
+    "zh": "真实 HSP，两端中点各分四箱；一条输入仍是一条输出带。",
+    "en": "Observed HSPs with four midpoint bins per endpoint; one ribbon per input remains."
+  },
+  "comparedensityeight": {
+    "zh": "只将 bins 从 4 改为 8，局部计数的分组尺度改变。",
+    "en": "Change only bins from 4 to 8, altering the grouping scale of local counts."
+  },
+  "comparebundle": {
+    "zh": "同一真实 HSP 以四箱显式聚束，展示范围不是重新比对结果。",
+    "en": "Same observed HSPs explicitly bundled into four bins; envelopes are not new alignments."
+  },
+  "comparebandwidth": {
+    "zh": "只将实际 band 骨架宽度从 0.035 改为 0.07。",
+    "en": "Change only actual band width from 0.035 to 0.07."
+  },
+  "comparefeaturearrow": {
+    "zh": "同六条真实注释，通用 arrow 几何。",
+    "en": "Same six source annotations with generic arrow geometry."
+  },
+  "comparefeatureblock": {
+    "zh": "只改为 block，不再用箭头表示方向，原始链保留。",
+    "en": "Change only shape to block; source strand is retained without a directional arrow."
+  },
+  "comparefeaturepreset": {
+    "zh": "质粒预设会共同改变默认头部、宽度及放置；这是预设示例，不是单参数对照。",
+    "en": "Plasmid preset changes head, width and placement defaults; this is a preset example, not a single-parameter contrast."
+  },
+  "compareexternaloff": {
+    "zh": "只禁止外侧回退，无法放下的名称可隐藏，特征仍在。",
+    "en": "Disable only exterior fallback; unresolved names may hide while features remain."
+  },
+  "compareellipsisfit": {
+    "zh": "保持 14 字符适配宽度，只改用 ellipsis；完整源名称仍保留。",
+    "en": "Keep the 14-character width and change only fitting to ellipsis; full source names remain."
+  },
+  "compareprimeroffset": {
+    "zh": "与 outside 基线相比只把 arc_offset 从 0.045 改为 0.09。",
+    "en": "Relative to outside baseline, only arc_offset changes from 0.045 to 0.09."
+  },
+  "compareregionwidth": {
+    "zh": "同一真实 query 区间，只把宽度从 0.08 改为 0.14。",
+    "en": "Same observed query interval; only width changes from 0.08 to 0.14."
+  },
+  "compareregionoffset": {
+    "zh": "只把 region_offset 从 0 改为 0.1，区间不变。",
+    "en": "Change only region_offset from 0 to 0.1, retaining the interval."
+  },
+  "comparetracktwo": {
+    "zh": "同一 GC 窗口分别用数值高度和颜色编码，显式声明两条轨道。",
+    "en": "Same GC windows encoded by height and colour in two explicitly named tracks."
+  },
+  "comparetrackorder": {
+    "zh": "只改变颜色轨道的 order，轨道顺序交换，GC 值不变。",
+    "en": "Change only the colour track order, swapping bands while GC values stay fixed."
   }
 }

@@ -2,6 +2,12 @@ Start with one complete circular backbone using bundled pUC19.
 
 ## Draw the backbone and centre label {#draw}
 
+Run this lesson in a fresh R session after installing the version described on the [installation page](installation.html).
+
+```r
+library(ggchord)
+```
+
 {{code:firstcircle}}
 
 {{figure:firstcircle}}

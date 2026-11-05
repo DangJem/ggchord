@@ -1,0 +1,68 @@
+[
+  {
+    "page": "chord",
+    "level": "L4",
+    "question": "四条完整序列中比对端点附近的原始 CDS 分布",
+    "evidence": {
+      "source": "website/en/chord.md",
+      "translation": "website/zh/chord.md",
+      "provenance": "website/ASSET-SOURCES.md",
+      "execution": "tools/teaching-audit/lesson-execution.json",
+      "figures": [
+        "showcasechord"
+      ]
+    },
+    "review": "Research question, source/permission boundary, unchanged original records, display selection, layer choices, export dimensions and inference limits explicitly explained",
+    "scope": "Integrated source-backed case; does not certify all formals or molecular recognition experimentally"
+  },
+  {
+    "page": "collinear",
+    "level": "L4",
+    "question": "按源坐标比较四基因组的局部关系和显示方向",
+    "evidence": {
+      "source": "website/en/collinear.md",
+      "translation": "website/zh/collinear.md",
+      "provenance": "website/ASSET-SOURCES.md",
+      "execution": "tools/teaching-audit/lesson-execution.json",
+      "figures": [
+        "showcasecollinear"
+      ]
+    },
+    "review": "Research question, source/permission boundary, unchanged original records, display selection, layer choices, export dimensions and inference limits explicitly explained",
+    "scope": "Integrated source-backed case; does not certify all formals or molecular recognition experimentally"
+  },
+  {
+    "page": "plasmids",
+    "level": "L4",
+    "question": "pUC19 与密集 pETDuet-1 的来源注释、识别及可读呈现",
+    "evidence": {
+      "source": "website/en/plasmids.md",
+      "translation": "website/zh/plasmids.md",
+      "provenance": "website/ASSET-SOURCES.md",
+      "execution": "tools/teaching-audit/lesson-execution.json",
+      "figures": [
+        "plasmid",
+        "showcaseplasmid"
+      ]
+    },
+    "review": "Research question, source/permission boundary, unchanged original records, display selection, layer choices, export dimensions and inference limits explicitly explained",
+    "scope": "Integrated source-backed case; does not certify all formals or molecular recognition experimentally"
+  },
+  {
+    "page": "real-data",
+    "level": "L4",
+    "question": "从原始 FASTA/GFF3/BLAST 到可追踪序列比较",
+    "evidence": {
+      "source": "website/en/real-data.md",
+      "translation": "website/zh/real-data.md",
+      "provenance": "website/ASSET-SOURCES.md",
+      "execution": "tools/teaching-audit/lesson-execution.json",
+      "figures": [
+        "realchord",
+        "reallinear"
+      ]
+    },
+    "review": "Research question, source/permission boundary, unchanged original records, display selection, layer choices, export dimensions and inference limits explicitly explained",
+    "scope": "Integrated source-backed case; does not certify all formals or molecular recognition experimentally"
+  }
+]

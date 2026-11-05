@@ -83,3 +83,17 @@ bins 的 gc 在 0–1 之间，每行对应一个实际窗口；最后窗口可�
 ```r
 ggsave("pUC19-tracks.png", p_multitrack, width = 9, height = 8, units = "in", dpi = 144)
 ```
+
+## 两条独立轨道与显示顺序 {#independent-bands}
+
+同一 GC 既可用柱高也可用颜色编码。这里明确声明 gc_height 和 gc_colour 两个 ID；高度值域 0–1 与颜色值域 0–1 分别设置，物理带宽不同。第二幅只把颜色轨道 order 从 2 改为 0，使其靠近骨架。order 是有限数值优先级，不是测量值，编号不必从 1 开始；同优先级按 ID 排序。相同 ID 的多层需一致的 side/order/width/gap，跨独立窗口不会隐式连接折线。
+
+{{code:comparemultitrackdata}}
+{{code:comparetracktwo}}
+{{figure:comparetracktwo}}
+{{code:comparetrackorder}}
+{{figure:comparetrackorder}}
+
+## DNA 窗口与折线边界 {#window-policy}
+
+此处 GC 为 `mean(bases %in% c("G", "C"))`：模糊碱基仍计入分母、对分子贡献为零；末窗口使用实际碱基数。当前 pUC19 不含模糊碱基，换输入时应明确并记录策略，不能假定自动忽略。局部聚焦裁剪区间并保留原汇总，不会重新计算缩短窗口的 GC。折线按输入样本及分组连接，`closed` 显式控制圆周闭合，`gap` 属于轨道的物理间隔。不能用闭合线暗示被省略源窗口之间存在连续观测。

@@ -42,3 +42,17 @@ Colour may identify sequences, feature classes or alignment identity. Legends sh
 {{terms}}
 
 <span id="check-result"></span>Choose a plotting module and start with default backbones. Explore parameters, labels and export settings once you have a figure to compare.
+
+## Fit, limits and clipping {#coordinate-controls}
+
+These controls act on the complete view after sequence geometry. They do not change source coordinates or infer missing lengths. See the [parameter atlas](parameter-atlas.html) for each coordinate signature.
+
+| Control | Default | Practical effect |
+| --- | --- | --- |
+| `fit` | `"labels"` | `labels` includes measured labels; `geometry` fits geometry only; `manual` requires xlim and ylim. Recheck after changing label or export size |
+| `xlim` / `ylim` | `NULL` | Explicit user limits take priority over automatic fitting; they can omit content |
+| `ratio` | `1` | Fixed y/x aspect; changing it affects visual geometry, not biological distance |
+| `clip` | `"off"` | `"on"` clips drawing to the panel; it does not remove source records |
+| `expand` | `FALSE` | Additional ggplot2 expansion; automatic fitting already adds a small margin |
+
+A fitted panel cannot guarantee that every label remains readable. Inspect the final target size and diagnostics; avoid solving a source-coordinate mistake by widening limits.

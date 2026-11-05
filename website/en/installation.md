@@ -20,6 +20,18 @@ stopifnot(as.character(packageVersion("ggchord")) == "0.16.7.9000")
 
 Install dependencies first, then use a fresh R session. A version number alone cannot distinguish commits; the site `build-manifest.json` and audit record retain source SHA. Readers using CRAN should use the [0.16.6 offline tutorials and reference](https://stat.ethz.ch/CRAN/web/packages/ggchord/index.html), and avoid development protein examples and `nonadjacent_linewidth`.
 
+### Verified differences {#verified-versions}
+
+The three introductory plotting sequences were actually rendered in six fresh R processes: each lesson on CRAN 0.16.6 and on this development checkout. This verifies the basic plotting calls, not identical appearances or all later lessons. The following probes were also run against both namespaces.
+
+| Capability | 0.16.6 | 0.16.7.9000 |
+| --- | --- | --- |
+| `geom_link_ribbon(nonadjacent_linewidth=...)` | Unavailable | Available |
+| Explicit `read_fasta_lengths(sequence_unit=...)` | Unavailable | Available |
+| Bundled native protein data | Unavailable | Available |
+
+The stable source archive SHA256 and exact process results are retained in the [version audit](../assets/source/tools/teaching-audit/version-check.json).
+
 ### Source downloads {#source}
 
 Source packages are available from [CRAN](https://cran.r-project.org/web/packages/ggchord/index.html) and [GitHub v0.16.6](https://github.com/DangJem/ggchord/releases/tag/v0.16.6).

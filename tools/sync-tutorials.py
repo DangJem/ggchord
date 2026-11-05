@@ -53,6 +53,7 @@ knitr::opts_chunk$set(eval = FALSE, collapse = TRUE, comment = "#>")
             target = f'https://dangjem.github.io/ggchord/{lang}/{slug}.html'
             return f'[{label}]({target}' + (f'#{anchor}' if anchor else '') + ')'
         body = re.sub(r'\[([^\]]+)\]\(([a-z-]+)\.html(?:#([^)]*))?\)', lesson_link, body)
+        body = body.replace('(../assets/source/', f'(https://dangjem.github.io/ggchord/assets/source/')
         text += f'\n## {p["title"][lang]} {{#{p["slug"]}}}\n\n'+body+'\n'
 
     # R chunks share byte-identical code in both languages; never knit here.

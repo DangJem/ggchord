@@ -398,5 +398,77 @@
       "en": "Shared endpoint branches and point links"
     },
     "group": "article"
+  },
+  {
+    "slug": "circular-layers",
+    "title": {
+      "zh": "圆图骨架、中心文字与注释轨道",
+      "en": "Circular backbones, centre text and annotation lanes"
+    },
+    "group": "article"
+  },
+  {
+    "slug": "circular-labels",
+    "title": {
+      "zh": "圆图固定标签与自动适配",
+      "en": "Fixed circular labels and automatic fitting"
+    },
+    "group": "article"
+  },
+  {
+    "slug": "primers",
+    "title": {
+      "zh": "识别引物、弧线与文字",
+      "en": "Primer recognition, arcs and labels"
+    },
+    "group": "article"
+  },
+  {
+    "slug": "restriction-sites",
+    "title": {
+      "zh": "限制酶搜索、切点与标签",
+      "en": "Restriction searches, cuts and labels"
+    },
+    "group": "article"
+  },
+  {
+    "slug": "scale-families",
+    "title": {
+      "zh": "按角色选择标度、图例与主题",
+      "en": "Choose scales, guides and themes by role"
+    },
+    "group": "guide"
+  },
+  {
+    "slug": "ribbon-statistics",
+    "title": {
+      "zh": "连接密度与显式聚束",
+      "en": "Link density and explicit bundling"
+    },
+    "group": "guide"
+  },
+  {
+    "slug": "parameter-atlas",
+    "title": {
+      "zh": "完整参数与默认值图谱",
+      "en": "Complete parameters and defaults atlas"
+    },
+    "group": "reference"
+  },
+  {
+    "slug": "workflow-tools",
+    "title": {
+      "zh": "按任务使用工作流与诊断工具",
+      "en": "Workflow and diagnostic tools by task"
+    },
+    "group": "guide"
+  },
+  {
+    "slug": "api-curriculum",
+    "title": {
+      "en": "API teaching map",
+      "zh": "全部 API 教学映射"
+    },
+    "group": "reference"
   }
 ]

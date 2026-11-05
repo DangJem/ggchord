@@ -17,3 +17,15 @@ Sequence names identify entire backbones. Gene names identify individual interva
 Find the red integrase arrow on the green `OQ646790.1` backbone. The new label comes from `anno`. Here, `label_radial_offset = 0.10` puts a little more radial distance between the text and arrow. When several annotations are close together, use `geom_gene_label_repel()` to spread their text. See [dense labels](labels.html#layout).
 
 Continue to the [four-sequence case study](chord.html) to combine these adjustments.
+
+## Sequence text orientation, rotation and alignment {#sequence-parameters}
+
+Use the same four complete sequences, changing only orientation or extra rotation. Arc rotates whole text along the local tangent rather than placing individual letters on an arc. Horizontal keeps text horizontal with outward justification and ignores extra seq_label_rotation. Radius defaults to 1, rotation to NULL (0), hjust/vjust to NULL resolved by orientation, and check_overlap to FALSE. Explicit radius is invalid in collinear mode. Labels overrides text, not accver. Change hjust or vjust individually and inspect at fixed dimensions.
+
+{{code:comparefinishchord}}
+{{code:compareseqlabelarc}}
+{{figure:compareseqlabelarc}}
+{{code:compareseqlabelhorizontal}}
+{{figure:compareseqlabelhorizontal}}
+{{code:compareseqlabelrotation}}
+{{figure:compareseqlabelrotation}}

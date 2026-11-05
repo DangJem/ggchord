@@ -4,6 +4,25 @@ import csv, json, re, subprocess, hashlib
 from collections import Counter
 from documentation_lib import ROOT, WEB, PAGES, snippets, expand
 
+def teaching_family(name):
+    if name=='ggchord': return 'constructor'
+    if name.startswith('coord_'): return 'coordinates'
+    if name.startswith('scale_'): return 'scales'
+    if name.startswith('guide_'): return 'guides'
+    if name.startswith('theme_'): return 'themes'
+    if name.startswith('position_'): return 'positions'
+    if 'label' in name and name.startswith('geom_'): return 'labels'
+    if name.startswith('geom_track'): return 'tracks'
+    if name.startswith(('geom_link','stat_ribbon')): return 'links/statistics'
+    if name=='geom_seq': return 'backbones'
+    if name=='geom_gene': return 'genes'
+    if name.startswith('geom_feature'): return 'features'
+    if name.startswith('geom_primer'): return 'primers'
+    if name.startswith('geom_restriction'): return 'restriction sites'
+    if name.startswith('geom_seq_'): return 'axes/regions/breaks'
+    if name in ['view_ggchord','diagnose_ggchord','export_ggchord_layout','get_chord_layout','optimize_ggchord_layout']: return 'output/diagnostics'
+    return 'data/workflows' if '_ggchord_' in name or name.startswith(('read_','as_','find_','filter_','list_','primer_')) else 'upstream helpers'
+
 def main():
     revision = subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
     version = re.search(r'^Version: (.+)$',(ROOT/'DESCRIPTION').read_text(),re.M)[1]
@@ -14,6 +33,7 @@ def main():
     rd = {}
     for path in (ROOT/'man').glob('*.Rd'):
         for alias in re.findall(r'\\alias\{([^}]+)\}',path.read_text()): rd[alias] = str(path.relative_to(ROOT))
+    contracts={(r['api'],r['parameter']):r for r in json.loads((ROOT/'tools/teaching-audit/parameter-contracts.json').read_text())}
     reviews=json.loads((WEB/'teaching-reviews.json').read_text())
     source_aliases={}
     for path in (ROOT/'R').glob('*.R'):
@@ -32,7 +52,7 @@ def main():
         chunk_ids=[k for k,v in chunks.items() if re.search(pattern,v)]
         # Deliberately conservative: occurrence alone never proves L2 or execution.
         level='L1' if evidence or mentions else 'L0'
-        row=dict(api=name,owner=e['owner'],alias=source_aliases.get(name,''),same_object_as=e['alias'],ownership='ggchord' if e['owner']=='ggchord' else 'upstream/object',family=name.split('_')[0],rd=rd.get(name,''),level=level,
+        row=dict(api=name,owner=e['owner'],alias=source_aliases.get(name,''),same_object_as=e['alias'],ownership='ggchord' if e['owner']=='ggchord' else 'upstream/object',family=teaching_family(name),rd=rd.get(name,''),level=level,
             pages=';'.join(evidence),mentions=';'.join(mentions),snippets=';'.join(chunk_ids),
             validation='static; teaching depth and mode require review',
             gap='Needs semantic review of inputs, effects, constraints and independent execution',
@@ -42,12 +62,18 @@ def main():
         row['review_reason']=review['reason'] if review else ''
         if review:
             row['level']=review['level']
-            row['validation']='semantic review; runtime logs separate'
+            row['validation']='explicit semantic review; see lesson-execution.json, layer-compatibility.csv and version-check.json for runtime scope'
+            row['gap']='Family reference exemption' if e['owner']!='ggchord' else ('Spelling alias: use '+review.get('alias_of','canonical') if review.get('alias_of') else '')
+        row['target_lesson']=(review['page']+'#'+review['anchor']) if review else ''
+        row['key_parameters']=';'.join(review['parameters']) if review else ''
+        row['case']=review.get('case','') if review else ''
+        row['figures']=';'.join(re.findall(r'\{\{figure:([a-z]+)\}\}',pages.get(review['page'],''))) if review else ''
         rows.append(row)
         for parameter,default in (e['parameters'] or {}).items():
-            params.append(dict(api=name,parameter=parameter,default=default,priority='standard ggplot2 interface' if parameter in ('mapping','data','position','show.legend','inherit.aes','...') else 'review by task',rd=row['rd'],pages=row['pages'],
+            contract=contracts[(name,parameter)]
+            params.append(dict(api=name,parameter=parameter,default=default,type=contract['type'],constraint=contract['constraint'],modes=row['modes'],lesson=(review.get('page','')+'#'+review.get('anchor','')) if review else '',priority='standard ggplot2 interface' if parameter in ('mapping','data','position','show.legend','inherit.aes','...') else ('core learning' if review and parameter in review['parameters'] and review['level']=='L3' else ('common advanced' if name.startswith(('geom_','coord_','position_','scale_','theme_')) else 'specialist by task')),rd=row['rd'],pages=row['pages'],
                 level=review['level'] if review and parameter in review['parameters'] else ('L1' if any(re.search(r'(?<![\w.])'+re.escape(parameter)+r'(?![\w.])', expanded_pages[p]) for p in evidence+mentions) else 'L0'),
-                validation='formal inspected; parameter teaching not certified',version=version,source_sha=revision))
+                validation='current formals and Rd contract; L3 applies only to explicitly reviewed comparison parameters',version=version,source_sha=revision))
     out=ROOT/'tools/teaching-audit';out.mkdir(exist_ok=True)
     for filename, data in [('teaching-api-v0.16.7.csv',rows),('teaching-parameters-v0.16.7.csv',params)]:
         with (out/filename).open('w') as f:
@@ -55,7 +81,7 @@ def main():
     sources=[ROOT/'NAMESPACE',ROOT/'DESCRIPTION',ROOT/'tools/documentation-examples.R',*sorted((ROOT/'R').glob('*.R')),*sorted((ROOT/'man').glob('*.Rd')),*sorted((WEB/'en').glob('*.md')),*sorted((WEB/'zh').glob('*.md'))]
     summary={'source_sha256':{str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in sources},'source_sha':revision,'version':version,'exports':len(rows),'parameters':len(params),'owned':sum(r['ownership']=='ggchord' for r in rows),'upstream_or_object':sum(r['ownership']!='ggchord' for r in rows),
         'levels':dict(Counter(r['level'] for r in rows)),
-        'limitation':'L2/L3 use explicit teaching-reviews.json judgments. Other L0/L1 rows are conservative evidence floors, not final depth certification. Runtime results recorded separately.'}
+        'limitation':'L2/L3 use explicit teaching-reviews.json judgments. Upstream/object L1 and spelling aliases have explicit family exemptions. Parameter occurrence gives reference coverage only. L3 is limited to reviewed key behaviors; case-level L4 reviews are separate in case-reviews.json. Runtime scope is recorded separately.'}
     (out/'teaching-summary-v0.16.7.json').write_text(json.dumps(summary,ensure_ascii=False,indent=2)+'\n')
     print(json.dumps({k:v for k,v in summary.items() if k!='source_sha256'},ensure_ascii=False,indent=2))
 if __name__=='__main__':main()

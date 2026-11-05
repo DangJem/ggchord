@@ -14,8 +14,8 @@ Choose a lesson by task. A means chord, B collinear, C single-sequence circular.
 | Colour by identity | [`scale_ribbon_fill_stepsn()`](reference/scale_ribbon_fill_stepsn.html) | `ribbon_fill` | A / B | [Basics](adjustments.html) |
 | Use categories and legends | [`scale_seq_colour_manual()`](reference/scale_seq_colour_manual.html) | `values, guide` | A / B / C | [Advanced](styling.html) |
 | Filter, deduplicate and merge HSPs | [`filter_ggchord_ribbons()`](reference/filter_ggchord_ribbons.html) | `min_pident, min_length` | A / B | [Advanced](ribbons.html) |
-| Summarize link density | [`stat_ribbon_density()`](reference/stat_ribbon_density.html) | `bins, weight` | A / B | [Advanced](ribbons.html) |
-| Bundle existing links | [`stat_ribbon_bundle()`](reference/stat_ribbon_bundle.html) | `min_bundle, group_by` | A / B | [Advanced](ribbons.html) |
+| Summarize link density | [`stat_ribbon_density()`](reference/stat_ribbon_density.html) | `bins, weight` | A / B | [Advanced](ribbon-statistics.html#density) |
+| Bundle existing links | [`stat_ribbon_bundle()`](reference/stat_ribbon_bundle.html) | `min_bundle, group_by` | A / B | [Advanced](ribbon-statistics.html#bundle) |
 | Align sequences left, center or right | [`coord_collinear()`](reference/coord_collinear.html) | `align` | B | [Basics](collinear-layout.html#alignment) |
 | Anchor to common loci | [`coord_collinear()`](reference/coord_collinear.html) | `anchor` | B | [Advanced](collinear-layout.html#anchor) |
 | Choose display directions automatically | [`coord_collinear()`](reference/coord_collinear.html) | `orientation, min_support` | B | [Advanced](collinear-layout.html#orientation) |
@@ -25,10 +25,10 @@ Choose a lesson by task. A means chord, B collinear, C single-sequence circular.
 | Rotate a circular view | [`coord_circular()`](reference/coord_circular.html) | `rotation, direction, gap, fit` | C | [Basics](plasmid-tuning.html) |
 | Stack feature annotations | [`position_feature_stack()`](reference/position_feature_stack.html) | `spacing, side, base_position` | A / B / C | [Advanced](annotations.html) |
 | Arrange feature labels automatically | [`geom_feature_label_repel()`](reference/geom_feature_label_repel.html) | `label_layout, label_fit, label_min_size` | A / B / C (conditional) | [Advanced](labels.html) |
-| Find primer bindings | [`find_primer_bindings()`](reference/find_primer_bindings.html) | `set, circular` | DNA | [Advanced](recognition.html) |
-| Draw primers and labels | [`geom_primer()`](reference/geom_primer.html) | `position` | C (bp) | [Advanced](plasmids.html) |
+| Find primer bindings | [`find_primer_bindings()`](reference/find_primer_bindings.html) | `set, circular` | DNA | [Advanced](primers.html#input) |
+| Draw primers and labels | [`geom_primer()`](reference/geom_primer.html) | `position` | C (bp) | [Advanced](primers.html#primer-arcs) |
 | Search and filter restriction sites | [`find_restriction_sites()`](reference/find_restriction_sites.html) | `methylation, enzymes` | DNA | [Advanced](recognition.html#restriction) |
-| Adjust restriction label leaders | [`geom_restriction_site()`](reference/geom_restriction_site.html) | `leader, label_style, label_side` | C (bp) | [Advanced](plasmids.html) |
+| Adjust restriction label leaders | [`geom_restriction_site()`](reference/geom_restriction_site.html) | `leader, label_style, label_side` | C (bp) | [Advanced](restriction-sites.html#restriction-labels) |
 | Draw GC bars and lines | [`geom_track_bar()`](reference/geom_track_tile.html) | `track_value, baseline` | A / B / C | [Advanced](tracks.html) |
 | Draw a tile colour band | [`geom_track_tile()`](reference/geom_track_tile.html) | `track_fill, position` | A / B / C | [Advanced](tracks.html#tile) |
 | Set track width and order | [`position_track()`](reference/position_track.html) | `track, side, order, width, gap` | A / B / C | [Advanced](tracks.html#sharing) |
@@ -37,6 +37,13 @@ Choose a lesson by task. A means chord, B collinear, C single-sequence circular.
 | Preview and export publication figures | [`view_ggchord()`](reference/view_ggchord.html) | `width, height, units` | general | [Basics](output.html) |
 | Diagnose and export layout | [`export_ggchord_layout()`](reference/export_ggchord_layout.html) | `plot` | general | [Advanced](faq.html) |
 | Share a trunk at equal endpoints | [`geom_link_ribbon()`](reference/geom_link_ribbon.html) | `link_branch, link_branch_fraction` | A / B | [Advanced](chord-branches.html#branches) |
+| Style centre names and lengths | [`geom_seq_center_label()`](reference/geom_seq_center_label.html) | `name, length, separator, name_style, length_style` | C | [Advanced](circular-layers.html#center) |
+| Set fixed label direction and side | [`geom_feature_label()`](reference/geom_feature_label.html) | `label_orientation, label_side, label_rotation` | A / B / C | [Advanced](circular-labels.html#fixed-labels) |
+| Fit or abbreviate automatic labels | [`geom_feature_label_repel()`](reference/geom_feature_label_repel.html) | `label_fit, label_max_lines, external` | A / B / C | [Advanced](circular-labels.html#fitting) |
+| Choose continuous and binned role scales | [`scale_ribbon_fill_gradientn()`](reference/scale_ribbon_fill_stepsn.html) | `colours, values, limits, guide` | A / B | [Advanced](scale-families.html) |
+| Inspect windows and built-in catalogs | [`diagnose_ggchord()`](reference/diagnose_ggchord.html) | `plot, width, height; catalog: aliases` | general | [Advanced](workflow-tools.html) |
+| Locate every API lesson | [`ggchord()`](reference/ggchord.html) | `all exported APIs` | general | [Advanced](api-curriculum.html) |
+| Find parameter types and full defaults | [`ggchord()`](reference/ggchord.html) | `all public formals` | general | [Advanced](parameter-atlas.html) |
 
 ## Three independent learning paths {#paths}
 

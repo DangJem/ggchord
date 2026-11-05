@@ -52,6 +52,8 @@ PAF 提供两端全长和区间。先选出 mapq ≥ 30 的比对，再由两端
 保留。这里需要所选 Python 已安装 Biopython；函数不自动安装依赖。
 `unsupported = "report"` 将不支持的位置记入报告，不把远端或复杂位置猜成区间。
 
+本例已在启用 Python Biopython 1.85 的环境重跑，实际返回 L09137.2、2686 bp 及一行注释。可在独立文档环境使用对应 Python 的 `python3 -m pip install biopython` 安装，并在启动 R 前将其可执行文件加入 PATH。可选依赖导致跳过或返回 NULL 时，不应记作导入成功。
+
 ## 可选的区间对象 {#ranges}
 
 第一段把序列 a 上的 10–30 bp 转成特征表。第二段把 a 上的 10–30 bp 与 b 上的 40–60 bp 连成一条记录。GRanges 表示一个区间，GInteractions 表示一对区间。先安装 GenomicRanges 和 InteractionSet，完整序列长度由 seqlengths 提供。

@@ -105,6 +105,33 @@ def main():
         if row['baseline']:
             require(row['baseline'] in CAPTIONS, row['id'] + ': unknown baseline')
     subprocess.run(['python3','tools/generate-task-index.py','--check'],cwd=ROOT,check=True)
+    subprocess.run(['python3','tools/generate-parameter-atlas.py','--check'],cwd=ROOT,check=True)
+    subprocess.run(['python3','tools/generate-api-curriculum.py','--check'],cwd=ROOT,check=True)
+    reviews=json.loads((WEB/'teaching-reviews.json').read_text())
+    inventory=json.loads((ROOT/'tools/teaching-audit/api-signatures.json').read_text())
+    require(set(reviews)=={e['name'] for e in inventory}, 'Every export needs an explicit curriculum decision')
+    for lang in ['en','zh']:
+        compatibility=(WEB/lang/'compatibility.md').read_text()
+        documented_geoms=set(re.findall(r'^\| \[\x60(geom_\w+)\(\)\x60\]',compatibility,re.M))
+        require(documented_geoms=={e['name'] for e in inventory if e['name'].startswith('geom_')},lang+': compatibility table must retain each individual geom row')
+    contracts=json.loads((ROOT/'tools/teaching-audit/parameter-contracts.json').read_text())
+    require({(r['api'],r['parameter']) for r in contracts} ==
+            {(e['name'],p) for e in inventory for p in (e['parameters'] or {})}, 'Incomplete parameter contracts')
+    runtime_record=json.loads((ROOT/'tools/teaching-audit/lesson-execution.json').read_text())
+    require(runtime_record.get('shared_code_sha256')==hashlib.sha256((ROOT/'tools/documentation-examples.R').read_bytes()).hexdigest(),'Lesson execution uses stale shared R source')
+    for path, digest in runtime_record.get('engine_sha256',{}).items():
+        require(hashlib.sha256((ROOT/path).read_bytes()).hexdigest()==digest,'Lesson execution uses stale engine: '+path)
+    execution=runtime_record['pages']
+    expanded_for_validation={p['slug']:expand((WEB/'en'/(p['slug']+'.md')).read_text(),'en') for p in PAGES}
+    all_code='\n'.join('\n'.join(re.findall(r'```r\n(.*?)```',text,re.S)) for text in expanded_for_validation.values())
+    for entry in inventory:
+        name=entry['name']; review=reviews[name]
+        require(all(review.get(k) for k in ['purpose','reason','page','anchor','modes','scope']), name+': incomplete semantic review')
+        if entry['owner']=='ggchord' and not review.get('alias_of'):
+            require(bool(re.search(r'(?<![\w.])'+re.escape(name)+r'\s*\(',all_code)),name+': missing canonical lesson call')
+            runtime_pages=[slug for slug, result in execution.items() if result['result']=='success' and re.search(r'(?<![\w.])'+re.escape(name)+r'\s*\(',expanded_for_validation[slug])]
+            require(bool(runtime_pages),name+': no executed lesson call')
+    # Occurrence and execution are prerequisites, never automatic depth upgrades.
     subprocess.run(['python3','tools/reference-translations.py','--check'],cwd=ROOT,check=True)
     subprocess.run(['python3','tools/sync-tutorials.py','--check'],cwd=ROOT,check=True)
     with (WEB/'assets/plots.csv').open() as f:
@@ -147,7 +174,7 @@ def main():
     exports = set(re.findall(r'^export\(([^)]+)\)',(ROOT/'NAMESPACE').read_text(),re.M))
     require(not (exports-aliases), f'Exports without Rd: {sorted(exports-aliases)}')
     for lang in ['en','zh']:
-        targets = {p['slug']: set(re.findall(r'\{#([^}]+)\}', (WEB/lang/(p['slug']+'.md')).read_text())) for p in PAGES}
+        targets = {p['slug']: {a or b for a,b in re.findall(r'\{#([^}]+)\}|\bid="([^"]+)"', (WEB/lang/(p['slug']+'.md')).read_text())} for p in PAGES}
         for p in PAGES:
             for url in re.findall(r'\]\(([^)\s]+)\)', expand((WEB/lang/(p['slug']+'.md')).read_text(),lang,figures='../assets')):
                 split = urlsplit(url)
@@ -165,6 +192,7 @@ def main():
                     if name in ['NEWS.md', 'MIGRATION.md', 'MIGRATION-Hans.md']: origin=ROOT/name
                     if name=='ASSET-SOURCES.md': origin=WEB/'ASSET-SOURCES.md'
                     if name=='documentation-examples.R': origin=ROOT/'tools/documentation-examples.R'
+                    if split.path.startswith('../assets/source/tools/teaching-audit/'): origin=ROOT/'tools/teaching-audit'/name
                     if name in {f'prepare-{key}{suffix}.R' for key in RECIPES for suffix in ['', '-zh']}: origin=WEB/'showcase-recipes.json'
                     if name in ['tutorial-inputs.zip','input-hashes.json']: origin=ROOT/'examples'
                     require(origin.exists(), f'{lang}/{p["slug"]}: unknown asset {url}')
@@ -177,7 +205,7 @@ def main():
     require(all('`'+name+'`' in config for name in names), 'Native pkgdown reference omits Rd topics')
     coverage=json.loads((WEB/'coverage.json').read_text())
     code=snippets()
-    require(len(coverage)==20,'Expected 20 reviewed capability families')
+    require(len({f['id'] for f in coverage})==len(coverage),'Duplicate capability family')
     results=json.loads((WEB/'assets/example-results.json').read_text())
     for family in coverage:
         require(family['result'] is None or family['result'] in results,f'{family["id"]}: missing result record')

@@ -514,7 +514,7 @@
     ]
   },
   "genbank": {
-    "console": " NULL"
+    "console": "List of 3\n $ seq_data:'data.frame':\t1 obs. of  8 variables:\n $ features:List of 1\n $ report  :List of 5"
   },
   "standardblast": {
     "columns": [
@@ -832,5 +832,89 @@
         "-"
       ]
     ]
+  },
+  "comparefindloci": {
+    "console": "               target_id               locus_id     accver start   end strand target_start target_end upstream downstream clipped_left clipped_right target_source_rows\n1 OQ646790.1:43765:46140 OQ646790.1:43765:46140 OQ646790.1 43665 46240      +        43765      46140      100        100        FALSE         FALSE                  1"
+  },
+  "comparefinishprimerrows": {
+    "columns": [
+      "name",
+      "start",
+      "end",
+      "strand",
+      "match_type"
+    ],
+    "rows": [
+      [
+        "M13/pUC Reverse",
+        "478",
+        "500",
+        "-",
+        "exact"
+      ],
+      [
+        "M13 Reverse",
+        "465",
+        "481",
+        "-",
+        "exact"
+      ],
+      [
+        "M13/pUC Forward",
+        "364",
+        "386",
+        "+",
+        "exact"
+      ]
+    ]
+  },
+  "comparefinishsiterows": {
+    "columns": [
+      "enzyme",
+      "position",
+      "enzyme_site_count",
+      "methylation_status"
+    ],
+    "rows": [
+      [
+        "EcoRI",
+        "396",
+        "1",
+        "unknown"
+      ],
+      [
+        "BamHI",
+        "417",
+        "1",
+        "unknown"
+      ],
+      [
+        "HindIII",
+        "447",
+        "1",
+        "unknown"
+      ]
+    ]
+  },
+  "comparebundlesummary": {
+    "columns": [
+      "observed_rows",
+      "displayed_bundles"
+    ],
+    "rows": [
+      [
+        13,
+        11
+      ]
+    ]
+  },
+  "comparecatalog": {
+    "console": "                primer_id  preferred_name                 sequence length is_universal                              source\n1 primer_657c543f56a4ea50 M13/pUC Reverse  AGCGGATAACAATTTCACACAGG     23         TRUE Addgene sequencing primer reference\n2 primer_97528c53fc4933a5    pBAD Forward     ATGCCATAGCATTTTTATCC     20         TRUE Addgene sequencing primer reference\n3 primer_9cc7178a1c0c1c24             SP6       ATTTAGGTGACACTATAG     18         TRUE Addgene sequencing primer reference\n4 primer_656f3aef2d2c0a76    MSCV Reverse CAGCGGGGCTGCTAAAGCGCATGC     24         TRUE Addgene sequencing primer reference"
+  },
+  "comparediagnostics": {
+    "console": "List of 2\n $ measurement:List of 15\n $ order      : chr [1:4] \"MT108731.1\" \"MT118296.1\" \"OQ646790.1\" ..."
+  },
+  "comparetrackfocus": {
+    "console": "  accver start end   gc .source_accver .source_row .source_origin .source_start .source_end .truncated_left .truncated_right\n1  pUC19     1   1 0.53          pUC19           5            500           401         500            TRUE            FALSE\n2  pUC19     2 101 0.49          pUC19           6            500           501         600           FALSE            FALSE\n3  pUC19   102 201 0.61          pUC19           7            500           601         700           FALSE            FALSE\n4  pUC19   202 301 0.58          pUC19           8            500           701         800           FALSE            FALSE"
   }
 }

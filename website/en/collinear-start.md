@@ -2,6 +2,12 @@ Start with four bundled sequences in horizontal rows. Use the same input as in t
 
 ## Draw four backbones {#draw}
 
+Run this lesson in a fresh R session after installing the version described on the [installation page](installation.html).
+
+```r
+library(ggchord)
+```
+
 {{code:frontlinearbase}}
 
 {{figure:frontlinearbase}}

@@ -1,5 +1,12 @@
 <div class="task-intro"><p>把原始 FASTA、GFF3 和标准 BLAST 表格组合成一张可追溯的序列比较图。你将检查输入、选择显示子集，再对照弦图与全长概览。</p></div>
 
+
+## 问题、数据来源与许可 {#research-question}
+
+本案例以原始文件为起点，回答四条源基因组的已观测相似区间和 CDS 如何组合成全长比较。FASTA/GFF3 标识及来源对应[四序列案例](chord.html#question)。BLAST 标准表由保留原值的原始输出转换，转换规则和输入行来源在 examples/blastn-standard/provenance.csv 中。
+
+包代码使用 MIT 许可；原始数据库记录及第三方参考目录的权利和使用条件按各来源保留，不把包许可自动套到所有输入。教学输入包提供未改写文件、SHA256 和来源说明。格式专题的 EMALE 记录另保留 gggenomes MIT 来源许可，见输入包中的 GGGENOMES-LICENSE.txt。
+
 ## 本页准备 {#prepare}
 解压[教学输入](../assets/tutorial-inputs.zip)，使工作目录包含 `examples/`。
 
@@ -54,3 +61,7 @@ FASTA 提供序列 ID 和长度，GFF3 提供注释范围与链，BLAST 提供�
 ```r
 ggsave("phage-comparison.png", p_real_chord, width = 10, height = 8, units = "in", dpi = 144)
 ```
+
+## 保存前的证据检查 {#evidence-check}
+
+按图中已声明的宽高调用 view_ggchord，再用相同尺寸 ggsave 保存。核查 ID、源链、比对端点方向、筛选报告、图例单位及标签隐藏原因；PNG 能渲染不代表字体在所有 PDF/SVG 阅读器中一致。保留完整源表、显示子集、参数、软件版本和输入哈希，使图可以追溯到记录。数据来源说明可下载自[资产与来源记录](../assets/ASSET-SOURCES.md)。

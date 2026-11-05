@@ -1,5 +1,12 @@
 <div class="lesson-intro">The complete Module II result: four real genomes, strand-separated features and outward-routed cross-row links.</div>
 
+
+## Research question, alignment and tradeoffs {#question}
+
+This view asks how selected CDS and observed intervals compare on one shared bp scale across four complete sequences. FASTA, GFF3 CDS and original BLAST HSPs are the same sources as the [chord case](chord.html#question). Auto orientation is a link-supported display decision. Center aligns complete sequences without asserting homologous centres.
+
+Adjacent rows use explicitly filtered observations; each cross-row pair retains only its longest HSP. Omitting two crowded features is a display decision, with complete source tables retained. Right-side controls are derived from the current layout and must be recomputed after order/direction/gap changes. Local clearance avoids arrows, not every intervening row along a long path.
+
 ## Complete result {#overview}
 
 {{figure:showcasecollinear}}
@@ -30,3 +37,11 @@ Rebuild controls when changing seq_gap, order, orientation or link selection. Lo
 ```r
 ggsave("four-genome-collinear.png", p_show_collinear, width = 12, height = 8, units = "in", dpi = 144)
 ```
+
+## Evidence checks before saving {#evidence-check}
+
+Preview with view_ggchord at the declared width/height and save with ggsave at matching dimensions. Check IDs, source strands, endpoint directions, selection reports, legend units and hidden-label reasons. A successful PNG does not certify font portability across PDF/SVG viewers. Keep complete source tables, display subsets, parameters, version and input hashes. Download the [asset/provenance record](../assets/ASSET-SOURCES.md).
+
+## Source rights and reproducibility {#source-rights}
+
+The package code is MIT-licensed; source database records and reference catalogues retain their original terms. The package license does not relicense third-party data. Keep accession identities and provenance with exported figures. The [asset/source record](../assets/ASSET-SOURCES.md), input archive hashes and displayed preparation script document this example; algorithmic matches remain hypotheses for experimental verification.

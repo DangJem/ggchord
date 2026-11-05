@@ -52,6 +52,8 @@ retaining segmented locations and record/feature provenance. The selected Python
 needs Biopython already installed; no automatic installation occurs.
 `unsupported = "report"` records unsupported locations rather than guessing bounds.
 
+The GenBank example was rerun with Python Biopython 1.85 enabled: it returned L09137.2, length 2686 bp and one annotation row. For a separate documentation environment, install Biopython with that Python’s `python3 -m pip install biopython`, then put its executable on PATH before starting R. Do not treat an optional-dependency skip or NULL as successful import.
+
 ## Optional interval objects {#ranges}
 
 Convert one interval and then an interval pair. Full lengths come from `seqlengths`. Install GenomicRanges for the first example and InteractionSet for the second.

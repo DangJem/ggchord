@@ -28,6 +28,7 @@
       "chord-labels",
       "chord-import",
       "ribbons",
+      "ribbon-statistics",
       "chord"
     ]
   },
@@ -60,9 +61,13 @@
       "plasmid-data",
       "plasmid-build",
       "plasmid-tuning",
+      "circular-layers",
       "annotations",
+      "circular-labels",
       "tracks",
       "recognition",
+      "primers",
+      "restriction-sites",
       "plasmid-catalog",
       "plasmids"
     ]
@@ -78,7 +83,8 @@
       "labels",
       "parameters",
       "adjustments",
-      "styling"
+      "styling",
+      "scale-families"
     ]
   },
   {
@@ -88,6 +94,7 @@
       "en": "Import and conversion"
     },
     "pages": [
+      "workflow-tools",
       "formats",
       "data",
       "protein-alignments",
@@ -113,7 +120,9 @@
     },
     "pages": [
       "task-index",
+      "api-curriculum",
       "compatibility",
+      "parameter-atlas",
       "reference"
     ]
   },

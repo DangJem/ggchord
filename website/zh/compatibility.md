@@ -1,28 +1,32 @@
-换坐标系时，先确认数据单位、图层和参数的边界。下表依据当前 Rd 和源码契约；“支持”表示该类图层有对应实现，不表示所有参数组合都经过穷举验证。对照运行记录见版本审计，不把静态说明当成设备验收。
+换坐标系时先确认单位、图层与参数。下表结合当前 Rd、源码契约与实际渲染；支持表示存在对应实现，不保证每个参数组合。三种布局可以使用原生 bp/aa 单位；基因、引物和酶切仍有核酸限制。
 
 ## 图层与三类坐标 {#layers}
 
-| 图层 | 弦图 | 共线性图 | 单序列圆图 | 证据与条件 |
+| 图层与参考 | 弦图 | 共线性图 | 单序列圆图 | 条件与边界 |
 | --- | --- | --- | --- | --- |
-| `geom_seq()` | 支持 | 条件支持 | 支持 | [骨架参考](reference/geom_seq.html)；共线性拒绝显式 radius、curvature、ring |
-| `geom_seq_label()` | 支持 | 条件支持 | 支持 | [参考](reference/geom_seq_label.html)；共线性不接受显式径向 label radius |
-| `geom_gene()` | 条件支持 | 条件支持 | 条件支持 | [参考](reference/geom_gene.html)；要求 bp 与已知正负链，aa 用通用特征 |
-| `geom_feature()` | 支持 | 支持 | 支持 | [参考](reference/geom_feature.html)；数据须匹配当前序列与单位 |
-| gene/feature 固定标签 | 支持 | 条件支持 | 支持 | [特征标签](reference/geom_feature_label.html)；共线性径向/切向含义改为竖排/横排 |
-| gene/feature 自动标签 | 支持 | 条件支持 | 支持 | [自动标签](reference/geom_feature_label_repel.html)；共线性用行布局，拒绝 external=FALSE |
-| `geom_link_ribbon()` | 支持 | 条件支持 | 不支持 | [参考](reference/geom_link_ribbon.html)；必须有合法连接；共线性按显示行判断邻接，分段同行带省略并报告 |
-| `geom_link_line()` | 支持 | 条件支持 | 不支持 | [参考](reference/geom_link_line.html)；显式分段同行点连接不支持；单圆图拒绝 ribbon/link 图层 |
-| `geom_seq_region()` | 支持 | 支持 | 支持 | [参考](reference/geom_seq_region.html)；区间、ID 和侧向须合法 |
-| `geom_seq_scale()` | 不支持 | 支持 | 不支持 | [参考](reference/geom_seq_scale.html)；直线标尺只适用共线性图；其他模式用局部序列轴 |
-| `geom_track_bar/line/tile()` | 支持 | 支持 | 支持 | [轨道参考](reference/geom_track_tile.html)；必须显式 position_track，同 ID 声明一致 |
-| `geom_seq_break()` | 不支持 | 条件支持 | 不支持 | [参考](reference/geom_seq_break.html)；需可识别的窗口边界；不是修改源序列 |
-| `geom_seq_center_label()` | 条件支持¹ | 不支持 | 支持 | [参考](reference/geom_seq_center_label.html)；单条序列；正式教学使用圆图 |
-| `geom_primer()` / 自动引物标签 | 条件支持¹ | 不支持 | 条件支持 | [参考](reference/geom_primer.html)；圆图与核酸单位 |
-| `geom_restriction_site()` | 条件支持¹ | 不支持 | 条件支持 | [参考](reference/geom_restriction_site.html)；圆图、核酸、有效切点 |
+| [`geom_seq()`](reference/geom_seq.html) | 支持 | 条件支持 | 支持 | 共线性拒绝显式 radius、curvature、ring |
+| [`geom_seq_label()`](reference/geom_seq_label.html) | 支持 | 条件支持 | 支持 | 共线性不接受显式径向标签 radius |
+| [`geom_gene()`](reference/geom_gene.html) | 条件支持 | 条件支持 | 条件支持 | 要求核酸单位和源正负链，aa 用通用特征 |
+| [`geom_feature()`](reference/geom_feature.html) | 支持 | 支持 | 支持 | 要求合法 ID、区间和一致的原生单位 |
+| [`geom_feature_plasmid()`](reference/geom_feature_plasmid.html) | 支持 | 支持 | 支持 | 通用特征预设；跨模式使用须重查圆图 Position 默认值 |
+| [`geom_gene_label()`](reference/geom_gene_label.html) | 支持 | 条件支持 | 支持 | 与基因共享 Position；共线性 radial/tangent 对应竖排/横排 |
+| [`geom_feature_label()`](reference/geom_feature_label.html) | 支持 | 条件支持 | 支持 | 与特征共享 Position；共线性 radial/tangent 对应竖排/横排 |
+| [`geom_gene_label_repel()`](reference/geom_gene_label_repel.html) | 支持 | 条件支持 | 支持 | 共线性拒绝 external=FALSE，按目标尺寸检查隐藏结果 |
+| [`geom_feature_label_repel()`](reference/geom_feature_label_repel.html) | 支持 | 条件支持 | 支持 | 共线性拒绝 external=FALSE，检查适配与隐藏 |
+| [`geom_link_ribbon()`](reference/geom_link_ribbon.html) | 支持 | 条件支持 | 不支持 | 共线性按显示行判断邻接；分段同行带省略并报告 |
+| [`geom_link_line()`](reference/geom_link_line.html) | 支持 | 条件支持 | 不支持 | 要求点坐标；不支持显式分段同行点连接 |
+| [`geom_seq_region()`](reference/geom_seq_region.html) | 支持 | 支持 | 支持 | 要求合法源区间、ID 和局部侧向 |
+| [`geom_seq_scale()`](reference/geom_seq_scale.html) | 不支持 | 支持 | 不支持 | 直线标尺仅适用共线性模式 |
+| [`geom_seq_break()`](reference/geom_seq_break.html) | 不支持 | 条件支持 | 不支持 | 要求共线性窗口边界，不修改源序列 |
+| [`geom_seq_center_label()`](reference/geom_seq_center_label.html) | 条件支持 | 不支持 | 条件支持 | 仅一条显示序列，长度使用其原生 bp/aa 单位 |
+| [`geom_primer()`](reference/geom_primer.html) | 条件支持 | 不支持 | 条件支持 | 仅一条显示 DNA 序列及合法结合坐标 |
+| [`geom_primer_label_repel()`](reference/geom_primer_label_repel.html) | 条件支持 | 不支持 | 条件支持 | 仅一条显示 DNA 序列，与引物共享位置 |
+| [`geom_restriction_site()`](reference/geom_restriction_site.html) | 条件支持 | 不支持 | 条件支持 | 仅一条显示 DNA 序列及实际计算的切割坐标 |
+| [`geom_track_bar()`](reference/geom_track_tile.html) | 支持 | 支持 | 支持 | 显式 position_track、数值高度与数值域 |
+| [`geom_track_line()`](reference/geom_track_tile.html) | 支持 | 支持 | 支持 | 显式 position_track；闭合须明确请求，不跨缺失样本连接 |
+| [`geom_track_tile()`](reference/geom_track_tile.html) | 支持 | 支持 | 支持 | 显式 position_track；不要求数值高度 |
 
-本表不将 `geom_feature_plasmid()` 单独当成新几何类型：它是[通用特征的预设](reference/geom_feature_plasmid.html)，主要为圆形质粒教学服务。其他坐标下不要假定其圆图布局参数可原样照搬，先使用通用 feature 图层。
-
-¹ 定向运行发现，单条 pUC19 配合 `coord_chord()` 的中心标签、引物和酶切图层可以 build；现有共线性帮助却将它们称为 circular-only。表中保留这个契约与实现的差异，不把一次 build 当作视觉正确或官方跨模式承诺。引物自动标签尚未单独运行；正式教学仍使用圆图。此任务不修改运行时。
+21 个 geom 分别在三种模式实际渲染，共 63 组明确标注的合成几何输入：53 组成功，10 组按契约拒绝，包含自动引物标签。中心标签在单序列弦图及圆图支持 bp/aa；引物与酶切要求 DNA。帮助已澄清这些边界。此处验证模式边界，不表示所有参数组合、生物识别或设备均已验收。参见[完整运行记录](../assets/source/tools/teaching-audit/layer-compatibility.csv)。
 
 ## 读懂条件支持 {#conditions}
 

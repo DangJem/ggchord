@@ -38,3 +38,5 @@ This page uses the default theme. Add `theme()` to adjust text, legends or backg
 Links from the same query share a colour; continuous identity needs a continuous scale. Put fixed colours outside aes() and make each guide explain its mapping.
 
 <div class="next-step">Continue: <a href="adjustments.html">Common adjustments and grammar →</a></div>
+
+See [scale families](scale-families.html) for runnable manual/continuous/steps/identity, line type, opacity and theme examples.

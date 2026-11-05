@@ -1,5 +1,12 @@
 <div class="task-intro"><p>Build a readable plasmid map from bundled pUC19 DNA, with separate annotation, primer and restriction layers. Keep display choices separate from complete results.</p></div>
 
+
+## Research question and sequence identity {#question}
+
+The pUC19 case first asks how complete actual DNA, identified annotations, primer bindings and restriction sites become separate layers. The dense pETDuet-1 case asks how to preserve hierarchy at a fixed export size. Full lengths come from their own original FASTA records, not maximum annotation ends; renaming pUC19c does not make it pUC19.
+
+Retain separate feature catalogue methods/provenance, primer catalogue versus exact matches, restriction database and methylation background. Curated reference annotations are not experimental validation for an unknown sample. Saved reference sets require exact complete-sequence matching; inspect search results for other targets.
+
 ## Use a source-backed sequence {#input}
 The bundled `plasmid_example_pUC19` is copied from the repository's original
 `examples/plasmid/pUC19.fna`; bases and sequence identity are not edited for display.
@@ -102,3 +109,11 @@ The explicit viewport keeps the dense map at the documented export size. `label_
 ```r
 ggsave("pETDuet-1-map.png", p_show_plasmid, width = 16.5, height = 8, units = "in", dpi = 144)
 ```
+
+## Evidence checks before saving {#evidence-check}
+
+Preview with view_ggchord at the declared width/height and save with ggsave at matching dimensions. Check IDs, source strands, endpoint directions, selection reports, legend units and hidden-label reasons. A successful PNG does not certify font portability across PDF/SVG viewers. Keep complete source tables, display subsets, parameters, version and input hashes. Download the [asset/provenance record](../assets/ASSET-SOURCES.md).
+
+## Source rights and reproducibility {#source-rights}
+
+The package code is MIT-licensed; source database records and reference catalogues retain their original terms. The package license does not relicense third-party data. Keep accession identities and provenance with exported figures. The [asset/source record](../assets/ASSET-SOURCES.md), input archive hashes and displayed preparation script document this example; algorithmic matches remain hypotheses for experimental verification.

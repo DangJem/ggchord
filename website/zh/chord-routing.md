@@ -55,3 +55,17 @@
 固定 `fill/alpha/colour/linewidth` 放在 `aes()` 外；数据差异映射到 ribbon 专用属性并配匹配标度。显式固定值优先于相应映射，所以映射透明度时省略固定 alpha。改变颜色不能证明不同生物学关系。完整签名见 [`geom_link_ribbon()`](reference/geom_link_ribbon.html)。
 
 接着用[共享端点分支与点连接](chord-branches.html)比较分支主干、主干比例及曲线/直线。
+
+## 区间高亮的侧向、宽度与偏移 {#region-parameters}
+
+从第一条真实 HSP 的 query 端保留原始 ID 与区间。默认宽度 0.08、偏移 0、侧向 inside；后图分别只改变 outside、宽度或偏移。它们是局部几何量，不是 bp。固定填色写在 geom 外观参数，数据类别映射使用 region_fill 和其专用标度。不能把高亮当作新的功能注释。
+
+{{code:comparefinishchord}}
+{{code:compareregioninside}}
+{{figure:compareregioninside}}
+{{code:compareregionoutside}}
+{{figure:compareregionoutside}}
+{{code:compareregionwidth}}
+{{figure:compareregionwidth}}
+{{code:compareregionoffset}}
+{{figure:compareregionoffset}}

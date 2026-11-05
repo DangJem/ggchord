@@ -1,5 +1,12 @@
 <div class="lesson-intro">模块二的综合结果：四条真实基因组、分链特征和向外绕行的跨行连接。</div>
 
+
+## 研究问题、对齐与取舍 {#question}
+
+这张图回答：在同一 bp 尺度下，四条完整序列的已选择 CDS 与比对区间如何相对排列？源表仍是四份 FASTA、GFF3 CDS 和原始 BLAST HSP，与[弦图案例](chord.html#question)相同。自动方向是按连接支持选择的显示方向；center 对齐整条序列，不声称各序列中心同源。
+
+相邻行展示经过明确阈值筛选的记录；跨行每对只保留最长 HSP。省略两个拥挤特征是图中取舍，完整 source 表保留。右侧控制点由当前布局推导，所以改变顺序、方向或行距后必须重新计算。局部避障让开箭头，并不保证整条长路径绕过所有中间行。
+
 ## 综合结果 {#overview}
 
 {{figure:showcasecollinear}}
@@ -30,3 +37,11 @@
 ```r
 ggsave("four-genome-collinear.png", p_show_collinear, width = 12, height = 8, units = "in", dpi = 144)
 ```
+
+## 保存前的证据检查 {#evidence-check}
+
+按图中已声明的宽高调用 view_ggchord，再用相同尺寸 ggsave 保存。核查 ID、源链、比对端点方向、筛选报告、图例单位及标签隐藏原因；PNG 能渲染不代表字体在所有 PDF/SVG 阅读器中一致。保留完整源表、显示子集、参数、软件版本和输入哈希，使图可以追溯到记录。数据来源说明可下载自[资产与来源记录](../assets/ASSET-SOURCES.md)。
+
+## 来源权利与复现 {#source-rights}
+
+包代码采用 MIT 许可；原始数据库记录及参考目录保留各自使用条件，包许可不重新授权第三方数据。导出时应保留记录身份和来源。[资产与来源记录](../assets/ASSET-SOURCES.md)、输入归档哈希及本页准备脚本共同描述本例，计算识别结果仍需实验核实。

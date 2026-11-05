@@ -1351,4 +1351,507 @@ p_comparetrackthin <- ggchord(track_seq) +
     limits = c(0, 1), name = "GC fraction") +
   coord_circular()
 p_comparetrackthin
+# ---- comparefinishcircle ----
+library(ggchord)
+library(dplyr)
+finish_dna <- plasmid_example_pUC19
+finish_seq <- finish_dna[c("accver", "length")]
+finish_features <- head(find_common_features(finish_dna), 6)
+finish_circle <- ggchord(finish_seq) + geom_seq() + coord_circular()
+finish_labels <- finish_features |>
+  mutate(anno = paste0(anno, " [", start, "-", end, " bp]"))
+finish_feature_base <- finish_circle + geom_feature(data = finish_labels)
+
+# ---- comparecenter ----
+p_comparecenter <- finish_circle + geom_seq_center_label()
+p_comparecenter
+
+# ---- comparecenternolength ----
+p_comparecenternolength <- finish_circle + geom_seq_center_label(length = FALSE)
+p_comparecenternolength
+
+# ---- comparecenterstyle ----
+p_comparecenterstyle <- finish_circle +
+  geom_seq_center_label(name_style = list(size = 6))
+p_comparecenterstyle
+
+# ---- comparebonedouble ----
+p_comparebonedouble <- ggchord(finish_seq) + geom_seq(seq_style = "double") + coord_circular()
+p_comparebonedouble
+
+# ---- comparebonesingle ----
+p_comparebonesingle <- ggchord(finish_seq) + geom_seq(seq_style = "single") + coord_circular()
+p_comparebonesingle
+
+# ---- compareboneband ----
+p_compareboneband <- ggchord(finish_seq) + geom_seq(seq_style = "band") + coord_circular()
+p_compareboneband
+
+# ---- comparebonegap ----
+p_comparebonegap <- ggchord(finish_seq) + geom_seq(seq_style = "double", seq_backbone_gap = 0.05) + coord_circular()
+p_comparebonegap
+
+# ---- comparecirclecounter ----
+p_comparecirclecounter <- ggchord(finish_seq) + geom_seq(seq_style = "double") +
+  coord_circular(direction = "counterclockwise")
+p_comparecirclecounter
+
+# ---- comparecirclegap ----
+p_comparecirclegap <- ggchord(finish_seq) + geom_seq(seq_style = "double") +
+  coord_circular(gap = 25)
+p_comparecirclegap
+
+# ---- comparefixedfeature ----
+p_comparefixedfeature <- finish_feature_base +
+  geom_feature_label(data = finish_labels, label_orientation = "feature")
+p_comparefixedfeature
+
+# ---- comparefixedhorizontal ----
+p_comparefixedhorizontal <- finish_feature_base +
+  geom_feature_label(data = finish_labels, label_orientation = "horizontal")
+p_comparefixedhorizontal
+
+# ---- comparefixedinside ----
+p_comparefixedinside <- finish_feature_base +
+  geom_feature_label(data = finish_labels, label_orientation = "feature", label_side = "inside")
+p_comparefixedinside
+
+# ---- comparefixedrotate ----
+p_comparefixedrotate <- finish_feature_base +
+  geom_feature_label(data = finish_labels, label_orientation = "feature", label_rotation = 30)
+p_comparefixedrotate
+
+# ---- comparefeaturefit ----
+p_comparefeaturefit <- finish_feature_base +
+  geom_feature_label_repel(data = finish_labels, label_layout = "feature")
+p_comparefeaturefit
+
+# ---- compareradialfit ----
+p_compareradialfit <- finish_feature_base +
+  geom_feature_label_repel(data = finish_labels, label_layout = "radial")
+p_compareradialfit
+
+# ---- compareautofit ----
+p_compareautofit <- finish_feature_base +
+  geom_feature_label_repel(data = finish_labels, label_layout = "auto")
+p_compareautofit
+
+# ---- comparecalloutfit ----
+p_comparecalloutfit <- finish_feature_base +
+  geom_feature_label_repel(data = finish_labels, label_layout = "callout")
+p_comparecalloutfit
+
+# ---- compareshrinkfit ----
+p_compareshrinkfit <- finish_feature_base +
+  geom_feature_label_repel(data = finish_labels, label_layout = "feature", label_fit = "shrink")
+p_compareshrinkfit
+
+# ---- comparewrapfit ----
+p_comparewrapfit <- finish_feature_base +
+  geom_feature_label_repel(data = finish_labels, label_layout = "feature", label_wrap = 14)
+p_comparewrapfit
+
+# ---- comparefinishstack ----
+finish_position <- position_feature_stack(base_position = position_plasmid(), spacing = 0.1)
+finish_stack_base <- ggchord(finish_seq) + geom_seq() + coord_circular()
+
+# ---- comparepositionidentity ----
+finish_current_position <- position_identity()
+p_comparepositionidentity <- finish_stack_base +
+  geom_feature(data = finish_features, position = finish_current_position) +
+  geom_feature_label_repel(data = finish_features, position = finish_current_position)
+p_comparepositionidentity
+
+# ---- comparepositionstack ----
+finish_current_position <- finish_position
+p_comparepositionstack <- finish_stack_base +
+  geom_feature(data = finish_features, position = finish_current_position) +
+  geom_feature_label_repel(data = finish_features, position = finish_current_position)
+p_comparepositionstack
+
+# ---- comparefinishdnabase ----
+library(ggchord)
+finish_dna <- plasmid_example_pUC19
+finish_seq <- finish_dna[c("accver", "length")]
+finish_recognition_base <- ggchord(finish_seq) + geom_seq(seq_style = "double") +
+  geom_seq_center_label() + coord_circular()
+# ---- comparefinishprimer ----
+finish_primers <- head(find_primer_bindings(finish_dna, set = "universal"), 3)
+# ---- comparefinishsites ----
+finish_sites <- find_restriction_sites(finish_dna,
+  enzymes = c("EcoRI", "BamHI", "HindIII"), methylation = "none")
+# ---- compareprimerbetween ----
+p_compareprimerbetween <- finish_recognition_base +
+  geom_primer(data = finish_primers, side = "between")
+p_compareprimerbetween
+
+# ---- compareprimeroutside ----
+p_compareprimeroutside <- finish_recognition_base +
+  geom_primer(data = finish_primers, side = "outside")
+p_compareprimeroutside
+
+# ---- compareprimerinside ----
+p_compareprimerinside <- finish_recognition_base +
+  geom_primer(data = finish_primers, side = "inside")
+p_compareprimerinside
+
+# ---- compareprimerwidth ----
+p_compareprimerwidth <- finish_recognition_base +
+  geom_primer(data = finish_primers, side = "between", arc_linewidth = 0.05)
+p_compareprimerwidth
+
+# ---- compareprimerlabel ----
+p_compareprimerlabel <- finish_recognition_base +
+  geom_primer(data = finish_primers) +
+  geom_primer_label_repel(data = finish_primers, side = "outside")
+p_compareprimerlabel
+
+# ---- compareprimernolocation ----
+p_compareprimernolocation <- finish_recognition_base +
+  geom_primer(data = finish_primers) +
+  geom_primer_label_repel(data = finish_primers, side = "outside", show_location = FALSE)
+p_compareprimernolocation
+
+# ---- compareprimerlabelinside ----
+p_compareprimerlabelinside <- finish_recognition_base +
+  geom_primer(data = finish_primers) +
+  geom_primer_label_repel(data = finish_primers, side = "inside")
+p_compareprimerlabelinside
+
+# ---- comparerestrictionradial ----
+p_comparerestrictionradial <- finish_recognition_base +
+  geom_restriction_site(data = finish_sites, leader = "radial")
+p_comparerestrictionradial
+
+# ---- comparerestrictionelbow ----
+p_comparerestrictionelbow <- finish_recognition_base +
+  geom_restriction_site(data = finish_sites, leader = "elbow")
+p_comparerestrictionelbow
+
+# ---- comparerestrictionstraight ----
+p_comparerestrictionstraight <- finish_recognition_base +
+  geom_restriction_site(data = finish_sites, leader = "straight")
+p_comparerestrictionstraight
+
+# ---- comparerestrictionenzyme ----
+p_comparerestrictionenzyme <- finish_recognition_base +
+  geom_restriction_site(data = finish_sites, leader = "radial", label_style = "enzyme")
+p_comparerestrictionenzyme
+
+# ---- comparerestrictionposition ----
+p_comparerestrictionposition <- finish_recognition_base +
+  geom_restriction_site(data = finish_sites, leader = "radial", label_style = "position")
+p_comparerestrictionposition
+
+# ---- comparerestrictionorder ----
+p_comparerestrictionorder <- finish_recognition_base +
+  geom_restriction_site(data = finish_sites, leader = "radial", label_order = "position_enzyme")
+p_comparerestrictionorder
+
+# ---- comparerestrictioninside ----
+p_comparerestrictioninside <- finish_recognition_base +
+  geom_restriction_site(data = finish_sites, leader = "radial", label_side = "inside")
+p_comparerestrictioninside
+
+# ---- compareshortauto ----
+p_compareshortauto <- gene_base + geom_gene(arrow_head_length = 1.5, short_feature = "auto")
+p_compareshortauto
+
+# ---- compareshortwedge ----
+p_compareshortwedge <- gene_base + geom_gene(arrow_head_length = 1.5, short_feature = "wedge")
+p_compareshortwedge
+
+# ---- compareshortblock ----
+p_compareshortblock <- gene_base + geom_gene(arrow_head_length = 1.5, short_feature = "block")
+p_compareshortblock
+
+# ---- comparefinishchord ----
+library(ggchord)
+library(dplyr)
+finish_seqs <- seq_data_example[c("accver", "length")]
+finish_chord <- ggchord(finish_seqs) + geom_seq() + coord_chord(rotation = 0)
+finish_region <- ribbon_data_example |>
+  slice_head(n = 1) |>
+  transmute(accver = qaccver, start = pmin(qstart, qend), end = pmax(qstart, qend))
+
+# ---- compareseqlabelarc ----
+p_compareseqlabelarc <- finish_chord + geom_seq_label(seq_label_orientation = "arc")
+p_compareseqlabelarc
+
+# ---- compareseqlabelhorizontal ----
+p_compareseqlabelhorizontal <- finish_chord + geom_seq_label(seq_label_orientation = "horizontal")
+p_compareseqlabelhorizontal
+
+# ---- compareseqlabelrotation ----
+p_compareseqlabelrotation <- finish_chord + geom_seq_label(seq_label_orientation = "arc", seq_label_rotation = 30)
+p_compareseqlabelrotation
+
+# ---- compareregioninside ----
+p_compareregioninside <- finish_chord + geom_seq_region(data = finish_region, region_side = "inside")
+p_compareregioninside
+
+# ---- compareregionoutside ----
+p_compareregionoutside <- finish_chord + geom_seq_region(data = finish_region, region_side = "outside")
+p_compareregionoutside
+# ---- comparefinishprimerrows ----
+head(finish_primers[c("name", "start", "end", "strand", "match_type")], 3)
+# ---- comparefinishsiterows ----
+finish_sites[c("enzyme", "position", "enzyme_site_count", "methylation_status")]
+# ---- comparescaledata ----
+library(ggchord)
+library(dplyr)
+scale_seqs <- seq_data_example[c("accver", "length")]
+scale_links <- ribbon_data_example
+scale_ids <- scale_seqs$accver
+scale_colours <- setNames(c("#E64B35", "#233E4A", "#269B82", "#D59B17"), scale_ids)
+scale_opacity <- setNames(c(0.35, 0.55, 0.75, 0.95), scale_ids)
+scale_lines <- setNames(c("solid", "dashed", "dotted", "dotdash"), scale_ids)
+scale_base <- ggchord(scale_seqs, ribbon_data = scale_links) + geom_seq() + coord_chord()
+scale_numeric <- scale_base + geom_link_ribbon(aes(ribbon_fill = pident))
+
+# ---- comparescalegradient ----
+p_comparescalegradient <- scale_numeric +
+  scale_ribbon_fill_gradientn(colours = c("#303B71", "#269B82", "#ECEB31"), limits = c(0, 100)) +
+  guides(ribbon_fill = guide_ggchord_colourbar())
+p_comparescalegradient
+
+# ---- comparescalesteps ----
+p_comparescalesteps <- scale_numeric +
+  scale_ribbon_fill_stepsn(colours = c("#303B71", "#269B82", "#ECEB31"),
+    breaks = c(0, 50, 80, 100), limits = c(0, 100))
+p_comparescalesteps
+
+# ---- comparescalemanual ----
+p_scale_manual <- scale_base +
+  geom_link_ribbon(aes(ribbon_fill = qaccver, ribbon_alpha = qaccver,
+    ribbon_colour = qaccver, ribbon_linetype = qaccver)) +
+  scale_ribbon_fill_manual(values = scale_colours) +
+  scale_ribbon_alpha_manual(values = scale_opacity) +
+  scale_ribbon_colour_manual(values = scale_colours) +
+  scale_ribbon_linetype_manual(values = scale_lines) +
+  scale_seq_colour_manual(values = scale_colours) +
+  guides(ribbon_fill = guide_ggchord_legend(nrow = 1))
+invisible(ggplot2::ggplot_build(p_scale_manual))
+
+# ---- comparescaleidentity ----
+scale_identity_links <- scale_links |>
+  mutate(display_colour = if_else(pident >= 90, "#269B82", "#303B71"))
+p_scale_identity <- ggchord(scale_seqs, ribbon_data = scale_identity_links) +
+  geom_seq() + geom_link_ribbon(aes(ribbon_fill = display_colour)) +
+  scale_ribbon_fill_identity() + coord_chord()
+invisible(ggplot2::ggplot_build(p_scale_identity))
+
+# ---- comparescalelinkdata ----
+scale_points <- scale_links |>
+  slice_head(n = 6) |>
+  mutate(qpos = floor((qstart + qend) / 2), spos = floor((sstart + send) / 2))
+p_scale_linkbase <- ggchord(scale_seqs) + geom_seq() + coord_chord()
+
+# ---- comparescalelinkmanual ----
+p_scale_linkmanual <- p_scale_linkbase +
+  geom_link_line(aes(link_colour = saccver, link_alpha = saccver,
+    link_linewidth = saccver, link_linetype = saccver), data = scale_points) +
+  scale_link_colour_manual(values = scale_colours) +
+  scale_link_alpha_manual(values = scale_opacity) +
+  scale_link_linewidth_manual(values = setNames(c(0.3, 0.5, 0.7, 0.9), scale_ids)) +
+  scale_link_linetype_manual(values = scale_lines)
+invisible(ggplot2::ggplot_build(p_scale_linkmanual))
+
+# ---- comparescalelinkcontinuous ----
+p_comparescalelinkcontinuous <- p_scale_linkbase +
+  geom_link_line(aes(link_colour = pident, link_alpha = pident,
+    link_linewidth = pident), data = scale_points) +
+  scale_link_colour_gradientn(colours = c("#303B71", "#ECEB31")) +
+  scale_link_alpha_continuous(range = c(0.3, 0.9)) +
+  scale_link_linewidth_continuous(range = c(0.2, 1))
+p_comparescalelinkcontinuous
+
+# ---- comparescalefeature ----
+scale_feature_data <- head(find_common_features(plasmid_example_pUC19), 6)
+feature_types <- unique(scale_feature_data$type)
+feature_colours <- setNames(rep(c("#993366", "#31849B", "#D59B17"),
+  length.out = length(feature_types)), feature_types)
+p_scale_feature <- ggchord(plasmid_example_pUC19) + geom_seq() +
+  geom_feature(aes(feature_fill = type, feature_shape = type), data = scale_feature_data) +
+  scale_feature_fill_manual(values = feature_colours) +
+  scale_feature_shape_manual(values = setNames(rep("arrow", length(feature_types)), feature_types)) +
+  coord_circular()
+invisible(ggplot2::ggplot_build(p_scale_feature))
+
+# ---- comparescalepreset ----
+p_scale_preset <- ggchord(plasmid_example_pUC19) + geom_seq() +
+  geom_feature(aes(feature_fill = type, feature_shape = type), data = scale_feature_data) +
+  scale_feature_fill_plasmid() + scale_feature_shape_plasmid() + coord_circular()
+invisible(ggplot2::ggplot_build(p_scale_preset))
+
+# ---- comparescalegenering ----
+scale_gene_data <- gene_data_example |>
+  transmute(accver, start, end, strand = source_strand)
+p_scale_gene <- ggchord(scale_seqs, gene_data = scale_gene_data) + geom_seq() +
+  geom_gene() + scale_gene_fill_manual(values = c("+" = "#CE1536", "-" = "#346B9D")) + coord_chord()
+p_scale_ring <- ggchord(scale_seqs) + geom_seq(aes(seq_ring = accver)) +
+  scale_seq_ring_manual(values = setNames(c(0.8, 1, 1.2, 1.4), scale_ids)) + coord_chord()
+invisible(ggplot2::ggplot_build(p_scale_gene))
+invisible(ggplot2::ggplot_build(p_scale_ring))
+
+# ---- comparescaleregion ----
+scale_region_data <- scale_links |>
+  slice_head(n = 3) |>
+  transmute(accver = qaccver, start = pmin(qstart, qend), end = pmax(qstart, qend))
+p_scale_region <- ggchord(scale_seqs) + geom_seq() +
+  geom_seq_region(aes(region_fill = accver), data = scale_region_data) +
+  scale_region_fill_manual(values = scale_colours) + coord_chord()
+invisible(ggplot2::ggplot_build(p_scale_region))
+
+# ---- comparescaletrack ----
+scale_track_bins <- bins |>
+  mutate(gc_class = if_else(gc >= 0.5, "GC >= 0.5", "GC < 0.5"))
+p_scale_trackfill <- ggchord(track_seq) + geom_seq() +
+  geom_track_tile(aes(track_fill = gc_class), data = scale_track_bins,
+    position = position_track("classes")) +
+  scale_track_fill_manual("classes", values = c("GC >= 0.5" = "#31849B", "GC < 0.5" = "#D59B17")) +
+  coord_circular()
+p_scale_trackcolour <- ggchord(track_seq) + geom_seq() +
+  geom_track_tile(aes(track_colour = gc_class), data = scale_track_bins,
+    position = position_track("classes"), fill = NA) +
+  scale_track_colour_manual("classes", values = c("GC >= 0.5" = "#31849B", "GC < 0.5" = "#D59B17")) +
+  coord_circular()
+invisible(ggplot2::ggplot_build(p_scale_trackfill))
+invisible(ggplot2::ggplot_build(p_scale_trackcolour))
+
+# ---- comparescaletrackgradient ----
+p_scale_trackgradient <- ggchord(track_seq) + geom_seq() +
+  geom_track_tile(aes(track_fill = gc, track_colour = gc), data = bins,
+    position = position_track("gc")) +
+  scale_track_fill_gradientn("gc", colours = c("#D59B17", "#31849B")) +
+  scale_track_colour_gradientn("gc", colours = c("#D59B17", "#31849B")) +
+  coord_circular()
+invisible(ggplot2::ggplot_build(p_scale_trackgradient))
+
+# ---- comparethemes ----
+theme_examples <- list(
+  default = theme_ggchord(), minimal = theme_ggchord_minimal(),
+  publication = theme_ggchord_publication(), dark = theme_ggchord_dark()
+)
+for (selected_theme in theme_examples) {
+  invisible(ggplot2::ggplot_build(scale_base + selected_theme))
+}
+p_comparethememinimal <- scale_base + theme_ggchord_minimal()
+p_comparethemedark <- scale_base + theme_ggchord_dark()
+p_theme_plasmid <- ggchord(plasmid_example_pUC19) + geom_seq() +
+  coord_circular() + theme_ggchord_plasmid()
+invisible(ggplot2::ggplot_build(p_theme_plasmid))
+
+# ---- comparecatalog ----
+catalogue <- primer_catalog(set = "universal")
+catalogue_aliases <- primer_catalog(set = "universal", aliases = TRUE)
+head(catalogue)
+
+# ---- comparediagnostics ----
+diagnostics <- diagnose_ggchord(scale_base, width = 9, height = 7, units = "in")
+layout_tables <- export_ggchord_layout(scale_base, include = "seq", original_data = TRUE)
+full_reference <- get_chord_layout(scale_base)
+order_choice <- optimize_ggchord_layout(scale_seqs, scale_links,
+  optimize = c("order", "orientation"), weight = "length")
+list(measurement = diagnostics$measurement, order = order_choice$seq_order)
+
+# ---- comparetrackfocus ----
+track_loci <- data.frame(accver = track_seq$accver, start = 500, end = 1500)
+focused_bins <- focus_ggchord_track(bins, track_seq, track_loci, type = "interval")
+head(focused_bins)
+
+# ---- comparedensitydata ----
+library(ggchord)
+stat_sequences <- seq_data_example
+stat_links <- ribbon_data_example
+stat_base <- ggchord(stat_sequences, ribbon_data = stat_links) + geom_seq() + coord_chord()
+
+# ---- comparedensityfour ----
+p_comparedensityfour <- stat_base +
+  stat_ribbon_density(aes(ribbon_alpha = after_stat(bundle_n)), bins = 4,
+    weight = "count", fill = "#269B82") +
+  scale_ribbon_alpha_continuous(range = c(0.2, 0.95), name = "Observed HSP count")
+p_comparedensityfour
+
+# ---- comparedensityeight ----
+p_comparedensityeight <- stat_base +
+  stat_ribbon_density(aes(ribbon_alpha = after_stat(bundle_n)), bins = 8,
+    weight = "count", fill = "#269B82") +
+  scale_ribbon_alpha_continuous(range = c(0.2, 0.95), name = "Observed HSP count")
+p_comparedensityeight
+
+# ---- comparebundle ----
+p_comparebundle <- stat_base + stat_ribbon_bundle(bins = 4, min_bundle = 2)
+p_comparebundle
+
+# ---- comparebundlesummary ----
+bundle_summary <- bundle_ggchord_ribbons(stat_links, stat_sequences, bins = 4, min_bundle = 2)
+data.frame(observed_rows = nrow(stat_links), displayed_bundles = nrow(bundle_summary$data))
+# ---- comparebandwidth ----
+p_comparebandwidth <- ggchord(finish_seq) +
+  geom_seq(seq_style = "band", seq_backbone_width = 0.07) + coord_circular()
+p_comparebandwidth
+
+# ---- comparefeaturearrow ----
+p_comparefeaturearrow <- finish_circle + geom_feature(data = finish_features, shape = "arrow")
+p_comparefeaturearrow
+
+# ---- comparefeatureblock ----
+p_comparefeatureblock <- finish_circle + geom_feature(data = finish_features, shape = "block")
+p_comparefeatureblock
+
+# ---- comparefeaturepreset ----
+p_comparefeaturepreset <- finish_circle + geom_feature_plasmid(data = finish_features)
+p_comparefeaturepreset
+
+# ---- compareexternaloff ----
+p_compareexternaloff <- finish_feature_base +
+  geom_feature_label_repel(data = finish_labels, label_layout = "feature", external = FALSE)
+p_compareexternaloff
+
+# ---- compareellipsisfit ----
+p_compareellipsisfit <- finish_feature_base +
+  geom_feature_label_repel(data = finish_labels, label_layout = "feature", label_wrap = 14, label_fit = "ellipsis")
+p_compareellipsisfit
+
+# ---- compareprimeroffset ----
+p_compareprimeroffset <- finish_recognition_base +
+  geom_primer(data = finish_primers, side = "outside", arc_offset = 0.09)
+p_compareprimeroffset
+
+# ---- compareregionwidth ----
+p_compareregionwidth <- finish_chord +
+  geom_seq_region(data = finish_region, region_side = "inside", region_width = 0.14)
+p_compareregionwidth
+
+# ---- compareregionoffset ----
+p_compareregionoffset <- finish_chord +
+  geom_seq_region(data = finish_region, region_side = "inside", region_offset = 0.1)
+p_compareregionoffset
+
+# ---- comparemultitrackdata ----
+make_gc_tracks <- function(colour_order) {
+  ggchord(track_seq) + geom_seq() +
+    geom_track_bar(aes(track_value = gc), data = bins,
+      position = position_track("gc_height", order = 1, width = grid::unit(8, "mm"))) +
+    geom_track_tile(aes(track_fill = gc), data = bins,
+      position = position_track("gc_colour", order = colour_order, width = grid::unit(4, "mm"))) +
+    scale_track_value_continuous("gc_height", limits = c(0, 1), unit = "GC fraction") +
+    scale_track_fill_gradientn("gc_colour", colours = c("#F1E51D", "#31849B"), limits = c(0, 1)) +
+    coord_circular()
+}
+
+# ---- comparetracktwo ----
+p_comparetracktwo <- make_gc_tracks(colour_order = 2)
+p_comparetracktwo
+
+# ---- comparetrackorder ----
+p_comparetrackorder <- make_gc_tracks(colour_order = 0)
+p_comparetrackorder
+# ---- comparefindloci ----
+source_target <- source_gene |>
+  mutate(feature_id = paste(accver, start, end, sep = ":"))
+selected_locus <- find_ggchord_loci(seq_data_example, source_target,
+  targets = source_target$feature_id, upstream = 100, downstream = 100)
+selected_locus
 # ---- end ----

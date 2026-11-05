@@ -16,7 +16,7 @@
     "input": "Source-strand integrase OQ646790.1:43765-46140, focused to 43000-47000 bp",
     "baseline": null,
     "default": "shouldered",
-    "validation": "rendered with view_ggchord; page preparation executed"
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
   },
   {
     "id": "comparegeneflush",
@@ -35,7 +35,7 @@
     "input": "Same source-strand integrase and window",
     "baseline": "comparegeneshouldered",
     "default": "shouldered",
-    "validation": "rendered with view_ggchord; page preparation executed"
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
   },
   {
     "id": "comparegenetriangle",
@@ -54,7 +54,7 @@
     "input": "Same source-strand integrase and window",
     "baseline": "comparegeneshouldered",
     "default": "shouldered",
-    "validation": "rendered with view_ggchord; page preparation executed"
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
   },
   {
     "id": "comparebranchnone",
@@ -73,7 +73,7 @@
     "input": "Explicit synthetic geometry demonstration: three 1000 bp sequences, two links sharing one query interval",
     "baseline": null,
     "default": "none",
-    "validation": "rendered with view_ggchord; page preparation executed"
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
   },
   {
     "id": "comparebranchquery",
@@ -92,7 +92,7 @@
     "input": "Same synthetic shared-query intervals; not observed alignments",
     "baseline": "comparebranchnone",
     "default": "none",
-    "validation": "rendered with view_ggchord; page preparation executed"
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
   },
   {
     "id": "comparebranchfraction",
@@ -111,7 +111,7 @@
     "input": "Same synthetic shared-query intervals; compare against query branching at default 0.15",
     "baseline": "comparebranchquery",
     "default": 0.15,
-    "validation": "rendered with view_ggchord; page preparation executed"
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
   },
   {
     "id": "comparelinkcurve",
@@ -131,7 +131,7 @@
     "input": "Same synthetic link intervals; point links use interval midpoints",
     "baseline": null,
     "default": "curve",
-    "validation": "rendered with view_ggchord; page preparation executed"
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
   },
   {
     "id": "comparelinkstraight",
@@ -151,7 +151,7 @@
     "input": "Same synthetic link intervals and midpoint anchors",
     "baseline": "comparelinkcurve",
     "default": "curve",
-    "validation": "rendered with view_ggchord; page preparation executed"
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
   },
   {
     "id": "comparetrackthin",
@@ -170,6 +170,1215 @@
     "input": "Same pUC19 100 bp GC windows, fraction and gradient as tracktile at 10 mm",
     "baseline": "tracktile",
     "default": "4 mm",
-    "validation": "rendered with view_ggchord; page preparation executed"
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
+  },
+  {
+    "id": "comparecenter",
+    "object": "p_comparecenter",
+    "parameter": "center label",
+    "value": "default",
+    "snippets": [
+      "comparefinishcircle",
+      "comparecenter"
+    ],
+    "page": "circular-layers",
+    "anchor": "center",
+    "coordinate": "circular",
+    "width": 9,
+    "height": 8,
+    "input": "Same source-backed pUC19 sequence and unchanged selected annotations",
+    "baseline": null,
+    "default": "see current Rd and parameter atlas",
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
+  },
+  {
+    "id": "comparecenternolength",
+    "object": "p_comparecenternolength",
+    "parameter": "length",
+    "value": "FALSE",
+    "snippets": [
+      "comparefinishcircle",
+      "comparecenternolength"
+    ],
+    "page": "circular-layers",
+    "anchor": "center",
+    "coordinate": "circular",
+    "width": 9,
+    "height": 8,
+    "input": "Same source-backed pUC19 sequence and unchanged selected annotations",
+    "baseline": "comparecenter",
+    "default": "see current Rd and parameter atlas",
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
+  },
+  {
+    "id": "comparecenterstyle",
+    "object": "p_comparecenterstyle",
+    "parameter": "name_style",
+    "value": "size=6",
+    "snippets": [
+      "comparefinishcircle",
+      "comparecenterstyle"
+    ],
+    "page": "circular-layers",
+    "anchor": "center",
+    "coordinate": "circular",
+    "width": 9,
+    "height": 8,
+    "input": "Same source-backed pUC19 sequence and unchanged selected annotations",
+    "baseline": "comparecenter",
+    "default": "see current Rd and parameter atlas",
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
+  },
+  {
+    "id": "comparebonedouble",
+    "object": "p_comparebonedouble",
+    "parameter": "seq_style",
+    "value": "double",
+    "snippets": [
+      "comparefinishcircle",
+      "comparebonedouble"
+    ],
+    "page": "circular-layers",
+    "anchor": "backbones",
+    "coordinate": "circular",
+    "width": 9,
+    "height": 8,
+    "input": "Same source-backed pUC19 sequence and unchanged selected annotations",
+    "baseline": null,
+    "default": "see current Rd and parameter atlas",
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
+  },
+  {
+    "id": "comparebonesingle",
+    "object": "p_comparebonesingle",
+    "parameter": "seq_style",
+    "value": "single",
+    "snippets": [
+      "comparefinishcircle",
+      "comparebonesingle"
+    ],
+    "page": "circular-layers",
+    "anchor": "backbones",
+    "coordinate": "circular",
+    "width": 9,
+    "height": 8,
+    "input": "Same source-backed pUC19 sequence and unchanged selected annotations",
+    "baseline": "comparebonedouble",
+    "default": "see current Rd and parameter atlas",
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
+  },
+  {
+    "id": "compareboneband",
+    "object": "p_compareboneband",
+    "parameter": "seq_style",
+    "value": "band",
+    "snippets": [
+      "comparefinishcircle",
+      "compareboneband"
+    ],
+    "page": "circular-layers",
+    "anchor": "backbones",
+    "coordinate": "circular",
+    "width": 9,
+    "height": 8,
+    "input": "Same complete source pUC19; actual geom_seq band after the confirmed rendering fix",
+    "baseline": "comparebonedouble",
+    "default": "see current Rd and parameter atlas",
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
+  },
+  {
+    "id": "comparebonegap",
+    "object": "p_comparebonegap",
+    "parameter": "seq_backbone_gap",
+    "value": "0.05",
+    "snippets": [
+      "comparefinishcircle",
+      "comparebonegap"
+    ],
+    "page": "circular-layers",
+    "anchor": "backbones",
+    "coordinate": "circular",
+    "width": 9,
+    "height": 8,
+    "input": "Same source-backed pUC19 sequence and unchanged selected annotations",
+    "baseline": "comparebonedouble",
+    "default": "see current Rd and parameter atlas",
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
+  },
+  {
+    "id": "comparecirclecounter",
+    "object": "p_comparecirclecounter",
+    "parameter": "direction",
+    "value": "counterclockwise",
+    "snippets": [
+      "comparefinishcircle",
+      "comparecirclecounter"
+    ],
+    "page": "circular-layers",
+    "anchor": "coordinates",
+    "coordinate": "circular",
+    "width": 9,
+    "height": 8,
+    "input": "Same source-backed pUC19 sequence and unchanged selected annotations",
+    "baseline": "comparebonedouble",
+    "default": "see current Rd and parameter atlas",
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
+  },
+  {
+    "id": "comparecirclegap",
+    "object": "p_comparecirclegap",
+    "parameter": "gap",
+    "value": "25",
+    "snippets": [
+      "comparefinishcircle",
+      "comparecirclegap"
+    ],
+    "page": "circular-layers",
+    "anchor": "coordinates",
+    "coordinate": "circular",
+    "width": 9,
+    "height": 8,
+    "input": "Same source-backed pUC19 sequence and unchanged selected annotations",
+    "baseline": "comparebonedouble",
+    "default": "see current Rd and parameter atlas",
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
+  },
+  {
+    "id": "comparefixedfeature",
+    "object": "p_comparefixedfeature",
+    "parameter": "fixed label",
+    "value": "label_orientation = \"feature\"",
+    "snippets": [
+      "comparefinishcircle",
+      "comparefixedfeature"
+    ],
+    "page": "circular-labels",
+    "anchor": "fixed-labels",
+    "coordinate": "circular",
+    "width": 9,
+    "height": 8,
+    "input": "Same source-backed pUC19 sequence and unchanged selected annotations",
+    "baseline": null,
+    "default": "see current Rd and parameter atlas",
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
+  },
+  {
+    "id": "comparefixedhorizontal",
+    "object": "p_comparefixedhorizontal",
+    "parameter": "fixed label",
+    "value": "label_orientation = \"horizontal\"",
+    "snippets": [
+      "comparefinishcircle",
+      "comparefixedhorizontal"
+    ],
+    "page": "circular-labels",
+    "anchor": "fixed-labels",
+    "coordinate": "circular",
+    "width": 9,
+    "height": 8,
+    "input": "Same source-backed pUC19 sequence and unchanged selected annotations",
+    "baseline": "comparefixedfeature",
+    "default": "see current Rd and parameter atlas",
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
+  },
+  {
+    "id": "comparefixedinside",
+    "object": "p_comparefixedinside",
+    "parameter": "fixed label",
+    "value": "label_orientation = \"feature\", label_side = \"inside\"",
+    "snippets": [
+      "comparefinishcircle",
+      "comparefixedinside"
+    ],
+    "page": "circular-labels",
+    "anchor": "fixed-labels",
+    "coordinate": "circular",
+    "width": 9,
+    "height": 8,
+    "input": "Same source-backed pUC19 sequence and unchanged selected annotations",
+    "baseline": "comparefixedfeature",
+    "default": "see current Rd and parameter atlas",
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
+  },
+  {
+    "id": "comparefixedrotate",
+    "object": "p_comparefixedrotate",
+    "parameter": "fixed label",
+    "value": "label_orientation = \"feature\", label_rotation = 30",
+    "snippets": [
+      "comparefinishcircle",
+      "comparefixedrotate"
+    ],
+    "page": "circular-labels",
+    "anchor": "fixed-labels",
+    "coordinate": "circular",
+    "width": 9,
+    "height": 8,
+    "input": "Same source-backed pUC19 sequence and unchanged selected annotations",
+    "baseline": "comparefixedfeature",
+    "default": "see current Rd and parameter atlas",
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
+  },
+  {
+    "id": "comparefeaturefit",
+    "object": "p_comparefeaturefit",
+    "parameter": "automatic label",
+    "value": "label_layout = \"feature\"",
+    "snippets": [
+      "comparefinishcircle",
+      "comparefeaturefit"
+    ],
+    "page": "circular-labels",
+    "anchor": "automatic-labels",
+    "coordinate": "circular",
+    "width": 9,
+    "height": 8,
+    "input": "Same source-backed pUC19 sequence and unchanged selected annotations",
+    "baseline": null,
+    "default": "see current Rd and parameter atlas",
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
+  },
+  {
+    "id": "compareradialfit",
+    "object": "p_compareradialfit",
+    "parameter": "automatic label",
+    "value": "label_layout = \"radial\"",
+    "snippets": [
+      "comparefinishcircle",
+      "compareradialfit"
+    ],
+    "page": "circular-labels",
+    "anchor": "automatic-labels",
+    "coordinate": "circular",
+    "width": 9,
+    "height": 8,
+    "input": "Same source-backed pUC19 sequence and unchanged selected annotations",
+    "baseline": "comparefeaturefit",
+    "default": "see current Rd and parameter atlas",
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
+  },
+  {
+    "id": "compareautofit",
+    "object": "p_compareautofit",
+    "parameter": "automatic label",
+    "value": "label_layout = \"auto\"",
+    "snippets": [
+      "comparefinishcircle",
+      "compareautofit"
+    ],
+    "page": "circular-labels",
+    "anchor": "automatic-labels",
+    "coordinate": "circular",
+    "width": 9,
+    "height": 8,
+    "input": "Same source-backed pUC19 sequence and unchanged selected annotations",
+    "baseline": "comparefeaturefit",
+    "default": "see current Rd and parameter atlas",
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
+  },
+  {
+    "id": "comparecalloutfit",
+    "object": "p_comparecalloutfit",
+    "parameter": "automatic label",
+    "value": "label_layout = \"callout\"",
+    "snippets": [
+      "comparefinishcircle",
+      "comparecalloutfit"
+    ],
+    "page": "circular-labels",
+    "anchor": "automatic-labels",
+    "coordinate": "circular",
+    "width": 9,
+    "height": 8,
+    "input": "Same source-backed pUC19 sequence and unchanged selected annotations",
+    "baseline": "comparefeaturefit",
+    "default": "see current Rd and parameter atlas",
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
+  },
+  {
+    "id": "compareshrinkfit",
+    "object": "p_compareshrinkfit",
+    "parameter": "automatic label",
+    "value": "label_layout = \"feature\", label_fit = \"shrink\"",
+    "snippets": [
+      "comparefinishcircle",
+      "compareshrinkfit"
+    ],
+    "page": "circular-labels",
+    "anchor": "automatic-labels",
+    "coordinate": "circular",
+    "width": 9,
+    "height": 8,
+    "input": "Same source-backed pUC19 sequence and unchanged selected annotations",
+    "baseline": "comparefeaturefit",
+    "default": "see current Rd and parameter atlas",
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
+  },
+  {
+    "id": "comparewrapfit",
+    "object": "p_comparewrapfit",
+    "parameter": "automatic label",
+    "value": "label_layout = \"feature\", label_wrap = 14",
+    "snippets": [
+      "comparefinishcircle",
+      "comparewrapfit"
+    ],
+    "page": "circular-labels",
+    "anchor": "automatic-labels",
+    "coordinate": "circular",
+    "width": 9,
+    "height": 8,
+    "input": "Same source-backed pUC19 sequence and unchanged selected annotations",
+    "baseline": "comparefeaturefit",
+    "default": "see current Rd and parameter atlas",
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
+  },
+  {
+    "id": "comparepositionidentity",
+    "object": "p_comparepositionidentity",
+    "parameter": "position",
+    "value": "position_identity()",
+    "snippets": [
+      "comparefinishcircle",
+      "comparefinishstack",
+      "comparepositionidentity"
+    ],
+    "page": "circular-layers",
+    "anchor": "stacking",
+    "coordinate": "circular",
+    "width": 9,
+    "height": 8,
+    "input": "Same source-backed pUC19 sequence and unchanged selected annotations",
+    "baseline": null,
+    "default": "see current Rd and parameter atlas",
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
+  },
+  {
+    "id": "comparepositionstack",
+    "object": "p_comparepositionstack",
+    "parameter": "position",
+    "value": "finish_position",
+    "snippets": [
+      "comparefinishcircle",
+      "comparefinishstack",
+      "comparepositionstack"
+    ],
+    "page": "circular-layers",
+    "anchor": "stacking",
+    "coordinate": "circular",
+    "width": 9,
+    "height": 8,
+    "input": "Same source-backed pUC19 sequence and unchanged selected annotations",
+    "baseline": "comparepositionidentity",
+    "default": "see current Rd and parameter atlas",
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
+  },
+  {
+    "id": "compareprimerbetween",
+    "object": "p_compareprimerbetween",
+    "parameter": "primer arc",
+    "value": "side = \"between\"",
+    "snippets": [
+      "comparefinishdnabase",
+      "comparefinishprimer",
+      "compareprimerbetween"
+    ],
+    "page": "primers",
+    "anchor": "primer-arcs",
+    "coordinate": "circular",
+    "width": 9,
+    "height": 8,
+    "input": "Same source-backed pUC19 sequence and unchanged selected annotations",
+    "baseline": null,
+    "default": "see current Rd and parameter atlas",
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
+  },
+  {
+    "id": "compareprimeroutside",
+    "object": "p_compareprimeroutside",
+    "parameter": "primer arc",
+    "value": "side = \"outside\"",
+    "snippets": [
+      "comparefinishdnabase",
+      "comparefinishprimer",
+      "compareprimeroutside"
+    ],
+    "page": "primers",
+    "anchor": "primer-arcs",
+    "coordinate": "circular",
+    "width": 9,
+    "height": 8,
+    "input": "Same source-backed pUC19 sequence and unchanged selected annotations",
+    "baseline": "compareprimerbetween",
+    "default": "see current Rd and parameter atlas",
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
+  },
+  {
+    "id": "compareprimerinside",
+    "object": "p_compareprimerinside",
+    "parameter": "primer arc",
+    "value": "side = \"inside\"",
+    "snippets": [
+      "comparefinishdnabase",
+      "comparefinishprimer",
+      "compareprimerinside"
+    ],
+    "page": "primers",
+    "anchor": "primer-arcs",
+    "coordinate": "circular",
+    "width": 9,
+    "height": 8,
+    "input": "Same source-backed pUC19 sequence and unchanged selected annotations",
+    "baseline": "compareprimerbetween",
+    "default": "see current Rd and parameter atlas",
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
+  },
+  {
+    "id": "compareprimerwidth",
+    "object": "p_compareprimerwidth",
+    "parameter": "primer arc",
+    "value": "side = \"between\", arc_linewidth = 0.05",
+    "snippets": [
+      "comparefinishdnabase",
+      "comparefinishprimer",
+      "compareprimerwidth"
+    ],
+    "page": "primers",
+    "anchor": "primer-arcs",
+    "coordinate": "circular",
+    "width": 9,
+    "height": 8,
+    "input": "Same source-backed pUC19 sequence and unchanged selected annotations",
+    "baseline": "compareprimerbetween",
+    "default": "see current Rd and parameter atlas",
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
+  },
+  {
+    "id": "compareprimerlabel",
+    "object": "p_compareprimerlabel",
+    "parameter": "primer label",
+    "value": "side = \"outside\"",
+    "snippets": [
+      "comparefinishdnabase",
+      "comparefinishprimer",
+      "compareprimerlabel"
+    ],
+    "page": "primers",
+    "anchor": "primer-labels",
+    "coordinate": "circular",
+    "width": 9,
+    "height": 8,
+    "input": "Same source-backed pUC19 sequence and unchanged selected annotations",
+    "baseline": null,
+    "default": "see current Rd and parameter atlas",
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
+  },
+  {
+    "id": "compareprimernolocation",
+    "object": "p_compareprimernolocation",
+    "parameter": "primer label",
+    "value": "side = \"outside\", show_location = FALSE",
+    "snippets": [
+      "comparefinishdnabase",
+      "comparefinishprimer",
+      "compareprimernolocation"
+    ],
+    "page": "primers",
+    "anchor": "primer-labels",
+    "coordinate": "circular",
+    "width": 9,
+    "height": 8,
+    "input": "Same source-backed pUC19 sequence and unchanged selected annotations",
+    "baseline": "compareprimerlabel",
+    "default": "see current Rd and parameter atlas",
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
+  },
+  {
+    "id": "compareprimerlabelinside",
+    "object": "p_compareprimerlabelinside",
+    "parameter": "primer label",
+    "value": "side = \"inside\"",
+    "snippets": [
+      "comparefinishdnabase",
+      "comparefinishprimer",
+      "compareprimerlabelinside"
+    ],
+    "page": "primers",
+    "anchor": "primer-labels",
+    "coordinate": "circular",
+    "width": 9,
+    "height": 8,
+    "input": "Same source-backed pUC19 sequence and unchanged selected annotations",
+    "baseline": "compareprimerlabel",
+    "default": "see current Rd and parameter atlas",
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
+  },
+  {
+    "id": "comparerestrictionradial",
+    "object": "p_comparerestrictionradial",
+    "parameter": "restriction labels",
+    "value": "leader = \"radial\"",
+    "snippets": [
+      "comparefinishdnabase",
+      "comparefinishsites",
+      "comparerestrictionradial"
+    ],
+    "page": "restriction-sites",
+    "anchor": "restriction-labels",
+    "coordinate": "circular",
+    "width": 9,
+    "height": 8,
+    "input": "Same source-backed pUC19 sequence and unchanged selected annotations",
+    "baseline": null,
+    "default": "see current Rd and parameter atlas",
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
+  },
+  {
+    "id": "comparerestrictionelbow",
+    "object": "p_comparerestrictionelbow",
+    "parameter": "restriction labels",
+    "value": "leader = \"elbow\"",
+    "snippets": [
+      "comparefinishdnabase",
+      "comparefinishsites",
+      "comparerestrictionelbow"
+    ],
+    "page": "restriction-sites",
+    "anchor": "restriction-labels",
+    "coordinate": "circular",
+    "width": 9,
+    "height": 8,
+    "input": "Same source-backed pUC19 sequence and unchanged selected annotations",
+    "baseline": "comparerestrictionradial",
+    "default": "see current Rd and parameter atlas",
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
+  },
+  {
+    "id": "comparerestrictionstraight",
+    "object": "p_comparerestrictionstraight",
+    "parameter": "restriction labels",
+    "value": "leader = \"straight\"",
+    "snippets": [
+      "comparefinishdnabase",
+      "comparefinishsites",
+      "comparerestrictionstraight"
+    ],
+    "page": "restriction-sites",
+    "anchor": "restriction-labels",
+    "coordinate": "circular",
+    "width": 9,
+    "height": 8,
+    "input": "Same source-backed pUC19 sequence and unchanged selected annotations",
+    "baseline": "comparerestrictionradial",
+    "default": "see current Rd and parameter atlas",
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
+  },
+  {
+    "id": "comparerestrictionenzyme",
+    "object": "p_comparerestrictionenzyme",
+    "parameter": "restriction labels",
+    "value": "leader = \"radial\", label_style = \"enzyme\"",
+    "snippets": [
+      "comparefinishdnabase",
+      "comparefinishsites",
+      "comparerestrictionenzyme"
+    ],
+    "page": "restriction-sites",
+    "anchor": "restriction-labels",
+    "coordinate": "circular",
+    "width": 9,
+    "height": 8,
+    "input": "Same source-backed pUC19 sequence and unchanged selected annotations",
+    "baseline": "comparerestrictionradial",
+    "default": "see current Rd and parameter atlas",
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
+  },
+  {
+    "id": "comparerestrictionposition",
+    "object": "p_comparerestrictionposition",
+    "parameter": "restriction labels",
+    "value": "leader = \"radial\", label_style = \"position\"",
+    "snippets": [
+      "comparefinishdnabase",
+      "comparefinishsites",
+      "comparerestrictionposition"
+    ],
+    "page": "restriction-sites",
+    "anchor": "restriction-labels",
+    "coordinate": "circular",
+    "width": 9,
+    "height": 8,
+    "input": "Same source-backed pUC19 sequence and unchanged selected annotations",
+    "baseline": "comparerestrictionradial",
+    "default": "see current Rd and parameter atlas",
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
+  },
+  {
+    "id": "comparerestrictionorder",
+    "object": "p_comparerestrictionorder",
+    "parameter": "restriction labels",
+    "value": "leader = \"radial\", label_order = \"position_enzyme\"",
+    "snippets": [
+      "comparefinishdnabase",
+      "comparefinishsites",
+      "comparerestrictionorder"
+    ],
+    "page": "restriction-sites",
+    "anchor": "restriction-labels",
+    "coordinate": "circular",
+    "width": 9,
+    "height": 8,
+    "input": "Same source-backed pUC19 sequence and unchanged selected annotations",
+    "baseline": "comparerestrictionradial",
+    "default": "see current Rd and parameter atlas",
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
+  },
+  {
+    "id": "comparerestrictioninside",
+    "object": "p_comparerestrictioninside",
+    "parameter": "restriction labels",
+    "value": "leader = \"radial\", label_side = \"inside\"",
+    "snippets": [
+      "comparefinishdnabase",
+      "comparefinishsites",
+      "comparerestrictioninside"
+    ],
+    "page": "restriction-sites",
+    "anchor": "restriction-labels",
+    "coordinate": "circular",
+    "width": 9,
+    "height": 8,
+    "input": "Same source-backed pUC19 sequence and unchanged selected annotations",
+    "baseline": "comparerestrictionradial",
+    "default": "see current Rd and parameter atlas",
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
+  },
+  {
+    "id": "compareshortauto",
+    "object": "p_compareshortauto",
+    "parameter": "short_feature",
+    "value": "auto",
+    "snippets": [
+      "comparegenedata",
+      "compareshortauto"
+    ],
+    "page": "feature-geometry",
+    "anchor": "short-features",
+    "coordinate": "collinear",
+    "width": 9,
+    "height": 4,
+    "input": "Same original integrase and source window; only fallback changes, head length fixed at 1.5",
+    "baseline": null,
+    "default": "see current Rd and parameter atlas",
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
+  },
+  {
+    "id": "compareshortwedge",
+    "object": "p_compareshortwedge",
+    "parameter": "short_feature",
+    "value": "wedge",
+    "snippets": [
+      "comparegenedata",
+      "compareshortwedge"
+    ],
+    "page": "feature-geometry",
+    "anchor": "short-features",
+    "coordinate": "collinear",
+    "width": 9,
+    "height": 4,
+    "input": "Same original integrase and source window; only fallback changes, head length fixed at 1.5",
+    "baseline": "compareshortauto",
+    "default": "see current Rd and parameter atlas",
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
+  },
+  {
+    "id": "compareshortblock",
+    "object": "p_compareshortblock",
+    "parameter": "short_feature",
+    "value": "block",
+    "snippets": [
+      "comparegenedata",
+      "compareshortblock"
+    ],
+    "page": "feature-geometry",
+    "anchor": "short-features",
+    "coordinate": "collinear",
+    "width": 9,
+    "height": 4,
+    "input": "Same original integrase and source window; only fallback changes, head length fixed at 1.5",
+    "baseline": "compareshortauto",
+    "default": "see current Rd and parameter atlas",
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
+  },
+  {
+    "id": "compareseqlabelarc",
+    "object": "p_compareseqlabelarc",
+    "parameter": "sequence labels",
+    "value": "seq_label_orientation = \"arc\"",
+    "snippets": [
+      "comparefinishchord",
+      "compareseqlabelarc"
+    ],
+    "page": "chord-labels",
+    "anchor": "sequence-parameters",
+    "coordinate": "chord",
+    "width": 9,
+    "height": 7,
+    "input": "Same four complete bundled sequences and source IDs",
+    "baseline": null,
+    "default": "see current Rd and parameter atlas",
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
+  },
+  {
+    "id": "compareseqlabelhorizontal",
+    "object": "p_compareseqlabelhorizontal",
+    "parameter": "sequence labels",
+    "value": "seq_label_orientation = \"horizontal\"",
+    "snippets": [
+      "comparefinishchord",
+      "compareseqlabelhorizontal"
+    ],
+    "page": "chord-labels",
+    "anchor": "sequence-parameters",
+    "coordinate": "chord",
+    "width": 9,
+    "height": 7,
+    "input": "Same four complete bundled sequences and source IDs",
+    "baseline": "compareseqlabelarc",
+    "default": "see current Rd and parameter atlas",
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
+  },
+  {
+    "id": "compareseqlabelrotation",
+    "object": "p_compareseqlabelrotation",
+    "parameter": "sequence labels",
+    "value": "seq_label_orientation = \"arc\", seq_label_rotation = 30",
+    "snippets": [
+      "comparefinishchord",
+      "compareseqlabelrotation"
+    ],
+    "page": "chord-labels",
+    "anchor": "sequence-parameters",
+    "coordinate": "chord",
+    "width": 9,
+    "height": 7,
+    "input": "Same four complete bundled sequences and source IDs",
+    "baseline": "compareseqlabelarc",
+    "default": "see current Rd and parameter atlas",
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
+  },
+  {
+    "id": "compareregioninside",
+    "object": "p_compareregioninside",
+    "parameter": "region_side",
+    "value": "region_side = \"inside\"",
+    "snippets": [
+      "comparefinishchord",
+      "compareregioninside"
+    ],
+    "page": "chord-routing",
+    "anchor": "region-parameters",
+    "coordinate": "chord",
+    "width": 9,
+    "height": 7,
+    "input": "First original HSP query interval, unchanged ID and endpoints",
+    "baseline": null,
+    "default": "see current Rd and parameter atlas",
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
+  },
+  {
+    "id": "compareregionoutside",
+    "object": "p_compareregionoutside",
+    "parameter": "region_side",
+    "value": "region_side = \"outside\"",
+    "snippets": [
+      "comparefinishchord",
+      "compareregionoutside"
+    ],
+    "page": "chord-routing",
+    "anchor": "region-parameters",
+    "coordinate": "chord",
+    "width": 9,
+    "height": 7,
+    "input": "First original HSP query interval, unchanged ID and endpoints",
+    "baseline": "compareregioninside",
+    "default": "see current Rd and parameter atlas",
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
+  },
+  {
+    "id": "comparescalegradient",
+    "object": "p_comparescalegradient",
+    "parameter": "scale/stat/theme as described in lesson",
+    "value": "comparescalegradient",
+    "snippets": [
+      "comparescaledata",
+      "comparescalegradient"
+    ],
+    "page": "scale-families",
+    "anchor": "numeric",
+    "coordinate": "chord",
+    "width": 9,
+    "height": 7,
+    "input": "Original complete sequence lengths and observed HSPs; explicit display mapping or aggregation",
+    "baseline": null,
+    "default": "current parameter atlas",
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
+  },
+  {
+    "id": "comparescalesteps",
+    "object": "p_comparescalesteps",
+    "parameter": "scale/stat/theme as described in lesson",
+    "value": "comparescalesteps",
+    "snippets": [
+      "comparescaledata",
+      "comparescalesteps"
+    ],
+    "page": "scale-families",
+    "anchor": "numeric",
+    "coordinate": "chord",
+    "width": 9,
+    "height": 7,
+    "input": "Original complete sequence lengths and observed HSPs; explicit display mapping or aggregation",
+    "baseline": "comparescalegradient",
+    "default": "current parameter atlas",
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
+  },
+  {
+    "id": "comparescalelinkcontinuous",
+    "object": "p_comparescalelinkcontinuous",
+    "parameter": "scale/stat/theme as described in lesson",
+    "value": "comparescalelinkcontinuous",
+    "snippets": [
+      "comparescaledata",
+      "comparescalelinkdata",
+      "comparescalelinkcontinuous"
+    ],
+    "page": "scale-families",
+    "anchor": "point-links",
+    "coordinate": "chord",
+    "width": 9,
+    "height": 7,
+    "input": "Original complete sequence lengths and observed HSPs; explicit display mapping or aggregation",
+    "baseline": null,
+    "default": "current parameter atlas",
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
+  },
+  {
+    "id": "comparethememinimal",
+    "object": "p_comparethememinimal",
+    "parameter": "scale/stat/theme as described in lesson",
+    "value": "comparethememinimal",
+    "snippets": [
+      "comparescaledata",
+      "comparethemes"
+    ],
+    "page": "scale-families",
+    "anchor": "themes",
+    "coordinate": "chord",
+    "width": 9,
+    "height": 7,
+    "input": "Original complete sequence lengths and observed HSPs; explicit display mapping or aggregation",
+    "baseline": null,
+    "default": "current parameter atlas",
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
+  },
+  {
+    "id": "comparethemedark",
+    "object": "p_comparethemedark",
+    "parameter": "scale/stat/theme as described in lesson",
+    "value": "comparethemedark",
+    "snippets": [
+      "comparescaledata",
+      "comparethemes"
+    ],
+    "page": "scale-families",
+    "anchor": "themes",
+    "coordinate": "chord",
+    "width": 9,
+    "height": 7,
+    "input": "Original complete sequence lengths and observed HSPs; explicit display mapping or aggregation",
+    "baseline": "comparethememinimal",
+    "default": "current parameter atlas",
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
+  },
+  {
+    "id": "comparedensityfour",
+    "object": "p_comparedensityfour",
+    "parameter": "scale/stat/theme as described in lesson",
+    "value": "comparedensityfour",
+    "snippets": [
+      "comparedensitydata",
+      "comparedensityfour"
+    ],
+    "page": "ribbon-statistics",
+    "anchor": "density",
+    "coordinate": "chord",
+    "width": 9,
+    "height": 7,
+    "input": "Original complete sequence lengths and observed HSPs; explicit display mapping or aggregation",
+    "baseline": null,
+    "default": "current parameter atlas",
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
+  },
+  {
+    "id": "comparedensityeight",
+    "object": "p_comparedensityeight",
+    "parameter": "scale/stat/theme as described in lesson",
+    "value": "comparedensityeight",
+    "snippets": [
+      "comparedensitydata",
+      "comparedensityeight"
+    ],
+    "page": "ribbon-statistics",
+    "anchor": "density",
+    "coordinate": "chord",
+    "width": 9,
+    "height": 7,
+    "input": "Original complete sequence lengths and observed HSPs; explicit display mapping or aggregation",
+    "baseline": "comparedensityfour",
+    "default": "current parameter atlas",
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
+  },
+  {
+    "id": "comparebundle",
+    "object": "p_comparebundle",
+    "parameter": "scale/stat/theme as described in lesson",
+    "value": "comparebundle",
+    "snippets": [
+      "comparedensitydata",
+      "comparebundle"
+    ],
+    "page": "ribbon-statistics",
+    "anchor": "bundle",
+    "coordinate": "chord",
+    "width": 9,
+    "height": 7,
+    "input": "Original complete sequence lengths and observed HSPs; explicit display mapping or aggregation",
+    "baseline": null,
+    "default": "current parameter atlas",
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
+  },
+  {
+    "id": "comparebandwidth",
+    "object": "p_comparebandwidth",
+    "api": "geom_seq",
+    "parameter": "seq_backbone_width",
+    "value": "0.07",
+    "snippets": [
+      "comparefinishcircle",
+      "comparebandwidth"
+    ],
+    "page": "circular-layers",
+    "anchor": "band-rendering",
+    "coordinate": "circular",
+    "width": 9,
+    "height": 8,
+    "input": "Same real source sequence, annotations or computed GC windows as the declared baseline",
+    "baseline": "compareboneband",
+    "default": "current signature",
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
+  },
+  {
+    "id": "comparefeaturearrow",
+    "object": "p_comparefeaturearrow",
+    "api": "geom_feature",
+    "parameter": "shape",
+    "value": "arrow",
+    "snippets": [
+      "comparefinishcircle",
+      "comparefeaturearrow"
+    ],
+    "page": "circular-layers",
+    "anchor": "feature-shapes",
+    "coordinate": "circular",
+    "width": 9,
+    "height": 8,
+    "input": "Same real source sequence, annotations or computed GC windows as the declared baseline",
+    "baseline": null,
+    "default": "current signature",
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
+  },
+  {
+    "id": "comparefeatureblock",
+    "object": "p_comparefeatureblock",
+    "api": "geom_feature",
+    "parameter": "shape",
+    "value": "block",
+    "snippets": [
+      "comparefinishcircle",
+      "comparefeatureblock"
+    ],
+    "page": "circular-layers",
+    "anchor": "feature-shapes",
+    "coordinate": "circular",
+    "width": 9,
+    "height": 8,
+    "input": "Same real source sequence, annotations or computed GC windows as the declared baseline",
+    "baseline": "comparefeaturearrow",
+    "default": "current signature",
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
+  },
+  {
+    "id": "comparefeaturepreset",
+    "object": "p_comparefeaturepreset",
+    "api": "geom_feature_plasmid",
+    "parameter": "preset",
+    "value": "plasmid",
+    "snippets": [
+      "comparefinishcircle",
+      "comparefeaturepreset"
+    ],
+    "page": "circular-layers",
+    "anchor": "feature-shapes",
+    "coordinate": "circular",
+    "width": 9,
+    "height": 8,
+    "input": "Same real source sequence, annotations or computed GC windows as the declared baseline",
+    "baseline": null,
+    "default": "current signature",
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
+  },
+  {
+    "id": "compareexternaloff",
+    "object": "p_compareexternaloff",
+    "api": "geom_feature_label_repel",
+    "parameter": "external",
+    "value": "FALSE",
+    "snippets": [
+      "comparefinishcircle",
+      "compareexternaloff"
+    ],
+    "page": "circular-labels",
+    "anchor": "fitting",
+    "coordinate": "circular",
+    "width": 9,
+    "height": 8,
+    "input": "Same real source sequence, annotations or computed GC windows as the declared baseline",
+    "baseline": "comparefeaturefit",
+    "default": "current signature",
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
+  },
+  {
+    "id": "compareellipsisfit",
+    "object": "p_compareellipsisfit",
+    "api": "geom_feature_label_repel",
+    "parameter": "label_fit",
+    "value": "ellipsis",
+    "snippets": [
+      "comparefinishcircle",
+      "compareellipsisfit"
+    ],
+    "page": "circular-labels",
+    "anchor": "fitting",
+    "coordinate": "circular",
+    "width": 9,
+    "height": 8,
+    "input": "Same real source sequence, annotations or computed GC windows as the declared baseline",
+    "baseline": "comparewrapfit",
+    "default": "current signature",
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
+  },
+  {
+    "id": "compareprimeroffset",
+    "object": "p_compareprimeroffset",
+    "api": "geom_primer",
+    "parameter": "arc_offset",
+    "value": "0.09",
+    "snippets": [
+      "comparefinishdnabase",
+      "comparefinishprimer",
+      "compareprimeroffset"
+    ],
+    "page": "primers",
+    "anchor": "primer-arcs",
+    "coordinate": "circular",
+    "width": 9,
+    "height": 8,
+    "input": "Same real source sequence, annotations or computed GC windows as the declared baseline",
+    "baseline": "compareprimeroutside",
+    "default": "current signature",
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
+  },
+  {
+    "id": "compareregionwidth",
+    "object": "p_compareregionwidth",
+    "api": "geom_seq_region",
+    "parameter": "region_width",
+    "value": "0.14",
+    "snippets": [
+      "comparefinishchord",
+      "compareregionwidth"
+    ],
+    "page": "chord-routing",
+    "anchor": "region-parameters",
+    "coordinate": "chord",
+    "width": 9,
+    "height": 7,
+    "input": "Same real source sequence, annotations or computed GC windows as the declared baseline",
+    "baseline": "compareregioninside",
+    "default": "current signature",
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
+  },
+  {
+    "id": "compareregionoffset",
+    "object": "p_compareregionoffset",
+    "api": "geom_seq_region",
+    "parameter": "region_offset",
+    "value": "0.1",
+    "snippets": [
+      "comparefinishchord",
+      "compareregionoffset"
+    ],
+    "page": "chord-routing",
+    "anchor": "region-parameters",
+    "coordinate": "chord",
+    "width": 9,
+    "height": 7,
+    "input": "Same real source sequence, annotations or computed GC windows as the declared baseline",
+    "baseline": "compareregioninside",
+    "default": "current signature",
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
+  },
+  {
+    "id": "comparetracktwo",
+    "object": "p_comparetracktwo",
+    "api": "position_track",
+    "parameter": "order",
+    "value": "2",
+    "snippets": [
+      "trackdata",
+      "comparemultitrackdata",
+      "comparetracktwo"
+    ],
+    "page": "tracks",
+    "anchor": "independent-bands",
+    "coordinate": "circular",
+    "width": 9,
+    "height": 8,
+    "input": "Same real source sequence, annotations or computed GC windows as the declared baseline",
+    "baseline": null,
+    "default": "current signature",
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
+  },
+  {
+    "id": "comparetrackorder",
+    "object": "p_comparetrackorder",
+    "api": "position_track",
+    "parameter": "order",
+    "value": "0",
+    "snippets": [
+      "trackdata",
+      "comparemultitrackdata",
+      "comparetrackorder"
+    ],
+    "page": "tracks",
+    "anchor": "independent-bands",
+    "coordinate": "circular",
+    "width": 9,
+    "height": 8,
+    "input": "Same real source sequence, annotations or computed GC windows as the declared baseline",
+    "baseline": "comparetracktwo",
+    "default": "current signature",
+    "validation": "rendered with view_ggchord; all 169 PNG exports completed; page preparations executed"
   }
 ]

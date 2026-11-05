@@ -11,8 +11,15 @@ pages <- Filter(function(page) {
   text <- paste(readLines(paste0("website/en/", page, ".md"), warn = FALSE), collapse = "\n")
   grepl("\\{\\{(code|prepare|recipe):", text)
 }, pages)
+selected <- sub("^--page=", "", grep("^--page=", commandArgs(trailingOnly=TRUE), value=TRUE))
+if (length(selected)) {
+  stopifnot(length(selected)==1L, selected %in% pages)
+  stopifnot(!"--write-outputs" %in% commandArgs(trailingOnly=TRUE))
+  pages <- selected
+}
 recipes <- jsonlite::fromJSON("website/showcase-recipes.json")
 outputs <- list()
+execution <- list()
 for(page in pages) {
   text <- paste(readLines(paste0('website/en/', page, '.md'), warn=FALSE), collapse='\n')
   for (name in names(recipes)) {
@@ -20,10 +27,25 @@ for(page in pages) {
       paste0("{{prepare:", paste(recipes[[name]], collapse = ","), "}}"),
       text, fixed = TRUE)
   }
-  matches <- regmatches(text, gregexpr('\\{\\{(code|prepare|output|console):[a-z,]+\\}\\}', text))[[1]]
+  matches <- regmatches(text, gregexpr('\\{\\{(code|prepare|output|console):[a-z,]+\\}\\}|```r\n[\\s\\S]*?```', text, perl=TRUE))[[1]]
   environment <- new.env(parent=globalenv())
   evaluated <- list()
+  raw_blocks <- 0L
+  # Full PNG rendering runs separately at recorded dimensions. Here validate raw
+  # constructors and arguments without opening previews or overwriting user files.
+  environment$view_ggchord <- function(plot, ...) invisible(plot)
+  environment$ggsave <- function(filename, plot, ...) {
+    stopifnot(inherits(plot, "ggplot"), is.character(filename))
+    invisible(NULL)
+  }
   for(marker in matches) {
+    if (startsWith(marker, "```r")) {
+      code <- sub("^```r\n", "", sub("```$", "", marker))
+      tryCatch(eval(parse(text=code),environment),error=function(e)
+        stop(page, " / raw block: ", conditionMessage(e),call.=FALSE))
+      raw_blocks <- raw_blocks + 1L
+      next
+    }
     if (startsWith(marker, "{{output:") || startsWith(marker, "{{console:")) {
       key <- sub("^.*:([a-z]+)[}][}]$", "\\1", marker)
       if (!key %in% names(evaluated)) {
@@ -51,13 +73,21 @@ for(page in pages) {
         stop(page, ' / ', key, ': ', conditionMessage(e), call.=FALSE)))
     }
   }
+  execution[[page]] <- list(result="success", chunks=names(evaluated), raw_blocks=raw_blocks,
+    isolation="separate R environment; packages loaded as declared by lesson snippets",
+    exports="raw save/preview arguments checked; actual PNG exports verified separately")
   cat('PASS:', page, 'in a separate documentation environment\n')
 }
 output_file <- 'website/assets/lesson-outputs.json'
 serialized <- jsonlite::toJSON(outputs, auto_unbox = TRUE, pretty = TRUE)
 if ('--write-outputs' %in% commandArgs(trailingOnly = TRUE)) {
   writeLines(serialized, output_file)
-} else if (!identical(paste(readLines(output_file, warn = FALSE), collapse = '\n'), as.character(serialized))) {
+} else if (!length(selected) && !identical(paste(readLines(output_file, warn = FALSE), collapse = '\n'), as.character(serialized))) {
   stop('Lesson outputs are stale. Run tools/check-documentation-lessons.R --write-outputs.')
 }
+if (length(selected)) execution[[selected]]$isolation <- "fresh R process, separate documentation environment"
+jsonlite::write_json(list(pages=execution,
+  scope="Shared preparations and raw constructors in page order; preview/save calls do not write files. Installation commands are not executed. First lessons also have fresh-process checks; 169 actual PNG exports are recorded separately.",
+  optional_genbank="Biopython enabled through the documentation-only Python environment"),
+  if (length(selected)) paste0("/tmp/ggchord-lesson-",selected,".json") else "tools/teaching-audit/lesson-execution.json",auto_unbox=TRUE,pretty=TRUE)
 cat(length(pages),'page preparations completed; no package checks or rendered exports.\n')

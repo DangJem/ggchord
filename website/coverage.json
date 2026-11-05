@@ -406,5 +406,236 @@
       "comparelinkstraight"
     ],
     "result": null
+  },
+  {
+    "id": "circular-layers",
+    "title": {
+      "en": "Circular Layers",
+      "zh": "圆图骨架、中心文字与注释轨道"
+    },
+    "articles": [
+      "circular-layers"
+    ],
+    "snippets": [
+      "comparefinishcircle",
+      "comparebonedouble",
+      "comparebonesingle",
+      "comparebonegap",
+      "compareboneband",
+      "comparebandwidth",
+      "comparecirclecounter",
+      "comparecirclegap",
+      "comparecenter",
+      "comparecenternolength",
+      "comparecenterstyle",
+      "comparefeaturearrow",
+      "comparefeatureblock",
+      "comparefeaturepreset",
+      "comparefinishstack",
+      "comparepositionidentity",
+      "comparepositionstack"
+    ],
+    "figures": [
+      "comparebonedouble",
+      "comparebonesingle",
+      "comparebonegap",
+      "compareboneband",
+      "comparebandwidth",
+      "comparecirclecounter",
+      "comparecirclegap",
+      "comparecenter",
+      "comparecenternolength",
+      "comparecenterstyle",
+      "comparefeaturearrow",
+      "comparefeatureblock",
+      "comparefeaturepreset",
+      "comparepositionidentity",
+      "comparepositionstack"
+    ],
+    "result": null
+  },
+  {
+    "id": "circular-labels",
+    "title": {
+      "en": "Circular Labels",
+      "zh": "圆图固定标签与自动适配"
+    },
+    "articles": [
+      "circular-labels"
+    ],
+    "snippets": [
+      "comparefinishcircle",
+      "comparefixedfeature",
+      "comparefixedhorizontal",
+      "comparefixedinside",
+      "comparefixedrotate",
+      "comparefeaturefit",
+      "compareradialfit",
+      "compareautofit",
+      "comparecalloutfit",
+      "compareshrinkfit",
+      "comparewrapfit",
+      "compareellipsisfit",
+      "compareexternaloff"
+    ],
+    "figures": [
+      "comparefixedfeature",
+      "comparefixedhorizontal",
+      "comparefixedinside",
+      "comparefixedrotate",
+      "comparefeaturefit",
+      "compareradialfit",
+      "compareautofit",
+      "comparecalloutfit",
+      "compareshrinkfit",
+      "comparewrapfit",
+      "compareellipsisfit",
+      "compareexternaloff"
+    ],
+    "result": null
+  },
+  {
+    "id": "primers",
+    "title": {
+      "en": "Primers",
+      "zh": "识别引物、弧线与文字"
+    },
+    "articles": [
+      "primers"
+    ],
+    "snippets": [
+      "comparefinishdnabase",
+      "comparefinishprimer",
+      "comparefinishprimerrows",
+      "compareprimerbetween",
+      "compareprimeroutside",
+      "compareprimeroffset",
+      "compareprimerinside",
+      "compareprimerwidth",
+      "compareprimerlabel",
+      "compareprimernolocation",
+      "compareprimerlabelinside"
+    ],
+    "figures": [
+      "compareprimerbetween",
+      "compareprimeroutside",
+      "compareprimeroffset",
+      "compareprimerinside",
+      "compareprimerwidth",
+      "compareprimerlabel",
+      "compareprimernolocation",
+      "compareprimerlabelinside"
+    ],
+    "result": null
+  },
+  {
+    "id": "restriction-sites",
+    "title": {
+      "en": "Restriction Sites",
+      "zh": "限制酶搜索、切点与标签"
+    },
+    "articles": [
+      "restriction-sites"
+    ],
+    "snippets": [
+      "comparefinishdnabase",
+      "comparefinishsites",
+      "comparefinishsiterows",
+      "comparerestrictionradial",
+      "comparerestrictionelbow",
+      "comparerestrictionstraight",
+      "comparerestrictionenzyme",
+      "comparerestrictionposition",
+      "comparerestrictionorder",
+      "comparerestrictioninside"
+    ],
+    "figures": [
+      "comparerestrictionradial",
+      "comparerestrictionelbow",
+      "comparerestrictionstraight",
+      "comparerestrictionenzyme",
+      "comparerestrictionposition",
+      "comparerestrictionorder",
+      "comparerestrictioninside"
+    ],
+    "result": null
+  },
+  {
+    "id": "scale-families",
+    "title": {
+      "en": "Scale Families",
+      "zh": "按角色选择标度、图例与主题"
+    },
+    "articles": [
+      "scale-families"
+    ],
+    "snippets": [
+      "comparescaledata",
+      "comparescalegradient",
+      "comparescalesteps",
+      "comparescaleidentity",
+      "comparescalemanual",
+      "comparescalelinkdata",
+      "comparescalelinkmanual",
+      "comparescalelinkcontinuous",
+      "comparescalefeature",
+      "comparescalepreset",
+      "comparescalegenering",
+      "comparescaleregion",
+      "trackdata",
+      "comparescaletrack",
+      "comparescaletrackgradient",
+      "comparethemes"
+    ],
+    "figures": [
+      "comparescalegradient",
+      "comparescalesteps",
+      "comparescalelinkcontinuous",
+      "comparethememinimal",
+      "comparethemedark"
+    ],
+    "result": null
+  },
+  {
+    "id": "ribbon-statistics",
+    "title": {
+      "en": "Ribbon Statistics",
+      "zh": "连接密度与显式聚束"
+    },
+    "articles": [
+      "ribbon-statistics"
+    ],
+    "snippets": [
+      "comparedensitydata",
+      "comparedensityfour",
+      "comparedensityeight",
+      "comparebundle",
+      "comparebundlesummary"
+    ],
+    "figures": [
+      "comparedensityfour",
+      "comparedensityeight",
+      "comparebundle"
+    ],
+    "result": null
+  },
+  {
+    "id": "workflow-tools",
+    "title": {
+      "en": "Workflow Tools",
+      "zh": "按任务使用工作流与诊断工具"
+    },
+    "articles": [
+      "workflow-tools"
+    ],
+    "snippets": [
+      "comparescaledata",
+      "trackdata",
+      "comparecatalog",
+      "comparediagnostics",
+      "comparetrackfocus"
+    ],
+    "figures": [],
+    "result": null
   }
 ]

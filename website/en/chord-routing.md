@@ -55,3 +55,17 @@ Next, [place sequence and gene labels](chord-labels.html).
 Set fixed `fill/alpha/colour/linewidth` outside `aes()`. Map data differences to dedicated ribbon roles with matching scales. Explicit fixed values override matching mappings; omit fixed alpha when mapping opacity. Colour differences do not establish biological relationships. See [`geom_link_ribbon()`](reference/geom_link_ribbon.html) for the full signature.
 
 Continue with [shared branches and point links](chord-branches.html) to compare trunks, trunk fractions and curved/straight paths.
+
+## Region side, width and offset {#region-parameters}
+
+Keep the original query ID and interval of the first observed HSP. Defaults are width 0.08, offset 0 and inside. Each subsequent figure changes only outside placement, width or offset. These are local geometry quantities, not bp. Set fixed fill in geom parameters or map categories to region_fill with its dedicated scale. Highlighting does not establish a new functional annotation.
+
+{{code:comparefinishchord}}
+{{code:compareregioninside}}
+{{figure:compareregioninside}}
+{{code:compareregionoutside}}
+{{figure:compareregionoutside}}
+{{code:compareregionwidth}}
+{{figure:compareregionwidth}}
+{{code:compareregionoffset}}
+{{figure:compareregionoffset}}

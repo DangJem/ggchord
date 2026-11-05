@@ -1,0 +1,63 @@
+{
+  "source_sha": "43967187ca81c7e531d4bb9182c29b9563d2ab84",
+  "stable_source": "https://cran.r-project.org/src/contrib/ggchord_0.16.6.tar.gz",
+  "stable_archive_sha256": "62d1f61a7973acd9e712fc2df8459a3176b5f2c711a5d4d73b0e420c04c142ff",
+  "records": [
+    {
+      "version": "0.16.6",
+      "scope": "stable",
+      "page": "chord-start",
+      "result": "fresh R process and grob render succeeded"
+    },
+    {
+      "version": "0.16.6",
+      "scope": "stable",
+      "page": "collinear-start",
+      "result": "fresh R process and grob render succeeded"
+    },
+    {
+      "version": "0.16.6",
+      "scope": "stable",
+      "page": "plasmid-start",
+      "result": "fresh R process and grob render succeeded"
+    },
+    {
+      "scope": "stable",
+      "probe": {
+        "version": "0.16.6",
+        "nonadjacent_linewidth": false,
+        "explicit_sequence_unit": false,
+        "protein_data": false
+      },
+      "preview": "/tmp/ggchord-stable-circle.png"
+    },
+    {
+      "version": "0.16.7.9000",
+      "scope": "development",
+      "page": "chord-start",
+      "result": "fresh R process and grob render succeeded"
+    },
+    {
+      "version": "0.16.7.9000",
+      "scope": "development",
+      "page": "collinear-start",
+      "result": "fresh R process and grob render succeeded"
+    },
+    {
+      "version": "0.16.7.9000",
+      "scope": "development",
+      "page": "plasmid-start",
+      "result": "fresh R process and grob render succeeded"
+    },
+    {
+      "scope": "development",
+      "probe": {
+        "version": "0.16.7.9000",
+        "nonadjacent_linewidth": true,
+        "explicit_sequence_unit": true,
+        "protein_data": true
+      },
+      "preview": "/tmp/ggchord-development-circle.png"
+    }
+  ]
+}

@@ -1,0 +1,84 @@
+[
+  {
+    "id": "core",
+    "task": "三模块核心参数教学与同输入对照",
+    "status": "complete",
+    "evidence": [
+      "website/en/circular-layers.md",
+      "website/en/feature-geometry.md",
+      "website/en/chord-branches.md",
+      "website/en/collinear-layout.md",
+      "website/parameter-comparisons.json"
+    ]
+  },
+  {
+    "id": "labels",
+    "task": "固定标签、自动标签、尺寸与拥挤",
+    "status": "complete",
+    "evidence": [
+      "website/en/circular-labels.md",
+      "website/en/chord-labels.md",
+      "website/en/labels.md"
+    ]
+  },
+  {
+    "id": "recognition",
+    "task": "引物、酶切搜索与绘制分开教学",
+    "status": "complete",
+    "evidence": [
+      "website/en/primers.md",
+      "website/en/restriction-sites.md",
+      "website/assets/lesson-outputs.json"
+    ]
+  },
+  {
+    "id": "scales",
+    "task": "全部角色标度、图例、主题与统计",
+    "status": "complete",
+    "evidence": [
+      "website/en/scale-families.md",
+      "website/en/ribbon-statistics.md",
+      "website/en/workflow-tools.md"
+    ]
+  },
+  {
+    "id": "apis",
+    "task": "130 导出逐项审阅、1474 formal 默认/类型/允许值/证据",
+    "status": "complete",
+    "evidence": [
+      "website/teaching-reviews.json",
+      "tools/teaching-audit/parameter-contracts.json",
+      "website/en/api-curriculum.md",
+      "website/en/parameter-atlas.md"
+    ]
+  },
+  {
+    "id": "cases",
+    "task": "完整真实科研案例与13质粒图库定位",
+    "status": "complete",
+    "evidence": [
+      "tools/teaching-audit/case-reviews.json",
+      "website/en/plasmid-catalog.md"
+    ]
+  },
+  {
+    "id": "versions",
+    "task": "开发版安装与正式版实际对照、可选导入依赖",
+    "status": "complete",
+    "evidence": [
+      "tools/teaching-audit/version-check.json",
+      "website/en/installation.md",
+      "website/en/formats.md"
+    ]
+  },
+  {
+    "id": "verification",
+    "task": "全部章节执行、图片、双语、链接、搜索、桌面与手机",
+    "status": "complete",
+    "evidence": [
+      "tools/teaching-audit/lesson-execution.json",
+      "tools/teaching-audit/layer-compatibility.csv",
+      "tools/teaching-audit/verification.json"
+    ]
+  }
+]

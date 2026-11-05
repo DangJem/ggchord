@@ -86,3 +86,17 @@ Save the plot just created to the working directory; use matching dimensions for
 ```r
 ggsave("pUC19-tracks.png", p_multitrack, width = 9, height = 8, units = "in", dpi = 144)
 ```
+
+## Two independent bands and display order {#independent-bands}
+
+Encode the same GC by bar height and colour using explicit gc_height/gc_colour IDs. Set height and colour domains 0–1 separately, with distinct physical widths. The second figure changes only colour order from 2 to 0, moving that band nearer the backbone. Order is a finite priority, not a measurement or required one-based index; ties use IDs. Layers sharing an ID must agree on side/order/width/gap. Lines do not implicitly bridge independent windows.
+
+{{code:comparemultitrackdata}}
+{{code:comparetracktwo}}
+{{figure:comparetracktwo}}
+{{code:comparetrackorder}}
+{{figure:comparetrackorder}}
+
+## DNA windows and line boundaries {#window-policy}
+
+GC here is `mean(bases %in% c("G", "C"))`: ambiguous bases remain in the denominator and contribute zero to the numerator. The final window uses its actual number of bases. This pUC19 input has no ambiguous bases; for other inputs explicitly choose and report a policy rather than assuming they are omitted. Focusing clips intervals and retains the original summary; it does not recompute GC for a shortened window. Line tracks connect the supplied samples within their grouping; `closed` explicitly controls circular closure and `gap` belongs to physical track placement. Do not use a closed line to imply continuity across omitted source windows.

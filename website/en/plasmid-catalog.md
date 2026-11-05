@@ -1,7 +1,14 @@
+These 13 maps are an optional reference gallery, not a mandatory sequence of lessons. Complete [first circular maps](plasmid-start.html) and [annotations/labels](circular-layers.html), then choose a vector and density similar to your own.
+
 These 13 maps use distinct repository FASTA records. The sequence and annotation sources remain available for each map.
 
 ## Prepare all cases once {#prepare}
 Run `library(dplyr)` before using the shared plotting script.
+
+```r
+library(ggchord)
+library(dplyr)
+```
 
 {{recipe:catalog}}
 
@@ -129,3 +136,7 @@ view_ggchord(p, width = 10, height = 8, units = "in")
 
 ## Next {#next}
 After comparing densities, continue to [The complete case](plasmids.html#complex), adding separate primer and restriction layers.
+
+## When comparing gallery maps {#gallery-limits}
+
+Each map uses its own complete FASTA and source annotations; do not transfer another reference’s features or cuts to different DNA. Sites nearest three evenly spaced targets are a display selection, not evidence that other cuts are absent. Names may be internal, exterior or hidden while feature geometry remains. Inspect dense cases at their declared dimensions rather than editing source intervals to fit a reduced screenshot.

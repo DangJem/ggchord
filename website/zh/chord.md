@@ -1,4 +1,11 @@
-<div class="lesson-intro">把四条基因组放在同一张关系图中，组合直线与弧形骨架、保留真实链方向的基因、连续相似度标度和精选标签，同时保留数据来源。</div>
+<div class="lesson-intro">把四条基因组放在同一张关系图中，组合直线与弧形骨架、保留真实链方向的基因、默认分段相似度标度和精选标签，同时保留数据来源。</div>
+
+
+## 研究问题与证据边界 {#question}
+
+这张图回答：四条完整源序列的已观测比对区间分布在哪里，哪些原始 CDS 靠近连接端点？它不是系统发育树，也不自动证明倒位或基因功能。输入记录可按 accession 到 NCBI 核查：[MT108731.1](https://www.ncbi.nlm.nih.gov/nuccore/MT108731.1)、[MT118296.1](https://www.ncbi.nlm.nih.gov/nuccore/MT118296.1)、[OQ646790.1](https://www.ncbi.nlm.nih.gov/nuccore/OQ646790.1)、[OR222515.1](https://www.ncbi.nlm.nih.gov/nuccore/OR222515.1)。
+
+筛选 HSP 的长度与 identity 阈值、每对最多三条以及逐链 CDS 抽样均是显示选择，原始 FASTA/GFF3/BLAST 不变。旋转、曲率、半径与翻转只改变显示；标签使用源名称。报告某个基因是否存在时须回查完整 GFF3，不能从这份抽样图推出缺失。
 
 ## 综合结果 {#overview}
 {{figure:showcasechord}}
@@ -39,3 +46,11 @@
 ```r
 ggsave("four-genome-chord.png", p_show_chord, width = 12, height = 10, units = "in", dpi = 144)
 ```
+
+## 保存前的证据检查 {#evidence-check}
+
+按图中已声明的宽高调用 view_ggchord，再用相同尺寸 ggsave 保存。核查 ID、源链、比对端点方向、筛选报告、图例单位及标签隐藏原因；PNG 能渲染不代表字体在所有 PDF/SVG 阅读器中一致。保留完整源表、显示子集、参数、软件版本和输入哈希，使图可以追溯到记录。数据来源说明可下载自[资产与来源记录](../assets/ASSET-SOURCES.md)。
+
+## 来源权利与复现 {#source-rights}
+
+包代码采用 MIT 许可；原始数据库记录及参考目录保留各自使用条件，包许可不重新授权第三方数据。导出时应保留记录身份和来源。[资产与来源记录](../assets/ASSET-SOURCES.md)、输入归档哈希及本页准备脚本共同描述本例，计算识别结果仍需实验核实。

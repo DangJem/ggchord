@@ -1,7 +1,14 @@
+这 13 张图是可选参考图库，不是需要逐页完成的课程。先完成[基础圆图](plasmid-start.html)、[注释与标签](circular-layers.html)，再按自己的载体和拥挤程度检索。
+
 这 13 张图使用各自的仓库 FASTA 参考序列。载体用途用于选例，图中注释来自相应的参考序列。完整来源和长度由随包数据及生成规则保留。
 
 ## 一次准备全部案例 {#prepare}
 共享脚本使用 dplyr 选择序列列。先运行 `library(dplyr)`。
+
+```r
+library(ggchord)
+library(dplyr)
+```
 
 {{recipe:catalog}}
 
@@ -129,3 +136,7 @@ view_ggchord(p, width = 10, height = 8, units = "in")
 
 ## 下一步 {#next}
 比较不同密度后，进入[综合实战](plasmids.html#complex)，添加独立引物与酶切图层。
+
+## 比较时注意 {#gallery-limits}
+
+每图使用自己的完整 FASTA 和来源注释，不能把一个参考的特征或切点搬到不同 DNA。切点按三个均匀目标选择最近实际位置，是显示选择；不表示其他切点不存在。名称可能内置、外移或隐藏，全部特征几何仍保留。密集图需按标注尺寸查看，缩小截图后读不清不能据此修改源区间。

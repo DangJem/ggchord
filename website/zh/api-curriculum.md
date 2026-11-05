@@ -1,0 +1,140 @@
+按 API 查找用途、主讲课程、模式、综合案例和完整参数。等级是教学范围的判断，不是所有参数组合的质量保证。L2 有可运行的最小使用与输入/输出解释；L3 还含关键参数与效果对照。上游重导出及纯拼写别名按家族说明，不重复制造课程。
+
+## API 学习路径 {#apis}
+
+| API 与参考 | 用途 | 主讲与等级 | 模式/输入边界 | 参数图谱 | 综合案例/工作流 |
+| --- | --- | --- | --- | --- | --- |
+| [`aes`](reference/ggplot2-helpers.html) | 适用于 ggchord 的部分 ggplot2 辅助函数 | [上游](parameter-atlas.html#upstream) | 上游对象/接口；遵循 ggplot2/grid 的原始契约 | [↗](parameter-atlas.html#api-aes) | [↗](chord.html) |
+| [`after_scale`](reference/ggplot2-helpers.html) | 适用于 ggchord 的部分 ggplot2 辅助函数 | [上游](parameter-atlas.html#upstream) | 上游对象/接口；遵循 ggplot2/grid 的原始契约 | [↗](parameter-atlas.html#api-after_scale) | [↗](chord.html) |
+| [`after_stat`](reference/ggplot2-helpers.html) | 适用于 ggchord 的部分 ggplot2 辅助函数 | [上游](parameter-atlas.html#upstream) | 上游对象/接口；遵循 ggplot2/grid 的原始契约 | [↗](parameter-atlas.html#api-after_stat) | [↗](chord.html) |
+| [`annotate`](reference/ggplot2-helpers.html) | 适用于 ggchord 的部分 ggplot2 辅助函数 | [上游](parameter-atlas.html#upstream) | 上游对象/接口；遵循 ggplot2/grid 的原始契约 | [↗](parameter-atlas.html#api-annotate) | [↗](chord.html) |
+| [`arrow`](reference/grid-helpers.html) | 物理单位与方向箭头 | [上游](parameter-atlas.html#upstream) | 上游对象/接口；遵循 ggplot2/grid 的原始契约 | [↗](parameter-atlas.html#api-arrow) | [↗](chord.html) |
+| [`as_ggchord_feature`](reference/as_ggchord_feature.html) | 将区间转换为 ggchord 通用注释 | [L2](formats.html#adapters) | 表格/受支持对象适配；完整长度与 ID 不得猜测 | [↗](parameter-atlas.html#api-as_ggchord_feature) | [↗](formats.html) |
+| [`as_ggchord_link`](reference/as_ggchord_link.html) | 将成对基因组区间转换为 ggchord 连接 | [L2](formats.html#adapters) | 表格/受支持对象适配；完整长度与 ID 不得猜测 | [↗](parameter-atlas.html#api-as_ggchord_link) | [↗](formats.html) |
+| [`as_ggchord_seq`](reference/as_ggchord_seq.html) | 将序列信息转换为 ggchord 输入 | [L2](formats.html#adapters) | 表格/受支持对象适配；完整长度与 ID 不得猜测 | [↗](parameter-atlas.html#api-as_ggchord_seq) | [↗](formats.html) |
+| [`build_ggchord_cds`](reference/build_ggchord_cds.html) | 建立显式的剪接 CDS 坐标映射 | [L2](projection.html#boundaries) | 显式 CDS/相位/单位的编码坐标工作流 | [↗](parameter-atlas.html#api-build_ggchord_cds) | [↗](homology.html) |
+| [`bundle_ggchord_ribbons`](reference/bundle_ggchord_ribbons.html) | 显式聚束密集比对连接 | [L3](ribbon-statistics.html#bundle) | 处理已有比对；不生成新的序列比对 | [↗](parameter-atlas.html#api-bundle_ggchord_ribbons) | [↗](chord.html) |
+| [`clean_ggchord_data`](reference/clean_ggchord_data.html) | 按明确策略清理输入并返回报告 | [L2](data.html#repairs) | 显式校验/修复/成员工作流；保留源表及报告 | [↗](parameter-atlas.html#api-clean_ggchord_data) | [↗](real-data.html) |
+| [`coord_chord`](reference/coord_chord.html) | 弦图坐标系 | [L3](chord-geometry.html#shape) | 弦图；整图旋转与逐序列几何分工 | [↗](parameter-atlas.html#api-coord_chord) | [↗](chord.html) |
+| [`coord_circular`](reference/coord_circular.html) | 单序列圆图坐标系 | [L3](circular-layers.html#coordinates) | 单条序列；bp/aa 布局；不接受 ribbon/link | [↗](parameter-atlas.html#api-coord_circular) | [↗](chord.html) |
+| [`coord_collinear`](reference/coord_collinear.html) | 直线型多序列共线性坐标系 | [L3](collinear-layout.html#parameters) | 共线性；bp/aa；拒绝圆图专属参数 | [↗](parameter-atlas.html#api-coord_collinear) | [↗](collinear.html) |
+| [`deduplicate_ggchord_ribbons`](reference/deduplicate_ggchord_ribbons.html) | 去除重复比对区间 | [L2](ribbons.html#transformations) | 处理已有比对；不生成新的序列比对 | [↗](parameter-atlas.html#api-deduplicate_ggchord_ribbons) | [↗](chord.html) |
+| [`diagnose_ggchord`](reference/diagnose_ggchord.html) | 检查指定尺寸的一次渲染而不改变原图 | [L2](workflow-tools.html#diagnostics) | 单一目标尺寸和设备；提示不等于全面质量保证 | [↗](parameter-atlas.html#api-diagnose_ggchord) | [↗](chord.html) |
+| [`element_blank`](reference/ggplot2-helpers.html) | 适用于 ggchord 的部分 ggplot2 辅助函数 | [上游](parameter-atlas.html#upstream) | 上游对象/接口；遵循 ggplot2/grid 的原始契约 | [↗](parameter-atlas.html#api-element_blank) | [↗](chord.html) |
+| [`element_line`](reference/ggplot2-helpers.html) | 适用于 ggchord 的部分 ggplot2 辅助函数 | [上游](parameter-atlas.html#upstream) | 上游对象/接口；遵循 ggplot2/grid 的原始契约 | [↗](parameter-atlas.html#api-element_line) | [↗](chord.html) |
+| [`element_rect`](reference/ggplot2-helpers.html) | 适用于 ggchord 的部分 ggplot2 辅助函数 | [上游](parameter-atlas.html#upstream) | 上游对象/接口；遵循 ggplot2/grid 的原始契约 | [↗](parameter-atlas.html#api-element_rect) | [↗](chord.html) |
+| [`element_text`](reference/ggplot2-helpers.html) | 适用于 ggchord 的部分 ggplot2 辅助函数 | [上游](parameter-atlas.html#upstream) | 上游对象/接口；遵循 ggplot2/grid 的原始契约 | [↗](parameter-atlas.html#api-element_text) | [↗](chord.html) |
+| [`expansion`](reference/ggplot2-helpers.html) | 适用于 ggchord 的部分 ggplot2 辅助函数 | [上游](parameter-atlas.html#upstream) | 上游对象/接口；遵循 ggplot2/grid 的原始契约 | [↗](parameter-atlas.html#api-expansion) | [↗](chord.html) |
+| [`export_ggchord_layout`](reference/export_ggchord_layout.html) | 导出 ggchord 计算几何 | [L2](output.html#geometry) | 所有受支持图；按图层导出公共表 | [↗](parameter-atlas.html#api-export_ggchord_layout) | [↗](chord.html) |
+| [`filter_ggchord_ribbons`](reference/filter_ggchord_ribbons.html) | 绘图前筛选比对区间 | [L2](ribbons.html#input) | 处理已有比对；不生成新的序列比对 | [↗](parameter-atlas.html#api-filter_ggchord_ribbons) | [↗](chord.html) |
+| [`filter_restriction_sites`](reference/filter_restriction_sites.html) | 筛选要显示的酶切位点 | [L2](restriction-sites.html#parameters) | 显示集合选择；保留完整目标上的位点计数 | [↗](parameter-atlas.html#api-filter_restriction_sites) | [↗](plasmids.html) |
+| [`find_common_features`](reference/find_common_features.html) | 在 DNA 中查找常见生物学注释 | [L2](recognition.html#features) | DNA/参考注释识别；保留方法与来源 | [↗](parameter-atlas.html#api-find_common_features) | [↗](plasmids.html) |
+| [`find_ggchord_loci`](reference/find_ggchord_loci.html) | 围绕明确指定的注释查找基因组区域 | [L2](feature-geometry.html#locus-selection) | 基因组窗口；显式目标 ID 与真实链 | [↗](parameter-atlas.html#api-find_ggchord_loci) | [↗](views.html) |
+| [`find_primer_bindings`](reference/find_primer_bindings.html) | 查找测序引物结合位点 | [L2](primers.html#input) | 实际 DNA 与寡核苷酸；命中不等于实验验证 | [↗](parameter-atlas.html#api-find_primer_bindings) | [↗](plasmids.html) |
+| [`find_restriction_sites`](reference/find_restriction_sites.html) | 查找酶切模式匹配及切割坐标 | [L2](restriction-sites.html#input) | 实际 DNA；明确甲基化假设；完整位点结果 | [↗](parameter-atlas.html#api-find_restriction_sites) | [↗](plasmids.html) |
+| [`focus_ggchord_data`](reference/focus_ggchord_data.html) | 将 ggchord 数据聚焦到一个或多个区域 | [L2](views.html#focus) | 显式输入、窗口与来源的工作流 | [↗](parameter-atlas.html#api-focus_ggchord_data) | [↗](homology.html) |
+| [`focus_ggchord_track`](reference/focus_ggchord_track.html) | 聚焦定量区间或采样点而不跨越省略窗口 | [L2](workflow-tools.html#track-focus) | 点/区间轨道；与显示窗口共享 loci | [↗](parameter-atlas.html#api-focus_ggchord_track) | [↗](tracks.html) |
+| [`geom_feature`](reference/geom_feature.html) | 绘制通用基因组注释 | [L3](circular-layers.html#feature-shapes) | 三种模式；通用注释可保留未知链及 aa 区间 | [↗](parameter-atlas.html#api-geom_feature) | [↗](chord.html) |
+| [`geom_feature_label`](reference/geom_feature_label.html) | 为通用基因组注释添加标签 | [L3](circular-labels.html#fixed-labels) | 三种模式；直线图的 radial/tangent 为竖排/横排 | [↗](parameter-atlas.html#api-geom_feature_label) | [↗](chord.html) |
+| [`geom_feature_label_repel`](reference/geom_feature_label_repel.html) | 自动安排通用注释标签 | [L3](circular-labels.html#automatic-labels) | 三种模式；直线图拒绝 external=FALSE | [↗](parameter-atlas.html#api-geom_feature_label_repel) | [↗](chord.html) |
+| [`geom_feature_plasmid`](reference/geom_feature_plasmid.html) | 在圆形质粒上绘制 SnapGene 风格注释 | [L3](circular-layers.html#feature-shapes) | 通用几何的组合预设；默认面向圆图 | [↗](parameter-atlas.html#api-geom_feature_plasmid) | [↗](chord.html) |
+| [`geom_gene`](reference/geom_gene.html) | 添加基因箭头图层 | [L3](feature-geometry.html#arrow-heads) | 三种模式的 bp 数据；需已知正负链 | [↗](parameter-atlas.html#api-geom_gene) | [↗](chord.html) |
+| [`geom_gene_label`](reference/geom_gene_label.html) | 添加固定基因标签图层 | [L3](labels.html#fixed) | bp 基因标签；各坐标的方向含义不同 | [↗](parameter-atlas.html#api-geom_gene_label) | [↗](chord.html) |
+| [`geom_gene_label_repel`](reference/geom_gene_label_repel.html) | 添加自动布局的基因标签图层 | [L3](labels.html#comparison) | bp 基因标签；直线图统一使用行布局 | [↗](parameter-atlas.html#api-geom_gene_label_repel) | [↗](chord.html) |
+| [`geom_link_line`](reference/geom_link_line.html) | 绘制序列间的点连接 | [L3](chord-branches.html#point-links) | 弦图/共线性；需 qpos/spos；圆图拒绝 | [↗](parameter-atlas.html#api-geom_link_line) | [↗](chord.html) |
+| [`geom_link_ribbon`](reference/geom_link_ribbon.html) | 添加比对区间连接图层 | [L3](chord-branches.html#branches) | 弦图/共线性；邻接按显示顺序；圆图拒绝 | [↗](parameter-atlas.html#api-geom_link_ribbon) | [↗](chord.html) |
+| [`geom_primer`](reference/geom_primer.html) | 在圆形序列上绘制引物结合范围 | [L3](primers.html#primer-arcs) | bp；推荐单圆图；单序列弦图可组合；共线性拒绝 | [↗](parameter-atlas.html#api-geom_primer) | [↗](plasmids.html) |
+| [`geom_primer_label_repel`](reference/geom_primer_label_repel.html) | 排列引物标签和引导线 | [L3](primers.html#primer-labels) | bp；推荐单圆图；共线性拒绝 | [↗](parameter-atlas.html#api-geom_primer_label_repel) | [↗](plasmids.html) |
+| [`geom_restriction_site`](reference/geom_restriction_site.html) | 绘制酶切位点、标签和确定性引导线 | [L3](restriction-sites.html#restriction-labels) | bp；推荐单圆图；共线性拒绝 | [↗](parameter-atlas.html#api-geom_restriction_site) | [↗](plasmids.html) |
+| [`geom_seq`](reference/geom_seq.html) | 添加序列骨架图层 | [L3](circular-layers.html#backbones) | 三种模式；直线图拒绝半径/曲率/ring；圆图自管方向与开口 | [↗](parameter-atlas.html#api-geom_seq) | [↗](chord.html) |
+| [`geom_seq_break`](reference/geom_seq_break.html) | 标记线性序列的裁剪端点 | [L2](views.html#segments) | 仅共线性；需要聚焦/分段端点元数据 | [↗](parameter-atlas.html#api-geom_seq_break) | [↗](collinear.html) |
+| [`geom_seq_center_label`](reference/geom_seq_center_label.html) | 添加圆形序列中心标签 | [L3](circular-layers.html#center) | 单条序列；推荐圆图；共线性拒绝 | [↗](parameter-atlas.html#api-geom_seq_center_label) | [↗](chord.html) |
+| [`geom_seq_label`](reference/geom_seq_label.html) | 添加序列名称图层 | [L3](chord-labels.html#sequence-parameters) | 三种模式；直线图拒绝显式径向半径 | [↗](parameter-atlas.html#api-geom_seq_label) | [↗](chord.html) |
+| [`geom_seq_region`](reference/geom_seq_region.html) | 沿序列骨架突出显示区域 | [L3](chord-routing.html#region-parameters) | 三种模式；区间、ID、单位需合法 | [↗](parameter-atlas.html#api-geom_seq_region) | [↗](chord.html) |
+| [`geom_seq_scale`](reference/geom_seq_scale.html) | 在线性图中添加共享的序列位置比例尺 | [L3](collinear-tuning.html#scale) | 仅共线性；原生 bp/aa 标尺 | [↗](parameter-atlas.html#api-geom_seq_scale) | [↗](collinear.html) |
+| [`geom_track_bar`](reference/geom_track_tile.html) | 沿序列骨架绘制定量轨道 | [L3](tracks.html#draw-gc) | 三种模式；显式 position_track 和区间箱 | [↗](parameter-atlas.html#api-geom_track_bar) | [↗](tracks.html) |
+| [`geom_track_line`](reference/geom_track_tile.html) | 沿序列骨架绘制定量轨道 | [L3](tracks.html#multiple) | 三种模式；每组位置递增；closed 需完整闭圆 | [↗](parameter-atlas.html#api-geom_track_line) | [↗](tracks.html) |
+| [`geom_track_tile`](reference/geom_track_tile.html) | 沿序列骨架绘制定量轨道 | [L3](tracks.html#tile) | 三种模式；显式轨道；重叠按输入顺序绘制 | [↗](parameter-atlas.html#api-geom_track_tile) | [↗](tracks.html) |
+| [`get_chord_layout`](reference/get_chord_layout.html) | 获取 ggchord 图的完整布局 | [L2](output.html#geometry) | 所有受支持图；完整文档化布局 | [↗](parameter-atlas.html#api-get_chord_layout) | [↗](chord.html) |
+| [`ggchord`](reference/ggchord.html) | 用图层组合弦图、圆图和共线性图 | [L2](modes.html#composition) | 三种坐标；同一图的 bp/aa 单位必须一致 | [↗](parameter-atlas.html#api-ggchord) | [↗](real-data.html) |
+| [`ggsave`](reference/ggplot2-helpers.html) | 适用于 ggchord 的部分 ggplot2 辅助函数 | [上游](parameter-atlas.html#upstream) | 上游对象/接口；遵循 ggplot2/grid 的原始契约 | [↗](parameter-atlas.html#api-ggsave) | [↗](chord.html) |
+| [`ggtitle`](reference/ggplot2-helpers.html) | 适用于 ggchord 的部分 ggplot2 辅助函数 | [上游](parameter-atlas.html#upstream) | 上游对象/接口；遵循 ggplot2/grid 的原始契约 | [↗](parameter-atlas.html#api-ggtitle) | [↗](chord.html) |
+| [`guide_ggchord_colorbar`](reference/guide_ggchord_legend.html) | ggchord 角色 aesthetic 图例；同义拼写 guide_ggchord_colourbar | [L2](scale-families.html#guides) | 受支持图的相应主题/图例；按角色及设备解释 | [↗](parameter-atlas.html#api-guide_ggchord_colorbar) | [↗](chord.html) |
+| [`guide_ggchord_colourbar`](reference/guide_ggchord_legend.html) | ggchord 角色 aesthetic 图例 | [L2](scale-families.html#guides) | 受支持图的相应主题/图例；按角色及设备解释 | [↗](parameter-atlas.html#api-guide_ggchord_colourbar) | [↗](chord.html) |
+| [`guide_ggchord_legend`](reference/guide_ggchord_legend.html) | ggchord 角色 aesthetic 图例 | [L2](scale-families.html#guides) | 受支持图的相应主题/图例；按角色及设备解释 | [↗](parameter-atlas.html#api-guide_ggchord_legend) | [↗](chord.html) |
+| [`guides`](reference/ggplot2-helpers.html) | 适用于 ggchord 的部分 ggplot2 辅助函数 | [上游](parameter-atlas.html#upstream) | 上游对象/接口；遵循 ggplot2/grid 的原始契约 | [↗](parameter-atlas.html#api-guides) | [↗](chord.html) |
+| [`labs`](reference/ggplot2-helpers.html) | 适用于 ggchord 的部分 ggplot2 辅助函数 | [上游](parameter-atlas.html#upstream) | 上游对象/接口；遵循 ggplot2/grid 的原始契约 | [↗](parameter-atlas.html#api-labs) | [↗](chord.html) |
+| [`last_plot`](reference/ggplot2-helpers.html) | 适用于 ggchord 的部分 ggplot2 辅助函数 | [上游](parameter-atlas.html#upstream) | 上游对象/接口；遵循 ggplot2/grid 的原始契约 | [↗](parameter-atlas.html#api-last_plot) | [↗](chord.html) |
+| [`link_ggchord_clusters`](reference/link_ggchord_clusters.html) | 将显式同源分组成员转换为注释连接 | [L2](homology.html#links) | 消费明确成员表；同名不能证明同源 | [↗](parameter-atlas.html#api-link_ggchord_clusters) | [↗](homology.html) |
+| [`map_ggchord_position`](reference/map_ggchord_position.html) | 转换序列位置与线性布局位置 | [L2](views.html#mapping) | 仅共线性；可逆的源/显示原生位置 | [↗](parameter-atlas.html#api-map_ggchord_position) | [↗](views.html) |
+| [`margin`](reference/ggplot2-helpers.html) | 适用于 ggchord 的部分 ggplot2 辅助函数 | [上游](parameter-atlas.html#upstream) | 上游对象/接口；遵循 ggplot2/grid 的原始契约 | [↗](parameter-atlas.html#api-margin) | [↗](chord.html) |
+| [`merge_ggchord_ribbons`](reference/merge_ggchord_ribbons.html) | 合并同序列对的相邻或重叠比对块 | [L2](ribbons.html#transformations) | 处理已有比对；不生成新的序列比对 | [↗](parameter-atlas.html#api-merge_ggchord_ribbons) | [↗](chord.html) |
+| [`optimize_ggchord_layout`](reference/optimize_ggchord_layout.html) | 优化序列顺序和方向以改善连接可读性 | [L2](workflow-tools.html#diagnostics) | 明确请求的顺序/方向启发式；不是生物学推断 | [↗](parameter-atlas.html#api-optimize_ggchord_layout) | [↗](chord.html) |
+| [`position_feature_stack`](reference/position_feature_stack.html) | 将重叠基因或注释堆叠到局部轨道 | [L3](circular-layers.html#stacking) | 先应用基础 Position，再分配重叠轨道 | [↗](parameter-atlas.html#api-position_feature_stack) | [↗](chord.html) |
+| [`position_identity`](reference/ggplot2-helpers.html) | 适用于 ggchord 的部分 ggplot2 辅助函数 | [上游](parameter-atlas.html#upstream) | 上游对象/接口；遵循 ggplot2/grid 的原始契约 | [↗](parameter-atlas.html#api-position_identity) | [↗](chord.html) |
+| [`position_plasmid`](reference/position_plasmid.html) | 将两条链的注释放在同一带上 | [L2](circular-layers.html#stacking) | 共享注释带的局部预设；默认面向圆图 | [↗](parameter-atlas.html#api-position_plasmid) | [↗](chord.html) |
+| [`position_strand`](reference/position_strand.html) | 按链将注释放在两侧 | [L2](circular-layers.html#stacking) | 合法特征/基因的带符号局部放置 | [↗](parameter-atlas.html#api-position_strand) | [↗](chord.html) |
+| [`position_track`](reference/position_track.html) | 在显式序列局部带中放置定量图层 | [L3](tracks.html#independent-bands) | 三种模式；同 ID 的声明和值域需一致 | [↗](parameter-atlas.html#api-position_track) | [↗](tracks.html) |
+| [`PositionIdentity`](reference/ggplot2-helpers.html) | 适用于 ggchord 的部分 ggplot2 辅助函数 | [上游](parameter-atlas.html#upstream) | 上游对象/接口；遵循 ggplot2/grid 的原始契约 | [↗](parameter-atlas.html#api-PositionIdentity) | [↗](chord.html) |
+| [`prepare_ggchord_data`](reference/prepare_ggchord_data.html) | 准备命名输入表并保留明确审计记录 | [L2](data.html#validation) | 显式校验/修复/成员工作流；保留源表及报告 | [↗](parameter-atlas.html#api-prepare_ggchord_data) | [↗](real-data.html) |
+| [`primer_catalog`](reference/primer_catalog.html) | 查看随包测序引物目录 | [L2](workflow-tools.html#catalog) | 目录元数据；不是目标上的结合搜索 | [↗](parameter-atlas.html#api-primer_catalog) | [↗](plasmids.html) |
+| [`project_ggchord_features`](reference/project_ggchord_features.html) | 通过剪接 CDS 映射投影蛋白结构域或基因组注释 | [L2](projection.html#cds) | 显式 CDS/相位/单位的编码坐标工作流 | [↗](parameter-atlas.html#api-project_ggchord_features) | [↗](homology.html) |
+| [`project_ggchord_links`](reference/project_ggchord_links.html) | 将明确无缺口的蛋白连接投影为基因组编码片段 | [L2](projection.html#links) | 显式 CDS/相位/单位的编码坐标工作流 | [↗](parameter-atlas.html#api-project_ggchord_links) | [↗](homology.html) |
+| [`read_bed`](reference/read_bed.html) | 将 BED 区间读为 ggchord 注释 | [L2](formats.html#zero-based) | 本地文件到标准表；按源格式转换坐标和声明单位 | [↗](parameter-atlas.html#api-read_bed) | [↗](formats.html) |
+| [`read_blast`](reference/read_blast.html) | 将一个或多个 BLAST 表格文件读为连接数据 | [L2](alignments.html#standard) | 本地文件到标准表；按源格式转换坐标和声明单位 | [↗](parameter-atlas.html#api-read_blast) | [↗](real-data.html) |
+| [`read_fasta_lengths`](reference/read_fasta_lengths.html) | 将一个或多个 FASTA 文件读为序列数据 | [L2](real-data.html#read) | 本地文件到标准表；按源格式转换坐标和声明单位 | [↗](parameter-atlas.html#api-read_fasta_lengths) | [↗](real-data.html) |
+| [`read_genbank`](reference/read_genbank.html) | 使用可选成熟解析器导入本地 GenBank 或 GBFF | [L2](formats.html#genbank) | 本地文件到标准表；按源格式转换坐标和声明单位 | [↗](parameter-atlas.html#api-read_genbank) | [↗](formats.html) |
+| [`read_gff3`](reference/read_gff3.html) | 将一个或多个 GFF3 文件读为注释数据 | [L2](real-data.html#read) | 本地文件到标准表；按源格式转换坐标和声明单位 | [↗](parameter-atlas.html#api-read_gff3) | [↗](real-data.html) |
+| [`read_paf`](reference/read_paf.html) | 将 PAF 比对读为 ggchord 连接 | [L2](formats.html#zero-based) | 本地文件到标准表；按源格式转换坐标和声明单位 | [↗](parameter-atlas.html#api-read_paf) | [↗](formats.html) |
+| [`rel`](reference/ggplot2-helpers.html) | 适用于 ggchord 的部分 ggplot2 辅助函数 | [上游](parameter-atlas.html#upstream) | 上游对象/接口；遵循 ggplot2/grid 的原始契约 | [↗](parameter-atlas.html#api-rel) | [↗](chord.html) |
+| [`scale_feature_fill_manual`](reference/scale_gene_fill_manual.html) | 基因、注释及区域填色标度 | [L2](scale-families.html#features) | 三种模式；匹配通用注释角色或预设 | [↗](parameter-atlas.html#api-scale_feature_fill_manual) | [↗](chord.html) |
+| [`scale_feature_fill_plasmid`](reference/scale_feature_fill_plasmid.html) | 质粒注释预设标度 | [L2](scale-families.html#features) | 三种模式；匹配通用注释角色或预设 | [↗](parameter-atlas.html#api-scale_feature_fill_plasmid) | [↗](chord.html) |
+| [`scale_feature_shape_manual`](reference/scale_feature_shape_manual.html) | 注释形状标度 | [L2](scale-families.html#features) | 三种模式；匹配通用注释角色或预设 | [↗](parameter-atlas.html#api-scale_feature_shape_manual) | [↗](chord.html) |
+| [`scale_feature_shape_plasmid`](reference/scale_feature_fill_plasmid.html) | 质粒注释预设标度 | [L2](scale-families.html#features) | 三种模式；匹配通用注释角色或预设 | [↗](parameter-atlas.html#api-scale_feature_shape_plasmid) | [↗](chord.html) |
+| [`scale_gene_fill_manual`](reference/scale_gene_fill_manual.html) | 基因、注释及区域填色标度 | [L2](scale-families.html#rings) | 三种模式的 bp 基因图层 | [↗](parameter-atlas.html#api-scale_gene_fill_manual) | [↗](chord.html) |
+| [`scale_link_alpha_continuous`](reference/scale_link.html) | 点连接标度 | [L2](scale-families.html#point-links) | 弦图/共线性；匹配点连接角色 | [↗](parameter-atlas.html#api-scale_link_alpha_continuous) | [↗](chord.html) |
+| [`scale_link_alpha_manual`](reference/scale_link.html) | 点连接标度 | [L2](scale-families.html#point-links) | 弦图/共线性；匹配点连接角色 | [↗](parameter-atlas.html#api-scale_link_alpha_manual) | [↗](chord.html) |
+| [`scale_link_color_gradientn`](reference/scale_link.html) | 点连接标度；同义拼写 scale_link_colour_gradientn | [L2](scale-families.html#point-links) | 弦图/共线性；匹配点连接角色 | [↗](parameter-atlas.html#api-scale_link_color_gradientn) | [↗](chord.html) |
+| [`scale_link_color_manual`](reference/scale_link.html) | 点连接标度；同义拼写 scale_link_colour_manual | [L2](scale-families.html#point-links) | 弦图/共线性；匹配点连接角色 | [↗](parameter-atlas.html#api-scale_link_color_manual) | [↗](chord.html) |
+| [`scale_link_colour_gradientn`](reference/scale_link.html) | 点连接标度 | [L2](scale-families.html#point-links) | 弦图/共线性；匹配点连接角色 | [↗](parameter-atlas.html#api-scale_link_colour_gradientn) | [↗](chord.html) |
+| [`scale_link_colour_manual`](reference/scale_link.html) | 点连接标度 | [L2](scale-families.html#point-links) | 弦图/共线性；匹配点连接角色 | [↗](parameter-atlas.html#api-scale_link_colour_manual) | [↗](chord.html) |
+| [`scale_link_linetype_manual`](reference/scale_link.html) | 点连接标度 | [L2](scale-families.html#point-links) | 弦图/共线性；匹配点连接角色 | [↗](parameter-atlas.html#api-scale_link_linetype_manual) | [↗](chord.html) |
+| [`scale_link_linewidth_continuous`](reference/scale_link.html) | 点连接标度 | [L2](scale-families.html#point-links) | 弦图/共线性；匹配点连接角色 | [↗](parameter-atlas.html#api-scale_link_linewidth_continuous) | [↗](chord.html) |
+| [`scale_link_linewidth_manual`](reference/scale_link.html) | 点连接标度 | [L2](scale-families.html#point-links) | 弦图/共线性；匹配点连接角色 | [↗](parameter-atlas.html#api-scale_link_linewidth_manual) | [↗](chord.html) |
+| [`scale_region_fill_manual`](reference/scale_gene_fill_manual.html) | 基因、注释及区域填色标度 | [L2](scale-families.html#rings) | 三种模式；匹配 region_fill | [↗](parameter-atlas.html#api-scale_region_fill_manual) | [↗](chord.html) |
+| [`scale_ribbon_alpha_continuous`](reference/scale_ribbon_alpha_continuous.html) | 区间连接透明度、轮廓及线型标度 | [L2](scale-families.html#categories) | 弦图/共线性；匹配连接带角色 | [↗](parameter-atlas.html#api-scale_ribbon_alpha_continuous) | [↗](chord.html) |
+| [`scale_ribbon_alpha_manual`](reference/scale_ribbon_alpha_continuous.html) | 区间连接透明度、轮廓及线型标度 | [L2](scale-families.html#categories) | 弦图/共线性；匹配连接带角色 | [↗](parameter-atlas.html#api-scale_ribbon_alpha_manual) | [↗](chord.html) |
+| [`scale_ribbon_color_manual`](reference/scale_ribbon_alpha_continuous.html) | 区间连接透明度、轮廓及线型标度；同义拼写 scale_ribbon_colour_manual | [L2](scale-families.html#categories) | 弦图/共线性；匹配连接带角色 | [↗](parameter-atlas.html#api-scale_ribbon_color_manual) | [↗](chord.html) |
+| [`scale_ribbon_colour_manual`](reference/scale_ribbon_alpha_continuous.html) | 区间连接透明度、轮廓及线型标度 | [L2](scale-families.html#categories) | 弦图/共线性；匹配连接带角色 | [↗](parameter-atlas.html#api-scale_ribbon_colour_manual) | [↗](chord.html) |
+| [`scale_ribbon_fill_gradientn`](reference/scale_ribbon_fill_stepsn.html) | 区间连接填色标度 | [L2](scale-families.html#numeric) | 弦图/共线性；匹配连接带角色 | [↗](parameter-atlas.html#api-scale_ribbon_fill_gradientn) | [↗](chord.html) |
+| [`scale_ribbon_fill_identity`](reference/scale_ribbon_fill_stepsn.html) | 区间连接填色标度 | [L2](scale-families.html#identity) | 弦图/共线性；匹配连接带角色 | [↗](parameter-atlas.html#api-scale_ribbon_fill_identity) | [↗](chord.html) |
+| [`scale_ribbon_fill_manual`](reference/scale_ribbon_fill_stepsn.html) | 区间连接填色标度 | [L2](scale-families.html#categories) | 弦图/共线性；匹配连接带角色 | [↗](parameter-atlas.html#api-scale_ribbon_fill_manual) | [↗](chord.html) |
+| [`scale_ribbon_fill_stepsn`](reference/scale_ribbon_fill_stepsn.html) | 区间连接填色标度 | [L2](scale-families.html#numeric) | 弦图/共线性；匹配连接带角色 | [↗](parameter-atlas.html#api-scale_ribbon_fill_stepsn) | [↗](chord.html) |
+| [`scale_ribbon_linetype_manual`](reference/scale_ribbon_alpha_continuous.html) | 区间连接透明度、轮廓及线型标度 | [L2](scale-families.html#categories) | 弦图/共线性；匹配连接带角色 | [↗](parameter-atlas.html#api-scale_ribbon_linetype_manual) | [↗](chord.html) |
+| [`scale_seq_color_manual`](reference/scale_seq_colour_manual.html) | 序列颜色标度；同义拼写 scale_seq_colour_manual | [L2](scale-families.html#categories) | 三种模式；匹配序列颜色角色 | [↗](parameter-atlas.html#api-scale_seq_color_manual) | [↗](chord.html) |
+| [`scale_seq_colour_manual`](reference/scale_seq_colour_manual.html) | 序列颜色标度 | [L2](scale-families.html#categories) | 三种模式；匹配序列颜色角色 | [↗](parameter-atlas.html#api-scale_seq_colour_manual) | [↗](chord.html) |
+| [`scale_seq_position_continuous`](reference/scale_seq_position_continuous.html) | 基因组序列位置标度 | [L2](views.html#focus) | 三种模式的位置轴；与直线标尺不同 | [↗](parameter-atlas.html#api-scale_seq_position_continuous) | [↗](chord.html) |
+| [`scale_seq_ring_manual`](reference/scale_seq_ring_manual.html) | 显式序列环标度 | [L2](scale-families.html#rings) | 弦图/圆图；显式正半径；共线性拒绝 | [↗](parameter-atlas.html#api-scale_seq_ring_manual) | [↗](chord.html) |
+| [`scale_track_colour_gradientn`](reference/scale_track_fill_gradientn.html) | 设置轨道填色或颜色映射 | [L2](tracks.html#draw-gc) | 三种模式；ID 必须匹配 position_track | [↗](parameter-atlas.html#api-scale_track_colour_gradientn) | [↗](tracks.html) |
+| [`scale_track_colour_manual`](reference/scale_track_fill_gradientn.html) | 设置轨道填色或颜色映射 | [L2](tracks.html#draw-gc) | 三种模式；ID 必须匹配 position_track | [↗](parameter-atlas.html#api-scale_track_colour_manual) | [↗](tracks.html) |
+| [`scale_track_fill_gradientn`](reference/scale_track_fill_gradientn.html) | 设置轨道填色或颜色映射 | [L2](tracks.html#draw-gc) | 三种模式；ID 必须匹配 position_track | [↗](parameter-atlas.html#api-scale_track_fill_gradientn) | [↗](tracks.html) |
+| [`scale_track_fill_manual`](reference/scale_track_fill_gradientn.html) | 设置轨道填色或颜色映射 | [L2](tracks.html#draw-gc) | 三种模式；ID 必须匹配 position_track | [↗](parameter-atlas.html#api-scale_track_fill_manual) | [↗](tracks.html) |
+| [`scale_track_value_continuous`](reference/scale_track_value_continuous.html) | 设置命名轨道的数值高度标度 | [L2](tracks.html#draw-gc) | 三种模式；ID 必须匹配 position_track | [↗](parameter-atlas.html#api-scale_track_value_continuous) | [↗](tracks.html) |
+| [`segment_ggchord_data`](reference/segment_ggchord_data.html) | 为分段线性图准备独立窗口 | [L2](views.html#segments) | 显式输入、窗口与来源的工作流 | [↗](parameter-atlas.html#api-segment_ggchord_data) | [↗](views.html) |
+| [`stat_ribbon_bundle`](reference/stat_ribbon_bundle.html) | 以统计图层聚束区间连接 | [L3](ribbon-statistics.html#bundle) | 弦图/共线性；显式聚束 | [↗](parameter-atlas.html#api-stat_ribbon_bundle) | [↗](chord.html) |
+| [`stat_ribbon_density`](reference/stat_ribbon_density.html) | 以统计图层计算局部连接密度 | [L3](ribbon-statistics.html#density) | 弦图/共线性；一行观测仍是一条带 | [↗](parameter-atlas.html#api-stat_ribbon_density) | [↗](chord.html) |
+| [`theme`](reference/ggplot2-helpers.html) | 适用于 ggchord 的部分 ggplot2 辅助函数 | [上游](parameter-atlas.html#upstream) | 上游对象/接口；遵循 ggplot2/grid 的原始契约 | [↗](parameter-atlas.html#api-theme) | [↗](chord.html) |
+| [`theme_ggchord`](reference/theme_ggchord.html) | ggchord 主题 | [L2](scale-families.html#themes) | 受支持图的相应主题/图例；按角色及设备解释 | [↗](parameter-atlas.html#api-theme_ggchord) | [↗](chord.html) |
+| [`theme_ggchord_dark`](reference/theme_ggchord.html) | ggchord 主题 | [L2](scale-families.html#themes) | 受支持图的相应主题/图例；按角色及设备解释 | [↗](parameter-atlas.html#api-theme_ggchord_dark) | [↗](chord.html) |
+| [`theme_ggchord_minimal`](reference/theme_ggchord.html) | ggchord 主题 | [L2](scale-families.html#themes) | 受支持图的相应主题/图例；按角色及设备解释 | [↗](parameter-atlas.html#api-theme_ggchord_minimal) | [↗](chord.html) |
+| [`theme_ggchord_plasmid`](reference/theme_ggchord.html) | ggchord 主题 | [L2](scale-families.html#themes) | 受支持图的相应主题/图例；按角色及设备解释 | [↗](parameter-atlas.html#api-theme_ggchord_plasmid) | [↗](chord.html) |
+| [`theme_ggchord_publication`](reference/theme_ggchord.html) | ggchord 主题 | [L2](scale-families.html#themes) | 受支持图的相应主题/图例；按角色及设备解释 | [↗](parameter-atlas.html#api-theme_ggchord_publication) | [↗](chord.html) |
+| [`unit`](reference/grid-helpers.html) | 物理单位与方向箭头 | [上游](parameter-atlas.html#upstream) | 上游对象/接口；遵循 ggplot2/grid 的原始契约 | [↗](parameter-atlas.html#api-unit) | [↗](chord.html) |
+| [`validate_ggchord_data`](reference/validate_ggchord_data.html) | 绘图前校验 ggchord 输入 | [L2](data.html#validation) | 显式校验/修复/成员工作流；保留源表及报告 | [↗](parameter-atlas.html#api-validate_ggchord_data) | [↗](real-data.html) |
+| [`validate_ggchord_hierarchy`](reference/validate_ggchord_hierarchy.html) | 校验显式 genome 与 contig 关系 | [L2](data.html#hierarchy) | 显式校验/修复/成员工作流；保留源表及报告 | [↗](parameter-atlas.html#api-validate_ggchord_hierarchy) | [↗](real-data.html) |
+| [`view_ggchord`](reference/view_ggchord.html) | 按预期导出尺寸预览图形 | [L2](output.html#size) | 所有受支持图；目标尺寸临时预览 | [↗](parameter-atlas.html#api-view_ggchord) | [↗](chord.html) |
+| [`waiver`](reference/ggplot2-helpers.html) | 适用于 ggchord 的部分 ggplot2 辅助函数 | [上游](parameter-atlas.html#upstream) | 上游对象/接口；遵循 ggplot2/grid 的原始契约 | [↗](parameter-atlas.html#api-waiver) | [↗](chord.html) |
+
+## 怎样复现 {#reproduce}
+
+按主讲页从准备代码开始运行；字段含义在[基础表](chord-data.html)，实际格式转换在[导入](formats.html)。所有主讲页的共享片段在独立环境执行，重要对照图来自真实 ggchord 渲染。已标明的简化几何示意不作为生物学证据。完整版本、源码和验证记录随仓库保留；[安装页](installation.html)区分开发版与正式版。

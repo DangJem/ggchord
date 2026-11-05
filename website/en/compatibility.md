@@ -1,28 +1,32 @@
-Check units, layers and parameter boundaries before changing coordinates. This table follows current Rd and source contracts. Support means an implementation exists, not that every parameter combination has been tested. Runtime evidence is recorded in the version audit; static documentation is not device acceptance.
+Check units, layers and parameters before changing coordinates. This table combines current Rd/source contracts with actual renders. Support describes an implementation, not every parameter combination. Layouts can use native bp/aa units; genes, primers and restriction layers retain nucleotide constraints.
 
 ## Layers across three coordinate systems {#layers}
 
-| Layer | Chord | Collinear | Single circular | Evidence and conditions |
+| Layer/reference | Chord | Collinear | Single circular | Conditions and boundaries |
 | --- | --- | --- | --- | --- |
-| `geom_seq()` | Supported | Conditional | Supported | [Reference](reference/geom_seq.html); linear mode rejects explicit radius, curvature and ring |
-| `geom_seq_label()` | Supported | Conditional | Supported | [Reference](reference/geom_seq_label.html); no explicit radial label radius in linear mode |
-| `geom_gene()` | Conditional | Conditional | Conditional | [Reference](reference/geom_gene.html); bp and known strands required; use generic features for aa |
-| `geom_feature()` | Supported | Supported | Supported | [Reference](reference/geom_feature.html); IDs, coordinates and units must match |
-| Fixed gene/feature labels | Supported | Conditional | Supported | [Feature labels](reference/geom_feature_label.html); radial/tangent become vertical/horizontal in linear mode |
-| Automatic gene/feature labels | Supported | Conditional | Supported | [Automatic labels](reference/geom_feature_label_repel.html); linear rows reject external=FALSE |
-| `geom_link_ribbon()` | Supported | Conditional | Unsupported | [Reference](reference/geom_link_ribbon.html); valid links required; linear adjacency follows display rows, same-row segmented ribbons are omitted and reported |
-| `geom_link_line()` | Supported | Conditional | Unsupported | [Reference](reference/geom_link_line.html); explicit same-row segmented point links unsupported; single circular mode rejects ribbon/link layers |
-| `geom_seq_region()` | Supported | Supported | Supported | [Reference](reference/geom_seq_region.html); valid intervals, IDs and side |
-| `geom_seq_scale()` | Unsupported | Supported | Unsupported | [Reference](reference/geom_seq_scale.html); straight scale bars require collinear mode; use local axes elsewhere |
-| `geom_track_bar/line/tile()` | Supported | Supported | Supported | [Track reference](reference/geom_track_tile.html); explicit position_track required, declarations sharing an ID must agree |
-| `geom_seq_break()` | Unsupported | Conditional | Unsupported | [Reference](reference/geom_seq_break.html); requires identifiable window boundaries; does not edit source sequences |
-| `geom_seq_center_label()` | Conditional¹ | Unsupported | Supported | [Reference](reference/geom_seq_center_label.html); single sequence; tutorials use circular mode |
-| `geom_primer()` / automatic primer labels | Conditional¹ | Unsupported | Conditional | [Reference](reference/geom_primer.html); circular and nucleotide units |
-| `geom_restriction_site()` | Conditional¹ | Unsupported | Conditional | [Reference](reference/geom_restriction_site.html); circular, nucleotide units and valid cut sites |
+| [`geom_seq()`](reference/geom_seq.html) | Supported | Conditional | Supported | Linear mode rejects explicit radius/curvature/ring |
+| [`geom_seq_label()`](reference/geom_seq_label.html) | Supported | Conditional | Supported | No explicit radial label radius in linear mode |
+| [`geom_gene()`](reference/geom_gene.html) | Conditional | Conditional | Conditional | Nucleotide units and source strands; use generic features for aa |
+| [`geom_feature()`](reference/geom_feature.html) | Supported | Supported | Supported | Valid IDs, intervals and matching native units |
+| [`geom_feature_plasmid()`](reference/geom_feature_plasmid.html) | Supported | Supported | Supported | Generic feature preset; circular Position defaults need review when transferred |
+| [`geom_gene_label()`](reference/geom_gene_label.html) | Supported | Conditional | Supported | Share the gene Position; radial/tangent become vertical/horizontal in linear mode |
+| [`geom_feature_label()`](reference/geom_feature_label.html) | Supported | Conditional | Supported | Share the feature Position; radial/tangent become vertical/horizontal in linear mode |
+| [`geom_gene_label_repel()`](reference/geom_gene_label_repel.html) | Supported | Conditional | Supported | Linear rows reject external=FALSE; inspect hiding at target size |
+| [`geom_feature_label_repel()`](reference/geom_feature_label_repel.html) | Supported | Conditional | Supported | Linear rows reject external=FALSE; inspect fitting and hiding |
+| [`geom_link_ribbon()`](reference/geom_link_ribbon.html) | Supported | Conditional | Unsupported | Linear adjacency follows display rows; segmented same-row ribbons are omitted and reported |
+| [`geom_link_line()`](reference/geom_link_line.html) | Supported | Conditional | Unsupported | Point coordinates required; explicit segmented same-row links unsupported |
+| [`geom_seq_region()`](reference/geom_seq_region.html) | Supported | Supported | Supported | Valid source intervals, IDs and local side |
+| [`geom_seq_scale()`](reference/geom_seq_scale.html) | Unsupported | Supported | Unsupported | Straight scale bars require collinear mode |
+| [`geom_seq_break()`](reference/geom_seq_break.html) | Unsupported | Conditional | Unsupported | Collinear window boundaries required; does not edit source sequence |
+| [`geom_seq_center_label()`](reference/geom_seq_center_label.html) | Conditional | Unsupported | Conditional | One displayed sequence; length uses its native bp/aa unit |
+| [`geom_primer()`](reference/geom_primer.html) | Conditional | Unsupported | Conditional | One displayed DNA sequence and valid binding coordinates |
+| [`geom_primer_label_repel()`](reference/geom_primer_label_repel.html) | Conditional | Unsupported | Conditional | One displayed DNA sequence; share primer placement |
+| [`geom_restriction_site()`](reference/geom_restriction_site.html) | Conditional | Unsupported | Conditional | One displayed DNA sequence and actual computed cleavage sites |
+| [`geom_track_bar()`](reference/geom_track_tile.html) | Supported | Supported | Supported | Explicit position_track; numeric heights and declared domains |
+| [`geom_track_line()`](reference/geom_track_tile.html) | Supported | Supported | Supported | Explicit position_track; closure must be requested and missing samples respected |
+| [`geom_track_tile()`](reference/geom_track_tile.html) | Supported | Supported | Supported | Explicit position_track; no numeric height required |
 
-`geom_feature_plasmid()` is a [generic feature preset](reference/geom_feature_plasmid.html), not a separate geometry family. It primarily serves circular plasmid lessons. Start with generic features in other coordinates rather than assuming all circular layout settings transfer unchanged.
-
-¹ Targeted builds of single-sequence pUC19 under `coord_chord()` accept centre labels, primers and restriction layers, although existing collinear documentation calls them circular-only. This records a contract/implementation discrepancy, not visual acceptance or an official cross-mode promise. Automatic primer labels were not separately run. Tutorials continue to use circular mode; runtime code is unchanged.
+All 21 geoms were rendered in all three modes using 63 explicitly synthetic geometry fixtures: 53 succeeded and 10 were rejected by contract, including automatic primer labels. Centre labels support bp/aa in single-sequence chord/circular views; primers and restriction layers require DNA. Help now clarifies these boundaries. This verifies mode boundaries, not all parameter combinations, biological recognition or devices. See the [complete runtime record](../assets/source/tools/teaching-audit/layer-compatibility.csv).
 
 ## Understand conditional support {#conditions}
 

@@ -48,6 +48,7 @@ def main():
         shutil.copy2(ROOT/name, assets/name)
     shutil.copy2(WEB/'ASSET-SOURCES.md',assets/'ASSET-SOURCES.md')
     shutil.copytree(ROOT/'R',assets/'source')
+    shutil.copytree(ROOT/'tools/teaching-audit',assets/'source/tools/teaching-audit')
     inputs=sorted([*ROOT.glob('examples/fasta/*.fna'),*ROOT.glob('examples/gff3/*.gff3'),
         *ROOT.glob('examples/blastn/*.o7'),*ROOT.glob('examples/blastn-standard/*'),
         *ROOT.glob('examples/format-inputs/*'),*ROOT.glob('examples/protein/*'),*ROOT.glob('examples/plasmid/*.fna')])
@@ -126,7 +127,7 @@ def main():
     files=[p for base in [WEB,ROOT/'R',ROOT/'man',ROOT/'tools',ROOT/'vignettes'] for p in base.rglob('*') if p.is_file() and '__pycache__' not in p.parts]
     files += inputs + sorted((ROOT/'data').glob('*.rda'))
     files += [ROOT/p for p in ['DESCRIPTION','NAMESPACE','NEWS.md','README.md','README-Hans.md','MIGRATION.md','MIGRATION-Hans.md','_pkgdown.yml','.github/workflows/documentation.yaml']]
-    manifest=dict(version=re.search(r'^Version: (.+)$',(ROOT/'DESCRIPTION').read_text(),re.M)[1],api_candidate='0.16.4',generator='pkgdown + paired Markdown + shared static assets',
+    manifest=dict(version=re.search(r'^Version: (.+)$',(ROOT/'DESCRIPTION').read_text(),re.M)[1],api_inventory='current NAMESPACE/formals; tools/teaching-audit/teaching-summary-v0.16.7.json',generator='pkgdown + paired Markdown + shared static assets',
         commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
         dirty=bool(subprocess.check_output(['git','status','--porcelain'],cwd=ROOT,text=True)),
         deployment='prepared for authorized deployment; builder does not deploy' if args.publication else 'local preview; not deployed',

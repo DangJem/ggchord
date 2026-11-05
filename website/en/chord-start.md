@@ -2,6 +2,12 @@ Start with four bundled sequences. Read their positions and lengths before addin
 
 ## Draw the backbones {#draw}
 
+Run this lesson in a fresh R session after installing the version described on the [installation page](installation.html).
+
+```r
+library(ggchord)
+```
+
 {{code:frontbackbone}}
 
 {{figure:frontbackbone}}

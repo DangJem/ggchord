@@ -1,4 +1,11 @@
-<div class="lesson-intro">Bring four genomes into one connected view. Combine straight and curved backbones, strand-aware genes and a continuous identity scale without hiding where the data came from.</div>
+<div class="lesson-intro">Bring four genomes into one connected view. Combine straight and curved backbones, strand-aware genes and the default stepped identity scale without hiding where the data came from.</div>
+
+
+## Research question and evidence limits {#question}
+
+This view asks where observed alignments lie across four complete source records and which original CDS occur near their endpoints. It is not a phylogenetic tree and does not independently establish inversions or function. Check the accession records at NCBI: [MT108731.1](https://www.ncbi.nlm.nih.gov/nuccore/MT108731.1), [MT118296.1](https://www.ncbi.nlm.nih.gov/nuccore/MT118296.1), [OQ646790.1](https://www.ncbi.nlm.nih.gov/nuccore/OQ646790.1), [OR222515.1](https://www.ncbi.nlm.nih.gov/nuccore/OR222515.1).
+
+Length/identity thresholds, at most three HSPs per pair and strand-aware CDS sampling are display choices. Original FASTA/GFF3/BLAST records stay unchanged. Rotation, curvature, radius and reversal affect display only; labels retain source names. Consult complete GFF3 before reporting gene presence or absence.
 
 ## What this view shows {#overview}
 {{figure:showcasechord}}
@@ -39,3 +46,11 @@ Use [link filtering](ribbons.html) to change the display threshold, [labels](lab
 ```r
 ggsave("four-genome-chord.png", p_show_chord, width = 12, height = 10, units = "in", dpi = 144)
 ```
+
+## Evidence checks before saving {#evidence-check}
+
+Preview with view_ggchord at the declared width/height and save with ggsave at matching dimensions. Check IDs, source strands, endpoint directions, selection reports, legend units and hidden-label reasons. A successful PNG does not certify font portability across PDF/SVG viewers. Keep complete source tables, display subsets, parameters, version and input hashes. Download the [asset/provenance record](../assets/ASSET-SOURCES.md).
+
+## Source rights and reproducibility {#source-rights}
+
+The package code is MIT-licensed; source database records and reference catalogues retain their original terms. The package license does not relicense third-party data. Keep accession identities and provenance with exported figures. The [asset/source record](../assets/ASSET-SOURCES.md), input archive hashes and displayed preparation script document this example; algorithmic matches remain hypotheses for experimental verification.

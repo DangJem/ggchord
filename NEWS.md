@@ -1,5 +1,15 @@
 # ggchord 0.16.7 (development)
 
+* Completed the bilingual tutorial audit with focused circular backbone, label,
+  primer, restriction-site, scale, ribbon-statistic and workflow lessons. Task
+  and API indexes link all 130 exports and 1,474 formal parameters to current
+  contracts and teaching evidence. Integrated cases explain provenance,
+  selection, export dimensions and inference limits; the plasmid catalogue
+  remains optional reference material.
+
+* Documented actual stable/development version differences and layer/coordinate
+  compatibility, and reran the teaching examples and documentation PNGs.
+
 * Fixed the default continuous point-link colour bar so it accepts the dedicated
   `link_colour` aesthetic. Explicit user guide settings remain authoritative.
 

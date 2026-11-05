@@ -38,3 +38,5 @@ These arrows join the midpoints of the first three alignments and point toward t
 Inspect each report and member rows before reading the plot. Aggregated bands are not new alignments; point links summarize midpoints of existing HSPs.
 
 <div class="next-step">Continue: <a href="views.html">Focus, segments and homology →</a></div>
+
+Continue to [link statistics](ribbon-statistics.html) for bundle_n, bundle_weight, density and bins/weight/group_by/min_bundle.
