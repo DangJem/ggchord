@@ -18,12 +18,13 @@ def main():
     source_aliases={}
     for path in (ROOT/'R').glob('*.R'):
         source_aliases.update(re.findall(r'^(\w+)\s*<-\s*(\w+)\s*$',path.read_text(),re.M))
+    expanded_pages={slug:expand(re.sub(r'\{\{figure:\w+\}\}', '', text),'en') for slug,text in pages.items()}
     rows=[]; params=[]
     for e in entries:
         name=e['name']; pattern=r'(?<![\w.])'+re.escape(name)+r'\s*\('
         evidence=[]; mentions=[]
         for slug, text in pages.items():
-            expanded=expand(re.sub(r'\{\{figure:\w+\}\}', '', text),'en')
+            expanded=expanded_pages[slug]
             if name in text: mentions.append(slug)
             code='\n'.join(re.findall(r'```r\n(.*?)```',expanded,re.S))
             # R AST inventory supplies signatures; call sites here are candidates for review.
@@ -45,12 +46,12 @@ def main():
         rows.append(row)
         for parameter,default in (e['parameters'] or {}).items():
             params.append(dict(api=name,parameter=parameter,default=default,priority='standard ggplot2 interface' if parameter in ('mapping','data','position','show.legend','inherit.aes','...') else 'review by task',rd=row['rd'],pages=row['pages'],
-                level=review['level'] if review and parameter in review['parameters'] else ('L1' if any(parameter in pages[p] for p in evidence+mentions) else 'L0'),
+                level=review['level'] if review and parameter in review['parameters'] else ('L1' if any(re.search(r'(?<![\w.])'+re.escape(parameter)+r'(?![\w.])', expanded_pages[p]) for p in evidence+mentions) else 'L0'),
                 validation='formal inspected; parameter teaching not certified',version=version,source_sha=revision))
     out=ROOT/'tools/teaching-audit';out.mkdir(exist_ok=True)
     for filename, data in [('teaching-api-v0.16.7.csv',rows),('teaching-parameters-v0.16.7.csv',params)]:
         with (out/filename).open('w') as f:
-            writer=csv.DictWriter(f,fieldnames=data[0]);writer.writeheader();writer.writerows(data)
+            writer=csv.DictWriter(f,fieldnames=data[0],lineterminator='\n');writer.writeheader();writer.writerows(data)
     sources=[ROOT/'NAMESPACE',ROOT/'DESCRIPTION',ROOT/'tools/documentation-examples.R',*sorted((ROOT/'R').glob('*.R')),*sorted((ROOT/'man').glob('*.Rd')),*sorted((WEB/'en').glob('*.md')),*sorted((WEB/'zh').glob('*.md'))]
     summary={'source_sha256':{str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in sources},'source_sha':revision,'version':version,'exports':len(rows),'parameters':len(params),'owned':sum(r['ownership']=='ggchord' for r in rows),'upstream_or_object':sum(r['ownership']!='ggchord' for r in rows),
         'levels':dict(Counter(r['level'] for r in rows)),

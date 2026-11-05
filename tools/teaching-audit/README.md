@@ -1,6 +1,6 @@
 # 三模块教程重构：本地审计记录
 
-基线：`647cd3b4655b299346237c84b804a531bb7ec45a`，版本 `0.16.7.9000`，2026-11-05。
+首批基线：`647cd3b4655b299346237c84b804a531bb7ec45a`；当前矩阵基线：`1dc62fee9320ae57b022364b14485584cd9471ce`。版本 `0.16.7.9000`，2026-11-05。
 矩阵读取当前工作区，包含本轮未提交文档；SHA 标记其父基线，不表示这些文档已经提交。
 正式版为 0.16.6，核查来源为 https://stat.ethz.ch/CRAN/web/packages/ggchord/refman/ggchord.html。
 不修改 R/、默认值或运行依赖；未整合、推送、部署和发布。
@@ -108,3 +108,21 @@
 完整任务仍未全部完成：剩余主要参数的系统对照、全部 API 的语义逐项审阅、辅助入口 L2 覆盖与完整案例 L4 审核均保留在上方缺口清单。本记录区分本轮已交付改造和原任务的全面验收。
 
 `Rscript tools/check-teaching-defaults.R` 定向比对全部 108 个包自身导出函数的 Rd usage 与当前 formals，参数顺序、必需参数和默认表达式全部匹配；此检查不运行 testthat 或包级发布检测。
+
+## 第二批：几何对照与设计参考（基线 1dc62fe）
+
+用户要求继续审计重构，并在 README 介绍参考的软件、避免提及商业工具。本轮沿用 v0.16.7，无运行时/API/依赖变更。
+
+- 双语 README 增加设计参考：ggplot2、BLAST、Circos、circlize、clinker、gggenes、genoPlotR、DNA Features Viewer、gggenomes、ggview；每项说明借鉴方面并链接原项目。由 website/readme-inspirations-{en,zh}.md 同步生成，检查不含商业产品名称。没有删除必要的数据来源、许可或历史记录。
+- 新增 feature-geometry：真实 OQ646790.1 integrase 43,765–46,140 bp，保留原始正链，局部展示 43,000–47,000 bp 并显示源坐标。三张 9 × 4 in 图固定共同头宽 1.6，仅切换 shouldered/flush/triangle。
+- 新增 chord-branches：随包 HSP 没有完全相同的 query 端点；明确使用三条 1000 bp 简化序列、两条共享 query 区间的示意记录。对照 none/query、0.15/0.35，随后显式计算 qpos/spos 比较 curve/straight，不篡改实际比对。
+- tracks 增加同一真实 GC 数据的 10/4 mm tile 带宽对照，固定 9 × 8 in、窗口、数值域和颜色。position_track 的 width 与数值高度区别可直接观察。
+- 通用箭头、标签、灵活参数、映射和样式集中到“通用绘图技巧”。既有页面 URL、章节锚点和三类独立首课保留；任务索引增至 33 项。
+- website/parameter-comparisons.json 记录新增 9 图的输入、独立准备片段、改动参数、当前默认、比较基线、尺寸、主讲页与运行状态。配图指纹只依赖该组实际代码、包数据与引擎；定向渲染先验证未请求图片的字节和依赖，不能跳过旧图校验。
+- 修复审计 CSV 的行尾为 LF；参数静态证据同时检查展开代码，避免仅因参数写在共享片段而误记为完全未出现。人工教学等级仍单独维护，不用代码出现自动升级。
+
+本轮运行：九张图由 view_ggchord 实际生成；40 个教学页独立环境执行成功；源码检查通过 50 对双语页面、107 张图、130 个导出与 95 个 Rd 主题。基因肩部、平齐头、共享主干、tile 带宽已查看图像。站点最终构建及链接检查结果另见下方。
+
+已审阅的 geom_gene、geom_link_ribbon、geom_link_line、geom_track_tile、position_track 与 coord_collinear 为 L3；等级只覆盖记录中的主讲关键行为，不宣称全部参数或全部模式组合已完成验收。未解决重点仍有短特征回退、固定/自动标签、引物/酶切的系统单参数对照、其他公开入口的人工语义审阅及完整案例 L4。
+
+第二批最终验证：`python3 tools/build-website.py` 成功构建 50 对页面和 95 个帮助主题；`python3 tools/check-documentation.py` 通过双语代码等价、图片指纹、链接/锚点/搜索检查。浏览器确认箭头课程三图、共用参数说明和“通用绘图技巧”导航；390 × 844 视口正文可读，章节抽屉显示新分组并可收起，随后恢复默认视口。未运行包级发布检查、合并、推送或部署。

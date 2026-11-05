@@ -212,11 +212,13 @@
     "snippets": [
       "tracks",
       "multitrack",
-      "tracktile"
+      "tracktile",
+      "comparetrackthin"
     ],
     "figures": [
       "multitrack",
-      "tracktile"
+      "tracktile",
+      "comparetrackthin"
     ],
     "result": null
   },
@@ -353,6 +355,55 @@
       "alignright",
       "alignanchor",
       "alignauto"
+    ],
+    "result": null
+  },
+  {
+    "id": "arrow-geometry",
+    "title": {
+      "zh": "真实基因箭头样式",
+      "en": "Real gene arrow styles"
+    },
+    "articles": [
+      "feature-geometry"
+    ],
+    "snippets": [
+      "comparegenedata",
+      "comparegeneshouldered",
+      "comparegeneflush",
+      "comparegenetriangle"
+    ],
+    "figures": [
+      "comparegeneshouldered",
+      "comparegeneflush",
+      "comparegenetriangle"
+    ],
+    "result": null
+  },
+  {
+    "id": "shared-branches",
+    "title": {
+      "zh": "共享分支与点路径",
+      "en": "Shared branches and point paths"
+    },
+    "articles": [
+      "chord-branches"
+    ],
+    "snippets": [
+      "comparebranchdata",
+      "comparebranchnone",
+      "comparebranchquery",
+      "comparebranchfraction",
+      "comparepointdata",
+      "comparelinkcurve",
+      "comparelinkstraight"
+    ],
+    "figures": [
+      "comparebranchnone",
+      "comparebranchquery",
+      "comparebranchfraction",
+      "comparelinkcurve",
+      "comparelinkstraight"
     ],
     "result": null
   }

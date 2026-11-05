@@ -179,6 +179,8 @@ def expand(text, lang, *, figures='assets', reference=''):
         'alignauto': 'collinear-layout#orientation',
         'tracktile': 'tracks#tile',
     })
+    for row in json.loads((WEB/'parameter-comparisons.json').read_text()):
+        destinations[row['id']] = row['page'] + '#' + row['anchor']
     for key in CAPTIONS:
         if key.startswith('catalog'): destinations[key] = 'plasmid-catalog#'+key
     for asset in assets:

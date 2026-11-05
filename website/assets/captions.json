@@ -390,5 +390,41 @@
   "tracktile": {
     "zh": "同一批真实 GC 窗口：固定宽度色带用颜色表示比例，色带高度不编码 GC。",
     "en": "The same real GC windows: a fixed-width band encodes fraction by colour, not height."
+  },
+  "comparegeneshouldered": {
+    "zh": "同一个真实 integrase：默认 shouldered 箭头。",
+    "en": "The same source integrase: default shouldered arrow."
+  },
+  "comparegeneflush": {
+    "zh": "只把 arrow_head_style 改为 flush。",
+    "en": "Only arrow_head_style changes to flush."
+  },
+  "comparegenetriangle": {
+    "zh": "只把 arrow_head_style 改为 triangle，整个区间采用三角楔形。",
+    "en": "Only arrow_head_style changes to triangle, a full triangular wedge."
+  },
+  "comparebranchnone": {
+    "zh": "简化示意：相同 query 区间的两条带独立绘制。",
+    "en": "Synthetic demonstration: two ribbons from the same query interval, drawn independently."
+  },
+  "comparebranchquery": {
+    "zh": "同一简化输入，只启用 query 分支，默认比例 0.15。",
+    "en": "Same synthetic input: enable query branching at the default 0.15 fraction."
+  },
+  "comparebranchfraction": {
+    "zh": "保持 query 分支，只将主干比例从 0.15 改为 0.35。",
+    "en": "Keep query branching and change only the trunk fraction from 0.15 to 0.35."
+  },
+  "comparelinkcurve": {
+    "zh": "同一简化输入，用曲线连接区间中点。",
+    "en": "Same synthetic input: curved links connect interval midpoints."
+  },
+  "comparelinkstraight": {
+    "zh": "只把 link_type 改为 straight，中点锚定不变。",
+    "en": "Only link_type changes to straight; midpoint anchors stay fixed."
+  },
+  "comparetrackthin": {
+    "zh": "同一 pUC19 GC 数据，只将 tile 带宽从 10 mm 改为 4 mm。",
+    "en": "Same pUC19 GC values: only tile band width changes from 10 mm to 4 mm."
   }
 }

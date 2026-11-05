@@ -15,30 +15,21 @@
     ]
   },
   "geom_track_tile": {
-    "level": "L2",
+    "level": "L3",
     "page": "tracks",
     "anchor": "tile",
-    "reason": "Actual GC inputs, executable tile, encoding comparison, defaults and track boundaries; rendered single-width parameter contrast is still missing, so L3 is not certified",
+    "reason": "Source pUC19 GC windows; tile/height explanation, track declarations and same-input 10 mm versus 4 mm physical-width contrast",
     "modes": "chord;collinear;circular",
-    "parameters": [
-      "position",
-      "bounds",
-      "alpha",
-      "linewidth"
-    ]
+    "parameters": []
   },
   "position_track": {
-    "level": "L2",
+    "level": "L3",
     "page": "tracks",
     "anchor": "tile",
-    "reason": "Track identity, physical width, side/order/gap, shared declarations and independent bands; rendered single-width parameter contrast is still missing, so L3 is not certified",
+    "reason": "Source pUC19 GC windows; tile/height explanation, track declarations and same-input 10 mm versus 4 mm physical-width contrast",
     "modes": "chord;collinear;circular",
     "parameters": [
-      "track",
-      "side",
-      "order",
-      "width",
-      "gap"
+      "width"
     ]
   },
   "geom_seq": {
@@ -66,12 +57,15 @@
     "parameters": []
   },
   "geom_link_ribbon": {
-    "level": "L2",
+    "level": "L3",
     "page": "chord-routing",
     "anchor": "clearance",
-    "reason": "Same real HSP and CDS avoidance contrast; branch teaching still incomplete",
+    "reason": "Routing/avoidance lesson plus synthetic equal-endpoint branch contrasts at fixed dimensions; explicitly distinguishes geometry, selection and observations",
     "modes": "chord;collinear",
-    "parameters": []
+    "parameters": [
+      "link_branch",
+      "link_branch_fraction"
+    ]
   },
   "geom_track_bar": {
     "level": "L2",
@@ -90,11 +84,23 @@
     "parameters": []
   },
   "geom_link_line": {
-    "level": "L2",
-    "page": "chord-routing",
-    "anchor": "point-markers",
-    "reason": "Actual interval midpoint point-link with arrow and reading guide; full endpoint/curve teaching remains open",
+    "level": "L3",
+    "page": "chord-branches",
+    "anchor": "point-links",
+    "reason": "Explicit interval-to-point midpoint table; same-input curved/straight contrast; interval information loss and mode boundaries",
     "modes": "chord;collinear",
-    "parameters": []
+    "parameters": [
+      "link_type"
+    ]
+  },
+  "geom_gene": {
+    "level": "L3",
+    "page": "feature-geometry",
+    "anchor": "arrow-heads",
+    "reason": "Original source-strand integrase; focused source axis; identical-size arrow-style contrasts; defaults, constraints, adaptation and presets",
+    "modes": "chord;collinear;circular (bp)",
+    "parameters": [
+      "arrow_head_style"
+    ]
   }
 }

@@ -1,5 +1,10 @@
 # ggchord 0.16.7 (development)
 
+* Expanded bilingual parameter lessons with source-backed gene arrow outlines,
+  explicitly illustrative shared-endpoint branches, curved versus straight point
+  links, and GC tile band-width comparisons. README acknowledgements describe
+  the open-source projects and public tools that informed the design.
+
 * Added bilingual lessons on collinear alignment, anchors and display orientation,
   a real GC tile-track example, task-based parameter lookup and coordinate
   compatibility guidance. Installation instructions distinguish the local

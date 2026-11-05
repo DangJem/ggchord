@@ -53,3 +53,5 @@ Next, [place sequence and gene labels](chord-labels.html).
 | `nonadjacent_linewidth` | `0.4` | Only nonadjacent collinear borders; 0 reuses ordinary linewidth |
 
 Set fixed `fill/alpha/colour/linewidth` outside `aes()`. Map data differences to dedicated ribbon roles with matching scales. Explicit fixed values override matching mappings; omit fixed alpha when mapping opacity. Colour differences do not establish biological relationships. See [`geom_link_ribbon()`](reference/geom_link_ribbon.html) for the full signature.
+
+Continue with [shared branches and point links](chord-branches.html) to compare trunks, trunk fractions and curved/straight paths.

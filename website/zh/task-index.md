@@ -8,8 +8,8 @@
 | 指定半径与曲率 | [`geom_seq()`](reference/geom_seq.html) | `seq_radius, seq_curvature` | A | [进阶](chord-geometry.html) |
 | 改变序列顺序和方向 | [`geom_seq()`](reference/geom_seq.html) | `seq_order, seq_orientation` | A / B | [进阶](chord-geometry.html) |
 | 改变连接路径与避障 | [`geom_link_ribbon()`](reference/geom_link_ribbon.html) | `link_ctrl_point, link_gap, link_avoid` | A / B | [进阶](chord-routing.html) |
-| 将色带改为有向点连接 | [`geom_link_line()`](reference/geom_link_line.html) | `arrow` | A / B | [进阶](chord-routing.html) |
-| 调整基因箭头形状 | [`geom_gene()`](reference/geom_gene.html) | `arrow_head_style, short_feature` | A / B / C (bp) | [进阶](annotations.html) |
+| 将色带改为有向点连接 | [`geom_link_line()`](reference/geom_link_line.html) | `link_type, qpos/spos, arrow` | A / B | [进阶](chord-branches.html#point-links) |
+| 调整基因箭头形状 | [`geom_gene()`](reference/geom_gene.html) | `arrow_head_style, short_feature` | A / B / C (bp) | [进阶](feature-geometry.html#arrow-heads) |
 | 强调一个局部区间 | [`geom_seq_region()`](reference/geom_seq_region.html) | `region_side, region_width, region_offset` | A / B / C | [进阶](chord-routing.html) |
 | 根据相似度配色 | [`scale_ribbon_fill_stepsn()`](reference/scale_ribbon_fill_stepsn.html) | `ribbon_fill` | A / B | [基础](adjustments.html) |
 | 分类配色与图例 | [`scale_seq_colour_manual()`](reference/scale_seq_colour_manual.html) | `values, guide` | A / B / C | [进阶](styling.html) |
@@ -36,6 +36,7 @@
 | 绘制原生蛋白比较 | [`ggchord()`](reference/ggchord.html) | `seq_data: sequence_unit` | A / B (aa) | [进阶](protein-alignments.html) |
 | 预览并导出论文图 | [`view_ggchord()`](reference/view_ggchord.html) | `width, height, units` | general | [基础](output.html) |
 | 诊断布局与导出坐标 | [`export_ggchord_layout()`](reference/export_ggchord_layout.html) | `plot` | general | [进阶](faq.html) |
+| 让相同端点的连接共享主干 | [`geom_link_ribbon()`](reference/geom_link_ribbon.html) | `link_branch, link_branch_fraction` | A / B | [进阶](chord-branches.html#branches) |
 
 ## 三条独立学习路线 {#paths}
 

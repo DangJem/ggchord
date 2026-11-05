@@ -6,6 +6,13 @@ markers <- grep('^# ---- [a-z]+ ----$', text)
 chunks <- setNames(lapply(seq_len(length(markers)-1L), function(i)
   text[seq.int(markers[i]+1L,markers[i+1L]-1L)]),
   sub('^# ---- ([a-z]+) ----$','\\1',text[markers[-length(markers)]]))
+comparisons <- jsonlite::fromJSON("website/parameter-comparisons.json", simplifyVector = FALSE)
+source("tools/render-teaching-comparisons.R")
+requested <- commandArgs(trailingOnly = TRUE)
+if (length(requested) && all(requested %in% vapply(comparisons, `[[`, "", "id"))) {
+  ggchord_render_comparisons(comparisons, requested, chunks, fingerprints)
+  quit(save = "no", status = 0)
+}
 env <- new.env(parent=globalenv())
 for(name in setdiff(names(chunks),c('save','preview','frontsave','frontpreview','imports','firstsave','firstsavebasic'))) {
   cat('Example:',name,'\n')
@@ -138,6 +145,9 @@ teaching_assets$input <- c(rep("Same bundled complete sequences and observed HSP
   "Same pUC19 100 bp windows as bar/line lesson; GC fraction mapped to tile colour")
 assets <- rbind(assets, teaching_assets)
 basic_ids <- c(basic_ids, teaching_assets$id)
+comparison_assets <- ggchord_comparison_assets(comparisons)
+assets <- rbind(assets, comparison_assets)
+basic_ids <- c(basic_ids, comparison_assets$id)
 requested <- commandArgs(trailingOnly=TRUE)
 if(length(requested) && any(!requested %in% assets$id)) stop('Unknown documentation figure ID')
 if(length(requested)) {

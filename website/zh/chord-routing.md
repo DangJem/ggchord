@@ -53,3 +53,5 @@
 | `nonadjacent_linewidth` | `0.4` | 只控制共线性非相邻显示行边框，0 沿用普通 linewidth |
 
 固定 `fill/alpha/colour/linewidth` 放在 `aes()` 外；数据差异映射到 ribbon 专用属性并配匹配标度。显式固定值优先于相应映射，所以映射透明度时省略固定 alpha。改变颜色不能证明不同生物学关系。完整签名见 [`geom_link_ribbon()`](reference/geom_link_ribbon.html)。
+
+接着用[共享端点分支与点连接](chord-branches.html)比较分支主干、主干比例及曲线/直线。

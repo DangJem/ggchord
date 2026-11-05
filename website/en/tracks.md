@@ -66,6 +66,15 @@ Use `scale_track_fill_gradientn()` for continuous colours or `scale_track_fill_m
 
 Change only tile width from 10 to 4 mm: colours stay the same while physical band width changes. Your own data must declare windows, units, NA handling and overlap policy. Check coordinate errors rather than hiding them with clip. See [`geom_track_tile()`](reference/geom_track_tile.html) and [`position_track()`](reference/position_track.html).
 
+## Change only physical tile width {#tile-width}
+
+Compare with the 10 mm band above. Keep the same 9 × 8 inch device, windows, colours and value domain, changing only `position_track(width)` to 4 mm:
+
+{{code:comparetrackthin}}
+{{figure:comparetrackthin}}
+
+Colours still encode the same GC fractions. Only physical band width shrinks. The geom draws interval tiles and the Position controls band width; neither changes base composition. Try 6 mm while retaining export dimensions. Bar heights are separately controlled by `track_value` and its value scale; reducing band width is not numerical normalization.
+
 ## Check your result {#check-result}
 GC in bins lies between 0 and 1; each row is an actual window and the last may be shorter than 100 bp. Bars and line share the same 0–1 fraction scale.
 

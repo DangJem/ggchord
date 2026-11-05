@@ -1,0 +1,175 @@
+[
+  {
+    "id": "comparegeneshouldered",
+    "object": "p_comparegeneshouldered",
+    "parameter": "arrow_head_style",
+    "value": "shouldered",
+    "snippets": [
+      "comparegenedata",
+      "comparegeneshouldered"
+    ],
+    "page": "feature-geometry",
+    "anchor": "arrow-heads",
+    "coordinate": "collinear",
+    "width": 9,
+    "height": 4,
+    "input": "Source-strand integrase OQ646790.1:43765-46140, focused to 43000-47000 bp",
+    "baseline": null,
+    "default": "shouldered",
+    "validation": "rendered with view_ggchord; page preparation executed"
+  },
+  {
+    "id": "comparegeneflush",
+    "object": "p_comparegeneflush",
+    "parameter": "arrow_head_style",
+    "value": "flush",
+    "snippets": [
+      "comparegenedata",
+      "comparegeneflush"
+    ],
+    "page": "feature-geometry",
+    "anchor": "arrow-heads",
+    "coordinate": "collinear",
+    "width": 9,
+    "height": 4,
+    "input": "Same source-strand integrase and window",
+    "baseline": "comparegeneshouldered",
+    "default": "shouldered",
+    "validation": "rendered with view_ggchord; page preparation executed"
+  },
+  {
+    "id": "comparegenetriangle",
+    "object": "p_comparegenetriangle",
+    "parameter": "arrow_head_style",
+    "value": "triangle",
+    "snippets": [
+      "comparegenedata",
+      "comparegenetriangle"
+    ],
+    "page": "feature-geometry",
+    "anchor": "arrow-heads",
+    "coordinate": "collinear",
+    "width": 9,
+    "height": 4,
+    "input": "Same source-strand integrase and window",
+    "baseline": "comparegeneshouldered",
+    "default": "shouldered",
+    "validation": "rendered with view_ggchord; page preparation executed"
+  },
+  {
+    "id": "comparebranchnone",
+    "object": "p_comparebranchnone",
+    "parameter": "link_branch",
+    "value": "none",
+    "snippets": [
+      "comparebranchdata",
+      "comparebranchnone"
+    ],
+    "page": "chord-branches",
+    "anchor": "branches",
+    "coordinate": "chord",
+    "width": 9,
+    "height": 7,
+    "input": "Explicit synthetic geometry demonstration: three 1000 bp sequences, two links sharing one query interval",
+    "baseline": null,
+    "default": "none",
+    "validation": "rendered with view_ggchord; page preparation executed"
+  },
+  {
+    "id": "comparebranchquery",
+    "object": "p_comparebranchquery",
+    "parameter": "link_branch",
+    "value": "query",
+    "snippets": [
+      "comparebranchdata",
+      "comparebranchquery"
+    ],
+    "page": "chord-branches",
+    "anchor": "branches",
+    "coordinate": "chord",
+    "width": 9,
+    "height": 7,
+    "input": "Same synthetic shared-query intervals; not observed alignments",
+    "baseline": "comparebranchnone",
+    "default": "none",
+    "validation": "rendered with view_ggchord; page preparation executed"
+  },
+  {
+    "id": "comparebranchfraction",
+    "object": "p_comparebranchfraction",
+    "parameter": "link_branch_fraction",
+    "value": "0.35",
+    "snippets": [
+      "comparebranchdata",
+      "comparebranchfraction"
+    ],
+    "page": "chord-branches",
+    "anchor": "fraction",
+    "coordinate": "chord",
+    "width": 9,
+    "height": 7,
+    "input": "Same synthetic shared-query intervals; compare against query branching at default 0.15",
+    "baseline": "comparebranchquery",
+    "default": 0.15,
+    "validation": "rendered with view_ggchord; page preparation executed"
+  },
+  {
+    "id": "comparelinkcurve",
+    "object": "p_comparelinkcurve",
+    "parameter": "link_type",
+    "value": "curve",
+    "snippets": [
+      "comparebranchdata",
+      "comparepointdata",
+      "comparelinkcurve"
+    ],
+    "page": "chord-branches",
+    "anchor": "point-links",
+    "coordinate": "chord",
+    "width": 9,
+    "height": 7,
+    "input": "Same synthetic link intervals; point links use interval midpoints",
+    "baseline": null,
+    "default": "curve",
+    "validation": "rendered with view_ggchord; page preparation executed"
+  },
+  {
+    "id": "comparelinkstraight",
+    "object": "p_comparelinkstraight",
+    "parameter": "link_type",
+    "value": "straight",
+    "snippets": [
+      "comparebranchdata",
+      "comparepointdata",
+      "comparelinkstraight"
+    ],
+    "page": "chord-branches",
+    "anchor": "point-links",
+    "coordinate": "chord",
+    "width": 9,
+    "height": 7,
+    "input": "Same synthetic link intervals and midpoint anchors",
+    "baseline": "comparelinkcurve",
+    "default": "curve",
+    "validation": "rendered with view_ggchord; page preparation executed"
+  },
+  {
+    "id": "comparetrackthin",
+    "object": "p_comparetrackthin",
+    "parameter": "position_track.width",
+    "value": "4 mm",
+    "snippets": [
+      "trackdata",
+      "comparetrackthin"
+    ],
+    "page": "tracks",
+    "anchor": "tile-width",
+    "coordinate": "circular",
+    "width": 9,
+    "height": 8,
+    "input": "Same pUC19 100 bp GC windows, fraction and gradient as tracktile at 10 mm",
+    "baseline": "tracktile",
+    "default": "4 mm",
+    "validation": "rendered with view_ggchord; page preparation executed"
+  }
+]

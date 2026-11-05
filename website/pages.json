@@ -382,5 +382,21 @@
       "en": "Layer and coordinate compatibility"
     },
     "group": "guide"
+  },
+  {
+    "slug": "feature-geometry",
+    "title": {
+      "zh": "基因与特征的箭头几何",
+      "en": "Gene and feature arrow geometry"
+    },
+    "group": "guide"
+  },
+  {
+    "slug": "chord-branches",
+    "title": {
+      "zh": "共享端点分支与点连接",
+      "en": "Shared endpoint branches and point links"
+    },
+    "group": "article"
   }
 ]

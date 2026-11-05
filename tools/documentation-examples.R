@@ -1287,4 +1287,68 @@ p_tracktile <- ggchord(track_seq) +
     limits = c(0, 1), name = "GC fraction") +
   coord_circular()
 p_tracktile
+# ---- comparegenedata ----
+library(ggchord)
+library(dplyr)
+source_gene <- gene_data_example |>
+  filter(accver == "OQ646790.1", start == 43765) |>
+  transmute(accver, start, end, strand = source_strand, anno)
+gene_window <- focus_ggchord_data(
+  seq_data = filter(seq_data_example, accver == "OQ646790.1"),
+  gene_data = source_gene,
+  loci = data.frame(accver = "OQ646790.1", start = 43000, end = 47000)
+)
+gene_base <- ggchord(gene_window$seq_data, gene_data = gene_window$gene_data) +
+  geom_seq() +
+  scale_seq_position_continuous(coordinates = "source") +
+  coord_collinear()
+# ---- comparegeneshouldered ----
+p_comparegeneshouldered <- gene_base + geom_gene(arrow_head_width = 1.6, arrow_head_style = "shouldered")
+p_comparegeneshouldered
+# ---- comparegeneflush ----
+p_comparegeneflush <- gene_base + geom_gene(arrow_head_width = 1.6, arrow_head_style = "flush")
+p_comparegeneflush
+# ---- comparegenetriangle ----
+p_comparegenetriangle <- gene_base + geom_gene(arrow_head_width = 1.6, arrow_head_style = "triangle")
+p_comparegenetriangle
+# ---- comparebranchdata ----
+library(ggchord)
+branch_seqs <- data.frame(accver = c("query", "target_a", "target_b"), length = 1000)
+branch_links <- data.frame(
+  qaccver = c("query", "query"), saccver = c("target_a", "target_b"),
+  qstart = 200, qend = 600, sstart = c(100, 300), send = c(500, 700)
+)
+branch_base <- ggchord(branch_seqs, ribbon_data = branch_links) +
+  geom_seq() + geom_seq_label() + coord_chord(rotation = 0)
+# ---- comparebranchnone ----
+p_comparebranchnone <- branch_base + geom_link_ribbon(link_branch = "none")
+p_comparebranchnone
+# ---- comparebranchquery ----
+p_comparebranchquery <- branch_base + geom_link_ribbon(link_branch = "query")
+p_comparebranchquery
+# ---- comparebranchfraction ----
+p_comparebranchfraction <- branch_base +
+  geom_link_ribbon(link_branch = "query", link_branch_fraction = 0.35)
+p_comparebranchfraction
+# ---- comparepointdata ----
+point_links <- data.frame(
+  qaccver = branch_links$qaccver, saccver = branch_links$saccver,
+  qpos = (branch_links$qstart + branch_links$qend) / 2,
+  spos = (branch_links$sstart + branch_links$send) / 2
+)
+# ---- comparelinkcurve ----
+p_comparelinkcurve <- branch_base + geom_link_line(data = point_links, link_type = "curve")
+p_comparelinkcurve
+# ---- comparelinkstraight ----
+p_comparelinkstraight <- branch_base + geom_link_line(data = point_links, link_type = "straight")
+p_comparelinkstraight
+# ---- comparetrackthin ----
+p_comparetrackthin <- ggchord(track_seq) +
+  geom_seq() +
+  geom_track_tile(aes(track_fill = gc), data = bins,
+    position = position_track("gc_colour", width = grid::unit(4, "mm"))) +
+  scale_track_fill_gradientn("gc_colour", colours = c("#F1E51D", "#31849B"),
+    limits = c(0, 1), name = "GC fraction") +
+  coord_circular()
+p_comparetrackthin
 # ---- end ----

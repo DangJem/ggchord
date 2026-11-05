@@ -95,6 +95,15 @@ def main():
         require(executable_blocks(expand(texts[0], 'en')) == executable_blocks(expand(texts[1], 'zh')), f'{p["slug"]}: mismatched executable code')
     for lang in ['en','zh']:
         require({f.stem for f in (WEB/lang).glob('*.md')} == set(slugs), f'{lang}: orphan or missing source page')
+    for filename in ['README.md', 'README-Hans.md']:
+        require(not re.search(r'SnapGene|Geneious', (ROOT/filename).read_text(), re.I),
+                filename + ': commercial product name in design references')
+    comparisons = json.loads((WEB/'parameter-comparisons.json').read_text())
+    for row in comparisons:
+        require(all(key in snippets() for key in row['snippets']), row['id'] + ': missing comparison dependency')
+        require(row['page'] in slugs, row['id'] + ': unknown comparison lesson')
+        if row['baseline']:
+            require(row['baseline'] in CAPTIONS, row['id'] + ': unknown baseline')
     subprocess.run(['python3','tools/generate-task-index.py','--check'],cwd=ROOT,check=True)
     subprocess.run(['python3','tools/reference-translations.py','--check'],cwd=ROOT,check=True)
     subprocess.run(['python3','tools/sync-tutorials.py','--check'],cwd=ROOT,check=True)
@@ -102,6 +111,12 @@ def main():
         assets = list(csv.DictReader(f))
     require({a['id'] for a in assets} == set(CAPTIONS), 'Figure manifest/captions mismatch')
     by_id = {a['id']: a for a in assets}
+    for row in comparisons:
+        asset = by_id.get(row['id'], {})
+        require(all(asset.get(key) == row[key] for key in ['object', 'coordinate']),
+                row['id'] + ': comparison object or mode differs from rendered asset')
+        require(all(float(asset.get(key, 0)) == float(row[key]) for key in ['width', 'height']),
+                row['id'] + ': comparison dimensions differ from rendered asset')
     for group in navigation:
         expected = {'chord': 'chord', 'collinear': 'collinear', 'plasmid': 'circular'}.get(group['id'])
         if not expected: continue
@@ -162,7 +177,7 @@ def main():
     require(all('`'+name+'`' in config for name in names), 'Native pkgdown reference omits Rd topics')
     coverage=json.loads((WEB/'coverage.json').read_text())
     code=snippets()
-    require(len(coverage)==18,'Expected 18 reviewed capability families')
+    require(len(coverage)==20,'Expected 20 reviewed capability families')
     results=json.loads((WEB/'assets/example-results.json').read_text())
     for family in coverage:
         require(family['result'] is None or family['result'] in results,f'{family["id"]}: missing result record')

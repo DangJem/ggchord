@@ -24,11 +24,8 @@
       "chord-tuning",
       "chord-geometry",
       "chord-routing",
+      "chord-branches",
       "chord-labels",
-      "labels",
-      "parameters",
-      "adjustments",
-      "styling",
       "chord-import",
       "ribbons",
       "chord"
@@ -68,6 +65,20 @@
       "recognition",
       "plasmid-catalog",
       "plasmids"
+    ]
+  },
+  {
+    "id": "shared-techniques",
+    "title": {
+      "zh": "通用绘图技巧",
+      "en": "Shared plotting techniques"
+    },
+    "pages": [
+      "feature-geometry",
+      "labels",
+      "parameters",
+      "adjustments",
+      "styling"
     ]
   },
   {

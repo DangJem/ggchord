@@ -8,8 +8,8 @@ Choose a lesson by task. A means chord, B collinear, C single-sequence circular.
 | Set radii and curvature | [`geom_seq()`](reference/geom_seq.html) | `seq_radius, seq_curvature` | A | [Advanced](chord-geometry.html) |
 | Order and orient sequences | [`geom_seq()`](reference/geom_seq.html) | `seq_order, seq_orientation` | A / B | [Advanced](chord-geometry.html) |
 | Route links around features | [`geom_link_ribbon()`](reference/geom_link_ribbon.html) | `link_ctrl_point, link_gap, link_avoid` | A / B | [Advanced](chord-routing.html) |
-| Connect points with arrows | [`geom_link_line()`](reference/geom_link_line.html) | `arrow` | A / B | [Advanced](chord-routing.html) |
-| Change gene arrow shapes | [`geom_gene()`](reference/geom_gene.html) | `arrow_head_style, short_feature` | A / B / C (bp) | [Advanced](annotations.html) |
+| Connect points with arrows | [`geom_link_line()`](reference/geom_link_line.html) | `link_type, qpos/spos, arrow` | A / B | [Advanced](chord-branches.html#point-links) |
+| Change gene arrow shapes | [`geom_gene()`](reference/geom_gene.html) | `arrow_head_style, short_feature` | A / B / C (bp) | [Advanced](feature-geometry.html#arrow-heads) |
 | Highlight an interval | [`geom_seq_region()`](reference/geom_seq_region.html) | `region_side, region_width, region_offset` | A / B / C | [Advanced](chord-routing.html) |
 | Colour by identity | [`scale_ribbon_fill_stepsn()`](reference/scale_ribbon_fill_stepsn.html) | `ribbon_fill` | A / B | [Basics](adjustments.html) |
 | Use categories and legends | [`scale_seq_colour_manual()`](reference/scale_seq_colour_manual.html) | `values, guide` | A / B / C | [Advanced](styling.html) |
@@ -36,6 +36,7 @@ Choose a lesson by task. A means chord, B collinear, C single-sequence circular.
 | Plot native protein comparisons | [`ggchord()`](reference/ggchord.html) | `seq_data: sequence_unit` | A / B (aa) | [Advanced](protein-alignments.html) |
 | Preview and export publication figures | [`view_ggchord()`](reference/view_ggchord.html) | `width, height, units` | general | [Basics](output.html) |
 | Diagnose and export layout | [`export_ggchord_layout()`](reference/export_ggchord_layout.html) | `plot` | general | [Advanced](faq.html) |
+| Share a trunk at equal endpoints | [`geom_link_ribbon()`](reference/geom_link_ribbon.html) | `link_branch, link_branch_fraction` | A / B | [Advanced](chord-branches.html#branches) |
 
 ## Three independent learning paths {#paths}
 

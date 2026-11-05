@@ -69,9 +69,18 @@ def fingerprints():
         'frontcirclestyle': {'frontcirclestyle', 'firstcircle'},
         'frontcirclerotation': {'frontcirclerotation', 'firstcircle', 'firstfeatures'},
     })
+    registry = json.loads((ROOT / 'website/parameter-comparisons.json').read_text())
+    declared = {row['id']: set(row['snippets']) for row in registry}
+    independent = {name for name in chunks if name.startswith('compare')}
     result = {}
     for key in captions:
+        if key in declared:
+            payload = engine + '\n' + '\n'.join(name + ':\n' + chunks[name]
+                for name in chunks if name in declared[key])
+            result[key] = hashlib.md5(payload.encode()).hexdigest()
+            continue
         excluded = exercises - practice_figures.get(key, set())
+        excluded.update(independent)
         # These new chunks write only independent comparison objects.
         if key not in {'alignleft', 'aligncenter', 'alignright', 'alignanchor', 'alignauto', 'tracktile'}:
             excluded.update({'alignbase', 'aligncenter', 'alignright', 'alignanchor', 'alignauto', 'tracktile'})

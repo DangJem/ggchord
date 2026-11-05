@@ -49,9 +49,9 @@
       "en": "Connect points with arrows"
     },
     "api": "geom_link_line",
-    "parameters": "arrow",
+    "parameters": "link_type, qpos/spos, arrow",
     "modes": "A / B",
-    "page": "chord-routing",
+    "page": "chord-branches#point-links",
     "level": "advanced"
   },
   {
@@ -62,7 +62,7 @@
     "api": "geom_gene",
     "parameters": "arrow_head_style, short_feature",
     "modes": "A / B / C (bp)",
-    "page": "annotations",
+    "page": "feature-geometry#arrow-heads",
     "level": "advanced"
   },
   {
@@ -349,6 +349,17 @@
     "parameters": "plot",
     "modes": "general",
     "page": "faq",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "让相同端点的连接共享主干",
+      "en": "Share a trunk at equal endpoints"
+    },
+    "api": "geom_link_ribbon",
+    "parameters": "link_branch, link_branch_fraction",
+    "modes": "A / B",
+    "page": "chord-branches#branches",
     "level": "advanced"
   }
 ]

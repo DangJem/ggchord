@@ -63,6 +63,15 @@ bar 表示相对基线的区间值。不要把相同数值域误认为必须位�
 
 试把 tile 的 width 从 10 改为 4 mm，其他设置不动；数值颜色不变，只有物理带宽变化。自备数据必须声明窗口、单位、NA 和重叠区间的处理。源坐标越界先查输入，不能用 clip 掩盖错误。更多见 [`geom_track_tile()`](reference/geom_track_tile.html) 和 [`position_track()`](reference/position_track.html)。
 
+## 只改变 tile 的物理宽度 {#tile-width}
+
+回看上面的 10 mm 色带，保持 9 × 8 英寸、输入窗口、颜色和数值域完全相同，仅把 `position_track(width)` 改为 4 mm：
+
+{{code:comparetrackthin}}
+{{figure:comparetrackthin}}
+
+颜色仍表示同一批 GC 比例，变窄的是物理带宽。`geom_track_tile()` 负责区间色块，Position 负责带宽；它们不改变窗口里的碱基组成。把 4 改为 6 mm 练习一次，保留同一导出尺寸。柱图的数值高度另由 `track_value` 和 value scale 控制，不能用缩窄带宽代替数值归一化。
+
 ## 完成后检查 {#check-result}
 bins 的 gc 在 0–1 之间，每行对应一个实际窗口；最后窗口可短于 100 bp。柱高与折线共用 0–1 的比例尺度。
 

@@ -42,3 +42,5 @@ instead of treating bp as Cartesian x/y.
 Check intervals and strands before shapes and labels. Unknown strands remain in general features; stacking changes display placement, not genomic coordinates.
 
 <div class="next-step">Continue: <a href="labels.html">Labels and local placement →</a></div>
+
+Compare shouldered/flush/triangle arrows on one observed CDS in [arrow geometry](feature-geometry.html#arrow-heads).

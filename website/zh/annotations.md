@@ -40,3 +40,5 @@
 先检查区间与链，再看形状与标签。未知链仍保留在通用注释中；堆叠改变显示位置，不改变原始基因组坐标。
 
 <div class="next-step">继续：<a href="labels.html">放置和调整标签 →</a></div>
+
+比较真实 CDS 的 shouldered/flush/triangle 三种箭头，见[箭头几何对照](feature-geometry.html#arrow-heads)。
