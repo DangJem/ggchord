@@ -135,6 +135,7 @@ install.packages("ggchord")
     text += ('RStudio Plots 会按面板尺寸重新排列标签。按相同显式宽高预览并保存：' if zh else
         'RStudio Plots can rearrange labels when its panel changes. Preview and save at the same explicit dimensions:')
     text += '\n\n```r\nview_ggchord(p_show_collinear, width = 12, height = 8, units = "in")\nggsave("comparison.png", p_show_collinear, width = 12, height = 8, units = "in", dpi = 144)\n```\n'
+    text += '\n' + (WEB / f'readme-inspirations-{lang}.md').read_text()
     text += f'\n## {onwards}\n\n'
     guides = ([('开始使用', 'installation'), ('章节索引', 'about'),
         ('函数文档', 'reference/index'), ('示例图集', 'gallery'),
