@@ -23,9 +23,9 @@
 #' distinct geometries or their defaults.
 #'
 #' Chord, circular and collinear remain separate coordinate modes. Circular
-#' maps reject inter-sequence links; collinear maps reject circular-only
+#' maps reject ribbon and point-link layers; collinear maps reject
 #' restriction/primer/centre-label layers. `geom_seq_scale()` is a collinear
-#' bp reference bar; [scale_seq_position_continuous()] configures genomic axes.
+#' sequence-unit reference bar; [scale_seq_position_continuous()] configures genomic axes.
 #' A matching name never implies that every geom supports every coord.
 #'
 #' @section Names and migration errors:
@@ -69,7 +69,7 @@
 #' path expansion. See [ggchord_data_contract] for source rows, optional
 #' dependencies, transformations, aggregation estimates and search limits.
 #'
-#' Native layout distances, bp, angles, numerical track domains and physical
+#' Native layout distances, sequence units, angles, numerical track domains and physical
 #' mm are separate quantities. Track IDs share numerical domains and consistent
 #' band declarations; their physical placement is not a numeric value scale.
 #' Existing documented return members remain supported. Prefer

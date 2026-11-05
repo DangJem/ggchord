@@ -1,5 +1,11 @@
 # ggchord 0.16.7 (development)
 
+* Fixed the default continuous point-link colour bar so it accepts the dedicated
+  `link_colour` aesthetic. Explicit user guide settings remain authoritative.
+
+* Fixed rendering of `geom_seq(seq_style = "band")` by removing an unsupported
+  argument forwarded to the polygon renderer.
+
 * Expanded bilingual parameter lessons with source-backed gene arrow outlines,
   explicitly illustrative shared-endpoint branches, curved versus straight point
   links, and GC tile band-width comparisons. README acknowledgements describe

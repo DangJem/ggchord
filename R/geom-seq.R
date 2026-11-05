@@ -27,7 +27,7 @@ GeomChordSeq <- ggplot2::ggproto(
       bands$colour <- bands$seq_colour
       bands$fill <- bands$seq_colour
       grobs[[length(grobs) + 1L]] <- ggplot2::GeomPolygon$draw_panel(
-        bands, panel_params, coord, na.rm = na.rm
+        bands, panel_params, coord
       )
     }
     if (nrow(breaks)) {

@@ -4,7 +4,7 @@ CoordCollinear <- ggplot2::ggproto("CoordCollinear", CoordGgchord)
 #' Linear multi-sequence collinearity coordinates
 #'
 #' Draws sequences as left-aligned horizontal backbones, ordered from top to
-#' bottom by `geom_seq(seq_order = ...)`. All sequences share one linear bp
+#' bottom by `geom_seq(seq_order = ...)`. All sequences share one linear sequence-unit
 #' scale. `seq_orientation = -1` reverses a sequence together with its features,
 #' links and axis without modifying the input data.
 #'
@@ -18,9 +18,10 @@ CoordCollinear <- ggplot2::ggproto("CoordCollinear", CoordGgchord)
 #'
 #' Explicit sequence radius, curvature, ring mappings/scales and sequence-label
 #' radius cannot be converted and produce an error. Remove these arguments
-#' when switching from [coord_chord()]. Circular-only primer, restriction-site
-#' and centre-label layers require [coord_circular()]; use [geom_feature()] for
-#' general linear annotations. Cross-track links may cross intervening tracks.
+#' when switching from [coord_chord()]. Primer, restriction-site and centre-label
+#' layers are unsupported here; use [coord_circular()] for single-sequence maps
+#' or [geom_feature()] for general linear annotations. Single-sequence chord
+#' compositions remain available. Cross-track links may cross intervening tracks.
 #' Explicit link control points use the exported linear layout x/y units;
 #' the longest backbone has width 2 (the longest complete display row when
 #' `segments` is supplied).
@@ -46,8 +47,8 @@ CoordCollinear <- ggplot2::ggproto("CoordCollinear", CoordGgchord)
 #'
 #' With `segments`, each accession remains an independent window but windows
 #' sharing `row_id` occupy one display row. Their table order is left to right;
-#' `align` applies to the whole row. `segment_gap` reserves display space in bp
-#' scale units, independently of omitted genomic length. Internal ends receive
+#' `align` applies to the whole row. `segment_gap` reserves display space in native
+#' sequence units, independently of omitted genomic length. Internal ends receive
 #' break marks. Use [segment_ggchord_data()] to crop/split input first. Local
 #' reversal comes from the table's `orientation`, so automatic orientation,
 #' explicit sequence orientation and `anchor` conflict with this mode. Ribbon
@@ -71,7 +72,7 @@ CoordCollinear <- ggplot2::ggproto("CoordCollinear", CoordGgchord)
 #' @param segments Optional data frame with unique window `accver`, `row_id`
 #'   and `orientation` (1 or -1). Every displayed accession must be declared.
 #'   Each window has its own local coordinates and reversible source metadata.
-#' @param segment_gap Positive display gap in bp scale units when `segments`
+#' @param segment_gap Positive display gap in native sequence units when `segments`
 #'   is supplied, default 100. It never implies genomic continuity.
 #' @inheritParams coord_chord
 #' @return A ggplot2 Coord object for composition with a ggchord plot.

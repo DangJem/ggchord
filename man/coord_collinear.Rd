@@ -57,7 +57,7 @@ support divided by their sum, default 0.1. A tie is always unresolved.}
 and \code{orientation} (1 or -1). Every displayed accession must be declared.
 Each window has its own local coordinates and reversible source metadata.}
 
-\item{segment_gap}{Positive display gap in bp scale units when \code{segments}
+\item{segment_gap}{Positive display gap in native sequence units when \code{segments}
 is supplied, default 100. It never implies genomic continuity.}
 }
 \value{
@@ -65,7 +65,7 @@ A ggplot2 Coord object for composition with a ggchord plot.
 }
 \description{
 Draws sequences as left-aligned horizontal backbones, ordered from top to
-bottom by \code{geom_seq(seq_order = ...)}. All sequences share one linear bp
+bottom by \code{geom_seq(seq_order = ...)}. All sequences share one linear sequence-unit
 scale. \code{seq_orientation = -1} reverses a sequence together with its features,
 links and axis without modifying the input data.
 }
@@ -80,9 +80,10 @@ horizontal. Label side \code{"outside"} means above and \code{"inside"} below.
 
 Explicit sequence radius, curvature, ring mappings/scales and sequence-label
 radius cannot be converted and produce an error. Remove these arguments
-when switching from \code{\link[=coord_chord]{coord_chord()}}. Circular-only primer, restriction-site
-and centre-label layers require \code{\link[=coord_circular]{coord_circular()}}; use \code{\link[=geom_feature]{geom_feature()}} for
-general linear annotations. Cross-track links may cross intervening tracks.
+when switching from \code{\link[=coord_chord]{coord_chord()}}. Primer, restriction-site and centre-label
+layers are unsupported here; use \code{\link[=coord_circular]{coord_circular()}} for single-sequence maps
+or \code{\link[=geom_feature]{geom_feature()}} for general linear annotations. Single-sequence chord
+compositions remain available. Cross-track links may cross intervening tracks.
 Explicit link control points use the exported linear layout x/y units;
 the longest backbone has width 2 (the longest complete display row when
 \code{segments} is supplied).
@@ -108,8 +109,8 @@ of a global optimum. It cannot be combined with an explicit
 
 With \code{segments}, each accession remains an independent window but windows
 sharing \code{row_id} occupy one display row. Their table order is left to right;
-\code{align} applies to the whole row. \code{segment_gap} reserves display space in bp
-scale units, independently of omitted genomic length. Internal ends receive
+\code{align} applies to the whole row. \code{segment_gap} reserves display space in native
+sequence units, independently of omitted genomic length. Internal ends receive
 break marks. Use \code{\link[=segment_ggchord_data]{segment_ggchord_data()}} to crop/split input first. Local
 reversal comes from the table's \code{orientation}, so automatic orientation,
 explicit sequence orientation and \code{anchor} conflict with this mode. Ribbon

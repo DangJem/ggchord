@@ -104,17 +104,17 @@ ggchord_match_feature_rows <- function(labels, features) {
   NULL
 }
 
-#' Convert genomic positions to or from a linear ggchord layout
+#' Convert sequence positions to or from a linear ggchord layout
 #'
 #' Maps positions for ordinary ggplot2 annotation layers without modifying
-#' source tables. Inverse mapping returns the chosen relative or source bp.
+#' source tables. Inverse mapping returns the chosen relative or source sequence positions.
 #' In a segmented layout, specify the window accession rather than its parent
 #' source accession. Positions outside that window, including display gaps,
 #' produce an error instead of being extrapolated into omitted sequence.
 #' @param plot A ggchord plot using [coord_collinear()].
 #' @param accver Sequence identifiers, scalar or one per position.
 #' @param position Numeric genomic positions, or layout x when `inverse = TRUE`.
-#' @param inverse Convert layout x back to bp.
+#' @param inverse Convert layout x back to native sequence positions.
 #' @param source Use original source coordinates after focusing.
 #' @return A data frame with accver, position, x and backbone y.
 #' @md

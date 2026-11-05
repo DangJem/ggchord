@@ -24,7 +24,13 @@ scale_link_linewidth_manual <- function(..., values) ggplot2::scale_linewidth_ma
 scale_link_linetype_manual <- function(..., values) ggplot2::scale_linetype_manual(..., values = values, aesthetics = "link_linetype")
 #' @rdname scale_link
 #' @export
-scale_link_colour_gradientn <- function(...) ggplot2::scale_colour_gradientn(..., aesthetics = "link_colour")
+scale_link_colour_gradientn <- function(...) {
+  args <- list(...)
+  if (!"guide" %in% names(args)) {
+    args$guide <- ggplot2::guide_colourbar(available_aes = "link_colour")
+  }
+  do.call(ggplot2::scale_colour_gradientn, c(args, list(aesthetics = "link_colour")))
+}
 #' @rdname scale_link
 #' @export
 scale_link_color_gradientn <- scale_link_colour_gradientn

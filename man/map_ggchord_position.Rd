@@ -2,7 +2,7 @@
 % Please edit documentation in R/collinear-utils.R
 \name{map_ggchord_position}
 \alias{map_ggchord_position}
-\title{Convert genomic positions to or from a linear ggchord layout}
+\title{Convert sequence positions to or from a linear ggchord layout}
 \usage{
 map_ggchord_position(plot, accver, position, inverse = FALSE, source = FALSE)
 }
@@ -13,7 +13,7 @@ map_ggchord_position(plot, accver, position, inverse = FALSE, source = FALSE)
 
 \item{position}{Numeric genomic positions, or layout x when \code{inverse = TRUE}.}
 
-\item{inverse}{Convert layout x back to bp.}
+\item{inverse}{Convert layout x back to native sequence positions.}
 
 \item{source}{Use original source coordinates after focusing.}
 }
@@ -22,7 +22,7 @@ A data frame with accver, position, x and backbone y.
 }
 \description{
 Maps positions for ordinary ggplot2 annotation layers without modifying
-source tables. Inverse mapping returns the chosen relative or source bp.
+source tables. Inverse mapping returns the chosen relative or source sequence positions.
 In a segmented layout, specify the window accession rather than its parent
 source accession. Positions outside that window, including display gaps,
 produce an error instead of being extrapolated into omitted sequence.

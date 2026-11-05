@@ -10,6 +10,10 @@ test_that("unshared links preserve vertex-wise staged styles", {
   shared <- build("query")
   expect_false(any(shared$.component == "trunk"))
   expect_equal(shared$link_alpha, separate$link_alpha)
+  coloured <- ggchord(s) + geom_seq() +
+    geom_link_line(aes(link_colour = pident), data = transform(d, pident = c(80, 95))) +
+    scale_link_colour_gradientn(colours = c("navy", "gold"))
+  expect_warning(ggplot2::ggplotGrob(coloured), NA)
 })
 
 

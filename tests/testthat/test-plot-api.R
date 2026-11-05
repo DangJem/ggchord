@@ -7,6 +7,8 @@ test_that("constructor and core sequence, ribbon and gene layers build", {
   expect_s3_class(p, "ggchord")
   built <- build_ggchord_smoke(p)
   expect_s3_class(built, "ggplot_built")
+  band <- ggchord(smoke_sequences()[1, ]) + geom_seq(seq_style = "band") + coord_circular()
+  expect_s3_class(ggplot2::ggplotGrob(band), "gtable")
   # F53: optional annotation text must not disable the strand fill mapping.
   expect_setequal(unique(built$data[[3]]$gene_fill), unname(colours))
 })
