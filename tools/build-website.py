@@ -10,6 +10,7 @@ import shutil
 import subprocess
 import zipfile
 from pathlib import Path
+from site_search import complete_examples, search_records
 from documentation_lib import ROOT, WEB, PAGES, CAPTIONS, RECIPES, expand, snippets, localize_r_comments
 
 class PageText(__import__('html.parser',fromlist=['HTMLParser']).HTMLParser):
@@ -17,8 +18,8 @@ class PageText(__import__('html.parser',fromlist=['HTMLParser']).HTMLParser):
         super().__init__();self.parts=[];self.stack=[];self.ignored=0;self.feed(text)
     def handle_starttag(self,tag,attrs):
         values=dict(attrs)
-        excluded=bool(self.ignored) or tag in ['nav','script','style'] or bool(
-            {'chapter-drawer','page-outline'} & set(values.get('class','').split()))
+        excluded=bool(self.ignored) or tag in ['nav','script','style','pre','summary','h1'] or bool(
+            {'chapter-drawer','page-outline','candidate-note','lesson-stage','breadcrumb','example-actions','section-number'} & set(values.get('class','').split()))
         if tag not in ['area','base','br','col','embed','hr','img','input','link','meta','param','source','track','wbr']:
             self.stack.append((tag,excluded));self.ignored+=int(excluded)
     def handle_endtag(self,tag):
@@ -39,6 +40,7 @@ def main():
     out.mkdir();assets=out/'assets';assets.mkdir()
     for p in (WEB/'assets').iterdir():
         if p.is_file():shutil.copy2(p,assets/p.name)
+    complete_examples(assets)
     for p in (ROOT/'man/figures').iterdir():
         if p.is_file() and (p.stem in CAPTIONS or p.stem=='logo'):shutil.copy2(p,assets/p.name)
     for name in ['documentation-examples.R','documentation-plots.R']:
@@ -91,6 +93,8 @@ def main():
     if any(statuses):raise SystemExit(combined[-7000:])
     # Post-process using the same XML library used by pkgdown; no hand-built page shell.
     subprocess.run(['Rscript','tools/finalize-website.R', 'publication' if args.publication else 'preview'],cwd=ROOT,check=True)
+    # Keep project presentation files identical to the source digested by finalization.
+    for name in ['site.css','site.js']: shutil.copy2(WEB/'assets'/name,assets/name)
     for lang in ['en','zh']:
         def redirect(old,target):
             path=out/lang/old;path.parent.mkdir(parents=True,exist_ok=True)
@@ -105,7 +109,7 @@ def main():
             main=re.search(r'<main\b[^>]*>(.*?)</main>',content,re.S)
             text=' '.join(PageText(main[1] if main else content).parts)
             index.append(dict(url=str(path.relative_to(out/lang)),title=title,text=re.sub(r'\s+',' ',text)))
-        (out/lang/'search.json').write_text(json.dumps(index,ensure_ascii=False)+'\n')
+        (out/lang/'search.json').write_text(json.dumps(search_records(out,lang,index),ensure_ascii=False)+'\n')
     # Stable historical paths remain usable after a future, separately authorized cutover.
     topics=[p.stem for p in (ROOT/'man').glob('*.Rd')]
     routes={'index.html':'en/index.html','articles/ggchord_vignette.html':'en/real-data.html',

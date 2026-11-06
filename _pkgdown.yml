@@ -5,12 +5,16 @@ home:
   sidebar: false
 template:
   bootstrap: 5
+  theme: a11y-light
+  theme-dark: a11y-dark
   light-switch: true
   bslib:
     base_font: system-ui
     heading_font: system-ui
     code_font: monospace
-    primary: "#087F75"
+    primary: "#086D67"
+    navbar-light-bg: "#FFFEFA"
+    navbar-dark-bg: "#17272C"
 navbar:
   structure:
     left: [home, start, plots, articles, reference]

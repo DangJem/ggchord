@@ -132,6 +132,7 @@ def main():
             runtime_pages=[slug for slug, result in execution.items() if result['result']=='success' and re.search(r'(?<![\w.])'+re.escape(name)+r'\s*\(',expanded_for_validation[slug])]
             require(bool(runtime_pages),name+': no executed lesson call')
     # Occurrence and execution are prerequisites, never automatic depth upgrades.
+    subprocess.run(['python3','tools/check-site-design.py'],cwd=ROOT,check=True)
     subprocess.run(['python3','tools/reference-translations.py','--check'],cwd=ROOT,check=True)
     subprocess.run(['python3','tools/sync-tutorials.py','--check'],cwd=ROOT,check=True)
     with (WEB/'assets/plots.csv').open() as f:
@@ -281,8 +282,18 @@ def main():
             actual = {str(p.relative_to(out/lang)) for p in (out/lang).rglob('*.html')}
             require(actual==expected,f'{lang}: generated page coverage')
             index = json.loads((out/lang/'search.json').read_text())
-            require({p['url'] for p in index} == expected-{'reference.html'},f'{lang}: incomplete search coverage')
+            require({p['url'].split('#')[0] for p in index} == expected-{'reference.html'},f'{lang}: incomplete search coverage')
             require(any('track' in p['text'] for p in index),f'{lang}: empty search content')
+            require({'course','function','parameter','task','faq'} <= {p.get('kind') for p in index},f'{lang}: missing structured search categories')
+            for result in index:
+                url=urlsplit(result['url']);target=(out/lang/unquote(url.path)).resolve()
+                require(target in docs,f'{lang}: search target missing: '+result['url'])
+                if url.fragment: require(unquote(url.fragment) in docs[target].ids,f'{lang}: search section missing: '+result['url'])
+        for example in json.loads((out/'assets/examples.json').read_text()):
+            script=out/example['file']
+            require(script.is_file() and hashlib.sha256(script.read_bytes()).hexdigest()==example['sha256'],'Complete script hash mismatch: '+example['file'])
+            require(script.read_text().startswith('library(ggchord)'), 'Complete example must load ggchord: '+example['file'])
+
         for path,doc in docs.items():
             if path.is_relative_to(out/'en') and path.name!='reference.html':
                 partner=(out/'zh'/path.relative_to(out/'en')).resolve()

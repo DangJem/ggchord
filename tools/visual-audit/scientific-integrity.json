@@ -1,0 +1,24 @@
+{
+  "baseline": "6c4036a",
+  "protected_roots": [
+    "R",
+    "man",
+    "data",
+    "examples",
+    "tests"
+  ],
+  "result": "unchanged",
+  "shared_example_sha256": "1c551a04334d6f1c6972805dec97ec9bfe3d8c601ed8199925b49362fecc49dc",
+  "scientific_png_count": 169,
+  "scope": "R core, Rd, tests, data, examples and scientific PNGs remain unchanged; only website presentation and derivative previews change",
+  "downloadable_scripts_preview": {
+    "parsed": 100,
+    "representative_executed": [
+      "index",
+      "chord-start",
+      "collinear-start",
+      "plasmid-start"
+    ],
+    "scope": "Preview/save calls captured; each representative graph rendered as a grob. No PNG exports repeated."
+  }
+}

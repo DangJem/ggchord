@@ -1,0 +1,74 @@
+[
+  {
+    "page": "installation",
+    "font": "17px",
+    "images": 0,
+    "mainWidth": 921,
+    "pageWidth": 1440,
+    "width": 1440
+  },
+  {
+    "page": "chord-start",
+    "font": "17px",
+    "images": 1,
+    "mainWidth": 921,
+    "pageWidth": 1440,
+    "width": 1440
+  },
+  {
+    "page": "collinear-start",
+    "font": "17px",
+    "images": 1,
+    "mainWidth": 921,
+    "pageWidth": 1440,
+    "width": 1440
+  },
+  {
+    "page": "plasmid-start",
+    "font": "17px",
+    "images": 1,
+    "mainWidth": 921,
+    "pageWidth": 1440,
+    "width": 1440
+  },
+  {
+    "page": "circular-labels",
+    "font": "17px",
+    "images": 12,
+    "mainWidth": 921,
+    "pageWidth": 1440,
+    "width": 1440
+  },
+  {
+    "page": "gallery",
+    "font": "17px",
+    "images": 169,
+    "mainWidth": 921,
+    "pageWidth": 1440,
+    "width": 1440
+  },
+  {
+    "page": "alignments",
+    "font": "17px",
+    "images": 0,
+    "mainWidth": 921,
+    "pageWidth": 1440,
+    "width": 1440
+  },
+  {
+    "page": "plasmids",
+    "font": "17px",
+    "images": 2,
+    "mainWidth": 921,
+    "pageWidth": 1440,
+    "width": 1440
+  },
+  {
+    "page": "reference/index",
+    "font": "17px",
+    "images": 1,
+    "mainWidth": 921,
+    "pageWidth": 1440,
+    "width": 1440
+  }
+]

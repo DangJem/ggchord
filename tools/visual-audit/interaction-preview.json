@@ -1,0 +1,16 @@
+{
+  "search": {
+    "query": "酶切引线",
+    "matched": 8,
+    "firstType": "task",
+    "arrowSelection": true,
+    "escapeClosed": true
+  },
+  "viewer": {
+    "originalPNG": true,
+    "filter": "none",
+    "actualSizeVerticalScrolling": true,
+    "escapeClosed": true,
+    "focusReturned": true
+  }
+}

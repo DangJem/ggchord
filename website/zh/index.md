@@ -1,36 +1,74 @@
-<div class="home-intro">
-<img class="package-logo" src="../assets/logo.webp" alt="ggchord" width="320" height="320">
-<p class="eyebrow">GENOMIC VISUALIZATION · R / GGPLOT2</p>
-<p class="home-lead">用 R 绘制基因组比较和质粒注释</p>
-<p>用图层组合弦图、共线性图与密集质粒注释。从真实序列、比对和注释，构建可复现的科研图形。</p>
-<div class="home-actions"><a class="primary-action" href="installation.html">开始使用 →</a><a href="about.html">浏览章节</a></div>
-</div>
+{{sitehero}}
 
 ## 选择你的可视化任务 {#choose}
-- [弦图](chord-start.html) · 比较多条序列的对应区间。
-- [共线性图](collinear-start.html) · 按共享比例比较基因位置与顺序。
-- [质粒图](plasmid-start.html) · 在单条序列上标记功能区间。
 
-## 弦图 · 四条基因组的总体联系 {#chord}
+{{taskcards}}
+
+## 从零开始，只需三步 {#quick-start}
+
+1. 按[安装页](installation.html)安装本网站对应的开发源码；正式版用户请用对应文档。
+2. 加载 ggchord，先使用随包真实序列数据。
+3. 选择布局；有图之后再加连接、注释和标签。
+
+```r
+library(ggchord)
+
+p <- ggchord(seq_data = seq_data_example) +
+  geom_seq() +
+  geom_seq_label() +
+  coord_chord()
+
+view_ggchord(p, width = 9, height = 6, units = "in")
+```
+
+同一套序列表可以采用不同布局；单序列圆图需要只显示一条序列。三种[独立首课](task-index.html#paths)分别解释输入、读图与下一步。
+
+## 真实数据，完整结果 {#results}
+
+以下图形来自当前 ggchord 源码和可追溯输入。预览用于选择案例；点击可查看高清原图。
+
+<div class="home-results">
+
+<section>
+
+### 四基因组弦图 {#chord}
 
 {{figure:showcasechord}}
 
-红色正链箭头放在内侧，连接带在重叠的端点局部让位；蓝色负链箭头放在外侧。连接带颜色表示比对相似度。两条 MT 序列的原始注释只有正链 CDS，另外两条同时展示正负链。[数据、筛选与完整代码](chord.html)。
+[来源、选择与完整代码](chord.html)
 
-## 共线性图 · 四序列、多图层、跨行比较 {#collinear}
+</section>
+
+<section>
+
+### 四基因组共线性图 {#collinear}
 
 {{figure:showcasecollinear}}
 
-沿同一碱基尺度比较基因顺序与对应位置。上下箭头区分链方向，虚线轮廓标记跨行连接。[共线性图入门](collinear-start.html) · [完整案例](collinear.html)。
+[来源、选择与完整代码](collinear.html)
 
-## 质粒图 · pETDuet-1 的密集注释 {#circular}
+</section>
+
+<section>
+
+### 密集质粒注释 {#circular}
+
 {{figure:showcaseplasmid}}
 
-双链骨架、多层特征、五个参考引物，以及按同一切点合并的酶名称。图中输入包含 58 个切点和 20 个特征，文字按实际导出尺寸布局。
-[从简单圆图到完整质粒注释 →](plasmid-start.html) · [完整案例](plasmids.html#complex)
+[来源、选择与完整代码](plasmids.html#complex)
+
+</section>
+
+</div>
 
 ## 按你的起点继续 {#learn}
-- [导入你自己的数据](formats.html)
-- [调整配色、图例和主题](styling.html)
-- [查看全部教程与功能](about.html)
-- [查阅函数、参数和返回值](reference/index.html)
+
+- [导入自己的数据](formats.html)
+- [按任务找函数与参数](task-index.html)
+- [调整颜色、图例与标签](styling.html)
+- [按论文尺寸预览与导出](output.html)
+- [查阅完整 API](reference/index.html)
+
+## 版本与复现 {#versions}
+
+<div class="version-panel">本网站面向 <strong>0.16.7.9000 开发版</strong>；正式版为 0.16.6。开发源码尚未发布，本地安装方式、实际差异与正式版文档均见 <a href="installation.html">安装页</a>。科研图、输入哈希和来源说明随案例提供。</div>

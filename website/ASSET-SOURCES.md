@@ -97,3 +97,13 @@ Four complete EMALE/Mavirus proteins and six observed pairwise BLASTp comparison
 are regenerated from `examples/protein/` using the two `data-raw/` scripts.
 Full identifiers, immutable source hashes, BLASTp version and command are retained
 in `examples/protein/sources.json`; no synthetic protein alignments are used.
+
+## v0.16.7 网站视觉资源 / Presentation assets
+
+`website/module-motifs.json` 中的弧线、平行骨架与同心环为本仓库原创 SVG 示意，
+用于识别三类课程，不代表分析结果，不复用第三方科研图。网站直接复用现有 Logo
+与科研 PNG；不生成多尺寸副本，不裁剪或改图内颜色，来源与许可沿用上述记录。
+
+The three course motifs are original decorative SVG paths, not analysis data.
+The website reuses the existing logo and scientific PNGs without resized copies,
+cropping or recolouring. Existing provenance and rights remain applicable.

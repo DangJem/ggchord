@@ -1,0 +1,55 @@
+[
+  {
+    "id": "baseline",
+    "task": "现状、线上提交、源码与浏览器基线",
+    "status": "complete"
+  },
+  {
+    "id": "identity",
+    "task": "设计令牌、品牌母题、Logo衍生与两个模板",
+    "status": "implemented",
+    "validation": "partial_browser_evidence; remaining verification skipped by user"
+  },
+  {
+    "id": "navigation",
+    "task": "左课程右TOC、分层、面包屑与跨模块入口",
+    "status": "implemented",
+    "validation": "partial_browser_evidence; remaining verification skipped by user"
+  },
+  {
+    "id": "content",
+    "task": "代码范围、完整示例、表格、对照图与原图",
+    "status": "implemented",
+    "validation": "partial_browser_evidence; remaining verification skipped by user"
+  },
+  {
+    "id": "search",
+    "task": "结构化任务/函数/参数/课程搜索与键盘",
+    "status": "implemented",
+    "validation": "partial_browser_evidence; remaining verification skipped by user"
+  },
+  {
+    "id": "responsive",
+    "task": "七个视口、四类页、明暗与200%缩放",
+    "status": "verified_sample",
+    "evidence": "responsive-matrix.json; browser-zoom.json; 56 viewport/theme/page cases"
+  },
+  {
+    "id": "accessibility",
+    "task": "实际对比度、焦点、弹窗、目标和键盘",
+    "status": "skipped_by_user",
+    "note": "已有证据保留；用户明确要求跳过剩余及重复验证，不表示完整验收通过"
+  },
+  {
+    "id": "performance",
+    "task": "衍生资源与实际浏览器加载指标",
+    "status": "skipped_by_user",
+    "note": "已有证据保留；用户明确要求跳过剩余及重复验证，不表示完整验收通过"
+  },
+  {
+    "id": "regression",
+    "task": "双语、代码、图像、路由、搜索、构建与源哈希",
+    "status": "skipped_by_user",
+    "note": "已有证据保留；用户明确要求跳过剩余及重复验证，不表示完整验收通过"
+  }
+]

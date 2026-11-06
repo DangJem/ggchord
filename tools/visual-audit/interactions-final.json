@@ -1,0 +1,35 @@
+{
+  "酶切引线": 14,
+  "link_branch": 17,
+  "GGplot": 20,
+  "zzzz-no-such-task": 0,
+  "search": {
+    "active": "site-search",
+    "selected": "search-result-0"
+  },
+  "searchClosed": {
+    "open": false,
+    "focus": "site-search-trigger",
+    "observation": "settled follow-up DOM observation"
+  },
+  "copy": {
+    "actual": "p_chord_backbone <- ggchord(seq_data = seq_data_example) +\n  geom_seq() +\n  geom_seq_label() +\n  coord_chord()\nview_ggchord(p_chord_backbone, width = 7, height = 7, units = \"in\")",
+    "expected": "p_chord_backbone <- ggchord(seq_data = seq_data_example) +\n  geom_seq() +\n  geom_seq_label() +\n  coord_chord()\nview_ggchord(p_chord_backbone, width = 7, height = 7, units = \"in\")",
+    "match": true
+  },
+  "viewer": {
+    "filter": "none",
+    "image": "http://127.0.0.1:8765/assets/frontbackbone.png",
+    "regions": [
+      {
+        "height": 775,
+        "scrollHeight": 1032
+      }
+    ]
+  },
+  "viewerClosed": {
+    "closed": true,
+    "focusFigure": false,
+    "note": "focus sampled after subsequent copy action; not evidence of viewer focus restoration"
+  }
+}

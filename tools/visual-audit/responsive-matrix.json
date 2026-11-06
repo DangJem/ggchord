@@ -1,0 +1,754 @@
+[
+  {
+    "size": [
+      1920,
+      1080
+    ],
+    "page": "index",
+    "theme": "light",
+    "font": "17px",
+    "h1": 1,
+    "missingAlt": 0,
+    "pageWidth": 1920,
+    "width": 1920
+  },
+  {
+    "size": [
+      1920,
+      1080
+    ],
+    "page": "chord-start",
+    "theme": "light",
+    "font": "17px",
+    "h1": 1,
+    "missingAlt": 0,
+    "pageWidth": 1920,
+    "width": 1920
+  },
+  {
+    "size": [
+      1920,
+      1080
+    ],
+    "page": "circular-labels",
+    "theme": "light",
+    "font": "17px",
+    "h1": 1,
+    "missingAlt": 0,
+    "pageWidth": 1920,
+    "width": 1920
+  },
+  {
+    "size": [
+      1920,
+      1080
+    ],
+    "page": "reference/geom_link_ribbon",
+    "theme": "light",
+    "font": "17px",
+    "h1": 1,
+    "missingAlt": 0,
+    "pageWidth": 1920,
+    "width": 1920
+  },
+  {
+    "size": [
+      1920,
+      1080
+    ],
+    "page": "index",
+    "theme": "dark",
+    "font": "17px",
+    "h1": 1,
+    "missingAlt": 0,
+    "pageWidth": 1920,
+    "width": 1920
+  },
+  {
+    "size": [
+      1920,
+      1080
+    ],
+    "page": "chord-start",
+    "theme": "dark",
+    "font": "17px",
+    "h1": 1,
+    "missingAlt": 0,
+    "pageWidth": 1920,
+    "width": 1920
+  },
+  {
+    "size": [
+      1920,
+      1080
+    ],
+    "page": "circular-labels",
+    "theme": "dark",
+    "font": "17px",
+    "h1": 1,
+    "missingAlt": 0,
+    "pageWidth": 1920,
+    "width": 1920
+  },
+  {
+    "size": [
+      1920,
+      1080
+    ],
+    "page": "reference/geom_link_ribbon",
+    "theme": "dark",
+    "font": "17px",
+    "h1": 1,
+    "missingAlt": 0,
+    "pageWidth": 1920,
+    "width": 1920
+  },
+  {
+    "size": [
+      1440,
+      900
+    ],
+    "page": "index",
+    "theme": "light",
+    "font": "17px",
+    "h1": 1,
+    "missingAlt": 0,
+    "pageWidth": 1440,
+    "width": 1440
+  },
+  {
+    "size": [
+      1440,
+      900
+    ],
+    "page": "chord-start",
+    "theme": "light",
+    "font": "17px",
+    "h1": 1,
+    "missingAlt": 0,
+    "pageWidth": 1440,
+    "width": 1440
+  },
+  {
+    "size": [
+      1440,
+      900
+    ],
+    "page": "circular-labels",
+    "theme": "light",
+    "font": "17px",
+    "h1": 1,
+    "missingAlt": 0,
+    "pageWidth": 1440,
+    "width": 1440
+  },
+  {
+    "size": [
+      1440,
+      900
+    ],
+    "page": "reference/geom_link_ribbon",
+    "theme": "light",
+    "font": "17px",
+    "h1": 1,
+    "missingAlt": 0,
+    "pageWidth": 1440,
+    "width": 1440
+  },
+  {
+    "size": [
+      1440,
+      900
+    ],
+    "page": "index",
+    "theme": "dark",
+    "font": "17px",
+    "h1": 1,
+    "missingAlt": 0,
+    "pageWidth": 1440,
+    "width": 1440
+  },
+  {
+    "size": [
+      1440,
+      900
+    ],
+    "page": "chord-start",
+    "theme": "dark",
+    "font": "17px",
+    "h1": 1,
+    "missingAlt": 0,
+    "pageWidth": 1440,
+    "width": 1440
+  },
+  {
+    "size": [
+      1440,
+      900
+    ],
+    "page": "circular-labels",
+    "theme": "dark",
+    "font": "17px",
+    "h1": 1,
+    "missingAlt": 0,
+    "pageWidth": 1440,
+    "width": 1440
+  },
+  {
+    "size": [
+      1440,
+      900
+    ],
+    "page": "reference/geom_link_ribbon",
+    "theme": "dark",
+    "font": "17px",
+    "h1": 1,
+    "missingAlt": 0,
+    "pageWidth": 1440,
+    "width": 1440
+  },
+  {
+    "size": [
+      1280,
+      800
+    ],
+    "page": "index",
+    "theme": "light",
+    "font": "17px",
+    "h1": 1,
+    "missingAlt": 0,
+    "pageWidth": 1280,
+    "width": 1280
+  },
+  {
+    "size": [
+      1280,
+      800
+    ],
+    "page": "chord-start",
+    "theme": "light",
+    "font": "17px",
+    "h1": 1,
+    "missingAlt": 0,
+    "pageWidth": 1280,
+    "width": 1280
+  },
+  {
+    "size": [
+      1280,
+      800
+    ],
+    "page": "circular-labels",
+    "theme": "light",
+    "font": "17px",
+    "h1": 1,
+    "missingAlt": 0,
+    "pageWidth": 1280,
+    "width": 1280
+  },
+  {
+    "size": [
+      1280,
+      800
+    ],
+    "page": "reference/geom_link_ribbon",
+    "theme": "light",
+    "font": "17px",
+    "h1": 1,
+    "missingAlt": 0,
+    "pageWidth": 1280,
+    "width": 1280
+  },
+  {
+    "size": [
+      1280,
+      800
+    ],
+    "page": "index",
+    "theme": "dark",
+    "font": "17px",
+    "h1": 1,
+    "missingAlt": 0,
+    "pageWidth": 1280,
+    "width": 1280
+  },
+  {
+    "size": [
+      1280,
+      800
+    ],
+    "page": "chord-start",
+    "theme": "dark",
+    "font": "17px",
+    "h1": 1,
+    "missingAlt": 0,
+    "pageWidth": 1280,
+    "width": 1280
+  },
+  {
+    "size": [
+      1280,
+      800
+    ],
+    "page": "circular-labels",
+    "theme": "dark",
+    "font": "17px",
+    "h1": 1,
+    "missingAlt": 0,
+    "pageWidth": 1280,
+    "width": 1280
+  },
+  {
+    "size": [
+      1280,
+      800
+    ],
+    "page": "reference/geom_link_ribbon",
+    "theme": "dark",
+    "font": "17px",
+    "h1": 1,
+    "missingAlt": 0,
+    "pageWidth": 1280,
+    "width": 1280
+  },
+  {
+    "size": [
+      1024,
+      768
+    ],
+    "page": "index",
+    "theme": "light",
+    "font": "17px",
+    "h1": 1,
+    "missingAlt": 0,
+    "pageWidth": 1024,
+    "width": 1024
+  },
+  {
+    "size": [
+      1024,
+      768
+    ],
+    "page": "chord-start",
+    "theme": "light",
+    "font": "17px",
+    "h1": 1,
+    "missingAlt": 0,
+    "pageWidth": 1024,
+    "width": 1024
+  },
+  {
+    "size": [
+      1024,
+      768
+    ],
+    "page": "circular-labels",
+    "theme": "light",
+    "font": "17px",
+    "h1": 1,
+    "missingAlt": 0,
+    "pageWidth": 1024,
+    "width": 1024
+  },
+  {
+    "size": [
+      1024,
+      768
+    ],
+    "page": "reference/geom_link_ribbon",
+    "theme": "light",
+    "font": "17px",
+    "h1": 1,
+    "missingAlt": 0,
+    "pageWidth": 1024,
+    "width": 1024
+  },
+  {
+    "size": [
+      1024,
+      768
+    ],
+    "page": "index",
+    "theme": "dark",
+    "font": "17px",
+    "h1": 1,
+    "missingAlt": 0,
+    "pageWidth": 1024,
+    "width": 1024
+  },
+  {
+    "size": [
+      1024,
+      768
+    ],
+    "page": "chord-start",
+    "theme": "dark",
+    "font": "17px",
+    "h1": 1,
+    "missingAlt": 0,
+    "pageWidth": 1024,
+    "width": 1024
+  },
+  {
+    "size": [
+      1024,
+      768
+    ],
+    "page": "circular-labels",
+    "theme": "dark",
+    "font": "17px",
+    "h1": 1,
+    "missingAlt": 0,
+    "pageWidth": 1024,
+    "width": 1024
+  },
+  {
+    "size": [
+      1024,
+      768
+    ],
+    "page": "reference/geom_link_ribbon",
+    "theme": "dark",
+    "font": "17px",
+    "h1": 1,
+    "missingAlt": 0,
+    "pageWidth": 1024,
+    "width": 1024
+  },
+  {
+    "size": [
+      768,
+      1024
+    ],
+    "page": "index",
+    "theme": "light",
+    "actualTheme": "light",
+    "font": "17px",
+    "h1": 1,
+    "missingAlt": 0,
+    "pageWidth": 768,
+    "width": 768
+  },
+  {
+    "size": [
+      768,
+      1024
+    ],
+    "page": "chord-start",
+    "theme": "light",
+    "actualTheme": "light",
+    "font": "17px",
+    "h1": 1,
+    "missingAlt": 0,
+    "pageWidth": 768,
+    "width": 768
+  },
+  {
+    "size": [
+      768,
+      1024
+    ],
+    "page": "circular-labels",
+    "theme": "light",
+    "actualTheme": "light",
+    "font": "17px",
+    "h1": 1,
+    "missingAlt": 0,
+    "pageWidth": 768,
+    "width": 768
+  },
+  {
+    "size": [
+      768,
+      1024
+    ],
+    "page": "reference/geom_link_ribbon",
+    "theme": "light",
+    "actualTheme": "light",
+    "font": "17px",
+    "h1": 1,
+    "missingAlt": 0,
+    "pageWidth": 768,
+    "width": 768
+  },
+  {
+    "size": [
+      768,
+      1024
+    ],
+    "page": "index",
+    "theme": "dark",
+    "actualTheme": "dark",
+    "font": "17px",
+    "h1": 1,
+    "missingAlt": 0,
+    "pageWidth": 768,
+    "width": 768
+  },
+  {
+    "size": [
+      768,
+      1024
+    ],
+    "page": "chord-start",
+    "theme": "dark",
+    "actualTheme": "dark",
+    "font": "17px",
+    "h1": 1,
+    "missingAlt": 0,
+    "pageWidth": 768,
+    "width": 768
+  },
+  {
+    "size": [
+      768,
+      1024
+    ],
+    "page": "circular-labels",
+    "theme": "dark",
+    "actualTheme": "dark",
+    "font": "17px",
+    "h1": 1,
+    "missingAlt": 0,
+    "pageWidth": 768,
+    "width": 768
+  },
+  {
+    "size": [
+      768,
+      1024
+    ],
+    "page": "reference/geom_link_ribbon",
+    "theme": "dark",
+    "actualTheme": "dark",
+    "font": "17px",
+    "h1": 1,
+    "missingAlt": 0,
+    "pageWidth": 768,
+    "width": 768
+  },
+  {
+    "size": [
+      390,
+      844
+    ],
+    "page": "index",
+    "theme": "light",
+    "actualTheme": "light",
+    "font": "16px",
+    "h1": 1,
+    "missingAlt": 0,
+    "pageWidth": 390,
+    "width": 390
+  },
+  {
+    "size": [
+      390,
+      844
+    ],
+    "page": "chord-start",
+    "theme": "light",
+    "actualTheme": "light",
+    "font": "16px",
+    "h1": 1,
+    "missingAlt": 0,
+    "pageWidth": 390,
+    "width": 390
+  },
+  {
+    "size": [
+      390,
+      844
+    ],
+    "page": "circular-labels",
+    "theme": "light",
+    "actualTheme": "light",
+    "font": "16px",
+    "h1": 1,
+    "missingAlt": 0,
+    "pageWidth": 390,
+    "width": 390
+  },
+  {
+    "size": [
+      390,
+      844
+    ],
+    "page": "reference/geom_link_ribbon",
+    "theme": "light",
+    "actualTheme": "light",
+    "font": "16px",
+    "h1": 1,
+    "missingAlt": 0,
+    "pageWidth": 390,
+    "width": 390
+  },
+  {
+    "size": [
+      390,
+      844
+    ],
+    "page": "index",
+    "theme": "dark",
+    "actualTheme": "dark",
+    "font": "16px",
+    "h1": 1,
+    "missingAlt": 0,
+    "pageWidth": 390,
+    "width": 390
+  },
+  {
+    "size": [
+      390,
+      844
+    ],
+    "page": "chord-start",
+    "theme": "dark",
+    "actualTheme": "dark",
+    "font": "16px",
+    "h1": 1,
+    "missingAlt": 0,
+    "pageWidth": 390,
+    "width": 390
+  },
+  {
+    "size": [
+      390,
+      844
+    ],
+    "page": "circular-labels",
+    "theme": "dark",
+    "actualTheme": "dark",
+    "font": "16px",
+    "h1": 1,
+    "missingAlt": 0,
+    "pageWidth": 390,
+    "width": 390
+  },
+  {
+    "size": [
+      390,
+      844
+    ],
+    "page": "reference/geom_link_ribbon",
+    "theme": "dark",
+    "actualTheme": "dark",
+    "font": "16px",
+    "h1": 1,
+    "missingAlt": 0,
+    "pageWidth": 390,
+    "width": 390
+  },
+  {
+    "size": [
+      360,
+      800
+    ],
+    "page": "index",
+    "theme": "light",
+    "actualTheme": "light",
+    "font": "16px",
+    "h1": 1,
+    "missingAlt": 0,
+    "pageWidth": 360,
+    "width": 360
+  },
+  {
+    "size": [
+      360,
+      800
+    ],
+    "page": "chord-start",
+    "theme": "light",
+    "actualTheme": "light",
+    "font": "16px",
+    "h1": 1,
+    "missingAlt": 0,
+    "pageWidth": 360,
+    "width": 360
+  },
+  {
+    "size": [
+      360,
+      800
+    ],
+    "page": "circular-labels",
+    "theme": "light",
+    "actualTheme": "light",
+    "font": "16px",
+    "h1": 1,
+    "missingAlt": 0,
+    "pageWidth": 360,
+    "width": 360
+  },
+  {
+    "size": [
+      360,
+      800
+    ],
+    "page": "reference/geom_link_ribbon",
+    "theme": "light",
+    "actualTheme": "light",
+    "font": "16px",
+    "h1": 1,
+    "missingAlt": 0,
+    "pageWidth": 360,
+    "width": 360
+  },
+  {
+    "size": [
+      360,
+      800
+    ],
+    "page": "index",
+    "theme": "dark",
+    "actualTheme": "dark",
+    "font": "16px",
+    "h1": 1,
+    "missingAlt": 0,
+    "pageWidth": 360,
+    "width": 360
+  },
+  {
+    "size": [
+      360,
+      800
+    ],
+    "page": "chord-start",
+    "theme": "dark",
+    "actualTheme": "dark",
+    "font": "16px",
+    "h1": 1,
+    "missingAlt": 0,
+    "pageWidth": 360,
+    "width": 360
+  },
+  {
+    "size": [
+      360,
+      800
+    ],
+    "page": "circular-labels",
+    "theme": "dark",
+    "actualTheme": "dark",
+    "font": "16px",
+    "h1": 1,
+    "missingAlt": 0,
+    "pageWidth": 360,
+    "width": 360
+  },
+  {
+    "size": [
+      360,
+      800
+    ],
+    "page": "reference/geom_link_ribbon",
+    "theme": "dark",
+    "actualTheme": "dark",
+    "font": "16px",
+    "h1": 1,
+    "missingAlt": 0,
+    "pageWidth": 360,
+    "width": 360
+  }
+]

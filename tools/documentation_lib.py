@@ -39,6 +39,8 @@ def table(headers, rows):
         ['| ' + ' | '.join(map(cell, row)) + ' |' for row in rows])
 
 def expand(text, lang, *, figures='assets', reference=''):
+    from site_components import home_hero, task_cards, responsive_image, lesson_urls
+    text=text.replace('{{sitehero}}',home_hero(lang,figures)).replace('{{taskcards}}',task_cards(lang))
     chunks = {name: localize_r_comments(code, lang) for name, code in snippets().items()}
     with (WEB / 'assets/plots.csv').open() as f:
         assets = list(csv.DictReader(f))
@@ -60,10 +62,16 @@ def expand(text, lang, *, figures='assets', reference=''):
     text = re.sub(r'\{\{recipe:(\w+)\}\}', recipe, text)
     def figure(key):
         caption=html.escape(CAPTIONS[key][lang])
-        hint='Click to enlarge' if lang=='en' else '点击放大查看'
-        width,height=dimensions[key]
-        return (f'<figure class="documentation-figure"><a class="figure-link" href="{figures}/{key}.png" '
-            f'title="{hint}"><img src="{figures}/{key}.png" alt="{caption}" width="{width}" height="{height}" loading="lazy"></a>'
+        code_url=lesson_urls().get(key,'gallery.html')
+        if figures!='../assets':
+            hint='Click to enlarge' if lang=='en' else '点击放大查看'
+            return (f'<figure class="documentation-figure"><a class="figure-link" href="{figures}/{key}.png" '
+                f'title="{hint}"><img src="{figures}/{key}.png" alt="{caption}" width="{dimensions[key][0]}" height="{dimensions[key][1]}" loading="lazy"></a>'
+                f'<figcaption>{caption} · <span class="figure-hint">{hint}</span></figcaption></figure>')
+        hint='Open full-resolution figure' if lang=='en' else '打开高清原图'
+        preview=responsive_image(key,lang,figures,alt=CAPTIONS[key][lang]) if figures=='../assets' else f'<img src="{figures}/{key}.png" alt="{caption}" width="{dimensions[key][0]}" height="{dimensions[key][1]}" loading="lazy">'
+        return (f'<figure class="documentation-figure" data-figure="{key}"><a class="figure-link" href="{figures}/{key}.png" '
+            f'title="{hint}" data-code-url="{code_url}">{preview}</a>'
             f'<figcaption>{caption} · <span class="figure-hint">{hint}</span></figcaption></figure>')
     previews = {a['object']: (float(a['width']), float(a['height'])) for a in assets}
     def preview_code(code):
@@ -122,67 +130,7 @@ def expand(text, lang, *, figures='assets', reference=''):
     text = text.replace('{{terms}}', table(['English', '现代汉语', 'API / units'],
         json.loads((WEB / 'terms.json').read_text())))
     gallery = []
-    destinations={'showcasechord':'chord#compose','showcasecollinear':'collinear#compose','showcaseplasmid':'plasmids#complex','chord':'modes#chord','circular':'modes#circular','collinear':'modes#collinear',
-        'first':'modes#collinear', 'firstchord':'chord-start#draw',
-        'firstlinear':'collinear-start#draw', 'firstcircle':'plasmid-start#draw',
-        'firstfeatures':'plasmid-build#features',
-        'practicechord':'chord-build#add-genes', 'practicelinear':'collinear-build#add-genes',
-        'practiceplasmid':'plasmid-build#add-label','realchord':'real-data#chord','reallinear':'real-data#linear',
-        'plasmid':'plasmids#draw','homologs':'homology#focus','recognition':'recognition#search','tracks':'tracks#domain',
-        'multitrack':'tracks#multiple','density':'ribbons#density','pointlinks':'ribbons#points',
-        'featurestack':'annotations#stack','decorations':'annotations#decoration','focus':'views#focus',
-        'segment':'views#segments','mappingposition':'views#mapping',
-        'nativeprotein':'protein-alignments#protein','nativeproteinchord':'protein-alignments#protein',
-        'labels':'labels#layout','labelauto':'labels#comparison','labelradial':'labels#comparison',
-        'labelarc':'labels#comparison','styling':'styling#roles','paf':'formats#zero-based'}
-    destinations.update(dict(zip(
-        ['learnseq','learnlinks','learngenes','learnlabels','linearseq','linearlinks','linearlabels','plasmidbackbone','plasmidfeatures','plasmidtext'],
-        ['chord-build#backbones','chord-build#links','chord-build#genes','chord-build#labels','collinear-build#backbones','collinear-build#links','collinear-build#labels','plasmid-build#backbone','plasmid-build#features','plasmid-build#labels'])))
-    destinations.update({
-        'frontbackbone': 'chord-start#draw',
-        'frontribbon': 'chord-build#links',
-        'frontfeature': 'chord-build#add-genes',
-        'frontrotation': 'chord-tuning#orientation',
-        'frontgap': 'chord-tuning#parameters',
-        'frontradius': 'chord-geometry#shape',
-        'frontcurvature': 'chord-geometry#curvature',
-        'frontorientation': 'chord-geometry#direction',
-        'frontroute': 'chord-routing#control',
-        'frontnoavoid': 'chord-routing#clearance',
-        'frontsmooth': 'chord-routing#clearance',
-        'frontseqlabels': 'chord-labels#sequence-labels',
-        'frontgenelabels': 'chord-labels#gene-labels',
-        'frontmarkers': 'chord-routing#point-markers',
-        'frontlinearbase': 'collinear-start#draw',
-        'frontlinearlink': 'collinear-build#links',
-        'frontlinearcds': 'collinear-build#add-genes',
-        'frontlineargap': 'collinear-tuning#gap',
-        'frontlinearscale': 'collinear-tuning#scale',
-        'frontlinearcross': 'collinear-routing#routes',
-        'frontcirclestyle': 'plasmid-tuning#style',
-        'frontcirclerotation': 'plasmid-tuning#rotation',
-        'frontorder': 'chord-geometry#order',
-        'mappingexample': 'adjustments#mapping',
-        'parameterexample': 'parameters#recommendation',
-        'parameteruniform': 'parameters#scalar',
-        'parametervector': 'parameters#vector',
-        'parameterstrand': 'parameters#strand',
-        'parameterwidth': 'parameters#width',
-        'parameterlabels': 'parameters#labels',
-        'frontcrosswidth': 'collinear-routing#width',
-        'frontcrosssame': 'collinear-routing#width',
-        'manualgenelabels': 'labels#fixed',
-        'alignleft': 'collinear-layout#baseline',
-        'aligncenter': 'collinear-layout#alignment',
-        'alignright': 'collinear-layout#alignment',
-        'alignanchor': 'collinear-layout#anchor',
-        'alignauto': 'collinear-layout#orientation',
-        'tracktile': 'tracks#tile',
-    })
-    for row in json.loads((WEB/'parameter-comparisons.json').read_text()):
-        destinations[row['id']] = row['page'] + '#' + row['anchor']
-    for key in CAPTIONS:
-        if key.startswith('catalog'): destinations[key] = 'plasmid-catalog#'+key
+    destinations=json.loads((WEB/'figure-lessons.json').read_text())
     for asset in assets:
         key = asset['id']
         page,anchor=destinations[key].split('#')

@@ -1,0 +1,7 @@
+{
+  "url": "https://dangjem.github.io/ggchord/build-manifest.json",
+  "commit": "b4eaeb1bcc445f2ac4d5f719d970ebdc8af87035",
+  "deployment": "prepared for authorized deployment; builder does not deploy",
+  "dirty": false,
+  "version": "0.16.7.9000"
+}

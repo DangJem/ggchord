@@ -1,0 +1,752 @@
+[
+  {
+    "page": "collinear-start",
+    "images": [
+      {
+        "alt": "四条共线性骨架",
+        "filter": "none"
+      }
+    ],
+    "pageWidth": 1440,
+    "tables": [],
+    "width": 1440
+  },
+  {
+    "page": "plasmid-start",
+    "images": [
+      {
+        "alt": "标有名称与长度的 pUC19 圆形骨架",
+        "filter": "none"
+      }
+    ],
+    "pageWidth": 1440,
+    "tables": [],
+    "width": 1440
+  },
+  {
+    "page": "gallery",
+    "images": [
+      {
+        "alt": "随包序列与已有比对区间的弦图",
+        "filter": "none"
+      },
+      {
+        "alt": "pUC19 注释的单序列圆图",
+        "filter": "none"
+      },
+      {
+        "alt": "按选定注释锚定的随包序列共线性图",
+        "filter": "none"
+      },
+      {
+        "alt": "从随包 pUC19 DNA 计算的 GC 比例",
+        "filter": "none"
+      },
+      {
+        "alt": "保留原始坐标刻度的局部序列视图",
+        "filter": "none"
+      },
+      {
+        "alt": "实际基因注释的自动标签布局",
+        "filter": "none"
+      },
+      {
+        "alt": "原始序列、选定 CDS 与已有比对的弦图",
+        "filter": "none"
+      },
+      {
+        "alt": "原始序列、全部导入 CDS 与筛选连接的线性图",
+        "filter": "none"
+      },
+      {
+        "alt": "pUC19 注释、精确引物命中与三个选定酶切位点",
+        "filter": "none"
+      },
+      {
+        "alt": "原始比对记录的区间密度",
+        "filter": "none"
+      },
+      {
+        "alt": "从已有 HSP 区间计算中点的点连接",
+        "filter": "none"
+      },
+      {
+        "alt": "pUC19 中重叠注释的分层显示",
+        "filter": "none"
+      },
+      {
+        "alt": "pUC19 GC 比例与三窗口滑动均值",
+        "filter": "none"
+      },
+      {
+        "alt": "蓝色箭头标出负链 AmpR，灰色带连接两段完全一致的编码 DNA。",
+        "filter": "none"
+      },
+      {
+        "alt": "突出显示 pUC19 复制起点的实际区间",
+        "filter": "none"
+      },
+      {
+        "alt": "实际基因注释的自动侧边标签",
+        "filter": "none"
+      },
+      {
+        "alt": "同一组基因注释的径向标签",
+        "filter": "none"
+      },
+      {
+        "alt": "同一组基因注释的沿弧标签",
+        "filter": "none"
+      },
+      {
+        "alt": "四条弦图骨架与查询类别的颜色标度",
+        "filter": "none"
+      },
+      {
+        "alt": "从真实 minimap2 PAF 结果绘制的两条 EMALE 序列",
+        "filter": "none"
+      },
+      {
+        "alt": "第一张图：两条真实随包序列、基因箭头及已有比对区间",
+        "filter": "none"
+      },
+      {
+        "alt": "四条原始基因组，按各序列真实链分别抽样 CDS",
+        "filter": "none"
+      },
+      {
+        "alt": "pETDuet-1密集质粒图：特征、参考引物与合并酶切位点",
+        "filter": "none"
+      },
+      {
+        "alt": "四基因组共线性图：分链特征与绕行的跨行连接",
+        "filter": "none"
+      },
+      {
+        "alt": "弦图第一步：序列骨架",
+        "filter": "none"
+      },
+      {
+        "alt": "弦图第二步：已有比对",
+        "filter": "none"
+      },
+      {
+        "alt": "弦图第三步：精选基因",
+        "filter": "none"
+      },
+      {
+        "alt": "弦图第四步：逐一添加标签",
+        "filter": "none"
+      },
+      {
+        "alt": "相同骨架，仅替换坐标系",
+        "filter": "none"
+      },
+      {
+        "alt": "相同连接，仅替换坐标系",
+        "filter": "none"
+      },
+      {
+        "alt": "相同基因与标签，仅替换坐标系",
+        "filter": "none"
+      },
+      {
+        "alt": "pUC19第一步：双线骨架",
+        "filter": "none"
+      },
+      {
+        "alt": "pUC19第二步：特征",
+        "filter": "none"
+      },
+      {
+        "alt": "pUC19第三步：标签",
+        "filter": "none"
+      },
+      {
+        "alt": "pSB1C3：参考特征图",
+        "filter": "none"
+      },
+      {
+        "alt": "pUC19：参考特征图",
+        "filter": "none"
+      },
+      {
+        "alt": "pBR322：参考特征图",
+        "filter": "none"
+      },
+      {
+        "alt": "pBluescript II SK(+)：参考特征图",
+        "filter": "none"
+      },
+      {
+        "alt": "pET-28a(+)：参考特征图",
+        "filter": "none"
+      },
+      {
+        "alt": "pETDuet-1：参考特征图",
+        "filter": "none"
+      },
+      {
+        "alt": "pDONR221：参考特征图",
+        "filter": "none"
+      },
+      {
+        "alt": "pcDNA3.1(+)：参考特征图",
+        "filter": "none"
+      },
+      {
+        "alt": "pTRE-Tight-BI：参考特征图",
+        "filter": "none"
+      },
+      {
+        "alt": "pTRIPZ：参考特征图",
+        "filter": "none"
+      },
+      {
+        "alt": "pCAMBIA1300：参考特征图",
+        "filter": "none"
+      },
+      {
+        "alt": "pEarleyGate 201：参考特征图",
+        "filter": "none"
+      },
+      {
+        "alt": "pSpCas9(BB)-2A-GFP (PX458)：参考特征图",
+        "filter": "none"
+      },
+      {
+        "alt": "两条随包序列的骨架及已有比对连接带",
+        "filter": "none"
+      },
+      {
+        "alt": "两条序列共享碱基坐标尺度，带状连接标示对应区间",
+        "filter": "none"
+      },
+      {
+        "alt": "标有名称与长度的 pUC19 圆形骨架",
+        "filter": "none"
+      },
+      {
+        "alt": "pUC19 圆形骨架上的复制起点注释区间",
+        "filter": "none"
+      },
+      {
+        "alt": "两条序列的弦图，每条增加一个基因箭头和原始注释名",
+        "filter": "none"
+      },
+      {
+        "alt": "两行共线性图，带基因箭头、注释名及 10 kb 比例尺",
+        "filter": "none"
+      },
+      {
+        "alt": "pUC19 圆图上的复制起点及标签",
+        "filter": "none"
+      },
+      {
+        "alt": "四条序列的默认弧形骨架",
+        "filter": "none"
+      },
+      {
+        "alt": "加入一条区间比对带",
+        "filter": "none"
+      },
+      {
+        "alt": "在绿色骨架上加入一个 integrase CDS",
+        "filter": "none"
+      },
+      {
+        "alt": "相对默认弦图逆时针旋转 90°",
+        "filter": "none"
+      },
+      {
+        "alt": "增大相邻骨架之间的间隙",
+        "filter": "none"
+      },
+      {
+        "alt": "缩小 MT118296.1 骨架的半径",
+        "filter": "none"
+      },
+      {
+        "alt": "把 MT118296.1 骨架画成直线",
+        "filter": "none"
+      },
+      {
+        "alt": "反转 MT118296.1 的显示方向",
+        "filter": "none"
+      },
+      {
+        "alt": "向上移动连接带的控制点",
+        "filter": "none"
+      },
+      {
+        "alt": "固定间距下连接带与 CDS 重叠",
+        "filter": "none"
+      },
+      {
+        "alt": "连接带在 CDS 附近平滑让位",
+        "filter": "none"
+      },
+      {
+        "alt": "把序列标签放到内侧并横排",
+        "filter": "none"
+      },
+      {
+        "alt": "给 CDS 添加原始注释名",
+        "filter": "none"
+      },
+      {
+        "alt": "区间高亮与有向点连接",
+        "filter": "none"
+      },
+      {
+        "alt": "交换两条骨架的显示顺序",
+        "filter": "none"
+      },
+      {
+        "alt": "四条共线性骨架",
+        "filter": "none"
+      },
+      {
+        "alt": "四行中加入一条比对带",
+        "filter": "none"
+      },
+      {
+        "alt": "在第三条绿色骨架上加入 CDS 箭头",
+        "filter": "none"
+      },
+      {
+        "alt": "增大共线性图行距",
+        "filter": "none"
+      },
+      {
+        "alt": "添加 10 kb 标尺",
+        "filter": "none"
+      },
+      {
+        "alt": "pUC19 的单线骨架",
+        "filter": "none"
+      },
+      {
+        "alt": "序列坐标原点位于 9 点钟的 pUC19 圆图",
+        "filter": "none"
+      },
+      {
+        "alt": "跨过第二行的连接带",
+        "filter": "none"
+      },
+      {
+        "alt": "将比对一致性映射到连接带颜色",
+        "filter": "none"
+      },
+      {
+        "alt": "按序列名称单独设置一个骨架半径",
+        "filter": "none"
+      },
+      {
+        "alt": "同一序列的两个窗口。右窗口反向显示。",
+        "filter": "none"
+      },
+      {
+        "alt": "黑点对应第一条序列的源坐标 10,100 bp。",
+        "filter": "none"
+      },
+      {
+        "alt": "pUC19 上的已知引物匹配和所选酶切位点。",
+        "filter": "none"
+      },
+      {
+        "alt": "四条完整蛋白与三条相邻 BLASTp 连接，比例尺为 50 aa",
+        "filter": "none"
+      },
+      {
+        "alt": "四条完整蛋白及六对实际 BLASTp 比对的弦图",
+        "filter": "none"
+      },
+      {
+        "alt": "所有序列使用同一间隙",
+        "filter": "none"
+      },
+      {
+        "alt": "按序列表顺序指定四个半径",
+        "filter": "none"
+      },
+      {
+        "alt": "按正负链分别设置 CDS 偏移",
+        "filter": "none"
+      },
+      {
+        "alt": "按正负链分别设置 CDS 宽度",
+        "filter": "none"
+      },
+      {
+        "alt": "按序列名称调整标签半径",
+        "filter": "none"
+      },
+      {
+        "alt": "单独加粗跨行连接带边框",
+        "filter": "none"
+      },
+      {
+        "alt": "跨行边框沿用普通线宽",
+        "filter": "none"
+      },
+      {
+        "alt": "弦图中的固定基因标签",
+        "filter": "none"
+      },
+      {
+        "alt": "相同四条序列和真实比对：左端对齐。",
+        "filter": "none"
+      },
+      {
+        "alt": "只将 align 改为 center：完整序列的显示中点对齐。",
+        "filter": "none"
+      },
+      {
+        "alt": "只将 align 改为 right：完整序列的显示右端对齐。",
+        "filter": "none"
+      },
+      {
+        "alt": "保持 left，增加各序列中点锚定；此处锚点是几何示范，不表示同源位点。",
+        "filter": "none"
+      },
+      {
+        "alt": "只启用自动显示方向，采用默认支持阈值 0.1；行顺序和原始端点不变。",
+        "filter": "none"
+      },
+      {
+        "alt": "同一批真实 GC 窗口：固定宽度色带用颜色表示比例，色带高度不编码 GC。",
+        "filter": "none"
+      },
+      {
+        "alt": "同一个真实 integrase：默认 shouldered 箭头。",
+        "filter": "none"
+      },
+      {
+        "alt": "只把 arrow_head_style 改为 flush。",
+        "filter": "none"
+      },
+      {
+        "alt": "只把 arrow_head_style 改为 triangle，整个区间采用三角楔形。",
+        "filter": "none"
+      },
+      {
+        "alt": "简化示意：相同 query 区间的两条带独立绘制。",
+        "filter": "none"
+      },
+      {
+        "alt": "同一简化输入，只启用 query 分支，默认比例 0.15。",
+        "filter": "none"
+      },
+      {
+        "alt": "保持 query 分支，只将主干比例从 0.15 改为 0.35。",
+        "filter": "none"
+      },
+      {
+        "alt": "同一简化输入，用曲线连接区间中点。",
+        "filter": "none"
+      },
+      {
+        "alt": "只把 link_type 改为 straight，中点锚定不变。",
+        "filter": "none"
+      },
+      {
+        "alt": "同一 pUC19 GC 数据，只将 tile 带宽从 10 mm 改为 4 mm。",
+        "filter": "none"
+      },
+      {
+        "alt": "中心名称与长度使用独立的默认文字样式。",
+        "filter": "none"
+      },
+      {
+        "alt": "只隐藏中心长度，名称保留。",
+        "filter": "none"
+      },
+      {
+        "alt": "只增大中心名称字号，长度样式不变。",
+        "filter": "none"
+      },
+      {
+        "alt": "相同 pUC19 的双线骨架。",
+        "filter": "none"
+      },
+      {
+        "alt": "只改为 single。",
+        "filter": "none"
+      },
+      {
+        "alt": "同一 pUC19，只将骨架样式改为 band；这是修复后实际渲染的骨架。",
+        "filter": "none"
+      },
+      {
+        "alt": "双线间距从 0.025 改为 0.05。",
+        "filter": "none"
+      },
+      {
+        "alt": "同一圆图，坐标改为逆时针增加。",
+        "filter": "none"
+      },
+      {
+        "alt": "只将圆图开口设为 25 度。",
+        "filter": "none"
+      },
+      {
+        "alt": "固定标签沿特征方向放置。",
+        "filter": "none"
+      },
+      {
+        "alt": "只把固定文字改为横排。",
+        "filter": "none"
+      },
+      {
+        "alt": "只把固定标签放在内侧。",
+        "filter": "none"
+      },
+      {
+        "alt": "只给固定标签增加 30 度旋转。",
+        "filter": "none"
+      },
+      {
+        "alt": "同一批注释，feature 内部优先标签布局。",
+        "filter": "none"
+      },
+      {
+        "alt": "只改为 radial 布局。",
+        "filter": "none"
+      },
+      {
+        "alt": "只改为 auto 布局。",
+        "filter": "none"
+      },
+      {
+        "alt": "只改为 callout 布局。",
+        "filter": "none"
+      },
+      {
+        "alt": "只将适配策略改为 shrink，字号下限仍为默认 1.5。",
+        "filter": "none"
+      },
+      {
+        "alt": "只指定 14 字符换行宽度，标签文字仍由源名称和坐标组成。",
+        "filter": "none"
+      },
+      {
+        "alt": "原始同一位置上的实际重叠注释。",
+        "filter": "none"
+      },
+      {
+        "alt": "只替换共享 Position，特征和标签一起分层。",
+        "filter": "none"
+      },
+      {
+        "alt": "同三条真实搜索命中，引物弧线位于双线之间。",
+        "filter": "none"
+      },
+      {
+        "alt": "只把引物弧线移到外侧。",
+        "filter": "none"
+      },
+      {
+        "alt": "只把引物弧线移到内侧。",
+        "filter": "none"
+      },
+      {
+        "alt": "只将引物弧宽从 0.026 改为 0.05。",
+        "filter": "none"
+      },
+      {
+        "alt": "引物文字默认包含真实结合范围。",
+        "filter": "none"
+      },
+      {
+        "alt": "只隐藏标签中的范围，弧线仍对应完整结合区间。",
+        "filter": "none"
+      },
+      {
+        "alt": "只把引物文字放到内侧。",
+        "filter": "none"
+      },
+      {
+        "alt": "同一批真实酶切命中，默认 radial 引线。",
+        "filter": "none"
+      },
+      {
+        "alt": "只把引线改为 elbow。",
+        "filter": "none"
+      },
+      {
+        "alt": "只把引线改为 straight。",
+        "filter": "none"
+      },
+      {
+        "alt": "只显示酶名，切点坐标仍保留。",
+        "filter": "none"
+      },
+      {
+        "alt": "只显示位置，原始酶名不丢弃。",
+        "filter": "none"
+      },
+      {
+        "alt": "只将文字顺序固定为位置后接酶名。",
+        "filter": "none"
+      },
+      {
+        "alt": "只把酶切文字放到内侧。",
+        "filter": "none"
+      },
+      {
+        "alt": "同一真实 CDS，请求较长头部以观察 auto 回退。",
+        "filter": "none"
+      },
+      {
+        "alt": "同一真实 CDS，请求较长头部以观察 wedge 回退。",
+        "filter": "none"
+      },
+      {
+        "alt": "同一真实 CDS，请求较长头部以观察 block 回退。",
+        "filter": "none"
+      },
+      {
+        "alt": "默认序列文字沿弧排布。",
+        "filter": "none"
+      },
+      {
+        "alt": "只把序列文字改为横排。",
+        "filter": "none"
+      },
+      {
+        "alt": "沿弧文字只增加 30 度旋转。",
+        "filter": "none"
+      },
+      {
+        "alt": "用实际 query 比对区间高亮内侧。",
+        "filter": "none"
+      },
+      {
+        "alt": "只把同一区间高亮移到外侧。",
+        "filter": "none"
+      },
+      {
+        "alt": "相同真实 HSP 的连续 Identity 渐变。",
+        "filter": "none"
+      },
+      {
+        "alt": "只替换为显式分段填色，原始 identity 不变。",
+        "filter": "none"
+      },
+      {
+        "alt": "同一批真实 HSP 中点，以 identity 映射颜色、透明度与线宽。",
+        "filter": "none"
+      },
+      {
+        "alt": "同一骨架与默认映射，minimal 主题只改非数据外观。",
+        "filter": "none"
+      },
+      {
+        "alt": "只替换为 dark 主题，序列与映射保留。",
+        "filter": "none"
+      },
+      {
+        "alt": "真实 HSP，两端中点各分四箱；一条输入仍是一条输出带。",
+        "filter": "none"
+      },
+      {
+        "alt": "只将 bins 从 4 改为 8，局部计数的分组尺度改变。",
+        "filter": "none"
+      },
+      {
+        "alt": "同一真实 HSP 以四箱显式聚束，展示范围不是重新比对结果。",
+        "filter": "none"
+      },
+      {
+        "alt": "只将实际 band 骨架宽度从 0.035 改为 0.07。",
+        "filter": "none"
+      },
+      {
+        "alt": "同六条真实注释，通用 arrow 几何。",
+        "filter": "none"
+      },
+      {
+        "alt": "只改为 block，不再用箭头表示方向，原始链保留。",
+        "filter": "none"
+      },
+      {
+        "alt": "质粒预设会共同改变默认头部、宽度及放置；这是预设示例，不是单参数对照。",
+        "filter": "none"
+      },
+      {
+        "alt": "只禁止外侧回退，无法放下的名称可隐藏，特征仍在。",
+        "filter": "none"
+      },
+      {
+        "alt": "保持 14 字符适配宽度，只改用 ellipsis；完整源名称仍保留。",
+        "filter": "none"
+      },
+      {
+        "alt": "与 outside 基线相比只把 arc_offset 从 0.045 改为 0.09。",
+        "filter": "none"
+      },
+      {
+        "alt": "同一真实 query 区间，只把宽度从 0.08 改为 0.14。",
+        "filter": "none"
+      },
+      {
+        "alt": "只把 region_offset 从 0 改为 0.1，区间不变。",
+        "filter": "none"
+      },
+      {
+        "alt": "同一 GC 窗口分别用数值高度和颜色编码，显式声明两条轨道。",
+        "filter": "none"
+      },
+      {
+        "alt": "只改变颜色轨道的 order，轨道顺序交换，GC 值不变。",
+        "filter": "none"
+      }
+    ],
+    "pageWidth": 1440,
+    "tables": [
+      {
+        "scroll": 1296,
+        "width": 1296
+      }
+    ],
+    "width": 1440
+  },
+  {
+    "page": "alignments",
+    "images": [],
+    "pageWidth": 1440,
+    "tables": [
+      {
+        "scroll": 804,
+        "width": 804
+      },
+      {
+        "scroll": 804,
+        "width": 804
+      }
+    ],
+    "width": 1440
+  },
+  {
+    "page": "plasmids",
+    "images": [
+      {
+        "alt": "pUC19 注释、精确引物命中与三个选定酶切位点",
+        "filter": "none"
+      },
+      {
+        "alt": "pETDuet-1密集质粒图：特征、参考引物与合并酶切位点",
+        "filter": "none"
+      }
+    ],
+    "pageWidth": 1440,
+    "tables": [
+      {
+        "scroll": 804,
+        "width": 804
+      }
+    ],
+    "width": 1440
+  }
+]
