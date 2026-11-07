@@ -94,7 +94,11 @@ def main():
         require(re.findall(r'\{\{[^}]+\}\}', texts[0]) == re.findall(r'\{\{[^}]+\}\}', texts[1]), f'{p["slug"]}: unmatched shared code/asset markers')
         require(executable_blocks(expand(texts[0], 'en')) == executable_blocks(expand(texts[1], 'zh')), f'{p["slug"]}: mismatched executable code')
     for lang in ['en','zh']:
-        require({f.stem for f in (WEB/lang).glob('*.md')} == set(slugs), f'{lang}: orphan or missing source page')
+        actual = {f.stem for f in (WEB/lang).glob('*.md')}
+        expected = set(slugs)
+        require(actual == expected,
+                f'{lang}: orphan source pages: {sorted(actual - expected)}; '
+                f'missing source pages: {sorted(expected - actual)}')
     for filename in ['README.md', 'README-Hans.md']:
         require(not re.search(r'SnapGene|Geneious', (ROOT/filename).read_text(), re.I),
                 filename + ': commercial product name in design references')
