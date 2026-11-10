@@ -1,0 +1,3 @@
+"source_hsp_id","qaccver","saccver","qstart","qend","sstart","send","pident","q_instance","s_instance","displayed_relation_id"
+"h1","A","B",100,300,30,130,95,"A_high","B","display-h1"
+"h5","A","B",100,300,30,130,80,"A_low","B","display-h5"

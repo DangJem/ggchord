@@ -1,0 +1,214 @@
+{
+  "baseline_chord": {
+    "result": {
+      "layers": 3,
+      "nonempty": 3
+    },
+    "warnings": [],
+    "elapsed_seconds": 0.376
+  },
+  "baseline_collinear": {
+    "result": {
+      "layers": 3,
+      "nonempty": 3
+    },
+    "warnings": [],
+    "elapsed_seconds": 0.807
+  },
+  "baseline_circular": {
+    "result": {
+      "layers": 2,
+      "nonempty": 2
+    },
+    "warnings": [],
+    "elapsed_seconds": 0.358
+  },
+  "duplicate_seq_order_rejected": {
+    "result": {
+      "error": "seq_order must contain non-repeated known sequence IDs"
+    },
+    "warnings": [],
+    "elapsed_seconds": 0.0140000000000002
+  },
+  "track_bar_is_identity": {
+    "result": {
+      "stat_class": "StatIdentity",
+      "registry": [
+        {
+          "track_id": "depth",
+          "accver": "MT108731.1",
+          "side": "outside",
+          "order": 1,
+          "direction": 1,
+          "offset_native": 0.03,
+          "offset_mm": 1,
+          "width_native": 0,
+          "width_mm": 4,
+          "normal_min": 0.0431233595800525,
+          "normal_max": 0.0956167979002625,
+          "mapper_sign": 1,
+          "measurement_status": "estimated",
+          "domain_status": "trained",
+          "unit": null,
+          "source_layers": "layer-0002",
+          "limits": [0, 17]
+        }
+      ],
+      "original_data": {
+        "layer-0002": {
+          "track": [
+            {
+              "accver": "MT108731.1",
+              "start": 1,
+              "end": 10,
+              "depth": 17,
+              "track_value": 17,
+              "group": 1
+            }
+          ]
+        }
+      }
+    },
+    "warnings": [],
+    "elapsed_seconds": 0.253
+  },
+  "mapping_and_export": {
+    "result": {
+      "metadata": {
+        "coordinate_space": "ggchord_layout",
+        "units": "data",
+        "sequence_unit": "bp",
+        "rotation": 0,
+        "rotation_applied": true,
+        "ratio": 1,
+        "coord_transform_applied": false,
+        "fit": "labels",
+        "xlim": [-0.121311111111111, 2.10101481481481],
+        "ylim": [-0.703744823563721, 0.035],
+        "clip": "off",
+        "coordinate": "collinear",
+        "genomic_scale": "linear",
+        "normal_direction": "positive_up"
+      },
+      "sequence_layout": [
+        {
+          "accver": "MT108731.1",
+          "orientation": 1,
+          "x_offset": -0,
+          "units_per_bp": 3.10930771263778e-05,
+          "xmin": -0,
+          "xmax": 2,
+          "anchor_start": 0,
+          "anchor_end": 64323,
+          "anchor_position": 0,
+          "anchor_x": 0,
+          "align": "left",
+          "order": 1,
+          "y": 0,
+          "source_origin": 1,
+          "source_accver": "MT108731.1",
+          "source_end": 64323,
+          "source_length": 64323,
+          "truncated_left": false,
+          "truncated_right": false,
+          "sequence_unit": "bp",
+          "units_per_position": 3.10930771263778e-05,
+          "_row": "MT108731.1"
+        },
+        {
+          "accver": "MT118296.1",
+          "orientation": 1,
+          "x_offset": -0,
+          "units_per_bp": 3.10930771263778e-05,
+          "xmin": -0,
+          "xmax": 0.997776844985464,
+          "anchor_start": 0,
+          "anchor_end": 32090,
+          "anchor_position": 0,
+          "anchor_x": 0,
+          "align": "left",
+          "order": 2,
+          "y": -0.6,
+          "source_origin": 1,
+          "source_accver": "MT118296.1",
+          "source_end": 32090,
+          "source_length": 32090,
+          "truncated_left": false,
+          "truncated_right": false,
+          "sequence_unit": "bp",
+          "units_per_position": 3.10930771263778e-05,
+          "_row": "MT118296.1"
+        }
+      ],
+      "positions": [
+        {
+          "accver": "MT108731.1",
+          "position": 1,
+          "x": 3.10930771263778e-05,
+          "y": 0,
+          "sequence_unit": "bp"
+        },
+        {
+          "accver": "MT108731.1",
+          "position": 64323,
+          "x": 2,
+          "y": 0,
+          "sequence_unit": "bp"
+        }
+      ]
+    },
+    "warnings": [],
+    "elapsed_seconds": 0.0670000000000002
+  },
+  "guide_measurement": {
+    "result": {
+      "measurement": {
+        "status": "measured",
+        "panel_mm": [154.920904010145, 150.291241178912],
+        "canvas_mm": [203.2, 152.4],
+        "panel_bounds_mm": [11.0675520848529, 165.988456094998, 1.0543794105438, 151.345620589456],
+        "x_range": [-1.19023670082844, 1.18860880835243],
+        "y_range": [-1.15701124374291, 1.15074474588302],
+        "units_per_mm": [0.0153552261031545, 0.0153552261031545],
+        "axis_units_per_inch": [0.390022743020125, 0.390022743020125],
+        "units_per_inch": 0.390022743020125,
+        "geometry_metric_status": "measured",
+        "converged": true,
+        "device": "quartz_off_screen",
+        "font_conditions": "Metrics use the selected device; font fallback and embedding remain unchecked",
+        "basis": "Resolved gtable grid.layout panel, including null units and aspect constraints",
+        "refinement_passes": 2
+      },
+      "guides": [
+        {
+          "guide": "guide-box-right",
+          "width_mm": 22.1439918201495,
+          "height_mm": 22.8804701767684,
+          "canvas_area_fraction": 0.0163610882195739,
+          "exceeds_canvas": false
+        }
+      ]
+    },
+    "warnings": [],
+    "elapsed_seconds": 0.379
+  },
+  "missing_target_apis": {
+    "result": {
+      "exported": [false, false, false, false, false],
+      "feature_data_formal": false,
+      "seq_axis_formal": false
+    },
+    "warnings": [],
+    "elapsed_seconds": 0
+  },
+  "real_paf_endpoints": {
+    "result": {
+      "rows": 11,
+      "reverse": 7,
+      "source": "examples/format-inputs/emales-pair.paf",
+      "conversion_verified": true
+    },
+    "warnings": [],
+    "elapsed_seconds": 0.00099999999999989
+  }
+}

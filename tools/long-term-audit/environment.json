@@ -1,0 +1,23 @@
+{
+  "baseline_sha": "33236efa98f308895368367ac9f96ea7f7337566",
+  "package_version": "0.16.7.9000",
+  "R": "R version 4.6.0 (2026-04-24)",
+  "dependencies": [
+    {
+      "name": "ggplot2",
+      "version": "4.0.3"
+    },
+    {
+      "name": "dplyr",
+      "version": "1.2.1"
+    },
+    {
+      "name": "pkgload",
+      "version": "1.5.3"
+    },
+    {
+      "name": "jsonlite",
+      "version": "2.0.0"
+    }
+  ]
+}

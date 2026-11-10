@@ -1,0 +1,6 @@
+"source_feature_id","accver","type","start","end","strand"
+"f1","A","CDS",10,19,"+"
+"f2","A","tRNA",30,39,"+"
+"f3","A","rRNA",50,59,"-"
+"f4","A","promoter",70,79,"."
+"f5","A","repeat",90,99,"."

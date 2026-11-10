@@ -1,0 +1,55 @@
+capability,classification,status,responsibility,data_role,public_entry,evidence,compatibility_evidence,validation
+coord_chord,可通过现有参数实现,基线已有,全局坐标投影,sequence,保留现有入口,R/coord-chord.R:64,见函数契约；本轮未穷举,静态源码；历史取样不等于本轮验收
+coord_circular,可通过现有参数实现,基线已有,全局坐标投影,sequence,保留现有入口,R/coord-circular.R:22,见函数契约；本轮未穷举,静态源码；历史取样不等于本轮验收
+coord_collinear,可通过现有参数实现,基线已有,全局坐标投影,sequence,保留现有入口,R/coord-collinear.R:94,见函数契约；本轮未穷举,静态源码；历史取样不等于本轮验收
+geom_feature,应扩展现有图层,基线已有,几何与固定样式,annotation,保留现有入口,R/geom-feature.R:269,chord:rendered;collinear:rendered;circular:rendered,静态源码；历史取样不等于本轮验收
+geom_feature_label,应扩展现有图层,基线已有,几何与固定样式,annotation,保留现有入口,R/geom-feature-label.R:28,chord:rendered;collinear:rendered;circular:rendered,静态源码；历史取样不等于本轮验收
+geom_feature_label_repel,应扩展现有图层,基线已有,几何与固定样式,annotation,保留现有入口,R/geom-feature-label.R:130,chord:rendered;collinear:rendered;circular:rendered,静态源码；历史取样不等于本轮验收
+geom_feature_plasmid,应扩展现有图层,基线已有,几何与固定样式,annotation,保留现有入口,R/geom-feature.R:450,chord:rendered;collinear:rendered;circular:rendered,静态源码；历史取样不等于本轮验收
+geom_gene,应扩展现有图层,基线已有,几何与固定样式,annotation,保留现有入口,R/geom-gene.R:56,chord:rendered;collinear:rendered;circular:rendered,静态源码；历史取样不等于本轮验收
+geom_gene_label,应扩展现有图层,基线已有,几何与固定样式,annotation,保留现有入口,R/geom-gene.R:186,chord:rendered;collinear:rendered;circular:rendered,静态源码；历史取样不等于本轮验收
+geom_gene_label_repel,应扩展现有图层,基线已有,几何与固定样式,annotation,保留现有入口,R/geom-gene.R:384,chord:rendered;collinear:rendered;circular:rendered,静态源码；历史取样不等于本轮验收
+geom_link_line,应扩展现有图层,基线已有,几何与固定样式,relationship,保留现有入口,R/geom-link-line.R:42,chord:rendered;collinear:rendered;circular:rejected,静态源码；历史取样不等于本轮验收
+geom_link_ribbon,应扩展现有图层,基线已有,几何与固定样式,relationship,保留现有入口,R/geom-ribbon.R:97,chord:rendered;collinear:rendered;circular:rejected,静态源码；历史取样不等于本轮验收
+geom_primer,应扩展现有图层,基线已有,几何与固定样式,annotation,保留现有入口,R/geom-primer.R:32,chord:rendered;collinear:rejected;circular:rendered,静态源码；历史取样不等于本轮验收
+geom_primer_label_repel,应扩展现有图层,基线已有,几何与固定样式,annotation,保留现有入口,R/geom-primer.R:93,chord:rendered;collinear:rejected;circular:rendered,静态源码；历史取样不等于本轮验收
+geom_restriction_site,应扩展现有图层,基线已有,几何与固定样式,annotation,保留现有入口,R/restriction-sites.R:642,chord:rendered;collinear:rejected;circular:rendered,静态源码；历史取样不等于本轮验收
+geom_seq,应扩展现有图层,基线已有,几何与固定样式,sequence,保留现有入口,R/geom-seq.R:131,chord:rendered;collinear:rendered;circular:rendered,静态源码；历史取样不等于本轮验收
+geom_seq_break,应扩展现有图层,基线已有,几何与固定样式,sequence,保留现有入口,R/geom-seq-break.R:37,chord:rejected;collinear:rendered;circular:rejected,静态源码；历史取样不等于本轮验收
+geom_seq_center_label,应扩展现有图层,基线已有,几何与固定样式,sequence,保留现有入口,R/geom-seq-center-label.R:14,chord:rendered;collinear:rejected;circular:rendered,静态源码；历史取样不等于本轮验收
+geom_seq_label,应扩展现有图层,基线已有,几何与固定样式,sequence,保留现有入口,R/geom-seq-label.R:52,chord:rendered;collinear:rendered;circular:rendered,静态源码；历史取样不等于本轮验收
+geom_seq_region,应扩展现有图层,基线已有,几何与固定样式,sequence,保留现有入口,R/geom-region.R:46,chord:rendered;collinear:rendered;circular:rendered,静态源码；历史取样不等于本轮验收
+geom_seq_scale,应扩展现有图层,基线已有,几何与固定样式,sequence,保留现有入口,R/geom-seq-scale.R:86,chord:rejected;collinear:rendered;circular:rejected,静态源码；历史取样不等于本轮验收
+geom_track_bar,应扩展现有图层,基线已有,几何与固定样式,track,保留现有入口,R/geom-track.R:155,chord:rendered;collinear:rendered;circular:rendered,静态源码；历史取样不等于本轮验收
+geom_track_line,应扩展现有图层,基线已有,几何与固定样式,track,保留现有入口,R/geom-track.R:145,chord:rendered;collinear:rendered;circular:rendered,静态源码；历史取样不等于本轮验收
+geom_track_tile,应扩展现有图层,基线已有,几何与固定样式,track,保留现有入口,R/geom-track.R:135,chord:rendered;collinear:rendered;circular:rendered,静态源码；历史取样不等于本轮验收
+position_feature_stack,可通过现有参数实现,基线已有,局部放置,annotation,保留现有入口,R/position-feature-stack.R:35,见函数契约；本轮未穷举,静态源码；历史取样不等于本轮验收
+position_identity,可通过现有参数实现,基线已有,局部放置,sequence,保留现有入口,:,见函数契约；本轮未穷举,静态源码；历史取样不等于本轮验收
+position_plasmid,可通过现有参数实现,基线已有,局部放置,sequence,保留现有入口,R/position-feature.R:38,见函数契约；本轮未穷举,静态源码；历史取样不等于本轮验收
+position_strand,可通过现有参数实现,基线已有,局部放置,sequence,保留现有入口,R/position-feature.R:25,见函数契约；本轮未穷举,静态源码；历史取样不等于本轮验收
+position_track,可通过现有参数实现,基线已有,局部放置,track,保留现有入口,R/geom-track.R:46,见函数契约；本轮未穷举,静态源码；历史取样不等于本轮验收
+stat_ribbon_bundle,需要 Stat,基线已有,统计变换,relationship,保留现有入口,R/stat-ribbon.R:130,见函数契约；本轮未穷举,静态源码；历史取样不等于本轮验收
+stat_ribbon_density,需要 Stat,基线已有,统计变换,relationship,保留现有入口,R/stat-ribbon.R:157,见函数契约；本轮未穷举,静态源码；历史取样不等于本轮验收
+feature_data统一输入,只需新数据适配器,目标或候选，未接入公开API,构造边界桥接；不新增生物学专用Geom,annotation,候选；需里程碑验证,见DESIGN.md及prototype.R,见设计规格,方案；原型不等于公开实现
+SNP/单点/断点,可通过现有参数实现,目标或候选，未接入公开API,marker/lollipop已有；VCF另作适配,annotation,候选；需里程碑验证,见DESIGN.md及prototype.R,见设计规格,方案；原型不等于公开实现
+repeat/motif/domain/小InDel,应扩展现有图层,目标或候选，未接入公开API,feature形状/角色/区间，不复制几何,annotation,候选；需里程碑验证,见DESIGN.md及prototype.R,见设计规格,方案；原型不等于公开实现
+大型SV成对断点,应扩展现有图层,目标或候选，未接入公开API,feature+pair/link；专用快捷入口待真实用例,relationship,候选；需里程碑验证,见DESIGN.md及prototype.R,见设计规格,方案；原型不等于公开实现
+sequence logo,暂不开发,目标或候选，未接入公开API,优先可选对接，不是简单区间形状,annotation,候选；需里程碑验证,见DESIGN.md及prototype.R,见设计规格,方案；原型不等于公开实现
+统一geom_track,应新增通用层,目标或候选，未接入公开API,源空间统计与Position后投影；快捷层薄包装,track,候选；需里程碑验证,见DESIGN.md及prototype.R,见设计规格,方案；原型不等于公开实现
+track count/bin/summary/smooth/density/ecdf,需要 Stat,目标或候选，未接入公开API,逐批证明口径，不能在投影后统计,track,候选；需里程碑验证,见DESIGN.md及prototype.R,见设计规格,方案；原型不等于公开实现
+track point/path/step/area/ribbon/errorbar/text,应扩展现有图层,目标或候选，未接入公开API,受控局部几何矩阵，不盲目透传,track,候选；需里程碑验证,见DESIGN.md及prototype.R,见设计规格,方案；原型不等于公开实现
+纵向Collinear,可通过现有参数实现,目标或候选，未接入公开API,扩展现有Coord轴向选项；该参数尚未实现,sequence,候选；需里程碑验证,见DESIGN.md及prototype.R,见设计规格,方案；原型不等于公开实现
+镜像Sankey,需要新 Coord,目标或候选，未接入公开API,左右实例注册；默认只过滤自连接，保留有向输入,relationship,候选；需里程碑验证,见DESIGN.md及prototype.R,见设计规格,方案；原型不等于公开实现
+基础Dotplot,需要新 Coord,目标或候选，未接入公开API,双轴投影，独立通用alignment mark薄层，无需Stat,relationship,候选；需里程碑验证,见DESIGN.md及prototype.R,见设计规格,方案；原型不等于公开实现
+Radial spokes,需要新 Coord,目标或候选，未接入公开API,线性辐条/循环邻接，只筛选输入HSP,relationship,候选；需里程碑验证,见DESIGN.md及prototype.R,见设计规格,方案；原型不等于公开实现
+重复序列与between路由,应扩展现有图层,目标或候选，未接入公开API,seq+link入口，共享实例桥接，不增Coord,relationship,候选；需里程碑验证,见DESIGN.md及prototype.R,见设计规格,方案；原型不等于公开实现
+equal显示长度,可通过现有参数实现,目标或候选，未接入公开API,一个opt-in策略，公开名字待审,sequence,候选；需里程碑验证,见DESIGN.md及prototype.R,见设计规格,方案；原型不等于公开实现
+首末坐标轴,应扩展现有图层,目标或候选，未接入公开API,显式scale设置优先，扩展axis测量/求解,sequence,候选；需里程碑验证,见DESIGN.md及prototype.R,见设计规格,方案；原型不等于公开实现
+端点渐变/尖头,应扩展现有图层,目标或候选，未接入公开API,共享ribbon几何，用户映射和标度优先,relationship,候选；需里程碑验证,见DESIGN.md及prototype.R,见设计规格,方案；原型不等于公开实现
+pident分段和比例guide,可通过现有参数实现,目标或候选，未接入公开API,stepsn与guide组合，需验证真实切割和非等宽图例,relationship,候选；需里程碑验证,见DESIGN.md及prototype.R,见设计规格,方案；原型不等于公开实现
+质粒标签统一布局,应扩展现有图层,目标或候选，未接入公开API,共享测量/solver，不能只调目录图参数,annotation,候选；需里程碑验证,见DESIGN.md及prototype.R,见设计规格,方案；原型不等于公开实现
+adaptive布局/guide,可通过现有参数实现,目标或候选，未接入公开API,渲染上下文与对象策略，公开名字待审,sequence,候选；需里程碑验证,见DESIGN.md及prototype.R,见设计规格,方案；原型不等于公开实现
+Fusion/区域放大,应新增通用层,目标或候选，未接入公开API,静态组合层，不是Coord,relationship,候选；需里程碑验证,见DESIGN.md及prototype.R,见设计规格,方案；原型不等于公开实现
+VCF/BEDPE/MAF/chain/BigWig,只需新数据适配器,目标或候选，未接入公开API,成熟生态可选依赖，不虚构缺失字段,source,候选；需里程碑验证,见DESIGN.md及prototype.R,见设计规格,方案；原型不等于公开实现
+短序列字符/比对列,暂不开发,目标或候选，未接入公开API,候选研究，真实字符和gap映射必需,source,候选；需里程碑验证,见DESIGN.md及prototype.R,见设计规格,方案；原型不等于公开实现
+交互/在线绘图/Studio,暂不开发,目标或候选，未接入公开API,明确非目标,none,候选；需里程碑验证,见DESIGN.md及prototype.R,见设计规格,方案；原型不等于公开实现

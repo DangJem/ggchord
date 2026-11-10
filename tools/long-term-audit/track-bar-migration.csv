@@ -1,0 +1,25 @@
+path,line,code,migration
+R/geom-track.R,127,"#'   geom_track_bar(aes(track_value = gc, track_fill = gc),",review numeric values -> col/identity; do not rename count examples blindly
+man/geom_track_tile.Rd,39,geom_track_bar(,review numeric values -> col/identity; do not rename count examples blindly
+man/geom_track_tile.Rd,123,"geom_track_bar(aes(track_value = gc, track_fill = gc),",review numeric values -> col/identity; do not rename count examples blindly
+website/en/compatibility.md,25,| [`geom_track_bar()`](reference/geom_track_tile.html) | Supported | Supported | Supported | Explicit position_track; numeric heights and declared domains |,review numeric values -> col/identity; do not rename count examples blindly
+website/en/parameter-atlas.md,546,<details><summary><code>geom_track_bar()</code></summary>,review numeric values -> col/identity; do not rename count examples blindly
+website/en/task-index.md,32,"| Draw GC bars and lines | [`geom_track_bar()`](reference/geom_track_tile.html) | `track_value, baseline` | A / B / C | [Advanced](tracks.html) |",review numeric values -> col/identity; do not rename count examples blindly
+website/zh/compatibility.md,25,| [`geom_track_bar()`](reference/geom_track_tile.html) | 支持 | 支持 | 支持 | 显式 position_track、数值高度与数值域 |,review numeric values -> col/identity; do not rename count examples blindly
+website/zh/parameter-atlas.md,546,<details><summary><code>geom_track_bar()</code></summary>,review numeric values -> col/identity; do not rename count examples blindly
+website/zh/task-index.md,32,"| 绘制 GC 柱图与折线 | [`geom_track_bar()`](reference/geom_track_tile.html) | `track_value, baseline` | A / B / C | [进阶](tracks.html) |",review numeric values -> col/identity; do not rename count examples blindly
+tools/check-layer-compatibility.R,34,"geom_track_bar = function() geom_track_bar(aes(track_value = value), data = bins, position = position_track(""fixture"")),",review numeric values -> col/identity; do not rename count examples blindly
+tools/documentation-examples.R,150,"geom_track_bar(aes(track_value = gc), data = bins,",review numeric values -> col/identity; do not rename count examples blindly
+tools/documentation-examples.R,1835,"geom_track_bar(aes(track_value = gc), data = bins,",review numeric values -> col/identity; do not rename count examples blindly
+tools/rc-fixtures.R,67,"geom_track_bar(aes(track_value = value, track_fill = value), data = bins,",review numeric values -> col/identity; do not rename count examples blindly
+tools/validate-engine-registry.R,39,"geom_track_bar(aes(track_value=value),data=bands,",review numeric values -> col/identity; do not rename count examples blindly
+tools/validate-engine-state.R,53,"physical<-ggchord(s[1,])+geom_seq()+geom_track_bar(aes(track_value=value),",review numeric values -> col/identity; do not rename count examples blindly
+tools/validate-tracks.R,9,"geom_track_bar(aes(track_value = value), data = values,",review numeric values -> col/identity; do not rename count examples blindly
+tools/validate-tracks.R,33,"geom_track_bar(aes(track_value = value), data = values[1L, ],",review numeric values -> col/identity; do not rename count examples blindly
+tools/validate-tracks.R,85,"p <- ggchord(s)+geom_seq()+geom_track_bar(aes(track_value=value),data=a,",review numeric values -> col/identity; do not rename count examples blindly
+tools/validate-tracks.R,100,"scaled <- ggchord(s[1,])+geom_seq()+geom_track_bar(aes(track_value=value),",review numeric values -> col/identity; do not rename count examples blindly
+tools/validate-tracks.R,110,"clipped <- ggchord(s[1,])+geom_seq()+geom_track_bar(aes(track_value=value),",review numeric values -> col/identity; do not rename count examples blindly
+tools/validate-tracks.R,117,"fails(export_ggchord_layout(ggchord(s[1,])+geom_seq()+geom_track_bar(aes(track_value=value),",review numeric values -> col/identity; do not rename count examples blindly
+tools/validate-v015-output.R,24,"plot + geom_track_bar(aes(track_value = value), data = bars,",review numeric values -> col/identity; do not rename count examples blindly
+tests/testthat/test-track-api.R,4,"geom_track_bar(aes(track_value = value), data = data,",review numeric values -> col/identity; do not rename count examples blindly
+examples/tracks.R,20,"geom_track_bar(aes(track_value = signal, track_fill = signal),",review numeric values -> col/identity; do not rename count examples blindly

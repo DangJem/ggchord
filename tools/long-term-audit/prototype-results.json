@@ -1,0 +1,6 @@
+{
+  "status": "isolated design prototype only",
+  "input": "synthetic",
+  "assertions": ["unique source routes", "ambiguous routes rejected", "named/index routes agree", "instance override wins", "no phantom DA edge", "signed dotplot slope", "equal boundary projection", "disjoint feature partition", "weighted source count equals ggplot2"],
+  "public_api_implemented": false
+}

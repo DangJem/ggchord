@@ -1,0 +1,16 @@
+{
+  "canvas_inches": [8, 6],
+  "input": ["20 synthetic categories"],
+  "candidate_selected": [
+    {
+      "rows": 5,
+      "width_mm": 167.159811925508,
+      "height_mm": 42.0781735159817,
+      "available_width_mm": 191.2,
+      "available_height_mm": 50.8,
+      "fits_budget": true
+    }
+  ],
+  "scope": ["measured candidates only; no integration, multi-guide solver or locked user settings"],
+  "impossible": [false]
+}

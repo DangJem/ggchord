@@ -1,0 +1,254 @@
+name,path,line,evidence,execution
+aes,tests/testthat/test-collinear.R,51,"mapped <- ggplot2::ggplot_build(base + aes(linetype = ""chosen"") +",not run
+aes,tests/testthat/test-link-api.R,7,"aes(link_alpha = after_scale(seq_along(x) / length(x))),",not run
+aes,tests/testthat/test-link-api.R,14,"geom_link_line(aes(link_colour = pident), data = transform(d, pident = c(80, 95))) +",not run
+aes,tests/testthat/test-plot-api.R,54,"geom_link_ribbon(aes(ribbon_alpha = pident), data = first, fill = ""orange"") +",not run
+aes,tests/testthat/test-plot-api.R,55,"geom_link_ribbon(aes(ribbon_alpha = pident),",not run
+aes,tests/testthat/test-plot-api.R,72,"geom_gene(aes(accver = id, start = lo, end = hi, strand = direction,",not run
+aes,tests/testthat/test-plot-api.R,74,"geom_gene_label(aes(accver = id, start = lo, end = hi,",not run
+aes,tests/testthat/test-track-api.R,4,"geom_track_bar(aes(track_value = value), data = data,",not run
+after_scale,tests/testthat/test-link-api.R,7,"aes(link_alpha = after_scale(seq_along(x) / length(x))),",not run
+build_ggchord_cds,tests/testthat/test-data-api.R,218,cds <- build_ggchord_cds(coding),not run
+bundle_ggchord_ribbons,tests/testthat/test-data-api.R,158,"bundled <- bundle_ggchord_ribbons(rbind(ribbon, ribbon),",not run
+clean_ggchord_data,tests/testthat/test-data-api.R,6,"cleaned <- clean_ggchord_data(seq, ribbon, transform(genes, accver = ""unknown""),",not run
+clean_ggchord_data,tests/testthat/test-data-api.R,32,"expect_error(clean_ggchord_data(smoke_sequences(), ribbon_data = ""not a table""),",not run
+clean_ggchord_data,tests/testthat/test-data-api.R,34,"expect_error(clean_ggchord_data(smoke_sequences(), gene_data = ""not a table""),",not run
+clean_ggchord_data,tests/testthat/test-data-api.R,42,"dropped <- clean_ggchord_data(smoke_sequences(), ribbon, genes)",not run
+clean_ggchord_data,tests/testthat/test-data-api.R,48,"kept <- clean_ggchord_data(smoke_sequences(), ribbon, genes,",not run
+clean_ggchord_data,tests/testthat/test-data-api.R,52,"expect_error(clean_ggchord_data(smoke_sequences(), ribbon,",not run
+clean_ggchord_data,tests/testthat/test-data-api.R,54,"expect_error(clean_ggchord_data(smoke_sequences(), gene_data = genes,",not run
+clean_ggchord_data,tests/testthat/test-data-api.R,59,"missing_kept <- clean_ggchord_data(reference, numeric_ribbon, numeric_gene,",not run
+clean_ggchord_data,tests/testthat/test-data-api.R,230,"cleaned <- clean_ggchord_data(smoke_sequences(), ribbon, gene)",not run
+coord_circular,tests/testthat/test-data-api.R,150,geom_primer_label_repel(data = primers) + coord_circular(),not run
+coord_circular,tests/testthat/test-feature-engine.R,5,"geom_feature_plasmid(data = features, shape = ""block"") + coord_circular()",not run
+coord_circular,tests/testthat/test-plot-api.R,10,"band <- ggchord(smoke_sequences()[1, ]) + geom_seq(seq_style = ""band"") + coord_circular()",not run
+coord_circular,tests/testthat/test-radial-geometry.R,80,geom_restriction_site(data = sites) + coord_circular(rotation = 0),not run
+coord_circular,tests/testthat/test-radial-geometry.R,109,geom_restriction_site(data = sites) + coord_circular(rotation = 0),not run
+coord_circular,tests/testthat/test-single-genome.R,10,"validate = ""none"") + geom_seq() + geom_seq_center_label() + coord_circular()",not run
+coord_circular,tests/testthat/test-single-genome.R,36,geom_seq() + coord_circular(),not run
+coord_circular,tests/testthat/test-single-genome.R,72,geom_primer(data = hits) + geom_primer_label_repel(data = hits) + coord_circular(),not run
+coord_collinear,tests/testthat/test-axis-empty-components.R,3,"validate = ""none"") + geom_seq() + coord_collinear() +",not run
+coord_collinear,tests/testthat/test-collinear.R,4,geom_gene(position = position_strand()) + coord_collinear(),not run
+coord_collinear,tests/testthat/test-collinear.R,18,coord_collinear(),not run
+coord_collinear,tests/testthat/test-collinear.R,43,geom_link_ribbon(adjacent_only = FALSE) + coord_collinear()),not run
+coord_collinear,tests/testthat/test-collinear.R,48,nonadjacent_linewidth = 0) + coord_collinear()),not run
+coord_collinear,tests/testthat/test-collinear.R,55,coord_collinear()),not run
+coord_collinear,tests/testthat/test-collinear.R,63,geom_seq(seq_gap = .01) + geom_link_ribbon() + coord_collinear(),not run
+coord_collinear,tests/testthat/test-collinear.R,74,coord_collinear(),not run
+coord_collinear,tests/testthat/test-collinear.R,85,"coord_collinear(segments = view$segments, segment_gap = 50)",not run
+coord_collinear,tests/testthat/test-data-api.R,24,plot <- ggchord(protein) + geom_seq() + coord_collinear() + geom_seq_scale(length = 10),not run
+coord_collinear,tests/testthat/test-feature-engine.R,15,"geom_feature(data = features, shape = ""block"") + coord_collinear()",not run
+coord_collinear,tests/testthat/test-layout-ownership.R,8,adjacent <- base + geom_link_ribbon() + coord_collinear(),not run
+coord_collinear,tests/testthat/test-layout-ownership.R,9,all <- base + geom_link_ribbon(adjacent_only = FALSE) + coord_collinear(),not run
+coord_collinear,tests/testthat/test-plot-api.R,76,"scale_gene_fill_manual(values = c(alpha = ""#113355"")) + coord_collinear()",not run
+coord_collinear,tests/testthat/test-track-api.R,8,coord_collinear(),not run
+deduplicate_ggchord_ribbons,tests/testthat/test-data-api.R,95,"expect_equal(nrow(deduplicate_ggchord_ribbons(rbind(ribbon, ribbon))$data), 1L)",not run
+deduplicate_ggchord_ribbons,tests/testthat/test-data-api.R,105,"expect_equal(nrow(deduplicate_ggchord_ribbons(blocks, by = ""overlap"")$data), 2L)",not run
+deduplicate_ggchord_ribbons,tests/testthat/test-data-api.R,108,"expect_equal(nrow(deduplicate_ggchord_ribbons(rbind(reverse, shifted), by = ""overlap"")$data), 1L)",not run
+deduplicate_ggchord_ribbons,tests/testthat/test-data-api.R,109,"expect_equal(nrow(deduplicate_ggchord_ribbons(rbind(reverse,",not run
+deduplicate_ggchord_ribbons,tests/testthat/test-data-api.R,135,"expect_equal(nrow(deduplicate_ggchord_ribbons(distinct)$data), 2L)",not run
+export_ggchord_layout,tests/testthat/test-collinear.R,5,"out <- export_ggchord_layout(p, include = c(""seq"", ""ribbon"", ""gene""))",not run
+export_ggchord_layout,tests/testthat/test-collinear.R,19,"before <- export_ggchord_layout(p, include = ""feature"")",not run
+export_ggchord_layout,tests/testthat/test-collinear.R,20,"after <- export_ggchord_layout(p + geom_feature_label_repel(data = features),",not run
+export_ggchord_layout,tests/testthat/test-collinear.R,64,"out <- export_ggchord_layout(p, include = ""ribbon"")",not run
+export_ggchord_layout,tests/testthat/test-collinear.R,75,"out <- export_ggchord_layout(p, include = ""feature"")$feature",not run
+export_ggchord_layout,tests/testthat/test-data-api.R,25,"exported <- export_ggchord_layout(plot, include = ""axis"")",not run
+export_ggchord_layout,tests/testthat/test-data-api.R,151,"labels <- export_ggchord_layout(plot, include = ""labels"")$labels",not run
+export_ggchord_layout,tests/testthat/test-feature-engine.R,16,"out <- export_ggchord_layout(p, include = ""feature"")",not run
+export_ggchord_layout,tests/testthat/test-layout-ownership.R,11,"first <- export_ggchord_layout(adjacent, include = ""ribbon"")",not run
+export_ggchord_layout,tests/testthat/test-layout-ownership.R,12,"second <- export_ggchord_layout(all, include = ""ribbon"")",not run
+export_ggchord_layout,tests/testthat/test-layout-ownership.R,13,"repeated <- export_ggchord_layout(adjacent, include = ""ribbon"")",not run
+export_ggchord_layout,tests/testthat/test-layout-ownership.R,27,"out <- export_ggchord_layout(p, include = c(""seq"", ""gene""))",not run
+export_ggchord_layout,tests/testthat/test-link-api.R,27,"d <- export_ggchord_layout(p, include = ""ribbon"")$ribbon",not run
+export_ggchord_layout,tests/testthat/test-plot-api.R,39,"out <- export_ggchord_layout(p, include = c(""feature"", ""link""))",not run
+export_ggchord_layout,tests/testthat/test-radial-geometry.R,110,"out <- export_ggchord_layout(p, include = ""labels"")",not run
+export_ggchord_layout,tests/testthat/test-single-genome.R,45,inner <- export_ggchord_layout(base + geom_restriction_site(,not run
+export_ggchord_layout,tests/testthat/test-track-api.R,9,"out <- export_ggchord_layout(plot, include = c(""track"", ""axis""))",not run
+filter_ggchord_ribbons,tests/testthat/test-data-api.R,94,"expect_equal(nrow(filter_ggchord_ribbons(ribbon, min_pident = 90)$data), 1L)",not run
+filter_restriction_sites,tests/testthat/test-radial-geometry.R,76,"sites <- filter_restriction_sites(find_restriction_sites(s),",not run
+find_common_features,tests/testthat/test-single-genome.R,61,"hit <- find_common_features(""TTTCAT"", database = db, circular = FALSE)",not run
+find_ggchord_loci,tests/testthat/test-data-api.R,200,"loci <- find_ggchord_loci(prepared$seq_data, prepared$features$genes,",not run
+find_primer_bindings,tests/testthat/test-radial-geometry.R,75,"primers <- find_primer_bindings(s, set = ""universal"")",not run
+find_primer_bindings,tests/testthat/test-radial-geometry.R,104,"primers <- find_primer_bindings(s, set = ""universal"")",not run
+find_primer_bindings,tests/testthat/test-single-genome.R,51,"primers <- find_primer_bindings(c(A = ""TTGCAAAAACG""),",not run
+find_primer_bindings,tests/testthat/test-single-genome.R,55,"expect_error(find_primer_bindings(c(A = ""ACGTACGTAAAATTTTGGGG""),",not run
+find_primer_bindings,tests/testthat/test-single-genome.R,69,"hits <- find_primer_bindings(c(A = ""AAAAAAAAAAAAAAAAAAAA""),",not run
+find_restriction_sites,tests/testthat/test-data-api.R,141,"sites <- find_restriction_sites(c(A = ""AGGACGTCC""), database = pattern,",not run
+find_restriction_sites,tests/testthat/test-radial-geometry.R,76,"sites <- filter_restriction_sites(find_restriction_sites(s),",not run
+find_restriction_sites,tests/testthat/test-radial-geometry.R,105,"sites <- find_restriction_sites(s, enzymes = c(""EcoRI"", ""BamHI"", ""HindIII""))",not run
+find_restriction_sites,tests/testthat/test-single-genome.R,63,"sites <- find_restriction_sites(c(A = ""TGAATTCG""), enzymes = ""EcoRI"")",not run
+focus_ggchord_data,tests/testthat/test-data-api.R,170,"focused <- focus_ggchord_data(smoke_sequences(), smoke_ribbon(), features,",not run
+focus_ggchord_data,tests/testthat/test-data-api.R,173,"again <- focus_ggchord_data(focused$seq_data, focused$ribbon_data,",not run
+focus_ggchord_data,tests/testthat/test-data-api.R,203,"focused <- focus_ggchord_data(prepared$seq_data,",not run
+geom_feature,tests/testthat/test-collinear.R,16,"geom_feature(data = features,",not run
+geom_feature,tests/testthat/test-collinear.R,73,"geom_feature(data = features, position = position_feature_stack()) +",not run
+geom_feature,tests/testthat/test-feature-engine.R,15,"geom_feature(data = features, shape = ""block"") + coord_collinear()",not run
+geom_feature,tests/testthat/test-plot-api.R,36,"geom_feature(data = features, shape = ""block"") +",not run
+geom_feature_label_repel,tests/testthat/test-collinear.R,20,"after <- export_ggchord_layout(p + geom_feature_label_repel(data = features),",not run
+geom_feature_plasmid,tests/testthat/test-feature-engine.R,5,"geom_feature_plasmid(data = features, shape = ""block"") + coord_circular()",not run
+geom_gene,tests/testthat/test-collinear.R,4,geom_gene(position = position_strand()) + coord_collinear(),not run
+geom_gene,tests/testthat/test-data-api.R,28,"expect_error(ggplot2::ggplot_build(plot + geom_gene()), ""require bp"")",not run
+geom_gene,tests/testthat/test-layout-ownership.R,24,shared <- geom_gene(data = d),not run
+geom_gene,tests/testthat/test-plot-api.R,5,geom_seq() + geom_link_ribbon() + geom_gene() + geom_seq_label() +,not run
+geom_gene,tests/testthat/test-plot-api.R,18,geom_seq() + geom_gene(),not run
+geom_gene,tests/testthat/test-plot-api.R,72,"geom_gene(aes(accver = id, start = lo, end = hi, strand = direction,",not run
+geom_gene,tests/testthat/test-radial-geometry.R,26,geom_seq() + geom_gene() + geom_gene_label_repel(),not run
+geom_gene,tests/testthat/test-radial-geometry.R,50,geom_seq() + geom_gene() + geom_gene_label_repel(),not run
+geom_gene,tests/testthat/test-radial-geometry.R,64,"geom_seq(seq_orientation = c(1, -1)) + geom_gene() +",not run
+geom_gene_label,tests/testthat/test-plot-api.R,74,"geom_gene_label(aes(accver = id, start = lo, end = hi,",not run
+geom_gene_label_repel,tests/testthat/test-plot-api.R,21,geom_gene_label_repel(label_layout = mode)),not run
+geom_gene_label_repel,tests/testthat/test-plot-api.R,24,shrink <- get_chord_layout(base + geom_gene_label_repel(,not run
+geom_gene_label_repel,tests/testthat/test-radial-geometry.R,26,geom_seq() + geom_gene() + geom_gene_label_repel(),not run
+geom_gene_label_repel,tests/testthat/test-radial-geometry.R,50,geom_seq() + geom_gene() + geom_gene_label_repel(),not run
+geom_gene_label_repel,tests/testthat/test-radial-geometry.R,65,"geom_gene_label_repel(label_side = ""outside"")",not run
+geom_link_line,tests/testthat/test-link-api.R,6,ggchord(s) + geom_seq() + geom_link_line(,not run
+geom_link_line,tests/testthat/test-link-api.R,14,"geom_link_line(aes(link_colour = pident), data = transform(d, pident = c(80, 95))) +",not run
+geom_link_line,tests/testthat/test-plot-api.R,38,geom_link_line(data = points),not run
+geom_link_ribbon,tests/testthat/test-collinear.R,3,"geom_seq(seq_orientation = c(A = 1, B = -1)) + geom_link_ribbon() +",not run
+geom_link_ribbon,tests/testthat/test-collinear.R,43,geom_link_ribbon(adjacent_only = FALSE) + coord_collinear()),not run
+geom_link_ribbon,tests/testthat/test-collinear.R,47,"geom_link_ribbon(adjacent_only = FALSE, linewidth = .2,",not run
+geom_link_ribbon,tests/testthat/test-collinear.R,52,geom_link_ribbon(adjacent_only = FALSE) +,not run
+geom_link_ribbon,tests/testthat/test-collinear.R,53,"geom_link_ribbon(adjacent_only = FALSE, inherit.aes = TRUE) +",not run
+geom_link_ribbon,tests/testthat/test-collinear.R,63,geom_seq(seq_gap = .01) + geom_link_ribbon() + coord_collinear(),not run
+geom_link_ribbon,tests/testthat/test-layout-ownership.R,8,adjacent <- base + geom_link_ribbon() + coord_collinear(),not run
+geom_link_ribbon,tests/testthat/test-layout-ownership.R,9,all <- base + geom_link_ribbon(adjacent_only = FALSE) + coord_collinear(),not run
+geom_link_ribbon,tests/testthat/test-link-api.R,25,"p <- ggchord(s, r) + geom_seq() + geom_link_ribbon(",not run
+geom_link_ribbon,tests/testthat/test-plot-api.R,5,geom_seq() + geom_link_ribbon() + geom_gene() + geom_seq_label() +,not run
+geom_link_ribbon,tests/testthat/test-plot-api.R,54,"geom_link_ribbon(aes(ribbon_alpha = pident), data = first, fill = ""orange"") +",not run
+geom_link_ribbon,tests/testthat/test-plot-api.R,55,"geom_link_ribbon(aes(ribbon_alpha = pident),",not run
+geom_primer,tests/testthat/test-radial-geometry.R,79,geom_primer(data = primers) + geom_primer_label_repel(data = primers) +,not run
+geom_primer,tests/testthat/test-radial-geometry.R,107,geom_primer(data = primers) +,not run
+geom_primer,tests/testthat/test-single-genome.R,72,geom_primer(data = hits) + geom_primer_label_repel(data = hits) + coord_circular(),not run
+geom_primer_label_repel,tests/testthat/test-data-api.R,150,geom_primer_label_repel(data = primers) + coord_circular(),not run
+geom_primer_label_repel,tests/testthat/test-radial-geometry.R,79,geom_primer(data = primers) + geom_primer_label_repel(data = primers) +,not run
+geom_primer_label_repel,tests/testthat/test-radial-geometry.R,108,"geom_primer_label_repel(data = primers, side = ""inside"") +",not run
+geom_primer_label_repel,tests/testthat/test-single-genome.R,72,geom_primer(data = hits) + geom_primer_label_repel(data = hits) + coord_circular(),not run
+geom_restriction_site,tests/testthat/test-radial-geometry.R,80,geom_restriction_site(data = sites) + coord_circular(rotation = 0),not run
+geom_restriction_site,tests/testthat/test-radial-geometry.R,109,geom_restriction_site(data = sites) + coord_circular(rotation = 0),not run
+geom_restriction_site,tests/testthat/test-single-genome.R,39,"geom_restriction_site(data = sites, leader = style))$restriction_sites",not run
+geom_restriction_site,tests/testthat/test-single-genome.R,45,inner <- export_ggchord_layout(base + geom_restriction_site(,not run
+geom_seq,tests/testthat/test-axis-empty-components.R,3,"validate = ""none"") + geom_seq() + coord_collinear() +",not run
+geom_seq,tests/testthat/test-axis-empty-components.R,6,"chord <- ggchord(data.frame(accver = ""A"", length = 1000)) + geom_seq() +",not run
+geom_seq,tests/testthat/test-axis-empty-components.R,12,"base <- ggchord(data.frame(accver = ""A"", length = 1000)) + geom_seq()",not run
+geom_seq,tests/testthat/test-collinear.R,3,"geom_seq(seq_orientation = c(A = 1, B = -1)) + geom_link_ribbon() +",not run
+geom_seq,tests/testthat/test-collinear.R,15,"p <- ggchord(seq, validate = ""none"") + geom_seq() +",not run
+geom_seq,tests/testthat/test-collinear.R,35,"base <- ggchord(seq, ribbon, validate = ""none"") + geom_seq()",not run
+geom_seq,tests/testthat/test-collinear.R,63,geom_seq(seq_gap = .01) + geom_link_ribbon() + coord_collinear(),not run
+geom_seq,tests/testthat/test-collinear.R,72,"p <- ggchord(data.frame(accver = ""A"", length = 1e6)) + geom_seq() +",not run
+geom_seq,tests/testthat/test-collinear.R,84,plot <- ggchord(view$seq_data) + geom_seq() +,not run
+geom_seq,tests/testthat/test-data-api.R,24,plot <- ggchord(protein) + geom_seq() + coord_collinear() + geom_seq_scale(length = 10),not run
+geom_seq,tests/testthat/test-data-api.R,149,"plot <- ggchord(smoke_sequences()[1, ]) + geom_seq() +",not run
+geom_seq,tests/testthat/test-feature-engine.R,3,"p <- ggchord(smoke_sequences()[1, ]) + geom_seq() +",not run
+geom_seq,tests/testthat/test-feature-engine.R,14,"p <- ggchord(smoke_sequences()[1, ]) + geom_seq() +",not run
+geom_seq,tests/testthat/test-layout-ownership.R,6,"base <- ggchord(seq, ribbon, validate = ""none"") + geom_seq()",not run
+geom_seq,tests/testthat/test-layout-ownership.R,25,p <- ggchord(s) + geom_seq() + shared + shared,not run
+geom_seq,tests/testthat/test-link-api.R,6,ggchord(s) + geom_seq() + geom_link_line(,not run
+geom_seq,tests/testthat/test-link-api.R,13,coloured <- ggchord(s) + geom_seq() +,not run
+geom_seq,tests/testthat/test-link-api.R,25,"p <- ggchord(s, r) + geom_seq() + geom_link_ribbon(",not run
+geom_seq,tests/testthat/test-plot-api.R,5,geom_seq() + geom_link_ribbon() + geom_gene() + geom_seq_label() +,not run
+geom_seq,tests/testthat/test-plot-api.R,10,"band <- ggchord(smoke_sequences()[1, ]) + geom_seq(seq_style = ""band"") + coord_circular()",not run
+geom_seq,tests/testthat/test-plot-api.R,18,geom_seq() + geom_gene(),not run
+geom_seq,tests/testthat/test-plot-api.R,35,p <- ggchord(smoke_sequences()) + geom_seq() +,not run
+geom_seq,tests/testthat/test-plot-api.R,53,p <- ggchord(smoke_sequences()) + geom_seq() +,not run
+geom_seq,tests/testthat/test-plot-api.R,71,"p <- ggchord(smoke_sequences()[1, ]) + geom_seq() +",not run
+geom_seq,tests/testthat/test-radial-geometry.R,26,geom_seq() + geom_gene() + geom_gene_label_repel(),not run
+geom_seq,tests/testthat/test-radial-geometry.R,50,geom_seq() + geom_gene() + geom_gene_label_repel(),not run
+geom_seq,tests/testthat/test-radial-geometry.R,64,"geom_seq(seq_orientation = c(1, -1)) + geom_gene() +",not run
+geom_seq,tests/testthat/test-radial-geometry.R,78,"p <- ggchord(s[c(""accver"", ""length"")]) + geom_seq() +",not run
+geom_seq,tests/testthat/test-radial-geometry.R,106,"p <- ggchord(s[c(""accver"", ""length"")]) + geom_seq() +",not run
+geom_seq,tests/testthat/test-single-genome.R,10,"validate = ""none"") + geom_seq() + geom_seq_center_label() + coord_circular()",not run
+geom_seq,tests/testthat/test-single-genome.R,36,geom_seq() + coord_circular(),not run
+geom_seq,tests/testthat/test-single-genome.R,71,"p <- ggchord(data.frame(accver = ""A"", length = 20)) + geom_seq() +",not run
+geom_seq,tests/testthat/test-track-api.R,3,plot <- ggchord(smoke_sequences()) + geom_seq() +,not run
+geom_seq_center_label,tests/testthat/test-single-genome.R,10,"validate = ""none"") + geom_seq() + geom_seq_center_label() + coord_circular()",not run
+geom_seq_label,tests/testthat/test-plot-api.R,5,geom_seq() + geom_link_ribbon() + geom_gene() + geom_seq_label() +,not run
+geom_seq_region,tests/testthat/test-plot-api.R,37,geom_seq_region(data = regions) +,not run
+geom_seq_scale,tests/testthat/test-data-api.R,24,plot <- ggchord(protein) + geom_seq() + coord_collinear() + geom_seq_scale(length = 10),not run
+geom_seq_scale,tests/testthat/test-track-api.R,7,"scale_seq_position_continuous(sequences = ""B"") + geom_seq_scale(length = 100) +",not run
+geom_track_bar,tests/testthat/test-track-api.R,4,"geom_track_bar(aes(track_value = value), data = data,",not run
+get_chord_layout,tests/testthat/test-axis-empty-components.R,8,"expect_equal(nrow(get_chord_layout(chord)$axis_ticks), 0L)",not run
+get_chord_layout,tests/testthat/test-axis-empty-components.R,13,plain <- get_chord_layout(base + scale_seq_position_continuous(,not run
+get_chord_layout,tests/testthat/test-axis-empty-components.R,15,logged <- get_chord_layout(base + scale_seq_position_continuous(,not run
+get_chord_layout,tests/testthat/test-layout-ownership.R,7,invisible(get_chord_layout(base)),not run
+get_chord_layout,tests/testthat/test-layout-ownership.R,17,"expect_setequal(names(get_chord_layout(base, build = FALSE)$seq_arcs), seq$accver)",not run
+get_chord_layout,tests/testthat/test-plot-api.R,20,layout <- get_chord_layout(base +,not run
+get_chord_layout,tests/testthat/test-plot-api.R,24,shrink <- get_chord_layout(base + geom_gene_label_repel(,not run
+get_chord_layout,tests/testthat/test-plot-api.R,63,out <- get_chord_layout(p)$layer_inputs,not run
+get_chord_layout,tests/testthat/test-radial-geometry.R,27,before <- get_chord_layout(p),not run
+get_chord_layout,tests/testthat/test-radial-geometry.R,30,"expect_identical(get_chord_layout(p, build = FALSE)$gene_labels$label,",not run
+get_chord_layout,tests/testthat/test-radial-geometry.R,51,layout <- get_chord_layout(p),not run
+get_chord_layout,tests/testthat/test-radial-geometry.R,66,layout <- get_chord_layout(p),not run
+get_chord_layout,tests/testthat/test-radial-geometry.R,81,l <- get_chord_layout(p),not run
+get_chord_layout,tests/testthat/test-single-genome.R,38,geometry <- get_chord_layout(base +,not run
+ggchord,tests/testthat/test-axis-empty-components.R,2,"plot <- ggchord(data.frame(accver = ""A"", length = 1000),",not run
+ggchord,tests/testthat/test-axis-empty-components.R,6,"chord <- ggchord(data.frame(accver = ""A"", length = 1000)) + geom_seq() +",not run
+ggchord,tests/testthat/test-axis-empty-components.R,12,"base <- ggchord(data.frame(accver = ""A"", length = 1000)) + geom_seq()",not run
+ggchord,tests/testthat/test-collinear.R,2,"p <- ggchord(smoke_sequences(), smoke_ribbon(), smoke_genes(), validate = ""none"") +",not run
+ggchord,tests/testthat/test-collinear.R,15,"p <- ggchord(seq, validate = ""none"") + geom_seq() +",not run
+ggchord,tests/testthat/test-collinear.R,35,"base <- ggchord(seq, ribbon, validate = ""none"") + geom_seq()",not run
+ggchord,tests/testthat/test-collinear.R,62,"p <- ggchord(smoke_sequences(), smoke_ribbon(), validate = ""none"") +",not run
+ggchord,tests/testthat/test-collinear.R,72,"p <- ggchord(data.frame(accver = ""A"", length = 1e6)) + geom_seq() +",not run
+ggchord,tests/testthat/test-collinear.R,84,plot <- ggchord(view$seq_data) + geom_seq() +,not run
+ggchord,tests/testthat/test-data-api.R,22,"expect_error(ggchord(transform(seq, length = ""bad"")), ""numeric"")",not run
+ggchord,tests/testthat/test-data-api.R,24,plot <- ggchord(protein) + geom_seq() + coord_collinear() + geom_seq_scale(length = 10),not run
+ggchord,tests/testthat/test-data-api.R,149,"plot <- ggchord(smoke_sequences()[1, ]) + geom_seq() +",not run
+ggchord,tests/testthat/test-feature-engine.R,3,"p <- ggchord(smoke_sequences()[1, ]) + geom_seq() +",not run
+ggchord,tests/testthat/test-feature-engine.R,14,"p <- ggchord(smoke_sequences()[1, ]) + geom_seq() +",not run
+ggchord,tests/testthat/test-layout-ownership.R,6,"base <- ggchord(seq, ribbon, validate = ""none"") + geom_seq()",not run
+ggchord,tests/testthat/test-layout-ownership.R,25,p <- ggchord(s) + geom_seq() + shared + shared,not run
+ggchord,tests/testthat/test-link-api.R,6,ggchord(s) + geom_seq() + geom_link_line(,not run
+ggchord,tests/testthat/test-link-api.R,13,coloured <- ggchord(s) + geom_seq() +,not run
+ggchord,tests/testthat/test-link-api.R,25,"p <- ggchord(s, r) + geom_seq() + geom_link_ribbon(",not run
+ggchord,tests/testthat/test-plot-api.R,4,"p <- ggchord(smoke_sequences(), smoke_ribbon(), genes, validate = ""none"") +",not run
+ggchord,tests/testthat/test-plot-api.R,10,"band <- ggchord(smoke_sequences()[1, ]) + geom_seq(seq_style = ""band"") + coord_circular()",not run
+ggchord,tests/testthat/test-plot-api.R,17,"base <- ggchord(smoke_sequences(), gene_data = smoke_genes()) +",not run
+ggchord,tests/testthat/test-plot-api.R,35,p <- ggchord(smoke_sequences()) + geom_seq() +,not run
+ggchord,tests/testthat/test-plot-api.R,53,p <- ggchord(smoke_sequences()) + geom_seq() +,not run
+ggchord,tests/testthat/test-plot-api.R,71,"p <- ggchord(smoke_sequences()[1, ]) + geom_seq() +",not run
+ggchord,tests/testthat/test-radial-geometry.R,24,"p <- ggchord(smoke_sequences(), gene_data = smoke_genes(),",not run
+ggchord,tests/testthat/test-radial-geometry.R,49,"p <- ggchord(seq, gene_data = genes, validate = ""none"") +",not run
+ggchord,tests/testthat/test-radial-geometry.R,63,"p <- ggchord(seq, gene_data = genes, validate = ""none"") +",not run
+ggchord,tests/testthat/test-radial-geometry.R,78,"p <- ggchord(s[c(""accver"", ""length"")]) + geom_seq() +",not run
+ggchord,tests/testthat/test-radial-geometry.R,106,"p <- ggchord(s[c(""accver"", ""length"")]) + geom_seq() +",not run
+ggchord,tests/testthat/test-single-genome.R,9,"plot <- ggchord(data.frame(accver = ""circle"", length = 1000),",not run
+ggchord,tests/testthat/test-single-genome.R,35,"base <- ggchord(data.frame(accver = ""A"", length = 1000)) +",not run
+ggchord,tests/testthat/test-single-genome.R,71,"p <- ggchord(data.frame(accver = ""A"", length = 20)) + geom_seq() +",not run
+ggchord,tests/testthat/test-track-api.R,3,plot <- ggchord(smoke_sequences()) + geom_seq() +,not run
+link_ggchord_clusters,tests/testthat/test-data-api.R,189,"homologs <- link_ggchord_clusters(genes,",not run
+map_ggchord_position,tests/testthat/test-collinear.R,86,"mapped <- map_ggchord_position(plot, c(""left"", ""right"", ""right""),",not run
+map_ggchord_position,tests/testthat/test-collinear.R,90,"restored <- map_ggchord_position(plot, mapped$accver, mapped$x,",not run
+merge_ggchord_ribbons,tests/testthat/test-data-api.R,98,"expect_equal(nrow(merge_ggchord_ribbons(blocks)$data), 1L)",not run
+merge_ggchord_ribbons,tests/testthat/test-data-api.R,115,single <- merge_ggchord_ribbons(block),not run
+merge_ggchord_ribbons,tests/testthat/test-data-api.R,118,"merged <- merge_ggchord_ribbons(rbind(block, transform(block,",not run
+optimize_ggchord_layout,tests/testthat/test-data-api.R,162,"suggestion <- optimize_ggchord_layout(smoke_sequences(), ribbon)",not run
+position_feature_stack,tests/testthat/test-collinear.R,17,position = position_feature_stack(base_position = position_strand(.2))) +,not run
+position_feature_stack,tests/testthat/test-collinear.R,73,"geom_feature(data = features, position = position_feature_stack()) +",not run
+position_strand,tests/testthat/test-collinear.R,4,geom_gene(position = position_strand()) + coord_collinear(),not run
+position_strand,tests/testthat/test-collinear.R,17,position = position_feature_stack(base_position = position_strand(.2))) +,not run
+position_track,tests/testthat/test-track-api.R,5,"position = position_track(""signal"")) +",not run
+prepare_ggchord_data,tests/testthat/test-data-api.R,129,"prepared <- prepare_ggchord_data(smoke_sequences(), points,",not run
+prepare_ggchord_data,tests/testthat/test-data-api.R,194,"prepared <- prepare_ggchord_data(sequences,",not run
+prepare_ggchord_data,tests/testthat/test-data-api.R,209,"bundled <- prepare_ggchord_data(sequences, opposite,",not run
+project_ggchord_features,tests/testthat/test-data-api.R,220,"genomic <- project_ggchord_features(domain, cds)",not run
+project_ggchord_features,tests/testthat/test-data-api.R,223,"protein <- project_ggchord_features(genomic, cds, from = ""genome"")",not run
+read_bed,tests/testthat/test-data-api.R,85,"expect_equal(unname(unlist(read_bed(bed)[c(""start"", ""end"")])), c(1, 1))",not run
+read_blast,tests/testthat/test-data-api.R,79,"imported <- read_blast(blast, format = ""outfmt6"")",not run
+read_fasta_lengths,tests/testthat/test-data-api.R,78,"expect_equal(read_fasta_lengths(fasta)$length, 8L)",not run
+read_gff3,tests/testthat/test-data-api.R,83,"expect_equal(read_gff3(gff)$anno, ""test protein"")",not run
+read_paf,tests/testthat/test-data-api.R,87,mapping <- read_paf(paf),not run
+scale_feature_fill_manual,tests/testthat/test-feature-engine.R,4,"scale_feature_fill_manual(values = c(CDS = ""black"")) +",not run
+scale_gene_fill_manual,tests/testthat/test-plot-api.R,6,scale_gene_fill_manual(values = colours),not run
+scale_gene_fill_manual,tests/testthat/test-plot-api.R,76,"scale_gene_fill_manual(values = c(alpha = ""#113355"")) + coord_collinear()",not run
+scale_link_colour_gradientn,tests/testthat/test-link-api.R,15,"scale_link_colour_gradientn(colours = c(""navy"", ""gold""))",not run
+scale_ribbon_alpha_continuous,tests/testthat/test-plot-api.R,57,scale_ribbon_alpha_continuous(),not run
+scale_seq_position_continuous,tests/testthat/test-axis-empty-components.R,4,"scale_seq_position_continuous(breaks = NULL, minor_breaks = NULL)",not run
+scale_seq_position_continuous,tests/testthat/test-axis-empty-components.R,7,"scale_seq_position_continuous(breaks = NULL, minor_breaks = NULL)",not run
+scale_seq_position_continuous,tests/testthat/test-axis-empty-components.R,13,plain <- get_chord_layout(base + scale_seq_position_continuous(,not run
+scale_seq_position_continuous,tests/testthat/test-axis-empty-components.R,15,logged <- get_chord_layout(base + scale_seq_position_continuous(,not run
+scale_seq_position_continuous,tests/testthat/test-track-api.R,7,"scale_seq_position_continuous(sequences = ""B"") + geom_seq_scale(length = 100) +",not run
+scale_track_value_continuous,tests/testthat/test-track-api.R,6,"scale_track_value_continuous(""signal"", limits = c(-2, 3)) +",not run
+segment_ggchord_data,tests/testthat/test-collinear.R,83,"view <- segment_ggchord_data(smoke_sequences()[1L, ], windows = windows)",not run
+validate_ggchord_data,tests/testthat/test-data-api.R,5,"expect_true(validate_ggchord_data(seq, ribbon, genes)$valid)",not run
+validate_ggchord_data,tests/testthat/test-data-api.R,104,"expect_false(any(validate_ggchord_data(smoke_sequences(), blocks)$warnings$category == ""overlapping""))",not run
+validate_ggchord_hierarchy,tests/testthat/test-data-api.R,186,"hierarchy <- validate_ggchord_hierarchy(sequences,",not run
+view_ggchord,tests/testthat/test-radial-geometry.R,28,"view_ggchord(p, viewer = ""none"")",not run

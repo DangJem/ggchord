@@ -1,0 +1,8 @@
+{
+  "source_file": "/Users/vutmvu/Downloads/ggchord_长期开发路线图与统一架构_Codex任务书_v10_独立执行版.md",
+  "sha256": "f2e7c7b1cf251a97780db87b53c9779202a13d383d3556acc72ead9015c489b9",
+  "lines": 1973,
+  "accepted_future_roadmap_replacement": "2026-11-10",
+  "sync": "git fetch origin; HEAD and origin/main identical at 33236efa98f308895368367ac9f96ea7f7337566",
+  "scope": "task book chapter 10 first round only"
+}

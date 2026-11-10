@@ -1,0 +1,4 @@
+"source_hsp_id","qaccver","saccver","qstart","qend","sstart","send","pident"
+"h1","A","B",100,300,30,130,95
+"h2","B","C",20,100,180,80,85
+"h3","C","D",40,90,200,400,90
