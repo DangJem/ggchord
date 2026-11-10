@@ -117,7 +117,7 @@ if (file.exists(behavior_file)) {
     circular = list(coord = "coord_circular", layers = c("geom_seq", "geom_feature", "geom_feature_label_repel", "geom_primer", "geom_primer_label_repel", "geom_restriction_site")),
     linear = list(coord = "coord_collinear", layers = c("geom_seq", "geom_feature", "geom_feature_label_repel", "geom_link_ribbon")),
     labels = list(coord = "coord_chord", layers = "geom_gene_label_repel"),
-    output = list(coord = "coord_circular", layers = "geom_track_bar"))
+    output = list(coord = "coord_circular", layers = "geom_track_col"))
   for (case in names(scenes)) if (any(behavior$case == case & behavior$status == "PASS_FINITE")) {
     scene <- scenes[[case]]
     selected <- compat$coordinate == scene$coord & compat$layer %in% scene$layers

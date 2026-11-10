@@ -36,7 +36,7 @@ local({
   r<-data.frame(qaccver='A',saccver='B',qstart=100,qend=250,sstart=400,send=600)
   bands<-data.frame(accver='A',start=100,end=300,value=5)
   base<-ggchord(pair,r)+geom_seq(seq_gap=.5)+geom_gene(data=genes)+
-    geom_track_bar(aes(track_value=value),data=bands,
+    geom_track_col(aes(track_value=value),data=bands,
       position=position_track('inner',side='inside',width=.03,gap=.01))+
     coord_collinear()
   automatic<-export_ggchord_layout(base+geom_link_ribbon(avoid='uniform'),include='ribbon')

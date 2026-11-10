@@ -21,7 +21,7 @@ features <- data.frame(accver = c("A", "B"), start = c(100, 100), end = c(400, 4
   strand = c("+", "-"), type = "CDS", label = c("LONG GENE LABEL A", "LONG GENE LABEL B"))
 
 add_tracks <- function(plot, bars, line, tiles) {
-  plot + geom_track_bar(aes(track_value = value), data = bars,
+  plot + geom_track_col(aes(track_value = value), data = bars,
     position = position_track("signal", width = unit(4, "mm"))) +
     geom_track_line(aes(track_value = value), data = line, colour = "#273F61",
       position = position_track("signal", width = unit(4, "mm"))) +

@@ -64,7 +64,7 @@ rc_fixtures <- function() {
     mean(dna %in% c("G", "C"))
   }, numeric(1))
   track <- ggchord(s[c("accver", "length")]) + geom_seq() +
-    geom_track_bar(aes(track_value = value, track_fill = value), data = bins,
+    geom_track_col(aes(track_value = value, track_fill = value), data = bins,
       position = position_track("gc", width = unit(4, "mm"))) +
     scale_track_value_continuous("gc", limits = c(0, 1), unit = "GC fraction") +
     scale_track_fill_gradientn("gc", colours = c("#DCE9FF", "#214E95")) + coord_circular()

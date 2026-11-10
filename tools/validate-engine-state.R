@@ -50,7 +50,7 @@ local({
   stopifnot(identical(ctx(),initial))
   record('F26_nested_error_context','Nested errors restore outer context and final exit restores the initial context')
   values<-data.frame(accver='A',start=100,end=200,value=5)
-  physical<-ggchord(s[1,])+geom_seq()+geom_track_bar(aes(track_value=value),
+  physical<-ggchord(s[1,])+geom_seq()+geom_track_col(aes(track_value=value),
     data=values,position=position_track('signal'))+coord_collinear()
   original<-snapshot(physical)
   baseline<-export_ggchord_layout(physical,include='track')
