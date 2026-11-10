@@ -26,7 +26,8 @@ geom_gene_label_repel(
 \arguments{
 \item{mapping}{Default NULL (uses pre-computed data)}
 
-\item{data}{Default NULL (retrieved automatically from the layout)}
+\item{data}{Optional layer table or function. Default data follows the
+gene/CDS selection described in \code{\link[=ggchord]{ggchord()}}.}
 
 \item{label_layout}{Character, default \code{"radial"}. Label layout:
 \code{"radial"} arranges horizontal external labels along sequence-relative

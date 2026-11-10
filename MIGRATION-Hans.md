@@ -2,6 +2,35 @@
 
 # 迁移到 ggchord 候选 API
 
+## 0.17.0 的统一注释输入
+
+推荐用 `ggchord(seq_data = seqs, feature_data = annotations)` 提供基因和其他特征。
+`geom_feature()` 默认使用全表；没有显式图层数据时，基因层依次从 `feature_class`、
+`type`、`role` 中选择 `gene`/`CDS`，tRNA/rRNA 使用通用特征层。缺失链按未知处理，
+通用层也接受双向注释。
+
+`gene_data` 继续兼容，包括第三位置参数；每次构造至多提示一次迁移，渲染不重复提示，
+尚未安排删除版本。无类型的旧表保留原基因语义。迁移时先给方向已知的旧基因表添加
+`type = "gene"`，再传给 `feature_data`；也可直接使用 `geom_gene(data = genes)`。
+两个构造输入不能同时提供。图层数据优先于全局表；组合基因与其他特征时显式筛选
+互斥子集，避免把同一全表绘制两遍。
+
+```r
+library(ggchord)
+library(dplyr)
+data(seq_data_example)
+data(gene_data_example)
+annotations <- gene_data_example |>
+  transmute(accver, start, end, strand = source_strand, type = "CDS")
+p <- ggchord(seq_data_example, feature_data = annotations) +
+  geom_seq() +
+  geom_gene()
+```
+
+`export_ggchord_layout()` 的 `layer_sources` 提供注释来源身份；原几何 `source_row`
+仍指向解析后的图层输入行。默认注释层共享构造输入的来源 ID；显式图层表与函数采用
+图层局部身份，不按数值内容猜测来源，也不会去重删除相同的真实源记录。
+
 ## 0.16.7 跨行连接带边框
 
 `geom_link_ribbon()` 对共线性非相邻行采用 `nonadjacent_linewidth = 0.4`，

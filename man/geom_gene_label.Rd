@@ -24,7 +24,8 @@ geom_gene_label(
 \arguments{
 \item{mapping}{Default NULL (uses pre-computed data)}
 
-\item{data}{Default NULL (retrieved automatically from the layout)}
+\item{data}{Optional layer table or function. Default data follows the
+gene/CDS selection described in \code{\link[=ggchord]{ggchord()}}.}
 
 \item{label_orientation}{Character, default \code{"horizontal"}. Text
 orientation relative to each sequence path: \code{"radial"},

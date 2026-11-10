@@ -704,6 +704,10 @@ validation_cleanable <- function(errors, warnings) {
 #'   \code{qaccver}, \code{saccver}, \code{qstart}, \code{qend}, \code{sstart}, \code{send}).
 #' @param gene_data data.frame/tibble, optional. Gene annotation data (columns
 #'   \code{accver}, \code{start}, \code{end}, \code{strand}; \code{anno} is optional).
+#' @param feature_data Unified annotation table, mutually exclusive with
+#'   `gene_data`. Requires `accver`, `start`, `end`. Missing strand is unknown;
+#'   `+`, `-`, `.`, and `+/-` are accepted. Reports use table `"feature"` and
+#'   `data_summary$n_feature`; the input is never modified.
 #' @param strict Logical. When \code{TRUE}, collect issues and then stop if any
 #'   severe problem is found. When \code{FALSE} (default), return the full
 #'   diagnostic report without stopping.
@@ -755,9 +759,13 @@ validate_ggchord_data <- function(seq_data,
                                   strict = FALSE,
                                   check_coordinates = TRUE,
                                   check_duplicates = TRUE,
-                                  check_self_links = TRUE) {
+                                  check_self_links = TRUE,
+                                  feature_data = NULL) {
+  if (!is.null(gene_data) && !is.null(feature_data)) ggchord_stop(
+    "validate_ggchord_data(): use only one of gene_data and feature_data")
   seq_data <- ggchord_normalize_accver(seq_data)
   gene_data <- ggchord_normalize_accver(gene_data)
+  feature_data <- ggchord_normalize_feature_input(feature_data)
 
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
@@ -785,6 +793,8 @@ validate_ggchord_data <- function(seq_data,
                               check_self_links)
   col <- validate_gene_data(gene_data, seq_data, col,
                             check_coordinates, check_duplicates)
+  col <- validate_feature_data(feature_data, seq_data, col,
+    check_coordinates, check_duplicates)
 
   col <- finalize_validation_collector(col)
   errors <- col$errors
@@ -795,6 +805,7 @@ validate_ggchord_data <- function(seq_data,
     n_seq = if (is.data.frame(seq_data)) nrow(seq_data) else NA_integer_,
     n_ribbon = if (is.data.frame(ribbon_data)) nrow(ribbon_data) else NA_integer_,
     n_gene = if (is.data.frame(gene_data)) nrow(gene_data) else NA_integer_,
+    n_feature = if (is.data.frame(feature_data)) nrow(feature_data) else NA_integer_,
     n_unknown_ribbon_ids = sum(errors$category == "unknown_id" &
                                  errors$table == "ribbon" & !is.na(errors$row)),
     n_unknown_gene_ids = sum(errors$category == "unknown_id" &
@@ -860,6 +871,10 @@ ggchord_structural_validation_errors <- function(validation) {
     gene = c(
       "not_dataframe", "missing_columns", "non_numeric", "non_finite",
       "missing_id", "empty_id", "invalid_strand"
+    ),
+    feature = c(
+      "not_dataframe", "missing_columns", "non_numeric", "non_finite",
+      "missing_id", "empty_id", "invalid_strand"
     )
   )
   keep <- vapply(seq_len(nrow(errors)), function(i) {
@@ -884,6 +899,8 @@ print.ggchord_validation <- function(x, ...) {
               ifelse(is.na(ds$n_seq), "NA", ds$n_seq),
               ifelse(is.na(ds$n_ribbon), "NA", ds$n_ribbon),
               ifelse(is.na(ds$n_gene), "NA", ds$n_gene)))
+  if (!is.null(ds$n_feature) && !is.na(ds$n_feature))
+    cat("Features: ", ds$n_feature, "\n", sep = "")
   if (nrow(x$errors) > 0) {
     cat("\nSevere errors (fix before plotting):\n")
     print(utils::head(x$errors[, c("table", "row", "column", "message")], 10),

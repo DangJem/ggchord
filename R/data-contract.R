@@ -28,8 +28,8 @@
 #'   \item{Validate}{\code{validate_ggchord_data()} reports all collected issues
 #'     without changing input. \code{strict = TRUE} stops after collection if
 #'     errors exist. Logical argument errors stop immediately. This validator
-#'     describes constructor seq/ribbon/gene tables; generic unknown-strand
-#'     features belong in preparation's named feature collections. Coordinate
+#'     describes constructor seq/ribbon/gene tables and the unified
+#'     `feature_data` input, including unknown and bidirectional strands. Coordinate
 #'     checks do not prove an alignment or a biological annotation.}
 #'   \item{Clean}{\code{clean_ggchord_data()} explicitly applies selected
 #'     policies and reports original rows and old/new values. Its historical
@@ -48,6 +48,13 @@
 #' }
 #'
 #' @section Coordinates and direction:
+#' `ggchord(feature_data = ...)` supplies default data for generic annotation
+#' layers. Gene layers select explicitly classified gene/CDS records; tRNA/rRNA
+#' and unclassified annotations remain generic features. Untyped legacy
+#' `gene_data` retains its directional semantics. Do not provide both inputs.
+#' Explicit layer data takes priority; mixed gene/feature compositions should
+#' use disjoint data subsets. Independent layers do not remove each other's rows.
+#'
 #' Native coordinates are one-based inclusive. Sequence tables may declare
 #' `sequence_unit = "bp"` or `"aa"`; omitted units mean bp. A plot uses one unit.
 #' Full protein lengths must be provided; alignment endpoints do not establish

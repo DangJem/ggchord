@@ -10,6 +10,7 @@ ggchord(
   gene_data = NULL,
   debug = FALSE,
   validate = c("warn", "error", "none"),
+  feature_data = NULL,
   ...
 )
 }
@@ -29,9 +30,11 @@ qend, sstart and send. length and pident are optional unless requested
 by a mapping, filter or statistic. A \code{GInteractions} object uses
 \code{\link[=as_ggchord_link]{as_ggchord_link()}} without inventing identity or alignment length.}
 
-\item{gene_data}{Optional table with accver, start, end and strand.
-Annotation (anno) may be omitted. Directional \code{GRanges} are accepted;
-use \code{geom_feature(data = ...)} for unknown-strand intervals.}
+\item{gene_data}{Compatible legacy annotation input. The third positional
+argument retains its meaning. Use \code{feature_data} in new code; a non-NULL
+legacy input emits one message at construction, never during rendering.
+Untyped legacy tables retain their directional gene semantics. No removal
+version is scheduled. Do not supply both annotation inputs.}
 
 \item{debug}{Logical. Whether to output debug information, default FALSE}
 
@@ -42,6 +45,14 @@ and caches the full report on the plot object
 (\code{p$ggchord$validation}); \code{"error"} stops on severe problems;
 \code{"none"} skips the diagnostic validation (the cheap structural
 checks that prevent crashes are still performed).}
+
+\item{feature_data}{Optional unified annotation table or \code{GRanges}. Requires
+\code{accver}, \code{start}, \code{end}; absent strand becomes unknown (\code{"."}). Generic
+feature layers use the full table. Default gene layers select \code{gene}/\code{CDS}
+from \code{feature_class}, \code{type}, or \code{role} (in that priority order), and require
+known strands. tRNA/rRNA remain generic features. Explicit layer \code{data}
+overrides the constructor input. Use disjoint subsets when combining
+gene and feature layers; each layer keeps its own data independently.}
 
 \item{...}{Reserved for clear migration errors from removed constructor
 arguments. Use \code{\link[=labs]{labs()}}, \code{\link[=coord_chord]{coord_chord()}} and \code{\link[=theme]{theme()}} for presentation.}
@@ -70,11 +81,11 @@ seqs <- seq_data_example |>
 links <- ribbon_data_example |>
   select(qaccver, saccver, qstart, qend, sstart, send)
 genes <- gene_data_example |>
-  transmute(accver, start, end, strand = source_strand)
+  transmute(accver, start, end, strand = source_strand, type = "CDS")
 p <- ggchord(
   seq_data = seqs,
   ribbon_data = links,
-  gene_data = genes
+  feature_data = genes
 ) +
   geom_seq() +
   geom_link_ribbon() +

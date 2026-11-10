@@ -11,7 +11,8 @@ validate_ggchord_data(
   strict = FALSE,
   check_coordinates = TRUE,
   check_duplicates = TRUE,
-  check_self_links = TRUE
+  check_self_links = TRUE,
+  feature_data = NULL
 )
 }
 \arguments{
@@ -40,6 +41,11 @@ diagnostics; exact duplicates are still reported.}
 
 \item{check_self_links}{Logical, default \code{TRUE}. Whether to flag
 alignment rows where \code{qaccver == saccver}.}
+
+\item{feature_data}{Unified annotation table, mutually exclusive with
+\code{gene_data}. Requires \code{accver}, \code{start}, \code{end}. Missing strand is unknown;
+\code{+}, \code{-}, \code{.}, and \verb{+/-} are accepted. Reports use table \code{"feature"} and
+\code{data_summary$n_feature}; the input is never modified.}
 }
 \value{
 A \code{"ggchord_validation"} object (a list) with at least:

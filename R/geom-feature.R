@@ -213,6 +213,8 @@ ggchord_feature_data <- function(data, fixed_shape = "arrow",
 #'   \code{strand}, \code{directionality} or \code{direction} may contain
 #'   \code{"forward"}, \code{"reverse"}, \code{"bidirectional"}, or
 #'   \code{"none"}.
+#'   When omitted, uses the full constructor `feature_data` (or compatible
+#'   `gene_data`). Other layers never remove records from this default input.
 #' @param shape Fixed feature geometry. An explicitly supplied shape takes
 #'   precedence over \code{aes(feature_shape = ...)}: \code{"arrow"},
 #'   \code{"compact_arrow"}, \code{"promoter_arrow"},
@@ -397,17 +399,8 @@ geom_feature <- function(mapping = NULL, data = NULL,
     feature_fill_mapping = visual_mapping[["feature_fill"]],
     feature_fill_fixed = dots$feature_fill %||% NULL
   )
-  if (!"feature_fill" %in% names(visual_mapping) && is.data.frame(data) &&
-      all(c("anno", "feature_color") %in% names(data))) {
-    usable <- !is.na(data$anno) & nzchar(as.character(data$anno)) &
-      !is.na(data$feature_color) & nzchar(as.character(data$feature_color))
-    source_colours <- stats::setNames(
-      as.character(data$feature_color[usable]), as.character(data$anno[usable])
-    )
-    lyr$ggchord_params$gene_colors <- source_colours[!duplicated(
-      names(source_colours), fromLast = TRUE
-    )]
-  }
+  if (!"feature_fill" %in% names(visual_mapping))
+    lyr$ggchord_params$gene_colors <- ggchord_feature_source_palette(data)
   lyr <- ggchord_capture_layer_input(lyr, data, mapping, roles)
   fixed_shape <- if (shape_mapped) NULL else feature_shape
   lyr$ggchord_input_transform <- function(x) {

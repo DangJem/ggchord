@@ -59,30 +59,24 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
         gene_params <- pp
         gene_geometry_layer_requested <- TRUE
         gene_data_override <- pp$gene_data_override %||%
-          ggchord_resolve_layer_input(lyr, data_list$gene_data)
+          ggchord_resolve_layer_input(lyr, ggchord_annotation_fallback(data_list))
 
       },
       gene_label        = {
         gene_label_params <- pp
         gene_label_layer <- TRUE
-        label_data <- ggchord_resolve_layer_input(lyr, data_list$gene_data)
+        label_data <- ggchord_resolve_layer_input(lyr, ggchord_annotation_fallback(data_list))
         gene_label_params$label_text <- label_data$anno
-        if (!isTRUE(gene_geometry_layer_requested) &&
-            (!is.null(lyr$ggchord_input_data) ||
-            length(intersect(names(lyr$ggchord_input_mapping),
-                             lyr$ggchord_role_aes)) > 0)) {
+        if (!isTRUE(gene_geometry_layer_requested)) {
           gene_data_override <- label_data
         }
       },
       gene_label_repel  = {
         gene_repel_params <- pp
         gene_repel_layer <- TRUE
-        label_data <- ggchord_resolve_layer_input(lyr, data_list$gene_data)
+        label_data <- ggchord_resolve_layer_input(lyr, ggchord_annotation_fallback(data_list))
         gene_repel_params$label_text <- label_data$anno
-        if (!isTRUE(gene_geometry_layer_requested) &&
-            (!is.null(lyr$ggchord_input_data) ||
-            length(intersect(names(lyr$ggchord_input_mapping),
-                             lyr$ggchord_role_aes)) > 0)) {
+        if (!isTRUE(gene_geometry_layer_requested)) {
           gene_data_override <- label_data
         }
       },
@@ -413,7 +407,12 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   gene_w    <- gene_params$gene_width %||% 0.05
   gene_cs   <- gene_params$gene_color_scheme %||% "strand"
   gene_cols <- gene_params$gene_colors
-  ggchord_check_interval_unit(gene_data_override %||% data_list$gene_data, sequence_unit, "Feature layer")
+  if (isTRUE(gene_params$is_feature) && is.null(gene_cols) &&
+      is.null(gene_params$feature_fill_mapping)) {
+    gene_cols <- ggchord_feature_source_palette(
+      gene_data_override %||% ggchord_annotation_fallback(data_list))
+  }
+  ggchord_check_interval_unit(gene_data_override %||% ggchord_annotation_fallback(data_list), sequence_unit, "Feature layer")
   gene_ord  <- gene_params$gene_order
   # Gene label settings come from the dedicated geom_gene_label() layer, with
   # the legacy geom_gene() arguments as fallback.
@@ -521,7 +520,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   # exactly the same category-to-shape mapping.
   gene_data_layout <- if (gene_geometry_layer_requested || gene_label_layer ||
       gene_repel_layer) {
-    gene_data_override %||% data_list$gene_data
+    gene_data_override %||% ggchord_annotation_fallback(data_list)
   } else {
     NULL
   }
@@ -1150,7 +1149,7 @@ compute_chord_geometry <- function(plot) {
         if (length(label_rows)) {
           label_layer <- plot$layers[[label_rows[length(label_rows)]]]
           label_input <- ggchord_resolve_layer_input(
-            label_layer, chord$data$gene_data
+            label_layer, ggchord_annotation_fallback(chord$data)
           )
           for (gene_row in gene_geometry_dep) {
             if (isTRUE(primary$collinear) && isTRUE(
@@ -1162,7 +1161,7 @@ compute_chord_geometry <- function(plot) {
                   isTRUE(label_layer$ggchord_params$is_feature_label)) next
             } else if (!isTRUE(feature_layer$ggchord_params$is_feature)) next
             feature_input <- ggchord_resolve_layer_input(
-              feature_layer, chord$data$gene_data
+              feature_layer, ggchord_annotation_fallback(chord$data)
             )
             compare <- intersect(
               if (isTRUE(primary$collinear)) c("accver", "start", "end", "strand") else
@@ -1287,11 +1286,11 @@ compute_chord_geometry <- function(plot) {
         seq_break = chord$data$seq_data,
         seq_scale = chord$data$seq_data,
         ribbon = chord$data$ribbon_data,
-        gene_poly = chord$data$gene_data,
-        gene_text = chord$data$gene_data,
-        gene_text_repel = chord$data$gene_data,
-        gene_label_segment = chord$data$gene_data,
-        gene_label_repel = chord$data$gene_data,
+        gene_poly = ggchord_annotation_fallback(chord$data),
+        gene_text = ggchord_annotation_fallback(chord$data),
+        gene_text_repel = ggchord_annotation_fallback(chord$data),
+        gene_label_segment = ggchord_annotation_fallback(chord$data),
+        gene_label_repel = ggchord_annotation_fallback(chord$data),
         seq_region = lyr$ggchord_params$regions,
         restriction_site = lyr$ggchord_input_data,
         seq_center_label = chord$data$seq_data,

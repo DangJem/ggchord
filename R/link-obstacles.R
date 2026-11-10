@@ -47,7 +47,7 @@ ggchord_collect_obstacles <- function(plot, cache) {
     sub$layers <- plot$layers[sort(unique(c(seq_layers, i)))]
     sub$ggchord$obstacles <- ggchord_empty_obstacles()
     layout <- compute_chord_geometry_single(sub, cache)
-    input <- ggchord_resolve_layer_input(layer, plot$ggchord$data$gene_data)
+    input <- ggchord_resolve_layer_input(layer, ggchord_annotation_fallback(plot$ggchord$data))
     out <- layer$ggchord_obstacle_provider(layer, layout, input)
     ggchord_require_columns(out, names(ggchord_empty_obstacles()), "obstacle provider")
     numeric <- c("start", "end", "normal_min", "normal_max", "priority")

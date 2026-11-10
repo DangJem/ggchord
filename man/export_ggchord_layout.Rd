@@ -61,6 +61,10 @@ Explicit label shrinking adds \code{label_fit_diagnostics}, preserving original
 text, requested/minimum/final sizes and fallback or hiding reasons.
 \code{render_context} distinguishes layout-only estimates from actual panel
 measurements. For a target-size measured report use \code{\link[=diagnose_ggchord]{diagnose_ggchord()}}.
+\code{source_registry} and \code{layer_sources} retain constructor and per-layer
+annotation identities without overwriting user columns. Explicit layer
+tables/functions have layer-local source scope. \code{annotation_duplicates}
+reports shared constructor rows drawn by multiple geometry layers.
 }
 \description{
 Builds a ggchord plot and returns selected computed geometry in a stable,

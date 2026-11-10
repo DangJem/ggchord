@@ -2,6 +2,40 @@
 
 # Migrate to the ggchord candidate API
 
+## Unified annotations in 0.17.0
+
+Prefer `ggchord(seq_data = seqs, feature_data = annotations)` for genes and
+other features. `geom_feature()` inherits the full table. Without explicit
+layer data, gene layers select `gene`/`CDS` from `feature_class`, `type`, or
+`role`, in that order; tRNA/rRNA use generic feature layers. Missing strand is
+unknown, and generic layers also accept bidirectional annotations.
+
+`gene_data` remains accepted, including the third positional argument. It emits
+one message when constructing a plot, with no repeated rendering messages and
+no scheduled removal. Untyped legacy tables retain their gene semantics. To
+migrate an untyped directional gene table, add `type = "gene"` before passing
+it as `feature_data`, or supply it explicitly to `geom_gene(data = genes)`.
+Do not pass both constructor inputs. Layer data overrides the global table;
+combine disjoint gene/feature subsets rather than drawing the full table twice.
+
+```r
+library(ggchord)
+library(dplyr)
+data(seq_data_example)
+data(gene_data_example)
+annotations <- gene_data_example |>
+  transmute(accver, start, end, strand = source_strand, type = "CDS")
+p <- ggchord(seq_data_example, feature_data = annotations) +
+  geom_seq() +
+  geom_gene()
+```
+
+`export_ggchord_layout()` exposes annotation identities in `layer_sources`;
+the old geometry `source_row` still refers to the resolved layer input.
+Constructor rows share source IDs across default annotation layers. Explicit
+layer tables and functions have layer-local scope, without content-based
+inference or removal of identical source observations.
+
 ## Cross-row ribbon outlines in 0.16.7
 
 `geom_link_ribbon()` uses `nonadjacent_linewidth = 0.4` for non-adjacent

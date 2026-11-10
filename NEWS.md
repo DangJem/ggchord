@@ -1,3 +1,24 @@
+# ggchord 0.17.0 (development)
+
+* Added `ggchord(feature_data = ...)` as the unified annotation input and
+  matching validation support. Generic feature layers inherit all annotations;
+  gene layers select explicitly classified gene/CDS records. Unknown and
+  bidirectional strands remain available to generic layers. Explicit layer
+  data takes priority; use disjoint subsets when combining gene and feature
+  layers.
+* Retained `gene_data`, including its third positional argument and untyped
+  directional tables, with one migration message at construction. Rendering
+  does not repeat this message. No removal version is scheduled. Providing both
+  non-NULL annotation inputs is an error.
+* Layout exports now include constructor `source_registry`, annotation
+  `layer_sources`, and `annotation_duplicates` sidecars. Existing geometry
+  `source_row` retains its layer-input meaning. Explicit layer data/functions
+  have layer-local identity; source equality is not guessed from values.
+* Inherited catalogue features retain their supplied annotation colours, just
+  like explicit feature-layer data. User mappings and scales remain authoritative.
+* Fixed user metadata named `source_row` overwriting computed geometry identity.
+  The original metadata remains available in exported resolved inputs.
+
 # ggchord 0.16.7 (development)
 
 * Completed the bilingual tutorial audit with focused circular backbone, label,

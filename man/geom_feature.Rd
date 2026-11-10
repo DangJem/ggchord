@@ -36,7 +36,9 @@ their internal level codes. Coordinates must resolve to finite numbers.
 \code{display_priority} or logical \code{prioritized_display}. As an alternative to
 \code{strand}, \code{directionality} or \code{direction} may contain
 \code{"forward"}, \code{"reverse"}, \code{"bidirectional"}, or
-\code{"none"}.}
+\code{"none"}.
+When omitted, uses the full constructor \code{feature_data} (or compatible
+\code{gene_data}). Other layers never remove records from this default input.}
 
 \item{shape}{Fixed feature geometry. An explicitly supplied shape takes
 precedence over \code{aes(feature_shape = ...)}: \code{"arrow"},

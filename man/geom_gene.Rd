@@ -21,7 +21,9 @@ geom_gene(
 \arguments{
 \item{mapping}{Default NULL (uses pre-computed data)}
 
-\item{data}{Default NULL (retrieved automatically from the layout)}
+\item{data}{Optional layer table or function, overriding constructor data.
+With unified \code{feature_data}, the default selects explicitly classified
+gene/CDS records; see \code{\link[=ggchord]{ggchord()}}. Legacy \code{gene_data} retains all rows.}
 
 \item{width}{Optional numeric/vector/list. Width of gene arrows, default 0.05}
 

@@ -48,9 +48,18 @@ globalVariables(c(
 #'   qend, sstart and send. length and pident are optional unless requested
 #'   by a mapping, filter or statistic. A `GInteractions` object uses
 #'   [as_ggchord_link()] without inventing identity or alignment length.
-#' @param gene_data Optional table with accver, start, end and strand.
-#'   Annotation (anno) may be omitted. Directional `GRanges` are accepted;
-#'   use `geom_feature(data = ...)` for unknown-strand intervals.
+#' @param gene_data Compatible legacy annotation input. The third positional
+#'   argument retains its meaning. Use `feature_data` in new code; a non-NULL
+#'   legacy input emits one message at construction, never during rendering.
+#'   Untyped legacy tables retain their directional gene semantics. No removal
+#'   version is scheduled. Do not supply both annotation inputs.
+#' @param feature_data Optional unified annotation table or `GRanges`. Requires
+#'   `accver`, `start`, `end`; absent strand becomes unknown (`"."`). Generic
+#'   feature layers use the full table. Default gene layers select `gene`/`CDS`
+#'   from `feature_class`, `type`, or `role` (in that priority order), and require
+#'   known strands. tRNA/rRNA remain generic features. Explicit layer `data`
+#'   overrides the constructor input. Use disjoint subsets when combining
+#'   gene and feature layers; each layer keeps its own data independently.
 #' @param debug Logical. Whether to output debug information, default FALSE
 #' @param validate Character, default \code{"warn"}. How to run the structured
 #'   input-data validation (see \code{\link{validate_ggchord_data}}):
@@ -79,11 +88,11 @@ globalVariables(c(
 #' links <- ribbon_data_example |>
 #'   select(qaccver, saccver, qstart, qend, sstart, send)
 #' genes <- gene_data_example |>
-#'   transmute(accver, start, end, strand = source_strand)
+#'   transmute(accver, start, end, strand = source_strand, type = "CDS")
 #' p <- ggchord(
 #'   seq_data = seqs,
 #'   ribbon_data = links,
-#'   gene_data = genes
+#'   feature_data = genes
 #' ) +
 #'   geom_seq() +
 #'   geom_link_ribbon() +
@@ -96,8 +105,11 @@ ggchord <- function(
     gene_data = NULL,
     debug = FALSE,
     validate = c("warn", "error", "none"),
+    feature_data = NULL,
     ...
 ) {
+  if (!is.null(gene_data) && !is.null(feature_data)) ggchord_stop(
+    "ggchord(): use only one of gene_data and feature_data; merge annotations explicitly or supply layer data")
   if (inherits(seq_data, "GRanges") || inherits(seq_data, "Seqinfo") ||
       inherits(seq_data, "GInteractions") || inherits(seq_data, "XStringSet") ||
       inherits(seq_data, "XString")) seq_data <- as_ggchord_seq(seq_data)
@@ -110,9 +122,11 @@ ggchord <- function(
   }
   seq_data <- ggchord_normalize_accver(seq_data)
   gene_data <- ggchord_normalize_accver(gene_data)
+  feature_data <- ggchord_normalize_feature_input(feature_data)
   sequence_unit <- ggchord_sequence_unit(seq_data, "ggchord()")
   ggchord_check_interval_unit(ribbon_data, sequence_unit, "ggchord()")
   ggchord_check_interval_unit(gene_data, sequence_unit, "ggchord()")
+  ggchord_check_interval_unit(feature_data, sequence_unit, "ggchord()")
   if (identical(sequence_unit, "aa") && !is.null(gene_data)) ggchord_stop(
     "ggchord(): gene_data requires bp coordinates; use geom_feature() for protein domains")
 
@@ -145,7 +159,7 @@ ggchord <- function(
     seq_data, ribbon_data, gene_data, strict = FALSE,
     check_coordinates = validate != "none",
     check_duplicates = validate != "none",
-    check_self_links = validate != "none"
+    check_self_links = validate != "none", feature_data = feature_data
   )
   structural_errors <- ggchord_structural_validation_errors(validation_result)
   if (nrow(structural_errors) > 0) {
@@ -194,7 +208,9 @@ ggchord <- function(
 
   p$ggchord <- list(
     data   = list(seq_data = seq_data, ribbon_data = ribbon_data,
-                  gene_data = gene_data),
+                  gene_data = gene_data, feature_data = feature_data),
+    sources = list(sequence = seq_data, relationship = ribbon_data,
+      gene = gene_data, feature = feature_data),
     global = list(rotation = 0, debug = debug, validate = validate),
     validation = validation,
     # Shared reference environment for plot-owned layout caching.
@@ -202,6 +218,9 @@ ggchord <- function(
     layout = NULL
   )
   class(p) <- c("ggchord", class(p))
+  if (!is.null(gene_data)) message(
+    "ggchord(): gene_data is retained for compatibility; use feature_data in new code. ",
+    "For untyped legacy tables, add type = 'gene' or supply explicit geom_gene(data = ...).")
   p
 }
 # ====================================================================

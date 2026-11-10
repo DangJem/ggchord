@@ -29,6 +29,15 @@
 #' coord transform. Native data units are not millimetres or genomic bp.
 #'
 #' @section Coordinate-specific tables:
+#' `source_registry` identifies constructor source rows without adding reserved
+#' columns to user data. `layer_sources` maps annotation `input_row` to its
+#' source ID, table and row; geometry `source_row` still indexes the resolved
+#' layer input. Default annotation layers share constructor source IDs. Explicit
+#' layer tables and data functions have layer-local scope; content equality is
+#' not used to guess shared identity. IDs are local to the plot, not persistent
+#' file identifiers. `annotation_duplicates` reports constructor annotations
+#' rendered by more than one geometry layer; labels do not count as duplicates.
+#'
 #' Circular `annotation_registry` retains its documented identity, owner,
 #' component/source row, inner track/radius/width/boundaries, outer region,
 #' sector, band, dominant band, slot, spill reason, crossing count, bounding box

@@ -58,6 +58,10 @@
 #'   text, requested/minimum/final sizes and fallback or hiding reasons.
 #'   `render_context` distinguishes layout-only estimates from actual panel
 #'   measurements. For a target-size measured report use [diagnose_ggchord()].
+#'   `source_registry` and `layer_sources` retain constructor and per-layer
+#'   annotation identities without overwriting user columns. Explicit layer
+#'   tables/functions have layer-local source scope. `annotation_duplicates`
+#'   reports shared constructor rows drawn by multiple geometry layers.
 #' @md
 #' @export
 #'
@@ -203,7 +207,9 @@ export_ggchord_layout <- function(
     exported$axis <- ggchord_rbind_fill(list(exported$axis, d))
   }
   exported$track_registry <- layout$track_registry %||% data.frame()
-  exported$track_diagnostics <- layout$track_diagnostics %||% data.frame()
+  exported$source_registry <- ggchord_source_registry(plot$ggchord$sources %||% list())
+  exported$layer_sources <- ggchord_annotation_source_maps(layout)
+  exported$annotation_duplicates <- ggchord_annotation_duplicate_sources(exported$layer_sources)
   exported$axis_selection <- layout$axis_selection %||% data.frame()
   exported$render_context <- layout$render_context %||% ggchord_estimated_render_context(layout)
   fits <- lapply(names(layout$layer_layouts), function(id) {

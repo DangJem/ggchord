@@ -1,0 +1,19 @@
+{
+  "version": "0.17.0.9000",
+  "scope": "targeted feature-input checks; no package release checks",
+  "results": {
+    "mixed_disjoint_layers": "passed",
+    "full_feature_and_labels": "passed",
+    "default_gene_and_duplicate_diagnostic": "passed",
+    "gene_labels_default_selection": "passed",
+    "legacy_position_and_message": "passed",
+    "input_errors_and_validation": "passed",
+    "unclassified_features_and_missing_strand": "passed",
+    "aa_generic_features": "passed",
+    "source_duplicates_are_not_deduplicated": "passed",
+    "empty_gene_subset": "passed",
+    "source_metadata_cannot_overwrite_geometry_identity": "passed",
+    "source_backed_palette_inheritance": "passed",
+    "granges_unknown_strand": "passed"
+  }
+}

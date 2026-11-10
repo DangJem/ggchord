@@ -267,6 +267,10 @@ diagnose_ggchord <- function(plot, width = 7, height = 5,
     }
   }
   guides <- ggchord_diagnostic_guides(table, canvas)
+  layer_sources <- ggchord_annotation_source_maps(layout)
+  annotation_duplicates <- ggchord_annotation_duplicate_sources(layer_sources)
+  if (nrow(annotation_duplicates)) add("duplicate_annotation_display", "suggestion",
+    "Constructor annotations appear in multiple geometry layers; use disjoint layer data if duplication is unintended")
   if (any(guides$exceeds_canvas %in% TRUE)) add("guide_size", "warning",
     "At least one guide is wider or taller than the target canvas")
   colours <- ggchord_diagnostic_colours(built, colour_vision)
@@ -284,6 +288,7 @@ diagnose_ggchord <- function(plot, width = 7, height = 5,
     text = if (length(text)) do.call(rbind, text) else data.frame(), guides = guides,
     colour_suggestions = colours, label_diagnostics = layout$collinear_label_diagnostics %||% data.frame(),
     annotation_registry = layout$circular_annotation_registry %||% data.frame(),
+    layer_sources = layer_sources, annotation_duplicates = annotation_duplicates,
     track_registry = layout$track_registry %||% data.frame(),
     track_diagnostics = layout$track_diagnostics %||% data.frame(),
     warnings = unique(warnings)), class = "ggchord_diagnostics")

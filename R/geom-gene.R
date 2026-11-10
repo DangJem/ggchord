@@ -24,7 +24,9 @@ gene_geom <- ggplot2::ggproto(
 #' separate internal aesthetic used by the ribbon layer.
 #'
 #' @param mapping Default NULL (uses pre-computed data)
-#' @param data Default NULL (retrieved automatically from the layout)
+#' @param data Optional layer table or function, overriding constructor data.
+#'   With unified `feature_data`, the default selects explicitly classified
+#'   gene/CDS records; see [ggchord()]. Legacy `gene_data` retains all rows.
 #' @param width Optional numeric/vector/list. Width of gene arrows, default 0.05
 #' @param arrow_head_length,arrow_head_width Shared arrow-head dimensions in
 #'   the sequence-local frame.
@@ -133,7 +135,8 @@ geom_gene <- function(mapping = NULL, data = NULL,
 #' \code{\link{geom_gene_label_repel}()} instead.
 #'
 #' @param mapping Default NULL (uses pre-computed data)
-#' @param data Default NULL (retrieved automatically from the layout)
+#' @param data Optional layer table or function. Default data follows the
+#'   gene/CDS selection described in [ggchord()].
 #' @param label_orientation Character, default \code{"horizontal"}. Text
 #'   orientation relative to each sequence path: \code{"radial"},
 #'   \code{"tangent"}, or \code{"horizontal"}.
@@ -302,7 +305,8 @@ ggchord_label_layer <- function(mapping = NULL, data = NULL,
 #' \code{\link{geom_gene_label}()} for manual rotation and offsets.
 #'
 #' @param mapping Default NULL (uses pre-computed data)
-#' @param data Default NULL (retrieved automatically from the layout)
+#' @param data Optional layer table or function. Default data follows the
+#'   gene/CDS selection described in [ggchord()].
 #' @param label_layout Character, default \code{"radial"}. Label layout:
 #'   \code{"radial"} arranges horizontal external labels along sequence-relative
 #'   contours, with straight normal leaders or a short normal departure followed

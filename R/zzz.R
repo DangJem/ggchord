@@ -242,6 +242,17 @@ ggchord_resolve_layer_input <- function(lyr, fallback = NULL) {
       "or a function returning supported data")
   }
   data <- ggchord_normalize_accver(as.data.frame(data, stringsAsFactors = FALSE))
+  source <- if (is.null(lyr$ggchord_input_data)) attr(fallback, "ggchord_source") else NULL
+  # A data function may subset while retaining arbitrary data-frame attributes.
+  # Only a resolver-owned row map may be used as constructor provenance.
+  attr(data, "ggchord_source") <- NULL
+  if (is.null(lyr$ggchord_input_data) && isTRUE(attr(fallback, "ggchord_annotation_input")) &&
+      type %in% c("gene", "gene_label", "gene_label_repel") &&
+      !isTRUE(lyr$ggchord_params$is_feature) && !isTRUE(lyr$ggchord_params$is_feature_label)) {
+    selected <- ggchord_annotation_gene_rows(data)
+    data <- data[selected, , drop = FALSE]
+    source$rows <- source$rows[selected]
+  }
   mapping <- lyr$ggchord_input_mapping
   roles <- intersect(lyr$ggchord_role_aes %||% character(0), names(mapping))
   for (role in roles) {
@@ -289,8 +300,15 @@ ggchord_resolve_layer_input <- function(lyr, fallback = NULL) {
   }
   transform <- lyr$ggchord_input_transform
   if (!is.null(transform)) data <- transform(data)
-  if (identical(type, "gene") && !isTRUE(lyr$ggchord_params$is_feature) &&
-      any(!data$strand %in% c("+", "-"))) ggchord_stop(
+  if (!is.null(source)) {
+    if (isTRUE(lyr$ggchord_params$is_feature) && "segments" %in% names(data) &&
+        ".biological_source_row" %in% names(data))
+      source$rows <- source$rows[data$.biological_source_row]
+    attr(data, "ggchord_source") <- source
+  }
+  if (type %in% c("gene", "gene_label", "gene_label_repel") &&
+      !isTRUE(lyr$ggchord_params$is_feature) && !isTRUE(lyr$ggchord_params$is_feature_label) &&
+      (is.null(data$strand) || anyNA(data$strand) || any(!data$strand %in% c("+", "-")))) ggchord_stop(
     "geom_gene(): directional genes need '+'/'-' strand; use geom_feature() for nondirectional intervals"
   )
   data
@@ -360,6 +378,7 @@ ggchord_attach_input_columns <- function(geometry, input) {
     return(geometry)
   }
   protected <- c(
+    "source_row",
     "x", "y", "x0", "y0", "x1", "y1", "xend", "yend", "group",
     "text_x", "text_y", "text", "label_x", "label_y", "label",
     "text_angle", "label_angle", "hjust", "vjust", "size", "alpha",
