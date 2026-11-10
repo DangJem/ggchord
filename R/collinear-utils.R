@@ -143,12 +143,27 @@ map_ggchord_position <- function(plot, accver, position, inverse = FALSE, source
   layout <- get_chord_layout(plot, build = TRUE)
   ref <- layout$sequence_reference
   ids <- rep_len(as.character(accver), length(position))
+  if (!is.null(layout$display_instances)) {
+    instances <- layout$display_instances
+    ids <- vapply(ids, function(id) {
+      if (id %in% instances$instance_id) return(instances$key[match(id, instances$instance_id)])
+      at <- which(instances$accver == id)
+      if (length(at) != 1L) ggchord_stop("Sequence '", id, "' has absent or ambiguous display instances; choose an instance ID")
+      instances$key[at]
+    }, character(1))
+  }
   if (anyNA(ids) || any(!ids %in% layout$seqs)) ggchord_stop(
     "map_ggchord_position(): unknown displayed accession")
   origin <- layout$sequence_layout$source_origin[match(ids, layout$sequence_layout$accver)]
   if (!length(origin)) origin <- rep(1, length(ids))
+  sankey <- isTRUE(layout$sankey_projected)
+  display_position <- position
+  if (sankey && inverse) {
+    frame <- layout$sankey_frames[match(ids, layout$sankey_frames$key), ]
+    position <- frame$axis_min + frame$top - position
+  }
   if (inverse) {
-    local <- (position - unname(ref$x_offset[ids])) / ref$x_scale
+    local <- (position - unname(ref$x_offset[ids])) / ggchord_collinear_scale(ids, ref)
     local <- ifelse(ref$orientation[ids] == 1, local, ref$lens[ids] - local)
     bp <- local + if (source) origin - 1 else 0
     x <- position
@@ -160,7 +175,14 @@ map_ggchord_position <- function(plot, accver, position, inverse = FALSE, source
   if ("row_id" %in% names(layout$sequence_layout) &&
       any(local < 1 - 1e-7 | local > unname(ref$lens[ids]) + 1e-7)) ggchord_stop(
     "map_ggchord_position(): position lies outside the specified window or in an omitted display gap")
-  data.frame(accver = ids, position = unname(bp), x = unname(x),
-    y = unname(ref$y[ids]), sequence_unit = layout$sequence_unit %||% "bp",
+  vertical <- identical(layout$seq_axis, "vertical")
+  out <- data.frame(accver = ids, position = unname(bp), x = if (vertical) -unname(ref$y[ids]) else unname(x),
+    y = if (vertical) unname(x) else unname(ref$y[ids]), sequence_unit = layout$sequence_unit %||% "bp",
     stringsAsFactors = FALSE)
+  if (sankey) {
+    frame <- layout$sankey_frames[match(ids, layout$sankey_frames$key), ]
+    out$x <- frame$column_x
+    out$y <- frame$top - (x - frame$axis_min)
+  }
+  ggchord_restore_instance_data(out, layout$display_instances)
 }

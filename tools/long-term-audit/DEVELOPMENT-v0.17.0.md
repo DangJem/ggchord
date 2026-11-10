@@ -82,3 +82,28 @@ Sankey、equal/端点轴、Ribbon 渐变/箭头、通用自适应或标签算法
 指纹需在后续文档工作包同步，不把旧生成物称为新版本已验证输出。
 
 发布状态：仅本地版本分支开发；未整合 main、推送、部署、打 tag/Release 或提交 CRAN。
+
+## Foundation 运行时推进（2026-11-10，持续开发中）
+
+已落实通用 `geom_track()` 的14种几何、源空间 identity/count/bin/summary 与原生数据
+Position；Stat 在实例复制前执行。数值 bar 已迁移 col，旧物理 Position 写法兼容。
+带出原始成员与统计结果。Feature 的 prepare/clean/focus/segment 统一入口已贯通。
+
+已落实命名/重复显示实例、实体继承与实例覆盖、between 名称/序号、歧义拒绝、声明 HSP
+身份的重复显示检查、路由/省略报告；不按相同值猜观测身份。同一 A–B–A 对象可切换
+Chord/横纵 Collinear。新增镜像 Sankey，自身过滤与互反输入区分，坐标反查已贯通；
+首批不支持共享分支，显式请求会报错。equal 为主动显示投影，导出源长与投影系数，
+禁止误导性共享绝对比例尺。默认1/末位、中间物理空间选择和闭圆接缝合并已接入。
+
+Ribbon 默认沿曲线参数由 query 色变为 subject 色，subject 端装饰收尖；固定 fill、映射
+与用户 scale 优先，tip=none 保留全端面。显式 pident 使用固定域和五段数值比例 guide。
+自动离散 Guide 测量文本选择列数，并沿用联合 panel/gtable 测量；显式主题/guide 优先。
+
+直接验证：`validate-track-grammar.R`、`validate-foundation-views.R` 与首批 Feature
+脚本通过。不运行 testthat。新增最小公开行为案例保留待正式发布授权后的包级执行。
+
+标签专项仍在本轮持续修正：已移除30标签/混合primer的隐式切换，短特征局部失败交给
+外围队列，长同位酶名按真实字体换行，按实际空间平衡接缝附近负载。首轮发现小画布
+物理迭代未收敛，旧“估计框零碰撞”不足以证明最终文字不重叠；正在用最终设备度量
+复核。139条真实酶切来源合并为同位标签，应报告 shared-label 成员，不误作隐藏。
+双语教学、参考翻译和网站仍在同步，当前不宣称整版已完成或已发布。

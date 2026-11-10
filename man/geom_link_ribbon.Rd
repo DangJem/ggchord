@@ -23,6 +23,9 @@ geom_link_ribbon(
   show.legend = TRUE,
   inherit.aes = FALSE,
   nonadjacent_linewidth = 0.4,
+  between = NULL,
+  allow_repeated = FALSE,
+  tip = c("subject", "none"),
   ...
 )
 }
@@ -56,8 +59,7 @@ avoidance uses one clearance across an endpoint.}
 
 \item{link_branch_fraction}{Shared length relative to the shortest member, in (0, 0.5].}
 
-\item{fill}{Optional fixed ribbon fill. \code{NULL} keeps the default Identity
-mapping.}
+\item{fill}{Optional fixed ribbon fill. NULL permits the automatic endpoint gradient.}
 
 \item{alpha, colour, linewidth}{Standard fixed ribbon styles. Explicit values
 take precedence over matching mappings; omitted defaults do not suppress
@@ -91,15 +93,21 @@ outlines by default. Zero uses the layer's ordinary \code{linewidth} for every
 ribbon. This changes width independently of line type. An explicit
 \code{aes(linewidth = ...)} controls widths instead of this fixed default.}
 
+\item{between}{Two display-instance names or declared-order indices for a unique route.}
+
+\item{allow_repeated}{Explicitly allow a declared source_hsp_id in more than one displayed relation.}
+
+\item{tip}{Subject-directed decorative taper, or none. Source intervals remain unchanged.}
+
 \item{...}{Additional arguments passed to \code{geom_polygon()}}
 }
 \value{
 A ggplot2 layer.
 }
 \description{
-Draws alignment ribbons. Identity is mapped to \code{ribbon_fill} by default;
-When pident is absent, the default is a fixed grey fill with no Identity
-guide. Alignment length and identity are never inferred from endpoints.
+Draws alignment ribbons with query-to-subject sequence-colour gradients
+by default. Explicit fill, ribbon_fill mappings or ribbon fill scales
+replace the gradient; map ribbon_fill = pident for an Identity guide. Alignment length and identity are never inferred from endpoints.
 Alternative mappings and legends are controlled with \code{aes()}, \verb{scale_*()}
 and \code{guides()}.
 }

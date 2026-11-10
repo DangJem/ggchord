@@ -41,18 +41,23 @@ ggchord_layout_axis_step <- function(
       ref <- seq_refs[[id]]
       r0 <- ref$r0 - axisGap[id]
 
-      majors <- axis_breaks[[id]] %||% breakPointsFunc(lens[id], axisMaj[id])
+      path <- ref$path
+      curve_length <- sum(sqrt(diff(path$x)^2 + diff(path$y)^2))
+      metric <- ggchord_render_context()$units_per_mm
+      available <- if (!is.null(metric) && all(is.finite(metric))) curve_length/max(metric) else NULL
+      majors <- axis_breaks[[id]] %||% breakPointsFunc(lens[id], axisMaj[id], available_mm=available)
       major_labels <- axis_labels[[id]]
-      if (isTRUE(circular) && any(abs(majors) < sqrt(.Machine$double.eps))) {
-        # Zero and sequence length are the same circular seam. Keep only the
-        # zero-side tick even when a default ggplot2 scale supplied both.
-        keep_major <- abs(majors - lens[id]) >= sqrt(.Machine$double.eps)
-        majors <- majors[keep_major]
-        if (!is.null(major_labels)) major_labels <- major_labels[keep_major]
+      if (isTRUE(circular) && abs(abs(ends[id]-starts[id])-2*pi)<1e-7 &&
+          is.null(axis_breaks[[id]]) && lens[id] > 1) {
+        # One seam cue names both actual ends without stacking two labels.
+        major_labels <- as.character(majors)
+        major_labels[majors == 1] <- paste0("1 / ", lens[id])
+        keep <- majors != lens[id]
+        majors <- majors[keep]; major_labels <- major_labels[keep]
       }
       minors <- axis_minor_breaks[[id]]
       if (is.null(minors)) {
-        minors <- unlist(lapply(seq_len(length(majors) - 1), function(i) {
+        minors <- unlist(lapply(seq_len(max(0L, length(majors) - 1L)), function(i) {
           seq(majors[i], majors[i + 1], length.out = axisMin[id] + 2)[-c(1, axisMin[id] + 2)]
         }))
       }

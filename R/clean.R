@@ -62,6 +62,7 @@
 #'   \code{reason}, \code{original_value}, \code{new_value} and
 #'   \code{action}).
 #' @seealso \code{\link{ggchord_data_contract}}
+#' @param feature_data Unified annotation input; mutually exclusive with gene_data.
 #' @export
 #'
 #' @examples
@@ -87,7 +88,20 @@ clean_ggchord_data <- function(
     reversed_interval = c("sort", "drop", "error", "keep"),
     invalid_pident = c("clip", "drop", "error", "keep"),
     empty_annotation = c("keep", "drop", "replace"),
-    replacement_annotation = "unannotated") {
+    replacement_annotation = "unannotated", feature_data = NULL) {
+  if (!is.null(feature_data)) {
+    if (!is.null(gene_data)) ggchord_stop("Supply only feature_data or gene_data")
+    features <- ggchord_normalize_feature_input(feature_data)
+    attr(features, "ggchord_unified_feature") <- TRUE
+    result <- clean_ggchord_data(seq_data, ribbon_data, features, unknown_id, out_of_range, reversed_interval, invalid_pident, empty_annotation, replacement_annotation)
+    result$feature_data <- result$gene_data
+    result$gene_data <- NULL
+    if (is.data.frame(result$report) && "component" %in% names(result$report))
+      result$report$component[result$report$component == "gene"] <- "feature"
+    return(result)
+  }
+
+  unified_feature <- isTRUE(attr(gene_data, "ggchord_unified_feature"))
   seq_data <- ggchord_normalize_accver(seq_data)
   gene_data <- ggchord_normalize_accver(gene_data)
 
@@ -376,7 +390,7 @@ clean_ggchord_data <- function(
       ggchord_stop("clean_ggchord_data(): gene_data$start and $end must contain finite numbers",
            call. = FALSE)
     }
-    if (anyNA(gene_out$strand) || any(!gene_out$strand %in% c("+", "-"))) {
+    if (anyNA(gene_out$strand) || any(!gene_out$strand %in% if (unified_feature) c("+", "-", ".", "+/-") else c("+", "-"))) {
       ggchord_stop("clean_ggchord_data(): gene_data$strand can only be '+' or '-'",
            call. = FALSE)
     }

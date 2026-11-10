@@ -11,7 +11,8 @@ segment_ggchord_data(
   windows,
   point_data = NULL,
   cross_gap = c("split", "drop"),
-  max_links = 10000
+  max_links = 10000,
+  feature_data = NULL
 )
 }
 \arguments{
@@ -31,6 +32,8 @@ defaults to 1). Bounds must be ordered, integral and within the sequence.}
 
 \item{max_links}{Positive integer upper bound on candidate ribbon/point
 copies. Increase explicitly for larger, intentionally overlapping views.}
+
+\item{feature_data}{Unified annotation input; mutually exclusive with gene_data.}
 }
 \value{
 A list containing focused \code{seq_data}, \code{ribbon_data}, \code{gene_data},

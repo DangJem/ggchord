@@ -207,6 +207,9 @@ export_ggchord_layout <- function(
     exported$axis <- ggchord_rbind_fill(list(exported$axis, d))
   }
   exported$track_registry <- layout$track_registry %||% data.frame()
+  exported$track_diagnostics <- layout$track_diagnostics %||% data.frame()
+  exported$track_statistics <- layout$track_statistics %||% list()
+  if (isTRUE(original_data)) exported$track_source_data <- layout$track_source_data %||% list()
   exported$source_registry <- ggchord_source_registry(plot$ggchord$sources %||% list())
   exported$layer_sources <- ggchord_annotation_source_maps(layout)
   exported$annotation_duplicates <- ggchord_annotation_duplicate_sources(exported$layer_sources)
@@ -237,6 +240,7 @@ export_ggchord_layout <- function(
     d
   })
   exported$label_fit_diagnostics <- ggchord_rbind_fill(fits) %||% data.frame()
+  exported$label_visibility <- ggchord_label_visibility(layout)
 
   coord <- plot$coordinates
   exported$connection_report <- layout$connection_report %||% data.frame()
@@ -247,6 +251,7 @@ export_ggchord_layout <- function(
     coordinate_space = "ggchord_layout",
     units = "data",
     sequence_unit = layout$sequence_unit %||% "bp",
+    length_mode = layout$length_mode %||% "proportional",
     rotation = layout$rotation %||%
       if (isTRUE(coord$ggchord_coord)) coord$rotation else 0,
     rotation_applied = TRUE,
@@ -266,8 +271,12 @@ export_ggchord_layout <- function(
       ggchord_empty_circular_annotation_registry()
   } else if (isTRUE(coord$ggchord_collinear)) {
     metadata$coordinate <- "collinear"
+    if (isTRUE(coord$ggchord_sankey)) metadata$coordinate <- "sankey"
     metadata$genomic_scale <- "linear"
     metadata$normal_direction <- "positive_up"
+    metadata$seq_axis <- layout$seq_axis %||% "horizontal"
+    if (identical(metadata$seq_axis, "vertical")) metadata$normal_direction <- "positive_left"
+    if (isTRUE(coord$ggchord_sankey)) metadata$normal_direction <- "positive_outward"
     exported$sequence_layout <- layout$sequence_layout
     if (identical(layout$sequence_unit, "aa")) {
       exported$sequence_layout$units_per_bp <- NA_real_
@@ -282,6 +291,16 @@ export_ggchord_layout <- function(
   }
 
   exported$metadata <- metadata
+  ref <- layout$sequence_reference
+  display <- if (isTRUE(layout$collinear)) {
+    if (identical(layout$seq_axis, "vertical")) layout$sequence_layout$axis_max - layout$sequence_layout$axis_min else
+      layout$sequence_layout$xmax - layout$sequence_layout$xmin
+  } else abs(ref$ends[layout$seqs] - ref$starts[layout$seqs])
+  exported$sequence_display <- data.frame(accver = layout$seqs,
+    source_length = unname(ref$lens[layout$seqs]), display_length = unname(display),
+    display_scale_factor = unname(display / ref$lens[layout$seqs]),
+    length_mode = metadata$length_mode, sequence_unit = metadata$sequence_unit,
+    display_unit = if (isTRUE(layout$collinear)) "layout" else "radian")
   conversions <- lapply(plot$ggchord$data, attr, which = "ggchord_conversion")
   conversions <- Filter(Negate(is.null), conversions)
   for (id in names(layout$layer_inputs)) {
@@ -291,6 +310,20 @@ export_ggchord_layout <- function(
   }
   if (length(conversions)) exported$conversion_reports <- conversions
   if (isTRUE(original_data)) exported$original_data <- kept_inputs
+  if (!is.null(layout$display_instances)) {
+    instances <- layout$display_instances
+    exported$display_instances <- instances[, intersect(c("instance_id", "accver", "declared_order", "side"), names(instances))]
+    exported$instance_routing <- layout$instance_routing %||% data.frame()
+    exported$instance_omissions <- layout$instance_omissions %||% data.frame()
+    for (field in intersect(names(exported), c(include, "sequence_display", "sequence_layout",
+        "track_registry", "track_diagnostics", "axis_selection", "connection_report", "label_diagnostics")))
+      exported[[field]] <- ggchord_restore_instance_data(exported[[field]], instances)
+    for (field in intersect(names(exported), c("original_data", "track_statistics")))
+      exported[[field]] <- lapply(exported[[field]], function(x) {
+        if (is.data.frame(x)) ggchord_restore_instance_data(x, instances) else
+          lapply(x, ggchord_restore_instance_data, instances = instances)
+      })
+  }
   class(exported) <- c("ggchord_layout_export", "list")
   exported
 }

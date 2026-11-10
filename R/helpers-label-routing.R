@@ -538,6 +538,18 @@ ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
         }
       }
     }
+    if (is.null(chosen) && concentric_circle && isTRUE(allow_external)) {
+      # The shared perimeter owns outer-space feasibility. A failed local
+      # corridor must become a candidate, not disappear before coordination.
+      chosen <- gl[i, , drop=FALSE]
+      chosen$text_x <- frame$curve_x[i] + outward[1] * .15
+      chosen$text_y <- frame$curve_y[i] + outward[2] * .15
+      chosen$text_angle <- 0; chosen$hjust <- .5; chosen$vjust <- .5
+      chosen_box <- ggchord_text_boxes(chosen,units_per_inch=units_per_inch,box_padding=.04)
+      chosen_leader <- ggchord_inner_label_leader(chosen,chosen_box,units_per_inch,
+        exterior_radius=sequence_radius+.055)
+      chosen_track <- -1L
+    }
     if (is.null(chosen)) {
       chosen <- gl[i, , drop = FALSE]
       chosen_box <- ggchord_text_boxes(data.frame())

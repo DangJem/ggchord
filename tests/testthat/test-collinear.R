@@ -91,3 +91,25 @@ test_that("segmented rows retain local reversal and reversible source positions"
     inverse = TRUE, source = TRUE)
   expect_equal(restored$position, c(150, 750, 760))
 })
+
+test_that("display instances route source HSPs in vertical equal Collinear", {
+  h <- smoke_ribbon(); h$source_hsp_id <- paste0("h",seq_len(nrow(h)))
+  p <- ggchord(smoke_sequences(),h,validate="none")+
+    geom_seq(seq_order=c(A_high="A",B="B",A_low="A"),length_mode="equal")+
+    geom_link_ribbon(between=c("A_high","B"))+
+    coord_collinear(seq_axis="vertical")
+  out <- export_ggchord_layout(p,include=c("seq","ribbon"))
+  expect_equal(nrow(out$display_instances),3L)
+  expect_true(all(out$instance_routing$q_instance=="A_high"))
+  mapped <- map_ggchord_position(p,"A_low",100)
+  expect_equal(map_ggchord_position(p,"A_low",mapped$y,inverse=TRUE)$position,100)
+})
+
+test_that("mirrored Sankey retains real interval provenance", {
+  p <- ggchord(smoke_sequences(),smoke_ribbon(),validate="none")+
+    geom_seq()+geom_link_ribbon()+coord_sankey()
+  out <- export_ggchord_layout(p,include="ribbon")
+  expect_identical(out$metadata$coordinate,"sankey")
+  expect_equal(nrow(out$display_instances),4L)
+  expect_setequal(out$instance_routing$qaccver,"A")
+})

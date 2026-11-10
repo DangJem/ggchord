@@ -14,6 +14,8 @@
 #'   Explicit gap takes precedence.
 #' @param link_branch Share equal query or subject endpoints: "none", "query", "subject".
 #' @param link_branch_fraction Shared length relative to the shortest member, in (0, 0.5].
+#' @param between Two display-instance names or declared-order indices.
+#' @param allow_repeated Allow repeated display of an explicitly declared source_hsp_id.
 #' @param arrow A grid arrow specification, or NULL.
 #' @param colour,alpha,linewidth,linetype Fixed styles; mappings use link_* aesthetics.
 #'   An explicitly supplied fixed value takes precedence over the matching
@@ -44,7 +46,10 @@ geom_link_line <- function(mapping = NULL, data = NULL,
     link_avoid = c("none", "smooth", "uniform"),
     link_branch = c("none", "query", "subject"), link_branch_fraction = 0.15,
     arrow = NULL, colour = "#59636D", alpha = 0.6, linewidth = 0.4,
-    linetype = 1, position = "identity", show.legend = NA, inherit.aes = FALSE, ...) {
+    linetype = 1, position = "identity", show.legend = NA, inherit.aes = FALSE,
+    between = NULL, allow_repeated = FALSE, ...) {
+  if (!is.logical(allow_repeated) || length(allow_repeated) != 1L || is.na(allow_repeated))
+    ggchord_stop("allow_repeated must be TRUE or FALSE")
   style_defaults <- c(link_colour = missing(colour), link_alpha = missing(alpha),
     link_linewidth = missing(linewidth), link_linetype = missing(linetype))
   link_type <- match.arg(link_type)
@@ -67,6 +72,7 @@ geom_link_line <- function(mapping = NULL, data = NULL,
     params = c(styles, list(arrow = arrow), alias$dots))
   lyr$ggchord_type <- "link"
   lyr$ggchord_params <- list(type = "link", style_defaults = style_defaults,
+    between = between, allow_repeated = allow_repeated,
     link_type = link_type, link_gap = link_gap,
     link_ctrl_point = link_ctrl_point, link_avoid = link_avoid,
     link_branch = link_branch, link_branch_fraction = link_branch_fraction)

@@ -133,3 +133,40 @@ NULL/NA/missing semantics; NULL does not universally mean disabled.
 ## Default chord rotation in v0.16.7
 
 Chord plots now default to 0 degrees. Use `coord_chord(rotation = 45)` to request the previous 45-degree layout explicitly. Native protein plots declare `sequence_unit = "aa"` and use complete protein lengths.
+
+## Foundation in v0.17.0
+
+`geom_track_bar()` now counts observations at source positions (`stat="count"`).
+For previously supplied heights, replace it with `geom_track_col()`; retain the
+same mapping and `position = position_track("signal")`, or use
+`track = position_track("signal")` with a separate native data `position`.
+`geom_track()` supports point/line/path/step/col/bar/tile/rect/area/ribbon/segment/
+linerange/errorbar/text and identity/count/bin/summary; bin needs explicit
+`binwidth` or `breaks`. Arbitrary Geom/Stat extensions remain outside this version.
+
+Feature workflows accept `feature_data` in prepare/clean/focus/segment; the result
+uses `feature_data`, while old gene calls retain `gene_data`. Never supply both.
+Source rows, unknown strands and metadata remain available.
+
+`geom_seq(seq_order=c(A_high="A", B="B", A_low="A"))` creates display copies.
+Filter real HSP rows on each layer and specify `between=c("A_high","B")` or
+`between=c(2,3)`. A route must be unique. Supply stable `source_hsp_id` values to
+check duplicate display across layers; `allow_repeated=TRUE` explicitly opts in.
+Without that column identity is layer-local, never guessed from equal values.
+The same plot can use Chord or Collinear. Sankey owns query-left/subject-right
+copies; it does not interpret `between` as a multistage flow.
+
+Use `coord_collinear(seq_axis="vertical")` for vertical backbones. Inverse mapping
+uses the final y coordinate. `coord_sankey()` filters entity self links by default
+and retains reciprocal input rows; shared branches are outside its first MVP.
+Use exported `display_instances` to select an unambiguous instance for mapping.
+
+`geom_seq(length_mode="equal")` changes only visual allocation. Source lengths,
+coordinates and local axes remain scientific coordinates; a shared absolute
+scale bar is rejected. Default ticks now label true position 1 and the final
+position. A closed circular seam combines them; explicit breaks take priority.
+
+Ribbons now default to endpoint sequence-colour gradients and a subject taper.
+Use `tip="none"` for untapered fronts. Map `aes(ribbon_fill=pident)` to select the
+Identity mode; it uses the fixed 0–100 domain and proportional intervals
+0/50/80/90/95/100. Fixed fill, user mappings and user scales override the gradient.

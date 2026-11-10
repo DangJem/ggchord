@@ -183,7 +183,11 @@ ggchord_collinear_axis <- function(p, layout) {
       x = ggchord_collinear_x(c(0, ref$lens[id]), id, ref),
       y = rep(y, 2L), accver = id
     )
-    majors <- p$axis_breaks[[id]] %||% breakPointsFunc(ref$lens[id], p$axisMaj[id])
+    metric <- ggchord_render_context()$units_per_mm
+    axis_name <- if (isTRUE(p$collinear_vertical)) "y" else "x"
+    available <- if (!is.null(metric) && is.finite(metric[[axis_name]]))
+      unname(ref$lens[id])*ggchord_collinear_scale(id,ref)/metric[[axis_name]] else NULL
+    majors <- p$axis_breaks[[id]] %||% breakPointsFunc(ref$lens[id], p$axisMaj[id],available_mm=available)
     major_labels <- p$axis_labels[[id]] %||% as.character(majors)
     minors <- p$axis_minor_breaks[[id]]
     if (is.null(minors)) {
@@ -206,6 +210,8 @@ ggchord_collinear_axis <- function(p, layout) {
     angle <- if (is.character(angle)) {
       if (identical(tolower(angle), "perpendicular")) 90 else 0
     } else as.numeric(angle)
+    if (isTRUE(p$collinear_vertical) && (is.numeric(p$axisLabelOrientation[[id]]) ||
+        identical(tolower(p$axisLabelOrientation[[id]]), "horizontal"))) angle <- angle - 90
     label_y <- y + direction * (len + p$labelOffset[id] * units)
     ticks[[id]] <- data.frame(
       x0 = ggchord_collinear_x(pos, id, ref), y0 = y,
@@ -237,11 +243,11 @@ ggchord_collinear_seq_labels <- function(p, layout) {
     text_x = min(ggchord_collinear_x(c(0, ref$lens[id]), id, ref)) - .04,
     text_y = unname(ref$y[id]),
     label = as.character(p$seq_label_text[id]),
-    text_angle = if (identical(p$seq_label_orientation, "horizontal")) 0 else
-      unname(p$seq_label_rotation[id]),
+    text_angle = (if (identical(p$seq_label_orientation, "horizontal")) 0 else
+      unname(p$seq_label_rotation[id])) - if (isTRUE(p$collinear_vertical)) 90 else 0,
     size = unname(p$seq_label_size[id]),
-    hjust = if (is.null(p$seq_label_hjust)) 1 else unname(p$seq_label_hjust[id]),
-    vjust = if (is.null(p$seq_label_vjust)) .5 else unname(p$seq_label_vjust[id]),
+    hjust = if (isTRUE(p$collinear_vertical) && !isTRUE(p$seq_label_hjust_explicit)) .5 else if (is.null(p$seq_label_hjust)) 1 else unname(p$seq_label_hjust[id]),
+    vjust = if (isTRUE(p$collinear_vertical) && !isTRUE(p$seq_label_vjust_explicit)) 1 else if (is.null(p$seq_label_vjust)) .5 else unname(p$seq_label_vjust[id]),
     accver = id, stringsAsFactors = FALSE
   )))
 }
@@ -282,6 +288,8 @@ ggchord_collinear_gene_labels <- function(p, layout) {
     angle <- if (isTRUE(p$gene_label_repel_layer)) 0 else
       (if (identical(p$gene_label_orientation, "radial")) 90 else 0) +
         p$geneLabelRotation[[id]][strand]
+    if (isTRUE(p$collinear_vertical) && (isTRUE(p$gene_label_repel_layer) ||
+        identical(p$gene_label_orientation, "horizontal"))) angle <- angle - 90
     x <- ggchord_collinear_x(pos, id, ref)
     offset <- p$geneLabelRadialOffset[[id]][strand]
     data.frame(text = text, text_x = x,
@@ -308,7 +316,7 @@ ggchord_collinear_gene_labels <- function(p, layout) {
       label_segment_overlap_alpha = p$gene_label_segment_overlap_alpha,
       .feature_mode = feature_mode, .label_side = side,
       .inside_colour = as.character(row$feature_label_colour %||% "#202020"),
-      .feature_span = abs(row$end - row$start) * ref$x_scale,
+      .feature_span = abs(row$end - row$start) * ggchord_collinear_scale(id, ref),
       stringsAsFactors = FALSE)
   })
   labels <- Filter(Negate(is.null), labels)

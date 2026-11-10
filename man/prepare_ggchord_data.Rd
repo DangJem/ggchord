@@ -11,7 +11,8 @@ prepare_ggchord_data(
   features = list(),
   links = list(),
   mapping = list(),
-  steps = list()
+  steps = list(),
+  feature_data = NULL
 )
 }
 \arguments{
@@ -31,6 +32,8 @@ collections. Each column mapping is a named character vector.}
 \item{steps}{Named list of explicit helper argument lists. Supported names:
 \code{clean}, \code{filter}, \code{deduplicate}, \code{merge}, \code{bundle}, \code{optimize}.
 Data arguments are supplied by preparation and cannot be overridden.}
+
+\item{feature_data}{Unified annotation table, mutually exclusive with gene_data.}
 }
 \value{
 A list with \code{seq_data}, \code{ribbon_data}, \code{gene_data}, \code{features},

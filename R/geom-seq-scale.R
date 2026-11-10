@@ -123,6 +123,8 @@ ggchord_seq_scale_geometry <- function(data, params, layout) {
     ": a shared straight bp scale requires coord_collinear(); use local sequence axes for other coordinates")
   if (is.null(data) || !nrow(data)) return(ggchord_empty_seq_scale_geometry())
   ref <- layout$sequence_reference
+  if (identical(layout$length_mode, "equal") && length(layout$seqs) > 1L)
+    ggchord_stop(caller, ": equal sequence lengths have no shared absolute scale; use each sequence's source axis")
   scale <- ref$x_scale
   if (!is.numeric(scale) || length(scale) != 1L || !is.finite(scale) || scale <= 0)
     ggchord_stop(caller, ": the layout does not expose one shared positive bp scale")

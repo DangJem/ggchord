@@ -55,6 +55,9 @@ CoordCollinear <- ggplot2::ggproto("CoordCollinear", CoordGgchord)
 #' adjacency follows display rows; same-row ribbons are omitted with a report,
 #' and explicit same-row pairs or point links are unsupported.
 #'
+#' @param seq_axis `"horizontal"` (default) or `"vertical"`. Vertical mode
+#'   projects sequence-local geometry onto upright columns and lays out text
+#'   in its own readable orientation; it does not change source strands.
 #' @param align Display alignment: `"left"` (default), `"center"`, or
 #'   `"right"`. Applied to the full sequence or the interval supplied by
 #'   `anchor`.
@@ -97,7 +100,9 @@ coord_collinear <- function(
     fit = c("labels", "geometry", "manual"),
     align = c("left", "center", "right"), anchor = NULL,
     orientation = c("manual", "auto"), min_support = 0.1,
-    segments = NULL, segment_gap = 100) {
+    segments = NULL, segment_gap = 100,
+    seq_axis = c("horizontal", "vertical")) {
+  seq_axis <- match.arg(seq_axis)
   fit <- match.arg(fit)
   align <- match.arg(align)
   orientation <- match.arg(orientation)
@@ -130,6 +135,7 @@ coord_collinear <- function(
   coord$collinear_min_support <- as.numeric(min_support)
   coord$collinear_segments <- segments
   coord$collinear_segment_gap <- segment_gap
+  coord$collinear_seq_axis <- seq_axis
   coord
 }
 

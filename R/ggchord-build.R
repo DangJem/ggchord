@@ -288,7 +288,8 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   }
   collinear_transform <- if (collinear) ggchord_collinear_transform(
     seqs, lens, orientation, chord$collinear_evidence %||% ribbon_data %||%
-      data_list$ribbon_data, plot$coordinates
+      data_list$ribbon_data, plot$coordinates,
+    length_mode = seq_params$length_mode %||% "proportional"
   ) else NULL
   if (collinear) orientation <- collinear_transform$orientation
   ribbon_stat_report <- NULL
@@ -777,7 +778,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
         seq_data$.focus_start[match(id, seq_data$accver)]
       } else 1
       domain <- if (source_axis) c(origin, origin + lens[[id]] - 1) else
-        c(0, min(1, lens[[id]]), lens[[id]])
+        c(1, lens[[id]])
       domain <- suppressWarnings(sc$transform(domain))
       sc$train(domain[is.finite(domain)])
       br <- sc$get_breaks()
@@ -892,10 +893,15 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
 
   layout_strategy <- if (collinear) {
     function(...) compute_collinear_layout(..., gene_label_text = lbl$label_text,
-      collinear_transform = collinear_transform)
+      seq_label_hjust_explicit = !is.null(seq_label_params$seq_label_hjust),
+      seq_label_vjust_explicit = !is.null(seq_label_params$seq_label_vjust),
+      collinear_transform = collinear_transform,
+      collinear_vertical = isTRUE(plot$coordinates$ggchord_sankey) ||
+        identical(plot$coordinates$collinear_seq_axis, "vertical"))
   } else compute_chord_layout
   layout <- layout_strategy(
     seqs = seqs, lens = lens, seq_labels = seq_labels,
+    length_mode = seq_params$length_mode %||% "proportional",
     seq_colors = seq_colors, seqRadius = seqRadius,
     seq_curvature = seq_curvature, orientation = orientation,
     seq_gap = seq_gap,
@@ -983,6 +989,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   )
 
   layout$seq_ring <- seq_ring
+  layout$length_mode <- seq_params$length_mode %||% "proportional"
   layout$seq_ring_radius <- if (is.null(seq_ring)) NULL else seqRadius
   layout$ribbon_stat_data <- ribbon_stat_data
   layout$ribbon_stat_report <- ribbon_stat_report
@@ -1067,6 +1074,7 @@ ggchord_layout_component <- function(layout, type, fallback = data.frame()) {
 compute_chord_geometry <- function(plot) {
   plot <- ggchord_register_layers(plot)
   plot <- ggchord_prepare_track_layers(plot)
+  plot <- ggchord_prepare_instances(plot)
   ggchord_validate_coord_contract(plot)
   chord <- plot$ggchord
   if (is.null(chord)) {
@@ -1098,6 +1106,17 @@ compute_chord_geometry <- function(plot) {
     ggchord_empty_obstacles()
   }
   primary <- compute_chord_geometry_single(plot, geometry_cache)
+  primary$display_instances <- plot$ggchord$display_instances
+  primary$instance_routing <- plot$ggchord$instance_routing
+  primary$instance_omissions <- plot$ggchord$instance_omissions
+  if (!is.null(primary$display_instances)) {
+    instances <- primary$display_instances
+    entities <- unique(instances$accver)
+    first <- match(entities, instances$accver)
+    primary$legend_seqs <- entities
+    primary$legend_seq_colors <- stats::setNames(unname(primary$seq_colors[instances$key[first]]), entities)
+    primary$legend_seq_labels <- stats::setNames(entities, entities)
+  }
   primary$obstacles <- plot$ggchord$obstacles
   ids <- vapply(plot$layers, function(x) x$ggchord_layer_id %||% "", character(1))
   groups <- split(which(nzchar(ids)), ids[nzchar(ids)])
@@ -1494,6 +1513,9 @@ compute_chord_geometry <- function(plot) {
     }
   }
   if (!is.null(plot$ggchord$ref)) {
+    if (isTRUE(plot$coordinates$ggchord_sankey)) primary <- ggchord_project_sankey_layout(primary,plot) else
+      if (isTRUE(primary$collinear) && identical(plot$coordinates$collinear_seq_axis, "vertical"))
+      primary <- ggchord_project_vertical_layout(primary)
     plot$ggchord$ref$layout <- primary
     plot$ggchord$ref$context_key <- ggchord_render_cache_key()
   }

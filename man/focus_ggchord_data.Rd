@@ -10,7 +10,8 @@ focus_ggchord_data(
   gene_data = NULL,
   loci,
   expand = 0,
-  boundary = c("trim", "drop")
+  boundary = c("trim", "drop"),
+  feature_data = NULL
 )
 }
 \arguments{
@@ -28,6 +29,8 @@ one value per locus.}
 
 \item{boundary}{Boundary policy. \code{"trim"} clips partially overlapping genes
 and alignments; \code{"drop"} keeps only rows fully contained in selected loci.}
+
+\item{feature_data}{Unified annotation input; mutually exclusive with gene_data.}
 }
 \value{
 A list of focused \code{seq_data}, \code{ribbon_data}, \code{gene_data}, normalized

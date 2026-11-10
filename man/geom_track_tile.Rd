@@ -3,7 +3,6 @@
 \name{geom_track_tile}
 \alias{geom_track_tile}
 \alias{geom_track_line}
-\alias{geom_track_bar}
 \title{Draw explicit quantitative tracks along sequence backbones}
 \usage{
 geom_track_tile(
@@ -35,22 +34,6 @@ geom_track_line(
   inherit.aes = FALSE,
   ...
 )
-
-geom_track_bar(
-  mapping = NULL,
-  data = NULL,
-  position,
-  baseline = 0,
-  fill = "#86AFB9",
-  colour = NA,
-  alpha = 1,
-  linewidth = 0.25,
-  linetype = 1,
-  bounds = c("error", "clip"),
-  show.legend = NA,
-  inherit.aes = FALSE,
-  ...
-)
 }
 \arguments{
 \item{mapping, data}{Standard ggplot2 mapping and layer input.}
@@ -68,19 +51,16 @@ Clipping is reported and never changes source values.}
 \item{...}{Extra geom parameters.}
 
 \item{closed}{Explicitly close a complete circular line series.}
-
-\item{baseline}{Explicit numeric bar baseline, default zero. It is included
-in scale training and must remain representable under limits/transform.}
 }
 \value{
 A ggplot2 layer with independent input and a shared named band.
 }
 \description{
-Tile and bar layers require \code{accver}, \code{start}, \code{end}; lines require \code{accver}
+Tiles require \code{accver}, \code{start}, \code{end}; lines require \code{accver}
 and \code{pos}. Map \code{track_value} for numeric height and \code{track_fill} or
 \code{track_colour} for visual mapping. Values are never inferred from column
 names. \code{group} separates line series; positions must increase strictly
-within each sequence/series. NA height breaks lines or omits bars, never
+within each sequence/series. NA height breaks lines and never
 becomes zero. Inf is rejected. Tiles may overlap in input drawing order;
 no averaging, interpolation or implicit aggregation is performed.
 }
@@ -120,7 +100,7 @@ doc_theme <- theme_ggchord_publication(
 p_tracks <- ggchord(seq_data = track_seq) +
   geom_seq() +
   geom_seq_center_label() +
-  geom_track_bar(aes(track_value = gc, track_fill = gc),
+  geom_track_col(aes(track_value = gc, track_fill = gc),
     data = bins,
     position = position_track("gc", width = unit(6, "mm"))
   ) +

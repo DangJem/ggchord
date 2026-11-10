@@ -13,7 +13,10 @@ ggchord_track_stage_mapping <- function(mapping, track) {
     if (is.symbol(x) && staged && as.character(x) %in% names(replacements))
       return(rlang::sym(replacements[[as.character(x)]]))
     if (!is.call(x)) return(x)
-    active <- staged || identical(as.character(x[[1L]]), "after_scale")
+    head <- x[[1L]]
+    called <- if (is.symbol(head)) as.character(head) else if (is.call(head) &&
+      as.character(head[[1L]]) %in% c("::", ":::")) as.character(head[[3L]]) else ""
+    active <- staged || identical(called, "after_scale")
     if (length(x) > 1L) for (i in seq.int(2L, length(x))) x[[i]] <- rewrite(x[[i]], active)
     x
   }
@@ -67,11 +70,11 @@ position_track <- function(track, side = c("outside", "inside"), order = 1,
 
 #' Draw explicit quantitative tracks along sequence backbones
 #'
-#' Tile and bar layers require `accver`, `start`, `end`; lines require `accver`
+#' Tiles require `accver`, `start`, `end`; lines require `accver`
 #' and `pos`. Map `track_value` for numeric height and `track_fill` or
 #' `track_colour` for visual mapping. Values are never inferred from column
 #' names. `group` separates line series; positions must increase strictly
-#' within each sequence/series. NA height breaks lines or omits bars, never
+#' within each sequence/series. NA height breaks lines and never
 #' becomes zero. Inf is rejected. Tiles may overlap in input drawing order;
 #' no averaging, interpolation or implicit aggregation is performed.
 #'
@@ -88,8 +91,6 @@ position_track <- function(track, side = c("outside", "inside"), order = 1,
 #' @param position A [position_track()] declaration. Every layer requires one.
 #' @param fill,colour,alpha,linewidth,linetype Fixed styles; fill and colour
 #'   mappings use the dedicated track roles and scoped scales.
-#' @param baseline Explicit numeric bar baseline, default zero. It is included
-#'   in scale training and must remain representable under limits/transform.
 #' @param closed Explicitly close a complete circular line series.
 #' @param bounds `"error"` (default) or `"clip"` for genomic coordinates.
 #'   Clipping is reported and never changes source values.
@@ -124,7 +125,7 @@ position_track <- function(track, side = c("outside", "inside"), order = 1,
 #' p_tracks <- ggchord(seq_data = track_seq) +
 #'   geom_seq() +
 #'   geom_seq_center_label() +
-#'   geom_track_bar(aes(track_value = gc, track_fill = gc),
+#'   geom_track_col(aes(track_value = gc, track_fill = gc),
 #'     data = bins,
 #'     position = position_track("gc", width = unit(6, "mm"))
 #'   ) +
@@ -150,16 +151,19 @@ geom_track_line <- function(mapping = NULL, data = NULL, position,
   ggchord_track_layer("line", mapping, data, position, NA, colour, alpha,
     linewidth, linetype, bounds, 0, closed, show.legend, inherit.aes, fixed, list(...))
 }
-#' @rdname geom_track_tile
+#' @rdname geom_track
 #' @export
-geom_track_bar <- function(mapping = NULL, data = NULL, position,
+geom_track_bar <- function(mapping = NULL, data = NULL, position = NULL,
     baseline = 0, fill = "#86AFB9", colour = NA, alpha = 1,
     linewidth = .25, linetype = 1, bounds = c("error", "clip"), show.legend = NA,
     inherit.aes = FALSE, ...) {
+  if (baseline != 0) ggchord_stop("geom_track_bar(): count uses a zero baseline; use geom_track_col() for supplied values")
   fixed <- c(fill = !missing(fill), colour = !missing(colour), alpha = !missing(alpha),
     linewidth = !missing(linewidth), linetype = !missing(linetype))
-  ggchord_track_layer("bar", mapping, data, position, fill, colour, alpha,
-    linewidth, linetype, bounds, baseline, FALSE, show.legend, inherit.aes, fixed, list(...))
+  dots <- list(...)
+  for (key in names(fixed)[fixed]) dots[[key]] <- get(key)
+  do.call(geom_track, c(list(mapping = mapping, data = data, geom = "bar",
+    position = position, bounds = bounds, show.legend = show.legend, inherit.aes = inherit.aes), dots))
 }
 
 ggchord_track_layer <- function(kind, mapping, data, position, fill, colour,
@@ -204,7 +208,7 @@ ggchord_track_layer <- function(kind, mapping, data, position, fill, colour,
 GeomGgchordTrack <- ggplot2::ggproto("GeomGgchordTrack", ggplot2::Geom,
   required_aes = c("x", "y"),
   default_aes = ggplot2::aes(fill = "#86AFB9", colour = NA, alpha = 1,
-    linewidth = .25, linetype = 1, size = 2.2,
+    linewidth = .25, linetype = 1, size = 2.2, shape = 19, stroke = .5,
     label = NA_character_, .component = "track_poly"),
   extra_params = c("na.rm", "track_keys", "track_kind", "axis_colour", "axis_size"),
   draw_panel = function(data, panel_params, coord, track_keys, track_kind,
@@ -212,11 +216,21 @@ GeomGgchordTrack <- ggplot2::ggproto("GeomGgchordTrack", ggplot2::Geom,
     for (role in names(track_keys)) data[[role]] <- data[[track_keys[[role]]]]
     polys <- data[data$.component %in% "track_poly", , drop = FALSE]
     lines <- data[data$.component %in% "track_line", , drop = FALSE]
+    points <- data[data$.component %in% "track_point", , drop = FALSE]
+    labels <- data[data$.component %in% "track_text", , drop = FALSE]
     axis <- data[data$.component %in% "track_axis_line", , drop = FALSE]
     text <- data[data$.component %in% "track_axis_text", , drop = FALSE]
     grobs <- list()
     if (nrow(polys)) grobs[[length(grobs) + 1L]] <- ggplot2::GeomPolygon$draw_panel(polys, panel_params, coord)
     if (nrow(lines)) grobs[[length(grobs) + 1L]] <- ggplot2::GeomPath$draw_panel(lines, panel_params, coord, na.rm = na.rm)
+    if (nrow(points)) grobs[[length(grobs) + 1L]] <- ggplot2::GeomPoint$draw_panel(points, panel_params, coord, na.rm = na.rm)
+    if (nrow(labels)) {
+      labels$angle <- labels$angle %||% 0
+      labels$hjust <- labels$hjust %||% .5; labels$vjust <- labels$vjust %||% .5
+      labels$family <- labels$family %||% ""; labels$fontface <- labels$fontface %||% 1
+      labels$lineheight <- labels$lineheight %||% 1.2
+      grobs[[length(grobs) + 1L]] <- ggplot2::GeomText$draw_panel(labels, panel_params, coord, na.rm = na.rm)
+    }
     if (nrow(axis)) {
       axis$colour <- axis_colour; axis$linewidth <- .25; axis$alpha <- 1; axis$linetype <- 1
       grobs[[length(grobs) + 1L]] <- ggplot2::GeomPath$draw_panel(axis, panel_params, coord, na.rm = na.rm)
@@ -231,11 +245,15 @@ GeomGgchordTrack <- ggplot2::ggproto("GeomGgchordTrack", ggplot2::Geom,
   },
   draw_key = function(data, params, size) {
     for (role in names(params$track_keys)) data[[role]] <- data[[params$track_keys[[role]]]]
-    if (params$track_kind == "line") ggplot2::draw_key_path(data, params, size) else ggplot2::draw_key_polygon(data, params, size)
+    if (params$track_kind %in% c("line", "path", "step", "segment", "linerange", "errorbar")) ggplot2::draw_key_path(data, params, size) else
+      if (params$track_kind == "point") ggplot2::draw_key_point(data, params, size) else
+        if (params$track_kind == "text") ggplot2::draw_key_text(data, params, size) else ggplot2::draw_key_polygon(data, params, size)
   })
 
 ggchord_prepare_track_layers <- function(plot) {
   plot$layers <- lapply(plot$layers, function(layer) {
+    if (!is.null(layer$ggchord_params$native_geom) &&
+        !isTRUE(layer$ggchord_params$native_prepared)) return(ggchord_track_native_input(layer, plot))
     if (!identical(layer$ggchord_type, "track") || !isTRUE(layer$inherit.aes)) return(layer)
     mapping <- layer$ggchord_input_mapping
     inherited <- ggchord_normalize_mapping(plot$mapping)
@@ -347,9 +365,9 @@ ggchord_add_track_scales <- function(plot) {
       scale <- if (is.numeric(value)) ggplot2::scale_colour_gradientn(
         colours = c("#31507D", "#65B4A8", "#F0D56A"), aesthetics = key,
         guide = ggplot2::guide_colourbar(available_aes = key),
-        name = rlang::as_label(mapping[[key]])) else ggplot2::scale_colour_manual(
+        name = layer$ggchord_params$track_mapping_labels[[key]] %||% rlang::as_label(mapping[[key]])) else ggplot2::scale_colour_manual(
           values = stats::setNames(chord_default_palette(length(levels)), levels),
-          aesthetics = key, name = rlang::as_label(mapping[[key]]))
+          aesthetics = key, name = layer$ggchord_params$track_mapping_labels[[key]] %||% rlang::as_label(mapping[[key]]))
       plot$scales$add(scale)
     }
   }

@@ -107,6 +107,12 @@ ggchord_perimeter_tasks <- function(registry, units_per_inch) {
   )
   tasks$w <- boxes$bw
   tasks$h <- boxes$bh
+  # Preserve full words and source labels while bounding long callouts in
+  # physical space. Both the packer and composite renderer use this text.
+  canvas <- ggchord_render_dimensions()
+  wrap_mm <- if (all(is.finite(canvas))) max(25,min(50,(canvas[1]-70)/2)) else 50
+  tasks$enzyme_label <- mapply(ggchord_wrap_physical_text,tasks$enzyme_label,
+    tasks$size,tasks$family,tasks$enzyme_fontface,MoreArgs=list(width_mm=wrap_mm),USE.NAMES=FALSE)
   restriction <- which(tasks$kind == "restriction")
   if (length(restriction)) {
     enzyme <- ggchord_restriction_text_metrics(
@@ -526,6 +532,32 @@ ggchord_place_dense_perimeter <- function(registry, layout,
     crowded_top <- sum(tasks$side == "top" &
       tasks$kind == "restriction") >= 8L
   }
+  canvas <- ggchord_render_dimensions()
+  if (all(is.finite(canvas))) for (side in c("top","bottom")) {
+    members <- which(tasks$side == side)
+    available <- canvas[1]/25.4*units_per_inch*.82
+    if (length(members) && sum(tasks$pack_w[members]) > available)
+      tasks$side[members] <- ifelse(tasks$direction_x[members]<0,"left","right")
+  }
+  if (all(is.finite(canvas))) {
+    # A seam cluster must not exhaust one side while the other is empty.
+    # Move a contiguous run nearest the upper seam, preserving anchor order.
+    available <- canvas[2]/25.4*units_per_inch*.78
+    left_load <- sum(tasks$h[tasks$side=="left"])
+    right_load <- sum(tasks$h[tasks$side=="right"])
+    if (max(left_load,right_load)>available) {
+      heavy <- if(right_load>left_load) "right" else "left"
+      light <- if(heavy=="right") "left" else "right"
+      candidates <- which(tasks$side==heavy & tasks$direction_y>0)
+      candidates <- candidates[order(abs(atan2(tasks$direction_x[candidates],tasks$direction_y[candidates])))]
+      difference <- abs(right_load-left_load)
+      for (i in candidates) {
+        improvement <- abs(difference-2*tasks$h[i])
+        if (improvement>=difference) break
+        tasks$side[i] <- light;difference <- improvement
+      }
+    }
+  }
   top_rows <- which(tasks$side == "top")
   wide_top <- crowded_top && length(top_rows) &&
     max(tasks$w[top_rows]) > .8 * backbone_outer
@@ -686,6 +718,9 @@ ggchord_place_dense_perimeter <- function(registry, layout,
     row <- task$row
     if (task$kind == "restriction") {
       sites <- registry[[id]]$restriction_site
+      if (!"label_text_original" %in% names(sites)) sites$label_text_original <- sites$label
+      sites$enzyme_label[row] <- task$enzyme_label
+      sites$label[row] <- paste(task$enzyme_label,task$coordinate_label)
       sites$x[row] <- task$target_x
       sites$y[row] <- task$target_y
       sites$label_attachment_x[row] <- task$edge_x
@@ -759,4 +794,19 @@ ggchord_place_dense_perimeter <- function(registry, layout,
     }
   }
   ggchord_measure_external_leader_crossings(registry)
+}
+
+# Word wrapping uses the same grid font metrics as rendering, not character count.
+ggchord_wrap_physical_text <- function(text,size,family,fontface,width_mm) {
+  if (is.na(text) || !nzchar(text)) return(text)
+  measure <- function(value) grid::convertWidth(grid::grobWidth(grid::textGrob(value,
+    gp=grid::gpar(fontsize=size*72.27/25.4,fontfamily=family,fontface=fontface))),"mm",TRUE)
+  if (measure(text) <= width_mm) return(text)
+  words <- strsplit(text,"[[:space:]]+")[[1]]
+  lines <- character(); line <- ""
+  for (word in words) {
+    trial <- trimws(paste(line,word))
+    if (nzchar(line) && measure(trial)>width_mm) {lines<-c(lines,line);line<-word} else line<-trial
+  }
+  paste(c(lines,line),collapse="\n")
 }

@@ -19,10 +19,12 @@ make_ggchord_scales <- function(layout, has_seq = FALSE, has_gene = FALSE,
   )
   role_guide <- function(role, colourbar = FALSE, order = 0,
                          override.aes = list()) {
+    labels <- switch(role, seq=layout$legend_seq_labels %||% layout$seq_labels,
+      gene=names(layout$gene_pal), feature=names(layout$feature_pal), region=names(layout$region_pal), NULL)
     if (!is.null(plot)) {
       return(ggchord_role_guide(
         plot, role, colourbar = colourbar, order = order,
-        override.aes = override.aes
+        override.aes = override.aes, labels=labels
       ))
     }
     if (colourbar) {
@@ -38,9 +40,9 @@ make_ggchord_scales <- function(layout, has_seq = FALSE, has_gene = FALSE,
   if (has_seq) {
     scales[[length(scales) + 1]] <- scale_seq_colour_manual(
       name   = "Seq ID",
-      values = layout$seq_colors,
-      labels = layout$seq_labels,
-      breaks = layout$seqs,
+      values = layout$legend_seq_colors %||% layout$seq_colors,
+      labels = layout$legend_seq_labels %||% layout$seq_labels,
+      breaks = layout$legend_seqs %||% layout$seqs,
       guide  = role_guide("seq", order = 1)
     )
   }
@@ -64,14 +66,14 @@ make_ggchord_scales <- function(layout, has_seq = FALSE, has_gene = FALSE,
       ribbon_breaks <- if (value_scheme) {
         layout$ribbon_color_breaks %||% pretty(ribbon_limits, n = 5)
       } else {
-        c(0, 50, 80, 90, 100)
+        c(0, 50, 80, 90, 95, 100)
       }
       ribbon_fill_scale <- scale_ribbon_fill_stepsn(
         name    = ribbon_name,
         colours = layout$ribbon_colors,
         limits  = ribbon_limits,
         breaks  = ribbon_breaks,
-        guide   = role_guide("ribbon", colourbar = TRUE, order = 2)
+        guide   = if (!value_scheme) ggchord_identity_guide(plot) else role_guide("ribbon", colourbar = TRUE, order = 2)
       )
     } else {
       ribbon_fill_scale <- scale_ribbon_fill_identity()

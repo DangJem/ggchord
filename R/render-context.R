@@ -91,7 +91,7 @@ ggchord_physical_requested <- function(plot) {
   any(vapply(plot$layers, function(layer) {
     params <- layer$ggchord_params
     if (is.null(params)) return(FALSE)
-    identical(params$type, "track") || isTRUE(params$physical_layout) ||
+    params$type %in% c("seq", "track") || isTRUE(params$physical_layout) ||
       identical(params$gene_label_fit, "shrink") || identical(params$feature_label_fit, "shrink")
   }, logical(1)))
 }
@@ -109,7 +109,8 @@ ggchord_render_table <- function(built, force = FALSE) {
   physical <- isTRUE(force) || ggchord_physical_requested(source)
   passes <- 0L
   if (physical && identical(context$status, "measured")) {
-    for (pass in seq_len(3L)) {
+    passes_allowed <- if (isTRUE(source$coordinates$ggchord_circular)) 6L else 3L
+    for (pass in seq_len(passes_allowed)) {
       input <- context
       next_plot <- ggchord_render_plot_copy(source)
       built <- ggchord_with_render_context(input, ggplot2::ggplot_build(next_plot))

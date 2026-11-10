@@ -242,7 +242,8 @@ ggchord_resolve_layer_input <- function(lyr, fallback = NULL) {
       "or a function returning supported data")
   }
   data <- ggchord_normalize_accver(as.data.frame(data, stringsAsFactors = FALSE))
-  source <- if (is.null(lyr$ggchord_input_data)) attr(fallback, "ggchord_source") else NULL
+  source <- lyr$ggchord_params$input_source %||%
+    if (is.null(lyr$ggchord_input_data)) attr(fallback, "ggchord_source") else NULL
   # A data function may subset while retaining arbitrary data-frame attributes.
   # Only a resolver-owned row map may be used as constructor provenance.
   attr(data, "ggchord_source") <- NULL
@@ -301,7 +302,7 @@ ggchord_resolve_layer_input <- function(lyr, fallback = NULL) {
   transform <- lyr$ggchord_input_transform
   if (!is.null(transform)) data <- transform(data)
   if (!is.null(source)) {
-    if (isTRUE(lyr$ggchord_params$is_feature) && "segments" %in% names(data) &&
+    if (is.null(lyr$ggchord_params$input_source) && isTRUE(lyr$ggchord_params$is_feature) && "segments" %in% names(data) &&
         ".biological_source_row" %in% names(data))
       source$rows <- source$rows[data$.biological_source_row]
     attr(data, "ggchord_source") <- source
@@ -450,7 +451,7 @@ extract_ggchord_layer_data <- function(lyr, layout) {
     lyr$ggchord_type %||% ""
   ]]
   input <- input %||% ggchord_resolve_layer_input(lyr)
-  ggchord_attach_input_columns(geometry, input)
+  ggchord_restore_instance_data(ggchord_attach_input_columns(geometry, input), layout$display_instances)
 }
 
 #' Combine axis components for GeomChordAxis

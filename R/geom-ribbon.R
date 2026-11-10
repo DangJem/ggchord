@@ -18,14 +18,14 @@ make_ribbon_geom <- function(outline = FALSE, linetype = FALSE) {
   renames <- c(fill = "ribbon_fill", alpha = "ribbon_alpha")
   if (isTRUE(outline)) renames <- c(renames, colour = "ribbon_colour")
   if (isTRUE(linetype)) renames <- c(renames, linetype = "ribbon_linetype")
-  rename_geom_aes(ggplot2::GeomPolygon, renames = renames)
+  rename_geom_aes(GeomRibbonFlow, renames = renames)
 }
 
 #' Add an alignment ribbon layer
 #'
-#' Draws alignment ribbons. Identity is mapped to `ribbon_fill` by default;
-#' When pident is absent, the default is a fixed grey fill with no Identity
-#' guide. Alignment length and identity are never inferred from endpoints.
+#' Draws alignment ribbons with query-to-subject sequence-colour gradients
+#' by default. Explicit fill, ribbon_fill mappings or ribbon fill scales
+#' replace the gradient; map ribbon_fill = pident for an Identity guide. Alignment length and identity are never inferred from endpoints.
 #' Alternative mappings and legends are controlled with `aes()`, `scale_*()`
 #' and `guides()`.
 #'
@@ -50,8 +50,10 @@ make_ribbon_geom <- function(outline = FALSE, linetype = FALSE) {
 #'   \code{"smooth"}. Smooth avoidance changes clearance locally; uniform
 #'   avoidance uses one clearance across an endpoint.
 #' @inheritParams geom_link_line
-#' @param fill Optional fixed ribbon fill. `NULL` keeps the default Identity
-#'   mapping.
+#' @param between Two display-instance names or declared-order indices for a unique route.
+#' @param allow_repeated Explicitly allow a declared source_hsp_id in more than one displayed relation.
+#' @param tip Subject-directed decorative taper, or none. Source intervals remain unchanged.
+#' @param fill Optional fixed ribbon fill. NULL permits the automatic endpoint gradient.
 #' @param alpha,colour,linewidth Standard fixed ribbon styles. Explicit values
 #'   take precedence over matching mappings; omitted defaults do not suppress
 #'   user mappings. For example, omit `alpha` when mapping `ribbon_alpha`.
@@ -111,8 +113,12 @@ geom_link_ribbon <- function(mapping = NULL, data = NULL,
                         show.legend = TRUE,
                         inherit.aes = FALSE,
                         nonadjacent_linewidth = 0.4,
+                        between = NULL, allow_repeated = FALSE, tip = c("subject", "none"),
                         ...) {
+  tip <- match.arg(tip)
   ribbon_ctrl_point <- link_ctrl_point
+  if (!is.logical(allow_repeated) || length(allow_repeated) != 1L || is.na(allow_repeated))
+    ggchord_stop("allow_repeated must be TRUE or FALSE")
   ribbon_gap <- link_gap
   style_defaults <- c(colour = missing(colour), linewidth = missing(linewidth))
   alpha_supplied <- !missing(alpha)
@@ -224,6 +230,7 @@ geom_link_ribbon <- function(mapping = NULL, data = NULL,
     type                      = "ribbon",
     style_defaults = style_defaults,
     adjacent_only = adjacent_only, pairs = pairs,
+    between = between, allow_repeated = allow_repeated, tip = tip,
     nonadjacent_linewidth = nonadjacent_linewidth,
     link_avoid = link_avoid, link_branch = link_branch, link_branch_fraction = link_branch_fraction,
     ribbon_color_scheme       = "pident",

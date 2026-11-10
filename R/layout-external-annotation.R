@@ -706,28 +706,12 @@ ggchord_complete_external_leaders <- function(registry) {
 ggchord_share_external_annotations <- function(registry, layout) {
   if (!isTRUE(layout$circular) || !length(registry)) return(registry)
   units_per_inch <- layout$text_units_per_inch %||% .30
-  restriction_count <- sum(vapply(registry, function(geometry) {
-    sites <- geometry$restriction_site
-    if (!is.data.frame(sites) || !nrow(sites)) return(0L)
-    sum(ggchord_outer_site_labels(sites) &
-      !is.na(sites$label) & nzchar(sites$label))
-  }, integer(1L)))
-  mixed_primers <- restriction_count > 0L && any(vapply(registry, function(layer) {
-    x <- layer$gene_label_repel
-    is.data.frame(x) && "annotation_class" %in% names(x) &&
-      any(x$annotation_class %in% "primer" & ggchord_outer_callouts(x))
-  }, logical(1)))
-  if ((restriction_count >= 30L || mixed_primers) && length(layout$seq_arcs) == 1L) {
+  # All outer classes enter the same measured queue, including sparse
+  # inputs. Adding a thirtieth label or one primer no longer changes solver.
+  if (length(layout$seq_arcs) == 1L) {
     registry <- ggchord_complete_external_leaders(registry)
-    dense_tasks <- ggchord_perimeter_tasks(registry, units_per_inch)
-    sites <- dense_tasks[dense_tasks$kind == "restriction", ,
-      drop = FALSE]
-    if (nrow(sites) > 0L && all(
-        sqrt(sites$text_x^2 + sites$text_y^2) >=
-          sqrt(sites$root_x^2 + sites$root_y^2) - .01)) {
-      return(ggchord_place_dense_perimeter(registry, layout,
-        tasks = dense_tasks))
-    }
+    tasks <- ggchord_perimeter_tasks(registry, units_per_inch)
+    if (nrow(tasks)) return(ggchord_place_dense_perimeter(registry, layout, tasks=tasks))
   }
   backbone_outer <- if (is.data.frame(layout$backbone_bounds) &&
       nrow(layout$backbone_bounds)) {

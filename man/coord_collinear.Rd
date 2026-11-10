@@ -16,7 +16,8 @@ coord_collinear(
   orientation = c("manual", "auto"),
   min_support = 0.1,
   segments = NULL,
-  segment_gap = 100
+  segment_gap = 100,
+  seq_axis = c("horizontal", "vertical")
 )
 }
 \arguments{
@@ -59,6 +60,10 @@ Each window has its own local coordinates and reversible source metadata.}
 
 \item{segment_gap}{Positive display gap in native sequence units when \code{segments}
 is supplied, default 100. It never implies genomic continuity.}
+
+\item{seq_axis}{\code{"horizontal"} (default) or \code{"vertical"}. Vertical mode
+projects sequence-local geometry onto upright columns and lays out text
+in its own readable orientation; it does not change source strands.}
 }
 \value{
 A ggplot2 Coord object for composition with a ggchord plot.

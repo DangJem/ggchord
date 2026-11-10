@@ -21,6 +21,8 @@ geom_link_line(
   position = "identity",
   show.legend = NA,
   inherit.aes = FALSE,
+  between = NULL,
+  allow_repeated = FALSE,
   ...
 )
 }
@@ -51,6 +53,10 @@ mapping. Omit the fixed argument to retain a mapped style, including an
 inherited mapping when \code{inherit.aes = TRUE}.}
 
 \item{position, show.legend, inherit.aes}{Standard ggplot2 layer arguments.}
+
+\item{between}{Two display-instance names or declared-order indices.}
+
+\item{allow_repeated}{Allow repeated display of an explicitly declared source_hsp_id.}
 
 \item{...}{Additional path parameters.}
 }

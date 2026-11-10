@@ -267,6 +267,8 @@ diagnose_ggchord <- function(plot, width = 7, height = 5,
     }
   }
   guides <- ggchord_diagnostic_guides(table, canvas)
+  if (identical(layout$length_mode, "equal")) add("normalized_sequence_lengths", "information",
+    "Opt-in equal-length display; source lengths/positions are retained and no shared absolute scale is implied")
   layer_sources <- ggchord_annotation_source_maps(layout)
   annotation_duplicates <- ggchord_annotation_duplicate_sources(layer_sources)
   if (nrow(annotation_duplicates)) add("duplicate_annotation_display", "suggestion",
@@ -287,6 +289,7 @@ diagnose_ggchord <- function(plot, width = 7, height = 5,
     checks = unique(do.call(rbind, checks)),
     text = if (length(text)) do.call(rbind, text) else data.frame(), guides = guides,
     colour_suggestions = colours, label_diagnostics = layout$collinear_label_diagnostics %||% data.frame(),
+    label_visibility = ggchord_label_visibility(layout),
     annotation_registry = layout$circular_annotation_registry %||% data.frame(),
     layer_sources = layer_sources, annotation_duplicates = annotation_duplicates,
     track_registry = layout$track_registry %||% data.frame(),

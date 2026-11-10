@@ -131,7 +131,8 @@ ggchord_collinear_direction_support <- function(seqs, orientation, ribbon_data,
   list(orientation = orientation, diagnostics = out)
 }
 
-ggchord_collinear_transform <- function(seqs, lens, orientation, ribbon_data, coord) {
+ggchord_collinear_transform <- function(seqs, lens, orientation, ribbon_data, coord,
+    length_mode = "proportional") {
   if (!length(seqs) || anyNA(seqs) || anyDuplicated(seqs)) ggchord_stop(
     "coord_collinear(): displayed sequence IDs must be non-missing and unique"
   )
@@ -142,7 +143,7 @@ ggchord_collinear_transform <- function(seqs, lens, orientation, ribbon_data, co
     ggchord_stop("coord_collinear(): sequence lengths and directions must be valid")
   }
   if (!is.null(coord$collinear_segments)) return(
-    ggchord_segmented_transform(seqs, lens, coord))
+    ggchord_segmented_transform(seqs, lens, coord, length_mode))
   mode <- coord$collinear_orientation %||% "manual"
   diagnostics <- data.frame(accver = seqs, forward_support = 0,
     reverse_support = 0, confidence = NA_real_, status = "manual",
@@ -163,7 +164,7 @@ ggchord_collinear_transform <- function(seqs, lens, orientation, ribbon_data, co
   low <- pmin(displayed_start, displayed_end)
   high <- pmax(displayed_start, displayed_end)
   anchor <- low + fraction * (high - low)
-  scale <- 2 / max(lens)
+  scale <- if (identical(length_mode, "equal")) 2 / lens else 2 / max(lens)
   offset <- stats::setNames(-as.numeric(anchor) * scale, seqs)
   table <- data.frame(accver = seqs, orientation = unname(orientation),
     x_offset = unname(offset), units_per_bp = scale,
@@ -187,7 +188,7 @@ ggchord_validate_display_segments <- function(segments) {
   invisible(segments)
 }
 
-ggchord_segmented_transform <- function(seqs, lens, coord) {
+ggchord_segmented_transform <- function(seqs, lens, coord, length_mode = "proportional") {
   data <- coord$collinear_segments
   ggchord_validate_display_segments(data)
   if (any(!seqs %in% as.character(data$accver))) ggchord_stop(
@@ -199,17 +200,19 @@ ggchord_segmented_transform <- function(seqs, lens, coord) {
   data <- data[data$accver %in% seqs, , drop = FALSE]
   data$accver <- as.character(data$accver); data$row_id <- as.character(data$row_id)
   groups <- lapply(rows, function(row) data$accver[data$row_id == row])
-  totals <- vapply(groups, function(ids) sum(lens[ids]) +
+  display_lens <- if (identical(length_mode, "equal")) stats::setNames(rep(max(lens), length(lens)), names(lens)) else lens
+  totals <- vapply(groups, function(ids) sum(display_lens[ids]) +
     max(0, length(ids) - 1L) * coord$collinear_segment_gap, numeric(1))
   if (any(!is.finite(totals))) ggchord_stop("coord_collinear(): segmented display widths must remain finite")
   scale <- 2 / max(totals)
+  per_sequence_scale <- scale * display_lens / lens
   fraction <- switch(coord$collinear_align, left = 0, center = .5, right = 1)
   offset <- stats::setNames(numeric(length(seqs)), seqs)
   slot <- stats::setNames(integer(length(seqs)), seqs)
   left_break <- right_break <- stats::setNames(rep(FALSE, length(seqs)), seqs)
   for (i in seq_along(groups)) {
     ids <- groups[[i]]
-    offset[ids] <- (c(0, utils::head(cumsum(lens[ids] + coord$collinear_segment_gap), -1L)) -
+    offset[ids] <- (c(0, utils::head(cumsum(display_lens[ids] + coord$collinear_segment_gap), -1L)) -
       totals[i] * fraction) * scale
     slot[ids] <- seq_along(ids)
     if (length(ids) > 1L) {
@@ -230,8 +233,8 @@ ggchord_segmented_transform <- function(seqs, lens, coord) {
     if (physical == "left") left_break <- left_break | flag else right_break <- right_break | flag
   }
   table <- data.frame(accver = seqs, orientation = unname(orientation),
-    x_offset = unname(offset), units_per_bp = scale,
-    xmin = unname(offset), xmax = unname(offset + lens[seqs] * scale),
+    x_offset = unname(offset), units_per_bp = unname(per_sequence_scale[seqs]),
+    xmin = unname(offset), xmax = unname(offset + lens[seqs] * per_sequence_scale[seqs]),
     anchor_start = NA_real_, anchor_end = NA_real_, anchor_position = NA_real_,
     anchor_x = NA_real_, align = coord$collinear_align,
     row_id = row_id, row_index = match(row_id, rows), segment_index = unname(slot),

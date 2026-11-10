@@ -49,7 +49,8 @@ set_ggchord_coord <- function(plot, layout) {
     )
     resolved$ggchord_collinear <- TRUE
     for (field in c("collinear_align", "collinear_anchor", "collinear_orientation",
-        "collinear_min_support")) resolved[[field]] <- coord[[field]]
+        "collinear_min_support", "collinear_segments", "collinear_segment_gap", "collinear_seq_axis",
+        "ggchord_sankey", "sankey_column_gap", "sankey_self_links")) resolved[[field]] <- coord[[field]]
   }
   plot$coordinates <- resolved
   plot
@@ -200,6 +201,7 @@ prepare_ggchord_plot <- function(plot) {
   plot <- ggchord_register_layers(plot)
   plot$scales <- plot$scales$clone()
   if (exists("ggchord_prepare_track_layers", mode = "function")) plot <- ggchord_prepare_track_layers(plot)
+  plot <- ggchord_prepare_instances(plot)
   plot$scales$scales <- Filter(function(s) is.null(s$ggchord_managed),
                                plot$scales$scales)
   plot$layers <- lapply(plot$layers, ggchord_inherit_ribbon_linetype,
@@ -222,8 +224,11 @@ prepare_ggchord_plot <- function(plot) {
         !isTRUE(lyr$ggchord_params$seq_legend_supplied)) {
       lyr$show.legend <- FALSE
     }
-    lyr$ggchord_resolved_input <- layout$layer_inputs[[lyr$ggchord_layer_id]][[lyr$ggchord_type]]
+    lyr$ggchord_resolved_input <- ggchord_restore_instance_data(
+      layout$layer_inputs[[lyr$ggchord_layer_id]][[lyr$ggchord_type]], layout$display_instances)
     geometry <- extract_ggchord_layer_data(lyr, layout)
+    flow <- ggchord_ribbon_flow(lyr, geometry, layout, plot)
+    lyr <- flow$layer; geometry <- flow$data
     # An absent component can have no column prototype in the public layout.
     # Draw its empty build-local layer without evaluating nonexistent x/text
     # mappings. Keep the source layer and exported component unchanged.

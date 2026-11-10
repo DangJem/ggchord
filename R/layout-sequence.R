@@ -1,7 +1,7 @@
 # Sequence allocation, references and track geometry.
 ggchord_layout_sequence_step <- function(
     axisGap, axisMajLen, axisMinLen, circular, geometry_cache, labelOffset, lens, orientation,
-    rotation, seq_curvature, seq_gap, seqRadius, seqs) {
+    rotation, seq_curvature, seq_gap, seqRadius, seqs, length_mode) {
   n <- length(seqs)
 
   # ====================================================================
@@ -16,8 +16,8 @@ ggchord_layout_sequence_step <- function(
   }
 
   seq_total_prop <- 1 - total_gap_prop
-  sum_lens <- sum(lens)
-  theta <- (lens / sum_lens) * total_circ * seq_total_prop
+  weights <- if (identical(length_mode, "equal")) rep(1, length(lens)) else lens
+  theta <- (weights / sum(weights)) * total_circ * seq_total_prop
   gap_rads <- total_circ * seq_gap
 
   # Compute the start and end angles of each sequence

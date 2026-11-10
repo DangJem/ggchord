@@ -19,6 +19,7 @@ geom_seq(
   position = "identity",
   show.legend = TRUE,
   inherit.aes = FALSE,
+  length_mode = c("proportional", "equal"),
   ...
 )
 }
@@ -27,7 +28,9 @@ geom_seq(
 
 \item{data}{Default NULL (retrieved automatically from the layout)}
 
-\item{seq_order}{Optional character vector. Specifies the drawing order of sequences}
+\item{seq_order}{Source IDs in display order. Repeats create display instances;
+use names such as c(A_high='A', B='B', A_low='A') for stable instance IDs.
+Repeated-entity HSPs require a unique between route on each link layer.}
 
 \item{seq_orientation}{Optional numeric (1 or -1). Sequence orientation, default 1}
 
@@ -54,6 +57,11 @@ affect vertical placement.}
 \item{linewidth}{Arc line width, default 0.9}
 
 \item{position, show.legend, inherit.aes}{Standard ggplot2 layer arguments.}
+
+\item{length_mode}{\code{"proportional"} (default) retains source-length ratios;
+\code{"equal"} gives each displayed sequence the same angular allocation or
+linear span without modifying source lengths. Shared absolute scale bars
+are unavailable in multi-sequence equal mode; local axes retain source units.}
 
 \item{...}{Additional fixed path aesthetics. \code{colour} (or \code{color}) sets
 \code{seq_colour}. Explicit fixed values take precedence over matching mappings;

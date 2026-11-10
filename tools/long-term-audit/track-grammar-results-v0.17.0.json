@@ -1,0 +1,20 @@
+{
+  "point": "built and rendered to grob in collinear source frame",
+  "line": "built and rendered to grob in collinear source frame",
+  "path": "built and rendered to grob in collinear source frame",
+  "step": "built and rendered to grob in collinear source frame",
+  "col": "supplied values and full interval widths retain identity semantics",
+  "bar": "built and rendered to grob in collinear source frame",
+  "tile": "built and rendered to grob in collinear source frame",
+  "area": "built and rendered to grob in collinear source frame",
+  "ribbon": "built and rendered to grob in collinear source frame",
+  "segment": "built and rendered to grob in collinear source frame",
+  "linerange": "built and rendered to grob in collinear source frame",
+  "errorbar": "built and rendered to grob in collinear source frame",
+  "text": "built and rendered to grob in collinear source frame",
+  "rect": "built and rendered to grob in collinear source frame",
+  "count": "weighted counts match supplied source groups without crossing accessions",
+  "overlay": "line and point share one circular band/domain",
+  "bin": "explicit binwidth; empty bin retained and membership recorded",
+  "summary": "native summary operates in source positions and value units"
+}

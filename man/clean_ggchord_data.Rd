@@ -13,7 +13,8 @@ clean_ggchord_data(
   reversed_interval = c("sort", "drop", "error", "keep"),
   invalid_pident = c("clip", "drop", "error", "keep"),
   empty_annotation = c("keep", "drop", "replace"),
-  replacement_annotation = "unannotated"
+  replacement_annotation = "unannotated",
+  feature_data = NULL
 )
 }
 \arguments{
@@ -63,6 +64,8 @@ missing/empty \code{anno} in gene data: \code{"replace"} fills them with
 
 \item{replacement_annotation}{Character, default \code{"unannotated"}.
 Replacement annotation used when \code{empty_annotation = "replace"}.}
+
+\item{feature_data}{Unified annotation input; mutually exclusive with gene_data.}
 }
 \value{
 A list with four components: \code{seq_data}, \code{ribbon_data},

@@ -34,6 +34,7 @@
 #'   source accession, origin, full length and truncation flags.
 #' @md
 #' @seealso \code{\link{ggchord_data_contract}}
+#' @param feature_data Unified annotation input; mutually exclusive with gene_data.
 #' @export
 #' @examples
 #' library(dplyr)
@@ -48,7 +49,18 @@
 #' )
 #' segment_ggchord_data(slice_head(seqs, n = 1), windows = windows)
 segment_ggchord_data <- function(seq_data, ribbon_data = NULL, gene_data = NULL,
-    windows, point_data = NULL, cross_gap = c("split", "drop"), max_links = 10000) {
+    windows, point_data = NULL, cross_gap = c("split", "drop"), max_links = 10000, feature_data = NULL) {
+  if (!is.null(feature_data)) {
+    if (!is.null(gene_data)) ggchord_stop("Supply only feature_data or gene_data")
+    features <- ggchord_normalize_feature_input(feature_data)
+    result <- segment_ggchord_data(seq_data, ribbon_data, features, windows, point_data, cross_gap, max_links)
+    result$feature_data <- result$gene_data
+    result$gene_data <- NULL
+    if (is.data.frame(result$report) && "component" %in% names(result$report))
+      result$report$component[result$report$component == "gene"] <- "feature"
+    return(result)
+  }
+
   caller <- "segment_ggchord_data()"
   cross_gap <- match.arg(cross_gap)
   seq_data <- as_ggchord_seq(seq_data)

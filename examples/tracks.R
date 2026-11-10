@@ -17,7 +17,7 @@ sites <- tibble(
 )
 track_plot <- ggchord(sequences) +
   geom_seq() +
-  geom_track_bar(aes(track_value = signal, track_fill = signal),
+  geom_track_col(aes(track_value = signal, track_fill = signal),
     data = bins,
     position = position_track("signal", width = unit(5, "mm"))
   ) +

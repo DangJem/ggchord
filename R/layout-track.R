@@ -117,11 +117,12 @@ ggchord_layout_tracks <- function(plot, layout, registry, inputs) {
   for (i in seq_along(data)) {
     d <- data[[i]]; p <- layers[[i]]$ggchord_params
     if (is.null(d)) ggchord_stop("Track layers require explicit data")
-    cols <- if (p$track_kind == "line") "pos" else c("start", "end")
+    cols <- if (!is.null(p$native_geom) || p$track_kind == "line") "pos" else c("start", "end")
     ggchord_require_columns(d, c("accver", cols), "track layer")
     d$accver <- ggchord_conversion_ids(d$accver, "track layer")
     if (any(!d$accver %in% seqs)) ggchord_stop("Track input contains an unknown displayed accession; focus to window IDs explicitly")
-    for (name in cols) if (!is.numeric(d[[name]]) || any(!is.finite(d[[name]])) || any(d[[name]] != floor(d[[name]])))
+    for (name in cols) if (!is.numeric(d[[name]]) || any(!is.finite(d[[name]])) ||
+        (is.null(p$native_geom) && any(d[[name]] != floor(d[[name]]))))
       ggchord_stop("Track genomic coordinates must be finite integers")
     if (p$track_kind != "tile") {
       ggchord_require_columns(d, "track_value", "quantitative track")
@@ -131,7 +132,7 @@ ggchord_layout_tracks <- function(plot, layout, registry, inputs) {
     if (anyNA(d$group)) ggchord_stop("Track series group IDs must be non-missing")
     if (isTRUE(p$closed) && (!isTRUE(layout$circular) || (plot$coordinates$circular_gap %||% 0) != 0))
       ggchord_stop("closed=TRUE requires coord_circular(gap=0)")
-    if (p$track_kind == "line") {
+    if (p$track_kind == "line" && is.null(p$native_geom)) {
       groups <- split(seq_len(nrow(d)), interaction(match(d$accver, unique(d$accver)),
         match(d$group, unique(d$group)), drop = TRUE))
       for (g in groups) if (length(g) > 1L && any(diff(d$pos[g]) <= 0))
@@ -163,6 +164,7 @@ ggchord_layout_tracks <- function(plot, layout, registry, inputs) {
     if (is.null(sc)) sc <- scale_track_value_continuous(id)
     sc <- sc$clone()
     values <- unlist(lapply(numeric, function(i) c(data[[i]]$track_value,
+      data[[i]]$track_ymin, data[[i]]$track_ymax,
       if (layers[[i]]$ggchord_params$track_kind == "bar") layers[[i]]$ggchord_params$baseline)), use.names = FALSE)
     finite <- values[!is.na(values)]
     transformed <- suppressWarnings(sc$transform(finite))
@@ -285,7 +287,9 @@ ggchord_layout_tracks <- function(plot, layout, registry, inputs) {
         group = group, source_row = rep_len(source, nrow(xy)), accver = unname(seq),
         track_id = id, label = NA_character_, .component = component, stringsAsFactors = FALSE)
     }
-    if (p$track_kind == "line") {
+    if (!is.null(p$native_geom)) {
+      geometry <- list(ggchord_track_native_geometry(d, p, layout, sc, at_value))
+    } else if (p$track_kind == "line") {
       usable <- !is.na(mapped)
       outside <- d$pos < 1 | d$pos > unname(ref$lens[d$accver])
       if (any(outside) && p$bounds == "error") ggchord_stop("Track sample coordinate outside sequence length")
@@ -351,6 +355,11 @@ ggchord_layout_tracks <- function(plot, layout, registry, inputs) {
   layout$track_registry <- band_table; layout$track_scales <- scales
   layout$track_obstacles <- obstacle[names(ggchord_empty_obstacles())]
   layout$track_diagnostics <- ggchord_rbind_fill(diagnostics)
+  layout$track_statistics <- stats::setNames(data,
+    vapply(layers, function(l) l$ggchord_layer_id, character(1)))
+  layout$track_source_data <- stats::setNames(lapply(seq_along(layers), function(i)
+    layers[[i]]$ggchord_params$track_sources %||% data[[i]]),
+    vapply(layers, function(l) l$ggchord_layer_id, character(1)))
   list(layout = layout, registry = registry, inputs = inputs)
 }
 

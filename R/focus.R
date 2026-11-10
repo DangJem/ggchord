@@ -211,6 +211,7 @@ ggchord_focus_feature_parts <- function(row, lo, hi, origin, caller) {
 #'   truncated output rows. `.source_origin` is the original genomic position
 #'   corresponding to local position one, including after repeated focusing.
 #' @seealso \code{\link{ggchord_data_contract}}
+#' @param feature_data Unified annotation input; mutually exclusive with gene_data.
 #' @export
 focus_ggchord_data <- function(
     seq_data,
@@ -218,7 +219,18 @@ focus_ggchord_data <- function(
     gene_data = NULL,
     loci,
     expand = 0,
-    boundary = c("trim", "drop")) {
+    boundary = c("trim", "drop"), feature_data = NULL) {
+  if (!is.null(feature_data)) {
+    if (!is.null(gene_data)) ggchord_stop("Supply only feature_data or gene_data")
+    features <- ggchord_normalize_feature_input(feature_data)
+    result <- focus_ggchord_data(seq_data, ribbon_data, features, loci, expand, boundary)
+    result$feature_data <- result$gene_data
+    result$gene_data <- NULL
+    if (is.data.frame(result$report) && "component" %in% names(result$report))
+      result$report$component[result$report$component == "gene"] <- "feature"
+    return(result)
+  }
+
   seq_data <- ggchord_normalize_accver(seq_data)
   gene_data <- ggchord_normalize_accver(gene_data)
   loci <- ggchord_normalize_accver(loci)

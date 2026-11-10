@@ -121,7 +121,7 @@ compute_chord_layout <- function(
     show_axis,
     # Global parameters
     rotation, debug = FALSE,
-    geometry_cache = NULL
+    geometry_cache = NULL, length_mode = "proportional"
 ) {
   # Only declared stage results enter the next context. Each stage has its
   # own frame; temporary loops and closures cannot write into another stage.

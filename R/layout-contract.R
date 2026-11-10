@@ -101,6 +101,20 @@
 #' live in a temporary directory and may be removed by cleanup; use ordinary
 #' [ggplot2::ggsave()] to keep a final file.
 #'
+#' @section Foundation projection and identity:
+#' `display_instances` separates source accver from instance_id and display
+#' order. `instance_routing` identifies each source HSP and its unique query/
+#' subject display route. Explicit source_hsp_id is shared across layers;
+#' absent IDs are layer-local. `sequence_display` records source_length,
+#' display_length and display_scale_factor; equal allocation changes only the
+#' display projection. Vertical Collinear uses final y as its inverse axis.
+#' Sankey instances additionally record left/right side; query is always left.
+#' `track_statistics` retains computed values and source_rows before display
+#' replication; `track_source_data` is included with original_data=TRUE.
+#' `label_visibility` reports layer/component/source_row, visibility, policy
+#' reason, final position and size, and available perimeter/crossing fields.
+#' An unavailable collision field is NA, never evidence of zero collisions.
+#'
 #' @md
 #' @name ggchord_layout_contract
 #' @family layout results

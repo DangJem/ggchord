@@ -310,9 +310,9 @@ scale_region_fill_manual <- function(..., values) {
 #' Genomic sequence position scale
 #'
 #' Controls major/minor genomic position breaks and labels independently for
-#' every sequence. The default domain is each sequence's `[0, length]` range;
+#' every sequence. The default domain is each sequence's `[1, length]` range;
 #' linear source-coordinate axes use the retained original genomic interval.
-#' This scale configures sequence axes in all three coordinate modes. To add
+#' This scale configures sequence axes across supported coordinate modes. To add
 #' an independent bp reference bar in a linear display, use [geom_seq_scale()].
 #'
 #' @param name Scale name; position guides are disabled by default.

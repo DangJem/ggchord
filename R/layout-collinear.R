@@ -5,8 +5,12 @@ ggchord_collinear_x <- function(pos, id, ref) {
   sequence_length <- unname(ref$lens[id])
   orientation <- unname(ref$orientation[id])
   ifelse(rep_len(orientation, length(pos)) == 1,
-    pos, rep_len(sequence_length, length(pos)) - pos) * ref$x_scale +
+    pos, rep_len(sequence_length, length(pos)) - pos) * ggchord_collinear_scale(id, ref) +
     rep_len(unname(ref$x_offset[id] %||% 0), length(pos))
+}
+
+ggchord_collinear_scale <- function(id, ref) {
+  if (length(ref$x_scale) == 1L) unname(ref$x_scale) else unname(ref$x_scale[id])
 }
 
 # Obstacles record signed distances from a horizontal backbone. Only entities
@@ -237,7 +241,7 @@ ggchord_collinear_entity_obstacles <- function(layer, layout, input) {
   pieces <- lapply(split(polygons, polygons$group), function(d) {
     row <- input[d$source_row[1L], , drop = FALSE]
     id <- as.character(row$accver)
-    local_x <- (d$x - unname(ref$x_offset[id] %||% 0)) / ref$x_scale
+    local_x <- (d$x - unname(ref$x_offset[id] %||% 0)) / ggchord_collinear_scale(id, ref)
     positions <- if (ref$orientation[id] == 1) local_x else
       unname(ref$lens[id]) - local_x
     offsets <- d$y - unname(ref$y[id])
@@ -270,7 +274,8 @@ compute_collinear_layout <- function(...) {
     y <- stats::setNames(row_y[segment_table$row_index], seqs)
   }
   ref <- list(mode = "collinear", lens = lens, orientation = p$orientation,
-    x_scale = p$collinear_transform$table$units_per_bp[1L], y = y,
+    x_scale = if (identical(p$length_mode, "equal")) stats::setNames(
+      p$collinear_transform$table$units_per_bp, seqs) else p$collinear_transform$table$units_per_bp[1L], y = y,
     x_offset = p$collinear_transform$offset %||% stats::setNames(rep(0, n), seqs))
   seq_arcs <- stats::setNames(lapply(seqs, function(id) {
     data.frame(x = ggchord_collinear_x(c(0, lens[[id]]), id, ref),

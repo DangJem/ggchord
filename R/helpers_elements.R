@@ -71,19 +71,21 @@ bezier_pts <- function(p0, p3, c1, c2, n = 100) {
 #' @return Numeric vector of major tick positions. The maximum/seam is omitted.
 #' @keywords internal
 #' @noRd
-breakPointsFunc <- function(max_value, n = 5, tol = 0.5) {
-  if (max_value <= 0) return(c(0, max_value))
-  # Plasmid maps favour a stable, readable coordinate cadence over an exact
-  # target count. Pick the smallest 1/2/2.5/5 x 10^k step that yields at most
-  # ten labelled intervals, matching common molecular-biology map practice.
-  exponent <- floor(log10(max_value)) - 2L
-  candidates <- sort(unique(as.vector(outer(
-    c(1, 2, 2.5, 5), 10^(exponent + 0:5), `*`
-  ))))
-  step <- candidates[which(ceiling(max_value / candidates) <= 10L)[1L]]
-  if (!is.finite(step)) step <- max_value
-  ticks <- seq(0, floor(max_value / step) * step, by = step)
-  sort(unique(ticks[ticks >= 0 & ticks < max_value]))
+breakPointsFunc <- function(max_value, n = 5, tol = 0.5, available_mm = NULL) {
+  if (max_value <= 1) return(max_value)
+  # Endpoints are scientific positions, not a relabelled zero.
+  context <- ggchord_render_context()
+  panel <- context$panel_mm
+  if (is.null(panel) || any(!is.finite(panel))) panel <- ggchord_render_dimensions() * .7
+  budget <- available_mm %||% if (all(is.finite(panel))) min(panel) else 100
+  label_mm <- tryCatch(grid::convertWidth(grid::grobWidth(grid::textGrob(
+    as.character(max_value), gp=grid::gpar(fontsize=8))), "mm", valueOnly=TRUE),
+    error=function(e) 10)
+  count <- max(2L, min(as.integer(n) + 2L, floor(budget / max(label_mm + 5, 10))))
+  middle <- pretty(c(1,max_value), n=max(1,count-2))
+  middle <- middle[middle > 1 & middle < max_value]
+  if (length(middle) > count-2) middle <- middle[unique(round(seq(1,length(middle),length.out=count-2)))]
+  sort(unique(c(1,middle,max_value)))
 }
 
 

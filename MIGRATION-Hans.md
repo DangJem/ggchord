@@ -121,3 +121,34 @@ p_offsets <- ggchord(seqs, gene_data = genes) +
 ## v0.16.7 的弦图默认旋转
 
 弦图默认旋转改为 0 度。需要 45 度布局时，显式添加 `coord_chord(rotation = 45)`。原生蛋白图声明 `sequence_unit = "aa"`，并提供完整蛋白长度。
+
+## v0.17.0 基础架构迁移
+
+`geom_track_bar()` 现在按源位置统计观测数（`stat="count"`）。旧调用若已提供数值高度，
+请改为 `geom_track_col()`，原映射与 `position=position_track("signal")` 可以保留；
+也可以使用 `track=position_track("signal")` 并单独指定数据 Position。
+通用 `geom_track()` 支持 point/line/path/step/col/bar/tile/rect/area/ribbon/segment/
+linerange/errorbar/text 和 identity/count/bin/summary；bin 必须显式给出 binwidth 或
+breaks。任意第三方 Geom/Stat 扩展不属于本版。
+
+prepare/clean/focus/segment 工作流接受 `feature_data` 并返回同名结果；旧 gene 调用继续
+返回 `gene_data`。两者不能同时提供。源记录、未知链和元数据保留。
+
+`geom_seq(seq_order=c(A_high="A", B="B", A_low="A"))` 声明显示副本。
+各连接层先筛选真实 HSP，再指定 `between=c("A_high","B")` 或 `between=c(2,3)`，
+路由必须唯一。提供稳定的 `source_hsp_id` 可检查跨层重复显示；确实需要重复时显式
+设置 `allow_repeated=TRUE`。未提供时来源身份只在层内有效，不根据相同值推断身份。
+同一图对象可以切换 Chord/Collinear。Sankey 自己声明 query 左列、subject 右列副本，
+不将 between 解释为多阶段流量。
+
+`coord_collinear(seq_axis="vertical")` 使用纵向骨架，反查坐标传入最终 y。
+`coord_sankey()` 默认过滤同源实体自身连接，保留输入的互反记录；首批 MVP 不支持
+共享分支。坐标映射时可从导出的 `display_instances` 选择无歧义实例。
+
+`geom_seq(length_mode="equal")` 只改变显示分配，真实长度、坐标和局部轴仍保留；
+禁止具有误导性的共享绝对比例尺。默认刻度显示真实首位 1 与末位，闭圆接缝合并两者；
+显式 breaks 始终优先。
+
+Ribbon 默认按曲线从 query 序列色渐变至 subject 序列色，并朝 subject 收尖。
+`tip="none"` 保留完整端面；`aes(ribbon_fill=pident)` 选择 Identity 模式，固定域为
+0–100，0/50/80/90/95/100 区间按数值比例显示。固定 fill、用户映射和用户标度优先。

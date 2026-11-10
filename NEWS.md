@@ -19,6 +19,30 @@
 * Fixed user metadata named `source_row` overwriting computed geometry identity.
   The original metadata remains available in exported resolved inputs.
 
+* Added source-local `geom_track()` with fourteen geometries, identity/count/bin/
+  summary statistics and native data positions. Physical bands use `track`;
+  the legacy `position = position_track()` spelling remains accepted. `bar`
+  now counts observations; replace previous numerical bars with `geom_track_col()`.
+* Added named/repeated display instances, explicit `between` routes and HSP
+  identity reports for Chord/Collinear. Statistical observations are computed
+  before display replication. Ambiguous routes fail instead of duplicating HSPs.
+* Added vertical Collinear and mirrored two-column `coord_sankey()`. Sankey
+  retains reciprocal input rows, filters same-entity links by default and
+  reports query-left/subject-right instances. Shared branches are not supported
+  in this first mirrored layout.
+* Added opt-in `length_mode = "equal"`, with original lengths and projection
+  factors in exports; a misleading shared absolute scale bar is rejected.
+* Default sequence ticks now retain positions 1 and length and adapt intermediate
+  positions to physical space. Circular seams combine the endpoint label.
+* Default ribbons interpolate endpoint sequence colours along their curve and
+  taper towards the subject. Explicit fill/mapping/scales take priority;
+  `tip = "none"` keeps full ribbon fronts. Explicit pident uses a fixed 0–100
+  domain and unequal 0/50/80/90/95/100 colour intervals and guide lengths.
+* Unified Feature input is also accepted by prepare, clean, focus and segment
+  workflows. Existing positional gene inputs are retained.
+* Circular outer labels now share one measured perimeter queue at every count;
+  the former 30-label/primer switch is removed.
+
 # ggchord 0.16.7 (development)
 
 * Completed the bilingual tutorial audit with focused circular backbone, label,
