@@ -109,7 +109,7 @@ ggchord_render_table <- function(built, force = FALSE) {
   physical <- isTRUE(force) || ggchord_physical_requested(source)
   passes <- 0L
   if (physical && identical(context$status, "measured")) {
-    passes_allowed <- if (isTRUE(source$coordinates$ggchord_circular)) 6L else 3L
+    passes_allowed <- if (isTRUE(source$coordinates$ggchord_circular)) 10L else 3L
     for (pass in seq_len(passes_allowed)) {
       input <- context
       next_plot <- ggchord_render_plot_copy(source)

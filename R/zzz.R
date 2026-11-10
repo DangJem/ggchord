@@ -454,6 +454,29 @@ extract_ggchord_layer_data <- function(lyr, layout) {
   ggchord_restore_instance_data(ggchord_attach_input_columns(geometry, input), layout$display_instances)
 }
 
+# Circular parallel ticks use the same glyph geometry for drawing and bounds.
+ggchord_axis_label_geometry <- function(layout, labels) {
+  if (!nrow(labels) || !isTRUE(layout$circular)) return(labels)
+  curved <- !is.na(labels$label_along_axis) & labels$label_along_axis
+  if (!any(curved)) return(labels)
+  text <- labels[curved, , drop = FALSE]
+  text$text <- text$label
+  text$text_x <- text$label_x; text$text_y <- text$label_y
+  text$text_angle <- text$label_angle
+  text$hjust <- text$label_hjust; text$vjust <- text$label_vjust
+  text$.axis_label <- text$label
+  glyph <- ggchord_arc_text_layout(text,
+    units_per_inch = layout$text_units_per_inch %||% .35,
+    respect_justification = TRUE)$glyphs
+  if (nrow(glyph)) {
+    glyph$label <- glyph$text
+    glyph$label_x <- glyph$text_x; glyph$label_y <- glyph$text_y
+    glyph$label_angle <- glyph$text_angle
+    glyph$label_hjust <- .5; glyph$label_vjust <- .5
+  }
+  ggchord_rbind_fill(list(labels[!curved, , drop = FALSE], glyph))
+}
+
 #' Combine axis components for GeomChordAxis
 #' @noRd
 ggchord_axis_geometry <- function(layout) {
@@ -476,6 +499,7 @@ ggchord_axis_geometry <- function(layout) {
     tick$yend <- tick$y1
   }
   if (nrow(label)) {
+    label <- ggchord_axis_label_geometry(layout, label)
     label$.component <- "text"
     label$x <- label$label_x
     label$y <- label$label_y

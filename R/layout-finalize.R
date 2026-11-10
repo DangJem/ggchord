@@ -18,7 +18,7 @@ ggchord_layout_finalize_step <- function(
                                     data.frame(), show_axis = FALSE)
     axis_ticks <- ggchord_hide_text_overlaps(
       axis_ticks, content,
-      units_per_inch = text_units_per_inch
+      units_per_inch = text_units_per_inch, circular = circular
     )
   }
 

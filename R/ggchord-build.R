@@ -990,6 +990,11 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     axisGap = axisGap, axisMaj = axisMaj, axisMajLen = axisMajLen,
     axisMin = axisMin, axisMinLen = axisMinLen,
     labelSize = labelSize, labelOffset = labelOffset,
+    axis_text_style = {
+      style <- ggchord_theme_element(plot, "ggchord.axis.text")
+      if(inherits(style,"element_text")) list(family=style@family,
+        fontface=style@face,lineheight=style@lineheight) else list()
+    },
     axisLabelOrientation = axisLabelOri,
     seqBackboneOuter = seqBackboneOuter,
     axis_breaks = axis_breaks,

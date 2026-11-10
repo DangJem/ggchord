@@ -379,7 +379,7 @@ ggchord_text_boxes <- function(df,
 # text anchor. This is shared by collision detection, leader clipping and the
 # renderer so all three use the same curved baseline and local tangents.
 ggchord_arc_text_layout <- function(text, units_per_inch = .35,
-                                     box_padding = 0) {
+                                     box_padding = 0, respect_justification = FALSE) {
   if (!nrow(text)) return(list(glyphs = data.frame(), boxes =
     ggchord_text_boxes(data.frame()), owners = integer()))
   glyphs <- list()
@@ -405,6 +405,7 @@ ggchord_arc_text_layout <- function(text, units_per_inch = .35,
     total <- sum(advance) + tracking * max(0, length(chars) - 1L)
     along <- cumsum(c(0, utils::head(advance + tracking, -1L))) + advance / 2 -
       total / 2
+    if (respect_justification) along <- along + (.5 - text$hjust[i]) * total
     radius <- sqrt(text$text_x[i]^2 + text$text_y[i]^2)
     centre_angle <- atan2(text$text_y[i], text$text_x[i])
     increasing_tangent <- (centre_angle * 180 / pi + 90) %% 360

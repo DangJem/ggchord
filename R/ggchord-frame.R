@@ -144,6 +144,7 @@ ggchord_adaptive_limits <- function(layout) {
     axis_labels <- layout$axis_ticks[!is.na(layout$axis_ticks$label), ,
                                      drop = FALSE]
     if (nrow(axis_labels) > 0) {
+      axis_labels <- ggchord_axis_label_geometry(layout, axis_labels)
       add_boxes(ggchord_text_boxes(
         axis_labels,
         x_col = "label_x", y_col = "label_y", text_col = "label",

@@ -2,7 +2,7 @@
 ggchord_layout_axis_step <- function(
     axis_breaks, axis_labels, axis_minor_breaks, axisGap, axisLabelOrientation, axisMaj, axisMajLen,
     axisMin, axisMinLen, circular, ends, labelOffset, labelSize, lens, nSeg, orientation, seq_refs,
-    seqBackboneOuter, seqs, show_axis, starts) {
+    seqBackboneOuter, seqs, show_axis, starts, axis_text_style) {
   # Step 5: generate axes (lines, ticks, labels)
   # ====================================================================
   axis_lines <- data.frame(x = numeric(0), y = numeric(0),
@@ -145,6 +145,9 @@ ggchord_layout_axis_step <- function(
         label = pts$display_label,
         label_x = lbl[, 1], label_y = lbl[, 2],
         size = labelSize[[id]],
+        family = axis_text_style$family %||% "",
+        fontface = axis_text_style$fontface %||% "plain",
+        lineheight = axis_text_style$lineheight %||% 1.2,
         label_angle = label_angle,
         label_angle_relative = relative_angle,
         label_along_axis = rep(along_axis, nrow(pts)),

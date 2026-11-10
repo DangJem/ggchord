@@ -16,7 +16,10 @@ metrics <- function(p, l = NULL) {
     overlaps <- overlaps + as.integer(abs(tasks$text_x[i]-tasks$text_x[j]) < (tasks$w[i]+tasks$w[j])/2 &&
       abs(tasks$text_y[i]-tasks$text_y[j]) < (tasks$h[i]+tasks$h[j])/2)
   visibility <- ggchord_label_visibility(l)
+  upper_opposite <- if(nrow(tasks)) sum(tasks$direction_y > .5 &
+    abs(tasks$direction_x) > .05 & tasks$text_x * tasks$direction_x < 0) else 0L
   list(external_labels=nrow(tasks),overlapping_boxes=overlaps,
+    upper_labels_on_opposite_side=upper_opposite,layout_units_per_inch=l$text_units_per_inch,
     requested=nrow(visibility),visible=sum(visibility$visible),
     hidden_reasons=if(nrow(visibility)) as.list(table(visibility$reason[!visibility$visible])) else list(),
     minimum_size=if(nrow(tasks)) min(tasks$size) else NULL)

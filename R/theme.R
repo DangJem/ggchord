@@ -37,7 +37,9 @@
 #'   with the plasmid preset. Their default line widths are 0.45/0.3 mm, or
 #'   0.6/0.35 mm with that preset. Explicit length and line settings take priority.
 #' @param axis.text.orientation One of `"horizontal"`, `"parallel"`,
-#'   `"perpendicular"`, or a finite numeric angle.
+#'   `"perpendicular"`, or a finite numeric angle. In circular layouts,
+#'   parallel labels follow the circle glyph by glyph. Horizontal and numeric
+#'   orientations retain straight text.
 #' @param axis.text.check.overlap Whether overlapping axis labels are hidden. Defaults to TRUE.
 #' @param seq.label,gene.label,feature.label,restriction.label,seq.center.label,seq.center.name,seq.center.length
 #'   Text elements for sequence, gene, feature, restriction-site and circular
@@ -52,7 +54,9 @@
 #' @param legend.seq.direction,legend.ribbon.direction,legend.gene.direction,legend.feature.direction,legend.region.direction Per-role directions.
 #' @param legend.seq.background,legend.ribbon.background,legend.gene.background,legend.feature.background,legend.region.background Per-role backgrounds.
 #' @param legend.seq.key,legend.ribbon.key,legend.gene.key,legend.feature.key,legend.region.key Per-role key elements.
-#' @param legend.seq.key.size,legend.seq.key.width,legend.seq.key.height,legend.ribbon.key.size,legend.ribbon.key.width,legend.ribbon.key.height,legend.gene.key.size,legend.gene.key.width,legend.gene.key.height,legend.feature.key.size,legend.feature.key.width,legend.feature.key.height,legend.region.key.size,legend.region.key.width,legend.region.key.height Per-role key dimensions.
+#' @param legend.seq.key.size,legend.seq.key.width,legend.seq.key.height,legend.ribbon.key.size,legend.ribbon.key.width,legend.ribbon.key.height,legend.gene.key.size,legend.gene.key.width,legend.gene.key.height,legend.feature.key.size,legend.feature.key.width,legend.feature.key.height,legend.region.key.size,legend.region.key.width,legend.region.key.height Per-role key dimensions. Automatic Identity rulers
+#'   measure their boundary labels independently of generic legend swatch sizes.
+#'   Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.
 #' @param legend.seq.text,legend.ribbon.text,legend.gene.text,legend.feature.text,legend.region.text Per-role text elements.
 #' @param legend.seq.text.position,legend.ribbon.text.position,legend.gene.text.position,legend.feature.text.position,legend.region.text.position Per-role text positions.
 #' @param legend.seq.title,legend.ribbon.title,legend.gene.title,legend.feature.title,legend.region.title Per-role title elements.

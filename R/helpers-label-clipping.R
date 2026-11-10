@@ -206,20 +206,26 @@ ggchord_repel_points <- function(seq_arcs, gene_polys, axis_lines, axis_ticks,
 #' always kept.
 #' @noRd
 ggchord_hide_text_overlaps <- function(df, content_pts,
-                                       units_per_inch = 0.35) {
+                                       units_per_inch = 0.35, circular = FALSE) {
   idx <- which(!is.na(df$label))
   if (!length(idx)) return(df)
-  boxes <- ggchord_text_boxes(df[idx, , drop = FALSE],
+  labels <- df[idx, , drop = FALSE]
+  labels$.axis_label_index <- seq_along(idx)
+  labels <- ggchord_axis_label_geometry(list(circular=circular,
+    text_units_per_inch=units_per_inch), labels)
+  boxes <- ggchord_text_boxes(labels,
     x_col = "label_x", y_col = "label_y", text_col = "label",
     angle_col = "label_angle", hjust_col = "label_hjust",
     vjust_col = "label_vjust", units_per_inch = units_per_inch, box_padding = .025)
+  owner <- labels$.axis_label_index
   hits_content <- vapply(seq_along(idx), function(k) {
-    dx <- content_pts$x - boxes$cx[k]
-    dy <- content_pts$y - boxes$cy[k]
-    cosine <- cos(boxes$angle[k])
-    sine <- sin(boxes$angle[k])
-    any(abs(dx * cosine + dy * sine) < boxes$ow[k] / 2 &
-        abs(-dx * sine + dy * cosine) < boxes$oh[k] / 2)
+    any(vapply(which(owner == k), function(j) {
+      dx <- content_pts$x - boxes$cx[j]
+      dy <- content_pts$y - boxes$cy[j]
+      cosine <- cos(boxes$angle[j]); sine <- sin(boxes$angle[j])
+      any(abs(dx * cosine + dy * sine) < boxes$ow[j] / 2 &
+        abs(-dx * sine + dy * cosine) < boxes$oh[j] / 2)
+    }, logical(1L)))
   }, logical(1L))
   groups <- split(seq_along(idx), df$accver[idx] %||% rep("", length(idx)))
   hits_content[vapply(groups, `[[`, integer(1L), 1L)] <- FALSE
@@ -229,8 +235,8 @@ ggchord_hide_text_overlaps <- function(df, content_pts,
       candidates <- rows[seq.int(1L, length(rows), by = stride)]
       trial <- kept
       for (k in candidates[!hits_content[candidates]]) {
-        if (ggchord_boxes_overlap_any(boxes[k, , drop = FALSE],
-                                     boxes[trial, , drop = FALSE])) break
+        if (ggchord_boxes_overlap_any(boxes[owner == k, , drop = FALSE],
+                                     boxes[owner %in% trial, , drop = FALSE])) break
         trial <- c(trial, k)
       }
       if (length(trial) - length(kept) == sum(!hits_content[candidates])) {

@@ -34,12 +34,19 @@
   factors in exports; a misleading shared absolute scale bar is rejected.
 * Default sequence ticks now retain positions 1 and length and adapt intermediate
   positions to physical space. Circular seams combine the endpoint label.
-* Default ribbons interpolate endpoint sequence colours along their curve and
-  optionally taper towards the subject (full fronts remain the default). Explicit fill/mapping/scales take priority;
+* Default ribbons retain Identity fills. Opt into endpoint sequence-colour
+  interpolation with `gradient = TRUE`, or an optional subject taper. Explicit fill/mapping/scales take priority;
   `tip = "none"` keeps full ribbon fronts. Explicit pident uses a fixed 0–100
   domain and unequal 0/50/80/90/95/100 colour intervals and guide lengths.
 * Unified Feature input is also accepted by prepare, clean, focus and segment
   workflows. Existing positional gene inputs are retained.
+* Fixed generic legend key sizes collapsing the full Identity ruler: automatic
+  guides measure boundary labels and reserve enough physical length. Explicit
+  per-role guide sizes remain authoritative.
+* Circular parallel axis labels now follow the arc character by character;
+  horizontal/numeric orientations and linear layouts retain straight text.
+* Fixed upper circular callouts crossing to the wrong side under load balancing;
+  source-root meridians and measured upper capacity determine their placement.
 * Circular outer labels now share one measured perimeter queue at every count;
   the former 30-label/primer switch is removed.
 

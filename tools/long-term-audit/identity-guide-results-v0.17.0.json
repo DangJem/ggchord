@@ -1,0 +1,110 @@
+{
+  "scope": "synthetic 0/50/80/90/95/100 Identity boundaries with small generic keys",
+  "default_gradient": false,
+  "results": {
+    "right": {
+      "guides": [
+        {
+          "guide": "guide-box-right",
+          "width_mm": 17.0561,
+          "height_mm": 118.4567,
+          "canvas_area_fraction": 0.0447,
+          "exceeds_canvas": false
+        }
+      ],
+      "measurements": [
+        {
+          "role": "ribbon",
+          "aesthetic": "ribbon_fill",
+          "title": "Identity (%)",
+          "n_items": 6,
+          "max_label_width_mm": 6.4745,
+          "max_label_height_mm": 2.7778,
+          "title_width_mm": 15.3606,
+          "title_height_mm": 2.1742,
+          "font_size_pt": 11,
+          "font_family": "",
+          "requested_key_width_mm": 9,
+          "requested_key_height_mm": 93.3333,
+          "position": "right",
+          "shared_height_budget_mm": 59.008,
+          "measurement": "device_text_metrics",
+          "font_fallback": "not_inspected",
+          "labels": ["0", "50", "80", "90", "95", "100"],
+          "_row": "width1"
+        }
+      ],
+      "closest_boundary_distance_mm": 4.6667,
+      "label_extent_mm": 2.7778
+    },
+    "bottom": {
+      "guides": [
+        {
+          "guide": "guide-box-bottom",
+          "width_mm": 188.6339,
+          "height_mm": 10.176,
+          "canvas_area_fraction": 0.0425,
+          "exceeds_canvas": false
+        }
+      ],
+      "measurements": [
+        {
+          "role": "ribbon",
+          "aesthetic": "ribbon_fill",
+          "title": "Identity (%)",
+          "n_items": 6,
+          "max_label_width_mm": 6.4745,
+          "max_label_height_mm": 2.7778,
+          "title_width_mm": 15.3606,
+          "title_height_mm": 2.1742,
+          "font_size_pt": 11,
+          "font_family": "",
+          "requested_key_width_mm": 131.909,
+          "requested_key_height_mm": 5,
+          "position": "bottom",
+          "shared_height_budget_mm": 59.008,
+          "measurement": "device_text_metrics",
+          "font_fallback": "not_inspected",
+          "labels": ["0", "50", "80", "90", "95", "100"],
+          "_row": "width1"
+        }
+      ],
+      "closest_boundary_distance_mm": 6.5955,
+      "label_extent_mm": 6.4745
+    },
+    "wrapper_bottom": {
+      "guides": [
+        {
+          "guide": "guide-box-bottom",
+          "width_mm": 102.822,
+          "height_mm": 13.155,
+          "canvas_area_fraction": 0.03,
+          "exceeds_canvas": false
+        }
+      ],
+      "measurements": [
+        {
+          "role": "ribbon",
+          "aesthetic": "ribbon_fill",
+          "title": "Identity (%)",
+          "n_items": 6,
+          "max_label_width_mm": 6.4745,
+          "max_label_height_mm": 2.7778,
+          "title_width_mm": 15.3606,
+          "title_height_mm": 2.1742,
+          "font_size_pt": 11,
+          "font_family": "",
+          "requested_key_width_mm": 131.909,
+          "requested_key_height_mm": 5,
+          "position": "bottom",
+          "shared_height_budget_mm": 123.016,
+          "measurement": "device_text_metrics",
+          "font_fallback": "not_inspected",
+          "labels": ["0", "50", "80", "90", "95", "100"],
+          "_row": "width"
+        }
+      ],
+      "evidence": "late bottom placement retains a horizontal ruler"
+    }
+  }
+}

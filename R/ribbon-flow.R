@@ -189,7 +189,7 @@ ggchord_sequence_display_colours <- function(plot,layout) {
 }
 
 ggchord_ribbon_uses_flow <- function(layer,plot) {
-  if(!identical(layer$ggchord_type,"ribbon"))return(FALSE)
+  if(!identical(layer$ggchord_type,"ribbon") || !isTRUE(layer$ggchord_params$gradient))return(FALSE)
   user <- layer$ggchord_input_mapping
   if(isTRUE(layer$inherit.aes))user <- c(user,plot$mapping[setdiff(names(plot$mapping),names(user))])
   is.null(layer$aes_params$ribbon_fill) && !"ribbon_fill" %in% names(user) &&

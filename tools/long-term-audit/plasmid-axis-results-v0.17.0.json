@@ -1,0 +1,8 @@
+{
+  "scope": "synthetic circular axis and explicit horizontal override",
+  "source_labels": ["1 / 10000", "2000", "4000", "6000", "8000"],
+  "glyph_count": 25,
+  "label_text_preserved": true,
+  "tangents_follow_arc": true,
+  "horizontal_stays_straight": true
+}

@@ -26,6 +26,7 @@ geom_link_ribbon(
   between = NULL,
   allow_repeated = FALSE,
   tip = c("none", "subject"),
+  gradient = FALSE,
   ...
 )
 }
@@ -59,7 +60,7 @@ avoidance uses one clearance across an endpoint.}
 
 \item{link_branch_fraction}{Shared length relative to the shortest member, in (0, 0.5].}
 
-\item{fill}{Optional fixed ribbon fill. NULL permits the automatic endpoint gradient.}
+\item{fill}{Optional fixed ribbon fill. NULL uses the default Identity fill.}
 
 \item{alpha, colour, linewidth}{Standard fixed ribbon styles. Explicit values
 take precedence over matching mappings; omitted defaults do not suppress
@@ -103,18 +104,21 @@ of the channel. The tip is a decorative front-midpoint marker, not a
 single matched base or biological transfer direction. Degenerate fronts
 fall back to the full front with a warning. Source intervals are unchanged.}
 
+\item{gradient}{Logical. Opt into endpoint sequence-colour interpolation;
+default FALSE. Explicit fill, mapping and scales still take priority.}
+
 \item{...}{Additional arguments passed to \code{geom_polygon()}}
 }
 \value{
 A ggplot2 layer.
 }
 \description{
-Draws alignment ribbons with query-to-subject sequence-colour gradients
-by default. Explicit fill, ribbon_fill mappings or ribbon fill scales
+Draws alignment ribbons with Identity fills by default.
+Set gradient = TRUE for query-to-subject sequence-colour interpolation. Explicit fill, ribbon_fill mappings or ribbon fill scales
 replace the gradient; map ribbon_fill = pident for an Identity guide. Alignment length and identity are never inferred from endpoints.
 Alternative mappings and legends are controlled with \code{aes()}, \verb{scale_*()}
-and \code{guides()}. Shared trunks keep the common endpoint colour; branch
-pieces interpolate between their endpoint colours. Optional tips appear
+and \code{guides()}. With gradient enabled, shared trunks keep the common
+endpoint colour and branches interpolate between their endpoint colours. Optional tips appear
 only at real subject fronts.
 }
 \examples{
@@ -130,4 +134,6 @@ ggchord(seq_data = seqs, ribbon_data = links) +
   geom_link_ribbon()
 ggchord(seqs, links) + geom_seq() +
   geom_link_ribbon(tip = "subject") + coord_collinear()
+ggchord(seqs, links) + geom_seq() +
+  geom_link_ribbon(gradient = TRUE)
 }

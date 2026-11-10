@@ -585,7 +585,9 @@ with the plasmid preset. Their default line widths are 0.45/0.3 mm, or
 0.6/0.35 mm with that preset. Explicit length and line settings take priority.}
 
 \item{axis.text.orientation}{One of \code{"horizontal"}, \code{"parallel"},
-\code{"perpendicular"}, or a finite numeric angle.}
+\code{"perpendicular"}, or a finite numeric angle. In circular layouts,
+parallel labels follow the circle glyph by glyph. Horizontal and numeric
+orientations retain straight text.}
 
 \item{axis.text.check.overlap}{Whether overlapping axis labels are hidden. Defaults to TRUE.}
 
@@ -605,7 +607,9 @@ to hide every guide for that role.}
 
 \item{legend.seq.key, legend.ribbon.key, legend.gene.key, legend.feature.key, legend.region.key}{Per-role key elements.}
 
-\item{legend.seq.key.size, legend.seq.key.width, legend.seq.key.height, legend.ribbon.key.size, legend.ribbon.key.width, legend.ribbon.key.height, legend.gene.key.size, legend.gene.key.width, legend.gene.key.height, legend.feature.key.size, legend.feature.key.width, legend.feature.key.height, legend.region.key.size, legend.region.key.width, legend.region.key.height}{Per-role key dimensions.}
+\item{legend.seq.key.size, legend.seq.key.width, legend.seq.key.height, legend.ribbon.key.size, legend.ribbon.key.width, legend.ribbon.key.height, legend.gene.key.size, legend.gene.key.width, legend.gene.key.height, legend.feature.key.size, legend.feature.key.width, legend.feature.key.height, legend.region.key.size, legend.region.key.width, legend.region.key.height}{Per-role key dimensions. Automatic Identity rulers
+measure their boundary labels independently of generic legend swatch sizes.
+Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.}
 
 \item{legend.seq.text, legend.ribbon.text, legend.gene.text, legend.feature.text, legend.region.text}{Per-role text elements.}
 

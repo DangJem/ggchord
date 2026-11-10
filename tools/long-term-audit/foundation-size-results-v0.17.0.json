@@ -6,79 +6,153 @@
   },
   "sizes": {
     "10x8": {
-      "external_labels": 70,
+      "external_labels": 71,
       "overlapping_boxes": 0,
+      "upper_labels_on_opposite_side": 11,
       "requested": 164,
       "visible": 164,
       "hidden_reasons": [],
       "minimum_size": 3.2,
       "measurement": {
         "status": "measured",
-        "panel_mm": [249.7825, 180.6502],
-        "canvas_mm": [254, 203.2],
-        "panel_bounds_mm": [2.1088, 251.8912, 11.2749, 191.9251],
-        "x_range": [-2.5815, 2.6191],
-        "y_range": [-1.3252, 2.436],
-        "units_per_mm": [0.0208, 0.0208],
-        "axis_units_per_inch": [0.5288, 0.5288],
-        "units_per_inch": 0.5288,
+        "panel_mm": [
+          244.9085,
+          198.9825
+        ],
+        "canvas_mm": [
+          254,
+          203.2
+        ],
+        "panel_bounds_mm": [
+          4.5458,
+          249.4542,
+          2.1088,
+          201.0912
+        ],
+        "x_range": [
+          -2.6396,
+          2.6789
+        ],
+        "y_range": [
+          -1.435,
+          2.8862
+        ],
+        "units_per_mm": [
+          0.0217,
+          0.0217
+        ],
+        "axis_units_per_inch": [
+          0.5516,
+          0.5516
+        ],
+        "units_per_inch": 0.5516,
         "geometry_metric_status": "measured",
         "converged": true,
         "device": "quartz_off_screen",
         "font_conditions": "Metrics use the selected device; font fallback and embedding remain unchecked",
         "basis": "Resolved gtable grid.layout panel, including null units and aspect constraints",
-        "refinement_passes": 6
+        "refinement_passes": 5
       }
     },
     "16.5x8": {
-      "external_labels": 69,
+      "external_labels": 71,
       "overlapping_boxes": 0,
+      "upper_labels_on_opposite_side": 10,
       "requested": 164,
       "visible": 164,
       "hidden_reasons": [],
       "minimum_size": 3.2,
       "measurement": {
         "status": "measured",
-        "panel_mm": [304.2189, 198.9825],
-        "canvas_mm": [419.1, 203.2],
-        "panel_bounds_mm": [57.4406, 361.6594, 2.1088, 201.0912],
-        "x_range": [-3.0691, 2.5214],
-        "y_range": [-1.4584, 2.1983],
-        "units_per_mm": [0.0184, 0.0184],
-        "axis_units_per_inch": [0.4668, 0.4668],
-        "units_per_inch": 0.4668,
+        "panel_mm": [
+          302.1918,
+          198.9825
+        ],
+        "canvas_mm": [
+          419.1,
+          203.2
+        ],
+        "panel_bounds_mm": [
+          58.4541,
+          360.6459,
+          2.1088,
+          201.0912
+        ],
+        "x_range": [
+          -3.6899,
+          3.118
+        ],
+        "y_range": [
+          -1.4991,
+          2.9837
+        ],
+        "units_per_mm": [
+          0.0225,
+          0.0225
+        ],
+        "axis_units_per_inch": [
+          0.5722,
+          0.5722
+        ],
+        "units_per_inch": 0.5722,
         "geometry_metric_status": "measured",
         "converged": true,
         "device": "quartz_off_screen",
         "font_conditions": "Metrics use the selected device; font fallback and embedding remain unchecked",
         "basis": "Resolved gtable grid.layout panel, including null units and aspect constraints",
-        "refinement_passes": 4
+        "refinement_passes": 5
       }
     },
     "8x8": {
       "external_labels": 75,
       "overlapping_boxes": 0,
+      "upper_labels_on_opposite_side": 17,
+      "layout_units_per_inch": 0.9143,
       "requested": 164,
       "visible": 164,
       "hidden_reasons": [],
       "minimum_size": 3.2,
       "measurement": {
         "status": "measured",
-        "panel_mm": [198.9825, 173.7879],
-        "canvas_mm": [203.2, 203.2],
-        "panel_bounds_mm": [2.1088, 201.0912, 14.706, 188.494],
-        "x_range": [-3.4599, 3.5223],
-        "y_range": [-2.0025, 4.0956],
-        "units_per_mm": [0.0351, 0.0351],
-        "axis_units_per_inch": [0.8913, 0.8913],
-        "units_per_inch": 0.8913,
-        "geometry_metric_status": "estimated",
-        "converged": false,
+        "panel_mm": [
+          198.9825,
+          167.9885
+        ],
+        "canvas_mm": [
+          203.2,
+          203.2
+        ],
+        "panel_bounds_mm": [
+          2.1088,
+          201.0912,
+          17.6057,
+          185.5943
+        ],
+        "x_range": [
+          -3.561,
+          3.6263
+        ],
+        "y_range": [
+          -1.4742,
+          4.5935
+        ],
+        "units_per_mm": [
+          0.0361,
+          0.0361
+        ],
+        "axis_units_per_inch": [
+          0.9174,
+          0.9174
+        ],
+        "units_per_inch": 0.9174,
+        "geometry_metric_status": "measured",
+        "converged": true,
         "device": "quartz_off_screen",
         "font_conditions": "Metrics use the selected device; font fallback and embedding remain unchecked",
         "basis": "Resolved gtable grid.layout panel, including null units and aspect constraints",
-        "refinement_passes": 6
+        "refinement_passes": 10
       }
     }
-  }
+  },
+  "refinement": "10x8 and 16.5x8 converged before the existing bound; 8x8 was remeasured after extending the bounded circular refinement. No source annotations or font sizes were removed."
 }

@@ -23,12 +23,12 @@ make_ribbon_geom <- function(outline = FALSE, linetype = FALSE) {
 
 #' Add an alignment ribbon layer
 #'
-#' Draws alignment ribbons with query-to-subject sequence-colour gradients
-#' by default. Explicit fill, ribbon_fill mappings or ribbon fill scales
+#' Draws alignment ribbons with Identity fills by default.
+#' Set gradient = TRUE for query-to-subject sequence-colour interpolation. Explicit fill, ribbon_fill mappings or ribbon fill scales
 #' replace the gradient; map ribbon_fill = pident for an Identity guide. Alignment length and identity are never inferred from endpoints.
 #' Alternative mappings and legends are controlled with `aes()`, `scale_*()`
-#' and `guides()`. Shared trunks keep the common endpoint colour; branch
-#' pieces interpolate between their endpoint colours. Optional tips appear
+#' and `guides()`. With gradient enabled, shared trunks keep the common
+#' endpoint colour and branches interpolate between their endpoint colours. Optional tips appear
 #' only at real subject fronts.
 #'
 #' @param mapping Default NULL (uses pre-computed data)
@@ -59,7 +59,9 @@ make_ribbon_geom <- function(outline = FALSE, linetype = FALSE) {
 #'   of the channel. The tip is a decorative front-midpoint marker, not a
 #'   single matched base or biological transfer direction. Degenerate fronts
 #'   fall back to the full front with a warning. Source intervals are unchanged.
-#' @param fill Optional fixed ribbon fill. NULL permits the automatic endpoint gradient.
+#' @param gradient Logical. Opt into endpoint sequence-colour interpolation;
+#'   default FALSE. Explicit fill, mapping and scales still take priority.
+#' @param fill Optional fixed ribbon fill. NULL uses the default Identity fill.
 #' @param alpha,colour,linewidth Standard fixed ribbon styles. Explicit values
 #'   take precedence over matching mappings; omitted defaults do not suppress
 #'   user mappings. For example, omit `alpha` when mapping `ribbon_alpha`.
@@ -104,6 +106,8 @@ make_ribbon_geom <- function(outline = FALSE, linetype = FALSE) {
 #'   geom_link_ribbon()
 #' ggchord(seqs, links) + geom_seq() +
 #'   geom_link_ribbon(tip = "subject") + coord_collinear()
+#' ggchord(seqs, links) + geom_seq() +
+#'   geom_link_ribbon(gradient = TRUE)
 geom_link_ribbon <- function(mapping = NULL, data = NULL,
                         link_ctrl_point = NULL,
                         link_gap = NULL,
@@ -122,8 +126,10 @@ geom_link_ribbon <- function(mapping = NULL, data = NULL,
                         inherit.aes = FALSE,
                         nonadjacent_linewidth = 0.4,
                         between = NULL, allow_repeated = FALSE, tip = c("none", "subject"),
-                        ...) {
+                        gradient = FALSE, ...) {
   tip <- match.arg(tip)
+  if (!is.logical(gradient) || length(gradient) != 1L || is.na(gradient))
+    ggchord_stop("gradient must be TRUE or FALSE")
   ribbon_ctrl_point <- link_ctrl_point
   if (!is.logical(allow_repeated) || length(allow_repeated) != 1L || is.na(allow_repeated))
     ggchord_stop("allow_repeated must be TRUE or FALSE")
@@ -238,7 +244,7 @@ geom_link_ribbon <- function(mapping = NULL, data = NULL,
     type                      = "ribbon",
     style_defaults = style_defaults,
     adjacent_only = adjacent_only, pairs = pairs,
-    between = between, allow_repeated = allow_repeated, tip = tip,
+    between = between, allow_repeated = allow_repeated, tip = tip, gradient = gradient,
     nonadjacent_linewidth = nonadjacent_linewidth,
     link_avoid = link_avoid, link_branch = link_branch, link_branch_fraction = link_branch_fraction,
     ribbon_color_scheme       = "pident",

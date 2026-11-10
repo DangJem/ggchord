@@ -16,7 +16,7 @@ for(n in counts) {
  h<-data.frame(qaccver='A',saccver='B',qstart=(i*17)%%500+1,
    qend=(i*17)%%500+101,sstart=(i*31)%%500+201,send=(i*31)%%500+351)
  reverse<-i%%2==0;temp<-h$sstart[reverse];h$sstart[reverse]<-h$send[reverse];h$send[reverse]<-temp
- p<-ggchord(s,h,validate='none')+geom_seq()+geom_link_ribbon()+coord_collinear()
+ p<-ggchord(s,h,validate='none')+geom_seq()+geom_link_ribbon(gradient=TRUE)+coord_collinear()
  warnings<-character();path<-tempfile(fileext='.png');gc(reset=TRUE)
  value<-tryCatch({
    elapsed<-system.time({
