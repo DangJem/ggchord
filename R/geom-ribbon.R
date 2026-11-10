@@ -27,7 +27,9 @@ make_ribbon_geom <- function(outline = FALSE, linetype = FALSE) {
 #' by default. Explicit fill, ribbon_fill mappings or ribbon fill scales
 #' replace the gradient; map ribbon_fill = pident for an Identity guide. Alignment length and identity are never inferred from endpoints.
 #' Alternative mappings and legends are controlled with `aes()`, `scale_*()`
-#' and `guides()`.
+#' and `guides()`. Shared trunks keep the common endpoint colour; branch
+#' pieces interpolate between their endpoint colours. Optional tips appear
+#' only at real subject fronts.
 #'
 #' @param mapping Default NULL (uses pre-computed data)
 #' @param data Default NULL (retrieved automatically from the layout)
@@ -52,7 +54,11 @@ make_ribbon_geom <- function(outline = FALSE, linetype = FALSE) {
 #' @inheritParams geom_link_line
 #' @param between Two display-instance names or declared-order indices for a unique route.
 #' @param allow_repeated Explicitly allow a declared source_hsp_id in more than one displayed relation.
-#' @param tip Subject-directed decorative taper, or none. Source intervals remain unchanged.
+#' @param tip Full interval fronts (none, default), or an optional subject taper.
+#'   The shoulder retains the translated target endpoint span at 88 percent
+#'   of the channel. The tip is a decorative front-midpoint marker, not a
+#'   single matched base or biological transfer direction. Degenerate fronts
+#'   fall back to the full front with a warning. Source intervals are unchanged.
 #' @param fill Optional fixed ribbon fill. NULL permits the automatic endpoint gradient.
 #' @param alpha,colour,linewidth Standard fixed ribbon styles. Explicit values
 #'   take precedence over matching mappings; omitted defaults do not suppress
@@ -96,6 +102,8 @@ make_ribbon_geom <- function(outline = FALSE, linetype = FALSE) {
 #' ggchord(seq_data = seqs, ribbon_data = links) +
 #'   geom_seq() +
 #'   geom_link_ribbon()
+#' ggchord(seqs, links) + geom_seq() +
+#'   geom_link_ribbon(tip = "subject") + coord_collinear()
 geom_link_ribbon <- function(mapping = NULL, data = NULL,
                         link_ctrl_point = NULL,
                         link_gap = NULL,
@@ -113,7 +121,7 @@ geom_link_ribbon <- function(mapping = NULL, data = NULL,
                         show.legend = TRUE,
                         inherit.aes = FALSE,
                         nonadjacent_linewidth = 0.4,
-                        between = NULL, allow_repeated = FALSE, tip = c("subject", "none"),
+                        between = NULL, allow_repeated = FALSE, tip = c("none", "subject"),
                         ...) {
   tip <- match.arg(tip)
   ribbon_ctrl_point <- link_ctrl_point

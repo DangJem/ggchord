@@ -22,7 +22,10 @@ ggchord_label_visibility <- function(layout) {
       rows[[length(rows)+1L]] <- data.frame(layer_id=owner,component=component,source_row=i,
         accver=as.character(input$accver[i]),source_text=source_text,visible=visible,
         reason=if(visible && 'source_rows' %in% names(selected) && length(selected$source_rows[[1]])>1)'represented_by_shared_label' else if(visible)'visible' else if(!is.na(source_text) && !nzchar(source_text))'empty_label' else 'not_placed_by_layer_policy',
+        actual_label=as.character(scalar('label',NA_character_)),
+        displayed_source_row=scalar('source_row'),
         text_x=scalar('text_x',scalar('x')),text_y=scalar('text_y',scalar('y')),
+        anchor_x=scalar('anchor_x'),anchor_y=scalar('anchor_y'),
         size=scalar('size'),side=scalar('outer_annotation_region',NA_character_),
         track=scalar('outer_track'),leader_crossings=scalar('leader_crossing_count'),stringsAsFactors=FALSE)
     }

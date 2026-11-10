@@ -149,6 +149,10 @@ prepare/clean/focus/segment 工作流接受 `feature_data` 并返回同名结果
 禁止具有误导性的共享绝对比例尺。默认刻度显示真实首位 1 与末位，闭圆接缝合并两者；
 显式 breaks 始终优先。
 
-Ribbon 默认按曲线从 query 序列色渐变至 subject 序列色，并朝 subject 收尖。
+Ribbon 默认按曲线从 query 序列色渐变至 subject 序列色，默认保留完整区间端面。
+显式 `tip="subject"` 才收尖：箭肩保留平移后的目标端点跨度，尖点仅是装饰标记，
+不代表唯一匹配坐标。
 `tip="none"` 保留完整端面；`aes(ribbon_fill=pident)` 选择 Identity 模式，固定域为
 0–100，0/50/80/90/95/100 区间按数值比例显示。固定 fill、用户映射和用户标度优先。
+
+渐变填充沿真实曲线使用设备分辨率网格，轮廓保持向量路径，避免透明分片接缝，并保留弯曲的来源端面。

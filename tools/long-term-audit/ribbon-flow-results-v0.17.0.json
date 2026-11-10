@@ -1,0 +1,6 @@
+{
+  "curved_front": "source arc retained in the fill mask; manually inspected PNG",
+  "endpoint_colours": "both declared sequence colours present",
+  "opacity": "requested alpha applied once",
+  "explicit_fill": "user fixed fill retained"
+}

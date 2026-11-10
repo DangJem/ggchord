@@ -166,7 +166,11 @@ coordinates and local axes remain scientific coordinates; a shared absolute
 scale bar is rejected. Default ticks now label true position 1 and the final
 position. A closed circular seam combines them; explicit breaks take priority.
 
-Ribbons now default to endpoint sequence-colour gradients and a subject taper.
+Ribbons now default to endpoint sequence-colour gradients and full interval fronts.
+Use `tip="subject"` for an optional decorative taper; its shoulder retains the
+translated target endpoint span and its tip is not a single matched position.
 Use `tip="none"` for untapered fronts. Map `aes(ribbon_fill=pident)` to select the
 Identity mode; it uses the fixed 0–100 domain and proportional intervals
 0/50/80/90/95/100. Fixed fill, user mappings and user scales override the gradient.
+
+Gradient fills use a device-resolved raster mesh along the true curve; outlines remain vector paths. This avoids translucent strip seams and preserves curved source fronts.

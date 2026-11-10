@@ -62,6 +62,14 @@ protan/deutan/tritan at severity 1 in linear RGB flag Lab distances below 10.
 These heuristic thresholds ignore spatial context, alpha compositing and
 viewing conditions, and never automatically change the plot or fail a run.
 }
+\section{Guide measurements}{
+
+\code{guide_measurements} records active roles, titles, item counts, device text
+widths/heights, requested key sizes, direction, grid and shared side budget.
+These complement actual guide-box measurements; requested key dimensions
+are not claimed as final grob bounds. Font fallback remains uninspected.
+}
+
 \examples{
 library(dplyr)
 data(seq_data_example)

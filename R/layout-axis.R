@@ -48,10 +48,10 @@ ggchord_layout_axis_step <- function(
       majors <- axis_breaks[[id]] %||% breakPointsFunc(lens[id], axisMaj[id], available_mm=available)
       major_labels <- axis_labels[[id]]
       if (isTRUE(circular) && abs(abs(ends[id]-starts[id])-2*pi)<1e-7 &&
-          is.null(axis_breaks[[id]]) && lens[id] > 1) {
+          (is.null(axis_breaks[[id]]) || isTRUE(attr(axis_breaks[[id]],"ggchord_automatic_breaks"))) && lens[id] > 1 && all(c(1,lens[id]) %in% majors)) {
         # One seam cue names both actual ends without stacking two labels.
-        major_labels <- as.character(majors)
-        major_labels[majors == 1] <- paste0("1 / ", lens[id])
+        major_labels <- as.character(major_labels %||% majors)
+        major_labels[majors == 1] <- paste0(major_labels[majors==1]," / ",major_labels[majors==lens[id]])
         keep <- majors != lens[id]
         majors <- majors[keep]; major_labels <- major_labels[keep]
       }

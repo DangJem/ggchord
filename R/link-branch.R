@@ -29,7 +29,8 @@ ggchord_branch_built <- function(built) {
     } else if (side == "query") c("qaccver","qpos") else c("saccver","spos")
     style_cols <- intersect(c("PANEL", "ribbon_fill","ribbon_alpha","ribbon_colour",
       "ribbon_linetype","link_colour","link_alpha","link_linewidth","link_linetype",
-      "fill","colour","alpha","linewidth","linetype"),names(data))
+      "fill","colour","alpha","linewidth","linetype",
+      if(isTRUE(layer$geom_params$flow)) if(side=="query")"flow_from" else "flow_to" else character()),names(data))
     row_groups <- split(seq_len(nrow(data)), data$source_row)
     items <- lapply(row_groups, function(idx) {
       row <- data$source_row[idx[1]]
@@ -64,7 +65,14 @@ ggchord_branch_built <- function(built) {
     if (any(vapply(items,is.null,logical(1)))) next
     groups <- split(seq_along(items), vapply(items, `[[`, character(1), "key"))
     output <- list(); geometries <- list(); next_group <- 0L; failures <- 0L
-    emit <- function(item, xy, component, members, first=TRUE,last=TRUE,preserve=FALSE) {
+    emit <- function(item, xy, component, members, first=TRUE,last=TRUE,preserve=FALSE,front_counts=NULL) {
+      if(ribbon && !preserve && !is.null(front_counts) && side=="subject") {
+        a<-front_counts[1];b<-front_counts[2]
+        xy<-rbind(xy[a+50+rev(seq_len(b)),,drop=FALSE],
+          xy[a+rev(seq_len(50)),,drop=FALSE],xy[rev(seq_len(a)),,drop=FALSE],
+          xy[a+50+b+rev(seq_len(50)),,drop=FALSE])
+        front_counts<-rev(front_counts)
+      }
       next_group <<- next_group + 1L
       rows <- if (preserve) item$idx else rep(item$idx[1], nrow(xy))
       d <- data[rows,,drop=FALSE]
@@ -77,6 +85,21 @@ ggchord_branch_built <- function(built) {
       raw$x <- xy[,1]; raw$y <- xy[,2]; raw$group <- next_group
       raw$.component <- component; raw$source_row <- d$source_row
       raw$source_rows <- d$source_rows
+      if(ribbon && !preserve && !is.null(front_counts)) {
+        raw$.q_n<-front_counts[1];raw$.s_n<-front_counts[2]
+        if("flow_qn" %in% names(d))d$flow_qn<-front_counts[1]
+        if("flow_sn" %in% names(d))d$flow_sn<-front_counts[2]
+        if("flow_tip" %in% names(d) && ((component=="trunk" && side=="query") ||
+            (component=="branch" && side=="subject")))d$flow_tip<-"none"
+        if(component=="trunk" && all(c("flow_from","flow_to") %in% names(d))) {
+          shared_colour <- d[[if(side=="query")"flow_from" else "flow_to"]]
+          d$flow_from<-d$flow_to<-shared_colour
+          if(".flow_from" %in% names(raw))raw$.flow_from<-shared_colour
+          if(".flow_to" %in% names(raw))raw$.flow_to<-shared_colour
+        }
+        if("flow_tip" %in% names(d))raw$.flow_tip <- d$flow_tip
+        output[[length(output)]] <<- d
+      }
       # A shared trunk does not claim any one member's destination or statistics.
       if (component == "trunk") {
         protected <- c("x","y","group",".component","source_row","source_rows",cols)
@@ -137,7 +160,7 @@ ggchord_branch_built <- function(built) {
           for (item in parts) emit(item,item$xy,"branch",item$row,preserve=TRUE)
           next
         }
-        emit(parts[[1]],trunk,"trunk",members)
+        emit(parts[[1]],trunk,"trunk",members,front_counts=c(nrow(near),nrow(node)))
         tangent <- node[nrow(node),]-node[1,]
         ranks <- order(as.numeric(targets %*% tangent))
         for (k in seq_along(ranks)) {
@@ -157,7 +180,7 @@ ggchord_branch_built <- function(built) {
             far_controls <- ggchord_rotate_points(do.call(rbind, controls), layout$rotation)
           }
           xy <- polygon(node_slice,item$far,sweep(a,2,delta,"+"),far_controls)
-          emit(item,xy,"branch",item$row)
+          emit(item,xy,"branch",item$row,front_counts=c(nrow(node_slice),nrow(item$far)))
         }
       }
     }

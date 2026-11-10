@@ -786,9 +786,22 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
       raw_br <- sc$get_transformation()$inverse(br) %||% numeric()
       break_labels <- break_labels %||% rep(NA_character_, length(raw_br))
       if (source_axis) raw_br <- raw_br - origin + 1
+      automatic_breaks <- inherits(position_scale$breaks,"waiver")
+      if (automatic_breaks) {
+        domain_limits <- range(sc$get_transformation()$inverse(sc$get_limits()))
+        endpoints <- c(1,lens[[id]])
+        source_endpoints <- endpoints + if(source_axis) origin-1 else 0
+        endpoints <- endpoints[source_endpoints>=domain_limits[1] & source_endpoints<=domain_limits[2]]
+        raw_br <- sort(unique(c(raw_br[is.finite(raw_br) & raw_br>=1 & raw_br<=lens[[id]]],endpoints)))
+        source_breaks <- raw_br + if(source_axis) origin-1 else 0
+        br <- sc$transform(source_breaks)
+        break_labels <- sc$get_labels(br)
+      }
       keep <- is.finite(raw_br) & raw_br >= 0 & raw_br <= lens[[id]]
       br <- br[keep]
-      axis_breaks[id] <- list(raw_br[keep])
+      values <- raw_br[keep]
+      attr(values,"ggchord_automatic_breaks") <- automatic_breaks
+      axis_breaks[id] <- list(values)
       minor <- sc$get_breaks_minor()
       minor <- sc$get_transformation()$inverse(minor) %||% numeric()
       if (source_axis) minor <- minor - origin + 1

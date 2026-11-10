@@ -209,10 +209,10 @@ GeomGgchordTrack <- ggplot2::ggproto("GeomGgchordTrack", ggplot2::Geom,
   required_aes = c("x", "y"),
   default_aes = ggplot2::aes(fill = "#86AFB9", colour = NA, alpha = 1,
     linewidth = .25, linetype = 1, size = 2.2, shape = 19, stroke = .5,
-    label = NA_character_, .component = "track_poly"),
-  extra_params = c("na.rm", "track_keys", "track_kind", "axis_colour", "axis_size"),
+    label = NA_character_, angle=0, hjust=.5, vjust=.5, family="",fontface=1,lineheight=1.2, .component = "track_poly"),
+  extra_params = c("na.rm", "track_keys", "track_kind", "axis_colour", "axis_size", "native_draw_params"),
   draw_panel = function(data, panel_params, coord, track_keys, track_kind,
-      axis_colour = "#4F5962", axis_size = 2.2, na.rm = FALSE) {
+      axis_colour = "#4F5962", axis_size = 2.2, na.rm = FALSE, native_draw_params=list()) {
     for (role in names(track_keys)) data[[role]] <- data[[track_keys[[role]]]]
     polys <- data[data$.component %in% "track_poly", , drop = FALSE]
     lines <- data[data$.component %in% "track_line", , drop = FALSE]
@@ -221,15 +221,20 @@ GeomGgchordTrack <- ggplot2::ggproto("GeomGgchordTrack", ggplot2::Geom,
     axis <- data[data$.component %in% "track_axis_line", , drop = FALSE]
     text <- data[data$.component %in% "track_axis_text", , drop = FALSE]
     grobs <- list()
-    if (nrow(polys)) grobs[[length(grobs) + 1L]] <- ggplot2::GeomPolygon$draw_panel(polys, panel_params, coord)
-    if (nrow(lines)) grobs[[length(grobs) + 1L]] <- ggplot2::GeomPath$draw_panel(lines, panel_params, coord, na.rm = na.rm)
+    draw <- function(geom,d,keys=character()) {
+      args <- list(data=d,panel_params=panel_params,coord=coord)
+      if (!identical(geom,ggplot2::GeomPolygon)) args$na.rm <- na.rm
+      do.call(geom$draw_panel,c(args,native_draw_params[intersect(names(native_draw_params),keys)]))
+    }
+    if (nrow(polys)) grobs[[length(grobs) + 1L]] <- draw(ggplot2::GeomPolygon,polys,"rule")
+    if (nrow(lines)) grobs[[length(grobs) + 1L]] <- draw(ggplot2::GeomPath,lines,c("arrow","lineend","linejoin","linemitre"))
     if (nrow(points)) grobs[[length(grobs) + 1L]] <- ggplot2::GeomPoint$draw_panel(points, panel_params, coord, na.rm = na.rm)
     if (nrow(labels)) {
       labels$angle <- labels$angle %||% 0
       labels$hjust <- labels$hjust %||% .5; labels$vjust <- labels$vjust %||% .5
       labels$family <- labels$family %||% ""; labels$fontface <- labels$fontface %||% 1
       labels$lineheight <- labels$lineheight %||% 1.2
-      grobs[[length(grobs) + 1L]] <- ggplot2::GeomText$draw_panel(labels, panel_params, coord, na.rm = na.rm)
+      grobs[[length(grobs) + 1L]] <- draw(ggplot2::GeomText,labels,c("parse","check_overlap"))
     }
     if (nrow(axis)) {
       axis$colour <- axis_colour; axis$linewidth <- .25; axis$alpha <- 1; axis$linetype <- 1
@@ -367,7 +372,8 @@ ggchord_add_track_scales <- function(plot) {
         guide = ggplot2::guide_colourbar(available_aes = key),
         name = layer$ggchord_params$track_mapping_labels[[key]] %||% rlang::as_label(mapping[[key]])) else ggplot2::scale_colour_manual(
           values = stats::setNames(chord_default_palette(length(levels)), levels),
-          aesthetics = key, name = layer$ggchord_params$track_mapping_labels[[key]] %||% rlang::as_label(mapping[[key]]))
+          aesthetics = key, guide=ggchord_role_guide(plot,"track",labels=levels),
+          name = layer$ggchord_params$track_mapping_labels[[key]] %||% rlang::as_label(mapping[[key]]))
       plot$scales$add(scale)
     }
   }

@@ -58,6 +58,22 @@ p <- ggchord(s) + geom_seq() + geom_track(aes(x = pos, y = weight),
 e <- export_ggchord_layout(p, include = "track")
 stopifnot(identical(e$track_statistics[[1]]$track_value, c(2.5, 1)))
 results$summary <- "native summary operates in source positions and value units"
+dodged <- data.frame(accver='A',pos=100,category=c('a','b'),weight=c(2,3))
+p <- ggchord(s)+geom_seq()+geom_track(aes(x=pos,weight=weight,fill=category),data=dodged,
+  geom='bar',position='dodge',track=position_track('dodged'))+coord_collinear()
+stat <- export_ggchord_layout(p,include='track')$track_statistics[[1]]
+stopifnot(setequal(unlist(stat$source_rows),1:2),sum(stat$count)==5)
+results$dodge <- 'count provenance retains source observations before display displacement'
+global <- data.frame(accver='A',length=1000,pos=100,value=2)
+p <- ggchord(global)+geom_seq()+geom_track(aes(x=pos,y=value),geom='point',track=position_track('global'))+coord_collinear()
+stopifnot(export_ggchord_layout(p,include='track')$track_statistics[[1]]$track_value==2)
+results$global_data <- 'NULL data inherits the constructor sequence table like data functions'
+rectangle <- data.frame(accver='A',left=100,right=200,low=1,high=10)
+p <- ggchord(s)+geom_seq()+geom_track(aes(xmin=left,xmax=right,ymin=low,ymax=high),
+  data=rectangle,geom='rect',track=position_track('rectangle'))+
+  scale_track_value_continuous('rectangle',transform='log10')+coord_collinear()
+invisible(ggplot2::ggplotGrob(p))
+results$rectangle_domain <- 'rectangles have no invented zero baseline and support a positive log domain'
 jsonlite::write_json(results, "tools/long-term-audit/track-grammar-results-v0.17.0.json",
   auto_unbox = TRUE, pretty = TRUE)
 cat("Track grammar checks passed\n")

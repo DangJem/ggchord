@@ -76,6 +76,15 @@ This is the recommended interface for consuming layout tables;
 Both retain their documented fields. See \link{ggchord_layout_contract} for
 units, provenance and stability boundaries.
 }
+\section{Ribbon drawing}{
+
+\code{ribbon_rendering} records per-layer fill/tip mode. Exported polygon fronts
+retain the full source intervals. An optional subject tip is decorative;
+its shoulder translates the target endpoint span to 88 percent of the
+channel. Continuous fills use a device-resolved raster mesh and vector
+outlines. A bounded fill budget warns when dense layers reduce resolution.
+}
+
 \examples{
 library(dplyr)
 library(ggchord)

@@ -16,5 +16,8 @@
   "count": "weighted counts match supplied source groups without crossing accessions",
   "overlay": "line and point share one circular band/domain",
   "bin": "explicit binwidth; empty bin retained and membership recorded",
-  "summary": "native summary operates in source positions and value units"
+  "summary": "native summary operates in source positions and value units",
+  "dodge": "count provenance retains source observations before display displacement",
+  "global_data": "NULL data inherits the constructor sequence table like data functions",
+  "rectangle_domain": "rectangles have no invented zero baseline and support a positive log domain"
 }

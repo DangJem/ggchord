@@ -25,7 +25,7 @@ geom_link_ribbon(
   nonadjacent_linewidth = 0.4,
   between = NULL,
   allow_repeated = FALSE,
-  tip = c("subject", "none"),
+  tip = c("none", "subject"),
   ...
 )
 }
@@ -97,7 +97,11 @@ ribbon. This changes width independently of line type. An explicit
 
 \item{allow_repeated}{Explicitly allow a declared source_hsp_id in more than one displayed relation.}
 
-\item{tip}{Subject-directed decorative taper, or none. Source intervals remain unchanged.}
+\item{tip}{Full interval fronts (none, default), or an optional subject taper.
+The shoulder retains the translated target endpoint span at 88 percent
+of the channel. The tip is a decorative front-midpoint marker, not a
+single matched base or biological transfer direction. Degenerate fronts
+fall back to the full front with a warning. Source intervals are unchanged.}
 
 \item{...}{Additional arguments passed to \code{geom_polygon()}}
 }
@@ -109,7 +113,9 @@ Draws alignment ribbons with query-to-subject sequence-colour gradients
 by default. Explicit fill, ribbon_fill mappings or ribbon fill scales
 replace the gradient; map ribbon_fill = pident for an Identity guide. Alignment length and identity are never inferred from endpoints.
 Alternative mappings and legends are controlled with \code{aes()}, \verb{scale_*()}
-and \code{guides()}.
+and \code{guides()}. Shared trunks keep the common endpoint colour; branch
+pieces interpolate between their endpoint colours. Optional tips appear
+only at real subject fronts.
 }
 \examples{
 library(dplyr)
@@ -122,4 +128,6 @@ links <- ribbon_data_example |>
 ggchord(seq_data = seqs, ribbon_data = links) +
   geom_seq() +
   geom_link_ribbon()
+ggchord(seqs, links) + geom_seq() +
+  geom_link_ribbon(tip = "subject") + coord_collinear()
 }

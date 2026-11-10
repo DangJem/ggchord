@@ -3,5 +3,6 @@
   "equal": "source lengths retained; forward and inverse positions round-trip in both axes",
   "sankey": "real query-left/subject-right endpoints; reciprocals retained, same entity excluded; inverse mapping round-trip",
   "axis": "default real endpoints and explicit-break precedence",
-  "workflow": "unified mixed/unknown-strand features survive focus, segment, clean, prepare"
+  "workflow": "unified mixed/unknown-strand features survive focus, segment, clean, prepare",
+  "endpoint_parameters": "entity-named point-link clearance inherited by repeated and mirrored instances"
 }

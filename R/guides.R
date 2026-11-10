@@ -230,7 +230,8 @@ ggchord_role_guide_spec <- function(plot, role, colourbar = FALSE) {
     position = resolved_position,
     direction = resolved_direction %||% NULL,
     theme = if (length(vals)) do.call(ggplot2::theme, vals) else NULL,
-    size_scale = size_scale
+    size_scale = size_scale,
+    height_budget = ggchord_guide_height_budget(plot,resolved_position)
   )
 }
 
@@ -274,16 +275,49 @@ ggchord_guide_columns <- function(labels, spec) {
   if (any(!is.finite(canvas))) return(NULL)
   text_style <- spec$theme$legend.text
   size <- if (inherits(text_style,"element_text") && is.numeric(text_style@size)) text_style@size else 8 * spec$size_scale
-  metrics <- lapply(as.character(labels),function(label) {
-    g <- grid::textGrob(label,gp=grid::gpar(fontsize=size))
-    c(width=grid::convertWidth(grid::grobWidth(g),"mm",TRUE),
-      height=grid::convertHeight(grid::grobHeight(g),"mm",TRUE))
-  })
-  metrics <- do.call(rbind,metrics)
-  pitch <- max(4*spec$size_scale,max(metrics[,"height"])+2)
+  metrics <- if(inherits(text_style,"element_blank")) matrix(c(0,0),nrow=1,dimnames=list(NULL,c("width","height"))) else
+    do.call(rbind,lapply(as.character(labels),function(label) {
+      g <- grid::textGrob(label,gp=grid::gpar(fontsize=size,
+        fontfamily=if(inherits(text_style,"element_text"))text_style@family %||% "" else "",
+        fontface=if(inherits(text_style,"element_text"))text_style@face %||% "plain" else "plain"))
+      c(width=grid::convertWidth(grid::grobWidth(g),"mm",TRUE),
+        height=grid::convertHeight(grid::grobHeight(g),"mm",TRUE))
+    }))
+  dimension <- function(field,fallback) {
+    value<-spec$theme[[field]]
+    if(grid::is.unit(value))as.numeric(grid::convertUnit(value,"mm",valueOnly=TRUE))[1] else fallback
+  }
+  key_height<-dimension("legend.key.height",4*spec$size_scale)
+  key_width<-dimension("legend.key.width",5.5*spec$size_scale)
+  pitch <- max(key_height,max(metrics[,"height"])+2)
   if (spec$position %in% c("top","bottom")) {
-    capacity <- max(1,floor(canvas[1]*.85/(max(metrics[,"width"])+8)))
+    capacity <- max(1,floor(canvas[1]*.85/(max(metrics[,"width"])+key_width+2)))
     return(as.integer(min(length(labels),capacity)))
   }
-  as.integer(max(1,ceiling(length(labels)*pitch/(canvas[2]*.72))))
+  as.integer(max(1,ceiling(length(labels)*pitch/(spec$height_budget %||% (canvas[2]*.72)))))
+}
+
+# Share the side budget between the actual visible roles; the final gtable
+# measurement remains authoritative and can report infeasible explicit styles.
+ggchord_guide_height_budget <- function(plot,position) {
+  canvas <- ggchord_render_dimensions()
+  if(any(!is.finite(canvas)))return(NULL)
+  settings <- ggchord_plot_settings(plot)
+  roles <- character()
+  for(layer in plot$layers) {
+    if(identical(layer$show.legend,FALSE))next
+    for(aes in names(ggchord_effective_mapping(layer))) {
+      role <- if(grepl("^track_(fill|colour)_",aes)) aes else switch(aes,
+        seq_colour="seq",ribbon_fill="ribbon",ribbon_colour="ribbon",
+        gene_fill="gene",feature_fill="feature",region_fill="region",NULL)
+      if(is.null(role))next
+      scale <- plot$scales$get_scales(aes)
+      if(!is.null(scale) && identical(scale$guide,"none"))next
+      item <- settings$legends[[role]]
+      where <- item$position %||% settings$legend$position %||% plot$theme$legend.position %||%
+        if(role=="ribbon") "left" else "right"
+      if(!isTRUE(item$hidden) && identical(where,position))roles <- c(roles,role)
+    }
+  }
+  max(12,canvas[2]*.72/max(1,length(unique(roles)))-5)
 }

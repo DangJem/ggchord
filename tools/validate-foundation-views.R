@@ -44,6 +44,10 @@ lay <- get_chord_layout(q,build=TRUE)
 for (id in s$accver) stopifnot(all(c('1',as.character(s$length[s$accver==id])) %in% lay$axis_ticks$label[lay$axis_ticks$accver==id]))
 q <- q+scale_seq_position_continuous(breaks=c(100,200),minor_breaks=NULL)
 stopifnot(setequal(na.omit(get_chord_layout(q,build=TRUE)$axis_ticks$label),c('100','200')))
+focused <- focus_ggchord_data(s,loci=data.frame(accver='A',start=101,end=300))
+source_axis <- ggchord(focused$seq_data)+geom_seq()+coord_collinear()+
+  scale_seq_position_continuous(coordinates='source')
+stopifnot(all(c('101','300') %in% get_chord_layout(source_axis,build=TRUE)$axis_ticks$label))
 results$axis <- 'default real endpoints and explicit-break precedence'
 loci <- data.frame(accver='A',start=25,end=200,locus_id='a')
 stopifnot(nrow(focus_ggchord_data(s,feature_data=f,loci=loci)$feature_data)==1,
@@ -51,5 +55,12 @@ stopifnot(nrow(focus_ggchord_data(s,feature_data=f,loci=loci)$feature_data)==1,
   nrow(clean_ggchord_data(s,feature_data=f)$feature_data)==3,
   nrow(prepare_ggchord_data(s,feature_data=f,steps=list(clean=list()))$feature_data)==3)
 results$workflow <- 'unified mixed/unknown-strand features survive focus, segment, clean, prepare'
+point_links <- data.frame(qaccver='A',saccver='B',qpos=100,spos=200)
+base <- ggchord(s)+geom_seq(seq_order=c(A_high='A',B='B',A_low='A'))+
+  geom_link_line(data=point_links,between=c(1,2),link_gap=c(A=.04,B=.05))+coord_collinear()
+invisible(ggplot2::ggplotGrob(base))
+mirrored <- ggchord(s)+geom_seq()+geom_link_line(data=point_links,link_gap=c(A=.04,B=.05))+coord_sankey()
+invisible(ggplot2::ggplotGrob(mirrored))
+results$endpoint_parameters <- 'entity-named point-link clearance inherited by repeated and mirrored instances'
 jsonlite::write_json(results,'tools/long-term-audit/foundation-views-results-v0.17.0.json',pretty=TRUE,auto_unbox=TRUE)
 cat('Foundation view checks passed.\n')

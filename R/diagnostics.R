@@ -158,6 +158,12 @@ ggchord_diagnostic_colours <- function(built, colour_vision) {
 #'   it never means that all quality or portability checks passed.
 #' @md
 #' @export
+#' @section Guide measurements:
+#' `guide_measurements` records active roles, titles, item counts, device text
+#' widths/heights, requested key sizes, direction, grid and shared side budget.
+#' These complement actual guide-box measurements; requested key dimensions
+#' are not claimed as final grob bounds. Font fallback remains uninspected.
+#'
 #' @examples
 #' library(dplyr)
 #' data(seq_data_example)
@@ -288,6 +294,7 @@ diagnose_ggchord <- function(plot, width = 7, height = 5,
   structure(list(measurement = context,
     checks = unique(do.call(rbind, checks)),
     text = if (length(text)) do.call(rbind, text) else data.frame(), guides = guides,
+    guide_measurements=ggchord_measure_guides(built$plot,guides),
     colour_suggestions = colours, label_diagnostics = layout$collinear_label_diagnostics %||% data.frame(),
     label_visibility = ggchord_label_visibility(layout),
     annotation_registry = layout$circular_annotation_registry %||% data.frame(),

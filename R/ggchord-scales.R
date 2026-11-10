@@ -20,7 +20,7 @@ make_ggchord_scales <- function(layout, has_seq = FALSE, has_gene = FALSE,
   role_guide <- function(role, colourbar = FALSE, order = 0,
                          override.aes = list()) {
     labels <- switch(role, seq=layout$legend_seq_labels %||% layout$seq_labels,
-      gene=names(layout$gene_pal), feature=names(layout$feature_pal), region=names(layout$region_pal), NULL)
+      gene=names(layout$gene_pal), feature=layout$final_gene_order, region=names(layout$region_pal), NULL)
     if (!is.null(plot)) {
       return(ggchord_role_guide(
         plot, role, colourbar = colourbar, order = order,
@@ -343,7 +343,8 @@ ggchord_infer_visual_scales <- function(plot, layout, scales) {
     if (!is.null(role)) {
       scale$guide <- ggchord_role_guide(
         plot, role, colourbar = identical(aesthetic, "ribbon_fill") &&
-          identical(info$kind, "continuous")
+          identical(info$kind, "continuous"),
+        labels=if(identical(info$kind,"discrete")) unique(as.character(info$values)) else NULL
       )
     }
     scales[[length(scales) + 1L]] <- scale

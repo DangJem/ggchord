@@ -65,6 +65,13 @@
 #' @md
 #' @export
 #'
+#' @section Ribbon drawing:
+#' `ribbon_rendering` records per-layer fill/tip mode. Exported polygon fronts
+#' retain the full source intervals. An optional subject tip is decorative;
+#' its shoulder translates the target endpoint span to 88 percent of the
+#' channel. Continuous fills use a device-resolved raster mesh and vector
+#' outlines. A bounded fill budget warns when dense layers reduce resolution.
+#'
 #' @examples
 #' library(dplyr)
 #' library(ggchord)
@@ -244,6 +251,14 @@ export_ggchord_layout <- function(
 
   coord <- plot$coordinates
   exported$connection_report <- layout$connection_report %||% data.frame()
+  ribbon_layers <- Filter(function(layer) identical(layer$ggchord_type,"ribbon"),plot$layers)
+  exported$ribbon_rendering <- ggchord_rbind_fill(lapply(ribbon_layers,function(layer) data.frame(
+    layer_id=layer$ggchord_layer_id,tip=layer$ggchord_params$tip %||% "none",
+    fill=if(ggchord_ribbon_uses_flow(layer,plot)) "endpoint_gradient" else "user_or_value_fill",
+    geometry_basis=if(identical(layer$ggchord_params$link_branch %||% "none","none")) "full_source_interval_fronts" else "source_fronts_and_explicit_artificial_branch_junctions",
+    shoulder_basis="translated_target_endpoint_span_at_channel_fraction_0.88",
+    marker_basis="decorative_subject_front_midpoint_not_a_single_match",stringsAsFactors=FALSE))) %||% data.frame()
+
   fitted <- if (isTRUE(layout$collinear) && identical(coord$fit, "geometry")) {
     ggchord_geometry_limits(layout)
   } else ggchord_adaptive_limits(layout)

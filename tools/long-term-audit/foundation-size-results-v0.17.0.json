@@ -1,0 +1,84 @@
+{
+  "input": {
+    "features": 20,
+    "primers": 5,
+    "sites": 139
+  },
+  "sizes": {
+    "10x8": {
+      "external_labels": 70,
+      "overlapping_boxes": 0,
+      "requested": 164,
+      "visible": 164,
+      "hidden_reasons": [],
+      "minimum_size": 3.2,
+      "measurement": {
+        "status": "measured",
+        "panel_mm": [249.7825, 180.6502],
+        "canvas_mm": [254, 203.2],
+        "panel_bounds_mm": [2.1088, 251.8912, 11.2749, 191.9251],
+        "x_range": [-2.5815, 2.6191],
+        "y_range": [-1.3252, 2.436],
+        "units_per_mm": [0.0208, 0.0208],
+        "axis_units_per_inch": [0.5288, 0.5288],
+        "units_per_inch": 0.5288,
+        "geometry_metric_status": "measured",
+        "converged": true,
+        "device": "quartz_off_screen",
+        "font_conditions": "Metrics use the selected device; font fallback and embedding remain unchecked",
+        "basis": "Resolved gtable grid.layout panel, including null units and aspect constraints",
+        "refinement_passes": 6
+      }
+    },
+    "16.5x8": {
+      "external_labels": 69,
+      "overlapping_boxes": 0,
+      "requested": 164,
+      "visible": 164,
+      "hidden_reasons": [],
+      "minimum_size": 3.2,
+      "measurement": {
+        "status": "measured",
+        "panel_mm": [304.2189, 198.9825],
+        "canvas_mm": [419.1, 203.2],
+        "panel_bounds_mm": [57.4406, 361.6594, 2.1088, 201.0912],
+        "x_range": [-3.0691, 2.5214],
+        "y_range": [-1.4584, 2.1983],
+        "units_per_mm": [0.0184, 0.0184],
+        "axis_units_per_inch": [0.4668, 0.4668],
+        "units_per_inch": 0.4668,
+        "geometry_metric_status": "measured",
+        "converged": true,
+        "device": "quartz_off_screen",
+        "font_conditions": "Metrics use the selected device; font fallback and embedding remain unchecked",
+        "basis": "Resolved gtable grid.layout panel, including null units and aspect constraints",
+        "refinement_passes": 4
+      }
+    },
+    "8x8": {
+      "external_labels": 75,
+      "overlapping_boxes": 0,
+      "requested": 164,
+      "visible": 164,
+      "hidden_reasons": [],
+      "minimum_size": 3.2,
+      "measurement": {
+        "status": "measured",
+        "panel_mm": [198.9825, 173.7879],
+        "canvas_mm": [203.2, 203.2],
+        "panel_bounds_mm": [2.1088, 201.0912, 14.706, 188.494],
+        "x_range": [-3.4599, 3.5223],
+        "y_range": [-2.0025, 4.0956],
+        "units_per_mm": [0.0351, 0.0351],
+        "axis_units_per_inch": [0.8913, 0.8913],
+        "units_per_inch": 0.8913,
+        "geometry_metric_status": "estimated",
+        "converged": false,
+        "device": "quartz_off_screen",
+        "font_conditions": "Metrics use the selected device; font fallback and embedding remain unchecked",
+        "basis": "Resolved gtable grid.layout panel, including null units and aspect constraints",
+        "refinement_passes": 6
+      }
+    }
+  }
+}

@@ -50,6 +50,12 @@ geom_track <- function(mapping = NULL, data = NULL, geom = "point", stat = NULL,
   dots <- ggchord_colour_dots(list(...), "geom_track()")
   if (stat == "bin" && is.null(dots$binwidth) && is.null(dots$breaks))
     ggchord_stop("geom_track(stat='bin'): supply binwidth or breaks explicitly")
+  if (!is.null(dots$orientation) && !identical(dots$orientation,"x"))
+    ggchord_stop("geom_track(): source position uses x; orientation='y' is unsupported")
+  if (!is.null(dots$size.unit) && !identical(dots$size.unit,"mm"))
+    ggchord_stop("geom_track(): text size currently uses mm")
+  if (!is.null(dots$outline.type) && !identical(dots$outline.type,"full"))
+    ggchord_stop("geom_track(): only full polygon outlines are supported")
   mapping <- ggchord_normalize_mapping(mapping) %||% ggplot2::aes()
   if (!is.numeric(baseline) || length(baseline) != 1L || !is.finite(baseline)) ggchord_stop("Track baseline must be finite")
   if (baseline != 0 && !(geom == "col" && stat == "identity" && identical(position, "identity")))
@@ -78,7 +84,9 @@ geom_track_col <- function(mapping = NULL, data = NULL, position = NULL,
 
 ggchord_track_native_input <- function(layer, plot) {
   p <- layer$ggchord_params
-  raw <- layer$ggchord_input_data
+  if(!inherits(plot$facet,"FacetNull"))ggchord_stop("geom_track(): native tracks currently require one ggplot panel; use separate ggchord plots for faceted statistics")
+  if(!isTRUE(plot$coordinates$ggchord_coord))ggchord_stop("geom_track(): use a ggchord coordinate; for vertical backbones use coord_collinear(seq_axis='vertical') instead of coord_flip()")
+  raw <- layer$ggchord_input_data %||% plot$ggchord$data$seq_data
   if (is.function(raw)) raw <- raw(plot$ggchord$data$seq_data)
   ggchord_require_columns(raw, character(), "geom_track()")
   mapping <- p$native_mapping
@@ -95,12 +103,30 @@ ggchord_track_native_input <- function(layer, plot) {
     if (target %in% names(mapping)) ggchord_stop("geom_track(): use only one of ", key, " and ", target)
     mapping[[target]] <- mapping[[key]]; mapping[[key]] <- NULL
   }
+  for(field in intersect(c("pos","start","end"),names(raw))) {
+    if(is.factor(raw[[field]]) || is.character(raw[[field]])) {
+      value <- suppressWarnings(as.numeric(as.character(raw[[field]])))
+      if(any(is.na(value) & !is.na(raw[[field]])))ggchord_stop("geom_track(): ",field," must contain numeric coordinate labels")
+      raw[[field]]<-value
+    }
+  }
+  interval_x <- FALSE
   if (!"x" %in% names(mapping) && p$native_geom != "rect") {
     if ("pos" %in% names(raw)) mapping$x <- rlang::quo(pos) else if (all(c("start", "end") %in% names(raw))) {
+      interval_x <- TRUE
       raw$.track_x <- (raw$start + raw$end - 1) / 2
       raw$.track_width <- raw$end - raw$start + 1
       mapping$x <- rlang::quo(.track_x)
     } else ggchord_stop("geom_track(): map x or supply pos/start/end")
+  }
+  if("x" %in% names(mapping)) {
+    source_x <- tryCatch(rlang::eval_tidy(mapping$x,raw),error=function(e)NULL)
+    if(!is.null(source_x)) {
+      if(!is.numeric(source_x))ggchord_stop("geom_track(): x must contain numeric source positions; convert factor labels explicitly")
+      if(any(is.infinite(source_x)))ggchord_stop("geom_track(): source positions must be finite")
+      if(!interval_x && identical(p$bounds,"error") && any(source_x<1,na.rm=TRUE))
+        ggchord_stop("geom_track(): source positions are one-based; x/pos must be at least 1")
+    }
   }
   if (!"y" %in% names(mapping) && "track_value" %in% names(raw)) mapping$y <- rlang::quo(track_value)
   if (p$native_stat == "count" && "y" %in% names(mapping) &&
@@ -132,6 +158,19 @@ ggchord_track_native_input <- function(layer, plot) {
     native <- do.call(getExportedValue("ggplot2", paste0("geom_", p$native_geom)),
       c(list(mapping = mapping, data = d, stat = p$native_stat,
         position = p$native_position, inherit.aes = FALSE), params))
+    if (p$native_stat != "identity") {
+      # Preserve Stat coordinates before a data Position moves the display
+      # centre/edges. Source membership must not follow a dodge displacement.
+      source_geom <- native$geom
+      native$geom <- ggplot2::ggproto(NULL,source_geom)
+      native$geom$default_aes$.ggchord_stat_x <- NA_real_
+      native$mapping$.ggchord_stat_x <- ggplot2::aes(value=after_stat(x))$value
+      if(p$native_stat=="bin")for(field in c("xmin","xmax")) {
+        key<-paste0(".ggchord_stat_",field)
+        native$geom$default_aes[[key]]<-NA_real_
+        native$mapping[[key]]<-rlang::new_quosure(rlang::call2("after_stat",rlang::sym(field)),asNamespace("ggplot2"))
+      }
+    }
     if (p$native_stat == "identity") {
       native$data$.track_input_index <- seq_len(nrow(d))
       native$mapping$.ggchord_source_index <- rlang::quo(.track_input_index)
@@ -141,7 +180,8 @@ ggchord_track_native_input <- function(layer, plot) {
     }
     q <- ggplot2::ggplot() + native + ggplot2::scale_fill_identity() +
       ggplot2::scale_colour_identity() + ggplot2::scale_alpha_identity() +
-      ggplot2::scale_size_identity() + ggplot2::scale_linewidth_identity()
+      ggplot2::scale_size_identity() + ggplot2::scale_linewidth_identity() +
+      ggplot2::scale_continuous_identity(aesthetics=c(".ggchord_stat_x",".ggchord_stat_xmin",".ggchord_stat_xmax"))
     computed <- ggplot2::ggplot_build(q)$data[[1L]]
     if (!nrow(computed)) next
     computed$accver <- seq
@@ -164,8 +204,8 @@ ggchord_track_native_input <- function(layer, plot) {
       keep <- local_group == computed$group[j]
       if (p$native_stat == "bin") {
         keep <- keep & if (identical(params$closed, "left"))
-          gx >= computed$start[j] & gx < computed$end[j] else gx > computed$start[j] & gx <= computed$end[j]
-      } else if (p$native_geom != "rect") keep <- keep & gx == computed$pos[j]
+          gx >= computed$.ggchord_stat_xmin[j] & gx < computed$.ggchord_stat_xmax[j] else gx > computed$.ggchord_stat_xmin[j] & gx <= computed$.ggchord_stat_xmax[j]
+      } else if (p$native_geom != "rect") keep <- keep & gx == computed$.ggchord_stat_x[j]
       rows[which(keep)]
     }))
     parts[[length(parts) + 1L]] <- computed
@@ -174,7 +214,7 @@ ggchord_track_native_input <- function(layer, plot) {
   if (is.null(output)) output <- data.frame(accver = character(), pos = numeric(), start = numeric(),
     end = numeric(), track_value = numeric(), track_ymin = numeric(), track_ymax = numeric(), group = integer())
   visual <- ggplot2::aes()
-  for (key in intersect(c("fill", "colour", "alpha", "linewidth", "linetype", "size", "shape", "label"), names(mapping))) {
+  for (key in intersect(c("fill", "colour", "alpha", "linewidth", "linetype", "size", "shape", "label", "angle", "hjust", "vjust", "family", "fontface", "lineheight", "stroke"), names(mapping))) {
     column <- paste0(".track_", key)
     output[[column]] <- output[[key]]
     target <- if (key %in% c("fill", "colour")) ggchord_track_aes(key, p$track_position$track) else key
@@ -185,7 +225,7 @@ ggchord_track_native_input <- function(layer, plot) {
     visual[[target]] <- ggchord_track_stage_mapping(late_mapping[key], p$track_position$track)[[key]]
   }
   # Fixed styles have already been interpreted by the native geom.
-  for (key in intersect(c("fill", "colour", "alpha", "linewidth", "linetype", "size", "shape"), names(params))) {
+  for (key in intersect(c("fill", "colour", "alpha", "linewidth", "linetype", "size", "shape", "angle", "hjust", "vjust", "family", "fontface", "lineheight", "stroke"), names(params))) {
     target <- if (key %in% c("fill", "colour")) ggchord_track_aes(key, p$track_position$track) else key
     layer$aes_params[[target]] <- params[[key]]
   }
@@ -195,10 +235,11 @@ ggchord_track_native_input <- function(layer, plot) {
     vapply(names(mapping), function(key) if (key %in% c("fill", "colour"))
       ggchord_track_aes(key, p$track_position$track) else key, character(1)))
   layer$ggchord_input_data <- output
-  layer$ggchord_params$track_kind <- if (p$native_geom %in% c("bar", "col", "rect", "tile")) "bar" else "line"
+  layer$ggchord_params$track_kind <- if (p$native_geom %in% c("bar", "col")) "bar" else "line"
   layer$ggchord_params$source_edges <- TRUE
   layer$ggchord_params$track_sources <- raw
   layer$ggchord_params$native_prepared <- TRUE
+  layer$geom_params$native_draw_params <- params[intersect(names(params),c("arrow","lineend","linejoin","linemitre","parse","check_overlap","rule"))]
   layer$geom_params$track_kind <- p$native_geom
   layer
 }

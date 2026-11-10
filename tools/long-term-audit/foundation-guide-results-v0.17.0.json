@@ -1,0 +1,105 @@
+{
+  "scope": "two categorical roles; shared side budget and final guide/panel measurement",
+  "guides": [
+    {
+      "guide": "guide-box-right",
+      "width_mm": 46.754,
+      "height_mm": 88.1118,
+      "canvas_area_fraction": 0.1824,
+      "exceeds_canvas": false
+    }
+  ],
+  "guide_measurements": [
+    {
+      "role": "seq",
+      "aesthetic": "seq_colour",
+      "title": "Seq ID",
+      "n_items": 12,
+      "max_label_width_mm": 18.3586,
+      "max_label_height_mm": 2.2727,
+      "title_width_mm": 8.1066,
+      "title_height_mm": 1.8982,
+      "font_size_pt": 9,
+      "font_family": "",
+      "requested_key_width_mm": 4.5833,
+      "requested_key_height_mm": 6,
+      "position": "right",
+      "ncol": 2,
+      "shared_height_budget_mm": 40.72,
+      "measurement": "device_text_metrics",
+      "font_fallback": "not_inspected",
+      "labels": ["sequence-1", "sequence-2", "sequence-3", "sequence-4", "sequence-5", "sequence-6", "sequence-7", "sequence-8", "sequence-9", "sequence-10", "sequence-11", "sequence-12"],
+      "_row": "width"
+    },
+    {
+      "role": "feature",
+      "aesthetic": "feature_fill",
+      "title": "type",
+      "n_items": 6,
+      "max_label_width_mm": 10.0568,
+      "max_label_height_mm": 2.2727,
+      "title_width_mm": 5.0121,
+      "title_height_mm": 1.8982,
+      "font_size_pt": 9,
+      "font_family": "",
+      "requested_key_width_mm": 4.5833,
+      "requested_key_height_mm": 6,
+      "position": "right",
+      "ncol": 1,
+      "shared_height_budget_mm": 40.72,
+      "measurement": "device_text_metrics",
+      "font_fallback": "not_inspected",
+      "labels": ["class-1", "class-2", "class-3", "class-4", "class-5", "class-6"],
+      "_row": "width1"
+    }
+  ],
+  "checks": [
+    {
+      "code": "panel_measurement",
+      "status": "measured",
+      "detail": "Resolved gtable grid.layout panel, including null units and aspect constraints"
+    },
+    {
+      "code": "colour_similarity",
+      "status": "suggestion",
+      "detail": "Some opaque discrete colours are close under the stated heuristic; inspect colour_suggestions"
+    },
+    {
+      "code": "font_embedding_and_fallback",
+      "status": "not_checked",
+      "detail": "Selected-device text metrics do not establish embedding or identify substituted fonts"
+    },
+    {
+      "code": "cross_application_transparency",
+      "status": "not_checked",
+      "detail": "Transparency in third-party applications was not inspected"
+    },
+    {
+      "code": "unregistered_grobs_and_arrowheads",
+      "status": "not_checked",
+      "detail": "Canvas checks cover registered vertices and text boxes, not arbitrary grobs or arrowhead extents"
+    },
+    {
+      "code": "colour_vision",
+      "status": "not_checked",
+      "detail": "Optional simulations were not requested"
+    }
+  ],
+  "measurement": {
+    "status": "measured",
+    "panel_mm": [42.9765, 124.8912],
+    "canvas_mm": [177.8, 127],
+    "panel_bounds_mm": [42.0348, 85.0113, 1.0544, 125.9456],
+    "x_range": [-0.206, 2.3479],
+    "y_range": [-7.1542, 0.2678],
+    "units_per_mm": [0.0594, 0.0594],
+    "axis_units_per_inch": [1.5095, 1.5095],
+    "units_per_inch": 1.5095,
+    "geometry_metric_status": "measured",
+    "converged": true,
+    "device": "quartz_off_screen",
+    "font_conditions": "Metrics use the selected device; font fallback and embedding remain unchecked",
+    "basis": "Resolved gtable grid.layout panel, including null units and aspect constraints",
+    "refinement_passes": 2
+  }
+}

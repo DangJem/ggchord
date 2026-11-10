@@ -211,6 +211,15 @@ prepare_ggchord_plot <- function(plot) {
   layout <- compute_chord_geometry(plot)
   cls <- classify_ggchord_layers(plot)
   new_layers <- plot$layers
+  needs_flow <- any(vapply(plot$layers,ggchord_ribbon_uses_flow,logical(1),plot=plot))
+  sequence_colours <- if(needs_flow) ggchord_sequence_display_colours(plot,layout) else NULL
+  if (needs_flow && !any(vapply(plot$layers,function(layer) identical(layer$ggchord_type,"seq"),logical(1)))) {
+    # The role scale has been consumed by endpoint lookup. Keeping an unmapped
+    # build-local copy would emit a false no-shared-levels warning. The source
+    # plot retains its scale for subsequent + geom_seq() compositions.
+    plot$scales <- plot$scales$clone()
+    plot$scales$scales <- Filter(function(scale)!"seq_colour" %in% scale$aesthetics,plot$scales$scales)
+  }
   for (i in seq_along(plot$layers)) {
     lyr <- plot$layers[[i]]
     if (is.null(lyr$ggchord_type)) next
@@ -227,7 +236,7 @@ prepare_ggchord_plot <- function(plot) {
     lyr$ggchord_resolved_input <- ggchord_restore_instance_data(
       layout$layer_inputs[[lyr$ggchord_layer_id]][[lyr$ggchord_type]], layout$display_instances)
     geometry <- extract_ggchord_layer_data(lyr, layout)
-    flow <- ggchord_ribbon_flow(lyr, geometry, layout, plot)
+    flow <- ggchord_ribbon_flow(lyr, geometry, layout, plot,sequence_colours)
     lyr <- flow$layer; geometry <- flow$data
     # An absent component can have no column prototype in the public layout.
     # Draw its empty build-local layer without evaluating nonexistent x/text

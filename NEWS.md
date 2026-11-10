@@ -35,7 +35,7 @@
 * Default sequence ticks now retain positions 1 and length and adapt intermediate
   positions to physical space. Circular seams combine the endpoint label.
 * Default ribbons interpolate endpoint sequence colours along their curve and
-  taper towards the subject. Explicit fill/mapping/scales take priority;
+  optionally taper towards the subject (full fronts remain the default). Explicit fill/mapping/scales take priority;
   `tip = "none"` keeps full ribbon fronts. Explicit pident uses a fixed 0–100
   domain and unequal 0/50/80/90/95/100 colour intervals and guide lengths.
 * Unified Feature input is also accepted by prepare, clean, focus and segment
