@@ -1,6 +1,6 @@
 Package: ggchord
 Title: Layered Chord, Circular and Linear Sequence Visualization
-Version: 0.19.0.9000
+Version: 0.20.0.9000
 Authors@R: person(given = "Jem", family = "Dang", email = "dangjem0730@gmail.com", role = c("aut", "cre"))
 Description: A 'ggplot2'-based package for multi-sequence alignment chord
     diagrams, linear and radial synteny plots, HSP dotplots and single circular

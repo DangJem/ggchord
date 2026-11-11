@@ -1,3 +1,12 @@
+# ggchord 0.20.0.9000
+
+- Added `read_bedpe()` as the first Semantic Enrichment adapter. It reads
+  paired zero-based intervals into canonical q/s endpoints, preserves anchor
+  order, raw fields, arbitrary score strings, extra fields and file provenance,
+  and follows paired-object negative-strand conventions. No identity, alignment
+  length or read support is inferred. Incomplete anchors fail by default;
+  `unmapped = "keep"` retains them explicitly for auditing before filtering.
+
 # ggchord 0.19.0.9000
 
 - Added `ggchord_fusion()`, `fusion_panel()` and `fusion_ribbon()` for static

@@ -3128,5 +3128,24 @@
       "en": "Circular/Chord center and 1–4 horizontal/vertical Collinear panels",
       "zh": "Circular/Chord中央图与1–4个横纵Collinear面板"
     }
+  },
+  "read_bedpe": {
+    "level": "L2",
+    "page": "formats",
+    "anchor": "bedpe",
+    "reason": "Runnable observed-interval round trip and explicit missing-anchor/strand boundaries",
+    "modes": "Input adapter",
+    "parameters": [],
+    "purpose": {
+      "en": "Read paired genomic intervals without inventing alignment evidence",
+      "zh": "读取双端区间，保留来源且不推断缺失比对证据"
+    },
+    "alias_of": "",
+    "case": "formats",
+    "scope": "Tab-separated BEDPE; raw fields and explicit missing-anchor policy",
+    "modes_localized": {
+      "en": "Canonical q/s intervals, paired-anchor direction and provenance",
+      "zh": "标准q/s区间、配对锚点方向与来源"
+    }
   }
 }

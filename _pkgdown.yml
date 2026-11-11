@@ -70,6 +70,7 @@ reference:
       - '`ggchord_data_contract`'
       - '`prepare_ggchord_data`'
       - '`read_bed`'
+      - '`read_bedpe`'
       - '`read_blast`'
       - '`read_fasta_lengths`'
       - '`read_genbank`'

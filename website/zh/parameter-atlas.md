@@ -2612,6 +2612,22 @@
 
 </details>
 
+<span id="api-read_bedpe"></span>
+<details><summary><code>read_bedpe()</code></summary>
+
+
+[完整参考](reference/read_bedpe.html)
+
+
+| 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
+| --- | --- | --- | --- |
+| `file` | `NULL` | 字符路径、标识或向量；见约束 | 可选的本地路径向量或通配模式，在files之前读取。 |
+| `files` | `NULL` | 字符路径、标识或向量；见约束 | 可选的其他本地路径或通配模式。 |
+| `source_file` | `FALSE` | 逻辑值 | 逻辑值，是否添加.source_file列，默认FALSE。 |
+| `unmapped` | `c("error", "keep")` | 向量；候选/多选含义见说明 | 不完整锚点的处理方式：默认"error"，或显式"keep"。 |
+
+</details>
+
 <span id="api-read_blast"></span>
 <details><summary><code>read_blast()</code></summary>
 

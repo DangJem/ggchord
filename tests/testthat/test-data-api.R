@@ -68,7 +68,8 @@ test_that("import helpers parse minimal files with explicit coordinate conventio
   gff <- tempfile(fileext = ".gff3")
   bed <- tempfile(fileext = ".bed")
   paf <- tempfile(fileext = ".paf")
-  on.exit(unlink(c(fasta, blast, gff, bed, paf)), add = TRUE)
+  bedpe <- tempfile(fileext = ".bedpe")
+  on.exit(unlink(c(fasta, blast, gff, bed, paf, bedpe)), add = TRUE)
   writeLines(c(">A", "ACGTACGT"), fasta)
   writeLines(paste("001", "NA", 98, 100, 0, 0, 1, 100, 1, 100, "1e-20", 200,
     sep = "\t"), blast)
@@ -84,6 +85,9 @@ test_that("import helpers parse minimal files with explicit coordinate conventio
   writeLines("A\t0\t1\tpoint\t0\t.", bed)
   expect_equal(unname(unlist(read_bed(bed)[c("start", "end")])), c(1, 1))
   writeLines("A\t1000\t99\t200\t-\tB\t1000\t299\t400\t90\t101\t255", paf)
+  writeLines("A\t0\t1\tB\t2\t4\tpair\t.\t+\t-", bedpe)
+  expect_equal(unname(unlist(read_bedpe(bedpe)[c("qstart", "qend", "sstart", "send")])),
+    c(1, 1, 4, 3))
   mapping <- read_paf(paf)
   expect_equal(unname(unlist(mapping[c("qstart", "qend", "sstart", "send")])),
     c(100, 200, 400, 300))

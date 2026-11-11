@@ -1,0 +1,12 @@
+{
+  "version": "0.20.0.9000",
+  "source": "examples/format-inputs/emales-pair.paf",
+  "source_rows": 11,
+  "canonical_endpoint_roundtrip": true,
+  "physical_lines_preserved": true,
+  "extra_fields_preserved": true,
+  "unknown_anchor_policy": "error by default; explicit audit keep",
+  "representative_build": "Collinear full-interval ribbon with explicit constant fill",
+  "evidence_scope": "Observed HSP re-encoding plus explicitly synthetic format cases; no real paired-read claim",
+  "specification": "https://bedtools.readthedocs.io/en/latest/content/general-usage.html#bedpe-format"
+}

@@ -66,6 +66,31 @@ PAF 提供两端全长和区间。先选出 mapq ≥ 30 的比对，再由两端
 
 {{output:frontimportgi}}
 
+## BED双端区间 {#bedpe}
+
+`read_bedpe()`读取六个必填的制表符分隔字段，以及可选name、score、两条链和额外元数据。第一端保持query、第二端保持subject；score保留为字符串，不推断Identity或测序支持度。格式依据[BEDPE说明](https://bedtools.readthedocs.io/en/latest/content/general-usage.html#bedpe-format)。
+
+下面将随包已观测比对的区间转写为BEDPE，用于坐标往返验证，不将它们当作配对测序证据。六列输入没有链证据，因此导入后的锚点链和相对方向保持未知。有真实链信息时才提供对应列，不由坐标升序猜测链。
+
+```r
+data(ribbon_data_example)
+paired_rows <- ribbon_data_example |>
+  transmute(
+    chrom1 = qaccver, start1 = pmin(qstart, qend) - 1, end1 = pmax(qstart, qend),
+    chrom2 = saccver, start2 = pmin(sstart, send) - 1, end2 = pmax(sstart, send)
+  )
+paired_file <- tempfile(fileext = ".bedpe")
+write.table(paired_rows, paired_file,
+  sep = "\t", quote = FALSE, row.names = FALSE, col.names = FALSE
+)
+paired_links <- read_bedpe(paired_file)
+unlink(paired_file)
+paired_links |>
+  select(qaccver, saccver, qstart, qend, sstart, send, q_mapped, s_mapped)
+```
+
+负链锚点采用降序canonical端点，与配对区间适配器一致；同时保留原始start/end和链字段。name不视为唯一ID。额外列在`bedpe_extra`中保留，按`column_11`起命名。未知染色体（`.`）或边界（`-1`）默认报错；显式`unmapped="keep"`为审计保留不完整行，适配或绘图前须筛选`q_mapped & s_mapped`。非法已知坐标和零宽区间始终报错。区间Ribbon没有Identity时，显式设置固定填充，不制造pident。
+
 ## 完成后检查 {#check-result}
 先查看返回列与转换报告，再选绘图列。PAF 反向命中保留端点方向；GenBank 记录身份不能因为展示需要而改成另一条随包质粒。
 

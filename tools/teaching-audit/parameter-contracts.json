@@ -10224,6 +10224,38 @@
     "source": "man/read_bed.Rd"
   },
   {
+    "api": "read_bedpe",
+    "parameter": "file",
+    "default": "NULL",
+    "type": "Character path/identifier/vector; see constraints",
+    "constraint": "Optional local path vector or glob patterns; read before files.",
+    "source": "man/read_bedpe.Rd"
+  },
+  {
+    "api": "read_bedpe",
+    "parameter": "files",
+    "default": "NULL",
+    "type": "Character path/identifier/vector; see constraints",
+    "constraint": "Optional additional local paths or glob patterns.",
+    "source": "man/read_bedpe.Rd"
+  },
+  {
+    "api": "read_bedpe",
+    "parameter": "source_file",
+    "default": "FALSE",
+    "type": "Logical",
+    "constraint": "Logical. Add a .source_file column, default FALSE.",
+    "source": "man/read_bedpe.Rd"
+  },
+  {
+    "api": "read_bedpe",
+    "parameter": "unmapped",
+    "default": "c(\"error\", \"keep\")",
+    "type": "Vector; choices versus multiple selection below",
+    "constraint": "\"error\" (default) or \"keep\" for incomplete anchors.",
+    "source": "man/read_bedpe.Rd"
+  },
+  {
     "api": "read_blast",
     "parameter": "file",
     "default": "NULL",

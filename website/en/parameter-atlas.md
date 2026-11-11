@@ -2612,6 +2612,22 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 </details>
 
+<span id="api-read_bedpe"></span>
+<details><summary><code>read_bedpe()</code></summary>
+
+
+[Full reference](reference/read_bedpe.html)
+
+
+| Parameter | Signature default | Type/value rule | Meaning, range and constraints |
+| --- | --- | --- | --- |
+| `file` | `NULL` | Character path/identifier/vector; see constraints | Optional local path vector or glob patterns; read before files. |
+| `files` | `NULL` | Character path/identifier/vector; see constraints | Optional additional local paths or glob patterns. |
+| `source_file` | `FALSE` | Logical | Logical. Add a .source_file column, default FALSE. |
+| `unmapped` | `c("error", "keep")` | Vector; choices versus multiple selection below | "error" (default) or "keep" for incomplete anchors. |
+
+</details>
+
 <span id="api-read_blast"></span>
 <details><summary><code>read_blast()</code></summary>
 

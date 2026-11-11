@@ -1305,6 +1305,17 @@
     }
   },
   {
+    "name": "read_bedpe",
+    "owner": "ggchord",
+    "alias": "",
+    "parameters": {
+      "file": "NULL",
+      "files": "NULL",
+      "source_file": "FALSE",
+      "unmapped": "c(\"error\", \"keep\")"
+    }
+  },
+  {
     "name": "read_blast",
     "owner": "ggchord",
     "alias": "",

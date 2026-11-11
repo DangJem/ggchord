@@ -53,6 +53,7 @@ Choose a lesson by task. A means chord, B collinear, C single-sequence circular.
 | Compose source-anchored views | [`ggchord_fusion()`](reference/ggchord_fusion.html) | `center, center_size, layout` | Fusion | [Advanced](fusion.html#intervals) |
 | Connect real intervals across panels | [`fusion_ribbon()`](reference/fusion_ribbon.html) | `data, qpanel, spanel, gradient, tip` | Fusion | [Advanced](fusion.html#intervals) |
 | Audit composition sources and physical anchors | [`export_ggchord_fusion()`](reference/export_ggchord_fusion.html) | `width, height` | Fusion | [Advanced](fusion.html#export) |
+| Import paired BED intervals | [`read_bedpe()`](reference/read_bedpe.html) | `file, files, source_file, unmapped` | Input | [Advanced](formats.html#bedpe) |
 
 ## Three independent learning paths {#paths}
 

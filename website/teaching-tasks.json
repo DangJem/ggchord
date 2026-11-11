@@ -537,5 +537,16 @@
     "modes": "Fusion",
     "page": "fusion#export",
     "level": "advanced"
+  },
+  {
+    "task": {
+      "en": "Import paired BED intervals",
+      "zh": "导入BED双端区间"
+    },
+    "api": "read_bedpe",
+    "parameters": "file, files, source_file, unmapped",
+    "modes": "Input",
+    "page": "formats#bedpe",
+    "level": "advanced"
   }
 ]

@@ -91,6 +91,7 @@
 | [`project_ggchord_features`](reference/project_ggchord_features.html) | 通过剪接 CDS 映射投影蛋白结构域或基因组注释 | [L2](projection.html#cds) | 显式 CDS/相位/单位的编码坐标工作流 | [↗](parameter-atlas.html#api-project_ggchord_features) | [↗](homology.html) |
 | [`project_ggchord_links`](reference/project_ggchord_links.html) | 将明确无缺口的蛋白连接投影为基因组编码片段 | [L2](projection.html#links) | 显式 CDS/相位/单位的编码坐标工作流 | [↗](parameter-atlas.html#api-project_ggchord_links) | [↗](homology.html) |
 | [`read_bed`](reference/read_bed.html) | 将 BED 区间读为 ggchord 注释 | [L2](formats.html#zero-based) | 本地文件到标准表；按源格式转换坐标和声明单位 | [↗](parameter-atlas.html#api-read_bed) | [↗](formats.html) |
+| [`read_bedpe`](reference/read_bedpe.html) | 读取双端区间，保留来源且不推断缺失比对证据 | [L2](formats.html#bedpe) | 标准q/s区间、配对锚点方向与来源 | [↗](parameter-atlas.html#api-read_bedpe) | [↗](formats.html) |
 | [`read_blast`](reference/read_blast.html) | 将一个或多个 BLAST 表格文件读为连接数据 | [L2](alignments.html#standard) | 本地文件到标准表；按源格式转换坐标和声明单位 | [↗](parameter-atlas.html#api-read_blast) | [↗](real-data.html) |
 | [`read_fasta_lengths`](reference/read_fasta_lengths.html) | 将一个或多个 FASTA 文件读为序列数据 | [L2](real-data.html#read) | 本地文件到标准表；按源格式转换坐标和声明单位 | [↗](parameter-atlas.html#api-read_fasta_lengths) | [↗](real-data.html) |
 | [`read_genbank`](reference/read_genbank.html) | 使用可选成熟解析器导入本地 GenBank 或 GBFF | [L2](formats.html#genbank) | 本地文件到标准表；按源格式转换坐标和声明单位 | [↗](parameter-atlas.html#api-read_genbank) | [↗](formats.html) |

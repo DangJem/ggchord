@@ -53,6 +53,7 @@
 | 组合有来源锚点的视图 | [`ggchord_fusion()`](reference/ggchord_fusion.html) | `center, center_size, layout` | Fusion | [进阶](fusion.html#intervals) |
 | 跨面板连接真实区间 | [`fusion_ribbon()`](reference/fusion_ribbon.html) | `data, qpanel, spanel, gradient, tip` | Fusion | [进阶](fusion.html#intervals) |
 | 审计组合来源与物理锚点 | [`export_ggchord_fusion()`](reference/export_ggchord_fusion.html) | `width, height` | Fusion | [进阶](fusion.html#export) |
+| 导入BED双端区间 | [`read_bedpe()`](reference/read_bedpe.html) | `file, files, source_file, unmapped` | Input | [进阶](formats.html#bedpe) |
 
 ## 三条独立学习路线 {#paths}
 

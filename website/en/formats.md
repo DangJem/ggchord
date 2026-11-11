@@ -66,6 +66,31 @@ Convert one interval and then an interval pair. Full lengths come from `seqlengt
 
 {{output:frontimportgi}}
 
+## Paired BED intervals {#bedpe}
+
+`read_bedpe()` reads six required tab-separated fields, optional name/score/two strands and additional metadata. The first anchor stays query and the second stays subject. Scores remain strings; neither Identity nor read support is inferred. The format follows the [BEDPE description](https://bedtools.readthedocs.io/en/latest/content/general-usage.html#bedpe-format).
+
+This example re-encodes the intervals of bundled observed alignments for a coordinate round trip; it is not paired-read evidence. Six columns contain no strand evidence, so the imported anchor strands and relative direction remain unknown. Supply real strand columns when known; do not infer them from ascending coordinates.
+
+```r
+data(ribbon_data_example)
+paired_rows <- ribbon_data_example |>
+  transmute(
+    chrom1 = qaccver, start1 = pmin(qstart, qend) - 1, end1 = pmax(qstart, qend),
+    chrom2 = saccver, start2 = pmin(sstart, send) - 1, end2 = pmax(sstart, send)
+  )
+paired_file <- tempfile(fileext = ".bedpe")
+write.table(paired_rows, paired_file,
+  sep = "\t", quote = FALSE, row.names = FALSE, col.names = FALSE
+)
+paired_links <- read_bedpe(paired_file)
+unlink(paired_file)
+paired_links |>
+  select(qaccver, saccver, qstart, qend, sstart, send, q_mapped, s_mapped)
+```
+
+Negative-strand anchors use decreasing canonical endpoints, consistent with paired-interval adapters; the original start/end and strand fields are also retained. Names are not assumed unique. Extra columns remain in `bedpe_extra`, named `column_11` onwards. Unknown chromosomes (`.`) and boundaries (`-1`) fail by default. Explicit `unmapped="keep"` retains incomplete rows for auditing; filter `q_mapped & s_mapped` before adaptation or plotting. Invalid known coordinates and zero-width intervals always fail. For interval ribbons without Identity, set a constant fill explicitly rather than manufacturing pident.
+
 ## Check your result {#check-result}
 Inspect returned fields and conversion reports before selecting plotting fields. Preserve endpoint direction for reverse PAF hits; do not rename a GenBank record to pretend it is a different bundled plasmid.
 

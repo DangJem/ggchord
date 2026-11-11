@@ -10,7 +10,7 @@ length from features, verifies homology experimentally, or adds plot layers.
 }
 \details{
 \describe{
-\item{Read}{The six \code{read_*()} functions parse local files. Both
+\item{Read}{The \code{read_*()} functions parse local files. Both
 \code{file} and \code{files} accept path vectors and glob patterns. When
 both are supplied, \code{file} precedes \code{files}; matches expand in
 pattern order, and each normalized path is read once, retaining its first
@@ -73,6 +73,13 @@ validation, cleaning and raw focus accept finite numeric positions; their
 success alone does not certify integral genomic coordinates. Prefer integral
 windows for biological data and use adapters before these legacy entries
 when strict integer checks are required.
+BEDPE keeps first/second anchors as query/subject, preserves original fields,
+and follows paired-object negative-strand endpoint ordering. It does not
+infer identity or read support. Unknown anchors fail by default; the explicit
+\code{read_bedpe(unmapped = "keep")} auditing policy retains missing canonical
+coordinates and mapping flags. Filter complete anchors before adaptation or
+plotting; keeping them is not evidence that they are drawable.
+
 BED/PAF half-open \code{[a,b)} becomes \code{[a+1,b]}; zero-width records
 cannot become nonempty intervals and are rejected. Link endpoint order can
 encode relative direction; it is not a circular-origin join. Feature
