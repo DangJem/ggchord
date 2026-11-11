@@ -107,7 +107,7 @@ test_that("Radial spokes retain complete intervals and reversible native positio
 })
 
 test_that("Fusion retains source intervals across independently measured panels", {
-  center <- ggchord(smoke_sequences()[1, ]) + geom_seq() + coord_circular()
+  center <- ggchord(smoke_sequences()[1, ]) + geom_seq() + coord_circular() + ggplot2::scale_x_reverse()
   detail <- ggchord(smoke_sequences()) + geom_seq() + coord_collinear()
   source <- smoke_ribbon()
   fusion <- ggchord_fusion(center) + fusion_panel(detail, "detail") +
@@ -115,4 +115,6 @@ test_that("Fusion retains source intervals across independently measured panels"
   out <- export_ggchord_fusion(fusion)
   expect_true(all(out$connections$retained))
   expect_identical(out$relationship_data[[1]], source)
+  query <- out$fronts[out$fronts$endpoint == "q", ]
+  expect_lt(stats::cor(query$local_x, query$x), 0)
 })

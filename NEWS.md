@@ -7,6 +7,7 @@
 - Added `export_ggchord_fusion()` with source relationships, namespaced instances,
   measured panel rectangles, local/global fronts, paths and diagnostics in mm.
   Standard `ggsave()` and `view_ggchord()` rebuild on the actual target device.
+  Endpoint projection respects native position-scale transforms before Coord.
 - Panel-local measurement budgets now keep labels, tracks and guides within
   their own physical context. Optional adaptive allocation adjusts the central
   panel to the physical aspect ratio without changing explicit font sizes.

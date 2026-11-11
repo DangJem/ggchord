@@ -140,3 +140,26 @@ stopifnot(ew$connections$s_instance=="subject-window",
   min(ew$fronts$position_boundary[ew$fronts$endpoint=="s"])==min(hits$sstart[9],hits$send[9])-1)
 check_fronts(ew)
 message("Fusion: explicitly renamed source windows passed")
+# Native aa coordinates from a real protein BLAST input.
+protein <- read_blast("examples/format-inputs/protein-pair-blastp.tsv")
+proteins <- read_fasta_lengths("examples/format-inputs/protein-pair.faa")
+proteins$sequence_unit <- "aa"; protein$sequence_unit <- "aa"
+pc <- ggchord(proteins,validate="none")+geom_seq(show.legend=FALSE)+coord_chord()
+pl <- ggchord(proteins,validate="none")+geom_seq(show.legend=FALSE)+coord_collinear()
+ep <- export_ggchord_fusion(ggchord_fusion(pc)+fusion_panel(pl,"protein")+
+  fusion_ribbon(protein,qpanel="center",spanel="protein",fill="grey70"))
+stopifnot(all(ep$connections$sequence_unit=="aa"),identical(ep$relationship_data[[1]],protein))
+check_fronts(ep)
+message("Fusion: native protein BLAST input passed")
+# A native reversed position scale precedes Coord, even on symmetric circle
+# limits. Verify reflection against the independently measured panel bounds.
+reflected <- ggchord_fusion(center+ggplot2::scale_x_reverse())+
+  fusion_panel(vertical,"detail")+
+  fusion_ribbon(hits[3,,drop=FALSE],qpanel="center",spanel="detail",fill="grey70")
+eflected <- export_ggchord_fusion(reflected)
+qf <- eflected$fronts[eflected$fronts$endpoint=="q",]
+panel <- eflected$panels[eflected$panels$panel_id=="center",]
+context <- eflected$diagnostics$center$render_context
+expected <- panel$panel_xmin+(-qf$local_x-context$x_range[1])/diff(context$x_range)*(panel$panel_xmax-panel$panel_xmin)
+stopifnot(isTRUE(all.equal(qf$x,unname(expected),check.attributes=FALSE)))
+message("Fusion: native position-scale reflection passed")

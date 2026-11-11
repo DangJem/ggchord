@@ -299,12 +299,19 @@ ggchord_fusion_front <- function(panel, endpoint) {
     xy <- frame$base; normal <- frame$normal
   }
   coord <- panel$built$layout$coord
-  projected <- coord$transform(data.frame(x=xy[,1],y=xy[,2]), panel$built$layout$panel_params[[1L]])
+  project <- function(points) {
+    # ggplot transforms position scales before Coord; reflecting a circular
+    # panel must also reflect its interval anchors, even with symmetric limits.
+    scaled <- data.frame(
+      x=panel$built$layout$panel_scales_x[[1L]]$transform(points[,1]),
+      y=panel$built$layout$panel_scales_y[[1L]]$transform(points[,2]))
+    coord$transform(scaled,panel$built$layout$panel_params[[1L]])
+  }
+  projected <- project(xy)
   if (any(!is.finite(c(projected$x,projected$y))) || any(projected$x < -1e-7 | projected$x > 1+1e-7 | projected$y < -1e-7 | projected$y > 1+1e-7))
     ggchord_stop("Fusion: source front is outside the visible coordinate limits in panel '", endpoint$panel, "'")
   bounds <- panel$context$panel_bounds_mm
-  normal_tip <- coord$transform(data.frame(x=xy[,1]+normal[,1],y=xy[,2]+normal[,2]),
-    panel$built$layout$panel_params[[1L]])
+  normal_tip <- project(xy+normal)
   normal <- cbind((normal_tip$x-projected$x)*diff(bounds[1:2]),
     (normal_tip$y-projected$y)*diff(bounds[3:4]))
   normal <- normal / sqrt(rowSums(normal^2))
