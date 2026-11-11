@@ -54,6 +54,7 @@ knitr::opts_chunk$set(eval = FALSE, collapse = TRUE, comment = "#>")
             return f'[{label}]({target}' + (f'#{anchor}' if anchor else '') + ')'
         body = re.sub(r'\[([^\]]+)\]\(([a-z-]+)\.html(?:#([^)]*))?\)', lesson_link, body)
         body = body.replace('(../assets/source/', f'(https://dangjem.github.io/ggchord/assets/source/')
+        body = body.replace('(../assets/MIGRATION.md)', '(../MIGRATION.md)').replace('(../assets/MIGRATION-Hans.md)', '(../MIGRATION-Hans.md)')
         text += f'\n## {p["title"][lang]} {{#{p["slug"]}}}\n\n'+body+'\n'
 
     # R chunks share byte-identical code in both languages; never knit here.
@@ -72,8 +73,8 @@ def readme(lang):
     title = 'ggchord：弦图、共线性图与质粒图' if zh else 'ggchord: chord, collinear and plasmid sequence plots'
     intro = ('基于 ggplot2 的 R 包。用独立图层组合序列骨架、区间连接、基因、通用注释、标签和定量轨道。'
         if zh else 'An R package built on ggplot2. Combine independent layers for sequence backbones, interval links, genes, general features, labels and quantitative tracks.')
-    status = ('正式版为 **ggchord 0.16.6**；本文示例由本地 **v0.16.7** 开发源码生成。正式资产见 GitHub Releases。'
-        if zh else 'The stable release is **ggchord 0.16.6**. These examples are generated from the local **v0.16.7** development source. Formal assets are on GitHub Releases.')
+    status = ('正式版为 **ggchord 0.16.6**；本文示例由本地 **v0.17.0** 开发源码生成。正式资产见 GitHub Releases。'
+        if zh else 'The stable release is **ggchord 0.16.6**. These examples are generated from the local **v0.17.0** development source. Formal assets are on GitHub Releases.')
     install = '安装' if zh else 'Install'
     quick = '三种模式' if zh else 'Three views'
     sizing = '预览与保存' if zh else 'Preview and save'

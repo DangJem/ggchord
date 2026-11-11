@@ -66,6 +66,27 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `min_support` | `0.1` | Numeric/integer; range in description | Minimum directional imbalance in [0, 1] for an automatic change. It is the absolute difference between forward and reverse support divided by their sum, default 0.1. A tie is always unresolved. |
 | `segments` | `NULL` | Explicit window/anchor table or documented equivalent | Optional data frame with unique window accver, row_id and orientation (1 or -1). Every displayed accession must be declared. Each window has its own local coordinates and reversible source metadata. |
 | `segment_gap` | `100` | Numeric/integer; range in description | Positive display gap in native sequence units when segments is supplied, default 100. It never implies genomic continuity. |
+| `seq_axis` | `c("horizontal", "vertical")` | Vector; choices versus multiple selection below | "horizontal" (default) or "vertical". Vertical mode projects sequence-local geometry onto upright columns and lays out text in its own readable orientation; it does not change source strands. |
+
+</details>
+
+<span id="api-coord_sankey"></span>
+<details><summary><code>coord_sankey()</code></summary>
+
+
+[Full reference](reference/coord_sankey.html)
+
+
+| Parameter | Signature default | Type/value rule | Meaning, range and constraints |
+| --- | --- | --- | --- |
+| `column_gap` | `3` | Numeric/integer; range in description | Positive separation of the two backbones in layout units. |
+| `self_links` | `FALSE` | Logical | Show relationships whose query and subject entity are equal. |
+| `ratio` | `1` | Numeric/integer; range in description | Fixed y/x aspect ratio, default 1. |
+| `xlim` | `NULL` | Nullable R object; type/inheritance below | Optional user limits. Explicit limits take priority over automatically fitted limits. |
+| `ylim` | `NULL` | Nullable R object; type/inheritance below | Optional user limits. Explicit limits take priority over automatically fitted limits. |
+| `expand` | `FALSE` | Logical | Logical. Expand coordinate limits, default FALSE. Automatic fitting already includes a small safety margin; set TRUE to request the additional ggplot2 coordinate expansion. |
+| `clip` | `"off"` | Character/enum; choices below | Whether drawing is clipped to the panel, default "off". |
+| `fit` | `c("labels", "geometry", "manual")` | Vector; choices versus multiple selection below | Fitting strategy: "labels" includes measured label boxes, "geometry" fits geometric elements only, and "manual" requires explicit xlim and ylim. |
 
 </details>
 
@@ -82,7 +103,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
 | `mapping` | `NULL` | aes mapping | Optional aesthetic mapping. Role aesthetics such as accver, start, end and strand may rename input columns; ordinary visual mappings are evaluated after geometry is generated. |
-| `data` | `NULL` | Table/supported object; data may be a function | data.frame with accver, start, end and strand; optional type, category and label. Factor start/end columns use their numeric labels, not their internal level codes. Coordinates must resolve to finite numbers. display_priority or logical prioritized_display. As an alternative to strand, directionality or direction may contain "forward", "reverse", "bidirectional", or "none". |
+| `data` | `NULL` | Table/supported object; data may be a function | data.frame with accver, start, end and strand; optional type, category and label. Factor start/end columns use their numeric labels, not their internal level codes. Coordinates must resolve to finite numbers. display_priority or logical prioritized_display. As an alternative to strand, directionality or direction may contain "forward", "reverse", "bidirectional", or "none". When omitted, uses the full constructor feature_data (or compatible gene_data). Other layers never remove records from this default input. |
 | `shape` | `"arrow"` | Character/enum; choices below | Fixed feature geometry. An explicitly supplied shape takes precedence over aes(feature_shape = ...): "arrow", "compact_arrow", "promoter_arrow", "primer_arrow", "marker", "block", "capped_line", "primer_arc", "chevron", or "lollipop". The default is "arrow". Use aes(feature_shape = type) together with scale_feature_shape_manual() to map categories to geometry. |
 | `width` | `NULL` | Geometry number/vector/documented formats | Optional numeric/vector/list controlling width in the shared feature geometry engine. In a circular feature-label composition, the base width responds to final label size within bounded limits. |
 | `arrow_head_length` | `0.04` | Numeric/integer; range in description | Arrow-head dimensions in the sequence-local frame, shared with geom_gene(). Values above one for arrow_head_width create a protruding block-arrow head. |
@@ -165,7 +186,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
 | `mapping` | `NULL` | aes mapping | Optional aesthetic mapping. Role aesthetics such as accver, start, end and strand may rename input columns; ordinary visual mappings are evaluated after geometry is generated. |
-| `data` | `NULL` | Table/supported object; data may be a function | data.frame with accver, start, end and strand; optional type, category and label. Factor start/end columns use their numeric labels, not their internal level codes. Coordinates must resolve to finite numbers. display_priority or logical prioritized_display. As an alternative to strand, directionality or direction may contain "forward", "reverse", "bidirectional", or "none". |
+| `data` | `NULL` | Table/supported object; data may be a function | data.frame with accver, start, end and strand; optional type, category and label. Factor start/end columns use their numeric labels, not their internal level codes. Coordinates must resolve to finite numbers. display_priority or logical prioritized_display. As an alternative to strand, directionality or direction may contain "forward", "reverse", "bidirectional", or "none". When omitted, uses the full constructor feature_data (or compatible gene_data). Other layers never remove records from this default input. |
 | `shape` | `"arrow"` | Character/enum; choices below | Fixed feature geometry. An explicitly supplied shape takes precedence over aes(feature_shape = ...): "arrow", "compact_arrow", "promoter_arrow", "primer_arrow", "marker", "block", "capped_line", "primer_arc", "chevron", or "lollipop". The default is "arrow". Use aes(feature_shape = type) together with scale_feature_shape_manual() to map categories to geometry. |
 | `width` | `0.058` | Numeric/integer; range in description | Track width; the default matches the compact feature bands used by desktop plasmid editors. |
 | `arrow_head_length` | `0.068` | Numeric/integer; range in description | Arrow-head dimensions in the sequence-local frame, shared with geom_gene(). Values above one for arrow_head_width create a protruding block-arrow head. |
@@ -193,7 +214,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
 | `mapping` | `NULL` | aes mapping | Default NULL (uses pre-computed data) |
-| `data` | `NULL` | Table/supported object; data may be a function | Default NULL (retrieved automatically from the layout) |
+| `data` | `NULL` | Table/supported object; data may be a function | Optional layer table or function, overriding constructor data. With unified feature_data, the default selects explicitly classified gene/CDS records; see ggchord(). Legacy gene_data retains all rows. |
 | `width` | `NULL` | Geometry number/vector/documented formats | Optional numeric/vector/list. Width of gene arrows, default 0.05 |
 | `arrow_head_length` | `0.04` | Numeric/integer; range in description | Shared arrow-head dimensions in the sequence-local frame. |
 | `arrow_head_width` | `1` | Numeric/integer; range in description | Shared arrow-head dimensions in the sequence-local frame. |
@@ -216,7 +237,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
 | `mapping` | `NULL` | aes mapping | Default NULL (uses pre-computed data) |
-| `data` | `NULL` | Table/supported object; data may be a function | Default NULL (retrieved automatically from the layout) |
+| `data` | `NULL` | Table/supported object; data may be a function | Optional layer table or function. Default data follows the gene/CDS selection described in ggchord(). |
 | `label_orientation` | `"horizontal"` | Character/enum; choices below | Character, default "horizontal". Text orientation relative to each sequence path: "radial", "tangent", or "horizontal". |
 | `label_side` | `"outside"` | Character/enum; choices below | Character, default "outside". Place labels outside the chord, use the strand-based "auto" side, or force "inside" placement. |
 | `label_overlap` | `"hide"` | Character/enum; choices below | Character, default "hide". Fixed-label collision policy: omit later conflicting labels ("hide"), apply the small position adjustment ("nudge"), or keep all requested positions ("allow"). Input row order therefore provides a simple way to prioritize labels in "hide" mode. |
@@ -242,7 +263,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
 | `mapping` | `NULL` | aes mapping | Default NULL (uses pre-computed data) |
-| `data` | `NULL` | Table/supported object; data may be a function | Default NULL (retrieved automatically from the layout) |
+| `data` | `NULL` | Table/supported object; data may be a function | Optional layer table or function. Default data follows the gene/CDS selection described in ggchord(). |
 | `label_layout` | `"radial"` | Character/enum; choices below | Character, default "radial". Label layout: "radial" arranges horizontal external labels along sequence-relative contours, with straight normal leaders or a short normal departure followed by a long connector when displaced; "auto" uses shared vertical columns on the left/right and radial placement elsewhere; "arc" rotates text along the sequence tangent. The former "aligned" mode has been removed; use "auto" for side columns. |
 | `label_wrap` | `NULL` | Nullable R object; type/inheritance below | Numeric or NULL, default NULL. When set, long gene annotations are wrapped at this many characters (e.g. 15), overriding label_fit. |
 | `label_fit` | `"wrap"` | Character/enum; choices below | Character, default "wrap". How labels whose initial boxes are crowded or unusually wide are fitted before deterministic layout: "wrap" preserves the complete annotation over multiple lines, "ellipsis" uses a single shortened line, "auto" wraps and adds an ellipsis only if text exceeds label_max_lines, and "none" disables adaptive fitting. Explicit "shrink" uses internal-first feature placement and reduces the complete text only as far as label_min_size. Labels that still cannot fit use the existing adjacent/external placement or hiding policy, at their requested size. This choice uses feature placement rather than the external layout selected by label_layout; other fitting modes are unchanged. |
@@ -285,6 +306,8 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `position` | `"identity"` | Character/enum; choices below | Standard ggplot2 layer arguments. |
 | `show.legend` | `NA` | R object; constraints below | Standard ggplot2 layer arguments. |
 | `inherit.aes` | `FALSE` | Logical | Standard ggplot2 layer arguments. |
+| `between` | `NULL` | Nullable R object; type/inheritance below | Two display-instance names or declared-order indices. |
+| `allow_repeated` | `FALSE` | Logical | Allow repeated display of an explicitly declared source_hsp_id. |
 | `...` | `Required/alternative entry; see description` | Forwarded arguments | Additional path parameters. |
 
 </details>
@@ -305,7 +328,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `link_avoid` | `c("uniform", "none", "smooth")` | Vector; choices versus multiple selection below | One of "uniform" (default), "none", or "smooth". Smooth avoidance changes clearance locally; uniform avoidance uses one clearance across an endpoint. |
 | `link_branch` | `c("none", "query", "subject")` | Vector; choices versus multiple selection below | Share equal query or subject endpoints: "none", "query", "subject". |
 | `link_branch_fraction` | `0.15` | Numeric/integer; range in description | Shared length relative to the shortest member, in (0, 0.5]. |
-| `fill` | `NULL` | Nullable R object; type/inheritance below | Optional fixed ribbon fill. NULL keeps the default Identity mapping. |
+| `fill` | `NULL` | Nullable R object; type/inheritance below | Optional fixed ribbon fill. NULL uses the default Identity fill. |
 | `alpha` | `0.42` | Numeric/integer; range in description | Standard fixed ribbon styles. Explicit values take precedence over matching mappings; omitted defaults do not suppress user mappings. For example, omit alpha when mapping ribbon_alpha. |
 | `colour` | `"#59636D"` | Character/enum; choices below | Standard fixed ribbon styles. Explicit values take precedence over matching mappings; omitted defaults do not suppress user mappings. For example, omit alpha when mapping ribbon_alpha. |
 | `linewidth` | `0.08` | Numeric/integer; range in description | Standard fixed ribbon styles. Explicit values take precedence over matching mappings; omitted defaults do not suppress user mappings. For example, omit alpha when mapping ribbon_alpha. |
@@ -316,6 +339,10 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `show.legend` | `TRUE` | Logical | Standard ggplot2 layer arguments. |
 | `inherit.aes` | `FALSE` | Logical | Standard ggplot2 layer arguments. |
 | `nonadjacent_linewidth` | `0.4` | Numeric/integer; range in description | Fixed outline width for non-adjacent displayed rows in coord_collinear(), default 0.4 mm. These ribbons use dashed outlines by default. Zero uses the layer's ordinary linewidth for every ribbon. This changes width independently of line type. An explicit aes(linewidth = ...) controls widths instead of this fixed default. |
+| `between` | `NULL` | Nullable R object; type/inheritance below | Two display-instance names or declared-order indices for a unique route. |
+| `allow_repeated` | `FALSE` | Logical | Explicitly allow a declared source_hsp_id in more than one displayed relation. |
+| `tip` | `c("none", "subject")` | Vector; choices versus multiple selection below | Full interval fronts (none, default), or an optional subject taper. The shoulder retains the translated target endpoint span at 88 percent of the channel. The tip is a decorative front-midpoint marker, not a single matched base or biological transfer direction. Degenerate fronts fall back to the full front with a warning. Source intervals are unchanged. |
+| `gradient` | `FALSE` | Logical | Logical. Opt into endpoint sequence-colour interpolation; default FALSE. Explicit fill, mapping and scales still take priority. |
 | `...` | `Required/alternative entry; see description` | Forwarded arguments | Additional arguments passed to geom_polygon() |
 
 </details>
@@ -406,7 +433,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | --- | --- | --- | --- |
 | `mapping` | `NULL` | aes mapping | Default NULL (uses pre-computed data) |
 | `data` | `NULL` | Table/supported object; data may be a function | Default NULL (retrieved automatically from the layout) |
-| `seq_order` | `NULL` | Geometry number/vector/documented formats | Optional character vector. Specifies the drawing order of sequences |
+| `seq_order` | `NULL` | Geometry number/vector/documented formats | Source IDs in display order. Repeats create display instances; use names such as c(A_high='A', B='B', A_low='A') for stable instance IDs. Repeated-entity HSPs require a unique between route on each link layer. |
 | `seq_orientation` | `NULL` | Geometry number/vector/documented formats | Optional numeric (1 or -1). Sequence orientation, default 1 |
 | `seq_gap` | `NULL` | Geometry number/vector/documented formats | Optional numeric. Gap proportion between sequences, default 0.03 in chord coordinates. A named vector can set the gap after each sequence; omitted IDs use the coordinate default. In coord_collinear(), a positive distance between consecutive backbones as a proportion of the longest backbone's width, default 0.3. The final sequence's gap is unused in linear layouts. Segmented linear displays measure it against the longest display row; windows in one row must request the same gap, and only gaps between rows affect vertical placement. |
 | `seq_radius` | `NULL` | Geometry number/vector/documented formats | Optional numeric (> 0). Sequence arc radius, default 1.0 |
@@ -418,6 +445,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `position` | `"identity"` | Character/enum; choices below | Standard ggplot2 layer arguments. |
 | `show.legend` | `TRUE` | Logical | Standard ggplot2 layer arguments. |
 | `inherit.aes` | `FALSE` | Logical | Standard ggplot2 layer arguments. |
+| `length_mode` | `c("proportional", "equal")` | Vector; choices versus multiple selection below | "proportional" (default) retains source-length ratios; "equal" gives each displayed sequence the same angular allocation or linear span without modifying source lengths. Shared absolute scale bars are unavailable in multi-sequence equal mode; local axes retain source units. |
 | `...` | `Required/alternative entry; see description` | Forwarded arguments | Additional fixed path aesthetics. colour (or color) sets seq_colour. Explicit fixed values take precedence over matching mappings; omit fixed arguments to retain mapped styles. |
 
 </details>
@@ -542,28 +570,70 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 </details>
 
-<span id="api-geom_track_bar"></span>
-<details><summary><code>geom_track_bar()</code></summary>
+<span id="api-geom_track"></span>
+<details><summary><code>geom_track()</code></summary>
 
 
-[Full reference](reference/geom_track_tile.html)
+[Full reference](reference/geom_track.html)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `mapping` | `NULL` | aes mapping | Standard ggplot2 mapping and layer input. |
-| `data` | `NULL` | Table/supported object; data may be a function | Standard ggplot2 mapping and layer input. |
-| `position` | `Required/alternative entry; see description` | Position object or documented string | A position_track() declaration. Every layer requires one. |
-| `baseline` | `0` | Numeric/integer; range in description | Explicit numeric bar baseline, default zero. It is included in scale training and must remain representable under limits/transform. |
-| `fill` | `"#86AFB9"` | Character/enum; choices below | Fixed styles; fill and colour mappings use the dedicated track roles and scoped scales. |
-| `colour` | `NA` | R object; constraints below | Fixed styles; fill and colour mappings use the dedicated track roles and scoped scales. |
-| `alpha` | `1` | Numeric/integer; range in description | Fixed styles; fill and colour mappings use the dedicated track roles and scoped scales. |
-| `linewidth` | `0.25` | Numeric/integer; range in description | Fixed styles; fill and colour mappings use the dedicated track roles and scoped scales. |
-| `linetype` | `1` | Numeric/integer; range in description | Fixed styles; fill and colour mappings use the dedicated track roles and scoped scales. |
-| `bounds` | `c("error", "clip")` | Vector; choices versus multiple selection below | "error" (default) or "clip" for genomic coordinates. Clipping is reported and never changes source values. |
-| `show.legend` | `NA` | R object; constraints below | Standard layer arguments. |
-| `inherit.aes` | `FALSE` | Logical | Standard layer arguments. |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Extra geom parameters. |
+| `mapping` | `NULL` | aes mapping | Standard layer input. Supply accver and source positions through x/pos, or interval start/end. Map y/track_value for identity values. |
+| `data` | `NULL` | Table/supported object; data may be a function | Standard layer input. Supply accver and source positions through x/pos, or interval start/end. Map y/track_value for identity values. |
+| `geom` | `"point"` | Character/enum; choices below | Native geometry/statistic names. bar defaults to count; col and other geoms default to identity. |
+| `stat` | `NULL` | Nullable R object; type/inheritance below | Native geometry/statistic names. bar defaults to count; col and other geoms default to identity. |
+| `track` | `NULL` | Nullable R object; type/inheritance below | A physical position_track() declaration. |
+| `position` | `NULL` | Position object or documented string | Data position such as identity, stack, dodge. The legacy position=position_track(...) spelling still declares the physical band. |
+| `bounds` | `c("error", "clip")` | Vector; choices versus multiple selection below | Coordinate error/clip policy. |
+| `baseline` | `0` | Numeric/integer; range in description | Numeric identity-column baseline. Nonzero baselines require position='identity' so stacking does not change their meaning. |
+| `show.legend` | `NA` | R object; constraints below | Standard layer controls. |
+| `inherit.aes` | `FALSE` | Logical | Standard layer controls. |
+| `...` | `Required/alternative entry; see description` | Forwarded arguments | Native geom/stat parameters and fixed styles. |
+
+</details>
+
+<span id="api-geom_track_bar"></span>
+<details><summary><code>geom_track_bar()</code></summary>
+
+
+[Full reference](reference/geom_track.html)
+
+
+| Parameter | Signature default | Type/value rule | Meaning, range and constraints |
+| --- | --- | --- | --- |
+| `mapping` | `NULL` | aes mapping | Standard layer input. Supply accver and source positions through x/pos, or interval start/end. Map y/track_value for identity values. |
+| `data` | `NULL` | Table/supported object; data may be a function | Standard layer input. Supply accver and source positions through x/pos, or interval start/end. Map y/track_value for identity values. |
+| `position` | `NULL` | Position object or documented string | Data position such as identity, stack, dodge. The legacy position=position_track(...) spelling still declares the physical band. |
+| `baseline` | `0` | Numeric/integer; range in description | Numeric identity-column baseline. Nonzero baselines require position='identity' so stacking does not change their meaning. |
+| `fill` | `"#86AFB9"` | Character/enum; choices below | Fixed styles for the count shortcut. |
+| `colour` | `NA` | R object; constraints below | Fixed styles for the count shortcut. |
+| `alpha` | `1` | Numeric/integer; range in description | Fixed styles for the count shortcut. |
+| `linewidth` | `0.25` | Numeric/integer; range in description | Fixed styles for the count shortcut. |
+| `linetype` | `1` | Numeric/integer; range in description | Fixed styles for the count shortcut. |
+| `bounds` | `c("error", "clip")` | Vector; choices versus multiple selection below | Coordinate error/clip policy. |
+| `show.legend` | `NA` | R object; constraints below | Standard layer controls. |
+| `inherit.aes` | `FALSE` | Logical | Standard layer controls. |
+| `...` | `Required/alternative entry; see description` | Forwarded arguments | Native geom/stat parameters and fixed styles. |
+
+</details>
+
+<span id="api-geom_track_col"></span>
+<details><summary><code>geom_track_col()</code></summary>
+
+
+[Full reference](reference/geom_track.html)
+
+
+| Parameter | Signature default | Type/value rule | Meaning, range and constraints |
+| --- | --- | --- | --- |
+| `mapping` | `NULL` | aes mapping | Standard layer input. Supply accver and source positions through x/pos, or interval start/end. Map y/track_value for identity values. |
+| `data` | `NULL` | Table/supported object; data may be a function | Standard layer input. Supply accver and source positions through x/pos, or interval start/end. Map y/track_value for identity values. |
+| `position` | `NULL` | Position object or documented string | Data position such as identity, stack, dodge. The legacy position=position_track(...) spelling still declares the physical band. |
+| `track` | `NULL` | Nullable R object; type/inheritance below | A physical position_track() declaration. |
+| `...` | `Required/alternative entry; see description` | Forwarded arguments | Native geom/stat parameters and fixed styles. |
+| `show.legend` | `NA` | R object; constraints below | Standard layer controls. |
+| `inherit.aes` | `FALSE` | Logical | Standard layer controls. |
 
 </details>
 
@@ -1321,7 +1391,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `axis.ticks.length` | `NULL` | Nullable R object; type/inheritance below | Scalar grid::unit() objects controlling physical axis spacing. A negative axis.gap places the circular axis inside the backbone; a positive value places it outside. Zero attaches ticks to the inner backbone edge and is the circular default, including the plasmid preset. Circular major/minor tick lengths default to 1.5/0.7 mm, or 2.2/0.8 mm with the plasmid preset. Their default line widths are 0.45/0.3 mm, or 0.6/0.35 mm with that preset. Explicit length and line settings take priority. |
 | `axis.minor.ticks.length` | `NULL` | Nullable R object; type/inheritance below | Scalar grid::unit() objects controlling physical axis spacing. A negative axis.gap places the circular axis inside the backbone; a positive value places it outside. Zero attaches ticks to the inner backbone edge and is the circular default, including the plasmid preset. Circular major/minor tick lengths default to 1.5/0.7 mm, or 2.2/0.8 mm with the plasmid preset. Their default line widths are 0.45/0.3 mm, or 0.6/0.35 mm with that preset. Explicit length and line settings take priority. |
 | `axis.text.offset` | `NULL` | Nullable R object; type/inheritance below | Scalar grid::unit() objects controlling physical axis spacing. A negative axis.gap places the circular axis inside the backbone; a positive value places it outside. Zero attaches ticks to the inner backbone edge and is the circular default, including the plasmid preset. Circular major/minor tick lengths default to 1.5/0.7 mm, or 2.2/0.8 mm with the plasmid preset. Their default line widths are 0.45/0.3 mm, or 0.6/0.35 mm with that preset. Explicit length and line settings take priority. |
-| `axis.text.orientation` | `NULL` | Nullable R object; type/inheritance below | One of "horizontal", "parallel", "perpendicular", or a finite numeric angle. |
+| `axis.text.orientation` | `NULL` | Nullable R object; type/inheritance below | One of "horizontal", "parallel", "perpendicular", or a finite numeric angle. In circular layouts, parallel labels follow the circle glyph by glyph. Horizontal and numeric orientations retain straight text. |
 | `axis.text.check.overlap` | `NULL` | Nullable R object; type/inheritance below | Whether overlapping axis labels are hidden. Defaults to TRUE. |
 | `seq.label` | `NULL` | Nullable R object; type/inheritance below | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
 | `gene.label` | `NULL` | Nullable R object; type/inheritance below | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
@@ -1338,9 +1408,9 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `legend.seq.direction` | `NULL` | Nullable R object; type/inheritance below | Per-role directions. |
 | `legend.seq.background` | `NULL` | Nullable R object; type/inheritance below | Per-role backgrounds. |
 | `legend.seq.key` | `NULL` | Nullable R object; type/inheritance below | Per-role key elements. |
-| `legend.seq.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
-| `legend.seq.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
-| `legend.seq.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
+| `legend.seq.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.seq.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.seq.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
 | `legend.seq.text` | `NULL` | Nullable R object; type/inheritance below | Per-role text elements. |
 | `legend.seq.text.position` | `NULL` | Nullable R object; type/inheritance below | Per-role text positions. |
 | `legend.seq.title` | `NULL` | Nullable R object; type/inheritance below | Per-role title elements. |
@@ -1366,9 +1436,9 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `legend.ribbon.direction` | `NULL` | Nullable R object; type/inheritance below | Per-role directions. |
 | `legend.ribbon.background` | `NULL` | Nullable R object; type/inheritance below | Per-role backgrounds. |
 | `legend.ribbon.key` | `NULL` | Nullable R object; type/inheritance below | Per-role key elements. |
-| `legend.ribbon.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
-| `legend.ribbon.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
-| `legend.ribbon.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
+| `legend.ribbon.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.ribbon.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.ribbon.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
 | `legend.ribbon.text` | `NULL` | Nullable R object; type/inheritance below | Per-role text elements. |
 | `legend.ribbon.text.position` | `NULL` | Nullable R object; type/inheritance below | Per-role text positions. |
 | `legend.ribbon.title` | `NULL` | Nullable R object; type/inheritance below | Per-role title elements. |
@@ -1383,9 +1453,9 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `legend.gene.direction` | `NULL` | Nullable R object; type/inheritance below | Per-role directions. |
 | `legend.gene.background` | `NULL` | Nullable R object; type/inheritance below | Per-role backgrounds. |
 | `legend.gene.key` | `NULL` | Nullable R object; type/inheritance below | Per-role key elements. |
-| `legend.gene.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
-| `legend.gene.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
-| `legend.gene.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
+| `legend.gene.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.gene.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.gene.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
 | `legend.gene.text` | `NULL` | Nullable R object; type/inheritance below | Per-role text elements. |
 | `legend.gene.text.position` | `NULL` | Nullable R object; type/inheritance below | Per-role text positions. |
 | `legend.gene.title` | `NULL` | Nullable R object; type/inheritance below | Per-role title elements. |
@@ -1397,9 +1467,9 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `legend.feature.direction` | `NULL` | Nullable R object; type/inheritance below | Per-role directions. |
 | `legend.feature.background` | `NULL` | Nullable R object; type/inheritance below | Per-role backgrounds. |
 | `legend.feature.key` | `NULL` | Nullable R object; type/inheritance below | Per-role key elements. |
-| `legend.feature.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
-| `legend.feature.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
-| `legend.feature.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
+| `legend.feature.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.feature.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.feature.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
 | `legend.feature.text` | `NULL` | Nullable R object; type/inheritance below | Per-role text elements. |
 | `legend.feature.text.position` | `NULL` | Nullable R object; type/inheritance below | Per-role text positions. |
 | `legend.feature.title` | `NULL` | Nullable R object; type/inheritance below | Per-role title elements. |
@@ -1411,9 +1481,9 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `legend.region.direction` | `NULL` | Nullable R object; type/inheritance below | Per-role directions. |
 | `legend.region.background` | `NULL` | Nullable R object; type/inheritance below | Per-role backgrounds. |
 | `legend.region.key` | `NULL` | Nullable R object; type/inheritance below | Per-role key elements. |
-| `legend.region.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
-| `legend.region.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
-| `legend.region.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
+| `legend.region.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.region.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.region.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
 | `legend.region.text` | `NULL` | Nullable R object; type/inheritance below | Per-role text elements. |
 | `legend.region.text.position` | `NULL` | Nullable R object; type/inheritance below | Per-role text positions. |
 | `legend.region.title` | `NULL` | Nullable R object; type/inheritance below | Per-role title elements. |
@@ -1442,7 +1512,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `axis.ticks.length` | `NULL` | Nullable R object; type/inheritance below | Scalar grid::unit() objects controlling physical axis spacing. A negative axis.gap places the circular axis inside the backbone; a positive value places it outside. Zero attaches ticks to the inner backbone edge and is the circular default, including the plasmid preset. Circular major/minor tick lengths default to 1.5/0.7 mm, or 2.2/0.8 mm with the plasmid preset. Their default line widths are 0.45/0.3 mm, or 0.6/0.35 mm with that preset. Explicit length and line settings take priority. |
 | `axis.minor.ticks.length` | `NULL` | Nullable R object; type/inheritance below | Scalar grid::unit() objects controlling physical axis spacing. A negative axis.gap places the circular axis inside the backbone; a positive value places it outside. Zero attaches ticks to the inner backbone edge and is the circular default, including the plasmid preset. Circular major/minor tick lengths default to 1.5/0.7 mm, or 2.2/0.8 mm with the plasmid preset. Their default line widths are 0.45/0.3 mm, or 0.6/0.35 mm with that preset. Explicit length and line settings take priority. |
 | `axis.text.offset` | `NULL` | Nullable R object; type/inheritance below | Scalar grid::unit() objects controlling physical axis spacing. A negative axis.gap places the circular axis inside the backbone; a positive value places it outside. Zero attaches ticks to the inner backbone edge and is the circular default, including the plasmid preset. Circular major/minor tick lengths default to 1.5/0.7 mm, or 2.2/0.8 mm with the plasmid preset. Their default line widths are 0.45/0.3 mm, or 0.6/0.35 mm with that preset. Explicit length and line settings take priority. |
-| `axis.text.orientation` | `NULL` | Nullable R object; type/inheritance below | One of "horizontal", "parallel", "perpendicular", or a finite numeric angle. |
+| `axis.text.orientation` | `NULL` | Nullable R object; type/inheritance below | One of "horizontal", "parallel", "perpendicular", or a finite numeric angle. In circular layouts, parallel labels follow the circle glyph by glyph. Horizontal and numeric orientations retain straight text. |
 | `axis.text.check.overlap` | `NULL` | Nullable R object; type/inheritance below | Whether overlapping axis labels are hidden. Defaults to TRUE. |
 | `seq.label` | `NULL` | Nullable R object; type/inheritance below | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
 | `gene.label` | `NULL` | Nullable R object; type/inheritance below | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
@@ -1459,9 +1529,9 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `legend.seq.direction` | `NULL` | Nullable R object; type/inheritance below | Per-role directions. |
 | `legend.seq.background` | `NULL` | Nullable R object; type/inheritance below | Per-role backgrounds. |
 | `legend.seq.key` | `NULL` | Nullable R object; type/inheritance below | Per-role key elements. |
-| `legend.seq.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
-| `legend.seq.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
-| `legend.seq.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
+| `legend.seq.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.seq.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.seq.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
 | `legend.seq.text` | `NULL` | Nullable R object; type/inheritance below | Per-role text elements. |
 | `legend.seq.text.position` | `NULL` | Nullable R object; type/inheritance below | Per-role text positions. |
 | `legend.seq.title` | `NULL` | Nullable R object; type/inheritance below | Per-role title elements. |
@@ -1487,9 +1557,9 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `legend.ribbon.direction` | `NULL` | Nullable R object; type/inheritance below | Per-role directions. |
 | `legend.ribbon.background` | `NULL` | Nullable R object; type/inheritance below | Per-role backgrounds. |
 | `legend.ribbon.key` | `NULL` | Nullable R object; type/inheritance below | Per-role key elements. |
-| `legend.ribbon.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
-| `legend.ribbon.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
-| `legend.ribbon.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
+| `legend.ribbon.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.ribbon.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.ribbon.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
 | `legend.ribbon.text` | `NULL` | Nullable R object; type/inheritance below | Per-role text elements. |
 | `legend.ribbon.text.position` | `NULL` | Nullable R object; type/inheritance below | Per-role text positions. |
 | `legend.ribbon.title` | `NULL` | Nullable R object; type/inheritance below | Per-role title elements. |
@@ -1504,9 +1574,9 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `legend.gene.direction` | `NULL` | Nullable R object; type/inheritance below | Per-role directions. |
 | `legend.gene.background` | `NULL` | Nullable R object; type/inheritance below | Per-role backgrounds. |
 | `legend.gene.key` | `NULL` | Nullable R object; type/inheritance below | Per-role key elements. |
-| `legend.gene.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
-| `legend.gene.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
-| `legend.gene.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
+| `legend.gene.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.gene.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.gene.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
 | `legend.gene.text` | `NULL` | Nullable R object; type/inheritance below | Per-role text elements. |
 | `legend.gene.text.position` | `NULL` | Nullable R object; type/inheritance below | Per-role text positions. |
 | `legend.gene.title` | `NULL` | Nullable R object; type/inheritance below | Per-role title elements. |
@@ -1518,9 +1588,9 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `legend.feature.direction` | `NULL` | Nullable R object; type/inheritance below | Per-role directions. |
 | `legend.feature.background` | `NULL` | Nullable R object; type/inheritance below | Per-role backgrounds. |
 | `legend.feature.key` | `NULL` | Nullable R object; type/inheritance below | Per-role key elements. |
-| `legend.feature.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
-| `legend.feature.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
-| `legend.feature.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
+| `legend.feature.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.feature.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.feature.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
 | `legend.feature.text` | `NULL` | Nullable R object; type/inheritance below | Per-role text elements. |
 | `legend.feature.text.position` | `NULL` | Nullable R object; type/inheritance below | Per-role text positions. |
 | `legend.feature.title` | `NULL` | Nullable R object; type/inheritance below | Per-role title elements. |
@@ -1532,9 +1602,9 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `legend.region.direction` | `NULL` | Nullable R object; type/inheritance below | Per-role directions. |
 | `legend.region.background` | `NULL` | Nullable R object; type/inheritance below | Per-role backgrounds. |
 | `legend.region.key` | `NULL` | Nullable R object; type/inheritance below | Per-role key elements. |
-| `legend.region.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
-| `legend.region.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
-| `legend.region.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
+| `legend.region.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.region.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.region.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
 | `legend.region.text` | `NULL` | Nullable R object; type/inheritance below | Per-role text elements. |
 | `legend.region.text.position` | `NULL` | Nullable R object; type/inheritance below | Per-role text positions. |
 | `legend.region.title` | `NULL` | Nullable R object; type/inheritance below | Per-role title elements. |
@@ -1563,7 +1633,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `axis.ticks.length` | `NULL` | Nullable R object; type/inheritance below | Scalar grid::unit() objects controlling physical axis spacing. A negative axis.gap places the circular axis inside the backbone; a positive value places it outside. Zero attaches ticks to the inner backbone edge and is the circular default, including the plasmid preset. Circular major/minor tick lengths default to 1.5/0.7 mm, or 2.2/0.8 mm with the plasmid preset. Their default line widths are 0.45/0.3 mm, or 0.6/0.35 mm with that preset. Explicit length and line settings take priority. |
 | `axis.minor.ticks.length` | `NULL` | Nullable R object; type/inheritance below | Scalar grid::unit() objects controlling physical axis spacing. A negative axis.gap places the circular axis inside the backbone; a positive value places it outside. Zero attaches ticks to the inner backbone edge and is the circular default, including the plasmid preset. Circular major/minor tick lengths default to 1.5/0.7 mm, or 2.2/0.8 mm with the plasmid preset. Their default line widths are 0.45/0.3 mm, or 0.6/0.35 mm with that preset. Explicit length and line settings take priority. |
 | `axis.text.offset` | `NULL` | Nullable R object; type/inheritance below | Scalar grid::unit() objects controlling physical axis spacing. A negative axis.gap places the circular axis inside the backbone; a positive value places it outside. Zero attaches ticks to the inner backbone edge and is the circular default, including the plasmid preset. Circular major/minor tick lengths default to 1.5/0.7 mm, or 2.2/0.8 mm with the plasmid preset. Their default line widths are 0.45/0.3 mm, or 0.6/0.35 mm with that preset. Explicit length and line settings take priority. |
-| `axis.text.orientation` | `NULL` | Nullable R object; type/inheritance below | One of "horizontal", "parallel", "perpendicular", or a finite numeric angle. |
+| `axis.text.orientation` | `NULL` | Nullable R object; type/inheritance below | One of "horizontal", "parallel", "perpendicular", or a finite numeric angle. In circular layouts, parallel labels follow the circle glyph by glyph. Horizontal and numeric orientations retain straight text. |
 | `axis.text.check.overlap` | `NULL` | Nullable R object; type/inheritance below | Whether overlapping axis labels are hidden. Defaults to TRUE. |
 | `seq.label` | `NULL` | Nullable R object; type/inheritance below | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
 | `gene.label` | `NULL` | Nullable R object; type/inheritance below | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
@@ -1580,9 +1650,9 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `legend.seq.direction` | `NULL` | Nullable R object; type/inheritance below | Per-role directions. |
 | `legend.seq.background` | `NULL` | Nullable R object; type/inheritance below | Per-role backgrounds. |
 | `legend.seq.key` | `NULL` | Nullable R object; type/inheritance below | Per-role key elements. |
-| `legend.seq.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
-| `legend.seq.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
-| `legend.seq.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
+| `legend.seq.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.seq.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.seq.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
 | `legend.seq.text` | `NULL` | Nullable R object; type/inheritance below | Per-role text elements. |
 | `legend.seq.text.position` | `NULL` | Nullable R object; type/inheritance below | Per-role text positions. |
 | `legend.seq.title` | `NULL` | Nullable R object; type/inheritance below | Per-role title elements. |
@@ -1608,9 +1678,9 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `legend.ribbon.direction` | `NULL` | Nullable R object; type/inheritance below | Per-role directions. |
 | `legend.ribbon.background` | `NULL` | Nullable R object; type/inheritance below | Per-role backgrounds. |
 | `legend.ribbon.key` | `NULL` | Nullable R object; type/inheritance below | Per-role key elements. |
-| `legend.ribbon.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
-| `legend.ribbon.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
-| `legend.ribbon.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
+| `legend.ribbon.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.ribbon.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.ribbon.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
 | `legend.ribbon.text` | `NULL` | Nullable R object; type/inheritance below | Per-role text elements. |
 | `legend.ribbon.text.position` | `NULL` | Nullable R object; type/inheritance below | Per-role text positions. |
 | `legend.ribbon.title` | `NULL` | Nullable R object; type/inheritance below | Per-role title elements. |
@@ -1625,9 +1695,9 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `legend.gene.direction` | `NULL` | Nullable R object; type/inheritance below | Per-role directions. |
 | `legend.gene.background` | `NULL` | Nullable R object; type/inheritance below | Per-role backgrounds. |
 | `legend.gene.key` | `NULL` | Nullable R object; type/inheritance below | Per-role key elements. |
-| `legend.gene.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
-| `legend.gene.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
-| `legend.gene.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
+| `legend.gene.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.gene.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.gene.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
 | `legend.gene.text` | `NULL` | Nullable R object; type/inheritance below | Per-role text elements. |
 | `legend.gene.text.position` | `NULL` | Nullable R object; type/inheritance below | Per-role text positions. |
 | `legend.gene.title` | `NULL` | Nullable R object; type/inheritance below | Per-role title elements. |
@@ -1639,9 +1709,9 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `legend.feature.direction` | `NULL` | Nullable R object; type/inheritance below | Per-role directions. |
 | `legend.feature.background` | `NULL` | Nullable R object; type/inheritance below | Per-role backgrounds. |
 | `legend.feature.key` | `NULL` | Nullable R object; type/inheritance below | Per-role key elements. |
-| `legend.feature.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
-| `legend.feature.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
-| `legend.feature.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
+| `legend.feature.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.feature.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.feature.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
 | `legend.feature.text` | `NULL` | Nullable R object; type/inheritance below | Per-role text elements. |
 | `legend.feature.text.position` | `NULL` | Nullable R object; type/inheritance below | Per-role text positions. |
 | `legend.feature.title` | `NULL` | Nullable R object; type/inheritance below | Per-role title elements. |
@@ -1653,9 +1723,9 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `legend.region.direction` | `NULL` | Nullable R object; type/inheritance below | Per-role directions. |
 | `legend.region.background` | `NULL` | Nullable R object; type/inheritance below | Per-role backgrounds. |
 | `legend.region.key` | `NULL` | Nullable R object; type/inheritance below | Per-role key elements. |
-| `legend.region.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
-| `legend.region.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
-| `legend.region.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
+| `legend.region.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.region.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.region.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
 | `legend.region.text` | `NULL` | Nullable R object; type/inheritance below | Per-role text elements. |
 | `legend.region.text.position` | `NULL` | Nullable R object; type/inheritance below | Per-role text positions. |
 | `legend.region.title` | `NULL` | Nullable R object; type/inheritance below | Per-role title elements. |
@@ -1684,7 +1754,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `axis.ticks.length` | `NULL` | Nullable R object; type/inheritance below | Scalar grid::unit() objects controlling physical axis spacing. A negative axis.gap places the circular axis inside the backbone; a positive value places it outside. Zero attaches ticks to the inner backbone edge and is the circular default, including the plasmid preset. Circular major/minor tick lengths default to 1.5/0.7 mm, or 2.2/0.8 mm with the plasmid preset. Their default line widths are 0.45/0.3 mm, or 0.6/0.35 mm with that preset. Explicit length and line settings take priority. |
 | `axis.minor.ticks.length` | `NULL` | Nullable R object; type/inheritance below | Scalar grid::unit() objects controlling physical axis spacing. A negative axis.gap places the circular axis inside the backbone; a positive value places it outside. Zero attaches ticks to the inner backbone edge and is the circular default, including the plasmid preset. Circular major/minor tick lengths default to 1.5/0.7 mm, or 2.2/0.8 mm with the plasmid preset. Their default line widths are 0.45/0.3 mm, or 0.6/0.35 mm with that preset. Explicit length and line settings take priority. |
 | `axis.text.offset` | `NULL` | Nullable R object; type/inheritance below | Scalar grid::unit() objects controlling physical axis spacing. A negative axis.gap places the circular axis inside the backbone; a positive value places it outside. Zero attaches ticks to the inner backbone edge and is the circular default, including the plasmid preset. Circular major/minor tick lengths default to 1.5/0.7 mm, or 2.2/0.8 mm with the plasmid preset. Their default line widths are 0.45/0.3 mm, or 0.6/0.35 mm with that preset. Explicit length and line settings take priority. |
-| `axis.text.orientation` | `NULL` | Nullable R object; type/inheritance below | One of "horizontal", "parallel", "perpendicular", or a finite numeric angle. |
+| `axis.text.orientation` | `NULL` | Nullable R object; type/inheritance below | One of "horizontal", "parallel", "perpendicular", or a finite numeric angle. In circular layouts, parallel labels follow the circle glyph by glyph. Horizontal and numeric orientations retain straight text. |
 | `axis.text.check.overlap` | `NULL` | Nullable R object; type/inheritance below | Whether overlapping axis labels are hidden. Defaults to TRUE. |
 | `seq.label` | `NULL` | Nullable R object; type/inheritance below | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
 | `gene.label` | `NULL` | Nullable R object; type/inheritance below | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
@@ -1701,9 +1771,9 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `legend.seq.direction` | `NULL` | Nullable R object; type/inheritance below | Per-role directions. |
 | `legend.seq.background` | `NULL` | Nullable R object; type/inheritance below | Per-role backgrounds. |
 | `legend.seq.key` | `NULL` | Nullable R object; type/inheritance below | Per-role key elements. |
-| `legend.seq.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
-| `legend.seq.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
-| `legend.seq.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
+| `legend.seq.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.seq.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.seq.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
 | `legend.seq.text` | `NULL` | Nullable R object; type/inheritance below | Per-role text elements. |
 | `legend.seq.text.position` | `NULL` | Nullable R object; type/inheritance below | Per-role text positions. |
 | `legend.seq.title` | `NULL` | Nullable R object; type/inheritance below | Per-role title elements. |
@@ -1729,9 +1799,9 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `legend.ribbon.direction` | `NULL` | Nullable R object; type/inheritance below | Per-role directions. |
 | `legend.ribbon.background` | `NULL` | Nullable R object; type/inheritance below | Per-role backgrounds. |
 | `legend.ribbon.key` | `NULL` | Nullable R object; type/inheritance below | Per-role key elements. |
-| `legend.ribbon.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
-| `legend.ribbon.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
-| `legend.ribbon.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
+| `legend.ribbon.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.ribbon.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.ribbon.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
 | `legend.ribbon.text` | `NULL` | Nullable R object; type/inheritance below | Per-role text elements. |
 | `legend.ribbon.text.position` | `NULL` | Nullable R object; type/inheritance below | Per-role text positions. |
 | `legend.ribbon.title` | `NULL` | Nullable R object; type/inheritance below | Per-role title elements. |
@@ -1746,9 +1816,9 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `legend.gene.direction` | `NULL` | Nullable R object; type/inheritance below | Per-role directions. |
 | `legend.gene.background` | `NULL` | Nullable R object; type/inheritance below | Per-role backgrounds. |
 | `legend.gene.key` | `NULL` | Nullable R object; type/inheritance below | Per-role key elements. |
-| `legend.gene.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
-| `legend.gene.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
-| `legend.gene.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
+| `legend.gene.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.gene.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.gene.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
 | `legend.gene.text` | `NULL` | Nullable R object; type/inheritance below | Per-role text elements. |
 | `legend.gene.text.position` | `NULL` | Nullable R object; type/inheritance below | Per-role text positions. |
 | `legend.gene.title` | `NULL` | Nullable R object; type/inheritance below | Per-role title elements. |
@@ -1760,9 +1830,9 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `legend.feature.direction` | `NULL` | Nullable R object; type/inheritance below | Per-role directions. |
 | `legend.feature.background` | `NULL` | Nullable R object; type/inheritance below | Per-role backgrounds. |
 | `legend.feature.key` | `NULL` | Nullable R object; type/inheritance below | Per-role key elements. |
-| `legend.feature.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
-| `legend.feature.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
-| `legend.feature.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
+| `legend.feature.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.feature.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.feature.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
 | `legend.feature.text` | `NULL` | Nullable R object; type/inheritance below | Per-role text elements. |
 | `legend.feature.text.position` | `NULL` | Nullable R object; type/inheritance below | Per-role text positions. |
 | `legend.feature.title` | `NULL` | Nullable R object; type/inheritance below | Per-role title elements. |
@@ -1774,9 +1844,9 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `legend.region.direction` | `NULL` | Nullable R object; type/inheritance below | Per-role directions. |
 | `legend.region.background` | `NULL` | Nullable R object; type/inheritance below | Per-role backgrounds. |
 | `legend.region.key` | `NULL` | Nullable R object; type/inheritance below | Per-role key elements. |
-| `legend.region.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
-| `legend.region.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
-| `legend.region.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
+| `legend.region.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.region.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.region.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
 | `legend.region.text` | `NULL` | Nullable R object; type/inheritance below | Per-role text elements. |
 | `legend.region.text.position` | `NULL` | Nullable R object; type/inheritance below | Per-role text positions. |
 | `legend.region.title` | `NULL` | Nullable R object; type/inheritance below | Per-role title elements. |
@@ -1805,7 +1875,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `axis.ticks.length` | `NULL` | Nullable R object; type/inheritance below | Scalar grid::unit() objects controlling physical axis spacing. A negative axis.gap places the circular axis inside the backbone; a positive value places it outside. Zero attaches ticks to the inner backbone edge and is the circular default, including the plasmid preset. Circular major/minor tick lengths default to 1.5/0.7 mm, or 2.2/0.8 mm with the plasmid preset. Their default line widths are 0.45/0.3 mm, or 0.6/0.35 mm with that preset. Explicit length and line settings take priority. |
 | `axis.minor.ticks.length` | `NULL` | Nullable R object; type/inheritance below | Scalar grid::unit() objects controlling physical axis spacing. A negative axis.gap places the circular axis inside the backbone; a positive value places it outside. Zero attaches ticks to the inner backbone edge and is the circular default, including the plasmid preset. Circular major/minor tick lengths default to 1.5/0.7 mm, or 2.2/0.8 mm with the plasmid preset. Their default line widths are 0.45/0.3 mm, or 0.6/0.35 mm with that preset. Explicit length and line settings take priority. |
 | `axis.text.offset` | `NULL` | Nullable R object; type/inheritance below | Scalar grid::unit() objects controlling physical axis spacing. A negative axis.gap places the circular axis inside the backbone; a positive value places it outside. Zero attaches ticks to the inner backbone edge and is the circular default, including the plasmid preset. Circular major/minor tick lengths default to 1.5/0.7 mm, or 2.2/0.8 mm with the plasmid preset. Their default line widths are 0.45/0.3 mm, or 0.6/0.35 mm with that preset. Explicit length and line settings take priority. |
-| `axis.text.orientation` | `NULL` | Nullable R object; type/inheritance below | One of "horizontal", "parallel", "perpendicular", or a finite numeric angle. |
+| `axis.text.orientation` | `NULL` | Nullable R object; type/inheritance below | One of "horizontal", "parallel", "perpendicular", or a finite numeric angle. In circular layouts, parallel labels follow the circle glyph by glyph. Horizontal and numeric orientations retain straight text. |
 | `axis.text.check.overlap` | `NULL` | Nullable R object; type/inheritance below | Whether overlapping axis labels are hidden. Defaults to TRUE. |
 | `seq.label` | `NULL` | Nullable R object; type/inheritance below | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
 | `gene.label` | `NULL` | Nullable R object; type/inheritance below | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
@@ -1822,9 +1892,9 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `legend.seq.direction` | `NULL` | Nullable R object; type/inheritance below | Per-role directions. |
 | `legend.seq.background` | `NULL` | Nullable R object; type/inheritance below | Per-role backgrounds. |
 | `legend.seq.key` | `NULL` | Nullable R object; type/inheritance below | Per-role key elements. |
-| `legend.seq.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
-| `legend.seq.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
-| `legend.seq.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
+| `legend.seq.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.seq.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.seq.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
 | `legend.seq.text` | `NULL` | Nullable R object; type/inheritance below | Per-role text elements. |
 | `legend.seq.text.position` | `NULL` | Nullable R object; type/inheritance below | Per-role text positions. |
 | `legend.seq.title` | `NULL` | Nullable R object; type/inheritance below | Per-role title elements. |
@@ -1850,9 +1920,9 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `legend.ribbon.direction` | `NULL` | Nullable R object; type/inheritance below | Per-role directions. |
 | `legend.ribbon.background` | `NULL` | Nullable R object; type/inheritance below | Per-role backgrounds. |
 | `legend.ribbon.key` | `NULL` | Nullable R object; type/inheritance below | Per-role key elements. |
-| `legend.ribbon.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
-| `legend.ribbon.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
-| `legend.ribbon.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
+| `legend.ribbon.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.ribbon.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.ribbon.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
 | `legend.ribbon.text` | `NULL` | Nullable R object; type/inheritance below | Per-role text elements. |
 | `legend.ribbon.text.position` | `NULL` | Nullable R object; type/inheritance below | Per-role text positions. |
 | `legend.ribbon.title` | `NULL` | Nullable R object; type/inheritance below | Per-role title elements. |
@@ -1867,9 +1937,9 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `legend.gene.direction` | `NULL` | Nullable R object; type/inheritance below | Per-role directions. |
 | `legend.gene.background` | `NULL` | Nullable R object; type/inheritance below | Per-role backgrounds. |
 | `legend.gene.key` | `NULL` | Nullable R object; type/inheritance below | Per-role key elements. |
-| `legend.gene.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
-| `legend.gene.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
-| `legend.gene.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
+| `legend.gene.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.gene.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.gene.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
 | `legend.gene.text` | `NULL` | Nullable R object; type/inheritance below | Per-role text elements. |
 | `legend.gene.text.position` | `NULL` | Nullable R object; type/inheritance below | Per-role text positions. |
 | `legend.gene.title` | `NULL` | Nullable R object; type/inheritance below | Per-role title elements. |
@@ -1881,9 +1951,9 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `legend.feature.direction` | `NULL` | Nullable R object; type/inheritance below | Per-role directions. |
 | `legend.feature.background` | `NULL` | Nullable R object; type/inheritance below | Per-role backgrounds. |
 | `legend.feature.key` | `NULL` | Nullable R object; type/inheritance below | Per-role key elements. |
-| `legend.feature.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
-| `legend.feature.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
-| `legend.feature.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
+| `legend.feature.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.feature.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.feature.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
 | `legend.feature.text` | `NULL` | Nullable R object; type/inheritance below | Per-role text elements. |
 | `legend.feature.text.position` | `NULL` | Nullable R object; type/inheritance below | Per-role text positions. |
 | `legend.feature.title` | `NULL` | Nullable R object; type/inheritance below | Per-role title elements. |
@@ -1895,9 +1965,9 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `legend.region.direction` | `NULL` | Nullable R object; type/inheritance below | Per-role directions. |
 | `legend.region.background` | `NULL` | Nullable R object; type/inheritance below | Per-role backgrounds. |
 | `legend.region.key` | `NULL` | Nullable R object; type/inheritance below | Per-role key elements. |
-| `legend.region.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
-| `legend.region.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
-| `legend.region.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. |
+| `legend.region.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.region.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.region.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
 | `legend.region.text` | `NULL` | Nullable R object; type/inheritance below | Per-role text elements. |
 | `legend.region.text.position` | `NULL` | Nullable R object; type/inheritance below | Per-role text positions. |
 | `legend.region.title` | `NULL` | Nullable R object; type/inheritance below | Per-role title elements. |
@@ -2006,6 +2076,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `invalid_pident` | `c("clip", "drop", "error", "keep")` | Vector; choices versus multiple selection below | Character, default "clip". Policy for pident outside [0, 100]: "clip" clamps them, "drop" removes the row, "error" stops, "keep" leaves them unchanged. |
 | `empty_annotation` | `c("keep", "drop", "replace")` | Vector; choices versus multiple selection below | Character, default "keep". Policy for missing/empty anno in gene data: "replace" fills them with replacement_annotation, "drop" removes the row, "keep" leaves them unchanged. |
 | `replacement_annotation` | `"unannotated"` | Character/enum; choices below | Character, default "unannotated". Replacement annotation used when empty_annotation = "replace". |
+| `feature_data` | `NULL` | Table/supported object; data may be a function | Unified annotation input; mutually exclusive with gene_data. |
 
 </details>
 
@@ -2196,6 +2267,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `loci` | `Required/alternative entry; see description` | Explicit window/anchor table or documented equivalent | Data frame containing accver, start, and end, and optionally locus_id. |
 | `expand` | `0` | Numeric/integer; range in description | Non-negative number of bases added on both sides, scalar or one value per locus. |
 | `boundary` | `c("trim", "drop")` | Vector; choices versus multiple selection below | Boundary policy. "trim" clips partially overlapping genes and alignments; "drop" keeps only rows fully contained in selected loci. |
+| `feature_data` | `NULL` | Table/supported object; data may be a function | Unified annotation input; mutually exclusive with gene_data. |
 
 </details>
 
@@ -2241,9 +2313,10 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | --- | --- | --- | --- |
 | `seq_data` | `Required/alternative entry; see description` | Table/supported object; data may be a function | data.frame/tibble with accver and length, or a GRanges, Seqinfo or GInteractions object with known full sequence lengths, or a named nucleotide or protein Biostrings XStringSet. Unnamed sequence objects must first use as_ggchord_seq() with explicit ids. Optional S4 inputs use as_ggchord_seq(). The sequence_unit column is "bp" (default when omitted) or "aa". All rows use the same unit. Protein lengths come from complete proteins. Native aa plots accept links and generic features; gene, primer and restriction layers require bp. Arbitrary character widths are not biological sequence lengths. |
 | `ribbon_data` | `NULL` | Table/supported object; data may be a function | Optional alignment table with qaccver, saccver, qstart, qend, sstart and send. length and pident are optional unless requested by a mapping, filter or statistic. A GInteractions object uses as_ggchord_link() without inventing identity or alignment length. |
-| `gene_data` | `NULL` | Table/supported object; data may be a function | Optional table with accver, start, end and strand. Annotation (anno) may be omitted. Directional GRanges are accepted; use geom_feature(data = ...) for unknown-strand intervals. |
+| `gene_data` | `NULL` | Table/supported object; data may be a function | Compatible legacy annotation input. The third positional argument retains its meaning. Use feature_data in new code; a non-NULL legacy input emits one message at construction, never during rendering. Untyped legacy tables retain their directional gene semantics. No removal version is scheduled. Do not supply both annotation inputs. |
 | `debug` | `FALSE` | Logical | Logical. Whether to output debug information, default FALSE |
 | `validate` | `c("warn", "error", "none")` | Vector; choices versus multiple selection below | Character, default "warn". How to run the structured input-data validation (see validate_ggchord_data): "warn" emits a single summary warning when the data has problems and caches the full report on the plot object (p$ggchord$validation); "error" stops on severe problems; "none" skips the diagnostic validation (the cheap structural checks that prevent crashes are still performed). |
+| `feature_data` | `NULL` | Table/supported object; data may be a function | Optional unified annotation table or GRanges. Requires accver, start, end; absent strand becomes unknown ("."). Generic feature layers use the full table. Default gene layers select gene/CDS from feature_class, type, or role (in that priority order), and require known strands. tRNA/rRNA remain generic features. Explicit layer data overrides the constructor input. Use disjoint subsets when combining gene and feature layers; each layer keeps its own data independently. |
 | `...` | `Required/alternative entry; see description` | Forwarded arguments | Reserved for clear migration errors from removed constructor arguments. Use labs(), coord_chord() and theme() for presentation. |
 
 </details>
@@ -2336,6 +2409,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `links` | `list()` | Named list | Named lists of feature or paired-interval inputs. |
 | `mapping` | `list()` | aes mapping | Named list with optional seq, ribbon, gene column mappings, and features/links lists of mappings named like the respective collections. Each column mapping is a named character vector. |
 | `steps` | `list()` | Named list | Named list of explicit helper argument lists. Supported names: clean, filter, deduplicate, merge, bundle, optimize. Data arguments are supplied by preparation and cannot be overridden. |
+| `feature_data` | `NULL` | Table/supported object; data may be a function | Unified annotation table, mutually exclusive with gene_data. |
 
 </details>
 
@@ -2503,6 +2577,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `point_data` | `NULL` | Nullable R object; type/inheritance below | Optional point links with qaccver, saccver, qpos, spos. |
 | `cross_gap` | `c("split", "drop")` | Vector; choices versus multiple selection below | How to handle interval links clipped by selected windows. |
 | `max_links` | `10000` | Numeric/integer; range in description | Positive integer upper bound on candidate ribbon/point copies. Increase explicitly for larger, intentionally overlapping views. |
+| `feature_data` | `NULL` | Table/supported object; data may be a function | Unified annotation input; mutually exclusive with gene_data. |
 
 </details>
 
@@ -2522,6 +2597,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `check_coordinates` | `TRUE` | Logical | Logical, default TRUE. Whether to check that ribbon/gene coordinates stay inside [1, sequence length]. |
 | `check_duplicates` | `TRUE` | Logical | Logical, default TRUE. Whether to look for fully duplicated, near-duplicated and highly overlapping records. Reciprocal overlap requires the intersection to cover at least 90 percent of each interval, including descending ribbon endpoints. Reversed feature bounds may cross a circular origin and are excluded from linear overlap diagnostics; exact duplicates are still reported. |
 | `check_self_links` | `TRUE` | Logical | Logical, default TRUE. Whether to flag alignment rows where qaccver == saccver. |
+| `feature_data` | `NULL` | Table/supported object; data may be a function | Unified annotation table, mutually exclusive with gene_data. Requires accver, start, end. Missing strand is unknown; +, -, ., and +/- are accepted. Reports use table "feature" and data_summary$n_feature; the input is never modified. |
 
 </details>
 

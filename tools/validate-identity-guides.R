@@ -29,6 +29,30 @@ results$wrapper_bottom <- list(guides=md$guides,measurements=md$guide_measuremen
 b<-ggplot2::ggplot_build(p)
 stopifnot(!ggchord_ribbon_uses_flow(p$layers[[2]],p),
  length(unique(b$data[[2]]$ribbon_fill))>1L)
+# One shared public case covers managed point-link and annotation scales.
+points <- data.frame(qaccver = h$qaccver, saccver = h$saccver,
+  qpos = h$qstart, spos = h$sstart, pident = h$pident)
+features <- data.frame(accver = "A", start = h$qstart, end = h$qend,
+  strand = "+", pident = h$pident)
+mapped <- ggchord(s, feature_data = features) + geom_seq() +
+  geom_feature(aes(feature_fill = pident)) +
+  geom_link_line(aes(link_colour = pident, link_alpha = pident,
+    link_linewidth = pident), data = points) + coord_collinear()
+expected <- c(0, 50, 80, 90, 95, 100)
+built <- ggplot2::ggplot_build(mapped)
+roles <- c("feature_fill", "link_colour", "link_alpha", "link_linewidth")
+for (role in roles) {
+  sc <- built$plot$scales$get_scales(role)
+  stopifnot(identical(as.numeric(sc$get_breaks()), expected),
+    identical(as.numeric(sc$get_limits()), c(0, 100)))
+}
+invisible(ggplot2::ggplotGrob(mapped))
+custom <- ggplot2::ggplot_build(mapped +
+  scale_link_alpha_continuous(breaks = c(25, 75)))
+stopifnot(identical(as.numeric(custom$plot$scales$get_scales("link_alpha")$get_breaks()),
+  c(25, 75)))
+results$managed_mappings <- list(roles = roles, breaks = expected,
+  domain = c(0, 100), explicit_scale_precedence = TRUE)
 jsonlite::write_json(list(scope='synthetic 0/50/80/90/95/100 Identity boundaries with small generic keys',
  default_gradient=FALSE,results=results),
  'tools/long-term-audit/identity-guide-results-v0.17.0.json',pretty=TRUE,auto_unbox=TRUE)

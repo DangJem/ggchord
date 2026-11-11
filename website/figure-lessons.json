@@ -167,5 +167,10 @@
   "catalogtripz": "plasmid-catalog#catalogtripz",
   "catalogcambia": "plasmid-catalog#catalogcambia",
   "catalogearley": "plasmid-catalog#catalogearley",
-  "catalogcas": "plasmid-catalog#catalogcas"
+  "catalogcas": "plasmid-catalog#catalogcas",
+  "foundationvertical": "foundation#instances",
+  "foundationsankey": "foundation#sankey",
+  "foundationcount": "foundation#tracks",
+  "foundationequal": "foundation#projection",
+  "foundationarrow": "foundation#tip"
 }

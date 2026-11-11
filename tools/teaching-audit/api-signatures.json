@@ -119,7 +119,8 @@
       "reversed_interval": "c(\"sort\", \"drop\", \"error\", \"keep\")",
       "invalid_pident": "c(\"clip\", \"drop\", \"error\", \"keep\")",
       "empty_annotation": "c(\"keep\", \"drop\", \"replace\")",
-      "replacement_annotation": "\"unannotated\""
+      "replacement_annotation": "\"unannotated\"",
+      "feature_data": "NULL"
     }
   },
   {
@@ -168,7 +169,23 @@
       "orientation": "c(\"manual\", \"auto\")",
       "min_support": "0.1",
       "segments": "NULL",
-      "segment_gap": "100"
+      "segment_gap": "100",
+      "seq_axis": "c(\"horizontal\", \"vertical\")"
+    }
+  },
+  {
+    "name": "coord_sankey",
+    "owner": "ggchord",
+    "alias": "",
+    "parameters": {
+      "column_gap": "3",
+      "self_links": "FALSE",
+      "ratio": "1",
+      "xlim": "NULL",
+      "ylim": "NULL",
+      "expand": "FALSE",
+      "clip": "\"off\"",
+      "fit": "c(\"labels\", \"geometry\", \"manual\")"
     }
   },
   {
@@ -377,7 +394,8 @@
       "gene_data": "NULL",
       "loci": "",
       "expand": "0",
-      "boundary": "c(\"trim\", \"drop\")"
+      "boundary": "c(\"trim\", \"drop\")",
+      "feature_data": "NULL"
     }
   },
   {
@@ -566,6 +584,8 @@
       "position": "\"identity\"",
       "show.legend": "NA",
       "inherit.aes": "FALSE",
+      "between": "NULL",
+      "allow_repeated": "FALSE",
       "...": ""
     }
   },
@@ -592,6 +612,10 @@
       "show.legend": "TRUE",
       "inherit.aes": "FALSE",
       "nonadjacent_linewidth": "0.4",
+      "between": "NULL",
+      "allow_repeated": "FALSE",
+      "tip": "c(\"none\", \"subject\")",
+      "gradient": "FALSE",
       "...": ""
     }
   },
@@ -674,6 +698,7 @@
       "position": "\"identity\"",
       "show.legend": "TRUE",
       "inherit.aes": "FALSE",
+      "length_mode": "c(\"proportional\", \"equal\")",
       "...": ""
     }
   },
@@ -773,13 +798,31 @@
     }
   },
   {
+    "name": "geom_track",
+    "owner": "ggchord",
+    "alias": "",
+    "parameters": {
+      "mapping": "NULL",
+      "data": "NULL",
+      "geom": "\"point\"",
+      "stat": "NULL",
+      "track": "NULL",
+      "position": "NULL",
+      "bounds": "c(\"error\", \"clip\")",
+      "baseline": "0",
+      "show.legend": "NA",
+      "inherit.aes": "FALSE",
+      "...": ""
+    }
+  },
+  {
     "name": "geom_track_bar",
     "owner": "ggchord",
     "alias": "",
     "parameters": {
       "mapping": "NULL",
       "data": "NULL",
-      "position": "",
+      "position": "NULL",
       "baseline": "0",
       "fill": "\"#86AFB9\"",
       "colour": "NA",
@@ -790,6 +833,20 @@
       "show.legend": "NA",
       "inherit.aes": "FALSE",
       "...": ""
+    }
+  },
+  {
+    "name": "geom_track_col",
+    "owner": "ggchord",
+    "alias": "",
+    "parameters": {
+      "mapping": "NULL",
+      "data": "NULL",
+      "position": "NULL",
+      "track": "NULL",
+      "...": "",
+      "show.legend": "NA",
+      "inherit.aes": "FALSE"
     }
   },
   {
@@ -849,6 +906,7 @@
       "gene_data": "NULL",
       "debug": "FALSE",
       "validate": "c(\"warn\", \"error\", \"none\")",
+      "feature_data": "NULL",
       "...": ""
     }
   },
@@ -1098,7 +1156,8 @@
       "features": "list()",
       "links": "list()",
       "mapping": "list()",
-      "steps": "list()"
+      "steps": "list()",
+      "feature_data": "NULL"
     }
   },
   {
@@ -1553,7 +1612,8 @@
       "windows": "",
       "point_data": "NULL",
       "cross_gap": "c(\"split\", \"drop\")",
-      "max_links": "10000"
+      "max_links": "10000",
+      "feature_data": "NULL"
     }
   },
   {
@@ -2344,7 +2404,8 @@
       "strict": "FALSE",
       "check_coordinates": "TRUE",
       "check_duplicates": "TRUE",
-      "check_self_links": "TRUE"
+      "check_self_links": "TRUE",
+      "feature_data": "NULL"
     }
   },
   {

@@ -8,29 +8,22 @@ library(ggchord)
 packageVersion("ggchord")
 ```
 
-最后一行显示已安装版本。**本网站面向开发版 0.16.7.9000**，CRAN 正式版为 0.16.6（2026-11-05 核查）。两者不能视作完全相同：开发版新增蛋白教学对象、跨行连接专用线宽，并修改圆图零旋转基准和部分默认外观。
+最后一行显示已安装版本。本地文档预览 **0.17.0.9000**；仓库记录的最近正式版为
+**0.16.6**。新的基础架构接口需要相应开发 checkout。更新已有脚本前请阅读
+[迁移说明](../assets/MIGRATION-Hans.md)。
 
-开发版尚未推送或发布，请从本网站对应的本地源码 checkout 安装；不要假定远端 main 已包含这些修改。在仓库根目录执行：
+开发时先安装依赖，再在对应 checkout 根目录使用新的 R 会话运行：
 
 ```r
 install.packages(".", repos = NULL, type = "source")
 library(ggchord)
-stopifnot(as.character(packageVersion("ggchord")) == "0.16.7.9000")
+stopifnot(as.character(packageVersion("ggchord")) == "0.17.0.9000")
 ```
 
-先安装依赖，再在新的 R 会话运行以上代码。版本号不能识别同版本不同提交；构建清单 `build-manifest.json` 和审计记录保留源码 SHA。只有 CRAN 版的读者应使用 [0.16.6 对应离线教程与参考](https://stat.ethz.ch/CRAN/web/packages/ggchord/index.html)，不要运行开发版蛋白数据案例或 `nonadjacent_linewidth` 参数。
+版本号不能区分不同提交，下载的构建清单记录源码版本。本地预览不代表包已发布或
+网站已部署。正式版用户可查阅 [0.16.6 文档](https://stat.ethz.ch/CRAN/web/packages/ggchord/index.html)。
 
-### 已实测的版本差异 {#verified-versions}
-
-三种首课的基本绘图代码分别在 CRAN 0.16.6 和当前开发 checkout 的全新 R 进程渲染，共六次。这验证基础调用，不保证外观相同，也不代表后续开发版课程都适用于正式版。以下能力也已针对两个命名空间实测。
-
-| 能力 | 0.16.6 | 0.16.7.9000 |
-| --- | --- | --- |
-| `geom_link_ribbon(nonadjacent_linewidth=...)` | 不提供 | 提供 |
-| 显式 `read_fasta_lengths(sequence_unit=...)` | 不提供 | 提供 |
-| 随包原生蛋白数据 | 不提供 | 提供 |
-
-正式版源码包 SHA256 与逐进程结果保存在[版本审计记录](../assets/source/tools/teaching-audit/version-check.json)。
+<span id="verified-versions"></span>
 
 ### 源码下载 {#source}
 

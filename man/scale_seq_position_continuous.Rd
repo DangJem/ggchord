@@ -58,5 +58,5 @@ seqs <- seq_data_example |>
 ggchord(seq_data = seqs) +
   geom_seq() +
   coord_collinear() +
-  scale_seq_position_continuous(breaks = seq(0, 100000, by = 20000))
+  scale_seq_position_continuous(n.breaks = 4)
 }

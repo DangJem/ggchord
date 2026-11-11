@@ -2,18 +2,24 @@
   "controls": {
     "n0": {
       "before": {
+        "backbone_diameter_mm": 147.8764,
+        "outer_text_extent_mm": {},
         "external_labels": 0,
         "overlapping_boxes": 0,
         "upper_labels_on_opposite_side": 0,
+        "layout_units_per_inch": 0.3478,
         "requested": 0,
         "visible": 0,
         "hidden_reasons": [],
         "minimum_size": {}
       },
       "after": {
+        "backbone_diameter_mm": 147.8764,
+        "outer_text_extent_mm": {},
         "external_labels": 0,
         "overlapping_boxes": 0,
         "upper_labels_on_opposite_side": 0,
+        "layout_units_per_inch": 0.3478,
         "requested": 0,
         "visible": 0,
         "hidden_reasons": [],
@@ -22,18 +28,30 @@
     },
     "n1": {
       "before": {
+        "backbone_diameter_mm": 147.8764,
+        "outer_text_extent_mm": {
+          "width": 27.6227,
+          "height": 2.5351
+        },
         "external_labels": 1,
         "overlapping_boxes": 0,
         "upper_labels_on_opposite_side": 0,
+        "layout_units_per_inch": 0.3478,
         "requested": 1,
         "visible": 1,
         "hidden_reasons": [],
         "minimum_size": 2.5
       },
       "after": {
+        "backbone_diameter_mm": 147.8764,
+        "outer_text_extent_mm": {
+          "width": 27.6227,
+          "height": 2.5351
+        },
         "external_labels": 1,
         "overlapping_boxes": 0,
         "upper_labels_on_opposite_side": 0,
+        "layout_units_per_inch": 0.3478,
         "requested": 1,
         "visible": 1,
         "hidden_reasons": [],
@@ -42,18 +60,30 @@
     },
     "n3": {
       "before": {
+        "backbone_diameter_mm": 147.8764,
+        "outer_text_extent_mm": {
+          "width": 131.111,
+          "height": 15.9915
+        },
         "external_labels": 3,
         "overlapping_boxes": 0,
         "upper_labels_on_opposite_side": 1,
+        "layout_units_per_inch": 0.3478,
         "requested": 3,
         "visible": 3,
         "hidden_reasons": [],
         "minimum_size": 2.5
       },
       "after": {
+        "backbone_diameter_mm": 147.8764,
+        "outer_text_extent_mm": {
+          "width": 135.0877,
+          "height": 12.7261
+        },
         "external_labels": 3,
         "overlapping_boxes": 0,
         "upper_labels_on_opposite_side": 1,
+        "layout_units_per_inch": 0.3478,
         "requested": 3,
         "visible": 3,
         "hidden_reasons": [],
@@ -62,18 +92,30 @@
     },
     "n10": {
       "before": {
+        "backbone_diameter_mm": 147.8764,
+        "outer_text_extent_mm": {
+          "width": 213.2632,
+          "height": 79.6094
+        },
         "external_labels": 10,
         "overlapping_boxes": 0,
         "upper_labels_on_opposite_side": 3,
+        "layout_units_per_inch": 0.3478,
         "requested": 10,
         "visible": 10,
         "hidden_reasons": [],
         "minimum_size": 2.5
       },
       "after": {
+        "backbone_diameter_mm": 147.8764,
+        "outer_text_extent_mm": {
+          "width": 137.8338,
+          "height": 46.8135
+        },
         "external_labels": 10,
         "overlapping_boxes": 0,
         "upper_labels_on_opposite_side": 1,
+        "layout_units_per_inch": 0.3478,
         "requested": 10,
         "visible": 10,
         "hidden_reasons": [],
@@ -82,18 +124,30 @@
     },
     "n29": {
       "before": {
+        "backbone_diameter_mm": 147.8764,
+        "outer_text_extent_mm": {
+          "width": 266.7278,
+          "height": 274.0876
+        },
         "external_labels": 29,
         "overlapping_boxes": 0,
         "upper_labels_on_opposite_side": 3,
+        "layout_units_per_inch": 0.3478,
         "requested": 29,
         "visible": 29,
         "hidden_reasons": [],
         "minimum_size": 2.5
       },
       "after": {
+        "backbone_diameter_mm": 147.8764,
+        "outer_text_extent_mm": {
+          "width": 222.416,
+          "height": 182.1566
+        },
         "external_labels": 29,
         "overlapping_boxes": 0,
         "upper_labels_on_opposite_side": 1,
+        "layout_units_per_inch": 0.3478,
         "requested": 29,
         "visible": 29,
         "hidden_reasons": [],
@@ -102,18 +156,30 @@
     },
     "n30": {
       "before": {
+        "backbone_diameter_mm": 147.8764,
+        "outer_text_extent_mm": {
+          "width": 260.5508,
+          "height": 184.3474
+        },
         "external_labels": 30,
         "overlapping_boxes": 0,
         "upper_labels_on_opposite_side": 1,
+        "layout_units_per_inch": 0.3478,
         "requested": 30,
         "visible": 30,
         "hidden_reasons": [],
         "minimum_size": 2.5
       },
       "after": {
+        "backbone_diameter_mm": 147.8764,
+        "outer_text_extent_mm": {
+          "width": 260.5508,
+          "height": 184.3474
+        },
         "external_labels": 30,
         "overlapping_boxes": 0,
         "upper_labels_on_opposite_side": 1,
+        "layout_units_per_inch": 0.3478,
         "requested": 30,
         "visible": 30,
         "hidden_reasons": [],
@@ -122,18 +188,30 @@
     },
     "n31": {
       "before": {
+        "backbone_diameter_mm": 147.8764,
+        "outer_text_extent_mm": {
+          "width": 298.6857,
+          "height": 185.9122
+        },
         "external_labels": 31,
         "overlapping_boxes": 0,
         "upper_labels_on_opposite_side": 1,
+        "layout_units_per_inch": 0.3478,
         "requested": 31,
         "visible": 31,
         "hidden_reasons": [],
         "minimum_size": 2.5
       },
       "after": {
+        "backbone_diameter_mm": 147.8764,
+        "outer_text_extent_mm": {
+          "width": 298.6857,
+          "height": 185.9122
+        },
         "external_labels": 31,
         "overlapping_boxes": 0,
         "upper_labels_on_opposite_side": 1,
+        "layout_units_per_inch": 0.3478,
         "requested": 31,
         "visible": 31,
         "hidden_reasons": [],
@@ -142,18 +220,30 @@
     },
     "n58": {
       "before": {
+        "backbone_diameter_mm": 147.8764,
+        "outer_text_extent_mm": {
+          "width": 489.3599,
+          "height": 200.7678
+        },
         "external_labels": 58,
         "overlapping_boxes": 0,
-        "upper_labels_on_opposite_side": 0,
+        "upper_labels_on_opposite_side": 3,
+        "layout_units_per_inch": 0.3478,
         "requested": 58,
         "visible": 58,
         "hidden_reasons": [],
         "minimum_size": 2.5
       },
       "after": {
+        "backbone_diameter_mm": 147.8764,
+        "outer_text_extent_mm": {
+          "width": 489.3599,
+          "height": 200.7678
+        },
         "external_labels": 58,
         "overlapping_boxes": 0,
-        "upper_labels_on_opposite_side": 0,
+        "upper_labels_on_opposite_side": 3,
+        "layout_units_per_inch": 0.3478,
         "requested": 58,
         "visible": 58,
         "hidden_reasons": [],
@@ -161,9 +251,15 @@
       }
     },
     "size_2_6": {
+      "backbone_diameter_mm": 147.8764,
+      "outer_text_extent_mm": {
+        "width": 260.5508,
+        "height": 184.3474
+      },
       "external_labels": 30,
       "overlapping_boxes": 0,
       "upper_labels_on_opposite_side": 1,
+      "layout_units_per_inch": 0.3478,
       "requested": 30,
       "visible": 30,
       "hidden_reasons": [],
@@ -172,117 +268,195 @@
   },
   "catalog": {
     "pSB1C3": {
+      "backbone_diameter_mm": 147.8764,
+      "outer_text_extent_mm": {
+        "width": 198.0542,
+        "height": 175.1151
+      },
       "external_labels": 5,
       "overlapping_boxes": 0,
       "upper_labels_on_opposite_side": 0,
+      "layout_units_per_inch": 0.3478,
       "requested": 10,
       "visible": 10,
       "hidden_reasons": [],
       "minimum_size": 2.5
     },
     "pUC19": {
+      "backbone_diameter_mm": 147.8764,
+      "outer_text_extent_mm": {
+        "width": 200.7625,
+        "height": 126.8801
+      },
       "external_labels": 4,
       "overlapping_boxes": 0,
       "upper_labels_on_opposite_side": 0,
+      "layout_units_per_inch": 0.3478,
       "requested": 12,
       "visible": 12,
       "hidden_reasons": [],
       "minimum_size": 2.5
     },
     "pBR322": {
+      "backbone_diameter_mm": 147.8764,
+      "outer_text_extent_mm": {
+        "width": 195.3106,
+        "height": 126.9151
+      },
       "external_labels": 3,
       "overlapping_boxes": 0,
       "upper_labels_on_opposite_side": 0,
+      "layout_units_per_inch": 0.3478,
       "requested": 9,
       "visible": 9,
       "hidden_reasons": [],
       "minimum_size": 2.5
     },
     "pBluescript_II_SK_plus": {
+      "backbone_diameter_mm": 147.8764,
+      "outer_text_extent_mm": {
+        "width": 197.2831,
+        "height": 126.9996
+      },
       "external_labels": 5,
       "overlapping_boxes": 0,
       "upper_labels_on_opposite_side": 0,
+      "layout_units_per_inch": 0.3478,
       "requested": 17,
       "visible": 17,
       "hidden_reasons": [],
       "minimum_size": 2.5
     },
     "pET_28a_plus": {
+      "backbone_diameter_mm": 147.8764,
+      "outer_text_extent_mm": {
+        "width": 201.859,
+        "height": 176.2364
+      },
       "external_labels": 10,
       "overlapping_boxes": 0,
-      "upper_labels_on_opposite_side": 1,
+      "upper_labels_on_opposite_side": 0,
+      "layout_units_per_inch": 0.3478,
       "requested": 19,
       "visible": 19,
       "hidden_reasons": [],
       "minimum_size": 2.5
     },
     "pETDuet_1": {
+      "backbone_diameter_mm": 147.8764,
+      "outer_text_extent_mm": {
+        "width": 201.7231,
+        "height": 180.4996
+      },
       "external_labels": 8,
       "overlapping_boxes": 0,
       "upper_labels_on_opposite_side": 0,
+      "layout_units_per_inch": 0.3478,
       "requested": 23,
       "visible": 23,
       "hidden_reasons": [],
       "minimum_size": 2.5
     },
     "pDONR221": {
+      "backbone_diameter_mm": 147.8764,
+      "outer_text_extent_mm": {
+        "width": 217.831,
+        "height": 154.4935
+      },
       "external_labels": 4,
       "overlapping_boxes": 0,
       "upper_labels_on_opposite_side": 0,
+      "layout_units_per_inch": 0.3478,
       "requested": 14,
       "visible": 14,
       "hidden_reasons": [],
       "minimum_size": 2.5
     },
     "pcDNA3_1_plus": {
+      "backbone_diameter_mm": 147.8764,
+      "outer_text_extent_mm": {
+        "width": 195.3106,
+        "height": 126.9057
+      },
       "external_labels": 3,
       "overlapping_boxes": 0,
       "upper_labels_on_opposite_side": 0,
+      "layout_units_per_inch": 0.3478,
       "requested": 16,
       "visible": 16,
       "hidden_reasons": [],
       "minimum_size": 2.5
     },
     "pTRE_Tight_BI": {
+      "backbone_diameter_mm": 147.8764,
+      "outer_text_extent_mm": {
+        "width": 201.1375,
+        "height": 175.1151
+      },
       "external_labels": 8,
       "overlapping_boxes": 0,
-      "upper_labels_on_opposite_side": 1,
+      "upper_labels_on_opposite_side": 0,
+      "layout_units_per_inch": 0.3478,
       "requested": 18,
       "visible": 18,
       "hidden_reasons": [],
       "minimum_size": 2.5
     },
     "pTRIPZ": {
+      "backbone_diameter_mm": 147.8764,
+      "outer_text_extent_mm": {
+        "width": 210.2646,
+        "height": 174.9811
+      },
       "external_labels": 14,
       "overlapping_boxes": 0,
       "upper_labels_on_opposite_side": 0,
+      "layout_units_per_inch": 0.3478,
       "requested": 36,
       "visible": 36,
       "hidden_reasons": [],
       "minimum_size": 2.5
     },
     "pCAMBIA1300": {
+      "backbone_diameter_mm": 147.8764,
+      "outer_text_extent_mm": {
+        "width": 212.1243,
+        "height": 174.9811
+      },
       "external_labels": 6,
       "overlapping_boxes": 0,
       "upper_labels_on_opposite_side": 0,
+      "layout_units_per_inch": 0.3478,
       "requested": 20,
       "visible": 20,
       "hidden_reasons": [],
       "minimum_size": 2.5
     },
     "pEarleyGate_201": {
+      "backbone_diameter_mm": 147.8764,
+      "outer_text_extent_mm": {
+        "width": 197.5035,
+        "height": 174.9811
+      },
       "external_labels": 8,
       "overlapping_boxes": 0,
-      "upper_labels_on_opposite_side": 1,
+      "upper_labels_on_opposite_side": 0,
+      "layout_units_per_inch": 0.3478,
       "requested": 24,
       "visible": 24,
       "hidden_reasons": [],
       "minimum_size": 2.5
     },
     "pSpCas9_BB_2A_GFP_PX458": {
+      "backbone_diameter_mm": 147.8764,
+      "outer_text_extent_mm": {
+        "width": 208.5442,
+        "height": 176.8365
+      },
       "external_labels": 12,
       "overlapping_boxes": 0,
       "upper_labels_on_opposite_side": 1,
+      "layout_units_per_inch": 0.3478,
       "requested": 22,
       "visible": 22,
       "hidden_reasons": [],
@@ -290,9 +464,15 @@
     }
   },
   "flagship": {
+    "backbone_diameter_mm": 147.2792,
+    "outer_text_extent_mm": {
+      "width": 276.347,
+      "height": 178.448
+    },
     "external_labels": 13,
     "overlapping_boxes": 0,
     "upper_labels_on_opposite_side": 0,
+    "layout_units_per_inch": 0.3492,
     "requested": 28,
     "visible": 28,
     "hidden_reasons": [],

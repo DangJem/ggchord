@@ -6,45 +6,28 @@
   },
   "sizes": {
     "10x8": {
+      "backbone_diameter_mm": 93.2485,
+      "outer_text_extent_mm": {
+        "width": 227.9813,
+        "height": 185.2249
+      },
       "external_labels": 71,
       "overlapping_boxes": 0,
       "upper_labels_on_opposite_side": 11,
+      "layout_units_per_inch": 0.5496,
       "requested": 164,
       "visible": 164,
       "hidden_reasons": [],
       "minimum_size": 3.2,
       "measurement": {
         "status": "measured",
-        "panel_mm": [
-          244.9085,
-          198.9825
-        ],
-        "canvas_mm": [
-          254,
-          203.2
-        ],
-        "panel_bounds_mm": [
-          4.5458,
-          249.4542,
-          2.1088,
-          201.0912
-        ],
-        "x_range": [
-          -2.6396,
-          2.6789
-        ],
-        "y_range": [
-          -1.435,
-          2.8862
-        ],
-        "units_per_mm": [
-          0.0217,
-          0.0217
-        ],
-        "axis_units_per_inch": [
-          0.5516,
-          0.5516
-        ],
+        "panel_mm": [244.9085, 198.9825],
+        "canvas_mm": [254, 203.2],
+        "panel_bounds_mm": [4.5458, 249.4542, 2.1088, 201.0912],
+        "x_range": [-2.6396, 2.6789],
+        "y_range": [-1.435, 2.8862],
+        "units_per_mm": [0.0217, 0.0217],
+        "axis_units_per_inch": [0.5516, 0.5516],
         "units_per_inch": 0.5516,
         "geometry_metric_status": "measured",
         "converged": true,
@@ -55,55 +38,43 @@
       }
     },
     "16.5x8": {
-      "external_labels": 71,
+      "backbone_diameter_mm": 107.4516,
+      "outer_text_extent_mm": {
+        "width": 375.0342,
+        "height": 185.1946
+      },
+      "external_labels": 69,
       "overlapping_boxes": 0,
-      "upper_labels_on_opposite_side": 10,
+      "upper_labels_on_opposite_side": 6,
+      "layout_units_per_inch": 0.4797,
       "requested": 164,
       "visible": 164,
       "hidden_reasons": [],
       "minimum_size": 3.2,
       "measurement": {
         "status": "measured",
-        "panel_mm": [
-          302.1918,
-          198.9825
-        ],
-        "canvas_mm": [
-          419.1,
-          203.2
-        ],
-        "panel_bounds_mm": [
-          58.4541,
-          360.6459,
-          2.1088,
-          201.0912
-        ],
-        "x_range": [
-          -3.6899,
-          3.118
-        ],
-        "y_range": [
-          -1.4991,
-          2.9837
-        ],
-        "units_per_mm": [
-          0.0225,
-          0.0225
-        ],
-        "axis_units_per_inch": [
-          0.5722,
-          0.5722
-        ],
-        "units_per_inch": 0.5722,
+        "panel_mm": [411.7583, 198.9825],
+        "canvas_mm": [419.1, 203.2],
+        "panel_bounds_mm": [3.6708, 415.4292, 2.1088, 201.0912],
+        "x_range": [-3.2579, 4.502],
+        "y_range": [-1.4629, 2.287],
+        "units_per_mm": [0.0188, 0.0188],
+        "axis_units_per_inch": [0.4787, 0.4787],
+        "units_per_inch": 0.4787,
         "geometry_metric_status": "measured",
         "converged": true,
         "device": "quartz_off_screen",
         "font_conditions": "Metrics use the selected device; font fallback and embedding remain unchecked",
         "basis": "Resolved gtable grid.layout panel, including null units and aspect constraints",
-        "refinement_passes": 5
+        "refinement_passes": 7
       }
     },
     "8x8": {
+      "backbone_diameter_mm": 56.0634,
+      "outer_text_extent_mm": {
+        "width": 186.2185,
+        "height": 156.2495
+      },
       "external_labels": 75,
       "overlapping_boxes": 0,
       "upper_labels_on_opposite_side": 17,
@@ -114,36 +85,13 @@
       "minimum_size": 3.2,
       "measurement": {
         "status": "measured",
-        "panel_mm": [
-          198.9825,
-          167.9885
-        ],
-        "canvas_mm": [
-          203.2,
-          203.2
-        ],
-        "panel_bounds_mm": [
-          2.1088,
-          201.0912,
-          17.6057,
-          185.5943
-        ],
-        "x_range": [
-          -3.561,
-          3.6263
-        ],
-        "y_range": [
-          -1.4742,
-          4.5935
-        ],
-        "units_per_mm": [
-          0.0361,
-          0.0361
-        ],
-        "axis_units_per_inch": [
-          0.9174,
-          0.9174
-        ],
+        "panel_mm": [198.9825, 167.9885],
+        "canvas_mm": [203.2, 203.2],
+        "panel_bounds_mm": [2.1088, 201.0912, 17.6057, 185.5943],
+        "x_range": [-3.561, 3.6263],
+        "y_range": [-1.4742, 4.5935],
+        "units_per_mm": [0.0361, 0.0361],
+        "axis_units_per_inch": [0.9174, 0.9174],
         "units_per_inch": 0.9174,
         "geometry_metric_status": "measured",
         "converged": true,
@@ -153,6 +101,5 @@
         "refinement_passes": 10
       }
     }
-  },
-  "refinement": "10x8 and 16.5x8 converged before the existing bound; 8x8 was remeasured after extending the bounded circular refinement. No source annotations or font sizes were removed."
+  }
 }

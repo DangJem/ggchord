@@ -1,0 +1,27 @@
+{
+  "responsiveCombinations": 98,
+  "pageOverflowCases": 0,
+  "topicsMenuLabel": "专题",
+  "search": {
+    "term": "coord_sankey",
+    "target": "zh/foundation.html#sankey"
+  },
+  "languageAnchorPreservedBothDirections": true,
+  "table": {
+    "viewport": 320,
+    "container": 288,
+    "content": 640,
+    "firstColumn": 192,
+    "keyboardScrollLeft": 40
+  },
+  "longFunction": {
+    "viewport": 320,
+    "paragraph": 288,
+    "scroll": 288
+  },
+  "darkThemeBackground": "rgb(16, 29, 34)",
+  "themeRestored": "light",
+  "mobileNavigationExpanded": true,
+  "fullPngViewerOpened": true,
+  "screenshot": "/private/tmp/ggchord-browser-v017/plasmid-final.jpg"
+}

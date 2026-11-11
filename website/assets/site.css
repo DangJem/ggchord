@@ -50,7 +50,7 @@ button,summary {touch-action:manipulation}
 /* Course navigation on the left, local outline on the right. */
 .doc-layout {display:grid;grid-template-columns:var(--course-width) minmax(0,1fr) var(--toc-width);gap:28px;align-items:start;margin-inline:0}
 .doc-layout > main.col-md-9,.doc-layout > aside.col-md-3 {width:auto;max-width:none}
-.doc-layout > main {grid-column:2;grid-row:1;min-width:0;padding:32px clamp(22px,3vw,48px) 64px;background:var(--surface-paper);min-height:78vh;border:1px solid var(--color-rule);border-radius:var(--radius-panel);overflow-wrap:anywhere}
+.doc-layout > main {grid-column:2;grid-row:1;min-width:0;margin-top:0;padding:32px clamp(22px,3vw,48px) 64px;background:var(--surface-paper);min-height:78vh;border:1px solid var(--color-rule);border-radius:var(--radius-panel);overflow-wrap:normal;word-break:normal}
 .chapter-nav {grid-column:1;grid-row:1}
 .page-nav {grid-column:3;grid-row:1}
 .chapter-nav,.page-nav {position:sticky;top:calc(var(--header-height) + 20px);max-height:calc(100dvh - var(--header-height) - 40px);overflow:auto;padding:12px 2px 24px;font-size:.82rem;scrollbar-width:thin}
@@ -108,6 +108,9 @@ main .package-logo,main img.logo {display:none}
 /* Tables scroll independently. Data values and IDs are never truncated. */
 .table-scroll,.data-output {max-width:100%;overflow-x:auto;margin-block:24px;scrollbar-width:thin}
 main table {width:100%;font-size:.85rem;line-height:1.65;border-collapse:collapse;margin:0}
+main .wide-table {min-width:40rem}
+main .wide-table :is(td,th) {min-width:7rem}
+main .wide-table :is(td,th):first-child {min-width:12rem}
 main th {text-align:left;background:var(--surface-soft);color:var(--text-strong);font-weight:650}
 main td,main th {padding:11px 12px;vertical-align:top;border-bottom:1px solid var(--color-rule);overflow-wrap:normal}
 main .data-output table {width:max-content;min-width:100%}
@@ -143,6 +146,7 @@ body[data-page=index] main > h1 {position:absolute;width:1px;height:1px;overflow
 body[data-page=index] main {padding:36px clamp(22px,5vw,80px) 64px}
 body[data-page=index] :is(.chapter-drawer,.page-outline) {display:none}
 .home-hero {display:grid;grid-template-columns:minmax(0,1fr) 240px;align-items:center;gap:60px;padding:20px 0 40px}
+.home-lead .hero-phrase {display:inline-block}
 .home-hero p:not(.home-lead) {max-width:76ch}
 .home-hero .brand-art {display:block;width:240px;height:240px;object-fit:contain}
 .eyebrow {font:.76rem/1.6 ui-monospace,monospace;color:var(--color-brand);letter-spacing:.06em}

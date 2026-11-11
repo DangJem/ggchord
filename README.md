@@ -8,7 +8,7 @@
 
 An R package built on ggplot2. Combine independent layers for sequence backbones, interval links, genes, general features, labels and quantitative tracks.
 
-The stable release is **ggchord 0.16.6**. These examples are generated from the local **v0.16.7** development source. Formal assets are on GitHub Releases.
+The stable release is **ggchord 0.16.6**. These examples are generated from the local **v0.17.0** development source. Formal assets are on GitHub Releases.
 
 ## Install
 
@@ -40,7 +40,7 @@ gene_palette <- c("+" = "#CE1536", "-" = "#346B9D", "." = "#8291A6")
 doc_background <- "#FFFCF5"
 identity_palette <- c("#303B71", "#36537D", "#269B82", "#A5D52C", "#ECEB31")
 identity_values <- c(0, 0.5, 0.8, 0.9, 1)
-identity_breaks <- c(0, 50, 80, 90, 100)
+identity_breaks <- c(0, 50, 80, 90, 95, 100)
 doc_legend_theme <- theme(
   legend.title = element_text(size = 13, face = "bold"),
   legend.text = element_text(size = 11),
@@ -52,14 +52,19 @@ sequence_guide <- guide_ggchord_legend(nrow = 1, theme = doc_legend_theme)
 strand_guide <- guide_ggchord_legend(
   nrow = 1, override.aes = list(strand = c("+", "-")), theme = doc_legend_theme
 )
-identity_guide <- guide_ggchord_colourbar(
-  position = "left", direction = "vertical",
-  theme = theme(
-    legend.key.height = unit(75, "mm"), legend.key.width = unit(5, "mm"),
-    legend.title = element_text(size = 13, face = "bold"),
-    legend.text = element_text(size = 11), legend.margin = margin(r = 7, unit = "mm")
-  )
+identity_guide_theme <- theme(
+  legend.key.height = unit(100, "mm"), legend.key.width = unit(5, "mm"),
+  legend.title = element_text(size = 13, face = "bold"),
+  legend.text = element_text(size = 11), legend.margin = margin(r = 7, unit = "mm")
 )
+identity_guide <- ggplot2::guide_coloursteps(
+  available_aes = "ribbon_fill", even.steps = FALSE, show.limits = TRUE,
+  position = "left", direction = "vertical", theme = identity_guide_theme
+)
+identity_colourbar <- guide_ggchord_colourbar(
+  position = "left", direction = "vertical", theme = identity_guide_theme
+)
+
 doc_theme <- theme_ggchord_publication(
   axis.text = element_text(size = 11),
   axis.text.check.overlap = TRUE
@@ -199,7 +204,7 @@ p_show_chord <- ggchord(seq_data = show_sequences, ribbon_data = show_links) +
   ) +
   scale_gene_fill_manual(values = gene_palette, breaks = c("+", "-"), name = "Strand") +
   guides(gene_fill = strand_guide, ribbon_fill = identity_guide) +
-  scale_seq_position_continuous(breaks = c(0, 20000, 40000), minor_breaks = NULL) +
+  doc_axis() +
   coord_chord(rotation = 50) +
   doc_theme +
   labs(
@@ -328,7 +333,7 @@ p_show_collinear <- ggchord(show_sequences, gene_data = show_linear_features) +
   ) +
   scale_gene_fill_manual(values = gene_palette, breaks = c("+", "-"), name = "Strand") +
   guides(gene_fill = strand_guide, ribbon_fill = identity_guide) +
-  scale_seq_position_continuous(breaks = c(0, 20000, 40000, 60000, 80000), minor_breaks = NULL) +
+  doc_axis() +
   show_linear_coord +
   doc_theme +
   labs(

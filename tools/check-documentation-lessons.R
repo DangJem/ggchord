@@ -87,7 +87,10 @@ if ('--write-outputs' %in% commandArgs(trailingOnly = TRUE)) {
 }
 if (length(selected)) execution[[selected]]$isolation <- "fresh R process, separate documentation environment"
 jsonlite::write_json(list(pages=execution,
-  scope="Shared preparations and raw constructors in page order; preview/save calls do not write files. Installation commands are not executed. First lessons also have fresh-process checks; 169 actual PNG exports are recorded separately.",
+  shared_code_sha256=digest::digest(file="tools/documentation-examples.R",algo="sha256"),
+  engine_sha256=as.list(stats::setNames(vapply(list.files("R","[.]R$",full.names=TRUE),function(path)
+    digest::digest(file=path,algo="sha256"),character(1)),list.files("R","[.]R$",full.names=TRUE))),
+  scope="Shared preparations and raw constructors in page order; preview/save calls do not write files. Installation commands are not executed. Actual PNG exports are recorded separately.",
   optional_genbank="Biopython enabled through the documentation-only Python environment"),
   if (length(selected)) paste0("/tmp/ggchord-lesson-",selected,".json") else "tools/teaching-audit/lesson-execution.json",auto_unbox=TRUE,pretty=TRUE)
 cat(length(pages),'page preparations completed; no package checks or rendered exports.\n')

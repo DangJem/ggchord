@@ -1,0 +1,17 @@
+{
+  "source_sha256": "e4d29db218d67878adf2c1e07ec0270b4ed32f334153cbae410640eaa0b18873",
+  "translations": {
+    "0": "用 ggplot2 语法绘制序列局部数据层",
+    "1": "标准图层输入。提供 accver，以及 x/pos 源位置或 start/end 区间；给定数值映射到 y/track_value。",
+    "2": "identity、stack、dodge 等数据 Position；旧 position=position_track(...) 写法仍声明物理 band。",
+    "3": "给定数值柱的基线，非零值要求 position='identity'，避免堆叠改变其含义。",
+    "4": "计数快捷层的固定样式。",
+    "5": "坐标报错或裁剪策略。",
+    "6": "标准图层控制参数。",
+    "7": "原生 geom/stat 参数和固定样式。",
+    "8": "原生几何与统计名称，bar 默认 count，col 及其他几何默认 identity。",
+    "9": "物理 ⟦0⟧ 声明。",
+    "10": "使用共享序列局部 band 的 ggplot2 图层。",
+    "11": "统计及数据 Position 在各 accession/window 内独立计算，再投影到物理轨道 band。支持 point、line、path、step、col、bar、tile、rect、area、ribbon、segment、linerange、errorbar 和 text；统计支持 identity、count、bin 和 summary，不支持的组合由原生图层报错。count 统计相同位置的观测，bin 要求显式 binwidth 或 breaks。x/y 映射指源位置和局部数值，不是屏幕 x/y。既有 track_value/track_fill/track_colour 角色继续接受。"
+  }
+}

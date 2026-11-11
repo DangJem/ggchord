@@ -33,29 +33,26 @@ library(ggchord)
 packageVersion("ggchord")
 ```
 
-The last line reports your installed version. **This site targets development version 0.16.7.9000**; CRAN provides 0.16.6 (checked 2026-11-05). They differ in bundled protein objects, dedicated cross-row border width, the circular zero-rotation reference and some default appearances.
+The last line reports your installed version. This local documentation previews
+**0.17.0.9000**. The repository's last recorded formal release is **0.16.6**;
+new Foundation APIs require the matching development checkout. See the
+[migration notes](../MIGRATION.md) before updating an existing script.
 
-The development changes are not yet pushed or released. Install from the local source checkout matching this site; do not assume remote main includes them. From the repository root run:
+For development work, install dependencies first and run from the matching
+checkout in a fresh R session:
 
 ```{r example-2, eval=FALSE}
 install.packages(".", repos = NULL, type = "source")
 library(ggchord)
-stopifnot(as.character(packageVersion("ggchord")) == "0.16.7.9000")
+stopifnot(as.character(packageVersion("ggchord")) == "0.17.0.9000")
 ```
 
-Install dependencies first, then use a fresh R session. A version number alone cannot distinguish commits; the site `build-manifest.json` and audit record retain source SHA. Readers using CRAN should use the [0.16.6 offline tutorials and reference](https://stat.ethz.ch/CRAN/web/packages/ggchord/index.html), and avoid development protein examples and `nonadjacent_linewidth`.
+Version numbers do not identify individual commits. The downloadable build
+manifest records the source revision. This local preview does not imply a
+published package or deployed website. Stable users can consult the
+[0.16.6 documentation](https://stat.ethz.ch/CRAN/web/packages/ggchord/index.html).
 
-#### Verified differences {#installation-verified-versions}
-
-The three introductory plotting sequences were actually rendered in six fresh R processes: each lesson on CRAN 0.16.6 and on this development checkout. This verifies the basic plotting calls, not identical appearances or all later lessons. The following probes were also run against both namespaces.
-
-| Capability | 0.16.6 | 0.16.7.9000 |
-| --- | --- | --- |
-| `geom_link_ribbon(nonadjacent_linewidth=...)` | Unavailable | Available |
-| Explicit `read_fasta_lengths(sequence_unit=...)` | Unavailable | Available |
-| Bundled native protein data | Unavailable | Available |
-
-The stable source archive SHA256 and exact process results are retained in the [version audit](https://dangjem.github.io/ggchord/assets/source/tools/teaching-audit/version-check.json).
+<span id="verified-versions"></span>
 
 #### Source downloads {#installation-source}
 

@@ -22,11 +22,13 @@
 | [`geom_primer()`](reference/geom_primer.html) | 条件支持 | 不支持 | 条件支持 | 仅一条显示 DNA 序列及合法结合坐标 |
 | [`geom_primer_label_repel()`](reference/geom_primer_label_repel.html) | 条件支持 | 不支持 | 条件支持 | 仅一条显示 DNA 序列，与引物共享位置 |
 | [`geom_restriction_site()`](reference/geom_restriction_site.html) | 条件支持 | 不支持 | 条件支持 | 仅一条显示 DNA 序列及实际计算的切割坐标 |
-| [`geom_track_bar()`](reference/geom_track_tile.html) | 支持 | 支持 | 支持 | 显式 position_track、数值高度与数值域 |
-| [`geom_track_line()`](reference/geom_track_tile.html) | 支持 | 支持 | 支持 | 显式 position_track；闭合须明确请求，不跨缺失样本连接 |
-| [`geom_track_tile()`](reference/geom_track_tile.html) | 支持 | 支持 | 支持 | 显式 position_track；不要求数值高度 |
+| [`geom_track()`](reference/geom_track.html) | 支持 | 支持 | 支持 | 源空间 Stat/Position；见[首批矩阵](foundation.html#tracks) |
+| [`geom_track_bar()`](reference/geom_track.html) | 支持 | 支持 | 支持 | 统计观测数，给定数值请使用 col |
+| [`geom_track_col()`](reference/geom_track.html) | 支持 | 支持 | 支持 | 显式 position_track、数值高度与数值域 |
+| [`geom_track_line()`](reference/geom_track.html) | 支持 | 支持 | 支持 | 显式 position_track；闭合须明确请求，不跨缺失样本连接 |
+| [`geom_track_tile()`](reference/geom_track.html) | 支持 | 支持 | 支持 | 显式 position_track；不要求数值高度 |
 
-21 个 geom 分别在三种模式实际渲染，共 63 组明确标注的合成几何输入：53 组成功，10 组按契约拒绝，包含自动引物标签。中心标签在单序列弦图及圆图支持 bp/aa；引物与酶切要求 DNA。帮助已澄清这些边界。此处验证模式边界，不表示所有参数组合、生物识别或设备均已验收。参见[完整运行记录](../assets/source/tools/teaching-audit/layer-compatibility.csv)。
+23 个代表性图层分别在三种主要模式实际渲染，共 69 组明确标注的合成几何输入：59 组成功，10 组按契约拒绝，包含自动引物标签。中心标签在单序列弦图及圆图支持 bp/aa；引物与酶切要求 DNA。帮助已澄清这些边界。此处验证模式边界，不表示所有参数组合、生物识别或设备均已验收。参见[完整运行记录](../assets/source/tools/teaching-audit/layer-compatibility.csv)。
 
 ## 读懂条件支持 {#conditions}
 
@@ -36,4 +38,4 @@ Position 只控制局部放置，不把不支持的图层转换成另一种坐�
 
 ## 版本与复现 {#versions}
 
-本表面向开发版 0.16.7.9000；[安装页](installation.html)说明本地源码安装与正式版入口。单圆图只接受单条显示序列；圆形蛋白只是显示布局，不声明蛋白分子为圆形。混合 bp/aa 数据必须先投影或分别作图。
+支持版本见[安装页](installation.html)，更新现有脚本时请参阅[迁移说明](../assets/MIGRATION-Hans.md)。单圆图只接受单条显示序列；圆形蛋白只是显示布局，不声明蛋白分子为圆形。混合 bp/aa 数据必须先投影或分别作图。

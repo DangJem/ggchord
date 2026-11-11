@@ -105,12 +105,23 @@ ggchord_perimeter_tasks <- function(registry, units_per_inch) {
   )
   tasks$w <- boxes$bw
   tasks$h <- boxes$bh
-  # Preserve full words and source labels while bounding long callouts in
-  # physical space. Both the packer and composite renderer use this text.
+  # Choose the compact origin fan only when the actual canvas can retain
+  # the full side words and a readable backbone. The ratio removes layout
+  # units, so this decision does not oscillate during physical refinement.
   canvas <- ggchord_render_dimensions()
-  wrap_mm <- if (all(is.finite(canvas))) max(25,min(50,(canvas[1]-70)/2)) else 50
-  tasks$enzyme_label <- mapply(ggchord_wrap_physical_text,tasks$enzyme_label,
-    tasks$size,tasks$family,tasks$enzyme_fontface,MoreArgs=list(width_mm=wrap_mm),USE.NAMES=FALSE)
+  sides <- tasks$root_x >= 0
+  side_width <- vapply(c(FALSE, TRUE), function(side)
+    max(c(0, tasks$w[sides == side])), numeric(1L))
+  reserve_mm <- 1.1 * sum(side_width) / units_per_inch * 25.4
+  compact_fan <- all(is.finite(canvas)) &&
+    reserve_mm + .6 * canvas[2] <= canvas[1]
+  tasks$compact_fan <- compact_fan
+  wrap_mm <- if (all(is.finite(canvas)))
+    max(25, min(50, (canvas[1] - 70) / 2)) else 50
+  if (!compact_fan) tasks$enzyme_label <- mapply(
+    ggchord_wrap_physical_text, tasks$enzyme_label,
+    tasks$size, tasks$family, tasks$enzyme_fontface,
+    MoreArgs = list(width_mm = wrap_mm), USE.NAMES = FALSE)
   restriction <- which(tasks$kind == "restriction")
   if (length(restriction)) {
     enzyme <- ggchord_restriction_text_metrics(
@@ -287,14 +298,18 @@ ggchord_perimeter_top_staircase <- function(tasks, rows, side_rows,
   rows <- rows[order(tasks$route_x[rows], tasks$route_y[rows])]
   if (diff(range(tasks$target_x[rows])) <=
       1.4 * backbone_outer) return(NULL)
-  preferred_split <- sum(tasks$route_x[rows] < 0)
-  splits <- preferred_split
+  straddles_axis <- min(tasks$route_x[rows]) < -.025 * backbone_outer &&
+    max(tasks$route_x[rows]) > .025 * backbone_outer
+  preferred_split <- if (straddles_axis) floor(length(rows) / 2) else
+    sum(tasks$route_x[rows] < -.025 * backbone_outer)
+  splits <- unique(pmax(1L, pmin(length(rows) - 1L,
+    c(preferred_split, floor(length(rows) * c(.5, .25, .75))))))
   base <- max(backbone_outer + .13,
     max(tasks$route_y[rows]) + .06)
   fan_gap <- min(gap, .004)
   solve_split <- function(split) {
     branches <- list(rows[seq_len(split)],
-      rev(rows[split + seq_len(length(rows) - split)]))
+      rev(rows[seq.int(split + 1L, length(rows))]))
     placed <- list()
     selected_rows <- integer()
     for (branch in seq_along(branches)) {
@@ -341,8 +356,9 @@ ggchord_perimeter_top_staircase <- function(tasks, rows, side_rows,
     }
     list(rows = selected_rows, selected = placed)
   }
-  # Branches follow their source-root meridian. Equal-count splits can send
-  # an entire short genomic run to the opposite side of the circle.
+  # A cluster entirely to one side of the axis can still use both arms.
+  # Trying only its axis split sent almost all names up one arm, and an early
+  # failure discarded the balanced alternatives in favour of a tall stack.
   options <- lapply(splits, solve_split)
   if (is.null(options[[1L]])) {
     options <- c(options, list(ggchord_perimeter_top_steps(
@@ -526,11 +542,66 @@ ggchord_place_dense_perimeter <- function(registry, layout,
   tasks$route_x <- tasks$direction_x * route_radius
   tasks$route_y <- tasks$direction_y * route_radius
   canvas <- ggchord_render_dimensions()
-  tasks <- ggchord_assign_perimeter_sides(tasks, canvas, units_per_inch)
-  # The joint allocator already reserves a fitting ordered top row. A second
-  # fan search would repartition it and invalidate that global angular order.
-  if(all(is.finite(canvas))) allow_top_fan <- FALSE
-  crowded_top <- FALSE
+  compact_fan <- isTRUE(tasks$compact_fan[1L])
+  if (compact_fan) {
+    tasks$side <- ifelse(tasks$direction_y < -.75 & abs(tasks$direction_x) < .7,
+      "bottom", ifelse(tasks$direction_x > .215, "right",
+        ifelse(tasks$direction_x < -.05, "left",
+          ifelse(tasks$direction_y >= 0, "top", "bottom"))))
+  if (allow_top_fan) {
+    # A fixed side boundary can split one tightly spaced origin cluster and
+    # make the side queue lift the upper fan. Group actual cuts first; feature
+    # and primer roots join that angular interval without bridging cut gaps.
+    angle <- atan2(tasks$direction_x, tasks$direction_y)
+    upper <- which(abs(angle) < .8 & tasks$kind == "restriction")
+    upper <- upper[order(angle[upper])]
+    if (length(upper) >= 8L) {
+      runs <- split(upper, cumsum(c(TRUE, diff(angle[upper]) >= .10)))
+      runs <- Filter(function(members) length(members) >= 8L, runs)
+      if (length(runs)) {
+        distance <- vapply(runs, function(members)
+          min(abs(angle[members])), numeric(1L))
+        cluster <- runs[[which.min(distance)]]
+        bounds <- range(c(0, angle[cluster]))
+        members <- which(angle >= bounds[1L] - .04 &
+          angle <= bounds[2L] + .04)
+        old_top <- which(tasks$side == "top")
+        tasks$side[old_top] <- ifelse(
+          tasks$direction_x[old_top] < 0, "left", "right")
+        tasks$side[members] <- "top"
+      }
+    }
+  }
+  crowded_top <- sum(tasks$side == "top" &
+    tasks$kind == "restriction") >= 8L
+  if (!crowded_top) {
+    angle <- atan2(tasks$direction_y, tasks$direction_x)
+    neighbours <- vapply(seq_along(angle), function(i) {
+      sum(abs(atan2(sin(angle - angle[i]),
+        cos(angle - angle[i]))) < .16)
+    }, integer(1L))
+    vertical <- abs(tasks$direction_y) >= abs(tasks$direction_x)
+    natural_side <- ifelse(vertical,
+      ifelse(tasks$direction_y >= 0, "top", "bottom"),
+      ifelse(tasks$direction_x >= 0, "right", "left"))
+    upper_left <- tasks$direction_x < 0 &
+      tasks$direction_y > 0
+    tasks$side[upper_left] <- natural_side[upper_left]
+    # A compact lower-right run reads as a short side fan; packing its wide
+    # labels across the whole bottom edge detached them from their roots.
+    lower_right <- tasks$direction_x > .20 &
+      tasks$direction_y < -.70
+    if (any(neighbours[lower_right] >= 4L)) {
+      tasks$side[lower_right] <- "right"
+    }
+    crowded_top <- sum(tasks$side == "top" &
+      tasks$kind == "restriction") >= 8L
+  }
+  } else {
+    tasks <- ggchord_assign_perimeter_sides(tasks, canvas, units_per_inch)
+    allow_top_fan <- FALSE
+    crowded_top <- FALSE
+  }
   top_rows <- which(tasks$side == "top")
   wide_top <- crowded_top && length(top_rows) &&
     max(tasks$w[top_rows]) > .8 * backbone_outer
@@ -552,8 +623,9 @@ ggchord_place_dense_perimeter <- function(registry, layout,
     # feature, primer and restriction leaders alike.
     axis <- ggchord_pack_ordered_axis(
       tasks$route_y[rows],
-      atan2(tasks$direction_x[rows],tasks$direction_y[rows]) *
-        if(side=="left") 1 else -1,
+      if (compact_fan) tasks$route_y[rows] else
+        atan2(tasks$direction_x[rows],tasks$direction_y[rows]) *
+          if(side=="left") 1 else -1,
       tasks$h[rows] / 2, tasks$h[rows] / 2, gap = gap
     )
     boundary <- max(backbone_outer + .12, route_radius + .07,

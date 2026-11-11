@@ -470,5 +470,13 @@
       "zh": "全部 API 教学映射"
     },
     "group": "reference"
+  },
+  {
+    "slug": "foundation",
+    "title": {
+      "en": "Source instances, tracks and new views",
+      "zh": "来源实例、轨道与新视图"
+    },
+    "group": "guide"
   }
 ]

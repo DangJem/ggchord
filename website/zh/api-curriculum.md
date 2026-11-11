@@ -18,6 +18,7 @@
 | [`coord_chord`](reference/coord_chord.html) | 弦图坐标系 | [L3](chord-geometry.html#shape) | 弦图；整图旋转与逐序列几何分工 | [↗](parameter-atlas.html#api-coord_chord) | [↗](chord.html) |
 | [`coord_circular`](reference/coord_circular.html) | 单序列圆图坐标系 | [L3](circular-layers.html#coordinates) | 单条序列；bp/aa 布局；不接受 ribbon/link | [↗](parameter-atlas.html#api-coord_circular) | [↗](chord.html) |
 | [`coord_collinear`](reference/coord_collinear.html) | 直线型多序列共线性坐标系 | [L3](collinear-layout.html#parameters) | 共线性；bp/aa；拒绝圆图专属参数 | [↗](parameter-atlas.html#api-coord_collinear) | [↗](collinear.html) |
+| [`coord_sankey`](reference/coord_sankey.html) | query 左列与 subject 右列镜像区间关系 | [L2](foundation.html#sankey) | 首批基础架构范围；详见本章支持矩阵 | [↗](parameter-atlas.html#api-coord_sankey) | [↗](foundation.html) |
 | [`deduplicate_ggchord_ribbons`](reference/deduplicate_ggchord_ribbons.html) | 去除重复比对区间 | [L2](ribbons.html#transformations) | 处理已有比对；不生成新的序列比对 | [↗](parameter-atlas.html#api-deduplicate_ggchord_ribbons) | [↗](chord.html) |
 | [`diagnose_ggchord`](reference/diagnose_ggchord.html) | 检查指定尺寸的一次渲染而不改变原图 | [L2](workflow-tools.html#diagnostics) | 单一目标尺寸和设备；提示不等于全面质量保证 | [↗](parameter-atlas.html#api-diagnose_ggchord) | [↗](chord.html) |
 | [`element_blank`](reference/ggplot2-helpers.html) | 适用于 ggchord 的部分 ggplot2 辅助函数 | [上游](parameter-atlas.html#upstream) | 上游对象/接口；遵循 ggplot2/grid 的原始契约 | [↗](parameter-atlas.html#api-element_blank) | [↗](chord.html) |
@@ -52,7 +53,9 @@
 | [`geom_seq_label`](reference/geom_seq_label.html) | 添加序列名称图层 | [L3](chord-labels.html#sequence-parameters) | 三种模式；直线图拒绝显式径向半径 | [↗](parameter-atlas.html#api-geom_seq_label) | [↗](chord.html) |
 | [`geom_seq_region`](reference/geom_seq_region.html) | 沿序列骨架突出显示区域 | [L3](chord-routing.html#region-parameters) | 三种模式；区间、ID、单位需合法 | [↗](parameter-atlas.html#api-geom_seq_region) | [↗](chord.html) |
 | [`geom_seq_scale`](reference/geom_seq_scale.html) | 在线性图中添加共享的序列位置比例尺 | [L3](collinear-tuning.html#scale) | 仅共线性；原生 bp/aa 标尺 | [↗](parameter-atlas.html#api-geom_seq_scale) | [↗](collinear.html) |
-| [`geom_track_bar`](reference/geom_track_tile.html) | 沿序列骨架绘制定量轨道 | [L3](tracks.html#draw-gc) | 三种模式；显式 position_track 和区间箱 | [↗](parameter-atlas.html#api-geom_track_bar) | [↗](tracks.html) |
+| [`geom_track`](reference/geom_track.html) | 源空间统计轨道 | [L2](foundation.html#tracks) | 首批基础架构范围；详见本章支持矩阵 | [↗](parameter-atlas.html#api-geom_track) | [↗](foundation.html) |
+| [`geom_track_bar`](reference/geom_track.html) | 按源位置统计观测数 | [L3](foundation.html#tracks) | 三种模式；显式 position_track 和区间箱 | [↗](parameter-atlas.html#api-geom_track_bar) | [↗](foundation.html) |
+| [`geom_track_col`](reference/geom_track.html) | 显示给定数值高度 | [L2](foundation.html#tracks) | 首批基础架构范围；详见本章支持矩阵 | [↗](parameter-atlas.html#api-geom_track_col) | [↗](foundation.html) |
 | [`geom_track_line`](reference/geom_track_tile.html) | 沿序列骨架绘制定量轨道 | [L3](tracks.html#multiple) | 三种模式；每组位置递增；closed 需完整闭圆 | [↗](parameter-atlas.html#api-geom_track_line) | [↗](tracks.html) |
 | [`geom_track_tile`](reference/geom_track_tile.html) | 沿序列骨架绘制定量轨道 | [L3](tracks.html#tile) | 三种模式；显式轨道；重叠按输入顺序绘制 | [↗](parameter-atlas.html#api-geom_track_tile) | [↗](tracks.html) |
 | [`get_chord_layout`](reference/get_chord_layout.html) | 获取 ggchord 图的完整布局 | [L2](output.html#geometry) | 所有受支持图；完整文档化布局 | [↗](parameter-atlas.html#api-get_chord_layout) | [↗](chord.html) |

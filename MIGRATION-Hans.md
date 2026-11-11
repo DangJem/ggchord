@@ -31,6 +31,24 @@ p <- ggchord(seq_data_example, feature_data = annotations) +
 仍指向解析后的图层输入行。默认注释层共享构造输入的来源 ID；显式图层表与函数采用
 图层局部身份，不按数值内容猜测来源，也不会去重删除相同的真实源记录。
 
+## 0.17.0 的轨道数值与序列坐标轴
+
+`geom_track_bar()` 现在按原生 bar 语义统计观测数；`geom_track_col()` 以
+`stat = "identity"` 显示已给定的数值高度。两个函数均未删除。迁移旧数值柱时，
+将函数名换成 `geom_track_col()`，保留数据、数值映射及物理 band。
+
+| 旧用法 | 替代写法 | 变化 |
+| --- | --- | --- |
+| 用 `geom_track_bar(aes(track_value = gc), data = bins, ...)` 显示给定值 | `geom_track_col(aes(track_value = gc), data = bins, ...)` | 数值高度改用 col，bar 统计行数。 |
+| 用 `geom_track(..., geom = "bar")` 显示给定值 | `geom_track(..., geom = "col")` | 统计观测数时用 bar 并映射 `aes(x = position)`。 |
+| 示例中显式从0开始的序列刻度向量 | `scale_seq_position_continuous(n.breaks = 3)` | 自动序列轴从1开始，优先保留真实首末位置。 |
+
+`track = position_track(...)` 声明物理 band，`position` 调整数据；此前
+`position = position_track(...)` 的物理 band 写法继续兼容。源坐标窗口保留原始
+基因组区间，仍可显式设置 breaks/labels；闭圆接缝合并1/长度。Identity 标尺仍从0开始，
+采用0/50/80/90/95/100；其他自动托管的数值pident映射也使用同一域与刻度，
+显式用户标度继续优先。
+
 ## 0.16.7 跨行连接带边框
 
 `geom_link_ribbon()` 对共线性非相邻行采用 `nonadjacent_linewidth = 0.4`，

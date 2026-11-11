@@ -26,7 +26,7 @@ First derive display colours from observed identity using an explicit 90% thresh
 
 ## Category fill, opacity, outline and line type {#categories}
 
-The same qaccver receives the same display values. Name manual values by actual categories to avoid order-dependent mismatches. This combines independently trained roles rather than claiming a single-parameter visual experiment. Use scale_ribbon_alpha_continuous(range=...) for numeric opacity and scale_ribbon_alpha_manual for categories. Colour and linetype change outlines, not alignment direction.
+The same qaccver receives the same display values. Name manual values by actual categories to avoid order-dependent mismatches. This combines independently trained roles rather than claiming a single-parameter visual experiment. Use `scale_ribbon_alpha_continuous(range=...)` for numeric opacity and `scale_ribbon_alpha_manual` for categories. Colour and linetype change outlines, not alignment direction.
 
 {{code:comparescalemanual}}
 
@@ -34,6 +34,8 @@ The same qaccver receives the same display values. Name manual values by actual 
 ## Independent scales for point links {#point-links}
 
 Explicitly calculate midpoints of observed HSPs; point links do not display full spans. Manual helpers map link_colour, link_alpha, link_linewidth and link_linetype by category; gradientn, alpha_continuous and linewidth_continuous map numeric values. Construct category and numeric combinations separately.
+
+Automatic numeric pident mappings use the 0–100 domain and six Identity ticks: 0, 50, 80, 90, 95 and 100. Explicit scales keep their own settings. The example sets the same domain, ticks and title for all three channels so their legend keys can combine.
 
 {{code:comparescalelinkdata}}
 {{code:comparescalelinkmanual}}

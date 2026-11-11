@@ -25,7 +25,7 @@ feature_palette <- c(
 doc_background <- "#FFFCF5"
 identity_palette <- c("#303B71", "#36537D", "#269B82", "#A5D52C", "#ECEB31")
 identity_values <- c(0, 0.5, 0.8, 0.9, 1)
-identity_breaks <- c(0, 50, 80, 90, 100)
+identity_breaks <- c(0, 50, 80, 90, 95, 100)
 doc_legend_theme <- theme(
   legend.title = element_text(size = 13, face = "bold"),
   legend.text = element_text(size = 11),
@@ -37,14 +37,19 @@ sequence_guide <- guide_ggchord_legend(nrow = 1, theme = doc_legend_theme)
 strand_guide <- guide_ggchord_legend(
   nrow = 1, override.aes = list(strand = c("+", "-")), theme = doc_legend_theme
 )
-identity_guide <- guide_ggchord_colourbar(
-  position = "left", direction = "vertical",
-  theme = theme(
-    legend.key.height = unit(75, "mm"), legend.key.width = unit(5, "mm"),
-    legend.title = element_text(size = 13, face = "bold"),
-    legend.text = element_text(size = 11), legend.margin = margin(r = 7, unit = "mm")
-  )
+identity_guide_theme <- theme(
+  legend.key.height = unit(100, "mm"), legend.key.width = unit(5, "mm"),
+  legend.title = element_text(size = 13, face = "bold"),
+  legend.text = element_text(size = 11), legend.margin = margin(r = 7, unit = "mm")
 )
+identity_guide <- ggplot2::guide_coloursteps(
+  available_aes = "ribbon_fill", even.steps = FALSE, show.limits = TRUE,
+  position = "left", direction = "vertical", theme = identity_guide_theme
+)
+identity_colourbar <- guide_ggchord_colourbar(
+  position = "left", direction = "vertical", theme = identity_guide_theme
+)
+
 doc_theme <- theme_ggchord_publication(
   axis.text = element_text(size = 11),
   axis.text.check.overlap = TRUE
@@ -147,7 +152,7 @@ head(bins)
 # ---- tracks ----
 p_tracks <- ggchord(track_seq) +
   geom_seq() +
-  geom_track_bar(aes(track_value = gc), data = bins,
+  geom_track_col(aes(track_value = gc), data = bins,
                  position = position_track("gc", width = grid::unit(10, "mm"))) +
   scale_track_value_continuous("gc", limits = c(0, 1), unit = "GC fraction") +
   coord_circular()
@@ -972,7 +977,7 @@ p_show_chord <- ggchord(seq_data = show_sequences, ribbon_data = show_links) +
   ) +
   scale_gene_fill_manual(values = gene_palette, breaks = c("+", "-"), name = "Strand") +
   guides(gene_fill = strand_guide, ribbon_fill = identity_guide) +
-  scale_seq_position_continuous(breaks = c(0, 20000, 40000), minor_breaks = NULL) +
+  doc_axis() +
   coord_chord(rotation = 50) +
   doc_theme +
   labs(
@@ -1082,7 +1087,7 @@ p_show_collinear <- ggchord(show_sequences, gene_data = show_linear_features) +
   ) +
   scale_gene_fill_manual(values = gene_palette, breaks = c("+", "-"), name = "Strand") +
   guides(gene_fill = strand_guide, ribbon_fill = identity_guide) +
-  scale_seq_position_continuous(breaks = c(0, 20000, 40000, 60000, 80000), minor_breaks = NULL) +
+  doc_axis() +
   show_linear_coord +
   doc_theme +
   labs(
@@ -1098,7 +1103,7 @@ p_learn_seq <- ggchord(seq_data = show_sequences) +
     values = seq_palette, name = "Sequence",
     guide = sequence_guide
   ) +
-  scale_seq_position_continuous(breaks = c(0, 20000, 40000), minor_breaks = NULL) +
+  doc_axis() +
   coord_chord() +
   doc_theme
 p_learn_seq
@@ -1111,7 +1116,7 @@ p_learn_links <- p_learn_seq +
   ) +
   scale_ribbon_fill_gradientn(
     colours = identity_palette, values = identity_values, limits = c(0, 100),
-    breaks = identity_breaks, name = "Identity (%)", guide = identity_guide
+    breaks = identity_breaks, name = "Identity (%)", guide = identity_colourbar
   )
 p_learn_links
 # ---- learngenes ----
@@ -1611,14 +1616,18 @@ scale_numeric <- scale_base + geom_link_ribbon(aes(ribbon_fill = pident))
 
 # ---- comparescalegradient ----
 p_comparescalegradient <- scale_numeric +
-  scale_ribbon_fill_gradientn(colours = c("#303B71", "#269B82", "#ECEB31"), limits = c(0, 100)) +
+  scale_ribbon_fill_gradientn(colours = c("#303B71", "#269B82", "#ECEB31"),
+    limits = c(0, 100), breaks = c(0, 50, 80, 90, 95, 100), name = "Identity (%)") +
   guides(ribbon_fill = guide_ggchord_colourbar())
 p_comparescalegradient
 
 # ---- comparescalesteps ----
 p_comparescalesteps <- scale_numeric +
   scale_ribbon_fill_stepsn(colours = c("#303B71", "#269B82", "#ECEB31"),
-    breaks = c(0, 50, 80, 100), limits = c(0, 100))
+    breaks = c(0, 50, 80, 90, 95, 100), limits = c(0, 100),
+    name = "Identity (%)", guide = ggplot2::guide_coloursteps(available_aes = "ribbon_fill",
+      even.steps = FALSE, show.limits = TRUE, position = "left",
+      direction = "vertical", theme = theme(legend.key.height = grid::unit(80, "mm"))))
 p_comparescalesteps
 
 # ---- comparescalemanual ----
@@ -1661,9 +1670,19 @@ invisible(ggplot2::ggplot_build(p_scale_linkmanual))
 p_comparescalelinkcontinuous <- p_scale_linkbase +
   geom_link_line(aes(link_colour = pident, link_alpha = pident,
     link_linewidth = pident), data = scale_points) +
-  scale_link_colour_gradientn(colours = c("#303B71", "#ECEB31")) +
-  scale_link_alpha_continuous(range = c(0.3, 0.9)) +
-  scale_link_linewidth_continuous(range = c(0.2, 1))
+  scale_link_colour_gradientn(
+    colours = c("#303B71", "#ECEB31"), limits = c(0, 100),
+    breaks = c(0, 50, 80, 90, 95, 100), name = "Identity (%)",
+    guide = guide_ggchord_legend()
+  ) +
+  scale_link_alpha_continuous(
+    range = c(0.3, 0.9), limits = c(0, 100),
+    breaks = c(0, 50, 80, 90, 95, 100), name = "Identity (%)"
+  ) +
+  scale_link_linewidth_continuous(
+    range = c(0.2, 1), limits = c(0, 100),
+    breaks = c(0, 50, 80, 90, 95, 100), name = "Identity (%)"
+  )
 p_comparescalelinkcontinuous
 
 # ---- comparescalefeature ----
@@ -1832,7 +1851,7 @@ p_compareregionoffset
 # ---- comparemultitrackdata ----
 make_gc_tracks <- function(colour_order) {
   ggchord(track_seq) + geom_seq() +
-    geom_track_bar(aes(track_value = gc), data = bins,
+    geom_track_col(aes(track_value = gc), data = bins,
       position = position_track("gc_height", order = 1, width = grid::unit(8, "mm"))) +
     geom_track_tile(aes(track_fill = gc), data = bins,
       position = position_track("gc_colour", order = colour_order, width = grid::unit(4, "mm"))) +
@@ -1854,4 +1873,72 @@ source_target <- source_gene |>
 selected_locus <- find_ggchord_loci(seq_data_example, source_target,
   targets = source_target$feature_id, upstream = 100, downstream = 100)
 selected_locus
+# ---- foundationdata ----
+library(dplyr)
+foundation_source <- ribbon_data_example |>
+  mutate(source_hsp_id = paste0("bundled:", row_number()))
+foundation_pair <- foundation_source |>
+  slice_head(n = 1) |>
+  select(qaccver, saccver)
+foundation_ids <- c(foundation_pair$qaccver, foundation_pair$saccver)
+foundation_seqs <- seq_data_example |>
+  filter(accver %in% foundation_ids) |>
+  select(accver, length)
+foundation_hsp <- foundation_source |>
+  filter(qaccver %in% foundation_ids, saccver %in% foundation_ids,
+    qaccver != saccver)
+foundation_features <- gene_data_example |>
+  filter(accver %in% foundation_ids) |>
+  transmute(accver, start, end, strand = source_strand, anno)
+# ---- foundationinstances ----
+foundation_order <- setNames(
+  c(foundation_ids[1], foundation_ids[2], foundation_ids[1]),
+  c("A_high", "B", "A_low")
+)
+foundation_split <- ceiling(nrow(foundation_hsp) / 2)
+foundation_plot <- ggchord(foundation_seqs, feature_data = foundation_features) +
+  geom_seq(seq_order = foundation_order) +
+  geom_seq_label() +
+  geom_feature(shape = "arrow") +
+  geom_link_ribbon(
+    data = foundation_hsp |> slice_head(n = foundation_split),
+    between = c("A_high", "B")
+  ) +
+  geom_link_ribbon(
+    data = foundation_hsp |> slice_tail(n = nrow(foundation_hsp) - foundation_split),
+    between = c(2, 3)
+  )
+p_foundationvertical <- foundation_plot + coord_collinear(seq_axis = "vertical")
+p_foundationvertical
+# ---- foundationsankey ----
+p_foundationsankey <- ggchord(foundation_seqs, foundation_hsp) +
+  geom_seq() +
+  geom_seq_label() +
+  geom_link_ribbon() +
+  coord_sankey()
+p_foundationsankey
+# ---- foundationcount ----
+foundation_events <- foundation_hsp |>
+  transmute(accver = qaccver, pos = qstart)
+p_foundationcount <- ggchord(foundation_seqs) +
+  geom_seq() +
+  geom_track(
+    aes(x = pos), data = foundation_events,
+    geom = "bar", track = position_track("query_starts")
+  ) +
+  coord_collinear()
+p_foundationcount
+# ---- foundationarrow ----
+p_foundationarrow <- ggchord(foundation_seqs, foundation_hsp) +
+  geom_seq() +
+  geom_link_ribbon(tip = "subject") +
+  coord_collinear()
+p_foundationarrow
+# ---- foundationequal ----
+p_foundationequal <- ggchord(foundation_seqs, foundation_hsp) +
+  geom_seq(length_mode = "equal") +
+  geom_link_ribbon(aes(ribbon_fill = pident), tip = "none") +
+  coord_collinear()
+p_foundationequal
+
 # ---- end ----

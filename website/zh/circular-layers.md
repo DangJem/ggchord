@@ -33,7 +33,7 @@ band 用填充多边形表示整条骨架，宽度由 seq_backbone_width 控制�
 
 ## 圆图坐标、旋转、开口与适配 {#coordinates}
 
-开发版零旋转的原点在 12 点钟，默认顺时针增加；正 rotation 逆时针转动整图。与上面 double 基线相比，下面分别只改变 direction 或 gap。rotation 对照见[圆图旋转](plasmid-tuning.html#rotation)。
+零旋转的原点在 12 点钟，默认顺时针增加；正 rotation 逆时针转动整图。与上面 double 基线相比，下面分别只改变 direction 或 gap。rotation 对照见[圆图旋转](plasmid-tuning.html#rotation)。
 
 | 参数 | 默认 | 类型与边界 |
 | --- | --- | --- |

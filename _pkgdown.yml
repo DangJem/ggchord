@@ -55,6 +55,7 @@ reference:
       - '`coord_chord`'
       - '`coord_circular`'
       - '`coord_collinear`'
+      - '`coord_sankey`'
       - '`ggchord`'
       - '`ggchord_api_contract`'
       - '`ggchord_layout_contract`'
@@ -113,6 +114,7 @@ reference:
   - title: Quantitative tracks
     contents:
       - '`geom_track_tile`'
+      - '`geom_track_bar`'
       - '`position_track`'
       - '`scale_track_fill_gradientn`'
       - '`scale_track_value_continuous`'

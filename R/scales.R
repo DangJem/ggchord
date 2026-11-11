@@ -341,7 +341,7 @@ scale_region_fill_manual <- function(..., values) {
 #' ggchord(seq_data = seqs) +
 #'   geom_seq() +
 #'   coord_collinear() +
-#'   scale_seq_position_continuous(breaks = seq(0, 100000, by = 20000))
+#'   scale_seq_position_continuous(n.breaks = 4)
 scale_seq_position_continuous <- function(
     name = ggplot2::waiver(), breaks = ggplot2::waiver(),
     minor_breaks = ggplot2::waiver(), labels = ggplot2::waiver(),

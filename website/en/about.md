@@ -4,10 +4,6 @@ Each plotting module starts with backbones, adds features and links, then finish
 
 {{articles}}
 
-## Software and documentation versions {#status}
-
-The stable release is **ggchord 0.16.6**. This site previews the locally developed **0.16.7** documentation and plotting fixes. Examples use the current source. See [NEWS](../assets/NEWS.md) for version changes.
-
 ## Interfaces and compatibility {#compatibility}
 
 The function reference describes current arguments, return values and boundaries. For an existing script, consult the [migration notes](../assets/MIGRATION.md). Check sequence IDs, units and full lengths, and record the package version, inputs and code when exporting.

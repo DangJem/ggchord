@@ -31,7 +31,9 @@ constructors <- list(
   geom_primer = function() geom_primer(data = primers),
   geom_primer_label_repel = function() list(geom_primer(data = primers), geom_primer_label_repel(data = primers)),
   geom_restriction_site = function() geom_restriction_site(data = sites),
-  geom_track_bar = function() geom_track_bar(aes(track_value = value), data = bins, position = position_track("fixture")),
+  geom_track = function() geom_track(aes(x=pos,y=value),data=samples,geom="point",track=position_track("fixture")),
+  geom_track_bar = function() geom_track_bar(aes(x=pos),data=samples,track=position_track("fixture")),
+  geom_track_col = function() geom_track_col(aes(track_value = value), data = bins, position = position_track("fixture")),
   geom_track_line = function() geom_track_line(aes(track_value = value), data = samples, position = position_track("fixture")),
   geom_track_tile = function() geom_track_tile(aes(track_fill = value), data = bins, position = position_track("fixture"))
 )

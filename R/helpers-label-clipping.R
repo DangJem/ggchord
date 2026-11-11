@@ -231,8 +231,21 @@ ggchord_hide_text_overlaps <- function(df, content_pts,
   hits_content[vapply(groups, `[[`, integer(1L), 1L)] <- FALSE
   kept <- integer()
   for (rows in groups) {
+    previous_count <- length(kept)
+    # Scientific endpoints take precedence over nearby rounded intermediate
+    # ticks. Preserve the ordinary overlap policy if both cannot physically fit.
+    endpoints <- if ("is_endpoint" %in% names(df))
+      rows[df$is_endpoint[idx[rows]] %in% TRUE] else integer()
+    priority <- integer()
+    for (k in endpoints) {
+      if (!ggchord_boxes_overlap_any(boxes[owner == k, , drop = FALSE],
+          boxes[owner %in% c(kept, priority), , drop = FALSE])) {
+        priority <- c(priority, k)
+      }
+    }
+    hits_content[priority] <- FALSE
     for (stride in seq_along(rows)) {
-      candidates <- rows[seq.int(1L, length(rows), by = stride)]
+      candidates <- unique(c(priority, rows[seq.int(1L, length(rows), by = stride)]))
       trial <- kept
       for (k in candidates[!hits_content[candidates]]) {
         if (ggchord_boxes_overlap_any(boxes[owner == k, , drop = FALSE],
@@ -244,6 +257,7 @@ ggchord_hide_text_overlaps <- function(df, content_pts,
         break
       }
     }
+    if (length(kept) == previous_count) kept <- c(kept, priority)
   }
   df$label[idx[setdiff(seq_along(idx), kept)]] <- NA_character_
   df

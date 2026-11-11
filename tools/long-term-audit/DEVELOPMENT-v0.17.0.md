@@ -1,109 +1,107 @@
-# v0.17.0 开发记录
+# v0.17.0 Foundation 开发记录
 
-## 统一 Feature 输入与来源桥接
+**状态：本地开发已完成，定向验证、双语文档及本地网站检查通过。未整合、未发布。**
 
-2026-11-10 用户要求恢复 README 原详细未来方向，并开始 v0.17.0 正式开发。
-本批从 `v0.17.0` 已有审计提交继续，不新建版本分支或 worktree。包版本已设为
-`0.17.0.9000`；首轮基线 CSV/JSON 保持冻结，不作为新实现的最新能力表。
+## 基线与范围
 
-已实现：
+2026-11-10用户授权按v10重排未来路线，随后要求开发本版至完成；追加要求覆盖
+README未来方向、默认Ribbon、Identity图例、质粒排版与一基坐标。
+本版使用原OneDrive checkout和专用分支`v0.17.0`，基线为本地main
+`33236efa98f308895368367ac9f96ea7f7337566`。开发版本为`0.17.0.9000`，
+最近记录的正式版仍为v0.16.6。主要运行时阶段为`f32e23a`、`d4ac7d1`、
+`feae16e`、`5253373`、`c9f731d`及本轮最终修正。
 
-- `ggchord(feature_data=...)` 和 `validate_ggchord_data(feature_data=...)`；两个非 NULL
-  注释入口互斥。gene_data 第三位置及旧无类型、已知链语义保留，只在构造时 message
-  一次，后续 build 不重复，未安排删除版本。
-- 缺少 strand 列按未知 `.` 处理，通用注释接受 `+/-`，可输入 GRanges 和 aa 特征；
-  原始表不被改写，额外列与 list-column 保留。
-- 默认基因/基因标签从 feature_class/type/role（依此次序）选择 gene/CDS；tRNA/rRNA
-  留在通用特征。缺少类别信息时不猜测，提示显式提供 gene 图层数据。
-- geom_feature 与 feature labels 默认使用全表；独立图层数据/数据函数优先。显式
-  互斥过滤可以组合 gene 与其他 feature，不根据另一层的存在隐式删行。
-- 默认输入贯通几何、标签、避障、导出。目录注释颜色继承与显式输入一致，用户标度
-  仍优先。source_row 元数据覆盖计算来源行号的缺陷已复现并修复。
-- `source_registry` 注册构造来源；`layer_sources` 保留 resolved input 行到源表/源行的
-  旁表；`annotation_duplicates` 报告同一构造记录出现于多个几何层，标签不计重复。
-  来源 ID 只在图对象内有效；显式表/函数为 layer scope，不按相同内容猜源身份。
+首轮审计的130导出、1474参数、59对页面是基线事实；冻结README/DESIGN及审计脚本
+不重写。当前清单另存`tools/teaching-audit/teaching-summary-v0.17.0.json`。
 
-主要源码：`R/annotation-input.R`、`R/ggchord.R`、`R/validate.R`、`R/zzz.R`、
-`R/ggchord-build.R`、`R/link-obstacles.R`、`R/layout-export.R`、`R/diagnostics.R`。
-相关 roxygen/Rd、NEWS、双语迁移同步。复用/扩充现有 feature 测试案例，只增加一个
-统一输入的代表性公开测试；本轮没有执行 testthat。
+## 已实现契约
 
-## 可运行的混合注释语法
+| 范围 | 本版行为与边界 |
+| --- | --- |
+| Feature输入 | `feature_data`贯通构造、validate/prepare/clean/focus/segment；generic默认全表，gene按明确gene/CDS分类。未知/双向链不伪造。 |
+| 兼容与来源 | `gene_data`保留第三位置及旧无类型语义，构造时一次迁移message，无删除日期；两个非NULL输入互斥。来源旁表保护用户字段，显式层输入保持局部身份，不按相同值猜测/删除观测。 |
+| 实例与路由 | Chord及横纵Collinear支持命名A–B–A，实体参数继承、实例覆盖；between名称/序号与HSP重复展示须明确。导出源输入、实例路由及省略原因。 |
+| Track | 14种首批几何与identity/count/bin/summary；bin显式配置。在源空间做Stat/数据Position，再投影和复制实例。bar默认count，给定数值用col；物理band与数据Position分开，旧物理写法兼容。 |
+| 新投影 | 纵向Collinear保持源位置/链并支持反查。Sankey为query左、subject右的真实区间镜像，保留互反行、默认排除自身；不声明流量守恒，不支持between/共享分支。 |
+| equal与轴 | equal仅改变显示分配，保留源长与投影系数，拒绝误导性共享绝对比例尺。默认轴保留1与真实末位；首末文字优先避让中间整万数。闭圆接缝合并1/L；源窗口保留101等真实起点，显式刻度继续优先。 |
+| Ribbon与Guide | 默认Identity、完整端面；`gradient=TRUE`才作端点序列色插值，`tip="subject"`是可选装饰。固定填充、映射及用户scale优先。自动托管数值pident使用0–100与0/50/80/90/95/100；默认Ribbon五段按数值比例显示。 |
+| 标签与字体度量 | 删除30标签/混合引物的整体求解切换。所有外侧类别共享实测任务与来源；按文字/画布预算选择紧凑原点扇形或外围队列。parallel圆轴逐字符沿弧，水平/数值角度及直线轴保留直线文字；渲染、剪裁和边界使用同一套字体几何。 |
 
-下列是明确标为合成的最小 API 输入，不冒充实际科研观测：
+原生Track首批为单面板；facets、coord_flip、raster、boxplot/violin、smooth、
+任意第三方Geom/Stat透传不支持并明确报错。统计成员在dodge等数据调整之前保留。
+矩形/tile不增加假零基线。此处不声称完整ggplot2兼容。
 
-```r
-library(ggchord)
-library(dplyr)
-seqs <- data.frame(accver = "A", length = 1000)
-annotations <- data.frame(
-  accver = "A",
-  start = c(100, 400), end = c(300, 450),
-  strand = c("+", "."), type = c("CDS", "promoter")
-)
-p <- ggchord(seqs, feature_data = annotations) +
-  geom_seq() +
-  geom_gene() +
-  geom_feature(
-    data = annotations |> filter(type != "CDS"),
-    shape = "block"
-  ) +
-  coord_collinear()
-```
+## 用户指出问题的原因与结果
 
-统一输入不要求转换为复杂对象。类型缺失/NA 作为未分类通用记录保留；不能据已知链
-就把它认作基因。几何 source_row 仍索引解析后输入；用户同名元数据保留在 original_data。
+- **0起点**：三个综合示例显式指定0刻度，覆盖了库的一基默认轴。现改用共享
+  `doc_axis()`，函数帮助同步。进一步修复真实64,323/83,080被邻近60,000/80,000
+  挤掉的问题，优先安排实测首末标签；空间不足时仍避免强行叠字。
+- **质粒退化**：宽横排替代分层扇形、宽画布也被统一50毫米换行，拉长顶部引导线并
+  压缩骨架。恢复空间充足时的相邻切点聚类与分层扇形；窄画布用已验证的外围队列。
+  判断依据是实际侧边文字宽度和画布预算，不是整体标签数量。缩窄横排、居中侧列或
+  直接保留未协调轮廓的尝试未采用。16.5×8英寸骨架由c9时点约89.9毫米恢复到107.5毫米。
+- **Identity漏95与拥挤**：共享示例曾覆盖成五边界；独立标度示例及点连接也有普通刻度。
+  现统一六刻度，点连接颜色/透明度/线宽示例可合并图例。自动数值pident覆盖库托管角色，
+  用户显式scale仍优先。颜色标尺按实测文字留长度，通用色块尺寸不再压缩完整标尺，
+  延后解析最终方向；显式角色尺寸保留优先。
+- **默认渐变**：按用户复核恢复非端点渐变Ribbon和旗舰弦图，默认`gradient=FALSE`。
+  可选渐变仍保留真实端点和最终映射颜色；密集填充降采样会警告。
+- **图片历史**：已mixed reset撤回未推送的`3f4d875`至`5253373`并保留工作文件。
+  最终图片统一进入一笔可达分支提交；不改已发布历史，不运行激进gc。
 
-## 定向验证
+## 定向证据
 
-执行 `Rscript tools/validate-feature-input.R`，结果保存在
-[feature-input-results-v0.17.0.json](feature-input-results-v0.17.0.json)。覆盖混合表互斥
-图层、全表/标签继承、默认基因筛选和重复显示诊断、单独基因标签、旧位置参数与消息、
-错误输入/结构化校验、无类型/无链、aa、相同源记录不去重、空基因子集、用户 source_row
-元数据隔离、真实 pUC19 配色等价和 GRanges（本环境已安装）。这些是直接相关的局部
-验证，不代表全部参数或发布矩阵。
+以下是本版阶段及本轮的局部开发证据，不是包级正式发布验收。
 
-真实 pUC19 识别出的9条注释通过统一输入构建圆图、导出来源，并在一个8×6英寸 PNG
-设备下绘制和人工查看；继承/显式输入的实际 feature_fill 相同。此次查看只核对新输入
-路径，既有密集标签排版问题没有在本批解决，不宣称视觉质量专项通过。
+| 工具/记录 | 实际范围 |
+| --- | --- |
+| `validate-feature-input.R` | 混合Feature、兼容消息、来源字段保护、真实目录及可选范围输入。 |
+| `validate-track-grammar.R` | 14种Geom、源空间Stat/Position、统计成员、同band组合和数值迁移。 |
+| `validate-foundation-views.R` | 重复实例、横纵投影、Sankey、equal、正反查、源窗口与实际gtable首末刻度回归。 |
+| `validate-ribbon-flow.R` | 显式渐变、最终颜色、透明/after_scale、真实区间端面、尖头和共享分支。 |
+| `validate-foundation-guides.R`、`validate-identity-guides.R` | 类别文字测量、六边界的右/底标尺、延后方向、托管点连接/注释pident及显式scale覆盖。 |
+| `validate-foundation-labels.R` | 0/1/3/10/29/30/31/58标签、相邻字号、13个目录案例；所测外侧框无重叠。 |
+| `validate-plasmid-axis.R` | 字符保留与切线变化，显式horizontal仍为直线。 |
+| `check-layer-compatibility.R` | 23个代表图层×三种主要模式，共69个grob结果：59渲染、10按契约拒绝。 |
+| `check-documentation-lessons.R` | 48个页面独立准备环境；构造及原始保存/预览参数检查，安装命令不执行。 |
+| `documentation-plots.R` | 当前源码的174张PNG，记录尺寸、来源、输出与依赖指纹。 |
 
-README 同源一致性与 Git diff whitespace 检查通过。未执行 testthat、R CMD build/check、
-vignette 重建、网站构建或 PNG/PDF/SVG 发布设备矩阵。
+真实pETDuet-1有20特征、5引物、139酶切来源。同位来源合并为shared-label，
+不是删除原始记录；“164可见来源”不等于164个独立文字框。
 
-## 当前边界与后续依赖
+| 画布（英寸） | 可见来源 | 圈外文字框重叠 | 实测收敛 | 骨架直径（毫米） |
+| --- | --- | --- | --- | --- |
+| 10×8 | 164/164 | 0 | 是 | 93.2 |
+| 16.5×8 | 164/164 | 0 | 是 | 107.5 |
+| 8×8 | 164/164 | 0 | 是 | 56.1 |
 
-整版仍在开发。本批不声称 A–B–A/实例路由、通用 Track/count/col、纵向 Collinear、
-Sankey、equal/端点轴、Ribbon 渐变/箭头、通用自适应或标签算法已经完成。
-下一批沿 Foundation 依赖继续来源/显示实例及 Track 统计空间；工作流 helper 的统一
-输入贯通和网站示例迁移也需后续推进，现有 gene_data 调用继续兼容。
+详细数值见`foundation-size-results-v0.17.0.json`；没有使用精确坐标、固定迭代次数
+或固定秒数作跨机器门槛。小画布内部注释仍受真实物理空间限制；不声称所有内侧文字、
+引导线、任意字体/画布均无碰撞。字体回退/嵌入及跨软件透明度未认证。
 
-首轮审计报告与设计保留其基线事实；README 详细版的恢复优先于任务书中简写建议，
-未来方向仍保留“规划/探索、未必已可用”的说明。网站存量版本标识、教学输出与配图
-指纹需在后续文档工作包同步，不把旧生成物称为新版本已验证输出。
+`ribbon-profile-v0.17.0.json`保留c9时点源码指纹，属于阶段性能记录；后续布局/轴修改
+不冒充重新测量。单一6×4英寸100dpi PNG下10/100/1000/10000条合成Ribbon均保留源行；
+最高档145.722秒、R堆高水位2788.1 MiB。降采样警告保留，不等于进程RSS或性能承诺。
 
-发布状态：仅本地版本分支开发；未整合 main、推送、部署、打 tag/Release 或提交 CRAN。
+## 文档与网站
 
-## Foundation 运行时推进（2026-11-10，持续开发中）
+当前为133导出、1514形参、97个Rd主题，60对教学/入口页面、916段参考正文翻译。
+README未来方向与基线逐字一致。Rmd同源同步但未knit；旧`docs/`冻结不重建。
+新增Foundation课程与五张真实输入示例，迁移说明补齐bar/count与col/identity。
 
-已落实通用 `geom_track()` 的14种几何、源空间 identity/count/bin/summary 与原生数据
-Position；Stat 在实例复制前执行。数值 bar 已迁移 col，旧物理 Position 写法兼容。
-带出原始成员与统计结果。Feature 的 prepare/clean/focus/segment 统一入口已贯通。
+静态内容巡检覆盖120个成对源页面；它不是逐页截图或教学质量认证。
+本地站点60对页面/97参考主题已生成，生成链接、锚点、搜索与资产检查通过。
+最终浏览器记录见`tools/visual-audit/v0.17.0/README.md`，完成状态见
+`v0.17.0-completion.md`。浏览器覆盖代表页的响应式与导航、语言锚点、搜索、主题、
+表格/代码溢出：7个代表页面×2语×7种宽度，共98个组合均无整页横向溢出。
+搜索Sankey、双向语言锚点、手机导航、主题恢复、表格键盘滚动和高清图查看已实测。
+320像素标度课程的长函数名溢出已按语义行内代码修正。不冒充全站每页视觉认证。
 
-已落实命名/重复显示实例、实体继承与实例覆盖、between 名称/序号、歧义拒绝、声明 HSP
-身份的重复显示检查、路由/省略报告；不按相同值猜观测身份。同一 A–B–A 对象可切换
-Chord/横纵 Collinear。新增镜像 Sankey，自身过滤与互反输入区分，坐标反查已贯通；
-首批不支持共享分支，显式请求会报错。equal 为主动显示投影，导出源长与投影系数，
-禁止误导性共享绝对比例尺。默认1/末位、中间物理空间选择和闭圆接缝合并已接入。
+本轮未运行testthat、devtools::test、R CMD build/check、vignette重建、PNG/PDF/SVG
+发布矩阵。正式GitHub发布、main整合、push、部署、tag和CRAN均未授权、未执行。
 
-Ribbon 默认沿曲线参数由 query 色变为 subject 色，subject 端装饰收尖；固定 fill、映射
-与用户 scale 优先，tip=none 保留全端面。显式 pident 使用固定域和五段数值比例 guide。
-自动离散 Guide 测量文本选择列数，并沿用联合 panel/gtable 测量；显式主题/guide 优先。
+## 后续边界
 
-直接验证：`validate-track-grammar.R`、`validate-foundation-views.R` 与首批 Feature
-脚本通过。不运行 testthat。新增最小公开行为案例保留待正式发布授权后的包级执行。
-
-标签专项仍在本轮持续修正：已移除30标签/混合primer的隐式切换，短特征局部失败交给
-外围队列，长同位酶名按真实字体换行，按实际空间平衡接缝附近负载。首轮发现小画布
-物理迭代未收敛，旧“估计框零碰撞”不足以证明最终文字不重叠；正在用最终设备度量
-复核。139条真实酶切来源合并为同位标签，应报告 shared-label 成员，不误作隐藏。
-双语教学、参考翻译和网站仍在同步，当前不宣称整版已完成或已发布。
+Dotplot/Radial正式Coord、复杂跨面板Fusion、更多统计、字符级视图及语义放大属于
+后续系列，不冒充本版公开功能。本版完成后仍保留v0.17.0分支；批准整合main后才从
+整合后的主分支创建下一版分支。

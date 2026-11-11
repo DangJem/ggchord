@@ -33,11 +33,17 @@
 * Added opt-in `length_mode = "equal"`, with original lengths and projection
   factors in exports; a misleading shared absolute scale bar is rejected.
 * Default sequence ticks now retain positions 1 and length and adapt intermediate
-  positions to physical space. Circular seams combine the endpoint label.
+  positions to physical space. Scientific endpoints take precedence over nearby
+  rounded intermediate labels during overlap pruning. Circular seams combine
+  the endpoint label.
+  Flagship examples now use this one-based default instead of overriding it
+  with zero-based tick vectors.
 * Default ribbons retain Identity fills. Opt into endpoint sequence-colour
   interpolation with `gradient = TRUE`, or an optional subject taper. Explicit fill/mapping/scales take priority;
   `tip = "none"` keeps full ribbon fronts. Explicit pident uses a fixed 0–100
   domain and unequal 0/50/80/90/95/100 colour intervals and guide lengths.
+  Other automatically managed numeric pident mappings share the same domain
+  and six ticks; explicitly supplied scales retain priority.
 * Unified Feature input is also accepted by prepare, clean, focus and segment
   workflows. Existing positional gene inputs are retained.
 * Fixed generic legend key sizes collapsing the full Identity ruler: automatic
@@ -45,8 +51,10 @@
   per-role guide sizes remain authoritative.
 * Circular parallel axis labels now follow the arc character by character;
   horizontal/numeric orientations and linear layouts retain straight text.
-* Fixed upper circular callouts crossing to the wrong side under load balancing;
-  source-root meridians and measured upper capacity determine their placement.
+* Restored compact, layered origin fans where measured side-word widths and
+  canvas space permit. Tight canvases retain measured perimeter queues instead
+  of forcing the wide fan to collapse. Long enzyme names wrap where necessary;
+  spacious canvases retain their original single-line labels.
 * Circular outer labels now share one measured perimeter queue at every count;
   the former 30-label/primer switch is removed.
 

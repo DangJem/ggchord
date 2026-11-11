@@ -32,7 +32,7 @@ def responsive_image(key,lang,base='../assets',*,eager=False,css='',alt=None):
 def home_hero(lang,base):
     zh=lang=='zh'
     return ('<section class="home-hero"><div><p class="eyebrow">ggchord · R / ggplot2</p><h1 class="home-lead">'+
-        ('真实坐标，三种视角。' if zh else 'Real coordinates. Three perspectives.')+'</h1><p>'+
+        ('<span class="hero-phrase">真实坐标，</span><span class="hero-phrase">三种视角。</span>' if zh else 'Real coordinates. Three perspectives.')+'</h1><p>'+
         ('用弦图看序列联系，用共线性图比较结构，用圆图组织单序列注释。独立图层，同一套可复现的绘图语法。' if zh else 'Trace relationships with chord plots, compare structure with collinear views, and annotate a single sequence with circular maps. Independent layers. Reproducible figures.')+
         '</p><div class="home-actions"><a class="primary-action" href="installation.html">'+('从安装开始' if zh else 'Start with installation')+' →</a><a href="#choose">'+('选择绘图任务' if zh else 'Choose your task')+'</a></div></div>'+responsive_image('logo',lang,base,eager=True,css='brand-art')+'</section>')
 

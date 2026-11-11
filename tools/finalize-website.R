@@ -36,7 +36,7 @@ for(lang in c('en','zh')) {
     if(is.null(id)) next
     old_id <- xml2::xml_attr(menu,'id')
     xml2::xml_set_attr(menu,'id',id)
-    labelled <- xml2::xml_find_all(doc,'//*[@aria-labelledby]')
+    labelled <- xml2::xml_find_all(xml2::xml_parent(menu),'.//*[@aria-labelledby]')
     for(node in labelled) if(identical(xml2::xml_attr(node,'aria-labelledby'),old_id))
       xml2::xml_set_attr(node,'aria-labelledby',id)
   }
@@ -223,9 +223,6 @@ for(lang in c('en','zh')) {
    ' <a href="',prefix,'task-index.html">',if(lang=='zh')'任务索引' else 'Task index','</a></div></dialog>')))
   xml2::xml_set_attr(body,'data-lang',lang)
   xml2::xml_set_attr(body,'data-search',paste0(paste(rep('../',deep),collapse=''),'search.json'))
-  notice <- paste(version, if(lang == 'zh') '文档' else 'documentation')
-  if(!publication) notice<-paste(notice,if(lang=='zh')'· 本地预览，尚未部署' else '· local preview, not deployed')
-  xml2::xml_add_child(main,fragment(paste0('<div class="candidate-note">',notice,'</div>')),.where=0L)
   if(startsWith(relative,'reference/')) {
    info<-if(lang=='zh') '本页完整说明已译为现代汉语；函数、参数、代码和原始数据标识保留原样。' else 'Complete canonical API text; task articles explain the workflows.'
    link<-paste0(paste(rep('../',deep),collapse=''),'about.html')
@@ -261,6 +258,8 @@ for(lang in c('en','zh')) {
   for(table in xml2::xml_find_all(main,'.//table')) {
     container <- xml2::xml_parent(table)
     if(grepl('data-output',xml2::xml_attr(container,'class') %||% '')) next
+    if(length(xml2::xml_find_all(table,'(.//tr)[1]/*')) >= 4L)
+      xml2::xml_set_attr(table,'class',trimws(paste(xml2::xml_attr(table,'class') %||% '', 'wide-table')))
     wrapper <- fragment(paste0('<div class="table-scroll" role="region" tabindex="0" aria-label="',if(lang=='zh')'可横向滚动的表格' else 'Horizontally scrollable table','"></div>'))
     xml2::xml_add_sibling(table,wrapper,.where='before')
     xml2::xml_add_child(xml2::xml_find_first(table,'preceding-sibling::*[1]'),table)

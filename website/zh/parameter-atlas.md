@@ -66,6 +66,27 @@
 | `min_support` | `0.1` | 数值/整数；范围见说明 | 自动改变方向所需的最小不平衡程度，范围 [0, 1]。正反支持的差值绝对值除以总和，默认 0.1；平局始终视为未解决。 |
 | `segments` | `NULL` | 显式窗口/锚点表或已记录的等价输入 | 可选数据框，含唯一窗口 accver、row_id 及 orientation（1 或 -1），须声明全部显示 accession。每个窗口有独立局部坐标和可逆源元数据。 |
 | `segment_gap` | `100` | 数值/整数；范围见说明 | 提供 segments 时的正显示间隙，单位为 原生序列单位，默认 100，不表示基因组连续。 |
+| `seq_axis` | `c("horizontal", "vertical")` | 向量；候选/多选含义见说明 | "horizontal"（默认）或 "vertical"。纵向模式将序列局部几何投影为直立列，并独立保持文字可读方向，不改变源链。 |
+
+</details>
+
+<span id="api-coord_sankey"></span>
+<details><summary><code>coord_sankey()</code></summary>
+
+
+[完整参考](reference/coord_sankey.html)
+
+
+| 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
+| --- | --- | --- | --- |
+| `column_gap` | `3` | 数值/整数；范围见说明 | 两列骨架的正间距，使用布局单位。 |
+| `self_links` | `FALSE` | 逻辑值 | 是否显示 query 和 subject 实体相同的关系。 |
+| `ratio` | `1` | 数值/整数；范围见说明 | 固定 y/x 纵横比，默认 1。 |
+| `xlim` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 可选用户范围，显式范围优先于自动拟合范围。 |
+| `ylim` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 可选用户范围，显式范围优先于自动拟合范围。 |
+| `expand` | `FALSE` | 逻辑值 | 是否扩展坐标范围，默认 FALSE。自动拟合已含小幅安全边距；设为 TRUE 可再请求 ggplot2 坐标扩展。 |
+| `clip` | `"off"` | 字符/枚举；取值见说明 | 是否将绘图裁剪到 panel，默认 "off"。 |
+| `fit` | `c("labels", "geometry", "manual")` | 向量；候选/多选含义见说明 | 拟合策略："labels" 包含实测标签框，"geometry" 只拟合几何，"manual" 要求显式 xlim 和 ylim。 |
 
 </details>
 
@@ -82,7 +103,7 @@
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
 | --- | --- | --- | --- |
 | `mapping` | `NULL` | aes 映射 | 可选映射。accver、start、end、strand 等角色 aesthetic 可重命名输入列；普通视觉映射在生成几何后计算。 |
-| `data` | `NULL` | 表格/受支持对象；data 还可为函数 | 含 accver、start、end、strand 的数据框，可选 type、category、label。因子列 start/end 使用数值标签而非内部级别编码；坐标必须为有限数值。可提供 display_priority 或逻辑列 prioritized_display。也可用 directionality 或 direction 代替 strand，取值为 "forward"、"reverse"、"bidirectional"、"none"。 |
+| `data` | `NULL` | 表格/受支持对象；data 还可为函数 | 含 accver、start、end、strand 的数据框，可选 type、category、label。因子列 start/end 使用数值标签而非内部级别编码；坐标必须为有限数值。可提供 display_priority 或逻辑列 prioritized_display。也可用 directionality 或 direction 代替 strand，取值为 "forward"、"reverse"、"bidirectional"、"none"。 省略时使用构造函数的完整 feature_data（或兼容的 gene_data），其他图层不会从默认输入删除记录。 |
 | `shape` | `"arrow"` | 字符/枚举；取值见说明 | 固定注释形状。显式 shape 优先于 aes(feature_shape = ...)：支持 "arrow"、"compact_arrow"、"promoter_arrow"、"primer_arrow"、"marker"、"block"、"capped_line"、"primer_arc"、"chevron"、"lollipop"，默认 "arrow"。使用 aes(feature_shape = type) 与 scale_feature_shape_manual() 将类别映射为形状。 |
 | `width` | `NULL` | 几何数值/向量/已记录格式 | 可选数值、向量或列表，控制共享注释几何引擎的宽度。圆图中与标签组合时，基础宽度会在限定范围内响应最终字号。 |
 | `arrow_head_length` | `0.04` | 数值/整数；范围见说明 | 序列局部坐标中的箭头尺寸，与 geom_gene() 共用。arrow_head_width 大于 1 时形成凸出的块状箭头。 |
@@ -165,7 +186,7 @@
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
 | --- | --- | --- | --- |
 | `mapping` | `NULL` | aes 映射 | 可选映射。accver、start、end、strand 等角色 aesthetic 可重命名输入列；普通视觉映射在生成几何后计算。 |
-| `data` | `NULL` | 表格/受支持对象；data 还可为函数 | 含 accver、start、end、strand 的数据框，可选 type、category、label。因子列 start/end 使用数值标签而非内部级别编码；坐标必须为有限数值。可提供 display_priority 或逻辑列 prioritized_display。也可用 directionality 或 direction 代替 strand，取值为 "forward"、"reverse"、"bidirectional"、"none"。 |
+| `data` | `NULL` | 表格/受支持对象；data 还可为函数 | 含 accver、start、end、strand 的数据框，可选 type、category、label。因子列 start/end 使用数值标签而非内部级别编码；坐标必须为有限数值。可提供 display_priority 或逻辑列 prioritized_display。也可用 directionality 或 direction 代替 strand，取值为 "forward"、"reverse"、"bidirectional"、"none"。 省略时使用构造函数的完整 feature_data（或兼容的 gene_data），其他图层不会从默认输入删除记录。 |
 | `shape` | `"arrow"` | 字符/枚举；取值见说明 | 固定注释形状。显式 shape 优先于 aes(feature_shape = ...)：支持 "arrow"、"compact_arrow"、"promoter_arrow"、"primer_arrow"、"marker"、"block"、"capped_line"、"primer_arc"、"chevron"、"lollipop"，默认 "arrow"。使用 aes(feature_shape = type) 与 scale_feature_shape_manual() 将类别映射为形状。 |
 | `width` | `0.058` | 数值/整数；范围见说明 | 轨道宽度，默认对应桌面质粒编辑器常用的紧凑注释带。 |
 | `arrow_head_length` | `0.068` | 数值/整数；范围见说明 | 序列局部坐标中的箭头尺寸，与 geom_gene() 共用。arrow_head_width 大于 1 时形成凸出的块状箭头。 |
@@ -193,7 +214,7 @@
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
 | --- | --- | --- | --- |
 | `mapping` | `NULL` | aes 映射 | 默认 NULL，使用预计算数据。 |
-| `data` | `NULL` | 表格/受支持对象；data 还可为函数 | 默认 NULL，从布局自动获取。 |
+| `data` | `NULL` | 表格/受支持对象；data 还可为函数 | 可选图层表或数据函数，优先于构造数据。使用统一 feature_data 时，默认只选择明确分类的 gene/CDS 记录，见 ggchord()。旧 gene_data 保留全部行。 |
 | `width` | `NULL` | 几何数值/向量/已记录格式 | 可选数值、向量或列表，基因箭头宽度，默认 0.05。 |
 | `arrow_head_length` | `0.04` | 数值/整数；范围见说明 | 序列局部坐标中的共享箭头尺寸。 |
 | `arrow_head_width` | `1` | 数值/整数；范围见说明 | 序列局部坐标中的共享箭头尺寸。 |
@@ -216,7 +237,7 @@
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
 | --- | --- | --- | --- |
 | `mapping` | `NULL` | aes 映射 | 默认 NULL，使用预计算数据。 |
-| `data` | `NULL` | 表格/受支持对象；data 还可为函数 | 默认 NULL，从布局自动获取。 |
+| `data` | `NULL` | 表格/受支持对象；data 还可为函数 | 可选图层表或数据函数，默认数据按 ggchord() 所述选择 gene/CDS。 |
 | `label_orientation` | `"horizontal"` | 字符/枚举；取值见说明 | 文字相对序列路径的方向，默认 "horizontal"，支持 "radial"、"tangent" 或 "horizontal"。 |
 | `label_side` | `"outside"` | 字符/枚举；取值见说明 | 标签侧向，默认 "outside"。可放在弦图外侧、按链选择 "auto" 侧，或强制 "inside"。 |
 | `label_overlap` | `"hide"` | 字符/枚举；取值见说明 | 固定标签碰撞策略，默认 "hide"。"hide" 省略后出现的冲突标签，"nudge" 小幅移动位置，"allow" 保留全部请求位置。因此 "hide" 模式下可通过输入行顺序设置优先级。 |
@@ -242,7 +263,7 @@
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
 | --- | --- | --- | --- |
 | `mapping` | `NULL` | aes 映射 | 默认 NULL，使用预计算数据。 |
-| `data` | `NULL` | 表格/受支持对象；data 还可为函数 | 默认 NULL，从布局自动获取。 |
+| `data` | `NULL` | 表格/受支持对象；data 还可为函数 | 可选图层表或数据函数，默认数据按 ggchord() 所述选择 gene/CDS。 |
 | `label_layout` | `"radial"` | 字符/枚举；取值见说明 | 标签布局，默认 "radial"。"radial" 沿序列相对轮廓排列水平外部文字，引导线沿法线直出；移位时先沿法线短出，再用长线连接。"auto" 在左右共享竖列，其余位置使用径向布局。"arc" 沿序列切线旋转文字。旧 "aligned" 模式已删除，侧列请使用 "auto"。 |
 | `label_wrap` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 数值或 NULL，默认 NULL。按指定字符数（如 15）对长基因注释换行，覆盖 label_fit。 |
 | `label_fit` | `"wrap"` | 字符/枚举；取值见说明 | 文字适配方式，默认 "wrap"，在确定性布局前处理拥挤或过宽的初始框。"wrap" 换行保留完整注释，"ellipsis" 缩成一行，"auto" 换行且仅超过 label_max_lines 时加省略号，"none" 关闭自适应。显式 "shrink" 优先内部放置，完整文字最多缩小到 label_min_size。仍无法容纳时，按现有策略以请求字号移到旁边/外侧或隐藏。该选项使用注释布局，而不是 label_layout 选择的外部布局；其他适配方式不变。 |
@@ -285,6 +306,8 @@
 | `position` | `"identity"` | 字符/枚举；取值见说明 | 标准 ggplot2 图层参数。 |
 | `show.legend` | `NA` | R 对象；约束见说明 | 标准 ggplot2 图层参数。 |
 | `inherit.aes` | `FALSE` | 逻辑值 | 标准 ggplot2 图层参数。 |
+| `between` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 两个显示实例名称或声明顺序序号。 |
+| `allow_repeated` | `FALSE` | 逻辑值 | 允许显式声明的 source_hsp_id 被重复显示。 |
 | `...` | `必需/互斥入口，见说明` | 上游转发参数 | 其他路径参数。 |
 
 </details>
@@ -305,7 +328,7 @@
 | `link_avoid` | `c("uniform", "none", "smooth")` | 向量；候选/多选含义见说明 | 避障方式："uniform"（默认）、"none" 或 "smooth"。平滑方式局部调整，统一方式在整个端点采用同一间距。 |
 | `link_branch` | `c("none", "query", "subject")` | 向量；候选/多选含义见说明 | 共享相同 query 或 subject 端点："none"、"query"、"subject"。 |
 | `link_branch_fraction` | `0.15` | 数值/整数；范围见说明 | 共享段相对最短成员的长度比例，范围 (0, 0.5]。 |
-| `fill` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 可选固定填色，NULL 保留默认的相似度映射。 |
+| `fill` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 可选的固定 Ribbon 填充色。NULL 使用默认 Identity 填充。 |
 | `alpha` | `0.42` | 数值/整数；范围见说明 | 标准固定样式。显式值优先于对应映射；省略的默认值不会阻止用户映射。例如映射 ribbon_alpha 时应省略 alpha。 |
 | `colour` | `"#59636D"` | 字符/枚举；取值见说明 | 标准固定样式。显式值优先于对应映射；省略的默认值不会阻止用户映射。例如映射 ribbon_alpha 时应省略 alpha。 |
 | `linewidth` | `0.08` | 数值/整数；范围见说明 | 标准固定样式。显式值优先于对应映射；省略的默认值不会阻止用户映射。例如映射 ribbon_alpha 时应省略 alpha。 |
@@ -316,6 +339,10 @@
 | `show.legend` | `TRUE` | 逻辑值 | 标准 ggplot2 图层参数。 |
 | `inherit.aes` | `FALSE` | 逻辑值 | 标准 ggplot2 图层参数。 |
 | `nonadjacent_linewidth` | `0.4` | 数值/整数；范围见说明 | 共线性布局 coord_collinear() 中非相邻显示行的固定边框线宽，默认 0.4 mm。这些连接带默认使用虚线。设为 0 时，所有连接带沿用普通 linewidth。此参数只控制线宽，不改变线型；显式 aes(linewidth = ...) 映射优先。 |
+| `between` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 两个显示实例名称或声明序号，用于确定唯一路由。 |
+| `allow_repeated` | `FALSE` | 逻辑值 | 显式允许声明的 source_hsp_id 出现在多个显示关系中。 |
+| `tip` | `c("none", "subject")` | 向量；候选/多选含义见说明 | 默认 none 保留完整区间端面；也可选择 subject 端收尖。肩部在通道 88% 处保留平移后的目标端点跨度。尖点是端面中点的装饰标记，不代表单个匹配碱基或生物转移方向。退化端面会警告并恢复完整端面。源区间保持不变。 |
+| `gradient` | `FALSE` | 逻辑值 | 逻辑值。显式启用端点序列色插值，默认 FALSE。显式 fill、映射和标度仍然优先。 |
 | `...` | `必需/互斥入口，见说明` | 上游转发参数 | 传给 geom_polygon() 的其他参数。 |
 
 </details>
@@ -406,7 +433,7 @@
 | --- | --- | --- | --- |
 | `mapping` | `NULL` | aes 映射 | 默认 NULL，使用预计算数据。 |
 | `data` | `NULL` | 表格/受支持对象；data 还可为函数 | 默认 NULL，从布局自动获取。 |
-| `seq_order` | `NULL` | 几何数值/向量/已记录格式 | 可选字符向量，指定序列绘制顺序。 |
+| `seq_order` | `NULL` | 几何数值/向量/已记录格式 | 显示顺序中的来源 ID，重复值创建显示实例。可使用 c(A_high='A', B='B', A_low='A') 这样的名称稳定标识实例。重复实体的 HSP 要求每个连接层提供唯一 between 路由。 |
 | `seq_orientation` | `NULL` | 几何数值/向量/已记录格式 | 可选数值 1 或 -1，序列方向，默认 1。 |
 | `seq_gap` | `NULL` | 几何数值/向量/已记录格式 | 可选数值，序列间隙比例；弦图默认 0.03。在 coord_collinear() 中表示相邻骨架间距相对最长骨架宽度的正比例，默认 0.3；线性布局不使用最后一条序列的 gap。分段线性图以最长显示行衡量，同一行窗口须使用相同 gap，只有行间间隙影响纵向位置。可按序列 ID 命名以指定其后的间隙，未列出的序列使用相应坐标默认值。 |
 | `seq_radius` | `NULL` | 几何数值/向量/已记录格式 | 可选正数，序列弧半径，默认 1.0。 |
@@ -418,6 +445,7 @@
 | `position` | `"identity"` | 字符/枚举；取值见说明 | 标准 ggplot2 图层参数。 |
 | `show.legend` | `TRUE` | 逻辑值 | 标准 ggplot2 图层参数。 |
 | `inherit.aes` | `FALSE` | 逻辑值 | 标准 ggplot2 图层参数。 |
+| `length_mode` | `c("proportional", "equal")` | 向量；候选/多选含义见说明 | "proportional"（默认）保留源长度比例；"equal" 为各显示序列分配相同角度或直线跨度，不修改源长度。多序列 equal 模式不能使用共享绝对比例尺，局部轴保留源单位。 |
 | `...` | `必需/互斥入口，见说明` | 上游转发参数 | 其他固定路径 aesthetic。colour（或 color）设置 seq_colour。显式固定值优先于对应映射；要保留映射请省略固定参数。 |
 
 </details>
@@ -542,28 +570,70 @@
 
 </details>
 
-<span id="api-geom_track_bar"></span>
-<details><summary><code>geom_track_bar()</code></summary>
+<span id="api-geom_track"></span>
+<details><summary><code>geom_track()</code></summary>
 
 
-[完整参考](reference/geom_track_tile.html)
+[完整参考](reference/geom_track.html)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
 | --- | --- | --- | --- |
-| `mapping` | `NULL` | aes 映射 | 标准 ggplot2 映射与图层输入。 |
-| `data` | `NULL` | 表格/受支持对象；data 还可为函数 | 标准 ggplot2 映射与图层输入。 |
-| `position` | `必需/互斥入口，见说明` | Position 对象或已记录的字符串 | 每层必须提供 position_track() 声明。 |
-| `baseline` | `0` | 数值/整数；范围见说明 | 显式数值柱基线，默认零；参与标度训练，须在限制/变换下仍可表达。 |
-| `fill` | `"#86AFB9"` | 字符/枚举；取值见说明 | 固定样式；填色和颜色映射使用专用轨道角色及作用域标度。 |
-| `colour` | `NA` | R 对象；约束见说明 | 固定样式；填色和颜色映射使用专用轨道角色及作用域标度。 |
-| `alpha` | `1` | 数值/整数；范围见说明 | 固定样式；填色和颜色映射使用专用轨道角色及作用域标度。 |
-| `linewidth` | `0.25` | 数值/整数；范围见说明 | 固定样式；填色和颜色映射使用专用轨道角色及作用域标度。 |
-| `linetype` | `1` | 数值/整数；范围见说明 | 固定样式；填色和颜色映射使用专用轨道角色及作用域标度。 |
-| `bounds` | `c("error", "clip")` | 向量；候选/多选含义见说明 | 基因组坐标策略为 "error"（默认）或 "clip"。裁剪会报告，不改变源值。 |
-| `show.legend` | `NA` | R 对象；约束见说明 | 标准图层参数。 |
-| `inherit.aes` | `FALSE` | 逻辑值 | 标准图层参数。 |
-| `...` | `必需/互斥入口，见说明` | 上游转发参数 | 其他几何参数。 |
+| `mapping` | `NULL` | aes 映射 | 标准图层输入。提供 accver，以及 x/pos 源位置或 start/end 区间；给定数值映射到 y/track_value。 |
+| `data` | `NULL` | 表格/受支持对象；data 还可为函数 | 标准图层输入。提供 accver，以及 x/pos 源位置或 start/end 区间；给定数值映射到 y/track_value。 |
+| `geom` | `"point"` | 字符/枚举；取值见说明 | 原生几何与统计名称，bar 默认 count，col 及其他几何默认 identity。 |
+| `stat` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 原生几何与统计名称，bar 默认 count，col 及其他几何默认 identity。 |
+| `track` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 物理 position_track() 声明。 |
+| `position` | `NULL` | Position 对象或已记录的字符串 | identity、stack、dodge 等数据 Position；旧 position=position_track(...) 写法仍声明物理 band。 |
+| `bounds` | `c("error", "clip")` | 向量；候选/多选含义见说明 | 坐标报错或裁剪策略。 |
+| `baseline` | `0` | 数值/整数；范围见说明 | 给定数值柱的基线，非零值要求 position='identity'，避免堆叠改变其含义。 |
+| `show.legend` | `NA` | R 对象；约束见说明 | 标准图层控制参数。 |
+| `inherit.aes` | `FALSE` | 逻辑值 | 标准图层控制参数。 |
+| `...` | `必需/互斥入口，见说明` | 上游转发参数 | 原生 geom/stat 参数和固定样式。 |
+
+</details>
+
+<span id="api-geom_track_bar"></span>
+<details><summary><code>geom_track_bar()</code></summary>
+
+
+[完整参考](reference/geom_track.html)
+
+
+| 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
+| --- | --- | --- | --- |
+| `mapping` | `NULL` | aes 映射 | 标准图层输入。提供 accver，以及 x/pos 源位置或 start/end 区间；给定数值映射到 y/track_value。 |
+| `data` | `NULL` | 表格/受支持对象；data 还可为函数 | 标准图层输入。提供 accver，以及 x/pos 源位置或 start/end 区间；给定数值映射到 y/track_value。 |
+| `position` | `NULL` | Position 对象或已记录的字符串 | identity、stack、dodge 等数据 Position；旧 position=position_track(...) 写法仍声明物理 band。 |
+| `baseline` | `0` | 数值/整数；范围见说明 | 给定数值柱的基线，非零值要求 position='identity'，避免堆叠改变其含义。 |
+| `fill` | `"#86AFB9"` | 字符/枚举；取值见说明 | 计数快捷层的固定样式。 |
+| `colour` | `NA` | R 对象；约束见说明 | 计数快捷层的固定样式。 |
+| `alpha` | `1` | 数值/整数；范围见说明 | 计数快捷层的固定样式。 |
+| `linewidth` | `0.25` | 数值/整数；范围见说明 | 计数快捷层的固定样式。 |
+| `linetype` | `1` | 数值/整数；范围见说明 | 计数快捷层的固定样式。 |
+| `bounds` | `c("error", "clip")` | 向量；候选/多选含义见说明 | 坐标报错或裁剪策略。 |
+| `show.legend` | `NA` | R 对象；约束见说明 | 标准图层控制参数。 |
+| `inherit.aes` | `FALSE` | 逻辑值 | 标准图层控制参数。 |
+| `...` | `必需/互斥入口，见说明` | 上游转发参数 | 原生 geom/stat 参数和固定样式。 |
+
+</details>
+
+<span id="api-geom_track_col"></span>
+<details><summary><code>geom_track_col()</code></summary>
+
+
+[完整参考](reference/geom_track.html)
+
+
+| 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
+| --- | --- | --- | --- |
+| `mapping` | `NULL` | aes 映射 | 标准图层输入。提供 accver，以及 x/pos 源位置或 start/end 区间；给定数值映射到 y/track_value。 |
+| `data` | `NULL` | 表格/受支持对象；data 还可为函数 | 标准图层输入。提供 accver，以及 x/pos 源位置或 start/end 区间；给定数值映射到 y/track_value。 |
+| `position` | `NULL` | Position 对象或已记录的字符串 | identity、stack、dodge 等数据 Position；旧 position=position_track(...) 写法仍声明物理 band。 |
+| `track` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 物理 position_track() 声明。 |
+| `...` | `必需/互斥入口，见说明` | 上游转发参数 | 原生 geom/stat 参数和固定样式。 |
+| `show.legend` | `NA` | R 对象；约束见说明 | 标准图层控制参数。 |
+| `inherit.aes` | `FALSE` | 逻辑值 | 标准图层控制参数。 |
 
 </details>
 
@@ -1321,7 +1391,7 @@
 | `axis.ticks.length` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 控制轴间距的单个绝对 grid::unit() 值。负 axis.gap 将圆图轴放在骨架内侧，正值放在外侧。零将刻度附着于骨架内缘，是圆图和质粒主题的默认值。圆图主/次刻度默认长 1.5/0.7 mm，质粒主题为 2.2/0.8 mm；对应默认线宽为 0.45/0.3 mm 和 0.6/0.35 mm。显式长度及线条样式优先。 |
 | `axis.minor.ticks.length` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 控制轴间距的单个绝对 grid::unit() 值。负 axis.gap 将圆图轴放在骨架内侧，正值放在外侧。零将刻度附着于骨架内缘，是圆图和质粒主题的默认值。圆图主/次刻度默认长 1.5/0.7 mm，质粒主题为 2.2/0.8 mm；对应默认线宽为 0.45/0.3 mm 和 0.6/0.35 mm。显式长度及线条样式优先。 |
 | `axis.text.offset` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 控制轴间距的单个绝对 grid::unit() 值。负 axis.gap 将圆图轴放在骨架内侧，正值放在外侧。零将刻度附着于骨架内缘，是圆图和质粒主题的默认值。圆图主/次刻度默认长 1.5/0.7 mm，质粒主题为 2.2/0.8 mm；对应默认线宽为 0.45/0.3 mm 和 0.6/0.35 mm。显式长度及线条样式优先。 |
-| `axis.text.orientation` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 支持 "horizontal"、"parallel"、"perpendicular" 或有限数值角度。 |
+| `axis.text.orientation` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 取"horizontal"、"parallel"、"perpendicular"或有限数值角度。圆形布局的 parallel 文字逐字符沿圆弧排列；水平和数值角度保留直线文字。 |
 | `axis.text.check.overlap` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 是否隐藏重叠坐标轴标签，默认启用。 |
 | `seq.label` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 序列、基因、通用注释、酶切及圆图中心标签的文字元素。 |
 | `gene.label` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 序列、基因、通用注释、酶切及圆图中心标签的文字元素。 |
@@ -1338,9 +1408,9 @@
 | `legend.seq.direction` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例方向。 |
 | `legend.seq.background` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例背景。 |
 | `legend.seq.key` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键元素。 |
-| `legend.seq.key.size` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
-| `legend.seq.key.width` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
-| `legend.seq.key.height` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
+| `legend.seq.key.size` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
+| `legend.seq.key.width` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
+| `legend.seq.key.height` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
 | `legend.seq.text` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例文字元素。 |
 | `legend.seq.text.position` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例文字位置。 |
 | `legend.seq.title` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例标题元素。 |
@@ -1366,9 +1436,9 @@
 | `legend.ribbon.direction` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例方向。 |
 | `legend.ribbon.background` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例背景。 |
 | `legend.ribbon.key` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键元素。 |
-| `legend.ribbon.key.size` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
-| `legend.ribbon.key.width` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
-| `legend.ribbon.key.height` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
+| `legend.ribbon.key.size` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
+| `legend.ribbon.key.width` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
+| `legend.ribbon.key.height` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
 | `legend.ribbon.text` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例文字元素。 |
 | `legend.ribbon.text.position` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例文字位置。 |
 | `legend.ribbon.title` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例标题元素。 |
@@ -1383,9 +1453,9 @@
 | `legend.gene.direction` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例方向。 |
 | `legend.gene.background` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例背景。 |
 | `legend.gene.key` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键元素。 |
-| `legend.gene.key.size` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
-| `legend.gene.key.width` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
-| `legend.gene.key.height` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
+| `legend.gene.key.size` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
+| `legend.gene.key.width` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
+| `legend.gene.key.height` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
 | `legend.gene.text` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例文字元素。 |
 | `legend.gene.text.position` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例文字位置。 |
 | `legend.gene.title` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例标题元素。 |
@@ -1397,9 +1467,9 @@
 | `legend.feature.direction` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例方向。 |
 | `legend.feature.background` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例背景。 |
 | `legend.feature.key` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键元素。 |
-| `legend.feature.key.size` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
-| `legend.feature.key.width` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
-| `legend.feature.key.height` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
+| `legend.feature.key.size` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
+| `legend.feature.key.width` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
+| `legend.feature.key.height` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
 | `legend.feature.text` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例文字元素。 |
 | `legend.feature.text.position` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例文字位置。 |
 | `legend.feature.title` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例标题元素。 |
@@ -1411,9 +1481,9 @@
 | `legend.region.direction` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例方向。 |
 | `legend.region.background` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例背景。 |
 | `legend.region.key` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键元素。 |
-| `legend.region.key.size` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
-| `legend.region.key.width` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
-| `legend.region.key.height` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
+| `legend.region.key.size` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
+| `legend.region.key.width` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
+| `legend.region.key.height` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
 | `legend.region.text` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例文字元素。 |
 | `legend.region.text.position` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例文字位置。 |
 | `legend.region.title` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例标题元素。 |
@@ -1442,7 +1512,7 @@
 | `axis.ticks.length` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 控制轴间距的单个绝对 grid::unit() 值。负 axis.gap 将圆图轴放在骨架内侧，正值放在外侧。零将刻度附着于骨架内缘，是圆图和质粒主题的默认值。圆图主/次刻度默认长 1.5/0.7 mm，质粒主题为 2.2/0.8 mm；对应默认线宽为 0.45/0.3 mm 和 0.6/0.35 mm。显式长度及线条样式优先。 |
 | `axis.minor.ticks.length` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 控制轴间距的单个绝对 grid::unit() 值。负 axis.gap 将圆图轴放在骨架内侧，正值放在外侧。零将刻度附着于骨架内缘，是圆图和质粒主题的默认值。圆图主/次刻度默认长 1.5/0.7 mm，质粒主题为 2.2/0.8 mm；对应默认线宽为 0.45/0.3 mm 和 0.6/0.35 mm。显式长度及线条样式优先。 |
 | `axis.text.offset` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 控制轴间距的单个绝对 grid::unit() 值。负 axis.gap 将圆图轴放在骨架内侧，正值放在外侧。零将刻度附着于骨架内缘，是圆图和质粒主题的默认值。圆图主/次刻度默认长 1.5/0.7 mm，质粒主题为 2.2/0.8 mm；对应默认线宽为 0.45/0.3 mm 和 0.6/0.35 mm。显式长度及线条样式优先。 |
-| `axis.text.orientation` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 支持 "horizontal"、"parallel"、"perpendicular" 或有限数值角度。 |
+| `axis.text.orientation` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 取"horizontal"、"parallel"、"perpendicular"或有限数值角度。圆形布局的 parallel 文字逐字符沿圆弧排列；水平和数值角度保留直线文字。 |
 | `axis.text.check.overlap` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 是否隐藏重叠坐标轴标签，默认启用。 |
 | `seq.label` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 序列、基因、通用注释、酶切及圆图中心标签的文字元素。 |
 | `gene.label` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 序列、基因、通用注释、酶切及圆图中心标签的文字元素。 |
@@ -1459,9 +1529,9 @@
 | `legend.seq.direction` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例方向。 |
 | `legend.seq.background` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例背景。 |
 | `legend.seq.key` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键元素。 |
-| `legend.seq.key.size` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
-| `legend.seq.key.width` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
-| `legend.seq.key.height` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
+| `legend.seq.key.size` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
+| `legend.seq.key.width` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
+| `legend.seq.key.height` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
 | `legend.seq.text` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例文字元素。 |
 | `legend.seq.text.position` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例文字位置。 |
 | `legend.seq.title` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例标题元素。 |
@@ -1487,9 +1557,9 @@
 | `legend.ribbon.direction` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例方向。 |
 | `legend.ribbon.background` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例背景。 |
 | `legend.ribbon.key` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键元素。 |
-| `legend.ribbon.key.size` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
-| `legend.ribbon.key.width` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
-| `legend.ribbon.key.height` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
+| `legend.ribbon.key.size` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
+| `legend.ribbon.key.width` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
+| `legend.ribbon.key.height` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
 | `legend.ribbon.text` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例文字元素。 |
 | `legend.ribbon.text.position` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例文字位置。 |
 | `legend.ribbon.title` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例标题元素。 |
@@ -1504,9 +1574,9 @@
 | `legend.gene.direction` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例方向。 |
 | `legend.gene.background` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例背景。 |
 | `legend.gene.key` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键元素。 |
-| `legend.gene.key.size` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
-| `legend.gene.key.width` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
-| `legend.gene.key.height` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
+| `legend.gene.key.size` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
+| `legend.gene.key.width` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
+| `legend.gene.key.height` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
 | `legend.gene.text` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例文字元素。 |
 | `legend.gene.text.position` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例文字位置。 |
 | `legend.gene.title` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例标题元素。 |
@@ -1518,9 +1588,9 @@
 | `legend.feature.direction` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例方向。 |
 | `legend.feature.background` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例背景。 |
 | `legend.feature.key` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键元素。 |
-| `legend.feature.key.size` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
-| `legend.feature.key.width` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
-| `legend.feature.key.height` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
+| `legend.feature.key.size` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
+| `legend.feature.key.width` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
+| `legend.feature.key.height` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
 | `legend.feature.text` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例文字元素。 |
 | `legend.feature.text.position` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例文字位置。 |
 | `legend.feature.title` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例标题元素。 |
@@ -1532,9 +1602,9 @@
 | `legend.region.direction` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例方向。 |
 | `legend.region.background` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例背景。 |
 | `legend.region.key` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键元素。 |
-| `legend.region.key.size` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
-| `legend.region.key.width` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
-| `legend.region.key.height` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
+| `legend.region.key.size` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
+| `legend.region.key.width` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
+| `legend.region.key.height` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
 | `legend.region.text` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例文字元素。 |
 | `legend.region.text.position` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例文字位置。 |
 | `legend.region.title` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例标题元素。 |
@@ -1563,7 +1633,7 @@
 | `axis.ticks.length` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 控制轴间距的单个绝对 grid::unit() 值。负 axis.gap 将圆图轴放在骨架内侧，正值放在外侧。零将刻度附着于骨架内缘，是圆图和质粒主题的默认值。圆图主/次刻度默认长 1.5/0.7 mm，质粒主题为 2.2/0.8 mm；对应默认线宽为 0.45/0.3 mm 和 0.6/0.35 mm。显式长度及线条样式优先。 |
 | `axis.minor.ticks.length` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 控制轴间距的单个绝对 grid::unit() 值。负 axis.gap 将圆图轴放在骨架内侧，正值放在外侧。零将刻度附着于骨架内缘，是圆图和质粒主题的默认值。圆图主/次刻度默认长 1.5/0.7 mm，质粒主题为 2.2/0.8 mm；对应默认线宽为 0.45/0.3 mm 和 0.6/0.35 mm。显式长度及线条样式优先。 |
 | `axis.text.offset` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 控制轴间距的单个绝对 grid::unit() 值。负 axis.gap 将圆图轴放在骨架内侧，正值放在外侧。零将刻度附着于骨架内缘，是圆图和质粒主题的默认值。圆图主/次刻度默认长 1.5/0.7 mm，质粒主题为 2.2/0.8 mm；对应默认线宽为 0.45/0.3 mm 和 0.6/0.35 mm。显式长度及线条样式优先。 |
-| `axis.text.orientation` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 支持 "horizontal"、"parallel"、"perpendicular" 或有限数值角度。 |
+| `axis.text.orientation` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 取"horizontal"、"parallel"、"perpendicular"或有限数值角度。圆形布局的 parallel 文字逐字符沿圆弧排列；水平和数值角度保留直线文字。 |
 | `axis.text.check.overlap` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 是否隐藏重叠坐标轴标签，默认启用。 |
 | `seq.label` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 序列、基因、通用注释、酶切及圆图中心标签的文字元素。 |
 | `gene.label` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 序列、基因、通用注释、酶切及圆图中心标签的文字元素。 |
@@ -1580,9 +1650,9 @@
 | `legend.seq.direction` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例方向。 |
 | `legend.seq.background` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例背景。 |
 | `legend.seq.key` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键元素。 |
-| `legend.seq.key.size` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
-| `legend.seq.key.width` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
-| `legend.seq.key.height` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
+| `legend.seq.key.size` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
+| `legend.seq.key.width` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
+| `legend.seq.key.height` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
 | `legend.seq.text` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例文字元素。 |
 | `legend.seq.text.position` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例文字位置。 |
 | `legend.seq.title` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例标题元素。 |
@@ -1608,9 +1678,9 @@
 | `legend.ribbon.direction` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例方向。 |
 | `legend.ribbon.background` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例背景。 |
 | `legend.ribbon.key` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键元素。 |
-| `legend.ribbon.key.size` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
-| `legend.ribbon.key.width` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
-| `legend.ribbon.key.height` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
+| `legend.ribbon.key.size` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
+| `legend.ribbon.key.width` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
+| `legend.ribbon.key.height` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
 | `legend.ribbon.text` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例文字元素。 |
 | `legend.ribbon.text.position` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例文字位置。 |
 | `legend.ribbon.title` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例标题元素。 |
@@ -1625,9 +1695,9 @@
 | `legend.gene.direction` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例方向。 |
 | `legend.gene.background` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例背景。 |
 | `legend.gene.key` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键元素。 |
-| `legend.gene.key.size` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
-| `legend.gene.key.width` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
-| `legend.gene.key.height` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
+| `legend.gene.key.size` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
+| `legend.gene.key.width` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
+| `legend.gene.key.height` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
 | `legend.gene.text` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例文字元素。 |
 | `legend.gene.text.position` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例文字位置。 |
 | `legend.gene.title` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例标题元素。 |
@@ -1639,9 +1709,9 @@
 | `legend.feature.direction` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例方向。 |
 | `legend.feature.background` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例背景。 |
 | `legend.feature.key` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键元素。 |
-| `legend.feature.key.size` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
-| `legend.feature.key.width` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
-| `legend.feature.key.height` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
+| `legend.feature.key.size` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
+| `legend.feature.key.width` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
+| `legend.feature.key.height` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
 | `legend.feature.text` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例文字元素。 |
 | `legend.feature.text.position` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例文字位置。 |
 | `legend.feature.title` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例标题元素。 |
@@ -1653,9 +1723,9 @@
 | `legend.region.direction` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例方向。 |
 | `legend.region.background` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例背景。 |
 | `legend.region.key` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键元素。 |
-| `legend.region.key.size` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
-| `legend.region.key.width` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
-| `legend.region.key.height` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
+| `legend.region.key.size` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
+| `legend.region.key.width` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
+| `legend.region.key.height` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
 | `legend.region.text` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例文字元素。 |
 | `legend.region.text.position` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例文字位置。 |
 | `legend.region.title` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例标题元素。 |
@@ -1684,7 +1754,7 @@
 | `axis.ticks.length` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 控制轴间距的单个绝对 grid::unit() 值。负 axis.gap 将圆图轴放在骨架内侧，正值放在外侧。零将刻度附着于骨架内缘，是圆图和质粒主题的默认值。圆图主/次刻度默认长 1.5/0.7 mm，质粒主题为 2.2/0.8 mm；对应默认线宽为 0.45/0.3 mm 和 0.6/0.35 mm。显式长度及线条样式优先。 |
 | `axis.minor.ticks.length` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 控制轴间距的单个绝对 grid::unit() 值。负 axis.gap 将圆图轴放在骨架内侧，正值放在外侧。零将刻度附着于骨架内缘，是圆图和质粒主题的默认值。圆图主/次刻度默认长 1.5/0.7 mm，质粒主题为 2.2/0.8 mm；对应默认线宽为 0.45/0.3 mm 和 0.6/0.35 mm。显式长度及线条样式优先。 |
 | `axis.text.offset` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 控制轴间距的单个绝对 grid::unit() 值。负 axis.gap 将圆图轴放在骨架内侧，正值放在外侧。零将刻度附着于骨架内缘，是圆图和质粒主题的默认值。圆图主/次刻度默认长 1.5/0.7 mm，质粒主题为 2.2/0.8 mm；对应默认线宽为 0.45/0.3 mm 和 0.6/0.35 mm。显式长度及线条样式优先。 |
-| `axis.text.orientation` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 支持 "horizontal"、"parallel"、"perpendicular" 或有限数值角度。 |
+| `axis.text.orientation` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 取"horizontal"、"parallel"、"perpendicular"或有限数值角度。圆形布局的 parallel 文字逐字符沿圆弧排列；水平和数值角度保留直线文字。 |
 | `axis.text.check.overlap` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 是否隐藏重叠坐标轴标签，默认启用。 |
 | `seq.label` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 序列、基因、通用注释、酶切及圆图中心标签的文字元素。 |
 | `gene.label` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 序列、基因、通用注释、酶切及圆图中心标签的文字元素。 |
@@ -1701,9 +1771,9 @@
 | `legend.seq.direction` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例方向。 |
 | `legend.seq.background` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例背景。 |
 | `legend.seq.key` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键元素。 |
-| `legend.seq.key.size` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
-| `legend.seq.key.width` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
-| `legend.seq.key.height` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
+| `legend.seq.key.size` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
+| `legend.seq.key.width` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
+| `legend.seq.key.height` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
 | `legend.seq.text` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例文字元素。 |
 | `legend.seq.text.position` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例文字位置。 |
 | `legend.seq.title` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例标题元素。 |
@@ -1729,9 +1799,9 @@
 | `legend.ribbon.direction` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例方向。 |
 | `legend.ribbon.background` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例背景。 |
 | `legend.ribbon.key` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键元素。 |
-| `legend.ribbon.key.size` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
-| `legend.ribbon.key.width` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
-| `legend.ribbon.key.height` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
+| `legend.ribbon.key.size` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
+| `legend.ribbon.key.width` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
+| `legend.ribbon.key.height` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
 | `legend.ribbon.text` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例文字元素。 |
 | `legend.ribbon.text.position` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例文字位置。 |
 | `legend.ribbon.title` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例标题元素。 |
@@ -1746,9 +1816,9 @@
 | `legend.gene.direction` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例方向。 |
 | `legend.gene.background` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例背景。 |
 | `legend.gene.key` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键元素。 |
-| `legend.gene.key.size` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
-| `legend.gene.key.width` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
-| `legend.gene.key.height` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
+| `legend.gene.key.size` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
+| `legend.gene.key.width` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
+| `legend.gene.key.height` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
 | `legend.gene.text` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例文字元素。 |
 | `legend.gene.text.position` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例文字位置。 |
 | `legend.gene.title` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例标题元素。 |
@@ -1760,9 +1830,9 @@
 | `legend.feature.direction` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例方向。 |
 | `legend.feature.background` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例背景。 |
 | `legend.feature.key` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键元素。 |
-| `legend.feature.key.size` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
-| `legend.feature.key.width` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
-| `legend.feature.key.height` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
+| `legend.feature.key.size` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
+| `legend.feature.key.width` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
+| `legend.feature.key.height` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
 | `legend.feature.text` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例文字元素。 |
 | `legend.feature.text.position` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例文字位置。 |
 | `legend.feature.title` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例标题元素。 |
@@ -1774,9 +1844,9 @@
 | `legend.region.direction` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例方向。 |
 | `legend.region.background` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例背景。 |
 | `legend.region.key` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键元素。 |
-| `legend.region.key.size` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
-| `legend.region.key.width` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
-| `legend.region.key.height` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
+| `legend.region.key.size` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
+| `legend.region.key.width` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
+| `legend.region.key.height` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
 | `legend.region.text` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例文字元素。 |
 | `legend.region.text.position` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例文字位置。 |
 | `legend.region.title` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例标题元素。 |
@@ -1805,7 +1875,7 @@
 | `axis.ticks.length` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 控制轴间距的单个绝对 grid::unit() 值。负 axis.gap 将圆图轴放在骨架内侧，正值放在外侧。零将刻度附着于骨架内缘，是圆图和质粒主题的默认值。圆图主/次刻度默认长 1.5/0.7 mm，质粒主题为 2.2/0.8 mm；对应默认线宽为 0.45/0.3 mm 和 0.6/0.35 mm。显式长度及线条样式优先。 |
 | `axis.minor.ticks.length` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 控制轴间距的单个绝对 grid::unit() 值。负 axis.gap 将圆图轴放在骨架内侧，正值放在外侧。零将刻度附着于骨架内缘，是圆图和质粒主题的默认值。圆图主/次刻度默认长 1.5/0.7 mm，质粒主题为 2.2/0.8 mm；对应默认线宽为 0.45/0.3 mm 和 0.6/0.35 mm。显式长度及线条样式优先。 |
 | `axis.text.offset` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 控制轴间距的单个绝对 grid::unit() 值。负 axis.gap 将圆图轴放在骨架内侧，正值放在外侧。零将刻度附着于骨架内缘，是圆图和质粒主题的默认值。圆图主/次刻度默认长 1.5/0.7 mm，质粒主题为 2.2/0.8 mm；对应默认线宽为 0.45/0.3 mm 和 0.6/0.35 mm。显式长度及线条样式优先。 |
-| `axis.text.orientation` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 支持 "horizontal"、"parallel"、"perpendicular" 或有限数值角度。 |
+| `axis.text.orientation` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 取"horizontal"、"parallel"、"perpendicular"或有限数值角度。圆形布局的 parallel 文字逐字符沿圆弧排列；水平和数值角度保留直线文字。 |
 | `axis.text.check.overlap` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 是否隐藏重叠坐标轴标签，默认启用。 |
 | `seq.label` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 序列、基因、通用注释、酶切及圆图中心标签的文字元素。 |
 | `gene.label` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 序列、基因、通用注释、酶切及圆图中心标签的文字元素。 |
@@ -1822,9 +1892,9 @@
 | `legend.seq.direction` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例方向。 |
 | `legend.seq.background` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例背景。 |
 | `legend.seq.key` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键元素。 |
-| `legend.seq.key.size` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
-| `legend.seq.key.width` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
-| `legend.seq.key.height` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
+| `legend.seq.key.size` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
+| `legend.seq.key.width` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
+| `legend.seq.key.height` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
 | `legend.seq.text` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例文字元素。 |
 | `legend.seq.text.position` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例文字位置。 |
 | `legend.seq.title` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例标题元素。 |
@@ -1850,9 +1920,9 @@
 | `legend.ribbon.direction` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例方向。 |
 | `legend.ribbon.background` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例背景。 |
 | `legend.ribbon.key` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键元素。 |
-| `legend.ribbon.key.size` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
-| `legend.ribbon.key.width` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
-| `legend.ribbon.key.height` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
+| `legend.ribbon.key.size` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
+| `legend.ribbon.key.width` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
+| `legend.ribbon.key.height` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
 | `legend.ribbon.text` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例文字元素。 |
 | `legend.ribbon.text.position` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例文字位置。 |
 | `legend.ribbon.title` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例标题元素。 |
@@ -1867,9 +1937,9 @@
 | `legend.gene.direction` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例方向。 |
 | `legend.gene.background` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例背景。 |
 | `legend.gene.key` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键元素。 |
-| `legend.gene.key.size` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
-| `legend.gene.key.width` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
-| `legend.gene.key.height` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
+| `legend.gene.key.size` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
+| `legend.gene.key.width` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
+| `legend.gene.key.height` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
 | `legend.gene.text` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例文字元素。 |
 | `legend.gene.text.position` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例文字位置。 |
 | `legend.gene.title` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例标题元素。 |
@@ -1881,9 +1951,9 @@
 | `legend.feature.direction` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例方向。 |
 | `legend.feature.background` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例背景。 |
 | `legend.feature.key` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键元素。 |
-| `legend.feature.key.size` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
-| `legend.feature.key.width` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
-| `legend.feature.key.height` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
+| `legend.feature.key.size` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
+| `legend.feature.key.width` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
+| `legend.feature.key.height` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
 | `legend.feature.text` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例文字元素。 |
 | `legend.feature.text.position` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例文字位置。 |
 | `legend.feature.title` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例标题元素。 |
@@ -1895,9 +1965,9 @@
 | `legend.region.direction` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例方向。 |
 | `legend.region.background` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例背景。 |
 | `legend.region.key` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键元素。 |
-| `legend.region.key.size` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
-| `legend.region.key.width` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
-| `legend.region.key.height` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键尺寸。 |
+| `legend.region.key.size` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
+| `legend.region.key.width` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
+| `legend.region.key.height` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例键的尺寸。自动 Identity 标尺独立测量边界文字，不把通用色块尺寸当成整条标尺长度。需要手动指定标尺长度时，使用 Ribbon 专用尺寸或显式 guide。 |
 | `legend.region.text` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例文字元素。 |
 | `legend.region.text.position` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例文字位置。 |
 | `legend.region.title` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 各角色图例标题元素。 |
@@ -2006,6 +2076,7 @@
 | `invalid_pident` | `c("clip", "drop", "error", "keep")` | 向量；候选/多选含义见说明 | 相似度策略，默认 "clip"。pident 超出 [0, 100] 时，"clip" 限制范围，"drop" 删除，"error" 停止，"keep" 保持。 |
 | `empty_annotation` | `c("keep", "drop", "replace")` | 向量；候选/多选含义见说明 | 空注释策略，默认 "keep"。基因 anno 缺失或为空时，"replace" 用 replacement_annotation 填充，"drop" 删除，"keep" 保持。 |
 | `replacement_annotation` | `"unannotated"` | 字符/枚举；取值见说明 | 替换文字，默认 "unannotated"，用于 empty_annotation = "replace"。 |
+| `feature_data` | `NULL` | 表格/受支持对象；data 还可为函数 | 统一注释输入，与 gene_data 互斥。 |
 
 </details>
 
@@ -2196,6 +2267,7 @@
 | `loci` | `必需/互斥入口，见说明` | 显式窗口/锚点表或已记录的等价输入 | 数据框，含 accver、start、end，可选 locus_id。 |
 | `expand` | `0` | 数值/整数；范围见说明 | 两侧扩展的非负碱基数，可为单值或每个区域一个值。 |
 | `boundary` | `c("trim", "drop")` | 向量；候选/多选含义见说明 | 边界策略："trim" 裁剪部分重叠的基因/比对，"drop" 只保留完全位于区域内的行。 |
+| `feature_data` | `NULL` | 表格/受支持对象；data 还可为函数 | 统一注释输入，与 gene_data 互斥。 |
 
 </details>
 
@@ -2241,9 +2313,10 @@
 | --- | --- | --- | --- |
 | `seq_data` | `必需/互斥入口，见说明` | 表格/受支持对象；data 还可为函数 | 含 accver 和 length 的 data.frame/tibble，或已知完整长度的 GRanges、Seqinfo、GInteractions，或已命名的核酸或蛋白 Biostrings XStringSet。未命名序列先通过 as_ggchord_seq() 显式提供 ids。可选 S4 输入经 as_ggchord_seq() 适配。sequence_unit 为 "bp"（省略时的默认值）或 "aa"，同一图使用一个单位。蛋白长度来自完整序列。aa 图接受连接和通用特征；基因、引物及酶切图层需要 bp。任意字符宽度不等于生物序列长度。 |
 | `ribbon_data` | `NULL` | 表格/受支持对象；data 还可为函数 | 可选比对表，包含 qaccver、saccver、qstart、qend、sstart 和 send。只有映射、筛选或统计需要时，才要求 length 和 pident。GInteractions 通过 as_ggchord_link() 转换，不编造相似度或比对长度。 |
-| `gene_data` | `NULL` | 表格/受支持对象；data 还可为函数 | 可选基因表，包含 accver、start、end 和 strand；可省略注释 anno。接受有方向的 GRanges；未知链区间请使用 geom_feature(data = ...)。 |
+| `gene_data` | `NULL` | 表格/受支持对象；data 还可为函数 | 兼容的旧注释输入，第三位置参数含义不变。新代码使用 feature_data；非 NULL 旧输入在构造时提示一次，渲染时不重复。无类别旧表保留有方向基因语义，未安排删除版本。两种注释输入不能同时提供。 |
 | `debug` | `FALSE` | 逻辑值 | 逻辑值，是否输出调试信息，默认 FALSE。 |
 | `validate` | `c("warn", "error", "none")` | 向量；候选/多选含义见说明 | 字符值，默认 "warn"。控制结构化输入校验，见 validate_ggchord_data："warn" 在发现问题时发出一条汇总警告，并在图对象的 p$ggchord$validation 缓存完整报告；"error" 在严重问题时停止；"none" 跳过诊断性校验，但仍执行防止崩溃的基础结构检查。 |
+| `feature_data` | `NULL` | 表格/受支持对象；data 还可为函数 | 可选统一注释表或 GRanges，要求 accver、start、end，缺少链时为未知（"."）。通用特征层使用全表；默认基因层按 feature_class、type、role 的优先顺序选择 gene/CDS，并要求已知链。tRNA/rRNA 保留为通用特征。图层显式 data 优先；组合 gene 与 feature 层时使用互斥子集，各图层独立保留自己的数据。 |
 | `...` | `必需/互斥入口，见说明` | 上游转发参数 | 保留用于为已删除的构造函数参数提供明确迁移错误。外观设置使用 labs()、coord_chord() 和 theme()。 |
 
 </details>
@@ -2336,6 +2409,7 @@
 | `links` | `list()` | 命名列表 | 注释或成对区间输入的命名列表。 |
 | `mapping` | `list()` | aes 映射 | 命名列表，可含 seq、ribbon、gene 列映射，以及与集合同名的 features/links 映射列表；每项列映射为命名字符向量。 |
 | `steps` | `list()` | 命名列表 | 明确辅助步骤参数的命名列表，支持 clean、filter、deduplicate、merge、bundle、optimize。数据由准备函数提供，不可覆盖。 |
+| `feature_data` | `NULL` | 表格/受支持对象；data 还可为函数 | 统一注释表，与 gene_data 互斥。 |
 
 </details>
 
@@ -2503,6 +2577,7 @@
 | `point_data` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 可选点连接，含 qaccver、saccver、qpos、spos。 |
 | `cross_gap` | `c("split", "drop")` | 向量；候选/多选含义见说明 | 被选定窗口截断的区间连接处理方式。 |
 | `max_links` | `10000` | 数值/整数；范围见说明 | 区间/点连接候选副本数的正整数上限；有意使用更大重叠视图时显式提高。 |
+| `feature_data` | `NULL` | 表格/受支持对象；data 还可为函数 | 统一注释输入，与 gene_data 互斥。 |
 
 </details>
 
@@ -2522,6 +2597,7 @@
 | `check_coordinates` | `TRUE` | 逻辑值 | 逻辑值，默认 TRUE，是否检查连接/基因坐标位于 [1, sequence length] 内。 |
 | `check_duplicates` | `TRUE` | 逻辑值 | 逻辑值，默认 TRUE，是否检查完全重复、近似重复及高度重叠记录。互惠重叠要求交集覆盖两区间各至少 90%，包括端点递减的连接。反向注释边界可能跨圆形原点，不参与线性重叠诊断，但仍报告完全重复。 |
 | `check_self_links` | `TRUE` | 逻辑值 | 逻辑值，默认 TRUE，是否标记满足 qaccver == saccver 的自身连接。 |
+| `feature_data` | `NULL` | 表格/受支持对象；data 还可为函数 | 统一注释表，与 gene_data 互斥，要求 accver、start、end。缺少链时为未知，接受 +、-、.、+/-。报告使用表名 "feature" 和 data_summary$n_feature，不修改输入。 |
 
 </details>
 

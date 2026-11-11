@@ -1,5 +1,5 @@
 {
-  "source_sha256": "6aca65e14fcc0912ff1450af00925f28bd3b1717abe6c03b52dcbc267ddd2948",
+  "source_sha256": "4a9656713c91a1288ef0deba013f1c4d7e7fa167dd8ab69ad49296fd52d16e1b",
   "translations": {
     "0": "绘制序列间的点连接",
     "1": "标准 ggplot2 映射及图层数据，支持数据函数。",
@@ -12,8 +12,10 @@
     "8": "grid 箭头定义或 NULL。",
     "9": "固定样式；映射使用 link_* aesthetic。显式固定值优先于对应映射。要保留映射请省略固定参数；⟦0⟧ 时也包括继承的映射。",
     "10": "标准 ggplot2 图层参数。",
-    "11": "其他路径参数。",
-    "12": "一个 ggplot2 图层。",
-    "13": "需要 qaccver、saccver、qpos、spos。位置使用与序列轨道相同的基因组坐标。曲线从 query 指向 subject，因此 ⟦0⟧ 提供的箭头默认指向 subject。"
+    "13": "其他路径参数。",
+    "14": "一个 ggplot2 图层。",
+    "15": "需要 qaccver、saccver、qpos、spos。位置使用与序列轨道相同的基因组坐标。曲线从 query 指向 subject，因此 ⟦0⟧ 提供的箭头默认指向 subject。",
+    "11": "两个显示实例名称或声明顺序序号。",
+    "12": "允许显式声明的 source_hsp_id 被重复显示。"
   }
 }

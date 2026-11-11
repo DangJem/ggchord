@@ -900,7 +900,8 @@
       "link_branch_fraction",
       "adjacent_only",
       "pairs",
-      "nonadjacent_linewidth"
+      "nonadjacent_linewidth",
+      "gradient"
     ],
     "purpose": {
       "en": "Add an alignment ribbon layer",
@@ -1141,21 +1142,21 @@
   },
   "geom_track_bar": {
     "level": "L3",
-    "page": "tracks",
-    "anchor": "draw-gc",
+    "page": "foundation",
+    "anchor": "tracks",
     "reason": "Reviewed input/output, constraints and runnable canonical lesson; key-parameter level applies only to listed behavior",
     "modes": "all three; explicit position_track and valid interval bins",
     "parameters": [
-      "baseline",
-      "bounds",
+      "mapping",
+      "track",
       "position"
     ],
     "purpose": {
-      "en": "Draw explicit quantitative tracks along sequence backbones",
-      "zh": "沿序列骨架绘制定量轨道"
+      "en": "Count observations at source positions",
+      "zh": "按源位置统计观测数"
     },
     "alias_of": "",
-    "case": "tracks",
+    "case": "foundation",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
       "en": "all three; explicit position_track and valid interval bins",
@@ -2923,6 +2924,76 @@
     "modes_localized": {
       "en": "upstream; applies only to matching supported ggplot roles",
       "zh": "上游对象/接口；遵循 ggplot2/grid 的原始契约"
+    }
+  },
+  "geom_track": {
+    "level": "L2",
+    "page": "foundation",
+    "anchor": "tracks",
+    "reason": "Explicit source/result example and documented first support matrix; local Foundation checks",
+    "modes": "Chord/Circular/Collinear/Sankey within the first support matrix",
+    "parameters": [
+      "geom",
+      "stat",
+      "track",
+      "position",
+      "mapping"
+    ],
+    "purpose": {
+      "en": "Source-space statistical tracks",
+      "zh": "源空间统计轨道"
+    },
+    "alias_of": "",
+    "case": "foundation",
+    "scope": "Foundation first implementation",
+    "modes_localized": {
+      "en": "Chord/Circular/Collinear/Sankey within the first support matrix",
+      "zh": "首批基础架构范围；详见本章支持矩阵"
+    }
+  },
+  "geom_track_col": {
+    "level": "L2",
+    "page": "foundation",
+    "anchor": "tracks",
+    "reason": "Explicit source/result example and documented first support matrix; local Foundation checks",
+    "modes": "Chord/Circular/Collinear/Sankey",
+    "parameters": [
+      "track",
+      "position",
+      "mapping"
+    ],
+    "purpose": {
+      "en": "Display supplied numerical heights",
+      "zh": "显示给定数值高度"
+    },
+    "alias_of": "",
+    "case": "foundation",
+    "scope": "Foundation first implementation",
+    "modes_localized": {
+      "en": "Chord/Circular/Collinear/Sankey",
+      "zh": "首批基础架构范围；详见本章支持矩阵"
+    }
+  },
+  "coord_sankey": {
+    "level": "L2",
+    "page": "foundation",
+    "anchor": "sankey",
+    "reason": "Explicit source/result example and documented first support matrix; local Foundation checks",
+    "modes": "Mirrored two-column relationships",
+    "parameters": [
+      "self_links",
+      "column_gap"
+    ],
+    "purpose": {
+      "en": "Mirrored query-left/subject-right interval relationships",
+      "zh": "query 左列与 subject 右列镜像区间关系"
+    },
+    "alias_of": "",
+    "case": "foundation",
+    "scope": "Foundation first implementation",
+    "modes_localized": {
+      "en": "Mirrored two-column relationships",
+      "zh": "首批基础架构范围；详见本章支持矩阵"
     }
   }
 }

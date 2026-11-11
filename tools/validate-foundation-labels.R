@@ -18,7 +18,14 @@ metrics <- function(p, l = NULL) {
   visibility <- ggchord_label_visibility(l)
   upper_opposite <- if(nrow(tasks)) sum(tasks$direction_y > .5 &
     abs(tasks$direction_x) > .05 & tasks$text_x * tasks$direction_x < 0) else 0L
-  list(external_labels=nrow(tasks),overlapping_boxes=overlaps,
+  radius <- max(l$backbone_bounds$outer)
+  list(backbone_diameter_mm = 2 * radius / unit * 25.4,
+    outer_text_extent_mm = if (nrow(tasks)) list(
+      width = diff(range(tasks$text_x + tasks$w / 2,
+                         tasks$text_x - tasks$w / 2)) / unit * 25.4,
+      height = diff(range(tasks$text_y + tasks$h / 2,
+                          tasks$text_y - tasks$h / 2)) / unit * 25.4) else NULL,
+    external_labels=nrow(tasks),overlapping_boxes=overlaps,
     upper_labels_on_opposite_side=upper_opposite,layout_units_per_inch=l$text_units_per_inch,
     requested=nrow(visibility),visible=sum(visibility$visible),
     hidden_reasons=if(nrow(visibility)) as.list(table(visibility$reason[!visibility$visible])) else list(),

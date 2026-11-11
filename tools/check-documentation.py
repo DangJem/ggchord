@@ -64,6 +64,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--source-only', action='store_true')
     args = parser.parse_args()
+    subprocess.run(['python3', str(ROOT / 'tools/check-teaching-content.py')], cwd=ROOT, check=True)
     errors = []
     def require(ok, message):
         if not ok: errors.append(message)

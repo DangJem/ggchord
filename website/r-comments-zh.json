@@ -43,5 +43,7 @@
   "Prefer source-backed bundled data; retain metadata outside plotting inputs.": "优先使用有来源的随包数据，绘图列之外保留完整元数据。",
   "Prefer a CDS overlapping a displayed ribbon endpoint within each positive-strand bin.": "每个正链分组优先选择与已展示连接端点重叠的 CDS。",
   "Shared controls sit just beyond the intervening backbones, rather than far away.": "共享控制点放在中间骨架稍外侧。",
-  "Recover biological strands from the source annotation field.": "从原始注释字段恢复真实链。"
+  "Recover biological strands from the source annotation field.": "从原始注释字段恢复真实链。",
+  "Synthetic intervals illustrate the mirrored layout.": "使用合成区间说明镜像布局。",
+  "Synthetic observations illustrate counting, not biological measurements.": "使用合成观测说明计数，不代表生物学测量。"
 }

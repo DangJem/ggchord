@@ -674,5 +674,25 @@
   "comparetrackorder": {
     "zh": "只改变颜色轨道的 order，轨道顺序交换，GC 值不变。",
     "en": "Change only the colour track order, swapping bands while GC values stay fixed."
+  },
+  "foundationvertical": {
+    "en": "Original HSPs routed through named A–B–A display instances on vertical backbones.",
+    "zh": "原始 HSP 在命名 A–B–A 显示实例之间路由，使用纵向骨架。"
+  },
+  "foundationsankey": {
+    "en": "Mirrored source sequences: query intervals on the left, subject intervals on the right.",
+    "zh": "同一组来源序列的镜像双列：query 区间在左，subject 区间在右。"
+  },
+  "foundationcount": {
+    "en": "Counts of actual query-start observations in source coordinates.",
+    "zh": "在源坐标统计真实 query 起点观测数。"
+  },
+  "foundationequal": {
+    "en": "Equal visual lengths with true local axes and explicitly selected identity fill.",
+    "zh": "等长视觉投影保留真实局部轴，并显式选择 Identity 填充。"
+  },
+  "foundationarrow": {
+    "en": "Optional subject tips: shoulders retain target endpoint spans; the tip is a decorative marker.",
+    "zh": "可选 subject 尖头：箭肩保留目标端点跨度，尖点仅作装饰标记。"
   }
 }

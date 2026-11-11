@@ -1,6 +1,8 @@
 #' Scales for point links
 #'
 #' Point-link aesthetics are independent of sequence and ribbon aesthetics.
+#' Automatically generated numeric pident mappings use the 0-100 domain and
+#' ticks 0/50/80/90/95/100. Explicit scales keep their own limits and breaks.
 #' @param ... Arguments passed to the corresponding ggplot2 scale.
 #' @param values Manual aesthetic values.
 #' @return A ggplot2 scale.
@@ -64,6 +66,11 @@ ggchord_add_link_scales <- function(plot) {
         link_alpha = scale_link_alpha_manual, link_linewidth = scale_link_linewidth_manual,
         link_linetype = scale_link_linetype_manual)
       scale <- fun(name = info$label, values = values, guide = guide)
+    }
+    if (identical(info$kind, "continuous") && all(info$labels == "pident")) {
+      scale$name <- "Identity (%)"
+      scale$limits <- c(0, 100)
+      scale$breaks <- c(0, 50, 80, 90, 95, 100)
     }
     scale$ggchord_managed <- TRUE
     plot$scales$add(scale)

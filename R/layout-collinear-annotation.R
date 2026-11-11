@@ -224,7 +224,8 @@ ggchord_collinear_axis <- function(p, layout) {
       label_angle = angle, label_angle_relative = FALSE,
       label_along_axis = FALSE, label_gap = unname(p$labelOffset[id]) * units,
       label_hjust = .5, label_vjust = if (direction < 0) 1 else 0,
-      is_major = major, is_origin = pos == 0, accver = id,
+      is_major = major, is_origin = pos == 0,
+      is_endpoint = major & pos %in% c(1, ref$lens[id]), accver = id,
       stringsAsFactors = FALSE
     )
   }

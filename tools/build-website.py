@@ -79,7 +79,7 @@ def main():
             headings=re.findall(r'<h[23] id="([^"]+)"[^>]*>(.*?)</h[23]>',body,re.S)
             toc=''.join(f'<li><a href="#{a}">{re.sub("<[^>]+>","",t)}</a></li>' for a,t in headings)
             sidebar=('<h2>本页目录</h2>' if lang=='zh' else '<h2>On this page</h2>')+'<ul class="toc-list">'+toc+'</ul>'
-            sidebar+=('<h2>项目资料</h2>' if lang=='zh' else '<h2>Project</h2>')+'<ul><li><a href="https://github.com/DangJem/ggchord">GitHub</a></li><li><a href="about.html">'+('全部专题' if lang=='zh' else 'All articles')+'</a></li><li>MIT</li></ul>'
+            sidebar+=('<h2>项目资料</h2>' if lang=='zh' else '<h2>Project</h2>')+'<ul><li><a href="https://github.com/DangJem/ggchord">GitHub</a></li><li><a href="about.html#modules">'+('章节索引' if lang=='zh' else 'Chapter index')+'</a></li><li>MIT</li></ul>'
             payload[lang].append(dict(slug=page['slug'],title=page['title'][lang],body=body,sidebar=sidebar))
     (out/'page-content.json').write_text(json.dumps(payload,ensure_ascii=False)+'\n')
     # Locales write separate destinations and share only immutable source files.
@@ -113,7 +113,7 @@ def main():
     # Stable historical paths remain usable after a future, separately authorized cutover.
     topics=[p.stem for p in (ROOT/'man').glob('*.Rd')]
     routes={'index.html':'en/index.html','articles/ggchord_vignette.html':'en/real-data.html',
-        'articles/ggchord_guide_hans.html':'zh/real-data.html','reference/index.html':'en/reference/index.html','news/index.html':'en/about.html#status'}
+        'articles/ggchord_guide_hans.html':'zh/real-data.html','reference/index.html':'en/reference/index.html','news/index.html':'assets/NEWS.md'}
     routes.update({'reference/'+s+'.html':'en/reference/'+s+'.html' for s in topics})
     for old,target in routes.items():
         path=out/old;path.parent.mkdir(parents=True,exist_ok=True);dest=os.path.relpath(out/target,path.parent)
@@ -131,7 +131,7 @@ def main():
     files=[p for base in [WEB,ROOT/'R',ROOT/'man',ROOT/'tools',ROOT/'vignettes'] for p in base.rglob('*') if p.is_file() and '__pycache__' not in p.parts]
     files += inputs + sorted((ROOT/'data').glob('*.rda'))
     files += [ROOT/p for p in ['DESCRIPTION','NAMESPACE','NEWS.md','README.md','README-Hans.md','MIGRATION.md','MIGRATION-Hans.md','_pkgdown.yml','.github/workflows/documentation.yaml']]
-    manifest=dict(version=re.search(r'^Version: (.+)$',(ROOT/'DESCRIPTION').read_text(),re.M)[1],api_inventory='current NAMESPACE/formals; tools/teaching-audit/teaching-summary-v0.16.7.json',generator='pkgdown + paired Markdown + shared static assets',
+    manifest=dict(version=re.search(r'^Version: (.+)$',(ROOT/'DESCRIPTION').read_text(),re.M)[1],api_inventory='current NAMESPACE/formals; tools/teaching-audit/teaching-summary-v0.17.0.json',generator='pkgdown + paired Markdown + shared static assets',
         commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
         dirty=bool(subprocess.check_output(['git','status','--porcelain'],cwd=ROOT,text=True)),
         deployment='prepared for authorized deployment; builder does not deploy' if args.publication else 'local preview; not deployed',

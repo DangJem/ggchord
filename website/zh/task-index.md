@@ -29,7 +29,7 @@
 | 绘制引物及文字 | [`geom_primer()`](reference/geom_primer.html) | `position` | C (bp) | [进阶](primers.html#primer-arcs) |
 | 搜索和筛选酶切位点 | [`find_restriction_sites()`](reference/find_restriction_sites.html) | `methylation, enzymes` | DNA | [进阶](recognition.html#restriction) |
 | 调整酶切文字引线 | [`geom_restriction_site()`](reference/geom_restriction_site.html) | `leader, label_style, label_side` | C (bp) | [进阶](restriction-sites.html#restriction-labels) |
-| 绘制 GC 柱图与折线 | [`geom_track_bar()`](reference/geom_track_tile.html) | `track_value, baseline` | A / B / C | [进阶](tracks.html) |
+| 绘制 GC 柱图与折线 | [`geom_track_col()`](reference/geom_track.html) | `track_value, baseline` | A / B / C | [进阶](tracks.html) |
 | 绘制 tile 色带 | [`geom_track_tile()`](reference/geom_track_tile.html) | `track_fill, position` | A / B / C | [进阶](tracks.html#tile) |
 | 设置轨道宽度和次序 | [`position_track()`](reference/position_track.html) | `track, side, order, width, gap` | A / B / C | [进阶](tracks.html#sharing) |
 | 导入 FASTA、GFF3 和比对 | [`read_fasta_lengths()`](reference/read_fasta_lengths.html) | `sequence_unit` | general | [基础](formats.html) |
@@ -44,6 +44,9 @@
 | 诊断窗口和查询目录 | [`diagnose_ggchord()`](reference/diagnose_ggchord.html) | `plot, width, height; catalog: aliases` | general | [进阶](workflow-tools.html) |
 | 查看全部接口的主讲位置 | [`ggchord()`](reference/ggchord.html) | `all exported APIs` | general | [进阶](api-curriculum.html) |
 | 查找参数类型与完整默认值 | [`ggchord()`](reference/ggchord.html) | `all public formals` | general | [进阶](parameter-atlas.html) |
+| 统计源位置观测数 | [`geom_track()`](reference/geom_track.html) | `geom, stat, track, position` | A / B / C / Sankey | [进阶](foundation.html#tracks) |
+| 为重复序列实例选择路由 | [`geom_link_ribbon()`](reference/geom_link_ribbon.html) | `between, allow_repeated` | A / B | [进阶](foundation.html#instances) |
+| 绘制镜像区间关系 | [`coord_sankey()`](reference/coord_sankey.html) | `column_gap, self_links` | Sankey | [进阶](foundation.html#sankey) |
 
 ## 三条独立学习路线 {#paths}
 

@@ -224,6 +224,78 @@
     "source": "man/coord_collinear.Rd"
   },
   {
+    "api": "coord_collinear",
+    "parameter": "seq_axis",
+    "default": "c(\"horizontal\", \"vertical\")",
+    "type": "Vector; choices versus multiple selection below",
+    "constraint": "\"horizontal\" (default) or \"vertical\". Vertical mode projects sequence-local geometry onto upright columns and lays out text in its own readable orientation; it does not change source strands.",
+    "source": "man/coord_collinear.Rd"
+  },
+  {
+    "api": "coord_sankey",
+    "parameter": "column_gap",
+    "default": "3",
+    "type": "Numeric/integer; range in description",
+    "constraint": "Positive separation of the two backbones in layout units.",
+    "source": "man/coord_sankey.Rd"
+  },
+  {
+    "api": "coord_sankey",
+    "parameter": "self_links",
+    "default": "FALSE",
+    "type": "Logical",
+    "constraint": "Show relationships whose query and subject entity are equal.",
+    "source": "man/coord_sankey.Rd"
+  },
+  {
+    "api": "coord_sankey",
+    "parameter": "ratio",
+    "default": "1",
+    "type": "Numeric/integer; range in description",
+    "constraint": "Fixed y/x aspect ratio, default 1.",
+    "source": "man/coord_sankey.Rd"
+  },
+  {
+    "api": "coord_sankey",
+    "parameter": "xlim",
+    "default": "NULL",
+    "type": "Nullable R object; type/inheritance below",
+    "constraint": "Optional user limits. Explicit limits take priority over automatically fitted limits.",
+    "source": "man/coord_sankey.Rd"
+  },
+  {
+    "api": "coord_sankey",
+    "parameter": "ylim",
+    "default": "NULL",
+    "type": "Nullable R object; type/inheritance below",
+    "constraint": "Optional user limits. Explicit limits take priority over automatically fitted limits.",
+    "source": "man/coord_sankey.Rd"
+  },
+  {
+    "api": "coord_sankey",
+    "parameter": "expand",
+    "default": "FALSE",
+    "type": "Logical",
+    "constraint": "Logical. Expand coordinate limits, default FALSE. Automatic fitting already includes a small safety margin; set TRUE to request the additional ggplot2 coordinate expansion.",
+    "source": "man/coord_sankey.Rd"
+  },
+  {
+    "api": "coord_sankey",
+    "parameter": "clip",
+    "default": "\"off\"",
+    "type": "Character/enum; choices below",
+    "constraint": "Whether drawing is clipped to the panel, default \"off\".",
+    "source": "man/coord_sankey.Rd"
+  },
+  {
+    "api": "coord_sankey",
+    "parameter": "fit",
+    "default": "c(\"labels\", \"geometry\", \"manual\")",
+    "type": "Vector; choices versus multiple selection below",
+    "constraint": "Fitting strategy: \"labels\" includes measured label boxes, \"geometry\" fits geometric elements only, and \"manual\" requires explicit xlim and ylim.",
+    "source": "man/coord_sankey.Rd"
+  },
+  {
     "api": "geom_feature",
     "parameter": "mapping",
     "default": "NULL",
@@ -236,7 +308,7 @@
     "parameter": "data",
     "default": "NULL",
     "type": "Table/supported object; data may be a function",
-    "constraint": "data.frame with accver, start, end and strand; optional type, category and label. Factor start/end columns use their numeric labels, not their internal level codes. Coordinates must resolve to finite numbers. display_priority or logical prioritized_display. As an alternative to strand, directionality or direction may contain \"forward\", \"reverse\", \"bidirectional\", or \"none\".",
+    "constraint": "data.frame with accver, start, end and strand; optional type, category and label. Factor start/end columns use their numeric labels, not their internal level codes. Coordinates must resolve to finite numbers. display_priority or logical prioritized_display. As an alternative to strand, directionality or direction may contain \"forward\", \"reverse\", \"bidirectional\", or \"none\". When omitted, uses the full constructor feature_data (or compatible gene_data). Other layers never remove records from this default input.",
     "source": "man/geom_feature.Rd"
   },
   {
@@ -612,7 +684,7 @@
     "parameter": "data",
     "default": "NULL",
     "type": "Table/supported object; data may be a function",
-    "constraint": "data.frame with accver, start, end and strand; optional type, category and label. Factor start/end columns use their numeric labels, not their internal level codes. Coordinates must resolve to finite numbers. display_priority or logical prioritized_display. As an alternative to strand, directionality or direction may contain \"forward\", \"reverse\", \"bidirectional\", or \"none\".",
+    "constraint": "data.frame with accver, start, end and strand; optional type, category and label. Factor start/end columns use their numeric labels, not their internal level codes. Coordinates must resolve to finite numbers. display_priority or logical prioritized_display. As an alternative to strand, directionality or direction may contain \"forward\", \"reverse\", \"bidirectional\", or \"none\". When omitted, uses the full constructor feature_data (or compatible gene_data). Other layers never remove records from this default input.",
     "source": "man/geom_feature_plasmid.Rd"
   },
   {
@@ -740,7 +812,7 @@
     "parameter": "data",
     "default": "NULL",
     "type": "Table/supported object; data may be a function",
-    "constraint": "Default NULL (retrieved automatically from the layout)",
+    "constraint": "Optional layer table or function, overriding constructor data. With unified feature_data, the default selects explicitly classified gene/CDS records; see ggchord(). Legacy gene_data retains all rows.",
     "source": "man/geom_gene.Rd"
   },
   {
@@ -828,7 +900,7 @@
     "parameter": "data",
     "default": "NULL",
     "type": "Table/supported object; data may be a function",
-    "constraint": "Default NULL (retrieved automatically from the layout)",
+    "constraint": "Optional layer table or function. Default data follows the gene/CDS selection described in ggchord().",
     "source": "man/geom_gene_label.Rd"
   },
   {
@@ -940,7 +1012,7 @@
     "parameter": "data",
     "default": "NULL",
     "type": "Table/supported object; data may be a function",
-    "constraint": "Default NULL (retrieved automatically from the layout)",
+    "constraint": "Optional layer table or function. Default data follows the gene/CDS selection described in ggchord().",
     "source": "man/geom_gene_label_repel.Rd"
   },
   {
@@ -1185,6 +1257,22 @@
   },
   {
     "api": "geom_link_line",
+    "parameter": "between",
+    "default": "NULL",
+    "type": "Nullable R object; type/inheritance below",
+    "constraint": "Two display-instance names or declared-order indices.",
+    "source": "man/geom_link_line.Rd"
+  },
+  {
+    "api": "geom_link_line",
+    "parameter": "allow_repeated",
+    "default": "FALSE",
+    "type": "Logical",
+    "constraint": "Allow repeated display of an explicitly declared source_hsp_id.",
+    "source": "man/geom_link_line.Rd"
+  },
+  {
+    "api": "geom_link_line",
     "parameter": "...",
     "default": "",
     "type": "Forwarded arguments",
@@ -1252,7 +1340,7 @@
     "parameter": "fill",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Optional fixed ribbon fill. NULL keeps the default Identity mapping.",
+    "constraint": "Optional fixed ribbon fill. NULL uses the default Identity fill.",
     "source": "man/geom_link_ribbon.Rd"
   },
   {
@@ -1333,6 +1421,38 @@
     "default": "0.4",
     "type": "Numeric/integer; range in description",
     "constraint": "Fixed outline width for non-adjacent displayed rows in coord_collinear(), default 0.4 mm. These ribbons use dashed outlines by default. Zero uses the layer's ordinary linewidth for every ribbon. This changes width independently of line type. An explicit aes(linewidth = ...) controls widths instead of this fixed default.",
+    "source": "man/geom_link_ribbon.Rd"
+  },
+  {
+    "api": "geom_link_ribbon",
+    "parameter": "between",
+    "default": "NULL",
+    "type": "Nullable R object; type/inheritance below",
+    "constraint": "Two display-instance names or declared-order indices for a unique route.",
+    "source": "man/geom_link_ribbon.Rd"
+  },
+  {
+    "api": "geom_link_ribbon",
+    "parameter": "allow_repeated",
+    "default": "FALSE",
+    "type": "Logical",
+    "constraint": "Explicitly allow a declared source_hsp_id in more than one displayed relation.",
+    "source": "man/geom_link_ribbon.Rd"
+  },
+  {
+    "api": "geom_link_ribbon",
+    "parameter": "tip",
+    "default": "c(\"none\", \"subject\")",
+    "type": "Vector; choices versus multiple selection below",
+    "constraint": "Full interval fronts (none, default), or an optional subject taper. The shoulder retains the translated target endpoint span at 88 percent of the channel. The tip is a decorative front-midpoint marker, not a single matched base or biological transfer direction. Degenerate fronts fall back to the full front with a warning. Source intervals are unchanged.",
+    "source": "man/geom_link_ribbon.Rd"
+  },
+  {
+    "api": "geom_link_ribbon",
+    "parameter": "gradient",
+    "default": "FALSE",
+    "type": "Logical",
+    "constraint": "Logical. Opt into endpoint sequence-colour interpolation; default FALSE. Explicit fill, mapping and scales still take priority.",
     "source": "man/geom_link_ribbon.Rd"
   },
   {
@@ -1676,7 +1796,7 @@
     "parameter": "seq_order",
     "default": "NULL",
     "type": "Geometry number/vector/documented formats",
-    "constraint": "Optional character vector. Specifies the drawing order of sequences",
+    "constraint": "Source IDs in display order. Repeats create display instances; use names such as c(A_high='A', B='B', A_low='A') for stable instance IDs. Repeated-entity HSPs require a unique between route on each link layer.",
     "source": "man/geom_seq.Rd"
   },
   {
@@ -1765,6 +1885,14 @@
     "default": "FALSE",
     "type": "Logical",
     "constraint": "Standard ggplot2 layer arguments.",
+    "source": "man/geom_seq.Rd"
+  },
+  {
+    "api": "geom_seq",
+    "parameter": "length_mode",
+    "default": "c(\"proportional\", \"equal\")",
+    "type": "Vector; choices versus multiple selection below",
+    "constraint": "\"proportional\" (default) retains source-length ratios; \"equal\" gives each displayed sequence the same angular allocation or linear span without modifying source lengths. Shared absolute scale bars are unavailable in multi-sequence equal mode; local axes retain source units.",
     "source": "man/geom_seq.Rd"
   },
   {
@@ -2256,108 +2384,252 @@
     "source": "man/geom_seq_scale.Rd"
   },
   {
+    "api": "geom_track",
+    "parameter": "mapping",
+    "default": "NULL",
+    "type": "aes mapping",
+    "constraint": "Standard layer input. Supply accver and source positions through x/pos, or interval start/end. Map y/track_value for identity values.",
+    "source": "man/geom_track.Rd"
+  },
+  {
+    "api": "geom_track",
+    "parameter": "data",
+    "default": "NULL",
+    "type": "Table/supported object; data may be a function",
+    "constraint": "Standard layer input. Supply accver and source positions through x/pos, or interval start/end. Map y/track_value for identity values.",
+    "source": "man/geom_track.Rd"
+  },
+  {
+    "api": "geom_track",
+    "parameter": "geom",
+    "default": "\"point\"",
+    "type": "Character/enum; choices below",
+    "constraint": "Native geometry/statistic names. bar defaults to count; col and other geoms default to identity.",
+    "source": "man/geom_track.Rd"
+  },
+  {
+    "api": "geom_track",
+    "parameter": "stat",
+    "default": "NULL",
+    "type": "Nullable R object; type/inheritance below",
+    "constraint": "Native geometry/statistic names. bar defaults to count; col and other geoms default to identity.",
+    "source": "man/geom_track.Rd"
+  },
+  {
+    "api": "geom_track",
+    "parameter": "track",
+    "default": "NULL",
+    "type": "Nullable R object; type/inheritance below",
+    "constraint": "A physical position_track() declaration.",
+    "source": "man/geom_track.Rd"
+  },
+  {
+    "api": "geom_track",
+    "parameter": "position",
+    "default": "NULL",
+    "type": "Position object or documented string",
+    "constraint": "Data position such as identity, stack, dodge. The legacy position=position_track(...) spelling still declares the physical band.",
+    "source": "man/geom_track.Rd"
+  },
+  {
+    "api": "geom_track",
+    "parameter": "bounds",
+    "default": "c(\"error\", \"clip\")",
+    "type": "Vector; choices versus multiple selection below",
+    "constraint": "Coordinate error/clip policy.",
+    "source": "man/geom_track.Rd"
+  },
+  {
+    "api": "geom_track",
+    "parameter": "baseline",
+    "default": "0",
+    "type": "Numeric/integer; range in description",
+    "constraint": "Numeric identity-column baseline. Nonzero baselines require position='identity' so stacking does not change their meaning.",
+    "source": "man/geom_track.Rd"
+  },
+  {
+    "api": "geom_track",
+    "parameter": "show.legend",
+    "default": "NA",
+    "type": "R object; constraints below",
+    "constraint": "Standard layer controls.",
+    "source": "man/geom_track.Rd"
+  },
+  {
+    "api": "geom_track",
+    "parameter": "inherit.aes",
+    "default": "FALSE",
+    "type": "Logical",
+    "constraint": "Standard layer controls.",
+    "source": "man/geom_track.Rd"
+  },
+  {
+    "api": "geom_track",
+    "parameter": "...",
+    "default": "",
+    "type": "Forwarded arguments",
+    "constraint": "Native geom/stat parameters and fixed styles.",
+    "source": "man/geom_track.Rd"
+  },
+  {
     "api": "geom_track_bar",
     "parameter": "mapping",
     "default": "NULL",
     "type": "aes mapping",
-    "constraint": "Standard ggplot2 mapping and layer input.",
-    "source": "man/geom_track_tile.Rd"
+    "constraint": "Standard layer input. Supply accver and source positions through x/pos, or interval start/end. Map y/track_value for identity values.",
+    "source": "man/geom_track.Rd"
   },
   {
     "api": "geom_track_bar",
     "parameter": "data",
     "default": "NULL",
     "type": "Table/supported object; data may be a function",
-    "constraint": "Standard ggplot2 mapping and layer input.",
-    "source": "man/geom_track_tile.Rd"
+    "constraint": "Standard layer input. Supply accver and source positions through x/pos, or interval start/end. Map y/track_value for identity values.",
+    "source": "man/geom_track.Rd"
   },
   {
     "api": "geom_track_bar",
     "parameter": "position",
-    "default": "",
+    "default": "NULL",
     "type": "Position object or documented string",
-    "constraint": "A position_track() declaration. Every layer requires one.",
-    "source": "man/geom_track_tile.Rd"
+    "constraint": "Data position such as identity, stack, dodge. The legacy position=position_track(...) spelling still declares the physical band.",
+    "source": "man/geom_track.Rd"
   },
   {
     "api": "geom_track_bar",
     "parameter": "baseline",
     "default": "0",
     "type": "Numeric/integer; range in description",
-    "constraint": "Explicit numeric bar baseline, default zero. It is included in scale training and must remain representable under limits/transform.",
-    "source": "man/geom_track_tile.Rd"
+    "constraint": "Numeric identity-column baseline. Nonzero baselines require position='identity' so stacking does not change their meaning.",
+    "source": "man/geom_track.Rd"
   },
   {
     "api": "geom_track_bar",
     "parameter": "fill",
     "default": "\"#86AFB9\"",
     "type": "Character/enum; choices below",
-    "constraint": "Fixed styles; fill and colour mappings use the dedicated track roles and scoped scales.",
-    "source": "man/geom_track_tile.Rd"
+    "constraint": "Fixed styles for the count shortcut.",
+    "source": "man/geom_track.Rd"
   },
   {
     "api": "geom_track_bar",
     "parameter": "colour",
     "default": "NA",
     "type": "R object; constraints below",
-    "constraint": "Fixed styles; fill and colour mappings use the dedicated track roles and scoped scales.",
-    "source": "man/geom_track_tile.Rd"
+    "constraint": "Fixed styles for the count shortcut.",
+    "source": "man/geom_track.Rd"
   },
   {
     "api": "geom_track_bar",
     "parameter": "alpha",
     "default": "1",
     "type": "Numeric/integer; range in description",
-    "constraint": "Fixed styles; fill and colour mappings use the dedicated track roles and scoped scales.",
-    "source": "man/geom_track_tile.Rd"
+    "constraint": "Fixed styles for the count shortcut.",
+    "source": "man/geom_track.Rd"
   },
   {
     "api": "geom_track_bar",
     "parameter": "linewidth",
     "default": "0.25",
     "type": "Numeric/integer; range in description",
-    "constraint": "Fixed styles; fill and colour mappings use the dedicated track roles and scoped scales.",
-    "source": "man/geom_track_tile.Rd"
+    "constraint": "Fixed styles for the count shortcut.",
+    "source": "man/geom_track.Rd"
   },
   {
     "api": "geom_track_bar",
     "parameter": "linetype",
     "default": "1",
     "type": "Numeric/integer; range in description",
-    "constraint": "Fixed styles; fill and colour mappings use the dedicated track roles and scoped scales.",
-    "source": "man/geom_track_tile.Rd"
+    "constraint": "Fixed styles for the count shortcut.",
+    "source": "man/geom_track.Rd"
   },
   {
     "api": "geom_track_bar",
     "parameter": "bounds",
     "default": "c(\"error\", \"clip\")",
     "type": "Vector; choices versus multiple selection below",
-    "constraint": "\"error\" (default) or \"clip\" for genomic coordinates. Clipping is reported and never changes source values.",
-    "source": "man/geom_track_tile.Rd"
+    "constraint": "Coordinate error/clip policy.",
+    "source": "man/geom_track.Rd"
   },
   {
     "api": "geom_track_bar",
     "parameter": "show.legend",
     "default": "NA",
     "type": "R object; constraints below",
-    "constraint": "Standard layer arguments.",
-    "source": "man/geom_track_tile.Rd"
+    "constraint": "Standard layer controls.",
+    "source": "man/geom_track.Rd"
   },
   {
     "api": "geom_track_bar",
     "parameter": "inherit.aes",
     "default": "FALSE",
     "type": "Logical",
-    "constraint": "Standard layer arguments.",
-    "source": "man/geom_track_tile.Rd"
+    "constraint": "Standard layer controls.",
+    "source": "man/geom_track.Rd"
   },
   {
     "api": "geom_track_bar",
     "parameter": "...",
     "default": "",
     "type": "Forwarded arguments",
-    "constraint": "Extra geom parameters.",
-    "source": "man/geom_track_tile.Rd"
+    "constraint": "Native geom/stat parameters and fixed styles.",
+    "source": "man/geom_track.Rd"
+  },
+  {
+    "api": "geom_track_col",
+    "parameter": "mapping",
+    "default": "NULL",
+    "type": "aes mapping",
+    "constraint": "Standard layer input. Supply accver and source positions through x/pos, or interval start/end. Map y/track_value for identity values.",
+    "source": "man/geom_track.Rd"
+  },
+  {
+    "api": "geom_track_col",
+    "parameter": "data",
+    "default": "NULL",
+    "type": "Table/supported object; data may be a function",
+    "constraint": "Standard layer input. Supply accver and source positions through x/pos, or interval start/end. Map y/track_value for identity values.",
+    "source": "man/geom_track.Rd"
+  },
+  {
+    "api": "geom_track_col",
+    "parameter": "position",
+    "default": "NULL",
+    "type": "Position object or documented string",
+    "constraint": "Data position such as identity, stack, dodge. The legacy position=position_track(...) spelling still declares the physical band.",
+    "source": "man/geom_track.Rd"
+  },
+  {
+    "api": "geom_track_col",
+    "parameter": "track",
+    "default": "NULL",
+    "type": "Nullable R object; type/inheritance below",
+    "constraint": "A physical position_track() declaration.",
+    "source": "man/geom_track.Rd"
+  },
+  {
+    "api": "geom_track_col",
+    "parameter": "...",
+    "default": "",
+    "type": "Forwarded arguments",
+    "constraint": "Native geom/stat parameters and fixed styles.",
+    "source": "man/geom_track.Rd"
+  },
+  {
+    "api": "geom_track_col",
+    "parameter": "show.legend",
+    "default": "NA",
+    "type": "R object; constraints below",
+    "constraint": "Standard layer controls.",
+    "source": "man/geom_track.Rd"
+  },
+  {
+    "api": "geom_track_col",
+    "parameter": "inherit.aes",
+    "default": "FALSE",
+    "type": "Logical",
+    "constraint": "Standard layer controls.",
+    "source": "man/geom_track.Rd"
   },
   {
     "api": "geom_track_line",
@@ -3980,7 +4252,7 @@
     "parameter": "axis.text.orientation",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "One of \"horizontal\", \"parallel\", \"perpendicular\", or a finite numeric angle.",
+    "constraint": "One of \"horizontal\", \"parallel\", \"perpendicular\", or a finite numeric angle. In circular layouts, parallel labels follow the circle glyph by glyph. Horizontal and numeric orientations retain straight text.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -4116,7 +4388,7 @@
     "parameter": "legend.seq.key.size",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -4124,7 +4396,7 @@
     "parameter": "legend.seq.key.width",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -4132,7 +4404,7 @@
     "parameter": "legend.seq.key.height",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -4340,7 +4612,7 @@
     "parameter": "legend.ribbon.key.size",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -4348,7 +4620,7 @@
     "parameter": "legend.ribbon.key.width",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -4356,7 +4628,7 @@
     "parameter": "legend.ribbon.key.height",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -4476,7 +4748,7 @@
     "parameter": "legend.gene.key.size",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -4484,7 +4756,7 @@
     "parameter": "legend.gene.key.width",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -4492,7 +4764,7 @@
     "parameter": "legend.gene.key.height",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -4588,7 +4860,7 @@
     "parameter": "legend.feature.key.size",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -4596,7 +4868,7 @@
     "parameter": "legend.feature.key.width",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -4604,7 +4876,7 @@
     "parameter": "legend.feature.key.height",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -4700,7 +4972,7 @@
     "parameter": "legend.region.key.size",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -4708,7 +4980,7 @@
     "parameter": "legend.region.key.width",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -4716,7 +4988,7 @@
     "parameter": "legend.region.key.height",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -4852,7 +5124,7 @@
     "parameter": "axis.text.orientation",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "One of \"horizontal\", \"parallel\", \"perpendicular\", or a finite numeric angle.",
+    "constraint": "One of \"horizontal\", \"parallel\", \"perpendicular\", or a finite numeric angle. In circular layouts, parallel labels follow the circle glyph by glyph. Horizontal and numeric orientations retain straight text.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -4988,7 +5260,7 @@
     "parameter": "legend.seq.key.size",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -4996,7 +5268,7 @@
     "parameter": "legend.seq.key.width",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -5004,7 +5276,7 @@
     "parameter": "legend.seq.key.height",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -5212,7 +5484,7 @@
     "parameter": "legend.ribbon.key.size",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -5220,7 +5492,7 @@
     "parameter": "legend.ribbon.key.width",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -5228,7 +5500,7 @@
     "parameter": "legend.ribbon.key.height",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -5348,7 +5620,7 @@
     "parameter": "legend.gene.key.size",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -5356,7 +5628,7 @@
     "parameter": "legend.gene.key.width",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -5364,7 +5636,7 @@
     "parameter": "legend.gene.key.height",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -5460,7 +5732,7 @@
     "parameter": "legend.feature.key.size",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -5468,7 +5740,7 @@
     "parameter": "legend.feature.key.width",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -5476,7 +5748,7 @@
     "parameter": "legend.feature.key.height",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -5572,7 +5844,7 @@
     "parameter": "legend.region.key.size",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -5580,7 +5852,7 @@
     "parameter": "legend.region.key.width",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -5588,7 +5860,7 @@
     "parameter": "legend.region.key.height",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -5724,7 +5996,7 @@
     "parameter": "axis.text.orientation",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "One of \"horizontal\", \"parallel\", \"perpendicular\", or a finite numeric angle.",
+    "constraint": "One of \"horizontal\", \"parallel\", \"perpendicular\", or a finite numeric angle. In circular layouts, parallel labels follow the circle glyph by glyph. Horizontal and numeric orientations retain straight text.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -5860,7 +6132,7 @@
     "parameter": "legend.seq.key.size",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -5868,7 +6140,7 @@
     "parameter": "legend.seq.key.width",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -5876,7 +6148,7 @@
     "parameter": "legend.seq.key.height",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -6084,7 +6356,7 @@
     "parameter": "legend.ribbon.key.size",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -6092,7 +6364,7 @@
     "parameter": "legend.ribbon.key.width",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -6100,7 +6372,7 @@
     "parameter": "legend.ribbon.key.height",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -6220,7 +6492,7 @@
     "parameter": "legend.gene.key.size",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -6228,7 +6500,7 @@
     "parameter": "legend.gene.key.width",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -6236,7 +6508,7 @@
     "parameter": "legend.gene.key.height",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -6332,7 +6604,7 @@
     "parameter": "legend.feature.key.size",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -6340,7 +6612,7 @@
     "parameter": "legend.feature.key.width",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -6348,7 +6620,7 @@
     "parameter": "legend.feature.key.height",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -6444,7 +6716,7 @@
     "parameter": "legend.region.key.size",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -6452,7 +6724,7 @@
     "parameter": "legend.region.key.width",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -6460,7 +6732,7 @@
     "parameter": "legend.region.key.height",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -6596,7 +6868,7 @@
     "parameter": "axis.text.orientation",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "One of \"horizontal\", \"parallel\", \"perpendicular\", or a finite numeric angle.",
+    "constraint": "One of \"horizontal\", \"parallel\", \"perpendicular\", or a finite numeric angle. In circular layouts, parallel labels follow the circle glyph by glyph. Horizontal and numeric orientations retain straight text.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -6732,7 +7004,7 @@
     "parameter": "legend.seq.key.size",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -6740,7 +7012,7 @@
     "parameter": "legend.seq.key.width",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -6748,7 +7020,7 @@
     "parameter": "legend.seq.key.height",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -6956,7 +7228,7 @@
     "parameter": "legend.ribbon.key.size",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -6964,7 +7236,7 @@
     "parameter": "legend.ribbon.key.width",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -6972,7 +7244,7 @@
     "parameter": "legend.ribbon.key.height",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -7092,7 +7364,7 @@
     "parameter": "legend.gene.key.size",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -7100,7 +7372,7 @@
     "parameter": "legend.gene.key.width",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -7108,7 +7380,7 @@
     "parameter": "legend.gene.key.height",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -7204,7 +7476,7 @@
     "parameter": "legend.feature.key.size",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -7212,7 +7484,7 @@
     "parameter": "legend.feature.key.width",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -7220,7 +7492,7 @@
     "parameter": "legend.feature.key.height",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -7316,7 +7588,7 @@
     "parameter": "legend.region.key.size",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -7324,7 +7596,7 @@
     "parameter": "legend.region.key.width",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -7332,7 +7604,7 @@
     "parameter": "legend.region.key.height",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -7468,7 +7740,7 @@
     "parameter": "axis.text.orientation",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "One of \"horizontal\", \"parallel\", \"perpendicular\", or a finite numeric angle.",
+    "constraint": "One of \"horizontal\", \"parallel\", \"perpendicular\", or a finite numeric angle. In circular layouts, parallel labels follow the circle glyph by glyph. Horizontal and numeric orientations retain straight text.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -7604,7 +7876,7 @@
     "parameter": "legend.seq.key.size",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -7612,7 +7884,7 @@
     "parameter": "legend.seq.key.width",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -7620,7 +7892,7 @@
     "parameter": "legend.seq.key.height",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -7828,7 +8100,7 @@
     "parameter": "legend.ribbon.key.size",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -7836,7 +8108,7 @@
     "parameter": "legend.ribbon.key.width",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -7844,7 +8116,7 @@
     "parameter": "legend.ribbon.key.height",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -7964,7 +8236,7 @@
     "parameter": "legend.gene.key.size",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -7972,7 +8244,7 @@
     "parameter": "legend.gene.key.width",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -7980,7 +8252,7 @@
     "parameter": "legend.gene.key.height",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -8076,7 +8348,7 @@
     "parameter": "legend.feature.key.size",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -8084,7 +8356,7 @@
     "parameter": "legend.feature.key.width",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -8092,7 +8364,7 @@
     "parameter": "legend.feature.key.height",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -8188,7 +8460,7 @@
     "parameter": "legend.region.key.size",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -8196,7 +8468,7 @@
     "parameter": "legend.region.key.width",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -8204,7 +8476,7 @@
     "parameter": "legend.region.key.height",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Per-role key dimensions.",
+    "constraint": "Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -8469,6 +8741,14 @@
     "default": "\"unannotated\"",
     "type": "Character/enum; choices below",
     "constraint": "Character, default \"unannotated\". Replacement annotation used when empty_annotation = \"replace\".",
+    "source": "man/clean_ggchord_data.Rd"
+  },
+  {
+    "api": "clean_ggchord_data",
+    "parameter": "feature_data",
+    "default": "NULL",
+    "type": "Table/supported object; data may be a function",
+    "constraint": "Unified annotation input; mutually exclusive with gene_data.",
     "source": "man/clean_ggchord_data.Rd"
   },
   {
@@ -9032,6 +9312,14 @@
     "source": "man/focus_ggchord_data.Rd"
   },
   {
+    "api": "focus_ggchord_data",
+    "parameter": "feature_data",
+    "default": "NULL",
+    "type": "Table/supported object; data may be a function",
+    "constraint": "Unified annotation input; mutually exclusive with gene_data.",
+    "source": "man/focus_ggchord_data.Rd"
+  },
+  {
     "api": "focus_ggchord_track",
     "parameter": "data",
     "default": "",
@@ -9108,7 +9396,7 @@
     "parameter": "gene_data",
     "default": "NULL",
     "type": "Table/supported object; data may be a function",
-    "constraint": "Optional table with accver, start, end and strand. Annotation (anno) may be omitted. Directional GRanges are accepted; use geom_feature(data = ...) for unknown-strand intervals.",
+    "constraint": "Compatible legacy annotation input. The third positional argument retains its meaning. Use feature_data in new code; a non-NULL legacy input emits one message at construction, never during rendering. Untyped legacy tables retain their directional gene semantics. No removal version is scheduled. Do not supply both annotation inputs.",
     "source": "man/ggchord.Rd"
   },
   {
@@ -9125,6 +9413,14 @@
     "default": "c(\"warn\", \"error\", \"none\")",
     "type": "Vector; choices versus multiple selection below",
     "constraint": "Character, default \"warn\". How to run the structured input-data validation (see validate_ggchord_data): \"warn\" emits a single summary warning when the data has problems and caches the full report on the plot object (p$ggchord$validation); \"error\" stops on severe problems; \"none\" skips the diagnostic validation (the cheap structural checks that prevent crashes are still performed).",
+    "source": "man/ggchord.Rd"
+  },
+  {
+    "api": "ggchord",
+    "parameter": "feature_data",
+    "default": "NULL",
+    "type": "Table/supported object; data may be a function",
+    "constraint": "Optional unified annotation table or GRanges. Requires accver, start, end; absent strand becomes unknown (\".\"). Generic feature layers use the full table. Default gene layers select gene/CDS from feature_class, type, or role (in that priority order), and require known strands. tRNA/rRNA remain generic features. Explicit layer data overrides the constructor input. Use disjoint subsets when combining gene and feature layers; each layer keeps its own data independently.",
     "source": "man/ggchord.Rd"
   },
   {
@@ -9381,6 +9677,14 @@
     "default": "list()",
     "type": "Named list",
     "constraint": "Named list of explicit helper argument lists. Supported names: clean, filter, deduplicate, merge, bundle, optimize. Data arguments are supplied by preparation and cannot be overridden.",
+    "source": "man/prepare_ggchord_data.Rd"
+  },
+  {
+    "api": "prepare_ggchord_data",
+    "parameter": "feature_data",
+    "default": "NULL",
+    "type": "Table/supported object; data may be a function",
+    "constraint": "Unified annotation table, mutually exclusive with gene_data.",
     "source": "man/prepare_ggchord_data.Rd"
   },
   {
@@ -9760,6 +10064,14 @@
     "source": "man/segment_ggchord_data.Rd"
   },
   {
+    "api": "segment_ggchord_data",
+    "parameter": "feature_data",
+    "default": "NULL",
+    "type": "Table/supported object; data may be a function",
+    "constraint": "Unified annotation input; mutually exclusive with gene_data.",
+    "source": "man/segment_ggchord_data.Rd"
+  },
+  {
     "api": "validate_ggchord_data",
     "parameter": "seq_data",
     "default": "",
@@ -9813,6 +10125,14 @@
     "default": "TRUE",
     "type": "Logical",
     "constraint": "Logical, default TRUE. Whether to flag alignment rows where qaccver == saccver.",
+    "source": "man/validate_ggchord_data.Rd"
+  },
+  {
+    "api": "validate_ggchord_data",
+    "parameter": "feature_data",
+    "default": "NULL",
+    "type": "Table/supported object; data may be a function",
+    "constraint": "Unified annotation table, mutually exclusive with gene_data. Requires accver, start, end. Missing strand is unknown; +, -, ., and +/- are accepted. Reports use table \"feature\" and data_summary$n_feature; the input is never modified.",
     "source": "man/validate_ggchord_data.Rd"
   },
   {

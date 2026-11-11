@@ -26,7 +26,7 @@
 
 ## 类别填色、透明度、边框与线型 {#categories}
 
-同一 qaccver 映射到同一显示值。manual 系列的 values 推荐按实际类别命名，避免类别顺序变化后错配。此例同时训练多个独立角色，是组合示范，不是单参数视觉对照。连续透明度用 scale_ribbon_alpha_continuous(range=...)；离散透明度用 scale_ribbon_alpha_manual。colour 与 linetype 只改变边框；不能用边框外观代替区间方向。
+同一 qaccver 映射到同一显示值。manual 系列的 values 推荐按实际类别命名，避免类别顺序变化后错配。此例同时训练多个独立角色，是组合示范，不是单参数视觉对照。连续透明度用 `scale_ribbon_alpha_continuous(range=...)`；离散透明度用 `scale_ribbon_alpha_manual`。colour 与 linetype 只改变边框；不能用边框外观代替区间方向。
 
 {{code:comparescalemanual}}
 
@@ -34,6 +34,8 @@
 ## 点连接的独立标度家族 {#point-links}
 
 先从真实 HSP 显式计算中点；不把点连接当作覆盖整个比对区间。manual 系列分别给 link_colour、link_alpha、link_linewidth、link_linetype 映射类别；gradientn、alpha_continuous、linewidth_continuous 对应数值。下面先构造类别组合，再用 pident 训练连续组合。
+
+自动托管的数值 pident 映射使用0–100域和0、50、80、90、95、100六个Identity刻度；显式用户标度继续优先。此例为三个通道设置相同域、刻度与标题，使图例键可以合并。
 
 {{code:comparescalelinkdata}}
 {{code:comparescalelinkmanual}}

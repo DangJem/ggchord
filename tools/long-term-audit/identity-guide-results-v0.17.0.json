@@ -105,6 +105,12 @@
         }
       ],
       "evidence": "late bottom placement retains a horizontal ruler"
+    },
+    "managed_mappings": {
+      "roles": ["feature_fill", "link_colour", "link_alpha", "link_linewidth"],
+      "breaks": [0, 50, 80, 90, 95, 100],
+      "domain": [0, 100],
+      "explicit_scale_precedence": true
     }
   }
 }

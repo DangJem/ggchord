@@ -41,4 +41,6 @@ A ggplot2 scale.
 }
 \description{
 Point-link aesthetics are independent of sequence and ribbon aesthetics.
+Automatically generated numeric pident mappings use the 0-100 domain and
+ticks 0/50/80/90/95/100. Explicit scales keep their own limits and breaks.
 }

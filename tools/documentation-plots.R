@@ -131,9 +131,17 @@ assets <- rbind(assets, tutorial_assets)
 basic_ids <- c(basic_ids, tutorial_ids)
 assets$width[assets$id %in% c("labels", "styling", "featurestack", "decorations")] <- 8
 assets$height[assets$id %in% c("labels", "styling", "featurestack", "decorations")] <- 8
+foundation_assets <- assets[rep(match("firstlinear",assets$id),5),]
+foundation_assets$id <- c("foundationvertical","foundationsankey","foundationcount","foundationequal","foundationarrow")
+foundation_assets$object <- paste0("p_",foundation_assets$id)
+foundation_assets$input <- "Two bundled source sequences, original observed HSPs and source-strand annotation; no fabricated intervals"
+foundation_assets$width <- c(9,9,9,9,9);foundation_assets$height <- c(8,8,5,5,5)
+foundation_assets$background <- "white"
+assets <- rbind(assets,foundation_assets)
+basic_ids <- c(basic_ids,foundation_assets$id)
 assets$coordinate <- vapply(assets$object, function(name) {
  coord <- get(name, env)$coordinates
- if (inherits(coord, "CoordCollinear")) "collinear" else if (inherits(coord, "CoordCircular")) "circular" else "chord"
+ if (isTRUE(coord$ggchord_sankey)) "sankey" else if (inherits(coord, "CoordCollinear")) "collinear" else if (inherits(coord, "CoordCircular")) "circular" else "chord"
 }, character(1))
 teaching_assets <- assets[rep(1L, 6L), ]
 teaching_assets$id <- c("alignleft", "aligncenter", "alignright", "alignanchor", "alignauto", "tracktile")

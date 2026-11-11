@@ -347,6 +347,11 @@ ggchord_infer_visual_scales <- function(plot, layout, scales) {
         labels=if(identical(info$kind,"discrete")) unique(as.character(info$values)) else NULL
       )
     }
+    if (identical(info$kind, "continuous") && all(info$labels == "pident")) {
+      scale$name <- "Identity (%)"
+      scale$limits <- c(0, 100)
+      scale$breaks <- c(0, 50, 80, 90, 95, 100)
+    }
     scales[[length(scales) + 1L]] <- scale
   }
   scales

@@ -22,11 +22,13 @@ Check units, layers and parameters before changing coordinates. This table combi
 | [`geom_primer()`](reference/geom_primer.html) | Conditional | Unsupported | Conditional | One displayed DNA sequence and valid binding coordinates |
 | [`geom_primer_label_repel()`](reference/geom_primer_label_repel.html) | Conditional | Unsupported | Conditional | One displayed DNA sequence; share primer placement |
 | [`geom_restriction_site()`](reference/geom_restriction_site.html) | Conditional | Unsupported | Conditional | One displayed DNA sequence and actual computed cleavage sites |
-| [`geom_track_bar()`](reference/geom_track_tile.html) | Supported | Supported | Supported | Explicit position_track; numeric heights and declared domains |
-| [`geom_track_line()`](reference/geom_track_tile.html) | Supported | Supported | Supported | Explicit position_track; closure must be requested and missing samples respected |
-| [`geom_track_tile()`](reference/geom_track_tile.html) | Supported | Supported | Supported | Explicit position_track; no numeric height required |
+| [`geom_track()`](reference/geom_track.html) | Supported | Supported | Supported | Source-space Stat/Position; first support matrix in [Foundation](foundation.html#tracks) |
+| [`geom_track_bar()`](reference/geom_track.html) | Supported | Supported | Supported | Count observations; use col for supplied values |
+| [`geom_track_col()`](reference/geom_track.html) | Supported | Supported | Supported | Explicit position_track; numeric heights and declared domains |
+| [`geom_track_line()`](reference/geom_track.html) | Supported | Supported | Supported | Explicit position_track; closure must be requested and missing samples respected |
+| [`geom_track_tile()`](reference/geom_track.html) | Supported | Supported | Supported | Explicit position_track; no numeric height required |
 
-All 21 geoms were rendered in all three modes using 63 explicitly synthetic geometry fixtures: 53 succeeded and 10 were rejected by contract, including automatic primer labels. Centre labels support bp/aa in single-sequence chord/circular views; primers and restriction layers require DNA. Help now clarifies these boundaries. This verifies mode boundaries, not all parameter combinations, biological recognition or devices. See the [complete runtime record](../assets/source/tools/teaching-audit/layer-compatibility.csv).
+23 representative layers were rendered in the three main modes using 69 explicitly synthetic geometry fixtures: 59 succeeded and 10 were rejected by contract, including automatic primer labels. Centre labels support bp/aa in single-sequence chord/circular views; primers and restriction layers require DNA. Help now clarifies these boundaries. This verifies mode boundaries, not all parameter combinations, biological recognition or devices. See the [complete runtime record](../assets/source/tools/teaching-audit/layer-compatibility.csv).
 
 ## Understand conditional support {#conditions}
 
@@ -36,4 +38,4 @@ A Position controls local placement; it cannot convert an unsupported layer into
 
 ## Versions and reproducibility {#versions}
 
-This table targets development version 0.16.7.9000; [installation](installation.html) explains local source installation and stable documentation. Single circular mode requires one displayed sequence. Circular protein layout is a display choice, not a claim of molecular circularity. Project mixed bp/aa inputs first or plot them separately.
+See [installation](installation.html) for supported versions and [migration](../assets/MIGRATION.md) when updating existing scripts. Single circular mode requires one displayed sequence. Circular protein layout is a display choice, not a claim of molecular circularity. Project mixed bp/aa inputs first or plot them separately.

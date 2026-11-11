@@ -29,7 +29,7 @@ Choose a lesson by task. A means chord, B collinear, C single-sequence circular.
 | Draw primers and labels | [`geom_primer()`](reference/geom_primer.html) | `position` | C (bp) | [Advanced](primers.html#primer-arcs) |
 | Search and filter restriction sites | [`find_restriction_sites()`](reference/find_restriction_sites.html) | `methylation, enzymes` | DNA | [Advanced](recognition.html#restriction) |
 | Adjust restriction label leaders | [`geom_restriction_site()`](reference/geom_restriction_site.html) | `leader, label_style, label_side` | C (bp) | [Advanced](restriction-sites.html#restriction-labels) |
-| Draw GC bars and lines | [`geom_track_bar()`](reference/geom_track_tile.html) | `track_value, baseline` | A / B / C | [Advanced](tracks.html) |
+| Draw GC bars and lines | [`geom_track_col()`](reference/geom_track.html) | `track_value, baseline` | A / B / C | [Advanced](tracks.html) |
 | Draw a tile colour band | [`geom_track_tile()`](reference/geom_track_tile.html) | `track_fill, position` | A / B / C | [Advanced](tracks.html#tile) |
 | Set track width and order | [`position_track()`](reference/position_track.html) | `track, side, order, width, gap` | A / B / C | [Advanced](tracks.html#sharing) |
 | Import FASTA, GFF3 and alignments | [`read_fasta_lengths()`](reference/read_fasta_lengths.html) | `sequence_unit` | general | [Basics](formats.html) |
@@ -44,6 +44,9 @@ Choose a lesson by task. A means chord, B collinear, C single-sequence circular.
 | Inspect windows and built-in catalogs | [`diagnose_ggchord()`](reference/diagnose_ggchord.html) | `plot, width, height; catalog: aliases` | general | [Advanced](workflow-tools.html) |
 | Locate every API lesson | [`ggchord()`](reference/ggchord.html) | `all exported APIs` | general | [Advanced](api-curriculum.html) |
 | Find parameter types and full defaults | [`ggchord()`](reference/ggchord.html) | `all public formals` | general | [Advanced](parameter-atlas.html) |
+| Count source-position observations | [`geom_track()`](reference/geom_track.html) | `geom, stat, track, position` | A / B / C / Sankey | [Advanced](foundation.html#tracks) |
+| Route repeated sequence instances | [`geom_link_ribbon()`](reference/geom_link_ribbon.html) | `between, allow_repeated` | A / B | [Advanced](foundation.html#instances) |
+| Draw mirrored interval relationships | [`coord_sankey()`](reference/coord_sankey.html) | `column_gap, self_links` | Sankey | [Advanced](foundation.html#sankey) |
 
 ## Three independent learning paths {#paths}
 

@@ -23,9 +23,9 @@ for (lang in languages) {
   modules <- Filter(function(x) x$id %in% c('chord','collinear','plasmid'),groups)
   components$plots$menu <- lapply(modules,function(group) list(
     text=group$title[[lang]],href=paste0(group$pages[[1]],'.html')))
-  topics <- Filter(function(x) x$id %in% c('data','techniques','cases'), groups)
+  topics <- Filter(function(x) x$id %in% c('data','techniques','shared-techniques','cases'), groups)
   components$articles$menu <- c(list(list(
-    text=if(is_han) '章节目录' else 'Chapter index', href='about.html')),
+    text=if(is_han) '章节目录' else 'Chapter index', href='about.html#modules')),
     lapply(topics, function(group) list(text=group$title[[lang]], href=paste0('about.html#path-',group$id))))
   cfg <- list(destination=paste0('.site/',lang),lang=if(is_han)'zh_CN' else 'en',
     navbar=list(components=components))

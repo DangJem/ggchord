@@ -279,7 +279,7 @@
       "zh": "绘制 GC 柱图与折线",
       "en": "Draw GC bars and lines"
     },
-    "api": "geom_track_bar",
+    "api": "geom_track_col",
     "parameters": "track_value, baseline",
     "modes": "A / B / C",
     "page": "tracks",
@@ -437,6 +437,39 @@
     "parameters": "all public formals",
     "modes": "general",
     "page": "parameter-atlas",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "en": "Count source-position observations",
+      "zh": "统计源位置观测数"
+    },
+    "api": "geom_track",
+    "parameters": "geom, stat, track, position",
+    "modes": "A / B / C / Sankey",
+    "page": "foundation#tracks",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "en": "Route repeated sequence instances",
+      "zh": "为重复序列实例选择路由"
+    },
+    "api": "geom_link_ribbon",
+    "parameters": "between, allow_repeated",
+    "modes": "A / B",
+    "page": "foundation#instances",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "en": "Draw mirrored interval relationships",
+      "zh": "绘制镜像区间关系"
+    },
+    "api": "coord_sankey",
+    "parameters": "column_gap, self_links",
+    "modes": "Sankey",
+    "page": "foundation#sankey",
     "level": "advanced"
   }
 ]

@@ -154,6 +154,7 @@ ggchord_layout_axis_step <- function(
         label_gap = rep(labelOffset[id], nrow(pts)),
         is_major = pts$is_major,
         is_origin = origin_tick,
+        is_endpoint = pts$is_major & pts$pos %in% c(1, lens[id]),
         accver = id,
         stringsAsFactors = FALSE
       )

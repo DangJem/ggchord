@@ -33,7 +33,7 @@ From the band baseline, double only band width while retaining other settings.
 
 ## Circular direction, rotation, opening and fit {#coordinates}
 
-The development zero origin is at 12 o’clock with clockwise coordinates. Positive rotation turns the complete plot counterclockwise. Relative to double above, each example changes only direction or gap. See the [rotation contrast](plasmid-tuning.html#rotation).
+The zero origin is at 12 o’clock with clockwise coordinates. Positive rotation turns the complete plot counterclockwise. Relative to double above, each example changes only direction or gap. See the [rotation contrast](plasmid-tuning.html#rotation).
 
 | Parameter | Default | Type and boundary |
 | --- | --- | --- |

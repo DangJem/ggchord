@@ -453,7 +453,7 @@
     "console": "      accver start   end strand                 anno type  source score phase                                                                                                                                          attributes .source_line source_strand     feature_id parent_ids                  .source_file\n1 MT108731.1 13064 14554      + hypothetical protein  CDS Genbank     .     0 ID=cds-QIQ63803.1;Dbxref=NCBI_GP:QIQ63803.1;Name=QIQ63803.1;Note=ORF46;gbkey=CDS;product=hypothetical protein;protein_id=QIQ63803.1;transl_table=11            7             + cds-QIQ63803.1            examples/gff3/MT108731.1.gff3\n2 MT108731.1 22920 23705      + hypothetical protein  CDS Genbank     .     0 ID=cds-QIQ63807.1;Dbxref=NCBI_GP:QIQ63807.1;Name=QIQ63807.1;Note=ORF53;gbkey=CDS;product=hypothetical protein;protein_id=QIQ63807.1;transl_table=11            8             + cds-QIQ63807.1            examples/gff3/MT108731.1.gff3\n3 MT108731.1 23894 24814      + hypothetical protein  CDS Genbank     .     0 ID=cds-QIQ63806.1;Dbxref=NCBI_GP:QIQ63806.1;Name=QIQ63806.1;Note=ORF54;gbkey=CDS;product=hypothetical protein;protein_id=QIQ63806.1;transl_table=11            9             + cds-QIQ63806.1            examples/gff3/MT108731.1.gff3\n4 MT108731.1 27115 28053      + hypothetical protein  CDS Genbank     .     0 ID=cds-QIQ63805.1;Dbxref=NCBI_GP:QIQ63805.1;Name=QIQ63805.1;Note=ORF61;gbkey=CDS;product=hypothetical protein;protein_id=QIQ63805.1;transl_table=11           10             + cds-QIQ63805.1            examples/gff3/MT108731.1.gff3"
   },
   "validation": {
-    "console": "List of 6\n $ seq_data   :'data.frame':\t4 obs. of  3 variables:\n $ ribbon_data:'data.frame':\t13 obs. of  7 variables:\n $ gene_data  : NULL\n $ features   :List of 1\n $ links      : list()\n $ report     :List of 10"
+    "console": "List of 7\n $ seq_data    :'data.frame':\t4 obs. of  3 variables:\n $ ribbon_data :'data.frame':\t13 obs. of  7 variables:\n $ gene_data   : NULL\n $ feature_data: NULL\n $ features    :List of 1\n $ links       : list()\n  [list output truncated]"
   },
   "hierarchy": {
     "console": "List of 5\n $ valid   : logi TRUE\n $ seq_data:'data.frame':\t4 obs. of  3 variables:\n $ genomes : tibble [4 × 1] (S3: tbl_df/tbl/data.frame)\n $ issues  :'data.frame':\t0 obs. of  6 variables:\n $ contigs :'data.frame':\t4 obs. of  4 variables:"
@@ -514,7 +514,7 @@
     ]
   },
   "genbank": {
-    "console": "List of 3\n $ seq_data:'data.frame':\t1 obs. of  8 variables:\n $ features:List of 1\n $ report  :List of 5"
+    "console": " NULL"
   },
   "standardblast": {
     "columns": [

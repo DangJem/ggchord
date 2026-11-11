@@ -1,10 +1,10 @@
 {
-  "source_sha256": "0809ade68f224bac6d78348ce3c7afefa50918d84866c7060e0d90eaa6c96192",
+  "source_sha256": "4c0f7ff9a51cc30ed017bcf0972580ff35329cc8dc60731b84a969f1db4c1813",
   "translations": {
     "0": "点连接标度",
     "1": "传给对应 ggplot2 标度的参数。",
     "2": "手动 aesthetic 值。",
     "3": "一个 ggplot2 标度。",
-    "4": "点连接 aesthetic 独立于序列及区间连接 aesthetic。"
+    "4": "点连接 aesthetic 独立于序列及区间连接 aesthetic。自动生成的数值 pident 映射使用0–100域和0/50/80/90/95/100刻度；显式标度保留自己的limits与breaks。"
   }
 }

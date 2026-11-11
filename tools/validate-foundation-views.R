@@ -39,8 +39,17 @@ m <- map_ggchord_position(q,'right:B',300)
 stopifnot(abs(map_ggchord_position(q,'right:B',m$y,inverse=TRUE)$position-300)<1e-7)
 invisible(ggplot2::ggplotGrob(q))
 results$sankey <- 'real query-left/subject-right endpoints; reciprocals retained, same entity excluded; inverse mapping round-trip'
-q <- ggchord(s)+geom_seq()+coord_collinear()
-lay <- get_chord_layout(q,build=TRUE)
+for (coord in list(coord_chord(), coord_collinear(),
+                   coord_collinear(seq_axis = "vertical"), coord_sankey())) {
+  q <- ggchord(s) + geom_seq() + coord
+  lay <- get_chord_layout(q, build = TRUE)
+  for (id in unique(lay$axis_ticks$accver)) {
+    labels <- stats::na.omit(lay$axis_ticks$label[lay$axis_ticks$accver == id])
+    stopifnot("1" %in% labels, !"0" %in% labels)
+  }
+}
+q <- ggchord(s) + geom_seq() + coord_collinear()
+lay <- get_chord_layout(q, build = TRUE)
 for (id in s$accver) stopifnot(all(c('1',as.character(s$length[s$accver==id])) %in% lay$axis_ticks$label[lay$axis_ticks$accver==id]))
 q <- q+scale_seq_position_continuous(breaks=c(100,200),minor_breaks=NULL)
 stopifnot(setequal(na.omit(get_chord_layout(q,build=TRUE)$axis_ticks$label),c('100','200')))
@@ -48,7 +57,12 @@ focused <- focus_ggchord_data(s,loci=data.frame(accver='A',start=101,end=300))
 source_axis <- ggchord(focused$seq_data)+geom_seq()+coord_collinear()+
   scale_seq_position_continuous(coordinates='source')
 stopifnot(all(c('101','300') %in% get_chord_layout(source_axis,build=TRUE)$axis_ticks$label))
-results$axis <- 'default real endpoints and explicit-break precedence'
+endpoint_plot <- ggchord(data.frame(accver = "endpoint-axis", length = 64323)) +
+  geom_seq() + coord_collinear() + scale_seq_position_continuous(n.breaks = 3)
+endpoint_table <- ggplot2::ggplotGrob(endpoint_plot)
+endpoint_layout <- attr(endpoint_table, "ggchord_render_layout")
+stopifnot(all(c("1", "64323") %in% endpoint_layout$axis_ticks$label))
+results$axis <- 'real endpoints survive measured pruning; explicit-break precedence and source windows retained'
 loci <- data.frame(accver='A',start=25,end=200,locus_id='a')
 stopifnot(nrow(focus_ggchord_data(s,feature_data=f,loci=loci)$feature_data)==1,
   nrow(segment_ggchord_data(s,feature_data=f,windows=loci)$feature_data)==1,

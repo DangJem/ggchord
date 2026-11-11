@@ -36,6 +36,26 @@ Constructor rows share source IDs across default annotation layers. Explicit
 layer tables and functions have layer-local scope, without content-based
 inference or removal of identical source observations.
 
+## Track values and sequence axes in 0.17.0
+
+`geom_track_bar()` now counts observations, matching native bar semantics;
+`geom_track_col()` displays supplied numeric heights with `stat = "identity"`.
+Neither function is removed. Migrate numerical bars by replacing the function
+name with `geom_track_col()`, retaining the data, value mapping and physical band.
+
+| Previous use | Replacement | Change |
+| --- | --- | --- |
+| `geom_track_bar(aes(track_value = gc), data = bins, ...)` for supplied values | `geom_track_col(aes(track_value = gc), data = bins, ...)` | Numeric-height behavior moves to col; bar counts rows. |
+| `geom_track(..., geom = "bar")` for supplied values | `geom_track(..., geom = "col")` | Use bar with `aes(x = position)` for observation counts. |
+| Explicit zero-based sequence tick vectors in examples | `scale_seq_position_continuous(n.breaks = 3)` | Automatic sequence axes start at 1 and prioritize real endpoints. |
+
+`track = position_track(...)` names the physical band; `position` adjusts data.
+The earlier `position = position_track(...)` band spelling remains accepted.
+Source-coordinate windows retain their original genomic interval. Explicit
+breaks and labels remain available; a closed circular axis combines 1/length
+at the seam. Automatically managed numeric pident mappings use the 0–100
+domain and ticks 0/50/80/90/95/100. Explicit user scales retain priority.
+
 ## Cross-row ribbon outlines in 0.16.7
 
 `geom_link_ribbon()` uses `nonadjacent_linewidth = 0.4` for non-adjacent
