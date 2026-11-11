@@ -10,8 +10,10 @@ ggchord_project_vertical_data <- function(data) {
   for (field in intersect(c("angle", "text_angle", "label_angle"), names(data))) {
     value <- (data[[field]] + 90 + 180) %% 360 - 180
     # Preserve readable text rather than turning labels upside down.
-    value[value > 90] <- value[value > 90] - 180
-    value[value < -90] <- value[value < -90] + 180
+    above <- which(value > 90)
+    value[above] <- value[above] - 180
+    below <- which(value < -90)
+    value[below] <- value[below] + 180
     data[[field]] <- value
   }
   data

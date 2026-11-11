@@ -1,11 +1,23 @@
 # ggchord 0.20.0.9000
 
+- `read_fasta_lengths(keep_sequence = TRUE)` optionally retains actual FASTA
+  characters and case alongside lengths and provenance. It does not infer an
+  alphabet or alignment. The default length-only output is unchanged.
+- Fixed `focus_ggchord_data()` retaining full sequence strings after shortening
+  a locus. Optional `sequence` strings now follow the same crop, including
+  repeated focusing, with length and integer-boundary validation. Character
+  order is preserved; focusing does not imply reverse complementation.
+
 - Added `read_bedpe()` as the first Semantic Enrichment adapter. It reads
   paired zero-based intervals into canonical q/s endpoints, preserves anchor
   order, raw fields, arbitrary score strings, extra fields and file provenance,
   and follows paired-object negative-strand conventions. No identity, alignment
   length or read support is inferred. Incomplete anchors fail by default;
   `unmapped = "keep"` retains them explicitly for auditing before filtering.
+
+- Fixed vertical and radial projection failing on missing text angles retained
+  in layered feature layouts. Unknown angles stay missing while finite angles
+  retain readable orientation.
 
 # ggchord 0.19.0.9000
 

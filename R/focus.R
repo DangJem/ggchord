@@ -194,6 +194,9 @@ ggchord_focus_feature_parts <- function(row, lo, hi, origin, caller) {
 #' Segmented annotations, cleavage positions and cached feature runs are
 #' cropped and relocated together. Source intervals, source origins and
 #' genomic left/right truncation flags are retained on the returned tables.
+#' An optional `sequence` column must contain non-missing strings matching
+#' each input length. It is cropped with integer locus boundaries, preserving
+#' character order and case; focusing does not reverse-complement strings.
 #' Alignment cropping is a linear display projection, not a new alignment:
 #' identity is retained, and a scaled alignment length is marked as estimated.
 #'
@@ -258,6 +261,16 @@ focus_ggchord_data <- function(
   seq_out$.locus_row <- focus$.locus_row
   seq_out$accver <- focus$.output_accver
   seq_out$length <- focus$.focus_end - focus$.focus_start + 1
+  if ("sequence" %in% names(seq_data)) {
+    characters <- seq_data$sequence
+    if (!is.character(characters) || anyNA(characters) ||
+        any(nchar(characters, type = "chars") != seq_data$length))
+      ggchord_stop(caller, ": sequence strings must match input lengths")
+    if (any(focus$.focus_start != floor(focus$.focus_start)) ||
+        any(focus$.focus_end != floor(focus$.focus_end)))
+      ggchord_stop(caller, ": sequence strings require integer locus boundaries")
+    seq_out$sequence <- substring(characters[seq_index], focus$.focus_start, focus$.focus_end)
+  }
 
   gene_out <- NULL
   gene_kept <- ribbon_kept <- integer()

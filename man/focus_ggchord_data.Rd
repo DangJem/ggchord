@@ -46,6 +46,9 @@ control their output sequence IDs.
 Segmented annotations, cleavage positions and cached feature runs are
 cropped and relocated together. Source intervals, source origins and
 genomic left/right truncation flags are retained on the returned tables.
+An optional \code{sequence} column must contain non-missing strings matching
+each input length. It is cropped with integer locus boundaries, preserving
+character order and case; focusing does not reverse-complement strings.
 Alignment cropping is a linear display projection, not a new alignment:
 identity is retained, and a scaled alignment length is marked as estimated.
 }

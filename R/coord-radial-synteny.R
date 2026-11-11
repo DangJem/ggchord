@@ -87,9 +87,11 @@ ggchord_project_radial_data <- function(data, frames, id = NULL, fixed_angle = F
   for (field in intersect(c("angle", "text_angle", "label_angle"), names(data))) {
     angle <- data[[field]] * pi / 180 + frames$theta[at]
     value <- atan2(sin(angle) * frames$ratio[at], cos(angle)) * 180 / pi
-    flipped <- value > 90 | value < -90
-    value[value > 90] <- value[value > 90] - 180
-    value[value < -90] <- value[value < -90] + 180
+    flipped <- which(value > 90 | value < -90)
+    above <- which(value > 90)
+    value[above] <- value[above] - 180
+    below <- which(value < -90)
+    value[below] <- value[below] + 180
     data[[field]] <- value
     # Flipping the baseline requires reflecting both justifications as well.
     prefix <- if (field == "label_angle") "label_" else ""

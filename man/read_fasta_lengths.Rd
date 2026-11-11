@@ -9,7 +9,8 @@ read_fasta_lengths(
   files = NULL,
   header_delim = NULL,
   source_file = FALSE,
-  sequence_unit = NULL
+  sequence_unit = NULL,
+  keep_sequence = FALSE
 )
 }
 \arguments{
@@ -27,10 +28,16 @@ more files, default \code{FALSE}.}
 \item{sequence_unit}{Optional \code{"bp"} or \code{"aa"} declaration. When supplied,
 adds that column to the result; the alphabet is not inferred. Omitted
 units retain the existing output columns and ggchord interprets them as bp.}
+
+\item{keep_sequence}{Logical, default \code{FALSE}. Also retain the actual FASTA
+characters in \code{sequence}, removing whitespace only and preserving case.
+No alphabet, reverse complement or alignment columns are inferred. Gap
+characters, if present, are counted in \code{length}; gapped input needs an
+explicit alignment-to-source map before genomic use.}
 }
 \value{
 A data.frame with columns \code{accver} and \code{length}, plus
-\code{sequence_unit} when explicitly requested.
+\code{sequence_unit} and \code{sequence} when explicitly requested.
 A \code{ggchord_import} attribute records files and per-file output row counts.
 }
 \description{
@@ -45,6 +52,9 @@ library(dplyr)
 source <- read_fasta_lengths("examples/fasta/MT108731.1.fna")
 seqs <- source |>
   select(accver, length)
+characters <- read_fasta_lengths(
+  "examples/fasta/MT108731.1.fna", keep_sequence = TRUE
+)
 }
 }
 \seealso{

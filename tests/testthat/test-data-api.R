@@ -77,6 +77,7 @@ test_that("import helpers parse minimal files with explicit coordinate conventio
     "A\tsource\tCDS\t1\t8\t.\t+\t0\tID=cds1;product=test%20protein",
     "##FASTA", ">A", "ACGTACGT"), gff)
   expect_equal(read_fasta_lengths(fasta)$length, 8L)
+  expect_identical(read_fasta_lengths(fasta, keep_sequence = TRUE)$sequence, "ACGTACGT")
   imported <- read_blast(blast, format = "outfmt6")
   expect_equal(nrow(imported), 1L)
   expect_equal(imported$qaccver, "001")
@@ -171,7 +172,9 @@ test_that("focus composes nested segment coordinates and keeps reverse links", {
   features <- smoke_genes()[1, ]
   features$segments <- I(list(data.frame(start = c(100, 160), end = c(140, 200),
     segment_index = 1:2, segment_type = "standard", length_bp = 41)))
-  focused <- focus_ggchord_data(smoke_sequences(), smoke_ribbon(), features,
+  sequences <- smoke_sequences()
+  sequences$sequence <- vapply(sequences$length, function(n) paste(rep("A", n), collapse = ""), "")
+  focused <- focus_ggchord_data(sequences, smoke_ribbon(), features,
     loci = data.frame(accver = c("A", "B"), start = c(120, 320),
       end = c(180, 380)))
   again <- focus_ggchord_data(focused$seq_data, focused$ribbon_data,
@@ -179,6 +182,7 @@ test_that("focus composes nested segment coordinates and keeps reverse links", {
   expect_true(all(again$gene_data$segments[[1]]$start >= 1))
   expect_true(all(again$gene_data$segments[[1]]$end <= again$seq_data$length[1]))
   expect_equal(again$seq_data$.source_origin, c(121, 321))
+  expect_equal(nchar(again$seq_data$sequence), again$seq_data$length)
   expect_gt(again$ribbon_data$sstart, again$ribbon_data$send)
   expect_equal(again$gene_data$.source_start, features$start)
 })
