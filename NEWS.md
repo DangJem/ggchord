@@ -13,7 +13,10 @@
   panel to the physical aspect ratio without changing explicit font sizes.
 - Cross-panel styles use standard aesthetic mappings/scales, a separate measured
   guide, opt-in sequence-colour gradients and decorative subject tips. Identity
-  retains 0/50/80/90/95/100 breaks. Existing standalone defaults are unchanged.
+  retains 0/50/80/90/95/100 breaks, with orientation and text metrics measured
+  for its default ruler. Native legend selection and last-plot state are
+  preserved. Panel copies retain callback/quosure environments without
+  serializing unrelated objects. Existing standalone defaults are unchanged.
 - Fusion currently requires fully visible same-unit intervals. Ambiguous routes,
   repeated declared HSP identities without consent, unsupported views, overlapping
   allocations and insufficient guide space fail explicitly. Sankey/free-angle/

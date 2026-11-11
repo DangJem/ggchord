@@ -18,7 +18,7 @@ fusion_ribbon(
   alpha = 0.35,
   linewidth = 0.25,
   linetype = 1,
-  show.legend = TRUE
+  show.legend = NA
 )
 }
 \arguments{
@@ -44,7 +44,8 @@ exported in full even when the tip is drawn.}
 \item{fill, colour, alpha, linewidth, linetype}{Fixed styles; explicit values
 take priority over mappings. The default fill without pident is steelblue.}
 
-\item{show.legend}{Whether this layer contributes to the composition guide.}
+\item{show.legend}{Standard ggplot2 legend selection: NA follows mappings;
+TRUE/FALSE or a named logical vector controls guide participation.}
 }
 \value{
 A component for \code{\link[=ggchord_fusion]{ggchord_fusion()}}.

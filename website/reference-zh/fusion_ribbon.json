@@ -1,5 +1,5 @@
 {
-  "source_sha256": "ccbd09ff4c13e2f92c1c1927aadd4d2859a77a8eb143f9cdb6d14dc6403c5d9b",
+  "source_sha256": "69b030804a8088f0e2169fc309f052f24db00741925a70f5a36bc05fd358b382",
   "translations": {
     "0": "连接Fusion面板间的真实区间",
     "1": "保留原始端点的关系数据框。",
@@ -10,7 +10,7 @@
     "6": "显式允许重复展示source_hsp_id。",
     "7": "控制距离相对于端点间距的比例，范围为⟦0⟧。",
     "8": "固定样式优先于对应映射。没有pident时，默认填充为steelblue。",
-    "9": "该图层是否参与组合层图例。",
+    "9": "标准ggplot2图例选择：NA按映射自动决定；TRUE/FALSE或命名逻辑向量控制参与图例的美学。",
     "10": "供⟦0⟧使用的组件。",
     "11": "使用标准qaccver/saccver与qstart/qend/sstart/send字段。可选qpanel/spanel和q_instance/s_instance明确选择面板与显示实例；仅在候选唯一时推断缺省选择。query/subject角色不依赖面板摆放方位。区间为一基闭区间，按输入方向保留跨度为⟦0⟧的前缘；单位置区间也有非零宽度。要求区间完整可见；需要拆分或聚焦时，先显式准备来源数据。"
   }

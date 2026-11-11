@@ -163,3 +163,30 @@ context <- eflected$diagnostics$center$render_context
 expected <- panel$panel_xmin+(-qf$local_x-context$x_range[1])/diff(context$x_range)*(panel$panel_xmax-panel$panel_xmin)
 stopifnot(isTRUE(all.equal(qf$x,unname(expected),check.attributes=FALSE)))
 message("Fusion: native position-scale reflection passed")
+# Bottom Identity rulers use horizontal measurements, not a vertical bar.
+bottom <- f0+ggplot2::theme(legend.position="bottom")
+eb <- export_ggchord_fusion(bottom)
+stopifnot(eb$metadata$guide_side=="bottom",eb$metadata$guide_size_mm[1]>eb$metadata$guide_size_mm[2])
+selected <- ggchord_fusion(center)+fusion_panel(vertical,"detail")+
+  fusion_ribbon(hits[1,,drop=FALSE],qpanel="center",spanel="detail",show.legend=c(fill=FALSE))
+stopifnot(export_ggchord_fusion(selected)$metadata$guide_side=="none")
+message("Fusion: measured horizontal Identity guide and native legend selection passed")
+# Auxiliary style/frame plots must not replace the user's last composition.
+last <- ggchord_fusion(center)+fusion_panel(vertical,"last")
+stopifnot(identical(ggplot2::last_plot(),last))
+invisible(export_ggchord_fusion(last))
+stopifnot(identical(ggplot2::last_plot(),last))
+message("Fusion: standard last_plot state preserved")
+jsonlite::write_json(list(
+  version=as.character(utils::packageVersion("ggchord")),
+  ggplot2=as.character(utils::packageVersion("ggplot2")),
+  real_paf_rows=nrow(hits), retained_paf_rows=sum(e$connections$retained),
+  source_endpoints_unchanged=identical(e$connections[cols],hits[cols]),
+  panel_cases=c("Circular", "Chord", "horizontal/vertical Collinear", "four sides", "source windows", "named repeated instances"),
+  physical_sizes_inches=list(c(10,8),c(12,6),c(14,11)),
+  protein_rows=nrow(ep$connections),protein_unit=unique(ep$connections$sequence_unit),
+  evidence=c("full ordered fronts", "native position scale reflection", "independent source cache", "local Track statistics", "label visibility", "unknown direction report", "explicit identity duplication", "empty input", "native scales and guides", "horizontal Identity measurement", "native legend selection", "shared preview", "last_plot preservation"),
+  limitations=c("local checks only", "no release device matrix", "no global collision certification"),
+  engine_sha256=as.list(stats::setNames(vapply(list.files("R","[.]R$",full.names=TRUE),function(p)
+    digest::digest(file=p,algo="sha256"),character(1)),list.files("R","[.]R$",full.names=TRUE)))),
+  "tools/long-term-audit/v0.19.0-results.json",auto_unbox=TRUE,pretty=TRUE)

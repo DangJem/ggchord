@@ -1,5 +1,7 @@
 # Render once inside final panel containers; never freeze a previous-size image.
 ggchord_build_fusion <- function(x) {
+  previous_plot <- ggplot2::last_plot()
+  on.exit(ggplot2::set_last_plot(previous_plot),add=TRUE)
   canvas <- c(width=grid::convertWidth(grid::unit(1,"npc"),"mm",TRUE),
     height=grid::convertHeight(grid::unit(1,"npc"),"mm",TRUE))
   origin <- grid::deviceLoc(grid::unit(0,"npc"),grid::unit(0,"npc"),valueOnly=TRUE)
@@ -28,8 +30,16 @@ ggchord_build_fusion <- function(x) {
     center <- c(mean(rect[1:2]),mean(rect[3:4]))*area+shift
     viewport <- grid::viewport(x=center[1],y=center[2],width=dimensions[1],height=dimensions[2],
       default.units="mm",clip="off",name=paste0("fusion-",id))
-    # Deep clone layers as well: extension geoms may carry their own state.
-    plot <- unserialize(serialize(ggchord_render_plot_copy(spec$plot),NULL))
+    # Clone build-local ggproto state without serializing quosure/data-function
+    # environments: a teaching environment can contain many unrelated plots.
+    plot <- ggchord_render_plot_copy(spec$plot)
+    plot$layers <- lapply(plot$layers,function(layer) {
+      copy <- ggplot2::ggproto(NULL,layer)
+      copy$geom <- ggplot2::ggproto(NULL,layer$geom)
+      copy$stat <- ggplot2::ggproto(NULL,layer$stat)
+      copy$position <- ggplot2::ggproto(NULL,layer$position)
+      copy
+    })
     table <- local({
       grid::pushViewport(viewport)
       on.exit(grid::popViewport())

@@ -32,6 +32,7 @@ ggchord_fusion <- function(center, center_size = NULL, layout = c("fixed", "adap
   x$panels <- list(center = list(plot = center, side = "center", size = center_size))
   x$ribbons <- list(); x$styles <- list(); x$fusion_layout <- match.arg(layout)
   class(x) <- c("ggchord_fusion", class(x))
+  ggplot2::set_last_plot(x)
   x
 }
 
@@ -80,7 +81,8 @@ fusion_panel <- function(plot, id, side = c("right", "top", "left", "bottom"), s
 #' @param curvature Control distance relative to endpoint separation, in `[0,1]`.
 #' @param fill,colour,alpha,linewidth,linetype Fixed styles; explicit values
 #'   take priority over mappings. The default fill without pident is steelblue.
-#' @param show.legend Whether this layer contributes to the composition guide.
+#' @param show.legend Standard ggplot2 legend selection: NA follows mappings;
+#'   TRUE/FALSE or a named logical vector controls guide participation.
 #' @return A component for [ggchord_fusion()].
 #' @export
 #' @examples
@@ -93,13 +95,13 @@ fusion_panel <- function(plot, id, side = c("right", "top", "left", "bottom"), s
 fusion_ribbon <- function(data, mapping = NULL, qpanel = NULL, spanel = NULL,
     gradient = FALSE, tip = c("none", "subject"), allow_repeated = FALSE,
     curvature = .3, fill = NULL, colour = NA, alpha = .35, linewidth = .25,
-    linetype = 1, show.legend = TRUE) {
+    linetype = 1, show.legend = NA) {
   ggchord_require_columns(data, c("qaccver", "saccver", "qstart", "qend", "sstart", "send"), "fusion_ribbon()")
   if (!is.null(mapping) && !inherits(mapping, "ggplot2::mapping") && !inherits(mapping, "uneval"))
     ggchord_stop("fusion_ribbon(): mapping must be aes()")
   if (length(setdiff(names(mapping), c("fill", "colour", "alpha", "linewidth", "linetype"))))
     ggchord_stop("fusion_ribbon(): only fill, colour, alpha, linewidth and linetype can be mapped")
-  for (value in list(gradient, allow_repeated, show.legend)) if (!is.logical(value) || length(value) != 1 || is.na(value))
+  for (value in list(gradient, allow_repeated)) if (!is.logical(value) || length(value) != 1 || is.na(value))
     ggchord_stop("fusion_ribbon(): flags must be TRUE or FALSE")
   if (!is.numeric(curvature) || length(curvature) != 1 || !is.finite(curvature) || curvature < 0 || curvature > 1)
     ggchord_stop("fusion_ribbon(): curvature must be in [0,1]")
@@ -136,6 +138,7 @@ fusion_ribbon <- function(data, mapping = NULL, qpanel = NULL, spanel = NULL,
   } else if (inherits(e2, "Scale") || inherits(e2, "theme") || inherits(e2, "Guides") || inherits(e2, "ggplot2::labels")) {
     e1$styles[[length(e1$styles) + 1L]] <- e2
   } else ggchord_stop("Fusion accepts fusion_panel(), fusion_ribbon(), scales, guides, labels and themes")
+  ggplot2::set_last_plot(e1)
   e1
 }
 
@@ -176,13 +179,12 @@ ggchord_fusion_styles <- function(x) {
     fixed <- layer$fixed
     for (name in names(defaults)) if (is.null(mapping[[name]]) && is.null(fixed[[name]])) fixed[[name]] <- defaults[[name]]
     p <- p + do.call(ggplot2::geom_polygon, c(list(data = d, mapping = mapping, inherit.aes = FALSE,
-      show.legend = layer$show.legend && !layer$gradient), fixed))
+      show.legend = if (layer$gradient) FALSE else layer$show.legend), fixed))
   }
   if (default_identity) p <- p + ggplot2::scale_fill_stepsn(name = "Identity (%)",
     colours = c("#440154", "#482878", "#3E4A89", "#31688E", "#26828E", "#1F9E89", "#35B779", "#6DCD59", "#B4DE2C", "#FDE725"),
     limits = c(0,100), breaks = c(0,50,80,90,95,100),
-    guide = ggplot2::guide_coloursteps(even.steps = FALSE, show.limits = TRUE,
-      theme = ggplot2::theme(legend.key.height = grid::unit(85, "mm"))))
+    guide = ggchord_fusion_identity_guide(p,x$styles))
   for (style in x$styles) p <- suppressMessages(p + style)
   built <- ggplot2::ggplot_build(p)
   table <- ggplot2::ggplot_gtable(built)
@@ -368,6 +370,7 @@ export_ggchord_fusion <- function(plot, width = 10, height = 8) {
 
 #' @export
 print.ggchord_fusion <- function(x, ...) {
+  ggplot2::set_last_plot(x)
   grid::grid.newpage()
   grid::grid.draw(x)
   invisible(x)
@@ -383,4 +386,36 @@ grid.draw.ggchord_fusion <- function(x, recording = TRUE) {
 #' @export
 ggplot_build.ggchord_fusion <- function(plot, ...) {
   ggchord_stop("Fusion is a composition: use grid.draw(), ggsave() or export_ggchord_fusion(), not ggplot_build()")
+}
+
+# The default cross-panel ruler uses its final orientation and real text metrics.
+ggchord_fusion_identity_guide <- function(plot, styles) {
+  theme <- plot$theme
+  explicit <- list()
+  for (style in styles) if (inherits(style,"theme")) {
+    theme <- theme + style
+    for (field in c("legend.key.width","legend.key.height","legend.key.size"))
+      if (!is.null(style[[field]])) explicit[[field]] <- style[[field]]
+  }
+  horizontal <- (theme$legend.position %||% "right") %in% c("top","bottom")
+  text <- ggplot2::calc_element("legend.text",ggplot2::theme_get()+theme)
+  values <- c(0,50,80,90,95,100)
+  dimensions <- if(inherits(text,"element_blank")) rep(0,length(values)) else
+    vapply(as.character(values),function(label) {
+      grob <- grid::textGrob(label,gp=grid::gpar(fontsize=text$size %||% 9,
+        fontfamily=text$family %||% "",fontface=text$face %||% "plain"))
+      if(horizontal) grid::convertWidth(grid::grobWidth(grob),"mm",TRUE) else
+        grid::convertHeight(grid::grobHeight(grob),"mm",TRUE)
+    },numeric(1))
+  required <- max(((head(dimensions,-1)+tail(dimensions,-1))/2+1.2)/(diff(values)/100))
+  field <- if(horizontal) "legend.key.width" else "legend.key.height"
+  thickness <- if(horizontal) "legend.key.height" else "legend.key.width"
+  length <- explicit[[field]] %||% explicit$legend.key.size
+  if(is.null(length)) length <- grid::unit(max(required,if(horizontal) 100 else 85),"mm") else
+    if(grid::is.unit(length) && grid::convertUnit(length,"mm",valueOnly=TRUE)<required)
+      warning("Fusion Identity labels exceed the explicitly fixed guide length; increase its length or reduce its explicit text size",call.=FALSE)
+  width <- explicit[[thickness]] %||% explicit$legend.key.size %||% grid::unit(4,"mm")
+  guide_theme <- do.call(ggplot2::theme,stats::setNames(list(length,width),c(field,thickness)))
+  ggplot2::guide_coloursteps(even.steps=FALSE,show.limits=TRUE,
+    direction=if(horizontal) "horizontal" else "vertical",theme=guide_theme)
 }
