@@ -1,0 +1,14 @@
+{
+  "basis": "Complete v0.19.0 178-PNG export followed by explicit Fusion-only dependency isolation; not inferred from historical images alone",
+  "shared_runtime_reference": "43ba9c2",
+  "unchanged_nonfusion_R_files": 98,
+  "unchanged_existing_snippets": 266,
+  "unchanged_original_pngs": 176,
+  "full_export_log_sha256": "4b7f74700b1edaf0ecc146d77846d476cba23f7f33a304cd7b481d21e1ba6b70",
+  "data_and_original_inputs_unchanged": true,
+  "isolated_runtime": [
+    "R/fusion.R",
+    "R/fusion-render.R"
+  ],
+  "scope": "Only Fusion figures consume the isolated implementation and new Fusion preparations. Shared render/guide/label code continues to invalidate all figures."
+}

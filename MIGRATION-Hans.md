@@ -1,3 +1,13 @@
+## 0.19.0：静态跨面板组合
+
+既有单图调用及默认行为保持不变。先创建独立图形，再用
+`ggchord_fusion(center) + fusion_panel(detail, "detail") +
+fusion_ribbon(links, qpanel="center", spanel="detail")`组合。
+继续使用标准q/s字段；只有组合路由需要面板或实例选择。
+跨面板层使用标准`aes(fill=...)`与`scale_fill_*()`，角色标度仍属于各自子图。
+通过`ggsave()`保存，用`export_ggchord_fusion()`核对物理几何，不调用`ggplot_build()`。
+要求区间完整可见且单位相同；这是增量接口，没有重命名或移除旧API。
+
 [English](MIGRATION.md) · [现代汉语](MIGRATION-Hans.md)
 
 # 迁移到 ggchord 候选 API

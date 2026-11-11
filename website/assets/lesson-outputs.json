@@ -912,7 +912,7 @@
     "console": "                primer_id  preferred_name                 sequence length is_universal                              source\n1 primer_657c543f56a4ea50 M13/pUC Reverse  AGCGGATAACAATTTCACACAGG     23         TRUE Addgene sequencing primer reference\n2 primer_97528c53fc4933a5    pBAD Forward     ATGCCATAGCATTTTTATCC     20         TRUE Addgene sequencing primer reference\n3 primer_9cc7178a1c0c1c24             SP6       ATTTAGGTGACACTATAG     18         TRUE Addgene sequencing primer reference\n4 primer_656f3aef2d2c0a76    MSCV Reverse CAGCGGGGCTGCTAAAGCGCATGC     24         TRUE Addgene sequencing primer reference"
   },
   "comparediagnostics": {
-    "console": "List of 2\n $ measurement:List of 15\n $ order      : chr [1:4] \"MT108731.1\" \"MT118296.1\" \"OQ646790.1\" ..."
+    "console": "List of 2\n $ measurement:List of 16\n $ order      : chr [1:4] \"MT108731.1\" \"MT118296.1\" \"OQ646790.1\" ..."
   },
   "comparetrackfocus": {
     "console": "  accver start end   gc .source_accver .source_row .source_origin .source_start .source_end .truncated_left .truncated_right\n1  pUC19     1   1 0.53          pUC19           5            500           401         500            TRUE            FALSE\n2  pUC19     2 101 0.49          pUC19           6            500           501         600           FALSE            FALSE\n3  pUC19   102 201 0.61          pUC19           7            500           601         700           FALSE            FALSE\n4  pUC19   202 301 0.58          pUC19           8            500           701         800           FALSE            FALSE"

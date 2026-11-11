@@ -49,3 +49,15 @@ The [Dotplot/Radial support matrix](view-expansion.html#support) records the new
 | Layer/reference | Dotplot | Radial |
 | --- | --- | --- |
 | [`geom_alignment_segment()`](reference/geom_alignment_segment.html) | Supported identity HSP segment | Unsupported |
+
+
+## Static cross-panel composition {#fusion}
+
+[Fusion](fusion.html) accepts a Circular/Chord center and up to four Collinear
+peripherals. Each panel keeps its existing layer contract. Cross-panel interval
+fronts use one-based inclusive boundaries with continuous curve mapping;
+fully visible same-unit source intervals and unambiguous panel/instance routes
+are required. Generic Fusion scales affect cross-panel layers only. Peripheral
+Sankey/Radial/Dotplot, facets and implicit third-party coordinate adapters are
+rejected. Physical panels are remeasured at save time; this does not imply
+global collision avoidance or general font scaling.

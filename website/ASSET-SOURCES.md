@@ -107,3 +107,14 @@ in `examples/protein/sources.json`; no synthetic protein alignments are used.
 The three course motifs are original decorative SVG paths, not analysis data.
 The website reuses the existing logo and scientific PNGs without resized copies,
 cropping or recolouring. Existing provenance and rights remain applicable.
+
+## Fusion composition
+
+`fusionview`/`fusionfour` use the original `examples/format-inputs/emales-pair.paf`,
+its declared lengths, and the existing PAF provenance. Two cross-panel HSPs are
+selected by length >=900 and pident >=85; the four-panel figure explicitly routes
+original rows 3/2/9/1 north/west/south/east. Original HSP endpoints are not changed.
+The circular count track counts all 11 query-start observations in explicit 2,000 bp source bins.
+Code: `fusiondata` through `fusionfour` in tools/documentation-examples.R;
+PNG sizes and source dependencies are recorded in website/assets/plots.csv.
+No new third-party code or visual assets were copied.

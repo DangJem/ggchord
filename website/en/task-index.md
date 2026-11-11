@@ -50,6 +50,9 @@ Choose a lesson by task. A means chord, B collinear, C single-sequence circular.
 | Show HSPs on independent axes | [`coord_dotplot()`](reference/coord_dotplot.html) | `x_seqs, y_seqs, x_orientation, y_orientation` | Dotplot | [Advanced](view-expansion.html#dotplot) |
 | Retain four alignment endpoints | [`geom_alignment_segment()`](reference/geom_alignment_segment.html) | `mapping, data, allow_repeated` | Dotplot | [Advanced](view-expansion.html#dotplot) |
 | Draw cyclic radial synteny | [`coord_radial_synteny()`](reference/coord_radial_synteny.html) | `start_angle, clockwise, inner_radius` | Radial | [Advanced](view-expansion.html#radial) |
+| Compose source-anchored views | [`ggchord_fusion()`](reference/ggchord_fusion.html) | `center, center_size, layout` | Fusion | [Advanced](fusion.html#intervals) |
+| Connect real intervals across panels | [`fusion_ribbon()`](reference/fusion_ribbon.html) | `data, qpanel, spanel, gradient, tip` | Fusion | [Advanced](fusion.html#intervals) |
+| Audit composition sources and physical anchors | [`export_ggchord_fusion()`](reference/export_ggchord_fusion.html) | `width, height` | Fusion | [Advanced](fusion.html#export) |
 
 ## Three independent learning paths {#paths}
 

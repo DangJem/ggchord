@@ -1,3 +1,15 @@
+## 0.19.0: static panel composition
+
+Existing single-view calls keep their defaults. Build independent plots, then
+use `ggchord_fusion(center) + fusion_panel(detail, "detail") +
+fusion_ribbon(links, qpanel="center", spanel="detail")`. Use ordinary q/s
+columns; panel/instance selectors are needed only for composition routes.
+Cross-panel aesthetics use ordinary `aes(fill=...)` and `scale_fill_*()`;
+role-specific scales still belong to their own panel. Save with `ggsave()`;
+inspect physical geometry with `export_ggchord_fusion()`, not `ggplot_build()`.
+Fully visible same-unit intervals are required. This additive interface does
+not rename or remove any previous API.
+
 [English](MIGRATION.md) · [现代汉语](MIGRATION-Hans.md)
 
 # Migrate to the ggchord candidate API

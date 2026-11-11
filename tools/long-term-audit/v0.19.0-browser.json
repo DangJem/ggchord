@@ -1,0 +1,267 @@
+{
+  "date": "2026-11-11",
+  "source_runtime": "7273e9c",
+  "browser": "Codex in-app browser",
+  "site": "local .site preview only",
+  "checks": [
+    {
+      "page": "en/fusion.html",
+      "viewport_width": 320,
+      "viewport_height": 900,
+      "document_width": 320,
+      "visible_broken_images": 0,
+      "heading_present": true
+    },
+    {
+      "page": "zh/fusion.html",
+      "viewport_width": 320,
+      "viewport_height": 900,
+      "document_width": 320,
+      "visible_broken_images": 0,
+      "heading_present": true
+    },
+    {
+      "page": "en/reference/ggchord_fusion.html",
+      "viewport_width": 320,
+      "viewport_height": 900,
+      "document_width": 320,
+      "visible_broken_images": 0,
+      "heading_present": true
+    },
+    {
+      "page": "zh/reference/ggchord_fusion.html",
+      "viewport_width": 320,
+      "viewport_height": 900,
+      "document_width": 320,
+      "visible_broken_images": 0,
+      "heading_present": true
+    },
+    {
+      "page": "en/reference/fusion_panel.html",
+      "viewport_width": 320,
+      "viewport_height": 900,
+      "document_width": 320,
+      "visible_broken_images": 0,
+      "heading_present": true
+    },
+    {
+      "page": "zh/reference/fusion_panel.html",
+      "viewport_width": 320,
+      "viewport_height": 900,
+      "document_width": 320,
+      "visible_broken_images": 0,
+      "heading_present": true
+    },
+    {
+      "page": "en/reference/fusion_ribbon.html",
+      "viewport_width": 320,
+      "viewport_height": 900,
+      "document_width": 320,
+      "visible_broken_images": 0,
+      "heading_present": true
+    },
+    {
+      "page": "zh/reference/fusion_ribbon.html",
+      "viewport_width": 320,
+      "viewport_height": 900,
+      "document_width": 320,
+      "visible_broken_images": 0,
+      "heading_present": true
+    },
+    {
+      "page": "en/reference/export_ggchord_fusion.html",
+      "viewport_width": 320,
+      "viewport_height": 900,
+      "document_width": 320,
+      "visible_broken_images": 0,
+      "heading_present": true
+    },
+    {
+      "page": "zh/reference/export_ggchord_fusion.html",
+      "viewport_width": 320,
+      "viewport_height": 900,
+      "document_width": 320,
+      "visible_broken_images": 0,
+      "heading_present": true
+    },
+    {
+      "page": "en/fusion.html",
+      "viewport_width": 768,
+      "viewport_height": 900,
+      "document_width": 768,
+      "visible_broken_images": 0,
+      "heading_present": true
+    },
+    {
+      "page": "zh/fusion.html",
+      "viewport_width": 768,
+      "viewport_height": 900,
+      "document_width": 768,
+      "visible_broken_images": 0,
+      "heading_present": true
+    },
+    {
+      "page": "en/reference/ggchord_fusion.html",
+      "viewport_width": 768,
+      "viewport_height": 900,
+      "document_width": 768,
+      "visible_broken_images": 0,
+      "heading_present": true
+    },
+    {
+      "page": "zh/reference/ggchord_fusion.html",
+      "viewport_width": 768,
+      "viewport_height": 900,
+      "document_width": 768,
+      "visible_broken_images": 0,
+      "heading_present": true
+    },
+    {
+      "page": "en/reference/fusion_panel.html",
+      "viewport_width": 768,
+      "viewport_height": 900,
+      "document_width": 768,
+      "visible_broken_images": 0,
+      "heading_present": true
+    },
+    {
+      "page": "zh/reference/fusion_panel.html",
+      "viewport_width": 768,
+      "viewport_height": 900,
+      "document_width": 768,
+      "visible_broken_images": 0,
+      "heading_present": true
+    },
+    {
+      "page": "en/reference/fusion_ribbon.html",
+      "viewport_width": 768,
+      "viewport_height": 900,
+      "document_width": 768,
+      "visible_broken_images": 0,
+      "heading_present": true
+    },
+    {
+      "page": "zh/reference/fusion_ribbon.html",
+      "viewport_width": 768,
+      "viewport_height": 900,
+      "document_width": 768,
+      "visible_broken_images": 0,
+      "heading_present": true
+    },
+    {
+      "page": "en/reference/export_ggchord_fusion.html",
+      "viewport_width": 768,
+      "viewport_height": 900,
+      "document_width": 768,
+      "visible_broken_images": 0,
+      "heading_present": true
+    },
+    {
+      "page": "zh/reference/export_ggchord_fusion.html",
+      "viewport_width": 768,
+      "viewport_height": 900,
+      "document_width": 768,
+      "visible_broken_images": 0,
+      "heading_present": true
+    },
+    {
+      "page": "en/fusion.html",
+      "viewport_width": 1440,
+      "viewport_height": 900,
+      "document_width": 1440,
+      "visible_broken_images": 0,
+      "heading_present": true
+    },
+    {
+      "page": "zh/fusion.html",
+      "viewport_width": 1440,
+      "viewport_height": 900,
+      "document_width": 1440,
+      "visible_broken_images": 0,
+      "heading_present": true
+    },
+    {
+      "page": "en/reference/ggchord_fusion.html",
+      "viewport_width": 1440,
+      "viewport_height": 900,
+      "document_width": 1440,
+      "visible_broken_images": 0,
+      "heading_present": true
+    },
+    {
+      "page": "zh/reference/ggchord_fusion.html",
+      "viewport_width": 1440,
+      "viewport_height": 900,
+      "document_width": 1440,
+      "visible_broken_images": 0,
+      "heading_present": true
+    },
+    {
+      "page": "en/reference/fusion_panel.html",
+      "viewport_width": 1440,
+      "viewport_height": 900,
+      "document_width": 1440,
+      "visible_broken_images": 0,
+      "heading_present": true
+    },
+    {
+      "page": "zh/reference/fusion_panel.html",
+      "viewport_width": 1440,
+      "viewport_height": 900,
+      "document_width": 1440,
+      "visible_broken_images": 0,
+      "heading_present": true
+    },
+    {
+      "page": "en/reference/fusion_ribbon.html",
+      "viewport_width": 1440,
+      "viewport_height": 900,
+      "document_width": 1440,
+      "visible_broken_images": 0,
+      "heading_present": true
+    },
+    {
+      "page": "zh/reference/fusion_ribbon.html",
+      "viewport_width": 1440,
+      "viewport_height": 900,
+      "document_width": 1440,
+      "visible_broken_images": 0,
+      "heading_present": true
+    },
+    {
+      "page": "en/reference/export_ggchord_fusion.html",
+      "viewport_width": 1440,
+      "viewport_height": 900,
+      "document_width": 1440,
+      "visible_broken_images": 0,
+      "heading_present": true
+    },
+    {
+      "page": "zh/reference/export_ggchord_fusion.html",
+      "viewport_width": 1440,
+      "viewport_height": 900,
+      "document_width": 1440,
+      "visible_broken_images": 0,
+      "heading_present": true
+    }
+  ],
+  "language_switch": {
+    "from": "zh/fusion.html#panels",
+    "to": "en/fusion.html#panels",
+    "retained_anchor": true
+  },
+  "search": {
+    "query": "fusion_ribbon",
+    "matches": 28,
+    "selected_destination": "en/reference/fusion_ribbon.html"
+  },
+  "figure": {
+    "page": "zh/fusion.html",
+    "lightbox": "fusionfour",
+    "natural_width": 2016,
+    "natural_height": 1584,
+    "loaded": true
+  },
+  "viewport_override_reset": true,
+  "limitations": "Representative browser evidence, not an exhaustive device/accessibility certification. Root horizontal overflow and visible loaded images were checked; code blocks may scroll internally."
+}

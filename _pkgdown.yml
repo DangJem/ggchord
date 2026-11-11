@@ -145,6 +145,12 @@ reference:
       - '`segment_ggchord_data`'
       - '`stat_ribbon_bundle`'
       - '`stat_ribbon_density`'
+  - title: Static panel composition
+    contents:
+      - '`ggchord_fusion`'
+      - '`fusion_panel`'
+      - '`fusion_ribbon`'
+      - '`export_ggchord_fusion`'
   - title: Output and diagnostics
     contents:
       - '`diagnose_ggchord`'

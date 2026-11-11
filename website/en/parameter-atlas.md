@@ -2184,6 +2184,21 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 </details>
 
+<span id="api-export_ggchord_fusion"></span>
+<details><summary><code>export_ggchord_fusion()</code></summary>
+
+
+[Full reference](reference/export_ggchord_fusion.html)
+
+
+| Parameter | Signature default | Type/value rule | Meaning, range and constraints |
+| --- | --- | --- | --- |
+| `plot` | `Required/alternative entry; see description` | R object; constraints below | A Fusion object. |
+| `width` | `10` | Numeric/integer; range in description | Positive canvas dimensions in inches. |
+| `height` | `8` | Numeric/integer; range in description | Positive canvas dimensions in inches. |
+
+</details>
+
 <span id="api-export_ggchord_layout"></span>
 <details><summary><code>export_ggchord_layout()</code></summary>
 
@@ -2354,6 +2369,48 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 </details>
 
+<span id="api-fusion_panel"></span>
+<details><summary><code>fusion_panel()</code></summary>
+
+
+[Full reference](reference/fusion_panel.html)
+
+
+| Parameter | Signature default | Type/value rule | Meaning, range and constraints |
+| --- | --- | --- | --- |
+| `plot` | `Required/alternative entry; see description` | R object; constraints below | A horizontal or vertical Collinear ggchord plot. Sankey, Radial, Dotplot, facets and external ggplots are not supported here. |
+| `id` | `Required/alternative entry; see description` | R object; constraints below | Unique nonempty panel name; "center" is reserved. |
+| `side` | `c("right", "top", "left", "bottom")` | Vector; choices versus multiple selection below | One of right, top, left or bottom; one panel per side. |
+| `size` | `NULL` | Nullable R object; type/inheritance below | Optional fractional width and height; overlapping or out-of-frame allocations fail with a diagnostic instead of moving explicit panels. |
+
+</details>
+
+<span id="api-fusion_ribbon"></span>
+<details><summary><code>fusion_ribbon()</code></summary>
+
+
+[Full reference](reference/fusion_ribbon.html)
+
+
+| Parameter | Signature default | Type/value rule | Meaning, range and constraints |
+| --- | --- | --- | --- |
+| `data` | `Required/alternative entry; see description` | Table/supported object; data may be a function | A relationship data frame, preserving original endpoints. |
+| `mapping` | `NULL` | aes mapping | Standard ggplot2 aesthetic mapping: fill, colour, alpha, linewidth and linetype. With pident and no explicit fill, Identity is mapped by default with 0/50/80/90/95/100 breaks. Composition uses ordinary scale_fill_* etc.; panel role scales remain local to each panel. |
+| `qpanel` | `NULL` | Nullable R object; type/inheritance below | Optional fixed panel IDs. Do not also supply their columns. |
+| `spanel` | `NULL` | Nullable R object; type/inheritance below | Optional fixed panel IDs. Do not also supply their columns. |
+| `gradient` | `FALSE` | Logical | Opt in to query-to-subject sequence-colour interpolation. Cannot be combined with an explicit fill or fill mapping. |
+| `tip` | `c("none", "subject")` | Vector; choices versus multiple selection below | "none" or a decorative "subject" tip. Source fronts remain exported in full even when the tip is drawn. |
+| `allow_repeated` | `FALSE` | Logical | Explicitly allow repeated source_hsp_id display. |
+| `curvature` | `0.3` | Numeric/integer; range in description | Control distance relative to endpoint separation, in [0,1]. |
+| `fill` | `NULL` | Nullable R object; type/inheritance below | Fixed styles; explicit values take priority over mappings. The default fill without pident is steelblue. |
+| `colour` | `NA` | R object; constraints below | Fixed styles; explicit values take priority over mappings. The default fill without pident is steelblue. |
+| `alpha` | `0.35` | Numeric/integer; range in description | Fixed styles; explicit values take priority over mappings. The default fill without pident is steelblue. |
+| `linewidth` | `0.25` | Numeric/integer; range in description | Fixed styles; explicit values take priority over mappings. The default fill without pident is steelblue. |
+| `linetype` | `1` | Numeric/integer; range in description | Fixed styles; explicit values take priority over mappings. The default fill without pident is steelblue. |
+| `show.legend` | `NA` | R object; constraints below | Standard ggplot2 legend selection: NA follows mappings; TRUE/FALSE or a named logical vector controls guide participation. |
+
+</details>
+
 <span id="api-get_chord_layout"></span>
 <details><summary><code>get_chord_layout()</code></summary>
 
@@ -2384,6 +2441,21 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `validate` | `c("warn", "error", "none")` | Vector; choices versus multiple selection below | Character, default "warn". How to run the structured input-data validation (see validate_ggchord_data): "warn" emits a single summary warning when the data has problems and caches the full report on the plot object (p$ggchord$validation); "error" stops on severe problems; "none" skips the diagnostic validation (the cheap structural checks that prevent crashes are still performed). |
 | `feature_data` | `NULL` | Table/supported object; data may be a function | Optional unified annotation table or GRanges. Requires accver, start, end; absent strand becomes unknown ("."). Generic feature layers use the full table. Default gene layers select gene/CDS from feature_class, type, or role (in that priority order), and require known strands. tRNA/rRNA remain generic features. Explicit layer data overrides the constructor input. Use disjoint subsets when combining gene and feature layers; each layer keeps its own data independently. |
 | `...` | `Required/alternative entry; see description` | Forwarded arguments | Reserved for clear migration errors from removed constructor arguments. Use labs(), coord_chord() and theme() for presentation. |
+
+</details>
+
+<span id="api-ggchord_fusion"></span>
+<details><summary><code>ggchord_fusion()</code></summary>
+
+
+[Full reference](reference/ggchord_fusion.html)
+
+
+| Parameter | Signature default | Type/value rule | Meaning, range and constraints |
+| --- | --- | --- | --- |
+| `center` | `Required/alternative entry; see description` | R object; constraints below | A ggchord plot using Circular or Chord coordinates. |
+| `center_size` | `NULL` | Nullable R object; type/inheritance below | Optional width and height as fractions of the composition area, excluding its cross-panel legend. NULL allocates available space. |
+| `layout` | `c("fixed", "adaptive")` | Vector; choices versus multiple selection below | "fixed" uses fixed panel allocations; "adaptive" also adjusts the central allocation to the physical aspect ratio. Both rebuild labels and guides at actual panel sizes. Neither rescales explicit fonts. |
 
 </details>
 

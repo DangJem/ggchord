@@ -486,5 +486,13 @@
       "zh": "HSP点阵图与径向共线性"
     },
     "group": "article"
+  },
+  {
+    "slug": "fusion",
+    "title": {
+      "en": "Real interval links across panels",
+      "zh": "真实区间跨面板组合"
+    },
+    "group": "article"
   }
 ]

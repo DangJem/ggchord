@@ -504,5 +504,38 @@
     "modes": "Radial",
     "page": "view-expansion#radial",
     "level": "advanced"
+  },
+  {
+    "task": {
+      "en": "Compose source-anchored views",
+      "zh": "组合有来源锚点的视图"
+    },
+    "api": "ggchord_fusion",
+    "parameters": "center, center_size, layout",
+    "modes": "Fusion",
+    "page": "fusion#intervals",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "en": "Connect real intervals across panels",
+      "zh": "跨面板连接真实区间"
+    },
+    "api": "fusion_ribbon",
+    "parameters": "data, qpanel, spanel, gradient, tip",
+    "modes": "Fusion",
+    "page": "fusion#intervals",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "en": "Audit composition sources and physical anchors",
+      "zh": "审计组合来源与物理锚点"
+    },
+    "api": "export_ggchord_fusion",
+    "parameters": "width, height",
+    "modes": "Fusion",
+    "page": "fusion#export",
+    "level": "advanced"
   }
 ]

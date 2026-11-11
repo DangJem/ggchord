@@ -34,7 +34,8 @@ for (lang in languages) {
   cfg$url <- paste0(source$url,lang,'/')
   if(is_han) {
     titles <- c('创建图形','读取和整理数据','图层和标签','配色、图例和布局调整',
-      '添加数据轨道','查找序列注释','投影和局部比较','保存与检查图形','方法、示例数据和通用工具')
+      '添加数据轨道','查找序列注释','投影和局部比较','静态面板组合','保存与检查图形','方法、示例数据和通用工具')
+    stopifnot(length(titles) == length(source$reference))
     cfg$reference <- source$reference
     for(i in seq_along(cfg$reference)) cfg$reference[[i]]$title <- titles[i]
   }

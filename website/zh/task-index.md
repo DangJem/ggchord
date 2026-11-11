@@ -50,6 +50,9 @@
 | 用独立双轴展示HSP | [`coord_dotplot()`](reference/coord_dotplot.html) | `x_seqs, y_seqs, x_orientation, y_orientation` | Dotplot | [进阶](view-expansion.html#dotplot) |
 | 保留四个比对端点 | [`geom_alignment_segment()`](reference/geom_alignment_segment.html) | `mapping, data, allow_repeated` | Dotplot | [进阶](view-expansion.html#dotplot) |
 | 绘制环形邻接的径向共线性 | [`coord_radial_synteny()`](reference/coord_radial_synteny.html) | `start_angle, clockwise, inner_radius` | Radial | [进阶](view-expansion.html#radial) |
+| 组合有来源锚点的视图 | [`ggchord_fusion()`](reference/ggchord_fusion.html) | `center, center_size, layout` | Fusion | [进阶](fusion.html#intervals) |
+| 跨面板连接真实区间 | [`fusion_ribbon()`](reference/fusion_ribbon.html) | `data, qpanel, spanel, gradient, tip` | Fusion | [进阶](fusion.html#intervals) |
+| 审计组合来源与物理锚点 | [`export_ggchord_fusion()`](reference/export_ggchord_fusion.html) | `width, height` | Fusion | [进阶](fusion.html#export) |
 
 ## 三条独立学习路线 {#paths}
 

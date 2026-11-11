@@ -9,12 +9,37 @@ chunks <- setNames(lapply(seq_len(length(markers)-1L), function(i)
 comparisons <- jsonlite::fromJSON("website/parameter-comparisons.json", simplifyVector = FALSE)
 source("tools/render-teaching-comparisons.R")
 requested <- commandArgs(trailingOnly = TRUE)
+if (length(requested) && all(requested %in% c("fusionview", "fusionfour"))) {
+  # These reviewed chunks create independent Fusion objects only. Reuse the
+  # completed full export for other figures, checking their dependencies.
+  previous <- read.csv("website/assets/plots.csv")
+  other <- !previous$id %in% requested
+  current <- unname(unlist(fingerprints$assets)[previous$id])
+  stopifnot(all(previous$dependency_md5[other] == current[other]))
+  env <- new.env(parent=globalenv())
+  for (name in c("fusiondata", "fusionpanels", "fusionlinear", "fusionview", "fusionfour"))
+    eval(parse(text=chunks[[name]]),env)
+  for (id in requested) {
+    at <- match(id,previous$id)
+    stopifnot(!is.na(at))
+    preview <- view_ggchord(get(paste0("p_",id),env),width=previous$width[at],
+      height=previous$height[at],dpi=previous$dpi[at],bg=previous$background[at],viewer="none")
+    stopifnot(file.copy(preview,previous$file[at],overwrite=TRUE))
+    previous$md5[at] <- unname(tools::md5sum(previous$file[at]))
+    previous$code_md5[at] <- fingerprints$code
+    previous$dependency_md5[at] <- current[at]
+    if (id=="fusionview") previous$input[at] <- "Original EMALE PAF; two observed HSPs length >=900 and identity >=85; 11 original query-start events counted in explicit 2000 bp source bins"
+  }
+  write.csv(previous,"website/assets/plots.csv",row.names=FALSE)
+  cat("Rendered",length(requested),"independent Fusion PNGs; other current figures retained.\n")
+  quit(save="no",status=0)
+}
 if (length(requested) && all(requested %in% vapply(comparisons, `[[`, "", "id"))) {
   ggchord_render_comparisons(comparisons, requested, chunks, fingerprints)
   quit(save = "no", status = 0)
 }
 env <- new.env(parent=globalenv())
-for(name in setdiff(names(chunks),c('save','preview','frontsave','frontpreview','imports','firstsave','firstsavebasic'))) {
+for(name in setdiff(names(chunks),c('save','preview','frontsave','frontpreview','fusionsave','imports','firstsave','firstsavebasic'))) {
   cat('Example:',name,'\n')
   eval(parse(text=chunks[[name]]),env)
 }
@@ -147,7 +172,16 @@ expansion_assets$input <- c("Original source-backed EMALE PAF pair, all 11 HSPs 
   "Bundled four real sequences and source-strand CDS; observed HSPs length >=900 and identity >=75, two longest per directed pair; source HSP-start observations counted before projection")
 assets <- rbind(assets, expansion_assets)
 basic_ids <- c(basic_ids, expansion_assets$id)
+fusion_assets <- expansion_assets
+fusion_assets$id <- c("fusionview", "fusionfour")
+fusion_assets$object <- c("p_fusionview", "p_fusionfour")
+fusion_assets$width <- c(11, 14); fusion_assets$height <- c(8, 11)
+fusion_assets$input <- c("Original EMALE PAF; two observed HSPs length >=900 and identity >=85; 11 original query-start events counted in explicit 2000 bp source bins",
+  "Four panels reuse the original EMALE PAF; observed source rows 3/2/9/1 explicitly routed north/west/south/east; no endpoint alteration")
+assets <- rbind(assets, fusion_assets)
+basic_ids <- c(basic_ids, fusion_assets$id)
 assets$coordinate <- vapply(assets$object, function(name) {
+ if (inherits(get(name, env), "ggchord_fusion")) return("fusion")
  coord <- get(name, env)$coordinates
  if (isTRUE(coord$ggchord_dotplot)) "dotplot" else if (isTRUE(coord$ggchord_radial)) "radial_synteny" else if (isTRUE(coord$ggchord_sankey)) "sankey" else if (inherits(coord, "CoordCollinear")) "collinear" else if (inherits(coord, "CoordCircular")) "circular" else "chord"
 }, character(1))

@@ -319,6 +319,16 @@
     }
   },
   {
+    "name": "export_ggchord_fusion",
+    "owner": "ggchord",
+    "alias": "",
+    "parameters": {
+      "plot": "",
+      "width": "10",
+      "height": "8"
+    }
+  },
+  {
     "name": "export_ggchord_layout",
     "owner": "ggchord",
     "alias": "",
@@ -441,6 +451,38 @@
       "loci": "",
       "type": "c(\"point\", \"interval\")",
       "boundary": "c(\"trim\", \"drop\")"
+    }
+  },
+  {
+    "name": "fusion_panel",
+    "owner": "ggchord",
+    "alias": "",
+    "parameters": {
+      "plot": "",
+      "id": "",
+      "side": "c(\"right\", \"top\", \"left\", \"bottom\")",
+      "size": "NULL"
+    }
+  },
+  {
+    "name": "fusion_ribbon",
+    "owner": "ggchord",
+    "alias": "",
+    "parameters": {
+      "data": "",
+      "mapping": "NULL",
+      "qpanel": "NULL",
+      "spanel": "NULL",
+      "gradient": "FALSE",
+      "tip": "c(\"none\", \"subject\")",
+      "allow_repeated": "FALSE",
+      "curvature": "0.3",
+      "fill": "NULL",
+      "colour": "NA",
+      "alpha": "0.35",
+      "linewidth": "0.25",
+      "linetype": "1",
+      "show.legend": "NA"
     }
   },
   {
@@ -959,6 +1001,16 @@
       "validate": "c(\"warn\", \"error\", \"none\")",
       "feature_data": "NULL",
       "...": ""
+    }
+  },
+  {
+    "name": "ggchord_fusion",
+    "owner": "ggchord",
+    "alias": "",
+    "parameters": {
+      "center": "",
+      "center_size": "NULL",
+      "layout": "c(\"fixed\", \"adaptive\")"
     }
   },
   {

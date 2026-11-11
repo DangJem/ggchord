@@ -2008,4 +2008,74 @@ ggchord(seq_data_example, ribbon_data_example) +
   geom_link_ribbon() +
   geom_seq_label() +
   coord_radial_synteny()
+# ---- fusiondata ----
+library(dplyr)
+fusion_hsp <- read_paf("examples/format-inputs/emales-pair.paf")
+fusion_seqs <- bind_rows(
+  fusion_hsp |> transmute(accver = qaccver, length = qlen),
+  fusion_hsp |> transmute(accver = saccver, length = slen)
+) |>
+  distinct()
+fusion_colours <- setNames(c("#0072B2", "#D55E00"), fusion_seqs$accver)
+fusion_links <- fusion_hsp |>
+  filter(length >= 900, pident >= 85)
+fusion_events <- fusion_hsp |>
+  transmute(accver = qaccver, pos = qstart)
+# ---- fusionpanels ----
+fusion_center <- ggchord(fusion_seqs |> slice(1)) +
+  geom_seq(aes(seq_colour = accver), show.legend = FALSE) +
+  geom_track(
+    data = fusion_events, geom = "bar", stat = "bin", binwidth = 2000,
+    boundary = 1, closed = "left", bounds = "clip",
+    track = position_track("hsp-start-count", width = unit(6, "mm"))
+  ) +
+  scale_track_value_continuous("hsp-start-count", name = NULL, breaks = c(0, 5)) +
+  scale_seq_colour_manual(values = fusion_colours) +
+  coord_circular()
+# ---- fusionlinear ----
+fusion_linear <- ggchord(fusion_seqs, fusion_hsp) +
+  geom_seq(show.legend = FALSE) +
+  geom_link_ribbon(show.legend = FALSE) +
+  geom_seq_label() +
+  scale_seq_colour_manual(values = fusion_colours) +
+  coord_collinear()
+fusion_vertical <- fusion_linear +
+  coord_collinear(seq_axis = "vertical")
+# ---- fusionview ----
+p_fusionview <- ggchord_fusion(fusion_center, layout = "adaptive") +
+  fusion_panel(fusion_vertical, id = "detail", side = "right") +
+  fusion_ribbon(fusion_links, qpanel = "center", spanel = "detail", alpha = 0.28)
+p_fusionview
+# ---- fusionfour ----
+p_fusionfour <- ggchord_fusion(fusion_center, layout = "adaptive") +
+  fusion_panel(fusion_vertical, id = "east", side = "right") +
+  fusion_panel(fusion_vertical, id = "west", side = "left") +
+  fusion_panel(fusion_linear, id = "north", side = "top") +
+  fusion_panel(fusion_linear, id = "south", side = "bottom") +
+  fusion_ribbon(fusion_hsp |> slice(3), qpanel = "center", spanel = "north", fill = "#0072B2") +
+  fusion_ribbon(fusion_hsp |> slice(2), qpanel = "center", spanel = "west", fill = "#0072B2") +
+  fusion_ribbon(fusion_hsp |> slice(9), qpanel = "center", spanel = "south", fill = "#0072B2") +
+  fusion_ribbon(fusion_hsp |> slice(1), qpanel = "center", spanel = "east", fill = "#0072B2", alpha = 0.16)
+p_fusionfour
+# ---- fusionstyle ----
+fusion_gradient <- ggchord_fusion(fusion_center) +
+  fusion_panel(fusion_vertical, id = "detail") +
+  fusion_ribbon(
+    fusion_hsp |> slice(3), qpanel = "center", spanel = "detail",
+    gradient = TRUE, tip = "subject"
+  )
+fusion_mapped <- ggchord_fusion(fusion_center) +
+  fusion_panel(fusion_vertical, id = "detail") +
+  fusion_ribbon(fusion_links, aes(fill = pident), qpanel = "center", spanel = "detail") +
+  ggplot2::scale_fill_gradient(low = "#3B528B", high = "#FDE725", limits = c(0, 100))
+# ---- fusionexport ----
+fusion_layout <- export_ggchord_fusion(p_fusionview, width = 11, height = 8)
+fusion_layout$connections |>
+  select(layer_id, source_row, qpanel, q_instance, spanel, s_instance, retained)
+fusion_layout$fronts |>
+  select(panel_id, accver, position_boundary, x, y) |>
+  slice_head(n = 4)
+# ---- fusionsave ----
+ggsave("fusion.png", p_fusionview, width = 11, height = 8, units = "in", dpi = 300)
+view_ggchord(p_fusionview, width = 11, height = 8, viewer = "none")
 # ---- end ----

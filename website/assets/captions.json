@@ -702,5 +702,13 @@
   "viewradial": {
     "en": "Four real sequences with proportional spokes, source-strand CDS, observed interval ribbons and counts of retained HSP-start observations. Cyclic adjacency selects existing relationships only.",
     "zh": "四条真实序列的等比例辐条、原始链CDS、已观测区间Ribbon和所选HSP起点计数；环形邻接只筛选已有关系。"
+  },
+  "fusionview": {
+    "en": "Two observed EMALE HSPs connect their full source intervals across independently measured circular and vertical panels. The count track uses all 11 original HSP starts.",
+    "zh": "两条已观测EMALE HSP以完整来源区间连接独立测量的圆图与纵向面板；计数轨道按明确的2,000 bp分箱统计原始11条HSP起点。"
+  },
+  "fusionfour": {
+    "en": "Four-direction Fusion with explicit observed PAF rows 3, 2, 9 and 1 routed north, west, south and east. Each panel retains its own original sequence scale.",
+    "zh": "四方向Fusion：真实PAF第3、2、9、1行明确路由到上、左、下、右，各面板保持自身序列比例。"
   }
 }

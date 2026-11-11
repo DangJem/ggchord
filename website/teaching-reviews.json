@@ -3052,5 +3052,81 @@
       "en": "Proportional/equal spokes, cyclic actual HSPs and shared feature/Track frames",
       "zh": "比例或equal辐条、真实环形邻接HSP、共享Feature与Track框架"
     }
+  },
+  "ggchord_fusion": {
+    "level": "L2",
+    "page": "fusion",
+    "anchor": "intervals",
+    "reason": "Runnable source-backed composition with explicit boundaries and measured interval exports",
+    "modes": "Fusion",
+    "parameters": [],
+    "purpose": {
+      "en": "Compose independent genomic panels",
+      "zh": "组合独立基因组面板"
+    },
+    "alias_of": "",
+    "case": "fusion",
+    "scope": "F0/F1 static composition; no F2/F3 guarantee",
+    "modes_localized": {
+      "en": "Circular/Chord center and 1–4 horizontal/vertical Collinear panels",
+      "zh": "Circular/Chord中央图与1–4个横纵Collinear面板"
+    }
+  },
+  "fusion_panel": {
+    "level": "L2",
+    "page": "fusion",
+    "anchor": "panels",
+    "reason": "Runnable source-backed composition with explicit boundaries and measured interval exports",
+    "modes": "Fusion",
+    "parameters": [],
+    "purpose": {
+      "en": "Register a panel at a physical side",
+      "zh": "注册指定方位的物理面板"
+    },
+    "alias_of": "",
+    "case": "fusion",
+    "scope": "F0/F1 static composition; no F2/F3 guarantee",
+    "modes_localized": {
+      "en": "Circular/Chord center and 1–4 horizontal/vertical Collinear panels",
+      "zh": "Circular/Chord中央图与1–4个横纵Collinear面板"
+    }
+  },
+  "fusion_ribbon": {
+    "level": "L2",
+    "page": "fusion",
+    "anchor": "intervals",
+    "reason": "Runnable source-backed composition with explicit boundaries and measured interval exports",
+    "modes": "Fusion",
+    "parameters": [],
+    "purpose": {
+      "en": "Connect full source intervals",
+      "zh": "连接完整来源区间"
+    },
+    "alias_of": "",
+    "case": "fusion",
+    "scope": "F0/F1 static composition; no F2/F3 guarantee",
+    "modes_localized": {
+      "en": "Circular/Chord center and 1–4 horizontal/vertical Collinear panels",
+      "zh": "Circular/Chord中央图与1–4个横纵Collinear面板"
+    }
+  },
+  "export_ggchord_fusion": {
+    "level": "L2",
+    "page": "fusion",
+    "anchor": "export",
+    "reason": "Runnable source-backed composition with explicit boundaries and measured interval exports",
+    "modes": "Fusion",
+    "parameters": [],
+    "purpose": {
+      "en": "Export measured composition fronts and sources",
+      "zh": "导出实测组合前缘与来源"
+    },
+    "alias_of": "",
+    "case": "fusion",
+    "scope": "F0/F1 static composition; no F2/F3 guarantee",
+    "modes_localized": {
+      "en": "Circular/Chord center and 1–4 horizontal/vertical Collinear panels",
+      "zh": "Circular/Chord中央图与1–4个横纵Collinear面板"
+    }
   }
 }

@@ -28,6 +28,7 @@
 | [`element_rect`](reference/ggplot2-helpers.html) | 适用于 ggchord 的部分 ggplot2 辅助函数 | [上游](parameter-atlas.html#upstream) | 上游对象/接口；遵循 ggplot2/grid 的原始契约 | [↗](parameter-atlas.html#api-element_rect) | [↗](chord.html) |
 | [`element_text`](reference/ggplot2-helpers.html) | 适用于 ggchord 的部分 ggplot2 辅助函数 | [上游](parameter-atlas.html#upstream) | 上游对象/接口；遵循 ggplot2/grid 的原始契约 | [↗](parameter-atlas.html#api-element_text) | [↗](chord.html) |
 | [`expansion`](reference/ggplot2-helpers.html) | 适用于 ggchord 的部分 ggplot2 辅助函数 | [上游](parameter-atlas.html#upstream) | 上游对象/接口；遵循 ggplot2/grid 的原始契约 | [↗](parameter-atlas.html#api-expansion) | [↗](chord.html) |
+| [`export_ggchord_fusion`](reference/export_ggchord_fusion.html) | 导出实测组合前缘与来源 | [L2](fusion.html#export) | Circular/Chord中央图与1–4个横纵Collinear面板 | [↗](parameter-atlas.html#api-export_ggchord_fusion) | [↗](fusion.html) |
 | [`export_ggchord_layout`](reference/export_ggchord_layout.html) | 导出 ggchord 计算几何 | [L2](output.html#geometry) | 所有受支持图；按图层导出公共表 | [↗](parameter-atlas.html#api-export_ggchord_layout) | [↗](chord.html) |
 | [`filter_ggchord_ribbons`](reference/filter_ggchord_ribbons.html) | 绘图前筛选比对区间 | [L2](ribbons.html#input) | 处理已有比对；不生成新的序列比对 | [↗](parameter-atlas.html#api-filter_ggchord_ribbons) | [↗](chord.html) |
 | [`filter_restriction_sites`](reference/filter_restriction_sites.html) | 筛选要显示的酶切位点 | [L2](restriction-sites.html#parameters) | 显示集合选择；保留完整目标上的位点计数 | [↗](parameter-atlas.html#api-filter_restriction_sites) | [↗](plasmids.html) |
@@ -37,6 +38,8 @@
 | [`find_restriction_sites`](reference/find_restriction_sites.html) | 查找酶切模式匹配及切割坐标 | [L2](restriction-sites.html#input) | 实际 DNA；明确甲基化假设；完整位点结果 | [↗](parameter-atlas.html#api-find_restriction_sites) | [↗](plasmids.html) |
 | [`focus_ggchord_data`](reference/focus_ggchord_data.html) | 将 ggchord 数据聚焦到一个或多个区域 | [L2](views.html#focus) | 显式输入、窗口与来源的工作流 | [↗](parameter-atlas.html#api-focus_ggchord_data) | [↗](homology.html) |
 | [`focus_ggchord_track`](reference/focus_ggchord_track.html) | 聚焦定量区间或采样点而不跨越省略窗口 | [L2](workflow-tools.html#track-focus) | 点/区间轨道；与显示窗口共享 loci | [↗](parameter-atlas.html#api-focus_ggchord_track) | [↗](tracks.html) |
+| [`fusion_panel`](reference/fusion_panel.html) | 注册指定方位的物理面板 | [L2](fusion.html#panels) | Circular/Chord中央图与1–4个横纵Collinear面板 | [↗](parameter-atlas.html#api-fusion_panel) | [↗](fusion.html) |
+| [`fusion_ribbon`](reference/fusion_ribbon.html) | 连接完整来源区间 | [L2](fusion.html#intervals) | Circular/Chord中央图与1–4个横纵Collinear面板 | [↗](parameter-atlas.html#api-fusion_ribbon) | [↗](fusion.html) |
 | [`geom_alignment_segment`](reference/geom_alignment_segment.html) | 绘制HSP完整端点 | [L2](view-expansion.html#dotplot) | 独立原生轴上的identity HSP线段 | [↗](parameter-atlas.html#api-geom_alignment_segment) | [↗](view-expansion.html) |
 | [`geom_feature`](reference/geom_feature.html) | 绘制通用基因组注释 | [L3](circular-layers.html#feature-shapes) | 三种模式；通用注释可保留未知链及 aa 区间；Radial见新增视图支持矩阵 | [↗](parameter-atlas.html#api-geom_feature) | [↗](chord.html) |
 | [`geom_feature_label`](reference/geom_feature_label.html) | 为通用基因组注释添加标签 | [L3](circular-labels.html#fixed-labels) | 三种模式；直线图的 radial/tangent 为竖排/横排；Radial见新增视图支持矩阵 | [↗](parameter-atlas.html#api-geom_feature_label) | [↗](chord.html) |
@@ -63,6 +66,7 @@
 | [`geom_track_tile`](reference/geom_track_tile.html) | 沿序列骨架绘制定量轨道 | [L3](tracks.html#tile) | 三种模式；显式轨道；重叠按输入顺序绘制；Radial见新增视图支持矩阵 | [↗](parameter-atlas.html#api-geom_track_tile) | [↗](tracks.html) |
 | [`get_chord_layout`](reference/get_chord_layout.html) | 获取 ggchord 图的完整布局 | [L2](output.html#geometry) | 所有受支持图；完整文档化布局 | [↗](parameter-atlas.html#api-get_chord_layout) | [↗](chord.html) |
 | [`ggchord`](reference/ggchord.html) | 用图层组合弦图、圆图和共线性图 | [L2](modes.html#composition) | 三种坐标；同一图的 bp/aa 单位必须一致 | [↗](parameter-atlas.html#api-ggchord) | [↗](real-data.html) |
+| [`ggchord_fusion`](reference/ggchord_fusion.html) | 组合独立基因组面板 | [L2](fusion.html#intervals) | Circular/Chord中央图与1–4个横纵Collinear面板 | [↗](parameter-atlas.html#api-ggchord_fusion) | [↗](fusion.html) |
 | [`ggsave`](reference/ggplot2-helpers.html) | 适用于 ggchord 的部分 ggplot2 辅助函数 | [上游](parameter-atlas.html#upstream) | 上游对象/接口；遵循 ggplot2/grid 的原始契约 | [↗](parameter-atlas.html#api-ggsave) | [↗](chord.html) |
 | [`ggtitle`](reference/ggplot2-helpers.html) | 适用于 ggchord 的部分 ggplot2 辅助函数 | [上游](parameter-atlas.html#upstream) | 上游对象/接口；遵循 ggplot2/grid 的原始契约 | [↗](parameter-atlas.html#api-ggtitle) | [↗](chord.html) |
 | [`guide_ggchord_colorbar`](reference/guide_ggchord_legend.html) | ggchord 角色 aesthetic 图例；同义拼写 guide_ggchord_colourbar | [L2](scale-families.html#guides) | 受支持图的相应主题/图例；按角色及设备解释 | [↗](parameter-atlas.html#api-guide_ggchord_colorbar) | [↗](chord.html) |

@@ -9104,6 +9104,30 @@
     "source": "man/diagnose_ggchord.Rd"
   },
   {
+    "api": "export_ggchord_fusion",
+    "parameter": "plot",
+    "default": "",
+    "type": "R object; constraints below",
+    "constraint": "A Fusion object.",
+    "source": "man/export_ggchord_fusion.Rd"
+  },
+  {
+    "api": "export_ggchord_fusion",
+    "parameter": "width",
+    "default": "10",
+    "type": "Numeric/integer; range in description",
+    "constraint": "Positive canvas dimensions in inches.",
+    "source": "man/export_ggchord_fusion.Rd"
+  },
+  {
+    "api": "export_ggchord_fusion",
+    "parameter": "height",
+    "default": "8",
+    "type": "Numeric/integer; range in description",
+    "constraint": "Positive canvas dimensions in inches.",
+    "source": "man/export_ggchord_fusion.Rd"
+  },
+  {
     "api": "export_ggchord_layout",
     "parameter": "plot",
     "default": "",
@@ -9600,6 +9624,150 @@
     "source": "man/focus_ggchord_track.Rd"
   },
   {
+    "api": "fusion_panel",
+    "parameter": "plot",
+    "default": "",
+    "type": "R object; constraints below",
+    "constraint": "A horizontal or vertical Collinear ggchord plot. Sankey, Radial, Dotplot, facets and external ggplots are not supported here.",
+    "source": "man/fusion_panel.Rd"
+  },
+  {
+    "api": "fusion_panel",
+    "parameter": "id",
+    "default": "",
+    "type": "R object; constraints below",
+    "constraint": "Unique nonempty panel name; \"center\" is reserved.",
+    "source": "man/fusion_panel.Rd"
+  },
+  {
+    "api": "fusion_panel",
+    "parameter": "side",
+    "default": "c(\"right\", \"top\", \"left\", \"bottom\")",
+    "type": "Vector; choices versus multiple selection below",
+    "constraint": "One of right, top, left or bottom; one panel per side.",
+    "source": "man/fusion_panel.Rd"
+  },
+  {
+    "api": "fusion_panel",
+    "parameter": "size",
+    "default": "NULL",
+    "type": "Nullable R object; type/inheritance below",
+    "constraint": "Optional fractional width and height; overlapping or out-of-frame allocations fail with a diagnostic instead of moving explicit panels.",
+    "source": "man/fusion_panel.Rd"
+  },
+  {
+    "api": "fusion_ribbon",
+    "parameter": "data",
+    "default": "",
+    "type": "Table/supported object; data may be a function",
+    "constraint": "A relationship data frame, preserving original endpoints.",
+    "source": "man/fusion_ribbon.Rd"
+  },
+  {
+    "api": "fusion_ribbon",
+    "parameter": "mapping",
+    "default": "NULL",
+    "type": "aes mapping",
+    "constraint": "Standard ggplot2 aesthetic mapping: fill, colour, alpha, linewidth and linetype. With pident and no explicit fill, Identity is mapped by default with 0/50/80/90/95/100 breaks. Composition uses ordinary scale_fill_* etc.; panel role scales remain local to each panel.",
+    "source": "man/fusion_ribbon.Rd"
+  },
+  {
+    "api": "fusion_ribbon",
+    "parameter": "qpanel",
+    "default": "NULL",
+    "type": "Nullable R object; type/inheritance below",
+    "constraint": "Optional fixed panel IDs. Do not also supply their columns.",
+    "source": "man/fusion_ribbon.Rd"
+  },
+  {
+    "api": "fusion_ribbon",
+    "parameter": "spanel",
+    "default": "NULL",
+    "type": "Nullable R object; type/inheritance below",
+    "constraint": "Optional fixed panel IDs. Do not also supply their columns.",
+    "source": "man/fusion_ribbon.Rd"
+  },
+  {
+    "api": "fusion_ribbon",
+    "parameter": "gradient",
+    "default": "FALSE",
+    "type": "Logical",
+    "constraint": "Opt in to query-to-subject sequence-colour interpolation. Cannot be combined with an explicit fill or fill mapping.",
+    "source": "man/fusion_ribbon.Rd"
+  },
+  {
+    "api": "fusion_ribbon",
+    "parameter": "tip",
+    "default": "c(\"none\", \"subject\")",
+    "type": "Vector; choices versus multiple selection below",
+    "constraint": "\"none\" or a decorative \"subject\" tip. Source fronts remain exported in full even when the tip is drawn.",
+    "source": "man/fusion_ribbon.Rd"
+  },
+  {
+    "api": "fusion_ribbon",
+    "parameter": "allow_repeated",
+    "default": "FALSE",
+    "type": "Logical",
+    "constraint": "Explicitly allow repeated source_hsp_id display.",
+    "source": "man/fusion_ribbon.Rd"
+  },
+  {
+    "api": "fusion_ribbon",
+    "parameter": "curvature",
+    "default": "0.3",
+    "type": "Numeric/integer; range in description",
+    "constraint": "Control distance relative to endpoint separation, in [0,1].",
+    "source": "man/fusion_ribbon.Rd"
+  },
+  {
+    "api": "fusion_ribbon",
+    "parameter": "fill",
+    "default": "NULL",
+    "type": "Nullable R object; type/inheritance below",
+    "constraint": "Fixed styles; explicit values take priority over mappings. The default fill without pident is steelblue.",
+    "source": "man/fusion_ribbon.Rd"
+  },
+  {
+    "api": "fusion_ribbon",
+    "parameter": "colour",
+    "default": "NA",
+    "type": "R object; constraints below",
+    "constraint": "Fixed styles; explicit values take priority over mappings. The default fill without pident is steelblue.",
+    "source": "man/fusion_ribbon.Rd"
+  },
+  {
+    "api": "fusion_ribbon",
+    "parameter": "alpha",
+    "default": "0.35",
+    "type": "Numeric/integer; range in description",
+    "constraint": "Fixed styles; explicit values take priority over mappings. The default fill without pident is steelblue.",
+    "source": "man/fusion_ribbon.Rd"
+  },
+  {
+    "api": "fusion_ribbon",
+    "parameter": "linewidth",
+    "default": "0.25",
+    "type": "Numeric/integer; range in description",
+    "constraint": "Fixed styles; explicit values take priority over mappings. The default fill without pident is steelblue.",
+    "source": "man/fusion_ribbon.Rd"
+  },
+  {
+    "api": "fusion_ribbon",
+    "parameter": "linetype",
+    "default": "1",
+    "type": "Numeric/integer; range in description",
+    "constraint": "Fixed styles; explicit values take priority over mappings. The default fill without pident is steelblue.",
+    "source": "man/fusion_ribbon.Rd"
+  },
+  {
+    "api": "fusion_ribbon",
+    "parameter": "show.legend",
+    "default": "NA",
+    "type": "R object; constraints below",
+    "constraint": "Standard ggplot2 legend selection: NA follows mappings; TRUE/FALSE or a named logical vector controls guide participation.",
+    "source": "man/fusion_ribbon.Rd"
+  },
+  {
     "api": "get_chord_layout",
     "parameter": "plot",
     "default": "",
@@ -9670,6 +9838,30 @@
     "type": "Forwarded arguments",
     "constraint": "Reserved for clear migration errors from removed constructor arguments. Use labs(), coord_chord() and theme() for presentation.",
     "source": "man/ggchord.Rd"
+  },
+  {
+    "api": "ggchord_fusion",
+    "parameter": "center",
+    "default": "",
+    "type": "R object; constraints below",
+    "constraint": "A ggchord plot using Circular or Chord coordinates.",
+    "source": "man/ggchord_fusion.Rd"
+  },
+  {
+    "api": "ggchord_fusion",
+    "parameter": "center_size",
+    "default": "NULL",
+    "type": "Nullable R object; type/inheritance below",
+    "constraint": "Optional width and height as fractions of the composition area, excluding its cross-panel legend. NULL allocates available space.",
+    "source": "man/ggchord_fusion.Rd"
+  },
+  {
+    "api": "ggchord_fusion",
+    "parameter": "layout",
+    "default": "c(\"fixed\", \"adaptive\")",
+    "type": "Vector; choices versus multiple selection below",
+    "constraint": "\"fixed\" uses fixed panel allocations; \"adaptive\" also adjusts the central allocation to the physical aspect ratio. Both rebuild labels and guides at actual panel sizes. Neither rescales explicit fonts.",
+    "source": "man/ggchord_fusion.Rd"
   },
   {
     "api": "link_ggchord_clusters",

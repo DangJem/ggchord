@@ -2184,6 +2184,21 @@
 
 </details>
 
+<span id="api-export_ggchord_fusion"></span>
+<details><summary><code>export_ggchord_fusion()</code></summary>
+
+
+[完整参考](reference/export_ggchord_fusion.html)
+
+
+| 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
+| --- | --- | --- | --- |
+| `plot` | `必需/互斥入口，见说明` | R 对象；约束见说明 | Fusion对象。 |
+| `width` | `10` | 数值/整数；范围见说明 | 以英寸指定的正画布宽高。 |
+| `height` | `8` | 数值/整数；范围见说明 | 以英寸指定的正画布宽高。 |
+
+</details>
+
 <span id="api-export_ggchord_layout"></span>
 <details><summary><code>export_ggchord_layout()</code></summary>
 
@@ -2354,6 +2369,48 @@
 
 </details>
 
+<span id="api-fusion_panel"></span>
+<details><summary><code>fusion_panel()</code></summary>
+
+
+[完整参考](reference/fusion_panel.html)
+
+
+| 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
+| --- | --- | --- | --- |
+| `plot` | `必需/互斥入口，见说明` | R 对象；约束见说明 | 横向或纵向Collinear ggchord图形。此处不支持Sankey、Radial、Dotplot、分面及外部ggplot。 |
+| `id` | `必需/互斥入口，见说明` | R 对象；约束见说明 | 唯一的非空面板名称；"center"为保留名称。 |
+| `side` | `c("right", "top", "left", "bottom")` | 向量；候选/多选含义见说明 | 可选right、top、left或bottom；每个方向最多一个面板。 |
+| `size` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 可选的相对宽度与高度。指定区域重叠或超出画布时报错，不擅自移动用户明确配置的面板。 |
+
+</details>
+
+<span id="api-fusion_ribbon"></span>
+<details><summary><code>fusion_ribbon()</code></summary>
+
+
+[完整参考](reference/fusion_ribbon.html)
+
+
+| 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
+| --- | --- | --- | --- |
+| `data` | `必需/互斥入口，见说明` | 表格/受支持对象；data 还可为函数 | 保留原始端点的关系数据框。 |
+| `mapping` | `NULL` | aes 映射 | 标准ggplot2美学映射，可映射fill、colour、alpha、linewidth和linetype。存在pident且未明确指定fill时，默认使用Identity映射及0/50/80/90/95/100刻度。组合层使用标准scale_fill_*等标度；各面板的角色标度只在其内部生效。 |
+| `qpanel` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 可选的固定面板ID，不得与同名数据列同时指定。 |
+| `spanel` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 可选的固定面板ID，不得与同名数据列同时指定。 |
+| `gradient` | `FALSE` | 逻辑值 | 显式启用query到subject的序列颜色插值，不得与固定fill或fill映射同时使用。 |
+| `tip` | `c("none", "subject")` | 向量；候选/多选含义见说明 | "none"或装饰性的"subject"尖头。即使绘制尖头，仍导出完整来源前缘。 |
+| `allow_repeated` | `FALSE` | 逻辑值 | 显式允许重复展示source_hsp_id。 |
+| `curvature` | `0.3` | 数值/整数；范围见说明 | 控制距离相对于端点间距的比例，范围为[0,1]。 |
+| `fill` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 固定样式优先于对应映射。没有pident时，默认填充为steelblue。 |
+| `colour` | `NA` | R 对象；约束见说明 | 固定样式优先于对应映射。没有pident时，默认填充为steelblue。 |
+| `alpha` | `0.35` | 数值/整数；范围见说明 | 固定样式优先于对应映射。没有pident时，默认填充为steelblue。 |
+| `linewidth` | `0.25` | 数值/整数；范围见说明 | 固定样式优先于对应映射。没有pident时，默认填充为steelblue。 |
+| `linetype` | `1` | 数值/整数；范围见说明 | 固定样式优先于对应映射。没有pident时，默认填充为steelblue。 |
+| `show.legend` | `NA` | R 对象；约束见说明 | 标准ggplot2图例选择：NA按映射自动决定；TRUE/FALSE或命名逻辑向量控制参与图例的美学。 |
+
+</details>
+
 <span id="api-get_chord_layout"></span>
 <details><summary><code>get_chord_layout()</code></summary>
 
@@ -2384,6 +2441,21 @@
 | `validate` | `c("warn", "error", "none")` | 向量；候选/多选含义见说明 | 字符值，默认 "warn"。控制结构化输入校验，见 validate_ggchord_data："warn" 在发现问题时发出一条汇总警告，并在图对象的 p$ggchord$validation 缓存完整报告；"error" 在严重问题时停止；"none" 跳过诊断性校验，但仍执行防止崩溃的基础结构检查。 |
 | `feature_data` | `NULL` | 表格/受支持对象；data 还可为函数 | 可选统一注释表或 GRanges，要求 accver、start、end，缺少链时为未知（"."）。通用特征层使用全表；默认基因层按 feature_class、type、role 的优先顺序选择 gene/CDS，并要求已知链。tRNA/rRNA 保留为通用特征。图层显式 data 优先；组合 gene 与 feature 层时使用互斥子集，各图层独立保留自己的数据。 |
 | `...` | `必需/互斥入口，见说明` | 上游转发参数 | 保留用于为已删除的构造函数参数提供明确迁移错误。外观设置使用 labs()、coord_chord() 和 theme()。 |
+
+</details>
+
+<span id="api-ggchord_fusion"></span>
+<details><summary><code>ggchord_fusion()</code></summary>
+
+
+[完整参考](reference/ggchord_fusion.html)
+
+
+| 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
+| --- | --- | --- | --- |
+| `center` | `必需/互斥入口，见说明` | R 对象；约束见说明 | 使用Circular或Chord坐标的ggchord图形。 |
+| `center_size` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 可选的宽度与高度，按扣除跨面板图例后的组合区域比例指定。NULL自动分配可用空间。 |
+| `layout` | `c("fixed", "adaptive")` | 向量；候选/多选含义见说明 | "fixed"使用固定面板区域；"adaptive"还根据真实物理宽高比调整中央区域。两者均按实际面板尺寸重新计算标签和图例，不缩放用户明确设置的字号。 |
 
 </details>
 

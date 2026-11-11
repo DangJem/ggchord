@@ -174,5 +174,7 @@
   "foundationequal": "foundation#projection",
   "foundationarrow": "foundation#tip",
   "viewdotplot": "view-expansion#dotplot",
-  "viewradial": "view-expansion#radial"
+  "viewradial": "view-expansion#radial",
+  "fusionview": "fusion#intervals",
+  "fusionfour": "fusion#panels"
 }
