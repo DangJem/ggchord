@@ -1,5 +1,5 @@
 # Explicit selection retains the row identity of the full resolved layer input.
-ggchord_select_ribbons <- function(data, seqs, params, collinear = FALSE, display_rows = NULL) {
+ggchord_select_ribbons <- function(data, seqs, params, collinear = FALSE, display_rows = NULL, cyclic = FALSE) {
   if (is.null(data)) return(list(data = NULL, report = data.frame()))
   n <- nrow(data)
   qi <- match(as.character(data$qaccver), seqs)
@@ -11,14 +11,14 @@ ggchord_select_ribbons <- function(data, seqs, params, collinear = FALSE, displa
     same_row <- !is.na(qi) & !is.na(si) & qi == si
   }
   adjacent <- abs(qi - si) == 1L
-  if (!collinear && length(seqs) > 1L) {
+  if ((!collinear || cyclic) && length(seqs) > 1L) {
     adjacent <- adjacent | abs(qi - si) == length(seqs) - 1L
   }
   adjacent[is.na(adjacent)] <- FALSE
   valid <- !is.na(qi) & !is.na(si) & qi != si
   explicit_pairs <- params$pairs
   only_adjacent <- params$adjacent_only %||%
-    (isTRUE(collinear) && is.null(explicit_pairs))
+    ((isTRUE(collinear) || cyclic) && is.null(explicit_pairs))
   keep <- valid
   reason <- ifelse(valid, NA_character_, "outside_sequence_set_or_self")
   reason[same_row] <- "same_display_row"
@@ -37,7 +37,7 @@ ggchord_select_ribbons <- function(data, seqs, params, collinear = FALSE, displa
     if (isTRUE(params$adjacent_only)) {
       d <- if (is.null(display_rows)) abs(match(q, seqs) - match(s, seqs)) else
         abs(display_rows[q] - display_rows[s])
-      allowed <- d == 1L | (!collinear & d == length(seqs) - 1L)
+      allowed <- d == 1L | ((!collinear || cyclic) & d == length(seqs) - 1L)
       if (any(!allowed)) ggchord_stop(
         "geom_link_ribbon(): non-adjacent pairs conflict with adjacent_only = TRUE; use FALSE"
       )
@@ -47,6 +47,13 @@ ggchord_select_ribbons <- function(data, seqs, params, collinear = FALSE, displa
       pair_key(q, s)
     reason[keep & !selected] <- "unselected_pair"
     keep <- keep & selected
+  }
+  if (cyclic) {
+    unknown <- ggchord_alignment_unknown(data, "coord_radial_synteny()")
+    if (any(unknown)) warning("coord_radial_synteny(): omitted ", sum(unknown),
+      " HSPs with unknown direction", call. = FALSE)
+    reason[unknown] <- "unknown_direction"
+    keep <- keep & !unknown
   }
   report <- data.frame(source_row = seq_len(n), qaccver = data$qaccver,
     saccver = data$saccver, retained = keep, reason = reason,
@@ -104,22 +111,26 @@ ggchord_match_feature_rows <- function(labels, features) {
   NULL
 }
 
-#' Convert sequence positions to or from a linear ggchord layout
+#' Map native sequence positions and display coordinates
 #'
 #' Maps positions for ordinary ggplot2 annotation layers without modifying
 #' source tables. Inverse mapping returns the chosen relative or source sequence positions.
 #' In a segmented layout, specify the window accession rather than its parent
 #' source accession. Positions outside that window, including display gaps,
 #' produce an error instead of being extrapolated into omitted sequence.
-#' @param plot A ggchord plot using [coord_collinear()] or [coord_dotplot()].
+#' @param plot A ggchord plot using [coord_collinear()], [coord_radial_synteny()]
+#'   or [coord_dotplot()].
 #' @param axis Dotplot axis to map, either `"x"` (query) or `"y"` (subject).
-#'   Required for Dotplots; omitted for linear layouts. Dotplot gaps return NA
+#'   Required for Dotplots; omitted for linear and radial layouts. Dotplot gaps return NA
 #'   on inverse mapping, with the chosen axis recorded in the result.
 #' @param accver Sequence identifiers, scalar or one per position.
 #' @param position Numeric genomic positions, or layout x when `inverse = TRUE`.
+#'   Radial inverse mapping instead requires a matrix/data frame with `x` and
+#'   `y` columns on the specified backbone. Off-backbone positions are rejected.
 #' @param inverse Convert layout x back to native sequence positions.
 #' @param source Use original source coordinates after focusing.
-#' @return A data frame with accver, position, x and backbone y.
+#' @return A data frame with accver, position, x, y and sequence_unit. Dotplots
+#'   also record the selected axis; the other display coordinate is NA.
 #' @md
 #' @export
 #' @examples
@@ -132,6 +143,8 @@ ggchord_match_feature_rows <- function(labels, features) {
 #'   coord_collinear()
 #' map_ggchord_position(p, seqs$accver[1], position = 100)
 map_ggchord_position <- function(plot, accver, position, inverse = FALSE, source = FALSE, axis = NULL) {
+  if (inherits(plot, "ggchord") && isTRUE(plot$coordinates$ggchord_radial))
+    return(ggchord_map_radial(plot, accver, position, inverse, source))
   if (inherits(plot, "ggchord") && isTRUE(plot$coordinates$ggchord_dotplot))
     return(ggchord_map_dotplot(plot, accver, position, inverse, source, axis))
   if (!inherits(plot, "ggchord") || !isTRUE(plot$coordinates$ggchord_collinear)) {

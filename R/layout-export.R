@@ -68,6 +68,15 @@
 #' @md
 #' @export
 #'
+#' @section New coordinate fields:
+#' Radial synteny layouts include `radial_frames` (tangent/normal, angle,
+#' local origin and inner radius; theta is in radians) and `radial_endpoints` (full HSP fronts).
+#' Metadata records cyclic adjacency, display rotation and closed one-based
+#' interval boundaries; these never imply a biological sequence closure.
+#' Dotplots include independent `axis_layout` frames and original endpoint
+#' rows under `alignment`; axis selection and unknown directions appear in
+#' `connection_report`.
+#'
 #' @section Ribbon drawing:
 #' `ribbon_rendering` records per-layer fill/tip mode. Exported polygon fronts
 #' retain the full source intervals. An optional subject tip is decorative;
@@ -300,6 +309,18 @@ export_ggchord_layout <- function(
     metadata$seq_axis <- layout$seq_axis %||% "horizontal"
     if (identical(metadata$seq_axis, "vertical")) metadata$normal_direction <- "positive_left"
     if (isTRUE(coord$ggchord_sankey)) metadata$normal_direction <- "positive_outward"
+    if (isTRUE(coord$ggchord_radial)) {
+      metadata$coordinate <- "radial_synteny"
+      metadata$normal_direction <- "counterclockwise_from_outward_spoke"
+      metadata$start_angle <- coord$radial_start_angle
+      metadata$clockwise <- coord$radial_clockwise
+      metadata$inner_radius <- coord$radial_inner_radius
+      metadata$adjacency <- "cyclic"
+      metadata$interval_fronts <- "closed_one_based_interval_boundaries"
+      exported$radial_frames <- ggchord_restore_instance_data(
+        transform(layout$radial_frames, accver = key), layout$display_instances)
+      exported$radial_endpoints <- ggchord_restore_instance_data(layout$radial_endpoints, layout$display_instances)
+    }
     exported$sequence_layout <- layout$sequence_layout
     if (identical(layout$sequence_unit, "aa")) {
       exported$sequence_layout$units_per_bp <- NA_real_

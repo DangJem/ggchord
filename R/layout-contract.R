@@ -63,6 +63,19 @@
 #' minimum/final sizes in mm and fallback/hiding reasons. Empty diagnostic
 #' tables need not have a fixed column prototype.
 #'
+#' @section Dotplot and radial frames:
+#' Dotplot `axis_layout` records one frame per axis/accession with length,
+#' offset, direction, source origin and native unit. Display gaps have no source
+#' mapping. `alignment` retains all four HSP positions; it is not a fine-grained
+#' alignment trace. A declared unknown direction is omitted and reported.
+#' Radial `radial_frames` exposes local tangent/normal vectors, angle and inner
+#' radius. `radial_endpoints` retains both original positions and ordered closed
+#' interval boundaries, with their final endpoint coordinates. Position mapping
+#' uses one-based native positions; interval fronts use `[min-1,max]` boundaries.
+#' Radial adjacency is cyclic display topology, never biological closure or
+#' evidence of a missing relationship. Native track statistics remain computed
+#' before instance replication and view projection.
+#'
 #' @section Measurement and cache scope:
 #' `render_context` and diagnostic `measurement` distinguish `estimated`,
 #' `unavailable` and `measured` panel status. `panel_mm`, `canvas_mm` and,

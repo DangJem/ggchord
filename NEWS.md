@@ -13,9 +13,28 @@
   Unknown direction is omitted with a warning; contradictory direction and
   endpoint metadata is rejected. Repeated declared HSP IDs require explicit
   `allow_repeated = TRUE`; unidentified duplicate/self rows remain distinct.
-* This first Dotplot slice supports identity segments and native annotations,
-  not the existing backbone/feature/track geometries, facets or base-level
-  mismatch reconstruction. Existing coordinate defaults are unchanged.
+* Added `coord_radial_synteny()` with proportional outward spokes and cyclic
+  adjacency, including observed last-to-first HSPs. A two-spoke layout retains
+  each source HSP once; one spoke is rejected. Named instances and `between`
+  reuse the existing explicit routing and repeated-source authorization.
+* Radial interval fronts use ordered boundaries of closed one-based intervals,
+  including a nonzero width for single-position HSPs. Inversions retain both
+  full fronts. Default annular connections preserve the central hole; explicit
+  controls, opt-in gradients and decorative subject tips reuse shared link
+  rendering. Existing views keep their previous interval conventions.
+* Radial sequence, gene/feature, label, region, break and quantitative Track
+  layers use source-local frames. Source statistics run before replication;
+  physical bands account for the final spoke direction. Sequence names sit
+  outside spoke ends; explicit horizontal text stays horizontal.
+* Exports now include `radial_frames`, full `radial_endpoints` and native
+  direction/unit metadata. Radial inverse mapping accepts an x/y table on the
+  selected backbone, preserving focused source origins and instance identity.
+* Dotplots support identity HSP segments and native annotations; existing
+  sequence/feature/track geometries and facets are explicitly rejected there.
+  Radial shared branches, circular-only annotations, shared straight scale
+  bars and joined multi-window rows are unsupported; use native spoke axes.
+  Neither view reconstructs base-level mismatches without alignment traces.
+
 
 # ggchord 0.17.0 (development)
 

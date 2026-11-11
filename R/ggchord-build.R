@@ -334,7 +334,8 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
       ggchord_stop("Protein alignments require ascending amino-acid endpoints; set display orientation on the backbone")
   }
   ggchord_check_interval_unit(ribbon_data, sequence_unit, "Ribbon layer")
-  ribbon_selection <- ggchord_select_ribbons(ribbon_data, seqs, ribbon_params, collinear, display_rows)
+  ribbon_selection <- ggchord_select_ribbons(ribbon_data, seqs, ribbon_params, collinear, display_rows,
+    cyclic = isTRUE(plot$coordinates$ggchord_radial))
   ribbon_data <- ribbon_selection$data
   has_ribbon_data <- !is.null(ribbon_data) && nrow(ribbon_data) > 0
 
@@ -1127,6 +1128,9 @@ compute_chord_geometry <- function(plot) {
     ggchord_empty_obstacles()
   }
   primary <- compute_chord_geometry_single(plot, geometry_cache)
+  if (isTRUE(plot$coordinates$ggchord_radial)) primary$radial_angles <- stats::setNames(
+    (plot$coordinates$radial_start_angle + (if (plot$coordinates$radial_clockwise) -1 else 1) *
+      360 * (seq_along(primary$seqs) - 1) / length(primary$seqs)) * pi / 180, primary$seqs)
   primary$display_instances <- plot$ggchord$display_instances
   primary$instance_routing <- plot$ggchord$instance_routing
   primary$instance_omissions <- plot$ggchord$instance_omissions
@@ -1534,6 +1538,7 @@ compute_chord_geometry <- function(plot) {
     }
   }
   if (!is.null(plot$ggchord$ref)) {
+    if (isTRUE(plot$coordinates$ggchord_radial)) primary <- ggchord_project_radial_layout(primary, plot) else
     if (isTRUE(plot$coordinates$ggchord_sankey)) primary <- ggchord_project_sankey_layout(primary,plot) else
       if (isTRUE(primary$collinear) && identical(plot$coordinates$collinear_seq_axis, "vertical"))
       primary <- ggchord_project_vertical_layout(primary)

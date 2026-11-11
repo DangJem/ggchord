@@ -1,0 +1,18 @@
+{
+  "dotplot": {
+    "mode": "dotplot",
+    "input_rows": 10000,
+    "displayed_rows": 10000,
+    "elapsed_seconds": 0.096,
+    "built_object_MiB": 77.4829,
+    "note": "Explicit synthetic repetition of real PAF rows; object size is not RSS; no fixed time pass criterion"
+  },
+  "radial": {
+    "mode": "radial",
+    "input_rows": 1000,
+    "displayed_rows": 1000,
+    "elapsed_seconds": 14.264,
+    "built_object_MiB": 43.5749,
+    "note": "Explicit synthetic repetition of real PAF rows; object size is not RSS; no fixed time pass criterion"
+  }
+}

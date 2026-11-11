@@ -50,7 +50,8 @@ set_ggchord_coord <- function(plot, layout) {
     resolved$ggchord_collinear <- TRUE
     for (field in c("collinear_align", "collinear_anchor", "collinear_orientation",
         "collinear_min_support", "collinear_segments", "collinear_segment_gap", "collinear_seq_axis",
-        "ggchord_sankey", "sankey_column_gap", "sankey_self_links")) resolved[[field]] <- coord[[field]]
+        "ggchord_sankey", "sankey_column_gap", "sankey_self_links",
+        "ggchord_radial", "radial_start_angle", "radial_clockwise", "radial_inner_radius")) resolved[[field]] <- coord[[field]]
   }
   plot$coordinates <- resolved
   plot

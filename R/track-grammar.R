@@ -146,7 +146,7 @@ ggchord_track_native_input <- function(layer, plot) {
   if (anyNA(raw$.track_group)) ggchord_stop("geom_track(): group values must be non-missing")
   mapping$group <- rlang::quo(.track_group)
   params <- p$native_params
-  if (!is.null(raw$.track_width) && is.null(params$width) && p$native_geom %in% c("bar", "col", "tile")) {
+  if (!is.null(raw[[".track_width"]]) && is.null(params$width) && p$native_geom %in% c("bar", "col", "tile")) {
     mapping$width <- rlang::quo(.track_width)
   }
   parts <- list()

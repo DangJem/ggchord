@@ -11,7 +11,7 @@
 \alias{scale_link_color_gradientn}
 \alias{scale_link_alpha_continuous}
 \alias{scale_link_linewidth_continuous}
-\title{Scales for point links}
+\title{Scales for point links and alignment segments}
 \usage{
 scale_link_colour_manual(..., values)
 

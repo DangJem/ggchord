@@ -1,4 +1,4 @@
-#' Scales for point links
+#' Scales for point links and alignment segments
 #'
 #' Point-link aesthetics are independent of sequence and ribbon aesthetics.
 #' Automatically generated numeric pident mappings use the 0-100 domain and

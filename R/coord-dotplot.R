@@ -131,25 +131,7 @@ ggchord_dotplot_geometry <- function(plot) {
       ggchord_stop("source_hsp_id must be nonempty when supplied")
     reason <- rep("retained", nrow(input))
     reason[!input$qaccver %in% x$accver | !input$saccver %in% y$accver] <- "outside_axis_selection"
-    unknown <- rep(FALSE, nrow(input))
-    for (field in intersect(c("direction", "strand", "relative_strand"), names(input))) {
-      value <- tolower(as.character(input[[field]]))
-      unknown <- unknown | is.na(value) | value %in% c("unknown", ".", "?", "*", "0", "")
-    }
-    if ("orientation_known" %in% names(input))
-      unknown <- unknown | is.na(input$orientation_known) | !input$orientation_known
-    # Explicit relative direction must agree with normalized endpoints.
-    # Never silently turn ascending PAF target endpoints into a forward hit.
-    slope <- sign(input$qend - input$qstart) * sign(input$send - input$sstart)
-    for (field in intersect(c("direction", "strand", "relative_strand"), names(input))) {
-      value <- tolower(as.character(input[[field]]))
-      if (any(!unknown & !value %in% c("same", "forward", "reverse", "+", "-", "1", "-1")))
-        ggchord_stop("geom_alignment_segment(): unrecognized relative direction in ", field)
-      reverse <- value %in% c("reverse", "-", "-1")
-      same <- value %in% c("same", "forward", "+", "1")
-      if (any(!unknown & ((reverse & slope > 0) | (same & slope < 0))))
-        ggchord_stop("geom_alignment_segment(): direction conflicts with endpoints; normalize reverse endpoints first (read_paf() does this)")
-    }
+    unknown <- ggchord_alignment_unknown(input, "geom_alignment_segment()")
     reason[unknown] <- "unknown_direction"
     if (any(unknown)) warning("geom_alignment_segment(): omitted ", sum(unknown), " HSPs with unknown direction", call. = FALSE)
     rows <- which(reason == "retained")

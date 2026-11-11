@@ -79,6 +79,17 @@ This is the recommended interface for consuming layout tables;
 Both retain their documented fields. See \link{ggchord_layout_contract} for
 units, provenance and stability boundaries.
 }
+\section{New coordinate fields}{
+
+Radial synteny layouts include \code{radial_frames} (tangent/normal, angle,
+local origin and inner radius; theta is in radians) and \code{radial_endpoints} (full HSP fronts).
+Metadata records cyclic adjacency, display rotation and closed one-based
+interval boundaries; these never imply a biological sequence closure.
+Dotplots include independent \code{axis_layout} frames and original endpoint
+rows under \code{alignment}; axis selection and unknown directions appear in
+\code{connection_report}.
+}
+
 \section{Ribbon drawing}{
 
 \code{ribbon_rendering} records per-layer fill/tip mode. Exported polygon fronts

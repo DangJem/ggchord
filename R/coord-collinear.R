@@ -141,9 +141,16 @@ coord_collinear <- function(
 
 ggchord_validate_coord_contract <- function(plot) {
   if (!isTRUE(plot$coordinates$ggchord_collinear)) return(invisible(plot))
+  if (isTRUE(plot$coordinates$ggchord_radial) && !inherits(plot$facet, "FacetNull"))
+    ggchord_stop("coord_radial_synteny(): facets are unsupported")
   for (layer in plot$layers) {
     params <- layer$ggchord_params
     if (is.null(params)) next
+    if (isTRUE(plot$coordinates$ggchord_radial) && identical(params$type, "seq_scale"))
+      ggchord_stop("coord_radial_synteny(): shared straight scale bars are unsupported; use the per-spoke sequence axes")
+    if (isTRUE(plot$coordinates$ggchord_radial) &&
+        !identical(params$link_branch %||% "none", "none"))
+      ggchord_stop("coord_radial_synteny(): shared branches are unsupported; use link_branch='none'")
     if (identical(params$type, "seq")) {
       if (!is.null(plot$coordinates$collinear_segments) &&
           !is.null(params$seq_orientation)) ggchord_stop(

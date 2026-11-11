@@ -163,7 +163,7 @@ ggchord_prepare_instances <- function(plot) {
       if (!is.null(p$between)) {
         if (isTRUE(p$adjacent_only)) {
           delta <- abs(match(input$qaccver,instances$key)-match(input$saccver,instances$key))
-          adjacent <- delta == 1L | (!isTRUE(plot$coordinates$ggchord_collinear) & delta == nrow(instances)-1L)
+          adjacent <- delta == 1L | ((!isTRUE(plot$coordinates$ggchord_collinear) || isTRUE(plot$coordinates$ggchord_radial)) & delta == nrow(instances)-1L)
           if (any(!adjacent)) ggchord_stop("between conflicts with explicit adjacent_only=TRUE")
         } else p$adjacent_only <- FALSE
       }

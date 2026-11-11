@@ -95,3 +95,13 @@ test_that("Dotplot retains reverse HSP endpoints and reversible axis positions",
     inverse = TRUE, axis = "y")
   expect_equal(back$position, hits$sstart)
 })
+
+test_that("Radial spokes retain complete intervals and reversible native positions", {
+  p <- ggchord(smoke_sequences(), smoke_ribbon(), validate = "none") +
+    geom_seq() + geom_link_ribbon() + coord_radial_synteny()
+  expect_s3_class(build_ggchord_smoke(p), "ggplot_built")
+  expect_equal(nrow(export_ggchord_layout(p)$radial_endpoints), 1L)
+  mapped <- map_ggchord_position(p, "A", 100)
+  back <- map_ggchord_position(p, "A", mapped[c("x", "y")], inverse = TRUE)
+  expect_equal(back$position, 100)
+})

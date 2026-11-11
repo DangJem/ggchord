@@ -49,9 +49,16 @@ ggchord_track_units <- function(normal, layout) {
   1 / sqrt((normal[, 1L] / units[1L])^2 + (normal[, 2L] / units[2L])^2)
 }
 
+ggchord_track_metric_vector <- function(vector, id, layout) {
+  theta <- layout$radial_angles[id]
+  if (is.null(theta)) return(vector)
+  cbind(vector[,1] * cos(theta) - vector[,2] * sin(theta),
+    vector[,1] * sin(theta) + vector[,2] * cos(theta))
+}
+
 ggchord_track_point <- function(pos, id, offset_native, offset_mm, layout) {
   frame <- ggchord_track_frame(pos, id, layout)
-  offset <- offset_native + offset_mm * ggchord_track_units(frame$normal, layout)
+  offset <- offset_native + offset_mm * ggchord_track_units(ggchord_track_metric_vector(frame$normal, id, layout), layout)
   frame$base + frame$normal * offset
 }
 
@@ -387,7 +394,7 @@ ggchord_track_axes <- function(layout, registry) {
     ends <- point(c(0, 1)); ticks <- point(fractions)
     normal <- ggchord_track_frame(anchor, seq, layout)$normal[1L, ]
     tangent <- matrix(c(-normal[2L], normal[1L]), nrow = 1L)
-    spacing <- ggchord_track_units(tangent, layout)
+    spacing <- ggchord_track_units(ggchord_track_metric_vector(tangent, seq, layout), layout)
     label_points <- ticks + matrix(rep(as.numeric(tangent) * spacing * 2.5,
       length(fractions)), ncol = 2L, byrow = TRUE)
     line <- data.frame(x = ends[, 1], y = ends[, 2], group = -1L,
