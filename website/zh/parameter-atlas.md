@@ -70,6 +70,49 @@
 
 </details>
 
+<span id="api-coord_dotplot"></span>
+<details><summary><code>coord_dotplot()</code></summary>
+
+
+[完整参考](reference/coord_dotplot.html)
+
+
+| 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
+| --- | --- | --- | --- |
+| `x_seqs` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 可选的唯一accession向量，按轴顺序排列。默认使用比对层中出现的query/subject accession；没有比对时使用全部序列。轴集合之外的原行会省略并报告；自比对和重复HSP原行保留。 |
+| `y_seqs` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 可选的唯一accession向量，按轴顺序排列。默认使用比对层中出现的query/subject accession；没有比对时使用全部序列。轴集合之外的原行会省略并报告；自比对和重复HSP原行保留。 |
+| `x_orientation` | `1` | 数值/整数；范围见说明 | 显示方向为1或-1，可提供单值，或按全部已选accession命名的向量。输入不变。 |
+| `y_orientation` | `1` | 数值/整数；范围见说明 | 显示方向为1或-1，可提供单值，或按全部已选accession命名的向量。输入不变。 |
+| `gap` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 轴区段之间的非负原生序列单位间距。NULL使用最长序列的百分之五。 |
+| `ratio` | `1` | 数值/整数；范围见说明 | 物理y单位与物理x单位的比例，默认1。 |
+| `xlim` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 可选的全局拼接位置范围，仅缩放面板，不修改导出的HSP端点。 |
+| `ylim` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 可选的全局拼接位置范围，仅缩放面板，不修改导出的HSP端点。 |
+| `expand` | `FALSE` | 逻辑值 | 逻辑值，是否扩展面板范围，默认FALSE。 |
+| `clip` | `"on"` | 字符/枚举；取值见说明 | 面板裁剪："on"为默认，或"off"。 |
+
+</details>
+
+<span id="api-coord_radial_synteny"></span>
+<details><summary><code>coord_radial_synteny()</code></summary>
+
+
+[完整参考](reference/coord_radial_synteny.html)
+
+
+| 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
+| --- | --- | --- | --- |
+| `start_angle` | `90` | 数值/整数；范围见说明 | 首条向外辐条的方向角，单位为度，从正x轴逆时针测量。默认90从12点钟开始。 |
+| `clockwise` | `TRUE` | 逻辑值 | 逻辑值，后续辐条是否按顺时针排列，默认TRUE。 |
+| `inner_radius` | `0.6` | 数值/整数；范围见说明 | 正的布局内孔半径，默认0.6。按真实比例展示时最长辐条长2。中心孔仅表示显示留白，不移除源位置。 |
+| `ratio` | `1` | 数值/整数；范围见说明 | 固定y/x纵横比，默认1。 |
+| `xlim` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 可选用户范围，显式范围优先于自动拟合范围。 |
+| `ylim` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 可选用户范围，显式范围优先于自动拟合范围。 |
+| `expand` | `FALSE` | 逻辑值 | 逻辑值，是否扩展坐标范围，默认FALSE。自动拟合已有小幅安全边距；设为TRUE可再请求ggplot2坐标扩展。 |
+| `clip` | `"off"` | 字符/枚举；取值见说明 | 是否将绘制裁剪到面板，默认"off"。 |
+| `fit` | `c("labels", "geometry", "manual")` | 向量；候选/多选含义见说明 | 拟合策略："labels"包含实测标签框，"geometry"只拟合几何元素，"manual"要求显式xlim及ylim。 |
+
+</details>
+
 <span id="api-coord_sankey"></span>
 <details><summary><code>coord_sankey()</code></summary>
 
@@ -92,6 +135,29 @@
 
 
 ## 几何与标签 {#layers}
+
+<span id="api-geom_alignment_segment"></span>
+<details><summary><code>geom_alignment_segment()</code></summary>
+
+
+[完整参考](reference/geom_alignment_segment.html)
+
+
+| 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
+| --- | --- | --- | --- |
+| `mapping` | `NULL` | aes 映射 | 标准ggplot2映射与图层数据，默认使用构造时的ribbon_data。几何角色为qaccver、saccver、qstart、qend、sstart和send。 |
+| `data` | `NULL` | 表格/受支持对象；data 还可为函数 | 标准ggplot2映射与图层数据，默认使用构造时的ribbon_data。几何角色为qaccver、saccver、qstart、qend、sstart和send。 |
+| `colour` | `"#59636D"` | 字符/枚举；取值见说明 | 固定样式。映射样式使用link_colour、link_alpha、link_linewidth和link_linetype，配合对应的scale_link函数。显式固定值优先。 |
+| `alpha` | `0.6` | 数值/整数；范围见说明 | 固定样式。映射样式使用link_colour、link_alpha、link_linewidth和link_linetype，配合对应的scale_link函数。显式固定值优先。 |
+| `linewidth` | `0.4` | 数值/整数；范围见说明 | 固定样式。映射样式使用link_colour、link_alpha、link_linewidth和link_linetype，配合对应的scale_link函数。显式固定值优先。 |
+| `linetype` | `1` | 数值/整数；范围见说明 | 固定样式。映射样式使用link_colour、link_alpha、link_linewidth和link_linetype，配合对应的scale_link函数。显式固定值优先。 |
+| `position` | `"identity"` | 字符/枚举；取值见说明 | 仅支持"identity"；数据位置调整会改变比对端点。 |
+| `show.legend` | `NA` | R 对象；约束见说明 | 标准ggplot2图层参数。 |
+| `inherit.aes` | `FALSE` | 逻辑值 | 标准ggplot2图层参数。 |
+| `allow_repeated` | `FALSE` | 逻辑值 | 是否允许显式标识的source_hsp_id记录重复展示，所有参与层均须选择允许。无声明ID的行不按值去重。 |
+| `...` | `必需/互斥入口，见说明` | 上游转发参数 | 传递给ggplot2线段几何的其他参数。 |
+
+</details>
 
 <span id="api-geom_feature"></span>
 <details><summary><code>geom_feature()</code></summary>
@@ -2128,7 +2194,7 @@
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
 | --- | --- | --- | --- |
 | `plot` | `必需/互斥入口，见说明` | R 对象；约束见说明 | 一个 ggchord 图。 |
-| `include` | `c("seq", "ribbon", "gene", "feature", "labels", "axis", "track")` | 向量；候选/多选含义见说明 | 选择组件的字符向量："seq"、"ribbon"、"gene"、"feature"、"labels"、"link"、"restriction"、"track"、"axis"。点连接及酶切位点须显式选择。 |
+| `include` | `c("seq", "ribbon", "gene", "feature", "labels", "axis", "track")` | 向量；候选/多选含义见说明 | 选择组件的字符向量："seq"、"ribbon"、"gene"、"feature"、"labels"、"alignment"、"link"、"restriction"、"track"及"axis"。点连接和酶切位点须显式选择。Dotplot默认选择alignment及axis；axis_layout保留可逆轴偏移、方向和源原点。比对导出保留四端点、图层身份和源行，省略原因写入connection_report。 |
 | `original_data` | `FALSE` | 逻辑值 | 逻辑值，是否在 original_data 包含逐层解析输入表，默认 FALSE。 |
 
 </details>
@@ -2348,11 +2414,12 @@
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
 | --- | --- | --- | --- |
-| `plot` | `必需/互斥入口，见说明` | R 对象；约束见说明 | 使用 coord_collinear() 的 ggchord 图。 |
+| `plot` | `必需/互斥入口，见说明` | R 对象；约束见说明 | 使用coord_collinear()、coord_radial_synteny()或coord_dotplot()的ggchord图。 |
 | `accver` | `必需/互斥入口，见说明` | R 对象；约束见说明 | 序列标识，单值或每个位置一个。 |
-| `position` | `必需/互斥入口，见说明` | Position 对象或已记录的字符串 | 数值基因组位置；inverse = TRUE 时为布局 x。 |
+| `position` | `必需/互斥入口，见说明` | Position 对象或已记录的字符串 | 数值基因组位置，inverse = TRUE时为布局x。Radial反查须改为提供包含x及y列的矩阵或数据框，位置必须在指定骨架上，骨架外位置会被拒绝。 |
 | `inverse` | `FALSE` | 逻辑值 | 是否将布局 x 反向转换为原生序列位置。 |
 | `source` | `FALSE` | 逻辑值 | 聚焦后是否使用原始源坐标。 |
+| `axis` | `NULL` | 可空 R 对象；具体类型/继承见说明 | Dotplot映射轴为"x"（query）或"y"（subject）。Dotplot必须指定，线性与径向布局省略。Dotplot间隙的反查结果为NA，返回值记录所选轴。 |
 
 </details>
 

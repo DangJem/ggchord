@@ -34,7 +34,7 @@ packageVersion("ggchord")
 ```
 
 The last line reports your installed version. This local documentation previews
-**0.17.0.9000**. The repository's last recorded formal release is **0.16.6**;
+**0.18.0.9000**. The repository's last recorded formal release is **0.16.6**;
 new Foundation APIs require the matching development checkout. See the
 [migration notes](../MIGRATION.md) before updating an existing script.
 
@@ -44,7 +44,7 @@ checkout in a fresh R session:
 ```{r example-2, eval=FALSE}
 install.packages(".", repos = NULL, type = "source")
 library(ggchord)
-stopifnot(as.character(packageVersion("ggchord")) == "0.17.0.9000")
+stopifnot(as.character(packageVersion("ggchord")) == "0.18.0.9000")
 ```
 
 Version numbers do not identify individual commits. The downloadable build
@@ -184,3 +184,20 @@ One turn represents the full length of pUC19. The origin is at 12 o’clock by d
 ### Use your own sequence {#plasmid-start-adapt}
 
 Provide one sequence row with `accver` and full `length`, and use the same ID in the feature table. [Continue to features and labels](https://dangjem.github.io/ggchord/en/plasmid-build.html).
+
+
+## HSP Dotplot and radial spokes {#view-expansion}
+
+Use the existing source tables; no extra alignment table is required. Dotplot segments retain all four HSP endpoints. Radial spokes use cyclic existing relationships and proportional lengths. See the website view-expansion chapter for source preparation, supported layers and inverse mapping.
+
+```{r example-9, eval=FALSE}
+ggchord(seq_data_example, ribbon_data_example) +
+  geom_alignment_segment(aes(link_colour = pident)) +
+  coord_dotplot()
+
+ggchord(seq_data_example, ribbon_data_example) +
+  geom_seq() +
+  geom_link_ribbon() +
+  geom_seq_label() +
+  coord_radial_synteny()
+```

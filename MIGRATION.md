@@ -2,6 +2,20 @@
 
 # Migrate to the ggchord candidate API
 
+## Radial synteny in 0.18.0
+
+Switch a supported sequence/feature/Track composition with
+`coord_radial_synteny()`. Spokes keep proportional source lengths; use
+`geom_seq(length_mode = "equal")` only for explicit normalization. Cyclic
+adjacency includes an observed last/first relationship, with no invented
+closure. Full interval fronts use ordered `[min-1,max]` boundaries in this new
+view; existing coordinate conventions are unchanged. Position axes start at 1.
+Radial inverse mapping requires an x/y table on the selected backbone.
+Shared straight scale bars and branches, joined window rows and circular-only
+annotations are explicitly rejected. See the paired view-expansion tutorial
+for source data, physical Track bands, routing and the complete support matrix.
+
+
 ## HSP Dotplots in 0.18.0
 
 Use the same sequence and ribbon tables with `geom_alignment_segment()` and

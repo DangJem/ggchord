@@ -35,6 +35,18 @@
     "rd": "man/coord_collinear.Rd",
     "matches": true
   },
+  "coord_dotplot": {
+    "rd": "man/coord_dotplot.Rd",
+    "matches": true
+  },
+  "coord_radial_synteny": {
+    "rd": "man/coord_radial_synteny.Rd",
+    "matches": true
+  },
+  "coord_sankey": {
+    "rd": "man/coord_sankey.Rd",
+    "matches": true
+  },
   "deduplicate_ggchord_ribbons": {
     "rd": "man/deduplicate_ggchord_ribbons.Rd",
     "matches": true
@@ -77,6 +89,10 @@
   },
   "focus_ggchord_track": {
     "rd": "man/focus_ggchord_track.Rd",
+    "matches": true
+  },
+  "geom_alignment_segment": {
+    "rd": "man/geom_alignment_segment.Rd",
     "matches": true
   },
   "geom_feature_label_repel": {
@@ -160,7 +176,15 @@
     "matches": true
   },
   "geom_track_bar": {
-    "rd": "man/geom_track_tile.Rd",
+    "rd": "man/geom_track.Rd",
+    "matches": true
+  },
+  "geom_track": {
+    "rd": "man/geom_track.Rd",
+    "matches": true
+  },
+  "geom_track_col": {
+    "rd": "man/geom_track.Rd",
     "matches": true
   },
   "get_chord_layout": {

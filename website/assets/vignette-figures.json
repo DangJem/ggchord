@@ -2,23 +2,23 @@
   {
     "file": "firstcircle.jpg",
     "source": "man/figures/firstcircle.png",
-    "source_sha256": "4808cfeb2f6fc94f96ab15d25730054faecbbdaaa03ab9b1e9fcd09a6d11bd49",
-    "sha256": "0c9c84e6e55a005d78db6bca49eabb0fc000b3b4c4b6ba75fdc1a3bec2cc832f",
-    "bytes": 33606
+    "source_sha256": "d7c291d3d46c4caa29c1e686ebc4d28f20a17b9a2e9efe9b21f7b2b208e8473b",
+    "sha256": "8b12c7f73bdc3cb935049a89a9b0a6991fc031318360b5193a24627372d59b74",
+    "bytes": 33973
   },
   {
     "file": "frontbackbone.jpg",
     "source": "man/figures/frontbackbone.png",
-    "source_sha256": "32e4a19bb9c6ac3b1caf6181ffc2e4e6ebab014f3188b97d6cc35dc8ee0b2b6d",
-    "sha256": "772933dd0b468ce417dde52c6af2c1352dd3d523f15c19901e2ea4a0cfd0b29e",
-    "bytes": 34878
+    "source_sha256": "fcfe3903ade3c4ca92a9712191ca3ee42be282f68cbce4b61e76d07112601d60",
+    "sha256": "64898581d0826c38905531656f6049b4c3aa220d4c6fe7e18bcc8551d2dece65",
+    "bytes": 29962
   },
   {
     "file": "frontlinearbase.jpg",
     "source": "man/figures/frontlinearbase.png",
-    "source_sha256": "bd3e47d9039923e76c1f632227cddb400dd8f0850e130ff75d50c42e2a7c1f9a",
-    "sha256": "5485abc53f60c0eff3638186feccd34f9de54da97be6a7d4ce60b7c83f0ead93",
-    "bytes": 22337
+    "source_sha256": "4ccef93465e668e04f763bacf4e21332637008e6925172fdf29eda7d5765a979",
+    "sha256": "e578c5e804fc40d3634283693317ca770ce37472e53f9839a619b6f1c4822780",
+    "bytes": 17574
   },
   {
     "file": "logo.png",

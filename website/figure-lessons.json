@@ -172,5 +172,7 @@
   "foundationsankey": "foundation#sankey",
   "foundationcount": "foundation#tracks",
   "foundationequal": "foundation#projection",
-  "foundationarrow": "foundation#tip"
+  "foundationarrow": "foundation#tip",
+  "viewdotplot": "view-expansion#dotplot",
+  "viewradial": "view-expansion#radial"
 }

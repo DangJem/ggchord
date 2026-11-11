@@ -1,0 +1,52 @@
+{
+  "version": "0.18.0.9000",
+  "date": "2026-11-11",
+  "surface": "local IAB browser at http://127.0.0.1:8765; not deployed",
+  "chapter": {
+    "paths": [
+      "/en/view-expansion.html",
+      "/zh/view-expansion.html"
+    ],
+    "widths": [
+      320,
+      768,
+      1440
+    ],
+    "combinations": 6,
+    "figures_per_page": 2
+  },
+  "reference": {
+    "topics": [
+      "coord_dotplot",
+      "geom_alignment_segment",
+      "coord_radial_synteny"
+    ],
+    "languages": [
+      "en",
+      "zh"
+    ],
+    "widths": [
+      320,
+      1440
+    ],
+    "combinations": 12,
+    "usage_and_example_blocks": 2
+  },
+  "observed_document_widths": {
+    "320": 305,
+    "768": 753,
+    "1440": 1425
+  },
+  "whole_page_horizontal_overflow_failures": 0,
+  "interactions": {
+    "radial_high_resolution_loaded_pixels": [
+      1440,
+      1296
+    ],
+    "original_size_and_close": "passed",
+    "new_function_search": "coord_radial_synteny returned function, parameter and task results",
+    "parameter_navigation": "/zh/parameter-atlas.html#param-coord_radial_synteny-start_angle exists",
+    "temporary_viewport": "reset"
+  },
+  "scope": "18 bounded page/width combinations. Source layout unchanged by subsequent compatibility-row rebuild; not an exhaustive browser or accessibility certification."
+}

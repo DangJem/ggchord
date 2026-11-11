@@ -39,3 +39,13 @@ Position 只控制局部放置，不把不支持的图层转换成另一种坐�
 ## 版本与复现 {#versions}
 
 支持版本见[安装页](installation.html)，更新现有脚本时请参阅[迁移说明](../assets/MIGRATION-Hans.md)。单圆图只接受单条显示序列；圆形蛋白只是显示布局，不声明蛋白分子为圆形。混合 bp/aa 数据必须先投影或分别作图。
+
+
+## 新增坐标系 {#new-views}
+
+新增契约见[Dotplot/Radial支持矩阵](view-expansion.html#support)。Dotplot使用独立identity HSP层；Radial将已有Feature与Track框架接入环形邻接。圆图专有层、共享直线比例尺和branch会明确报错。新增图层检查与此前三视图证据分开记录。
+
+
+| 图层与参考 | Dotplot | Radial |
+| --- | --- | --- |
+| [`geom_alignment_segment()`](reference/geom_alignment_segment.html) | 支持identity HSP线段 | 不支持 |

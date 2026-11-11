@@ -39,3 +39,13 @@ A Position controls local placement; it cannot convert an unsupported layer into
 ## Versions and reproducibility {#versions}
 
 See [installation](installation.html) for supported versions and [migration](../assets/MIGRATION.md) when updating existing scripts. Single circular mode requires one displayed sequence. Circular protein layout is a display choice, not a claim of molecular circularity. Project mixed bp/aa inputs first or plot them separately.
+
+
+## New coordinate systems {#new-views}
+
+The [Dotplot/Radial support matrix](view-expansion.html#support) records the new contracts. Dotplot uses a dedicated identity HSP mark. Radial adapts the existing feature/Track frames with cyclic adjacency; circular-only layers, shared straight scales and branches are explicitly rejected. The current layer probes are recorded separately from the earlier three-view evidence.
+
+
+| Layer/reference | Dotplot | Radial |
+| --- | --- | --- |
+| [`geom_alignment_segment()`](reference/geom_alignment_segment.html) | Supported identity HSP segment | Unsupported |

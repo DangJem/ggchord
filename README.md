@@ -8,7 +8,7 @@
 
 An R package built on ggplot2. Combine independent layers for sequence backbones, interval links, genes, general features, labels and quantitative tracks.
 
-The stable release is **ggchord 0.16.6**. These examples are generated from the local **v0.17.0** development source. Formal assets are on GitHub Releases.
+The stable release is **ggchord 0.16.6**. These examples are generated from the local **v0.18.0** development source. Formal assets are on GitHub Releases.
 
 ## Install
 

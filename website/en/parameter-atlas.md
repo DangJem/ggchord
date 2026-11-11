@@ -70,6 +70,49 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 </details>
 
+<span id="api-coord_dotplot"></span>
+<details><summary><code>coord_dotplot()</code></summary>
+
+
+[Full reference](reference/coord_dotplot.html)
+
+
+| Parameter | Signature default | Type/value rule | Meaning, range and constraints |
+| --- | --- | --- | --- |
+| `x_seqs` | `NULL` | Nullable R object; type/inheritance below | Optional unique accession vectors in axis order. Defaults to the query/subject accessions occurring in alignment layers, or all sequences when there are no alignments. Rows outside a selected axis set are omitted and recorded; self and repeated HSP rows are retained. |
+| `y_seqs` | `NULL` | Nullable R object; type/inheritance below | Optional unique accession vectors in axis order. Defaults to the query/subject accessions occurring in alignment layers, or all sequences when there are no alignments. Rows outside a selected axis set are omitted and recorded; self and repeated HSP rows are retained. |
+| `x_orientation` | `1` | Numeric/integer; range in description | Display direction: 1 or -1, either a scalar or a vector named by every selected accession. Input is unchanged. |
+| `y_orientation` | `1` | Numeric/integer; range in description | Display direction: 1 or -1, either a scalar or a vector named by every selected accession. Input is unchanged. |
+| `gap` | `NULL` | Nullable R object; type/inheritance below | Nonnegative spacing in native sequence units between axis segments. NULL uses five percent of the longest sequence. |
+| `ratio` | `1` | Numeric/integer; range in description | Ratio of physical y units to physical x units, default 1. |
+| `xlim` | `NULL` | Nullable R object; type/inheritance below | Optional global concatenated position limits. These zoom the panel without changing exported HSP endpoints. |
+| `ylim` | `NULL` | Nullable R object; type/inheritance below | Optional global concatenated position limits. These zoom the panel without changing exported HSP endpoints. |
+| `expand` | `FALSE` | Logical | Logical. Expand panel limits, default FALSE. |
+| `clip` | `"on"` | Character/enum; choices below | Panel clipping, "on" (default) or "off". |
+
+</details>
+
+<span id="api-coord_radial_synteny"></span>
+<details><summary><code>coord_radial_synteny()</code></summary>
+
+
+[Full reference](reference/coord_radial_synteny.html)
+
+
+| Parameter | Signature default | Type/value rule | Meaning, range and constraints |
+| --- | --- | --- | --- |
+| `start_angle` | `90` | Numeric/integer; range in description | Direction of the first outward spoke in degrees, counterclockwise from the positive x axis. Default 90 starts at noon. |
+| `clockwise` | `TRUE` | Logical | Logical, order subsequent spokes clockwise, default TRUE. |
+| `inner_radius` | `0.6` | Numeric/integer; range in description | Positive inner radius in layout units, default 0.6. The longest proportional spoke has length 2. The central hole is display spacing and does not remove any source positions. |
+| `ratio` | `1` | Numeric/integer; range in description | Fixed y/x aspect ratio, default 1. |
+| `xlim` | `NULL` | Nullable R object; type/inheritance below | Optional user limits. Explicit limits take priority over automatically fitted limits. |
+| `ylim` | `NULL` | Nullable R object; type/inheritance below | Optional user limits. Explicit limits take priority over automatically fitted limits. |
+| `expand` | `FALSE` | Logical | Logical. Expand coordinate limits, default FALSE. Automatic fitting already includes a small safety margin; set TRUE to request the additional ggplot2 coordinate expansion. |
+| `clip` | `"off"` | Character/enum; choices below | Whether drawing is clipped to the panel, default "off". |
+| `fit` | `c("labels", "geometry", "manual")` | Vector; choices versus multiple selection below | Fitting strategy: "labels" includes measured label boxes, "geometry" fits geometric elements only, and "manual" requires explicit xlim and ylim. |
+
+</details>
+
 <span id="api-coord_sankey"></span>
 <details><summary><code>coord_sankey()</code></summary>
 
@@ -92,6 +135,29 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 
 ## Geometry and labels {#layers}
+
+<span id="api-geom_alignment_segment"></span>
+<details><summary><code>geom_alignment_segment()</code></summary>
+
+
+[Full reference](reference/geom_alignment_segment.html)
+
+
+| Parameter | Signature default | Type/value rule | Meaning, range and constraints |
+| --- | --- | --- | --- |
+| `mapping` | `NULL` | aes mapping | Standard ggplot2 mapping and layer data. Data defaults to the constructor's ribbon_data. Geometry roles are qaccver, saccver, qstart, qend, sstart, and send. |
+| `data` | `NULL` | Table/supported object; data may be a function | Standard ggplot2 mapping and layer data. Data defaults to the constructor's ribbon_data. Geometry roles are qaccver, saccver, qstart, qend, sstart, and send. |
+| `colour` | `"#59636D"` | Character/enum; choices below | Fixed styles. Mapped styles use link_colour, link_alpha, link_linewidth and link_linetype, with the corresponding scale_link functions. Explicit fixed styles win. |
+| `alpha` | `0.6` | Numeric/integer; range in description | Fixed styles. Mapped styles use link_colour, link_alpha, link_linewidth and link_linetype, with the corresponding scale_link functions. Explicit fixed styles win. |
+| `linewidth` | `0.4` | Numeric/integer; range in description | Fixed styles. Mapped styles use link_colour, link_alpha, link_linewidth and link_linetype, with the corresponding scale_link functions. Explicit fixed styles win. |
+| `linetype` | `1` | Numeric/integer; range in description | Fixed styles. Mapped styles use link_colour, link_alpha, link_linewidth and link_linetype, with the corresponding scale_link functions. Explicit fixed styles win. |
+| `position` | `"identity"` | Character/enum; choices below | Only "identity" is supported: data adjustment would change the alignment endpoints. |
+| `show.legend` | `NA` | R object; constraints below | Standard ggplot2 layer arguments. |
+| `inherit.aes` | `FALSE` | Logical | Standard ggplot2 layer arguments. |
+| `allow_repeated` | `FALSE` | Logical | Allow explicitly identified source_hsp_id records to be displayed more than once. All participating layers must opt in. Rows without declared IDs are never deduplicated by their values. |
+| `...` | `Required/alternative entry; see description` | Forwarded arguments | Additional arguments passed to ggplot2's segment geometry. |
+
+</details>
 
 <span id="api-geom_feature"></span>
 <details><summary><code>geom_feature()</code></summary>
@@ -2128,7 +2194,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
 | `plot` | `Required/alternative entry; see description` | R object; constraints below | A ggchord plot. |
-| `include` | `c("seq", "ribbon", "gene", "feature", "labels", "axis", "track")` | Vector; choices versus multiple selection below | Character vector selecting any of "seq", "ribbon", "gene", "feature", "labels", "link", "restriction", "track", and "axis". Point links and restriction sites require explicit selection. |
+| `include` | `c("seq", "ribbon", "gene", "feature", "labels", "axis", "track")` | Vector; choices versus multiple selection below | Character vector selecting any of "seq", "ribbon", "gene", "feature", "labels", "alignment", "link", "restriction", "track", and "axis". Point links and restriction sites require explicit selection. Dotplots default to alignment and axis; axis_layout contains reversible axis offsets, directions and source origins. Alignment exports retain all four endpoints, layer identity and source row; omissions appear in connection_report. |
 | `original_data` | `FALSE` | Logical | Logical. Include the resolved per-layer input tables under original_data, default FALSE. |
 
 </details>
@@ -2348,11 +2414,12 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `plot` | `Required/alternative entry; see description` | R object; constraints below | A ggchord plot using coord_collinear(). |
+| `plot` | `Required/alternative entry; see description` | R object; constraints below | A ggchord plot using coord_collinear(), coord_radial_synteny() or coord_dotplot(). |
 | `accver` | `Required/alternative entry; see description` | R object; constraints below | Sequence identifiers, scalar or one per position. |
-| `position` | `Required/alternative entry; see description` | Position object or documented string | Numeric genomic positions, or layout x when inverse = TRUE. |
+| `position` | `Required/alternative entry; see description` | Position object or documented string | Numeric genomic positions, or layout x when inverse = TRUE. Radial inverse mapping instead requires a matrix/data frame with x and y columns on the specified backbone. Off-backbone positions are rejected. |
 | `inverse` | `FALSE` | Logical | Convert layout x back to native sequence positions. |
 | `source` | `FALSE` | Logical | Use original source coordinates after focusing. |
+| `axis` | `NULL` | Nullable R object; type/inheritance below | Dotplot axis to map, either "x" (query) or "y" (subject). Required for Dotplots; omitted for linear and radial layouts. Dotplot gaps return NA on inverse mapping, with the chosen axis recorded in the result. |
 
 </details>
 

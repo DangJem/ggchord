@@ -13,6 +13,7 @@ PATTERNS = {
     'internal revision': r'\b[0-9a-f]{40}\b',
     'manual HTML break': r'<br\s*/?>',
 }
+series="v"+".".join(re.search(r"^Version: (.+)$",(ROOT/"DESCRIPTION").read_text(),re.M)[1].split(".")[:3])
 rows, findings = [], []
 for page in PAGES:
     for language in ('en', 'zh'):
@@ -45,8 +46,8 @@ for page in PAGES:
             findings='; '.join(hits)))
 out = ROOT / 'tools/teaching-audit'
 for name, data, fields in [
-    ('content-pages-v0.17.0.csv', rows, list(rows[0])),
-    ('content-findings-v0.17.0.csv', findings,
+    (f'content-pages-{series}.csv', rows, list(rows[0])),
+    (f'content-findings-{series}.csv', findings,
      ['path', 'line', 'category', 'evidence', 'disposition'])]:
     with (out / name).open('w', newline='') as stream:
         writer = csv.DictWriter(stream, fieldnames=fields, lineterminator='\n')

@@ -75,13 +75,14 @@ def main():
                 level=review['level'] if review and parameter in review['parameters'] else ('L1' if any(re.search(r'(?<![\w.])'+re.escape(parameter)+r'(?![\w.])', expanded_pages[p]) for p in evidence+mentions) else 'L0'),
                 validation='current formals and Rd contract; L3 applies only to explicitly reviewed comparison parameters',version=version,source_sha=revision))
     out=ROOT/'tools/teaching-audit';out.mkdir(exist_ok=True)
-    for filename, data in [('teaching-api-v0.17.0.csv',rows),('teaching-parameters-v0.17.0.csv',params)]:
+    series='v'+'.'.join(version.split('.')[:3])
+    for filename, data in [(f'teaching-api-{series}.csv',rows),(f'teaching-parameters-{series}.csv',params)]:
         with (out/filename).open('w') as f:
             writer=csv.DictWriter(f,fieldnames=data[0],lineterminator='\n');writer.writeheader();writer.writerows(data)
     sources=[ROOT/'NAMESPACE',ROOT/'DESCRIPTION',ROOT/'tools/documentation-examples.R',*sorted((ROOT/'R').glob('*.R')),*sorted((ROOT/'man').glob('*.Rd')),*sorted((WEB/'en').glob('*.md')),*sorted((WEB/'zh').glob('*.md'))]
     summary={'source_sha256':{str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in sources},'source_sha':revision,'version':version,'exports':len(rows),'parameters':len(params),'owned':sum(r['ownership']=='ggchord' for r in rows),'upstream_or_object':sum(r['ownership']!='ggchord' for r in rows),
         'levels':dict(Counter(r['level'] for r in rows)),
         'limitation':'L2/L3 use explicit teaching-reviews.json judgments. Upstream/object L1 and spelling aliases have explicit family exemptions. Parameter occurrence gives reference coverage only. L3 is limited to reviewed key behaviors; case-level L4 reviews are separate in case-reviews.json. Runtime scope is recorded separately.'}
-    (out/'teaching-summary-v0.17.0.json').write_text(json.dumps(summary,ensure_ascii=False,indent=2)+'\n')
+    (out/f'teaching-summary-{series}.json').write_text(json.dumps(summary,ensure_ascii=False,indent=2)+'\n')
     print(json.dumps({k:v for k,v in summary.items() if k!='source_sha256'},ensure_ascii=False,indent=2))
 if __name__=='__main__':main()

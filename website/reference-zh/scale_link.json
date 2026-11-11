@@ -1,7 +1,7 @@
 {
-  "source_sha256": "4c0f7ff9a51cc30ed017bcf0972580ff35329cc8dc60731b84a969f1db4c1813",
+  "source_sha256": "ae7d08e3c98294b427d117d949c8d8571260fc34a187cb9b624dc292ce361059",
   "translations": {
-    "0": "点连接标度",
+    "0": "点连接与比对线段标度",
     "1": "传给对应 ggplot2 标度的参数。",
     "2": "手动 aesthetic 值。",
     "3": "一个 ggplot2 标度。",

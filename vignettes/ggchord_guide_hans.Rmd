@@ -33,7 +33,7 @@ library(ggchord)
 packageVersion("ggchord")
 ```
 
-最后一行显示已安装版本。本地文档预览 **0.17.0.9000**；仓库记录的最近正式版为
+最后一行显示已安装版本。本地文档预览 **0.18.0.9000**；仓库记录的最近正式版为
 **0.16.6**。新的基础架构接口需要相应开发 checkout。更新已有脚本前请阅读
 [迁移说明](../MIGRATION-Hans.md)。
 
@@ -42,7 +42,7 @@ packageVersion("ggchord")
 ```{r example-2, eval=FALSE}
 install.packages(".", repos = NULL, type = "source")
 library(ggchord)
-stopifnot(as.character(packageVersion("ggchord")) == "0.17.0.9000")
+stopifnot(as.character(packageVersion("ggchord")) == "0.18.0.9000")
 ```
 
 版本号不能区分不同提交，下载的构建清单记录源码版本。本地预览不代表包已发布或
@@ -180,3 +180,20 @@ view_ggchord(p_first_circle, width = 6, height = 6, units = "in")
 ### 换用自己的序列 {#plasmid-start-adapt}
 
 提供一行含 `accver` 和完整 `length` 的序列表，再用相同的 ID 连接特征表。[继续添加特征和标签](https://dangjem.github.io/ggchord/zh/plasmid-build.html)。
+
+
+## HSP点阵图与径向辐条 {#view-expansion}
+
+复用已有来源表，无需另一套比对表。Dotplot线段保留四个HSP端点，Radial使用已有环形邻接关系和真实长度比例。来源准备、支持图层与位置反查见网站view-expansion章节。
+
+```{r example-9, eval=FALSE}
+ggchord(seq_data_example, ribbon_data_example) +
+  geom_alignment_segment(aes(link_colour = pident)) +
+  coord_dotplot()
+
+ggchord(seq_data_example, ribbon_data_example) +
+  geom_seq() +
+  geom_link_ribbon() +
+  geom_seq_label() +
+  coord_radial_synteny()
+```

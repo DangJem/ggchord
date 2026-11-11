@@ -57,6 +57,12 @@ knitr::opts_chunk$set(eval = FALSE, collapse = TRUE, comment = "#>")
         body = body.replace('(../assets/MIGRATION.md)', '(../MIGRATION.md)').replace('(../assets/MIGRATION-Hans.md)', '(../MIGRATION-Hans.md)')
         text += f'\n## {p["title"][lang]} {{#{p["slug"]}}}\n\n'+body+'\n'
 
+    from documentation_lib import snippets
+    heading = 'HSP点阵图与径向辐条' if lang == 'zh' else 'HSP Dotplot and radial spokes'
+    summary = ('复用已有来源表，无需另一套比对表。Dotplot线段保留四个HSP端点，Radial使用已有环形邻接关系和真实长度比例。来源准备、支持图层与位置反查见网站view-expansion章节。' if lang == 'zh' else
+        'Use the existing source tables; no extra alignment table is required. Dotplot segments retain all four HSP endpoints. Radial spokes use cyclic existing relationships and proportional lengths. See the website view-expansion chapter for source preparation, supported layers and inverse mapping.')
+    text += '\n## ' + heading + ' {#view-expansion}\n\n' + summary + '\n\n```r\n' + snippets()['expansionminimal'] + '\n```\n'
+
     # R chunks share byte-identical code in both languages; never knit here.
     count = 0
     def chunk(m):
@@ -73,8 +79,8 @@ def readme(lang):
     title = 'ggchord：弦图、共线性图与质粒图' if zh else 'ggchord: chord, collinear and plasmid sequence plots'
     intro = ('基于 ggplot2 的 R 包。用独立图层组合序列骨架、区间连接、基因、通用注释、标签和定量轨道。'
         if zh else 'An R package built on ggplot2. Combine independent layers for sequence backbones, interval links, genes, general features, labels and quantitative tracks.')
-    status = ('正式版为 **ggchord 0.16.6**；本文示例由本地 **v0.17.0** 开发源码生成。正式资产见 GitHub Releases。'
-        if zh else 'The stable release is **ggchord 0.16.6**. These examples are generated from the local **v0.17.0** development source. Formal assets are on GitHub Releases.')
+    status = ('正式版为 **ggchord 0.16.6**；本文示例由本地 **v0.18.0** 开发源码生成。正式资产见 GitHub Releases。'
+        if zh else 'The stable release is **ggchord 0.16.6**. These examples are generated from the local **v0.18.0** development source. Formal assets are on GitHub Releases.')
     install = '安装' if zh else 'Install'
     quick = '三种模式' if zh else 'Three views'
     sizing = '预览与保存' if zh else 'Preview and save'

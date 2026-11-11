@@ -174,6 +174,39 @@
     }
   },
   {
+    "name": "coord_dotplot",
+    "owner": "ggchord",
+    "alias": "",
+    "parameters": {
+      "x_seqs": "NULL",
+      "y_seqs": "NULL",
+      "x_orientation": "1",
+      "y_orientation": "1",
+      "gap": "NULL",
+      "ratio": "1",
+      "xlim": "NULL",
+      "ylim": "NULL",
+      "expand": "FALSE",
+      "clip": "\"on\""
+    }
+  },
+  {
+    "name": "coord_radial_synteny",
+    "owner": "ggchord",
+    "alias": "",
+    "parameters": {
+      "start_angle": "90",
+      "clockwise": "TRUE",
+      "inner_radius": "0.6",
+      "ratio": "1",
+      "xlim": "NULL",
+      "ylim": "NULL",
+      "expand": "FALSE",
+      "clip": "\"off\"",
+      "fit": "c(\"labels\", \"geometry\", \"manual\")"
+    }
+  },
+  {
     "name": "coord_sankey",
     "owner": "ggchord",
     "alias": "",
@@ -408,6 +441,24 @@
       "loci": "",
       "type": "c(\"point\", \"interval\")",
       "boundary": "c(\"trim\", \"drop\")"
+    }
+  },
+  {
+    "name": "geom_alignment_segment",
+    "owner": "ggchord",
+    "alias": "",
+    "parameters": {
+      "mapping": "NULL",
+      "data": "NULL",
+      "colour": "\"#59636D\"",
+      "alpha": "0.6",
+      "linewidth": "0.4",
+      "linetype": "1",
+      "position": "\"identity\"",
+      "show.legend": "NA",
+      "inherit.aes": "FALSE",
+      "allow_repeated": "FALSE",
+      "...": ""
     }
   },
   {
@@ -1052,7 +1103,8 @@
       "accver": "",
       "position": "",
       "inverse": "FALSE",
-      "source": "FALSE"
+      "source": "FALSE",
+      "axis": "NULL"
     }
   },
   {

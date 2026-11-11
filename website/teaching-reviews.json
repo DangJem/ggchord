@@ -684,7 +684,7 @@
     "page": "circular-layers",
     "anchor": "feature-shapes",
     "reason": "Reviewed input/output, constraints and runnable canonical lesson; key-parameter level applies only to listed behavior",
-    "modes": "all three; generic annotations including unknown strand and aa",
+    "modes": "all three; generic annotations including unknown strand and aa; Radial per view-expansion matrix",
     "parameters": [
       "shape",
       "width",
@@ -700,8 +700,8 @@
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "all three; generic annotations including unknown strand and aa",
-      "zh": "三种模式；通用注释可保留未知链及 aa 区间"
+      "en": "all three; generic annotations including unknown strand and aa; Radial per new-view support matrix",
+      "zh": "三种模式；通用注释可保留未知链及 aa 区间；Radial见新增视图支持矩阵"
     }
   },
   "geom_feature_label": {
@@ -709,7 +709,7 @@
     "page": "circular-labels",
     "anchor": "fixed-labels",
     "reason": "Reviewed input/output, constraints and runnable canonical lesson; key-parameter level applies only to listed behavior",
-    "modes": "all three; linear uses vertical/horizontal rows for radial/tangent",
+    "modes": "all three; linear uses vertical/horizontal rows for radial/tangent; Radial per view-expansion matrix",
     "parameters": [
       "label_orientation",
       "label_side",
@@ -727,8 +727,8 @@
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "all three; linear uses vertical/horizontal rows for radial/tangent",
-      "zh": "三种模式；直线图的 radial/tangent 为竖排/横排"
+      "en": "all three; linear uses vertical/horizontal rows for radial/tangent; Radial per new-view support matrix",
+      "zh": "三种模式；直线图的 radial/tangent 为竖排/横排；Radial见新增视图支持矩阵"
     }
   },
   "geom_feature_label_repel": {
@@ -736,7 +736,7 @@
     "page": "circular-labels",
     "anchor": "automatic-labels",
     "reason": "Reviewed input/output, constraints and runnable canonical lesson; key-parameter level applies only to listed behavior",
-    "modes": "all three; external=FALSE rejected by linear mode",
+    "modes": "all three; external=FALSE rejected by linear mode; Radial per view-expansion matrix",
     "parameters": [
       "label_layout",
       "label_fit",
@@ -755,8 +755,8 @@
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "all three; external=FALSE rejected by linear mode",
-      "zh": "三种模式；直线图拒绝 external=FALSE"
+      "en": "all three; external=FALSE rejected by linear mode; Radial per new-view support matrix",
+      "zh": "三种模式；直线图拒绝 external=FALSE；Radial见新增视图支持矩阵"
     }
   },
   "geom_feature_plasmid": {
@@ -764,7 +764,7 @@
     "page": "circular-layers",
     "anchor": "feature-shapes",
     "reason": "Reviewed input/output, constraints and runnable canonical lesson; key-parameter level applies only to listed behavior",
-    "modes": "generic geometry preset; intended circular; compare defaults before transfer",
+    "modes": "generic geometry preset; intended circular; compare defaults before transfer; Radial per view-expansion matrix",
     "parameters": [
       "shape",
       "width",
@@ -782,8 +782,8 @@
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "generic geometry preset; intended circular; compare defaults before transfer",
-      "zh": "通用几何的组合预设；默认面向圆图"
+      "en": "generic geometry preset; intended circular; compare defaults before transfer; Radial per new-view support matrix",
+      "zh": "通用几何的组合预设；默认面向圆图；Radial见新增视图支持矩阵"
     }
   },
   "geom_gene": {
@@ -791,7 +791,7 @@
     "page": "feature-geometry",
     "anchor": "arrow-heads",
     "reason": "Reviewed input/output, constraints and runnable canonical lesson; key-parameter level applies only to listed behavior",
-    "modes": "all three on bp; known strand required",
+    "modes": "all three on bp; known strand required; Radial per view-expansion matrix",
     "parameters": [
       "width",
       "arrow_head_length",
@@ -807,8 +807,8 @@
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "all three on bp; known strand required",
-      "zh": "三种模式的 bp 数据；需已知正负链"
+      "en": "all three on bp; known strand required; Radial per new-view support matrix",
+      "zh": "三种模式的 bp 数据；需已知正负链；Radial见新增视图支持矩阵"
     }
   },
   "geom_gene_label": {
@@ -816,7 +816,7 @@
     "page": "labels",
     "anchor": "fixed",
     "reason": "Reviewed input/output, constraints and runnable canonical lesson; key-parameter level applies only to listed behavior",
-    "modes": "bp gene labels; circular/linear orientation differs",
+    "modes": "bp gene labels; circular/linear orientation differs; Radial per view-expansion matrix",
     "parameters": [
       "label_rotation",
       "label_radial_offset",
@@ -832,8 +832,8 @@
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "bp gene labels; circular/linear orientation differs",
-      "zh": "bp 基因标签；各坐标的方向含义不同"
+      "en": "bp gene labels; circular/linear orientation differs; Radial per new-view support matrix",
+      "zh": "bp 基因标签；各坐标的方向含义不同；Radial见新增视图支持矩阵"
     }
   },
   "geom_gene_label_repel": {
@@ -841,7 +841,7 @@
     "page": "labels",
     "anchor": "comparison",
     "reason": "Reviewed input/output, constraints and runnable canonical lesson; key-parameter level applies only to listed behavior",
-    "modes": "bp gene labels; linear shares row layout",
+    "modes": "bp gene labels; linear shares row layout; Radial per view-expansion matrix",
     "parameters": [
       "label_layout",
       "label_fit",
@@ -857,8 +857,8 @@
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "bp gene labels; linear shares row layout",
-      "zh": "bp 基因标签；直线图统一使用行布局"
+      "en": "bp gene labels; linear shares row layout; Radial per new-view support matrix",
+      "zh": "bp 基因标签；直线图统一使用行布局；Radial见新增视图支持矩阵"
     }
   },
   "geom_link_line": {
@@ -866,7 +866,7 @@
     "page": "chord-branches",
     "anchor": "point-links",
     "reason": "Reviewed input/output, constraints and runnable canonical lesson; key-parameter level applies only to listed behavior",
-    "modes": "chord/collinear; explicit qpos/spos; circular rejected",
+    "modes": "chord/collinear; explicit qpos/spos; circular rejected; Radial per view-expansion matrix",
     "parameters": [
       "link_type",
       "link_gap",
@@ -882,8 +882,8 @@
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "chord/collinear; explicit qpos/spos; circular rejected",
-      "zh": "弦图/共线性；需 qpos/spos；圆图拒绝"
+      "en": "chord/collinear; explicit qpos/spos; circular rejected; Radial per new-view support matrix",
+      "zh": "弦图/共线性；需 qpos/spos；圆图拒绝；Radial见新增视图支持矩阵"
     }
   },
   "geom_link_ribbon": {
@@ -891,7 +891,7 @@
     "page": "chord-branches",
     "anchor": "branches",
     "reason": "Reviewed input/output, constraints and runnable canonical lesson; key-parameter level applies only to listed behavior",
-    "modes": "chord/collinear; circular rejected; linear adjacency follows displayed rows",
+    "modes": "chord/collinear; circular rejected; linear adjacency follows displayed rows; Radial per view-expansion matrix",
     "parameters": [
       "link_ctrl_point",
       "link_gap",
@@ -911,8 +911,8 @@
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "chord/collinear; circular rejected; linear adjacency follows displayed rows",
-      "zh": "弦图/共线性；邻接按显示顺序；圆图拒绝"
+      "en": "chord/collinear; circular rejected; linear adjacency follows displayed rows; Radial per new-view support matrix",
+      "zh": "弦图/共线性；邻接按显示顺序；圆图拒绝；Radial见新增视图支持矩阵"
     }
   },
   "geom_primer": {
@@ -995,7 +995,7 @@
     "page": "circular-layers",
     "anchor": "backbones",
     "reason": "Reviewed input/output, constraints and runnable canonical lesson; key-parameter level applies only to listed behavior",
-    "modes": "all three; linear rejects radius/curvature/ring; circular owns gap/direction",
+    "modes": "all three; linear rejects radius/curvature/ring; circular owns gap/direction; Radial per view-expansion matrix",
     "parameters": [
       "seq_style",
       "seq_backbone_gap",
@@ -1014,8 +1014,8 @@
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "all three; linear rejects radius/curvature/ring; circular owns gap/direction",
-      "zh": "三种模式；直线图拒绝半径/曲率/ring；圆图自管方向与开口"
+      "en": "all three; linear rejects radius/curvature/ring; circular owns gap/direction; Radial per new-view support matrix",
+      "zh": "三种模式；直线图拒绝半径/曲率/ring；圆图自管方向与开口；Radial见新增视图支持矩阵"
     }
   },
   "geom_seq_break": {
@@ -1023,7 +1023,7 @@
     "page": "views",
     "anchor": "segments",
     "reason": "Reviewed input/output, constraints and runnable canonical lesson; key-parameter level applies only to listed behavior",
-    "modes": "collinear only, focused/segmented truncated-end metadata required",
+    "modes": "collinear only, focused/segmented truncated-end metadata required; Radial per view-expansion matrix",
     "parameters": [
       "position"
     ],
@@ -1035,8 +1035,8 @@
     "case": "collinear",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "collinear only, focused/segmented truncated-end metadata required",
-      "zh": "仅共线性；需要聚焦/分段端点元数据"
+      "en": "collinear only, focused/segmented truncated-end metadata required; Radial per new-view support matrix",
+      "zh": "仅共线性；需要聚焦/分段端点元数据；Radial见新增视图支持矩阵"
     }
   },
   "geom_seq_center_label": {
@@ -1069,7 +1069,7 @@
     "page": "chord-labels",
     "anchor": "sequence-parameters",
     "reason": "Reviewed input/output, constraints and runnable canonical lesson; key-parameter level applies only to listed behavior",
-    "modes": "all three; linear rejects explicit seq_label_radius",
+    "modes": "all three; linear rejects explicit seq_label_radius; Radial per view-expansion matrix",
     "parameters": [
       "seq_label_orientation",
       "seq_label_rotation",
@@ -1087,8 +1087,8 @@
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "all three; linear rejects explicit seq_label_radius",
-      "zh": "三种模式；直线图拒绝显式径向半径"
+      "en": "all three; linear rejects explicit seq_label_radius; Radial per new-view support matrix",
+      "zh": "三种模式；直线图拒绝显式径向半径；Radial见新增视图支持矩阵"
     }
   },
   "geom_seq_region": {
@@ -1096,7 +1096,7 @@
     "page": "chord-routing",
     "anchor": "region-parameters",
     "reason": "Reviewed input/output, constraints and runnable canonical lesson; key-parameter level applies only to listed behavior",
-    "modes": "all three, valid source intervals and units",
+    "modes": "all three, valid source intervals and units; Radial per view-expansion matrix",
     "parameters": [
       "region_side",
       "region_width",
@@ -1110,8 +1110,8 @@
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "all three, valid source intervals and units",
-      "zh": "三种模式；区间、ID、单位需合法"
+      "en": "all three, valid source intervals and units; Radial per new-view support matrix",
+      "zh": "三种模式；区间、ID、单位需合法；Radial见新增视图支持矩阵"
     }
   },
   "geom_seq_scale": {
@@ -1145,7 +1145,7 @@
     "page": "foundation",
     "anchor": "tracks",
     "reason": "Reviewed input/output, constraints and runnable canonical lesson; key-parameter level applies only to listed behavior",
-    "modes": "all three; explicit position_track and valid interval bins",
+    "modes": "all three; explicit position_track and valid interval bins; Radial per view-expansion matrix",
     "parameters": [
       "mapping",
       "track",
@@ -1159,8 +1159,8 @@
     "case": "foundation",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "all three; explicit position_track and valid interval bins",
-      "zh": "三种模式；显式 position_track 和区间箱"
+      "en": "all three; explicit position_track and valid interval bins; Radial per new-view support matrix",
+      "zh": "三种模式；显式 position_track 和区间箱；Radial见新增视图支持矩阵"
     }
   },
   "geom_track_line": {
@@ -1168,7 +1168,7 @@
     "page": "tracks",
     "anchor": "multiple",
     "reason": "Reviewed input/output, constraints and runnable canonical lesson; key-parameter level applies only to listed behavior",
-    "modes": "all three; increasing positions per group; closed requires complete circular gap=0",
+    "modes": "all three; increasing positions per group; closed requires complete circular gap=0; Radial per view-expansion matrix",
     "parameters": [
       "closed",
       "bounds",
@@ -1182,8 +1182,8 @@
     "case": "tracks",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "all three; increasing positions per group; closed requires complete circular gap=0",
-      "zh": "三种模式；每组位置递增；closed 需完整闭圆"
+      "en": "all three; increasing positions per group; closed requires complete circular gap=0; Radial per new-view support matrix",
+      "zh": "三种模式；每组位置递增；closed 需完整闭圆；Radial见新增视图支持矩阵"
     }
   },
   "geom_track_tile": {
@@ -1191,7 +1191,7 @@
     "page": "tracks",
     "anchor": "tile",
     "reason": "Reviewed input/output, constraints and runnable canonical lesson; key-parameter level applies only to listed behavior",
-    "modes": "all three; explicit named track; overlapping input tiles keep drawing order",
+    "modes": "all three; explicit named track; overlapping input tiles keep drawing order; Radial per view-expansion matrix",
     "parameters": [
       "bounds",
       "position"
@@ -1204,8 +1204,8 @@
     "case": "tracks",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "all three; explicit named track; overlapping input tiles keep drawing order",
-      "zh": "三种模式；显式轨道；重叠按输入顺序绘制"
+      "en": "all three; explicit named track; overlapping input tiles keep drawing order; Radial per new-view support matrix",
+      "zh": "三种模式；显式轨道；重叠按输入顺序绘制；Radial见新增视图支持矩阵"
     }
   },
   "get_chord_layout": {
@@ -1445,10 +1445,10 @@
   },
   "map_ggchord_position": {
     "level": "L2",
-    "page": "views",
-    "anchor": "mapping",
+    "page": "view-expansion",
+    "anchor": "export",
     "reason": "Reviewed input/output, constraints and runnable canonical lesson; key-parameter level applies only to listed behavior",
-    "modes": "collinear only; reversible source/display native sequence coordinates",
+    "modes": "Collinear / Dotplot / Radial",
     "parameters": [
       "plot",
       "accver",
@@ -1457,15 +1457,15 @@
       "source"
     ],
     "purpose": {
-      "en": "Convert sequence positions to or from a linear ggchord layout",
-      "zh": "转换序列位置与线性布局位置"
+      "en": "Map source positions and display coordinates",
+      "zh": "映射源位置与显示坐标"
     },
     "alias_of": "",
-    "case": "views",
+    "case": "view-expansion",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "collinear only; reversible source/display native sequence coordinates",
-      "zh": "仅共线性；可逆的源/显示原生位置"
+      "en": "Native/source positions; explicit Dotplot axis, or both x/y for radial inverse",
+      "zh": "原生或源坐标；Dotplot须选轴，Radial反查须给x/y"
     }
   },
   "margin": {
@@ -2931,7 +2931,7 @@
     "page": "foundation",
     "anchor": "tracks",
     "reason": "Explicit source/result example and documented first support matrix; local Foundation checks",
-    "modes": "Chord/Circular/Collinear/Sankey within the first support matrix",
+    "modes": "Chord/Circular/Collinear/Sankey within the first support matrix; Radial per view-expansion matrix",
     "parameters": [
       "geom",
       "stat",
@@ -2947,8 +2947,8 @@
     "case": "foundation",
     "scope": "Foundation first implementation",
     "modes_localized": {
-      "en": "Chord/Circular/Collinear/Sankey within the first support matrix",
-      "zh": "首批基础架构范围；详见本章支持矩阵"
+      "en": "Chord/Circular/Collinear/Sankey within the first support matrix; Radial per new-view support matrix",
+      "zh": "首批基础架构范围；详见本章支持矩阵；Radial见新增视图支持矩阵"
     }
   },
   "geom_track_col": {
@@ -2956,7 +2956,7 @@
     "page": "foundation",
     "anchor": "tracks",
     "reason": "Explicit source/result example and documented first support matrix; local Foundation checks",
-    "modes": "Chord/Circular/Collinear/Sankey",
+    "modes": "Chord/Circular/Collinear/Sankey; Radial per view-expansion matrix",
     "parameters": [
       "track",
       "position",
@@ -2970,8 +2970,8 @@
     "case": "foundation",
     "scope": "Foundation first implementation",
     "modes_localized": {
-      "en": "Chord/Circular/Collinear/Sankey",
-      "zh": "首批基础架构范围；详见本章支持矩阵"
+      "en": "Chord/Circular/Collinear/Sankey; Radial per new-view support matrix",
+      "zh": "首批基础架构范围；详见本章支持矩阵；Radial见新增视图支持矩阵"
     }
   },
   "coord_sankey": {
@@ -2994,6 +2994,63 @@
     "modes_localized": {
       "en": "Mirrored two-column relationships",
       "zh": "首批基础架构范围；详见本章支持矩阵"
+    }
+  },
+  "coord_dotplot": {
+    "level": "L2",
+    "page": "view-expansion",
+    "anchor": "dotplot",
+    "reason": "Runnable source-backed example, endpoint/source semantics and explicit support matrix; no all-parameter guarantee",
+    "modes": "Dotplot",
+    "parameters": [],
+    "purpose": {
+      "en": "Two-axis HSP projection",
+      "zh": "HSP双轴投影"
+    },
+    "alias_of": "",
+    "case": "view-expansion",
+    "scope": "Native endpoints and per-coordinate explicit support contract",
+    "modes_localized": {
+      "en": "Identity HSP segments on independent native axes",
+      "zh": "独立原生轴上的identity HSP线段"
+    }
+  },
+  "geom_alignment_segment": {
+    "level": "L2",
+    "page": "view-expansion",
+    "anchor": "dotplot",
+    "reason": "Runnable source-backed example, endpoint/source semantics and explicit support matrix; no all-parameter guarantee",
+    "modes": "Dotplot",
+    "parameters": [],
+    "purpose": {
+      "en": "Draw complete HSP endpoints",
+      "zh": "绘制HSP完整端点"
+    },
+    "alias_of": "",
+    "case": "view-expansion",
+    "scope": "Native endpoints and per-coordinate explicit support contract",
+    "modes_localized": {
+      "en": "Identity HSP segments on independent native axes",
+      "zh": "独立原生轴上的identity HSP线段"
+    }
+  },
+  "coord_radial_synteny": {
+    "level": "L2",
+    "page": "view-expansion",
+    "anchor": "radial",
+    "reason": "Runnable source-backed example, endpoint/source semantics and explicit support matrix; no all-parameter guarantee",
+    "modes": "Radial synteny",
+    "parameters": [],
+    "purpose": {
+      "en": "Project linear sequences onto radial spokes",
+      "zh": "将线性序列投影到径向辐条"
+    },
+    "alias_of": "",
+    "case": "view-expansion",
+    "scope": "Native endpoints and per-coordinate explicit support contract",
+    "modes_localized": {
+      "en": "Proportional/equal spokes, cyclic actual HSPs and shared feature/Track frames",
+      "zh": "比例或equal辐条、真实环形邻接HSP、共享Feature与Track框架"
     }
   }
 }

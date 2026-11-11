@@ -1941,4 +1941,71 @@ p_foundationequal <- ggchord(foundation_seqs, foundation_hsp) +
   coord_collinear()
 p_foundationequal
 
+# ---- dotplotdata ----
+library(dplyr)
+dotplot_hsp <- read_paf("examples/format-inputs/emales-pair.paf")
+dotplot_seqs <- bind_rows(
+  dotplot_hsp |> transmute(accver = qaccver, length = qlen),
+  dotplot_hsp |> transmute(accver = saccver, length = slen)
+) |>
+  distinct()
+# ---- dotplotview ----
+p_viewdotplot <- ggchord(dotplot_seqs, dotplot_hsp) +
+  geom_alignment_segment(aes(link_colour = pident), linewidth = 0.65) +
+  coord_dotplot()
+p_viewdotplot
+# ---- dotplotreverse ----
+dotplot_reversed <- ggchord(dotplot_seqs, dotplot_hsp) +
+  geom_alignment_segment(aes(link_colour = pident), linewidth = 0.65) +
+  coord_dotplot(y_orientation = -1)
+dotplot_layout <- export_ggchord_layout(dotplot_reversed)
+dotplot_layout$axis_layout
+# ---- radialdata ----
+library(dplyr)
+radial_seqs <- seq_data_example |>
+  select(accver, length)
+radial_hsp <- ribbon_data_example |>
+  mutate(source_hsp_id = paste0("bundled:", row_number())) |>
+  filter(length >= 900, pident >= 75) |>
+  group_by(qaccver, saccver) |>
+  slice_max(length, n = 2, with_ties = FALSE) |>
+  ungroup()
+radial_features <- gene_data_example |>
+  transmute(accver, start, end, strand = source_strand, anno, type = "CDS")
+radial_events <- radial_hsp |>
+  transmute(accver = qaccver, pos = qstart)
+# ---- radialview ----
+p_viewradial <- ggchord(radial_seqs, radial_hsp, feature_data = radial_features) +
+  geom_seq() +
+  geom_link_ribbon(link_avoid = "smooth") +
+  geom_feature(shape = "arrow", width = 0.025, position = position_strand(0.05)) +
+  geom_seq_label(seq_label_orientation = "horizontal") +
+  geom_track(
+    data = radial_events, geom = "bar",
+    track = position_track("hsp-count", width = unit(3, "mm"))
+  ) +
+  coord_radial_synteny(start_angle = 90, inner_radius = 0.7)
+p_viewradial
+# ---- radialmap ----
+radial_layout <- export_ggchord_layout(p_viewradial, original_data = TRUE)
+radial_location <- map_ggchord_position(p_viewradial, radial_seqs$accver[1], 1000)
+radial_roundtrip <- map_ggchord_position(
+  p_viewradial, radial_seqs$accver[1], radial_location[c("x", "y")], inverse = TRUE
+)
+radial_roundtrip
+# ---- radialrotate ----
+radial_rotated <- p_viewradial +
+  coord_radial_synteny(start_angle = 45, clockwise = FALSE, inner_radius = 0.9)
+radial_rotated
+
+# ---- expansionminimal ----
+ggchord(seq_data_example, ribbon_data_example) +
+  geom_alignment_segment(aes(link_colour = pident)) +
+  coord_dotplot()
+
+ggchord(seq_data_example, ribbon_data_example) +
+  geom_seq() +
+  geom_link_ribbon() +
+  geom_seq_label() +
+  coord_radial_synteny()
 # ---- end ----

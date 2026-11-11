@@ -47,6 +47,9 @@ Choose a lesson by task. A means chord, B collinear, C single-sequence circular.
 | Count source-position observations | [`geom_track()`](reference/geom_track.html) | `geom, stat, track, position` | A / B / C / Sankey | [Advanced](foundation.html#tracks) |
 | Route repeated sequence instances | [`geom_link_ribbon()`](reference/geom_link_ribbon.html) | `between, allow_repeated` | A / B | [Advanced](foundation.html#instances) |
 | Draw mirrored interval relationships | [`coord_sankey()`](reference/coord_sankey.html) | `column_gap, self_links` | Sankey | [Advanced](foundation.html#sankey) |
+| Show HSPs on independent axes | [`coord_dotplot()`](reference/coord_dotplot.html) | `x_seqs, y_seqs, x_orientation, y_orientation` | Dotplot | [Advanced](view-expansion.html#dotplot) |
+| Retain four alignment endpoints | [`geom_alignment_segment()`](reference/geom_alignment_segment.html) | `mapping, data, allow_repeated` | Dotplot | [Advanced](view-expansion.html#dotplot) |
+| Draw cyclic radial synteny | [`coord_radial_synteny()`](reference/coord_radial_synteny.html) | `start_angle, clockwise, inner_radius` | Radial | [Advanced](view-expansion.html#radial) |
 
 ## Three independent learning paths {#paths}
 

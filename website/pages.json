@@ -478,5 +478,13 @@
       "zh": "来源实例、轨道与新视图"
     },
     "group": "guide"
+  },
+  {
+    "slug": "view-expansion",
+    "title": {
+      "en": "HSP Dotplots and radial synteny",
+      "zh": "HSP点阵图与径向共线性"
+    },
+    "group": "article"
   }
 ]

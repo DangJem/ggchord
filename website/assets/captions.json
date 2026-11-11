@@ -694,5 +694,13 @@
   "foundationarrow": {
     "en": "Optional subject tips: shoulders retain target endpoint spans; the tip is a decorative marker.",
     "zh": "可选 subject 尖头：箭肩保留目标端点跨度，尖点仅作装饰标记。"
+  },
+  "viewdotplot": {
+    "en": "All 11 source-backed EMALE PAF HSPs in one-based native coordinates; reverse alignments retain their negative slope.",
+    "zh": "真实EMALE PAF的全部11条HSP，一基原生坐标；反向比对保留负斜率。"
+  },
+  "viewradial": {
+    "en": "Four real sequences with proportional spokes, source-strand CDS, observed interval ribbons and counts of retained HSP-start observations. Cyclic adjacency selects existing relationships only.",
+    "zh": "四条真实序列的等比例辐条、原始链CDS、已观测区间Ribbon和所选HSP起点计数；环形邻接只筛选已有关系。"
   }
 }

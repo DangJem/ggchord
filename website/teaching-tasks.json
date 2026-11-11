@@ -471,5 +471,38 @@
     "modes": "Sankey",
     "page": "foundation#sankey",
     "level": "advanced"
+  },
+  {
+    "task": {
+      "en": "Show HSPs on independent axes",
+      "zh": "用独立双轴展示HSP"
+    },
+    "api": "coord_dotplot",
+    "parameters": "x_seqs, y_seqs, x_orientation, y_orientation",
+    "modes": "Dotplot",
+    "page": "view-expansion#dotplot",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "en": "Retain four alignment endpoints",
+      "zh": "保留四个比对端点"
+    },
+    "api": "geom_alignment_segment",
+    "parameters": "mapping, data, allow_repeated",
+    "modes": "Dotplot",
+    "page": "view-expansion#dotplot",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "en": "Draw cyclic radial synteny",
+      "zh": "绘制环形邻接的径向共线性"
+    },
+    "api": "coord_radial_synteny",
+    "parameters": "start_angle, clockwise, inner_radius",
+    "modes": "Radial",
+    "page": "view-expansion#radial",
+    "level": "advanced"
   }
 ]

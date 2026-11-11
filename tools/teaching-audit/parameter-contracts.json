@@ -232,6 +232,158 @@
     "source": "man/coord_collinear.Rd"
   },
   {
+    "api": "coord_dotplot",
+    "parameter": "x_seqs",
+    "default": "NULL",
+    "type": "Nullable R object; type/inheritance below",
+    "constraint": "Optional unique accession vectors in axis order. Defaults to the query/subject accessions occurring in alignment layers, or all sequences when there are no alignments. Rows outside a selected axis set are omitted and recorded; self and repeated HSP rows are retained.",
+    "source": "man/coord_dotplot.Rd"
+  },
+  {
+    "api": "coord_dotplot",
+    "parameter": "y_seqs",
+    "default": "NULL",
+    "type": "Nullable R object; type/inheritance below",
+    "constraint": "Optional unique accession vectors in axis order. Defaults to the query/subject accessions occurring in alignment layers, or all sequences when there are no alignments. Rows outside a selected axis set are omitted and recorded; self and repeated HSP rows are retained.",
+    "source": "man/coord_dotplot.Rd"
+  },
+  {
+    "api": "coord_dotplot",
+    "parameter": "x_orientation",
+    "default": "1",
+    "type": "Numeric/integer; range in description",
+    "constraint": "Display direction: 1 or -1, either a scalar or a vector named by every selected accession. Input is unchanged.",
+    "source": "man/coord_dotplot.Rd"
+  },
+  {
+    "api": "coord_dotplot",
+    "parameter": "y_orientation",
+    "default": "1",
+    "type": "Numeric/integer; range in description",
+    "constraint": "Display direction: 1 or -1, either a scalar or a vector named by every selected accession. Input is unchanged.",
+    "source": "man/coord_dotplot.Rd"
+  },
+  {
+    "api": "coord_dotplot",
+    "parameter": "gap",
+    "default": "NULL",
+    "type": "Nullable R object; type/inheritance below",
+    "constraint": "Nonnegative spacing in native sequence units between axis segments. NULL uses five percent of the longest sequence.",
+    "source": "man/coord_dotplot.Rd"
+  },
+  {
+    "api": "coord_dotplot",
+    "parameter": "ratio",
+    "default": "1",
+    "type": "Numeric/integer; range in description",
+    "constraint": "Ratio of physical y units to physical x units, default 1.",
+    "source": "man/coord_dotplot.Rd"
+  },
+  {
+    "api": "coord_dotplot",
+    "parameter": "xlim",
+    "default": "NULL",
+    "type": "Nullable R object; type/inheritance below",
+    "constraint": "Optional global concatenated position limits. These zoom the panel without changing exported HSP endpoints.",
+    "source": "man/coord_dotplot.Rd"
+  },
+  {
+    "api": "coord_dotplot",
+    "parameter": "ylim",
+    "default": "NULL",
+    "type": "Nullable R object; type/inheritance below",
+    "constraint": "Optional global concatenated position limits. These zoom the panel without changing exported HSP endpoints.",
+    "source": "man/coord_dotplot.Rd"
+  },
+  {
+    "api": "coord_dotplot",
+    "parameter": "expand",
+    "default": "FALSE",
+    "type": "Logical",
+    "constraint": "Logical. Expand panel limits, default FALSE.",
+    "source": "man/coord_dotplot.Rd"
+  },
+  {
+    "api": "coord_dotplot",
+    "parameter": "clip",
+    "default": "\"on\"",
+    "type": "Character/enum; choices below",
+    "constraint": "Panel clipping, \"on\" (default) or \"off\".",
+    "source": "man/coord_dotplot.Rd"
+  },
+  {
+    "api": "coord_radial_synteny",
+    "parameter": "start_angle",
+    "default": "90",
+    "type": "Numeric/integer; range in description",
+    "constraint": "Direction of the first outward spoke in degrees, counterclockwise from the positive x axis. Default 90 starts at noon.",
+    "source": "man/coord_radial_synteny.Rd"
+  },
+  {
+    "api": "coord_radial_synteny",
+    "parameter": "clockwise",
+    "default": "TRUE",
+    "type": "Logical",
+    "constraint": "Logical, order subsequent spokes clockwise, default TRUE.",
+    "source": "man/coord_radial_synteny.Rd"
+  },
+  {
+    "api": "coord_radial_synteny",
+    "parameter": "inner_radius",
+    "default": "0.6",
+    "type": "Numeric/integer; range in description",
+    "constraint": "Positive inner radius in layout units, default 0.6. The longest proportional spoke has length 2. The central hole is display spacing and does not remove any source positions.",
+    "source": "man/coord_radial_synteny.Rd"
+  },
+  {
+    "api": "coord_radial_synteny",
+    "parameter": "ratio",
+    "default": "1",
+    "type": "Numeric/integer; range in description",
+    "constraint": "Fixed y/x aspect ratio, default 1.",
+    "source": "man/coord_radial_synteny.Rd"
+  },
+  {
+    "api": "coord_radial_synteny",
+    "parameter": "xlim",
+    "default": "NULL",
+    "type": "Nullable R object; type/inheritance below",
+    "constraint": "Optional user limits. Explicit limits take priority over automatically fitted limits.",
+    "source": "man/coord_radial_synteny.Rd"
+  },
+  {
+    "api": "coord_radial_synteny",
+    "parameter": "ylim",
+    "default": "NULL",
+    "type": "Nullable R object; type/inheritance below",
+    "constraint": "Optional user limits. Explicit limits take priority over automatically fitted limits.",
+    "source": "man/coord_radial_synteny.Rd"
+  },
+  {
+    "api": "coord_radial_synteny",
+    "parameter": "expand",
+    "default": "FALSE",
+    "type": "Logical",
+    "constraint": "Logical. Expand coordinate limits, default FALSE. Automatic fitting already includes a small safety margin; set TRUE to request the additional ggplot2 coordinate expansion.",
+    "source": "man/coord_radial_synteny.Rd"
+  },
+  {
+    "api": "coord_radial_synteny",
+    "parameter": "clip",
+    "default": "\"off\"",
+    "type": "Character/enum; choices below",
+    "constraint": "Whether drawing is clipped to the panel, default \"off\".",
+    "source": "man/coord_radial_synteny.Rd"
+  },
+  {
+    "api": "coord_radial_synteny",
+    "parameter": "fit",
+    "default": "c(\"labels\", \"geometry\", \"manual\")",
+    "type": "Vector; choices versus multiple selection below",
+    "constraint": "Fitting strategy: \"labels\" includes measured label boxes, \"geometry\" fits geometric elements only, and \"manual\" requires explicit xlim and ylim.",
+    "source": "man/coord_radial_synteny.Rd"
+  },
+  {
     "api": "coord_sankey",
     "parameter": "column_gap",
     "default": "3",
@@ -294,6 +446,94 @@
     "type": "Vector; choices versus multiple selection below",
     "constraint": "Fitting strategy: \"labels\" includes measured label boxes, \"geometry\" fits geometric elements only, and \"manual\" requires explicit xlim and ylim.",
     "source": "man/coord_sankey.Rd"
+  },
+  {
+    "api": "geom_alignment_segment",
+    "parameter": "mapping",
+    "default": "NULL",
+    "type": "aes mapping",
+    "constraint": "Standard ggplot2 mapping and layer data. Data defaults to the constructor's ribbon_data. Geometry roles are qaccver, saccver, qstart, qend, sstart, and send.",
+    "source": "man/geom_alignment_segment.Rd"
+  },
+  {
+    "api": "geom_alignment_segment",
+    "parameter": "data",
+    "default": "NULL",
+    "type": "Table/supported object; data may be a function",
+    "constraint": "Standard ggplot2 mapping and layer data. Data defaults to the constructor's ribbon_data. Geometry roles are qaccver, saccver, qstart, qend, sstart, and send.",
+    "source": "man/geom_alignment_segment.Rd"
+  },
+  {
+    "api": "geom_alignment_segment",
+    "parameter": "colour",
+    "default": "\"#59636D\"",
+    "type": "Character/enum; choices below",
+    "constraint": "Fixed styles. Mapped styles use link_colour, link_alpha, link_linewidth and link_linetype, with the corresponding scale_link functions. Explicit fixed styles win.",
+    "source": "man/geom_alignment_segment.Rd"
+  },
+  {
+    "api": "geom_alignment_segment",
+    "parameter": "alpha",
+    "default": "0.6",
+    "type": "Numeric/integer; range in description",
+    "constraint": "Fixed styles. Mapped styles use link_colour, link_alpha, link_linewidth and link_linetype, with the corresponding scale_link functions. Explicit fixed styles win.",
+    "source": "man/geom_alignment_segment.Rd"
+  },
+  {
+    "api": "geom_alignment_segment",
+    "parameter": "linewidth",
+    "default": "0.4",
+    "type": "Numeric/integer; range in description",
+    "constraint": "Fixed styles. Mapped styles use link_colour, link_alpha, link_linewidth and link_linetype, with the corresponding scale_link functions. Explicit fixed styles win.",
+    "source": "man/geom_alignment_segment.Rd"
+  },
+  {
+    "api": "geom_alignment_segment",
+    "parameter": "linetype",
+    "default": "1",
+    "type": "Numeric/integer; range in description",
+    "constraint": "Fixed styles. Mapped styles use link_colour, link_alpha, link_linewidth and link_linetype, with the corresponding scale_link functions. Explicit fixed styles win.",
+    "source": "man/geom_alignment_segment.Rd"
+  },
+  {
+    "api": "geom_alignment_segment",
+    "parameter": "position",
+    "default": "\"identity\"",
+    "type": "Character/enum; choices below",
+    "constraint": "Only \"identity\" is supported: data adjustment would change the alignment endpoints.",
+    "source": "man/geom_alignment_segment.Rd"
+  },
+  {
+    "api": "geom_alignment_segment",
+    "parameter": "show.legend",
+    "default": "NA",
+    "type": "R object; constraints below",
+    "constraint": "Standard ggplot2 layer arguments.",
+    "source": "man/geom_alignment_segment.Rd"
+  },
+  {
+    "api": "geom_alignment_segment",
+    "parameter": "inherit.aes",
+    "default": "FALSE",
+    "type": "Logical",
+    "constraint": "Standard ggplot2 layer arguments.",
+    "source": "man/geom_alignment_segment.Rd"
+  },
+  {
+    "api": "geom_alignment_segment",
+    "parameter": "allow_repeated",
+    "default": "FALSE",
+    "type": "Logical",
+    "constraint": "Allow explicitly identified source_hsp_id records to be displayed more than once. All participating layers must opt in. Rows without declared IDs are never deduplicated by their values.",
+    "source": "man/geom_alignment_segment.Rd"
+  },
+  {
+    "api": "geom_alignment_segment",
+    "parameter": "...",
+    "default": "",
+    "type": "Forwarded arguments",
+    "constraint": "Additional arguments passed to ggplot2's segment geometry.",
+    "source": "man/geom_alignment_segment.Rd"
   },
   {
     "api": "geom_feature",
@@ -8876,7 +9116,7 @@
     "parameter": "include",
     "default": "c(\"seq\", \"ribbon\", \"gene\", \"feature\", \"labels\", \"axis\", \"track\")",
     "type": "Vector; choices versus multiple selection below",
-    "constraint": "Character vector selecting any of \"seq\", \"ribbon\", \"gene\", \"feature\", \"labels\", \"link\", \"restriction\", \"track\", and \"axis\". Point links and restriction sites require explicit selection.",
+    "constraint": "Character vector selecting any of \"seq\", \"ribbon\", \"gene\", \"feature\", \"labels\", \"alignment\", \"link\", \"restriction\", \"track\", and \"axis\". Point links and restriction sites require explicit selection. Dotplots default to alignment and axis; axis_layout contains reversible axis offsets, directions and source origins. Alignment exports retain all four endpoints, layer identity and source row; omissions appear in connection_report.",
     "source": "man/export_ggchord_layout.Rd"
   },
   {
@@ -9484,7 +9724,7 @@
     "parameter": "plot",
     "default": "",
     "type": "R object; constraints below",
-    "constraint": "A ggchord plot using coord_collinear().",
+    "constraint": "A ggchord plot using coord_collinear(), coord_radial_synteny() or coord_dotplot().",
     "source": "man/map_ggchord_position.Rd"
   },
   {
@@ -9500,7 +9740,7 @@
     "parameter": "position",
     "default": "",
     "type": "Position object or documented string",
-    "constraint": "Numeric genomic positions, or layout x when inverse = TRUE.",
+    "constraint": "Numeric genomic positions, or layout x when inverse = TRUE. Radial inverse mapping instead requires a matrix/data frame with x and y columns on the specified backbone. Off-backbone positions are rejected.",
     "source": "man/map_ggchord_position.Rd"
   },
   {
@@ -9517,6 +9757,14 @@
     "default": "FALSE",
     "type": "Logical",
     "constraint": "Use original source coordinates after focusing.",
+    "source": "man/map_ggchord_position.Rd"
+  },
+  {
+    "api": "map_ggchord_position",
+    "parameter": "axis",
+    "default": "NULL",
+    "type": "Nullable R object; type/inheritance below",
+    "constraint": "Dotplot axis to map, either \"x\" (query) or \"y\" (subject). Required for Dotplots; omitted for linear and radial layouts. Dotplot gaps return NA on inverse mapping, with the chosen axis recorded in the result.",
     "source": "man/map_ggchord_position.Rd"
   },
   {

@@ -139,9 +139,17 @@ foundation_assets$width <- c(9,9,9,9,9);foundation_assets$height <- c(8,8,5,5,5)
 foundation_assets$background <- "white"
 assets <- rbind(assets,foundation_assets)
 basic_ids <- c(basic_ids,foundation_assets$id)
+expansion_assets <- foundation_assets[1:2, ]
+expansion_assets$id <- c("viewdotplot", "viewradial")
+expansion_assets$object <- paste0("p_", expansion_assets$id)
+expansion_assets$width <- c(8, 10); expansion_assets$height <- c(7, 9)
+expansion_assets$input <- c("Original source-backed EMALE PAF pair, all 11 HSPs and declared native lengths",
+  "Bundled four real sequences and source-strand CDS; observed HSPs length >=900 and identity >=75, two longest per directed pair; source HSP-start observations counted before projection")
+assets <- rbind(assets, expansion_assets)
+basic_ids <- c(basic_ids, expansion_assets$id)
 assets$coordinate <- vapply(assets$object, function(name) {
  coord <- get(name, env)$coordinates
- if (isTRUE(coord$ggchord_sankey)) "sankey" else if (inherits(coord, "CoordCollinear")) "collinear" else if (inherits(coord, "CoordCircular")) "circular" else "chord"
+ if (isTRUE(coord$ggchord_dotplot)) "dotplot" else if (isTRUE(coord$ggchord_radial)) "radial_synteny" else if (isTRUE(coord$ggchord_sankey)) "sankey" else if (inherits(coord, "CoordCollinear")) "collinear" else if (inherits(coord, "CoordCircular")) "circular" else "chord"
 }, character(1))
 teaching_assets <- assets[rep(1L, 6L), ]
 teaching_assets$id <- c("alignleft", "aligncenter", "alignright", "alignanchor", "alignauto", "tracktile")

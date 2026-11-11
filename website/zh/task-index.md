@@ -47,6 +47,9 @@
 | 统计源位置观测数 | [`geom_track()`](reference/geom_track.html) | `geom, stat, track, position` | A / B / C / Sankey | [进阶](foundation.html#tracks) |
 | 为重复序列实例选择路由 | [`geom_link_ribbon()`](reference/geom_link_ribbon.html) | `between, allow_repeated` | A / B | [进阶](foundation.html#instances) |
 | 绘制镜像区间关系 | [`coord_sankey()`](reference/coord_sankey.html) | `column_gap, self_links` | Sankey | [进阶](foundation.html#sankey) |
+| 用独立双轴展示HSP | [`coord_dotplot()`](reference/coord_dotplot.html) | `x_seqs, y_seqs, x_orientation, y_orientation` | Dotplot | [进阶](view-expansion.html#dotplot) |
+| 保留四个比对端点 | [`geom_alignment_segment()`](reference/geom_alignment_segment.html) | `mapping, data, allow_repeated` | Dotplot | [进阶](view-expansion.html#dotplot) |
+| 绘制环形邻接的径向共线性 | [`coord_radial_synteny()`](reference/coord_radial_synteny.html) | `start_angle, clockwise, inner_radius` | Radial | [进阶](view-expansion.html#radial) |
 
 ## 三条独立学习路线 {#paths}
 

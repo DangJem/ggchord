@@ -2,6 +2,16 @@
 
 # 迁移到 ggchord 候选 API
 
+## 0.18.0 的径向共线性
+
+在支持的序列、Feature和Track组合中使用`coord_radial_synteny()`，默认保持源长度
+比例；只有显式`geom_seq(length_mode = "equal")`才归一显示长度。环形邻接包含
+已有的末条/首条关系，不补造闭合比对。新视图的完整区间前缘使用按输入方向排序的
+`[min-1,max]`边界，已有坐标约定不变，位置轴从1开始。径向反查须提供所选骨架上
+的x/y表。不支持共享直线比例尺、branch、多窗口拼行及圆图专有注释，会明确报错。
+双语view-expansion教程提供真实来源、物理Track、实例路由和完整支持矩阵。
+
+
 ## 0.18.0 的 HSP Dotplot
 
 使用相同的序列表和 Ribbon 表，组合 `geom_alignment_segment()` 与
