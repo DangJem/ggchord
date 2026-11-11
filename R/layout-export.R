@@ -239,31 +239,7 @@ export_ggchord_layout <- function(
   exported$annotation_duplicates <- ggchord_annotation_duplicate_sources(exported$layer_sources)
   exported$axis_selection <- layout$axis_selection %||% data.frame()
   exported$render_context <- layout$render_context %||% ggchord_estimated_render_context(layout)
-  fits <- lapply(names(layout$layer_layouts), function(id) {
-    # Dependency sub-layouts may carry compatibility label diagnostics even
-    # when their owner only draws a backbone or feature. Export only the
-    # actual text owner's diagnostics, including owners whose text was hidden.
-    if (!any(names(layout$layer_geometry[[id]]) %in%
-        c("gene_text", "gene_text_repel", "gene_label_repel"))) return(NULL)
-    d <- layout$layer_layouts[[id]]$label_fit_diagnostics
-    if (!is.data.frame(d) || !nrow(d)) return(NULL)
-    resolved <- lapply(layout$layer_geometry[[id]], function(g) {
-      if (!is.data.frame(g) || !nrow(g) || !"label_size_requested" %in% names(g)) return(NULL)
-      if (".component" %in% names(g)) g <- g[g$.component %in% c("text", "arc_text"), , drop = FALSE]
-      if (!nrow(g)) return(NULL)
-      unique(g[intersect(c("source_row", "label_size_final", "label_fit_reason"), names(g))])
-    })
-    resolved <- ggchord_rbind_fill(resolved)
-    if (is.data.frame(resolved) && nrow(resolved)) {
-      at <- match(d$source_row, resolved$source_row)
-      for (field in intersect(c("label_size_final", "label_fit_reason"), names(resolved)))
-        d[[field]][!is.na(at)] <- resolved[[field]][at[!is.na(at)]]
-      d$label_fit_reason[is.na(at)] <- "hidden_after_layout"
-    } else d$label_fit_reason <- "hidden_after_layout"
-    d$layer_id <- id
-    d
-  })
-  exported$label_fit_diagnostics <- ggchord_rbind_fill(fits) %||% data.frame()
+  exported$label_fit_diagnostics <- ggchord_label_fit_diagnostics(layout)
   exported$label_visibility <- ggchord_label_visibility(layout)
 
   coord <- plot$coordinates

@@ -1,0 +1,17 @@
+{
+  "source_sha256": "ccbd09ff4c13e2f92c1c1927aadd4d2859a77a8eb143f9cdb6d14dc6403c5d9b",
+  "translations": {
+    "0": "连接Fusion面板间的真实区间",
+    "1": "保留原始端点的关系数据框。",
+    "2": "标准ggplot2美学映射，可映射fill、colour、alpha、linewidth和linetype。存在pident且未明确指定fill时，默认使用Identity映射及0/50/80/90/95/100刻度。组合层使用标准scale_fill_*等标度；各面板的角色标度只在其内部生效。",
+    "3": "可选的固定面板ID，不得与同名数据列同时指定。",
+    "4": "显式启用query到subject的序列颜色插值，不得与固定fill或fill映射同时使用。",
+    "5": "⟦0⟧或装饰性的⟦1⟧尖头。即使绘制尖头，仍导出完整来源前缘。",
+    "6": "显式允许重复展示source_hsp_id。",
+    "7": "控制距离相对于端点间距的比例，范围为⟦0⟧。",
+    "8": "固定样式优先于对应映射。没有pident时，默认填充为steelblue。",
+    "9": "该图层是否参与组合层图例。",
+    "10": "供⟦0⟧使用的组件。",
+    "11": "使用标准qaccver/saccver与qstart/qend/sstart/send字段。可选qpanel/spanel和q_instance/s_instance明确选择面板与显示实例；仅在候选唯一时推断缺省选择。query/subject角色不依赖面板摆放方位。区间为一基闭区间，按输入方向保留跨度为⟦0⟧的前缘；单位置区间也有非零宽度。要求区间完整可见；需要拆分或聚焦时，先显式准备来源数据。"
+  }
+}

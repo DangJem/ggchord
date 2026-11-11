@@ -1,3 +1,23 @@
+# ggchord 0.19.0.9000
+
+- Added `ggchord_fusion()`, `fusion_panel()` and `fusion_ribbon()` for static
+  compositions with a Circular/Chord center and up to four horizontal/vertical
+  Collinear panels. Cross-panel ribbons use real ordered interval fronts,
+  one-based inclusive boundaries and explicit panel/instance routing.
+- Added `export_ggchord_fusion()` with source relationships, namespaced instances,
+  measured panel rectangles, local/global fronts, paths and diagnostics in mm.
+  Standard `ggsave()` and `view_ggchord()` rebuild on the actual target device.
+- Panel-local measurement budgets now keep labels, tracks and guides within
+  their own physical context. Optional adaptive allocation adjusts the central
+  panel to the physical aspect ratio without changing explicit font sizes.
+- Cross-panel styles use standard aesthetic mappings/scales, a separate measured
+  guide, opt-in sequence-colour gradients and decorative subject tips. Identity
+  retains 0/50/80/90/95/100 breaks. Existing standalone defaults are unchanged.
+- Fusion currently requires fully visible same-unit intervals. Ambiguous routes,
+  repeated declared HSP identities without consent, unsupported views, overlapping
+  allocations and insufficient guide space fail explicitly. Sankey/free-angle/
+  eight-direction combinations and general font scaling remain future work.
+
 # ggchord 0.18.0 (development)
 
 * Added `coord_dotplot()` and `geom_alignment_segment()` for HSP-level views

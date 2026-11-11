@@ -234,6 +234,9 @@ view_ggchord <- function(
       mm = fitted$width * 25.4, px = fitted$width * dpi)
     height <- switch(units, "in" = fitted$height, cm = fitted$height * 2.54,
       mm = fitted$height * 25.4, px = fitted$height * dpi)
+  } else if (is.null(height) && inherits(plot, "ggchord_fusion")) {
+    # Fusion resolves all panels on the final device through grid.draw().
+    height <- width * .8
   } else if (is.null(height)) {
     width_inches <- ggchord_preview_pixels(width, units, dpi) / dpi
     fitted <- ggchord_preview_layout(plot, width_inches)

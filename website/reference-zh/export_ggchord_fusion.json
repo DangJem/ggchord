@@ -1,0 +1,10 @@
+{
+  "source_sha256": "6c2c6d5e3cb5af8a8c4d91fc10c4a62bcff4953ce8e44ef1193e19be2bf005ef",
+  "translations": {
+    "0": "按指定物理尺寸导出Fusion布局",
+    "1": "Fusion对象。",
+    "2": "以英寸指定的正画布宽高。",
+    "3": "包含panels、instances、connections、fronts、paths、diagnostics和逐面板来源布局的列表。全部全局几何使用毫米。",
+    "4": "在临时测量设备上按指定尺寸构建，并恢复此前设备。几何使用该设备的字体度量；后续保存会在实际输出设备上重新构建，因此度量可能有细微差异。来源坐标与身份不变。"
+  }
+}

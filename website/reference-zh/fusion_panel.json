@@ -1,0 +1,12 @@
+{
+  "source_sha256": "56c5196d0a496f7d1a50b219b3228250a6a09363f28763bff67bd08d026d49ed",
+  "translations": {
+    "0": "向Fusion添加基因组面板",
+    "1": "横向或纵向Collinear ggchord图形。此处不支持Sankey、Radial、Dotplot、分面及外部ggplot。",
+    "2": "唯一的非空面板名称；⟦0⟧为保留名称。",
+    "3": "可选right、top、left或bottom；每个方向最多一个面板。",
+    "4": "可选的相对宽度与高度。指定区域重叠或超出画布时报错，不擅自移动用户明确配置的面板。",
+    "5": "供⟦0⟧使用的组件。",
+    "6": "向Fusion添加基因组面板。"
+  }
+}

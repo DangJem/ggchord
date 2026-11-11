@@ -6,7 +6,10 @@ ggchord_device_scale <- function(device_inches = NULL,
                                  reference = c(width = 8, height = 6),
                                  limits = c(0.5, 1.6)) {
   if (is.null(device_inches)) {
-    device_inches <- if (grDevices::dev.cur() == 1L) {
+    available <- ggchord_render_context()$available_canvas_mm
+    device_inches <- if (length(available) == 2L && all(is.finite(available))) {
+      available / 25.4
+    } else if (grDevices::dev.cur() == 1L) {
       c(NA_real_, NA_real_)
     } else tryCatch(
       grDevices::dev.size("in"), error = function(e) c(NA_real_, NA_real_)

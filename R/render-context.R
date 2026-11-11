@@ -27,6 +27,8 @@ ggchord_render_plot_copy <- function(plot) {
 }
 
 ggchord_render_dimensions <- function() {
+  available <- ggchord_render_context()$available_canvas_mm
+  if (length(available) == 2L && all(is.finite(available))) return(available)
   if (grDevices::dev.cur() == 1L) return(c(width = NA_real_, height = NA_real_))
   value <- tryCatch(grDevices::dev.size("in") * 25.4,
     error = function(e) c(NA_real_, NA_real_))
@@ -79,6 +81,7 @@ ggchord_panel_context <- function(table, built) {
     y = abs(diff(yr)) / result$size[["height"]])
   list(status = "measured", panel_mm = result$size,
     canvas_mm = ggchord_render_dimensions(), panel_bounds_mm = result$bounds,
+    available_canvas_mm = ggchord_render_context()$available_canvas_mm,
     x_range = xr, y_range = yr, units_per_mm = units,
     axis_units_per_inch = units * 25.4, units_per_inch = max(units) * 25.4,
     geometry_metric_status = "estimated", converged = FALSE,
