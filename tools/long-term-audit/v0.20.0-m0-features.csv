@@ -1,0 +1,11 @@
+"accver","start","end","strand","type","anno",".source_start",".source_end",".source_accver",".source_origin",".source_row"
+"pETDuet-1",1,68,".","misc_feature","MCS-1",69,168,"pETDuet-1",101,3
+"pETDuet-1",114,132,"+","promoter","T7 promoter",214,232,"pETDuet-1",101,6
+"pETDuet-1",133,157,".","protein_bind","lac operator",233,257,"pETDuet-1",101,7
+"pETDuet-1",186,191,".","RBS","RBS",286,291,"pETDuet-1",101,8
+"pETDuet-1",197,338,".","misc_feature","MCS-2",297,438,"pETDuet-1",101,9
+"pETDuet-1",200,202,"+","CDS","ATG",300,302,"pETDuet-1",101,10
+"pETDuet-1",266,310,"+","CDS","S-Tag",366,410,"pETDuet-1",101,11
+"pETDuet-1",362,409,".","terminator","T7 terminator",462,509,"pETDuet-1",101,12
+"pETDuet-1",446,901,"+","rep_origin","f1 ori",546,1001,"pETDuet-1",101,13
+"pETDuet-1",1016,1800,"-","CDS","AmpR",1116,1976,"pETDuet-1",101,14

@@ -1,0 +1,57 @@
+{
+  "version": "0.20.0.9000",
+  "elapsed_seconds": 10.263,
+  "source_md5": {
+    "examples/fasta/MT108731.1.fna": "0d7e7e4f1b574e2381e5b99cb835e52b",
+    "examples/fasta/MT118296.1.fna": "4723d1991b3e4449de7a95f07edea2d0",
+    "examples/protein/four-proteins.faa": "1b0a732c3d79a2a056c242ea3f76ca77",
+    "examples/plasmid/pETDuet-1.fna": "5bb448fec48781c2d2a1645b0ad2d15c"
+  },
+  "character_rows": 200,
+  "dna_examples": 2,
+  "aa_examples": 2,
+  "source_mapping": true,
+  "reverse_complement": true,
+  "repeated_focus": true,
+  "wide": {
+    "representation": "letters",
+    "available_mm_per_position": 3,
+    "required_mm_per_position": 2.2588,
+    "size_mm": 3,
+    "n_positions": 60,
+    "reason": "Measured glyph width plus spacing; narrow panels retain tiles without shrinking fonts"
+  },
+  "narrow": {
+    "representation": "tiles",
+    "available_mm_per_position": 0.2,
+    "required_mm_per_position": 2.2588,
+    "size_mm": 3,
+    "n_positions": 60,
+    "reason": "Measured glyph width plus spacing; narrow panels retain tiles without shrinking fonts"
+  },
+  "M0": {
+    "source": "pETDuet-1",
+    "start": 101,
+    "end": 1900,
+    "features": 10,
+    "primers": 2,
+    "restriction_sites": 3,
+    "site_label_groups": 1,
+    "statistics": "none: no recomputed or implied signal",
+    "feature_labels": 3,
+    "label_selection": "CDS excluding literal ATG and replication origins; primer names and selected enzyme names",
+    "primer_display": "generic arrow at real binding interval",
+    "restriction_display": "three original recognition blocks; one shared enzyme-name label; not cut-site ticks",
+    "feature_source_overlap_verified": true,
+    "source_boundaries": [100, 1900],
+    "decorative_leaders": 2,
+    "biological_connections": 0,
+    "coordinates": "identity position scales only; shared continuous source frame and measured panel context",
+    "sizes_inches": [
+      [12, 8],
+      [10, 7]
+    ],
+    "PNG": "v0.20.0-m0-detail.png"
+  },
+  "not_verified": ["PDF/SVG release matrix", "true alignment columns/mismatch/indel", "CDS translation/phase detail", "M1-M3", "arbitrary inset positions/scales"]
+}

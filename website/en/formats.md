@@ -95,3 +95,21 @@ Negative-strand anchors use decreasing canonical endpoints, consistent with pair
 Inspect returned fields and conversion reports before selecting plotting fields. Preserve endpoint direction for reverse PAF hits; do not rename a GenBank record to pretend it is a different bundled plasmid.
 
 <div class="next-step">Continue: <a href="alignments.html">Import nucleotide and protein alignments →</a></div>
+
+
+## Retain actual FASTA characters {#characters}
+
+Use `keep_sequence = TRUE` to retain characters with their physical header line and optional file provenance. Only whitespace is removed; case is retained. Declare bp or aa explicitly instead of guessing the alphabet. Focusing crops the string as well as the interval; local position 1 below is original position 1001. A decreasing locus selects the same interval and does not reverse-complement it. Lengths alone cannot supply characters; HSP endpoints cannot supply mismatch or gap columns. Gapped FASTA counts gap characters and needs a separate alignment-to-source map before genomic use.
+
+```r
+character_source <- read_fasta_lengths(
+  "examples/plasmid/pUC19.fna",
+  sequence_unit = "bp", keep_sequence = TRUE, source_file = TRUE
+)
+character_locus <- focus_ggchord_data(
+  character_source,
+  loci = data.frame(accver = character_source$accver, start = 1001, end = 1060)
+)
+character_locus$seq_data |>
+  select(accver, length, sequence, .source_origin)
+```

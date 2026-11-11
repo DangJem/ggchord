@@ -1338,7 +1338,8 @@
       "files": "NULL",
       "header_delim": "NULL",
       "source_file": "FALSE",
-      "sequence_unit": "NULL"
+      "sequence_unit": "NULL",
+      "keep_sequence": "FALSE"
     }
   },
   {

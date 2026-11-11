@@ -95,3 +95,21 @@ paired_links |>
 先查看返回列与转换报告，再选绘图列。PAF 反向命中保留端点方向；GenBank 记录身份不能因为展示需要而改成另一条随包质粒。
 
 <div class="next-step">继续：<a href="alignments.html">导入核酸和蛋白比对 →</a></div>
+
+
+## 保留真实 FASTA 字符 {#characters}
+
+通过 `keep_sequence = TRUE` 保留真实字符、头部物理行号和可选文件来源。仅读取时去除空白，保留大小写；显式声明 bp 或 aa，不猜字母表。聚焦同时裁剪字符串与区间，下例局部位置 1 对应原始位置 1001。降序区域仍选择同一区间，不执行反向互补。只有长度不能恢复字符，只有 HSP 端点不能恢复 mismatch 或 gap 列。有 gap 的 FASTA 会将 gap 计入长度，基因组用途需要单独的比对列到源位置映射。
+
+```r
+character_source <- read_fasta_lengths(
+  "examples/plasmid/pUC19.fna",
+  sequence_unit = "bp", keep_sequence = TRUE, source_file = TRUE
+)
+character_locus <- focus_ggchord_data(
+  character_source,
+  loci = data.frame(accver = character_source$accver, start = 1001, end = 1060)
+)
+character_locus$seq_data |>
+  select(accver, length, sequence, .source_origin)
+```

@@ -2661,6 +2661,7 @@
 | `header_delim` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 可选分隔字符串；提供后在每个出现位置拆分头部，只保留第一段。 |
 | `source_file` | `FALSE` | 逻辑值 | 逻辑值，读取一个或多个文件时是否添加 .source_file 列，默认 FALSE。 |
 | `sequence_unit` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 可选单位声明 "bp" 或 "aa"，提供后在结果中添加该列。函数不推断字母表。省略时保留既有输出列，ggchord 按 bp 解释。 |
+| `keep_sequence` | `FALSE` | 逻辑值 | 逻辑值，默认 FALSE。在 sequence 中保留真实 FASTA 字符，仅去除空白，保留大小写。不推断字母表、反向互补或比对列。若有 gap 字符，也计入 length；将有 gap 的输入用于基因组坐标前，必须提供显式的比对列到源位置映射。 |
 
 </details>
 

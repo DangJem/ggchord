@@ -2661,6 +2661,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `header_delim` | `NULL` | Nullable R object; type/inheritance below | Optional character. When given, each header is split at every occurrence of this delimiter and only the first piece is kept. |
 | `source_file` | `FALSE` | Logical | Logical. Add a .source_file column when reading one or more files, default FALSE. |
 | `sequence_unit` | `NULL` | Nullable R object; type/inheritance below | Optional "bp" or "aa" declaration. When supplied, adds that column to the result; the alphabet is not inferred. Omitted units retain the existing output columns and ggchord interprets them as bp. |
+| `keep_sequence` | `FALSE` | Logical | Logical, default FALSE. Also retain the actual FASTA characters in sequence, removing whitespace only and preserving case. No alphabet, reverse complement or alignment columns are inferred. Gap characters, if present, are counted in length; gapped input needs an explicit alignment-to-source map before genomic use. |
 
 </details>
 

@@ -1,0 +1,16 @@
+"kind","accver","start","end","strand","label",".source_start",".source_end"
+"feature","pETDuet-1",1,68,".","MCS-1",69,168
+"feature","pETDuet-1",114,132,"+","T7 promoter",214,232
+"feature","pETDuet-1",133,157,".","lac operator",233,257
+"feature","pETDuet-1",186,191,".","RBS",286,291
+"feature","pETDuet-1",197,338,".","MCS-2",297,438
+"feature","pETDuet-1",200,202,"+","ATG",300,302
+"feature","pETDuet-1",266,310,"+","S-Tag",366,410
+"feature","pETDuet-1",362,409,".","T7 terminator",462,509
+"feature","pETDuet-1",446,901,"+","f1 ori",546,1001
+"feature","pETDuet-1",1016,1800,"-","AmpR",1116,1976
+"primer","pETDuet-1",348,366,"-","T7 Terminal",448,466
+"primer","pETDuet-1",114,133,"+","T7",214,233
+"recognition","pETDuet-1",6,11,"+","BamHI",106,111
+"recognition","pETDuet-1",12,17,"+","EcoRI",112,117
+"recognition","pETDuet-1",43,48,"+","HindIII",143,148

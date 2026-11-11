@@ -10352,6 +10352,14 @@
     "source": "man/read_fasta_lengths.Rd"
   },
   {
+    "api": "read_fasta_lengths",
+    "parameter": "keep_sequence",
+    "default": "FALSE",
+    "type": "Logical",
+    "constraint": "Logical, default FALSE. Also retain the actual FASTA characters in sequence, removing whitespace only and preserving case. No alphabet, reverse complement or alignment columns are inferred. Gap characters, if present, are counted in length; gapped input needs an explicit alignment-to-source map before genomic use.",
+    "source": "man/read_fasta_lengths.Rd"
+  },
+  {
     "api": "read_genbank",
     "parameter": "file",
     "default": "NULL",

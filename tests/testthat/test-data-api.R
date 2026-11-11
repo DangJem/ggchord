@@ -70,14 +70,14 @@ test_that("import helpers parse minimal files with explicit coordinate conventio
   paf <- tempfile(fileext = ".paf")
   bedpe <- tempfile(fileext = ".bedpe")
   on.exit(unlink(c(fasta, blast, gff, bed, paf, bedpe)), add = TRUE)
-  writeLines(c(">A", "ACGTACGT"), fasta)
+  writeLines(c(">A", "ACgtACGT"), fasta)
   writeLines(paste("001", "NA", 98, 100, 0, 0, 1, 100, 1, 100, "1e-20", 200,
     sep = "\t"), blast)
   writeLines(c("##gff-version 3",
     "A\tsource\tCDS\t1\t8\t.\t+\t0\tID=cds1;product=test%20protein",
     "##FASTA", ">A", "ACGTACGT"), gff)
   expect_equal(read_fasta_lengths(fasta)$length, 8L)
-  expect_identical(read_fasta_lengths(fasta, keep_sequence = TRUE)$sequence, "ACGTACGT")
+  expect_identical(read_fasta_lengths(fasta, keep_sequence = TRUE)$sequence, "ACgtACGT")
   imported <- read_blast(blast, format = "outfmt6")
   expect_equal(nrow(imported), 1L)
   expect_equal(imported$qaccver, "001")

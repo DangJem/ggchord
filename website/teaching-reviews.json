@@ -1798,14 +1798,15 @@
   },
   "read_fasta_lengths": {
     "level": "L2",
-    "page": "real-data",
-    "anchor": "read",
+    "page": "formats",
+    "anchor": "characters",
     "reason": "Reviewed input/output, constraints and runnable canonical lesson; key-parameter level applies only to listed behavior",
     "modes": "local FASTA; declared bp/aa unit and complete lengths",
     "parameters": [
       "file",
       "files",
-      "sequence_unit"
+      "sequence_unit",
+      "keep_sequence"
     ],
     "purpose": {
       "en": "Read one or more FASTA files into seq_data format",

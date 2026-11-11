@@ -3,7 +3,7 @@
     "formats": {
       "result": "success",
       "chunks": ["setup", "adapters", "formats", "formatpaf", "drawpaf", "genbank", "frontimportgr", "frontimportgi"],
-      "raw_blocks": 1,
+      "raw_blocks": 2,
       "isolation": "fresh R process, separate documentation environment",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     }
@@ -21,7 +21,7 @@
     "R/coord-circular.R": "46ed55ec3e7fdfa137a74b8cd0e507237fe888ff6d5afb33d107ece8443ddc37",
     "R/coord-collinear.R": "330a790c9821b27f08eb805907a5534504852664a6f5b8a974130348a6d834e4",
     "R/coord-dotplot.R": "a2c037b06c6ecc260a54366cdeddb26e3f2ab8e547e8732d71c64e4e7fe421f4",
-    "R/coord-radial-synteny.R": "92bf139453b4289992aabfe2c9c2c4260e9cbc9c6226d950902282718af52196",
+    "R/coord-radial-synteny.R": "167406b5a167f81d21de19e1bf1f9afb2c41490fab56ac3db4f868d87b656c91",
     "R/coord-sankey.R": "38dcfdd222ffb061752bd32b64cf5e1b0d9857f4e7bdcaec5a114a463aa9be28",
     "R/data_doc.R": "ad85662a588f9b35cfe9934af43a9a23176f1905b04b18b05abfd71d03e87e98",
     "R/data-bedpe.R": "0f6639a6d7ee62dd06e41d1e815ec2de2c3c3f936ab8e10fac43490079f625e4",
@@ -29,7 +29,7 @@
     "R/data-convert.R": "9720d558c7e38c4b0c403c377380bdb07df0ed8e6b917a17eb2afb0453d2986a",
     "R/data-formats.R": "131ab3efe27b0df7d42d659774723683b8340f473411f1d213cf879790bcae94",
     "R/data-genbank.R": "a278f28d7ca8382854dd3044e24d6fe3d094b85f9d0a12b7a2ff53171f9f378e",
-    "R/data-import.R": "2c823c04135861169e145dc3c99789a8d70ae5363f2bc103ffc16194c7af2932",
+    "R/data-import.R": "fb71c68771d756073278b7d86fb1d8ecb88c5d309447f2448b3b37334c25dcb3",
     "R/data-prepare.R": "42dcccd45c46deca8300cbf632eedd1d50d3964ce4d856389f4f68abb0f4d0fa",
     "R/data-project.R": "ada3bf29ca0de165a8d6df626d06962645e9afacecd885d84ff7204ba6279fd3",
     "R/data-relations.R": "85bc1a3eb03e1f9ef666f27ef0808b7942e5c7e6042a071b01d7c8cd24ba4914",
@@ -37,7 +37,7 @@
     "R/diagnostics.R": "1704a363751c2836022b3d598e36ecaf16ef277d2a31b7b52e95932c5a865668",
     "R/display-instances.R": "9fe7f78c53eacaa1a7a21a9e3126f666854462a5368471d79967577f30563ebd",
     "R/focus-track.R": "76bd54e504c51bc871f1742f6fe49f314a7fc236a85be24c4ddb9deb7aa778fc",
-    "R/focus.R": "ed209b1d76039164405059bb4ac7ced268c28ee3f0bec5d0c5d2ee63b85b5060",
+    "R/focus.R": "1016cfe1273b3028aa4bf2612d09f386cdeac9b2caef473ce56e338b7e67599e",
     "R/fusion-render.R": "1b834270ed88f327da53e7bd8831c53df610a21d390f067b0223b08a1d8a53cb",
     "R/fusion.R": "8e6eb01188c0e7826dfa57217e29ee505e33727addd50147cb717f15ebf592c2",
     "R/geom-alignment-segment.R": "a1f725f2722c5add53569a211d2b37a02d24d9825303e1f3d1c8f9ff6f38e3b6",
@@ -108,7 +108,7 @@
     "R/theme.R": "c443fe20bcd8527a2c69b4c49f43a191306cfa0599a739130e417b635481d560",
     "R/track-grammar.R": "7ffc7c06186f12b9b79a2abac2556016fd4cf15fb1bf73ac0730ec8093c10143",
     "R/validate.R": "e80446a0f633f4160f524a920933e550e85fca5b3e7fc3a239ca0d7f1dbd8ed6",
-    "R/view-projection.R": "25e5c2a2ffcc7bc80a7cd15231a70e0b95e65a608ba7db3cf9285e78242562c7",
+    "R/view-projection.R": "af38488dff2a56f2f986a38e9fbcde86126da45a749f04ce6186dd342d8bf167",
     "R/viewer.R": "f482af4be44c1892b2bc14616014eb237a4de4a16e341bc87e2293e6ef917960",
     "R/zzz.R": "95628e07ae0edfa4f685527742b599d8d4572f8b04bf8ed4825a8d86d1fa0b87"
   },
