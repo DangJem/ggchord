@@ -287,6 +287,11 @@ ggchord <- function(
   } else {
     p <- NextMethod()
   }
+  if (inherits(e2, "theme")) {
+    if (is.null(attr(e2, "ggchord.settings"))) {
+      p$ggchord$native_theme <- if (is.null(e1$ggchord$native_theme)) e2 else e1$ggchord$native_theme + e2
+    } else p$ggchord$native_theme <- NULL
+  }
   ggchord_validate_coord_contract(p)
   # ggplot2 copies plot metadata, but environments remain shared references.
   # A new composition owns a new lazy cache; invalidating e1's environment

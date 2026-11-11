@@ -199,6 +199,9 @@ ggchord_adaptive_limits <- function(layout) {
 #' callers that need a fully prepared ggplot object.
 #' @noRd
 prepare_ggchord_plot <- function(plot) {
+  if (isTRUE(plot$coordinates$ggchord_dotplot)) return(ggchord_prepare_dotplot(plot))
+  if (any(vapply(plot$layers, function(x) identical(x$ggchord_type, "alignment"), logical(1))))
+    ggchord_stop("geom_alignment_segment() requires coord_dotplot()")
   plot <- ggchord_register_layers(plot)
   plot$scales <- plot$scales$clone()
   if (exists("ggchord_prepare_track_layers", mode = "function")) plot <- ggchord_prepare_track_layers(plot)

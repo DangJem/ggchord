@@ -14,8 +14,11 @@
 #' @param plot A ggchord plot.
 #' @param include Character vector selecting any of \code{"seq"},
 #'   \code{"ribbon"}, \code{"gene"}, \code{"feature"}, \code{"labels"},
-#'   \code{"link"}, \code{"restriction"}, \code{"track"}, and \code{"axis"}. Point links and
+#'   \code{"alignment"}, \code{"link"}, \code{"restriction"}, \code{"track"}, and \code{"axis"}. Point links and
 #'   restriction sites require explicit selection.
+#' Dotplots default to `alignment` and `axis`; `axis_layout` contains reversible
+#' axis offsets, directions and source origins. Alignment exports retain all four
+#' endpoints, layer identity and source row; omissions appear in `connection_report`.
 #' @param original_data Logical. Include the resolved per-layer input tables
 #'   under \code{original_data}, default \code{FALSE}.
 #'
@@ -86,6 +89,7 @@ export_ggchord_layout <- function(
     plot,
     include = c("seq", "ribbon", "gene", "feature", "labels", "axis", "track"),
     original_data = FALSE) {
+  default_include <- missing(include)
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
 
@@ -93,7 +97,7 @@ export_ggchord_layout <- function(
     ggchord_stop("export_ggchord_layout(): plot must be a ggchord object")
   }
   allowed <- c("seq", "link", "ribbon", "gene", "feature", "labels",
-               "restriction", "axis", "track")
+               "restriction", "axis", "track", "alignment")
   if (!is.character(include) || anyNA(include) ||
       any(!include %in% allowed)) {
     ggchord_stop(
@@ -107,6 +111,10 @@ export_ggchord_layout <- function(
     ggchord_stop("export_ggchord_layout(): original_data must be TRUE or FALSE")
   }
 
+  if (isTRUE(plot$coordinates$ggchord_dotplot)) {
+    if (default_include) include <- c("alignment", "axis")
+    return(ggchord_export_dotplot(plot, include, original_data))
+  }
   plot <- ggchord_register_layers(plot)
   layout <- get_chord_layout(plot, build = TRUE)
   exported <- stats::setNames(vector("list", length(include)), include)

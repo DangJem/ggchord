@@ -81,3 +81,17 @@ test_that("source metadata remains mappable without replacing computed geometry"
   expect_true(nrow(built$data[[3]]) > 0L)
   expect_true(all(built$data[[3]]$label == "shown"))
 })
+
+test_that("Dotplot retains reverse HSP endpoints and reversible axis positions", {
+  hits <- smoke_ribbon()
+  hits$sstart <- 600
+  hits$send <- 200
+  p <- ggchord(smoke_sequences(), hits, validate = "none") +
+    geom_alignment_segment() + coord_dotplot()
+  expect_s3_class(build_ggchord_smoke(p), "ggplot_built")
+  out <- export_ggchord_layout(p)$alignment
+  expect_true(all(out$y > out$yend))
+  back <- map_ggchord_position(p, out$saccver, out$y,
+    inverse = TRUE, axis = "y")
+  expect_equal(back$position, hits$sstart)
+})

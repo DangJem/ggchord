@@ -2,6 +2,18 @@
 
 # 迁移到 ggchord 候选 API
 
+## 0.18.0 的 HSP Dotplot
+
+使用相同的序列表和 Ribbon 表，组合 `geom_alignment_segment()` 与
+`coord_dotplot()`，无需 `geom_seq()`。点连接继续用 `geom_link_line()`；
+Alignment 样式复用 `link_*` 映射及 `scale_link_*()`。端点必须已规范化方向，
+`read_paf()` 已完成此步骤；不能直接把升序 target 区间加负链当作正向线段。
+未知方向会报告并省略，没有精细比对轨迹时不生成逐碱基路径。
+位置反查指定 `map_ggchord_position(..., axis = "x"/"y")`；聚焦后的原始来源
+坐标用 `source = TRUE`。窗口轴默认仍显示窗口内相对坐标。已有弦图、单圆图和
+共线性代码无需因此改写。
+
+
 ## 0.17.0 的统一注释输入
 
 推荐用 `ggchord(seq_data = seqs, feature_data = annotations)` 提供基因和其他特征。

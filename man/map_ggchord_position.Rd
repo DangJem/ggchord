@@ -4,10 +4,17 @@
 \alias{map_ggchord_position}
 \title{Convert sequence positions to or from a linear ggchord layout}
 \usage{
-map_ggchord_position(plot, accver, position, inverse = FALSE, source = FALSE)
+map_ggchord_position(
+  plot,
+  accver,
+  position,
+  inverse = FALSE,
+  source = FALSE,
+  axis = NULL
+)
 }
 \arguments{
-\item{plot}{A ggchord plot using \code{\link[=coord_collinear]{coord_collinear()}}.}
+\item{plot}{A ggchord plot using \code{\link[=coord_collinear]{coord_collinear()}} or \code{\link[=coord_dotplot]{coord_dotplot()}}.}
 
 \item{accver}{Sequence identifiers, scalar or one per position.}
 
@@ -16,6 +23,10 @@ map_ggchord_position(plot, accver, position, inverse = FALSE, source = FALSE)
 \item{inverse}{Convert layout x back to native sequence positions.}
 
 \item{source}{Use original source coordinates after focusing.}
+
+\item{axis}{Dotplot axis to map, either \code{"x"} (query) or \code{"y"} (subject).
+Required for Dotplots; omitted for linear layouts. Dotplot gaps return NA
+on inverse mapping, with the chosen axis recorded in the result.}
 }
 \value{
 A data frame with accver, position, x and backbone y.

@@ -2,6 +2,20 @@
 
 # Migrate to the ggchord candidate API
 
+## HSP Dotplots in 0.18.0
+
+Use the same sequence and ribbon tables with `geom_alignment_segment()` and
+`coord_dotplot()`; no `geom_seq()` is needed. Keep `geom_link_line()` for point
+links. Alignment styles use the existing `link_*` roles and `scale_link_*()`.
+Use normalized endpoint directions (`read_paf()` already does this); a raw
+ascending target interval plus a minus strand must first be normalized.
+Unknown directions are reported and omitted. There is no base-level path
+without explicit alignment trace data. Select `axis = "x"` or `"y"` for
+`map_ggchord_position()`; source coordinates after focusing use `source = TRUE`.
+Default window-axis labels remain relative to the selected window. These new
+APIs do not require changes to existing Chord, Circular or Collinear code.
+
+
 ## Unified annotations in 0.17.0
 
 Prefer `ggchord(seq_data = seqs, feature_data = annotations)` for genes and

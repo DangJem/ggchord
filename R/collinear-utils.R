@@ -111,7 +111,10 @@ ggchord_match_feature_rows <- function(labels, features) {
 #' In a segmented layout, specify the window accession rather than its parent
 #' source accession. Positions outside that window, including display gaps,
 #' produce an error instead of being extrapolated into omitted sequence.
-#' @param plot A ggchord plot using [coord_collinear()].
+#' @param plot A ggchord plot using [coord_collinear()] or [coord_dotplot()].
+#' @param axis Dotplot axis to map, either `"x"` (query) or `"y"` (subject).
+#'   Required for Dotplots; omitted for linear layouts. Dotplot gaps return NA
+#'   on inverse mapping, with the chosen axis recorded in the result.
 #' @param accver Sequence identifiers, scalar or one per position.
 #' @param position Numeric genomic positions, or layout x when `inverse = TRUE`.
 #' @param inverse Convert layout x back to native sequence positions.
@@ -128,7 +131,9 @@ ggchord_match_feature_rows <- function(labels, features) {
 #'   geom_seq() +
 #'   coord_collinear()
 #' map_ggchord_position(p, seqs$accver[1], position = 100)
-map_ggchord_position <- function(plot, accver, position, inverse = FALSE, source = FALSE) {
+map_ggchord_position <- function(plot, accver, position, inverse = FALSE, source = FALSE, axis = NULL) {
+  if (inherits(plot, "ggchord") && isTRUE(plot$coordinates$ggchord_dotplot))
+    return(ggchord_map_dotplot(plot, accver, position, inverse, source, axis))
   if (!inherits(plot, "ggchord") || !isTRUE(plot$coordinates$ggchord_collinear)) {
     ggchord_stop("map_ggchord_position(): use a ggchord plot with coord_collinear()")
   }

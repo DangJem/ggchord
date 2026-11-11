@@ -1,3 +1,22 @@
+# ggchord 0.18.0 (development)
+
+* Added `coord_dotplot()` and `geom_alignment_segment()` for HSP-level views
+  of existing `seq_data` and `ribbon_data`, without a backbone layer. Both
+  axes have independent sequence selections, order and display orientation;
+  offsets, gaps, separators and native bp/aa units preserve all four endpoints.
+* Dotplot exports include alignment rows, reversible `axis_layout` and a
+  connection report for axis-selection and unknown-direction omissions.
+  `map_ggchord_position(..., axis = "x"/"y")` supports both directions and
+  focused source origins; inverse positions in display gaps return NA.
+* Alignment styles reuse `link_*` mappings and scales, including the six
+  default Identity ticks. Explicit scales and native axis themes take priority.
+  Unknown direction is omitted with a warning; contradictory direction and
+  endpoint metadata is rejected. Repeated declared HSP IDs require explicit
+  `allow_repeated = TRUE`; unidentified duplicate/self rows remain distinct.
+* This first Dotplot slice supports identity segments and native annotations,
+  not the existing backbone/feature/track geometries, facets or base-level
+  mismatch reconstruction. Existing coordinate defaults are unchanged.
+
 # ggchord 0.17.0 (development)
 
 * Added `ggchord(feature_data = ...)` as the unified annotation input and

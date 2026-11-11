@@ -15,8 +15,11 @@ export_ggchord_layout(
 
 \item{include}{Character vector selecting any of \code{"seq"},
 \code{"ribbon"}, \code{"gene"}, \code{"feature"}, \code{"labels"},
-\code{"link"}, \code{"restriction"}, \code{"track"}, and \code{"axis"}. Point links and
-restriction sites require explicit selection.}
+\code{"alignment"}, \code{"link"}, \code{"restriction"}, \code{"track"}, and \code{"axis"}. Point links and
+restriction sites require explicit selection.
+Dotplots default to \code{alignment} and \code{axis}; \code{axis_layout} contains reversible
+axis offsets, directions and source origins. Alignment exports retain all four
+endpoints, layer identity and source row; omissions appear in \code{connection_report}.}
 
 \item{original_data}{Logical. Include the resolved per-layer input tables
 under \code{original_data}, default \code{FALSE}.}

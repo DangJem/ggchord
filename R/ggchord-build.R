@@ -1090,6 +1090,9 @@ ggchord_layout_component <- function(layout, type, fallback = data.frame()) {
 #' Compute a plot-owned, per-layer geometry registry
 #' @noRd
 compute_chord_geometry <- function(plot) {
+  if (isTRUE(plot$coordinates$ggchord_dotplot)) return(ggchord_dotplot_geometry(plot))
+  if (any(vapply(plot$layers, function(x) identical(x$ggchord_type, "alignment"), logical(1))))
+    ggchord_stop("geom_alignment_segment() requires coord_dotplot()")
   plot <- ggchord_register_layers(plot)
   plot <- ggchord_prepare_track_layers(plot)
   plot <- ggchord_prepare_instances(plot)
