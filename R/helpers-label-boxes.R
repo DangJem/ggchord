@@ -584,7 +584,7 @@ ggchord_box_overlaps_feature <- function(box, polygon, tol = .004) {
     for (j in seq_len(nrow(polygon_xy) - 1L)) {
       if (ggchord_segment_intersects(
           closed_corners[i, ], closed_corners[i + 1L, ],
-          polygon_xy[j, ], polygon_xy[j + 1L, ])) return(TRUE)
+          polygon_xy[j, ], polygon_xy[j + 1L, ], tol = tol)) return(TRUE)
     }
   }
   # Dense feature paths make a vertex-in-box check an inexpensive and robust

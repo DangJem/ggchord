@@ -3,8 +3,9 @@ pkgload::load_all(quiet = TRUE)
 library(dplyr)
 folder <- 'tools/long-term-audit'
 arguments <- commandArgs(trailingOnly = TRUE)
+features_check <- '--features' %in% arguments
 after <- '--after' %in% arguments
-prefix <- if (after) 'v0.27.0-quality-after-' else 'v0.27.0-quality-'
+prefix <- if (features_check) 'v0.27.0-quality-features-' else if (after) 'v0.27.0-quality-after-' else 'v0.27.0-quality-'
 measure <- function(plot, id, width = 10, height = 8) {
   path <- file.path(folder, paste0(prefix, id, '.png'))
   ggchord_diagnostic_device(path, 'png', width, height, 110)
@@ -43,7 +44,7 @@ boxes <- data.frame(layer_id = 'format', source_row = 1:2, text_object = c('one'
   centre_x_mm = c(40, 43), centre_y_mm = 50, width_mm = 10, height_mm = 10,
   angle_radians = 0, xmin_mm = c(35, 38), xmax_mm = c(45, 48), ymin_mm = 45, ymax_mm = 55)
 result <- ggchord_label_quality(empty, boxes, mock, context)
-stopifnot(result$summary$n_text_overlaps == 1L, is.na(result$summary$n_text_over_feature))
+stopifnot(result$summary$n_text_overlaps == 1L, result$summary$n_feature_polygons == 0L)
 empty$layer_geometry <- list(format = list(gene_label_repel = data.frame(
   .component = 'segment', source_row = 1:2, accver = 'format',
   x = c(.1, .1), y = c(.2, .8), xend = c(.8, .8), yend = c(.8, .2))))
@@ -53,10 +54,30 @@ empty$layer_geometry$format$gene_label_repel$xend <- empty$layer_geometry$format
 empty$layer_geometry$format$gene_label_repel$yend <- empty$layer_geometry$format$gene_label_repel$y
 result <- ggchord_label_quality(empty, boxes, mock, context)
 stopifnot(result$summary$n_leaders == 0L, result$summary$n_leaders_through_text == 0L)
+# Synthetic polygon controls: same constructor source is intentional, a different
+# constructor row is foreign, and absent association stays unresolved.
+empty$layer_geometry <- list(format = list(gene_poly = data.frame(
+  x = c(.3, .5, .5, .3), y = c(.4, .4, .6, .6), group = 1L,
+  source_row = 1L, .component = 'polygon')))
+feature_input <- data.frame(accver = 'format', anno = 'control')
+attr(feature_input, 'ggchord_source') <- list(table = 'feature', rows = 1L)
+empty$layer_inputs <- list(format = list(gene_poly = feature_input,
+  gene_label_repel = feature_input))
+result <- ggchord_label_quality(empty, boxes[1L, ], mock, context)
+stopifnot(result$summary$n_text_on_own_feature == 1L, result$summary$n_text_over_feature == 0L)
+attr(empty$layer_inputs$format$gene_label_repel, 'ggchord_source')$rows <- 2L
+result <- ggchord_label_quality(empty, boxes[1L, ], mock, context)
+stopifnot(result$summary$n_text_over_feature == 1L)
+empty$layer_inputs <- list()
+result <- ggchord_label_quality(empty, boxes[1L, ], mock, context)
+stopifnot(result$summary$n_text_feature_unresolved == 1L, result$summary$n_text_over_feature == 0L)
+empty$layer_geometry$format$gene_poly$.component <- 'boundary'
+result <- ggchord_label_quality(empty, boxes[1L, ], mock, context)
+stopifnot(result$summary$n_feature_polygons == 0L, result$summary$n_feature_parts_unchecked == 1L)
 objects <- c('pSB1C3', 'pUC19', 'pBR322', 'pBluescript_II_SK_plus', 'pET_28a_plus',
   'pETDuet_1', 'pDONR221', 'pcDNA3_1_plus', 'pTRE_Tight_BI', 'pTRIPZ', 'pCAMBIA1300',
   'pEarleyGate_201', 'pSpCas9_BB_2A_GFP_PX458')
-requested <- setdiff(arguments, '--after')
+requested <- setdiff(arguments, c('--after', '--features'))
 if (length(requested)) objects <- intersect(objects, requested)
 results <- list()
 for (id in objects) {
@@ -78,9 +99,9 @@ for (id in objects) {
   stopifnot(identical(original, plot$ggchord$data))
 }
 jsonlite::write_json(list(scope = 'Original catalogue inputs; 10x8 inches, one PNG device. Contacts reported, not assumed zero; not a cross-application comparison.',
-  detector_controls = 'overlap, crossing and through-text detected; unmeasured feature contact remains NA',
+  detector_controls = 'Explicit synthetic geometry distinguishes overlap, crossing, through-text and own/foreign/unresolved polygon contacts',
   cases = results, comparison_scope = 'SnapGene is a visual reference only; matched external exports are not required under the clarified user instruction.',
-  unverified = c('text-feature footprint contacts', 'release device/platform matrix')),
-  file.path(folder, if (after) 'v0.27.0-label-quality-after-results.json' else 'v0.27.0-label-quality-results.json'),
+  unverified = c('non-polygon strokes/markers, visibility/occlusion and exact ink', 'release device/platform matrix')),
+  file.path(folder, if (features_check) 'v0.27.0-label-quality-feature-results.json' else if (after) 'v0.27.0-label-quality-after-results.json' else 'v0.27.0-label-quality-results.json'),
   auto_unbox = TRUE, pretty = TRUE, na = 'null')
 cat('Label quality observations recorded\n')

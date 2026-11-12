@@ -9,8 +9,9 @@
 
 - Added measured `label_quality` evidence to `diagnose_ggchord()`: registered
   text-object contacts, annotation-leader crossings/through-text contacts,
-  canvas bounds and physical leader lengths. Unchecked feature contacts stay
-  missing. Text measurement now follows native justification, size units and
+  canvas bounds and physical leader lengths. Registered feature polygon
+  contacts distinguish own-source placement, other-source contacts and unresolved
+  associations; skipped non-polygon parts remain explicit. Text measurement now follows native justification, size units and
   component styles, including hidden Track axes, without changing the plot.
 
 - Extended `geom_track()` with native source-space `smooth`, `density` and

@@ -48,6 +48,7 @@ ggchord_label_quality <- function(layout, text, built, context) {
   contact <- function(type, first, second) {
     conflicts[[length(conflicts)+1L]] <<- data.frame(type = type, first = first, second = second)
   }
+  boxes <- data.frame()
   if (nrow(text)) {
     text$text_id <- paste0('text-', seq_len(nrow(text)))
     text$label_id <- paste(text$layer_id, text$text_object, sep = '/')
@@ -72,6 +73,10 @@ ggchord_label_quality <- function(layout, text, built, context) {
         contact('leader_through_text', segments$leader_id[i], text$label_id[j])
     }
   }
+  features <- ggchord_label_feature_quality(layout, text, boxes, to_mm)
+  if (nrow(features$contacts)) for (i in which(features$contacts$relation != 'own_source'))
+    contact(if (features$contacts$relation[i] == 'other_source') 'text_over_feature' else
+      'text_feature_unresolved', features$contacts$label_id[i], features$contacts$feature_id[i])
   ids <- unique(segments$leader_id)
   if (length(ids) > 1L) for (i in seq_len(length(ids)-1L)) for (j in seq.int(i+1L, length(ids))) {
     a <- segments[segments$leader_id == ids[i], , drop = FALSE]
@@ -101,10 +106,16 @@ ggchord_label_quality <- function(layout, text, built, context) {
       text$ymax_mm > context$canvas_mm[['height']]])) else 0L,
     mean_leader_length_mm = if (length(lengths)) mean(lengths) else NA_real_,
     max_leader_length_mm = if (length(lengths)) max(lengths) else NA_real_,
-    n_text_over_feature = NA_integer_)
+    n_feature_polygons = if (nrow(features$polygons)) length(unique(features$polygons$polygon_id)) else 0L,
+    n_feature_parts_unchecked = nrow(features$skipped),
+    n_text_over_feature = sum(features$contacts$relation == 'other_source'),
+    n_text_feature_unresolved = sum(features$contacts$relation == 'unresolved'),
+    n_text_on_own_feature = sum(features$contacts$relation == 'own_source'))
   if (!measured) for (key in setdiff(names(summary), 'measured')) summary[[key]] <- NA
   list(summary = summary, conflicts = conflicts, text = text, leaders = segments,
-    scope = 'Measured registered panel text boxes and annotation polylines; own string parts excluded from text-pair conflicts. Strict leader interior contacts, not shared endpoints. No automatic layout change.',
-    not_checked = c('text versus feature footprints', 'unregistered custom grobs',
+    feature_contacts = features$contacts, feature_polygons = features$polygons,
+    feature_parts_unchecked = features$skipped,
+    scope = 'Measured registered panel text boxes, annotation polylines and gene/feature polygon envelopes, including transparent polygons. Own-source label contacts are recorded separately; unproven source association remains unresolved. Strict leader interior contacts, not shared endpoints. No automatic layout change.',
+    not_checked = c('non-polygon feature strokes/markers, stroke width and visibility/occlusion', 'unregistered custom grobs',
       'outer plot decoration/guide text', 'glyph outlines/ligatures or cross-application rendering'))
 }

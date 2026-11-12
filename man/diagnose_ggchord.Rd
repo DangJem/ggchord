@@ -71,9 +71,13 @@ internal contacts are not label collisions. Leader crossings exclude shared
 endpoints; through-text checks concern box interiors, not exact glyph ink.
 Source-label visibility follows the layer policy and may share one displayed
 label across records. It is distinct from the number of text/glyph boxes.
-Text-feature footprint contacts and unregistered/outer decoration objects
-remain unchecked; their counts are not silently reported as zero. These
-measurements never move, hide or change input records.
+Registered gene/feature polygon envelopes are checked against text boxes;
+\code{feature_contacts} separates proven own-source placement, other-source
+contacts and unresolved associations. Transparent polygons remain in this
+conservative geometry check. Non-polygon strokes/markers and visibility or
+occlusion are not checked; \code{feature_parts_unchecked} records skipped parts.
+Unregistered/outer decorations remain unchecked. These measurements never
+move, hide or change input records.
 Degenerate annotation placeholders with coincident endpoints are not
 counted as leaders. Circular label visibility can additionally report
 \code{leader_text_status} for clear, detoured or unresolved static-text routes.
