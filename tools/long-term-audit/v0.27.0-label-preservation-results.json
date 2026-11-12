@@ -1,0 +1,157 @@
+{
+  "status": "passed recorded layout preservation comparisons",
+  "directed_endpoint_pairs_preserved": 80,
+  "input_json_sha256": {
+    "v0.27.0-label-size-results.json": "e1550971bb0f2c0dd4e871ae772d226b1bd8160e5e6c399a156fa564dc466e2b",
+    "v0.27.0-label-size-after-results.json": "cf5ad96c0a6193b7b0651d8ee550d26fa3b26b268f579ff91f886de6072c94ad",
+    "v0.27.0-label-size-adaptive-results.json": "3845111a45bbff4f689df5131581ab874282a5eefea9f80db2f3bd029dc5af17",
+    "v0.27.0-label-size-adaptive-after-results.json": "1d7675ef17025533fb9bcb19c692c3fdf20cbff3683818f4f4e3ce4994ad30f3"
+  },
+  "comparisons": {
+    "pUC19/compact": {
+      "source_labels_and_native_positions_anchors_sizes_preserved": true,
+      "directed_endpoint_pairs_preserved": 9,
+      "quality": {
+        "measured": true,
+        "n_source_labels": 12,
+        "n_visible_source_labels": 12,
+        "n_hidden_source_labels": 0,
+        "n_text_boxes": 43,
+        "n_text_objects": 13,
+        "n_leaders": 9,
+        "n_text_overlaps": 0,
+        "n_leader_crossings": 0,
+        "n_leaders_through_text": 0,
+        "n_label_outside_canvas": 0,
+        "mean_leader_length_mm": 10.1543,
+        "max_leader_length_mm": 15.6205,
+        "n_feature_polygons": 9,
+        "n_feature_parts_unchecked": 12,
+        "n_text_over_feature": 0,
+        "n_text_feature_unresolved": 0,
+        "n_text_on_own_feature": 3
+      }
+    },
+    "pTRE_Tight_BI/compact": {
+      "source_labels_and_native_positions_anchors_sizes_preserved": true,
+      "directed_endpoint_pairs_preserved": 14,
+      "quality": {
+        "measured": true,
+        "n_source_labels": 18,
+        "n_visible_source_labels": 18,
+        "n_hidden_source_labels": 0,
+        "n_text_boxes": 64,
+        "n_text_objects": 19,
+        "n_leaders": 14,
+        "n_text_overlaps": 0,
+        "n_leader_crossings": 0,
+        "n_leaders_through_text": 0,
+        "n_label_outside_canvas": 0,
+        "mean_leader_length_mm": 20.2289,
+        "max_leader_length_mm": 40.5877,
+        "n_feature_polygons": 16,
+        "n_feature_parts_unchecked": 4,
+        "n_text_over_feature": 0,
+        "n_text_feature_unresolved": 0,
+        "n_text_on_own_feature": 0
+      }
+    },
+    "pETDuet_1/compact": {
+      "source_labels_and_native_positions_anchors_sizes_preserved": true,
+      "directed_endpoint_pairs_preserved": 17,
+      "quality": {
+        "measured": true,
+        "n_source_labels": 23,
+        "n_visible_source_labels": 23,
+        "n_hidden_source_labels": 0,
+        "n_text_boxes": 98,
+        "n_text_objects": 25,
+        "n_leaders": 17,
+        "n_text_overlaps": 0,
+        "n_leader_crossings": 0,
+        "n_leaders_through_text": 0,
+        "n_label_outside_canvas": 0,
+        "mean_leader_length_mm": 21.6069,
+        "max_leader_length_mm": 55.9914,
+        "n_feature_polygons": 21,
+        "n_feature_parts_unchecked": 4,
+        "n_text_over_feature": 0,
+        "n_text_feature_unresolved": 0,
+        "n_text_on_own_feature": 5
+      }
+    },
+    "adaptive-pUC19/compact": {
+      "source_labels_and_native_positions_anchors_sizes_preserved": true,
+      "directed_endpoint_pairs_preserved": 9,
+      "quality": {
+        "measured": true,
+        "n_source_labels": 12,
+        "n_visible_source_labels": 12,
+        "n_hidden_source_labels": 0,
+        "n_text_boxes": 47,
+        "n_text_objects": 14,
+        "n_leaders": 9,
+        "n_text_overlaps": 0,
+        "n_leader_crossings": 0,
+        "n_leaders_through_text": 0,
+        "n_label_outside_canvas": 0,
+        "mean_leader_length_mm": 10.2283,
+        "max_leader_length_mm": 15.9385,
+        "n_feature_polygons": 9,
+        "n_feature_parts_unchecked": 12,
+        "n_text_over_feature": 0,
+        "n_text_feature_unresolved": 1,
+        "n_text_on_own_feature": 3
+      }
+    },
+    "adaptive-pTRE_Tight_BI/compact": {
+      "source_labels_and_native_positions_anchors_sizes_preserved": true,
+      "directed_endpoint_pairs_preserved": 14,
+      "quality": {
+        "measured": true,
+        "n_source_labels": 18,
+        "n_visible_source_labels": 18,
+        "n_hidden_source_labels": 0,
+        "n_text_boxes": 82,
+        "n_text_objects": 20,
+        "n_leaders": 14,
+        "n_text_overlaps": 0,
+        "n_leader_crossings": 0,
+        "n_leaders_through_text": 0,
+        "n_label_outside_canvas": 0,
+        "mean_leader_length_mm": 22.076,
+        "max_leader_length_mm": 44.3243,
+        "n_feature_polygons": 16,
+        "n_feature_parts_unchecked": 4,
+        "n_text_over_feature": 0,
+        "n_text_feature_unresolved": 0,
+        "n_text_on_own_feature": 0
+      }
+    },
+    "adaptive-pETDuet_1/compact": {
+      "source_labels_and_native_positions_anchors_sizes_preserved": true,
+      "directed_endpoint_pairs_preserved": 17,
+      "quality": {
+        "measured": true,
+        "n_source_labels": 23,
+        "n_visible_source_labels": 23,
+        "n_hidden_source_labels": 0,
+        "n_text_boxes": 104,
+        "n_text_objects": 26,
+        "n_leaders": 17,
+        "n_text_overlaps": 0,
+        "n_leader_crossings": 0,
+        "n_leaders_through_text": 0,
+        "n_label_outside_canvas": 0,
+        "mean_leader_length_mm": 21.321,
+        "max_leader_length_mm": 57.1217,
+        "n_feature_polygons": 21,
+        "n_feature_parts_unchecked": 4,
+        "n_text_over_feature": 0,
+        "n_text_feature_unresolved": 1,
+        "n_text_on_own_feature": 5
+      }
+    }
+  },
+  "scope": "Recorded three-source compact fixed/adaptive profiles only; not arbitrary size or ink certification"
+}

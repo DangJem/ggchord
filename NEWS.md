@@ -1,5 +1,11 @@
 # ggchord 0.27.0 (development)
 
+- Fixed crossed circular exterior callout leaders on cramped canvases by routing
+  collided paths around measured text and other leaders. Real directed endpoints,
+  label positions and source records stay unchanged; unresolved cases remain
+  reported. Automatic combined seam text can try a bounded outer backbone lane
+  when the inner channel cannot fit it. Explicit offsets remain fixed.
+
 - Fixed automatically combined circular seam labels touching feature polygons.
   Only collided strings with an automatic text offset receive bounded radial
   clearance; tick coordinates, source values and explicit offsets stay fixed.

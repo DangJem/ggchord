@@ -60,8 +60,14 @@ ggchord_clear_axis_seam_text <- function(text, layout) {
     height <- max(boxes$oh, na.rm = TRUE)
     step <- max(height/4, .15*units/25.4)
     limit <- max(2*height, .8*units/25.4)
+    amounts <- seq(step, limit, by = step)
+    # A narrow inner channel may not fit even at the font floor. One bounded
+    # outer lane can clear the backbone without shrinking or deleting text.
+    outer <- if (length(band)) band[2L]+height-radius else NA_real_
+    if (is.finite(outer) && outer > limit && outer <= max(4*height, 3*units/25.4))
+      amounts <- c(amounts, outer)
     text$.axis_clearance_status[i] <- 'feature_unresolved'
-    for (amount in seq(step, limit, by = step)) {
+    for (amount in amounts) {
       candidate <- original
       candidate$text_x <- original$text_x*(radius+amount)/radius
       candidate$text_y <- original$text_y*(radius+amount)/radius

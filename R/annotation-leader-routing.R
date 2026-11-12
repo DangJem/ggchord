@@ -130,5 +130,6 @@ ggchord_detour_annotation_leaders <- function(registry, layout) {
       geometry$x == geometry$xend & geometry$y == geometry$yend
     registry[[owner]]$gene_label_repel <- geometry[!unused, , drop = FALSE]
   }
+  registry <- ggchord_detour_crossing_leaders(registry, layout)
   ggchord_measure_external_leader_crossings(registry)
 }

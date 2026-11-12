@@ -2,8 +2,12 @@
 # no case-specific tuning, package tests or publication device matrix.
 pkgload::load_all(quiet = TRUE)
 folder <- 'tools/long-term-audit'
+adaptive <- '--adaptive' %in% commandArgs(trailingOnly = TRUE)
+prefix <- if (adaptive) 'v0.27.0-label-size-adaptive-' else 'v0.27.0-label-size-'
+if ('--after' %in% commandArgs(trailingOnly = TRUE)) prefix <- paste0(prefix, 'after-')
 cases <- c('pUC19', 'pTRE_Tight_BI', 'pETDuet_1')
-profiles <- list(compact = c(6, 6), wide = c(12, 8))
+profiles <- if (adaptive) list(compact = c(6, 6)) else list(compact = c(6, 6), wide = c(12, 8))
+if ('--compact-only' %in% commandArgs(trailingOnly = TRUE)) profiles <- profiles['compact']
 observations <- list()
 for (id in cases) {
   inputs <- new.env()
@@ -20,11 +24,12 @@ for (id in cases) {
       label_fit = 'shrink', label_min_size = 2.5) +
     geom_restriction_site(data = sites[nearest, ], label_size = 2.5) +
     coord_circular() + theme_ggchord_plasmid()
+  if (adaptive) plot <- plot + adapt_ggchord('adaptive')
   original <- plot$ggchord$data
   for (profile in names(profiles)) {
     cat('Controlled canvas:', id, profile, '\n'); flush.console()
     size <- profiles[[profile]]
-    path <- file.path(folder, paste0('v0.27.0-label-size-', id, '-', profile, '.png'))
+    path <- file.path(folder, paste0(prefix, id, '-', profile, '.png'))
     ggchord_diagnostic_device(path, 'png', size[1], size[2], 110)
     table <- ggplot2::ggplotGrob(plot)
     grid::grid.newpage(); grid::grid.draw(table)
@@ -54,11 +59,12 @@ for (id in cases) {
   }
 }
 sources <- list.files('R', '[.]R$', full.names = TRUE)
-jsonlite::write_json(list(scope = 'Three unchanged catalogue sources, identical layer settings at 6x6 and 12x8 inches; one PNG device. Observations are not assumed passes.',
+jsonlite::write_json(list(scope = 'Three unchanged catalogue sources, common layer settings and explicit physical sizes; one PNG device. Observations are not assumed passes.',
+  layout_policy = if (adaptive) 'adaptive' else 'existing fixed physical styles',
   observations = observations, runtime_sha256 = as.list(stats::setNames(vapply(sources,
     function(path) digest::digest(file = path, algo = 'sha256'), character(1)), sources)),
   unverified = c('exact ink, non-polygon strokes/markers and font portability',
     'all catalogue sources at arbitrary sizes', 'publication device/platform matrix')),
-  file.path(folder, 'v0.27.0-label-size-results.json'),
+  file.path(folder, paste0(prefix, 'results.json')),
   pretty = TRUE, auto_unbox = TRUE, na = 'null')
 cat('Controlled canvas observations recorded\n')

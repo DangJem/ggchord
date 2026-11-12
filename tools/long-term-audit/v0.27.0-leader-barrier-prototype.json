@@ -1,0 +1,1284 @@
+{
+  "scope": "Route-only prototype using recorded mm geometry; not a public layout result, no full render certification",
+  "cases": {
+    "pTRE_Tight_BI/compact": {
+      "before_count": 5,
+      "after_count": 0,
+      "before": [
+        {
+          "leader_id": "layer-0003/gene_label_repel/14/pTRE-Tight-BI",
+          "layer_id": "layer-0003",
+          "source_row": 14,
+          "x0": 62.2365,
+          "y0": 96.1741,
+          "x1": 60.991,
+          "y1": 101.6668
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/14/pTRE-Tight-BI",
+          "layer_id": "layer-0003",
+          "source_row": 14,
+          "x0": 60.991,
+          "y0": 101.6668,
+          "x1": 48.5408,
+          "y1": 111.7141
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/15/pTRE-Tight-BI",
+          "layer_id": "layer-0003",
+          "source_row": 15,
+          "x0": 74.3708,
+          "y0": 95.8668,
+          "x1": 75.8927,
+          "y1": 101.2894
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/15/pTRE-Tight-BI",
+          "layer_id": "layer-0003",
+          "source_row": 15,
+          "x0": 75.8927,
+          "y0": 101.2894,
+          "x1": 100.0129,
+          "y1": 109.2885
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/1/pTRE-Tight-BI",
+          "layer_id": "layer-0003",
+          "source_row": 1,
+          "x0": 68.5591,
+          "y0": 90.046,
+          "x1": 68.4255,
+          "y1": 87.2609
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/7/pTRE-Tight-BI",
+          "layer_id": "layer-0003",
+          "source_row": 7,
+          "x0": 76.5712,
+          "y0": 87.7238,
+          "x1": 82.6682,
+          "y1": 98.465
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/7/pTRE-Tight-BI",
+          "layer_id": "layer-0003",
+          "source_row": 7,
+          "x0": 82.6682,
+          "y0": 98.465,
+          "x1": 100.0129,
+          "y1": 91.0988
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/9/pTRE-Tight-BI",
+          "layer_id": "layer-0003",
+          "source_row": 9,
+          "x0": 90.9908,
+          "y0": 80.2914,
+          "x1": 96.3034,
+          "y1": 82.1617
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/9/pTRE-Tight-BI",
+          "layer_id": "layer-0003",
+          "source_row": 9,
+          "x0": 96.3034,
+          "y0": 82.1617,
+          "x1": 100.0129,
+          "y1": 82.1617
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/12/pTRE-Tight-BI",
+          "layer_id": "layer-0003",
+          "source_row": 12,
+          "x0": 48.6166,
+          "y0": 87.7669,
+          "x1": 44.2647,
+          "y1": 91.3422
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/12/pTRE-Tight-BI",
+          "layer_id": "layer-0003",
+          "source_row": 12,
+          "x0": 44.2647,
+          "y0": 91.3422,
+          "x1": 35.3823,
+          "y1": 91.3422
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/2/pTRE-Tight-BI",
+          "layer_id": "layer-0003",
+          "source_row": 2,
+          "x0": 69.9659,
+          "y0": 89.923,
+          "x1": 68.5971,
+          "y1": 95.4325
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/2/pTRE-Tight-BI",
+          "layer_id": "layer-0003",
+          "source_row": 2,
+          "x0": 68.5971,
+          "y0": 95.4325,
+          "x1": 66.5387,
+          "y1": 111.7141
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/3/pTRE-Tight-BI",
+          "layer_id": "layer-0003",
+          "source_row": 3,
+          "x0": 71.3034,
+          "y0": 89.7013,
+          "x1": 79.6092,
+          "y1": 92.9876
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/3/pTRE-Tight-BI",
+          "layer_id": "layer-0003",
+          "source_row": 3,
+          "x0": 79.6092,
+          "y0": 92.9876,
+          "x1": 88.4262,
+          "y1": 111.7141
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/4/pTRE-Tight-BI",
+          "layer_id": "layer-0003",
+          "source_row": 4,
+          "x0": 72.7289,
+          "y0": 89.3482,
+          "x1": 79.6092,
+          "y1": 92.9876
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/4/pTRE-Tight-BI",
+          "layer_id": "layer-0003",
+          "source_row": 4,
+          "x0": 79.6092,
+          "y0": 92.9876,
+          "x1": 100.0129,
+          "y1": 104.7411
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/5/pTRE-Tight-BI",
+          "layer_id": "layer-0003",
+          "source_row": 5,
+          "x0": 74.068,
+          "y0": 88.9,
+          "x1": 100.0129,
+          "y1": 100.1936
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/6/pTRE-Tight-BI",
+          "layer_id": "layer-0003",
+          "source_row": 6,
+          "x0": 75.3167,
+          "y0": 88.3721,
+          "x1": 79.8814,
+          "y1": 90.9472
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/6/pTRE-Tight-BI",
+          "layer_id": "layer-0003",
+          "source_row": 6,
+          "x0": 79.8814,
+          "y0": 90.9472,
+          "x1": 100.0129,
+          "y1": 95.6462
+        },
+        {
+          "leader_id": "layer-0004/restriction_site/1/",
+          "layer_id": "layer-0004",
+          "source_row": 1,
+          "x0": 93.2868,
+          "y0": 86.8594,
+          "x1": 93.9638,
+          "y1": 87.2501
+        },
+        {
+          "leader_id": "layer-0004/restriction_site/1/",
+          "layer_id": "layer-0004",
+          "source_row": 1,
+          "x0": 93.9638,
+          "y0": 87.2501,
+          "x1": 100.0129,
+          "y1": 87.2501
+        },
+        {
+          "leader_id": "layer-0004/restriction_site/2/",
+          "layer_id": "layer-0004",
+          "source_row": 2,
+          "x0": 67.6976,
+          "y0": 42.5461,
+          "x1": 67.6976,
+          "y1": 41.7643
+        },
+        {
+          "leader_id": "layer-0004/restriction_site/2/",
+          "layer_id": "layer-0004",
+          "source_row": 2,
+          "x0": 67.6976,
+          "y0": 41.7643,
+          "x1": 67.6976,
+          "y1": 39.3495
+        },
+        {
+          "leader_id": "layer-0004/restriction_site/3/",
+          "layer_id": "layer-0004",
+          "source_row": 3,
+          "x0": 42.1084,
+          "y0": 86.8594,
+          "x1": 41.4315,
+          "y1": 87.2501
+        },
+        {
+          "leader_id": "layer-0004/restriction_site/3/",
+          "layer_id": "layer-0004",
+          "source_row": 3,
+          "x0": 41.4315,
+          "y0": 87.2501,
+          "x1": 35.3823,
+          "y1": 87.2501
+        }
+      ],
+      "after": [
+        {
+          "leader_id": "layer-0003/gene_label_repel/14/pTRE-Tight-BI",
+          "layer_id": "layer-0003",
+          "source_row": 14,
+          "x0": 62.2365,
+          "y0": 96.1741,
+          "x1": 60.991,
+          "y1": 101.6668,
+          "_row": "1"
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/14/pTRE-Tight-BI",
+          "layer_id": "layer-0003",
+          "source_row": 14,
+          "x0": 60.991,
+          "y0": 101.6668,
+          "x1": 48.5408,
+          "y1": 111.7141,
+          "_row": "2"
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/15/pTRE-Tight-BI",
+          "layer_id": "layer-0003",
+          "source_row": 15,
+          "x0": 74.3708,
+          "y0": 95.8668,
+          "x1": 75.8927,
+          "y1": 101.2894,
+          "_row": "3"
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/15/pTRE-Tight-BI",
+          "layer_id": "layer-0003",
+          "source_row": 15,
+          "x0": 75.8927,
+          "y0": 101.2894,
+          "x1": 100.0129,
+          "y1": 109.2885,
+          "_row": "4"
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/1/pTRE-Tight-BI",
+          "layer_id": "layer-0003",
+          "source_row": 1,
+          "x0": 68.5591,
+          "y0": 90.046,
+          "x1": 68.4255,
+          "y1": 87.2609,
+          "_row": "5"
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/7/pTRE-Tight-BI",
+          "layer_id": "layer-0003",
+          "source_row": 7,
+          "x0": 76.5712,
+          "y0": 87.7238,
+          "x1": 82.6682,
+          "y1": 98.465,
+          "_row": "6"
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/7/pTRE-Tight-BI",
+          "layer_id": "layer-0003",
+          "source_row": 7,
+          "x0": 82.6682,
+          "y0": 98.465,
+          "x1": 100.0129,
+          "y1": 91.0988,
+          "_row": "7"
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/9/pTRE-Tight-BI",
+          "layer_id": "layer-0003",
+          "source_row": 9,
+          "x0": 90.9908,
+          "y0": 80.2914,
+          "x1": 96.3034,
+          "y1": 82.1617,
+          "_row": "8"
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/9/pTRE-Tight-BI",
+          "layer_id": "layer-0003",
+          "source_row": 9,
+          "x0": 96.3034,
+          "y0": 82.1617,
+          "x1": 100.0129,
+          "y1": 82.1617,
+          "_row": "9"
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/12/pTRE-Tight-BI",
+          "layer_id": "layer-0003",
+          "source_row": 12,
+          "x0": 48.6166,
+          "y0": 87.7669,
+          "x1": 44.2647,
+          "y1": 91.3422,
+          "_row": "10"
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/12/pTRE-Tight-BI",
+          "layer_id": "layer-0003",
+          "source_row": 12,
+          "x0": 44.2647,
+          "y0": 91.3422,
+          "x1": 35.3823,
+          "y1": 91.3422,
+          "_row": "11"
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/2/pTRE-Tight-BI",
+          "layer_id": "layer-0003",
+          "source_row": 2,
+          "x0": 69.9659,
+          "y0": 89.923,
+          "x1": 68.5971,
+          "y1": 95.4325,
+          "_row": "12"
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/2/pTRE-Tight-BI",
+          "layer_id": "layer-0003",
+          "source_row": 2,
+          "x0": 68.5971,
+          "y0": 95.4325,
+          "x1": 66.5387,
+          "y1": 111.7141,
+          "_row": "13"
+        },
+        {
+          "leader_id": "layer-0004/restriction_site/1/",
+          "layer_id": "layer-0004",
+          "source_row": 1,
+          "x0": 93.2868,
+          "y0": 86.8594,
+          "x1": 93.9638,
+          "y1": 87.2501,
+          "_row": "21"
+        },
+        {
+          "leader_id": "layer-0004/restriction_site/1/",
+          "layer_id": "layer-0004",
+          "source_row": 1,
+          "x0": 93.9638,
+          "y0": 87.2501,
+          "x1": 100.0129,
+          "y1": 87.2501,
+          "_row": "22"
+        },
+        {
+          "leader_id": "layer-0004/restriction_site/2/",
+          "layer_id": "layer-0004",
+          "source_row": 2,
+          "x0": 67.6976,
+          "y0": 42.5461,
+          "x1": 67.6976,
+          "y1": 41.7643,
+          "_row": "23"
+        },
+        {
+          "leader_id": "layer-0004/restriction_site/2/",
+          "layer_id": "layer-0004",
+          "source_row": 2,
+          "x0": 67.6976,
+          "y0": 41.7643,
+          "x1": 67.6976,
+          "y1": 39.3495,
+          "_row": "24"
+        },
+        {
+          "leader_id": "layer-0004/restriction_site/3/",
+          "layer_id": "layer-0004",
+          "source_row": 3,
+          "x0": 42.1084,
+          "y0": 86.8594,
+          "x1": 41.4315,
+          "y1": 87.2501,
+          "_row": "25"
+        },
+        {
+          "leader_id": "layer-0004/restriction_site/3/",
+          "layer_id": "layer-0004",
+          "source_row": 3,
+          "x0": 41.4315,
+          "y0": 87.2501,
+          "x1": 35.3823,
+          "y1": 87.2501,
+          "_row": "26"
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/3/pTRE-Tight-BI",
+          "layer_id": "layer-0003",
+          "source_row": 3,
+          "x0": 71.3034,
+          "y0": 89.7013,
+          "x1": 68.6154,
+          "y1": 95.4582,
+          "_row": "14"
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/3/pTRE-Tight-BI",
+          "layer_id": "layer-0003",
+          "source_row": 3,
+          "x0": 68.6154,
+          "y0": 95.4582,
+          "x1": 68.6154,
+          "y1": 98.0458,
+          "_row": "14.1"
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/3/pTRE-Tight-BI",
+          "layer_id": "layer-0003",
+          "source_row": 3,
+          "x0": 68.6154,
+          "y0": 98.0458,
+          "x1": 88.4262,
+          "y1": 111.7141,
+          "_row": "14.2"
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/4/pTRE-Tight-BI",
+          "layer_id": "layer-0003",
+          "source_row": 4,
+          "x0": 72.7289,
+          "y0": 89.3482,
+          "x1": 68.6154,
+          "y1": 95.4582,
+          "_row": "16"
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/4/pTRE-Tight-BI",
+          "layer_id": "layer-0003",
+          "source_row": 4,
+          "x0": 68.6154,
+          "y0": 95.4582,
+          "x1": 68.6154,
+          "y1": 98.0458,
+          "_row": "16.1"
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/4/pTRE-Tight-BI",
+          "layer_id": "layer-0003",
+          "source_row": 4,
+          "x0": 68.6154,
+          "y0": 98.0458,
+          "x1": 75.6427,
+          "y1": 101.5394,
+          "_row": "16.2"
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/4/pTRE-Tight-BI",
+          "layer_id": "layer-0003",
+          "source_row": 4,
+          "x0": 75.6427,
+          "y0": 101.5394,
+          "x1": 76.1427,
+          "y1": 101.0394,
+          "_row": "16.3"
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/4/pTRE-Tight-BI",
+          "layer_id": "layer-0003",
+          "source_row": 4,
+          "x0": 76.1427,
+          "y0": 101.0394,
+          "x1": 100.0129,
+          "y1": 104.7411,
+          "_row": "16.4"
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/5/pTRE-Tight-BI",
+          "layer_id": "layer-0003",
+          "source_row": 5,
+          "x0": 74.068,
+          "y0": 88.9,
+          "x1": 76.3212,
+          "y1": 87.4738,
+          "_row": "18"
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/5/pTRE-Tight-BI",
+          "layer_id": "layer-0003",
+          "source_row": 5,
+          "x0": 76.3212,
+          "y0": 87.4738,
+          "x1": 79.6314,
+          "y1": 90.6972,
+          "_row": "18.1"
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/5/pTRE-Tight-BI",
+          "layer_id": "layer-0003",
+          "source_row": 5,
+          "x0": 79.6314,
+          "y0": 90.6972,
+          "x1": 80.1314,
+          "y1": 91.1972,
+          "_row": "18.2"
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/5/pTRE-Tight-BI",
+          "layer_id": "layer-0003",
+          "source_row": 5,
+          "x0": 80.1314,
+          "y0": 91.1972,
+          "x1": 82.9182,
+          "y1": 98.215,
+          "_row": "18.3"
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/5/pTRE-Tight-BI",
+          "layer_id": "layer-0003",
+          "source_row": 5,
+          "x0": 82.9182,
+          "y0": 98.215,
+          "x1": 82.4182,
+          "y1": 98.715,
+          "_row": "18.4"
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/5/pTRE-Tight-BI",
+          "layer_id": "layer-0003",
+          "source_row": 5,
+          "x0": 82.4182,
+          "y0": 98.715,
+          "x1": 100.0129,
+          "y1": 100.1936,
+          "_row": "18.5"
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/6/pTRE-Tight-BI",
+          "layer_id": "layer-0003",
+          "source_row": 6,
+          "x0": 75.3167,
+          "y0": 88.3721,
+          "x1": 76.5712,
+          "y1": 87.7238,
+          "_row": "19"
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/6/pTRE-Tight-BI",
+          "layer_id": "layer-0003",
+          "source_row": 6,
+          "x0": 76.5712,
+          "y0": 87.7238,
+          "x1": 79.8814,
+          "y1": 90.9472,
+          "_row": "19.1"
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/6/pTRE-Tight-BI",
+          "layer_id": "layer-0003",
+          "source_row": 6,
+          "x0": 79.8814,
+          "y0": 90.9472,
+          "x1": 99.7629,
+          "y1": 90.8488,
+          "_row": "19.2"
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/6/pTRE-Tight-BI",
+          "layer_id": "layer-0003",
+          "source_row": 6,
+          "x0": 99.7629,
+          "y0": 90.8488,
+          "x1": 100.2629,
+          "y1": 91.3488,
+          "_row": "19.3"
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/6/pTRE-Tight-BI",
+          "layer_id": "layer-0003",
+          "source_row": 6,
+          "x0": 100.2629,
+          "y0": 91.3488,
+          "x1": 100.0129,
+          "y1": 95.6462,
+          "_row": "19.4"
+        }
+      ],
+      "attempts": {
+        "2": {
+          "route_found": true,
+          "accepted": false
+        },
+        "3": {
+          "route_found": true,
+          "accepted": true
+        },
+        "4": {
+          "route_found": true,
+          "accepted": true
+        },
+        "5": {
+          "route_found": true,
+          "accepted": true
+        },
+        "6": {
+          "route_found": true,
+          "accepted": true
+        },
+        "7": {
+          "route_found": true,
+          "accepted": false
+        },
+        "9": {
+          "route_found": true,
+          "accepted": false
+        },
+        "12": {
+          "route_found": true,
+          "accepted": false
+        },
+        "14": {
+          "route_found": true,
+          "accepted": false
+        },
+        "15": {
+          "route_found": false,
+          "accepted": false
+        }
+      }
+    },
+    "pETDuet_1/compact": {
+      "before_count": 6,
+      "after_count": 0,
+      "before": [
+        {
+          "leader_id": "layer-0003/gene_label_repel/1/pETDuet-1",
+          "layer_id": "layer-0003",
+          "source_row": 1,
+          "x0": 74.2876,
+          "y0": 110.3789,
+          "x1": 74.4504,
+          "y1": 118.9315
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/1/pETDuet-1",
+          "layer_id": "layer-0003",
+          "source_row": 1,
+          "x0": 74.4504,
+          "y0": 118.9315,
+          "x1": 76.7428,
+          "y1": 127.9099
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/7/pETDuet-1",
+          "layer_id": "layer-0003",
+          "source_row": 7,
+          "x0": 84.049,
+          "y0": 108.8932,
+          "x1": 86.4381,
+          "y1": 117.1069
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/7/pETDuet-1",
+          "layer_id": "layer-0003",
+          "source_row": 7,
+          "x0": 86.4381,
+          "y0": 117.1069,
+          "x1": 122.6543,
+          "y1": 120.927
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/8/pETDuet-1",
+          "layer_id": "layer-0003",
+          "source_row": 8,
+          "x0": 85.8462,
+          "y0": 108.3211,
+          "x1": 88.6451,
+          "y1": 116.4043
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/8/pETDuet-1",
+          "layer_id": "layer-0003",
+          "source_row": 8,
+          "x0": 88.6451,
+          "y0": 116.4043,
+          "x1": 122.6543,
+          "y1": 116.3732
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/9/pETDuet-1",
+          "layer_id": "layer-0003",
+          "source_row": 9,
+          "x0": 89.1286,
+          "y0": 107.0081,
+          "x1": 92.6763,
+          "y1": 114.7919
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/9/pETDuet-1",
+          "layer_id": "layer-0003",
+          "source_row": 9,
+          "x0": 92.6763,
+          "y0": 114.7919,
+          "x1": 122.6543,
+          "y1": 107.2656
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/10/pETDuet-1",
+          "layer_id": "layer-0003",
+          "source_row": 10,
+          "x0": 81.6786,
+          "y0": 95.0805,
+          "x1": 89.3693,
+          "y1": 116.1467
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/10/pETDuet-1",
+          "layer_id": "layer-0003",
+          "source_row": 10,
+          "x0": 89.3693,
+          "y0": 116.1467,
+          "x1": 122.6543,
+          "y1": 111.8194
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/2/pETDuet-1",
+          "layer_id": "layer-0003",
+          "source_row": 2,
+          "x0": 76.1718,
+          "y0": 110.2956,
+          "x1": 77.1372,
+          "y1": 106.1104
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/4/pETDuet-1",
+          "layer_id": "layer-0003",
+          "source_row": 4,
+          "x0": 75.604,
+          "y0": 96.4262,
+          "x1": 74.8298,
+          "y1": 87.4465
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/11/pETDuet-1",
+          "layer_id": "layer-0003",
+          "source_row": 11,
+          "x0": 83.8669,
+          "y0": 94.1544,
+          "x1": 82.3204,
+          "y1": 90.9581
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/12/pETDuet-1",
+          "layer_id": "layer-0003",
+          "source_row": 12,
+          "x0": 93.5854,
+          "y0": 104.6009,
+          "x1": 94.3995,
+          "y1": 99.012
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/15/pETDuet-1",
+          "layer_id": "layer-0003",
+          "source_row": 15,
+          "x0": 100.3905,
+          "y0": 46.658,
+          "x1": 97.4715,
+          "y1": 49.5121
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/19/pETDuet-1",
+          "layer_id": "layer-0003",
+          "source_row": 19,
+          "x0": 58.0308,
+          "y0": 107.0135,
+          "x1": 59.7255,
+          "y1": 103.2919
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/20/pETDuet-1",
+          "layer_id": "layer-0003",
+          "source_row": 20,
+          "x0": 73.2266,
+          "y0": 110.3841,
+          "x1": 73.1475,
+          "y1": 118.9378
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/20/pETDuet-1",
+          "layer_id": "layer-0003",
+          "source_row": 20,
+          "x0": 73.1475,
+          "y0": 118.9378,
+          "x1": 53.682,
+          "y1": 127.9099
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/3/pETDuet-1",
+          "layer_id": "layer-0003",
+          "source_row": 3,
+          "x0": 78.7508,
+          "y0": 110.0267,
+          "x1": 85.5733,
+          "y1": 111.3331
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/3/pETDuet-1",
+          "layer_id": "layer-0003",
+          "source_row": 3,
+          "x0": 85.5733,
+          "y0": 111.3331,
+          "x1": 95.8402,
+          "y1": 127.9099
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/6/pETDuet-1",
+          "layer_id": "layer-0003",
+          "source_row": 6,
+          "x0": 83.1402,
+          "y0": 109.1452,
+          "x1": 122.6543,
+          "y1": 125.4809
+        },
+        {
+          "leader_id": "layer-0004/restriction_site/1/",
+          "layer_id": "layer-0004",
+          "source_row": 1,
+          "x0": 112.4304,
+          "y0": 95.3244,
+          "x1": 113.4582,
+          "y1": 95.9181
+        },
+        {
+          "leader_id": "layer-0004/restriction_site/1/",
+          "layer_id": "layer-0004",
+          "source_row": 1,
+          "x0": 113.4582,
+          "y0": 95.9181,
+          "x1": 122.6543,
+          "y1": 95.9181
+        },
+        {
+          "leader_id": "layer-0004/restriction_site/2/",
+          "layer_id": "layer-0004",
+          "source_row": 2,
+          "x0": 73.5738,
+          "y0": 28.0068,
+          "x1": 73.5738,
+          "y1": 26.8194
+        },
+        {
+          "leader_id": "layer-0004/restriction_site/2/",
+          "layer_id": "layer-0004",
+          "source_row": 2,
+          "x0": 73.5738,
+          "y0": 26.8194,
+          "x1": 73.5738,
+          "y1": 23.1518
+        },
+        {
+          "leader_id": "layer-0004/restriction_site/3/",
+          "layer_id": "layer-0004",
+          "source_row": 3,
+          "x0": 34.7171,
+          "y0": 95.3244,
+          "x1": 33.6893,
+          "y1": 95.9181
+        },
+        {
+          "leader_id": "layer-0004/restriction_site/3/",
+          "layer_id": "layer-0004",
+          "source_row": 3,
+          "x0": 33.6893,
+          "y0": 95.9181,
+          "x1": 24.4932,
+          "y1": 95.9181
+        }
+      ],
+      "after": [
+        {
+          "leader_id": "layer-0003/gene_label_repel/1/pETDuet-1",
+          "layer_id": "layer-0003",
+          "source_row": 1,
+          "x0": 74.2876,
+          "y0": 110.3789,
+          "x1": 74.4504,
+          "y1": 118.9315,
+          "_row": "1"
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/1/pETDuet-1",
+          "layer_id": "layer-0003",
+          "source_row": 1,
+          "x0": 74.4504,
+          "y0": 118.9315,
+          "x1": 76.7428,
+          "y1": 127.9099,
+          "_row": "2"
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/7/pETDuet-1",
+          "layer_id": "layer-0003",
+          "source_row": 7,
+          "x0": 84.049,
+          "y0": 108.8932,
+          "x1": 86.4381,
+          "y1": 117.1069,
+          "_row": "3"
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/7/pETDuet-1",
+          "layer_id": "layer-0003",
+          "source_row": 7,
+          "x0": 86.4381,
+          "y0": 117.1069,
+          "x1": 122.6543,
+          "y1": 120.927,
+          "_row": "4"
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/8/pETDuet-1",
+          "layer_id": "layer-0003",
+          "source_row": 8,
+          "x0": 85.8462,
+          "y0": 108.3211,
+          "x1": 88.6451,
+          "y1": 116.4043,
+          "_row": "5"
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/8/pETDuet-1",
+          "layer_id": "layer-0003",
+          "source_row": 8,
+          "x0": 88.6451,
+          "y0": 116.4043,
+          "x1": 122.6543,
+          "y1": 116.3732,
+          "_row": "6"
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/9/pETDuet-1",
+          "layer_id": "layer-0003",
+          "source_row": 9,
+          "x0": 89.1286,
+          "y0": 107.0081,
+          "x1": 92.6763,
+          "y1": 114.7919,
+          "_row": "7"
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/9/pETDuet-1",
+          "layer_id": "layer-0003",
+          "source_row": 9,
+          "x0": 92.6763,
+          "y0": 114.7919,
+          "x1": 122.6543,
+          "y1": 107.2656,
+          "_row": "8"
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/10/pETDuet-1",
+          "layer_id": "layer-0003",
+          "source_row": 10,
+          "x0": 81.6786,
+          "y0": 95.0805,
+          "x1": 89.3693,
+          "y1": 116.1467,
+          "_row": "9"
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/10/pETDuet-1",
+          "layer_id": "layer-0003",
+          "source_row": 10,
+          "x0": 89.3693,
+          "y0": 116.1467,
+          "x1": 122.6543,
+          "y1": 111.8194,
+          "_row": "10"
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/2/pETDuet-1",
+          "layer_id": "layer-0003",
+          "source_row": 2,
+          "x0": 76.1718,
+          "y0": 110.2956,
+          "x1": 77.1372,
+          "y1": 106.1104,
+          "_row": "11"
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/4/pETDuet-1",
+          "layer_id": "layer-0003",
+          "source_row": 4,
+          "x0": 75.604,
+          "y0": 96.4262,
+          "x1": 74.8298,
+          "y1": 87.4465,
+          "_row": "12"
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/11/pETDuet-1",
+          "layer_id": "layer-0003",
+          "source_row": 11,
+          "x0": 83.8669,
+          "y0": 94.1544,
+          "x1": 82.3204,
+          "y1": 90.9581,
+          "_row": "13"
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/12/pETDuet-1",
+          "layer_id": "layer-0003",
+          "source_row": 12,
+          "x0": 93.5854,
+          "y0": 104.6009,
+          "x1": 94.3995,
+          "y1": 99.012,
+          "_row": "14"
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/15/pETDuet-1",
+          "layer_id": "layer-0003",
+          "source_row": 15,
+          "x0": 100.3905,
+          "y0": 46.658,
+          "x1": 97.4715,
+          "y1": 49.5121,
+          "_row": "15"
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/19/pETDuet-1",
+          "layer_id": "layer-0003",
+          "source_row": 19,
+          "x0": 58.0308,
+          "y0": 107.0135,
+          "x1": 59.7255,
+          "y1": 103.2919,
+          "_row": "16"
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/20/pETDuet-1",
+          "layer_id": "layer-0003",
+          "source_row": 20,
+          "x0": 73.2266,
+          "y0": 110.3841,
+          "x1": 73.1475,
+          "y1": 118.9378,
+          "_row": "17"
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/20/pETDuet-1",
+          "layer_id": "layer-0003",
+          "source_row": 20,
+          "x0": 73.1475,
+          "y0": 118.9378,
+          "x1": 53.682,
+          "y1": 127.9099,
+          "_row": "18"
+        },
+        {
+          "leader_id": "layer-0004/restriction_site/1/",
+          "layer_id": "layer-0004",
+          "source_row": 1,
+          "x0": 112.4304,
+          "y0": 95.3244,
+          "x1": 113.4582,
+          "y1": 95.9181,
+          "_row": "22"
+        },
+        {
+          "leader_id": "layer-0004/restriction_site/1/",
+          "layer_id": "layer-0004",
+          "source_row": 1,
+          "x0": 113.4582,
+          "y0": 95.9181,
+          "x1": 122.6543,
+          "y1": 95.9181,
+          "_row": "23"
+        },
+        {
+          "leader_id": "layer-0004/restriction_site/2/",
+          "layer_id": "layer-0004",
+          "source_row": 2,
+          "x0": 73.5738,
+          "y0": 28.0068,
+          "x1": 73.5738,
+          "y1": 26.8194,
+          "_row": "24"
+        },
+        {
+          "leader_id": "layer-0004/restriction_site/2/",
+          "layer_id": "layer-0004",
+          "source_row": 2,
+          "x0": 73.5738,
+          "y0": 26.8194,
+          "x1": 73.5738,
+          "y1": 23.1518,
+          "_row": "25"
+        },
+        {
+          "leader_id": "layer-0004/restriction_site/3/",
+          "layer_id": "layer-0004",
+          "source_row": 3,
+          "x0": 34.7171,
+          "y0": 95.3244,
+          "x1": 33.6893,
+          "y1": 95.9181,
+          "_row": "26"
+        },
+        {
+          "leader_id": "layer-0004/restriction_site/3/",
+          "layer_id": "layer-0004",
+          "source_row": 3,
+          "x0": 33.6893,
+          "y0": 95.9181,
+          "x1": 24.4932,
+          "y1": 95.9181,
+          "_row": "27"
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/3/pETDuet-1",
+          "layer_id": "layer-0003",
+          "source_row": 3,
+          "x0": 78.7508,
+          "y0": 110.0267,
+          "x1": 74.4957,
+          "y1": 112.8632,
+          "_row": "19"
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/3/pETDuet-1",
+          "layer_id": "layer-0003",
+          "source_row": 3,
+          "x0": 74.4957,
+          "y0": 112.8632,
+          "x1": 74.4957,
+          "y1": 115.4041,
+          "_row": "19.1"
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/3/pETDuet-1",
+          "layer_id": "layer-0003",
+          "source_row": 3,
+          "x0": 74.4957,
+          "y0": 115.4041,
+          "x1": 95.8402,
+          "y1": 127.9099,
+          "_row": "19.2"
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/6/pETDuet-1",
+          "layer_id": "layer-0003",
+          "source_row": 6,
+          "x0": 83.1402,
+          "y0": 109.1452,
+          "x1": 83.799,
+          "y1": 108.6432,
+          "_row": "21"
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/6/pETDuet-1",
+          "layer_id": "layer-0003",
+          "source_row": 6,
+          "x0": 83.799,
+          "y0": 108.6432,
+          "x1": 84.299,
+          "y1": 109.1432,
+          "_row": "21.1"
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/6/pETDuet-1",
+          "layer_id": "layer-0003",
+          "source_row": 6,
+          "x0": 84.299,
+          "y0": 109.1432,
+          "x1": 85.5493,
+          "y1": 111.3632,
+          "_row": "21.2"
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/6/pETDuet-1",
+          "layer_id": "layer-0003",
+          "source_row": 6,
+          "x0": 85.5493,
+          "y0": 111.3632,
+          "x1": 86.6881,
+          "y1": 116.8569,
+          "_row": "21.3"
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/6/pETDuet-1",
+          "layer_id": "layer-0003",
+          "source_row": 6,
+          "x0": 86.6881,
+          "y0": 116.8569,
+          "x1": 86.1881,
+          "y1": 117.3569,
+          "_row": "21.4"
+        },
+        {
+          "leader_id": "layer-0003/gene_label_repel/6/pETDuet-1",
+          "layer_id": "layer-0003",
+          "source_row": 6,
+          "x0": 86.1881,
+          "y0": 117.3569,
+          "x1": 122.6543,
+          "y1": 125.4809,
+          "_row": "21.5"
+        }
+      ],
+      "attempts": {
+        "1": {
+          "route_found": true,
+          "accepted": false
+        },
+        "3": {
+          "route_found": true,
+          "accepted": true
+        },
+        "6": {
+          "route_found": true,
+          "accepted": true
+        },
+        "7": {
+          "route_found": true,
+          "accepted": false
+        },
+        "8": {
+          "route_found": true,
+          "accepted": false
+        },
+        "9": {
+          "route_found": true,
+          "accepted": false
+        },
+        "10": {
+          "route_found": true,
+          "accepted": false
+        },
+        "20": {
+          "route_found": true,
+          "accepted": false
+        }
+      }
+    }
+  }
+}

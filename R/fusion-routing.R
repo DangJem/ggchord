@@ -38,14 +38,39 @@ ggchord_route_obstacles <- function(obstacles, endpoints) {
   obstacles[!obstacles$kind %in% 'container' | !obstacles$panel_id %in% endpoints, , drop = FALSE]
 }
 
-ggchord_route_shortest <- function(start, end, boxes, canvas, clearance = .6) {
+# Same proper-interior test as annotation leaders, vectorized over barriers.
+ggchord_route_segment_crossings <- function(a, b, barriers, tolerance = 1e-9) {
+  if (is.null(barriers) || !nrow(barriers)) return(logical())
+  rx <- b[1]-a[1]; ry <- b[2]-a[2]
+  sx <- barriers$x2-barriers$x1; sy <- barriers$y2-barriers$y1
+  denominator <- rx*sy-ry*sx
+  valid <- is.finite(denominator) & abs(denominator) > tolerance
+  out <- rep(FALSE, nrow(barriers))
+  qx <- barriers$x1[valid]-a[1]; qy <- barriers$y1[valid]-a[2]
+  t <- (qx*sy[valid]-qy*sx[valid])/denominator[valid]
+  u <- (qx*ry-qy*rx)/denominator[valid]
+  out[valid] <- t > tolerance & t < 1-tolerance & u > tolerance & u < 1-tolerance
+  out
+}
+
+ggchord_route_shortest <- function(start, end, boxes, canvas, clearance = .6, barriers = NULL) {
   if (any(c(start, end) < 0) || any(c(start[1], end[1]) > canvas[1]) ||
       any(c(start[2], end[2]) > canvas[2])) return(NULL)
   padded <- ggchord_route_inflate(boxes, clearance)
-  if (!any(ggchord_route_segment_hits(start, end, padded))) return(rbind(start, end))
+  crosses <- function(a, b) {
+    any(ggchord_route_segment_crossings(a, b, barriers))
+  }
+  if (!any(ggchord_route_segment_hits(start, end, padded)) && !crosses(start, end)) return(rbind(start, end))
   corners <- do.call(rbind, lapply(seq_len(nrow(padded)), function(i)
     as.matrix(expand.grid(x = c(padded$xmin[i], padded$xmax[i]),
       y = c(padded$ymin[i], padded$ymax[i])))))
+  if (!is.null(barriers) && nrow(barriers)) {
+    endpoints <- rbind(as.matrix(barriers[c('x1', 'y1')]), as.matrix(barriers[c('x2', 'y2')]))
+    near <- do.call(rbind, lapply(seq_len(nrow(endpoints)), function(i)
+      sweep(as.matrix(expand.grid(x = c(-1, 1)*clearance,
+        y = c(-1, 1)*clearance)), 2, endpoints[i, ], '+')))
+    corners <- rbind(corners, near)
+  }
   corners <- corners[corners[, 1] >= clearance & corners[, 1] <= canvas[1] - clearance &
     corners[, 2] >= clearance & corners[, 2] <= canvas[2] - clearance, , drop = FALSE]
   nodes <- unique(rbind(start, end, corners))
@@ -60,7 +85,8 @@ ggchord_route_shortest <- function(start, end, boxes, canvas, clearance = .6) {
     for (to in which(!visited)) {
       cost <- sqrt(sum((nodes[to, ] - nodes[at, ])^2))
       if (distance[at] + cost >= distance[to] ||
-          any(ggchord_route_segment_hits(nodes[at, ], nodes[to, ], padded))) next
+          any(ggchord_route_segment_hits(nodes[at, ], nodes[to, ], padded)) ||
+          crosses(nodes[at, ], nodes[to, ])) next
       distance[to] <- distance[at] + cost; previous[to] <- at
     }
   }
