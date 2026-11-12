@@ -1,9 +1,9 @@
-# Only automatically combined circular seam strings may acquire bounded radial
-# clearance. Tick anchors, source values and explicit physical offsets stay put.
-ggchord_clear_axis_seam_text <- function(text, layout) {
-  required <- c('.axis_seam_combined', '.axis_offset_explicit', '.axis_allow_clearance')
+# Automatically positioned circular strings may acquire bounded radial
+# clearance. Tick anchors, explicit breaks and physical offsets stay put.
+ggchord_clear_circular_axis_text <- function(text, layout) {
+  required <- c('.axis_automatic_breaks', '.axis_offset_explicit', '.axis_allow_clearance')
   if (!all(required %in% names(text)) || !length(layout$layer_geometry)) return(text)
-  at <- which(text$.axis_seam_combined %in% TRUE)
+  at <- which(text$.axis_automatic_breaks %in% TRUE)
   if (!length(at)) return(text)
   polygons <- list()
   for (owner in layout$layer_geometry) {

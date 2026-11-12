@@ -5,6 +5,7 @@ folder <- 'tools/long-term-audit'
 adaptive <- '--adaptive' %in% commandArgs(trailingOnly = TRUE)
 prefix <- if (adaptive) 'v0.27.0-label-size-adaptive-' else 'v0.27.0-label-size-'
 if ('--after' %in% commandArgs(trailingOnly = TRUE)) prefix <- paste0(prefix, 'after-')
+if ('--refined' %in% commandArgs(trailingOnly = TRUE)) prefix <- paste0(prefix, 'refined-')
 cases <- c('pUC19', 'pTRE_Tight_BI', 'pETDuet_1')
 profiles <- if (adaptive) list(compact = c(6, 6)) else list(compact = c(6, 6), wide = c(12, 8))
 if ('--compact-only' %in% commandArgs(trailingOnly = TRUE)) profiles <- profiles['compact']
@@ -49,11 +50,17 @@ for (id in cases) {
     })) %||% data.frame()
     quality <- ggchord_label_quality(layout, text, built, context)
     visibility <- ggchord_label_visibility(layout)
+    axis <- ggchord_axis_geometry(layout)
+    clearance <- if ('.axis_clearance_status' %in% names(axis)) unique(axis[
+      axis$.component %in% 'text' & !is.na(axis$.axis_clearance_status),
+      intersect(c('accver', '.axis_label', '.axis_automatic_breaks', '.axis_offset_explicit',
+        '.axis_clearance_status', '.axis_clearance_mm'), names(axis)), drop = FALSE]) else data.frame()
     grDevices::dev.off()
     stopifnot(identical(original, plot$ggchord$data), context$status == 'measured')
     observations[[paste(id, profile, sep = '/')]] <- list(
       width_in = size[1], height_in = size[2], quality = quality,
       visibility = visibility, font_range_mm = range(text$size_mm, na.rm = TRUE),
+      axis_clearance = clearance,
       source_preserved = TRUE, case_specific_manual_changes = 0L,
       file = path, png_sha256 = digest::digest(file = path, algo = 'sha256'))
   }

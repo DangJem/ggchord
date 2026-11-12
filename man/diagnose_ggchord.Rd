@@ -81,6 +81,8 @@ move, hide or change input records.
 Degenerate annotation placeholders with coincident endpoints are not
 counted as leaders. Circular label visibility can additionally report
 \code{leader_text_status} for clear, detoured or unresolved static-text routes.
+\code{leader_route_status} records bounded crossing detours or unresolved routes
+while preserving directed endpoints and source-label positions.
 }
 
 \section{Guide measurements}{

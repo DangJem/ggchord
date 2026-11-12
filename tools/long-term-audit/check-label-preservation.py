@@ -2,15 +2,17 @@
 import hashlib
 import json
 import math
+import sys
 from pathlib import Path
 
 root = Path(__file__).resolve().parent
 files = {}
 comparisons = {}
 endpoint_count = 0
+variant = 'refined' if '--refined' in sys.argv else 'after'
 for mode in ("", "adaptive-"):
     before_path = root / f"v0.27.0-label-size-{mode}results.json"
-    after_path = root / f"v0.27.0-label-size-{mode}after-results.json"
+    after_path = root / f"v0.27.0-label-size-{mode}{variant}-results.json"
     before, after = (json.loads(path.read_text()) for path in (before_path, after_path))
     for path in (before_path, after_path):
         files[path.name] = hashlib.sha256(path.read_bytes()).hexdigest()
@@ -45,5 +47,6 @@ result = {"status": "passed recorded layout preservation comparisons",
           "directed_endpoint_pairs_preserved": endpoint_count,
           "input_json_sha256": files, "comparisons": comparisons,
           "scope": "Recorded three-source compact fixed/adaptive profiles only; not arbitrary size or ink certification"}
-(root / "v0.27.0-label-preservation-results.json").write_text(json.dumps(result, indent=2) + "\n")
+(root / ("v0.27.0-label-preservation-refined-results.json" if variant == 'refined'
+         else "v0.27.0-label-preservation-results.json")).write_text(json.dumps(result, indent=2) + "\n")
 print(f"Preserved labels, native positions, anchors, sizes and {endpoint_count} directed endpoint pairs")

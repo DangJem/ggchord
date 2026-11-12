@@ -219,6 +219,8 @@ ggchord_diagnostic_colours <- function(built, colour_vision) {
 #' Degenerate annotation placeholders with coincident endpoints are not
 #' counted as leaders. Circular label visibility can additionally report
 #' `leader_text_status` for clear, detoured or unresolved static-text routes.
+#' `leader_route_status` records bounded crossing detours or unresolved routes
+#' while preserving directed endpoints and source-label positions.
 #' @md
 #' @export
 #' @section Guide measurements:

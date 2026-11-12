@@ -66,8 +66,25 @@ ggchord_detour_crossing_leaders <- function(registry, layout) {
         barriers <- others
         barriers$x1 <- barriers$x1-origin[1]; barriers$x2 <- barriers$x2-origin[1]
         barriers$y1 <- barriers$y1-origin[2]; barriers$y2 <- barriers$y2-origin[2]
-        route <- ggchord_route_shortest(start-origin, end-origin, obstacles, canvas,
-          clearance = clearance, barriers = barriers)
+        groups <- boxes$text_object[!own_text]
+        active <- which(ggchord_route_segment_hits(start-origin, end-origin, obstacles))
+        route <- NULL
+        # Add only text objects touched by trial routes. Every accepted route
+        # still clears the full obstacle set; distant glyph corners need not
+        # inflate the initial visibility graph.
+        for (attempt in seq_len(length(unique(groups))+1L)) {
+          route <- ggchord_route_shortest(start-origin, end-origin,
+            obstacles[active, , drop = FALSE], canvas,
+            clearance = clearance, barriers = barriers)
+          if (is.null(route)) break
+          touched <- unique(unlist(lapply(seq_len(nrow(route)-1L), function(k)
+            which(ggchord_route_segment_hits(route[k, ], route[k+1L, ], obstacles))), use.names = FALSE))
+          if (!length(touched)) break
+          newer <- which(groups %in% groups[union(active, touched)])
+          route <- NULL
+          if (length(newer) <= length(active)) break
+          active <- newer
+        }
         if (!is.null(route)) {
           route <- sweep(route, 2, origin, '+')
           segments <- data.frame(x0 = head(route[, 1], -1), y0 = head(route[, 2], -1),

@@ -6,9 +6,10 @@
   reported. Automatic combined seam text can try a bounded outer backbone lane
   when the inner channel cannot fit it. Explicit offsets remain fixed.
 
-- Fixed automatically combined circular seam labels touching feature polygons.
-  Only collided strings with an automatic text offset receive bounded radial
-  clearance; tick coordinates, source values and explicit offsets stay fixed.
+- Fixed automatically positioned circular coordinate labels touching feature polygons.
+  Only collided parallel strings with automatic breaks and text offsets receive
+  bounded radial clearance; tick coordinates, source values, explicit breaks
+  and explicit offsets stay fixed.
   The search also protects other text and retains unresolved cases for review.
 
 - Fixed default Sankey sequence names overlapping their starting coordinate
