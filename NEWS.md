@@ -1,5 +1,14 @@
 # ggchord 0.22.0.9000
 
+- Added `magnify_ggchord()` for an explicit source interval and an independently
+  built Collinear detail plot, using a Circular/Chord source and the shared
+  Fusion renderer. Target-size highlights and decorative boundary leaders
+  follow real source windows, display instances and native position scales.
+- Fusion exports now separate focus_regions, focus_fronts and leaders from
+  biological connections/relationship_data. Detail data/statistics remain
+  explicit; there is no automatic layer copying, origin wrapping, character
+  panel registration or nested-inset inference.
+
 - Fixed the shared circular perimeter layout overriding an explicit
   `geom_restriction_site(leader = "straight")` request with a one-bend route.
   Explicit direct routes now remain direct after label placement; default

@@ -1,10 +1,10 @@
 {
-  "source_sha256": "6c2c6d5e3cb5af8a8c4d91fc10c4a62bcff4953ce8e44ef1193e19be2bf005ef",
+  "source_sha256": "97457d1a7e9d113e92eb1c8515909f79f59b6ed2a266adb22a928887c07495d9",
   "translations": {
     "0": "按指定物理尺寸导出Fusion布局",
     "1": "Fusion对象。",
     "2": "以英寸指定的正画布宽高。",
-    "3": "包含panels、instances、connections、fronts、paths、diagnostics和逐面板来源布局的列表。全部全局几何使用毫米。",
+    "3": "返回列表，含 panels、instances、connections、fronts、paths、diagnostics 和各面板源布局。通过 ⟦0⟧ 创建的组合还会填充 focus_region_data、focus_regions、focus_fronts 和装饰性 leaders；普通 Fusion 对象在这些字段返回空表。全局几何均以 mm 表示。",
     "4": "在临时测量设备上按指定尺寸构建，并恢复此前设备。几何使用该设备的字体度量；后续保存会在实际输出设备上重新构建，因此度量可能有细微差异。来源坐标与身份不变。"
   }
 }

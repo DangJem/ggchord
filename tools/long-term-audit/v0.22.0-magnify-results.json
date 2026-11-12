@@ -1,0 +1,30 @@
+{
+  "version": "0.22.0.9000",
+  "region": [
+    {
+      "accver": "pETDuet-1",
+      "start": 101,
+      "end": 1900
+    }
+  ],
+  "feature_records": 10,
+  "primer_records": 2,
+  "recognition_records": 3,
+  "source_bounds": [100, 1900],
+  "exact_source_mapping": true,
+  "independent_detail_and_statistics": true,
+  "biological_links": 0,
+  "decorative_leaders": 2,
+  "sampled_length_ratio": 1.3845,
+  "measured_sizes_inches": [
+    [12, 8],
+    [10, 7]
+  ],
+  "native_scale_reflection": true,
+  "renamed_focus_and_instance_resolution": true,
+  "real_hsp_and_focus_kept_separate": true,
+  "native_aa_and_single_position": true,
+  "source_data_unchanged": true,
+  "elapsed_seconds": 16.794,
+  "limits": ["explicit detail plot and statistics", "Circular/Chord source and Collinear detail only", "one ordered source region", "no global collision guarantee", "no release device matrix"]
+}

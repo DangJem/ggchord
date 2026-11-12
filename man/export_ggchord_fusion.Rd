@@ -13,7 +13,10 @@ export_ggchord_fusion(plot, width = 10, height = 8)
 }
 \value{
 A list with panels, instances, connections, fronts, paths,
-diagnostics and per-panel source layouts. All global geometry uses mm.
+diagnostics and per-panel source layouts. Compositions made with
+\code{\link[=magnify_ggchord]{magnify_ggchord()}} also populate focus_region_data, focus_regions, focus_fronts and decorative
+leaders; ordinary Fusion objects return empty tables for these fields.
+All global geometry uses mm.
 }
 \description{
 Builds at the requested size on a temporary measurement device, restoring

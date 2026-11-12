@@ -153,6 +153,7 @@ reference:
   - title: Static panel composition
     contents:
       - '`ggchord_fusion`'
+      - '`magnify_ggchord`'
       - '`fusion_panel`'
       - '`fusion_ribbon`'
       - '`export_ggchord_fusion`'

@@ -3239,5 +3239,29 @@
       "en": "Existing DNA/RNA/AA columns; Cartesian local cells; explicit source mapping",
       "zh": "已有DNA/RNA/AA对齐列；Cartesian局部单元与显式源映射"
     }
+  },
+  "magnify_ggchord": {
+    "level": "L2",
+    "page": "fusion",
+    "anchor": "magnify",
+    "reason": "Runnable source-backed locus and explicit local detail; source/leader/stat boundaries reviewed",
+    "modes": "Circular/Chord source; Collinear detail",
+    "parameters": [
+      "region",
+      "detail_plot",
+      "side",
+      "connector"
+    ],
+    "purpose": {
+      "en": "Connect a real source interval to an explicit independent local detail plot",
+      "zh": "连接真实源区间与显式独立构建的局部细节图"
+    },
+    "alias_of": "",
+    "case": "fusion",
+    "scope": "One ordered source interval; no automatic arbitrary-layer or Stat rebuilding",
+    "modes_localized": {
+      "en": "Circular/Chord center, Collinear detail, explicit source instances",
+      "zh": "Circular/Chord主图、Collinear细节与显式源实例"
+    }
   }
 }

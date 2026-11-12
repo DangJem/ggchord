@@ -147,6 +147,7 @@ ggchord_build_fusion <- function(x) {
       connection_rows[[length(connection_rows)+1L]] <- report
     }
   }
+  focus <- ggchord_build_focus(x$focus, panels)
   guide <- styles$guide
   if (styles$side!="none") {
     xy <- switch(styles$side,right=c(canvas[1]-guide_size[1]/2,canvas[2]/2),
@@ -154,11 +155,12 @@ ggchord_build_fusion <- function(x) {
       bottom=c(canvas[1]/2,guide_size[2]/2))
     guide <- grid::grobTree(guide,vp=grid::viewport(x=xy[1],y=xy[2],width=guide_size[1],height=guide_size[2],default.units="mm"))
   }
-  grob <- do.call(grid::grobTree,c(unname(backgrounds),ribbons,unname(foregrounds),
+  grob <- do.call(grid::grobTree,c(unname(backgrounds),ribbons,focus$underlay,unname(foregrounds),focus$overlay,
     list(guide, vp=grid::viewport(xscale=c(0,1),yscale=c(0,1)))))
   bind <- function(rows) if(length(rows)) ggchord_rbind_fill(rows) else data.frame()
   list(grob=grob,export=list(panels=bind(panel_rows),instances=bind(instances),
     connections=bind(connection_rows),fronts=bind(fronts),paths=bind(paths),
+    focus_region_data=focus$input,focus_regions=focus$regions,focus_fronts=focus$fronts,leaders=focus$leaders,
     diagnostics=diagnostics,source_layouts=lapply(panels,`[[`,"layout"),
     source_data=lapply(x$panels,function(p)p$plot$ggchord$sources),
     relationship_data=lapply(x$ribbons,`[[`,"data"),

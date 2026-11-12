@@ -570,5 +570,16 @@
     "modes": "DNA / RNA / AA",
     "page": "formats#aligned-source",
     "level": "advanced"
+  },
+  {
+    "task": {
+      "en": "Connect a genomic region to its independently rebuilt detail",
+      "zh": "连接基因组区域与独立重建的细节图"
+    },
+    "api": "magnify_ggchord",
+    "parameters": "region, detail_plot, side, connector",
+    "modes": "Circular / Chord + Collinear",
+    "page": "fusion#magnify",
+    "level": "advanced"
   }
 ]

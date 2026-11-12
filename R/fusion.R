@@ -248,6 +248,12 @@ ggchord_fusion_endpoint <- function(panels, row, prefix, layer_id, source_row) {
   selected_instance <- row[[paste0(prefix,"_instance")]]
   start <- row[[paste0(prefix,"start")]]; end <- row[[paste0(prefix,"end")]]
   where <- paste0("Fusion ", layer_id, " row ", source_row, " ", prefix, ": ")
+  ggchord_resolve_panel_interval(panels, entity, start, end, selected_panel, selected_instance, where)
+}
+
+# Shared locus resolver: decorative focus regions are not HSP relationships.
+ggchord_resolve_panel_interval <- function(panels, entity, start, end,
+    selected_panel, selected_instance, where) {
   if (length(entity)!=1 || is.na(entity) || !nzchar(entity) ||
       !is.numeric(start) || !is.numeric(end) || any(!is.finite(c(start,end))) || min(start,end) < 1 ||
       any(c(start,end) != floor(c(start,end)))) ggchord_stop(where, "invalid accession or one-based interval")
@@ -351,7 +357,10 @@ ggchord_fusion_path <- function(q, s, curvature) {
 #' @param plot A Fusion object.
 #' @param width,height Positive canvas dimensions in inches.
 #' @return A list with panels, instances, connections, fronts, paths,
-#'   diagnostics and per-panel source layouts. All global geometry uses mm.
+#'   diagnostics and per-panel source layouts. Compositions made with
+#'   [magnify_ggchord()] also populate focus_region_data, focus_regions, focus_fronts and decorative
+#'   leaders; ordinary Fusion objects return empty tables for these fields.
+#'   All global geometry uses mm.
 #' @export
 #' @examples
 #' data(seq_data_example)

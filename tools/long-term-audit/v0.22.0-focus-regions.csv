@@ -1,0 +1,2 @@
+"accver","start","end","source_instance","detail_instance","source_origin","detail_origin","sequence_unit","source_length_mm","detail_length_mm","length_ratio","stat_scope","collision_status","highlight_width_mm","highlight_alpha","colour","connector","leader_linewidth","leader_linetype"
+"pETDuet-1",101,1900,"pETDuet-1","pETDuet-1",1,101,"bp",114.292757375696,158.240849874953,1.38452211240992,"explicit_detail_plot","not globally measured",1.5,0.2,"#B45309","leader",0.35,2

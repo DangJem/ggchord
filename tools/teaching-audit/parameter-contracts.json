@@ -9992,6 +9992,102 @@
     "source": "man/link_ggchord_clusters.Rd"
   },
   {
+    "api": "magnify_ggchord",
+    "parameter": "plot",
+    "default": "",
+    "type": "R object; constraints below",
+    "constraint": "A ggchord Circular or Chord source plot.",
+    "source": "man/magnify_ggchord.Rd"
+  },
+  {
+    "api": "magnify_ggchord",
+    "parameter": "region",
+    "default": "",
+    "type": "R object; constraints below",
+    "constraint": "One-row data frame with accver, start, end in original one-based inclusive source coordinates. Bounds must be ordered positive integers. Optional instance and detail_instance select exact display instances in the source and detail panels. Ambiguity fails; origin-wrapping intervals must be split before using this single-window interface.",
+    "source": "man/magnify_ggchord.Rd"
+  },
+  {
+    "api": "magnify_ggchord",
+    "parameter": "detail_plot",
+    "default": "",
+    "type": "R object; constraints below",
+    "constraint": "An explicit horizontal or vertical Collinear ggchord plot. The selected source interval must be fully visible in both panels, in the same bp/aa unit. Ordinary Cartesian character plots are not supported here.",
+    "source": "man/magnify_ggchord.Rd"
+  },
+  {
+    "api": "magnify_ggchord",
+    "parameter": "side",
+    "default": "c(\"right\", \"top\", \"left\", \"bottom\")",
+    "type": "Vector; choices versus multiple selection below",
+    "constraint": "One of right, top, left or bottom for the detail panel.",
+    "source": "man/magnify_ggchord.Rd"
+  },
+  {
+    "api": "magnify_ggchord",
+    "parameter": "center_size",
+    "default": "NULL",
+    "type": "Nullable R object; type/inheritance below",
+    "constraint": "Optional panel width/height fractions, following ggchord_fusion() and fusion_panel(). Defaults reserve a smaller source panel and a wider detail container for the selected side. Overlap fails.",
+    "source": "man/magnify_ggchord.Rd"
+  },
+  {
+    "api": "magnify_ggchord",
+    "parameter": "detail_size",
+    "default": "NULL",
+    "type": "Nullable R object; type/inheritance below",
+    "constraint": "Optional panel width/height fractions, following ggchord_fusion() and fusion_panel(). Defaults reserve a smaller source panel and a wider detail container for the selected side. Overlap fails.",
+    "source": "man/magnify_ggchord.Rd"
+  },
+  {
+    "api": "magnify_ggchord",
+    "parameter": "connector",
+    "default": "c(\"leader\", \"none\")",
+    "type": "Vector; choices versus multiple selection below",
+    "constraint": "\"leader\" draws two decorative boundary leaders; \"none\" retains the highlights only. These are not biological ribbons or alignments.",
+    "source": "man/magnify_ggchord.Rd"
+  },
+  {
+    "api": "magnify_ggchord",
+    "parameter": "colour",
+    "default": "\"#B45309\"",
+    "type": "Character/enum; choices below",
+    "constraint": "Fixed highlight/leader colour.",
+    "source": "man/magnify_ggchord.Rd"
+  },
+  {
+    "api": "magnify_ggchord",
+    "parameter": "alpha",
+    "default": "0.2",
+    "type": "Numeric/integer; range in description",
+    "constraint": "Highlight opacity in [0,1]. Leaders use the opaque colour.",
+    "source": "man/magnify_ggchord.Rd"
+  },
+  {
+    "api": "magnify_ggchord",
+    "parameter": "highlight_width",
+    "default": "1.5",
+    "type": "Numeric/integer; range in description",
+    "constraint": "Positive highlight band width in physical mm.",
+    "source": "man/magnify_ggchord.Rd"
+  },
+  {
+    "api": "magnify_ggchord",
+    "parameter": "linewidth",
+    "default": "0.35",
+    "type": "Numeric/integer; range in description",
+    "constraint": "Nonnegative leader width using the usual ggplot2 convention.",
+    "source": "man/magnify_ggchord.Rd"
+  },
+  {
+    "api": "magnify_ggchord",
+    "parameter": "linetype",
+    "default": "2",
+    "type": "Numeric/integer; range in description",
+    "constraint": "Leader line type, default dashed.",
+    "source": "man/magnify_ggchord.Rd"
+  },
+  {
     "api": "map_alignment_position",
     "parameter": "data",
     "default": "",

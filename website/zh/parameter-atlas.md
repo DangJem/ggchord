@@ -2511,6 +2511,30 @@
 
 </details>
 
+<span id="api-magnify_ggchord"></span>
+<details><summary><code>magnify_ggchord()</code></summary>
+
+
+[完整参考](reference/magnify_ggchord.html)
+
+
+| 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
+| --- | --- | --- | --- |
+| `plot` | `必需/互斥入口，见说明` | R 对象；约束见说明 | 使用 Circular 或 Chord 的 ggchord 源图。 |
+| `region` | `必需/互斥入口，见说明` | R 对象；约束见说明 | 单行数据框，包含 accver、start、end，使用原始一基闭区间源坐标。边界须为有序正整数。可选 instance 和 detail_instance 分别指定源面板与细节面板中的显示实例。歧义会报错；使用该单窗口接口前须显式拆分跨原点区域。 |
+| `detail_plot` | `必需/互斥入口，见说明` | R 对象；约束见说明 | 显式构建的横向或纵向 Collinear ggchord 图。选定源区间须在两个面板完整可见，且 bp/aa 单位一致。这里不支持普通 Cartesian 字符图。 |
+| `side` | `c("right", "top", "left", "bottom")` | 向量；候选/多选含义见说明 | 细节面板位于右、上、左或下。 |
+| `center_size` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 可选面板宽高比例，遵循 ggchord_fusion() 与 fusion_panel()。默认按选定方位保留较小的源面板和较宽的细节容器；分配重叠时报错。 |
+| `detail_size` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 可选面板宽高比例，遵循 ggchord_fusion() 与 fusion_panel()。默认按选定方位保留较小的源面板和较宽的细节容器；分配重叠时报错。 |
+| `connector` | `c("leader", "none")` | 向量；候选/多选含义见说明 | "leader" 绘制两条装饰性边界引线；"none" 只保留高亮。引线不是生物学色带或比对。 |
+| `colour` | `"#B45309"` | 字符/枚举；取值见说明 | 固定的高亮与引线颜色。 |
+| `alpha` | `0.2` | 数值/整数；范围见说明 | 高亮透明度，范围 [0,1]；引线使用不透明颜色。 |
+| `highlight_width` | `1.5` | 数值/整数；范围见说明 | 正数，以物理 mm 指定高亮带宽。 |
+| `linewidth` | `0.35` | 数值/整数；范围见说明 | 非负引线宽度，采用通常的 ggplot2 约定。 |
+| `linetype` | `2` | 数值/整数；范围见说明 | 引线线型，默认虚线。 |
+
+</details>
+
 <span id="api-map_alignment_position"></span>
 <details><summary><code>map_alignment_position()</code></summary>
 

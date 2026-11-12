@@ -56,6 +56,7 @@ Choose a lesson by task. A means chord, B collinear, C single-sequence circular.
 | Import paired BED intervals | [`read_bedpe()`](reference/read_bedpe.html) | `file, files, source_file, unmapped` | Input | [Advanced](formats.html#bedpe) |
 | Show actual characters and gaps from an alignment | [`geom_residue()`](reference/geom_residue.html) | `mapping, overflow, size` | Cartesian aligned excerpts | [Advanced](formats.html#aligned-characters) |
 | Look up source positions and alignment columns | [`map_alignment_position()`](reference/map_alignment_position.html) | `data, accver, position, inverse` | DNA / RNA / AA | [Advanced](formats.html#aligned-source) |
+| Connect a genomic region to its independently rebuilt detail | [`magnify_ggchord()`](reference/magnify_ggchord.html) | `region, detail_plot, side, connector` | Circular / Chord + Collinear | [Advanced](fusion.html#magnify) |
 
 ## Three independent learning paths {#paths}
 

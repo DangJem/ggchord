@@ -1171,6 +1171,25 @@
     }
   },
   {
+    "name": "magnify_ggchord",
+    "owner": "ggchord",
+    "alias": "",
+    "parameters": {
+      "plot": "",
+      "region": "",
+      "detail_plot": "",
+      "side": "c(\"right\", \"top\", \"left\", \"bottom\")",
+      "center_size": "NULL",
+      "detail_size": "NULL",
+      "connector": "c(\"leader\", \"none\")",
+      "colour": "\"#B45309\"",
+      "alpha": "0.2",
+      "highlight_width": "1.5",
+      "linewidth": "0.35",
+      "linetype": "2"
+    }
+  },
+  {
     "name": "map_alignment_position",
     "owner": "ggchord",
     "alias": "",

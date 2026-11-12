@@ -78,6 +78,7 @@
 | [`labs`](reference/ggplot2-helpers.html) | 适用于 ggchord 的部分 ggplot2 辅助函数 | [上游](parameter-atlas.html#upstream) | 上游对象/接口；遵循 ggplot2/grid 的原始契约 | [↗](parameter-atlas.html#api-labs) | [↗](chord.html) |
 | [`last_plot`](reference/ggplot2-helpers.html) | 适用于 ggchord 的部分 ggplot2 辅助函数 | [上游](parameter-atlas.html#upstream) | 上游对象/接口；遵循 ggplot2/grid 的原始契约 | [↗](parameter-atlas.html#api-last_plot) | [↗](chord.html) |
 | [`link_ggchord_clusters`](reference/link_ggchord_clusters.html) | 将显式同源分组成员转换为注释连接 | [L2](homology.html#links) | 消费明确成员表；同名不能证明同源 | [↗](parameter-atlas.html#api-link_ggchord_clusters) | [↗](homology.html) |
+| [`magnify_ggchord`](reference/magnify_ggchord.html) | 连接真实源区间与显式独立构建的局部细节图 | [L2](fusion.html#magnify) | Circular/Chord主图、Collinear细节与显式源实例 | [↗](parameter-atlas.html#api-magnify_ggchord) | [↗](fusion.html) |
 | [`map_alignment_position`](reference/map_alignment_position.html) | 在选定行中精确查找对齐列与源位置 | [L2](formats.html#aligned-characters) | 已有DNA/RNA/AA对齐列；Cartesian局部单元与显式源映射 | [↗](parameter-atlas.html#api-map_alignment_position) | [↗](formats.html) |
 | [`map_ggchord_position`](reference/map_ggchord_position.html) | 映射源位置与显示坐标 | [L2](view-expansion.html#export) | 原生或源坐标；Dotplot须选轴，Radial反查须给x/y | [↗](parameter-atlas.html#api-map_ggchord_position) | [↗](view-expansion.html) |
 | [`margin`](reference/ggplot2-helpers.html) | 适用于 ggchord 的部分 ggplot2 辅助函数 | [上游](parameter-atlas.html#upstream) | 上游对象/接口；遵循 ggplot2/grid 的原始契约 | [↗](parameter-atlas.html#api-margin) | [↗](chord.html) |

@@ -56,3 +56,50 @@ Fusion组合独立的基因组图形，并连接其真实序列区间。中央�
 
 要求区间完整可见；需要局部窗口或拆分时，先在来源工作流中明确准备。不支持跨原点环绕解释、直接bp↔aa连接、外围Sankey/Radial/Dotplot、分面、猜测外部ggplot坐标、自由方位/八方向布局或全局自动路由。
 连接可以交叉或穿过面板内部；前景注释保留，但不保证任意组合都无碰撞。
+
+
+## 源区间与独立局部细节 {#magnify}
+
+`magnify_ggchord()` 组合一张 Circular/Chord 源图和显式构建的 Collinear 细节图。源区间是生物学数据，不是图片像素中的矩形；同一区间须在两个面板完整可见。两个面板都按最终设备尺寸重建，不拉伸截图。
+
+下例选择 pETDuet-1 的原始位置 101–1900，共 1800 bp。5404→2 的跨原点注释与该窗口没有交集；进入线性聚焦前显式排除，不能用 min/max 把它误画成长特征。细节保留 10 条注释，并按明确规则给 CDS/复制起点子集加标签。反转细节的显示方向不改变源坐标或生物学链。
+
+```r
+plasmid <- plasmid_example_pETDuet_1
+annotations <- find_common_features(plasmid)
+selected_region <- data.frame(accver = plasmid$accver, start = 101, end = 1900)
+local_source <- focus_ggchord_data(
+  plasmid,
+  feature_data = annotations |> filter(start <= end),
+  loci = selected_region
+)
+whole_plasmid <- ggchord(plasmid, feature_data = annotations) +
+  geom_seq(show.legend = FALSE) +
+  geom_feature(position = position_plasmid(), show.legend = FALSE) +
+  geom_seq_center_label() +
+  coord_circular(rotation = -30)
+local_labels <- local_source$feature_data |>
+  filter(type %in% c("CDS", "rep_origin"), anno != "ATG")
+local_detail <- ggchord(
+  local_source$seq_data, feature_data = local_source$feature_data
+) +
+  geom_seq(seq_orientation = -1, show.legend = FALSE) +
+  geom_feature(show.legend = FALSE) +
+  geom_feature_label(
+    data = local_labels, label_orientation = "horizontal",
+    label_overlap = "allow", colour = "#202020", size = 3
+  ) +
+  coord_collinear(seq_axis = "vertical") +
+  scale_seq_position_continuous(coordinates = "source")
+focused_view <- magnify_ggchord(whole_plasmid, selected_region, local_detail)
+focused_view
+focus_geometry <- export_ggchord_fusion(focused_view, width = 12, height = 8)
+focus_geometry$focus_regions
+focus_geometry$leaders
+```
+
+用普通 `ggsave()` 指定物理尺寸保存，例如 12×8 英寸；`view_ggchord()` 使用同一渲染器。`center_size`、`detail_size` 是容器比例，`highlight_width` 则以物理 mm 计。细节方位和显示方向会影响引线是否交叉，这里不承诺全局避让。`connector = "none"` 只保留高亮。
+
+虚线是装饰性的聚焦引线，与生物学 `connections`、`relationship_data` 分开导出；添加真实 `fusion_ribbon()` 仍须提供真实关系数据。`focus_region_data` 保留原始选区及任意元数据，`focus_regions` 记录解析出的实例、源原点和采样物理路径长度比。细节容器较小时，该比值可能小于 1，这不改变生物学长度。
+
+细节图拥有自己的数据、标度、图层和统计。若使用 count/bin/coverage 轨道，请自行准备并说明局部或全局统计总体；组合器只记录 `explicit_detail_plot`，不会静默选择口径。它不复制任意源图层、不推断比对，也不接收普通 Cartesian 字符面板。当前使用一个有序区间；同一 accession 重复时显式指定 `instance`/`detail_instance`，跨原点区间须先拆分。多个或嵌套 inset 盒及其他中央 Coord 不属于此接口。

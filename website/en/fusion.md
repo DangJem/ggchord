@@ -111,3 +111,50 @@ peripheral Sankey/Radial/Dotplot, facets, external ggplot coordinate guessing,
 free-angle/eight-direction layouts and automatic global routing are outside
 this interface. Links may cross or pass through panel interiors; foreground
 annotations are retained, but arbitrary layouts are not guaranteed collision-free.
+
+
+## A source interval and its local detail {#magnify}
+
+`magnify_ggchord()` composes a Circular/Chord source and an explicit Collinear detail plot. A source interval is biological data, not a rectangle in image pixels. The same region must be fully visible in both panels. Both rebuild at the final device size; no screenshot is stretched.
+
+This example selects pETDuet-1 source positions 101–1900 (1800 bp). Its origin-crossing annotation at 5404→2 has no overlap with this interval; exclude it explicitly before linear focusing rather than taking its min/max as a long feature. The detail retains 10 annotations and labels the explicitly selected CDS/replication-origin subset. Reversing the detail's display orientation changes neither source coordinates nor biological strands.
+
+```r
+plasmid <- plasmid_example_pETDuet_1
+annotations <- find_common_features(plasmid)
+selected_region <- data.frame(accver = plasmid$accver, start = 101, end = 1900)
+local_source <- focus_ggchord_data(
+  plasmid,
+  feature_data = annotations |> filter(start <= end),
+  loci = selected_region
+)
+whole_plasmid <- ggchord(plasmid, feature_data = annotations) +
+  geom_seq(show.legend = FALSE) +
+  geom_feature(position = position_plasmid(), show.legend = FALSE) +
+  geom_seq_center_label() +
+  coord_circular(rotation = -30)
+local_labels <- local_source$feature_data |>
+  filter(type %in% c("CDS", "rep_origin"), anno != "ATG")
+local_detail <- ggchord(
+  local_source$seq_data, feature_data = local_source$feature_data
+) +
+  geom_seq(seq_orientation = -1, show.legend = FALSE) +
+  geom_feature(show.legend = FALSE) +
+  geom_feature_label(
+    data = local_labels, label_orientation = "horizontal",
+    label_overlap = "allow", colour = "#202020", size = 3
+  ) +
+  coord_collinear(seq_axis = "vertical") +
+  scale_seq_position_continuous(coordinates = "source")
+focused_view <- magnify_ggchord(whole_plasmid, selected_region, local_detail)
+focused_view
+focus_geometry <- export_ggchord_fusion(focused_view, width = 12, height = 8)
+focus_geometry$focus_regions
+focus_geometry$leaders
+```
+
+Use ordinary `ggsave()` at a chosen physical size, for example 12×8 inches; `view_ggchord()` uses the same renderer. `center_size` and `detail_size` are container fractions, while `highlight_width` is physical mm. Changing the detail side or orientation can change leader crossings; global collision avoidance is not claimed. `connector = "none"` keeps only highlights.
+
+The dashed lines are decorative focus leaders. They are exported separately from biological `connections` and `relationship_data`; adding actual `fusion_ribbon()` layers still requires real relationship data. `focus_region_data` preserves the original selection and arbitrary metadata, while `focus_regions` reports resolved instances, source origins and the sampled physical path-length ratio. The ratio can be below one with a small detail allocation; it is not a change to biological length.
+
+The detail plot owns its data, scales, layers and statistics. For count/bin/coverage tracks, prepare and state the intended local or global statistical population yourself; the wrapper records `explicit_detail_plot` and never silently chooses a scope. It does not copy arbitrary source layers, infer alignments or accept ordinary Cartesian character panels. Use one ordered region, explicitly select `instance`/`detail_instance` when an accession is repeated, and split origin wraps before this single-window workflow. Multiple/nested inset boxes and other central Coords remain outside this interface.
