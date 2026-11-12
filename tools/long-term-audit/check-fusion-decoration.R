@@ -78,7 +78,7 @@ grid::grid.newpage(); rendered <- ggchord_build_fusion(overlap)
 grid::grid.draw(rendered$grob)
 grDevices::dev.off()
 if (previous %in% grDevices::dev.list()) grDevices::dev.set(previous)
-check_single_paint <- function(rendered, path) {
+check_single_paint <- function(rendered, path, where = "canvas", background = "#F3F5F7") {
   d <- rendered$export$paths
   qn <- sum(rendered$export$fronts$endpoint == 'q')
   sn <- sum(rendered$export$fronts$endpoint == 's')
@@ -90,7 +90,17 @@ check_single_paint <- function(rendered, path) {
   outside <- vapply(seq_len(nrow(centers)), function(i) !any(
     centers[i, 1] >= panels$container_xmin & centers[i, 1] <= panels$container_xmax &
     centers[i, 2] >= panels$container_ymin & centers[i, 2] <= panels$container_ymax), logical(1))
-  candidates <- which(outside & rowSums((edge1-edge2)^2) > 4)
+  in_margin <- vapply(seq_len(nrow(centers)), function(i) any(
+    centers[i, 1] >= panels$container_xmin & centers[i, 1] <= panels$container_xmax &
+    centers[i, 2] >= panels$container_ymin & centers[i, 2] <= panels$container_ymax &
+    !(centers[i, 1] >= panels$panel_xmin & centers[i, 1] <= panels$panel_xmax &
+      centers[i, 2] >= panels$panel_ymin & centers[i, 2] <= panels$panel_ymax)), logical(1))
+  boxes <- rendered$export$routing_obstacles |> filter(kind != 'container')
+  clear_text <- vapply(seq_len(nrow(centers)), function(i) !any(
+    centers[i, 1] >= boxes$xmin & centers[i, 1] <= boxes$xmax &
+    centers[i, 2] >= boxes$ymin & centers[i, 2] <= boxes$ymax), logical(1))
+  candidates <- which((if (where == "margin") in_margin else outside) &
+    clear_text & rowSums((edge1-edge2)^2) > 4)
   stopifnot(length(candidates) > 0)
   at <- candidates[ceiling(length(candidates)/2)]
   raster <- png::readPNG(path)
@@ -103,16 +113,19 @@ check_single_paint <- function(rendered, path) {
   reference <- tempfile(fileext = '.png')
   ggchord_diagnostic_device(reference, 'png', 1, 1, 110)
   grid::grid.newpage()
-  grid::grid.rect(gp = grid::gpar(fill = '#F3F5F7', col = NA))
+  grid::grid.rect(gp = grid::gpar(fill = background, col = NA))
   grid::grid.rect(gp = grid::gpar(fill = scales::alpha('#548CA0', .35), col = NA))
   grDevices::dev.off()
   calibration <- png::readPNG(reference)
   expected <- calibration[ceiling(dim(calibration)[1]/2), ceiling(dim(calibration)[2]/2), 1:3]
   unlink(reference)
-  stopifnot(max(abs(observed-expected)) < .02)
+  if (max(abs(observed-expected)) >= .02) stop(paste("Single paint mismatch:", where,
+    "observed", paste(round(observed, 3), collapse = ","),
+    "expected", paste(round(expected, 3), collapse = ",")))
 }
 if (requireNamespace('png', quietly = TRUE)) {
   check_single_paint(rendered, path)
+  check_single_paint(rendered, path, where = "margin")
   # Exercise the older nested-connection viewport path too. Parent foregrounds
   # must not disable the ancestor's disjoint clipping rectangles.
   child_only <- plain + ggplot2::labs(title = 'Nested opacity check') +
@@ -133,7 +146,7 @@ fail(export_ggchord_fusion(titled + theme(plot.margin = margin(100, 100, 100, 10
 jsonlite::write_json(list(status = 'passed', native_title_subtitle_caption_tag = TRUE,
   actual_drawing_text = TRUE, later_updates_preserved = TRUE, no_dummy_axes = TRUE,
   source_records_unchanged = TRUE, nested_source_registration = TRUE,
-  transparent_connection_once = requireNamespace('png', quietly = TRUE),
+  ordinary_margin_connection_present = requireNamespace('png', quietly = TRUE), transparent_connection_once = requireNamespace('png', quietly = TRUE),
   explicit_margin_failure = TRUE, content_bounds_mm = b$metadata$content_bounds_mm),
   'tools/long-term-audit/v0.27.0-decoration-results.json', pretty = TRUE, auto_unbox = TRUE)
 cat('Fusion native plot decorations: passed\n')

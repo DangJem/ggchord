@@ -11,7 +11,12 @@ ggchord_fusion_render_events <- function(render_events, connection_grobs, overla
       if (!is.null(event$bounds) && (!is.null(event$panel_id) || isTRUE(event$composition_background))) {
         later <- if (i < length(render_events)) Filter(Negate(is.null),
           lapply(render_events[seq.int(i+1L,length(render_events))], `[[`, "container_bounds")) else list()
-        children <- c(children, clip_regions(ggchord_fusion_rect_subtract(event$bounds, later)))
+        # Connections are composition geometry and must cross a child's
+        # ordinary margins to reach the neighbouring canvas. Native child
+        # geoms keep their own panel clip; later containers still cover them.
+        paint_bounds <- if (isTRUE(event$composition_background)) event$bounds else
+          event$container_bounds %||% event$bounds
+        children <- c(children, clip_regions(ggchord_fusion_rect_subtract(paint_bounds, later)))
       }
       children <- c(children, list(event$foreground),
         unname(overlay_grobs[names(overlay_grobs) == event$panel_id]))

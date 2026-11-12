@@ -483,3 +483,5 @@ Nested compositions retain independent headings and mm registration. Native
 foreground/background separation and inherited clipping keep translucent
 connections from accumulating repeated paints in explicit overlap mode.
 The source tables, selected intervals and palette mappings remain unchanged.
+
+Ordinary child margins do not act as masks for composition connections. In explicit overlap mode, links traverse the full container below its foreground; later containers retain the declared covering order. Use measured `route = "avoid"` for annotation clearance instead of relying on accidental margin gaps.

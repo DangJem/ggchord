@@ -10028,7 +10028,7 @@
     "parameter": "allow_overlap",
     "default": "FALSE",
     "type": "Logical",
-    "constraint": "Explicitly allow container overlap. Default FALSE fails on overlap. When TRUE, later panels paint over earlier panels. Connections use disjoint native grid clips to avoid accumulating translucent fills. This is deliberate placement, not global collision avoidance.",
+    "constraint": "Explicitly allow container overlap. Default FALSE fails on overlap. When TRUE, later panels paint over earlier panels. Connections use disjoint native grid clips to avoid accumulating translucent fills. Ordinary child margins do not break links; later containers still cover earlier content. This is deliberate placement, not global collision avoidance.",
     "source": "man/ggchord_fusion.Rd"
   },
   {

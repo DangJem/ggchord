@@ -31,7 +31,8 @@ explicit fonts. Impossible space constraints fail rather than dropping keys.}
 \item{allow_overlap}{Explicitly allow container overlap. Default FALSE fails
 on overlap. When TRUE, later panels paint over earlier panels. Connections
 use disjoint native grid clips to avoid accumulating translucent fills.
-This is deliberate placement, not global collision avoidance.}
+Ordinary child margins do not break links; later containers still cover
+earlier content. This is deliberate placement, not global collision avoidance.}
 
 \item{center_box}{Optional centre allocation: xmin, xmax, ymin, ymax as four
 fractions of the composition content area excluding outer decorations and

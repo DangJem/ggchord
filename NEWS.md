@@ -1,5 +1,11 @@
 # ggchord 0.27.0 (development)
 
+- Fixed artificial ribbon breaks in ordinary child margins under explicit
+  overlap. Composition connections traverse the complete child container,
+  still honour later covering containers and draw below native foregrounds.
+  Margins no longer act as undeclared masks; source fronts and observations
+  remain unchanged. Same-device single-paint checks cover these margin regions.
+
 - Composition `labs(title/subtitle/caption/tag)` and native plot Theme furniture
   now draw and reserve actual space, fixing previously accepted but invisible
   settings. Backgrounds and margins use native gtable measurement; child axes

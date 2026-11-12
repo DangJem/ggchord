@@ -145,3 +145,14 @@ check-fusion-decoration.R通过实际标题/副标题/图注/tag绘制、后加�
 两个实际透明绘制路径及不可容纳margin报错。v0.27.0-decoration-results.json
 与实际保存的PNG保留证据。复用已有Fusion最小API案例添加标题返回契约，未运行
 testthat或发布流程。正文/帮助/两语课程同步；其他长期工作继续。
+
+## 第八工作包：修复普通边距断带
+
+实际查看第七工作包PNG发现，重叠模式在根区域扣整个container、叶图却仅重画
+panel_bounds，普通边距被当成未声明mask。现叶图按完整container重画连接，仍
+扣后层容器、前景在上方，各区互斥而不重复alpha；原生子图geom保留自己的Coord
+裁剪。Source fronts/记录/观测数不变，普通Theme边距不承担科学筛选或关系裁断。
+
+复用check-fusion-decoration.R，在实测margin且避开文字/Guide的带内区域，与
+同设备单次绘制色块比较。普通canvas、margin及旧嵌套路径都通过；实际PNG已更新
+并查看，原来的断带消失。没有原样增加测试矩阵或运行包级检测。
