@@ -74,6 +74,9 @@ label across records. It is distinct from the number of text/glyph boxes.
 Text-feature footprint contacts and unregistered/outer decoration objects
 remain unchecked; their counts are not silently reported as zero. These
 measurements never move, hide or change input records.
+Degenerate annotation placeholders with coincident endpoints are not
+counted as leaders. Circular label visibility can additionally report
+\code{leader_text_status} for clear, detoured or unresolved static-text routes.
 }
 
 \section{Guide measurements}{

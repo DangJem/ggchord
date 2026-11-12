@@ -1,0 +1,123 @@
+{
+  "scope": "Original catalogue inputs; 10x8 inches, one PNG device. Contacts reported, not assumed zero; not a cross-application comparison.",
+  "detector_controls": "overlap, crossing and through-text detected; unmeasured feature contact remains NA",
+  "cases": {
+    "pSB1C3": {
+      "measured": true,
+      "n_source_labels": 10,
+      "n_visible_source_labels": 10,
+      "n_hidden_source_labels": 0,
+      "n_text_boxes": 91,
+      "n_text_objects": 29,
+      "n_leaders": 6,
+      "n_text_overlaps": 0,
+      "n_leader_crossings": 0,
+      "n_leaders_through_text": 0,
+      "n_label_outside_canvas": 0,
+      "mean_leader_length_mm": 18.3187,
+      "max_leader_length_mm": 28.2028,
+      "n_text_over_feature": null,
+      "width": 10,
+      "height": 8,
+      "file": "tools/long-term-audit/v0.27.0-quality-after-pSB1C3.png",
+      "measurement": "measured",
+      "visibility_reasons": {
+        "visible": 10
+      }
+    },
+    "pUC19": {
+      "measured": true,
+      "n_source_labels": 12,
+      "n_visible_source_labels": 12,
+      "n_hidden_source_labels": 0,
+      "n_text_boxes": 85,
+      "n_text_objects": 28,
+      "n_leaders": 6,
+      "n_text_overlaps": 0,
+      "n_leader_crossings": 0,
+      "n_leaders_through_text": 0,
+      "n_label_outside_canvas": 0,
+      "mean_leader_length_mm": 12.7721,
+      "max_leader_length_mm": 20.4136,
+      "n_text_over_feature": null,
+      "width": 10,
+      "height": 8,
+      "file": "tools/long-term-audit/v0.27.0-quality-after-pUC19.png",
+      "measurement": "measured",
+      "visibility_reasons": {
+        "visible": 12
+      }
+    },
+    "pETDuet_1": {
+      "measured": true,
+      "n_source_labels": 23,
+      "n_visible_source_labels": 23,
+      "n_hidden_source_labels": 0,
+      "n_text_boxes": 128,
+      "n_text_objects": 39,
+      "n_leaders": 10,
+      "n_text_overlaps": 0,
+      "n_leader_crossings": 0,
+      "n_leaders_through_text": 0,
+      "n_label_outside_canvas": 0,
+      "mean_leader_length_mm": 22.592,
+      "max_leader_length_mm": 80.4954,
+      "n_text_over_feature": null,
+      "width": 10,
+      "height": 8,
+      "file": "tools/long-term-audit/v0.27.0-quality-after-pETDuet_1.png",
+      "measurement": "measured",
+      "visibility_reasons": {
+        "visible": 23
+      }
+    },
+    "pTRE_Tight_BI": {
+      "measured": true,
+      "n_source_labels": 18,
+      "n_visible_source_labels": 18,
+      "n_hidden_source_labels": 0,
+      "n_text_boxes": 146,
+      "n_text_objects": 38,
+      "n_leaders": 10,
+      "n_text_overlaps": 0,
+      "n_leader_crossings": 0,
+      "n_leaders_through_text": 0,
+      "n_label_outside_canvas": 0,
+      "mean_leader_length_mm": 40.9504,
+      "max_leader_length_mm": 82.8636,
+      "n_text_over_feature": null,
+      "width": 10,
+      "height": 8,
+      "file": "tools/long-term-audit/v0.27.0-quality-after-pTRE_Tight_BI.png",
+      "measurement": "measured",
+      "visibility_reasons": {
+        "visible": 18
+      }
+    },
+    "pSpCas9_BB_2A_GFP_PX458": {
+      "measured": true,
+      "n_source_labels": 22,
+      "n_visible_source_labels": 22,
+      "n_hidden_source_labels": 0,
+      "n_text_boxes": 152,
+      "n_text_objects": 38,
+      "n_leaders": 14,
+      "n_text_overlaps": 0,
+      "n_leader_crossings": 0,
+      "n_leaders_through_text": 0,
+      "n_label_outside_canvas": 0,
+      "mean_leader_length_mm": 26.0528,
+      "max_leader_length_mm": 71.3574,
+      "n_text_over_feature": null,
+      "width": 10,
+      "height": 8,
+      "file": "tools/long-term-audit/v0.27.0-quality-after-pSpCas9_BB_2A_GFP_PX458.png",
+      "measurement": "measured",
+      "visibility_reasons": {
+        "visible": 22
+      }
+    }
+  },
+  "comparison_scope": "SnapGene is a visual reference only; matched external exports are not required under the clarified user instruction.",
+  "unverified": ["text-feature footprint contacts", "release device/platform matrix"]
+}

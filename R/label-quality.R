@@ -14,6 +14,7 @@ ggchord_label_quality <- function(layout, text, built, context) {
     out <- data.frame(leader_id = paste(id, component, source, part, sep = '/'),
       layer_id = id, source_row = source, x0 = a$x, y0 = a$y, x1 = b$x, y1 = b$y)
     out <- out[stats::complete.cases(out[c('x0', 'y0', 'x1', 'y1')]), , drop = FALSE]
+    out <- out[out$x0 != out$x1 | out$y0 != out$y1, , drop = FALSE]
     if (nrow(out)) segments[[length(segments)+1L]] <<- out
   }
   for (id in names(layout$layer_geometry)) {

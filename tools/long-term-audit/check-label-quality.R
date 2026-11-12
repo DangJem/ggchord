@@ -2,9 +2,12 @@
 pkgload::load_all(quiet = TRUE)
 library(dplyr)
 folder <- 'tools/long-term-audit'
+arguments <- commandArgs(trailingOnly = TRUE)
+after <- '--after' %in% arguments
+prefix <- if (after) 'v0.27.0-quality-after-' else 'v0.27.0-quality-'
 measure <- function(plot, id, width = 10, height = 8) {
-  path <- file.path(folder, paste0('v0.27.0-quality-', id, '.png'))
-  grDevices::png(path, width = width, height = height, units = 'in', res = 110, type = 'quartz')
+  path <- file.path(folder, paste0(prefix, id, '.png'))
+  ggchord_diagnostic_device(path, 'png', width, height, 110)
   on.exit(grDevices::dev.off())
   table <- ggplot2::ggplotGrob(plot)
   grid::grid.newpage(); grid::grid.draw(table)
@@ -24,7 +27,8 @@ measure <- function(plot, id, width = 10, height = 8) {
   })
   text <- ggchord_rbind_fill(texts) %||% data.frame()
   result <- ggchord_label_quality(layout, text, built, context)
-  jsonlite::write_json(result, file.path(folder, paste0('v0.27.0-quality-', id, '.json')),
+  result$label_visibility <- ggchord_label_visibility(layout)
+  jsonlite::write_json(result, file.path(folder, paste0(prefix, id, '.json')),
     auto_unbox = TRUE, pretty = TRUE, na = 'null')
   c(result$summary, list(width = width, height = height, file = path,
     measurement = context$status, visibility_reasons = as.list(table(ggchord_label_visibility(layout)$reason))))
@@ -45,10 +49,14 @@ empty$layer_geometry <- list(format = list(gene_label_repel = data.frame(
   x = c(.1, .1), y = c(.2, .8), xend = c(.8, .8), yend = c(.8, .2))))
 result <- ggchord_label_quality(empty, boxes, mock, context)
 stopifnot(result$summary$n_leader_crossings == 1L, result$summary$n_leaders_through_text > 0L)
+empty$layer_geometry$format$gene_label_repel$xend <- empty$layer_geometry$format$gene_label_repel$x
+empty$layer_geometry$format$gene_label_repel$yend <- empty$layer_geometry$format$gene_label_repel$y
+result <- ggchord_label_quality(empty, boxes, mock, context)
+stopifnot(result$summary$n_leaders == 0L, result$summary$n_leaders_through_text == 0L)
 objects <- c('pSB1C3', 'pUC19', 'pBR322', 'pBluescript_II_SK_plus', 'pET_28a_plus',
   'pETDuet_1', 'pDONR221', 'pcDNA3_1_plus', 'pTRE_Tight_BI', 'pTRIPZ', 'pCAMBIA1300',
   'pEarleyGate_201', 'pSpCas9_BB_2A_GFP_PX458')
-requested <- commandArgs(trailingOnly = TRUE)
+requested <- setdiff(arguments, '--after')
 if (length(requested)) objects <- intersect(objects, requested)
 results <- list()
 for (id in objects) {
@@ -73,5 +81,6 @@ jsonlite::write_json(list(scope = 'Original catalogue inputs; 10x8 inches, one P
   detector_controls = 'overlap, crossing and through-text detected; unmeasured feature contact remains NA',
   cases = results, comparison_scope = 'SnapGene is a visual reference only; matched external exports are not required under the clarified user instruction.',
   unverified = c('text-feature footprint contacts', 'release device/platform matrix')),
-  file.path(folder, 'v0.27.0-label-quality-results.json'), auto_unbox = TRUE, pretty = TRUE, na = 'null')
+  file.path(folder, if (after) 'v0.27.0-label-quality-after-results.json' else 'v0.27.0-label-quality-results.json'),
+  auto_unbox = TRUE, pretty = TRUE, na = 'null')
 cat('Label quality observations recorded\n')

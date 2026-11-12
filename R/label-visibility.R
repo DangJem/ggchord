@@ -27,7 +27,8 @@ ggchord_label_visibility <- function(layout) {
         text_x=scalar('text_x',scalar('x')),text_y=scalar('text_y',scalar('y')),
         anchor_x=scalar('anchor_x'),anchor_y=scalar('anchor_y'),
         size=scalar('size'),side=scalar('outer_annotation_region',NA_character_),
-        track=scalar('outer_track'),leader_crossings=scalar('leader_crossing_count'),stringsAsFactors=FALSE)
+        track=scalar('outer_track'),leader_crossings=scalar('leader_crossing_count'),
+        leader_text_status=scalar('leader_text_status',NA_character_),stringsAsFactors=FALSE)
     }
   }
   ggchord_restore_instance_data(ggchord_rbind_fill(rows) %||% data.frame(),layout$display_instances)

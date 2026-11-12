@@ -1,5 +1,12 @@
 # ggchord 0.27.0 (development)
 
+- Fixed circular exterior annotation leaders passing through origin-axis or
+  inner feature text. Collided paths now receive bounded static-text detours
+  while keeping their real root and final label attachment; unresolved routes
+  remain reported. Removed unused zero-length leader placeholders, which could
+  produce misleading contacts or accidental cap marks. Scientific inputs,
+  label contents and uncollided paths remain unchanged.
+
 - Added measured `label_quality` evidence to `diagnose_ggchord()`: registered
   text-object contacts, annotation-leader crossings/through-text contacts,
   canvas bounds and physical leader lengths. Unchecked feature contacts stay

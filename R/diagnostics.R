@@ -57,7 +57,9 @@ ggchord_diagnostic_text_styles <- function(data, layer) {
     apply_style('track_axis_text', p$axis_text_params, overrides)
     apply_style('track_axis_title', p$axis_title_params, overrides)
   } else if (inherits(layer$geom, 'GeomChordAxis') || inherits(layer$geom, 'GeomChordGeneLabelRepel')) {
-    apply_style(c('text', 'arc_text'), layer$geom_params$text_params)
+    style <- layer$geom_params$text_params
+    if (inherits(layer$geom, 'GeomChordGeneLabelRepel') && isTRUE(style$.ggchord_resolved_size)) style$size <- NULL
+    apply_style(c('text', 'arc_text'), style)
   }
   data
 }
@@ -202,6 +204,9 @@ ggchord_diagnostic_colours <- function(built, colour_vision) {
 #' Text-feature footprint contacts and unregistered/outer decoration objects
 #' remain unchecked; their counts are not silently reported as zero. These
 #' measurements never move, hide or change input records.
+#' Degenerate annotation placeholders with coincident endpoints are not
+#' counted as leaders. Circular label visibility can additionally report
+#' `leader_text_status` for clear, detoured or unresolved static-text routes.
 #' @md
 #' @export
 #' @section Guide measurements:

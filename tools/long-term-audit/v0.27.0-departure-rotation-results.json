@@ -1,0 +1,23 @@
+{
+  "status": "passed",
+  "rotation": 35,
+  "direction": "counterclockwise",
+  "summary": {
+    "measured": true,
+    "n_source_labels": 7,
+    "n_visible_source_labels": 7,
+    "n_hidden_source_labels": 0,
+    "n_text_boxes": 106,
+    "n_text_objects": 30,
+    "n_leaders": 1,
+    "n_text_overlaps": 0,
+    "n_leader_crossings": 0,
+    "n_leaders_through_text": 0,
+    "n_label_outside_canvas": 0,
+    "mean_leader_length_mm": 43.9593,
+    "max_leader_length_mm": 43.9593,
+    "n_text_over_feature": "NA"
+  },
+  "source_inputs_unchanged": true,
+  "scope": "single directed rotation/reversal control; no device matrix"
+}
