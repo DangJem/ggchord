@@ -17,3 +17,16 @@ pinned originals with `python3 data-raw/prepare-genome-alignment-inputs.py`.
   Chain encodes alignment blocks/gaps, not nucleotide mismatch characters.
 
 No aligner, assembly, lift-over or homology detection is run by the readers.
+
+- `nucmer.delta` and `promer.delta` are unchanged upstream MUMmer examples at
+  tag v4.0.0rc1. They contain existing alignment coordinates, error counts and
+  signed gap scripts, not source FASTA strings. The preamble's historical
+  FASTA paths are provenance only; the reader never opens or retrieves them.
+  The nucleotide example's original organism name is B_anthracis; the protein
+  comparison uses Drosophila. This is file-format/coordinate validation, not
+  experimental work, sequence design or a newly run comparison.
+  `DELTA-TOOLS-LICENSE.md` retains the exact upstream Artistic 2.0 notice.
+  No upstream implementation or executable is distributed in ggchord.
+  `read_delta()` requires an existing user-selected show-coords executable.
+  PROMER identity is an AA alignment statistic, while source endpoints and
+  complete source lengths remain bp; these units must not be conflated.

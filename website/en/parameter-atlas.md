@@ -2816,6 +2816,24 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 </details>
 
+<span id="api-read_delta"></span>
+<details><summary><code>read_delta()</code></summary>
+
+
+[Full reference](reference/read_delta.html)
+
+
+| Parameter | Signature default | Type/value rule | Meaning, range and constraints |
+| --- | --- | --- | --- |
+| `file` | `NULL` | Character path/identifier/vector; see constraints | Optional local path vector or glob patterns, before files. |
+| `files` | `NULL` | Character path/identifier/vector; see constraints | Optional additional delta paths or patterns. |
+| `executable` | `"show-coords"` | Character/enum; choices below | Existing show-coords executable name or path, default "show-coords". It must already be installed; no environment is modified. |
+| `query_ids` | `NULL` | Nullable R object; type/inheritance below | Optional explicit named source-ID maps, following read_chain(). Shared final IDs need explicit declaration on both sides and consistent full lengths. Defaults never auto-prefix IDs. |
+| `subject_ids` | `NULL` | Nullable R object; type/inheritance below | Optional explicit named source-ID maps, following read_chain(). Shared final IDs need explicit declaration on both sides and consistent full lengths. Defaults never auto-prefix IDs. |
+| `source_file` | `FALSE` | Logical | Add .source_file to ribbon rows, default FALSE. |
+
+</details>
+
 <span id="api-read_fasta_lengths"></span>
 <details><summary><code>read_fasta_lengths()</code></summary>
 

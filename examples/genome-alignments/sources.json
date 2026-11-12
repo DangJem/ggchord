@@ -21,5 +21,29 @@
     "sha256": "d4bbb0c4e5345e6f2508c3b93fb247fcb2db95783fb8a584c23cd88e3c03df6c",
     "retrieved": "2026-11-12",
     "transformation": "none; original permission notice"
+  },
+  {
+    "file": "nucmer.delta",
+    "url": "https://raw.githubusercontent.com/mummer4/mummer/v4.0.0rc1/docs/web/examples/data/nucmer.delta",
+    "sha256": "873a3f866c83d1de63b1509690294c33b5cca3c41f741c5961ac6b648f25bb8b",
+    "retrieved": "2026-11-12",
+    "transformation": "none; original bytes unchanged",
+    "license": "DELTA-TOOLS-LICENSE.md"
+  },
+  {
+    "file": "promer.delta",
+    "url": "https://raw.githubusercontent.com/mummer4/mummer/v4.0.0rc1/docs/web/examples/data/promer.delta",
+    "sha256": "8108b8b8cc4ea815c46bc98cd188d8e7a082bd449ade520f2ca8b31177ee213e",
+    "retrieved": "2026-11-12",
+    "transformation": "none; original bytes unchanged",
+    "license": "DELTA-TOOLS-LICENSE.md"
+  },
+  {
+    "file": "DELTA-TOOLS-LICENSE.md",
+    "url": "https://raw.githubusercontent.com/mummer4/mummer/v4.0.0rc1/LICENSE.md",
+    "sha256": "bfa1e6460e4086c49f80a22ee90305e11461c77983c20f2beaa480953a66fa05",
+    "retrieved": "2026-11-12",
+    "transformation": "none; original bytes unchanged",
+    "license": "DELTA-TOOLS-LICENSE.md"
   }
 ]

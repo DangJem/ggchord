@@ -10800,6 +10800,54 @@
     "source": "man/read_chain.Rd"
   },
   {
+    "api": "read_delta",
+    "parameter": "file",
+    "default": "NULL",
+    "type": "Character path/identifier/vector; see constraints",
+    "constraint": "Optional local path vector or glob patterns, before files.",
+    "source": "man/read_delta.Rd"
+  },
+  {
+    "api": "read_delta",
+    "parameter": "files",
+    "default": "NULL",
+    "type": "Character path/identifier/vector; see constraints",
+    "constraint": "Optional additional delta paths or patterns.",
+    "source": "man/read_delta.Rd"
+  },
+  {
+    "api": "read_delta",
+    "parameter": "executable",
+    "default": "\"show-coords\"",
+    "type": "Character/enum; choices below",
+    "constraint": "Existing show-coords executable name or path, default \"show-coords\". It must already be installed; no environment is modified.",
+    "source": "man/read_delta.Rd"
+  },
+  {
+    "api": "read_delta",
+    "parameter": "query_ids",
+    "default": "NULL",
+    "type": "Nullable R object; type/inheritance below",
+    "constraint": "Optional explicit named source-ID maps, following read_chain(). Shared final IDs need explicit declaration on both sides and consistent full lengths. Defaults never auto-prefix IDs.",
+    "source": "man/read_delta.Rd"
+  },
+  {
+    "api": "read_delta",
+    "parameter": "subject_ids",
+    "default": "NULL",
+    "type": "Nullable R object; type/inheritance below",
+    "constraint": "Optional explicit named source-ID maps, following read_chain(). Shared final IDs need explicit declaration on both sides and consistent full lengths. Defaults never auto-prefix IDs.",
+    "source": "man/read_delta.Rd"
+  },
+  {
+    "api": "read_delta",
+    "parameter": "source_file",
+    "default": "FALSE",
+    "type": "Logical",
+    "constraint": "Add .source_file to ribbon rows, default FALSE.",
+    "source": "man/read_delta.Rd"
+  },
+  {
     "api": "read_fasta_lengths",
     "parameter": "file",
     "default": "NULL",

@@ -2816,6 +2816,24 @@
 
 </details>
 
+<span id="api-read_delta"></span>
+<details><summary><code>read_delta()</code></summary>
+
+
+[完整参考](reference/read_delta.html)
+
+
+| 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
+| --- | --- | --- | --- |
+| `file` | `NULL` | 字符路径、标识或向量；见约束 | 可选本地路径向量或通配模式，在 files 之前读取。 |
+| `files` | `NULL` | 字符路径、标识或向量；见约束 | 可选的其他 delta 路径或通配模式。 |
+| `executable` | `"show-coords"` | 字符/枚举；取值见说明 | 已有 show-coords 可执行程序名称或路径，默认 "show-coords"。必须事先安装，不改动环境。 |
+| `query_ids` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 可选显式命名源 ID 映射，遵循 read_chain()。共享最终 ID 需要两侧显式声明且完整长度一致；默认不自动加前缀。 |
+| `subject_ids` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 可选显式命名源 ID 映射，遵循 read_chain()。共享最终 ID 需要两侧显式声明且完整长度一致；默认不自动加前缀。 |
+| `source_file` | `FALSE` | 逻辑值 | 是否向 ribbon 行添加 .source_file，默认 FALSE。 |
+
+</details>
+
 <span id="api-read_fasta_lengths"></span>
 <details><summary><code>read_fasta_lengths()</code></summary>
 

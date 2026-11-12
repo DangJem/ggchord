@@ -9,6 +9,7 @@
 | GenBank sequence with annotations | [Preserve record IDs and segments](#genbank) |
 | bedGraph or BigWig continuous signals | [Keep values and missing ranges explicit](#signals) |
 | VCF/BCF variants and structural breakpoints | [Retain original variant evidence](#variants) |
+| Existing delta results | [Keep native metrics and coordinate units distinct](#delta) |
 | Existing MAF or chain genomic alignments | [Preserve blocks and source coordinates](#genome-alignments) |
 | Existing R tables | [Map required fields](#adapters) |
 | GRanges or GInteractions | [Convert interval objects](#ranges) |
@@ -338,3 +339,36 @@ MAF retains the actual gapped characters and full declared source lengths. Negat
 The chain example explicitly selects source block 1, the source-backed NR_046654.1/chr3 relationship; upstream `_modified` format controls remain in the unchanged input and are not claimed as new biological observations. The three aligned exon blocks retain intervening gaps. Chain provides no mismatches or character cells, and a chain score is not Identity. Query maps to qaccver, target to saccver; original IDs remain separately traceable. Declare `sequence_unit` explicitly when its default bp is inappropriate.
 
 For two assemblies both named `chr1`, declare identities, for example `query_ids = c(chr1 = "assemblyB.chr1")` and `subject_ids = c(chr1 = "assemblyA.chr1")`. Defaults preserve IDs and reject ambiguous cross-role collisions; they never auto-prefix or merge assemblies. Full-length conflicts fail, and shared final IDs require explicit consistent declaration on both sides. This is source identity, separate from display instances. No pident, support count or complete source string is inferred from either format's endpoints.
+
+## Existing delta alignments {#delta}
+
+`read_delta()` requires an existing **show-coords** program; `DELTA_DECODER` can select its executable for this lesson. It reads existing NUCMER/PROMER results, never invokes an aligner or opens the historical FASTA paths in the file preamble. The unchanged upstream Drosophila example, pinned version, original permission notice and hashes are in `examples/genome-alignments/`. An absent executable skips this optional example; that is not successful decoding.
+
+```r
+delta_decoder <- Sys.getenv("DELTA_DECODER", "show-coords")
+if (nzchar(Sys.which(delta_decoder))) {
+  delta <- read_delta(
+    "examples/genome-alignments/promer.delta",
+    executable = delta_decoder, source_file = TRUE
+  )
+  observed_intervals <- delta$ribbon_data |>
+    filter(qaccver == "3210101")
+  displayed_ids <- unique(c(observed_intervals$qaccver, observed_intervals$saccver))
+  displayed_sources <- delta$seq_data |>
+    filter(accver %in% displayed_ids)
+
+  ggchord(displayed_sources) +
+    geom_seq(show.legend = FALSE) +
+    geom_seq_label() +
+    geom_link_ribbon(data = observed_intervals) +
+    coord_collinear() +
+    labs(
+      title = "Existing translated alignment intervals",
+      subtitle = "Drosophila source coordinates in bp; native identity in AA"
+    )
+}
+```
+
+This explicitly selected query remains the literal string `"3210101"`. Query/reference map to qaccver/saccver without shifting the original one-based directional endpoints. Every native output row is checked against its actual source header/endpoints before error counts, signed delta scripts and physical lines are attached. Full lengths come from source declarations, not the last alignment. Cross-role source-name collisions follow the explicit ID maps of `read_chain()`; no assembly identity is guessed.
+
+`pident` is the tool's reported percentage with its printed precision, not a value reconstructed from two endpoints. In PROMER it is an **AA alignment statistic**, while interval coordinates and full sequence lengths remain **bp**. Native similarity/stop percentages and frames remain separate. qspan/sspan are genomic span widths, not alignment-column counts; a BLAST `length`, read support and sequence characters are not manufactured. Original text and native output/messages remain in `report`. If the executable has no reliable version option, its version remains unknown in the reader report; record your prepared environment's provenance separately. The directed audit records the actual fixed tool source tag and executable checksum. No third-party executable or implementation is redistributed in ggchord.

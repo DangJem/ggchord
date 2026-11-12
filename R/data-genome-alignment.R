@@ -192,6 +192,16 @@ ggchord_alignment_rename <- function(ids, map, caller) {
   ids
 }
 
+ggchord_alignment_identity_maps <- function(query, subject, query_ids, subject_ids, caller) {
+  q <- stats::setNames(ggchord_alignment_rename(query, query_ids, caller), query)
+  s <- stats::setNames(ggchord_alignment_rename(subject, subject_ids, caller), subject)
+  overlap <- intersect(unname(q), unname(s))
+  if (length(overlap) && (any(!names(q)[q %in% overlap] %in% names(query_ids)) ||
+      any(!names(s)[s %in% overlap] %in% names(subject_ids)))) ggchord_stop(caller,
+        ': query and target IDs collide; explicitly declare query_ids/subject_ids for distinct assemblies or shared sources')
+  list(query = q, subject = s)
+}
+
 #' Read chain alignment blocks without inventing sequence characters
 #'
 #' Optional Biopython Bio.Align parses chain coordinates. Each block aligned
@@ -237,12 +247,8 @@ read_chain <- function(file = NULL, files = NULL, query_ids = NULL, subject_ids 
   blocks <- unlist(lapply(source$parsed$files, `[[`, 'blocks'), recursive = FALSE)
   q_original <- unique(vapply(blocks, function(b) b$sequences[[2L]]$accver, character(1)))
   s_original <- unique(vapply(blocks, function(b) b$sequences[[1L]]$accver, character(1)))
-  q_names <- stats::setNames(ggchord_alignment_rename(q_original, query_ids, caller), q_original)
-  s_names <- stats::setNames(ggchord_alignment_rename(s_original, subject_ids, caller), s_original)
-  overlap <- intersect(unname(q_names), unname(s_names))
-  if (length(overlap) && (any(!names(q_names)[q_names %in% overlap] %in% names(query_ids)) ||
-      any(!names(s_names)[s_names %in% overlap] %in% names(subject_ids)))) ggchord_stop(caller,
-        ': query and target IDs collide; explicitly declare query_ids/subject_ids for distinct assemblies or shared sources')
+  maps <- ggchord_alignment_identity_maps(q_original, s_original, query_ids, subject_ids, caller)
+  q_names <- maps$query; s_names <- maps$subject
   dictionary <- list(); links <- list()
   for (i in seq_along(source$parsed$files)) for (block in source$parsed$files[[i]]$blocks) {
     if (length(block$sequences) != 2L) ggchord_stop(caller, ': chain decoder must return exactly two source sequences')

@@ -1454,6 +1454,19 @@
     }
   },
   {
+    "name": "read_delta",
+    "owner": "ggchord",
+    "alias": "",
+    "parameters": {
+      "file": "NULL",
+      "files": "NULL",
+      "executable": "\"show-coords\"",
+      "query_ids": "NULL",
+      "subject_ids": "NULL",
+      "source_file": "FALSE"
+    }
+  },
+  {
     "name": "read_fasta_lengths",
     "owner": "ggchord",
     "alias": "",

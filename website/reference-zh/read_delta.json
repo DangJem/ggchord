@@ -1,0 +1,14 @@
+{
+  "source_sha256": "4dde74176037edd31e6f65c4ef2e71e4093c5a91c22d5df24c6ee27f40187397",
+  "translations": {
+    "0": "通过可选命令行解码器读取已有 delta 比对",
+    "1": "可选本地路径向量或通配模式，在 files 之前读取。",
+    "2": "可选的其他 delta 路径或通配模式。",
+    "3": "已有 show-coords 可执行程序名称或路径，默认 \"show-coords\"。必须事先安装，不改动环境。",
+    "4": "可选显式命名源 ID 映射，遵循 ⟦0⟧。共享最终 ID 需要两侧显式声明且完整长度一致；默认不自动加前缀。",
+    "5": "是否向 ribbon 行添加 .source_file，默认 FALSE。",
+    "6": "列表包含 seq_data、ribbon_data 和 report。报告保留原始文本/表头、原生解码输出/消息、可执行程序及确切参数。工具无法报告版本时不猜版本，应另记录准备环境的版本。源行保持独立，不制造源 HSP ID 或观测计数。解析是显式数据准备，不在绘制时执行。",
+    "7": "以固定 -THld 参数调用现有 show-coords 读取 NUCMER/PROMER delta。不运行比对、筛选、排序、合并或缺失字符重建。Delta 序言中的源 FASTA 路径作为元数据保留，不打开或下载。",
+    "8": "Query 映射 qaccver，reference 映射 saccver。原一基闭区间方向端点及完整长度与工具输出核对，不平移或推断长度。看似数字的原 ID 保持字符串。源错误计数、有符号 delta 脚本（含末尾零）及物理比对行/表头行保留在每行中；不只凭脚本重建序列字符。pident 是解码器报告的百分比 identity，保留打印精度，不由端点推断。NUCMER 表示核苷酸比对，PROMER 表示氨基酸比对，但源端点及完整长度坐标仍用 bp。Similarity、stop 百分比和 frame 为独立原生字段。qspan/sspan 为源区间宽度，不是对齐列数；不制造 BLAST length 或 read-support 字段。"
+  }
+}

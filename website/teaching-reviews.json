@@ -3475,5 +3475,31 @@
       "en": "optional Biopython; MAF cells and chain intervals",
       "zh": "可选 Biopython；MAF 字符单元与 chain 区间"
     }
+  },
+  "read_delta": {
+    "level": "L2",
+    "page": "formats",
+    "anchor": "delta",
+    "reason": "Unchanged source-backed translated delta input and native metric/coordinate distinction; direct two-mode verification",
+    "modes": "existing NUCMER/PROMER results; no aligner",
+    "parameters": [
+      "file",
+      "files",
+      "executable",
+      "query_ids",
+      "subject_ids",
+      "source_file"
+    ],
+    "purpose": {
+      "en": "Read existing delta alignments through an optional native decoder",
+      "zh": "通过可选原生解码器读取已有 delta 比对"
+    },
+    "alias_of": "",
+    "case": "formats",
+    "scope": "source interval pairs and native metrics, without character reconstruction",
+    "modes_localized": {
+      "en": "optional show-coords; bp coordinates and declared alignment metric unit",
+      "zh": "可选 show-coords；bp 坐标与独立声明的比对统计单位"
+    }
   }
 }

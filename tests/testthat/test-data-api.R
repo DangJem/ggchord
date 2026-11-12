@@ -117,6 +117,15 @@ test_that("import helpers parse minimal files with explicit coordinate conventio
     writeLines(c("chain 1 A 8 + 0 4 B 8 - 0 4 1", "4"), chain)
     expect_equal(nrow(read_chain(chain, python = import_python)$ribbon_data), 1L)
   }
+  delta_decoder <- Sys.getenv("DELTA_DECODER", "show-coords")
+  if (nzchar(Sys.which(delta_decoder))) {
+    delta <- tempfile(fileext = ".delta")
+    on.exit(unlink(delta), add = TRUE)
+    # Format-only source evidence; no aligner or biological inference.
+    writeLines(c("reference.fna query.fna", "NUCMER", ">A B 8 8",
+      "1 4 8 5 0 0 0", "0"), delta)
+    expect_equal(nrow(read_delta(delta, executable = delta_decoder)$ribbon_data), 1L)
+  }
   mapping <- read_paf(paf)
   expect_equal(unname(unlist(mapping[c("qstart", "qend", "sstart", "send")])),
     c(100, 200, 400, 300))

@@ -9,6 +9,7 @@
 | GenBank 单序列及注释 | [保留原始记录与分段](#genbank) |
 | bedGraph 或 BigWig 连续信号 | [显式保留值和缺失区间](#signals) |
 | VCF/BCF 变异和结构断点 | [保留原始变异证据](#variants) |
+| 已有 delta 结果 | [区分原生统计和坐标单位](#delta) |
 | 已有 MAF 或 chain 基因组比对 | [保留块及源坐标](#genome-alignments) |
 | 已有 R 表格 | [映射必需字段](#adapters) |
 | GRanges 或 GInteractions | [直接转换区间对象](#ranges) |
@@ -337,3 +338,36 @@ MAF 保留实际带 gap 字符和声明的完整源长度，负链分量映射�
 Chain 示例显式选择源块 1，即有来源的 NR_046654.1/chr3 关系；上游 `_modified` 格式对照仍在未改动输入中，不冒充新生物学观测。三个 exon 对齐块保留中间缺口。Chain 不提供错配或字符单元，chain 分数不是 Identity。Query 映射 qaccver，target 映射 saccver，原 ID 独立可追溯。默认 bp 不适用时应显式声明 `sequence_unit`。
 
 两套组装都叫 `chr1` 时须声明身份，例如 `query_ids = c(chr1 = "assemblyB.chr1")`、`subject_ids = c(chr1 = "assemblyA.chr1")`。默认保留 ID，并拒绝跨角色歧义，不自动加前缀或合并组装。完整长度冲突明确失败；最终共享 ID 要求两侧显式且一致地声明。这是源身份，与显示实例分开。两种格式都不会仅由端点推断 pident、支持计数或完整源字符串。
+
+## 已有 delta 比对 {#delta}
+
+`read_delta()` 需要已有 **show-coords** 程序；本课程可通过 `DELTA_DECODER` 选择其可执行文件。读取的是已有 NUCMER/PROMER 结果，不调用 aligner，也不打开序言中的历史 FASTA 路径。未改动的上游 Drosophila 示例、固定版本、原始许可及哈希保留在 `examples/genome-alignments/`。程序缺失时跳过可选示例，不代表成功解码。
+
+```r
+delta_decoder <- Sys.getenv("DELTA_DECODER", "show-coords")
+if (nzchar(Sys.which(delta_decoder))) {
+  delta <- read_delta(
+    "examples/genome-alignments/promer.delta",
+    executable = delta_decoder, source_file = TRUE
+  )
+  observed_intervals <- delta$ribbon_data |>
+    filter(qaccver == "3210101")
+  displayed_ids <- unique(c(observed_intervals$qaccver, observed_intervals$saccver))
+  displayed_sources <- delta$seq_data |>
+    filter(accver %in% displayed_ids)
+
+  ggchord(displayed_sources) +
+    geom_seq(show.legend = FALSE) +
+    geom_seq_label() +
+    geom_link_ribbon(data = observed_intervals) +
+    coord_collinear() +
+    labs(
+      title = "Existing translated alignment intervals",
+      subtitle = "Drosophila source coordinates in bp; native identity in AA"
+    )
+}
+```
+
+这里显式选取的 query 仍是字面字符串 `"3210101"`。Query/reference 映射 qaccver/saccver，原一基有方向端点不再次平移。每条原生输出先与实际源表头和端点核对，再关联错误计数、有符号 delta 脚本和物理行号。完整长度来自源声明，不取最后比对端点。跨角色同名源遵循 `read_chain()` 的显式 ID 映射，不猜组装身份。
+
+`pident` 为工具报告的百分比及其打印精度，不由两个端点重建。PROMER 中它是 **AA 比对统计**，而区间坐标和完整源长度仍是 **bp**。原生 similarity/stop 百分比及 frame 独立保留。qspan/sspan 是基因组跨度，不是对齐列数；不制造 BLAST `length`、read support 或字符。原文、原生输出及消息保留在 `report`。若程序没有可靠版本选项，读取报告中的版本保持未知，应另行记录准备环境的来源。定向检查记录了实际固定工具源码 tag 和可执行文件校验和。ggchord 不重新分发第三方程序或实现。

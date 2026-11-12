@@ -1,5 +1,13 @@
 # ggchord 0.27.0 (development)
 
+- Added `read_delta()` to read existing NUCMER/PROMER results through an
+  optional user-selected show-coords executable, without running an aligner.
+  Native output is matched to original directional source coordinates and
+  full lengths before physical rows, error fields and signed gap scripts are
+  attached. Reported Identity retains native precision; PROMER AA identity
+  remains distinct from its bp source coordinates. No aligned characters,
+  BLAST column counts or read support are invented.
+
 - Added optional Biopython bridges `read_maf()` and `read_chain()` for existing
   genomic alignments. MAF retains exact symbols, gaps and directional source
   positions per file/block; chain retains separate aligned intervals across
