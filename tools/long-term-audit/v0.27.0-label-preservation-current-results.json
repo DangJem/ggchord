@@ -1,0 +1,83 @@
+{
+  "status": "passed recorded layout preservation comparisons",
+  "directed_endpoint_pairs_preserved": 40,
+  "input_json_sha256": {
+    "v0.27.0-label-size-adaptive-results.json": "3845111a45bbff4f689df5131581ab874282a5eefea9f80db2f3bd029dc5af17",
+    "v0.27.0-label-size-adaptive-current-results.json": "6604ef7aa13514c1e4384cd675347beaeb3558665e325a73bda9429ad0a2e328"
+  },
+  "comparisons": {
+    "adaptive-pUC19/compact": {
+      "source_labels_and_native_positions_anchors_sizes_preserved": true,
+      "directed_endpoint_pairs_preserved": 9,
+      "quality": {
+        "measured": true,
+        "n_source_labels": 12,
+        "n_visible_source_labels": 12,
+        "n_hidden_source_labels": 0,
+        "n_text_boxes": 47,
+        "n_text_objects": 14,
+        "n_leaders": 9,
+        "n_text_overlaps": 0,
+        "n_leader_crossings": 0,
+        "n_leaders_through_text": 0,
+        "n_label_outside_canvas": 0,
+        "mean_leader_length_mm": 10.2283,
+        "max_leader_length_mm": 15.9385,
+        "n_feature_polygons": 9,
+        "n_feature_parts_unchecked": 12,
+        "n_text_over_feature": 0,
+        "n_text_feature_unresolved": 0,
+        "n_text_on_own_feature": 3
+      }
+    },
+    "adaptive-pTRE_Tight_BI/compact": {
+      "source_labels_and_native_positions_anchors_sizes_preserved": true,
+      "directed_endpoint_pairs_preserved": 14,
+      "quality": {
+        "measured": true,
+        "n_source_labels": 18,
+        "n_visible_source_labels": 18,
+        "n_hidden_source_labels": 0,
+        "n_text_boxes": 82,
+        "n_text_objects": 20,
+        "n_leaders": 14,
+        "n_text_overlaps": 0,
+        "n_leader_crossings": 0,
+        "n_leaders_through_text": 0,
+        "n_label_outside_canvas": 0,
+        "mean_leader_length_mm": 22.0754,
+        "max_leader_length_mm": 44.3243,
+        "n_feature_polygons": 16,
+        "n_feature_parts_unchecked": 4,
+        "n_text_over_feature": 0,
+        "n_text_feature_unresolved": 0,
+        "n_text_on_own_feature": 0
+      }
+    },
+    "adaptive-pETDuet_1/compact": {
+      "source_labels_and_native_positions_anchors_sizes_preserved": true,
+      "directed_endpoint_pairs_preserved": 17,
+      "quality": {
+        "measured": true,
+        "n_source_labels": 23,
+        "n_visible_source_labels": 23,
+        "n_hidden_source_labels": 0,
+        "n_text_boxes": 104,
+        "n_text_objects": 26,
+        "n_leaders": 17,
+        "n_text_overlaps": 0,
+        "n_leader_crossings": 0,
+        "n_leaders_through_text": 0,
+        "n_label_outside_canvas": 0,
+        "mean_leader_length_mm": 21.321,
+        "max_leader_length_mm": 57.1217,
+        "n_feature_polygons": 21,
+        "n_feature_parts_unchecked": 4,
+        "n_text_over_feature": 0,
+        "n_text_feature_unresolved": 0,
+        "n_text_on_own_feature": 5
+      }
+    }
+  },
+  "scope": "Recorded three-source compact fixed/adaptive profiles only; not arbitrary size or ink certification"
+}
