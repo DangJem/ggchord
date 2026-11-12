@@ -1,0 +1,12 @@
+{
+  "source_sha256": "aa204d0d7ccca0d216c5dd5891ab9701a72a8b66d55bbba54b66ef463a29925f",
+  "translations": {
+    "0": "精确映射对齐列与源位置",
+    "1": "⟦0⟧ 返回的对齐长表。",
+    "2": "单个对齐行 ID，即使其 ⟦0⟧ 使用不同名称。",
+    "3": "数值位置，必须为正整数或 NA。",
+    "4": "FALSE 将对齐列映射到源位置；TRUE 将源位置映射到对齐列。",
+    "5": "数据框，含 input_position、accver、alignment_column、source_accver、source_position、is_gap 和 matched。已知 gap 列的 matched 为 TRUE、source_position 为 NA；不可用位置的 matched 为 FALSE。",
+    "6": "在一个对齐行中查找已有单元，不跨 gap 或已删除列插值。可先用普通数据操作筛选对齐表，再将查找限制在保留窗口。"
+  }
+}

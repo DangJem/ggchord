@@ -241,3 +241,18 @@ test_that("cleaning retains one-base inclusive gene and ribbon intervals", {
   expect_equal(cleaned$ribbon_data$qstart, cleaned$ribbon_data$qend)
   expect_equal(cleaned$gene_data$start, cleaned$gene_data$end)
 })
+
+
+test_that("aligned character input keeps gap columns and exact source lookup", {
+  # Explicit synthetic format input, not biological alignment evidence.
+  file <- tempfile(fileext = ".fa")
+  on.exit(unlink(file), add = TRUE)
+  writeLines(c(">A", "AC-G", ">B", "ACTG"), file)
+  cells <- read_aligned_fasta(file, "DNA")
+  gap <- map_alignment_position(cells, "A", 3)
+  expect_true(gap$matched && gap$is_gap && is.na(gap$source_position))
+  expect_equal(map_alignment_position(cells, "A", 3, inverse = TRUE)$alignment_column, 4)
+  p <- ggplot2::ggplot(cells, aes(alignment_column, accver, label = symbol)) +
+    geom_residue()
+  expect_s3_class(ggplot2::ggplotGrob(p), "gtable")
+})

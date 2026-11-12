@@ -11,7 +11,8 @@ length from features, verifies homology experimentally, or adds plot layers.
 \details{
 \describe{
 \item{Read}{The \code{read_*()} functions parse local files. Both
-\code{file} and \code{files} accept path vectors and glob patterns. When
+\code{file} and \code{files}, when both are exposed by a reader, accept
+path vectors and glob patterns. When
 both are supplied, \code{file} precedes \code{files}; matches expand in
 pattern order, and each normalized path is read once, retaining its first
 supplied spelling. Missing, empty, unmatched or directory paths fail.
@@ -146,6 +147,19 @@ protein search uses the standard codon table without alternative starts,
 splicing or circular-origin protein matches. Source \code{geneticCode}
 metadata is not interpreted as a selectable translation table. Use exact DNA
 mode or an external code-aware analysis for nonstandard translation.
+}
+
+\section{Character alignments}{
+
+\code{\link[=read_aligned_fasta]{read_aligned_fasta()}} is a single-alignment, single-file reader; it does
+not concatenate independent alignments or expose a files argument.
+\code{\link[=as_ggchord_alignment]{as_ggchord_alignment()}} distinguishes alignment columns from nullable
+source positions. Gaps consume columns only. Default positions refer to
+ungapped input fragments, not complete genomes. Explicit source metadata
+can verify supplied characters; it does not independently establish homology.
+\code{\link[=map_alignment_position]{map_alignment_position()}} performs exact lookups without interpolation.
+\code{\link[=geom_residue]{geom_residue()}} draws local cells in ordinary Cartesian ggplots, outside
+the biological backbone Coord pipeline. No new alignment is computed.
 }
 
 \seealso{

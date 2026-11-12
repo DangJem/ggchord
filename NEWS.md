@@ -1,3 +1,21 @@
+# ggchord 0.21.0.9000
+
+- Added `as_ggchord_alignment()` and `read_aligned_fasta()` for existing
+  DNA/RNA/AA aligned characters. They preserve gap columns, case and provenance,
+  with exact nullable source positions and explicitly declared origins/strands.
+  Optional full forward strings verify the supplied source coordinates and
+  characters, including negative-strand nucleotide complementation.
+- Added `map_alignment_position()` for exact source/column lookup in a selected
+  alignment row or filtered window. Gaps and unavailable positions remain
+  distinct; no interpolation or missing alignment evidence is manufactured.
+- Added `geom_residue()` for local character cells in ordinary Cartesian
+  ggplots. Actual glyph and cell dimensions are measured at drawing time;
+  insufficient space uses explicit tile/error policies rather than shrinking
+  fonts. Standard mapping, styles and user scales remain independent.
+- Added source-backed nucleotide/protein alignment inputs and local workflows.
+  These features do not run an aligner, infer complete genome coordinates,
+  translate CDS, decode CIGAR, or project characters through backbone Coords.
+
 # ggchord 0.20.0.9000
 
 - `read_fasta_lengths(keep_sequence = TRUE)` optionally retains actual FASTA

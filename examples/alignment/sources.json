@@ -1,0 +1,29 @@
+[
+  {
+    "file": "opuntia.aln",
+    "url": "https://raw.githubusercontent.com/biopython/biopython/master/Doc/examples/opuntia.aln",
+    "retrieved": "2026-11-12",
+    "sha256": "294738d4f0061d8706cb6206903a689428ec06b094255eb518088c59ccd69b0b",
+    "transformation": "Unchanged original bytes",
+    "output": "opuntia-aligned.fasta",
+    "alphabet": "DNA",
+    "output_transformation": "Concatenate unchanged CLUSTAL record blocks; write FASTA. Preserve full source IDs, case, gap columns and record order. No new alignment."
+  },
+  {
+    "file": "protein.aln",
+    "url": "https://raw.githubusercontent.com/biopython/biopython/master/Tests/Clustalw/protein.aln",
+    "retrieved": "2026-11-12",
+    "sha256": "61cf11d97a68848248f78677228319bbede85cbd7f5a0c1f299c61369e9b6a19",
+    "transformation": "Unchanged original bytes",
+    "output": "protein-aligned.fasta",
+    "alphabet": "AA",
+    "output_transformation": "Concatenate unchanged CLUSTAL record blocks; write FASTA. Preserve full source IDs, case, gap columns and record order. No new alignment."
+  },
+  {
+    "file": "BIOPYTHON-LICENSE.rst",
+    "url": "https://raw.githubusercontent.com/biopython/biopython/master/LICENSE.rst",
+    "retrieved": "2026-11-12",
+    "sha256": "ce261228bf68b0239cecbc7c0a9004d315c0bc70150930a3fd6d60da6f66dd56",
+    "transformation": "Unchanged original bytes"
+  }
+]
