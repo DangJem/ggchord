@@ -3,7 +3,7 @@
     "formats": {
       "result": "success",
       "chunks": ["setup", "adapters", "formats", "formatpaf", "drawpaf", "genbank", "frontimportgr", "frontimportgi"],
-      "raw_blocks": 12,
+      "raw_blocks": 13,
       "isolation": "fresh R process, separate documentation environment",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     }

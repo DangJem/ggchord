@@ -11,6 +11,7 @@
 | VCF/BCF 变异和结构断点 | [保留原始变异证据](#variants) |
 | 已有蛋白 signature 注释 | [保留 AA 位置及源分数](#protein-signatures) |
 | 已有 feature 对及组 | [保留原关系与成员](#feature-relations) |
+| BAM/CRAM 已比对 reads | [使用成熟覆盖度桥接](#aligned-reads) |
 | 已有 delta 结果 | [区分原生统计和坐标单位](#delta) |
 | 已有 MAF 或 chain 基因组比对 | [保留块及源坐标](#genome-alignments) |
 | 已有 R 表格 | [映射必需字段](#adapters) |
@@ -437,3 +438,37 @@ groups$membership |>
 `pairs` 接受两个 ID 及可选分数；`named_groups` 将第一列保留为原生字符组 ID，包括数字状 ID；`groups` 将全部字段作为成员，仅记录文件内组索引。成员关系不会展开为全体两两连接。重复、单成员组、成员顺序、原字段及物理行均保留。
 
 可选 `feature_data` 按唯一 `feature_id` 精确匹配，不修改大小写、版本或前缀。成对示例与组示例有不同原始命名空间及配套位置表。缺失 ID 默认报错，`unmatched = "report"` 保留原行并标记不完整映射；重复 feature ID 的歧义始终报错。没有位置时仍返回全部关系，不生成映射连接。注释链向单独保留，不据此赋予比对方向；分段注释需要显式连续锚点表。不推断完整长度、Identity、支持度或源字符。
+
+## 已比对 reads：可选覆盖度桥接 {#aligned-reads}
+
+使用可选 **GenomicAlignments**、**Rsamtools** 和 **GenomicRanges** 读取已有 BAM，显式选择过滤与计数口径，再由 ggchord 绘制信号。本例使用依赖包中未改动的果蝇 RNA-seq 子集，原 BAM header 保留 TopHat、参考及 SRR 来源；固定源 URL 和校验和见 `tools/long-term-audit/v0.27.0-read-coverage-results.json`。不运行 read 比对或变异检测。
+
+```r
+if (requireNamespace("GenomicAlignments", quietly = TRUE) &&
+    requireNamespace("Rsamtools", quietly = TRUE)) {
+  bam_file <- system.file("extdata", "sm_treated1.bam", package = "GenomicAlignments")
+  read_filter <- Rsamtools::ScanBamParam(
+    flag = Rsamtools::scanBamFlag(
+      isUnmappedQuery = FALSE, isSecondaryAlignment = FALSE,
+      isNotPassingQualityControls = FALSE, isDuplicate = FALSE
+    ), mapqFilter = 0L
+  )
+  aligned <- GenomicAlignments::readGAlignments(bam_file, param = read_filter)
+  read_coverage <- GenomicAlignments::coverage(aligned, drop.D.ranges = TRUE)
+  coverage_track <- bind_rows(lapply(names(read_coverage), function(id) {
+    runs <- read_coverage[[id]]
+    ends <- cumsum(S4Vectors::runLength(runs))
+    data.frame(
+      accver = id, start = c(1, head(ends, -1L) + 1), end = ends,
+      value = S4Vectors::runValue(runs)
+    )
+  }))
+  coverage_track |> head()
+}
+```
+
+每条保留的**alignment 记录**在其已比对参考区块上贡献一次。跳过区（`N`）以及本例显式排除的删除区（`D`）贡献零；保留 supplementary alignment。不设碱基质量阈值，不去除重叠配对端或重复分子。这不是自动得到的 fragment、唯一分子、表达量、Identity 或变异支持度。零段是该明确计算中的已存储零，与实验信号缺失不同。大型输入可用依赖包的流式 `BamFile` coverage 方法，并沿用相同过滤声明。
+
+将这些一基闭合区间交给 `geom_track(geom = "rect")`，设置 `xmin = start - 1`、`xmax = end`、`ymin = 0`、`ymax = value`，方法见[连续信号](#signals)。完整参考长度取 `scanBamHeader(bam_file)[[1]]$targets`，不取最后 read 端点。绘制小区域前显式选择源窗口。
+
+CRAM 应由已有 HTSlib/pysam 或 samtools 环境解码，需要参考时提供**实际匹配的参考**，保留原 header、过滤和转换日志。不伪造参考、不自动下载未请求资源，也不宣称所有 CRAM 都可独立解码。定向原型仅用 `no_ref=1` 将相同真实 BAM 记录重编码，无外部参考访问，再核对解码后的全部记录字段/标签、参考字典及覆盖度。这是格式往返，不是原始 CRAM 观测，也不是所有参考型 CRAM 的认证。上游 `SO:sorted` header 和临时索引缺失产生的解码消息均保留；顺序读取成功，没有改写它们。

@@ -1,0 +1,37 @@
+{
+  "status": "passed",
+  "source": {
+    "package": "GenomicAlignments",
+    "version": "1.48.0",
+    "file": "extdata/sm_treated1.bam",
+    "sha256": "ac2681fae928f670d597e0f95854602e1daea9aa34947e07335bd88a8be9ee53",
+    "url": "https://raw.githubusercontent.com/Bioconductor/GenomicAlignments/34a743a22b7ce4f754c3962bb06ae872581905b2/inst/extdata/sm_treated1.bam",
+    "metadata": {
+      "@HD": ["VN:1.0", "SO:sorted"],
+      "@SQ": ["SN:chr2L", "LN:23011544"],
+      "@SQ.1": ["SN:chr2R", "LN:21146708"],
+      "@SQ.2": ["SN:chr3L", "LN:24543557"],
+      "@PG": ["ID:TopHat", "VN:1.2.0", "CL:/g/steinmetz/collaboration/software/CentOS5/bin/tophat /g/huber/users/reyes/Genomes/Bowtie_index/d_melanogaster_dm3 SRR031718.fastq,SRR031719.fastq,SRR031720.fastq,SRR031721.fastq,SRR031722.fastq,SRR031723.fastq"]
+    },
+    "original_geo_context": "GSE18508; package summarizeOverlaps source-files section"
+  },
+  "aligned_records": 1800,
+  "signal_runs": 860,
+  "covered_record_bases": 80260,
+  "original_reference_lengths": [23011544, 21146708, 24543557],
+  "semantics": "Each retained alignment contributes one over M/= /X blocks; excludes D/N, unmapped/secondary/QC-fail/duplicate flags. Supplementary retained; no base-quality filter or fragment/molecule deduplication.",
+  "bedgraph_coordinate_and_value_roundtrip": true,
+  "cram": {
+    "data": {
+      "records": 1800,
+      "all_record_fields_and_tags_equal": true,
+      "reference_dictionary_equal": true,
+      "pysam": "0.24.1",
+      "samtools": "1.24",
+      "cram_mode": "explicit no_ref=1 re-encoding, not an original CRAM observation"
+    },
+    "messages": ["[E::cram_index_load] Could not retrieve index file for '/var/folders/cg/wt2b30gj0f95nnj9l7lq9l_h0000gn/T//RtmpOoZCkI/ggchord-cram-10859f7d28f9/roundtrip.bam.cram'", "[E::sam_hrecs_sort_order] Unknown sort order field: sorted"]
+  },
+  "no_new_reader_or_analysis_engine": true,
+  "no_source_characters_or_identity_inferred": true
+}

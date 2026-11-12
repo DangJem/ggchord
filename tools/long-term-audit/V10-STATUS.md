@@ -113,3 +113,7 @@ DEVELOPMENT-v0.27.0.md。全任务书仍在持续开发中，不因一个工作�
 仅已有pairs/membership范围，无clique/直系同源/比对方向/全长推断；不冒称支持
 .collinearity。按需BAM/CRAM、探索GFA/ODGI、全局制图质量/Track/API与整站旧资产
 仍未关闭。上文历史版本判断保留历史语境，不作为当前未开发项的替代。
+
+§6.6按需BAM/CRAM桥接已通过真实果蝇BAM→成熟coverage→普通Track/bedGraph及
+显式no_ref CRAM格式往返定向门槛（第十六工作包）。不是新增通用reader，不代表
+任意缺参考CRAM认证。范围/过滤/来源/原header消息见read-coverage-results。

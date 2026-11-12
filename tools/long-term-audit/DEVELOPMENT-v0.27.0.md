@@ -342,3 +342,27 @@ formats独立课程执行通过（含原可选解析环境），1144段参考翻
 
 这完成第十五工作包的离线pairs/membership范围，不宣称支持未取得真实输出的
 .collinearity，也不关闭按需/探索适配、标签/Fusion质量、Track/API治理或整站重现。
+
+## 第十六工作包：BAM/CRAM按需成熟生态桥接
+
+回查v10 §6.6确认这是按需覆盖/统计桥接，而非强制新增通用二进制reader。使用
+可选GenomicAlignments/Rsamtools读已有BAM、coverage/drop.D.ranges计算源空间
+覆盖，普通表/bedGraph及现有Track消费结果。只增加教学可选Suggests，不增加
+Imports或新reader/分析引擎。未来发布须复核可选依赖平台矩阵，本次没有运行包检。
+
+真实输入为GenomicAlignments1.48.0的sm_treated1.bam，固定源提交34a743a中
+原文件重新下载哈希与安装依赖字节一致。原header保留Drosophila dm3、TopHat及
+SRR031718–SRR031723；依赖summarizeOverlaps来源章节关联GSE18508。未复制
+第三方原BAM/解析代码到ggchord；原header及完整SHA256/URL写入结果JSON。
+
+显式排除unmapped/secondary/QC-fail/duplicate，MAPQ阈值0，保留supplementary，
+按alignment而非fragment/唯一分子计数；N及显式D不贡献，未设base-quality阈值。
+1800记录、860信号run、80260已覆盖record-bases与成熟grglist区块总宽一致，
+真实零run保留，bedGraph坐标和值精确往返。源全长只取@SQ，不取最后read位置。
+
+以相同真实BAM记录显式no_ref=1重编码CRAM并解码回BAM，pysam0.24.1/HTSlib
+配套samtools1.24核对全部记录字段/标签、@SQ字典及R覆盖度一致。此为格式往返，
+不是原始CRAM业务输入或所有参考型CRAM认证；真实参考型文件仍需实际匹配参考。
+原header的SO:sorted及临时索引缺失产生的消息原样保存，不改header伪造无警告。
+顺序解码没有外部参考下载。check-read-coverage.R和read-coverage-results为证据，
+chr2L 1–10000源窗口PNG实际生成并查看，未运行设备矩阵。双语formats已同步。

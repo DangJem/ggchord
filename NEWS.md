@@ -1,5 +1,10 @@
 # ggchord 0.27.0 (development)
 
+- Documented an optional BAM coverage workflow through GenomicAlignments and
+  existing Track inputs, with explicit flag/deletion/reference-skip semantics.
+  A source-backed Drosophila example and a clearly identified no-reference CRAM
+  format round trip verify coordinate/value preservation without a new reader.
+
 - Added `read_feature_relations()` for offline feature pairs and named/unnamed
   memberships. Exact unique feature IDs can map supplied contiguous intervals;
   original scores, physical lines and group/member order remain traceable.

@@ -11,6 +11,7 @@
 | VCF/BCF variants and structural breakpoints | [Retain original variant evidence](#variants) |
 | Existing protein signature annotations | [Retain AA locations and source scores](#protein-signatures) |
 | Existing feature pairs and groups | [Retain original relationships and memberships](#feature-relations) |
+| BAM/CRAM aligned reads | [Use a mature coverage bridge](#aligned-reads) |
 | Existing delta results | [Keep native metrics and coordinate units distinct](#delta) |
 | Existing MAF or chain genomic alignments | [Preserve blocks and source coordinates](#genome-alignments) |
 | Existing R tables | [Map required fields](#adapters) |
@@ -438,3 +439,37 @@ The caller declares ascending one-based-inclusive contiguous anchors; the file s
 `pairs` accepts two IDs and an optional score. `named_groups` retains the first field as a native character group ID, including numeric-looking IDs; `groups` treats every field as a member and only records a file-local group index. Memberships never expand into all pairwise connections. Duplicates, singleton groups, member order, raw fields and physical lines stay visible.
 
 Optional `feature_data` matches exact unique `feature_id` values. Case, versions and prefixes are never edited; the pair example and group example have different original ID namespaces and companion tables. Missing IDs fail by default; `unmatched = "report"` preserves original rows and flags incomplete mappings. Ambiguous duplicate feature IDs always fail. Without positions the reader still returns all relationships, with no mapped links. Annotation strand is retained separately, without assigning alignment direction; segmented annotations require an explicit contiguous anchor table. No full lengths, Identity, support or source characters are inferred.
+
+## Aligned reads: an optional coverage bridge {#aligned-reads}
+
+Use optional **GenomicAlignments**, **Rsamtools** and **GenomicRanges** for an existing BAM. Keep filtering and counting choices explicit; ggchord draws the resulting signal. This example uses the dependency's unchanged Drosophila RNA-seq subset. Its source BAM header retains the original TopHat/reference and SRR provenance; the fixed source URL and checksum are in `tools/long-term-audit/v0.27.0-read-coverage-results.json`. No read alignment or variant calling occurs.
+
+```r
+if (requireNamespace("GenomicAlignments", quietly = TRUE) &&
+    requireNamespace("Rsamtools", quietly = TRUE)) {
+  bam_file <- system.file("extdata", "sm_treated1.bam", package = "GenomicAlignments")
+  read_filter <- Rsamtools::ScanBamParam(
+    flag = Rsamtools::scanBamFlag(
+      isUnmappedQuery = FALSE, isSecondaryAlignment = FALSE,
+      isNotPassingQualityControls = FALSE, isDuplicate = FALSE
+    ), mapqFilter = 0L
+  )
+  aligned <- GenomicAlignments::readGAlignments(bam_file, param = read_filter)
+  read_coverage <- GenomicAlignments::coverage(aligned, drop.D.ranges = TRUE)
+  coverage_track <- bind_rows(lapply(names(read_coverage), function(id) {
+    runs <- read_coverage[[id]]
+    ends <- cumsum(S4Vectors::runLength(runs))
+    data.frame(
+      accver = id, start = c(1, head(ends, -1L) + 1), end = ends,
+      value = S4Vectors::runValue(runs)
+    )
+  }))
+  coverage_track |> head()
+}
+```
+
+Each retained **alignment record** contributes one over its aligned reference blocks. Skipped regions (`N`) and, with this explicit choice, deletions (`D`) contribute zero; supplementary alignments are retained. No base-quality threshold or overlapping-mate/molecule deduplication is applied. These values are not automatically fragment counts, unique molecules, expression, Identity or variant support. Zero runs are stored zeros for this declared computation, unlike missing experimental intervals. For large inputs use the dependency's streaming `BamFile` coverage method with the same explicit filters.
+
+Pass these one-based-inclusive ranges to `geom_track(geom = "rect")` using `xmin = start - 1`, `xmax = end`, `ymin = 0`, `ymax = value`, as in [continuous signals](#signals). Full reference lengths come from `scanBamHeader(bam_file)[[1]]$targets`, not the last read end. Specify source windows explicitly before displaying a small region.
+
+For CRAM, decode using a mature installed HTSlib/pysam or samtools environment and the **actual matching reference** when required, retaining the original header, filters and conversion log. Never invent a reference, auto-download unrequested resources or claim all CRAM files are independently decodable. The directed prototype uses `no_ref=1` solely to re-encode the same real BAM records without external reference access, then verifies all record fields/tags, reference dictionary and coverage after decoding. It is a format round trip, not an original CRAM observation or universal reference-based CRAM certification. The upstream header's `SO:sorted` and absent temporary index generate retained decoder messages; sequential reading succeeds without rewriting them.
