@@ -2852,6 +2852,24 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 </details>
 
+<span id="api-read_feature_relations"></span>
+<details><summary><code>read_feature_relations()</code></summary>
+
+
+[Full reference](reference/read_feature_relations.html)
+
+
+| Parameter | Signature default | Type/value rule | Meaning, range and constraints |
+| --- | --- | --- | --- |
+| `file` | `NULL` | Character path/identifier/vector; see constraints | Optional local paths or patterns, read before files. |
+| `files` | `NULL` | Character path/identifier/vector; see constraints | Optional additional local paths or patterns. |
+| `format` | `c("pairs", "named_groups", "groups")` | Vector; choices versus multiple selection below | Explicit schema: "pairs" (default), "named_groups", or "groups". |
+| `feature_data` | `NULL` | Table/supported object; data may be a function | Optional data frame with unique character feature_id, character accver and numeric start/end in declared source coordinates. Original columns remain in report$feature_data; optional strand is retained. |
+| `unmatched` | `c("error", "report")` | Vector; choices versus multiple selection below | "error" (default) rejects IDs absent from supplied feature_data; "report" retains incomplete rows with mapping flags and reports each missing ID. Without feature_data all rows stay unplaced. |
+| `source_file` | `FALSE` | Logical | Add .source_file to pairs, membership and mapped links. |
+
+</details>
+
 <span id="api-read_genbank"></span>
 <details><summary><code>read_genbank()</code></summary>
 

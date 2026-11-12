@@ -97,6 +97,10 @@ test_that("import helpers parse minimal files with explicit coordinate conventio
   signatures <- read_signature_matches(system.file("extdata", "P00517-signatures.tsv", package = "ggchord"))
   expect_equal(nrow(signatures$features$signature), 1L)
   expect_identical(signatures$seq_data$sequence_unit, "aa")
+  groups <- read_feature_relations(system.file("extdata", "plant-feature-groups.txt", package = "ggchord"),
+    format = "named_groups")
+  expect_equal(nrow(groups$membership), 12L)
+  expect_equal(nrow(groups$ribbon_data), 0L)
   if (.Platform$OS.type != "windows" && requireNamespace("rtracklayer", quietly = TRUE)) {
     indexed <- read_bigwig(system.file("extdata", "pUC19-gc-100.bw", package = "ggchord"))
     expect_true(nrow(indexed) > 0L)

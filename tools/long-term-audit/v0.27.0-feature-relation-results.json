@@ -1,0 +1,15 @@
+{
+  "status": "passed",
+  "sources": "inst/extdata/feature-relation-sources.json",
+  "original_pairs": 20,
+  "original_groups": 3,
+  "original_members": 12,
+  "exact_id_and_interval_mapping": true,
+  "original_scores_and_records": true,
+  "groups_never_expanded": true,
+  "feature_strand_not_alignment_orientation": true,
+  "no_source_length_identity_support_inference": true,
+  "missing_ambiguous_and_namespace_controls": true,
+  "coordinate_interpretation": "Caller explicitly declares companion positions as 1-based-inclusive anchors; file suffix is not a schema detector.",
+  "scope": "Offline input adaptation only; no homology inference or sequence analysis; no plot without independent source lengths."
+}

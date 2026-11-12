@@ -10,6 +10,7 @@
 | bedGraph 或 BigWig 连续信号 | [显式保留值和缺失区间](#signals) |
 | VCF/BCF 变异和结构断点 | [保留原始变异证据](#variants) |
 | 已有蛋白 signature 注释 | [保留 AA 位置及源分数](#protein-signatures) |
+| 已有 feature 对及组 | [保留原关系与成员](#feature-relations) |
 | 已有 delta 结果 | [区分原生统计和坐标单位](#delta) |
 | 已有 MAF 或 chain 基因组比对 | [保留块及源坐标](#genome-alignments) |
 | 已有 R 表格 | [映射必需字段](#adapters) |
@@ -404,3 +405,35 @@ if (requireNamespace("jsonlite", quietly = TRUE)) {
 每个缓存 JSON location 为一个 feature，实际片段存入 `segments`，start/end 仅包围其 footprint。现有 Feature 几何保留坐标空隙，并维持一个源命中。代表性标志是元数据，不自动筛选。原 entry/protein/location 索引及文件内 `.source_match` 可追溯，多文件须结合 `.source_input`。TSV 没有 JSON 分组证据，不按模型 ID 自动合并。分数保留原生列表列：JSON 数字、TSV 字符串和缺失值保留各自来源类型。不同库的 score/e-value 不能当作一种通用置信度比较，也不制造 identity/read support。若要使用数值标度，应先选择所需成员库并明确其分数含义。
 
 JSON 需要可选 **jsonlite**，只读提供的本地缓存。后续页 URL 和声明计数留在报告中，绘图时不获取数据。质量/上下文元数据、原始字段及完整源对象可供核对。这些位置注释不提供完整蛋白字符，也不构成独立字符核验。[官方格式说明](https://interproscan-docs.readthedocs.io/en/v5/OutputFormats.html)及[分数解释](https://interpro-documentation.readthedocs.io/en/latest/faq.html#why-are-there-no-e-values-associated-with-interpro-entries)说明其底层约定。
+
+## 已有 feature 关系 {#feature-relations}
+
+`read_feature_relations()` 离线读取已有成对关系或组成员。安装包中的植物子集保留固定源提交中 MCScanX 数据的完整原始行。许可、原 URL、哈希及抽样物理行号见 `inst/extdata/feature-relation-sources.json`；`data-raw/prepare-feature-relations.py` 可重现输入，不运行分析。
+
+```r
+pair_file <- system.file("extdata", "plant-feature-pairs.homology", package = "ggchord")
+group_file <- system.file("extdata", "plant-feature-groups.txt", package = "ggchord")
+position_file <- system.file("extdata", "plant-pair-features.gff", package = "ggchord")
+
+# 此工具的四列位置表不是 GFF3；显式声明源锚点。
+anchors <- read.table(
+  position_file, header = FALSE, na.strings = character(),
+  col.names = c("accver", "feature_id", "start", "end"),
+  colClasses = c("character", "character", "numeric", "numeric")
+)
+relations <- read_feature_relations(
+  pair_file, feature_data = anchors, source_file = TRUE
+)
+relations$ribbon_data |>
+  select(qfeature_id, sfeature_id, qaccver, qstart, qend, source_score)
+
+groups <- read_feature_relations(group_file, format = "named_groups")
+groups$membership |>
+  select(group_id, feature_id, .source_group, .source_member)
+```
+
+调用者声明升序一基闭合连续锚点，文件后缀不能确立坐标约定。配套表没有完整染色体长度，因此本例检查关系，不伪造 `seq_data` 绘制整条染色体。绘制 `ribbon_data` 区间关系前，应独立取得完整长度；这些关系不是逐位点 HSP。只有明确分数含义后才映射分数；原第三列保持不透明字符串，不当作 Identity 或 e-value。
+
+`pairs` 接受两个 ID 及可选分数；`named_groups` 将第一列保留为原生字符组 ID，包括数字状 ID；`groups` 将全部字段作为成员，仅记录文件内组索引。成员关系不会展开为全体两两连接。重复、单成员组、成员顺序、原字段及物理行均保留。
+
+可选 `feature_data` 按唯一 `feature_id` 精确匹配，不修改大小写、版本或前缀。成对示例与组示例有不同原始命名空间及配套位置表。缺失 ID 默认报错，`unmatched = "report"` 保留原行并标记不完整映射；重复 feature ID 的歧义始终报错。没有位置时仍返回全部关系，不生成映射连接。注释链向单独保留，不据此赋予比对方向；分段注释需要显式连续锚点表。不推断完整长度、Identity、支持度或源字符。

@@ -104,6 +104,7 @@
 | [`read_chain`](reference/read_chain.html) | 读取已有基因组对齐块及真实源坐标 | [L2](formats.html#genome-alignments) | 可选 Biopython；MAF 字符单元与 chain 区间 | [↗](parameter-atlas.html#api-read_chain) | [↗](formats.html) |
 | [`read_delta`](reference/read_delta.html) | 通过可选原生解码器读取已有 delta 比对 | [L2](formats.html#delta) | 可选 show-coords；bp 坐标与独立声明的比对统计单位 | [↗](parameter-atlas.html#api-read_delta) | [↗](formats.html) |
 | [`read_fasta_lengths`](reference/read_fasta_lengths.html) | 将一个或多个 FASTA 文件读为序列数据 | [L2](formats.html#characters) | 本地文件到标准表；按源格式转换坐标和声明单位 | [↗](parameter-atlas.html#api-read_fasta_lengths) | [↗](real-data.html) |
+| [`read_feature_relations`](reference/read_feature_relations.html) | 读取预计算 feature 对及成员关系 | [L2](formats.html#feature-relations) | 精确 feature ID；显式连续锚点；不推断完整长度 | [↗](parameter-atlas.html#api-read_feature_relations) | [↗](formats.html) |
 | [`read_genbank`](reference/read_genbank.html) | 使用可选成熟解析器导入本地 GenBank 或 GBFF | [L2](formats.html#genbank) | 本地文件到标准表；按源格式转换坐标和声明单位 | [↗](parameter-atlas.html#api-read_genbank) | [↗](formats.html) |
 | [`read_gff3`](reference/read_gff3.html) | 将一个或多个 GFF3 文件读为注释数据 | [L2](real-data.html#read) | 本地文件到标准表；按源格式转换坐标和声明单位 | [↗](parameter-atlas.html#api-read_gff3) | [↗](real-data.html) |
 | [`read_maf`](reference/read_maf.html) | 读取已有基因组对齐块及真实源坐标 | [L2](formats.html#genome-alignments) | 可选 Biopython；MAF 字符单元与 chain 区间 | [↗](parameter-atlas.html#api-read_maf) | [↗](formats.html) |

@@ -1,5 +1,12 @@
 # ggchord 0.27.0 (development)
 
+- Added `read_feature_relations()` for offline feature pairs and named/unnamed
+  memberships. Exact unique feature IDs can map supplied contiguous intervals;
+  original scores, physical lines and group/member order remain traceable.
+  Memberships never create pair links. Annotation strand does not imply an
+  alignment direction, and source lengths, Identity or support are not inferred.
+  Pinned plant examples include original permission, hashes and subset rules.
+
 - Added `read_signature_matches()` for existing AA signature TSV and cached
   InterPro/Pfam entry JSON, retaining full source lengths, accession case,
   repeated model matches and native score types. JSON locations reuse Feature

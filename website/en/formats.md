@@ -10,6 +10,7 @@
 | bedGraph or BigWig continuous signals | [Keep values and missing ranges explicit](#signals) |
 | VCF/BCF variants and structural breakpoints | [Retain original variant evidence](#variants) |
 | Existing protein signature annotations | [Retain AA locations and source scores](#protein-signatures) |
+| Existing feature pairs and groups | [Retain original relationships and memberships](#feature-relations) |
 | Existing delta results | [Keep native metrics and coordinate units distinct](#delta) |
 | Existing MAF or chain genomic alignments | [Preserve blocks and source coordinates](#genome-alignments) |
 | Existing R tables | [Map required fields](#adapters) |
@@ -405,3 +406,35 @@ Full lengths are declared AA lengths, not maximum feature ends. The API returns 
 Each cached JSON location is one feature with actual `segments`; its start/end only bound the footprint. Existing Feature geometry leaves coordinate gaps empty and retains one source match. The representative flag is metadata, never an automatic filter. Original entry/protein/location indices and per-file `.source_match` stay traceable; use `.source_input` when combining files. TSV rows lack JSON grouping evidence and are not automatically grouped by model ID. Scores remain a native list-column: JSON numbers, TSV strings and missing values retain their source type. Do not compare different libraries' score/e-value systems as a universal confidence or invent identity/read support. For a numeric scale, first select the intended library and establish its actual score meaning explicitly.
 
 JSON needs optional **jsonlite** and reads only supplied local caches. Remaining-page URLs and declared counts stay in the report; nothing is fetched at draw time. Quality/context metadata, original fields and complete source objects remain available for auditing. These location annotations provide no complete protein characters or independent character verification. The [official format guide](https://interproscan-docs.readthedocs.io/en/v5/OutputFormats.html) and [score explanation](https://interpro-documentation.readthedocs.io/en/latest/faq.html#why-are-there-no-e-values-associated-with-interpro-entries) describe the underlying conventions.
+
+## Existing feature relationships {#feature-relations}
+
+`read_feature_relations()` reads existing pairs or group memberships offline. The installed plant subsets preserve complete original MCScanX data lines from a pinned source commit. Permission, original URLs, hashes and physical subset indices are recorded in `inst/extdata/feature-relation-sources.json`; `data-raw/prepare-feature-relations.py` reproduces them without running an analysis.
+
+```r
+pair_file <- system.file("extdata", "plant-feature-pairs.homology", package = "ggchord")
+group_file <- system.file("extdata", "plant-feature-groups.txt", package = "ggchord")
+position_file <- system.file("extdata", "plant-pair-features.gff", package = "ggchord")
+
+# This four-column tool table is not GFF3. Explicitly declare source anchors.
+anchors <- read.table(
+  position_file, header = FALSE, na.strings = character(),
+  col.names = c("accver", "feature_id", "start", "end"),
+  colClasses = c("character", "character", "numeric", "numeric")
+)
+relations <- read_feature_relations(
+  pair_file, feature_data = anchors, source_file = TRUE
+)
+relations$ribbon_data |>
+  select(qfeature_id, sfeature_id, qaccver, qstart, qend, source_score)
+
+groups <- read_feature_relations(group_file, format = "named_groups")
+groups$membership |>
+  select(group_id, feature_id, .source_group, .source_member)
+```
+
+The caller declares ascending one-based-inclusive contiguous anchors; the file suffix does not establish the coordinate convention. The companion position tables have no full chromosome lengths, so this example inspects relationships and does not invent `seq_data` to draw a whole chromosome. Supply independently sourced full lengths before plotting `ribbon_data` as interval relationships. These are not basewise HSPs. Map a score only after establishing its meaning; the third input column remains an opaque string, not Identity or e-value.
+
+`pairs` accepts two IDs and an optional score. `named_groups` retains the first field as a native character group ID, including numeric-looking IDs; `groups` treats every field as a member and only records a file-local group index. Memberships never expand into all pairwise connections. Duplicates, singleton groups, member order, raw fields and physical lines stay visible.
+
+Optional `feature_data` matches exact unique `feature_id` values. Case, versions and prefixes are never edited; the pair example and group example have different original ID namespaces and companion tables. Missing IDs fail by default; `unmatched = "report"` preserves original rows and flags incomplete mappings. Ambiguous duplicate feature IDs always fail. Without positions the reader still returns all relationships, with no mapped links. Annotation strand is retained separately, without assigning alignment direction; segmented annotations require an explicit contiguous anchor table. No full lengths, Identity, support or source characters are inferred.

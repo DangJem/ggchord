@@ -1,0 +1,15 @@
+{
+  "source_sha256": "83b1627d04aac9f5774246efe886c8620a4c6e66b57ecc9aa37a9c373f86441c",
+  "translations": {
+    "0": "读取预计算 feature 对或组成员关系",
+    "1": "可选本地路径或模式，在 files 之前读取。",
+    "2": "可选的其他本地路径或模式。",
+    "3": "显式结构：\"pairs\"（默认）、\"named_groups\" 或 \"groups\"。",
+    "4": "可选数据框，包含唯一字符 feature_id、字符 accver 及声明源坐标中的数值 start/end。原列保留在 report$feature_data，可选 strand 原样保留。",
+    "5": "\"error\"（默认）拒绝在给定 feature_data 中缺失的 ID；\"report\" 保留不完整行、映射标志并报告每个缺失 ID。未提供 feature_data 时全部行保持未放置。",
+    "6": "为成对关系、成员表及已映射连接添加 .source_file。",
+    "7": "列表包含 pairs、membership、ribbon_data（仅完整映射的原始对）和 report。组输入不产生连接。已映射成员在 membership 中带有源区间。report 保留原文件、字段、缺失 ID、未放置的对和给定 feature_data。不从注释端点生成 seq_data；文件内记录索引须结合 .source_input 使用，不是生物学 ID。",
+    "8": "读取本地空白分隔的对（两个 ID 和可选的不透明 score）、命名组（组 ID 后接成员）或无名组（仅成员）。结构必须显式选择，不猜表头。跳过空行及整行 # 注释。ID、原分数字符串、物理行、成员顺序、重复及原字段均可追溯。数字状 ID 保持字符串，组索引局限于各文件，无名组不造生物学组 ID。成员关系不生成两两连接，也不宣称直系同源。",
+    "9": "可选 feature_data 按唯一 feature_id 精确匹配，不修改大小写、前缀或版本，不猜 gene/CDS 父子关系。提供升序一基闭合连续源区间及可选 strand（+、- 或 .）。负链仅为注释元数据，配对锚点保持升序，direction 保持缺失。这是 feature 关系，不是逐位点比对。分段 feature 需要显式连续锚点表，不能静默使用填满间隙的包围跨度。不推断完整序列长度、identity、支持度、比对方向或源字符。"
+  }
+}

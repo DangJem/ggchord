@@ -3525,5 +3525,31 @@
       "en": "AA features; source-native scores; JSON needs optional jsonlite",
       "zh": "AA feature；源原生分数；JSON 需可选 jsonlite"
     }
+  },
+  "read_feature_relations": {
+    "level": "L2",
+    "page": "formats",
+    "anchor": "feature-relations",
+    "reason": "Pinned original plant pairs and memberships with exact-ID mapping and provenance checks",
+    "modes": "Offline pairs and group membership",
+    "parameters": [
+      "file",
+      "files",
+      "format",
+      "feature_data",
+      "unmatched",
+      "source_file"
+    ],
+    "purpose": {
+      "en": "Read precomputed feature pairs and memberships",
+      "zh": "读取预计算 feature 对及成员关系"
+    },
+    "alias_of": "",
+    "case": "formats",
+    "scope": "existing relations only; no inference or clique expansion",
+    "modes_localized": {
+      "en": "Exact feature IDs; contiguous supplied anchors; no full lengths inferred",
+      "zh": "精确 feature ID；显式连续锚点；不推断完整长度"
+    }
   }
 }

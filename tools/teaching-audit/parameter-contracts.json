@@ -10896,6 +10896,54 @@
     "source": "man/read_fasta_lengths.Rd"
   },
   {
+    "api": "read_feature_relations",
+    "parameter": "file",
+    "default": "NULL",
+    "type": "Character path/identifier/vector; see constraints",
+    "constraint": "Optional local paths or patterns, read before files.",
+    "source": "man/read_feature_relations.Rd"
+  },
+  {
+    "api": "read_feature_relations",
+    "parameter": "files",
+    "default": "NULL",
+    "type": "Character path/identifier/vector; see constraints",
+    "constraint": "Optional additional local paths or patterns.",
+    "source": "man/read_feature_relations.Rd"
+  },
+  {
+    "api": "read_feature_relations",
+    "parameter": "format",
+    "default": "c(\"pairs\", \"named_groups\", \"groups\")",
+    "type": "Vector; choices versus multiple selection below",
+    "constraint": "Explicit schema: \"pairs\" (default), \"named_groups\", or \"groups\".",
+    "source": "man/read_feature_relations.Rd"
+  },
+  {
+    "api": "read_feature_relations",
+    "parameter": "feature_data",
+    "default": "NULL",
+    "type": "Table/supported object; data may be a function",
+    "constraint": "Optional data frame with unique character feature_id, character accver and numeric start/end in declared source coordinates. Original columns remain in report$feature_data; optional strand is retained.",
+    "source": "man/read_feature_relations.Rd"
+  },
+  {
+    "api": "read_feature_relations",
+    "parameter": "unmatched",
+    "default": "c(\"error\", \"report\")",
+    "type": "Vector; choices versus multiple selection below",
+    "constraint": "\"error\" (default) rejects IDs absent from supplied feature_data; \"report\" retains incomplete rows with mapping flags and reports each missing ID. Without feature_data all rows stay unplaced.",
+    "source": "man/read_feature_relations.Rd"
+  },
+  {
+    "api": "read_feature_relations",
+    "parameter": "source_file",
+    "default": "FALSE",
+    "type": "Logical",
+    "constraint": "Add .source_file to pairs, membership and mapped links.",
+    "source": "man/read_feature_relations.Rd"
+  },
+  {
     "api": "read_genbank",
     "parameter": "file",
     "default": "NULL",

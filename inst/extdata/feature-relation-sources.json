@@ -1,0 +1,136 @@
+{
+  "source_commit": "0956cb8f900c152e2be8ba3196829e50ab454b94",
+  "license": "BSD-2-Clause",
+  "inputs": [
+    {
+      "role": "pairs",
+      "url": "https://raw.githubusercontent.com/wyp1125/MCScanX/0956cb8f900c152e2be8ba3196829e50ab454b94/data/at_gm_pt_vv.homology",
+      "sha256": "5b173b0ad4e3a13ba94a2d85f8d696bdd09f901eb2a2186765f3c44de5e12834",
+      "local_name": "ggchord-plant.homology"
+    },
+    {
+      "role": "pair_features",
+      "url": "https://raw.githubusercontent.com/wyp1125/MCScanX/0956cb8f900c152e2be8ba3196829e50ab454b94/data/at_gm_pt_vv.gff",
+      "sha256": "b3b37e52f2060bd00fb80e082d30e2b7a97fce67dc553e184f2aaf35228e22e1",
+      "local_name": "ggchord-plant.gff"
+    },
+    {
+      "role": "groups",
+      "url": "https://raw.githubusercontent.com/wyp1125/MCScanX/0956cb8f900c152e2be8ba3196829e50ab454b94/data/at_MCL_families.txt",
+      "sha256": "bef7454141b03739078feac47a2d33363a04d29eccbdd0d8d7ab09a81c947b49",
+      "local_name": "ggchord-plant.groups"
+    },
+    {
+      "role": "group_features",
+      "url": "https://raw.githubusercontent.com/wyp1125/MCScanX/0956cb8f900c152e2be8ba3196829e50ab454b94/data/at.gff",
+      "sha256": "fb1c90c7ae60b66ccfc4dc22ee93763e81e3c16688e98a5e549a6d6b5afa2e70",
+      "local_name": "ggchord-plant-groups.gff"
+    },
+    {
+      "role": "license",
+      "url": "https://raw.githubusercontent.com/wyp1125/MCScanX/0956cb8f900c152e2be8ba3196829e50ab454b94/LICENSE",
+      "sha256": "1c3bb6caf9fc99f4c28203990dccd716da8940e6cef2b5dbf814d6235190a78f",
+      "local_name": "ggchord-relations-license.txt"
+    }
+  ],
+  "outputs": [
+    {
+      "file": "plant-feature-pairs.homology",
+      "sha256": "4bb6a834a256a79ebab6da2fa90312588cdfb27709136354c580024fde7a52a7",
+      "rule": "First 20 complete original pair records, bytes unchanged.",
+      "source_rows": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ]
+    },
+    {
+      "file": "plant-pair-features.gff",
+      "sha256": "71ac5f86432ad632ba5b900ebefab9851d655b9c7206f799c489c171fb261964",
+      "rule": "Complete original position rows for IDs in selected pairs, no ID edits.",
+      "source_rows": [
+        2,
+        4,
+        5,
+        6,
+        9,
+        10,
+        14,
+        16,
+        29208,
+        32817,
+        33999,
+        34004,
+        34014,
+        35186,
+        36700,
+        40106,
+        41405,
+        41407,
+        41417,
+        41418,
+        41430,
+        48710,
+        50145,
+        62845,
+        65567,
+        71337,
+        71348,
+        73018
+      ]
+    },
+    {
+      "file": "plant-feature-groups.txt",
+      "sha256": "998063810ec06f5006719eebef76a5e8014a43d3a1e5f1b1044ba91a30bec075",
+      "rule": "First three complete named input groups with 2-4 members; native group IDs retained.",
+      "source_rows": [
+        1167,
+        1168,
+        1169
+      ]
+    },
+    {
+      "file": "plant-group-features.gff",
+      "sha256": "9cd59259ad789e55b9070996762e5efa6a90233a4cd53744927f173b70c22f78",
+      "rule": "Complete original position rows from the unprefixed companion table; no namespace guessing.",
+      "source_rows": [
+        989,
+        4096,
+        5456,
+        5457,
+        5458,
+        5459,
+        7031,
+        8123,
+        11526,
+        13793,
+        20473,
+        22447
+      ]
+    },
+    {
+      "file": "FEATURE-RELATIONS-LICENSE.txt",
+      "sha256": "1c3bb6caf9fc99f4c28203990dccd716da8940e6cef2b5dbf814d6235190a78f",
+      "rule": "Unchanged original permission notice.",
+      "source_rows": null
+    }
+  ],
+  "coordinate_scope": "Source position tables only; not a full chromosome length dictionary. Reader feature_data must use declared one-based-inclusive intervals. No source length is inferred from feature endpoints."
+}

@@ -2852,6 +2852,24 @@
 
 </details>
 
+<span id="api-read_feature_relations"></span>
+<details><summary><code>read_feature_relations()</code></summary>
+
+
+[完整参考](reference/read_feature_relations.html)
+
+
+| 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
+| --- | --- | --- | --- |
+| `file` | `NULL` | 字符路径、标识或向量；见约束 | 可选本地路径或模式，在 files 之前读取。 |
+| `files` | `NULL` | 字符路径、标识或向量；见约束 | 可选的其他本地路径或模式。 |
+| `format` | `c("pairs", "named_groups", "groups")` | 向量；候选/多选含义见说明 | 显式结构："pairs"（默认）、"named_groups" 或 "groups"。 |
+| `feature_data` | `NULL` | 表格/受支持对象；data 还可为函数 | 可选数据框，包含唯一字符 feature_id、字符 accver 及声明源坐标中的数值 start/end。原列保留在 report$feature_data，可选 strand 原样保留。 |
+| `unmatched` | `c("error", "report")` | 向量；候选/多选含义见说明 | "error"（默认）拒绝在给定 feature_data 中缺失的 ID；"report" 保留不完整行、映射标志并报告每个缺失 ID。未提供 feature_data 时全部行保持未放置。 |
+| `source_file` | `FALSE` | 逻辑值 | 为成对关系、成员表及已映射连接添加 .source_file。 |
+
+</details>
+
 <span id="api-read_genbank"></span>
 <details><summary><code>read_genbank()</code></summary>
 

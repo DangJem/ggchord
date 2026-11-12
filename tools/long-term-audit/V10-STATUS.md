@@ -105,3 +105,11 @@ v10的首轮审计/架构设计与多数核心能力已有实现，不能据此�
 结合源码论证。首个主题/Track工作包已实现并定向验证，见THEME-DESIGN-v0.27.0.md及
 DEVELOPMENT-v0.27.0.md。全任务书仍在持续开发中，不因一个工作包通过而关闭剩余项。
 本轮未推送、部署或发布，包级发布验收门槛不变。
+
+## v0.27.0 第十五工作包更新
+
+§6.6预计算feature对/同源组已实现read_feature_relations；固定植物来源重新下载
+校验及离线20对/3组12成员验证通过，证据见DEVELOPMENT与feature-relation-results。
+仅已有pairs/membership范围，无clique/直系同源/比对方向/全长推断；不冒称支持
+.collinearity。按需BAM/CRAM、探索GFA/ODGI、全局制图质量/Track/API与整站旧资产
+仍未关闭。上文历史版本判断保留历史语境，不作为当前未开发项的替代。

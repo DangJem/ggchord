@@ -1480,6 +1480,19 @@
     }
   },
   {
+    "name": "read_feature_relations",
+    "owner": "ggchord",
+    "alias": "",
+    "parameters": {
+      "file": "NULL",
+      "files": "NULL",
+      "format": "c(\"pairs\", \"named_groups\", \"groups\")",
+      "feature_data": "NULL",
+      "unmatched": "c(\"error\", \"report\")",
+      "source_file": "FALSE"
+    }
+  },
+  {
     "name": "read_genbank",
     "owner": "ggchord",
     "alias": "",
