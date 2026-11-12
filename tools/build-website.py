@@ -33,6 +33,8 @@ class PageText(__import__('html.parser',fromlist=['HTMLParser']).HTMLParser):
 def main():
     parser=argparse.ArgumentParser()
     parser.add_argument('--publication',action='store_true')
+    parser.add_argument('--render-jobs',type=int,choices=(1,2),default=2,
+                        help='Maximum concurrent native locale renderers (default: 2)')
     args=parser.parse_args()
     out=ROOT/'.site'
     if out.is_symlink():raise SystemExit('Refusing a symlink output directory')
@@ -95,14 +97,23 @@ def main():
             payload[lang].append(dict(slug=page['slug'],title=page['title'][lang],body=body,sidebar=sidebar))
     (out/'page-content.json').write_text(json.dumps(payload,ensure_ascii=False)+'\n')
     # Locales write separate destinations and share only immutable source files.
-    jobs=[]
-    for lang in ['en','zh']:
-        with (out/(lang+'-build.log')).open('w') as log:
-            jobs.append(subprocess.Popen(['Rscript','tools/render-website.R',lang],cwd=ROOT,stdout=log,stderr=subprocess.STDOUT))
-    statuses=[job.wait() for job in jobs]
-    combined='\n'.join((out/(lang+'-build.log')).read_text() for lang in ['en','zh'])
+    statuses = {}
+    languages = ['en', 'zh']
+    for start in range(0, len(languages), args.render_jobs):
+        jobs = []
+        for lang in languages[start:start + args.render_jobs]:
+            with (out/(lang+'-build.log')).open('w') as log:
+                jobs.append((lang, subprocess.Popen(
+                    ['Rscript','tools/render-website.R',lang],cwd=ROOT,
+                    stdout=log,stderr=subprocess.STDOUT)))
+        for lang, job in jobs:
+            statuses[lang] = job.wait()
+        (out/'render-processes.json').write_text(json.dumps(dict(
+            render_jobs=args.render_jobs, return_codes=statuses),indent=2)+'\n')
+    combined='\n'.join((out/(lang+'-build.log')).read_text() for lang in languages)
     (out/'build.log').write_text(combined)
-    if any(statuses):raise SystemExit(combined[-7000:])
+    if any(statuses.values()):
+        raise SystemExit('Native locale renderers failed: '+json.dumps(statuses)+'\n'+combined[-7000:])
     # Post-process using the same XML library used by pkgdown; no hand-built page shell.
     subprocess.run(['Rscript','tools/finalize-website.R', 'publication' if args.publication else 'preview'],cwd=ROOT,check=True)
     # Keep project presentation files identical to the source digested by finalization.
