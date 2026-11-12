@@ -38,6 +38,10 @@ See the complete [layout contract](reference/ggchord_layout_contract.html).
 `diagnose_ggchord()` separates measured panel size from geometry convergence.
 A measured panel does not certify collision-free text, font embedding or all
 applications. Inspect warnings, text/guide measurements and placement reasons.
+Drawing warns when bounded physical refinement does not converge. Geometry
+measurements then remain estimates; diagnostics capture the warning and retain
+the `physical_layout` check. Try a larger canvas or revise label/guide settings,
+then measure again.
 `optimize_ggchord_layout()` applies documented opt-in adjustments; retain a copy
 and inspect the result. Previews and diagnostics use independent render copies.
 Direct mutation of shared ggproto layer environments retains ordinary ggplot2

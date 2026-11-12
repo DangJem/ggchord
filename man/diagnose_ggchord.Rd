@@ -69,7 +69,9 @@ annotation polylines and measured oriented text boxes in millimetres. Its
 \code{measurement} entry separates panel measurement, geometry convergence and
 physical refinement passes. Circular calibration may try one extrapolated
 scale, accepting it only after the usual measured convergence gate passes;
-rejected trials retain the ordinary refinement sequence. Arc
+rejected trials retain the ordinary refinement sequence. Drawing warns when
+bounded physical refinement does not converge; diagnostics capture that
+warning and retain the \code{physical_layout} check. Arc
 glyphs belonging to one string are one text object; their intentional
 internal contacts are not label collisions. Leader crossings exclude shared
 endpoints; through-text checks concern box interiors, not exact glyph ink.

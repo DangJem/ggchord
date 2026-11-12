@@ -1,5 +1,11 @@
 # ggchord 0.27.0 (development)
 
+- Drawing now warns when bounded physical refinement does not converge.
+  Geometry measurements remain estimates, and `diagnose_ggchord()` captures the
+  warning alongside its existing `physical_layout` check. The warning reports
+  the observed calibration failure; it does not establish that every possible
+  layout is infeasible.
+
 - Fixed ordinary label boxes and arc-glyph advances using PDF proxy metrics
   while a target graphics device was already active. Measured layout now uses
   that active device; headless measurement retains its fallback. Text spacing

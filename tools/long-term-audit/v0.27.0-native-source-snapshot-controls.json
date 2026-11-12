@@ -1,0 +1,7 @@
+{
+  "scope": "Explicit builder snapshot controls, not a complete native HTML rebuild",
+  "unchanged_snapshot_accepted": true,
+  "expected_mismatch_rejected": true,
+  "archive_inputs_branch": "pending actual final build",
+  "builder_sha256": "5eb0590ac46267fa0aeaa037813cb4a751a3369eefa1fe82fcbbd55deb3b84dc"
+}

@@ -187,6 +187,9 @@ ggchord_render_table <- function(built, force = FALSE) {
   }
   context$refinement_passes <- passes
   context$refinement_acceleration <- acceleration
+  if (physical && identical(context$status, 'measured') && !isTRUE(context$converged)) warning(
+    'ggchord(): physical geometry did not converge within the bounded refinement budget; geometry measurements remain estimates. Inspect diagnose_ggchord() and consider a larger canvas or revised label/guide settings.',
+    call. = FALSE)
   context$adaptive_layout <- built$plot$ggchord$adaptive_report
   context$guide_layout <- result$report
   if (identical(result$report$status,"insufficient_space")) warning(

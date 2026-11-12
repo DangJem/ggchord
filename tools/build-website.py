@@ -30,12 +30,39 @@ class PageText(__import__('html.parser',fromlist=['HTMLParser']).HTMLParser):
     def handle_data(self,data):
         if not self.ignored:self.parts.append(data)
 
+def render_source_snapshot():
+    """Inputs consumed by rendering; audit outputs can still be written."""
+    roots = [WEB, ROOT/'R', ROOT/'man', ROOT/'data', ROOT/'vignettes',
+             ROOT/'tools/teaching-audit']
+    files = {p for root in roots for p in root.rglob('*')
+             if p.is_file() and '__pycache__' not in p.parts}
+    files.update(ROOT.glob('*.md'))
+    files.update(ROOT/name for name in [
+        'DESCRIPTION','NAMESPACE','LICENSE','_pkgdown.yml',
+        'tools/build-website.py','tools/documentation_lib.py','tools/site_search.py',
+        'tools/render-website.R','tools/finalize-website.R',
+        'tools/reference-translations.py','tools/documentation-examples.R',
+        'tools/documentation-plots.R','tools/audit-source-snapshot.R',
+        'tools/render-teaching-comparisons.R','tools/documentation-fingerprints.py'])
+    return {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest()
+            for p in sorted(files)}
+
+
+def assert_render_source_snapshot(snapshot, input_hashes):
+    current_inputs = {name: hashlib.sha256((ROOT/name).read_bytes()).hexdigest()
+                      for name in input_hashes}
+    if render_source_snapshot() != snapshot or current_inputs != input_hashes:
+        raise RuntimeError('Website source inputs changed during the build; '
+                           'retain partial files but do not mark the build complete.')
+
+
 def main():
     parser=argparse.ArgumentParser()
     parser.add_argument('--publication',action='store_true')
     parser.add_argument('--render-jobs',type=int,choices=(1,2),default=2,
                         help='Maximum concurrent native locale renderers (default: 2)')
     args=parser.parse_args()
+    render_snapshot = render_source_snapshot()
     out=ROOT/'.site'
     if out.is_symlink():raise SystemExit('Refusing a symlink output directory')
     if out.exists():shutil.rmtree(out)
@@ -82,6 +109,10 @@ def main():
         archive.write(ROOT/'tools/documentation-examples.R','tools/documentation-examples.R')
         for name, code in recipes.items(): archive.writestr(name, code)
         archive.writestr('input-hashes.json',json.dumps(input_hashes,indent=2)+'\n')
+    assert_render_source_snapshot(render_snapshot, input_hashes)
+    (out/'source-snapshot.json').write_text(json.dumps(dict(
+        status='started; completion unverified', render_inputs=render_snapshot,
+        archive_inputs=input_hashes),indent=2)+'\n')
     pandoc_dir=subprocess.check_output(['Rscript','-e','cat(rmarkdown::find_pandoc()$dir)'],cwd=ROOT,text=True).strip()
     payload={lang:[] for lang in ['en','zh']}
     for lang in payload:
@@ -114,6 +145,7 @@ def main():
     (out/'build.log').write_text(combined)
     if any(statuses.values()):
         raise SystemExit('Native locale renderers failed: '+json.dumps(statuses)+'\n'+combined[-7000:])
+    assert_render_source_snapshot(render_snapshot, input_hashes)
     # Post-process using the same XML library used by pkgdown; no hand-built page shell.
     subprocess.run(['Rscript','tools/finalize-website.R', 'publication' if args.publication else 'preview'],cwd=ROOT,check=True)
     # Keep project presentation files identical to the source digested by finalization.
@@ -159,6 +191,10 @@ def main():
         dirty=bool(subprocess.check_output(['git','status','--porcelain'],cwd=ROOT,text=True)),
         deployment='prepared for authorized deployment; builder does not deploy' if args.publication else 'local preview; not deployed',
         source_sha256={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in files})
+    assert_render_source_snapshot(render_snapshot, input_hashes)
+    (out/'source-snapshot.json').write_text(json.dumps(dict(
+        status='verified unchanged across rendering and finalization',
+        render_inputs=render_snapshot,archive_inputs=input_hashes),indent=2)+'\n')
     (out/'build-manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n')
     (out/'page-content.json').unlink()
     shutil.rmtree(out/'reference-zh')
