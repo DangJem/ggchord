@@ -2867,6 +2867,23 @@
 
 </details>
 
+<span id="api-read_vcf"></span>
+<details><summary><code>read_vcf()</code></summary>
+
+
+[完整参考](reference/read_vcf.html)
+
+
+| 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
+| --- | --- | --- | --- |
+| `file` | `NULL` | 字符路径、标识或向量；见约束 | 可选本地路径向量或通配模式，在 files 之前读取。 |
+| `files` | `NULL` | 字符路径、标识或向量；见约束 | 可选的其他 VCF/BCF 路径或通配模式。 |
+| `structural` | `FALSE` | 逻辑值 | 逻辑值，是否显式请求可选结构变异解码，默认 FALSE。该模式拒绝重复记录 ID，避免 mate 关系歧义。默认模式保留全部源记录。 |
+| `python` | `"python3"` | 字符路径、标识或向量；见约束 | 仅 BCF 需要的已有 Python 解释器，其中须已安装可选 pysam。VCF 文本忽略此参数，默认 "python3"；不改动任何环境。 |
+| `source_file` | `FALSE` | 逻辑值 | 是否向返回表的每行添加 .source_file，默认 FALSE。 |
+
+</details>
+
 <span id="api-register_ggchord_alignment"></span>
 <details><summary><code>register_ggchord_alignment()</code></summary>
 

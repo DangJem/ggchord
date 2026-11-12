@@ -10920,6 +10920,46 @@
     "source": "man/read_paf.Rd"
   },
   {
+    "api": "read_vcf",
+    "parameter": "file",
+    "default": "NULL",
+    "type": "Character path/identifier/vector; see constraints",
+    "constraint": "Optional local path vector or glob patterns, before files.",
+    "source": "man/read_vcf.Rd"
+  },
+  {
+    "api": "read_vcf",
+    "parameter": "files",
+    "default": "NULL",
+    "type": "Character path/identifier/vector; see constraints",
+    "constraint": "Optional additional VCF/BCF paths or patterns.",
+    "source": "man/read_vcf.Rd"
+  },
+  {
+    "api": "read_vcf",
+    "parameter": "structural",
+    "default": "FALSE",
+    "type": "Logical",
+    "constraint": "Logical. Explicitly request optional structural decoding, default FALSE. Duplicate record IDs fail in this mode because mates would be ambiguous. All source records remain accessible in the default mode.",
+    "source": "man/read_vcf.Rd"
+  },
+  {
+    "api": "read_vcf",
+    "parameter": "python",
+    "default": "\"python3\"",
+    "type": "Character path/identifier/vector; see constraints",
+    "constraint": "Existing interpreter with optional pysam for BCF only. Ignored for VCF text; default \"python3\". No environment is modified.",
+    "source": "man/read_vcf.Rd"
+  },
+  {
+    "api": "read_vcf",
+    "parameter": "source_file",
+    "default": "FALSE",
+    "type": "Logical",
+    "constraint": "Add .source_file to returned table rows, default FALSE.",
+    "source": "man/read_vcf.Rd"
+  },
+  {
     "api": "register_ggchord_alignment",
     "parameter": "plot",
     "default": "",

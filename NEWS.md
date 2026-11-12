@@ -1,5 +1,13 @@
 # ggchord 0.27.0 (development)
 
+- Added optional `read_vcf()` using VariantAnnotation, with a pysam/HTSlib
+  bridge for modern BCF and explicit StructuralVariantAnnotation decoding.
+  Original multiallelic records, INFO, sample genotypes, IDs and headers stay
+  traceable. Reference-allele features and structural uncertainty intervals
+  are distinct; missing mates/support/Identity/full lengths are not invented.
+  Reciprocal pairs produce one link; unpaired and out-of-bounds evidence stays
+  in the report. No optional decoder is installed or run during plotting.
+
 - Added `read_bedgraph()` and optional `read_bigwig()` for quantitative signal
   intervals, preserving source coordinates, values and import provenance.
   BigWig uses rtracklayer on supported platforms (not Windows), retains the

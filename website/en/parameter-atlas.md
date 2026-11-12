@@ -2867,6 +2867,23 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 </details>
 
+<span id="api-read_vcf"></span>
+<details><summary><code>read_vcf()</code></summary>
+
+
+[Full reference](reference/read_vcf.html)
+
+
+| Parameter | Signature default | Type/value rule | Meaning, range and constraints |
+| --- | --- | --- | --- |
+| `file` | `NULL` | Character path/identifier/vector; see constraints | Optional local path vector or glob patterns, before files. |
+| `files` | `NULL` | Character path/identifier/vector; see constraints | Optional additional VCF/BCF paths or patterns. |
+| `structural` | `FALSE` | Logical | Logical. Explicitly request optional structural decoding, default FALSE. Duplicate record IDs fail in this mode because mates would be ambiguous. All source records remain accessible in the default mode. |
+| `python` | `"python3"` | Character path/identifier/vector; see constraints | Existing interpreter with optional pysam for BCF only. Ignored for VCF text; default "python3". No environment is modified. |
+| `source_file` | `FALSE` | Logical | Add .source_file to returned table rows, default FALSE. |
+
+</details>
+
 <span id="api-register_ggchord_alignment"></span>
 <details><summary><code>register_ggchord_alignment()</code></summary>
 

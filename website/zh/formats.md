@@ -259,3 +259,32 @@ if (.Platform$OS.type != "windows" && requireNamespace("rtracklayer", quietly = 
 bedGraph 为四列制表符分隔数据，使用零基半开坐标及有限的有符号数值。导入仅转换一次坐标；原始端点、值、物理行号和不解释样式的显示表头均可追溯。每文件一条信号，多个 track 定义应拆分。字面序列 ID `track`、`browser` 合法，表头不设置图形样式。重叠行保留，不隐式采用末行覆盖规则。
 
 矩形以 `start - 1` 和 `end` 为单元边界，不在缺失区间插值连线。BigWig 需要可选 **rtracklayer**，其解码器不支持 Windows；该平台使用已有 bedGraph 文件。二进制导入的 GRanges 已是一基闭区间。区段值保留二进制浮点精度，区段数量不代表原始测量次数。完整长度来自文件表头。查询采用无链区间并集，结果裁切至并集，空选区返回零行。缺失区间仍缺失，与存储的零不同；不制造 coverage、identity、support、单位或裁切前观测 ID。各 Track 的映射、数值域、单位和 Guide 仍显式配置。
+
+## 变异记录与结构断点 {#variants}
+
+VCF 需要可选 **VariantAnnotation**，显式结构变异解码另外需要 **StructuralVariantAnnotation**。示例读取依赖包未改动的有来源输入：chr22 的 1000 Genomes 子集，以及 StructuralVariantAnnotation 分发的真实 caller VCF。数据保留在这些包中，ggchord 不复制第三方解析器实现或输入。`check-variant-import.R` 记录确切依赖版本和源哈希。
+
+```r
+if (requireNamespace("VariantAnnotation", quietly = TRUE)) {
+  variant_file <- system.file("extdata", "chr22.vcf.gz", package = "VariantAnnotation")
+  imported_variants <- read_vcf(variant_file, source_file = TRUE)
+  imported_variants$features$variant |>
+    select(accver, start, end, feature_id, REF, ALT) |>
+    head()
+}
+
+if (requireNamespace("StructuralVariantAnnotation", quietly = TRUE)) {
+  structural_file <- system.file("extdata", "gridss.vcf", package = "StructuralVariantAnnotation")
+  structural <- read_vcf(structural_file, structural = TRUE)
+  structural$links |>
+    select(qaccver, saccver, qstart, qend, sstart, send,
+      q_breakend_orientation, s_breakend_orientation)
+  structural$report$records[[1]]$warnings
+}
+```
+
+每条可放置记录保留一个 feature 行及 ALT 列表，多等位调用也不拆分。Feature 表示包括 padding 碱基的参考等位基因跨度，不是推断的符号 SV footprint。完整 INFO、样本/基因型数组及表头在 `report$records[[1]]$parsed` 中，应在那里检查实际 caller 字段；缺失支持度或 Identity 不变成零，也不制造计数。未知完整长度保持 NA，绘图前应提供可靠参考长度。端粒和越界跨度保留在 `unplaced_features` 及源对象中，不裁切。
+
+结构解码需显式启用，保留置信区间，关闭缺失 mate 推断；每个互惠对生成一条连接，包含两个原始记录索引。警告标明解码器未配对的记录，报告保留全部记录。`.plottable = FALSE` 标记超出已知参考边界的断点，相关配对保留在 `unplaced_links`。精确单碱基断点可显式选取位置后用于 `geom_link_line()`；不确定区间适合区间几何。`q_breakend_orientation`、`s_breakend_orientation` 描述衍生序列，不是相对同源链。不能制造比对 Identity 为这些连接配色。
+
+现代 BCF（`.bcf` 或 `.bcf.gz`）通过 `python` 指定已安装可选 **pysam** 的现有解释器，例如 `read_vcf("calls.bcf", python = "/path/to/environment/bin/python")`。仅 BCF 会调用它，经 HTSlib 转临时 VCF，并记录解码器、版本和消息。虚拟环境解释器路径保留其环境。原记录顺序、数值及基因型保留；转码文本不是原始 BCF 物理行。不会安装任何软件。本读取器将选定本地文件加载到内存，大数据应在上游选取或子集化。

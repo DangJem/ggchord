@@ -259,3 +259,32 @@ if (.Platform$OS.type != "windows" && requireNamespace("rtracklayer", quietly = 
 bedGraph uses four tab-separated columns, zero-based half-open coordinates and finite signed values. Import converts coordinates once; original endpoints, values, physical lines and opaque display headers remain traceable. One file represents one signal; split multiple track definitions. Literal sequence IDs `track` and `browser` are valid. Headers never set plot styles. Overlaps remain rows, without an implicit last-wins rule.
 
 Rectangles use `start - 1` and `end` as cell boundaries; no line is interpolated across absent ranges. BigWig requires optional **rtracklayer**, whose decoder does not support Windows. Use an existing bedGraph file there. Binary GRanges coordinates are already one-based inclusive. Imported runs retain binary floating-point precision; run counts are not original measurement counts. Full lengths come from the file header. Query windows form an unstranded union, results are clipped to it, and empty selection returns zero rows. Missing intervals stay absent, distinct from a stored zero; no coverage, identity, support, units or pre-clipping observation IDs are invented. Each Track's mapping, value range, units and Guide remain explicit.
+
+## Variant records and structural breakpoints {#variants}
+
+Install optional **VariantAnnotation** for VCF and additionally **StructuralVariantAnnotation** for explicit structural decoding. These examples read the dependencies' unchanged source-backed examples: the chr22 1000 Genomes subset and a real caller VCF distributed with StructuralVariantAnnotation. Data stays in those packages; no third-party parser implementation or input is copied into ggchord. `check-variant-import.R` records exact package versions and source hashes.
+
+```r
+if (requireNamespace("VariantAnnotation", quietly = TRUE)) {
+  variant_file <- system.file("extdata", "chr22.vcf.gz", package = "VariantAnnotation")
+  imported_variants <- read_vcf(variant_file, source_file = TRUE)
+  imported_variants$features$variant |>
+    select(accver, start, end, feature_id, REF, ALT) |>
+    head()
+}
+
+if (requireNamespace("StructuralVariantAnnotation", quietly = TRUE)) {
+  structural_file <- system.file("extdata", "gridss.vcf", package = "StructuralVariantAnnotation")
+  structural <- read_vcf(structural_file, structural = TRUE)
+  structural$links |>
+    select(qaccver, saccver, qstart, qend, sstart, send,
+      q_breakend_orientation, s_breakend_orientation)
+  structural$report$records[[1]]$warnings
+}
+```
+
+Each placed record remains one feature row with an ALT list, including multiallelic calls. Features show the reference allele span, including the padding base, rather than an inferred symbolic SV footprint. Complete INFO, sample/genotype arrays and headers remain in `report$records[[1]]$parsed`. Inspect actual caller fields there; neither missing support nor Identity becomes zero or a fabricated count. Unknown full lengths remain NA; provide reliable reference lengths before plotting. Telomeric/out-of-bounds spans stay in `unplaced_features` and the source, without clipping.
+
+Structural decoding is opt-in, keeps confidence intervals, disables absent-mate inference, and creates one link per reciprocal pair with both original record indices. Warnings identify records not paired by the decoder, while all records remain in the report. `.plottable = FALSE` marks breakends outside known reference bounds; affected pairs remain in `unplaced_links`. Exact single-base breakpoints suit `geom_link_line()` after explicitly selecting their positions; uncertainty intervals suit interval geometry. `q_breakend_orientation` and `s_breakend_orientation` describe the derivative sequence, not relative homology strand. Never manufacture alignment Identity to colour these links.
+
+For modern BCF (`.bcf` or `.bcf.gz`), supply `python` naming an existing interpreter with optional **pysam**: `read_vcf("calls.bcf", python = "/path/to/environment/bin/python")`. Only BCF invokes it, transcodes to temporary VCF via HTSlib, and records decoder/version/messages. Virtual-environment interpreter paths retain their environment. Original record order, values and genotypes are preserved; transcoded text is not an original physical BCF line. No installation occurs. This reader loads selected local files into memory; select or subset large datasets upstream.

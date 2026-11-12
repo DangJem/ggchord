@@ -99,6 +99,11 @@ test_that("import helpers parse minimal files with explicit coordinate conventio
     expect_true(nrow(indexed) > 0L)
     expect_identical(unique(indexed$accver), "pUC19")
   }
+  if (requireNamespace("VariantAnnotation", quietly = TRUE)) {
+    variants <- read_vcf(system.file("extdata", "chr22.vcf.gz", package = "VariantAnnotation"))
+    expect_true(nrow(variants$features$variant) > 0L)
+    expect_identical(unique(variants$features$variant$accver), "22")
+  }
   mapping <- read_paf(paf)
   expect_equal(unname(unlist(mapping[c("qstart", "qend", "sstart", "send")])),
     c(100, 200, 400, 300))

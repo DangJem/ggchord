@@ -1,0 +1,14 @@
+{
+  "source_sha256": "da421c22e5164153c351495cecdcd186070de033d79c94f272026cfb64d5bb2d",
+  "translations": {
+    "0": "通过可选的成熟变异解码器读取 VCF 或 BCF",
+    "1": "可选本地路径向量或通配模式，在 files 之前读取。",
+    "2": "可选的其他 VCF/BCF 路径或通配模式。",
+    "3": "逻辑值，是否显式请求可选结构变异解码，默认 FALSE。该模式拒绝重复记录 ID，避免 mate 关系歧义。默认模式保留全部源记录。",
+    "4": "仅 BCF 需要的已有 Python 解释器，其中须已安装可选 pysam。VCF 文本忽略此参数，默认 \"python3\"；不改动任何环境。",
+    "5": "是否向返回表的每行添加 .source_file，默认 FALSE。",
+    "6": "列表包含 features$variant（参考等位基因跨度）、breakends、links 和 report。报告保留各完整解析 VCF 对象、源记录文本、原始表头和 ID、解码器版本、警告及未知长度保持缺失的序列字典。原始 INFO 和基因型证据在 report$records 中，不将特定 caller 的支持字段默认为通用计数。表中 .source_input 和 .source_record 对应报告文件及其记录顺序，不是新造的生物学观测 ID。BCF 文本为解码器输出，不是原始二进制字节；不赋予 BCF 物理行号。",
+    "7": "可选 VariantAnnotation 读取本地 VCF 文本（包括 gzip）。以 .bcf 或 .bcf.gz 结尾的文件先由显式选定 Python 环境中的 pysam/HTSlib 转为临时 VCF。不安装解析器，也不在绘图时运行。这是针对选定本地文件的内存适配器，不是染色体规模索引查询或变异检测器。",
+    "8": "每条可放置源记录保留一行，包括多等位记录。变异 feature 表示 POS 处参考等位基因跨度，包括 padding 碱基；不冒充插入序列或符号 SV 的 footprint。保留原 ID、REF、ALT 列表、QUAL、FILTER、INFO 和样本/基因型数组。缺失 ID 仍缺失。不合并、筛选、定相或归一化等位基因和样本，不从位置推断支持度、Identity 或完整长度。表头未知长度保持 NA。端粒或越界参考跨度保留在完整解析源及 ⟦0⟧，不裁切制造参考 feature。空 VCF 返回空 feature 表。显式结构变异解码使用可选 StructuralVariantAnnotation，关闭缺失 mate 推断，保留位置不确定性。每个互惠解码对生成一条 link，包含两个源记录索引；单端及未配对记录仍保留在源和报告中。断点方向描述衍生序列，不是同源方向或 feature 链。连接保留升序置信区间和独立方向字段，不制造 pident、相对 Orientation 或指向缺失 mate 的连接。解码器派生元数据与原始证据分开标明。超出已知边界的断点标为 .plottable = FALSE，受影响的配对保留在报告 unplaced_links 中，不裁切成精确边界。"
+  }
+}

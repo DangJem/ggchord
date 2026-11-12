@@ -1490,6 +1490,18 @@
     }
   },
   {
+    "name": "read_vcf",
+    "owner": "ggchord",
+    "alias": "",
+    "parameters": {
+      "file": "NULL",
+      "files": "NULL",
+      "structural": "FALSE",
+      "python": "\"python3\"",
+      "source_file": "FALSE"
+    }
+  },
+  {
     "name": "register_ggchord_alignment",
     "owner": "ggchord",
     "alias": "",

@@ -1,0 +1,19 @@
+{
+  "status": "passed",
+  "source": "/private/tmp/ggchord-adapter-r-lib/StructuralVariantAnnotation/extdata/gridss.vcf",
+  "package": "StructuralVariantAnnotation",
+  "package_version": "1.28.0",
+  "source_sha256": "87d676d63b06a772ba852b3ffc487cc34204f94a969123616be023f35db912e4",
+  "original_records": 8,
+  "reciprocal_pairs": 2,
+  "explicitly_selected_overview_pairs": 1,
+  "source_info_and_genotypes_preserved": true,
+  "outside_reference_uncertainty_reported": true,
+  "empty_and_telomeric_preserved": true,
+  "unpaired_retained_in_source": true,
+  "bcf_roundtrip": true,
+  "multiallelic_records_not_split": true,
+  "uncertainty_not_collapsed": true,
+  "unknown_lengths_remain_unknown": true,
+  "no_fabricated_support_identity_or_mate": true
+}

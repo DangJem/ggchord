@@ -105,6 +105,7 @@
 | [`read_genbank`](reference/read_genbank.html) | 使用可选成熟解析器导入本地 GenBank 或 GBFF | [L2](formats.html#genbank) | 本地文件到标准表；按源格式转换坐标和声明单位 | [↗](parameter-atlas.html#api-read_genbank) | [↗](formats.html) |
 | [`read_gff3`](reference/read_gff3.html) | 将一个或多个 GFF3 文件读为注释数据 | [L2](real-data.html#read) | 本地文件到标准表；按源格式转换坐标和声明单位 | [↗](parameter-atlas.html#api-read_gff3) | [↗](real-data.html) |
 | [`read_paf`](reference/read_paf.html) | 将 PAF 比对读为 ggchord 连接 | [L2](formats.html#zero-based) | 本地文件到标准表；按源格式转换坐标和声明单位 | [↗](parameter-atlas.html#api-read_paf) | [↗](formats.html) |
+| [`read_vcf`](reference/read_vcf.html) | 导入变异记录及显式解码的结构断点 | [L2](formats.html#variants) | VCF；BCF 需显式 pysam Python；结构解码为可选依赖 | [↗](parameter-atlas.html#api-read_vcf) | [↗](formats.html) |
 | [`register_ggchord_alignment`](reference/register_ggchord_alignment.html) | 注册精确字符/源位置用于独立Fusion细节 | [L2](fusion.html#character-detail) | 显式源/对齐列映射；独立Cartesian细节；已观测完整codon | [↗](parameter-atlas.html#api-register_ggchord_alignment) | [↗](fusion.html) |
 | [`rel`](reference/ggplot2-helpers.html) | 适用于 ggchord 的部分 ggplot2 辅助函数 | [上游](parameter-atlas.html#upstream) | 上游对象/接口；遵循 ggplot2/grid 的原始契约 | [↗](parameter-atlas.html#api-rel) | [↗](chord.html) |
 | [`scale_feature_fill_manual`](reference/scale_gene_fill_manual.html) | 基因、注释及区域填色标度 | [L2](scale-families.html#features) | 三种模式；匹配通用注释角色或预设 | [↗](parameter-atlas.html#api-scale_feature_fill_manual) | [↗](chord.html) |

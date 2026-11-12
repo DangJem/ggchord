@@ -3398,5 +3398,30 @@
       "en": "quantitative Track input; BigWig optional on supported platforms",
       "zh": "定量轨道输入；BigWig 为支持平台上的可选依赖"
     }
+  },
+  "read_vcf": {
+    "level": "L2",
+    "page": "formats",
+    "anchor": "variants",
+    "reason": "Real optional-package VCF with complete source evidence; structural/BCF controls in directed audit",
+    "modes": "variant feature input; optional structural pair input",
+    "parameters": [
+      "file",
+      "files",
+      "structural",
+      "python",
+      "source_file"
+    ],
+    "purpose": {
+      "en": "Import variant records and explicitly decoded structural breakpoints",
+      "zh": "导入变异记录及显式解码的结构断点"
+    },
+    "alias_of": "",
+    "case": "formats",
+    "scope": "reference allele spans and separately decoded uncertainty intervals",
+    "modes_localized": {
+      "en": "VCF; BCF with explicit pysam Python; optional structural decoder",
+      "zh": "VCF；BCF 需显式 pysam Python；结构解码为可选依赖"
+    }
   }
 }

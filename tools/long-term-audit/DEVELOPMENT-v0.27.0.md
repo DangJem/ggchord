@@ -182,3 +182,30 @@ check-signal-import.R实际通过文本/二进制每碱基信号一致（尊重f
 来源及真实GC轨道保留。代表PNG已保存；macOS R4.6/rtracklayer1.72在/tmp隔离库
 验证，未更改用户R库。其他平台发布矩阵未执行。两个帮助/Rd/双语课程及API
 索引同步，formats课程独立进程通过，1089段参考翻译检查通过；没有运行testthat。
+
+## 第十工作包：VCF/BCF与结构断点
+
+read_vcf()以可选VariantAnnotation读取文本/压缩VCF，BCF通过显式Python中的
+pysam/HTSlib转码。保留每源记录、多ALT、原ID/REF/QUAL/FILTER、INFO及样本
+数组；参考跨度含padding，不冒充插入/SV footprint。未知全长保持NA。不可
+放置的参考跨度单列unplaced_features，完整源仍在报告。空输入合法返回空表。
+
+显式structural=TRUE调用可选StructuralVariantAnnotation，不推断missing mate、
+不压缩位置不确定性。互惠对仅一条link，双源索引保留；未配对源仍在报告并附
+解码警告。断点方向独立命名，不制造同源Orientation、pident或read support；
+超出参考边界的置信区间不裁切，.plottable=FALSE，相关配对进unplaced_links。
+BCF桥接保留用户虚拟环境解释器路径，不能normalizePath解析其symlink后误用
+系统Python。解码消息和确切HTSlib版本入报告，没有新Imports或用户环境修改。
+
+check-variant-import.R实际通过真实gridss源8记录/2互惠对、未配对记录完整、
+INFO/基因型相同、现代BCF2往返、缺失ID/QUAL、多ALT不拆分、置信区间保留、
+未知长度及歧义重复ID边界。另以VariantAnnotation真实chr22的10376记录、空
+VCF/端粒记录和越界SV不确定区间定向核对。真实概览显式仅选1个跨染色体关系，
+同染色体配对仍在原links，不用零宽ribbon掩饰精确点，改为点连接几何。实际PNG
+已保存查看；不是所有caller/平台的发布矩阵。原始输入保留在依赖包内，ggchord
+不重新分发第三方输入或复制其实现，版本及源SHA256记录在结果JSON。
+
+VariantAnnotation1.58/StructuralVariantAnnotation1.28/pysam0.24.1仅在/tmp隔离
+库/虚拟环境实测。帮助/Rd/双语课程/API索引同步，1098段参考翻译及formats
+独立进程通过。只复用已有import最小案例添加可选成功路径，未运行testthat。
+其他标准格式、密集布局、整站重现和API收敛继续。
