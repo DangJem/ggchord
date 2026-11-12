@@ -1,5 +1,13 @@
 # ggchord 0.27.0 (development)
 
+- `fusion_panel(side = "auto")` places any number of panels that fit a bounded
+  clockwise perimeter search in the measured composition area. Explicit boxes,
+  named/angle allocations and supplied sizes stay fixed. Only unlocked default
+  containers adapt; placement does not shrink fonts, rotate children or drop
+  panels. Impossible packing fails explicitly. Exports record physical angles,
+  container adaptation and the placement strategy. Magnification lists can
+  repeat named `"auto"` sides while retaining explicit detail-panel selections.
+
 - Fusion accepts native cross-panel Guides at different outside positions.
   Adaptive compositions jointly measure Guide candidates and panel allocations,
   preserving explicit positions, direction, grid, fonts and absolute boxes.

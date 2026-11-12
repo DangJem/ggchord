@@ -32,7 +32,7 @@ biological flow of genetic material.
 
 ## Register panels and instances {#panels}
 
-Use one panel per side: `right`, `top`, `left`, `bottom`. IDs must be unique;
+The first example uses one panel per named side: `right`, `top`, `left`, `bottom`. Diagonal, free and automatic placement are described below. IDs must be unique;
 `center` is reserved. `size=c(width,height)` and `center_size` are fractions of
 the composition area after the cross-panel legend has been allocated. Explicit
 allocations that overlap fail rather than silently relocating a panel.
@@ -71,7 +71,7 @@ A tip is a decorative direction marker; full source fronts remain exported.
 
 Default `layout="fixed"` allocates panel rectangles and rebuilds their labels
 and guides at the output size. `layout="adaptive"` additionally fits the
-central rectangle to the physical aspect ratio. Explicit font sizes remain
+central rectangle to the physical aspect ratio and jointly budgets native outer Guides. Explicit font sizes remain
 fixed. This is not a general font-scaling or global collision solver. Each
 panel retains its own guides; different scale meanings are not automatically
 merged. Use `show.legend=FALSE` or local `theme()` deliberately where appropriate.
@@ -420,3 +420,28 @@ Impossible constraints fail explicitly. `theme(legend.position = "none")`
 hides composition Guides using native ggplot2 semantics. Inside composition
 Guides remain unsupported; each independent panel can still own local Guides.
 This is a bounded physical-space search, not a claim of global optimality.
+
+## Automatic perimeter panels {#auto-perimeter}
+
+Set `fusion_panel(..., side = "auto")` to place more than eight independent
+panels around the center. The placement uses actual mm after the outer Guide
+budget, clockwise in input order on rectangular canvases. Explicit sizes and
+all fixed named/angle/box allocations stay fixed. Unlocked default containers
+may adapt down to a 15 mm floor; this does not shrink fonts or guarantee that
+arbitrary text will fit. Use each child's own label/physical-size policy.
+
+```r
+# Requires dplyr and the source checkout or tutorial input bundle.
+source("examples/fusion-auto.R")
+auto_fusion
+```
+
+This real example intentionally displays one observed HSP twelve times. Its
+explicit `source_hsp_id` and `allow_repeated = TRUE` distinguish 12 connections
+from one observation. Each view still rebuilds its exact interval fronts.
+`metadata$panel_layout` records the bounded search, preserved constraints and
+container adaptation; panel rows expose `auto_angle` and `auto_size_factor`.
+Multiple magnify details can use repeated named `"auto"` sides, with explicit
+`detail_panel` selections. If no packing is feasible, the build fails with a clear diagnostic;
+no panel is discarded. The search is deterministic and conservative, not a
+global optimum or a promise that any count fits every canvas.

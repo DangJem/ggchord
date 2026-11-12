@@ -1,10 +1,10 @@
 {
-  "source_sha256": "72f5f26cc824b84bc2333aeb1cf23b633d3d2944be073d8231931a19db2e7e16",
+  "source_sha256": "e772a6171f351b954c10e11c9ffa1fc08412779e6699245b99cc0b2eabaded60",
   "translations": {
     "0": "向Fusion添加基因组面板",
     "1": "独立ggchord基因组图、另一张Fusion，或来自 ⟦0⟧ 的Cartesian细节图。Dotplot、分面和未注册的外部ggplot当前尚未接入。字符面板的跨面板连接须明确fill，不能使用骨架颜色渐变。",
     "2": "唯一的非空面板名称；⟦0⟧为保留名称。",
-    "3": "right、top、left、bottom、topright、topleft、bottomright、bottomleft之一，每个命名侧边一个面板；摆放不会旋转子图Coord。",
+    "3": "right、top、left、bottom、topright、topleft、bottomright 或 bottomleft（每个命名方向一个面板）；auto 表示有界顺时针外围布局，可容纳画布允许的任意数量独立面板。auto 保留显式尺寸和全部固定分配；未锁定的默认容器可适配，最低15毫米。摆放不缩放字体、不旋转子图 Coord。找不到可行位置时明确失败。",
     "4": "可选宽高比例。超出画布的分配报错；重叠默认报错，只有组合对象显式允许时才接受。",
     "5": "可选显式矩形（xmin、xmax、ymin、ymax），允许按任意顺序命名。数值表示扣除组合图例后的区域比例，绝对grid单位保持物理尺寸。替代side/size/angle/distance，超界在构建时报错。",
     "6": "替代side的有限角度，以右侧为0度、逆时针为正。不旋转子图或文字。",

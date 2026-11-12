@@ -1,0 +1,24 @@
+{
+  "status": "passed",
+  "independent_panels": 13,
+  "displayed_connections": 12,
+  "scientific_observations": 1,
+  "clockwise_physical_placement": true,
+  "boxes_disjoint": true,
+  "explicit_boxes_sizes_preserved": true,
+  "source_rows_preserved": true,
+  "multiple_auto_details": true,
+  "alternate_aspect_ratio": true,
+  "impossible_size_rejected": true,
+  "placement": {
+    "status": "feasible",
+    "panel_ids": ["view-1", "view-2", "view-3", "view-4", "view-5", "view-6", "view-7", "view-8", "view-9", "view-10", "view-11", "view-12"],
+    "strategy": "bounded_clockwise_perimeter",
+    "start_phase": 0,
+    "default_size_factor": 1,
+    "minimum_default_container_mm": 15,
+    "gap_mm": 1,
+    "fixed_allocations_preserved": true,
+    "placement_rescales_fonts": false
+  }
+}

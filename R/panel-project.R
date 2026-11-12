@@ -35,7 +35,7 @@ ggchord_fusion_box <- function(box) {
   invisible(box)
 }
 
-ggchord_fusion_sides <- function() c("right", "top", "left", "bottom", "topright", "topleft", "bottomright", "bottomleft")
+ggchord_fusion_sides <- function() c("right", "top", "left", "bottom", "topright", "topleft", "bottomright", "bottomleft", "auto")
 
 # Move child exports from their local composition to the enclosing canvas.
 # Only known geometric columns are shifted, never arbitrary source metadata.

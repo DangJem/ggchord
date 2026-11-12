@@ -48,7 +48,8 @@ ordinary unregistered plots are rejected.}
 
 \item{side}{A named side from fusion_panel(), including diagonal sides.
 For a list of plots, supply a character vector named by panel ID, with
-distinct sides. Multiple panels require explicit routing and placement.}
+distinct fixed sides or repeated auto values for automatic perimeter
+allocation. Every input region still explicitly selects its detail panel.}
 
 \item{center_size, detail_size}{Optional panel width/height fractions, following
 \code{\link[=ggchord_fusion]{ggchord_fusion()}} and \code{\link[=fusion_panel]{fusion_panel()}}. Defaults reserve a smaller source

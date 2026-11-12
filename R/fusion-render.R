@@ -70,7 +70,7 @@ ggchord_build_fusion <- function(x) {
       panel_rows[[id]] <- ggchord_rbind_fill(list(container, child$panels))
       instances[[id]] <- child$instances
       diagnostics[[id]] <- list(panel_id = id, canvas_mm = dimensions, nested = TRUE,
-        guide_layout = child$metadata$guide_layout,
+        guide_layout = child$metadata$guide_layout, panel_layout = child$metadata$panel_layout,
         composition_guide_bounds_mm = child$metadata$guide_bounds_mm)
       for (key in names(child$diagnostics)) {
         diagnostic <- child$diagnostics[[key]]
@@ -336,6 +336,10 @@ ggchord_build_fusion <- function(x) {
     d <- panel_rows[[id]]; at <- which(d$panel_id == id); spec <- x$panels[[id]]
     for (name in c("requested_angle", "requested_distance")) if (!name %in% names(d)) d[[name]] <- NA_real_
     d$requested_angle[at] <- spec$angle %||% NA_real_
+    for (name in c("auto_angle", "auto_size_factor")) {
+      if (!name %in% names(d)) d[[name]] <- NA_real_
+      d[[name]][at] <- attr(rectangles[[id]], name) %||% NA_real_
+    }
     d$requested_distance[at] <- spec$distance %||% NA_real_
     if (!"requested_box" %in% names(d)) d$requested_box <- I(rep(list(NULL), nrow(d)))
     d$requested_box[at] <- list(spec$box)
@@ -351,7 +355,7 @@ ggchord_build_fusion <- function(x) {
     }), recursive=FALSE)),
     routing_obstacles=obstacles,routing_corridors=combine(corridor_rows,"routing_corridors"),diagnostics=diagnostics,source_layouts=lapply(panels,`[[`,"layout"),source_data=sources,
     relationship_data=c(lapply(x$ribbons,`[[`,"data"),unlist(lapply(nested_results,function(n) n$export$relationship_data),recursive=FALSE)),
-    metadata=list(canvas_mm=canvas,coordinate_space="composition",units="mm",layout=x$fusion_layout,
+    metadata=list(canvas_mm=canvas,panel_layout=attr(rectangles,"automatic_layout") %||% list(status="fixed"),coordinate_space="composition",units="mm",layout=x$fusion_layout,
       guide_side=styles$side,guide_size_mm=guide_size,guide_sizes_mm=styles$sizes,
       guide_bounds_mm=guide_boxes,guide_layout=styles$report,measurement="measured",allow_overlap=isTRUE(x$allow_overlap),
       device=names(grDevices::dev.cur()),font_conditions="Selected device metrics; fallback and embedding not certified"))

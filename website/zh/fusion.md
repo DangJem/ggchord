@@ -20,7 +20,7 @@ Fusion组合独立的基因组图形，并连接其真实序列区间。中央�
 
 ## 注册面板与显示实例 {#panels}
 
-每个方向最多一个面板：`right`、`top`、`left`、`bottom`。ID必须唯一，`center`是保留名称。`size=c(width,height)`与`center_size`使用扣除跨面板图例后组合区域的相对比例。明确指定的区域发生重叠时会报错，不擅自移动面板。
+首例的每个命名方向最多一个面板：`right`、`top`、`left`、`bottom`；斜向、自由区域与自动排布见后文。ID必须唯一，`center`是保留名称。`size=c(width,height)`与`center_size`使用扣除跨面板图例后组合区域的相对比例。明确指定的区域发生重叠时会报错，不擅自移动面板。
 方位只决定摆放位置，不旋转文字；需要纵向序列轴时，在子图上设置`coord_collinear(seq_axis="vertical")`。
 
 四方向示例复用真实PAF第3、2、9、1行，明确连接到上、左、下、右面板。重复视图是不同显示实例，不是新增观测。不同面板无需共享相同的物理bp/mm比例。
@@ -38,7 +38,7 @@ Fusion组合独立的基因组图形，并连接其真实序列区间。中央�
 
 {{code:fusionstyle}}
 
-默认`layout="fixed"`分配面板区域，并按输出尺寸重新测量标签和图例；`layout="adaptive"`还按物理宽高比调整中央区域。用户明确指定的字号保持固定。这不是通用字号缩放或全局碰撞求解器。
+默认`layout="fixed"`分配面板区域，并按输出尺寸重新测量标签和图例；`layout="adaptive"`还按物理宽高比调整中央区域，并对外层原生Guide联合预算。用户明确指定的字号保持固定。这不是通用字号缩放或全局碰撞求解器。
 每张子图保留自己的图例，不自动合并含义不同的标度；需要简化时，主动设置`show.legend=FALSE`或局部`theme()`。组合层的`theme()`/`guides()`只作用于跨面板图例。必须保留的图例空间会实际测量；画布过小则给出错误诊断。
 
 ## 导出与核对锚点 {#export}
@@ -344,3 +344,24 @@ Guide；显式位置、方向、行列、字体、key 尺寸和绝对面板框�
 `diagnostics`。无法满足约束时明确失败。`theme(legend.position = "none")` 沿用
 ggplot2 语义隐藏组合图例。组合内部 Guide 暂不支持；各独立子图仍可拥有局部
 Guide。这是有界物理空间搜索，不声称全局最优。
+
+## 自动外围排布 {#auto-perimeter}
+
+用 `fusion_panel(..., side = "auto")` 将超过八个独立面板排在中央图外围。
+排布在外层 Guide 预算后的实际毫米空间进行，在矩形画布上按输入顺序顺时针
+放置。显式尺寸和全部固定方位、角度、box 保持不变。未锁定默认容器可适配，
+最低15毫米；这不缩小字体，也不保证任意文字均能容纳。各子图保留自己的标签
+及物理尺寸策略。
+
+```r
+# Requires dplyr and the source checkout or tutorial input bundle.
+source("examples/fusion-auto.R")
+auto_fusion
+```
+
+真实示例刻意将一条已观测 HSP 展示十二次，显式 `source_hsp_id` 和
+`allow_repeated = TRUE` 区分十二条显示连接与一条来源观测。每个视图仍按实际
+尺寸重建精确区间端面。`metadata$panel_layout` 记录有界搜索、保留约束及容器
+适配，面板行提供 `auto_angle`、`auto_size_factor`。多个 magnify 细节可以在
+命名方位向量中重复使用 `"auto"`，同时明确 `detail_panel`。无法摆放时明确
+报错，不丢弃面板。这是确定性保守搜索，不声称全局最优或任意数量都能放进任意画布。

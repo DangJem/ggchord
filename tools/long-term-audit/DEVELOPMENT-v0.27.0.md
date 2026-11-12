@@ -113,3 +113,16 @@ check-fusion-guides.R通过真实Identity宽矮转向（六keys）、双侧原�
 v0.27.0-fusion-guide-results.json记录结果。metadata最终Guide尺寸/边界独立于
 候选carrier测量位置，嵌套diagnostics保留子组合报告。无全局最优或正式设备认证
 承诺；自动环绕布局、高密度质量广覆盖、适配器及稳定化继续开发。
+
+## 第六工作包：自动环绕外围面板
+
+side=auto显式选择按实际毫米画布/外层Guide预算的顺时针外围搜索，可超过八图。
+固定box/方位/角度和显式size均不动；只有默认容器在有限范围内适配，最低15mm，
+不暗改字体、Coord方向、数据或图层。摆放失败明确报错，不丢面板。导出自动角度、
+实际容器适配系数及有界搜索策略；嵌套诊断保留子组合panel_layout。
+
+check-fusion-auto.R通过12外围+中央、真实HSP原记录不变/12显示仍1来源观测、
+矩形物理方位、框无重叠、混合显式框/尺寸保留、另一宽高比重建、多细节重复auto
+方位以及超大显式尺寸失败。真实完整示例examples/fusion-auto.R；
+v0.27.0-fusion-auto-results.json与实际保存的PNG为证据。并非全局最优或任意
+数量/文字在任意画布的可读性保证；密集质量广覆盖及其他长期工作继续。

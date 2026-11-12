@@ -60,7 +60,11 @@ ggchord_fusion <- function(center, center_size = NULL, layout = c("fixed", "adap
 #'   require explicit cross-panel fill; backbone-colour gradient is unavailable.
 #' @param id Unique nonempty panel name; `"center"` is reserved.
 #' @param side One of right, top, left, bottom, topright, topleft, bottomright or
-#'   bottomleft; one panel per named side. Placement never rotates the child Coord.
+#'   bottomleft (one panel per named side), or auto for a bounded clockwise
+#'   perimeter layout with any number of distinct panels that fit the canvas.
+#'   Auto preserves explicit sizes and all fixed allocations; unlocked default
+#'   containers may adapt with a 15 mm floor. Placement does not rescale fonts
+#'   or rotate the child Coord. If no placement is feasible, the build fails explicitly.
 #' @param size Optional fractional width and height. Out-of-frame allocations
 #'   fail; overlap fails unless explicitly allowed by the composition.
 #' @param box Optional explicit rectangle (xmin, xmax, ymin, ymax), optionally
@@ -198,7 +202,7 @@ fusion_ribbon <- function(data, mapping = NULL, qpanel = NULL, spanel = NULL,
 `+.ggchord_fusion` <- function(e1, e2) {
   if (inherits(e2, "ggchord_fusion_panel")) {
     if (e2$id %in% names(e1$panels)) ggchord_stop("Fusion: duplicate panel id '", e2$id, "'")
-    if (!e2$side %in% c("free", "angle") && e2$side %in% vapply(e1$panels, `[[`, "", "side")) ggchord_stop("Fusion: only one panel per side is supported")
+    if (!e2$side %in% c("free", "angle", "auto") && e2$side %in% vapply(e1$panels, `[[`, "", "side")) ggchord_stop("Fusion: only one panel per side is supported")
     e1$panels[[e2$id]] <- unclass(e2)
   } else if (inherits(e2, "ggchord_fusion_ribbon")) {
     e1$ribbons[[length(e1$ribbons) + 1L]] <- unclass(e2)
@@ -286,7 +290,7 @@ ggchord_fusion_styles <- function(x) {
         positions = c("left", "right", "top", "bottom")))
     report <- joint$report
     if (!report$status %in% c("feasible", "no_guides")) ggchord_stop(
-      "Fusion: cross-panel guides cannot fit the composition under the explicit constraints; enlarge the canvas or revise guide layout")
+      "Fusion: cross-panel guides and panel allocations cannot fit the composition under the explicit constraints; enlarge the canvas or revise guide layout")
     built <- joint$built; table <- joint$table %||% ggplot2::ggplot_gtable(built)
   } else table <- ggplot2::ggplot_gtable(built)
   at <- which(grepl("^guide-box", table$layout$name) & !vapply(table$grobs, inherits, logical(1), "zeroGrob"))
@@ -313,7 +317,7 @@ ggchord_fusion_guide_budget <- function(canvas, sizes) {
 
 ggchord_fusion_rectangles <- function(x, canvas) {
   sides <- vapply(x$panels, `[[`, "", "side")
-  extended <- any(sides %in% c("free", "angle")) || !is.null(x$panels$center$box)
+  extended <- any(sides %in% c("free", "angle", "auto")) || !is.null(x$panels$center$box)
   corner <- any(sides %in% c("topright", "topleft", "bottomright", "bottomleft"))
   available <- if (extended) c(.32, .68, .32, .68) else c(
     if (any(sides %in% c("left", "topleft", "bottomleft"))) .3 else .02,
@@ -333,6 +337,7 @@ ggchord_fusion_rectangles <- function(x, canvas) {
   }
   rects <- lapply(x$panels, function(panel) {
     side <- panel$side
+    if (side == "auto") return(NULL)
     if (!is.null(panel$box)) {
       return(ggchord_fusion_box_rect(panel$box, canvas))
     }
@@ -347,6 +352,7 @@ ggchord_fusion_rectangles <- function(x, canvas) {
         c(cos(panel$angle*pi/180)/canvas[1], sin(panel$angle*pi/180)/canvas[2]))
     c(xmin=xy[1]-size[1]/2,xmax=xy[1]+size[1]/2,ymin=xy[2]-size[2]/2,ymax=xy[2]+size[2]/2)
   })
+  rects <- ggchord_fusion_auto_rectangles(x, rects, canvas)
   for (i in seq_along(rects)) {
     a <- rects[[i]]
     if (any(a < 0 | a > 1)) ggchord_stop("Fusion: panel allocation lies outside canvas")

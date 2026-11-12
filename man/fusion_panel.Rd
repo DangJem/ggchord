@@ -23,7 +23,11 @@ require explicit cross-panel fill; backbone-colour gradient is unavailable.}
 \item{id}{Unique nonempty panel name; \code{"center"} is reserved.}
 
 \item{side}{One of right, top, left, bottom, topright, topleft, bottomright or
-bottomleft; one panel per named side. Placement never rotates the child Coord.}
+bottomleft (one panel per named side), or auto for a bounded clockwise
+perimeter layout with any number of distinct panels that fit the canvas.
+Auto preserves explicit sizes and all fixed allocations; unlocked default
+containers may adapt with a 15 mm floor. Placement does not rescale fonts
+or rotate the child Coord. If no placement is feasible, the build fails explicitly.}
 
 \item{size}{Optional fractional width and height. Out-of-frame allocations
 fail; overlap fails unless explicitly allowed by the composition.}

@@ -9764,7 +9764,7 @@
     "parameter": "side",
     "default": "c(\"right\", \"top\", \"left\", \"bottom\")",
     "type": "Vector; choices versus multiple selection below",
-    "constraint": "One of right, top, left, bottom, topright, topleft, bottomright or bottomleft; one panel per named side. Placement never rotates the child Coord.",
+    "constraint": "One of right, top, left, bottom, topright, topleft, bottomright or bottomleft (one panel per named side), or auto for a bounded clockwise perimeter layout with any number of distinct panels that fit the canvas. Auto preserves explicit sizes and all fixed allocations; unlocked default containers may adapt with a 15 mm floor. Placement does not rescale fonts or rotate the child Coord. If no placement is feasible, the build fails explicitly.",
     "source": "man/fusion_panel.Rd"
   },
   {
@@ -10116,7 +10116,7 @@
     "parameter": "side",
     "default": "c(\"right\", \"top\", \"left\", \"bottom\")",
     "type": "Vector; choices versus multiple selection below",
-    "constraint": "A named side from fusion_panel(), including diagonal sides. For a list of plots, supply a character vector named by panel ID, with distinct sides. Multiple panels require explicit routing and placement.",
+    "constraint": "A named side from fusion_panel(), including diagonal sides. For a list of plots, supply a character vector named by panel ID, with distinct fixed sides or repeated auto values for automatic perimeter allocation. Every input region still explicitly selects its detail panel.",
     "source": "man/magnify_ggchord.Rd"
   },
   {

@@ -36,7 +36,8 @@
 #'   ordinary unregistered plots are rejected.
 #' @param side A named side from fusion_panel(), including diagonal sides.
 #'   For a list of plots, supply a character vector named by panel ID, with
-#'   distinct sides. Multiple panels require explicit routing and placement.
+#'   distinct fixed sides or repeated auto values for automatic perimeter
+#'   allocation. Every input region still explicitly selects its detail panel.
 #' @param center_size,detail_size Optional panel width/height fractions, following
 #'   [ggchord_fusion()] and [fusion_panel()]. Defaults reserve a smaller source
 #'   panel and a wider detail container for a single detail plot. With multiple
@@ -127,8 +128,8 @@ magnify_ggchord <- function(plot, region, detail_plot,
   } else if (multiple) {
     if (!is.character(side) || is.null(names(side)) || anyDuplicated(names(side)) ||
         !setequal(names(side), ids) || anyNA(side) ||
-        any(!side %in% ggchord_fusion_sides()) || anyDuplicated(side))
-      ggchord_stop(caller, ": provide one distinct named side for each detail panel")
+        any(!side %in% ggchord_fusion_sides()) || anyDuplicated(side[side != "auto"]))
+      ggchord_stop(caller, ": provide a named side for each detail panel (fixed sides distinct; auto may repeat)")
     sides <- side[ids]
   } else sides <- stats::setNames(if (side_supplied) match.arg(side, ggchord_fusion_sides()) else "right", ids)
   targets <- region[["detail_panel"]]
@@ -154,8 +155,8 @@ magnify_ggchord <- function(plot, region, detail_plot,
   } else {
     side <- sides[[1L]]
     lateral <- side %in% c("right", "left")
-    if (is.null(center_size) && is.null(center_box)) center_size <- if (lateral) c(.4,.8) else c(.8,.4)
-    if (is.null(detail_size)) detail_size <- if (lateral) c(.42,.88) else c(.88,.42)
+    if (side != "auto" && is.null(center_size) && is.null(center_box)) center_size <- if (lateral) c(.4,.8) else c(.8,.4)
+    if (side != "auto" && is.null(detail_size)) detail_size <- if (lateral) c(.42,.88) else c(.88,.42)
     result <- ggchord_fusion(plot, center_size = center_size, allow_overlap = allow_overlap, center_box = center_box) +
       fusion_panel(detail_plot, "detail", side = side, size = detail_size)
   }

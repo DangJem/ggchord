@@ -2431,7 +2431,7 @@
 | --- | --- | --- | --- |
 | `plot` | `必需/互斥入口，见说明` | R 对象；约束见说明 | 独立ggchord基因组图、另一张Fusion，或来自 register_ggchord_alignment() 的Cartesian细节图。Dotplot、分面和未注册的外部ggplot当前尚未接入。字符面板的跨面板连接须明确fill，不能使用骨架颜色渐变。 |
 | `id` | `必需/互斥入口，见说明` | R 对象；约束见说明 | 唯一的非空面板名称；"center"为保留名称。 |
-| `side` | `c("right", "top", "left", "bottom")` | 向量；候选/多选含义见说明 | right、top、left、bottom、topright、topleft、bottomright、bottomleft之一，每个命名侧边一个面板；摆放不会旋转子图Coord。 |
+| `side` | `c("right", "top", "left", "bottom")` | 向量；候选/多选含义见说明 | right、top、left、bottom、topright、topleft、bottomright 或 bottomleft（每个命名方向一个面板）；auto 表示有界顺时针外围布局，可容纳画布允许的任意数量独立面板。auto 保留显式尺寸和全部固定分配；未锁定的默认容器可适配，最低15毫米。摆放不缩放字体、不旋转子图 Coord。找不到可行位置时明确失败。 |
 | `size` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 可选宽高比例。超出画布的分配报错；重叠默认报错，只有组合对象显式允许时才接受。 |
 | `box` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 可选显式矩形（xmin、xmax、ymin、ymax），允许按任意顺序命名。数值表示扣除组合图例后的区域比例，绝对grid单位保持物理尺寸。替代side/size/angle/distance，超界在构建时报错。 |
 | `angle` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 替代side的有限角度，以右侧为0度、逆时针为正。不旋转子图或文字。 |
@@ -2547,7 +2547,7 @@
 | `plot` | `必需/互斥入口，见说明` | R 对象；约束见说明 | 已注册的ggchord基因组源图或嵌套Fusion。 |
 | `region` | `必需/互斥入口，见说明` | R 对象；约束见说明 | 非空数据框，包含原始来源一基闭区间坐标 accver、start、end。默认边界为有序正整数。可选 instance 和 detail_instance 为每行精确选择源及细节显示实例；歧义会报错。显式 wrap = TRUE 允许 start > end 的跨环状源原点区间。两个选定叶面板必须声明相同的完整源长度，字符来源须使用 as_ggchord_alignment(circular = TRUE)。区间绘为两段，只保留两个外侧边界引线。细节列表使用 detail_panel 列逐行选择目标。嵌套叶使用 detail/center 等完整路径；可选 source_panel 同样选择 center 下的源叶。歧义的容器选择会报错。 |
 | `detail_plot` | `必需/互斥入口，见说明` | R 对象；约束见说明 | 显式已注册ggchord基因组图、嵌套Fusion、来自 register_ggchord_alignment() 的字符图，或按唯一名称给出的图列表。每个面板至少有一个选区，center 是保留名。选区在两端均须完整可见，bp/aa单位一致。字符图须显式注册源/对齐列映射，未注册的普通图会拒绝。 |
-| `side` | `c("right", "top", "left", "bottom")` | 向量；候选/多选含义见说明 | fusion_panel()中的命名侧边，含对角方向。图列表须提供按面板ID命名且互不相同的侧边；多面板必须明确路由和摆放。 |
+| `side` | `c("right", "top", "left", "bottom")` | 向量；候选/多选含义见说明 | fusion_panel() 中的命名方位，包括斜向。对于图形列表，提供按面板 ID 命名的字符向量；固定方位互异，auto 可以重复以自动分配外围位置。每个输入选区仍须明确选择其 detail_panel。 |
 | `center_size` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 可选面板宽高比例，沿用 ggchord_fusion() 与 fusion_panel()。单细节默认保留较小源面板和较宽细节区域。多细节可用命名尺寸列表或NULL沿用Fusion默认分配，center_size同样沿用Fusion规则。超界报错，重叠必须显式allow_overlap。 |
 | `detail_size` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 可选面板宽高比例，沿用 ggchord_fusion() 与 fusion_panel()。单细节默认保留较小源面板和较宽细节区域。多细节可用命名尺寸列表或NULL沿用Fusion默认分配，center_size同样沿用Fusion规则。超界报错，重叠必须显式allow_overlap。 |
 | `connector` | `c("leader", "none")` | 向量；候选/多选含义见说明 | "leader" 为每行绘制两条装饰性边界引线；"none" 只保留高亮。引线不是生物学色带或比对。 |
