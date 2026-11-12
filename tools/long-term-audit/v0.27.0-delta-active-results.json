@@ -1,0 +1,25 @@
+{
+  "status": "passed",
+  "modes": {
+    "promer": {
+      "source_sha256": "8108b8b8cc4ea815c46bc98cd188d8e7a082bd449ade520f2ca8b31177ee213e",
+      "original_alignments": 54,
+      "native_identity_preserved": true,
+      "identity_unit": "aa",
+      "coordinate_unit": "bp",
+      "full_source_lengths_and_direction": true,
+      "exact_physical_source_rows": true,
+      "signed_scripts_retained": true
+    }
+  },
+  "explicit_identity_maps": true,
+  "no_aligner_run": true,
+  "active_real_sample": "unchanged upstream Drosophila PROMER; no historical nucleotide sample loaded",
+  "nucleotide_control": "explicitly synthetic two-record NUCMER schema/direction control; not biological observations",
+  "no_reconstructed_characters_or_support": true,
+  "decoder": {
+    "executable": "/tmp/ggchord-show-coords",
+    "source_tag_for_this_check": "v4.0.0rc1",
+    "executable_sha256": "8857dccf166c369a90a72bf892330d23a423d6f756e1345d57220134ec7910c5"
+  }
+}

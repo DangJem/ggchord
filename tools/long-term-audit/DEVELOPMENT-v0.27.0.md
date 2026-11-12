@@ -407,3 +407,17 @@ check-track-estimates.R实际通过真实pUC19 GC及G/C位点对原生ggplot2 4.
 翻译/帮助/Rd/NEWS/双语基础矩阵/兼容课程同步；最小测试仅新增一条公开smooth
 成功路径，未运行testthat或发布矩阵。详细矩阵及facet/boxplot/violin/Track group
 评估见TRACK-GRAMMAR-v0.27.0.md，不宣称任意第三方层全兼容。
+
+## 第十九工作包：活动delta样例治理
+
+按后续样例约束，将原NUCMER病原体示例标为historical-only：原文件、固定URL、
+原物种背景、原许可和历史delta-results均完整保留，不删名、不改原字节、不把
+改名当新真实数据。现有源生成脚本跳过该文件的活动下载；活动check-delta-import
+只读原Drosophila PROMER，并用明确标注的人工NUCMER格式/方向控制验证核酸模式。
+尚未取得新的良性真实NUCMER样例，不能声称该真实样例覆盖已替代。
+
+活动脚本已实际通过54条果蝇记录的源坐标/全长/原统计逐行核对、正反方向与
+显式身份映射；新的2行NUCMER控制仅为格式证据。新证据另存delta-active-results
+和delta-active-links，历史输出未覆盖。实际果蝇图沿用真实数据；没有运行aligner
+或活动读取旧NUCMER样例。README/来源JSON与当前设计说明同步，原服务端限制
+记录仍完整保留，本阶段没有新的服务端内容限制或安全设置变更。

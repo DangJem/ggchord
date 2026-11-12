@@ -28,7 +28,9 @@
     "sha256": "873a3f866c83d1de63b1509690294c33b5cca3c41f741c5961ac6b648f25bb8b",
     "retrieved": "2026-11-12",
     "transformation": "none; original bytes unchanged",
-    "license": "DELTA-TOOLS-LICENSE.md"
+    "license": "DELTA-TOOLS-LICENSE.md",
+    "status": "historical-only",
+    "active_use": "Excluded from active checks and regeneration after the 2026-11-12 sample constraint. Original bytes, source and historical results remain unchanged; not replaced by renamed data."
   },
   {
     "file": "promer.delta",

@@ -30,3 +30,12 @@ No aligner, assembly, lift-over or homology detection is run by the readers.
   `read_delta()` requires an existing user-selected show-coords executable.
   PROMER identity is an AA alignment statistic, while source endpoints and
   complete source lengths remain bp; these units must not be conflated.
+
+After the 2026-11-12 sample constraint, `nucmer.delta` is **historical only**:
+its original bytes, organism provenance, original source URL and past results
+remain intact, but active checks and regeneration no longer load/download it.
+The active real example is the unchanged Drosophila `promer.delta`; nucleotide
+mode uses clearly marked synthetic schema/direction controls, not renamed
+biological data. A new benign real NUCMER sample has not been validated here.
+Historical `v0.27.0-delta-results.json` is retained; new runs write the separate
+`v0.27.0-delta-active-results.json` without overwriting that historical evidence.
