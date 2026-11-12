@@ -312,7 +312,9 @@ ggplot_build.ggchord <- function(plot, ...) {
          "Please build the plot with ggchord().")
   }
   source <- plot
+  plot <- ggchord_apply_adaptive_styles(plot)
   plot <- prepare_ggchord_plot(plot)
+  plot$ggchord$ref$layout$adaptive_layout <- plot$ggchord$adaptive_report
   class(plot) <- setdiff(class(plot), "ggchord")
   built <- ggchord_branch_built(ggplot2::ggplot_build(plot))
   attr(built, "ggchord_source_plot") <- source

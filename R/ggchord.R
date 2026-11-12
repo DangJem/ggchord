@@ -245,6 +245,9 @@ ggchord <- function(
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
 
+  # Compose ordinary lists through the same per-component bookkeeping as +.
+  if (identical(class(e2), "list")) return(Reduce(`+`, e2, init = e1))
+
   old_settings <- attr(e1$theme, "ggchord.settings")
   new_settings <- if (inherits(e2, "theme")) {
     attr(e2, "ggchord.settings")
@@ -293,6 +296,9 @@ ggchord <- function(
     p <- NextMethod()
   }
   if (inherits(e2, "theme")) {
+    incoming <- attr(e2, "ggchord.explicit_theme") %||% as.list(e2)
+    p$ggchord$theme_explicit <- ggchord_merge_theme_constraints(
+      e1$ggchord$theme_explicit %||% list(), incoming, isTRUE(attr(e2, "complete")))
     if (is.null(attr(e2, "ggchord.settings"))) {
       p$ggchord$native_theme <- if (is.null(e1$ggchord$native_theme)) e2 else e1$ggchord$native_theme + e2
     } else p$ggchord$native_theme <- NULL

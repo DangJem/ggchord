@@ -105,11 +105,16 @@ ggchord_base_gtable <- function(built) {
 }
 
 ggchord_render_table <- function(built, force = FALSE) {
-  table <- ggchord_base_gtable(built)
-  context <- ggchord_panel_context(table, built)
   source <- attr(built, "ggchord_source_plot")
   if (is.null(source)) source <- built$plot
-  physical <- isTRUE(force) || ggchord_physical_requested(source)
+  guided <- function(value) {
+    if (identical(source$ggchord$layout_policy$mode,"adaptive"))
+      ggchord_guide_joint_layout(value,source) else list(built=value,table=ggchord_base_gtable(value))
+  }
+  result <- guided(built)
+  built <- result$built; table <- result$table %||% ggchord_base_gtable(built)
+  context <- ggchord_panel_context(table, built)
+  physical <- isTRUE(force) || !is.null(source$ggchord$layout_policy) || ggchord_physical_requested(source)
   passes <- 0L
   if (physical && identical(context$status, "measured")) {
     passes_allowed <- if (isTRUE(source$coordinates$ggchord_circular)) 10L else 3L
@@ -117,7 +122,8 @@ ggchord_render_table <- function(built, force = FALSE) {
       input <- context
       next_plot <- ggchord_render_plot_copy(source)
       built <- ggchord_with_render_context(input, ggplot2::ggplot_build(next_plot))
-      table <- ggchord_with_render_context(input, ggchord_base_gtable(built))
+      result <- ggchord_with_render_context(input, guided(built))
+      built <- result$built; table <- result$table %||% ggchord_base_gtable(built)
       context <- ggchord_panel_context(table, built)
       passes <- pass
       if (!identical(context$status, "measured")) break
@@ -128,9 +134,15 @@ ggchord_render_table <- function(built, force = FALSE) {
     }
   }
   context$refinement_passes <- passes
+  context$adaptive_layout <- built$plot$ggchord$adaptive_report
+  context$guide_layout <- result$report
+  if (identical(result$report$status,"insufficient_space")) warning(
+    "adapt_ggchord(): guides cannot fit the canvas and panel budget under the supplied constraints; increase width/height or revise explicit guide layout. See guide_layout diagnostics.",call.=FALSE)
   layout <- built$plot$ggchord$ref$layout
   if (!is.null(layout)) {
     layout$render_context <- context
+    layout$adaptive_layout <- context$adaptive_layout
+    layout$guide_layout <- context$guide_layout
     if (is.data.frame(layout$track_registry) && nrow(layout$track_registry))
       layout$track_registry$measurement_status <- context$geometry_metric_status
   }

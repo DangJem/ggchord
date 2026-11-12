@@ -98,6 +98,14 @@ contexts can have missing dimensions and convergence. Device/basis/font
 conditions state the source and limits of the evidence. Refinement counts
 and private solver/candidate/cache structures are implementation details.
 
+With \code{\link[=adapt_ggchord]{adapt_ggchord()}}, layout-only exports report \code{adaptive_layout$policy}
+and mark the guide layout as \code{target_device_required}. Target-size diagnostics
+instead report effective theme styles, scale factors and a \code{guide_layout}
+with selected grids, explicit locks, candidate sizes and final guide-box
+bounds in mm. Search indices and scores are diagnostic details, not stable
+biological identifiers. A feasible guide budget is not a global collision
+certificate. Fusion exposes these reports separately for each panel.
+
 A plot composition owns a fresh layout cache; a build/getter may populate
 it. Device/context changes invalidate estimates, even for ordinary labels.
 \code{get_chord_layout(build = FALSE)} requires a current cache. Previews and

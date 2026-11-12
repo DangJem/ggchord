@@ -1,3 +1,20 @@
+# ggchord 0.24.0 (development)
+
+- Added opt-in `adapt_ggchord()` policies: `fixed` retains reference physical
+  theme/guide sizes, `scale` bounds default theme text, line and spacing changes,
+  and `adaptive` also selects a joint arrangement of native guides using actual
+  device measurements. Plots without a policy retain their existing behaviour.
+- Joint guide layout considers discrete rows/columns, direction and side while
+  preserving scale order, continuous/stepped bars and explicit geom/theme/guide
+  settings. No categories are dropped. A bounded candidate search remeasures
+  complete gtables and warns when the canvas/panel budget cannot be satisfied.
+- Standard print, `ggsave()`, preview and diagnostics share the policy path;
+  Fusion applies it within each opted-in panel before rebuilding endpoints.
+  `diagnose_ggchord()` reports effective styles, locks, chosen guide grids and
+  physical bounds. Layout-only exports identify the policy and the need for a
+  target device. Outer Fusion allocations, facets, arbitrary grobs and a new
+  global label solver are outside this contract. No existing API is removed.
+
 # ggchord 0.23.0 (development)
 
 - `magnify_ggchord()` now accepts multiple source intervals in one explicit

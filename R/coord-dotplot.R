@@ -232,6 +232,8 @@ ggchord_export_dotplot <- function(plot, include, original_data) {
     ylim = plot$coordinates$limits$y %||% layout$ylim)
   if (original_data) out$original_data <- layout$layer_inputs
   out$source_registry <- ggchord_source_registry(plot$ggchord$sources %||% list())
+  if (!is.null(plot$ggchord$layout_policy)) out$adaptive_layout <- list(
+    policy=plot$ggchord$layout_policy,measurement="layout_only",guide_layout="target_device_required")
   class(out) <- c("ggchord_layout_export", "list")
   out
 }

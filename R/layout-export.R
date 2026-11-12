@@ -127,6 +127,10 @@ export_ggchord_layout <- function(
   plot <- ggchord_register_layers(plot)
   layout <- get_chord_layout(plot, build = TRUE)
   exported <- stats::setNames(vector("list", length(include)), include)
+  if (!is.null(plot$ggchord$layout_policy)) {
+    exported$adaptive_layout <- list(policy=plot$ggchord$layout_policy,
+      measurement="layout_only",guide_layout="target_device_required")
+  }
   for (nm in include) exported[[nm]] <- data.frame()
   kept_inputs <- list()
 

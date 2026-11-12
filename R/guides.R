@@ -194,7 +194,8 @@ ggchord_role_guide_spec <- function(plot, role, colourbar = FALSE) {
     identical(item$position, "none")
   if (hidden) return(list(hidden = TRUE))
 
-  size_scale <- ggchord_device_scale()
+  size_scale <- if (is.null(plot$ggchord$layout_policy)) ggchord_device_scale() else
+    plot$ggchord$adaptive_report$spacing_factor %||% 1
   field_map <- c(
     background = "legend.background", key = "legend.key",
     key.size = "legend.key.size", key.width = "legend.key.width",

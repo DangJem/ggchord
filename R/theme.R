@@ -285,6 +285,7 @@ ggchord_theme_from_environment <- function(preset, env, dots) {
     major = if (preset == "plasmid") .6 else .45,
     minor = if (preset == "plasmid") .35 else .3)
   attr(out, "ggchord.settings") <- settings
+  attr(out, "ggchord.explicit_theme") <- overrides
   out
 }
 

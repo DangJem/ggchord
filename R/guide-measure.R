@@ -20,7 +20,9 @@ ggchord_measure_guides <- function(plot,boxes) {
     if(is.null(role))next
     labels <- scale$get_labels()
     labels <- labels %||% character()
-    params <- if(inherits(guide,'Guide'))guide$params else list()
+    selected <- which(vapply(plot$guides$params,function(p) aes %in% p$aesthetic,logical(1)))
+    params <- if(length(selected)) plot$guides$params[[selected[1]]] else
+      if(inherits(guide,'Guide'))guide$params else list()
     own_theme <- params$theme
     text <- own_theme$legend.text %||% plot$theme$legend.text
     title_style <- own_theme$legend.title %||% plot$theme$legend.title

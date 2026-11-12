@@ -77,6 +77,7 @@ ggchord_build_fusion <- function(x) {
     oversized <- any(vapply(guide_bounds,function(size) any(size>dimensions),logical(1)))
     if (oversized) ggchord_stop("Fusion panel '",id,"': guides exceed its container; increase size or configure local guides")
     diagnostics[[id]] <- list(panel_id=id,canvas_mm=dimensions,render_context=context,
+      adaptive_layout=context$adaptive_layout,guide_layout=context$guide_layout,
       label_fit=ggchord_label_fit_diagnostics(layout),label_visibility=ggchord_label_visibility(layout),
       guide_sizes_mm=guide_bounds,guide_overflow=oversized,collision_status="not globally measured")
   }

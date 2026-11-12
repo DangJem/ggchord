@@ -87,6 +87,14 @@
 #' conditions state the source and limits of the evidence. Refinement counts
 #' and private solver/candidate/cache structures are implementation details.
 #'
+#' With [adapt_ggchord()], layout-only exports report `adaptive_layout$policy`
+#' and mark the guide layout as `target_device_required`. Target-size diagnostics
+#' instead report effective theme styles, scale factors and a `guide_layout`
+#' with selected grids, explicit locks, candidate sizes and final guide-box
+#' bounds in mm. Search indices and scores are diagnostic details, not stable
+#' biological identifiers. A feasible guide budget is not a global collision
+#' certificate. Fusion exposes these reports separately for each panel.
+#'
 #' A plot composition owns a fresh layout cache; a build/getter may populate
 #' it. Device/context changes invalidate estimates, even for ordinary labels.
 #' `get_chord_layout(build = FALSE)` requires a current cache. Previews and
