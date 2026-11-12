@@ -8832,6 +8832,38 @@
     "source": "man/theme_ggchord.Rd"
   },
   {
+    "api": "adapt_ggchord",
+    "parameter": "mode",
+    "default": "c(\"adaptive\", \"fixed\", \"scale\")",
+    "type": "Vector; choices versus multiple selection below",
+    "constraint": "One of adaptive, fixed, or scale.",
+    "source": "man/adapt_ggchord.Rd"
+  },
+  {
+    "api": "adapt_ggchord",
+    "parameter": "reference_size",
+    "default": "c(8, 6)",
+    "type": "Vector; choices versus multiple selection below",
+    "constraint": "Positive width and height in inches. Scale modes use the fourth root of target/reference area, with a bounded text multiplier.",
+    "source": "man/adapt_ggchord.Rd"
+  },
+  {
+    "api": "adapt_ggchord",
+    "parameter": "text_scale_range",
+    "default": "c(0.85, 1.35)",
+    "type": "Vector; choices versus multiple selection below",
+    "constraint": "Lower and upper positive text multipliers containing 1. Lines and default spacing use the square root of the text multiplier.",
+    "source": "man/adapt_ggchord.Rd"
+  },
+  {
+    "api": "adapt_ggchord",
+    "parameter": "min_text_size",
+    "default": "2.5",
+    "type": "Numeric/integer; range in description",
+    "constraint": "Lower bound in mm for automatically reduced theme text. Defaults already smaller than this value are preserved rather than enlarged. Explicit text sizes and existing label-fit policies keep their own contracts.",
+    "source": "man/adapt_ggchord.Rd"
+  },
+  {
     "api": "as_ggchord_alignment",
     "parameter": "sequences",
     "default": "",

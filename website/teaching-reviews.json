@@ -3263,5 +3263,29 @@
       "en": "Circular/Chord center, Collinear detail, explicit source instances",
       "zh": "Circular/Chord主图、Collinear细节与显式源实例"
     }
+  },
+  "adapt_ggchord": {
+    "level": "L2",
+    "page": "styling",
+    "anchor": "adaptive",
+    "reason": "Runnable real-data policy and target-size diagnostics; focused mode and constraint evidence in check-adaptive.R",
+    "modes": "fixed; scale; adaptive",
+    "parameters": [
+      "mode",
+      "reference_size",
+      "text_scale_range",
+      "min_text_size"
+    ],
+    "purpose": {
+      "en": "Opt into bounded theme scaling and joint guide layout at the target size",
+      "zh": "按目标尺寸启用有界主题缩放与图例联合排布"
+    },
+    "alias_of": "",
+    "case": "styling",
+    "scope": "native guides and theme defaults within individual plots and Fusion panels",
+    "modes_localized": {
+      "en": "fixed/scale/adaptive; explicit settings remain authoritative; no global collision guarantee",
+      "zh": "fixed/scale/adaptive；显式设置优先，不保证全局零碰撞"
+    }
   }
 }

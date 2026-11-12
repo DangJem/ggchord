@@ -2066,6 +2066,22 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 ## Input, conversion, diagnostics and output {#workflows}
 
+<span id="api-adapt_ggchord"></span>
+<details><summary><code>adapt_ggchord()</code></summary>
+
+
+[Full reference](reference/adapt_ggchord.html)
+
+
+| Parameter | Signature default | Type/value rule | Meaning, range and constraints |
+| --- | --- | --- | --- |
+| `mode` | `c("adaptive", "fixed", "scale")` | Vector; choices versus multiple selection below | One of adaptive, fixed, or scale. |
+| `reference_size` | `c(8, 6)` | Vector; choices versus multiple selection below | Positive width and height in inches. Scale modes use the fourth root of target/reference area, with a bounded text multiplier. |
+| `text_scale_range` | `c(0.85, 1.35)` | Vector; choices versus multiple selection below | Lower and upper positive text multipliers containing 1. Lines and default spacing use the square root of the text multiplier. |
+| `min_text_size` | `2.5` | Numeric/integer; range in description | Lower bound in mm for automatically reduced theme text. Defaults already smaller than this value are preserved rather than enlarged. Explicit text sizes and existing label-fit policies keep their own contracts. |
+
+</details>
+
 <span id="api-as_ggchord_alignment"></span>
 <details><summary><code>as_ggchord_alignment()</code></summary>
 

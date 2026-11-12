@@ -1,5 +1,16 @@
 [
   {
+    "name": "adapt_ggchord",
+    "owner": "ggchord",
+    "alias": "",
+    "parameters": {
+      "mode": "c(\"adaptive\", \"fixed\", \"scale\")",
+      "reference_size": "c(8, 6)",
+      "text_scale_range": "c(0.85, 1.35)",
+      "min_text_size": "2.5"
+    }
+  },
+  {
     "name": "aes",
     "owner": "ggplot2",
     "alias": "",

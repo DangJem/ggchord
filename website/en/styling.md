@@ -34,6 +34,52 @@ A wide guide may need multiple rows or a wider export, not smaller biological da
 ## Select a theme for the scene {#themes}
 This page uses the default theme. Add `theme()` to adjust text, legends or background; for example, `theme(text = element_text(size = 12))` sets the base text size. `theme_ggchord_publication()` provides a publication style and `theme_ggchord_plasmid()` suits circular maps. Themes control non-data appearance without changing coordinates or mapped colours.
 
+## Target-size layout {#adaptive}
+
+Add `adapt_ggchord()` to opt into target-size layout. The bundled example uses
+recorded sequence lengths and HSPs; the reference canvas is in inches and the
+automatic text floor is in mm. The report describes the requested 8 × 6 inch
+PNG; use the same size with standard `ggsave()` to reproduce that arrangement.
+
+```r
+library(ggchord)
+library(dplyr)
+seqs <- seq_data_example |>
+  select(accver, length)
+plot <- ggchord(seqs, ribbon_data_example) +
+  geom_seq() +
+  geom_link_ribbon() +
+  adapt_ggchord(
+    mode = "adaptive",
+    reference_size = c(8, 6),
+    text_scale_range = c(0.85, 1.35),
+    min_text_size = 2.5
+  )
+report <- diagnose_ggchord(plot, width = 8, height = 6, device = "png")
+report$guide_layout$guides
+report$adaptive_layout$styles
+```
+
+`fixed` holds default theme and guide furniture at reference physical sizes.
+`scale` adjusts theme-driven defaults within the chosen multiplier range.
+`adaptive` adds a bounded joint search for native guide grids, sides and
+directions, then remeasures the result. It reuses existing label layout;
+`feasible` is a guide-space result, not a promise that every label is collision-free.
+No policy preserves the existing plotting behaviour.
+
+Explicit geom styles, theme sizes, guide positions/directions/grids/key sizes,
+scales and `show.legend` remain authoritative. Continuous/stepped bars remain
+intact; categories and source records are retained. When constraints exceed the
+canvas budget, diagnostics report `insufficient_space` and rendering warns.
+Increase the export size or revise the explicit guide settings. The bounded
+search does not guarantee a global optimum. Layout-only exports record the
+policy but require a target device for final guide measurements.
+
+Apply the policy to each desired Fusion panel before composing it. Each panel
+uses its allocated size; outer panel allocations and the cross-panel guide are
+separate. Facets, arbitrary custom grobs, blanket scaling of geometric constants
+and font embedding certification are outside this policy.
+
 ## Check your result {#check-result}
 Links from the same query share a colour; continuous identity needs a continuous scale. Put fixed colours outside aes() and make each guide explain its mapping.
 

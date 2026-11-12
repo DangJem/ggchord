@@ -63,3 +63,10 @@ Position 只控制局部放置，不把不支持的图层转换成另一种坐�
 | [`geom_residue()`](reference/geom_residue.html) | 不支持生物学骨架投影 | 支持局部字符单元及 identity/reverse 位置标度 |
 
 [字符对齐工作流](formats.html#aligned-characters) 使用普通 ggplot x/y 坐标，源位置和对齐列保留为不同字段。按最终物理字形度量选择可读文字或明确的色格/报错策略，不改变源数据、不缩小字号。不代表已支持 Fusion 面板注册、自动 CDS 翻译或新比对计算。
+
+## 可选目标尺寸策略 {#adaptive}
+
+[`adapt_ggchord()`](styling.html#adaptive) 支持单个 Chord、Circular、Collinear、
+Sankey、Radial、Dotplot 图及显式启用策略的 Fusion 子面板。它调整默认主题样式，
+在用户显式约束内排列原生图例；默认不启用。分面、任意自定义 grob、Fusion 外层
+区域分配和全局标签求解器不在此范围内。

@@ -4,6 +4,7 @@ Find purpose, primary lesson, modes, complete cases and full parameters by API. 
 
 | API/reference | Purpose | Lesson and level | Mode/input boundary | Parameter atlas | Case/workflow |
 | --- | --- | --- | --- | --- | --- |
+| [`adapt_ggchord`](reference/adapt_ggchord.html) | Opt into bounded theme scaling and joint guide layout at the target size | [L2](styling.html#adaptive) | fixed/scale/adaptive; explicit settings remain authoritative; no global collision guarantee | [↗](parameter-atlas.html#api-adapt_ggchord) | [↗](styling.html) |
 | [`aes`](reference/ggplot2-helpers.html) | Selected ggplot2 helpers for ggchord plots | [upstream](parameter-atlas.html#upstream) | upstream; applies only to matching supported ggplot roles | [↗](parameter-atlas.html#api-aes) | [↗](chord.html) |
 | [`after_scale`](reference/ggplot2-helpers.html) | Selected ggplot2 helpers for ggchord plots | [upstream](parameter-atlas.html#upstream) | upstream; applies only to matching supported ggplot roles | [↗](parameter-atlas.html#api-after_scale) | [↗](chord.html) |
 | [`after_stat`](reference/ggplot2-helpers.html) | Selected ggplot2 helpers for ggchord plots | [upstream](parameter-atlas.html#upstream) | upstream; applies only to matching supported ggplot roles | [↗](parameter-atlas.html#api-after_stat) | [↗](chord.html) |

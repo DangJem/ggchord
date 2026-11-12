@@ -4,6 +4,7 @@
 
 | API 与参考 | 用途 | 主讲与等级 | 模式/输入边界 | 参数图谱 | 综合案例/工作流 |
 | --- | --- | --- | --- | --- | --- |
+| [`adapt_ggchord`](reference/adapt_ggchord.html) | 按目标尺寸启用有界主题缩放与图例联合排布 | [L2](styling.html#adaptive) | fixed/scale/adaptive；显式设置优先，不保证全局零碰撞 | [↗](parameter-atlas.html#api-adapt_ggchord) | [↗](styling.html) |
 | [`aes`](reference/ggplot2-helpers.html) | 适用于 ggchord 的部分 ggplot2 辅助函数 | [上游](parameter-atlas.html#upstream) | 上游对象/接口；遵循 ggplot2/grid 的原始契约 | [↗](parameter-atlas.html#api-aes) | [↗](chord.html) |
 | [`after_scale`](reference/ggplot2-helpers.html) | 适用于 ggchord 的部分 ggplot2 辅助函数 | [上游](parameter-atlas.html#upstream) | 上游对象/接口；遵循 ggplot2/grid 的原始契约 | [↗](parameter-atlas.html#api-after_scale) | [↗](chord.html) |
 | [`after_stat`](reference/ggplot2-helpers.html) | 适用于 ggchord 的部分 ggplot2 辅助函数 | [上游](parameter-atlas.html#upstream) | 上游对象/接口；遵循 ggplot2/grid 的原始契约 | [↗](parameter-atlas.html#api-after_stat) | [↗](chord.html) |

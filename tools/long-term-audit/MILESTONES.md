@@ -77,3 +77,10 @@ DEVELOPMENT-v0.22.0.md。本版尚未整合、推送或发布，v10完整目标�
 按明确批准将v0.22.0 d5dfbbb整合本地main并建立v0.23.0；未推送。
 多源region、Collinear主图、真实HSP局部图与逐行来源导出已实现，定向验证与双语说明完成，
 见DEVELOPMENT-v0.23.0.md。M2/M3及完整发布验收未完成。
+
+## v0.24.0 Guide 与可选 Adaptive 本地完成
+
+2026-11-12按用户明确批准将v0.23.0 4a9d755整合本地main，从main创建v0.24.0。
+原生Guide实际毫米联合候选、显式约束、fixed/scale/adaptive及共享渲染路径已完成本地开发，
+含Fusion子面板、失败报告和两语相关文档。范围与定向证据见DEVELOPMENT-v0.24.0.md。
+本版尚未整合、推送或发布。M2/M3、F2/F3、全局标签质量及1.0前治理继续保留。

@@ -1,5 +1,5 @@
 {
-  "source_sha256": "e4d29db218d67878adf2c1e07ec0270b4ed32f334153cbae410640eaa0b18873",
+  "source_sha256": "398943e62065e770de055f3de38349fa7eb63b2aef5a30ff3353ff2dc10791a2",
   "translations": {
     "0": "用 ggplot2 语法绘制序列局部数据层",
     "1": "标准图层输入。提供 accver，以及 x/pos 源位置或 start/end 区间；给定数值映射到 y/track_value。",
@@ -12,6 +12,6 @@
     "8": "原生几何与统计名称，bar 默认 count，col 及其他几何默认 identity。",
     "9": "物理 ⟦0⟧ 声明。",
     "10": "使用共享序列局部 band 的 ggplot2 图层。",
-    "11": "统计及数据 Position 在各 accession/window 内独立计算，再投影到物理轨道 band。支持 point、line、path、step、col、bar、tile、rect、area、ribbon、segment、linerange、errorbar 和 text；统计支持 identity、count、bin 和 summary，不支持的组合由原生图层报错。count 统计相同位置的观测，bin 要求显式 binwidth 或 breaks。x/y 映射指源位置和局部数值，不是屏幕 x/y。既有 track_value/track_fill/track_colour 角色继续接受。"
+    "11": "每个 accession/窗口内独立计算统计与数据 Position，再投影到物理轨道带。支持 point、line、path、step、col、bar、tile、rect、area、ribbon、segment、linerange、errorbar 和 text；支持 identity、count、bin、summary 统计，不支持的组合在原生层报错。count 对相同位置计数，bin 必须显式提供 binwidth 或 breaks。显式 group 映射优先于离散样式映射。分箱来源成员遵循原生统计的外边界及数值容差，在数据 Position 移动柱之前确定。x/y 表示源位置/局部数值，不是屏幕坐标；仍接受 track_value/track_fill/track_colour 角色。"
   }
 }

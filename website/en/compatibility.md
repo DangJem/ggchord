@@ -70,3 +70,11 @@ global collision avoidance or general font scaling.
 | [`geom_residue()`](reference/geom_residue.html) | Unsupported biological backbone projection | Supported local character cells with identity/reverse position scales |
 
 The [aligned-character workflow](formats.html#aligned-characters) uses ordinary ggplot x/y coordinates. Source positions and alignment columns are separate fields. Final physical glyph measurement selects readable text or explicit tile/error behavior; it does not change source data or shrink fonts. No Fusion panel registration, automatic CDS translation or new alignment is implied.
+
+## Optional target-size policies {#adaptive}
+
+[`adapt_ggchord()`](styling.html#adaptive) supports individual Chord, Circular,
+Collinear, Sankey, Radial and Dotplot plots, and opted-in Fusion panels.
+It scales default theme styles and arranges native guides under explicit user
+constraints; no policy is applied by default. Facets, arbitrary custom grobs,
+outer Fusion allocations and a global label solver are outside this scope.

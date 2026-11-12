@@ -2066,6 +2066,22 @@
 
 ## 输入、转换、诊断与输出 {#workflows}
 
+<span id="api-adapt_ggchord"></span>
+<details><summary><code>adapt_ggchord()</code></summary>
+
+
+[完整参考](reference/adapt_ggchord.html)
+
+
+| 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
+| --- | --- | --- | --- |
+| `mode` | `c("adaptive", "fixed", "scale")` | 向量；候选/多选含义见说明 | 选择 adaptive、fixed 或 scale。 |
+| `reference_size` | `c(8, 6)` | 向量；候选/多选含义见说明 | 以英寸表示的正宽度和高度。缩放模式使用目标面积与参考面积之比的四次方根，并限制文字倍率。 |
+| `text_scale_range` | `c(0.85, 1.35)` | 向量；候选/多选含义见说明 | 包含 1 的正文字倍率下限和上限。线宽与默认间距使用文字倍率的平方根。 |
+| `min_text_size` | `2.5` | 数值/整数；范围见说明 | 自动减小主题文字时的字号下限，单位 mm。已小于此值的默认字号保持原值，不自动放大。显式字号和已有标签适应策略保持各自契约。 |
+
+</details>
+
 <span id="api-as_ggchord_alignment"></span>
 <details><summary><code>as_ggchord_alignment()</code></summary>
 
