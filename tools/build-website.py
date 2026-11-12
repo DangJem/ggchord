@@ -53,7 +53,7 @@ def main():
     shutil.copytree(ROOT/'tools/teaching-audit',assets/'source/tools/teaching-audit')
     inputs=sorted([*ROOT.glob('examples/fasta/*.fna'),*ROOT.glob('examples/gff3/*.gff3'),
         *ROOT.glob('examples/blastn/*.o7'),*ROOT.glob('examples/blastn-standard/*'),
-        *ROOT.glob('examples/format-inputs/*'),*ROOT.glob('examples/protein/*'),*ROOT.glob('examples/plasmid/*.fna')])
+        *ROOT.glob('examples/format-inputs/*'),*ROOT.glob('examples/protein/*'),*ROOT.glob('examples/alignment/*'),*ROOT.glob('examples/plasmid/*.fna')])
     input_hashes={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in inputs}
     (assets/'input-hashes.json').write_text(json.dumps(input_hashes,indent=2)+'\n')
     shared_code = snippets()

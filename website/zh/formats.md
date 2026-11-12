@@ -113,3 +113,82 @@ character_locus <- focus_ggchord_data(
 character_locus$seq_data |>
   select(accver, length, sequence, .source_origin)
 ```
+
+
+## 已有字符对齐：区分对齐列与源位置 {#aligned-characters}
+
+以下示例需要源码 checkout 中的 `examples/alignment/`。该目录保留 Biopython 原始 DNA/蛋白比对输入、上游许可、哈希及可重复的 FASTA 格式转写规则。不运行比对工具，不改动完整记录 ID 或原始字符；显式选择行与列。
+
+`read_aligned_fasta()` 读取一个已有对齐，须声明 DNA、RNA 或 AA；等长本身不能证明同源性。`alignment_column` 包括 `-` 和 `.` gap，这些列的 `source_position` 为 NA。默认源位置在去 gap 输入片段中从 1 计数，不是完整基因组坐标。小写字符也消耗位置，因此不能把此读取器当作 A3M 插入语义解析器。
+
+```r
+aligned_dna <- read_aligned_fasta(
+  "examples/alignment/opuntia-aligned.fasta", "DNA", source_file = TRUE
+)
+selected_rows <- unique(aligned_dna$accver)[c(1, 3, 7)]
+local_dna <- aligned_dna |>
+  filter(accver %in% selected_rows, between(alignment_column, 321, 380))
+
+map_alignment_position(local_dna, selected_rows[1], c(342, 343, 344))
+map_alignment_position(local_dna, selected_rows[1], 343, inverse = TRUE)
+
+p_characters <- ggplot2::ggplot(
+  local_dna, aes(alignment_column, accver, label = symbol)
+) +
+  geom_residue(aes(fill = symbol), size = 3, overflow = "error") +
+  ggplot2::scale_fill_manual(
+    values = c(
+      A = "#B8D8BA", C = "#A6CBE3", G = "#F2D28C", T = "#EAA8A8",
+      N = "#D8D8D8", "-" = "#F5F5F5", "." = "#F5F5F5"
+    ),
+    guide = "none"
+  ) +
+  ggplot2::labs(x = "Alignment column", y = NULL) +
+  ggplot2::theme_minimal()
+p_characters
+```
+
+首条选中记录在对齐列 343 有 gap；按列查找返回 `matched = TRUE`、`is_gap = TRUE` 和缺失源位置。反向查找源位置 343 则定位到其实际对齐列，不做插值。被筛选删除的位置返回 `matched = FALSE`；筛选不重编号保留列。即使另行声明了不同源 ID，`map_alignment_position()` 仍按对齐行 ID 选择记录。
+
+`geom_residue()` 是普通 Cartesian ggplot 图层，样式和用户标度遵循 ggplot2。绘制时按实际单元宽高测量字形：`overflow = "error"` 要求文字可读，`"tile"` 对放不下的字母保留色格，不缩小字号。显示字母时可减少列数或增大物理宽度，例如用普通 `ggsave(width = 12, height = 3.4, units = "in")` 保存 `p_characters`；仅增加 DPI 不会增加物理空间。支持离散行、identity/reverse 位置标度与 Cartesian 坐标；该层尚不把字符附着到 ggchord 骨架 Coord 或 Fusion 面板。
+
+### 蛋白局部片段 {#aligned-protein}
+
+同一数据契约可接收真实蛋白字符。该窗口保留上游 gap 与残基差异；fill 区分原始字符，不代表推断的功能域。
+
+```r
+aligned_protein <- read_aligned_fasta(
+  "examples/alignment/protein-aligned.fasta", "AA"
+)
+protein_rows <- unique(aligned_protein$accver)[2:4]
+local_protein <- aligned_protein |>
+  filter(accver %in% protein_rows, between(alignment_column, 221, 260))
+
+ggplot2::ggplot(local_protein, aes(alignment_column, accver, label = symbol)) +
+  geom_residue(aes(fill = symbol), size = 3, overflow = "tile") +
+  ggplot2::scale_fill_hue(l = 85, c = 35, guide = "none") +
+  ggplot2::labs(x = "Alignment column", y = NULL) +
+  ggplot2::theme_minimal()
+```
+
+### 显式源坐标 {#aligned-source}
+
+`source_data` 的每个对齐记录对应一行，包含 `accver`、`start` 和 `strand`。`start` 是首个非 gap 源位置；负链位置递减，字符串必须已处于比对方向。可选 `source_accver` 标识原分子。若提供完整正向 `sequence`，逐一核对非 gap 字符：负链核酸使用互补，AA 仅反序。未提供完整源字符串时标为未核对，不猜起点或链。
+
+下例只检查同一对齐去 gap 后的片段一致性，**不构成独立基因组验证**。实际基因组投影应提供有独立来源的序列和区间元数据。
+
+```r
+original_strings <- read_fasta_lengths(
+  "examples/alignment/opuntia-aligned.fasta", keep_sequence = TRUE
+)
+fragment_sources <- original_strings |>
+  transmute(
+    accver, source_accver = accver, start = 1, strand = "+",
+    sequence = gsub("[-.]", "", sequence)
+  )
+checked_cells <- as_ggchord_alignment(
+  original_strings, "DNA", source_data = fragment_sources
+)
+```
+
+仅凭六个 HSP 端点不能恢复内部 mismatch/gap。此工作流接收已有对齐列，不解析 CIGAR/A3M/Clustal/Stockholm，不推断 CDS 翻译/相位，不计算共识、Logo 或新比对。源身份与位置会保留，供后续显式的宏观/细节映射使用。

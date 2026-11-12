@@ -457,6 +457,25 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 </details>
 
+<span id="api-geom_residue"></span>
+<details><summary><code>geom_residue()</code></summary>
+
+
+[Full reference](reference/geom_residue.html)
+
+
+| Parameter | Signature default | Type/value rule | Meaning, range and constraints |
+| --- | --- | --- | --- |
+| `mapping` | `NULL` | aes mapping | Standard ggplot2 layer mapping and data. Required aesthetics are x, y and label. Ordinary colour, fill, alpha, size, family and fontface mappings/scales are supported. size is in mm. |
+| `data` | `NULL` | Table/supported object; data may be a function | Standard ggplot2 layer mapping and data. Required aesthetics are x, y and label. Ordinary colour, fill, alpha, size, family and fontface mappings/scales are supported. size is in mm. |
+| `overflow` | `c("tile", "error")` | Vector; choices versus multiple selection below | "tile" (default) or "error" when letters do not fit. |
+| `position` | `"identity"` | Character/enum; choices below | Standard ggplot2 layer arguments. |
+| `show.legend` | `NA` | R object; constraints below | Standard ggplot2 layer arguments. |
+| `inherit.aes` | `TRUE` | Logical | Standard ggplot2 layer arguments. |
+| `...` | `Required/alternative entry; see description` | Forwarded arguments | Fixed text/cell aesthetics and na.rm, passed to the layer. |
+
+</details>
+
 <span id="api-geom_restriction_site"></span>
 <details><summary><code>geom_restriction_site()</code></summary>
 
@@ -2047,6 +2066,21 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 ## Input, conversion, diagnostics and output {#workflows}
 
+<span id="api-as_ggchord_alignment"></span>
+<details><summary><code>as_ggchord_alignment()</code></summary>
+
+
+[Full reference](reference/as_ggchord_alignment.html)
+
+
+| Parameter | Signature default | Type/value rule | Meaning, range and constraints |
+| --- | --- | --- | --- |
+| `sequences` | `Required/alternative entry; see description` | R object; constraints below | Named character vector of aligned strings, or a data frame with unique accver and character sequence. All strings must have the same positive width and each record must contain a nongap symbol. |
+| `alphabet` | `Required/alternative entry; see description` | R object; constraints below | Explicit "DNA", "RNA" or "AA". IUPAC nucleotide ambiguity codes and protein ambiguity/rare-residue codes are accepted; * is accepted only for AA. The alphabet is never guessed. |
+| `source_data` | `NULL` | Nullable R object; type/inheritance below | Optional data frame with one row per alignment accver, start (first nongap source coordinate) and strand ("+" or "-"). Optional source_accver declares a different source ID; optional character sequence supplies the full forward source for verification. Coordinates must remain positive exact integers. Input metadata is retained in the ggchord_conversion attribute. |
+
+</details>
+
 <span id="api-as_ggchord_feature"></span>
 <details><summary><code>as_ggchord_feature()</code></summary>
 
@@ -2477,6 +2511,22 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 </details>
 
+<span id="api-map_alignment_position"></span>
+<details><summary><code>map_alignment_position()</code></summary>
+
+
+[Full reference](reference/map_alignment_position.html)
+
+
+| Parameter | Signature default | Type/value rule | Meaning, range and constraints |
+| --- | --- | --- | --- |
+| `data` | `Required/alternative entry; see description` | Table/supported object; data may be a function | Long alignment frame from as_ggchord_alignment(). |
+| `accver` | `Required/alternative entry; see description` | R object; constraints below | One alignment-row ID, even if its source_accver differs. |
+| `position` | `Required/alternative entry; see description` | Position object or documented string | Numeric positions, positive integral or NA. |
+| `inverse` | `FALSE` | Logical | FALSE maps alignment columns to source positions; TRUE maps source positions to alignment columns. |
+
+</details>
+
 <span id="api-map_ggchord_position"></span>
 <details><summary><code>map_ggchord_position()</code></summary>
 
@@ -2594,6 +2644,22 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `link_data` | `Required/alternative entry; see description` | R object; constraints below | Data frame with qfeature_id, sfeature_id identifying CDS models and ordered inclusive protein qstart, qend, sstart, send. Query and subject residue spans must be equal. If present, gapopen must be zero and source length must equal this residue span. |
 | `cds` | `Required/alternative entry; see description` | R object; constraints below | A map from build_ggchord_cds(). |
 | `ungapped` | `FALSE` | Logical | Must explicitly be TRUE, confirming an ungapped residue correspondence rather than inferring it from equal endpoint spans. |
+
+</details>
+
+<span id="api-read_aligned_fasta"></span>
+<details><summary><code>read_aligned_fasta()</code></summary>
+
+
+[Full reference](reference/read_aligned_fasta.html)
+
+
+| Parameter | Signature default | Type/value rule | Meaning, range and constraints |
+| --- | --- | --- | --- |
+| `file` | `Required/alternative entry; see description` | Character path/identifier/vector; see constraints | A single local aligned FASTA path; no multi-alignment concatenation. |
+| `alphabet` | `Required/alternative entry; see description` | R object; constraints below | Explicit "DNA", "RNA" or "AA". IUPAC nucleotide ambiguity codes and protein ambiguity/rare-residue codes are accepted; * is accepted only for AA. The alphabet is never guessed. |
+| `source_data` | `NULL` | Nullable R object; type/inheritance below | Optional data frame with one row per alignment accver, start (first nongap source coordinate) and strand ("+" or "-"). Optional source_accver declares a different source ID; optional character sequence supplies the full forward source for verification. Coordinates must remain positive exact integers. Input metadata is retained in the ggchord_conversion attribute. |
+| `source_file` | `FALSE` | Logical | Logical. Also retain .source_file on each character row. |
 
 </details>
 

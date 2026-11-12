@@ -1864,6 +1864,62 @@
     "source": "man/geom_primer_label_repel.Rd"
   },
   {
+    "api": "geom_residue",
+    "parameter": "mapping",
+    "default": "NULL",
+    "type": "aes mapping",
+    "constraint": "Standard ggplot2 layer mapping and data. Required aesthetics are x, y and label. Ordinary colour, fill, alpha, size, family and fontface mappings/scales are supported. size is in mm.",
+    "source": "man/geom_residue.Rd"
+  },
+  {
+    "api": "geom_residue",
+    "parameter": "data",
+    "default": "NULL",
+    "type": "Table/supported object; data may be a function",
+    "constraint": "Standard ggplot2 layer mapping and data. Required aesthetics are x, y and label. Ordinary colour, fill, alpha, size, family and fontface mappings/scales are supported. size is in mm.",
+    "source": "man/geom_residue.Rd"
+  },
+  {
+    "api": "geom_residue",
+    "parameter": "overflow",
+    "default": "c(\"tile\", \"error\")",
+    "type": "Vector; choices versus multiple selection below",
+    "constraint": "\"tile\" (default) or \"error\" when letters do not fit.",
+    "source": "man/geom_residue.Rd"
+  },
+  {
+    "api": "geom_residue",
+    "parameter": "position",
+    "default": "\"identity\"",
+    "type": "Character/enum; choices below",
+    "constraint": "Standard ggplot2 layer arguments.",
+    "source": "man/geom_residue.Rd"
+  },
+  {
+    "api": "geom_residue",
+    "parameter": "show.legend",
+    "default": "NA",
+    "type": "R object; constraints below",
+    "constraint": "Standard ggplot2 layer arguments.",
+    "source": "man/geom_residue.Rd"
+  },
+  {
+    "api": "geom_residue",
+    "parameter": "inherit.aes",
+    "default": "TRUE",
+    "type": "Logical",
+    "constraint": "Standard ggplot2 layer arguments.",
+    "source": "man/geom_residue.Rd"
+  },
+  {
+    "api": "geom_residue",
+    "parameter": "...",
+    "default": "",
+    "type": "Forwarded arguments",
+    "constraint": "Fixed text/cell aesthetics and na.rm, passed to the layer.",
+    "source": "man/geom_residue.Rd"
+  },
+  {
     "api": "geom_restriction_site",
     "parameter": "mapping",
     "default": "NULL",
@@ -8776,6 +8832,30 @@
     "source": "man/theme_ggchord.Rd"
   },
   {
+    "api": "as_ggchord_alignment",
+    "parameter": "sequences",
+    "default": "",
+    "type": "R object; constraints below",
+    "constraint": "Named character vector of aligned strings, or a data frame with unique accver and character sequence. All strings must have the same positive width and each record must contain a nongap symbol.",
+    "source": "man/as_ggchord_alignment.Rd"
+  },
+  {
+    "api": "as_ggchord_alignment",
+    "parameter": "alphabet",
+    "default": "",
+    "type": "R object; constraints below",
+    "constraint": "Explicit \"DNA\", \"RNA\" or \"AA\". IUPAC nucleotide ambiguity codes and protein ambiguity/rare-residue codes are accepted; * is accepted only for AA. The alphabet is never guessed.",
+    "source": "man/as_ggchord_alignment.Rd"
+  },
+  {
+    "api": "as_ggchord_alignment",
+    "parameter": "source_data",
+    "default": "NULL",
+    "type": "Nullable R object; type/inheritance below",
+    "constraint": "Optional data frame with one row per alignment accver, start (first nongap source coordinate) and strand (\"+\" or \"-\"). Optional source_accver declares a different source ID; optional character sequence supplies the full forward source for verification. Coordinates must remain positive exact integers. Input metadata is retained in the ggchord_conversion attribute.",
+    "source": "man/as_ggchord_alignment.Rd"
+  },
+  {
     "api": "as_ggchord_feature",
     "parameter": "x",
     "default": "",
@@ -9912,6 +9992,38 @@
     "source": "man/link_ggchord_clusters.Rd"
   },
   {
+    "api": "map_alignment_position",
+    "parameter": "data",
+    "default": "",
+    "type": "Table/supported object; data may be a function",
+    "constraint": "Long alignment frame from as_ggchord_alignment().",
+    "source": "man/map_alignment_position.Rd"
+  },
+  {
+    "api": "map_alignment_position",
+    "parameter": "accver",
+    "default": "",
+    "type": "R object; constraints below",
+    "constraint": "One alignment-row ID, even if its source_accver differs.",
+    "source": "man/map_alignment_position.Rd"
+  },
+  {
+    "api": "map_alignment_position",
+    "parameter": "position",
+    "default": "",
+    "type": "Position object or documented string",
+    "constraint": "Numeric positions, positive integral or NA.",
+    "source": "man/map_alignment_position.Rd"
+  },
+  {
+    "api": "map_alignment_position",
+    "parameter": "inverse",
+    "default": "FALSE",
+    "type": "Logical",
+    "constraint": "FALSE maps alignment columns to source positions; TRUE maps source positions to alignment columns.",
+    "source": "man/map_alignment_position.Rd"
+  },
+  {
     "api": "map_ggchord_position",
     "parameter": "plot",
     "default": "",
@@ -10198,6 +10310,38 @@
     "type": "Logical",
     "constraint": "Must explicitly be TRUE, confirming an ungapped residue correspondence rather than inferring it from equal endpoint spans.",
     "source": "man/project_ggchord_links.Rd"
+  },
+  {
+    "api": "read_aligned_fasta",
+    "parameter": "file",
+    "default": "",
+    "type": "Character path/identifier/vector; see constraints",
+    "constraint": "A single local aligned FASTA path; no multi-alignment concatenation.",
+    "source": "man/read_aligned_fasta.Rd"
+  },
+  {
+    "api": "read_aligned_fasta",
+    "parameter": "alphabet",
+    "default": "",
+    "type": "R object; constraints below",
+    "constraint": "Explicit \"DNA\", \"RNA\" or \"AA\". IUPAC nucleotide ambiguity codes and protein ambiguity/rare-residue codes are accepted; * is accepted only for AA. The alphabet is never guessed.",
+    "source": "man/read_aligned_fasta.Rd"
+  },
+  {
+    "api": "read_aligned_fasta",
+    "parameter": "source_data",
+    "default": "NULL",
+    "type": "Nullable R object; type/inheritance below",
+    "constraint": "Optional data frame with one row per alignment accver, start (first nongap source coordinate) and strand (\"+\" or \"-\"). Optional source_accver declares a different source ID; optional character sequence supplies the full forward source for verification. Coordinates must remain positive exact integers. Input metadata is retained in the ggchord_conversion attribute.",
+    "source": "man/read_aligned_fasta.Rd"
+  },
+  {
+    "api": "read_aligned_fasta",
+    "parameter": "source_file",
+    "default": "FALSE",
+    "type": "Logical",
+    "constraint": "Logical. Also retain .source_file on each character row.",
+    "source": "man/read_aligned_fasta.Rd"
   },
   {
     "api": "read_bed",

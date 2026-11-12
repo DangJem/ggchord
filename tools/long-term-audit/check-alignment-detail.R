@@ -73,23 +73,38 @@ before <- dna_window
 draw_at <- function(plot,width,height) {
   close <- ggchord:::ggchord_measurement_device(text="",width=width,height=height)
   on.exit(close())
-  grid::grid.newpage();grid::grid.draw(ggplot2::ggplotGrob(plot))
+  result <- tryCatch({grid::grid.newpage();grid::grid.draw(ggplot2::ggplotGrob(plot));NULL},error=identity)
+  close()
+  if (inherits(result,'error')) stop(result)
 }
+render_devices <- grDevices::dev.list()
 draw_at(p_dna,12,3.4)
 small <- p_dna+ggplot2::theme(axis.text.y=ggplot2::element_blank())
 expect_error(draw_at(small,2.5,2),'cannot fit')
 # A replacement layer uses the same table and finite font, explicit tile policy.
 p_tile <- ggplot2::ggplot(dna_window,aes(alignment_column,accver,label=symbol))+
   geom_residue(aes(fill=symbol),size=3,overflow='tile')+
+  ggplot2::scale_fill_manual(values=c(A='#B8D8BA',C='#A6CBE3',G='#F2D28C',T='#EAA8A8',N='#D8D8D8','-'='#F5F5F5','.'='#F5F5F5'))+
   ggplot2::theme_void()+ggplot2::theme(legend.position='none')
 draw_at(p_tile,2.5,2)
 draw_at(p_dna+ggplot2::scale_x_reverse(),12,3.4)
+# Independent native layers, including a standard data callback and user scale.
+first_row <- filter(dna_window,accver==dna_ids[1])
+other_rows <- filter(dna_window,accver!=dna_ids[1])
+multi <- ggplot2::ggplot(dna_window,aes(alignment_column,accver,label=symbol))+
+  geom_residue(aes(fill=symbol),data=function(d) d[d$accver==dna_ids[1],])+
+  geom_residue(data=other_rows,fill="#123456")+
+  ggplot2::scale_fill_manual(values=stats::setNames(rep("#B8D8BA",length(unique(dna_window$symbol))),unique(dna_window$symbol)))
+built <- ggplot2::ggplot_build(multi)
+stopifnot(nrow(built$data[[1]])==nrow(first_row),nrow(built$data[[2]])==nrow(other_rows),
+  all(built$data[[1]]$fill=="#B8D8BA"),all(built$data[[2]]$fill=="#123456"))
 expect_error(draw_at(p_dna+ggplot2::coord_polar(),12,3.4),'Cartesian')
 expect_error(draw_at(p_dna+ggplot2::scale_x_log10(),12,3.4),'identity or reverse')
 stopifnot(identical(before,dna_window))
 ggplot2::ggsave(file.path(out,'v0.21.0-alignment-dna.png'),p_dna,width=12,height=3.4,dpi=120,bg='white')
 ggplot2::ggsave(file.path(out,'v0.21.0-alignment-protein.png'),p_aa,width=12,height=3.4,dpi=120,bg='white')
 ggplot2::ggsave(file.path(out,'v0.21.0-alignment-tiles.png'),p_tile,width=2.5,height=2,dpi=120,bg='white')
+stopifnot(identical(grDevices::dev.list(),render_devices))
 utils::write.csv(dna_window,file.path(out,'v0.21.0-dna-columns.csv'),row.names=FALSE)
 utils::write.csv(aa_window,file.path(out,'v0.21.0-protein-columns.csv'),row.names=FALSE)
 jsonlite::write_json(list(version='0.21.0.9000',source_md5=as.list(tools::md5sum(c(
@@ -100,7 +115,7 @@ jsonlite::write_json(list(version='0.21.0.9000',source_md5=as.list(tools::md5sum
   note='Source positions refer to ungapped input fragments, not independently verified whole genomes',
   window_columns=list(DNA=c(321,380),AA=c(221,260)),
   physical_font_budget=list(wide='letters at 12 x 3.4 in',narrow='explicit error or tiles at 2.5 x 2 in',size_mm=3),
-  source_table_unchanged=TRUE,elapsed_seconds=unname(proc.time()[['elapsed']]-started),
+  source_table_unchanged=TRUE,graphics_devices_restored=TRUE,independent_layers_and_user_scale=TRUE,elapsed_seconds=unname(proc.time()[['elapsed']]-started),
   not_in_scope=c('MSA computation','CDS translation/phase','CIGAR decoding','macro view projection','release device matrix')),
   file.path(out,'v0.21.0-alignment-results.json'),pretty=TRUE,auto_unbox=TRUE)
 message('Alignment: real DNA/AA gaps, exact maps, declared reverse, source verification and physical text/tile drawing passed')

@@ -54,6 +54,8 @@
 | 跨面板连接真实区间 | [`fusion_ribbon()`](reference/fusion_ribbon.html) | `data, qpanel, spanel, gradient, tip` | Fusion | [进阶](fusion.html#intervals) |
 | 审计组合来源与物理锚点 | [`export_ggchord_fusion()`](reference/export_ggchord_fusion.html) | `width, height` | Fusion | [进阶](fusion.html#export) |
 | 导入BED双端区间 | [`read_bedpe()`](reference/read_bedpe.html) | `file, files, source_file, unmapped` | Input | [进阶](formats.html#bedpe) |
+| 显示已有对齐的真实字符与gap | [`geom_residue()`](reference/geom_residue.html) | `mapping, overflow, size` | Cartesian aligned excerpts | [进阶](formats.html#aligned-characters) |
+| 精确查找源位置与对齐列 | [`map_alignment_position()`](reference/map_alignment_position.html) | `data, accver, position, inverse` | DNA / RNA / AA | [进阶](formats.html#aligned-source) |
 
 ## 三条独立学习路线 {#paths}
 

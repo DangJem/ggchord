@@ -3148,5 +3148,96 @@
       "en": "Canonical q/s intervals, paired-anchor direction and provenance",
       "zh": "标准q/s区间、配对锚点方向与来源"
     }
+  },
+  "as_ggchord_alignment": {
+    "level": "L2",
+    "page": "formats",
+    "anchor": "aligned-source",
+    "reason": "Runnable real aligned-character workflow and explicit source/column/physical-space boundaries",
+    "modes": "Local aligned characters",
+    "parameters": [
+      "sequences",
+      "alphabet",
+      "source_data"
+    ],
+    "purpose": {
+      "en": "Adapt existing aligned strings with exact nullable source positions",
+      "zh": "适配已有对齐字符串，保留精确且可缺失的源位置"
+    },
+    "alias_of": "",
+    "case": "formats",
+    "scope": "Existing alignment or local excerpt; no new alignment, macro Coord projection or CDS inference",
+    "modes_localized": {
+      "en": "Existing DNA/RNA/AA columns; Cartesian local cells; explicit source mapping",
+      "zh": "已有DNA/RNA/AA对齐列；Cartesian局部单元与显式源映射"
+    }
+  },
+  "read_aligned_fasta": {
+    "level": "L2",
+    "page": "formats",
+    "anchor": "aligned-characters",
+    "reason": "Runnable real aligned-character workflow and explicit source/column/physical-space boundaries",
+    "modes": "Local aligned characters",
+    "parameters": [
+      "file",
+      "alphabet",
+      "source_file"
+    ],
+    "purpose": {
+      "en": "Read existing DNA/RNA/AA alignment characters without computing a new alignment",
+      "zh": "读取已有DNA/RNA/AA对齐字符，不计算新比对"
+    },
+    "alias_of": "",
+    "case": "formats",
+    "scope": "Existing alignment or local excerpt; no new alignment, macro Coord projection or CDS inference",
+    "modes_localized": {
+      "en": "Existing DNA/RNA/AA columns; Cartesian local cells; explicit source mapping",
+      "zh": "已有DNA/RNA/AA对齐列；Cartesian局部单元与显式源映射"
+    }
+  },
+  "map_alignment_position": {
+    "level": "L2",
+    "page": "formats",
+    "anchor": "aligned-characters",
+    "reason": "Runnable real aligned-character workflow and explicit source/column/physical-space boundaries",
+    "modes": "Local aligned characters",
+    "parameters": [
+      "accver",
+      "position",
+      "inverse"
+    ],
+    "purpose": {
+      "en": "Look up exact alignment columns and source positions in a selected row",
+      "zh": "在选定行中精确查找对齐列与源位置"
+    },
+    "alias_of": "",
+    "case": "formats",
+    "scope": "Existing alignment or local excerpt; no new alignment, macro Coord projection or CDS inference",
+    "modes_localized": {
+      "en": "Existing DNA/RNA/AA columns; Cartesian local cells; explicit source mapping",
+      "zh": "已有DNA/RNA/AA对齐列；Cartesian局部单元与显式源映射"
+    }
+  },
+  "geom_residue": {
+    "level": "L2",
+    "page": "formats",
+    "anchor": "aligned-characters",
+    "reason": "Runnable real aligned-character workflow and explicit source/column/physical-space boundaries",
+    "modes": "Local aligned characters",
+    "parameters": [
+      "mapping",
+      "overflow"
+    ],
+    "purpose": {
+      "en": "Draw local characters with measured physical space and explicit tile/error policy",
+      "zh": "按实际物理空间绘制局部字符，明确选择色格或报错策略"
+    },
+    "alias_of": "",
+    "case": "formats",
+    "scope": "Existing alignment or local excerpt; no new alignment, macro Coord projection or CDS inference",
+    "modes_localized": {
+      "en": "Existing DNA/RNA/AA columns; Cartesian local cells; explicit source mapping",
+      "zh": "已有DNA/RNA/AA对齐列；Cartesian局部单元与显式源映射"
+    }
   }
 }

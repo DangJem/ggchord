@@ -457,6 +457,25 @@
 
 </details>
 
+<span id="api-geom_residue"></span>
+<details><summary><code>geom_residue()</code></summary>
+
+
+[完整参考](reference/geom_residue.html)
+
+
+| 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
+| --- | --- | --- | --- |
+| `mapping` | `NULL` | aes 映射 | 标准 ggplot2 图层映射与数据。必需美学为 x、y 和 label；支持普通 colour、fill、alpha、size、family 和 fontface 映射与标度。size 的单位为 mm。 |
+| `data` | `NULL` | 表格/受支持对象；data 还可为函数 | 标准 ggplot2 图层映射与数据。必需美学为 x、y 和 label；支持普通 colour、fill、alpha、size、family 和 fontface 映射与标度。size 的单位为 mm。 |
+| `overflow` | `c("tile", "error")` | 向量；候选/多选含义见说明 | 字母无法容纳时使用 "tile"（默认）或 "error"。 |
+| `position` | `"identity"` | 字符/枚举；取值见说明 | 标准 ggplot2 图层参数。 |
+| `show.legend` | `NA` | R 对象；约束见说明 | 标准 ggplot2 图层参数。 |
+| `inherit.aes` | `TRUE` | 逻辑值 | 标准 ggplot2 图层参数。 |
+| `...` | `必需/互斥入口，见说明` | 上游转发参数 | 传给图层的固定文字/色格美学及 na.rm。 |
+
+</details>
+
 <span id="api-geom_restriction_site"></span>
 <details><summary><code>geom_restriction_site()</code></summary>
 
@@ -2047,6 +2066,21 @@
 
 ## 输入、转换、诊断与输出 {#workflows}
 
+<span id="api-as_ggchord_alignment"></span>
+<details><summary><code>as_ggchord_alignment()</code></summary>
+
+
+[完整参考](reference/as_ggchord_alignment.html)
+
+
+| 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
+| --- | --- | --- | --- |
+| `sequences` | `必需/互斥入口，见说明` | R 对象；约束见说明 | 已对齐字符串的命名字符向量，或含唯一 accver 和字符列 sequence 的数据框。所有字符串的正宽度必须相同，每条记录须至少含一个非 gap 字符。 |
+| `alphabet` | `必需/互斥入口，见说明` | R 对象；约束见说明 | 显式指定 "DNA"、"RNA" 或 "AA"。接受 IUPAC 核酸含糊码及蛋白含糊/稀有残基码；* 仅用于 AA。不猜测字母表。 |
+| `source_data` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 可选数据框，每个对齐 accver 对应一行，包含 start（首个非 gap 源位置）和 strand（"+" 或 "-"）。可选 source_accver 声明不同的源 ID，可选字符列 sequence 提供完整正向源字符串以供核对。坐标必须为正且精确的整数。输入元数据保留在 ggchord_conversion 属性中。 |
+
+</details>
+
 <span id="api-as_ggchord_feature"></span>
 <details><summary><code>as_ggchord_feature()</code></summary>
 
@@ -2477,6 +2511,22 @@
 
 </details>
 
+<span id="api-map_alignment_position"></span>
+<details><summary><code>map_alignment_position()</code></summary>
+
+
+[完整参考](reference/map_alignment_position.html)
+
+
+| 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
+| --- | --- | --- | --- |
+| `data` | `必需/互斥入口，见说明` | 表格/受支持对象；data 还可为函数 | as_ggchord_alignment() 返回的对齐长表。 |
+| `accver` | `必需/互斥入口，见说明` | R 对象；约束见说明 | 单个对齐行 ID，即使其 source_accver 使用不同名称。 |
+| `position` | `必需/互斥入口，见说明` | Position 对象或已记录的字符串 | 数值位置，必须为正整数或 NA。 |
+| `inverse` | `FALSE` | 逻辑值 | FALSE 将对齐列映射到源位置；TRUE 将源位置映射到对齐列。 |
+
+</details>
+
 <span id="api-map_ggchord_position"></span>
 <details><summary><code>map_ggchord_position()</code></summary>
 
@@ -2594,6 +2644,22 @@
 | `link_data` | `必需/互斥入口，见说明` | R 对象；约束见说明 | 数据框，以 qfeature_id、sfeature_id 标识 CDS 模型，并提供有序闭区间蛋白坐标 qstart、qend、sstart、send。两端残基跨度须相等；若存在 gapopen 则必须为零，源 length 须等于残基跨度。 |
 | `cds` | `必需/互斥入口，见说明` | R 对象；约束见说明 | 由 build_ggchord_cds() 创建的映射。 |
 | `ungapped` | `FALSE` | 逻辑值 | 须显式设为 TRUE，确认无缺口残基对应，不能仅由端点跨度相等推断。 |
+
+</details>
+
+<span id="api-read_aligned_fasta"></span>
+<details><summary><code>read_aligned_fasta()</code></summary>
+
+
+[完整参考](reference/read_aligned_fasta.html)
+
+
+| 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
+| --- | --- | --- | --- |
+| `file` | `必需/互斥入口，见说明` | 字符路径、标识或向量；见约束 | 单个本地已对齐 FASTA 文件路径，不拼接多个独立对齐。 |
+| `alphabet` | `必需/互斥入口，见说明` | R 对象；约束见说明 | 显式指定 "DNA"、"RNA" 或 "AA"。接受 IUPAC 核酸含糊码及蛋白含糊/稀有残基码；* 仅用于 AA。不猜测字母表。 |
+| `source_data` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 可选数据框，每个对齐 accver 对应一行，包含 start（首个非 gap 源位置）和 strand（"+" 或 "-"）。可选 source_accver 声明不同的源 ID，可选字符列 sequence 提供完整正向源字符串以供核对。坐标必须为正且精确的整数。输入元数据保留在 ggchord_conversion 属性中。 |
+| `source_file` | `FALSE` | 逻辑值 | 逻辑值，是否在每个字符行额外保留 .source_file。 |
 
 </details>
 

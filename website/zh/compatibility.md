@@ -54,3 +54,12 @@ Position 只控制局部放置，不把不支持的图层转换成另一种坐�
 ## 静态跨面板组合 {#fusion}
 
 [Fusion](fusion.html)接受Circular/Chord中央图与最多四个Collinear外围面板，各面板保留原有图层契约。跨面板完整前缘采用一基闭区间边界和连续曲线映射；要求同单位来源区间完整可见，面板与实例路由无歧义。Fusion的标准标度只作用于跨面板图层。外围Sankey/Radial/Dotplot、分面及隐式第三方坐标适配均拒绝。保存时重新测量物理面板，不代表具备全局避障或通用字号缩放。
+
+
+## 局部对齐字符单元 {#aligned-cells}
+
+| 图层/参考 | Chord / Collinear / Circular / Dotplot / Radial | 普通 Cartesian ggplot |
+| --- | --- | --- |
+| [`geom_residue()`](reference/geom_residue.html) | 不支持生物学骨架投影 | 支持局部字符单元及 identity/reverse 位置标度 |
+
+[字符对齐工作流](formats.html#aligned-characters) 使用普通 ggplot x/y 坐标，源位置和对齐列保留为不同字段。按最终物理字形度量选择可读文字或明确的色格/报错策略，不改变源数据、不缩小字号。不代表已支持 Fusion 面板注册、自动 CDS 翻译或新比对计算。

@@ -40,6 +40,9 @@ ggchord_alignment_complement <- function(x, alphabet) {
 #'   `sequence_unit`, `source_verified` and `.source_row`. Conversion provenance
 #'   retains the original input and normalized source metadata. No identity,
 #'   consensus, translation, phase or full sequence length is inferred.
+#'   source_verified records whether the record's nongap characters were
+#'   checked, including on its gap rows; it is not independent biological
+#'   confirmation of the supplied source.
 #' @export
 #' @examples
 #' # Explicit synthetic format example, not a biological alignment claim.

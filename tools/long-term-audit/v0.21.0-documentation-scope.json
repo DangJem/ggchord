@@ -1,0 +1,25 @@
+{
+  "scope": "Whole documentation source/assets check; not package or browser verification",
+  "passed": false,
+  "stale_lesson_engines": [
+    "R/coord-radial-synteny.R",
+    "R/data-contract.R",
+    "R/data-import.R",
+    "R/focus.R",
+    "R/view-projection.R"
+  ],
+  "stale_plot_count": 178,
+  "reason": "Prior teaching/figure fingerprints are not revalidated by v0.21.0 local character checks. Existing images not re-stamped or rebuilt.",
+  "scoped_checks": [
+    "1022 Han reference prose blocks",
+    "formats preparation and raw R blocks",
+    "paired lesson code and explicit anchors",
+    "new API/formal and compatibility coverage"
+  ],
+  "not_claimed": [
+    "all old tutorial engines rerun",
+    "current output of all historical PNGs",
+    "whole-site browser QA",
+    "release device matrix"
+  ]
+}

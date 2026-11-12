@@ -113,3 +113,82 @@ character_locus <- focus_ggchord_data(
 character_locus$seq_data |>
   select(accver, length, sequence, .source_origin)
 ```
+
+
+## Existing alignments: keep columns and source positions separate {#aligned-characters}
+
+These examples require the source checkout's `examples/alignment/` directory. It contains unchanged Biopython DNA/protein alignment inputs, the upstream permission notice, hashes and a reproducible FASTA re-encoding rule. No aligner is run. Full record IDs and original characters remain unchanged; choose rows and columns explicitly.
+
+`read_aligned_fasta()` reads one existing alignment. Declare DNA, RNA or AA; equal lengths alone do not establish homology. `alignment_column` includes `-` and `.` gaps, whose `source_position` is NA. Default positions count the ungapped input fragment from one; they are not complete-genome coordinates. Lowercase letters consume positions, so this reader must not be used as an A3M insertion parser.
+
+```r
+aligned_dna <- read_aligned_fasta(
+  "examples/alignment/opuntia-aligned.fasta", "DNA", source_file = TRUE
+)
+selected_rows <- unique(aligned_dna$accver)[c(1, 3, 7)]
+local_dna <- aligned_dna |>
+  filter(accver %in% selected_rows, between(alignment_column, 321, 380))
+
+map_alignment_position(local_dna, selected_rows[1], c(342, 343, 344))
+map_alignment_position(local_dna, selected_rows[1], 343, inverse = TRUE)
+
+p_characters <- ggplot2::ggplot(
+  local_dna, aes(alignment_column, accver, label = symbol)
+) +
+  geom_residue(aes(fill = symbol), size = 3, overflow = "error") +
+  ggplot2::scale_fill_manual(
+    values = c(
+      A = "#B8D8BA", C = "#A6CBE3", G = "#F2D28C", T = "#EAA8A8",
+      N = "#D8D8D8", "-" = "#F5F5F5", "." = "#F5F5F5"
+    ),
+    guide = "none"
+  ) +
+  ggplot2::labs(x = "Alignment column", y = NULL) +
+  ggplot2::theme_minimal()
+p_characters
+```
+
+The first selected row has a gap at alignment column 343. Column lookup therefore returns `matched = TRUE`, `is_gap = TRUE` and a missing source position. Inverse lookup of source position 343 finds its actual alignment column, without interpolation. Positions removed by filtering return `matched = FALSE`; filtering never renumbers retained columns. `map_alignment_position()` selects an alignment-row ID even when a separately declared source ID differs.
+
+`geom_residue()` is a standard Cartesian ggplot layer. Styles and user scales follow ggplot2. It measures glyphs against actual cell width and height at draw time: `overflow = "error"` requires readable letters; `"tile"` retains colour cells where text cannot fit, without shrinking fonts. Focus fewer columns or increase physical width to show letters. For example, save `p_characters` with ordinary `ggsave(width = 12, height = 3.4, units = "in")`; simply raising DPI adds no physical room. Discrete rows, identity/reverse position scales and Cartesian coordinates are supported; this layer does not attach characters to ggchord's backbone Coords or Fusion panels.
+
+### Protein excerpt {#aligned-protein}
+
+The same data contract accepts actual protein characters. This excerpt contains upstream gaps and residue differences; fill distinguishes literal symbols, not inferred functional domains.
+
+```r
+aligned_protein <- read_aligned_fasta(
+  "examples/alignment/protein-aligned.fasta", "AA"
+)
+protein_rows <- unique(aligned_protein$accver)[2:4]
+local_protein <- aligned_protein |>
+  filter(accver %in% protein_rows, between(alignment_column, 221, 260))
+
+ggplot2::ggplot(local_protein, aes(alignment_column, accver, label = symbol)) +
+  geom_residue(aes(fill = symbol), size = 3, overflow = "tile") +
+  ggplot2::scale_fill_hue(l = 85, c = 35, guide = "none") +
+  ggplot2::labs(x = "Alignment column", y = NULL) +
+  ggplot2::theme_minimal()
+```
+
+### Explicit source coordinates {#aligned-source}
+
+Provide one `source_data` row per aligned record with `accver`, `start` and `strand`. `start` is the first nongap source coordinate. Negative-strand positions decrease; strings must already be in alignment orientation. An optional `source_accver` identifies the original molecule. If you provide a full forward `sequence`, every nongap character is checked, using nucleotide complementation on the negative strand and order reversal only for AA. Missing source strings remain unverified; no origins or strands are guessed.
+
+The following example checks consistency against ungapped fragments derived from the same alignment. It is deliberately **not independent genomic validation**. For a real genomic projection, supply independently known source sequences and interval metadata instead.
+
+```r
+original_strings <- read_fasta_lengths(
+  "examples/alignment/opuntia-aligned.fasta", keep_sequence = TRUE
+)
+fragment_sources <- original_strings |>
+  transmute(
+    accver, source_accver = accver, start = 1, strand = "+",
+    sequence = gsub("[-.]", "", sequence)
+  )
+checked_cells <- as_ggchord_alignment(
+  original_strings, "DNA", source_data = fragment_sources
+)
+```
+
+No mismatch/gap detail can be recovered from six HSP endpoints alone. This workflow accepts existing columns, not CIGAR/A3M/Clustal/Stockholm parsing, CDS translation/phase inference, consensus/Logo analysis or alignment computation. It leaves source identity and positions available for later explicit macro/detail mapping.

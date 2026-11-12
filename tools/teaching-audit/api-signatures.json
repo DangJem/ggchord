@@ -55,6 +55,16 @@
     }
   },
   {
+    "name": "as_ggchord_alignment",
+    "owner": "ggchord",
+    "alias": "",
+    "parameters": {
+      "sequences": "",
+      "alphabet": "",
+      "source_data": "NULL"
+    }
+  },
+  {
     "name": "as_ggchord_feature",
     "owner": "ggchord",
     "alias": "",
@@ -747,6 +757,20 @@
     }
   },
   {
+    "name": "geom_residue",
+    "owner": "ggchord",
+    "alias": "",
+    "parameters": {
+      "mapping": "NULL",
+      "data": "NULL",
+      "overflow": "c(\"tile\", \"error\")",
+      "position": "\"identity\"",
+      "show.legend": "NA",
+      "inherit.aes": "TRUE",
+      "...": ""
+    }
+  },
+  {
     "name": "geom_restriction_site",
     "owner": "ggchord",
     "alias": "",
@@ -1147,6 +1171,17 @@
     }
   },
   {
+    "name": "map_alignment_position",
+    "owner": "ggchord",
+    "alias": "",
+    "parameters": {
+      "data": "",
+      "accver": "",
+      "position": "",
+      "inverse": "FALSE"
+    }
+  },
+  {
     "name": "map_ggchord_position",
     "owner": "ggchord",
     "alias": "",
@@ -1292,6 +1327,17 @@
       "link_data": "",
       "cds": "",
       "ungapped": "FALSE"
+    }
+  },
+  {
+    "name": "read_aligned_fasta",
+    "owner": "ggchord",
+    "alias": "",
+    "parameters": {
+      "file": "",
+      "alphabet": "",
+      "source_data": "NULL",
+      "source_file": "FALSE"
     }
   },
   {

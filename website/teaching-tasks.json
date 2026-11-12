@@ -548,5 +548,27 @@
     "modes": "Input",
     "page": "formats#bedpe",
     "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "显示已有对齐的真实字符与gap",
+      "en": "Show actual characters and gaps from an alignment"
+    },
+    "api": "geom_residue",
+    "parameters": "mapping, overflow, size",
+    "modes": "Cartesian aligned excerpts",
+    "page": "formats#aligned-characters",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "精确查找源位置与对齐列",
+      "en": "Look up source positions and alignment columns"
+    },
+    "api": "map_alignment_position",
+    "parameters": "data, accver, position, inverse",
+    "modes": "DNA / RNA / AA",
+    "page": "formats#aligned-source",
+    "level": "advanced"
   }
 ]

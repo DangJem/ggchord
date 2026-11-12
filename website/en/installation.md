@@ -9,8 +9,8 @@ packageVersion("ggchord")
 ```
 
 The last line reports your installed version. This local documentation previews
-**0.20.0.9000**. The repository's last recorded formal release is **0.16.6**;
-new Foundation, Fusion and BEDPE APIs require the matching development checkout. See the
+**0.21.0.9000**. The repository's last recorded formal release is **0.16.6**;
+new Foundation, Fusion, BEDPE and aligned-character APIs require the matching development checkout. See the
 [migration notes](../assets/MIGRATION.md) before updating an existing script.
 
 For development work, install dependencies first and run from the matching
@@ -19,7 +19,7 @@ checkout in a fresh R session:
 ```r
 install.packages(".", repos = NULL, type = "source")
 library(ggchord)
-stopifnot(as.character(packageVersion("ggchord")) == "0.20.0.9000")
+stopifnot(as.character(packageVersion("ggchord")) == "0.21.0.9000")
 ```
 
 Version numbers do not identify individual commits. The downloadable build

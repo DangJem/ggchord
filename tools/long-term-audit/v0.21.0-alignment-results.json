@@ -1,0 +1,29 @@
+{
+  "version": "0.21.0.9000",
+  "source_md5": {
+    "examples/alignment/opuntia-aligned.fasta": "ee88017ba69aa385d72dd4384796a4b6",
+    "examples/alignment/protein-aligned.fasta": "786b18983628af5cb2294056c974fbd5"
+  },
+  "dna_records": 7,
+  "aa_records": 20,
+  "dna_cells": 6342,
+  "aa_cells": 8220,
+  "gap_cells": 1295,
+  "exact_source_column_roundtrip": true,
+  "negative_orientation_and_source_verification": true,
+  "note": "Source positions refer to ungapped input fragments, not independently verified whole genomes",
+  "window_columns": {
+    "DNA": [321, 380],
+    "AA": [221, 260]
+  },
+  "physical_font_budget": {
+    "wide": "letters at 12 x 3.4 in",
+    "narrow": "explicit error or tiles at 2.5 x 2 in",
+    "size_mm": 3
+  },
+  "source_table_unchanged": true,
+  "graphics_devices_restored": true,
+  "independent_layers_and_user_scale": true,
+  "elapsed_seconds": 0.521,
+  "not_in_scope": ["MSA computation", "CDS translation/phase", "CIGAR decoding", "macro view projection", "release device matrix"]
+}

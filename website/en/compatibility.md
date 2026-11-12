@@ -61,3 +61,12 @@ are required. Generic Fusion scales affect cross-panel layers only. Peripheral
 Sankey/Radial/Dotplot, facets and implicit third-party coordinate adapters are
 rejected. Physical panels are remeasured at save time; this does not imply
 global collision avoidance or general font scaling.
+
+
+## Local aligned-character cells {#aligned-cells}
+
+| Layer/reference | Chord / Collinear / Circular / Dotplot / Radial | Ordinary Cartesian ggplot |
+| --- | --- | --- |
+| [`geom_residue()`](reference/geom_residue.html) | Unsupported biological backbone projection | Supported local character cells with identity/reverse position scales |
+
+The [aligned-character workflow](formats.html#aligned-characters) uses ordinary ggplot x/y coordinates. Source positions and alignment columns are separate fields. Final physical glyph measurement selects readable text or explicit tile/error behavior; it does not change source data or shrink fonts. No Fusion panel registration, automatic CDS translation or new alignment is implied.

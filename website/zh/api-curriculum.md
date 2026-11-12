@@ -9,6 +9,7 @@
 | [`after_stat`](reference/ggplot2-helpers.html) | 适用于 ggchord 的部分 ggplot2 辅助函数 | [上游](parameter-atlas.html#upstream) | 上游对象/接口；遵循 ggplot2/grid 的原始契约 | [↗](parameter-atlas.html#api-after_stat) | [↗](chord.html) |
 | [`annotate`](reference/ggplot2-helpers.html) | 适用于 ggchord 的部分 ggplot2 辅助函数 | [上游](parameter-atlas.html#upstream) | 上游对象/接口；遵循 ggplot2/grid 的原始契约 | [↗](parameter-atlas.html#api-annotate) | [↗](chord.html) |
 | [`arrow`](reference/grid-helpers.html) | 物理单位与方向箭头 | [上游](parameter-atlas.html#upstream) | 上游对象/接口；遵循 ggplot2/grid 的原始契约 | [↗](parameter-atlas.html#api-arrow) | [↗](chord.html) |
+| [`as_ggchord_alignment`](reference/as_ggchord_alignment.html) | 适配已有对齐字符串，保留精确且可缺失的源位置 | [L2](formats.html#aligned-source) | 已有DNA/RNA/AA对齐列；Cartesian局部单元与显式源映射 | [↗](parameter-atlas.html#api-as_ggchord_alignment) | [↗](formats.html) |
 | [`as_ggchord_feature`](reference/as_ggchord_feature.html) | 将区间转换为 ggchord 通用注释 | [L2](formats.html#adapters) | 表格/受支持对象适配；完整长度与 ID 不得猜测 | [↗](parameter-atlas.html#api-as_ggchord_feature) | [↗](formats.html) |
 | [`as_ggchord_link`](reference/as_ggchord_link.html) | 将成对基因组区间转换为 ggchord 连接 | [L2](formats.html#adapters) | 表格/受支持对象适配；完整长度与 ID 不得猜测 | [↗](parameter-atlas.html#api-as_ggchord_link) | [↗](formats.html) |
 | [`as_ggchord_seq`](reference/as_ggchord_seq.html) | 将序列信息转换为 ggchord 输入 | [L2](formats.html#adapters) | 表格/受支持对象适配；完整长度与 ID 不得猜测 | [↗](parameter-atlas.html#api-as_ggchord_seq) | [↗](formats.html) |
@@ -52,6 +53,7 @@
 | [`geom_link_ribbon`](reference/geom_link_ribbon.html) | 添加比对区间连接图层 | [L3](chord-branches.html#branches) | 弦图/共线性；邻接按显示顺序；圆图拒绝；Radial见新增视图支持矩阵 | [↗](parameter-atlas.html#api-geom_link_ribbon) | [↗](chord.html) |
 | [`geom_primer`](reference/geom_primer.html) | 在圆形序列上绘制引物结合范围 | [L3](primers.html#primer-arcs) | bp；推荐单圆图；单序列弦图可组合；共线性拒绝 | [↗](parameter-atlas.html#api-geom_primer) | [↗](plasmids.html) |
 | [`geom_primer_label_repel`](reference/geom_primer_label_repel.html) | 排列引物标签和引导线 | [L3](primers.html#primer-labels) | bp；推荐单圆图；共线性拒绝 | [↗](parameter-atlas.html#api-geom_primer_label_repel) | [↗](plasmids.html) |
+| [`geom_residue`](reference/geom_residue.html) | 按实际物理空间绘制局部字符，明确选择色格或报错策略 | [L2](formats.html#aligned-characters) | 已有DNA/RNA/AA对齐列；Cartesian局部单元与显式源映射 | [↗](parameter-atlas.html#api-geom_residue) | [↗](formats.html) |
 | [`geom_restriction_site`](reference/geom_restriction_site.html) | 绘制酶切位点、标签和确定性引导线 | [L3](restriction-sites.html#restriction-labels) | bp；推荐单圆图；共线性拒绝 | [↗](parameter-atlas.html#api-geom_restriction_site) | [↗](plasmids.html) |
 | [`geom_seq`](reference/geom_seq.html) | 添加序列骨架图层 | [L3](circular-layers.html#backbones) | 三种模式；直线图拒绝半径/曲率/ring；圆图自管方向与开口；Radial见新增视图支持矩阵 | [↗](parameter-atlas.html#api-geom_seq) | [↗](chord.html) |
 | [`geom_seq_break`](reference/geom_seq_break.html) | 标记线性序列的裁剪端点 | [L2](views.html#segments) | 仅共线性；需要聚焦/分段端点元数据；Radial见新增视图支持矩阵 | [↗](parameter-atlas.html#api-geom_seq_break) | [↗](collinear.html) |
@@ -76,6 +78,7 @@
 | [`labs`](reference/ggplot2-helpers.html) | 适用于 ggchord 的部分 ggplot2 辅助函数 | [上游](parameter-atlas.html#upstream) | 上游对象/接口；遵循 ggplot2/grid 的原始契约 | [↗](parameter-atlas.html#api-labs) | [↗](chord.html) |
 | [`last_plot`](reference/ggplot2-helpers.html) | 适用于 ggchord 的部分 ggplot2 辅助函数 | [上游](parameter-atlas.html#upstream) | 上游对象/接口；遵循 ggplot2/grid 的原始契约 | [↗](parameter-atlas.html#api-last_plot) | [↗](chord.html) |
 | [`link_ggchord_clusters`](reference/link_ggchord_clusters.html) | 将显式同源分组成员转换为注释连接 | [L2](homology.html#links) | 消费明确成员表；同名不能证明同源 | [↗](parameter-atlas.html#api-link_ggchord_clusters) | [↗](homology.html) |
+| [`map_alignment_position`](reference/map_alignment_position.html) | 在选定行中精确查找对齐列与源位置 | [L2](formats.html#aligned-characters) | 已有DNA/RNA/AA对齐列；Cartesian局部单元与显式源映射 | [↗](parameter-atlas.html#api-map_alignment_position) | [↗](formats.html) |
 | [`map_ggchord_position`](reference/map_ggchord_position.html) | 映射源位置与显示坐标 | [L2](view-expansion.html#export) | 原生或源坐标；Dotplot须选轴，Radial反查须给x/y | [↗](parameter-atlas.html#api-map_ggchord_position) | [↗](view-expansion.html) |
 | [`margin`](reference/ggplot2-helpers.html) | 适用于 ggchord 的部分 ggplot2 辅助函数 | [上游](parameter-atlas.html#upstream) | 上游对象/接口；遵循 ggplot2/grid 的原始契约 | [↗](parameter-atlas.html#api-margin) | [↗](chord.html) |
 | [`merge_ggchord_ribbons`](reference/merge_ggchord_ribbons.html) | 合并同序列对的相邻或重叠比对块 | [L2](ribbons.html#transformations) | 处理已有比对；不生成新的序列比对 | [↗](parameter-atlas.html#api-merge_ggchord_ribbons) | [↗](chord.html) |
@@ -90,6 +93,7 @@
 | [`primer_catalog`](reference/primer_catalog.html) | 查看随包测序引物目录 | [L2](workflow-tools.html#catalog) | 目录元数据；不是目标上的结合搜索 | [↗](parameter-atlas.html#api-primer_catalog) | [↗](plasmids.html) |
 | [`project_ggchord_features`](reference/project_ggchord_features.html) | 通过剪接 CDS 映射投影蛋白结构域或基因组注释 | [L2](projection.html#cds) | 显式 CDS/相位/单位的编码坐标工作流 | [↗](parameter-atlas.html#api-project_ggchord_features) | [↗](homology.html) |
 | [`project_ggchord_links`](reference/project_ggchord_links.html) | 将明确无缺口的蛋白连接投影为基因组编码片段 | [L2](projection.html#links) | 显式 CDS/相位/单位的编码坐标工作流 | [↗](parameter-atlas.html#api-project_ggchord_links) | [↗](homology.html) |
+| [`read_aligned_fasta`](reference/read_aligned_fasta.html) | 读取已有DNA/RNA/AA对齐字符，不计算新比对 | [L2](formats.html#aligned-characters) | 已有DNA/RNA/AA对齐列；Cartesian局部单元与显式源映射 | [↗](parameter-atlas.html#api-read_aligned_fasta) | [↗](formats.html) |
 | [`read_bed`](reference/read_bed.html) | 将 BED 区间读为 ggchord 注释 | [L2](formats.html#zero-based) | 本地文件到标准表；按源格式转换坐标和声明单位 | [↗](parameter-atlas.html#api-read_bed) | [↗](formats.html) |
 | [`read_bedpe`](reference/read_bedpe.html) | 读取双端区间，保留来源且不推断缺失比对证据 | [L2](formats.html#bedpe) | 标准q/s区间、配对锚点方向与来源 | [↗](parameter-atlas.html#api-read_bedpe) | [↗](formats.html) |
 | [`read_blast`](reference/read_blast.html) | 将一个或多个 BLAST 表格文件读为连接数据 | [L2](alignments.html#standard) | 本地文件到标准表；按源格式转换坐标和声明单位 | [↗](parameter-atlas.html#api-read_blast) | [↗](real-data.html) |

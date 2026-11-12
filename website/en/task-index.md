@@ -54,6 +54,8 @@ Choose a lesson by task. A means chord, B collinear, C single-sequence circular.
 | Connect real intervals across panels | [`fusion_ribbon()`](reference/fusion_ribbon.html) | `data, qpanel, spanel, gradient, tip` | Fusion | [Advanced](fusion.html#intervals) |
 | Audit composition sources and physical anchors | [`export_ggchord_fusion()`](reference/export_ggchord_fusion.html) | `width, height` | Fusion | [Advanced](fusion.html#export) |
 | Import paired BED intervals | [`read_bedpe()`](reference/read_bedpe.html) | `file, files, source_file, unmapped` | Input | [Advanced](formats.html#bedpe) |
+| Show actual characters and gaps from an alignment | [`geom_residue()`](reference/geom_residue.html) | `mapping, overflow, size` | Cartesian aligned excerpts | [Advanced](formats.html#aligned-characters) |
+| Look up source positions and alignment columns | [`map_alignment_position()`](reference/map_alignment_position.html) | `data, accver, position, inverse` | DNA / RNA / AA | [Advanced](formats.html#aligned-source) |
 
 ## Three independent learning paths {#paths}
 

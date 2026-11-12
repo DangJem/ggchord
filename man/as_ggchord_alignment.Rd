@@ -28,6 +28,9 @@ An ordinary long data frame containing \code{accver}, \code{alignment_column},
 \code{sequence_unit}, \code{source_verified} and \code{.source_row}. Conversion provenance
 retains the original input and normalized source metadata. No identity,
 consensus, translation, phase or full sequence length is inferred.
+source_verified records whether the record's nongap characters were
+checked, including on its gap rows; it is not independent biological
+confirmation of the supplied source.
 }
 \description{
 Accepts an existing alignment, never computes one. Equal character counts
