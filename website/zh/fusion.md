@@ -102,7 +102,7 @@ focus_geometry$leaders
 
 虚线是装饰性的聚焦引线，与生物学 `connections`、`relationship_data` 分开导出；添加真实 `fusion_ribbon()` 仍须提供真实关系数据。`focus_region_data` 保留原始选区及任意元数据，`focus_regions` 记录解析出的实例、源原点和采样物理路径长度比。细节容器较小时，该比值可能小于 1，这不改变生物学长度。
 
-细节图拥有自己的数据、标度、图层和统计。若使用 count/bin/coverage 轨道，请自行准备并说明局部或全局统计总体；组合器只记录 `explicit_detail_plot`，不会静默选择口径。它不复制任意源图层、不推断比对，也不接收未注册的 Cartesian 字符面板。当前使用一个有序区间；同一 accession 重复时显式指定 `instance`/`detail_instance`，跨原点区间须先拆分。下节提供独立细节；后文进一步介绍显式嵌套与自由区域分配，全局避障由独立布局策略负责。
+细节图拥有自己的数据、标度、图层和统计。若使用 count/bin/coverage 轨道，请自行准备并说明局部或全局统计总体；组合器只记录 `explicit_detail_plot`，不会静默选择口径。它不复制任意源图层、不推断比对，也不接收未注册的 Cartesian 字符面板。当前使用一个有序区间；同一 accession 重复时显式指定 `instance`/`detail_instance`，跨原点选区按后文显式声明 `wrap = TRUE`。下节提供独立细节；后文进一步介绍显式嵌套与自由区域分配，全局避障由独立布局策略负责。
 
 ## 保留真实 HSP 的成对源窗口 {#paired-detail}
 
@@ -208,7 +208,7 @@ export_ggchord_fusion(character_detail, width = 16, height = 5)$focus_regions
 # ggsave("character-detail.png", character_detail, width = 16, height = 5)
 ```
 
-普通图仍可编辑，各自颜色、图层与注释保持独立。支持 identity/reverse x 标度和离散 y 行。Fusion 每次构建都核对修改后的字符位置/标签，并重新测量最终面板毫米边界；半格边界对应真实端点字符。gap 无源位置，不会被插值为碱基。选区必须按生物学顺序包含全部已选源碱基，内含子与跨原点区域需拆成独立源区间。同一来源有多个对齐行时用 `detail_instance` 明确选择。不注册的 ggplot、分面、非线性/翻转坐标和移动已注册字符均报错。
+普通图仍可编辑，各自颜色、图层与注释保持独立。支持 identity/reverse x 标度和离散 y 行。Fusion 每次构建都核对修改后的字符位置/标签，并重新测量最终面板毫米边界；半格边界对应真实端点字符。gap 无源位置，不会被插值为碱基。选区必须按生物学顺序包含全部已选源碱基，内含子需拆成独立源区间，跨原点区域使用后文的显式环绕声明。同一来源有多个对齐行时用 `detail_instance` 明确选择。不注册的 ggplot、分面、非线性/翻转坐标和移动已注册字符均报错。
 
 `translate_ggchord_cds()` 的碱基行可以同样注册。按 `examples/m2-detail.R` 将翻译标在 codon 中心，完整跨段 codon 来源查 `source_positions`。AA残基行使用独立aa坐标域，基因组bp宏观图直接连接aa位置仍需显式CDS投影。magnify装饰引线与生物学Fusion连接分开；字符端点没有骨架颜色可用于渐变，应明确提供跨面板fill。窄画布仍执行 `geom_residue()` 的tile/error策略，应增加物理尺寸，不能只增加DPI。全局引线避障是独立布局问题；下文提供显式嵌套和自由区域分配。
 
@@ -266,4 +266,23 @@ report$focus_region_data_by_composition
 
 `composition_id` 与 `region_row` 将派生选区、front和引线关联到 `focus_region_data_by_composition` 的各层原始选区。顶层 `focus_region_data` 仍是原始外层输入。叶面板用 `detail/center`、`detail/detail` 等路径命名，组合容器不会被当作单一基因组轴。来源在多个叶面板重复时，应指定完整路径与准确实例；`source_panel` 可选择 `center` 下的源叶面板。导出保留实际毫米边界和原始box/angle请求。
 
-各子图保留独立图层、Scale和统计总体，组合器不会暗中复制图层或重算统计。跨原点区间目前仍须显式拆分。完整负链CDS→基因组focus→真实字符示例见 `examples/m3-nested.R`。字符保留按物理尺寸的tile/error策略，较小嵌套区域不能仅凭增加DPI容纳60个字母。完整多设备发布验收与全局连接/标签优化属于独立工作。
+各子图保留独立图层、Scale和统计总体，组合器不会暗中复制图层或重算统计。跨原点区间采用后文的显式完整源长度声明。完整负链CDS→基因组focus→真实字符示例见 `examples/m3-nested.R`。字符保留按物理尺寸的tile/error策略，较小嵌套区域不能仅凭增加DPI容纳60个字母。完整多设备发布验收与全局连接/标签优化属于独立工作。
+
+## 显式跨原点选区 {#origin-detail}
+
+圆形排版不是环状来源的证据。在 `start > end` 的选区上设置 `wrap = TRUE`。
+两个选定叶面板必须保留相同的完整源长度。字符适配器还需显式 `circular = TRUE`，
+并在 `source_data` 提供完整字符串或精确 `source_length`；缺少完整字符串时，字符
+仍标为未核对。最多覆盖完整一圈，保证源位置到字符列的反查唯一。负链按自身方向
+环绕并保留 gap。不会暗中拼接不同的 focus 实例。
+
+完整真实流程见 `examples/origin-detail.R`：从未改动的随包 pUC19 FASTA 提取
+82 个实际碱基（2640–2686，再到 1–35）。`focus_region_data` 保留原来的一行；
+派生表以 `region_piece` 区分两段，共享同一 `region_row`。只有外侧两个边界有引线，
+接缝不是另一条选区或生物学关系。
+
+```r
+# Requires dplyr and the source checkout or tutorial input bundle.
+source("examples/origin-detail.R")
+origin_detail
+```

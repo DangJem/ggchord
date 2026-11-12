@@ -2094,6 +2094,7 @@
 | `sequences` | `必需/互斥入口，见说明` | R 对象；约束见说明 | 已对齐字符串的命名字符向量，或含唯一 accver 和字符列 sequence 的数据框。所有字符串的正宽度必须相同，每条记录须至少含一个非 gap 字符。 |
 | `alphabet` | `必需/互斥入口，见说明` | R 对象；约束见说明 | 显式指定 "DNA"、"RNA" 或 "AA"。接受 IUPAC 核酸含糊码及蛋白含糊/稀有残基码；* 仅用于 AA。不猜测字母表。 |
 | `source_data` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 可选数据框，每个对齐 accver 对应一行，包含 start（首个非 gap 源位置）和 strand（"+" 或 "-"）。可选 source_accver 声明不同的源 ID，可选字符列 sequence 提供完整正向源字符串以供核对。坐标必须为正且精确的整数。输入元数据保留在 ggchord_conversion 属性中。 |
+| `circular` | `FALSE` | 逻辑值 | 显式逻辑声明全部来源为环状，默认 FALSE。必须提供 source_data，其中含完整 source_length 或完整 sequence。坐标在该长度处按声明链方向环绕；非 gap 字符最多覆盖完整一圈。增加 source_circular 和 source_length 列。圆形绘图不会自动启用此转换。 |
 
 </details>
 
@@ -2542,7 +2543,7 @@
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
 | --- | --- | --- | --- |
 | `plot` | `必需/互斥入口，见说明` | R 对象；约束见说明 | 已注册的ggchord基因组源图或嵌套Fusion。 |
-| `region` | `必需/互斥入口，见说明` | R 对象；约束见说明 | 非空表，以 accver、start、end 指定原始一基闭区间，边界须为有序正整数。可选 instance 与 detail_instance 逐行选择源/细节中的准确实例，歧义报错，跨原点区间须先拆分。多细节时用 detail_panel 选择命名目标。嵌套叶面板用detail/center等完整路径，source_panel可选择center下的源叶面板；容器选择存在歧义时不能省略。 |
+| `region` | `必需/互斥入口，见说明` | R 对象；约束见说明 | 非空数据框，包含原始来源一基闭区间坐标 accver、start、end。默认边界为有序正整数。可选 instance 和 detail_instance 为每行精确选择源及细节显示实例；歧义会报错。显式 wrap = TRUE 允许 start > end 的跨环状源原点区间。两个选定叶面板必须声明相同的完整源长度，字符来源须使用 as_ggchord_alignment(circular = TRUE)。区间绘为两段，只保留两个外侧边界引线。细节列表使用 detail_panel 列逐行选择目标。嵌套叶使用 detail/center 等完整路径；可选 source_panel 同样选择 center 下的源叶。歧义的容器选择会报错。 |
 | `detail_plot` | `必需/互斥入口，见说明` | R 对象；约束见说明 | 显式已注册ggchord基因组图、嵌套Fusion、来自 register_ggchord_alignment() 的字符图，或按唯一名称给出的图列表。每个面板至少有一个选区，center 是保留名。选区在两端均须完整可见，bp/aa单位一致。字符图须显式注册源/对齐列映射，未注册的普通图会拒绝。 |
 | `side` | `c("right", "top", "left", "bottom")` | 向量；候选/多选含义见说明 | fusion_panel()中的命名侧边，含对角方向。图列表须提供按面板ID命名且互不相同的侧边；多面板必须明确路由和摆放。 |
 | `center_size` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 可选面板宽高比例，沿用 ggchord_fusion() 与 fusion_panel()。单细节默认保留较小源面板和较宽细节区域。多细节可用命名尺寸列表或NULL沿用Fusion默认分配，center_size同样沿用Fusion规则。超界报错，重叠必须显式allow_overlap。 |
@@ -2708,6 +2709,7 @@
 | `alphabet` | `必需/互斥入口，见说明` | R 对象；约束见说明 | 显式指定 "DNA"、"RNA" 或 "AA"。接受 IUPAC 核酸含糊码及蛋白含糊/稀有残基码；* 仅用于 AA。不猜测字母表。 |
 | `source_data` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 可选数据框，每个对齐 accver 对应一行，包含 start（首个非 gap 源位置）和 strand（"+" 或 "-"）。可选 source_accver 声明不同的源 ID，可选字符列 sequence 提供完整正向源字符串以供核对。坐标必须为正且精确的整数。输入元数据保留在 ggchord_conversion 属性中。 |
 | `source_file` | `FALSE` | 逻辑值 | 逻辑值，是否在每个字符行额外保留 .source_file。 |
+| `circular` | `FALSE` | 逻辑值 | 显式逻辑声明全部来源为环状，默认 FALSE。必须提供 source_data，其中含完整 source_length 或完整 sequence。坐标在该长度处按声明链方向环绕；非 gap 字符最多覆盖完整一圈。增加 source_circular 和 source_length 列。圆形绘图不会自动启用此转换。 |
 
 </details>
 
@@ -2841,7 +2843,7 @@
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
 | --- | --- | --- | --- |
 | `plot` | `必需/互斥入口，见说明` | R 对象；约束见说明 | 含 geom_residue 图层的单面板 Cartesian ggplot，映射 x = alignment_column、y = accver、label = symbol。支持 identity/reverse x 标度和离散 y 标度，可以独立叠加注释。拒绝分面、非线性标度、翻转坐标及移动已注册字符的 position 调整。 |
-| `data` | `必需/互斥入口，见说明` | 表格/受支持对象；data 还可为函数 | as_ggchord_alignment()、read_aligned_fasta() 或 translate_ggchord_cds()$nucleotides/residues 中实际显示的行。每个 accver/alignment_column 只有一个单元，各行源坐标唯一。筛选窗口时保留原列号。所选源碱基必须全部存在；分段/跨原点区间须显式拆分。gap 保留显示列，但无源坐标。 |
+| `data` | `必需/互斥入口，见说明` | 表格/受支持对象；data 还可为函数 | as_ggchord_alignment()、read_aligned_fasta() 或 translate_ggchord_cds()$nucleotides/residues 中实际显示的行。每个 accver/alignment_column 只能有一个字符，源坐标在每行中必须唯一。筛选窗口时保留原列号。必须包含全部已选源碱基；剪接选区应显式拆分。跨原点 magnify 选区需要显式环状来源元数据。gap 列可见，但没有源坐标。 |
 
 </details>
 

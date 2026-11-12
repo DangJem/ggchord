@@ -4,7 +4,13 @@
 \alias{read_aligned_fasta}
 \title{Read aligned FASTA with source-to-column mapping}
 \usage{
-read_aligned_fasta(file, alphabet, source_data = NULL, source_file = FALSE)
+read_aligned_fasta(
+  file,
+  alphabet,
+  source_data = NULL,
+  source_file = FALSE,
+  circular = FALSE
+)
 }
 \arguments{
 \item{file}{A single local aligned FASTA path; no multi-alignment concatenation.}
@@ -21,6 +27,12 @@ must remain positive exact integers. Input metadata is retained in the
 \code{ggchord_conversion} attribute.}
 
 \item{source_file}{Logical. Also retain \code{.source_file} on each character row.}
+
+\item{circular}{Explicit logical declaration that every source is circular,
+default FALSE. Requires source_data with full source_length or full sequence.
+Coordinates wrap at that length in the declared strand direction; nongap
+characters may cover at most one complete tour. Adds source_circular and
+source_length columns. A circular plot never activates this conversion.}
 }
 \value{
 The long frame from \code{\link[=as_ggchord_alignment]{as_ggchord_alignment()}}, with the physical FASTA

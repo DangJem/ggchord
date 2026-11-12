@@ -4,7 +4,7 @@
 \alias{as_ggchord_alignment}
 \title{Adapt aligned characters with exact source positions}
 \usage{
-as_ggchord_alignment(sequences, alphabet, source_data = NULL)
+as_ggchord_alignment(sequences, alphabet, source_data = NULL, circular = FALSE)
 }
 \arguments{
 \item{sequences}{Named character vector of aligned strings, or a data frame
@@ -21,6 +21,12 @@ Optional \code{source_accver} declares a different source ID; optional character
 \code{sequence} supplies the full forward source for verification. Coordinates
 must remain positive exact integers. Input metadata is retained in the
 \code{ggchord_conversion} attribute.}
+
+\item{circular}{Explicit logical declaration that every source is circular,
+default FALSE. Requires source_data with full source_length or full sequence.
+Coordinates wrap at that length in the declared strand direction; nongap
+characters may cover at most one complete tour. Adds source_circular and
+source_length columns. A circular plot never activates this conversion.}
 }
 \value{
 An ordinary long data frame containing \code{accver}, \code{alignment_column},

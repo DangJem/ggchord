@@ -15,8 +15,8 @@
 #'   [read_aligned_fasta()] or translate_ggchord_cds()$nucleotides/residues.
 #'   One cell per accver/alignment_column; source coordinates must be unique
 #'   within each row. Keep original columns when filtering a window. Every
-#'   selected source base must be present; split spliced/origin-wrapping regions
-#'   explicitly. Gap columns remain visible but have no source coordinate.
+#'   selected source base must be present; split spliced regions explicitly.
+#'   Origin-wrapping magnify regions require explicit circular source metadata. Gap columns remain visible but have no source coordinate.
 #' @return The ordinary plot with a source registration. Use it as detail_plot
 #'   in [magnify_ggchord()] or as an outer [fusion_panel()]. Region detail_instance
 #'   selects an exact alignment row accver when several rows share a source.

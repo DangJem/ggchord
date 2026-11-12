@@ -19,8 +19,11 @@
 #' @param region Nonempty data frame with `accver`, `start`, `end` in original
 #'   one-based inclusive source coordinates. Bounds must be ordered positive
 #'   integers. Optional `instance` and `detail_instance` select exact display
-#'   instances in the source and detail panels for every row. Ambiguity fails; origin-wrapping
-#'   intervals must be split before using this interface. With a list of details,
+#'   instances in the source and detail panels for every row. Ambiguity fails.
+#'   Explicit wrap = TRUE permits start > end across a circular source origin.
+#'   Both selected leaves must declare matching full source lengths; character
+#'   sources require as_ggchord_alignment(circular = TRUE). The interval is
+#'   drawn as two pieces with only its two external boundary leaders. With a list of details,
 #'   a `detail_panel` column selects the named target for each row. Nested leaves
 #'   use full paths, for example detail/center; optional source_panel similarly
 #'   selects a source leaf under center. Ambiguous container selection fails.
@@ -57,7 +60,8 @@
 #'   returns focus_regions, focus_fronts and leaders in mm, plus original
 #'   focus_region_data (without metadata-name collisions), preserving the input
 #'   region, exact instances, source origins and sampled physical path-length ratio.
-#'   The derived tables use region_row to identify the original input row.
+#'   The derived tables use region_row to identify the original input row and
+#'   region_piece to identify the origin-split piece. The raw input stays intact.
 #'   Stat scope is recorded as explicit_detail_plot. Leaders do not appear in
 #'   connections or relationship_data. Global label/leader collision avoidance
 #'   and automatic layer rebuilding are not implemented. The measured ratio may be below one if the chosen
@@ -82,11 +86,13 @@ magnify_ggchord <- function(plot, region, detail_plot,
   ggchord_fusion_check_plot(plot, center = TRUE)
   caller <- "magnify_ggchord()"
   ggchord_require_columns(region, c("accver", "start", "end"), caller)
+  wrap <- region[["wrap"]] %||% rep(FALSE, nrow(region))
+  if (!is.logical(wrap) || anyNA(wrap)) ggchord_stop(caller, ": wrap must contain logical declarations")
   if (nrow(region) < 1L || !is.character(region$accver) || anyNA(region$accver) || any(!nzchar(region$accver)) ||
       !is.numeric(region$start) || !is.numeric(region$end) ||
-      any(!is.finite(c(region$start,region$end))) || any(region$start < 1) || any(region$end < region$start) ||
-      any(c(region$start,region$end) != floor(c(region$start,region$end))) || any(region$end > 2^53-1))
-    ggchord_stop(caller, ": provide ordered positive integral source intervals; split origin-wrapping regions explicitly")
+      any(!is.finite(c(region$start,region$end))) || any(region$start < 1) || any(ifelse(wrap, region$end >= region$start, region$end < region$start)) ||
+      any(c(region$start,region$end) != floor(c(region$start,region$end))) || any(c(region$start,region$end) > 2^53-1))
+    ggchord_stop(caller, ": provide ordered positive integral intervals, or start > end with explicit wrap = TRUE")
   for (name in intersect(c("instance", "detail_instance", "source_panel"), names(region)))
     if (!is.character(region[[name]]) || anyNA(region[[name]]) || any(!nzchar(region[[name]])))
       ggchord_stop(caller, ": instance selectors must be nonempty strings")
@@ -150,6 +156,7 @@ magnify_ggchord <- function(plot, region, detail_plot,
   }
   resolved_region <- as.data.frame(region)
   resolved_region$detail_panel <- targets
+  resolved_region$wrap <- wrap
   result$focus <- list(input = region, region = resolved_region, connector = match.arg(connector),
     colour = colour, alpha = alpha, width = highlight_width, linewidth = linewidth, linetype = linetype)
   ggplot2::set_last_plot(result)
@@ -160,19 +167,64 @@ magnify_ggchord <- function(plot, region, detail_plot,
 ggchord_build_focus <- function(focus, panels) {
   empty <- list(input = data.frame(), underlay = list(), overlay = list(), regions = data.frame(), fronts = data.frame(), leaders = data.frame())
   if (is.null(focus)) return(empty)
-  pieces <- lapply(seq_len(nrow(focus$region)), function(i) {
-    piece <- ggchord_build_focus_region(focus, panels, focus$region[i, , drop = FALSE])
-    for (name in c("regions", "fronts", "leaders"))
-      piece[[name]]$region_row <- rep.int(i, nrow(piece[[name]]))
-    piece
-  })
+  pieces <- list()
+  for (i in seq_len(nrow(focus$region))) {
+    region <- focus$region[i, , drop = FALSE]
+    if (isTRUE(region$wrap)) {
+      # Resolve both endpoints to the SAME exact leaf/instance before splitting.
+      resolve <- function(position, panel, instance) ggchord_resolve_panel_interval(
+        panels, region$accver, position, position, panel, instance, "magnify_ggchord() wrap: ")
+      q <- resolve(region$start, region[["source_panel"]] %||% "center", region[["instance"]])
+      qe <- resolve(region$end, q$panel, q$instance)
+      d <- resolve(region$start, region$detail_panel, region[["detail_instance"]])
+      de <- resolve(region$end, d$panel, d$instance)
+      source_length <- ggchord_focus_wrap_length(panels[[q$panel]], q)
+      detail_length <- ggchord_focus_wrap_length(panels[[d$panel]], d)
+      if (!is.finite(source_length) || !is.finite(detail_length) || source_length != detail_length)
+        ggchord_stop("magnify_ggchord(): wrap requires matching declared full source lengths in source and detail")
+      if (max(region$start, region$end) > source_length)
+        ggchord_stop("magnify_ggchord(): wrapped endpoints exceed declared source length")
+      region$source_panel <- q$panel; region$instance <- q$instance
+      region$detail_panel <- d$panel; region$detail_instance <- d$instance
+      bounds <- list(c(region$start, source_length), c(1, region$end))
+    } else bounds <- list(c(region$start, region$end))
+    for (j in seq_along(bounds)) {
+      part <- region; part$start <- bounds[[j]][1L]; part$end <- bounds[[j]][2L]
+      boundaries <- if (length(bounds) == 1L) c("start", "end") else if (j == 1L) "start" else "end"
+      piece <- ggchord_build_focus_region(focus, panels, part, boundaries)
+      for (name in c("regions", "fronts", "leaders")) {
+        piece[[name]]$region_row <- rep.int(i, nrow(piece[[name]]))
+        piece[[name]]$region_piece <- rep.int(j, nrow(piece[[name]]))
+      }
+      piece$regions$wrap <- region$wrap
+      pieces[[length(pieces) + 1L]] <- piece
+    }
+  }
   bind <- function(name) do.call(rbind, lapply(pieces, `[[`, name))
   grobs <- function(name) unlist(lapply(pieces, `[[`, name), recursive = FALSE)
   list(input = focus$input, underlay = grobs("underlay"), overlay = grobs("overlay"),
     regions = bind("regions"), fronts = bind("fronts"), leaders = bind("leaders"))
 }
 
-ggchord_build_focus_region <- function(focus, panels, region) {
+# Full source lengths belong to provenance, not the displayed local span.
+ggchord_focus_wrap_length <- function(panel, endpoint) {
+  if (isTRUE(panel$layout$character)) {
+    d <- panel$layout$character_data
+    d <- d[as.character(d$accver) == endpoint$instance, , drop = FALSE]
+    if (!"source_circular" %in% names(d) || !isTRUE(all(d$source_circular)) ||
+        !"source_length" %in% names(d)) return(NA_real_)
+    n <- unique(d$source_length)
+  } else {
+    source <- ggchord_focus_source(panel$seq_data)
+    # Repeated focused windows must agree about their complete source length.
+    n <- unique(source$length[source$accver == endpoint$entity])
+  }
+  if (length(n) != 1L || !is.numeric(n) || !is.finite(n) || n < 1 || n != floor(n) || n > 2^53 - 1)
+    return(NA_real_)
+  n
+}
+
+ggchord_build_focus_region <- function(focus, panels, region, boundaries = c("start", "end")) {
   resolve <- function(panel, instance) ggchord_resolve_panel_interval(panels,
     region$accver, region$start, region$end, panel, instance,
     paste0("magnify_ggchord() ",panel,": "))
@@ -189,6 +241,7 @@ ggchord_build_focus_region <- function(focus, panels, region) {
       source_position_boundary = qf$position_boundary[ends],
       x = qf$x[ends],y = qf$y[ends],xend = sf$x[c(1L,nrow(sf))],yend = sf$y[c(1L,nrow(sf))],
       coordinate_space = "composition",units = "mm",semantic = "decorative_focus_leader")
+    leaders <- leaders[leaders$boundary %in% boundaries, , drop = FALSE]
     grobs[[1L]] <- grid::segmentsGrob(leaders$x, leaders$y, leaders$xend, leaders$yend,
       default.units = "mm",gp = grid::gpar(col = focus$colour,
         lwd = focus$linewidth * 72.27/25.4,lty = focus$linetype))

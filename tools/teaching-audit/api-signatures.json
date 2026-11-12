@@ -72,7 +72,8 @@
     "parameters": {
       "sequences": "",
       "alphabet": "",
-      "source_data": "NULL"
+      "source_data": "NULL",
+      "circular": "FALSE"
     }
   },
   {
@@ -1375,7 +1376,8 @@
       "file": "",
       "alphabet": "",
       "source_data": "NULL",
-      "source_file": "FALSE"
+      "source_file": "FALSE",
+      "circular": "FALSE"
     }
   },
   {

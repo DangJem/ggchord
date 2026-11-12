@@ -8888,6 +8888,14 @@
     "source": "man/as_ggchord_alignment.Rd"
   },
   {
+    "api": "as_ggchord_alignment",
+    "parameter": "circular",
+    "default": "FALSE",
+    "type": "Logical",
+    "constraint": "Explicit logical declaration that every source is circular, default FALSE. Requires source_data with full source_length or full sequence. Coordinates wrap at that length in the declared strand direction; nongap characters may cover at most one complete tour. Adds source_circular and source_length columns. A circular plot never activates this conversion.",
+    "source": "man/as_ggchord_alignment.Rd"
+  },
+  {
     "api": "as_ggchord_feature",
     "parameter": "x",
     "default": "",
@@ -10076,7 +10084,7 @@
     "parameter": "region",
     "default": "",
     "type": "R object; constraints below",
-    "constraint": "Nonempty data frame with accver, start, end in original one-based inclusive source coordinates. Bounds must be ordered positive integers. Optional instance and detail_instance select exact display instances in the source and detail panels for every row. Ambiguity fails; origin-wrapping intervals must be split before using this interface. With a list of details, a detail_panel column selects the named target for each row. Nested leaves use full paths, for example detail/center; optional source_panel similarly selects a source leaf under center. Ambiguous container selection fails.",
+    "constraint": "Nonempty data frame with accver, start, end in original one-based inclusive source coordinates. Bounds must be ordered positive integers. Optional instance and detail_instance select exact display instances in the source and detail panels for every row. Ambiguity fails. Explicit wrap = TRUE permits start > end across a circular source origin. Both selected leaves must declare matching full source lengths; character sources require as_ggchord_alignment(circular = TRUE). The interval is drawn as two pieces with only its two external boundary leaders. With a list of details, a detail_panel column selects the named target for each row. Nested leaves use full paths, for example detail/center; optional source_panel similarly selects a source leaf under center. Ambiguous container selection fails.",
     "source": "man/magnify_ggchord.Rd"
   },
   {
@@ -10536,6 +10544,14 @@
     "source": "man/read_aligned_fasta.Rd"
   },
   {
+    "api": "read_aligned_fasta",
+    "parameter": "circular",
+    "default": "FALSE",
+    "type": "Logical",
+    "constraint": "Explicit logical declaration that every source is circular, default FALSE. Requires source_data with full source_length or full sequence. Coordinates wrap at that length in the declared strand direction; nongap characters may cover at most one complete tour. Adds source_circular and source_length columns. A circular plot never activates this conversion.",
+    "source": "man/read_aligned_fasta.Rd"
+  },
+  {
     "api": "read_bed",
     "parameter": "file",
     "default": "NULL",
@@ -10836,7 +10852,7 @@
     "parameter": "data",
     "default": "",
     "type": "Table/supported object; data may be a function",
-    "constraint": "The displayed rows of as_ggchord_alignment(), read_aligned_fasta() or translate_ggchord_cds()$nucleotides/residues. One cell per accver/alignment_column; source coordinates must be unique within each row. Keep original columns when filtering a window. Every selected source base must be present; split spliced/origin-wrapping regions explicitly. Gap columns remain visible but have no source coordinate.",
+    "constraint": "The displayed rows of as_ggchord_alignment(), read_aligned_fasta() or translate_ggchord_cds()$nucleotides/residues. One cell per accver/alignment_column; source coordinates must be unique within each row. Keep original columns when filtering a window. Every selected source base must be present; split spliced regions explicitly. Origin-wrapping magnify regions require explicit circular source metadata. Gap columns remain visible but have no source coordinate.",
     "source": "man/register_ggchord_alignment.Rd"
   },
   {

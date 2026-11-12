@@ -155,7 +155,7 @@ Use ordinary `ggsave()` at a chosen physical size, for example 12×8 inches; `vi
 
 The dashed lines are decorative focus leaders. They are exported separately from biological `connections` and `relationship_data`; adding actual `fusion_ribbon()` layers still requires real relationship data. `focus_region_data` preserves the original selection and arbitrary metadata, while `focus_regions` reports resolved instances, source origins and the sampled physical path-length ratio. The ratio can be below one with a small detail allocation; it is not a change to biological length.
 
-The detail plot owns its data, scales, layers and statistics. For count/bin/coverage tracks, prepare and state the intended local or global statistical population yourself; the wrapper records `explicit_detail_plot` and never silently chooses a scope. It does not copy arbitrary source layers, infer alignments or accept unregistered Cartesian character panels. Use one ordered region, explicitly select `instance`/`detail_instance` when an accession is repeated, and split origin wraps before this single-window workflow. Explicit nested/free-position allocations are described below; global avoidance is a separate layout concern.
+The detail plot owns its data, scales, layers and statistics. For count/bin/coverage tracks, prepare and state the intended local or global statistical population yourself; the wrapper records `explicit_detail_plot` and never silently chooses a scope. It does not copy arbitrary source layers, infer alignments or accept unregistered Cartesian character panels. Use one ordered region, explicitly select `instance`/`detail_instance` when an accession is repeated, and declare `wrap = TRUE` for origin-crossing selections as described below. Explicit nested/free-position allocations are described below; global avoidance is a separate layout concern.
 
 ## Paired source windows with real HSPs {#paired-detail}
 
@@ -265,7 +265,7 @@ export_ggchord_fusion(character_detail, width = 16, height = 5)$focus_regions
 # ggsave("character-detail.png", character_detail, width = 16, height = 5)
 ```
 
-The ordinary plot remains editable: local colours, layers and annotations remain independent. Identity/reverse x scales and discrete y rows are supported. Each Fusion build verifies the registered residue positions/labels after edits and remeasures the final panel in mm; half-cell boundaries attach to the exact endpoint cells. Gap cells have no source position and are never interpolated into bases. A source interval must contain every selected base in biological order; split introns and origin joins into separate source rows. Use `detail_instance` to select an alignment row when several rows share a source. Unregistered ggplots, facets, nonlinear/flipped coordinates and moved registered cells fail.
+The ordinary plot remains editable: local colours, layers and annotations remain independent. Identity/reverse x scales and discrete y rows are supported. Each Fusion build verifies the registered residue positions/labels after edits and remeasures the final panel in mm; half-cell boundaries attach to the exact endpoint cells. Gap cells have no source position and are never interpolated into bases. A source interval must contain every selected base in biological order; split introns into separate source rows; origin joins use the explicit wrapping declaration below. Use `detail_instance` to select an alignment row when several rows share a source. Unregistered ggplots, facets, nonlinear/flipped coordinates and moved registered cells fail.
 
 `translate_ggchord_cds()` nucleotide rows can be registered in the same way. Keep the translation on codon centres as in `examples/m2-detail.R`; use `source_positions` for full codon membership across segments. AA residue rows use their own aa coordinate domain; connecting a genomic bp macro directly to aa positions still requires an explicit CDS projection. Decorative magnify leaders remain separate from biological Fusion links. Character endpoints have no backbone colour for a Fusion gradient: supply explicit cross-panel fill. Narrow panels retain `geom_residue()`'s tile/error policy; enlarge the physical export instead of relying on DPI. Global leader avoidance is separate; explicit nested/free-position allocation is supported below.
 
@@ -323,4 +323,27 @@ report$focus_region_data_by_composition
 
 `composition_id` plus `region_row` connects derived regions/fronts/leaders to each original selection in `focus_region_data_by_composition`. Top-level `focus_region_data` remains the original outer input. Nested leaf names use paths such as `detail/center` and `detail/detail`; a composition container is never treated as one genomic axis. If an accession occurs in multiple leaves, select the full panel path and exact instance. `source_panel` can select a source leaf under `center`. Layout exports include actual mm boundaries and requested boxes/angles.
 
-Each plot keeps its own layers, scales and statistical population; the compositor does not silently copy layers or recompute statistics. Origin wraps still require explicit splitting. The complete negative-strand CDS-to-genome-focus-to-real-character example is in `examples/m3-nested.R`. Registered characters retain their physical tile/error policy; a small nested allocation cannot make 60 letters readable merely by increasing DPI. Full multi-device publication acceptance and global route/label optimisation are separate concerns.
+Each plot keeps its own layers, scales and statistical population; the compositor does not silently copy layers or recompute statistics. Origin wraps use the explicit source-length declaration below. The complete negative-strand CDS-to-genome-focus-to-real-character example is in `examples/m3-nested.R`. Registered characters retain their physical tile/error policy; a small nested allocation cannot make 60 letters readable merely by increasing DPI. Full multi-device publication acceptance and global route/label optimisation are separate concerns.
+
+## Explicit origin-crossing selection {#origin-detail}
+
+Circular layout is not evidence of a circular source. Set `wrap = TRUE` on a
+selection with `start > end`. Both selected leaf panels must retain the same
+full source length. Character adapters additionally require `circular = TRUE`
+and `source_data` with a full sequence or an exact `source_length`; without the
+full string, characters remain unverified. At most one source tour is allowed,
+so inverse source-to-column mapping stays unique. Negative strands wrap in
+their own direction and retain gaps. Different focused instances are never
+joined implicitly.
+
+Run the complete real pUC19 workflow in `examples/origin-detail.R`. It extracts
+82 observed bases (2640–2686, then 1–35) from the unchanged bundled FASTA.
+`focus_region_data` retains the original single row. Derived tables identify
+two pieces with `region_piece`, sharing one `region_row`; only the two external
+boundaries receive leaders. The seam is not another selection or relationship.
+
+```r
+# Requires dplyr and the source checkout or tutorial input bundle.
+source("examples/origin-detail.R")
+origin_detail
+```

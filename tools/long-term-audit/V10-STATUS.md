@@ -42,7 +42,7 @@ bin外边界来源漏记、普通Chord/Collinear绕过声明HSP重复检查、ma
 | §6.5 Recipes | 已有真实科研综合示例与Fusion配方，继续复用基础API | tools/documentation-examples.R；不是独立模板产品；v0.22.0已提供显式源区间magnify入口 |
 | §6.6 适配器 | 本版新增BEDPE保留原字段/方向/缺失策略；FASTA可显式保留真实字符 | check-bedpe.R、check-semantic-detail.R；VCF/SV、BigWig/bedGraph、domain/motif等格式专用导入器未完成，见ADAPTER-AUDIT-v0.20.0.md |
 | §4.9、§10.13 短序列 | v0.21.0已实现真实gapped FASTA、源/列双映射、显式源验证和Cartesian局部geom_residue | DEVELOPMENT-v0.21.0.md、v0.21.0-alignment-results.json；v0.26.0已补齐显式字符注册与CDS真实翻译/phase；不含MSA算法、CIGAR全格式解析或缺失来源推断 |
-| §4.10 语义放大 | M0/M1/M2及命名多细节已有；v0.27补齐显式center/detail box、真实CDS/字符嵌套路径、逐层原始选区与物理重建 | check-fusion-advanced.R；4×4/8×8/12×8源区域定向构建、实际嵌套PNG有证据。跨原点自动选择、全局避障及M3完整发布矩阵继续推进 |
+| §4.10 语义放大 | M0/M1/M2及命名多细节已有；v0.27补齐显式center/detail box、真实CDS/字符嵌套路径、逐层原始选区与物理重建 | check-fusion-advanced.R；4×4/8×8/12×8源区域定向构建、实际嵌套PNG有证据。显式跨原点选区已在v0.27补齐（check-origin-detail.R）；全局避障及M3完整发布矩阵继续推进 |
 | §7、A.4、§10.8/14/17 网站/README | 导航/Markdown源/双语教学重构已实施，README未来方向保留，新API同步实际教程 | v0.17/18/19开发记录与浏览器JSON；62对页面为当前源规模。代表页响应式通过，不是全站逐页逐宽度视觉认证；本版不重建旧图或冻结docs |
 | §8.3、§9、1.0稳定化 | 待实施 | 未集中冻结全部新API、兼容/弃用策略及完整候选发布验收；版本分支开发完成不等于v10完成 |
 | X 非目标 | 持续遵守 | 不开发交互HTML绘图、Shiny/在线编辑器，不运行分析引擎伪造比对，不自动push/部署/Release |

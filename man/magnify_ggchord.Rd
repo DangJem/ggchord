@@ -28,8 +28,11 @@ magnify_ggchord(
 \item{region}{Nonempty data frame with \code{accver}, \code{start}, \code{end} in original
 one-based inclusive source coordinates. Bounds must be ordered positive
 integers. Optional \code{instance} and \code{detail_instance} select exact display
-instances in the source and detail panels for every row. Ambiguity fails; origin-wrapping
-intervals must be split before using this interface. With a list of details,
+instances in the source and detail panels for every row. Ambiguity fails.
+Explicit wrap = TRUE permits start > end across a circular source origin.
+Both selected leaves must declare matching full source lengths; character
+sources require as_ggchord_alignment(circular = TRUE). The interval is
+drawn as two pieces with only its two external boundary leaders. With a list of details,
 a \code{detail_panel} column selects the named target for each row. Nested leaves
 use full paths, for example detail/center; optional source_panel similarly
 selects a source leaf under center. Ambiguous container selection fails.}
@@ -80,7 +83,8 @@ A \code{\link[=ggchord_fusion]{ggchord_fusion()}} object. \code{\link[=export_gg
 returns focus_regions, focus_fronts and leaders in mm, plus original
 focus_region_data (without metadata-name collisions), preserving the input
 region, exact instances, source origins and sampled physical path-length ratio.
-The derived tables use region_row to identify the original input row.
+The derived tables use region_row to identify the original input row and
+region_piece to identify the origin-split piece. The raw input stays intact.
 Stat scope is recorded as explicit_detail_plot. Leaders do not appear in
 connections or relationship_data. Global label/leader collision avoidance
 and automatic layer rebuilding are not implemented. The measured ratio may be below one if the chosen

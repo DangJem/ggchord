@@ -68,3 +68,14 @@ v0.27.0-m3-nested.png、v0.27.0-fusion-lesson.json。
 
 第二工作包只完成显式多视图/摆放/嵌套核心，完整F2/F3/M3尚未整体关闭：全局路由/
 标签和Guide联合优化、跨原点选择与更多适配器等继续开发，发布矩阵仍未运行。
+
+## 第三工作包：跨原点
+
+新增显式circular字符源转换及wrap选区，默认线性行为不变。来源长度、双向映射、
+负链互补/gap和字符核对分开记录，不从图形或HSP推断完整源。原选区保留，
+两个绘制片段用region_piece区分，仅外侧起止两条引线。
+
+check-origin-detail.R通过真实pUC19 2640–2686/1–35共82碱基、负链含gap、反查、
+缺失/冲突长度与重复绕圈拒绝、精确整数上界及不同实例不可暗中拼接检查。
+v0.27.0-origin-detail.png实际保存并查看；v0.27.0-origin-results.json保留结果。
+公开示例examples/origin-detail.R可独立运行；帮助、NEWS与两语课程同步。

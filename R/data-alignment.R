@@ -35,6 +35,11 @@ ggchord_alignment_complement <- function(x, alphabet) {
 #'   `sequence` supplies the full forward source for verification. Coordinates
 #'   must remain positive exact integers. Input metadata is retained in the
 #'   `ggchord_conversion` attribute.
+#' @param circular Explicit logical declaration that every source is circular,
+#'   default FALSE. Requires source_data with full source_length or full sequence.
+#'   Coordinates wrap at that length in the declared strand direction; nongap
+#'   characters may cover at most one complete tour. Adds source_circular and
+#'   source_length columns. A circular plot never activates this conversion.
 #' @return An ordinary long data frame containing `accver`, `alignment_column`,
 #'   `source_accver`, `source_position`, `symbol`, `is_gap`, `strand`, `alphabet`,
 #'   `sequence_unit`, `source_verified` and `.source_row`. Conversion provenance
@@ -48,7 +53,7 @@ ggchord_alignment_complement <- function(x, alphabet) {
 #' # Explicit synthetic format example, not a biological alignment claim.
 #' aligned <- as_ggchord_alignment(c(A = "AC-G", B = "ACTG"), "DNA")
 #' aligned
-as_ggchord_alignment <- function(sequences, alphabet, source_data = NULL) {
+as_ggchord_alignment <- function(sequences, alphabet, source_data = NULL, circular = FALSE) {
   caller <- "as_ggchord_alignment()"
   alphabet <- match.arg(alphabet, c("DNA", "RNA", "AA"))
   if (is.data.frame(sequences)) {
@@ -70,6 +75,10 @@ as_ggchord_alignment <- function(sequences, alphabet, source_data = NULL) {
   allowed <- strsplit(allowed, "", fixed = TRUE)[[1L]]
   if (any(!toupper(unlist(symbols, use.names = FALSE)) %in% allowed))
     ggchord_stop(caller, ": character outside the declared alphabet (whitespace is not a residue)")
+  if (!is.logical(circular) || length(circular) != 1L || is.na(circular))
+    ggchord_stop(caller, ": circular must be TRUE or FALSE")
+  if (circular && is.null(source_data))
+    ggchord_stop(caller, ": circular coordinates require explicit source_data")
   metadata <- source_data
   if (is.null(metadata)) metadata <- data.frame(accver = ids, start = 1, strand = "+")
   ggchord_require_columns(metadata, c("accver", "start", "strand"), caller)
@@ -87,10 +96,31 @@ as_ggchord_alignment <- function(sequences, alphabet, source_data = NULL) {
   if ("sequence" %in% names(metadata) &&
       (!is.character(metadata$sequence) || anyNA(metadata$sequence)))
     ggchord_stop(caller, ": full source strings must be nonmissing character values")
+  if (circular) {
+    source_length <- metadata[["source_length"]]
+    if (is.null(source_length) && "sequence" %in% names(metadata))
+      source_length <- nchar(metadata$sequence, type = "chars")
+    if (!is.numeric(source_length) || length(source_length) != nrow(metadata) ||
+        any(!is.finite(source_length)) || any(source_length < 1 | source_length > 2^53 - 1 |
+          source_length != floor(source_length)) || any(metadata$start > source_length))
+      ggchord_stop(caller, ": circular source_data requires exact full source_length (or full sequence) and start within it")
+    if ("sequence" %in% names(metadata) && any(nchar(metadata$sequence, type = "chars") != source_length))
+      ggchord_stop(caller, ": source_length disagrees with the full source string")
+    metadata$source_length <- source_length
+  }
   pieces <- lapply(seq_along(ids), function(i) {
     value <- symbols[[i]]; gap <- value %in% c("-", ".")
     if (all(gap)) ggchord_stop(caller, ": record contains only gaps: ", ids[i])
     position <- metadata$start[i] + (cumsum(!gap) - 1) * if (metadata$strand[i] == "+") 1 else -1
+    if (circular) {
+      n <- metadata$source_length[i]; start <- metadata$start[i]; k <- cumsum(!gap) - 1
+      if (sum(!gap) > n)
+        ggchord_stop(caller, ": circular record may not revisit a source position: ", ids[i])
+      # Avoid an intermediate start + k above the exact-integer range.
+      position <- if (metadata$strand[i] == "+") {
+        ifelse(k <= n - start, start + pmin(k, n - start), k - (n - start))
+      } else ifelse(k < start, start - pmin(k, start - 1), n - (k - start))
+    }
     position[gap] <- NA_real_
     if (any(position[!gap] < 1 | position[!gap] > 2^53 - 1))
       ggchord_stop(caller, ": source interval lies outside positive exact coordinates: ", ids[i])
@@ -111,6 +141,10 @@ as_ggchord_alignment <- function(sequences, alphabet, source_data = NULL) {
       source_verified = verified, .source_row = i, stringsAsFactors = FALSE)
   })
   result <- do.call(rbind, pieces); rownames(result) <- NULL
+  if (circular) {
+    result$source_circular <- TRUE
+    result$source_length <- metadata$source_length[result$.source_row]
+  }
   attr(result, "ggchord_conversion") <- list(format = "aligned characters", alphabet = alphabet,
     source_data = metadata, source_input = sequences,
     coordinates = "one-based alignment columns and nullable one-based source positions")
@@ -134,13 +168,13 @@ as_ggchord_alignment <- function(sequences, alphabet, source_data = NULL) {
 #' # Requires the source checkout or tutorial input bundle.
 #' dna <- read_aligned_fasta("examples/alignment/opuntia-aligned.fasta", "DNA")
 #' }
-read_aligned_fasta <- function(file, alphabet, source_data = NULL, source_file = FALSE) {
+read_aligned_fasta <- function(file, alphabet, source_data = NULL, source_file = FALSE, circular = FALSE) {
   if (!is.character(file) || length(file) != 1L || is.na(file) || !file.exists(file) || dir.exists(file))
     ggchord_stop("read_aligned_fasta(): supply a single existing file")
   if (!is.logical(source_file) || length(source_file) != 1L || is.na(source_file))
     ggchord_stop("read_aligned_fasta(): source_file must be TRUE or FALSE")
   sequences <- read_fasta_lengths(file, keep_sequence = TRUE, source_file = source_file)
-  result <- as_ggchord_alignment(sequences, alphabet, source_data)
+  result <- as_ggchord_alignment(sequences, alphabet, source_data, circular = circular)
   result$.source_line <- sequences$.source_line[result$.source_row]
   if (source_file) result$.source_file <- sequences$.source_file[result$.source_row]
   result <- ggchord_format_import(result, file, "aligned FASTA", nrow(result),

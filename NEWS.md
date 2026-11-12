@@ -1,5 +1,14 @@
 # ggchord 0.27.0 (development)
 
+- Aligned-character adapters accept an explicit `circular = TRUE` declaration,
+  using a declared full source length or full source string. Forward/reverse
+  positions wrap without revisiting a source position; gaps and verification
+  remain exact. Default linear adaptation is unchanged.
+- Magnification accepts explicit `region$wrap = TRUE` for origin-crossing
+  selections. Matching full source lengths and the same exact source/detail
+  instances are required. Exports preserve the original row and distinguish
+  the two drawn pieces; the source seam does not gain extra boundary leaders.
+
 - Registered sequence-axis spacing/orientation settings for standard `theme()`
   configuration. Existing `theme_ggchord()` shortcuts remain compatible and use
   the same settings; supplying both spellings in one call fails explicitly.
