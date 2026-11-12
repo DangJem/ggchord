@@ -514,7 +514,7 @@
     ]
   },
   "genbank": {
-    "console": " NULL"
+    "console": "List of 3\n $ seq_data:'data.frame':\t1 obs. of  8 variables:\n $ features:List of 1\n $ report  :List of 5"
   },
   "standardblast": {
     "columns": [

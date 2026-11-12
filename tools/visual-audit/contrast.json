@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "source": "website/assets/site.css",
-  "source_sha256": "6e627caf2d6328d5caca013917b3520f7a4b00193088e953d0df551dafa484ed",
+  "source_sha256": "33fafb05e285507466df723d44a49290584f76eb2fd7e303f87647db07b3ecf7",
   "method": {
     "reference": "https://www.w3.org/TR/WCAG22/#contrast-minimum",
     "non_text_reference": "https://www.w3.org/TR/WCAG22/#non-text-contrast",

@@ -1,0 +1,33 @@
+{
+  "scope": "Actual CUA DOM traversal of 62 English and 62 Han pages at seven widths; not 868 visual screenshots",
+  "pages": 124,
+  "widths": [
+    320,
+    375,
+    650,
+    768,
+    1024,
+    1280,
+    1440
+  ],
+  "measurements": 868,
+  "theme": "light",
+  "css_sha256": "6e627caf2d6328d5caca013917b3520f7a4b00193088e953d0df551dafa484ed",
+  "findings": [
+    {
+      "path": "/zh/reference/index.html",
+      "viewport": 320,
+      "client_width": 320,
+      "page_width": 362,
+      "broken_visible_images": 0,
+      "cause": "Native reference-index code rule overrides generic inline code overflow wrapping"
+    }
+  ],
+  "other_page_overflow_or_visible_broken_images": 0,
+  "unverified": [
+    "all offscreen lazy images at every scroll position",
+    "font fallback/embedding",
+    "print media",
+    "dark theme and representative visual review"
+  ]
+}

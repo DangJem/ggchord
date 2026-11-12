@@ -1,0 +1,108 @@
+{
+  "pages": 124,
+  "widths": [
+    320,
+    375,
+    650,
+    768,
+    1024,
+    1280,
+    1440
+  ],
+  "measurements": 868,
+  "findings": [],
+  "stylesheet": [
+    "http://127.0.0.1:8776/assets/site.css?v=f2ef20df1caca7e06468bb667d7e483c"
+  ],
+  "screenshots": [
+    {
+      "path": "tools/long-term-audit/v0.27.0-browser-reference-320.jpg",
+      "sha256": "1914dd2d0aee02f204e163fe74ede322b546be86446d3f3fa4d0b5a8a10d5a73",
+      "height": 900,
+      "theme": "light",
+      "url": "/zh/reference/index.html",
+      "width": 320
+    },
+    {
+      "path": "tools/long-term-audit/v0.27.0-browser-home-375.jpg",
+      "sha256": "fac8324c010efff3a5a0031a5570606b74511cc8fef1f2ce74a14df7052233e4",
+      "height": 900,
+      "theme": "light",
+      "url": "/zh/index.html",
+      "width": 375
+    },
+    {
+      "path": "tools/long-term-audit/v0.27.0-browser-home-768.jpg",
+      "sha256": "8fa59baaaa0e5a62c2c2ff1babb1a3064606613154ef9318062a8150cd270620",
+      "height": 900,
+      "theme": "light",
+      "url": "/en/index.html",
+      "width": 768
+    },
+    {
+      "path": "tools/long-term-audit/v0.27.0-browser-reference-long-id-320.jpg",
+      "sha256": "1ff98234c5416a3af01780179c18ba47ca8b6e3b045a7c2b4b4ac6f9b533f573",
+      "height": 900,
+      "theme": "light",
+      "url": "/zh/reference/index.html",
+      "width": 320
+    },
+    {
+      "path": "tools/long-term-audit/v0.27.0-browser-atlas-375-dark.jpg",
+      "sha256": "46bd31d5d0309e79afffd313add2b0415aed1c9ec84c30c4291daa3a482ba63f",
+      "height": 900,
+      "theme": "dark",
+      "url": "/zh/parameter-atlas.html",
+      "width": 375
+    },
+    {
+      "path": "tools/long-term-audit/v0.27.0-browser-gallery-1280-dark.jpg",
+      "sha256": "053d3cec530776ce0ef0a1825e9fbfa4ebaf58b2596daae32bb96c320ee85a64",
+      "height": 900,
+      "theme": "dark",
+      "url": "/en/gallery.html",
+      "width": 1280
+    },
+    {
+      "path": "tools/long-term-audit/v0.27.0-browser-output-1024.jpg",
+      "sha256": "db258d8ef7d4aad841f8351d032f29fcb496524b20e4229903281051d51229e7",
+      "height": 900,
+      "theme": "light",
+      "url": "/en/output.html",
+      "width": 1024
+    },
+    {
+      "path": "tools/long-term-audit/v0.27.0-browser-code-375.jpg",
+      "sha256": "ad4046f9cdeb6c4e88bfe9c92e7ae3e579e2102ec01f5eb8b5cc27f64bad01e4",
+      "height": 900,
+      "theme": "light",
+      "url": "/en/foundation.html#tracks",
+      "width": 375
+    }
+  ],
+  "functional": {
+    "languageCounterpart": true,
+    "mobileMenu": true,
+    "themeChangeAndRestore": true,
+    "homeSearchGeomTrack": {
+      "matches": 92,
+      "target": "/en/foundation.html#tracks"
+    },
+    "copyCompletePage": {
+      "startsWithLibrary": true,
+      "characters": 489,
+      "sha256": "63adfd8c9c7103a682beefd6ece6f9a94483c0a05ffbfb508e833bf5bc08dfce"
+    },
+    "parameterTableAt375": {
+      "tableWidth": 640,
+      "scrollContainerWidth": 343,
+      "overflowX": "auto"
+    }
+  },
+  "not_checked": [
+    "all offscreen/lazy image states",
+    "font substitution, embedding and other browser/platform fonts",
+    "actual print preview: no observable preview through the current browser interface",
+    "WCAG certification or visual perfection of every page"
+  ]
+}

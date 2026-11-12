@@ -33,18 +33,18 @@ bin外边界来源漏记、普通Chord/Collinear绕过声明HSP重复检查、ma
 | §4.5、§10.5/11 Radial | 已实现spokes、首尾邻接、有/无D–A对照及共享Feature/Track/实例 | check-radial.R；N=2每源行一次，N=1拒绝，无虚构首尾连接 |
 | §4.7–4.8、§10.12 等长/轴 | 已实现可选equal、真实长度保留、1/L端点优先及圆接缝策略 | foundation-views-results-v0.17.0.json、plasmid-axis-results-v0.17.0.json；显式刻度优先，不提供误导性共享绝对比例尺 |
 | §4.11、§10.16 A–B–A | 已实现seq_order/命名副本、between与dplyr筛选，在Collinear/Chord/Radial共用路由 | v0.17/18开发记录；Circular/Dotplot不适配重复实例 |
-| §5、A.3 Fusion | F0/F1及v0.27显式Sankey/Radial注册、八方位/物理angle/box、多层Fusion、来源命名空间与覆盖诊断已实现 | DEVELOPMENT-v0.27.0.md、check-fusion-advanced.R；F2/F3整体尚未关闭：显式实测避障/共享显示通道已完成原型与定向验证；外层多侧Guide联合预算已实现并定向验证（check-fusion-guides.R）；显式自动环绕已实现并定向验证（check-fusion-auto.R）；原生组合标题/背景/内容预算与嵌套继承clip修复已定向验证（check-fusion-decoration.R）；高密度广覆盖和发布矩阵继续开发 |
+| §5、A.3 Fusion | 已实现显式Sankey/Radial、八方位/angle/box、嵌套、实测避障/共享通道、多侧Guide及自动环绕 | v0.27工作包记录；39条不同真实植物关系两尺寸源保留/受检障碍0，空装饰误阻挡已修复。连接相互交叉与整体阅读质量仍未全面认证，发布矩阵待明确授权 |
 | §6.1、A.5 Ribbon | 已实现显式端点渐变、装饰subject尖头、Identity六刻度与用户scale优先 | ribbon-flow-results-v0.17.0.json、identity-guide-results-v0.17.0.json；按后续用户决定默认仍非端点渐变，不能按原提案声称默认渐变 |
-| §6.2、A.6 标签 | 已修复30标签/混合层切换、共享实测队列、圆轴字形；真实13质粒/旗舰与代表尺寸有证据 | foundation-label/size-results-v0.17.0.json；不是全局零碰撞保证。用户2026-11-12澄清SnapGene仅作显示效果参考，不要求公平导出；引线穿字/内部框指标与可读性检查仍继续 |
+| §6.2、A.6 标签 | 13真实目录的文字/引线实测诊断、静态文字绕行、来源可追踪多边形接触及圆轴字符串身份已补 | v0.27工作包20–22/26；源标签保持，受检交叉/穿框0；3个刻度-feature包围接触仍待复核。SnapGene仅作显示效果参考，不要求公平导出；不承诺全局零碰撞 |
 | §6.3.1、§10.15 Guide | v0.24.0实现原生Guide联合候选、离散行列/位置/方向选择、完整gtable毫米重测、显式约束和失败报告；连续/分段色条保持完整 | DEVELOPMENT-v0.24.0.md、check-adaptive.R；有界搜索不是全局最优保证，任意自定义Guide仅测量，v0.27.0已补Fusion外层多侧Guide与面板预算，自动环绕已在v0.27.0补齐定向证据，更广泛质量继续开发 |
-| §6.3、A.7 Adaptive | v0.24.0新增可选fixed/scale/adaptive，共享打印/保存/预览/诊断与Fusion子面板路径；默认主题文字/线条/间距有界缩放，用户显式样式优先 | v0.24.0-adaptive-results.json；已检查代表视图、尺寸和锁定失败，不是全部视图多尺寸发布矩阵；所有几何常量缩放、新全局标签求解、字体移植认证未完成 |
+| §6.3、A.7 Adaptive | fixed/scale/adaptive共享目标设备与Fusion路径，用户显式样式优先；已补六坐标加竖向Collinear的14个真实横/竖尺寸配置 | v0.27.0-adaptive-quality-after-results.json：受检文字重叠/裁切0，修复Sankey默认名字压首tick；全几何常量缩放、任意组合和字体移植仍未认证，发布矩阵待授权 |
 | §6.4 灵活参数 | 已有标量/实体/实例及按链继承，用户映射/scale优先；已同步教程 | v0.17/18记录、website双语flexible-parameters课程；未承诺任意第三方层全兼容 |
 | §6.5 Recipes | 已有真实科研综合示例与Fusion配方，继续复用基础API | tools/documentation-examples.R；不是独立模板产品；v0.22.0已提供显式源区间magnify入口 |
-| §6.6 适配器 | 本版新增BEDPE保留原字段/方向/缺失策略；FASTA可显式保留真实字符 | check-bedpe.R、check-semantic-detail.R；v0.27已新增bedGraph/可选BigWig及真实GC输入定向验证（check-signal-import.R），明确Windows解码边界、查询并集与缺失语义；v0.27已完成可选VCF/BCF及显式SV解码（check-variant-import.R），不推断mate/支持度；MAF/chain成熟解析桥接及真实逐块字符/负链核对已完成（check-genome-alignment-import.R）；delta成熟show-coords桥接及两模式原生统计/方向逐行核对已完成（check-delta-import.R）；已有蛋白signature TSV/InterPro-Pfam缓存JSON与原生AA segments已完成（check-signature-import.R）；同源关系及按需/探索格式仍继续，历史审计见ADAPTER-AUDIT-v0.20.0.md |
+| §6.6 适配器 | 已补真实BigWig/bedGraph、VCF/BCF、MAF/chain、PROMER/植物NUCMER、signature JSON/TSV和离线pair/membership适配，成熟生态按需桥接有定向证据 | 各v0.27适配工作包；真实BAM覆盖与明确no_ref格式CRAM往返已查，GFA/ODGI仅完成探索门槛与取舍。原始分数/缺失语义保留，不推断mate/方向/支持度，不认证任意CRAM或图格式。历史审计见ADAPTER-AUDIT-v0.20.0.md |
 | §4.9、§10.13 短序列 | v0.21.0已实现真实gapped FASTA、源/列双映射、显式源验证和Cartesian局部geom_residue | DEVELOPMENT-v0.21.0.md、v0.21.0-alignment-results.json；v0.26.0已补齐显式字符注册与CDS真实翻译/phase；不含MSA算法、CIGAR全格式解析或缺失来源推断 |
 | §4.10 语义放大 | M0/M1/M2及命名多细节已有；v0.27补齐显式center/detail box、真实CDS/字符嵌套路径、逐层原始选区与物理重建 | check-fusion-advanced.R；4×4/8×8/12×8源区域定向构建、实际嵌套PNG有证据。显式跨原点选区已在v0.27补齐（check-origin-detail.R）；实测跨面板/原生文字/Guide障碍路线已提供并定向验证（check-fusion-routing.R）；更广泛密集质量及M3完整发布矩阵继续推进 |
-| §7、A.4、§10.8/14/17 网站/README | 导航/Markdown源/双语教学重构已实施，README未来方向保留，新API同步实际教程 | v0.17/18/19开发记录与浏览器JSON；62对页面为当前源规模。代表页响应式通过，不是全站逐页逐宽度视觉认证；本版不重建旧图或冻结docs |
-| §8.3、§9、1.0稳定化 | 待实施 | 未集中冻结全部新API、兼容/弃用策略及完整候选发布验收；版本分支开发完成不等于v10完成 |
+| §7、A.4、§10.8/14/17 网站/README | 801474d运行时基线的50页课程/178单PNG已真正重现；62对章节/121原生帮助主题实际生成，索引窄屏换行已修复 | DOCUMENTATION-REVIEW-v0.27.0.md；124页×7宽度868实际DOM状态、8张代表截图及菜单/搜索/复制有证据。不是每页逐字、全滚动、字体替换或实际打印认证。冻结docs未重建，未部署 |
+| §8.3、§9、1.0稳定化 | 已进行当前157入口职责/迁移与签名审查，保留109主题形参及既有兼容入口，无新删除期限 | API-REVIEW-v0.27.0.md；签名/上游绑定核对不等于全部行为或1.0冻结，完整候选发布验收待明确授权；版本开发完成不等于v10全部完成 |
 | X 非目标 | 持续遵守 | 不开发交互HTML绘图、Shiny/在线编辑器，不运行分析引擎伪造比对，不自动push/部署/Release |
 
 ## §10 首轮18项交付的解释

@@ -84,6 +84,8 @@ main li {margin-block:4px}
 main img {max-width:100%;height:auto;filter:none}
 main code {font-family:"SFMono-Regular",Consolas,"Liberation Mono",monospace;font-size:.9em}
 main :not(pre) > code {overflow-wrap:anywhere;color:var(--color-brand)}
+.template-reference-index main code,
+.template-reference-index main code a {overflow-wrap:anywhere}
 main pre {overflow-x:auto;white-space:pre;max-width:100%;padding:20px;background:var(--surface-code);font: .85rem/1.7 "SFMono-Regular",Consolas,monospace;border:0}
 main pre code {overflow-wrap:normal}
 main pre a {color:inherit;text-decoration:none}
