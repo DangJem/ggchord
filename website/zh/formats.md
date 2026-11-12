@@ -7,6 +7,9 @@
 | FASTA 序列 + GFF3 注释 + BLAST 局部比对 | [从源文件画比较图](real-data.html#read) |
 | BED 区间或 PAF（Pairwise mApping Format）比对 | [核对零基坐标](#zero-based) |
 | GenBank 单序列及注释 | [保留原始记录与分段](#genbank) |
+| bedGraph 或 BigWig 连续信号 | [显式保留值和缺失区间](#signals) |
+| VCF/BCF 变异和结构断点 | [保留原始变异证据](#variants) |
+| 已有 MAF 或 chain 基因组比对 | [保留块及源坐标](#genome-alignments) |
 | 已有 R 表格 | [映射必需字段](#adapters) |
 | GRanges 或 GInteractions | [直接转换区间对象](#ranges) |
 
@@ -288,3 +291,49 @@ if (requireNamespace("StructuralVariantAnnotation", quietly = TRUE)) {
 结构解码需显式启用，保留置信区间，关闭缺失 mate 推断；每个互惠对生成一条连接，包含两个原始记录索引。警告标明解码器未配对的记录，报告保留全部记录。`.plottable = FALSE` 标记超出已知参考边界的断点，相关配对保留在 `unplaced_links`。精确单碱基断点可显式选取位置后用于 `geom_link_line()`；不确定区间适合区间几何。`q_breakend_orientation`、`s_breakend_orientation` 描述衍生序列，不是相对同源链。不能制造比对 Identity 为这些连接配色。
 
 现代 BCF（`.bcf` 或 `.bcf.gz`）通过 `python` 指定已安装可选 **pysam** 的现有解释器，例如 `read_vcf("calls.bcf", python = "/path/to/environment/bin/python")`。仅 BCF 会调用它，经 HTSlib 转临时 VCF，并记录解码器、版本和消息。虚拟环境解释器路径保留其环境。原记录顺序、数值及基因型保留；转码文本不是原始 BCF 物理行。不会安装任何软件。本读取器将选定本地文件加载到内存，大数据应在上游选取或子集化。
+
+## 基因组对齐块：MAF 与 chain {#genome-alignments}
+
+使用已有 Python 环境，其中须安装支持 MAF/chain 的可选 **Biopython Bio.Align**，已直接验证 1.85。课程可通过 `ALIGNMENT_PYTHON` 选择该解释器。源码 checkout/输入包须包含 `examples/genome-alignments/`；两个未改动的固定上游版本文件有哈希、许可归属及验证脚本，不运行 aligner。可选解析器不可用意味着跳过示例，不是成功导入。
+
+```r
+alignment_python <- Sys.getenv("ALIGNMENT_PYTHON", "python3")
+alignment_available <- nzchar(Sys.which(alignment_python)) &&
+  identical(suppressWarnings(system2(
+    alignment_python,
+    c("-c", shQuote("from Bio import Align; assert hasattr(Align, 'parse')")),
+    stdout = FALSE, stderr = FALSE
+  )), 0L)
+if (alignment_available) {
+  maf <- read_maf(
+    "examples/genome-alignments/ucsc_mm9_chr10.maf",
+    alphabet = "DNA", python = alignment_python, source_file = TRUE
+  )
+  local_maf <- maf$alignment |>
+    filter(.source_input == 1, source_block == 1, between(alignment_column, 61, 100))
+  ggplot2::ggplot(local_maf, aes(alignment_column, accver, label = symbol)) +
+    geom_residue(aes(fill = symbol), size = 3, overflow = "tile") +
+    ggplot2::scale_fill_manual(
+      values = c(
+        A = "#B8D8BA", C = "#A6CBE3", G = "#F2D28C", T = "#EAA8A8",
+        N = "#D8D8D8", "-" = "#F5F5F5"
+      ), guide = "none"
+    ) +
+    ggplot2::labs(x = "MAF alignment column", y = NULL) +
+    ggplot2::theme_minimal()
+
+  chains <- read_chain(
+    "examples/genome-alignments/dna_rna.chain", python = alignment_python
+  )
+  observed_chain <- chains$ribbon_data |>
+    filter(source_block == 1)
+  observed_chain |>
+    select(qaccver, saccver, qstart, qend, sstart, send)
+}
+```
+
+MAF 保留实际带 gap 字符和声明的完整源长度，负链分量映射至递减的**正向源坐标**。第一分量锚定关系、源块/文件及原始坐标矩阵均显式保留，不自动扩展成所有可能配对。Gap 单元的源位置缺失，完整长度不能独立验证字符。对齐列在每块重新开始，因此 `map_alignment_position()` 或字符面板前必须筛选一个文件/块。原质量、上下文及空分量证据保留在源与报告中，第一锚为空时不会静默换锚。
+
+Chain 示例显式选择源块 1，即有来源的 NR_046654.1/chr3 关系；上游 `_modified` 格式对照仍在未改动输入中，不冒充新生物学观测。三个 exon 对齐块保留中间缺口。Chain 不提供错配或字符单元，chain 分数不是 Identity。Query 映射 qaccver，target 映射 saccver，原 ID 独立可追溯。默认 bp 不适用时应显式声明 `sequence_unit`。
+
+两套组装都叫 `chr1` 时须声明身份，例如 `query_ids = c(chr1 = "assemblyB.chr1")`、`subject_ids = c(chr1 = "assemblyA.chr1")`。默认保留 ID，并拒绝跨角色歧义，不自动加前缀或合并组装。完整长度冲突明确失败；最终共享 ID 要求两侧显式且一致地声明。这是源身份，与显示实例分开。两种格式都不会仅由端点推断 pident、支持计数或完整源字符串。

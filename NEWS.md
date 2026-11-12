@@ -1,5 +1,13 @@
 # ggchord 0.27.0 (development)
 
+- Added optional Biopython bridges `read_maf()` and `read_chain()` for existing
+  genomic alignments. MAF retains exact symbols, gaps and directional source
+  positions per file/block; chain retains separate aligned intervals across
+  gaps without inventing characters or Identity. Complete source text, full
+  declared lengths, coordinate matrices and decoder metadata stay traceable.
+  Chain query/target name collisions require explicit source-ID declarations;
+  no assembly identity is guessed or automatically renamed.
+
 - Added optional `read_vcf()` using VariantAnnotation, with a pysam/HTSlib
   bridge for modern BCF and explicit StructuralVariantAnnotation decoding.
   Original multiallelic records, INFO, sample genotypes, IDs and headers stay

@@ -104,6 +104,19 @@ test_that("import helpers parse minimal files with explicit coordinate conventio
     expect_true(nrow(variants$features$variant) > 0L)
     expect_identical(unique(variants$features$variant$accver), "22")
   }
+  import_python <- Sys.getenv("ALIGNMENT_PYTHON", "python3")
+  if (nzchar(Sys.which(import_python)) && identical(suppressWarnings(system2(import_python,
+    c("-c", shQuote("from Bio import Align; assert hasattr(Align, 'parse')")),
+    stdout = FALSE, stderr = FALSE)), 0L)) {
+    # Format-only fixtures; no inferred biological alignment evidence.
+    maf <- tempfile(fileext = ".maf")
+    chain <- tempfile(fileext = ".chain")
+    on.exit(unlink(c(maf, chain)), add = TRUE)
+    writeLines(c("##maf version=1", "a score=1", "s A 0 8 + 8 ACgtACGT", ""), maf)
+    expect_equal(nrow(read_maf(maf, python = import_python)$alignment), 8L)
+    writeLines(c("chain 1 A 8 + 0 4 B 8 - 0 4 1", "4"), chain)
+    expect_equal(nrow(read_chain(chain, python = import_python)$ribbon_data), 1L)
+  }
   mapping <- read_paf(paf)
   expect_equal(unname(unlist(mapping[c("qstart", "qend", "sstart", "send")])),
     c(100, 200, 400, 300))

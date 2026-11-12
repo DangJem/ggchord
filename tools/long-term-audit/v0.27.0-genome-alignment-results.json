@@ -1,0 +1,24 @@
+{
+  "status": "passed",
+  "decoder": {
+    "package": "biopython",
+    "version": "1.85"
+  },
+  "maf_blocks": 48,
+  "maf_components": 270,
+  "negative_components": 190,
+  "actual_gap_cells": 5055,
+  "anchor_pairs": 222,
+  "character_cells": 34429,
+  "raw_s_rows_checked": true,
+  "inverse_lookup": true,
+  "empty_anchor_not_replaced": true,
+  "real_reverse_chain_blocks": 3,
+  "chain_gaps_not_bridged": true,
+  "explicit_assembly_identity": true,
+  "no_fake_identity_or_characters": true,
+  "sources": {
+    "maf": "c6d2758ba9eee7614bf6bd1d1a8ad6484e838505e2436de75e46851cef55bcf2",
+    "chain": "dc30d5cffc0015d88005972f6c7eec80dd5595295d41475c422f115287bcb102"
+  }
+}

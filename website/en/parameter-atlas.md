@@ -2797,6 +2797,25 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 </details>
 
+<span id="api-read_chain"></span>
+<details><summary><code>read_chain()</code></summary>
+
+
+[Full reference](reference/read_chain.html)
+
+
+| Parameter | Signature default | Type/value rule | Meaning, range and constraints |
+| --- | --- | --- | --- |
+| `file` | `NULL` | Character path/identifier/vector; see constraints | Optional local path vector or glob patterns, before files. |
+| `files` | `NULL` | Character path/identifier/vector; see constraints | Optional additional chain paths or patterns. |
+| `query_ids` | `NULL` | Nullable R object; type/inheritance below | Optional named character vectors mapping original query/target IDs to explicit source IDs. Unspecified IDs stay unchanged. Unknown map keys and conflicting full lengths fail. |
+| `subject_ids` | `NULL` | Nullable R object; type/inheritance below | Optional named character vectors mapping original query/target IDs to explicit source IDs. Unspecified IDs stay unchanged. Unknown map keys and conflicting full lengths fail. |
+| `sequence_unit` | `c("bp", "aa")` | Vector; choices versus multiple selection below | Declared coordinate unit, "bp" (default) or "aa". The format itself cannot establish the biological unit. |
+| `python` | `"python3"` | Character path/identifier/vector; see constraints | Existing interpreter with optional Biopython, default "python3". |
+| `source_file` | `FALSE` | Logical | Add .source_file to ribbon rows, default FALSE. |
+
+</details>
+
 <span id="api-read_fasta_lengths"></span>
 <details><summary><code>read_fasta_lengths()</code></summary>
 
@@ -2849,6 +2868,23 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `anno_from` | `c("product", "Name", "gene", "ID")` | Vector; choices versus multiple selection below | Character vector of GFF3 attribute keys, tried in order to fill the anno column. |
 | `unstranded` | `c("plus", "drop", "keep")` | Vector; choices versus multiple selection below | "plus" (the default) assigns unknown strands to +; "drop" removes them. Use "keep" with geom_feature() to retain them as nondirectional . intervals. source_strand always records the input. |
 | `source_file` | `FALSE` | Logical | Logical. Add a .source_file column when reading one or more files, default FALSE. |
+
+</details>
+
+<span id="api-read_maf"></span>
+<details><summary><code>read_maf()</code></summary>
+
+
+[Full reference](reference/read_maf.html)
+
+
+| Parameter | Signature default | Type/value rule | Meaning, range and constraints |
+| --- | --- | --- | --- |
+| `file` | `NULL` | Character path/identifier/vector; see constraints | Optional local path vector or glob patterns, before files. |
+| `files` | `NULL` | Character path/identifier/vector; see constraints | Optional additional MAF paths or patterns. |
+| `alphabet` | `"DNA"` | Character/enum; choices below | Declared DNA, RNA or AA alphabet, default "DNA". |
+| `python` | `"python3"` | Character path/identifier/vector; see constraints | Existing interpreter with optional Biopython, default "python3". |
+| `source_file` | `FALSE` | Logical | Add .source_file to alignment/ribbon rows, default FALSE. |
 
 </details>
 

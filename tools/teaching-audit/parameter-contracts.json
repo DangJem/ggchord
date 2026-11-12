@@ -10744,6 +10744,62 @@
     "source": "man/read_blast.Rd"
   },
   {
+    "api": "read_chain",
+    "parameter": "file",
+    "default": "NULL",
+    "type": "Character path/identifier/vector; see constraints",
+    "constraint": "Optional local path vector or glob patterns, before files.",
+    "source": "man/read_chain.Rd"
+  },
+  {
+    "api": "read_chain",
+    "parameter": "files",
+    "default": "NULL",
+    "type": "Character path/identifier/vector; see constraints",
+    "constraint": "Optional additional chain paths or patterns.",
+    "source": "man/read_chain.Rd"
+  },
+  {
+    "api": "read_chain",
+    "parameter": "query_ids",
+    "default": "NULL",
+    "type": "Nullable R object; type/inheritance below",
+    "constraint": "Optional named character vectors mapping original query/target IDs to explicit source IDs. Unspecified IDs stay unchanged. Unknown map keys and conflicting full lengths fail.",
+    "source": "man/read_chain.Rd"
+  },
+  {
+    "api": "read_chain",
+    "parameter": "subject_ids",
+    "default": "NULL",
+    "type": "Nullable R object; type/inheritance below",
+    "constraint": "Optional named character vectors mapping original query/target IDs to explicit source IDs. Unspecified IDs stay unchanged. Unknown map keys and conflicting full lengths fail.",
+    "source": "man/read_chain.Rd"
+  },
+  {
+    "api": "read_chain",
+    "parameter": "sequence_unit",
+    "default": "c(\"bp\", \"aa\")",
+    "type": "Vector; choices versus multiple selection below",
+    "constraint": "Declared coordinate unit, \"bp\" (default) or \"aa\". The format itself cannot establish the biological unit.",
+    "source": "man/read_chain.Rd"
+  },
+  {
+    "api": "read_chain",
+    "parameter": "python",
+    "default": "\"python3\"",
+    "type": "Character path/identifier/vector; see constraints",
+    "constraint": "Existing interpreter with optional Biopython, default \"python3\".",
+    "source": "man/read_chain.Rd"
+  },
+  {
+    "api": "read_chain",
+    "parameter": "source_file",
+    "default": "FALSE",
+    "type": "Logical",
+    "constraint": "Add .source_file to ribbon rows, default FALSE.",
+    "source": "man/read_chain.Rd"
+  },
+  {
     "api": "read_fasta_lengths",
     "parameter": "file",
     "default": "NULL",
@@ -10894,6 +10950,46 @@
     "type": "Logical",
     "constraint": "Logical. Add a .source_file column when reading one or more files, default FALSE.",
     "source": "man/read_gff3.Rd"
+  },
+  {
+    "api": "read_maf",
+    "parameter": "file",
+    "default": "NULL",
+    "type": "Character path/identifier/vector; see constraints",
+    "constraint": "Optional local path vector or glob patterns, before files.",
+    "source": "man/read_maf.Rd"
+  },
+  {
+    "api": "read_maf",
+    "parameter": "files",
+    "default": "NULL",
+    "type": "Character path/identifier/vector; see constraints",
+    "constraint": "Optional additional MAF paths or patterns.",
+    "source": "man/read_maf.Rd"
+  },
+  {
+    "api": "read_maf",
+    "parameter": "alphabet",
+    "default": "\"DNA\"",
+    "type": "Character/enum; choices below",
+    "constraint": "Declared DNA, RNA or AA alphabet, default \"DNA\".",
+    "source": "man/read_maf.Rd"
+  },
+  {
+    "api": "read_maf",
+    "parameter": "python",
+    "default": "\"python3\"",
+    "type": "Character path/identifier/vector; see constraints",
+    "constraint": "Existing interpreter with optional Biopython, default \"python3\".",
+    "source": "man/read_maf.Rd"
+  },
+  {
+    "api": "read_maf",
+    "parameter": "source_file",
+    "default": "FALSE",
+    "type": "Logical",
+    "constraint": "Add .source_file to alignment/ribbon rows, default FALSE.",
+    "source": "man/read_maf.Rd"
   },
   {
     "api": "read_paf",

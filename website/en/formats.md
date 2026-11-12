@@ -1,4 +1,4 @@
-<div class="task-intro"><p>Convert tables, BED, PAF or GenBank into ggchord inputs while retaining record identity and converting coordinate conventions only once.</p></div>
+<div class="task-intro"><p>Import sequence, interval, alignment, variant and signal sources as ggchord inputs while retaining record identity and converting coordinate conventions only once.</p></div>
 
 ## Choose by the files you have {#choose-format}
 
@@ -7,7 +7,11 @@
 | FASTA sequences, GFF3 annotations and BLAST alignments | [Draw a comparison from source files](real-data.html#read) |
 | BED intervals or PAF (Pairwise mApping Format) alignments | [Check zero-based coordinates](#zero-based) |
 | GenBank sequence with annotations | [Preserve record IDs and segments](#genbank) |
+| bedGraph or BigWig continuous signals | [Keep values and missing ranges explicit](#signals) |
+| VCF/BCF variants and structural breakpoints | [Retain original variant evidence](#variants) |
+| Existing MAF or chain genomic alignments | [Preserve blocks and source coordinates](#genome-alignments) |
 | Existing R tables | [Map required fields](#adapters) |
+| GRanges or GInteractions | [Convert interval objects](#ranges) |
 
 ## Prepare this page {#prepare}
 In a fresh R session, run the code below, then follow this page in order. Colours and layout are optional display choices; inputs select only the fields needed. For file-based examples, first extract the [input bundle](../assets/tutorial-inputs.zip) so the working directory contains `examples/`.
@@ -288,3 +292,49 @@ Each placed record remains one feature row with an ALT list, including multialle
 Structural decoding is opt-in, keeps confidence intervals, disables absent-mate inference, and creates one link per reciprocal pair with both original record indices. Warnings identify records not paired by the decoder, while all records remain in the report. `.plottable = FALSE` marks breakends outside known reference bounds; affected pairs remain in `unplaced_links`. Exact single-base breakpoints suit `geom_link_line()` after explicitly selecting their positions; uncertainty intervals suit interval geometry. `q_breakend_orientation` and `s_breakend_orientation` describe the derivative sequence, not relative homology strand. Never manufacture alignment Identity to colour these links.
 
 For modern BCF (`.bcf` or `.bcf.gz`), supply `python` naming an existing interpreter with optional **pysam**: `read_vcf("calls.bcf", python = "/path/to/environment/bin/python")`. Only BCF invokes it, transcodes to temporary VCF via HTSlib, and records decoder/version/messages. Virtual-environment interpreter paths retain their environment. Original record order, values and genotypes are preserved; transcoded text is not an original physical BCF line. No installation occurs. This reader loads selected local files into memory; select or subset large datasets upstream.
+
+## Genomic alignment blocks: MAF and chain {#genome-alignments}
+
+Use an existing Python environment with optional **Biopython Bio.Align** MAF/chain support (directly verified with 1.85). `ALIGNMENT_PYTHON` can select that interpreter for this lesson. The source checkout/input bundle must contain `examples/genome-alignments/`. Its two unchanged fixed-version upstream files have hashes, permission attribution and a verification script; no aligner is run. An unavailable optional parser skips the example, not a successful import.
+
+```r
+alignment_python <- Sys.getenv("ALIGNMENT_PYTHON", "python3")
+alignment_available <- nzchar(Sys.which(alignment_python)) &&
+  identical(suppressWarnings(system2(
+    alignment_python,
+    c("-c", shQuote("from Bio import Align; assert hasattr(Align, 'parse')")),
+    stdout = FALSE, stderr = FALSE
+  )), 0L)
+if (alignment_available) {
+  maf <- read_maf(
+    "examples/genome-alignments/ucsc_mm9_chr10.maf",
+    alphabet = "DNA", python = alignment_python, source_file = TRUE
+  )
+  local_maf <- maf$alignment |>
+    filter(.source_input == 1, source_block == 1, between(alignment_column, 61, 100))
+  ggplot2::ggplot(local_maf, aes(alignment_column, accver, label = symbol)) +
+    geom_residue(aes(fill = symbol), size = 3, overflow = "tile") +
+    ggplot2::scale_fill_manual(
+      values = c(
+        A = "#B8D8BA", C = "#A6CBE3", G = "#F2D28C", T = "#EAA8A8",
+        N = "#D8D8D8", "-" = "#F5F5F5"
+      ), guide = "none"
+    ) +
+    ggplot2::labs(x = "MAF alignment column", y = NULL) +
+    ggplot2::theme_minimal()
+
+  chains <- read_chain(
+    "examples/genome-alignments/dna_rna.chain", python = alignment_python
+  )
+  observed_chain <- chains$ribbon_data |>
+    filter(source_block == 1)
+  observed_chain |>
+    select(qaccver, saccver, qstart, qend, sstart, send)
+}
+```
+
+MAF retains the actual gapped characters and full declared source lengths. Negative components map to decreasing **forward source** coordinates. First-component anchor relationships, source blocks/files and original coordinate matrices remain explicit; a block is not automatically expanded to every possible pair. Gap cells have missing source positions, and full lengths alone do not independently verify symbols. Filter one file/block before `map_alignment_position()` or a character panel because columns restart per block. Original quality, context and empty-component evidence stays in the source/report. An empty first anchor never silently becomes another anchor.
+
+The chain example explicitly selects source block 1, the source-backed NR_046654.1/chr3 relationship; upstream `_modified` format controls remain in the unchanged input and are not claimed as new biological observations. The three aligned exon blocks retain intervening gaps. Chain provides no mismatches or character cells, and a chain score is not Identity. Query maps to qaccver, target to saccver; original IDs remain separately traceable. Declare `sequence_unit` explicitly when its default bp is inappropriate.
+
+For two assemblies both named `chr1`, declare identities, for example `query_ids = c(chr1 = "assemblyB.chr1")` and `subject_ids = c(chr1 = "assemblyA.chr1")`. Defaults preserve IDs and reject ambiguous cross-role collisions; they never auto-prefix or merge assemblies. Full-length conflicts fail, and shared final IDs require explicit consistent declaration on both sides. This is source identity, separate from display instances. No pident, support count or complete source string is inferred from either format's endpoints.

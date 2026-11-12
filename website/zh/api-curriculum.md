@@ -101,9 +101,11 @@
 | [`read_bedpe`](reference/read_bedpe.html) | 读取双端区间，保留来源且不推断缺失比对证据 | [L2](formats.html#bedpe) | 标准q/s区间、配对锚点方向与来源 | [↗](parameter-atlas.html#api-read_bedpe) | [↗](formats.html) |
 | [`read_bigwig`](reference/read_bigwig.html) | 导入连续区间信号，显式保留坐标及单位边界 | [L2](formats.html#signals) | 定量轨道输入；BigWig 为支持平台上的可选依赖 | [↗](parameter-atlas.html#api-read_bigwig) | [↗](formats.html) |
 | [`read_blast`](reference/read_blast.html) | 将一个或多个 BLAST 表格文件读为连接数据 | [L2](alignments.html#standard) | 本地文件到标准表；按源格式转换坐标和声明单位 | [↗](parameter-atlas.html#api-read_blast) | [↗](real-data.html) |
+| [`read_chain`](reference/read_chain.html) | 读取已有基因组对齐块及真实源坐标 | [L2](formats.html#genome-alignments) | 可选 Biopython；MAF 字符单元与 chain 区间 | [↗](parameter-atlas.html#api-read_chain) | [↗](formats.html) |
 | [`read_fasta_lengths`](reference/read_fasta_lengths.html) | 将一个或多个 FASTA 文件读为序列数据 | [L2](formats.html#characters) | 本地文件到标准表；按源格式转换坐标和声明单位 | [↗](parameter-atlas.html#api-read_fasta_lengths) | [↗](real-data.html) |
 | [`read_genbank`](reference/read_genbank.html) | 使用可选成熟解析器导入本地 GenBank 或 GBFF | [L2](formats.html#genbank) | 本地文件到标准表；按源格式转换坐标和声明单位 | [↗](parameter-atlas.html#api-read_genbank) | [↗](formats.html) |
 | [`read_gff3`](reference/read_gff3.html) | 将一个或多个 GFF3 文件读为注释数据 | [L2](real-data.html#read) | 本地文件到标准表；按源格式转换坐标和声明单位 | [↗](parameter-atlas.html#api-read_gff3) | [↗](real-data.html) |
+| [`read_maf`](reference/read_maf.html) | 读取已有基因组对齐块及真实源坐标 | [L2](formats.html#genome-alignments) | 可选 Biopython；MAF 字符单元与 chain 区间 | [↗](parameter-atlas.html#api-read_maf) | [↗](formats.html) |
 | [`read_paf`](reference/read_paf.html) | 将 PAF 比对读为 ggchord 连接 | [L2](formats.html#zero-based) | 本地文件到标准表；按源格式转换坐标和声明单位 | [↗](parameter-atlas.html#api-read_paf) | [↗](formats.html) |
 | [`read_vcf`](reference/read_vcf.html) | 导入变异记录及显式解码的结构断点 | [L2](formats.html#variants) | VCF；BCF 需显式 pysam Python；结构解码为可选依赖 | [↗](parameter-atlas.html#api-read_vcf) | [↗](formats.html) |
 | [`register_ggchord_alignment`](reference/register_ggchord_alignment.html) | 注册精确字符/源位置用于独立Fusion细节 | [L2](fusion.html#character-detail) | 显式源/对齐列映射；独立Cartesian细节；已观测完整codon | [↗](parameter-atlas.html#api-register_ggchord_alignment) | [↗](fusion.html) |

@@ -3423,5 +3423,57 @@
       "en": "VCF; BCF with explicit pysam Python; optional structural decoder",
       "zh": "VCF；BCF 需显式 pysam Python；结构解码为可选依赖"
     }
+  },
+  "read_maf": {
+    "level": "L2",
+    "page": "formats",
+    "anchor": "genome-alignments",
+    "reason": "Pinned unchanged real genomic input; directional endpoints and source evidence verified in dedicated audit",
+    "modes": "MAF exact cells; chain intervals without characters",
+    "parameters": [
+      "file",
+      "files",
+      "alphabet",
+      "python",
+      "source_file"
+    ],
+    "purpose": {
+      "en": "Read existing genomic alignment blocks and source coordinates",
+      "zh": "读取已有基因组对齐块及真实源坐标"
+    },
+    "alias_of": "",
+    "case": "formats",
+    "scope": "existing alignment source input with explicit coordinate and identity boundaries",
+    "modes_localized": {
+      "en": "optional Biopython; MAF cells and chain intervals",
+      "zh": "可选 Biopython；MAF 字符单元与 chain 区间"
+    }
+  },
+  "read_chain": {
+    "level": "L2",
+    "page": "formats",
+    "anchor": "genome-alignments",
+    "reason": "Pinned unchanged real genomic input; directional endpoints and source evidence verified in dedicated audit",
+    "modes": "MAF exact cells; chain intervals without characters",
+    "parameters": [
+      "file",
+      "files",
+      "query_ids",
+      "subject_ids",
+      "sequence_unit",
+      "python",
+      "source_file"
+    ],
+    "purpose": {
+      "en": "Read existing genomic alignment blocks and source coordinates",
+      "zh": "读取已有基因组对齐块及真实源坐标"
+    },
+    "alias_of": "",
+    "case": "formats",
+    "scope": "existing alignment source input with explicit coordinate and identity boundaries",
+    "modes_localized": {
+      "en": "optional Biopython; MAF cells and chain intervals",
+      "zh": "可选 Biopython；MAF 字符单元与 chain 区间"
+    }
   }
 }

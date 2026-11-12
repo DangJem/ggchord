@@ -209,3 +209,30 @@ VariantAnnotation1.58/StructuralVariantAnnotation1.28/pysam0.24.1仅在/tmp隔�
 库/虚拟环境实测。帮助/Rd/双语课程/API索引同步，1098段参考翻译及formats
 独立进程通过。只复用已有import最小案例添加可选成功路径，未运行testthat。
 其他标准格式、密集布局、整站重现和API收敛继续。
+
+## 第十一工作包：真实MAF/chain标准输入
+
+read_maf/read_chain使用可选Biopython Bio.Align公开接口，不运行aligner。原文件
+从固定biopython-185 tag取得，SHA256及该tag的原始许可独立保留；原文件未修改。
+MAF保留原字符、gap、完整源长度及负链正向源坐标，以第一分量为锚而非自动
+构造全clique；每文件/块上下文显式保留。空s分量进入unplaced_components，
+不自动换锚。原e/q/i及其他文本/注释/score/坐标矩阵保留在报告。长度不能
+核验字符，source_verified=FALSE。合并字符表重建全文件/块来源，避免rbind
+只保留第一块的单alignment属性。列查询前必须显式筛选块，不重编号。
+
+chain的query对应qaccver、target对应saccver，各双侧非零段独立导出，gap仍在
+原矩阵；没有字符/mismatch/pident。query_ids/subject_ids为显式命名向量，
+保留原ID及角色；跨组装同名默认拒绝，不自动改名或合并。共享最终ID需两侧
+显式声明且完整长度一致；未知映射及全长冲突报错。格式不证明生物学单位，
+默认声明bp，可显式aa。不是显示副本或自动发现同源。
+
+check-genome-alignment-import.R通过原MAF全部270条s分量/48块（190负链、
+5055 gap）、222锚关系和34429实际字符单元逐行原文核对，以及原列/源反查。
+chain示例含真实与标明_modified的上游格式控制，科学示例只选第一条真实
+NR_046654.1/chr3，3个反向exon块保留源gap与181/198295559完整长度。
+显式跨组装身份及空锚不替换有独立格式对照。实际gap字符PNG已保存并查看。
+只复用已有import测试加入两reader单一可选成功路径，未运行testthat。
+
+帮助/Rd/API索引/双语课程同步，formats在准备好的显式Python环境中真实
+执行成功，1117段参考翻译及参数课程检查通过。实际Biopython1.85，后续
+发布设备/平台兼容检查仍待正式授权；delta及其他格式、质量和整站重现继续。

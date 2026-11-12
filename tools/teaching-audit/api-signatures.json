@@ -1440,6 +1440,20 @@
     }
   },
   {
+    "name": "read_chain",
+    "owner": "ggchord",
+    "alias": "",
+    "parameters": {
+      "file": "NULL",
+      "files": "NULL",
+      "query_ids": "NULL",
+      "subject_ids": "NULL",
+      "sequence_unit": "c(\"bp\", \"aa\")",
+      "python": "\"python3\"",
+      "source_file": "FALSE"
+    }
+  },
+  {
     "name": "read_fasta_lengths",
     "owner": "ggchord",
     "alias": "",
@@ -1476,6 +1490,18 @@
       "feature_types": "\"CDS\"",
       "anno_from": "c(\"product\", \"Name\", \"gene\", \"ID\")",
       "unstranded": "c(\"plus\", \"drop\", \"keep\")",
+      "source_file": "FALSE"
+    }
+  },
+  {
+    "name": "read_maf",
+    "owner": "ggchord",
+    "alias": "",
+    "parameters": {
+      "file": "NULL",
+      "files": "NULL",
+      "alphabet": "\"DNA\"",
+      "python": "\"python3\"",
       "source_file": "FALSE"
     }
   },

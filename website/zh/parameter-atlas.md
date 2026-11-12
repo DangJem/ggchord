@@ -2797,6 +2797,25 @@
 
 </details>
 
+<span id="api-read_chain"></span>
+<details><summary><code>read_chain()</code></summary>
+
+
+[完整参考](reference/read_chain.html)
+
+
+| 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
+| --- | --- | --- | --- |
+| `file` | `NULL` | 字符路径、标识或向量；见约束 | 可选本地路径向量或通配模式，在 files 之前读取。 |
+| `files` | `NULL` | 字符路径、标识或向量；见约束 | 可选的其他 chain 路径或通配模式。 |
+| `query_ids` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 可选命名字符向量，将原 query/target ID 映射为显式源 ID。未指定者原样保留。未知映射键或冲突的完整长度明确失败。 |
+| `subject_ids` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 可选命名字符向量，将原 query/target ID 映射为显式源 ID。未指定者原样保留。未知映射键或冲突的完整长度明确失败。 |
+| `sequence_unit` | `c("bp", "aa")` | 向量；候选/多选含义见说明 | 显式坐标单位，"bp"（默认）或 "aa"；格式本身不能建立生物学单位。 |
+| `python` | `"python3"` | 字符路径、标识或向量；见约束 | 已安装可选 Biopython 的现有解释器，默认 "python3"。 |
+| `source_file` | `FALSE` | 逻辑值 | 是否向 ribbon 行添加 .source_file，默认 FALSE。 |
+
+</details>
+
 <span id="api-read_fasta_lengths"></span>
 <details><summary><code>read_fasta_lengths()</code></summary>
 
@@ -2849,6 +2868,23 @@
 | `anno_from` | `c("product", "Name", "gene", "ID")` | 向量；候选/多选含义见说明 | GFF3 属性键字符向量，按顺序尝试填充 anno 列。 |
 | `unstranded` | `c("plus", "drop", "keep")` | 向量；候选/多选含义见说明 | "plus"（默认值）将未知链设为 +，"drop" 删除未知链。使用 "keep" 并通过 geom_feature() 可保留为无方向的 . 区间；source_strand 始终记录原始链。 |
 | `source_file` | `FALSE` | 逻辑值 | 逻辑值，读取一个或多个文件时是否添加 .source_file 列，默认 FALSE。 |
+
+</details>
+
+<span id="api-read_maf"></span>
+<details><summary><code>read_maf()</code></summary>
+
+
+[完整参考](reference/read_maf.html)
+
+
+| 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
+| --- | --- | --- | --- |
+| `file` | `NULL` | 字符路径、标识或向量；见约束 | 可选本地路径向量或通配模式，在 files 之前读取。 |
+| `files` | `NULL` | 字符路径、标识或向量；见约束 | 可选的其他 MAF 路径或通配模式。 |
+| `alphabet` | `"DNA"` | 字符/枚举；取值见说明 | 显式声明的 DNA、RNA 或 AA 字母表，默认 "DNA"。 |
+| `python` | `"python3"` | 字符路径、标识或向量；见约束 | 已安装可选 Biopython 的现有解释器，默认 "python3"。 |
+| `source_file` | `FALSE` | 逻辑值 | 是否向 alignment/ribbon 行添加 .source_file，默认 FALSE。 |
 
 </details>
 

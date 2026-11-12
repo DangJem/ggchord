@@ -1,0 +1,25 @@
+[
+  {
+    "file": "ucsc_mm9_chr10.maf",
+    "url": "https://raw.githubusercontent.com/biopython/biopython/biopython-185/Tests/MAF/ucsc_mm9_chr10.maf",
+    "sha256": "c6d2758ba9eee7614bf6bd1d1a8ad6484e838505e2436de75e46851cef55bcf2",
+    "retrieved": "2026-11-12",
+    "transformation": "none; original bytes unchanged",
+    "license": "BIOPYTHON-LICENSE.rst"
+  },
+  {
+    "file": "dna_rna.chain",
+    "url": "https://raw.githubusercontent.com/biopython/biopython/biopython-185/Tests/Blat/dna_rna.chain",
+    "sha256": "dc30d5cffc0015d88005972f6c7eec80dd5595295d41475c422f115287bcb102",
+    "retrieved": "2026-11-12",
+    "transformation": "none; original bytes unchanged",
+    "license": "BIOPYTHON-LICENSE.rst"
+  },
+  {
+    "file": "BIOPYTHON-LICENSE.rst",
+    "url": "https://raw.githubusercontent.com/biopython/biopython/biopython-185/LICENSE.rst",
+    "sha256": "d4bbb0c4e5345e6f2508c3b93fb247fcb2db95783fb8a584c23cd88e3c03df6c",
+    "retrieved": "2026-11-12",
+    "transformation": "none; original permission notice"
+  }
+]

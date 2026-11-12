@@ -1,0 +1,15 @@
+{
+  "source_sha256": "7fcd74c72260852694a351e2f1144a8c04673aa1b2682b6ceebfa372c3a41c8a",
+  "translations": {
+    "0": "读取 chain 对齐块而不制造序列字符",
+    "1": "可选本地路径向量或通配模式，在 files 之前读取。",
+    "2": "可选的其他 chain 路径或通配模式。",
+    "3": "可选命名字符向量，将原 query/target ID 映射为显式源 ID。未指定者原样保留。未知映射键或冲突的完整长度明确失败。",
+    "4": "显式坐标单位，\"bp\"（默认）或 \"aa\"；格式本身不能建立生物学单位。",
+    "5": "已安装可选 Biopython 的现有解释器，默认 \"python3\"。",
+    "6": "是否向 ribbon 行添加 .source_file，默认 FALSE。",
+    "7": "列表包含 seq_data、ribbon_data 和 report。报告保留原文、chain 分数/ID、完整长度和精确零基边界矩阵。每条连接保留 source_block、source_segment 来源，不制造 source HSP ID、pident、碱基错配脚本或字符比对。",
+    "8": "可选 Biopython Bio.Align 解析 chain 坐标。双侧均对齐的每段生成一对有方向区间，中间 gap 保留在源坐标矩阵中，不伪装成无间断匹配。源 chain 分数和 ID 保留在报告元数据中，均不是 Identity 或 read-support 计数。Chain 不包含对齐字符。",
+    "9": "Chain query 映射为 qaccver，target 映射为 saccver；原 ID 保留在 q_source_accver/s_source_accver。两套组装使用相同 ID 时，须显式提供 query_ids/subject_ids，不能隐式合并不同分子或自动添加前缀。最终共享 ID 要求两侧都显式声明且完整长度一致。这是数据身份映射，不是自动发现同源关系或创建显示实例。"
+  }
+}

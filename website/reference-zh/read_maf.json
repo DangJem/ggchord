@@ -1,0 +1,14 @@
+{
+  "source_sha256": "1d1231a9904c11e8d07e08fb8d32bd49ccadc2cce9285f162049c519e32a1129",
+  "translations": {
+    "0": "读取具有精确源字符的已有 MAF 块",
+    "1": "可选本地路径向量或通配模式，在 files 之前读取。",
+    "2": "可选的其他 MAF 路径或通配模式。",
+    "3": "显式声明的 DNA、RNA 或 AA 字母表，默认 \"DNA\"。",
+    "4": "已安装可选 Biopython 的现有解释器，默认 \"python3\"。",
+    "5": "是否向 alignment/ribbon 行添加 .source_file，默认 FALSE。",
+    "6": "列表包含 seq_data（声明的完整长度）、ribbon_data、alignment 字符单元和 report。报告保留源索引及原始解码元数据，不制造 pident 或 read support。",
+    "7": "通过显式选定 Python 环境中的可选 Biopython Bio.Align 解析本地 MAF，不计算新比对。完整源 ID、长度、块分数、坐标矩阵和原文可追溯。空分量及质量/上下文行保留在原文和解析元数据中，不为缺失分量制造字符或关系。零长 s 分量列入 report$unplaced_components，不获得源位置或连接；第一锚为空时不隐式改用其他分量。",
+    "8": "各块第一分量作为 query 锚，与其他非空分量成对；不推断全体配对 clique 或 Identity。源位置来自解码器的正向零基边界矩阵，仅转换一次为有方向的一基闭区间。负链行从真实正向源坐标递减，不使用反向互补字符串上的偏移。各块和输入文件是独立上下文。字符单元复用 ⟦0⟧，保留原字符及 gap；gap 源位置缺失。完整长度不能独立核验源字符，因此 source_verified 保持 FALSE。列查询或绘制字符面板前须按 .source_input 及 source_block 筛选：每块对齐列从一重新开始。不拼接块、不重编号，也不冒充完整源字符串。"
+  }
+}
