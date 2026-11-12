@@ -2,18 +2,26 @@
 
 #' Compose independent genomic panels
 #'
-#' A Fusion is a static composition, not a coordinate system. Add up to four
+#' A Fusion is a static composition, not a coordinate system. Add independent
 #' [fusion_panel()] objects and independent [fusion_ribbon()] layers. Ordinary
 #' [ggplot2::ggsave()] rebuilds panels and interval fronts at the target size.
 #' Source plots and their scales remain independent. Composition scales and
 #' themes apply only to cross-panel links and their separate legend.
 #'
-#' @param center A ggchord plot using Circular, Chord or horizontal/vertical Collinear coordinates.
+#' @param center A ggchord genomic plot (Circular, Chord, Collinear, Sankey or
+#'   Radial), or another Fusion. Nested biological endpoints use full panel paths.
 #' @param center_size Optional width and height as fractions of the composition
 #'   area, excluding its cross-panel legend. NULL allocates available space.
 #' @param layout `"fixed"` uses fixed panel allocations; `"adaptive"` also
 #'   adjusts the central allocation to the physical aspect ratio. Both rebuild
 #'   labels and guides at actual panel sizes. Neither rescales explicit fonts.
+#' @param allow_overlap Explicitly allow container overlap. Default FALSE fails
+#'   on overlap. When TRUE, later panels paint over earlier panels. Connections
+#'   use disjoint native grid clips to avoid accumulating translucent fills.
+#'   This is deliberate placement, not global collision avoidance.
+#' @param center_box Optional centre allocation: xmin, xmax, ymin, ymax as four
+#'   fractions of the composition area excluding its legend, or four absolute
+#'   grid units. Use instead of center_size. See fusion_panel().
 #' @return A Fusion object, printable and accepted by [ggplot2::ggsave()].
 #' @export
 #' @examples
@@ -23,40 +31,78 @@
 #' center <- ggchord(seqs) + geom_seq() + coord_chord()
 #' detail <- ggchord(seqs) + geom_seq() + coord_collinear(seq_axis = "vertical")
 #' ggchord_fusion(center) + fusion_panel(detail, id = "detail", side = "right")
-ggchord_fusion <- function(center, center_size = NULL, layout = c("fixed", "adaptive")) {
+ggchord_fusion <- function(center, center_size = NULL, layout = c("fixed", "adaptive"), allow_overlap = FALSE, center_box = NULL) {
+  if (!is.logical(allow_overlap) || length(allow_overlap) != 1L || is.na(allow_overlap))
+    ggchord_stop("Fusion: allow_overlap must be TRUE or FALSE")
   ggchord_fusion_check_plot(center, center = TRUE)
   ggchord_fusion_size(center_size)
+  ggchord_fusion_box(center_box)
+  if (!is.null(center_box) && !is.null(center_size)) ggchord_stop("Fusion: use center_box instead of center_size")
   # Retain the ggplot carrier so ggplot2 4's S7 Ops bridge can dispatch
   # additions of native scales/themes without conflicting S3 '+' methods.
   x <- ggplot2::ggplot()
-  x$panels <- list(center = list(plot = center, side = "center", size = center_size))
+  x$panels <- list(center = list(plot = center, side = "center", size = center_size, box = center_box))
   x$ribbons <- list(); x$styles <- list(); x$fusion_layout <- match.arg(layout)
+  x$allow_overlap <- allow_overlap
   class(x) <- c("ggchord_fusion", class(x))
   ggplot2::set_last_plot(x)
   x
 }
 
 #' Add a genomic panel to a Fusion
-#' @param plot A horizontal or vertical Collinear ggchord plot or a Cartesian
-#'   detail from [register_ggchord_alignment()]. Sankey, Radial, Dotplot, facets
-#'   and unregistered external ggplots are not supported here. Character panels
+#' @param plot An independent ggchord genomic plot, another Fusion, or a Cartesian
+#'   detail from [register_ggchord_alignment()]. Dotplot, facets and unregistered
+#'   external ggplots are not yet registered here. Character panels
 #'   require explicit cross-panel fill; backbone-colour gradient is unavailable.
 #' @param id Unique nonempty panel name; `"center"` is reserved.
-#' @param side One of right, top, left or bottom; one panel per side.
-#' @param size Optional fractional width and height; overlapping or out-of-frame
-#'   allocations fail with a diagnostic instead of moving explicit panels.
+#' @param side One of right, top, left, bottom, topright, topleft, bottomright or
+#'   bottomleft; one panel per named side. Placement never rotates the child Coord.
+#' @param size Optional fractional width and height. Out-of-frame allocations
+#'   fail; overlap fails unless explicitly allowed by the composition.
+#' @param box Optional explicit rectangle (xmin, xmax, ymin, ymax), optionally
+#'   named in any order. Numeric values are fractions of the area excluding
+#'   the composition legend; absolute grid units retain their physical size.
+#'   Use instead of side/size/angle/distance. Out-of-frame boxes fail at build.
+#' @param angle Optional finite placement angle in degrees counterclockwise
+#'   from the right, instead of side. Does not rotate the plot or its labels.
+#' @param distance Positive radial distance from the centre allocation, as a
+#'   fraction of half the shorter physical allocation dimension; default .8.
+#'   Angles describe physical canvas directions even on rectangular devices. The allocation must fit without implicit clamping.
 #' @return A component for [ggchord_fusion()].
 #' @export
 #' @examples
 #' data(seq_data_example)
 #' p <- ggchord(seq_data_example) + geom_seq()
 #' ggchord_fusion(p) + fusion_panel(p + coord_collinear(), "right")
-fusion_panel <- function(plot, id, side = c("right", "top", "left", "bottom"), size = NULL) {
+#' quiet <- p + theme(legend.position = "none")
+#' ggchord_fusion(quiet) +
+#'   fusion_panel(quiet + coord_sankey(), "mirror", angle = 31, distance = .8)
+#' ggchord_fusion(quiet, center_box = c(.02, .35, .2, .8), allow_overlap = TRUE) +
+#'   fusion_panel(quiet + coord_collinear(), "inset", box = c(.25, .98, .3, .7))
+fusion_panel <- function(plot, id, side = c("right", "top", "left", "bottom"), size = NULL,
+    box = NULL, angle = NULL, distance = NULL) {
   ggchord_fusion_check_plot(plot)
   if (!is.character(id) || length(id) != 1L || is.na(id) || !nzchar(id) || id == "center")
     ggchord_stop("fusion_panel(): id must be one nonempty name other than 'center'")
   ggchord_fusion_size(size)
-  structure(list(plot = plot, id = id, side = match.arg(side), size = size), class = "ggchord_fusion_panel")
+  ggchord_fusion_box(box)
+  if (!is.null(box)) {
+    if (!missing(side) || !is.null(size) || !is.null(angle) || !is.null(distance))
+      ggchord_stop("fusion_panel(): use box alone instead of side/size/angle/distance")
+    side <- "free"
+  } else if (!is.null(angle)) {
+    if (!missing(side) || !is.numeric(angle) || length(angle) != 1L || !is.finite(angle))
+      ggchord_stop("fusion_panel(): angle must be finite and used instead of side")
+    distance <- distance %||% .8
+    if (!is.numeric(distance) || length(distance) != 1L || !is.finite(distance) || distance <= 0)
+      ggchord_stop("fusion_panel(): distance must be a positive radial fraction of half the shorter allocation dimension")
+    side <- "angle"
+  } else {
+    if (!is.null(distance)) ggchord_stop("fusion_panel(): distance requires angle")
+    side <- if (missing(side)) "right" else match.arg(side, ggchord_fusion_sides())
+  }
+  structure(list(plot = plot, id = id, side = side, size = size, box = box,
+    angle = angle, distance = distance), class = "ggchord_fusion_panel")
 }
 
 #' Connect real intervals across Fusion panels
@@ -133,7 +179,7 @@ fusion_ribbon <- function(data, mapping = NULL, qpanel = NULL, spanel = NULL,
 `+.ggchord_fusion` <- function(e1, e2) {
   if (inherits(e2, "ggchord_fusion_panel")) {
     if (e2$id %in% names(e1$panels)) ggchord_stop("Fusion: duplicate panel id '", e2$id, "'")
-    if (e2$side %in% vapply(e1$panels, `[[`, "", "side")) ggchord_stop("Fusion: only one panel per side is supported")
+    if (!e2$side %in% c("free", "angle") && e2$side %in% vapply(e1$panels, `[[`, "", "side")) ggchord_stop("Fusion: only one panel per side is supported")
     e1$panels[[e2$id]] <- unclass(e2)
   } else if (inherits(e2, "ggchord_fusion_ribbon")) {
     e1$ribbons[[length(e1$ribbons) + 1L]] <- unclass(e2)
@@ -150,6 +196,7 @@ ggchord_fusion_size <- function(size) {
 }
 
 ggchord_fusion_check_plot <- function(plot, center = FALSE) {
+  if (inherits(plot, "ggchord_fusion")) return(invisible(plot))
   if (!center && !is.null(plot$ggchord_alignment)) {
     ggchord_alignment_layout(ggplot2::ggplot_build(plot), plot$ggchord_alignment)
     return(invisible(plot))
@@ -157,10 +204,10 @@ ggchord_fusion_check_plot <- function(plot, center = FALSE) {
   if (!inherits(plot, "ggchord")) ggchord_stop("Fusion panels must be ggchord plots or registered character details")
   coord <- plot$coordinates
   if (center) {
-    if (!isTRUE(coord$ggchord_coord) || isTRUE(coord$ggchord_sankey) || isTRUE(coord$ggchord_radial) || isTRUE(coord$ggchord_dotplot))
-      ggchord_stop("Fusion center requires Circular, Chord or Collinear coordinates")
-  } else if (!isTRUE(coord$ggchord_collinear) || isTRUE(coord$ggchord_sankey) || isTRUE(coord$ggchord_radial))
-    ggchord_stop("Fusion peripheral panels require horizontal or vertical Collinear coordinates")
+    if (!isTRUE(coord$ggchord_coord) || isTRUE(coord$ggchord_dotplot))
+      ggchord_stop("Fusion center requires registered genomic coordinates")
+  } else if (!isTRUE(coord$ggchord_coord) || isTRUE(coord$ggchord_dotplot))
+    ggchord_stop("Fusion peripheral panels require registered genomic coordinates")
   if (!inherits(plot$facet, "FacetNull")) ggchord_stop("Fusion panels do not support facets")
 }
 
@@ -205,22 +252,38 @@ ggchord_fusion_styles <- function(x) {
 
 ggchord_fusion_rectangles <- function(x, canvas) {
   sides <- vapply(x$panels, `[[`, "", "side")
-  available <- c(if ("left" %in% sides) .3 else .02,
-    if ("right" %in% sides) .7 else .98,
-    if ("bottom" %in% sides) .3 else .02,
-    if ("top" %in% sides) .7 else .98)
+  extended <- any(sides %in% c("free", "angle")) || !is.null(x$panels$center$box)
+  corner <- any(sides %in% c("topright", "topleft", "bottomright", "bottomleft"))
+  available <- if (extended) c(.32, .68, .32, .68) else c(
+    if (any(sides %in% c("left", "topleft", "bottomleft"))) .3 else .02,
+    if (any(sides %in% c("right", "topright", "bottomright"))) .7 else .98,
+    if (any(sides %in% c("bottom", "bottomright", "bottomleft"))) .3 else .02,
+    if (any(sides %in% c("top", "topright", "topleft"))) .7 else .98)
   center <- c(diff(available[1:2]),diff(available[3:4]))
   center_xy <- c(mean(available[1:2]),mean(available[3:4]))
+  if (extended) center <- pmin(center, .36 * min(canvas) / canvas)
+  if (!is.null(x$panels$center$box)) {
+    anchor <- ggchord_fusion_box_rect(x$panels$center$box, canvas)
+    center_xy <- c(mean(anchor[1:2]), mean(anchor[3:4]))
+  }
   if (identical(x$fusion_layout, "adaptive")) {
     physical <- center * canvas
     center <- pmin(center, min(physical) / canvas)
   }
   rects <- lapply(x$panels, function(panel) {
     side <- panel$side
+    if (!is.null(panel$box)) {
+      return(ggchord_fusion_box_rect(panel$box, canvas))
+    }
     size <- panel$size %||% switch(side, center = center,
-      right = c(.26,.7), left = c(.26,.7), top = c(.4,.26), bottom = c(.4,.26))
+      right = c(.26, if (corner) .4 else .7), left = c(.26, if (corner) .4 else .7),
+      top = c(.4,.26), bottom = c(.4,.26), angle = .18 * min(canvas) / canvas, c(.24,.24))
     xy <- switch(side, center = center_xy, right = c(.99-size[1]/2,.5),
-      left = c(.01+size[1]/2,.5), top = c(.5,.99-size[2]/2), bottom = c(.5,.01+size[2]/2))
+      left = c(.01+size[1]/2,.5), top = c(.5,.99-size[2]/2), bottom = c(.5,.01+size[2]/2),
+      topright = c(.99-size[1]/2,.99-size[2]/2), topleft = c(.01+size[1]/2,.99-size[2]/2),
+      bottomright = c(.99-size[1]/2,.01+size[2]/2), bottomleft = c(.01+size[1]/2,.01+size[2]/2),
+      angle = center_xy + panel$distance * min(canvas) / 2 *
+        c(cos(panel$angle*pi/180)/canvas[1], sin(panel$angle*pi/180)/canvas[2]))
     c(xmin=xy[1]-size[1]/2,xmax=xy[1]+size[1]/2,ymin=xy[2]-size[2]/2,ymax=xy[2]+size[2]/2)
   })
   for (i in seq_along(rects)) {
@@ -228,7 +291,7 @@ ggchord_fusion_rectangles <- function(x, canvas) {
     if (any(a < 0 | a > 1)) ggchord_stop("Fusion: panel allocation lies outside canvas")
     for (j in seq_len(i-1L)) {
       b <- rects[[j]]
-      if (min(a[2],b[2]) > max(a[1],b[1]) && min(a[4],b[4]) > max(a[3],b[3]))
+      if (!isTRUE(x$allow_overlap) && min(a[2],b[2]) > max(a[1],b[1]) && min(a[4],b[4]) > max(a[3],b[3]))
         ggchord_stop("Fusion: explicit panel allocations overlap: ", names(rects)[i], " and ", names(rects)[j])
     }
   }
@@ -263,10 +326,14 @@ ggchord_resolve_panel_interval <- function(panels, entity, start, end,
   if (length(entity)!=1 || is.na(entity) || !nzchar(entity) ||
       !is.numeric(start) || !is.numeric(end) || any(!is.finite(c(start,end))) || min(start,end) < 1 ||
       any(c(start,end) != floor(c(start,end)))) ggchord_stop(where, "invalid accession or one-based interval")
-  if (!is.null(selected_panel) && (is.na(selected_panel) || !selected_panel %in% names(panels)))
-    ggchord_stop(where, "unknown panel '", selected_panel, "'")
+  selected <- names(panels)
+  if (!is.null(selected_panel)) {
+    selected <- if (selected_panel %in% names(panels)) selected_panel else
+      names(panels)[startsWith(names(panels), paste0(selected_panel, "/"))]
+    if (is.na(selected_panel) || !length(selected)) ggchord_stop(where, "unknown panel '", selected_panel, "'")
+  }
   candidates <- list()
-  for (id in selected_panel %||% names(panels)) {
+  for (id in selected) {
     layout <- panels[[id]]$layout
     if (isTRUE(layout$character)) {
       candidates <- c(candidates, ggchord_alignment_interval(panels[[id]], id, entity, start, end, selected_instance))
@@ -305,18 +372,8 @@ ggchord_fusion_front <- function(panel, endpoint) {
   boundary <- c(min(endpoint$start,endpoint$end)-1,max(endpoint$start,endpoint$end)) - endpoint$origin + 1
   if (endpoint$end < endpoint$start) boundary <- rev(boundary)
   pos <- seq(boundary[1], boundary[2], length.out = 40)
-  if (isTRUE(layout$collinear)) {
-    xy <- cbind(x=ggchord_collinear_x(pos,id,ref), y=rep(unname(ref$y[id]),length(pos)))
-    normal <- cbind(x=rep(0,length(pos)),y=rep(1,length(pos)))
-    if (identical(layout$seq_axis,"vertical")) {
-      xy <- cbind(x=-xy[,2],y=xy[,1]); normal <- cbind(x=-normal[,2],y=normal[,1])
-    }
-  } else {
-    # Track's continuous frame preserves even a single-base front. The
-    # legacy nearest-reference Ribbon mapper would quantize short intervals.
-    frame <- ggchord_track_frame(pos,id,layout)
-    xy <- frame$base; normal <- frame$normal
-  }
+  frame <- ggchord_panel_backbone_frame(layout, id, pos)
+  xy <- frame$xy; normal <- frame$normal
   coord <- panel$built$layout$coord
   project <- function(points) {
     # ggplot transforms position scales before Coord; reflecting a circular
@@ -371,7 +428,14 @@ ggchord_fusion_path <- function(q, s, curvature) {
 #'   diagnostics and per-panel source layouts. Compositions made with
 #'   [magnify_ggchord()] also populate focus_region_data, focus_regions, focus_fronts and decorative
 #'   leaders; ordinary Fusion objects return empty tables for these fields.
-#'   All global geometry uses mm.
+#'   Nested leaves use full paths such as detail/center. Composition-scoped
+#'   focus_region_data_by_composition preserves all original region tables;
+#'   composition_id plus region_row identifies their derived rows. Containers
+#'   have coordinate = fusion and are not biological interval namespaces.
+#'   overlaps reports deliberate covering order. source_observations counts
+#'   display copies only for explicit source_hsp_id; no identity is inferred
+#'   by comparing values. Requested boxes/angles and resolved allocations remain
+#'   in panels. All global geometry uses mm.
 #' @export
 #' @examples
 #' data(seq_data_example)

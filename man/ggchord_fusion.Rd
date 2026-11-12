@@ -4,10 +4,17 @@
 \alias{ggchord_fusion}
 \title{Compose independent genomic panels}
 \usage{
-ggchord_fusion(center, center_size = NULL, layout = c("fixed", "adaptive"))
+ggchord_fusion(
+  center,
+  center_size = NULL,
+  layout = c("fixed", "adaptive"),
+  allow_overlap = FALSE,
+  center_box = NULL
+)
 }
 \arguments{
-\item{center}{A ggchord plot using Circular, Chord or horizontal/vertical Collinear coordinates.}
+\item{center}{A ggchord genomic plot (Circular, Chord, Collinear, Sankey or
+Radial), or another Fusion. Nested biological endpoints use full panel paths.}
 
 \item{center_size}{Optional width and height as fractions of the composition
 area, excluding its cross-panel legend. NULL allocates available space.}
@@ -15,12 +22,21 @@ area, excluding its cross-panel legend. NULL allocates available space.}
 \item{layout}{\code{"fixed"} uses fixed panel allocations; \code{"adaptive"} also
 adjusts the central allocation to the physical aspect ratio. Both rebuild
 labels and guides at actual panel sizes. Neither rescales explicit fonts.}
+
+\item{allow_overlap}{Explicitly allow container overlap. Default FALSE fails
+on overlap. When TRUE, later panels paint over earlier panels. Connections
+use disjoint native grid clips to avoid accumulating translucent fills.
+This is deliberate placement, not global collision avoidance.}
+
+\item{center_box}{Optional centre allocation: xmin, xmax, ymin, ymax as four
+fractions of the composition area excluding its legend, or four absolute
+grid units. Use instead of center_size. See fusion_panel().}
 }
 \value{
 A Fusion object, printable and accepted by \code{\link[ggplot2:ggsave]{ggplot2::ggsave()}}.
 }
 \description{
-A Fusion is a static composition, not a coordinate system. Add up to four
+A Fusion is a static composition, not a coordinate system. Add independent
 \code{\link[=fusion_panel]{fusion_panel()}} objects and independent \code{\link[=fusion_ribbon]{fusion_ribbon()}} layers. Ordinary
 \code{\link[ggplot2:ggsave]{ggplot2::ggsave()}} rebuilds panels and interval fronts at the target size.
 Source plots and their scales remain independent. Composition scales and

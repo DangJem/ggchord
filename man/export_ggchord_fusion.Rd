@@ -16,7 +16,14 @@ A list with panels, instances, connections, fronts, paths,
 diagnostics and per-panel source layouts. Compositions made with
 \code{\link[=magnify_ggchord]{magnify_ggchord()}} also populate focus_region_data, focus_regions, focus_fronts and decorative
 leaders; ordinary Fusion objects return empty tables for these fields.
-All global geometry uses mm.
+Nested leaves use full paths such as detail/center. Composition-scoped
+focus_region_data_by_composition preserves all original region tables;
+composition_id plus region_row identifies their derived rows. Containers
+have coordinate = fusion and are not biological interval namespaces.
+overlaps reports deliberate covering order. source_observations counts
+display copies only for explicit source_hsp_id; no identity is inferred
+by comparing values. Requested boxes/angles and resolved allocations remain
+in panels. All global geometry uses mm.
 }
 \description{
 Builds at the requested size on a temporary measurement device, restoring

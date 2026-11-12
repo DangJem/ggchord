@@ -23,13 +23,63 @@ ggchord_build_fusion <- function(x) {
     "Fusion: canvas cannot contain required cross-panel guides; increase width/height or set explicit guide layout")
   rectangles <- ggchord_fusion_rectangles(x, area)
   panels <- list(); panel_rows <- list(); instances <- list(); diagnostics <- list()
-  backgrounds <- list(); foregrounds <- list()
+  backgrounds <- list(); foregrounds <- list(); nested_results <- list(); sources <- list()
+  render_events <- list(); connection_grobs <- list(); overlay_grobs <- list()
   for (id in names(x$panels)) {
     spec <- x$panels[[id]]; rect <- rectangles[[id]]
     dimensions <- c(diff(rect[1:2]),diff(rect[3:4]))*area
     center <- c(mean(rect[1:2]),mean(rect[3:4]))*area+shift
     viewport <- grid::viewport(x=center[1],y=center[2],width=dimensions[1],height=dimensions[2],
       default.units="mm",clip="off",name=paste0("fusion-",id))
+    if (inherits(spec$plot, "ggchord_fusion")) {
+      nested <- local({
+        grid::pushViewport(viewport)
+        on.exit(grid::popViewport())
+        ggchord_build_fusion(spec$plot)
+      })
+      offset <- center - dimensions / 2
+      child <- ggchord_fusion_nested_export(nested$export, id, offset)
+      nested_results[[id]] <- list(export = child, permissions = nested$source_permissions)
+      for (key in names(nested$panel_registry)) {
+        full <- paste0(id, "/", key)
+        if (full %in% names(panels) || full %in% names(x$panels)) ggchord_stop("Fusion: nested panel path collision: ", full)
+        panel <- nested$panel_registry[[key]]
+        panel$context$panel_bounds_mm <- panel$context$panel_bounds_mm + rep(offset, each = 2L)
+        panels[[full]] <- panel
+      }
+      container <- data.frame(panel_id = id, side = spec$side, coordinate = "fusion", is_container = TRUE,
+        container_xmin = offset[1], container_xmax = offset[1] + dimensions[1],
+        container_ymin = offset[2], container_ymax = offset[2] + dimensions[2],
+        panel_xmin = offset[1], panel_xmax = offset[1] + dimensions[1],
+        panel_ymin = offset[2], panel_ymax = offset[2] + dimensions[2],
+        measurement = "measured_nested_composition", geometry_metric_status = "nested", converged = TRUE)
+      panel_rows[[id]] <- ggchord_rbind_fill(list(container, child$panels))
+      instances[[id]] <- child$instances
+      diagnostics[[id]] <- list(panel_id = id, canvas_mm = dimensions, nested = TRUE)
+      for (key in names(child$diagnostics)) {
+        diagnostic <- child$diagnostics[[key]]
+        diagnostic$panel_id <- paste0(id, "/", key)
+        if (!is.null(diagnostic$render_context$panel_bounds_mm))
+          diagnostic$render_context$panel_bounds_mm <- diagnostic$render_context$panel_bounds_mm + rep(offset, each = 2L)
+        diagnostics[[paste0(id, "/", key)]] <- diagnostic
+      }
+      sources[[id]] <- nested$export$source_data
+      for (event in nested$render_events) {
+        if (!is.null(event$panel_id)) event$panel_id <- paste0(id, "/", event$panel_id)
+        event$background <- grid::grobTree(event$background, vp = viewport)
+        event$foreground <- grid::grobTree(event$foreground, vp = viewport)
+        if (!is.null(event$bounds)) event$bounds <- event$bounds + rep(offset, each = 2L)
+        if (!is.null(event$container_bounds)) event$container_bounds <- event$container_bounds + rep(offset, each = 2L)
+        render_events[[length(render_events) + 1L]] <- event
+      }
+      connection_viewport <- viewport; connection_viewport$clip <- NA
+      connection_grobs <- c(connection_grobs, lapply(nested$connection_grobs, function(g) grid::grobTree(g, vp = connection_viewport)))
+      for (j in seq_along(nested$overlay_grobs)) overlay_grobs <- c(overlay_grobs,
+        stats::setNames(list(grid::grobTree(nested$overlay_grobs[[j]], vp = viewport)),
+          paste0(id, "/", names(nested$overlay_grobs)[j])))
+      next
+    }
+    if (id %in% names(panels)) ggchord_stop("Fusion: nested panel path collision: ", id)
     # Clone build-local ggproto state without serializing quosure/data-function
     # environments: a teaching environment can contain many unrelated plots.
     character_panel <- !is.null(spec$plot$ggchord_alignment)
@@ -67,11 +117,17 @@ ggchord_build_fusion <- function(x) {
     built <- attr(table,"ggchord_render_built")
     panels[[id]] <- list(layout=layout,built=built,context=context,
       seq_data=spec$plot$ggchord$data$seq_data)
+    sources[[id]] <- spec$plot$ggchord_alignment %||% spec$plot$ggchord$sources
     backgrounds[[id]] <- grid::grobTree(ggchord_fusion_partition(table,TRUE),vp=viewport)
     foregrounds[[id]] <- grid::grobTree(ggchord_fusion_partition(table,FALSE),vp=viewport)
     bounds <- context$panel_bounds_mm
+    render_events[[length(render_events) + 1L]] <- list(panel_id = id, background = backgrounds[[id]],
+      foreground = foregrounds[[id]], bounds = bounds,
+      container_bounds = c(center[1]-dimensions[1]/2, center[1]+dimensions[1]/2,
+        center[2]-dimensions[2]/2, center[2]+dimensions[2]/2))
     panel_rows[[id]] <- data.frame(panel_id=id,side=spec$side,
-      coordinate=if(character_panel) "alignment" else if(isTRUE(spec$plot$coordinates$ggchord_circular)) "circular" else
+      coordinate=if(character_panel) "alignment" else if(isTRUE(layout$sankey_projected)) "sankey" else
+        if(isTRUE(layout$radial_projected)) "radial" else if(isTRUE(spec$plot$coordinates$ggchord_circular)) "circular" else
         if(isTRUE(layout$collinear)) "collinear" else "chord",
       container_xmin=center[1]-dimensions[1]/2,container_xmax=center[1]+dimensions[1]/2,
       container_ymin=center[2]-dimensions[2]/2,container_ymax=center[2]+dimensions[2]/2,
@@ -163,7 +219,14 @@ ggchord_build_fusion <- function(x) {
       connection_rows[[length(connection_rows)+1L]] <- report
     }
   }
+  for (nested in nested_results) for (key in names(nested$permissions)) {
+    permissions <- c(seen[[key]], nested$permissions[[key]])
+    if (length(permissions) > 1L && !all(unlist(permissions)))
+      ggchord_stop("Fusion: repeated source_hsp_id '", key, "' across nested panels requires allow_repeated=TRUE on all participating layers")
+    seen[[key]] <- permissions
+  }
   focus <- ggchord_build_focus(x$focus, panels)
+  for (name in c("regions", "fronts", "leaders")) focus[[name]]$composition_id <- rep("root", nrow(focus[[name]]))
   guide <- styles$guide
   if (styles$side!="none") {
     xy <- switch(styles$side,right=c(canvas[1]-guide_size[1]/2,canvas[2]/2),
@@ -171,16 +234,77 @@ ggchord_build_fusion <- function(x) {
       bottom=c(canvas[1]/2,guide_size[2]/2))
     guide <- grid::grobTree(guide,vp=grid::viewport(x=xy[1],y=xy[2],width=guide_size[1],height=guide_size[2],default.units="mm"))
   }
-  grob <- do.call(grid::grobTree,c(unname(backgrounds),ribbons,focus$underlay,unname(foregrounds),focus$overlay,
-    list(guide, vp=grid::viewport(xscale=c(0,1),yscale=c(0,1)))))
+  overlaps <- list()
+  ids <- names(x$panels)
+  for (i in seq_along(ids)) for (j in seq_len(i - 1L)) {
+    a <- rectangles[[i]]; b <- rectangles[[j]]
+    box <- c(max(a[1], b[1]), min(a[2], b[2]), max(a[3], b[3]), min(a[4], b[4]))
+    if (box[1] >= box[2] || box[3] >= box[4]) next
+    box <- box * rep(area, each = 2L) + rep(shift, each = 2L)
+    overlaps[[length(overlaps) + 1L]] <- data.frame(under = ids[j], over = ids[i],
+      xmin = box[1], xmax = box[2], ymin = box[3], ymax = box[4], units = "mm",
+      policy = "explicit_allow; later panel paints over earlier panel")
+  }
+  connection_grobs <- c(ribbons, focus$underlay, connection_grobs)
+  overlay_grobs <- c(overlay_grobs, focus$overlay)
+  render_events[[length(render_events) + 1L]] <- list(panel_id = NULL,
+    background = grid::nullGrob(), foreground = guide, bounds = NULL)
+  overlap_mode <- isTRUE(x$allow_overlap) || any(vapply(nested_results,
+    function(n) nrow(n$export$overlaps) > 0L, logical(1)))
+  if (overlap_mode) {
+    containers <- Filter(Negate(is.null), lapply(render_events, `[[`, "container_bounds"))
+    clip_regions <- function(regions) lapply(regions, function(bounds)
+      ggchord_fusion_clip_connections(connection_grobs, bounds, canvas))
+    children <- clip_regions(ggchord_fusion_rect_subtract(c(0,canvas[1],0,canvas[2]), containers))
+    for (i in seq_along(render_events)) {
+      event <- render_events[[i]]
+      children <- c(children, list(event$background))
+      if (!is.null(event$panel_id)) {
+        later <- if (i < length(render_events)) Filter(Negate(is.null),
+          lapply(render_events[seq.int(i+1L,length(render_events))], `[[`, "container_bounds")) else list()
+        children <- c(children, clip_regions(ggchord_fusion_rect_subtract(event$bounds, later)))
+      }
+      children <- c(children, list(event$foreground),
+        unname(overlay_grobs[names(overlay_grobs) == event$panel_id]))
+    }
+  } else children <- c(lapply(render_events, `[[`, "background"), connection_grobs,
+    lapply(render_events, `[[`, "foreground"), unname(overlay_grobs))
+  grob <- do.call(grid::grobTree, c(unname(children), list(vp = grid::viewport(xscale=c(0,1),yscale=c(0,1)))))
   bind <- function(rows) if(length(rows)) ggchord_rbind_fill(rows) else data.frame()
-  list(grob=grob,export=list(panels=bind(panel_rows),instances=bind(instances),
-    connections=bind(connection_rows),fronts=bind(fronts),paths=bind(paths),
-    focus_region_data=focus$input,focus_regions=focus$regions,focus_fronts=focus$fronts,leaders=focus$leaders,
-    diagnostics=diagnostics,source_layouts=lapply(panels,`[[`,"layout"),
-    source_data=lapply(x$panels,function(p) p$plot$ggchord_alignment %||% p$plot$ggchord$sources),
-    relationship_data=lapply(x$ribbons,`[[`,"data"),
+  child_tables <- function(name) lapply(nested_results, function(n) n$export[[name]])
+  combine <- function(rows, name) bind(c(rows, child_tables(name)))
+  focus_regions <- bind(c(list(focus$regions), child_tables("focus_regions")))
+  focus_fronts <- bind(c(list(focus$fronts), child_tables("focus_fronts")))
+  leaders <- bind(c(list(focus$leaders), child_tables("leaders")))
+  for (id in names(panel_rows)) {
+    d <- panel_rows[[id]]; at <- which(d$panel_id == id); spec <- x$panels[[id]]
+    for (name in c("requested_angle", "requested_distance")) if (!name %in% names(d)) d[[name]] <- NA_real_
+    d$requested_angle[at] <- spec$angle %||% NA_real_
+    d$requested_distance[at] <- spec$distance %||% NA_real_
+    if (!"requested_box" %in% names(d)) d$requested_box <- I(rep(list(NULL), nrow(d)))
+    d$requested_box[at] <- list(spec$box)
+    panel_rows[[id]] <- d
+  }
+  export <- list(panels=bind(panel_rows),instances=bind(instances),overlaps=combine(overlaps,"overlaps"),
+    connections=combine(connection_rows,"connections"),fronts=combine(fronts,"fronts"),paths=combine(paths,"paths"),
+    focus_region_data=focus$input,focus_regions=focus_regions,focus_fronts=focus_fronts,leaders=leaders,
+    nested_focus_region_data=lapply(nested_results,function(n) n$export$focus_region_data),
+    focus_region_data_by_composition=c(list(root=focus$input), unlist(lapply(names(nested_results), function(id) {
+      data <- nested_results[[id]]$export$focus_region_data_by_composition
+      stats::setNames(data, paste0(id, "/", names(data)))
+    }), recursive=FALSE)),
+    diagnostics=diagnostics,source_layouts=lapply(panels,`[[`,"layout"),source_data=sources,
+    relationship_data=c(lapply(x$ribbons,`[[`,"data"),unlist(lapply(nested_results,function(n) n$export$relationship_data),recursive=FALSE)),
     metadata=list(canvas_mm=canvas,coordinate_space="composition",units="mm",layout=x$fusion_layout,
-      guide_side=styles$side,guide_size_mm=guide_size,measurement="measured",
-      device=names(grDevices::dev.cur()),font_conditions="Selected device metrics; fallback and embedding not certified")))
+      guide_side=styles$side,guide_size_mm=guide_size,measurement="measured",allow_overlap=isTRUE(x$allow_overlap),
+      device=names(grDevices::dev.cur()),font_conditions="Selected device metrics; fallback and embedding not certified"))
+  if ("source_hsp_id" %in% names(export$connections)) {
+    d <- export$connections
+    ids <- unique(as.character(d$source_hsp_id[!is.na(d$source_hsp_id) & d$retained]))
+    export$source_observations <- ggchord_rbind_fill(lapply(ids, function(id) data.frame(
+      source_hsp_id = id, displayed_connections = sum(d$source_hsp_id %in% id & d$retained),
+      identity_basis = "explicit source_hsp_id; display copies are not new observations"))) %||% data.frame()
+  } else export$source_observations <- data.frame()
+  list(grob=grob,export=export,panel_registry=panels,source_permissions=seen,
+    render_events=render_events,connection_grobs=connection_grobs,overlay_grobs=overlay_grobs)
 }

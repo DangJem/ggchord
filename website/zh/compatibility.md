@@ -53,7 +53,7 @@ Position 只控制局部放置，不把不支持的图层转换成另一种坐�
 
 ## 静态跨面板组合 {#fusion}
 
-[Fusion](fusion.html)接受Circular/Chord/Collinear中央图与最多四个Collinear外围面板，各面板保留原有图层契约。跨面板完整前缘采用一基闭区间边界和连续曲线映射；要求同单位来源区间完整可见，面板与实例路由无歧义。Fusion的标准标度只作用于跨面板图层。外围Sankey/Radial/Dotplot、分面及隐式第三方坐标适配均拒绝。保存时重新测量物理面板，不代表具备全局避障或通用字号缩放。
+[Fusion](fusion.html)接受已注册Circular/Chord/Collinear/Sankey/Radial、多层组合及已注册字符面板，各面板保留原有图层契约。跨面板完整前缘采用一基闭区间边界和连续曲线映射；要求同单位来源区间完整可见，面板与实例路由无歧义。Fusion的标准标度只作用于跨面板图层。Dotplot端点、分面及隐式第三方坐标适配仍未注册。保存时重新测量物理面板，不代表具备全局避障或通用字号缩放。
 
 
 ## 局部对齐字符单元 {#aligned-cells}
@@ -71,4 +71,6 @@ Sankey、Radial、Dotplot 图及显式启用策略的 Fusion 子面板。它调�
 在用户显式约束内排列原生图例；默认不启用。分面、任意自定义 grob、Fusion 外层
 区域分配和全局标签求解器不在此范围内。
 
-[语义放大](fusion.html#multiple-details) 支持最多四侧的命名独立 Collinear 细节面板，每行显式选择目标；嵌套和自由定位盒仍不支持。
+[语义放大](fusion.html#multiple-details) 支持独立的已注册细节、八侧名称、嵌套叶面板路径及自由区域，每行显式选择目标；有意重叠需主动允许，全局避障由独立布局策略负责。
+
+Fusion还支持Sankey/Radial、多层组合及八方位/显式区域。叶面板路径保留独立来源，显式重叠导出覆盖顺序；Dotplot仍需独立轴注册。见[高级区域与嵌套](fusion.html#advanced-placement)。

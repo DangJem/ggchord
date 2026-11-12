@@ -482,7 +482,10 @@
       "plot": "",
       "id": "",
       "side": "c(\"right\", \"top\", \"left\", \"bottom\")",
-      "size": "NULL"
+      "size": "NULL",
+      "box": "NULL",
+      "angle": "NULL",
+      "distance": "NULL"
     }
   },
   {
@@ -1045,7 +1048,9 @@
     "parameters": {
       "center": "",
       "center_size": "NULL",
-      "layout": "c(\"fixed\", \"adaptive\")"
+      "layout": "c(\"fixed\", \"adaptive\")",
+      "allow_overlap": "FALSE",
+      "center_box": "NULL"
     }
   },
   {
@@ -1197,7 +1202,10 @@
       "alpha": "0.2",
       "highlight_width": "1.5",
       "linewidth": "0.35",
-      "linetype": "2"
+      "linetype": "2",
+      "detail_box": "NULL",
+      "allow_overlap": "FALSE",
+      "center_box": "NULL"
     }
   },
   {

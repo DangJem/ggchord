@@ -4,20 +4,41 @@
 \alias{fusion_panel}
 \title{Add a genomic panel to a Fusion}
 \usage{
-fusion_panel(plot, id, side = c("right", "top", "left", "bottom"), size = NULL)
+fusion_panel(
+  plot,
+  id,
+  side = c("right", "top", "left", "bottom"),
+  size = NULL,
+  box = NULL,
+  angle = NULL,
+  distance = NULL
+)
 }
 \arguments{
-\item{plot}{A horizontal or vertical Collinear ggchord plot or a Cartesian
-detail from \code{\link[=register_ggchord_alignment]{register_ggchord_alignment()}}. Sankey, Radial, Dotplot, facets
-and unregistered external ggplots are not supported here. Character panels
+\item{plot}{An independent ggchord genomic plot, another Fusion, or a Cartesian
+detail from \code{\link[=register_ggchord_alignment]{register_ggchord_alignment()}}. Dotplot, facets and unregistered
+external ggplots are not yet registered here. Character panels
 require explicit cross-panel fill; backbone-colour gradient is unavailable.}
 
 \item{id}{Unique nonempty panel name; \code{"center"} is reserved.}
 
-\item{side}{One of right, top, left or bottom; one panel per side.}
+\item{side}{One of right, top, left, bottom, topright, topleft, bottomright or
+bottomleft; one panel per named side. Placement never rotates the child Coord.}
 
-\item{size}{Optional fractional width and height; overlapping or out-of-frame
-allocations fail with a diagnostic instead of moving explicit panels.}
+\item{size}{Optional fractional width and height. Out-of-frame allocations
+fail; overlap fails unless explicitly allowed by the composition.}
+
+\item{box}{Optional explicit rectangle (xmin, xmax, ymin, ymax), optionally
+named in any order. Numeric values are fractions of the area excluding
+the composition legend; absolute grid units retain their physical size.
+Use instead of side/size/angle/distance. Out-of-frame boxes fail at build.}
+
+\item{angle}{Optional finite placement angle in degrees counterclockwise
+from the right, instead of side. Does not rotate the plot or its labels.}
+
+\item{distance}{Positive radial distance from the centre allocation, as a
+fraction of half the shorter physical allocation dimension; default .8.
+Angles describe physical canvas directions even on rectangular devices. The allocation must fit without implicit clamping.}
 }
 \value{
 A component for \code{\link[=ggchord_fusion]{ggchord_fusion()}}.
@@ -29,4 +50,9 @@ Add a genomic panel to a Fusion
 data(seq_data_example)
 p <- ggchord(seq_data_example) + geom_seq()
 ggchord_fusion(p) + fusion_panel(p + coord_collinear(), "right")
+quiet <- p + theme(legend.position = "none")
+ggchord_fusion(quiet) +
+  fusion_panel(quiet + coord_sankey(), "mirror", angle = 31, distance = .8)
+ggchord_fusion(quiet, center_box = c(.02, .35, .2, .8), allow_overlap = TRUE) +
+  fusion_panel(quiet + coord_collinear(), "inset", box = c(.25, .98, .3, .7))
 }

@@ -1,8 +1,7 @@
 ## Connect real source intervals {#intervals}
 
 Fusion combines independent genomic plots and connects their real sequence
-intervals. The center can be Circular, Chord or Collinear; peripherals are horizontal or
-vertical Collinear plots. Each plot remains usable on its own. The composition
+intervals. The center and peripherals can use registered genomic Coord views; Sankey and Radial retain their explicit display instances. Nested Fusions and registered character details are supported. Each plot remains usable on its own. The composition
 rebuilds all panels at their actual physical sizes before drawing links.
 
 Download the [original EMALE PAF and provenance](formats.html). This lesson
@@ -107,9 +106,8 @@ may differ slightly while source coordinates remain unchanged. Use ordinary
 
 Fully visible intervals are required. Prepare partial windows or splits in
 the source workflow explicitly. Cross-origin wrapping, direct bp↔aa links,
-peripheral Sankey/Radial/Dotplot, facets, external ggplot coordinate guessing,
-free-angle/eight-direction layouts and automatic global routing are outside
-this interface. Links may cross or pass through panel interiors; foreground
+Dotplot, facets, external ggplot coordinate guessing and automatic global routing
+remain outside this interface. Explicit derived views and placement are described below. Links may cross or pass through panel interiors; foreground
 annotations are retained, but arbitrary layouts are not guaranteed collision-free.
 
 
@@ -157,7 +155,7 @@ Use ordinary `ggsave()` at a chosen physical size, for example 12×8 inches; `vi
 
 The dashed lines are decorative focus leaders. They are exported separately from biological `connections` and `relationship_data`; adding actual `fusion_ribbon()` layers still requires real relationship data. `focus_region_data` preserves the original selection and arbitrary metadata, while `focus_regions` reports resolved instances, source origins and the sampled physical path-length ratio. The ratio can be below one with a small detail allocation; it is not a change to biological length.
 
-The detail plot owns its data, scales, layers and statistics. For count/bin/coverage tracks, prepare and state the intended local or global statistical population yourself; the wrapper records `explicit_detail_plot` and never silently chooses a scope. It does not copy arbitrary source layers, infer alignments or accept unregistered Cartesian character panels. Use one ordered region, explicitly select `instance`/`detail_instance` when an accession is repeated, and split origin wraps before this single-window workflow. Nested or freely positioned inset boxes remain outside this interface; named independent details are supported below.
+The detail plot owns its data, scales, layers and statistics. For count/bin/coverage tracks, prepare and state the intended local or global statistical population yourself; the wrapper records `explicit_detail_plot` and never silently chooses a scope. It does not copy arbitrary source layers, infer alignments or accept unregistered Cartesian character panels. Use one ordered region, explicitly select `instance`/`detail_instance` when an accession is repeated, and split origin wraps before this single-window workflow. Explicit nested/free-position allocations are described below; global avoidance is a separate layout concern.
 
 ## Paired source windows with real HSPs {#paired-detail}
 
@@ -226,13 +224,13 @@ multiple <- magnify_ggchord(
 export_ggchord_fusion(multiple, width = 12, height = 8)$focus_regions
 ```
 
-Use up to four named details, one per side. Every panel needs a region; missing
+This example uses four named details, one per cardinal side; diagonal sides and explicit boxes are available below. Every panel needs a region; missing
 or unknown targets fail. Source and detail instance selectors remain independent.
 `detail_size` accepts a named list of width/height fractions; NULL uses Fusion
 defaults. Overlaps fail rather than displacing explicit allocations. Standard
 saving rebuilds panels and leaders at the requested size. At small sizes, inspect
 labels and enlarge the canvas as needed. Leaders may cross the main plot or one
-another; this interface does not solve global avoidance, nesting or arbitrary boxes.
+another; global avoidance is separate from the explicit nested/box allocation described below.
 
 ## Character details with exact source anchors {#character-detail}
 
@@ -269,4 +267,60 @@ export_ggchord_fusion(character_detail, width = 16, height = 5)$focus_regions
 
 The ordinary plot remains editable: local colours, layers and annotations remain independent. Identity/reverse x scales and discrete y rows are supported. Each Fusion build verifies the registered residue positions/labels after edits and remeasures the final panel in mm; half-cell boundaries attach to the exact endpoint cells. Gap cells have no source position and are never interpolated into bases. A source interval must contain every selected base in biological order; split introns and origin joins into separate source rows. Use `detail_instance` to select an alignment row when several rows share a source. Unregistered ggplots, facets, nonlinear/flipped coordinates and moved registered cells fail.
 
-`translate_ggchord_cds()` nucleotide rows can be registered in the same way. Keep the translation on codon centres as in `examples/m2-detail.R`; use `source_positions` for full codon membership across segments. AA residue rows use their own aa coordinate domain; connecting a genomic bp macro directly to aa positions still requires an explicit CDS projection. Decorative magnify leaders remain separate from biological Fusion links. Character endpoints have no backbone colour for a Fusion gradient: supply explicit cross-panel fill. Narrow panels retain `geom_residue()`'s tile/error policy; enlarge the physical export instead of relying on DPI. Global leader avoidance and nested/free-position insets remain outside this workflow.
+`translate_ggchord_cds()` nucleotide rows can be registered in the same way. Keep the translation on codon centres as in `examples/m2-detail.R`; use `source_positions` for full codon membership across segments. AA residue rows use their own aa coordinate domain; connecting a genomic bp macro directly to aa positions still requires an explicit CDS projection. Decorative magnify leaders remain separate from biological Fusion links. Character endpoints have no backbone colour for a Fusion gradient: supply explicit cross-panel fill. Narrow panels retain `geom_residue()`'s tile/error policy; enlarge the physical export instead of relying on DPI. Global leader avoidance is separate; explicit nested/free-position allocation is supported below.
+
+## Eight directions and independent physical placement {#advanced-placement}
+
+`fusion_panel()` supports the four cardinal sides plus `topright`, `topleft`, `bottomright` and `bottomleft`. Default corner layouts reserve space for all eight; side names remain unique. For other arrangements use `angle`/`distance` or an explicit `box`. There is no fixed panel-count limit for explicit boxes/angles: every allocation must still fit. Placement changes the container, not the child's Coord or text orientation. Angles describe physical directions on rectangular exports; distance is a fraction of half the shorter allocation dimension, measured from the centre allocation.
+
+```r
+data(seq_data_example)
+sequences <- seq_data_example |>
+  dplyr::select(accver, length)
+base_panels <- ggchord(sequences) + geom_seq(show.legend = FALSE)
+central <- base_panels + coord_chord()
+mirrored <- base_panels + coord_sankey()
+free_angle <- ggchord_fusion(central) +
+  fusion_panel(mirrored, "mirror", angle = 31, distance = .8, size = c(.16, .22))
+free_box <- ggchord_fusion(central, center_box = c(.02, .35, .2, .8)) +
+  fusion_panel(mirrored, "mirror", box = c(.45, .98, .1, .9))
+physical_box <- ggchord_fusion(central, center_box = unit(c(5, 85, 10, 100), "mm")) +
+  fusion_panel(mirrored, "mirror", box = unit(c(100, 210, 10, 100), "mm"))
+export_ggchord_fusion(physical_box, width = 12, height = 6)$panels
+```
+
+A numeric box uses xmin, xmax, ymin, ymax fractions; an absolute-unit box keeps its physical dimensions. Coordinates refer to the composition area excluding its cross-panel guide. Do not combine box with side/size/angle/distance, or center_box with center_size. Physical allocations are checked at every target size; they are never silently clamped. Explicit `allow_overlap = TRUE` on `ggchord_fusion()` or `magnify_ggchord()` permits deliberate overlays. Later panels cover earlier panels, using vector grid clipping rather than PNG crops; translucent connections are not repainted twice in the same area. The export's `overlaps` table records covering order. This permits intentional masks and does not promise automatic obstacle avoidance.
+
+Sankey source IDs occur in both mirrored columns. Choose an exact `q_instance`/`s_instance` from `get_chord_layout(plot)$display_instances`; omission fails when ambiguous. Radial and Chord use their own registered backbone frames. All q/s intervals, units and source records remain unchanged. If a declared `source_hsp_id` appears repeatedly, every participating Fusion layer must opt into `allow_repeated = TRUE`, including layers inside nested compositions. `source_observations` distinguishes explicit evidence IDs from display counts. This does not infer identity by comparing equal table values. Dotplot has independent axes and is not yet a registered Fusion endpoint.
+
+## Nested source regions retain their own namespaces {#nested-detail}
+
+A detail may itself be a Fusion. This example uses two explicit windows on the unchanged pUC19 source. The inner source is the larger window; its child is the smaller window. The outer selection targets the inner source through `detail/center`, not an arbitrary rectangle in an image.
+
+```r
+data(plasmid_example_pUC19)
+source_genome <- plasmid_example_pUC19 |>
+  dplyr::select(accver, length)
+large_region <- data.frame(accver = "pUC19", start = 101, end = 1900)
+small_region <- data.frame(accver = "pUC19", start = 301, end = 600)
+large_window <- focus_ggchord_data(source_genome, loci = large_region)
+small_window <- focus_ggchord_data(source_genome, loci = small_region)
+large_plot <- ggchord(large_window$seq_data) +
+  geom_seq(show.legend = FALSE) + coord_collinear()
+small_plot <- ggchord(small_window$seq_data) +
+  geom_seq(show.legend = FALSE) + coord_collinear()
+inner <- magnify_ggchord(large_plot, small_region, small_plot)
+whole <- ggchord(source_genome) + geom_seq() + coord_circular()
+large_region$detail_panel <- "detail/center"
+outer <- magnify_ggchord(
+  whole, large_region, inner,
+  center_box = c(.02, .22, .15, .85), detail_box = c(.27, .99, .1, .9)
+)
+report <- export_ggchord_fusion(outer, width = 14, height = 7)
+report$focus_regions
+report$focus_region_data_by_composition
+```
+
+`composition_id` plus `region_row` connects derived regions/fronts/leaders to each original selection in `focus_region_data_by_composition`. Top-level `focus_region_data` remains the original outer input. Nested leaf names use paths such as `detail/center` and `detail/detail`; a composition container is never treated as one genomic axis. If an accession occurs in multiple leaves, select the full panel path and exact instance. `source_panel` can select a source leaf under `center`. Layout exports include actual mm boundaries and requested boxes/angles.
+
+Each plot keeps its own layers, scales and statistical population; the compositor does not silently copy layers or recompute statistics. Origin wraps still require explicit splitting. The complete negative-strand CDS-to-genome-focus-to-real-character example is in `examples/m3-nested.R`. Registered characters retain their physical tile/error policy; a small nested allocation cannot make 60 letters readable merely by increasing DPI. Full multi-device publication acceptance and global route/label optimisation are separate concerns.

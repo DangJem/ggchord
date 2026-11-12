@@ -29,3 +29,42 @@ line/text/title继承与局部原生guide_axis主题，按字形实测留出未�
 数据适配、全局质量、整站旧资产重现及1.0治理仍在持续范围内。
 未运行testthat/devtools::test、R CMD build/check、vignette编译或发布设备矩阵；
 冻结docs没有重建，本轮没有远端操作。
+
+## Fusion/M3显式组合第二工作包
+
+先以独立原型核对Sankey/Radial骨架frame与公开map_ggchord_position，再接入共享
+Fusion源区间解析。新增八个命名侧边、实际物理angle/distance、相对/绝对单位box、
+center_box和显式allow_overlap。角度以中心分配区域为起点，按真实毫米空间定义，
+不因矩形宽高比变成另一个角度，也不旋转子图Coord/字体。旧四侧默认保持。
+
+嵌套Fusion递归按实际容器尺寸重建，叶面板用完整路径注册。组合容器不是一个
+生物学坐标域；原始源/对齐位置、实例、origin及单位不变。magnify支持detail_box、
+center_box、嵌套目标路径和可选source_panel。任意元数据及各层原始选区由
+focus_region_data_by_composition保留，composition_id+region_row关联派生表。
+
+显式重叠仍默认禁止。允许后按叶图层顺序覆盖，以互不相交的原生grid矩形剪裁
+连接区域，不栅格化子图，不用重复半透明绘制掩盖背景，也不把重叠许可当自动避障。
+父子层共享完整渲染账本，保留内部图例、连接和高亮层级。同一明确source_hsp_id跨
+嵌套重复显示，全部参与层均需allow_repeated=TRUE；source_observations只按显式ID
+区分来源观测与显示次数，不猜同值表身份。
+
+`check-fusion-advanced.R`通过：
+
+- 真实随包HSP在八个独立面板重复展示，Sankey/Radial/横纵Collinear均有代表；
+  每个新视图的front独立用公开源位置映射及最终实测panel范围核对（0.02mm容差），
+  原q/s端点、来源表及pident保留，八条显示连接仍是一条明确来源观测。
+- Sankey两侧歧义拒绝；矩形画布31度物理位置、绝对毫米box、超界/冲突配置检查；
+  旧source-region流程在4×4、8×8、12×8定向构建保留源边界。
+- 真实EMALE负链CDS→原始基因组focus→60个真实字符，两层原始选区和四条装饰
+  引线保留；完整叶路径准确，跨层重复HSP未全部显式允许时拒绝。
+- 显式覆盖输出重叠表，默认同区域拒绝；标准ggsave生成八面板和真实嵌套两张PNG，
+  均人工查看。布局中的交叉仍可存在，这不代表全局路由/避障已完成。
+- 相关Fusion课程在独立R环境执行通过（保留旧反向HSP警告）；新增m3-nested.R
+  可运行真实来源示例，帮助/Rd、NEWS、双语课程/参考/兼容矩阵/参数图谱同步。
+  最小公开Fusion案例复用为混合嵌套双细节路径，不运行testthat。
+
+证据：v0.27.0-fusion-advanced-results.json、v0.27.0-fusion-eight.png、
+v0.27.0-m3-nested.png、v0.27.0-fusion-lesson.json。
+
+第二工作包只完成显式多视图/摆放/嵌套核心，完整F2/F3/M3尚未整体关闭：全局路由/
+标签和Guide联合优化、跨原点选择与更多适配器等继续开发，发布矩阵仍未运行。

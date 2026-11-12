@@ -2428,10 +2428,13 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `plot` | `Required/alternative entry; see description` | R object; constraints below | A horizontal or vertical Collinear ggchord plot or a Cartesian detail from register_ggchord_alignment(). Sankey, Radial, Dotplot, facets and unregistered external ggplots are not supported here. Character panels require explicit cross-panel fill; backbone-colour gradient is unavailable. |
+| `plot` | `Required/alternative entry; see description` | R object; constraints below | An independent ggchord genomic plot, another Fusion, or a Cartesian detail from register_ggchord_alignment(). Dotplot, facets and unregistered external ggplots are not yet registered here. Character panels require explicit cross-panel fill; backbone-colour gradient is unavailable. |
 | `id` | `Required/alternative entry; see description` | R object; constraints below | Unique nonempty panel name; "center" is reserved. |
-| `side` | `c("right", "top", "left", "bottom")` | Vector; choices versus multiple selection below | One of right, top, left or bottom; one panel per side. |
-| `size` | `NULL` | Nullable R object; type/inheritance below | Optional fractional width and height; overlapping or out-of-frame allocations fail with a diagnostic instead of moving explicit panels. |
+| `side` | `c("right", "top", "left", "bottom")` | Vector; choices versus multiple selection below | One of right, top, left, bottom, topright, topleft, bottomright or bottomleft; one panel per named side. Placement never rotates the child Coord. |
+| `size` | `NULL` | Nullable R object; type/inheritance below | Optional fractional width and height. Out-of-frame allocations fail; overlap fails unless explicitly allowed by the composition. |
+| `box` | `NULL` | Nullable R object; type/inheritance below | Optional explicit rectangle (xmin, xmax, ymin, ymax), optionally named in any order. Numeric values are fractions of the area excluding the composition legend; absolute grid units retain their physical size. Use instead of side/size/angle/distance. Out-of-frame boxes fail at build. |
+| `angle` | `NULL` | Nullable R object; type/inheritance below | Optional finite placement angle in degrees counterclockwise from the right, instead of side. Does not rotate the plot or its labels. |
+| `distance` | `NULL` | Nullable R object; type/inheritance below | Positive radial distance from the centre allocation, as a fraction of half the shorter physical allocation dimension; default .8. Angles describe physical canvas directions even on rectangular devices. The allocation must fit without implicit clamping. |
 
 </details>
 
@@ -2503,9 +2506,11 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `center` | `Required/alternative entry; see description` | R object; constraints below | A ggchord plot using Circular, Chord or horizontal/vertical Collinear coordinates. |
+| `center` | `Required/alternative entry; see description` | R object; constraints below | A ggchord genomic plot (Circular, Chord, Collinear, Sankey or Radial), or another Fusion. Nested biological endpoints use full panel paths. |
 | `center_size` | `NULL` | Nullable R object; type/inheritance below | Optional width and height as fractions of the composition area, excluding its cross-panel legend. NULL allocates available space. |
 | `layout` | `c("fixed", "adaptive")` | Vector; choices versus multiple selection below | "fixed" uses fixed panel allocations; "adaptive" also adjusts the central allocation to the physical aspect ratio. Both rebuild labels and guides at actual panel sizes. Neither rescales explicit fonts. |
+| `allow_overlap` | `FALSE` | Logical | Explicitly allow container overlap. Default FALSE fails on overlap. When TRUE, later panels paint over earlier panels. Connections use disjoint native grid clips to avoid accumulating translucent fills. This is deliberate placement, not global collision avoidance. |
+| `center_box` | `NULL` | Nullable R object; type/inheritance below | Optional centre allocation: xmin, xmax, ymin, ymax as four fractions of the composition area excluding its legend, or four absolute grid units. Use instead of center_size. See fusion_panel(). |
 
 </details>
 
@@ -2536,18 +2541,21 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `plot` | `Required/alternative entry; see description` | R object; constraints below | A ggchord Circular, Chord or horizontal/vertical Collinear source plot. |
-| `region` | `Required/alternative entry; see description` | R object; constraints below | Nonempty data frame with accver, start, end in original one-based inclusive source coordinates. Bounds must be ordered positive integers. Optional instance and detail_instance select exact display instances in the source and detail panels for every row. Ambiguity fails; origin-wrapping intervals must be split before using this interface. With a list of details, a detail_panel column selects the named target for each row. |
-| `detail_plot` | `Required/alternative entry; see description` | R object; constraints below | An explicit horizontal or vertical Collinear ggchord plot, a character plot from register_ggchord_alignment(), or a uniquely named list of one to four such plots. Every panel must have at least one source region; the name center is reserved. The selected source interval must be fully visible in both panels, in the same bp/aa unit. Character plots require explicit source/column registration; ordinary unregistered plots are rejected. |
-| `side` | `c("right", "top", "left", "bottom")` | Vector; choices versus multiple selection below | One of right, top, left or bottom for a single detail plot. For a list of plots, supply a character vector named by panel ID, with distinct sides. Multiple panels require explicit routing and placement. |
-| `center_size` | `NULL` | Nullable R object; type/inheritance below | Optional panel width/height fractions, following ggchord_fusion() and fusion_panel(). Defaults reserve a smaller source panel and a wider detail container for a single detail plot. With multiple details, use a named list of sizes or NULL for Fusion defaults; center_size also follows Fusion defaults. Overlap and out-of-frame allocations fail. |
-| `detail_size` | `NULL` | Nullable R object; type/inheritance below | Optional panel width/height fractions, following ggchord_fusion() and fusion_panel(). Defaults reserve a smaller source panel and a wider detail container for a single detail plot. With multiple details, use a named list of sizes or NULL for Fusion defaults; center_size also follows Fusion defaults. Overlap and out-of-frame allocations fail. |
+| `plot` | `Required/alternative entry; see description` | R object; constraints below | A registered ggchord genomic source plot or nested Fusion. |
+| `region` | `Required/alternative entry; see description` | R object; constraints below | Nonempty data frame with accver, start, end in original one-based inclusive source coordinates. Bounds must be ordered positive integers. Optional instance and detail_instance select exact display instances in the source and detail panels for every row. Ambiguity fails; origin-wrapping intervals must be split before using this interface. With a list of details, a detail_panel column selects the named target for each row. Nested leaves use full paths, for example detail/center; optional source_panel similarly selects a source leaf under center. Ambiguous container selection fails. |
+| `detail_plot` | `Required/alternative entry; see description` | R object; constraints below | An explicit registered ggchord genomic plot, nested Fusion, a character plot from register_ggchord_alignment(), or a uniquely named list of such plots. Every panel must have at least one source region; the name center is reserved. The selected source interval must be fully visible in both panels, in the same bp/aa unit. Character plots require explicit source/column registration; ordinary unregistered plots are rejected. |
+| `side` | `c("right", "top", "left", "bottom")` | Vector; choices versus multiple selection below | A named side from fusion_panel(), including diagonal sides. For a list of plots, supply a character vector named by panel ID, with distinct sides. Multiple panels require explicit routing and placement. |
+| `center_size` | `NULL` | Nullable R object; type/inheritance below | Optional panel width/height fractions, following ggchord_fusion() and fusion_panel(). Defaults reserve a smaller source panel and a wider detail container for a single detail plot. With multiple details, use a named list of sizes or NULL for Fusion defaults; center_size also follows Fusion defaults. Out-of-frame allocations fail; overlap requires explicit allow_overlap. |
+| `detail_size` | `NULL` | Nullable R object; type/inheritance below | Optional panel width/height fractions, following ggchord_fusion() and fusion_panel(). Defaults reserve a smaller source panel and a wider detail container for a single detail plot. With multiple details, use a named list of sizes or NULL for Fusion defaults; center_size also follows Fusion defaults. Out-of-frame allocations fail; overlap requires explicit allow_overlap. |
 | `connector` | `c("leader", "none")` | Vector; choices versus multiple selection below | "leader" draws two decorative boundary leaders per row; "none" retains the highlights only. These are not biological ribbons or alignments. |
 | `colour` | `"#B45309"` | Character/enum; choices below | Fixed highlight/leader colour. |
 | `alpha` | `0.2` | Numeric/integer; range in description | Highlight opacity in [0,1]. Leaders use the opaque colour. |
 | `highlight_width` | `1.5` | Numeric/integer; range in description | Positive highlight band width in physical mm. |
 | `linewidth` | `0.35` | Numeric/integer; range in description | Nonnegative leader width using the usual ggplot2 convention. |
 | `linetype` | `2` | Numeric/integer; range in description | Leader line type, default dashed. |
+| `detail_box` | `NULL` | Nullable R object; type/inheritance below | Explicit detail allocation instead of side/detail_size, using the box convention in fusion_panel(). For multiple plots, supply a named list covering every detail. Physical boxes are rechecked at target size. |
+| `allow_overlap` | `FALSE` | Logical | Deliberately permit overlapping containers, following ggchord_fusion(). Later panels cover earlier ones; default FALSE. |
+| `center_box` | `NULL` | Nullable R object; type/inheritance below | Explicit source allocation instead of center_size. |
 
 </details>
 

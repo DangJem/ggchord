@@ -16,28 +16,33 @@ magnify_ggchord(
   alpha = 0.2,
   highlight_width = 1.5,
   linewidth = 0.35,
-  linetype = 2
+  linetype = 2,
+  detail_box = NULL,
+  allow_overlap = FALSE,
+  center_box = NULL
 )
 }
 \arguments{
-\item{plot}{A ggchord Circular, Chord or horizontal/vertical Collinear source plot.}
+\item{plot}{A registered ggchord genomic source plot or nested Fusion.}
 
 \item{region}{Nonempty data frame with \code{accver}, \code{start}, \code{end} in original
 one-based inclusive source coordinates. Bounds must be ordered positive
 integers. Optional \code{instance} and \code{detail_instance} select exact display
 instances in the source and detail panels for every row. Ambiguity fails; origin-wrapping
 intervals must be split before using this interface. With a list of details,
-a \code{detail_panel} column selects the named target for each row.}
+a \code{detail_panel} column selects the named target for each row. Nested leaves
+use full paths, for example detail/center; optional source_panel similarly
+selects a source leaf under center. Ambiguous container selection fails.}
 
-\item{detail_plot}{An explicit horizontal or vertical Collinear ggchord plot,
+\item{detail_plot}{An explicit registered ggchord genomic plot, nested Fusion,
 a character plot from \code{\link[=register_ggchord_alignment]{register_ggchord_alignment()}}, or a uniquely named
-list of one to four such plots. Every panel must have
+list of such plots. Every panel must have
 at least one source region; the name \code{center} is reserved.
 The selected source interval must be fully visible in both panels, in the
 same bp/aa unit. Character plots require explicit source/column registration;
 ordinary unregistered plots are rejected.}
 
-\item{side}{One of right, top, left or bottom for a single detail plot.
+\item{side}{A named side from fusion_panel(), including diagonal sides.
 For a list of plots, supply a character vector named by panel ID, with
 distinct sides. Multiple panels require explicit routing and placement.}
 
@@ -45,7 +50,8 @@ distinct sides. Multiple panels require explicit routing and placement.}
 \code{\link[=ggchord_fusion]{ggchord_fusion()}} and \code{\link[=fusion_panel]{fusion_panel()}}. Defaults reserve a smaller source
 panel and a wider detail container for a single detail plot. With multiple
 details, use a named list of sizes or NULL for Fusion defaults; center_size
-also follows Fusion defaults. Overlap and out-of-frame allocations fail.}
+also follows Fusion defaults. Out-of-frame allocations fail; overlap
+requires explicit allow_overlap.}
 
 \item{connector}{\code{"leader"} draws two decorative boundary leaders per row; \code{"none"}
 retains the highlights only. These are not biological ribbons or alignments.}
@@ -59,6 +65,15 @@ retains the highlights only. These are not biological ribbons or alignments.}
 \item{linewidth}{Nonnegative leader width using the usual ggplot2 convention.}
 
 \item{linetype}{Leader line type, default dashed.}
+
+\item{detail_box}{Explicit detail allocation instead of side/detail_size,
+using the box convention in fusion_panel(). For multiple plots, supply a
+named list covering every detail. Physical boxes are rechecked at target size.}
+
+\item{allow_overlap}{Deliberately permit overlapping containers, following
+ggchord_fusion(). Later panels cover earlier ones; default FALSE.}
+
+\item{center_box}{Explicit source allocation instead of center_size.}
 }
 \value{
 A \code{\link[=ggchord_fusion]{ggchord_fusion()}} object. \code{\link[=export_ggchord_fusion]{export_ggchord_fusion()}} additionally
@@ -67,15 +82,14 @@ focus_region_data (without metadata-name collisions), preserving the input
 region, exact instances, source origins and sampled physical path-length ratio.
 The derived tables use region_row to identify the original input row.
 Stat scope is recorded as explicit_detail_plot. Leaders do not appear in
-connections or relationship_data. Global label/leader collision avoidance,
-arbitrary inset boxes, nested insets and automatic layer rebuilding
-are not implemented. The measured ratio may be below one if the chosen
+connections or relationship_data. Global label/leader collision avoidance
+and automatic layer rebuilding are not implemented. The measured ratio may be below one if the chosen
 detail allocation does not enlarge the region.
 }
 \description{
-Marks real source intervals in a Circular/Chord/Collinear plot and connects them to
-the same intervals in an independently constructed Collinear or registered
-Cartesian character detail plot.
+Marks real source intervals in registered genomic panels and connects them to
+the same intervals in independent genomic or registered character details.
+A detail or source can itself be a nested Fusion.
 Returns a Fusion, not a new Coord or a crop of an existing image. Ordinary
 ggsave rebuilds both panels, highlights and leaders at the actual target size.
 }
@@ -95,4 +109,6 @@ local <- focus_ggchord_data(plasmid_example_pUC19, loci = region)
 detail <- ggchord(local$seq_data) +
   geom_seq() + coord_collinear(seq_axis = "vertical")
 magnify_ggchord(whole, region, detail)
+magnify_ggchord(whole, region, detail,
+  center_box = c(.02, .35, .2, .8), detail_box = c(.45, .98, .1, .9))
 }

@@ -53,13 +53,10 @@ The [Dotplot/Radial support matrix](view-expansion.html#support) records the new
 
 ## Static cross-panel composition {#fusion}
 
-[Fusion](fusion.html) accepts a Circular/Chord/Collinear center and up to four Collinear
-or explicitly registered Cartesian character peripherals. Each panel keeps its existing layer contract. Cross-panel interval
+[Fusion](fusion.html) accepts registered Circular/Chord/Collinear/Sankey/Radial plots, nested Fusions and explicitly registered Cartesian character details. Eight named sides and explicit angle/box placements share the source-frame resolver. Each panel keeps its existing layer contract. Cross-panel interval
 fronts use one-based inclusive boundaries with continuous curve mapping;
 fully visible same-unit source intervals and unambiguous panel/instance routes
-are required. Generic Fusion scales affect cross-panel layers only. Peripheral
-Sankey/Radial/Dotplot, facets and implicit third-party coordinate adapters are
-rejected. Physical panels are remeasured at save time; this does not imply
+are required. Generic Fusion scales affect cross-panel layers only. Dotplot, facets and implicit third-party coordinate adapters remain unregistered. Physical panels are remeasured at save time; this does not imply
 global collision avoidance or general font scaling.
 
 
@@ -79,4 +76,4 @@ It scales default theme styles and arranges native guides under explicit user
 constraints; no policy is applied by default. Facets, arbitrary custom grobs,
 outer Fusion allocations and a global label solver are outside this scope.
 
-Named independent Collinear details are supported by [magnification](fusion.html#multiple-details), up to four sides with explicit per-row targets. Nested or freely positioned inset boxes remain outside scope.
+[Magnification](fusion.html#multiple-details) supports independent registered details with explicit per-row targets, eight named sides, nested leaf paths and free boxes. Deliberate overlap is opt-in; global avoidance is separate.

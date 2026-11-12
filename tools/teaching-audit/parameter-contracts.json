@@ -9740,7 +9740,7 @@
     "parameter": "plot",
     "default": "",
     "type": "R object; constraints below",
-    "constraint": "A horizontal or vertical Collinear ggchord plot or a Cartesian detail from register_ggchord_alignment(). Sankey, Radial, Dotplot, facets and unregistered external ggplots are not supported here. Character panels require explicit cross-panel fill; backbone-colour gradient is unavailable.",
+    "constraint": "An independent ggchord genomic plot, another Fusion, or a Cartesian detail from register_ggchord_alignment(). Dotplot, facets and unregistered external ggplots are not yet registered here. Character panels require explicit cross-panel fill; backbone-colour gradient is unavailable.",
     "source": "man/fusion_panel.Rd"
   },
   {
@@ -9756,7 +9756,7 @@
     "parameter": "side",
     "default": "c(\"right\", \"top\", \"left\", \"bottom\")",
     "type": "Vector; choices versus multiple selection below",
-    "constraint": "One of right, top, left or bottom; one panel per side.",
+    "constraint": "One of right, top, left, bottom, topright, topleft, bottomright or bottomleft; one panel per named side. Placement never rotates the child Coord.",
     "source": "man/fusion_panel.Rd"
   },
   {
@@ -9764,7 +9764,31 @@
     "parameter": "size",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Optional fractional width and height; overlapping or out-of-frame allocations fail with a diagnostic instead of moving explicit panels.",
+    "constraint": "Optional fractional width and height. Out-of-frame allocations fail; overlap fails unless explicitly allowed by the composition.",
+    "source": "man/fusion_panel.Rd"
+  },
+  {
+    "api": "fusion_panel",
+    "parameter": "box",
+    "default": "NULL",
+    "type": "Nullable R object; type/inheritance below",
+    "constraint": "Optional explicit rectangle (xmin, xmax, ymin, ymax), optionally named in any order. Numeric values are fractions of the area excluding the composition legend; absolute grid units retain their physical size. Use instead of side/size/angle/distance. Out-of-frame boxes fail at build.",
+    "source": "man/fusion_panel.Rd"
+  },
+  {
+    "api": "fusion_panel",
+    "parameter": "angle",
+    "default": "NULL",
+    "type": "Nullable R object; type/inheritance below",
+    "constraint": "Optional finite placement angle in degrees counterclockwise from the right, instead of side. Does not rotate the plot or its labels.",
+    "source": "man/fusion_panel.Rd"
+  },
+  {
+    "api": "fusion_panel",
+    "parameter": "distance",
+    "default": "NULL",
+    "type": "Nullable R object; type/inheritance below",
+    "constraint": "Positive radial distance from the centre allocation, as a fraction of half the shorter physical allocation dimension; default .8. Angles describe physical canvas directions even on rectangular devices. The allocation must fit without implicit clamping.",
     "source": "man/fusion_panel.Rd"
   },
   {
@@ -9956,7 +9980,7 @@
     "parameter": "center",
     "default": "",
     "type": "R object; constraints below",
-    "constraint": "A ggchord plot using Circular, Chord or horizontal/vertical Collinear coordinates.",
+    "constraint": "A ggchord genomic plot (Circular, Chord, Collinear, Sankey or Radial), or another Fusion. Nested biological endpoints use full panel paths.",
     "source": "man/ggchord_fusion.Rd"
   },
   {
@@ -9973,6 +9997,22 @@
     "default": "c(\"fixed\", \"adaptive\")",
     "type": "Vector; choices versus multiple selection below",
     "constraint": "\"fixed\" uses fixed panel allocations; \"adaptive\" also adjusts the central allocation to the physical aspect ratio. Both rebuild labels and guides at actual panel sizes. Neither rescales explicit fonts.",
+    "source": "man/ggchord_fusion.Rd"
+  },
+  {
+    "api": "ggchord_fusion",
+    "parameter": "allow_overlap",
+    "default": "FALSE",
+    "type": "Logical",
+    "constraint": "Explicitly allow container overlap. Default FALSE fails on overlap. When TRUE, later panels paint over earlier panels. Connections use disjoint native grid clips to avoid accumulating translucent fills. This is deliberate placement, not global collision avoidance.",
+    "source": "man/ggchord_fusion.Rd"
+  },
+  {
+    "api": "ggchord_fusion",
+    "parameter": "center_box",
+    "default": "NULL",
+    "type": "Nullable R object; type/inheritance below",
+    "constraint": "Optional centre allocation: xmin, xmax, ymin, ymax as four fractions of the composition area excluding its legend, or four absolute grid units. Use instead of center_size. See fusion_panel().",
     "source": "man/ggchord_fusion.Rd"
   },
   {
@@ -10028,7 +10068,7 @@
     "parameter": "plot",
     "default": "",
     "type": "R object; constraints below",
-    "constraint": "A ggchord Circular, Chord or horizontal/vertical Collinear source plot.",
+    "constraint": "A registered ggchord genomic source plot or nested Fusion.",
     "source": "man/magnify_ggchord.Rd"
   },
   {
@@ -10036,7 +10076,7 @@
     "parameter": "region",
     "default": "",
     "type": "R object; constraints below",
-    "constraint": "Nonempty data frame with accver, start, end in original one-based inclusive source coordinates. Bounds must be ordered positive integers. Optional instance and detail_instance select exact display instances in the source and detail panels for every row. Ambiguity fails; origin-wrapping intervals must be split before using this interface. With a list of details, a detail_panel column selects the named target for each row.",
+    "constraint": "Nonempty data frame with accver, start, end in original one-based inclusive source coordinates. Bounds must be ordered positive integers. Optional instance and detail_instance select exact display instances in the source and detail panels for every row. Ambiguity fails; origin-wrapping intervals must be split before using this interface. With a list of details, a detail_panel column selects the named target for each row. Nested leaves use full paths, for example detail/center; optional source_panel similarly selects a source leaf under center. Ambiguous container selection fails.",
     "source": "man/magnify_ggchord.Rd"
   },
   {
@@ -10044,7 +10084,7 @@
     "parameter": "detail_plot",
     "default": "",
     "type": "R object; constraints below",
-    "constraint": "An explicit horizontal or vertical Collinear ggchord plot, a character plot from register_ggchord_alignment(), or a uniquely named list of one to four such plots. Every panel must have at least one source region; the name center is reserved. The selected source interval must be fully visible in both panels, in the same bp/aa unit. Character plots require explicit source/column registration; ordinary unregistered plots are rejected.",
+    "constraint": "An explicit registered ggchord genomic plot, nested Fusion, a character plot from register_ggchord_alignment(), or a uniquely named list of such plots. Every panel must have at least one source region; the name center is reserved. The selected source interval must be fully visible in both panels, in the same bp/aa unit. Character plots require explicit source/column registration; ordinary unregistered plots are rejected.",
     "source": "man/magnify_ggchord.Rd"
   },
   {
@@ -10052,7 +10092,7 @@
     "parameter": "side",
     "default": "c(\"right\", \"top\", \"left\", \"bottom\")",
     "type": "Vector; choices versus multiple selection below",
-    "constraint": "One of right, top, left or bottom for a single detail plot. For a list of plots, supply a character vector named by panel ID, with distinct sides. Multiple panels require explicit routing and placement.",
+    "constraint": "A named side from fusion_panel(), including diagonal sides. For a list of plots, supply a character vector named by panel ID, with distinct sides. Multiple panels require explicit routing and placement.",
     "source": "man/magnify_ggchord.Rd"
   },
   {
@@ -10060,7 +10100,7 @@
     "parameter": "center_size",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Optional panel width/height fractions, following ggchord_fusion() and fusion_panel(). Defaults reserve a smaller source panel and a wider detail container for a single detail plot. With multiple details, use a named list of sizes or NULL for Fusion defaults; center_size also follows Fusion defaults. Overlap and out-of-frame allocations fail.",
+    "constraint": "Optional panel width/height fractions, following ggchord_fusion() and fusion_panel(). Defaults reserve a smaller source panel and a wider detail container for a single detail plot. With multiple details, use a named list of sizes or NULL for Fusion defaults; center_size also follows Fusion defaults. Out-of-frame allocations fail; overlap requires explicit allow_overlap.",
     "source": "man/magnify_ggchord.Rd"
   },
   {
@@ -10068,7 +10108,7 @@
     "parameter": "detail_size",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Optional panel width/height fractions, following ggchord_fusion() and fusion_panel(). Defaults reserve a smaller source panel and a wider detail container for a single detail plot. With multiple details, use a named list of sizes or NULL for Fusion defaults; center_size also follows Fusion defaults. Overlap and out-of-frame allocations fail.",
+    "constraint": "Optional panel width/height fractions, following ggchord_fusion() and fusion_panel(). Defaults reserve a smaller source panel and a wider detail container for a single detail plot. With multiple details, use a named list of sizes or NULL for Fusion defaults; center_size also follows Fusion defaults. Out-of-frame allocations fail; overlap requires explicit allow_overlap.",
     "source": "man/magnify_ggchord.Rd"
   },
   {
@@ -10117,6 +10157,30 @@
     "default": "2",
     "type": "Numeric/integer; range in description",
     "constraint": "Leader line type, default dashed.",
+    "source": "man/magnify_ggchord.Rd"
+  },
+  {
+    "api": "magnify_ggchord",
+    "parameter": "detail_box",
+    "default": "NULL",
+    "type": "Nullable R object; type/inheritance below",
+    "constraint": "Explicit detail allocation instead of side/detail_size, using the box convention in fusion_panel(). For multiple plots, supply a named list covering every detail. Physical boxes are rechecked at target size.",
+    "source": "man/magnify_ggchord.Rd"
+  },
+  {
+    "api": "magnify_ggchord",
+    "parameter": "allow_overlap",
+    "default": "FALSE",
+    "type": "Logical",
+    "constraint": "Deliberately permit overlapping containers, following ggchord_fusion(). Later panels cover earlier ones; default FALSE.",
+    "source": "man/magnify_ggchord.Rd"
+  },
+  {
+    "api": "magnify_ggchord",
+    "parameter": "center_box",
+    "default": "NULL",
+    "type": "Nullable R object; type/inheritance below",
+    "constraint": "Explicit source allocation instead of center_size.",
     "source": "man/magnify_ggchord.Rd"
   },
   {

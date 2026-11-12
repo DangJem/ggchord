@@ -12,6 +12,17 @@
   Same-ID overlays still share a band/domain/axis; different IDs retain independent
   numerical and colour scales. Theme changes do not alter data or statistics.
 
+- Fusion registers Sankey/Radial backbone frames and supports eight named sides,
+  physical placement angles, absolute/relative boxes and nested compositions.
+  Magnification accepts explicit source/detail boxes and full nested leaf paths.
+  Containers are never treated as genomic coordinate domains. Ambiguous mirrored
+  instances still require explicit selection.
+- Explicit overlap is opt-in; later panels cover earlier panels through disjoint
+  native grid clips, preserving translucent connection appearance. Every target
+  size is remeasured. Exports retain requested/resolved placement, per-composition
+  original focus tables, covering order and explicit evidence/display counts.
+  Repeated source HSP IDs across nesting require opt-in on all participating layers.
+
 # ggchord 0.26.0 (development)
 
 - Added `register_ggchord_alignment()` for explicit source/column registration of
