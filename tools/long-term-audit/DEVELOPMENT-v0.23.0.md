@@ -38,3 +38,45 @@ check-magnify-pairs.R通过：随包四条真实序列，以ribbon_data_example�
 M3多细节面板、自动统计/图层重建、跨原点、Fusion F2/F3、通用Guide/Adaptive仍待后续。
 旧远端CI失败记录见CI-69556d8.json：引线回归已在本地main修复，但尚未推送验证；
 5个旧lesson engine及178旧图指纹过期待重现。没有完整包检查或发布设备矩阵。
+
+## 2026-11-12 审计修复
+
+用户要求先修正v10复审结论，再继续开发。本版维持0.23.0.9000，修复以下已支持行为：
+
+- 显式Track group优先于离散样式推断，不再把同一统计组拆开。
+- Bin的来源成员在原生Stat阶段确定并随结果保留，包含外边界和数值容差；
+  pad/drop和数据Position不再重新推断成员。用户breaks/binwidth回调每组仍只求值一次。
+- 普通Chord/Collinear和已有Radial/Sankey共享过滤后检查；只有实际显示的声明HSP参与
+  重复诊断。bundle结果通过已有成员报告回查原始观测；重复显示仍要求各参与层显式同意。
+  instance_routing增加retained，repeated_display只描述实际显示的重复来源。
+- magnify的可选instance/detail_instance字段精确访问，普通同前缀元数据不再选中副本。
+
+审计原始结果仍保留；修复复现命令：
+
+```sh
+Rscript tools/long-term-audit/review-v10-2026-11-12.R tools/long-term-audit/review-v10-2026-11-12-fix-results.json --check
+Rscript tools/long-term-audit/check-magnify-pairs.R
+```
+
+四项defect_observed均为FALSE。额外定向核对了pair/邻接过滤、显式允许重复、bundle来源，
+以及左右闭分箱的边界容差、pad/drop、数据Position和单一grob构建。
+M1原有脚本改为逐源行核对strand/原始端点，增加真实HSP裁剪后两端的同一进度与origin检查。
+物理锚点独立使用实际骨架插值和实测panel边界核对，覆盖Chord、横/纵Collinear及原生反射；
+没有冻结精确设备浮点坐标。单张PNG重现并人工查看，图像内容未变；不声称全局引线避障。
+
+复用既有最小Track与Fusion测试，补入分箱来源和声明HSP重复的单一回归；未运行testthat。
+NEWS、roxygen/Rd与当前状态同步，git diff --check通过。未运行包级检查、发布矩阵或整站构建。
+
+分箱适配器局部调用ggplot2未导出的compute_bins/bin_cut以共用原生归属，不复制分箱算法。
+已核对[ggplot2 4.0.0源码](https://github.com/tidyverse/ggplot2/tree/v4.0.0/R)，
+本机4.0.3定向验证通过；将来升级ggplot2时须复核这一适配点，不能宣称任意未来版本兼容。
+无声明ID的跨层来源继承仍属后续设计，未将等值数据擅自去重。
+
+## 后续开发交接
+
+按v10 §6.3.1与A.7，下一阶段优先补齐真实画布下的Guide联合布局，再推进可选Adaptive。
+先复用guides.R的测量、render context与既有gtable重测机制，设计Guide约束和候选原型，
+覆盖同侧多组图例、长标签、Identity比例色条，以及用户显式行列/方向/位置优先。
+达到可行性门槛后再确定公开入口；fixed基线、字体下限、失败诊断和Fusion子面板测量是边界。
+M2/M3与高级Fusion继续保留，不将它们与本轮4项修复混为完成。下一版实现须先获准整合本版，
+再从main建立对应版本分支和完整设计文档；本次尚未开始下一版运行时开发。

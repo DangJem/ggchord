@@ -1,0 +1,57 @@
+{
+  "baseline": "e7a3c7c",
+  "R": "R version 4.6.0 (2026-04-24)",
+  "ggplot2": "4.0.3",
+  "explicit_group": {
+    "track_count": 2,
+    "native_count": 2,
+    "defect_observed": false
+  },
+  "bin_source_membership": {
+    "count": 3,
+    "source_rows": [
+      [1, 2, 3]
+    ],
+    "expected_source_rows": [
+      [1, 2, 3]
+    ],
+    "defect_observed": false
+  },
+  "declared_duplicate_hsp": {
+    "views": {
+      "chord": {
+        "accepted": false,
+        "message": "A declared source_hsp_id is displayed more than once; use disjoint layer data or allow_repeated=TRUE explicitly"
+      },
+      "collinear": {
+        "accepted": false,
+        "message": "A declared source_hsp_id is displayed more than once; use disjoint layer data or allow_repeated=TRUE explicitly"
+      },
+      "radial": {
+        "accepted": false,
+        "message": "A declared source_hsp_id is displayed more than once; use disjoint layer data or allow_repeated=TRUE explicitly"
+      }
+    },
+    "defect_observed": false
+  },
+  "metadata_selector": {
+    "with_metadata": "magnify_ggchord() center: ambiguous panel or instance; specify panel and instance",
+    "without_metadata": "magnify_ggchord() center: ambiguous panel or instance; specify panel and instance",
+    "defect_observed": false
+  },
+  "related_checks": {
+    "display_selection": true,
+    "explicit_consent": true,
+    "bundle_source_members": true,
+    "native_bin_boundaries": true,
+    "bin_grob": true
+  },
+  "runtime_md5": {
+    "R/track-grammar.R": "99069f396a84c56337753eddc7a22539",
+    "R/display-instances.R": "6a6373fb7f00745bcab508dacd7349ca",
+    "R/ggchord-build.R": "376be6e38a481f13f3a848e2bcdb7915",
+    "R/coord-radial-synteny.R": "d7693060b68125ca3c2c8b1fc994c4b0",
+    "R/magnify.R": "9386396374208ee25f58d469d1f76874"
+  },
+  "code_state": "committed runtime"
+}
