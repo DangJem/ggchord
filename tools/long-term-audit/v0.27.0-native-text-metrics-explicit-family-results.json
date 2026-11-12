@@ -30,6 +30,24 @@
       "equal": true
     }
   ],
+  "font_lookup": {
+    "family": "Songti SC",
+    "path": "/System/Library/Fonts/Supplemental/Songti.ttc",
+    "face_index": 6,
+    "file_sha256": "dd2f0628d302f322a2e9c3cf3253d5e73f418275e1f1421c84a7c65ce5a87777",
+    "glyphs": [
+      {
+        "glyph": "格",
+        "index": 1780
+      },
+      {
+        "glyph": "式",
+        "index": 1844
+      }
+    ],
+    "scope": "Installed-font lookup; actual PNG rendering reviewed separately, no font distributed"
+  },
+  "audit_script_sha256": "1b2f53d3e2d9c49556a5b84f890ede6d9bc6f2a41c711f528acf75163e008da7",
   "source_sha256": "4ca3aab391d2fed4c7b10f40f2310c63d145beaf35912d721d8ce07eec106648",
   "scope": "Three explicit type specimens using installed macOS Songti SC; rectangle metrics plus separate visual inspection, not ink outlines, embedding or font portability. Font remains system-installed and is not bundled or redistributed; no additional licence rights are asserted.",
   "file": "tools/long-term-audit/v0.27.0-native-text-metrics-explicit-family.png",

@@ -1,5 +1,10 @@
 # Explicit typography observations, no biological records or release matrix.
 pkgload::load_all(quiet = TRUE)
+font_lookup <- systemfonts::match_fonts('Songti SC')
+font_file <- font_lookup$path[1L]
+stopifnot(file.exists(font_file))
+glyph_lookup <- systemfonts::glyph_info(c('格', '式'), family = 'Songti SC')[c('glyph', 'index')]
+stopifnot(all(glyph_lookup$index > 0L))
 target <- FALSE
 native <- TRUE
 prefix <- 'v0.27.0-native-text-metrics-explicit-family'
@@ -40,6 +45,10 @@ if (native) {
 if (target || native) stopifnot(all(vapply(observations, `[[`, logical(1), 'equal')))
 jsonlite::write_json(list(status = if (native) 'passed native target-device type controls' else if (target) 'passed target-device prototype type controls' else 'observed, not an assumed pass',
   production_override = target, observations = observations,
+  font_lookup = list(family = 'Songti SC', path = font_file, face_index = font_lookup$index[1L],
+    file_sha256 = digest::digest(file = font_file, algo = 'sha256'), glyphs = glyph_lookup,
+    scope = 'Installed-font lookup; actual PNG rendering reviewed separately, no font distributed'),
+  audit_script_sha256 = digest::digest(file = 'tools/long-term-audit/observe-explicit-font-metrics.R', algo = 'sha256'),
   source_sha256 = digest::digest(file = 'R/helpers-label-boxes.R', algo = 'sha256'),
   scope = 'Three explicit type specimens using installed macOS Songti SC; rectangle metrics plus separate visual inspection, not ink outlines, embedding or font portability. Font remains system-installed and is not bundled or redistributed; no additional licence rights are asserted.',
   file = path, png_sha256 = digest::digest(file = path, algo = 'sha256')),

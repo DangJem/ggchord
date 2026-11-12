@@ -38,7 +38,7 @@
     "R/data-signatures.R": "76d2944377247505f9a94e6356c53c597df82ca345e9a891c5884ddfcfee1ade",
     "R/data-translate.R": "12ca1bf84e8dd9e71f6c6a72dbf9a52ce0eaeb20e706caf5b89d9771b063f764",
     "R/data-variant.R": "5263e5c39ec2ffb3bb2785bbbb3daa6f76f57028515762b7bdb4906e17265351",
-    "R/diagnostics.R": "d4d8d9257076a401c14f5c877f5a6dceec67bec8b59c2e9f2eb8a2d99895b0b7",
+    "R/diagnostics.R": "038f30b69d51ea143c83e9f9e9842c450d12964dc07194cf9d59bb064a8f5fe7",
     "R/display-instances.R": "51838c6911fbd8d6f1e6d2e5b49c5720b35ada1eaac6fd9659e9ae943339fc0a",
     "R/focus-track.R": "76bd54e504c51bc871f1742f6fe49f314a7fc236a85be24c4ddb9deb7aa778fc",
     "R/focus.R": "1016cfe1273b3028aa4bf2612d09f386cdeac9b2caef473ce56e338b7e67599e",
@@ -76,14 +76,14 @@
     "R/helpers-data-contract.R": "4c67140c9fdf1cff6fa19307d48de47e826bc7025d3e9dab57c7daad17ed1212",
     "R/helpers-device.R": "25fa792c520f4c539c1b1c3f2b878c1295b0c11f23347ae5991778b0cbfb0570",
     "R/helpers-feature-geometry.R": "e29fa3280cc422b9fe95e73e11d38e62fda36ee103e1f826d43922bc95716041",
-    "R/helpers-label-boxes.R": "c8a331c163d15ac9138fa6f65afef7aa73f77833b15f3429a122fa71f49c2806",
+    "R/helpers-label-boxes.R": "4ca3aab391d2fed4c7b10f40f2310c63d145beaf35912d721d8ce07eec106648",
     "R/helpers-label-clipping.R": "177f342d5c267705b8513f6e32ef1a14211c56bff879783ba458a85cfe8752b5",
     "R/helpers-label-radial.R": "544d1a391b3dd136c9b50c2d78f23c9d41114cdd62db3641d6877946a33aab01",
     "R/helpers-label-routing.R": "d9c336cf0901ebc7eb108dc3214834299f96ae5c4c9b16b6ae34a4788fc7ae8f",
     "R/helpers-ordered-packing.R": "962c2926a2b1da42a9cc90aee2c0ef2158925c9863a403b839d7bfaee60608b2",
     "R/helpers-plot.R": "5a1d038f10bf11667cbfde73f4f00460f329d0346bfa52042a067dbfb8a37325",
     "R/label-feature-quality.R": "c3a11e972bf8859dca09d84456c61898f0bf4f6090265fa52d9b081bb965bf8f",
-    "R/label-quality.R": "ecf6c66a91606b04e48f6dc9f7691b20c6a2c25875a73fcb9eaeb77319de8e11",
+    "R/label-quality.R": "d783c309068c85fd01e05088eb3f9a99b3e75cee8330b85e21c2413742d7167e",
     "R/label-visibility.R": "53305e83f6fef9c4587c04e16c0b4d11632215dc5c30e3c49af33810dbcd64df",
     "R/layout-annotation.R": "06b7b9e473484b8686507a3b794de675cba346bce787c38aa7cbb96aeb2edfc0",
     "R/layout-axis.R": "268258e9bfbc2ee0ae13cd744059a774295c8e3545694499bfcef34f56acb6b5",
@@ -112,7 +112,7 @@
     "R/position-feature.R": "39acbab6d587df4d5dda7cf9f2baa0cae3ed32500c5429a10c949c39cfa16ba5",
     "R/primers.R": "14d9fc7022f0cc2c164776a72c9cff8d759b384e3f91231a5d790e1cccdf1f7f",
     "R/reexports.R": "a81498474b530d3bc81fcbf4e46ef38c6178be0b2e900da4ebfeae9895b9a110",
-    "R/render-context.R": "a8102e8a9f9f84029a579510c8d08a9f25fcd2022505256701ed28ccc537c335",
+    "R/render-context.R": "1e0c418fe37c0029927d0cab4611130936b93e64fc86e5781de10c56e836290f",
     "R/restriction-sites.R": "eef578ec14428679ec56aed01b180222ac977d419a16da68fe95eaf98aad551a",
     "R/ribbon-flow.R": "342f512d58b982348e2f295b899076b5e7a3105d83ea4a3ee6a31a364c463579",
     "R/ribbon-layout.R": "40148f60e84f991cef4285e41817579ff47f661548b2713bb6eabebc6e1d0215",
@@ -138,13 +138,13 @@
       "n_hidden_source_labels": 0,
       "n_text_boxes": 91,
       "n_text_objects": 14,
-      "n_leaders": 6,
+      "n_leaders": 5,
       "n_text_overlaps": 0,
       "n_leader_crossings": 0,
       "n_leaders_through_text": 0,
       "n_label_outside_canvas": 0,
-      "mean_leader_length_mm": 18.3167,
-      "max_leader_length_mm": 28.2004,
+      "mean_leader_length_mm": 20.0408,
+      "max_leader_length_mm": 27.6803,
       "n_feature_polygons": 7,
       "n_feature_parts_unchecked": 0,
       "n_text_over_feature": 0,
@@ -157,6 +157,10 @@
       "geometry_metric_status": "measured",
       "geometry_converged": true,
       "refinement_passes": 1,
+      "refinement_acceleration": {
+        "attempted": false,
+        "accepted": false
+      },
       "visibility_reasons": {
         "visible": 10
       }
@@ -168,12 +172,12 @@
       "n_hidden_source_labels": 0,
       "n_text_boxes": 85,
       "n_text_objects": 15,
-      "n_leaders": 6,
+      "n_leaders": 4,
       "n_text_overlaps": 0,
       "n_leader_crossings": 0,
       "n_leaders_through_text": 0,
       "n_label_outside_canvas": 0,
-      "mean_leader_length_mm": 12.7704,
+      "mean_leader_length_mm": 14.5278,
       "max_leader_length_mm": 20.411,
       "n_feature_polygons": 9,
       "n_feature_parts_unchecked": 12,
@@ -187,6 +191,10 @@
       "geometry_metric_status": "measured",
       "geometry_converged": true,
       "refinement_passes": 1,
+      "refinement_acceleration": {
+        "attempted": false,
+        "accepted": false
+      },
       "visibility_reasons": {
         "visible": 12
       }
@@ -217,6 +225,10 @@
       "geometry_metric_status": "measured",
       "geometry_converged": true,
       "refinement_passes": 1,
+      "refinement_acceleration": {
+        "attempted": false,
+        "accepted": false
+      },
       "visibility_reasons": {
         "visible": 9
       }
@@ -226,15 +238,15 @@
       "n_source_labels": 17,
       "n_visible_source_labels": 17,
       "n_hidden_source_labels": 0,
-      "n_text_boxes": 128,
+      "n_text_boxes": 134,
       "n_text_objects": 21,
-      "n_leaders": 6,
+      "n_leaders": 4,
       "n_text_overlaps": 0,
       "n_leader_crossings": 0,
       "n_leaders_through_text": 0,
       "n_label_outside_canvas": 0,
-      "mean_leader_length_mm": 18.4949,
-      "max_leader_length_mm": 44.2477,
+      "mean_leader_length_mm": 13.8906,
+      "max_leader_length_mm": 20.4907,
       "n_feature_polygons": 14,
       "n_feature_parts_unchecked": 12,
       "n_text_over_feature": 0,
@@ -247,6 +259,10 @@
       "geometry_metric_status": "measured",
       "geometry_converged": true,
       "refinement_passes": 1,
+      "refinement_acceleration": {
+        "attempted": false,
+        "accepted": false
+      },
       "visibility_reasons": {
         "visible": 17
       }
@@ -263,8 +279,8 @@
       "n_leader_crossings": 0,
       "n_leaders_through_text": 0,
       "n_label_outside_canvas": 0,
-      "mean_leader_length_mm": 43.5302,
-      "max_leader_length_mm": 77.4982,
+      "mean_leader_length_mm": 42.8596,
+      "max_leader_length_mm": 77.5255,
       "n_feature_polygons": 16,
       "n_feature_parts_unchecked": 4,
       "n_text_over_feature": 0,
@@ -277,6 +293,10 @@
       "geometry_metric_status": "measured",
       "geometry_converged": true,
       "refinement_passes": 1,
+      "refinement_acceleration": {
+        "attempted": false,
+        "accepted": false
+      },
       "visibility_reasons": {
         "visible": 19
       }
@@ -286,20 +306,20 @@
       "n_source_labels": 23,
       "n_visible_source_labels": 23,
       "n_hidden_source_labels": 0,
-      "n_text_boxes": 128,
+      "n_text_boxes": 130,
       "n_text_objects": 26,
       "n_leaders": 10,
       "n_text_overlaps": 0,
       "n_leader_crossings": 0,
       "n_leaders_through_text": 0,
       "n_label_outside_canvas": 0,
-      "mean_leader_length_mm": 22.5892,
-      "max_leader_length_mm": 80.4851,
+      "mean_leader_length_mm": 27.4089,
+      "max_leader_length_mm": 80.5659,
       "n_feature_polygons": 21,
       "n_feature_parts_unchecked": 4,
       "n_text_over_feature": 0,
       "n_text_feature_unresolved": 0,
-      "n_text_on_own_feature": 6,
+      "n_text_on_own_feature": 5,
       "width": 10,
       "height": 8,
       "file": "tools/long-term-audit/v0.27.0-quality-current-pETDuet_1.png",
@@ -307,6 +327,10 @@
       "geometry_metric_status": "measured",
       "geometry_converged": true,
       "refinement_passes": 1,
+      "refinement_acceleration": {
+        "attempted": false,
+        "accepted": false
+      },
       "visibility_reasons": {
         "visible": 23
       }
@@ -323,8 +347,8 @@
       "n_leader_crossings": 0,
       "n_leaders_through_text": 0,
       "n_label_outside_canvas": 0,
-      "mean_leader_length_mm": 25.6189,
-      "max_leader_length_mm": 52.8471,
+      "mean_leader_length_mm": 25.693,
+      "max_leader_length_mm": 53,
       "n_feature_polygons": 11,
       "n_feature_parts_unchecked": 0,
       "n_text_over_feature": 0,
@@ -337,6 +361,10 @@
       "geometry_metric_status": "measured",
       "geometry_converged": true,
       "refinement_passes": 1,
+      "refinement_acceleration": {
+        "attempted": false,
+        "accepted": false
+      },
       "visibility_reasons": {
         "visible": 14
       }
@@ -353,7 +381,7 @@
       "n_leader_crossings": 0,
       "n_leaders_through_text": 0,
       "n_label_outside_canvas": 0,
-      "mean_leader_length_mm": 15.1262,
+      "mean_leader_length_mm": 15.143,
       "max_leader_length_mm": 20.4281,
       "n_feature_polygons": 13,
       "n_feature_parts_unchecked": 4,
@@ -367,6 +395,10 @@
       "geometry_metric_status": "measured",
       "geometry_converged": true,
       "refinement_passes": 1,
+      "refinement_acceleration": {
+        "attempted": false,
+        "accepted": false
+      },
       "visibility_reasons": {
         "visible": 16
       }
@@ -383,8 +415,8 @@
       "n_leader_crossings": 0,
       "n_leaders_through_text": 0,
       "n_label_outside_canvas": 0,
-      "mean_leader_length_mm": 40.9451,
-      "max_leader_length_mm": 82.8535,
+      "mean_leader_length_mm": 41.3193,
+      "max_leader_length_mm": 82.7255,
       "n_feature_polygons": 16,
       "n_feature_parts_unchecked": 4,
       "n_text_over_feature": 0,
@@ -397,6 +429,10 @@
       "geometry_metric_status": "measured",
       "geometry_converged": true,
       "refinement_passes": 1,
+      "refinement_acceleration": {
+        "attempted": false,
+        "accepted": false
+      },
       "visibility_reasons": {
         "visible": 18
       }
@@ -406,15 +442,15 @@
       "n_source_labels": 36,
       "n_visible_source_labels": 36,
       "n_hidden_source_labels": 0,
-      "n_text_boxes": 249,
+      "n_text_boxes": 248,
       "n_text_objects": 37,
-      "n_leaders": 18,
+      "n_leaders": 17,
       "n_text_overlaps": 0,
       "n_leader_crossings": 0,
       "n_leaders_through_text": 0,
       "n_label_outside_canvas": 0,
-      "mean_leader_length_mm": 19.9388,
-      "max_leader_length_mm": 48.562,
+      "mean_leader_length_mm": 19.325,
+      "max_leader_length_mm": 28.787,
       "n_feature_polygons": 33,
       "n_feature_parts_unchecked": 4,
       "n_text_over_feature": 0,
@@ -427,6 +463,10 @@
       "geometry_metric_status": "measured",
       "geometry_converged": true,
       "refinement_passes": 1,
+      "refinement_acceleration": {
+        "attempted": false,
+        "accepted": false
+      },
       "visibility_reasons": {
         "visible": 36
       }
@@ -438,13 +478,13 @@
       "n_hidden_source_labels": 0,
       "n_text_boxes": 150,
       "n_text_objects": 21,
-      "n_leaders": 9,
+      "n_leaders": 7,
       "n_text_overlaps": 0,
       "n_leader_crossings": 0,
       "n_leaders_through_text": 0,
       "n_label_outside_canvas": 0,
-      "mean_leader_length_mm": 13.6624,
-      "max_leader_length_mm": 22.0181,
+      "mean_leader_length_mm": 14.1488,
+      "max_leader_length_mm": 22.0345,
       "n_feature_polygons": 19,
       "n_feature_parts_unchecked": 8,
       "n_text_over_feature": 0,
@@ -457,6 +497,10 @@
       "geometry_metric_status": "measured",
       "geometry_converged": true,
       "refinement_passes": 1,
+      "refinement_acceleration": {
+        "attempted": false,
+        "accepted": false
+      },
       "visibility_reasons": {
         "visible": 20
       }
@@ -466,15 +510,15 @@
       "n_source_labels": 24,
       "n_visible_source_labels": 24,
       "n_hidden_source_labels": 0,
-      "n_text_boxes": 185,
+      "n_text_boxes": 188,
       "n_text_objects": 28,
-      "n_leaders": 9,
+      "n_leaders": 10,
       "n_text_overlaps": 0,
       "n_leader_crossings": 0,
       "n_leaders_through_text": 0,
       "n_label_outside_canvas": 0,
-      "mean_leader_length_mm": 16.0765,
-      "max_leader_length_mm": 23.8901,
+      "mean_leader_length_mm": 16.5421,
+      "max_leader_length_mm": 24.0174,
       "n_feature_polygons": 21,
       "n_feature_parts_unchecked": 8,
       "n_text_over_feature": 0,
@@ -487,6 +531,10 @@
       "geometry_metric_status": "measured",
       "geometry_converged": true,
       "refinement_passes": 1,
+      "refinement_acceleration": {
+        "attempted": false,
+        "accepted": false
+      },
       "visibility_reasons": {
         "visible": 24
       }
@@ -496,15 +544,15 @@
       "n_source_labels": 22,
       "n_visible_source_labels": 22,
       "n_hidden_source_labels": 0,
-      "n_text_boxes": 152,
+      "n_text_boxes": 147,
       "n_text_objects": 25,
-      "n_leaders": 14,
+      "n_leaders": 11,
       "n_text_overlaps": 0,
       "n_leader_crossings": 0,
       "n_leaders_through_text": 0,
       "n_label_outside_canvas": 0,
-      "mean_leader_length_mm": 26.035,
-      "max_leader_length_mm": 71.3574,
+      "mean_leader_length_mm": 29.5294,
+      "max_leader_length_mm": 71.9491,
       "n_feature_polygons": 18,
       "n_feature_parts_unchecked": 15,
       "n_text_over_feature": 0,
@@ -516,7 +564,11 @@
       "measurement": "measured",
       "geometry_metric_status": "measured",
       "geometry_converged": true,
-      "refinement_passes": 2,
+      "refinement_passes": 1,
+      "refinement_acceleration": {
+        "attempted": false,
+        "accepted": false
+      },
       "visibility_reasons": {
         "visible": 22
       }

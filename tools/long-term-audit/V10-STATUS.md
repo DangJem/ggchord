@@ -1,6 +1,6 @@
 # v10 长期任务书实施状态
 
-核对日期：2026-11-12。对应任务书：`ggchord_长期开发路线图与统一架构_Codex任务书_v10_独立执行版.md`。
+核对日期：2026-11-13（按下表当前事实与后续分阶段记录区分历史基线）。对应任务书：`ggchord_长期开发路线图与统一架构_Codex任务书_v10_独立执行版.md`。
 基线审计为33236ef；Foundation、View Expansion、Composition已分别完成本地开发并按授权
 整合main；v0.21.0已按授权整合并推送，origin/main为69556d8；v0.22.0已获批准整合本地main（d5dfbbb）。v0.23.0（含4项审计修复，4a9d755）已按授权整合本地main；
 v0.24.0 074899e已按授权整合本地main；v0.25.0的显式多独立细节面板已按本次授权整合本地main（功能基线1628933），未推送。
@@ -35,9 +35,9 @@ bin外边界来源漏记、普通Chord/Collinear绕过声明HSP重复检查、ma
 | §4.11、§10.16 A–B–A | 已实现seq_order/命名副本、between与dplyr筛选，在Collinear/Chord/Radial共用路由 | v0.17/18开发记录；Circular/Dotplot不适配重复实例 |
 | §5、A.3 Fusion | 已实现显式Sankey/Radial、八方位/angle/box、嵌套、实测避障/共享通道、多侧Guide及自动环绕 | v0.27工作包记录；39条不同真实植物关系两尺寸源保留/受检障碍0，空装饰误阻挡已修复。连接相互交叉与整体阅读质量仍未全面认证，发布矩阵待明确授权 |
 | §6.1、A.5 Ribbon | 已实现显式端点渐变、装饰subject尖头、Identity六刻度与用户scale优先 | ribbon-flow-results-v0.17.0.json、identity-guide-results-v0.17.0.json；按后续用户决定默认仍非端点渐变，不能按原提案声称默认渐变 |
-| §6.2、A.6 标签 | 13真实目录的文字/引线实测诊断、静态文字绕行、来源可追踪多边形接触及圆轴字符串身份已补 | v0.27工作包20–22/26/29；13目录240条源标签全保留，受检交叉/穿框/未归属多边形接触0；3处接缝文字接触已在本输入/设备内修复，显式偏移优先。SnapGene仅作显示效果参考，不要求公平导出；不承诺全局零碰撞 |
+| §6.2、A.6 标签 | 13真实目录的文字/引线实测诊断、静态文字绕行、来源可追踪多边形接触及圆轴字符串身份已补 | v0.27工作包20–38；13目录/三源小图已有分阶段实测，最新冻结源码正在复核。三常用旗舰尺寸各164标签保留、受检冲突0且收敛；6×6全注释仍41重叠/871穿框/47未归属接触/未收敛。显式偏移优先。SnapGene仅作显示效果参考，不要求公平导出；不承诺全局零碰撞 |
 | §6.3.1、§10.15 Guide | v0.24.0实现原生Guide联合候选、离散行列/位置/方向选择、完整gtable毫米重测、显式约束和失败报告；连续/分段色条保持完整 | DEVELOPMENT-v0.24.0.md、check-adaptive.R；有界搜索不是全局最优保证，任意自定义Guide仅测量，v0.27.0已补Fusion外层多侧Guide与面板预算，自动环绕已在v0.27.0补齐定向证据，更广泛质量继续开发 |
-| §6.3、A.7 Adaptive | fixed/scale/adaptive共享目标设备与Fusion路径，用户显式样式优先；已补六坐标加竖向Collinear的14个真实横/竖尺寸配置 | v0.27.0-adaptive-quality-after-results.json：受检文字重叠/裁切0，修复Sankey默认名字压首tick；全几何常量缩放、任意组合和字体移植仍未认证，发布矩阵待授权 |
+| §6.3、A.7 Adaptive | fixed/scale/adaptive共享目标设备与Fusion路径，用户显式样式优先；已补六坐标加竖向Collinear的14个真实横/竖尺寸配置 | v0.27.0-adaptive-quality-device-results.json：14配置受检文字重叠/裁切0、均达到实测物理收敛；修复Sankey默认名字压首tick；全几何常量缩放、任意组合和字体移植仍未认证，发布矩阵待授权 |
 | §6.4 灵活参数 | 已有标量/实体/实例及按链继承，用户映射/scale优先；已同步教程 | v0.17/18记录、website双语flexible-parameters课程；未承诺任意第三方层全兼容 |
 | §6.5 Recipes | 已有真实科研综合示例与Fusion配方，继续复用基础API | tools/documentation-examples.R；不是独立模板产品；v0.22.0已提供显式源区间magnify入口 |
 | §6.6 适配器 | 已补真实BigWig/bedGraph、VCF/BCF、MAF/chain、PROMER/植物NUCMER、signature JSON/TSV和离线pair/membership适配，成熟生态按需桥接有定向证据 | 各v0.27适配工作包；真实BAM覆盖与明确no_ref格式CRAM往返已查，GFA/ODGI仅完成探索门槛与取舍。原始分数/缺失语义保留，不推断mate/方向/支持度，不认证任意CRAM或图格式。历史审计见ADAPTER-AUDIT-v0.20.0.md |

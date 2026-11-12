@@ -5,7 +5,7 @@
       ".axis_label": "1 / 2856",
       ".axis_offset_explicit": false,
       ".axis_clearance_status": "feature_clearance",
-      ".axis_clearance_mm": 0.5066
+      ".axis_clearance_mm": 0.4924
     }
   ],
   "explicit_shortcut": [
@@ -37,7 +37,7 @@
       ".axis_label": "1 / 2856",
       ".axis_offset_explicit": false,
       ".axis_clearance_status": "feature_clearance",
-      ".axis_clearance_mm": 0.5066
+      ".axis_clearance_mm": 0.4924
     }
   ],
   "explicit_breaks": [
@@ -76,8 +76,8 @@
     "n_leader_crossings": 0,
     "n_leaders_through_text": 0,
     "n_label_outside_canvas": 0,
-    "mean_leader_length_mm": 49.218,
-    "max_leader_length_mm": 80.3291,
+    "mean_leader_length_mm": 48.1465,
+    "max_leader_length_mm": 79.2194,
     "n_feature_polygons": 16,
     "n_feature_parts_unchecked": 4,
     "n_text_over_feature": 0,
