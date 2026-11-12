@@ -1,0 +1,9 @@
+Controlled canvas: pUC19 compact 
+Controlled canvas: pUC19 wide 
+Controlled canvas: pTRE_Tight_BI compact 
+Controlled canvas: pTRE_Tight_BI wide 
+Controlled canvas: pETDuet_1 compact 
+Controlled canvas: pETDuet_1 wide 
+Controlled canvas observations recorded
+Error: unexpected ',' in "  file.path(folder, 'v0.27.0-label-size-results.json'),"
+Execution halted
