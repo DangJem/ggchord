@@ -1,0 +1,40 @@
+{
+  "baseline": "f3d9ef4",
+  "R": "R version 4.6.0 (2026-04-24)",
+  "ggplot2": "4.0.3",
+  "explicit_group": {
+    "track_count": [1, 1],
+    "native_count": 2,
+    "defect_observed": true
+  },
+  "bin_source_membership": {
+    "count": 3,
+    "source_rows": [
+      [2, 3]
+    ],
+    "expected_source_rows": [
+      [1, 2, 3]
+    ],
+    "defect_observed": true
+  },
+  "declared_duplicate_hsp": {
+    "views": {
+      "chord": {
+        "accepted": true
+      },
+      "collinear": {
+        "accepted": true
+      },
+      "radial": {
+        "accepted": false,
+        "message": "A declared source_hsp_id is displayed more than once; use disjoint layer data or allow_repeated=TRUE explicitly"
+      }
+    },
+    "defect_observed": true
+  },
+  "metadata_selector": {
+    "actual_source_instance": "A2",
+    "without_metadata": "magnify_ggchord() center: ambiguous panel or instance; specify panel and instance",
+    "defect_observed": true
+  }
+}
