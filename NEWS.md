@@ -1,5 +1,9 @@
 # ggchord 0.27.0 (development)
 
+- Fixed empty native axis/title cells being treated as Fusion route obstacles.
+  Zero-area furniture no longer creates false collisions or blocks otherwise
+  feasible interval ribbons. Positive-area decorations remain protected.
+
 - Fixed circular exterior annotation leaders passing through origin-axis or
   inner feature text. Collided paths now receive bounded static-text detours
   while keeping their real root and final label attachment; unresolved routes
@@ -11,8 +15,9 @@
   text-object contacts, annotation-leader crossings/through-text contacts,
   canvas bounds and physical leader lengths. Registered feature polygon
   contacts distinguish own-source placement, other-source contacts and unresolved
-  associations; skipped non-polygon parts remain explicit. Text measurement now follows native justification, size units and
-  component styles, including hidden Track axes, without changing the plot.
+  associations; skipped non-polygon parts remain explicit. Text measurement now
+  follows native justification, size units and component styles, including hidden
+  Track axes, without changing the plot.
 
 - Extended `geom_track()` with native source-space `smooth`, `density` and
   `ecdf` statistics. Model outputs retain estimation-group source rows rather

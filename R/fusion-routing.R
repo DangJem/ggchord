@@ -187,7 +187,7 @@ ggchord_fusion_guide_obstacles <- function(table, id, origin) {
     length(table$heights), length(table$widths), widths = table$widths,
     heights = table$heights, respect = table$respect)))
   on.exit(grid::popViewport())
-  ggchord_rbind_fill(lapply(at, function(i) {
+  boxes <- ggchord_rbind_fill(lapply(at, function(i) {
     entry <- table$layout[i, ]
     grid::pushViewport(grid::viewport(layout.pos.row = seq.int(entry$t, entry$b),
       layout.pos.col = seq.int(entry$l, entry$r)))
@@ -198,6 +198,12 @@ ggchord_fusion_guide_obstacles <- function(table, id, origin) {
       xmax = hi$x*25.4-origin[1], ymin = lo$y*25.4-origin[2], ymax = hi$y*25.4-origin[2],
       measurement = 'resolved_gtable_cell')
   }))
+  # Empty native axis/title cells can contain non-zeroGrob wrappers while
+  # occupying no area. They are not furniture obstacles: treating their
+  # centre as an enclosed box falsely blocks even a clear interval ribbon.
+  boxes[is.finite(boxes$xmin) & is.finite(boxes$xmax) &
+    is.finite(boxes$ymin) & is.finite(boxes$ymax) &
+    boxes$xmax - boxes$xmin > 1e-7 & boxes$ymax - boxes$ymin > 1e-7, , drop = FALSE]
 }
 
 # Recheck final assembled physical envelopes, including ancestor decoration.

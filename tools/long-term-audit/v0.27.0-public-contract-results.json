@@ -1,6 +1,6 @@
 {
   "status": "passed signature/source-surface review only",
-  "base_commit": "31f18c3f4116c60b2463220c74f5bb9989a4048a",
+  "base_commit": "8b61a3223f5b65d75a6bbefe87907068db49ca14",
   "working_tree_note": "Development review can include uncommitted implementation; source hashes, not HEAD alone, identify loaded inputs.",
   "source_sha256": {
     "R/aaa-geom.R": "4f1bdfea7173650be4c1d41895921e13b8ae3a6c6c8ea290e2e726ef0e75849d",
@@ -46,7 +46,7 @@
     "R/fusion-placement.R": "2f16b1b2c1687d7e3895f49914e0b321a509f8c03ad6fa55302fda6534e20a9c",
     "R/fusion-render-events.R": "fb3a81210eabaa6e0271054ba99c6a40e8fe52751e1d1722affd091ea0280239",
     "R/fusion-render.R": "964e5db5b05be6df31ddb257fe6969e7fba8efce859d8841b18fcbe4d857512f",
-    "R/fusion-routing.R": "7fde0bdc4a30a554a1b5736fda689e234ef0c183d7205f4bc4e023513ef3e99a",
+    "R/fusion-routing.R": "7ab41d466331210b3d197c8ea56123c5fc8f8981eedfe81203faa33d74b8cff4",
     "R/fusion.R": "87359e64f61795a31554d14c21de34b1801ccc3ef5a5a7377308b6d6e14c0834",
     "R/geom-alignment-segment.R": "a1f725f2722c5add53569a211d2b37a02d24d9825303e1f3d1c8f9ff6f38e3b6",
     "R/geom-feature-label.R": "bcf2bed3f679ecbe2fdac304d49c8ae10f36f4e5eab3a3724ac88b5680b0adfe",
