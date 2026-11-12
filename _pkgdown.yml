@@ -59,6 +59,7 @@ reference:
       - '`coord_dotplot`'
       - '`coord_radial_synteny`'
       - '`ggchord`'
+      - '`adapt_ggchord`'
       - '`ggchord_api_contract`'
       - '`ggchord_layout_contract`'
   - title: Input and validation
@@ -71,6 +72,14 @@ reference:
       - '`prepare_ggchord_data`'
       - '`read_bed`'
       - '`read_bedpe`'
+      - '`read_bedgraph`'
+      - '`read_bigwig`'
+      - '`read_vcf`'
+      - '`read_maf`'
+      - '`read_chain`'
+      - '`read_delta`'
+      - '`read_feature_relations`'
+      - '`read_signature_matches`'
       - '`read_aligned_fasta`'
       - '`as_ggchord_alignment`'
       - '`map_alignment_position`'
@@ -137,6 +146,8 @@ reference:
   - title: Projection and comparison workflows
     contents:
       - '`build_ggchord_cds`'
+      - '`translate_ggchord_cds`'
+      - '`register_ggchord_alignment`'
       - '`bundle_ggchord_ribbons`'
       - '`deduplicate_ggchord_ribbons`'
       - '`filter_ggchord_ribbons`'

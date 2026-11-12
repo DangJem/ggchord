@@ -1,0 +1,10 @@
+{
+  "scope": "Actual generated archive bytes and complete downloadable script file references; no deployment or complete site claim",
+  "inputs": 76,
+  "literal_file_references": 30,
+  "all_bytes_match_source": true,
+  "all_script_inputs_present": true,
+  "historical_nucleotide_data_in_archive": false,
+  "native_topics_covered": 121,
+  "archive_sha256": "5df251d5d0daa3bf6ff44675b3d258707cfa1006922bf4a8160c706d7a472d82"
+}

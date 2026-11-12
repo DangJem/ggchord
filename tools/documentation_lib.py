@@ -24,7 +24,7 @@ def localize_r_comments(code, lang):
         indent, comment = match.groups()
         if comment in translations:
             return indent + '# ' + translations[comment]
-        if comment.startswith('----') or comment.startswith('ggsave('):
+        if comment.startswith('----') or re.match(r'^(?:ggplot2::)?ggsave\(', comment):
             return match[0]
         if re.search('[A-Za-z]{3}', comment) and not re.search('[\u3400-\u9fff]', comment):
             raise ValueError('Missing Han code comment: ' + comment)

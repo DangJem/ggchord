@@ -54,6 +54,18 @@ def main():
     inputs=sorted([*ROOT.glob('examples/fasta/*.fna'),*ROOT.glob('examples/gff3/*.gff3'),
         *ROOT.glob('examples/blastn/*.o7'),*ROOT.glob('examples/blastn-standard/*'),
         *ROOT.glob('examples/format-inputs/*'),*ROOT.glob('examples/protein/*'),*ROOT.glob('examples/alignment/*'),*ROOT.glob('examples/plasmid/*.fna')])
+    # New lessons need their actual auxiliary inputs/scripts in the download,
+    # not merely code links into a maintainer checkout. Preserve historical
+    # provenance in sources.json while excluding its inactive data file.
+    historical = {item['file'] for item in json.loads(
+        (ROOT/'examples/genome-alignments/sources.json').read_text())
+        if item.get('status') == 'historical-only'}
+    inputs += [p for p in ROOT.glob('examples/genome-alignments/*')
+        if p.is_file() and p.name not in historical]
+    inputs += [p for p in ROOT.glob('examples/cds/*') if p.is_file()]
+    for name in ['m2-detail.R', 'm3-nested.R', 'origin-detail.R', 'fusion-auto.R', 'fusion-routing.R']:
+        inputs.append(ROOT/'examples'/name)
+    inputs = sorted(set(inputs))
     input_hashes={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in inputs}
     (assets/'input-hashes.json').write_text(json.dumps(input_hashes,indent=2)+'\n')
     shared_code = snippets()
