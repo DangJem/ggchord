@@ -3,8 +3,8 @@
 
 #' Compose a source region and an explicit local detail plot
 #'
-#' Marks one real source interval in a Circular/Chord plot and connects it to
-#' the same interval in an independently constructed Collinear detail plot.
+#' Marks real source intervals in a Circular/Chord/Collinear plot and connects them to
+#' the same intervals in an independently constructed Collinear detail plot.
 #' Returns a Fusion, not a new Coord or a crop of an existing image. Ordinary
 #' ggsave rebuilds both panels, highlights and leaders at the actual target size.
 #'
@@ -14,12 +14,12 @@
 #' its data, mappings, statistics and labels. Original source origins, including
 #' renamed/repeated focus windows, are used to resolve the same interval.
 #'
-#' @param plot A ggchord Circular or Chord source plot.
-#' @param region One-row data frame with `accver`, `start`, `end` in original
+#' @param plot A ggchord Circular, Chord or horizontal/vertical Collinear source plot.
+#' @param region Nonempty data frame with `accver`, `start`, `end` in original
 #'   one-based inclusive source coordinates. Bounds must be ordered positive
 #'   integers. Optional `instance` and `detail_instance` select exact display
-#'   instances in the source and detail panels. Ambiguity fails; origin-wrapping
-#'   intervals must be split before using this single-window interface.
+#'   instances in the source and detail panels for every row. Ambiguity fails; origin-wrapping
+#'   intervals must be split before using this interface. All rows share one detail panel.
 #' @param detail_plot An explicit horizontal or vertical Collinear ggchord plot.
 #'   The selected source interval must be fully visible in both panels, in the
 #'   same bp/aa unit. Ordinary Cartesian character plots are not supported here.
@@ -27,7 +27,7 @@
 #' @param center_size,detail_size Optional panel width/height fractions, following
 #'   [ggchord_fusion()] and [fusion_panel()]. Defaults reserve a smaller source
 #'   panel and a wider detail container for the selected side. Overlap fails.
-#' @param connector `"leader"` draws two decorative boundary leaders; `"none"`
+#' @param connector `"leader"` draws two decorative boundary leaders per row; `"none"`
 #'   retains the highlights only. These are not biological ribbons or alignments.
 #' @param colour Fixed highlight/leader colour.
 #' @param alpha Highlight opacity in `[0,1]`. Leaders use the opaque colour.
@@ -38,6 +38,7 @@
 #'   returns focus_regions, focus_fronts and leaders in mm, plus original
 #'   focus_region_data (without metadata-name collisions), preserving the input
 #'   region, exact instances, source origins and sampled physical path-length ratio.
+#'   The derived tables use region_row to identify the original input row.
 #'   Stat scope is recorded as explicit_detail_plot. Leaders do not appear in
 #'   connections or relationship_data. Global label/leader collision avoidance,
 #'   arbitrary inset boxes, nested/multiple insets and automatic layer rebuilding
@@ -61,13 +62,13 @@ magnify_ggchord <- function(plot, region, detail_plot,
   ggchord_fusion_check_plot(detail_plot)
   caller <- "magnify_ggchord()"
   ggchord_require_columns(region, c("accver", "start", "end"), caller)
-  if (nrow(region) != 1L || !is.character(region$accver) || is.na(region$accver) || !nzchar(region$accver) ||
+  if (nrow(region) < 1L || !is.character(region$accver) || anyNA(region$accver) || any(!nzchar(region$accver)) ||
       !is.numeric(region$start) || !is.numeric(region$end) ||
-      any(!is.finite(c(region$start,region$end))) || region$start < 1 || region$end < region$start ||
-      any(c(region$start,region$end) != floor(c(region$start,region$end))) || region$end > 2^53-1)
-    ggchord_stop(caller, ": provide one ordered positive integral source interval; split origin-wrapping regions explicitly")
+      any(!is.finite(c(region$start,region$end))) || any(region$start < 1) || any(region$end < region$start) ||
+      any(c(region$start,region$end) != floor(c(region$start,region$end))) || any(region$end > 2^53-1))
+    ggchord_stop(caller, ": provide ordered positive integral source intervals; split origin-wrapping regions explicitly")
   for (name in intersect(c("instance", "detail_instance"), names(region)))
-    if (!is.character(region[[name]]) || is.na(region[[name]]) || !nzchar(region[[name]]))
+    if (!is.character(region[[name]]) || anyNA(region[[name]]) || any(!nzchar(region[[name]])))
       ggchord_stop(caller, ": instance selectors must be nonempty strings")
   if (!is.numeric(alpha) || length(alpha)!=1L || !is.finite(alpha) || alpha<0 || alpha>1 ||
       !is.numeric(highlight_width) || length(highlight_width)!=1L || !is.finite(highlight_width) || highlight_width<=0 ||
@@ -93,7 +94,19 @@ magnify_ggchord <- function(plot, region, detail_plot,
 ggchord_build_focus <- function(focus, panels) {
   empty <- list(input = data.frame(), underlay = list(), overlay = list(), regions = data.frame(), fronts = data.frame(), leaders = data.frame())
   if (is.null(focus)) return(empty)
-  region <- focus$region
+  pieces <- lapply(seq_len(nrow(focus$region)), function(i) {
+    piece <- ggchord_build_focus_region(focus, panels, focus$region[i, , drop = FALSE])
+    for (name in c("regions", "fronts", "leaders"))
+      piece[[name]]$region_row <- rep.int(i, nrow(piece[[name]]))
+    piece
+  })
+  bind <- function(name) do.call(rbind, lapply(pieces, `[[`, name))
+  grobs <- function(name) unlist(lapply(pieces, `[[`, name), recursive = FALSE)
+  list(input = focus$input, underlay = grobs("underlay"), overlay = grobs("overlay"),
+    regions = bind("regions"), fronts = bind("fronts"), leaders = bind("leaders"))
+}
+
+ggchord_build_focus_region <- function(focus, panels, region) {
   resolve <- function(panel, instance) ggchord_resolve_panel_interval(panels,
     region$accver, region$start, region$end, panel, instance,
     paste0("magnify_ggchord() ",panel,": "))

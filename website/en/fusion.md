@@ -1,7 +1,7 @@
 ## Connect real source intervals {#intervals}
 
 Fusion combines independent genomic plots and connects their real sequence
-intervals. The center can be Circular or Chord; peripherals are horizontal or
+intervals. The center can be Circular, Chord or Collinear; peripherals are horizontal or
 vertical Collinear plots. Each plot remains usable on its own. The composition
 rebuilds all panels at their actual physical sizes before drawing links.
 
@@ -115,7 +115,7 @@ annotations are retained, but arbitrary layouts are not guaranteed collision-fre
 
 ## A source interval and its local detail {#magnify}
 
-`magnify_ggchord()` composes a Circular/Chord source and an explicit Collinear detail plot. A source interval is biological data, not a rectangle in image pixels. The same region must be fully visible in both panels. Both rebuild at the final device size; no screenshot is stretched.
+`magnify_ggchord()` composes a Circular/Chord/Collinear source and an explicit Collinear detail plot. A source interval is biological data, not a rectangle in image pixels. The same region must be fully visible in both panels. Both rebuild at the final device size; no screenshot is stretched.
 
 This example selects pETDuet-1 source positions 101–1900 (1800 bp). Its origin-crossing annotation at 5404→2 has no overlap with this interval; exclude it explicitly before linear focusing rather than taking its min/max as a long feature. The detail retains 10 annotations and labels the explicitly selected CDS/replication-origin subset. Reversing the detail's display orientation changes neither source coordinates nor biological strands.
 
@@ -158,3 +158,33 @@ Use ordinary `ggsave()` at a chosen physical size, for example 12×8 inches; `vi
 The dashed lines are decorative focus leaders. They are exported separately from biological `connections` and `relationship_data`; adding actual `fusion_ribbon()` layers still requires real relationship data. `focus_region_data` preserves the original selection and arbitrary metadata, while `focus_regions` reports resolved instances, source origins and the sampled physical path-length ratio. The ratio can be below one with a small detail allocation; it is not a change to biological length.
 
 The detail plot owns its data, scales, layers and statistics. For count/bin/coverage tracks, prepare and state the intended local or global statistical population yourself; the wrapper records `explicit_detail_plot` and never silently chooses a scope. It does not copy arbitrary source layers, infer alignments or accept ordinary Cartesian character panels. Use one ordered region, explicitly select `instance`/`detail_instance` when an accession is repeated, and split origin wraps before this single-window workflow. Multiple/nested inset boxes and other central Coords remain outside this interface.
+
+## Paired source windows with real HSPs {#paired-detail}
+
+Each row of `region` selects one original source interval; all rows share one explicit detail panel. The example selects the two endpoints of a real HSP from the four-sequence dataset. Gene direction and the local HSP come from the focused input tables. `region_row` links each derived region, front and decorative leader to its input row; arbitrary original metadata stays in `focus_region_data`.
+
+```r
+library(dplyr)
+seqs <- seq_data_example |> select(accver, length)
+features <- gene_data_example |> mutate(type = 'gene')
+hsp <- ribbon_data_example |> slice(1)
+regions <- bind_rows(
+  transmute(hsp, accver = qaccver, start = pmin(qstart, qend), end = pmax(qstart, qend)),
+  transmute(hsp, accver = saccver, start = pmin(sstart, send), end = pmax(sstart, send))
+)
+local <- focus_ggchord_data(seqs, feature_data = features,
+  ribbon_data = hsp, loci = regions)
+source <- ggchord(seqs, feature_data = features, ribbon_data = hsp) +
+  geom_seq(show.legend = FALSE) + geom_gene(show.legend = FALSE) +
+  geom_link_ribbon(show.legend = FALSE)
+detail <- ggchord(local$seq_data, feature_data = local$feature_data,
+  ribbon_data = local$ribbon_data) + geom_seq(show.legend = FALSE) +
+  geom_gene(show.legend = FALSE) + geom_link_ribbon(show.legend = FALSE) + coord_collinear()
+paired_detail <- magnify_ggchord(
+  source + coord_collinear(), regions, detail, side = "bottom"
+)
+paired_detail
+export_ggchord_fusion(paired_detail, width = 12, height = 8)$focus_regions
+```
+
+This does not create multiple insets or infer base-level alignments. Each interval must be fully visible in both panels. Instance selectors apply per row.

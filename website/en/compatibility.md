@@ -53,7 +53,7 @@ The [Dotplot/Radial support matrix](view-expansion.html#support) records the new
 
 ## Static cross-panel composition {#fusion}
 
-[Fusion](fusion.html) accepts a Circular/Chord center and up to four Collinear
+[Fusion](fusion.html) accepts a Circular/Chord/Collinear center and up to four Collinear
 peripherals. Each panel keeps its existing layer contract. Cross-panel interval
 fronts use one-based inclusive boundaries with continuous curve mapping;
 fully visible same-unit source intervals and unambiguous panel/instance routes

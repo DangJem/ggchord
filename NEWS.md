@@ -1,3 +1,13 @@
+# ggchord 0.23.0 (development)
+
+- `magnify_ggchord()` now accepts multiple source intervals in one explicit
+  detail panel. Each row resolves its own source/detail instance; derived
+  region, front and leader tables use `region_row` to refer to input rows.
+  Original selection metadata remains unchanged in `focus_region_data`.
+- Fusion and magnification now accept horizontal or vertical Collinear source
+  panels, using the same native-scale and physical projection as other panels.
+  Real local HSPs remain in the explicit detail plot, separate from focus leaders.
+
 # ggchord 0.22.0.9000
 
 - Added `magnify_ggchord()` for an explicit source interval and an independently

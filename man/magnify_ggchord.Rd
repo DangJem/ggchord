@@ -20,13 +20,13 @@ magnify_ggchord(
 )
 }
 \arguments{
-\item{plot}{A ggchord Circular or Chord source plot.}
+\item{plot}{A ggchord Circular, Chord or horizontal/vertical Collinear source plot.}
 
-\item{region}{One-row data frame with \code{accver}, \code{start}, \code{end} in original
+\item{region}{Nonempty data frame with \code{accver}, \code{start}, \code{end} in original
 one-based inclusive source coordinates. Bounds must be ordered positive
 integers. Optional \code{instance} and \code{detail_instance} select exact display
-instances in the source and detail panels. Ambiguity fails; origin-wrapping
-intervals must be split before using this single-window interface.}
+instances in the source and detail panels for every row. Ambiguity fails; origin-wrapping
+intervals must be split before using this interface. All rows share one detail panel.}
 
 \item{detail_plot}{An explicit horizontal or vertical Collinear ggchord plot.
 The selected source interval must be fully visible in both panels, in the
@@ -38,7 +38,7 @@ same bp/aa unit. Ordinary Cartesian character plots are not supported here.}
 \code{\link[=ggchord_fusion]{ggchord_fusion()}} and \code{\link[=fusion_panel]{fusion_panel()}}. Defaults reserve a smaller source
 panel and a wider detail container for the selected side. Overlap fails.}
 
-\item{connector}{\code{"leader"} draws two decorative boundary leaders; \code{"none"}
+\item{connector}{\code{"leader"} draws two decorative boundary leaders per row; \code{"none"}
 retains the highlights only. These are not biological ribbons or alignments.}
 
 \item{colour}{Fixed highlight/leader colour.}
@@ -56,6 +56,7 @@ A \code{\link[=ggchord_fusion]{ggchord_fusion()}} object. \code{\link[=export_gg
 returns focus_regions, focus_fronts and leaders in mm, plus original
 focus_region_data (without metadata-name collisions), preserving the input
 region, exact instances, source origins and sampled physical path-length ratio.
+The derived tables use region_row to identify the original input row.
 Stat scope is recorded as explicit_detail_plot. Leaders do not appear in
 connections or relationship_data. Global label/leader collision avoidance,
 arbitrary inset boxes, nested/multiple insets and automatic layer rebuilding
@@ -63,8 +64,8 @@ are not implemented. The measured ratio may be below one if the chosen
 detail allocation does not enlarge the region.
 }
 \description{
-Marks one real source interval in a Circular/Chord plot and connects it to
-the same interval in an independently constructed Collinear detail plot.
+Marks real source intervals in a Circular/Chord/Collinear plot and connects them to
+the same intervals in an independently constructed Collinear detail plot.
 Returns a Fusion, not a new Coord or a crop of an existing image. Ordinary
 ggsave rebuilds both panels, highlights and leaders at the actual target size.
 }

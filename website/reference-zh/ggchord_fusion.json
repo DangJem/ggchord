@@ -1,8 +1,8 @@
 {
-  "source_sha256": "f81b6db72437a137f11ae9fb6763b491c30b39ee22375e40e7c917761f64c416",
+  "source_sha256": "753aacb57b119776350cdcadb43f16f0dadde2b0f8622e2a224fd46be66705c9",
   "translations": {
     "0": "组合独立的基因组面板",
-    "1": "使用Circular或Chord坐标的ggchord图形。",
+    "1": "使用 Circular、Chord 或横向/纵向 Collinear 坐标的 ggchord 图形。",
     "2": "可选的宽度与高度，按扣除跨面板图例后的组合区域比例指定。NULL自动分配可用空间。",
     "3": "⟦0⟧使用固定面板区域；⟦1⟧还根据真实物理宽高比调整中央区域。两者均按实际面板尺寸重新计算标签和图例，不缩放用户明确设置的字号。",
     "4": "可打印并传给⟦0⟧的Fusion对象。",

@@ -1,0 +1,13 @@
+{
+  "version": "0.23.0.9000",
+  "source_sequences": 4,
+  "selected_regions": 2,
+  "local_hsp": 1,
+  "decorative_leaders": 4,
+  "exact_source_boundaries": true,
+  "raw_metadata_preserved": true,
+  "chord_and_horizontal_vertical_collinear": true,
+  "reflected_scale": true,
+  "single_region_compatible": true,
+  "no_release_matrix": true
+}

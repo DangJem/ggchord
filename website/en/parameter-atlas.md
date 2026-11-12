@@ -2487,7 +2487,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `center` | `Required/alternative entry; see description` | R object; constraints below | A ggchord plot using Circular or Chord coordinates. |
+| `center` | `Required/alternative entry; see description` | R object; constraints below | A ggchord plot using Circular, Chord or horizontal/vertical Collinear coordinates. |
 | `center_size` | `NULL` | Nullable R object; type/inheritance below | Optional width and height as fractions of the composition area, excluding its cross-panel legend. NULL allocates available space. |
 | `layout` | `c("fixed", "adaptive")` | Vector; choices versus multiple selection below | "fixed" uses fixed panel allocations; "adaptive" also adjusts the central allocation to the physical aspect ratio. Both rebuild labels and guides at actual panel sizes. Neither rescales explicit fonts. |
 
@@ -2520,13 +2520,13 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `plot` | `Required/alternative entry; see description` | R object; constraints below | A ggchord Circular or Chord source plot. |
-| `region` | `Required/alternative entry; see description` | R object; constraints below | One-row data frame with accver, start, end in original one-based inclusive source coordinates. Bounds must be ordered positive integers. Optional instance and detail_instance select exact display instances in the source and detail panels. Ambiguity fails; origin-wrapping intervals must be split before using this single-window interface. |
+| `plot` | `Required/alternative entry; see description` | R object; constraints below | A ggchord Circular, Chord or horizontal/vertical Collinear source plot. |
+| `region` | `Required/alternative entry; see description` | R object; constraints below | Nonempty data frame with accver, start, end in original one-based inclusive source coordinates. Bounds must be ordered positive integers. Optional instance and detail_instance select exact display instances in the source and detail panels for every row. Ambiguity fails; origin-wrapping intervals must be split before using this interface. All rows share one detail panel. |
 | `detail_plot` | `Required/alternative entry; see description` | R object; constraints below | An explicit horizontal or vertical Collinear ggchord plot. The selected source interval must be fully visible in both panels, in the same bp/aa unit. Ordinary Cartesian character plots are not supported here. |
 | `side` | `c("right", "top", "left", "bottom")` | Vector; choices versus multiple selection below | One of right, top, left or bottom for the detail panel. |
 | `center_size` | `NULL` | Nullable R object; type/inheritance below | Optional panel width/height fractions, following ggchord_fusion() and fusion_panel(). Defaults reserve a smaller source panel and a wider detail container for the selected side. Overlap fails. |
 | `detail_size` | `NULL` | Nullable R object; type/inheritance below | Optional panel width/height fractions, following ggchord_fusion() and fusion_panel(). Defaults reserve a smaller source panel and a wider detail container for the selected side. Overlap fails. |
-| `connector` | `c("leader", "none")` | Vector; choices versus multiple selection below | "leader" draws two decorative boundary leaders; "none" retains the highlights only. These are not biological ribbons or alignments. |
+| `connector` | `c("leader", "none")` | Vector; choices versus multiple selection below | "leader" draws two decorative boundary leaders per row; "none" retains the highlights only. These are not biological ribbons or alignments. |
 | `colour` | `"#B45309"` | Character/enum; choices below | Fixed highlight/leader colour. |
 | `alpha` | `0.2` | Numeric/integer; range in description | Highlight opacity in [0,1]. Leaders use the opaque colour. |
 | `highlight_width` | `1.5` | Numeric/integer; range in description | Positive highlight band width in physical mm. |

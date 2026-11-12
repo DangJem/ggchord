@@ -8,7 +8,7 @@
 #' Source plots and their scales remain independent. Composition scales and
 #' themes apply only to cross-panel links and their separate legend.
 #'
-#' @param center A ggchord plot using Circular or Chord coordinates.
+#' @param center A ggchord plot using Circular, Chord or horizontal/vertical Collinear coordinates.
 #' @param center_size Optional width and height as fractions of the composition
 #'   area, excluding its cross-panel legend. NULL allocates available space.
 #' @param layout `"fixed"` uses fixed panel allocations; `"adaptive"` also
@@ -151,8 +151,8 @@ ggchord_fusion_check_plot <- function(plot, center = FALSE) {
   if (!inherits(plot, "ggchord")) ggchord_stop("Fusion panels must be ggchord plots")
   coord <- plot$coordinates
   if (center) {
-    if (!isTRUE(coord$ggchord_coord) || isTRUE(coord$ggchord_collinear) || isTRUE(coord$ggchord_dotplot))
-      ggchord_stop("Fusion center requires Circular or Chord coordinates")
+    if (!isTRUE(coord$ggchord_coord) || isTRUE(coord$ggchord_sankey) || isTRUE(coord$ggchord_radial) || isTRUE(coord$ggchord_dotplot))
+      ggchord_stop("Fusion center requires Circular, Chord or Collinear coordinates")
   } else if (!isTRUE(coord$ggchord_collinear) || isTRUE(coord$ggchord_sankey) || isTRUE(coord$ggchord_radial))
     ggchord_stop("Fusion peripheral panels require horizontal or vertical Collinear coordinates")
   if (!inherits(plot$facet, "FacetNull")) ggchord_stop("Fusion panels do not support facets")

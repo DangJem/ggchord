@@ -53,7 +53,7 @@ Position 只控制局部放置，不把不支持的图层转换成另一种坐�
 
 ## 静态跨面板组合 {#fusion}
 
-[Fusion](fusion.html)接受Circular/Chord中央图与最多四个Collinear外围面板，各面板保留原有图层契约。跨面板完整前缘采用一基闭区间边界和连续曲线映射；要求同单位来源区间完整可见，面板与实例路由无歧义。Fusion的标准标度只作用于跨面板图层。外围Sankey/Radial/Dotplot、分面及隐式第三方坐标适配均拒绝。保存时重新测量物理面板，不代表具备全局避障或通用字号缩放。
+[Fusion](fusion.html)接受Circular/Chord/Collinear中央图与最多四个Collinear外围面板，各面板保留原有图层契约。跨面板完整前缘采用一基闭区间边界和连续曲线映射；要求同单位来源区间完整可见，面板与实例路由无歧义。Fusion的标准标度只作用于跨面板图层。外围Sankey/Radial/Dotplot、分面及隐式第三方坐标适配均拒绝。保存时重新测量物理面板，不代表具备全局避障或通用字号缩放。
 
 
 ## 局部对齐字符单元 {#aligned-cells}

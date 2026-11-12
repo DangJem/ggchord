@@ -9924,7 +9924,7 @@
     "parameter": "center",
     "default": "",
     "type": "R object; constraints below",
-    "constraint": "A ggchord plot using Circular or Chord coordinates.",
+    "constraint": "A ggchord plot using Circular, Chord or horizontal/vertical Collinear coordinates.",
     "source": "man/ggchord_fusion.Rd"
   },
   {
@@ -9996,7 +9996,7 @@
     "parameter": "plot",
     "default": "",
     "type": "R object; constraints below",
-    "constraint": "A ggchord Circular or Chord source plot.",
+    "constraint": "A ggchord Circular, Chord or horizontal/vertical Collinear source plot.",
     "source": "man/magnify_ggchord.Rd"
   },
   {
@@ -10004,7 +10004,7 @@
     "parameter": "region",
     "default": "",
     "type": "R object; constraints below",
-    "constraint": "One-row data frame with accver, start, end in original one-based inclusive source coordinates. Bounds must be ordered positive integers. Optional instance and detail_instance select exact display instances in the source and detail panels. Ambiguity fails; origin-wrapping intervals must be split before using this single-window interface.",
+    "constraint": "Nonempty data frame with accver, start, end in original one-based inclusive source coordinates. Bounds must be ordered positive integers. Optional instance and detail_instance select exact display instances in the source and detail panels for every row. Ambiguity fails; origin-wrapping intervals must be split before using this interface. All rows share one detail panel.",
     "source": "man/magnify_ggchord.Rd"
   },
   {
@@ -10044,7 +10044,7 @@
     "parameter": "connector",
     "default": "c(\"leader\", \"none\")",
     "type": "Vector; choices versus multiple selection below",
-    "constraint": "\"leader\" draws two decorative boundary leaders; \"none\" retains the highlights only. These are not biological ribbons or alignments.",
+    "constraint": "\"leader\" draws two decorative boundary leaders per row; \"none\" retains the highlights only. These are not biological ribbons or alignments.",
     "source": "man/magnify_ggchord.Rd"
   },
   {

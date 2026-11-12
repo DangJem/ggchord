@@ -1,6 +1,6 @@
 ## 连接真实来源区间 {#intervals}
 
-Fusion组合独立的基因组图形，并连接其真实序列区间。中央可用Circular或Chord，外围为横向或纵向Collinear。每张子图仍可单独使用；组合层先在实际物理尺寸内重新构建各面板，再绘制连接。
+Fusion组合独立的基因组图形，并连接其真实序列区间。中央可用Circular、Chord或Collinear，外围为横向或纵向Collinear。每张子图仍可单独使用；组合层先在实际物理尺寸内重新构建各面板，再绘制连接。
 
 从[输入下载与来源页](formats.html)取得原始EMALE PAF。本课的数据整理需要可选依赖`dplyr`。PAF包含11条已观测HSP；下面显式选择长度≥900、Identity≥85%的两条用于跨面板展示。计数轨道按明确的2,000 bp分箱统计全部原始query起点观测，不解释为覆盖深度。最后一个显示分箱明确裁切到真实序列边界，来源观测及计数保留。
 
@@ -60,7 +60,7 @@ Fusion组合独立的基因组图形，并连接其真实序列区间。中央�
 
 ## 源区间与独立局部细节 {#magnify}
 
-`magnify_ggchord()` 组合一张 Circular/Chord 源图和显式构建的 Collinear 细节图。源区间是生物学数据，不是图片像素中的矩形；同一区间须在两个面板完整可见。两个面板都按最终设备尺寸重建，不拉伸截图。
+`magnify_ggchord()` 组合一张 Circular/Chord/Collinear 源图和显式构建的 Collinear 细节图。源区间是生物学数据，不是图片像素中的矩形；同一区间须在两个面板完整可见。两个面板都按最终设备尺寸重建，不拉伸截图。
 
 下例选择 pETDuet-1 的原始位置 101–1900，共 1800 bp。5404→2 的跨原点注释与该窗口没有交集；进入线性聚焦前显式排除，不能用 min/max 把它误画成长特征。细节保留 10 条注释，并按明确规则给 CDS/复制起点子集加标签。反转细节的显示方向不改变源坐标或生物学链。
 
@@ -103,3 +103,33 @@ focus_geometry$leaders
 虚线是装饰性的聚焦引线，与生物学 `connections`、`relationship_data` 分开导出；添加真实 `fusion_ribbon()` 仍须提供真实关系数据。`focus_region_data` 保留原始选区及任意元数据，`focus_regions` 记录解析出的实例、源原点和采样物理路径长度比。细节容器较小时，该比值可能小于 1，这不改变生物学长度。
 
 细节图拥有自己的数据、标度、图层和统计。若使用 count/bin/coverage 轨道，请自行准备并说明局部或全局统计总体；组合器只记录 `explicit_detail_plot`，不会静默选择口径。它不复制任意源图层、不推断比对，也不接收普通 Cartesian 字符面板。当前使用一个有序区间；同一 accession 重复时显式指定 `instance`/`detail_instance`，跨原点区间须先拆分。多个或嵌套 inset 盒及其他中央 Coord 不属于此接口。
+
+## 保留真实 HSP 的成对源窗口 {#paired-detail}
+
+`region` 每行选择一个原始源区间，所有行共享一个显式细节面板。本例从四序列数据中选取一条真实 HSP 的两个端点窗口，基因方向和局部 HSP 均来自聚焦后的输入表。派生区域、前缘和装饰引线通过 `region_row` 对应输入行；任意原始元数据保留在 `focus_region_data`。
+
+```r
+library(dplyr)
+seqs <- seq_data_example |> select(accver, length)
+features <- gene_data_example |> mutate(type = 'gene')
+hsp <- ribbon_data_example |> slice(1)
+regions <- bind_rows(
+  transmute(hsp, accver = qaccver, start = pmin(qstart, qend), end = pmax(qstart, qend)),
+  transmute(hsp, accver = saccver, start = pmin(sstart, send), end = pmax(sstart, send))
+)
+local <- focus_ggchord_data(seqs, feature_data = features,
+  ribbon_data = hsp, loci = regions)
+source <- ggchord(seqs, feature_data = features, ribbon_data = hsp) +
+  geom_seq(show.legend = FALSE) + geom_gene(show.legend = FALSE) +
+  geom_link_ribbon(show.legend = FALSE)
+detail <- ggchord(local$seq_data, feature_data = local$feature_data,
+  ribbon_data = local$ribbon_data) + geom_seq(show.legend = FALSE) +
+  geom_gene(show.legend = FALSE) + geom_link_ribbon(show.legend = FALSE) + coord_collinear()
+paired_detail <- magnify_ggchord(
+  source + coord_collinear(), regions, detail, side = "bottom"
+)
+paired_detail
+export_ggchord_fusion(paired_detail, width = 12, height = 8)$focus_regions
+```
+
+这仍然只有一个细节面板，不推断逐碱基比对。每个区间须在两个面板完整可见；实例选择按行独立解析。

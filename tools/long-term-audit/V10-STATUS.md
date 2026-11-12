@@ -2,7 +2,7 @@
 
 核对日期：2026-11-12。对应任务书：`ggchord_长期开发路线图与统一架构_Codex任务书_v10_独立执行版.md`。
 基线审计为33236ef；Foundation、View Expansion、Composition已分别完成本地开发并按授权
-整合main；v0.21.0已按授权整合并推送，main/origin/main为69556d8。当前v0.22.0约定范围本地开发完成，尚未整合或推送。
+整合main；v0.21.0已按授权整合并推送，origin/main为69556d8；v0.22.0已获批准整合本地main（d5dfbbb）。当前v0.23.0约定范围本地完成，尚未整合或推送。
 最近正式发布仍为v0.16.6。本文中的“完成”指明确边界内的本地实现与定向验证，
 不表示包级发布检测、所有候选功能或任意输入组合完成。
 
@@ -20,7 +20,7 @@
 | §4.5、§10.5/11 Radial | 已实现spokes、首尾邻接、有/无D–A对照及共享Feature/Track/实例 | check-radial.R；N=2每源行一次，N=1拒绝，无虚构首尾连接 |
 | §4.7–4.8、§10.12 等长/轴 | 已实现可选equal、真实长度保留、1/L端点优先及圆接缝策略 | foundation-views-results-v0.17.0.json、plasmid-axis-results-v0.17.0.json；显式刻度优先，不提供误导性共享绝对比例尺 |
 | §4.11、§10.16 A–B–A | 已实现seq_order/命名副本、between与dplyr筛选，在Collinear/Chord/Radial共用路由 | v0.17/18开发记录；Circular/Dotplot不适配重复实例 |
-| §5、A.3 Fusion | F0/F1已实现真实区间、中央Circular/Chord、四方向横纵Collinear、毫米导出与目标尺寸重建 | check-fusion.R、v0.19.0-results.json；F2/F3、外围Sankey/Radial/Dotplot、八方向/自由角度、全局避障未完成 |
+| §5、A.3 Fusion | F0/F1已实现真实区间、中央Circular/Chord（v0.23.0扩展Collinear）、四方向横纵Collinear、毫米导出与目标尺寸重建 | check-fusion.R、v0.19.0-results.json；F2/F3、外围Sankey/Radial/Dotplot、八方向/自由角度、全局避障未完成 |
 | §6.1、A.5 Ribbon | 已实现显式端点渐变、装饰subject尖头、Identity六刻度与用户scale优先 | ribbon-flow-results-v0.17.0.json、identity-guide-results-v0.17.0.json；按后续用户决定默认仍非端点渐变，不能按原提案声称默认渐变 |
 | §6.2、A.6 标签 | 已修复30标签/混合层切换、共享实测队列、圆轴字形；真实13质粒/旗舰与代表尺寸有证据 | foundation-label/size-results-v0.17.0.json；不是全局零碰撞保证，未完成与SnapGene同输入导出的完整公平对标，全部引线穿字/内部框指标仍待完善 |
 | §6.3.1、§10.15 Guide | 已实现实测预算、Identity保序不等宽分段、最终方向和显式设置优先，已有离散布局原型 | guide-results.json、foundation-guide-results-v0.17.0.json；通用多Guide联合分行/调向求解仍未完成 |
@@ -29,7 +29,7 @@
 | §6.5 Recipes | 已有真实科研综合示例与Fusion配方，继续复用基础API | tools/documentation-examples.R；不是独立模板产品；v0.22.0已提供显式源区间magnify入口 |
 | §6.6 适配器 | 本版新增BEDPE保留原字段/方向/缺失策略；FASTA可显式保留真实字符 | check-bedpe.R、check-semantic-detail.R；VCF/SV、BigWig/bedGraph、domain/motif等格式专用导入器未完成，见ADAPTER-AUDIT-v0.20.0.md |
 | §4.9、§10.13 短序列 | v0.21.0已实现真实gapped FASTA、源/列双映射、显式源验证和Cartesian局部geom_residue | DEVELOPMENT-v0.21.0.md、v0.21.0-alignment-results.json；不含MSA算法、CIGAR全格式解析、CDS翻译/phase及宏观字符投影 |
-| §4.10 语义放大 | v0.22.0已公开magnify_ggchord：真实源区间、独立Collinear细节、毫米高亮与装饰leader、精确导出 | DEVELOPMENT-v0.22.0.md、check-magnify.R；要求显式detail及统计口径。M1–M3完整目标、跨原点选区、任意inset、多级嵌套未完成 |
+| §4.10 语义放大 | v0.22.0公开magnify；v0.23.0实现M1显式多源区间/Chord与Collinear主图、真实HSP局部图、逐行源导出 | DEVELOPMENT-v0.23.0.md、check-magnify-pairs.R；要求显式detail及统计口径。M2–M3、跨原点选区、任意inset、多级嵌套未完成 |
 | §7、A.4、§10.8/14/17 网站/README | 导航/Markdown源/双语教学重构已实施，README未来方向保留，新API同步实际教程 | v0.17/18/19开发记录与浏览器JSON；62对页面为当前源规模。代表页响应式通过，不是全站逐页逐宽度视觉认证；本版不重建旧图或冻结docs |
 | §8.3、§9、1.0稳定化 | 待实施 | 未集中冻结全部新API、兼容/弃用策略及完整候选发布验收；版本分支开发完成不等于v10完成 |
 | X 非目标 | 持续遵守 | 不开发交互HTML绘图、Shiny/在线编辑器，不运行分析引擎伪造比对，不自动push/部署/Release |

@@ -7,7 +7,7 @@
 ggchord_fusion(center, center_size = NULL, layout = c("fixed", "adaptive"))
 }
 \arguments{
-\item{center}{A ggchord plot using Circular or Chord coordinates.}
+\item{center}{A ggchord plot using Circular, Chord or horizontal/vertical Collinear coordinates.}
 
 \item{center_size}{Optional width and height as fractions of the composition
 area, excluding its cross-panel legend. NULL allocates available space.}
