@@ -6,7 +6,11 @@
   rendering, route obstacles and perimeter packing share the target-device
   bold-name/plain-coordinate envelope and physical gap. Effective component
   theme styles enter layout before placement; axis placement precedes leader
-  routing so rerouting cannot move its own text obstacles.
+  routing so rerouting cannot move its own text obstacles. Fixed leader roots
+  also receive axis clearance, and collided internal callouts can detour around
+  the resolved text. Batched route and perimeter crossing decisions preserve
+  the existing strict-interior rules. Label-quality measurement reports
+  physical convergence separately from panel measurement.
 
 - Fixed bounded `scale`/`adaptive` line factors not reaching omitted fixed
   linewidth aesthetics in native sequence, point-link, ribbon and alignment

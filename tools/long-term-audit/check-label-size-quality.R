@@ -8,6 +8,7 @@ if ('--after' %in% commandArgs(trailingOnly = TRUE)) prefix <- paste0(prefix, 'a
 if ('--refined' %in% commandArgs(trailingOnly = TRUE)) prefix <- paste0(prefix, 'refined-')
 if ('--current' %in% commandArgs(trailingOnly = TRUE)) prefix <- paste0(prefix, 'current-')
 if ('--ordered' %in% commandArgs(trailingOnly = TRUE)) prefix <- paste0(prefix, 'ordered-')
+if ('--roots' %in% commandArgs(trailingOnly = TRUE)) prefix <- paste0(prefix, 'roots-')
 cases <- c('pUC19', 'pTRE_Tight_BI', 'pETDuet_1')
 profiles <- if (adaptive) list(compact = c(6, 6)) else list(compact = c(6, 6), wide = c(12, 8))
 if ('--compact-only' %in% commandArgs(trailingOnly = TRUE)) profiles <- profiles['compact']

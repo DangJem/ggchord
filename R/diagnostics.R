@@ -214,7 +214,9 @@ ggchord_diagnostic_colours <- function(built, colour_vision) {
 #'   it never means that all quality or portability checks passed.
 #' @section Label quality:
 #' `label_quality` reports summary counts, text-object conflicts, registered
-#' annotation polylines and measured oriented text boxes in millimetres. Arc
+#' annotation polylines and measured oriented text boxes in millimetres. Its
+#' `measurement` entry separates panel measurement, geometry convergence and
+#' physical refinement passes. Arc
 #' glyphs belonging to one string are one text object; their intentional
 #' internal contacts are not label collisions. Leader crossings exclude shared
 #' endpoints; through-text checks concern box interiors, not exact glyph ink.

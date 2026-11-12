@@ -1,0 +1,9 @@
+{
+  "scope": "665651c native square per-case artifact versus in-process two-batch candidate, entire diagnostics are equal; full four-profile driver interrupted",
+  "native_diagnostics_sha256": "7abc970097bb8a93ce2fb69fb2237cbb5522fa99beddf6e76fd022269614a643",
+  "candidate_diagnostics_sha256": "7abc970097bb8a93ce2fb69fb2237cbb5522fa99beddf6e76fd022269614a643",
+  "whole_diagnostics_equal": true,
+  "retained_source_labels": 164,
+  "leaders_through_text": 2,
+  "quality_pass": false
+}

@@ -35,7 +35,8 @@ measure <- function(plot, id, width = 10, height = 8) {
   jsonlite::write_json(result, file.path(folder, paste0(prefix, id, '.json')),
     auto_unbox = TRUE, pretty = TRUE, na = 'null')
   c(result$summary, list(width = width, height = height, file = path,
-    measurement = context$status, visibility_reasons = as.list(table(ggchord_label_visibility(layout)$reason))))
+    measurement = context$status, geometry_metric_status = context$geometry_metric_status,
+    geometry_converged = context$converged, refinement_passes = context$refinement_passes, visibility_reasons = as.list(table(ggchord_label_visibility(layout)$reason))))
 }
 # Explicit geometry controls test detectors rather than invented observations.
 identity_projection <- list(transform = function(data, panel) data)

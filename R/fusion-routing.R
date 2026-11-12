@@ -53,6 +53,43 @@ ggchord_route_segment_crossings <- function(a, b, barriers, tolerance = 1e-9) {
   out
 }
 
+# Batch the existing strict rectangle/segment decisions for graph neighbours.
+ggchord_route_targets_blocked <- function(a, targets, boxes, barriers, tolerance = 1e-7) {
+  n <- nrow(targets)
+  if (!n) return(logical())
+  result <- rep(FALSE, n)
+  if (nrow(boxes)) {
+    enter <- matrix(0, n, nrow(boxes)); leave <- matrix(1, n, nrow(boxes))
+    for (axis in 1:2) {
+      lo <- boxes[[if (axis == 1L) 'xmin' else 'ymin']] + tolerance
+      hi <- boxes[[if (axis == 1L) 'xmax' else 'ymax']] - tolerance
+      delta <- targets[, axis]-a[axis]
+      moving <- abs(delta) >= 1e-12
+      if (any(moving)) {
+        first <- outer(rep(1, sum(moving)), lo-a[axis])/delta[moving]
+        last <- outer(rep(1, sum(moving)), hi-a[axis])/delta[moving]
+        enter[moving, ] <- pmax(enter[moving, , drop = FALSE], pmin(first, last))
+        leave[moving, ] <- pmin(leave[moving, , drop = FALSE], pmax(first, last))
+      }
+      outside <- a[axis] <= lo | a[axis] >= hi
+      if (any(!moving) && any(outside)) leave[!moving, outside] <- -Inf
+    }
+    result <- rowSums(enter < leave & leave > 0 & enter < 1) > 0
+  }
+  if (!is.null(barriers) && nrow(barriers)) {
+    rx <- targets[, 1]-a[1]; ry <- targets[, 2]-a[2]
+    sx <- barriers$x2-barriers$x1; sy <- barriers$y2-barriers$y1
+    denominator <- outer(rx, sy)-outer(ry, sx)
+    valid <- is.finite(denominator) & abs(denominator) > 1e-9
+    qx <- barriers$x1-a[1]; qy <- barriers$y1-a[2]
+    t <- matrix(rep(qx*sy-qy*sx, each = n), n)/denominator
+    u <- (outer(ry, qx)-outer(rx, qy))/denominator
+    result <- result | rowSums(valid & t > 1e-9 & t < 1-1e-9 & u > 1e-9 & u < 1-1e-9,
+      na.rm = TRUE) > 0
+  }
+  unname(result)
+}
+
 ggchord_route_shortest <- function(start, end, boxes, canvas, clearance = .6, barriers = NULL) {
   if (any(c(start, end) < 0) || any(c(start[1], end[1]) > canvas[1]) ||
       any(c(start[2], end[2]) > canvas[2])) return(NULL)
@@ -86,12 +123,15 @@ ggchord_route_shortest <- function(start, end, boxes, canvas, clearance = .6, ba
     if (!is.finite(distance[at])) return(NULL)
     if (at == 2L) break
     visited[at] <- TRUE
-    for (to in which(!visited)) {
-      cost <- sqrt(sum((nodes[to, ] - nodes[at, ])^2))
-      if (distance[at] + cost >= distance[to] ||
-          any(ggchord_route_segment_hits(nodes[at, ], nodes[to, ], padded)) ||
-          crosses(nodes[at, ], nodes[to, ])) next
-      distance[to] <- distance[at] + cost; previous[to] <- at
+    to <- which(!visited)
+    costs <- sqrt(rowSums(sweep(nodes[to, , drop = FALSE], 2, nodes[at, ], '-')^2))
+    improved <- distance[at]+costs < distance[to]
+    to <- to[improved]; costs <- costs[improved]
+    if (length(to)) {
+      clear <- !ggchord_route_targets_blocked(nodes[at, ],
+        nodes[to, , drop = FALSE], padded, barriers)
+      distance[to[clear]] <- distance[at]+costs[clear]
+      previous[to[clear]] <- at
     }
   }
   if (!is.finite(distance[2L])) return(NULL)

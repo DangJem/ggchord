@@ -28,7 +28,36 @@ ggchord_annotation_leader_segments <- function(registry) {
   all
 }
 
-# Route existing crossed exterior callouts around text and all other leaders.
+# Fixed directed roots are obstacles for text placement. Mutable shoulders are
+# deliberately absent so rerouting cannot change an axis obstacle afterwards.
+ggchord_annotation_leader_roots <- function(registry) {
+  segments <- ggchord_annotation_leader_segments(registry)
+  roots <- list()
+  if (nrow(segments)) {
+    keys <- paste(segments$owner, segments$component, segments$source, sep = '\r')
+    for (key in unique(keys)) {
+      path <- segments[keys == key, , drop = FALSE]
+      starts <- vapply(seq_len(nrow(path)), function(i) !any(
+        (path$x2-path$x1[i])^2+(path$y2-path$y1[i])^2 < 1e-18), logical(1))
+      point <- if (sum(starts) == 1L) c(path$x1[starts], path$y1[starts]) else NULL
+      if (is.null(point)) {
+        geometry <- registry[[path$owner[1L]]][[path$component[1L]]]
+        if (all(c('anchor_x', 'anchor_y') %in% names(geometry))) {
+          anchors <- unique(geometry[geometry$source_row %in% path$source[1L],
+            c('anchor_x', 'anchor_y'), drop = FALSE])
+          anchors <- anchors[stats::complete.cases(anchors), , drop = FALSE]
+          if (nrow(anchors) == 1L) point <- unlist(anchors, use.names = FALSE)
+        }
+      }
+      if (length(point) == 2L && all(is.finite(point))) roots[[length(roots)+1L]] <-
+        data.frame(x0 = point[1L], y0 = point[2L], x1 = point[1L], y1 = point[2L])
+    }
+  }
+  ggchord_rbind_fill(roots) %||% data.frame(x0 = numeric(), y0 = numeric(),
+    x1 = numeric(), y1 = numeric())
+}
+
+# Route collided annotation callouts around text and all other leaders.
 # Positions, directed chain endpoints and source membership remain unchanged.
 ggchord_detour_crossing_leaders <- function(registry, layout) {
   crosses <- function(path, others) nrow(others) > 0L && any(vapply(seq_len(nrow(path)), function(i)
@@ -47,7 +76,7 @@ ggchord_detour_crossing_leaders <- function(registry, layout) {
     geometry <- registry[[owner]][[component]]
     if (!is.data.frame(geometry) || !nrow(geometry)) next
     sources <- if (component == 'gene_label_repel')
-      unique(geometry$source_row[geometry$.component %in% 'text' & ggchord_outer_callouts(geometry)]) else
+      unique(geometry$source_row[geometry$.component %in% 'text']) else
       unique(geometry$source_row[geometry$restriction_component %in% 'leader'])
     for (source in sources[!is.na(sources)]) {
       leaders <- ggchord_annotation_leader_segments(registry)

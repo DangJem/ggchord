@@ -32,6 +32,10 @@ if ('--ordered' %in% commandArgs(trailingOnly = TRUE)) {
   routes <- TRUE
   prefix <- 'v0.27.0-flagship-ordered-'
 }
+if ('--roots' %in% commandArgs(trailingOnly = TRUE)) {
+  routes <- TRUE
+  prefix <- 'v0.27.0-flagship-roots-'
+}
 lines <- readLines('tools/documentation-examples.R', warn = FALSE)
 markers <- grep('^# ---- [a-z]+ ----$', lines)
 chunks <- stats::setNames(lapply(seq_len(length(markers)-1L), function(i)
@@ -53,7 +57,11 @@ results <- list()
 for (name in names(profiles)) {
   cat('Flagship labels:', name, '\n'); flush.console()
   size <- profiles[[name]]
-  results[[name]] <- measure(p_show_plasmid, name, size[1L], size[2L])
+  results[[name]] <- tryCatch(measure(p_show_plasmid, name, size[1L], size[2L]),
+    error = function(e) list(status = 'explicit_failure', message = conditionMessage(e),
+      width = size[1L], height = size[2L], measured = FALSE,
+      n_visible_source_labels = NA_integer_, n_text_overlaps = NA_integer_,
+      n_leader_crossings = NA_integer_, n_leaders_through_text = NA_integer_))
   stopifnot(identical(source, p_show_plasmid$ggchord$data),
     identical(layer_inputs, lapply(p_show_plasmid$layers, function(layer) layer$ggchord_input_data)))
 }

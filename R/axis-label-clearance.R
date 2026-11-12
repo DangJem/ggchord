@@ -19,7 +19,14 @@ ggchord_clear_circular_axis_text <- function(text, layout) {
   units <- layout$text_units_per_inch %||% .35
   # Axis placement precedes leader routing. Depending on the current leader
   # path here would move text again after its obstacle was already routed.
-  if (!length(polygons)) return(text)
+  roots <- ggchord_annotation_leader_roots(layout$layer_geometry)
+  if (!length(polygons) && !nrow(roots)) return(text)
+  root_hit <- function(boxes) {
+    if (!nrow(roots) || !nrow(boxes)) return(FALSE)
+    boxes$ow <- boxes$ow+2*.3*units/25.4
+    boxes$oh <- boxes$oh+2*.3*units/25.4
+    ggchord_inner_leader_hits(roots, boxes)
+  }
   backbone_radii <- unlist(lapply(layout$layer_geometry, function(owner) {
     d <- owner[['seq']]
     if (!is.data.frame(d) || !all(c('x', 'y') %in% names(d))) return(numeric())
@@ -49,7 +56,8 @@ ggchord_clear_circular_axis_text <- function(text, layout) {
     original <- text[i, , drop = FALSE]
     boxes <- boxes_for(original)
     feature_collision <- feature_hit(boxes)
-    if (!feature_collision) {
+    anchor_collision <- !feature_collision && root_hit(boxes)
+    if (!feature_collision && !anchor_collision) {
       text$.axis_clearance_status[i] <- 'clear'
       next
     }
@@ -71,7 +79,7 @@ ggchord_clear_circular_axis_text <- function(text, layout) {
     if (is.finite(outer) && outer > limit && outer <= max(4*height, 3*units/25.4))
       amounts <- c(amounts, outer)
     amounts <- unique(amounts[order(abs(amounts), amounts < 0)])
-    text$.axis_clearance_status[i] <- 'feature_unresolved'
+    text$.axis_clearance_status[i] <- if (feature_collision) 'feature_unresolved' else 'anchor_unresolved'
     min_radius <- max(2*height, sum(boxes$ow)/(pi/2))
     for (amount in amounts) {
       if (radius+amount < min_radius) next
@@ -79,14 +87,14 @@ ggchord_clear_circular_axis_text <- function(text, layout) {
       candidate$text_x <- original$text_x*(radius+amount)/radius
       candidate$text_y <- original$text_y*(radius+amount)/radius
       moved <- boxes_for(candidate)
-      if (feature_hit(moved) || backbone_hit(moved)) next
+      if (feature_hit(moved) || backbone_hit(moved) || root_hit(moved)) next
       hits_text <- nrow(others) > 0L && any(vapply(seq_len(nrow(moved)), function(k)
         any(ggchord_oriented_box_overlaps(moved[k, , drop = FALSE], others)), logical(1)))
       if (hits_text) next
       text$text_x[i] <- candidate$text_x
       text$text_y[i] <- candidate$text_y
       text$.axis_clearance_mm[i] <- amount*25.4/units
-      text$.axis_clearance_status[i] <- 'feature_clearance'
+      text$.axis_clearance_status[i] <- if (feature_collision) 'feature_clearance' else 'anchor_clearance'
       break
     }
   }

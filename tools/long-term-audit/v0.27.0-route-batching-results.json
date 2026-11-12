@@ -1,0 +1,11 @@
+{
+  "status": "passed native batching equivalence controls",
+  "decision_count": 7684,
+  "full_route_status": ["route", "route", "route", "route", "no_route"],
+  "candidate_body_sha256": "0991370a9a4fac28c6ad3e7b3fac864e785d7a9fba41a44e94269beac1f5feef",
+  "helper_body_sha256": "f3048a601b3f38f7b7d43c5144f5f856399d8beefb47ce81b8618f9263b301d1",
+  "reference_commit": "665651c",
+  "runtime_source_sha256": "bce028f9cea881bb0ac9608c74cfd029024e9a5c6ac81d8d40aa807d3f8f313c",
+  "production_changed": true,
+  "scope": "Explicit finite computational geometry; no full-figure or platform certification"
+}

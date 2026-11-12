@@ -120,7 +120,11 @@ ggchord_label_quality <- function(layout, text, built, context) {
       automatic_breaks = axis$.axis_automatic_breaks[at], explicit_offset = axis$.axis_offset_explicit[at],
       status = axis$.axis_clearance_status[at], radial_shift_mm = axis$.axis_clearance_mm[at]))
   }
-  list(summary = summary, conflicts = conflicts, text = text, leaders = segments,
+  list(summary = summary, measurement = list(panel_status = context$status %||% 'unknown',
+    geometry_metric_status = context$geometry_metric_status %||% 'unknown',
+    geometry_converged = context$converged %||% NA,
+    refinement_passes = context$refinement_passes %||% NA_integer_),
+    conflicts = conflicts, text = text, leaders = segments,
     axis_clearance = axis_clearance,
     feature_contacts = features$contacts, feature_polygons = features$polygons,
     feature_parts_unchecked = features$skipped,

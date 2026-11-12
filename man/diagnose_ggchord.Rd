@@ -65,7 +65,9 @@ viewing conditions, and never automatically change the plot or fail a run.
 \section{Label quality}{
 
 \code{label_quality} reports summary counts, text-object conflicts, registered
-annotation polylines and measured oriented text boxes in millimetres. Arc
+annotation polylines and measured oriented text boxes in millimetres. Its
+\code{measurement} entry separates panel measurement, geometry convergence and
+physical refinement passes. Arc
 glyphs belonging to one string are one text object; their intentional
 internal contacts are not label collisions. Leader crossings exclude shared
 endpoints; through-text checks concern box interiors, not exact glyph ink.

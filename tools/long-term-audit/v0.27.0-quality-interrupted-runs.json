@@ -148,5 +148,12 @@
     "R/layout-axis.R": "268258e9bfbc2ee0ae13cd744059a774295c8e3545694499bfcef34f56acb6b5",
     "R/collinear-utils.R": "48b4672eaa2bdc4b183d83e363f58356c88aa1973b3bf71cdf39639d3b1d467e",
     "R/helpers-ordered-packing.R": "962c2926a2b1da42a9cc90aee2c0ef2158925c9863a403b839d7bfaee60608b2"
+  },
+  "later_artifact_review": {
+    "native_square_json_complete": true,
+    "native_square_whole_diagnostics_equal_to_two_batch_candidate": true,
+    "native_square_conflicts": 2,
+    "driver_still_exit_143": true,
+    "compact_not_completed": true
   }
 }

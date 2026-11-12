@@ -19,6 +19,12 @@
     "n_text_feature_unresolved": 0,
     "n_text_on_own_feature": 2
   },
+  "measurement": {
+    "panel_status": "measured",
+    "geometry_metric_status": "measured",
+    "geometry_converged": true,
+    "refinement_passes": 1
+  },
   "conflicts": [],
   "text": [
     {

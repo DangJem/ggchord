@@ -46,8 +46,7 @@ ggchord_detour_annotation_leaders <- function(registry, layout) {
     if (is.data.frame(sites) && nrow(sites) && any(sites$restriction_component %in% 'leader')) return(TRUE)
     d <- owner$gene_label_repel
     if (!is.data.frame(d) || !nrow(d)) return(FALSE)
-    sources <- d$source_row[d$.component %in% 'text' & ggchord_outer_callouts(d)]
-    any(d$.component %in% 'segment' & d$source_row %in% sources)
+    any(d$.component %in% 'segment')
   }, logical(1)))
   if (!needed) return(registry)
   boxes <- ggchord_annotation_text_obstacles(registry, layout)

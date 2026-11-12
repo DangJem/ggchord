@@ -62,7 +62,9 @@
 #' @param axis.text.check.overlap Whether overlapping axis labels are hidden. Defaults to TRUE.
 #'   Automatically positioned circular parallel labels, including combined seam
 #'   strings, can receive bounded inward or outward radial clearance around
-#'   feature polygons. Annotation leaders route around the resolved axis text.
+#'   feature polygons and fixed annotation-leader roots. Internal and exterior
+#'   annotation leaders route around the resolved axis text; mutable shoulders
+#'   do not feed back into axis placement.
 #'   Explicit `axis.text.offset` values and explicit scale breaks stay fixed.
 #' @param seq.label,gene.label,feature.label,restriction.label,seq.center.label,seq.center.name,seq.center.length
 #'   Text elements for sequence, gene, feature, restriction-site and circular

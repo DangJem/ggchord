@@ -169,23 +169,20 @@ ggchord_perimeter_tasks <- function(registry, units_per_inch) {
 }
 
 ggchord_perimeter_rail_crossings <- function(tasks, rows, edge_x, edge_y) {
-  if (length(rows) < 2L) return(0L)
+  n <- length(rows)
+  if (n < 2L) return(0L)
+  segments <- data.frame(x1 = tasks$route_x[rows], y1 = tasks$route_y[rows],
+    x2 = rep(edge_x, n), y2 = edge_y)
   crossings <- 0L
-  for (a in seq_len(length(rows) - 1L)) {
-    i <- rows[a]
-    first <- data.frame(x1 = tasks$route_x[i], y1 = tasks$route_y[i],
-      x2 = edge_x, y2 = edge_y[a])
-    for (b in seq.int(a + 1L, length(rows))) {
-      j <- rows[b]
-      if (abs(tasks$route_x[i] - tasks$route_x[j]) < 1e-8 &&
-          abs(tasks$route_y[i] - tasks$route_y[j]) < 1e-8) next
-      second <- data.frame(x1 = tasks$route_x[j], y1 = tasks$route_y[j],
-        x2 = edge_x, y2 = edge_y[b])
-      crossings <- crossings + as.integer(
-        ggchord_external_leader_crosses(first, second))
-    }
+  for (a in seq_len(n-1L)) {
+    at <- seq.int(a+1L, n)
+    at <- at[abs(segments$x1[at]-segments$x1[a]) >= 1e-8 |
+      abs(segments$y1[at]-segments$y1[a]) >= 1e-8]
+    if (length(at)) crossings <- crossings+sum(ggchord_route_segment_crossings(
+      c(segments$x1[a], segments$y1[a]), c(segments$x2[a], segments$y2[a]),
+      segments[at, , drop = FALSE]))
   }
-  crossings
+  as.integer(crossings)
 }
 
 ggchord_perimeter_line_hits_box <- function(line, box) {

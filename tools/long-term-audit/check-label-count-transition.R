@@ -10,6 +10,13 @@ features <- find_common_features(sequence)
 sites <- find_restriction_sites(sequence)
 counts <- c(0L, 1L, 3L, 10L, 29L, 30L, 31L, 58L)
 stopifnot(nrow(sites) >= max(counts))
+selected_counts <- sub('^--counts=', '', grep('^--counts=', commandArgs(trailingOnly = TRUE), value = TRUE))
+if (length(selected_counts)) {
+  stopifnot(length(selected_counts) == 1L)
+  selected_counts <- as.integer(strsplit(selected_counts, ',', fixed = TRUE)[[1L]])
+  stopifnot(length(selected_counts) > 0L, all(selected_counts %in% counts))
+  counts <- selected_counts
+}
 position <- position_feature_stack(spacing = .085, base_position = position_plasmid())
 results <- list()
 for (count in counts) {
@@ -28,11 +35,12 @@ for (count in counts) {
     results[[as.character(count)]]$n_visible_source_labels == nrow(features)+count)
 }
 sources <- list.files('R', '[.]R$', full.names = TRUE)
-jsonlite::write_json(list(scope = 'pUC19 feature labels with eight explicit real-site row counts on the same 10x8 PNG canvas; not arbitrary counts or devices',
+jsonlite::write_json(list(scope = paste('pUC19 feature labels with', length(counts), 'selected real-site row count(s) on the same 10x8 PNG canvas; not arbitrary counts or devices'),
   source_features = nrow(features), source_sites = nrow(sites), cases = results,
   runtime_sha256 = as.list(setNames(vapply(sources, function(path)
     digest::digest(file = path, algo = 'sha256'), character(1)), sources)),
   source_tables_preserved = TRUE, per_case_manual_tuning = 0L,
   caveats = 'Contacts are observations; changing source count can legitimately change placement. No pixel-equality or unmeasured quality guarantee.'),
-  'tools/long-term-audit/v0.27.0-label-transition-results.json', pretty = TRUE, auto_unbox = TRUE)
+  paste0('tools/long-term-audit/v0.27.0-label-transition-',
+    if (length(selected_counts)) paste(counts, collapse = '-') else 'all', '-results.json'), pretty = TRUE, auto_unbox = TRUE)
 cat('Site count transition observations recorded\n')
