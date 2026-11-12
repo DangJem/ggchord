@@ -10,6 +10,10 @@
 #' native legends and colour bars, then remeasures the complete plot. Existing
 #' label layout is rerun with the resulting sizes; this is not a new global
 #' label collision solver. Data, source coordinates and scale mappings are unchanged.
+#' Omitted fixed line widths in native backbone, link, ribbon and alignment
+#' layers follow the bounded line factor. Explicit widths and mapped widths
+#' retain their own values and scale rules. Other geometry constants and native
+#' theme-derived aesthetic expressions are not uniformly multiplied.
 #'
 #' Explicit geom styles, mapped sizes, theme fields and guide constraints take
 #' priority. Only unspecified guide grids, directions and positions can change.
@@ -126,8 +130,38 @@ ggchord_apply_adaptive_styles <- function(plot) {
   for (name in c("plot.margin", "legend.spacing", "legend.spacing.x", "legend.spacing.y", "legend.box.spacing"))
     if (grid::is.unit(theme[[name]]) && is.null(explicit[[name]]))
       theme[[name]] <- theme[[name]] * report$spacing_factor
+  geom_styles <- list()
+  for (i in seq_along(plot$layers)) {
+    layer <- plot$layers[[i]]
+    defaults <- layer$ggchord_params$style_defaults
+    fields <- intersect(grep('(^|_)linewidth$', names(defaults), value = TRUE), names(layer$aes_params))
+    user <- layer$ggchord_input_mapping
+    if (isTRUE(layer$inherit.aes)) {
+      inherited <- ggchord_normalize_mapping(plot$mapping)
+      user <- c(user, inherited[setdiff(names(inherited), names(user))])
+    }
+    copied <- FALSE
+    for (field in fields) {
+      value <- layer$aes_params[[field]]
+      if (!is.numeric(value) || length(value) != 1L || !is.finite(value)) next
+      mapped <- isTRUE(defaults[[field]]) && field %in% names(user)
+      locked <- !isTRUE(defaults[[field]]) || mapped
+      target <- if (!locked && policy$mode != 'fixed') value*report$line_factor else value
+      if (!identical(target, value)) {
+        if (!copied) layer <- reconstruct_layer(layer, layer$data)
+        copied <- TRUE
+        layer$aes_params[[field]] <- target
+      }
+      geom_styles[[length(geom_styles)+1L]] <- data.frame(
+        layer_id = layer$ggchord_layer_id %||% paste0('layer-', i), aesthetic = field,
+        default_or_fixed = value, effective_fixed = if (mapped) NA_real_ else target,
+        mapped = mapped, user_locked = locked, units = 'ggplot2 linewidth aesthetic')
+    }
+    if (copied) plot$layers[[i]] <- layer
+  }
   plot$theme <- theme
   report$styles <- ggchord_rbind_fill(sizes) %||% data.frame()
+  report$geom_styles <- ggchord_rbind_fill(geom_styles) %||% data.frame()
   plot$ggchord$adaptive_report <- report
   plot
 }

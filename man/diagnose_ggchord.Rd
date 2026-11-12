@@ -91,8 +91,9 @@ while preserving directed endpoints and source-label positions.
 widths/heights, requested key sizes, direction, grid and shared side budget.
 These complement actual guide-box measurements; requested key dimensions
 are not claimed as final grob bounds. Font fallback remains uninspected.
-With \code{\link[=adapt_ggchord]{adapt_ggchord()}}, \code{adaptive_layout} reports effective theme styles and
-scale factors. In adaptive mode, \code{guide_layout} reports the bounded joint
+With \code{\link[=adapt_ggchord]{adapt_ggchord()}}, \code{adaptive_layout} reports effective theme styles,
+selected default fixed geom line widths and scale factors. In adaptive mode,
+\code{guide_layout} reports the bounded joint
 search, selected guide grids/positions, explicit locks and measured guide-box
 bounds in mm. \code{feasible} concerns the guide canvas and reserved panel budget;
 it does not certify every label or custom grob. \code{insufficient_space} retains

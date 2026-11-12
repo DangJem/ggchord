@@ -1,0 +1,6 @@
+Warning message:
+ggchord(): input data has 21 validation warning(s) (e.g. "start > end in ribbon coordinates (may represent a reverse-complement hit; clean_ggchord_data() can sort them for stable drawing)"). Run validate_ggchord_data(...) for details. 
+null device 
+          1 
+Error: adjusted_pair$layers[[1]]$aes_params$linewidth > 0.9 is not TRUE
+Execution halted

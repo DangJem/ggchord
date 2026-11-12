@@ -228,8 +228,9 @@ ggchord_diagnostic_colours <- function(built, colour_vision) {
 #' widths/heights, requested key sizes, direction, grid and shared side budget.
 #' These complement actual guide-box measurements; requested key dimensions
 #' are not claimed as final grob bounds. Font fallback remains uninspected.
-#' With [adapt_ggchord()], `adaptive_layout` reports effective theme styles and
-#' scale factors. In adaptive mode, `guide_layout` reports the bounded joint
+#' With [adapt_ggchord()], `adaptive_layout` reports effective theme styles,
+#' selected default fixed geom line widths and scale factors. In adaptive mode,
+#' `guide_layout` reports the bounded joint
 #' search, selected guide grids/positions, explicit locks and measured guide-box
 #' bounds in mm. `feasible` concerns the guide canvas and reserved panel budget;
 #' it does not certify every label or custom grob. `insufficient_space` retains

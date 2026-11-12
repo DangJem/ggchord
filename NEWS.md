@@ -1,5 +1,11 @@
 # ggchord 0.27.0 (development)
 
+- Fixed bounded `scale`/`adaptive` line factors not reaching omitted fixed
+  linewidth aesthetics in native sequence, point-link, ribbon and alignment
+  layers. Explicit and mapped widths keep their own rules, identical layer
+  types remain independent, and `fixed` or plots without a policy keep their
+  existing styles. Diagnostics report the selected effective fixed widths.
+
 - Fixed crossed circular exterior callout leaders on cramped canvases by routing
   collided paths around measured text and other leaders. Real directed endpoints,
   label positions and source records stay unchanged; unresolved cases remain

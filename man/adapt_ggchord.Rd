@@ -44,6 +44,10 @@ within bounds. \code{adaptive} additionally selects a joint arrangement of train
 native legends and colour bars, then remeasures the complete plot. Existing
 label layout is rerun with the resulting sizes; this is not a new global
 label collision solver. Data, source coordinates and scale mappings are unchanged.
+Omitted fixed line widths in native backbone, link, ribbon and alignment
+layers follow the bounded line factor. Explicit widths and mapped widths
+retain their own values and scale rules. Other geometry constants and native
+theme-derived aesthetic expressions are not uniformly multiplied.
 
 Explicit geom styles, mapped sizes, theme fields and guide constraints take
 priority. Only unspecified guide grids, directions and positions can change.

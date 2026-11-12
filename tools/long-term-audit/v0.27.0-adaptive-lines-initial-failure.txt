@@ -1,0 +1,6 @@
+Warning message:
+ggchord(): input data has 21 validation warning(s) (e.g. "start > end in ribbon coordinates (may represent a reverse-complement hit; clean_ggchord_data() can sort them for stable drawing)"). Run validate_ggchord_data(...) for details. 
+null device 
+          1 
+Error: geom_link_line(): supply data with qaccver/saccver/qpos/spos
+Execution halted
