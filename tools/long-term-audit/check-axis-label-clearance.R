@@ -1,5 +1,8 @@
 # Directed real-source controls, on one PNG device. No package/release checks.
+source('tools/audit-source-snapshot.R')
+audit_session <- audit_source_snapshot(additional = c('tools/long-term-audit/check-axis-label-clearance.R'))
 pkgload::load_all(quiet = TRUE)
+audit_assert_source_snapshot(audit_session)
 data(plasmid_example_pTRE_Tight_BI)
 source <- plasmid_example_pTRE_Tight_BI
 features <- find_common_features(source)
@@ -50,7 +53,8 @@ diagnostics <- diagnose_ggchord(rotated, width = 10, height = 8, device = 'png')
 stopifnot(diagnostics$label_quality$summary$n_text_overlaps == 0L,
   diagnostics$label_quality$summary$n_text_feature_unresolved == 0L,
   diagnostics$label_quality$summary$n_label_outside_canvas == 0L)
-jsonlite::write_json(list(status = 'passed for recorded source and selected device',
+audit_assert_source_snapshot(audit_session)
+jsonlite::write_json(list(runtime_sha256 = as.list(audit_session$engine), status = 'passed for recorded source and selected device',
   automatic = automatic$axis, explicit_shortcut = shortcut$axis, explicit_native = native$axis,
   explicit_combined_theme = combined$axis, unrelated_combined_theme = unrelated$axis,
   explicit_breaks = manual_breaks$axis_all,

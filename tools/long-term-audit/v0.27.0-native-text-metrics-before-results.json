@@ -1,0 +1,36 @@
+{
+  "status": "observed, not an assumed pass",
+  "observations": [
+    {
+      "text": "Long name (123)",
+      "family": "sans",
+      "face": "plain",
+      "actual_mm": [24.4633, 2.3039],
+      "layout_mm": [24.1776, 2.2796],
+      "difference_mm": [-0.2856, -0.0243],
+      "equal": false
+    },
+    {
+      "text": "Long\nname (123)",
+      "family": "sans",
+      "face": "bold",
+      "actual_mm": [16.7814, 6.937],
+      "layout_mm": [16.5862, 6.9049],
+      "difference_mm": [-0.1952, -0.0321],
+      "equal": false
+    },
+    {
+      "text": "Format / 格式",
+      "family": "sans",
+      "face": "plain",
+      "actual_mm": [16.921, 2.3039],
+      "layout_mm": [16.921, 2.3039],
+      "difference_mm": [-3.5527e-15, 2.6645e-15],
+      "equal": true
+    }
+  ],
+  "source_sha256": "c8a331c163d15ac9138fa6f65afef7aa73f77833b15f3429a122fa71f49c2806",
+  "scope": "Three explicit type specimens on one PNG; rectangle metrics, not ink outlines or font portability",
+  "file": "tools/long-term-audit/v0.27.0-native-text-metrics-before.png",
+  "png_sha256": "46ef5e5ff56797f11431a0800ce7a4c63e5e6608611b1cc855a5102f51319865"
+}

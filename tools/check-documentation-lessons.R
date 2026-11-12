@@ -1,6 +1,9 @@
 # Verify that task pages prepare their own R objects, without building the package,
 # knitting vignettes, saving user files, opening previews or running a test suite.
+source('tools/audit-source-snapshot.R')
+audit_session <- audit_source_snapshot(additional = c('tools/check-documentation-lessons.R', 'tools/documentation-examples.R', 'website/pages.json', 'website/showcase-recipes.json', list.files('website/en', '[.]md$', full.names = TRUE)))
 pkgload::load_all(quiet = TRUE)
+audit_assert_source_snapshot(audit_session)
 lines <- readLines('tools/documentation-examples.R', warn = FALSE)
 markers <- grep('^# ---- [a-z]+ ----$', lines)
 chunks <- setNames(lapply(seq_len(length(markers)-1L), function(i)
@@ -80,6 +83,7 @@ for(page in pages) {
 }
 output_file <- 'website/assets/lesson-outputs.json'
 serialized <- jsonlite::toJSON(outputs, auto_unbox = TRUE, pretty = TRUE)
+audit_assert_source_snapshot(audit_session)
 if ('--write-outputs' %in% commandArgs(trailingOnly = TRUE)) {
   writeLines(serialized, output_file)
 } else if (!length(selected) && !identical(paste(readLines(output_file, warn = FALSE), collapse = '\n'), as.character(serialized))) {
@@ -87,9 +91,8 @@ if ('--write-outputs' %in% commandArgs(trailingOnly = TRUE)) {
 }
 if (length(selected)) execution[[selected]]$isolation <- "fresh R process, separate documentation environment"
 jsonlite::write_json(list(pages=execution,
-  shared_code_sha256=digest::digest(file="tools/documentation-examples.R",algo="sha256"),
-  engine_sha256=as.list(stats::setNames(vapply(list.files("R","[.]R$",full.names=TRUE),function(path)
-    digest::digest(file=path,algo="sha256"),character(1)),list.files("R","[.]R$",full.names=TRUE))),
+  shared_code_sha256=unname(audit_session$inputs[["tools/documentation-examples.R"]]),
+  engine_sha256=as.list(audit_session$engine),
   scope="Shared preparations and raw constructors in page order; preview/save calls do not write files. Installation commands are not executed. Actual PNG exports are recorded separately.",
   optional_genbank="Biopython enabled through the documentation-only Python environment"),
   if (length(selected)) paste0("/tmp/ggchord-lesson-",selected,".json") else "tools/teaching-audit/lesson-execution.json",auto_unbox=TRUE,pretty=TRUE)

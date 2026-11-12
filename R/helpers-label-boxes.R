@@ -334,7 +334,8 @@ ggchord_text_boxes <- function(df,
   h <- numeric(n)
   valid <- !is.na(texts) & nzchar(texts)
   if (any(valid)) {
-    close_device <- ggchord_measurement_device(text = texts[valid])
+    close_device <- if (grDevices::dev.cur() > 1L) function() invisible(NULL) else
+      ggchord_measurement_device(text = texts[valid])
     on.exit(close_device())
     valid_rows <- which(valid)
     for (i in valid_rows) {

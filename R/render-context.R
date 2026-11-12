@@ -116,24 +116,77 @@ ggchord_render_table <- function(built, force = FALSE) {
   context <- ggchord_panel_context(table, built)
   physical <- isTRUE(force) || !is.null(source$ggchord$layout_policy) || ggchord_physical_requested(source)
   passes <- 0L
+  evaluations <- 0L
+  history <- list()
+  acceleration <- list(attempted = FALSE, accepted = FALSE)
   if (physical && identical(context$status, "measured")) {
-    passes_allowed <- if (isTRUE(source$coordinates$ggchord_circular)) 10L else 3L
+    passes_allowed <- 10L
     for (pass in seq_len(passes_allowed)) {
+      # Try one scalar extrapolation only for an observed circular contraction.
+      if (isTRUE(source$coordinates$ggchord_circular) && !acceleration$attempted &&
+          length(history) >= 2L && length(context$units_per_mm) == 2L &&
+          all(is.finite(context$units_per_mm)) && all(context$units_per_mm > 0) &&
+          abs(diff(context$units_per_mm))/max(context$units_per_mm) < 1e-6) {
+        h0 <- history[[length(history)-1L]]; h1 <- history[[length(history)]]
+        delta <- h1[['input']]-h0[['input']]
+        slope <- if (abs(delta) > 1e-12) (h1[['output']]-h0[['output']])/delta else NA_real_
+        predicted <- if (is.finite(slope) && slope >= 0 && slope < .95)
+          (h1[['output']]-slope*h1[['input']])/(1-slope) else NA_real_
+        current <- max(context$units_per_mm)
+        if (is.finite(predicted) && predicted > 0 && predicted >= current*.5 && predicted <= current*3) {
+          acceleration$attempted <- TRUE
+          proposed <- context
+          proposed$units_per_mm <- stats::setNames(rep(predicted, 2L), c('x', 'y'))
+          proposed$axis_units_per_inch <- proposed$units_per_mm*25.4
+          proposed$units_per_inch <- predicted*25.4
+          proposed$geometry_metric_status <- 'estimated'
+          proposed$basis <- 'Extrapolated scale candidate; actual panel must be rebuilt and measured'
+          evaluations <- evaluations+1L
+          trial <- tryCatch({
+            trial_plot <- ggchord_render_plot_copy(source)
+            trial_built <- ggchord_with_render_context(proposed, ggplot2::ggplot_build(trial_plot))
+            trial_result <- ggchord_with_render_context(proposed, guided(trial_built))
+            trial_built <- trial_result$built
+            trial_table <- trial_result$table %||% ggchord_base_gtable(trial_built)
+            trial_context <- ggchord_panel_context(trial_table, trial_built)
+            error <- if (identical(trial_context$status, 'measured'))
+              max(abs(trial_context$units_per_mm/proposed$units_per_mm-1)) else Inf
+            list(built = trial_built, result = trial_result, table = trial_table,
+              context = trial_context, relative = error)
+          }, error = function(e) list(relative = Inf, message = conditionMessage(e)))
+          accepted <- is.finite(trial$relative) && trial$relative <= .005 &&
+            !identical(trial$result$report$status, 'insufficient_space')
+          acceleration$accepted <- accepted
+          acceleration$proposed_units_per_mm <- predicted
+          acceleration$measured_relative <- trial$relative
+          if (!is.null(trial$message)) acceleration$failure_message <- trial$message
+          if (accepted) {
+            built <- trial$built; result <- trial$result; table <- trial$table
+            context <- trial$context
+            context$converged <- TRUE; context$geometry_metric_status <- 'measured'
+            passes <- evaluations
+            break
+          }
+        }
+      }
       input <- context
       next_plot <- ggchord_render_plot_copy(source)
       built <- ggchord_with_render_context(input, ggplot2::ggplot_build(next_plot))
       result <- ggchord_with_render_context(input, guided(built))
       built <- result$built; table <- result$table %||% ggchord_base_gtable(built)
       context <- ggchord_panel_context(table, built)
-      passes <- pass
+      evaluations <- evaluations+1L
+      passes <- evaluations
       if (!identical(context$status, "measured")) break
       relative <- max(abs(context$units_per_mm / input$units_per_mm - 1))
       context$converged <- is.finite(relative) && relative <= .005
       context$geometry_metric_status <- if (isTRUE(context$converged)) "measured" else "estimated"
+      history <- c(history, list(c(input = max(input$units_per_mm), output = max(context$units_per_mm))))
       if (isTRUE(context$converged)) break
     }
   }
   context$refinement_passes <- passes
+  context$refinement_acceleration <- acceleration
   context$adaptive_layout <- built$plot$ggchord$adaptive_report
   context$guide_layout <- result$report
   if (identical(result$report$status,"insufficient_space")) warning(
@@ -151,6 +204,7 @@ ggchord_render_table <- function(built, force = FALSE) {
   attr(table, "ggchord_render_built") <- built
   table
 }
+
 
 #' @export
 #' @importFrom ggplot2 ggplot_gtable

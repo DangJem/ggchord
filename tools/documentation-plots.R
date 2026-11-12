@@ -1,5 +1,8 @@
 # Shared documentation assets only: one PNG device, explicit sizes, no release matrix.
+source('tools/audit-source-snapshot.R')
+audit_session <- audit_source_snapshot(additional = c('tools/documentation-plots.R', 'tools/documentation-examples.R', 'tools/render-teaching-comparisons.R', 'tools/documentation-fingerprints.py', 'website/parameter-comparisons.json'))
 pkgload::load_all(quiet = TRUE)
+audit_assert_source_snapshot(audit_session)
 text <- readLines('tools/documentation-examples.R', warn = FALSE)
 fingerprints <- jsonlite::fromJSON(system2('python3', 'tools/documentation-fingerprints.py', stdout = TRUE))
 markers <- grep('^# ---- [a-z]+ ----$', text)
@@ -30,7 +33,8 @@ if (length(requested) && all(requested %in% c("fusionview", "fusionfour"))) {
     previous$dependency_md5[at] <- current[at]
     if (id=="fusionview") previous$input[at] <- "Original EMALE PAF; two observed HSPs length >=900 and identity >=85; 11 original query-start events counted in explicit 2000 bp source bins"
   }
-  write.csv(previous,"website/assets/plots.csv",row.names=FALSE)
+  audit_assert_source_snapshot(audit_session)
+write.csv(previous,"website/assets/plots.csv",row.names=FALSE)
   cat("Rendered",length(requested),"independent Fusion PNGs; other current figures retained.\n")
   quit(save="no",status=0)
 }
@@ -227,9 +231,11 @@ assets$code_md5 <- if(length(requested)) {
  ifelse(assets$id %in% requested, fingerprints$code, previous$code_md5[match(assets$id, previous$id)])
 } else rep(fingerprints$code, nrow(assets))
 assets$dependency_md5 <- unname(unlist(fingerprints$assets)[assets$id])
+audit_assert_source_snapshot(audit_session)
 write.csv(assets,'website/assets/plots.csv',row.names=FALSE)
 catalog <- env$catalog_summary
 catalog$figure <- catalog_ids
+audit_assert_source_snapshot(audit_session)
 write.csv(catalog, 'website/assets/plasmid-catalog.csv', row.names=FALSE)
 results<-list(
  showcase=list(sequences=nrow(env$show_sequences),CDS=nrow(env$show_genes),

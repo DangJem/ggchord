@@ -1,5 +1,8 @@
 # One PNG per requested case; no release device matrix or package test suite.
+source('tools/audit-source-snapshot.R')
+audit_session <- audit_source_snapshot(additional = c('tools/long-term-audit/check-label-quality.R', 'tools/documentation-examples.R'))
 pkgload::load_all(quiet = TRUE)
+audit_assert_source_snapshot(audit_session)
 library(dplyr)
 folder <- 'tools/long-term-audit'
 arguments <- commandArgs(trailingOnly = TRUE)
@@ -32,11 +35,13 @@ measure <- function(plot, id, width = 10, height = 8) {
   text <- ggchord_rbind_fill(texts) %||% data.frame()
   result <- ggchord_label_quality(layout, text, built, context)
   result$label_visibility <- ggchord_label_visibility(layout)
+  audit_assert_source_snapshot(audit_session)
   jsonlite::write_json(result, file.path(folder, paste0(prefix, id, '.json')),
     auto_unbox = TRUE, pretty = TRUE, na = 'null')
   c(result$summary, list(width = width, height = height, file = path,
     measurement = context$status, geometry_metric_status = context$geometry_metric_status,
-    geometry_converged = context$converged, refinement_passes = context$refinement_passes, visibility_reasons = as.list(table(ggchord_label_visibility(layout)$reason))))
+    geometry_converged = context$converged, refinement_passes = context$refinement_passes,
+    refinement_acceleration = context$refinement_acceleration, visibility_reasons = as.list(table(ggchord_label_visibility(layout)$reason))))
 }
 # Explicit geometry controls test detectors rather than invented observations.
 identity_projection <- list(transform = function(data, panel) data)
@@ -118,10 +123,10 @@ if (clearance_check || current_check) {
       current$n_text_over_feature == 0L, current$n_text_feature_unresolved == 0L)
   }
 }
+audit_assert_source_snapshot(audit_session)
 source_files <- list.files('R', '[.]R$', full.names = TRUE)
 jsonlite::write_json(list(scope = 'Original catalogue inputs; 10x8 inches, one PNG device. Contacts reported, not assumed zero; not a cross-application comparison.',
-  source_sha256 = as.list(stats::setNames(vapply(source_files,
-    function(path) digest::digest(file = path, algo = 'sha256'), character(1)), source_files)),
+  source_sha256 = as.list(audit_session$engine),
   detector_controls = 'Explicit synthetic geometry distinguishes overlap, crossing, through-text and own/foreign/unresolved polygon contacts',
   cases = results, comparison_scope = 'SnapGene is a visual reference only; matched external exports are not required under the clarified user instruction.',
   unverified = c('non-polygon strokes/markers, visibility/occlusion and exact ink', 'release device/platform matrix')),

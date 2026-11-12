@@ -4,6 +4,8 @@ helper <- readLines('tools/long-term-audit/check-label-quality.R', warn = FALSE)
 end <- grep('^# Explicit geometry controls', helper)[1L]-1L
 stopifnot(is.finite(end))
 eval(parse(text = helper[seq_len(end)]))
+audit_assert_source_snapshot(audit_session)
+audit_session <- audit_source_snapshot(additional = c(audit_session$additional, 'tools/long-term-audit/check-flagship-label-quality.R'))
 joint <- '--joint' %in% commandArgs(trailingOnly = TRUE)
 prefix <- if (joint) 'v0.27.0-flagship-joint-' else 'v0.27.0-flagship-quality-'
 routes <- '--routes' %in% commandArgs(trailingOnly = TRUE)
@@ -36,6 +38,10 @@ if ('--roots' %in% commandArgs(trailingOnly = TRUE)) {
   routes <- TRUE
   prefix <- 'v0.27.0-flagship-roots-'
 }
+if ('--device' %in% commandArgs(trailingOnly = TRUE)) {
+  routes <- TRUE
+  prefix <- 'v0.27.0-flagship-device-'
+}
 lines <- readLines('tools/documentation-examples.R', warn = FALSE)
 markers <- grep('^# ---- [a-z]+ ----$', lines)
 chunks <- stats::setNames(lapply(seq_len(length(markers)-1L), function(i)
@@ -65,13 +71,13 @@ for (name in names(profiles)) {
   stopifnot(identical(source, p_show_plasmid$ggchord$data),
     identical(layer_inputs, lapply(p_show_plasmid$layers, function(layer) layer$ggchord_input_data)))
 }
+audit_assert_source_snapshot(audit_session)
 sources <- list.files('R', '[.]R$', full.names = TRUE)
 jsonlite::write_json(list(scope = 'Published pETDuet-1 plot from canonical documentation chunks; same annotation tables and fixed layer settings across the selected physical PNG sizes',
   source_annotations = list(features = nrow(show_plasmid_features), primers = nrow(show_plasmid_primers),
     selected_restriction_rows = nrow(show_plasmid_sites)), profiles = results,
   source_and_layer_inputs_preserved = TRUE, per_profile_manual_tuning = 0L,
-  runtime_sha256 = as.list(stats::setNames(vapply(sources,
-    function(path) digest::digest(file = path, algo = 'sha256'), character(1)), sources)),
+  runtime_sha256 = as.list(audit_session$engine),
   caveats = c('Contact counts and visibility reasons are observations, not assumed passes.',
     'Exact ink, non-polygon strokes, arbitrary canvases and publication device/platform matrix remain unverified.')),
   if (routes) paste0('tools/long-term-audit/', prefix, paste(names(profiles), collapse = '-'), '-results.json') else

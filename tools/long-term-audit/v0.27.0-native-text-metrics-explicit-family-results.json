@@ -1,0 +1,37 @@
+{
+  "status": "passed native target-device type controls",
+  "production_override": false,
+  "observations": [
+    {
+      "text": "Long name (123)",
+      "family": "Songti SC",
+      "face": "plain",
+      "actual_mm": [21.9315, 2.2099],
+      "layout_mm": [21.9315, 2.2099],
+      "difference_mm": [0, -5.7732e-15],
+      "equal": true
+    },
+    {
+      "text": "Long\nname (123)",
+      "family": "Songti SC",
+      "face": "bold",
+      "actual_mm": [14.3833, 6.8351],
+      "layout_mm": [14.3833, 6.8351],
+      "difference_mm": [0, -8.8818e-16],
+      "equal": true
+    },
+    {
+      "text": "Format / 格式",
+      "family": "Songti SC",
+      "face": "plain",
+      "actual_mm": [19.4262, 2.2099],
+      "layout_mm": [19.4262, 2.2099],
+      "difference_mm": [-3.5527e-15, -3.1086e-15],
+      "equal": true
+    }
+  ],
+  "source_sha256": "4ca3aab391d2fed4c7b10f40f2310c63d145beaf35912d721d8ce07eec106648",
+  "scope": "Three explicit type specimens using installed macOS Songti SC; rectangle metrics plus separate visual inspection, not ink outlines, embedding or font portability. Font remains system-installed and is not bundled or redistributed; no additional licence rights are asserted.",
+  "file": "tools/long-term-audit/v0.27.0-native-text-metrics-explicit-family.png",
+  "png_sha256": "2bfc1fa9c8281015b920bc47310316aaf5836e309f3bfb3f7bb6ebcc1326b3ab"
+}

@@ -216,7 +216,9 @@ ggchord_diagnostic_colours <- function(built, colour_vision) {
 #' `label_quality` reports summary counts, text-object conflicts, registered
 #' annotation polylines and measured oriented text boxes in millimetres. Its
 #' `measurement` entry separates panel measurement, geometry convergence and
-#' physical refinement passes. Arc
+#' physical refinement passes. Circular calibration may try one extrapolated
+#' scale, accepting it only after the usual measured convergence gate passes;
+#' rejected trials retain the ordinary refinement sequence. Arc
 #' glyphs belonging to one string are one text object; their intentional
 #' internal contacts are not label collisions. Leader crossings exclude shared
 #' endpoints; through-text checks concern box interiors, not exact glyph ink.

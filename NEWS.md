@@ -1,5 +1,16 @@
 # ggchord 0.27.0 (development)
 
+- Fixed ordinary label boxes and arc-glyph advances using PDF proxy metrics
+  while a target graphics device was already active. Measured layout now uses
+  that active device; headless measurement retains its fallback. Text spacing
+  may shift slightly where old proxy widths disagreed with the renderer.
+  Circular physical refinement may try one bounded scale extrapolation after
+  two measured samples. It accepts that scale only after rebuilding and passing
+  the existing measured convergence gate; a rejected trial leaves the ordinary
+  sequence intact. Non-circular views share the same bounded ordinary budget,
+  fixing profiles that needed another measured rebuild after the former short
+  cap. Calibration remains separate from other layout constraints.
+
 - Fixed circular axis clearance accidentally treating center labels as backbone
   geometry through partial list-name matching. Diagnostics expose the actual
   clearance status and signed physical shift. Composite restriction-label

@@ -1,0 +1,37 @@
+{
+  "status": "passed native target-device type controls",
+  "production_override": false,
+  "observations": [
+    {
+      "text": "Long name (123)",
+      "family": "sans",
+      "face": "plain",
+      "actual_mm": [24.4633, 2.3039],
+      "layout_mm": [24.4633, 2.3039],
+      "difference_mm": [0, -5.7732e-15],
+      "equal": true
+    },
+    {
+      "text": "Long\nname (123)",
+      "family": "sans",
+      "face": "bold",
+      "actual_mm": [16.7814, 6.937],
+      "layout_mm": [16.7814, 6.937],
+      "difference_mm": [-3.5527e-15, 0],
+      "equal": true
+    },
+    {
+      "text": "Format / 格式",
+      "family": "sans",
+      "face": "plain",
+      "actual_mm": [16.921, 2.3039],
+      "layout_mm": [16.921, 2.3039],
+      "difference_mm": [-3.5527e-15, -2.6645e-15],
+      "equal": true
+    }
+  ],
+  "source_sha256": "4ca3aab391d2fed4c7b10f40f2310c63d145beaf35912d721d8ce07eec106648",
+  "scope": "Three explicit type specimens on one PNG; rectangle metrics, not ink outlines or font portability",
+  "file": "tools/long-term-audit/v0.27.0-native-text-metrics-after.png",
+  "png_sha256": "46ef5e5ff56797f11431a0800ce7a4c63e5e6608611b1cc855a5102f51319865"
+}

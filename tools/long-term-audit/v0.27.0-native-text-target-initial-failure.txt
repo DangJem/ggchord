@@ -1,0 +1,4 @@
+null device 
+          1 
+Error: all(vapply(observations, `[[`, logical(1), "equal")) is not TRUE
+Execution halted

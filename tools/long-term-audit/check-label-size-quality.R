@@ -1,6 +1,9 @@
 # Controlled canvas experiment, one PNG device. It records failures as evidence;
 # no case-specific tuning, package tests or publication device matrix.
+source('tools/audit-source-snapshot.R')
+audit_session <- audit_source_snapshot(additional = c('tools/long-term-audit/check-label-size-quality.R'))
 pkgload::load_all(quiet = TRUE)
+audit_assert_source_snapshot(audit_session)
 folder <- 'tools/long-term-audit'
 adaptive <- '--adaptive' %in% commandArgs(trailingOnly = TRUE)
 prefix <- if (adaptive) 'v0.27.0-label-size-adaptive-' else 'v0.27.0-label-size-'
@@ -9,6 +12,7 @@ if ('--refined' %in% commandArgs(trailingOnly = TRUE)) prefix <- paste0(prefix, 
 if ('--current' %in% commandArgs(trailingOnly = TRUE)) prefix <- paste0(prefix, 'current-')
 if ('--ordered' %in% commandArgs(trailingOnly = TRUE)) prefix <- paste0(prefix, 'ordered-')
 if ('--roots' %in% commandArgs(trailingOnly = TRUE)) prefix <- paste0(prefix, 'roots-')
+if ('--device' %in% commandArgs(trailingOnly = TRUE)) prefix <- paste0(prefix, 'device-')
 cases <- c('pUC19', 'pTRE_Tight_BI', 'pETDuet_1')
 profiles <- if (adaptive) list(compact = c(6, 6)) else list(compact = c(6, 6), wide = c(12, 8))
 if ('--compact-only' %in% commandArgs(trailingOnly = TRUE)) profiles <- profiles['compact']
@@ -69,10 +73,10 @@ for (id in cases) {
   }
 }
 sources <- list.files('R', '[.]R$', full.names = TRUE)
+audit_assert_source_snapshot(audit_session)
 jsonlite::write_json(list(scope = 'Three unchanged catalogue sources, common layer settings and explicit physical sizes; one PNG device. Observations are not assumed passes.',
   layout_policy = if (adaptive) 'adaptive' else 'existing fixed physical styles',
-  observations = observations, runtime_sha256 = as.list(stats::setNames(vapply(sources,
-    function(path) digest::digest(file = path, algo = 'sha256'), character(1)), sources)),
+  observations = observations, runtime_sha256 = as.list(audit_session$engine),
   unverified = c('exact ink, non-polygon strokes/markers and font portability',
     'all catalogue sources at arbitrary sizes', 'publication device/platform matrix')),
   file.path(folder, paste0(prefix, 'results.json')),
