@@ -264,6 +264,11 @@ ggchord <- function(
       if (!is.null(value)) new_settings$legend[[field]] <- value
     }
   }
+  if (inherits(e2, 'theme') && is.null(attr(e2, 'ggchord.settings')) &&
+      !is.null(e2[['ggchord.axis.text.offset']])) {
+    new_settings <- new_settings %||% ggchord_plot_settings(e1)
+    new_settings$axis$text.offset.explicit <- TRUE
+  }
   if (inherits(e2, "Scale")) {
     aesthetic <- e2$aesthetics[1L]
     existing <- if (!is.null(aesthetic)) e1$scales$get_scales(aesthetic) else NULL

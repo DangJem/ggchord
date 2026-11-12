@@ -4556,7 +4556,7 @@
     "parameter": "axis.text.check.overlap",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Whether overlapping axis labels are hidden. Defaults to TRUE.",
+    "constraint": "Whether overlapping axis labels are hidden. Defaults to TRUE. Automatically combined circular seam strings can also receive bounded extra radial clearance around feature polygons when axis.text.offset was not explicitly supplied. Explicit offsets are always preserved.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -5428,7 +5428,7 @@
     "parameter": "axis.text.check.overlap",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Whether overlapping axis labels are hidden. Defaults to TRUE.",
+    "constraint": "Whether overlapping axis labels are hidden. Defaults to TRUE. Automatically combined circular seam strings can also receive bounded extra radial clearance around feature polygons when axis.text.offset was not explicitly supplied. Explicit offsets are always preserved.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -6300,7 +6300,7 @@
     "parameter": "axis.text.check.overlap",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Whether overlapping axis labels are hidden. Defaults to TRUE.",
+    "constraint": "Whether overlapping axis labels are hidden. Defaults to TRUE. Automatically combined circular seam strings can also receive bounded extra radial clearance around feature polygons when axis.text.offset was not explicitly supplied. Explicit offsets are always preserved.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -7172,7 +7172,7 @@
     "parameter": "axis.text.check.overlap",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Whether overlapping axis labels are hidden. Defaults to TRUE.",
+    "constraint": "Whether overlapping axis labels are hidden. Defaults to TRUE. Automatically combined circular seam strings can also receive bounded extra radial clearance around feature polygons when axis.text.offset was not explicitly supplied. Explicit offsets are always preserved.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -8044,7 +8044,7 @@
     "parameter": "axis.text.check.overlap",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Whether overlapping axis labels are hidden. Defaults to TRUE.",
+    "constraint": "Whether overlapping axis labels are hidden. Defaults to TRUE. Automatically combined circular seam strings can also receive bounded extra radial clearance around feature polygons when axis.text.offset was not explicitly supplied. Explicit offsets are always preserved.",
     "source": "man/theme_ggchord.Rd"
   },
   {

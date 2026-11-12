@@ -480,6 +480,7 @@ ggchord_axis_label_geometry <- function(layout, labels) {
   text$text_angle <- text$label_angle
   text$hjust <- text$label_hjust; text$vjust <- text$label_vjust
   text$.axis_label <- text$label
+  text <- ggchord_clear_axis_seam_text(text, layout)
   glyph <- ggchord_arc_text_layout(text,
     units_per_inch = layout$text_units_per_inch %||% .35,
     respect_justification = TRUE)$glyphs

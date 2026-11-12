@@ -1,5 +1,10 @@
 # ggchord 0.27.0 (development)
 
+- Fixed automatically combined circular seam labels touching feature polygons.
+  Only collided strings with an automatic text offset receive bounded radial
+  clearance; tick coordinates, source values and explicit offsets stay fixed.
+  The search also protects other text and retains unresolved cases for review.
+
 - Fixed default Sankey sequence names overlapping their starting coordinate
   labels after projection. Explicit justification remains unchanged. Circular
   axis glyphs now retain string identity in diagnostics, avoiding false reports

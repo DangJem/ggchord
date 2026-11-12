@@ -60,6 +60,9 @@
 #'   parallel labels follow the circle glyph by glyph. Horizontal and numeric
 #'   orientations retain straight text.
 #' @param axis.text.check.overlap Whether overlapping axis labels are hidden. Defaults to TRUE.
+#'   Automatically combined circular seam strings can also receive bounded
+#'   extra radial clearance around feature polygons when `axis.text.offset`
+#'   was not explicitly supplied. Explicit offsets are always preserved.
 #' @param seq.label,gene.label,feature.label,restriction.label,seq.center.label,seq.center.name,seq.center.length
 #'   Text elements for sequence, gene, feature, restriction-site and circular
 #'   centre labels.
@@ -203,6 +206,9 @@ ggchord_theme_from_environment <- function(preset, env, dots) {
   }
   if (preset == "plasmid" && is.null(values$axis.text.offset)) {
     values$axis.text.offset <- grid::unit(1.15, "mm")
+    # The unit retains provenance through theme + theme, whose settings
+    # attribute alone cannot reveal a later equal-valued native override.
+    attr(values$axis.text.offset, "ggchord.automatic_axis_offset") <- TRUE
   }
   base_size <- if (preset == "publication") 9 else if (preset == "plasmid") 10 else 11
   dark <- preset == "dark"
@@ -312,6 +318,8 @@ ggchord_theme_from_environment <- function(preset, env, dots) {
   overrides <- overrides[!vapply(overrides, is.null, logical(1))]
   if (length(overrides)) out <- out + do.call(ggplot2::theme, overrides)
   settings <- ggchord_theme_settings(values)
+  settings$axis$text.offset.explicit <- 'axis.text.offset' %in% supplied_shortcuts ||
+    'ggchord.axis.text.offset' %in% native_overrides
   settings$axis$tick.linewidth <- c(
     major = if (preset == "plasmid") .45 else if (preset == "minimal") .2 else .25,
     minor = .2)
@@ -385,6 +393,7 @@ ggchord_theme_settings <- function(values) {
     minor.ticks.length = values$axis.minor.ticks.length %||% grid::unit(.4, "mm"),
     minor.ticks.length.explicit = !is.null(values$axis.minor.ticks.length),
     text.offset = values$axis.text.offset %||% grid::unit(.8, "mm"),
+    text.offset.explicit = !is.null(values$axis.text.offset),
     text.orientation = orientation, text.check.overlap = overlap),
     legend = common, legends = role_settings)
 }
@@ -414,6 +423,8 @@ ggchord_plot_settings <- function(plot) {
     for (name in physical[!vapply(values, is.null, logical(1))]) {
       key <- if (name == "axis") "hidden" else sub("^axis[.]", "", name)
       found$axis[[key]] <- checked[[key]]
+      if (key == "text.offset" && !isTRUE(attr(values[[name]],
+          "ggchord.automatic_axis_offset"))) found$axis$text.offset.explicit <- TRUE
       if (key %in% c("gap", "ticks.length", "minor.ticks.length")) found$axis[[paste0(key, ".explicit")]] <- TRUE
     }
   }

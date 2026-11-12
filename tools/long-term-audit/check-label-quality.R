@@ -5,8 +5,9 @@ folder <- 'tools/long-term-audit'
 arguments <- commandArgs(trailingOnly = TRUE)
 features_check <- '--features' %in% arguments
 identity_check <- '--identity' %in% arguments
+clearance_check <- '--clearance' %in% arguments
 after <- '--after' %in% arguments
-prefix <- if (identity_check) 'v0.27.0-quality-identity-' else if (features_check) 'v0.27.0-quality-features-' else if (after) 'v0.27.0-quality-after-' else 'v0.27.0-quality-'
+prefix <- if (clearance_check) 'v0.27.0-quality-clearance-' else if (identity_check) 'v0.27.0-quality-identity-' else if (features_check) 'v0.27.0-quality-features-' else if (after) 'v0.27.0-quality-after-' else 'v0.27.0-quality-'
 measure <- function(plot, id, width = 10, height = 8) {
   path <- file.path(folder, paste0(prefix, id, '.png'))
   ggchord_diagnostic_device(path, 'png', width, height, 110)
@@ -30,6 +31,10 @@ measure <- function(plot, id, width = 10, height = 8) {
   text <- ggchord_rbind_fill(texts) %||% data.frame()
   result <- ggchord_label_quality(layout, text, built, context)
   result$label_visibility <- ggchord_label_visibility(layout)
+  axis <- ggchord_axis_geometry(layout)
+  if ('.axis_clearance_status' %in% names(axis)) result$axis_clearance <- unique(axis[
+    axis$.component %in% 'text' & !is.na(axis$.axis_clearance_status),
+    intersect(c('accver', '.axis_label', '.axis_offset_explicit', '.axis_clearance_status', '.axis_clearance_mm'), names(axis)), drop = FALSE])
   jsonlite::write_json(result, file.path(folder, paste0(prefix, id, '.json')),
     auto_unbox = TRUE, pretty = TRUE, na = 'null')
   c(result$summary, list(width = width, height = height, file = path,
@@ -78,7 +83,7 @@ stopifnot(result$summary$n_feature_polygons == 0L, result$summary$n_feature_part
 objects <- c('pSB1C3', 'pUC19', 'pBR322', 'pBluescript_II_SK_plus', 'pET_28a_plus',
   'pETDuet_1', 'pDONR221', 'pcDNA3_1_plus', 'pTRE_Tight_BI', 'pTRIPZ', 'pCAMBIA1300',
   'pEarleyGate_201', 'pSpCas9_BB_2A_GFP_PX458')
-requested <- setdiff(arguments, c('--after', '--features', '--identity'))
+requested <- setdiff(arguments, c('--after', '--features', '--identity', '--clearance'))
 if (length(requested)) objects <- intersect(objects, requested)
 results <- list()
 for (id in objects) {
@@ -99,10 +104,24 @@ for (id in objects) {
   results[[id]] <- measure(plot, id)
   stopifnot(identical(original, plot$ggchord$data))
 }
+if (clearance_check) {
+  before <- jsonlite::fromJSON(file.path(folder, 'v0.27.0-label-quality-feature-results.json'), simplifyVector = FALSE)$cases
+  for (id in names(results)) {
+    current <- results[[id]]
+    stopifnot(current$n_source_labels == before[[id]]$n_source_labels,
+      current$n_visible_source_labels == current$n_source_labels,
+      current$n_text_overlaps == 0L, current$n_leader_crossings == 0L,
+      current$n_leaders_through_text == 0L, current$n_label_outside_canvas == 0L,
+      current$n_text_over_feature == 0L, current$n_text_feature_unresolved == 0L)
+  }
+}
+source_files <- list.files('R', '[.]R$', full.names = TRUE)
 jsonlite::write_json(list(scope = 'Original catalogue inputs; 10x8 inches, one PNG device. Contacts reported, not assumed zero; not a cross-application comparison.',
+  source_sha256 = as.list(stats::setNames(vapply(source_files,
+    function(path) digest::digest(file = path, algo = 'sha256'), character(1)), source_files)),
   detector_controls = 'Explicit synthetic geometry distinguishes overlap, crossing, through-text and own/foreign/unresolved polygon contacts',
   cases = results, comparison_scope = 'SnapGene is a visual reference only; matched external exports are not required under the clarified user instruction.',
   unverified = c('non-polygon strokes/markers, visibility/occlusion and exact ink', 'release device/platform matrix')),
-  file.path(folder, if (identity_check) 'v0.27.0-label-quality-identity-results.json' else if (features_check) 'v0.27.0-label-quality-feature-results.json' else if (after) 'v0.27.0-label-quality-after-results.json' else 'v0.27.0-label-quality-results.json'),
+  file.path(folder, if (clearance_check) 'v0.27.0-label-quality-clearance-results.json' else if (identity_check) 'v0.27.0-label-quality-identity-results.json' else if (features_check) 'v0.27.0-label-quality-feature-results.json' else if (after) 'v0.27.0-label-quality-after-results.json' else 'v0.27.0-label-quality-results.json'),
   auto_unbox = TRUE, pretty = TRUE, na = 'null')
 cat('Label quality observations recorded\n')

@@ -60,4 +60,6 @@ These are oriented text envelopes, not exact ink outlines. A leader crossing a b
 
 SnapGene serves as a visual reference for clear annotation hierarchy and orderly leaders; matched exports from that application are not required. Use controlled ggchord comparisons to assess changes in content retention, physical size, crowding and legibility.
 
+With the usual overlap policy enabled, an automatically combined circular seam string such as `1 / 2856` can gain bounded radial clearance if its text envelopes touch a feature polygon. Other text remains protected. Tick positions and label contents stay fixed; an explicitly supplied `axis.text.offset`, including a value equal to the preset, prevents this adjustment. This is a local clearance rule, not a general axis-layout guarantee.
+
 Circular exterior callouts now protect the measured origin-axis and inner feature text on their way out of the feature band. Only paths with an oriented-box contact are rerouted; the true root, final label attachment and label contents stay fixed. The bounded search verifies its candidate against all registered static text and reports `leader_text_status` as clear, detoured or unresolved. An unresolved route retains its evidence for review. Unused zero-length placeholders are removed rather than treated as real leaders or marker observations.

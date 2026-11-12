@@ -47,6 +47,7 @@ ggchord_layout_axis_step <- function(
       available <- if (!is.null(metric) && all(is.finite(metric))) curve_length/max(metric) else NULL
       majors <- axis_breaks[[id]] %||% breakPointsFunc(lens[id], axisMaj[id], available_mm=available)
       major_labels <- axis_labels[[id]]
+      seam_position <- numeric()
       if (isTRUE(circular) && abs(abs(ends[id]-starts[id])-2*pi)<1e-7 &&
           (is.null(axis_breaks[[id]]) || isTRUE(attr(axis_breaks[[id]],"ggchord_automatic_breaks"))) && lens[id] > 1 && all(c(1,lens[id]) %in% majors)) {
         # One seam cue names both actual ends without stacking two labels.
@@ -54,6 +55,7 @@ ggchord_layout_axis_step <- function(
         major_labels[majors == 1] <- paste0(major_labels[majors==1]," / ",major_labels[majors==lens[id]])
         keep <- majors != lens[id]
         majors <- majors[keep]; major_labels <- major_labels[keep]
+        seam_position <- 1
       }
       minors <- axis_minor_breaks[[id]]
       if (is.null(minors)) {
@@ -152,6 +154,9 @@ ggchord_layout_axis_step <- function(
         label_angle_relative = relative_angle,
         label_along_axis = rep(along_axis, nrow(pts)),
         label_gap = rep(labelOffset[id], nrow(pts)),
+        .axis_seam_combined = pts$pos %in% seam_position,
+        .axis_offset_explicit = isTRUE(axis_text_style$offset_explicit),
+        .axis_allow_clearance = isTRUE(axis_text_style$allow_clearance),
         is_major = pts$is_major,
         is_origin = origin_tick,
         is_endpoint = pts$is_major & pts$pos %in% c(1, lens[id]),

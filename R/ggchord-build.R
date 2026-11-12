@@ -993,8 +993,10 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     labelSize = labelSize, labelOffset = labelOffset,
     axis_text_style = {
       style <- ggchord_theme_element(plot, "ggchord.axis.text")
-      if(inherits(style,"element_text")) list(family=style@family,
+      text_style <- if(inherits(style,"element_text")) list(family=style@family,
         fontface=style@face,lineheight=style@lineheight) else list()
+      c(text_style, list(offset_explicit = isTRUE(axis_theme$text.offset.explicit),
+        allow_clearance = isTRUE(axis_theme$text.check.overlap)))
     },
     axisLabelOrientation = axisLabelOri,
     seqBackboneOuter = seqBackboneOuter,

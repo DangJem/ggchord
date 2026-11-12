@@ -589,7 +589,10 @@ with the plasmid preset. Their default line widths are 0.45/0.3 mm, or
 parallel labels follow the circle glyph by glyph. Horizontal and numeric
 orientations retain straight text.}
 
-\item{axis.text.check.overlap}{Whether overlapping axis labels are hidden. Defaults to TRUE.}
+\item{axis.text.check.overlap}{Whether overlapping axis labels are hidden. Defaults to TRUE.
+Automatically combined circular seam strings can also receive bounded
+extra radial clearance around feature polygons when \code{axis.text.offset}
+was not explicitly supplied. Explicit offsets are always preserved.}
 
 \item{seq.label, gene.label, feature.label, restriction.label, seq.center.label, seq.center.name, seq.center.length}{Text elements for sequence, gene, feature, restriction-site and circular
 centre labels.}

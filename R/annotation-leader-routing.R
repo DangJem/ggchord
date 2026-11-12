@@ -1,7 +1,7 @@
 # Protect static inner/axis text after the shared exterior queue has settled.
 # Positions and real feature anchors are unchanged; only collided leader pieces
 # can acquire a short deterministic polyline detour.
-ggchord_annotation_text_obstacles <- function(registry, layout) {
+ggchord_annotation_text_obstacles <- function(registry, layout, include_axis = TRUE) {
   all <- list()
   unit <- layout$text_units_per_inch %||% .35
   add <- function(text, owner) {
@@ -30,8 +30,12 @@ ggchord_annotation_text_obstacles <- function(registry, layout) {
     d <- registry[[owner]]$seq_center_label
     if (is.data.frame(d) && nrow(d)) add(d, owner)
   }
-  axis <- ggchord_axis_geometry(layout)
-  if (nrow(axis)) add(axis[axis$.component %in% 'text', , drop = FALSE], '.axis')
+  if (include_axis) {
+    axis_layout <- layout
+    axis_layout$layer_geometry <- registry
+    axis <- ggchord_axis_geometry(axis_layout)
+    if (nrow(axis)) add(axis[axis$.component %in% 'text', , drop = FALSE], '.axis')
+  }
   ggchord_rbind_fill(all) %||% data.frame()
 }
 
