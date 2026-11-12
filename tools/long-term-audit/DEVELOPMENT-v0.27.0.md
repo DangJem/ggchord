@@ -543,3 +543,25 @@ direct_clear/17routed_clear，10x8为17/22。代表after PNG已查看，连接�
 已有check-fusion-routing.R定向通过（包括有面积阻挡、装饰、父级墙和显式失败）；
 复用已有Fusion最小案例加route=avoid和空轴单元，直接代表build成功，不运行testthat。
 NEWS同步。运行时代码变更后课程/178PNG正在重新运行，旧指纹不直接当新源码通过。
+# 第二十六工作包：跨视图尺寸证据与两处标签问题
+
+新增真实拟南芥区间和pUC19注释的Adaptive单PNG设备检查，六种坐标加竖向Collinear，
+横9x6/竖6x9英寸。只记录这些输入和尺寸，不作为全部常量缩放或发布矩阵认证。
+最初固定3mm断言因单位换算的微小浮点误差失败，改为语义数值相等，不锁定精确
+浮点坐标/框尺寸。原始输入逆向HSP验证警告保留，不为消警告排序或改科学来源。
+
+before发现Sankey横/竖各4处名字-首刻度重叠，真实PNG确认。来源于投影后仍使用
+竖向Collinear的上边缘锚定，使水平名字向下覆盖起始tick。现在默认将名字的下边缘
+锚到柱顶上方；显式seq_label_vjust保持用户值，直接公开布局核对通过。
+
+另一个before为竖版圆图19处相邻刻度字形接触。它们是同一弧形字符串内部，轴
+最终component变成text且build丢失非美学父身份，诊断误当不同对象。现在仅对行序
+一致的StatIdentity/PositionIdentity层恢复源字形sidecar，axis glyph与feature glyph
+都按实际父字符串分组。没有移动/隐藏刻度或将不同字符串相邻接触静默排除。
+after14个受检配置均文字对象重叠/裁切0，源数据保留、显式3mm字号保持，Guide为
+feasible或no_guides；Sankey after实图已查看。独立6x9圆轴控制为20字形框/5对象、
+0重叠。原before/after分别保存，不把修正误报当作绘图文字被移动的证据。
+
+最小公开测试复用Sankey案例和现有Adaptive例，另保留一条圆轴误报回归；只做相关
+直接build/诊断，不执行testthat。read_delta帮助示例同步到活动植物输入，历史文件
+仍保存原事实。13目录的3例刻度-feature包围接触继续保留待复核；全任务仍未完成。

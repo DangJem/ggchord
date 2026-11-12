@@ -252,6 +252,7 @@ ggchord_collinear_seq_labels <- function(p, layout) {
     size = unname(p$seq_label_size[id]),
     hjust = if (isTRUE(p$collinear_vertical) && !isTRUE(p$seq_label_hjust_explicit)) .5 else if (is.null(p$seq_label_hjust)) 1 else unname(p$seq_label_hjust[id]),
     vjust = if (isTRUE(p$collinear_vertical) && !isTRUE(p$seq_label_vjust_explicit)) 1 else if (is.null(p$seq_label_vjust)) .5 else unname(p$seq_label_vjust[id]),
+    .ggchord_vjust_explicit = isTRUE(p$seq_label_vjust_explicit),
     accver = id, stringsAsFactors = FALSE
   )))
 }

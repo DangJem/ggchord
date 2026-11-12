@@ -74,7 +74,14 @@ ggchord_project_sankey_layout <- function(layout, plot) {
   for (owner in names(layout$layer_geometry)) for (component in names(layout$layer_geometry[[owner]])) {
     d <- layout$layer_geometry[[owner]][[component]]
     if (!component %in% c("ribbon", "link")) {
-      layout$layer_geometry[[owner]][[component]] <- ggchord_project_sankey_data(d,frames)
+      projected <- ggchord_project_sankey_data(d,frames)
+      if (component == 'seq_label' && is.data.frame(projected) && nrow(projected)) {
+        automatic <- !(projected$.ggchord_vjust_explicit %||% rep(FALSE, nrow(projected)))
+        # Projection changes a left-of-row name into an above-column name.
+        # Anchor its lower edge there, clear of the first coordinate tick.
+        projected$vjust[automatic] <- 0
+      }
+      layout$layer_geometry[[owner]][[component]] <- projected
       next
     }
     input <- layout$layer_inputs[[owner]][[component]]

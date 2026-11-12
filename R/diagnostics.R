@@ -33,6 +33,14 @@ ggchord_diagnostic_guides <- function(table, canvas_mm) {
 }
 
 ggchord_diagnostic_text_styles <- function(data, layer) {
+  # Identity layers retain render-order sidecars that are not aesthetics.
+  # In particular axis arc glyphs draw as component='text'; losing their
+  # parent identity turns intentional contacts within one string into clashes.
+  original <- layer$data
+  if (is.data.frame(original) && nrow(original) == nrow(data) &&
+      inherits(layer$stat, 'StatIdentity') && inherits(layer$position, 'PositionIdentity')) for (field in setdiff(intersect(
+        c('.arc_parent_group', '.arc_glyph_index', '.axis_label', 'source_row',
+          'accver', 'display_instance_id'), names(original)), names(data))) data[[field]] <- original[[field]]
   if (!'.component' %in% names(data)) return(data)
   apply_style <- function(component, style, overrides = list()) {
     at <- which(data$.component %in% component)
@@ -102,7 +110,7 @@ ggchord_diagnostic_text <- function(data, coordinate, panel, context, parse = FA
     bw <- abs(cos(angle)) * w + abs(sin(angle)) * h
     bh <- abs(sin(angle)) * w + abs(cos(angle)) * h
     data.frame(source_row = value("source_row", NA_integer_), label = as.character(data$label[i]),
-      text_object = if (value('.component', '') %in% 'arc_text')
+      text_object = if (value('.component', '') %in% 'arc_text' || !is.na(value('.arc_glyph_index', NA_real_)))
         paste0('arc-', value('.arc_parent_group', value('group', NA_real_)), '/', value('source_row', NA_integer_), '/',
           value('display_instance_id', value('accver', ''))) else paste0('row-', i),
       size_mm = as.numeric(data$size[i]) * points_per_unit / (72.27/25.4), xmin_mm = cx - bw / 2, xmax_mm = cx + bw / 2,

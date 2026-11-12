@@ -74,7 +74,7 @@ ggchord_delta_source <- function(text, caller) {
 #' @examples
 #' \dontrun{
 #' # Requires an existing show-coords executable and the source input bundle.
-#' observed <- read_delta("examples/genome-alignments/nucmer.delta")
+#' observed <- read_delta("examples/genome-alignments/arabidopsis-first-pair.delta")
 #' head(observed$ribbon_data)
 #' }
 read_delta <- function(file = NULL, files = NULL, executable = 'show-coords',

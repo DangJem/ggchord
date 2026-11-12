@@ -1,5 +1,5 @@
 {
-  "source_sha256": "4dde74176037edd31e6f65c4ef2e71e4093c5a91c22d5df24c6ee27f40187397",
+  "source_sha256": "c605c0e760654781fc3daaf8e23a521647872a4e835c015ad525261e815314d6",
   "translations": {
     "0": "通过可选命令行解码器读取已有 delta 比对",
     "1": "可选本地路径向量或通配模式，在 files 之前读取。",

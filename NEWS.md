@@ -1,5 +1,10 @@
 # ggchord 0.27.0 (development)
 
+- Fixed default Sankey sequence names overlapping their starting coordinate
+  labels after projection. Explicit justification remains unchanged. Circular
+  axis glyphs now retain string identity in diagnostics, avoiding false reports
+  of collisions between letters belonging to the same coordinate label.
+
 - Fixed empty native axis/title cells being treated as Fusion route obstacles.
   Zero-area furniture no longer creates false collisions or blocks otherwise
   feasible interval ribbons. Positive-area decorations remain protected.

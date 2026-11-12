@@ -107,11 +107,12 @@ test_that("display instances route source HSPs in vertical equal Collinear", {
 
 test_that("mirrored Sankey retains real interval provenance", {
   p <- ggchord(smoke_sequences(),smoke_ribbon(),validate="none")+
-    geom_seq()+geom_link_ribbon()+coord_sankey()
+    geom_seq()+geom_seq_label(size=3)+geom_link_ribbon()+coord_sankey()
   out <- export_ggchord_layout(p,include="ribbon")
   expect_identical(out$metadata$coordinate,"sankey")
   expect_equal(nrow(out$display_instances),4L)
   expect_setequal(out$instance_routing$qaccver,"A")
+  expect_equal(diagnose_ggchord(p, 8, 6, device = "png")$label_quality$summary$n_text_overlaps, 0L)
 })
 
 test_that("ordinary views check declared HSP identity after display filtering", {
