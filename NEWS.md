@@ -1,5 +1,9 @@
 # ggchord 0.27.0 (development)
 
+- The progressive linear gallery examples share a measured 12 × 8 inch export
+  canvas, with their original data, labels and guide settings. Gallery cards
+  link separately to the related lesson and the shared plotting source.
+
 - Drawing now warns when bounded physical refinement does not converge.
   Geometry measurements remain estimates, and `diagnose_ggchord()` captures the
   warning alongside its existing `physical_layout` check. The warning reports

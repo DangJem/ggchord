@@ -7,6 +7,9 @@
 | [点连接](#pointlinks) | [注释堆叠](#featurestack) | [聚焦](#focus) | [标签布局](#labelauto) |
 
 ## 图片与尺寸 {#figures}
+图库中仅替换为直线坐标的“[相同骨架](#linearseq)”、“[相同连接](#linearlinks)”和
+“[相同基因与标签](#linearlabels)”三幅图统一使用 12 × 8 英寸导出画布，为标签与显式尺寸的图例预留空间。
+请按标注尺寸重现；使用较小画布时，应检查标签隐藏原因。
 {{gallery}}
 
 ## 两种语言共用一个来源 {#source}

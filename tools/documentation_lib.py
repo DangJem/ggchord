@@ -60,9 +60,9 @@ def expand(text, lang, *, figures='assets', reference=''):
         label = 'Download the preparation script' if lang == 'en' else '下载准备脚本'
         return f'[{label}]({figures}/{name})\n\n```r\nsource("{name}")\n```\n'
     text = re.sub(r'\{\{recipe:(\w+)\}\}', recipe, text)
-    def figure(key):
+    def figure(key, source_url=None):
         caption=html.escape(CAPTIONS[key][lang])
-        code_url=lesson_urls().get(key,'gallery.html')
+        code_url=source_url or lesson_urls().get(key,'gallery.html')
         if figures!='../assets':
             hint='Click to enlarge' if lang=='en' else '点击放大查看'
             return (f'<figure class="documentation-figure"><a class="figure-link" href="{figures}/{key}.png" '
@@ -134,9 +134,12 @@ def expand(text, lang, *, figures='assets', reference=''):
     for asset in assets:
         key = asset['id']
         page,anchor=destinations[key].split('#')
-        label='Data, code and interpretation →' if lang=='en' else '数据、代码与读图说明 →'
+        label='Related lesson →' if lang=='en' else '相关教程 →'
+        source_label='Shared R source' if lang=='en' else '共享 R 源码'
+        source_url=f'{figures}/documentation-examples.R' if figures=='../assets' else None
+        source_link=f' · <a href="{source_url}">{source_label}</a>' if source_url else ''
         gallery.append(f'<section class="gallery-card"><h3 id="{key}">{html.escape(CAPTIONS[key][lang])}</h3>'
-            f'{figure(key)}<p><a href="{page}.html#{anchor}">{label}</a></p>'
+            f'{figure(key,source_url)}<p><a href="{page}.html#{anchor}">{label}</a>{source_link}</p>'
             f'<p class="asset-size"><code>{asset["object"]}</code> · {asset["width"]} × {asset["height"]} in · '
             f'{asset["dpi"]} dpi</p></section>')
     results_path = WEB/'assets/example-results.json'

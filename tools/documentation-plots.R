@@ -87,8 +87,9 @@ extra_objects <- c(learning_objects, paste0("p_", catalog_ids))
 extra <- assets[rep(1L, length(extra_ids)), ]
 extra$id <- extra_ids
 extra$object <- extra_objects
-extra$width <- 10
-extra$height <- c(rep(8, 4), rep(6, 3), rep(8, 3), rep(8, 13))
+# The three progressive linear illustrations share one measured canvas.
+extra$width <- ifelse(extra$id %in% c("linearseq", "linearlinks", "linearlabels"), 12, 10)
+extra$height <- 8
 extra$input <- c(rep("Progressive layers using the same four repository FASTA/GFF3 records and explicitly selected observed HSPs/CDS", 7), rep("Bundled pUC19; stepwise backbone, source annotations and labels", 3), paste("Bundled source-backed reference", env$catalog_summary$accver, "with current feature recognition; see plasmid-catalog.csv"))
 assets <- rbind(assets, extra)
 assets <- rbind(assets, data.frame(

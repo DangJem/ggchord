@@ -7,6 +7,11 @@
 | [Point links](#pointlinks) | [Feature stacking](#featurestack) | [Focus](#focus) | [Label layouts](#labelauto) |
 
 ## Figures and dimensions {#figures}
+The gallery figures showing [the same backbones](#linearseq),
+[observed links](#linearlinks) and [genes and labels](#linearlabels) with linear
+coordinates share a 12 × 8 inch export canvas. This leaves room for their labels
+and explicitly sized guides. Reproduce them at the declared dimensions and
+inspect hidden-label reasons when using a smaller canvas.
 {{gallery}}
 
 ## One source for both languages {#source}
