@@ -1,0 +1,16 @@
+# Re-encoding of the companion unchanged cached entry JSON.
+# Existing AA annotations only; no scanner or domain analysis was run.
+# Missing MD5, status, run date and integrated description remain -.
+p51587	-	3418	pfam	PF00634	BRCA2 repeat	1005	1033	0.0012	-	-	IPR002093	-
+p51587	-	3418	pfam	PF00634	BRCA2 repeat	1216	1243	4.1e-06	-	-	IPR002093	-
+p51587	-	3418	pfam	PF00634	BRCA2 repeat	1424	1452	4.4e-06	-	-	IPR002093	-
+p51587	-	3418	pfam	PF00634	BRCA2 repeat	1522	1548	2.7e-05	-	-	IPR002093	-
+p51587	-	3418	pfam	PF00634	BRCA2 repeat	1667	1695	0.05	-	-	IPR002093	-
+p51587	-	3418	pfam	PF00634	BRCA2 repeat	1974	2002	1e-06	-	-	IPR002093	-
+p51587	-	3418	pfam	PF00634	BRCA2 repeat	2055	2080	0.44	-	-	IPR002093	-
+p51587	-	3418	pfam	PF09103	BRCA2, oligonucleotide/oligosaccharide-binding, domain 1	2670	2795	1e-40	-	-	IPR015187	-
+p51587	-	3418	pfam	PF09104	BRCA2, oligonucleotide/oligosaccharide-binding, domain 3	3052	3185	7.2e-51	-	-	IPR015188	-
+p51587	-	3418	pfam	PF09121	Tower	2831	2872	8.8e-17	-	-	IPR015205	-
+p51587	-	3418	pfam	PF09169	BRCA2, helical	2482	2667	2.4e-97	-	-	IPR015252	-
+p51587	-	3418	pfam	PF21318	BRCA2, OB2	2969	3035	3.4e-30	-	-	-	-
+p51587	-	3418	pfam	PF22687	BRCA2 TR2 domain	3260	3334	1.9e-31	-	-	IPR055077	-

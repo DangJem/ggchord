@@ -3501,5 +3501,29 @@
       "en": "optional show-coords; bp coordinates and declared alignment metric unit",
       "zh": "可选 show-coords；bp 坐标与独立声明的比对统计单位"
     }
+  },
+  "read_signature_matches": {
+    "level": "L2",
+    "page": "formats",
+    "anchor": "protein-signatures",
+    "reason": "Real cached AA annotations and explicit TSV re-encoding, with native score/segment provenance checks",
+    "modes": "AA feature input; offline signature TSV and cached entry JSON",
+    "parameters": [
+      "file",
+      "files",
+      "format",
+      "source_file"
+    ],
+    "purpose": {
+      "en": "Read existing protein signature locations and source metadata",
+      "zh": "读取已有蛋白 signature 位置及源元数据"
+    },
+    "alias_of": "",
+    "case": "formats",
+    "scope": "existing annotation input, no new signature analysis",
+    "modes_localized": {
+      "en": "AA features; source-native scores; JSON needs optional jsonlite",
+      "zh": "AA feature；源原生分数；JSON 需可选 jsonlite"
+    }
   }
 }

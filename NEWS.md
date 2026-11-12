@@ -1,5 +1,13 @@
 # ggchord 0.27.0 (development)
 
+- Added `read_signature_matches()` for existing AA signature TSV and cached
+  InterPro/Pfam entry JSON, retaining full source lengths, accession case,
+  repeated model matches and native score types. JSON locations reuse Feature
+  segments without filling gaps or splitting one match into observations.
+  Missing feature-instance IDs remain missing; member-library scores are not
+  converted into a common confidence. Cached source examples include CC0
+  attribution, hashes and explicit TSV re-encoding without a new analysis run.
+
 - Fixed explicit virtual-environment Python paths in `read_genbank()`: resolving
   the executable symlink could incorrectly select the system environment.
   Optional parser bridges now share the same internal process/JSON/message

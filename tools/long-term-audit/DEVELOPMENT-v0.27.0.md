@@ -279,3 +279,32 @@ check-source-parser.R用纯进程/JSON及明确标记的格式对照核对虚拟
 新增生物学样例。结果source-parser-results.json实际通过。最小import现有
 可选案例补一个显式解释器GenBank成功路径，未运行testthat。NEWS/帮助/Rd/
 对应两语课程同步；仍继续其余任务，不将此修复算作全部任务书完成。
+
+## 第十四工作包：已有蛋白signature注释
+
+read_signature_matches()离线读取11–15列signature TSV或缓存entry JSON。
+不运行域分析/在线检索，AA全长来自声明，保留API原小写ID及版本。源score
+用列表列保留数字/字符串/缺失类型，不统一成员库度量、不造evalue/Identity/
+support。模型ID不是实例ID，feature_id缺失不补造，重复命中不合并；代表性
+标记不触发筛选。完整原文/原对象/TSV字段及分页链接入报告，不追下一页。
+
+源码核对后复用原生Feature segments：一JSON location一行，实际fragment/
+状态/索引在segments，start/end仅为包围范围，几何不填空隙。原层级及每文件
+source_match保留；不把片段拆成独立命中，也不从TSV猜分组。跨文件已知长度/
+MD5声明冲突明确失败；MD5不冒充独立字符验证。
+
+两个普通人类蛋白缓存按原字节/CC0/日期/URL/哈希留在inst/extdata。派生TSV
+只是显式重编码原位置/分数，未知MD5/状态/运行日期/整合描述保持-，不是
+新运行InterProScan。原JSON保留更丰富分组，生成规则/缺失字段/许可可追溯。
+实际缓存共14个location（1+13），其中展示的p51587有13命中及重复模型。
+
+check-signature-import.R实际通过原ID/AA全长、JSON与显式TSV坐标/模型一致、
+原生score/代表性标志不变、模型重复而实例ID缺失、分页链接不获取，以及
+单location双片段保留一个生物学源行/两个可见run的格式对照。真实AA代表图
+已保存并查看。包内输入使帮助最小示例可运行；仅复用现有import案例增加
+一个轻量成功路径，未运行testthat。1134段翻译、参数图谱/API课程及formats
+独立环境通过。没有发布设备矩阵或冻结站重建。
+
+NEWS/帮助/Rd/双语课程/API/输入说明同步；原先GenBank解释器参数的图谱生成
+也随当前源重新同步。其余同源关系、按需二进制覆盖/探索图数据、制图质量、
+集中API及整站重现仍继续，不据此宣称全部长期任务书已完成。

@@ -1,0 +1,4 @@
+# Re-encoding of the companion unchanged cached entry JSON.
+# Existing AA annotations only; no scanner or domain analysis was run.
+# Missing MD5, status, run date and integrated description remain -.
+p00517	-	351	pfam	PF00069	Protein kinase domain	44	298	3.9e-71	-	-	IPR000719	-

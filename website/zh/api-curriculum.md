@@ -108,6 +108,7 @@
 | [`read_gff3`](reference/read_gff3.html) | 将一个或多个 GFF3 文件读为注释数据 | [L2](real-data.html#read) | 本地文件到标准表；按源格式转换坐标和声明单位 | [↗](parameter-atlas.html#api-read_gff3) | [↗](real-data.html) |
 | [`read_maf`](reference/read_maf.html) | 读取已有基因组对齐块及真实源坐标 | [L2](formats.html#genome-alignments) | 可选 Biopython；MAF 字符单元与 chain 区间 | [↗](parameter-atlas.html#api-read_maf) | [↗](formats.html) |
 | [`read_paf`](reference/read_paf.html) | 将 PAF 比对读为 ggchord 连接 | [L2](formats.html#zero-based) | 本地文件到标准表；按源格式转换坐标和声明单位 | [↗](parameter-atlas.html#api-read_paf) | [↗](formats.html) |
+| [`read_signature_matches`](reference/read_signature_matches.html) | 读取已有蛋白 signature 位置及源元数据 | [L2](formats.html#protein-signatures) | AA feature；源原生分数；JSON 需可选 jsonlite | [↗](parameter-atlas.html#api-read_signature_matches) | [↗](formats.html) |
 | [`read_vcf`](reference/read_vcf.html) | 导入变异记录及显式解码的结构断点 | [L2](formats.html#variants) | VCF；BCF 需显式 pysam Python；结构解码为可选依赖 | [↗](parameter-atlas.html#api-read_vcf) | [↗](formats.html) |
 | [`register_ggchord_alignment`](reference/register_ggchord_alignment.html) | 注册精确字符/源位置用于独立Fusion细节 | [L2](fusion.html#character-detail) | 显式源/对齐列映射；独立Cartesian细节；已观测完整codon | [↗](parameter-atlas.html#api-register_ggchord_alignment) | [↗](fusion.html) |
 | [`rel`](reference/ggplot2-helpers.html) | 适用于 ggchord 的部分 ggplot2 辅助函数 | [上游](parameter-atlas.html#upstream) | 上游对象/接口；遵循 ggplot2/grid 的原始契约 | [↗](parameter-atlas.html#api-rel) | [↗](chord.html) |

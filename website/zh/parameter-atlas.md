@@ -2865,7 +2865,7 @@
 | `files` | `NULL` | 字符路径、标识或向量；见约束 | 可选路径或通配模式，用于多个文件。 |
 | `feature_types` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 可选的注释类型，NULL 保留全部。 |
 | `lengths` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 可选的已知完整长度命名数值向量，遵循 as_ggchord_seq()。 |
-| `python` | `"python3"` | 字符路径、标识或向量；见约束 | 解释器名称或路径，默认 "python3"，必须事先安装可选 Biopython；本函数不修改环境。 |
+| `python` | `"python3"` | 字符路径、标识或向量；见约束 | 解释器名称或路径，默认 "python3"，必须事先安装可选 Biopython；本函数不修改环境。 显式虚拟环境解释器保留入口路径，不将其可执行文件符号链接解析到另一个环境。 |
 | `unsupported` | `c("error", "report")` | 向量；候选/多选含义见说明 | 对无法安全表示为本地区间的位置，选择 "error" 或 "report"。 |
 | `source_file` | `FALSE` | 逻辑值 | 是否在输出表添加 .source_file 列，默认 FALSE；无论此选项如何，报告均保留文件来源。 |
 
@@ -2918,6 +2918,22 @@
 | `file` | `NULL` | 字符路径、标识或向量；见约束 | 可选路径向量或通配模式，在 files 之前读取。 |
 | `files` | `NULL` | 字符路径、标识或向量；见约束 | 可选路径或通配模式，用于多个 PAF 文件。 |
 | `source_file` | `FALSE` | 逻辑值 | 逻辑值，是否添加 .source_file 列，默认 FALSE。 |
+
+</details>
+
+<span id="api-read_signature_matches"></span>
+<details><summary><code>read_signature_matches()</code></summary>
+
+
+[完整参考](reference/read_signature_matches.html)
+
+
+| 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
+| --- | --- | --- | --- |
+| `file` | `NULL` | 字符路径、标识或向量；见约束 | 可选本地路径向量或通配模式，在 files 之前读取。 |
+| `files` | `NULL` | 字符路径、标识或向量；见约束 | 可选的其他输入路径或通配模式。 |
+| `format` | `c("scan_tsv", "entry_json")` | 向量；候选/多选含义见说明 | 显式结构："scan_tsv"（默认，11–15 列）或 "entry_json"（含 metadata/proteins/locations 的缓存 entry 结果）。JSON 需要可选 jsonlite。不跟随分页链接，声明计数及后续页链接保留在报告中。 |
+| `source_file` | `FALSE` | 逻辑值 | 是否向 feature 行添加 .source_file，默认 FALSE。 |
 
 </details>
 

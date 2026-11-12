@@ -1,0 +1,34 @@
+[
+  {
+    "file": "P00517-pfam.json",
+    "url": "https://www.ebi.ac.uk/interpro/api/entry/pfam/protein/uniprot/P00517/",
+    "retrieved": "2026-11-12",
+    "sha256": "af59a7727e2e953c1f4245bd26cb6a533b41e6565d08a69d3af861943c09c1ed",
+    "transformation": "none; original cached JSON response",
+    "license": "CC0-1.0",
+    "license_source": "https://interpro-documentation.readthedocs.io/en/latest/license.html",
+    "derived_tsv": {
+      "file": "P00517-signatures.tsv",
+      "sha256": "b2700fd8b1a90cf945cb92c7ed1978badb775c36c85658888ae651dd0e783312",
+      "rule": "One row per original location fragment; preserve accession case, AA boundaries, library/signature and reported score. Missing metadata remains -. This is not a new scan output.",
+      "source_matches": 1,
+      "output_fragments": 1
+    }
+  },
+  {
+    "file": "P51587-pfam.json",
+    "url": "https://www.ebi.ac.uk/interpro/api/entry/pfam/protein/uniprot/P51587/",
+    "retrieved": "2026-11-12",
+    "sha256": "6e924b235d381bcd3ecd2678deb66f35ed198a243eaadd70b990653612aae404",
+    "transformation": "none; original cached JSON response",
+    "license": "CC0-1.0",
+    "license_source": "https://interpro-documentation.readthedocs.io/en/latest/license.html",
+    "derived_tsv": {
+      "file": "P51587-signatures.tsv",
+      "sha256": "71f8d4436cb64c81da6a4df73713d7c4e280bec9f1d96958bf1f73244dd5f8c2",
+      "rule": "One row per original location fragment; preserve accession case, AA boundaries, library/signature and reported score. Missing metadata remains -. This is not a new scan output.",
+      "source_matches": 13,
+      "output_fragments": 13
+    }
+  }
+]

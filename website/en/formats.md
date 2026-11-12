@@ -9,6 +9,7 @@
 | GenBank sequence with annotations | [Preserve record IDs and segments](#genbank) |
 | bedGraph or BigWig continuous signals | [Keep values and missing ranges explicit](#signals) |
 | VCF/BCF variants and structural breakpoints | [Retain original variant evidence](#variants) |
+| Existing protein signature annotations | [Retain AA locations and source scores](#protein-signatures) |
 | Existing delta results | [Keep native metrics and coordinate units distinct](#delta) |
 | Existing MAF or chain genomic alignments | [Preserve blocks and source coordinates](#genome-alignments) |
 | Existing R tables | [Map required fields](#adapters) |
@@ -374,3 +375,33 @@ if (nzchar(Sys.which(delta_decoder))) {
 This explicitly selected query remains the literal string `"3210101"`. Query/reference map to qaccver/saccver without shifting the original one-based directional endpoints. Every native output row is checked against its actual source header/endpoints before error counts, signed delta scripts and physical lines are attached. Full lengths come from source declarations, not the last alignment. Cross-role source-name collisions follow the explicit ID maps of `read_chain()`; no assembly identity is guessed.
 
 `pident` is the tool's reported percentage with its printed precision, not a value reconstructed from two endpoints. In PROMER it is an **AA alignment statistic**, while interval coordinates and full sequence lengths remain **bp**. Native similarity/stop percentages and frames remain separate. qspan/sspan are genomic span widths, not alignment-column counts; a BLAST `length`, read support and sequence characters are not manufactured. Original text and native output/messages remain in `report`. If the executable has no reliable version option, its version remains unknown in the reader report; record your prepared environment's provenance separately. The directed audit records the actual fixed tool source tag and executable checksum. No third-party executable or implementation is redistributed in ggchord.
+
+## Existing protein signatures {#protein-signatures}
+
+These installed-package inputs contain existing Pfam annotations cached from the InterPro API for two human proteins. The original JSON bytes, retrieval date, URLs, CC0 attribution and hashes are in `inst/extdata/signature-sources.json`. `data-raw/prepare-signature-inputs.py` explicitly re-encodes the same observed fragments as TSV for a coordinate round trip. It does not run InterProScan: absent MD5, status, run date and integrated description remain `-`. The TSV is a derived format example, not a new analysis result.
+
+```r
+signature_file <- system.file("extdata", "P00517-signatures.tsv", package = "ggchord")
+signatures <- read_signature_matches(signature_file, source_file = TRUE)
+signatures$features$signature |>
+  select(accver, start, end, signature_id, analysis, source_score)
+
+if (requireNamespace("jsonlite", quietly = TRUE)) {
+  cached_file <- system.file("extdata", "P51587-pfam.json", package = "ggchord")
+  cached <- read_signature_matches(cached_file, format = "entry_json")
+  ggchord(cached$seq_data) +
+    geom_seq(show.legend = FALSE) +
+    geom_seq_label() +
+    geom_feature(
+      aes(feature_fill = signature_id), data = cached$features$signature,
+      shape = "block", position = position_feature_stack()
+    ) +
+    coord_collinear()
+}
+```
+
+Full lengths are declared AA lengths, not maximum feature ends. The API returns lowercase IDs (`p00517`, `p51587`); these remain unchanged, as do accession versions and repeated model matches. Model/signature IDs are not unique feature-instance IDs, so `feature_id` stays missing. Any source identity reconciliation with another file must be explicit.
+
+Each cached JSON location is one feature with actual `segments`; its start/end only bound the footprint. Existing Feature geometry leaves coordinate gaps empty and retains one source match. The representative flag is metadata, never an automatic filter. Original entry/protein/location indices and per-file `.source_match` stay traceable; use `.source_input` when combining files. TSV rows lack JSON grouping evidence and are not automatically grouped by model ID. Scores remain a native list-column: JSON numbers, TSV strings and missing values retain their source type. Do not compare different libraries' score/e-value systems as a universal confidence or invent identity/read support. For a numeric scale, first select the intended library and establish its actual score meaning explicitly.
+
+JSON needs optional **jsonlite** and reads only supplied local caches. Remaining-page URLs and declared counts stay in the report; nothing is fetched at draw time. Quality/context metadata, original fields and complete source objects remain available for auditing. These location annotations provide no complete protein characters or independent character verification. The [official format guide](https://interproscan-docs.readthedocs.io/en/v5/OutputFormats.html) and [score explanation](https://interpro-documentation.readthedocs.io/en/latest/faq.html#why-are-there-no-e-values-associated-with-interpro-entries) describe the underlying conventions.

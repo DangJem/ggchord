@@ -9,6 +9,7 @@
 | GenBank 单序列及注释 | [保留原始记录与分段](#genbank) |
 | bedGraph 或 BigWig 连续信号 | [显式保留值和缺失区间](#signals) |
 | VCF/BCF 变异和结构断点 | [保留原始变异证据](#variants) |
+| 已有蛋白 signature 注释 | [保留 AA 位置及源分数](#protein-signatures) |
 | 已有 delta 结果 | [区分原生统计和坐标单位](#delta) |
 | 已有 MAF 或 chain 基因组比对 | [保留块及源坐标](#genome-alignments) |
 | 已有 R 表格 | [映射必需字段](#adapters) |
@@ -373,3 +374,33 @@ if (nzchar(Sys.which(delta_decoder))) {
 这里显式选取的 query 仍是字面字符串 `"3210101"`。Query/reference 映射 qaccver/saccver，原一基有方向端点不再次平移。每条原生输出先与实际源表头和端点核对，再关联错误计数、有符号 delta 脚本和物理行号。完整长度来自源声明，不取最后比对端点。跨角色同名源遵循 `read_chain()` 的显式 ID 映射，不猜组装身份。
 
 `pident` 为工具报告的百分比及其打印精度，不由两个端点重建。PROMER 中它是 **AA 比对统计**，而区间坐标和完整源长度仍是 **bp**。原生 similarity/stop 百分比及 frame 独立保留。qspan/sspan 是基因组跨度，不是对齐列数；不制造 BLAST `length`、read support 或字符。原文、原生输出及消息保留在 `report`。若程序没有可靠版本选项，读取报告中的版本保持未知，应另行记录准备环境的来源。定向检查记录了实际固定工具源码 tag 和可执行文件校验和。ggchord 不重新分发第三方程序或实现。
+
+## 已有蛋白 signature {#protein-signatures}
+
+安装包内的输入为从 InterPro API 缓存的两个普通人类蛋白的已有 Pfam 注释。原 JSON 字节、获取日期、URL、CC0 归属及哈希在 `inst/extdata/signature-sources.json` 中。`data-raw/prepare-signature-inputs.py` 将相同已观测片段显式重编码为 TSV，供坐标往返核对；不运行 InterProScan，缺失的 MD5、状态、运行日期及整合描述保持 `-`。TSV 是派生格式示例，不是新分析结果。
+
+```r
+signature_file <- system.file("extdata", "P00517-signatures.tsv", package = "ggchord")
+signatures <- read_signature_matches(signature_file, source_file = TRUE)
+signatures$features$signature |>
+  select(accver, start, end, signature_id, analysis, source_score)
+
+if (requireNamespace("jsonlite", quietly = TRUE)) {
+  cached_file <- system.file("extdata", "P51587-pfam.json", package = "ggchord")
+  cached <- read_signature_matches(cached_file, format = "entry_json")
+  ggchord(cached$seq_data) +
+    geom_seq(show.legend = FALSE) +
+    geom_seq_label() +
+    geom_feature(
+      aes(feature_fill = signature_id), data = cached$features$signature,
+      shape = "block", position = position_feature_stack()
+    ) +
+    coord_collinear()
+}
+```
+
+完整长度为声明的 AA 长度，不取 feature 最大端点。API 返回的小写 ID（`p00517`、`p51587`）、accession version 及重复模型命中均不改动。模型/signature ID 不是唯一 feature 实例 ID，因此 `feature_id` 保持缺失；与其他文件的源身份协调须显式完成。
+
+每个缓存 JSON location 为一个 feature，实际片段存入 `segments`，start/end 仅包围其 footprint。现有 Feature 几何保留坐标空隙，并维持一个源命中。代表性标志是元数据，不自动筛选。原 entry/protein/location 索引及文件内 `.source_match` 可追溯，多文件须结合 `.source_input`。TSV 没有 JSON 分组证据，不按模型 ID 自动合并。分数保留原生列表列：JSON 数字、TSV 字符串和缺失值保留各自来源类型。不同库的 score/e-value 不能当作一种通用置信度比较，也不制造 identity/read support。若要使用数值标度，应先选择所需成员库并明确其分数含义。
+
+JSON 需要可选 **jsonlite**，只读提供的本地缓存。后续页 URL 和声明计数留在报告中，绘图时不获取数据。质量/上下文元数据、原始字段及完整源对象可供核对。这些位置注释不提供完整蛋白字符，也不构成独立字符核验。[官方格式说明](https://interproscan-docs.readthedocs.io/en/v5/OutputFormats.html)及[分数解释](https://interpro-documentation.readthedocs.io/en/latest/faq.html#why-are-there-no-e-values-associated-with-interpro-entries)说明其底层约定。

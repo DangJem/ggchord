@@ -10932,7 +10932,7 @@
     "parameter": "python",
     "default": "\"python3\"",
     "type": "Character path/identifier/vector; see constraints",
-    "constraint": "Interpreter name or path, default \"python3\". It must already have the optional Biopython package installed. No environment is modified.",
+    "constraint": "Interpreter name or path, default \"python3\". It must already have the optional Biopython package installed. No environment is modified. An explicit virtual-environment interpreter keeps its entry path rather than resolving its executable symlink into a different environment.",
     "source": "man/read_genbank.Rd"
   },
   {
@@ -11062,6 +11062,38 @@
     "type": "Logical",
     "constraint": "Logical. Add a .source_file column, default FALSE.",
     "source": "man/read_paf.Rd"
+  },
+  {
+    "api": "read_signature_matches",
+    "parameter": "file",
+    "default": "NULL",
+    "type": "Character path/identifier/vector; see constraints",
+    "constraint": "Optional local path vector or glob patterns, before files.",
+    "source": "man/read_signature_matches.Rd"
+  },
+  {
+    "api": "read_signature_matches",
+    "parameter": "files",
+    "default": "NULL",
+    "type": "Character path/identifier/vector; see constraints",
+    "constraint": "Optional additional input paths or patterns.",
+    "source": "man/read_signature_matches.Rd"
+  },
+  {
+    "api": "read_signature_matches",
+    "parameter": "format",
+    "default": "c(\"scan_tsv\", \"entry_json\")",
+    "type": "Vector; choices versus multiple selection below",
+    "constraint": "Explicit schema: \"scan_tsv\" (default, 11-15 columns) or \"entry_json\" (cached entry results with metadata/proteins/locations). JSON requires optional jsonlite. No pagination links are followed; declared counts and remaining-page links stay in the report.",
+    "source": "man/read_signature_matches.Rd"
+  },
+  {
+    "api": "read_signature_matches",
+    "parameter": "source_file",
+    "default": "FALSE",
+    "type": "Logical",
+    "constraint": "Add .source_file to feature rows, default FALSE.",
+    "source": "man/read_signature_matches.Rd"
   },
   {
     "api": "read_vcf",

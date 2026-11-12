@@ -1529,6 +1529,17 @@
     }
   },
   {
+    "name": "read_signature_matches",
+    "owner": "ggchord",
+    "alias": "",
+    "parameters": {
+      "file": "NULL",
+      "files": "NULL",
+      "format": "c(\"scan_tsv\", \"entry_json\")",
+      "source_file": "FALSE"
+    }
+  },
+  {
     "name": "read_vcf",
     "owner": "ggchord",
     "alias": "",

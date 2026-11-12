@@ -1,0 +1,13 @@
+{
+  "source_sha256": "a007701827689686f24e130c59422c972139890a28c984fdcec12d55a5b17a2f",
+  "translations": {
+    "0": "将已有蛋白 signature 命中读为 AA feature",
+    "1": "可选本地路径向量或通配模式，在 files 之前读取。",
+    "2": "可选的其他输入路径或通配模式。",
+    "3": "显式结构：\"scan_tsv\"（默认，11–15 列）或 \"entry_json\"（含 metadata/proteins/locations 的缓存 entry 结果）。JSON 需要可选 jsonlite。不跟随分页链接，声明计数及后续页链接保留在报告中。",
+    "4": "是否向 feature 行添加 .source_file，默认 FALSE。",
+    "5": "列表包含 seq_data（aa）、features$signature 和 report，保留可追溯的源长度、原生元数据、原始文件及分页信息。同一标识的已知长度或声明 MD5 冲突会明确失败，不静默合并不同来源。MD5 仅保留声明，没有实际源字符时不独立核验。",
+    "6": "读取本地 signature TSV 或 InterPro/Pfam entry JSON 缓存，不运行注释引擎或联网查询。标识大小写及版本原样保留，包括 API 返回的小写标识。seq_data 的完整蛋白长度取源声明，不以 feature 端点替代。不制造源字符或核验结论。",
+    "7": "源分数是列表列，保留每个原生标量、字符串或缺失值。不同成员库的 score/e-value 不可默认比较，不制造通用置信度、evalue、Identity 或 read support。报告保留原 TSV 字段和 JSON 对象，TSV 第 10 列、日期、可选整合/GO/pathway 元数据不猜测版本特定语义，也不成为绘图指令。每个 JSON location 保持一个 feature 行，复用现有 segments 契约保存实际片段及原索引/状态。start/end 为该 location 包围范围，不填满片段间隙。文件内 .source_match 及 entry/protein/location 索引保留源上下文。模型和 signature ID 是标签，不是唯一 feature 实例 ID，因此 feature_id 保持缺失。代表性及非代表性命中全部保留。TSV 保留原区间和物理行，不推断跨行分组。多文件合并时命中索引须结合 .source_input，均不是新造的生物学观测 ID。"
+  }
+}

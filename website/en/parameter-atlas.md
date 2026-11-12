@@ -2865,7 +2865,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `files` | `NULL` | Character path/identifier/vector; see constraints | Optional paths or wildcard patterns for several files. |
 | `feature_types` | `NULL` | Nullable R object; type/inheritance below | Optional feature types to select. NULL retains all. |
 | `lengths` | `NULL` | Nullable R object; type/inheritance below | Optional named numeric vector of known full sequence lengths, following as_ggchord_seq(). |
-| `python` | `"python3"` | Character path/identifier/vector; see constraints | Interpreter name or path, default "python3". It must already have the optional Biopython package installed. No environment is modified. |
+| `python` | `"python3"` | Character path/identifier/vector; see constraints | Interpreter name or path, default "python3". It must already have the optional Biopython package installed. No environment is modified. An explicit virtual-environment interpreter keeps its entry path rather than resolving its executable symlink into a different environment. |
 | `unsupported` | `c("error", "report")` | Vector; choices versus multiple selection below | "error" or "report" for locations without a safe local interval representation. |
 | `source_file` | `FALSE` | Logical | Add .source_file columns to output tables, default FALSE. File provenance is retained in the report regardless. |
 
@@ -2918,6 +2918,22 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `file` | `NULL` | Character path/identifier/vector; see constraints | Optional path vector or glob patterns; read before files. |
 | `files` | `NULL` | Character path/identifier/vector; see constraints | Optional paths or wildcard patterns for multiple PAF files. |
 | `source_file` | `FALSE` | Logical | Logical. Add a .source_file column, default FALSE. |
+
+</details>
+
+<span id="api-read_signature_matches"></span>
+<details><summary><code>read_signature_matches()</code></summary>
+
+
+[Full reference](reference/read_signature_matches.html)
+
+
+| Parameter | Signature default | Type/value rule | Meaning, range and constraints |
+| --- | --- | --- | --- |
+| `file` | `NULL` | Character path/identifier/vector; see constraints | Optional local path vector or glob patterns, before files. |
+| `files` | `NULL` | Character path/identifier/vector; see constraints | Optional additional input paths or patterns. |
+| `format` | `c("scan_tsv", "entry_json")` | Vector; choices versus multiple selection below | Explicit schema: "scan_tsv" (default, 11-15 columns) or "entry_json" (cached entry results with metadata/proteins/locations). JSON requires optional jsonlite. No pagination links are followed; declared counts and remaining-page links stay in the report. |
+| `source_file` | `FALSE` | Logical | Add .source_file to feature rows, default FALSE. |
 
 </details>
 

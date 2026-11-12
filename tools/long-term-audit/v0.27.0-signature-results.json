@@ -1,0 +1,13 @@
+{
+  "status": "passed",
+  "sources": "inst/extdata/signature-sources.json",
+  "original_accession_case": true,
+  "original_full_aa_lengths": true,
+  "real_locations": 13,
+  "native_scores_and_flags_preserved": true,
+  "json_and_explicit_tsv_reencoding": true,
+  "one_match_with_native_segments": true,
+  "no_gap_fill_or_pagination_fetch": true,
+  "no_annotation_engine_run": true,
+  "no_inferred_score_metric_identity_or_feature_instance_id": true
+}
