@@ -377,6 +377,20 @@ if (nzchar(Sys.which(delta_decoder))) {
 
 `pident` 为工具报告的百分比及其打印精度，不由两个端点重建。PROMER 中它是 **AA 比对统计**，而区间坐标和完整源长度仍是 **bp**。原生 similarity/stop 百分比及 frame 独立保留。qspan/sspan 是基因组跨度，不是对齐列数；不制造 BLAST `length`、read support 或字符。原文、原生输出及消息保留在 `report`。若程序没有可靠版本选项，读取报告中的版本保持未知，应另行记录准备环境的来源。定向检查记录了实际固定工具源码 tag 和可执行文件校验和。ggchord 不重新分发第三方程序或实现。
 
+来源输入包还包含 `arabidopsis-first-pair.delta`：保留原序言及首个完整拟南芥序列对块的全部 39 条记录，字节为原文件的未改动前缀。`arabidopsis-source.json` 记录固定提交的原始压缩文件、解压哈希、完整块规则及产物哈希，并保留作者的 MIT 许可原文。它提供独立于翻译比对示例的真实核酸比对验证，不重新运行比对，也不认证剩余源块。复用同一个已有解码器：
+
+```r
+if (nzchar(Sys.which(delta_decoder))) {
+  plant_delta <- read_delta(
+    "examples/genome-alignments/arabidopsis-first-pair.delta",
+    executable = delta_decoder, source_file = TRUE
+  )
+  plant_delta$ribbon_data |>
+    select(qaccver, qstart, qend, saccver, sstart, send, pident) |>
+    head()
+}
+```
+
 ## 已有蛋白 signature {#protein-signatures}
 
 安装包内的输入为从 InterPro API 缓存的两个普通人类蛋白的已有 Pfam 注释。原 JSON 字节、获取日期、URL、CC0 归属及哈希在 `inst/extdata/signature-sources.json` 中。`data-raw/prepare-signature-inputs.py` 将相同已观测片段显式重编码为 TSV，供坐标往返核对；不运行 InterProScan，缺失的 MD5、状态、运行日期及整合描述保持 `-`。TSV 是派生格式示例，不是新分析结果。

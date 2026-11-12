@@ -36,6 +36,32 @@ its original bytes, organism provenance, original source URL and past results
 remain intact, but active checks and regeneration no longer load/download it.
 The active real example is the unchanged Drosophila `promer.delta`; nucleotide
 mode uses clearly marked synthetic schema/direction controls, not renamed
-biological data. A new benign real NUCMER sample has not been validated here.
+biological data. The separate plant sample below now provides a source-backed
+real NUCMER check; the historical input and its prior results remain unchanged.
 Historical `v0.27.0-delta-results.json` is retained; new runs write the separate
 `v0.27.0-delta-active-results.json` without overwriting that historical evidence.
+
+## Existing Arabidopsis nucleotide alignments
+
+`arabidopsis-first-pair.delta` is an unchanged prefix of the author's existing
+Arabidopsis input in MariaNattestad/assemblytics, pinned to commit
+`7acd1acec5b4175ab71a7c885a6ddadec0e355ab`. It contains the original two-line
+preamble and complete first sequence-pair block: 39 observed alignments of
+TAIR10 `Chr1` and `JSAD01000088.1` in the declared query assembly
+`GCA_000835945.1_ASM83594v1_genomic.fna`. No row, ID, error count, directional
+endpoint or signed script is changed. Paths in the preamble remain provenance,
+not files retrieved by the reader. Original physical line numbers remain valid
+because the product is a prefix, not a reassembled selection.
+
+`arabidopsis-source.json` records the full compressed/decompressed hashes,
+complete block rule, source line interval, product hash and original URLs.
+`python3 data-raw/prepare-plant-delta.py` explicitly retrieves and verifies those
+original bytes; `--cache` can use an existing directory containing the source
+compressed file and LICENSE. `ASSEMBLY-EXAMPLE-LICENSE.txt` preserves the
+author's exact MIT permission notice. No upstream implementation is copied.
+
+`check-plant-delta.R` compares all 39 existing records, scripts and reported
+identity values with the physical input and mature show-coords output, then
+draws those same intervals. It does not run alignment, reconstruct nucleotide
+characters, call variants or manufacture support. Remaining source blocks and
+character-level consistency with the source FASTA are not certified.

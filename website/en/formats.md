@@ -378,6 +378,20 @@ This explicitly selected query remains the literal string `"3210101"`. Query/ref
 
 `pident` is the tool's reported percentage with its printed precision, not a value reconstructed from two endpoints. In PROMER it is an **AA alignment statistic**, while interval coordinates and full sequence lengths remain **bp**. Native similarity/stop percentages and frames remain separate. qspan/sspan are genomic span widths, not alignment-column counts; a BLAST `length`, read support and sequence characters are not manufactured. Original text and native output/messages remain in `report`. If the executable has no reliable version option, its version remains unknown in the reader report; record your prepared environment's provenance separately. The directed audit records the actual fixed tool source tag and executable checksum. No third-party executable or implementation is redistributed in ggchord.
 
+The source bundle also includes `arabidopsis-first-pair.delta`, an unchanged prefix containing the original preamble and all 39 records of the first Arabidopsis sequence-pair block. `arabidopsis-source.json` records the pinned original compressed file, decompressed hash, complete-block rule and unchanged product hash; the author's MIT permission notice is retained. This checks real nucleotide alignments independently of the translated example, without newly running alignment or certifying the remaining source blocks. Use the same existing decoder:
+
+```r
+if (nzchar(Sys.which(delta_decoder))) {
+  plant_delta <- read_delta(
+    "examples/genome-alignments/arabidopsis-first-pair.delta",
+    executable = delta_decoder, source_file = TRUE
+  )
+  plant_delta$ribbon_data |>
+    select(qaccver, qstart, qend, saccver, sstart, send, pident) |>
+    head()
+}
+```
+
 ## Existing protein signatures {#protein-signatures}
 
 These installed-package inputs contain existing Pfam annotations cached from the InterPro API for two human proteins. The original JSON bytes, retrieval date, URLs, CC0 attribution and hashes are in `inst/extdata/signature-sources.json`. `data-raw/prepare-signature-inputs.py` explicitly re-encodes the same observed fragments as TSV for a coordinate round trip. It does not run InterProScan: absent MD5, status, run date and integrated description remain `-`. The TSV is a derived format example, not a new analysis result.

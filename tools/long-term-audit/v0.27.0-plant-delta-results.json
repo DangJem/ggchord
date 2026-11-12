@@ -1,0 +1,46 @@
+{
+  "status": "passed for the unchanged first complete source-pair block",
+  "source": {
+    "file": "arabidopsis-first-pair.delta",
+    "organism": "Arabidopsis thaliana",
+    "upstream_repository": "MariaNattestad/assemblytics",
+    "commit": "7acd1acec5b4175ab71a7c885a6ddadec0e355ab",
+    "retrieved": "2026-11-12",
+    "compressed": {
+      "upstream_name": "arabidopsis.delta.gz",
+      "url": "https://raw.githubusercontent.com/MariaNattestad/assemblytics/7acd1acec5b4175ab71a7c885a6ddadec0e355ab/input_examples/arabidopsis.delta.gz",
+      "sha256": "09e3616fa4b6b5e6001311d7cb0d2c70991f7001e4259e26a0506fb0ed4c81d9"
+    },
+    "license": {
+      "upstream_name": "LICENSE",
+      "url": "https://raw.githubusercontent.com/MariaNattestad/assemblytics/7acd1acec5b4175ab71a7c885a6ddadec0e355ab/LICENSE",
+      "sha256": "2c71940d243c3b8cd6ce2916d4ebbfbcc96758c73baa57f2bbf98daf6ccc8652",
+      "notice_file": "ASSEMBLY-EXAMPLE-LICENSE.txt"
+    },
+    "decompressed_sha256": "6b07d591e773b3a93724cee004c04fbfdbda56e9f4ab943dd529a06e9d0b2af9",
+    "selected_header": ">Chr1 JSAD01000088.1 30427671 15877916",
+    "source_lines": [
+      1,
+      1276
+    ],
+    "original_sequence_pair_blocks": 767,
+    "selected_complete_blocks": 1,
+    "original_alignment_records": 10015,
+    "selected_alignment_records": 39,
+    "product_sha256": "a515610227107e93a6c0f39f3a4765de1d08f2cabfc709c319dcf3a5283ed227",
+    "transformation": "gzip decompression, then unchanged prefix: original two-line preamble plus the complete first sequence-pair block; no alignment record or gap script edited",
+    "source_reference": "Arabidopsis_TAIR10.fasta",
+    "source_query": "GCA_000835945.1_ASM83594v1_genomic.fna",
+    "scope": "Existing source-reported whole interval/error/script evidence only; no FASTA strings, new alignment, variant calling or inferred support"
+  },
+  "alignments": 39,
+  "sequence_ids": ["JSAD01000088.1", "Chr1"],
+  "complete_source_lengths": [15877916, 30427671],
+  "native_identity_preserved": true,
+  "every_physical_header_endpoint_error_and_script_checked": true,
+  "both_query_directions_preserved": true,
+  "source_preamble_retained_not_opened": true,
+  "decoder_sha256": "8857dccf166c369a90a72bf892330d23a423d6f756e1345d57220134ec7910c5",
+  "no_aligner_or_variant_caller_run": true,
+  "unverified": ["remaining source sequence-pair blocks", "character-level consistency without source FASTA", "independent reconstruction of exact unrounded identity", "release device/platform matrix"]
+}
