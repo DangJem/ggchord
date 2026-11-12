@@ -89,3 +89,10 @@ AA残基使用CDS ID的已观测aa命名空间；bp宏观图若要关联蛋白�
 仅增加/复用最小公开成功案例留待正式发布授权后执行；本轮未运行testthat、
 devtools::test、R CMD build/check、vignette编译或完整PNG/PDF/SVG发布矩阵。
 没有重建冻结docs、旧lesson engine或178旧图，旧远端CI未通过新push验证。
+
+## 提交与结束状态核对
+
+实现、文档及定向证据提交为 de561e6。本轮主分支未移动，仍03805fa。
+结束读取发现本地origin/main引用也为03805fa，reflog记录2026-11-12 13:56:15 +0800
+由push更新，与交接记录69556d8不同。本轮没有执行fetch或push，不推断其他会话的
+操作授权，也不据本地引用宣称远端CI已通过。de561e6仍仅在本地v0.26.0分支。
