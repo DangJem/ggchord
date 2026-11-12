@@ -1,5 +1,10 @@
 # ggchord 0.27.0 (development)
 
+- Fixed false self-intersection errors for inward Tracks on closed circular
+  backbones. The duplicated seam now shares a periodic tangent; genuinely
+  folded bands still fail. This geometric correction does not infer biological
+  circularity, alter source intervals or disable collision detection.
+
 - Fixed artificial ribbon breaks in ordinary child margins under explicit
   overlap. Composition connections traverse the complete child container,
   still honour later covering containers and draw below native foregrounds.

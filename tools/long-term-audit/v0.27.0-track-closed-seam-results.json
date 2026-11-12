@@ -1,0 +1,8 @@
+{
+  "status": "passed",
+  "narrow_inward_band": true,
+  "actual_fold_still_detected": true,
+  "original_gc_windows_preserved": true,
+  "source": "plasmid_example_pUC19",
+  "no_biological_circularity_inference": true
+}

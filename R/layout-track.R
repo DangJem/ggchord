@@ -25,6 +25,16 @@ ggchord_track_frame <- function(pos, id, layout) {
   path <- reference$path
   before <- pmax(1L, seq_len(nrow(path)) - 1L)
   after <- pmin(nrow(path), seq_len(nrow(path)) + 1L)
+  # A geometrically closed backbone has one tangent at its duplicated seam.
+  # One-sided endpoint differences cross even a narrow inward offset there.
+  # This is geometric closure, not an inference of biological circularity.
+  if (nrow(path) > 2L &&
+      sqrt((path$x[1L] - tail(path$x, 1L))^2 +
+           (path$y[1L] - tail(path$y, 1L))^2) <=
+        1e-10 * max(1, diff(range(path$x)), diff(range(path$y)))) {
+    before[1L] <- nrow(path) - 1L
+    after[nrow(path)] <- 2L
+  }
   dx <- path$x[after] - path$x[before]; dy <- path$y[after] - path$y[before]
   norm <- sqrt(dx^2 + dy^2)
   if (any(norm <= 0)) ggchord_stop("Track backbone has an undefined local normal")
