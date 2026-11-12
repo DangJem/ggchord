@@ -6,6 +6,9 @@
 
 # Global variable declarations (to avoid R CMD check NOTEs)
 globalVariables(c(
+  ".flow_from", ".flow_tip", ".flow_to", ".fusion_row", ".fusion_x", ".fusion_y",
+  ".q_n", ".s_n", ".track_group", ".track_input_index", ".track_width", ".track_x",
+  "pos", "track_value", "key",
   "x", "y", "group", "pident", "fill", "colour", "strand", "anno", "accver",
   "text_x", "text_y", "text", "text_angle", "hjust", "vjust",
   "x0", "y0", "x1", "y1", "xend", "yend", ".component",
@@ -74,6 +77,8 @@ globalVariables(c(
 #' @return A ggchord object (inherits from ggplot) to which geom_* layers can be added with +
 #' @seealso [ggchord_api_contract], [ggchord_data_contract],
 #'   [ggchord_layout_contract], [view_ggchord()]
+#' @importFrom utils head
+#' @importFrom grDevices as.raster
 #' @export
 #'
 #' @examples

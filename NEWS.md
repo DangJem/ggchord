@@ -1,3 +1,13 @@
+# ggchord 0.22.0.9000
+
+- Fixed the shared circular perimeter layout overriding an explicit
+  `geom_restriction_site(leader = "straight")` request with a one-bend route.
+  Explicit direct routes now remain direct after label placement; default
+  radial and explicit elbow routing retain their existing semantics.
+- Added missing namespace imports and nonstandard-evaluation declarations
+  reported by the main-branch CI. No package-wide check is claimed for this
+  local development fix.
+
 # ggchord 0.21.0.9000
 
 - Added `as_ggchord_alignment()` and `read_aligned_fasta()` for existing

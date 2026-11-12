@@ -1,0 +1,36 @@
+{
+  "commit": "69556d8b0a51a30962339afbdc78b8962ff05586",
+  "event": "push",
+  "pushed_main": true,
+  "documentation": {
+    "run": "https://github.com/DangJem/ggchord/actions/runs/43141481170",
+    "conclusion": "failure",
+    "reason": "Old lesson engine and 178 plot dependency fingerprints; preview/deploy skipped"
+  },
+  "r_cmd_check": {
+    "run": "https://github.com/DangJem/ggchord/actions/runs/43141481132",
+    "conclusion": "failure",
+    "jobs": [
+      "macos release",
+      "windows release",
+      "ubuntu release",
+      "ubuntu devel"
+    ],
+    "inspected_job": 130929252538,
+    "failure": "test-single-genome.R:43: explicit straight restriction leader became a one-bend path",
+    "linux_release_assertions": {
+      "pass": 197,
+      "fail": 1,
+      "warn": 0,
+      "skip": 0
+    },
+    "note": "Missing imports and NSE declarations reported"
+  },
+  "local_followup": {
+    "branch": "v0.22.0",
+    "restriction_reproducer": "straight 2 vertices; elbow 3 vertices; inner labels retained; passed",
+    "test_suite_not_run": true,
+    "remote_rerun_or_fix_push": false,
+    "publication": false
+  }
+}

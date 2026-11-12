@@ -1,6 +1,6 @@
 Package: ggchord
 Title: Layered Chord, Circular and Linear Sequence Visualization
-Version: 0.21.0.9000
+Version: 0.22.0.9000
 Authors@R: person(given = "Jem", family = "Dang", email = "dangjem0730@gmail.com", role = c("aut", "cre"))
 Description: A 'ggplot2'-based package for multi-sequence alignment chord
     diagrams, linear and radial synteny plots, HSP dotplots and single circular
@@ -12,7 +12,7 @@ Description: A 'ggplot2'-based package for multi-sequence alignment chord
     scales and themes keep data mapping separate from geometry and appearance.
 License: MIT + file LICENSE
 Depends: R (>= 4.1.0)
-Imports: ggplot2 (>= 4.0.0), grDevices, grid, rlang, scales
+Imports: ggplot2 (>= 4.0.0), grDevices, grid, rlang, scales, utils
 VignetteBuilder: knitr
 Suggests: knitr, rmarkdown, qpdf, dplyr, purrr, tidyr, svglite, testthat (>= 3.0.0),
     readxl, digest, GenomicRanges, InteractionSet, IRanges, S4Vectors,

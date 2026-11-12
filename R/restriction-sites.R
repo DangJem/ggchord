@@ -1886,6 +1886,7 @@ ggchord_restriction_geometry <- function(data, params, layout, seq_data) {
     ))
   }
   rendered <- ggchord_rbind_fill(output)
+  rendered$.leader_style <- params$leader %||% "radial"
   if ("display_warning" %in% names(data) && nrow(rendered)) {
     blocked <- vapply(rendered$source_rows, function(rows) {
       rows <- as.integer(rows)

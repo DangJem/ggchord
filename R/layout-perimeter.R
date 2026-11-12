@@ -782,15 +782,21 @@ ggchord_place_dense_perimeter <- function(registry, layout,
       leaders <- which(sites$restriction_component %in% "leader" &
         sites$source_row == task$source)
       if (length(leaders) >= 2L) {
-        if (length(leaders) < 3L) {
+        direct <- ".leader_style" %in% names(sites) &&
+          identical(sites$.leader_style[row], "straight")
+        if (!direct && length(leaders) < 3L) {
           extra <- sites[tail(leaders, 1L), , drop = FALSE]
           sites <- rbind(sites, extra)
           leaders <- c(leaders, nrow(sites))
         }
         sites$x[leaders] <- task$edge_x
         sites$y[leaders] <- task$edge_y
-        sites$x[leaders[1:2]] <- c(task$root_x, task$route_x)
-        sites$y[leaders[1:2]] <- c(task$root_y, task$route_y)
+        sites$x[leaders[1L]] <- task$root_x
+        sites$y[leaders[1L]] <- task$root_y
+        if (!direct) {
+          sites$x[leaders[2L]] <- task$route_x
+          sites$y[leaders[2L]] <- task$route_y
+        }
       }
       registry[[id]]$restriction_site <- sites
     } else {
