@@ -111,11 +111,20 @@ test_that("import helpers parse minimal files with explicit coordinate conventio
     # Format-only fixtures; no inferred biological alignment evidence.
     maf <- tempfile(fileext = ".maf")
     chain <- tempfile(fileext = ".chain")
-    on.exit(unlink(c(maf, chain)), add = TRUE)
+    genbank <- tempfile(fileext = ".gb")
+    on.exit(unlink(c(maf, chain, genbank)), add = TRUE)
     writeLines(c("##maf version=1", "a score=1", "s A 0 8 + 8 ACgtACGT", ""), maf)
     expect_equal(nrow(read_maf(maf, python = import_python)$alignment), 8L)
     writeLines(c("chain 1 A 8 + 0 4 B 8 - 0 4 1", "4"), chain)
     expect_equal(nrow(read_chain(chain, python = import_python)$ribbon_data), 1L)
+    writeLines(c(
+      "LOCUS       FORMAT_ONLY                8 bp    DNA              UNK 01-JAN-1980",
+      "DEFINITION  Explicit synthetic format control.", "ACCESSION   FORMAT_ONLY",
+      "VERSION     FORMAT_ONLY", "KEYWORDS    .", "SOURCE      .", "  ORGANISM  .",
+      "            .", "FEATURES             Location/Qualifiers", "ORIGIN", "//"
+    ), genbank)
+    expect_equal(read_genbank(genbank,
+      python = unname(Sys.which(import_python)))$seq_data$length, 8)
   }
   delta_decoder <- Sys.getenv("DELTA_DECODER", "show-coords")
   if (nzchar(Sys.which(delta_decoder))) {

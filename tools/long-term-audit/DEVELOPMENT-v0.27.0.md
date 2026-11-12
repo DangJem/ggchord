@@ -264,3 +264,18 @@ MAF/chain定向脚本复核通过。只复用既有import案例添加一个可�
 仅是可能因素，不能当作已确认原因或将普通文件解析等同病原体实验。用户已
 要求分析；已核对实际聊天错误与官方说明。后续继续常规制图工程，不修改
 安全设置，不以改名或隐藏来源代替真实输入语义。其余长期工作仍未完成。
+
+## 第十三工作包：统一可选解析进程边界
+
+已确认旧GenBank入口对显式解释器做normalizePath，虚拟环境symlink可能切到
+未安装依赖的系统Python。现GenBank、BCF、MAF/chain复用source-parser.R中
+同一私有进程/JSON/临时文件/消息边界，解释器入口不解symlink，公开签名和
+源解码器不变。不新增运行时依赖、网络安装或生物学分析。GenBank多文件
+始终JSON数组，文件路径不作为代码执行。
+
+check-source-parser.R用纯进程/JSON及明确标记的格式对照核对虚拟环境prefix、
+含空格/特殊字符路径原样保留、stderr入报告，以及公开GenBank双文件和BCF
+转码结果。对照GenBank只声明长度、没有实际源字符，不能当生物学数据；没有
+新增生物学样例。结果source-parser-results.json实际通过。最小import现有
+可选案例补一个显式解释器GenBank成功路径，未运行testthat。NEWS/帮助/Rd/
+对应两语课程同步；仍继续其余任务，不将此修复算作全部任务书完成。

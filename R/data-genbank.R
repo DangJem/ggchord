@@ -105,6 +105,8 @@ with open(sys.argv[2], 'w', encoding='utf-8') as handle:
 #'   following [as_ggchord_seq()].
 #' @param python Interpreter name or path, default `"python3"`. It must already
 #'   have the optional Biopython package installed. No environment is modified.
+#'   An explicit virtual-environment interpreter keeps its entry path rather
+#'   than resolving its executable symlink into a different environment.
 #' @param unsupported `"error"` or `"report"` for locations without a safe
 #'   local interval representation.
 #' @param source_file Add `.source_file` columns to output tables, default
@@ -147,27 +149,10 @@ read_genbank <- function(file = NULL, files = NULL, feature_types = NULL,
     caller, ": feature_types must be NULL or nonempty feature type names")
   if (!is.logical(source_file) || length(source_file) != 1L || is.na(source_file))
     ggchord_stop(caller, ": source_file must be TRUE or FALSE")
-  if (!is.character(python) || length(python) != 1L || is.na(python) || !nzchar(python))
-    ggchord_stop(caller, ": python must name one existing interpreter")
-  executable <- if (file.exists(python)) normalizePath(python) else unname(Sys.which(python))
-  if (!nzchar(executable)) ggchord_stop(caller,
-    ": selected Python interpreter was not found; select an existing environment with the optional parser, or use FASTA/GFF3/BED input")
-  ggchord_conversion_require("jsonlite", caller)
-  temporary <- tempfile("ggchord-records-")
-  dir.create(temporary)
-  on.exit(unlink(temporary, recursive = TRUE), add = TRUE)
-  script <- file.path(temporary, "parse_records.py")
-  config <- file.path(temporary, "input.json")
-  output <- file.path(temporary, "output.json")
-  log <- file.path(temporary, "parser.log")
-  writeLines(ggchord_record_parser_script(), script, useBytes = TRUE)
-  jsonlite::write_json(list(files = unname(normalizePath(paths))), config, auto_unbox = FALSE)
-  status <- suppressWarnings(system2(executable,
-    args = c(shQuote(script), shQuote(config), shQuote(output)), stdout = log, stderr = log))
-  messages <- if (file.exists(log)) readLines(log, warn = FALSE) else character()
-  if (!identical(status, 0L) || !file.exists(output)) ggchord_stop(caller,
-    ": optional source parser failed in the selected environment: ", paste(messages, collapse = "\n"))
-  parsed <- jsonlite::read_json(output, simplifyVector = FALSE)
+  result <- ggchord_parse_external_source(ggchord_record_parser_script(),
+    list(files = unname(as.list(normalizePath(paths)))), python, caller)
+  parsed <- result$data
+  messages <- result$messages
   records <- parsed$records
   if (!length(records)) ggchord_stop(caller, ": no GenBank records were parsed")
   seqs <- list(); features <- list(); unplaced <- list(); feature_files <- character()

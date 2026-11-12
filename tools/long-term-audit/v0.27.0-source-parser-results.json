@@ -1,0 +1,11 @@
+{
+  "status": "passed",
+  "json_paths_unchanged": true,
+  "stderr_message_retained": true,
+  "selected_environment_prefix": "/private/tmp/ggchord-hts-python-venv",
+  "virtual_environment_preserved": true,
+  "genbank_single_file_control": true,
+  "genbank_two_file_control": true,
+  "bcf_control": true,
+  "fixtures": "explicitly synthetic format controls, no biological claims"
+}

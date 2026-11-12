@@ -1,5 +1,10 @@
 # ggchord 0.27.0 (development)
 
+- Fixed explicit virtual-environment Python paths in `read_genbank()`: resolving
+  the executable symlink could incorrectly select the system environment.
+  Optional parser bridges now share the same internal process/JSON/message
+  boundary while retaining their existing public signatures and decoders.
+
 - Added `read_delta()` to read existing NUCMER/PROMER results through an
   optional user-selected show-coords executable, without running an aligner.
   Native output is matched to original directional source coordinates and

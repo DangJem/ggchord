@@ -25,7 +25,9 @@ read_genbank(
 following \code{\link[=as_ggchord_seq]{as_ggchord_seq()}}.}
 
 \item{python}{Interpreter name or path, default \code{"python3"}. It must already
-have the optional Biopython package installed. No environment is modified.}
+have the optional Biopython package installed. No environment is modified.
+An explicit virtual-environment interpreter keeps its entry path rather
+than resolving its executable symlink into a different environment.}
 
 \item{unsupported}{\code{"error"} or \code{"report"} for locations without a safe
 local interval representation.}

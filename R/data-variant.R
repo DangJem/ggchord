@@ -19,20 +19,10 @@ with open(sys.argv[2], 'w', encoding='utf-8') as handle:
 )---"
 
 ggchord_variant_bcf_text <- function(path, destination, python, caller) {
-  if (!is.character(python) || length(python) != 1L || is.na(python) || !nzchar(python))
-    ggchord_stop(caller, ': python must name one existing interpreter for BCF')
-  executable <- if (file.exists(python)) file.path(normalizePath(dirname(python)), basename(python)) else unname(Sys.which(python))
-  if (!nzchar(executable)) ggchord_stop(caller, ': selected Python was not found; select an environment with pysam or supply VCF text')
-  ggchord_conversion_require('jsonlite', caller)
-  script <- paste0(destination, '.py'); config <- paste0(destination, '.json')
-  result <- paste0(destination, '.decoder.json'); log <- paste0(destination, '.log')
-  writeLines(ggchord_variant_bcf_script(), script, useBytes = TRUE)
-  jsonlite::write_json(list(source = normalizePath(path), destination = destination), config, auto_unbox = TRUE)
-  status <- suppressWarnings(system2(executable, c(shQuote(script), shQuote(config), shQuote(result)), stdout = log, stderr = log))
-  if (!identical(status, 0L) || !file.exists(result)) ggchord_stop(caller,
-    ': BCF decoder failed: ', paste(readLines(log, warn = FALSE), collapse = '\n'))
-  decoder <- jsonlite::read_json(result, simplifyVector = TRUE)
-  decoder$messages <- readLines(log, warn = FALSE)
+  result <- ggchord_parse_external_source(ggchord_variant_bcf_script(),
+    list(source = normalizePath(path), destination = destination), python, caller)
+  decoder <- result$data
+  decoder$messages <- result$messages
   decoder
 }
 
