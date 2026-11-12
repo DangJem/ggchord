@@ -163,3 +163,22 @@ panel_bounds，普通边距被当成未声明mask。现叶图按完整container�
 路径使用周期中心差分；没有关闭折叠检测或更改数据。check-track-closed-seam.R
 使用原有随包pUC19计算真实GC，核对窄内轨无误报、真正折叠仍拒绝、公开来源
 表保留，并保存代表PNG。没有运行包级检测或设备矩阵。
+
+## 第九工作包：bedGraph/BigWig连续信号
+
+read_bedgraph()保留原四列/物理行/显示header，零半开转一闭；每文件一signal，
+拒绝多个track定义，不填零/排序/聚合/猜测单位。共享BED-family header识别修复
+防止合法track/browser标识丢行。read_bigwig()通过可选rtracklayer GRanges解码，
+不再次平移坐标，保留完整长度字典/原查询/有效无链并集；适配层再次裁切并集以
+避免不同解码版本差异，不制造裁切前观测ID。Windows明确不支持该可选解码，
+提供已有bedGraph替代；没有自研二进制引擎或增加Imports。
+
+真实输入由原始pUC19完整字符串派生27个GC百分比窗口，末窗86bp。核对随包
+字符串完全相同后才显式映射fixture标识，原header/哈希/规则独立存储。Canonical
+微型输入在inst/extdata，安装后帮助示例也可运行；不是测序coverage。
+
+check-signal-import.R实际通过文本/二进制每碱基信号一致（尊重float32精度）、
+完整长度、查询并集/裁切/空查询、缺失区间不等于零、合法header关键字标识、
+来源及真实GC轨道保留。代表PNG已保存；macOS R4.6/rtracklayer1.72在/tmp隔离库
+验证，未更改用户R库。其他平台发布矩阵未执行。两个帮助/Rd/双语课程及API
+索引同步，formats课程独立进程通过，1089段参考翻译检查通过；没有运行testthat。

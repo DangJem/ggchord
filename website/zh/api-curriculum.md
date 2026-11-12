@@ -97,7 +97,9 @@
 | [`project_ggchord_links`](reference/project_ggchord_links.html) | 将明确无缺口的蛋白连接投影为基因组编码片段 | [L2](projection.html#links) | 显式 CDS/相位/单位的编码坐标工作流 | [↗](parameter-atlas.html#api-project_ggchord_links) | [↗](homology.html) |
 | [`read_aligned_fasta`](reference/read_aligned_fasta.html) | 读取已有DNA/RNA/AA对齐字符，不计算新比对 | [L2](formats.html#aligned-characters) | 已有DNA/RNA/AA对齐列；Cartesian局部单元与显式源映射 | [↗](parameter-atlas.html#api-read_aligned_fasta) | [↗](formats.html) |
 | [`read_bed`](reference/read_bed.html) | 将 BED 区间读为 ggchord 注释 | [L2](formats.html#zero-based) | 本地文件到标准表；按源格式转换坐标和声明单位 | [↗](parameter-atlas.html#api-read_bed) | [↗](formats.html) |
+| [`read_bedgraph`](reference/read_bedgraph.html) | 导入连续区间信号，显式保留坐标及单位边界 | [L2](formats.html#signals) | 定量轨道输入；BigWig 为支持平台上的可选依赖 | [↗](parameter-atlas.html#api-read_bedgraph) | [↗](formats.html) |
 | [`read_bedpe`](reference/read_bedpe.html) | 读取双端区间，保留来源且不推断缺失比对证据 | [L2](formats.html#bedpe) | 标准q/s区间、配对锚点方向与来源 | [↗](parameter-atlas.html#api-read_bedpe) | [↗](formats.html) |
+| [`read_bigwig`](reference/read_bigwig.html) | 导入连续区间信号，显式保留坐标及单位边界 | [L2](formats.html#signals) | 定量轨道输入；BigWig 为支持平台上的可选依赖 | [↗](parameter-atlas.html#api-read_bigwig) | [↗](formats.html) |
 | [`read_blast`](reference/read_blast.html) | 将一个或多个 BLAST 表格文件读为连接数据 | [L2](alignments.html#standard) | 本地文件到标准表；按源格式转换坐标和声明单位 | [↗](parameter-atlas.html#api-read_blast) | [↗](real-data.html) |
 | [`read_fasta_lengths`](reference/read_fasta_lengths.html) | 将一个或多个 FASTA 文件读为序列数据 | [L2](formats.html#characters) | 本地文件到标准表；按源格式转换坐标和声明单位 | [↗](parameter-atlas.html#api-read_fasta_lengths) | [↗](real-data.html) |
 | [`read_genbank`](reference/read_genbank.html) | 使用可选成熟解析器导入本地 GenBank 或 GBFF | [L2](formats.html#genbank) | 本地文件到标准表；按源格式转换坐标和声明单位 | [↗](parameter-atlas.html#api-read_genbank) | [↗](formats.html) |

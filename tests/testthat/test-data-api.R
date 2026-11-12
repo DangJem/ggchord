@@ -69,7 +69,8 @@ test_that("import helpers parse minimal files with explicit coordinate conventio
   bed <- tempfile(fileext = ".bed")
   paf <- tempfile(fileext = ".paf")
   bedpe <- tempfile(fileext = ".bedpe")
-  on.exit(unlink(c(fasta, blast, gff, bed, paf, bedpe)), add = TRUE)
+  bedgraph <- tempfile(fileext = ".bedGraph")
+  on.exit(unlink(c(fasta, blast, gff, bed, paf, bedpe, bedgraph)), add = TRUE)
   writeLines(c(">A", "ACgtACGT"), fasta)
   writeLines(paste("001", "NA", 98, 100, 0, 0, 1, 100, 1, 100, "1e-20", 200,
     sep = "\t"), blast)
@@ -86,9 +87,18 @@ test_that("import helpers parse minimal files with explicit coordinate conventio
   writeLines("A\t0\t1\tpoint\t0\t.", bed)
   expect_equal(unname(unlist(read_bed(bed)[c("start", "end")])), c(1, 1))
   writeLines("A\t1000\t99\t200\t-\tB\t1000\t299\t400\t90\t101\t255", paf)
-  writeLines("A\t0\t1\tB\t2\t4\tpair\t.\t+\t-", bedpe)
+  writeLines("browser\t0\t1\tB\t2\t4\tpair\t.\t+\t-", bedpe)
   expect_equal(unname(unlist(read_bedpe(bedpe)[c("qstart", "qend", "sstart", "send")])),
     c(1, 1, 4, 3))
+  writeLines(c('track type=bedGraph name="format fixture"', "track\t0\t1\t-0.5"), bedgraph)
+  signal <- read_bedgraph(bedgraph)
+  expect_identical(signal$accver, "track")
+  expect_equal(unname(unlist(signal[c("start", "end", "value")])), c(1, 1, -.5))
+  if (.Platform$OS.type != "windows" && requireNamespace("rtracklayer", quietly = TRUE)) {
+    indexed <- read_bigwig(system.file("extdata", "pUC19-gc-100.bw", package = "ggchord"))
+    expect_true(nrow(indexed) > 0L)
+    expect_identical(unique(indexed$accver), "pUC19")
+  }
   mapping <- read_paf(paf)
   expect_equal(unname(unlist(mapping[c("qstart", "qend", "sstart", "send")])),
     c(100, 200, 400, 300))

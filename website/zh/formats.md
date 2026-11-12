@@ -222,3 +222,40 @@ observed$residues |>
 默认 `initiation = "literal"` 不改写替代起始密码子；`"start"` 要求完整5′端。`ambiguous = "error"` 拒绝模糊 codon，显式 `"solve"` 交由 Biostrings 解析，不能唯一确定时输出X。未知翻译表、缺失/过短源序列及已声明的翻译例外均报错。`partial = "trim"` 在构建 CDS map 时声明：只排除首段 phase 与末端不完整 codon，后续 phase 用于校验连续性，不删除跨段 codon 的碱基。缺失序列不会被补造。RNA 必须显式声明；有序 `segments` 沿用既有分段/跨原点契约。
 
 完整的碱基、codon 和宏观关联可运行示例在 `examples/m2-detail.R`，负链氨基酸标在其三个编码碱基中心。真实正/负链分段对照、源hash和原始预期翻译保存在 `examples/cds/`。[注册字符图](fusion.html#character-detail)后可连接精确源边界。
+
+## 连续信号：bedGraph 与 BigWig {#signals}
+
+这个安装包内的示例由未改动的随包 pUC19 序列按 100 bp 窗口计算真实 GC 百分比，末窗为 86 bp；它是序列组成，不是实验测序覆盖度。`data-raw/prepare-signal-inputs.R` 保留生成规则，`inst/extdata/signal-sources.json` 保留哈希及显式的原始表头映射。读取器保留标识。
+
+```r
+signal_file <- system.file("extdata", "pUC19-gc-100.bedGraph", package = "ggchord")
+signal <- read_bedgraph(signal_file, source_file = TRUE)
+data(plasmid_example_pUC19)
+gc_band <- position_track("GC", side = "inside", width = unit(7, "mm"))
+p_signal <- ggchord(plasmid_example_pUC19) +
+  geom_seq(show.legend = FALSE) +
+  geom_track(
+    aes(xmin = start - 1, xmax = end, ymin = 0, ymax = value, fill = value),
+    data = signal, geom = "rect", track = gc_band
+  ) +
+  scale_track_value_continuous("GC", limits = c(0, 100), unit = "GC (%)") +
+  scale_track_fill_gradientn(
+    "GC", colours = c("#F1E51D", "#31849B"), limits = c(0, 100), name = "GC (%)"
+  ) +
+  coord_circular()
+p_signal
+
+if (.Platform$OS.type != "windows" && requireNamespace("rtracklayer", quietly = TRUE)) {
+  indexed_file <- system.file("extdata", "pUC19-gc-100.bw", package = "ggchord")
+  selected_signal <- read_bigwig(
+    indexed_file,
+    which = data.frame(accver = "pUC19", start = c(50, 100), end = c(150, 250)),
+    source_file = TRUE
+  )
+  selected_signal |> select(accver, start, end, value)
+}
+```
+
+bedGraph 为四列制表符分隔数据，使用零基半开坐标及有限的有符号数值。导入仅转换一次坐标；原始端点、值、物理行号和不解释样式的显示表头均可追溯。每文件一条信号，多个 track 定义应拆分。字面序列 ID `track`、`browser` 合法，表头不设置图形样式。重叠行保留，不隐式采用末行覆盖规则。
+
+矩形以 `start - 1` 和 `end` 为单元边界，不在缺失区间插值连线。BigWig 需要可选 **rtracklayer**，其解码器不支持 Windows；该平台使用已有 bedGraph 文件。二进制导入的 GRanges 已是一基闭区间。区段值保留二进制浮点精度，区段数量不代表原始测量次数。完整长度来自文件表头。查询采用无链区间并集，结果裁切至并集，空选区返回零行。缺失区间仍缺失，与存储的零不同；不制造 coverage、identity、support、单位或裁切前观测 ID。各 Track 的映射、数值域、单位和 Guide 仍显式配置。

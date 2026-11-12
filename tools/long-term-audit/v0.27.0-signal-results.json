@@ -1,0 +1,14 @@
+{
+  "status": "passed",
+  "real_source": "examples/plasmid/pUC19.fna",
+  "source_windows": 27,
+  "full_length": 2686,
+  "interpretation": "actual GC percent, not read coverage",
+  "binary_signal_preserved": true,
+  "binary_native_precision": true,
+  "selection_union_and_clipping": true,
+  "absent_is_not_zero": true,
+  "header_like_identifiers_preserved": true,
+  "physical_lines_and_headers_retained": true,
+  "no_fake_support_or_identity": true
+}

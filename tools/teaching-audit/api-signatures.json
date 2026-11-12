@@ -1394,6 +1394,16 @@
     }
   },
   {
+    "name": "read_bedgraph",
+    "owner": "ggchord",
+    "alias": "",
+    "parameters": {
+      "file": "NULL",
+      "files": "NULL",
+      "source_file": "FALSE"
+    }
+  },
+  {
     "name": "read_bedpe",
     "owner": "ggchord",
     "alias": "",
@@ -1402,6 +1412,17 @@
       "files": "NULL",
       "source_file": "FALSE",
       "unmapped": "c(\"error\", \"keep\")"
+    }
+  },
+  {
+    "name": "read_bigwig",
+    "owner": "ggchord",
+    "alias": "",
+    "parameters": {
+      "file": "NULL",
+      "files": "NULL",
+      "which": "NULL",
+      "source_file": "FALSE"
     }
   },
   {

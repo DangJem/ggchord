@@ -1,0 +1,27 @@
+{
+  "source_file": "examples/plasmid/pUC19.fna",
+  "source_sha256": "7b8862f66923cbad2d1e252ea4523dc2865febd4c119f2128355e3f39b060d6a",
+  "original_header": ">pUC19.dna  (2686 bp)",
+  "original_identifier": "pUC19.dna",
+  "identifier": "pUC19",
+  "identifier_rule": "Explicit packaged fixture ID pUC19 after checking the complete original FASTA sequence. Readers never rename identifiers.",
+  "sequence_length": 2686,
+  "window_bp": 100,
+  "intervals": 27,
+  "rule": "Count actual G/C bases in each non-overlapping 100-bp window; divide by its actual width and multiply by 100. No smoothing, zero imputation or biological inference.",
+  "value_unit": "GC percent",
+  "biological_interpretation": "Sequence composition; not read coverage.",
+  "transformation": "Explicit fixture identifier mapping recorded separately; bases unchanged. bedGraph stores zero-based half-open intervals. BigWig is exported by rtracklayer and stores floating-point signal values, not original observation counts.",
+  "generator": "data-raw/prepare-signal-inputs.R",
+  "rtracklayer": "1.72.0",
+  "files": [
+    {
+      "file": "inst/extdata/pUC19-gc-100.bedGraph",
+      "sha256": "169dd1d7cab3c7f97830248a9ba2acbcf34d8e66597b7c6e86ef3727ba4a8ae6"
+    },
+    {
+      "file": "inst/extdata/pUC19-gc-100.bw",
+      "sha256": "6c94f8bc55493db8d7f0e798053e4b9e32c2e59d216da8c27c6339456fff9eb7"
+    }
+  ]
+}

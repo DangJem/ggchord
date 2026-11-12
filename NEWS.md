@@ -1,5 +1,14 @@
 # ggchord 0.27.0 (development)
 
+- Added `read_bedgraph()` and optional `read_bigwig()` for quantitative signal
+  intervals, preserving source coordinates, values and import provenance.
+  BigWig uses rtracklayer on supported platforms (not Windows), retains the
+  header length dictionary, and clips to the explicit query union. Gaps remain
+  absent rather than zero; no observation counts, coverage or units are inferred.
+  Tiny real pUC19 GC signals include reproducible generation and source hashes.
+- BED-family readers now preserve literal sequence IDs `track` and `browser`,
+  fixing data loss caused by treating every such row as a display header.
+
 - Fixed false self-intersection errors for inward Tracks on closed circular
   backbones. The duplicated seam now shares a periodic tangent; genuinely
   folded bands still fail. This geometric correction does not infer biological

@@ -2731,6 +2731,21 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 </details>
 
+<span id="api-read_bedgraph"></span>
+<details><summary><code>read_bedgraph()</code></summary>
+
+
+[Full reference](reference/read_bedgraph.html)
+
+
+| Parameter | Signature default | Type/value rule | Meaning, range and constraints |
+| --- | --- | --- | --- |
+| `file` | `NULL` | Character path/identifier/vector; see constraints | Optional input path vector or glob patterns, before files. |
+| `files` | `NULL` | Character path/identifier/vector; see constraints | Optional additional paths or wildcard patterns for bedGraph files. |
+| `source_file` | `FALSE` | Logical | Logical. Add .source_file to each row, default FALSE. |
+
+</details>
+
 <span id="api-read_bedpe"></span>
 <details><summary><code>read_bedpe()</code></summary>
 
@@ -2744,6 +2759,22 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `files` | `NULL` | Character path/identifier/vector; see constraints | Optional additional local paths or glob patterns. |
 | `source_file` | `FALSE` | Logical | Logical. Add a .source_file column, default FALSE. |
 | `unmapped` | `c("error", "keep")` | Vector; choices versus multiple selection below | "error" (default) or "keep" for incomplete anchors. |
+
+</details>
+
+<span id="api-read_bigwig"></span>
+<details><summary><code>read_bigwig()</code></summary>
+
+
+[Full reference](reference/read_bigwig.html)
+
+
+| Parameter | Signature default | Type/value rule | Meaning, range and constraints |
+| --- | --- | --- | --- |
+| `file` | `NULL` | Character path/identifier/vector; see constraints | Optional local input path vector or glob patterns, before files. |
+| `files` | `NULL` | Character path/identifier/vector; see constraints | Optional additional paths or wildcards for local BigWig files. |
+| `which` | `NULL` | Nullable R object; type/inheritance below | NULL for the whole file, or a GRanges / data frame with character accver and numeric start/end in one-based inclusive coordinates. Unknown accessions and out-of-bounds intervals fail explicitly. An empty selection returns no signal rows. The same selection applies to each file. |
+| `source_file` | `FALSE` | Logical | Logical. Add .source_file to each row, default FALSE. |
 
 </details>
 

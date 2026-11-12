@@ -10600,6 +10600,30 @@
     "source": "man/read_bed.Rd"
   },
   {
+    "api": "read_bedgraph",
+    "parameter": "file",
+    "default": "NULL",
+    "type": "Character path/identifier/vector; see constraints",
+    "constraint": "Optional input path vector or glob patterns, before files.",
+    "source": "man/read_bedgraph.Rd"
+  },
+  {
+    "api": "read_bedgraph",
+    "parameter": "files",
+    "default": "NULL",
+    "type": "Character path/identifier/vector; see constraints",
+    "constraint": "Optional additional paths or wildcard patterns for bedGraph files.",
+    "source": "man/read_bedgraph.Rd"
+  },
+  {
+    "api": "read_bedgraph",
+    "parameter": "source_file",
+    "default": "FALSE",
+    "type": "Logical",
+    "constraint": "Logical. Add .source_file to each row, default FALSE.",
+    "source": "man/read_bedgraph.Rd"
+  },
+  {
     "api": "read_bedpe",
     "parameter": "file",
     "default": "NULL",
@@ -10630,6 +10654,38 @@
     "type": "Vector; choices versus multiple selection below",
     "constraint": "\"error\" (default) or \"keep\" for incomplete anchors.",
     "source": "man/read_bedpe.Rd"
+  },
+  {
+    "api": "read_bigwig",
+    "parameter": "file",
+    "default": "NULL",
+    "type": "Character path/identifier/vector; see constraints",
+    "constraint": "Optional local input path vector or glob patterns, before files.",
+    "source": "man/read_bigwig.Rd"
+  },
+  {
+    "api": "read_bigwig",
+    "parameter": "files",
+    "default": "NULL",
+    "type": "Character path/identifier/vector; see constraints",
+    "constraint": "Optional additional paths or wildcards for local BigWig files.",
+    "source": "man/read_bigwig.Rd"
+  },
+  {
+    "api": "read_bigwig",
+    "parameter": "which",
+    "default": "NULL",
+    "type": "Nullable R object; type/inheritance below",
+    "constraint": "NULL for the whole file, or a GRanges / data frame with character accver and numeric start/end in one-based inclusive coordinates. Unknown accessions and out-of-bounds intervals fail explicitly. An empty selection returns no signal rows. The same selection applies to each file.",
+    "source": "man/read_bigwig.Rd"
+  },
+  {
+    "api": "read_bigwig",
+    "parameter": "source_file",
+    "default": "FALSE",
+    "type": "Logical",
+    "constraint": "Logical. Add .source_file to each row, default FALSE.",
+    "source": "man/read_bigwig.Rd"
   },
   {
     "api": "read_blast",

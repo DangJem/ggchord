@@ -3351,5 +3351,52 @@
       "en": "Explicit source/column map; independent Cartesian detail; complete observed codons",
       "zh": "显式源/对齐列映射；独立Cartesian细节；已观测完整codon"
     }
+  },
+  "read_bedgraph": {
+    "level": "L2",
+    "page": "formats",
+    "anchor": "signals",
+    "reason": "Real packaged GC input, explicit coordinates and units; optional binary query and platform boundary",
+    "modes": "quantitative Track input",
+    "parameters": [
+      "file",
+      "files",
+      "source_file"
+    ],
+    "purpose": {
+      "en": "Import continuous interval signals without inferring units",
+      "zh": "导入连续区间信号，显式保留坐标及单位边界"
+    },
+    "alias_of": "",
+    "case": "formats",
+    "scope": "signal import with explicit source semantics",
+    "modes_localized": {
+      "en": "quantitative Track input; BigWig optional on supported platforms",
+      "zh": "定量轨道输入；BigWig 为支持平台上的可选依赖"
+    }
+  },
+  "read_bigwig": {
+    "level": "L2",
+    "page": "formats",
+    "anchor": "signals",
+    "reason": "Real packaged GC input, explicit coordinates and units; optional binary query and platform boundary",
+    "modes": "quantitative Track input",
+    "parameters": [
+      "file",
+      "files",
+      "which",
+      "source_file"
+    ],
+    "purpose": {
+      "en": "Import continuous interval signals without inferring units",
+      "zh": "导入连续区间信号，显式保留坐标及单位边界"
+    },
+    "alias_of": "",
+    "case": "formats",
+    "scope": "signal import with explicit source semantics",
+    "modes_localized": {
+      "en": "quantitative Track input; BigWig optional on supported platforms",
+      "zh": "定量轨道输入；BigWig 为支持平台上的可选依赖"
+    }
   }
 }

@@ -222,3 +222,40 @@ observed$residues |>
 The default `initiation = "literal"` does not recode alternative starts; `"start"` requires a complete 5-prime end. `ambiguous = "error"` rejects fuzzy codons; explicit `"solve"` delegates to Biostrings, using X if unresolved. Unknown codes, missing/short sources and declared translation exceptions fail. `partial = "trim"` belongs to the CDS map: only the initial phase and incomplete terminal codon are excluded; later segment phases validate continuity without deleting junction bases. No missing sequence is reconstructed. RNA must be declared explicitly. Ordered `segments` support the existing spliced/origin-join contract.
 
 A complete runnable nucleotide/codon/macro example is `examples/m2-detail.R`; its negative-strand labels are centred on their three coding bases. Real spliced plus/minus controls, source hashes and original expected translations are retained in `examples/cds/`. [Register the character plot](fusion.html#character-detail) to connect its exact source boundaries.
+
+## Continuous signals: bedGraph and BigWig {#signals}
+
+This installed-package example contains actual GC percentages computed from the unchanged bundled pUC19 sequence in 100 bp windows (last window 86 bp). It is sequence composition, not measured read coverage. `data-raw/prepare-signal-inputs.R` records the calculation and `inst/extdata/signal-sources.json` records hashes and the explicit original-header mapping. Readers preserve IDs.
+
+```r
+signal_file <- system.file("extdata", "pUC19-gc-100.bedGraph", package = "ggchord")
+signal <- read_bedgraph(signal_file, source_file = TRUE)
+data(plasmid_example_pUC19)
+gc_band <- position_track("GC", side = "inside", width = unit(7, "mm"))
+p_signal <- ggchord(plasmid_example_pUC19) +
+  geom_seq(show.legend = FALSE) +
+  geom_track(
+    aes(xmin = start - 1, xmax = end, ymin = 0, ymax = value, fill = value),
+    data = signal, geom = "rect", track = gc_band
+  ) +
+  scale_track_value_continuous("GC", limits = c(0, 100), unit = "GC (%)") +
+  scale_track_fill_gradientn(
+    "GC", colours = c("#F1E51D", "#31849B"), limits = c(0, 100), name = "GC (%)"
+  ) +
+  coord_circular()
+p_signal
+
+if (.Platform$OS.type != "windows" && requireNamespace("rtracklayer", quietly = TRUE)) {
+  indexed_file <- system.file("extdata", "pUC19-gc-100.bw", package = "ggchord")
+  selected_signal <- read_bigwig(
+    indexed_file,
+    which = data.frame(accver = "pUC19", start = c(50, 100), end = c(150, 250)),
+    source_file = TRUE
+  )
+  selected_signal |> select(accver, start, end, value)
+}
+```
+
+bedGraph uses four tab-separated columns, zero-based half-open coordinates and finite signed values. Import converts coordinates once; original endpoints, values, physical lines and opaque display headers remain traceable. One file represents one signal; split multiple track definitions. Literal sequence IDs `track` and `browser` are valid. Headers never set plot styles. Overlaps remain rows, without an implicit last-wins rule.
+
+Rectangles use `start - 1` and `end` as cell boundaries; no line is interpolated across absent ranges. BigWig requires optional **rtracklayer**, whose decoder does not support Windows. Use an existing bedGraph file there. Binary GRanges coordinates are already one-based inclusive. Imported runs retain binary floating-point precision; run counts are not original measurement counts. Full lengths come from the file header. Query windows form an unstranded union, results are clipped to it, and empty selection returns zero rows. Missing intervals stay absent, distinct from a stored zero; no coverage, identity, support, units or pre-clipping observation IDs are invented. Each Track's mapping, value range, units and Guide remain explicit.

@@ -2,10 +2,23 @@
 # https://genome.ucsc.edu/FAQ/FAQformat.html#format1
 # https://github.com/lh3/miniasm/blob/master/PAF.md
 
+ggchord_format_header <- function(lines) {
+  text <- trimws(lines)
+  header <- grepl("^track([[:space:]]+[^[:space:]=]+=|$)", text) |
+    grepl("^browser([[:space:]]+(position|hide|dense|squish|pack|full)([[:space:]]|$)|$)", text)
+  # A tab-separated interval wins over a header-like accession prefix.
+  for (i in which(header & grepl("\t", lines, fixed = TRUE))) {
+    fields <- strsplit(lines[i], "\t", fixed = TRUE)[[1L]]
+    if (length(fields) >= 3L && all(grepl("^[0-9]+$", fields[2:3]))) header[i] <- FALSE
+  }
+  header
+}
+
 ggchord_format_lines <- function(file, caller, bed = FALSE) {
   lines <- ggchord_read_text(file, caller)
   keep <- nzchar(trimws(lines)) & !grepl("^[[:space:]]*#", lines)
-  if (bed) keep <- keep & !grepl("^[[:space:]]*(track|browser)([[:space:]]|$)", lines)
+  header <- if (bed) ggchord_format_header(lines) else rep(FALSE, length(lines))
+  if (bed) keep <- keep & !header
   index <- which(keep)
   if (!length(index)) ggchord_stop(caller, ": no data rows in ", file)
   values <- lapply(lines[index], function(line) {
@@ -14,7 +27,9 @@ ggchord_format_lines <- function(file, caller, bed = FALSE) {
       strsplit(trimws(line), "[[:space:]]+")[[1L]]
     }
   })
-  list(fields = values, line = index)
+  metadata <- which(header | grepl("^[[:space:]]*#", lines))
+  list(fields = values, line = index,
+    headers = data.frame(.source_line = metadata, text = lines[metadata], stringsAsFactors = FALSE))
 }
 
 ggchord_format_integer <- function(x, name, caller, minimum = 0) {
