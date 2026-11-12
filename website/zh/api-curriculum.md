@@ -79,7 +79,7 @@
 | [`labs`](reference/ggplot2-helpers.html) | 适用于 ggchord 的部分 ggplot2 辅助函数 | [上游](parameter-atlas.html#upstream) | 上游对象/接口；遵循 ggplot2/grid 的原始契约 | [↗](parameter-atlas.html#api-labs) | [↗](chord.html) |
 | [`last_plot`](reference/ggplot2-helpers.html) | 适用于 ggchord 的部分 ggplot2 辅助函数 | [上游](parameter-atlas.html#upstream) | 上游对象/接口；遵循 ggplot2/grid 的原始契约 | [↗](parameter-atlas.html#api-last_plot) | [↗](chord.html) |
 | [`link_ggchord_clusters`](reference/link_ggchord_clusters.html) | 将显式同源分组成员转换为注释连接 | [L2](homology.html#links) | 消费明确成员表；同名不能证明同源 | [↗](parameter-atlas.html#api-link_ggchord_clusters) | [↗](homology.html) |
-| [`magnify_ggchord`](reference/magnify_ggchord.html) | 连接真实源区间与显式独立构建的局部细节图 | [L2](fusion.html#magnify) | Circular/Chord主图、Collinear细节与显式源实例 | [↗](parameter-atlas.html#api-magnify_ggchord) | [↗](fusion.html) |
+| [`magnify_ggchord`](reference/magnify_ggchord.html) | 连接真实源区间与显式独立构建的局部细节图 | [L2](fusion.html#magnify) | Circular/Chord/Collinear主图；Collinear或已注册字符细节 | [↗](parameter-atlas.html#api-magnify_ggchord) | [↗](fusion.html) |
 | [`map_alignment_position`](reference/map_alignment_position.html) | 在选定行中精确查找对齐列与源位置 | [L2](formats.html#aligned-characters) | 已有DNA/RNA/AA对齐列；Cartesian局部单元与显式源映射 | [↗](parameter-atlas.html#api-map_alignment_position) | [↗](formats.html) |
 | [`map_ggchord_position`](reference/map_ggchord_position.html) | 映射源位置与显示坐标 | [L2](view-expansion.html#export) | 原生或源坐标；Dotplot须选轴，Radial反查须给x/y | [↗](parameter-atlas.html#api-map_ggchord_position) | [↗](view-expansion.html) |
 | [`margin`](reference/ggplot2-helpers.html) | 适用于 ggchord 的部分 ggplot2 辅助函数 | [上游](parameter-atlas.html#upstream) | 上游对象/接口；遵循 ggplot2/grid 的原始契约 | [↗](parameter-atlas.html#api-margin) | [↗](chord.html) |
@@ -103,6 +103,7 @@
 | [`read_genbank`](reference/read_genbank.html) | 使用可选成熟解析器导入本地 GenBank 或 GBFF | [L2](formats.html#genbank) | 本地文件到标准表；按源格式转换坐标和声明单位 | [↗](parameter-atlas.html#api-read_genbank) | [↗](formats.html) |
 | [`read_gff3`](reference/read_gff3.html) | 将一个或多个 GFF3 文件读为注释数据 | [L2](real-data.html#read) | 本地文件到标准表；按源格式转换坐标和声明单位 | [↗](parameter-atlas.html#api-read_gff3) | [↗](real-data.html) |
 | [`read_paf`](reference/read_paf.html) | 将 PAF 比对读为 ggchord 连接 | [L2](formats.html#zero-based) | 本地文件到标准表；按源格式转换坐标和声明单位 | [↗](parameter-atlas.html#api-read_paf) | [↗](formats.html) |
+| [`register_ggchord_alignment`](reference/register_ggchord_alignment.html) | 注册精确字符/源位置用于独立Fusion细节 | [L2](fusion.html#character-detail) | 显式源/对齐列映射；独立Cartesian细节；已观测完整codon | [↗](parameter-atlas.html#api-register_ggchord_alignment) | [↗](fusion.html) |
 | [`rel`](reference/ggplot2-helpers.html) | 适用于 ggchord 的部分 ggplot2 辅助函数 | [上游](parameter-atlas.html#upstream) | 上游对象/接口；遵循 ggplot2/grid 的原始契约 | [↗](parameter-atlas.html#api-rel) | [↗](chord.html) |
 | [`scale_feature_fill_manual`](reference/scale_gene_fill_manual.html) | 基因、注释及区域填色标度 | [L2](scale-families.html#features) | 三种模式；匹配通用注释角色或预设 | [↗](parameter-atlas.html#api-scale_feature_fill_manual) | [↗](chord.html) |
 | [`scale_feature_fill_plasmid`](reference/scale_feature_fill_plasmid.html) | 质粒注释预设标度 | [L2](scale-families.html#features) | 三种模式；匹配通用注释角色或预设 | [↗](parameter-atlas.html#api-scale_feature_fill_plasmid) | [↗](chord.html) |
@@ -146,6 +147,7 @@
 | [`theme_ggchord_minimal`](reference/theme_ggchord.html) | ggchord 主题 | [L2](scale-families.html#themes) | 受支持图的相应主题/图例；按角色及设备解释 | [↗](parameter-atlas.html#api-theme_ggchord_minimal) | [↗](chord.html) |
 | [`theme_ggchord_plasmid`](reference/theme_ggchord.html) | ggchord 主题 | [L2](scale-families.html#themes) | 受支持图的相应主题/图例；按角色及设备解释 | [↗](parameter-atlas.html#api-theme_ggchord_plasmid) | [↗](chord.html) |
 | [`theme_ggchord_publication`](reference/theme_ggchord.html) | ggchord 主题 | [L2](scale-families.html#themes) | 受支持图的相应主题/图例；按角色及设备解释 | [↗](parameter-atlas.html#api-theme_ggchord_publication) | [↗](chord.html) |
+| [`translate_ggchord_cds`](reference/translate_ggchord_cds.html) | 通过可选Biostrings翻译真实CDS并保留codon来源 | [L2](formats.html#cds-translation) | 显式源/对齐列映射；独立Cartesian细节；已观测完整codon | [↗](parameter-atlas.html#api-translate_ggchord_cds) | [↗](formats.html) |
 | [`unit`](reference/grid-helpers.html) | 物理单位与方向箭头 | [上游](parameter-atlas.html#upstream) | 上游对象/接口；遵循 ggplot2/grid 的原始契约 | [↗](parameter-atlas.html#api-unit) | [↗](chord.html) |
 | [`validate_ggchord_data`](reference/validate_ggchord_data.html) | 绘图前校验 ggchord 输入 | [L2](data.html#validation) | 显式校验/修复/成员工作流；保留源表及报告 | [↗](parameter-atlas.html#api-validate_ggchord_data) | [↗](real-data.html) |
 | [`validate_ggchord_hierarchy`](reference/validate_ggchord_hierarchy.html) | 校验显式 genome 与 contig 关系 | [L2](data.html#hierarchy) | 显式校验/修复/成员工作流；保留源表及报告 | [↗](parameter-atlas.html#api-validate_ggchord_hierarchy) | [↗](real-data.html) |

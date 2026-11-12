@@ -2428,7 +2428,7 @@
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
 | --- | --- | --- | --- |
-| `plot` | `必需/互斥入口，见说明` | R 对象；约束见说明 | 横向或纵向Collinear ggchord图形。此处不支持Sankey、Radial、Dotplot、分面及外部ggplot。 |
+| `plot` | `必需/互斥入口，见说明` | R 对象；约束见说明 | 横向或纵向 Collinear ggchord 图，或通过 register_ggchord_alignment() 注册的 Cartesian 细节图。此处不支持 Sankey、Radial、Dotplot、分面及未注册的外部 ggplot。字符面板的跨面板连接须明确提供 fill，不能使用骨架颜色渐变。 |
 | `id` | `必需/互斥入口，见说明` | R 对象；约束见说明 | 唯一的非空面板名称；"center"为保留名称。 |
 | `side` | `c("right", "top", "left", "bottom")` | 向量；候选/多选含义见说明 | 可选right、top、left或bottom；每个方向最多一个面板。 |
 | `size` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 可选的相对宽度与高度。指定区域重叠或超出画布时报错，不擅自移动用户明确配置的面板。 |
@@ -2538,7 +2538,7 @@
 | --- | --- | --- | --- |
 | `plot` | `必需/互斥入口，见说明` | R 对象；约束见说明 | 使用 Circular、Chord 或横向/纵向 Collinear 的 ggchord 源图。 |
 | `region` | `必需/互斥入口，见说明` | R 对象；约束见说明 | 非空数据框，包含 accver、start、end，使用原始一基闭区间源坐标。边界须为有序正整数。可选 instance 和 detail_instance 为每行指定源/目标显示实例；歧义报错，跨原点须先拆分。使用细节列表时，detail_panel 列为每行指定命名目标。 |
-| `detail_plot` | `必需/互斥入口，见说明` | R 对象；约束见说明 | 显式横向/纵向 Collinear ggchord 图，或按唯一ID命名的一至四个此类图的列表。每个面板至少有一个选区，center 是保留名称。选区须在两侧完整可见，bp/aa单位一致；不支持普通 Cartesian 字符图。 |
+| `detail_plot` | `必需/互斥入口，见说明` | R 对象；约束见说明 | 显式横向/纵向 Collinear ggchord 图、通过 register_ggchord_alignment() 注册的字符图，或按唯一ID命名的一至四个此类图的列表。每个面板至少有一个选区，center 是保留名称。选区须在两侧完整可见，bp/aa单位一致。字符图须显式注册源/对齐列映射，未注册的普通图会被拒绝。 |
 | `side` | `c("right", "top", "left", "bottom")` | 向量；候选/多选含义见说明 | 单图时选择右、上、左、下。图列表须提供按面板ID命名的字符向量，各侧不同；多面板要求显式路由和位置。 |
 | `center_size` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 可选面板宽高比例，遵循 ggchord_fusion() 与 fusion_panel()。单图默认保留较小源面板与较宽细节容器；多细节时使用命名尺寸列表或 NULL 沿用 Fusion 默认，center_size 同样沿用 Fusion 默认。重叠或超界分配会报错。 |
 | `detail_size` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 可选面板宽高比例，遵循 ggchord_fusion() 与 fusion_panel()。单图默认保留较小源面板与较宽细节容器；多细节时使用命名尺寸列表或 NULL 沿用 Fusion 默认，center_size 同样沿用 Fusion 默认。重叠或超界分配会报错。 |
@@ -2823,6 +2823,20 @@
 
 </details>
 
+<span id="api-register_ggchord_alignment"></span>
+<details><summary><code>register_ggchord_alignment()</code></summary>
+
+
+[完整参考](reference/register_ggchord_alignment.html)
+
+
+| 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
+| --- | --- | --- | --- |
+| `plot` | `必需/互斥入口，见说明` | R 对象；约束见说明 | 含 geom_residue 图层的单面板 Cartesian ggplot，映射 x = alignment_column、y = accver、label = symbol。支持 identity/reverse x 标度和离散 y 标度，可以独立叠加注释。拒绝分面、非线性标度、翻转坐标及移动已注册字符的 position 调整。 |
+| `data` | `必需/互斥入口，见说明` | 表格/受支持对象；data 还可为函数 | as_ggchord_alignment()、read_aligned_fasta() 或 translate_ggchord_cds()$nucleotides/residues 中实际显示的行。每个 accver/alignment_column 只有一个单元，各行源坐标唯一。筛选窗口时保留原列号。所选源碱基必须全部存在；分段/跨原点区间须显式拆分。gap 保留显示列，但无源坐标。 |
+
+</details>
+
 <span id="api-segment_ggchord_data"></span>
 <details><summary><code>segment_ggchord_data()</code></summary>
 
@@ -2840,6 +2854,23 @@
 | `cross_gap` | `c("split", "drop")` | 向量；候选/多选含义见说明 | 被选定窗口截断的区间连接处理方式。 |
 | `max_links` | `10000` | 数值/整数；范围见说明 | 区间/点连接候选副本数的正整数上限；有意使用更大重叠视图时显式提高。 |
 | `feature_data` | `NULL` | 表格/受支持对象；data 还可为函数 | 统一注释输入，与 gene_data 互斥。 |
+
+</details>
+
+<span id="api-translate_ggchord_cds"></span>
+<details><summary><code>translate_ggchord_cds()</code></summary>
+
+
+[完整参考](reference/translate_ggchord_cds.html)
+
+
+| 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
+| --- | --- | --- | --- |
+| `cds` | `必需/互斥入口，见说明` | R 对象；约束见说明 | build_ggchord_cds() 生成的映射。 |
+| `sequences` | `必需/互斥入口，见说明` | R 对象；约束见说明 | 完整正向源字符串的命名字符向量，或含唯一 accver 和 sequence 的表（例如 read_fasta_lengths() 配合 keep_sequence = TRUE）。也接受 DNAStringSet/RNAStringSet。每个 CDS 的源序列必须存在且覆盖声明区间。 |
+| `alphabet` | `c("DNA", "RNA")` | 向量；候选/多选含义见说明 | 显式 "DNA"（默认）或 "RNA"，仅接受无 gap 的 IUPAC 字符。 |
+| `initiation` | `c("literal", "start")` | 向量；候选/多选含义见说明 | "literal"（默认）按字面翻译每个 codon。"start" 仅对首个 codon 使用翻译表的替代起始密码子，要求完整生物学5′端。 |
+| `ambiguous` | `c("error", "solve")` | 向量；候选/多选含义见说明 | "error"（默认）拒绝模糊 codon；"solve" 交由 Biostrings 解析，不能唯一确定时输出X。 |
 
 </details>
 

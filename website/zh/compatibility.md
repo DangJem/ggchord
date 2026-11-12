@@ -62,7 +62,7 @@ Position 只控制局部放置，不把不支持的图层转换成另一种坐�
 | --- | --- | --- |
 | [`geom_residue()`](reference/geom_residue.html) | 不支持生物学骨架投影 | 支持局部字符单元及 identity/reverse 位置标度 |
 
-[字符对齐工作流](formats.html#aligned-characters) 使用普通 ggplot x/y 坐标，源位置和对齐列保留为不同字段。按最终物理字形度量选择可读文字或明确的色格/报错策略，不改变源数据、不缩小字号。不代表已支持 Fusion 面板注册、自动 CDS 翻译或新比对计算。
+[字符对齐工作流](formats.html#aligned-characters) 使用普通 ggplot x/y 坐标，源位置和对齐列保留为不同字段。按最终物理字形度量选择可读文字或明确的色格/报错策略，不改变源数据、不缩小字号。显式源映射注册后支持 Fusion/magnify 字符细节；可选 Biostrings 通过既有CDS map翻译真实字符，不推断比对或缺失phase。见[CDS翻译](formats.html#cds-translation)与[字符细节](fusion.html#character-detail)。
 
 ## 可选目标尺寸策略 {#adaptive}
 

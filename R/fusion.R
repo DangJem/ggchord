@@ -37,8 +37,10 @@ ggchord_fusion <- function(center, center_size = NULL, layout = c("fixed", "adap
 }
 
 #' Add a genomic panel to a Fusion
-#' @param plot A horizontal or vertical Collinear ggchord plot. Sankey,
-#'   Radial, Dotplot, facets and external ggplots are not supported here.
+#' @param plot A horizontal or vertical Collinear ggchord plot or a Cartesian
+#'   detail from [register_ggchord_alignment()]. Sankey, Radial, Dotplot, facets
+#'   and unregistered external ggplots are not supported here. Character panels
+#'   require explicit cross-panel fill; backbone-colour gradient is unavailable.
 #' @param id Unique nonempty panel name; `"center"` is reserved.
 #' @param side One of right, top, left or bottom; one panel per side.
 #' @param size Optional fractional width and height; overlapping or out-of-frame
@@ -148,7 +150,11 @@ ggchord_fusion_size <- function(size) {
 }
 
 ggchord_fusion_check_plot <- function(plot, center = FALSE) {
-  if (!inherits(plot, "ggchord")) ggchord_stop("Fusion panels must be ggchord plots")
+  if (!center && !is.null(plot$ggchord_alignment)) {
+    ggchord_alignment_layout(ggplot2::ggplot_build(plot), plot$ggchord_alignment)
+    return(invisible(plot))
+  }
+  if (!inherits(plot, "ggchord")) ggchord_stop("Fusion panels must be ggchord plots or registered character details")
   coord <- plot$coordinates
   if (center) {
     if (!isTRUE(coord$ggchord_coord) || isTRUE(coord$ggchord_sankey) || isTRUE(coord$ggchord_radial) || isTRUE(coord$ggchord_dotplot))
@@ -262,6 +268,10 @@ ggchord_resolve_panel_interval <- function(panels, entity, start, end,
   candidates <- list()
   for (id in selected_panel %||% names(panels)) {
     layout <- panels[[id]]$layout
+    if (isTRUE(layout$character)) {
+      candidates <- c(candidates, ggchord_alignment_interval(panels[[id]], id, entity, start, end, selected_instance))
+      next
+    }
     keys <- layout$seqs
     instances <- layout$display_instances
     entities <- if (is.null(instances)) keys else instances$accver[match(keys,instances$key)]
@@ -290,6 +300,7 @@ ggchord_resolve_panel_interval <- function(panels, entity, start, end,
 }
 
 ggchord_fusion_front <- function(panel, endpoint) {
+  if (isTRUE(panel$layout$character)) return(ggchord_alignment_front(panel, endpoint))
   layout <- panel$layout; ref <- layout$sequence_reference; id <- endpoint$key
   boundary <- c(min(endpoint$start,endpoint$end)-1,max(endpoint$start,endpoint$end)) - endpoint$origin + 1
   if (endpoint$end < endpoint$start) boundary <- rev(boundary)

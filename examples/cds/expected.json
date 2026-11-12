@@ -1,0 +1,155 @@
+{
+  "source_sha256": "a8b5d8239001f56a5b8b3ff047b10338b839329cf594aad36bfa4755a0dfb480",
+  "fasta_sha256": "2bcb6eec38c296e92ab396b9cfc58db4f09860348bd9287f92149d714cce2683",
+  "parser": "Biopython 1.88",
+  "models": [
+    {
+      "feature_id": "NP_051041.1",
+      "gene": "rps16",
+      "accver": "NC_000932.1",
+      "strand": "-",
+      "codon_start": 1,
+      "genetic_code": 11,
+      "segments": [
+        {
+          "start": 6149,
+          "end": 6188,
+          "segment_order": 1
+        },
+        {
+          "start": 5084,
+          "end": 5283,
+          "segment_order": 2
+        }
+      ],
+      "expected_protein": "MVKLRLKRCGRKQRAVYRILAIDVRYRREGRDLSKVGFYDPITNQTFLNLSAILDFLKKGAQPTRTAHDISKKAGIFTE",
+      "source_location": "join{[6148:6188](-), [5083:5283](-)}",
+      "qualifiers": {
+        "gene": [
+          "rps16"
+        ],
+        "locus_tag": [
+          "ArthCp004"
+        ],
+        "codon_start": [
+          "1"
+        ],
+        "transl_table": [
+          "11"
+        ],
+        "product": [
+          "ribosomal protein S16"
+        ],
+        "protein_id": [
+          "NP_051041.1"
+        ],
+        "db_xref": [
+          "GI:7525015",
+          "GeneID:844798"
+        ],
+        "translation": [
+          "MVKLRLKRCGRKQRAVYRILAIDVRYRREGRDLSKVGFYDPITNQTFLNLSAILDFLKKGAQPTRTAHDISKKAGIFTE"
+        ]
+      }
+    },
+    {
+      "feature_id": "NP_051042.1",
+      "gene": "psbK",
+      "accver": "NC_000932.1",
+      "strand": "+",
+      "codon_start": 1,
+      "genetic_code": 11,
+      "segments": [
+        {
+          "start": 7017,
+          "end": 7202,
+          "segment_order": 1
+        }
+      ],
+      "expected_protein": "MLNIFNLICIFFNSTLFSSTFLVAKLPEAYAFLNPIVDVMPVIPLFFLLLAFVWQAAVSFR",
+      "source_location": "[7016:7202](+)",
+      "qualifiers": {
+        "gene": [
+          "psbK"
+        ],
+        "locus_tag": [
+          "ArthCp005"
+        ],
+        "note": [
+          "PSII K protein"
+        ],
+        "codon_start": [
+          "1"
+        ],
+        "transl_table": [
+          "11"
+        ],
+        "product": [
+          "photosystem II protein K"
+        ],
+        "protein_id": [
+          "NP_051042.1"
+        ],
+        "db_xref": [
+          "GI:7525016",
+          "GeneID:844795"
+        ],
+        "translation": [
+          "MLNIFNLICIFFNSTLFSSTFLVAKLPEAYAFLNPIVDVMPVIPLFFLLLAFVWQAAVSFR"
+        ]
+      }
+    },
+    {
+      "feature_id": "NP_051089.1",
+      "gene": "petD",
+      "accver": "NC_000932.1",
+      "strand": "+",
+      "codon_start": 1,
+      "genetic_code": 11,
+      "segments": [
+        {
+          "start": 76481,
+          "end": 76488,
+          "segment_order": 1
+        },
+        {
+          "start": 77198,
+          "end": 77672,
+          "segment_order": 2
+        }
+      ],
+      "expected_protein": "MGVTKKPDLNDPVLRAKLAKGMGHNYYGEPAWPNDLLYIFPVVILGTIACNVGLAVLEPSMIGEPADPFATPLEILPEWYFFPVFQILRTVPNKLLGVLLMVSVPAGLLTVPFLENVNKFQNPFRRPVATTVFLIGTAAALWLGIGATLPIDKSLTLGLF",
+      "source_location": "join{[76480:76488](+), [77197:77672](+)}",
+      "qualifiers": {
+        "gene": [
+          "petD"
+        ],
+        "locus_tag": [
+          "ArthCp054"
+        ],
+        "note": [
+          "cytochrome b6/f complex subunit 4"
+        ],
+        "codon_start": [
+          "1"
+        ],
+        "transl_table": [
+          "11"
+        ],
+        "product": [
+          "cytochrome b6/f complex subunit IV"
+        ],
+        "protein_id": [
+          "NP_051089.1"
+        ],
+        "db_xref": [
+          "GI:7525064",
+          "GeneID:844728"
+        ],
+        "translation": [
+          "MGVTKKPDLNDPVLRAKLAKGMGHNYYGEPAWPNDLLYIFPVVILGTIACNVGLAVLEPSMIGEPADPFATPLEILPEWYFFPVFQILRTVPNKLLGVLLMVSVPAGLLTVPFLENVNKFQNPFRRPVATTVFLIGTAAALWLGIGATLPIDKSLTLGLF"
+        ]
+      }
+    }
+  ]
+}

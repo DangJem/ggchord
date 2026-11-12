@@ -254,5 +254,21 @@ test_that("aligned character input keeps gap columns and exact source lookup", {
   expect_equal(map_alignment_position(cells, "A", 3, inverse = TRUE)$alignment_column, 4)
   p <- ggplot2::ggplot(cells, aes(alignment_column, accver, label = symbol)) +
     geom_residue()
-  expect_s3_class(ggplot2::ggplotGrob(p), "gtable")
+  registered <- register_ggchord_alignment(p, cells)
+  expect_s3_class(ggplot2::ggplotGrob(registered), "gtable")
+  macro <- ggchord(data.frame(accver = "A", length = 3)) + geom_seq() + coord_collinear()
+  detail <- export_ggchord_fusion(magnify_ggchord(macro,
+    data.frame(accver = "A", start = 1, end = 3), registered))
+  expect_equal(nrow(detail$leaders), 2L)
+})
+
+# One minimal public success path; the real-data directed script covers provenance.
+test_that("source-backed CDS translation retains codon source positions", {
+  skip_if_not_installed("Biostrings")
+  coding <- data.frame(feature_id = "cds", accver = "source", start = 1,
+    end = 6, strand = "+", phase = 0)
+  out <- translate_ggchord_cds(build_ggchord_cds(coding, genetic_code = 11),
+    c(source = "ATGTAA"))
+  expect_identical(out$models$protein_sequence, "M*")
+  expect_equal(out$residues$source_positions[[2]], 4:6)
 })

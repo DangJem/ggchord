@@ -6,6 +6,9 @@
 #' Map `x` to alignment columns (or independently known source positions), `y`
 #' to sequence rows and `label` to actual characters. It does not compute an
 #' alignment or project through ggchord's biological backbone coordinates.
+#' Use [register_ggchord_alignment()] to associate exact source positions with
+#' a Fusion/magnify detail panel. Half-cell extents train position scales so
+#' first/last cells remain fully visible by default.
 #' Native scales must be identity or reverse; nonlinear scales and non-Cartesian
 #' coordinates are rejected rather than misrepresenting single-position cells.
 #'
@@ -42,6 +45,11 @@ GeomResidue <- ggplot2::ggproto("GeomResidue", ggplot2::Geom,
   default_aes = ggplot2::aes(colour = "#202020", fill = "#E5EDF2", alpha = NA,
     size = 3, family = "mono", fontface = 1, lineheight = 1.2),
   extra_params = c("na.rm", "overflow"),
+  setup_data = function(data, params) {
+    data$xmin <- data$x - .5; data$xmax <- data$x + .5
+    data$ymin <- as.numeric(data$y) - .5; data$ymax <- as.numeric(data$y) + .5
+    data
+  },
   draw_key = ggplot2::draw_key_label,
   draw_panel = function(data, panel_params, coord, overflow = "tile", na.rm = FALSE) {
     if (!inherits(coord, "CoordCartesian") || isTRUE(coord$ggchord_coord))

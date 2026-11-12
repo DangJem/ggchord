@@ -34,6 +34,9 @@ A standard Cartesian ggplot layer for local nucleotide/protein excerpts.
 Map \code{x} to alignment columns (or independently known source positions), \code{y}
 to sequence rows and \code{label} to actual characters. It does not compute an
 alignment or project through ggchord's biological backbone coordinates.
+Use \code{\link[=register_ggchord_alignment]{register_ggchord_alignment()}} to associate exact source positions with
+a Fusion/magnify detail panel. Half-cell extents train position scales so
+first/last cells remain fully visible by default.
 Native scales must be identity or reverse; nonlinear scales and non-Cartesian
 coordinates are rejected rather than misrepresenting single-position cells.
 }

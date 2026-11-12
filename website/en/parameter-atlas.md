@@ -2428,7 +2428,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `plot` | `Required/alternative entry; see description` | R object; constraints below | A horizontal or vertical Collinear ggchord plot. Sankey, Radial, Dotplot, facets and external ggplots are not supported here. |
+| `plot` | `Required/alternative entry; see description` | R object; constraints below | A horizontal or vertical Collinear ggchord plot or a Cartesian detail from register_ggchord_alignment(). Sankey, Radial, Dotplot, facets and unregistered external ggplots are not supported here. Character panels require explicit cross-panel fill; backbone-colour gradient is unavailable. |
 | `id` | `Required/alternative entry; see description` | R object; constraints below | Unique nonempty panel name; "center" is reserved. |
 | `side` | `c("right", "top", "left", "bottom")` | Vector; choices versus multiple selection below | One of right, top, left or bottom; one panel per side. |
 | `size` | `NULL` | Nullable R object; type/inheritance below | Optional fractional width and height; overlapping or out-of-frame allocations fail with a diagnostic instead of moving explicit panels. |
@@ -2538,7 +2538,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | --- | --- | --- | --- |
 | `plot` | `Required/alternative entry; see description` | R object; constraints below | A ggchord Circular, Chord or horizontal/vertical Collinear source plot. |
 | `region` | `Required/alternative entry; see description` | R object; constraints below | Nonempty data frame with accver, start, end in original one-based inclusive source coordinates. Bounds must be ordered positive integers. Optional instance and detail_instance select exact display instances in the source and detail panels for every row. Ambiguity fails; origin-wrapping intervals must be split before using this interface. With a list of details, a detail_panel column selects the named target for each row. |
-| `detail_plot` | `Required/alternative entry; see description` | R object; constraints below | An explicit horizontal or vertical Collinear ggchord plot, or a uniquely named list of one to four such plots. Every panel must have at least one source region; the name center is reserved. The selected source interval must be fully visible in both panels, in the same bp/aa unit. Ordinary Cartesian character plots are not supported here. |
+| `detail_plot` | `Required/alternative entry; see description` | R object; constraints below | An explicit horizontal or vertical Collinear ggchord plot, a character plot from register_ggchord_alignment(), or a uniquely named list of one to four such plots. Every panel must have at least one source region; the name center is reserved. The selected source interval must be fully visible in both panels, in the same bp/aa unit. Character plots require explicit source/column registration; ordinary unregistered plots are rejected. |
 | `side` | `c("right", "top", "left", "bottom")` | Vector; choices versus multiple selection below | One of right, top, left or bottom for a single detail plot. For a list of plots, supply a character vector named by panel ID, with distinct sides. Multiple panels require explicit routing and placement. |
 | `center_size` | `NULL` | Nullable R object; type/inheritance below | Optional panel width/height fractions, following ggchord_fusion() and fusion_panel(). Defaults reserve a smaller source panel and a wider detail container for a single detail plot. With multiple details, use a named list of sizes or NULL for Fusion defaults; center_size also follows Fusion defaults. Overlap and out-of-frame allocations fail. |
 | `detail_size` | `NULL` | Nullable R object; type/inheritance below | Optional panel width/height fractions, following ggchord_fusion() and fusion_panel(). Defaults reserve a smaller source panel and a wider detail container for a single detail plot. With multiple details, use a named list of sizes or NULL for Fusion defaults; center_size also follows Fusion defaults. Overlap and out-of-frame allocations fail. |
@@ -2823,6 +2823,20 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 </details>
 
+<span id="api-register_ggchord_alignment"></span>
+<details><summary><code>register_ggchord_alignment()</code></summary>
+
+
+[Full reference](reference/register_ggchord_alignment.html)
+
+
+| Parameter | Signature default | Type/value rule | Meaning, range and constraints |
+| --- | --- | --- | --- |
+| `plot` | `Required/alternative entry; see description` | R object; constraints below | A single-panel Cartesian ggplot with geom_residue layers mapping x = alignment_column, y = accver, label = symbol. Identity/reverse x scales and a discrete y scale are supported. Additional independent annotations are allowed. Facets, nonlinear scales, flipped coordinates and position adjustments moving registered cells are rejected. |
+| `data` | `Required/alternative entry; see description` | Table/supported object; data may be a function | The displayed rows of as_ggchord_alignment(), read_aligned_fasta() or translate_ggchord_cds()$nucleotides/residues. One cell per accver/alignment_column; source coordinates must be unique within each row. Keep original columns when filtering a window. Every selected source base must be present; split spliced/origin-wrapping regions explicitly. Gap columns remain visible but have no source coordinate. |
+
+</details>
+
 <span id="api-segment_ggchord_data"></span>
 <details><summary><code>segment_ggchord_data()</code></summary>
 
@@ -2840,6 +2854,23 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `cross_gap` | `c("split", "drop")` | Vector; choices versus multiple selection below | How to handle interval links clipped by selected windows. |
 | `max_links` | `10000` | Numeric/integer; range in description | Positive integer upper bound on candidate ribbon/point copies. Increase explicitly for larger, intentionally overlapping views. |
 | `feature_data` | `NULL` | Table/supported object; data may be a function | Unified annotation input; mutually exclusive with gene_data. |
+
+</details>
+
+<span id="api-translate_ggchord_cds"></span>
+<details><summary><code>translate_ggchord_cds()</code></summary>
+
+
+[Full reference](reference/translate_ggchord_cds.html)
+
+
+| Parameter | Signature default | Type/value rule | Meaning, range and constraints |
+| --- | --- | --- | --- |
+| `cds` | `Required/alternative entry; see description` | R object; constraints below | A map from build_ggchord_cds(). |
+| `sequences` | `Required/alternative entry; see description` | R object; constraints below | Named character vector of complete forward source strings, or a data frame with unique accver and sequence (e.g. read_fasta_lengths() with keep_sequence = TRUE). DNAStringSet/RNAStringSet are also accepted. Every CDS source must exist and contain its declared intervals. |
+| `alphabet` | `c("DNA", "RNA")` | Vector; choices versus multiple selection below | Explicit "DNA" (default) or "RNA"; ungapped IUPAC only. |
+| `initiation` | `c("literal", "start")` | Vector; choices versus multiple selection below | "literal" (default) translates every codon literally. "start" uses the genetic code's alternative initiation codons for the first codon only; it requires a complete biological 5-prime end. |
+| `ambiguous` | `c("error", "solve")` | Vector; choices versus multiple selection below | "error" (default) rejects ambiguous codons; "solve" uses Biostrings to resolve them, emitting X when not uniquely resolvable. |
 
 </details>
 

@@ -114,6 +114,12 @@ correspondence, rounds to bp and marks estimated length; identity is retained,
 not recalculated. Segment preparation creates separate windows and explicit
 gaps; it never concatenates their biological sequences. Position mapping is
 invertible within the selected linear window and rejects segmented gaps.
+\code{\link[=translate_ggchord_cds]{translate_ggchord_cds()}} extracts real forward source strings through the
+same CDS map and delegates translation to optional Biostrings. It requires
+known genetic codes, retains stops, reports partial trimming and preserves
+the three genomic positions of every codon.
+\code{\link[=register_ggchord_alignment]{register_ggchord_alignment()}} registers exact source/column cells for
+independent Cartesian detail panels, without deriving any bases from HSPs.
 CDS projection uses observed complete codons and explicit phase/partial
 policies; it does not translate with the stored genetic-code ID. Protein
 identity/length remain source-prefixed metadata when links are projected.

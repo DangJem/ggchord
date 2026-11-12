@@ -1,0 +1,10 @@
+{
+  "translations": {
+    "0": "为基因组组合注册独立字符图",
+    "1": "含 geom_residue 图层的单面板 Cartesian ggplot，映射 x = alignment_column、y = accver、label = symbol。支持 identity/reverse x 标度和离散 y 标度，可以独立叠加注释。拒绝分面、非线性标度、翻转坐标及移动已注册字符的 position 调整。",
+    "2": "⟦0⟧、⟦1⟧ 或 translate_ggchord_cds()$nucleotides/residues 中实际显示的行。每个 accver/alignment_column 只有一个单元，各行源坐标唯一。筛选窗口时保留原列号。所选源碱基必须全部存在；分段/跨原点区间须显式拆分。gap 保留显示列，但无源坐标。",
+    "3": "附加源注册的普通图。可作为 ⟦0⟧ 的 detail_plot 或外围 ⟦1⟧。多行共享来源时，选区 detail_instance 明确选择对齐行 accver。注册声明用户提供的来源，source_verified 不代表独立生物学验证。导出的源布局保留输入表。",
+    "4": "向普通 Cartesian ggplot 附加显式源/对齐列映射。图形仍可编辑、独立打印。Fusion 和 magnify 按最终物理尺寸重建图，核对实际 geom_residue 位置/标签并投影精确源边界。不从 HSP 插值，也不隐式计算比对。"
+  },
+  "source_sha256": "ee9939c1bfd37596b064dcdba23e387c62320d45f6ec23348f9d4ea8dc7de827"
+}

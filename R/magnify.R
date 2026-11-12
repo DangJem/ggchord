@@ -4,7 +4,8 @@
 #' Compose a source region and an explicit local detail plot
 #'
 #' Marks real source intervals in a Circular/Chord/Collinear plot and connects them to
-#' the same intervals in an independently constructed Collinear detail plot.
+#' the same intervals in an independently constructed Collinear or registered
+#' Cartesian character detail plot.
 #' Returns a Fusion, not a new Coord or a crop of an existing image. Ordinary
 #' ggsave rebuilds both panels, highlights and leaders at the actual target size.
 #'
@@ -22,10 +23,12 @@
 #'   intervals must be split before using this interface. With a list of details,
 #'   a `detail_panel` column selects the named target for each row.
 #' @param detail_plot An explicit horizontal or vertical Collinear ggchord plot,
-#'   or a uniquely named list of one to four such plots. Every panel must have
+#'   a character plot from [register_ggchord_alignment()], or a uniquely named
+#'   list of one to four such plots. Every panel must have
 #'   at least one source region; the name `center` is reserved.
 #'   The selected source interval must be fully visible in both panels, in the
-#'   same bp/aa unit. Ordinary Cartesian character plots are not supported here.
+#'   same bp/aa unit. Character plots require explicit source/column registration;
+#'   ordinary unregistered plots are rejected.
 #' @param side One of right, top, left or bottom for a single detail plot.
 #'   For a list of plots, supply a character vector named by panel ID, with
 #'   distinct sides. Multiple panels require explicit routing and placement.
@@ -84,7 +87,7 @@ magnify_ggchord <- function(plot, region, detail_plot,
     ggchord_stop(caller, ": colour must be a single colour string")
   tryCatch(grDevices::col2rgb(colour),error=function(e) ggchord_stop(caller, ": invalid colour"))
   if (length(linetype)!=1L || is.na(linetype)) ggchord_stop(caller, ": linetype must be scalar")
-  multiple <- !inherits(detail_plot, "ggchord")
+  multiple <- !inherits(detail_plot, "ggplot")
   details <- if (multiple) detail_plot else list(detail = detail_plot)
   ids <- names(details)
   if (!is.list(details) || !length(details) || length(details) > 4L ||
@@ -162,7 +165,7 @@ ggchord_build_focus_region <- function(focus, panels, region) {
   if (focus$connector == "leader") {
     leaders <- data.frame(boundary = c("start", "end"),
       source_position_boundary = qf$position_boundary[ends],
-      x = qf$x[ends],y = qf$y[ends],xend = sf$x[ends],yend = sf$y[ends],
+      x = qf$x[ends],y = qf$y[ends],xend = sf$x[c(1L,nrow(sf))],yend = sf$y[c(1L,nrow(sf))],
       coordinate_space = "composition",units = "mm",semantic = "decorative_focus_leader")
     grobs[[1L]] <- grid::segmentsGrob(leaders$x, leaders$y, leaders$xend, leaders$yend,
       default.units = "mm",gp = grid::gpar(col = focus$colour,

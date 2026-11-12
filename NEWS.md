@@ -1,3 +1,22 @@
+# ggchord 0.26.0 (development)
+
+- Added `register_ggchord_alignment()` for explicit source/column registration of
+  independent Cartesian `geom_residue()` plots. Fusion and `magnify_ggchord()`
+  accept these detail panels, remeasure them at target size, and check registered
+  cells against the actual rendered positions/labels after edits. Exact endpoint
+  cells retain reverse orientation, gaps and source units; no HSP interpolation
+  supplies base-level evidence. Spliced/origin regions must be split explicitly.
+- Added `translate_ggchord_cds()` using optional Biostrings, the existing spliced
+  CDS map and complete forward DNA/RNA strings. Known genetic codes and explicit
+  literal/start initiation and ambiguous-codon policies govern translation.
+  Stops remain visible; partial trimming, genomic strands and the three source
+  positions/rows/segments of each codon are retained, including exon junctions.
+  Missing sources/codes and unsupported translation exceptions fail explicitly.
+- Residue position scales now train on half-cell extents, fixing default clipping
+  at the first/last character. Font sizes and overflow policies are unchanged.
+  Registered character endpoints require explicit Fusion fill instead of a
+  backbone-colour gradient. This is local development, not release acceptance.
+
 # ggchord 0.25.0 (development)
 
 - `magnify_ggchord()` accepts a named list of up to four independent Collinear

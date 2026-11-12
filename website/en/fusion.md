@@ -115,7 +115,7 @@ annotations are retained, but arbitrary layouts are not guaranteed collision-fre
 
 ## A source interval and its local detail {#magnify}
 
-`magnify_ggchord()` composes a Circular/Chord/Collinear source and an explicit Collinear detail plot. A source interval is biological data, not a rectangle in image pixels. The same region must be fully visible in both panels. Both rebuild at the final device size; no screenshot is stretched.
+`magnify_ggchord()` composes a Circular/Chord/Collinear source and an explicit Collinear or registered character detail plot. A source interval is biological data, not a rectangle in image pixels. The same region must be fully visible in both panels. Both rebuild at the final device size; no screenshot is stretched.
 
 This example selects pETDuet-1 source positions 101–1900 (1800 bp). Its origin-crossing annotation at 5404→2 has no overlap with this interval; exclude it explicitly before linear focusing rather than taking its min/max as a long feature. The detail retains 10 annotations and labels the explicitly selected CDS/replication-origin subset. Reversing the detail's display orientation changes neither source coordinates nor biological strands.
 
@@ -157,7 +157,7 @@ Use ordinary `ggsave()` at a chosen physical size, for example 12×8 inches; `vi
 
 The dashed lines are decorative focus leaders. They are exported separately from biological `connections` and `relationship_data`; adding actual `fusion_ribbon()` layers still requires real relationship data. `focus_region_data` preserves the original selection and arbitrary metadata, while `focus_regions` reports resolved instances, source origins and the sampled physical path-length ratio. The ratio can be below one with a small detail allocation; it is not a change to biological length.
 
-The detail plot owns its data, scales, layers and statistics. For count/bin/coverage tracks, prepare and state the intended local or global statistical population yourself; the wrapper records `explicit_detail_plot` and never silently chooses a scope. It does not copy arbitrary source layers, infer alignments or accept ordinary Cartesian character panels. Use one ordered region, explicitly select `instance`/`detail_instance` when an accession is repeated, and split origin wraps before this single-window workflow. Nested or freely positioned inset boxes remain outside this interface; named independent details are supported below.
+The detail plot owns its data, scales, layers and statistics. For count/bin/coverage tracks, prepare and state the intended local or global statistical population yourself; the wrapper records `explicit_detail_plot` and never silently chooses a scope. It does not copy arbitrary source layers, infer alignments or accept unregistered Cartesian character panels. Use one ordered region, explicitly select `instance`/`detail_instance` when an accession is repeated, and split origin wraps before this single-window workflow. Nested or freely positioned inset boxes remain outside this interface; named independent details are supported below.
 
 ## Paired source windows with real HSPs {#paired-detail}
 
@@ -233,3 +233,40 @@ defaults. Overlaps fail rather than displacing explicit allocations. Standard
 saving rebuilds panels and leaders at the requested size. At small sizes, inspect
 labels and enlarge the canvas as needed. Leaders may cross the main plot or one
 another; this interface does not solve global avoidance, nesting or arbitrary boxes.
+
+## Character details with exact source anchors {#character-detail}
+
+A Cartesian character plot can be an independent detail panel after `register_ggchord_alignment()`. Register the actual displayed character rows: x is the original alignment/coding column, y is the alignment row ID, and label is the actual symbol. The source map remains separate from the ordinary ggplot scales. These real 60-column excerpts retain the upstream gaps and mismatches; their macro lengths refer to the **ungapped aligned fragments**, not complete genomes.
+
+```r
+library(dplyr)
+cells <- read_aligned_fasta("examples/alignment/opuntia-aligned.fasta", "DNA")
+rows <- unique(cells$accver)[c(1, 3)]
+window <- cells |>
+  filter(accver %in% rows, between(alignment_column, 321, 380))
+sequences <- cells |>
+  filter(accver %in% rows, !is_gap) |>
+  group_by(accver) |>
+  summarise(length = max(source_position), .groups = "drop")
+regions <- window |>
+  filter(!is_gap) |>
+  group_by(source_accver) |>
+  summarise(start = min(source_position), end = max(source_position), .groups = "drop") |>
+  rename(accver = source_accver)
+letters <- ggplot2::ggplot(window, aes(alignment_column, accver, label = symbol)) +
+  geom_residue(aes(fill = symbol), size = 2.7, overflow = "error") +
+  ggplot2::scale_fill_hue(l = 85, c = 40, guide = "none") +
+  ggplot2::theme_minimal()
+letters <- register_ggchord_alignment(letters, window)
+macro <- ggchord(sequences) + geom_seq() + coord_collinear()
+character_detail <- magnify_ggchord(
+  macro, regions, letters,
+  center_size = c(.22, .7), detail_size = c(.5, .8)
+)
+export_ggchord_fusion(character_detail, width = 16, height = 5)$focus_regions
+# ggsave("character-detail.png", character_detail, width = 16, height = 5)
+```
+
+The ordinary plot remains editable: local colours, layers and annotations remain independent. Identity/reverse x scales and discrete y rows are supported. Each Fusion build verifies the registered residue positions/labels after edits and remeasures the final panel in mm; half-cell boundaries attach to the exact endpoint cells. Gap cells have no source position and are never interpolated into bases. A source interval must contain every selected base in biological order; split introns and origin joins into separate source rows. Use `detail_instance` to select an alignment row when several rows share a source. Unregistered ggplots, facets, nonlinear/flipped coordinates and moved registered cells fail.
+
+`translate_ggchord_cds()` nucleotide rows can be registered in the same way. Keep the translation on codon centres as in `examples/m2-detail.R`; use `source_positions` for full codon membership across segments. AA residue rows use their own aa coordinate domain; connecting a genomic bp macro directly to aa positions still requires an explicit CDS projection. Decorative magnify leaders remain separate from biological Fusion links. Character endpoints have no backbone colour for a Fusion gradient: supply explicit cross-panel fill. Narrow panels retain `geom_residue()`'s tile/error policy; enlarge the physical export instead of relying on DPI. Global leader avoidance and nested/free-position insets remain outside this workflow.

@@ -9740,7 +9740,7 @@
     "parameter": "plot",
     "default": "",
     "type": "R object; constraints below",
-    "constraint": "A horizontal or vertical Collinear ggchord plot. Sankey, Radial, Dotplot, facets and external ggplots are not supported here.",
+    "constraint": "A horizontal or vertical Collinear ggchord plot or a Cartesian detail from register_ggchord_alignment(). Sankey, Radial, Dotplot, facets and unregistered external ggplots are not supported here. Character panels require explicit cross-panel fill; backbone-colour gradient is unavailable.",
     "source": "man/fusion_panel.Rd"
   },
   {
@@ -10044,7 +10044,7 @@
     "parameter": "detail_plot",
     "default": "",
     "type": "R object; constraints below",
-    "constraint": "An explicit horizontal or vertical Collinear ggchord plot, or a uniquely named list of one to four such plots. Every panel must have at least one source region; the name center is reserved. The selected source interval must be fully visible in both panels, in the same bp/aa unit. Ordinary Cartesian character plots are not supported here.",
+    "constraint": "An explicit horizontal or vertical Collinear ggchord plot, a character plot from register_ggchord_alignment(), or a uniquely named list of one to four such plots. Every panel must have at least one source region; the name center is reserved. The selected source interval must be fully visible in both panels, in the same bp/aa unit. Character plots require explicit source/column registration; ordinary unregistered plots are rejected.",
     "source": "man/magnify_ggchord.Rd"
   },
   {
@@ -10760,6 +10760,22 @@
     "source": "man/read_paf.Rd"
   },
   {
+    "api": "register_ggchord_alignment",
+    "parameter": "plot",
+    "default": "",
+    "type": "R object; constraints below",
+    "constraint": "A single-panel Cartesian ggplot with geom_residue layers mapping x = alignment_column, y = accver, label = symbol. Identity/reverse x scales and a discrete y scale are supported. Additional independent annotations are allowed. Facets, nonlinear scales, flipped coordinates and position adjustments moving registered cells are rejected.",
+    "source": "man/register_ggchord_alignment.Rd"
+  },
+  {
+    "api": "register_ggchord_alignment",
+    "parameter": "data",
+    "default": "",
+    "type": "Table/supported object; data may be a function",
+    "constraint": "The displayed rows of as_ggchord_alignment(), read_aligned_fasta() or translate_ggchord_cds()$nucleotides/residues. One cell per accver/alignment_column; source coordinates must be unique within each row. Keep original columns when filtering a window. Every selected source base must be present; split spliced/origin-wrapping regions explicitly. Gap columns remain visible but have no source coordinate.",
+    "source": "man/register_ggchord_alignment.Rd"
+  },
+  {
     "api": "segment_ggchord_data",
     "parameter": "seq_data",
     "default": "",
@@ -10822,6 +10838,46 @@
     "type": "Table/supported object; data may be a function",
     "constraint": "Unified annotation input; mutually exclusive with gene_data.",
     "source": "man/segment_ggchord_data.Rd"
+  },
+  {
+    "api": "translate_ggchord_cds",
+    "parameter": "cds",
+    "default": "",
+    "type": "R object; constraints below",
+    "constraint": "A map from build_ggchord_cds().",
+    "source": "man/translate_ggchord_cds.Rd"
+  },
+  {
+    "api": "translate_ggchord_cds",
+    "parameter": "sequences",
+    "default": "",
+    "type": "R object; constraints below",
+    "constraint": "Named character vector of complete forward source strings, or a data frame with unique accver and sequence (e.g. read_fasta_lengths() with keep_sequence = TRUE). DNAStringSet/RNAStringSet are also accepted. Every CDS source must exist and contain its declared intervals.",
+    "source": "man/translate_ggchord_cds.Rd"
+  },
+  {
+    "api": "translate_ggchord_cds",
+    "parameter": "alphabet",
+    "default": "c(\"DNA\", \"RNA\")",
+    "type": "Vector; choices versus multiple selection below",
+    "constraint": "Explicit \"DNA\" (default) or \"RNA\"; ungapped IUPAC only.",
+    "source": "man/translate_ggchord_cds.Rd"
+  },
+  {
+    "api": "translate_ggchord_cds",
+    "parameter": "initiation",
+    "default": "c(\"literal\", \"start\")",
+    "type": "Vector; choices versus multiple selection below",
+    "constraint": "\"literal\" (default) translates every codon literally. \"start\" uses the genetic code's alternative initiation codons for the first codon only; it requires a complete biological 5-prime end.",
+    "source": "man/translate_ggchord_cds.Rd"
+  },
+  {
+    "api": "translate_ggchord_cds",
+    "parameter": "ambiguous",
+    "default": "c(\"error\", \"solve\")",
+    "type": "Vector; choices versus multiple selection below",
+    "constraint": "\"error\" (default) rejects ambiguous codons; \"solve\" uses Biostrings to resolve them, emitting X when not uniquely resolvable.",
+    "source": "man/translate_ggchord_cds.Rd"
   },
   {
     "api": "validate_ggchord_data",

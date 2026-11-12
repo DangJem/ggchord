@@ -7,8 +7,10 @@
 fusion_panel(plot, id, side = c("right", "top", "left", "bottom"), size = NULL)
 }
 \arguments{
-\item{plot}{A horizontal or vertical Collinear ggchord plot. Sankey,
-Radial, Dotplot, facets and external ggplots are not supported here.}
+\item{plot}{A horizontal or vertical Collinear ggchord plot or a Cartesian
+detail from \code{\link[=register_ggchord_alignment]{register_ggchord_alignment()}}. Sankey, Radial, Dotplot, facets
+and unregistered external ggplots are not supported here. Character panels
+require explicit cross-panel fill; backbone-colour gradient is unavailable.}
 
 \item{id}{Unique nonempty panel name; \code{"center"} is reserved.}
 

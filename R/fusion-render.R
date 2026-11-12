@@ -32,7 +32,8 @@ ggchord_build_fusion <- function(x) {
       default.units="mm",clip="off",name=paste0("fusion-",id))
     # Clone build-local ggproto state without serializing quosure/data-function
     # environments: a teaching environment can contain many unrelated plots.
-    plot <- ggchord_render_plot_copy(spec$plot)
+    character_panel <- !is.null(spec$plot$ggchord_alignment)
+    plot <- if (character_panel) spec$plot else ggchord_render_plot_copy(spec$plot)
     plot$layers <- lapply(plot$layers,function(layer) {
       copy <- ggplot2::ggproto(NULL,layer)
       copy$geom <- ggplot2::ggproto(NULL,layer$geom)
@@ -43,7 +44,20 @@ ggchord_build_fusion <- function(x) {
     table <- local({
       grid::pushViewport(viewport)
       on.exit(grid::popViewport())
-      ggchord_with_render_context(list(available_canvas_mm=dimensions),ggplot2::ggplotGrob(plot))
+      ggchord_with_render_context(list(available_canvas_mm=dimensions), {
+        if (character_panel) {
+          built <- ggplot2::ggplot_build(plot)
+          layout <- ggchord_alignment_layout(built, plot$ggchord_alignment)
+          table <- ggplot2::ggplot_gtable(built)
+          context <- ggchord_panel_context(table, built)
+          context$geometry_metric_status <- "measured_positions; glyph_fit_at_draw"
+          context$converged <- TRUE
+          attr(table, "ggchord_render_context") <- context
+          attr(table, "ggchord_render_layout") <- layout
+          attr(table, "ggchord_render_built") <- built
+          table
+        } else ggplot2::ggplotGrob(plot)
+      })
     })
     context <- attr(table,"ggchord_render_context")
     if (!identical(context$status,"measured")) ggchord_stop("Fusion panel '",id,"': actual panel measurement unavailable")
@@ -57,7 +71,7 @@ ggchord_build_fusion <- function(x) {
     foregrounds[[id]] <- grid::grobTree(ggchord_fusion_partition(table,FALSE),vp=viewport)
     bounds <- context$panel_bounds_mm
     panel_rows[[id]] <- data.frame(panel_id=id,side=spec$side,
-      coordinate=if(isTRUE(spec$plot$coordinates$ggchord_circular)) "circular" else
+      coordinate=if(character_panel) "alignment" else if(isTRUE(spec$plot$coordinates$ggchord_circular)) "circular" else
         if(isTRUE(layout$collinear)) "collinear" else "chord",
       container_xmin=center[1]-dimensions[1]/2,container_xmax=center[1]+dimensions[1]/2,
       container_ymin=center[2]-dimensions[2]/2,container_ymax=center[2]+dimensions[2]/2,
@@ -130,6 +144,7 @@ ggchord_build_fusion <- function(x) {
       if (layer$gradient) {
         endpoint_colour <- function(endpoint,front) {
           panel <- panels[[endpoint$panel]]
+          if (isTRUE(panel$layout$character)) ggchord_stop("Fusion: character endpoints require explicit fill; sequence-colour gradient has no backbone colour")
           colours <- ggchord_sequence_display_colours(panel$built$plot,panel$layout)
           ids <- if(is.null(panel$layout$display_instances)) endpoint$key else endpoint$instance
           at <- which(colours$instance == ids)
@@ -163,7 +178,7 @@ ggchord_build_fusion <- function(x) {
     connections=bind(connection_rows),fronts=bind(fronts),paths=bind(paths),
     focus_region_data=focus$input,focus_regions=focus$regions,focus_fronts=focus$fronts,leaders=focus$leaders,
     diagnostics=diagnostics,source_layouts=lapply(panels,`[[`,"layout"),
-    source_data=lapply(x$panels,function(p)p$plot$ggchord$sources),
+    source_data=lapply(x$panels,function(p) p$plot$ggchord_alignment %||% p$plot$ggchord$sources),
     relationship_data=lapply(x$ribbons,`[[`,"data"),
     metadata=list(canvas_mm=canvas,coordinate_space="composition",units="mm",layout=x$fusion_layout,
       guide_side=styles$side,guide_size_mm=guide_size,measurement="measured",

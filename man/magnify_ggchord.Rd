@@ -30,10 +30,12 @@ intervals must be split before using this interface. With a list of details,
 a \code{detail_panel} column selects the named target for each row.}
 
 \item{detail_plot}{An explicit horizontal or vertical Collinear ggchord plot,
-or a uniquely named list of one to four such plots. Every panel must have
+a character plot from \code{\link[=register_ggchord_alignment]{register_ggchord_alignment()}}, or a uniquely named
+list of one to four such plots. Every panel must have
 at least one source region; the name \code{center} is reserved.
 The selected source interval must be fully visible in both panels, in the
-same bp/aa unit. Ordinary Cartesian character plots are not supported here.}
+same bp/aa unit. Character plots require explicit source/column registration;
+ordinary unregistered plots are rejected.}
 
 \item{side}{One of right, top, left or bottom for a single detail plot.
 For a list of plots, supply a character vector named by panel ID, with
@@ -72,7 +74,8 @@ detail allocation does not enlarge the region.
 }
 \description{
 Marks real source intervals in a Circular/Chord/Collinear plot and connects them to
-the same intervals in an independently constructed Collinear detail plot.
+the same intervals in an independently constructed Collinear or registered
+Cartesian character detail plot.
 Returns a Fusion, not a new Coord or a crop of an existing image. Ordinary
 ggsave rebuilds both panels, highlights and leaders at the actual target size.
 }

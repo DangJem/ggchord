@@ -191,4 +191,34 @@ checked_cells <- as_ggchord_alignment(
 )
 ```
 
-仅凭六个 HSP 端点不能恢复内部 mismatch/gap。此工作流接收已有对齐列，不解析 CIGAR/A3M/Clustal/Stockholm，不推断 CDS 翻译/相位，不计算共识、Logo 或新比对。源身份与位置会保留，供后续显式的宏观/细节映射使用。
+仅凭六个 HSP 端点不能恢复内部 mismatch/gap。此工作流接收已有对齐列，不解析 CIGAR/A3M/Clustal/Stockholm，不推断相位，不计算共识、Logo 或新比对。显式CDS翻译见下节；精确宏观/细节注册见Fusion课程。
+
+## 有来源的 CDS 翻译 {#cds-translation}
+
+`build_ggchord_cds()` 定义已观测编码坐标；`translate_ggchord_cds()` 还需要真实的完整正向 DNA/RNA 字符串及可选依赖 **Biostrings**。本例真实 EMALE 负链 CDS 的源 phase 为0、起始密码子为ATG。表11为显式选择，并与保留的上游蛋白 FASTA 核对；输入来源见 `examples/format-inputs/README.md`。
+
+```r
+library(dplyr)
+# Requires the source checkout, dplyr and optional Biostrings.
+genome <- read_fasta_lengths(
+  "examples/format-inputs/emales-BVI_023A.fna", keep_sequence = TRUE
+)
+coding <- read_gff3("examples/format-inputs/emales-BVI_023A.gff3") |>
+  filter(feature_id == "BVI_023A_0009")
+cds <- build_ggchord_cds(coding, genetic_code = 11)
+observed <- translate_ggchord_cds(cds, genome, initiation = "start")
+expected <- read_fasta_lengths(
+  "examples/format-inputs/protein-pair.faa", keep_sequence = TRUE
+) |>
+  filter(accver == "BVI_023A_0009")
+stopifnot(sub("[*]$", "", observed$models$protein_sequence) == expected$sequence)
+observed$residues |>
+  select(alignment_column, symbol, codon, source_positions) |>
+  head()
+```
+
+`models` 报告编码/蛋白字符串、翻译表、起始及模糊碱基策略、不完整末端和末端余数。`nucleotides` 保留每个基因组碱基；`residues$source_positions` 按生物学顺序列出每个 codon 的三个基因组位置，也保留跨 exon 的 codon。残基位置使用 CDS feature ID 的已观测蛋白坐标域，不推断外部蛋白 accession。内部及末端终止符均保留为 `*`；本例仅在对照时删除一个末端终止符，以符合上游 FASTA 约定。
+
+默认 `initiation = "literal"` 不改写替代起始密码子；`"start"` 要求完整5′端。`ambiguous = "error"` 拒绝模糊 codon，显式 `"solve"` 交由 Biostrings 解析，不能唯一确定时输出X。未知翻译表、缺失/过短源序列及已声明的翻译例外均报错。`partial = "trim"` 在构建 CDS map 时声明：只排除首段 phase 与末端不完整 codon，后续 phase 用于校验连续性，不删除跨段 codon 的碱基。缺失序列不会被补造。RNA 必须显式声明；有序 `segments` 沿用既有分段/跨原点契约。
+
+完整的碱基、codon 和宏观关联可运行示例在 `examples/m2-detail.R`，负链氨基酸标在其三个编码碱基中心。真实正/负链分段对照、源hash和原始预期翻译保存在 `examples/cds/`。[注册字符图](fusion.html#character-detail)后可连接精确源边界。

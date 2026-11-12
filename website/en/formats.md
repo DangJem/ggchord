@@ -191,4 +191,34 @@ checked_cells <- as_ggchord_alignment(
 )
 ```
 
-No mismatch/gap detail can be recovered from six HSP endpoints alone. This workflow accepts existing columns, not CIGAR/A3M/Clustal/Stockholm parsing, CDS translation/phase inference, consensus/Logo analysis or alignment computation. It leaves source identity and positions available for later explicit macro/detail mapping.
+No mismatch/gap detail can be recovered from six HSP endpoints alone. This workflow accepts existing columns, not CIGAR/A3M/Clustal/Stockholm parsing, phase inference, consensus/Logo analysis or alignment computation. Explicit CDS translation is described below; exact macro/detail registration is available in the Fusion lesson.
+
+## Source-backed CDS translation {#cds-translation}
+
+`build_ggchord_cds()` defines observed coding coordinates; `translate_ggchord_cds()` additionally needs actual complete forward DNA/RNA strings and optional **Biostrings**. This real EMALE negative-strand CDS has source phase 0 and an ATG start. Table 11 is an explicit choice checked against the unchanged upstream protein FASTA. Input provenance is in `examples/format-inputs/README.md`.
+
+```r
+library(dplyr)
+# Requires the source checkout, dplyr and optional Biostrings.
+genome <- read_fasta_lengths(
+  "examples/format-inputs/emales-BVI_023A.fna", keep_sequence = TRUE
+)
+coding <- read_gff3("examples/format-inputs/emales-BVI_023A.gff3") |>
+  filter(feature_id == "BVI_023A_0009")
+cds <- build_ggchord_cds(coding, genetic_code = 11)
+observed <- translate_ggchord_cds(cds, genome, initiation = "start")
+expected <- read_fasta_lengths(
+  "examples/format-inputs/protein-pair.faa", keep_sequence = TRUE
+) |>
+  filter(accver == "BVI_023A_0009")
+stopifnot(sub("[*]$", "", observed$models$protein_sequence) == expected$sequence)
+observed$residues |>
+  select(alignment_column, symbol, codon, source_positions) |>
+  head()
+```
+
+`models` reports coding/protein strings, genetic code, initiation/ambiguity policies, partial ends and terminal remainder. `nucleotides` retains each genomic base; `residues$source_positions` contains the three genomic positions of each codon in biological order, even across exon boundaries. Residue positions use the CDS feature ID's observed-protein namespace; they are not an inferred external protein accession. Terminal and internal stops remain `*`. The example removes only the final stop for comparison with the upstream FASTA convention.
+
+The default `initiation = "literal"` does not recode alternative starts; `"start"` requires a complete 5-prime end. `ambiguous = "error"` rejects fuzzy codons; explicit `"solve"` delegates to Biostrings, using X if unresolved. Unknown codes, missing/short sources and declared translation exceptions fail. `partial = "trim"` belongs to the CDS map: only the initial phase and incomplete terminal codon are excluded; later segment phases validate continuity without deleting junction bases. No missing sequence is reconstructed. RNA must be declared explicitly. Ordered `segments` support the existing spliced/origin-join contract.
+
+A complete runnable nucleotide/codon/macro example is `examples/m2-detail.R`; its negative-strand labels are centred on their three coding bases. Real spliced plus/minus controls, source hashes and original expected translations are retained in `examples/cds/`. [Register the character plot](fusion.html#character-detail) to connect its exact source boundaries.

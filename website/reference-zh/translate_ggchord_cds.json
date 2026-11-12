@@ -1,0 +1,14 @@
+{
+  "translations": {
+    "0": "翻译有来源的 CDS 并保留精确 codon 来源",
+    "1": "⟦0⟧ 生成的映射。",
+    "2": "完整正向源字符串的命名字符向量，或含唯一 accver 和 sequence 的表（例如 ⟦0⟧ 配合 keep_sequence = TRUE）。也接受 DNAStringSet/RNAStringSet。每个 CDS 的源序列必须存在且覆盖声明区间。",
+    "3": "显式 ⟦0⟧（默认）或 ⟦1⟧，仅接受无 gap 的 IUPAC 字符。",
+    "4": "⟦0⟧（默认）按字面翻译每个 codon。⟦1⟧ 仅对首个 codon 使用翻译表的替代起始密码子，要求完整生物学5′端。",
+    "5": "⟦0⟧（默认）拒绝模糊 codon；⟦1⟧ 交由 Biostrings 解析，不能唯一确定时输出X。",
+    "6": "包含 models（coding_sequence、protein_sequence及策略）、nucleotides（每个已观测编码碱基一行）、residues（每个 codon 一行）的列表。residues 中 source_positions、source_cds_rows 和 source_cds_segments 列表列按转录顺序保存来源。残基以 CDS feature_id 作为已观测蛋白 accver，不推断外部 accession。碱基行保留基因组 source_accver/source_position 和 codon_index/codon_base，两表均可用 ⟦0⟧ 显示。provenance 保留源输入和原 CDS map，不计算比对。",
+    "7": "使用 ⟦0⟧ 中全部已观测完整 codon，包括跨段 codon。按生物学分段顺序提取，负链 DNA/RNA 取互补。翻译表及翻译计算由 Biostrings 提供，仅调用本函数时需要该依赖。",
+    "8": "每个模型必须有已知 genetic_code，不推断序列、phase、缺失末端或翻译例外。内部及末端终止符均保留为 ⟦0⟧，不替换或删除。结果为已观测翻译，不验证基因功能，也不预测完整蛋白。不完整末端的裁剪沿用输入 CDS map 并在 models 中报告。"
+  },
+  "source_sha256": "b9b6215e4d98acbeb0e9e6376d4db5d8af0ee01f26cae455631653cac58e3be4"
+}

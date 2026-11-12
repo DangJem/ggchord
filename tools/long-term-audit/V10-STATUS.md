@@ -41,8 +41,8 @@ bin外边界来源漏记、普通Chord/Collinear绕过声明HSP重复检查、ma
 | §6.4 灵活参数 | 已有标量/实体/实例及按链继承，用户映射/scale优先；已同步教程 | v0.17/18记录、website双语flexible-parameters课程；未承诺任意第三方层全兼容 |
 | §6.5 Recipes | 已有真实科研综合示例与Fusion配方，继续复用基础API | tools/documentation-examples.R；不是独立模板产品；v0.22.0已提供显式源区间magnify入口 |
 | §6.6 适配器 | 本版新增BEDPE保留原字段/方向/缺失策略；FASTA可显式保留真实字符 | check-bedpe.R、check-semantic-detail.R；VCF/SV、BigWig/bedGraph、domain/motif等格式专用导入器未完成，见ADAPTER-AUDIT-v0.20.0.md |
-| §4.9、§10.13 短序列 | v0.21.0已实现真实gapped FASTA、源/列双映射、显式源验证和Cartesian局部geom_residue | DEVELOPMENT-v0.21.0.md、v0.21.0-alignment-results.json；不含MSA算法、CIGAR全格式解析、CDS翻译/phase及宏观字符投影 |
-| §4.10 语义放大 | v0.22.0公开magnify；v0.23.0实现M1显式多源区间/Chord与Collinear主图、真实HSP局部图、逐行源导出 | DEVELOPMENT-v0.23.0.md、check-magnify-pairs.R；要求显式detail及统计口径。v0.25.0补充M3非嵌套四侧命名独立细节，完成三尺寸定向构建；M2、跨原点、任意inset、嵌套、全局避障和M3完整发布矩阵仍未完成 |
+| §4.9、§10.13 短序列 | v0.21.0已实现真实gapped FASTA、源/列双映射、显式源验证和Cartesian局部geom_residue | DEVELOPMENT-v0.21.0.md、v0.21.0-alignment-results.json；v0.26.0已补齐显式字符注册与CDS真实翻译/phase；不含MSA算法、CIGAR全格式解析或缺失来源推断 |
+| §4.10 语义放大 | v0.22.0公开magnify；v0.23.0实现M1显式多源区间/Chord与Collinear主图、真实HSP局部图、逐行源导出 | DEVELOPMENT-v0.23.0.md、check-magnify-pairs.R；要求显式detail及统计口径。v0.25.0补充M3非嵌套四侧命名独立细节，完成三尺寸定向构建；v0.26.0已完成约定M2核心，跨原点自动选区、任意inset、嵌套、全局避障和M3完整发布矩阵仍未完成 |
 | §7、A.4、§10.8/14/17 网站/README | 导航/Markdown源/双语教学重构已实施，README未来方向保留，新API同步实际教程 | v0.17/18/19开发记录与浏览器JSON；62对页面为当前源规模。代表页响应式通过，不是全站逐页逐宽度视觉认证；本版不重建旧图或冻结docs |
 | §8.3、§9、1.0稳定化 | 待实施 | 未集中冻结全部新API、兼容/弃用策略及完整候选发布验收；版本分支开发完成不等于v10完成 |
 | X 非目标 | 持续遵守 | 不开发交互HTML绘图、Shiny/在线编辑器，不运行分析引擎伪造比对，不自动push/部署/Release |
@@ -85,3 +85,15 @@ v10的首轮审计/架构设计与多数核心能力已有实现，不能据此�
 
 上述工作量差异大，也包含需原型评审的候选；不以已开版本数、导出函数数或勾选条数计算百分比。
 进入1.0前应明确稳定版实际纳入范围；若决定延后任务书项目，须明确记录，不能直接改写为已完成。
+
+## v0.26.0 M2 本地完成
+
+从本地main 03805fa建立v0.26.0后，字符面板注册与CDS真实翻译/phase/宏观关联已完成
+约定本地开发。两个公开入口复用既有source/column、CDS map、Biostrings及Fusion测量，
+没有从HSP端点制造逐位点信息。四条真实CDS与原记录预期翻译相等，正/负链分段、
+两个跨exon codon及真实DNA/AA窗口、反射标度、源坐标/毫米端点有定向证据。
+详情见DEVELOPMENT-v0.26.0.md和v0.26.0-m2-results.json；M2核心不再列为未开发。
+
+上节“v0.25.0合入后的整体判断”为当时状态。当前尚未整合main、推送或发布；
+本版没有完整发布矩阵认证。M3自由/嵌套/全局避障、F2/F3、更多适配器、制图质量
+广覆盖与1.0治理仍待后续推进；旧CI、旧lesson engine和178旧图事项保持未关闭。

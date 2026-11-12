@@ -3258,10 +3258,10 @@
     },
     "alias_of": "",
     "case": "fusion",
-    "scope": "One ordered source interval; no automatic arbitrary-layer or Stat rebuilding",
+    "scope": "Explicit ordered source rows and independent details; no automatic arbitrary-layer or Stat rebuilding",
     "modes_localized": {
-      "en": "Circular/Chord center, Collinear detail, explicit source instances",
-      "zh": "Circular/Chord主图、Collinear细节与显式源实例"
+      "en": "Circular/Chord/Collinear center; Collinear or registered character details",
+      "zh": "Circular/Chord/Collinear主图；Collinear或已注册字符细节"
     }
   },
   "adapt_ggchord": {
@@ -3286,6 +3286,53 @@
     "modes_localized": {
       "en": "fixed/scale/adaptive; explicit settings remain authoritative; no global collision guarantee",
       "zh": "fixed/scale/adaptive；显式设置优先，不保证全局零碰撞"
+    }
+  },
+  "register_ggchord_alignment": {
+    "level": "L2",
+    "page": "fusion",
+    "anchor": "character-detail",
+    "reason": "Runnable source-backed M2 workflow with explicit coordinate and translation boundaries",
+    "modes": "Explicit source-backed M2",
+    "parameters": [
+      "plot",
+      "data"
+    ],
+    "purpose": {
+      "en": "Register exact character/source positions for independent Fusion details",
+      "zh": "注册精确字符/源位置用于独立Fusion细节"
+    },
+    "alias_of": "",
+    "case": "fusion",
+    "scope": "Exact source characters and observed codons; no inferred alignment or missing phase",
+    "modes_localized": {
+      "en": "Explicit source/column map; independent Cartesian detail; complete observed codons",
+      "zh": "显式源/对齐列映射；独立Cartesian细节；已观测完整codon"
+    }
+  },
+  "translate_ggchord_cds": {
+    "level": "L2",
+    "page": "formats",
+    "anchor": "cds-translation",
+    "reason": "Runnable source-backed M2 workflow with explicit coordinate and translation boundaries",
+    "modes": "Explicit source-backed M2",
+    "parameters": [
+      "cds",
+      "sequences",
+      "alphabet",
+      "initiation",
+      "ambiguous"
+    ],
+    "purpose": {
+      "en": "Translate real CDS strings with codon provenance using optional Biostrings",
+      "zh": "通过可选Biostrings翻译真实CDS并保留codon来源"
+    },
+    "alias_of": "",
+    "case": "formats",
+    "scope": "Exact source characters and observed codons; no inferred alignment or missing phase",
+    "modes_localized": {
+      "en": "Explicit source/column map; independent Cartesian detail; complete observed codons",
+      "zh": "显式源/对齐列映射；独立Cartesian细节；已观测完整codon"
     }
   }
 }

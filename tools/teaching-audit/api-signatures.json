@@ -1456,6 +1456,15 @@
     }
   },
   {
+    "name": "register_ggchord_alignment",
+    "owner": "ggchord",
+    "alias": "",
+    "parameters": {
+      "plot": "",
+      "data": ""
+    }
+  },
+  {
     "name": "rel",
     "owner": "ggplot2",
     "alias": "",
@@ -2573,6 +2582,18 @@
       "legend.region.margin": "NULL",
       "legend.region.spacing": "NULL",
       "...": ""
+    }
+  },
+  {
+    "name": "translate_ggchord_cds",
+    "owner": "ggchord",
+    "alias": "",
+    "parameters": {
+      "cds": "",
+      "sequences": "",
+      "alphabet": "c(\"DNA\", \"RNA\")",
+      "initiation": "c(\"literal\", \"start\")",
+      "ambiguous": "c(\"error\", \"solve\")"
     }
   },
   {

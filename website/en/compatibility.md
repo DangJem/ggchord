@@ -54,7 +54,7 @@ The [Dotplot/Radial support matrix](view-expansion.html#support) records the new
 ## Static cross-panel composition {#fusion}
 
 [Fusion](fusion.html) accepts a Circular/Chord/Collinear center and up to four Collinear
-peripherals. Each panel keeps its existing layer contract. Cross-panel interval
+or explicitly registered Cartesian character peripherals. Each panel keeps its existing layer contract. Cross-panel interval
 fronts use one-based inclusive boundaries with continuous curve mapping;
 fully visible same-unit source intervals and unambiguous panel/instance routes
 are required. Generic Fusion scales affect cross-panel layers only. Peripheral
@@ -69,7 +69,7 @@ global collision avoidance or general font scaling.
 | --- | --- | --- |
 | [`geom_residue()`](reference/geom_residue.html) | Unsupported biological backbone projection | Supported local character cells with identity/reverse position scales |
 
-The [aligned-character workflow](formats.html#aligned-characters) uses ordinary ggplot x/y coordinates. Source positions and alignment columns are separate fields. Final physical glyph measurement selects readable text or explicit tile/error behavior; it does not change source data or shrink fonts. No Fusion panel registration, automatic CDS translation or new alignment is implied.
+The [aligned-character workflow](formats.html#aligned-characters) uses ordinary ggplot x/y coordinates. Source positions and alignment columns are separate fields. Final physical glyph measurement selects readable text or explicit tile/error behavior; it does not change source data or shrink fonts. Explicit source registration supports Fusion/magnify details. Optional source-backed CDS translation uses Biostrings and the existing CDS map; no alignment or missing phase is inferred. See [CDS translation](formats.html#cds-translation) and [character details](fusion.html#character-detail).
 
 ## Optional target-size policies {#adaptive}
 
