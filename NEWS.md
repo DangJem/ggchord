@@ -1,5 +1,15 @@
 # ggchord 0.27.0 (development)
 
+- Fusion accepts native cross-panel Guides at different outside positions.
+  Adaptive compositions jointly measure Guide candidates and panel allocations,
+  preserving explicit positions, direction, grid, fonts and absolute boxes.
+  Default Identity rulers remeasure label spacing when changing orientation.
+  Fixed mode keeps existing placements; impossible constraints fail explicitly.
+  Metadata includes final per-side Guide sizes/bounds and candidate/lock reports.
+- Explicit `theme(legend.position = "none")` is respected by the joint Guide
+  engine, including composition carriers, rather than being treated as an
+  unmeasurable visible Guide.
+
 - Fusion ribbons support explicit measured obstacle routes and shared display
   corridors (`route = "avoid"` / `"bundle"`). Original source rows, complete
   interval fronts and physical departure normals remain intact. Bundling uses

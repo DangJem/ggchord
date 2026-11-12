@@ -384,3 +384,39 @@ Rotated text uses conservative bounding rectangles, curved strings larger
 envelopes, and native decoration cells their final gtable bounds. Arbitrary
 custom grobs and every endpoint data shape are not claimed to be glyph-level
 obstacles. Theme changes affect metrics, never source coordinates or evidence.
+
+## Outer Guides and the panel budget {#outer-guides}
+
+Keep each panel's local scales and Guides independent. Composition scales and
+`guides()` describe the cross-panel ribbons. Native Guides may occupy different
+outside positions, rather than all requiring one shared side:
+
+```r
+library(ggchord)
+guide_source <- ggchord(seq_data_example) + geom_seq(show.legend = FALSE)
+guide_fusion <- ggchord_fusion(guide_source, layout = "adaptive") +
+  fusion_panel(guide_source + coord_collinear(), "detail") +
+  fusion_ribbon(ribbon_data_example, aes(fill = qaccver, alpha = pident),
+    qpanel = "center", spanel = "detail") +
+  ggplot2::guides(
+    fill = ggplot2::guide_legend(position = "bottom", nrow = 1),
+    alpha = ggplot2::guide_legend(position = "right")
+  )
+guide_fusion
+```
+
+`layout = "fixed"` keeps existing placements. `"adaptive"` reuses the native
+Guide candidate/measurement engine, jointly considers side budgets and panel
+allocations, and then rebuilds every child in the remaining physical space.
+It may move/reflow unlocked Guides; explicit position, direction, rows/columns,
+fonts, key dimensions and absolute panel boxes remain constraints. For example,
+a default Identity ruler can become horizontal on a wide, short canvas; its
+length is remeasured for all six original labels rather than dropping 95 or 100.
+
+`metadata$guide_layout` reports choices and locks. `guide_bounds_mm` and
+`guide_sizes_mm` describe the final outer boxes, after packaging and before
+panel measurement. Nested composition Guide reports appear in `diagnostics`.
+Impossible constraints fail explicitly. `theme(legend.position = "none")`
+hides composition Guides using native ggplot2 semantics. Inside composition
+Guides remain unsupported; each independent panel can still own local Guides.
+This is a bounded physical-space search, not a claim of global optimality.

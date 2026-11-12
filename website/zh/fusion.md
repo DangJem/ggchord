@@ -314,3 +314,33 @@ routed
 可见路径，不声称全局最优布局。旋转文字使用保守矩形包围框，曲线字符串采用更大
 包络，原生装饰使用最终 gtable 单元边界。不声称任意自定义 grob 和所有端点数据
 形状均已进入逐字形障碍模型。主题改变测量值，不改变源坐标或证据。
+
+## 外层 Guide 与面板空间预算 {#outer-guides}
+
+各子图保留独立 Scale 和 Guide。组合层的 Scale 与 `guides()` 描述跨面板连接带；
+原生 Guide 可以分别放在不同外侧，无需全部共用同一侧：
+
+```r
+library(ggchord)
+guide_source <- ggchord(seq_data_example) + geom_seq(show.legend = FALSE)
+guide_fusion <- ggchord_fusion(guide_source, layout = "adaptive") +
+  fusion_panel(guide_source + coord_collinear(), "detail") +
+  fusion_ribbon(ribbon_data_example, aes(fill = qaccver, alpha = pident),
+    qpanel = "center", spanel = "detail") +
+  ggplot2::guides(
+    fill = ggplot2::guide_legend(position = "bottom", nrow = 1),
+    alpha = ggplot2::guide_legend(position = "right")
+  )
+guide_fusion
+```
+
+`layout = "fixed"` 保留已有位置；`"adaptive"` 复用原生 Guide 候选/测量引擎，
+联合考虑各侧预算和面板区域，再在剩余物理空间重建各子图。可以移动或重排未锁定
+Guide；显式位置、方向、行列、字体、key 尺寸和绝对面板框仍是约束。例如宽矮
+画布上的默认 Identity 尺可以转为横向，按原来六个标签重新测量长度，不丢掉95或100。
+
+`metadata$guide_layout` 报告选择及锁定项；`guide_bounds_mm`、`guide_sizes_mm`
+记录完成图例组合后、测量面板前的最终外层框。嵌套组合的 Guide 报告位于
+`diagnostics`。无法满足约束时明确失败。`theme(legend.position = "none")` 沿用
+ggplot2 语义隐藏组合图例。组合内部 Guide 暂不支持；各独立子图仍可拥有局部
+Guide。这是有界物理空间搜索，不声称全局最优。

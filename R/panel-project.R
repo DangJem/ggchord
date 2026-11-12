@@ -57,6 +57,10 @@ ggchord_fusion_nested_export <- function(value, parent, offset) {
   value$panels <- prefix(ggchord_fusion_translate_table(value$panels, offset,
     c("container_xmin", "container_xmax", "panel_xmin", "panel_xmax"),
     c("container_ymin", "container_ymax", "panel_ymin", "panel_ymax")), "panel_id")
+  value$metadata$guide_bounds_mm <- ggchord_fusion_translate_table(value$metadata$guide_bounds_mm,
+    offset, c("xmin", "xmax"), c("ymin", "ymax"))
+  value$metadata$guide_layout$bounds <- ggchord_fusion_translate_table(value$metadata$guide_layout$bounds,
+    offset, c("xmin_mm", "xmax_mm"), c("ymin_mm", "ymax_mm"))
   value$instances <- prefix(value$instances, "panel_id")
   value$routing_obstacles <- prefix(ggchord_fusion_translate_table(value$routing_obstacles, offset,
     c("xmin", "xmax"), c("ymin", "ymax")), "panel_id")

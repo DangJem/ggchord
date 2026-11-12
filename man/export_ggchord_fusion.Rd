@@ -28,6 +28,9 @@ physical envelopes; routing_corridors records explicit shared display
 channels and their source-row members. Connections/leaders report route
 status and collisions. leader_paths stores decorative polyline vertices.
 These routes do not imply a global optimum or altered biological evidence.
+metadata includes final outer guide_bounds_mm/guide_sizes_mm and the
+guide_layout candidate/constraint report; per-guide native positions remain
+independent. Nested composition reports also appear in diagnostics.
 }
 \description{
 Builds at the requested size on a temporary measurement device, restoring

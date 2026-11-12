@@ -2511,7 +2511,7 @@
 | --- | --- | --- | --- |
 | `center` | `必需/互斥入口，见说明` | R 对象；约束见说明 | ggchord基因组图（Circular、Chord、Collinear、Sankey、Radial）或另一张Fusion。嵌套生物学端点用完整面板路径选择。 |
 | `center_size` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 可选的宽度与高度，按扣除跨面板图例后的组合区域比例指定。NULL自动分配可用空间。 |
-| `layout` | `c("fixed", "adaptive")` | 向量；候选/多选含义见说明 | "fixed"使用固定面板区域；"adaptive"还根据真实物理宽高比调整中央区域。两者均按实际面板尺寸重新计算标签和图例，不缩放用户明确设置的字号。 |
+| `layout` | `c("fixed", "adaptive")` | 向量；候选/多选含义见说明 | "fixed" 使用固定面板分配；"adaptive" 还按物理宽高适配中心，并将原生跨面板 Guide 候选与面板区域联合测量。未锁定的 Guide 位置、方向和行列可自适应；显式原生设置及绝对尺寸框保持固定。允许多个外侧 Guide 位置。两种模式均按实际面板尺寸重建标签和图例，不缩小用户显式字体。无法满足空间约束时明确失败，不丢弃 keys。 |
 | `allow_overlap` | `FALSE` | 逻辑值 | 显式允许容器重叠。默认FALSE遇到重叠报错；TRUE时后加入的面板覆盖先加入者。连接使用互不重叠的原生grid裁剪，避免透明填充重复累积。这是有意摆放，不是全局避障。 |
 | `center_box` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 可选中心区域，以xmin、xmax、ymin、ymax给出扣除外层图例后的四个比例或四个绝对grid单位，替代center_size；见fusion_panel()。 |
 

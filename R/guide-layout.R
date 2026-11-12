@@ -15,7 +15,7 @@ ggchord_guide_constraints <- function(source, params) {
     role <- settings$legends[[ggchord_guide_role(aes)]]
     scale <- source$scales$get_scales(aes)
     guide <- source$guides$guides[[aes]] %||% scale$guide
-    user <- if (inherits(guide, "Guide")) guide$params else list()
+    user <- if (inherits(guide, "Guide") && !isTRUE(attr(guide, "ggchord_fusion_default"))) guide$params else list()
     constraints$position <- constraints$position %||% user$position %||% role$position %||%
       settings$legend$position %||% explicit$legend.position
     constraints$direction <- constraints$direction %||% user$direction %||% role$direction %||%
@@ -37,6 +37,10 @@ ggchord_guide_size <- function(grob) c(
   height=grid::convertHeight(grid::grobHeight(grob),"mm",TRUE))
 
 ggchord_guide_candidates <- function(guide, params, theme, source) {
+  generated <- all(vapply(params$aesthetic, function(aes) {
+    g <- source$guides$guides[[aes]] %||% source$scales$get_scales(aes)$guide
+    isTRUE(attr(g, "ggchord_fusion_default"))
+  }, logical(1)))
   locks <- ggchord_guide_constraints(source, params)
   position <- params$position %||% theme$legend.position %||% "right"
   if (is.numeric(position)) position <- "inside"
@@ -64,6 +68,10 @@ ggchord_guide_candidates <- function(guide, params, theme, source) {
         if (!is.null(width) && !is.null(height)) {
           p$theme$legend.key.width <- height; p$theme$legend.key.height <- width
         }
+      }
+      if (generated) {
+        default_guide <- ggchord_fusion_identity_guide(source, list(source$ggchord$theme_explicit), direction = orientation)
+        p$theme <- default_guide$params$theme
       }
       grob <- guide$draw(theme=theme, position=where, direction=orientation, params=p)
       size <- ggchord_guide_size(grob)
@@ -106,16 +114,24 @@ ggchord_guide_bounds <- function(table, canvas) {
   ggchord_rbind_fill(rows) %||% data.frame()
 }
 
-ggchord_guide_joint_layout <- function(built, source) {
+ggchord_guide_joint_layout <- function(built, source, evaluate = NULL, positions = NULL) {
   canvas <- ggchord_render_dimensions()
   if (any(!is.finite(canvas))) return(list(built=built,report=list(status="unavailable")))
+  if (identical(built$plot$theme$legend.position, "none")) return(list(built = built,
+    table = ggchord_base_gtable(built), report = list(status = "no_guides", guides = data.frame())))
   collection <- ggplot2::ggproto(NULL,built$plot$guides)
   guides <- lapply(collection$guides,function(g) ggplot2::ggproto(NULL,g))
   params <- collection$params
   if (!length(guides)) return(list(built=built,report=list(status="no_guides",guides=data.frame())))
   theme <- built$plot$theme
+  # Native complete themes can leave directional spacing to inheritance.
+  # package_box consumes resolved units, whereas guide drawing resolves text.
+  for (name in c("legend.spacing.x", "legend.spacing.y"))
+    theme[[name]] <- ggplot2::calc_element(name, theme)
   candidates <- lapply(seq_along(guides),function(i)
     ggchord_guide_candidates(guides[[i]],params[[i]],theme,source))
+  if (!is.null(positions)) candidates <- lapply(candidates, function(items)
+    Filter(function(item) item$position %in% positions, items))
   if (any(lengths(candidates)==0L)) return(list(built=built,report=list(status="unmeasurable_guide")))
   score <- function(choices) {
     sizes <- matrix(0,4,2,dimnames=list(c("left","right","top","bottom"),c("width","height")))
@@ -127,9 +143,10 @@ ggchord_guide_joint_layout <- function(built, source) {
     remaining <- canvas-c(sum(sizes[c("left","right"),"width"]),sum(sizes[c("top","bottom"),"height"]))
     overflow <- sum(pmax(sizes[,1]/canvas[1]-1,0))+sum(pmax(sizes[,2]/canvas[2]-1,0))+
       sum(pmax(.4-remaining/canvas,0))
-    list(score=overflow*1e4+sum(vapply(choices,`[[`,numeric(1),"change"))*.01+
+    extra <- if (is.null(evaluate)) list(penalty = 0, feasible = TRUE) else evaluate(sizes)
+    list(score=overflow*1e4+extra$penalty+sum(vapply(choices,`[[`,numeric(1),"change"))*.01+
         sum(sizes[,1]*sizes[,2])/prod(canvas)*.001,
-      budget_ok=overflow<=1e-10,remaining=remaining)
+      budget_ok=overflow<=1e-10 && extra$feasible,remaining=remaining)
   }
   # Bounded deterministic beam: joint candidates compete across all visible
   # guides. Preserve trained ordering, labels, keys and scale semantics.

@@ -7,23 +7,33 @@ ggchord_build_fusion <- function(x) {
   origin <- grid::deviceLoc(grid::unit(0,"npc"),grid::unit(0,"npc"),valueOnly=TRUE)
   origin <- c(origin$x,origin$y)*25.4
   styles <- ggchord_fusion_styles(x)
-  guide_size <- if (styles$side=="none") c(0,0) else c(
-    grid::convertWidth(grid::grobWidth(styles$guide),"mm",TRUE),
-    grid::convertHeight(grid::grobHeight(styles$guide),"mm",TRUE))
-  area <- canvas; shift <- c(0,0)
-  guide_xy <- if (styles$side == "none") NULL else switch(styles$side,
-    right=c(canvas[1]-guide_size[1]/2,canvas[2]/2), left=c(guide_size[1]/2,canvas[2]/2),
-    top=c(canvas[1]/2,canvas[2]-guide_size[2]/2), bottom=c(canvas[1]/2,guide_size[2]/2))
-  if (styles$side %in% c("left","right")) {
-    area[1] <- canvas[1]-guide_size[1]-4
-    if (styles$side=="left") shift[1] <- guide_size[1]+4
-  }
-  if (styles$side %in% c("top","bottom")) {
-    area[2] <- canvas[2]-guide_size[2]-4
-    if (styles$side=="bottom") shift[2] <- guide_size[2]+4
-  }
-  if (min(area)<15 || any(guide_size > canvas)) ggchord_stop(
+  guide_size <- if (styles$side == "none") c(0, 0) else if (styles$side != "multiple")
+    styles$sizes[styles$side, ] else apply(styles$sizes, 2, max)
+  budget <- ggchord_fusion_guide_budget(canvas, styles$sizes)
+  area <- budget$area; shift <- budget$shift
+  guide_boxes <- lapply(names(styles$guides), function(side) {
+    size <- styles$sizes[side, ]
+    xy <- switch(side, right = c(canvas[1]-size[1]/2, shift[2]+area[2]/2),
+      left = c(size[1]/2, shift[2]+area[2]/2),
+      top = c(shift[1]+area[1]/2, canvas[2]-size[2]/2),
+      bottom = c(shift[1]+area[1]/2, size[2]/2))
+    data.frame(side = side, xmin = xy[1]-size[1]/2, xmax = xy[1]+size[1]/2,
+      ymin = xy[2]-size[2]/2, ymax = xy[2]+size[2]/2, width_mm = size[1], height_mm = size[2])
+  })
+  guide_boxes <- ggchord_rbind_fill(guide_boxes) %||% data.frame()
+  if (min(area)<15 || (nrow(guide_boxes) && any(guide_boxes$xmin < 0 | guide_boxes$ymin < 0 |
+      guide_boxes$xmax > canvas[1] | guide_boxes$ymax > canvas[2]))) ggchord_stop(
     "Fusion: canvas cannot contain required cross-panel guides; increase width/height or set explicit guide layout")
+  if (nrow(guide_boxes) > 1L) for (i in seq_len(nrow(guide_boxes))) for (j in seq_len(i-1L)) {
+    a <- guide_boxes[i, ]; b <- guide_boxes[j, ]
+    if (min(a$xmax, b$xmax) > max(a$xmin, b$xmin) && min(a$ymax, b$ymax) > max(a$ymin, b$ymin))
+      ggchord_stop("Fusion: cross-panel guide boxes overlap under the explicit layout; enlarge the canvas or revise guide layout")
+  }
+  styles$report$candidate_bounds <- styles$report$bounds
+  styles$report$bounds <- if (!nrow(guide_boxes)) data.frame() else data.frame(
+    guide = paste0("guide-box-", guide_boxes$side), xmin_mm = guide_boxes$xmin,
+    xmax_mm = guide_boxes$xmax, ymin_mm = guide_boxes$ymin, ymax_mm = guide_boxes$ymax,
+    overflow = FALSE)
   rectangles <- ggchord_fusion_rectangles(x, area)
   panels <- list(); panel_rows <- list(); instances <- list(); diagnostics <- list()
   backgrounds <- list(); foregrounds <- list(); nested_results <- list(); sources <- list()
@@ -59,7 +69,9 @@ ggchord_build_fusion <- function(x) {
         measurement = "measured_nested_composition", geometry_metric_status = "nested", converged = TRUE)
       panel_rows[[id]] <- ggchord_rbind_fill(list(container, child$panels))
       instances[[id]] <- child$instances
-      diagnostics[[id]] <- list(panel_id = id, canvas_mm = dimensions, nested = TRUE)
+      diagnostics[[id]] <- list(panel_id = id, canvas_mm = dimensions, nested = TRUE,
+        guide_layout = child$metadata$guide_layout,
+        composition_guide_bounds_mm = child$metadata$guide_bounds_mm)
       for (key in names(child$diagnostics)) {
         diagnostic <- child$diagnostics[[key]]
         diagnostic$panel_id <- paste0(id, "/", key)
@@ -168,9 +180,8 @@ ggchord_build_fusion <- function(x) {
     data.frame(panel_id = e$panel_id, kind = "container", xmin = b[1], xmax = b[2],
       ymin = b[3], ymax = b[4], measurement = "resolved_container")
   })
-  if (!is.null(guide_xy)) obstacle_parts[["composition-guide"]] <- data.frame(panel_id = "",
-    kind = "guide", xmin = guide_xy[1]-guide_size[1]/2, xmax = guide_xy[1]+guide_size[1]/2,
-    ymin = guide_xy[2]-guide_size[2]/2, ymax = guide_xy[2]+guide_size[2]/2, measurement = "composition_guide")
+  if (nrow(guide_boxes)) obstacle_parts[["composition-guide"]] <- data.frame(panel_id = "",
+    kind = "guide", guide_boxes[c("xmin", "xmax", "ymin", "ymax")], measurement = "composition_guide")
   obstacles <- unique(ggchord_rbind_fill(c(containers, obstacle_parts))) %||% data.frame()
   # Use the shared Ribbon renderer with a single full-canvas Cartesian frame.
   frame <- ggplot2::ggplot() + ggplot2::coord_cartesian(xlim=c(0,canvas[1]),ylim=c(0,canvas[2]),expand=FALSE)
@@ -271,13 +282,13 @@ ggchord_build_fusion <- function(x) {
   if (!is.null(focus_settings)) { focus_settings$obstacles <- obstacles; focus_settings$canvas <- canvas }
   focus <- ggchord_build_focus(focus_settings, panels)
   for (name in c("regions", "fronts", "leaders", "leader_paths")) focus[[name]]$composition_id <- rep("root", nrow(focus[[name]]))
-  guide <- styles$guide
-  if (styles$side!="none") {
-    xy <- switch(styles$side,right=c(canvas[1]-guide_size[1]/2,canvas[2]/2),
-      left=c(guide_size[1]/2,canvas[2]/2),top=c(canvas[1]/2,canvas[2]-guide_size[2]/2),
-      bottom=c(canvas[1]/2,guide_size[2]/2))
-    guide <- grid::grobTree(guide,vp=grid::viewport(x=xy[1],y=xy[2],width=guide_size[1],height=guide_size[2],default.units="mm"))
-  }
+  guide_grobs <- lapply(seq_len(nrow(guide_boxes)), function(i) {
+    b <- guide_boxes[i, ]
+    grid::grobTree(styles$guides[[b$side]], vp = grid::viewport(
+      x = mean(c(b$xmin, b$xmax)), y = mean(c(b$ymin, b$ymax)),
+      width = b$width_mm, height = b$height_mm, default.units = "mm"))
+  })
+  guide <- do.call(grid::grobTree, guide_grobs)
   overlaps <- list()
   ids <- names(x$panels)
   for (i in seq_along(ids)) for (j in seq_len(i - 1L)) {
@@ -341,7 +352,8 @@ ggchord_build_fusion <- function(x) {
     routing_obstacles=obstacles,routing_corridors=combine(corridor_rows,"routing_corridors"),diagnostics=diagnostics,source_layouts=lapply(panels,`[[`,"layout"),source_data=sources,
     relationship_data=c(lapply(x$ribbons,`[[`,"data"),unlist(lapply(nested_results,function(n) n$export$relationship_data),recursive=FALSE)),
     metadata=list(canvas_mm=canvas,coordinate_space="composition",units="mm",layout=x$fusion_layout,
-      guide_side=styles$side,guide_size_mm=guide_size,measurement="measured",allow_overlap=isTRUE(x$allow_overlap),
+      guide_side=styles$side,guide_size_mm=guide_size,guide_sizes_mm=styles$sizes,
+      guide_bounds_mm=guide_boxes,guide_layout=styles$report,measurement="measured",allow_overlap=isTRUE(x$allow_overlap),
       device=names(grDevices::dev.cur()),font_conditions="Selected device metrics; fallback and embedding not certified"))
   # A parent can add overlapping leaves after a child was measured. Recheck
   # child geometry in the complete enclosing canvas rather than exporting a

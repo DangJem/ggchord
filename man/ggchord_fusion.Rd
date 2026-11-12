@@ -20,8 +20,12 @@ Radial), or another Fusion. Nested biological endpoints use full panel paths.}
 area, excluding its cross-panel legend. NULL allocates available space.}
 
 \item{layout}{\code{"fixed"} uses fixed panel allocations; \code{"adaptive"} also
-adjusts the central allocation to the physical aspect ratio. Both rebuild
-labels and guides at actual panel sizes. Neither rescales explicit fonts.}
+adjusts the central allocation to the physical aspect ratio and jointly
+measures native cross-panel Guide candidates against panel allocations.
+Unlocked Guide positions/direction/rows may adapt; explicit native settings
+and absolute boxes stay fixed. Multiple outside Guide positions are allowed.
+Both rebuild labels and guides at actual panel sizes without shrinking
+explicit fonts. Impossible space constraints fail rather than dropping keys.}
 
 \item{allow_overlap}{Explicitly allow container overlap. Default FALSE fails
 on overlap. When TRUE, later panels paint over earlier panels. Connections

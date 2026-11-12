@@ -13,8 +13,12 @@
 #' @param center_size Optional width and height as fractions of the composition
 #'   area, excluding its cross-panel legend. NULL allocates available space.
 #' @param layout `"fixed"` uses fixed panel allocations; `"adaptive"` also
-#'   adjusts the central allocation to the physical aspect ratio. Both rebuild
-#'   labels and guides at actual panel sizes. Neither rescales explicit fonts.
+#'   adjusts the central allocation to the physical aspect ratio and jointly
+#'   measures native cross-panel Guide candidates against panel allocations.
+#'   Unlocked Guide positions/direction/rows may adapt; explicit native settings
+#'   and absolute boxes stay fixed. Multiple outside Guide positions are allowed.
+#'   Both rebuild labels and guides at actual panel sizes without shrinking
+#'   explicit fonts. Impossible space constraints fail rather than dropping keys.
 #' @param allow_overlap Explicitly allow container overlap. Default FALSE fails
 #'   on overlap. When TRUE, later panels paint over earlier panels. Connections
 #'   use disjoint native grid clips to avoid accumulating translucent fills.
@@ -253,16 +257,58 @@ ggchord_fusion_styles <- function(x) {
     colours = c("#440154", "#482878", "#3E4A89", "#31688E", "#26828E", "#1F9E89", "#35B779", "#6DCD59", "#B4DE2C", "#FDE725"),
     limits = c(0,100), breaks = c(0,50,80,90,95,100),
     guide = ggchord_fusion_identity_guide(p,x$styles))
-  for (style in x$styles) p <- suppressMessages(p + style)
+  explicit <- ggplot2::theme()
+  for (style in x$styles) {
+    p <- suppressMessages(p + style)
+    if (inherits(style, "theme")) explicit <- explicit + style
+  }
+  # Capture user locks separately from the carrier's default right-hand guide.
+  p$ggchord <- list(theme_explicit = explicit)
   built <- ggplot2::ggplot_build(p)
-  table <- ggplot2::ggplot_gtable(built)
+  report <- list(status = "fixed")
+  if (identical(x$fusion_layout, "adaptive")) {
+    canvas <- c(grid::convertWidth(grid::unit(1, "npc"), "mm", TRUE),
+      grid::convertHeight(grid::unit(1, "npc"), "mm", TRUE))
+    evaluate <- function(sizes) {
+      budget <- ggchord_fusion_guide_budget(canvas, sizes)
+      rects <- tryCatch(ggchord_fusion_rectangles(x, budget$area), error = function(e) NULL)
+      if (min(budget$area) < 15 || is.null(rects)) return(list(penalty = 1e6, feasible = FALSE))
+      dimensions <- lapply(rects, function(r) c(diff(r[1:2]), diff(r[3:4]))*budget$area)
+      automatic <- vapply(x$panels, function(panel) is.null(panel$size) && is.null(panel$box), logical(1))
+      small <- sum(vapply(dimensions[automatic], function(d) sum(pmax(15-d, 0)), numeric(1)))
+      # Side boxes must coexist without meeting at the reserved corners.
+      small <- small + sum(pmax(sizes[c("left", "right"), "height"]-budget$area[2], 0)) +
+        sum(pmax(sizes[c("top", "bottom"), "width"]-budget$area[1], 0))
+      list(penalty = small*1e4, feasible = small == 0)
+    }
+    joint <- ggchord_with_render_context(list(available_canvas_mm = canvas),
+      ggchord_guide_joint_layout(built, p, evaluate = evaluate,
+        positions = c("left", "right", "top", "bottom")))
+    report <- joint$report
+    if (!report$status %in% c("feasible", "no_guides")) ggchord_stop(
+      "Fusion: cross-panel guides cannot fit the composition under the explicit constraints; enlarge the canvas or revise guide layout")
+    built <- joint$built; table <- joint$table %||% ggplot2::ggplot_gtable(built)
+  } else table <- ggplot2::ggplot_gtable(built)
   at <- which(grepl("^guide-box", table$layout$name) & !vapply(table$grobs, inherits, logical(1), "zeroGrob"))
-  if (length(at) > 1L) ggchord_stop("Fusion: use one common legend position for cross-panel guides")
-  guide <- if (length(at)) table$grobs[[at]] else grid::nullGrob()
-  side <- if (length(at)) sub("guide-box-", "", table$layout$name[at]) else "none"
-  if (!side %in% c("none", "left", "right", "top", "bottom")) ggchord_stop("Fusion: cross-panel legends must be outside the panels")
+  sides <- sub("guide-box-", "", table$layout$name[at])
+  if (any(!sides %in% c("left", "right", "top", "bottom")))
+    ggchord_stop("Fusion: cross-panel legends must be outside the panels")
+  guides <- stats::setNames(table$grobs[at], sides)
+  sizes <- matrix(0, 4, 2, dimnames = list(c("left", "right", "top", "bottom"), c("width", "height")))
+  for (side in sides) sizes[side, ] <- ggchord_guide_size(guides[[side]])
   styles <- lapply(built$data, function(d) d[seq.int(1L, length.out = nrow(d) / 3L, by = 3L), , drop = FALSE])
-  list(data = styles, guide = guide, side = side)
+  list(data = styles, guides = guides, sizes = sizes, report = report,
+    guide = if (length(at) == 1L) guides[[1L]] else grid::nullGrob(),
+    side = if (!length(at)) "none" else if (length(at) == 1L) sides else "multiple")
+}
+
+
+# Reserve all native outside guide boxes before measuring any child panel.
+ggchord_fusion_guide_budget <- function(canvas, sizes) {
+  horizontal <- c("left", "right"); vertical <- c("top", "bottom")
+  widths <- ifelse(sizes[horizontal, "width"] > 0, sizes[horizontal, "width"]+4, 0)
+  heights <- ifelse(sizes[vertical, "height"] > 0, sizes[vertical, "height"]+4, 0)
+  list(area = canvas-c(sum(widths), sum(heights)), shift = c(widths[1L], heights[2L]))
 }
 
 ggchord_fusion_rectangles <- function(x, canvas) {
@@ -455,6 +501,9 @@ ggchord_fusion_path <- function(q, s, curvature) {
 #'   channels and their source-row members. Connections/leaders report route
 #'   status and collisions. leader_paths stores decorative polyline vertices.
 #'   These routes do not imply a global optimum or altered biological evidence.
+#'   metadata includes final outer guide_bounds_mm/guide_sizes_mm and the
+#'   guide_layout candidate/constraint report; per-guide native positions remain
+#'   independent. Nested composition reports also appear in diagnostics.
 #' @export
 #' @examples
 #' data(seq_data_example)
@@ -492,7 +541,7 @@ ggplot_build.ggchord_fusion <- function(plot, ...) {
 }
 
 # The default cross-panel ruler uses its final orientation and real text metrics.
-ggchord_fusion_identity_guide <- function(plot, styles) {
+ggchord_fusion_identity_guide <- function(plot, styles, direction = NULL) {
   theme <- plot$theme
   explicit <- list()
   for (style in styles) if (inherits(style,"theme")) {
@@ -500,7 +549,8 @@ ggchord_fusion_identity_guide <- function(plot, styles) {
     for (field in c("legend.key.width","legend.key.height","legend.key.size"))
       if (!is.null(style[[field]])) explicit[[field]] <- style[[field]]
   }
-  horizontal <- (theme$legend.position %||% "right") %in% c("top","bottom")
+  horizontal <- if (!is.null(direction)) direction == "horizontal" else
+    (theme$legend.direction %||% if ((theme$legend.position %||% "right") %in% c("top", "bottom")) "horizontal" else "vertical") == "horizontal"
   text <- ggplot2::calc_element("legend.text",ggplot2::theme_get()+theme)
   values <- c(0,50,80,90,95,100)
   dimensions <- if(inherits(text,"element_blank")) rep(0,length(values)) else
@@ -519,6 +569,8 @@ ggchord_fusion_identity_guide <- function(plot, styles) {
       warning("Fusion Identity labels exceed the explicitly fixed guide length; increase its length or reduce its explicit text size",call.=FALSE)
   width <- explicit[[thickness]] %||% explicit$legend.key.size %||% grid::unit(4,"mm")
   guide_theme <- do.call(ggplot2::theme,stats::setNames(list(length,width),c(field,thickness)))
-  ggplot2::guide_coloursteps(even.steps=FALSE,show.limits=TRUE,
+  result <- ggplot2::guide_coloursteps(even.steps=FALSE,show.limits=TRUE,
     direction=if(horizontal) "horizontal" else "vertical",theme=guide_theme)
+  attr(result, "ggchord_fusion_default") <- TRUE
+  result
 }

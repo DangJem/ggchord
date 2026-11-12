@@ -1,0 +1,69 @@
+{
+  "status": "passed",
+  "compact_identity": [
+    {
+      "aesthetic": "fill",
+      "title": "Identity (%)",
+      "type": "continuous",
+      "requested_position": "right",
+      "final_position": "bottom",
+      "direction": "horizontal",
+      "n_items": 6,
+      "width_mm": 117.638,
+      "height_mm": 7.9343,
+      "position_locked": false,
+      "direction_locked": false,
+      "grid_locked": false,
+      "candidate_count": 6,
+      "selected_candidate": 2,
+      "reason": "joint_space_budget"
+    }
+  ],
+  "multiple_guides": [
+    {
+      "aesthetic": "fill",
+      "title": "qaccver",
+      "type": "discrete",
+      "requested_position": "bottom",
+      "final_position": "bottom",
+      "direction": "horizontal",
+      "rows": 1,
+      "columns": 3,
+      "n_items": 3,
+      "width_mm": 81.9629,
+      "height_mm": 6.096,
+      "position_locked": true,
+      "direction_locked": false,
+      "grid_locked": true,
+      "candidate_count": 1,
+      "selected_candidate": 1,
+      "reason": "requested_layout_fits"
+    },
+    {
+      "aesthetic": "alpha",
+      "title": "pident",
+      "type": "discrete",
+      "requested_position": "right",
+      "final_position": "right",
+      "direction": "vertical",
+      "rows": 4,
+      "columns": 1,
+      "n_items": 4,
+      "width_mm": 10.5028,
+      "height_mm": 28.9065,
+      "position_locked": true,
+      "direction_locked": false,
+      "grid_locked": false,
+      "candidate_count": 5,
+      "selected_candidate": 1,
+      "reason": "requested_layout_fits"
+    }
+  ],
+  "full_source_records": true,
+  "native_mappings_preserved": true,
+  "guides_outside_panels": true,
+  "explicit_constraints_fail_honestly": true,
+  "absolute_boxes_preserved": true,
+  "inside_rejected": true,
+  "shared_single_panel_engine": true
+}
