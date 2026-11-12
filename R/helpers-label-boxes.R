@@ -352,8 +352,27 @@ ggchord_text_boxes <- function(df,
         grid::grobHeight(grob), "inches", valueOnly = TRUE
       ) * units_per_inch
     }
+    close_device()
   }
 
+  composite <- if ('.ggchord_composite_label' %in% names(df) &&
+      all(c('enzyme_label', 'coordinate_label', 'enzyme_fontface') %in% names(df)))
+    which(df$.ggchord_composite_label %in% TRUE & valid) else integer()
+  if (length(composite)) {
+    exact <- ggchord_site_label_metrics(df$enzyme_label[composite], df$coordinate_label[composite],
+      sizes[composite], families[composite], df$enzyme_fontface[composite],
+      lineheights[composite], units_per_inch)
+    w[composite] <- exact$width; h[composite] <- exact$height
+    hjust[composite] <- .5
+  }
+  uniform_sites <- if ('.ggchord_composite_label' %in% names(df))
+    which(df$.ggchord_composite_label %in% FALSE & valid) else integer()
+  if (length(uniform_sites)) {
+    exact <- ggchord_restriction_text_metrics(texts[uniform_sites], sizes[uniform_sites],
+      units_per_inch, parse = FALSE, fontface = fontfaces[uniform_sites],
+      family = families[uniform_sites], lineheight = lineheights[uniform_sites])
+    w[uniform_sites] <- exact$width; h[uniform_sites] <- exact$height
+  }
   cos_a <- cos(angles)
   sin_a <- sin(angles)
   cx_off <- (0.5 - hjust) * w * cos_a - (0.5 - vjust) * h * sin_a

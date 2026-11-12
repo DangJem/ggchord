@@ -112,7 +112,16 @@ ggchord_label_quality <- function(layout, text, built, context) {
     n_text_feature_unresolved = sum(features$contacts$relation == 'unresolved'),
     n_text_on_own_feature = sum(features$contacts$relation == 'own_source'))
   if (!measured) for (key in setdiff(names(summary), 'measured')) summary[[key]] <- NA
+  axis <- ggchord_axis_geometry(layout)
+  axis_clearance <- data.frame()
+  if ('.axis_clearance_status' %in% names(axis)) {
+    at <- axis$.component %in% 'text' & !is.na(axis$.axis_clearance_status)
+    axis_clearance <- unique(data.frame(accver = axis$accver[at], label = axis$.axis_label[at],
+      automatic_breaks = axis$.axis_automatic_breaks[at], explicit_offset = axis$.axis_offset_explicit[at],
+      status = axis$.axis_clearance_status[at], radial_shift_mm = axis$.axis_clearance_mm[at]))
+  }
   list(summary = summary, conflicts = conflicts, text = text, leaders = segments,
+    axis_clearance = axis_clearance,
     feature_contacts = features$contacts, feature_polygons = features$polygons,
     feature_parts_unchecked = features$skipped,
     scope = 'Measured registered panel text boxes, annotation polylines and gene/feature polygon envelopes, including transparent polygons. Own-source label contacts are recorded separately; unproven source association remains unresolved. Strict leader interior contacts, not shared endpoints. No automatic layout change.',

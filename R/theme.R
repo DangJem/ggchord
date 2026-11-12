@@ -61,7 +61,8 @@
 #'   orientations retain straight text.
 #' @param axis.text.check.overlap Whether overlapping axis labels are hidden. Defaults to TRUE.
 #'   Automatically positioned circular parallel labels, including combined seam
-#'   strings, can receive bounded radial clearance around feature polygons.
+#'   strings, can receive bounded inward or outward radial clearance around
+#'   feature polygons. Annotation leaders route around the resolved axis text.
 #'   Explicit `axis.text.offset` values and explicit scale breaks stay fixed.
 #' @param seq.label,gene.label,feature.label,restriction.label,seq.center.label,seq.center.name,seq.center.length
 #'   Text elements for sequence, gene, feature, restriction-site and circular
@@ -469,6 +470,34 @@ ggchord_theme_point_size <- function(plot, name, fallback) {
   el@size
 }
 
+ggchord_resolve_theme_component <- function(plot, lyr, param_name, element_name) {
+  el <- ggchord_theme_element(plot, element_name)
+  current <- lyr$geom_params[[param_name]] %||% list()
+  if (is.null(el)) return(current)
+  if (inherits(el, "element_blank")) current$alpha <- 0
+  else if (inherits(el, "element_line")) {
+    vals <- list(colour = el@colour, linewidth = el@linewidth,
+      linetype = el@linetype, lineend = el@lineend, linejoin = el@linejoin)
+    # A composite layer may map text colour while its segment component
+    # still needs an independent theme colour. Component line styles
+    # are applied after scale mapping, so a layer-level mapping must not
+    # suppress them.
+    for (nm in names(vals)) if (is.null(current[[nm]]) &&
+        !is.null(vals[[nm]])) {
+      current[[nm]] <- vals[[nm]]
+    }
+  } else if (inherits(el, "element_text")) {
+    vals <- list(colour = el@colour, size = el@size / ggplot2::.pt,
+      family = el@family,
+      fontface = el@face, lineheight = el@lineheight)
+    for (nm in names(vals)) if (is.null(current[[nm]]) &&
+        is.null(lyr$mapping[[nm]]) && !is.null(vals[[nm]])) {
+      current[[nm]] <- vals[[nm]]
+    }
+  }
+  current
+}
+
 #' @noRd
 ggchord_apply_theme_styles <- function(plot) {
   for (i in seq_along(plot$layers)) {
@@ -482,31 +511,8 @@ ggchord_apply_theme_styles <- function(plot) {
     components <- lyr$ggchord_theme_components
     if (!is.null(components)) {
       for (param_name in names(components)) {
-        el <- ggchord_theme_element(plot, unname(components[[param_name]]))
-        if (is.null(el)) next
-        current <- lyr$geom_params[[param_name]] %||% list()
-        if (inherits(el, "element_blank")) current$alpha <- 0
-        else if (inherits(el, "element_line")) {
-          vals <- list(colour = el@colour, linewidth = el@linewidth,
-            linetype = el@linetype, lineend = el@lineend, linejoin = el@linejoin)
-          # A composite layer may map text colour while its segment component
-          # still needs an independent theme colour. Component line styles
-          # are applied after scale mapping, so a layer-level mapping must not
-          # suppress them.
-          for (nm in names(vals)) if (is.null(current[[nm]]) &&
-              !is.null(vals[[nm]])) {
-            current[[nm]] <- vals[[nm]]
-          }
-        } else if (inherits(el, "element_text")) {
-          vals <- list(colour = el@colour, size = el@size / ggplot2::.pt,
-            family = el@family,
-            fontface = el@face, lineheight = el@lineheight)
-          for (nm in names(vals)) if (is.null(current[[nm]]) &&
-              is.null(lyr$mapping[[nm]]) && !is.null(vals[[nm]])) {
-            current[[nm]] <- vals[[nm]]
-          }
-        }
-        lyr$geom_params[[param_name]] <- current
+        lyr$geom_params[[param_name]] <- ggchord_resolve_theme_component(
+          plot, lyr, param_name, unname(components[[param_name]]))
       }
       plot$layers[[i]] <- lyr
       next

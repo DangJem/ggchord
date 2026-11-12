@@ -1281,6 +1281,13 @@ compute_chord_geometry <- function(plot) {
         max(backbone$outer - backbone$center)
       } else 0
       site_params <- site_layer$ggchord_params
+      site_style <- ggchord_resolve_theme_component(plot, site_layer,
+        "text_params", "ggchord.restriction.label")
+      site_params$label_size <- site_style$size %||% site_params$label_size
+      site_params$label_family <- site_style$family %||% ''
+      site_params$label_fontface <- site_style$fontface %||% 'plain'
+      site_params$label_lineheight <- site_style$lineheight %||% 1.2
+      site_params$composite_labels <- isTRUE(site_layer$geom_params$composite_labels)
       site_params$backbone_outer_offset <- backbone_outer
       sub_layout$restriction_sites <- ggchord_restriction_geometry(
         site_input, site_params, primary, chord$data$seq_data

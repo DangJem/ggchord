@@ -374,11 +374,11 @@ show_plasmid_sites <- filter_restriction_sites(
 show_plasmid_position <- position_feature_stack(
   spacing = 0.085, base_position = position_plasmid()
 )
-p_show_plasmid <- ggchord(show_plasmid, validate = "none") +
+p_show_plasmid <- ggchord(show_plasmid, feature_data = show_plasmid_features, validate = "none") +
   geom_seq(seq_style = "double", colour = "#252525") +
-  geom_feature_plasmid(data = show_plasmid_features, position = show_plasmid_position) +
+  geom_feature_plasmid(position = show_plasmid_position) +
   geom_feature_label_repel(
-    data = show_plasmid_features, position = show_plasmid_position,
+    position = show_plasmid_position,
     external = TRUE, max_overlaps = 0,
     label_fit = "shrink", label_min_size = 2.5
   ) +

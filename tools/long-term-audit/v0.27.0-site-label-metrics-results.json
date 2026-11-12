@@ -1,0 +1,24 @@
+{
+  "status": "passed one wrapped composite typography control",
+  "actual_rendered_fragment_envelope_mm": {
+    "xmin": 41.7305,
+    "xmax": 58.2695,
+    "ymin": 21.5315,
+    "ymax": 28.4685
+  },
+  "diagnostic_envelope_mm": [
+    41.7305,
+    58.2695,
+    21.5315,
+    28.4685
+  ],
+  "obstacle_envelope_mm": [
+    41.7305,
+    58.2695,
+    21.5315,
+    28.4685
+  ],
+  "file": "tools/long-term-audit/v0.27.0-site-label-metrics.png",
+  "png_sha256": "a9937816c948476c0ca179500edf71e9aa381ec20f3171858e306e2f6939c654",
+  "scope": "Logical grid text envelopes on one PNG device; not exact glyph ink, embedded fonts or platform certification"
+}

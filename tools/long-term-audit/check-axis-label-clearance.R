@@ -34,7 +34,7 @@ disabled <- measure(base + theme_ggchord_plasmid() + theme(ggchord.axis.text.che
 manual_breaks <- measure(base + theme_ggchord_plasmid() +
   scale_seq_position_continuous(breaks = c(1, 1000, 2000), minor_breaks = NULL))
 stopifnot(automatic$axis$.axis_clearance_status == 'feature_clearance',
-  automatic$axis$.axis_clearance_mm > 0,
+  abs(automatic$axis$.axis_clearance_mm) > 0,
   shortcut$axis$.axis_clearance_status == 'explicit_offset',
   native$axis$.axis_clearance_status == 'explicit_offset',
   combined$axis$.axis_clearance_status == 'explicit_offset',
@@ -58,6 +58,8 @@ jsonlite::write_json(list(status = 'passed for recorded source and selected devi
   equal_valued_explicit_offsets_are_not_inferred_automatic = TRUE,
   rotated_counterclockwise = diagnostics$label_quality$summary,
   source_inputs_preserved = TRUE, scope = 'bounded automatic circular parallel text; no general axis solver or platform certification'),
+  if ('--joint' %in% commandArgs(trailingOnly = TRUE))
+    'tools/long-term-audit/v0.27.0-axis-clearance-precise-results.json' else
   if ('--refined' %in% commandArgs(trailingOnly = TRUE))
     'tools/long-term-audit/v0.27.0-axis-clearance-refined-results.json' else
     'tools/long-term-audit/v0.27.0-axis-clearance-results.json', pretty = TRUE, auto_unbox = TRUE, na = 'null')

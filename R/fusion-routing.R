@@ -57,6 +57,10 @@ ggchord_route_shortest <- function(start, end, boxes, canvas, clearance = .6, ba
   if (any(c(start, end) < 0) || any(c(start[1], end[1]) > canvas[1]) ||
       any(c(start[2], end[2]) > canvas[2])) return(NULL)
   padded <- ggchord_route_inflate(boxes, clearance)
+  # Fixed endpoints inside a padded obstacle cannot reach an exterior route.
+  # Reject that case before constructing its visibility graph.
+  if (any(ggchord_route_segment_hits(start, start, padded)) ||
+      any(ggchord_route_segment_hits(end, end, padded))) return(NULL)
   crosses <- function(a, b) {
     any(ggchord_route_segment_crossings(a, b, barriers))
   }

@@ -1,5 +1,13 @@
 # ggchord 0.27.0 (development)
 
+- Fixed circular axis clearance accidentally treating center labels as backbone
+  geometry through partial list-name matching. Diagnostics expose the actual
+  clearance status and signed physical shift. Composite restriction-label
+  rendering, route obstacles and perimeter packing share the target-device
+  bold-name/plain-coordinate envelope and physical gap. Effective component
+  theme styles enter layout before placement; axis placement precedes leader
+  routing so rerouting cannot move its own text obstacles.
+
 - Fixed bounded `scale`/`adaptive` line factors not reaching omitted fixed
   linewidth aesthetics in native sequence, point-link, ribbon and alignment
   layers. Explicit and mapped widths keep their own rules, identical layer

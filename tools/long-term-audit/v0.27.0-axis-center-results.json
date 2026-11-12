@@ -1,0 +1,47 @@
+{
+  "status": "passed direct public regression",
+  "central_text_does_not_change_backbone_clearance": true,
+  "axis_clearance": [
+    {
+      "accver": "format",
+      "label": "1 / 5000",
+      "automatic_breaks": true,
+      "explicit_offset": false,
+      "status": "feature_clearance",
+      "radial_shift_mm": -3.0395
+    },
+    {
+      "accver": "format",
+      "label": "1000",
+      "automatic_breaks": true,
+      "explicit_offset": false,
+      "status": "clear",
+      "radial_shift_mm": 0
+    },
+    {
+      "accver": "format",
+      "label": "2000",
+      "automatic_breaks": true,
+      "explicit_offset": false,
+      "status": "clear",
+      "radial_shift_mm": 0
+    },
+    {
+      "accver": "format",
+      "label": "3000",
+      "automatic_breaks": true,
+      "explicit_offset": false,
+      "status": "clear",
+      "radial_shift_mm": 0
+    },
+    {
+      "accver": "format",
+      "label": "4000",
+      "automatic_breaks": true,
+      "explicit_offset": false,
+      "status": "clear",
+      "radial_shift_mm": 0
+    }
+  ],
+  "package_test_suite_run": false
+}

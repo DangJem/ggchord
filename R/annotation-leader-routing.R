@@ -42,6 +42,8 @@ ggchord_annotation_text_obstacles <- function(registry, layout, include_axis = T
 ggchord_detour_annotation_leaders <- function(registry, layout) {
   if (!isTRUE(layout$circular)) return(registry)
   needed <- any(vapply(registry, function(owner) {
+    sites <- owner$restriction_site
+    if (is.data.frame(sites) && nrow(sites) && any(sites$restriction_component %in% 'leader')) return(TRUE)
     d <- owner$gene_label_repel
     if (!is.data.frame(d) || !nrow(d)) return(FALSE)
     sources <- d$source_row[d$.component %in% 'text' & ggchord_outer_callouts(d)]

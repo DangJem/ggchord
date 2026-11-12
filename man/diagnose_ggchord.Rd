@@ -83,6 +83,10 @@ counted as leaders. Circular label visibility can additionally report
 \code{leader_text_status} for clear, detoured or unresolved static-text routes.
 \code{leader_route_status} records bounded crossing detours or unresolved routes
 while preserving directed endpoints and source-label positions.
+\code{axis_clearance} records available automatic circular label decisions and
+radial shifts in millimetres, positive outward and negative inward.
+Composite site labels use the same bold name and regular coordinate
+fragments, physical gap and text styles as the renderer.
 }
 
 \section{Guide measurements}{

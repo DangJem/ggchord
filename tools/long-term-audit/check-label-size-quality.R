@@ -7,6 +7,7 @@ prefix <- if (adaptive) 'v0.27.0-label-size-adaptive-' else 'v0.27.0-label-size-
 if ('--after' %in% commandArgs(trailingOnly = TRUE)) prefix <- paste0(prefix, 'after-')
 if ('--refined' %in% commandArgs(trailingOnly = TRUE)) prefix <- paste0(prefix, 'refined-')
 if ('--current' %in% commandArgs(trailingOnly = TRUE)) prefix <- paste0(prefix, 'current-')
+if ('--ordered' %in% commandArgs(trailingOnly = TRUE)) prefix <- paste0(prefix, 'ordered-')
 cases <- c('pUC19', 'pTRE_Tight_BI', 'pETDuet_1')
 profiles <- if (adaptive) list(compact = c(6, 6)) else list(compact = c(6, 6), wide = c(12, 8))
 if ('--compact-only' %in% commandArgs(trailingOnly = TRUE)) profiles <- profiles['compact']

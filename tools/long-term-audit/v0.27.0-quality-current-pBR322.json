@@ -11,8 +11,8 @@
     "n_leader_crossings": 0,
     "n_leaders_through_text": 0,
     "n_label_outside_canvas": 0,
-    "mean_leader_length_mm": 16.8142,
-    "max_leader_length_mm": 20.437,
+    "mean_leader_length_mm": 16.8121,
+    "max_leader_length_mm": 20.4344,
     "n_feature_polygons": 6,
     "n_feature_parts_unchecked": 4,
     "n_text_over_feature": 0,
@@ -26,12 +26,12 @@
       "label": "T",
       "text_object": "arc-1/1/pBR322",
       "size_mm": 3.3389,
-      "xmin_mm": 188.4511,
-      "xmax_mm": 191.5928,
-      "ymin_mm": 152.4207,
-      "ymax_mm": 155.4799,
-      "centre_x_mm": 190.022,
-      "centre_y_mm": 153.9503,
+      "xmin_mm": 188.4544,
+      "xmax_mm": 191.5961,
+      "ymin_mm": 152.426,
+      "ymax_mm": 155.4853,
+      "centre_x_mm": 190.0252,
+      "centre_y_mm": 153.9557,
       "width_mm": 2.0472,
       "height_mm": 2.399,
       "angle_radians": -0.9518,
@@ -44,12 +44,12 @@
       "label": "c",
       "text_object": "arc-1/1/pBR322",
       "size_mm": 3.3389,
-      "xmin_mm": 189.7134,
-      "xmax_mm": 192.6393,
-      "ymin_mm": 150.9187,
-      "ymax_mm": 153.6485,
-      "centre_x_mm": 191.1763,
-      "centre_y_mm": 152.2836,
+      "xmin_mm": 189.7167,
+      "xmax_mm": 192.6425,
+      "ymin_mm": 150.9241,
+      "ymax_mm": 153.6539,
+      "centre_x_mm": 191.1796,
+      "centre_y_mm": 152.289,
       "width_mm": 1.6757,
       "height_mm": 2.399,
       "angle_radians": -0.9783,
@@ -62,12 +62,12 @@
       "label": "R",
       "text_object": "arc-1/1/pBR322",
       "size_mm": 3.3389,
-      "xmin_mm": 190.7305,
-      "xmax_mm": 194.0514,
-      "ymin_mm": 148.7578,
-      "ymax_mm": 152.0853,
-      "centre_x_mm": 192.3909,
-      "centre_y_mm": 150.4216,
+      "xmin_mm": 190.7338,
+      "xmax_mm": 194.0546,
+      "ymin_mm": 148.7632,
+      "ymax_mm": 152.0907,
+      "centre_x_mm": 192.3942,
+      "centre_y_mm": 150.427,
       "width_mm": 2.4203,
       "height_mm": 2.399,
       "angle_radians": -1.0073,
@@ -80,12 +80,12 @@
       "label": "r",
       "text_object": "arc-2/2/pBR322",
       "size_mm": 3.3389,
-      "xmin_mm": 143.3547,
-      "xmax_mm": 144.9609,
-      "ymin_mm": 33.5078,
-      "ymax_mm": 36.0908,
-      "centre_x_mm": 144.1578,
-      "centre_y_mm": 34.7993,
+      "xmin_mm": 143.3637,
+      "xmax_mm": 144.9699,
+      "ymin_mm": 33.528,
+      "ymax_mm": 36.111,
+      "centre_x_mm": 144.1668,
+      "centre_y_mm": 34.8195,
       "width_mm": 1.116,
       "height_mm": 2.399,
       "angle_radians": 0.2169,
@@ -98,12 +98,12 @@
       "label": "o",
       "text_object": "arc-2/2/pBR322",
       "size_mm": 3.3389,
-      "xmin_mm": 144.5628,
-      "xmax_mm": 146.9403,
-      "ymin_mm": 33.7829,
-      "ymax_mm": 36.554,
-      "centre_x_mm": 145.7515,
-      "centre_y_mm": 35.1684,
+      "xmin_mm": 144.5718,
+      "xmax_mm": 146.9492,
+      "ymin_mm": 33.803,
+      "ymax_mm": 36.5742,
+      "centre_x_mm": 145.7605,
+      "centre_y_mm": 35.1886,
       "width_mm": 1.8639,
       "height_mm": 2.399,
       "angle_radians": 0.2383,
@@ -116,12 +116,12 @@
       "label": "p",
       "text_object": "arc-2/2/pBR322",
       "size_mm": 3.3389,
-      "xmin_mm": 146.5035,
-      "xmax_mm": 148.9302,
-      "ymin_mm": 34.2719,
-      "ymax_mm": 37.0751,
-      "centre_x_mm": 147.7169,
-      "centre_y_mm": 35.6735,
+      "xmin_mm": 146.5124,
+      "xmax_mm": 148.9392,
+      "ymin_mm": 34.2921,
+      "ymax_mm": 37.0953,
+      "centre_x_mm": 147.7258,
+      "centre_y_mm": 35.6937,
       "width_mm": 1.8639,
       "height_mm": 2.399,
       "angle_radians": 0.2648,
@@ -134,12 +134,12 @@
       "label": "b",
       "text_object": "arc-3/3/pBR322",
       "size_mm": 3.3389,
-      "xmin_mm": 113.3915,
-      "xmax_mm": 115.6404,
-      "ymin_mm": 32.8056,
-      "ymax_mm": 35.4896,
-      "centre_x_mm": 114.516,
-      "centre_y_mm": 34.1476,
+      "xmin_mm": 113.4042,
+      "xmax_mm": 115.6531,
+      "ymin_mm": 32.826,
+      "ymax_mm": 35.51,
+      "centre_x_mm": 114.5286,
+      "centre_y_mm": 34.168,
       "width_mm": 1.8639,
       "height_mm": 2.399,
       "angle_radians": -0.1729,
@@ -152,12 +152,12 @@
       "label": "o",
       "text_object": "arc-3/3/pBR322",
       "size_mm": 3.3389,
-      "xmin_mm": 115.4224,
-      "xmax_mm": 117.6163,
-      "ymin_mm": 32.5023,
-      "ymax_mm": 35.1476,
-      "centre_x_mm": 116.5193,
-      "centre_y_mm": 33.8249,
+      "xmin_mm": 115.435,
+      "xmax_mm": 117.629,
+      "ymin_mm": 32.5227,
+      "ymax_mm": 35.168,
+      "centre_x_mm": 116.532,
+      "centre_y_mm": 33.8453,
       "width_mm": 1.8639,
       "height_mm": 2.399,
       "angle_radians": -0.1464,
@@ -170,12 +170,12 @@
       "label": "m",
       "text_object": "arc-3/3/pBR322",
       "size_mm": 3.3389,
-      "xmin_mm": 117.493,
-      "xmax_mm": 120.5385,
-      "ymin_mm": 32.1487,
-      "ymax_mm": 34.8485,
-      "centre_x_mm": 119.0158,
-      "centre_y_mm": 33.4986,
+      "xmin_mm": 117.5056,
+      "xmax_mm": 120.5511,
+      "ymin_mm": 32.1691,
+      "ymax_mm": 34.8689,
+      "centre_x_mm": 119.0284,
+      "centre_y_mm": 33.519,
       "width_mm": 2.7917,
       "height_mm": 2.399,
       "angle_radians": -0.1135,
@@ -188,12 +188,12 @@
       "label": "o",
       "text_object": "arc-4/4/pBR322",
       "size_mm": 3.3389,
-      "xmin_mm": 64.1001,
-      "xmax_mm": 67.1361,
-      "ymin_mm": 63.3037,
-      "ymax_mm": 66.2189,
-      "centre_x_mm": 65.6181,
-      "centre_y_mm": 64.7613,
+      "xmin_mm": 64.1192,
+      "xmax_mm": 67.1552,
+      "ymin_mm": 63.3202,
+      "ymax_mm": 66.2354,
+      "centre_x_mm": 65.6372,
+      "centre_y_mm": 64.7778,
       "width_mm": 1.8639,
       "height_mm": 2.399,
       "angle_radians": -0.9458,
@@ -206,12 +206,12 @@
       "label": "r",
       "text_object": "arc-4/4/pBR322",
       "size_mm": 3.3389,
-      "xmin_mm": 65.2958,
-      "xmax_mm": 67.883,
-      "ymin_mm": 62.277,
-      "ymax_mm": 64.6128,
-      "centre_x_mm": 66.5894,
-      "centre_y_mm": 63.4449,
+      "xmin_mm": 65.3149,
+      "xmax_mm": 67.9021,
+      "ymin_mm": 62.2936,
+      "ymax_mm": 64.6294,
+      "centre_x_mm": 66.6085,
+      "centre_y_mm": 63.4615,
       "width_mm": 1.116,
       "height_mm": 2.399,
       "angle_radians": -0.9244,
@@ -224,12 +224,12 @@
       "label": "i",
       "text_object": "arc-4/4/pBR322",
       "size_mm": 3.3389,
-      "xmin_mm": 66.0498,
-      "xmax_mm": 68.4014,
-      "ymin_mm": 61.584,
-      "ymax_mm": 63.6431,
-      "centre_x_mm": 67.2256,
-      "centre_y_mm": 62.6136,
+      "xmin_mm": 66.0689,
+      "xmax_mm": 68.4205,
+      "ymin_mm": 61.6006,
+      "ymax_mm": 63.6597,
+      "centre_x_mm": 67.2447,
+      "centre_y_mm": 62.6301,
       "width_mm": 0.7446,
       "height_mm": 2.399,
       "angle_radians": -0.9107,
@@ -242,12 +242,12 @@
       "label": "A",
       "text_object": "arc-5/5/pBR322",
       "size_mm": 3.3389,
-      "xmin_mm": 63.0346,
-      "xmax_mm": 66.2783,
-      "ymin_mm": 151.3581,
-      "ymax_mm": 154.5599,
-      "centre_x_mm": 64.6564,
-      "centre_y_mm": 152.959,
+      "xmin_mm": 63.0536,
+      "xmax_mm": 66.2973,
+      "ymin_mm": 151.363,
+      "ymax_mm": 154.5648,
+      "centre_x_mm": 64.6754,
+      "centre_y_mm": 152.9639,
       "width_mm": 2.2354,
       "height_mm": 2.399,
       "angle_radians": 0.9676,
@@ -260,12 +260,12 @@
       "label": "m",
       "text_object": "arc-5/5/pBR322",
       "size_mm": 3.3389,
-      "xmin_mm": 64.4399,
-      "xmax_mm": 68.0302,
-      "ymin_mm": 153.3302,
-      "ymax_mm": 157.0017,
-      "centre_x_mm": 66.235,
-      "centre_y_mm": 155.1659,
+      "xmin_mm": 64.4589,
+      "xmax_mm": 68.0492,
+      "ymin_mm": 153.335,
+      "ymax_mm": 157.0066,
+      "centre_x_mm": 66.254,
+      "centre_y_mm": 155.1708,
       "width_mm": 2.7917,
       "height_mm": 2.399,
       "angle_radians": 0.9322,
@@ -278,12 +278,12 @@
       "label": "p",
       "text_object": "arc-5/5/pBR322",
       "size_mm": 3.3389,
-      "xmin_mm": 66.25,
-      "xmax_mm": 69.2878,
-      "ymin_mm": 155.6865,
-      "ymax_mm": 158.6383,
-      "centre_x_mm": 67.7689,
-      "centre_y_mm": 157.1624,
+      "xmin_mm": 66.269,
+      "xmax_mm": 69.3067,
+      "ymin_mm": 155.6914,
+      "ymax_mm": 158.6432,
+      "centre_x_mm": 67.7878,
+      "centre_y_mm": 157.1673,
       "width_mm": 1.8639,
       "height_mm": 2.399,
       "angle_radians": 0.8993,
@@ -296,12 +296,12 @@
       "label": "R",
       "text_object": "arc-5/5/pBR322",
       "size_mm": 3.3389,
-      "xmin_mm": 67.5436,
-      "xmax_mm": 70.9382,
-      "ymin_mm": 157.2595,
-      "ymax_mm": 160.6566,
-      "centre_x_mm": 69.2409,
-      "centre_y_mm": 158.958,
+      "xmin_mm": 67.5626,
+      "xmax_mm": 70.9572,
+      "ymin_mm": 157.2643,
+      "ymax_mm": 160.6615,
+      "centre_x_mm": 69.2599,
+      "centre_y_mm": 158.9629,
       "width_mm": 2.4203,
       "height_mm": 2.399,
       "angle_radians": 0.8689,
@@ -314,12 +314,12 @@
       "label": "A",
       "text_object": "arc-6/6/pBR322",
       "size_mm": 3.3389,
-      "xmin_mm": 99.4752,
-      "xmax_mm": 102.4528,
-      "ymin_mm": 173.2868,
-      "ymax_mm": 176.3539,
-      "centre_x_mm": 100.964,
-      "centre_y_mm": 174.8203,
+      "xmin_mm": 99.4886,
+      "xmax_mm": 102.4662,
+      "ymin_mm": 173.2886,
+      "ymax_mm": 176.3557,
+      "centre_x_mm": 100.9774,
+      "centre_y_mm": 174.8222,
       "width_mm": 2.2354,
       "height_mm": 2.399,
       "angle_radians": 0.3886,
@@ -332,12 +332,12 @@
       "label": "m",
       "text_object": "arc-6/6/pBR322",
       "size_mm": 3.3389,
-      "xmin_mm": 101.7718,
-      "xmax_mm": 105.217,
-      "ymin_mm": 174.1943,
-      "ymax_mm": 177.4053,
-      "centre_x_mm": 103.4944,
-      "centre_y_mm": 175.7998,
+      "xmin_mm": 101.7852,
+      "xmax_mm": 105.2304,
+      "ymin_mm": 174.1962,
+      "ymax_mm": 177.4072,
+      "centre_x_mm": 103.5078,
+      "centre_y_mm": 175.8017,
       "width_mm": 2.7917,
       "height_mm": 2.399,
       "angle_radians": 0.3501,
@@ -350,12 +350,12 @@
       "label": "p",
       "text_object": "arc-6/6/pBR322",
       "size_mm": 3.3389,
-      "xmin_mm": 104.6172,
-      "xmax_mm": 107.1315,
-      "ymin_mm": 175.1921,
-      "ymax_mm": 178.0498,
-      "centre_x_mm": 105.8744,
-      "centre_y_mm": 176.621,
+      "xmin_mm": 104.6305,
+      "xmax_mm": 107.1449,
+      "ymin_mm": 175.1939,
+      "ymax_mm": 178.0517,
+      "centre_x_mm": 105.8877,
+      "centre_y_mm": 176.6228,
       "width_mm": 1.8639,
       "height_mm": 2.399,
       "angle_radians": 0.3144,
@@ -368,12 +368,12 @@
       "label": "R",
       "text_object": "arc-6/6/pBR322",
       "size_mm": 3.3389,
-      "xmin_mm": 106.5983,
-      "xmax_mm": 109.5897,
-      "ymin_mm": 175.8141,
-      "ymax_mm": 178.7909,
-      "centre_x_mm": 108.094,
-      "centre_y_mm": 177.3025,
+      "xmin_mm": 106.6116,
+      "xmax_mm": 109.603,
+      "ymin_mm": 175.816,
+      "ymax_mm": 178.7929,
+      "centre_x_mm": 108.1073,
+      "centre_y_mm": 177.3044,
       "width_mm": 2.4203,
       "height_mm": 2.399,
       "angle_radians": 0.2815,
@@ -386,12 +386,12 @@
       "label": " ",
       "text_object": "arc-6/6/pBR322",
       "size_mm": 3.3389,
-      "xmin_mm": 109.1064,
-      "xmax_mm": 110.6136,
-      "ymin_mm": 176.5102,
-      "ymax_mm": 179.0666,
-      "centre_x_mm": 109.86,
-      "centre_y_mm": 177.7884,
+      "xmin_mm": 109.1197,
+      "xmax_mm": 110.6269,
+      "ymin_mm": 176.5121,
+      "ymax_mm": 179.0685,
+      "centre_x_mm": 109.8733,
+      "centre_y_mm": 177.7903,
       "width_mm": 0.9311,
       "height_mm": 2.399,
       "angle_radians": 0.2555,
@@ -404,12 +404,12 @@
       "label": "p",
       "text_object": "arc-6/6/pBR322",
       "size_mm": 3.3389,
-      "xmin_mm": 110.1687,
-      "xmax_mm": 112.5375,
-      "ymin_mm": 176.7784,
-      "ymax_mm": 179.5438,
-      "centre_x_mm": 111.3531,
-      "centre_y_mm": 178.1611,
+      "xmin_mm": 110.182,
+      "xmax_mm": 112.5508,
+      "ymin_mm": 176.7803,
+      "ymax_mm": 179.5457,
+      "centre_x_mm": 111.3664,
+      "centre_y_mm": 178.163,
       "width_mm": 1.8639,
       "height_mm": 2.399,
       "angle_radians": 0.2337,
@@ -422,12 +422,12 @@
       "label": "r",
       "text_object": "arc-6/6/pBR322",
       "size_mm": 3.3389,
-      "xmin_mm": 112.1525,
-      "xmax_mm": 113.7451,
-      "ymin_mm": 177.2318,
-      "ymax_mm": 179.811,
-      "centre_x_mm": 112.9488,
-      "centre_y_mm": 178.5214,
+      "xmin_mm": 112.1658,
+      "xmax_mm": 113.7584,
+      "ymin_mm": 177.2337,
+      "ymax_mm": 179.8129,
+      "centre_x_mm": 112.9621,
+      "centre_y_mm": 178.5233,
       "width_mm": 1.116,
       "height_mm": 2.399,
       "angle_radians": 0.2105,
@@ -440,12 +440,12 @@
       "label": "o",
       "text_object": "arc-6/6/pBR322",
       "size_mm": 3.3389,
-      "xmin_mm": 113.4135,
-      "xmax_mm": 115.6915,
-      "ymin_mm": 177.4926,
-      "ymax_mm": 180.1967,
-      "centre_x_mm": 114.5525,
-      "centre_y_mm": 178.8446,
+      "xmin_mm": 113.4268,
+      "xmax_mm": 115.7047,
+      "ymin_mm": 177.4945,
+      "ymax_mm": 180.1986,
+      "centre_x_mm": 114.5658,
+      "centre_y_mm": 178.8465,
       "width_mm": 1.8639,
       "height_mm": 2.399,
       "angle_radians": 0.1873,
@@ -458,12 +458,12 @@
       "label": "m",
       "text_object": "arc-6/6/pBR322",
       "size_mm": 3.3389,
-      "xmin_mm": 115.473,
-      "xmax_mm": 118.5951,
-      "ymin_mm": 177.8726,
-      "ymax_mm": 180.6657,
-      "centre_x_mm": 117.034,
-      "centre_y_mm": 179.2692,
+      "xmin_mm": 115.4863,
+      "xmax_mm": 118.6083,
+      "ymin_mm": 177.8745,
+      "ymax_mm": 180.6676,
+      "centre_x_mm": 117.0473,
+      "centre_y_mm": 179.2711,
       "width_mm": 2.7917,
       "height_mm": 2.399,
       "angle_radians": 0.1516,
@@ -476,12 +476,12 @@
       "label": "o",
       "text_object": "arc-6/6/pBR322",
       "size_mm": 3.3389,
-      "xmin_mm": 118.4648,
-      "xmax_mm": 120.5936,
-      "ymin_mm": 178.3057,
-      "ymax_mm": 180.9041,
-      "centre_x_mm": 119.5292,
-      "centre_y_mm": 179.6049,
+      "xmin_mm": 118.4781,
+      "xmax_mm": 120.6069,
+      "ymin_mm": 178.3076,
+      "ymax_mm": 180.906,
+      "centre_x_mm": 119.5425,
+      "centre_y_mm": 179.6068,
       "width_mm": 1.8639,
       "height_mm": 2.399,
       "angle_radians": 0.1159,
@@ -494,12 +494,12 @@
       "label": "t",
       "text_object": "arc-6/6/pBR322",
       "size_mm": 3.3389,
-      "xmin_mm": 120.4834,
-      "xmax_mm": 121.6358,
-      "ymin_mm": 178.5283,
-      "ymax_mm": 181.0041,
-      "centre_x_mm": 121.0596,
-      "centre_y_mm": 179.7662,
+      "xmin_mm": 120.4967,
+      "xmax_mm": 121.6491,
+      "ymin_mm": 178.5301,
+      "ymax_mm": 181.006,
+      "centre_x_mm": 121.0729,
+      "centre_y_mm": 179.768,
       "width_mm": 0.9311,
       "height_mm": 2.399,
       "angle_radians": 0.0941,
@@ -512,12 +512,12 @@
       "label": "e",
       "text_object": "arc-6/6/pBR322",
       "size_mm": 3.3389,
-      "xmin_mm": 121.5771,
-      "xmax_mm": 123.6093,
-      "ymin_mm": 178.6304,
-      "ymax_mm": 181.1577,
-      "centre_x_mm": 122.5932,
-      "centre_y_mm": 179.8941,
+      "xmin_mm": 121.5904,
+      "xmax_mm": 123.6226,
+      "ymin_mm": 178.6322,
+      "ymax_mm": 181.1595,
+      "centre_x_mm": 122.6065,
+      "centre_y_mm": 179.8959,
       "width_mm": 1.8639,
       "height_mm": 2.399,
       "angle_radians": 0.0723,
@@ -530,12 +530,12 @@
       "label": "r",
       "text_object": "arc-6/6/pBR322",
       "size_mm": 3.3389,
-      "xmin_mm": 123.6099,
-      "xmax_mm": 124.8423,
-      "ymin_mm": 178.7678,
-      "ymax_mm": 181.2187,
-      "centre_x_mm": 124.2261,
-      "centre_y_mm": 179.9933,
+      "xmin_mm": 123.6232,
+      "xmax_mm": 124.8555,
+      "ymin_mm": 178.7696,
+      "ymax_mm": 181.2204,
+      "centre_x_mm": 124.2393,
+      "centre_y_mm": 179.995,
       "width_mm": 1.116,
       "height_mm": 2.399,
       "angle_radians": 0.0491,
@@ -548,13 +548,13 @@
       "label": "AbaAI (727)",
       "text_object": "row-1",
       "size_mm": 2.5,
-      "xmin_mm": 224.6746,
-      "xmax_mm": 238.0657,
-      "ymin_mm": 154.0035,
-      "ymax_mm": 155.7997,
-      "centre_x_mm": 231.3701,
-      "centre_y_mm": 154.9016,
-      "width_mm": 13.3911,
+      "xmin_mm": 224.7989,
+      "xmax_mm": 238.1428,
+      "ymin_mm": 154.0085,
+      "ymax_mm": 155.8047,
+      "centre_x_mm": 231.4709,
+      "centre_y_mm": 154.9066,
+      "width_mm": 13.3439,
       "height_mm": 1.7963,
       "angle_radians": 0,
       "layer_id": "layer-0004",
@@ -566,13 +566,13 @@
       "label": "AbaHI (2180)",
       "text_object": "row-2",
       "size_mm": 2.5,
-      "xmin_mm": 120.2851,
-      "xmax_mm": 135.2103,
-      "ymin_mm": 9.3677,
-      "ymax_mm": 11.164,
-      "centre_x_mm": 127.7477,
-      "centre_y_mm": 10.2659,
-      "width_mm": 14.9251,
+      "xmin_mm": 120.32,
+      "xmax_mm": 135.1979,
+      "ymin_mm": 9.3793,
+      "ymax_mm": 11.1756,
+      "centre_x_mm": 127.759,
+      "centre_y_mm": 10.2775,
+      "width_mm": 14.878,
       "height_mm": 1.7963,
       "angle_radians": 0,
       "layer_id": "layer-0004",
@@ -581,16 +581,16 @@
     },
     {
       "source_row": 3,
-      "label": "AbaAI (3634)",
+      "label": "(3634) AbaAI",
       "text_object": "row-3",
       "size_mm": 2.5,
-      "xmin_mm": 15.923,
-      "xmax_mm": 30.7096,
-      "ymin_mm": 154.0035,
-      "ymax_mm": 155.7997,
-      "centre_x_mm": 23.3163,
-      "centre_y_mm": 154.9016,
-      "width_mm": 14.7867,
+      "xmin_mm": 15.8571,
+      "xmax_mm": 30.5966,
+      "ymin_mm": 154.0085,
+      "ymax_mm": 155.8047,
+      "centre_x_mm": 23.2269,
+      "centre_y_mm": 154.9066,
+      "width_mm": 14.7395,
       "height_mm": 1.7963,
       "angle_radians": 0,
       "layer_id": "layer-0004",
@@ -602,12 +602,12 @@
       "label": "1",
       "text_object": "arc-1/NA/pBR322",
       "size_mm": 2.7414,
-      "xmin_mm": 128.8252,
-      "xmax_mm": 130.4022,
-      "ymin_mm": 189.1503,
-      "ymax_mm": 191.156,
-      "centre_x_mm": 129.6137,
-      "centre_y_mm": 190.1531,
+      "xmin_mm": 128.8365,
+      "xmax_mm": 130.4135,
+      "ymin_mm": 189.1504,
+      "ymax_mm": 191.1561,
+      "centre_x_mm": 129.625,
+      "centre_y_mm": 190.1533,
       "width_mm": 1.5303,
       "height_mm": 1.9697,
       "angle_radians": -0.0239,
@@ -620,12 +620,12 @@
       "label": " ",
       "text_object": "arc-1/NA/pBR322",
       "size_mm": 2.7414,
-      "xmin_mm": 130.4371,
-      "xmax_mm": 131.2785,
-      "ymin_mm": 189.1147,
-      "ymax_mm": 191.1129,
-      "centre_x_mm": 130.8578,
-      "centre_y_mm": 190.1138,
+      "xmin_mm": 130.4484,
+      "xmax_mm": 131.2898,
+      "ymin_mm": 189.1148,
+      "ymax_mm": 191.113,
+      "centre_x_mm": 130.8691,
+      "centre_y_mm": 190.1139,
       "width_mm": 0.7645,
       "height_mm": 1.9697,
       "angle_radians": -0.0393,
@@ -638,12 +638,12 @@
       "label": "/",
       "text_object": "arc-1/NA/pBR322",
       "size_mm": 2.7414,
-      "xmin_mm": 131.2785,
-      "xmax_mm": 132.1404,
-      "ymin_mm": 189.0731,
-      "ymax_mm": 191.0784,
-      "centre_x_mm": 131.7095,
-      "centre_y_mm": 190.0758,
+      "xmin_mm": 131.2898,
+      "xmax_mm": 132.1516,
+      "ymin_mm": 189.0732,
+      "ymax_mm": 191.0786,
+      "centre_x_mm": 131.7207,
+      "centre_y_mm": 190.0759,
       "width_mm": 0.7645,
       "height_mm": 1.9697,
       "angle_radians": -0.0499,
@@ -656,12 +656,12 @@
       "label": " ",
       "text_object": "arc-1/NA/pBR322",
       "size_mm": 2.7414,
-      "xmin_mm": 132.1196,
-      "xmax_mm": 133.0018,
-      "ymin_mm": 189.0226,
-      "ymax_mm": 191.0349,
-      "centre_x_mm": 132.5607,
-      "centre_y_mm": 190.0287,
+      "xmin_mm": 132.1308,
+      "xmax_mm": 133.013,
+      "ymin_mm": 189.0227,
+      "ymax_mm": 191.035,
+      "centre_x_mm": 132.5719,
+      "centre_y_mm": 190.0288,
       "width_mm": 0.7645,
       "height_mm": 1.9697,
       "angle_radians": -0.0605,
@@ -674,12 +674,12 @@
       "label": "4",
       "text_object": "arc-1/NA/pBR322",
       "size_mm": 2.7414,
-      "xmin_mm": 132.9648,
-      "xmax_mm": 134.6402,
-      "ymin_mm": 188.9038,
-      "ymax_mm": 190.9839,
-      "centre_x_mm": 133.8025,
-      "centre_y_mm": 189.9439,
+      "xmin_mm": 132.9761,
+      "xmax_mm": 134.6514,
+      "ymin_mm": 188.904,
+      "ymax_mm": 190.9841,
+      "centre_x_mm": 133.8138,
+      "centre_y_mm": 189.944,
       "width_mm": 1.5303,
       "height_mm": 1.9697,
       "angle_radians": -0.0759,
@@ -692,12 +692,12 @@
       "label": "3",
       "text_object": "arc-1/NA/pBR322",
       "size_mm": 2.7414,
-      "xmin_mm": 134.5772,
-      "xmax_mm": 136.2897,
+      "xmin_mm": 134.5884,
+      "xmax_mm": 136.3009,
       "ymin_mm": 188.7494,
-      "ymax_mm": 190.857,
-      "centre_x_mm": 135.4334,
-      "centre_y_mm": 189.8032,
+      "ymax_mm": 190.8571,
+      "centre_x_mm": 135.4446,
+      "centre_y_mm": 189.8033,
       "width_mm": 1.5303,
       "height_mm": 1.9697,
       "angle_radians": -0.0962,
@@ -710,11 +710,11 @@
       "label": "6",
       "text_object": "arc-1/NA/pBR322",
       "size_mm": 2.7414,
-      "xmin_mm": 136.1866,
-      "xmax_mm": 137.9356,
-      "ymin_mm": 188.5622,
-      "ymax_mm": 190.6965,
-      "centre_x_mm": 137.0611,
+      "xmin_mm": 136.1978,
+      "xmax_mm": 137.9468,
+      "ymin_mm": 188.5623,
+      "ymax_mm": 190.6966,
+      "centre_x_mm": 137.0723,
       "centre_y_mm": 189.6294,
       "width_mm": 1.5303,
       "height_mm": 1.9697,
@@ -728,12 +728,12 @@
       "label": "1",
       "text_object": "arc-1/NA/pBR322",
       "size_mm": 2.7414,
-      "xmin_mm": 137.7926,
-      "xmax_mm": 139.5773,
-      "ymin_mm": 188.3425,
+      "xmin_mm": 137.8038,
+      "xmax_mm": 139.5885,
+      "ymin_mm": 188.3426,
       "ymax_mm": 190.5026,
-      "centre_x_mm": 138.685,
-      "centre_y_mm": 189.4225,
+      "centre_x_mm": 138.6962,
+      "centre_y_mm": 189.4226,
       "width_mm": 1.5303,
       "height_mm": 1.9697,
       "angle_radians": -0.1368,
@@ -746,12 +746,12 @@
       "label": "1",
       "text_object": "arc-2/NA/pBR322",
       "size_mm": 2.7414,
-      "xmin_mm": 206.8007,
-      "xmax_mm": 208.9228,
-      "ymin_mm": 117.3001,
-      "ymax_mm": 119.0323,
-      "centre_x_mm": 207.8617,
-      "centre_y_mm": 118.1662,
+      "xmin_mm": 206.8015,
+      "xmax_mm": 208.9235,
+      "ymin_mm": 117.3095,
+      "ymax_mm": 119.0417,
+      "centre_x_mm": 207.8625,
+      "centre_y_mm": 118.1756,
       "width_mm": 1.5303,
       "height_mm": 1.9697,
       "angle_radians": -1.4636,
@@ -764,12 +764,12 @@
       "label": "0",
       "text_object": "arc-2/NA/pBR322",
       "size_mm": 2.7414,
-      "xmin_mm": 206.9728,
-      "xmax_mm": 209.0678,
-      "ymin_mm": 115.6892,
-      "ymax_mm": 117.3846,
-      "centre_x_mm": 208.0203,
-      "centre_y_mm": 116.5369,
+      "xmin_mm": 206.9735,
+      "xmax_mm": 209.0685,
+      "ymin_mm": 115.6986,
+      "ymax_mm": 117.394,
+      "centre_x_mm": 208.021,
+      "centre_y_mm": 116.5463,
       "width_mm": 1.5303,
       "height_mm": 1.9697,
       "angle_radians": -1.4839,
@@ -782,15 +782,15 @@
       "label": "0",
       "text_object": "arc-2/NA/pBR322",
       "size_mm": 2.7414,
-      "xmin_mm": 207.1122,
-      "xmax_mm": 209.1793,
-      "ymin_mm": 114.0758,
-      "ymax_mm": 115.7338,
-      "centre_x_mm": 208.1457,
-      "centre_y_mm": 114.9048,
+      "xmin_mm": 207.1129,
+      "xmax_mm": 209.18,
+      "ymin_mm": 114.0852,
+      "ymax_mm": 115.7432,
+      "centre_x_mm": 208.1465,
+      "centre_y_mm": 114.9142,
       "width_mm": 1.5303,
       "height_mm": 1.9697,
-      "angle_radians": -1.5042,
+      "angle_radians": -1.5043,
       "layer_id": "native-5",
       "text_id": "text-43",
       "label_id": "native-5/arc-2/NA/pBR322"
@@ -800,15 +800,15 @@
       "label": "0",
       "text_object": "arc-2/NA/pBR322",
       "size_mm": 2.7414,
-      "xmin_mm": 207.2188,
-      "xmax_mm": 209.2572,
-      "ymin_mm": 112.4605,
-      "ymax_mm": 114.0803,
-      "centre_x_mm": 208.238,
-      "centre_y_mm": 113.2704,
+      "xmin_mm": 207.2195,
+      "xmax_mm": 209.2579,
+      "ymin_mm": 112.47,
+      "ymax_mm": 114.0897,
+      "centre_x_mm": 208.2387,
+      "centre_y_mm": 113.2798,
       "width_mm": 1.5303,
       "height_mm": 1.9697,
-      "angle_radians": -1.5245,
+      "angle_radians": -1.5246,
       "layer_id": "native-5",
       "text_id": "text-44",
       "label_id": "native-5/arc-2/NA/pBR322"
@@ -819,55 +819,73 @@
       "leader_id": "layer-0004/restriction_site/1/",
       "layer_id": "layer-0004",
       "source_row": 1,
-      "x0": 204.2958,
-      "y0": 153.7326,
-      "x1": 206.3225,
-      "y1": 154.9016
+      "x0": 204.2974,
+      "y0": 153.7377,
+      "x1": 206.3238,
+      "y1": 154.9066
     },
     {
       "leader_id": "layer-0004/restriction_site/1/",
       "layer_id": "layer-0004",
       "source_row": 1,
-      "x0": 206.3225,
-      "y0": 154.9016,
-      "x1": 224.4198,
-      "y1": 154.9016
+      "x0": 206.3238,
+      "y0": 154.9066,
+      "x1": 224.4188,
+      "y1": 154.9066
     },
     {
       "leader_id": "layer-0004/restriction_site/2/",
       "layer_id": "layer-0004",
       "source_row": 2,
-      "x0": 127.7477,
-      "y0": 21.102,
-      "x1": 127.7493,
-      "y1": 18.7617
+      "x0": 127.759,
+      "y0": 21.1239,
+      "x1": 127.7606,
+      "y1": 18.784
     },
     {
       "leader_id": "layer-0004/restriction_site/2/",
       "layer_id": "layer-0004",
       "source_row": 2,
-      "x0": 127.7493,
-      "y0": 18.7617,
-      "x1": 127.7477,
-      "y1": 11.5332
+      "x0": 127.7606,
+      "y0": 18.784,
+      "x1": 127.759,
+      "y1": 11.5564
     },
     {
       "leader_id": "layer-0004/restriction_site/3/",
       "layer_id": "layer-0004",
       "source_row": 3,
-      "x0": 51.077,
-      "y0": 153.7326,
-      "x1": 49.0504,
-      "y1": 154.9016
+      "x0": 51.098,
+      "y0": 153.7377,
+      "x1": 49.0716,
+      "y1": 154.9066
     },
     {
       "leader_id": "layer-0004/restriction_site/3/",
       "layer_id": "layer-0004",
       "source_row": 3,
-      "x0": 49.0504,
-      "y0": 154.9016,
-      "x1": 30.9531,
-      "y1": 154.9016
+      "x0": 49.0716,
+      "y0": 154.9066,
+      "x1": 30.9766,
+      "y1": 154.9066
+    }
+  ],
+  "axis_clearance": [
+    {
+      "accver": "pBR322",
+      "label": "1 / 4361",
+      "automatic_breaks": true,
+      "explicit_offset": false,
+      "status": "clear",
+      "radial_shift_mm": 0
+    },
+    {
+      "accver": "pBR322",
+      "label": "1000",
+      "automatic_breaks": true,
+      "explicit_offset": false,
+      "status": "clear",
+      "radial_shift_mm": 0
     }
   ],
   "feature_contacts": [
@@ -913,495 +931,79 @@
       "layer_id": "layer-0002",
       "source_row": 1,
       "source_id": "feature:1",
-      "x_mm": 136.7426,
-      "y_mm": 182.9065
+      "x_mm": 136.7527,
+      "y_mm": 182.908
     },
     {
       "polygon_id": "layer-0002/101",
       "layer_id": "layer-0002",
       "source_row": 1,
       "source_id": "feature:1",
-      "x_mm": 140.4191,
-      "y_mm": 182.3585
+      "x_mm": 140.4288,
+      "y_mm": 182.36
     },
     {
       "polygon_id": "layer-0002/101",
       "layer_id": "layer-0002",
       "source_row": 1,
       "source_id": "feature:1",
-      "x_mm": 143.8368,
-      "y_mm": 181.6775
+      "x_mm": 143.8461,
+      "y_mm": 181.6791
     },
     {
       "polygon_id": "layer-0002/101",
       "layer_id": "layer-0002",
       "source_row": 1,
       "source_id": "feature:1",
-      "x_mm": 147.4426,
-      "y_mm": 180.7744
+      "x_mm": 147.4514,
+      "y_mm": 180.7762
     },
     {
       "polygon_id": "layer-0002/101",
       "layer_id": "layer-0002",
       "source_row": 1,
       "source_id": "feature:1",
-      "x_mm": 150.7778,
-      "y_mm": 179.7641
+      "x_mm": 150.7862,
+      "y_mm": 179.766
     },
     {
       "polygon_id": "layer-0002/101",
       "layer_id": "layer-0002",
       "source_row": 1,
       "source_id": "feature:1",
-      "x_mm": 154.2786,
-      "y_mm": 178.5146
+      "x_mm": 154.2866,
+      "y_mm": 178.5166
     },
     {
       "polygon_id": "layer-0002/101",
       "layer_id": "layer-0002",
       "source_row": 1,
       "source_id": "feature:1",
-      "x_mm": 157.4998,
-      "y_mm": 177.1846
+      "x_mm": 157.5073,
+      "y_mm": 177.1868
     },
     {
       "polygon_id": "layer-0002/101",
       "layer_id": "layer-0002",
       "source_row": 1,
       "source_id": "feature:1",
-      "x_mm": 160.8624,
-      "y_mm": 175.6004
+      "x_mm": 160.8695,
+      "y_mm": 175.6028
     },
     {
       "polygon_id": "layer-0002/101",
       "layer_id": "layer-0002",
       "source_row": 1,
       "source_id": "feature:1",
-      "x_mm": 163.9389,
-      "y_mm": 173.9634
+      "x_mm": 163.9456,
+      "y_mm": 173.966
     },
     {
       "polygon_id": "layer-0002/101",
       "layer_id": "layer-0002",
       "source_row": 1,
       "source_id": "feature:1",
-      "x_mm": 167.1315,
-      "y_mm": 172.0596
-    },
-    {
-      "polygon_id": "layer-0002/101",
-      "layer_id": "layer-0002",
-      "source_row": 1,
-      "source_id": "feature:1",
-      "x_mm": 170.0341,
-      "y_mm": 170.1311
-    },
-    {
-      "polygon_id": "layer-0002/101",
-      "layer_id": "layer-0002",
-      "source_row": 1,
-      "source_id": "feature:1",
-      "x_mm": 173.0263,
-      "y_mm": 167.9257
-    },
-    {
-      "polygon_id": "layer-0002/101",
-      "layer_id": "layer-0002",
-      "source_row": 1,
-      "source_id": "feature:1",
-      "x_mm": 175.7275,
-      "y_mm": 165.7239
-    },
-    {
-      "polygon_id": "layer-0002/101",
-      "layer_id": "layer-0002",
-      "source_row": 1,
-      "source_id": "feature:1",
-      "x_mm": 178.322,
-      "y_mm": 163.3973
-    },
-    {
-      "polygon_id": "layer-0002/101",
-      "layer_id": "layer-0002",
-      "source_row": 1,
-      "source_id": "feature:1",
-      "x_mm": 180.9652,
-      "y_mm": 160.7838
-    },
-    {
-      "polygon_id": "layer-0002/101",
-      "layer_id": "layer-0002",
-      "source_row": 1,
-      "source_id": "feature:1",
-      "x_mm": 183.3211,
-      "y_mm": 158.2158
-    },
-    {
-      "polygon_id": "layer-0002/101",
-      "layer_id": "layer-0002",
-      "source_row": 1,
-      "source_id": "feature:1",
-      "x_mm": 185.6975,
-      "y_mm": 155.3576
-    },
-    {
-      "polygon_id": "layer-0002/101",
-      "layer_id": "layer-0002",
-      "source_row": 1,
-      "source_id": "feature:1",
-      "x_mm": 187.7923,
-      "y_mm": 152.5726
-    },
-    {
-      "polygon_id": "layer-0002/101",
-      "layer_id": "layer-0002",
-      "source_row": 1,
-      "source_id": "feature:1",
-      "x_mm": 189.8794,
-      "y_mm": 149.4967
-    },
-    {
-      "polygon_id": "layer-0002/101",
-      "layer_id": "layer-0002",
-      "source_row": 1,
-      "source_id": "feature:1",
-      "x_mm": 191.6934,
-      "y_mm": 146.5212
-    },
-    {
-      "polygon_id": "layer-0002/101",
-      "layer_id": "layer-0002",
-      "source_row": 1,
-      "source_id": "feature:1",
-      "x_mm": 193.4714,
-      "y_mm": 143.2568
-    },
-    {
-      "polygon_id": "layer-0002/101",
-      "layer_id": "layer-0002",
-      "source_row": 1,
-      "source_id": "feature:1",
-      "x_mm": 194.9873,
-      "y_mm": 140.1189
-    },
-    {
-      "polygon_id": "layer-0002/101",
-      "layer_id": "layer-0002",
-      "source_row": 1,
-      "source_id": "feature:1",
-      "x_mm": 196.4392,
-      "y_mm": 136.6971
-    },
-    {
-      "polygon_id": "layer-0002/101",
-      "layer_id": "layer-0002",
-      "source_row": 1,
-      "source_id": "feature:1",
-      "x_mm": 197.6426,
-      "y_mm": 133.4266
-    },
-    {
-      "polygon_id": "layer-0002/101",
-      "layer_id": "layer-0002",
-      "source_row": 1,
-      "source_id": "feature:1",
-      "x_mm": 198.7549,
-      "y_mm": 129.8797
-    },
-    {
-      "polygon_id": "layer-0002/101",
-      "layer_id": "layer-0002",
-      "source_row": 1,
-      "source_id": "feature:1",
-      "x_mm": 199.6344,
-      "y_mm": 126.5077
-    },
-    {
-      "polygon_id": "layer-0002/101",
-      "layer_id": "layer-0002",
-      "source_row": 1,
-      "source_id": "feature:1",
-      "x_mm": 200.3963,
-      "y_mm": 122.8694
-    },
-    {
-      "polygon_id": "layer-0002/101",
-      "layer_id": "layer-0002",
-      "source_row": 1,
-      "source_id": "feature:1",
-      "x_mm": 200.9436,
-      "y_mm": 119.4278
-    },
-    {
-      "polygon_id": "layer-0002/101",
-      "layer_id": "layer-0002",
-      "source_row": 1,
-      "source_id": "feature:1",
-      "x_mm": 201.3281,
-      "y_mm": 115.9642
-    },
-    {
-      "polygon_id": "layer-0002/101",
-      "layer_id": "layer-0002",
-      "source_row": 1,
-      "source_id": "feature:1",
-      "x_mm": 201.5578,
-      "y_mm": 112.2542
-    },
-    {
-      "polygon_id": "layer-0002/101",
-      "layer_id": "layer-0002",
-      "source_row": 1,
-      "source_id": "feature:1",
-      "x_mm": 201.6035,
-      "y_mm": 108.7696
-    },
-    {
-      "polygon_id": "layer-0002/101",
-      "layer_id": "layer-0002",
-      "source_row": 1,
-      "source_id": "feature:1",
-      "x_mm": 201.4713,
-      "y_mm": 105.0548
-    },
-    {
-      "polygon_id": "layer-0002/101",
-      "layer_id": "layer-0002",
-      "source_row": 1,
-      "source_id": "feature:1",
-      "x_mm": 201.1778,
-      "y_mm": 101.5823
-    },
-    {
-      "polygon_id": "layer-0002/101",
-      "layer_id": "layer-0002",
-      "source_row": 1,
-      "source_id": "feature:1",
-      "x_mm": 200.6847,
-      "y_mm": 97.898
-    },
-    {
-      "polygon_id": "layer-0002/101",
-      "layer_id": "layer-0002",
-      "source_row": 1,
-      "source_id": "feature:1",
-      "x_mm": 200.0548,
-      "y_mm": 94.4705
-    },
-    {
-      "polygon_id": "layer-0002/101",
-      "layer_id": "layer-0002",
-      "source_row": 1,
-      "source_id": "feature:1",
-      "x_mm": 198.9791,
-      "y_mm": 94.6925
-    },
-    {
-      "polygon_id": "layer-0002/101",
-      "layer_id": "layer-0002",
-      "source_row": 1,
-      "source_id": "feature:1",
-      "x_mm": 201.4879,
-      "y_mm": 89.2656
-    },
-    {
-      "polygon_id": "layer-0002/101",
-      "layer_id": "layer-0002",
-      "source_row": 1,
-      "source_id": "feature:1",
-      "x_mm": 206.2528,
-      "y_mm": 93.1914
-    },
-    {
-      "polygon_id": "layer-0002/101",
-      "layer_id": "layer-0002",
-      "source_row": 1,
-      "source_id": "feature:1",
-      "x_mm": 205.1771,
-      "y_mm": 93.4134
-    },
-    {
-      "polygon_id": "layer-0002/101",
-      "layer_id": "layer-0002",
-      "source_row": 1,
-      "source_id": "feature:1",
-      "x_mm": 205.8511,
-      "y_mm": 97.0835
-    },
-    {
-      "polygon_id": "layer-0002/101",
-      "layer_id": "layer-0002",
-      "source_row": 1,
-      "source_id": "feature:1",
-      "x_mm": 206.3786,
-      "y_mm": 101.0285
-    },
-    {
-      "polygon_id": "layer-0002/101",
-      "layer_id": "layer-0002",
-      "source_row": 1,
-      "source_id": "feature:1",
-      "x_mm": 206.6924,
-      "y_mm": 104.7467
-    },
-    {
-      "polygon_id": "layer-0002/101",
-      "layer_id": "layer-0002",
-      "source_row": 1,
-      "source_id": "feature:1",
-      "x_mm": 206.8336,
-      "y_mm": 108.7244
-    },
-    {
-      "polygon_id": "layer-0002/101",
-      "layer_id": "layer-0002",
-      "source_row": 1,
-      "source_id": "feature:1",
-      "x_mm": 206.7842,
-      "y_mm": 112.4555
-    },
-    {
-      "polygon_id": "layer-0002/101",
-      "layer_id": "layer-0002",
-      "source_row": 1,
-      "source_id": "feature:1",
-      "x_mm": 206.5377,
-      "y_mm": 116.428
-    },
-    {
-      "polygon_id": "layer-0002/101",
-      "layer_id": "layer-0002",
-      "source_row": 1,
-      "source_id": "feature:1",
-      "x_mm": 206.1256,
-      "y_mm": 120.1366
-    },
-    {
-      "polygon_id": "layer-0002/101",
-      "layer_id": "layer-0002",
-      "source_row": 1,
-      "source_id": "feature:1",
-      "x_mm": 205.5391,
-      "y_mm": 123.8217
-    },
-    {
-      "polygon_id": "layer-0002/101",
-      "layer_id": "layer-0002",
-      "source_row": 1,
-      "source_id": "feature:1",
-      "x_mm": 204.7228,
-      "y_mm": 127.7172
-    },
-    {
-      "polygon_id": "layer-0002/101",
-      "layer_id": "layer-0002",
-      "source_row": 1,
-      "source_id": "feature:1",
-      "x_mm": 203.7806,
-      "y_mm": 131.3278
-    },
-    {
-      "polygon_id": "layer-0002/101",
-      "layer_id": "layer-0002",
-      "source_row": 1,
-      "source_id": "feature:1",
-      "x_mm": 202.5893,
-      "y_mm": 135.1254
-    },
-    {
-      "polygon_id": "layer-0002/101",
-      "layer_id": "layer-0002",
-      "source_row": 1,
-      "source_id": "feature:1",
-      "x_mm": 201.3003,
-      "y_mm": 138.6272
-    },
-    {
-      "polygon_id": "layer-0002/101",
-      "layer_id": "layer-0002",
-      "source_row": 1,
-      "source_id": "feature:1",
-      "x_mm": 199.7452,
-      "y_mm": 142.2909
-    },
-    {
-      "polygon_id": "layer-0002/101",
-      "layer_id": "layer-0002",
-      "source_row": 1,
-      "source_id": "feature:1",
-      "x_mm": 198.1216,
-      "y_mm": 145.6507
-    },
-    {
-      "polygon_id": "layer-0002/101",
-      "layer_id": "layer-0002",
-      "source_row": 1,
-      "source_id": "feature:1",
-      "x_mm": 196.2174,
-      "y_mm": 149.1458
-    },
-    {
-      "polygon_id": "layer-0002/101",
-      "layer_id": "layer-0002",
-      "source_row": 1,
-      "source_id": "feature:1",
-      "x_mm": 194.2748,
-      "y_mm": 152.3316
-    },
-    {
-      "polygon_id": "layer-0002/101",
-      "layer_id": "layer-0002",
-      "source_row": 1,
-      "source_id": "feature:1",
-      "x_mm": 192.0396,
-      "y_mm": 155.6249
-    },
-    {
-      "polygon_id": "layer-0002/101",
-      "layer_id": "layer-0002",
-      "source_row": 1,
-      "source_id": "feature:1",
-      "x_mm": 189.7962,
-      "y_mm": 158.6066
-    },
-    {
-      "polygon_id": "layer-0002/101",
-      "layer_id": "layer-0002",
-      "source_row": 1,
-      "source_id": "feature:1",
-      "x_mm": 187.2512,
-      "y_mm": 161.6668
-    },
-    {
-      "polygon_id": "layer-0002/101",
-      "layer_id": "layer-0002",
-      "source_row": 1,
-      "source_id": "feature:1",
-      "x_mm": 184.7284,
-      "y_mm": 164.4162
-    },
-    {
-      "polygon_id": "layer-0002/101",
-      "layer_id": "layer-0002",
-      "source_row": 1,
-      "source_id": "feature:1",
-      "x_mm": 181.8978,
-      "y_mm": 167.2143
-    },
-    {
-      "polygon_id": "layer-0002/101",
-      "layer_id": "layer-0002",
-      "source_row": 1,
-      "source_id": "feature:1",
-      "x_mm": 179.1195,
-      "y_mm": 169.7052
-    },
-    {
-      "polygon_id": "layer-0002/101",
-      "layer_id": "layer-0002",
-      "source_row": 1,
-      "source_id": "feature:1",
-      "x_mm": 176.2268,
+      "x_mm": 167.1377,
       "y_mm": 172.0624
     },
     {
@@ -1409,3384 +1011,3800 @@
       "layer_id": "layer-0002",
       "source_row": 1,
       "source_id": "feature:1",
-      "x_mm": 173.0226,
-      "y_mm": 174.4234
+      "x_mm": 170.04,
+      "y_mm": 170.1342
     },
     {
       "polygon_id": "layer-0002/101",
       "layer_id": "layer-0002",
       "source_row": 1,
       "source_id": "feature:1",
-      "x_mm": 169.9144,
-      "y_mm": 176.488
+      "x_mm": 173.0318,
+      "y_mm": 167.9291
     },
     {
       "polygon_id": "layer-0002/101",
       "layer_id": "layer-0002",
       "source_row": 1,
       "source_id": "feature:1",
-      "x_mm": 166.4956,
-      "y_mm": 178.5261
+      "x_mm": 175.7327,
+      "y_mm": 165.7276
     },
     {
       "polygon_id": "layer-0002/101",
       "layer_id": "layer-0002",
       "source_row": 1,
       "source_id": "feature:1",
-      "x_mm": 163.2013,
-      "y_mm": 180.2786
+      "x_mm": 178.3269,
+      "y_mm": 163.4013
     },
     {
       "polygon_id": "layer-0002/101",
       "layer_id": "layer-0002",
       "source_row": 1,
       "source_id": "feature:1",
-      "x_mm": 159.6005,
-      "y_mm": 181.9744
+      "x_mm": 180.9698,
+      "y_mm": 160.7881
     },
     {
       "polygon_id": "layer-0002/101",
       "layer_id": "layer-0002",
       "source_row": 1,
       "source_id": "feature:1",
-      "x_mm": 156.1513,
-      "y_mm": 183.3981
+      "x_mm": 183.3253,
+      "y_mm": 158.2204
     },
     {
       "polygon_id": "layer-0002/101",
       "layer_id": "layer-0002",
       "source_row": 1,
       "source_id": "feature:1",
-      "x_mm": 152.4026,
-      "y_mm": 184.7356
+      "x_mm": 185.7015,
+      "y_mm": 155.3625
     },
     {
       "polygon_id": "layer-0002/101",
       "layer_id": "layer-0002",
       "source_row": 1,
       "source_id": "feature:1",
-      "x_mm": 148.8313,
-      "y_mm": 185.8169
+      "x_mm": 187.796,
+      "y_mm": 152.5779
     },
     {
       "polygon_id": "layer-0002/101",
       "layer_id": "layer-0002",
       "source_row": 1,
       "source_id": "feature:1",
-      "x_mm": 144.9703,
-      "y_mm": 186.7834
+      "x_mm": 189.8829,
+      "y_mm": 149.5024
     },
     {
       "polygon_id": "layer-0002/101",
       "layer_id": "layer-0002",
       "source_row": 1,
       "source_id": "feature:1",
-      "x_mm": 141.3107,
-      "y_mm": 187.5122
+      "x_mm": 191.6966,
+      "y_mm": 146.5272
     },
     {
       "polygon_id": "layer-0002/101",
       "layer_id": "layer-0002",
       "source_row": 1,
       "source_id": "feature:1",
-      "x_mm": 137.374,
-      "y_mm": 188.0985
+      "x_mm": 193.4743,
+      "y_mm": 143.2633
     },
     {
+      "polygon_id": "layer-0002/101",
+      "layer_id": "layer-0002",
+      "source_row": 1,
+      "source_id": "feature:1",
+      "x_mm": 194.99,
+      "y_mm": 140.1258
+    },
+    {
+      "polygon_id": "layer-0002/101",
+      "layer_id": "layer-0002",
+      "source_row": 1,
+      "source_id": "feature:1",
+      "x_mm": 196.4418,
+      "y_mm": 136.7044
+    },
+    {
+      "polygon_id": "layer-0002/101",
+      "layer_id": "layer-0002",
+      "source_row": 1,
+      "source_id": "feature:1",
+      "x_mm": 197.6451,
+      "y_mm": 133.4343
+    },
+    {
+      "polygon_id": "layer-0002/101",
+      "layer_id": "layer-0002",
+      "source_row": 1,
+      "source_id": "feature:1",
+      "x_mm": 198.7571,
+      "y_mm": 129.8879
+    },
+    {
+      "polygon_id": "layer-0002/101",
+      "layer_id": "layer-0002",
+      "source_row": 1,
+      "source_id": "feature:1",
+      "x_mm": 199.6366,
+      "y_mm": 126.5163
+    },
+    {
+      "polygon_id": "layer-0002/101",
+      "layer_id": "layer-0002",
+      "source_row": 1,
+      "source_id": "feature:1",
+      "x_mm": 200.3983,
+      "y_mm": 122.8785
+    },
+    {
+      "polygon_id": "layer-0002/101",
+      "layer_id": "layer-0002",
+      "source_row": 1,
+      "source_id": "feature:1",
+      "x_mm": 200.9456,
+      "y_mm": 119.4373
+    },
+    {
+      "polygon_id": "layer-0002/101",
+      "layer_id": "layer-0002",
+      "source_row": 1,
+      "source_id": "feature:1",
+      "x_mm": 201.33,
+      "y_mm": 115.9742
+    },
+    {
+      "polygon_id": "layer-0002/101",
+      "layer_id": "layer-0002",
+      "source_row": 1,
+      "source_id": "feature:1",
+      "x_mm": 201.5597,
+      "y_mm": 112.2646
+    },
+    {
+      "polygon_id": "layer-0002/101",
+      "layer_id": "layer-0002",
+      "source_row": 1,
+      "source_id": "feature:1",
+      "x_mm": 201.6055,
+      "y_mm": 108.7805
+    },
+    {
+      "polygon_id": "layer-0002/101",
+      "layer_id": "layer-0002",
+      "source_row": 1,
+      "source_id": "feature:1",
+      "x_mm": 201.4732,
+      "y_mm": 105.0661
+    },
+    {
+      "polygon_id": "layer-0002/101",
+      "layer_id": "layer-0002",
+      "source_row": 1,
+      "source_id": "feature:1",
+      "x_mm": 201.1797,
+      "y_mm": 101.5941
+    },
+    {
+      "polygon_id": "layer-0002/101",
+      "layer_id": "layer-0002",
+      "source_row": 1,
+      "source_id": "feature:1",
+      "x_mm": 200.6868,
+      "y_mm": 97.9102
+    },
+    {
+      "polygon_id": "layer-0002/101",
+      "layer_id": "layer-0002",
+      "source_row": 1,
+      "source_id": "feature:1",
+      "x_mm": 200.0569,
+      "y_mm": 94.4832
+    },
+    {
+      "polygon_id": "layer-0002/101",
+      "layer_id": "layer-0002",
+      "source_row": 1,
+      "source_id": "feature:1",
+      "x_mm": 198.9814,
+      "y_mm": 94.7052
+    },
+    {
+      "polygon_id": "layer-0002/101",
+      "layer_id": "layer-0002",
+      "source_row": 1,
+      "source_id": "feature:1",
+      "x_mm": 201.4899,
+      "y_mm": 89.2789
+    },
+    {
+      "polygon_id": "layer-0002/101",
+      "layer_id": "layer-0002",
+      "source_row": 1,
+      "source_id": "feature:1",
+      "x_mm": 206.2541,
+      "y_mm": 93.2042
+    },
+    {
+      "polygon_id": "layer-0002/101",
+      "layer_id": "layer-0002",
+      "source_row": 1,
+      "source_id": "feature:1",
+      "x_mm": 205.1786,
+      "y_mm": 93.4262
+    },
+    {
+      "polygon_id": "layer-0002/101",
+      "layer_id": "layer-0002",
+      "source_row": 1,
+      "source_id": "feature:1",
+      "x_mm": 205.8525,
+      "y_mm": 97.0958
+    },
+    {
+      "polygon_id": "layer-0002/101",
+      "layer_id": "layer-0002",
+      "source_row": 1,
+      "source_id": "feature:1",
+      "x_mm": 206.3799,
+      "y_mm": 101.0404
+    },
+    {
+      "polygon_id": "layer-0002/101",
+      "layer_id": "layer-0002",
+      "source_row": 1,
+      "source_id": "feature:1",
+      "x_mm": 206.6937,
+      "y_mm": 104.7581
+    },
+    {
+      "polygon_id": "layer-0002/101",
+      "layer_id": "layer-0002",
+      "source_row": 1,
+      "source_id": "feature:1",
+      "x_mm": 206.8349,
+      "y_mm": 108.7353
+    },
+    {
+      "polygon_id": "layer-0002/101",
+      "layer_id": "layer-0002",
+      "source_row": 1,
+      "source_id": "feature:1",
+      "x_mm": 206.7855,
+      "y_mm": 112.4659
+    },
+    {
+      "polygon_id": "layer-0002/101",
+      "layer_id": "layer-0002",
+      "source_row": 1,
+      "source_id": "feature:1",
+      "x_mm": 206.539,
+      "y_mm": 116.4379
+    },
+    {
+      "polygon_id": "layer-0002/101",
+      "layer_id": "layer-0002",
+      "source_row": 1,
+      "source_id": "feature:1",
+      "x_mm": 206.1269,
+      "y_mm": 120.1461
+    },
+    {
+      "polygon_id": "layer-0002/101",
+      "layer_id": "layer-0002",
+      "source_row": 1,
+      "source_id": "feature:1",
+      "x_mm": 205.5405,
+      "y_mm": 123.8306
+    },
+    {
+      "polygon_id": "layer-0002/101",
+      "layer_id": "layer-0002",
+      "source_row": 1,
+      "source_id": "feature:1",
+      "x_mm": 204.7244,
+      "y_mm": 127.7257
+    },
+    {
+      "polygon_id": "layer-0002/101",
+      "layer_id": "layer-0002",
+      "source_row": 1,
+      "source_id": "feature:1",
+      "x_mm": 203.7823,
+      "y_mm": 131.3358
+    },
+    {
+      "polygon_id": "layer-0002/101",
+      "layer_id": "layer-0002",
+      "source_row": 1,
+      "source_id": "feature:1",
+      "x_mm": 202.5911,
+      "y_mm": 135.133
+    },
+    {
+      "polygon_id": "layer-0002/101",
+      "layer_id": "layer-0002",
+      "source_row": 1,
+      "source_id": "feature:1",
+      "x_mm": 201.3023,
+      "y_mm": 138.6343
+    },
+    {
+      "polygon_id": "layer-0002/101",
+      "layer_id": "layer-0002",
+      "source_row": 1,
+      "source_id": "feature:1",
+      "x_mm": 199.7473,
+      "y_mm": 142.2976
+    },
+    {
+      "polygon_id": "layer-0002/101",
+      "layer_id": "layer-0002",
+      "source_row": 1,
+      "source_id": "feature:1",
+      "x_mm": 198.124,
+      "y_mm": 145.6569
+    },
+    {
+      "polygon_id": "layer-0002/101",
+      "layer_id": "layer-0002",
+      "source_row": 1,
+      "source_id": "feature:1",
+      "x_mm": 196.22,
+      "y_mm": 149.1515
+    },
+    {
+      "polygon_id": "layer-0002/101",
+      "layer_id": "layer-0002",
+      "source_row": 1,
+      "source_id": "feature:1",
+      "x_mm": 194.2776,
+      "y_mm": 152.337
+    },
+    {
+      "polygon_id": "layer-0002/101",
+      "layer_id": "layer-0002",
+      "source_row": 1,
+      "source_id": "feature:1",
+      "x_mm": 192.0427,
+      "y_mm": 155.6298
+    },
+    {
+      "polygon_id": "layer-0002/101",
+      "layer_id": "layer-0002",
+      "source_row": 1,
+      "source_id": "feature:1",
+      "x_mm": 189.7996,
+      "y_mm": 158.6112
+    },
+    {
+      "polygon_id": "layer-0002/101",
+      "layer_id": "layer-0002",
+      "source_row": 1,
+      "source_id": "feature:1",
+      "x_mm": 187.255,
+      "y_mm": 161.671
+    },
+    {
+      "polygon_id": "layer-0002/101",
+      "layer_id": "layer-0002",
+      "source_row": 1,
+      "source_id": "feature:1",
+      "x_mm": 184.7324,
+      "y_mm": 164.42
+    },
+    {
+      "polygon_id": "layer-0002/101",
+      "layer_id": "layer-0002",
+      "source_row": 1,
+      "source_id": "feature:1",
+      "x_mm": 181.9022,
+      "y_mm": 167.2177
+    },
+    {
+      "polygon_id": "layer-0002/101",
+      "layer_id": "layer-0002",
+      "source_row": 1,
+      "source_id": "feature:1",
+      "x_mm": 179.1242,
+      "y_mm": 169.7083
+    },
+    {
+      "polygon_id": "layer-0002/101",
+      "layer_id": "layer-0002",
+      "source_row": 1,
+      "source_id": "feature:1",
+      "x_mm": 176.232,
+      "y_mm": 172.0652
+    },
+    {
+      "polygon_id": "layer-0002/101",
+      "layer_id": "layer-0002",
+      "source_row": 1,
+      "source_id": "feature:1",
+      "x_mm": 173.0281,
+      "y_mm": 174.426
+    },
+    {
+      "polygon_id": "layer-0002/101",
+      "layer_id": "layer-0002",
+      "source_row": 1,
+      "source_id": "feature:1",
+      "x_mm": 169.9203,
+      "y_mm": 176.4903
+    },
+    {
+      "polygon_id": "layer-0002/101",
+      "layer_id": "layer-0002",
+      "source_row": 1,
+      "source_id": "feature:1",
+      "x_mm": 166.502,
+      "y_mm": 178.5282
+    },
+    {
+      "polygon_id": "layer-0002/101",
+      "layer_id": "layer-0002",
+      "source_row": 1,
+      "source_id": "feature:1",
+      "x_mm": 163.2081,
+      "y_mm": 180.2804
+    },
+    {
+      "polygon_id": "layer-0002/101",
+      "layer_id": "layer-0002",
+      "source_row": 1,
+      "source_id": "feature:1",
+      "x_mm": 159.6078,
+      "y_mm": 181.976
+    },
+    {
+      "polygon_id": "layer-0002/101",
+      "layer_id": "layer-0002",
+      "source_row": 1,
+      "source_id": "feature:1",
+      "x_mm": 156.159,
+      "y_mm": 183.3995
+    },
+    {
+      "polygon_id": "layer-0002/101",
+      "layer_id": "layer-0002",
+      "source_row": 1,
+      "source_id": "feature:1",
+      "x_mm": 152.4108,
+      "y_mm": 184.7368
+    },
+    {
+      "polygon_id": "layer-0002/101",
+      "layer_id": "layer-0002",
+      "source_row": 1,
+      "source_id": "feature:1",
+      "x_mm": 148.8399,
+      "y_mm": 185.818
+    },
+    {
+      "polygon_id": "layer-0002/101",
+      "layer_id": "layer-0002",
+      "source_row": 1,
+      "source_id": "feature:1",
+      "x_mm": 144.9794,
+      "y_mm": 186.7844
+    },
+    {
+      "polygon_id": "layer-0002/101",
+      "layer_id": "layer-0002",
+      "source_row": 1,
+      "source_id": "feature:1",
+      "x_mm": 141.3203,
+      "y_mm": 187.5131
+    },
+    {
+      "polygon_id": "layer-0002/101",
+      "layer_id": "layer-0002",
+      "source_row": 1,
+      "source_id": "feature:1",
+      "x_mm": 137.384,
+      "y_mm": 188.0993
+    },
+    {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 155.2191,
-      "y_mm": 40.9398
+      "x_mm": 155.2269,
+      "y_mm": 40.9592
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 154.7873,
-      "y_mm": 40.768
+      "x_mm": 154.7951,
+      "y_mm": 40.7875
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 154.3544,
-      "y_mm": 40.599
+      "x_mm": 154.3623,
+      "y_mm": 40.6185
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 153.9205,
-      "y_mm": 40.4328
+      "x_mm": 153.9285,
+      "y_mm": 40.4523
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 153.4855,
-      "y_mm": 40.2692
+      "x_mm": 153.4935,
+      "y_mm": 40.2888
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 153.0495,
-      "y_mm": 40.1084
+      "x_mm": 153.0576,
+      "y_mm": 40.128
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 152.6126,
-      "y_mm": 39.9503
+      "x_mm": 152.6207,
+      "y_mm": 39.9699
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 152.1746,
-      "y_mm": 39.795
+      "x_mm": 152.1828,
+      "y_mm": 39.8146
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 151.7357,
-      "y_mm": 39.6424
+      "x_mm": 151.7439,
+      "y_mm": 39.6621
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 151.2958,
-      "y_mm": 39.4926
+      "x_mm": 151.3041,
+      "y_mm": 39.5123
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 150.855,
-      "y_mm": 39.3456
+      "x_mm": 150.8633,
+      "y_mm": 39.3653
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 150.4132,
-      "y_mm": 39.2014
+      "x_mm": 150.4216,
+      "y_mm": 39.221
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 149.9706,
-      "y_mm": 39.0599
+      "x_mm": 149.9791,
+      "y_mm": 39.0796
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 149.5271,
-      "y_mm": 38.9212
+      "x_mm": 149.5356,
+      "y_mm": 38.9409
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 149.0827,
-      "y_mm": 38.7853
+      "x_mm": 149.0913,
+      "y_mm": 38.805
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 148.6375,
-      "y_mm": 38.6522
+      "x_mm": 148.6461,
+      "y_mm": 38.6719
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 148.1914,
-      "y_mm": 38.5219
+      "x_mm": 148.2001,
+      "y_mm": 38.5416
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 147.7446,
-      "y_mm": 38.3944
+      "x_mm": 147.7533,
+      "y_mm": 38.4142
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 147.2969,
-      "y_mm": 38.2697
+      "x_mm": 147.3057,
+      "y_mm": 38.2895
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 146.8485,
-      "y_mm": 38.1478
+      "x_mm": 146.8574,
+      "y_mm": 38.1676
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 146.3993,
-      "y_mm": 38.0288
+      "x_mm": 146.4082,
+      "y_mm": 38.0486
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 145.9494,
-      "y_mm": 37.9126
+      "x_mm": 145.9584,
+      "y_mm": 37.9324
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 145.4987,
-      "y_mm": 37.7992
+      "x_mm": 145.5078,
+      "y_mm": 37.819
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 145.0474,
-      "y_mm": 37.6886
+      "x_mm": 145.0565,
+      "y_mm": 37.7085
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 144.5954,
-      "y_mm": 37.5809
+      "x_mm": 144.6045,
+      "y_mm": 37.6008
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 144.1427,
-      "y_mm": 37.476
+      "x_mm": 144.1519,
+      "y_mm": 37.4959
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 143.6893,
-      "y_mm": 37.374
+      "x_mm": 143.6986,
+      "y_mm": 37.3939
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 143.2353,
-      "y_mm": 37.2748
+      "x_mm": 143.2446,
+      "y_mm": 37.2948
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 142.7807,
-      "y_mm": 37.1785
+      "x_mm": 142.7901,
+      "y_mm": 37.1984
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 142.3255,
-      "y_mm": 37.0851
+      "x_mm": 142.335,
+      "y_mm": 37.105
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 141.8697,
-      "y_mm": 36.9945
+      "x_mm": 141.8792,
+      "y_mm": 37.0144
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 141.4134,
-      "y_mm": 36.9067
+      "x_mm": 141.423,
+      "y_mm": 36.9267
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 140.9565,
-      "y_mm": 36.8219
+      "x_mm": 140.9661,
+      "y_mm": 36.8419
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 140.4991,
-      "y_mm": 36.7399
+      "x_mm": 140.5088,
+      "y_mm": 36.7599
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 140.0412,
-      "y_mm": 36.6608
+      "x_mm": 140.0509,
+      "y_mm": 36.6808
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 139.8557,
-      "y_mm": 37.7434
+      "x_mm": 139.8654,
+      "y_mm": 37.7632
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 135.9564,
-      "y_mm": 33.454
+      "x_mm": 135.9666,
+      "y_mm": 33.4744
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 141.1102,
-      "y_mm": 30.4231
+      "x_mm": 141.1198,
+      "y_mm": 30.4439
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 140.9247,
-      "y_mm": 31.5057
+      "x_mm": 140.9343,
+      "y_mm": 31.5264
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 141.415,
-      "y_mm": 31.5905
+      "x_mm": 141.4245,
+      "y_mm": 31.6111
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 141.9048,
-      "y_mm": 31.6783
+      "x_mm": 141.9142,
+      "y_mm": 31.6989
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 142.3939,
-      "y_mm": 31.7692
+      "x_mm": 142.4034,
+      "y_mm": 31.7898
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 142.8826,
-      "y_mm": 31.8632
+      "x_mm": 142.8919,
+      "y_mm": 31.8838
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 143.3706,
-      "y_mm": 31.9603
+      "x_mm": 143.3799,
+      "y_mm": 31.9809
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 143.858,
-      "y_mm": 32.0604
+      "x_mm": 143.8672,
+      "y_mm": 32.081
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 144.3447,
-      "y_mm": 32.1636
+      "x_mm": 144.3539,
+      "y_mm": 32.1842
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 144.8308,
-      "y_mm": 32.2698
+      "x_mm": 144.8399,
+      "y_mm": 32.2904
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 145.3162,
-      "y_mm": 32.3791
+      "x_mm": 145.3253,
+      "y_mm": 32.3997
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 145.8009,
-      "y_mm": 32.4915
+      "x_mm": 145.8099,
+      "y_mm": 32.512
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 146.285,
-      "y_mm": 32.6069
+      "x_mm": 146.2939,
+      "y_mm": 32.6274
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 146.7682,
-      "y_mm": 32.7253
+      "x_mm": 146.7771,
+      "y_mm": 32.7458
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 147.2507,
-      "y_mm": 32.8468
+      "x_mm": 147.2595,
+      "y_mm": 32.8673
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 147.7325,
-      "y_mm": 32.9713
+      "x_mm": 147.7412,
+      "y_mm": 32.9918
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 148.2134,
-      "y_mm": 33.0988
+      "x_mm": 148.2221,
+      "y_mm": 33.1193
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 148.6936,
-      "y_mm": 33.2294
+      "x_mm": 148.7022,
+      "y_mm": 33.2498
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 149.1729,
-      "y_mm": 33.3629
+      "x_mm": 149.1814,
+      "y_mm": 33.3834
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 149.6513,
-      "y_mm": 33.4995
+      "x_mm": 149.6598,
+      "y_mm": 33.5199
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 150.1289,
-      "y_mm": 33.6391
+      "x_mm": 150.1374,
+      "y_mm": 33.6595
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 150.6056,
-      "y_mm": 33.7817
+      "x_mm": 150.614,
+      "y_mm": 33.802
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 151.0814,
-      "y_mm": 33.9273
+      "x_mm": 151.0898,
+      "y_mm": 33.9476
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 151.5563,
-      "y_mm": 34.0758
+      "x_mm": 151.5646,
+      "y_mm": 34.0961
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 152.0302,
-      "y_mm": 34.2274
+      "x_mm": 152.0384,
+      "y_mm": 34.2477
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 152.5032,
-      "y_mm": 34.3819
+      "x_mm": 152.5114,
+      "y_mm": 34.4022
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 152.9752,
-      "y_mm": 34.5394
+      "x_mm": 152.9833,
+      "y_mm": 34.5596
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 153.4462,
-      "y_mm": 34.6998
+      "x_mm": 153.4542,
+      "y_mm": 34.7201
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 153.9162,
-      "y_mm": 34.8632
+      "x_mm": 153.9241,
+      "y_mm": 34.8835
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 154.3851,
-      "y_mm": 35.0296
+      "x_mm": 154.393,
+      "y_mm": 35.0498
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 154.853,
-      "y_mm": 35.1989
+      "x_mm": 154.8608,
+      "y_mm": 35.2191
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 155.3198,
-      "y_mm": 35.3712
+      "x_mm": 155.3276,
+      "y_mm": 35.3913
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 155.7855,
-      "y_mm": 35.5463
+      "x_mm": 155.7932,
+      "y_mm": 35.5665
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 156.2501,
-      "y_mm": 35.7244
+      "x_mm": 156.2578,
+      "y_mm": 35.7446
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 156.7136,
-      "y_mm": 35.9054
+      "x_mm": 156.7212,
+      "y_mm": 35.9255
     },
     {
       "polygon_id": "layer-0002/201",
       "layer_id": "layer-0002",
       "source_row": 2,
       "source_id": "feature:2",
-      "x_mm": 157.1759,
-      "y_mm": 36.0894
+      "x_mm": 157.1835,
+      "y_mm": 36.1095
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 124.7654,
-      "y_mm": 35.6787
+      "x_mm": 124.777,
+      "y_mm": 35.6989
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 124.5332,
-      "y_mm": 35.6883
+      "x_mm": 124.5449,
+      "y_mm": 35.7084
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 124.3011,
-      "y_mm": 35.6986
+      "x_mm": 124.3128,
+      "y_mm": 35.7187
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 124.069,
-      "y_mm": 35.7096
+      "x_mm": 124.0808,
+      "y_mm": 35.7297
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 123.837,
-      "y_mm": 35.7213
+      "x_mm": 123.8487,
+      "y_mm": 35.7414
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 123.373,
-      "y_mm": 35.747
+      "x_mm": 123.3848,
+      "y_mm": 35.7671
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 123.1411,
-      "y_mm": 35.7609
+      "x_mm": 123.1529,
+      "y_mm": 35.781
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 122.9092,
-      "y_mm": 35.7755
+      "x_mm": 122.9211,
+      "y_mm": 35.7957
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 122.6773,
-      "y_mm": 35.7909
+      "x_mm": 122.6893,
+      "y_mm": 35.811
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 122.4456,
-      "y_mm": 35.807
+      "x_mm": 122.4575,
+      "y_mm": 35.8271
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 122.2138,
-      "y_mm": 35.8239
+      "x_mm": 122.2258,
+      "y_mm": 35.844
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 121.9821,
-      "y_mm": 35.8414
+      "x_mm": 121.9941,
+      "y_mm": 35.8615
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 121.7505,
-      "y_mm": 35.8597
+      "x_mm": 121.7626,
+      "y_mm": 35.8798
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 121.5189,
-      "y_mm": 35.8787
+      "x_mm": 121.531,
+      "y_mm": 35.8989
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 121.2874,
-      "y_mm": 35.8985
+      "x_mm": 121.2995,
+      "y_mm": 35.9186
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 121.056,
-      "y_mm": 35.919
+      "x_mm": 121.0681,
+      "y_mm": 35.9391
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 120.5933,
-      "y_mm": 35.9621
+      "x_mm": 120.6055,
+      "y_mm": 35.9822
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 120.3621,
-      "y_mm": 35.9848
+      "x_mm": 120.3743,
+      "y_mm": 36.0049
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 120.1309,
-      "y_mm": 36.0082
+      "x_mm": 120.1432,
+      "y_mm": 36.0282
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 119.8998,
-      "y_mm": 36.0323
+      "x_mm": 119.9121,
+      "y_mm": 36.0523
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 119.6688,
-      "y_mm": 36.0571
+      "x_mm": 119.6811,
+      "y_mm": 36.0772
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 119.4379,
-      "y_mm": 36.0827
+      "x_mm": 119.4502,
+      "y_mm": 36.1027
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 119.207,
-      "y_mm": 36.109
+      "x_mm": 119.2194,
+      "y_mm": 36.129
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 118.9762,
-      "y_mm": 36.136
+      "x_mm": 118.9886,
+      "y_mm": 36.156
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 118.7456,
-      "y_mm": 36.1637
+      "x_mm": 118.758,
+      "y_mm": 36.1838
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 118.515,
-      "y_mm": 36.1922
+      "x_mm": 118.5274,
+      "y_mm": 36.2122
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 118.2845,
-      "y_mm": 36.2214
+      "x_mm": 118.2969,
+      "y_mm": 36.2414
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 118.054,
-      "y_mm": 36.2513
+      "x_mm": 118.0666,
+      "y_mm": 36.2713
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 117.5935,
-      "y_mm": 36.3133
+      "x_mm": 117.6061,
+      "y_mm": 36.3333
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 117.3634,
-      "y_mm": 36.3454
+      "x_mm": 117.376,
+      "y_mm": 36.3654
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 117.1334,
-      "y_mm": 36.3782
+      "x_mm": 117.146,
+      "y_mm": 36.3982
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 116.9035,
-      "y_mm": 36.4117
+      "x_mm": 116.9161,
+      "y_mm": 36.4317
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 116.6736,
-      "y_mm": 36.446
+      "x_mm": 116.6863,
+      "y_mm": 36.466
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 116.4439,
-      "y_mm": 36.4809
+      "x_mm": 116.4567,
+      "y_mm": 36.501
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 116.2144,
-      "y_mm": 36.5166
+      "x_mm": 116.2271,
+      "y_mm": 36.5367
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 115.9849,
-      "y_mm": 36.5531
+      "x_mm": 115.9977,
+      "y_mm": 36.5731
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 115.7555,
-      "y_mm": 36.5902
+      "x_mm": 115.7683,
+      "y_mm": 36.6102
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 115.5263,
-      "y_mm": 36.6281
+      "x_mm": 115.5391,
+      "y_mm": 36.6481
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 115.2972,
-      "y_mm": 36.6666
+      "x_mm": 115.31,
+      "y_mm": 36.6866
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 114.8393,
-      "y_mm": 36.746
+      "x_mm": 114.8522,
+      "y_mm": 36.766
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 114.6105,
-      "y_mm": 36.7867
+      "x_mm": 114.6235,
+      "y_mm": 36.8067
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 114.3819,
-      "y_mm": 36.8282
+      "x_mm": 114.3949,
+      "y_mm": 36.8481
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 114.1534,
-      "y_mm": 36.8703
+      "x_mm": 114.1664,
+      "y_mm": 36.8903
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 113.9251,
-      "y_mm": 36.9132
+      "x_mm": 113.9381,
+      "y_mm": 36.9332
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 113.6969,
-      "y_mm": 36.9568
+      "x_mm": 113.7099,
+      "y_mm": 36.9768
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 113.4688,
-      "y_mm": 37.0012
+      "x_mm": 113.4819,
+      "y_mm": 37.0211
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 113.2409,
-      "y_mm": 37.0462
+      "x_mm": 113.254,
+      "y_mm": 37.0662
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 113.0131,
-      "y_mm": 37.092
+      "x_mm": 113.0262,
+      "y_mm": 37.1119
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 112.7854,
-      "y_mm": 37.1385
+      "x_mm": 112.7986,
+      "y_mm": 37.1584
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 112.5579,
-      "y_mm": 37.1857
+      "x_mm": 112.5711,
+      "y_mm": 37.2056
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 112.3306,
-      "y_mm": 37.2336
+      "x_mm": 112.3438,
+      "y_mm": 37.2535
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 111.8763,
-      "y_mm": 37.3315
+      "x_mm": 111.8896,
+      "y_mm": 37.3514
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 111.6494,
-      "y_mm": 37.3816
+      "x_mm": 111.6627,
+      "y_mm": 37.4015
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 111.4227,
-      "y_mm": 37.4323
+      "x_mm": 111.436,
+      "y_mm": 37.4522
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 111.1961,
-      "y_mm": 37.4838
+      "x_mm": 111.2095,
+      "y_mm": 37.5037
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 110.9697,
-      "y_mm": 37.536
+      "x_mm": 110.9831,
+      "y_mm": 37.5559
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 110.7435,
-      "y_mm": 37.5889
+      "x_mm": 110.7569,
+      "y_mm": 37.6088
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 110.5174,
-      "y_mm": 37.6425
+      "x_mm": 110.5308,
+      "y_mm": 37.6624
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 110.2915,
-      "y_mm": 37.6968
+      "x_mm": 110.305,
+      "y_mm": 37.7167
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 110.0657,
-      "y_mm": 37.7519
+      "x_mm": 110.0793,
+      "y_mm": 37.7717
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 108.8282,
-      "y_mm": 32.6701
+      "x_mm": 108.8419,
+      "y_mm": 32.6906
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 109.0699,
-      "y_mm": 32.6112
+      "x_mm": 109.0835,
+      "y_mm": 32.6318
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 109.3118,
-      "y_mm": 32.5531
+      "x_mm": 109.3254,
+      "y_mm": 32.5736
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 109.5539,
-      "y_mm": 32.4957
+      "x_mm": 109.5675,
+      "y_mm": 32.5163
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 109.7961,
-      "y_mm": 32.4391
+      "x_mm": 109.8097,
+      "y_mm": 32.4597
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 110.0386,
-      "y_mm": 32.3833
+      "x_mm": 110.0521,
+      "y_mm": 32.4038
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 110.2812,
-      "y_mm": 32.3282
+      "x_mm": 110.2947,
+      "y_mm": 32.3487
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 110.524,
-      "y_mm": 32.2739
+      "x_mm": 110.5374,
+      "y_mm": 32.2944
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 110.7669,
-      "y_mm": 32.2203
+      "x_mm": 110.7803,
+      "y_mm": 32.2409
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 111.2533,
-      "y_mm": 32.1155
+      "x_mm": 111.2667,
+      "y_mm": 32.136
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 111.4968,
-      "y_mm": 32.0642
+      "x_mm": 111.5101,
+      "y_mm": 32.0848
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 111.7404,
-      "y_mm": 32.0137
+      "x_mm": 111.7537,
+      "y_mm": 32.0343
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 111.9841,
-      "y_mm": 31.9639
+      "x_mm": 111.9974,
+      "y_mm": 31.9845
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 112.228,
-      "y_mm": 31.915
+      "x_mm": 112.2413,
+      "y_mm": 31.9356
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 112.4721,
-      "y_mm": 31.8668
+      "x_mm": 112.4853,
+      "y_mm": 31.8874
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 112.7163,
-      "y_mm": 31.8193
+      "x_mm": 112.7295,
+      "y_mm": 31.84
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 112.9607,
-      "y_mm": 31.7727
+      "x_mm": 112.9739,
+      "y_mm": 31.7933
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 113.2052,
-      "y_mm": 31.7268
+      "x_mm": 113.2183,
+      "y_mm": 31.7474
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 113.4499,
-      "y_mm": 31.6816
+      "x_mm": 113.463,
+      "y_mm": 31.7023
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 113.6947,
-      "y_mm": 31.6373
+      "x_mm": 113.7077,
+      "y_mm": 31.6579
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 113.9396,
-      "y_mm": 31.5937
+      "x_mm": 113.9526,
+      "y_mm": 31.6143
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 114.4299,
-      "y_mm": 31.5088
+      "x_mm": 114.4429,
+      "y_mm": 31.5295
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 114.6752,
-      "y_mm": 31.4675
+      "x_mm": 114.6882,
+      "y_mm": 31.4882
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 114.9207,
-      "y_mm": 31.427
+      "x_mm": 114.9336,
+      "y_mm": 31.4477
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 115.1663,
-      "y_mm": 31.3873
+      "x_mm": 115.1792,
+      "y_mm": 31.4079
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 115.412,
-      "y_mm": 31.3483
+      "x_mm": 115.4248,
+      "y_mm": 31.369
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 115.6578,
-      "y_mm": 31.3101
+      "x_mm": 115.6707,
+      "y_mm": 31.3308
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 115.9038,
-      "y_mm": 31.2727
+      "x_mm": 115.9166,
+      "y_mm": 31.2934
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 116.1499,
-      "y_mm": 31.236
+      "x_mm": 116.1626,
+      "y_mm": 31.2567
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 116.3961,
-      "y_mm": 31.2002
+      "x_mm": 116.4088,
+      "y_mm": 31.2209
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 116.6423,
-      "y_mm": 31.1651
+      "x_mm": 116.655,
+      "y_mm": 31.1858
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 116.8888,
-      "y_mm": 31.1307
+      "x_mm": 116.9014,
+      "y_mm": 31.1514
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 117.3819,
-      "y_mm": 31.0644
+      "x_mm": 117.3945,
+      "y_mm": 31.0851
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 117.6286,
-      "y_mm": 31.0324
+      "x_mm": 117.6412,
+      "y_mm": 31.0531
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 117.8754,
-      "y_mm": 31.0012
+      "x_mm": 117.888,
+      "y_mm": 31.0219
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 118.1223,
-      "y_mm": 30.9707
+      "x_mm": 118.1348,
+      "y_mm": 30.9915
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 118.3693,
-      "y_mm": 30.9411
+      "x_mm": 118.3818,
+      "y_mm": 30.9618
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 118.6165,
-      "y_mm": 30.9122
+      "x_mm": 118.6289,
+      "y_mm": 30.9329
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 118.8636,
-      "y_mm": 30.884
+      "x_mm": 118.876,
+      "y_mm": 30.9048
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 119.1109,
-      "y_mm": 30.8567
+      "x_mm": 119.1233,
+      "y_mm": 30.8774
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 119.3583,
-      "y_mm": 30.8301
+      "x_mm": 119.3706,
+      "y_mm": 30.8509
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 119.6057,
-      "y_mm": 30.8043
+      "x_mm": 119.618,
+      "y_mm": 30.8251
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 119.8533,
-      "y_mm": 30.7793
+      "x_mm": 119.8655,
+      "y_mm": 30.8001
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 120.1009,
-      "y_mm": 30.7551
+      "x_mm": 120.1131,
+      "y_mm": 30.7759
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 120.5963,
-      "y_mm": 30.709
+      "x_mm": 120.6085,
+      "y_mm": 30.7297
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 120.8441,
-      "y_mm": 30.6871
+      "x_mm": 120.8563,
+      "y_mm": 30.7078
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 121.092,
-      "y_mm": 30.666
+      "x_mm": 121.1041,
+      "y_mm": 30.6867
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 121.3399,
-      "y_mm": 30.6456
+      "x_mm": 121.352,
+      "y_mm": 30.6664
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 121.588,
-      "y_mm": 30.6261
+      "x_mm": 121.6,
+      "y_mm": 30.6468
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 121.836,
-      "y_mm": 30.6073
+      "x_mm": 121.8481,
+      "y_mm": 30.6281
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 122.0842,
-      "y_mm": 30.5893
+      "x_mm": 122.0962,
+      "y_mm": 30.6101
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 122.3324,
-      "y_mm": 30.5721
+      "x_mm": 122.3443,
+      "y_mm": 30.5928
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 122.5806,
-      "y_mm": 30.5556
+      "x_mm": 122.5925,
+      "y_mm": 30.5764
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 122.8289,
-      "y_mm": 30.54
+      "x_mm": 122.8408,
+      "y_mm": 30.5608
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 123.0772,
-      "y_mm": 30.5251
+      "x_mm": 123.0891,
+      "y_mm": 30.5459
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 123.5741,
-      "y_mm": 30.4977
+      "x_mm": 123.5859,
+      "y_mm": 30.5185
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 123.8225,
-      "y_mm": 30.4851
+      "x_mm": 123.8343,
+      "y_mm": 30.5059
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 124.071,
-      "y_mm": 30.4734
+      "x_mm": 124.0828,
+      "y_mm": 30.4942
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 124.3196,
-      "y_mm": 30.4624
+      "x_mm": 124.3313,
+      "y_mm": 30.4832
     },
     {
       "polygon_id": "layer-0002/301",
       "layer_id": "layer-0002",
       "source_row": 3,
       "source_id": "feature:3",
-      "x_mm": 124.5682,
-      "y_mm": 30.4522
+      "x_mm": 124.5798,
+      "y_mm": 30.473
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 55.4559,
-      "y_mm": 93.823
+      "x_mm": 55.4764,
+      "y_mm": 93.8357
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 55.8192,
-      "y_mm": 92.2377
+      "x_mm": 55.8396,
+      "y_mm": 92.2506
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 56.277,
-      "y_mm": 90.4362
+      "x_mm": 56.2974,
+      "y_mm": 90.4494
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 56.7147,
-      "y_mm": 88.8698
+      "x_mm": 56.7349,
+      "y_mm": 88.8832
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 57.1866,
-      "y_mm": 87.3134
+      "x_mm": 57.2069,
+      "y_mm": 87.327
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 57.7678,
-      "y_mm": 85.5479
+      "x_mm": 57.788,
+      "y_mm": 85.5617
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 58.3126,
-      "y_mm": 84.0154
+      "x_mm": 58.3327,
+      "y_mm": 84.0294
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 58.891,
-      "y_mm": 82.4954
+      "x_mm": 58.911,
+      "y_mm": 82.5096
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 59.5928,
-      "y_mm": 80.7742
+      "x_mm": 59.6127,
+      "y_mm": 80.7886
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 60.2422,
-      "y_mm": 79.2831
+      "x_mm": 60.262,
+      "y_mm": 79.2977
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 60.9242,
-      "y_mm": 77.8066
+      "x_mm": 60.944,
+      "y_mm": 77.8214
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 61.7432,
-      "y_mm": 76.1381
+      "x_mm": 61.7629,
+      "y_mm": 76.1531
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 62.4941,
-      "y_mm": 74.6954
+      "x_mm": 62.5136,
+      "y_mm": 74.7106
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 63.2765,
-      "y_mm": 73.2696
+      "x_mm": 63.296,
+      "y_mm": 73.2849
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 64.2089,
-      "y_mm": 71.6616
+      "x_mm": 64.2282,
+      "y_mm": 71.6772
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 65.0576,
-      "y_mm": 70.2742
+      "x_mm": 65.0768,
+      "y_mm": 70.29
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 66.0647,
-      "y_mm": 68.712
+      "x_mm": 66.0838,
+      "y_mm": 68.7279
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 66.9779,
-      "y_mm": 67.3662
+      "x_mm": 66.9969,
+      "y_mm": 67.3823
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 67.9205,
-      "y_mm": 66.0408
+      "x_mm": 67.9394,
+      "y_mm": 66.0571
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 69.0331,
-      "y_mm": 64.5518
+      "x_mm": 69.0518,
+      "y_mm": 64.5683
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 70.0371,
-      "y_mm": 63.2723
+      "x_mm": 70.0557,
+      "y_mm": 63.289
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 71.069,
-      "y_mm": 62.0152
+      "x_mm": 71.0875,
+      "y_mm": 62.032
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 72.2819,
-      "y_mm": 60.6067
+      "x_mm": 72.3002,
+      "y_mm": 60.6237
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 73.3719,
-      "y_mm": 59.3997
+      "x_mm": 73.3901,
+      "y_mm": 59.4168
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 74.4882,
-      "y_mm": 58.2169
+      "x_mm": 74.5062,
+      "y_mm": 58.2341
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 75.7955,
-      "y_mm": 56.8955
+      "x_mm": 75.8133,
+      "y_mm": 56.913
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 76.9663,
-      "y_mm": 55.7667
+      "x_mm": 76.984,
+      "y_mm": 55.7843
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 78.1616,
-      "y_mm": 54.6638
+      "x_mm": 78.1792,
+      "y_mm": 54.6815
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 79.5571,
-      "y_mm": 53.436
+      "x_mm": 79.5745,
+      "y_mm": 53.4539
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 80.8031,
-      "y_mm": 52.3907
+      "x_mm": 80.8203,
+      "y_mm": 52.4087
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 82.0718,
-      "y_mm": 51.3731
+      "x_mm": 82.0889,
+      "y_mm": 51.3912
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 83.5487,
-      "y_mm": 50.2446
+      "x_mm": 83.5656,
+      "y_mm": 50.2629
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 84.864,
-      "y_mm": 49.2879
+      "x_mm": 84.8807,
+      "y_mm": 49.3063
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 86.2,
-      "y_mm": 48.3604
+      "x_mm": 86.2165,
+      "y_mm": 48.3789
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 87.7514,
-      "y_mm": 47.3366
+      "x_mm": 87.7677,
+      "y_mm": 47.3553
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 88.3431,
-      "y_mm": 48.262
+      "x_mm": 88.3593,
+      "y_mm": 48.2805
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 90.2605,
-      "y_mm": 42.7807
+      "x_mm": 90.2765,
+      "y_mm": 42.7999
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 84.342,
-      "y_mm": 42.0049
+      "x_mm": 84.3588,
+      "y_mm": 42.0242
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 84.9337,
-      "y_mm": 42.9302
+      "x_mm": 84.9504,
+      "y_mm": 42.9494
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 83.2724,
-      "y_mm": 44.0262
+      "x_mm": 83.2894,
+      "y_mm": 44.0453
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 81.8418,
-      "y_mm": 45.0192
+      "x_mm": 81.8589,
+      "y_mm": 45.0381
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 80.4334,
-      "y_mm": 46.0434
+      "x_mm": 80.4507,
+      "y_mm": 46.0622
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 78.8518,
-      "y_mm": 47.2515
+      "x_mm": 78.8693,
+      "y_mm": 47.2702
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 77.4932,
-      "y_mm": 48.341
+      "x_mm": 77.5108,
+      "y_mm": 48.3595
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 76.1589,
-      "y_mm": 49.4601
+      "x_mm": 76.1767,
+      "y_mm": 49.4785
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 74.6646,
-      "y_mm": 50.7746
+      "x_mm": 74.6826,
+      "y_mm": 50.7928
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 73.3845,
-      "y_mm": 51.9553
+      "x_mm": 73.4027,
+      "y_mm": 51.9734
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 72.1307,
-      "y_mm": 53.1639
+      "x_mm": 72.149,
+      "y_mm": 53.1819
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 70.7308,
-      "y_mm": 54.5786
+      "x_mm": 70.7493,
+      "y_mm": 54.5963
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 69.5353,
-      "y_mm": 55.8449
+      "x_mm": 69.554,
+      "y_mm": 55.8625
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 68.368,
-      "y_mm": 57.1373
+      "x_mm": 68.3868,
+      "y_mm": 57.1547
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 67.0692,
-      "y_mm": 58.6453
+      "x_mm": 67.0882,
+      "y_mm": 58.6625
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 65.9641,
-      "y_mm": 59.9912
+      "x_mm": 65.9832,
+      "y_mm": 60.0082
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 64.8889,
-      "y_mm": 61.3611
+      "x_mm": 64.9082,
+      "y_mm": 61.378
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 63.6974,
-      "y_mm": 62.9552
+      "x_mm": 63.7168,
+      "y_mm": 62.9719
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 62.6879,
-      "y_mm": 64.3743
+      "x_mm": 62.7074,
+      "y_mm": 64.3908
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 61.7099,
-      "y_mm": 65.8152
+      "x_mm": 61.7296,
+      "y_mm": 65.8315
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 60.6314,
-      "y_mm": 67.4878
+      "x_mm": 60.6512,
+      "y_mm": 67.5039
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 59.7224,
-      "y_mm": 68.9733
+      "x_mm": 59.7423,
+      "y_mm": 68.9892
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 58.7239,
-      "y_mm": 70.6949
+      "x_mm": 58.7439,
+      "y_mm": 70.7106
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 57.8859,
-      "y_mm": 72.2215
+      "x_mm": 57.9061,
+      "y_mm": 72.237
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 57.0817,
-      "y_mm": 73.7662
+      "x_mm": 57.102,
+      "y_mm": 73.7815
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 56.2046,
-      "y_mm": 75.5527
+      "x_mm": 56.2249,
+      "y_mm": 75.5677
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 55.4741,
-      "y_mm": 77.1335
+      "x_mm": 55.4945,
+      "y_mm": 77.1484
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 54.7786,
-      "y_mm": 78.7301
+      "x_mm": 54.7991,
+      "y_mm": 78.7447
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 54.0269,
-      "y_mm": 80.5729
+      "x_mm": 54.0475,
+      "y_mm": 80.5873
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 53.4074,
-      "y_mm": 82.2004
+      "x_mm": 53.4281,
+      "y_mm": 82.2147
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 52.8239,
-      "y_mm": 83.8412
+      "x_mm": 52.8446,
+      "y_mm": 83.8553
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 52.2013,
-      "y_mm": 85.7316
+      "x_mm": 52.2222,
+      "y_mm": 85.7454
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 51.6958,
-      "y_mm": 87.3981
+      "x_mm": 51.7167,
+      "y_mm": 87.4116
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 51.227,
-      "y_mm": 89.0752
+      "x_mm": 51.2479,
+      "y_mm": 89.0886
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 50.7365,
-      "y_mm": 91.0041
+      "x_mm": 50.7576,
+      "y_mm": 91.0172
     },
     {
       "polygon_id": "layer-0002/401",
       "layer_id": "layer-0002",
       "source_row": 4,
       "source_id": "feature:4",
-      "x_mm": 50.3473,
-      "y_mm": 92.7015
+      "x_mm": 50.3684,
+      "y_mm": 92.7144
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 105.9568,
-      "y_mm": 180.1974
+      "x_mm": 105.9708,
+      "y_mm": 180.1992
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 103.5274,
-      "y_mm": 179.404
+      "x_mm": 103.5417,
+      "y_mm": 179.4059
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 101.1268,
-      "y_mm": 178.5271
+      "x_mm": 101.1415,
+      "y_mm": 178.5292
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 98.758,
-      "y_mm": 177.5678
+      "x_mm": 98.773,
+      "y_mm": 177.57
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 96.4238,
-      "y_mm": 176.5271
+      "x_mm": 96.4391,
+      "y_mm": 176.5294
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 94.127,
-      "y_mm": 175.4064
+      "x_mm": 94.1425,
+      "y_mm": 175.4089
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 91.8702,
-      "y_mm": 174.207
+      "x_mm": 91.8861,
+      "y_mm": 174.2096
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 89.6563,
-      "y_mm": 172.9302
+      "x_mm": 89.6724,
+      "y_mm": 172.933
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 87.4878,
-      "y_mm": 171.5777
+      "x_mm": 87.5042,
+      "y_mm": 171.5807
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 85.3674,
-      "y_mm": 170.1511
+      "x_mm": 85.3841,
+      "y_mm": 170.1542
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 83.112,
-      "y_mm": 168.5122
+      "x_mm": 83.129,
+      "y_mm": 168.5155
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 81.1002,
-      "y_mm": 166.9361
+      "x_mm": 81.1174,
+      "y_mm": 166.9396
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 79.144,
-      "y_mm": 165.2914
+      "x_mm": 79.1615,
+      "y_mm": 165.2951
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 77.2459,
-      "y_mm": 163.5801
+      "x_mm": 77.2636,
+      "y_mm": 163.584
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 75.4081,
-      "y_mm": 161.8041
+      "x_mm": 75.426,
+      "y_mm": 161.8083
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 73.6327,
-      "y_mm": 159.9658
+      "x_mm": 73.6509,
+      "y_mm": 159.9701
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 71.922,
-      "y_mm": 158.0671
+      "x_mm": 71.9404,
+      "y_mm": 158.0717
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 70.2779,
-      "y_mm": 156.1104
+      "x_mm": 70.2965,
+      "y_mm": 156.1153
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 68.7025,
-      "y_mm": 154.0981
+      "x_mm": 68.7212,
+      "y_mm": 154.1032
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 67.1975,
-      "y_mm": 152.0325
+      "x_mm": 67.2165,
+      "y_mm": 152.0379
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 65.7649,
-      "y_mm": 149.9162
+      "x_mm": 65.784,
+      "y_mm": 149.9218
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 64.4062,
-      "y_mm": 147.7515
+      "x_mm": 64.4255,
+      "y_mm": 147.7575
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 63.1232,
-      "y_mm": 145.5412
+      "x_mm": 63.1427,
+      "y_mm": 145.5474
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 61.9174,
-      "y_mm": 143.2879
+      "x_mm": 61.937,
+      "y_mm": 143.2944
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 60.7902,
-      "y_mm": 140.9942
+      "x_mm": 60.81,
+      "y_mm": 141.001
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 59.7429,
-      "y_mm": 138.663
+      "x_mm": 59.7628,
+      "y_mm": 138.6701
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 58.7769,
-      "y_mm": 136.2969
+      "x_mm": 58.7969,
+      "y_mm": 136.3043
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 57.8932,
-      "y_mm": 133.8989
+      "x_mm": 57.9134,
+      "y_mm": 133.9065
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 57.093,
-      "y_mm": 131.4717
+      "x_mm": 57.1132,
+      "y_mm": 131.4797
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 56.3771,
-      "y_mm": 129.0183
+      "x_mm": 56.3974,
+      "y_mm": 129.0266
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 55.7465,
-      "y_mm": 126.5417
+      "x_mm": 55.7669,
+      "y_mm": 126.5503
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 55.2018,
-      "y_mm": 124.0447
+      "x_mm": 55.2223,
+      "y_mm": 124.0536
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 54.7438,
-      "y_mm": 121.5304
+      "x_mm": 54.7644,
+      "y_mm": 121.5396
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 54.373,
-      "y_mm": 119.0018
+      "x_mm": 54.3936,
+      "y_mm": 119.0113
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 54.0898,
-      "y_mm": 116.4618
+      "x_mm": 54.1105,
+      "y_mm": 116.4717
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 55.1836,
-      "y_mm": 116.361
+      "x_mm": 55.204,
+      "y_mm": 116.3709
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 51.1865,
-      "y_mm": 111.9007
+      "x_mm": 51.2075,
+      "y_mm": 111.9112
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 47.788,
-      "y_mm": 117.0428
+      "x_mm": 47.8094,
+      "y_mm": 117.0526
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 48.8817,
-      "y_mm": 116.942
+      "x_mm": 48.903,
+      "y_mm": 116.9518
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 49.1846,
-      "y_mm": 119.6617
+      "x_mm": 49.2058,
+      "y_mm": 119.6712
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 49.5813,
-      "y_mm": 122.3693
+      "x_mm": 49.6025,
+      "y_mm": 122.3784
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 50.0714,
-      "y_mm": 125.0615
+      "x_mm": 50.0925,
+      "y_mm": 125.0703
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 50.6543,
-      "y_mm": 127.7353
+      "x_mm": 50.6753,
+      "y_mm": 127.7437
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 51.3292,
-      "y_mm": 130.3872
+      "x_mm": 51.3501,
+      "y_mm": 130.3954
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 52.0954,
-      "y_mm": 133.0143
+      "x_mm": 52.1163,
+      "y_mm": 133.0221
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 52.952,
-      "y_mm": 135.6133
+      "x_mm": 52.9727,
+      "y_mm": 135.6207
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 53.8978,
-      "y_mm": 138.1811
+      "x_mm": 53.9185,
+      "y_mm": 138.1883
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 54.9319,
-      "y_mm": 140.7147
+      "x_mm": 54.9524,
+      "y_mm": 140.7215
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 56.053,
-      "y_mm": 143.211
+      "x_mm": 56.0733,
+      "y_mm": 143.2176
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 57.2597,
-      "y_mm": 145.6671
+      "x_mm": 57.2799,
+      "y_mm": 145.6733
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 58.5505,
-      "y_mm": 148.0801
+      "x_mm": 58.5706,
+      "y_mm": 148.086
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 59.924,
-      "y_mm": 150.4469
+      "x_mm": 59.9439,
+      "y_mm": 150.4525
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 61.3785,
-      "y_mm": 152.7649
+      "x_mm": 61.3982,
+      "y_mm": 152.7702
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 62.9122,
-      "y_mm": 155.0312
+      "x_mm": 62.9317,
+      "y_mm": 155.0362
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 64.5234,
-      "y_mm": 157.2431
+      "x_mm": 64.5427,
+      "y_mm": 157.2478
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 66.2101,
-      "y_mm": 159.398
+      "x_mm": 66.2292,
+      "y_mm": 159.4025
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 67.9702,
-      "y_mm": 161.4933
+      "x_mm": 67.9891,
+      "y_mm": 161.4975
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 69.8018,
-      "y_mm": 163.5265
+      "x_mm": 69.8204,
+      "y_mm": 163.5305
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 71.7025,
-      "y_mm": 165.4952
+      "x_mm": 71.7209,
+      "y_mm": 165.4989
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 73.6701,
-      "y_mm": 167.397
+      "x_mm": 73.6883,
+      "y_mm": 167.4005
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 75.7023,
-      "y_mm": 169.2297
+      "x_mm": 75.7202,
+      "y_mm": 169.2329
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 77.7967,
-      "y_mm": 170.991
+      "x_mm": 77.8143,
+      "y_mm": 170.994
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 79.9506,
-      "y_mm": 172.6788
+      "x_mm": 79.968,
+      "y_mm": 172.6816
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 82.3654,
-      "y_mm": 174.434
+      "x_mm": 82.3825,
+      "y_mm": 174.4366
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 84.6357,
-      "y_mm": 175.9619
+      "x_mm": 84.6524,
+      "y_mm": 175.9642
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 86.9574,
-      "y_mm": 177.4104
+      "x_mm": 86.9739,
+      "y_mm": 177.4125
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 89.3278,
-      "y_mm": 178.7777
+      "x_mm": 89.344,
+      "y_mm": 178.7797
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 91.7441,
-      "y_mm": 180.0623
+      "x_mm": 91.7599,
+      "y_mm": 180.0642
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 94.2033,
-      "y_mm": 181.2626
+      "x_mm": 94.2188,
+      "y_mm": 181.2643
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 96.7025,
-      "y_mm": 182.3772
+      "x_mm": 96.7177,
+      "y_mm": 182.3787
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 99.2388,
-      "y_mm": 183.4047
+      "x_mm": 99.2537,
+      "y_mm": 183.4061
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 101.8091,
-      "y_mm": 184.3439
+      "x_mm": 101.8236,
+      "y_mm": 184.3452
     },
     {
       "polygon_id": "layer-0002/501",
       "layer_id": "layer-0002",
       "source_row": 5,
       "source_id": "feature:5",
-      "x_mm": 104.4103,
-      "y_mm": 185.1938
+      "x_mm": 104.4245,
+      "y_mm": 185.195
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 116.8231,
-      "y_mm": 182.6607
+      "x_mm": 116.8358,
+      "y_mm": 182.6623
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 116.5933,
-      "y_mm": 182.6262
+      "x_mm": 116.606,
+      "y_mm": 182.6278
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 116.3637,
-      "y_mm": 182.591
+      "x_mm": 116.3764,
+      "y_mm": 182.5925
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 116.1341,
-      "y_mm": 182.5551
+      "x_mm": 116.1469,
+      "y_mm": 182.5566
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 115.9047,
-      "y_mm": 182.5184
+      "x_mm": 115.9175,
+      "y_mm": 182.5199
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 115.6754,
-      "y_mm": 182.481
+      "x_mm": 115.6882,
+      "y_mm": 182.4825
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 115.4462,
-      "y_mm": 182.4429
+      "x_mm": 115.459,
+      "y_mm": 182.4444
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 115.2171,
-      "y_mm": 182.4041
+      "x_mm": 115.23,
+      "y_mm": 182.4056
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 114.9881,
-      "y_mm": 182.3645
+      "x_mm": 115.001,
+      "y_mm": 182.3661
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 114.7593,
-      "y_mm": 182.3242
+      "x_mm": 114.7722,
+      "y_mm": 182.3258
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 114.5306,
-      "y_mm": 182.2832
+      "x_mm": 114.5436,
+      "y_mm": 182.2848
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 114.302,
-      "y_mm": 182.2415
+      "x_mm": 114.315,
+      "y_mm": 182.2431
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 114.0736,
-      "y_mm": 182.1991
+      "x_mm": 114.0866,
+      "y_mm": 182.2007
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 113.8453,
-      "y_mm": 182.156
+      "x_mm": 113.8583,
+      "y_mm": 182.1575
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 113.6171,
-      "y_mm": 182.1121
+      "x_mm": 113.6302,
+      "y_mm": 182.1137
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 113.1612,
-      "y_mm": 182.0222
+      "x_mm": 113.1743,
+      "y_mm": 182.0238
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 112.9335,
-      "y_mm": 181.9762
+      "x_mm": 112.9466,
+      "y_mm": 181.9778
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 112.7059,
-      "y_mm": 181.9295
+      "x_mm": 112.7191,
+      "y_mm": 181.9311
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 112.4784,
-      "y_mm": 181.882
+      "x_mm": 112.4916,
+      "y_mm": 181.8836
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 112.2511,
-      "y_mm": 181.8339
+      "x_mm": 112.2644,
+      "y_mm": 181.8355
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 112.024,
-      "y_mm": 181.785
+      "x_mm": 112.0372,
+      "y_mm": 181.7866
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 111.797,
-      "y_mm": 181.7354
+      "x_mm": 111.8103,
+      "y_mm": 181.737
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 111.5701,
-      "y_mm": 181.6851
+      "x_mm": 111.5835,
+      "y_mm": 181.6867
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 111.3435,
-      "y_mm": 181.6341
+      "x_mm": 111.3568,
+      "y_mm": 181.6357
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 111.1169,
-      "y_mm": 181.5824
+      "x_mm": 111.1303,
+      "y_mm": 181.584
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 110.8906,
-      "y_mm": 181.5299
+      "x_mm": 110.904,
+      "y_mm": 181.5316
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 110.6644,
-      "y_mm": 181.4768
+      "x_mm": 110.6779,
+      "y_mm": 181.4784
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 110.4384,
-      "y_mm": 181.4229
+      "x_mm": 110.4519,
+      "y_mm": 181.4246
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 110.2125,
-      "y_mm": 181.3684
+      "x_mm": 110.226,
+      "y_mm": 181.37
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 109.9869,
-      "y_mm": 181.3131
+      "x_mm": 110.0004,
+      "y_mm": 181.3148
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 109.7614,
-      "y_mm": 181.2571
+      "x_mm": 109.7749,
+      "y_mm": 181.2588
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 109.536,
-      "y_mm": 181.2004
+      "x_mm": 109.5496,
+      "y_mm": 181.2021
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 109.3109,
-      "y_mm": 181.143
+      "x_mm": 109.3245,
+      "y_mm": 181.1447
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 109.0859,
-      "y_mm": 181.0849
+      "x_mm": 109.0996,
+      "y_mm": 181.0866
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 108.8612,
-      "y_mm": 181.0261
+      "x_mm": 108.8748,
+      "y_mm": 181.0278
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 109.0095,
-      "y_mm": 180.4669
+      "x_mm": 109.0231,
+      "y_mm": 180.4687
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 105.1835,
-      "y_mm": 182.6956
+      "x_mm": 105.1977,
+      "y_mm": 182.6971
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 107.3717,
-      "y_mm": 186.6406
+      "x_mm": 107.3856,
+      "y_mm": 186.6416
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 107.52,
-      "y_mm": 186.0814
+      "x_mm": 107.5339,
+      "y_mm": 186.0825
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 107.7607,
-      "y_mm": 186.1445
+      "x_mm": 107.7745,
+      "y_mm": 186.1455
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 108.0016,
-      "y_mm": 186.2067
+      "x_mm": 108.0154,
+      "y_mm": 186.2078
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 108.2427,
-      "y_mm": 186.2682
+      "x_mm": 108.2564,
+      "y_mm": 186.2693
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 108.4839,
-      "y_mm": 186.3289
+      "x_mm": 108.4976,
+      "y_mm": 186.33
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 108.7254,
-      "y_mm": 186.3889
+      "x_mm": 108.7391,
+      "y_mm": 186.39
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 108.967,
-      "y_mm": 186.4481
+      "x_mm": 108.9807,
+      "y_mm": 186.4492
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 109.2088,
-      "y_mm": 186.5066
+      "x_mm": 109.2225,
+      "y_mm": 186.5076
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 109.4508,
-      "y_mm": 186.5643
+      "x_mm": 109.4644,
+      "y_mm": 186.5653
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 109.693,
-      "y_mm": 186.6212
+      "x_mm": 109.7066,
+      "y_mm": 186.6222
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 109.9354,
-      "y_mm": 186.6774
+      "x_mm": 109.9489,
+      "y_mm": 186.6784
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 110.1779,
-      "y_mm": 186.7328
+      "x_mm": 110.1914,
+      "y_mm": 186.7338
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 110.4206,
-      "y_mm": 186.7875
+      "x_mm": 110.4341,
+      "y_mm": 186.7885
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 110.6635,
-      "y_mm": 186.8414
+      "x_mm": 110.6769,
+      "y_mm": 186.8423
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 110.9065,
-      "y_mm": 186.8945
+      "x_mm": 110.92,
+      "y_mm": 186.8955
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 111.1498,
-      "y_mm": 186.9468
+      "x_mm": 111.1631,
+      "y_mm": 186.9478
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 111.3931,
-      "y_mm": 186.9984
+      "x_mm": 111.4065,
+      "y_mm": 186.9994
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 111.6367,
-      "y_mm": 187.0493
+      "x_mm": 111.65,
+      "y_mm": 187.0502
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 111.8804,
-      "y_mm": 187.0993
+      "x_mm": 111.8937,
+      "y_mm": 187.1003
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 112.1242,
-      "y_mm": 187.1486
+      "x_mm": 112.1375,
+      "y_mm": 187.1496
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 112.6124,
-      "y_mm": 187.2449
+      "x_mm": 112.6256,
+      "y_mm": 187.2458
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 112.8567,
-      "y_mm": 187.2919
+      "x_mm": 112.8699,
+      "y_mm": 187.2928
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 113.1011,
-      "y_mm": 187.3381
+      "x_mm": 113.1143,
+      "y_mm": 187.3391
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 113.3457,
-      "y_mm": 187.3836
+      "x_mm": 113.3588,
+      "y_mm": 187.3845
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 113.5905,
-      "y_mm": 187.4283
+      "x_mm": 113.6036,
+      "y_mm": 187.4292
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 113.8354,
-      "y_mm": 187.4722
+      "x_mm": 113.8484,
+      "y_mm": 187.4731
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 114.0804,
-      "y_mm": 187.5154
+      "x_mm": 114.0934,
+      "y_mm": 187.5163
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 114.3255,
-      "y_mm": 187.5577
+      "x_mm": 114.3385,
+      "y_mm": 187.5586
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 114.5708,
-      "y_mm": 187.5994
+      "x_mm": 114.5838,
+      "y_mm": 187.6002
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 114.8162,
-      "y_mm": 187.6402
+      "x_mm": 114.8291,
+      "y_mm": 187.6411
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 115.0617,
-      "y_mm": 187.6803
+      "x_mm": 115.0746,
+      "y_mm": 187.6811
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 115.3074,
-      "y_mm": 187.7196
+      "x_mm": 115.3203,
+      "y_mm": 187.7204
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 115.5532,
-      "y_mm": 187.7581
+      "x_mm": 115.566,
+      "y_mm": 187.7589
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 115.7991,
-      "y_mm": 187.7958
+      "x_mm": 115.8119,
+      "y_mm": 187.7967
     },
     {
       "polygon_id": "layer-0002/601",
       "layer_id": "layer-0002",
       "source_row": 6,
       "source_id": "feature:6",
-      "x_mm": 116.0451,
-      "y_mm": 187.8328
+      "x_mm": 116.0579,
+      "y_mm": 187.8337
     }
   ],
   "feature_parts_unchecked": [
@@ -4954,7 +4972,7 @@
       "reason": "visible",
       "actual_label": "AbaAI (727)",
       "displayed_source_row": 1,
-      "text_x": 1.2192,
+      "text_x": 1.2204,
       "text_y": 0.5334,
       "anchor_x": null,
       "anchor_y": null,
@@ -4976,7 +4994,7 @@
       "actual_label": "AbaHI (2180)",
       "displayed_source_row": 2,
       "text_x": 0.0007,
-      "text_y": -1.1674,
+      "text_y": -1.1675,
       "anchor_x": null,
       "anchor_y": null,
       "size": 2.5,
@@ -4994,9 +5012,9 @@
       "source_text": "AbaAI",
       "visible": true,
       "reason": "visible",
-      "actual_label": "AbaAI (3634)",
+      "actual_label": "(3634) AbaAI",
       "displayed_source_row": 3,
-      "text_x": -1.2273,
+      "text_x": -1.2286,
       "text_y": 0.5334,
       "anchor_x": null,
       "anchor_y": null,
@@ -5006,22 +5024,6 @@
       "leader_crossings": 0,
       "leader_text_status": null,
       "leader_route_status": null
-    }
-  ],
-  "axis_clearance": [
-    {
-      "accver": "pBR322",
-      ".axis_label": "1 / 4361",
-      ".axis_offset_explicit": false,
-      ".axis_clearance_status": "clear",
-      ".axis_clearance_mm": 0
-    },
-    {
-      "accver": "pBR322",
-      ".axis_label": "1000",
-      ".axis_offset_explicit": false,
-      ".axis_clearance_status": "clear",
-      ".axis_clearance_mm": 0
     }
   ]
 }

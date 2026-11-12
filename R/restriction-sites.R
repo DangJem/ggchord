@@ -543,27 +543,17 @@ GeomRestrictionSite <- ggplot2::ggproto(
       if (composite) {
         placed <- coord$transform(labels, panel_params)
         fragments <- vector("list", nrow(placed))
-        gap <- grid::unit(.65, "mm")
         for (i in seq_len(nrow(placed))) {
-          common_gp <- list(
-            col = scales::alpha(placed$colour[i], placed$alpha[i]),
-            fontsize = placed$size[i] * (72.27 / 25.4),
-            fontfamily = placed$family[i], lineheight = placed$lineheight[i]
-          )
           enzyme_face <- if ("enzyme_fontface" %in% names(placed) &&
               !is.na(placed$enzyme_fontface[i])) {
             placed$enzyme_fontface[i]
           } else "plain"
-          enzyme <- grid::textGrob(
-            placed$enzyme_label[i], y = grid::unit(placed$y[i], "native"),
-            vjust = placed$vjust[i],
-            gp = do.call(grid::gpar, c(common_gp, list(fontface = enzyme_face)))
-          )
-          coordinate <- grid::textGrob(
-            placed$coordinate_label[i],
-            y = grid::unit(placed$y[i], "native"), vjust = placed$vjust[i],
-            gp = do.call(grid::gpar, c(common_gp, list(fontface = "plain")))
-          )
+          parts <- ggchord_site_label_parts(placed$enzyme_label[i], placed$coordinate_label[i],
+            placed$size[i], placed$family[i], enzyme_face, placed$lineheight[i],
+            scales::alpha(placed$colour[i], placed$alpha[i]))
+          enzyme <- parts$enzyme; coordinate <- parts$coordinate; gap <- parts$gap
+          enzyme$y <- coordinate$y <- grid::unit(placed$y[i], 'native')
+          enzyme$vjust <- coordinate$vjust <- placed$vjust[i]
           has_enzyme <- !is.na(placed$enzyme_label[i]) &&
             nzchar(placed$enzyme_label[i])
           has_coordinate <- !is.na(placed$coordinate_label[i]) &&
@@ -1248,7 +1238,8 @@ ggchord_restriction_text_metrics <- function(text, size, units_per_inch,
   width <- height <- numeric(n)
   valid <- !is.na(text) & nzchar(text)
   if (!any(valid)) return(data.frame(width = width, height = height))
-  close_device <- ggchord_measurement_device(text = text[valid])
+  close_device <- if (grDevices::dev.cur() > 1L) function() invisible(NULL) else
+    ggchord_measurement_device(text = text[valid])
   on.exit(close_device())
   for (i in which(valid)) {
     label <- if (isTRUE(parse)) tryCatch(parse(text = text[i])[[1L]],
@@ -1506,26 +1497,15 @@ ggchord_restriction_geometry <- function(data, params, layout, seq_data) {
       paste0("(", coordinate, ")")
     } else if (params$label_style == "position") coordinate else
       rep("", length(idx))
-    enzyme_metrics <- ggchord_restriction_text_metrics(
-      enzyme_label, params$label_size %||% 2.9, units_per_inch,
-      parse = FALSE, fontface = site_enzyme_fontface
-    )
-    coordinate_metrics <- ggchord_restriction_text_metrics(
-      coordinate_label, params$label_size %||% 2.9, units_per_inch,
-      parse = FALSE, fontface = "plain"
-    )
-    spacer <- ifelse(nzchar(enzyme_label) & nzchar(coordinate_label), " ", "")
-    spacer_metrics <- ggchord_restriction_text_metrics(
-      spacer, params$label_size %||% 2.9, units_per_inch,
-      parse = FALSE, fontface = "plain"
-    )
-    # The layout and connector use the exact two grobs that will be rendered:
-    # a bold enzyme fragment and a regular coordinate fragment.
-    metrics <- data.frame(
-      width = enzyme_metrics$width + coordinate_metrics$width +
-        spacer_metrics$width,
-      height = pmax(enzyme_metrics$height, coordinate_metrics$height)
-    )
+    # Use the renderer's fragments and physical gap, including bold names.
+    metrics <- if (isTRUE(params$composite_labels %||% TRUE)) {
+      ggchord_site_label_metrics(enzyme_label, coordinate_label,
+        params$label_size %||% 2.9, params$label_family %||% '',
+        site_enzyme_fontface, params$label_lineheight %||% 1.2, units_per_inch)
+    } else ggchord_restriction_text_metrics(label_text,
+      params$label_size %||% 2.9, units_per_inch, parse = FALSE,
+      fontface = params$label_fontface %||% 'plain', family = params$label_family %||% '',
+      lineheight = params$label_lineheight %||% 1.2)
     column <- if (".restriction_column" %in% names(labels)) {
       labels$.restriction_column %in% TRUE
     } else rep(FALSE, length(idx))
@@ -1862,6 +1842,9 @@ ggchord_restriction_geometry <- function(data, params, layout, seq_data) {
         enzyme_label = enzyme_label[member],
         enzyme_fontface = site_enzyme_fontface[member],
         coordinate_label = coordinate_label[member],
+        .ggchord_composite_label = isTRUE(params$composite_labels %||% TRUE),
+        family = params$label_family %||% '', fontface = params$label_fontface %||% 'plain',
+        lineheight = params$label_lineheight %||% 1.2,
         size = params$label_size %||% 2.9, angle = 0,
         hjust = labels$hjust[member], vjust = labels$vjust[member],
         stringsAsFactors = FALSE

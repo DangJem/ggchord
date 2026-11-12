@@ -1,0 +1,29 @@
+{
+  "status": "passed",
+  "implicit": {
+    "composite": true,
+    "effective_style": {
+      "colour": "#111111",
+      "size": 4.569,
+      "family": "sans",
+      "fontface": "plain",
+      "lineheight": 1.4
+    },
+    "packing_mm": [24.0985, 11.7674],
+    "actual_mm": [23.3365, 11.0054]
+  },
+  "explicit_uniform_face": {
+    "composite": false,
+    "effective_style": {
+      "size": 2.5,
+      "fontface": "italic",
+      "family": "serif",
+      "colour": "#111111",
+      "lineheight": 1.4
+    },
+    "packing_mm": [12.26, 6.6147],
+    "actual_mm": [11.498, 5.8527]
+  },
+  "original_layer_preserved": true,
+  "scope": "One PNG composite packing envelope and component precedence; platforms unverified"
+}

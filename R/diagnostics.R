@@ -64,6 +64,9 @@ ggchord_diagnostic_text_styles <- function(data, layer) {
     if (!is.null(p$axis_size)) overrides$size <- p$axis_size
     apply_style('track_axis_text', p$axis_text_params, overrides)
     apply_style('track_axis_title', p$axis_title_params, overrides)
+  } else if (inherits(layer$geom, 'GeomRestrictionSite')) {
+    apply_style('label', layer$geom_params$text_params)
+    data$.ggchord_composite_label <- rep(isTRUE(layer$geom_params$composite_labels), nrow(data))
   } else if (inherits(layer$geom, 'GeomChordAxis') || inherits(layer$geom, 'GeomChordGeneLabelRepel')) {
     style <- layer$geom_params$text_params
     if (inherits(layer$geom, 'GeomChordGeneLabelRepel') && isTRUE(style$.ggchord_resolved_size)) style$size <- NULL
@@ -101,8 +104,16 @@ ggchord_diagnostic_text <- function(data, coordinate, panel, context, parse = FA
       fontface = value("fontface", 1), lineheight = value("lineheight", 1.2)))
     w <- grid::convertWidth(grid::grobWidth(grob), "mm", valueOnly = TRUE)
     h <- grid::convertHeight(grid::grobHeight(grob), "mm", valueOnly = TRUE)
+    composite <- isTRUE(value('.ggchord_composite_label', FALSE)) &&
+      all(c('enzyme_label', 'coordinate_label', 'enzyme_fontface') %in% names(data))
+    if (composite) {
+      exact <- ggchord_site_label_metrics(value('enzyme_label', ''), value('coordinate_label', ''),
+        data$size[i], value('family', ''), value('enzyme_fontface', 'plain'),
+        value('lineheight', 1.2))
+      w <- exact$width; h <- exact$height
+    }
     angle <- value("angle", 0) * pi / 180
-    hj <- value('hjust', .5); vj <- value('vjust', .5)
+    hj <- if (composite) .5 else value('hjust', .5); vj <- value('vjust', .5)
     cx <- xy$x[i] * context$panel_mm[["width"]] + context$panel_bounds_mm[["xmin"]] +
       (.5 - hj) * w * cos(angle) - (.5 - vj) * h * sin(angle)
     cy <- xy$y[i] * context$panel_mm[["height"]] + context$panel_bounds_mm[["ymin"]] +
@@ -221,6 +232,10 @@ ggchord_diagnostic_colours <- function(built, colour_vision) {
 #' `leader_text_status` for clear, detoured or unresolved static-text routes.
 #' `leader_route_status` records bounded crossing detours or unresolved routes
 #' while preserving directed endpoints and source-label positions.
+#' `axis_clearance` records available automatic circular label decisions and
+#' radial shifts in millimetres, positive outward and negative inward.
+#' Composite site labels use the same bold name and regular coordinate
+#' fragments, physical gap and text styles as the renderer.
 #' @md
 #' @export
 #' @section Guide measurements:

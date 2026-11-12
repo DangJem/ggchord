@@ -32,10 +32,6 @@ measure <- function(plot, id, width = 10, height = 8) {
   text <- ggchord_rbind_fill(texts) %||% data.frame()
   result <- ggchord_label_quality(layout, text, built, context)
   result$label_visibility <- ggchord_label_visibility(layout)
-  axis <- ggchord_axis_geometry(layout)
-  if ('.axis_clearance_status' %in% names(axis)) result$axis_clearance <- unique(axis[
-    axis$.component %in% 'text' & !is.na(axis$.axis_clearance_status),
-    intersect(c('accver', '.axis_label', '.axis_offset_explicit', '.axis_clearance_status', '.axis_clearance_mm'), names(axis)), drop = FALSE])
   jsonlite::write_json(result, file.path(folder, paste0(prefix, id, '.json')),
     auto_unbox = TRUE, pretty = TRUE, na = 'null')
   c(result$summary, list(width = width, height = height, file = path,
@@ -85,7 +81,12 @@ objects <- c('pSB1C3', 'pUC19', 'pBR322', 'pBluescript_II_SK_plus', 'pET_28a_plu
   'pETDuet_1', 'pDONR221', 'pcDNA3_1_plus', 'pTRE_Tight_BI', 'pTRIPZ', 'pCAMBIA1300',
   'pEarleyGate_201', 'pSpCas9_BB_2A_GFP_PX458')
 requested <- setdiff(arguments, c('--after', '--features', '--identity', '--clearance', '--current'))
-if (length(requested)) objects <- intersect(objects, requested)
+if (length(requested)) {
+  unknown <- setdiff(requested, objects)
+  if (length(unknown)) stop('Unknown requested catalogue IDs: ', paste(unknown, collapse = ', '))
+  objects <- intersect(objects, requested)
+}
+stopifnot(length(objects) > 0L)
 results <- list()
 for (id in objects) {
   cat('Quality:', id, '\n'); flush.console()

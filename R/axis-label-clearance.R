@@ -16,10 +16,12 @@ ggchord_clear_circular_axis_text <- function(text, layout) {
     parts <- split(d, d$group, drop = TRUE)
     polygons <- c(polygons, Filter(function(p) nrow(p) >= 3L, parts))
   }
-  if (!length(polygons)) return(text)
   units <- layout$text_units_per_inch %||% .35
+  # Axis placement precedes leader routing. Depending on the current leader
+  # path here would move text again after its obstacle was already routed.
+  if (!length(polygons)) return(text)
   backbone_radii <- unlist(lapply(layout$layer_geometry, function(owner) {
-    d <- owner$seq
+    d <- owner[['seq']]
     if (!is.data.frame(d) || !all(c('x', 'y') %in% names(d))) return(numeric())
     sqrt(d$x^2+d$y^2)
   }), use.names = FALSE)
@@ -46,7 +48,8 @@ ggchord_clear_circular_axis_text <- function(text, layout) {
   for (i in at) {
     original <- text[i, , drop = FALSE]
     boxes <- boxes_for(original)
-    if (!feature_hit(boxes)) {
+    feature_collision <- feature_hit(boxes)
+    if (!feature_collision) {
       text$.axis_clearance_status[i] <- 'clear'
       next
     }
@@ -61,13 +64,17 @@ ggchord_clear_circular_axis_text <- function(text, layout) {
     step <- max(height/4, .15*units/25.4)
     limit <- max(2*height, .8*units/25.4)
     amounts <- seq(step, limit, by = step)
+    amounts <- c(amounts, -seq(step, max(4*height, 3*units/25.4), by = step))
     # A narrow inner channel may not fit even at the font floor. One bounded
     # outer lane can clear the backbone without shrinking or deleting text.
     outer <- if (length(band)) band[2L]+height-radius else NA_real_
     if (is.finite(outer) && outer > limit && outer <= max(4*height, 3*units/25.4))
       amounts <- c(amounts, outer)
+    amounts <- unique(amounts[order(abs(amounts), amounts < 0)])
     text$.axis_clearance_status[i] <- 'feature_unresolved'
+    min_radius <- max(2*height, sum(boxes$ow)/(pi/2))
     for (amount in amounts) {
+      if (radius+amount < min_radius) next
       candidate <- original
       candidate$text_x <- original$text_x*(radius+amount)/radius
       candidate$text_y <- original$text_y*(radius+amount)/radius

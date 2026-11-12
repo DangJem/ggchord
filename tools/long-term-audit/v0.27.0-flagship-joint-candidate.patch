@@ -1,0 +1,293 @@
+diff --git a/R/annotation-leader-barriers.R b/R/annotation-leader-barriers.R
+index e726663..26b7a0b 100644
+--- a/R/annotation-leader-barriers.R
++++ b/R/annotation-leader-barriers.R
+@@ -1,38 +1,40 @@
+-# Route existing crossed exterior callouts around text and all other leaders.
+-# Positions, directed chain endpoints and source membership remain unchanged.
+-ggchord_detour_crossing_leaders <- function(registry, layout) {
+-  collect <- function(registry) {
+-    parts <- list()
+-    for (id in names(registry)) {
+-      d <- registry[[id]]$gene_label_repel
+-      if (is.data.frame(d) && nrow(d)) {
+-        at <- which(d$.component %in% 'segment' & is.finite(d$source_row))
+-        if (length(at)) parts[[length(parts)+1L]] <- data.frame(owner = id,
+-          component = 'gene_label_repel', source = d$source_row[at],
+-          x1 = d$x[at], y1 = d$y[at], x2 = d$xend[at], y2 = d$yend[at])
+-      }
+-      d <- registry[[id]]$restriction_site
+-      if (is.data.frame(d) && nrow(d)) {
+-        at <- which(d$restriction_component %in% 'leader' & is.finite(d$source_row))
+-        for (source in unique(d$source_row[at])) {
+-          rows <- at[d$source_row[at] == source]
+-          if (length(rows) < 2L) next
+-          parts[[length(parts)+1L]] <- data.frame(owner = id,
+-            component = 'restriction_site', source = source,
+-            x1 = head(d$x[rows], -1), y1 = head(d$y[rows], -1),
+-            x2 = tail(d$x[rows], -1), y2 = tail(d$y[rows], -1))
+-        }
++# Actual directed native paths, shared by placement and measured routing.
++ggchord_annotation_leader_segments <- function(registry) {
++  parts <- list()
++  for (id in names(registry)) {
++    d <- registry[[id]]$gene_label_repel
++    if (is.data.frame(d) && nrow(d)) {
++      at <- which(d$.component %in% 'segment' & is.finite(d$source_row))
++      if (length(at)) parts[[length(parts)+1L]] <- data.frame(owner = id,
++        component = 'gene_label_repel', source = d$source_row[at],
++        x1 = d$x[at], y1 = d$y[at], x2 = d$xend[at], y2 = d$yend[at])
++    }
++    d <- registry[[id]]$restriction_site
++    if (is.data.frame(d) && nrow(d)) {
++      at <- which(d$restriction_component %in% 'leader' & is.finite(d$source_row))
++      for (source in unique(d$source_row[at])) {
++        rows <- at[d$source_row[at] == source]
++        if (length(rows) < 2L) next
++        parts[[length(parts)+1L]] <- data.frame(owner = id,
++          component = 'restriction_site', source = source,
++          x1 = head(d$x[rows], -1), y1 = head(d$y[rows], -1),
++          x2 = tail(d$x[rows], -1), y2 = tail(d$y[rows], -1))
+       }
+     }
+-    all <- ggchord_rbind_fill(parts) %||% data.frame()
+-    if (nrow(all)) all <- all[stats::complete.cases(all) &
+-      (all$x1 != all$x2 | all$y1 != all$y2), , drop = FALSE]
+-    all
+   }
++  all <- ggchord_rbind_fill(parts) %||% data.frame()
++  if (nrow(all)) all <- all[stats::complete.cases(all) &
++    (all$x1 != all$x2 | all$y1 != all$y2), , drop = FALSE]
++  all
++}
++
++# Route existing crossed exterior callouts around text and all other leaders.
++# Positions, directed chain endpoints and source membership remain unchanged.
++ggchord_detour_crossing_leaders <- function(registry, layout) {
+   crosses <- function(path, others) nrow(others) > 0L && any(vapply(seq_len(nrow(path)), function(i)
+     any(ggchord_route_segment_crossings(c(path$x1[i], path$y1[i]),
+       c(path$x2[i], path$y2[i]), others)), logical(1)))
+-  leaders <- collect(registry)
++  leaders <- ggchord_annotation_leader_segments(registry)
+   if (!nrow(leaders)) return(registry)
+   boxes <- ggchord_annotation_text_obstacles(registry, layout)
+   units <- layout$text_units_per_inch %||% .35
+@@ -46,7 +48,7 @@ ggchord_detour_crossing_leaders <- function(registry, layout) {
+     if (!is.data.frame(geometry) || !nrow(geometry)) next
+     sources <- unique(geometry$source_row[geometry$.component %in% 'text' & ggchord_outer_callouts(geometry)])
+     for (source in sources[!is.na(sources)]) {
+-      leaders <- collect(registry)
++      leaders <- ggchord_annotation_leader_segments(registry)
+       own <- leaders$owner == owner & leaders$component == 'gene_label_repel' & leaders$source == source
+       path <- leaders[own, , drop = FALSE]; others <- leaders[!own, , drop = FALSE]
+       if (!nrow(path) || !crosses(path, others)) next
+@@ -68,22 +70,29 @@ ggchord_detour_crossing_leaders <- function(registry, layout) {
+         barriers$y1 <- barriers$y1-origin[2]; barriers$y2 <- barriers$y2-origin[2]
+         groups <- boxes$text_object[!own_text]
+         active <- which(ggchord_route_segment_hits(start-origin, end-origin, obstacles))
++        barrier_groups <- paste(barriers$owner, barriers$component, barriers$source, sep = '\r')
++        active_barriers <- which(ggchord_route_segment_crossings(start-origin, end-origin, barriers))
++        active_barriers <- which(barrier_groups %in% barrier_groups[active_barriers])
+         route <- NULL
+         # Add only text objects touched by trial routes. Every accepted route
+         # still clears the full obstacle set; distant glyph corners need not
+         # inflate the initial visibility graph.
+-        for (attempt in seq_len(length(unique(groups))+1L)) {
++        for (attempt in seq_len(length(unique(groups))+length(unique(barrier_groups))+1L)) {
+           route <- ggchord_route_shortest(start-origin, end-origin,
+             obstacles[active, , drop = FALSE], canvas,
+-            clearance = clearance, barriers = barriers)
++            clearance = clearance, barriers = barriers[active_barriers, , drop = FALSE])
+           if (is.null(route)) break
+           touched <- unique(unlist(lapply(seq_len(nrow(route)-1L), function(k)
+             which(ggchord_route_segment_hits(route[k, ], route[k+1L, ], obstacles))), use.names = FALSE))
+-          if (!length(touched)) break
++          crossed <- unique(unlist(lapply(seq_len(nrow(route)-1L), function(k)
++            which(ggchord_route_segment_crossings(route[k, ], route[k+1L, ], barriers))), use.names = FALSE))
++          if (!length(touched) && !length(crossed)) break
+           newer <- which(groups %in% groups[union(active, touched)])
++          newer_barriers <- which(barrier_groups %in% barrier_groups[union(active_barriers, crossed)])
+           route <- NULL
+-          if (length(newer) <= length(active)) break
++          if (length(newer) <= length(active) && length(newer_barriers) <= length(active_barriers)) break
+           active <- newer
++          active_barriers <- newer_barriers
+         }
+         if (!is.null(route)) {
+           route <- sweep(route, 2, origin, '+')
+diff --git a/R/axis-label-clearance.R b/R/axis-label-clearance.R
+index 07da229..bda2120 100644
+--- a/R/axis-label-clearance.R
++++ b/R/axis-label-clearance.R
+@@ -16,8 +16,23 @@ ggchord_clear_circular_axis_text <- function(text, layout) {
+     parts <- split(d, d$group, drop = TRUE)
+     polygons <- c(polygons, Filter(function(p) nrow(p) >= 3L, parts))
+   }
+-  if (!length(polygons)) return(text)
+   units <- layout$text_units_per_inch %||% .35
++  leaders <- ggchord_annotation_leader_segments(layout$layer_geometry)
++  if (!length(polygons) && !nrow(leaders)) return(text)
++  segments <- data.frame(x0 = leaders$x1, y0 = leaders$y1, x1 = leaders$x2, y1 = leaders$y2)
++  if (nrow(segments)) {
++    leader_xmin <- pmin(segments$x0, segments$x1); leader_xmax <- pmax(segments$x0, segments$x1)
++    leader_ymin <- pmin(segments$y0, segments$y1); leader_ymax <- pmax(segments$y0, segments$y1)
++  }
++  leader_hit <- function(boxes) {
++    if (!nrow(segments)) return(FALSE)
++    any(vapply(seq_len(nrow(boxes)), function(i) {
++      box <- boxes[i, , drop = FALSE]
++      at <- which(leader_xmin <= box$xmax & leader_xmax >= box$xmin &
++        leader_ymin <= box$ymax & leader_ymax >= box$ymin)
++      length(at) > 0L && ggchord_inner_leader_hits(segments[at, , drop = FALSE], box)
++    }, logical(1)))
++  }
+   backbone_radii <- unlist(lapply(layout$layer_geometry, function(owner) {
+     d <- owner$seq
+     if (!is.data.frame(d) || !all(c('x', 'y') %in% names(d))) return(numeric())
+@@ -46,7 +61,9 @@ ggchord_clear_circular_axis_text <- function(text, layout) {
+   for (i in at) {
+     original <- text[i, , drop = FALSE]
+     boxes <- boxes_for(original)
+-    if (!feature_hit(boxes)) {
++    feature_collision <- feature_hit(boxes)
++    leader_collision <- !feature_collision && leader_hit(boxes)
++    if (!feature_collision && !leader_collision) {
+       text$.axis_clearance_status[i] <- 'clear'
+       next
+     }
+@@ -61,25 +78,28 @@ ggchord_clear_circular_axis_text <- function(text, layout) {
+     step <- max(height/4, .15*units/25.4)
+     limit <- max(2*height, .8*units/25.4)
+     amounts <- seq(step, limit, by = step)
++    amounts <- c(amounts, -seq(step, max(4*height, 3*units/25.4), by = step))
+     # A narrow inner channel may not fit even at the font floor. One bounded
+     # outer lane can clear the backbone without shrinking or deleting text.
+     outer <- if (length(band)) band[2L]+height-radius else NA_real_
+     if (is.finite(outer) && outer > limit && outer <= max(4*height, 3*units/25.4))
+       amounts <- c(amounts, outer)
+-    text$.axis_clearance_status[i] <- 'feature_unresolved'
++    amounts <- unique(amounts[order(abs(amounts), amounts < 0)])
++    text$.axis_clearance_status[i] <- if (feature_collision) 'feature_unresolved' else 'leader_unresolved'
+     for (amount in amounts) {
++      if (radius+amount <= 0) next
+       candidate <- original
+       candidate$text_x <- original$text_x*(radius+amount)/radius
+       candidate$text_y <- original$text_y*(radius+amount)/radius
+       moved <- boxes_for(candidate)
+-      if (feature_hit(moved) || backbone_hit(moved)) next
++      if (feature_hit(moved) || backbone_hit(moved) || leader_hit(moved)) next
+       hits_text <- nrow(others) > 0L && any(vapply(seq_len(nrow(moved)), function(k)
+         any(ggchord_oriented_box_overlaps(moved[k, , drop = FALSE], others)), logical(1)))
+       if (hits_text) next
+       text$text_x[i] <- candidate$text_x
+       text$text_y[i] <- candidate$text_y
+       text$.axis_clearance_mm[i] <- amount*25.4/units
+-      text$.axis_clearance_status[i] <- 'feature_clearance'
++      text$.axis_clearance_status[i] <- if (feature_collision) 'feature_clearance' else 'leader_clearance'
+       break
+     }
+   }
+diff --git a/R/diagnostics.R b/R/diagnostics.R
+index e8f8e42..2d8870a 100644
+--- a/R/diagnostics.R
++++ b/R/diagnostics.R
+@@ -221,6 +221,8 @@ ggchord_diagnostic_colours <- function(built, colour_vision) {
+ #' `leader_text_status` for clear, detoured or unresolved static-text routes.
+ #' `leader_route_status` records bounded crossing detours or unresolved routes
+ #' while preserving directed endpoints and source-label positions.
++#' `axis_clearance` records available automatic circular label decisions and
++#' radial shifts in millimetres, positive outward and negative inward.
+ #' @md
+ #' @export
+ #' @section Guide measurements:
+diff --git a/R/label-quality.R b/R/label-quality.R
+index 887f15e..7526bdd 100644
+--- a/R/label-quality.R
++++ b/R/label-quality.R
+@@ -112,7 +112,16 @@ ggchord_label_quality <- function(layout, text, built, context) {
+     n_text_feature_unresolved = sum(features$contacts$relation == 'unresolved'),
+     n_text_on_own_feature = sum(features$contacts$relation == 'own_source'))
+   if (!measured) for (key in setdiff(names(summary), 'measured')) summary[[key]] <- NA
++  axis <- ggchord_axis_geometry(layout)
++  axis_clearance <- data.frame()
++  if ('.axis_clearance_status' %in% names(axis)) {
++    at <- axis$.component %in% 'text' & !is.na(axis$.axis_clearance_status)
++    axis_clearance <- unique(data.frame(accver = axis$accver[at], label = axis$.axis_label[at],
++      automatic_breaks = axis$.axis_automatic_breaks[at], explicit_offset = axis$.axis_offset_explicit[at],
++      status = axis$.axis_clearance_status[at], radial_shift_mm = axis$.axis_clearance_mm[at]))
++  }
+   list(summary = summary, conflicts = conflicts, text = text, leaders = segments,
++    axis_clearance = axis_clearance,
+     feature_contacts = features$contacts, feature_polygons = features$polygons,
+     feature_parts_unchecked = features$skipped,
+     scope = 'Measured registered panel text boxes, annotation polylines and gene/feature polygon envelopes, including transparent polygons. Own-source label contacts are recorded separately; unproven source association remains unresolved. Strict leader interior contacts, not shared endpoints. No automatic layout change.',
+diff --git a/R/theme.R b/R/theme.R
+index a6bdc56..be972b9 100644
+--- a/R/theme.R
++++ b/R/theme.R
+@@ -61,7 +61,8 @@
+ #'   orientations retain straight text.
+ #' @param axis.text.check.overlap Whether overlapping axis labels are hidden. Defaults to TRUE.
+ #'   Automatically positioned circular parallel labels, including combined seam
+-#'   strings, can receive bounded radial clearance around feature polygons.
++#'   strings, can receive bounded inward or outward radial clearance around
++#'   feature polygons and registered annotation leaders.
+ #'   Explicit `axis.text.offset` values and explicit scale breaks stay fixed.
+ #' @param seq.label,gene.label,feature.label,restriction.label,seq.center.label,seq.center.name,seq.center.length
+ #'   Text elements for sequence, gene, feature, restriction-site and circular
+diff --git a/tools/documentation-examples.R b/tools/documentation-examples.R
+index d8674d2..790ee5a 100644
+--- a/tools/documentation-examples.R
++++ b/tools/documentation-examples.R
+@@ -1001,11 +1001,11 @@ show_plasmid_sites <- filter_restriction_sites(
+ show_plasmid_position <- position_feature_stack(
+   spacing = 0.085, base_position = position_plasmid()
+ )
+-p_show_plasmid <- ggchord(show_plasmid, validate = "none") +
++p_show_plasmid <- ggchord(show_plasmid, feature_data = show_plasmid_features, validate = "none") +
+   geom_seq(seq_style = "double", colour = "#252525") +
+-  geom_feature_plasmid(data = show_plasmid_features, position = show_plasmid_position) +
++  geom_feature_plasmid(position = show_plasmid_position) +
+   geom_feature_label_repel(
+-    data = show_plasmid_features, position = show_plasmid_position,
++    position = show_plasmid_position,
+     external = TRUE, max_overlaps = 0,
+     label_fit = "shrink", label_min_size = 2.5
+   ) +
+diff --git a/tools/long-term-audit/check-flagship-label-quality.R b/tools/long-term-audit/check-flagship-label-quality.R
+index b9b0f6b..9338c72 100644
+--- a/tools/long-term-audit/check-flagship-label-quality.R
++++ b/tools/long-term-audit/check-flagship-label-quality.R
+@@ -4,7 +4,8 @@ helper <- readLines('tools/long-term-audit/check-label-quality.R', warn = FALSE)
+ end <- grep('^# Explicit geometry controls', helper)[1L]-1L
+ stopifnot(is.finite(end))
+ eval(parse(text = helper[seq_len(end)]))
+-prefix <- 'v0.27.0-flagship-quality-'
++joint <- '--joint' %in% commandArgs(trailingOnly = TRUE)
++prefix <- if (joint) 'v0.27.0-flagship-joint-' else 'v0.27.0-flagship-quality-'
+ lines <- readLines('tools/documentation-examples.R', warn = FALSE)
+ markers <- grep('^# ---- [a-z]+ ----$', lines)
+ chunks <- stats::setNames(lapply(seq_len(length(markers)-1L), function(i)
+@@ -32,5 +33,6 @@ jsonlite::write_json(list(scope = 'Published pETDuet-1 plot from canonical docum
+     function(path) digest::digest(file = path, algo = 'sha256'), character(1)), sources)),
+   caveats = c('Contact counts and visibility reasons are observations, not assumed passes.',
+     'Exact ink, non-polygon strokes, arbitrary canvases and publication device/platform matrix remain unverified.')),
+-  'tools/long-term-audit/v0.27.0-flagship-quality-results.json', pretty = TRUE, auto_unbox = TRUE, na = 'null')
++  if (joint) 'tools/long-term-audit/v0.27.0-flagship-joint-results.json' else
++    'tools/long-term-audit/v0.27.0-flagship-quality-results.json', pretty = TRUE, auto_unbox = TRUE, na = 'null')
+ cat('Flagship controlled size observations recorded\n')
+diff --git a/tools/long-term-audit/check-label-quality.R b/tools/long-term-audit/check-label-quality.R
+index cbb68d2..056cc12 100644
+--- a/tools/long-term-audit/check-label-quality.R
++++ b/tools/long-term-audit/check-label-quality.R
+@@ -32,10 +32,6 @@ measure <- function(plot, id, width = 10, height = 8) {
+   text <- ggchord_rbind_fill(texts) %||% data.frame()
+   result <- ggchord_label_quality(layout, text, built, context)
+   result$label_visibility <- ggchord_label_visibility(layout)
+-  axis <- ggchord_axis_geometry(layout)
+-  if ('.axis_clearance_status' %in% names(axis)) result$axis_clearance <- unique(axis[
+-    axis$.component %in% 'text' & !is.na(axis$.axis_clearance_status),
+-    intersect(c('accver', '.axis_label', '.axis_offset_explicit', '.axis_clearance_status', '.axis_clearance_mm'), names(axis)), drop = FALSE])
+   jsonlite::write_json(result, file.path(folder, paste0(prefix, id, '.json')),
+     auto_unbox = TRUE, pretty = TRUE, na = 'null')
+   c(result$summary, list(width = width, height = height, file = path,

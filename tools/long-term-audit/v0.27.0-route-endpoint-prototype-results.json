@@ -1,0 +1,51 @@
+{
+  "status": "passed production preflight equivalence",
+  "cases": {
+    "start_inside": {
+      "same_result": true,
+      "status": "no_route",
+      "path": {}
+    },
+    "end_inside": {
+      "same_result": true,
+      "status": "no_route",
+      "path": {}
+    },
+    "padded_endpoint": {
+      "same_result": true,
+      "status": "no_route",
+      "path": {}
+    },
+    "boundary": {
+      "same_result": true,
+      "status": "route",
+      "path": [
+        [3.75, 5],
+        [3.75, 6.25],
+        [4.75, 7.75],
+        [5.25, 8.25],
+        [9, 9]
+      ]
+    },
+    "route_around": {
+      "same_result": true,
+      "status": "route",
+      "path": [
+        [1, 5],
+        [4.75, 1.75],
+        [9, 5]
+      ]
+    },
+    "clear": {
+      "same_result": true,
+      "status": "route",
+      "path": [
+        [1, 1],
+        [9, 1]
+      ]
+    }
+  },
+  "production_has_preflight": true,
+  "source_sha256": "ed0bca5d7492148fcdc02418954d3db8faa45b18c56ecb6dc18c93a5633bd3a0",
+  "scope": "Six explicit geometry controls; dense figure observations are recorded separately"
+}

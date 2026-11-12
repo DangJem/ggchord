@@ -32,7 +32,19 @@ ggchord_perimeter_tasks <- function(registry, units_per_inch) {
           angle = 0, hjust = .5, vjust = .5,
           family = if ("family" %in% names(sites))
             as.character(sites$family[row]) else "",
-          fontface = "plain", lineheight = 1.2,
+          fontface = if ("fontface" %in% names(sites)) {
+            face <- sites$fontface[row]
+            if (length(face) != 1L || is.na(face) ||
+                (is.character(face) && !nzchar(face))) "plain" else
+              if (is.numeric(face)) c("plain", "bold", "italic", "bold.italic")[
+              max(1L, min(4L, as.integer(face)))] else as.character(face)
+          } else "plain",
+          lineheight = if ("lineheight" %in% names(sites))
+            as.numeric(sites$lineheight[row]) else 1.2,
+          .ggchord_composite_label = if (".ggchord_composite_label" %in% names(sites))
+            isTRUE(sites$.ggchord_composite_label[row]) else FALSE,
+          label_order = if ("label_order" %in% names(sites))
+            as.character(sites$label_order[row]) else "enzyme_position",
           enzyme_label = if ("enzyme_label" %in% names(sites))
             as.character(sites$enzyme_label[row]) else "",
           coordinate_label = if ("coordinate_label" %in% names(sites))
@@ -87,6 +99,7 @@ ggchord_perimeter_tasks <- function(registry, units_per_inch) {
         } else "plain",
         lineheight = if ("lineheight" %in% names(geometry))
           as.numeric(geometry$lineheight[row]) else 1.2,
+        .ggchord_composite_label = NA, label_order = "enzyme_position",
         enzyme_label = "", coordinate_label = "",
         enzyme_fontface = "plain",
         stringsAsFactors = FALSE
@@ -124,26 +137,17 @@ ggchord_perimeter_tasks <- function(registry, units_per_inch) {
     MoreArgs = list(width_mm = wrap_mm), USE.NAMES = FALSE)
   restriction <- which(tasks$kind == "restriction")
   if (length(restriction)) {
-    enzyme <- ggchord_restriction_text_metrics(
-      tasks$enzyme_label[restriction], tasks$size[restriction],
-      units_per_inch, parse = FALSE,
-      fontface = tasks$enzyme_fontface[restriction],
-      family = tasks$family[restriction],
-      lineheight = tasks$lineheight[restriction]
-    )
-    coordinate <- ggchord_restriction_text_metrics(
-      tasks$coordinate_label[restriction], tasks$size[restriction],
-      units_per_inch, parse = FALSE,
-      family = tasks$family[restriction],
-      lineheight = tasks$lineheight[restriction]
-    )
-    both <- nzchar(tasks$enzyme_label[restriction]) &
-      nzchar(tasks$coordinate_label[restriction])
-    tasks$w[restriction] <- enzyme$width + coordinate$width +
-      ifelse(both, .65 / 25.4 * units_per_inch, 0) +
-      .03 * units_per_inch
-    tasks$h[restriction] <- pmax(enzyme$height, coordinate$height) +
-      .03 * units_per_inch
+    tasks$text[restriction] <- vapply(restriction, function(i) {
+      parts <- c(tasks$enzyme_label[i], tasks$coordinate_label[i])
+      if (tasks$label_order[i] %in% "position_enzyme") parts <- rev(parts)
+      paste(parts[nzchar(parts)], collapse = " ")
+    }, character(1))
+    # Measure the same fragments on the target device as rendering and routing.
+    # Explicit uniform font faces retain their ordinary text-box path.
+    measured <- ggchord_text_boxes(tasks[restriction, , drop = FALSE],
+      units_per_inch = units_per_inch, box_padding = .015)
+    tasks$w[restriction] <- measured$bw
+    tasks$h[restriction] <- measured$bh
   }
   callout <- which(tasks$kind == "feature")
   if (length(callout)) {
@@ -767,7 +771,7 @@ ggchord_place_dense_perimeter <- function(registry, layout,
       sites <- registry[[id]]$restriction_site
       if (!"label_text_original" %in% names(sites)) sites$label_text_original <- sites$label
       sites$enzyme_label[row] <- task$enzyme_label
-      sites$label[row] <- paste(task$enzyme_label,task$coordinate_label)
+      sites$label[row] <- task$text
       sites$x[row] <- task$target_x
       sites$y[row] <- task$target_y
       sites$label_attachment_x[row] <- task$edge_x

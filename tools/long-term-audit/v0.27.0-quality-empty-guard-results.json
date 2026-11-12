@@ -1,0 +1,9 @@
+{
+  "status": "passed expected rejection",
+  "case": "unknown catalogue ID must not succeed with zero cases",
+  "returncode": 1,
+  "message": [
+    "Error: Unknown requested catalogue IDs: --unknown-control",
+    "Execution halted"
+  ]
+}

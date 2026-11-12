@@ -18,3 +18,20 @@ test_that("transformed axis breaks retain their genomic anchors", {
   expect_equal(as.character(logged$label), c("10", "100"))
   expect_equal(logged[c("x0", "y0")], plain[c("x0", "y0")])
 })
+
+test_that("central text is not treated as a sequence backbone obstacle", {
+  # Format control: the feature forces nontrivial automatic text clearance.
+  seqs <- data.frame(accver = "format", length = 5000)
+  features <- data.frame(accver = "format", start = 1, end = 1000,
+    strand = "+", anno = "format feature")
+  plot <- ggchord(seqs, feature_data = features) +
+    geom_seq(seq_style = "double") +
+    geom_feature_plasmid(position = position_plasmid(offset = -.04)) +
+    coord_circular() + theme_ggchord_plasmid()
+  plain <- diagnose_ggchord(plot, width = 8, height = 8, device = "png")
+  central <- diagnose_ggchord(plot + geom_seq_center_label(),
+    width = 8, height = 8, device = "png")
+  expect_true(any(plain$label_quality$axis_clearance$radial_shift_mm != 0))
+  expect_equal(central$label_quality$axis_clearance,
+    plain$label_quality$axis_clearance)
+})
