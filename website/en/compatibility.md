@@ -22,7 +22,7 @@ Check units, layers and parameters before changing coordinates. This table combi
 | [`geom_primer()`](reference/geom_primer.html) | Conditional | Unsupported | Conditional | One displayed DNA sequence and valid binding coordinates |
 | [`geom_primer_label_repel()`](reference/geom_primer_label_repel.html) | Conditional | Unsupported | Conditional | One displayed DNA sequence; share primer placement |
 | [`geom_restriction_site()`](reference/geom_restriction_site.html) | Conditional | Unsupported | Conditional | One displayed DNA sequence and actual computed cleavage sites |
-| [`geom_track()`](reference/geom_track.html) | Supported | Supported | Supported | Source-space Stat/Position; first support matrix in [Foundation](foundation.html#tracks) |
+| [`geom_track()`](reference/geom_track.html) | Supported | Supported | Supported | Source-space Stat/Position; [base matrix](foundation.html#tracks) and [estimation combinations](tracks.html#estimates) |
 | [`geom_track_bar()`](reference/geom_track.html) | Supported | Supported | Supported | Count observations; use col for supplied values |
 | [`geom_track_col()`](reference/geom_track.html) | Supported | Supported | Supported | Explicit position_track; numeric heights and declared domains |
 | [`geom_track_line()`](reference/geom_track.html) | Supported | Supported | Supported | Explicit position_track; closure must be requested and missing samples respected |

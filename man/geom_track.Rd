@@ -77,7 +77,18 @@ Statistics and data positions are calculated independently within each
 accession/window before projection into the physical track band. Supported
 geoms are point, line, path, step, col, bar, tile, rect, area, ribbon,
 segment, linerange, errorbar and text. Supported statistics are identity,
-count, bin and summary; unsupported combinations fail in the native layer.
+count, bin, summary, smooth, density and ecdf; unsupported combinations fail
+in the native layer. Smooth/density/ecdf retain each estimation group's
+complete eligible source-row set, not new independent observations. These
+sets describe the group submitted to the native estimator, not per-point
+influence or a custom model's additional internal filtering decisions.
+Statistics operate on raw source x/y before Track numerical-scale transforms.
+ECDF requires explicit pad=FALSE because infinite anchors are not source
+positions. Density's native bounds argument is not forwarded: bounds here
+controls source-coordinate clipping, not density boundary correction.
+New estimation combinations use position="identity": smooth with
+line/path/point/ribbon, density with line/path/point/area, and ecdf with
+line/path/point/step. Other combinations are explicitly rejected.
 Count counts identical positions; bin requires explicit binwidth or breaks.
 An explicit group mapping takes priority over discrete style mappings.
 Bin source membership follows the native statistic, including outer edges
@@ -91,5 +102,15 @@ events <- data.frame(accver = "A", pos = c(100, 100, 400))
 ggchord(data.frame(accver = "A", length = 1000)) +
   geom_seq() +
   geom_track(data = events, geom = "bar", track = position_track("count")) +
+  coord_collinear()
+# Fit existing GC windows in source space; estimates are not new data.
+path <- system.file("extdata", "pUC19-gc-100.bedGraph", package = "ggchord")
+signal <- read_bedgraph(path)
+signal$pos <- (signal$start + signal$end) / 2
+ggchord(data.frame(accver = "pUC19", length = 2686)) +
+  geom_seq() +
+  geom_track(aes(x = pos, y = value), data = signal, geom = "line",
+    stat = "smooth", method = "lm", formula = y ~ x, se = FALSE,
+    track = position_track("GC")) +
   coord_collinear()
 }

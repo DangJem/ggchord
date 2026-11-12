@@ -100,3 +100,40 @@ Encode the same GC by bar height and colour using explicit gc_height/gc_colour I
 ## DNA windows and line boundaries {#window-policy}
 
 GC here is `mean(bases %in% c("G", "C"))`: ambiguous bases remain in the denominator and contribute zero to the numerator. The final window uses its actual number of bases. This pUC19 input has no ambiguous bases; for other inputs explicitly choose and report a policy rather than assuming they are omitted. Focusing clips intervals and retains the original summary; it does not recompute GC for a shortened window. Line tracks connect the supplied samples within their grouping; `closed` explicitly controls circular closure and `gap` belongs to physical track placement. Do not use a closed line to imply continuity across omitted source windows.
+
+## Native source-space estimates {#estimates}
+
+`geom_track()` also delegates `smooth`, `density` and `ecdf` to native ggplot2 statistics **before projection**. These create estimates of supplied observations, not additional observations. They run independently by accession/window and explicit group. Estimation `source_rows` records the eligible group submitted to the estimator after native missing-value handling; it is not per-point influence, positive read support or a custom model's additional internal filtering report.
+
+| Statistic | Documented geometry | Input and explicit choices | Data Position |
+| --- | --- | --- | --- |
+| `smooth` | `line`, `path`, `point`, `ribbon` | Source `x` and raw numerical `y`; choose method/formula; ribbon requires SE bounds | `"identity"` or native PositionIdentity |
+| `density` | `line`, `path`, `point`, `area` | Positions in `x`, optional weights; choose bandwidth; `after_stat(density)` is density per source-position unit | `"identity"` or native PositionIdentity |
+| `ecdf` | `line`, `path`, `point`, `step` | Positions in `x`; `after_stat(ecdf)` is cumulative fraction; explicit `pad = FALSE` avoids infinite source anchors | `"identity"` or native PositionIdentity |
+
+Other combinations of these statistics fail explicitly. Use `position = "identity"` explicitly for density area because area otherwise defaults to stacking. `bounds` remains the Track source-boundary policy and does not forward the native density boundary-correction parameter. Facets, boxplots, violins, raster and arbitrary third-party Geom/Stat objects remain unsupported; a numerical name in a function is not a projection contract.
+
+Reuse the real `bins` and `track_seq` prepared above. This explicit linear fit is a display summary of the GC fractions, with a native confidence ribbon and mean line sharing one Track:
+
+```r
+estimate_bins <- bins |> dplyr::mutate(pos = (start + end) / 2)
+estimate_band <- position_track("gc_fit", width = unit(12, "mm"))
+p_estimate <- ggchord(track_seq) +
+  geom_seq() +
+  geom_track(
+    aes(x = pos, y = gc), data = estimate_bins, geom = "ribbon", stat = "smooth",
+    method = "lm", formula = y ~ x, se = TRUE, position = "identity",
+    fill = "#387D88", alpha = 0.2, track = estimate_band
+  ) +
+  geom_track(
+    aes(x = pos, y = gc), data = estimate_bins, geom = "line", stat = "smooth",
+    method = "lm", formula = y ~ x, se = FALSE, colour = "#285B65", track = estimate_band
+  ) +
+  scale_track_value_continuous("gc_fit", name = "GC fit", unit = "fraction") +
+  coord_collinear()
+p_estimate
+```
+
+Statistical fitting uses raw supplied source x/y. A later transformed Track value scale maps the estimates; it does not silently refit a log-space model, unlike placing a transform before a Stat in a native ggplot. If transformed-space fitting is intended, prepare and name that transformed variable explicitly and state its unit. Kernel density of event positions is not measured sequencing depth. ECDF output is a cumulative distribution, not a basewise alignment.
+
+The directed source-backed checks compare native ggplot2 results and group membership for real pUC19 GC windows and G/C positions, plus curved/vertical projection and an explicitly missing-value control. `check-track-estimates.R` retains the numerical report and actual CI/mean image. Finite source bounds and physical-band constraints still apply; automatic placement does not change the fitted model or manufacture observations.

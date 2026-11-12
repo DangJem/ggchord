@@ -34,3 +34,14 @@ test_that("track bins retain the observations counted at outer boundaries", {
   expect_equal(out$count,3)
   expect_equal(out$source_rows[[1]],1:3)
 })
+
+test_that("native track estimates retain their source group", {
+  observations <- data.frame(accver = "A", pos = c(100, 200, 300, 400), value = c(2, 4, 3, 5))
+  plot <- ggchord(smoke_sequences()) + geom_seq() +
+    geom_track(aes(x = pos, y = value), data = observations, geom = "line",
+      stat = "smooth", method = "lm", formula = y ~ x, se = FALSE,
+      track = position_track("fit")) + coord_collinear()
+  out <- export_ggchord_layout(plot, include = "track")$track_statistics[[1]]
+  expect_true(nrow(out) > 0L)
+  expect_equal(out$source_rows[[1]], 1:4)
+})

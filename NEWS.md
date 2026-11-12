@@ -1,5 +1,12 @@
 # ggchord 0.27.0 (development)
 
+- Extended `geom_track()` with native source-space `smooth`, `density` and
+  `ecdf` statistics. Model outputs retain estimation-group source rows rather
+  than becoming independent observations; ECDF requires finite `pad = FALSE`.
+  Track transforms map the resulting values without silently refitting a model
+  in transformed space. Fixed line/path/step geometry to follow mapped y when
+  separate ymin/ymax fields are present, allowing a mean line over a CI ribbon.
+
 - Documented an optional BAM coverage workflow through GenomicAlignments and
   existing Track inputs, with explicit flag/deletion/reference-skip semantics.
   A source-backed Drosophila example and a clearly identified no-reference CRAM

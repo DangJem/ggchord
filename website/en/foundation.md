@@ -79,10 +79,10 @@ p_count_shortcut <- ggchord(foundation_seqs) +
 | point, line, path, step, text | identity | source x and local y; text requires label |
 | tile, rect, area, ribbon, segment, linerange, errorbar | identity | corresponding native ggplot2 extents |
 
-Available statistics are identity/count/bin/summary. Bin needs explicit binwidth
+Available statistics are identity/count/bin/summary, plus the documented [smooth/density/ecdf estimation combinations](tracks.html#estimates). Bin needs explicit binwidth
 or breaks. Native group and after_stat mappings are supported; numerical axes
 retain the statistic's value units. Arbitrary third-party Geom/Stat plugins and
-smooth/density/ecdf statistics are outside this first support matrix. Existing
+unsupported combinations are rejected. Existing
 track line/tile shortcuts retain their documented behaviour.
 
 Source position uses x orientation; native text size currently uses mm and polygon outlines are full. Other orientations/size units/partial outlines fail explicitly. Native text styles and path arrows are forwarded.

@@ -5,7 +5,18 @@
 #' accession/window before projection into the physical track band. Supported
 #' geoms are point, line, path, step, col, bar, tile, rect, area, ribbon,
 #' segment, linerange, errorbar and text. Supported statistics are identity,
-#' count, bin and summary; unsupported combinations fail in the native layer.
+#' count, bin, summary, smooth, density and ecdf; unsupported combinations fail
+#' in the native layer. Smooth/density/ecdf retain each estimation group's
+#' complete eligible source-row set, not new independent observations. These
+#' sets describe the group submitted to the native estimator, not per-point
+#' influence or a custom model's additional internal filtering decisions.
+#' Statistics operate on raw source x/y before Track numerical-scale transforms.
+#' ECDF requires explicit pad=FALSE because infinite anchors are not source
+#' positions. Density's native bounds argument is not forwarded: bounds here
+#' controls source-coordinate clipping, not density boundary correction.
+#' New estimation combinations use position="identity": smooth with
+#' line/path/point/ribbon, density with line/path/point/area, and ecdf with
+#' line/path/point/step. Other combinations are explicitly rejected.
 #' Count counts identical positions; bin requires explicit binwidth or breaks.
 #' An explicit group mapping takes priority over discrete style mappings.
 #' Bin source membership follows the native statistic, including outer edges
@@ -34,6 +45,16 @@
 #'   geom_seq() +
 #'   geom_track(data = events, geom = "bar", track = position_track("count")) +
 #'   coord_collinear()
+#' # Fit existing GC windows in source space; estimates are not new data.
+#' path <- system.file("extdata", "pUC19-gc-100.bedGraph", package = "ggchord")
+#' signal <- read_bedgraph(path)
+#' signal$pos <- (signal$start + signal$end) / 2
+#' ggchord(data.frame(accver = "pUC19", length = 2686)) +
+#'   geom_seq() +
+#'   geom_track(aes(x = pos, y = value), data = signal, geom = "line",
+#'     stat = "smooth", method = "lm", formula = y ~ x, se = FALSE,
+#'     track = position_track("GC")) +
+#'   coord_collinear()
 geom_track <- function(mapping = NULL, data = NULL, geom = "point", stat = NULL,
     track = NULL, position = NULL, bounds = c("error", "clip"), baseline = 0,
     show.legend = NA, inherit.aes = FALSE, ...) {
@@ -42,15 +63,22 @@ geom_track <- function(mapping = NULL, data = NULL, geom = "point", stat = NULL,
   if (!is.character(geom) || length(geom) != 1L || !geom %in% geoms)
     ggchord_stop("geom_track(): unsupported geom; see the documented support matrix")
   stat <- stat %||% if (geom == "bar") "count" else "identity"
-  if (!is.character(stat) || length(stat) != 1L || !stat %in% c("identity", "count", "bin", "summary"))
-    ggchord_stop("geom_track(): supported stats are identity, count, bin, summary")
+  if (!is.character(stat) || length(stat) != 1L || !stat %in% c("identity", "count", "bin", "summary", "smooth", "density", "ecdf"))
+    ggchord_stop("geom_track(): supported stats are identity, count, bin, summary, smooth, density, ecdf")
   if (inherits(position, "Position") && isTRUE(position$ggchord_track_position)) {
     if (!is.null(track)) ggchord_stop("geom_track(): declare the physical track only once")
     track <- position; position <- NULL
   }
   if (is.null(track)) ggchord_stop("geom_track(): supply track = position_track(...)")
   position <- position %||% if (geom %in% c("bar", "col", "area")) "stack" else "identity"
+  estimates <- list(smooth = c("line", "path", "point", "ribbon"),
+    density = c("line", "path", "point", "area"), ecdf = c("line", "path", "point", "step"))
+  identity_position <- identical(position, "identity") || inherits(position, "PositionIdentity")
+  if (stat %in% names(estimates) && (!geom %in% estimates[[stat]] || !identity_position))
+    ggchord_stop("geom_track(): ", stat, " requires position='identity' and geom in ", paste(estimates[[stat]], collapse = ", "))
   dots <- ggchord_colour_dots(list(...), "geom_track()")
+  if (stat == "ecdf" && !identical(dots$pad, FALSE))
+    ggchord_stop("geom_track(stat='ecdf'): supply pad=FALSE; infinite ECDF anchors are not source coordinates")
   if (stat == "bin" && is.null(dots$binwidth) && is.null(dots$breaks))
     ggchord_stop("geom_track(stat='bin'): supply binwidth or breaks explicitly")
   if (!is.null(dots$orientation) && !identical(dots$orientation,"x"))
@@ -170,13 +198,15 @@ ggchord_track_native_input <- function(layer, plot) {
       native$geom$default_aes$.ggchord_stat_x <- NA_real_
       native$mapping$.ggchord_stat_x <- ggplot2::aes(value=after_stat(x))$value
     }
-    if (p$native_stat %in% c("identity", "bin")) {
+    if (p$native_stat %in% c("identity", "bin", "smooth", "density", "ecdf")) {
       native$data$.track_input_index <- seq_len(nrow(d))
       native$mapping$.ggchord_source_index <- rlang::quo(.track_input_index)
       source_stat <- native$stat
       required <- unique(c(source_stat$required_aes, ".ggchord_source_index"))
       native$stat <- ggplot2::ggproto(NULL, source_stat, required_aes = required)
       if (p$native_stat == "bin") native$stat <- ggchord_track_bin_stat(native$stat)
+      if (p$native_stat %in% c("smooth", "density", "ecdf"))
+        native$stat <- ggchord_track_group_stat(native$stat)
     }
     q <- ggplot2::ggplot() + native + ggplot2::scale_fill_identity() +
       ggplot2::scale_colour_identity() + ggplot2::scale_alpha_identity() +
@@ -202,11 +232,14 @@ ggchord_track_native_input <- function(layer, plot) {
     computed$source_rows <- I(lapply(seq_len(nrow(computed)), function(j) {
       if (p$native_stat == "identity") return(rows[computed$.ggchord_source_index[j]])
       if (p$native_stat == "bin") return(rows[computed$.ggchord_bin_rows[[j]]])
+      if (p$native_stat %in% c("smooth", "density", "ecdf"))
+        return(rows[computed$.ggchord_group_rows[[j]]])
       keep <- local_group == computed$group[j]
       if (p$native_geom != "rect") keep <- keep & gx == computed$.ggchord_stat_x[j]
       rows[which(keep)]
     }))
     computed$.ggchord_bin_rows <- NULL
+    computed$.ggchord_group_rows <- NULL
     parts[[length(parts) + 1L]] <- computed
   }
   output <- ggchord_rbind_fill(parts)
@@ -241,6 +274,20 @@ ggchord_track_native_input <- function(layer, plot) {
   layer$geom_params$native_draw_params <- params[intersect(names(params),c("arrow","lineend","linejoin","linemitre","parse","check_overlap","rule"))]
   layer$geom_params$track_kind <- p$native_geom
   layer
+}
+
+ggchord_track_group_stat <- function(stat) {
+  # Preserve native parameter discovery while wrapping the actual eligible
+  # compute_group input, after native missing-value removal and before Position.
+  # Model/density estimates depend on this group, not just the output x value.
+  ggplot2::ggproto(NULL, stat,
+    dropped_aes = unique(c(stat$dropped_aes, ".ggchord_source_index")),
+    parameters = function(self, extra = FALSE) stat$parameters(extra = extra),
+    compute_group = function(data, scales, ...) {
+      result <- stat$compute_group(data, scales, ...)
+      result$.ggchord_group_rows <- I(rep(list(data$.ggchord_source_index), nrow(result)))
+      result
+    })
 }
 
 ggchord_track_bin_stat <- function(stat) {
@@ -312,7 +359,9 @@ ggchord_track_native_geometry <- function(d, p, layout, sc, at_value) {
       runs <- split(rows[valid], cumsum(!valid)[valid])
       for (run in runs) {
         if (length(run) < 2L) next
-        x <- d$pos[run]; upper <- d$track_ymax[run]; lower <- d$track_ymin[run]
+        x <- d$pos[run]
+        upper <- if (geom %in% c("area", "ribbon")) d$track_ymax[run] else d$track_value[run]
+        lower <- d$track_ymin[run]
         if (geom == "step") {
           direction <- p$native_params$direction %||% "hv"
           if (direction == "mid") {

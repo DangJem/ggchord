@@ -22,7 +22,7 @@
 | [`geom_primer()`](reference/geom_primer.html) | 条件支持 | 不支持 | 条件支持 | 仅一条显示 DNA 序列及合法结合坐标 |
 | [`geom_primer_label_repel()`](reference/geom_primer_label_repel.html) | 条件支持 | 不支持 | 条件支持 | 仅一条显示 DNA 序列，与引物共享位置 |
 | [`geom_restriction_site()`](reference/geom_restriction_site.html) | 条件支持 | 不支持 | 条件支持 | 仅一条显示 DNA 序列及实际计算的切割坐标 |
-| [`geom_track()`](reference/geom_track.html) | 支持 | 支持 | 支持 | 源空间 Stat/Position；见[首批矩阵](foundation.html#tracks) |
+| [`geom_track()`](reference/geom_track.html) | 支持 | 支持 | 支持 | 源空间 Stat/Position；见[基础矩阵](foundation.html#tracks)和[估计组合](tracks.html#estimates) |
 | [`geom_track_bar()`](reference/geom_track.html) | 支持 | 支持 | 支持 | 统计观测数，给定数值请使用 col |
 | [`geom_track_col()`](reference/geom_track.html) | 支持 | 支持 | 支持 | 显式 position_track、数值高度与数值域 |
 | [`geom_track_line()`](reference/geom_track.html) | 支持 | 支持 | 支持 | 显式 position_track；闭合须明确请求，不跨缺失样本连接 |

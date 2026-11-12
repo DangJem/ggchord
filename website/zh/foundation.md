@@ -69,9 +69,8 @@ p_count_shortcut <- ggchord(foundation_seqs) +
 | point、line、path、step、text | identity | 源 x 与局部 y，text 还需 label |
 | tile、rect、area、ribbon、segment、linerange、errorbar | identity | 对应 ggplot2 原生范围字段 |
 
-可用统计包括 identity/count/bin/summary，bin 必须显式给出 binwidth 或 breaks。
-支持原生 group 与 after_stat 映射；数值轴保留统计量单位。任意第三方 Geom/Stat 插件
-及 smooth/density/ecdf 不属于首批支持矩阵。既有 track line/tile 快捷层保留其原有行为。
+可用统计包括 identity/count/bin/summary，以及已声明的 [smooth/density/ecdf 估计组合](tracks.html#estimates)。bin 必须显式给出 binwidth 或 breaks。
+支持原生 group 与 after_stat 映射；数值轴保留统计量单位。任意第三方 Geom/Stat 插件不在支持范围内，不支持的组合明确拒绝。既有 track line/tile 快捷层保留其原有行为。
 
 源位置使用 x orientation，原生文字字号目前使用 mm，区间几何只支持完整轮廓。其他方向、字号单位或局部轮廓会明确报错。原生文字样式和路径箭头继续转发。
 

@@ -97,3 +97,40 @@ ggsave("pUC19-tracks.png", p_multitrack, width = 9, height = 8, units = "in", dp
 ## DNA 窗口与折线边界 {#window-policy}
 
 此处 GC 为 `mean(bases %in% c("G", "C"))`：模糊碱基仍计入分母、对分子贡献为零；末窗口使用实际碱基数。当前 pUC19 不含模糊碱基，换输入时应明确并记录策略，不能假定自动忽略。局部聚焦裁剪区间并保留原汇总，不会重新计算缩短窗口的 GC。折线按输入样本及分组连接，`closed` 显式控制圆周闭合，`gap` 属于轨道的物理间隔。不能用闭合线暗示被省略源窗口之间存在连续观测。
+
+## 原生源空间估计 {#estimates}
+
+`geom_track()` 还会在**投影前**委托原生 ggplot2 执行 `smooth`、`density` 和 `ecdf`。它们是给定观测的估计，不是新增观测，按 accession/窗口及显式 group 独立计算。估计的 `source_rows` 记录原生缺失值处理后提交给估计器的组，不表示每点影响力、阳性 read support，也不是自定义模型内部进一步过滤的报告。
+
+| 统计 | 已声明几何 | 输入和显式选择 | 数据 Position |
+| --- | --- | --- | --- |
+| `smooth` | `line`、`path`、`point`、`ribbon` | 源 `x` 与原数值 `y`；选择 method/formula，ribbon 需要 SE 边界 | `"identity"` 或原生 PositionIdentity |
+| `density` | `line`、`path`、`point`、`area` | `x` 中的位置及可选权重；选择带宽，`after_stat(density)` 单位是源位置单位的倒数 | `"identity"` 或原生 PositionIdentity |
+| `ecdf` | `line`、`path`、`point`、`step` | `x` 中的位置；`after_stat(ecdf)` 是累计比例；显式 `pad = FALSE` 避免无限源锚点 | `"identity"` 或原生 PositionIdentity |
+
+这些统计的其他组合明确报错。density area 必须显式 `position = "identity"`，因为 area 否则默认堆叠。`bounds` 仍是 Track 源边界策略，不转发原生 density 的边界校正参数。facet、boxplot、violin、raster 及任意第三方 Geom/Stat 对象仍不支持；存在一个数值名称不等于具备投影契约。
+
+复用上文准备的真实 `bins` 和 `track_seq`。下面显式线性拟合作为 GC 比例的显示摘要，原生置信 ribbon 与均值线共享一个 Track：
+
+```r
+estimate_bins <- bins |> dplyr::mutate(pos = (start + end) / 2)
+estimate_band <- position_track("gc_fit", width = unit(12, "mm"))
+p_estimate <- ggchord(track_seq) +
+  geom_seq() +
+  geom_track(
+    aes(x = pos, y = gc), data = estimate_bins, geom = "ribbon", stat = "smooth",
+    method = "lm", formula = y ~ x, se = TRUE, position = "identity",
+    fill = "#387D88", alpha = 0.2, track = estimate_band
+  ) +
+  geom_track(
+    aes(x = pos, y = gc), data = estimate_bins, geom = "line", stat = "smooth",
+    method = "lm", formula = y ~ x, se = FALSE, colour = "#285B65", track = estimate_band
+  ) +
+  scale_track_value_continuous("gc_fit", name = "GC fit", unit = "fraction") +
+  coord_collinear()
+p_estimate
+```
+
+拟合使用给定的原始源 x/y，之后 Track 数值标度的变换只映射估计，不会暗中重拟合 log 空间模型；这与原生 ggplot 在 Stat 之前放置变换有别。如需在变换空间拟合，应事先显式准备、命名变换变量并声明单位。事件位置的核密度不是测序深度，ECDF 是累计分布，不是逐位点比对。
+
+真实 pUC19 GC 窗口及 G/C 位置已与原生 ggplot2 数值和组来源逐项对照，并核对曲线/竖向投影及显式缺失值控制。`check-track-estimates.R` 保存数值报告和实际 CI/均值图。有限源边界及物理 band 约束仍适用；自动摆放不改变模型或制造观测。

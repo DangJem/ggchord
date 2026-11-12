@@ -1,0 +1,13 @@
+{
+  "status": "passed",
+  "ggplot2": "4.0.3",
+  "sources": "unchanged bundled pUC19 sequence and GC bedGraph; inst/extdata/signal-sources.json",
+  "stats": ["smooth", "density", "ecdf"],
+  "native_source_estimates_equal": true,
+  "group_source_membership_before_position": true,
+  "missing_rows_excluded": true,
+  "raw_estimates_before_track_transforms": true,
+  "curved_vertical_projections_preserve_statistics": true,
+  "finite_ecdf_explicit_pad": false,
+  "model_output_not_new_observations": true
+}

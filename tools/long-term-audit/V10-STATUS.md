@@ -26,7 +26,7 @@ bin外边界来源漏记、普通Chord/Collinear绕过声明HSP重复检查、ma
 | §1.3、§10.1–8 首轮审计与统一架构方案 | 已完成首轮审计、分类矩阵、迁移设计和隔离原型 | README.md、DESIGN.md、api.csv、parameters.csv、capabilities.csv、prototype-results.json；均为当时基线，不冒充当前API清单 |
 | §2、§10.2 来源/实例/路由 | 已实现共享来源、命名实例、Coord前路由与来源导出 | DEVELOPMENT-v0.17.0.md、check-view-source-bridge.R；跨进程任意同值表身份不作推断 |
 | §2.5、§10.9 Feature统一 | 已实现feature_data、旧gene_data兼容及互斥、显式分类 | feature-input-results-v0.17.0.json；稳定化阶段仍须决定兼容长期策略 |
-| §3.6–3.7、§10.10 Track | 已实现14种首批几何、identity/count/bin/summary、group/after_stat/数据Position、物理band和来源统计成员 | track-grammar-results-v0.17.0.json；不是任意第三方Geom/Stat透传，facets、smooth、boxplot/violin等未支持 |
+| §3.6–3.7、§10.10 Track | 已实现14种首批几何、identity/count/bin/summary及受控smooth/density/ecdf、group/after_stat/数据Position、物理band和来源统计成员 | track-grammar-results-v0.17.0.json；不是任意第三方Geom/Stat透传，facets、boxplot/violin等未支持；新估计组合见TRACK-GRAMMAR-v0.27.0.md |
 | §4.2、A.1 纵向Collinear | 已实现源空间到纵向投影、方向/反查与图层组合 | foundation-views-results-v0.17.0.json；本版补缺失角度崩溃修复 |
 | §4.3、A.2 Sankey | 已实现query左/subject右镜像、真实区间、默认自身过滤 | 同上；不实现多阶段流量模型，不支持共享branch/重复between路由 |
 | §4.4、§10.4 Dotplot | 已实现HSP线段、独立轴、源端点/单位/来源与反查 | check-dotplot.R、DEVELOPMENT-v0.18.0.md；精细错配轨迹及单序列Track不在当前支持范围 |

@@ -388,3 +388,22 @@ check-graph-paths.R以已有seq/feature/focus接口构建真实200步子集，�
 GFA2、缺字符或native ODGI二进制；文档记录上游成熟导出路线，不冒称实测过其
 二进制。按探索条款的真实原型/取舍门槛已交付，不把未验证能力写成正式API。
 双语formats同步；没有新增公开参数，不增加测试矩阵或运行包级发布验收。
+
+## 第十八工作包：Track原生估计统计与来源
+
+回查v10 §3.6–3.7，补齐smooth/density/ecdf的原型与受控实现，继续复用原生Stat，
+不新增估计引擎/公开函数/显式签名形参。新组合仅文档声明几何和identity数据
+Position；ECDF必须显式pad=FALSE，density bounds不与已有源边界参数双义。
+统计在原始源x/y空间运行，Track数值变换只映射结果，不暗中改拟合空间。
+
+native compute_group wrapper保留参数发现，记录原生缺失值处理后提交的源组。
+拟合点不成为新观测；source_rows不是每点影响或自定义模型内部进一步过滤报告。
+保留同ID叠加/独立ID scale及用户优先。另确认line/path/step遇ymin/ymax原先
+跟随上界而非y，现共享路径几何仅area/ribbon用上界，均值线准确跟随y。
+
+check-track-estimates.R实际通过真实pUC19 GC及G/C位点对原生ggplot2 4.0.3的
+逐Stat数值/分组核对，缺失值控制、有限ECDF拒绝、曲线/竖向投影和后置log标度
+不改源统计。CI带+均值线PNG实际保存查看。Track课程独立环境执行通过，1144段
+翻译/帮助/Rd/NEWS/双语基础矩阵/兼容课程同步；最小测试仅新增一条公开smooth
+成功路径，未运行testthat或发布矩阵。详细矩阵及facet/boxplot/violin/Track group
+评估见TRACK-GRAMMAR-v0.27.0.md，不宣称任意第三方层全兼容。
