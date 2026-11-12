@@ -3,7 +3,8 @@ test_that("named tracks share domains and compose with selected axes and a bp re
   plot <- ggchord(smoke_sequences()) + geom_seq() +
     geom_track_col(aes(track_value = value), data = data,
       position = position_track("signal")) +
-    scale_track_value_continuous("signal", limits = c(-2, 3)) +
+    scale_track_value_continuous("signal", limits = c(-2, 3),
+      guide = ggplot2::guide_axis(theme = theme(axis.text = element_text(colour = "purple")))) +
     scale_seq_position_continuous(sequences = "B") + geom_seq_scale(length = 100) +
     coord_collinear()
   out <- export_ggchord_layout(plot, include = c("track", "axis"))

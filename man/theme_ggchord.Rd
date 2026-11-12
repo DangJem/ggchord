@@ -654,6 +654,27 @@ scalar absolute \code{grid::unit()} values; \code{axis.text.orientation} is scal
 The preset themes share this signature and provide appearance defaults.
 }
 
+\section{Native detailed configuration}{
+
+Use standard \code{theme()} with the registered \verb{ggchord.axis.*}, \code{ggchord.seq.label},
+\code{ggchord.gene.label}, \code{ggchord.feature.label} and leader elements. Axis gap,
+tick lengths, text offset/orientation and overlap settings also have
+\verb{ggchord.axis.*} entries. Absolute scalar units are required for spacings.
+Existing short arguments remain convenient aliases; do not supply both
+spellings for one setting in the same call. Later theme() entries override
+earlier defaults following ordinary ggplot2 field-wise merging.
+
+Quantitative axis decoration uses ggchord.track.axis.line,
+ggchord.track.axis.text and ggchord.track.axis.title, plus absolute
+ggchord.track.axis.text.offset and ggchord.track.axis.title.offset.
+These inherit sequence-axis/text styling; each track may override its own
+decoration through guide_axis(theme = theme(axis.text = ..., axis.title = ...,
+axis.line = ...)) in scale_track_value_continuous(). Numerical domains,
+units, breaks and labels still belong to that scale; colours to scoped
+fill/colour scales; physical bands to position_track().
+Theme changes never filter data, alter HSPs or choose sequence directions.
+}
+
 \section{Standard ggplot2 settings}{
 
 Standard text, plot title/caption/tag, backgrounds, plot margins and common

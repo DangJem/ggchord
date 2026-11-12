@@ -77,3 +77,58 @@ report$adaptive_layout$styles
 <div class="next-step">继续：<a href="adjustments.html">调整图形 →</a></div>
 
 各角色 manual/continuous/steps/identity、线型、透明度和主题的完整可运行家族例子见[标度家族](scale-families.html)。
+
+## 使用标准 theme 细调外观 {#native-theme}
+
+`ggchord()` 已自动提供 `theme_ggchord()`。只有场景需要时才切换四个预设：Minimal简化装饰，Publication采用紧凑字体，Dark调整深色背景上的非数据装饰，Plasmid强调圆形注释。数据palette、科学连接及序列方向保持独立；背景需要其他数据对比度时，应明确使用数据scale或Geom固定颜色。
+
+| 要调整的内容 | 所属组件 |
+| --- | --- |
+| 背景、字体、非数据标签/引线外观 | `theme()` |
+| 序列颜色、Feature填色、Track数值范围/刻度/单位 | `aes()`及相应Scale |
+| 骨架形态、Ribbon箭头/渐变模式、数据对象固定样式 | Geom |
+| Track物理band、Feature堆叠与偏移 | Position |
+| 序列顺序/方向及投影 | Coord / 显式数据流程 |
+| 图例行列、顺序、方向、单个位置 | Guide；全局摆放用Theme |
+
+注册的 `ggchord.axis.*` 物理设置接受单个绝对单位，与 `theme_ggchord()` 现有短参数使用同一配置。后续细调优先写 `theme(ggchord.axis.gap = unit(1, "mm"))`。一次主题构造只使用一种拼写，同义入口同时提供会报错；后续 `theme()` 按熟悉的ggplot2逐字段合并。`ggchord.seq.label`、`ggchord.gene.label`、`ggchord.feature.label`及其 `.segment` 线元素控制真实注释图层，显式Geom样式/映射仍优先。普通Cartesian的 `axis.text.x` 不代替自动序列轴；Dotplot保留独立原生x/y轴。
+
+### Track共享外观与局部覆盖 {#track-theme}
+
+以下真实GC比例来自未改动的随包pUC19序列，需可选dplyr。Track数据Scale负责比例值域和单位，其局部原生Guide负责轴装饰，普通Theme负责共享外观，没有虚构测序深度或read support。
+
+```r
+data(plasmid_example_pUC19)
+library(dplyr)
+source_sequence <- plasmid_example_pUC19
+bin_start <- seq.int(1L, source_sequence$length, by = 100L)
+track_bins <- tibble(
+  accver = source_sequence$accver, start = bin_start,
+  end = pmin(bin_start + 99L, source_sequence$length)
+) |>
+  rowwise() |>
+  mutate(gc = mean(strsplit(
+    substr(source_sequence$sequence, start, end), "", fixed = TRUE
+  )[[1]] %in% c("G", "C"))) |>
+  ungroup()
+themed_track <- ggchord(source_sequence |> select(accver, length)) +
+  geom_seq() +
+  geom_track(aes(x = start, y = gc), data = track_bins, geom = "point",
+    track = position_track("GC", width = unit(5, "mm")), colour = "#59B59C") +
+  scale_track_value_continuous("GC", limits = c(0, 1), unit = "fraction",
+    guide = ggplot2::guide_axis(theme = theme(
+      axis.text = element_text(colour = "#E5A5C0", size = 10),
+      axis.title = element_text(face = "bold")
+    ))) +
+  coord_circular() +
+  theme_ggchord_dark() +
+  theme(
+    ggchord.axis.text.orientation = "horizontal",
+    ggchord.track.axis.text = element_text(size = 9),
+    ggchord.track.axis.title.offset = unit(6, "mm")
+  )
+```
+
+`ggchord.track.axis.line/text/title` 控制共享数值轴外观；`.text.offset` 与 `.title.offset` 使用非负绝对单位。预留图幅时采用解析后的字号/字体/角度实测。GC Guide的显式文字样式优先于后来添加的全局9pt默认；局部 `element_blank()` 只隐藏对应装饰。`guide_axis()` 支持局部 `axis.line/text/title`、`angle` 与 `check.overlap`，其余选项明确报错，不静默忽略。
+
+同Track ID的图层共享band、数值域和一个数值参考轴；不同ID已有独立数值/fill/colour Scale和颜色Guide。按ID添加 `scale_track_*()`，无需为每个Track注册主题元素。颜色Guide的局部外观可以通过对应Track色标中的原生 `guide_legend(theme = ...)` 或 `guide_colourbar(theme = ...)` 设置；全局图例字体/背景/位置仍由Theme负责。主题切换不改变序列顺序、HSP筛选、统计或单位。标签/Guide自动排版是独立策略，会按最终导出尺寸重新测量。

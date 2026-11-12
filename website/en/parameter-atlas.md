@@ -1370,7 +1370,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `transform` | `"identity"` | Character/enum; choices below | Standard continuous-scale controls. |
 | `oob` | `scales::censor` | R object; constraints below | Standard continuous-scale controls. |
 | `unit` | `NULL` | Nullable R object; type/inheritance below | Optional data-unit label retained in track exports. |
-| `guide` | `c("axis", "none")` | Vector; choices versus multiple selection below | "axis" or "none" for the numerical track axis. |
+| `guide` | `c("axis", "none")` | Vector; choices versus multiple selection below | "axis" or "none" for the numerical track axis, or a native ggplot2::guide_axis() with local theme (axis.line/text/title), angle and check.overlap. Other guide_axis options fail explicitly because this sequence-local numerical reference is not a Cartesian panel axis. Local guide styling overrides global ggchord.track.axis.* theme elements. |
 | `...` | `Required/alternative entry; see description` | Forwarded arguments | Additional ggplot2 continuous-scale arguments. |
 
 </details>

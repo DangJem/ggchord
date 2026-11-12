@@ -50,6 +50,8 @@ ggchord_track_units <- function(normal, layout) {
 }
 
 ggchord_track_metric_vector <- function(vector, id, layout) {
+  if (isTRUE(layout$collinear) && isTRUE((layout$track_projection_axis %||% layout$seq_axis) %in% c("vertical", "sankey")))
+    return(cbind(-vector[, 2], vector[, 1]))
   theta <- layout$radial_angles[id]
   if (is.null(theta)) return(vector)
   cbind(vector[,1] * cos(theta) - vector[,2] * sin(theta),
@@ -118,6 +120,7 @@ ggchord_track_polygons_overlap <- function(a, b) {
 }
 
 ggchord_layout_tracks <- function(plot, layout, registry, inputs) {
+  layout$track_projection_axis <- plot$coordinates$collinear_seq_axis
   layers <- Filter(function(l) identical(l$ggchord_type, "track"), plot$layers)
   seqs <- layout$seqs; ref <- layout$sequence_reference
   data <- lapply(layers, function(l) ggchord_resolve_layer_input(l, plot$ggchord$data$seq_data))
@@ -370,13 +373,14 @@ ggchord_layout_tracks <- function(plot, layout, registry, inputs) {
   list(layout = layout, registry = registry, inputs = inputs)
 }
 
-ggchord_track_axes <- function(layout, registry) {
+ggchord_track_axes <- function(layout, registry, plot) {
   axes <- list()
   for (id in names(layout$track_scales)) {
     sc <- layout$track_scales[[id]]
     band <- layout$track_registry[layout$track_registry$track_id == id, , drop = FALSE][1L, ]
     if (!isTRUE(sc$ggchord_track_axis) || band$domain_status != "trained") next
     owner <- band$source_layers[[1L]][1L]
+    style <- ggchord_track_axis_style(plot, id)
     # One explicit numerical reference per shared track domain. Automatic
     # breaks use its endpoints; explicit user breaks/labels remain untouched.
     breaks <- if (ggplot2::is_waiver(sc$breaks)) unique(sc$get_limits()) else sc$get_breaks()
@@ -395,7 +399,10 @@ ggchord_track_axes <- function(layout, registry) {
     normal <- ggchord_track_frame(anchor, seq, layout)$normal[1L, ]
     tangent <- matrix(c(-normal[2L], normal[1L]), nrow = 1L)
     spacing <- ggchord_track_units(ggchord_track_metric_vector(tangent, seq, layout), layout)
-    label_points <- ticks + matrix(rep(as.numeric(tangent) * spacing * 2.5,
+    screen_tangent <- ggchord_track_metric_vector(tangent, seq, layout)[1L, ]
+    label_extent <- ggchord_track_axis_extent(labels, style$axis_text_params, screen_tangent)
+    text_distance <- if (style$text_offset_locked) style$text_offset_mm else max(style$text_offset_mm, label_extent + 1)
+    label_points <- ticks + matrix(rep(as.numeric(tangent) * spacing * text_distance,
       length(fractions)), ncol = 2L, byrow = TRUE)
     line <- data.frame(x = ends[, 1], y = ends[, 2], group = -1L,
       source_row = NA_integer_, accver = seq, track_id = id, label = NA_character_,
@@ -406,20 +413,34 @@ ggchord_track_axes <- function(layout, registry) {
       track_id = id, label = as.character(labels), .component = "track_axis_text")
     title <- if (ggplot2::is_waiver(sc$name)) id else as.character(sc$name)
     if (length(title) && !is.na(title) && nzchar(title)) {
-      value <- point(.5) + tangent * spacing * 5.5
       unit <- sc$ggchord_track_unit
       if (!is.null(unit) && nzchar(unit)) title <- paste0(title, " (", unit, ")")
+      title_extent <- ggchord_track_axis_extent(title, style$axis_title_params, screen_tangent)
+      title_distance <- if (style$title_offset_locked) style$title_offset_mm else
+        max(style$title_offset_mm, text_distance + label_extent + title_extent + 1)
+      value <- point(.5) + tangent * spacing * title_distance
       title_row <- data.frame(x = value[1, 1], y = value[1, 2], group = -1000L,
         source_row = NA_integer_, accver = seq, track_id = id, label = title,
-        .component = "track_axis_text")
+        .component = "track_axis_title")
       text <- ggchord_rbind_fill(list(text, title_row))
     }
     out <- ggchord_rbind_fill(list(line, text))
+    out$.axis_hidden <- FALSE
+    for (kind in c("line", "text", "title")) {
+      at <- which(out$.component == paste0("track_axis_", kind))
+      params <- style[[paste0("axis_", kind, "_params")]]
+      out$.axis_hidden[at] <- isTRUE(params$hidden)
+      for (name in setdiff(names(params), "hidden")) if (length(params[[name]])) {
+        key <- paste0(".axis_", name)
+        if (is.null(out[[key]])) out[[key]] <- rep(NA, nrow(out))
+        out[[key]][at] <- params[[name]]
+      }
+    }
     # Add blank input columns so visual mappings can evaluate on axis rows.
     base <- registry[[owner]]$track
     out <- ggchord_rbind_fill(list(base, out))
     registry[[owner]]$track <- out
-    axes[[id]] <- ggchord_rbind_fill(list(line, text))
+    axes[[id]] <- out[out$.component %in% c("track_axis_line", "track_axis_text", "track_axis_title"), , drop = FALSE]
   }
   list(registry = registry, axes = ggchord_rbind_fill(axes) %||% data.frame())
 }

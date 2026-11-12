@@ -17,6 +17,25 @@
 #' scalar absolute \code{grid::unit()} values; \code{axis.text.orientation} is scalar.
 #' The preset themes share this signature and provide appearance defaults.
 #'
+#' @section Native detailed configuration:
+#' Use standard `theme()` with the registered `ggchord.axis.*`, `ggchord.seq.label`,
+#' `ggchord.gene.label`, `ggchord.feature.label` and leader elements. Axis gap,
+#' tick lengths, text offset/orientation and overlap settings also have
+#' `ggchord.axis.*` entries. Absolute scalar units are required for spacings.
+#' Existing short arguments remain convenient aliases; do not supply both
+#' spellings for one setting in the same call. Later theme() entries override
+#' earlier defaults following ordinary ggplot2 field-wise merging.
+#'
+#' Quantitative axis decoration uses ggchord.track.axis.line,
+#' ggchord.track.axis.text and ggchord.track.axis.title, plus absolute
+#' ggchord.track.axis.text.offset and ggchord.track.axis.title.offset.
+#' These inherit sequence-axis/text styling; each track may override its own
+#' decoration through guide_axis(theme = theme(axis.text = ..., axis.title = ...,
+#' axis.line = ...)) in scale_track_value_continuous(). Numerical domains,
+#' units, breaks and labels still belong to that scale; colours to scoped
+#' fill/colour scales; physical bands to position_track().
+#' Theme changes never filter data, alter HSPs or choose sequence directions.
+#'
 #' @section Standard ggplot2 settings:
 #' Standard text, plot title/caption/tag, backgrounds, plot margins and common
 #' legend settings remain available through \code{...}, for example
@@ -165,6 +184,8 @@ ggchord_theme_from_environment <- function(preset, env, dots) {
   ggchord_reject_retired(dots, caller, old)
   nms <- setdiff(names(formals(theme_ggchord)), "...")
   values <- stats::setNames(lapply(nms, get, envir = env), nms)
+  supplied_shortcuts <- names(values)[!vapply(values, is.null, logical(1))]
+  native_overrides <- names(dots)
   # Standard settings remain usable through dots and participate in role inheritance.
   values <- c(values, dots)
   dots <- list()
@@ -212,6 +233,11 @@ ggchord_theme_from_environment <- function(preset, env, dots) {
       legend.spacing.y = grid::unit(4, "mm"),
       legend.text = ggplot2::element_text(size = ggplot2::rel(.73), colour = fg),
       legend.title = ggplot2::element_text(size = ggplot2::rel(.82), face = "bold", colour = fg),
+      ggchord.track.axis.line = ggplot2::element_line(colour = if (dark) fg else "#4F5962", linewidth = .25),
+      ggchord.track.axis.text = ggplot2::element_text(colour = if (dark) fg else "#4F5962", size = ggplot2::rel(2.2 * ggplot2::.pt / (11 * .72))),
+      ggchord.track.axis.title = ggplot2::element_text(),
+      ggchord.track.axis.text.offset = grid::unit(2.5, "mm"),
+      ggchord.track.axis.title.offset = grid::unit(5.5, "mm"),
       ggchord.axis.line = ggplot2::element_line(
         colour = if (dark) "#ADB5BD" else if (preset == "plasmid") "#252525" else if (preset == "minimal") "#90969B" else "#737A80",
         linewidth = if (preset == "plasmid") .55 else if (preset == "minimal") .25 else .3),
@@ -264,6 +290,14 @@ ggchord_theme_from_environment <- function(preset, env, dots) {
     ggchord.seq.center.name = values$seq.center.name,
     ggchord.seq.center.length = values$seq.center.length
   )
+  physical <- c("axis", "axis.gap", "axis.ticks.length", "axis.minor.ticks.length",
+    "axis.text.offset", "axis.text.orientation", "axis.text.check.overlap")
+  custom <- c(custom, stats::setNames(values[physical], paste0("ggchord.", physical)))
+  aliases <- sub("^ggchord[.]", "", names(custom))
+  conflict <- names(custom)[aliases %in% supplied_shortcuts & names(custom) %in% native_overrides]
+  if (length(conflict)) ggchord_stop(caller, ": use either the shortcut or its native theme element, not both: ",
+    paste(conflict, collapse = ", "))
+  custom <- custom[!names(custom) %in% native_overrides]
   standard <- c("text", "plot.title", "plot.subtitle", "plot.caption", "plot.tag",
     "plot.title.position", "plot.caption.position", "plot.tag.position",
     "plot.background", "panel.background", "plot.margin", "legend.position",
@@ -297,7 +331,7 @@ ggchord_theme_settings <- function(values) {
                 "axis.text.offset", "legend.ribbon.ticks.length")
   for (nm in unit_nms) {
     x <- values[[nm]]
-    if (!is.null(x) && (!grid::is.unit(x) || length(x) != 1L))
+    if (!is.null(x) && (!grid::is.unit(x) || length(x) != 1L || !is.finite(as.numeric(x))))
       ggchord_stop("theme_ggchord(): ", nm, " must be one grid::unit()")
     if (!is.null(x) && !grid::unitType(x) %in%
         c("inches", "cm", "mm", "points", "bigpts", "picas"))
@@ -372,6 +406,17 @@ ggchord_plot_settings <- function(plot) {
     nms <- setdiff(names(formals(theme_ggchord)), "...")
     found <- ggchord_theme_settings(stats::setNames(rep(list(NULL), length(nms)), nms))
   }
+  physical <- c("axis", "axis.gap", "axis.ticks.length", "axis.minor.ticks.length",
+    "axis.text.offset", "axis.text.orientation", "axis.text.check.overlap")
+  values <- stats::setNames(lapply(physical, function(n) plot$theme[[paste0("ggchord.", n)]]), physical)
+  if (any(!vapply(values, is.null, logical(1)))) {
+    checked <- ggchord_theme_settings(values)$axis
+    for (name in physical[!vapply(values, is.null, logical(1))]) {
+      key <- if (name == "axis") "hidden" else sub("^axis[.]", "", name)
+      found$axis[[key]] <- checked[[key]]
+      if (key %in% c("gap", "ticks.length", "minor.ticks.length")) found$axis[[paste0(key, ".explicit")]] <- TRUE
+    }
+  }
   if (isTRUE(plot$coordinates$ggchord_circular)) {
     if (!isTRUE(found$axis$gap.explicit)) found$axis$gap <- grid::unit(0, "mm")
     if (!isTRUE(found$axis$ticks.length.explicit))
@@ -417,6 +462,12 @@ ggchord_theme_point_size <- function(plot, name, fallback) {
 ggchord_apply_theme_styles <- function(plot) {
   for (i in seq_along(plot$layers)) {
     lyr <- plot$layers[[i]]
+    if (identical(lyr$ggchord_type, "track")) {
+      style <- ggchord_track_axis_style(plot, lyr$ggchord_params$track_position$track)
+      for (name in c("axis_line_params", "axis_text_params", "axis_title_params", "axis_check_overlap"))
+        if (is.null(lyr$geom_params[[name]])) lyr$geom_params[[name]] <- style[[name]]
+      plot$layers[[i]] <- lyr
+    }
     components <- lyr$ggchord_theme_components
     if (!is.null(components)) {
       for (param_name in names(components)) {

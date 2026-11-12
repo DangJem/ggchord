@@ -1,3 +1,17 @@
+# ggchord 0.27.0 (development)
+
+- Registered sequence-axis spacing/orientation settings for standard `theme()`
+  configuration. Existing `theme_ggchord()` shortcuts remain compatible and use
+  the same settings; supplying both spellings in one call fails explicitly.
+- Track numerical axes now use global `ggchord.track.axis.line/text/title`
+  elements and physical text/title offsets. Font metrics used to reserve plot
+  space follow their resolved styles. This fixes hard-coded axis colours/fonts,
+  including unreadable non-data decoration under the Dark preset.
+- A track's value scale accepts native `guide_axis(theme = ...)` for local axis
+  line/text/title styling, angle and overlap checks. Other options fail explicitly.
+  Same-ID overlays still share a band/domain/axis; different IDs retain independent
+  numerical and colour scales. Theme changes do not alter data or statistics.
+
 # ggchord 0.26.0 (development)
 
 - Added `register_ggchord_alignment()` for explicit source/column registration of

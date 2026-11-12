@@ -1370,7 +1370,7 @@
 | `transform` | `"identity"` | 字符/枚举；取值见说明 | 标准连续标度控制项。 |
 | `oob` | `scales::censor` | R 对象；约束见说明 | 标准连续标度控制项。 |
 | `unit` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 可选数据单位标签，保留在轨道导出中。 |
-| `guide` | `c("axis", "none")` | 向量；候选/多选含义见说明 | 数值轨道轴使用 "axis" 或 "none"。 |
+| `guide` | `c("axis", "none")` | 向量；候选/多选含义见说明 | 数值轨道轴可选 "axis" 或 "none"，或使用原生ggplot2::guide_axis()，支持局部theme（axis.line/text/title）、angle及check.overlap。因为该轴是序列局部数值参考而非Cartesian面板轴，其他guide_axis选项会明确报错。局部Guide外观覆盖全局ggchord.track.axis.*主题元素。 |
 | `...` | `必需/互斥入口，见说明` | 上游转发参数 | 其他 ggplot2 连续标度参数。 |
 
 </details>

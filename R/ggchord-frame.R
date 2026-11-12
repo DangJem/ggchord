@@ -163,8 +163,12 @@ ggchord_adaptive_limits <- function(layout) {
     if (!is.data.frame(text) || !nrow(text) || !"label" %in% names(text)) next
     text <- text[!is.na(text$label) & nzchar(as.character(text$label)), , drop = FALSE]
     if (!nrow(text)) next
+    if (".axis_hidden" %in% names(text)) text <- text[!text$.axis_hidden, , drop = FALSE]
+    for (name in c("size", "family", "fontface", "angle", "lineheight", "hjust", "vjust"))
+      if (paste0(".axis_", name) %in% names(text)) text[[name]] <- text[[paste0(".axis_", name)]]
+    text$text_angle <- text$angle %||% 0
     text$size <- text$size %||% entry$size
-    text$hjust <- .5; text$vjust <- .5
+    text$hjust <- text$hjust %||% .5; text$vjust <- text$vjust %||% .5
     add_boxes(ggchord_text_boxes(text, x_col = "x", y_col = "y", text_col = "label",
       units_per_inch = units_per_inch, box_padding = .03))
   }

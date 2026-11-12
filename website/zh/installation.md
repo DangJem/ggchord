@@ -8,7 +8,7 @@ library(ggchord)
 packageVersion("ggchord")
 ```
 
-最后一行显示已安装版本。本地文档预览 **0.26.0.9000**；仓库记录的最近正式版为
+最后一行显示已安装版本。本地文档预览 **0.27.0.9000**；仓库记录的最近正式版为
 **0.16.6**。新的基础架构、Fusion、BEDPE与字符对齐接口需要相应开发 checkout。更新已有脚本前请阅读
 [迁移说明](../assets/MIGRATION-Hans.md)。
 
@@ -17,7 +17,7 @@ packageVersion("ggchord")
 ```r
 install.packages(".", repos = NULL, type = "source")
 library(ggchord)
-stopifnot(as.character(packageVersion("ggchord")) == "0.26.0.9000")
+stopifnot(as.character(packageVersion("ggchord")) == "0.27.0.9000")
 ```
 
 版本号不能区分不同提交，下载的构建清单记录源码版本。本地预览不代表包已发布或

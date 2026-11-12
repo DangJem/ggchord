@@ -1377,7 +1377,7 @@ compute_chord_geometry <- function(plot) {
   if (has_tracks) {
     tracks <- ggchord_layout_tracks(plot, primary, registry, inputs)
     primary <- tracks$layout; registry <- tracks$registry; inputs <- tracks$inputs
-    axes <- ggchord_track_axes(primary, registry)
+    axes <- ggchord_track_axes(primary, registry, plot)
     registry <- axes$registry; primary$track_axes <- axes$axes
     primary$obstacles <- ggchord_rbind_fill(list(primary$obstacles, primary$track_obstacles))
     # Only requested automatic avoidance consumes the newly registered bands.

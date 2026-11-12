@@ -1,0 +1,92 @@
+{
+  "status": "passed targeted theme and Track checks; not release acceptance",
+  "presets": ["default", "minimal", "publication", "dark", "plasmid"],
+  "views": ["chord", "collinear", "radial", "sankey"],
+  "track_ids": ["GC", "adenine"],
+  "source": "unchanged pUC19 sequence; GC fraction and adenine count per 100bp bin",
+  "axes": [
+    {
+      "track_id": "GC",
+      ".component": "track_axis_line",
+      ".axis_colour": "#F1F3F5",
+      ".axis_hidden": false,
+      "_row": "GC.417"
+    },
+    {
+      "track_id": "GC",
+      ".component": "track_axis_line",
+      ".axis_colour": "#F1F3F5",
+      ".axis_hidden": false,
+      "_row": "GC.418"
+    },
+    {
+      "track_id": "GC",
+      "label": "0",
+      ".component": "track_axis_text",
+      ".axis_colour": "#E5A5C0",
+      ".axis_size": 4.2175,
+      ".axis_hidden": false,
+      "_row": "GC.419"
+    },
+    {
+      "track_id": "GC",
+      "label": "1",
+      ".component": "track_axis_text",
+      ".axis_colour": "#E5A5C0",
+      ".axis_size": 4.2175,
+      ".axis_hidden": false,
+      "_row": "GC.420"
+    },
+    {
+      "track_id": "GC",
+      "label": "GC (fraction)",
+      ".component": "track_axis_title",
+      ".axis_colour": "#E5A5C0",
+      ".axis_size": 4.2175,
+      ".axis_hidden": false,
+      "_row": "GC.421"
+    },
+    {
+      "track_id": "adenine",
+      ".component": "track_axis_line",
+      ".axis_colour": "#F1F3F5",
+      ".axis_hidden": false,
+      "_row": "adenine.1729"
+    },
+    {
+      "track_id": "adenine",
+      ".component": "track_axis_line",
+      ".axis_colour": "#F1F3F5",
+      ".axis_hidden": false,
+      "_row": "adenine.1730"
+    },
+    {
+      "track_id": "adenine",
+      "label": "0",
+      ".component": "track_axis_text",
+      ".axis_colour": "#F1F3F5",
+      ".axis_size": 3.5146,
+      ".axis_hidden": false,
+      "_row": "adenine.1731"
+    },
+    {
+      "track_id": "adenine",
+      "label": "100",
+      ".component": "track_axis_text",
+      ".axis_colour": "#F1F3F5",
+      ".axis_size": 3.5146,
+      ".axis_hidden": false,
+      "_row": "adenine.1732"
+    },
+    {
+      "track_id": "adenine",
+      "label": "adenine (bases per bin)",
+      ".component": "track_axis_title",
+      ".axis_colour": "#F1F3F5",
+      ".axis_size": 3.5146,
+      ".axis_hidden": false,
+      "_row": "adenine.1733"
+    }
+  ],
+  "semantics": "theme changes decoration; independent named scales preserve domains and source statistics"
+}

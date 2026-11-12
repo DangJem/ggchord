@@ -86,3 +86,58 @@ Links from the same query share a colour; continuous identity needs a continuous
 <div class="next-step">Continue: <a href="adjustments.html">Common adjustments and grammar →</a></div>
 
 See [scale families](scale-families.html) for runnable manual/continuous/steps/identity, line type, opacity and theme examples.
+
+## Detailed appearance with standard theme syntax {#native-theme}
+
+`ggchord()` already supplies `theme_ggchord()`. Choose one of the four presets only when its appearance suits the figure: Minimal reduces decoration; Publication uses compact typography; Dark changes non-data decoration for a dark background; Plasmid emphasises circular annotations. Palettes, scientific relationships and sequence directions remain independent. Use explicit data scales or fixed geom colours when a background requires different data contrast.
+
+| Change | Component |
+| --- | --- |
+| Background, font, non-data labels/leader appearance | `theme()` |
+| Sequence colours, feature fill, numerical Track range/breaks/units | `aes()` and the corresponding scale |
+| Backbone form, Ribbon arrow/gradient mode, fixed data styles | Geom |
+| Track band, feature stacking and offsets | Position |
+| Sequence order/direction and projection | Coord / explicit data workflow |
+| Guide rows, columns, order, direction and individual position | Guide; global placement in theme |
+
+The registered `ggchord.axis.*` physical settings accept scalar absolute units, just like the existing short arguments in `theme_ggchord()`. Prefer `theme(ggchord.axis.gap = unit(1, "mm"))` for later adjustments. Use one spelling in a theme constructor; supplying both spellings for the same setting is an error. A later `theme()` merges fields in the familiar ggplot2 order. `ggchord.seq.label`, `ggchord.gene.label`, `ggchord.feature.label` and their `.segment` line elements style their actual annotation layers, while explicit geom styles/mappings remain authoritative. Ordinary Cartesian `axis.text.x` is not a substitute for the automatic genomic sequence axis; Dotplot has independent native x/y axes.
+
+### Shared Track appearance and local overrides {#track-theme}
+
+The following real GC fractions come from the unchanged bundled pUC19 sequence. It needs optional dplyr. The Track's data scale owns the fraction domain and unit; its local native Guide owns axis appearance. The ordinary theme owns shared decorations. No coverage or read support is invented.
+
+```r
+data(plasmid_example_pUC19)
+library(dplyr)
+source_sequence <- plasmid_example_pUC19
+bin_start <- seq.int(1L, source_sequence$length, by = 100L)
+track_bins <- tibble(
+  accver = source_sequence$accver, start = bin_start,
+  end = pmin(bin_start + 99L, source_sequence$length)
+) |>
+  rowwise() |>
+  mutate(gc = mean(strsplit(
+    substr(source_sequence$sequence, start, end), "", fixed = TRUE
+  )[[1]] %in% c("G", "C"))) |>
+  ungroup()
+themed_track <- ggchord(source_sequence |> select(accver, length)) +
+  geom_seq() +
+  geom_track(aes(x = start, y = gc), data = track_bins, geom = "point",
+    track = position_track("GC", width = unit(5, "mm")), colour = "#59B59C") +
+  scale_track_value_continuous("GC", limits = c(0, 1), unit = "fraction",
+    guide = ggplot2::guide_axis(theme = theme(
+      axis.text = element_text(colour = "#E5A5C0", size = 10),
+      axis.title = element_text(face = "bold")
+    ))) +
+  coord_circular() +
+  theme_ggchord_dark() +
+  theme(
+    ggchord.axis.text.orientation = "horizontal",
+    ggchord.track.axis.text = element_text(size = 9),
+    ggchord.track.axis.title.offset = unit(6, "mm")
+  )
+```
+
+`ggchord.track.axis.line/text/title` control shared numerical-axis styles; `.text.offset` and `.title.offset` are nonnegative absolute units. Resolved font/family/angle metrics are used when reserving plot space. The GC Guide's explicit text style wins over the later shared 9pt default. A local `element_blank()` hides just that decoration. `guide_axis()` supports local `axis.line/text/title`, `angle` and `check.overlap`; other options fail explicitly instead of being silently ignored.
+
+Layers with one Track ID share a band, value domain and one numerical reference; distinct IDs already have independent value/fill/colour scales and colour guides. Add `scale_track_*()` for each ID rather than a theme element named after every track. Colour-guide appearance can use the native `guide_legend(theme = ...)` or `guide_colourbar(theme = ...)` supplied to the corresponding Track colour scale. Global legend fonts/background/placement remain theme concerns. Sequence order, HSP selection, statistics and units never change when switching themes. Automatic label/Guide layout is a separate policy and remeasures at the final export size.
