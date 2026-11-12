@@ -51,3 +51,11 @@ The preceding table identifies the backbone layer. Set `original_data = TRUE` in
 Use matching dimensions for preview and saving. Inspect text, guides and warnings; a successful measurement does not certify fonts or release quality across devices.
 
 <div class="next-step">Continue: <a href="faq.html">Frequently asked questions →</a></div>
+
+## Measure label contacts {#label-quality}
+
+`diagnose_ggchord(p, width = 10, height = 8)$label_quality` reports measured panel text objects, annotation leaders, box contacts and physical leader lengths. `summary` distinguishes source labels retained/hidden by layer policy from text objects and glyph boxes. `conflicts`, `text` and `leaders` locate each reported contact. Glyphs within one arc string share a text-object identity; touching polyline endpoints are not counted as crossings. Inspect actual PNG output as well as the tables.
+
+These are oriented text envelopes, not exact ink outlines. A leader crossing a box can need visual review; whitespace and label backgrounds are not certified glyph shapes. Text-feature footprint contacts, outer decorations and unregistered grobs remain unchecked, with missing metrics rather than a false zero. Diagnostics do not improve a layout by hiding labels or changing source data. A measured panel or zero contacts in the checked categories does not establish that all layout constraints passed.
+
+SnapGene serves as a visual reference for clear annotation hierarchy and orderly leaders; matched exports from that application are not required. Use controlled ggchord comparisons to assess changes in content retention, physical size, crowding and legibility.

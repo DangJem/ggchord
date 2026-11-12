@@ -62,6 +62,20 @@ protan/deutan/tritan at severity 1 in linear RGB flag Lab distances below 10.
 These heuristic thresholds ignore spatial context, alpha compositing and
 viewing conditions, and never automatically change the plot or fail a run.
 }
+\section{Label quality}{
+
+\code{label_quality} reports summary counts, text-object conflicts, registered
+annotation polylines and measured oriented text boxes in millimetres. Arc
+glyphs belonging to one string are one text object; their intentional
+internal contacts are not label collisions. Leader crossings exclude shared
+endpoints; through-text checks concern box interiors, not exact glyph ink.
+Source-label visibility follows the layer policy and may share one displayed
+label across records. It is distinct from the number of text/glyph boxes.
+Text-feature footprint contacts and unregistered/outer decoration objects
+remain unchecked; their counts are not silently reported as zero. These
+measurements never move, hide or change input records.
+}
+
 \section{Guide measurements}{
 
 \code{guide_measurements} records active roles, titles, item counts, device text

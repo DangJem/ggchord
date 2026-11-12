@@ -121,6 +121,12 @@
 #' fallback, arbitrary grobs or cross-application portability. Preview paths
 #' live in a temporary directory and may be removed by cleanup; use ordinary
 #' [ggplot2::ggsave()] to keep a final file.
+#' `label_quality` adds measured panel text/annotation-leader contacts, source
+#' visibility counts and text/leader tables. Oriented boxes and leader lengths
+#' use mm; arc glyphs share a text-object identity. Counts are evidence within
+#' the stated scope, not exact ink outlines or a certificate for text-feature
+#' contacts, custom grobs or external plot decorations. Unchecked metrics stay
+#' missing, and diagnostics do not change the layout or its original records.
 #'
 #' @section Foundation projection and identity:
 #' `display_instances` separates source accver from instance_id and display

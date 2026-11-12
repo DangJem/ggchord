@@ -134,6 +134,12 @@ A measured panel does not certify collision-free geometry, font embedding,
 fallback, arbitrary grobs or cross-application portability. Preview paths
 live in a temporary directory and may be removed by cleanup; use ordinary
 \code{\link[ggplot2:ggsave]{ggplot2::ggsave()}} to keep a final file.
+\code{label_quality} adds measured panel text/annotation-leader contacts, source
+visibility counts and text/leader tables. Oriented boxes and leader lengths
+use mm; arc glyphs share a text-object identity. Counts are evidence within
+the stated scope, not exact ink outlines or a certificate for text-feature
+contacts, custom grobs or external plot decorations. Unchecked metrics stay
+missing, and diagnostics do not change the layout or its original records.
 }
 
 \section{Foundation projection and identity}{
