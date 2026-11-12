@@ -51,6 +51,9 @@
 #'   ggchord_fusion(). Later panels cover earlier ones; default FALSE.
 #' @param connector `"leader"` draws two decorative boundary leaders per row; `"none"`
 #'   retains the highlights only. These are not biological ribbons or alignments.
+#' @param route Direct boundary leaders (default), or avoid to route around
+#'   measured other containers and native text/guide envelopes. Endpoints stay
+#'   fixed; no clear route fails rather than hiding the selection.
 #' @param colour Fixed highlight/leader colour.
 #' @param alpha Highlight opacity in `[0,1]`. Leaders use the opaque colour.
 #' @param highlight_width Positive highlight band width in physical mm.
@@ -63,8 +66,9 @@
 #'   The derived tables use region_row to identify the original input row and
 #'   region_piece to identify the origin-split piece. The raw input stays intact.
 #'   Stat scope is recorded as explicit_detail_plot. Leaders do not appear in
-#'   connections or relationship_data. Global label/leader collision avoidance
-#'   and automatic layer rebuilding are not implemented. The measured ratio may be below one if the chosen
+#'   connections or relationship_data. leader_paths contains the final decorative
+#'   polyline vertices. Routing is deterministic in measured physical space, not
+#'   a guarantee of globally optimal layout or automatic layer rebuilding. The measured ratio may be below one if the chosen
 #'   detail allocation does not enlarge the region.
 #' @export
 #' @examples
@@ -81,7 +85,8 @@
 magnify_ggchord <- function(plot, region, detail_plot,
     side = c("right", "top", "left", "bottom"), center_size = NULL, detail_size = NULL,
     connector = c("leader", "none"), colour = "#B45309", alpha = .2,
-    highlight_width = 1.5, linewidth = .35, linetype = 2, detail_box = NULL, allow_overlap = FALSE, center_box = NULL) {
+    highlight_width = 1.5, linewidth = .35, linetype = 2, detail_box = NULL, allow_overlap = FALSE, center_box = NULL, route = c("direct", "avoid")) {
+  route <- match.arg(route)
   side_supplied <- !missing(side)
   ggchord_fusion_check_plot(plot, center = TRUE)
   caller <- "magnify_ggchord()"
@@ -158,14 +163,14 @@ magnify_ggchord <- function(plot, region, detail_plot,
   resolved_region$detail_panel <- targets
   resolved_region$wrap <- wrap
   result$focus <- list(input = region, region = resolved_region, connector = match.arg(connector),
-    colour = colour, alpha = alpha, width = highlight_width, linewidth = linewidth, linetype = linetype)
+    colour = colour, alpha = alpha, width = highlight_width, linewidth = linewidth, linetype = linetype, route = route)
   ggplot2::set_last_plot(result)
   result
 }
 
 # Build only after the real panel sizes, position scales and Coord are final.
 ggchord_build_focus <- function(focus, panels) {
-  empty <- list(input = data.frame(), underlay = list(), overlay = list(), regions = data.frame(), fronts = data.frame(), leaders = data.frame())
+  empty <- list(input = data.frame(), underlay = list(), overlay = list(), regions = data.frame(), fronts = data.frame(), leaders = data.frame(), leader_paths = data.frame())
   if (is.null(focus)) return(empty)
   pieces <- list()
   for (i in seq_len(nrow(focus$region))) {
@@ -192,7 +197,7 @@ ggchord_build_focus <- function(focus, panels) {
       part <- region; part$start <- bounds[[j]][1L]; part$end <- bounds[[j]][2L]
       boundaries <- if (length(bounds) == 1L) c("start", "end") else if (j == 1L) "start" else "end"
       piece <- ggchord_build_focus_region(focus, panels, part, boundaries)
-      for (name in c("regions", "fronts", "leaders")) {
+      for (name in c("regions", "fronts", "leaders", "leader_paths")) {
         piece[[name]]$region_row <- rep.int(i, nrow(piece[[name]]))
         piece[[name]]$region_piece <- rep.int(j, nrow(piece[[name]]))
       }
@@ -203,7 +208,7 @@ ggchord_build_focus <- function(focus, panels) {
   bind <- function(name) do.call(rbind, lapply(pieces, `[[`, name))
   grobs <- function(name) unlist(lapply(pieces, `[[`, name), recursive = FALSE)
   list(input = focus$input, underlay = grobs("underlay"), overlay = grobs("overlay"),
-    regions = bind("regions"), fronts = bind("fronts"), leaders = bind("leaders"))
+    regions = bind("regions"), fronts = bind("fronts"), leaders = bind("leaders"), leader_paths = bind("leader_paths"))
 }
 
 # Full source lengths belong to provenance, not the displayed local span.
@@ -235,16 +240,32 @@ ggchord_build_focus_region <- function(focus, panels, region, boundaries = c("st
   sf <- ggchord_fusion_front(panels[[s$panel]], s)
   grobs <- list()
   ends <- c(1L,nrow(qf))
-  leaders <- data.frame()
+  leaders <- data.frame(); leader_paths <- data.frame()
   if (focus$connector == "leader") {
     leaders <- data.frame(boundary = c("start", "end"),
       source_position_boundary = qf$position_boundary[ends],
       x = qf$x[ends],y = qf$y[ends],xend = sf$x[c(1L,nrow(sf))],yend = sf$y[c(1L,nrow(sf))],
       coordinate_space = "composition",units = "mm",semantic = "decorative_focus_leader")
     leaders <- leaders[leaders$boundary %in% boundaries, , drop = FALSE]
-    grobs[[1L]] <- grid::segmentsGrob(leaders$x, leaders$y, leaders$xend, leaders$yend,
-      default.units = "mm",gp = grid::gpar(col = focus$colour,
-        lwd = focus$linewidth * 72.27/25.4,lty = focus$linetype))
+    obstacles <- ggchord_route_inflate(ggchord_route_obstacles(focus$obstacles, c(q$panel, s$panel)), focus$linewidth/2)
+    paths <- lapply(seq_len(nrow(leaders)), function(i) {
+      a <- c(leaders$x[i], leaders$y[i]); b <- c(leaders$xend[i], leaders$yend[i])
+      hits <- sum(ggchord_route_segment_hits(a, b, obstacles))
+      route <- focus$route %||% "direct"
+      line <- if (route == "avoid") ggchord_route_shortest(a, b, obstacles, focus$canvas,
+        clearance = focus$linewidth/2 + .6) else rbind(a, b)
+      if (is.null(line)) ggchord_stop("magnify_ggchord(): no clear leader route; move/enlarge panels or inspect route = 'direct'")
+      leaders$route[i] <<- route
+      leaders$route_status[i] <<- if (nrow(line) > 2L) "routed_clear" else if (hits) "direct_collision" else "direct_clear"
+      leaders$obstacle_collisions[i] <<- if (route == "avoid") 0L else hits
+      leaders$length_mm[i] <<- sum(sqrt(rowSums((line[-1L, , drop = FALSE]-line[-nrow(line), , drop = FALSE])^2)))
+      data.frame(boundary = leaders$boundary[i], vertex = seq_len(nrow(line)),
+        x = line[, 1], y = line[, 2], coordinate_space = "composition", units = "mm")
+    })
+    leader_paths <- do.call(rbind, paths)
+    grobs <- lapply(paths, function(path) grid::polylineGrob(path$x, path$y,
+      default.units = "mm", gp = grid::gpar(col = focus$colour,
+        lwd = focus$linewidth * 72.27/25.4, lty = focus$linetype)))
   }
   highlight <- function(front) {
     offset <- focus$width/2
@@ -264,11 +285,11 @@ ggchord_build_focus_region <- function(focus, panels, region, boundaries = c("st
   report$source_origin <- q$origin; report$detail_origin <- s$origin
   report$sequence_unit <- q$unit; report$source_length_mm <- source_mm; report$detail_length_mm <- detail_mm
   report$length_ratio <- detail_mm/source_mm; report$stat_scope <- "explicit_detail_plot"
-  report$collision_status <- "not globally measured"
+  report$collision_status <- if (nrow(leaders)) paste(unique(leaders$route_status), collapse = ";") else "no_leaders"
   report$highlight_width_mm <- focus$width; report$highlight_alpha <- focus$alpha
   report$colour <- focus$colour; report$connector <- focus$connector
   report$leader_linewidth <- focus$linewidth; report$leader_linetype <- focus$linetype
   qf$panel_id <- q$panel; qf$instance_id <- q$instance
   sf$panel_id <- s$panel; sf$instance_id <- s$instance
-  list(input = focus$input, underlay = grobs, overlay = highlights, regions = report, fronts = rbind(qf,sf),leaders = leaders)
+  list(input = focus$input, underlay = grobs, overlay = highlights, regions = report, fronts = rbind(qf,sf), leaders = leaders, leader_paths = leader_paths)
 }

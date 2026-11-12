@@ -155,7 +155,7 @@ Use ordinary `ggsave()` at a chosen physical size, for example 12×8 inches; `vi
 
 The dashed lines are decorative focus leaders. They are exported separately from biological `connections` and `relationship_data`; adding actual `fusion_ribbon()` layers still requires real relationship data. `focus_region_data` preserves the original selection and arbitrary metadata, while `focus_regions` reports resolved instances, source origins and the sampled physical path-length ratio. The ratio can be below one with a small detail allocation; it is not a change to biological length.
 
-The detail plot owns its data, scales, layers and statistics. For count/bin/coverage tracks, prepare and state the intended local or global statistical population yourself; the wrapper records `explicit_detail_plot` and never silently chooses a scope. It does not copy arbitrary source layers, infer alignments or accept unregistered Cartesian character panels. Use one ordered region, explicitly select `instance`/`detail_instance` when an accession is repeated, and declare `wrap = TRUE` for origin-crossing selections as described below. Explicit nested/free-position allocations are described below; global avoidance is a separate layout concern.
+The detail plot owns its data, scales, layers and statistics. For count/bin/coverage tracks, prepare and state the intended local or global statistical population yourself; the wrapper records `explicit_detail_plot` and never silently chooses a scope. It does not copy arbitrary source layers, infer alignments or accept unregistered Cartesian character panels. Use one ordered region, explicitly select `instance`/`detail_instance` when an accession is repeated, and declare `wrap = TRUE` for origin-crossing selections as described below. Explicit nested/free-position allocations are described below; measured obstacle routing is described below.
 
 ## Paired source windows with real HSPs {#paired-detail}
 
@@ -323,7 +323,7 @@ report$focus_region_data_by_composition
 
 `composition_id` plus `region_row` connects derived regions/fronts/leaders to each original selection in `focus_region_data_by_composition`. Top-level `focus_region_data` remains the original outer input. Nested leaf names use paths such as `detail/center` and `detail/detail`; a composition container is never treated as one genomic axis. If an accession occurs in multiple leaves, select the full panel path and exact instance. `source_panel` can select a source leaf under `center`. Layout exports include actual mm boundaries and requested boxes/angles.
 
-Each plot keeps its own layers, scales and statistical population; the compositor does not silently copy layers or recompute statistics. Origin wraps use the explicit source-length declaration below. The complete negative-strand CDS-to-genome-focus-to-real-character example is in `examples/m3-nested.R`. Registered characters retain their physical tile/error policy; a small nested allocation cannot make 60 letters readable merely by increasing DPI. Full multi-device publication acceptance and global route/label optimisation are separate concerns.
+Each plot keeps its own layers, scales and statistical population; the compositor does not silently copy layers or recompute statistics. Origin wraps use the explicit source-length declaration below. The complete negative-strand CDS-to-genome-focus-to-real-character example is in `examples/m3-nested.R`. Registered characters retain their physical tile/error policy; a small nested allocation cannot make 60 letters readable merely by increasing DPI. Full multi-device publication acceptance and broader layout optimisation remain separate concerns.
 
 ## Explicit origin-crossing selection {#origin-detail}
 
@@ -347,3 +347,40 @@ boundaries receive leaders. The seam is not another selection or relationship.
 source("examples/origin-detail.R")
 origin_detail
 ```
+
+## Measured routes and display corridors {#routing}
+
+`fusion_ribbon(route = "avoid")` keeps both complete interval fronts and their
+physical departure normals. It routes a narrow polygonal body around measured
+other leaf containers, native layer text, and final gtable guide/decoration
+cells. `route_width` is in mm and does not encode an alignment length or count.
+The default `"direct"` preserves the existing Bezier drawing and reports its
+collisions; it does not silently filter records.
+
+Use `route = "bundle"` with an explicit character `route_group` column to share
+a corridor within one layer and ordered panel pair. Each source row still has
+its own front, colour/alpha and polygon. Shared-channel overpainting is not
+read support or another observation. Groups are user declarations; no cluster
+or relationship is inferred. Run the real three-HSP example:
+
+```r
+# Requires dplyr and the source checkout or tutorial input bundle.
+source("examples/fusion-routing.R")
+routed
+```
+
+`magnify_ggchord(route = "avoid")` applies the same measured-space contract to
+its decorative leaders. Exported `leader_paths` contains the final polyline
+vertices, separate from biological `paths`. `routing_corridors` identifies
+shared channels and member source rows; `routing_obstacles` records the
+physical envelopes. Connections/leaders report route status and collisions.
+Each target size is rebuilt, including ancestor checks after nested allocation.
+
+No clear route produces an explicit error: move/enlarge the panels, narrow a
+selection, revise a declared group, or inspect `route = "direct"`. Ancestor
+overlays that obstruct an already measured child route also fail explicitly.
+Routing uses deterministic visibility paths, not a global layout optimum.
+Rotated text uses conservative bounding rectangles, curved strings larger
+envelopes, and native decoration cells their final gtable bounds. Arbitrary
+custom grobs and every endpoint data shape are not claimed to be glyph-level
+obstacles. Theme changes affect metrics, never source coordinates or evidence.

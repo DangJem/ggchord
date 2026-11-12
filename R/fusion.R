@@ -126,6 +126,14 @@ fusion_panel <- function(plot, id, side = c("right", "top", "left", "bottom"), s
 #' @param tip `"none"` or a decorative `"subject"` tip. Source fronts remain
 #'   exported in full even when the tip is drawn.
 #' @param allow_repeated Explicitly allow repeated source_hsp_id display.
+#' @param route Default direct Bezier ribbons, or avoid for a measured obstacle
+#'   route. Bundle requires an explicit route_group character column and shares
+#'   a corridor for each group and ordered panel pair within the layer; every
+#'   observation, source row, complete front and style remains independent. It
+#'   does not aggregate evidence or imply biological flow. Avoid preserves complete interval fronts and uses a narrow polygonal
+#'   corridor between them. Failure to find a clear route is explicit.
+#' @param route_width Positive corridor width in mm for avoid/bundle (default .8).
+#'   This is drawing width, not an alignment length or statistical weight.
 #' @param curvature Control distance relative to endpoint separation, in `[0,1]`.
 #' @param fill,colour,alpha,linewidth,linetype Fixed styles; explicit values
 #'   take priority over mappings. The default fill without pident is steelblue.
@@ -143,7 +151,7 @@ fusion_panel <- function(plot, id, side = c("right", "top", "left", "bottom"), s
 fusion_ribbon <- function(data, mapping = NULL, qpanel = NULL, spanel = NULL,
     gradient = FALSE, tip = c("none", "subject"), allow_repeated = FALSE,
     curvature = .3, fill = NULL, colour = NA, alpha = .35, linewidth = .25,
-    linetype = 1, show.legend = NA) {
+    linetype = 1, show.legend = NA, route = c("direct", "avoid", "bundle"), route_width = .8) {
   ggchord_require_columns(data, c("qaccver", "saccver", "qstart", "qend", "sstart", "send"), "fusion_ribbon()")
   if (!is.null(mapping) && !inherits(mapping, "ggplot2::mapping") && !inherits(mapping, "uneval"))
     ggchord_stop("fusion_ribbon(): mapping must be aes()")
@@ -170,7 +178,14 @@ fusion_ribbon <- function(data, mapping = NULL, qpanel = NULL, spanel = NULL,
       fixed[[name]] <- value
     }
   }
+  route <- match.arg(route)
+  if (route == "bundle" && (!"route_group" %in% names(data) || !is.character(data$route_group) ||
+      anyNA(data$route_group) || any(!nzchar(data$route_group))))
+    ggchord_stop("fusion_ribbon(): route = 'bundle' requires explicit nonempty character route_group values")
+  if (!is.numeric(route_width) || length(route_width) != 1L || !is.finite(route_width) || route_width <= 0)
+    ggchord_stop("fusion_ribbon(): route_width must be positive physical mm")
   structure(list(data = data, mapping = mapping, selectors = selectors, fixed = fixed,
+    route = route, route_width = route_width,
     gradient = gradient, tip = match.arg(tip), allow_repeated = allow_repeated,
     curvature = curvature, show.legend = show.legend), class = "ggchord_fusion_ribbon")
 }
@@ -435,7 +450,11 @@ ggchord_fusion_path <- function(q, s, curvature) {
 #'   overlaps reports deliberate covering order. source_observations counts
 #'   display copies only for explicit source_hsp_id; no identity is inferred
 #'   by comparing values. Requested boxes/angles and resolved allocations remain
-#'   in panels. All global geometry uses mm.
+#'   in panels. All global geometry uses mm. routing_obstacles records measured
+#'   physical envelopes; routing_corridors records explicit shared display
+#'   channels and their source-row members. Connections/leaders report route
+#'   status and collisions. leader_paths stores decorative polyline vertices.
+#'   These routes do not imply a global optimum or altered biological evidence.
 #' @export
 #' @examples
 #' data(seq_data_example)

@@ -23,7 +23,11 @@ have coordinate = fusion and are not biological interval namespaces.
 overlaps reports deliberate covering order. source_observations counts
 display copies only for explicit source_hsp_id; no identity is inferred
 by comparing values. Requested boxes/angles and resolved allocations remain
-in panels. All global geometry uses mm.
+in panels. All global geometry uses mm. routing_obstacles records measured
+physical envelopes; routing_corridors records explicit shared display
+channels and their source-row members. Connections/leaders report route
+status and collisions. leader_paths stores decorative polyline vertices.
+These routes do not imply a global optimum or altered biological evidence.
 }
 \description{
 Builds at the requested size on a temporary measurement device, restoring

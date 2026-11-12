@@ -19,7 +19,8 @@ magnify_ggchord(
   linetype = 2,
   detail_box = NULL,
   allow_overlap = FALSE,
-  center_box = NULL
+  center_box = NULL,
+  route = c("direct", "avoid")
 )
 }
 \arguments{
@@ -77,6 +78,10 @@ named list covering every detail. Physical boxes are rechecked at target size.}
 ggchord_fusion(). Later panels cover earlier ones; default FALSE.}
 
 \item{center_box}{Explicit source allocation instead of center_size.}
+
+\item{route}{Direct boundary leaders (default), or avoid to route around
+measured other containers and native text/guide envelopes. Endpoints stay
+fixed; no clear route fails rather than hiding the selection.}
 }
 \value{
 A \code{\link[=ggchord_fusion]{ggchord_fusion()}} object. \code{\link[=export_ggchord_fusion]{export_ggchord_fusion()}} additionally
@@ -86,8 +91,9 @@ region, exact instances, source origins and sampled physical path-length ratio.
 The derived tables use region_row to identify the original input row and
 region_piece to identify the origin-split piece. The raw input stays intact.
 Stat scope is recorded as explicit_detail_plot. Leaders do not appear in
-connections or relationship_data. Global label/leader collision avoidance
-and automatic layer rebuilding are not implemented. The measured ratio may be below one if the chosen
+connections or relationship_data. leader_paths contains the final decorative
+polyline vertices. Routing is deterministic in measured physical space, not
+a guarantee of globally optimal layout or automatic layer rebuilding. The measured ratio may be below one if the chosen
 detail allocation does not enlarge the region.
 }
 \description{

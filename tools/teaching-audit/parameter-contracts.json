@@ -9912,6 +9912,22 @@
     "source": "man/fusion_ribbon.Rd"
   },
   {
+    "api": "fusion_ribbon",
+    "parameter": "route",
+    "default": "c(\"direct\", \"avoid\", \"bundle\")",
+    "type": "Vector; choices versus multiple selection below",
+    "constraint": "Default direct Bezier ribbons, or avoid for a measured obstacle route. Bundle requires an explicit route_group character column and shares a corridor for each group and ordered panel pair within the layer; every observation, source row, complete front and style remains independent. It does not aggregate evidence or imply biological flow. Avoid preserves complete interval fronts and uses a narrow polygonal corridor between them. Failure to find a clear route is explicit.",
+    "source": "man/fusion_ribbon.Rd"
+  },
+  {
+    "api": "fusion_ribbon",
+    "parameter": "route_width",
+    "default": "0.8",
+    "type": "Numeric/integer; range in description",
+    "constraint": "Positive corridor width in mm for avoid/bundle (default .8). This is drawing width, not an alignment length or statistical weight.",
+    "source": "man/fusion_ribbon.Rd"
+  },
+  {
     "api": "get_chord_layout",
     "parameter": "plot",
     "default": "",
@@ -10189,6 +10205,14 @@
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
     "constraint": "Explicit source allocation instead of center_size.",
+    "source": "man/magnify_ggchord.Rd"
+  },
+  {
+    "api": "magnify_ggchord",
+    "parameter": "route",
+    "default": "c(\"direct\", \"avoid\")",
+    "type": "Vector; choices versus multiple selection below",
+    "constraint": "Direct boundary leaders (default), or avoid to route around measured other containers and native text/guide envelopes. Endpoints stay fixed; no clear route fails rather than hiding the selection.",
     "source": "man/magnify_ggchord.Rd"
   },
   {

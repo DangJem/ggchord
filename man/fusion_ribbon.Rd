@@ -18,7 +18,9 @@ fusion_ribbon(
   alpha = 0.35,
   linewidth = 0.25,
   linetype = 1,
-  show.legend = NA
+  show.legend = NA,
+  route = c("direct", "avoid", "bundle"),
+  route_width = 0.8
 )
 }
 \arguments{
@@ -46,6 +48,16 @@ take priority over mappings. The default fill without pident is steelblue.}
 
 \item{show.legend}{Standard ggplot2 legend selection: NA follows mappings;
 TRUE/FALSE or a named logical vector controls guide participation.}
+
+\item{route}{Default direct Bezier ribbons, or avoid for a measured obstacle
+route. Bundle requires an explicit route_group character column and shares
+a corridor for each group and ordered panel pair within the layer; every
+observation, source row, complete front and style remains independent. It
+does not aggregate evidence or imply biological flow. Avoid preserves complete interval fronts and uses a narrow polygonal
+corridor between them. Failure to find a clear route is explicit.}
+
+\item{route_width}{Positive corridor width in mm for avoid/bundle (default .8).
+This is drawing width, not an alignment length or statistical weight.}
 }
 \value{
 A component for \code{\link[=ggchord_fusion]{ggchord_fusion()}}.

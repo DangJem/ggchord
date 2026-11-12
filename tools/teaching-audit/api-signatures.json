@@ -507,7 +507,9 @@
       "alpha": "0.35",
       "linewidth": "0.25",
       "linetype": "1",
-      "show.legend": "NA"
+      "show.legend": "NA",
+      "route": "c(\"direct\", \"avoid\", \"bundle\")",
+      "route_width": "0.8"
     }
   },
   {
@@ -1206,7 +1208,8 @@
       "linetype": "2",
       "detail_box": "NULL",
       "allow_overlap": "FALSE",
-      "center_box": "NULL"
+      "center_box": "NULL",
+      "route": "c(\"direct\", \"avoid\")"
     }
   },
   {

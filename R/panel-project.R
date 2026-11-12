@@ -58,8 +58,10 @@ ggchord_fusion_nested_export <- function(value, parent, offset) {
     c("container_xmin", "container_xmax", "panel_xmin", "panel_xmax"),
     c("container_ymin", "container_ymax", "panel_ymin", "panel_ymax")), "panel_id")
   value$instances <- prefix(value$instances, "panel_id")
+  value$routing_obstacles <- prefix(ggchord_fusion_translate_table(value$routing_obstacles, offset,
+    c("xmin", "xmax"), c("ymin", "ymax")), "panel_id")
   value$connections <- prefix(value$connections, c("qpanel", "spanel", "layer_id"))
-  for (name in c("fronts", "paths", "focus_fronts", "leaders")) {
+  for (name in c("fronts", "paths", "focus_fronts", "leaders", "leader_paths", "routing_corridors")) {
     value[[name]] <- ggchord_fusion_translate_table(value[[name]], offset, c("x", "xend"), c("y", "yend"))
     value[[name]] <- prefix(value[[name]], c("panel_id", "layer_id", "composition_id"))
   }

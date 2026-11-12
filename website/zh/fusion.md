@@ -54,7 +54,7 @@ Fusion组合独立的基因组图形，并连接其真实序列区间。中央�
 
 {{code:fusionsave}}
 
-要求区间完整可见；需要局部窗口或拆分时，先在来源工作流中明确准备。跨原点仍需明确拆分，不支持直接bp↔aa连接、Dotplot端点、分面、猜测外部ggplot坐标或全局自动路由。其他已注册视图及显式区域分配见后文。
+要求区间完整可见；需要局部窗口或拆分时，先在来源工作流中明确准备。跨原点仍需明确拆分，不支持直接bp↔aa连接、Dotplot端点、分面、猜测外部ggplot坐标。实测障碍路由见后文。其他已注册视图及显式区域分配见后文。
 连接可以交叉或穿过面板内部；前景注释保留，但不保证任意组合都无碰撞。
 
 
@@ -102,7 +102,7 @@ focus_geometry$leaders
 
 虚线是装饰性的聚焦引线，与生物学 `connections`、`relationship_data` 分开导出；添加真实 `fusion_ribbon()` 仍须提供真实关系数据。`focus_region_data` 保留原始选区及任意元数据，`focus_regions` 记录解析出的实例、源原点和采样物理路径长度比。细节容器较小时，该比值可能小于 1，这不改变生物学长度。
 
-细节图拥有自己的数据、标度、图层和统计。若使用 count/bin/coverage 轨道，请自行准备并说明局部或全局统计总体；组合器只记录 `explicit_detail_plot`，不会静默选择口径。它不复制任意源图层、不推断比对，也不接收未注册的 Cartesian 字符面板。当前使用一个有序区间；同一 accession 重复时显式指定 `instance`/`detail_instance`，跨原点选区按后文显式声明 `wrap = TRUE`。下节提供独立细节；后文进一步介绍显式嵌套与自由区域分配，全局避障由独立布局策略负责。
+细节图拥有自己的数据、标度、图层和统计。若使用 count/bin/coverage 轨道，请自行准备并说明局部或全局统计总体；组合器只记录 `explicit_detail_plot`，不会静默选择口径。它不复制任意源图层、不推断比对，也不接收未注册的 Cartesian 字符面板。当前使用一个有序区间；同一 accession 重复时显式指定 `instance`/`detail_instance`，跨原点选区按后文显式声明 `wrap = TRUE`。下节提供独立细节；后文进一步介绍显式嵌套与自由区域分配，实测障碍路由见后文。
 
 ## 保留真实 HSP 的成对源窗口 {#paired-detail}
 
@@ -266,7 +266,7 @@ report$focus_region_data_by_composition
 
 `composition_id` 与 `region_row` 将派生选区、front和引线关联到 `focus_region_data_by_composition` 的各层原始选区。顶层 `focus_region_data` 仍是原始外层输入。叶面板用 `detail/center`、`detail/detail` 等路径命名，组合容器不会被当作单一基因组轴。来源在多个叶面板重复时，应指定完整路径与准确实例；`source_panel` 可选择 `center` 下的源叶面板。导出保留实际毫米边界和原始box/angle请求。
 
-各子图保留独立图层、Scale和统计总体，组合器不会暗中复制图层或重算统计。跨原点区间采用后文的显式完整源长度声明。完整负链CDS→基因组focus→真实字符示例见 `examples/m3-nested.R`。字符保留按物理尺寸的tile/error策略，较小嵌套区域不能仅凭增加DPI容纳60个字母。完整多设备发布验收与全局连接/标签优化属于独立工作。
+各子图保留独立图层、Scale和统计总体，组合器不会暗中复制图层或重算统计。跨原点区间采用后文的显式完整源长度声明。完整负链CDS→基因组focus→真实字符示例见 `examples/m3-nested.R`。字符保留按物理尺寸的tile/error策略，较小嵌套区域不能仅凭增加DPI容纳60个字母。完整多设备发布验收与更广泛的联合布局优化属于独立工作。
 
 ## 显式跨原点选区 {#origin-detail}
 
@@ -286,3 +286,31 @@ report$focus_region_data_by_composition
 source("examples/origin-detail.R")
 origin_detail
 ```
+
+## 实测路由与显示通道 {#routing}
+
+`fusion_ribbon(route = "avoid")` 保留两端完整区间及物理离开法线，在实测的其他
+叶面板容器、原生图层文字和最终 gtable 图例/装饰单元之间寻找较窄的多边形路线。
+`route_width` 单位为毫米，不表示比对长度或数量。默认 `"direct"` 保留已有
+Bezier 绘制并报告碰撞，不会暗中筛掉记录。
+
+`route = "bundle"` 配合显式字符列 `route_group`，在同一图层的每组及有序面板对内
+共享通道。每个源行仍有独立端面、颜色/透明度及多边形。共享通道的叠画不代表
+read support 或新增观测。分组由用户声明，不推断同源簇或关系。运行真实三条 HSP 示例：
+
+```r
+# Requires dplyr and the source checkout or tutorial input bundle.
+source("examples/fusion-routing.R")
+routed
+```
+
+`magnify_ggchord(route = "avoid")` 将相同实测空间契约用于装饰引线。导出的
+`leader_paths` 含最终折线顶点，与生物学 `paths` 分开。`routing_corridors` 记录
+共享通道及成员源行，`routing_obstacles` 记录物理包围框；连接/引线报告路由状态
+及碰撞。每个目标尺寸均重新构建，嵌套分配后还会核对祖先新增障碍。
+
+找不到可行路线时明确报错：可移动或扩大面板、缩小选区、调整声明分组，或使用
+`route = "direct"` 查看诊断。祖先覆盖阻断已测子路线时也明确失败。采用确定性的
+可见路径，不声称全局最优布局。旋转文字使用保守矩形包围框，曲线字符串采用更大
+包络，原生装饰使用最终 gtable 单元边界。不声称任意自定义 grob 和所有端点数据
+形状均已进入逐字形障碍模型。主题改变测量值，不改变源坐标或证据。

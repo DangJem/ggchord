@@ -33,7 +33,7 @@ bin外边界来源漏记、普通Chord/Collinear绕过声明HSP重复检查、ma
 | §4.5、§10.5/11 Radial | 已实现spokes、首尾邻接、有/无D–A对照及共享Feature/Track/实例 | check-radial.R；N=2每源行一次，N=1拒绝，无虚构首尾连接 |
 | §4.7–4.8、§10.12 等长/轴 | 已实现可选equal、真实长度保留、1/L端点优先及圆接缝策略 | foundation-views-results-v0.17.0.json、plasmid-axis-results-v0.17.0.json；显式刻度优先，不提供误导性共享绝对比例尺 |
 | §4.11、§10.16 A–B–A | 已实现seq_order/命名副本、between与dplyr筛选，在Collinear/Chord/Radial共用路由 | v0.17/18开发记录；Circular/Dotplot不适配重复实例 |
-| §5、A.3 Fusion | F0/F1及v0.27显式Sankey/Radial注册、八方位/物理angle/box、多层Fusion、来源命名空间与覆盖诊断已实现 | DEVELOPMENT-v0.27.0.md、check-fusion-advanced.R；F2/F3整体尚未关闭：全局路由/高密度质量、外层Guide联合优化和发布矩阵继续开发 |
+| §5、A.3 Fusion | F0/F1及v0.27显式Sankey/Radial注册、八方位/物理angle/box、多层Fusion、来源命名空间与覆盖诊断已实现 | DEVELOPMENT-v0.27.0.md、check-fusion-advanced.R；F2/F3整体尚未关闭：显式实测避障/共享显示通道已完成原型与定向验证；高密度质量、外层Guide联合优化和发布矩阵继续开发 |
 | §6.1、A.5 Ribbon | 已实现显式端点渐变、装饰subject尖头、Identity六刻度与用户scale优先 | ribbon-flow-results-v0.17.0.json、identity-guide-results-v0.17.0.json；按后续用户决定默认仍非端点渐变，不能按原提案声称默认渐变 |
 | §6.2、A.6 标签 | 已修复30标签/混合层切换、共享实测队列、圆轴字形；真实13质粒/旗舰与代表尺寸有证据 | foundation-label/size-results-v0.17.0.json；不是全局零碰撞保证，未完成与SnapGene同输入导出的完整公平对标，全部引线穿字/内部框指标仍待完善 |
 | §6.3.1、§10.15 Guide | v0.24.0实现原生Guide联合候选、离散行列/位置/方向选择、完整gtable毫米重测、显式约束和失败报告；连续/分段色条保持完整 | DEVELOPMENT-v0.24.0.md、check-adaptive.R；有界搜索不是全局最优保证，任意自定义Guide仅测量，Fusion外层联合布局未实现 |
@@ -42,7 +42,7 @@ bin外边界来源漏记、普通Chord/Collinear绕过声明HSP重复检查、ma
 | §6.5 Recipes | 已有真实科研综合示例与Fusion配方，继续复用基础API | tools/documentation-examples.R；不是独立模板产品；v0.22.0已提供显式源区间magnify入口 |
 | §6.6 适配器 | 本版新增BEDPE保留原字段/方向/缺失策略；FASTA可显式保留真实字符 | check-bedpe.R、check-semantic-detail.R；VCF/SV、BigWig/bedGraph、domain/motif等格式专用导入器未完成，见ADAPTER-AUDIT-v0.20.0.md |
 | §4.9、§10.13 短序列 | v0.21.0已实现真实gapped FASTA、源/列双映射、显式源验证和Cartesian局部geom_residue | DEVELOPMENT-v0.21.0.md、v0.21.0-alignment-results.json；v0.26.0已补齐显式字符注册与CDS真实翻译/phase；不含MSA算法、CIGAR全格式解析或缺失来源推断 |
-| §4.10 语义放大 | M0/M1/M2及命名多细节已有；v0.27补齐显式center/detail box、真实CDS/字符嵌套路径、逐层原始选区与物理重建 | check-fusion-advanced.R；4×4/8×8/12×8源区域定向构建、实际嵌套PNG有证据。显式跨原点选区已在v0.27补齐（check-origin-detail.R）；全局避障及M3完整发布矩阵继续推进 |
+| §4.10 语义放大 | M0/M1/M2及命名多细节已有；v0.27补齐显式center/detail box、真实CDS/字符嵌套路径、逐层原始选区与物理重建 | check-fusion-advanced.R；4×4/8×8/12×8源区域定向构建、实际嵌套PNG有证据。显式跨原点选区已在v0.27补齐（check-origin-detail.R）；实测跨面板/原生文字/Guide障碍路线已提供并定向验证（check-fusion-routing.R）；更广泛密集质量及M3完整发布矩阵继续推进 |
 | §7、A.4、§10.8/14/17 网站/README | 导航/Markdown源/双语教学重构已实施，README未来方向保留，新API同步实际教程 | v0.17/18/19开发记录与浏览器JSON；62对页面为当前源规模。代表页响应式通过，不是全站逐页逐宽度视觉认证；本版不重建旧图或冻结docs |
 | §8.3、§9、1.0稳定化 | 待实施 | 未集中冻结全部新API、兼容/弃用策略及完整候选发布验收；版本分支开发完成不等于v10完成 |
 | X 非目标 | 持续遵守 | 不开发交互HTML绘图、Shiny/在线编辑器，不运行分析引擎伪造比对，不自动push/部署/Release |

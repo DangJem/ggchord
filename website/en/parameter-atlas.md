@@ -2462,6 +2462,8 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `linewidth` | `0.25` | Numeric/integer; range in description | Fixed styles; explicit values take priority over mappings. The default fill without pident is steelblue. |
 | `linetype` | `1` | Numeric/integer; range in description | Fixed styles; explicit values take priority over mappings. The default fill without pident is steelblue. |
 | `show.legend` | `NA` | R object; constraints below | Standard ggplot2 legend selection: NA follows mappings; TRUE/FALSE or a named logical vector controls guide participation. |
+| `route` | `c("direct", "avoid", "bundle")` | Vector; choices versus multiple selection below | Default direct Bezier ribbons, or avoid for a measured obstacle route. Bundle requires an explicit route_group character column and shares a corridor for each group and ordered panel pair within the layer; every observation, source row, complete front and style remains independent. It does not aggregate evidence or imply biological flow. Avoid preserves complete interval fronts and uses a narrow polygonal corridor between them. Failure to find a clear route is explicit. |
+| `route_width` | `0.8` | Numeric/integer; range in description | Positive corridor width in mm for avoid/bundle (default .8). This is drawing width, not an alignment length or statistical weight. |
 
 </details>
 
@@ -2557,6 +2559,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `detail_box` | `NULL` | Nullable R object; type/inheritance below | Explicit detail allocation instead of side/detail_size, using the box convention in fusion_panel(). For multiple plots, supply a named list covering every detail. Physical boxes are rechecked at target size. |
 | `allow_overlap` | `FALSE` | Logical | Deliberately permit overlapping containers, following ggchord_fusion(). Later panels cover earlier ones; default FALSE. |
 | `center_box` | `NULL` | Nullable R object; type/inheritance below | Explicit source allocation instead of center_size. |
+| `route` | `c("direct", "avoid")` | Vector; choices versus multiple selection below | Direct boundary leaders (default), or avoid to route around measured other containers and native text/guide envelopes. Endpoints stay fixed; no clear route fails rather than hiding the selection. |
 
 </details>
 

@@ -1,0 +1,13 @@
+{
+  "status": "passed",
+  "real_HSPs": 3,
+  "every_source_retained": true,
+  "complete_fronts_unchanged": true,
+  "direct_obstacle_reported": true,
+  "routed_polygon_clear": true,
+  "shared_corridor_without_aggregation": true,
+  "focus_leaders_clear": true,
+  "no_route_explicit_failure": true,
+  "physical_rebuild": true,
+  "scope": "measured other containers, native layer text and gtable decoration/guide envelopes; no global optimum claim"
+}

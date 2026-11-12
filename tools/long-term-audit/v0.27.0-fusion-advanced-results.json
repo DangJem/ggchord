@@ -196,7 +196,7 @@
       "detail_length_mm": 41.9908,
       "length_ratio": 15.8727,
       "stat_scope": "explicit_detail_plot",
-      "collision_status": "not globally measured",
+      "collision_status": "direct_collision",
       "highlight_width_mm": 1.5,
       "highlight_alpha": 0.2,
       "colour": "#B45309",
@@ -204,6 +204,8 @@
       "leader_linewidth": 0.35,
       "leader_linetype": 2,
       "region_row": 1,
+      "region_piece": 1,
+      "wrap": false,
       "composition_id": "root",
       "_row": "1"
     },
@@ -222,7 +224,7 @@
       "detail_length_mm": 165.8715,
       "length_ratio": 58.6602,
       "stat_scope": "explicit_detail_plot",
-      "collision_status": "not globally measured",
+      "collision_status": "direct_collision",
       "highlight_width_mm": 1.5,
       "highlight_alpha": 0.2,
       "colour": "#B45309",
@@ -230,6 +232,8 @@
       "leader_linewidth": 0.35,
       "leader_linetype": 2,
       "region_row": 1,
+      "region_piece": 1,
+      "wrap": false,
       "composition_id": "detail/root",
       "_row": "detail"
     }

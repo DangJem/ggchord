@@ -1,3 +1,30 @@
+# One decorative tip geometry for rendering and physical route validation.
+ggchord_ribbon_tip_edges <- function(edge1, edge2, front, tip) {
+  if (tip == "subject") {
+    n <- nrow(edge1); center <- (edge1+edge2)/2; span <- edge2[n, ]-edge1[n, ]
+    if (sum(span^2) < 1e-20 || sum((center[n, ]-center[1L, ])^2) < 1e-20) tip <- "none" else {
+      shoulder <- max(2L, floor(.88*(n-1L))+1L)
+      middle <- (nrow(front)+1)/2
+      marker <- colMeans(front[unique(c(floor(middle), ceiling(middle))), , drop = FALSE])
+      base1 <- center[shoulder, ]-span/2; base2 <- center[shoulder, ]+span/2
+      u <- seq(0, 1, length.out = n-shoulder+1L)
+      edge1[shoulder:n, ] <- outer(1-u, base1)+outer(u, marker)
+      edge2[shoulder:n, ] <- outer(1-u, base2)+outer(u, marker)
+    }
+  }
+  list(edge1 = edge1, edge2 = edge2, tip = tip)
+}
+
+ggchord_ribbon_visible_polygon <- function(path, nq, ns, tip) {
+  if (tip == "none") return(path)
+  ne <- (nrow(path)-nq-ns)/2
+  subject <- path[nq+ne+seq_len(ns), , drop = FALSE]
+  shape <- ggchord_ribbon_tip_edges(path[nrow(path)-seq_len(ne)+1L, , drop = FALSE],
+    path[nq+seq_len(ne), , drop = FALSE], subject, tip)
+  rbind(path[seq_len(nq), , drop = FALSE], shape$edge2,
+    if (shape$tip == "none") subject, shape$edge1[ne:1L, , drop = FALSE])
+}
+
 # Ribbon colour follows the sampled Bezier parameter, never screen x/y.
 GeomRibbonFlow <- ggplot2::ggproto("GeomRibbonFlow", ggplot2::GeomPolygon,
   default_aes = utils::modifyList(ggplot2::GeomPolygon$default_aes,
@@ -23,24 +50,11 @@ GeomRibbonFlow <- ggplot2::ggproto("GeomRibbonFlow", ggplot2::GeomPolygon,
       xy1 <- as.matrix(edge1); xy2 <- as.matrix(edge2)
       t <- seq(0,1,length.out=ne)
       subject_rows <- nq+ne+seq_len(ns)
-      if (tip == "subject") {
-        centre <- (xy1+xy2)/2
-        span <- xy2[ne,]-xy1[ne,]
-        if (sum(span^2)<1e-20 || sum((centre[ne,]-centre[1,])^2)<1e-20) {
-          warning("Ribbon subject tip has a degenerate interval/channel; keeping the full front",call.=FALSE)
-          tip <- "none"
-        } else {
-          shoulder <- max(2L,floor(.88*(ne-1L))+1L)
-          front <- as.matrix(d[subject_rows,c("x","y")])
-          middle <- (nrow(front)+1)/2
-          marker <- colMeans(front[unique(c(floor(middle),ceiling(middle))),,drop=FALSE])
-          base1 <- centre[shoulder,]-span/2
-          base2 <- centre[shoulder,]+span/2
-          u <- seq(0,1,length.out=ne-shoulder+1L)
-          xy1[shoulder:ne,] <- outer(1-u,base1)+outer(u,marker)
-          xy2[shoulder:ne,] <- outer(1-u,base2)+outer(u,marker)
-        }
-      }
+      shape <- ggchord_ribbon_tip_edges(xy1, xy2, as.matrix(d[subject_rows, c("x", "y")]), tip)
+      if (tip == "subject" && shape$tip == "none") warning(
+        "Ribbon subject tip has a degenerate interval/channel; keeping the full front", call. = FALSE)
+      xy1 <- shape$edge1; xy2 <- shape$edge2; tip <- shape$tip
+
       colors <- if (flow) {
         if (is.na(d$flow_from[1]) || is.na(d$flow_to[1])) rep(NA_character_,ne-1L) else
           { endpoints <- c(d$flow_from[1],d$flow_to[1])

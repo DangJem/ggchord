@@ -2462,6 +2462,8 @@
 | `linewidth` | `0.25` | 数值/整数；范围见说明 | 固定样式优先于对应映射。没有pident时，默认填充为steelblue。 |
 | `linetype` | `1` | 数值/整数；范围见说明 | 固定样式优先于对应映射。没有pident时，默认填充为steelblue。 |
 | `show.legend` | `NA` | R 对象；约束见说明 | 标准ggplot2图例选择：NA按映射自动决定；TRUE/FALSE或命名逻辑向量控制参与图例的美学。 |
+| `route` | `c("direct", "avoid", "bundle")` | 向量；候选/多选含义见说明 | 默认 direct 绘制 Bezier 连接带；avoid 在实测障碍间寻找路径。bundle 要求显式 route_group 字符列，在同一图层的每组及有序面板对内共享通道；每条观测、源行、完整端面及样式仍独立，不聚合证据，也不暗示生物学流动。avoid 保留完整区间端面，中间使用较窄的多边形通道。无法找到无碰撞路线时明确报错。 |
+| `route_width` | `0.8` | 数值/整数；范围见说明 | avoid/bundle 通道的正宽度，单位毫米，默认 .8。这是绘制宽度，不是比对长度或统计权重。 |
 
 </details>
 
@@ -2557,6 +2559,7 @@
 | `detail_box` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 显式细节区域，替代side/detail_size，沿用fusion_panel()的box约定。多图须用覆盖全部面板的命名列表；物理区域按实际目标尺寸重新检查。 |
 | `allow_overlap` | `FALSE` | 逻辑值 | 按ggchord_fusion()显式允许容器重叠，后加入者覆盖先加入者，默认FALSE。 |
 | `center_box` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 显式源区域分配，替代center_size。 |
+| `route` | `c("direct", "avoid")` | 向量；候选/多选含义见说明 | 默认直接连接边界引线；avoid 绕开实测的其他容器及原生文字/图例包围框。端点固定，找不到可行路径时明确失败，不隐藏选区。 |
 
 </details>
 

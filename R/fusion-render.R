@@ -11,6 +11,9 @@ ggchord_build_fusion <- function(x) {
     grid::convertWidth(grid::grobWidth(styles$guide),"mm",TRUE),
     grid::convertHeight(grid::grobHeight(styles$guide),"mm",TRUE))
   area <- canvas; shift <- c(0,0)
+  guide_xy <- if (styles$side == "none") NULL else switch(styles$side,
+    right=c(canvas[1]-guide_size[1]/2,canvas[2]/2), left=c(guide_size[1]/2,canvas[2]/2),
+    top=c(canvas[1]/2,canvas[2]-guide_size[2]/2), bottom=c(canvas[1]/2,guide_size[2]/2))
   if (styles$side %in% c("left","right")) {
     area[1] <- canvas[1]-guide_size[1]-4
     if (styles$side=="left") shift[1] <- guide_size[1]+4
@@ -24,7 +27,7 @@ ggchord_build_fusion <- function(x) {
   rectangles <- ggchord_fusion_rectangles(x, area)
   panels <- list(); panel_rows <- list(); instances <- list(); diagnostics <- list()
   backgrounds <- list(); foregrounds <- list(); nested_results <- list(); sources <- list()
-  render_events <- list(); connection_grobs <- list(); overlay_grobs <- list()
+  render_events <- list(); connection_grobs <- list(); overlay_grobs <- list(); obstacle_parts <- list()
   for (id in names(x$panels)) {
     spec <- x$panels[[id]]; rect <- rectangles[[id]]
     dimensions <- c(diff(rect[1:2]),diff(rect[3:4]))*area
@@ -40,6 +43,7 @@ ggchord_build_fusion <- function(x) {
       offset <- center - dimensions / 2
       child <- ggchord_fusion_nested_export(nested$export, id, offset)
       nested_results[[id]] <- list(export = child, permissions = nested$source_permissions)
+      obstacle_parts[[id]] <- child$routing_obstacles[child$routing_obstacles$kind != "container", , drop = FALSE]
       for (key in names(nested$panel_registry)) {
         full <- paste0(id, "/", key)
         if (full %in% names(panels) || full %in% names(x$panels)) ggchord_stop("Fusion: nested panel path collision: ", full)
@@ -109,6 +113,12 @@ ggchord_build_fusion <- function(x) {
         } else ggplot2::ggplotGrob(plot)
       })
     })
+    # Guide bounds are measured while the actual child viewport is active.
+    local({
+      grid::pushViewport(viewport)
+      on.exit(grid::popViewport())
+      obstacle_parts[[id]] <<- ggchord_fusion_guide_obstacles(table, id, origin)
+    })
     context <- attr(table,"ggchord_render_context")
     if (!identical(context$status,"measured")) ggchord_stop("Fusion panel '",id,"': actual panel measurement unavailable")
     context$device_panel_bounds_mm <- context$panel_bounds_mm
@@ -117,6 +127,7 @@ ggchord_build_fusion <- function(x) {
     built <- attr(table,"ggchord_render_built")
     panels[[id]] <- list(layout=layout,built=built,context=context,
       seq_data=spec$plot$ggchord$data$seq_data)
+    obstacle_parts[[paste0(id, "/text")]] <- ggchord_fusion_text_obstacles(panels[[id]], id)
     sources[[id]] <- spec$plot$ggchord_alignment %||% spec$plot$ggchord$sources
     backgrounds[[id]] <- grid::grobTree(ggchord_fusion_partition(table,TRUE),vp=viewport)
     foregrounds[[id]] <- grid::grobTree(ggchord_fusion_partition(table,FALSE),vp=viewport)
@@ -151,10 +162,21 @@ ggchord_build_fusion <- function(x) {
       label_fit=ggchord_label_fit_diagnostics(layout),label_visibility=ggchord_label_visibility(layout),
       guide_sizes_mm=guide_bounds,guide_overflow=oversized,collision_status="not globally measured")
   }
+  containers <- lapply(render_events, function(e) {
+    if (is.null(e$panel_id) || is.null(e$container_bounds)) return(NULL)
+    b <- e$container_bounds
+    data.frame(panel_id = e$panel_id, kind = "container", xmin = b[1], xmax = b[2],
+      ymin = b[3], ymax = b[4], measurement = "resolved_container")
+  })
+  if (!is.null(guide_xy)) obstacle_parts[["composition-guide"]] <- data.frame(panel_id = "",
+    kind = "guide", xmin = guide_xy[1]-guide_size[1]/2, xmax = guide_xy[1]+guide_size[1]/2,
+    ymin = guide_xy[2]-guide_size[2]/2, ymax = guide_xy[2]+guide_size[2]/2, measurement = "composition_guide")
+  obstacles <- unique(ggchord_rbind_fill(c(containers, obstacle_parts))) %||% data.frame()
   # Use the shared Ribbon renderer with a single full-canvas Cartesian frame.
   frame <- ggplot2::ggplot() + ggplot2::coord_cartesian(xlim=c(0,canvas[1]),ylim=c(0,canvas[2]),expand=FALSE)
   frame <- ggplot2::ggplot_build(frame)
   connection_rows <- list(); fronts <- list(); paths <- list(); ribbons <- list(); seen <- list()
+  corridors <- list(); corridor_rows <- list()
   for (i in seq_along(x$ribbons)) {
     layer <- x$ribbons[[i]]; input <- layer$data
     layer_id <- paste0("fusion-ribbon-",i)
@@ -183,6 +205,25 @@ ggchord_build_fusion <- function(x) {
       }
       qf <- ggchord_fusion_front(panels[[q$panel]],q); sf <- ggchord_fusion_front(panels[[s$panel]],s)
       path <- ggchord_fusion_path(qf,sf,layer$curvature)
+      style <- styles$data[[i]][row,,drop=FALSE]
+      relevant <- ggchord_route_obstacles(obstacles, c(q$panel, s$panel))
+      stroke <- if (is.na(style$colour) || !is.finite(style$linewidth)) 0 else style$linewidth/2
+      relevant <- ggchord_route_inflate(relevant, stroke)
+      group <- if (identical(layer$route, "bundle")) record$route_group else NA_character_
+      # Length-prefixed keys avoid collisions with slashes or arbitrary user IDs.
+      key <- if (!is.na(group)) paste0(nchar(c(layer_id, q$panel, s$panel, group)), ":",
+        c(layer_id, q$panel, s$panel, group), collapse = "") else NULL
+      corridor <- if (!is.null(key)) corridors[[key]] else NULL
+      routed <- ggchord_route_ribbon(qf, sf, path, relevant, canvas,
+        layer$route %||% "direct", layer$route_width %||% .8, corridor = corridor, tip = layer$tip)
+      if (!is.null(key)) {
+        corridors[[key]] <- routed$corridor
+        corridor_rows[[length(corridor_rows)+1L]] <- data.frame(layer_id = layer_id,
+          route_group = group, source_row = row, qpanel = q$panel, spanel = s$panel,
+          vertex = seq_len(nrow(routed$corridor)), x = routed$corridor[, 1], y = routed$corridor[, 2],
+          coordinate_space = "composition", units = "mm", semantic = "shared_drawing_corridor")
+      }
+      path <- routed$path
       normals <- attr(path,"endpoint_normals")
       for (prefix in c("q","s")) {
         endpoint <- if(prefix=="q") q else s
@@ -193,7 +234,6 @@ ggchord_build_fusion <- function(x) {
         front$control_normal_x <- normals[prefix,1]; front$control_normal_y <- normals[prefix,2]
         fronts[[length(fronts)+1L]] <- front
       }
-      style <- styles$data[[i]][row,,drop=FALSE]
       d <- data.frame(x=path[,1],y=path[,2],group=1L,fill=style$fill,colour=style$colour,
         alpha=style$alpha,linewidth=style$linewidth,linetype=style$linetype,
         flow_qn=nrow(qf),flow_sn=nrow(sf),flow_tip=layer$tip,flow_from=NA_character_,flow_to=NA_character_)
@@ -213,6 +253,8 @@ ggchord_build_fusion <- function(x) {
       ribbons[[length(ribbons)+1L]] <- GeomRibbonFlow$draw_panel(d,frame$layout$panel_params[[1]],frame$layout$coord,
         flow=layer$gradient,tip=layer$tip)
       d$layer_id <- layer_id; d$source_row <- row; paths[[length(paths)+1L]] <- d
+      report$route <- layer$route %||% "direct"; report$route_status <- routed$status
+      report$obstacle_collisions <- routed$collisions; report$tip <- layer$tip; report$route_stroke_mm <- stroke
       report$qpanel <- q$panel; report$spanel <- s$panel
       report$q_instance <- q$instance; report$s_instance <- s$instance
       report$sequence_unit <- q$unit; report$retained <- TRUE; report$reason <- "retained"
@@ -225,8 +267,10 @@ ggchord_build_fusion <- function(x) {
       ggchord_stop("Fusion: repeated source_hsp_id '", key, "' across nested panels requires allow_repeated=TRUE on all participating layers")
     seen[[key]] <- permissions
   }
-  focus <- ggchord_build_focus(x$focus, panels)
-  for (name in c("regions", "fronts", "leaders")) focus[[name]]$composition_id <- rep("root", nrow(focus[[name]]))
+  focus_settings <- x$focus
+  if (!is.null(focus_settings)) { focus_settings$obstacles <- obstacles; focus_settings$canvas <- canvas }
+  focus <- ggchord_build_focus(focus_settings, panels)
+  for (name in c("regions", "fronts", "leaders", "leader_paths")) focus[[name]]$composition_id <- rep("root", nrow(focus[[name]]))
   guide <- styles$guide
   if (styles$side!="none") {
     xy <- switch(styles$side,right=c(canvas[1]-guide_size[1]/2,canvas[2]/2),
@@ -276,6 +320,7 @@ ggchord_build_fusion <- function(x) {
   focus_regions <- bind(c(list(focus$regions), child_tables("focus_regions")))
   focus_fronts <- bind(c(list(focus$fronts), child_tables("focus_fronts")))
   leaders <- bind(c(list(focus$leaders), child_tables("leaders")))
+  leader_paths <- bind(c(list(focus$leader_paths), child_tables("leader_paths")))
   for (id in names(panel_rows)) {
     d <- panel_rows[[id]]; at <- which(d$panel_id == id); spec <- x$panels[[id]]
     for (name in c("requested_angle", "requested_distance")) if (!name %in% names(d)) d[[name]] <- NA_real_
@@ -287,17 +332,60 @@ ggchord_build_fusion <- function(x) {
   }
   export <- list(panels=bind(panel_rows),instances=bind(instances),overlaps=combine(overlaps,"overlaps"),
     connections=combine(connection_rows,"connections"),fronts=combine(fronts,"fronts"),paths=combine(paths,"paths"),
-    focus_region_data=focus$input,focus_regions=focus_regions,focus_fronts=focus_fronts,leaders=leaders,
+    focus_region_data=focus$input,focus_regions=focus_regions,focus_fronts=focus_fronts,leaders=leaders,leader_paths=leader_paths,
     nested_focus_region_data=lapply(nested_results,function(n) n$export$focus_region_data),
     focus_region_data_by_composition=c(list(root=focus$input), unlist(lapply(names(nested_results), function(id) {
       data <- nested_results[[id]]$export$focus_region_data_by_composition
       stats::setNames(data, paste0(id, "/", names(data)))
     }), recursive=FALSE)),
-    diagnostics=diagnostics,source_layouts=lapply(panels,`[[`,"layout"),source_data=sources,
+    routing_obstacles=obstacles,routing_corridors=combine(corridor_rows,"routing_corridors"),diagnostics=diagnostics,source_layouts=lapply(panels,`[[`,"layout"),source_data=sources,
     relationship_data=c(lapply(x$ribbons,`[[`,"data"),unlist(lapply(nested_results,function(n) n$export$relationship_data),recursive=FALSE)),
     metadata=list(canvas_mm=canvas,coordinate_space="composition",units="mm",layout=x$fusion_layout,
       guide_side=styles$side,guide_size_mm=guide_size,measurement="measured",allow_overlap=isTRUE(x$allow_overlap),
       device=names(grDevices::dev.cur()),font_conditions="Selected device metrics; fallback and embedding not certified"))
+  # A parent can add overlapping leaves after a child was measured. Recheck
+  # child geometry in the complete enclosing canvas rather than exporting a
+  # stale clear claim. Exact routes fail explicitly if the parent blocks them.
+  for (i in seq_len(nrow(export$connections))) {
+    connection <- export$connections[i, , drop = FALSE]
+    if (!isTRUE(connection$retained)) next
+    path <- export$paths[export$paths$layer_id == connection$layer_id &
+      export$paths$source_row == connection$source_row, c("x", "y"), drop = FALSE]
+    relevant <- ggchord_route_inflate(ggchord_route_obstacles(obstacles, c(connection$qpanel, connection$spanel)), connection$route_stroke_mm)
+    qn <- sum(export$fronts$layer_id == connection$layer_id & export$fronts$source_row == connection$source_row & export$fronts$endpoint == "q")
+    sn <- sum(export$fronts$layer_id == connection$layer_id & export$fronts$source_row == connection$source_row & export$fronts$endpoint == "s")
+    polygon <- ggchord_ribbon_visible_polygon(as.matrix(path), qn, sn, connection$tip)
+    collisions <- sum(ggchord_route_polygon_hits(polygon, relevant))
+    if (collisions && connection$route %in% c("avoid", "bundle"))
+      ggchord_stop("Fusion: enclosing layout obstructs a measured route in ", connection$layer_id,
+        "; move the overlapping parent panels or use route = 'direct' with explicit diagnostics")
+    export$connections$obstacle_collisions[i] <- collisions
+    if (collisions) export$connections$route_status[i] <- "direct_collision"
+  }
+  for (i in seq_len(nrow(export$leaders))) {
+    leader <- export$leaders[i, , drop = FALSE]
+    selected <- export$focus_regions$composition_id == leader$composition_id &
+      export$focus_regions$region_row == leader$region_row & export$focus_regions$region_piece == leader$region_piece
+    region <- export$focus_regions[selected, , drop = FALSE]
+    selected <- export$leader_paths$composition_id == leader$composition_id &
+      export$leader_paths$region_row == leader$region_row & export$leader_paths$region_piece == leader$region_piece &
+      export$leader_paths$boundary == leader$boundary
+    line <- as.matrix(export$leader_paths[selected, c("x", "y"), drop = FALSE])
+    relevant <- ggchord_route_inflate(ggchord_route_obstacles(obstacles, c(region$source_panel, region$detail_panel)), region$leader_linewidth/2)
+    hits <- rep(FALSE, nrow(relevant))
+    for (j in seq_len(nrow(line)-1L)) hits <- hits | ggchord_route_segment_hits(line[j, ], line[j+1L, ], relevant)
+    if (any(hits) && leader$route == "avoid")
+      ggchord_stop("Fusion: enclosing layout obstructs a focus leader; move the overlapping panels or inspect route = 'direct'")
+    export$leaders$obstacle_collisions[i] <- sum(hits)
+    if (any(hits)) export$leaders$route_status[i] <- "direct_collision"
+  }
+  for (i in seq_len(nrow(export$focus_regions))) {
+    region <- export$focus_regions[i, , drop = FALSE]
+    selected <- export$leaders$composition_id == region$composition_id &
+      export$leaders$region_row == region$region_row & export$leaders$region_piece == region$region_piece
+    states <- export$leaders$route_status[selected]
+    export$focus_regions$collision_status[i] <- if (length(states)) paste(unique(states), collapse = ";") else "no_leaders"
+  }
   if ("source_hsp_id" %in% names(export$connections)) {
     d <- export$connections
     ids <- unique(as.character(d$source_hsp_id[!is.na(d$source_hsp_id) & d$retained]))

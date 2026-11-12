@@ -1,5 +1,15 @@
 # ggchord 0.27.0 (development)
 
+- Fusion ribbons support explicit measured obstacle routes and shared display
+  corridors (`route = "avoid"` / `"bundle"`). Original source rows, complete
+  interval fronts and physical departure normals remain intact. Bundling uses
+  explicit `route_group` values and never aggregates scientific observations.
+- Magnification can route decorative leaders around the same measured obstacles.
+  Exports include route statuses, collisions, obstacle envelopes, shared corridor
+  membership and decorative `leader_paths`. Native font/guide metrics are rebuilt
+  at target size; impossible routes and obstructing ancestor overlays fail
+  explicitly. Default direct drawing is unchanged and reports collisions.
+
 - Aligned-character adapters accept an explicit `circular = TRUE` declaration,
   using a declared full source length or full source string. Forward/reverse
   positions wrap without revisiting a source position; gaps and verification
