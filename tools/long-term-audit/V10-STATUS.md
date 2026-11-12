@@ -3,7 +3,7 @@
 核对日期：2026-11-12。对应任务书：`ggchord_长期开发路线图与统一架构_Codex任务书_v10_独立执行版.md`。
 基线审计为33236ef；Foundation、View Expansion、Composition已分别完成本地开发并按授权
 整合main；v0.21.0已按授权整合并推送，origin/main为69556d8；v0.22.0已获批准整合本地main（d5dfbbb）。v0.23.0（含4项审计修复，4a9d755）已按授权整合本地main；
-v0.24.0的Guide联合布局与可选排版策略本地完成，尚未整合或推送。
+v0.24.0 074899e已按授权整合本地main；v0.25.0的显式多独立细节面板本地开发完成，未整合或推送。
 最近正式发布仍为v0.16.6。本文中的“完成”指明确边界内的本地实现与定向验证，
 不表示包级发布检测、所有候选功能或任意输入组合完成。
 
@@ -42,7 +42,7 @@ bin外边界来源漏记、普通Chord/Collinear绕过声明HSP重复检查、ma
 | §6.5 Recipes | 已有真实科研综合示例与Fusion配方，继续复用基础API | tools/documentation-examples.R；不是独立模板产品；v0.22.0已提供显式源区间magnify入口 |
 | §6.6 适配器 | 本版新增BEDPE保留原字段/方向/缺失策略；FASTA可显式保留真实字符 | check-bedpe.R、check-semantic-detail.R；VCF/SV、BigWig/bedGraph、domain/motif等格式专用导入器未完成，见ADAPTER-AUDIT-v0.20.0.md |
 | §4.9、§10.13 短序列 | v0.21.0已实现真实gapped FASTA、源/列双映射、显式源验证和Cartesian局部geom_residue | DEVELOPMENT-v0.21.0.md、v0.21.0-alignment-results.json；不含MSA算法、CIGAR全格式解析、CDS翻译/phase及宏观字符投影 |
-| §4.10 语义放大 | v0.22.0公开magnify；v0.23.0实现M1显式多源区间/Chord与Collinear主图、真实HSP局部图、逐行源导出 | DEVELOPMENT-v0.23.0.md、check-magnify-pairs.R；要求显式detail及统计口径。M2–M3、跨原点选区、任意inset、多级嵌套未完成 |
+| §4.10 语义放大 | v0.22.0公开magnify；v0.23.0实现M1显式多源区间/Chord与Collinear主图、真实HSP局部图、逐行源导出 | DEVELOPMENT-v0.23.0.md、check-magnify-pairs.R；要求显式detail及统计口径。v0.25.0补充M3非嵌套四侧命名独立细节，完成三尺寸定向构建；M2、跨原点、任意inset、嵌套、全局避障和M3完整发布矩阵仍未完成 |
 | §7、A.4、§10.8/14/17 网站/README | 导航/Markdown源/双语教学重构已实施，README未来方向保留，新API同步实际教程 | v0.17/18/19开发记录与浏览器JSON；62对页面为当前源规模。代表页响应式通过，不是全站逐页逐宽度视觉认证；本版不重建旧图或冻结docs |
 | §8.3、§9、1.0稳定化 | 待实施 | 未集中冻结全部新API、兼容/弃用策略及完整候选发布验收；版本分支开发完成不等于v10完成 |
 | X 非目标 | 持续遵守 | 不开发交互HTML绘图、Shiny/在线编辑器，不运行分析引擎伪造比对，不自动push/部署/Release |

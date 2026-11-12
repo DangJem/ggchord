@@ -70,3 +70,5 @@ Position 只控制局部放置，不把不支持的图层转换成另一种坐�
 Sankey、Radial、Dotplot 图及显式启用策略的 Fusion 子面板。它调整默认主题样式，
 在用户显式约束内排列原生图例；默认不启用。分面、任意自定义 grob、Fusion 外层
 区域分配和全局标签求解器不在此范围内。
+
+[语义放大](fusion.html#multiple-details) 支持最多四侧的命名独立 Collinear 细节面板，每行显式选择目标；嵌套和自由定位盒仍不支持。

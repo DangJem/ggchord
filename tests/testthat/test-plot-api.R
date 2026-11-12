@@ -121,7 +121,10 @@ test_that("Fusion retains source intervals across independently measured panels"
     instance_note = "ordinary metadata", detail_instance_note = "also metadata")
   focused <- focus_ggchord_data(smoke_sequences(), loci = locus)
   local <- ggchord(focused$seq_data) + geom_seq() + coord_collinear()
-  magnified <- export_ggchord_fusion(magnify_ggchord(detail, locus, local))
+  locus$detail_panel <- c("first", "second")
+  magnified <- export_ggchord_fusion(magnify_ggchord(detail, locus,
+    list(first = local, second = local), side = c(first = "top", second = "bottom")))
+  expect_identical(magnified$focus_regions$detail_panel, c("first", "second"))
   expect_equal(magnified$focus_regions$detail_origin, c(100, 100))
   expect_identical(magnified$focus_regions$region_row, 1:2)
   expect_identical(magnified$focus_region_data, locus)

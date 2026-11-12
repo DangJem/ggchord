@@ -19,14 +19,21 @@
 #'   one-based inclusive source coordinates. Bounds must be ordered positive
 #'   integers. Optional `instance` and `detail_instance` select exact display
 #'   instances in the source and detail panels for every row. Ambiguity fails; origin-wrapping
-#'   intervals must be split before using this interface. All rows share one detail panel.
-#' @param detail_plot An explicit horizontal or vertical Collinear ggchord plot.
+#'   intervals must be split before using this interface. With a list of details,
+#'   a `detail_panel` column selects the named target for each row.
+#' @param detail_plot An explicit horizontal or vertical Collinear ggchord plot,
+#'   or a uniquely named list of one to four such plots. Every panel must have
+#'   at least one source region; the name `center` is reserved.
 #'   The selected source interval must be fully visible in both panels, in the
 #'   same bp/aa unit. Ordinary Cartesian character plots are not supported here.
-#' @param side One of right, top, left or bottom for the detail panel.
+#' @param side One of right, top, left or bottom for a single detail plot.
+#'   For a list of plots, supply a character vector named by panel ID, with
+#'   distinct sides. Multiple panels require explicit routing and placement.
 #' @param center_size,detail_size Optional panel width/height fractions, following
 #'   [ggchord_fusion()] and [fusion_panel()]. Defaults reserve a smaller source
-#'   panel and a wider detail container for the selected side. Overlap fails.
+#'   panel and a wider detail container for a single detail plot. With multiple
+#'   details, use a named list of sizes or NULL for Fusion defaults; center_size
+#'   also follows Fusion defaults. Overlap and out-of-frame allocations fail.
 #' @param connector `"leader"` draws two decorative boundary leaders per row; `"none"`
 #'   retains the highlights only. These are not biological ribbons or alignments.
 #' @param colour Fixed highlight/leader colour.
@@ -41,7 +48,7 @@
 #'   The derived tables use region_row to identify the original input row.
 #'   Stat scope is recorded as explicit_detail_plot. Leaders do not appear in
 #'   connections or relationship_data. Global label/leader collision avoidance,
-#'   arbitrary inset boxes, nested/multiple insets and automatic layer rebuilding
+#'   arbitrary inset boxes, nested insets and automatic layer rebuilding
 #'   are not implemented. The measured ratio may be below one if the chosen
 #'   detail allocation does not enlarge the region.
 #' @export
@@ -59,7 +66,6 @@ magnify_ggchord <- function(plot, region, detail_plot,
     connector = c("leader", "none"), colour = "#B45309", alpha = .2,
     highlight_width = 1.5, linewidth = .35, linetype = 2) {
   ggchord_fusion_check_plot(plot, center = TRUE)
-  ggchord_fusion_check_plot(detail_plot)
   caller <- "magnify_ggchord()"
   ggchord_require_columns(region, c("accver", "start", "end"), caller)
   if (nrow(region) < 1L || !is.character(region$accver) || anyNA(region$accver) || any(!nzchar(region$accver)) ||
@@ -78,13 +84,48 @@ magnify_ggchord <- function(plot, region, detail_plot,
     ggchord_stop(caller, ": colour must be a single colour string")
   tryCatch(grDevices::col2rgb(colour),error=function(e) ggchord_stop(caller, ": invalid colour"))
   if (length(linetype)!=1L || is.na(linetype)) ggchord_stop(caller, ": linetype must be scalar")
-  side <- match.arg(side)
-  lateral <- side %in% c("right", "left")
-  if (is.null(center_size)) center_size <- if (lateral) c(.4,.8) else c(.8,.4)
-  if (is.null(detail_size)) detail_size <- if (lateral) c(.42,.88) else c(.88,.42)
-  result <- ggchord_fusion(plot, center_size = center_size) +
-    fusion_panel(detail_plot, "detail", side = side, size = detail_size)
-  result$focus <- list(input = region, region = as.data.frame(region), connector = match.arg(connector),
+  multiple <- !inherits(detail_plot, "ggchord")
+  details <- if (multiple) detail_plot else list(detail = detail_plot)
+  ids <- names(details)
+  if (!is.list(details) || !length(details) || length(details) > 4L ||
+      is.null(ids) || anyNA(ids) || any(!nzchar(ids)) || anyDuplicated(ids) || "center" %in% ids)
+    ggchord_stop(caller, ": detail_plot must be a plot or a uniquely named list of one to four plots")
+  lapply(details, ggchord_fusion_check_plot)
+  if (multiple) {
+    if (!is.character(side) || is.null(names(side)) || anyDuplicated(names(side)) ||
+        !setequal(names(side), ids) || anyNA(side) ||
+        any(!side %in% c("right", "top", "left", "bottom")) || anyDuplicated(side))
+      ggchord_stop(caller, ": provide one distinct named side for each detail panel")
+    sides <- side[ids]
+  } else sides <- stats::setNames(match.arg(side), ids)
+  targets <- region[["detail_panel"]]
+  if (is.null(targets)) {
+    if (length(details) > 1L) ggchord_stop(caller, ": multiple details require a detail_panel column")
+    targets <- rep(ids, nrow(region))
+  }
+  if (!is.character(targets) || anyNA(targets) || any(!targets %in% ids))
+    ggchord_stop(caller, ": detail_panel must select an existing detail plot")
+  if (any(!ids %in% targets)) ggchord_stop(caller, ": every detail panel must have a source region")
+  sizes <- if (multiple && !is.null(detail_size)) {
+    if (!is.list(detail_size) || is.null(names(detail_size)) || anyDuplicated(names(detail_size)) ||
+        !setequal(names(detail_size), ids))
+      ggchord_stop(caller, ": detail_size must be a named list matching the detail plots")
+    detail_size[ids]
+  } else stats::setNames(rep(list(detail_size),length(ids)),ids)
+  if (multiple) {
+    result <- ggchord_fusion(plot, center_size = center_size)
+    for (id in ids) result <- result + fusion_panel(details[[id]], id, sides[[id]], sizes[[id]])
+  } else {
+    side <- sides[[1L]]
+    lateral <- side %in% c("right", "left")
+    if (is.null(center_size)) center_size <- if (lateral) c(.4,.8) else c(.8,.4)
+    if (is.null(detail_size)) detail_size <- if (lateral) c(.42,.88) else c(.88,.42)
+    result <- ggchord_fusion(plot, center_size = center_size) +
+      fusion_panel(detail_plot, "detail", side = side, size = detail_size)
+  }
+  resolved_region <- as.data.frame(region)
+  resolved_region$detail_panel <- targets
+  result$focus <- list(input = region, region = resolved_region, connector = match.arg(connector),
     colour = colour, alpha = alpha, width = highlight_width, linewidth = linewidth, linetype = linetype)
   ggplot2::set_last_plot(result)
   result
@@ -111,7 +152,7 @@ ggchord_build_focus_region <- function(focus, panels, region) {
     region$accver, region$start, region$end, panel, instance,
     paste0("magnify_ggchord() ",panel,": "))
   q <- resolve("center", region[["instance"]])
-  s <- resolve("detail", region[["detail_instance"]])
+  s <- resolve(region[["detail_panel"]] %||% "detail", region[["detail_instance"]])
   if (q$unit != s$unit) ggchord_stop("magnify_ggchord(): source and detail units must agree")
   qf <- ggchord_fusion_front(panels[[q$panel]], q)
   sf <- ggchord_fusion_front(panels[[s$panel]], s)
@@ -140,6 +181,7 @@ ggchord_build_focus_region <- function(focus, panels, region) {
   if (any(!is.finite(c(source_mm,detail_mm))) || min(source_mm,detail_mm)<=0)
     ggchord_stop("magnify_ggchord(): selected interval has no measurable span at the requested scale")
   report <- region[c("accver", "start", "end")]
+  report$source_panel <- q$panel; report$detail_panel <- s$panel
   report$source_instance <- q$instance; report$detail_instance <- s$instance
   report$source_origin <- q$origin; report$detail_origin <- s$origin
   report$sequence_unit <- q$unit; report$source_length_mm <- source_mm; report$detail_length_mm <- detail_mm
@@ -149,6 +191,6 @@ ggchord_build_focus_region <- function(focus, panels, region) {
   report$colour <- focus$colour; report$connector <- focus$connector
   report$leader_linewidth <- focus$linewidth; report$leader_linetype <- focus$linetype
   qf$panel_id <- "center"; qf$instance_id <- q$instance
-  sf$panel_id <- "detail"; sf$instance_id <- s$instance
+  sf$panel_id <- s$panel; sf$instance_id <- s$instance
   list(input = focus$input, underlay = grobs, overlay = highlights, regions = report, fronts = rbind(qf,sf),leaders = leaders)
 }

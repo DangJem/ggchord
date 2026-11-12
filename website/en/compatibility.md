@@ -78,3 +78,5 @@ Collinear, Sankey, Radial and Dotplot plots, and opted-in Fusion panels.
 It scales default theme styles and arranges native guides under explicit user
 constraints; no policy is applied by default. Facets, arbitrary custom grobs,
 outer Fusion allocations and a global label solver are outside this scope.
+
+Named independent Collinear details are supported by [magnification](fusion.html#multiple-details), up to four sides with explicit per-row targets. Nested or freely positioned inset boxes remain outside scope.

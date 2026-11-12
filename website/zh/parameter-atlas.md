@@ -2537,11 +2537,11 @@
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
 | --- | --- | --- | --- |
 | `plot` | `必需/互斥入口，见说明` | R 对象；约束见说明 | 使用 Circular、Chord 或横向/纵向 Collinear 的 ggchord 源图。 |
-| `region` | `必需/互斥入口，见说明` | R 对象；约束见说明 | 非空数据框，包含 accver、start、end，使用原始一基闭区间源坐标。边界须为有序正整数。可选 instance 和 detail_instance 为每行分别指定源面板与细节面板中的显示实例。歧义会报错；使用前须显式拆分跨原点区域。所有行共享一个细节面板。 |
-| `detail_plot` | `必需/互斥入口，见说明` | R 对象；约束见说明 | 显式构建的横向或纵向 Collinear ggchord 图。选定源区间须在两个面板完整可见，且 bp/aa 单位一致。这里不支持普通 Cartesian 字符图。 |
-| `side` | `c("right", "top", "left", "bottom")` | 向量；候选/多选含义见说明 | 细节面板位于右、上、左或下。 |
-| `center_size` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 可选面板宽高比例，遵循 ggchord_fusion() 与 fusion_panel()。默认按选定方位保留较小的源面板和较宽的细节容器；分配重叠时报错。 |
-| `detail_size` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 可选面板宽高比例，遵循 ggchord_fusion() 与 fusion_panel()。默认按选定方位保留较小的源面板和较宽的细节容器；分配重叠时报错。 |
+| `region` | `必需/互斥入口，见说明` | R 对象；约束见说明 | 非空数据框，包含 accver、start、end，使用原始一基闭区间源坐标。边界须为有序正整数。可选 instance 和 detail_instance 为每行指定源/目标显示实例；歧义报错，跨原点须先拆分。使用细节列表时，detail_panel 列为每行指定命名目标。 |
+| `detail_plot` | `必需/互斥入口，见说明` | R 对象；约束见说明 | 显式横向/纵向 Collinear ggchord 图，或按唯一ID命名的一至四个此类图的列表。每个面板至少有一个选区，center 是保留名称。选区须在两侧完整可见，bp/aa单位一致；不支持普通 Cartesian 字符图。 |
+| `side` | `c("right", "top", "left", "bottom")` | 向量；候选/多选含义见说明 | 单图时选择右、上、左、下。图列表须提供按面板ID命名的字符向量，各侧不同；多面板要求显式路由和位置。 |
+| `center_size` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 可选面板宽高比例，遵循 ggchord_fusion() 与 fusion_panel()。单图默认保留较小源面板与较宽细节容器；多细节时使用命名尺寸列表或 NULL 沿用 Fusion 默认，center_size 同样沿用 Fusion 默认。重叠或超界分配会报错。 |
+| `detail_size` | `NULL` | 可空 R 对象；具体类型/继承见说明 | 可选面板宽高比例，遵循 ggchord_fusion() 与 fusion_panel()。单图默认保留较小源面板与较宽细节容器；多细节时使用命名尺寸列表或 NULL 沿用 Fusion 默认，center_size 同样沿用 Fusion 默认。重叠或超界分配会报错。 |
 | `connector` | `c("leader", "none")` | 向量；候选/多选含义见说明 | "leader" 为每行绘制两条装饰性边界引线；"none" 只保留高亮。引线不是生物学色带或比对。 |
 | `colour` | `"#B45309"` | 字符/枚举；取值见说明 | 固定的高亮与引线颜色。 |
 | `alpha` | `0.2` | 数值/整数；范围见说明 | 高亮透明度，范围 [0,1]；引线使用不透明颜色。 |

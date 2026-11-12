@@ -102,11 +102,11 @@ focus_geometry$leaders
 
 虚线是装饰性的聚焦引线，与生物学 `connections`、`relationship_data` 分开导出；添加真实 `fusion_ribbon()` 仍须提供真实关系数据。`focus_region_data` 保留原始选区及任意元数据，`focus_regions` 记录解析出的实例、源原点和采样物理路径长度比。细节容器较小时，该比值可能小于 1，这不改变生物学长度。
 
-细节图拥有自己的数据、标度、图层和统计。若使用 count/bin/coverage 轨道，请自行准备并说明局部或全局统计总体；组合器只记录 `explicit_detail_plot`，不会静默选择口径。它不复制任意源图层、不推断比对，也不接收普通 Cartesian 字符面板。当前使用一个有序区间；同一 accession 重复时显式指定 `instance`/`detail_instance`，跨原点区间须先拆分。多个或嵌套 inset 盒及其他中央 Coord 不属于此接口。
+细节图拥有自己的数据、标度、图层和统计。若使用 count/bin/coverage 轨道，请自行准备并说明局部或全局统计总体；组合器只记录 `explicit_detail_plot`，不会静默选择口径。它不复制任意源图层、不推断比对，也不接收普通 Cartesian 字符面板。当前使用一个有序区间；同一 accession 重复时显式指定 `instance`/`detail_instance`，跨原点区间须先拆分。嵌套或自由定位的 inset 盒不属于此接口；下节提供命名独立细节面板。
 
 ## 保留真实 HSP 的成对源窗口 {#paired-detail}
 
-`region` 每行选择一个原始源区间，所有行共享一个显式细节面板。本例从四序列数据中选取一条真实 HSP 的两个端点窗口，基因方向和局部 HSP 均来自聚焦后的输入表。派生区域、前缘和装饰引线通过 `region_row` 对应输入行；任意原始元数据保留在 `focus_region_data`。
+本例的 `region` 每行选择一个原始源区间，所有行共享一个显式细节面板。本例从四序列数据中选取一条真实 HSP 的两个端点窗口，基因方向和局部 HSP 均来自聚焦后的输入表。派生区域、前缘和装饰引线通过 `region_row` 对应输入行；任意原始元数据保留在 `focus_region_data`。
 
 ```r
 library(dplyr)
@@ -133,3 +133,45 @@ export_ggchord_fusion(paired_detail, width = 12, height = 8)$focus_regions
 ```
 
 这仍然只有一个细节面板，不推断逐碱基比对。每个区间须在两个面板完整可见；实例选择按行独立解析。
+
+## 独立细节面板 {#multiple-details}
+
+将一条真实 HSP 的两端分别绘为独立局部图。命名列表提供细节图，`detail_panel`
+为每个源行选择目标，命名 `side` 向量指定不同侧边。每个面板拥有自己的数据和标度。
+
+```r
+library(ggchord)
+library(dplyr)
+seqs <- seq_data_example |> select(accver, length)
+hsp <- ribbon_data_example |> slice(1)
+regions <- bind_rows(
+  transmute(hsp, accver = qaccver, start = pmin(qstart, qend),
+    end = pmax(qstart, qend), detail_panel = "query"),
+  transmute(hsp, accver = saccver, start = pmin(sstart, send),
+    end = pmax(sstart, send), detail_panel = "subject")
+)
+make_detail <- function(region) {
+  local <- focus_ggchord_data(seqs, loci = region)
+  ggchord(local$seq_data) +
+    geom_seq(show.legend = FALSE) +
+    coord_collinear(seq_axis = "vertical")
+}
+source <- ggchord(seqs, hsp) +
+  geom_seq(show.legend = FALSE) +
+  geom_link_ribbon(show.legend = FALSE)
+details <- list(
+  query = make_detail(regions[1, ]),
+  subject = make_detail(regions[2, ])
+)
+multiple <- magnify_ggchord(
+  source, regions, details,
+  side = c(query = "left", subject = "right")
+)
+export_ggchord_fusion(multiple, width = 12, height = 8)$focus_regions
+```
+
+最多支持四个命名细节，每侧一个，每个面板须有选区；缺失或未知目标会报错。
+源/目标实例选择相互独立。`detail_size` 接受按面板命名的宽高比例列表，NULL 使用
+Fusion 默认分配；区域重叠会报错。标准保存按目标尺寸重建面板和引线。小画布需要
+检查标签并适当增大尺寸。引线可能穿过主图或相互交叉；此入口不提供全局避障、嵌套
+或任意矩形位置。

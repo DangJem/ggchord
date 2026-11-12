@@ -26,17 +26,24 @@ magnify_ggchord(
 one-based inclusive source coordinates. Bounds must be ordered positive
 integers. Optional \code{instance} and \code{detail_instance} select exact display
 instances in the source and detail panels for every row. Ambiguity fails; origin-wrapping
-intervals must be split before using this interface. All rows share one detail panel.}
+intervals must be split before using this interface. With a list of details,
+a \code{detail_panel} column selects the named target for each row.}
 
-\item{detail_plot}{An explicit horizontal or vertical Collinear ggchord plot.
+\item{detail_plot}{An explicit horizontal or vertical Collinear ggchord plot,
+or a uniquely named list of one to four such plots. Every panel must have
+at least one source region; the name \code{center} is reserved.
 The selected source interval must be fully visible in both panels, in the
 same bp/aa unit. Ordinary Cartesian character plots are not supported here.}
 
-\item{side}{One of right, top, left or bottom for the detail panel.}
+\item{side}{One of right, top, left or bottom for a single detail plot.
+For a list of plots, supply a character vector named by panel ID, with
+distinct sides. Multiple panels require explicit routing and placement.}
 
 \item{center_size, detail_size}{Optional panel width/height fractions, following
 \code{\link[=ggchord_fusion]{ggchord_fusion()}} and \code{\link[=fusion_panel]{fusion_panel()}}. Defaults reserve a smaller source
-panel and a wider detail container for the selected side. Overlap fails.}
+panel and a wider detail container for a single detail plot. With multiple
+details, use a named list of sizes or NULL for Fusion defaults; center_size
+also follows Fusion defaults. Overlap and out-of-frame allocations fail.}
 
 \item{connector}{\code{"leader"} draws two decorative boundary leaders per row; \code{"none"}
 retains the highlights only. These are not biological ribbons or alignments.}
@@ -59,7 +66,7 @@ region, exact instances, source origins and sampled physical path-length ratio.
 The derived tables use region_row to identify the original input row.
 Stat scope is recorded as explicit_detail_plot. Leaders do not appear in
 connections or relationship_data. Global label/leader collision avoidance,
-arbitrary inset boxes, nested/multiple insets and automatic layer rebuilding
+arbitrary inset boxes, nested insets and automatic layer rebuilding
 are not implemented. The measured ratio may be below one if the chosen
 detail allocation does not enlarge the region.
 }

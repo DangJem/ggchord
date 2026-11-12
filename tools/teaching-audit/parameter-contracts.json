@@ -10036,7 +10036,7 @@
     "parameter": "region",
     "default": "",
     "type": "R object; constraints below",
-    "constraint": "Nonempty data frame with accver, start, end in original one-based inclusive source coordinates. Bounds must be ordered positive integers. Optional instance and detail_instance select exact display instances in the source and detail panels for every row. Ambiguity fails; origin-wrapping intervals must be split before using this interface. All rows share one detail panel.",
+    "constraint": "Nonempty data frame with accver, start, end in original one-based inclusive source coordinates. Bounds must be ordered positive integers. Optional instance and detail_instance select exact display instances in the source and detail panels for every row. Ambiguity fails; origin-wrapping intervals must be split before using this interface. With a list of details, a detail_panel column selects the named target for each row.",
     "source": "man/magnify_ggchord.Rd"
   },
   {
@@ -10044,7 +10044,7 @@
     "parameter": "detail_plot",
     "default": "",
     "type": "R object; constraints below",
-    "constraint": "An explicit horizontal or vertical Collinear ggchord plot. The selected source interval must be fully visible in both panels, in the same bp/aa unit. Ordinary Cartesian character plots are not supported here.",
+    "constraint": "An explicit horizontal or vertical Collinear ggchord plot, or a uniquely named list of one to four such plots. Every panel must have at least one source region; the name center is reserved. The selected source interval must be fully visible in both panels, in the same bp/aa unit. Ordinary Cartesian character plots are not supported here.",
     "source": "man/magnify_ggchord.Rd"
   },
   {
@@ -10052,7 +10052,7 @@
     "parameter": "side",
     "default": "c(\"right\", \"top\", \"left\", \"bottom\")",
     "type": "Vector; choices versus multiple selection below",
-    "constraint": "One of right, top, left or bottom for the detail panel.",
+    "constraint": "One of right, top, left or bottom for a single detail plot. For a list of plots, supply a character vector named by panel ID, with distinct sides. Multiple panels require explicit routing and placement.",
     "source": "man/magnify_ggchord.Rd"
   },
   {
@@ -10060,7 +10060,7 @@
     "parameter": "center_size",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Optional panel width/height fractions, following ggchord_fusion() and fusion_panel(). Defaults reserve a smaller source panel and a wider detail container for the selected side. Overlap fails.",
+    "constraint": "Optional panel width/height fractions, following ggchord_fusion() and fusion_panel(). Defaults reserve a smaller source panel and a wider detail container for a single detail plot. With multiple details, use a named list of sizes or NULL for Fusion defaults; center_size also follows Fusion defaults. Overlap and out-of-frame allocations fail.",
     "source": "man/magnify_ggchord.Rd"
   },
   {
@@ -10068,7 +10068,7 @@
     "parameter": "detail_size",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Optional panel width/height fractions, following ggchord_fusion() and fusion_panel(). Defaults reserve a smaller source panel and a wider detail container for the selected side. Overlap fails.",
+    "constraint": "Optional panel width/height fractions, following ggchord_fusion() and fusion_panel(). Defaults reserve a smaller source panel and a wider detail container for a single detail plot. With multiple details, use a named list of sizes or NULL for Fusion defaults; center_size also follows Fusion defaults. Overlap and out-of-frame allocations fail.",
     "source": "man/magnify_ggchord.Rd"
   },
   {

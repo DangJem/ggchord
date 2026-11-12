@@ -1,3 +1,14 @@
+# ggchord 0.25.0 (development)
+
+- `magnify_ggchord()` accepts a named list of up to four independent Collinear
+  detail plots. Each region selects its target through `detail_panel`; named
+  `side` and optional named `detail_size` settings define the allocations.
+  Single-plot calls retain their existing defaults.
+- Focus exports include source/detail panel IDs while preserving input metadata,
+  exact instances and original source boundaries. Shared Fusion rendering rebuilds
+  every detail at the target size; overlapping allocations fail explicitly.
+  Nested/free-position insets and global leader avoidance remain outside scope.
+
 # ggchord 0.24.0 (development)
 
 - Added opt-in `adapt_ggchord()` policies: `fixed` retains reference physical
