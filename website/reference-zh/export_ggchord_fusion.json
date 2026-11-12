@@ -1,10 +1,10 @@
 {
-  "source_sha256": "738a28170d76abe33260d059b5dc1599d8307ca3562f9bcb9d46c7e3789cc334",
+  "source_sha256": "555253a1e583d504d6af55d42699b64ee75dc59f260d6264929dc4b0a7810915",
   "translations": {
     "0": "按指定物理尺寸导出Fusion布局",
     "1": "Fusion对象。",
     "2": "以英寸指定的正画布宽高。",
-    "3": "返回panels、instances、connections、fronts、paths、diagnostics及逐面板源布局。由 ⟦0⟧ 创建的组合还包含focus_region_data、focus_regions、focus_fronts和装饰引线，普通Fusion这些字段为空表。嵌套叶面板使用detail/center等完整路径；focus_region_data_by_composition保留各层原始选区，composition_id与region_row定位派生行。coordinate=fusion的容器不是生物学区间坐标域。overlaps记录有意覆盖顺序；source_observations仅对显式source_hsp_id统计显示副本，不通过比较数值猜测身份。panels保留原始box/angle请求和实际区域，全局几何均以毫米计。 routing_obstacles 记录实测物理包围框，routing_corridors 记录显式共享显示通道及源行成员。连接/引线报告路线状态和碰撞；leader_paths 保留装饰折线顶点。这些路由不代表全局最优或生物学证据改变。 metadata 包含最终外层 guide_bounds_mm/guide_sizes_mm 和 guide_layout 候选/约束报告；各 Guide 保留独立原生位置。嵌套组合报告也位于 diagnostics。",
+    "3": "返回panels、instances、connections、fronts、paths、diagnostics及逐面板源布局。由 ⟦0⟧ 创建的组合还包含focus_region_data、focus_regions、focus_fronts和装饰引线，普通Fusion这些字段为空表。嵌套叶面板使用detail/center等完整路径；focus_region_data_by_composition保留各层原始选区，composition_id与region_row定位派生行。coordinate=fusion的容器不是生物学区间坐标域。overlaps记录有意覆盖顺序；source_observations仅对显式source_hsp_id统计显示副本，不通过比较数值猜测身份。panels保留原始box/angle请求和实际区域，全局几何均以毫米计。 routing_obstacles 记录实测物理包围框，routing_corridors 记录显式共享显示通道及源行成员。连接/引线报告路线状态和碰撞；leader_paths 保留装饰折线顶点。这些路由不代表全局最优或生物学证据改变。 metadata 包含最终外层 guide_bounds_mm/guide_sizes_mm 和 guide_layout 候选/约束报告；各 Guide 保留独立原生位置。嵌套组合报告也位于 diagnostics。 原生组合装饰另提供 content_bounds_mm、content_canvas_mm 和含生效标签及物理包围框的 plot_decoration；源坐标与源行不变。",
     "4": "在临时测量设备上按指定尺寸构建，并恢复此前设备。几何使用该设备的字体度量；后续保存会在实际输出设备上重新构建，因此度量可能有细微差异。来源坐标与身份不变。"
   }
 }

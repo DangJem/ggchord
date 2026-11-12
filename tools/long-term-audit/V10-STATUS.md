@@ -33,7 +33,7 @@ bin外边界来源漏记、普通Chord/Collinear绕过声明HSP重复检查、ma
 | §4.5、§10.5/11 Radial | 已实现spokes、首尾邻接、有/无D–A对照及共享Feature/Track/实例 | check-radial.R；N=2每源行一次，N=1拒绝，无虚构首尾连接 |
 | §4.7–4.8、§10.12 等长/轴 | 已实现可选equal、真实长度保留、1/L端点优先及圆接缝策略 | foundation-views-results-v0.17.0.json、plasmid-axis-results-v0.17.0.json；显式刻度优先，不提供误导性共享绝对比例尺 |
 | §4.11、§10.16 A–B–A | 已实现seq_order/命名副本、between与dplyr筛选，在Collinear/Chord/Radial共用路由 | v0.17/18开发记录；Circular/Dotplot不适配重复实例 |
-| §5、A.3 Fusion | F0/F1及v0.27显式Sankey/Radial注册、八方位/物理angle/box、多层Fusion、来源命名空间与覆盖诊断已实现 | DEVELOPMENT-v0.27.0.md、check-fusion-advanced.R；F2/F3整体尚未关闭：显式实测避障/共享显示通道已完成原型与定向验证；外层多侧Guide联合预算已实现并定向验证（check-fusion-guides.R）；显式自动环绕已实现并定向验证（check-fusion-auto.R）；高密度广覆盖和发布矩阵继续开发 |
+| §5、A.3 Fusion | F0/F1及v0.27显式Sankey/Radial注册、八方位/物理angle/box、多层Fusion、来源命名空间与覆盖诊断已实现 | DEVELOPMENT-v0.27.0.md、check-fusion-advanced.R；F2/F3整体尚未关闭：显式实测避障/共享显示通道已完成原型与定向验证；外层多侧Guide联合预算已实现并定向验证（check-fusion-guides.R）；显式自动环绕已实现并定向验证（check-fusion-auto.R）；原生组合标题/背景/内容预算与嵌套继承clip修复已定向验证（check-fusion-decoration.R）；高密度广覆盖和发布矩阵继续开发 |
 | §6.1、A.5 Ribbon | 已实现显式端点渐变、装饰subject尖头、Identity六刻度与用户scale优先 | ribbon-flow-results-v0.17.0.json、identity-guide-results-v0.17.0.json；按后续用户决定默认仍非端点渐变，不能按原提案声称默认渐变 |
 | §6.2、A.6 标签 | 已修复30标签/混合层切换、共享实测队列、圆轴字形；真实13质粒/旗舰与代表尺寸有证据 | foundation-label/size-results-v0.17.0.json；不是全局零碰撞保证，未完成与SnapGene同输入导出的完整公平对标，全部引线穿字/内部框指标仍待完善 |
 | §6.3.1、§10.15 Guide | v0.24.0实现原生Guide联合候选、离散行列/位置/方向选择、完整gtable毫米重测、显式约束和失败报告；连续/分段色条保持完整 | DEVELOPMENT-v0.24.0.md、check-adaptive.R；有界搜索不是全局最优保证，任意自定义Guide仅测量，v0.27.0已补Fusion外层多侧Guide与面板预算，自动环绕已在v0.27.0补齐定向证据，更广泛质量继续开发 |

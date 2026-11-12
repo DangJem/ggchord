@@ -6,12 +6,16 @@
 #' [fusion_panel()] objects and independent [fusion_ribbon()] layers. Ordinary
 #' [ggplot2::ggsave()] rebuilds panels and interval fronts at the target size.
 #' Source plots and their scales remain independent. Composition scales and
-#' themes apply only to cross-panel links and their separate legend.
+#' themes apply to cross-panel links, their separate Guides and native outer
+#' plot furniture. Use labs(title/subtitle/caption/tag) and standard plot Theme
+#' elements for composition headings, captions, backgrounds and margins. Child
+#' axes and styles remain local; the composition has no Cartesian data axes.
 #'
 #' @param center A ggchord genomic plot (Circular, Chord, Collinear, Sankey or
 #'   Radial), or another Fusion. Nested biological endpoints use full panel paths.
 #' @param center_size Optional width and height as fractions of the composition
-#'   area, excluding its cross-panel legend. NULL allocates available space.
+#'   content area, excluding native outer plot decorations and cross-panel
+#'   Guides. NULL allocates available space.
 #' @param layout `"fixed"` uses fixed panel allocations; `"adaptive"` also
 #'   adjusts the central allocation to the physical aspect ratio and jointly
 #'   measures native cross-panel Guide candidates against panel allocations.
@@ -24,7 +28,8 @@
 #'   use disjoint native grid clips to avoid accumulating translucent fills.
 #'   This is deliberate placement, not global collision avoidance.
 #' @param center_box Optional centre allocation: xmin, xmax, ymin, ymax as four
-#'   fractions of the composition area excluding its legend, or four absolute
+#'   fractions of the composition content area excluding outer decorations and
+#'   Guides, or four absolute
 #'   grid units. Use instead of center_size. See fusion_panel().
 #' @return A Fusion object, printable and accepted by [ggplot2::ggsave()].
 #' @export
@@ -34,7 +39,10 @@
 #' seqs <- seq_data_example |> select(accver, length) |> slice_head(n = 2)
 #' center <- ggchord(seqs) + geom_seq() + coord_chord()
 #' detail <- ggchord(seqs) + geom_seq() + coord_collinear(seq_axis = "vertical")
-#' ggchord_fusion(center) + fusion_panel(detail, id = "detail", side = "right")
+#' ggchord_fusion(center) +
+#'   fusion_panel(detail, id = "detail", side = "right") +
+#'   ggplot2::labs(title = "Independent genomic views",
+#'     caption = "Source: bundled sequence records")
 ggchord_fusion <- function(center, center_size = NULL, layout = c("fixed", "adaptive"), allow_overlap = FALSE, center_box = NULL) {
   if (!is.logical(allow_overlap) || length(allow_overlap) != 1L || is.na(allow_overlap))
     ggchord_stop("Fusion: allow_overlap must be TRUE or FALSE")
@@ -68,8 +76,9 @@ ggchord_fusion <- function(center, center_size = NULL, layout = c("fixed", "adap
 #' @param size Optional fractional width and height. Out-of-frame allocations
 #'   fail; overlap fails unless explicitly allowed by the composition.
 #' @param box Optional explicit rectangle (xmin, xmax, ymin, ymax), optionally
-#'   named in any order. Numeric values are fractions of the area excluding
-#'   the composition legend; absolute grid units retain their physical size.
+#'   named in any order. Numeric values are fractions of the content area after
+#'   native outer plot decorations and Guides; absolute grid units retain their
+#'   physical size within that same frame.
 #'   Use instead of side/size/angle/distance. Out-of-frame boxes fail at build.
 #' @param angle Optional finite placement angle in degrees counterclockwise
 #'   from the right, instead of side. Does not rotate the plot or its labels.
@@ -509,7 +518,10 @@ ggchord_fusion_path <- function(q, s, curvature) {
 #'   These routes do not imply a global optimum or altered biological evidence.
 #'   metadata includes final outer guide_bounds_mm/guide_sizes_mm and the
 #'   guide_layout candidate/constraint report; per-guide native positions remain
-#'   independent. Nested composition reports also appear in diagnostics.
+#'   independent. Native composition decorations add content_bounds_mm and
+#'   content_canvas_mm plus plot_decoration with effective labels and physical
+#'   envelopes; source coordinates and rows remain unchanged. Nested composition
+#'   reports also appear in diagnostics.
 #' @export
 #' @examples
 #' data(seq_data_example)

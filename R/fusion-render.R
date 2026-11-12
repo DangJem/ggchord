@@ -1,5 +1,5 @@
 # Render once inside final panel containers; never freeze a previous-size image.
-ggchord_build_fusion <- function(x) {
+ggchord_build_fusion_core <- function(x) {
   previous_plot <- ggplot2::last_plot()
   on.exit(ggplot2::set_last_plot(previous_plot),add=TRUE)
   canvas <- c(width=grid::convertWidth(grid::unit(1,"npc"),"mm",TRUE),
@@ -71,6 +71,7 @@ ggchord_build_fusion <- function(x) {
       instances[[id]] <- child$instances
       diagnostics[[id]] <- list(panel_id = id, canvas_mm = dimensions, nested = TRUE,
         guide_layout = child$metadata$guide_layout, panel_layout = child$metadata$panel_layout,
+        plot_decoration = child$metadata$plot_decoration, content_bounds_mm = child$metadata$content_bounds_mm,
         composition_guide_bounds_mm = child$metadata$guide_bounds_mm)
       for (key in names(child$diagnostics)) {
         diagnostic <- child$diagnostics[[key]]
@@ -88,7 +89,7 @@ ggchord_build_fusion <- function(x) {
         if (!is.null(event$container_bounds)) event$container_bounds <- event$container_bounds + rep(offset, each = 2L)
         render_events[[length(render_events) + 1L]] <- event
       }
-      connection_viewport <- viewport; connection_viewport$clip <- NA
+      connection_viewport <- viewport; connection_viewport$clip <- grid::viewport(clip = "inherit")$clip
       connection_grobs <- c(connection_grobs, lapply(nested$connection_grobs, function(g) grid::grobTree(g, vp = connection_viewport)))
       for (j in seq_along(nested$overlay_grobs)) overlay_grobs <- c(overlay_grobs,
         stats::setNames(list(grid::grobTree(nested$overlay_grobs[[j]], vp = viewport)),
@@ -306,25 +307,7 @@ ggchord_build_fusion <- function(x) {
     background = grid::nullGrob(), foreground = guide, bounds = NULL)
   overlap_mode <- isTRUE(x$allow_overlap) || any(vapply(nested_results,
     function(n) nrow(n$export$overlaps) > 0L, logical(1)))
-  if (overlap_mode) {
-    containers <- Filter(Negate(is.null), lapply(render_events, `[[`, "container_bounds"))
-    clip_regions <- function(regions) lapply(regions, function(bounds)
-      ggchord_fusion_clip_connections(connection_grobs, bounds, canvas))
-    children <- clip_regions(ggchord_fusion_rect_subtract(c(0,canvas[1],0,canvas[2]), containers))
-    for (i in seq_along(render_events)) {
-      event <- render_events[[i]]
-      children <- c(children, list(event$background))
-      if (!is.null(event$panel_id)) {
-        later <- if (i < length(render_events)) Filter(Negate(is.null),
-          lapply(render_events[seq.int(i+1L,length(render_events))], `[[`, "container_bounds")) else list()
-        children <- c(children, clip_regions(ggchord_fusion_rect_subtract(event$bounds, later)))
-      }
-      children <- c(children, list(event$foreground),
-        unname(overlay_grobs[names(overlay_grobs) == event$panel_id]))
-    }
-  } else children <- c(lapply(render_events, `[[`, "background"), connection_grobs,
-    lapply(render_events, `[[`, "foreground"), unname(overlay_grobs))
-  grob <- do.call(grid::grobTree, c(unname(children), list(vp = grid::viewport(xscale=c(0,1),yscale=c(0,1)))))
+  grob <- ggchord_fusion_render_events(render_events, connection_grobs, overlay_grobs, canvas, overlap_mode)
   bind <- function(rows) if(length(rows)) ggchord_rbind_fill(rows) else data.frame()
   child_tables <- function(name) lapply(nested_results, function(n) n$export[[name]])
   combine <- function(rows, name) bind(c(rows, child_tables(name)))
@@ -359,49 +342,7 @@ ggchord_build_fusion <- function(x) {
       guide_side=styles$side,guide_size_mm=guide_size,guide_sizes_mm=styles$sizes,
       guide_bounds_mm=guide_boxes,guide_layout=styles$report,measurement="measured",allow_overlap=isTRUE(x$allow_overlap),
       device=names(grDevices::dev.cur()),font_conditions="Selected device metrics; fallback and embedding not certified"))
-  # A parent can add overlapping leaves after a child was measured. Recheck
-  # child geometry in the complete enclosing canvas rather than exporting a
-  # stale clear claim. Exact routes fail explicitly if the parent blocks them.
-  for (i in seq_len(nrow(export$connections))) {
-    connection <- export$connections[i, , drop = FALSE]
-    if (!isTRUE(connection$retained)) next
-    path <- export$paths[export$paths$layer_id == connection$layer_id &
-      export$paths$source_row == connection$source_row, c("x", "y"), drop = FALSE]
-    relevant <- ggchord_route_inflate(ggchord_route_obstacles(obstacles, c(connection$qpanel, connection$spanel)), connection$route_stroke_mm)
-    qn <- sum(export$fronts$layer_id == connection$layer_id & export$fronts$source_row == connection$source_row & export$fronts$endpoint == "q")
-    sn <- sum(export$fronts$layer_id == connection$layer_id & export$fronts$source_row == connection$source_row & export$fronts$endpoint == "s")
-    polygon <- ggchord_ribbon_visible_polygon(as.matrix(path), qn, sn, connection$tip)
-    collisions <- sum(ggchord_route_polygon_hits(polygon, relevant))
-    if (collisions && connection$route %in% c("avoid", "bundle"))
-      ggchord_stop("Fusion: enclosing layout obstructs a measured route in ", connection$layer_id,
-        "; move the overlapping parent panels or use route = 'direct' with explicit diagnostics")
-    export$connections$obstacle_collisions[i] <- collisions
-    if (collisions) export$connections$route_status[i] <- "direct_collision"
-  }
-  for (i in seq_len(nrow(export$leaders))) {
-    leader <- export$leaders[i, , drop = FALSE]
-    selected <- export$focus_regions$composition_id == leader$composition_id &
-      export$focus_regions$region_row == leader$region_row & export$focus_regions$region_piece == leader$region_piece
-    region <- export$focus_regions[selected, , drop = FALSE]
-    selected <- export$leader_paths$composition_id == leader$composition_id &
-      export$leader_paths$region_row == leader$region_row & export$leader_paths$region_piece == leader$region_piece &
-      export$leader_paths$boundary == leader$boundary
-    line <- as.matrix(export$leader_paths[selected, c("x", "y"), drop = FALSE])
-    relevant <- ggchord_route_inflate(ggchord_route_obstacles(obstacles, c(region$source_panel, region$detail_panel)), region$leader_linewidth/2)
-    hits <- rep(FALSE, nrow(relevant))
-    for (j in seq_len(nrow(line)-1L)) hits <- hits | ggchord_route_segment_hits(line[j, ], line[j+1L, ], relevant)
-    if (any(hits) && leader$route == "avoid")
-      ggchord_stop("Fusion: enclosing layout obstructs a focus leader; move the overlapping panels or inspect route = 'direct'")
-    export$leaders$obstacle_collisions[i] <- sum(hits)
-    if (any(hits)) export$leaders$route_status[i] <- "direct_collision"
-  }
-  for (i in seq_len(nrow(export$focus_regions))) {
-    region <- export$focus_regions[i, , drop = FALSE]
-    selected <- export$leaders$composition_id == region$composition_id &
-      export$leaders$region_row == region$region_row & export$leaders$region_piece == region$region_piece
-    states <- export$leaders$route_status[selected]
-    export$focus_regions$collision_status[i] <- if (length(states)) paste(unique(states), collapse = ";") else "no_leaders"
-  }
+  export <- ggchord_fusion_recheck_routes(export, obstacles)
   if ("source_hsp_id" %in% names(export$connections)) {
     d <- export$connections
     ids <- unique(as.character(d$source_hsp_id[!is.na(d$source_hsp_id) & d$retained]))

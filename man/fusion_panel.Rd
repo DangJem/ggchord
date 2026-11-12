@@ -33,8 +33,9 @@ or rotate the child Coord. If no placement is feasible, the build fails explicit
 fail; overlap fails unless explicitly allowed by the composition.}
 
 \item{box}{Optional explicit rectangle (xmin, xmax, ymin, ymax), optionally
-named in any order. Numeric values are fractions of the area excluding
-the composition legend; absolute grid units retain their physical size.
+named in any order. Numeric values are fractions of the content area after
+native outer plot decorations and Guides; absolute grid units retain their
+physical size within that same frame.
 Use instead of side/size/angle/distance. Out-of-frame boxes fail at build.}
 
 \item{angle}{Optional finite placement angle in degrees counterclockwise

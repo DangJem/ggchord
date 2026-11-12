@@ -53,10 +53,15 @@ ggchord_fusion_prefix_table <- function(data, parent, columns) {
 }
 
 ggchord_fusion_nested_export <- function(value, parent, offset) {
-  prefix <- function(d, cols) ggchord_fusion_prefix_table(d, parent, cols)
+  prefix <- function(d, cols) if (is.null(parent)) d else ggchord_fusion_prefix_table(d, parent, cols)
   value$panels <- prefix(ggchord_fusion_translate_table(value$panels, offset,
     c("container_xmin", "container_xmax", "panel_xmin", "panel_xmax"),
     c("container_ymin", "container_ymax", "panel_ymin", "panel_ymax")), "panel_id")
+  if (length(value$metadata$content_bounds_mm) == 4L)
+    value$metadata$content_bounds_mm <- value$metadata$content_bounds_mm + rep(offset, each = 2L)
+  if (!is.null(value$metadata$plot_decoration)) value$metadata$plot_decoration$bounds_mm <-
+    ggchord_fusion_translate_table(value$metadata$plot_decoration$bounds_mm,
+      offset, c("xmin", "xmax"), c("ymin", "ymax"))
   value$metadata$guide_bounds_mm <- ggchord_fusion_translate_table(value$metadata$guide_bounds_mm,
     offset, c("xmin", "xmax"), c("ymin", "ymax"))
   value$metadata$guide_layout$bounds <- ggchord_fusion_translate_table(value$metadata$guide_layout$bounds,

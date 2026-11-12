@@ -111,9 +111,11 @@ test_that("Fusion retains source intervals across independently measured panels"
   detail <- ggchord(smoke_sequences()) + geom_seq() + coord_collinear()
   source <- smoke_ribbon()
   fusion <- ggchord_fusion(center) + fusion_panel(detail, "detail") +
-    fusion_ribbon(source, qpanel = "center", spanel = "detail", fill = "steelblue")
+    fusion_ribbon(source, qpanel = "center", spanel = "detail", fill = "steelblue") +
+    ggplot2::labs(title = "Source intervals")
   out <- export_ggchord_fusion(fusion)
   expect_true(all(out$connections$retained))
+  expect_identical(out$metadata$plot_decoration$labels$title, "Source intervals")
   expect_identical(out$relationship_data[[1]], source)
   query <- out$fronts[out$fronts$endpoint == "q", ]
   expect_lt(stats::cor(query$local_x, query$x), 0)

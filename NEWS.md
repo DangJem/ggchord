@@ -1,5 +1,18 @@
 # ggchord 0.27.0 (development)
 
+- Composition `labs(title/subtitle/caption/tag)` and native plot Theme furniture
+  now draw and reserve actual space, fixing previously accepted but invisible
+  settings. Backgrounds and margins use native gtable measurement; child axes
+  remain local. Exports retain the outer content frame, labels and envelopes,
+  including nested compositions. Fixed boxes are rechecked after this budget;
+  enlarge the canvas or revise explicit margins if necessary.
+- Fixed inherited clipping in nested composition connections. The internal
+  grid viewport code for disabling clips had been used as inheritance, allowing
+  translucent connections to repaint across disjoint overlap clips. Native
+  `clip = "inherit"` now preserves the ancestor region; same-device single-paint
+  calibration verifies both decorated and nested paths without fixing raw RGB
+  values across colour-managed devices.
+
 - `fusion_panel(side = "auto")` places any number of panels that fit a bounded
   clockwise perimeter search in the measured composition area. Explicit boxes,
   named/angle allocations and supplied sizes stay fixed. Only unlocked default

@@ -126,3 +126,22 @@ check-fusion-auto.R通过12外围+中央、真实HSP原记录不变/12显示仍1
 方位以及超大显式尺寸失败。真实完整示例examples/fusion-auto.R；
 v0.27.0-fusion-auto-results.json与实际保存的PNG为证据。并非全局最优或任意
 数量/文字在任意画布的可读性保证；密集质量广覆盖及其他长期工作继续。
+
+## 第七工作包：原生组合标题/背景及继承裁剪修复
+
+labs(title/subtitle/caption/tag)及原生plot Theme此前只进carrier未绘制，现以原生
+gtable外框测量空间，再在内容区域运行现有Fusion。无装饰保留原路径；子图轴/
+主题/数据独立，不显示虚构0–1坐标轴。内容框、有效标签、包围框及嵌套诊断
+保留在外画布毫米域，更新标签/element_blank沿用原生语义，固定margin/box不暗缩。
+
+前景/背景独立gtable使用唯一grob包装，防止同名layout在共享列表中引用背景。
+像素核对另外确认旧嵌套connection viewport将NA误当继承（实际为关闭clip），
+现直接复用grid::viewport(clip="inherit")的原生设置。此前几何/来源检查不能
+证明透明度正确；本次新增同设备单次绘制色块校准，在Quartz色彩管理下比较实测
+颜色，不锁定原始RGB。装饰外框与旧嵌套路径都验证无重复paint。
+
+check-fusion-decoration.R通过实际标题/副标题/图注/tag绘制、后加设置与空白元素、
+内容空间/来源记录、Collinear公开源位置到外mm映射、嵌套注册、无虚构轴、
+两个实际透明绘制路径及不可容纳margin报错。v0.27.0-decoration-results.json
+与实际保存的PNG保留证据。复用已有Fusion最小API案例添加标题返回契约，未运行
+testthat或发布流程。正文/帮助/两语课程同步；其他长期工作继续。

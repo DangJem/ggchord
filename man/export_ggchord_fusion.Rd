@@ -30,7 +30,10 @@ status and collisions. leader_paths stores decorative polyline vertices.
 These routes do not imply a global optimum or altered biological evidence.
 metadata includes final outer guide_bounds_mm/guide_sizes_mm and the
 guide_layout candidate/constraint report; per-guide native positions remain
-independent. Nested composition reports also appear in diagnostics.
+independent. Native composition decorations add content_bounds_mm and
+content_canvas_mm plus plot_decoration with effective labels and physical
+envelopes; source coordinates and rows remain unchanged. Nested composition
+reports also appear in diagnostics.
 }
 \description{
 Builds at the requested size on a temporary measurement device, restoring

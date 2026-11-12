@@ -20,7 +20,7 @@ Fusion组合独立的基因组图形，并连接其真实序列区间。中央�
 
 ## 注册面板与显示实例 {#panels}
 
-首例的每个命名方向最多一个面板：`right`、`top`、`left`、`bottom`；斜向、自由区域与自动排布见后文。ID必须唯一，`center`是保留名称。`size=c(width,height)`与`center_size`使用扣除跨面板图例后组合区域的相对比例。明确指定的区域发生重叠时会报错，不擅自移动面板。
+首例的每个命名方向最多一个面板：`right`、`top`、`left`、`bottom`；斜向、自由区域与自动排布见后文。ID必须唯一，`center`是保留名称。`size=c(width,height)`与`center_size`使用扣除原生外层装饰及跨面板图例后内容区的相对比例。明确指定的区域发生重叠时会报错，不擅自移动面板。
 方位只决定摆放位置，不旋转文字；需要纵向序列轴时，在子图上设置`coord_collinear(seq_axis="vertical")`。
 
 四方向示例复用真实PAF第3、2、9、1行，明确连接到上、左、下、右面板。重复视图是不同显示实例，不是新增观测。不同面板无需共享相同的物理bp/mm比例。
@@ -39,7 +39,7 @@ Fusion组合独立的基因组图形，并连接其真实序列区间。中央�
 {{code:fusionstyle}}
 
 默认`layout="fixed"`分配面板区域，并按输出尺寸重新测量标签和图例；`layout="adaptive"`还按物理宽高比调整中央区域，并对外层原生Guide联合预算。用户明确指定的字号保持固定。这不是通用字号缩放或全局碰撞求解器。
-每张子图保留自己的图例，不自动合并含义不同的标度；需要简化时，主动设置`show.legend=FALSE`或局部`theme()`。组合层的`theme()`/`guides()`只作用于跨面板图例。必须保留的图例空间会实际测量；画布过小则给出错误诊断。
+每张子图保留自己的图例，不自动合并含义不同的标度；需要简化时，主动设置`show.legend=FALSE`或局部`theme()`。组合层的`guides()`配置跨面板Guide；`theme()`还配置后文的原生外层图形装饰。必须保留的图例空间会实际测量；画布过小则给出错误诊断。
 
 ## 导出与核对锚点 {#export}
 
@@ -232,7 +232,7 @@ physical_box <- ggchord_fusion(central, center_box = unit(c(5, 85, 10, 100), "mm
 export_ggchord_fusion(physical_box, width = 12, height = 6)$panels
 ```
 
-数值box按 xmin、xmax、ymin、ymax给出比例；绝对单位box保持真实物理尺寸，坐标相对于扣除外层连接图例后的组合区域。box不与side/size/angle/distance同时使用，center_box不与center_size同时使用。每次目标尺寸均重新检查物理区域，不暗中夹紧。`ggchord_fusion()` 或 `magnify_ggchord()` 的显式 `allow_overlap = TRUE` 允许有意叠放，后加入的面板盖住先加入者。使用矢量grid裁剪，不截取PNG；透明连接不在同一区域重复叠画。导出的 `overlaps` 表记录覆盖顺序。这允许有意遮罩，不代表自动避障。
+数值box按 xmin、xmax、ymin、ymax给出比例；绝对单位box保持真实物理尺寸，坐标相对于扣除原生外层装饰及连接图例后的内容区。box不与side/size/angle/distance同时使用，center_box不与center_size同时使用。每次目标尺寸均重新检查物理区域，不暗中夹紧。`ggchord_fusion()` 或 `magnify_ggchord()` 的显式 `allow_overlap = TRUE` 允许有意叠放，后加入的面板盖住先加入者。使用矢量grid裁剪，不截取PNG；透明连接不在同一区域重复叠画。导出的 `overlaps` 表记录覆盖顺序。这允许有意遮罩，不代表自动避障。
 
 Sankey来源同时出现在左右两列，需从 `get_chord_layout(plot)$display_instances` 明确选择 `q_instance`/`s_instance`，歧义时不能省略。Radial、Chord使用各自已注册骨架frame。q/s区间、单位和来源记录保持不变。同一显式 `source_hsp_id` 重复显示时，所有参与的Fusion图层（含嵌套内部）均须设置 `allow_repeated = TRUE`；`source_observations` 区分明确来源ID和显示次数，不通过比较表值猜测观测身份。Dotplot有独立双轴，当前尚未注册为Fusion端点。
 
@@ -365,3 +365,35 @@ auto_fusion
 适配，面板行提供 `auto_angle`、`auto_size_factor`。多个 magnify 细节可以在
 命名方位向量中重复使用 `"auto"`，同时明确 `detail_panel`。无法摆放时明确
 报错，不丢弃面板。这是确定性保守搜索，不声称全局最优或任意数量都能放进任意画布。
+
+## 原生外层图形装饰 {#plot-furniture}
+
+使用标准 `labs()` 和 plot Theme 元素配置组合标题、副标题、图注、tag、背景及
+边距。这些设置此前只进入样式 carrier、未被绘制；现在按实测空间预留并出现在
+最终静态图中。各子图仍保留自己的轴、主题和源坐标，Fusion 本身没有笛卡尔数据轴。
+
+```r
+styled_guide_fusion <- guide_fusion +
+  ggplot2::labs(
+    title = "Source-aware composition",
+    subtitle = "Independent genomic panels and native Guides",
+    caption = "Source: bundled ggchord records",
+    tag = "A"
+  ) +
+  theme(
+    plot.title = element_text(size = 16, face = "bold"),
+    plot.caption = element_text(size = 9),
+    plot.margin = margin(5, 5, 5, 5, "mm"),
+    plot.background = element_rect(fill = "#F3F5F7", colour = NA)
+  )
+styled_guide_fusion
+```
+
+`metadata$content_bounds_mm`、`content_canvas_mm` 记录实际内部组合区域，
+`plot_decoration` 保留生效标签及原生物理包围框。box 相对于扣除外层装饰和 Guide
+后的内容区；已有固定框在目标尺寸重新检查，不够时扩大画布或调整显式边距。
+使用原生 `labs(title = NULL, subtitle = NULL, caption = NULL, tag = NULL)`
+清除标题。没有装饰时保留旧渲染路径。
+
+嵌套组合保留独立标题及毫米位置注册。原生前景/背景分离和继承裁剪可避免显式
+重叠模式下半透明连接重复叠画；源表、已选区间及颜色映射保持不变。

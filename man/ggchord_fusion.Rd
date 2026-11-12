@@ -17,7 +17,8 @@ ggchord_fusion(
 Radial), or another Fusion. Nested biological endpoints use full panel paths.}
 
 \item{center_size}{Optional width and height as fractions of the composition
-area, excluding its cross-panel legend. NULL allocates available space.}
+content area, excluding native outer plot decorations and cross-panel
+Guides. NULL allocates available space.}
 
 \item{layout}{\code{"fixed"} uses fixed panel allocations; \code{"adaptive"} also
 adjusts the central allocation to the physical aspect ratio and jointly
@@ -33,7 +34,8 @@ use disjoint native grid clips to avoid accumulating translucent fills.
 This is deliberate placement, not global collision avoidance.}
 
 \item{center_box}{Optional centre allocation: xmin, xmax, ymin, ymax as four
-fractions of the composition area excluding its legend, or four absolute
+fractions of the composition content area excluding outer decorations and
+Guides, or four absolute
 grid units. Use instead of center_size. See fusion_panel().}
 }
 \value{
@@ -44,7 +46,10 @@ A Fusion is a static composition, not a coordinate system. Add independent
 \code{\link[=fusion_panel]{fusion_panel()}} objects and independent \code{\link[=fusion_ribbon]{fusion_ribbon()}} layers. Ordinary
 \code{\link[ggplot2:ggsave]{ggplot2::ggsave()}} rebuilds panels and interval fronts at the target size.
 Source plots and their scales remain independent. Composition scales and
-themes apply only to cross-panel links and their separate legend.
+themes apply to cross-panel links, their separate Guides and native outer
+plot furniture. Use labs(title/subtitle/caption/tag) and standard plot Theme
+elements for composition headings, captions, backgrounds and margins. Child
+axes and styles remain local; the composition has no Cartesian data axes.
 }
 \examples{
 library(dplyr)
@@ -52,5 +57,8 @@ data(seq_data_example)
 seqs <- seq_data_example |> select(accver, length) |> slice_head(n = 2)
 center <- ggchord(seqs) + geom_seq() + coord_chord()
 detail <- ggchord(seqs) + geom_seq() + coord_collinear(seq_axis = "vertical")
-ggchord_fusion(center) + fusion_panel(detail, id = "detail", side = "right")
+ggchord_fusion(center) +
+  fusion_panel(detail, id = "detail", side = "right") +
+  ggplot2::labs(title = "Independent genomic views",
+    caption = "Source: bundled sequence records")
 }

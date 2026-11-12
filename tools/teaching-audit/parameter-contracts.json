@@ -9780,7 +9780,7 @@
     "parameter": "box",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Optional explicit rectangle (xmin, xmax, ymin, ymax), optionally named in any order. Numeric values are fractions of the area excluding the composition legend; absolute grid units retain their physical size. Use instead of side/size/angle/distance. Out-of-frame boxes fail at build.",
+    "constraint": "Optional explicit rectangle (xmin, xmax, ymin, ymax), optionally named in any order. Numeric values are fractions of the content area after native outer plot decorations and Guides; absolute grid units retain their physical size within that same frame. Use instead of side/size/angle/distance. Out-of-frame boxes fail at build.",
     "source": "man/fusion_panel.Rd"
   },
   {
@@ -10012,7 +10012,7 @@
     "parameter": "center_size",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Optional width and height as fractions of the composition area, excluding its cross-panel legend. NULL allocates available space.",
+    "constraint": "Optional width and height as fractions of the composition content area, excluding native outer plot decorations and cross-panel Guides. NULL allocates available space.",
     "source": "man/ggchord_fusion.Rd"
   },
   {
@@ -10036,7 +10036,7 @@
     "parameter": "center_box",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Optional centre allocation: xmin, xmax, ymin, ymax as four fractions of the composition area excluding its legend, or four absolute grid units. Use instead of center_size. See fusion_panel().",
+    "constraint": "Optional centre allocation: xmin, xmax, ymin, ymax as four fractions of the composition content area excluding outer decorations and Guides, or four absolute grid units. Use instead of center_size. See fusion_panel().",
     "source": "man/ggchord_fusion.Rd"
   },
   {

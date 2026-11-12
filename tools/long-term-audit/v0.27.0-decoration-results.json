@@ -1,0 +1,12 @@
+{
+  "status": "passed",
+  "native_title_subtitle_caption_tag": true,
+  "actual_drawing_text": true,
+  "later_updates_preserved": true,
+  "no_dummy_axes": true,
+  "source_records_unchanged": true,
+  "nested_source_registration": true,
+  "transparent_connection_once": true,
+  "explicit_margin_failure": true,
+  "content_bounds_mm": [7.5412, 299.8, 9.5225, 182.3583]
+}

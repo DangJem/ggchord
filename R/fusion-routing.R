@@ -199,3 +199,51 @@ ggchord_fusion_guide_obstacles <- function(table, id, origin) {
       measurement = 'resolved_gtable_cell')
   }))
 }
+
+# Recheck final assembled physical envelopes, including ancestor decoration.
+ggchord_fusion_recheck_routes <- function(export, obstacles) {
+  # A parent can add overlapping leaves after a child was measured. Recheck
+  # child geometry in the complete enclosing canvas rather than exporting a
+  # stale clear claim. Exact routes fail explicitly if the parent blocks them.
+  for (i in seq_len(nrow(export$connections))) {
+    connection <- export$connections[i, , drop = FALSE]
+    if (!isTRUE(connection$retained)) next
+    path <- export$paths[export$paths$layer_id == connection$layer_id &
+      export$paths$source_row == connection$source_row, c("x", "y"), drop = FALSE]
+    relevant <- ggchord_route_inflate(ggchord_route_obstacles(obstacles, c(connection$qpanel, connection$spanel)), connection$route_stroke_mm)
+    qn <- sum(export$fronts$layer_id == connection$layer_id & export$fronts$source_row == connection$source_row & export$fronts$endpoint == "q")
+    sn <- sum(export$fronts$layer_id == connection$layer_id & export$fronts$source_row == connection$source_row & export$fronts$endpoint == "s")
+    polygon <- ggchord_ribbon_visible_polygon(as.matrix(path), qn, sn, connection$tip)
+    collisions <- sum(ggchord_route_polygon_hits(polygon, relevant))
+    if (collisions && connection$route %in% c("avoid", "bundle"))
+      ggchord_stop("Fusion: enclosing layout obstructs a measured route in ", connection$layer_id,
+        "; move the overlapping parent panels or use route = 'direct' with explicit diagnostics")
+    export$connections$obstacle_collisions[i] <- collisions
+    if (collisions) export$connections$route_status[i] <- "direct_collision"
+  }
+  for (i in seq_len(nrow(export$leaders))) {
+    leader <- export$leaders[i, , drop = FALSE]
+    selected <- export$focus_regions$composition_id == leader$composition_id &
+      export$focus_regions$region_row == leader$region_row & export$focus_regions$region_piece == leader$region_piece
+    region <- export$focus_regions[selected, , drop = FALSE]
+    selected <- export$leader_paths$composition_id == leader$composition_id &
+      export$leader_paths$region_row == leader$region_row & export$leader_paths$region_piece == leader$region_piece &
+      export$leader_paths$boundary == leader$boundary
+    line <- as.matrix(export$leader_paths[selected, c("x", "y"), drop = FALSE])
+    relevant <- ggchord_route_inflate(ggchord_route_obstacles(obstacles, c(region$source_panel, region$detail_panel)), region$leader_linewidth/2)
+    hits <- rep(FALSE, nrow(relevant))
+    for (j in seq_len(nrow(line)-1L)) hits <- hits | ggchord_route_segment_hits(line[j, ], line[j+1L, ], relevant)
+    if (any(hits) && leader$route == "avoid")
+      ggchord_stop("Fusion: enclosing layout obstructs a focus leader; move the overlapping panels or inspect route = 'direct'")
+    export$leaders$obstacle_collisions[i] <- sum(hits)
+    if (any(hits)) export$leaders$route_status[i] <- "direct_collision"
+  }
+  for (i in seq_len(nrow(export$focus_regions))) {
+    region <- export$focus_regions[i, , drop = FALSE]
+    selected <- export$leaders$composition_id == region$composition_id &
+      export$leaders$region_row == region$region_row & export$leaders$region_piece == region$region_piece
+    states <- export$leaders$route_status[selected]
+    export$focus_regions$collision_status[i] <- if (length(states)) paste(unique(states), collapse = ";") else "no_leaders"
+  }
+  export
+}

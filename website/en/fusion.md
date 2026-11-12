@@ -34,7 +34,7 @@ biological flow of genetic material.
 
 The first example uses one panel per named side: `right`, `top`, `left`, `bottom`. Diagonal, free and automatic placement are described below. IDs must be unique;
 `center` is reserved. `size=c(width,height)` and `center_size` are fractions of
-the composition area after the cross-panel legend has been allocated. Explicit
+the content area after native outer decoration and cross-panel Guides have been allocated. Explicit
 allocations that overlap fail rather than silently relocating a panel.
 A side specifies placement; it does not rotate a plot's text. Set the plot's
 own `coord_collinear(seq_axis="vertical")` for a vertical sequence axis.
@@ -75,7 +75,7 @@ central rectangle to the physical aspect ratio and jointly budgets native outer 
 fixed. This is not a general font-scaling or global collision solver. Each
 panel retains its own guides; different scale meanings are not automatically
 merged. Use `show.legend=FALSE` or local `theme()` deliberately where appropriate.
-Composition `theme()`/`guides()` affect the cross-panel legend only. Required
+Composition `guides()` configures cross-panel Guides; `theme()` also styles the native outer plot furniture described below. Required
 guide space is measured; a canvas too small for it fails with a diagnostic.
 
 ## Export and inspect anchors {#export}
@@ -289,7 +289,7 @@ physical_box <- ggchord_fusion(central, center_box = unit(c(5, 85, 10, 100), "mm
 export_ggchord_fusion(physical_box, width = 12, height = 6)$panels
 ```
 
-A numeric box uses xmin, xmax, ymin, ymax fractions; an absolute-unit box keeps its physical dimensions. Coordinates refer to the composition area excluding its cross-panel guide. Do not combine box with side/size/angle/distance, or center_box with center_size. Physical allocations are checked at every target size; they are never silently clamped. Explicit `allow_overlap = TRUE` on `ggchord_fusion()` or `magnify_ggchord()` permits deliberate overlays. Later panels cover earlier panels, using vector grid clipping rather than PNG crops; translucent connections are not repainted twice in the same area. The export's `overlaps` table records covering order. This permits intentional masks and does not promise automatic obstacle avoidance.
+A numeric box uses xmin, xmax, ymin, ymax fractions; an absolute-unit box keeps its physical dimensions. Coordinates refer to the composition content area after native outer plot decorations and cross-panel Guides. Do not combine box with side/size/angle/distance, or center_box with center_size. Physical allocations are checked at every target size; they are never silently clamped. Explicit `allow_overlap = TRUE` on `ggchord_fusion()` or `magnify_ggchord()` permits deliberate overlays. Later panels cover earlier panels, using vector grid clipping rather than PNG crops; translucent connections are not repainted twice in the same area. The export's `overlaps` table records covering order. This permits intentional masks and does not promise automatic obstacle avoidance.
 
 Sankey source IDs occur in both mirrored columns. Choose an exact `q_instance`/`s_instance` from `get_chord_layout(plot)$display_instances`; omission fails when ambiguous. Radial and Chord use their own registered backbone frames. All q/s intervals, units and source records remain unchanged. If a declared `source_hsp_id` appears repeatedly, every participating Fusion layer must opt into `allow_repeated = TRUE`, including layers inside nested compositions. `source_observations` distinguishes explicit evidence IDs from display counts. This does not infer identity by comparing equal table values. Dotplot has independent axes and is not yet a registered Fusion endpoint.
 
@@ -445,3 +445,41 @@ Multiple magnify details can use repeated named `"auto"` sides, with explicit
 `detail_panel` selections. If no packing is feasible, the build fails with a clear diagnostic;
 no panel is discarded. The search is deterministic and conservative, not a
 global optimum or a promise that any count fits every canvas.
+
+## Native outer plot furniture {#plot-furniture}
+
+Use ordinary `labs()` and plot Theme elements for the composition's title,
+subtitle, caption, tag, background and margins. These settings previously
+entered the style carrier without being drawn; they now reserve measured
+space and appear in the final static drawing. Each child retains its own
+axes, theme and source coordinates. Fusion has no Cartesian data axes.
+
+```r
+styled_guide_fusion <- guide_fusion +
+  ggplot2::labs(
+    title = "Source-aware composition",
+    subtitle = "Independent genomic panels and native Guides",
+    caption = "Source: bundled ggchord records",
+    tag = "A"
+  ) +
+  theme(
+    plot.title = element_text(size = 16, face = "bold"),
+    plot.caption = element_text(size = 9),
+    plot.margin = margin(5, 5, 5, 5, "mm"),
+    plot.background = element_rect(fill = "#F3F5F7", colour = NA)
+  )
+styled_guide_fusion
+```
+
+`metadata$content_bounds_mm`/`content_canvas_mm` describe the actual inner
+composition frame; `plot_decoration` records effective labels and native
+physical envelopes. Boxes refer to this content frame after outer decoration
+and Guide allocation. Existing fixed boxes are rechecked at target size;
+enlarge the canvas or revise explicit margins if they no longer fit. Clear
+headings with native `labs(title = NULL, subtitle = NULL, caption = NULL, tag = NULL)`.
+No decoration keeps the previous rendering path.
+
+Nested compositions retain independent headings and mm registration. Native
+foreground/background separation and inherited clipping keep translucent
+connections from accumulating repeated paints in explicit overlap mode.
+The source tables, selected intervals and palette mappings remain unchanged.
