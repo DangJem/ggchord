@@ -1,0 +1,44 @@
+{
+  "status": "passed exploratory projection",
+  "source": {
+    "url": "https://raw.githubusercontent.com/pangenome/odgi/3f59d596cff3bbe9ddff3862e3212812254496e5/test/LPA.gfa",
+    "sha256": "9017b433f35b604bdcafd9339318f1649585bceda4ccf263f1ee1f16adf0cdf3",
+    "license": "MIT, copyright 2019 Erik Garrison",
+    "description": "Existing human Lipoprotein A graph; source names are opaque path IDs"
+  },
+  "decoder": {
+    "package": "gfapy",
+    "version": "1.2.3"
+  },
+  "nodes": 3751,
+  "links": 5195,
+  "paths": 13,
+  "source_steps": 202806,
+  "selected_first_steps": 200,
+  "repeated_node_ids_by_path": {
+    "chm13__LPA__tig00000001": 883,
+    "HG002__LPA__tig00000001": 884,
+    "HG002__LPA__tig00000005": 778,
+    "HG00733__LPA__tig00000001": 878,
+    "HG00733__LPA__tig00000008": 882,
+    "HG01358__LPA__tig00000002": 887,
+    "HG01358__LPA__tig00000010": 773,
+    "HG02572__LPA__tig00000005": 790,
+    "HG02572__LPA__tig00000001": 787,
+    "NA19239__LPA__tig00000002": 874,
+    "NA19239__LPA__tig00000006": 778,
+    "NA19240__LPA__tig00000001": 789,
+    "NA19240__LPA__tig00000012": 874
+  },
+  "coordinates": "1-based-inclusive cumulative coordinates of original zero-overlap path steps; path strand is retained",
+  "scientific_pair_links_emitted": 0,
+  "decision": "Use existing sequence/feature views for an explicit path subset. No generic GFA/ODGI reader or graph Coord is justified by this prototype.",
+  "unsupported": [
+    "nonzero or unknown overlaps",
+    "missing node lengths/characters",
+    "GFA W/J or GFA2",
+    "native ODGI binary decoding",
+    "automatic occurrence pairing or orthology"
+  ],
+  "no_analysis_engine": true
+}

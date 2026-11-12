@@ -366,3 +366,25 @@ SRR031718–SRR031723；依赖summarizeOverlaps来源章节关联GSE18508。未�
 原header的SO:sorted及临时索引缺失产生的消息原样保存，不改header伪造无警告。
 顺序解码没有外部参考下载。check-read-coverage.R和read-coverage-results为证据，
 chr2L 1–10000源窗口PNG实际生成并查看，未运行设备矩阵。双语formats已同步。
+
+## 第十七工作包：GFA/ODGI探索性路径桥接
+
+按v10 §6.6探索范围完成真实人类LPA图原型。固定ODGI v0.8.4提交3f59d596原图
+与MIT许可重新下载校验，成熟可选gfapy1.2.3只装/tmp环境，不进运行时依赖。
+未自研解析引擎、运行组装/比对/ODGI，也未新增空壳reader或Graph Coord。
+
+prototype-graph-paths.py实际核对3751节点/5195原0M边、13路径202806步骤的
+每个有向转移及字符长度，源路径累计坐标与节点方向保留。两条明确命名路径各
+取前100原步骤，CSV保留node_id/source_step/node_occurrence，给定全路径长度
+另表保留，不冒充完整染色体长度。每路径有773–887个重复节点ID，自动按node
+配对有真实歧义，因此原型导出0条科学链接，不用全clique伪造同源/支持度。
+
+check-graph-paths.R以已有seq/feature/focus接口构建真实200步子集，源位置连续、
+窗口/原路径长度核对通过，PNG实际生成并查看。原图不改，所选两前缀确实都是
+正遍历，没有为了双色展示伪造负链。原图未复制进发布包，固定下载规则和原始
+许可/源哈希、CSV/PNG及结果JSON可追溯。详细决策见OPTIONAL-GRAPH-BRIDGE文档。
+
+边界：原型只论证零重叠有字符GFA1路径。未知/非零重叠明确拒绝，不支持GFA W/J/
+GFA2、缺字符或native ODGI二进制；文档记录上游成熟导出路线，不冒称实测过其
+二进制。按探索条款的真实原型/取舍门槛已交付，不把未验证能力写成正式API。
+双语formats同步；没有新增公开参数，不增加测试矩阵或运行包级发布验收。

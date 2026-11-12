@@ -117,3 +117,7 @@ DEVELOPMENT-v0.27.0.md。全任务书仍在持续开发中，不因一个工作�
 §6.6按需BAM/CRAM桥接已通过真实果蝇BAM→成熟coverage→普通Track/bedGraph及
 显式no_ref CRAM格式往返定向门槛（第十六工作包）。不是新增通用reader，不代表
 任意缺参考CRAM认证。范围/过滤/来源/原header消息见read-coverage-results。
+
+§6.6 GFA/ODGI探索项已交付固定人类LPA图的成熟解析路径原型、源步骤投影、
+原生视图和明确取舍（第十七工作包）。这关闭探索性调研门槛，不宣称通用GFA或
+ODGI二进制reader；非0M/缺字符/W/J/GFA2等范围保留为未认证。详见OPTIONAL-GRAPH-BRIDGE。

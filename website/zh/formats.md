@@ -472,3 +472,11 @@ if (requireNamespace("GenomicAlignments", quietly = TRUE) &&
 将这些一基闭合区间交给 `geom_track(geom = "rect")`，设置 `xmin = start - 1`、`xmax = end`、`ymin = 0`、`ymax = value`，方法见[连续信号](#signals)。完整参考长度取 `scanBamHeader(bam_file)[[1]]$targets`，不取最后 read 端点。绘制小区域前显式选择源窗口。
 
 CRAM 应由已有 HTSlib/pysam 或 samtools 环境解码，需要参考时提供**实际匹配的参考**，保留原 header、过滤和转换日志。不伪造参考、不自动下载未请求资源，也不宣称所有 CRAM 都可独立解码。定向原型仅用 `no_ref=1` 将相同真实 BAM 记录重编码，无外部参考访问，再核对解码后的全部记录字段/标签、参考字典及覆盖度。这是格式往返，不是原始 CRAM 观测，也不是所有参考型 CRAM 的认证。上游 `SO:sorted` header 和临时索引缺失产生的解码消息均保留；顺序读取成功，没有改写它们。
+
+## 图路径：探索性子集 {#graph-paths}
+
+GFA 图边表达邻接/重叠，不自动提供整基因组间 HSP。已有显式路径步骤在坐标构建有据时，可用普通 sequence/feature 表展示。节点 ID 可在同一路径重复，须保留路径、源步骤索引、出现次序及遍历方向，不能连接所有出现位置，也不能把节点/边数当作直系同源、Identity 或 read support。
+
+真实探索例使用固定提交中未改动的 ODGI 人类 LPA 图，由可选 **gfapy** 解码。5,195 条原边都是零重叠；原型核对每个原始路径转移和节点长度，投影 13 条给定路径的 202,806 个步骤。展示子集显式保留两条命名路径各前 100 个步骤，原遍历方向及 ID 不改；给定完整路径长度与染色体长度严格区分，不生成 pair 连接。代码、源 URL/哈希、原 MIT 许可、输出表及实际图见源码 checkout 的 `tools/long-term-audit/OPTIONAL-GRAPH-BRIDGE-v0.27.0.md` 及其原型资产；`data-raw/prepare-graph-prototype.py` 仅在显式调用时取得两个固定原文件。
+
+这不是通用 `read_gfa()` 或 graph Coord。非零/未知重叠、源字符缺失、GFA W/J/GFA2 及 ODGI 原生二进制不在此原型范围。用成熟上游工具导出明确路径子集并保留日志/来源映射，不推断缺失坐标或成对证据；文档中的上游导出路线也不等同于此处已验证二进制解码。
