@@ -7,6 +7,9 @@
 #' segment, linerange, errorbar and text. Supported statistics are identity,
 #' count, bin and summary; unsupported combinations fail in the native layer.
 #' Count counts identical positions; bin requires explicit binwidth or breaks.
+#' An explicit group mapping takes priority over discrete style mappings.
+#' Bin source membership follows the native statistic, including outer edges
+#' and its numerical boundary tolerance, before data positions move the bars.
 #' Mapping x/y refers to source position/local numerical value, not screen x/y.
 #' Existing track_value/track_fill/track_colour roles remain accepted.
 #' @param mapping,data Standard layer input. Supply accver and source positions
@@ -137,7 +140,8 @@ ggchord_track_native_input <- function(layer, plot) {
   late_mapping <- mapping[late]; mapping[late] <- NULL
   source_group <- if ("group" %in% names(mapping)) rlang::eval_tidy(mapping$group, raw) else rep(1L, nrow(raw))
   group_fields <- list(source_group)
-  for (key in intersect(c("fill", "colour", "linetype", "shape"), names(mapping))) {
+  for (key in if (!"group" %in% names(mapping))
+      intersect(c("fill", "colour", "linetype", "shape"), names(mapping)) else character()) {
     if (grepl("after_stat|stage\\(", rlang::as_label(mapping[[key]]))) next
     value <- rlang::eval_tidy(mapping[[key]], raw)
     if (!is.numeric(value)) group_fields[[length(group_fields) + 1L]] <- rep_len(value, nrow(raw))
@@ -165,23 +169,19 @@ ggchord_track_native_input <- function(layer, plot) {
       native$geom <- ggplot2::ggproto(NULL,source_geom)
       native$geom$default_aes$.ggchord_stat_x <- NA_real_
       native$mapping$.ggchord_stat_x <- ggplot2::aes(value=after_stat(x))$value
-      if(p$native_stat=="bin")for(field in c("xmin","xmax")) {
-        key<-paste0(".ggchord_stat_",field)
-        native$geom$default_aes[[key]]<-NA_real_
-        native$mapping[[key]]<-rlang::new_quosure(rlang::call2("after_stat",rlang::sym(field)),asNamespace("ggplot2"))
-      }
     }
-    if (p$native_stat == "identity") {
+    if (p$native_stat %in% c("identity", "bin")) {
       native$data$.track_input_index <- seq_len(nrow(d))
       native$mapping$.ggchord_source_index <- rlang::quo(.track_input_index)
       source_stat <- native$stat
       required <- unique(c(source_stat$required_aes, ".ggchord_source_index"))
       native$stat <- ggplot2::ggproto(NULL, source_stat, required_aes = required)
+      if (p$native_stat == "bin") native$stat <- ggchord_track_bin_stat(native$stat)
     }
     q <- ggplot2::ggplot() + native + ggplot2::scale_fill_identity() +
       ggplot2::scale_colour_identity() + ggplot2::scale_alpha_identity() +
       ggplot2::scale_size_identity() + ggplot2::scale_linewidth_identity() +
-      ggplot2::scale_continuous_identity(aesthetics=c(".ggchord_stat_x",".ggchord_stat_xmin",".ggchord_stat_xmax"))
+      ggplot2::scale_continuous_identity(aesthetics=".ggchord_stat_x")
     computed <- ggplot2::ggplot_build(q)$data[[1L]]
     if (!nrow(computed)) next
     computed$accver <- seq
@@ -195,19 +195,18 @@ ggchord_track_native_input <- function(layer, plot) {
       computed$track_ymin <- pmin(p$baseline, computed$track_value)
       computed$track_ymax <- pmax(p$baseline, computed$track_value)
     }
-    # Native group integers are local to this sequence. Membership is exact
-    # for count/identity; bin membership respects the requested closed side.
+    # Native group integers are local to this sequence. Bin membership travels
+    # with the Stat result, before padding, empty-bin removal or Position moves.
     gx <- if ("x" %in% names(mapping)) rep_len(rlang::eval_tidy(mapping$x, d), nrow(d)) else rep(NA_real_, nrow(d))
     local_group <- match(d$.track_group, sort(unique(d$.track_group)))
     computed$source_rows <- I(lapply(seq_len(nrow(computed)), function(j) {
       if (p$native_stat == "identity") return(rows[computed$.ggchord_source_index[j]])
+      if (p$native_stat == "bin") return(rows[computed$.ggchord_bin_rows[[j]]])
       keep <- local_group == computed$group[j]
-      if (p$native_stat == "bin") {
-        keep <- keep & if (identical(params$closed, "left"))
-          gx >= computed$.ggchord_stat_xmin[j] & gx < computed$.ggchord_stat_xmax[j] else gx > computed$.ggchord_stat_xmin[j] & gx <= computed$.ggchord_stat_xmax[j]
-      } else if (p$native_geom != "rect") keep <- keep & gx == computed$.ggchord_stat_x[j]
+      if (p$native_geom != "rect") keep <- keep & gx == computed$.ggchord_stat_x[j]
       rows[which(keep)]
     }))
+    computed$.ggchord_bin_rows <- NULL
     parts[[length(parts) + 1L]] <- computed
   }
   output <- ggchord_rbind_fill(parts)
@@ -242,6 +241,34 @@ ggchord_track_native_input <- function(layer, plot) {
   layer$geom_params$native_draw_params <- params[intersect(names(params),c("arrow","lineend","linejoin","linemitre","parse","check_overlap","rule"))]
   layer$geom_params$track_kind <- p$native_geom
   layer
+}
+
+ggchord_track_bin_stat <- function(stat) {
+  # Keep the dependency on native bin internals in this adapter. Their fuzzy
+  # edges/outer inclusion must be shared with StatBin, not approximated here.
+  # Verified against ggplot2 >= 4.0.0's R/bin.R and R/stat-bin.R:
+  # https://github.com/tidyverse/ggplot2/tree/v4.0.0/R
+  compute_bins <- utils::getFromNamespace("compute_bins", "ggplot2")
+  bin_cut <- utils::getFromNamespace("bin_cut", "ggplot2")
+  ggplot2::ggproto(NULL, stat,
+    dropped_aes = unique(c(stat$dropped_aes, ".ggchord_source_index")),
+    compute_group = function(data, scales, binwidth = NULL, bins = NULL,
+        center = NULL, boundary = NULL, closed = c("right", "left"),
+        pad = FALSE, breaks = NULL, flipped_aes = FALSE, drop = "none") {
+      resolved <- compute_bins(data$x, scales$x, breaks = breaks,
+        binwidth = binwidth, bins = bins, center = center, boundary = boundary,
+        closed = closed)
+      membership <- as.integer(bin_cut(data$x, resolved))
+      # Resolve user callbacks only once. Track's native x scale is identity.
+      result <- stat$compute_group(data, scales, breaks = resolved$breaks,
+        closed = closed, pad = pad, flipped_aes = flipped_aes, drop = drop)
+      centers <- (utils::head(resolved$breaks, -1L) + utils::tail(resolved$breaks, -1L)) / 2
+      at <- match(result$x, centers)
+      result$.ggchord_bin_rows <- I(lapply(at, function(i) {
+        if (is.na(i)) integer() else data$.ggchord_source_index[which(membership == i)]
+      }))
+      result
+    })
 }
 
 ggchord_track_native_geometry <- function(d, p, layout, sc, at_value) {

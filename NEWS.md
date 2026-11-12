@@ -7,6 +7,19 @@
 - Fusion and magnification now accept horizontal or vertical Collinear source
   panels, using the same native-scale and physical projection as other panels.
   Real local HSPs remain in the explicit detail plot, separate from focus leaders.
+- Fixed Track statistics splitting an explicit `group` by discrete styles.
+  Explicit grouping now takes priority, matching native ggplot2 statistics.
+  Bin `source_rows` now uses native bin membership, retaining outer-boundary
+  observations and numerical edge tolerance through padding, dropping and
+  data positions; computed count values are unchanged by this provenance fix.
+- Fixed ordinary Chord/Collinear views bypassing declared `source_hsp_id`
+  duplicate checks. Backbone views now check observations actually retained
+  after selection; explicitly repeated observations require `allow_repeated = TRUE`
+  on every participating layer. Filtered observations do not trigger duplicates.
+  Instance routing exports also mark whether each route was retained.
+- Fixed `magnify_ggchord()` partially matching ordinary metadata columns such
+  as `instance_note` to optional instance selectors. Only exact `instance` and
+  `detail_instance` fields select copies; ambiguous selections still fail.
 
 # ggchord 0.22.0.9000
 

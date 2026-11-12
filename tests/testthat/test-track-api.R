@@ -13,11 +13,23 @@ test_that("named tracks share domains and compose with selected axes and a bp re
   expect_s3_class(build_ggchord_smoke(plot), "ggplot_built")
 })
 
-test_that("track bars count original observations before projection", {
-  events <- data.frame(accver=c("A","A","B"),pos=c(100,100,100),weight=c(2,3,7))
+test_that("track bars respect explicit source groups before projection", {
+  events <- data.frame(accver=c("A","A","B"),pos=c(100,100,100),weight=c(2,3,7),
+    category=c("a","b","a"))
   p <- ggchord(smoke_sequences())+geom_seq()+
-    geom_track(aes(x=pos,weight=weight),data=events,geom="bar",track=position_track("counts"))+
+    geom_track(aes(x=pos,weight=weight,fill=category,group=1),data=events,geom="bar",track=position_track("counts"))+
     coord_collinear()
-  out <- export_ggchord_layout(p,include="track")
+  out <- suppressWarnings(export_ggchord_layout(p,include="track"))
   expect_equal(out$track_statistics[[1]]$count,c(5,7))
+  expect_equal(out$track_statistics[[1]]$source_rows[[1]],1:2)
+})
+
+test_that("track bins retain the observations counted at outer boundaries", {
+  events <- data.frame(accver="A",pos=c(100,150,200))
+  p <- ggchord(smoke_sequences())+geom_seq()+
+    geom_track(aes(x=pos),data=events,geom="col",stat="bin",breaks=c(100,200),
+      track=position_track("bins"))+coord_collinear()
+  out <- export_ggchord_layout(p,include="track")$track_statistics[[1]]
+  expect_equal(out$count,3)
+  expect_equal(out$source_rows[[1]],1:3)
 })

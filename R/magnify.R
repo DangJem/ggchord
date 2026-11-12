@@ -110,8 +110,8 @@ ggchord_build_focus_region <- function(focus, panels, region) {
   resolve <- function(panel, instance) ggchord_resolve_panel_interval(panels,
     region$accver, region$start, region$end, panel, instance,
     paste0("magnify_ggchord() ",panel,": "))
-  q <- resolve("center", region$instance)
-  s <- resolve("detail", region$detail_instance)
+  q <- resolve("center", region[["instance"]])
+  s <- resolve("detail", region[["detail_instance"]])
   if (q$unit != s$unit) ggchord_stop("magnify_ggchord(): source and detail units must agree")
   qf <- ggchord_fusion_front(panels[[q$panel]], q)
   sf <- ggchord_fusion_front(panels[[s$panel]], s)

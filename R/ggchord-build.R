@@ -1542,6 +1542,9 @@ compute_chord_geometry <- function(plot) {
     if (isTRUE(plot$coordinates$ggchord_sankey)) primary <- ggchord_project_sankey_layout(primary,plot) else
       if (isTRUE(primary$collinear) && identical(plot$coordinates$collinear_seq_axis, "vertical"))
       primary <- ggchord_project_vertical_layout(primary)
+  }
+  primary <- ggchord_check_displayed_hsps(primary, plot)
+  if (!is.null(plot$ggchord$ref)) {
     plot$ggchord$ref$layout <- primary
     plot$ggchord$ref$context_key <- ggchord_render_cache_key()
   }

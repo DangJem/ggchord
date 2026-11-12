@@ -210,7 +210,7 @@ ggchord_project_radial_layout <- function(layout, plot) {
     source_y = unname(layout$sequence_reference$y[layout$seqs]), axis_min = tab$xmin,
     ratio = plot$coordinates$ratio %||% 1)
   layout$radial_clockwise <- plot$coordinates$radial_clockwise
-  endpoints <- identities <- list()
+  endpoints <- list()
   for (owner in names(layout$layer_geometry)) for (component in names(layout$layer_geometry[[owner]])) {
     d <- layout$layer_geometry[[owner]][[component]]
     if (!component %in% c("ribbon", "link")) {
@@ -235,13 +235,6 @@ ggchord_project_radial_layout <- function(layout, plot) {
     if (!is.data.frame(d) || !nrow(d)) next
     input <- layout$layer_inputs[[owner]][[component]]
     layer <- plot$layers[[which(vapply(plot$layers, function(l) identical(l$ggchord_layer_id, owner), logical(1)))[1]]]
-    if ("source_hsp_id" %in% names(input)) {
-      stable <- as.character(input$source_hsp_id)
-      if (anyNA(stable) || any(!nzchar(stable))) ggchord_stop("source_hsp_id must be nonempty when supplied")
-      identities[[length(identities) + 1L]] <- data.frame(layer_id = owner,
-        source_hsp_id = stable[unique(d$source_row)],
-        allow_repeated = isTRUE(layer$ggchord_params$allow_repeated))
-    }
     result <- ggchord_radial_connections(d, input, layer$ggchord_params, component, layout, frames)
     layout$layer_geometry[[owner]][[component]] <- result$data
     if (!is.null(result$endpoints)) {
@@ -250,12 +243,6 @@ ggchord_project_radial_layout <- function(layout, plot) {
         as.character(input$source_hsp_id[result$endpoints$source_row]) else NA_character_
       endpoints[[owner]] <- result$endpoints
     }
-  }
-  identity <- ggchord_rbind_fill(identities)
-  if (is.data.frame(identity) && nrow(identity)) {
-    duplicate <- duplicated(identity$source_hsp_id) | duplicated(identity$source_hsp_id, fromLast = TRUE)
-    if (any(duplicate & !identity$allow_repeated)) ggchord_stop(
-      "A declared source_hsp_id is displayed more than once; use disjoint layer data or allow_repeated=TRUE explicitly")
   }
   layout$seq_arcs <- lapply(layout$seq_arcs, ggchord_project_radial_data, frames = frames)
   axis_angle <- ggchord_plot_settings(plot)$axis$text.orientation

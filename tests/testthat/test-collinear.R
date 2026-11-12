@@ -113,3 +113,14 @@ test_that("mirrored Sankey retains real interval provenance", {
   expect_equal(nrow(out$display_instances),4L)
   expect_setequal(out$instance_routing$qaccver,"A")
 })
+
+test_that("ordinary views check declared HSP identity after display filtering", {
+  h <- smoke_ribbon(); h$source_hsp_id <- paste0("h",seq_len(nrow(h)))
+  base <- ggchord(smoke_sequences(),h)+geom_seq()
+  duplicate <- base+geom_link_ribbon()+geom_link_ribbon()
+  expect_error(get_chord_layout(duplicate+coord_chord()),"allow_repeated")
+  expect_error(get_chord_layout(duplicate+coord_collinear()),"allow_repeated")
+  allowed <- base+geom_link_ribbon(allow_repeated=TRUE)+
+    geom_link_ribbon(allow_repeated=TRUE)+coord_collinear()
+  expect_true(nrow(get_chord_layout(allowed)$ribbon_polys)>0L)
+})

@@ -195,13 +195,6 @@ ggchord_prepare_instances <- function(plot) {
     plot$layers[[i]] <- layer
   }
   report <- ggchord_rbind_fill(routes) %||% data.frame()
-  if (nrow(report)) {
-    repeated <- duplicated(report$source_hsp_id) | duplicated(report$source_hsp_id, fromLast = TRUE)
-    declared <- report$source_scope == "declared"
-    if (any(repeated & declared & !report$allow_repeated)) ggchord_stop(
-      "A declared source_hsp_id is displayed more than once; use disjoint layer data or allow_repeated=TRUE explicitly")
-    report$repeated_display <- repeated & declared
-  }
   coord <- plot$coordinates
   if (!is.null(coord$collinear_anchor) || !is.null(coord$collinear_segments)) {
     source_coord <- coord
@@ -224,6 +217,52 @@ ggchord_prepare_instances <- function(plot) {
   plot$ggchord$instance_omissions <- ggchord_rbind_fill(omissions) %||% data.frame()
   plot$ggchord$instances_prepared <- TRUE
   plot
+}
+
+# Validate actual displayed source rows after pair/adjacency/direction filtering.
+# This also runs when ordinary Chord/Collinear need no instance expansion.
+ggchord_check_displayed_hsps <- function(layout, plot) {
+  identities <- list()
+  routes <- layout$instance_routing
+  if (is.data.frame(routes) && nrow(routes)) {
+    routes$retained <- FALSE
+    routes$repeated_display <- FALSE
+  }
+  for (layer in plot$layers) {
+    component <- layer$ggchord_type
+    if (is.null(component) || !component %in% c("ribbon", "link")) next
+    id <- layer$ggchord_layer_id
+    input <- layout$layer_inputs[[id]][[component]]
+    geometry <- layout$layer_geometry[[id]][[component]]
+    visible <- unique(geometry$source_row)
+    if (identical(layer$ggchord_params$ribbon_stat$type, "bundle")) {
+      members <- layout$layer_layouts[[id]]$ribbon_stat_report$source_rows[visible]
+      visible <- as.integer(unlist(strsplit(members, ",", fixed = TRUE)))
+      input <- ggchord_resolve_layer_input(layer, plot$ggchord$data$ribbon_data)
+    }
+    if (is.data.frame(routes) && nrow(routes)) {
+      at <- which(routes$layer_id == id)[visible]
+      routes$retained[at] <- TRUE
+    }
+    if (!"source_hsp_id" %in% names(input)) next
+    stable <- as.character(input$source_hsp_id)
+    if (anyNA(stable) || any(!nzchar(stable)))
+      ggchord_stop("source_hsp_id must be nonempty when supplied")
+    if (!length(visible)) next
+    identities[[length(identities) + 1L]] <- data.frame(
+      source_hsp_id = stable[visible], allow_repeated = isTRUE(layer$ggchord_params$allow_repeated))
+  }
+  identity <- ggchord_rbind_fill(identities)
+  if (is.data.frame(identity) && nrow(identity)) {
+    repeated <- duplicated(identity$source_hsp_id) | duplicated(identity$source_hsp_id, fromLast = TRUE)
+    if (any(repeated & !identity$allow_repeated)) ggchord_stop(
+      "A declared source_hsp_id is displayed more than once; use disjoint layer data or allow_repeated=TRUE explicitly")
+    if (is.data.frame(routes) && nrow(routes)) routes$repeated_display <-
+      routes$retained & routes$source_scope == "declared" &
+      routes$source_hsp_id %in% identity$source_hsp_id[repeated]
+  }
+  layout$instance_routing <- routes
+  layout
 }
 
 ggchord_restore_instance_data <- function(data, instances) {

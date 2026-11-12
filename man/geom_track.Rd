@@ -79,6 +79,9 @@ geoms are point, line, path, step, col, bar, tile, rect, area, ribbon,
 segment, linerange, errorbar and text. Supported statistics are identity,
 count, bin and summary; unsupported combinations fail in the native layer.
 Count counts identical positions; bin requires explicit binwidth or breaks.
+An explicit group mapping takes priority over discrete style mappings.
+Bin source membership follows the native statistic, including outer edges
+and its numerical boundary tolerance, before data positions move the bars.
 Mapping x/y refers to source position/local numerical value, not screen x/y.
 Existing track_value/track_fill/track_colour roles remain accepted.
 }

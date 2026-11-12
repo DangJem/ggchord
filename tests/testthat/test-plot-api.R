@@ -117,12 +117,14 @@ test_that("Fusion retains source intervals across independently measured panels"
   expect_identical(out$relationship_data[[1]], source)
   query <- out$fronts[out$fronts$endpoint == "q", ]
   expect_lt(stats::cor(query$local_x, query$x), 0)
-  locus <- data.frame(accver = c("A", "B"), start = 100, end = 200)
+  locus <- data.frame(accver = c("A", "B"), start = 100, end = 200,
+    instance_note = "ordinary metadata", detail_instance_note = "also metadata")
   focused <- focus_ggchord_data(smoke_sequences(), loci = locus)
   local <- ggchord(focused$seq_data) + geom_seq() + coord_collinear()
   magnified <- export_ggchord_fusion(magnify_ggchord(detail, locus, local))
   expect_equal(magnified$focus_regions$detail_origin, c(100, 100))
   expect_identical(magnified$focus_regions$region_row, 1:2)
+  expect_identical(magnified$focus_region_data, locus)
   expect_equal(nrow(magnified$leaders), 4L)
   expect_equal(nrow(magnified$connections), 0L)
 })

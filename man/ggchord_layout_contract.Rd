@@ -133,7 +133,10 @@ live in a temporary directory and may be removed by cleanup; use ordinary
 \code{display_instances} separates source accver from instance_id and display
 order. \code{instance_routing} identifies each source HSP and its unique query/
 subject display route. Explicit source_hsp_id is shared across layers;
-absent IDs are layer-local. \code{sequence_display} records source_length,
+absent IDs are layer-local. Routing \code{retained} records whether a relation
+survives geometry selection; \code{repeated_display} and repeated-ID checks use
+only retained source observations, including ordinary views without copies.
+\code{sequence_display} records source_length,
 display_length and display_scale_factor; equal allocation changes only the
 display projection. Vertical Collinear uses final y as its inverse axis.
 Sankey instances additionally record left/right side; query is always left.
