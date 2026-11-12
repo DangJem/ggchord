@@ -1,0 +1,363 @@
+{
+  "scope": "Bounded diagnostic sample of the in-process candidate; not a quality pass or a performance threshold",
+  "production_override": true,
+  "candidate_sha256": "4d61ab6262256350e55b52144a558a24f00c5d23947a5b1cb21cb3d34aa6a001",
+  "outcome": {
+    "interrupted": "reached elapsed time limit"
+  },
+  "total_samples_seconds": 38.79,
+  "by_total": [
+    {
+      "total.time": 38.79,
+      "total.pct": 100,
+      "self.time": 0.06,
+      "self.pct": 0.15,
+      "_row": "\"eval\""
+    },
+    {
+      "total.time": 38.79,
+      "total.pct": 100,
+      "self.time": 0.04,
+      "self.pct": 0.1,
+      "_row": "\"tryCatch\""
+    },
+    {
+      "total.time": 38.79,
+      "total.pct": 100,
+      "self.time": 0.01,
+      "self.pct": 0.03,
+      "_row": "\"tryCatchOne\""
+    },
+    {
+      "total.time": 38.79,
+      "total.pct": 100,
+      "self.time": 0,
+      "self.pct": 0,
+      "_row": "\"doTryCatch\""
+    },
+    {
+      "total.time": 38.79,
+      "total.pct": 100,
+      "self.time": 0,
+      "self.pct": 0,
+      "_row": "\"measure\""
+    },
+    {
+      "total.time": 38.79,
+      "total.pct": 100,
+      "self.time": 0,
+      "self.pct": 0,
+      "_row": "\"source\""
+    },
+    {
+      "total.time": 38.79,
+      "total.pct": 100,
+      "self.time": 0,
+      "self.pct": 0,
+      "_row": "\"tryCatchList\""
+    },
+    {
+      "total.time": 38.79,
+      "total.pct": 100,
+      "self.time": 0,
+      "self.pct": 0,
+      "_row": "\"withVisible\""
+    },
+    {
+      "total.time": 38.78,
+      "total.pct": 99.97,
+      "self.time": 0,
+      "self.pct": 0,
+      "_row": "\"ggplot_gtable\""
+    },
+    {
+      "total.time": 38.78,
+      "total.pct": 99.97,
+      "self.time": 0,
+      "self.pct": 0,
+      "_row": "\"ggplot2::ggplotGrob\""
+    },
+    {
+      "total.time": 38.51,
+      "total.pct": 99.28,
+      "self.time": 0,
+      "self.pct": 0,
+      "_row": "\"ggplot_build.ggchord\""
+    },
+    {
+      "total.time": 38.28,
+      "total.pct": 98.69,
+      "self.time": 0,
+      "self.pct": 0,
+      "_row": "\"prepare_ggchord_plot\""
+    },
+    {
+      "total.time": 36.16,
+      "total.pct": 93.22,
+      "self.time": 0,
+      "self.pct": 0,
+      "_row": "\"compute_chord_geometry\""
+    },
+    {
+      "total.time": 33.28,
+      "total.pct": 85.8,
+      "self.time": 0.57,
+      "self.pct": 1.47,
+      "_row": "\"<Anonymous>\""
+    },
+    {
+      "total.time": 24.71,
+      "total.pct": 63.7,
+      "self.time": 0,
+      "self.pct": 0,
+      "_row": "\"ggchord_render_table\""
+    },
+    {
+      "total.time": 24.71,
+      "total.pct": 63.7,
+      "self.time": 0,
+      "self.pct": 0,
+      "_row": "\"ggplot_gtable.ggchord_built\""
+    },
+    {
+      "total.time": 24.56,
+      "total.pct": 63.32,
+      "self.time": 0,
+      "self.pct": 0,
+      "_row": "\"ggchord_with_render_context\""
+    },
+    {
+      "total.time": 24.5,
+      "total.pct": 63.16,
+      "self.time": 0,
+      "self.pct": 0,
+      "_row": "\"ggplot2::ggplot_build\""
+    },
+    {
+      "total.time": 22.06,
+      "total.pct": 56.87,
+      "self.time": 0.02,
+      "self.pct": 0.05,
+      "_row": "\"compute_chord_geometry_single\""
+    },
+    {
+      "total.time": 21.81,
+      "total.pct": 56.23,
+      "self.time": 0.01,
+      "self.pct": 0.03,
+      "_row": "\"do.call\""
+    },
+    {
+      "total.time": 21.24,
+      "total.pct": 54.76,
+      "self.time": 0,
+      "self.pct": 0,
+      "_row": "\"ggchord_layout_run_stage\""
+    },
+    {
+      "total.time": 21.24,
+      "total.pct": 54.76,
+      "self.time": 0,
+      "self.pct": 0,
+      "_row": "\"layout_strategy\""
+    },
+    {
+      "total.time": 14.07,
+      "total.pct": 36.27,
+      "self.time": 0,
+      "self.pct": 0,
+      "_row": "\"attach_plot_env\""
+    },
+    {
+      "total.time": 14.07,
+      "total.pct": 36.27,
+      "self.time": 0,
+      "self.pct": 0,
+      "_row": "\"ggplot_build\""
+    },
+    {
+      "total.time": 14.07,
+      "total.pct": 36.27,
+      "self.time": 0,
+      "self.pct": 0,
+      "_row": "\"options\""
+    }
+  ],
+  "by_self": [
+    {
+      "self.time": 5.26,
+      "self.pct": 13.56,
+      "total.time": 5.53,
+      "total.pct": 14.26,
+      "_row": "\".External\""
+    },
+    {
+      "self.time": 1.95,
+      "self.pct": 5.03,
+      "total.time": 4.71,
+      "total.pct": 12.14,
+      "_row": "\"%in%\""
+    },
+    {
+      "self.time": 1.71,
+      "self.pct": 4.41,
+      "total.time": 1.87,
+      "total.pct": 4.82,
+      "_row": "\"ggchord_segment_intersects\""
+    },
+    {
+      "self.time": 1.47,
+      "self.pct": 3.79,
+      "total.time": 1.52,
+      "total.pct": 3.92,
+      "_row": "\"$\""
+    },
+    {
+      "self.time": 1.17,
+      "self.pct": 3.02,
+      "total.time": 5.48,
+      "total.pct": 14.13,
+      "_row": "\"[.data.frame\""
+    },
+    {
+      "self.time": 1.1,
+      "self.pct": 2.84,
+      "total.time": 3.56,
+      "total.pct": 9.18,
+      "_row": "\"[[.data.frame\""
+    },
+    {
+      "self.time": 1.08,
+      "self.pct": 2.78,
+      "total.time": 1.08,
+      "total.pct": 2.78,
+      "_row": "\"sys.call\""
+    },
+    {
+      "self.time": 0.94,
+      "self.pct": 2.42,
+      "total.time": 7.18,
+      "total.pct": 18.51,
+      "_row": "\"data.frame\""
+    },
+    {
+      "self.time": 0.75,
+      "self.pct": 1.93,
+      "total.time": 0.75,
+      "total.pct": 1.93,
+      "_row": "\"names\""
+    },
+    {
+      "self.time": 0.73,
+      "self.pct": 1.88,
+      "total.time": 2.79,
+      "total.pct": 7.19,
+      "_row": "\"deparse\""
+    },
+    {
+      "self.time": 0.71,
+      "self.pct": 1.83,
+      "total.time": 7.36,
+      "total.pct": 18.97,
+      "_row": "\"ggchord_radial_label_lanes\""
+    },
+    {
+      "self.time": 0.65,
+      "self.pct": 1.68,
+      "total.time": 0.65,
+      "total.pct": 1.68,
+      "_row": "\"unique.default\""
+    },
+    {
+      "self.time": 0.61,
+      "self.pct": 1.57,
+      "total.time": 1.34,
+      "total.pct": 3.45,
+      "_row": "\".deparseOpts\""
+    },
+    {
+      "self.time": 0.59,
+      "self.pct": 1.52,
+      "total.time": 4.15,
+      "total.pct": 10.7,
+      "_row": "\"[[\""
+    },
+    {
+      "self.time": 0.58,
+      "self.pct": 1.5,
+      "total.time": 1.32,
+      "total.pct": 3.4,
+      "_row": "\"ggchord_oriented_box_overlaps\""
+    },
+    {
+      "self.time": 0.57,
+      "self.pct": 1.47,
+      "total.time": 33.28,
+      "total.pct": 85.8,
+      "_row": "\"<Anonymous>\""
+    },
+    {
+      "self.time": 0.54,
+      "self.pct": 1.39,
+      "total.time": 4.1,
+      "total.pct": 10.57,
+      "_row": "\"as.data.frame.numeric\""
+    },
+    {
+      "self.time": 0.5,
+      "self.pct": 1.29,
+      "total.time": 4.28,
+      "total.pct": 11.03,
+      "_row": "\"ggchord_box_overlaps_feature\""
+    },
+    {
+      "self.time": 0.43,
+      "self.pct": 1.11,
+      "total.time": 0.59,
+      "total.pct": 1.52,
+      "_row": "\"$<-.data.frame\""
+    },
+    {
+      "self.time": 0.41,
+      "self.pct": 1.06,
+      "total.time": 0.57,
+      "total.pct": 1.47,
+      "_row": "\"structure\""
+    },
+    {
+      "self.time": 0.4,
+      "self.pct": 1.03,
+      "total.time": 0.4,
+      "total.pct": 1.03,
+      "_row": "\"c\""
+    },
+    {
+      "self.time": 0.4,
+      "self.pct": 1.03,
+      "total.time": 0.4,
+      "total.pct": 1.03,
+      "_row": "\"is.na\""
+    },
+    {
+      "self.time": 0.39,
+      "self.pct": 1.01,
+      "total.time": 0.47,
+      "total.pct": 1.21,
+      "_row": "\"stopifnot\""
+    },
+    {
+      "self.time": 0.39,
+      "self.pct": 1.01,
+      "total.time": 0.43,
+      "total.pct": 1.11,
+      "_row": "\"pmatch\""
+    },
+    {
+      "self.time": 0.38,
+      "self.pct": 0.98,
+      "total.time": 0.99,
+      "total.pct": 2.55,
+      "_row": "\"rbind\""
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+Vector obstruction decisions equivalent: 7072 
+Four complete graph routes equivalent
+
+Attaching package: ‘dplyr’
+
+The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union
+

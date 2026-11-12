@@ -1,0 +1,363 @@
+{
+  "scope": "Bounded diagnostic sample of the in-process candidate; not a quality pass or a performance threshold",
+  "production_override": true,
+  "candidate_sha256": "4d61ab6262256350e55b52144a558a24f00c5d23947a5b1cb21cb3d34aa6a001",
+  "outcome": {
+    "interrupted": "reached elapsed time limit"
+  },
+  "total_samples_seconds": 104.75,
+  "by_total": [
+    {
+      "total.time": 104.75,
+      "total.pct": 100,
+      "self.time": 0.25,
+      "self.pct": 0.24,
+      "_row": "\"eval\""
+    },
+    {
+      "total.time": 104.75,
+      "total.pct": 100,
+      "self.time": 0.06,
+      "self.pct": 0.06,
+      "_row": "\"doTryCatch\""
+    },
+    {
+      "total.time": 104.75,
+      "total.pct": 100,
+      "self.time": 0.05,
+      "self.pct": 0.05,
+      "_row": "\"tryCatchList\""
+    },
+    {
+      "total.time": 104.75,
+      "total.pct": 100,
+      "self.time": 0.03,
+      "self.pct": 0.03,
+      "_row": "\"tryCatch\""
+    },
+    {
+      "total.time": 104.75,
+      "total.pct": 100,
+      "self.time": 0.03,
+      "self.pct": 0.03,
+      "_row": "\"tryCatchOne\""
+    },
+    {
+      "total.time": 104.75,
+      "total.pct": 100,
+      "self.time": 0,
+      "self.pct": 0,
+      "_row": "\"measure\""
+    },
+    {
+      "total.time": 104.75,
+      "total.pct": 100,
+      "self.time": 0,
+      "self.pct": 0,
+      "_row": "\"source\""
+    },
+    {
+      "total.time": 104.75,
+      "total.pct": 100,
+      "self.time": 0,
+      "self.pct": 0,
+      "_row": "\"withVisible\""
+    },
+    {
+      "total.time": 104.73,
+      "total.pct": 99.98,
+      "self.time": 0,
+      "self.pct": 0,
+      "_row": "\"ggplot_gtable\""
+    },
+    {
+      "total.time": 104.73,
+      "total.pct": 99.98,
+      "self.time": 0,
+      "self.pct": 0,
+      "_row": "\"ggplot2::ggplotGrob\""
+    },
+    {
+      "total.time": 104.38,
+      "total.pct": 99.65,
+      "self.time": 0,
+      "self.pct": 0,
+      "_row": "\"ggplot_build.ggchord\""
+    },
+    {
+      "total.time": 104.09,
+      "total.pct": 99.37,
+      "self.time": 0,
+      "self.pct": 0,
+      "_row": "\"prepare_ggchord_plot\""
+    },
+    {
+      "total.time": 97.93,
+      "total.pct": 93.49,
+      "self.time": 0.02,
+      "self.pct": 0.02,
+      "_row": "\"compute_chord_geometry\""
+    },
+    {
+      "total.time": 93.13,
+      "total.pct": 88.91,
+      "self.time": 0,
+      "self.pct": 0,
+      "_row": "\"ggchord_render_table\""
+    },
+    {
+      "total.time": 93.13,
+      "total.pct": 88.91,
+      "self.time": 0,
+      "self.pct": 0,
+      "_row": "\"ggplot_gtable.ggchord_built\""
+    },
+    {
+      "total.time": 93,
+      "total.pct": 88.78,
+      "self.time": 0,
+      "self.pct": 0,
+      "_row": "\"ggchord_with_render_context\""
+    },
+    {
+      "total.time": 92.92,
+      "total.pct": 88.71,
+      "self.time": 1.48,
+      "self.pct": 1.41,
+      "_row": "\"<Anonymous>\""
+    },
+    {
+      "total.time": 92.82,
+      "total.pct": 88.61,
+      "self.time": 0,
+      "self.pct": 0,
+      "_row": "\"ggplot2::ggplot_build\""
+    },
+    {
+      "total.time": 49.44,
+      "total.pct": 47.2,
+      "self.time": 0,
+      "self.pct": 0,
+      "_row": "\"ggchord_resolve_circular_annotation_registry\""
+    },
+    {
+      "total.time": 49.44,
+      "total.pct": 47.2,
+      "self.time": 0,
+      "self.pct": 0,
+      "_row": "\"resolve_annotation_registry\""
+    },
+    {
+      "total.time": 43.2,
+      "total.pct": 41.24,
+      "self.time": 0.05,
+      "self.pct": 0.05,
+      "_row": "\"do.call\""
+    },
+    {
+      "total.time": 42.6,
+      "total.pct": 40.67,
+      "self.time": 0.01,
+      "self.pct": 0.01,
+      "_row": "\"compute_chord_geometry_single\""
+    },
+    {
+      "total.time": 41.79,
+      "total.pct": 39.89,
+      "self.time": 0,
+      "self.pct": 0,
+      "_row": "\"layout_strategy\""
+    },
+    {
+      "total.time": 41.77,
+      "total.pct": 39.88,
+      "self.time": 0,
+      "self.pct": 0,
+      "_row": "\"ggchord_layout_run_stage\""
+    },
+    {
+      "total.time": 33.45,
+      "total.pct": 31.93,
+      "self.time": 4.31,
+      "self.pct": 4.11,
+      "_row": "\"data.frame\""
+    }
+  ],
+  "by_self": [
+    {
+      "self.time": 12.96,
+      "self.pct": 12.37,
+      "total.time": 13.33,
+      "total.pct": 12.73,
+      "_row": "\".External\""
+    },
+    {
+      "self.time": 4.95,
+      "self.pct": 4.73,
+      "total.time": 14.54,
+      "total.pct": 13.88,
+      "_row": "\"%in%\""
+    },
+    {
+      "self.time": 4.31,
+      "self.pct": 4.11,
+      "total.time": 33.45,
+      "total.pct": 31.93,
+      "_row": "\"data.frame\""
+    },
+    {
+      "self.time": 3.9,
+      "self.pct": 3.72,
+      "total.time": 4.06,
+      "total.pct": 3.88,
+      "_row": "\"$\""
+    },
+    {
+      "self.time": 3.77,
+      "self.pct": 3.6,
+      "total.time": 12.75,
+      "total.pct": 12.17,
+      "_row": "\"deparse\""
+    },
+    {
+      "self.time": 3.08,
+      "self.pct": 2.94,
+      "total.time": 3.46,
+      "total.pct": 3.3,
+      "_row": "\"ggchord_segment_intersects\""
+    },
+    {
+      "self.time": 2.93,
+      "self.pct": 2.8,
+      "total.time": 14.13,
+      "total.pct": 13.49,
+      "_row": "\"[.data.frame\""
+    },
+    {
+      "self.time": 2.82,
+      "self.pct": 2.69,
+      "total.time": 9,
+      "total.pct": 8.59,
+      "_row": "\"[[.data.frame\""
+    },
+    {
+      "self.time": 2.81,
+      "self.pct": 2.68,
+      "total.time": 2.81,
+      "total.pct": 2.68,
+      "_row": "\"sys.call\""
+    },
+    {
+      "self.time": 2.73,
+      "self.pct": 2.61,
+      "total.time": 20.07,
+      "total.pct": 19.16,
+      "_row": "\"as.data.frame.numeric\""
+    },
+    {
+      "self.time": 2.65,
+      "self.pct": 2.53,
+      "total.time": 5.71,
+      "total.pct": 5.45,
+      "_row": "\".deparseOpts\""
+    },
+    {
+      "self.time": 2,
+      "self.pct": 1.91,
+      "total.time": 2.71,
+      "total.pct": 2.59,
+      "_row": "\"structure\""
+    },
+    {
+      "self.time": 1.94,
+      "self.pct": 1.85,
+      "total.time": 1.94,
+      "total.pct": 1.85,
+      "_row": "\"names\""
+    },
+    {
+      "self.time": 1.57,
+      "self.pct": 1.5,
+      "total.time": 10.57,
+      "total.pct": 10.09,
+      "_row": "\"[[\""
+    },
+    {
+      "self.time": 1.48,
+      "self.pct": 1.41,
+      "total.time": 92.92,
+      "total.pct": 88.71,
+      "_row": "\"<Anonymous>\""
+    },
+    {
+      "self.time": 1.35,
+      "self.pct": 1.29,
+      "total.time": 1.41,
+      "total.pct": 1.35,
+      "_row": "\"pmatch\""
+    },
+    {
+      "self.time": 1.3,
+      "self.pct": 1.24,
+      "total.time": 22.4,
+      "total.pct": 21.38,
+      "_row": "\"as.data.frame\""
+    },
+    {
+      "self.time": 1.3,
+      "self.pct": 1.24,
+      "total.time": 1.33,
+      "total.pct": 1.27,
+      "_row": "\"unique.default\""
+    },
+    {
+      "self.time": 1.29,
+      "self.pct": 1.23,
+      "total.time": 14.06,
+      "total.pct": 13.42,
+      "_row": "\"paste\""
+    },
+    {
+      "self.time": 1.27,
+      "self.pct": 1.21,
+      "total.time": 10.43,
+      "total.pct": 9.96,
+      "_row": "\"ggchord_box_overlaps_feature\""
+    },
+    {
+      "self.time": 1.25,
+      "self.pct": 1.19,
+      "total.time": 15.96,
+      "total.pct": 15.24,
+      "_row": "\"ggchord_radial_label_lanes\""
+    },
+    {
+      "self.time": 1.25,
+      "self.pct": 1.19,
+      "total.time": 1.6,
+      "total.pct": 1.53,
+      "_row": "\"$<-.data.frame\""
+    },
+    {
+      "self.time": 1.23,
+      "self.pct": 1.17,
+      "total.time": 1.23,
+      "total.pct": 1.17,
+      "_row": "\"length\""
+    },
+    {
+      "self.time": 1.2,
+      "self.pct": 1.15,
+      "total.time": 6.31,
+      "total.pct": 6.02,
+      "_row": "\"ggchord_external_leader_crosses\""
+    },
+    {
+      "self.time": 1.19,
+      "self.pct": 1.14,
+      "total.time": 1.44,
+      "total.pct": 1.37,
+      "_row": "\"is.data.frame\""
+    }
+  ]
+}

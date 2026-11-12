@@ -1,0 +1,19 @@
+
+Attaching package: ‘dplyr’
+
+The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+Site count transition: 0 
+Site count transition: 1 
+Site count transition: 3 
+Site count transition: 10 
+Site count transition: 29 
+Site count transition: 30 
+Site count transition: 31 
+Site count transition: 58 

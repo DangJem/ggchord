@@ -1,0 +1,10 @@
+{
+  "status": "passed isolated vector candidate controls",
+  "decision_count": 7684,
+  "full_route_status": ["route", "route", "route", "route", "no_route"],
+  "candidate_body_sha256": "4d61ab6262256350e55b52144a558a24f00c5d23947a5b1cb21cb3d34aa6a001",
+  "helper_body_sha256": "f3048a601b3f38f7b7d43c5144f5f856399d8beefb47ce81b8618f9263b301d1",
+  "baseline_source_sha256": "ed0bca5d7492148fcdc02418954d3db8faa45b18c56ecb6dc18c93a5633bd3a0",
+  "production_changed": false,
+  "scope": "Explicit finite computational geometry; no full-figure or platform certification"
+}
