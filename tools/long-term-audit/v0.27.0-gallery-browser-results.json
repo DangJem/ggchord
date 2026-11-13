@@ -1,0 +1,133 @@
+{
+  "scope": "New native gallery/source link and representative output/reference pages; not the previous 868-state sweep",
+  "states": [
+    {
+      "h1": [
+        "1. 示例图集"
+      ],
+      "scrollWidth": 1440,
+      "url": "http://127.0.0.1:8776/zh/gallery.html#linearlabels",
+      "visibleBrokenImages": [],
+      "width": 1440
+    },
+    {
+      "h1": [
+        "1. 示例图集"
+      ],
+      "scrollWidth": 320,
+      "url": "http://127.0.0.1:8776/zh/gallery.html#linearlabels",
+      "visibleBrokenImages": [],
+      "width": 320
+    },
+    {
+      "h1": [
+        "1. Reproducible gallery"
+      ],
+      "scrollWidth": 320,
+      "url": "http://127.0.0.1:8776/en/gallery.html#linearlabels",
+      "visibleBrokenImages": [],
+      "width": 320
+    },
+    {
+      "h1": [
+        "1. Reproducible gallery"
+      ],
+      "scrollWidth": 1440,
+      "url": "http://127.0.0.1:8776/en/gallery.html#linearlabels",
+      "visibleBrokenImages": [],
+      "width": 1440
+    },
+    {
+      "h1": [
+        "1. Preview and export at publication size"
+      ],
+      "scrollWidth": 320,
+      "url": "http://127.0.0.1:8776/en/output.html",
+      "visibleBrokenImages": [],
+      "width": 320
+    },
+    {
+      "h1": [
+        "1. Preview and export at publication size"
+      ],
+      "scrollWidth": 1440,
+      "url": "http://127.0.0.1:8776/en/output.html",
+      "visibleBrokenImages": [],
+      "width": 1440
+    },
+    {
+      "h1": [
+        "1. 按论文尺寸预览和导出"
+      ],
+      "scrollWidth": 320,
+      "url": "http://127.0.0.1:8776/zh/output.html",
+      "visibleBrokenImages": [],
+      "width": 320
+    },
+    {
+      "h1": [
+        "1. 按论文尺寸预览和导出"
+      ],
+      "scrollWidth": 1440,
+      "url": "http://127.0.0.1:8776/zh/output.html",
+      "visibleBrokenImages": [],
+      "width": 1440
+    },
+    {
+      "h1": [
+        "Inspect one target-size render without changing the plot"
+      ],
+      "scrollWidth": 320,
+      "url": "http://127.0.0.1:8776/en/reference/diagnose_ggchord.html",
+      "visibleBrokenImages": [],
+      "width": 320
+    },
+    {
+      "h1": [
+        "Inspect one target-size render without changing the plot"
+      ],
+      "scrollWidth": 1440,
+      "url": "http://127.0.0.1:8776/en/reference/diagnose_ggchord.html",
+      "visibleBrokenImages": [],
+      "width": 1440
+    },
+    {
+      "h1": [
+        "检查指定尺寸的一次渲染而不改变原图"
+      ],
+      "scrollWidth": 320,
+      "url": "http://127.0.0.1:8776/zh/reference/diagnose_ggchord.html",
+      "visibleBrokenImages": [],
+      "width": 320
+    },
+    {
+      "h1": [
+        "检查指定尺寸的一次渲染而不改变原图"
+      ],
+      "scrollWidth": 1440,
+      "url": "http://127.0.0.1:8776/zh/reference/diagnose_ggchord.html",
+      "visibleBrokenImages": [],
+      "width": 1440
+    }
+  ],
+  "modal": {
+    "language": "zh",
+    "desktop_and_mobile_open_close": true,
+    "source_href": "../assets/documentation-examples.R",
+    "natural_image": [
+      1728,
+      1152
+    ],
+    "mobile_original_image_width": 1728,
+    "mobile_scroll_region": [
+      305,
+      1752
+    ]
+  },
+  "not_checked": [
+    "full 868-state rerun",
+    "theme and language menu interaction on this build",
+    "print, all lazy images and every scroll position",
+    "cross-platform fonts and exact plot ink"
+  ]
+}

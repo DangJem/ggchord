@@ -1,0 +1,17 @@
+{
+  "status": "passed",
+  "scope": "Final native gallery figure URLs in two languages",
+  "pages": {
+    "en": {
+      "figures": 178,
+      "html_sha256": "38ce0a5190bf7cd2aa776d49aba66f3b38ff8833eb3c06b8fa2356e31428ae29"
+    },
+    "zh": {
+      "figures": 178,
+      "html_sha256": "ee3df9d20b9d9e6d70d95df2c250baecf3503a9622ffc50b164e4042130badef"
+    }
+  },
+  "not_checked": [
+    "browser interaction and visual quality"
+  ]
+}

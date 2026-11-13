@@ -313,7 +313,9 @@ for(lang in c('en','zh')) {
   }
   for(figure in xml2::xml_find_all(main,'.//figure[@data-figure]')) {
     key <- xml2::xml_attr(figure,'data-figure')
-    xml2::xml_set_attr(xml2::xml_find_first(figure,'./a'),'data-code-url',paste0(prefix,sub('#','.html#',figure_lessons[[key]],fixed=TRUE)))
+    code_url <- if(current_page=='gallery') paste0(base,'documentation-examples.R') else
+      paste0(prefix,sub('#','.html#',figure_lessons[[key]],fixed=TRUE))
+    xml2::xml_set_attr(xml2::xml_find_first(figure,'./a'),'data-code-url',code_url)
   }
   if(current_page=='index') xml2::xml_set_attr(xml2::xml_find_all(main,'.//*[contains(@class,"home-results")]//img'),
     'sizes','(max-width: 899px) calc(100vw - 48px), (max-width: 1199px) 30vw, 420px')
