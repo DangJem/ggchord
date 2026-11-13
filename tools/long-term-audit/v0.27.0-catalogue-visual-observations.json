@@ -1,0 +1,75 @@
+{
+  "scope": "Actual visual inspection of all 13 retained 10x8 inch catalogue PNGs at the displayed fit size; not a new runtime render",
+  "artifacts": {
+    "pUC19": {
+      "file": "tools/long-term-audit/v0.27.0-quality-current-pUC19.png",
+      "sha256": "cdd709074be479e1b3729476555580e02aef40a562654256ea336c61a2fc46aa",
+      "observation": "普通稀疏目录图的层次清楚，内部短特征名称沿局部方向排列，未在此缩放视图观察到文字互压。"
+    },
+    "pTRE_Tight_BI": {
+      "file": "tools/long-term-audit/v0.27.0-quality-current-pTRE_Tight_BI.png",
+      "sha256": "835a7a398eaaf8c2fb8cb6c2d16260ecad5031952981d15cddb924f89c6113ed",
+      "observation": "重复名称可读且来源分别可追踪，但一组引线向右上方扇出，另一路向上，外部排布仍不够紧凑均衡；零交叉不等于成熟阅读质量。"
+    },
+    "pETDuet_1": {
+      "file": "tools/long-term-audit/v0.27.0-quality-current-pETDuet_1.png",
+      "sha256": "9f4e24f1feffb2ffee6a225c7d4bf305029dce86b9d585159d5ae88e94b69ec9",
+      "observation": "内部长/短注释层次可分，顶部外部名称可读；右上方两条近水平长线仍有视觉负担，保留整体紧凑性待改进。"
+    },
+    "pDONR221": {
+      "file": "tools/long-term-audit/v0.27.0-quality-current-pDONR221.png",
+      "sha256": "5de60a37c132e2106f885560aa5c6d6b8e0f6b5afba9a59c525bd65f406f777d",
+      "observation": "名称与细小特征能区分，单条右上外部标签引线较长，未在当前视图发现文字互压。"
+    },
+    "pCAMBIA1300": {
+      "file": "tools/long-term-audit/v0.27.0-quality-current-pCAMBIA1300.png",
+      "sha256": "aa25e048abe767dce7930c6458ba1e5abefd4f81555220e3e6e429ca9c924a6f",
+      "observation": "上下层短特征名称可区分，左侧外部名称与顶部名称未压住其他文字，内部空间仍较空。"
+    },
+    "pSpCas9_BB_2A_GFP_PX458": {
+      "file": "tools/long-term-audit/v0.27.0-quality-current-pSpCas9_BB_2A_GFP_PX458.png",
+      "sha256": "ca81f8743cc2ce90b3a414b8241233818fefe5768b7698eafc23553d3543b68f",
+      "observation": "细小注释转外部后可读；顶部两条、右上多条引线占据较多留白，整体紧凑性仍有改进空间。"
+    },
+    "pSB1C3": {
+      "file": "tools/long-term-audit/v0.27.0-quality-current-pSB1C3.png",
+      "sha256": "30b341d77814fbaf57c18d1654c7d84c369636fc509aea6db3902ff2340b0da6",
+      "observation": "稀疏层次清楚，顶部两条独立名称与引线可追踪，未在当前视图发现文字互压。"
+    },
+    "pBR322": {
+      "file": "tools/long-term-audit/v0.27.0-quality-current-pBR322.png",
+      "sha256": "1face077e1fdc0d541533d23a5a962cad63204014158ccee1e5e29739ba61460",
+      "observation": "稀疏图清楚，较长注释内部标名可读。当前视图未见新增互压。"
+    },
+    "pBluescript_II_SK_plus": {
+      "file": "tools/long-term-audit/v0.27.0-quality-current-pBluescript_II_SK_plus.png",
+      "sha256": "a8d9814f19e119e55b377bad87c2e730ace5dcd8bf65959b185624f8dc1f0148",
+      "observation": "右半侧局部密集名称沿不同半径/方向分布，可读但需跟随局部方向阅读，不认证为最优排版。"
+    },
+    "pET_28a_plus": {
+      "file": "tools/long-term-audit/v0.27.0-quality-current-pET_28a_plus.png",
+      "sha256": "dc7866025e3aecc4c4ddd4425d01dbc202d89d4cf075a8298b917fdd4b5cf4b5",
+      "observation": "右上外部名称有序，仍存在较长扇束和不均衡留白；内部名称可区分。"
+    },
+    "pcDNA3_1_plus": {
+      "file": "tools/long-term-audit/v0.27.0-quality-current-pcDNA3_1_plus.png",
+      "sha256": "d45bf945417f08e419f06b5f679efe65ce5d606f8f92898740be01f8b4818c14",
+      "observation": "大部分名称清楚；内部短黄色特征上的跨边界名称阅读较费力，属于自身包络接触仍不能视为排版完美。"
+    },
+    "pTRIPZ": {
+      "file": "tools/long-term-audit/v0.27.0-quality-current-pTRIPZ.png",
+      "sha256": "7c433247b7eb247ce171e0cfec5b53dc90011755d622ea6aa2104507e3887802",
+      "observation": "重复外部名称与短引线分开，左侧和顶部名称可读；密集内部名称随圆周转向，整体阅读仍需逐项跟随。"
+    },
+    "pEarleyGate_201": {
+      "file": "tools/long-term-audit/v0.27.0-quality-current-pEarleyGate_201.png",
+      "sha256": "05b1507e643a2d686013c309386534b77e89a73050ee4b19cebe278ee915466e",
+      "observation": "右侧三个短特征转外部，内部短箭头附近有局部引线，当前视图可区分但没有验证笔画级接触。"
+    }
+  },
+  "not_checked": [
+    "all physical zoom levels and print size",
+    "stroke or glyph outlines and arbitrary device portability",
+    "complete mature-application visual equivalence"
+  ]
+}
