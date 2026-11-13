@@ -21,7 +21,7 @@ p <- ggchord(seq_data = seq_data_example) +
 view_ggchord(p, width = 9, height = 6, units = "in")
 ```
 
-同一套序列表可以采用不同布局；单序列圆图需要只显示一条序列。三种[独立首课](task-index.html#paths)分别解释输入、读图与下一步。
+同一套序列表可以采用不同布局；单序列圆图需要只显示一条序列。各类[独立首课](learn.html#modules)分别解释输入、读图与下一步。
 
 ## 真实数据，完整结果 {#results}
 
@@ -64,7 +64,7 @@ view_ggchord(p, width = 9, height = 6, units = "in")
 ## 按你的起点继续 {#learn}
 
 - [导入自己的数据](formats.html)
-- [按任务找函数与参数](task-index.html)
+- [按任务找函数与参数](learn.html#tasks)
 - [调整颜色、图例与标签](styling.html)
 - [按论文尺寸预览与导出](output.html)
 - [查阅完整 API](reference/index.html)

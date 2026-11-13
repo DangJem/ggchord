@@ -158,7 +158,7 @@ body[data-page=index] :is(.chapter-drawer,.page-outline) {display:none}
 .home-actions {display:flex;align-items:center;gap:20px;flex-wrap:wrap;margin-top:26px}
 .primary-action {display:inline-block;padding:11px 18px;min-height:44px;background:var(--color-brand);color:var(--surface-paper);font-weight:700;text-decoration:none;border-radius:var(--radius-small)}
 .primary-action:hover {color:var(--surface-paper);background:var(--text-strong)}
-.task-cards {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;margin-block:26px}
+.task-cards {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px;margin-block:26px}
 .task-card {border:1px solid var(--color-rule);border-top:3px solid var(--module-color);padding:24px;border-radius:var(--radius-panel);min-width:0}
 .task-card p {font-size:.89rem}
 .task-card h3 {margin-top:14px;font-size:1.3rem}
@@ -218,3 +218,5 @@ footer {border-top:1px solid var(--color-rule);padding:22px 0;color:var(--text-m
 @media(max-width:650px) {body{font-size:16px}.container{padding-inline:0}.navbar .container{padding-inline:12px}.navbar-brand img{width:30px;height:30px}.navbar .navbar-brand{font-size:1.25rem}.language-control summary{padding-inline:8px;font-size:.8rem}.doc-layout > main,body[data-page=index] main{padding:22px 16px 42px}main h1{font-size:1.8rem}main h2{font-size:1.3rem}main pre{font-size:.82rem;padding:16px}.home-hero{grid-template-columns:1fr;gap:10px;padding:6px 0 20px}.home-hero .brand-art{width:104px;height:104px;grid-row:1;margin-bottom:8px}.home-lead{font-size:2rem;max-width:22ch}.home-actions{gap:16px}.task-cards,.figure-comparison,.mode-grid,.route-grid,.gallery-grid,.showcase-overview{grid-template-columns:1fr}.task-card .minimum-input{min-height:0}.figure-toolbar strong{flex-basis:100%}.figure-toolbar{padding:10px;gap:6px}.search-dialog{margin:12px auto;max-height:calc(100dvh - 24px)}.search-field,.search-filters,.search-count{margin-inline:16px}.search-results{padding-inline:10px}.search-heading{padding:10px 16px}}
 @media(prefers-reduced-motion:reduce) {*,*::before,*::after{scroll-behavior:auto;transition:none;animation:none}}
 @media print {.navbar,.chapter-nav,.page-nav,.chapter-drawer,.page-outline,.copy-code,.example-actions{display:none}.doc-layout{display:block}.doc-layout > main{padding:0;border:0}.documentation-figure{break-inside:avoid}}
+
+.module-preview{width:100%;height:180px;object-fit:contain;background:var(--surface-paper)}

@@ -5,7 +5,21 @@
       "en": "ggchord",
       "zh": "ggchord"
     },
-    "group": "start"
+    "group": "start",
+    "id": "index",
+    "kind": "home",
+    "canonical_path": "index.html",
+    "parent": null,
+    "module": "start",
+    "prerequisites": [],
+    "next_steps": [
+      "learn"
+    ],
+    "apis": [],
+    "recipe_ids": [],
+    "figure_ids": [],
+    "translation_key": "index",
+    "aliases": []
   },
   {
     "slug": "installation",
@@ -13,7 +27,21 @@
       "zh": "下载与安装",
       "en": "Download and install"
     },
-    "group": "start"
+    "group": "start",
+    "id": "installation",
+    "kind": "tutorial",
+    "canonical_path": "installation.html",
+    "parent": "learn",
+    "module": "start",
+    "prerequisites": [],
+    "next_steps": [
+      "modes"
+    ],
+    "apis": [],
+    "recipe_ids": [],
+    "figure_ids": [],
+    "translation_key": "installation",
+    "aliases": []
   },
   {
     "slug": "modes",
@@ -21,7 +49,34 @@
       "zh": "绘图基本概念",
       "en": "Plotting concepts"
     },
-    "group": "start"
+    "group": "start",
+    "id": "modes",
+    "kind": "tutorial",
+    "canonical_path": "modes.html",
+    "parent": "learn",
+    "module": "start",
+    "prerequisites": [],
+    "next_steps": [
+      "data"
+    ],
+    "apis": [
+      "geom_seq",
+      "geom_feature",
+      "geom_gene",
+      "geom_link_ribbon",
+      "geom_link_line",
+      "coord_chord",
+      "coord_collinear",
+      "coord_circular"
+    ],
+    "recipe_ids": [],
+    "figure_ids": [
+      "frontbackbone",
+      "frontlinearbase",
+      "firstcircle"
+    ],
+    "translation_key": "modes",
+    "aliases": []
   },
   {
     "slug": "chord-start",
@@ -29,7 +84,27 @@
       "zh": "绘制序列骨架",
       "en": "Draw sequence backbones"
     },
-    "group": "article"
+    "group": "article",
+    "id": "chord-start",
+    "kind": "tutorial",
+    "canonical_path": "chord-start.html",
+    "parent": "multi-sequence",
+    "module": "multi-sequence",
+    "prerequisites": [],
+    "next_steps": [
+      "chord-build"
+    ],
+    "apis": [
+      "geom_seq",
+      "geom_seq_label",
+      "coord_chord"
+    ],
+    "recipe_ids": [],
+    "figure_ids": [
+      "frontbackbone"
+    ],
+    "translation_key": "chord-start",
+    "aliases": []
   },
   {
     "slug": "chord-data",
@@ -37,7 +112,21 @@
       "zh": "基本数据表",
       "en": "Basic input tables"
     },
-    "group": "article"
+    "group": "article",
+    "id": "chord-data",
+    "kind": "tutorial",
+    "canonical_path": "chord-data.html",
+    "parent": "formats",
+    "module": "data",
+    "prerequisites": [],
+    "next_steps": [],
+    "apis": [
+      "ggchord"
+    ],
+    "recipe_ids": [],
+    "figure_ids": [],
+    "translation_key": "chord-data",
+    "aliases": []
   },
   {
     "slug": "chord-import",
@@ -45,7 +134,19 @@
       "zh": "导入 FASTA、GFF3 与 BLAST",
       "en": "Import FASTA, GFF3 and BLAST"
     },
-    "group": "article"
+    "group": "article",
+    "id": "chord-import",
+    "kind": "tutorial",
+    "canonical_path": "chord-import.html",
+    "parent": "formats",
+    "module": "data",
+    "prerequisites": [],
+    "next_steps": [],
+    "apis": [],
+    "recipe_ids": [],
+    "figure_ids": [],
+    "translation_key": "chord-import",
+    "aliases": []
   },
   {
     "slug": "chord-build",
@@ -53,7 +154,28 @@
       "zh": "添加连接和特征",
       "en": "Add links and features"
     },
-    "group": "article"
+    "group": "article",
+    "id": "chord-build",
+    "kind": "tutorial",
+    "canonical_path": "chord-build.html",
+    "parent": "multi-sequence",
+    "module": "multi-sequence",
+    "prerequisites": [],
+    "next_steps": [
+      "collinear-start"
+    ],
+    "apis": [
+      "geom_link_ribbon",
+      "geom_gene_label"
+    ],
+    "recipe_ids": [],
+    "figure_ids": [
+      "frontbackbone",
+      "frontribbon",
+      "frontfeature"
+    ],
+    "translation_key": "chord-build",
+    "aliases": []
   },
   {
     "slug": "chord-tuning",
@@ -61,7 +183,25 @@
       "zh": "调整旋转与间隙",
       "en": "Adjust rotation and gaps"
     },
-    "group": "article"
+    "group": "article",
+    "id": "chord-tuning",
+    "kind": "tutorial",
+    "canonical_path": "chord-tuning.html",
+    "parent": "multi-sequence",
+    "module": "multi-sequence",
+    "prerequisites": [],
+    "next_steps": [
+      "collinear-layout"
+    ],
+    "apis": [],
+    "recipe_ids": [],
+    "figure_ids": [
+      "frontbackbone",
+      "frontrotation",
+      "frontgap"
+    ],
+    "translation_key": "chord-tuning",
+    "aliases": []
   },
   {
     "slug": "chord-geometry",
@@ -69,7 +209,26 @@
       "zh": "逐条调整骨架",
       "en": "Adjust individual backbones"
     },
-    "group": "article"
+    "group": "article",
+    "id": "chord-geometry",
+    "kind": "tutorial",
+    "canonical_path": "chord-geometry.html",
+    "parent": "multi-sequence",
+    "module": "multi-sequence",
+    "prerequisites": [],
+    "next_steps": [
+      "chord-tuning"
+    ],
+    "apis": [],
+    "recipe_ids": [],
+    "figure_ids": [
+      "frontradius",
+      "frontcurvature",
+      "frontorientation",
+      "frontorder"
+    ],
+    "translation_key": "chord-geometry",
+    "aliases": []
   },
   {
     "slug": "chord-routing",
@@ -77,7 +236,33 @@
       "zh": "引导连接带与避障",
       "en": "Route ribbons and avoid obstacles"
     },
-    "group": "article"
+    "group": "article",
+    "id": "chord-routing",
+    "kind": "tutorial",
+    "canonical_path": "chord-routing.html",
+    "parent": "multi-sequence",
+    "module": "multi-sequence",
+    "prerequisites": [],
+    "next_steps": [
+      "chord-branches"
+    ],
+    "apis": [
+      "geom_link_ribbon"
+    ],
+    "recipe_ids": [],
+    "figure_ids": [
+      "frontribbon",
+      "frontroute",
+      "frontnoavoid",
+      "frontsmooth",
+      "frontmarkers",
+      "compareregioninside",
+      "compareregionoutside",
+      "compareregionwidth",
+      "compareregionoffset"
+    ],
+    "translation_key": "chord-routing",
+    "aliases": []
   },
   {
     "slug": "chord-labels",
@@ -85,7 +270,29 @@
       "zh": "放置序列和基因标签",
       "en": "Place sequence and gene labels"
     },
-    "group": "article"
+    "group": "article",
+    "id": "chord-labels",
+    "kind": "tutorial",
+    "canonical_path": "chord-labels.html",
+    "parent": "multi-sequence",
+    "module": "multi-sequence",
+    "prerequisites": [],
+    "next_steps": [
+      "collinear-data"
+    ],
+    "apis": [
+      "geom_gene_label_repel"
+    ],
+    "recipe_ids": [],
+    "figure_ids": [
+      "frontseqlabels",
+      "frontgenelabels",
+      "compareseqlabelarc",
+      "compareseqlabelhorizontal",
+      "compareseqlabelrotation"
+    ],
+    "translation_key": "chord-labels",
+    "aliases": []
   },
   {
     "slug": "ribbons",
@@ -93,7 +300,24 @@
       "zh": "筛选、合并与聚束连接",
       "en": "Filter, merge and bundle links"
     },
-    "group": "article"
+    "group": "article",
+    "id": "ribbons",
+    "kind": "tutorial",
+    "canonical_path": "ribbons.html",
+    "parent": "multi-sequence",
+    "module": "multi-sequence",
+    "prerequisites": [],
+    "next_steps": [
+      "ribbon-statistics"
+    ],
+    "apis": [],
+    "recipe_ids": [],
+    "figure_ids": [
+      "density",
+      "pointlinks"
+    ],
+    "translation_key": "ribbons",
+    "aliases": []
   },
   {
     "slug": "real-data",
@@ -101,7 +325,22 @@
       "zh": "从源文件绘制序列比较图",
       "en": "Sequence comparisons from source files"
     },
-    "group": "article"
+    "group": "article",
+    "id": "real-data",
+    "kind": "case",
+    "canonical_path": "real-data.html",
+    "parent": "formats",
+    "module": "data",
+    "prerequisites": [],
+    "next_steps": [],
+    "apis": [],
+    "recipe_ids": [],
+    "figure_ids": [
+      "realchord",
+      "reallinear"
+    ],
+    "translation_key": "real-data",
+    "aliases": []
   },
   {
     "slug": "chord",
@@ -109,7 +348,25 @@
       "zh": "四序列综合案例",
       "en": "Four-sequence case study"
     },
-    "group": "article"
+    "group": "article",
+    "id": "chord",
+    "kind": "case",
+    "canonical_path": "chord.html",
+    "parent": "multi-sequence",
+    "module": "multi-sequence",
+    "prerequisites": [],
+    "next_steps": [
+      "collinear"
+    ],
+    "apis": [],
+    "recipe_ids": [
+      "chord"
+    ],
+    "figure_ids": [
+      "showcasechord"
+    ],
+    "translation_key": "chord",
+    "aliases": []
   },
   {
     "slug": "collinear-start",
@@ -117,7 +374,25 @@
       "zh": "绘制共线性骨架",
       "en": "Draw your first collinear plot"
     },
-    "group": "article"
+    "group": "article",
+    "id": "collinear-start",
+    "kind": "tutorial",
+    "canonical_path": "collinear-start.html",
+    "parent": "multi-sequence",
+    "module": "multi-sequence",
+    "prerequisites": [],
+    "next_steps": [
+      "collinear-build"
+    ],
+    "apis": [
+      "geom_seq_label"
+    ],
+    "recipe_ids": [],
+    "figure_ids": [
+      "frontlinearbase"
+    ],
+    "translation_key": "collinear-start",
+    "aliases": []
   },
   {
     "slug": "collinear-data",
@@ -125,7 +400,21 @@
       "zh": "共线性输入与端点方向",
       "en": "Collinear inputs and endpoint direction"
     },
-    "group": "article"
+    "group": "article",
+    "id": "collinear-data",
+    "kind": "tutorial",
+    "canonical_path": "collinear-data.html",
+    "parent": "multi-sequence",
+    "module": "multi-sequence",
+    "prerequisites": [],
+    "next_steps": [
+      "ribbons"
+    ],
+    "apis": [],
+    "recipe_ids": [],
+    "figure_ids": [],
+    "translation_key": "collinear-data",
+    "aliases": []
   },
   {
     "slug": "collinear-build",
@@ -133,7 +422,27 @@
       "zh": "添加比较图层与坐标轴",
       "en": "Add comparison layers and axes"
     },
-    "group": "article"
+    "group": "article",
+    "id": "collinear-build",
+    "kind": "tutorial",
+    "canonical_path": "collinear-build.html",
+    "parent": "multi-sequence",
+    "module": "multi-sequence",
+    "prerequisites": [],
+    "next_steps": [
+      "chord-geometry"
+    ],
+    "apis": [
+      "geom_gene_label"
+    ],
+    "recipe_ids": [],
+    "figure_ids": [
+      "frontlinearbase",
+      "frontlinearlink",
+      "frontlinearcds"
+    ],
+    "translation_key": "collinear-build",
+    "aliases": []
   },
   {
     "slug": "collinear-routing",
@@ -141,7 +450,26 @@
       "zh": "跨行路由、避障与比例尺",
       "en": "Cross-row routes, clearance and scale bars"
     },
-    "group": "article"
+    "group": "article",
+    "id": "collinear-routing",
+    "kind": "tutorial",
+    "canonical_path": "collinear-routing.html",
+    "parent": "multi-sequence",
+    "module": "multi-sequence",
+    "prerequisites": [],
+    "next_steps": [
+      "chord-labels"
+    ],
+    "apis": [],
+    "recipe_ids": [],
+    "figure_ids": [
+      "frontlinearlink",
+      "frontlinearcross",
+      "frontcrosswidth",
+      "frontcrosssame"
+    ],
+    "translation_key": "collinear-routing",
+    "aliases": []
   },
   {
     "slug": "homology",
@@ -149,7 +477,23 @@
       "zh": "比较有证据的 CDS 邻域",
       "en": "Compare source-backed CDS neighbourhoods"
     },
-    "group": "article"
+    "group": "article",
+    "id": "homology",
+    "kind": "case",
+    "canonical_path": "homology.html",
+    "parent": "multi-sequence",
+    "module": "multi-sequence",
+    "prerequisites": [],
+    "next_steps": [
+      "chord"
+    ],
+    "apis": [],
+    "recipe_ids": [],
+    "figure_ids": [
+      "homologs"
+    ],
+    "translation_key": "homology",
+    "aliases": []
   },
   {
     "slug": "views",
@@ -157,7 +501,27 @@
       "zh": "聚焦、锚定与分段",
       "en": "Focus, anchor and segment"
     },
-    "group": "guide"
+    "group": "guide",
+    "id": "views",
+    "kind": "tutorial",
+    "canonical_path": "views.html",
+    "parent": "multi-sequence",
+    "module": "multi-sequence",
+    "prerequisites": [],
+    "next_steps": [
+      "homology"
+    ],
+    "apis": [
+      "map_ggchord_position"
+    ],
+    "recipe_ids": [],
+    "figure_ids": [
+      "focus",
+      "segment",
+      "mappingposition"
+    ],
+    "translation_key": "views",
+    "aliases": []
   },
   {
     "slug": "collinear",
@@ -165,7 +529,23 @@
       "zh": "四基因组共线性案例",
       "en": "Four-genome collinear case study"
     },
-    "group": "article"
+    "group": "article",
+    "id": "collinear",
+    "kind": "case",
+    "canonical_path": "collinear.html",
+    "parent": "multi-sequence",
+    "module": "multi-sequence",
+    "prerequisites": [],
+    "next_steps": [],
+    "apis": [],
+    "recipe_ids": [
+      "collinear"
+    ],
+    "figure_ids": [
+      "showcasecollinear"
+    ],
+    "translation_key": "collinear",
+    "aliases": []
   },
   {
     "slug": "plasmid-start",
@@ -173,7 +553,25 @@
       "zh": "绘制圆形骨架",
       "en": "Draw your first circular map"
     },
-    "group": "article"
+    "group": "article",
+    "id": "plasmid-start",
+    "kind": "tutorial",
+    "canonical_path": "plasmid-start.html",
+    "parent": "circular",
+    "module": "circular",
+    "prerequisites": [],
+    "next_steps": [
+      "plasmid-data"
+    ],
+    "apis": [
+      "coord_circular"
+    ],
+    "recipe_ids": [],
+    "figure_ids": [
+      "firstcircle"
+    ],
+    "translation_key": "plasmid-start",
+    "aliases": []
   },
   {
     "slug": "plasmid-data",
@@ -181,7 +579,24 @@
       "zh": "单序列长度、DNA 和注释",
       "en": "Single-sequence length, DNA and annotations"
     },
-    "group": "article"
+    "group": "article",
+    "id": "plasmid-data",
+    "kind": "tutorial",
+    "canonical_path": "plasmid-data.html",
+    "parent": "circular",
+    "module": "circular",
+    "prerequisites": [],
+    "next_steps": [
+      "plasmid-build"
+    ],
+    "apis": [
+      "read_fasta_lengths",
+      "readDNAStringSet"
+    ],
+    "recipe_ids": [],
+    "figure_ids": [],
+    "translation_key": "plasmid-data",
+    "aliases": []
   },
   {
     "slug": "plasmid-build",
@@ -189,7 +604,25 @@
       "zh": "添加特征、标签、引物和酶切位点",
       "en": "Add features, labels, primers and restriction sites"
     },
-    "group": "article"
+    "group": "article",
+    "id": "plasmid-build",
+    "kind": "tutorial",
+    "canonical_path": "plasmid-build.html",
+    "parent": "circular",
+    "module": "circular",
+    "prerequisites": [],
+    "next_steps": [
+      "plasmid-tuning"
+    ],
+    "apis": [],
+    "recipe_ids": [],
+    "figure_ids": [
+      "firstcircle",
+      "firstfeatures",
+      "practiceplasmid"
+    ],
+    "translation_key": "plasmid-build",
+    "aliases": []
   },
   {
     "slug": "recognition",
@@ -197,7 +630,25 @@
       "zh": "搜索特征、引物与酶切位点",
       "en": "Find features, primers and restriction sites"
     },
-    "group": "guide"
+    "group": "guide",
+    "id": "recognition",
+    "kind": "tutorial",
+    "canonical_path": "recognition.html",
+    "parent": "circular",
+    "module": "circular",
+    "prerequisites": [],
+    "next_steps": [
+      "primers"
+    ],
+    "apis": [
+      "geom_restriction_site"
+    ],
+    "recipe_ids": [],
+    "figure_ids": [
+      "recognition"
+    ],
+    "translation_key": "recognition",
+    "aliases": []
   },
   {
     "slug": "plasmid-catalog",
@@ -205,7 +656,35 @@
       "zh": "13 个质粒参考案例",
       "en": "Thirteen plasmid reference maps"
     },
-    "group": "article"
+    "group": "article",
+    "id": "plasmid-catalog",
+    "kind": "gallery",
+    "canonical_path": "plasmid-catalog.html",
+    "parent": "circular",
+    "module": "circular",
+    "prerequisites": [],
+    "next_steps": [],
+    "apis": [],
+    "recipe_ids": [
+      "catalog"
+    ],
+    "figure_ids": [
+      "catalogpsb",
+      "catalogpuc",
+      "catalogpbr",
+      "catalogblue",
+      "catalogpet",
+      "catalogduet",
+      "catalogdonr",
+      "catalogpcdna",
+      "catalogtre",
+      "catalogtripz",
+      "catalogcambia",
+      "catalogearley",
+      "catalogcas"
+    ],
+    "translation_key": "plasmid-catalog",
+    "aliases": []
   },
   {
     "slug": "plasmids",
@@ -213,7 +692,28 @@
       "zh": "pUC19 与 pETDuet-1 完整案例",
       "en": "Complete pUC19 and pETDuet-1 cases"
     },
-    "group": "article"
+    "group": "article",
+    "id": "plasmids",
+    "kind": "case",
+    "canonical_path": "plasmids.html",
+    "parent": "circular",
+    "module": "circular",
+    "prerequisites": [],
+    "next_steps": [
+      "plasmid-catalog"
+    ],
+    "apis": [
+      "geom_primer_label_repel"
+    ],
+    "recipe_ids": [
+      "plasmid"
+    ],
+    "figure_ids": [
+      "plasmid",
+      "showcaseplasmid"
+    ],
+    "translation_key": "plasmids",
+    "aliases": []
   },
   {
     "slug": "data",
@@ -221,7 +721,25 @@
       "zh": "表格字段与坐标约定",
       "en": "Table fields and coordinate conventions"
     },
-    "group": "start"
+    "group": "start",
+    "id": "data",
+    "kind": "tutorial",
+    "canonical_path": "data.html",
+    "parent": "learn",
+    "module": "start",
+    "prerequisites": [],
+    "next_steps": [],
+    "apis": [
+      "read_gff3",
+      "geom_feature",
+      "read_genbank",
+      "read_bed",
+      "read_paf"
+    ],
+    "recipe_ids": [],
+    "figure_ids": [],
+    "translation_key": "data",
+    "aliases": []
   },
   {
     "slug": "formats",
@@ -229,7 +747,34 @@
       "zh": "导入和转换数据",
       "en": "Import and convert data"
     },
-    "group": "article"
+    "group": "article",
+    "id": "formats",
+    "kind": "tutorial",
+    "canonical_path": "formats.html",
+    "parent": "index",
+    "module": "data",
+    "prerequisites": [],
+    "next_steps": [],
+    "apis": [
+      "read_bedpe",
+      "read_aligned_fasta",
+      "map_alignment_position",
+      "geom_residue",
+      "register_ggchord_alignment",
+      "geom_link_line",
+      "read_vcf",
+      "read_delta",
+      "read_chain",
+      "read_feature_relations",
+      "geom_track",
+      "read_gfa"
+    ],
+    "recipe_ids": [],
+    "figure_ids": [
+      "paf"
+    ],
+    "translation_key": "formats",
+    "aliases": []
   },
   {
     "slug": "alignments",
@@ -237,7 +782,21 @@
       "en": "Import nucleotide and protein alignments",
       "zh": "导入核酸和蛋白比对"
     },
-    "group": "article"
+    "group": "article",
+    "id": "alignments",
+    "kind": "tutorial",
+    "canonical_path": "alignments.html",
+    "parent": "formats",
+    "module": "data",
+    "prerequisites": [],
+    "next_steps": [],
+    "apis": [
+      "read_blast"
+    ],
+    "recipe_ids": [],
+    "figure_ids": [],
+    "translation_key": "alignments",
+    "aliases": []
   },
   {
     "slug": "projection",
@@ -245,7 +804,23 @@
       "zh": "将蛋白区间转换为基因组坐标",
       "en": "Project protein intervals to genomic coordinates"
     },
-    "group": "guide"
+    "group": "guide",
+    "id": "projection",
+    "kind": "tutorial",
+    "canonical_path": "projection.html",
+    "parent": "formats",
+    "module": "data",
+    "prerequisites": [],
+    "next_steps": [],
+    "apis": [
+      "project_ggchord_features"
+    ],
+    "recipe_ids": [
+      "ampr"
+    ],
+    "figure_ids": [],
+    "translation_key": "projection",
+    "aliases": []
   },
   {
     "slug": "annotations",
@@ -253,7 +828,33 @@
       "en": "Features, stacking and genomic decoration",
       "zh": "绘制注释与处理重叠"
     },
-    "group": "article"
+    "group": "article",
+    "id": "annotations",
+    "kind": "tutorial",
+    "canonical_path": "annotations.html",
+    "parent": "styling",
+    "module": "shared-techniques",
+    "prerequisites": [],
+    "next_steps": [],
+    "apis": [
+      "position_feature_stack",
+      "geom_gene",
+      "geom_feature_plasmid",
+      "position_strand",
+      "position_plasmid",
+      "geom_seq_label",
+      "geom_seq_center_label",
+      "geom_seq_break",
+      "geom_seq_scale",
+      "scale_seq_position_continuous"
+    ],
+    "recipe_ids": [],
+    "figure_ids": [
+      "featurestack",
+      "decorations"
+    ],
+    "translation_key": "annotations",
+    "aliases": []
   },
   {
     "slug": "labels",
@@ -261,7 +862,28 @@
       "zh": "自动布局与文字适配",
       "en": "Automatic label layouts and text fitting"
     },
-    "group": "guide"
+    "group": "guide",
+    "id": "labels",
+    "kind": "tutorial",
+    "canonical_path": "labels.html",
+    "parent": "styling",
+    "module": "shared-techniques",
+    "prerequisites": [],
+    "next_steps": [],
+    "apis": [
+      "geom_gene_label",
+      "geom_feature_label"
+    ],
+    "recipe_ids": [],
+    "figure_ids": [
+      "labels",
+      "manualgenelabels",
+      "labelauto",
+      "labelradial",
+      "labelarc"
+    ],
+    "translation_key": "labels",
+    "aliases": []
   },
   {
     "slug": "tracks",
@@ -269,7 +891,36 @@
       "en": "Quantitative tracks",
       "zh": "添加数据轨道"
     },
-    "group": "guide"
+    "group": "guide",
+    "id": "tracks",
+    "kind": "tutorial",
+    "canonical_path": "tracks.html",
+    "parent": "styling",
+    "module": "shared-techniques",
+    "prerequisites": [],
+    "next_steps": [],
+    "apis": [
+      "position_track",
+      "scale_track_value_continuous",
+      "geom_track_col",
+      "geom_track_bar",
+      "focus_ggchord_track",
+      "scale_track_fill_gradientn",
+      "scale_track_fill_manual",
+      "geom_track_tile",
+      "geom_track"
+    ],
+    "recipe_ids": [],
+    "figure_ids": [
+      "tracks",
+      "multitrack",
+      "tracktile",
+      "comparetrackthin",
+      "comparetracktwo",
+      "comparetrackorder"
+    ],
+    "translation_key": "tracks",
+    "aliases": []
   },
   {
     "slug": "styling",
@@ -277,7 +928,33 @@
       "en": "Mappings, scales, guides and themes",
       "zh": "配置配色、图例和主题"
     },
-    "group": "article"
+    "group": "article",
+    "id": "styling",
+    "kind": "tutorial",
+    "canonical_path": "styling.html",
+    "parent": "index",
+    "module": "shared-techniques",
+    "prerequisites": [],
+    "next_steps": [],
+    "apis": [
+      "guide_ggchord_legend",
+      "guide_ggchord_colourbar",
+      "guides",
+      "theme",
+      "theme_ggchord_publication",
+      "theme_ggchord_plasmid",
+      "ggchord",
+      "theme_ggchord",
+      "guide_axis",
+      "guide_legend",
+      "guide_colourbar"
+    ],
+    "recipe_ids": [],
+    "figure_ids": [
+      "styling"
+    ],
+    "translation_key": "styling",
+    "aliases": []
   },
   {
     "slug": "parameters",
@@ -285,7 +962,38 @@
       "zh": "灵活参数配置",
       "en": "Flexible parameter configuration"
     },
-    "group": "article"
+    "group": "article",
+    "id": "parameters",
+    "kind": "tutorial",
+    "canonical_path": "parameters.html",
+    "parent": "styling",
+    "module": "shared-techniques",
+    "prerequisites": [],
+    "next_steps": [],
+    "apis": [
+      "position_strand",
+      "geom_seq",
+      "geom_seq_label",
+      "geom_link_ribbon",
+      "geom_link_line",
+      "geom_gene",
+      "geom_feature",
+      "position_plasmid",
+      "geom_gene_label",
+      "geom_feature_label",
+      "position_track"
+    ],
+    "recipe_ids": [],
+    "figure_ids": [
+      "parameteruniform",
+      "parameterexample",
+      "parametervector",
+      "parameterstrand",
+      "parameterwidth",
+      "parameterlabels"
+    ],
+    "translation_key": "parameters",
+    "aliases": []
   },
   {
     "slug": "adjustments",
@@ -293,7 +1001,25 @@
       "zh": "映射相似度与图层职责",
       "en": "Map identity and understand layer roles"
     },
-    "group": "guide"
+    "group": "guide",
+    "id": "adjustments",
+    "kind": "tutorial",
+    "canonical_path": "adjustments.html",
+    "parent": "styling",
+    "module": "shared-techniques",
+    "prerequisites": [],
+    "next_steps": [],
+    "apis": [
+      "position_strand",
+      "position_feature_stack",
+      "position_track"
+    ],
+    "recipe_ids": [],
+    "figure_ids": [
+      "mappingexample"
+    ],
+    "translation_key": "adjustments",
+    "aliases": []
   },
   {
     "slug": "output",
@@ -301,7 +1027,24 @@
       "zh": "按论文尺寸预览和导出",
       "en": "Preview and export at publication size"
     },
-    "group": "guide"
+    "group": "guide",
+    "id": "output",
+    "kind": "tutorial",
+    "canonical_path": "output.html",
+    "parent": "styling",
+    "module": "shared-techniques",
+    "prerequisites": [],
+    "next_steps": [],
+    "apis": [
+      "export_ggchord_layout",
+      "geom_seq_scale"
+    ],
+    "recipe_ids": [],
+    "figure_ids": [
+      "frontlinearbase"
+    ],
+    "translation_key": "output",
+    "aliases": []
   },
   {
     "slug": "reference",
@@ -309,7 +1052,21 @@
       "en": "Function reference",
       "zh": "函数参考文档"
     },
-    "group": "reference"
+    "group": "reference",
+    "id": "reference",
+    "kind": "index",
+    "canonical_path": "reference/index.html",
+    "parent": "index",
+    "module": "reference",
+    "prerequisites": [],
+    "next_steps": [],
+    "apis": [],
+    "recipe_ids": [],
+    "figure_ids": [],
+    "translation_key": "reference",
+    "aliases": [
+      "reference.html"
+    ]
   },
   {
     "slug": "gallery",
@@ -317,7 +1074,19 @@
       "en": "Reproducible gallery",
       "zh": "示例图集"
     },
-    "group": "guide"
+    "group": "guide",
+    "id": "gallery",
+    "kind": "gallery",
+    "canonical_path": "gallery.html",
+    "parent": "index",
+    "module": "cases",
+    "prerequisites": [],
+    "next_steps": [],
+    "apis": [],
+    "recipe_ids": [],
+    "figure_ids": [],
+    "translation_key": "gallery",
+    "aliases": []
   },
   {
     "slug": "faq",
@@ -325,7 +1094,19 @@
       "en": "Frequently asked questions",
       "zh": "常见问题"
     },
-    "group": "guide"
+    "group": "guide",
+    "id": "faq",
+    "kind": "tutorial",
+    "canonical_path": "faq.html",
+    "parent": "about",
+    "module": "information",
+    "prerequisites": [],
+    "next_steps": [],
+    "apis": [],
+    "recipe_ids": [],
+    "figure_ids": [],
+    "translation_key": "faq",
+    "aliases": []
   },
   {
     "slug": "collinear-tuning",
@@ -333,7 +1114,25 @@
       "zh": "调整行距与标尺",
       "en": "Adjust row spacing and scale"
     },
-    "group": "article"
+    "group": "article",
+    "id": "collinear-tuning",
+    "kind": "tutorial",
+    "canonical_path": "collinear-tuning.html",
+    "parent": "multi-sequence",
+    "module": "multi-sequence",
+    "prerequisites": [],
+    "next_steps": [
+      "chord-routing"
+    ],
+    "apis": [],
+    "recipe_ids": [],
+    "figure_ids": [
+      "frontlinearlink",
+      "frontlineargap",
+      "frontlinearscale"
+    ],
+    "translation_key": "collinear-tuning",
+    "aliases": []
   },
   {
     "slug": "plasmid-tuning",
@@ -341,7 +1140,25 @@
       "zh": "调整骨架样式与旋转",
       "en": "Adjust backbone style and rotation"
     },
-    "group": "article"
+    "group": "article",
+    "id": "plasmid-tuning",
+    "kind": "tutorial",
+    "canonical_path": "plasmid-tuning.html",
+    "parent": "circular",
+    "module": "circular",
+    "prerequisites": [],
+    "next_steps": [
+      "circular-layers"
+    ],
+    "apis": [],
+    "recipe_ids": [],
+    "figure_ids": [
+      "firstcircle",
+      "frontcirclestyle",
+      "frontcirclerotation"
+    ],
+    "translation_key": "plasmid-tuning",
+    "aliases": []
   },
   {
     "slug": "about",
@@ -349,7 +1166,19 @@
       "zh": "网站信息与章节索引",
       "en": "Site information and chapter index"
     },
-    "group": "guide"
+    "group": "guide",
+    "id": "about",
+    "kind": "project",
+    "canonical_path": "about.html",
+    "parent": "index",
+    "module": "information",
+    "prerequisites": [],
+    "next_steps": [],
+    "apis": [],
+    "recipe_ids": [],
+    "figure_ids": [],
+    "translation_key": "about",
+    "aliases": []
   },
   {
     "slug": "protein-alignments",
@@ -357,7 +1186,24 @@
       "zh": "从 BLASTp 绘制蛋白比较图",
       "en": "Protein comparisons from BLASTp"
     },
-    "group": "guide"
+    "group": "guide",
+    "id": "protein-alignments",
+    "kind": "tutorial",
+    "canonical_path": "protein-alignments.html",
+    "parent": "formats",
+    "module": "data",
+    "prerequisites": [],
+    "next_steps": [],
+    "apis": [
+      "geom_feature"
+    ],
+    "recipe_ids": [],
+    "figure_ids": [
+      "nativeprotein",
+      "nativeproteinchord"
+    ],
+    "translation_key": "protein-alignments",
+    "aliases": []
   },
   {
     "slug": "collinear-layout",
@@ -365,7 +1211,31 @@
       "zh": "对齐、锚点与显示方向",
       "en": "Alignment, anchors and display directions"
     },
-    "group": "article"
+    "group": "article",
+    "id": "collinear-layout",
+    "kind": "tutorial",
+    "canonical_path": "collinear-layout.html",
+    "parent": "multi-sequence",
+    "module": "multi-sequence",
+    "prerequisites": [],
+    "next_steps": [
+      "collinear-tuning"
+    ],
+    "apis": [
+      "export_ggchord_layout",
+      "geom_seq",
+      "coord_collinear"
+    ],
+    "recipe_ids": [],
+    "figure_ids": [
+      "alignleft",
+      "aligncenter",
+      "alignright",
+      "alignanchor",
+      "alignauto"
+    ],
+    "translation_key": "collinear-layout",
+    "aliases": []
   },
   {
     "slug": "task-index",
@@ -373,7 +1243,55 @@
       "zh": "按任务查找功能与参数",
       "en": "Find functions and parameters by task"
     },
-    "group": "guide"
+    "group": "guide",
+    "id": "task-index",
+    "kind": "tutorial",
+    "canonical_path": "task-index.html",
+    "parent": "about",
+    "module": "information",
+    "prerequisites": [],
+    "next_steps": [],
+    "apis": [
+      "geom_seq",
+      "geom_link_ribbon",
+      "geom_link_line",
+      "geom_gene",
+      "geom_seq_region",
+      "scale_ribbon_fill_stepsn",
+      "scale_seq_colour_manual",
+      "coord_collinear",
+      "segment_ggchord_data",
+      "geom_seq_scale",
+      "coord_circular",
+      "position_feature_stack",
+      "geom_feature_label_repel",
+      "geom_primer",
+      "geom_restriction_site",
+      "geom_track_col",
+      "geom_track_tile",
+      "position_track",
+      "read_fasta_lengths",
+      "ggchord",
+      "export_ggchord_layout",
+      "geom_seq_center_label",
+      "geom_feature_label",
+      "scale_ribbon_fill_gradientn",
+      "geom_track",
+      "coord_sankey",
+      "coord_dotplot",
+      "geom_alignment_segment",
+      "coord_radial_synteny",
+      "ggchord_fusion",
+      "export_ggchord_fusion",
+      "read_bedpe",
+      "geom_residue",
+      "map_alignment_position",
+      "magnify_ggchord"
+    ],
+    "recipe_ids": [],
+    "figure_ids": [],
+    "translation_key": "task-index",
+    "aliases": []
   },
   {
     "slug": "compatibility",
@@ -381,7 +1299,46 @@
       "zh": "图层与坐标模式的兼容边界",
       "en": "Layer and coordinate compatibility"
     },
-    "group": "guide"
+    "group": "guide",
+    "id": "compatibility",
+    "kind": "tool",
+    "canonical_path": "compatibility.html",
+    "parent": "reference",
+    "module": "reference",
+    "prerequisites": [],
+    "next_steps": [],
+    "apis": [
+      "geom_seq",
+      "geom_seq_label",
+      "geom_gene",
+      "geom_feature",
+      "geom_feature_plasmid",
+      "geom_gene_label",
+      "geom_feature_label",
+      "geom_gene_label_repel",
+      "geom_feature_label_repel",
+      "geom_link_ribbon",
+      "geom_link_line",
+      "geom_seq_region",
+      "geom_seq_scale",
+      "geom_seq_break",
+      "geom_seq_center_label",
+      "geom_primer",
+      "geom_primer_label_repel",
+      "geom_restriction_site",
+      "geom_track",
+      "geom_track_bar",
+      "geom_track_col",
+      "geom_track_line",
+      "geom_track_tile",
+      "ggchord_validate_coord_contract",
+      "geom_alignment_segment",
+      "geom_residue"
+    ],
+    "recipe_ids": [],
+    "figure_ids": [],
+    "translation_key": "compatibility",
+    "aliases": []
   },
   {
     "slug": "feature-geometry",
@@ -389,7 +1346,30 @@
       "zh": "基因与特征的箭头几何",
       "en": "Gene and feature arrow geometry"
     },
-    "group": "guide"
+    "group": "guide",
+    "id": "feature-geometry",
+    "kind": "tutorial",
+    "canonical_path": "feature-geometry.html",
+    "parent": "styling",
+    "module": "shared-techniques",
+    "prerequisites": [],
+    "next_steps": [],
+    "apis": [
+      "geom_feature",
+      "geom_gene",
+      "geom_feature_plasmid"
+    ],
+    "recipe_ids": [],
+    "figure_ids": [
+      "comparegeneshouldered",
+      "comparegeneflush",
+      "comparegenetriangle",
+      "compareshortauto",
+      "compareshortwedge",
+      "compareshortblock"
+    ],
+    "translation_key": "feature-geometry",
+    "aliases": []
   },
   {
     "slug": "chord-branches",
@@ -397,7 +1377,30 @@
       "zh": "共享端点分支与点连接",
       "en": "Shared endpoint branches and point links"
     },
-    "group": "article"
+    "group": "article",
+    "id": "chord-branches",
+    "kind": "tutorial",
+    "canonical_path": "chord-branches.html",
+    "parent": "multi-sequence",
+    "module": "multi-sequence",
+    "prerequisites": [],
+    "next_steps": [
+      "collinear-routing"
+    ],
+    "apis": [
+      "geom_link_ribbon",
+      "geom_link_line"
+    ],
+    "recipe_ids": [],
+    "figure_ids": [
+      "comparebranchnone",
+      "comparebranchquery",
+      "comparebranchfraction",
+      "comparelinkcurve",
+      "comparelinkstraight"
+    ],
+    "translation_key": "chord-branches",
+    "aliases": []
   },
   {
     "slug": "circular-layers",
@@ -405,7 +1408,41 @@
       "zh": "圆图骨架、中心文字与注释轨道",
       "en": "Circular backbones, centre text and annotation lanes"
     },
-    "group": "article"
+    "group": "article",
+    "id": "circular-layers",
+    "kind": "tutorial",
+    "canonical_path": "circular-layers.html",
+    "parent": "circular",
+    "module": "circular",
+    "prerequisites": [],
+    "next_steps": [
+      "circular-labels"
+    ],
+    "apis": [
+      "position_feature_stack",
+      "position_plasmid",
+      "position_strand"
+    ],
+    "recipe_ids": [],
+    "figure_ids": [
+      "comparebonedouble",
+      "comparebonesingle",
+      "comparebonegap",
+      "compareboneband",
+      "comparebandwidth",
+      "comparecirclecounter",
+      "comparecirclegap",
+      "comparecenter",
+      "comparecenternolength",
+      "comparecenterstyle",
+      "comparefeaturearrow",
+      "comparefeatureblock",
+      "comparefeaturepreset",
+      "comparepositionidentity",
+      "comparepositionstack"
+    ],
+    "translation_key": "circular-layers",
+    "aliases": []
   },
   {
     "slug": "circular-labels",
@@ -413,7 +1450,34 @@
       "zh": "圆图固定标签与自动适配",
       "en": "Fixed circular labels and automatic fitting"
     },
-    "group": "article"
+    "group": "article",
+    "id": "circular-labels",
+    "kind": "tutorial",
+    "canonical_path": "circular-labels.html",
+    "parent": "circular",
+    "module": "circular",
+    "prerequisites": [],
+    "next_steps": [
+      "recognition"
+    ],
+    "apis": [],
+    "recipe_ids": [],
+    "figure_ids": [
+      "comparefixedfeature",
+      "comparefixedhorizontal",
+      "comparefixedinside",
+      "comparefixedrotate",
+      "comparefeaturefit",
+      "compareradialfit",
+      "compareautofit",
+      "comparecalloutfit",
+      "compareshrinkfit",
+      "comparewrapfit",
+      "compareellipsisfit",
+      "compareexternaloff"
+    ],
+    "translation_key": "circular-labels",
+    "aliases": []
   },
   {
     "slug": "primers",
@@ -421,7 +1485,30 @@
       "zh": "识别引物、弧线与文字",
       "en": "Primer recognition, arcs and labels"
     },
-    "group": "article"
+    "group": "article",
+    "id": "primers",
+    "kind": "tutorial",
+    "canonical_path": "primers.html",
+    "parent": "circular",
+    "module": "circular",
+    "prerequisites": [],
+    "next_steps": [
+      "restriction-sites"
+    ],
+    "apis": [],
+    "recipe_ids": [],
+    "figure_ids": [
+      "compareprimerbetween",
+      "compareprimeroutside",
+      "compareprimeroffset",
+      "compareprimerinside",
+      "compareprimerwidth",
+      "compareprimerlabel",
+      "compareprimernolocation",
+      "compareprimerlabelinside"
+    ],
+    "translation_key": "primers",
+    "aliases": []
   },
   {
     "slug": "restriction-sites",
@@ -429,7 +1516,29 @@
       "zh": "限制酶搜索、切点与标签",
       "en": "Restriction searches, cuts and labels"
     },
-    "group": "article"
+    "group": "article",
+    "id": "restriction-sites",
+    "kind": "tutorial",
+    "canonical_path": "restriction-sites.html",
+    "parent": "circular",
+    "module": "circular",
+    "prerequisites": [],
+    "next_steps": [
+      "plasmids"
+    ],
+    "apis": [],
+    "recipe_ids": [],
+    "figure_ids": [
+      "comparerestrictionradial",
+      "comparerestrictionelbow",
+      "comparerestrictionstraight",
+      "comparerestrictionenzyme",
+      "comparerestrictionposition",
+      "comparerestrictionorder",
+      "comparerestrictioninside"
+    ],
+    "translation_key": "restriction-sites",
+    "aliases": []
   },
   {
     "slug": "scale-families",
@@ -437,7 +1546,27 @@
       "zh": "按角色选择标度、图例与主题",
       "en": "Choose scales, guides and themes by role"
     },
-    "group": "guide"
+    "group": "guide",
+    "id": "scale-families",
+    "kind": "tutorial",
+    "canonical_path": "scale-families.html",
+    "parent": "styling",
+    "module": "shared-techniques",
+    "prerequisites": [],
+    "next_steps": [],
+    "apis": [
+      "scale_ribbon_alpha_continuous"
+    ],
+    "recipe_ids": [],
+    "figure_ids": [
+      "comparescalegradient",
+      "comparescalesteps",
+      "comparescalelinkcontinuous",
+      "comparethememinimal",
+      "comparethemedark"
+    ],
+    "translation_key": "scale-families",
+    "aliases": []
   },
   {
     "slug": "ribbon-statistics",
@@ -445,7 +1574,25 @@
       "zh": "连接密度与显式聚束",
       "en": "Link density and explicit bundling"
     },
-    "group": "guide"
+    "group": "guide",
+    "id": "ribbon-statistics",
+    "kind": "tutorial",
+    "canonical_path": "ribbon-statistics.html",
+    "parent": "multi-sequence",
+    "module": "multi-sequence",
+    "prerequisites": [],
+    "next_steps": [
+      "views"
+    ],
+    "apis": [],
+    "recipe_ids": [],
+    "figure_ids": [
+      "comparedensityfour",
+      "comparedensityeight",
+      "comparebundle"
+    ],
+    "translation_key": "ribbon-statistics",
+    "aliases": []
   },
   {
     "slug": "parameter-atlas",
@@ -453,7 +1600,19 @@
       "zh": "完整参数与默认值图谱",
       "en": "Complete parameters and defaults atlas"
     },
-    "group": "reference"
+    "group": "reference",
+    "id": "parameter-atlas",
+    "kind": "tool",
+    "canonical_path": "parameter-atlas.html",
+    "parent": "reference",
+    "module": "reference",
+    "prerequisites": [],
+    "next_steps": [],
+    "apis": [],
+    "recipe_ids": [],
+    "figure_ids": [],
+    "translation_key": "parameter-atlas",
+    "aliases": []
   },
   {
     "slug": "workflow-tools",
@@ -461,7 +1620,19 @@
       "zh": "按任务使用工作流与诊断工具",
       "en": "Workflow and diagnostic tools by task"
     },
-    "group": "guide"
+    "group": "guide",
+    "id": "workflow-tools",
+    "kind": "tutorial",
+    "canonical_path": "workflow-tools.html",
+    "parent": "formats",
+    "module": "data",
+    "prerequisites": [],
+    "next_steps": [],
+    "apis": [],
+    "recipe_ids": [],
+    "figure_ids": [],
+    "translation_key": "workflow-tools",
+    "aliases": []
   },
   {
     "slug": "api-curriculum",
@@ -469,7 +1640,19 @@
       "en": "API teaching map",
       "zh": "全部 API 教学映射"
     },
-    "group": "reference"
+    "group": "reference",
+    "id": "api-curriculum",
+    "kind": "tool",
+    "canonical_path": "api-curriculum.html",
+    "parent": "reference",
+    "module": "reference",
+    "prerequisites": [],
+    "next_steps": [],
+    "apis": [],
+    "recipe_ids": [],
+    "figure_ids": [],
+    "translation_key": "api-curriculum",
+    "aliases": []
   },
   {
     "slug": "foundation",
@@ -477,7 +1660,32 @@
       "en": "Source instances, tracks and new views",
       "zh": "来源实例、轨道与新视图"
     },
-    "group": "guide"
+    "group": "guide",
+    "id": "foundation",
+    "kind": "tutorial",
+    "canonical_path": "foundation.html",
+    "parent": "styling",
+    "module": "shared-techniques",
+    "prerequisites": [],
+    "next_steps": [],
+    "apis": [
+      "coord_chord",
+      "coord_collinear",
+      "map_ggchord_position",
+      "export_ggchord_layout",
+      "coord_flip",
+      "geom_link_ribbon"
+    ],
+    "recipe_ids": [],
+    "figure_ids": [
+      "foundationvertical",
+      "foundationsankey",
+      "foundationcount",
+      "foundationequal",
+      "foundationarrow"
+    ],
+    "translation_key": "foundation",
+    "aliases": []
   },
   {
     "slug": "view-expansion",
@@ -485,7 +1693,28 @@
       "en": "HSP Dotplots and radial synteny",
       "zh": "HSP点阵图与径向共线性"
     },
-    "group": "article"
+    "group": "article",
+    "id": "view-expansion",
+    "kind": "tutorial",
+    "canonical_path": "view-expansion.html",
+    "parent": "dotplot",
+    "module": "dotplot",
+    "prerequisites": [],
+    "next_steps": [],
+    "apis": [
+      "read_paf",
+      "geom_seq",
+      "map_ggchord_position",
+      "geom_alignment_segment",
+      "geom_track"
+    ],
+    "recipe_ids": [],
+    "figure_ids": [
+      "viewdotplot",
+      "viewradial"
+    ],
+    "translation_key": "view-expansion",
+    "aliases": []
   },
   {
     "slug": "fusion",
@@ -493,6 +1722,106 @@
       "en": "Real interval links across panels",
       "zh": "真实区间跨面板组合"
     },
-    "group": "article"
+    "group": "article",
+    "id": "fusion",
+    "kind": "module",
+    "canonical_path": "fusion.html",
+    "parent": "learn",
+    "module": "fusion",
+    "prerequisites": [],
+    "next_steps": [],
+    "apis": [],
+    "recipe_ids": [],
+    "figure_ids": [],
+    "translation_key": "fusion",
+    "aliases": []
+  },
+  {
+    "slug": "learn",
+    "title": {
+      "zh": "学习总览与任务查询",
+      "en": "Learning paths and tasks"
+    },
+    "group": "guide",
+    "id": "learn",
+    "kind": "index",
+    "canonical_path": "learn.html",
+    "parent": "index",
+    "module": "start",
+    "prerequisites": [],
+    "next_steps": [
+      "installation"
+    ],
+    "apis": [],
+    "recipe_ids": [],
+    "figure_ids": [],
+    "translation_key": "learn",
+    "aliases": []
+  },
+  {
+    "slug": "multi-sequence",
+    "title": {
+      "zh": "多序列关系",
+      "en": "Multi-sequence relationships"
+    },
+    "group": "guide",
+    "id": "multi-sequence",
+    "kind": "module",
+    "canonical_path": "multi-sequence.html",
+    "parent": "learn",
+    "module": "multi-sequence",
+    "prerequisites": [],
+    "next_steps": [
+      "chord-start"
+    ],
+    "apis": [],
+    "recipe_ids": [],
+    "figure_ids": [],
+    "translation_key": "multi-sequence",
+    "aliases": []
+  },
+  {
+    "slug": "circular",
+    "title": {
+      "zh": "单序列圆图",
+      "en": "Single-sequence circular maps"
+    },
+    "group": "guide",
+    "id": "circular",
+    "kind": "module",
+    "canonical_path": "circular.html",
+    "parent": "learn",
+    "module": "circular",
+    "prerequisites": [],
+    "next_steps": [
+      "plasmid-start"
+    ],
+    "apis": [],
+    "recipe_ids": [],
+    "figure_ids": [],
+    "translation_key": "circular",
+    "aliases": []
+  },
+  {
+    "slug": "dotplot",
+    "title": {
+      "zh": "HSP 点图",
+      "en": "HSP Dotplot"
+    },
+    "group": "guide",
+    "id": "dotplot",
+    "kind": "module",
+    "canonical_path": "dotplot.html",
+    "parent": "learn",
+    "module": "dotplot",
+    "prerequisites": [],
+    "next_steps": [
+      "view-expansion"
+    ],
+    "apis": [],
+    "recipe_ids": [],
+    "figure_ids": [],
+    "translation_key": "dotplot",
+    "aliases": []
   }
 ]

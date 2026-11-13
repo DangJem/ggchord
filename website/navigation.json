@@ -1,144 +1,167 @@
 [
   {
-    "id": "techniques",
+    "id": "start",
     "title": {
-      "zh": "ggchord 绘图原理",
-      "en": "ggchord plotting principles"
+      "zh": "开始使用",
+      "en": "Get started"
     },
+    "landing": "learn",
     "pages": [
+      "learn",
       "installation",
-      "chord-data",
-      "alignments",
-      "modes"
+      "modes",
+      "data"
     ]
   },
   {
-    "id": "chord",
+    "id": "multi-sequence",
     "title": {
-      "zh": "模块一『弦图』部分",
-      "en": "Module 1 · Chord"
+      "zh": "多序列关系",
+      "en": "Multi-sequence relationships"
     },
+    "landing": "multi-sequence",
     "pages": [
+      "multi-sequence",
       "chord-start",
       "chord-build",
-      "chord-tuning",
+      "collinear-start",
+      "collinear-build",
       "chord-geometry",
+      "chord-tuning",
+      "collinear-layout",
+      "collinear-tuning",
       "chord-routing",
       "chord-branches",
+      "collinear-routing",
       "chord-labels",
-      "chord-import",
+      "collinear-data",
       "ribbons",
       "ribbon-statistics",
-      "chord"
-    ]
-  },
-  {
-    "id": "collinear",
-    "title": {
-      "zh": "模块二『共线性图』部分",
-      "en": "Module 2 · Collinear"
-    },
-    "pages": [
-      "collinear-start",
-      "collinear-data",
-      "collinear-build",
-      "collinear-tuning",
-      "collinear-layout",
-      "collinear-routing",
       "views",
       "homology",
+      "chord",
       "collinear"
     ]
   },
   {
-    "id": "plasmid",
+    "id": "circular",
     "title": {
-      "zh": "模块三『单序列圆图』部分",
-      "en": "Module 3 · Circular"
+      "zh": "单序列圆图",
+      "en": "Single-sequence circular maps"
     },
+    "landing": "circular",
     "pages": [
+      "circular",
       "plasmid-start",
       "plasmid-data",
       "plasmid-build",
       "plasmid-tuning",
       "circular-layers",
-      "annotations",
       "circular-labels",
-      "tracks",
       "recognition",
       "primers",
       "restriction-sites",
-      "plasmid-catalog",
-      "plasmids"
+      "plasmids",
+      "plasmid-catalog"
+    ]
+  },
+  {
+    "id": "dotplot",
+    "title": {
+      "zh": "HSP 点图",
+      "en": "HSP Dotplot"
+    },
+    "landing": "dotplot",
+    "pages": [
+      "dotplot",
+      "view-expansion"
+    ]
+  },
+  {
+    "id": "fusion",
+    "title": {
+      "zh": "多视图组合",
+      "en": "Multi-view composition"
+    },
+    "landing": "fusion",
+    "pages": [
+      "fusion"
     ]
   },
   {
     "id": "shared-techniques",
     "title": {
-      "zh": "通用绘图技巧",
-      "en": "Shared plotting techniques"
+      "zh": "通用技巧",
+      "en": "Shared techniques"
     },
+    "landing": "styling",
     "pages": [
+      "styling",
+      "annotations",
       "feature-geometry",
       "labels",
       "parameters",
       "adjustments",
-      "styling",
       "scale-families",
+      "tracks",
       "foundation",
-      "view-expansion",
-      "fusion"
+      "output"
     ]
   },
   {
     "id": "data",
     "title": {
-      "zh": "导入与转换",
-      "en": "Import and conversion"
+      "zh": "数据与工作流",
+      "en": "Data and workflows"
     },
+    "landing": "formats",
     "pages": [
-      "workflow-tools",
       "formats",
-      "data",
+      "chord-data",
+      "chord-import",
+      "alignments",
       "protein-alignments",
-      "projection"
+      "projection",
+      "workflow-tools",
+      "real-data"
     ]
   },
   {
     "id": "cases",
     "title": {
-      "zh": "完整案例与图库",
-      "en": "Case studies and gallery"
+      "zh": "案例图库",
+      "en": "Gallery"
     },
+    "landing": "gallery",
     "pages": [
-      "gallery",
-      "real-data"
+      "gallery"
     ]
   },
   {
     "id": "reference",
     "title": {
-      "zh": "函数参考文档",
-      "en": "Function reference"
+      "zh": "API 参考",
+      "en": "API reference"
     },
+    "landing": "reference",
     "pages": [
-      "task-index",
-      "api-curriculum",
+      "reference",
       "compatibility",
       "parameter-atlas",
-      "reference"
+      "api-curriculum"
     ]
   },
   {
     "id": "information",
     "title": {
-      "zh": "其他信息",
-      "en": "Further information"
+      "zh": "项目信息",
+      "en": "Project information"
     },
+    "landing": "about",
     "pages": [
-      "output",
+      "about",
       "faq",
-      "about"
+      "task-index"
     ]
   }
 ]

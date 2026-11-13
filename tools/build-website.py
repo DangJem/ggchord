@@ -9,6 +9,7 @@ import re
 import shutil
 import subprocess
 import zipfile
+from datetime import datetime, timezone
 from pathlib import Path
 from site_search import complete_examples, search_records
 from documentation_lib import ROOT, WEB, PAGES, CAPTIONS, RECIPES, expand, snippets, localize_r_comments
@@ -67,6 +68,13 @@ def main():
     if out.is_symlink():raise SystemExit('Refusing a symlink output directory')
     if out.exists():shutil.rmtree(out)
     out.mkdir();assets=out/'assets';assets.mkdir()
+    metadata=json.loads((WEB/'version.json').read_text())
+    metadata.update(source_commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
+        build_time=datetime.now(timezone.utc).isoformat(),
+        example_runtime=subprocess.check_output(['Rscript','--vanilla','-e',
+          'cat(R.version.string, "; ggplot2 ", as.character(packageVersion("ggplot2")), sep="")'],cwd=ROOT,text=True).strip(),
+        deployment='local-only; not deployed')
+    (out/'build-metadata.json').write_text(json.dumps(metadata,indent=2)+'\n')
     for p in (WEB/'assets').iterdir():
         if p.is_file():shutil.copy2(p,assets/p.name)
     complete_examples(assets)
@@ -199,6 +207,7 @@ def main():
         dirty=bool(subprocess.check_output(['git','status','--porcelain'],cwd=ROOT,text=True)),
         deployment='prepared for authorized deployment; builder does not deploy' if args.publication else 'local preview; not deployed',
         source_sha256={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in files})
+    manifest.update(metadata)
     assert_render_source_snapshot(render_snapshot, input_hashes)
     (out/'source-snapshot.json').write_text(json.dumps(dict(
         status='verified unchanged across rendering and finalization',

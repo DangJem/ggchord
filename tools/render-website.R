@@ -15,8 +15,8 @@ if('zh' %in% languages) {
 for (lang in languages) {
   is_han <- lang == 'zh'
   Sys.setenv(LANGUAGE=if(is_han)'zh_CN' else 'en')
-  nav_names <- if(is_han) c('开始使用','绘图教程','绘图技巧','数据与工作流','案例图库','函数参考') else
-    c('Get started','Plot tutorials','Plotting techniques','Data & workflows','Gallery','Reference')
+  nav_names <- if(is_han) c('开始使用','绘图模块','通用技巧','数据与工作流','案例图库','API 参考') else
+    c('Get started','Plotting modules','Shared techniques','Data & workflows','Gallery','API reference')
   keys <- c('start','plots','techniques','data','gallery','reference')
   components <- setNames(lapply(seq_along(keys),function(i) list(text=nav_names[i])),keys)
   # Every primary menu opens useful teaching directly; the project page remains
@@ -24,20 +24,16 @@ for (lang in languages) {
   groups <- jsonlite::fromJSON('website/navigation.json', simplifyVector=FALSE)
   page_menu <- function(slugs) lapply(slugs, function(slug) {
     page <- Filter(function(x) identical(x$slug, slug), page_index)[[1L]]
-    list(text = page$title[[lang]], href = paste0(slug, '.html'))
+    list(text = page$title[[lang]], href = page$canonical_path)
   })
-  modules <- Filter(function(x) x$id %in% c('chord','collinear','plasmid'),groups)
+  modules <- Filter(function(x) x$id %in% c('multi-sequence','circular','dotplot','fusion'),groups)
   components$plots$menu <- lapply(modules,function(group) list(
-    text=group$title[[lang]],href=paste0(group$pages[[1]],'.html')))
-  components$plots$menu <- c(components$plots$menu, list(
-    list(text = if(is_han) '镜像 Sankey' else 'Mirrored Sankey', href = 'foundation.html#sankey'),
-    list(text = 'Dotplot', href = 'view-expansion.html#dotplot'),
-    list(text = if(is_han) '径向辐条' else 'Radial spokes', href = 'view-expansion.html#radial')))
+    text=group$title[[lang]],href=paste0(group$landing,'.html')))
   shared <- Filter(function(x) x$id == 'shared-techniques', groups)[[1L]]
   data <- Filter(function(x) x$id == 'data', groups)[[1L]]
-  components$techniques$menu <- page_menu(c(unlist(shared$pages), 'output'))
-  components$data$menu <- page_menu(c('chord-data', 'alignments', unlist(data$pages)))
-  components$start$href <- 'installation.html'
+  components$techniques$menu <- page_menu(unlist(shared$pages))
+  components$data$menu <- page_menu(unlist(data$pages))
+  components$start$href <- 'learn.html'
   components$gallery$href <- 'gallery.html'
   components$reference$href <- 'reference/index.html'
   cfg <- list(destination=paste0('.site/',lang),lang=if(is_han)'zh_CN' else 'en',
