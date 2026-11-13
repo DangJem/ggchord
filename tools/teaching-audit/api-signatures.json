@@ -595,6 +595,9 @@
       "label_segment_overlap": "\"fade\"",
       "label_segment_overlap_alpha": "0.18",
       "label_segment_linetype": "\"auto\"",
+      "label_segment_layer": "c(\"below\", \"above\")",
+      "label_repeat": "c(\"individual\", \"bracket\")",
+      "label_segment_colour": "\"auto\"",
       "...": ""
     }
   },

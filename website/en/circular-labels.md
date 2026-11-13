@@ -97,7 +97,11 @@ multi-bend detours. Filled features cover leaders drawn below; transparent
 fills keep their transparency. Internal single-line names follow circular
 tracks. Wrapped sources keep one annotation and a continuous glyph on closed
 circles; a visible coordinate gap retains separate display pieces. A shifted adjacent name receives a short attachment. To restore the
-label layer's drawing order, use `geom_feature_label_repel(label_segment_layer = "above")`.
+label layer's drawing order:
+
+```r
+geom_feature_label_repel(label_segment_layer = "above")
+```
 
 ## Exercises and your annotations {#adapt}
 
@@ -121,7 +125,7 @@ search does not guarantee every density fits inside; inspect visibility,
 convergence and conflict diagnostics at export dimensions.
 
 
-## Shared labels for consecutive repeats
+## Shared labels for consecutive repeats {#consecutive-repeats}
 
 `label_repeat = "bracket"` is an explicit display style; the default
 `"individual"` retains separate labels. Consecutive non-overlapping short

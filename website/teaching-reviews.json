@@ -745,7 +745,10 @@
       "label_min_size",
       "label_side",
       "external",
-      "max_overlaps"
+      "max_overlaps",
+      "label_segment_layer",
+      "label_repeat",
+      "label_segment_colour"
     ],
     "purpose": {
       "en": "Automatically arrange generic feature labels",

@@ -796,7 +796,7 @@
     "parameter": "label_layout",
     "default": "c(\"feature\", \"radial\", \"auto\", \"callout\")",
     "type": "Vector; choices versus multiple selection below",
-    "constraint": "One of \"feature\", \"radial\", \"auto\", or \"callout\". The default \"feature\" follows plasmid-map convention: text is tried inside first, then assigned to a fixed-radius internal track. All non-external text is laid out character by character along its selected track radius rather than rotated as one straight string. A light leader appears when one or more intervening tracks separate the feature and its label. Choose another mode for unrestricted external callouts.",
+    "constraint": "One of \"feature\", \"radial\", \"auto\", or \"callout\". The default \"feature\" follows plasmid-map convention: text is tried inside first, then assigned to a fixed-radius internal track. All non-external text is laid out character by character along its selected track radius rather than rotated as one straight string. A light leader appears when tracks separate the feature and its label or a visible angular displacement could obscure ownership. Circular feature layouts retain direct leaders instead of multi-bend detours. Choose another mode for unrestricted external callouts.",
     "source": "man/geom_feature_label_repel.Rd"
   },
   {
@@ -901,6 +901,30 @@
     "default": "\"auto\"",
     "type": "Character/enum; choices below",
     "constraint": "Character or numeric, default \"auto\". Leader-line linetype. \"auto\" draws solid lines, except for labels that were moved to the other side of their arc, which are drawn dashed. Any other valid ggplot2 linetype (e.g. \"solid\", \"dashed\", \"dotted\", or a numeric dash pattern) is used for all leader lines.",
+    "source": "man/geom_feature_label_repel.Rd"
+  },
+  {
+    "api": "geom_feature_label_repel",
+    "parameter": "label_segment_layer",
+    "default": "c(\"below\", \"above\")",
+    "type": "Vector; choices versus multiple selection below",
+    "constraint": "Draw leaders \"below\" all data layers (default), or \"above\" at this label layer's normal position. Text always stays at this layer's position. Filled features can cover leaders drawn below; transparent features retain their normal transparency.",
+    "source": "man/geom_feature_label_repel.Rd"
+  },
+  {
+    "api": "geom_feature_label_repel",
+    "parameter": "label_repeat",
+    "default": "c(\"individual\", \"bracket\")",
+    "type": "Vector; choices versus multiple selection below",
+    "constraint": "\"individual\" (default) keeps one label per feature. \"bracket\" shares a counted label and an arc bracket for consecutive, non-overlapping short features with the same name, type, direction and resolved fill in one circular feature band. Source rows and individual arrows remain separate. Only supported with label_layout = \"feature\".",
+    "source": "man/geom_feature_label_repel.Rd"
+  },
+  {
+    "api": "geom_feature_label_repel",
+    "parameter": "label_segment_colour",
+    "default": "\"auto\"",
+    "type": "Character/enum; choices below",
+    "constraint": "\"auto\" uses muted grey for leaders from a feature inside the sequence circle to a label outside it. Other leaders retain the theme colour. Explicit colours override both. A custom feature-label segment theme overrides the automatic palette. label_segment_linetype = \"auto\" uses dashed lines for those inside-to-outside attachments. Labels that stay inside retain their established leader style.",
     "source": "man/geom_feature_label_repel.Rd"
   },
   {
@@ -4556,7 +4580,7 @@
     "parameter": "axis.text.check.overlap",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Whether overlapping axis labels are hidden. Defaults to TRUE. Automatically positioned circular parallel labels, including combined seam strings, can receive bounded inward or outward radial clearance around feature polygons and fixed annotation-leader roots. Internal and exterior annotation leaders route around the resolved axis text; mutable shoulders do not feed back into axis placement. Explicit axis.text.offset values and explicit scale breaks stay fixed.",
+    "constraint": "Whether overlapping axis labels are hidden. Defaults to TRUE. Automatically positioned circular parallel labels, including combined seam strings, can receive bounded inward or outward radial clearance around feature polygons and fixed annotation-leader roots. Internal and exterior annotation leaders route around the resolved axis text; mutable shoulders do not feed back into axis placement. Automatic strings stay in a near- backbone channel. Origin/end strings take priority and remain visible; an automatic endpoint may use either readable side of its tick, with a bounded tangential gap up to 4 mm, to clear fixed feature exit rays. Unresolved endpoint clearance is reported as endpoint_unresolved. Overlap checking may hide ordinary intermediate text while keeping its tick, with hidden_near_backbone in diagnostics. Explicit axis.text.offset values and explicit scale breaks stay fixed.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -5428,7 +5452,7 @@
     "parameter": "axis.text.check.overlap",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Whether overlapping axis labels are hidden. Defaults to TRUE. Automatically positioned circular parallel labels, including combined seam strings, can receive bounded inward or outward radial clearance around feature polygons and fixed annotation-leader roots. Internal and exterior annotation leaders route around the resolved axis text; mutable shoulders do not feed back into axis placement. Explicit axis.text.offset values and explicit scale breaks stay fixed.",
+    "constraint": "Whether overlapping axis labels are hidden. Defaults to TRUE. Automatically positioned circular parallel labels, including combined seam strings, can receive bounded inward or outward radial clearance around feature polygons and fixed annotation-leader roots. Internal and exterior annotation leaders route around the resolved axis text; mutable shoulders do not feed back into axis placement. Automatic strings stay in a near- backbone channel. Origin/end strings take priority and remain visible; an automatic endpoint may use either readable side of its tick, with a bounded tangential gap up to 4 mm, to clear fixed feature exit rays. Unresolved endpoint clearance is reported as endpoint_unresolved. Overlap checking may hide ordinary intermediate text while keeping its tick, with hidden_near_backbone in diagnostics. Explicit axis.text.offset values and explicit scale breaks stay fixed.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -6300,7 +6324,7 @@
     "parameter": "axis.text.check.overlap",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Whether overlapping axis labels are hidden. Defaults to TRUE. Automatically positioned circular parallel labels, including combined seam strings, can receive bounded inward or outward radial clearance around feature polygons and fixed annotation-leader roots. Internal and exterior annotation leaders route around the resolved axis text; mutable shoulders do not feed back into axis placement. Explicit axis.text.offset values and explicit scale breaks stay fixed.",
+    "constraint": "Whether overlapping axis labels are hidden. Defaults to TRUE. Automatically positioned circular parallel labels, including combined seam strings, can receive bounded inward or outward radial clearance around feature polygons and fixed annotation-leader roots. Internal and exterior annotation leaders route around the resolved axis text; mutable shoulders do not feed back into axis placement. Automatic strings stay in a near- backbone channel. Origin/end strings take priority and remain visible; an automatic endpoint may use either readable side of its tick, with a bounded tangential gap up to 4 mm, to clear fixed feature exit rays. Unresolved endpoint clearance is reported as endpoint_unresolved. Overlap checking may hide ordinary intermediate text while keeping its tick, with hidden_near_backbone in diagnostics. Explicit axis.text.offset values and explicit scale breaks stay fixed.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -7172,7 +7196,7 @@
     "parameter": "axis.text.check.overlap",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Whether overlapping axis labels are hidden. Defaults to TRUE. Automatically positioned circular parallel labels, including combined seam strings, can receive bounded inward or outward radial clearance around feature polygons and fixed annotation-leader roots. Internal and exterior annotation leaders route around the resolved axis text; mutable shoulders do not feed back into axis placement. Explicit axis.text.offset values and explicit scale breaks stay fixed.",
+    "constraint": "Whether overlapping axis labels are hidden. Defaults to TRUE. Automatically positioned circular parallel labels, including combined seam strings, can receive bounded inward or outward radial clearance around feature polygons and fixed annotation-leader roots. Internal and exterior annotation leaders route around the resolved axis text; mutable shoulders do not feed back into axis placement. Automatic strings stay in a near- backbone channel. Origin/end strings take priority and remain visible; an automatic endpoint may use either readable side of its tick, with a bounded tangential gap up to 4 mm, to clear fixed feature exit rays. Unresolved endpoint clearance is reported as endpoint_unresolved. Overlap checking may hide ordinary intermediate text while keeping its tick, with hidden_near_backbone in diagnostics. Explicit axis.text.offset values and explicit scale breaks stay fixed.",
     "source": "man/theme_ggchord.Rd"
   },
   {
@@ -8044,7 +8068,7 @@
     "parameter": "axis.text.check.overlap",
     "default": "NULL",
     "type": "Nullable R object; type/inheritance below",
-    "constraint": "Whether overlapping axis labels are hidden. Defaults to TRUE. Automatically positioned circular parallel labels, including combined seam strings, can receive bounded inward or outward radial clearance around feature polygons and fixed annotation-leader roots. Internal and exterior annotation leaders route around the resolved axis text; mutable shoulders do not feed back into axis placement. Explicit axis.text.offset values and explicit scale breaks stay fixed.",
+    "constraint": "Whether overlapping axis labels are hidden. Defaults to TRUE. Automatically positioned circular parallel labels, including combined seam strings, can receive bounded inward or outward radial clearance around feature polygons and fixed annotation-leader roots. Internal and exterior annotation leaders route around the resolved axis text; mutable shoulders do not feed back into axis placement. Automatic strings stay in a near- backbone channel. Origin/end strings take priority and remain visible; an automatic endpoint may use either readable side of its tick, with a bounded tangential gap up to 4 mm, to clear fixed feature exit rays. Unresolved endpoint clearance is reported as endpoint_unresolved. Overlap checking may hide ordinary intermediate text while keeping its tick, with hidden_near_backbone in diagnostics. Explicit axis.text.offset values and explicit scale breaks stay fixed.",
     "source": "man/theme_ggchord.Rd"
   },
   {

@@ -8,7 +8,7 @@
 
 An R package built on ggplot2. Combine independent layers for sequence backbones, interval links, genes, general features, labels and quantitative tracks.
 
-The stable release is **ggchord 0.16.6**. These examples are generated from the local **v0.18.0** development source. Formal assets are on GitHub Releases.
+The stable release is **ggchord 0.16.6**. These examples are generated from the local **v0.27.0** development source. Formal assets are on GitHub Releases.
 
 ## Install
 
@@ -38,9 +38,6 @@ gene_palette <- c("+" = "#CE1536", "-" = "#346B9D", "." = "#8291A6")
 
 ```r
 doc_background <- "#FFFCF5"
-identity_palette <- c("#303B71", "#36537D", "#269B82", "#A5D52C", "#ECEB31")
-identity_values <- c(0, 0.5, 0.8, 0.9, 1)
-identity_breaks <- c(0, 50, 80, 90, 95, 100)
 doc_legend_theme <- theme(
   legend.title = element_text(size = 13, face = "bold"),
   legend.text = element_text(size = 11),
@@ -59,9 +56,6 @@ identity_guide_theme <- theme(
 )
 identity_guide <- ggplot2::guide_coloursteps(
   available_aes = "ribbon_fill", even.steps = FALSE, show.limits = TRUE,
-  position = "left", direction = "vertical", theme = identity_guide_theme
-)
-identity_colourbar <- guide_ggchord_colourbar(
   position = "left", direction = "vertical", theme = identity_guide_theme
 )
 
@@ -417,15 +411,12 @@ ggsave("comparison.png", p_show_collinear, width = 12, height = 8, units = "in",
 
 ## Future directions
 
-ggchord will continue to evolve around **a shared model of genomic relationships, flexible ggplot2-style layers, and publication-ready static figures**. The following are planned or exploratory directions; **new functions and arguments mentioned here are not necessarily available yet**.
+Development continues around readable static figures and a consistent plotting grammar. Current functions, supported inputs and limits are documented in the tutorials and reference; the directions below describe further improvements.
 
-- **More genomic views**: Explore `coord_dotplot()`, spoke-based `coord_radial_synteny()`, and mirrored `coord_sankey()`, reusing sequence and interval-alignment tables to show the same relationships in different layouts.
-- **Unified features and annotations**: Move toward `feature_data` as a common input for genes and other annotations. Extend `geom_feature()` through shapes, mappings, and positioning to cover variants, motifs, repeats, and protein domains, while retaining convenient layers such as `geom_gene()`.
-- **Tracks with a familiar ggplot2 grammar**: Explore `geom_track(geom = ..., stat = ...)` for lines, points, areas, tiles, columns, and statistical transformations. For example, `geom = "bar", stat = "count"` would count observations, whereas `geom = "col", stat = "identity"` would plot supplied values; track positioning, overlays, and scales would be handled separately.
-- **More expressive sequence relationships**: Improve ribbon endpoint colours, gradients, and directional arrowheads. Add optional equal-length sequence display and smarter first/last-position labels and intermediate ticks, without changing underlying bp/aa coordinates.
-- **Magnified regions and sequence-level detail**: Explore coordinate-aware insets that connect whole-genome views to local features, nucleotide letters, or amino-acid residues, with independent layers and layouts in the detail panel.
-- **Automatic layout and multi-view composition**: Improve dense annotations, leader lines, legends, and adaptation to different figure sizes. Explore figure compositions linking overview and detail panels through exact genomic coordinates.
-- **A stable, extensible data foundation**: Keep ordinary `data.frame` inputs simple while standardizing sequences, annotations, alignments, and display instances internally. Continue to focus on reproducible PNG, PDF, and SVG output.
+- Improve dense annotation, leader lines and legend placement at practical figure sizes, with clear diagnostics when space is insufficient.
+- Strengthen overview-and-detail compositions while preserving original coordinates, units and the meaning of every displayed relationship.
+- Broaden adapters for existing research outputs, using mature optional tools and retaining source records and missing information.
+- Refine API consistency, compatibility and reproducible teaching examples while keeping ordinary data-frame inputs simple.
 
 ## Design references and acknowledgements
 

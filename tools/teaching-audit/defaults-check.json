@@ -1,4 +1,12 @@
 {
+  "adapt_ggchord": {
+    "rd": "man/adapt_ggchord.Rd",
+    "matches": true
+  },
+  "as_ggchord_alignment": {
+    "rd": "man/as_ggchord_alignment.Rd",
+    "matches": true
+  },
   "as_ggchord_feature": {
     "rd": "man/as_ggchord_feature.Rd",
     "matches": true
@@ -55,6 +63,10 @@
     "rd": "man/diagnose_ggchord.Rd",
     "matches": true
   },
+  "export_ggchord_fusion": {
+    "rd": "man/export_ggchord_fusion.Rd",
+    "matches": true
+  },
   "export_ggchord_layout": {
     "rd": "man/export_ggchord_layout.Rd",
     "matches": true
@@ -89,6 +101,14 @@
   },
   "focus_ggchord_track": {
     "rd": "man/focus_ggchord_track.Rd",
+    "matches": true
+  },
+  "fusion_panel": {
+    "rd": "man/fusion_panel.Rd",
+    "matches": true
+  },
+  "fusion_ribbon": {
+    "rd": "man/fusion_ribbon.Rd",
     "matches": true
   },
   "geom_alignment_segment": {
@@ -137,6 +157,10 @@
   },
   "geom_primer": {
     "rd": "man/geom_primer.Rd",
+    "matches": true
+  },
+  "geom_residue": {
+    "rd": "man/geom_residue.Rd",
     "matches": true
   },
   "geom_restriction_site": {
@@ -191,6 +215,10 @@
     "rd": "man/get_chord_layout.Rd",
     "matches": true
   },
+  "ggchord_fusion": {
+    "rd": "man/ggchord_fusion.Rd",
+    "matches": true
+  },
   "ggchord": {
     "rd": "man/ggchord.Rd",
     "matches": true
@@ -209,6 +237,14 @@
   },
   "link_ggchord_clusters": {
     "rd": "man/link_ggchord_clusters.Rd",
+    "matches": true
+  },
+  "magnify_ggchord": {
+    "rd": "man/magnify_ggchord.Rd",
+    "matches": true
+  },
+  "map_alignment_position": {
+    "rd": "man/map_alignment_position.Rd",
     "matches": true
   },
   "map_ggchord_position": {
@@ -255,16 +291,44 @@
     "rd": "man/project_ggchord_links.Rd",
     "matches": true
   },
+  "read_aligned_fasta": {
+    "rd": "man/read_aligned_fasta.Rd",
+    "matches": true
+  },
   "read_bed": {
     "rd": "man/read_bed.Rd",
+    "matches": true
+  },
+  "read_bedgraph": {
+    "rd": "man/read_bedgraph.Rd",
+    "matches": true
+  },
+  "read_bedpe": {
+    "rd": "man/read_bedpe.Rd",
+    "matches": true
+  },
+  "read_bigwig": {
+    "rd": "man/read_bigwig.Rd",
     "matches": true
   },
   "read_blast": {
     "rd": "man/read_blast.Rd",
     "matches": true
   },
+  "read_chain": {
+    "rd": "man/read_chain.Rd",
+    "matches": true
+  },
+  "read_delta": {
+    "rd": "man/read_delta.Rd",
+    "matches": true
+  },
   "read_fasta_lengths": {
     "rd": "man/read_fasta_lengths.Rd",
+    "matches": true
+  },
+  "read_feature_relations": {
+    "rd": "man/read_feature_relations.Rd",
     "matches": true
   },
   "read_genbank": {
@@ -275,8 +339,24 @@
     "rd": "man/read_gff3.Rd",
     "matches": true
   },
+  "read_maf": {
+    "rd": "man/read_maf.Rd",
+    "matches": true
+  },
   "read_paf": {
     "rd": "man/read_paf.Rd",
+    "matches": true
+  },
+  "read_signature_matches": {
+    "rd": "man/read_signature_matches.Rd",
+    "matches": true
+  },
+  "read_vcf": {
+    "rd": "man/read_vcf.Rd",
+    "matches": true
+  },
+  "register_ggchord_alignment": {
+    "rd": "man/register_ggchord_alignment.Rd",
     "matches": true
   },
   "scale_feature_fill_plasmid": {
@@ -441,6 +521,10 @@
   },
   "theme_ggchord_plasmid": {
     "rd": "man/theme_ggchord.Rd",
+    "matches": true
+  },
+  "translate_ggchord_cds": {
+    "rd": "man/translate_ggchord_cds.Rd",
     "matches": true
   },
   "validate_ggchord_data": {

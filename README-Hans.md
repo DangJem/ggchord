@@ -8,7 +8,7 @@
 
 基于 ggplot2 的 R 包。用独立图层组合序列骨架、区间连接、基因、通用注释、标签和定量轨道。
 
-正式版为 **ggchord 0.16.6**；本文示例由本地 **v0.18.0** 开发源码生成。正式资产见 GitHub Releases。
+正式版为 **ggchord 0.16.6**；本文示例由本地 **v0.27.0** 开发源码生成。正式资产见 GitHub Releases。
 
 ## 安装
 
@@ -38,9 +38,6 @@ gene_palette <- c("+" = "#CE1536", "-" = "#346B9D", "." = "#8291A6")
 
 ```r
 doc_background <- "#FFFCF5"
-identity_palette <- c("#303B71", "#36537D", "#269B82", "#A5D52C", "#ECEB31")
-identity_values <- c(0, 0.5, 0.8, 0.9, 1)
-identity_breaks <- c(0, 50, 80, 90, 95, 100)
 doc_legend_theme <- theme(
   legend.title = element_text(size = 13, face = "bold"),
   legend.text = element_text(size = 11),
@@ -59,9 +56,6 @@ identity_guide_theme <- theme(
 )
 identity_guide <- ggplot2::guide_coloursteps(
   available_aes = "ribbon_fill", even.steps = FALSE, show.limits = TRUE,
-  position = "left", direction = "vertical", theme = identity_guide_theme
-)
-identity_colourbar <- guide_ggchord_colourbar(
   position = "left", direction = "vertical", theme = identity_guide_theme
 )
 
@@ -417,15 +411,12 @@ ggsave("comparison.png", p_show_collinear, width = 12, height = 8, units = "in",
 
 ## 未来方向
 
-ggchord 将继续围绕**统一的基因组关系表达、灵活的 ggplot2 图层语法与高质量静态科研绘图**拓展。以下为规划和探索方向，所提到的新函数及参数**尚不代表当前版本已经支持**。
+后续开发继续围绕清晰的静态科研图和一致的绘图语法展开。当前函数、支持输入及限制见教程与参考文档；以下列出进一步改进的方向。
 
-- **更丰富的基因组视图**：探索 `coord_dotplot()`、径向辐条式 `coord_radial_synteny()` 和镜像式 `coord_sankey()`，尽量复用现有序列表与区间比对表，在不同布局间展示同一组序列关系。
-- **统一的特征数据与图层**：计划以 `feature_data` 作为基因和其他注释的通用输入；通过 `geom_feature()` 的形状、映射与位置参数表示基因、变异、motif、重复序列和蛋白结构域，`geom_gene()` 等常用图层仍可作为快捷入口。
-- **更接近 ggplot2 的数据轨道**：探索 `geom_track(geom = ..., stat = ...)`，支持折线、点、面积、色块、柱形及统计变换。例如 `geom = "bar", stat = "count"` 表示计数，而 `geom = "col", stat = "identity"` 表示绘制已有数值；轨道位置、叠加和尺度由独立机制管理。
-- **更精细的序列关系绘制**：改进 Ribbon 的起止端着色、渐变和方向箭头；提供可选的序列显示长度归一化，并改进首末位置标注与中间刻度的自动排布，始终保留真实 bp/aa 坐标。
-- **局部放大与逐字符视图**：探索基于真实序列区间的局部放大，将完整基因组图与局部基因、DNA 碱基或蛋白质氨基酸细节结合；放大区域可采用独立的图层和布局。
-- **自动排版与多视图组合**：改进密集注释标签、引导线、图例及不同画布尺寸下的布局；探索通过真实坐标关联整体视图与局部视图的组合式科研图。
-- **稳定、易扩展的数据架构**：保持普通 `data.frame` 作为主要用户输入，在内部统一处理序列、特征、比对关系和显示实例，使新增视图无需重复准备数据，并继续专注于可复现的 PNG、PDF 和 SVG 输出。
+- 改善实际成图尺寸下的密集注释、引导线和图例布局，空间不足时提供明确诊断。
+- 完善整体与局部细节的组合，保留原始坐标、单位及每条显示关系的含义。
+- 扩展已有科研结果的适配，优先使用成熟的可选工具，保留源记录与缺失信息。
+- 完善 API 一致性、兼容性和可重现的教学示例，保持普通数据框输入简洁。
 
 ## 设计参考与致谢
 
