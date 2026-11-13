@@ -529,7 +529,8 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     NULL
   }
   if (!is.null(gene_data_layout) && isTRUE(lbl$is_feature_label)) {
-    gene_data_layout$.feature_label_repeat <- lbl$feature_label_repeat %||% "individual"
+    gene_data_layout$.feature_label_repeat <- rep(
+      lbl$feature_label_repeat %||% "individual",nrow(gene_data_layout))
   }
   ribbon_obstacles <- plot$ggchord$obstacles %||% ggchord_empty_obstacles()
   if (!is.null(gene_data_layout) && !"anno" %in% names(gene_data_layout)) {

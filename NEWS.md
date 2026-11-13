@@ -1,5 +1,11 @@
 # ggchord 0.27.0 (development)
 
+- Non-circular feature-label layers receive an explicit false value for the
+  inside-to-outside style marker, fixing a linear-view aesthetic evaluation
+  error. Empty label tables retain their complete drawing schema and use
+  zero-length parameter vectors instead of assigning a scalar to zero rows.
+  Existing nonempty circular drawing geometry remains unchanged.
+
 - Circular origin/end coordinate strings take priority over intermediate
   ticks and adjustable leader-exit channels. Endpoint text is retained;
   unresolved nearby placement is reported as `endpoint_unresolved` rather

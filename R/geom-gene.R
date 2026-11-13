@@ -501,7 +501,9 @@ ggchord_label_repel_layer <- function(mapping = NULL, data = NULL,
   empty <- data.frame(
     x = numeric(), y = numeric(), xend = numeric(), yend = numeric(),
     label = character(), .component = character(), group = integer(),
-    .draw_as_arc = logical(),
+    .draw_as_arc = logical(), .feature_internal_exit = logical(),
+    feature_label_mode = character(), feature_label_fill = character(),
+    feature_label_colour = character(),
     linetype = character(), alpha = numeric(), size = numeric(), angle = numeric(),
     hjust = numeric(), vjust = numeric()
   )

@@ -530,7 +530,12 @@ ggchord_axis_geometry <- function(layout) {
   }
   values <- Filter(nrow, list(line, tick, label))
   if (!length(values)) {
-    return(data.frame(x = numeric(), y = numeric(), .component = character()))
+    return(data.frame(x=numeric(),y=numeric(),xend=numeric(),yend=numeric(),
+      label=character(),group=integer(),.component=character(),
+      .draw_as_arc=logical(),.feature_internal_exit=logical(),
+      feature_label_mode=character(),feature_label_fill=character(),
+      feature_label_colour=character(),linetype=character(),alpha=numeric(),
+      size=numeric(),angle=numeric(),hjust=numeric(),vjust=numeric()))
   }
   ggchord_rbind_fill(values)
 }
@@ -587,7 +592,9 @@ ggchord_repel_geometry <- function(layout) {
   segment <- layout$gene_label_segments %||% data.frame()
   text <- layout$gene_labels %||% data.frame()
   arc_text <- data.frame()
-  if (nrow(text) && identical(layout$gene_label_layout, "feature")) {
+  if (nrow(text) && !isTRUE(layout$circular)) text$.feature_internal_exit <- FALSE
+  if (nrow(text) && identical(layout$gene_label_layout, "feature") &&
+      isTRUE(layout$circular)) {
     radius <- unname(layout$seqRadius[as.character(text$accver)])
     text$.feature_internal_exit <- isTRUE(layout$circular) &
       text$feature_label_mode %in% "external" & is.finite(radius) &

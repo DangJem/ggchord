@@ -62,7 +62,7 @@
     "R/geom-alignment-segment.R": "a1f725f2722c5add53569a211d2b37a02d24d9825303e1f3d1c8f9ff6f38e3b6",
     "R/geom-feature-label.R": "b060787e45b25f003cde5ed3c746c10505a08e3e9adc0be12a07b03d5791c15b",
     "R/geom-feature.R": "a43d020e36d2e965fc99d08274dfc6ce7cf0a58564326a54b70d99e12e04265c",
-    "R/geom-gene.R": "47c600035eb8bc7a3467dc4ee39e5766b4af361d997c7bceacf36f696924ce5a",
+    "R/geom-gene.R": "85413e91feda75f6482ffe48d9f2c5603071bbf03914d004bb157dc609d4b847",
     "R/geom-link-line.R": "36942a7d4c12374c38fa78e7461685b692dac9d9cabd6c32694d41e32a8420ef",
     "R/geom-primer.R": "b33604572f87a10a0b84a8aebe44a55b731a20f260fce9b037e527d25d38fb9a",
     "R/geom-region.R": "a30af3000b91b5d286055b9c09139cd2df36c67ed71cad3f48efdfe164b360e2",
@@ -74,7 +74,7 @@
     "R/geom-seq-scale.R": "671c40e95584734d2b01d35d13c9f7216ddc643924182f4a65402ab5b596114c",
     "R/geom-seq.R": "266c3b93dccc114f9506b595c8468e79aa27a1c8b24fba6e3ae6737fd031ffae",
     "R/geom-track.R": "a470b7b2f2ab038241d4d4bb2cca31013c4ac8cbf03884d5bd9f798faa9a1982",
-    "R/ggchord-build.R": "00ebb588f2e6e6dbd2ddb4217cddf0d82bec653165948fdc0454f1c30252e18c",
+    "R/ggchord-build.R": "eb09469bec4cddd0455b4b1cc4e2870bf9f98e14000489a975f674f104ba9551",
     "R/ggchord-frame.R": "f48c581fa66b187bafc7e493cd1c2b2316eff4bf3f5e8e4105f1210fca24f9e1",
     "R/ggchord-scales.R": "ec84da03ed4e9d9d8c8dc6227196a007a932b5aeca302d5d6e54d7a06d7e014a",
     "R/ggchord.R": "ba965f90eab0eb79ae90f6cd1e5e04b14b6842425b9bd8d8635db0769956e22b",
@@ -138,6 +138,6 @@
     "R/validate.R": "e80446a0f633f4160f524a920933e550e85fca5b3e7fc3a239ca0d7f1dbd8ed6",
     "R/view-projection.R": "af38488dff2a56f2f986a38e9fbcde86126da45a749f04ce6186dd342d8bf167",
     "R/viewer.R": "f482af4be44c1892b2bc14616014eb237a4de4a16e341bc87e2293e6ef917960",
-    "R/zzz.R": "aa04d644f325abfbba310c066761f93597d60bc76522e7e0d4af4746842064c8"
+    "R/zzz.R": "772efcf92fbe2d9b44329c13da1f146da06e873d8344e4ae3d776cd0f650348a"
   }
 }
