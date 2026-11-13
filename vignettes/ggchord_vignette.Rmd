@@ -1,11 +1,11 @@
 ---
-title: "ggchord: chord, collinear and plasmid tutorial"
+title: "ggchord: sequence plots and composition"
 output:
   rmarkdown::html_vignette:
     self_contained: true
     css: vignette.css
 vignette: >
-  %\VignetteIndexEntry{ggchord: chord, collinear and plasmid tutorial}
+  %\VignetteIndexEntry{ggchord: sequence plots and composition}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -18,76 +18,86 @@ knitr::opts_chunk$set(eval = FALSE, collapse = TRUE, comment = "#>")
 
 <img src="tutorial-assets/logo.png" alt="ggchord" width="200">
 
-Draw any of the three views with bundled records. Each opening lesson includes its own setup. Continue online for data import, advanced workflows and complete research examples.
+Choose among four plotting modules. Each opening lesson includes its own setup. Continue online for data import, advanced workflows and complete research examples.
 
 
 ## Download and install {#installation}
 
-### Download and install {#installation-requirements}
+### Choose a version and dependencies {#installation-requirements}
 
-Use R ≥ 4.1.0 and ggplot2 ≥ 4.0.0. Run these commands in R. CRAN supplies ggchord and its required dependencies.
+These lessons use the **0.27.0.9000 development API**. Choose a matching source; the stable 0.16.6 package has a different teaching scope.
+
+R ≥ 4.1.0; ggplot2 ≥ 4.0.0.
 
 ```{r example-1, eval=FALSE}
-install.packages("ggchord")
-library(ggchord)
-packageVersion("ggchord")
+install.packages("remotes")
 ```
 
-The last line reports your installed version. This local documentation previews
-**0.27.0.9000**. The repository's last recorded formal release is **0.16.6**;
-new Foundation, Fusion, BEDPE and aligned-character APIs require the matching development checkout. See the
-[migration notes](../MIGRATION.md) before updating an existing script.
+#### Stable release {#installation-stable}
 
-For development work, install dependencies first and run from the matching
-checkout in a fresh R session:
+The latest recorded formal release is 0.16.6. Its source and versioned help are available at [GitHub v0.16.6](https://github.com/DangJem/ggchord/releases/tag/v0.16.6). Use its bundled help after installing the fixed tag; these lessons include newer APIs.
 
 ```{r example-2, eval=FALSE}
-install.packages(".", repos = NULL, type = "source")
-library(ggchord)
-stopifnot(as.character(packageVersion("ggchord")) == "0.27.0.9000")
+remotes::install_github("DangJem/ggchord@v0.16.6", dependencies = NA)
 ```
 
-Version numbers do not identify individual commits. The downloadable build
-manifest records the source revision. This local preview does not imply a
-published package or deployed website. Stable users can consult the
-[0.16.6 documentation](https://stat.ethz.ch/CRAN/web/packages/ggchord/index.html).
+#### Development snapshot {#installation-source}
+
+The development runtime is pinned to public audit commit `0f5dd96da57876da74cd1234c7de9cf5579c80b8`. This local documentation refactor does not change runtime behavior. The separate documentation revision, build time and input hashes are recorded in the [build manifest](https://dangjem.github.io/ggchord/build-manifest.json). Installation downloads source and dependencies.
+
+```{r example-3, eval=FALSE}
+runtime_commit <- "0f5dd96da57876da74cd1234c7de9cf5579c80b8"
+remotes::install_github(
+  paste0("DangJem/ggchord@", runtime_commit),
+  dependencies = NA, upgrade = "never"
+)
+```
 
 <span id="verified-versions"></span>
 
-#### Source downloads {#installation-source}
+### Confirm in a fresh session and draw {#installation-troubleshooting}
 
-Source packages are available from [CRAN](https://cran.r-project.org/web/packages/ggchord/index.html) and [GitHub v0.16.6](https://github.com/DangJem/ggchord/releases/tag/v0.16.6).
+```{r example-4, eval=FALSE}
+library(ggchord)
+stopifnot(as.character(packageVersion("ggchord")) == "0.27.0.9000")
+stopifnot(packageDescription("ggchord")$RemoteSha ==
+  "0f5dd96da57876da74cd1234c7de9cf5579c80b8")
+p <- ggchord(seq_data_example) +
+  geom_seq() +
+  geom_seq_label() +
+  coord_chord()
+p
+```
 
 #### Optional dependencies {#installation-support-evidence}
 
-Getting started and the basic chord lessons require only ggchord. The case study lists its extra dependencies.
+The first plot needs only ggchord. Data lessons explicitly use dplyr; import recipes name their optional decoders.
 
-### Confirm the installation {#installation-troubleshooting}
+### Continue learning {#installation-first-steps}
 
-Load the package in a new R session with `library(ggchord)`. If installation or loading fails, check the R or dependency version named in the error.
+<span id="first-plot"></span><span id="input"></span><span id="read"></span>
 
-### Next steps {#installation-first-steps}
-
-- [Basic input tables](https://dangjem.github.io/ggchord/en/chord-data.html) shows real sequence, link and feature rows and explains each column.
-- [Plotting concepts](https://dangjem.github.io/ggchord/en/modes.html) introduces backbones, layers and coordinate systems.
-- <span id="first-plot"></span><span id="input"></span><span id="read"></span>[Draw sequence backbones](#chord-start) opens the chord chapter.
-- <span id="save"></span>[Save plots](https://dangjem.github.io/ggchord/en/output.html) explains dimensions and file formats.
+- [Input tables](https://dangjem.github.io/ggchord/en/data.html#prepare)
+- [First multi-sequence plot](#multi-sequence-start-draw)
+- <span id="save"></span>[Save at target size](https://dangjem.github.io/ggchord/en/output.html)
 
 
-## Draw sequence backbones {#chord-start}
+## First multi-sequence relationship plot {#multi-sequence-start}
 
-Start with four bundled sequences. Read their positions and lengths before adding links and features.
+Build backbones, a link, a feature and labels in one lesson using bundled source records. Run in order; this lesson uses ggchord and optional dplyr.
 
-### Draw the backbones {#chord-start-draw}
+### Draw the backbones {#multi-sequence-start-draw}
 
 Run this lesson in a fresh R session after installing the version described on the [installation page](#installation).
 
-```{r example-3, eval=FALSE}
+
+```{r example-5, eval=FALSE}
 library(ggchord)
 ```
 
 
-```{r example-4, eval=FALSE}
+
+```{r example-6, eval=FALSE}
 p_chord_backbone <- ggchord(seq_data = seq_data_example) +
   geom_seq() +
   geom_seq_label() +
@@ -97,100 +107,287 @@ view_ggchord(p_chord_backbone, width = 7, height = 7, units = "in")
 
 
 <figure class="documentation-figure"><img src="tutorial-assets/frontbackbone.jpg" alt="Default arc backbones for four sequences" width="1008" height="1008" loading="lazy"><figcaption>Default arc backbones for four sequences</figcaption></figure>
-
-### Read the plot {#chord-start-read}
+### Read the plot {#multi-sequence-start-read}
 
 Each arc represents a row of the sequence table. Find `MT108731.1` by its label and compare it with `MT118296.1`. These two sequences are 64,323 bp and 32,090 bp, so the first arc is about twice as long as the second.
 
 `geom_seq()` draws the backbones, `geom_seq_label()` adds their IDs, and `coord_chord()` arranges the backbones as arcs.
-
-### Try removing the labels {#chord-start-try}
+### Try removing the labels {#multi-sequence-start-try}
 
 Remove the `geom_seq_label()` line and run the code again. The arcs stay in place and the sequence names disappear.
+### Add an alignment ribbon {#multi-sequence-start-links}
 
-### Use your own sequences {#chord-start-adapt}
+Take the first row of the bundled alignment table. It connects two of the four sequences.
 
-Replace `seq_data_example` with a table containing `accver` and `length`. See [Basic input tables](https://dangjem.github.io/ggchord/en/chord-data.html#tables) for the column definitions. Next, [add links and features](https://dangjem.github.io/ggchord/en/chord-build.html).
-
-
-## Draw your first collinear plot {#collinear-start}
-
-Start with four bundled sequences in horizontal rows. Use the same input as in the chord chapter and look at the backbones first.
-
-### Draw four backbones {#collinear-start-draw}
-
-Run this lesson in a fresh R session after installing the version described on the [installation page](#installation).
-
-```{r example-5, eval=FALSE}
-library(ggchord)
-```
-
-
-```{r example-6, eval=FALSE}
-p_linear_base <- ggchord(seq_data = seq_data_example) +
-  geom_seq() +
-  geom_seq_label() +
-  coord_collinear()
-view_ggchord(p_linear_base, width = 8, height = 5, units = "in")
-```
-
-
-<figure class="documentation-figure"><img src="tutorial-assets/frontlinearbase.jpg" alt="Four collinear backbones" width="1152" height="720" loading="lazy"><figcaption>Four collinear backbones</figcaption></figure>
-
-### Read position and length on a common scale {#collinear-start-read}
-
-Each row represents one sequence. Compare `MT108731.1` at about 64 kb with `MT118296.1` at about 32 kb. A shared bp scale lets you compare horizontal lengths directly.
-
-### Try removing the sequence names {#collinear-start-try}
-
-Remove `geom_seq_label()`. The four backbones and their relative lengths remain visible.
-
-### Use your own sequences {#collinear-start-adapt}
-
-Supply a sequence table with `accver` and full `length`. Next, [add an alignment and a CDS](https://dangjem.github.io/ggchord/en/collinear-build.html).
-
-
-## Draw your first circular map {#plasmid-start}
-
-Start with one complete circular backbone using bundled pUC19.
-
-### Draw the backbone and centre label {#plasmid-start-draw}
-
-Run this lesson in a fresh R session after installing the version described on the [installation page](#installation).
 
 ```{r example-7, eval=FALSE}
-library(ggchord)
+chord_links <- head(ribbon_data_example, 1)
+
+p_chord_ribbon <- p_chord_backbone +
+  geom_link_ribbon(data = chord_links)
+view_ggchord(p_chord_ribbon, width = 7, height = 7, units = "in")
 ```
+
+
+<figure class="documentation-figure"><img src="tutorial-assets/frontribbon.jpg" alt="One alignment ribbon added" width="1008" height="1008" loading="lazy"><figcaption>One alignment ribbon added</figcaption></figure>
+
+Follow the ribbon to both ends. It spans 26,298–51,139 bp on `MT108731.1` and 7,121–31,959 bp on `MT118296.1`. Each end covers an interval, so this layer uses `geom_link_ribbon()`.
+
+The default colour reflects the alignment identity for this row, about 98.6%. The crossed shape comes from how the interval ends are joined. Use the alignment coordinates to assess inversion.
+### Add a CDS {#multi-sequence-start-add-genes}
+
+<span id="prepare"></span><span id="inspect-genes"></span><span id="genes"></span>Select the original annotation starting at 43,765 bp on `OQ646790.1` and recover its biological strand.
 
 
 ```{r example-8, eval=FALSE}
-plasmid <- plasmid_example_pUC19
-p_first_circle <- ggchord(seq_data = plasmid) +
-  geom_seq() +
-  geom_seq_center_label() +
-  coord_circular()
-view_ggchord(p_first_circle, width = 6, height = 6, units = "in")
+chord_genes_example <- subset(gene_data_example, accver == "OQ646790.1" & start == 43765)
+chord_genes_example$strand <- chord_genes_example$source_strand
+
+p_chord_feature <- p_chord_ribbon +
+  geom_gene(data = chord_genes_example)
+view_ggchord(p_chord_feature, width = 7, height = 7, units = "in")
 ```
 
 
-<figure class="documentation-figure"><img src="tutorial-assets/firstcircle.jpg" alt="A circular pUC19 backbone with its name and length" width="864" height="864" loading="lazy"><figcaption>A circular pUC19 backbone with its name and length</figcaption></figure>
+<figure class="documentation-figure"><img src="tutorial-assets/frontfeature.jpg" alt="One integrase CDS added to the green backbone" width="1008" height="1008" loading="lazy"><figcaption>One integrase CDS added to the green backbone</figcaption></figure>
 
-Ticks extend inward from the inner backbone edge, with labels farther inward. On a narrow canvas, the default removes colliding text while retaining the ticks.
+Find the red arrow on green `OQ646790.1`. It marks the plus-strand integrase CDS from 43,765 to 46,140 bp. The ribbon and this CDS use independent input tables.
 
-### Read the ticks around the circle {#plasmid-start-features}
+To display the CDS name, add `geom_gene_label(data = chord_genes_example)`. It reads the label from `anno`. Next, use the same backbones to compare [rotation and gaps](https://dangjem.github.io/ggchord/en/chord-geometry.html#orientation).
 
-One turn represents the full length of pUC19. The origin is at 12 o’clock by default, with coordinates increasing clockwise. Ticks show bp and the centre label identifies the sequence. The backbone and `coord_circular()` establish positions around the circle. The next section places a replication origin on it.
+### Display the feature name {#multi-sequence-start-labels}
 
-### Use your own sequence {#plasmid-start-adapt}
 
-Provide one sequence row with `accver` and full `length`, and use the same ID in the feature table. [Continue to features and labels](https://dangjem.github.io/ggchord/en/plasmid-build.html).
+```{r example-9, eval=FALSE}
+p_chord_gene_labels <- ggchord(seq_data_example) +
+  geom_seq() +
+  geom_seq_label() +
+  geom_gene(data = chord_genes_example) +
+  geom_gene_label(data = chord_genes_example, label_radial_offset = 0.10) +
+  coord_chord()
+view_ggchord(p_chord_gene_labels, width = 7, height = 7, units = "in")
+```
+
+
+<figure class="documentation-figure"><img src="tutorial-assets/frontgenelabels.jpg" alt="Label the CDS with its original annotation" width="1008" height="1008" loading="lazy"><figcaption>Label the CDS with its original annotation</figcaption></figure>
+
+### Switch to a linear layout {#multi-sequence-start-collinear}
+
+
+```{r example-10, eval=FALSE}
+p_chord_feature + coord_collinear()
+```
+
+
+This keeps the input and layers, while Collinear selects adjacent rows by default. Compare all four views in the [next lesson](https://dangjem.github.io/ggchord/en/multi-sequence-views.html).
+
+### Use your own sequences {#multi-sequence-start-adapt}
+
+Replace `seq_data_example` with a table containing `accver` and `length`. See [Basic input tables](https://dangjem.github.io/ggchord/en/data.html#prepare) for the column definitions.
+
+
+## First single-sequence circular map {#circular-start}
+
+### Length and a prepared annotation {#circular-start-input}
+
+Only lengths and prepared tables are needed. The ori row is the verified pUC19 annotation 867–1455, matching the original inspectorigin output; no DNA recognition is run. Dependencies: ggchord and dplyr.
+
+```{r example-11, eval=FALSE}
+library(ggchord)
+```
+
+
+```{r example-12, eval=FALSE}
+library(dplyr)
+circle_seqs <- plasmid_example_pUC19 |> select(accver, length)
+circle_origins <- tibble(
+  accver = "pUC19", start = 867, end = 1455,
+  strand = "-", type = "rep_origin", anno = "ori"
+)
+p_coursecircle <- ggchord(circle_seqs) +
+  geom_seq() + geom_seq_center_label() + coord_circular()
+```
+
+
+![Circular backbone](../man/figures/coursecircle.png)
+
+### Add the feature and its label {#circular-start-features-and-labels}
+
+
+```{r example-13, eval=FALSE}
+p_coursecirclefeature <- p_coursecircle +
+  geom_feature_plasmid(data = circle_origins) +
+  geom_feature_label(data = circle_origins,
+    label_side = "inside", label_radial_offset = 0.12, size = 4)
+view_ggchord(p_coursecirclefeature)
+```
+
+
+![Circular feature and label](../man/figures/coursecirclefeature.png)
+
+Locate both ori endpoints on the ticks and trace the label to anno. A circular display is not evidence of molecular topology.
+
+### Exercise and save {#circular-start-exercise}
+
+Remove the label layer and rerun; backbone and source interval stay unchanged. Replace the row with your own known annotation.
+
+```{r example-14, eval=FALSE}
+ggsave("circular-first.png", p_coursecirclefeature,
+  width = 10, height = 8, units = "in", dpi = 144)
+```
+
+
+## Read a two-axis Dotplot from existing HSPs {#dotplot-start}
+
+
+```{r example-15, eval=FALSE}
+library(ggchord)
+library(dplyr)
+```
+
+
+### Plot original HSP endpoints {#dotplot-start-dotplot}
+
+The source-backed EMALE PAF pair has 11 observed HSPs. Its declared sequence
+lengths supply both axes. `read_paf()` converts zero-based half-open intervals
+to the internal one-based convention and reverses target endpoints for minus
+alignments. The files and their provenance are in the [input download](https://dangjem.github.io/ggchord/en/formats.html).
+The following code needs the optional `dplyr` package for data preparation.
+
+
+```{r example-16, eval=FALSE}
+library(dplyr)
+dotplot_hsp <- read_paf("examples/format-inputs/emales-pair.paf")
+dotplot_seqs <- bind_rows(
+  dotplot_hsp |> transmute(accver = qaccver, length = qlen),
+  dotplot_hsp |> transmute(accver = saccver, length = slen)
+) |>
+  distinct()
+```
+
+
+Each line runs from `(qstart, sstart)` to `(qend, send)`. `geom_seq()` is not
+required. Use `link_*` mappings and scales for colour, alpha, width and type.
+The default Identity domain is 0–100 with ticks 0/50/80/90/95/100; an explicit
+user scale overrides it.
+
+
+```{r example-17, eval=FALSE}
+p_viewdotplot <- ggchord(dotplot_seqs, dotplot_hsp) +
+  geom_alignment_segment(aes(link_colour = pident), linewidth = 0.65) +
+  coord_dotplot()
+view_ggchord(p_viewdotplot, width = 8, height = 7, units = "in")
+```
+
+
+<figure class="documentation-figure"><img src="tutorial-assets/viewdotplot.jpg" alt="All 11 source-backed EMALE PAF HSPs in one-based native coordinates; reverse alignments retain their negative slope." width="1152" height="1008" loading="lazy"><figcaption>All 11 source-backed EMALE PAF HSPs in one-based native coordinates; reverse alignments retain their negative slope.</figcaption></figure>
+
+The legacy constructor may warn about descending endpoints in these valid reverse HSPs. Keep the normalized ordering; sorting each interval would erase the displayed inversion.
+
+`x_seqs` and `y_seqs` independently select/order accessions. `gap` is display
+spacing in native bp/aa, not omitted source sequence. Axis directions accept
+1/-1 or complete named vectors. Display reversal changes the slope without
+changing the biological source table. Each axis starts at source position 1;
+concatenated segments retain their own accession and local tick labels.
+
+
+```{r example-18, eval=FALSE}
+dotplot_reversed <- ggchord(dotplot_seqs, dotplot_hsp) +
+  geom_alignment_segment(aes(link_colour = pident), linewidth = 0.65) +
+  coord_dotplot(y_orientation = -1)
+dotplot_layout <- export_ggchord_layout(dotplot_reversed)
+dotplot_layout$axis_layout
+```
+
+
+Use `map_ggchord_position(..., axis = "x"/"y")` for native/global conversion,
+with `inverse = TRUE` to go back. Display gaps return NA. Focused source
+origins use `source = TRUE`; default axis labels stay window-relative.
+Unknown directions are warned, omitted and reported; contradictory direction
+metadata is rejected. Repeated declared HSP IDs require `allow_repeated=TRUE`
+in all participating layers. Unidentified duplicate/self rows remain distinct.
+Without cg/cs/CIGAR or another alignment trace, these are HSP segments, not
+base-level mismatches or gap paths.
+
+### Boundaries and next steps {#dotplot-start-support}
+
+Backbone gene/feature/track/ribbon layers, facets and Fusion endpoints are unsupported. To inspect gaps or mismatches, provide actual aligned characters; see [the alignment workflow](https://dangjem.github.io/ggchord/en/aligned-sequences.html). Exercise: trace four endpoints of one segment and explain slope and colour separately.
+
+
+## One real link between independent plots {#fusion-start}
+
+### Start with two independent plots {#fusion-start-panels}
+
+Use ggchord, dplyr and the original PAF in the [input bundle](https://dangjem.github.io/ggchord/assets/tutorial-inputs.zip). Print course_center and course_detail independently, then connect one existing relationship.
+
+```{r example-19, eval=FALSE}
+library(ggchord)
+library(dplyr)
+```
+
+
+```{r example-20, eval=FALSE}
+library(dplyr)
+fusion_hsp <- read_paf("examples/format-inputs/emales-pair.paf")
+fusion_seqs <- bind_rows(
+  fusion_hsp |> transmute(accver = qaccver, length = qlen),
+  fusion_hsp |> transmute(accver = saccver, length = slen)
+) |>
+  distinct()
+fusion_colours <- setNames(c("#0072B2", "#D55E00"), fusion_seqs$accver)
+fusion_links <- fusion_hsp |>
+  filter(length >= 900, pident >= 85)
+fusion_events <- fusion_hsp |>
+  transmute(accver = qaccver, pos = qstart)
+```
+
+
+
+```{r example-21, eval=FALSE}
+course_center <- ggchord(fusion_seqs |> slice(1)) +
+  geom_seq(show.legend = FALSE) +
+  coord_circular()
+course_detail <- ggchord(fusion_seqs) +
+  geom_seq(show.legend = FALSE) +
+  geom_seq_label() +
+  coord_collinear(seq_axis = "vertical")
+p_coursefusion <- ggchord_fusion(course_center) +
+  fusion_panel(course_detail, id = "detail", side = "right") +
+  fusion_ribbon(
+    fusion_links |> slice(1), qpanel = "center", spanel = "detail",
+    fill = "#269B82", alpha = 0.35
+  )
+view_ggchord(p_coursefusion)
+```
+
+
+![Two panels and one source relationship](../man/figures/coursefusion.png)
+
+### Check intervals, panels and instances {#fusion-start-intervals}
+
+Fusion is a composition, not a seventh Coord. Each panel retains its data, layers, scales and physical ratio. A side places a panel without rotating it. Endpoints must share units, be fully visible and route unambiguously; direct bp–aa links are unsupported.
+
+```{r example-22, eval=FALSE}
+course_export <- export_ggchord_fusion(p_coursefusion, width = 12, height = 8)
+course_export$connections
+course_export$fronts
+```
+
+### Save at the same size {#fusion-start-save}
+
+```{r example-23, eval=FALSE}
+ggsave("fusion-first.png", p_coursefusion,
+  width = 12, height = 8, units = "in", dpi = 144)
+```
+
+Exercise: choose another real HSP and identify qpanel/spanel and its source row. Dotplot, facets and unregistered external plots are unsupported.
 
 
 ## HSP Dotplot and radial spokes {#view-expansion}
 
 Use the existing source tables; no extra alignment table is required. Dotplot segments retain all four HSP endpoints. Radial spokes use cyclic existing relationships and proportional lengths. See the website view-expansion chapter for source preparation, supported layers and inverse mapping.
 
-```{r example-9, eval=FALSE}
+```{r example-24, eval=FALSE}
 ggchord(seq_data_example, ribbon_data_example) +
   geom_alignment_segment(aes(link_colour = pident)) +
   coord_dotplot()

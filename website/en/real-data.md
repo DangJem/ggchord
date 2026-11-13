@@ -63,9 +63,7 @@ Check that IDs agree across the tables, inspect filtering reports and verify tha
 ## Save this result {#save-result}
 Save the plot just created to the working directory; use matching dimensions for preview.
 
-```r
-ggsave("phage-comparison.png", p_real_chord, width = 10, height = 8, units = "in", dpi = 144)
-```
+{{code:courseblockc}}
 
 ## Evidence checks before saving {#evidence-check}
 

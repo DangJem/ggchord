@@ -1,0 +1,25 @@
+{
+  "records": [
+    {
+      "page": "multi-sequence-start",
+      "result": "fresh R process and public build/export succeeded",
+      "script_sha256": "92dad3cf93e40f1f7cf7e6496dd2aff84e9a33b4b6dc6da880d03de443601bf5"
+    },
+    {
+      "page": "circular-start",
+      "result": "fresh R process and public build/export succeeded",
+      "script_sha256": "abd39e4034187f73e874c200c121f37f76ae3f6f68c093eb20d3b393f49e9e7f"
+    },
+    {
+      "page": "dotplot-start",
+      "result": "fresh R process and public build/export succeeded",
+      "script_sha256": "0922f424825e1b50d907ffb73672c9eeebb908e8bf9250c347bfb8407236f79d"
+    },
+    {
+      "page": "fusion-start",
+      "result": "fresh R process and public build/export succeeded",
+      "script_sha256": "d0c7e54ec22d94b67674557b077f455f802fc484962a1d166ad915fed1bdbe85"
+    }
+  ],
+  "scope": "Four independent opening lessons; no install/network, package tests or device matrix"
+}

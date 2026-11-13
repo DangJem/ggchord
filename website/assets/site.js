@@ -43,7 +43,7 @@
   const dialog=document.querySelector('#site-search-dialog'),trigger=document.querySelector('#site-search-trigger');
   const input=document.querySelector('#site-search'),results=document.querySelector('#site-results'),status=document.querySelector('#search-status');
   if(dialog&&trigger&&input&&results) {
-    const labels=zh?{all:'全部',course:'课程',function:'函数',parameter:'参数',task:'任务',faq:'排错'}:{all:'All',course:'Courses',function:'Functions',parameter:'Parameters',task:'Tasks',faq:'FAQ'};
+    const labels=zh?{all:'全部',course:'课程',function:'函数',parameter:'参数',task:'任务',tool:'查询工具',faq:'排错'}:{all:'All',course:'Courses',function:'Functions',parameter:'Parameters',task:'Tasks',tool:'Tools',faq:'FAQ'};
     const indexURL=new URL(document.body.dataset.search,location.href);
     let records,loading,filter='all',selected=-1,items=[],invoker;
     const tokens=q=>q.match(/[a-z_][a-z0-9_.]*|[\p{Script=Han}]+/giu)?.flatMap(s=>/^[\p{Script=Han}]{3,}$/u.test(s)?(s.match(/.{1,2}/gu)||[]):[s])||[];
@@ -71,12 +71,18 @@
           if(!terms.every(t=>(title+' '+keywords+' '+body).includes(t)))return null;
           let score=title===query?1000:title.includes(query)?150:0;
           score+=terms.reduce((n,t)=>n+(title.includes(t)?20:0)+(keywords.includes(t)?15:0),0);
-          if(r.kind==='parameter'||r.kind==='task')score+=8;
+          if(r.kind==='course')score+=100;
+          if(r.kind==='parameter')score-=40;
+          if(r.kind==='function'&&title===query)score+=1800;
+          if(r.kind==='parameter'&&title.split(' · ').at(-1)===query)score+=1200;
+          if((r.queries||[]).some(q=>q.toLocaleLowerCase()===query))score+=2200;
           return {r,score};
         }).filter(Boolean).sort((a,b)=>b.score-a.score);
         status.textContent=ranked.length?(zh?`${ranked.length} 项匹配，显示前 20 项`:`${ranked.length} matches; showing up to 20`):(zh?'没有找到结果。试试函数全名、另一个任务词，或使用任务索引。':'No results. Try a full function name, another task, or the task index.');
         input.setAttribute('aria-expanded',String(ranked.length>0));
-        for(const {r} of ranked.slice(0,20)) {
+        const seenPages=new Set();
+        const grouped=ranked.filter(({r})=>{const key=r.kind==='parameter'?r.url:r.url.split('#')[0];if(seenPages.has(key))return false;seenPages.add(key);return true;});
+        for(const {r} of grouped.slice(0,20)) {
           const li=document.createElement('li');li.setAttribute('role','presentation');
           const a=document.createElement('a');a.href=new URL(r.url,indexURL).href;a.id='search-result-'+items.length;a.setAttribute('role','option');a.tabIndex=-1;a.setAttribute('aria-selected','false');
           const kind=document.createElement('span');kind.className='search-kind';kind.textContent=labels[r.kind||'course']+(r.section?' · '+r.section:'');
@@ -98,6 +104,26 @@
     });
     document.addEventListener('keydown',e=>{const editable=/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)||e.target.isContentEditable;if(((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k')||(!editable&&e.key==='/')){e.preventDefault();if(!document.querySelector('dialog[open]'))open();}});
     trigger.setAttribute('aria-label',zh?'搜索任务、函数和参数，快捷键 Control 或 Command K':'Search tasks, functions and parameters, Control or Command K');
+  }
+  const galleryControls=document.querySelector('.gallery-controls');
+  if(galleryControls) {
+    const cards=[...document.querySelectorAll('.gallery-card')];
+    const selectors=[...galleryControls.querySelectorAll('select')];
+    const applyGallery=()=>{
+      let visible=0;
+      cards.forEach(card=>{
+        const keep=selectors.every(select=>select.value==='all'||(select.dataset.galleryFilter==='featured'?card.dataset.featured==='true':card.dataset['gallery'+select.dataset.galleryFilter[0].toUpperCase()+select.dataset.galleryFilter.slice(1)]===select.value));
+        card.hidden=!keep;if(keep)visible++;
+      });
+      galleryControls.querySelector('.gallery-count').textContent=zh?`显示 ${visible} / ${cards.length} 张图`:`Showing ${visible} / ${cards.length} figures`;
+    };
+    const revealHash=()=>{
+      const id=decodeURIComponent(location.hash.slice(1));
+      const target=document.getElementById(id);
+      if(target?.closest('.gallery-card')) {selectors.forEach(s=>s.value='all');applyGallery();target.scrollIntoView({block:'start'});}
+    };
+    selectors.forEach(s=>s.addEventListener('change',applyGallery));
+    applyGallery();revealHash();addEventListener('hashchange',revealHash);
   }
   // Native dialog isolates the background; full-resolution PNG pixels are unchanged.
   const figures=[...document.querySelectorAll('a.figure-link')];

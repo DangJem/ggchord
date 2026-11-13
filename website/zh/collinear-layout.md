@@ -1,4 +1,8 @@
-先学会[第一张共线性图](collinear-start.html)，再用同一组真实输入观察对齐、锚点和方向。无需学习弦图。
+{{code:courseblocky}}
+
+{{prepare:frontlinks}}
+
+先学会[第一张共线性图](multi-sequence-start.html#collinear)，再用同一组真实输入观察对齐、锚点和方向。无需学习弦图。
 
 ## 输入与默认左对齐 {#baseline}
 
@@ -63,4 +67,12 @@
 
 先只把 `align` 从 left 改成 right，观察短序列与最长序列的相对位置；再给每条序列选择一个有业务依据的锚点，解释为何可以比较。使用自己的 FASTA 长度和 BLAST/PAF 端点时先核对 ID、单位、完整长度及反向端点，见[数据导入](real-data.html#read)。
 
-没有连接时先查端点和相邻行筛选，见[跨行连接](collinear-routing.html)。接下来学习[局部窗口与分段](views.html)，完整参数见 [`coord_collinear()`](reference/coord_collinear.html)。
+没有连接时先查端点和相邻行筛选，见[跨行连接](multi-sequence-links.html#routes)。接下来学习[局部窗口与分段](views.html)，完整参数见 [`coord_collinear()`](reference/coord_collinear.html)。
+
+## 增加行距 {#gap}
+
+{{code:frontlineargap}}
+
+{{figure:frontlineargap}}
+
+`seq_gap` 在共线性图中以最长骨架宽度为基准，默认是 `0.30`。只把 MT108731.1 下方的间隙设为 `0.45`，其余行距仍为 `0.30`。比对带仍连接相同的 bp 区间。

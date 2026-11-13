@@ -1,5 +1,11 @@
 # ggchord 0.27.0 (development)
 
+- The documentation source now organizes learning into multi-sequence
+  relationships, single-sequence circular maps, HSP Dotplots and Fusion
+  composition. Shared first lessons, source-aware detail recipes, task search
+  and gallery filters use explicit page metadata and section migrations.
+  Original figure identifiers and sources are retained alongside new course PNGs.
+
 - Website installation guidance pins the development runtime source and separates
   it from stable-version help. Projection, GFF3 unknown-strand handling, count
   versus supplied-value tracks, registered character details and Fusion scope

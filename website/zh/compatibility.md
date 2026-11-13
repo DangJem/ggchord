@@ -1,32 +1,34 @@
-换坐标系时先确认单位、图层与参数。下表结合当前 Rd、源码契约与实际渲染；支持表示存在对应实现，不保证每个参数组合。三种布局可以使用原生 bp/aa 单位；基因、引物和酶切仍有核酸限制。
+换坐标系时先确认单位、图层与参数。下表结合当前 Rd、源码契约与实际渲染；支持表示存在对应实现，不保证每个参数组合。支持的布局可以使用原生 bp/aa 单位；基因、引物和酶切仍有核酸限制。
 
-## 图层与三类坐标 {#layers}
+## 图层与六类坐标 {#layers}
 
-| 图层与参考 | 弦图 | 共线性图 | 单序列圆图 | 条件与边界 |
-| --- | --- | --- | --- | --- |
-| [`geom_seq()`](reference/geom_seq.html) | 支持 | 条件支持 | 支持 | 共线性拒绝显式 radius、curvature、ring |
-| [`geom_seq_label()`](reference/geom_seq_label.html) | 支持 | 条件支持 | 支持 | 共线性不接受显式径向标签 radius |
-| [`geom_gene()`](reference/geom_gene.html) | 条件支持 | 条件支持 | 条件支持 | 要求核酸单位和源正负链，aa 用通用特征 |
-| [`geom_feature()`](reference/geom_feature.html) | 支持 | 支持 | 支持 | 要求合法 ID、区间和一致的原生单位 |
-| [`geom_feature_plasmid()`](reference/geom_feature_plasmid.html) | 支持 | 支持 | 支持 | 通用特征预设；跨模式使用须重查圆图 Position 默认值 |
-| [`geom_gene_label()`](reference/geom_gene_label.html) | 支持 | 条件支持 | 支持 | 与基因共享 Position；共线性 radial/tangent 对应竖排/横排 |
-| [`geom_feature_label()`](reference/geom_feature_label.html) | 支持 | 条件支持 | 支持 | 与特征共享 Position；共线性 radial/tangent 对应竖排/横排 |
-| [`geom_gene_label_repel()`](reference/geom_gene_label_repel.html) | 支持 | 条件支持 | 支持 | 共线性拒绝 external=FALSE，按目标尺寸检查隐藏结果 |
-| [`geom_feature_label_repel()`](reference/geom_feature_label_repel.html) | 支持 | 条件支持 | 支持 | 共线性拒绝 external=FALSE，检查适配与隐藏 |
-| [`geom_link_ribbon()`](reference/geom_link_ribbon.html) | 支持 | 条件支持 | 不支持 | 共线性按显示行判断邻接；分段同行带省略并报告 |
-| [`geom_link_line()`](reference/geom_link_line.html) | 支持 | 条件支持 | 不支持 | 要求点坐标；不支持显式分段同行点连接 |
-| [`geom_seq_region()`](reference/geom_seq_region.html) | 支持 | 支持 | 支持 | 要求合法源区间、ID 和局部侧向 |
-| [`geom_seq_scale()`](reference/geom_seq_scale.html) | 不支持 | 支持 | 不支持 | 直线标尺仅适用共线性模式 |
-| [`geom_seq_break()`](reference/geom_seq_break.html) | 不支持 | 条件支持 | 不支持 | 要求共线性窗口边界，不修改源序列 |
-| [`geom_seq_center_label()`](reference/geom_seq_center_label.html) | 条件支持 | 不支持 | 条件支持 | 仅一条显示序列，长度使用其原生 bp/aa 单位 |
-| [`geom_primer()`](reference/geom_primer.html) | 条件支持 | 不支持 | 条件支持 | 仅一条显示 DNA 序列及合法结合坐标 |
-| [`geom_primer_label_repel()`](reference/geom_primer_label_repel.html) | 条件支持 | 不支持 | 条件支持 | 仅一条显示 DNA 序列，与引物共享位置 |
-| [`geom_restriction_site()`](reference/geom_restriction_site.html) | 条件支持 | 不支持 | 条件支持 | 仅一条显示 DNA 序列及实际计算的切割坐标 |
-| [`geom_track()`](reference/geom_track.html) | 支持 | 支持 | 支持 | 源空间 Stat/Position；见[基础矩阵](foundation.html#tracks)和[估计组合](tracks.html#estimates) |
-| [`geom_track_bar()`](reference/geom_track.html) | 支持 | 支持 | 支持 | 统计观测数，给定数值请使用 col |
-| [`geom_track_col()`](reference/geom_track.html) | 支持 | 支持 | 支持 | 显式 position_track、数值高度与数值域 |
-| [`geom_track_line()`](reference/geom_track.html) | 支持 | 支持 | 支持 | 显式 position_track；闭合须明确请求，不跨缺失样本连接 |
-| [`geom_track_tile()`](reference/geom_track.html) | 支持 | 支持 | 支持 | 显式 position_track；不要求数值高度 |
+| 图层与参考 | 弦图 | 共线性图 | 单序列圆图 | Radial | Sankey | Dotplot | 条件与边界 |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| [`geom_seq()`](reference/geom_seq.html) | 支持 | 条件支持 | 支持 | 条件支持 | 条件支持 | 不支持 | 共线性拒绝显式 radius、curvature、ring |
+| [`geom_seq_label()`](reference/geom_seq_label.html) | 支持 | 条件支持 | 支持 | 条件支持 | 条件支持 | 不支持 | 共线性不接受显式径向标签 radius |
+| [`geom_gene()`](reference/geom_gene.html) | 条件支持 | 条件支持 | 条件支持 | 条件支持 | 条件支持 | 不支持 | 要求核酸单位和源正负链，aa 用通用特征 |
+| [`geom_feature()`](reference/geom_feature.html) | 支持 | 支持 | 支持 | 条件支持 | 条件支持 | 不支持 | 要求合法 ID、区间和一致的原生单位 |
+| [`geom_feature_plasmid()`](reference/geom_feature_plasmid.html) | 支持 | 支持 | 支持 | 条件支持 | 条件支持 | 不支持 | 通用特征预设；跨模式使用须重查圆图 Position 默认值 |
+| [`geom_gene_label()`](reference/geom_gene_label.html) | 支持 | 条件支持 | 支持 | 条件支持 | 条件支持 | 不支持 | 与基因共享 Position；共线性 radial/tangent 对应竖排/横排 |
+| [`geom_feature_label()`](reference/geom_feature_label.html) | 支持 | 条件支持 | 支持 | 条件支持 | 条件支持 | 不支持 | 与特征共享 Position；共线性 radial/tangent 对应竖排/横排 |
+| [`geom_gene_label_repel()`](reference/geom_gene_label_repel.html) | 支持 | 条件支持 | 支持 | 条件支持 | 条件支持 | 不支持 | 共线性拒绝 external=FALSE，按目标尺寸检查隐藏结果 |
+| [`geom_feature_label_repel()`](reference/geom_feature_label_repel.html) | 支持 | 条件支持 | 支持 | 条件支持 | 条件支持 | 不支持 | 共线性拒绝 external=FALSE，检查适配与隐藏 |
+| [`geom_link_ribbon()`](reference/geom_link_ribbon.html) | 支持 | 条件支持 | 不支持 | 条件支持 | 条件支持 | 不支持 | 共线性按显示行判断邻接；分段同行带省略并报告 |
+| [`geom_link_line()`](reference/geom_link_line.html) | 支持 | 条件支持 | 不支持 | 条件支持 | 条件支持 | 不支持 | 要求点坐标；不支持显式分段同行点连接 |
+| [`geom_seq_region()`](reference/geom_seq_region.html) | 支持 | 支持 | 支持 | 条件支持 | 条件支持 | 不支持 | 要求合法源区间、ID 和局部侧向 |
+| [`geom_seq_scale()`](reference/geom_seq_scale.html) | 不支持 | 支持 | 不支持 | 不支持 | 条件支持 | 不支持 | 直线标尺仅适用共线性模式 |
+| [`geom_seq_break()`](reference/geom_seq_break.html) | 不支持 | 条件支持 | 不支持 | 条件支持 | 条件支持 | 不支持 | 要求共线性窗口边界，不修改源序列 |
+| [`geom_seq_center_label()`](reference/geom_seq_center_label.html) | 条件支持 | 不支持 | 条件支持 | 不支持 | 不支持 | 不支持 | 仅一条显示序列，长度使用其原生 bp/aa 单位 |
+| [`geom_primer()`](reference/geom_primer.html) | 条件支持 | 不支持 | 条件支持 | 不支持 | 不支持 | 不支持 | 仅一条显示 DNA 序列及合法结合坐标 |
+| [`geom_primer_label_repel()`](reference/geom_primer_label_repel.html) | 条件支持 | 不支持 | 条件支持 | 不支持 | 不支持 | 不支持 | 仅一条显示 DNA 序列，与引物共享位置 |
+| [`geom_restriction_site()`](reference/geom_restriction_site.html) | 条件支持 | 不支持 | 条件支持 | 不支持 | 不支持 | 不支持 | 仅一条显示 DNA 序列及实际计算的切割坐标 |
+| [`geom_track()`](reference/geom_track.html) | 支持 | 支持 | 支持 | 条件支持 | 条件支持 | 不支持 | 源空间 Stat/Position；见[基础矩阵](tracks-statistics.html#tracks)和[估计组合](tracks-statistics.html#estimates) |
+| [`geom_track_bar()`](reference/geom_track.html) | 支持 | 支持 | 支持 | 条件支持 | 条件支持 | 不支持 | 统计观测数，给定数值请使用 col |
+| [`geom_track_col()`](reference/geom_track.html) | 支持 | 支持 | 支持 | 条件支持 | 条件支持 | 不支持 | 显式 position_track、数值高度与数值域 |
+| [`geom_track_line()`](reference/geom_track.html) | 支持 | 支持 | 支持 | 条件支持 | 条件支持 | 不支持 | 显式 position_track；闭合须明确请求，不跨缺失样本连接 |
+| [`geom_track_tile()`](reference/geom_track.html) | 支持 | 支持 | 支持 | 条件支持 | 条件支持 | 不支持 | 显式 position_track；不要求数值高度 |
+| [`geom_alignment_segment()`](reference/geom_alignment_segment.html) | 不支持 | 不支持 | 不支持 | 条件支持 | 条件支持 | 不支持 | 不支持 | 不支持 | HSP identity 线段 | 专用双轴几何 |
+
 
 23 个代表性图层分别在三种主要模式实际渲染，共 69 组明确标注的合成几何输入：59 组成功，10 组按契约拒绝，包含自动引物标签。中心标签在单序列弦图及圆图支持 bp/aa；引物与酶切要求 DNA。帮助已澄清这些边界。此处验证模式边界，不表示所有参数组合、生物识别或设备均已验收。参见[完整运行记录](../assets/source/tools/teaching-audit/layer-compatibility.csv)。
 
@@ -43,7 +45,7 @@ Position 只控制局部放置，不把不支持的图层转换成另一种坐�
 
 ## 新增坐标系 {#new-views}
 
-新增契约见[Dotplot/Radial支持矩阵](view-expansion.html#support)。Dotplot使用独立identity HSP层；Radial将已有Feature与Track框架接入环形邻接。圆图专有层、共享直线比例尺和branch会明确报错。新增图层检查与此前三视图证据分开记录。
+新增契约见[Dotplot/Radial支持矩阵](dotplot-start.html#support)。Dotplot使用独立identity HSP层；Radial将已有Feature与Track框架接入环形邻接。圆图专有层、共享直线比例尺和branch会明确报错。新增图层检查与此前三视图证据分开记录。
 
 
 | 图层与参考 | Dotplot | Radial |
@@ -58,11 +60,11 @@ Position 只控制局部放置，不把不支持的图层转换成另一种坐�
 
 ## 局部对齐字符单元 {#aligned-cells}
 
-| 图层/参考 | Chord / Collinear / Circular / Dotplot / Radial | 普通 Cartesian ggplot |
+| 图层/参考 | Chord / Collinear / Circular / Dotplot / Radial / Sankey | 普通 Cartesian ggplot |
 | --- | --- | --- |
 | [`geom_residue()`](reference/geom_residue.html) | 不支持生物学骨架投影 | 支持局部字符单元及 identity/reverse 位置标度 |
 
-[字符对齐工作流](formats.html#aligned-characters) 使用普通 ggplot x/y 坐标，源位置和对齐列保留为不同字段。按最终物理字形度量选择可读文字或明确的色格/报错策略，不改变源数据、不缩小字号。显式源映射注册后支持 Fusion/magnify 字符细节；可选 Biostrings 通过既有CDS map翻译真实字符，不推断比对或缺失phase。见[CDS翻译](formats.html#cds-translation)与[字符细节](fusion.html#character-detail)。
+[字符对齐工作流](aligned-sequences.html#aligned-characters) 使用普通 ggplot x/y 坐标，源位置和对齐列保留为不同字段。按最终物理字形度量选择可读文字或明确的色格/报错策略，不改变源数据、不缩小字号。显式源映射注册后支持 Fusion/magnify 字符细节；可选 Biostrings 通过既有CDS map翻译真实字符，不推断比对或缺失phase。见[CDS翻译](aligned-sequences.html#cds-translation)与[字符细节](fusion-details.html#character-detail)。
 
 ## 可选目标尺寸策略 {#adaptive}
 
@@ -71,6 +73,6 @@ Sankey、Radial、Dotplot 图及显式启用策略的 Fusion 子面板。它调�
 在用户显式约束内排列原生图例；默认不启用。分面、任意自定义 grob、Fusion 外层
 区域分配和全局标签求解器不在此范围内。
 
-[语义放大](fusion.html#multiple-details) 支持独立的已注册细节、八侧名称、嵌套叶面板路径及自由区域，每行显式选择目标；有意重叠需主动允许，全局避障由独立布局策略负责。
+[语义放大](fusion-details.html#multiple-details) 支持独立的已注册细节、八侧名称、嵌套叶面板路径及自由区域，每行显式选择目标；有意重叠需主动允许，全局避障由独立布局策略负责。
 
-Fusion还支持Sankey/Radial、多层组合及八方位/显式区域。叶面板路径保留独立来源，显式重叠导出覆盖顺序；Dotplot仍需独立轴注册。见[高级区域与嵌套](fusion.html#advanced-placement)。
+Fusion还支持Sankey/Radial、多层组合及八方位/显式区域。叶面板路径保留独立来源，显式重叠导出覆盖顺序；Dotplot仍需独立轴注册。见[高级区域与嵌套](fusion-layout.html#advanced-placement)。

@@ -49,6 +49,4 @@ Next: [read real BLASTp query intervals](alignments.html#protein), understand [C
 ## Save this result {#save-result}
 Save the plot just created to the working directory; use matching dimensions for preview.
 
-```r
-ggsave("ampR-neighbourhood.png", p_homologs, width = 10, height = 5, units = "in", dpi = 144)
-```
+{{code:courseblocke}}

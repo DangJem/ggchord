@@ -23,9 +23,7 @@ shared branches in this first version.
 
 ## Check sources and instances {#instances}
 
-```r
-get_chord_layout(p_foundationsankey)$display_instances
-```
+{{code:courseblockae}}
 
 Each of two sources appears once on each side. Do not duplicate seq_data to manufacture observations. Reciprocal records stay distinct. self_links = TRUE enables existing self records without creating any. seq_order contains each source once; between and shared branches are unsupported.
 

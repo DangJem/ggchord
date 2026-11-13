@@ -35,7 +35,7 @@ spacing, not deleted sequence. Sequence names sit beyond the outer tips.
 
 Ribbons can select nonneighbors with explicit `pairs` or
 `adjacent_only=FALSE`. Nonneighbor point links need `between`; named A–B–A
-instances use the same unambiguous [routing contract](foundation.html#instances).
+instances use the same unambiguous [routing contract](instances.html#instances).
 User control points use final x/y coordinates. Endpoint gradients and subject
 tips remain explicit options; default ribbons retain Identity fills.
 ## Export and reverse-map {#export}

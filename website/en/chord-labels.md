@@ -1,31 +1,3 @@
-Sequence names identify entire backbones. Gene names identify individual intervals. Their label layers can be adjusted separately.
+## Lesson moved {#moved}
 
-## Move sequence names inward {#sequence-labels}
-
-{{code:frontseqlabels}}
-
-{{figure:frontseqlabels}}
-
-`seq_label_radius = 0.7` places each label at 70% of its backbone's radius. Compare with the [default plot](chord-start.html#draw). The labels sit farther from the ticks. Text follows the arc by default. `seq_label_orientation = "horizontal"` makes all four names horizontal. Change one setting at a time to separate their effects.
-
-## Label one CDS {#gene-labels}
-
-{{code:frontgenes,frontgenelabels}}
-
-{{figure:frontgenelabels}}
-
-Find the red integrase arrow on the green `OQ646790.1` backbone. The new label comes from `anno`. Here, `label_radial_offset = 0.10` puts a little more radial distance between the text and arrow. When several annotations are close together, use `geom_gene_label_repel()` to spread their text. See [dense labels](labels.html#layout).
-
-Continue to the [four-sequence case study](chord.html) to combine these adjustments.
-
-## Sequence text orientation, rotation and alignment {#sequence-parameters}
-
-Use the same four complete sequences, changing only orientation or extra rotation. Arc rotates whole text along the local tangent rather than placing individual letters on an arc. Horizontal keeps text horizontal with outward justification and ignores extra seq_label_rotation. Radius defaults to 1, rotation to NULL (0), hjust/vjust to NULL resolved by orientation, and check_overlap to FALSE. Explicit radius is invalid in collinear mode. Labels overrides text, not accver. Change hjust or vjust individually and inspect at fixed dimensions.
-
-{{code:comparefinishchord}}
-{{code:compareseqlabelarc}}
-{{figure:compareseqlabelarc}}
-{{code:compareseqlabelhorizontal}}
-{{figure:compareseqlabelhorizontal}}
-{{code:compareseqlabelrotation}}
-{{figure:compareseqlabelrotation}}
+[Multi-sequence names and feature labels](multi-sequence-labels.html#sequence-labels)

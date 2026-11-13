@@ -6,7 +6,7 @@ Plot four existing HSP endpoints on independent axes. Segments are not base-leve
 
 ## Learning route {#path}
 
-- [HSP Dotplots and radial synteny](view-expansion.html)
+- [HSP Dotplots and radial synteny](dotplot-start.html#dotplot)
 - [Import nucleotide and protein alignments](alignments.html)
 - [Protein comparisons from BLASTp](protein-alignments.html)
 - [Import and convert data](formats.html)

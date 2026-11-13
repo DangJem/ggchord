@@ -1,296 +1,4 @@
 {
-  "frontseqtable": {
-    "columns": [
-      "accver",
-      "length"
-    ],
-    "rows": [
-      [
-        "MT108731.1",
-        "64323"
-      ],
-      [
-        "MT118296.1",
-        "32090"
-      ],
-      [
-        "OQ646790.1",
-        "57367"
-      ],
-      [
-        "OR222515.1",
-        "83080"
-      ]
-    ]
-  },
-  "frontlinktable": {
-    "columns": [
-      "qaccver",
-      "qstart",
-      "qend",
-      "saccver",
-      "sstart",
-      "send",
-      "pident"
-    ],
-    "rows": [
-      [
-        "MT108731.1",
-        "26298",
-        "51139",
-        "MT118296.1",
-        "7121",
-        "31959",
-        "98.612"
-      ],
-      [
-        "MT108731.1",
-        "21513",
-        "25922",
-        "MT118296.1",
-        "2365",
-        "6772",
-        "97.031"
-      ],
-      [
-        "MT108731.1",
-        "20376",
-        "20677",
-        "MT118296.1",
-        "403",
-        "704",
-        "96.689"
-      ],
-      [
-        "MT108731.1",
-        "45278",
-        "50839",
-        "OQ646790.1",
-        "27955",
-        "33476",
-        "78.429"
-      ],
-      [
-        "MT108731.1",
-        "12796",
-        "14536",
-        "OQ646790.1",
-        "722",
-        "2456",
-        "80.011"
-      ]
-    ]
-  },
-  "frontgenetable": {
-    "columns": [
-      "accver",
-      "start",
-      "end",
-      "strand",
-      "anno"
-    ],
-    "rows": [
-      [
-        "MT108731.1",
-        "13064",
-        "14554",
-        "+",
-        "hypothetical protein"
-      ],
-      [
-        "MT108731.1",
-        "22920",
-        "23705",
-        "+",
-        "hypothetical protein"
-      ],
-      [
-        "MT108731.1",
-        "23894",
-        "24814",
-        "+",
-        "hypothetical protein"
-      ],
-      [
-        "MT108731.1",
-        "27115",
-        "28053",
-        "+",
-        "hypothetical protein"
-      ],
-      [
-        "MT108731.1",
-        "48053",
-        "49111",
-        "+",
-        "hypothetical protein"
-      ]
-    ]
-  },
-  "frontimportseq": {
-    "columns": [
-      "accver",
-      "length",
-      ".source_line"
-    ],
-    "rows": [
-      [
-        "MT108731.1",
-        "64323",
-        "1"
-      ],
-      [
-        "MT118296.1",
-        "32090",
-        "1"
-      ],
-      [
-        "OQ646790.1",
-        "57367",
-        "1"
-      ],
-      [
-        "OR222515.1",
-        "83080",
-        "1"
-      ]
-    ]
-  },
-  "frontimportgff": {
-    "columns": [
-      "accver",
-      "start",
-      "end",
-      "strand",
-      "type"
-    ],
-    "rows": [
-      [
-        "MT108731.1",
-        "13064",
-        "14554",
-        "+",
-        "CDS"
-      ],
-      [
-        "MT108731.1",
-        "22920",
-        "23705",
-        "+",
-        "CDS"
-      ],
-      [
-        "MT108731.1",
-        "23894",
-        "24814",
-        "+",
-        "CDS"
-      ],
-      [
-        "MT108731.1",
-        "27115",
-        "28053",
-        "+",
-        "CDS"
-      ]
-    ]
-  },
-  "frontimportblast": {
-    "columns": [
-      "qaccver",
-      "saccver",
-      "qstart",
-      "qend",
-      "sstart",
-      "send"
-    ],
-    "rows": [
-      [
-        "MT108731.1",
-        "MT118296.1",
-        "26298",
-        "51139",
-        "7121",
-        "31959"
-      ],
-      [
-        "MT108731.1",
-        "MT118296.1",
-        "21513",
-        "25922",
-        "2365",
-        "6772"
-      ],
-      [
-        "MT108731.1",
-        "MT118296.1",
-        "20691",
-        "21146",
-        "1032",
-        "1495"
-      ]
-    ]
-  },
-  "frontimportgr": {
-    "columns": [
-      "accver",
-      "start",
-      "end",
-      "strand",
-      ".source_row",
-      "directionality",
-      "source_strand"
-    ],
-    "rows": [
-      [
-        "a",
-        "10",
-        "30",
-        "+",
-        "1",
-        "forward",
-        "+"
-      ]
-    ]
-  },
-  "frontimportgi": {
-    "columns": [
-      "qaccver",
-      "saccver",
-      "qstart",
-      "qend",
-      "sstart",
-      "send",
-      "qstrand",
-      "sstrand",
-      ".source_row",
-      ".query_anchor",
-      ".subject_anchor",
-      "orientation_known",
-      "direction",
-      "query_directionality",
-      "subject_directionality"
-    ],
-    "rows": [
-      [
-        "a",
-        "b",
-        "10",
-        "30",
-        "40",
-        "60",
-        "*",
-        "*",
-        "1",
-        "1",
-        "2",
-        "FALSE",
-        null,
-        "none",
-        "none"
-      ]
-    ]
-  },
   "realimport": {
     "console": "[1] table    category severity n       \n<0 rows> (or 0-length row.names)"
   },
@@ -322,24 +30,6 @@
         "49101",
         "50831",
         "+"
-      ]
-    ]
-  },
-  "frontselectedgene": {
-    "columns": [
-      "accver",
-      "start",
-      "end",
-      "strand",
-      "anno"
-    ],
-    "rows": [
-      [
-        "OQ646790.1",
-        "43765",
-        "46140",
-        "+",
-        "integrase"
       ]
     ]
   },
@@ -403,23 +93,8 @@
   "linkprojection": {
     "console": "  qaccver   saccver qstart qend sstart send qfeature_id    sfeature_id sequence_unit qstrand sstrand source_row projection_piece projected_bases orientation_known direction source_qstart source_qend source_sstart source_send\n1   pUC19 pETDuet-1   2486 2427   1976 1917  pUC19_AmpR pETDuet-1_AmpR            bp       -       -          1                1              60              TRUE      same             1          20             1          20"
   },
-  "inspectorigin": {
-    "columns": [
-      "accver",
-      "start",
-      "end",
-      "type",
-      "anno"
-    ],
-    "rows": [
-      [
-        "pUC19",
-        "867",
-        "1455",
-        "rep_origin",
-        "ori"
-      ]
-    ]
+  "comparecatalog": {
+    "console": "                primer_id  preferred_name                 sequence length is_universal                              source\n1 primer_657c543f56a4ea50 M13/pUC Reverse  AGCGGATAACAATTTCACACAGG     23         TRUE Addgene sequencing primer reference\n2 primer_97528c53fc4933a5    pBAD Forward     ATGCCATAGCATTTTTATCC     20         TRUE Addgene sequencing primer reference\n3 primer_9cc7178a1c0c1c24             SP6       ATTTAGGTGACACTATAG     18         TRUE Addgene sequencing primer reference\n4 primer_656f3aef2d2c0a76    MSCV Reverse CAGCGGGGCTGCTAAAGCGCATGC     24         TRUE Addgene sequencing primer reference"
   },
   "frontplasmidsummary": {
     "columns": [
@@ -435,20 +110,6 @@
       ]
     ]
   },
-  "frontduetsummary": {
-    "columns": [
-      "features",
-      "primers",
-      "selected_site_rows"
-    ],
-    "rows": [
-      [
-        20,
-        5,
-        139
-      ]
-    ]
-  },
   "imports": {
     "console": "      accver start   end strand                 anno type  source score phase                                                                                                                                          attributes .source_line source_strand     feature_id parent_ids                  .source_file\n1 MT108731.1 13064 14554      + hypothetical protein  CDS Genbank     .     0 ID=cds-QIQ63803.1;Dbxref=NCBI_GP:QIQ63803.1;Name=QIQ63803.1;Note=ORF46;gbkey=CDS;product=hypothetical protein;protein_id=QIQ63803.1;transl_table=11            7             + cds-QIQ63803.1            examples/gff3/MT108731.1.gff3\n2 MT108731.1 22920 23705      + hypothetical protein  CDS Genbank     .     0 ID=cds-QIQ63807.1;Dbxref=NCBI_GP:QIQ63807.1;Name=QIQ63807.1;Note=ORF53;gbkey=CDS;product=hypothetical protein;protein_id=QIQ63807.1;transl_table=11            8             + cds-QIQ63807.1            examples/gff3/MT108731.1.gff3\n3 MT108731.1 23894 24814      + hypothetical protein  CDS Genbank     .     0 ID=cds-QIQ63806.1;Dbxref=NCBI_GP:QIQ63806.1;Name=QIQ63806.1;Note=ORF54;gbkey=CDS;product=hypothetical protein;protein_id=QIQ63806.1;transl_table=11            9             + cds-QIQ63806.1            examples/gff3/MT108731.1.gff3\n4 MT108731.1 27115 28053      + hypothetical protein  CDS Genbank     .     0 ID=cds-QIQ63805.1;Dbxref=NCBI_GP:QIQ63805.1;Name=QIQ63805.1;Note=ORF61;gbkey=CDS;product=hypothetical protein;protein_id=QIQ63805.1;transl_table=11           10             + cds-QIQ63805.1            examples/gff3/MT108731.1.gff3"
   },
@@ -457,64 +118,6 @@
   },
   "hierarchy": {
     "console": "List of 5\n $ valid   : logi TRUE\n $ seq_data:'data.frame':\t4 obs. of  3 variables:\n $ genomes : tibble [4 × 1] (S3: tbl_df/tbl/data.frame)\n $ issues  :'data.frame':\t0 obs. of  6 variables:\n $ contigs :'data.frame':\t4 obs. of  4 variables:"
-  },
-  "adapters": {
-    "console": "  .source_row    qaccver    saccver qstart  qend sstart  send\n1           1 MT108731.1 MT118296.1  26298 51139   7121 31959\n2           2 MT108731.1 MT118296.1  21513 25922   2365  6772\n3           3 MT108731.1 MT118296.1  20376 20677    403   704\n4           4 MT108731.1 OQ646790.1  45278 50839  27955 33476"
-  },
-  "formats": {
-    "columns": [
-      "accver",
-      "start",
-      "end",
-      "strand",
-      "directionality",
-      "chromStart",
-      "chromEnd",
-      ".source_line"
-    ],
-    "rows": [
-      [
-        "pUC19",
-        "867",
-        "1455",
-        ".",
-        "none",
-        "866",
-        "1455",
-        "1"
-      ]
-    ]
-  },
-  "formatpaf": {
-    "columns": [
-      "qaccver",
-      "qstart",
-      "qend",
-      "saccver",
-      "sstart",
-      "send"
-    ],
-    "rows": [
-      [
-        "BVI_023A",
-        "1728",
-        "11139",
-        "Cflag_017A",
-        "17357",
-        "7863"
-      ],
-      [
-        "BVI_023A",
-        "15258",
-        "15450",
-        "Cflag_017A",
-        "4320",
-        "4129"
-      ]
-    ]
-  },
-  "genbank": {
-    "console": "List of 3\n $ seq_data:'data.frame':\t1 obs. of  8 variables:\n $ features:List of 1\n $ report  :List of 5"
   },
   "standardblast": {
     "columns": [
@@ -671,35 +274,6 @@
         "20523",
         "-",
         "Int"
-      ]
-    ]
-  },
-  "frontgeometry": {
-    "columns": [
-      "layer_id",
-      "component",
-      "source_row"
-    ],
-    "rows": [
-      [
-        "layer-0001",
-        "seq",
-        "1"
-      ],
-      [
-        "layer-0001",
-        "seq",
-        "2"
-      ],
-      [
-        "layer-0001",
-        "seq",
-        "3"
-      ],
-      [
-        "layer-0001",
-        "seq",
-        "4"
       ]
     ]
   },
@@ -908,13 +482,403 @@
       ]
     ]
   },
-  "comparecatalog": {
-    "console": "                primer_id  preferred_name                 sequence length is_universal                              source\n1 primer_657c543f56a4ea50 M13/pUC Reverse  AGCGGATAACAATTTCACACAGG     23         TRUE Addgene sequencing primer reference\n2 primer_97528c53fc4933a5    pBAD Forward     ATGCCATAGCATTTTTATCC     20         TRUE Addgene sequencing primer reference\n3 primer_9cc7178a1c0c1c24             SP6       ATTTAGGTGACACTATAG     18         TRUE Addgene sequencing primer reference\n4 primer_656f3aef2d2c0a76    MSCV Reverse CAGCGGGGCTGCTAAAGCGCATGC     24         TRUE Addgene sequencing primer reference"
+  "frontduetsummary": {
+    "columns": [
+      "features",
+      "primers",
+      "selected_site_rows"
+    ],
+    "rows": [
+      [
+        20,
+        5,
+        139
+      ]
+    ]
+  },
+  "adapters": {
+    "console": "  .source_row    qaccver    saccver qstart  qend sstart  send\n1           1 MT108731.1 MT118296.1  26298 51139   7121 31959\n2           2 MT108731.1 MT118296.1  21513 25922   2365  6772\n3           3 MT108731.1 MT118296.1  20376 20677    403   704\n4           4 MT108731.1 OQ646790.1  45278 50839  27955 33476"
+  },
+  "genbank": {
+    "console": " NULL"
+  },
+  "frontimportseq": {
+    "columns": [
+      "accver",
+      "length",
+      ".source_line"
+    ],
+    "rows": [
+      [
+        "MT108731.1",
+        "64323",
+        "1"
+      ],
+      [
+        "MT118296.1",
+        "32090",
+        "1"
+      ],
+      [
+        "OQ646790.1",
+        "57367",
+        "1"
+      ],
+      [
+        "OR222515.1",
+        "83080",
+        "1"
+      ]
+    ]
+  },
+  "frontimportgff": {
+    "columns": [
+      "accver",
+      "start",
+      "end",
+      "strand",
+      "type"
+    ],
+    "rows": [
+      [
+        "MT108731.1",
+        "13064",
+        "14554",
+        "+",
+        "CDS"
+      ],
+      [
+        "MT108731.1",
+        "22920",
+        "23705",
+        "+",
+        "CDS"
+      ],
+      [
+        "MT108731.1",
+        "23894",
+        "24814",
+        "+",
+        "CDS"
+      ],
+      [
+        "MT108731.1",
+        "27115",
+        "28053",
+        "+",
+        "CDS"
+      ]
+    ]
+  },
+  "frontimportblast": {
+    "columns": [
+      "qaccver",
+      "saccver",
+      "qstart",
+      "qend",
+      "sstart",
+      "send"
+    ],
+    "rows": [
+      [
+        "MT108731.1",
+        "MT118296.1",
+        "26298",
+        "51139",
+        "7121",
+        "31959"
+      ],
+      [
+        "MT108731.1",
+        "MT118296.1",
+        "21513",
+        "25922",
+        "2365",
+        "6772"
+      ],
+      [
+        "MT108731.1",
+        "MT118296.1",
+        "20691",
+        "21146",
+        "1032",
+        "1495"
+      ]
+    ]
+  },
+  "frontimportgr": {
+    "columns": [
+      "accver",
+      "start",
+      "end",
+      "strand",
+      ".source_row",
+      "directionality",
+      "source_strand"
+    ],
+    "rows": [
+      [
+        "a",
+        "10",
+        "30",
+        "+",
+        "1",
+        "forward",
+        "+"
+      ]
+    ]
+  },
+  "frontimportgi": {
+    "columns": [
+      "qaccver",
+      "saccver",
+      "qstart",
+      "qend",
+      "sstart",
+      "send",
+      "qstrand",
+      "sstrand",
+      ".source_row",
+      ".query_anchor",
+      ".subject_anchor",
+      "orientation_known",
+      "direction",
+      "query_directionality",
+      "subject_directionality"
+    ],
+    "rows": [
+      [
+        "a",
+        "b",
+        "10",
+        "30",
+        "40",
+        "60",
+        "*",
+        "*",
+        "1",
+        "1",
+        "2",
+        "FALSE",
+        {},
+        "none",
+        "none"
+      ]
+    ]
+  },
+  "formats": {
+    "columns": [
+      "accver",
+      "start",
+      "end",
+      "strand",
+      "directionality",
+      "chromStart",
+      "chromEnd",
+      ".source_line"
+    ],
+    "rows": [
+      [
+        "pUC19",
+        "867",
+        "1455",
+        ".",
+        "none",
+        "866",
+        "1455",
+        "1"
+      ]
+    ]
+  },
+  "formatpaf": {
+    "columns": [
+      "qaccver",
+      "qstart",
+      "qend",
+      "saccver",
+      "sstart",
+      "send"
+    ],
+    "rows": [
+      [
+        "BVI_023A",
+        "1728",
+        "11139",
+        "Cflag_017A",
+        "17357",
+        "7863"
+      ],
+      [
+        "BVI_023A",
+        "15258",
+        "15450",
+        "Cflag_017A",
+        "4320",
+        "4129"
+      ]
+    ]
+  },
+  "comparetrackfocus": {
+    "console": "  accver start end   gc .source_accver .source_row .source_origin .source_start .source_end .truncated_left .truncated_right\n1  pUC19     1   1 0.53          pUC19           5            500           401         500            TRUE            FALSE\n2  pUC19     2 101 0.49          pUC19           6            500           501         600           FALSE            FALSE\n3  pUC19   102 201 0.61          pUC19           7            500           601         700           FALSE            FALSE\n4  pUC19   202 301 0.58          pUC19           8            500           701         800           FALSE            FALSE"
+  },
+  "frontgeometry": {
+    "columns": [
+      "layer_id",
+      "component",
+      "source_row"
+    ],
+    "rows": [
+      [
+        "layer-0001",
+        "seq",
+        "1"
+      ],
+      [
+        "layer-0001",
+        "seq",
+        "2"
+      ],
+      [
+        "layer-0001",
+        "seq",
+        "3"
+      ],
+      [
+        "layer-0001",
+        "seq",
+        "4"
+      ]
+    ]
   },
   "comparediagnostics": {
     "console": "List of 2\n $ measurement:List of 17\n $ order      : chr [1:4] \"MT108731.1\" \"MT118296.1\" \"OQ646790.1\" ..."
   },
-  "comparetrackfocus": {
-    "console": "  accver start end   gc .source_accver .source_row .source_origin .source_start .source_end .truncated_left .truncated_right\n1  pUC19     1   1 0.53          pUC19           5            500           401         500            TRUE            FALSE\n2  pUC19     2 101 0.49          pUC19           6            500           501         600           FALSE            FALSE\n3  pUC19   102 201 0.61          pUC19           7            500           601         700           FALSE            FALSE\n4  pUC19   202 301 0.58          pUC19           8            500           701         800           FALSE            FALSE"
+  "frontseqtable": {
+    "columns": [
+      "accver",
+      "length"
+    ],
+    "rows": [
+      [
+        "MT108731.1",
+        "64323"
+      ],
+      [
+        "MT118296.1",
+        "32090"
+      ],
+      [
+        "OQ646790.1",
+        "57367"
+      ],
+      [
+        "OR222515.1",
+        "83080"
+      ]
+    ]
+  },
+  "frontlinktable": {
+    "columns": [
+      "qaccver",
+      "qstart",
+      "qend",
+      "saccver",
+      "sstart",
+      "send",
+      "pident"
+    ],
+    "rows": [
+      [
+        "MT108731.1",
+        "26298",
+        "51139",
+        "MT118296.1",
+        "7121",
+        "31959",
+        "98.612"
+      ],
+      [
+        "MT108731.1",
+        "21513",
+        "25922",
+        "MT118296.1",
+        "2365",
+        "6772",
+        "97.031"
+      ],
+      [
+        "MT108731.1",
+        "20376",
+        "20677",
+        "MT118296.1",
+        "403",
+        "704",
+        "96.689"
+      ],
+      [
+        "MT108731.1",
+        "45278",
+        "50839",
+        "OQ646790.1",
+        "27955",
+        "33476",
+        "78.429"
+      ],
+      [
+        "MT108731.1",
+        "12796",
+        "14536",
+        "OQ646790.1",
+        "722",
+        "2456",
+        "80.011"
+      ]
+    ]
+  },
+  "frontgenetable": {
+    "columns": [
+      "accver",
+      "start",
+      "end",
+      "strand",
+      "anno"
+    ],
+    "rows": [
+      [
+        "MT108731.1",
+        "13064",
+        "14554",
+        "+",
+        "hypothetical protein"
+      ],
+      [
+        "MT108731.1",
+        "22920",
+        "23705",
+        "+",
+        "hypothetical protein"
+      ],
+      [
+        "MT108731.1",
+        "23894",
+        "24814",
+        "+",
+        "hypothetical protein"
+      ],
+      [
+        "MT108731.1",
+        "27115",
+        "28053",
+        "+",
+        "hypothetical protein"
+      ],
+      [
+        "MT108731.1",
+        "48053",
+        "49111",
+        "+",
+        "hypothetical protein"
+      ]
+    ]
   }
 }

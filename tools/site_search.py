@@ -3,6 +3,7 @@ import html,json,re,hashlib
 from pathlib import Path
 from urllib.parse import quote
 from documentation_lib import ROOT,WEB,PAGES,RECIPES,snippets,expand
+from site_registry import page_kind
 
 def complete_examples(assets):
     folder=assets/'examples';folder.mkdir(exist_ok=True)
@@ -10,7 +11,7 @@ def complete_examples(assets):
     for lang in ['en','zh']:
         for page in PAGES:
             slug=page['slug']
-            if slug=='installation':continue
+            if slug=='installation' or page.get('kind')=='alias':continue
             text=(WEB/lang/(slug+'.md')).read_text()
             # Inline the exact public preparation source, including recipe functions.
             for name,keys in RECIPES.items():text=text.replace('{{recipe:'+name+'}}','{{prepare:'+','.join(keys)+'}}')
@@ -26,7 +27,9 @@ def complete_examples(assets):
 def search_records(out,lang,page_records):
     records=[]
     for page in page_records:
-        page['kind']='faq' if page['url']=='faq.html' else 'function' if page['url'].startswith('reference/') else 'course'
+        kind=page_kind(page['url'])
+        page['kind']='faq' if page['url']=='faq.html' else 'function' if kind=='api' else 'course' if kind in ['tutorial','module','case','index'] else 'tool'
+        page['keywords']=page['url'].removesuffix('.html')
         page['summary']=page['text'][:240]
         records.append(page)
         # Hit-level context uses only public rendered prose; executable blocks are excluded.
@@ -55,7 +58,10 @@ def search_records(out,lang,page_records):
     for r in json.loads((WEB/'teaching-tasks.json').read_text()):
         slug,_,anchor=r['page'].partition('#')
         records.append(dict(kind='task',url=slug+'.html'+('#'+anchor if anchor else ''),title=r['task'][lang],section=titles[slug],keywords=r['api']+' '+r['parameters'],text=r['task'][lang]+' '+r['parameters'],summary=r['api']+' · '+r['parameters']+' · '+r['modes']))
+    aliases={a:p.stem for p in (ROOT/'man').glob('*.Rd') for a in re.findall(r'\\alias\{([^}]+)\}',p.read_text())}
     for api,r in decisions.items():
         slug,_,anchor=(r['page']+'#'+r['anchor']).partition('#')
-        records.append(dict(kind='function',url=slug+'.html#'+anchor,title=api,section=titles[slug],keywords=api+' '+r['purpose'][lang],text=r['purpose'][lang],summary=r['purpose'][lang]))
+        records.append(dict(kind='function',url='reference/'+aliases[api]+'.html#ref-usage',title=api,section=titles[slug],keywords=api+' '+r['purpose'][lang],text=r['purpose'][lang],summary=r['purpose'][lang]))
+    for intent in json.loads((WEB/'search-intents.json').read_text()):
+        records.append(dict(kind='task',url=intent['url'],title=intent['title'][lang],queries=intent['queries'],keywords=' '.join(intent['queries']),text=intent['title'][lang],summary=intent['summary'][lang]))
     return records

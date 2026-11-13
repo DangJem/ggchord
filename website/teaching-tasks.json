@@ -7,7 +7,7 @@
     "api": "geom_seq",
     "parameters": "seq_style, seq_backbone_gap, seq_backbone_width",
     "modes": "A / B / C",
-    "page": "plasmid-tuning#style",
+    "page": "circular-layout#style",
     "level": "basics"
   },
   {
@@ -40,7 +40,7 @@
     "api": "geom_link_ribbon",
     "parameters": "link_ctrl_point, link_gap, link_avoid",
     "modes": "A / B",
-    "page": "chord-routing",
+    "page": "multi-sequence-links#control",
     "level": "advanced"
   },
   {
@@ -51,7 +51,7 @@
     "api": "geom_link_line",
     "parameters": "link_type, qpos/spos, arrow",
     "modes": "A / B",
-    "page": "chord-branches#point-links",
+    "page": "multi-sequence-links#point-links",
     "level": "advanced"
   },
   {
@@ -73,7 +73,7 @@
     "api": "geom_seq_region",
     "parameters": "region_side, region_width, region_offset",
     "modes": "A / B / C",
-    "page": "chord-routing",
+    "page": "multi-sequence-links#control",
     "level": "advanced"
   },
   {
@@ -84,7 +84,7 @@
     "api": "scale_ribbon_fill_stepsn",
     "parameters": "ribbon_fill",
     "modes": "A / B",
-    "page": "adjustments",
+    "page": "styling#roles",
     "level": "basics"
   },
   {
@@ -117,7 +117,7 @@
     "api": "stat_ribbon_density",
     "parameters": "bins, weight",
     "modes": "A / B",
-    "page": "ribbon-statistics#density",
+    "page": "ribbons#statistics-density",
     "level": "advanced"
   },
   {
@@ -128,7 +128,7 @@
     "api": "stat_ribbon_bundle",
     "parameters": "min_bundle, group_by",
     "modes": "A / B",
-    "page": "ribbon-statistics#bundle",
+    "page": "ribbons#statistics-bundle",
     "level": "advanced"
   },
   {
@@ -172,7 +172,7 @@
     "api": "geom_link_ribbon",
     "parameters": "adjacent_only, pairs, nonadjacent_linewidth",
     "modes": "B",
-    "page": "collinear-routing",
+    "page": "multi-sequence-links#routes",
     "level": "advanced"
   },
   {
@@ -194,7 +194,7 @@
     "api": "geom_seq_scale",
     "parameters": "length, location, offset",
     "modes": "B",
-    "page": "collinear-tuning#scale",
+    "page": "collinear-layout#gap",
     "level": "advanced"
   },
   {
@@ -205,7 +205,7 @@
     "api": "coord_circular",
     "parameters": "rotation, direction, gap, fit",
     "modes": "C",
-    "page": "plasmid-tuning",
+    "page": "circular-layout#style",
     "level": "basics"
   },
   {
@@ -293,7 +293,7 @@
     "api": "geom_track_tile",
     "parameters": "track_fill, position",
     "modes": "A / B / C",
-    "page": "tracks#tile",
+    "page": "tracks",
     "level": "advanced"
   },
   {
@@ -304,7 +304,7 @@
     "api": "position_track",
     "parameters": "track, side, order, width, gap",
     "modes": "A / B / C",
-    "page": "tracks#sharing",
+    "page": "tracks",
     "level": "advanced"
   },
   {
@@ -359,7 +359,7 @@
     "api": "geom_link_ribbon",
     "parameters": "link_branch, link_branch_fraction",
     "modes": "A / B",
-    "page": "chord-branches#branches",
+    "page": "multi-sequence-links#branches",
     "level": "advanced"
   },
   {
@@ -370,7 +370,7 @@
     "api": "geom_seq_center_label",
     "parameters": "name, length, separator, name_style, length_style",
     "modes": "C",
-    "page": "circular-layers#center",
+    "page": "circular-layout#center",
     "level": "advanced"
   },
   {
@@ -414,7 +414,7 @@
     "api": "diagnose_ggchord",
     "parameters": "plot, width, height; catalog: aliases",
     "modes": "general",
-    "page": "workflow-tools",
+    "page": "workflows#tools",
     "level": "advanced"
   },
   {
@@ -447,7 +447,7 @@
     "api": "geom_track",
     "parameters": "geom, stat, track, position",
     "modes": "A / B / C / Sankey",
-    "page": "foundation#tracks",
+    "page": "tracks-statistics#tracks",
     "level": "advanced"
   },
   {
@@ -458,7 +458,7 @@
     "api": "geom_link_ribbon",
     "parameters": "between, allow_repeated",
     "modes": "A / B",
-    "page": "foundation#instances",
+    "page": "instances#instances",
     "level": "advanced"
   },
   {
@@ -469,7 +469,7 @@
     "api": "coord_sankey",
     "parameters": "column_gap, self_links",
     "modes": "Sankey",
-    "page": "foundation#sankey",
+    "page": "sankey#sankey",
     "level": "advanced"
   },
   {
@@ -480,7 +480,7 @@
     "api": "coord_dotplot",
     "parameters": "x_seqs, y_seqs, x_orientation, y_orientation",
     "modes": "Dotplot",
-    "page": "view-expansion#dotplot",
+    "page": "dotplot-start#dotplot",
     "level": "advanced"
   },
   {
@@ -491,7 +491,7 @@
     "api": "geom_alignment_segment",
     "parameters": "mapping, data, allow_repeated",
     "modes": "Dotplot",
-    "page": "view-expansion#dotplot",
+    "page": "dotplot-start#dotplot",
     "level": "advanced"
   },
   {
@@ -502,7 +502,7 @@
     "api": "coord_radial_synteny",
     "parameters": "start_angle, clockwise, inner_radius",
     "modes": "Radial",
-    "page": "view-expansion#radial",
+    "page": "radial-synteny#radial",
     "level": "advanced"
   },
   {
@@ -513,7 +513,7 @@
     "api": "ggchord_fusion",
     "parameters": "center, center_size, layout",
     "modes": "Fusion",
-    "page": "fusion#intervals",
+    "page": "fusion-routing#intervals",
     "level": "advanced"
   },
   {
@@ -524,7 +524,7 @@
     "api": "fusion_ribbon",
     "parameters": "data, qpanel, spanel, gradient, tip",
     "modes": "Fusion",
-    "page": "fusion#intervals",
+    "page": "fusion-routing#intervals",
     "level": "advanced"
   },
   {
@@ -535,7 +535,7 @@
     "api": "export_ggchord_fusion",
     "parameters": "width, height",
     "modes": "Fusion",
-    "page": "fusion#export",
+    "page": "fusion-routing#export",
     "level": "advanced"
   },
   {
@@ -546,7 +546,7 @@
     "api": "read_bedpe",
     "parameters": "file, files, source_file, unmapped",
     "modes": "Input",
-    "page": "formats#bedpe",
+    "page": "import-intervals#bedpe",
     "level": "advanced"
   },
   {
@@ -557,7 +557,7 @@
     "api": "geom_residue",
     "parameters": "mapping, overflow, size",
     "modes": "Cartesian aligned excerpts",
-    "page": "formats#aligned-characters",
+    "page": "aligned-sequences#aligned-characters",
     "level": "advanced"
   },
   {
@@ -568,7 +568,7 @@
     "api": "map_alignment_position",
     "parameters": "data, accver, position, inverse",
     "modes": "DNA / RNA / AA",
-    "page": "formats#aligned-source",
+    "page": "aligned-sequences#aligned-source",
     "level": "advanced"
   },
   {
@@ -579,7 +579,7 @@
     "api": "magnify_ggchord",
     "parameters": "region, detail_plot, side, connector",
     "modes": "Circular / Chord + Collinear",
-    "page": "fusion#magnify",
+    "page": "fusion-details#magnify",
     "level": "advanced"
   }
 ]

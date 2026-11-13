@@ -6,7 +6,7 @@
 
 ## 学习路线 {#path}
 
-- [HSP点阵图与径向共线性](view-expansion.html)
+- [HSP点阵图与径向共线性](dotplot-start.html#dotplot)
 - [导入核酸和蛋白比对](alignments.html)
 - [从 BLASTp 绘制蛋白比较图](protein-alignments.html)
 - [导入和转换数据](formats.html)

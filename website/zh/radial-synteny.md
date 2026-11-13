@@ -28,7 +28,7 @@ N=2每条原始HSP只绘一次，N=1报错。反向HSP保留完整、有顺序�
 
 
 Ribbon可用显式`pairs`或`adjacent_only=FALSE`选择非邻接关系；非邻接点连接须指定
-`between`。命名A–B–A实例沿用[明确路由契约](foundation.html#instances)。
+`between`。命名A–B–A实例沿用[明确路由契约](instances.html#instances)。
 用户控制点使用最终x/y布局单位。端点渐变和subject尖头仍须显式选择，默认保留Identity填充。
 ## 导出与反向映射 {#export}
 

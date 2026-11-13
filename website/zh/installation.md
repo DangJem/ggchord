@@ -52,6 +52,6 @@ p
 
 <span id="first-plot"></span><span id="input"></span><span id="read"></span>
 
-- [基本数据表](chord-data.html)
-- [第一张多序列图](chord-start.html)
+- [基本数据表](data.html#prepare)
+- [第一张多序列图](multi-sequence-start.html#draw)
 - <span id="save"></span>[按目标尺寸保存](output.html)

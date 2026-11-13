@@ -1,3 +1,5 @@
+先按任务选[四个模块](learn.html#modules)：多序列关系（Chord/Collinear/Radial/Sankey）、单序列 Circular、HSP Dotplot、Fusion 组合。六种 Coord 与组合层职责不同。
+
 ## 图由什么组成？ {#prepare}
 
 | 概念 | 图上的含义 | 在代码中 |
@@ -17,19 +19,19 @@
 
 {{figure:frontbackbone}}
 
-`coord_chord()` 把多条序列排在同一张图里，便于查看整体连接关系。[从序列骨架开始](chord-start.html)。
+`coord_chord()` 把多条序列排在同一张图里，便于查看整体连接关系。[从序列骨架开始](multi-sequence-start.html#draw)。
 
 ### 共线性图 {#collinear}
 
 {{figure:frontlinearbase}}
 
-`coord_collinear()` 把骨架排成横行，便于比较位置和顺序。[进入共线性图章节](collinear-start.html)。共线性图的区间连接默认保留相邻显示行之间的记录。
+`coord_collinear()` 把骨架排成横行，便于比较位置和顺序。[进入共线性图章节](multi-sequence-start.html#collinear)。共线性图的区间连接默认保留相邻显示行之间的记录。
 
 ### 单序列圆图 {#circular}
 
 {{figure:firstcircle}}
 
-`coord_circular()` 把一条序列画成圆环，适合标注质粒等环状 DNA。[进入单序列圆图章节](plasmid-start.html)。
+`coord_circular()` 把一条序列画成圆环，适合标注质粒等环状 DNA。[进入单序列圆图章节](circular-start.html#input)。
 
 ## 从数据到图形 {#composition}
 

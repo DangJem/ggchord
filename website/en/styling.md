@@ -41,24 +41,7 @@ recorded sequence lengths and HSPs; the reference canvas is in inches and the
 automatic text floor is in mm. The report describes the requested 8 × 6 inch
 PNG; use the same size with standard `ggsave()` to reproduce that arrangement.
 
-```r
-library(ggchord)
-library(dplyr)
-seqs <- seq_data_example |>
-  select(accver, length)
-plot <- ggchord(seqs, ribbon_data_example) +
-  geom_seq() +
-  geom_link_ribbon() +
-  adapt_ggchord(
-    mode = "adaptive",
-    reference_size = c(8, 6),
-    text_scale_range = c(0.85, 1.35),
-    min_text_size = 2.5
-  )
-report <- diagnose_ggchord(plot, width = 8, height = 6, device = "png")
-report$guide_layout$guides
-report$adaptive_layout$styles
-```
+{{code:courseblockw}}
 
 `fixed` holds default theme and guide furniture at reference physical sizes.
 `scale` adjusts theme-driven defaults within the chosen multiplier range.
@@ -83,7 +66,7 @@ and font embedding certification are outside this policy.
 ## Check your result {#check-result}
 Links from the same query share a colour; continuous identity needs a continuous scale. Put fixed colours outside aes() and make each guide explain its mapping.
 
-<div class="next-step">Continue: <a href="adjustments.html">Common adjustments and grammar →</a></div>
+<div class="next-step">Continue: <a href="styling.html#roles">Common adjustments and grammar →</a></div>
 
 See [scale families](scale-families.html) for runnable manual/continuous/steps/identity, line type, opacity and theme examples.
 
@@ -106,38 +89,36 @@ The registered `ggchord.axis.*` physical settings accept scalar absolute units, 
 
 The following real GC fractions come from the unchanged bundled pUC19 sequence. It needs optional dplyr. The Track's data scale owns the fraction domain and unit; its local native Guide owns axis appearance. The ordinary theme owns shared decorations. No coverage or read support is invented.
 
-```r
-data(plasmid_example_pUC19)
-library(dplyr)
-source_sequence <- plasmid_example_pUC19
-bin_start <- seq.int(1L, source_sequence$length, by = 100L)
-track_bins <- tibble(
-  accver = source_sequence$accver, start = bin_start,
-  end = pmin(bin_start + 99L, source_sequence$length)
-) |>
-  rowwise() |>
-  mutate(gc = mean(strsplit(
-    substr(source_sequence$sequence, start, end), "", fixed = TRUE
-  )[[1]] %in% c("G", "C"))) |>
-  ungroup()
-themed_track <- ggchord(source_sequence |> select(accver, length)) +
-  geom_seq() +
-  geom_track(aes(x = start, y = gc), data = track_bins, geom = "point",
-    track = position_track("GC", width = unit(5, "mm")), colour = "#59B59C") +
-  scale_track_value_continuous("GC", limits = c(0, 1), unit = "fraction",
-    guide = ggplot2::guide_axis(theme = theme(
-      axis.text = element_text(colour = "#E5A5C0", size = 10),
-      axis.title = element_text(face = "bold")
-    ))) +
-  coord_circular() +
-  theme_ggchord_dark() +
-  theme(
-    ggchord.axis.text.orientation = "horizontal",
-    ggchord.track.axis.text = element_text(size = 9),
-    ggchord.track.axis.title.offset = unit(6, "mm")
-  )
-```
+{{code:courseblockx}}
 
 `ggchord.track.axis.line/text/title` control shared numerical-axis styles; `.text.offset` and `.title.offset` are nonnegative absolute units. Resolved font/family/angle metrics are used when reserving plot space. The GC Guide's explicit text style wins over the later shared 9pt default. A local `element_blank()` hides just that decoration. `guide_axis()` supports local `axis.line/text/title`, `angle` and `check.overlap`; other options fail explicitly instead of being silently ignored.
 
 Layers with one Track ID share a band, value domain and one numerical reference; distinct IDs already have independent value/fill/colour scales and colour guides. Add `scale_track_*()` for each ID rather than a theme element named after every track. Colour-guide appearance can use the native `guide_legend(theme = ...)` or `guide_colourbar(theme = ...)` supplied to the corresponding Track colour scale. Global legend fonts/background/placement remain theme concerns. Sequence order, HSP selection, statistics and units never change when switching themes. Automatic label/Guide layout is a separate policy and remeasures at the final export size.
+
+<div class="task-intro"><p>Put common adjustments in the appropriate ggplot2 component: mappings, geometry, positions, coordinates and themes have distinct roles.</p></div>
+
+<span id="mapping-prepare"></span>
+
+## Assign each responsibility {#grammar}
+[Plotting concepts](modes.html#prepare) explains layers, mappings, scales and coordinates. The example below applies that distinction to alignment identity.
+
+## Map link identity {#mapping}
+
+{{code:adjustments}}
+
+{{figure:mappingexample}}
+
+## Place features {#position}
+Use `position_strand(c("+" = .1, "-" = -.2))` for signed strand offsets.
+`position_feature_stack()` handles overlapping features; `position_track()`
+allocates a named quantitative lane. Geometric sequence parameters accept one
+value, a matching unnamed vector, or a vector named by `accver`; named vectors
+are recommended. This syntax does not extend to scales, guides or themes.
+
+Each layer owns its own `data`, `mapping` and parameters. Repeated feature or
+link layers do not replace one another. Use ordinary ggplot2 `show.legend` and
+`inherit.aes`; role input mappings precede geometry, while staged visual mappings
+follow ggplot2 evaluation. See the [API contract](reference/ggchord_api_contract.html).
+
+## Check your result {#check-result-supplement}
+Use a coordinate for global rotation, named values for per-sequence geometry, and mappings plus scales for data-dependent colour.

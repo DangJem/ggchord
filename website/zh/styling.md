@@ -38,24 +38,7 @@
 参考画布单位为英寸，自动字号下限单位为 mm。诊断描述指定的 8 × 6 英寸 PNG；
 标准 `ggsave()` 使用相同尺寸即可重现此排布。
 
-```r
-library(ggchord)
-library(dplyr)
-seqs <- seq_data_example |>
-  select(accver, length)
-plot <- ggchord(seqs, ribbon_data_example) +
-  geom_seq() +
-  geom_link_ribbon() +
-  adapt_ggchord(
-    mode = "adaptive",
-    reference_size = c(8, 6),
-    text_scale_range = c(0.85, 1.35),
-    min_text_size = 2.5
-  )
-report <- diagnose_ggchord(plot, width = 8, height = 6, device = "png")
-report$guide_layout$guides
-report$adaptive_layout$styles
-```
+{{code:courseblockw}}
 
 `fixed` 固定默认主题和图例部件的参考物理尺寸，`scale` 在倍率范围内调整主题驱动
 的默认样式，`adaptive` 再联合选择原生图例的行列、侧边和方向并重测。它复用已有
@@ -74,7 +57,7 @@ report$adaptive_layout$styles
 ## 完成后检查 {#check-result}
 同一 query 的连接颜色一致；连续相似度应使用连续标度。固定颜色放在 aes() 外，图例必须能说明映射。
 
-<div class="next-step">继续：<a href="adjustments.html">调整图形 →</a></div>
+<div class="next-step">继续：<a href="styling.html#roles">调整图形 →</a></div>
 
 各角色 manual/continuous/steps/identity、线型、透明度和主题的完整可运行家族例子见[标度家族](scale-families.html)。
 
@@ -97,38 +80,35 @@ report$adaptive_layout$styles
 
 以下真实GC比例来自未改动的随包pUC19序列，需可选dplyr。Track数据Scale负责比例值域和单位，其局部原生Guide负责轴装饰，普通Theme负责共享外观，没有虚构测序深度或read support。
 
-```r
-data(plasmid_example_pUC19)
-library(dplyr)
-source_sequence <- plasmid_example_pUC19
-bin_start <- seq.int(1L, source_sequence$length, by = 100L)
-track_bins <- tibble(
-  accver = source_sequence$accver, start = bin_start,
-  end = pmin(bin_start + 99L, source_sequence$length)
-) |>
-  rowwise() |>
-  mutate(gc = mean(strsplit(
-    substr(source_sequence$sequence, start, end), "", fixed = TRUE
-  )[[1]] %in% c("G", "C"))) |>
-  ungroup()
-themed_track <- ggchord(source_sequence |> select(accver, length)) +
-  geom_seq() +
-  geom_track(aes(x = start, y = gc), data = track_bins, geom = "point",
-    track = position_track("GC", width = unit(5, "mm")), colour = "#59B59C") +
-  scale_track_value_continuous("GC", limits = c(0, 1), unit = "fraction",
-    guide = ggplot2::guide_axis(theme = theme(
-      axis.text = element_text(colour = "#E5A5C0", size = 10),
-      axis.title = element_text(face = "bold")
-    ))) +
-  coord_circular() +
-  theme_ggchord_dark() +
-  theme(
-    ggchord.axis.text.orientation = "horizontal",
-    ggchord.track.axis.text = element_text(size = 9),
-    ggchord.track.axis.title.offset = unit(6, "mm")
-  )
-```
+{{code:courseblockx}}
 
 `ggchord.track.axis.line/text/title` 控制共享数值轴外观；`.text.offset` 与 `.title.offset` 使用非负绝对单位。预留图幅时采用解析后的字号/字体/角度实测。GC Guide的显式文字样式优先于后来添加的全局9pt默认；局部 `element_blank()` 只隐藏对应装饰。`guide_axis()` 支持局部 `axis.line/text/title`、`angle` 与 `check.overlap`，其余选项明确报错，不静默忽略。
 
 同Track ID的图层共享band、数值域和一个数值参考轴；不同ID已有独立数值/fill/colour Scale和颜色Guide。按ID添加 `scale_track_*()`，无需为每个Track注册主题元素。颜色Guide的局部外观可以通过对应Track色标中的原生 `guide_legend(theme = ...)` 或 `guide_colourbar(theme = ...)` 设置；全局图例字体/背景/位置仍由Theme负责。主题切换不改变序列顺序、HSP筛选、统计或单位。标签/Guide自动排版是独立策略，会按最终导出尺寸重新测量。
+
+<div class="task-intro"><p>把常见调整放到正确的 ggplot2 组件：数据映射、几何位置、坐标和主题各负其责。</p></div>
+
+<span id="mapping-prepare"></span>
+
+## 职责分配 {#grammar}
+[绘图基本概念](modes.html#prepare)解释图层、映射、标度和坐标的分工。下面只演示如何把这种分工用到比对相似度。
+
+## 映射连接相似度 {#mapping}
+
+
+{{code:adjustments}}
+
+{{figure:mappingexample}}
+
+## 放置注释 {#position}
+使用 `position_strand(c("+" = .1, "-" = -.2))` 指定带符号的逐链位移。
+`position_feature_stack()` 处理重叠注释，`position_track()` 分配命名定量轨道。
+逐序列几何参数可用单值、等长无名向量或按 `accver` 命名的向量；推荐命名向量。
+这套语法不扩展到标度、图例或 theme。
+
+每层独立拥有 `data`、`mapping` 和参数，同类注释/连接层不会互相替换。
+`show.legend` 和 `inherit.aes` 遵循 ggplot2。输入角色映射在几何生成前处理，
+后期视觉映射遵循 ggplot2 求值。详见 [接口说明](reference/ggchord_api_contract.html)。
+
+## 完成后检查 {#check-result-supplement}
+旋转整体图形使用 coord；逐序列几何使用明确命名值；颜色随数据变化时使用映射和标度。

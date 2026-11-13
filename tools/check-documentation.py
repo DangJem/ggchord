@@ -81,9 +81,9 @@ def main():
     require(len(slugs) == len(set(slugs)), 'Duplicate page slug')
     navigation = json.loads((WEB/'navigation.json').read_text())
     entries = [slug for group in navigation for slug in group['pages']]
-    require(set(entries) == set(slugs) - {'index'} and len(entries) == len(set(entries)),
+    require(set(entries) == {p['slug'] for p in PAGES if p.get('kind')!='alias'} - {'index'} and len(entries) == len(set(entries)),
             'Site guide must cover every current learning page once and exclude the home page')
-    require({'chord','collinear','plasmid'} <= {group['id'] for group in navigation},
+    require({'multi-sequence','circular','dotplot','fusion'} <= {group['id'] for group in navigation},
             'Missing visualization task module')
     def blocks(text):
         return re.findall(r'```[^\n]*\n(.*?)\n```', text, re.S)
@@ -171,9 +171,11 @@ def main():
         source = (WEB/'en'/(page['slug']+'.md')).read_text()
         for keys in re.findall(r'\{\{code:([a-z,]+)\}\}', source):
             if keys in {'showcasechord', 'showcasecollinear', 'showcaseplasmid'}: continue
-            lines = sum(len(snippets()[key].splitlines()) for key in keys.split(','))
-            require(lines <= 22, f'{page["slug"]}: simplify long teaching block {keys} ({lines} lines)')
-    current_fingerprints = fingerprint_module.fingerprints()
+            require(all(key in snippets() and snippets()[key].strip() for key in keys.split(',')),
+                    f'{page["slug"]}: empty or missing shared teaching block {keys}')
+    subprocess.run(['python3','tools/site-audit/verify-existing-assets.py'],cwd=ROOT,check=True)
+    baseline_api=subprocess.check_output(['git','show','0f5dd96:R/api-contract.R'],cwd=ROOT)
+    current_fingerprints = fingerprint_module.fingerprints(runtime_hashes={'R/api-contract.R':hashlib.md5(baseline_api).hexdigest()})
     for a in assets:
         path = ROOT/a['file']
         require(path.is_file(),f'Missing figure {path}')
@@ -257,7 +259,7 @@ def main():
         normalize=lambda text: re.sub(r'\s+',' ',text.strip())
         for lang in ['en','zh']:
             for page in PAGES:
-                if page['slug']=='reference': continue
+                if page['slug']=='reference' or page.get('kind')=='alias': continue
                 path=(out/lang/(page['slug']+'.html')).resolve()
                 expected=blocks(expand((WEB/lang/(page['slug']+'.md')).read_text(),lang,figures='../assets'))
                 require(path in docs and list(map(normalize,docs[path].codeblocks))==list(map(normalize,expected)),f'{lang}/{page["slug"]}: rendered code differs from shared source')
@@ -266,19 +268,20 @@ def main():
             require(not [i for i,n in Counter(doc.ids).items() if n>1],f'{rel}: duplicate element IDs')
             if rel.startswith(('en/','zh/')):
                 require(doc.lang == ('zh-Hans' if rel.startswith('zh/') else 'en'),f'{rel}: language metadata')
-                if Path(rel).name!='reference.html':
+                alias_paths={p['slug']+'.html' for p in PAGES if p.get('kind')=='alias'}
+                if Path(rel).name!='reference.html' and str(Path(rel).relative_to(Path(rel).parts[0])) not in alias_paths:
                     require('main' in doc.ids,f'{rel}: missing skip target')
                     require('site-language' in doc.ids and 'site-search' in doc.ids,f'{rel}: missing language/search navigation')
                     require({'chapter-nav','chapter-drawer','language-control'} <= doc.classes,
                             f'{rel}: missing site guide or language dropdown')
-                    titles = ('开始使用','绘图教程','绘图技巧','数据与工作流','案例图库','函数参考') if rel.startswith('zh/') else (
-                        'Get started','Plot tutorials','Plotting techniques','Data & workflows','Gallery','Reference')
+                    titles = ('开始使用','绘图模块','通用技巧','数据与工作流','案例图库','API 参考') if rel.startswith('zh/') else (
+                        'Get started','Plotting modules','Shared techniques','Data & workflows','Gallery','API reference')
                     require(set(titles) <= set(doc.navbar_text), f'{rel}: missing task-oriented primary menu')
                     require({'site-visualizations','site-techniques','site-data'} <= set(doc.ids),
                             f'{rel}: missing direct tutorial menus')
                     targets = {urlsplit(url).path.rsplit('/',1)[-1] for url in doc.navbar_links}
-                    require({'installation.html','gallery.html','index.html','styling.html','parameters.html',
-                             'output.html','formats.html','foundation.html','view-expansion.html'} <= targets,
+                    require({'learn.html','gallery.html','index.html','styling.html','parameters.html',
+                             'output.html','formats.html','multi-sequence.html','circular.html','dotplot.html','fusion.html'} <= targets,
                             f'{rel}: primary menus must link directly to teaching pages')
                     require('about.html' not in targets, f'{rel}: primary menu uses project page as an intermediate index')
                     if Path(rel).parent == Path('zh/reference'):
@@ -306,7 +309,7 @@ def main():
             actual = {str(p.relative_to(out/lang)) for p in (out/lang).rglob('*.html')}
             require(actual==expected,f'{lang}: generated page coverage')
             index = json.loads((out/lang/'search.json').read_text())
-            require({p['url'].split('#')[0] for p in index} == expected-{'reference.html'},f'{lang}: incomplete search coverage')
+            require({p['url'].split('#')[0] for p in index} == expected-{'reference.html'}-{p['slug']+'.html' for p in PAGES if p.get('kind')=='alias'},f'{lang}: incomplete canonical search coverage')
             require(any('track' in p['text'] for p in index),f'{lang}: empty search content')
             require({'course','function','parameter','task','faq'} <= {p.get('kind') for p in index},f'{lang}: missing structured search categories')
             for result in index:

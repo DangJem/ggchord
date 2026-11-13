@@ -55,7 +55,7 @@ view_ggchord(p, width = 9, height = 6, units = "in")
 
 {{figure:showcaseplasmid}}
 
-[来源、选择与完整代码](plasmids.html#complex)
+[来源、选择与完整代码](circular-dense-case.html#complex)
 
 </section>
 

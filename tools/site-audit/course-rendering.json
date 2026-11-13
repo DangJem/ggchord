@@ -62,6 +62,123 @@
       "sha256": "3efe2a89b7c879d23528d2b8e3be1590115cddafd17c14f28ad3425f93b3d510",
       "code_sha256": "5006a28de3b490845c756354d924e2871a66ff1589e66db3ced041b88a115a87",
       "status": "rendered PNG"
+    },
+    "coursecircle": {
+      "file": "man/figures/coursecircle.png",
+      "width": 10,
+      "height": 8,
+      "dpi": 110,
+      "sha256": "7ae5fb824c690565e1929dfde05b1c6ece04494866ff3195bbe6a00c602be5a1",
+      "code_sha256": "214472d66bb15bfd19c1a62aa349ec7a55e0fab4c208b14f65711fc493009de3",
+      "status": "rendered PNG"
+    },
+    "coursecirclefeature": {
+      "file": "man/figures/coursecirclefeature.png",
+      "width": 10,
+      "height": 8,
+      "dpi": 110,
+      "sha256": "34a19367b67f31335c512844e9144c046a70b3df46eb941d8fb129fe81b46acf",
+      "code_sha256": "0dd20ac98b30b4ee87ec3be6de2f741e008a6df8a91d6cafb711157dd227d5ae",
+      "status": "rendered PNG"
+    },
+    "coursefocusedview": {
+      "file": "man/figures/coursefocusedview.png",
+      "width": 12,
+      "height": 8,
+      "dpi": 110,
+      "sha256": "d7a24638400ed528ededc27c529c85e1a7b9fdd7a2147df4c6a2564070f38456",
+      "code_sha256": "b0678b0de4eb3cc7794df80cd30bc79cf8c4c6d5b590e593d0e5c5d4a65025dd",
+      "status": "rendered PNG"
+    },
+    "coursepaireddetail": {
+      "file": "man/figures/coursepaireddetail.png",
+      "width": 12,
+      "height": 8,
+      "dpi": 110,
+      "sha256": "c7b1ae6ccdee49df3362e0f3955d663fe4b45635abf34e6f20913030732981d4",
+      "code_sha256": "61be942edd35e943a27bf2db91ea8dbca8617728fa412f5fc833b798b34144d3",
+      "status": "rendered PNG"
+    },
+    "coursemultiple": {
+      "file": "man/figures/coursemultiple.png",
+      "width": 12,
+      "height": 8,
+      "dpi": 110,
+      "sha256": "d36bb6a35e6741dc903aff1f11d85563c00218b5715ccd964555b8a45aeadd39",
+      "code_sha256": "6140a7e3ad97560850744b83c6c8efbfdb7fce1ad9c3427c2e7e02e53fd4d344",
+      "status": "rendered PNG"
+    },
+    "coursecharacterdetail": {
+      "file": "man/figures/coursecharacterdetail.png",
+      "width": 16,
+      "height": 5,
+      "dpi": 110,
+      "sha256": "108163255a992acc373e348a7710f7ee29cada01099ced09678346d5dd1ccb0a",
+      "code_sha256": "c5ffe8d2f203a75a36ada01e0e6c84c3f5ca5e6843a2619e70475f235bd72fd5",
+      "status": "rendered PNG"
+    },
+    "coursephysicalbox": {
+      "file": "man/figures/coursephysicalbox.png",
+      "width": 12,
+      "height": 6,
+      "dpi": 110,
+      "sha256": "1e9834df8c24259ddafa8b48f5a3576d9fbea95faabf46491a82fd740b4d3dfd",
+      "code_sha256": "2e57e129977dbed182fd2e5ad96e2578f504d55c53291c9826a61a0263eaf89f",
+      "status": "rendered PNG"
+    },
+    "courseguidefusion": {
+      "file": "man/figures/courseguidefusion.png",
+      "width": 12,
+      "height": 8,
+      "dpi": 110,
+      "sha256": "9af439549f4f5b38cf6b411a9301721d8bda5245ddc7206f9f81fd87865f4ebe",
+      "code_sha256": "7ed90e8c4c3f45bb656b63d987161345852f250690b5673c485396908e542661",
+      "status": "rendered PNG"
+    },
+    "courseautofusion": {
+      "file": "man/figures/courseautofusion.png",
+      "width": 14,
+      "height": 10,
+      "dpi": 110,
+      "sha256": "18fdc504df9709b31dfd8d18e7041fe1f1b0d4cec944a8d54a67369648b31502",
+      "code_sha256": "2d54024dad28a0cb38be2bf9fd29d4ff7d576afc1073cb8f7519e3f9ce760a67",
+      "status": "rendered PNG"
+    },
+    "coursestyledguidefusion": {
+      "file": "man/figures/coursestyledguidefusion.png",
+      "width": 12,
+      "height": 8,
+      "dpi": 110,
+      "sha256": "8af0f4393b3fad73a9d35e04a5469e027d0ac46391487b6a9392462348622661",
+      "code_sha256": "7e584b57ff2f6cb46eb6c0cef62fce33ac7d0bc12e73a38e37b1df7a4ea714e3",
+      "status": "rendered PNG"
+    },
+    "courseouter": {
+      "file": "man/figures/courseouter.png",
+      "width": 14,
+      "height": 7,
+      "dpi": 110,
+      "sha256": "9f277dcbb3f45234834b7e68e37382f8cfedaeb82db29b53dbd9446ddabf2bd4",
+      "code_sha256": "933d1f4edd4f59ce0f7ffdbf790685d44da226aebd64ca5584d74ddc6551ab41",
+      "status": "rendered PNG"
+    },
+    "courseorigindetail": {
+      "file": "man/figures/courseorigindetail.png",
+      "width": 16,
+      "height": 5,
+      "dpi": 110,
+      "sha256": "584d2c3c775838e9429ac1562bd585945beedb6fb2ef9835ac7ce35991348e85",
+      "code_sha256": "f3e66e183fa6bf192bacb3fb39de8ab3ead9f42c3d128ace7be7520c16075eff",
+      "status": "rendered PNG"
+    },
+    "courserouted": {
+      "file": "man/figures/courserouted.png",
+      "width": 12,
+      "height": 8,
+      "dpi": 110,
+      "sha256": "ed44ddb662e4d0f4336c5c220202163a903c18d4c16fc37efae4d3f8024faf93",
+      "code_sha256": "1b0bf076bc260827639897b47dca3cdec344e16f1113ea12126449e468c466f5",
+      "status": "rendered PNG"
     }
   },
   "source_sha256": {
@@ -220,8 +337,8 @@
     "data/single_gene_example.rda": "9c409d598bd257e248b6dcedfab25efd47bc09980efb62dac6b6d7e5cc42724a",
     "data/single_genome_example.rda": "b7c79786ea40ad9b3c52d0f3fac9976550cc301962f993018352cb74598f9c89",
     "tools/documentation-examples.R": "060d00fa173bbd0c89bf970b8bb909611888219d11ad48d9d6d8798e1ad5bceb",
-    "tools/site-course-examples.R": "39ccc2b01dab9e326beaa849f6305d802284c0c721b32ef29ded34ad0045c9f3",
-    "website/course-figures.json": "d437cec6f202994c8ac89813eeda9d43b40ff6cdfaa9db0128deb1e6f22ecda8"
+    "tools/site-course-examples.R": "35be92b9fe12fadde2dd356c43897cfa873a719fbc9989bf62f07e4d16175f61",
+    "website/course-figures.json": "eaf009a7455008583fbae9d65d1fcba8f1b1fb15ae574302273b65d87388ae6f"
   },
   "scope": "Registered course PNGs at normal sizes; no package checks or release device matrix"
 }

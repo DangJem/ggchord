@@ -98,13 +98,11 @@ feature 布局使用直接引线，允许穿过特征，不再多折绕路。默
 要恢复引线在标签层原有的绘制顺序，可使用
 
 
-```r
-geom_feature_label_repel(label_segment_layer = "above")
-```
+{{code:courseblockz}}
 
 ## 练习与自备注释 {#adapt}
 
-只把 label_max_lines 改为 3，解释是否改善了拥挤；再固定输出尺寸，比较外部回退开关。固定标签与自动标签有各自接口，不能混用。自备数据用明确 label 文本或 anno，核对 ID、区间、链及唯一 feature_id。继续看[引物文字](primers.html#primer-labels)和[密集 pETDuet-1 案例](plasmids.html#complex)。
+只把 label_max_lines 改为 3，解释是否改善了拥挤；再固定输出尺寸，比较外部回退开关。固定标签与自动标签有各自接口，不能混用。自备数据用明确 label 文本或 anno，核对 ID、区间、链及唯一 feature_id。继续看[引物文字](primers.html#primer-labels)和[密集 pETDuet-1 案例](circular-dense-case.html#complex)。
 
 
 相邻注释优先比较实际径向距离与角向位移，内侧有空闲轨道时不强迫它们在同一
@@ -128,21 +126,7 @@ geom_feature_label_repel(label_segment_layer = "above")
 `represented_by_shared_label`。此样式只用于单序列闭合圆的 `feature` 布局，
 其他坐标保持逐条显示。弧形括注是范围标记，标签引线仍使用简单路径。
 
-```r
-features <- find_common_features(plasmid_example_pTRE_Tight_BI)
-feature_position <- position_feature_stack(base_position = position_plasmid())
-ggchord(plasmid_example_pTRE_Tight_BI[c("accver", "length")], feature_data = features) +
-  geom_seq(seq_style = "double") +
-  geom_feature_plasmid(position = feature_position) +
-  geom_feature_label_repel(
-    position = feature_position,
-    label_repeat = "bracket",
-    label_fit = "shrink",
-    label_min_size = 2.5
-  ) +
-  coord_circular() +
-  theme_ggchord_plasmid()
-```
+{{code:courseblockaa}}
 
 质粒主题的自动轴文字贴近序列骨架，显式轴偏移不变。圆形特征轨道按不能放入
 箭头的文字需求留空，文字轨道按实际字号与物理间隙排布；显式 `spacing` 仍是
@@ -153,12 +137,7 @@ ggchord(plasmid_example_pTRE_Tight_BI[c("accver", "length")], feature_data = fea
 位点引线保留原有风格。若圈内名字紧贴自己的特征、角向未明显偏移且无竞争来源，
 省略无助于归属的短线；偏移或邻近其他来源时仍保留引线。
 
-```r
-geom_feature_label_repel(
-  label_segment_colour = "grey50",
-  label_segment_linetype = "dashed"
-)
-```
+{{code:courseblockab}}
 
 显式参数调整该图层全部特征引线；自定义 `ggchord.feature.label.segment` 主题也
 优先于自动配色。分段虚线按实际箭头轮廓裁切，保留原分段信息。圈内换行文字的

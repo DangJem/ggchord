@@ -7,9 +7,14 @@
     },
     "articles": [
       "modes",
-      "chord-start",
-      "collinear-start",
-      "plasmid-start"
+      "chord-geometry",
+      "output",
+      "multi-sequence-start",
+      "multi-sequence-layout",
+      "multi-sequence-links",
+      "multi-sequence-labels",
+      "circular-layout",
+      "diagnostics"
     ],
     "snippets": [
       "frontbackbone",
@@ -85,9 +90,10 @@
       "zh": "文件格式与适配器"
     },
     "articles": [
-      "formats",
       "alignments",
-      "protein-alignments"
+      "protein-alignments",
+      "import-sequences",
+      "import-intervals"
     ],
     "snippets": [
       "adapters",
@@ -131,7 +137,9 @@
     },
     "articles": [
       "ribbons",
-      "chord-build"
+      "multi-sequence-start",
+      "multi-sequence-links",
+      "multi-sequence-labels"
     ],
     "snippets": [
       "pointlinks",
@@ -166,8 +174,8 @@
       "zh": "自动与固定标签"
     },
     "articles": [
-      "labels",
-      "plasmids"
+      "plasmids",
+      "labels"
     ],
     "snippets": [
       "labellayouts",
@@ -188,8 +196,8 @@
       "zh": "轴、参照条与区域"
     },
     "articles": [
-      "annotations",
-      "views"
+      "views",
+      "annotations"
     ],
     "snippets": [
       "decorations",
@@ -207,7 +215,8 @@
       "zh": "定量轨道与数值域"
     },
     "articles": [
-      "tracks"
+      "tracks",
+      "tracks-statistics"
     ],
     "snippets": [
       "tracks",
@@ -249,8 +258,8 @@
       "zh": "CDS 与连接投影"
     },
     "articles": [
-      "projection",
-      "homology"
+      "homology",
+      "projection"
     ],
     "snippets": [
       "projection",
@@ -303,7 +312,6 @@
     },
     "articles": [
       "styling",
-      "adjustments",
       "parameters"
     ],
     "snippets": [
@@ -323,7 +331,8 @@
       "zh": "预览、结果与排序"
     },
     "articles": [
-      "output"
+      "output",
+      "diagnostics"
     ],
     "snippets": [
       "frontpreview",
@@ -387,7 +396,7 @@
       "en": "Shared branches and point paths"
     },
     "articles": [
-      "chord-branches"
+      "multi-sequence-links"
     ],
     "snippets": [
       "comparebranchdata",
@@ -414,7 +423,9 @@
       "zh": "圆图骨架、中心文字与注释轨道"
     },
     "articles": [
-      "circular-layers"
+      "circular-labels",
+      "circular-layout",
+      "circular-features"
     ],
     "snippets": [
       "comparefinishcircle",
@@ -461,7 +472,9 @@
       "zh": "圆图固定标签与自动适配"
     },
     "articles": [
-      "circular-labels"
+      "circular-labels",
+      "circular-layout",
+      "circular-features"
     ],
     "snippets": [
       "comparefinishcircle",
@@ -501,7 +514,8 @@
       "zh": "识别引物、弧线与文字"
     },
     "articles": [
-      "primers"
+      "primers",
+      "restriction-sites"
     ],
     "snippets": [
       "comparefinishdnabase",
@@ -535,6 +549,7 @@
       "zh": "限制酶搜索、切点与标签"
     },
     "articles": [
+      "primers",
       "restriction-sites"
     ],
     "snippets": [
@@ -567,7 +582,10 @@
       "zh": "按角色选择标度、图例与主题"
     },
     "articles": [
-      "scale-families"
+      "tracks",
+      "scale-families",
+      "tracks-statistics",
+      "diagnostics"
     ],
     "snippets": [
       "comparescaledata",
@@ -603,7 +621,7 @@
       "zh": "连接密度与显式聚束"
     },
     "articles": [
-      "ribbon-statistics"
+      "ribbons"
     ],
     "snippets": [
       "comparedensitydata",
@@ -626,7 +644,11 @@
       "zh": "按任务使用工作流与诊断工具"
     },
     "articles": [
-      "workflow-tools"
+      "recognition",
+      "tracks",
+      "scale-families",
+      "tracks-statistics",
+      "diagnostics"
     ],
     "snippets": [
       "comparescaledata",

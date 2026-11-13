@@ -87,4 +87,4 @@ Compute windows from actual pUC19 DNA. `track_value` controls height; track_fill
 
 ## Exercises and selection rules {#adapt}
 
-Switch pident from gradient to explicit steps, restore the gradient, then change only the alpha output range. Check that guides still represent the same data units. Give additional layers independent data/mapping and retain explicit user scales. See the [parameter atlas](parameter-atlas.html) for complete defaults, types and forwarding, and [link statistics](ribbon-statistics.html) for aggregation.
+Switch pident from gradient to explicit steps, restore the gradient, then change only the alpha output range. Check that guides still represent the same data units. Give additional layers independent data/mapping and retain explicit user scales. See the [parameter atlas](parameter-atlas.html) for complete defaults, types and forwarding, and [link statistics](ribbons.html#statistics) for aggregation.

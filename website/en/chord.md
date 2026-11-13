@@ -10,7 +10,7 @@ Length/identity thresholds, at most three HSPs per pair and strand-aware CDS sam
 ## What this view shows {#overview}
 {{figure:showcasechord}}
 
-Compare the dark blue `MT118296.1` and teal `OQ646790.1` backbones first. Their radii are 0.82 and 1.18. Orange `OR222515.1` and red `MT108731.1` use 1.02 and 1.08. Radius separates backbones visually. Read sequence lengths from the bp ticks. [Compare radius on its own](chord-geometry.html#shape).
+Compare the dark blue `MT118296.1` and teal `OQ646790.1` backbones first. Their radii are 0.82 and 1.18. Orange `OR222515.1` and red `MT108731.1` use 1.02 and 1.08. Radius separates backbones visually. Read sequence lengths from the bp ticks. [Compare radius on its own](chord-geometry.html).
 
 CDS are sampled separately for each available source strand, without a length threshold. Neither MT record has a negative-strand CDS. The sole negative-strand CDS on OQ646790.1 is 207 bp. An explicit Position places positive-strand arrows inside and negative-strand arrows outside. Arrow direction, colour and data retain the source strands. Positive-strand sampling favours CDS that overlap displayed link endpoints so the view demonstrates local ribbon clearance. Every arrow uses its original annotation as the label, including hypothetical protein.
 
@@ -43,9 +43,7 @@ Start with the sequence colours and gene directions, then trace the larger align
 Use [link filtering](ribbons.html) to change the display threshold, [labels](labels.html) to choose annotation density, or [sequence parameters](parameters.html) to change radius and curvature. For a file-by-file introduction, start with [original sequence comparisons](real-data.html).
 
 ## Save at its intended size {#save}
-```r
-ggsave("four-genome-chord.png", p_show_chord, width = 12, height = 10, units = "in", dpi = 144)
-```
+{{code:courseblockd}}
 
 ## Evidence checks before saving {#evidence-check}
 

@@ -119,5 +119,259 @@
       "en": "Two independent panels and one real relationship"
     },
     "source": "Bundled source-backed lengths/HSPs/CDS, with biological source_strand restored; explicit selection recorded in preparation."
+  },
+  {
+    "id": "coursecircle",
+    "object": "p_coursecircle",
+    "snippets": [
+      "coursecircleinput"
+    ],
+    "width": 10,
+    "height": 8,
+    "dpi": 110,
+    "file": "man/figures/coursecircle.png",
+    "caption": {
+      "zh": "长度与骨架",
+      "en": "Length and backbone"
+    },
+    "source": "Existing pUC19 origin row accver=pUC19, start=867, end=1455, type=rep_origin, anno=ori; matches the audited inspectorigin output and source annotation. No recognition is run in this lesson."
+  },
+  {
+    "id": "coursecirclefeature",
+    "object": "p_coursecirclefeature",
+    "snippets": [
+      "coursecircleinput",
+      "coursecirclefeature"
+    ],
+    "width": 10,
+    "height": 8,
+    "dpi": 110,
+    "file": "man/figures/coursecirclefeature.png",
+    "caption": {
+      "zh": "已有注释与名称",
+      "en": "Prepared annotation and label"
+    },
+    "source": "Existing pUC19 origin row accver=pUC19, start=867, end=1455, type=rep_origin, anno=ori; matches the audited inspectorigin output and source annotation. No recognition is run in this lesson."
+  },
+  {
+    "id": "coursefocusedview",
+    "object": "focused_view",
+    "snippets": [
+      "fusiondata",
+      "fusionpanels",
+      "fusionlinear",
+      "fusionview",
+      "courseblockbs"
+    ],
+    "width": 12,
+    "height": 8,
+    "dpi": 110,
+    "file": "man/figures/coursefocusedview.png",
+    "caption": {
+      "zh": "单一来源局部细节",
+      "en": "A local source detail"
+    },
+    "source": "Exact shared code extracted from the audited Fusion example; actual source inputs and selection remain in the registered snippets."
+  },
+  {
+    "id": "coursepaireddetail",
+    "object": "paired_detail",
+    "snippets": [
+      "fusiondata",
+      "fusionpanels",
+      "fusionlinear",
+      "fusionview",
+      "courseblockbt"
+    ],
+    "width": 12,
+    "height": 8,
+    "dpi": 110,
+    "file": "man/figures/coursepaireddetail.png",
+    "caption": {
+      "zh": "HSP 两端共享细节图",
+      "en": "Both HSP ends in one detail"
+    },
+    "source": "Exact shared code extracted from the audited Fusion example; actual source inputs and selection remain in the registered snippets."
+  },
+  {
+    "id": "coursemultiple",
+    "object": "multiple",
+    "snippets": [
+      "fusiondata",
+      "fusionpanels",
+      "fusionlinear",
+      "fusionview",
+      "courseblockbu"
+    ],
+    "width": 12,
+    "height": 8,
+    "dpi": 110,
+    "file": "man/figures/coursemultiple.png",
+    "caption": {
+      "zh": "两个独立来源细节面板",
+      "en": "Two independent source detail panels"
+    },
+    "source": "Exact shared code extracted from the audited Fusion example; actual source inputs and selection remain in the registered snippets."
+  },
+  {
+    "id": "coursecharacterdetail",
+    "object": "character_detail",
+    "snippets": [
+      "fusiondata",
+      "fusionpanels",
+      "fusionlinear",
+      "fusionview",
+      "courseblockbv"
+    ],
+    "width": 16,
+    "height": 5,
+    "dpi": 110,
+    "file": "man/figures/coursecharacterdetail.png",
+    "caption": {
+      "zh": "已有真实字符的注册细节",
+      "en": "Registered details from actual aligned characters"
+    },
+    "source": "Exact shared code extracted from the audited Fusion example; actual source inputs and selection remain in the registered snippets."
+  },
+  {
+    "id": "coursephysicalbox",
+    "object": "physical_box",
+    "snippets": [
+      "fusiondata",
+      "fusionpanels",
+      "fusionlinear",
+      "fusionview",
+      "courseblockbn"
+    ],
+    "width": 12,
+    "height": 6,
+    "dpi": 110,
+    "file": "man/figures/coursephysicalbox.png",
+    "caption": {
+      "zh": "显式毫米布局",
+      "en": "Explicit layout in millimeters"
+    },
+    "source": "Exact shared code extracted from the audited Fusion example; actual source inputs and selection remain in the registered snippets."
+  },
+  {
+    "id": "courseguidefusion",
+    "object": "guide_fusion",
+    "snippets": [
+      "fusiondata",
+      "fusionpanels",
+      "fusionlinear",
+      "fusionview",
+      "courseblockbo"
+    ],
+    "width": 12,
+    "height": 8,
+    "dpi": 110,
+    "file": "man/figures/courseguidefusion.png",
+    "caption": {
+      "zh": "多侧图例预算",
+      "en": "Multi-side guide allocation"
+    },
+    "source": "Exact shared code extracted from the audited Fusion example; actual source inputs and selection remain in the registered snippets."
+  },
+  {
+    "id": "courseautofusion",
+    "object": "auto_fusion",
+    "snippets": [
+      "fusiondata",
+      "fusionpanels",
+      "fusionlinear",
+      "fusionview",
+      "courseblockbp"
+    ],
+    "width": 14,
+    "height": 10,
+    "dpi": 110,
+    "file": "man/figures/courseautofusion.png",
+    "caption": {
+      "zh": "同一 HSP 的十二次有意展示",
+      "en": "Twelve deliberate views of one HSP"
+    },
+    "source": "Exact shared code extracted from the audited Fusion example; actual source inputs and selection remain in the registered snippets."
+  },
+  {
+    "id": "coursestyledguidefusion",
+    "object": "styled_guide_fusion",
+    "snippets": [
+      "fusiondata",
+      "fusionpanels",
+      "fusionlinear",
+      "fusionview",
+      "courseblockbo",
+      "courseblockbq"
+    ],
+    "width": 12,
+    "height": 8,
+    "dpi": 110,
+    "file": "man/figures/coursestyledguidefusion.png",
+    "caption": {
+      "zh": "外层标题与图注",
+      "en": "Outer title and caption"
+    },
+    "source": "Exact shared code extracted from the audited Fusion example; actual source inputs and selection remain in the registered snippets."
+  },
+  {
+    "id": "courseouter",
+    "object": "outer",
+    "snippets": [
+      "fusiondata",
+      "fusionpanels",
+      "fusionlinear",
+      "fusionview",
+      "courseblockbx"
+    ],
+    "width": 14,
+    "height": 7,
+    "dpi": 110,
+    "file": "man/figures/courseouter.png",
+    "caption": {
+      "zh": "具有叶路径的嵌套细节",
+      "en": "Nested details with explicit leaf paths"
+    },
+    "source": "Exact shared code extracted from the audited Fusion example; actual source inputs and selection remain in the registered snippets."
+  },
+  {
+    "id": "courseorigindetail",
+    "object": "origin_detail",
+    "snippets": [
+      "fusiondata",
+      "fusionpanels",
+      "fusionlinear",
+      "fusionview",
+      "courseblockby"
+    ],
+    "width": 16,
+    "height": 5,
+    "dpi": 110,
+    "file": "man/figures/courseorigindetail.png",
+    "caption": {
+      "zh": "显式跨原点选区",
+      "en": "An explicit origin-crossing selection"
+    },
+    "source": "Exact shared code extracted from the audited Fusion example; actual source inputs and selection remain in the registered snippets."
+  },
+  {
+    "id": "courserouted",
+    "object": "routed",
+    "snippets": [
+      "fusiondata",
+      "fusionpanels",
+      "fusionlinear",
+      "fusionview",
+      "courseblockbl"
+    ],
+    "width": 12,
+    "height": 8,
+    "dpi": 110,
+    "file": "man/figures/courserouted.png",
+    "caption": {
+      "zh": "显式显示通道与障碍",
+      "en": "Explicit display corridors and obstacles"
+    },
+    "source": "Exact shared code extracted from the audited Fusion example; actual source inputs and selection remain in the registered snippets."
   }
 ]

@@ -58,9 +58,7 @@ FASTA 提供序列 ID 和长度，GFF3 提供注释范围与链，BLAST 提供�
 ## 保存本页结果 {#save-result}
 在工作目录中保存刚刚创建的图；预览时使用相同宽高。
 
-```r
-ggsave("phage-comparison.png", p_real_chord, width = 10, height = 8, units = "in", dpi = 144)
-```
+{{code:courseblockc}}
 
 ## 保存前的证据检查 {#evidence-check}
 

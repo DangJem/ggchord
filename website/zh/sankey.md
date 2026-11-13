@@ -21,9 +21,7 @@ Sankey 将每个来源在左右两列各显示一次。左侧 query 端点连接
 
 ## 核对来源与实例 {#instances}
 
-```r
-get_chord_layout(p_foundationsankey)$display_instances
-```
+{{code:courseblockae}}
 
 两条来源在左右各显示一次；不能手工复制 seq_data 冒充新观测。互反记录保持独立。self_links = TRUE 只启用已有自身记录，不补造关系。seq_order 每个来源只能出现一次；between 和 shared branches 不支持。
 

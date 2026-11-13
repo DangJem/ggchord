@@ -36,7 +36,7 @@ blastp -query proteins.faa -subject reference.faa -outfmt 7 -out hits-protein.ts
 {{code:blastendpoints}}
 {{output:blastendpoints}}
 
-一条带由两条序列的 ID 和各自的起止坐标确定。要按一致性着色或筛选时保留 `pident`，要按比对长度筛选时保留 `length`。用自定义字段输出无表头文件时，在 `read_blast()` 中用 `col_names` 按实际顺序声明列。已经读入的其他表可用[连接格式转换](formats.html#adapters)。
+一条带由两条序列的 ID 和各自的起止坐标确定。要按一致性着色或筛选时保留 `pident`，要按比对长度筛选时保留 `length`。用自定义字段输出无表头文件时，在 `read_blast()` 中用 `col_names` 按实际顺序声明列。已经读入的其他表可用[连接格式转换](import-sequences.html#adapters)。
 
 ## 先选择坐标单位 {#protein}
 
@@ -48,7 +48,7 @@ blastp -query proteins.faa -subject reference.faa -outfmt 7 -out hits-protein.ts
 
 一张图使用一个坐标单位。蛋白长度来自完整序列，命中端点仅描述参与比对的区间。BLASTx、tBLASTn 的两端单位不同，需要先选定统一的显示坐标。基因的正负链与蛋白的 N→C 顺序是不同的生物学含义。
 
-[查看 BLASTp 原生蛋白比较图](protein-alignments.html#protein)，或继续[了解三种绘图布局](modes.html)。
+[查看 BLASTp 原生蛋白比较图](protein-alignments.html#protein)，或继续[了解四个绘图模块](modes.html)。
 
 <span id="projection"></span>要将蛋白命中定位到核酸基因组，可阅读[CDS 坐标投影](projection.html)。
 

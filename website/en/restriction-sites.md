@@ -56,4 +56,4 @@ find_restriction_sites returns matches and cuts; filter_restriction_sites select
 
 ## Exercises, dense maps and limitations {#adapt}
 
-Increase only min_label_gap and inspect outward label/leader movement; then restore defaults and set label=FALSE for ticks only. Retain full search results separately from the display subset. Increase export dimensions instead of deleting source observations to fit a small image. Recheck crowding after combining features and primers in [dense pETDuet-1](plasmids.html#complex). Computed cuts do not validate a digestion experiment.
+Increase only min_label_gap and inspect outward label/leader movement; then restore defaults and set label=FALSE for ticks only. Retain full search results separately from the display subset. Increase export dimensions instead of deleting source observations to fit a small image. Recheck crowding after combining features and primers in [dense pETDuet-1](circular-dense-case.html#complex). Computed cuts do not validate a digestion experiment.

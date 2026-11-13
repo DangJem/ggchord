@@ -1,0 +1,150 @@
+[
+  {
+    "queries": [
+      "Sankey"
+    ],
+    "url": "sankey.html",
+    "title": {
+      "zh": "镜像 Sankey 课程",
+      "en": "Mirrored Sankey lesson"
+    },
+    "summary": {
+      "zh": "按任务选择当前课程或精确参数；详见输入与支持边界。",
+      "en": "Choose the current lesson or exact parameter; inspect its input and support boundary."
+    }
+  },
+  {
+    "queries": [
+      "径向共线性",
+      "Radial",
+      "Radial synteny"
+    ],
+    "url": "radial-synteny.html",
+    "title": {
+      "zh": "径向共线性课程",
+      "en": "Radial synteny lesson"
+    },
+    "summary": {
+      "zh": "按任务选择当前课程或精确参数；详见输入与支持边界。",
+      "en": "Choose the current lesson or exact parameter; inspect its input and support boundary."
+    }
+  },
+  {
+    "queries": [
+      "Dotplot",
+      "HSP 点图"
+    ],
+    "url": "dotplot-start.html",
+    "title": {
+      "zh": "从 HSP 读取 Dotplot",
+      "en": "Read a Dotplot from HSPs"
+    },
+    "summary": {
+      "zh": "按任务选择当前课程或精确参数；详见输入与支持边界。",
+      "en": "Choose the current lesson or exact parameter; inspect its input and support boundary."
+    }
+  },
+  {
+    "queries": [
+      "Fusion",
+      "多视图组合"
+    ],
+    "url": "fusion-start.html",
+    "title": {
+      "zh": "两面板真实来源组合",
+      "en": "Two-panel source-backed composition"
+    },
+    "summary": {
+      "zh": "按任务选择当前课程或精确参数；详见输入与支持边界。",
+      "en": "Choose the current lesson or exact parameter; inspect its input and support boundary."
+    }
+  },
+  {
+    "queries": [
+      "给定数值柱",
+      "supplied value bars"
+    ],
+    "url": "reference/geom_track.html#ref-usage",
+    "title": {
+      "zh": "给定值使用 geom_track_col",
+      "en": "Use geom_track_col for supplied values"
+    },
+    "summary": {
+      "zh": "按任务选择当前课程或精确参数；详见输入与支持边界。",
+      "en": "Choose the current lesson or exact parameter; inspect its input and support boundary."
+    }
+  },
+  {
+    "queries": [
+      "计数",
+      "count"
+    ],
+    "url": "tracks-statistics.html#tracks",
+    "title": {
+      "zh": "计数与给定值：bar 和 col",
+      "en": "Counts and supplied values: bar and col"
+    },
+    "summary": {
+      "zh": "按任务选择当前课程或精确参数；详见输入与支持边界。",
+      "en": "Choose the current lesson or exact parameter; inspect its input and support boundary."
+    }
+  },
+  {
+    "queries": [
+      "保存图片",
+      "save plot"
+    ],
+    "url": "output.html#size",
+    "title": {
+      "zh": "按目标尺寸保存图片",
+      "en": "Save a plot at target size"
+    },
+    "summary": {
+      "zh": "按任务选择当前课程或精确参数；详见输入与支持边界。",
+      "en": "Choose the current lesson or exact parameter; inspect its input and support boundary."
+    }
+  },
+  {
+    "queries": [
+      "标签重叠",
+      "overlapping labels"
+    ],
+    "url": "labels.html",
+    "title": {
+      "zh": "检查文字布局与目标尺寸",
+      "en": "Inspect label layout and target size"
+    },
+    "summary": {
+      "zh": "按任务选择当前课程或精确参数；详见输入与支持边界。",
+      "en": "Choose the current lesson or exact parameter; inspect its input and support boundary."
+    }
+  },
+  {
+    "queries": [
+      "feature_data"
+    ],
+    "url": "data.html#source",
+    "title": {
+      "zh": "统一 feature_data 输入",
+      "en": "Unified feature_data inputs"
+    },
+    "summary": {
+      "zh": "按任务选择当前课程或精确参数；详见输入与支持边界。",
+      "en": "Choose the current lesson or exact parameter; inspect its input and support boundary."
+    }
+  },
+  {
+    "queries": [
+      "windows"
+    ],
+    "url": "parameter-atlas.html#param-segment_ggchord_data-windows",
+    "title": {
+      "zh": "segment_ggchord_data 的 windows",
+      "en": "windows in segment_ggchord_data"
+    },
+    "summary": {
+      "zh": "按任务选择当前课程或精确参数；详见输入与支持边界。",
+      "en": "Choose the current lesson or exact parameter; inspect its input and support boundary."
+    }
+  }
+]

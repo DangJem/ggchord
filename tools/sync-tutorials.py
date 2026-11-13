@@ -4,14 +4,14 @@ import argparse
 import re
 from documentation_lib import ROOT, WEB, PAGES, expand, localize_r_comments
 
-INTRO_CHAPTERS = ('installation', 'chord-start', 'collinear-start', 'plasmid-start')
+INTRO_CHAPTERS = ('installation', 'multi-sequence-start', 'circular-start', 'dotplot-start', 'fusion-start')
 CHAPTERS = [next(p for p in PAGES if p['slug'] == slug) for slug in INTRO_CHAPTERS]
 
 def tutorial(lang):
-    title = 'ggchord: chord, collinear and plasmid tutorial' if lang == 'en' else 'ggchord：弦图、共线性图与质粒图教程'
-    intro = ('Draw any of the three views with bundled records. Each opening lesson includes its own setup. '
+    title = 'ggchord: sequence plots and composition' if lang == 'en' else 'ggchord：序列图与多视图组合教程'
+    intro = ('Choose among four plotting modules. Each opening lesson includes its own setup. '
         'Continue online for data import, advanced workflows and complete research examples.' if lang == 'en' else
-        '用随包记录学习三种绘图模式，每种模式都提供独立的首图代码。'
+        '按任务选择四个绘图模块，每个模块都提供独立的首图代码。'
         '自备数据、专业专题和完整科研案例请继续查阅在线教程。')
     text = f'''---
 title: "{title}"
@@ -54,6 +54,9 @@ knitr::opts_chunk$set(eval = FALSE, collapse = TRUE, comment = "#>")
             return f'[{label}]({target}' + (f'#{anchor}' if anchor else '') + ')'
         body = re.sub(r'\[([^\]]+)\]\(([a-z-]+)\.html(?:#([^)]*))?\)', lesson_link, body)
         body = body.replace('(../assets/source/', f'(https://dangjem.github.io/ggchord/assets/source/')
+        body = re.sub(r'\(\.\./assets/(course\w+\.png)\)',r'(../man/figures/\1)',body)
+        body = body.replace('(../build-manifest.json)', '(https://dangjem.github.io/ggchord/build-manifest.json)')
+        body = body.replace('(../assets/tutorial-inputs.zip)', '(https://dangjem.github.io/ggchord/assets/tutorial-inputs.zip)')
         body = body.replace('(../assets/MIGRATION.md)', '(../MIGRATION.md)').replace('(../assets/MIGRATION-Hans.md)', '(../MIGRATION-Hans.md)')
         text += f'\n## {p["title"][lang]} {{#{p["slug"]}}}\n\n'+body+'\n'
 
@@ -79,13 +82,13 @@ def readme(lang):
     development_version = re.search(r'^Version:\s*(\S+)',
         (ROOT/'DESCRIPTION').read_text(), re.M).group(1)
     development_version = re.sub(r'\.9000$', '', development_version)
-    title = 'ggchord：弦图、共线性图与质粒图' if zh else 'ggchord: chord, collinear and plasmid sequence plots'
+    title = 'ggchord：序列图与多视图组合' if zh else 'ggchord: sequence plots and composition'
     intro = ('基于 ggplot2 的 R 包。用独立图层组合序列骨架、区间连接、基因、通用注释、标签和定量轨道。'
         if zh else 'An R package built on ggplot2. Combine independent layers for sequence backbones, interval links, genes, general features, labels and quantitative tracks.')
     status = (f'正式版为 **ggchord 0.16.6**；本文示例由本地 **v{development_version}** 开发源码生成。正式资产见 GitHub Releases。'
         if zh else f'The stable release is **ggchord 0.16.6**. These examples are generated from the local **v{development_version}** development source. Formal assets are on GitHub Releases.')
     install = '安装' if zh else 'Install'
-    quick = '三种模式' if zh else 'Three views'
+    quick = '三个真实数据综合示例' if zh else 'Three source-backed comprehensive examples'
     sizing = '预览与保存' if zh else 'Preview and save'
     onwards = '继续阅读' if zh else 'Continue'
     site = f'https://dangjem.github.io/ggchord/{lang}/'
@@ -106,7 +109,11 @@ def readme(lang):
 R ≥ 4.1.0 · ggplot2 ≥ 4.0.0
 
 ```r
-install.packages("ggchord")
+install.packages("remotes")
+remotes::install_github(
+  "DangJem/ggchord@0f5dd96da57876da74cd1234c7de9cf5579c80b8",
+  dependencies = NA, upgrade = "never"
+)
 ```
 
 '''
@@ -149,10 +156,10 @@ install.packages("ggchord")
     text += '\n' + (WEB / f'readme-roadmap-{lang}.md').read_text()
     text += '\n' + (WEB / f'readme-inspirations-{lang}.md').read_text()
     text += f'\n## {onwards}\n\n'
-    guides = ([('开始使用', 'installation'), ('章节索引', 'about'),
+    guides = ([('开始使用', 'installation'), ('学习总览', 'learn'),
         ('函数文档', 'reference/index'), ('示例图集', 'gallery'),
         ('其他信息', 'about')] if zh else
-        [('Get started', 'installation'), ('Chapter index', 'about'),
+        [('Get started', 'installation'), ('Learning overview', 'learn'),
          ('Function reference', 'reference/index'), ('Gallery', 'gallery'),
          ('Further information', 'about')])
     text += '\n'.join('- ['+label+']('+site+slug+'.html)' for label, slug in guides)+'\n'

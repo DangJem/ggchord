@@ -1,5 +1,5 @@
 ## Why are labels different after resizing? {#resize}
-The available physical space changed. Use [explicit-size preview and saving](output.html#size).
+The available physical space changed. Use [explicit-size preview and saving](output.html).
 Check hidden-label diagnostics; do not infer missing input rows from absent text.
 
 ## How do I find supported parameters? {#removed}

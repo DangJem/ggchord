@@ -96,7 +96,7 @@
   },
   "as_ggchord_feature": {
     "level": "L2",
-    "page": "formats",
+    "page": "import-sequences",
     "anchor": "adapters",
     "reason": "Reviewed input/output, constraints and runnable canonical lesson; key-parameter level applies only to listed behavior",
     "modes": "table/S4 adapter; coordinates and biological direction retained",
@@ -118,7 +118,7 @@
   },
   "as_ggchord_link": {
     "level": "L2",
-    "page": "formats",
+    "page": "import-sequences",
     "anchor": "adapters",
     "reason": "Reviewed input/output, constraints and runnable canonical lesson; key-parameter level applies only to listed behavior",
     "modes": "table/GInteractions adapter; no invented alignment statistics",
@@ -140,7 +140,7 @@
   },
   "as_ggchord_seq": {
     "level": "L2",
-    "page": "formats",
+    "page": "import-sequences",
     "anchor": "adapters",
     "reason": "Reviewed input/output, constraints and runnable canonical lesson; key-parameter level applies only to listed behavior",
     "modes": "table/S4 adapter; complete lengths and explicit IDs/units",
@@ -187,8 +187,8 @@
   },
   "bundle_ggchord_ribbons": {
     "level": "L3",
-    "page": "ribbon-statistics",
-    "anchor": "bundle",
+    "page": "ribbons",
+    "anchor": "statistics-bundle",
     "reason": "Reviewed input/output, constraints and runnable canonical lesson; key-parameter level applies only to listed behavior",
     "modes": "explicit normalized-bin aggregation; original observations retained separately",
     "parameters": [
@@ -258,7 +258,7 @@
   },
   "coord_circular": {
     "level": "L3",
-    "page": "circular-layers",
+    "page": "circular-layout",
     "anchor": "coordinates",
     "reason": "Reviewed input/output, constraints and runnable canonical lesson; key-parameter level applies only to listed behavior",
     "modes": "one sequence; bp or aa; no ribbon/link layers",
@@ -332,8 +332,8 @@
   },
   "diagnose_ggchord": {
     "level": "L2",
-    "page": "workflow-tools",
-    "anchor": "diagnostics",
+    "page": "diagnostics",
+    "anchor": "target-size",
     "reason": "Reviewed input/output, constraints and runnable canonical lesson; key-parameter level applies only to listed behavior",
     "modes": "one target-size device; advisory, not universal quality certification",
     "parameters": [
@@ -455,7 +455,7 @@
   },
   "export_ggchord_layout": {
     "level": "L2",
-    "page": "output",
+    "page": "diagnostics",
     "anchor": "geometry",
     "reason": "Reviewed input/output, constraints and runnable canonical lesson; key-parameter level applies only to listed behavior",
     "modes": "layer-aware public tables for all supported plots",
@@ -656,7 +656,7 @@
   },
   "focus_ggchord_track": {
     "level": "L2",
-    "page": "workflow-tools",
+    "page": "tracks-statistics",
     "anchor": "track-focus",
     "reason": "Reviewed input/output, constraints and runnable canonical lesson; key-parameter level applies only to listed behavior",
     "modes": "point/interval track data; shares declared loci with focus/segment",
@@ -681,7 +681,7 @@
   },
   "geom_feature": {
     "level": "L3",
-    "page": "circular-layers",
+    "page": "circular-features",
     "anchor": "feature-shapes",
     "reason": "Reviewed input/output, constraints and runnable canonical lesson; key-parameter level applies only to listed behavior",
     "modes": "all three; generic annotations including unknown strand and aa; Radial per view-expansion matrix",
@@ -701,7 +701,7 @@
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
       "en": "all three; generic annotations including unknown strand and aa; Radial per new-view support matrix",
-      "zh": "三种模式；通用注释可保留未知链及 aa 区间；Radial见新增视图支持矩阵"
+      "zh": "兼容骨架坐标（见支持表）；通用注释可保留未知链及 aa 区间；Radial见新增视图支持矩阵"
     }
   },
   "geom_feature_label": {
@@ -728,7 +728,7 @@
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
       "en": "all three; linear uses vertical/horizontal rows for radial/tangent; Radial per new-view support matrix",
-      "zh": "三种模式；直线图的 radial/tangent 为竖排/横排；Radial见新增视图支持矩阵"
+      "zh": "兼容骨架坐标（见支持表）；直线图的 radial/tangent 为竖排/横排；Radial见新增视图支持矩阵"
     }
   },
   "geom_feature_label_repel": {
@@ -759,12 +759,12 @@
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
       "en": "all three; external=FALSE rejected by linear mode; Radial per new-view support matrix",
-      "zh": "三种模式；直线图拒绝 external=FALSE；Radial见新增视图支持矩阵"
+      "zh": "兼容骨架坐标（见支持表）；直线图拒绝 external=FALSE；Radial见新增视图支持矩阵"
     }
   },
   "geom_feature_plasmid": {
     "level": "L3",
-    "page": "circular-layers",
+    "page": "circular-features",
     "anchor": "feature-shapes",
     "reason": "Reviewed input/output, constraints and runnable canonical lesson; key-parameter level applies only to listed behavior",
     "modes": "generic geometry preset; intended circular; compare defaults before transfer; Radial per view-expansion matrix",
@@ -811,7 +811,7 @@
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
       "en": "all three on bp; known strand required; Radial per new-view support matrix",
-      "zh": "三种模式的 bp 数据；需已知正负链；Radial见新增视图支持矩阵"
+      "zh": "兼容骨架坐标（见支持表）的 bp 数据；需已知正负链；Radial见新增视图支持矩阵"
     }
   },
   "geom_gene_label": {
@@ -866,7 +866,7 @@
   },
   "geom_link_line": {
     "level": "L3",
-    "page": "chord-branches",
+    "page": "multi-sequence-links",
     "anchor": "point-links",
     "reason": "Reviewed input/output, constraints and runnable canonical lesson; key-parameter level applies only to listed behavior",
     "modes": "chord/collinear; explicit qpos/spos; circular rejected; Radial per view-expansion matrix",
@@ -891,7 +891,7 @@
   },
   "geom_link_ribbon": {
     "level": "L3",
-    "page": "chord-branches",
+    "page": "multi-sequence-links",
     "anchor": "branches",
     "reason": "Reviewed input/output, constraints and runnable canonical lesson; key-parameter level applies only to listed behavior",
     "modes": "chord/collinear; circular rejected; linear adjacency follows displayed rows; Radial per view-expansion matrix",
@@ -995,7 +995,7 @@
   },
   "geom_seq": {
     "level": "L3",
-    "page": "circular-layers",
+    "page": "circular-layout",
     "anchor": "backbones",
     "reason": "Reviewed input/output, constraints and runnable canonical lesson; key-parameter level applies only to listed behavior",
     "modes": "all three; linear rejects radius/curvature/ring; circular owns gap/direction; Radial per view-expansion matrix",
@@ -1018,7 +1018,7 @@
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
       "en": "all three; linear rejects radius/curvature/ring; circular owns gap/direction; Radial per new-view support matrix",
-      "zh": "三种模式；直线图拒绝半径/曲率/ring；圆图自管方向与开口；Radial见新增视图支持矩阵"
+      "zh": "兼容骨架坐标（见支持表）；直线图拒绝半径/曲率/ring；圆图自管方向与开口；Radial见新增视图支持矩阵"
     }
   },
   "geom_seq_break": {
@@ -1044,7 +1044,7 @@
   },
   "geom_seq_center_label": {
     "level": "L3",
-    "page": "circular-layers",
+    "page": "circular-layout",
     "anchor": "center",
     "reason": "Reviewed input/output, constraints and runnable canonical lesson; key-parameter level applies only to listed behavior",
     "modes": "one sequence; circular recommended; linear rejected",
@@ -1069,7 +1069,7 @@
   },
   "geom_seq_label": {
     "level": "L3",
-    "page": "chord-labels",
+    "page": "multi-sequence-labels",
     "anchor": "sequence-parameters",
     "reason": "Reviewed input/output, constraints and runnable canonical lesson; key-parameter level applies only to listed behavior",
     "modes": "all three; linear rejects explicit seq_label_radius; Radial per view-expansion matrix",
@@ -1091,12 +1091,12 @@
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
       "en": "all three; linear rejects explicit seq_label_radius; Radial per new-view support matrix",
-      "zh": "三种模式；直线图拒绝显式径向半径；Radial见新增视图支持矩阵"
+      "zh": "兼容骨架坐标（见支持表）；直线图拒绝显式径向半径；Radial见新增视图支持矩阵"
     }
   },
   "geom_seq_region": {
     "level": "L3",
-    "page": "chord-routing",
+    "page": "annotations",
     "anchor": "region-parameters",
     "reason": "Reviewed input/output, constraints and runnable canonical lesson; key-parameter level applies only to listed behavior",
     "modes": "all three, valid source intervals and units; Radial per view-expansion matrix",
@@ -1114,13 +1114,13 @@
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
       "en": "all three, valid source intervals and units; Radial per new-view support matrix",
-      "zh": "三种模式；区间、ID、单位需合法；Radial见新增视图支持矩阵"
+      "zh": "兼容骨架坐标（见支持表）；区间、ID、单位需合法；Radial见新增视图支持矩阵"
     }
   },
   "geom_seq_scale": {
     "level": "L3",
-    "page": "collinear-tuning",
-    "anchor": "scale",
+    "page": "collinear-layout",
+    "anchor": "gap",
     "reason": "Reviewed input/output, constraints and runnable canonical lesson; key-parameter level applies only to listed behavior",
     "modes": "collinear only; native bp/aa ruler",
     "parameters": [
@@ -1145,7 +1145,7 @@
   },
   "geom_track_bar": {
     "level": "L3",
-    "page": "foundation",
+    "page": "tracks-statistics",
     "anchor": "tracks",
     "reason": "Reviewed input/output, constraints and runnable canonical lesson; key-parameter level applies only to listed behavior",
     "modes": "all three; explicit position_track and valid interval bins; Radial per view-expansion matrix",
@@ -1159,11 +1159,11 @@
       "zh": "按源位置统计观测数"
     },
     "alias_of": "",
-    "case": "foundation",
+    "case": "multi-sequence",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "all three; explicit position_track and valid interval bins; Radial per new-view support matrix",
-      "zh": "三种模式；显式 position_track 和区间箱；Radial见新增视图支持矩阵"
+      "en": "Count observations at source positions in compatible backbone views; zero baseline; binning is a separate explicit Stat",
+      "zh": "兼容骨架坐标中的源位置观测计数；基线仅 0；分箱是另行声明的 Stat"
     }
   },
   "geom_track_line": {
@@ -1186,7 +1186,7 @@
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
       "en": "all three; increasing positions per group; closed requires complete circular gap=0; Radial per new-view support matrix",
-      "zh": "三种模式；每组位置递增；closed 需完整闭圆；Radial见新增视图支持矩阵"
+      "zh": "兼容骨架坐标（见支持表）；每组位置递增；closed 需完整闭圆；Radial见新增视图支持矩阵"
     }
   },
   "geom_track_tile": {
@@ -1208,12 +1208,12 @@
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
       "en": "all three; explicit named track; overlapping input tiles keep drawing order; Radial per new-view support matrix",
-      "zh": "三种模式；显式轨道；重叠按输入顺序绘制；Radial见新增视图支持矩阵"
+      "zh": "兼容骨架坐标（见支持表）；显式轨道；重叠按输入顺序绘制；Radial见新增视图支持矩阵"
     }
   },
   "get_chord_layout": {
     "level": "L2",
-    "page": "output",
+    "page": "diagnostics",
     "anchor": "geometry",
     "reason": "Reviewed input/output, constraints and runnable canonical lesson; key-parameter level applies only to listed behavior",
     "modes": "complete documented layout for all supported plots",
@@ -1245,15 +1245,15 @@
       "validate"
     ],
     "purpose": {
-      "en": "Layered chord, circular and collinear sequence plots",
-      "zh": "用图层组合弦图、圆图和共线性图"
+      "en": "Create sequence plots from tables and independent layers",
+      "zh": "用数据表和独立图层创建序列图"
     },
     "alias_of": "",
     "case": "real-data",
     "scope": "source-backed complete workflow",
     "modes_localized": {
       "en": "constructor; one declared unit per plot",
-      "zh": "三种坐标；同一图的 bp/aa 单位必须一致"
+      "zh": "兼容坐标（见支持表）；同一图的 bp/aa 单位必须一致"
     }
   },
   "ggsave": {
@@ -1448,7 +1448,7 @@
   },
   "map_ggchord_position": {
     "level": "L2",
-    "page": "view-expansion",
+    "page": "radial-synteny",
     "anchor": "export",
     "reason": "Reviewed input/output, constraints and runnable canonical lesson; key-parameter level applies only to listed behavior",
     "modes": "Collinear / Dotplot / Radial",
@@ -1464,7 +1464,7 @@
       "zh": "映射源位置与显示坐标"
     },
     "alias_of": "",
-    "case": "view-expansion",
+    "case": "dotplot-start",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
       "en": "Native/source positions; explicit Dotplot axis, or both x/y for radial inverse",
@@ -1514,8 +1514,8 @@
   },
   "optimize_ggchord_layout": {
     "level": "L2",
-    "page": "workflow-tools",
-    "anchor": "diagnostics",
+    "page": "diagnostics",
+    "anchor": "target-size",
     "reason": "Reviewed input/output, constraints and runnable canonical lesson; key-parameter level applies only to listed behavior",
     "modes": "explicit input sequence order/orientation heuristic, not biological inference",
     "parameters": [
@@ -1539,7 +1539,7 @@
   },
   "position_feature_stack": {
     "level": "L3",
-    "page": "circular-layers",
+    "page": "circular-features",
     "anchor": "stacking",
     "reason": "Reviewed input/output, constraints and runnable canonical lesson; key-parameter level applies only to listed behavior",
     "modes": "feature lanes; base Position before overlap allocation",
@@ -1581,7 +1581,7 @@
   },
   "position_plasmid": {
     "level": "L2",
-    "page": "circular-layers",
+    "page": "circular-features",
     "anchor": "stacking",
     "reason": "Reviewed input/output, constraints and runnable canonical lesson; key-parameter level applies only to listed behavior",
     "modes": "local shared-band preset; intended circular",
@@ -1602,7 +1602,7 @@
   },
   "position_strand": {
     "level": "L2",
-    "page": "circular-layers",
+    "page": "circular-features",
     "anchor": "stacking",
     "reason": "Reviewed input/output, constraints and runnable canonical lesson; key-parameter level applies only to listed behavior",
     "modes": "local signed placement on valid feature/gene layers",
@@ -1623,7 +1623,7 @@
   },
   "position_track": {
     "level": "L3",
-    "page": "tracks",
+    "page": "tracks-statistics",
     "anchor": "independent-bands",
     "reason": "Reviewed input/output, constraints and runnable canonical lesson; key-parameter level applies only to listed behavior",
     "modes": "all three; same track ID shares consistent declarations",
@@ -1643,7 +1643,7 @@
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
       "en": "all three; same track ID shares consistent declarations",
-      "zh": "三种模式；同 ID 的声明和值域需一致"
+      "zh": "兼容骨架坐标（见支持表）；同 ID 的声明和值域需一致"
     }
   },
   "PositionIdentity": {
@@ -1690,7 +1690,7 @@
   },
   "primer_catalog": {
     "level": "L2",
-    "page": "workflow-tools",
+    "page": "recognition",
     "anchor": "catalog",
     "reason": "Reviewed input/output, constraints and runnable canonical lesson; key-parameter level applies only to listed behavior",
     "modes": "catalogue metadata, not a binding search",
@@ -1757,7 +1757,7 @@
   },
   "read_bed": {
     "level": "L2",
-    "page": "formats",
+    "page": "import-intervals",
     "anchor": "zero-based",
     "reason": "Reviewed input/output, constraints and runnable canonical lesson; key-parameter level applies only to listed behavior",
     "modes": "zero-based half-open BED converted once",
@@ -1801,7 +1801,7 @@
   },
   "read_fasta_lengths": {
     "level": "L2",
-    "page": "formats",
+    "page": "aligned-sequences",
     "anchor": "characters",
     "reason": "Reviewed input/output, constraints and runnable canonical lesson; key-parameter level applies only to listed behavior",
     "modes": "local FASTA; declared bp/aa unit and complete lengths",
@@ -1825,7 +1825,7 @@
   },
   "read_genbank": {
     "level": "L2",
-    "page": "formats",
+    "page": "import-sequences",
     "anchor": "genbank",
     "reason": "Reviewed input/output, constraints and runnable canonical lesson; key-parameter level applies only to listed behavior",
     "modes": "local GenBank; explicit installed Biopython parser; provenance retained",
@@ -1872,7 +1872,7 @@
   },
   "read_paf": {
     "level": "L2",
-    "page": "formats",
+    "page": "import-intervals",
     "anchor": "zero-based",
     "reason": "Reviewed input/output, constraints and runnable canonical lesson; key-parameter level applies only to listed behavior",
     "modes": "PAF with complete source lengths and strand-aware endpoint conversion",
@@ -1930,7 +1930,7 @@
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
       "en": "all three; matching generic feature role/preset",
-      "zh": "三种模式；匹配通用注释角色或预设"
+      "zh": "兼容骨架坐标（见支持表）；匹配通用注释角色或预设"
     }
   },
   "scale_feature_fill_plasmid": {
@@ -1951,7 +1951,7 @@
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
       "en": "all three; matching generic feature role/preset",
-      "zh": "三种模式；匹配通用注释角色或预设"
+      "zh": "兼容骨架坐标（见支持表）；匹配通用注释角色或预设"
     }
   },
   "scale_feature_shape_manual": {
@@ -1975,7 +1975,7 @@
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
       "en": "all three; matching generic feature role/preset",
-      "zh": "三种模式；匹配通用注释角色或预设"
+      "zh": "兼容骨架坐标（见支持表）；匹配通用注释角色或预设"
     }
   },
   "scale_feature_shape_plasmid": {
@@ -1997,7 +1997,7 @@
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
       "en": "all three; matching generic feature role/preset",
-      "zh": "三种模式；匹配通用注释角色或预设"
+      "zh": "兼容骨架坐标（见支持表）；匹配通用注释角色或预设"
     }
   },
   "scale_gene_fill_manual": {
@@ -2018,7 +2018,7 @@
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
       "en": "bp gene layers; compatible backbone coordinates",
-      "zh": "三种模式的 bp 基因图层"
+      "zh": "兼容骨架坐标（见支持表）的 bp 基因图层"
     }
   },
   "scale_link_alpha_continuous": {
@@ -2220,7 +2220,7 @@
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
       "en": "all three; matching region_fill role",
-      "zh": "三种模式；匹配 region_fill"
+      "zh": "兼容骨架坐标（见支持表）；匹配 region_fill"
     }
   },
   "scale_ribbon_alpha_continuous": {
@@ -2432,7 +2432,7 @@
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
       "en": "all three; matching sequence colour role",
-      "zh": "三种模式；匹配序列颜色角色"
+      "zh": "兼容骨架坐标（见支持表）；匹配序列颜色角色"
     }
   },
   "scale_seq_colour_manual": {
@@ -2453,7 +2453,7 @@
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
       "en": "all three; matching sequence colour role",
-      "zh": "三种模式；匹配序列颜色角色"
+      "zh": "兼容骨架坐标（见支持表）；匹配序列颜色角色"
     }
   },
   "scale_seq_position_continuous": {
@@ -2476,7 +2476,7 @@
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
       "en": "all three; position axis, separate from the collinear ruler",
-      "zh": "三种模式的位置轴；与直线标尺不同"
+      "zh": "兼容骨架坐标（见支持表）的位置轴；与直线标尺不同"
     }
   },
   "scale_seq_ring_manual": {
@@ -2505,8 +2505,8 @@
   },
   "scale_track_colour_gradientn": {
     "level": "L2",
-    "page": "tracks",
-    "anchor": "draw-gc",
+    "page": "scale-families",
+    "anchor": "tracks",
     "reason": "Reviewed input/output, constraints and runnable canonical lesson; key-parameter level applies only to listed behavior",
     "modes": "all three; scale ID must match position_track",
     "parameters": [
@@ -2522,13 +2522,13 @@
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
       "en": "all three; scale ID must match position_track",
-      "zh": "三种模式；ID 必须匹配 position_track"
+      "zh": "兼容骨架坐标（见支持表）；ID 必须匹配 position_track"
     }
   },
   "scale_track_colour_manual": {
     "level": "L2",
-    "page": "tracks",
-    "anchor": "draw-gc",
+    "page": "scale-families",
+    "anchor": "tracks",
     "reason": "Reviewed input/output, constraints and runnable canonical lesson; key-parameter level applies only to listed behavior",
     "modes": "all three; scale ID must match position_track",
     "parameters": [
@@ -2543,13 +2543,13 @@
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
       "en": "all three; scale ID must match position_track",
-      "zh": "三种模式；ID 必须匹配 position_track"
+      "zh": "兼容骨架坐标（见支持表）；ID 必须匹配 position_track"
     }
   },
   "scale_track_fill_gradientn": {
     "level": "L2",
-    "page": "tracks",
-    "anchor": "draw-gc",
+    "page": "scale-families",
+    "anchor": "tracks",
     "reason": "Reviewed input/output, constraints and runnable canonical lesson; key-parameter level applies only to listed behavior",
     "modes": "all three; scale ID must match position_track",
     "parameters": [
@@ -2565,13 +2565,13 @@
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
       "en": "all three; scale ID must match position_track",
-      "zh": "三种模式；ID 必须匹配 position_track"
+      "zh": "兼容骨架坐标（见支持表）；ID 必须匹配 position_track"
     }
   },
   "scale_track_fill_manual": {
     "level": "L2",
-    "page": "tracks",
-    "anchor": "draw-gc",
+    "page": "scale-families",
+    "anchor": "tracks",
     "reason": "Reviewed input/output, constraints and runnable canonical lesson; key-parameter level applies only to listed behavior",
     "modes": "all three; scale ID must match position_track",
     "parameters": [
@@ -2586,13 +2586,13 @@
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
       "en": "all three; scale ID must match position_track",
-      "zh": "三种模式；ID 必须匹配 position_track"
+      "zh": "兼容骨架坐标（见支持表）；ID 必须匹配 position_track"
     }
   },
   "scale_track_value_continuous": {
     "level": "L2",
-    "page": "tracks",
-    "anchor": "draw-gc",
+    "page": "scale-families",
+    "anchor": "tracks",
     "reason": "Reviewed input/output, constraints and runnable canonical lesson; key-parameter level applies only to listed behavior",
     "modes": "all three; scale ID must match position_track",
     "parameters": [
@@ -2610,7 +2610,7 @@
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
       "en": "all three; scale ID must match position_track",
-      "zh": "三种模式；ID 必须匹配 position_track"
+      "zh": "兼容骨架坐标（见支持表）；ID 必须匹配 position_track"
     }
   },
   "segment_ggchord_data": {
@@ -2642,8 +2642,8 @@
   },
   "stat_ribbon_bundle": {
     "level": "L3",
-    "page": "ribbon-statistics",
-    "anchor": "bundle",
+    "page": "ribbons",
+    "anchor": "statistics-bundle",
     "reason": "Reviewed input/output, constraints and runnable canonical lesson; key-parameter level applies only to listed behavior",
     "modes": "chord/collinear ribbon layer; explicit aggregation",
     "parameters": [
@@ -2666,8 +2666,8 @@
   },
   "stat_ribbon_density": {
     "level": "L3",
-    "page": "ribbon-statistics",
-    "anchor": "density",
+    "page": "ribbons",
+    "anchor": "statistics-density",
     "reason": "Reviewed input/output, constraints and runnable canonical lesson; key-parameter level applies only to listed behavior",
     "modes": "chord/collinear ribbon layer; one ribbon per source observation",
     "parameters": [
@@ -2932,7 +2932,7 @@
   },
   "geom_track": {
     "level": "L2",
-    "page": "foundation",
+    "page": "tracks-statistics",
     "anchor": "tracks",
     "reason": "Explicit source/result example and documented first support matrix; local Foundation checks",
     "modes": "Chord/Circular/Collinear/Sankey within the first support matrix; Radial per view-expansion matrix",
@@ -2948,7 +2948,7 @@
       "zh": "源空间统计轨道"
     },
     "alias_of": "",
-    "case": "foundation",
+    "case": "multi-sequence",
     "scope": "Foundation first implementation",
     "modes_localized": {
       "en": "Chord/Circular/Collinear/Sankey within the first support matrix; Radial per new-view support matrix",
@@ -2957,7 +2957,7 @@
   },
   "geom_track_col": {
     "level": "L2",
-    "page": "foundation",
+    "page": "tracks-statistics",
     "anchor": "tracks",
     "reason": "Explicit source/result example and documented first support matrix; local Foundation checks",
     "modes": "Chord/Circular/Collinear/Sankey; Radial per view-expansion matrix",
@@ -2971,7 +2971,7 @@
       "zh": "显示给定数值高度"
     },
     "alias_of": "",
-    "case": "foundation",
+    "case": "multi-sequence",
     "scope": "Foundation first implementation",
     "modes_localized": {
       "en": "Chord/Circular/Collinear/Sankey; Radial per new-view support matrix",
@@ -2980,7 +2980,7 @@
   },
   "coord_sankey": {
     "level": "L2",
-    "page": "foundation",
+    "page": "sankey",
     "anchor": "sankey",
     "reason": "Explicit source/result example and documented first support matrix; local Foundation checks",
     "modes": "Mirrored two-column relationships",
@@ -2993,7 +2993,7 @@
       "zh": "query 左列与 subject 右列镜像区间关系"
     },
     "alias_of": "",
-    "case": "foundation",
+    "case": "multi-sequence",
     "scope": "Foundation first implementation",
     "modes_localized": {
       "en": "Mirrored two-column relationships",
@@ -3002,7 +3002,7 @@
   },
   "coord_dotplot": {
     "level": "L2",
-    "page": "view-expansion",
+    "page": "dotplot-start",
     "anchor": "dotplot",
     "reason": "Runnable source-backed example, endpoint/source semantics and explicit support matrix; no all-parameter guarantee",
     "modes": "Dotplot",
@@ -3012,7 +3012,7 @@
       "zh": "HSP双轴投影"
     },
     "alias_of": "",
-    "case": "view-expansion",
+    "case": "dotplot-start",
     "scope": "Native endpoints and per-coordinate explicit support contract",
     "modes_localized": {
       "en": "Identity HSP segments on independent native axes",
@@ -3021,7 +3021,7 @@
   },
   "geom_alignment_segment": {
     "level": "L2",
-    "page": "view-expansion",
+    "page": "dotplot-start",
     "anchor": "dotplot",
     "reason": "Runnable source-backed example, endpoint/source semantics and explicit support matrix; no all-parameter guarantee",
     "modes": "Dotplot",
@@ -3031,7 +3031,7 @@
       "zh": "绘制HSP完整端点"
     },
     "alias_of": "",
-    "case": "view-expansion",
+    "case": "dotplot-start",
     "scope": "Native endpoints and per-coordinate explicit support contract",
     "modes_localized": {
       "en": "Identity HSP segments on independent native axes",
@@ -3040,7 +3040,7 @@
   },
   "coord_radial_synteny": {
     "level": "L2",
-    "page": "view-expansion",
+    "page": "radial-synteny",
     "anchor": "radial",
     "reason": "Runnable source-backed example, endpoint/source semantics and explicit support matrix; no all-parameter guarantee",
     "modes": "Radial synteny",
@@ -3050,7 +3050,7 @@
       "zh": "将线性序列投影到径向辐条"
     },
     "alias_of": "",
-    "case": "view-expansion",
+    "case": "dotplot-start",
     "scope": "Native endpoints and per-coordinate explicit support contract",
     "modes_localized": {
       "en": "Proportional/equal spokes, cyclic actual HSPs and shared feature/Track frames",
@@ -3059,7 +3059,7 @@
   },
   "ggchord_fusion": {
     "level": "L2",
-    "page": "fusion",
+    "page": "fusion-routing",
     "anchor": "intervals",
     "reason": "Runnable source-backed composition with explicit boundaries and measured interval exports",
     "modes": "Fusion",
@@ -3084,7 +3084,7 @@
   },
   "fusion_panel": {
     "level": "L2",
-    "page": "fusion",
+    "page": "fusion-layout",
     "anchor": "advanced-placement",
     "reason": "Runnable source-backed composition with explicit boundaries and measured interval exports",
     "modes": "Fusion",
@@ -3111,7 +3111,7 @@
   },
   "fusion_ribbon": {
     "level": "L2",
-    "page": "fusion",
+    "page": "fusion-routing",
     "anchor": "intervals",
     "reason": "Runnable source-backed composition with explicit boundaries and measured interval exports",
     "modes": "Registered genomic plots, nested Fusion and registered character details; explicit panel/instance routing; Dotplot excluded",
@@ -3130,7 +3130,7 @@
   },
   "export_ggchord_fusion": {
     "level": "L2",
-    "page": "fusion",
+    "page": "fusion-routing",
     "anchor": "export",
     "reason": "Runnable source-backed composition with explicit boundaries and measured interval exports",
     "modes": "Registered genomic plots, nested Fusion and registered character details; explicit panel/instance routing; Dotplot excluded",
@@ -3149,7 +3149,7 @@
   },
   "read_bedpe": {
     "level": "L2",
-    "page": "formats",
+    "page": "import-intervals",
     "anchor": "bedpe",
     "reason": "Runnable observed-interval round trip and explicit missing-anchor/strand boundaries",
     "modes": "Input adapter",
@@ -3168,7 +3168,7 @@
   },
   "as_ggchord_alignment": {
     "level": "L2",
-    "page": "formats",
+    "page": "aligned-sequences",
     "anchor": "aligned-source",
     "reason": "Runnable real aligned-character workflow and explicit source/column/physical-space boundaries",
     "modes": "Local aligned characters",
@@ -3191,7 +3191,7 @@
   },
   "read_aligned_fasta": {
     "level": "L2",
-    "page": "formats",
+    "page": "aligned-sequences",
     "anchor": "aligned-characters",
     "reason": "Runnable real aligned-character workflow and explicit source/column/physical-space boundaries",
     "modes": "Local aligned characters",
@@ -3214,7 +3214,7 @@
   },
   "map_alignment_position": {
     "level": "L2",
-    "page": "formats",
+    "page": "aligned-sequences",
     "anchor": "aligned-characters",
     "reason": "Runnable real aligned-character workflow and explicit source/column/physical-space boundaries",
     "modes": "Local aligned characters",
@@ -3237,7 +3237,7 @@
   },
   "geom_residue": {
     "level": "L2",
-    "page": "formats",
+    "page": "aligned-sequences",
     "anchor": "aligned-characters",
     "reason": "Runnable real aligned-character workflow and explicit source/column/physical-space boundaries",
     "modes": "Local aligned characters",
@@ -3259,7 +3259,7 @@
   },
   "magnify_ggchord": {
     "level": "L2",
-    "page": "fusion",
+    "page": "fusion-details",
     "anchor": "magnify",
     "reason": "Runnable source-backed locus and explicit local detail; source/leader/stat boundaries reviewed",
     "modes": "Registered genomic plots, nested Fusion and registered character details; explicit panel/instance routing; Dotplot excluded",
@@ -3310,7 +3310,7 @@
   },
   "register_ggchord_alignment": {
     "level": "L2",
-    "page": "fusion",
+    "page": "fusion-details",
     "anchor": "character-detail",
     "reason": "Runnable source-backed M2 workflow with explicit coordinate and translation boundaries",
     "modes": "Explicit source-backed M2",
@@ -3332,7 +3332,7 @@
   },
   "translate_ggchord_cds": {
     "level": "L2",
-    "page": "formats",
+    "page": "aligned-sequences",
     "anchor": "cds-translation",
     "reason": "Runnable source-backed M2 workflow with explicit coordinate and translation boundaries",
     "modes": "Explicit source-backed M2",
@@ -3357,7 +3357,7 @@
   },
   "read_bedgraph": {
     "level": "L2",
-    "page": "formats",
+    "page": "import-signals",
     "anchor": "signals",
     "reason": "Real packaged GC input, explicit coordinates and units; optional binary query and platform boundary",
     "modes": "quantitative Track input",
@@ -3380,7 +3380,7 @@
   },
   "read_bigwig": {
     "level": "L2",
-    "page": "formats",
+    "page": "import-signals",
     "anchor": "signals",
     "reason": "Real packaged GC input, explicit coordinates and units; optional binary query and platform boundary",
     "modes": "quantitative Track input",
@@ -3404,7 +3404,7 @@
   },
   "read_vcf": {
     "level": "L2",
-    "page": "formats",
+    "page": "import-relations",
     "anchor": "variants",
     "reason": "Real optional-package VCF with complete source evidence; structural/BCF controls in directed audit",
     "modes": "variant feature input; optional structural pair input",
@@ -3429,7 +3429,7 @@
   },
   "read_maf": {
     "level": "L2",
-    "page": "formats",
+    "page": "import-relations",
     "anchor": "genome-alignments",
     "reason": "Pinned unchanged real genomic input; directional endpoints and source evidence verified in dedicated audit",
     "modes": "MAF exact cells; chain intervals without characters",
@@ -3454,7 +3454,7 @@
   },
   "read_chain": {
     "level": "L2",
-    "page": "formats",
+    "page": "import-relations",
     "anchor": "genome-alignments",
     "reason": "Pinned unchanged real genomic input; directional endpoints and source evidence verified in dedicated audit",
     "modes": "MAF exact cells; chain intervals without characters",
@@ -3481,7 +3481,7 @@
   },
   "read_delta": {
     "level": "L2",
-    "page": "formats",
+    "page": "import-relations",
     "anchor": "delta",
     "reason": "Unchanged source-backed translated delta input and native metric/coordinate distinction; direct two-mode verification",
     "modes": "existing NUCMER/PROMER results; no aligner",
@@ -3507,7 +3507,7 @@
   },
   "read_signature_matches": {
     "level": "L2",
-    "page": "formats",
+    "page": "import-relations",
     "anchor": "protein-signatures",
     "reason": "Real cached AA annotations and explicit TSV re-encoding, with native score/segment provenance checks",
     "modes": "AA feature input; offline signature TSV and cached entry JSON",
@@ -3531,7 +3531,7 @@
   },
   "read_feature_relations": {
     "level": "L2",
-    "page": "formats",
+    "page": "import-relations",
     "anchor": "feature-relations",
     "reason": "Pinned original plant pairs and memberships with exact-ID mapping and provenance checks",
     "modes": "Offline pairs and group membership",

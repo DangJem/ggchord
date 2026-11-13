@@ -4,9 +4,7 @@ Build backbones, a link, a feature and labels in one lesson using bundled source
 
 Run this lesson in a fresh R session after installing the version described on the [installation page](installation.html).
 
-```r
-library(ggchord)
-```
+{{code:courseblockac}}
 
 {{code:frontbackbone}}
 
@@ -40,7 +38,7 @@ The default colour reflects the alignment identity for this row, about 98.6%. Th
 
 Find the red arrow on green `OQ646790.1`. It marks the plus-strand integrase CDS from 43,765 to 46,140 bp. The ribbon and this CDS use independent input tables.
 
-To display the CDS name, add `geom_gene_label(data = chord_genes_example)`. It reads the label from `anno`. Next, use the same backbones to compare [rotation and gaps](chord-tuning.html).
+To display the CDS name, add `geom_gene_label(data = chord_genes_example)`. It reads the label from `anno`. Next, use the same backbones to compare [rotation and gaps](chord-geometry.html#orientation).
 
 ## Display the feature name {#labels}
 
@@ -50,12 +48,10 @@ To display the CDS name, add `geom_gene_label(data = chord_genes_example)`. It r
 
 ## Switch to a linear layout {#collinear}
 
-```r
-p_chord_feature + coord_collinear()
-```
+{{code:courseblockad}}
 
 This keeps the input and layers, while Collinear selects adjacent rows by default. Compare all four views in the [next lesson](multi-sequence-views.html).
 
 ## Use your own sequences {#adapt}
 
-Replace `seq_data_example` with a table containing `accver` and `length`. See [Basic input tables](chord-data.html#tables) for the column definitions.
+Replace `seq_data_example` with a table containing `accver` and `length`. See [Basic input tables](data.html#prepare) for the column definitions.

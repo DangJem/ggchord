@@ -6,9 +6,9 @@ Lengths and prepared annotations are sufficient to draw. Sequence characters are
 
 ## Learning route {#path}
 
-- [Draw your first circular map](plasmid-start.html)
-- [Single-sequence length, DNA and annotations](plasmid-data.html)
-- [Circular backbones, centre text and annotation lanes](circular-layers.html)
+- [Draw your first circular map](circular-start.html#input)
+- [Single-sequence length, DNA and annotations](circular-data.html#tables)
+- [Circular backbones, centre text and annotation lanes](circular-layout.html#input)
 - [Fixed circular labels and automatic fitting](circular-labels.html)
 - [Quantitative tracks](tracks.html)
 - [Complete pUC19 and pETDuet-1 cases](plasmids.html)

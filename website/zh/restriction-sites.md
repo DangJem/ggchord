@@ -56,4 +56,4 @@ find_restriction_sites 返回全部匹配和切点，filter_restriction_sites �
 
 ## 练习、密集图与限制 {#adapt}
 
-只增大 min_label_gap，观察标签与引线是否向外扩展；再回到默认，用 label=FALSE 只显示切点。保持完整搜索结果，另存显示子集。小图放不下时增加实际导出尺寸，而不是删除源记录。组合特征与引物后重新检查拥挤，见[密集 pETDuet-1](plasmids.html#complex)。计算切点不是实际酶切实验的验证。
+只增大 min_label_gap，观察标签与引线是否向外扩展；再回到默认，用 label=FALSE 只显示切点。保持完整搜索结果，另存显示子集。小图放不下时增加实际导出尺寸，而不是删除源记录。组合特征与引物后重新检查拥挤，见[密集 pETDuet-1](circular-dense-case.html#complex)。计算切点不是实际酶切实验的验证。

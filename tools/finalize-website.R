@@ -337,7 +337,7 @@ for(lang in c('en','zh')) {
   for(figure in xml2::xml_find_all(main,'.//figure[@data-figure]')) {
     key <- xml2::xml_attr(figure,'data-figure')
     code_url <- if(current_page=='gallery') paste0(base,'documentation-examples.R') else
-      paste0(prefix,sub('#','.html#',figure_lessons[[key]],fixed=TRUE))
+      paste0(prefix,if(grepl('#',figure_lessons[[key]],fixed=TRUE)) sub('#','.html#',figure_lessons[[key]],fixed=TRUE) else paste0(figure_lessons[[key]],'.html'))
     xml2::xml_set_attr(xml2::xml_find_first(figure,'./a'),'data-code-url',code_url)
   }
   if(current_page=='index') xml2::xml_set_attr(xml2::xml_find_all(main,'.//*[contains(@class,"home-results")]//img'),

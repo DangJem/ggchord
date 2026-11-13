@@ -220,3 +220,5 @@ footer {border-top:1px solid var(--color-rule);padding:22px 0;color:var(--text-m
 @media print {.navbar,.chapter-nav,.page-nav,.chapter-drawer,.page-outline,.copy-code,.example-actions{display:none}.doc-layout{display:block}.doc-layout > main{padding:0;border:0}.documentation-figure{break-inside:avoid}}
 
 .module-preview{width:100%;height:180px;object-fit:contain;background:var(--surface-paper)}
+
+.gallery-controls{display:flex;flex-wrap:wrap;gap:12px;margin:16px 0}.gallery-controls label{display:grid;gap:4px;font-size:.85rem}.gallery-controls select{padding:8px;border:1px solid var(--color-control);border-radius:6px;background:var(--surface-paper);color:var(--text-main)}.gallery-controls .gallery-count{flex-basis:100%;margin:0}.gallery-card[hidden]{display:none}

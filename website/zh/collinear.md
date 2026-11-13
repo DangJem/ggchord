@@ -11,7 +11,7 @@
 
 {{figure:showcasecollinear}}
 
-四条骨架按碱基位置比较，精选的 16 条 CDS 放在各行两侧。先沿一条横行读基因位置，再跟随带状连接看匹配区间。实线轮廓连接相邻行，虚线轮廓提示中间还有其他显示行。若刚开始，先做[四条骨架示例](collinear-start.html)，再完成[添加比对和 CDS](collinear-build.html)。
+四条骨架按碱基位置比较，精选的 16 条 CDS 放在各行两侧。先沿一条横行读基因位置，再跟随带状连接看匹配区间。实线轮廓连接相邻行，虚线轮廓提示中间还有其他显示行。若刚开始，先做[四条骨架示例](multi-sequence-start.html#collinear)，再完成[添加比对和 CDS](multi-sequence-start.html#collinear)。
 
 ## 准备原始记录 {#prepare}
 解压[教学输入包](../assets/tutorial-inputs.zip)，安装dplyr、purrr、tidyr后运行：
@@ -31,12 +31,10 @@
 虚线外框标识非相邻显示行，较明显的线宽便于辨认。控制点沿右侧分流，局部smooth避障在箭头附近退让。identity左侧色条与弦图一致，底部链图例使用箭头。比例尺水平offset为0，长度仍按共享bp转换计算。
 
 ## 调整与限制 {#read}
-修改seq_gap、行顺序、方向或连接筛选后，应同步重建控制点。局部箭头避障不是绕过中间整条序列的自动路由器；跨行ribbon之间仍可合法相交。需要局部观察时使用[focus与分段](views.html)。当前显式圆形半径/曲率不能直接传入共线性坐标，见[转换边界](collinear-data.html#contract)。
+修改seq_gap、行顺序、方向或连接筛选后，应同步重建控制点。局部箭头避障不是绕过中间整条序列的自动路由器；跨行ribbon之间仍可合法相交。需要局部观察时使用[focus与分段](views.html)。当前显式圆形半径/曲率不能直接传入共线性坐标，见[转换边界](multi-sequence-views.html#input)。
 
 ## 按预定尺寸保存 {#save}
-```r
-ggsave("four-genome-collinear.png", p_show_collinear, width = 12, height = 8, units = "in", dpi = 144)
-```
+{{code:courseblockf}}
 
 ## 保存前的证据检查 {#evidence-check}
 

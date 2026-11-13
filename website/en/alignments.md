@@ -36,7 +36,7 @@ The reader puts the six plotting fields first in the returned table.
 {{code:blastendpoints}}
 {{output:blastendpoints}}
 
-A ribbon uses the two sequence IDs and their start and end positions. Keep `pident` to colour or filter by identity and `length` to filter by alignment length. For a custom headerless file, pass the actual field order as `col_names` to `read_blast()`. For a table already in R, see [link conversion](formats.html#adapters).
+A ribbon uses the two sequence IDs and their start and end positions. Keep `pident` to colour or filter by identity and `length` to filter by alignment length. For a custom headerless file, pass the actual field order as `col_names` to `read_blast()`. For a table already in R, see [link conversion](import-sequences.html#adapters).
 
 ## Choose the coordinate unit first {#protein}
 
@@ -48,7 +48,7 @@ A ribbon uses the two sequence IDs and their start and end positions. Keep `pide
 
 One plot uses one coordinate unit. Full sequences supply protein lengths, while HSP endpoints describe only aligned intervals. BLASTx and tBLASTn have endpoints in different units and require a chosen common display domain. Nucleotide strand and protein N→C order have distinct biological meanings.
 
-[Draw a native BLASTp protein comparison](protein-alignments.html#protein), or continue to [the three plotting layouts](modes.html).
+[Draw a native BLASTp protein comparison](protein-alignments.html#protein), or continue to [the four plotting modules](modes.html).
 
 <span id="projection"></span>To locate protein hits on a nucleotide genome, read [CDS coordinate projection](projection.html).
 

@@ -46,4 +46,11 @@ Inspect match positions, methods and provenance. Restriction filtering is a disp
 
 <div class="next-step">Continue: <a href="plasmids.html">A complete circular annotation workflow →</a></div>
 
-After inspecting matches, follow [primer arcs and text](primers.html) and [restriction labels/leaders](restriction-sites.html). See [circular layers](circular-layers.html) for backbones/centre/lanes and [circular labels](circular-labels.html) for fixed/automatic text.
+After inspecting matches, follow [primer arcs and text](primers.html) and [restriction labels/leaders](restriction-sites.html). See [circular layers](circular-layout.html#input) for backbones/centre/lanes and [circular labels](circular-labels.html) for fixed/automatic text.
+
+## A catalogue is not a search result {#catalog}
+
+`primer_catalog` returns oligonucleotide records; aliases=TRUE returns source aliases. Catalogue direction is descriptive; find_primer_bindings determines binding direction on target DNA. Multiple names for one sequence do not represent distinct oligonucleotides. Continue with [primers](primers.html) to search and draw.
+
+{{code:comparecatalog}}
+{{console:comparecatalog}}

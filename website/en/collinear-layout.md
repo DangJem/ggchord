@@ -1,4 +1,8 @@
-Start with [your first collinear plot](collinear-start.html), then compare alignment, anchors and orientation on the same real input. No chord lessons are required.
+{{code:courseblocky}}
+
+{{prepare:frontlinks}}
+
+Start with [your first collinear plot](multi-sequence-start.html#collinear), then compare alignment, anchors and orientation on the same real input. No chord lessons are required.
 
 ## Input and default left alignment {#baseline}
 
@@ -63,4 +67,12 @@ These belong to `coord_collinear()`, not the other coordinate systems. Window ta
 
 First change only left to right and observe short sequences against the longest backbone. Then choose a justified anchor for each sequence and explain why they can be compared. For your FASTA lengths and BLAST/PAF endpoints, check IDs, units, complete lengths and reverse endpoints; see [data import](real-data.html#read).
 
-For missing links inspect endpoints and adjacent-row filtering in [cross-row connections](collinear-routing.html). Continue with [local windows and segments](views.html); see [`coord_collinear()`](reference/coord_collinear.html) for the complete reference.
+For missing links inspect endpoints and adjacent-row filtering in [cross-row connections](multi-sequence-links.html#routes). Continue with [local windows and segments](views.html); see [`coord_collinear()`](reference/coord_collinear.html) for the complete reference.
+
+## Increase row spacing {#gap}
+
+{{code:frontlineargap}}
+
+{{figure:frontlineargap}}
+
+In a collinear plot, `seq_gap` is relative to the longest backbone width and defaults to `0.30`. Set the gap below MT108731.1 to `0.45`. The other gaps retain `0.30`; the final row has no following gap. The ribbon still joins the same bp intervals.

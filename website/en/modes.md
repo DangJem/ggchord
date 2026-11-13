@@ -1,3 +1,5 @@
+Choose among [four modules](learn.html#modules): multi-sequence relationships (Chord/Collinear/Radial/Sankey), single-sequence Circular, HSP Dotplot and Fusion composition. Six Coords and the composition layer have distinct responsibilities.
+
 ## What makes up a plot? {#prepare}
 
 | Concept | Meaning in the plot | In code |
@@ -17,19 +19,19 @@ Biological strand comes from the feature table. Display orientation determines w
 
 {{figure:frontbackbone}}
 
-`coord_chord()` arranges multiple sequences in one view so you can see their overall relationships. [Start with sequence backbones](chord-start.html).
+`coord_chord()` arranges multiple sequences in one view so you can see their overall relationships. [Start with sequence backbones](multi-sequence-start.html#draw).
 
 ### Collinear plot {#collinear}
 
 {{figure:frontlinearbase}}
 
-`coord_collinear()` lays backbones out in rows to make position and order easier to compare. [Open the collinear chapter](collinear-start.html). Collinear ribbons default to links between adjacent display rows.
+`coord_collinear()` lays backbones out in rows to make position and order easier to compare. [Open the collinear chapter](multi-sequence-start.html#collinear). Collinear ribbons default to links between adjacent display rows.
 
 ### Single-sequence circular plot {#circular}
 
 {{figure:firstcircle}}
 
-`coord_circular()` draws a single sequence as a ring, suitable for annotating plasmids and other circular DNA. [Open the circular chapter](plasmid-start.html).
+`coord_circular()` draws a single sequence as a ring, suitable for annotating plasmids and other circular DNA. [Open the circular chapter](circular-start.html#input).
 
 ## From data to a figure {#composition}
 
@@ -45,7 +47,7 @@ Colour may identify sequences, feature classes or alignment identity. Legends sh
 
 ## Fit, limits and clipping {#coordinate-controls}
 
-These controls act on the complete view after sequence geometry. They do not change source coordinates or infer missing lengths. See the [parameter atlas](parameter-atlas.html) for each coordinate signature.
+The following fit/clip defaults apply to Chord, Collinear, Circular, Sankey and Radial. Dotplot has no fit argument and defaults to clip="on". These controls act on the complete view after sequence geometry. They do not change source coordinates or infer missing lengths. See the [parameter atlas](parameter-atlas.html) for each coordinate signature.
 
 | Control | Default | Practical effect |
 | --- | --- | --- |

@@ -4,7 +4,7 @@
 
 [English](README.md) · [现代汉语](README-Hans.md)
 
-# ggchord：弦图、共线性图与质粒图
+# ggchord：序列图与多视图组合
 
 基于 ggplot2 的 R 包。用独立图层组合序列骨架、区间连接、基因、通用注释、标签和定量轨道。
 
@@ -15,12 +15,16 @@
 R ≥ 4.1.0 · ggplot2 ≥ 4.0.0
 
 ```r
-install.packages("ggchord")
+install.packages("remotes")
+remotes::install_github(
+  "DangJem/ggchord@0f5dd96da57876da74cd1234c7de9cf5579c80b8",
+  dependencies = NA, upgrade = "never"
+)
 ```
 
 如已检出本版源码，在仓库根目录使用 `pkgload::load_all(".")`。正式版可从 CRAN 安装。 示例使用 dplyr（≥ 1.1.0）、purrr、tidyr 和原生 `|>`，这些是示例可选依赖。
 
-## 三种模式
+## 三个真实数据综合示例
 
 以下三张综合示例展示本版的组合能力。原始输入保持可追溯，完整准备代码和解释见对应教程；初次使用请从最小首图开始。
 
@@ -434,7 +438,7 @@ ggchord 的图形语法、基因组表达和预览流程参考了以下开源项
 ## 继续阅读
 
 - [开始使用](https://dangjem.github.io/ggchord/zh/installation.html)
-- [章节索引](https://dangjem.github.io/ggchord/zh/about.html)
+- [学习总览](https://dangjem.github.io/ggchord/zh/learn.html)
 - [函数文档](https://dangjem.github.io/ggchord/zh/reference/index.html)
 - [示例图集](https://dangjem.github.io/ggchord/zh/gallery.html)
 - [其他信息](https://dangjem.github.io/ggchord/zh/about.html)

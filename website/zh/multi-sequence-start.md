@@ -4,9 +4,7 @@
 
 按[安装页](installation.html)安装本网站对应版本后，在全新 R 会话运行本课。
 
-```r
-library(ggchord)
-```
+{{code:courseblockac}}
 
 {{code:frontbackbone}}
 
@@ -40,7 +38,7 @@ library(ggchord)
 
 绿色的 `OQ646790.1` 上出现红色箭头。它是 integrase 的 CDS，范围为 43,765–46,140 bp，原始注释为正链。连接带和这个 CDS 使用各自的数据。
 
-如果需要显示 CDS 名称，可以加上 `geom_gene_label(data = chord_genes_example)`，标签来自 `anno` 列。下一节用相同骨架比较[旋转与间隙](chord-tuning.html)。
+如果需要显示 CDS 名称，可以加上 `geom_gene_label(data = chord_genes_example)`，标签来自 `anno` 列。下一节用相同骨架比较[旋转与间隙](chord-geometry.html#orientation)。
 
 ## 显示特征名称 {#labels}
 
@@ -50,12 +48,10 @@ library(ggchord)
 
 ## 切换线性布局 {#collinear}
 
-```r
-p_chord_feature + coord_collinear()
-```
+{{code:courseblockad}}
 
 这一步保持输入与图层，但线性视图默认只连接相邻行。完整四视图对照见[下一课](multi-sequence-views.html)。
 
 ## 换成自己的序列 {#adapt}
 
-把 `seq_data_example` 换成含 `accver` 和 `length` 的表即可。列的含义见[基本数据表](chord-data.html#tables)。接下来[添加连接和特征](chord-build.html)。
+把 `seq_data_example` 换成含 `accver` 和 `length` 的表即可。列的含义见[基本数据表](data.html#prepare)。接下来[添加连接和特征](multi-sequence-start.html#draw)。

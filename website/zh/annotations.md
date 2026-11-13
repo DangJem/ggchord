@@ -24,7 +24,7 @@
 
 `geom_gene()`、`geom_feature_plasmid()` 是有用预设，默认值并不相同。
 `position_strand()` 提供带符号位移，`position_plasmid()` 提供圆图放置预设，
-后者不构成第四类坐标模式。
+后者是局部 Position，不新增 Coord。
 
 ## 高亮区间而不改写观测 {#decoration}
 {{code:decorations}}
@@ -42,3 +42,17 @@
 <div class="next-step">继续：<a href="labels.html">放置和调整标签 →</a></div>
 
 比较真实 CDS 的 shouldered/flush/triangle 三种箭头，见[箭头几何对照](feature-geometry.html#arrow-heads)。
+
+## 区间高亮的侧向、宽度与偏移 {#region-parameters}
+
+从第一条真实 HSP 的 query 端保留原始 ID 与区间。默认宽度 0.08、偏移 0、侧向 inside；后图分别只改变 outside、宽度或偏移。它们是局部几何量，不是 bp。固定填色写在 geom 外观参数，数据类别映射使用 region_fill 和其专用标度。不能把高亮当作新的功能注释。
+
+{{code:comparefinishchord}}
+{{code:compareregioninside}}
+{{figure:compareregioninside}}
+{{code:compareregionoutside}}
+{{figure:compareregionoutside}}
+{{code:compareregionwidth}}
+{{figure:compareregionwidth}}
+{{code:compareregionoffset}}
+{{figure:compareregionoffset}}

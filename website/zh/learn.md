@@ -12,13 +12,69 @@
 - [配置配色、图例和主题](styling.html)
 - [按论文尺寸预览和导出](output.html)
 
-## 按任务查找 {#tasks}
+<!-- generated-tasks -->
+按目标查找课程；支持范围见[兼容表](compatibility.html)。以下历史 A/B/C 缩写分别指 Chord/Collinear/Circular，并不概括全部模块。
 
-- [导入和转换数据](formats.html)
-- [聚焦、锚定与分段](views.html)
-- [将蛋白区间转换为基因组坐标](projection.html)
-- [自动布局与文字适配](labels.html)
-- [添加数据轨道](tracks.html)
-- [图层与坐标模式的兼容边界](compatibility.html)
-- [函数参考文档](reference/index.html)
-- [完整参数与默认值图谱](parameter-atlas.html)
+## 功能与参数索引 {#tasks}
+
+| 任务 | 函数 | 关键参数 | 模式 | 课程与层级 |
+| --- | --- | --- | --- | --- |
+| 改变骨架样式 | [`geom_seq()`](reference/geom_seq.html) | `seq_style, seq_backbone_gap, seq_backbone_width` | A / B / C | [基础](circular-layout.html#style) |
+| 指定半径与曲率 | [`geom_seq()`](reference/geom_seq.html) | `seq_radius, seq_curvature` | A | [进阶](chord-geometry.html) |
+| 改变序列顺序和方向 | [`geom_seq()`](reference/geom_seq.html) | `seq_order, seq_orientation` | A / B | [进阶](chord-geometry.html) |
+| 改变连接路径与避障 | [`geom_link_ribbon()`](reference/geom_link_ribbon.html) | `link_ctrl_point, link_gap, link_avoid` | A / B | [进阶](multi-sequence-links.html#control) |
+| 将色带改为有向点连接 | [`geom_link_line()`](reference/geom_link_line.html) | `link_type, qpos/spos, arrow` | A / B | [进阶](multi-sequence-links.html#point-links) |
+| 调整基因箭头形状 | [`geom_gene()`](reference/geom_gene.html) | `arrow_head_style, short_feature` | A / B / C (bp) | [进阶](feature-geometry.html#arrow-heads) |
+| 强调一个局部区间 | [`geom_seq_region()`](reference/geom_seq_region.html) | `region_side, region_width, region_offset` | A / B / C | [进阶](multi-sequence-links.html#control) |
+| 根据相似度配色 | [`scale_ribbon_fill_stepsn()`](reference/scale_ribbon_fill_stepsn.html) | `ribbon_fill` | A / B | [基础](styling.html#roles) |
+| 分类配色与图例 | [`scale_seq_colour_manual()`](reference/scale_seq_colour_manual.html) | `values, guide` | A / B / C | [进阶](styling.html) |
+| 筛选、去重、合并比对 | [`filter_ggchord_ribbons()`](reference/filter_ggchord_ribbons.html) | `min_pident, min_length` | A / B | [进阶](ribbons.html) |
+| 汇总连接密度 | [`stat_ribbon_density()`](reference/stat_ribbon_density.html) | `bins, weight` | A / B | [进阶](ribbons.html#statistics-density) |
+| 显式聚束连接 | [`stat_ribbon_bundle()`](reference/stat_ribbon_bundle.html) | `min_bundle, group_by` | A / B | [进阶](ribbons.html#statistics-bundle) |
+| 左中右对齐序列 | [`coord_collinear()`](reference/coord_collinear.html) | `align` | B | [基础](collinear-layout.html#alignment) |
+| 以共同位点锚定 | [`coord_collinear()`](reference/coord_collinear.html) | `anchor` | B | [进阶](collinear-layout.html#anchor) |
+| 自动选择显示方向 | [`coord_collinear()`](reference/coord_collinear.html) | `orientation, min_support` | B | [进阶](collinear-layout.html#orientation) |
+| 连接非相邻行 | [`geom_link_ribbon()`](reference/geom_link_ribbon.html) | `adjacent_only, pairs, nonadjacent_linewidth` | B | [进阶](multi-sequence-links.html#routes) |
+| 显示局部窗口与断点 | [`segment_ggchord_data()`](reference/segment_ggchord_data.html) | `windows; coord_collinear: segments, segment_gap` | B | [进阶](views.html#segments) |
+| 绘制固定长度标尺 | [`geom_seq_scale()`](reference/geom_seq_scale.html) | `length, location, offset` | B | [进阶](collinear-layout.html#gap) |
+| 改变圆图朝向 | [`coord_circular()`](reference/coord_circular.html) | `rotation, direction, gap, fit` | C | [基础](circular-layout.html#style) |
+| 堆叠特征注释 | [`position_feature_stack()`](reference/position_feature_stack.html) | `spacing, side, base_position` | A / B / C | [进阶](annotations.html) |
+| 自动排布特征文字 | [`geom_feature_label_repel()`](reference/geom_feature_label_repel.html) | `label_layout, label_fit, label_min_size` | A / B / C (conditional) | [进阶](labels.html) |
+| 搜索引物结合位置 | [`find_primer_bindings()`](reference/find_primer_bindings.html) | `set, circular` | DNA | [进阶](primers.html#input) |
+| 绘制引物及文字 | [`geom_primer()`](reference/geom_primer.html) | `position` | C (bp) | [进阶](primers.html#primer-arcs) |
+| 搜索和筛选酶切位点 | [`find_restriction_sites()`](reference/find_restriction_sites.html) | `methylation, enzymes` | DNA | [进阶](recognition.html#restriction) |
+| 调整酶切文字引线 | [`geom_restriction_site()`](reference/geom_restriction_site.html) | `leader, label_style, label_side` | C (bp) | [进阶](restriction-sites.html#restriction-labels) |
+| 绘制 GC 柱图与折线 | [`geom_track_col()`](reference/geom_track.html) | `track_value, baseline` | A / B / C | [进阶](tracks.html) |
+| 绘制 tile 色带 | [`geom_track_tile()`](reference/geom_track_tile.html) | `track_fill, position` | A / B / C | [进阶](tracks.html) |
+| 设置轨道宽度和次序 | [`position_track()`](reference/position_track.html) | `track, side, order, width, gap` | A / B / C | [进阶](tracks.html) |
+| 导入 FASTA、GFF3 和比对 | [`read_fasta_lengths()`](reference/read_fasta_lengths.html) | `sequence_unit` | general | [基础](formats.html) |
+| 绘制原生蛋白比较 | [`ggchord()`](reference/ggchord.html) | `seq_data: sequence_unit` | A / B (aa) | [进阶](protein-alignments.html) |
+| 预览并导出论文图 | [`view_ggchord()`](reference/view_ggchord.html) | `width, height, units` | general | [基础](output.html) |
+| 诊断布局与导出坐标 | [`export_ggchord_layout()`](reference/export_ggchord_layout.html) | `plot` | general | [进阶](faq.html) |
+| 让相同端点的连接共享主干 | [`geom_link_ribbon()`](reference/geom_link_ribbon.html) | `link_branch, link_branch_fraction` | A / B | [进阶](multi-sequence-links.html#branches) |
+| 调整中心名称和长度 | [`geom_seq_center_label()`](reference/geom_seq_center_label.html) | `name, length, separator, name_style, length_style` | C | [进阶](circular-layout.html#center) |
+| 固定标签方向与内外侧 | [`geom_feature_label()`](reference/geom_feature_label.html) | `label_orientation, label_side, label_rotation` | A / B / C | [进阶](circular-labels.html#fixed-labels) |
+| 自动标签缩放与省略 | [`geom_feature_label_repel()`](reference/geom_feature_label_repel.html) | `label_fit, label_max_lines, external` | A / B / C | [进阶](circular-labels.html#fitting) |
+| 选择连续与分段角色标度 | [`scale_ribbon_fill_gradientn()`](reference/scale_ribbon_fill_stepsn.html) | `colours, values, limits, guide` | A / B | [进阶](scale-families.html) |
+| 诊断窗口和查询目录 | [`diagnose_ggchord()`](reference/diagnose_ggchord.html) | `plot, width, height; catalog: aliases` | general | [进阶](workflows.html#tools) |
+| 查看全部接口的主讲位置 | [`ggchord()`](reference/ggchord.html) | `all exported APIs` | general | [进阶](api-curriculum.html) |
+| 查找参数类型与完整默认值 | [`ggchord()`](reference/ggchord.html) | `all public formals` | general | [进阶](parameter-atlas.html) |
+| 统计源位置观测数 | [`geom_track()`](reference/geom_track.html) | `geom, stat, track, position` | A / B / C / Sankey | [进阶](tracks-statistics.html#tracks) |
+| 为重复序列实例选择路由 | [`geom_link_ribbon()`](reference/geom_link_ribbon.html) | `between, allow_repeated` | A / B | [进阶](instances.html#instances) |
+| 绘制镜像区间关系 | [`coord_sankey()`](reference/coord_sankey.html) | `column_gap, self_links` | Sankey | [进阶](sankey.html#sankey) |
+| 用独立双轴展示HSP | [`coord_dotplot()`](reference/coord_dotplot.html) | `x_seqs, y_seqs, x_orientation, y_orientation` | Dotplot | [进阶](dotplot-start.html#dotplot) |
+| 保留四个比对端点 | [`geom_alignment_segment()`](reference/geom_alignment_segment.html) | `mapping, data, allow_repeated` | Dotplot | [进阶](dotplot-start.html#dotplot) |
+| 绘制环形邻接的径向共线性 | [`coord_radial_synteny()`](reference/coord_radial_synteny.html) | `start_angle, clockwise, inner_radius` | Radial | [进阶](radial-synteny.html#radial) |
+| 组合有来源锚点的视图 | [`ggchord_fusion()`](reference/ggchord_fusion.html) | `center, center_size, layout` | Fusion | [进阶](fusion-routing.html#intervals) |
+| 跨面板连接真实区间 | [`fusion_ribbon()`](reference/fusion_ribbon.html) | `data, qpanel, spanel, gradient, tip` | Fusion | [进阶](fusion-routing.html#intervals) |
+| 审计组合来源与物理锚点 | [`export_ggchord_fusion()`](reference/export_ggchord_fusion.html) | `width, height` | Fusion | [进阶](fusion-routing.html#export) |
+| 导入BED双端区间 | [`read_bedpe()`](reference/read_bedpe.html) | `file, files, source_file, unmapped` | Input | [进阶](import-intervals.html#bedpe) |
+| 显示已有对齐的真实字符与gap | [`geom_residue()`](reference/geom_residue.html) | `mapping, overflow, size` | Cartesian aligned excerpts | [进阶](aligned-sequences.html#aligned-characters) |
+| 精确查找源位置与对齐列 | [`map_alignment_position()`](reference/map_alignment_position.html) | `data, accver, position, inverse` | DNA / RNA / AA | [进阶](aligned-sequences.html#aligned-source) |
+| 连接基因组区域与独立重建的细节图 | [`magnify_ggchord()`](reference/magnify_ggchord.html) | `region, detail_plot, side, connector` | Circular / Chord + Collinear | [进阶](fusion-details.html#magnify) |
+
+## 独立学习路线 {#paths}
+
+弦图：骨架 → 比对与基因 → 布局 → 连接路径 → 标签 → 四基因组案例。共线性图：骨架 → 输入与比对 → 行距 → 对齐与方向 → 跨行与局部窗口 → 四基因组案例。圆图：骨架 → 特征与标签 → 样式 → 注释布局 → 引物与酶切 → 轨道 → 完整 pUC19 → 可选参考图库。
+
+固定样式、映射、标度、图例和主题统一在[配色与图例](styling.html)主讲；[输出](output.html)集中说明预览、尺寸和保存。函数参考提供完整签名，任务表提供教学入口，并不表示所有参数已经达到同样教学深度。

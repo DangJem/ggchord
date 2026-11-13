@@ -24,19 +24,15 @@
       "multi-sequence",
       "multi-sequence-start",
       "multi-sequence-views",
+      "multi-sequence-layout",
+      "chord-geometry",
+      "collinear-layout",
+      "multi-sequence-links",
+      "multi-sequence-labels",
       "sankey",
       "radial-synteny",
       "instances",
-      "chord-geometry",
-      "chord-tuning",
-      "collinear-layout",
-      "collinear-tuning",
-      "chord-routing",
-      "chord-branches",
-      "collinear-routing",
-      "chord-labels",
       "ribbons",
-      "ribbon-statistics",
       "views",
       "homology",
       "chord",
@@ -52,16 +48,16 @@
     "landing": "circular",
     "pages": [
       "circular",
-      "plasmid-start",
-      "plasmid-data",
-      "plasmid-build",
-      "plasmid-tuning",
-      "circular-layers",
+      "circular-start",
+      "circular-data",
+      "circular-layout",
+      "circular-features",
       "circular-labels",
       "recognition",
       "primers",
       "restriction-sites",
       "plasmids",
+      "circular-dense-case",
       "plasmid-catalog"
     ]
   },
@@ -74,7 +70,7 @@
     "landing": "dotplot",
     "pages": [
       "dotplot",
-      "view-expansion"
+      "dotplot-start"
     ]
   },
   {
@@ -85,7 +81,12 @@
     },
     "landing": "fusion",
     "pages": [
-      "fusion"
+      "fusion",
+      "fusion-start",
+      "fusion-routing",
+      "fusion-layout",
+      "fusion-details",
+      "fusion-advanced"
     ]
   },
   {
@@ -101,11 +102,11 @@
       "feature-geometry",
       "labels",
       "parameters",
-      "adjustments",
       "scale-families",
       "tracks",
-      "foundation",
-      "output"
+      "tracks-statistics",
+      "output",
+      "diagnostics"
     ]
   },
   {
@@ -117,11 +118,15 @@
     "landing": "formats",
     "pages": [
       "formats",
-      "chord-import",
+      "import-sequences",
+      "import-intervals",
+      "import-signals",
+      "aligned-sequences",
+      "import-relations",
       "alignments",
       "protein-alignments",
       "projection",
-      "workflow-tools",
+      "workflows",
       "real-data"
     ]
   },
@@ -160,7 +165,7 @@
     "pages": [
       "about",
       "faq",
-      "task-index"
+      "migration"
     ]
   }
 ]

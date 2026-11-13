@@ -18,7 +18,7 @@ def assets():
 @lru_cache(maxsize=1)
 def lesson_urls():
     mapping=json.loads((ROOT/'website/figure-lessons.json').read_text())
-    return {key:target.replace('#','.html#',1) for key,target in mapping.items()}
+    return {key:target.replace('#','.html#',1) if '#' in target else target+'.html' for key,target in mapping.items()}
 
 
 def motif(mode, css='mode-motif'):

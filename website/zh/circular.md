@@ -6,9 +6,9 @@
 
 ## 学习路线 {#path}
 
-- [绘制圆形骨架](plasmid-start.html)
-- [单序列长度、DNA 和注释](plasmid-data.html)
-- [圆图骨架、中心文字与注释轨道](circular-layers.html)
+- [绘制圆形骨架](circular-start.html#input)
+- [单序列长度、DNA 和注释](circular-data.html#tables)
+- [圆图骨架、中心文字与注释轨道](circular-layout.html#input)
 - [圆图固定标签与自动适配](circular-labels.html)
 - [添加数据轨道](tracks.html)
 - [pUC19 与 pETDuet-1 完整案例](plasmids.html)

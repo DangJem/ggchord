@@ -65,7 +65,7 @@
       "comparebranchdata",
       "comparebranchnone"
     ],
-    "page": "chord-branches",
+    "page": "multi-sequence-links",
     "anchor": "branches",
     "coordinate": "chord",
     "width": 9,
@@ -84,7 +84,7 @@
       "comparebranchdata",
       "comparebranchquery"
     ],
-    "page": "chord-branches",
+    "page": "multi-sequence-links",
     "anchor": "branches",
     "coordinate": "chord",
     "width": 9,
@@ -103,7 +103,7 @@
       "comparebranchdata",
       "comparebranchfraction"
     ],
-    "page": "chord-branches",
+    "page": "multi-sequence-links",
     "anchor": "fraction",
     "coordinate": "chord",
     "width": 9,
@@ -123,7 +123,7 @@
       "comparepointdata",
       "comparelinkcurve"
     ],
-    "page": "chord-branches",
+    "page": "multi-sequence-links",
     "anchor": "point-links",
     "coordinate": "chord",
     "width": 9,
@@ -143,7 +143,7 @@
       "comparepointdata",
       "comparelinkstraight"
     ],
-    "page": "chord-branches",
+    "page": "multi-sequence-links",
     "anchor": "point-links",
     "coordinate": "chord",
     "width": 9,
@@ -181,7 +181,7 @@
       "comparefinishcircle",
       "comparecenter"
     ],
-    "page": "circular-layers",
+    "page": "circular-layout",
     "anchor": "center",
     "coordinate": "circular",
     "width": 9,
@@ -200,7 +200,7 @@
       "comparefinishcircle",
       "comparecenternolength"
     ],
-    "page": "circular-layers",
+    "page": "circular-layout",
     "anchor": "center",
     "coordinate": "circular",
     "width": 9,
@@ -219,7 +219,7 @@
       "comparefinishcircle",
       "comparecenterstyle"
     ],
-    "page": "circular-layers",
+    "page": "circular-layout",
     "anchor": "center",
     "coordinate": "circular",
     "width": 9,
@@ -238,7 +238,7 @@
       "comparefinishcircle",
       "comparebonedouble"
     ],
-    "page": "circular-layers",
+    "page": "circular-layout",
     "anchor": "backbones",
     "coordinate": "circular",
     "width": 9,
@@ -257,7 +257,7 @@
       "comparefinishcircle",
       "comparebonesingle"
     ],
-    "page": "circular-layers",
+    "page": "circular-layout",
     "anchor": "backbones",
     "coordinate": "circular",
     "width": 9,
@@ -276,7 +276,7 @@
       "comparefinishcircle",
       "compareboneband"
     ],
-    "page": "circular-layers",
+    "page": "circular-layout",
     "anchor": "backbones",
     "coordinate": "circular",
     "width": 9,
@@ -295,7 +295,7 @@
       "comparefinishcircle",
       "comparebonegap"
     ],
-    "page": "circular-layers",
+    "page": "circular-layout",
     "anchor": "backbones",
     "coordinate": "circular",
     "width": 9,
@@ -314,7 +314,7 @@
       "comparefinishcircle",
       "comparecirclecounter"
     ],
-    "page": "circular-layers",
+    "page": "circular-layout",
     "anchor": "coordinates",
     "coordinate": "circular",
     "width": 9,
@@ -333,7 +333,7 @@
       "comparefinishcircle",
       "comparecirclegap"
     ],
-    "page": "circular-layers",
+    "page": "circular-layout",
     "anchor": "coordinates",
     "coordinate": "circular",
     "width": 9,
@@ -543,7 +543,7 @@
       "comparefinishstack",
       "comparepositionidentity"
     ],
-    "page": "circular-layers",
+    "page": "circular-layout",
     "anchor": "stacking",
     "coordinate": "circular",
     "width": 9,
@@ -563,7 +563,7 @@
       "comparefinishstack",
       "comparepositionstack"
     ],
-    "page": "circular-layers",
+    "page": "circular-layout",
     "anchor": "stacking",
     "coordinate": "circular",
     "width": 9,
@@ -919,7 +919,7 @@
       "comparefinishchord",
       "compareseqlabelarc"
     ],
-    "page": "chord-labels",
+    "page": "multi-sequence-labels",
     "anchor": "sequence-parameters",
     "coordinate": "chord",
     "width": 9,
@@ -938,7 +938,7 @@
       "comparefinishchord",
       "compareseqlabelhorizontal"
     ],
-    "page": "chord-labels",
+    "page": "multi-sequence-labels",
     "anchor": "sequence-parameters",
     "coordinate": "chord",
     "width": 9,
@@ -957,7 +957,7 @@
       "comparefinishchord",
       "compareseqlabelrotation"
     ],
-    "page": "chord-labels",
+    "page": "multi-sequence-labels",
     "anchor": "sequence-parameters",
     "coordinate": "chord",
     "width": 9,
@@ -976,7 +976,7 @@
       "comparefinishchord",
       "compareregioninside"
     ],
-    "page": "chord-routing",
+    "page": "multi-sequence-links",
     "anchor": "region-parameters",
     "coordinate": "chord",
     "width": 9,
@@ -995,7 +995,7 @@
       "comparefinishchord",
       "compareregionoutside"
     ],
-    "page": "chord-routing",
+    "page": "multi-sequence-links",
     "anchor": "region-parameters",
     "coordinate": "chord",
     "width": 9,
@@ -1110,7 +1110,7 @@
       "comparedensitydata",
       "comparedensityfour"
     ],
-    "page": "ribbon-statistics",
+    "page": "ribbons",
     "anchor": "density",
     "coordinate": "chord",
     "width": 9,
@@ -1129,7 +1129,7 @@
       "comparedensitydata",
       "comparedensityeight"
     ],
-    "page": "ribbon-statistics",
+    "page": "ribbons",
     "anchor": "density",
     "coordinate": "chord",
     "width": 9,
@@ -1148,7 +1148,7 @@
       "comparedensitydata",
       "comparebundle"
     ],
-    "page": "ribbon-statistics",
+    "page": "ribbons",
     "anchor": "bundle",
     "coordinate": "chord",
     "width": 9,
@@ -1168,7 +1168,7 @@
       "comparefinishcircle",
       "comparebandwidth"
     ],
-    "page": "circular-layers",
+    "page": "circular-layout",
     "anchor": "band-rendering",
     "coordinate": "circular",
     "width": 9,
@@ -1188,7 +1188,7 @@
       "comparefinishcircle",
       "comparefeaturearrow"
     ],
-    "page": "circular-layers",
+    "page": "circular-layout",
     "anchor": "feature-shapes",
     "coordinate": "circular",
     "width": 9,
@@ -1208,7 +1208,7 @@
       "comparefinishcircle",
       "comparefeatureblock"
     ],
-    "page": "circular-layers",
+    "page": "circular-layout",
     "anchor": "feature-shapes",
     "coordinate": "circular",
     "width": 9,
@@ -1228,7 +1228,7 @@
       "comparefinishcircle",
       "comparefeaturepreset"
     ],
-    "page": "circular-layers",
+    "page": "circular-layout",
     "anchor": "feature-shapes",
     "coordinate": "circular",
     "width": 9,
@@ -1309,7 +1309,7 @@
       "comparefinishchord",
       "compareregionwidth"
     ],
-    "page": "chord-routing",
+    "page": "multi-sequence-links",
     "anchor": "region-parameters",
     "coordinate": "chord",
     "width": 9,
@@ -1329,7 +1329,7 @@
       "comparefinishchord",
       "compareregionoffset"
     ],
-    "page": "chord-routing",
+    "page": "multi-sequence-links",
     "anchor": "region-parameters",
     "coordinate": "chord",
     "width": 9,

@@ -99,13 +99,11 @@ tracks. Wrapped sources keep one annotation and a continuous glyph on closed
 circles; a visible coordinate gap retains separate display pieces. A shifted adjacent name receives a short attachment. To restore the
 label layer's drawing order:
 
-```r
-geom_feature_label_repel(label_segment_layer = "above")
-```
+{{code:courseblockz}}
 
 ## Exercises and your annotations {#adapt}
 
-Change only label_max_lines to 3 and explain any improvement. At fixed dimensions, compare exterior fallback on/off. Fixed and automatic layers have different controls. Supply explicit label text or anno, checking IDs, intervals, strands and unique feature_id values. Continue with [primer text](primers.html#primer-labels) and the [dense pETDuet-1 case](plasmids.html#complex).
+Change only label_max_lines to 3 and explain any improvement. At fixed dimensions, compare exterior fallback on/off. Fixed and automatic layers have different controls. Supply explicit label text or anno, checking IDs, intervals, strands and unique feature_id values. Continue with [primer text](primers.html#primer-labels) and the [dense pETDuet-1 case](circular-dense-case.html#complex).
 
 
 Neighbouring names compare radial travel with angular displacement; an empty
@@ -137,21 +135,7 @@ sources. This applies to the `feature` layout on a single closed circular
 sequence; other coordinates retain individual labels. The curved range marker
 is distinct from the label's simple leader.
 
-```r
-features <- find_common_features(plasmid_example_pTRE_Tight_BI)
-feature_position <- position_feature_stack(base_position = position_plasmid())
-ggchord(plasmid_example_pTRE_Tight_BI[c("accver", "length")], feature_data = features) +
-  geom_seq(seq_style = "double") +
-  geom_feature_plasmid(position = feature_position) +
-  geom_feature_label_repel(
-    position = feature_position,
-    label_repeat = "bracket",
-    label_fit = "shrink",
-    label_min_size = 2.5
-  ) +
-  coord_circular() +
-  theme_ggchord_plasmid()
-```
+{{code:courseblockaa}}
 
 Automatic plasmid axis text hugs the backbone; explicit offsets keep their
 placement. Circular feature bands reserve gutters for names that cannot fit
@@ -166,12 +150,7 @@ leaders retain their established style. A centred, isolated name close to its
 feature omits an unnecessary short attachment; displaced or competing names
 retain association leaders.
 
-```r
-geom_feature_label_repel(
-  label_segment_colour = "grey50",
-  label_segment_linetype = "dashed"
-)
-```
+{{code:courseblockab}}
 
 Explicit parameters affect all feature leaders in the layer. A custom
 `ggchord.feature.label.segment` theme also overrides the automatic palette.

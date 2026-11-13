@@ -10,7 +10,7 @@
 ## 综合结果 {#overview}
 {{figure:showcasechord}}
 
-先比较深蓝色 `MT118296.1` 和青绿色 `OQ646790.1`，它们的半径分别为 0.82 和 1.18。橙色 `OR222515.1` 和红色 `MT108731.1` 使用 1.02 和 1.08。半径用来拉开骨架层次，序列长度仍按 bp 刻度读取。[单独比较半径效果](chord-geometry.html#shape)。
+先比较深蓝色 `MT118296.1` 和青绿色 `OQ646790.1`，它们的半径分别为 0.82 和 1.18。橙色 `OR222515.1` 和红色 `MT108731.1` 使用 1.02 和 1.08。半径用来拉开骨架层次，序列长度仍按 bp 刻度读取。[单独比较半径效果](chord-geometry.html)。
 
 每条序列按已有的正、负链分别抽样，无 CDS 长度门槛。两条 MT 序列没有负链 CDS，OQ646790.1 唯一的负链 CDS 为 207 bp。本图用显式 Position 把正链箭头放在内侧、负链箭头放在外侧。箭头方向、颜色和数据仍使用原始链。正链抽样优先保留与所显示比对端点重叠的记录，以展示连接带局部避障。每条箭头使用原始注释作为标签，包括 hypothetical protein。
 
@@ -43,9 +43,7 @@
 需要减少连接时查看[连接筛选](ribbons.html)，调整文字密度时查看[标签](labels.html)，改变半径和曲率时查看[逐序列参数](parameters.html)。从文件读取开始学习可先看[真实序列比较](real-data.html)。
 
 ## 按预定尺寸保存 {#save}
-```r
-ggsave("four-genome-chord.png", p_show_chord, width = 12, height = 10, units = "in", dpi = 144)
-```
+{{code:courseblockd}}
 
 ## 保存前的证据检查 {#evidence-check}
 

@@ -39,7 +39,7 @@ for(page in pages) {
   # constructors and arguments without opening previews or overwriting user files.
   environment$view_ggchord <- function(plot, ...) invisible(plot)
   environment$ggsave <- function(filename, plot, ...) {
-    stopifnot(inherits(plot, "ggplot"), is.character(filename))
+    stopifnot(inherits(plot, "ggplot") || inherits(plot, "ggchord_fusion"), is.character(filename))
     invisible(NULL)
   }
   for(marker in matches) {
@@ -85,7 +85,11 @@ for(page in pages) {
 output_file <- 'website/assets/lesson-outputs.json'
 serialized <- jsonlite::toJSON(outputs, auto_unbox = TRUE, pretty = TRUE)
 audit_assert_source_snapshot(audit_session)
-if ('--write-outputs' %in% commandArgs(trailingOnly = TRUE)) {
+if (length(selected) && '--update-outputs' %in% commandArgs(trailingOnly = TRUE)) {
+  old_outputs <- jsonlite::fromJSON(output_file, simplifyVector = FALSE)
+  for (key in names(outputs)) old_outputs[key] <- outputs[key]
+  writeLines(jsonlite::toJSON(old_outputs,auto_unbox=TRUE,pretty=TRUE),output_file)
+} else if ('--write-outputs' %in% commandArgs(trailingOnly = TRUE)) {
   writeLines(serialized, output_file)
 } else if (!length(selected) && !identical(paste(readLines(output_file, warn = FALSE), collapse = '\n'), as.character(serialized))) {
   stop('Lesson outputs are stale. Run tools/check-documentation-lessons.R --write-outputs.')
@@ -98,3 +102,10 @@ jsonlite::write_json(list(pages=execution,
   optional_genbank="Biopython enabled through the documentation-only Python environment"),
   if (length(selected)) paste0("/tmp/ggchord-lesson-",selected,".json") else "tools/teaching-audit/lesson-execution.json",auto_unbox=TRUE,pretty=TRUE)
 cat(length(pages),'page preparations completed; no package checks or rendered exports.\n')
+if(length(selected) && '--update-outputs' %in% commandArgs(trailingOnly=TRUE)) {
+  destination <- 'tools/teaching-audit/lesson-execution.json'
+  prior <- jsonlite::fromJSON(destination,simplifyVector=FALSE)
+  stopifnot(identical(prior$shared_code_sha256,unname(audit_session$inputs[['tools/documentation-examples.R']])))
+  prior$pages[selected] <- execution[selected]
+  jsonlite::write_json(prior,destination,auto_unbox=TRUE,pretty=TRUE)
+}

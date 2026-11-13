@@ -52,6 +52,6 @@ The first plot needs only ggchord. Data lessons explicitly use dplyr; import rec
 
 <span id="first-plot"></span><span id="input"></span><span id="read"></span>
 
-- [Input tables](chord-data.html)
-- [First multi-sequence plot](chord-start.html)
+- [Input tables](data.html#prepare)
+- [First multi-sequence plot](multi-sequence-start.html#draw)
 - <span id="save"></span>[Save at target size](output.html)

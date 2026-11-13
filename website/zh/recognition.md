@@ -40,4 +40,11 @@ Wallace 熔解温度估计是基于组成的启发式值。
 
 <div class="next-step">继续：<a href="plasmids.html">绘制完整质粒图 →</a></div>
 
-识别结果确认后，分别跟做[引物弧线与文字](primers.html)和[酶切标签与引线](restriction-sites.html)。圆图骨架、中心文字和分层见[图层课](circular-layers.html)，固定与自动文字见[圆图标签](circular-labels.html)。
+识别结果确认后，分别跟做[引物弧线与文字](primers.html)和[酶切标签与引线](restriction-sites.html)。圆图骨架、中心文字和分层见[图层课](circular-layout.html#input)，固定与自动文字见[圆图标签](circular-labels.html)。
+
+## 目录不是搜索结果 {#catalog}
+
+primer_catalog 返回寡核苷酸目录；aliases=TRUE 返回来源别名。目录方向是描述提示，实际结合方向由 find_primer_bindings 在目标 DNA 上计算。同序列多名称不应被当成多个不同寡核苷酸。按需查看目录后，去[引物课](primers.html)搜索和显示。
+
+{{code:comparecatalog}}
+{{console:comparecatalog}}

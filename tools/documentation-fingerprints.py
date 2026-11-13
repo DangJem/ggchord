@@ -15,7 +15,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 
 
-def fingerprints():
+def fingerprints(runtime_hashes=None):
     source = (ROOT / 'tools/documentation-examples.R').read_text()
     markers = list(re.finditer(r'^# ---- ([a-z]+) ----\n', source, re.M))
     chunks = {m[1]: source[m.end():markers[i + 1].start()].removesuffix('\n')
@@ -26,7 +26,8 @@ def fingerprints():
     runtime = sorted((ROOT / 'R').glob('*.R'))
     def runtime_digest(paths):
         return '\n'.join(str(p.relative_to(ROOT)) + ':' +
-                         hashlib.md5(p.read_bytes()).hexdigest() for p in paths)
+                         (runtime_hashes or {}).get(str(p.relative_to(ROOT)),
+                          hashlib.md5(p.read_bytes()).hexdigest()) for p in paths)
     data_digest = '\n' + '\n'.join(str(p.relative_to(ROOT)) + ':' +
         hashlib.md5(p.read_bytes()).hexdigest()
         for p in sorted((ROOT / 'data').glob('*.rda')) + [ROOT / 'R/sysdata.rda'])

@@ -44,3 +44,17 @@ Check intervals and strands before shapes and labels. Unknown strands remain in 
 <div class="next-step">Continue: <a href="labels.html">Labels and local placement →</a></div>
 
 Compare shouldered/flush/triangle arrows on one observed CDS in [arrow geometry](feature-geometry.html#arrow-heads).
+
+## Region side, width and offset {#region-parameters}
+
+Keep the original query ID and interval of the first observed HSP. Defaults are width 0.08, offset 0 and inside. Each subsequent figure changes only outside placement, width or offset. These are local geometry quantities, not bp. Set fixed fill in geom parameters or map categories to region_fill with its dedicated scale. Highlighting does not establish a new functional annotation.
+
+{{code:comparefinishchord}}
+{{code:compareregioninside}}
+{{figure:compareregioninside}}
+{{code:compareregionoutside}}
+{{figure:compareregionoutside}}
+{{code:compareregionwidth}}
+{{figure:compareregionwidth}}
+{{code:compareregionoffset}}
+{{figure:compareregionoffset}}

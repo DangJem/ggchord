@@ -49,6 +49,4 @@
 ## 保存本页结果 {#save-result}
 在工作目录中保存刚刚创建的图；预览时使用相同宽高。
 
-```r
-ggsave("ampR-neighbourhood.png", p_homologs, width = 10, height = 5, units = "in", dpi = 144)
-```
+{{code:courseblocke}}

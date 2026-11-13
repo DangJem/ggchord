@@ -4,7 +4,7 @@
 
 [English](README.md) · [现代汉语](README-Hans.md)
 
-# ggchord: chord, collinear and plasmid sequence plots
+# ggchord: sequence plots and composition
 
 An R package built on ggplot2. Combine independent layers for sequence backbones, interval links, genes, general features, labels and quantitative tracks.
 
@@ -15,12 +15,16 @@ The stable release is **ggchord 0.16.6**. These examples are generated from the 
 R ≥ 4.1.0 · ggplot2 ≥ 4.0.0
 
 ```r
-install.packages("ggchord")
+install.packages("remotes")
+remotes::install_github(
+  "DangJem/ggchord@0f5dd96da57876da74cd1234c7de9cf5579c80b8",
+  dependencies = NA, upgrade = "never"
+)
 ```
 
 For a checkout of this version, use `pkgload::load_all(".")` from its root. The stable release is available from CRAN. Examples use dplyr (≥ 1.1.0), purrr, tidyr and the native `|>` pipe as optional example dependencies.
 
-## Three views
+## Three source-backed comprehensive examples
 
 These three complete examples demonstrate this version. Inputs are traceable; each guide provides preparation and interpretation. New users can begin with the minimal first-plot lesson.
 
@@ -434,7 +438,7 @@ These projects inform design and comparison. Consult ggchord's function document
 ## Continue
 
 - [Get started](https://dangjem.github.io/ggchord/en/installation.html)
-- [Chapter index](https://dangjem.github.io/ggchord/en/about.html)
+- [Learning overview](https://dangjem.github.io/ggchord/en/learn.html)
 - [Function reference](https://dangjem.github.io/ggchord/en/reference/index.html)
 - [Gallery](https://dangjem.github.io/ggchord/en/gallery.html)
 - [Further information](https://dangjem.github.io/ggchord/en/about.html)

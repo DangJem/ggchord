@@ -1,14 +1,11 @@
-这 13 张图是可选参考图库，不是需要逐页完成的课程。先完成[基础圆图](plasmid-start.html)、[注释与标签](circular-layers.html)，再按自己的载体和拥挤程度检索。
+这 13 张图是可选参考图库，不是需要逐页完成的课程。先完成[基础圆图](circular-start.html#input)、[注释与标签](circular-layout.html#input)，再按自己的载体和拥挤程度检索。
 
 这 13 张图使用各自的仓库 FASTA 参考序列。载体用途用于选例，图中注释来自相应的参考序列。完整来源和长度由随包数据及生成规则保留。
 
 ## 一次准备全部案例 {#prepare}
 共享脚本使用 dplyr 选择序列列。先运行 `library(dplyr)`。
 
-```r
-library(ggchord)
-library(dplyr)
-```
+{{code:courseblockg}}
 
 {{recipe:catalog}}
 
@@ -18,124 +15,72 @@ library(dplyr)
 {{plasmidcatalog}}
 
 ## pSB1C3：小载体与基本骨架 {#catalogpsb}
-```r
-sequence <- plasmid_example_pSB1C3
-p <- make_catalog_plot(sequence, find_common_features(sequence))
-view_ggchord(p, width = 10, height = 8, units = "in")
-```
+{{code:courseblockh}}
 
 {{figure:catalogpsb}}
 
 ## pUC19：常见注释与复制起点 {#catalogpuc}
-```r
-sequence <- plasmid_example_pUC19
-p <- make_catalog_plot(sequence, find_common_features(sequence))
-view_ggchord(p, width = 10, height = 8, units = "in")
-```
+{{code:courseblocki}}
 
 {{figure:catalogpuc}}
 
 ## pBR322：多个抗性区与方向 {#catalogpbr}
-```r
-sequence <- plasmid_example_pBR322
-p <- make_catalog_plot(sequence, find_common_features(sequence))
-view_ggchord(p, width = 10, height = 8, units = "in")
-```
+{{code:courseblockj}}
 
 {{figure:catalogpbr}}
 
 ## pBluescript II SK(+)：局部调控与短特征 {#catalogblue}
-```r
-sequence <- plasmid_example_pBluescript_II_SK_plus
-p <- make_catalog_plot(sequence, find_common_features(sequence))
-view_ggchord(p, width = 10, height = 8, units = "in")
-```
+{{code:courseblockk}}
 
 {{figure:catalogblue}}
 
 ## pET-28a(+)：表达区与标签 {#catalogpet}
-```r
-sequence <- plasmid_example_pET_28a_plus
-p <- make_catalog_plot(sequence, find_common_features(sequence))
-view_ggchord(p, width = 10, height = 8, units = "in")
-```
+{{code:courseblockl}}
 
 {{figure:catalogpet}}
 
 ## pETDuet-1：双表达单元，进入密集案例 {#catalogduet}
-```r
-sequence <- plasmid_example_pETDuet_1
-p <- make_catalog_plot(sequence, find_common_features(sequence))
-view_ggchord(p, width = 10, height = 8, units = "in")
-```
+{{code:courseblockm}}
 
 {{figure:catalogduet}}
 
 ## pDONR221：重组相关结构 {#catalogdonr}
-```r
-sequence <- plasmid_example_pDONR221
-p <- make_catalog_plot(sequence, find_common_features(sequence))
-view_ggchord(p, width = 10, height = 8, units = "in")
-```
+{{code:courseblockn}}
 
 {{figure:catalogdonr}}
 
 ## pcDNA3.1(+)：表达载体的注释层级 {#catalogpcdna}
-```r
-sequence <- plasmid_example_pcDNA3_1_plus
-p <- make_catalog_plot(sequence, find_common_features(sequence))
-view_ggchord(p, width = 10, height = 8, units = "in")
-```
+{{code:courseblocko}}
 
 {{figure:catalogpcdna}}
 
 ## pTRE-Tight-BI：双向调控布局 {#catalogtre}
-```r
-sequence <- plasmid_example_pTRE_Tight_BI
-p <- make_catalog_plot(sequence, find_common_features(sequence))
-view_ggchord(p, width = 10, height = 8, units = "in")
-```
+{{code:courseblockp}}
 
 {{figure:catalogtre}}
 
 ## pTRIPZ：更长序列的显示密度 {#catalogtripz}
-```r
-sequence <- plasmid_example_pTRIPZ
-p <- make_catalog_plot(sequence, find_common_features(sequence))
-view_ggchord(p, width = 10, height = 8, units = "in")
-```
+{{code:courseblockq}}
 
 {{figure:catalogtripz}}
 
 ## pCAMBIA1300：较大植物载体的结构 {#catalogcambia}
-```r
-sequence <- plasmid_example_pCAMBIA1300
-p <- make_catalog_plot(sequence, find_common_features(sequence))
-view_ggchord(p, width = 10, height = 8, units = "in")
-```
+{{code:courseblockr}}
 
 {{figure:catalogcambia}}
 
 ## pEarleyGate 201：另一植物载体的类别对照 {#catalogearley}
-```r
-sequence <- plasmid_example_pEarleyGate_201
-p <- make_catalog_plot(sequence, find_common_features(sequence))
-view_ggchord(p, width = 10, height = 8, units = "in")
-```
+{{code:courseblocks}}
 
 {{figure:catalogearley}}
 
 ## pSpCas9(BB)-2A-GFP (PX458)：大型表达载体与文字适配 {#catalogcas}
-```r
-sequence <- plasmid_example_pSpCas9_BB_2A_GFP_PX458
-p <- make_catalog_plot(sequence, find_common_features(sequence))
-view_ggchord(p, width = 10, height = 8, units = "in")
-```
+{{code:courseblockt}}
 
 {{figure:catalogcas}}
 
 ## 下一步 {#next}
-比较不同密度后，进入[综合实战](plasmids.html#complex)，添加独立引物与酶切图层。
+比较不同密度后，进入[综合实战](circular-dense-case.html#complex)，添加独立引物与酶切图层。
 
 ## 比较时注意 {#gallery-limits}
 

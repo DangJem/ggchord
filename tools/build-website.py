@@ -40,7 +40,7 @@ def render_source_snapshot():
     files.update(ROOT.glob('*.md'))
     files.update(ROOT/name for name in [
         'DESCRIPTION','NAMESPACE','LICENSE','_pkgdown.yml',
-        'tools/build-website.py','tools/documentation_lib.py','tools/site_search.py',
+        'tools/build-website.py','tools/documentation_lib.py','tools/site_search.py','tools/site_registry.py','tools/site_components.py',
         'tools/render-website.R','tools/finalize-website.R','tools/site-course-examples.R',
         'tools/reference-translations.py','tools/documentation-examples.R',
         'tools/documentation-plots.R','tools/audit-source-snapshot.R',
@@ -84,6 +84,8 @@ def main():
         shutil.copy2(ROOT/row['file'],assets/Path(row['file']).name)
     for name in ['documentation-examples.R','documentation-plots.R']:
         shutil.copy2(ROOT/'tools'/name,assets/name)
+    shutil.copy2(ROOT/'tools/site-course-examples.R',assets/'site-course-examples.R')
+    shutil.copy2(WEB/'course-figures.json',assets/'course-figures.json')
     shutil.copy2(ROOT/'NEWS.md',assets/'NEWS.md')
     for name in ['MIGRATION.md', 'MIGRATION-Hans.md']:
         shutil.copy2(ROOT/name, assets/name)
@@ -127,7 +129,7 @@ def main():
     payload={lang:[] for lang in ['en','zh']}
     for lang in payload:
         for page in PAGES:
-            if page['slug']=='reference':continue
+            if page['slug']=='reference' or page.get('kind')=='alias':continue
             md=expand((WEB/lang/(page['slug']+'.md')).read_text(),lang,figures='../assets')
             body=subprocess.check_output([str(Path(pandoc_dir)/'pandoc'),'--from=markdown+pipe_tables+header_attributes',
                 '--to=html5','--wrap=none'],input=md,text=True)
@@ -158,6 +160,22 @@ def main():
     assert_render_source_snapshot(render_snapshot, input_hashes)
     # Post-process using the same XML library used by pkgdown; no hand-built page shell.
     subprocess.run(['Rscript','tools/finalize-website.R', 'publication' if args.publication else 'preview'],cwd=ROOT,check=True)
+    migrations=json.loads((WEB/'page-migrations.json').read_text())
+    shutil.copy2(WEB/'page-migrations.json',assets/'page-migrations.json')
+    for lang in ['en','zh']:
+        for page in PAGES:
+            name=page['slug']+'.html'
+            mapping=migrations.get(name,{'':page['canonical_path']})
+            script=('<script>(function(){const m='+json.dumps(mapping,ensure_ascii=False)+
+                ';function go(){const f=decodeURIComponent(location.hash.slice(1));'
+                'const d=m[f];if(d && d!==location.pathname.split("/").pop()+location.hash)'
+                'location.replace(d)};go();addEventListener("hashchange",go)})()</script>')
+            path=out/lang/name
+            if page.get('kind')=='alias':
+                links=''.join('<li><a href="'+html.escape(dest,quote=True)+'">'+html.escape(anchor or page['title'][lang])+'</a></li>' for anchor,dest in mapping.items())
+                path.write_text('<!doctype html><html lang="'+('zh-Hans' if lang=='zh' else 'en')+'"><meta charset="utf-8"><title>Moved · ggchord</title><h1>'+('课程已迁移' if lang=='zh' else 'Lesson moved')+'</h1><p>'+('旧章节的具体新位置如下。' if lang=='zh' else 'Find the exact destination of each old section below.')+'</p><ul>'+links+'</ul>'+script+'</html>')
+            elif name in migrations:
+                path.write_text(path.read_text().replace('</head>',script+'</head>',1))
     # Keep project presentation files identical to the source digested by finalization.
     for name in ['site.css','site.js']: shutil.copy2(WEB/'assets'/name,assets/name)
     for lang in ['en','zh']:
@@ -168,7 +186,7 @@ def main():
         redirect('reference.html','reference/index.html')
         index=[]
         for path in sorted((out/lang).rglob('*.html')):
-            if path.name=='reference.html':continue
+            if path.name=='reference.html' or any(p['slug']+'.html'==str(path.relative_to(out/lang)) and p.get('kind')=='alias' for p in PAGES):continue
             content=path.read_text()
             title=html.unescape(re.search(r'<title>(.*?)</title>',content,re.S)[1]).split(' • ')[0]
             main=re.search(r'<main\b[^>]*>(.*?)</main>',content,re.S)
@@ -188,7 +206,7 @@ def main():
     routes.update({name:'en/'+name for name in ['authors.html','LICENSE.html','LICENSE-text.html']})
     for old,target in routes.items():
         path=out/old;path.parent.mkdir(parents=True,exist_ok=True);dest=os.path.relpath(out/target,path.parent)
-        extra='<script>try{if(localStorage.getItem("ggchord-language")==="zh")location.replace("zh/index.html");else location.replace("en/index.html")}catch(e){location.replace("en/index.html")}</script>' if old=='index.html' else f'<meta http-equiv="refresh" content="0;url={dest}">'
+        extra='<script>try{if(localStorage.getItem("ggchord-language")==="zh")location.replace("zh/index.html");else location.replace("en/index.html")}catch(e){location.replace("en/index.html")}</script>' if old=='index.html' else '<script>location.replace('+json.dumps(dest)+'+('+json.dumps('' if '#' in dest else '#')+'===""?"":location.hash))</script>'+f'<noscript><meta http-equiv="refresh" content="0;url={dest}"></noscript>'
         path.write_text(f'<!doctype html><html lang="en"><head><meta charset="utf-8"><title>ggchord</title>{extra}</head><body><a href="{dest}">English</a> · <a href="{os.path.relpath(out/"zh/index.html",path.parent)}">现代汉语</a></body></html>')
     (out/'404.html').write_text('<!doctype html><html lang="en"><meta charset="utf-8"><title>Page not found / 未找到页面</title><h1>Page not found / 未找到页面</h1><p><a href="en/index.html">English home</a> · <a href="zh/index.html">现代汉语首页</a></p></html>')
     routes['404.html']='404.html'
@@ -196,6 +214,9 @@ def main():
     for rel in json.loads((WEB/'historical-pages.json').read_text()):
         if rel in routes:continue
         path=out/rel;path.parent.mkdir(parents=True,exist_ok=True)
+        if rel=='README-Hans.html':
+            path.write_text('<!doctype html><html lang="zh-Hans"><meta charset="utf-8"><title>历史汉语入口 · ggchord</title><h1>历史汉语 README</h1><p>此地址保留历史来源说明，不表示与当前教程逐项等价。</p><a href="zh/learn.html">现代汉语学习总览</a> · <a href="https://github.com/DangJem/ggchord/blob/0f5dd96da57876da74cd1234c7de9cf5579c80b8/README-Hans.md">固定审计版本 README</a></html>')
+            retired.append(rel);continue
         en=os.path.relpath(out/'en/reference/index.html',path.parent);zh=os.path.relpath(out/'zh/reference/index.html',path.parent)
         path.write_text(f'<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Historical documentation</title></head><body><h1>Historical documentation / 历史文档</h1><p>This historical URL has no exact current equivalent. 此旧地址没有一一对应的当前页面。</p><a href="{en}">Current reference</a> · <a href="{zh}">现代汉语参考</a></body></html>')
         retired.append(rel)

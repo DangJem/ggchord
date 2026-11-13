@@ -57,5 +57,8 @@
   "Recover biological strands from the source annotation field.": "从原始注释字段恢复真实链。",
   "Synthetic intervals illustrate the mirrored layout.": "使用合成区间说明镜像布局。",
   "Synthetic observations illustrate counting, not biological measurements.": "使用合成观测说明计数，不代表生物学测量。",
-  "A shared display label preserves all seven biological operator records.": "共享显示标签保留全部七条生物学 operator 记录。"
+  "A shared display label preserves all seven biological operator records.": "共享显示标签保留全部七条生物学 operator 记录。",
+  "This four-column tool table is not GFF3. Explicitly declare source anchors.": "此工具的四列位置表不是 GFF3；显式声明源锚点。",
+  "Requires the source checkout, dplyr and optional Biostrings.": "需要源码 checkout、dplyr 及可选 Biostrings。",
+  "Requires dplyr and the source checkout or tutorial input bundle.": "需要 dplyr 和源码 checkout 或教程输入包。"
 }

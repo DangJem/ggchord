@@ -1,6 +1,6 @@
 Browse complete current parameters by purpose. Defaults come from actual formals and descriptions from matching Rd. NULL can resolve during layout. A choice vector may mean match.arg alternatives or multiple enabled options; read its description. Upstream reexports follow their own help.
 
-Start with the [task index](task-index.html). Lessons compare important parameters; references define full signatures and forwarding. Expand functions as needed; upstream dots are not presented as separate ggchord APIs.
+Start with the [learning overview](learn.html#tasks). Lessons compare important parameters; references define full signatures and forwarding. Expand functions as needed; upstream dots are not presented as separate ggchord APIs.
 
 
 ## Coordinates and global views {#coordinates}
