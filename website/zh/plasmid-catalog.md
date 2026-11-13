@@ -140,3 +140,14 @@ view_ggchord(p, width = 10, height = 8, units = "in")
 ## 比较时注意 {#gallery-limits}
 
 每图使用自己的完整 FASTA 和来源注释，不能把一个参考的特征或切点搬到不同 DNA。切点按三个均匀目标选择最近实际位置，是显示选择；不表示其他切点不存在。名称可能内置、外移或隐藏，全部特征几何仍保留。密集图需按标注尺寸查看，缩小截图后读不清不能据此修改源区间。
+
+
+## 与原参考图比较时的选择 {#reference-selection}
+
+本页固定取3条位点用于简化展示，不能用位点数判断识别完整性。要保留原记录
+的酶集合选择，先对完整结果使用
+`filter_restriction_sites(sites, set = "reference", parent_set = "commercial_nonredundant")`。
+它复用保存profile，不能保证恢复旧PNG的全部导出设置或同名酶库；例如pETDuet-1
+原文件保存None而旧PNG显示位点。独立引物需另加`find_primer_bindings(sequence,
+set = "reference")`及primer图层。具名子段在`segments`中，不计为另一个顶层特征；
+虚线分段也不自动生成额外文字。密集全量标签需要按输出尺寸重新检查。

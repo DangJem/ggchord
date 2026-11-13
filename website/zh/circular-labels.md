@@ -99,3 +99,9 @@ feature 布局使用直接引线，允许穿过特征，不再多折绕路。默
 ## 练习与自备注释 {#adapt}
 
 只把 label_max_lines 改为 3，解释是否改善了拥挤；再固定输出尺寸，比较外部回退开关。固定标签与自动标签有各自接口，不能混用。自备数据用明确 label 文本或 anno，核对 ID、区间、链及唯一 feature_id。继续看[引物文字](primers.html#primer-labels)和[密集 pETDuet-1 案例](plasmids.html#complex)。
+
+
+相邻注释优先比较实际径向距离与角向位移，内侧有空闲轨道时不强迫它们在同一
+最近轨道上挤开。箭头中的虚线可能是来源分段或 cleavage 边界，应检查返回的
+`segments`、`segment_name` 和 `cleavage_arrows`，不能把每条虚线当作独立特征。
+顶层特征标签不会自动为每个子段另加文字；需要子段名称时保留并查看源分段表。

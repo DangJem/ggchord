@@ -1,0 +1,80 @@
+[
+  {
+    "object": "pUC19",
+    "reference": "pUC19",
+    "length": 2686,
+    "exact_sequence": true
+  },
+  {
+    "object": "pBR322",
+    "reference": "pBR322",
+    "length": 4361,
+    "exact_sequence": true
+  },
+  {
+    "object": "pSB1C3",
+    "reference": "pSB1C3",
+    "length": 2070,
+    "exact_sequence": true
+  },
+  {
+    "object": "pBluescript_II_SK_plus",
+    "reference": "pBluescript II SK(+)",
+    "length": 2961,
+    "exact_sequence": true
+  },
+  {
+    "object": "pET_28a_plus",
+    "reference": "pET-28a(+)",
+    "length": 5369,
+    "exact_sequence": true
+  },
+  {
+    "object": "pETDuet_1",
+    "reference": "pETDuet-1",
+    "length": 5420,
+    "exact_sequence": true
+  },
+  {
+    "object": "pcDNA3_1_plus",
+    "reference": "pcDNA3.1(+)",
+    "length": 5428,
+    "exact_sequence": true
+  },
+  {
+    "object": "pDONR221",
+    "reference": "pDONR221",
+    "length": 4761,
+    "exact_sequence": true
+  },
+  {
+    "object": "pCAMBIA1300",
+    "reference": "pCAMBIA1300",
+    "length": 8959,
+    "exact_sequence": true
+  },
+  {
+    "object": "pTRE_Tight_BI",
+    "reference": "pTRE-Tight-BI",
+    "length": 2856,
+    "exact_sequence": true
+  },
+  {
+    "object": "pEarleyGate_201",
+    "reference": "pEarleyGate 201",
+    "length": 11779,
+    "exact_sequence": true
+  },
+  {
+    "object": "pTRIPZ",
+    "reference": "pTRIPZ",
+    "length": 13320,
+    "exact_sequence": true
+  },
+  {
+    "object": "pSpCas9_BB_2A_GFP_PX458",
+    "reference": "pSpCas9(BB)-2A-GFP (PX458)",
+    "length": 9288,
+    "exact_sequence": true
+  }
+]

@@ -100,3 +100,11 @@ label layer's drawing order, use `geom_feature_label_repel(label_segment_layer =
 ## Exercises and your annotations {#adapt}
 
 Change only label_max_lines to 3 and explain any improvement. At fixed dimensions, compare exterior fallback on/off. Fixed and automatic layers have different controls. Supply explicit label text or anno, checking IDs, intervals, strands and unique feature_id values. Continue with [primer text](primers.html#primer-labels) and the [dense pETDuet-1 case](plasmids.html#complex).
+
+
+Neighbouring names compare radial travel with angular displacement; an empty
+inner track can preserve association better than squeezing names onto the
+nearest track. Dotted arrow boundaries can come from source segments or
+cleavage markers. Inspect `segments`, `segment_name` and `cleavage_arrows`;
+a boundary is not necessarily an independent feature. Top-level feature
+labels do not automatically add text for every named subsegment.

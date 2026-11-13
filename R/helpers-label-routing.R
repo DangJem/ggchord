@@ -355,20 +355,26 @@ ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
         track = radial_indices + 1L, tangent = tangent_candidates
       )
     }
-    # One tiny tangent adjustment is acceptable, but a neighbouring radial
-    # track is preferred to a visibly detached same-track label. This produces
-    # the compact multi-level stacks used by dense operator/MCS clusters.
-    candidates$score <- (candidates$track - 1L) * .92 +
-      abs(candidates$tangent) * if (concentric_circle) .36 else .74
-    candidates <- candidates[order(candidates$score,
-      abs(candidates$tangent), candidates$tangent < 0), , drop = FALSE]
+    # Compare real radial travel with angular displacement. A free inner
+    # track is preferable to pushing a name along a congested outer track.
+    # Ordered packing is a candidate, not permission to force a shared radius.
+    score <- function(track, tangent) {
+      if (!length(track)) return(numeric())
+      if (concentric_circle) {
+        max(track_radii) - track_radii[track] +
+          1.2 * pmax(0, abs(tangent) * tangent_step - measured$h * .25)
+      } else (track - 1L) * .92 + abs(tangent) * .74
+    }
+    candidates$score <- score(candidates$track, candidates$tangent)
     if (concentric_circle && length(track_radii) &&
         is.finite(inner_preferences[i])) {
       shift <- (inner_preferences[i] - polar_angle) *
         track_radii[1L] / tangent_step
       candidates <- rbind(data.frame(track = 1L, tangent = shift,
-        score = -.5), candidates)
+        score = score(1L, shift)), candidates)
     }
+    candidates <- candidates[order(candidates$score,
+      abs(candidates$tangent), candidates$tangent < 0), , drop = FALSE]
     if (starts_inside) {
       candidates <- rbind(data.frame(track = 0L, tangent = 0L, score = -1),
         candidates)

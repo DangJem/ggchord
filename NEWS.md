@@ -1,5 +1,14 @@
 # ggchord 0.27.0 (development)
 
+- Circular feature labels compare angular displacement with actual radial
+  travel rather than forcing ordered neighbours onto the nearest shared
+  track. Free inner tracks can keep long names closer to their own features.
+  Circular restriction leaders also retain the perimeter queue's direct or
+  single-shoulder routes instead of searching multi-bend graph detours.
+  Reference feature imports now retain named segment and translated flags
+  from the original files. Segment boundaries are not independent features;
+  their names remain available in the returned segment tables.
+
 - Closed circular features remain continuous across the genomic origin,
   with arrowheads only at biological ends. Open/gapped views keep their
   display split. Wrapped segment tables retain real gaps and colours; only

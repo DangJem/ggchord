@@ -1,0 +1,14 @@
+"plasmid","length","source_features","recognized_features","missing_features","extra_features","changed_identity_coordinates","source_primer_bindings","named_segments","all_enzyme_site_rows","all_cut_positions","old_sampled_site_rows","reference_profile","reference_selected_site_rows","reference_selected_positions"
+"pBluescript II SK(+)",2961,14,14,0,0,0,0,3,55363,2871,3,"Unique 6+ Cutters",48,42
+"pBR322",4361,6,6,0,0,0,0,1,86747,4251,3,"Unique 6+ Cutters",47,42
+"pCAMBIA1300",8959,17,17,0,0,0,0,2,194972,8715,3,"Unique 6+ Cutters",42,37
+"pcDNA3.1(+)",5428,13,13,0,0,0,0,1,102211,5272,3,"Unique 6+ Cutters",51,47
+"pDONR221",4761,11,11,0,0,0,0,0,76301,4491,3,"Unique 6+ Cutters",47,42
+"pEarleyGate 201",11779,21,21,0,0,0,0,2,238165,11315,3,"Unique 6+ Cutters",39,37
+"pET-28a(+)",5369,16,16,0,0,0,0,0,103436,5228,3,"Unique 6+ Cutters",51,45
+"pETDuet-1",5420,20,20,0,0,0,5,1,105006,5271,3,"None",0,0
+"pSB1C3",2070,7,7,0,0,0,2,0,35431,1974,3,"Unique 6+ Cutters",38,33
+"pSpCas9(BB)-2A-GFP (PX458)",9288,19,19,0,0,0,0,2,199413,9070,3,"BbsI + EcoRI",4,4
+"pTRE-Tight-BI",2856,15,15,0,0,0,0,1,51165,2748,3,"Unique 6+ Cutters",47,44
+"pTRIPZ",13320,33,33,0,0,0,0,1,272378,12932,3,"Unique Cutters + BamHI",38,35
+"pUC19",2686,9,9,0,0,0,0,3,49845,2603,3,"Unique 6+ Cutters",39,33

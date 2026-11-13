@@ -3,7 +3,7 @@ source('tools/audit-source-snapshot.R')
 source('tools/long-term-audit/feature-association-metrics.R')
 arguments <- commandArgs(trailingOnly = TRUE)
 stage <- if (length(arguments)) arguments[1L] else 'before'
-stopifnot(stage %in% c('before', 'after', 'prototype', 'control', 'reverse'))
+stopifnot(stage %in% c('before', 'after', 'prototype', 'control', 'reverse', 'lanes', 'balanced'))
 audit_session <- audit_source_snapshot(additional = c(
   'tools/long-term-audit/check-feature-association.R',
   'tools/long-term-audit/feature-association-metrics.R'))

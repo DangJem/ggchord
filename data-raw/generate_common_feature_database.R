@@ -560,7 +560,8 @@ read_binary_plasmid_reference <- function(path) {
         length_bp = if (bounds[1L] <= bounds[2L]) {
           bounds[2L] - bounds[1L] + 1L
         } else sequence_length - bounds[1L] + bounds[2L] + 1L,
-        translated = FALSE, segment_name = NA_character_,
+        translated = isTRUE(unname(value_or(segment_attrs["translated"], "0")) == "1"),
+        segment_name = value_or(segment_attrs["name"], NA_character_),
         color = value_or(segment_attrs["color"], "#B8BDC3"),
         stringsAsFactors = FALSE
       )
@@ -788,4 +789,12 @@ if (exists("ggchord_primer_database", envir = old, inherits = FALSE)) {
   objects$ggchord_primer_database <- get("ggchord_primer_database", envir = old)
 }
 list2env(objects, envir = environment())
-save(list = names(objects), file = "R/sysdata.rda", compress = "xz")
+# Serialize and verify a fresh file before replacing a cloud-synced database.
+# A failed write must never leave the package with a truncated sysdata file.
+output <- "R/sysdata.rda"
+staged_output <- tempfile("ggchord-common-features-", fileext = ".rda")
+save(list = names(objects), file = staged_output, compress = "xz")
+verified <- new.env(parent = emptyenv())
+stopifnot(setequal(load(staged_output, envir = verified), names(objects)))
+if (!file.rename(staged_output, output)) stop("Cannot replace ", output,
+  "; verified output retained at ", staged_output, call. = FALSE)

@@ -1,0 +1,18 @@
+plasmid,parent,name,source_range
+pBluescript II SK(+),AmpR,signal sequence,2765-2833
+pBluescript II SK(+),lac promoter,-10,860-866
+pBluescript II SK(+),lac promoter,-35,885-890
+pBR322,AmpR,signal sequence,4085-4153
+pCAMBIA1300,lac promoter,-35,8871-8876
+pCAMBIA1300,lac promoter,-10,8895-8901
+pcDNA3.1(+),AmpR,signal sequence,5224-5292
+pEarleyGate 201,lac UV5 promoter,-35,2919-2924
+pEarleyGate 201,lac UV5 promoter,-10,2943-2949
+pETDuet-1,AmpR,signal sequence,1908-1976
+pSpCas9(BB)-2A-GFP (PX458),EGFP,1a,5588-5590
+pSpCas9(BB)-2A-GFP (PX458),AmpR,signal sequence,7608-7676
+pTRE-Tight-BI,AmpR,signal sequence,2333-2401
+pTRIPZ,AmpR,signal sequence,12798-12866
+pUC19,lac promoter,-10,513-519
+pUC19,lac promoter,-35,538-543
+pUC19,AmpR,signal sequence,2418-2486

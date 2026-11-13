@@ -140,3 +140,16 @@ After comparing densities, continue to [The complete case](plasmids.html#complex
 ## When comparing gallery maps {#gallery-limits}
 
 Each map uses its own complete FASTA and source annotations; do not transfer another reference’s features or cuts to different DNA. Sites nearest three evenly spaced targets are a display selection, not evidence that other cuts are absent. Names may be internal, exterior or hidden while feature geometry remains. Inspect dense cases at their declared dimensions rather than editing source intervals to fit a reduced screenshot.
+
+
+## Comparing reference selections {#reference-selection}
+
+This gallery deliberately draws three site rows per map. For a saved enzyme
+profile, apply `filter_restriction_sites(sites, set = "reference",
+parent_set = "commercial_nonredundant")` to complete recognition results.
+Saved profiles do not recover every old PNG export setting or enzyme-library
+version: pETDuet-1 saves None despite showing cutters in the PNG. Independent
+primers require `find_primer_bindings(sequence, set = "reference")` and primer
+layers. Named subsegments remain in `segments`; they are not extra top-level
+features, and dotted boundaries do not automatically receive extra labels.
+Inspect dense maps again at their actual export dimensions.
