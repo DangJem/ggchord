@@ -1,0 +1,8 @@
+{
+  "audited_urls": 582,
+  "expected_status": 200,
+  "unknown_route_status": 404,
+  "explicit_bilingual_recovery_page": true,
+  "scope": "Local Python HTTP server; unknown URLs get its HTTP 404 body. The generated 404.html is separately verified; hosting rewrite/custom-404 configuration is not deployed or tested.",
+  "failures": []
+}

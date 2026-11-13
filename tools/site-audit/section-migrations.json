@@ -1,0 +1,6878 @@
+[
+  {
+    "language": "en",
+    "old": "index.html#choose",
+    "target": "index.html#choose",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "index.html#chord",
+    "target": "index.html#chord",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "index.html#circular",
+    "target": "index.html#circular",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "index.html#collinear",
+    "target": "index.html#collinear",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "index.html#learn",
+    "target": "index.html#learn",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "index.html#quick-start",
+    "target": "index.html#quick-start",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "index.html#results",
+    "target": "index.html#results",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "index.html#versions",
+    "target": "index.html#versions",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "index.html#choose",
+    "target": "index.html#choose",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "index.html#chord",
+    "target": "index.html#chord",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "index.html#circular",
+    "target": "index.html#circular",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "index.html#collinear",
+    "target": "index.html#collinear",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "index.html#learn",
+    "target": "index.html#learn",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "index.html#quick-start",
+    "target": "index.html#quick-start",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "index.html#results",
+    "target": "index.html#results",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "index.html#versions",
+    "target": "index.html#versions",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "installation.html#first-plot",
+    "target": "installation.html#first-plot",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "installation.html#first-steps",
+    "target": "installation.html#first-steps",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "installation.html#input",
+    "target": "installation.html#input",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "installation.html#read",
+    "target": "installation.html#read",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "installation.html#requirements",
+    "target": "installation.html#requirements",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "installation.html#save",
+    "target": "installation.html#save",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "installation.html#source",
+    "target": "installation.html#source",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "installation.html#support-evidence",
+    "target": "installation.html#support-evidence",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "installation.html#troubleshooting",
+    "target": "installation.html#troubleshooting",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "installation.html#verified-versions",
+    "target": "installation.html#verified-versions",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "installation.html#first-plot",
+    "target": "installation.html#first-plot",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "installation.html#first-steps",
+    "target": "installation.html#first-steps",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "installation.html#input",
+    "target": "installation.html#input",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "installation.html#read",
+    "target": "installation.html#read",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "installation.html#requirements",
+    "target": "installation.html#requirements",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "installation.html#save",
+    "target": "installation.html#save",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "installation.html#source",
+    "target": "installation.html#source",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "installation.html#support-evidence",
+    "target": "installation.html#support-evidence",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "installation.html#troubleshooting",
+    "target": "installation.html#troubleshooting",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "installation.html#verified-versions",
+    "target": "installation.html#verified-versions",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "modes.html#check-result",
+    "target": "modes.html#check-result",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "modes.html#choose",
+    "target": "modes.html#choose",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "modes.html#chord",
+    "target": "modes.html#chord",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "modes.html#circular",
+    "target": "modes.html#circular",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "modes.html#collinear",
+    "target": "modes.html#collinear",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "modes.html#composition",
+    "target": "modes.html#composition",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "modes.html#coordinate-controls",
+    "target": "modes.html#coordinate-controls",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "modes.html#prepare",
+    "target": "modes.html#prepare",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "modes.html#terms",
+    "target": "modes.html#terms",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "modes.html#check-result",
+    "target": "modes.html#check-result",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "modes.html#choose",
+    "target": "modes.html#choose",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "modes.html#chord",
+    "target": "modes.html#chord",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "modes.html#circular",
+    "target": "modes.html#circular",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "modes.html#collinear",
+    "target": "modes.html#collinear",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "modes.html#composition",
+    "target": "modes.html#composition",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "modes.html#coordinate-controls",
+    "target": "modes.html#coordinate-controls",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "modes.html#prepare",
+    "target": "modes.html#prepare",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "modes.html#terms",
+    "target": "modes.html#terms",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "chord-start.html#adapt",
+    "target": "multi-sequence-start.html#adapt",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "chord-start.html#draw",
+    "target": "multi-sequence-start.html#draw",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "chord-start.html#read",
+    "target": "multi-sequence-start.html#read",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "chord-start.html#try",
+    "target": "multi-sequence-start.html#try",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "chord-start.html#adapt",
+    "target": "multi-sequence-start.html#adapt",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "chord-start.html#draw",
+    "target": "multi-sequence-start.html#draw",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "chord-start.html#read",
+    "target": "multi-sequence-start.html#read",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "chord-start.html#try",
+    "target": "multi-sequence-start.html#try",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "chord-data.html#coordinates",
+    "target": "data.html#reading-coordinates",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "chord-data.html#inspect",
+    "target": "data.html#inspect",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "chord-data.html#names",
+    "target": "data.html#names",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "chord-data.html#protein-unit",
+    "target": "data.html#protein-unit",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "chord-data.html#tables",
+    "target": "data.html#tables",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "chord-data.html#coordinates",
+    "target": "data.html#reading-coordinates",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "chord-data.html#inspect",
+    "target": "data.html#inspect",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "chord-data.html#names",
+    "target": "data.html#names",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "chord-data.html#protein-unit",
+    "target": "data.html#protein-unit",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "chord-data.html#tables",
+    "target": "data.html#tables",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "chord-import.html#alternatives",
+    "target": "import-sequences.html#alternatives",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "chord-import.html#blast",
+    "target": "import-sequences.html#blast",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "chord-import.html#files",
+    "target": "import-sequences.html#files",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "chord-import.html#alternatives",
+    "target": "import-sequences.html#alternatives",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "chord-import.html#blast",
+    "target": "import-sequences.html#blast",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "chord-import.html#files",
+    "target": "import-sequences.html#files",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "chord-build.html#add-genes",
+    "target": "multi-sequence-start.html#add-genes",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "chord-build.html#backbones",
+    "target": "multi-sequence-start.html#draw",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "chord-build.html#bundled",
+    "target": "multi-sequence-start.html#draw",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "chord-build.html#genes",
+    "target": "multi-sequence-start.html#genes",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "chord-build.html#inspect-genes",
+    "target": "multi-sequence-start.html#inspect-genes",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "chord-build.html#labels",
+    "target": "multi-sequence-start.html#labels",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "chord-build.html#links",
+    "target": "multi-sequence-start.html#links",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "chord-build.html#prepare",
+    "target": "multi-sequence-start.html#prepare",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "chord-build.html#add-genes",
+    "target": "multi-sequence-start.html#add-genes",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "chord-build.html#backbones",
+    "target": "multi-sequence-start.html#draw",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "chord-build.html#bundled",
+    "target": "multi-sequence-start.html#draw",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "chord-build.html#genes",
+    "target": "multi-sequence-start.html#genes",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "chord-build.html#inspect-genes",
+    "target": "multi-sequence-start.html#inspect-genes",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "chord-build.html#labels",
+    "target": "multi-sequence-start.html#labels",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "chord-build.html#links",
+    "target": "multi-sequence-start.html#links",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "chord-build.html#prepare",
+    "target": "multi-sequence-start.html#prepare",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "chord-tuning.html#clearance",
+    "target": "chord-geometry.html#orientation",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "chord-tuning.html#guides",
+    "target": "chord-geometry.html#orientation",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "chord-tuning.html#orientation",
+    "target": "chord-geometry.html#orientation",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "chord-tuning.html#parameters",
+    "target": "chord-geometry.html#parameters",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "chord-tuning.html#prepare",
+    "target": "chord-geometry.html#orientation",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "chord-tuning.html#clearance",
+    "target": "chord-geometry.html#orientation",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "chord-tuning.html#guides",
+    "target": "chord-geometry.html#orientation",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "chord-tuning.html#orientation",
+    "target": "chord-geometry.html#orientation",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "chord-tuning.html#parameters",
+    "target": "chord-geometry.html#parameters",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "chord-tuning.html#prepare",
+    "target": "chord-geometry.html#orientation",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "chord-geometry.html#curvature",
+    "target": "chord-geometry.html#curvature",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "chord-geometry.html#direction",
+    "target": "multi-sequence-layout.html#direction",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "chord-geometry.html#order",
+    "target": "multi-sequence-layout.html#order",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "chord-geometry.html#shape",
+    "target": "chord-geometry.html#shape",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "chord-geometry.html#curvature",
+    "target": "chord-geometry.html#curvature",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "chord-geometry.html#direction",
+    "target": "multi-sequence-layout.html#direction",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "chord-geometry.html#order",
+    "target": "multi-sequence-layout.html#order",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "chord-geometry.html#shape",
+    "target": "chord-geometry.html#shape",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "chord-routing.html#branch-contract",
+    "target": "multi-sequence-links.html#branch-contract",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "chord-routing.html#clearance",
+    "target": "multi-sequence-links.html#clearance",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "chord-routing.html#control",
+    "target": "multi-sequence-links.html#control",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "chord-routing.html#point-markers",
+    "target": "multi-sequence-links.html#point-markers",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "chord-routing.html#region-parameters",
+    "target": "annotations.html#region-parameters",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "chord-routing.html#branch-contract",
+    "target": "multi-sequence-links.html#branch-contract",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "chord-routing.html#clearance",
+    "target": "multi-sequence-links.html#clearance",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "chord-routing.html#control",
+    "target": "multi-sequence-links.html#control",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "chord-routing.html#point-markers",
+    "target": "multi-sequence-links.html#point-markers",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "chord-routing.html#region-parameters",
+    "target": "annotations.html#region-parameters",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "chord-branches.html#adapt",
+    "target": "multi-sequence-links.html#adapt",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "chord-branches.html#branches",
+    "target": "multi-sequence-links.html#branches",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "chord-branches.html#fraction",
+    "target": "multi-sequence-links.html#fraction",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "chord-branches.html#input",
+    "target": "multi-sequence-links.html#input",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "chord-branches.html#point-links",
+    "target": "multi-sequence-links.html#point-links",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "chord-branches.html#adapt",
+    "target": "multi-sequence-links.html#adapt",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "chord-branches.html#branches",
+    "target": "multi-sequence-links.html#branches",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "chord-branches.html#fraction",
+    "target": "multi-sequence-links.html#fraction",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "chord-branches.html#input",
+    "target": "multi-sequence-links.html#input",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "chord-branches.html#point-links",
+    "target": "multi-sequence-links.html#point-links",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "chord-labels.html#gene-labels",
+    "target": "multi-sequence-labels.html#gene-labels",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "chord-labels.html#sequence-labels",
+    "target": "multi-sequence-labels.html#sequence-labels",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "chord-labels.html#sequence-parameters",
+    "target": "multi-sequence-labels.html#sequence-parameters",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "chord-labels.html#gene-labels",
+    "target": "multi-sequence-labels.html#gene-labels",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "chord-labels.html#sequence-labels",
+    "target": "multi-sequence-labels.html#sequence-labels",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "chord-labels.html#sequence-parameters",
+    "target": "multi-sequence-labels.html#sequence-parameters",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "ribbons.html#check-result",
+    "target": "ribbons.html#check-result",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "ribbons.html#density",
+    "target": "ribbons.html#density",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "ribbons.html#input",
+    "target": "ribbons.html#input",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "ribbons.html#points",
+    "target": "multi-sequence-links.html#interval-points",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "ribbons.html#prepare",
+    "target": "ribbons.html#prepare",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "ribbons.html#transformations",
+    "target": "ribbons.html#transformations",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "ribbons.html#check-result",
+    "target": "ribbons.html#check-result",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "ribbons.html#density",
+    "target": "ribbons.html#density",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "ribbons.html#input",
+    "target": "ribbons.html#input",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "ribbons.html#points",
+    "target": "multi-sequence-links.html#interval-points",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "ribbons.html#prepare",
+    "target": "ribbons.html#prepare",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "ribbons.html#transformations",
+    "target": "ribbons.html#transformations",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "ribbon-statistics.html#adapt",
+    "target": "ribbons.html#statistics-adapt",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "ribbon-statistics.html#bundle",
+    "target": "ribbons.html#statistics-bundle",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "ribbon-statistics.html#density",
+    "target": "ribbons.html#statistics-density",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "ribbon-statistics.html#input",
+    "target": "ribbons.html#statistics",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "ribbon-statistics.html#parameters",
+    "target": "ribbons.html#statistics-parameters",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "ribbon-statistics.html#adapt",
+    "target": "ribbons.html#statistics-adapt",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "ribbon-statistics.html#bundle",
+    "target": "ribbons.html#statistics-bundle",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "ribbon-statistics.html#density",
+    "target": "ribbons.html#statistics-density",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "ribbon-statistics.html#input",
+    "target": "ribbons.html#statistics",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "ribbon-statistics.html#parameters",
+    "target": "ribbons.html#statistics-parameters",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "real-data.html#check-result",
+    "target": "real-data.html#check-result",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "real-data.html#chord",
+    "target": "real-data.html#chord",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "real-data.html#evidence-check",
+    "target": "real-data.html#evidence-check",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "real-data.html#linear",
+    "target": "real-data.html#linear",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "real-data.html#minimal-fields",
+    "target": "real-data.html#minimal-fields",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "real-data.html#prepare",
+    "target": "real-data.html#prepare",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "real-data.html#provenance",
+    "target": "real-data.html#provenance",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "real-data.html#read",
+    "target": "real-data.html#read",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "real-data.html#research-question",
+    "target": "real-data.html#research-question",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "real-data.html#save-result",
+    "target": "real-data.html#save-result",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "real-data.html#selection",
+    "target": "real-data.html#selection",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "real-data.html#check-result",
+    "target": "real-data.html#check-result",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "real-data.html#chord",
+    "target": "real-data.html#chord",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "real-data.html#evidence-check",
+    "target": "real-data.html#evidence-check",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "real-data.html#linear",
+    "target": "real-data.html#linear",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "real-data.html#minimal-fields",
+    "target": "real-data.html#minimal-fields",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "real-data.html#prepare",
+    "target": "real-data.html#prepare",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "real-data.html#provenance",
+    "target": "real-data.html#provenance",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "real-data.html#read",
+    "target": "real-data.html#read",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "real-data.html#research-question",
+    "target": "real-data.html#research-question",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "real-data.html#save-result",
+    "target": "real-data.html#save-result",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "real-data.html#selection",
+    "target": "real-data.html#selection",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "chord.html#compose",
+    "target": "chord.html#compose",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "chord.html#evidence-check",
+    "target": "chord.html#evidence-check",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "chord.html#overview",
+    "target": "chord.html#overview",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "chord.html#prepare",
+    "target": "chord.html#prepare",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "chord.html#question",
+    "target": "chord.html#question",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "chord.html#read",
+    "target": "chord.html#read",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "chord.html#save",
+    "target": "chord.html#save",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "chord.html#source-rights",
+    "target": "chord.html#source-rights",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "chord.html#compose",
+    "target": "chord.html#compose",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "chord.html#evidence-check",
+    "target": "chord.html#evidence-check",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "chord.html#overview",
+    "target": "chord.html#overview",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "chord.html#prepare",
+    "target": "chord.html#prepare",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "chord.html#question",
+    "target": "chord.html#question",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "chord.html#read",
+    "target": "chord.html#read",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "chord.html#save",
+    "target": "chord.html#save",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "chord.html#source-rights",
+    "target": "chord.html#source-rights",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "collinear-start.html#adapt",
+    "target": "multi-sequence-start.html#adapt",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "collinear-start.html#draw",
+    "target": "multi-sequence-start.html#draw",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "collinear-start.html#read",
+    "target": "multi-sequence-start.html#read",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "collinear-start.html#try",
+    "target": "multi-sequence-start.html#try",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "collinear-start.html#adapt",
+    "target": "multi-sequence-start.html#adapt",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "collinear-start.html#draw",
+    "target": "multi-sequence-start.html#draw",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "collinear-start.html#read",
+    "target": "multi-sequence-start.html#read",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "collinear-start.html#try",
+    "target": "multi-sequence-start.html#try",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "collinear-data.html#contract",
+    "target": "multi-sequence-views.html#input",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "collinear-data.html#example",
+    "target": "multi-sequence-views.html#input",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "collinear-data.html#import",
+    "target": "multi-sequence-views.html#input",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "collinear-data.html#tables",
+    "target": "multi-sequence-views.html#input",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "collinear-data.html#contract",
+    "target": "multi-sequence-views.html#input",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "collinear-data.html#example",
+    "target": "multi-sequence-views.html#input",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "collinear-data.html#import",
+    "target": "multi-sequence-views.html#input",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "collinear-data.html#tables",
+    "target": "multi-sequence-views.html#input",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "collinear-build.html#add-genes",
+    "target": "multi-sequence-start.html#add-genes",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "collinear-build.html#backbones",
+    "target": "multi-sequence-start.html#collinear",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "collinear-build.html#bundled",
+    "target": "multi-sequence-start.html#draw",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "collinear-build.html#inspect-genes",
+    "target": "multi-sequence-start.html#inspect-genes",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "collinear-build.html#labels",
+    "target": "multi-sequence-start.html#labels",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "collinear-build.html#links",
+    "target": "multi-sequence-start.html#links",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "collinear-build.html#prepare",
+    "target": "multi-sequence-start.html#prepare",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "collinear-build.html#switch",
+    "target": "multi-sequence-start.html#collinear",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "collinear-build.html#add-genes",
+    "target": "multi-sequence-start.html#add-genes",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "collinear-build.html#backbones",
+    "target": "multi-sequence-start.html#collinear",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "collinear-build.html#bundled",
+    "target": "multi-sequence-start.html#draw",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "collinear-build.html#inspect-genes",
+    "target": "multi-sequence-start.html#inspect-genes",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "collinear-build.html#labels",
+    "target": "multi-sequence-start.html#labels",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "collinear-build.html#links",
+    "target": "multi-sequence-start.html#links",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "collinear-build.html#prepare",
+    "target": "multi-sequence-start.html#prepare",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "collinear-build.html#switch",
+    "target": "multi-sequence-start.html#collinear",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "collinear-tuning.html#baseline",
+    "target": "collinear-layout.html#baseline",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "collinear-tuning.html#gap",
+    "target": "collinear-layout.html#gap",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "collinear-tuning.html#scale",
+    "target": "collinear-layout.html#gap",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "collinear-tuning.html#baseline",
+    "target": "collinear-layout.html#baseline",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "collinear-tuning.html#gap",
+    "target": "collinear-layout.html#gap",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "collinear-tuning.html#scale",
+    "target": "collinear-layout.html#gap",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "collinear-layout.html#adapt",
+    "target": "collinear-layout.html#adapt",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "collinear-layout.html#alignment",
+    "target": "collinear-layout.html#alignment",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "collinear-layout.html#anchor",
+    "target": "collinear-layout.html#anchor",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "collinear-layout.html#baseline",
+    "target": "collinear-layout.html#baseline",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "collinear-layout.html#orientation",
+    "target": "collinear-layout.html#orientation",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "collinear-layout.html#parameters",
+    "target": "collinear-layout.html#parameters",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "collinear-layout.html#adapt",
+    "target": "collinear-layout.html#adapt",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "collinear-layout.html#alignment",
+    "target": "collinear-layout.html#alignment",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "collinear-layout.html#anchor",
+    "target": "collinear-layout.html#anchor",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "collinear-layout.html#baseline",
+    "target": "collinear-layout.html#baseline",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "collinear-layout.html#orientation",
+    "target": "collinear-layout.html#orientation",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "collinear-layout.html#parameters",
+    "target": "collinear-layout.html#parameters",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "collinear-routing.html#clearance",
+    "target": "multi-sequence-links.html#clearance",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "collinear-routing.html#next",
+    "target": "multi-sequence-links.html#routes",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "collinear-routing.html#prepare",
+    "target": "multi-sequence-links.html#routes",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "collinear-routing.html#routes",
+    "target": "multi-sequence-links.html#routes",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "collinear-routing.html#ruler",
+    "target": "multi-sequence-links.html#routes",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "collinear-routing.html#width",
+    "target": "multi-sequence-links.html#width",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "collinear-routing.html#clearance",
+    "target": "multi-sequence-links.html#clearance",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "collinear-routing.html#next",
+    "target": "multi-sequence-links.html#routes",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "collinear-routing.html#prepare",
+    "target": "multi-sequence-links.html#routes",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "collinear-routing.html#routes",
+    "target": "multi-sequence-links.html#routes",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "collinear-routing.html#ruler",
+    "target": "multi-sequence-links.html#routes",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "collinear-routing.html#width",
+    "target": "multi-sequence-links.html#width",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "views.html#check-result",
+    "target": "views.html#check-result",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "views.html#focus",
+    "target": "views.html#focus",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "views.html#homology",
+    "target": "views.html#homology",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "views.html#mapping",
+    "target": "views.html#mapping",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "views.html#segments",
+    "target": "views.html#segments",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "views.html#check-result",
+    "target": "views.html#check-result",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "views.html#focus",
+    "target": "views.html#focus",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "views.html#homology",
+    "target": "views.html#homology",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "views.html#mapping",
+    "target": "views.html#mapping",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "views.html#segments",
+    "target": "views.html#segments",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "homology.html#check-result",
+    "target": "homology.html#check-result",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "homology.html#focus",
+    "target": "homology.html#focus",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "homology.html#links",
+    "target": "homology.html#links",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "homology.html#membership",
+    "target": "homology.html#membership",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "homology.html#projection",
+    "target": "homology.html#projection",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "homology.html#save-result",
+    "target": "homology.html#save-result",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "homology.html#check-result",
+    "target": "homology.html#check-result",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "homology.html#focus",
+    "target": "homology.html#focus",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "homology.html#links",
+    "target": "homology.html#links",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "homology.html#membership",
+    "target": "homology.html#membership",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "homology.html#projection",
+    "target": "homology.html#projection",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "homology.html#save-result",
+    "target": "homology.html#save-result",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "collinear.html#compose",
+    "target": "collinear.html#compose",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "collinear.html#evidence-check",
+    "target": "collinear.html#evidence-check",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "collinear.html#gc",
+    "target": "collinear.html#gc",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "collinear.html#overview",
+    "target": "collinear.html#overview",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "collinear.html#prepare",
+    "target": "collinear.html#prepare",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "collinear.html#question",
+    "target": "collinear.html#question",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "collinear.html#read",
+    "target": "collinear.html#read",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "collinear.html#save",
+    "target": "collinear.html#save",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "collinear.html#source-rights",
+    "target": "collinear.html#source-rights",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "collinear.html#compose",
+    "target": "collinear.html#compose",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "collinear.html#evidence-check",
+    "target": "collinear.html#evidence-check",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "collinear.html#gc",
+    "target": "collinear.html#gc",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "collinear.html#overview",
+    "target": "collinear.html#overview",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "collinear.html#prepare",
+    "target": "collinear.html#prepare",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "collinear.html#question",
+    "target": "collinear.html#question",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "collinear.html#read",
+    "target": "collinear.html#read",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "collinear.html#save",
+    "target": "collinear.html#save",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "collinear.html#source-rights",
+    "target": "collinear.html#source-rights",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "plasmid-start.html#adapt",
+    "target": "circular-start.html#exercise",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "plasmid-start.html#draw",
+    "target": "circular-start.html#input",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "plasmid-start.html#features",
+    "target": "circular-start.html#features-and-labels",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "plasmid-start.html#adapt",
+    "target": "circular-start.html#exercise",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "plasmid-start.html#draw",
+    "target": "circular-start.html#input",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "plasmid-start.html#features",
+    "target": "circular-start.html#features-and-labels",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "plasmid-data.html#import",
+    "target": "circular-data.html#import",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "plasmid-data.html#inspect",
+    "target": "circular-data.html#inspect",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "plasmid-data.html#path",
+    "target": "circular-data.html#path",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "plasmid-data.html#tables",
+    "target": "circular-data.html#tables",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "plasmid-data.html#import",
+    "target": "circular-data.html#import",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "plasmid-data.html#inspect",
+    "target": "circular-data.html#inspect",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "plasmid-data.html#path",
+    "target": "circular-data.html#path",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "plasmid-data.html#tables",
+    "target": "circular-data.html#tables",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "plasmid-build.html#adapt",
+    "target": "circular-start.html#exercise",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "plasmid-build.html#add-label",
+    "target": "circular-start.html#features-and-labels",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "plasmid-build.html#backbone",
+    "target": "circular-start.html#input",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "plasmid-build.html#details",
+    "target": "circular-start.html#input",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "plasmid-build.html#features",
+    "target": "circular-start.html#features-and-labels",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "plasmid-build.html#labels",
+    "target": "circular-start.html#input",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "plasmid-build.html#origin",
+    "target": "circular-start.html#input",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "plasmid-build.html#prepare",
+    "target": "circular-start.html#input",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "plasmid-build.html#adapt",
+    "target": "circular-start.html#exercise",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "plasmid-build.html#add-label",
+    "target": "circular-start.html#features-and-labels",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "plasmid-build.html#backbone",
+    "target": "circular-start.html#input",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "plasmid-build.html#details",
+    "target": "circular-start.html#input",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "plasmid-build.html#features",
+    "target": "circular-start.html#features-and-labels",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "plasmid-build.html#labels",
+    "target": "circular-start.html#input",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "plasmid-build.html#origin",
+    "target": "circular-start.html#input",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "plasmid-build.html#prepare",
+    "target": "circular-start.html#input",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "plasmid-tuning.html#baseline",
+    "target": "circular-layout.html#style",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "plasmid-tuning.html#rotation",
+    "target": "circular-layout.html#rotation",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "plasmid-tuning.html#style",
+    "target": "circular-layout.html#style",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "plasmid-tuning.html#baseline",
+    "target": "circular-layout.html#style",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "plasmid-tuning.html#rotation",
+    "target": "circular-layout.html#rotation",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "plasmid-tuning.html#style",
+    "target": "circular-layout.html#style",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "recognition.html#check-result",
+    "target": "recognition.html#check-result",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "recognition.html#features",
+    "target": "recognition.html#features",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "recognition.html#prepare",
+    "target": "recognition.html#prepare",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "recognition.html#reference",
+    "target": "recognition.html#reference",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "recognition.html#restriction",
+    "target": "recognition.html#restriction",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "recognition.html#search",
+    "target": "recognition.html#search",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "recognition.html#check-result",
+    "target": "recognition.html#check-result",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "recognition.html#features",
+    "target": "recognition.html#features",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "recognition.html#prepare",
+    "target": "recognition.html#prepare",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "recognition.html#reference",
+    "target": "recognition.html#reference",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "recognition.html#restriction",
+    "target": "recognition.html#restriction",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "recognition.html#search",
+    "target": "recognition.html#search",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "plasmid-catalog.html#catalogblue",
+    "target": "plasmid-catalog.html#catalogblue",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "plasmid-catalog.html#catalogcambia",
+    "target": "plasmid-catalog.html#catalogcambia",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "plasmid-catalog.html#catalogcas",
+    "target": "plasmid-catalog.html#catalogcas",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "plasmid-catalog.html#catalogdonr",
+    "target": "plasmid-catalog.html#catalogdonr",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "plasmid-catalog.html#catalogduet",
+    "target": "plasmid-catalog.html#catalogduet",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "plasmid-catalog.html#catalogearley",
+    "target": "plasmid-catalog.html#catalogearley",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "plasmid-catalog.html#catalogpbr",
+    "target": "plasmid-catalog.html#catalogpbr",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "plasmid-catalog.html#catalogpcdna",
+    "target": "plasmid-catalog.html#catalogpcdna",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "plasmid-catalog.html#catalogpet",
+    "target": "plasmid-catalog.html#catalogpet",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "plasmid-catalog.html#catalogpsb",
+    "target": "plasmid-catalog.html#catalogpsb",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "plasmid-catalog.html#catalogpuc",
+    "target": "plasmid-catalog.html#catalogpuc",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "plasmid-catalog.html#catalogtre",
+    "target": "plasmid-catalog.html#catalogtre",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "plasmid-catalog.html#catalogtripz",
+    "target": "plasmid-catalog.html#catalogtripz",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "plasmid-catalog.html#counts",
+    "target": "plasmid-catalog.html#counts",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "plasmid-catalog.html#gallery-limits",
+    "target": "plasmid-catalog.html#gallery-limits",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "plasmid-catalog.html#next",
+    "target": "plasmid-catalog.html#next",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "plasmid-catalog.html#prepare",
+    "target": "plasmid-catalog.html#prepare",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "plasmid-catalog.html#reference-selection",
+    "target": "plasmid-catalog.html#reference-selection",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "plasmid-catalog.html#catalogblue",
+    "target": "plasmid-catalog.html#catalogblue",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "plasmid-catalog.html#catalogcambia",
+    "target": "plasmid-catalog.html#catalogcambia",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "plasmid-catalog.html#catalogcas",
+    "target": "plasmid-catalog.html#catalogcas",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "plasmid-catalog.html#catalogdonr",
+    "target": "plasmid-catalog.html#catalogdonr",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "plasmid-catalog.html#catalogduet",
+    "target": "plasmid-catalog.html#catalogduet",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "plasmid-catalog.html#catalogearley",
+    "target": "plasmid-catalog.html#catalogearley",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "plasmid-catalog.html#catalogpbr",
+    "target": "plasmid-catalog.html#catalogpbr",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "plasmid-catalog.html#catalogpcdna",
+    "target": "plasmid-catalog.html#catalogpcdna",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "plasmid-catalog.html#catalogpet",
+    "target": "plasmid-catalog.html#catalogpet",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "plasmid-catalog.html#catalogpsb",
+    "target": "plasmid-catalog.html#catalogpsb",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "plasmid-catalog.html#catalogpuc",
+    "target": "plasmid-catalog.html#catalogpuc",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "plasmid-catalog.html#catalogtre",
+    "target": "plasmid-catalog.html#catalogtre",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "plasmid-catalog.html#catalogtripz",
+    "target": "plasmid-catalog.html#catalogtripz",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "plasmid-catalog.html#counts",
+    "target": "plasmid-catalog.html#counts",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "plasmid-catalog.html#gallery-limits",
+    "target": "plasmid-catalog.html#gallery-limits",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "plasmid-catalog.html#next",
+    "target": "plasmid-catalog.html#next",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "plasmid-catalog.html#prepare",
+    "target": "plasmid-catalog.html#prepare",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "plasmid-catalog.html#reference-selection",
+    "target": "plasmid-catalog.html#reference-selection",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "plasmids.html#adapt",
+    "target": "plasmids.html#adapt",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "plasmids.html#check-result",
+    "target": "plasmids.html#check-result",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "plasmids.html#complex",
+    "target": "circular-dense-case.html#complex",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "plasmids.html#draw",
+    "target": "plasmids.html#draw",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "plasmids.html#evidence-check",
+    "target": "plasmids.html#evidence-check",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "plasmids.html#input",
+    "target": "plasmids.html#input",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "plasmids.html#layers",
+    "target": "plasmids.html#layers",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "plasmids.html#limits",
+    "target": "plasmids.html#limits",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "plasmids.html#question",
+    "target": "plasmids.html#question",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "plasmids.html#save-result",
+    "target": "plasmids.html#save-result",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "plasmids.html#sites",
+    "target": "plasmids.html#sites",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "plasmids.html#source-rights",
+    "target": "plasmids.html#source-rights",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "plasmids.html#adapt",
+    "target": "plasmids.html#adapt",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "plasmids.html#check-result",
+    "target": "plasmids.html#check-result",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "plasmids.html#complex",
+    "target": "circular-dense-case.html#complex",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "plasmids.html#draw",
+    "target": "plasmids.html#draw",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "plasmids.html#evidence-check",
+    "target": "plasmids.html#evidence-check",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "plasmids.html#input",
+    "target": "plasmids.html#input",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "plasmids.html#layers",
+    "target": "plasmids.html#layers",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "plasmids.html#limits",
+    "target": "plasmids.html#limits",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "plasmids.html#question",
+    "target": "plasmids.html#question",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "plasmids.html#save-result",
+    "target": "plasmids.html#save-result",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "plasmids.html#sites",
+    "target": "plasmids.html#sites",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "plasmids.html#source-rights",
+    "target": "plasmids.html#source-rights",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "circular-layers.html#adapt",
+    "target": "circular-features.html#adapt",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "circular-layers.html#backbones",
+    "target": "circular-layout.html#backbones",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "circular-layers.html#band-rendering",
+    "target": "circular-layout.html#band-rendering",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "circular-layers.html#center",
+    "target": "circular-layout.html#center",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "circular-layers.html#coordinates",
+    "target": "circular-layout.html#coordinates",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "circular-layers.html#feature-shapes",
+    "target": "circular-features.html#feature-shapes",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "circular-layers.html#input",
+    "target": "circular-layout.html#input",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "circular-layers.html#stacking",
+    "target": "circular-features.html#stacking",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "circular-layers.html#adapt",
+    "target": "circular-features.html#adapt",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "circular-layers.html#backbones",
+    "target": "circular-layout.html#backbones",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "circular-layers.html#band-rendering",
+    "target": "circular-layout.html#band-rendering",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "circular-layers.html#center",
+    "target": "circular-layout.html#center",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "circular-layers.html#coordinates",
+    "target": "circular-layout.html#coordinates",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "circular-layers.html#feature-shapes",
+    "target": "circular-features.html#feature-shapes",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "circular-layers.html#input",
+    "target": "circular-layout.html#input",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "circular-layers.html#stacking",
+    "target": "circular-features.html#stacking",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "circular-labels.html#adapt",
+    "target": "circular-labels.html#adapt",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "circular-labels.html#automatic-labels",
+    "target": "circular-labels.html#automatic-labels",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "circular-labels.html#automatic-parameters",
+    "target": "circular-labels.html#automatic-parameters",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "circular-labels.html#consecutive-repeats",
+    "target": "circular-labels.html#consecutive-repeats",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "circular-labels.html#fitting",
+    "target": "circular-labels.html#fitting",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "circular-labels.html#fixed-labels",
+    "target": "circular-labels.html#fixed-labels",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "circular-labels.html#fixed-parameters",
+    "target": "circular-labels.html#fixed-parameters",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "circular-labels.html#input",
+    "target": "circular-labels.html#input",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "circular-labels.html#adapt",
+    "target": "circular-labels.html#adapt",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "circular-labels.html#automatic-labels",
+    "target": "circular-labels.html#automatic-labels",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "circular-labels.html#automatic-parameters",
+    "target": "circular-labels.html#automatic-parameters",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "circular-labels.html#consecutive-repeats",
+    "target": "circular-labels.html#consecutive-repeats",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "circular-labels.html#fitting",
+    "target": "circular-labels.html#fitting",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "circular-labels.html#fixed-labels",
+    "target": "circular-labels.html#fixed-labels",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "circular-labels.html#fixed-parameters",
+    "target": "circular-labels.html#fixed-parameters",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "circular-labels.html#input",
+    "target": "circular-labels.html#input",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "primers.html#adapt",
+    "target": "primers.html#adapt",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "primers.html#input",
+    "target": "primers.html#input",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "primers.html#parameters",
+    "target": "primers.html#parameters",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "primers.html#primer-arcs",
+    "target": "primers.html#primer-arcs",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "primers.html#primer-labels",
+    "target": "primers.html#primer-labels",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "primers.html#adapt",
+    "target": "primers.html#adapt",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "primers.html#input",
+    "target": "primers.html#input",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "primers.html#parameters",
+    "target": "primers.html#parameters",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "primers.html#primer-arcs",
+    "target": "primers.html#primer-arcs",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "primers.html#primer-labels",
+    "target": "primers.html#primer-labels",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "restriction-sites.html#adapt",
+    "target": "restriction-sites.html#adapt",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "restriction-sites.html#input",
+    "target": "restriction-sites.html#input",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "restriction-sites.html#parameters",
+    "target": "restriction-sites.html#parameters",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "restriction-sites.html#restriction-labels",
+    "target": "restriction-sites.html#restriction-labels",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "restriction-sites.html#text-content",
+    "target": "restriction-sites.html#text-content",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "restriction-sites.html#adapt",
+    "target": "restriction-sites.html#adapt",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "restriction-sites.html#input",
+    "target": "restriction-sites.html#input",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "restriction-sites.html#parameters",
+    "target": "restriction-sites.html#parameters",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "restriction-sites.html#restriction-labels",
+    "target": "restriction-sites.html#restriction-labels",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "restriction-sites.html#text-content",
+    "target": "restriction-sites.html#text-content",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "data.html#check-result",
+    "target": "data.html#check-result",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "data.html#coordinates",
+    "target": "data.html#coordinates",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "data.html#hierarchy",
+    "target": "data.html#hierarchy",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "data.html#import",
+    "target": "data.html#import",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "data.html#minimal",
+    "target": "data.html#minimal",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "data.html#prepare",
+    "target": "data.html#prepare",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "data.html#repairs",
+    "target": "data.html#repairs",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "data.html#tables",
+    "target": "data.html#tables",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "data.html#validation",
+    "target": "data.html#validation",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "data.html#check-result",
+    "target": "data.html#check-result",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "data.html#coordinates",
+    "target": "data.html#coordinates",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "data.html#hierarchy",
+    "target": "data.html#hierarchy",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "data.html#import",
+    "target": "data.html#import",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "data.html#minimal",
+    "target": "data.html#minimal",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "data.html#prepare",
+    "target": "data.html#prepare",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "data.html#repairs",
+    "target": "data.html#repairs",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "data.html#tables",
+    "target": "data.html#tables",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "data.html#validation",
+    "target": "data.html#validation",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "formats.html#adapters",
+    "target": "import-sequences.html#adapters",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "formats.html#aligned-characters",
+    "target": "aligned-sequences.html#aligned-characters",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "formats.html#aligned-protein",
+    "target": "aligned-sequences.html#aligned-protein",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "formats.html#aligned-reads",
+    "target": "import-signals.html#aligned-reads",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "formats.html#aligned-source",
+    "target": "aligned-sequences.html#aligned-source",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "formats.html#bedpe",
+    "target": "import-intervals.html#bedpe",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "formats.html#cds-translation",
+    "target": "aligned-sequences.html#cds-translation",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "formats.html#characters",
+    "target": "aligned-sequences.html#characters",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "formats.html#check-result",
+    "target": "formats.html",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "formats.html#choose-format",
+    "target": "formats.html#choose-format",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "formats.html#delta",
+    "target": "import-relations.html#delta",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "formats.html#feature-relations",
+    "target": "import-relations.html#feature-relations",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "formats.html#genbank",
+    "target": "import-sequences.html#genbank",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "formats.html#genome-alignments",
+    "target": "import-relations.html#genome-alignments",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "formats.html#graph-paths",
+    "target": "import-relations.html#graph-paths",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "formats.html#prepare",
+    "target": "formats.html",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "formats.html#protein-signatures",
+    "target": "import-relations.html#protein-signatures",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "formats.html#ranges",
+    "target": "import-intervals.html#ranges",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "formats.html#signals",
+    "target": "import-signals.html#signals",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "formats.html#variants",
+    "target": "import-relations.html#variants",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "formats.html#zero-based",
+    "target": "import-intervals.html#zero-based",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "formats.html#adapters",
+    "target": "import-sequences.html#adapters",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "formats.html#aligned-characters",
+    "target": "aligned-sequences.html#aligned-characters",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "formats.html#aligned-protein",
+    "target": "aligned-sequences.html#aligned-protein",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "formats.html#aligned-reads",
+    "target": "import-signals.html#aligned-reads",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "formats.html#aligned-source",
+    "target": "aligned-sequences.html#aligned-source",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "formats.html#bedpe",
+    "target": "import-intervals.html#bedpe",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "formats.html#cds-translation",
+    "target": "aligned-sequences.html#cds-translation",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "formats.html#characters",
+    "target": "aligned-sequences.html#characters",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "formats.html#check-result",
+    "target": "formats.html",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "formats.html#choose-format",
+    "target": "formats.html#choose-format",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "formats.html#delta",
+    "target": "import-relations.html#delta",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "formats.html#feature-relations",
+    "target": "import-relations.html#feature-relations",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "formats.html#genbank",
+    "target": "import-sequences.html#genbank",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "formats.html#genome-alignments",
+    "target": "import-relations.html#genome-alignments",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "formats.html#graph-paths",
+    "target": "import-relations.html#graph-paths",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "formats.html#prepare",
+    "target": "formats.html",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "formats.html#protein-signatures",
+    "target": "import-relations.html#protein-signatures",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "formats.html#ranges",
+    "target": "import-intervals.html#ranges",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "formats.html#signals",
+    "target": "import-signals.html#signals",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "formats.html#variants",
+    "target": "import-relations.html#variants",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "formats.html#zero-based",
+    "target": "import-intervals.html#zero-based",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "alignments.html#check-result",
+    "target": "alignments.html#check-result",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "alignments.html#minimal",
+    "target": "alignments.html#minimal",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "alignments.html#prepare",
+    "target": "alignments.html#prepare",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "alignments.html#projection",
+    "target": "alignments.html#projection",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "alignments.html#protein",
+    "target": "alignments.html#protein",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "alignments.html#source",
+    "target": "alignments.html#source",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "alignments.html#standard",
+    "target": "alignments.html#standard",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "alignments.html#check-result",
+    "target": "alignments.html#check-result",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "alignments.html#minimal",
+    "target": "alignments.html#minimal",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "alignments.html#prepare",
+    "target": "alignments.html#prepare",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "alignments.html#projection",
+    "target": "alignments.html#projection",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "alignments.html#protein",
+    "target": "alignments.html#protein",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "alignments.html#source",
+    "target": "alignments.html#source",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "alignments.html#standard",
+    "target": "alignments.html#standard",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "projection.html#boundaries",
+    "target": "projection.html#boundaries",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "projection.html#cds",
+    "target": "projection.html#cds",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "projection.html#check-result",
+    "target": "projection.html#check-result",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "projection.html#links",
+    "target": "projection.html#links",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "projection.html#prepare",
+    "target": "projection.html#prepare",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "projection.html#boundaries",
+    "target": "projection.html#boundaries",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "projection.html#cds",
+    "target": "projection.html#cds",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "projection.html#check-result",
+    "target": "projection.html#check-result",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "projection.html#links",
+    "target": "projection.html#links",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "projection.html#prepare",
+    "target": "projection.html#prepare",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "annotations.html#check-result",
+    "target": "annotations.html#check-result",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "annotations.html#decoration",
+    "target": "annotations.html#decoration",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "annotations.html#prepare",
+    "target": "annotations.html#prepare",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "annotations.html#shapes",
+    "target": "annotations.html#shapes",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "annotations.html#stack",
+    "target": "annotations.html#stack",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "annotations.html#check-result",
+    "target": "annotations.html#check-result",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "annotations.html#decoration",
+    "target": "annotations.html#decoration",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "annotations.html#prepare",
+    "target": "annotations.html#prepare",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "annotations.html#shapes",
+    "target": "annotations.html#shapes",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "annotations.html#stack",
+    "target": "annotations.html#stack",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "labels.html#anchors",
+    "target": "labels.html#anchors",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "labels.html#check-result",
+    "target": "labels.html#check-result",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "labels.html#comparison",
+    "target": "labels.html#comparison",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "labels.html#fixed",
+    "target": "labels.html#fixed",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "labels.html#layout",
+    "target": "labels.html#layout",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "labels.html#prepare",
+    "target": "labels.html#prepare",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "labels.html#anchors",
+    "target": "labels.html#anchors",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "labels.html#check-result",
+    "target": "labels.html#check-result",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "labels.html#comparison",
+    "target": "labels.html#comparison",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "labels.html#fixed",
+    "target": "labels.html#fixed",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "labels.html#layout",
+    "target": "labels.html#layout",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "labels.html#prepare",
+    "target": "labels.html#prepare",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "tracks.html#check-result",
+    "target": "tracks.html#check-result",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "tracks.html#diagnostics",
+    "target": "tracks.html#diagnostics",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "tracks.html#domain",
+    "target": "tracks.html#domain",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "tracks.html#draw-gc",
+    "target": "tracks.html#draw-gc",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "tracks.html#estimates",
+    "target": "tracks-statistics.html#estimates",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "tracks.html#independent-bands",
+    "target": "tracks-statistics.html#independent-bands",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "tracks.html#multiple",
+    "target": "tracks.html#multiple",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "tracks.html#prepare",
+    "target": "tracks.html",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "tracks.html#save-result",
+    "target": "tracks.html#save-result",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "tracks.html#sharing",
+    "target": "tracks.html#sharing",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "tracks.html#tile",
+    "target": "tracks.html#tile",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "tracks.html#tile-width",
+    "target": "tracks.html#tile-width",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "tracks.html#window-policy",
+    "target": "tracks-statistics.html#window-policy",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "tracks.html#check-result",
+    "target": "tracks.html#check-result",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "tracks.html#diagnostics",
+    "target": "tracks.html#diagnostics",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "tracks.html#domain",
+    "target": "tracks.html#domain",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "tracks.html#draw-gc",
+    "target": "tracks.html#draw-gc",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "tracks.html#estimates",
+    "target": "tracks-statistics.html#estimates",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "tracks.html#independent-bands",
+    "target": "tracks-statistics.html#independent-bands",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "tracks.html#multiple",
+    "target": "tracks.html#multiple",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "tracks.html#prepare",
+    "target": "tracks.html",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "tracks.html#save-result",
+    "target": "tracks.html#save-result",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "tracks.html#sharing",
+    "target": "tracks.html#sharing",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "tracks.html#tile",
+    "target": "tracks.html#tile",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "tracks.html#tile-width",
+    "target": "tracks.html#tile-width",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "tracks.html#window-policy",
+    "target": "tracks-statistics.html#window-policy",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "styling.html#adaptive",
+    "target": "styling.html#adaptive",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "styling.html#check-result",
+    "target": "styling.html#check-result",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "styling.html#guides",
+    "target": "styling.html#guides",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "styling.html#native-theme",
+    "target": "styling.html#native-theme",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "styling.html#prepare",
+    "target": "styling.html#prepare",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "styling.html#priority",
+    "target": "styling.html#priority",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "styling.html#roles",
+    "target": "styling.html#roles",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "styling.html#themes",
+    "target": "styling.html#themes",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "styling.html#track-theme",
+    "target": "styling.html#track-theme",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "styling.html#adaptive",
+    "target": "styling.html#adaptive",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "styling.html#check-result",
+    "target": "styling.html#check-result",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "styling.html#guides",
+    "target": "styling.html#guides",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "styling.html#native-theme",
+    "target": "styling.html#native-theme",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "styling.html#prepare",
+    "target": "styling.html#prepare",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "styling.html#priority",
+    "target": "styling.html#priority",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "styling.html#roles",
+    "target": "styling.html#roles",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "styling.html#themes",
+    "target": "styling.html#themes",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "styling.html#track-theme",
+    "target": "styling.html#track-theme",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameters.html#check-result",
+    "target": "parameters.html#check-result",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameters.html#compatibility",
+    "target": "parameters.html#compatibility",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameters.html#genes",
+    "target": "parameters.html#genes",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameters.html#labels",
+    "target": "parameters.html#labels",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameters.html#recommendation",
+    "target": "parameters.html#recommendation",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameters.html#scalar",
+    "target": "parameters.html#scalar",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameters.html#scope",
+    "target": "parameters.html#scope",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameters.html#strand",
+    "target": "parameters.html#strand",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameters.html#vector",
+    "target": "parameters.html#vector",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameters.html#width",
+    "target": "parameters.html#width",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameters.html#check-result",
+    "target": "parameters.html#check-result",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameters.html#compatibility",
+    "target": "parameters.html#compatibility",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameters.html#genes",
+    "target": "parameters.html#genes",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameters.html#labels",
+    "target": "parameters.html#labels",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameters.html#recommendation",
+    "target": "parameters.html#recommendation",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameters.html#scalar",
+    "target": "parameters.html#scalar",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameters.html#scope",
+    "target": "parameters.html#scope",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameters.html#strand",
+    "target": "parameters.html#strand",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameters.html#vector",
+    "target": "parameters.html#vector",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameters.html#width",
+    "target": "parameters.html#width",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "adjustments.html#check-result",
+    "target": "styling.html#check-result",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "adjustments.html#grammar",
+    "target": "styling.html#grammar",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "adjustments.html#mapping",
+    "target": "styling.html#mapping",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "adjustments.html#position",
+    "target": "styling.html#position",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "adjustments.html#prepare",
+    "target": "styling.html#prepare",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "adjustments.html#check-result",
+    "target": "styling.html#check-result",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "adjustments.html#grammar",
+    "target": "styling.html#grammar",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "adjustments.html#mapping",
+    "target": "styling.html#mapping",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "adjustments.html#position",
+    "target": "styling.html#position",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "adjustments.html#prepare",
+    "target": "styling.html#prepare",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "output.html#check-result",
+    "target": "output.html#check-result",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "output.html#consumption",
+    "target": "diagnostics.html#consumption",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "output.html#diagnostics",
+    "target": "diagnostics.html#diagnostics",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "output.html#geometry",
+    "target": "diagnostics.html#geometry",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "output.html#label-quality",
+    "target": "diagnostics.html#label-quality",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "output.html#prepare",
+    "target": "output.html#prepare",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "output.html#size",
+    "target": "output.html#size",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "output.html#check-result",
+    "target": "output.html#check-result",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "output.html#consumption",
+    "target": "diagnostics.html#consumption",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "output.html#diagnostics",
+    "target": "diagnostics.html#diagnostics",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "output.html#geometry",
+    "target": "diagnostics.html#geometry",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "output.html#label-quality",
+    "target": "diagnostics.html#label-quality",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "output.html#prepare",
+    "target": "output.html#prepare",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "output.html#size",
+    "target": "output.html#size",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "faq.html#biology",
+    "target": "faq.html#biology",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "faq.html#quality",
+    "target": "faq.html#quality",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "faq.html#removed",
+    "target": "faq.html#removed",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "faq.html#report",
+    "target": "faq.html#report",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "faq.html#resize",
+    "target": "faq.html#resize",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "faq.html#ribbons",
+    "target": "faq.html#ribbons",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "faq.html#strand",
+    "target": "faq.html#strand",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "faq.html#biology",
+    "target": "faq.html#biology",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "faq.html#quality",
+    "target": "faq.html#quality",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "faq.html#removed",
+    "target": "faq.html#removed",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "faq.html#report",
+    "target": "faq.html#report",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "faq.html#resize",
+    "target": "faq.html#resize",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "faq.html#ribbons",
+    "target": "faq.html#ribbons",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "faq.html#strand",
+    "target": "faq.html#strand",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "protein-alignments.html#check-result",
+    "target": "protein-alignments.html#check-result",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "protein-alignments.html#projection",
+    "target": "protein-alignments.html#projection",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "protein-alignments.html#protein",
+    "target": "protein-alignments.html#protein",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "protein-alignments.html#source",
+    "target": "protein-alignments.html#source",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "protein-alignments.html#check-result",
+    "target": "protein-alignments.html#check-result",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "protein-alignments.html#projection",
+    "target": "protein-alignments.html#projection",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "protein-alignments.html#protein",
+    "target": "protein-alignments.html#protein",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "protein-alignments.html#source",
+    "target": "protein-alignments.html#source",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "task-index.html#paths",
+    "target": "learn.html#paths",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "task-index.html#tasks",
+    "target": "learn.html#tasks",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "task-index.html#paths",
+    "target": "learn.html#paths",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "task-index.html#tasks",
+    "target": "learn.html#tasks",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "compatibility.html#adaptive",
+    "target": "compatibility.html#adaptive",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "compatibility.html#aligned-cells",
+    "target": "compatibility.html#aligned-cells",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "compatibility.html#conditions",
+    "target": "compatibility.html#conditions",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "compatibility.html#fusion",
+    "target": "compatibility.html#fusion",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "compatibility.html#layers",
+    "target": "compatibility.html#layers",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "compatibility.html#new-views",
+    "target": "compatibility.html#new-views",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "compatibility.html#versions",
+    "target": "compatibility.html#versions",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "compatibility.html#adaptive",
+    "target": "compatibility.html#adaptive",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "compatibility.html#aligned-cells",
+    "target": "compatibility.html#aligned-cells",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "compatibility.html#conditions",
+    "target": "compatibility.html#conditions",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "compatibility.html#fusion",
+    "target": "compatibility.html#fusion",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "compatibility.html#layers",
+    "target": "compatibility.html#layers",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "compatibility.html#new-views",
+    "target": "compatibility.html#new-views",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "compatibility.html#versions",
+    "target": "compatibility.html#versions",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "feature-geometry.html#adapt",
+    "target": "feature-geometry.html#adapt",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "feature-geometry.html#arrow-heads",
+    "target": "feature-geometry.html#arrow-heads",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "feature-geometry.html#input",
+    "target": "feature-geometry.html#input",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "feature-geometry.html#locus-selection",
+    "target": "feature-geometry.html#locus-selection",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "feature-geometry.html#parameters",
+    "target": "feature-geometry.html#parameters",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "feature-geometry.html#short-features",
+    "target": "feature-geometry.html#short-features",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "feature-geometry.html#adapt",
+    "target": "feature-geometry.html#adapt",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "feature-geometry.html#arrow-heads",
+    "target": "feature-geometry.html#arrow-heads",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "feature-geometry.html#input",
+    "target": "feature-geometry.html#input",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "feature-geometry.html#locus-selection",
+    "target": "feature-geometry.html#locus-selection",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "feature-geometry.html#parameters",
+    "target": "feature-geometry.html#parameters",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "feature-geometry.html#short-features",
+    "target": "feature-geometry.html#short-features",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "scale-families.html#adapt",
+    "target": "scale-families.html#adapt",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "scale-families.html#categories",
+    "target": "scale-families.html#categories",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "scale-families.html#features",
+    "target": "scale-families.html#features",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "scale-families.html#guides",
+    "target": "scale-families.html#guides",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "scale-families.html#identity",
+    "target": "scale-families.html#identity",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "scale-families.html#input",
+    "target": "scale-families.html#input",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "scale-families.html#numeric",
+    "target": "scale-families.html#numeric",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "scale-families.html#point-links",
+    "target": "scale-families.html#point-links",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "scale-families.html#rings",
+    "target": "scale-families.html#rings",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "scale-families.html#themes",
+    "target": "scale-families.html#themes",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "scale-families.html#tracks",
+    "target": "scale-families.html#tracks",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "scale-families.html#adapt",
+    "target": "scale-families.html#adapt",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "scale-families.html#categories",
+    "target": "scale-families.html#categories",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "scale-families.html#features",
+    "target": "scale-families.html#features",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "scale-families.html#guides",
+    "target": "scale-families.html#guides",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "scale-families.html#identity",
+    "target": "scale-families.html#identity",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "scale-families.html#input",
+    "target": "scale-families.html#input",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "scale-families.html#numeric",
+    "target": "scale-families.html#numeric",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "scale-families.html#point-links",
+    "target": "scale-families.html#point-links",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "scale-families.html#rings",
+    "target": "scale-families.html#rings",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "scale-families.html#themes",
+    "target": "scale-families.html#themes",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "scale-families.html#tracks",
+    "target": "scale-families.html#tracks",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-PositionIdentity",
+    "target": "parameter-atlas.html#api-PositionIdentity",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-adapt_ggchord",
+    "target": "parameter-atlas.html#api-adapt_ggchord",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-aes",
+    "target": "parameter-atlas.html#api-aes",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-after_scale",
+    "target": "parameter-atlas.html#api-after_scale",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-after_stat",
+    "target": "parameter-atlas.html#api-after_stat",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-annotate",
+    "target": "parameter-atlas.html#api-annotate",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-arrow",
+    "target": "parameter-atlas.html#api-arrow",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-as_ggchord_alignment",
+    "target": "parameter-atlas.html#api-as_ggchord_alignment",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-as_ggchord_feature",
+    "target": "parameter-atlas.html#api-as_ggchord_feature",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-as_ggchord_link",
+    "target": "parameter-atlas.html#api-as_ggchord_link",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-as_ggchord_seq",
+    "target": "parameter-atlas.html#api-as_ggchord_seq",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-build_ggchord_cds",
+    "target": "parameter-atlas.html#api-build_ggchord_cds",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-bundle_ggchord_ribbons",
+    "target": "parameter-atlas.html#api-bundle_ggchord_ribbons",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-clean_ggchord_data",
+    "target": "parameter-atlas.html#api-clean_ggchord_data",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-coord_chord",
+    "target": "parameter-atlas.html#api-coord_chord",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-coord_circular",
+    "target": "parameter-atlas.html#api-coord_circular",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-coord_collinear",
+    "target": "parameter-atlas.html#api-coord_collinear",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-coord_dotplot",
+    "target": "parameter-atlas.html#api-coord_dotplot",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-coord_radial_synteny",
+    "target": "parameter-atlas.html#api-coord_radial_synteny",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-coord_sankey",
+    "target": "parameter-atlas.html#api-coord_sankey",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-deduplicate_ggchord_ribbons",
+    "target": "parameter-atlas.html#api-deduplicate_ggchord_ribbons",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-diagnose_ggchord",
+    "target": "parameter-atlas.html#api-diagnose_ggchord",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-element_blank",
+    "target": "parameter-atlas.html#api-element_blank",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-element_line",
+    "target": "parameter-atlas.html#api-element_line",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-element_rect",
+    "target": "parameter-atlas.html#api-element_rect",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-element_text",
+    "target": "parameter-atlas.html#api-element_text",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-expansion",
+    "target": "parameter-atlas.html#api-expansion",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-export_ggchord_fusion",
+    "target": "parameter-atlas.html#api-export_ggchord_fusion",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-export_ggchord_layout",
+    "target": "parameter-atlas.html#api-export_ggchord_layout",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-filter_ggchord_ribbons",
+    "target": "parameter-atlas.html#api-filter_ggchord_ribbons",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-filter_restriction_sites",
+    "target": "parameter-atlas.html#api-filter_restriction_sites",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-find_common_features",
+    "target": "parameter-atlas.html#api-find_common_features",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-find_ggchord_loci",
+    "target": "parameter-atlas.html#api-find_ggchord_loci",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-find_primer_bindings",
+    "target": "parameter-atlas.html#api-find_primer_bindings",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-find_restriction_sites",
+    "target": "parameter-atlas.html#api-find_restriction_sites",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-focus_ggchord_data",
+    "target": "parameter-atlas.html#api-focus_ggchord_data",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-focus_ggchord_track",
+    "target": "parameter-atlas.html#api-focus_ggchord_track",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-fusion_panel",
+    "target": "parameter-atlas.html#api-fusion_panel",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-fusion_ribbon",
+    "target": "parameter-atlas.html#api-fusion_ribbon",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-geom_alignment_segment",
+    "target": "parameter-atlas.html#api-geom_alignment_segment",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-geom_feature",
+    "target": "parameter-atlas.html#api-geom_feature",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-geom_feature_label",
+    "target": "parameter-atlas.html#api-geom_feature_label",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-geom_feature_label_repel",
+    "target": "parameter-atlas.html#api-geom_feature_label_repel",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-geom_feature_plasmid",
+    "target": "parameter-atlas.html#api-geom_feature_plasmid",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-geom_gene",
+    "target": "parameter-atlas.html#api-geom_gene",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-geom_gene_label",
+    "target": "parameter-atlas.html#api-geom_gene_label",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-geom_gene_label_repel",
+    "target": "parameter-atlas.html#api-geom_gene_label_repel",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-geom_link_line",
+    "target": "parameter-atlas.html#api-geom_link_line",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-geom_link_ribbon",
+    "target": "parameter-atlas.html#api-geom_link_ribbon",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-geom_primer",
+    "target": "parameter-atlas.html#api-geom_primer",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-geom_primer_label_repel",
+    "target": "parameter-atlas.html#api-geom_primer_label_repel",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-geom_residue",
+    "target": "parameter-atlas.html#api-geom_residue",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-geom_restriction_site",
+    "target": "parameter-atlas.html#api-geom_restriction_site",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-geom_seq",
+    "target": "parameter-atlas.html#api-geom_seq",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-geom_seq_break",
+    "target": "parameter-atlas.html#api-geom_seq_break",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-geom_seq_center_label",
+    "target": "parameter-atlas.html#api-geom_seq_center_label",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-geom_seq_label",
+    "target": "parameter-atlas.html#api-geom_seq_label",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-geom_seq_region",
+    "target": "parameter-atlas.html#api-geom_seq_region",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-geom_seq_scale",
+    "target": "parameter-atlas.html#api-geom_seq_scale",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-geom_track",
+    "target": "parameter-atlas.html#api-geom_track",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-geom_track_bar",
+    "target": "parameter-atlas.html#api-geom_track_bar",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-geom_track_col",
+    "target": "parameter-atlas.html#api-geom_track_col",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-geom_track_line",
+    "target": "parameter-atlas.html#api-geom_track_line",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-geom_track_tile",
+    "target": "parameter-atlas.html#api-geom_track_tile",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-get_chord_layout",
+    "target": "parameter-atlas.html#api-get_chord_layout",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-ggchord",
+    "target": "parameter-atlas.html#api-ggchord",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-ggchord_fusion",
+    "target": "parameter-atlas.html#api-ggchord_fusion",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-ggsave",
+    "target": "parameter-atlas.html#api-ggsave",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-ggtitle",
+    "target": "parameter-atlas.html#api-ggtitle",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-guide_ggchord_colorbar",
+    "target": "parameter-atlas.html#api-guide_ggchord_colorbar",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-guide_ggchord_colourbar",
+    "target": "parameter-atlas.html#api-guide_ggchord_colourbar",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-guide_ggchord_legend",
+    "target": "parameter-atlas.html#api-guide_ggchord_legend",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-guides",
+    "target": "parameter-atlas.html#api-guides",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-labs",
+    "target": "parameter-atlas.html#api-labs",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-last_plot",
+    "target": "parameter-atlas.html#api-last_plot",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-link_ggchord_clusters",
+    "target": "parameter-atlas.html#api-link_ggchord_clusters",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-magnify_ggchord",
+    "target": "parameter-atlas.html#api-magnify_ggchord",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-map_alignment_position",
+    "target": "parameter-atlas.html#api-map_alignment_position",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-map_ggchord_position",
+    "target": "parameter-atlas.html#api-map_ggchord_position",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-margin",
+    "target": "parameter-atlas.html#api-margin",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-merge_ggchord_ribbons",
+    "target": "parameter-atlas.html#api-merge_ggchord_ribbons",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-optimize_ggchord_layout",
+    "target": "parameter-atlas.html#api-optimize_ggchord_layout",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-position_feature_stack",
+    "target": "parameter-atlas.html#api-position_feature_stack",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-position_identity",
+    "target": "parameter-atlas.html#api-position_identity",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-position_plasmid",
+    "target": "parameter-atlas.html#api-position_plasmid",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-position_strand",
+    "target": "parameter-atlas.html#api-position_strand",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-position_track",
+    "target": "parameter-atlas.html#api-position_track",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-prepare_ggchord_data",
+    "target": "parameter-atlas.html#api-prepare_ggchord_data",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-primer_catalog",
+    "target": "parameter-atlas.html#api-primer_catalog",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-project_ggchord_features",
+    "target": "parameter-atlas.html#api-project_ggchord_features",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-project_ggchord_links",
+    "target": "parameter-atlas.html#api-project_ggchord_links",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-read_aligned_fasta",
+    "target": "parameter-atlas.html#api-read_aligned_fasta",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-read_bed",
+    "target": "parameter-atlas.html#api-read_bed",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-read_bedgraph",
+    "target": "parameter-atlas.html#api-read_bedgraph",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-read_bedpe",
+    "target": "parameter-atlas.html#api-read_bedpe",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-read_bigwig",
+    "target": "parameter-atlas.html#api-read_bigwig",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-read_blast",
+    "target": "parameter-atlas.html#api-read_blast",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-read_chain",
+    "target": "parameter-atlas.html#api-read_chain",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-read_delta",
+    "target": "parameter-atlas.html#api-read_delta",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-read_fasta_lengths",
+    "target": "parameter-atlas.html#api-read_fasta_lengths",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-read_feature_relations",
+    "target": "parameter-atlas.html#api-read_feature_relations",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-read_genbank",
+    "target": "parameter-atlas.html#api-read_genbank",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-read_gff3",
+    "target": "parameter-atlas.html#api-read_gff3",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-read_maf",
+    "target": "parameter-atlas.html#api-read_maf",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-read_paf",
+    "target": "parameter-atlas.html#api-read_paf",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-read_signature_matches",
+    "target": "parameter-atlas.html#api-read_signature_matches",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-read_vcf",
+    "target": "parameter-atlas.html#api-read_vcf",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-register_ggchord_alignment",
+    "target": "parameter-atlas.html#api-register_ggchord_alignment",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-rel",
+    "target": "parameter-atlas.html#api-rel",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-scale_feature_fill_manual",
+    "target": "parameter-atlas.html#api-scale_feature_fill_manual",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-scale_feature_fill_plasmid",
+    "target": "parameter-atlas.html#api-scale_feature_fill_plasmid",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-scale_feature_shape_manual",
+    "target": "parameter-atlas.html#api-scale_feature_shape_manual",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-scale_feature_shape_plasmid",
+    "target": "parameter-atlas.html#api-scale_feature_shape_plasmid",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-scale_gene_fill_manual",
+    "target": "parameter-atlas.html#api-scale_gene_fill_manual",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-scale_link_alpha_continuous",
+    "target": "parameter-atlas.html#api-scale_link_alpha_continuous",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-scale_link_alpha_manual",
+    "target": "parameter-atlas.html#api-scale_link_alpha_manual",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-scale_link_color_gradientn",
+    "target": "parameter-atlas.html#api-scale_link_color_gradientn",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-scale_link_color_manual",
+    "target": "parameter-atlas.html#api-scale_link_color_manual",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-scale_link_colour_gradientn",
+    "target": "parameter-atlas.html#api-scale_link_colour_gradientn",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-scale_link_colour_manual",
+    "target": "parameter-atlas.html#api-scale_link_colour_manual",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-scale_link_linetype_manual",
+    "target": "parameter-atlas.html#api-scale_link_linetype_manual",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-scale_link_linewidth_continuous",
+    "target": "parameter-atlas.html#api-scale_link_linewidth_continuous",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-scale_link_linewidth_manual",
+    "target": "parameter-atlas.html#api-scale_link_linewidth_manual",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-scale_region_fill_manual",
+    "target": "parameter-atlas.html#api-scale_region_fill_manual",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-scale_ribbon_alpha_continuous",
+    "target": "parameter-atlas.html#api-scale_ribbon_alpha_continuous",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-scale_ribbon_alpha_manual",
+    "target": "parameter-atlas.html#api-scale_ribbon_alpha_manual",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-scale_ribbon_color_manual",
+    "target": "parameter-atlas.html#api-scale_ribbon_color_manual",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-scale_ribbon_colour_manual",
+    "target": "parameter-atlas.html#api-scale_ribbon_colour_manual",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-scale_ribbon_fill_gradientn",
+    "target": "parameter-atlas.html#api-scale_ribbon_fill_gradientn",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-scale_ribbon_fill_identity",
+    "target": "parameter-atlas.html#api-scale_ribbon_fill_identity",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-scale_ribbon_fill_manual",
+    "target": "parameter-atlas.html#api-scale_ribbon_fill_manual",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-scale_ribbon_fill_stepsn",
+    "target": "parameter-atlas.html#api-scale_ribbon_fill_stepsn",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-scale_ribbon_linetype_manual",
+    "target": "parameter-atlas.html#api-scale_ribbon_linetype_manual",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-scale_seq_color_manual",
+    "target": "parameter-atlas.html#api-scale_seq_color_manual",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-scale_seq_colour_manual",
+    "target": "parameter-atlas.html#api-scale_seq_colour_manual",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-scale_seq_position_continuous",
+    "target": "parameter-atlas.html#api-scale_seq_position_continuous",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-scale_seq_ring_manual",
+    "target": "parameter-atlas.html#api-scale_seq_ring_manual",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-scale_track_colour_gradientn",
+    "target": "parameter-atlas.html#api-scale_track_colour_gradientn",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-scale_track_colour_manual",
+    "target": "parameter-atlas.html#api-scale_track_colour_manual",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-scale_track_fill_gradientn",
+    "target": "parameter-atlas.html#api-scale_track_fill_gradientn",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-scale_track_fill_manual",
+    "target": "parameter-atlas.html#api-scale_track_fill_manual",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-scale_track_value_continuous",
+    "target": "parameter-atlas.html#api-scale_track_value_continuous",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-segment_ggchord_data",
+    "target": "parameter-atlas.html#api-segment_ggchord_data",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-stat_ribbon_bundle",
+    "target": "parameter-atlas.html#api-stat_ribbon_bundle",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-stat_ribbon_density",
+    "target": "parameter-atlas.html#api-stat_ribbon_density",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-theme",
+    "target": "parameter-atlas.html#api-theme",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-theme_ggchord",
+    "target": "parameter-atlas.html#api-theme_ggchord",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-theme_ggchord_dark",
+    "target": "parameter-atlas.html#api-theme_ggchord_dark",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-theme_ggchord_minimal",
+    "target": "parameter-atlas.html#api-theme_ggchord_minimal",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-theme_ggchord_plasmid",
+    "target": "parameter-atlas.html#api-theme_ggchord_plasmid",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-theme_ggchord_publication",
+    "target": "parameter-atlas.html#api-theme_ggchord_publication",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-translate_ggchord_cds",
+    "target": "parameter-atlas.html#api-translate_ggchord_cds",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-unit",
+    "target": "parameter-atlas.html#api-unit",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-validate_ggchord_data",
+    "target": "parameter-atlas.html#api-validate_ggchord_data",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-validate_ggchord_hierarchy",
+    "target": "parameter-atlas.html#api-validate_ggchord_hierarchy",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-view_ggchord",
+    "target": "parameter-atlas.html#api-view_ggchord",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#api-waiver",
+    "target": "parameter-atlas.html#api-waiver",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#coordinates",
+    "target": "parameter-atlas.html#coordinates",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#guides",
+    "target": "parameter-atlas.html#guides",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#layers",
+    "target": "parameter-atlas.html#layers",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#positions",
+    "target": "parameter-atlas.html#positions",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#scales",
+    "target": "parameter-atlas.html#scales",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#statistics",
+    "target": "parameter-atlas.html#statistics",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#themes",
+    "target": "parameter-atlas.html#themes",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#upstream",
+    "target": "parameter-atlas.html#upstream",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "parameter-atlas.html#workflows",
+    "target": "parameter-atlas.html#workflows",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-PositionIdentity",
+    "target": "parameter-atlas.html#api-PositionIdentity",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-adapt_ggchord",
+    "target": "parameter-atlas.html#api-adapt_ggchord",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-aes",
+    "target": "parameter-atlas.html#api-aes",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-after_scale",
+    "target": "parameter-atlas.html#api-after_scale",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-after_stat",
+    "target": "parameter-atlas.html#api-after_stat",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-annotate",
+    "target": "parameter-atlas.html#api-annotate",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-arrow",
+    "target": "parameter-atlas.html#api-arrow",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-as_ggchord_alignment",
+    "target": "parameter-atlas.html#api-as_ggchord_alignment",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-as_ggchord_feature",
+    "target": "parameter-atlas.html#api-as_ggchord_feature",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-as_ggchord_link",
+    "target": "parameter-atlas.html#api-as_ggchord_link",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-as_ggchord_seq",
+    "target": "parameter-atlas.html#api-as_ggchord_seq",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-build_ggchord_cds",
+    "target": "parameter-atlas.html#api-build_ggchord_cds",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-bundle_ggchord_ribbons",
+    "target": "parameter-atlas.html#api-bundle_ggchord_ribbons",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-clean_ggchord_data",
+    "target": "parameter-atlas.html#api-clean_ggchord_data",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-coord_chord",
+    "target": "parameter-atlas.html#api-coord_chord",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-coord_circular",
+    "target": "parameter-atlas.html#api-coord_circular",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-coord_collinear",
+    "target": "parameter-atlas.html#api-coord_collinear",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-coord_dotplot",
+    "target": "parameter-atlas.html#api-coord_dotplot",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-coord_radial_synteny",
+    "target": "parameter-atlas.html#api-coord_radial_synteny",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-coord_sankey",
+    "target": "parameter-atlas.html#api-coord_sankey",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-deduplicate_ggchord_ribbons",
+    "target": "parameter-atlas.html#api-deduplicate_ggchord_ribbons",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-diagnose_ggchord",
+    "target": "parameter-atlas.html#api-diagnose_ggchord",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-element_blank",
+    "target": "parameter-atlas.html#api-element_blank",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-element_line",
+    "target": "parameter-atlas.html#api-element_line",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-element_rect",
+    "target": "parameter-atlas.html#api-element_rect",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-element_text",
+    "target": "parameter-atlas.html#api-element_text",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-expansion",
+    "target": "parameter-atlas.html#api-expansion",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-export_ggchord_fusion",
+    "target": "parameter-atlas.html#api-export_ggchord_fusion",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-export_ggchord_layout",
+    "target": "parameter-atlas.html#api-export_ggchord_layout",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-filter_ggchord_ribbons",
+    "target": "parameter-atlas.html#api-filter_ggchord_ribbons",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-filter_restriction_sites",
+    "target": "parameter-atlas.html#api-filter_restriction_sites",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-find_common_features",
+    "target": "parameter-atlas.html#api-find_common_features",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-find_ggchord_loci",
+    "target": "parameter-atlas.html#api-find_ggchord_loci",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-find_primer_bindings",
+    "target": "parameter-atlas.html#api-find_primer_bindings",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-find_restriction_sites",
+    "target": "parameter-atlas.html#api-find_restriction_sites",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-focus_ggchord_data",
+    "target": "parameter-atlas.html#api-focus_ggchord_data",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-focus_ggchord_track",
+    "target": "parameter-atlas.html#api-focus_ggchord_track",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-fusion_panel",
+    "target": "parameter-atlas.html#api-fusion_panel",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-fusion_ribbon",
+    "target": "parameter-atlas.html#api-fusion_ribbon",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-geom_alignment_segment",
+    "target": "parameter-atlas.html#api-geom_alignment_segment",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-geom_feature",
+    "target": "parameter-atlas.html#api-geom_feature",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-geom_feature_label",
+    "target": "parameter-atlas.html#api-geom_feature_label",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-geom_feature_label_repel",
+    "target": "parameter-atlas.html#api-geom_feature_label_repel",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-geom_feature_plasmid",
+    "target": "parameter-atlas.html#api-geom_feature_plasmid",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-geom_gene",
+    "target": "parameter-atlas.html#api-geom_gene",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-geom_gene_label",
+    "target": "parameter-atlas.html#api-geom_gene_label",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-geom_gene_label_repel",
+    "target": "parameter-atlas.html#api-geom_gene_label_repel",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-geom_link_line",
+    "target": "parameter-atlas.html#api-geom_link_line",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-geom_link_ribbon",
+    "target": "parameter-atlas.html#api-geom_link_ribbon",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-geom_primer",
+    "target": "parameter-atlas.html#api-geom_primer",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-geom_primer_label_repel",
+    "target": "parameter-atlas.html#api-geom_primer_label_repel",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-geom_residue",
+    "target": "parameter-atlas.html#api-geom_residue",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-geom_restriction_site",
+    "target": "parameter-atlas.html#api-geom_restriction_site",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-geom_seq",
+    "target": "parameter-atlas.html#api-geom_seq",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-geom_seq_break",
+    "target": "parameter-atlas.html#api-geom_seq_break",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-geom_seq_center_label",
+    "target": "parameter-atlas.html#api-geom_seq_center_label",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-geom_seq_label",
+    "target": "parameter-atlas.html#api-geom_seq_label",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-geom_seq_region",
+    "target": "parameter-atlas.html#api-geom_seq_region",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-geom_seq_scale",
+    "target": "parameter-atlas.html#api-geom_seq_scale",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-geom_track",
+    "target": "parameter-atlas.html#api-geom_track",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-geom_track_bar",
+    "target": "parameter-atlas.html#api-geom_track_bar",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-geom_track_col",
+    "target": "parameter-atlas.html#api-geom_track_col",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-geom_track_line",
+    "target": "parameter-atlas.html#api-geom_track_line",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-geom_track_tile",
+    "target": "parameter-atlas.html#api-geom_track_tile",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-get_chord_layout",
+    "target": "parameter-atlas.html#api-get_chord_layout",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-ggchord",
+    "target": "parameter-atlas.html#api-ggchord",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-ggchord_fusion",
+    "target": "parameter-atlas.html#api-ggchord_fusion",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-ggsave",
+    "target": "parameter-atlas.html#api-ggsave",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-ggtitle",
+    "target": "parameter-atlas.html#api-ggtitle",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-guide_ggchord_colorbar",
+    "target": "parameter-atlas.html#api-guide_ggchord_colorbar",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-guide_ggchord_colourbar",
+    "target": "parameter-atlas.html#api-guide_ggchord_colourbar",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-guide_ggchord_legend",
+    "target": "parameter-atlas.html#api-guide_ggchord_legend",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-guides",
+    "target": "parameter-atlas.html#api-guides",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-labs",
+    "target": "parameter-atlas.html#api-labs",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-last_plot",
+    "target": "parameter-atlas.html#api-last_plot",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-link_ggchord_clusters",
+    "target": "parameter-atlas.html#api-link_ggchord_clusters",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-magnify_ggchord",
+    "target": "parameter-atlas.html#api-magnify_ggchord",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-map_alignment_position",
+    "target": "parameter-atlas.html#api-map_alignment_position",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-map_ggchord_position",
+    "target": "parameter-atlas.html#api-map_ggchord_position",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-margin",
+    "target": "parameter-atlas.html#api-margin",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-merge_ggchord_ribbons",
+    "target": "parameter-atlas.html#api-merge_ggchord_ribbons",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-optimize_ggchord_layout",
+    "target": "parameter-atlas.html#api-optimize_ggchord_layout",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-position_feature_stack",
+    "target": "parameter-atlas.html#api-position_feature_stack",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-position_identity",
+    "target": "parameter-atlas.html#api-position_identity",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-position_plasmid",
+    "target": "parameter-atlas.html#api-position_plasmid",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-position_strand",
+    "target": "parameter-atlas.html#api-position_strand",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-position_track",
+    "target": "parameter-atlas.html#api-position_track",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-prepare_ggchord_data",
+    "target": "parameter-atlas.html#api-prepare_ggchord_data",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-primer_catalog",
+    "target": "parameter-atlas.html#api-primer_catalog",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-project_ggchord_features",
+    "target": "parameter-atlas.html#api-project_ggchord_features",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-project_ggchord_links",
+    "target": "parameter-atlas.html#api-project_ggchord_links",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-read_aligned_fasta",
+    "target": "parameter-atlas.html#api-read_aligned_fasta",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-read_bed",
+    "target": "parameter-atlas.html#api-read_bed",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-read_bedgraph",
+    "target": "parameter-atlas.html#api-read_bedgraph",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-read_bedpe",
+    "target": "parameter-atlas.html#api-read_bedpe",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-read_bigwig",
+    "target": "parameter-atlas.html#api-read_bigwig",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-read_blast",
+    "target": "parameter-atlas.html#api-read_blast",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-read_chain",
+    "target": "parameter-atlas.html#api-read_chain",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-read_delta",
+    "target": "parameter-atlas.html#api-read_delta",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-read_fasta_lengths",
+    "target": "parameter-atlas.html#api-read_fasta_lengths",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-read_feature_relations",
+    "target": "parameter-atlas.html#api-read_feature_relations",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-read_genbank",
+    "target": "parameter-atlas.html#api-read_genbank",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-read_gff3",
+    "target": "parameter-atlas.html#api-read_gff3",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-read_maf",
+    "target": "parameter-atlas.html#api-read_maf",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-read_paf",
+    "target": "parameter-atlas.html#api-read_paf",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-read_signature_matches",
+    "target": "parameter-atlas.html#api-read_signature_matches",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-read_vcf",
+    "target": "parameter-atlas.html#api-read_vcf",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-register_ggchord_alignment",
+    "target": "parameter-atlas.html#api-register_ggchord_alignment",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-rel",
+    "target": "parameter-atlas.html#api-rel",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-scale_feature_fill_manual",
+    "target": "parameter-atlas.html#api-scale_feature_fill_manual",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-scale_feature_fill_plasmid",
+    "target": "parameter-atlas.html#api-scale_feature_fill_plasmid",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-scale_feature_shape_manual",
+    "target": "parameter-atlas.html#api-scale_feature_shape_manual",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-scale_feature_shape_plasmid",
+    "target": "parameter-atlas.html#api-scale_feature_shape_plasmid",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-scale_gene_fill_manual",
+    "target": "parameter-atlas.html#api-scale_gene_fill_manual",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-scale_link_alpha_continuous",
+    "target": "parameter-atlas.html#api-scale_link_alpha_continuous",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-scale_link_alpha_manual",
+    "target": "parameter-atlas.html#api-scale_link_alpha_manual",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-scale_link_color_gradientn",
+    "target": "parameter-atlas.html#api-scale_link_color_gradientn",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-scale_link_color_manual",
+    "target": "parameter-atlas.html#api-scale_link_color_manual",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-scale_link_colour_gradientn",
+    "target": "parameter-atlas.html#api-scale_link_colour_gradientn",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-scale_link_colour_manual",
+    "target": "parameter-atlas.html#api-scale_link_colour_manual",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-scale_link_linetype_manual",
+    "target": "parameter-atlas.html#api-scale_link_linetype_manual",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-scale_link_linewidth_continuous",
+    "target": "parameter-atlas.html#api-scale_link_linewidth_continuous",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-scale_link_linewidth_manual",
+    "target": "parameter-atlas.html#api-scale_link_linewidth_manual",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-scale_region_fill_manual",
+    "target": "parameter-atlas.html#api-scale_region_fill_manual",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-scale_ribbon_alpha_continuous",
+    "target": "parameter-atlas.html#api-scale_ribbon_alpha_continuous",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-scale_ribbon_alpha_manual",
+    "target": "parameter-atlas.html#api-scale_ribbon_alpha_manual",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-scale_ribbon_color_manual",
+    "target": "parameter-atlas.html#api-scale_ribbon_color_manual",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-scale_ribbon_colour_manual",
+    "target": "parameter-atlas.html#api-scale_ribbon_colour_manual",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-scale_ribbon_fill_gradientn",
+    "target": "parameter-atlas.html#api-scale_ribbon_fill_gradientn",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-scale_ribbon_fill_identity",
+    "target": "parameter-atlas.html#api-scale_ribbon_fill_identity",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-scale_ribbon_fill_manual",
+    "target": "parameter-atlas.html#api-scale_ribbon_fill_manual",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-scale_ribbon_fill_stepsn",
+    "target": "parameter-atlas.html#api-scale_ribbon_fill_stepsn",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-scale_ribbon_linetype_manual",
+    "target": "parameter-atlas.html#api-scale_ribbon_linetype_manual",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-scale_seq_color_manual",
+    "target": "parameter-atlas.html#api-scale_seq_color_manual",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-scale_seq_colour_manual",
+    "target": "parameter-atlas.html#api-scale_seq_colour_manual",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-scale_seq_position_continuous",
+    "target": "parameter-atlas.html#api-scale_seq_position_continuous",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-scale_seq_ring_manual",
+    "target": "parameter-atlas.html#api-scale_seq_ring_manual",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-scale_track_colour_gradientn",
+    "target": "parameter-atlas.html#api-scale_track_colour_gradientn",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-scale_track_colour_manual",
+    "target": "parameter-atlas.html#api-scale_track_colour_manual",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-scale_track_fill_gradientn",
+    "target": "parameter-atlas.html#api-scale_track_fill_gradientn",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-scale_track_fill_manual",
+    "target": "parameter-atlas.html#api-scale_track_fill_manual",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-scale_track_value_continuous",
+    "target": "parameter-atlas.html#api-scale_track_value_continuous",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-segment_ggchord_data",
+    "target": "parameter-atlas.html#api-segment_ggchord_data",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-stat_ribbon_bundle",
+    "target": "parameter-atlas.html#api-stat_ribbon_bundle",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-stat_ribbon_density",
+    "target": "parameter-atlas.html#api-stat_ribbon_density",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-theme",
+    "target": "parameter-atlas.html#api-theme",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-theme_ggchord",
+    "target": "parameter-atlas.html#api-theme_ggchord",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-theme_ggchord_dark",
+    "target": "parameter-atlas.html#api-theme_ggchord_dark",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-theme_ggchord_minimal",
+    "target": "parameter-atlas.html#api-theme_ggchord_minimal",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-theme_ggchord_plasmid",
+    "target": "parameter-atlas.html#api-theme_ggchord_plasmid",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-theme_ggchord_publication",
+    "target": "parameter-atlas.html#api-theme_ggchord_publication",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-translate_ggchord_cds",
+    "target": "parameter-atlas.html#api-translate_ggchord_cds",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-unit",
+    "target": "parameter-atlas.html#api-unit",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-validate_ggchord_data",
+    "target": "parameter-atlas.html#api-validate_ggchord_data",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-validate_ggchord_hierarchy",
+    "target": "parameter-atlas.html#api-validate_ggchord_hierarchy",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-view_ggchord",
+    "target": "parameter-atlas.html#api-view_ggchord",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#api-waiver",
+    "target": "parameter-atlas.html#api-waiver",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#coordinates",
+    "target": "parameter-atlas.html#coordinates",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#guides",
+    "target": "parameter-atlas.html#guides",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#layers",
+    "target": "parameter-atlas.html#layers",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#positions",
+    "target": "parameter-atlas.html#positions",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#scales",
+    "target": "parameter-atlas.html#scales",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#statistics",
+    "target": "parameter-atlas.html#statistics",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#themes",
+    "target": "parameter-atlas.html#themes",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#upstream",
+    "target": "parameter-atlas.html#upstream",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "parameter-atlas.html#workflows",
+    "target": "parameter-atlas.html#workflows",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "workflow-tools.html#adapt",
+    "target": "workflows.html#tools",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "workflow-tools.html#catalog",
+    "target": "recognition.html#catalog",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "workflow-tools.html#diagnostics",
+    "target": "diagnostics.html#target-size",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "workflow-tools.html#input",
+    "target": "workflows.html#tools",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "workflow-tools.html#tools",
+    "target": "workflows.html#tools",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "workflow-tools.html#track-focus",
+    "target": "tracks-statistics.html#track-focus",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "workflow-tools.html#adapt",
+    "target": "workflows.html#tools",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "workflow-tools.html#catalog",
+    "target": "recognition.html#catalog",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "workflow-tools.html#diagnostics",
+    "target": "diagnostics.html#target-size",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "workflow-tools.html#input",
+    "target": "workflows.html#tools",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "workflow-tools.html#tools",
+    "target": "workflows.html#tools",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "workflow-tools.html#track-focus",
+    "target": "tracks-statistics.html#track-focus",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "api-curriculum.html#apis",
+    "target": "api-curriculum.html#apis",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "api-curriculum.html#reproduce",
+    "target": "api-curriculum.html#reproduce",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "api-curriculum.html#apis",
+    "target": "api-curriculum.html#apis",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "api-curriculum.html#reproduce",
+    "target": "api-curriculum.html#reproduce",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "foundation.html#instances",
+    "target": "instances.html#instances",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "foundation.html#projection",
+    "target": "multi-sequence-views.html#projection",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "foundation.html#sankey",
+    "target": "sankey.html#sankey",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "foundation.html#source",
+    "target": "data.html#source",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "foundation.html#tip",
+    "target": "multi-sequence-views.html#tip",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "foundation.html#tracks",
+    "target": "tracks-statistics.html#tracks",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "foundation.html#instances",
+    "target": "instances.html#instances",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "foundation.html#projection",
+    "target": "multi-sequence-views.html#projection",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "foundation.html#sankey",
+    "target": "sankey.html#sankey",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "foundation.html#source",
+    "target": "data.html#source",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "foundation.html#tip",
+    "target": "multi-sequence-views.html#tip",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "foundation.html#tracks",
+    "target": "tracks-statistics.html#tracks",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "view-expansion.html#dotplot",
+    "target": "dotplot-start.html#dotplot",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "view-expansion.html#export",
+    "target": "radial-synteny.html#export",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "view-expansion.html#radial",
+    "target": "radial-synteny.html#radial",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "view-expansion.html#support",
+    "target": "dotplot-start.html#support",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "view-expansion.html#dotplot",
+    "target": "dotplot-start.html#dotplot",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "view-expansion.html#export",
+    "target": "radial-synteny.html#export",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "view-expansion.html#radial",
+    "target": "radial-synteny.html#radial",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "view-expansion.html#support",
+    "target": "dotplot-start.html#support",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "fusion.html#advanced-placement",
+    "target": "fusion-layout.html#advanced-placement",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "fusion.html#auto-perimeter",
+    "target": "fusion-layout.html#auto-perimeter",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "fusion.html#character-detail",
+    "target": "fusion-details.html#character-detail",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "fusion.html#export",
+    "target": "fusion-routing.html#export",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "fusion.html#intervals",
+    "target": "fusion-routing.html#intervals",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "fusion.html#magnify",
+    "target": "fusion-details.html#magnify",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "fusion.html#multiple-details",
+    "target": "fusion-details.html#multiple-details",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "fusion.html#nested-detail",
+    "target": "fusion-advanced.html#nested-detail",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "fusion.html#origin-detail",
+    "target": "fusion-advanced.html#origin-detail",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "fusion.html#outer-guides",
+    "target": "fusion-layout.html#outer-guides",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "fusion.html#paired-detail",
+    "target": "fusion-details.html#paired-detail",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "fusion.html#panels",
+    "target": "fusion-routing.html#panels",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "fusion.html#plot-furniture",
+    "target": "fusion-layout.html#plot-furniture",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "fusion.html#routing",
+    "target": "fusion-routing.html#routing",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "fusion.html#styles",
+    "target": "fusion-layout.html#styles",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "fusion.html#advanced-placement",
+    "target": "fusion-layout.html#advanced-placement",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "fusion.html#auto-perimeter",
+    "target": "fusion-layout.html#auto-perimeter",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "fusion.html#character-detail",
+    "target": "fusion-details.html#character-detail",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "fusion.html#export",
+    "target": "fusion-routing.html#export",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "fusion.html#intervals",
+    "target": "fusion-routing.html#intervals",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "fusion.html#magnify",
+    "target": "fusion-details.html#magnify",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "fusion.html#multiple-details",
+    "target": "fusion-details.html#multiple-details",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "fusion.html#nested-detail",
+    "target": "fusion-advanced.html#nested-detail",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "fusion.html#origin-detail",
+    "target": "fusion-advanced.html#origin-detail",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "fusion.html#outer-guides",
+    "target": "fusion-layout.html#outer-guides",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "fusion.html#paired-detail",
+    "target": "fusion-details.html#paired-detail",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "fusion.html#panels",
+    "target": "fusion-routing.html#panels",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "fusion.html#plot-furniture",
+    "target": "fusion-layout.html#plot-furniture",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "fusion.html#routing",
+    "target": "fusion-routing.html#routing",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "fusion.html#styles",
+    "target": "fusion-layout.html#styles",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "about.html#compatibility",
+    "target": "about.html#compatibility",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "about.html#feedback",
+    "target": "about.html#feedback",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "about.html#modules",
+    "target": "learn.html#modules",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "about.html#sources",
+    "target": "about.html#sources",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "about.html#compatibility",
+    "target": "about.html#compatibility",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "about.html#feedback",
+    "target": "about.html#feedback",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "about.html#modules",
+    "target": "learn.html#modules",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "about.html#sources",
+    "target": "about.html#sources",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "gallery.html#assets",
+    "target": "gallery.html#assets",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "gallery.html#figures",
+    "target": "gallery.html#figures",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "gallery.html#reproduce",
+    "target": "gallery.html#reproduce",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "gallery.html#source",
+    "target": "gallery.html#source",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "gallery.html#tasks",
+    "target": "gallery.html#tasks",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "gallery.html#assets",
+    "target": "gallery.html#assets",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "gallery.html#figures",
+    "target": "gallery.html#figures",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "gallery.html#reproduce",
+    "target": "gallery.html#reproduce",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "gallery.html#source",
+    "target": "gallery.html#source",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "gallery.html#tasks",
+    "target": "gallery.html#tasks",
+    "valid": true
+  },
+  {
+    "language": "en",
+    "old": "reference.html#about",
+    "target": "reference/index.html",
+    "valid": true
+  },
+  {
+    "language": "zh",
+    "old": "reference.html#about",
+    "target": "reference/index.html",
+    "valid": true
+  }
+]

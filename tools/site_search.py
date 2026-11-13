@@ -54,7 +54,7 @@ def search_records(out,lang,page_records):
     for r in contracts:
         api=r['api'];parameter=r['parameter'];review=decisions[api]
         records.append(dict(kind='parameter',url='parameter-atlas.html#'+quote('param-'+api+'-'+parameter,safe='._-'),title=api+' · '+parameter,
-            section=titles['parameter-atlas'],keywords=parameter+' '+api+' '+review['purpose'][lang],text=r['constraint'],summary=(('默认：' if lang=='zh' else 'Default: ')+(r['default'] or ('必需参数' if lang=='zh' else 'required'))+' · '+review['purpose'][lang])))
+            section=titles['parameter-atlas'],keywords=parameter+' '+api+' '+review['purpose'][lang],text=r['constraint'],summary=(('默认：' if lang=='zh' else 'Default: ')+(r['default'] or ('无形式默认；必需性见契约' if lang=='zh' else 'No formal default; see requiredness contract'))+' · '+review['purpose'][lang])))
     for r in json.loads((WEB/'teaching-tasks.json').read_text()):
         slug,_,anchor=r['page'].partition('#')
         records.append(dict(kind='task',url=slug+'.html'+('#'+anchor if anchor else ''),title=r['task'][lang],section=titles[slug],keywords=r['api']+' '+r['parameters'],text=r['task'][lang]+' '+r['parameters'],summary=r['api']+' · '+r['parameters']+' · '+r['modes']))

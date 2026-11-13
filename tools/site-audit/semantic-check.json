@@ -1,0 +1,10 @@
+{
+  "feature_output_rows": 1,
+  "feature_segment_rows": 2,
+  "paired_link_rows": 2,
+  "windows_argument": "accepted",
+  "nonzero_bar_baseline": "rejected with col alternative",
+  "alignment_numeric_position": "accepted",
+  "genomic_numeric_position": "accepted",
+  "scope": "Selected residues on source-backed rps16 exons and minimal documented API calls; no inferred biological alignment, package suite or device matrix"
+}

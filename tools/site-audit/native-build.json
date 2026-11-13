@@ -1,0 +1,367 @@
+{
+  "native_builder_commit": "7e6a4c0e359a8b29fc8a62e83aff4b89cd32b7e4",
+  "build_time": "2026-11-13T18:46:43.764963+00:00",
+  "runtime": "R version 4.6.0 (2026-04-24); ggplot2 4.0.3",
+  "processes": {
+    "render_jobs": 1,
+    "return_codes": {
+      "en": 0,
+      "zh": 0
+    }
+  },
+  "workers": {
+    "en": [
+      {
+        "options": [
+          "--part=reference"
+        ],
+        "return_code": 0,
+        "log": "en-worker-0.log"
+      },
+      {
+        "options": [
+          "--part=articles",
+          "--offset=0",
+          "--count=4"
+        ],
+        "return_code": 0,
+        "log": "en-worker-1.log"
+      },
+      {
+        "options": [
+          "--part=articles",
+          "--offset=4",
+          "--count=4"
+        ],
+        "return_code": 0,
+        "log": "en-worker-2.log"
+      },
+      {
+        "options": [
+          "--part=articles",
+          "--offset=8",
+          "--count=4"
+        ],
+        "return_code": 0,
+        "log": "en-worker-3.log"
+      },
+      {
+        "options": [
+          "--part=articles",
+          "--offset=12",
+          "--count=4"
+        ],
+        "return_code": 0,
+        "log": "en-worker-4.log"
+      },
+      {
+        "options": [
+          "--part=articles",
+          "--offset=16",
+          "--count=4"
+        ],
+        "return_code": 0,
+        "log": "en-worker-5.log"
+      },
+      {
+        "options": [
+          "--part=articles",
+          "--offset=20",
+          "--count=4"
+        ],
+        "return_code": 0,
+        "log": "en-worker-6.log"
+      },
+      {
+        "options": [
+          "--part=articles",
+          "--offset=24",
+          "--count=4"
+        ],
+        "return_code": 0,
+        "log": "en-worker-7.log"
+      },
+      {
+        "options": [
+          "--part=articles",
+          "--offset=28",
+          "--count=4"
+        ],
+        "return_code": 0,
+        "log": "en-worker-8.log"
+      },
+      {
+        "options": [
+          "--part=articles",
+          "--offset=32",
+          "--count=4"
+        ],
+        "return_code": 0,
+        "log": "en-worker-9.log"
+      },
+      {
+        "options": [
+          "--part=articles",
+          "--offset=36",
+          "--count=4"
+        ],
+        "return_code": 0,
+        "log": "en-worker-10.log"
+      },
+      {
+        "options": [
+          "--part=articles",
+          "--offset=40",
+          "--count=4"
+        ],
+        "return_code": 0,
+        "log": "en-worker-11.log"
+      },
+      {
+        "options": [
+          "--part=articles",
+          "--offset=44",
+          "--count=4"
+        ],
+        "return_code": 0,
+        "log": "en-worker-12.log"
+      },
+      {
+        "options": [
+          "--part=articles",
+          "--offset=48",
+          "--count=4"
+        ],
+        "return_code": 0,
+        "log": "en-worker-13.log"
+      },
+      {
+        "options": [
+          "--part=articles",
+          "--offset=52",
+          "--count=4"
+        ],
+        "return_code": 0,
+        "log": "en-worker-14.log"
+      },
+      {
+        "options": [
+          "--part=articles",
+          "--offset=56",
+          "--count=4"
+        ],
+        "return_code": 0,
+        "log": "en-worker-15.log"
+      },
+      {
+        "options": [
+          "--part=articles",
+          "--offset=60",
+          "--count=4"
+        ],
+        "return_code": 0,
+        "log": "en-worker-16.log"
+      },
+      {
+        "options": [
+          "--part=articles",
+          "--offset=64",
+          "--count=4"
+        ],
+        "return_code": 0,
+        "log": "en-worker-17.log"
+      },
+      {
+        "options": [
+          "--part=articles",
+          "--offset=68",
+          "--count=4"
+        ],
+        "return_code": 0,
+        "log": "en-worker-18.log"
+      }
+    ],
+    "zh": [
+      {
+        "options": [
+          "--part=reference"
+        ],
+        "return_code": 0,
+        "log": "zh-worker-0.log"
+      },
+      {
+        "options": [
+          "--part=articles",
+          "--offset=0",
+          "--count=4"
+        ],
+        "return_code": 0,
+        "log": "zh-worker-1.log"
+      },
+      {
+        "options": [
+          "--part=articles",
+          "--offset=4",
+          "--count=4"
+        ],
+        "return_code": 0,
+        "log": "zh-worker-2.log"
+      },
+      {
+        "options": [
+          "--part=articles",
+          "--offset=8",
+          "--count=4"
+        ],
+        "return_code": 0,
+        "log": "zh-worker-3.log"
+      },
+      {
+        "options": [
+          "--part=articles",
+          "--offset=12",
+          "--count=4"
+        ],
+        "return_code": 0,
+        "log": "zh-worker-4.log"
+      },
+      {
+        "options": [
+          "--part=articles",
+          "--offset=16",
+          "--count=4"
+        ],
+        "return_code": 0,
+        "log": "zh-worker-5.log"
+      },
+      {
+        "options": [
+          "--part=articles",
+          "--offset=20",
+          "--count=4"
+        ],
+        "return_code": 0,
+        "log": "zh-worker-6.log"
+      },
+      {
+        "options": [
+          "--part=articles",
+          "--offset=24",
+          "--count=4"
+        ],
+        "return_code": 0,
+        "log": "zh-worker-7.log"
+      },
+      {
+        "options": [
+          "--part=articles",
+          "--offset=28",
+          "--count=4"
+        ],
+        "return_code": 0,
+        "log": "zh-worker-8.log"
+      },
+      {
+        "options": [
+          "--part=articles",
+          "--offset=32",
+          "--count=4"
+        ],
+        "return_code": 0,
+        "log": "zh-worker-9.log"
+      },
+      {
+        "options": [
+          "--part=articles",
+          "--offset=36",
+          "--count=4"
+        ],
+        "return_code": 0,
+        "log": "zh-worker-10.log"
+      },
+      {
+        "options": [
+          "--part=articles",
+          "--offset=40",
+          "--count=4"
+        ],
+        "return_code": 0,
+        "log": "zh-worker-11.log"
+      },
+      {
+        "options": [
+          "--part=articles",
+          "--offset=44",
+          "--count=4"
+        ],
+        "return_code": 0,
+        "log": "zh-worker-12.log"
+      },
+      {
+        "options": [
+          "--part=articles",
+          "--offset=48",
+          "--count=4"
+        ],
+        "return_code": 0,
+        "log": "zh-worker-13.log"
+      },
+      {
+        "options": [
+          "--part=articles",
+          "--offset=52",
+          "--count=4"
+        ],
+        "return_code": 0,
+        "log": "zh-worker-14.log"
+      },
+      {
+        "options": [
+          "--part=articles",
+          "--offset=56",
+          "--count=4"
+        ],
+        "return_code": 0,
+        "log": "zh-worker-15.log"
+      },
+      {
+        "options": [
+          "--part=articles",
+          "--offset=60",
+          "--count=4"
+        ],
+        "return_code": 0,
+        "log": "zh-worker-16.log"
+      },
+      {
+        "options": [
+          "--part=articles",
+          "--offset=64",
+          "--count=4"
+        ],
+        "return_code": 0,
+        "log": "zh-worker-17.log"
+      },
+      {
+        "options": [
+          "--part=articles",
+          "--offset=68",
+          "--count=4"
+        ],
+        "return_code": 0,
+        "log": "zh-worker-18.log"
+      }
+    ]
+  },
+  "source_snapshot_sha256": "7a0b860a85c063ae413116b2e538c002563faebdc8f25833b43432db11cb43fd",
+  "derived_refreshes": [
+    {
+      "previous_snapshot_sha256": "49bd7c8b3e8d065c024504b038848be3476c0904003e64a23d3ecc76fd91f512",
+      "files": {
+        "tools/site_search.py": "e35f778402d7e52dd6237e1dc987b754df5d3e5e997ebea07e7ef1a617256d9d"
+      },
+      "scope": "Copied CSS/JS cache keys or local search index from unchanged canonical HTML; no native content/examples rerendered"
+    }
+  ],
+  "scope": "Local native HTML plus guarded search refresh; no deployment, package tests or vignette execution"
+}

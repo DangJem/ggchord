@@ -1,0 +1,107 @@
+[
+  {
+    "id": "V01",
+    "priority": "P0",
+    "implementation": "Feature rows versus segments list-column; paired links can split",
+    "evidence": "projection.md; semantic-check.json: 1 feature / 2 pieces versus 2 link rows",
+    "boundary": "Document/source and scoped execution checks; browser acceptance separately pending; not every parameter combination or optional parser certified"
+  },
+  {
+    "id": "V02",
+    "priority": "P0",
+    "implementation": "segment uses windows; focus uses loci",
+    "evidence": "teaching-tasks.json; semantic-check.json windows accepted",
+    "boundary": "Document/source and scoped execution checks; browser acceptance separately pending; not every parameter combination or optional parser certified"
+  },
+  {
+    "id": "V03",
+    "priority": "P1",
+    "implementation": "Fusion panel registry and physical layout conditions replace fixed four-panel cap",
+    "evidence": "fusion-layout.md; teaching-reviews.json; executed course examples",
+    "boundary": "Document/source and scoped execution checks; browser acceptance separately pending; not every parameter combination or optional parser certified"
+  },
+  {
+    "id": "V04",
+    "priority": "P1",
+    "implementation": "Registered Cartesian character details distinguished from direct backbone projection",
+    "evidence": "aligned-sequences.md; fusion-details.md; coursecharacterdetail PNG",
+    "boundary": "Document/source and scoped execution checks; browser acceptance separately pending; not every parameter combination or optional parser certified"
+  },
+  {
+    "id": "V05",
+    "priority": "P1",
+    "implementation": "Legacy plus default documented; teaching calls explicitly keep unknown strands",
+    "evidence": "data.md; both shared example files; equivalent 24-row known-strand import",
+    "boundary": "Document/source and scoped execution checks; browser acceptance separately pending; not every parameter combination or optional parser certified"
+  },
+  {
+    "id": "V06",
+    "priority": "P0",
+    "implementation": "Count-bar baseline restricted to zero; supplied values use col",
+    "evidence": "parameter-overrides.json; canonical contract; semantic-check.json rejects nonzero",
+    "boundary": "Document/source and scoped execution checks; browser acceptance separately pending; not every parameter combination or optional parser certified"
+  },
+  {
+    "id": "V07",
+    "priority": "P0",
+    "implementation": "Both mapping position parameters described as numeric, with Radial inverse exception",
+    "evidence": "parameter-overrides.json; semantic-check.json numeric calls accepted",
+    "boundary": "Document/source and scoped execution checks; browser acceptance separately pending; not every parameter combination or optional parser certified"
+  },
+  {
+    "id": "V08",
+    "priority": "P2",
+    "implementation": "No formal default distinguished from requiredness, including search summaries",
+    "evidence": "generator and site_search.py; requiredness deferred to exact API contract",
+    "boundary": "Document/source and scoped execution checks; browser acceptance separately pending; not every parameter combination or optional parser certified"
+  },
+  {
+    "id": "V09",
+    "priority": "P2",
+    "implementation": "No generic table/data-function type is imposed across APIs",
+    "evidence": "Canonical per-API Rd contract, with explicit projection feature_data override",
+    "boundary": "Document/source and scoped execution checks; browser acceptance separately pending; not every parameter combination or optional parser certified"
+  },
+  {
+    "id": "V10",
+    "priority": "P1",
+    "implementation": "Four modules, six Coord types, Fusion as composition",
+    "evidence": "pages.json; navigation.json; compatibility.md; historical 69-case scope retained",
+    "boundary": "Document/source and scoped execution checks; browser acceptance separately pending; not every parameter combination or optional parser certified"
+  },
+  {
+    "id": "V11",
+    "priority": "P1",
+    "implementation": "bar/count and col/identity use distinct teaching descriptions",
+    "evidence": "tracks-statistics.md; shared count example; executed current lesson",
+    "boundary": "Document/source and scoped execution checks; browser acceptance separately pending; not every parameter combination or optional parser certified"
+  },
+  {
+    "id": "V12",
+    "priority": "P2",
+    "implementation": "Specific current Fusion support and actual unsupported endpoints replace vague future claim",
+    "evidence": "Module migration and current fusion-layout/routing/advanced lessons",
+    "boundary": "Document/source and scoped execution checks; browser acceptance separately pending; not every parameter combination or optional parser certified"
+  },
+  {
+    "id": "V13",
+    "priority": "P1",
+    "implementation": "Paired detail restores source_strand and real CDS type",
+    "evidence": "courseblockbt; paired-detail PNG actual render and current code hash",
+    "boundary": "Document/source and scoped execution checks; browser acceptance separately pending; not every parameter combination or optional parser certified"
+  },
+  {
+    "id": "V14",
+    "priority": "P1",
+    "implementation": "Paired languages distinguish ordinary continuous links from explicit magnify wrap",
+    "evidence": "fusion-routing/details/advanced; paired code and anchors; real wrapped figure",
+    "boundary": "Document/source and scoped execution checks; browser acceptance separately pending; not every parameter combination or optional parser certified"
+  },
+  {
+    "id": "MIG-14",
+    "priority": "P1",
+    "implementation": "Public aliases restored to their canonical Rd families",
+    "evidence": "built-check.json: all 14 family destinations checked",
+    "boundary": "Document/source and scoped execution checks; browser acceptance separately pending; not every parameter combination or optional parser certified"
+  }
+]

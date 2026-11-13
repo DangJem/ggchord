@@ -5,6 +5,7 @@ from pathlib import Path
 from urllib.parse import unquote,urlsplit
 ROOT=Path(__file__).resolve().parents[2];sys.path.insert(0,str(ROOT/'tools'))
 from site_registry import canonical
+from documentation_lib import snippets
 
 def main():
     site=ROOT/'.site';baseline=json.loads((ROOT/'tools/site-audit/baseline.json').read_text())
@@ -49,7 +50,10 @@ def main():
         path=site/record['file'];require(hashlib.sha256(path.read_bytes()).hexdigest()==record['sha256'],'Example download: '+record['file'])
     courses=json.loads((ROOT/'website/course-figures.json').read_text())
     rendered=json.loads((ROOT/'tools/site-audit/course-rendering.json').read_text())
+    chunks=snippets()
     for row in courses:
+        code='\n\n'.join(chunks[key] for key in row['snippets'])
+        require(hashlib.sha256(code.encode()).hexdigest()==rendered['figures'][row['id']]['code_sha256'],'Course code changed: '+row['id'])
         digest=rendered['figures'][row['id']]['sha256']
         require(hashlib.sha256((site/'assets'/Path(row['file']).name).read_bytes()).hexdigest()==digest,'Course figure: '+row['id'])
     result=dict(audited_urls=len(baseline['urls']),declared_old_sections=len(sections),restored_public_aliases=restored,

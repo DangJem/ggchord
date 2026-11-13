@@ -1,0 +1,20 @@
+{
+  "status": "pending user unlock",
+  "reason": "Native Mac UI reported locked screen; browser extension was unavailable earlier",
+  "planned_widths": [
+    1280,
+    1440,
+    1920
+  ],
+  "mobile_testing": false,
+  "observations_before_final_build": [
+    "At 1440px, duplicate version text compressed the header; CSS fix committed in 7e6a4c0"
+  ],
+  "not_verified_on_final_build": [
+    "Viewport layout at all three widths",
+    "Navigation and language switch",
+    "Search ranking and keyboard focus",
+    "Gallery filters/hash reveal and image viewer"
+  ],
+  "scope": "Earlier preview observation is not final browser acceptance"
+}

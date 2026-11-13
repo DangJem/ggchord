@@ -1,0 +1,25 @@
+{
+  "audited_urls": 582,
+  "declared_old_sections": 1146,
+  "restored_public_aliases": [
+    "guide_ggchord_colourbar",
+    "scale_feature_fill_manual",
+    "scale_region_fill_manual",
+    "scale_ribbon_alpha_manual",
+    "scale_ribbon_color_manual",
+    "scale_ribbon_colour_manual",
+    "scale_ribbon_fill_gradientn",
+    "scale_ribbon_fill_identity",
+    "scale_ribbon_fill_manual",
+    "scale_ribbon_linetype_manual",
+    "scale_seq_color_manual",
+    "theme_ggchord_dark",
+    "theme_ggchord_minimal",
+    "theme_ggchord_publication"
+  ],
+  "original_figure_ids": 178,
+  "new_course_pngs": 22,
+  "archive_inputs": 76,
+  "scope": "Local files, declared source/known generated chapter anchors and download bytes; not remote deployment or arbitrary unrecorded historical fragments",
+  "failures": []
+}

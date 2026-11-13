@@ -1,0 +1,54 @@
+{
+  "scope": "Validation commands actually executed in this task; native output/browser evidence is reported separately",
+  "commands": [
+    {
+      "command": "python3 tools/check-documentation.py --source-only",
+      "result": "passed: 94 paired entries; 157 exports; 121 Rd; 1149 protected translations"
+    },
+    {
+      "command": "Rscript --vanilla tools/check-documentation-lessons.R --write-outputs",
+      "result": "passed: 52 current pages, separate environments in one new R process; package namespaces can be shared"
+    },
+    {
+      "command": "Rscript --vanilla tools/check-documentation-lessons.R --page=protein-alignments --update-outputs",
+      "result": "passed in a fresh R process after adding the executable dplyr import"
+    },
+    {
+      "command": "Rscript --vanilla tools/check-documentation-lessons.R --page=aligned-sequences --update-outputs",
+      "result": "passed in a fresh R process with explicit GFF3 keep"
+    },
+    {
+      "command": "python3 tools/check-first-lessons.py",
+      "result": "passed earlier: four separate new R processes and public build/export; first-lessons.json holds exact script hashes"
+    },
+    {
+      "command": "python3 tools/render-site-courses.py [plus --only for added independent Fusion views]",
+      "result": "22 actual PNGs; each code/hash/render-input record retained in course-rendering.json"
+    },
+    {
+      "command": "Rscript --vanilla tools/site-audit/check-semantics.R",
+      "result": "passed: semantic-check.json"
+    },
+    {
+      "command": "python3 tools/site-audit/verify-existing-assets.py",
+      "result": "passed: exact explicit-keep edit proved input-identical for all 24 source CDS; 178 original PNG/dependency checks"
+    },
+    {
+      "command": "python3 tools/check-site-design.py --write",
+      "result": "passed: 76 controlled contrast pairs and six static rules; not a WCAG certification"
+    }
+  ],
+  "current_source_sha256": {
+    "tools/documentation-examples.R": "abb8b3c3aa21ea2d21374a9da0a2b1d932066492a91a21a0d2572bc661b077a9",
+    "tools/site-course-examples.R": "16848ad5459b31e2ef3b246bca5d04ecd9ec128965a3fbef54e95741dc05aff0",
+    "tools/check-documentation-lessons.R": "dd229a13aa63bd7349a438a4faeec470e15379a5df860bae9f1a50933fc14b54",
+    "tools/check-first-lessons.py": "bf33c7f6543408e1b180af873f764d9e444a7e87eb7a58106b3c0fef0cd1b72f",
+    "tools/site-audit/check-semantics.R": "a0897aad78d14633126d5ebb762650a80d5545a2d92538aa521a46ace8fd74d0"
+  },
+  "limits": [
+    "No remote install executed",
+    "Optional GenBank NULL is a skip, not successful parsing",
+    "No testthat, package build/check, vignette knitting or publication device matrix",
+    "Selected source-backed self-correspondence in the shape check is not a detected biological alignment"
+  ]
+}
