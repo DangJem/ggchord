@@ -7,6 +7,11 @@ library(dplyr)
 arguments <- commandArgs(trailingOnly = TRUE)
 after <- '--after' %in% arguments
 suffix <- if ('--device' %in% arguments) '-device' else if (after) '-after' else ''
+requested_suffix <- Sys.getenv('GGCHORD_ADAPTIVE_SUFFIX')
+if (nzchar(requested_suffix)) {
+  stopifnot(grepl('^-[A-Za-z0-9._-]+$', requested_suffix))
+  suffix <- requested_suffix
+}
 plant <- read_delta('examples/genome-alignments/arabidopsis-first-pair.delta',
   executable = Sys.getenv('DELTA_DECODER', 'show-coords'))
 base <- ggchord(plant$seq_data, ribbon_data = plant$ribbon_data) +

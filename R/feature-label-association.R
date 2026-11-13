@@ -48,7 +48,7 @@ ggchord_feature_label_shifted <- function(candidate, height) {
 # Preserve straight source-to-label association. Clip glyph envelopes instead
 # of making a visibility-graph detour; transparent feature fills stay honest.
 ggchord_simple_feature_leaders <- function(registry, layout) {
-  registry <- ggchord_clear_simple_feature_exits(registry, layout)
+  registry <- ggchord_clear_simple_annotation_exits(registry, layout)
   boxes <- ggchord_annotation_text_obstacles(registry, layout)
   units <- layout$text_units_per_inch %||% .35
   source_maps <- ggchord_annotation_source_maps(layout)

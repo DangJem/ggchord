@@ -1,5 +1,11 @@
 # ggchord 0.27.0 (development)
 
+- The same bounded straight/single-elbow exit check also covers exterior
+  restriction-site leaders. Fixed cut positions, text entries, labels and
+  source rows remain unchanged; a collided restriction fan is not exempt from
+  text and leader checks merely because the feature callouts are already clear.
+  Explicit straight and elbow styles retain their chosen routes.
+
 - Collided exterior feature callouts can jointly choose shorter straight or
   single-elbow exits while keeping their source roots and label entries fixed.
   A complete group must clear registered text and all other leaders before it

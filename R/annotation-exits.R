@@ -1,6 +1,6 @@
-# Try coordinated straight/one-elbow exits without moving text or source roots.
+# Coordinate straight/one-elbow annotation exits without moving text or source roots.
 # A whole conflicting owner group is accepted together, or left unchanged.
-ggchord_clear_simple_feature_exits <- function(registry, layout) {
+ggchord_clear_simple_annotation_exits <- function(registry, layout) {
   if (!isTRUE(layout$circular)) return(registry)
   boxes <- ggchord_annotation_text_obstacles(registry, layout)
   leaders <- ggchord_annotation_leader_segments(registry)
@@ -13,12 +13,20 @@ ggchord_clear_simple_feature_exits <- function(registry, layout) {
   crosses <- function(d, others) nrow(others) && any(vapply(seq_len(nrow(d)),
     function(i) any(ggchord_route_segment_crossings(c(d$x1[i],d$y1[i]),
       c(d$x2[i],d$y2[i]),others)),logical(1)))
-  for (owner in names(registry)) {
-    geometry <- registry[[owner]]$gene_label_repel
-    if (!is.data.frame(geometry) || !all(c('.component','feature_label_mode','label_layout') %in% names(geometry))) next
-    labels <- geometry[geometry$.component %in% 'text' &
-      geometry$feature_label_mode %in% 'external' & geometry$label_layout %in% 'feature',,drop=FALSE]
-    eligible <- leaders$owner %in% owner & leaders$component %in% 'gene_label_repel' &
+  for (owner in names(registry)) for (component in c('gene_label_repel','restriction_site')) {
+    geometry <- registry[[owner]][[component]]
+    if (!is.data.frame(geometry) || !nrow(geometry)) next
+    if (component == 'gene_label_repel') {
+      if (!all(c('.component','feature_label_mode','label_layout') %in% names(geometry))) next
+      labels <- geometry[geometry$.component %in% 'text' &
+        geometry$feature_label_mode %in% 'external' & geometry$label_layout %in% 'feature',,drop=FALSE]
+    } else {
+      labels <- geometry[ggchord_outer_site_labels(geometry),,drop=FALSE]
+      # Explicit straight/elbow styles retain their already chosen routes.
+      if ('.leader_style' %in% names(labels)) labels <- labels[
+        !labels$.leader_style %in% c('straight','elbow'),,drop=FALSE]
+    }
+    eligible <- leaders$owner %in% owner & leaders$component %in% component &
       leaders$source %in% labels$source_row
     keys <- key(leaders)
     blocked <- Filter(function(k) {
@@ -45,8 +53,8 @@ ggchord_clear_simple_feature_exits <- function(registry, layout) {
       hit <- vapply(seq_len(nrow(obstacles)),function(j)
         ggchord_inner_leader_hits(route(d),obstacles[j,,drop=FALSE]),logical(1))
       corners <- obstacles[hit,,drop=FALSE]
-      corners$ow <- corners$ow+.4*units/25.4
-      corners$oh <- corners$oh+.4*units/25.4
+      corners$ow <- corners$ow+.6*units/25.4
+      corners$oh <- corners$oh+.6*units/25.4
       direction <- a/radius; tangent <- c(-direction[2L],direction[1L])
       grid <- expand.grid(radial=c(-.1,-.05,0,.025,.05,.075,.1,.15,.2,.3,.5),
         tangent=c(0,.025,-.025,.05,-.05,.1,-.1,.15,-.15,.25,-.25,.4,-.4,.6,-.6,.8,-.8))
@@ -83,18 +91,25 @@ ggchord_clear_simple_feature_exits <- function(registry, layout) {
     if (!valid) next
     for (d in accepted) {
       source <- d$source[1L]
-      at <- geometry$.component %in% 'segment' & geometry$source_row %in% source
+      at <- geometry$source_row %in% source & if (component == 'gene_label_repel')
+        geometry$.component %in% 'segment' else geometry$restriction_component %in% 'leader'
       template <- geometry[which(at)[1L],,drop=FALSE]
       geometry <- geometry[!at,,drop=FALSE]
-      replacement <- template[rep(1L,nrow(d)),,drop=FALSE]
-      replacement$x <- d$x1;replacement$y <- d$y1
-      replacement$xend <- d$x2;replacement$yend <- d$y2
-      for (pair in list(c('x0','x'),c('y0','y'),c('x1','xend'),c('y1','yend')))
-        if (pair[1L] %in% names(replacement)) replacement[[pair[1L]]] <- replacement[[pair[2L]]]
+      if (component == 'gene_label_repel') {
+        replacement <- template[rep(1L,nrow(d)),,drop=FALSE]
+        replacement$x <- d$x1;replacement$y <- d$y1
+        replacement$xend <- d$x2;replacement$yend <- d$y2
+        for (pair in list(c('x0','x'),c('y0','y'),c('x1','xend'),c('y1','yend')))
+          if (pair[1L] %in% names(replacement)) replacement[[pair[1L]]] <- replacement[[pair[2L]]]
+      } else {
+        replacement <- template[rep(1L,nrow(d)+1L),,drop=FALSE]
+        replacement$x <- c(d$x1[1L],d$x2)
+        replacement$y <- c(d$y1[1L],d$y2)
+      }
       replacement$leader_text_status <- 'simple_exit_clearance'
       geometry <- ggchord_rbind_fill(list(geometry,replacement))
     }
-    registry[[owner]]$gene_label_repel <- geometry
+    registry[[owner]][[component]] <- geometry
     leaders <- trial
   }
   registry

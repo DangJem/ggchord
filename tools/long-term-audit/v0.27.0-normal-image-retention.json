@@ -1,0 +1,114 @@
+{
+  "scope": "Only newly generated untracked PNGs from this work package; no historical tracked assets or scientific inputs removed",
+  "reused_images": {
+    "v0.27.0-adaptive-quality-chord-all-exits.png": {
+      "file": "v0.27.0-adaptive-quality-chord-device.png",
+      "sha256": "1c9e53e33c9e763f84ceb7d3d17955e40b5a3cbcfe67e2dcea2c886808bfb470"
+    },
+    "v0.27.0-adaptive-quality-collinear-all-exits.png": {
+      "file": "v0.27.0-adaptive-quality-collinear-device.png",
+      "sha256": "932011c02ba2a1a76c1e247f6de33f63cb55a05ac16454ccff5582f3076b49f6"
+    },
+    "v0.27.0-adaptive-quality-dotplot-all-exits.png": {
+      "file": "v0.27.0-adaptive-quality-dotplot-device.png",
+      "sha256": "5faa5d3efb1ce40725ea9e318e005e53eb20adbf24b23b103a06467c81634c3a"
+    },
+    "v0.27.0-adaptive-quality-radial-all-exits.png": {
+      "file": "v0.27.0-adaptive-quality-radial-noncircular-refinement-prototype.png",
+      "sha256": "0e1ac0db10ade0840591a5e10cb24b1c66b7d5166887735b283466bb96e9d7f4"
+    },
+    "v0.27.0-adaptive-quality-sankey-all-exits.png": {
+      "file": "v0.27.0-adaptive-quality-sankey-device.png",
+      "sha256": "13649ad3348ee08384cef6ca1d9a70cd70611449286c9431ab9fa6e5fedad48b"
+    },
+    "v0.27.0-adaptive-quality-vertical-all-exits.png": {
+      "file": "v0.27.0-adaptive-quality-vertical-device.png",
+      "sha256": "bc119958e79c942ae58949df8e74e3d5e17becb8c2d3d936876462aa45bb1093"
+    },
+    "v0.27.0-all-exits-a-pCAMBIA1300.png": {
+      "file": "v0.27.0-endpoint-slot-pCAMBIA1300.png",
+      "sha256": "cc59bd8e5bce8ba591a0699b5708c054baa966afeb96b43bea7361c9ae3373e4"
+    },
+    "v0.27.0-all-exits-a-pETDuet_1.png": {
+      "file": "v0.27.0-exit-final-a-pETDuet_1.png",
+      "sha256": "2ecf6ccccc3053321ad699937abdd8649f7552753e31d464c1ea96cf7010902b"
+    },
+    "v0.27.0-all-exits-a-pET_28a_plus.png": {
+      "file": "v0.27.0-endpoint-slot-pET_28a_plus.png",
+      "sha256": "5798ef843f179622aa9e5abc001fa578b04a91e12b11ab79d2456afa4ff46251"
+    },
+    "v0.27.0-all-exits-a-pSB1C3.png": {
+      "file": "v0.27.0-exit-final-a-pSB1C3.png",
+      "sha256": "41d877935e2c46869c23b95ceb4b1e385e4959cec7210651a7c4f26a82bd8597"
+    },
+    "v0.27.0-all-exits-a-pSpCas9_BB_2A_GFP_PX458.png": {
+      "file": "v0.27.0-exit-final-a-pSpCas9_BB_2A_GFP_PX458.png",
+      "sha256": "0dfa016feac2e366dfc1fb09125d3dfe27c5c6df4092c7115d48739a0e6b528b"
+    },
+    "v0.27.0-all-exits-a-pTRE_Tight_BI.png": {
+      "file": "v0.27.0-exit-final-a-pTRE_Tight_BI.png",
+      "sha256": "060ad2927d82f86ee8c6d3b2776800426314ad169a4d6f8c65d28c1d977b561f"
+    },
+    "v0.27.0-all-exits-b-pBR322.png": {
+      "file": "v0.27.0-compact-final-pBR322.png",
+      "sha256": "e57f81acc123d49e6cfe9e6856bd987b078ee1008879897aea1172b0c2d7c4b9"
+    },
+    "v0.27.0-all-exits-b-pBluescript_II_SK_plus.png": {
+      "file": "v0.27.0-compact-final-pBluescript_II_SK_plus.png",
+      "sha256": "a06cdb74f4c16b1cb24f1846302d50ad3908da8260d0182c93ff8c3c469b3d0c"
+    },
+    "v0.27.0-all-exits-b-pDONR221.png": {
+      "file": "v0.27.0-compact-final-pDONR221.png",
+      "sha256": "0db9c40e11d01b37df1c196aba708f6a5b67df323acbdb3537ccd54b639fb8b6"
+    },
+    "v0.27.0-all-exits-b-pEarleyGate_201.png": {
+      "file": "v0.27.0-compact-final-pEarleyGate_201.png",
+      "sha256": "e7f4141291aff84e55f773bf360cbcea19aec487a35b0507640a670616540db6"
+    },
+    "v0.27.0-all-exits-b-pTRIPZ.png": {
+      "file": "v0.27.0-compact-final-pTRIPZ.png",
+      "sha256": "0cb1a447024cc85119306e02a3488ddc925cc442ad7b6213046abd46afc9df84"
+    },
+    "v0.27.0-all-exits-b-pUC19.png": {
+      "file": "v0.27.0-compact-final-pUC19.png",
+      "sha256": "d8a1bc110476fb3989dbee4d0f40e471727de61cb0507616b8f8e1fe82b0026d"
+    },
+    "v0.27.0-all-exits-b-pcDNA3_1_plus.png": {
+      "file": "v0.27.0-compact-final-pcDNA3_1_plus.png",
+      "sha256": "86d3dd192dd466f34ba24667e9d7430648dce659db94afd6633fe6d4d98b7a50"
+    },
+    "v0.27.0-all-exits-flagship-matched.png": {
+      "file": "v0.27.0-normal-flagship-matched.png",
+      "sha256": "f547cc423e4a0d345f97455230ee6303d448b81b928de527e007ea359ce99af5"
+    }
+  },
+  "removed_process_images": {
+    "v0.27.0-all-exits-flagship-compact.png": {
+      "sha256": "fa1c6adf0eade1e0a36f268c469f8e1381162ea119d3a2f31b18d30caee95f8a",
+      "reason": "Completed historical reduced-canvas probe; failed metrics retained in profile JSON; excluded from the normal-size completion gate by user instruction"
+    },
+    "v0.27.0-all-exits-flagship-square.png": {
+      "sha256": "953d4e3f2c943f8ffb5f583417da5b314da38931ac5b36261d1b7bd212f4431b",
+      "reason": "Completed historical reduced-canvas probe; failed metrics retained in profile JSON; excluded from the normal-size completion gate by user instruction"
+    },
+    "v0.27.0-exit-final-flagship-matched.png": {
+      "sha256": "c6d892bcbdb89fdac2c698884a47d821aa24c2c4c27103e2f6e2966a86ef5b28",
+      "reason": "Superseded intermediate render; original failure metrics retained in exit-final-flagship JSON"
+    },
+    "v0.27.0-exit-final-flagship-compact.png": {
+      "sha256": "fa1c6adf0eade1e0a36f268c469f8e1381162ea119d3a2f31b18d30caee95f8a",
+      "reason": "Superseded intermediate render; original failure metrics retained in exit-final-flagship JSON"
+    }
+  },
+  "retained_new_images": {
+    "v0.27.0-adaptive-quality-circular-all-exits.png": {
+      "sha256": "2ea0ca95483edb4141ffbb877b902ea1917689acfdf7fc2397687a5ce453e428"
+    },
+    "v0.27.0-all-exits-flagship-published.png": {
+      "sha256": "e9601df3a660b76096e0beb1ef068f0a666ec255137eab4501119f9bfc9263fb"
+    },
+    "v0.27.0-normal-flagship-matched.png": {
+      "sha256": "f547cc423e4a0d345f97455230ee6303d448b81b928de527e007ea359ce99af5"
+    }
+  }
+}

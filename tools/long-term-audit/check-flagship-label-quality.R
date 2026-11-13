@@ -64,6 +64,10 @@ if (length(selected)) {
   selected <- strsplit(selected, ',', fixed = TRUE)[[1L]]
   stopifnot(length(selected) > 0L, all(selected %in% names(profiles)))
   profiles <- profiles[selected]
+} else {
+  # Routine verification uses normal dense-figure sizes. Smaller historical
+  # probes remain explicitly reproducible, but are not part of this default.
+  profiles <- profiles[c('published', 'matched')]
 }
 results <- list()
 for (name in names(profiles)) {
