@@ -85,6 +85,7 @@ feature 默认先尝试内部，再尝试相邻与外部；radial、auto、callo
 | label_segment_linetype | auto | 自动选择引线线型 |
 | label_segment_layer | below | below 置于数据层下方；above 恢复标签层顺序，文字位置不变 |
 | label_repeat | individual | bracket 为连续同名短特征添加共享的名称×数量与弧形括注 |
+| label_segment_colour | auto | 圆内特征连圈外标签默认灰色；可指定颜色 |
 
 诊断表在 export_ggchord_layout 的标签记录中。先读隐藏/适配原因，再调整输出尺寸、标签子集、布局或换行。需要完整源名称时不要只保存截断后的图。
 
@@ -142,3 +143,19 @@ ggchord(plasmid_example_pTRE_Tight_BI[c("accver", "length")], feature_data = fea
 质粒主题的自动轴文字贴近序列骨架，显式轴偏移不变。圆形特征轨道按不能放入
 箭头的文字需求留空，文字轨道按实际字号与物理间隙排布；显式 `spacing` 仍是
 最小间距。这是有界布局，仍需按实际导出尺寸查看诊断，不能保证任意密度无冲突。
+
+
+默认灰色虚线用于**从序列圆内的特征连到圈外标签**的引线。圈内相邻标签及限制
+位点引线保留原有风格。若圈内名字紧贴自己的特征、角向未明显偏移且无竞争来源，
+省略无助于归属的短线；偏移或邻近其他来源时仍保留引线。
+
+```r
+geom_feature_label_repel(
+  label_segment_colour = "grey50",
+  label_segment_linetype = "dashed"
+)
+```
+
+显式参数调整该图层全部特征引线；自定义 `ggchord.feature.label.segment` 主题也
+优先于自动配色。分段虚线按实际箭头轮廓裁切，保留原分段信息。圈内换行文字的
+各行沿各自同心圆逐字排布。自动轴文字保留小的物理留白，显式偏移值仍优先。

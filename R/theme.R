@@ -208,7 +208,7 @@ ggchord_theme_from_environment <- function(preset, env, dots) {
     values$axis.minor.ticks.length <- grid::unit(.8, "mm")
   }
   if (preset == "plasmid" && is.null(values$axis.text.offset)) {
-    values$axis.text.offset <- grid::unit(.45, "mm")
+    values$axis.text.offset <- grid::unit(.8, "mm")
     # The unit retains provenance through theme + theme, whose settings
     # attribute alone cannot reveal a later equal-valued native override.
     attr(values$axis.text.offset, "ggchord.automatic_axis_offset") <- TRUE
@@ -283,6 +283,7 @@ ggchord_theme_from_environment <- function(preset, env, dots) {
         colour = if (dark) fg else "#111111", size = ggplot2::rel(.9),
         face = "plain", lineheight = 1)
     )
+  attr(out[["ggchord.feature.label.segment"]], "ggchord.automatic_feature_segment") <- TRUE
   custom <- list(
     ggchord.axis.line = values$axis.line,
     ggchord.axis.ticks = values$axis.ticks,
@@ -475,6 +476,11 @@ ggchord_theme_point_size <- function(plot, name, fallback) {
 ggchord_resolve_theme_component <- function(plot, lyr, param_name, element_name) {
   el <- ggchord_theme_element(plot, element_name)
   current <- lyr$geom_params[[param_name]] %||% list()
+  if (identical(element_name, "ggchord.feature.label.segment")) {
+    raw <- plot$theme[[element_name]]
+    current$.automatic_feature_segment <- is.null(raw) ||
+      isTRUE(attr(raw, "ggchord.automatic_feature_segment"))
+  }
   if (is.null(el)) return(current)
   if (inherits(el, "element_blank")) current$alpha <- 0
   else if (inherits(el, "element_line")) {

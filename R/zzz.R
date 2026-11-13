@@ -568,7 +568,6 @@ ggchord_feature_arc_text <- function(text, units_per_inch) {
   # Every internal feature label follows the radius selected by the track
   # solver. This includes labels moved off the feature into an inner track.
   eligible <- text$feature_label_mode %in% c("inside", "adjacent") &
-    !grepl("\n", text$text, fixed = TRUE) &
     !is.na(text$text) & nzchar(text$text)
   text$.draw_as_arc <- eligible
   curved <- ggchord_arc_text_layout(
@@ -583,6 +582,13 @@ ggchord_repel_geometry <- function(layout) {
   segment <- layout$gene_label_segments %||% data.frame()
   text <- layout$gene_labels %||% data.frame()
   arc_text <- data.frame()
+  if (nrow(text) && identical(layout$gene_label_layout, "feature")) {
+    radius <- unname(layout$seqRadius[as.character(text$accver)])
+    text$.feature_internal_exit <- isTRUE(layout$circular) &
+      text$feature_label_mode %in% "external" & is.finite(radius) &
+      sqrt(text$anchor_x^2+text$anchor_y^2) < radius -
+        .1*(layout$text_units_per_inch %||% .35)/25.4
+  }
   if (nrow(text) && identical(layout$gene_label_layout, "feature")) {
     curved <- ggchord_feature_arc_text(
       text, layout$text_units_per_inch %||% .35
@@ -607,7 +613,7 @@ ggchord_repel_geometry <- function(layout) {
         "group" %in% names(text)) {
       label_index <- match(segment$group, text$group)
       for (nm in intersect(
-          c("source_row", "accver", "feature_track", "label_track"),
+          c("source_row", "accver", "feature_track", "label_track", "feature_label_mode", ".feature_internal_exit"),
           names(text))) {
         segment[[nm]] <- text[[nm]][label_index]
       }

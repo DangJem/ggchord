@@ -442,8 +442,7 @@ ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
       }
       if (concentric_circle && track_index > 0L) candidate <-
         ggchord_feature_label_attachment(candidate, polygons, FALSE, units_per_inch)
-      box <- if (concentric_circle &&
-          !grepl("\n", candidate$text, fixed = TRUE)) {
+      box <- if (concentric_circle) {
         ggchord_arc_text_layout(
           candidate, units_per_inch = units_per_inch, box_padding = .25/25.4
         )$boxes

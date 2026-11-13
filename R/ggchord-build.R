@@ -503,13 +503,15 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     ggchord_stop("max_overlaps must be a non-negative number or Inf")
   }
 
+  geometry_label_size <- gene_params$feature_layout_label_size %||% gene_lsz
   geneWidth  <- process_gene_param(gene_w, seqs, "width", 0.05, FALSE)
-  if (isTRUE(gene_params$is_feature) && isTRUE(lbl$is_feature_label) &&
+  if (isTRUE(gene_params$is_feature) &&
+      (isTRUE(gene_params$feature_layout_has_labels) || isTRUE(lbl$is_feature_label)) &&
       isTRUE(plot$coordinates$ggchord_circular)) {
     # Feature bands accommodate the actual label font size within bounded
     # limits. This is a modest physical adjustment, not a response to label
     # length; long text must still use adjacent/external fallback.
-    width_factor <- pmin(1.42, pmax(.78, .82 + .072 * gene_lsz))
+    width_factor <- pmin(1.42, pmax(.78, .82 + .072 * geometry_label_size))
     geneWidth <- lapply(geneWidth, function(value) {
       adjusted <- as.numeric(value) * width_factor
       stats::setNames(pmin(.095, pmax(.032, adjusted)), names(value))
@@ -679,7 +681,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
       active_position,
       seqs = seqs, lengths = lens,
       circular = isTRUE(plot$coordinates$ggchord_circular),
-      label_size = gene_lsz,
+      label_size = geometry_label_size,
       caller = if (isTRUE(gene_params$is_feature)) "geom_feature()" else "geom_gene()"
     )
     # Allocate on the complete entity table before selecting/reordering labels;
@@ -1119,6 +1121,7 @@ compute_chord_geometry <- function(plot) {
     } else chord$data$ribbon_data
   }
 
+  plot <- ggchord_resolve_feature_geometry_context(plot)
   geometry_cache <- new.env(parent = emptyenv())
   avoid_requested <- any(vapply(plot$layers, function(layer) {
     params <- layer$ggchord_params
@@ -1374,6 +1377,7 @@ compute_chord_geometry <- function(plot) {
       }
     }
   }
+  primary$layer_inputs <- inputs
   circular_resolved <- FALSE
   external_resolved <- FALSE
   if (has_tracks && isTRUE(plot$coordinates$ggchord_circular)) {
@@ -1432,8 +1436,20 @@ compute_chord_geometry <- function(plot) {
   }
   for (id in names(registry)) for (component in names(registry[[id]])) {
     d <- registry[[id]][[component]]
+    if (identical(component,"gene_label_repel") && isTRUE(primary$circular) &&
+        is.data.frame(d) && all(c("feature_label_mode","anchor_x","anchor_y") %in% names(d))) {
+      text <- d[d$.component %in% "text",,drop=FALSE]
+      backbone <- unname(primary$seqRadius[as.character(text$accver)])
+      internal_exit <- text$feature_label_mode %in% "external" &
+        sqrt(text$anchor_x^2+text$anchor_y^2) < backbone -
+          .1*(primary$text_units_per_inch %||% .35)/25.4
+      # Perimeter solvers rebuild segment vertices without text anchor fields.
+      # Resolve style from the final owning label, never from a segment's NAs.
+      d$.feature_internal_exit <- internal_exit[match(d$source_row,text$source_row)]
+    }
     if (is.data.frame(d) && "label_size_requested" %in% names(d))
-      registry[[id]][[component]] <- ggchord_label_fit_metadata(d)
+      d <- ggchord_label_fit_metadata(d)
+    registry[[id]][[component]] <- d
   }
   primary$layer_geometry <- registry
   primary$layer_inputs <- inputs

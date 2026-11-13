@@ -53,6 +53,27 @@ ggchord_annotation_leader_roots <- function(registry) {
         data.frame(x0 = point[1L], y0 = point[2L], x1 = point[1L], y1 = point[2L])
     }
   }
+  # External feature names have a fixed radial exit through the backbone.
+  # Reserve that short channel, not a mutable shoulder or the entire route,
+  # so automatic axis strings do not occupy the exit and cause a feedback loop.
+  backbone <- unlist(lapply(registry, function(owner) {
+    d <- owner[["seq"]]
+    if (!is.data.frame(d) || !nrow(d)) return(numeric())
+    sqrt(d$x^2+d$y^2)
+  }), use.names = FALSE)
+  if (length(backbone)) for (owner in registry) {
+    d <- owner$gene_label_repel
+    if (!is.data.frame(d) || !"feature_label_mode" %in% names(d)) next
+    d <- d[d$.component %in% "text" &
+      d$feature_label_mode %in% "external", , drop = FALSE]
+    radius <- sqrt(d$anchor_x^2+d$anchor_y^2)
+    exit <- max(backbone)+.055
+    keep <- is.finite(radius) & radius>0 & radius<max(backbone)
+    d <- d[keep, , drop = FALSE]; radius <- radius[keep]
+    if (nrow(d)) roots[[length(roots)+1L]] <- data.frame(
+      x0 = d$anchor_x, y0 = d$anchor_y,
+      x1 = d$anchor_x*exit/radius, y1 = d$anchor_y*exit/radius)
+  }
   ggchord_rbind_fill(roots) %||% data.frame(x0 = numeric(), y0 = numeric(),
     x1 = numeric(), y1 = numeric())
 }

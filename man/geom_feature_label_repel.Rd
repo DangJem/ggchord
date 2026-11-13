@@ -23,6 +23,7 @@ geom_feature_label_repel(
   label_segment_linetype = "auto",
   label_segment_layer = c("below", "above"),
   label_repeat = c("individual", "bracket"),
+  label_segment_colour = "auto",
   ...
 )
 }
@@ -101,6 +102,14 @@ non-overlapping short features with the same name, type, direction and
 resolved fill in one circular feature band. Source rows and individual
 arrows remain separate. Only supported with \code{label_layout = "feature"}.}
 
+\item{label_segment_colour}{\code{"auto"} uses muted grey for leaders from
+a feature inside the sequence circle to a label outside it. Other leaders
+retain the theme colour. Explicit colours override both. A custom
+feature-label segment theme overrides the automatic palette.
+\code{label_segment_linetype = "auto"} uses dashed lines for those
+inside-to-outside attachments. Labels that stay inside retain their
+established leader style.}
+
 \item{...}{Additional text parameters.}
 }
 \value{
@@ -130,7 +139,7 @@ ggchord(seq_data = seqs) +
   geom_seq() +
   geom_feature(data = features, position = position_plasmid()) +
   geom_feature_label_repel(data = features, position = position_plasmid(),
-    label_segment_layer = "below") +
+    label_segment_layer = "below", label_segment_colour = "grey50") +
   coord_circular()
 # A shared display label preserves all seven biological operator records.
 repeated <- find_common_features(plasmid_example_pTRE_Tight_BI)

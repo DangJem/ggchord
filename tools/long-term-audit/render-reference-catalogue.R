@@ -47,7 +47,17 @@ for(id in ids) {
   selected_positions=length(unique(sites$position)),source_features=nrow(f),source_primers=nrow(primers),
   visibility=ggchord_label_visibility(l),converged=attr(table,'ggchord_render_context')$converged,
   warnings=warnings,quality=association_text_quality(table)$summary,
-  association=association_metrics(l)$summary)
+  association=association_metrics(l)$summary,
+  feature_exterior_from_inside=sum(vapply(l$layer_geometry,function(owner) {
+    d<-owner$gene_label_repel
+    if (!is.data.frame(d) || !'.feature_internal_exit' %in% names(d))return(0L)
+    sum(d$.component %in% 'text' & d$.feature_internal_exit %in% TRUE)
+  },integer(1))),
+  built_internal_exit_segments=sum(vapply(attr(table,'ggchord_render_built')$data,
+    function(d)if (all(c('.component','.feature_internal_exit') %in% names(d)))
+      sum(d$.component %in% 'segment' & d$.feature_internal_exit %in% TRUE) else 0L,integer(1))))
+ if (results[[id]]$feature_exterior_from_inside>0L)
+   stopifnot(results[[id]]$built_internal_exit_segments>0L)
  saveRDS(l,paste0('/tmp/',output_prefix,'-',id,'.rds'))
  grDevices::dev.off()
  jsonlite::write_json(list(cases=results,runtime_sha256=as.list(audit$engine),
@@ -55,4 +65,5 @@ for(id in ids) {
   paste0('tools/long-term-audit/',output_prefix,'-results.json'),pretty=TRUE,auto_unbox=TRUE)
 }
 audit_assert_source_snapshot(audit)
+stopifnot(all(vapply(results,function(x) x$association$anchors_off_own_feature==0L,logical(1))))
 cat('Reference catalogue completed\n')

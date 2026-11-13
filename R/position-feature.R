@@ -303,6 +303,14 @@ ggchord_feature_lane_offsets <- function(data, lane, base, direction,
           lane_demand[lane_value + 1L] <- max(overlap)
         }
       }
+      # A centred-label demand estimate is conservative: some names use
+      # angular slots or exterior fallback. Do not spend the whole inner disk
+      # on that estimate. Share the remaining radial budget across band gaps.
+      radius_budget <- max(.25, min(abs(1 + base[idx])))
+      minimum_steps <- pmax(spacing, head(lane_width, -1L)/2 +
+        tail(lane_width, -1L)/2)
+      corridor_budget <- min(radius_budget*.18,
+        max(0, radius_budget-.25-sum(minimum_steps))/(length(centres)-1L))
       for (i in 2:length(centres)) {
         # Reserve only the corridor demanded by labels that cannot fit their
         # own arrows.  Fixed wide gutters made mostly empty outer bands push
@@ -314,8 +322,8 @@ ggchord_feature_lane_offsets <- function(data, lane, base, direction,
             max(label_metrics$h[idx], na.rm = TRUE) else .025
           row_pitch <- height*1.15 + .3*measured_units/25.4
           needed <- lane_demand[i-1L]
-          max(.45*measured_units/25.4,
-            needed*row_pitch + if (needed>0L) .5*measured_units/25.4 else 0)
+          max(.45*measured_units/25.4, min(corridor_budget,
+            needed*row_pitch + if (needed>0L) .5*measured_units/25.4 else 0))
         } else if (i == 2L) {
           max(.125, spacing * 1.20)
         } else {

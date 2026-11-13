@@ -184,6 +184,8 @@ ggchord_layout_label_step <- function(
           stringsAsFactors = FALSE
         )
         inner_routes <- layout_result$leader_segments
+        if (is.data.frame(inner_routes) && nrow(inner_routes)) inner_routes <-
+          inner_routes[draw_segment[inner_routes$group], , drop = FALSE]
         if (is.data.frame(inner_routes) && nrow(inner_routes)) gene_label_segments <- rbind(
           gene_label_segments[!gene_label_segments$group %in% inner_routes$group, , drop = FALSE],
           inner_routes)

@@ -406,6 +406,32 @@ ggchord_arc_text_layout <- function(text, units_per_inch = .35,
   boxes <- list()
   owners <- integer()
   for (i in seq_len(nrow(text))) {
+    if (!is.na(text$text[i]) && grepl("\n", text$text[i], fixed=TRUE)) {
+      lines <- strsplit(as.character(text$text[i]), "\n", fixed=TRUE)[[1L]]
+      centre <- atan2(text$text_y[i],text$text_x[i])
+      radius <- sqrt(text$text_x[i]^2+text$text_y[i]^2)
+      tangent <- centre*180/pi+90
+      difference <- ((text$text_angle[i]-tangent+180)%%360)-180
+      direction <- if(abs(difference)>90) -1 else 1
+      sample <- text[i,,drop=FALSE];sample$text <- "Mg"
+      sample$text_angle <- 0
+      pitch <- ggchord_text_boxes(sample,units_per_inch=units_per_inch)$h *
+        (text$lineheight[i] %||% 1.2)
+      for (line in seq_along(lines)) {
+        row <- text[i,,drop=FALSE];row$text <- lines[line]
+        line_radius <- radius-direction*((length(lines)+1)/2-line)*pitch
+        row$text_x <- line_radius*cos(centre);row$text_y <- line_radius*sin(centre)
+        part <- ggchord_arc_text_layout(row,units_per_inch,box_padding,respect_justification)
+        if (nrow(part$glyphs)) {
+          part$glyphs$.arc_parent_group <- text$group[i] %||% i
+          part$glyphs$.arc_line <- line
+          glyphs[[length(glyphs)+1L]] <- part$glyphs
+          boxes[[length(boxes)+1L]] <- part$boxes
+          owners <- c(owners,rep(i,nrow(part$boxes)))
+        }
+      }
+      next
+    }
     chars <- strsplit(enc2utf8(as.character(text$text[i])), "", fixed = TRUE)[[1L]]
     if (!length(chars) || is.na(text$text[i]) || !nzchar(text$text[i])) next
     measured <- text[rep(i, length(chars)), , drop = FALSE]

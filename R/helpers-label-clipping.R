@@ -23,7 +23,7 @@ ggchord_clip_segments_to_labels <- function(segments, gl,
   }
   curved <- if ("feature_label_mode" %in% names(gl)) {
     gl$feature_label_mode %in% c("inside", "adjacent") &
-      !grepl("\n", gl$text, fixed = TRUE) & !is.na(gl$text) & nzchar(gl$text)
+      !is.na(gl$text) & nzchar(gl$text)
   } else rep(FALSE, nrow(gl))
   box_parts <- list()
   box_owner <- integer()

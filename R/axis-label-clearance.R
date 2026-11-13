@@ -66,7 +66,7 @@ ggchord_clear_circular_axis_text <- function(text, layout) {
         isTRUE(original$.axis_allow_clearance) && nrow(boxes)) {
       radius <- sqrt(original$text_x^2+original$text_y^2)
       outer <- max(sqrt(rowSums(ggchord_boxes_corners(boxes)^2)))
-      shift <- band[1L]-.2*units/25.4-outer
+      shift <- band[1L]-.65*units/25.4-outer
       candidate <- original
       candidate$text_x <- original$text_x*(radius+shift)/radius
       candidate$text_y <- original$text_y*(radius+shift)/radius
@@ -95,11 +95,11 @@ ggchord_clear_circular_axis_text <- function(text, layout) {
     step <- max(height/4, .15*units/25.4)
     limit <- max(2*height, .8*units/25.4)
     amounts <- seq(step, limit, by = step)
-    amounts <- c(amounts, -seq(step, max(4*height, 3*units/25.4), by = step))
+    amounts <- c(amounts, -seq(step, max(8*height, 3*units/25.4), by = step))
     # A narrow inner channel may not fit even at the font floor. One bounded
     # outer lane can clear the backbone without shrinking or deleting text.
     outer <- if (length(band)) band[2L]+height-radius else NA_real_
-    if (is.finite(outer) && outer > limit && outer <= max(4*height, 3*units/25.4))
+    if (is.finite(outer) && outer > limit && outer <= max(8*height, 3*units/25.4))
       amounts <- c(amounts, outer)
     amounts <- unique(amounts[order(abs(amounts), amounts < 0)])
     text$.axis_clearance_status[i] <- if (feature_collision) 'feature_unresolved' else 'anchor_unresolved'

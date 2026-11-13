@@ -56,6 +56,8 @@ association_metrics <- function(layout) {
       routes <- d[d$.component == 'segment' & d$source_row == source, , drop = FALSE]
       shift <- abs(atan2(sin(atan2(t$y,t$x)-atan2(t$anchor_y,t$anchor_x)),
         cos(atan2(t$y,t$x)-atan2(t$anchor_y,t$anchor_x)))) * sqrt(t$x^2+t$y^2)
+      tangent_error <- if (nrow(glyphs) && isTRUE(t$.draw_as_arc)) max(abs(
+        ((glyphs$angle-atan2(glyphs$y,glyphs$x)*180/pi-90+90)%%180)-90)) else NA_real_
       # Count supporting lines, merging collinear fragments caused by glyph
       # clipping. This observes route complexity without locking coordinates.
       supports <- list()
@@ -69,9 +71,24 @@ association_metrics <- function(layout) {
           abs((a[1]-q$a[1])*q$v[2]-(a[2]-q$a[2])*q$v[1]) < 1e-7, logical(1)))
         if (!same) supports[[length(supports)+1L]] <- list(a=a,v=v)
       }
+      # Check the actual drawable owner's contour, not the label sub-layout's
+      # recomputed surrogate. A small physical tolerance admits edge clearance.
+      shared <- "repeat_count" %in% names(t) && isTRUE(t$repeat_count>1L)
+      anchor_on_source <- if (shared || !length(own)) NA else any(vapply(own, function(p) {
+        a <- cbind(p$x,p$y);b<-a[c(2:nrow(a),1L),,drop=FALSE]
+        edge<-b-a;point<-c(t$anchor_x,t$anchor_y)
+        delta<-matrix(point,nrow(a),2,byrow=TRUE)-a
+        fraction<-pmin(1,pmax(0,rowSums(delta*edge)/pmax(rowSums(edge^2),1e-20)))
+        nearest<-a+edge*fraction
+        ggchord_point_in_polygon(point[1L],point[2L],p) ||
+          min(sqrt(rowSums((nearest-matrix(point,nrow(a),2,byrow=TRUE))^2))) <=
+            .1*(layout$text_units_per_inch %||% .35)/25.4
+      },logical(1)))
       labels[[length(labels)+1L]] <- data.frame(owner = owner, source_row = source,
         source_id = source_id, label = t$label, mode = t$feature_label_mode,
-        contained = contained, arc_text = isTRUE(t$.draw_as_arc),
+        contained = contained, anchor_on_source = anchor_on_source,
+        tangent_error_deg = tangent_error,
+        arc_text = isTRUE(t$.draw_as_arc),
         supporting_segments = length(supports), tangential_shift = shift, has_leader = nrow(routes) > 0L,
         ambiguous_adjacent = t$feature_label_mode == 'adjacent' && !nrow(routes) && shift > max(boxes$oh)*.5)
       for (j in seq_len(nrow(routes))) for (p in polygons) if (association_segment_inside(
@@ -86,6 +103,8 @@ association_metrics <- function(layout) {
   crossings <- unique(ggchord_rbind_fill(crossings) %||% data.frame())
   list(labels = labels, leader_feature_crossings = crossings,
     summary = list(inside_labels_outside_own_feature = sum(labels$mode == 'inside' & !labels$contained),
+      anchors_off_own_feature = sum(labels$anchor_on_source %in% FALSE),
+      internal_glyphs_off_tangent = sum(labels$tangent_error_deg>1,na.rm=TRUE),
       ambiguous_adjacent_without_leader = sum(labels$ambiguous_adjacent),
       leaders_over_one_bend = sum(labels$supporting_segments > 2L),
       internal_labels_without_arc = sum(labels$mode %in% c('inside','adjacent') & !labels$arc_text),

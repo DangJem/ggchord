@@ -25,6 +25,14 @@ for(id in ids) for(style in c('individual','bracket')) {
   converged=attr(table,'ggchord_render_context')$converged,warnings=warnings,
   fit=ggchord_label_fit_diagnostics(l),
   polygons=length(unique(l$gene_polys$group)),source_features=nrow(f))
+ if (any(l$gene_labels$feature_label_mode %in% 'external')) {
+   built <- attr(table,'ggchord_render_built')
+   drawn <- ggchord_rbind_fill(lapply(built$data,function(d) {
+     if (!all(c('.component','.feature_internal_exit') %in% names(d)))return(NULL)
+     d[d$.component %in% 'segment' & d$.feature_internal_exit %in% TRUE,,drop=FALSE]
+   }))
+   stopifnot(is.data.frame(drawn),nrow(drawn)>0L)
+ }
  stopifnot(all(results[[name]]$visibility$visible),
    length(unique(l$gene_polys$source_row))==nrow(f))
  if(id=='pTRE_Tight_BI' && style=='bracket') {
@@ -34,9 +42,11 @@ for(id in ids) for(style in c('individual','bracket')) {
      sum(results[[name]]$visibility$reason=='represented_by_shared_label')==7L,
      sum(results[[name]]$fit$label_fit_reason=='represented_by_shared_label')==7L)
    rendered <- l$layer_geometry[[names(l$layer_geometry)[3L]]]$gene_label_repel
-   # Removal of shared children must not discard the later promoter's leader.
-   promoter <- which(f$anno=='AmpR promoter')
-   stopifnot(any(rendered$.component=='segment' & rendered$source_row %in% promoter))
+   # Remaining leaders must resolve to a visible stable text/source group.
+   segments <- rendered[rendered$.component=='segment',,drop=FALSE]
+   texts <- rendered[rendered$.component=='text',,drop=FALSE]
+   stopifnot(all(segments$group %in% texts$group),
+     all(segments$source_row %in% texts$source_row))
  }
  grDevices::dev.off()
 }

@@ -214,6 +214,7 @@ ggchord_layout_annotation_step <- function(
             as.character(gene$.feature_biological_strand %||% strand), "+/-"
           )
         )
+        piece_polygons <- list()
         for (part in seq_along(shape_parts)) {
           part_index <- part_index + 1L
           mapped <- if (!is.null(shape_parts[[part]]$xy)) {
@@ -223,6 +224,8 @@ ggchord_layout_annotation_step <- function(
               shape_parts[[part]]$angle, shape_parts[[part]]$radius, ref
             )
           }
+          piece_polygons[[length(piece_polygons)+1L]] <- data.frame(
+            x=mapped[,1L],y=mapped[,2L])
           gene_poly_list[[length(gene_poly_list) + 1L]] <- data.frame(
           x = mapped[, 1],
           y = mapped[, 2],
@@ -280,6 +283,8 @@ ggchord_layout_annotation_step <- function(
               boundary_xy <- map_to_curve_many(
                 rep(boundary_angle, 2L), radii, ref
               )
+              clipped_marks <- ggchord_clip_feature_boundary(boundary_xy, piece_polygons)
+              for (boundary_xy in clipped_marks) {
               part_index <- part_index + 1L
               gene_poly_list[[length(gene_poly_list) + 1L]] <- data.frame(
                 x = boundary_xy[, 1L], y = boundary_xy[, 2L],
@@ -298,6 +303,7 @@ ggchord_layout_annotation_step <- function(
                 ord = seq_len(nrow(boundary_xy)),
                 .component = "boundary", stringsAsFactors = FALSE
               )
+              }
             }
           }
         }

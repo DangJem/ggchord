@@ -50,6 +50,20 @@ ggchord_feature_label_shifted <- function(candidate, height) {
 ggchord_simple_feature_leaders <- function(registry, layout) {
   boxes <- ggchord_annotation_text_obstacles(registry, layout)
   units <- layout$text_units_per_inch %||% .35
+  source_maps <- ggchord_annotation_source_maps(layout)
+  attachment_key <- function(owner, source, components) {
+    keys <- unique(source_maps$source_id[source_maps$layer_id %in% owner &
+      source_maps$input_row %in% source & source_maps$component %in% components])
+    if (length(keys)==1L) keys else paste(owner,source,sep="/")
+  }
+  feature_registry <- registry
+  for (id in names(feature_registry)) {
+    p <- feature_registry[[id]]$gene_poly
+    if (!is.data.frame(p) || !nrow(p)) next
+    p$.attachment_id <- vapply(p$source_row,function(source)
+      attachment_key(id,source,"gene_poly"),character(1))
+    feature_registry[[id]]$gene_poly <- p
+  }
   for (owner in names(registry)) {
     geometry <- registry[[owner]]$gene_label_repel
     if (!is.data.frame(geometry) || !nrow(geometry) ||
@@ -70,6 +84,10 @@ ggchord_simple_feature_leaders <- function(registry, layout) {
         next
       }
       own <- boxes$owner == owner & !is.na(boxes$source_row) & boxes$source_row == source
+      row$.attachment_id <- attachment_key(owner,source,
+        c("gene_text","gene_text_repel","gene_label_repel"))
+      if (ggchord_feature_short_attachment(row,boxes[own,,drop=FALSE],
+          feature_registry,units)) next
       route <- data.frame(x0 = row$anchor_x, y0 = row$anchor_y,
         x1 = row$x, y1 = row$y)
       own_cuts <- ggchord_inner_leader_intervals(route, boxes[own, , drop = FALSE])
@@ -109,4 +127,36 @@ ggchord_simple_feature_leaders <- function(registry, layout) {
     registry[[owner]]$gene_label_repel <- ggchord_rbind_fill(parts)
   }
   registry
+}
+
+# Omit an isolated, centred, near-source attachment. Tangential displacement,
+# intervening features, and competing nearby sources still require a leader.
+ggchord_feature_short_attachment <- function(row, boxes, registry, units) {
+  if (!row$feature_label_mode %in% "adjacent" ||
+      isTRUE(row$repeat_count>1L) || !nrow(boxes)) return(FALSE)
+  if (ggchord_feature_label_shifted(row,max(boxes$oh))) return(FALSE)
+  route <- data.frame(x0=row$anchor_x,y0=row$anchor_y,x1=row$x,y1=row$y)
+  cuts <- ggchord_inner_leader_intervals(route,boxes)
+  fraction <- if(nrow(cuts)) min(cuts$start) else 1
+  distance <- sqrt((row$x-row$anchor_x)^2+(row$y-row$anchor_y)^2)
+  if (distance*fraction > 1.5*units/25.4) return(FALSE)
+  # Association remains explicit when another feature is just as close to
+  # the name. Compare contour distance, not distant polygon vertices alone.
+  for (owner in registry) {
+    p <- owner$gene_poly
+    if (!is.data.frame(p) || !nrow(p)) next
+    p <- p[p$.component %in% "polygon",,drop=FALSE]
+    for (part in split(p,p$group,drop=TRUE)) {
+      if (!nrow(part)) next
+      # Shared feature/label source IDs are local; caller supplies own key.
+      if (identical(as.character(part$.attachment_id[1L]),row$.attachment_id)) next
+      xy<-cbind(part$x,part$y);edge<-xy[c(2:nrow(xy),1L),,drop=FALSE]-xy
+      relative<-matrix(c(row$x,row$y),nrow(xy),2,byrow=TRUE)-xy
+      along<-pmin(1,pmax(0,rowSums(relative*edge)/pmax(rowSums(edge^2),1e-20)))
+      closest<-xy+edge*along
+      if (min(sqrt((closest[,1L]-row$x)^2+(closest[,2L]-row$y)^2)) <=
+          distance*1.15) return(FALSE)
+    }
+  }
+  TRUE
 }

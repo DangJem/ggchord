@@ -85,6 +85,7 @@ From the 14-character wrap example, change only label_fit to ellipsis. Then retu
 | label_segment_linetype | auto | Automatic leader line type |
 | label_segment_layer | below | below/above; text retains the label layer position |
 | label_repeat | individual | bracket shares a counted label and arc bracket for consecutive matching short features |
+| label_segment_colour | auto | Grey for leaders from inside features to exterior labels; accepts an explicit colour |
 
 Read exported label placement and fit diagnostics before changing dimensions, label subsets, layout or wrapping. Keep original full names rather than retaining only truncated figure text.
 
@@ -153,3 +154,24 @@ placement. Circular feature bands reserve gutters for names that cannot fit
 inside their arrows, and text tracks use measured heights and physical gaps.
 Explicit `spacing` remains a minimum. This bounded search does not guarantee
 conflict-free placement at every density; inspect actual-size export diagnostics.
+
+
+Default grey dashed lines connect **a feature inside the sequence circle to
+an exterior feature label**. Internal neighbouring labels and restriction
+leaders retain their established style. A centred, isolated name close to its
+feature omits an unnecessary short attachment; displaced or competing names
+retain association leaders.
+
+```r
+geom_feature_label_repel(
+  label_segment_colour = "grey50",
+  label_segment_linetype = "dashed"
+)
+```
+
+Explicit parameters affect all feature leaders in the layer. A custom
+`ggchord.feature.label.segment` theme also overrides the automatic palette.
+Segment boundaries clip to the actual arrow contour without editing source
+segments. Wrapped internal labels use a separate concentric baseline for each
+line. Automatic coordinate text retains a small physical backbone gap;
+explicit offsets keep their contract.

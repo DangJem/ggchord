@@ -131,15 +131,16 @@ GeomChordGeneLabelRepel <- ggplot2::ggproto(
   required_aes = c("x", "y"),
   default_aes = ggplot2::aes(
     xend = NA_real_, yend = NA_real_, label = NA_character_,
-    .component = NA_character_,
+    .component = NA_character_, .feature_internal_exit = FALSE,
     colour = "#2B3035", alpha = NA, linewidth = 0.25, linetype = 1,
     size = 2.5, angle = 0, hjust = 0.5, vjust = 0.5,
     family = "", fontface = 1, lineheight = 1.2
   ),
-  extra_params = c("na.rm", "segment_params", "text_params"),
+  extra_params = c("na.rm", "segment_params", "text_params", "feature_segment_style"),
   draw_key = function(data, params, size) grid::nullGrob(),
   draw_panel = function(data, panel_params, coord, na.rm = FALSE,
-                        segment_params = list(), text_params = list()) {
+                        segment_params = list(), text_params = list(),
+                        feature_segment_style = list()) {
     segment <- data[data$.component %in% "segment", , drop = FALSE]
     text <- data[data$.component %in% "text", , drop = FALSE]
     arc_text <- data[data$.component %in% "arc_text", , drop = FALSE]
@@ -150,6 +151,16 @@ GeomChordGeneLabelRepel <- ggplot2::ggproto(
       segment, segment_params,
       c("colour", "alpha", "linewidth", "linetype")
     )
+    if (nrow(segment) && length(feature_segment_style)) {
+      inner <- segment$.feature_internal_exit %in% TRUE
+      automatic <- isTRUE(segment_params$.automatic_feature_segment)
+      if (!identical(feature_segment_style$colour,"auto")) {
+        segment$colour <- feature_segment_style$colour
+      } else if (automatic) segment$colour[inner] <- "#8A8A8A"
+      if (!identical(feature_segment_style$linetype,"auto")) {
+        segment$linetype <- feature_segment_style$linetype
+      } else if (automatic) segment$linetype[inner] <- "dashed"
+    }
     text <- ggchord_component_style(
       text, text_params,
       text_styles

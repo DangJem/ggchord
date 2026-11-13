@@ -16,8 +16,17 @@ ggchord_layout_finalize_step <- function(
     content <- ggchord_repel_points(seq_arcs, gene_polys,
                                     data.frame(x = numeric(0), y = numeric(0)),
                                     data.frame(), show_axis = FALSE)
-    axis_ticks <- ggchord_hide_text_overlaps(
-      axis_ticks, content,
+    movable <- rep(FALSE,nrow(axis_ticks))
+    if (isTRUE(circular) && all(c(".axis_automatic_breaks",
+        ".axis_offset_explicit",".axis_allow_clearance") %in% names(axis_ticks))) {
+      movable <- axis_ticks$.axis_automatic_breaks %in% TRUE &
+        !(axis_ticks$.axis_offset_explicit %in% TRUE) &
+        axis_ticks$.axis_allow_clearance %in% TRUE
+    }
+    # Measured contour clearance runs later, after every layer owns its
+    # geometry. Do not delete movable strings using pre-clearance positions.
+    if (any(!movable)) axis_ticks[!movable,] <- ggchord_hide_text_overlaps(
+      axis_ticks[!movable,,drop=FALSE], content,
       units_per_inch = text_units_per_inch, circular = circular
     )
   }

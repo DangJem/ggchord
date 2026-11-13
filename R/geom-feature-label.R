@@ -100,6 +100,13 @@ geom_feature_label <- function(
 #'   non-overlapping short features with the same name, type, direction and
 #'   resolved fill in one circular feature band. Source rows and individual
 #'   arrows remain separate. Only supported with `label_layout = "feature"`.
+#' @param label_segment_colour `"auto"` uses muted grey for leaders from
+#'   a feature inside the sequence circle to a label outside it. Other leaders
+#'   retain the theme colour. Explicit colours override both. A custom
+#'   feature-label segment theme overrides the automatic palette.
+#'   `label_segment_linetype = "auto"` uses dashed lines for those
+#'   inside-to-outside attachments. Labels that stay inside retain their
+#'   established leader style.
 #' @param label_segment_layer Draw leaders `"below"` all data layers (default),
 #'   or `"above"` at this label layer's normal position. Text always stays at
 #'   this layer's position. Filled features can cover leaders drawn below;
@@ -136,7 +143,7 @@ geom_feature_label <- function(
 #'   geom_seq() +
 #'   geom_feature(data = features, position = position_plasmid()) +
 #'   geom_feature_label_repel(data = features, position = position_plasmid(),
-#'     label_segment_layer = "below") +
+#'     label_segment_layer = "below", label_segment_colour = "grey50") +
 #'   coord_circular()
 #' # A shared display label preserves all seven biological operator records.
 #' repeated <- find_common_features(plasmid_example_pTRE_Tight_BI)
@@ -163,11 +170,17 @@ geom_feature_label_repel <- function(
     label_min_size = 1.5, label_segment_overlap = "fade",
     label_segment_overlap_alpha = .18, label_segment_linetype = "auto",
     label_segment_layer = c("below", "above"),
-    label_repeat = c("individual", "bracket"), ...) {
+    label_repeat = c("individual", "bracket"),
+    label_segment_colour = "auto", ...) {
   position_explicit <- !missing(position)
   dots <- list(...)
   ggchord_reject_label_prefix(dots, "geom_feature_label_repel()")
   ggchord_reject_manual_label_args(dots, "geom_feature_label_repel()")
+  if (!is.character(label_segment_colour) || length(label_segment_colour)!=1L ||
+      is.na(label_segment_colour)) ggchord_stop("label_segment_colour must be 'auto' or one colour")
+  if (!identical(label_segment_colour,"auto")) tryCatch(
+    grDevices::col2rgb(label_segment_colour), error=function(e)
+      ggchord_stop("label_segment_colour must be 'auto' or one colour"))
   label_repeat <- match.arg(label_repeat)
   label_segment_layer <- match.arg(label_segment_layer)
   label_layout <- match.arg(label_layout)
@@ -195,6 +208,8 @@ geom_feature_label_repel <- function(
     # `feature` is an internal staged mode of the shared composite renderer:
     # fit inside first, nudge only nearby labels, and emit leaders only when a
     # real radial gap separates the curved glyph envelope from its feature.
+    lyr$geom_params$feature_segment_style <- list(
+      colour=label_segment_colour,linetype=label_segment_linetype)
     lyr$ggchord_params$gene_label_layout <- "feature"
     lyr$ggchord_params$label_segment_layer <- label_segment_layer
     lyr$ggchord_params$is_feature_label <- TRUE
@@ -216,6 +231,9 @@ geom_feature_label_repel <- function(
         colour = I(feature_label_colour)
       )$colour
     }
+    lyr$mapping[[".feature_internal_exit"]] <- ggplot2::aes(
+      .feature_internal_exit = I(.feature_internal_exit)
+    )$.feature_internal_exit
     lyr$mapping[["feature_label_mode"]] <- ggplot2::aes(
       feature_label_mode = I(feature_label_mode)
     )$feature_label_mode
@@ -241,6 +259,8 @@ geom_feature_label_repel <- function(
     show.legend = show.legend, inherit.aes = inherit.aes, ...
   )
   lyr$ggchord_params$gene_label_layout <- if (label_fit == "shrink") "feature" else label_layout
+  lyr$geom_params$feature_segment_style <- list(
+    colour=label_segment_colour,linetype=label_segment_linetype)
   lyr$ggchord_params$label_segment_layer <- label_segment_layer
   lyr$ggchord_params$is_feature_label <- TRUE
   lyr$ggchord_params$position_explicit <- position_explicit

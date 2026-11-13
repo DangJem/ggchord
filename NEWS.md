@@ -1,5 +1,30 @@
 # ggchord 0.27.0 (development)
 
+- Feature segment-boundary marks are clipped to the actual arrow contour,
+  including tapered and compressed heads, instead of spanning the nominal
+  feature width. Isolated, centred internal names omit unnecessary short
+  attachments; shifted or competing names retain source leaders.
+  `geom_feature_label_repel(label_segment_colour = "auto")` uses muted grey
+  for leaders that start inside the sequence circle and end at an exterior
+  feature label; automatic line type makes those attachments dashed. Labels
+  that stay inside and restriction-site leaders retain their previous style.
+  Explicit colour/line type or a custom segment theme takes priority.
+
+- Wrapped internal feature labels now draw each line along its own concentric
+  baseline, using the same glyph geometry for placement, clipping and display.
+  Automatic plasmid coordinate strings retain a small physical gap from the
+  backbone. Movable strings reach measured clearance before overlap hiding,
+  rather than disappearing based on their pre-clearance positions.
+
+- Matched circular feature geometry and label owners now share one font-size
+  measurement context before dependency layouts and obstacle collection.
+  Adding independent primer layers no longer makes the same feature bands use
+  different arrow widths or radial gaps. Multiple matching label layers retain
+  their own text styles while the shared geometry uses their largest size.
+  Automatic gutter estimates use a bounded share of the available inner radius.
+  Axis clearance also reserves fixed feature-leader exits through the backbone;
+  blocked automatic strings may use a bounded alternate lane.
+
 - Circular plasmid axis text uses a narrow measured channel next to the
   backbone while explicit breaks and offsets keep their placement. Stacked
   circular feature bands reserve space for labels that cannot fit their arrows
