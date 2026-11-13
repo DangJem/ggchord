@@ -1,0 +1,85 @@
+{
+  "scope": "Actual current rerenders; identical tracked PNGs reused after SHA256 equality, before any duplicate removal",
+  "reused_images": {
+    "v0.27.0-exit-final-b-pUC19.png": {
+      "file": "v0.27.0-compact-final-pUC19.png",
+      "sha256": "d8a1bc110476fb3989dbee4d0f40e471727de61cb0507616b8f8e1fe82b0026d"
+    },
+    "v0.27.0-exit-final-b-pBR322.png": {
+      "file": "v0.27.0-compact-final-pBR322.png",
+      "sha256": "e57f81acc123d49e6cfe9e6856bd987b078ee1008879897aea1172b0c2d7c4b9"
+    },
+    "v0.27.0-exit-final-b-pBluescript_II_SK_plus.png": {
+      "file": "v0.27.0-compact-final-pBluescript_II_SK_plus.png",
+      "sha256": "a06cdb74f4c16b1cb24f1846302d50ad3908da8260d0182c93ff8c3c469b3d0c"
+    },
+    "v0.27.0-exit-final-a-pET_28a_plus.png": {
+      "file": "v0.27.0-endpoint-slot-pET_28a_plus.png",
+      "sha256": "5798ef843f179622aa9e5abc001fa578b04a91e12b11ab79d2456afa4ff46251"
+    },
+    "v0.27.0-exit-final-b-pcDNA3_1_plus.png": {
+      "file": "v0.27.0-compact-final-pcDNA3_1_plus.png",
+      "sha256": "86d3dd192dd466f34ba24667e9d7430648dce659db94afd6633fe6d4d98b7a50"
+    },
+    "v0.27.0-exit-final-b-pDONR221.png": {
+      "file": "v0.27.0-compact-final-pDONR221.png",
+      "sha256": "0db9c40e11d01b37df1c196aba708f6a5b67df323acbdb3537ccd54b639fb8b6"
+    },
+    "v0.27.0-exit-final-a-pCAMBIA1300.png": {
+      "file": "v0.27.0-endpoint-slot-pCAMBIA1300.png",
+      "sha256": "cc59bd8e5bce8ba591a0699b5708c054baa966afeb96b43bea7361c9ae3373e4"
+    },
+    "v0.27.0-exit-final-b-pEarleyGate_201.png": {
+      "file": "v0.27.0-compact-final-pEarleyGate_201.png",
+      "sha256": "e7f4141291aff84e55f773bf360cbcea19aec487a35b0507640a670616540db6"
+    },
+    "v0.27.0-exit-final-b-pTRIPZ.png": {
+      "file": "v0.27.0-compact-final-pTRIPZ.png",
+      "sha256": "0cb1a447024cc85119306e02a3488ddc925cc442ad7b6213046abd46afc9df84"
+    }
+  },
+  "retained_images": [
+    {
+      "file": "v0.27.0-exit-final-a-pSB1C3.png",
+      "sha256": "41d877935e2c46869c23b95ceb4b1e385e4959cec7210651a7c4f26a82bd8597"
+    },
+    {
+      "file": "v0.27.0-exit-final-a-pETDuet_1.png",
+      "sha256": "2ecf6ccccc3053321ad699937abdd8649f7552753e31d464c1ea96cf7010902b"
+    },
+    {
+      "file": "v0.27.0-exit-final-a-pTRE_Tight_BI.png",
+      "sha256": "060ad2927d82f86ee8c6d3b2776800426314ad169a4d6f8c65d28c1d977b561f"
+    },
+    {
+      "file": "v0.27.0-exit-final-a-pSpCas9_BB_2A_GFP_PX458.png",
+      "sha256": "0dfa016feac2e366dfc1fb09125d3dfe27c5c6df4092c7115d48739a0e6b528b"
+    }
+  ],
+  "removed_intermediate_images": [
+    {
+      "file": "v0.27.0-endpoint-slot-pSB1C3.png",
+      "sha256": "41d877935e2c46869c23b95ceb4b1e385e4959cec7210651a7c4f26a82bd8597",
+      "reuse": "v0.27.0-exit-final-a-pSB1C3.png",
+      "reason": "duplicate of final render"
+    },
+    {
+      "file": "v0.27.0-endpoint-slot-pETDuet_1.png",
+      "sha256": "2ecf6ccccc3053321ad699937abdd8649f7552753e31d464c1ea96cf7010902b",
+      "reuse": "v0.27.0-exit-final-a-pETDuet_1.png",
+      "reason": "duplicate of final render"
+    },
+    {
+      "file": "v0.27.0-endpoint-slot-pSpCas9_BB_2A_GFP_PX458.png",
+      "sha256": "0dfa016feac2e366dfc1fb09125d3dfe27c5c6df4092c7115d48739a0e6b528b",
+      "reuse": "v0.27.0-exit-final-a-pSpCas9_BB_2A_GFP_PX458.png",
+      "reason": "duplicate of final render"
+    },
+    {
+      "file": "v0.27.0-endpoint-slot-pTRE_Tight_BI.png",
+      "sha256": "075e7f971741bb7ceec31c2f001288f252d80c70fcd68882bb912613ad0cde03",
+      "reuse": null,
+      "reason": "intermediate three-contact candidate; measurements retained in endpoint-slot results"
+    }
+  ]
+}

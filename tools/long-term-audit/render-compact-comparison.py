@@ -1,4 +1,5 @@
 """Read completed observations; no rendering or changes to source inputs."""
+import argparse
 import csv
 import hashlib
 import html
@@ -6,14 +7,28 @@ import json
 from pathlib import Path
 
 root = Path(__file__).resolve().parent
-before = json.loads((root / 'v0.27.0-cluster-final-results.json').read_text())
-after = json.loads((root / 'v0.27.0-compact-final-results.json').read_text())
-retention = json.loads((root / 'v0.27.0-compact-image-retention.json').read_text())
+parser = argparse.ArgumentParser(description=__doc__)
+parser.add_argument('--before', default='v0.27.0-cluster-final-results.json')
+parser.add_argument('--after', default='v0.27.0-compact-final-results.json')
+parser.add_argument('--output-prefix', default='v0.27.0-compact-comparison')
+parser.add_argument('--image-retention')
+args = parser.parse_args()
+for name in (args.before, args.after, args.output_prefix):
+    assert Path(name).name == name
+before = json.loads((root / args.before).read_text())
+after = json.loads((root / args.after).read_text())
+retentions = [json.loads((root / 'v0.27.0-compact-image-retention.json').read_text())]
+if args.image_retention:
+    assert Path(args.image_retention).name == args.image_retention
+    retentions.append(json.loads((root / args.image_retention).read_text()))
+styles = args.before == 'v0.27.0-cluster-final-results.json' and args.after == 'v0.27.0-compact-final-results.json'
+before_caption = Path(args.before).name.removesuffix('-results.json')
+after_caption = Path(args.after).name.removesuffix('-results.json')
 
 
 def image_file(file):
     name = Path(file).name
-    reuse = retention['reused_images'].get(name)
+    reuse = next((r['reused_images'][name] for r in reversed(retentions) if name in r['reused_images']), None)
     if reuse:
         name = reuse['file']
         assert hashlib.sha256((root / name).read_bytes()).hexdigest() == reuse['sha256']
@@ -49,28 +64,28 @@ for name, case in after['cases'].items():
             f"穿字框 {old['quality']['n_leaders_through_text']} → {case['quality']['n_leaders_through_text']}；"
             f"收敛 {old['converged']} → {case['converged']}")
     sections.append(f'<section><h2>{html.escape(name)}</h2><p>{html.escape(desc)}</p><div class="pair">'
-                    f'<figure><figcaption>之前：cluster-final</figcaption><img src="{image_file(old["file"])}"></figure>'
-                    f'<figure><figcaption>之后：compact-final，默认 individual</figcaption><img src="{image_file(case["file"])}"></figure>'
+                    f'<figure><figcaption>之前：{html.escape(before_caption)}</figcaption><img src="{image_file(old["file"])}"></figure>'
+                    f'<figure><figcaption>之后：{html.escape(after_caption)}，默认 individual</figcaption><img src="{image_file(case["file"])}"></figure>'
                     '</div></section>')
-for name in ('pTRE_Tight_BI', 'pCAMBIA1300', 'pETDuet_1'):
+for name in (('pTRE_Tight_BI', 'pCAMBIA1300', 'pETDuet_1') if styles else ()):
     individual = image_file(f'v0.27.0-compact-{name}-individual.png')
     bracket = image_file(f'v0.27.0-compact-{name}-bracket.png')
     sections.append(f'<section><h2>{name}：显式样式对照</h2><p>本节不含限制位点；两侧保留相同完整特征与画布，只有 label_repeat 不同。</p><div class="pair">'
                     f'<figure><figcaption>individual</figcaption><img src="{individual}"></figure>'
                     f'<figure><figcaption>bracket</figcaption><img src="{bracket}"></figure></div></section>')
 extra = root / 'v0.27.0-repeat-catalogue-control-results.json'
-if extra.exists():
+if styles and extra.exists():
     grouped = json.loads(extra.read_text())
     assert grouped['converged'] and all(row['visible'] for row in grouped['visibility'])
     sections.append('<section><h2>pTRIPZ：完整位点下的重复标注样式</h2>'
                     '<p>两侧相同原始特征、reference 位点及10×8英寸画布，6个连续 operator 共享一个计数标签，箭头保持独立。</p><div class="pair">'
                     f'<figure><figcaption>individual</figcaption><img src="{image_file("v0.27.0-compact-final-pTRIPZ.png")}"></figure>'
                     f'<figure><figcaption>bracket</figcaption><img src="{image_file("v0.27.0-repeat-pTRIPZ-bracket.png")}"></figure></div></section>')
-with (root / 'v0.27.0-compact-comparison.csv').open('w', newline='') as stream:
+with (root / (args.output_prefix + '.csv')).open('w', newline='') as stream:
     writer = csv.DictWriter(stream, rows[0].keys(), lineterminator='\n')
     writer.writeheader()
     writer.writerows(rows)
-(root / 'v0.27.0-compact-comparison.html').write_text('''<!doctype html><html lang="zh-Hans"><meta charset="utf-8">
+(root / (args.output_prefix + '.html')).write_text('''<!doctype html><html lang="zh-Hans"><meta charset="utf-8">
 <title>质粒紧凑布局：同输入、同尺寸对照</title><style>
 body{font:16px system-ui,sans-serif;line-height:1.6;margin:2rem;background:#f5f5f5;color:#202020}
 section{margin:2rem 0;padding:1rem;background:white;border-radius:8px}.pair{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
@@ -80,4 +95,4 @@ figure{margin:0}img{width:100%;height:auto}figcaption{font-weight:bold}@media(ma
 新括注样式另列，不把共享来源计作独立字框。几何穿字框记录不等于最终可见墨迹穿越，也不等于已通过遮盖认证。
 灰色虚线用于圆内特征→圈外标签；限制位点保留原样式。原点/终点文字优先保留；拥挤的普通中间刻度可依据重叠策略隐藏文字并保留刻度，诊断记录 hidden_near_backbone。源标签统计不包括坐标轴文字。</p>
 ''' + ''.join(sections) + '</html>')
-print('Wrote 13 unchanged-input pairs, four style pairs and CSV; verified reused image hashes')
+print(f'Wrote {len(rows)} unchanged-input pairs and CSV; verified reused image hashes')

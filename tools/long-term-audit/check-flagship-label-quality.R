@@ -42,6 +42,12 @@ if ('--device' %in% commandArgs(trailingOnly = TRUE)) {
   routes <- TRUE
   prefix <- 'v0.27.0-flagship-device-'
 }
+requested_prefix <- Sys.getenv('GGCHORD_FLAGSHIP_PREFIX')
+if (nzchar(requested_prefix)) {
+  stopifnot(grepl('^[A-Za-z0-9._-]+$', requested_prefix))
+  prefix <- requested_prefix
+  routes <- TRUE
+}
 lines <- readLines('tools/documentation-examples.R', warn = FALSE)
 markers <- grep('^# ---- [a-z]+ ----$', lines)
 chunks <- stats::setNames(lapply(seq_len(length(markers)-1L), function(i)
