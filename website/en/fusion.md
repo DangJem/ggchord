@@ -105,9 +105,12 @@ may differ slightly while source coordinates remain unchanged. Use ordinary
 {{code:fusionsave}}
 
 Fully visible intervals are required. Prepare partial windows or splits in
-the source workflow explicitly. Cross-origin wrapping, direct bp↔aa links,
-Dotplot, facets, external ggplot coordinate guessing and automatic global routing
-remain outside this interface. Explicit derived views and placement are described below. Links may cross or pass through panel interiors; foreground
+the source workflow explicitly. Ordinary `fusion_ribbon()` inputs require prepared continuous intervals.
+For cross-origin selections, use the explicit `magnify_ggchord()` with region `wrap = TRUE`
+region workflow below, with matching complete source lengths. Direct bp↔aa
+links, Dotplot, facets and unregistered external plots remain unsupported.
+`direct`, `avoid` and `bundle` route against their documented measured obstacles;
+they do not guarantee a global optimum. Explicit derived views and placement are described below. Links may cross or pass through panel interiors; foreground
 annotations are retained, but arbitrary layouts are not guaranteed collision-free.
 
 
@@ -164,7 +167,7 @@ In this example, each row of `region` selects one original source interval; all 
 ```r
 library(dplyr)
 seqs <- seq_data_example |> select(accver, length)
-features <- gene_data_example |> mutate(type = 'gene')
+features <- gene_data_example |> mutate(strand = source_strand, type = 'CDS')
 hsp <- ribbon_data_example |> slice(1)
 regions <- bind_rows(
   transmute(hsp, accver = qaccver, start = pmin(qstart, qend), end = pmax(qstart, qend)),

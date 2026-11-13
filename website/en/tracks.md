@@ -25,8 +25,9 @@ measurements. `position_track()` controls placement/physical width;
 ## Share an ID deliberately {#sharing}
 Same-ID layers share a numerical domain, including bar baselines, and must agree
 on width/placement. Colour scales are scoped independently by track ID. Tiles
-show interval categories, lines connect observations, bars encode interval values
-relative to a baseline. Sharing a domain does not require sharing a spatial band.
+show interval categories, lines connect observations, `geom_track_col()` encodes supplied interval values relative to a baseline;
+`geom_track_bar()` counts observations at positions with baseline 0. Binning
+requires explicit binwidth/breaks through the bin workflow. Sharing a domain does not require sharing a spatial band.
 
 ## Inspect retention and limits {#diagnostics}
 The export's `track_registry` and `track_diagnostics` record domains, physical

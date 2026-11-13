@@ -2017,7 +2017,7 @@
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "bp gene layers; all three coordinates",
+      "en": "bp gene layers; compatible backbone coordinates",
       "zh": "三种模式的 bp 基因图层"
     }
   },
@@ -3114,7 +3114,7 @@
     "page": "fusion",
     "anchor": "intervals",
     "reason": "Runnable source-backed composition with explicit boundaries and measured interval exports",
-    "modes": "Fusion",
+    "modes": "Registered genomic plots, nested Fusion and registered character details; explicit panel/instance routing; Dotplot excluded",
     "parameters": [],
     "purpose": {
       "en": "Connect full source intervals",
@@ -3124,8 +3124,8 @@
     "case": "fusion",
     "scope": "F0/F1 static composition; no F2/F3 guarantee",
     "modes_localized": {
-      "en": "Circular/Chord center and 1–4 horizontal/vertical Collinear panels",
-      "zh": "Circular/Chord中央图与1–4个横纵Collinear面板"
+      "en": "Registered genomic plots, nested Fusion and registered character details; explicit panel/instance routing; Dotplot excluded",
+      "zh": "已注册基因组图、嵌套 Fusion 与已注册字符细节；显式面板/实例路由；不含 Dotplot"
     }
   },
   "export_ggchord_fusion": {
@@ -3133,7 +3133,7 @@
     "page": "fusion",
     "anchor": "export",
     "reason": "Runnable source-backed composition with explicit boundaries and measured interval exports",
-    "modes": "Fusion",
+    "modes": "Registered genomic plots, nested Fusion and registered character details; explicit panel/instance routing; Dotplot excluded",
     "parameters": [],
     "purpose": {
       "en": "Export measured composition fronts and sources",
@@ -3143,8 +3143,8 @@
     "case": "fusion",
     "scope": "F0/F1 static composition; no F2/F3 guarantee",
     "modes_localized": {
-      "en": "Circular/Chord center and 1–4 horizontal/vertical Collinear panels",
-      "zh": "Circular/Chord中央图与1–4个横纵Collinear面板"
+      "en": "Registered genomic plots, nested Fusion and registered character details; explicit panel/instance routing; Dotplot excluded",
+      "zh": "已注册基因组图、嵌套 Fusion 与已注册字符细节；显式面板/实例路由；不含 Dotplot"
     }
   },
   "read_bedpe": {
@@ -3262,7 +3262,7 @@
     "page": "fusion",
     "anchor": "magnify",
     "reason": "Runnable source-backed locus and explicit local detail; source/leader/stat boundaries reviewed",
-    "modes": "Circular/Chord source; Collinear detail",
+    "modes": "Registered genomic plots, nested Fusion and registered character details; explicit panel/instance routing; Dotplot excluded",
     "parameters": [
       "region",
       "detail_plot",
@@ -3280,8 +3280,8 @@
     "case": "fusion",
     "scope": "Explicit source-aware composition, physical placement and nested leaf paths; no inferred alignments or silent statistical rebuilding",
     "modes_localized": {
-      "en": "Registered genomic/character panels; eight sides, explicit boxes and nested paths",
-      "zh": "已注册基因组/字符面板；八方位、显式区域和嵌套路径"
+      "en": "Registered genomic plots, nested Fusion and registered character details; explicit panel/instance routing; Dotplot excluded",
+      "zh": "已注册基因组图、嵌套 Fusion 与已注册字符细节；显式面板/实例路由；不含 Dotplot"
     }
   },
   "adapt_ggchord": {

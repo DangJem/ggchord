@@ -1,5 +1,12 @@
 # ggchord 0.27.0 (development)
 
+- Website installation guidance pins the development runtime source and separates
+  it from stable-version help. Projection, GFF3 unknown-strand handling, count
+  versus supplied-value tracks, registered character details and Fusion scope
+  are described consistently. Parameter atlas types use API context, distinguish
+  missing formal defaults from required arguments, and document count bars'
+  zero-baseline restriction. Existing public aliases retain their reference routes.
+
 - Automatic sequence-axis lines and major/minor ticks now draw before the
   first gene, feature or primer layer, so marks no longer paint over feature
   arrows. Measured axis text remains in front. User layer order, source

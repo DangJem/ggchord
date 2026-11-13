@@ -181,7 +181,7 @@
       "en": "Show local windows and breaks"
     },
     "api": "segment_ggchord_data",
-    "parameters": "loci; coord_collinear: segments, segment_gap",
+    "parameters": "windows; coord_collinear: segments, segment_gap",
     "modes": "B",
     "page": "views#segments",
     "level": "advanced"

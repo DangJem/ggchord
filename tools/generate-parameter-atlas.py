@@ -17,12 +17,20 @@ def family(name):
         if name.startswith(prefix):return key
     return 'workflows'
 
-def kind(name,default,lang):
+def kind(api,name,default,lang):
     zh=lang=='zh'
+    # Same spelling does not imply the same parameter contract across APIs.
+    if api=='map_alignment_position' and name=='position':
+        return '正整数或 NA；原始位置或对齐列' if zh else 'Positive integers or NA; source positions or alignment columns'
+    if api=='map_ggchord_position' and name=='position':
+        return '数值位置；Radial 逆映射用 x/y 矩阵或数据框' if zh else 'Numeric positions; Radial inverse uses an x/y matrix or data frame'
+    if name in ['seq_data','ribbon_data','gene_data','feature_data']:
+        return '本函数支持的表格/对象；见右侧契约' if zh else 'API-specific table/supported object; see the contract'
+    if name=='data':
+        return ('图层数据表或 ggplot2 数据函数' if zh else 'Layer data frame or ggplot2 data function') if api.startswith('geom_') else ('本函数的数据输入；见右侧契约' if zh else 'API-specific data input; see the contract')
     if name=='...':return '上游转发参数' if zh else 'Forwarded arguments'
     if name=='sequence':return '序列对象/字符串/完整序列表，见说明' if zh else 'Sequence object/string/complete-sequence table; see description'
     if name=='mapping':return 'aes 映射' if zh else 'aes mapping'
-    if name in ['data','seq_data','ribbon_data','gene_data','feature_data']:return '表格/受支持对象；data 还可为函数' if zh else 'Table/supported object; data may be a function'
     if name in ['file','files','python','ids']:return '字符路径、标识或向量；见约束' if zh else 'Character path/identifier/vector; see constraints'
     if name in ['loci','segments','anchor']:return '显式窗口/锚点表或已记录的等价输入' if zh else 'Explicit window/anchor table or documented equivalent'
     if default in ['TRUE','FALSE']:return '逻辑值' if zh else 'Logical'
@@ -71,10 +79,12 @@ def main():
                     description=source.get(parameter,{}).get(lang)
                     if description is None:
                         description=('由继承参数及上游接口定义；见完整参考。' if zh else 'Defined by inherited arguments and upstream contract; see full reference.')
-                    default_text=default or ('必需/互斥入口，见说明' if zh else 'Required/alternative entry; see description')
-                    cells=[f'`{parameter}`',f'`{default_text}`',kind(parameter,default,lang),description]
+                    if name=='geom_track_bar' and parameter=='baseline':
+                        description=('计数柱仅允许 0 基线；任何非零值均报错。给定数值和非零基线使用 geom_track_col()。' if zh else 'Count bars require baseline 0; every nonzero value is rejected. Use geom_track_col() for supplied values and nonzero baselines.')
+                    default_text=default or ('无形式默认；是否必需见契约' if zh else 'No formal default; requiredness follows the contract')
+                    cells=[f'`{parameter}`',f'`{default_text}`',kind(name,parameter,default,lang),description]
                     content+=['| '+' | '.join(c.replace('|','\\|').replace('\n',' ') for c in cells)+' |']
-                    if lang=='en':records.append(dict(api=name,parameter=parameter,default=default,type=kind(parameter,default,'en'),constraint=description,source=str(path.relative_to(ROOT))))
+                    if lang=='en':records.append(dict(api=name,parameter=parameter,default=default,type=kind(name,parameter,default,'en'),constraint=description,source=str(path.relative_to(ROOT)),requiredness='see API contract' if not default else 'has formal default'))
                 content+=['\n</details>\n']
         content += ['\n## '+('上游重导出与对象' if zh else 'Upstream reexports and objects')+' {#upstream}\n',
                     ('这些入口保留上游 ggplot2/grid 语义；它们不是新增的 ggchord 图层。after_stat/after_scale 的阶段不同，不能由 identical 结果推断可互换。\n' if zh else 'These retain upstream ggplot2/grid semantics rather than defining new ggchord layers. After_stat and after_scale differ by stage even if identical compares their R objects equal.\n')]
@@ -86,8 +96,8 @@ def main():
             content += ['| '+('参数 | 签名默认 | 类型/约束' if zh else 'Parameter | Signature default | Type/contract')+' |','| --- | --- | --- |']
             for parameter,default in (entry['parameters'] or {}).items():
                 note=('遵循上游接口；具体类型、单位和允许值见其帮助。' if zh else 'Follow upstream help for types, units and accepted values.')
-                content += ['| `'+parameter+'` | `'+(default or ('必需/互斥入口' if zh else 'Required/alternative entry'))+'` | '+kind(parameter,default,lang)+'; '+note+' |']
-                if lang=='en':records.append(dict(api=name,parameter=parameter,default=default,type=kind(parameter,default,'en'),constraint=note,source=str(path.relative_to(ROOT)) if path else entry['owner']))
+                content += ['| `'+parameter+'` | `'+(default or ('无形式默认；见上游契约' if zh else 'No formal default; see upstream contract'))+'` | '+kind(name,parameter,default,lang)+'; '+note+' |']
+                if lang=='en':records.append(dict(api=name,parameter=parameter,default=default,type=kind(name,parameter,default,'en'),constraint=note,source=str(path.relative_to(ROOT)) if path else entry['owner'],requiredness='upstream contract'))
             content += ['\n</details>\n']
         result='\n'.join(content).rstrip()+'\n';target=WEB/lang/'parameter-atlas.md'
         if args.check:assert target.read_text()==result,'Stale parameter atlas: '+lang

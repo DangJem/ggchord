@@ -146,7 +146,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
 | `mapping` | `NULL` | aes mapping | Standard ggplot2 mapping and layer data. Data defaults to the constructor's ribbon_data. Geometry roles are qaccver, saccver, qstart, qend, sstart, and send. |
-| `data` | `NULL` | Table/supported object; data may be a function | Standard ggplot2 mapping and layer data. Data defaults to the constructor's ribbon_data. Geometry roles are qaccver, saccver, qstart, qend, sstart, and send. |
+| `data` | `NULL` | Layer data frame or ggplot2 data function | Standard ggplot2 mapping and layer data. Data defaults to the constructor's ribbon_data. Geometry roles are qaccver, saccver, qstart, qend, sstart, and send. |
 | `colour` | `"#59636D"` | Character/enum; choices below | Fixed styles. Mapped styles use link_colour, link_alpha, link_linewidth and link_linetype, with the corresponding scale_link functions. Explicit fixed styles win. |
 | `alpha` | `0.6` | Numeric/integer; range in description | Fixed styles. Mapped styles use link_colour, link_alpha, link_linewidth and link_linetype, with the corresponding scale_link functions. Explicit fixed styles win. |
 | `linewidth` | `0.4` | Numeric/integer; range in description | Fixed styles. Mapped styles use link_colour, link_alpha, link_linewidth and link_linetype, with the corresponding scale_link functions. Explicit fixed styles win. |
@@ -155,7 +155,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `show.legend` | `NA` | R object; constraints below | Standard ggplot2 layer arguments. |
 | `inherit.aes` | `FALSE` | Logical | Standard ggplot2 layer arguments. |
 | `allow_repeated` | `FALSE` | Logical | Allow explicitly identified source_hsp_id records to be displayed more than once. All participating layers must opt in. Rows without declared IDs are never deduplicated by their values. |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Additional arguments passed to ggplot2's segment geometry. |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Additional arguments passed to ggplot2's segment geometry. |
 
 </details>
 
@@ -169,7 +169,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
 | `mapping` | `NULL` | aes mapping | Optional aesthetic mapping. Role aesthetics such as accver, start, end and strand may rename input columns; ordinary visual mappings are evaluated after geometry is generated. |
-| `data` | `NULL` | Table/supported object; data may be a function | data.frame with accver, start, end and strand; optional type, category and label. Factor start/end columns use their numeric labels, not their internal level codes. Coordinates must resolve to finite numbers. display_priority or logical prioritized_display. As an alternative to strand, directionality or direction may contain "forward", "reverse", "bidirectional", or "none". When omitted, uses the full constructor feature_data (or compatible gene_data). Other layers never remove records from this default input. |
+| `data` | `NULL` | Layer data frame or ggplot2 data function | data.frame with accver, start, end and strand; optional type, category and label. Factor start/end columns use their numeric labels, not their internal level codes. Coordinates must resolve to finite numbers. display_priority or logical prioritized_display. As an alternative to strand, directionality or direction may contain "forward", "reverse", "bidirectional", or "none". When omitted, uses the full constructor feature_data (or compatible gene_data). Other layers never remove records from this default input. |
 | `shape` | `"arrow"` | Character/enum; choices below | Fixed feature geometry. An explicitly supplied shape takes precedence over aes(feature_shape = ...): "arrow", "compact_arrow", "promoter_arrow", "primer_arrow", "marker", "block", "capped_line", "primer_arc", "chevron", or "lollipop". The default is "arrow". Use aes(feature_shape = type) together with scale_feature_shape_manual() to map categories to geometry. |
 | `width` | `NULL` | Geometry number/vector/documented formats | Optional numeric/vector/list controlling width in the shared feature geometry engine. In a circular feature-label composition, the base width responds to final label size within bounded limits. |
 | `arrow_head_length` | `0.04` | Numeric/integer; range in description | Arrow-head dimensions in the sequence-local frame, shared with geom_gene(). Values above one for arrow_head_width create a protruding block-arrow head. |
@@ -183,7 +183,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `position` | `"identity"` | Character/enum; choices below | Feature placement. Use "identity", "strand", "plasmid", position_strand(), position_plasmid(), or position_feature_stack(). |
 | `show.legend` | `TRUE` | Logical | Standard ggplot2 layer arguments. |
 | `inherit.aes` | `FALSE` | Logical | Standard ggplot2 layer arguments. |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Additional fixed polygon aesthetics. |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Additional fixed polygon aesthetics. |
 
 </details>
 
@@ -197,7 +197,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
 | `mapping` | `NULL` | aes mapping | Standard layer inputs. Map feature text with label. |
-| `data` | `NULL` | Table/supported object; data may be a function | Standard layer inputs. Map feature text with label. |
+| `data` | `NULL` | Layer data frame or ggplot2 data function | Standard layer inputs. Map feature text with label. |
 | `label_orientation` | `c("feature", "horizontal", "radial", "tangent")` | Vector; choices versus multiple selection below | One of "feature", "horizontal", "radial", or "tangent". "feature" keeps both internal and adjacent labels tangent to the feature direction; compact labels move beside the feature. |
 | `label_side` | `c("outside", "inside", "auto")` | Vector; choices versus multiple selection below | One of "inside", "outside", or "auto". |
 | `label_overlap` | `c("hide", "nudge", "allow")` | Vector; choices versus multiple selection below | Fixed-label collision policy. |
@@ -209,7 +209,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `position` | `"identity"` | Character/enum; choices below | Feature Position used for the label anchor. In coord_collinear(), an omitted Position shares the matching feature layer's lanes; an explicit Position changes only label anchors, leaving feature polygons in their own Position. If both inputs contain unique feature_id values, label inputs may be subsets or reordered; their accession, interval and strand must still agree. Without IDs, inheritance requires the same interval rows in order. Multiple matching geometry layers require an explicit label Position or unambiguous feature IDs. |
 | `show.legend` | `FALSE` | Logical | Standard ggplot2 layer arguments. |
 | `inherit.aes` | `FALSE` | Logical | Standard ggplot2 layer arguments. |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Additional text parameters. |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Additional text parameters. |
 
 </details>
 
@@ -223,7 +223,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
 | `mapping` | `NULL` | aes mapping | Standard layer inputs. Map feature text with label. |
-| `data` | `NULL` | Table/supported object; data may be a function | Standard layer inputs. Map feature text with label. |
+| `data` | `NULL` | Layer data frame or ggplot2 data function | Standard layer inputs. Map feature text with label. |
 | `label_layout` | `c("feature", "radial", "auto", "callout")` | Vector; choices versus multiple selection below | One of "feature", "radial", "auto", or "callout". The default "feature" follows plasmid-map convention: text is tried inside first, then assigned to a fixed-radius internal track. All non-external text is laid out character by character along its selected track radius rather than rotated as one straight string. A light leader appears when tracks separate the feature and its label or a visible angular displacement could obscure ownership. Circular feature layouts retain direct leaders instead of multi-bend detours. Choose another mode for unrestricted external callouts. |
 | `label_wrap` | `NULL` | Nullable R object; type/inheritance below | Text fitting controls. label_fit = "shrink" explicitly uses internal-first placement without truncating the text. Text size is bounded by label_min_size; unresolved labels keep their requested font and use adjacent/external placement or hiding. Other fitting modes retain their existing behavior. |
 | `label_fit` | `c("wrap", "none", "ellipsis", "auto", "shrink")` | Vector; choices versus multiple selection below | Text fitting controls. label_fit = "shrink" explicitly uses internal-first placement without truncating the text. Text size is bounded by label_min_size; unresolved labels keep their requested font and use adjacent/external placement or hiding. Other fitting modes retain their existing behavior. |
@@ -241,7 +241,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `label_segment_layer` | `c("below", "above")` | Vector; choices versus multiple selection below | Draw leaders "below" all data layers (default), or "above" at this label layer's normal position. Text always stays at this layer's position. Filled features can cover leaders drawn below; transparent features retain their normal transparency. |
 | `label_repeat` | `c("individual", "bracket")` | Vector; choices versus multiple selection below | "individual" (default) keeps one label per feature. "bracket" shares a counted label and an arc bracket for consecutive, non-overlapping short features with the same name, type, direction and resolved fill in one circular feature band. Source rows and individual arrows remain separate. Only supported with label_layout = "feature". |
 | `label_segment_colour` | `"auto"` | Character/enum; choices below | "auto" uses muted grey for leaders from a feature inside the sequence circle to a label outside it. Other leaders retain the theme colour. Explicit colours override both. A custom feature-label segment theme overrides the automatic palette. label_segment_linetype = "auto" uses dashed lines for those inside-to-outside attachments. Labels that stay inside retain their established leader style. |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Additional text parameters. |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Additional text parameters. |
 
 </details>
 
@@ -255,7 +255,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
 | `mapping` | `NULL` | aes mapping | Optional aesthetic mapping. Role aesthetics such as accver, start, end and strand may rename input columns; ordinary visual mappings are evaluated after geometry is generated. |
-| `data` | `NULL` | Table/supported object; data may be a function | data.frame with accver, start, end and strand; optional type, category and label. Factor start/end columns use their numeric labels, not their internal level codes. Coordinates must resolve to finite numbers. display_priority or logical prioritized_display. As an alternative to strand, directionality or direction may contain "forward", "reverse", "bidirectional", or "none". When omitted, uses the full constructor feature_data (or compatible gene_data). Other layers never remove records from this default input. |
+| `data` | `NULL` | Layer data frame or ggplot2 data function | data.frame with accver, start, end and strand; optional type, category and label. Factor start/end columns use their numeric labels, not their internal level codes. Coordinates must resolve to finite numbers. display_priority or logical prioritized_display. As an alternative to strand, directionality or direction may contain "forward", "reverse", "bidirectional", or "none". When omitted, uses the full constructor feature_data (or compatible gene_data). Other layers never remove records from this default input. |
 | `shape` | `"arrow"` | Character/enum; choices below | Fixed feature geometry. An explicitly supplied shape takes precedence over aes(feature_shape = ...): "arrow", "compact_arrow", "promoter_arrow", "primer_arrow", "marker", "block", "capped_line", "primer_arc", "chevron", or "lollipop". The default is "arrow". Use aes(feature_shape = type) together with scale_feature_shape_manual() to map categories to geometry. |
 | `width` | `0.058` | Numeric/integer; range in description | Track width; the default matches the compact feature bands used by desktop plasmid editors. |
 | `arrow_head_length` | `0.068` | Numeric/integer; range in description | Arrow-head dimensions in the sequence-local frame, shared with geom_gene(). Values above one for arrow_head_width create a protruding block-arrow head. |
@@ -269,7 +269,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `position` | `NULL` | Position object or documented string | Feature position. NULL (the default) automatically stacks overlapping features on compact lanes inside the plasmid backbone. Reuse the same explicit position_feature_stack() object for a separate label layer so polygons and labels share their lanes. Optional numeric display_priority (larger first) or logical prioritized_display can override the default longest-first ordering for overlapping features. |
 | `show.legend` | `FALSE` | Logical | Standard ggplot2 layer arguments. |
 | `inherit.aes` | `FALSE` | Logical | Standard ggplot2 layer arguments. |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Additional fixed polygon aesthetics. |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Additional fixed polygon aesthetics. |
 
 </details>
 
@@ -283,7 +283,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
 | `mapping` | `NULL` | aes mapping | Default NULL (uses pre-computed data) |
-| `data` | `NULL` | Table/supported object; data may be a function | Optional layer table or function, overriding constructor data. With unified feature_data, the default selects explicitly classified gene/CDS records; see ggchord(). Legacy gene_data retains all rows. |
+| `data` | `NULL` | Layer data frame or ggplot2 data function | Optional layer table or function, overriding constructor data. With unified feature_data, the default selects explicitly classified gene/CDS records; see ggchord(). Legacy gene_data retains all rows. |
 | `width` | `NULL` | Geometry number/vector/documented formats | Optional numeric/vector/list. Width of gene arrows, default 0.05 |
 | `arrow_head_length` | `0.04` | Numeric/integer; range in description | Shared arrow-head dimensions in the sequence-local frame. |
 | `arrow_head_width` | `1` | Numeric/integer; range in description | Shared arrow-head dimensions in the sequence-local frame. |
@@ -292,7 +292,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `position` | `"identity"` | Character/enum; choices below | Feature placement. Use "identity", "strand", "plasmid", position_strand(), position_plasmid(), or position_feature_stack(). |
 | `show.legend` | `TRUE` | Logical | Standard ggplot2 layer arguments. |
 | `inherit.aes` | `FALSE` | Logical | Standard ggplot2 layer arguments. |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Additional arguments passed to geom_polygon() |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Additional arguments passed to geom_polygon() |
 
 </details>
 
@@ -306,7 +306,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
 | `mapping` | `NULL` | aes mapping | Default NULL (uses pre-computed data) |
-| `data` | `NULL` | Table/supported object; data may be a function | Optional layer table or function. Default data follows the gene/CDS selection described in ggchord(). |
+| `data` | `NULL` | Layer data frame or ggplot2 data function | Optional layer table or function. Default data follows the gene/CDS selection described in ggchord(). |
 | `label_orientation` | `"horizontal"` | Character/enum; choices below | Character, default "horizontal". Text orientation relative to each sequence path: "radial", "tangent", or "horizontal". |
 | `label_side` | `"outside"` | Character/enum; choices below | Character, default "outside". Place labels outside the chord, use the strand-based "auto" side, or force "inside" placement. |
 | `label_overlap` | `"hide"` | Character/enum; choices below | Character, default "hide". Fixed-label collision policy: omit later conflicting labels ("hide"), apply the small position adjustment ("nudge"), or keep all requested positions ("allow"). Input row order therefore provides a simple way to prioritize labels in "hide" mode. |
@@ -318,7 +318,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `position` | `"identity"` | Character/enum; choices below | Position adjustment. Supply the same position_feature_stack() used by a gene/feature layer when labels are drawn from separate data or without a geometry layer. In coord_collinear(), labels without an explicit Position share a matching geometry layer's lanes; explicit label Positions do not move the geometry layer. Unique feature_id columns allow label subsets and reordered labels when their accession, interval and strand agree with the geometry input. Multiple matching geometry layers require an explicit label Position or unambiguous feature IDs. |
 | `show.legend` | `FALSE` | Logical | Standard ggplot2 layer arguments. |
 | `inherit.aes` | `FALSE` | Logical | Standard ggplot2 layer arguments. |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Additional arguments passed to geom_text() |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Additional arguments passed to geom_text() |
 
 </details>
 
@@ -332,7 +332,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
 | `mapping` | `NULL` | aes mapping | Default NULL (uses pre-computed data) |
-| `data` | `NULL` | Table/supported object; data may be a function | Optional layer table or function. Default data follows the gene/CDS selection described in ggchord(). |
+| `data` | `NULL` | Layer data frame or ggplot2 data function | Optional layer table or function. Default data follows the gene/CDS selection described in ggchord(). |
 | `label_layout` | `"radial"` | Character/enum; choices below | Character, default "radial". Label layout: "radial" arranges horizontal external labels along sequence-relative contours, with straight normal leaders or a short normal departure followed by a long connector when displaced; "auto" uses shared vertical columns on the left/right and radial placement elsewhere; "arc" rotates text along the sequence tangent. The former "aligned" mode has been removed; use "auto" for side columns. |
 | `label_wrap` | `NULL` | Nullable R object; type/inheritance below | Numeric or NULL, default NULL. When set, long gene annotations are wrapped at this many characters (e.g. 15), overriding label_fit. |
 | `label_fit` | `"wrap"` | Character/enum; choices below | Character, default "wrap". How labels whose initial boxes are crowded or unusually wide are fitted before deterministic layout: "wrap" preserves the complete annotation over multiple lines, "ellipsis" uses a single shortened line, "auto" wraps and adds an ellipsis only if text exceeds label_max_lines, and "none" disables adaptive fitting. Explicit "shrink" uses internal-first feature placement and reduces the complete text only as far as label_min_size. Labels that still cannot fit use the existing adjacent/external placement or hiding policy, at their requested size. This choice uses feature placement rather than the external layout selected by label_layout; other fitting modes are unchanged. |
@@ -346,7 +346,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `show.legend` | `FALSE` | Logical | Standard ggplot2 layer arguments. |
 | `inherit.aes` | `FALSE` | Logical | Standard ggplot2 layer arguments. |
 | `label_min_size` | `1.5` | Numeric/integer; range in description | Minimum text size in millimetres for explicit label_fit = "shrink", default 1.5. It must not exceed the requested text size. Source text, requested/final size and fitting reason are retained in exported label geometry. |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Additional text styles and drawing options. Automatic layouts own rotation, offsets, orientation and overlap policy; use geom_gene_label() for manual label_rotation, label_radial_offset, label_circum_offset, label_circum_limit, label_orientation or label_overlap. These manual controls are rejected here. |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Additional text styles and drawing options. Automatic layouts own rotation, offsets, orientation and overlap policy; use geom_gene_label() for manual label_rotation, label_radial_offset, label_circum_offset, label_circum_limit, label_orientation or label_overlap. These manual controls are rejected here. |
 
 </details>
 
@@ -360,7 +360,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
 | `mapping` | `NULL` | aes mapping | Standard ggplot2 mapping and layer data, including data functions. |
-| `data` | `NULL` | Table/supported object; data may be a function | Standard ggplot2 mapping and layer data, including data functions. |
+| `data` | `NULL` | Layer data frame or ggplot2 data function | Standard ggplot2 mapping and layer data, including data functions. |
 | `link_type` | `c("curve", "straight")` | Vector; choices versus multiple selection below | Either "curve" (default) or "straight". |
 | `link_gap` | `NULL` | Nullable R object; type/inheritance below | Explicit endpoint spacing. With the default link_avoid = "none", NULL uses a fixed spacing of 0.035. Set link_avoid to "smooth" or "uniform" to opt in to entity-aware endpoint spacing. |
 | `link_ctrl_point` | `NULL` | Nullable R object; type/inheritance below | Bezier control points: two numbers, four numbers, or a list per input row. |
@@ -377,7 +377,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `inherit.aes` | `FALSE` | Logical | Standard ggplot2 layer arguments. |
 | `between` | `NULL` | Nullable R object; type/inheritance below | Two display-instance names or declared-order indices. |
 | `allow_repeated` | `FALSE` | Logical | Allow repeated display of an explicitly declared source_hsp_id. |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Additional path parameters. |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Additional path parameters. |
 
 </details>
 
@@ -391,7 +391,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
 | `mapping` | `NULL` | aes mapping | Default NULL (uses pre-computed data) |
-| `data` | `NULL` | Table/supported object; data may be a function | Default NULL (retrieved automatically from the layout) |
+| `data` | `NULL` | Layer data frame or ggplot2 data function | Default NULL (retrieved automatically from the layout) |
 | `link_ctrl_point` | `NULL` | Nullable R object; type/inheritance below | Optional vector/list of Bezier edge controls. Two numbers specify one shared control; four numbers specify controls for the two ribbon edges. A per-row list may contain pairs of coordinate vectors. NULL uses the origin c(0, 0) in chord layouts and derives controls from the sequence endpoints in collinear layouts. With shared branches, controls shape the far ends while the junction follows the shared trunk. |
 | `link_gap` | `NULL` | Nullable R object; type/inheritance below | Optional numeric/vector controlling spacing between sequences and ribbon endpoints. With the default link_avoid = "uniform", NULL uses one obstacle-aware clearance across each endpoint. Use "smooth" for clearance that changes only next to geom_gene() and geom_feature() polygons, or "none" for fixed spacing 0.035. Text and leader lines are ignored. Supplying a number disables the automatic rule and uses that exact spacing. Linear layouts reduce automatic baseline clearance to fit narrow channels; an explicit gap or feature clearance that cannot fit raises an error. |
 | `link_avoid` | `c("uniform", "none", "smooth")` | Vector; choices versus multiple selection below | One of "uniform" (default), "none", or "smooth". Smooth avoidance changes clearance locally; uniform avoidance uses one clearance across an endpoint. |
@@ -412,7 +412,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `allow_repeated` | `FALSE` | Logical | Explicitly allow a declared source_hsp_id in more than one displayed relation. |
 | `tip` | `c("none", "subject")` | Vector; choices versus multiple selection below | Full interval fronts (none, default), or an optional subject taper. The shoulder retains the translated target endpoint span at 88 percent of the channel. The tip is a decorative front-midpoint marker, not a single matched base or biological transfer direction. Degenerate fronts fall back to the full front with a warning. Source intervals are unchanged. |
 | `gradient` | `FALSE` | Logical | Logical. Opt into endpoint sequence-colour interpolation; default FALSE. Explicit fill, mapping and scales still take priority. |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Additional arguments passed to geom_polygon() |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Additional arguments passed to geom_polygon() |
 
 </details>
 
@@ -426,7 +426,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
 | `mapping` | `NULL` | aes mapping | Standard layer inputs. |
-| `data` | `NULL` | Table/supported object; data may be a function | Standard layer inputs. |
+| `data` | `NULL` | Layer data frame or ggplot2 data function | Standard layer inputs. |
 | `side` | `c("between", "outside", "inside")` | Vector; choices versus multiple selection below | Backbone lane used by the primer arc. "between" uses the backbone centre line; "outside" and "inside" use arc_offset. |
 | `arc_offset` | `0.045` | Numeric/integer; range in description | Distance from the backbone centre when side is "outside" or "inside". |
 | `arc_linewidth` | `0.026` | Numeric/integer; range in description | Radial width of the primer arc. |
@@ -434,7 +434,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `position` | `NULL` | Position object or documented string | Standard layer arguments. |
 | `show.legend` | `FALSE` | Logical | Standard layer arguments. |
 | `inherit.aes` | `FALSE` | Logical | Standard layer arguments. |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Additional parameters passed to geom_feature(). |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Additional parameters passed to geom_feature(). |
 
 </details>
 
@@ -448,7 +448,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
 | `mapping` | `NULL` | aes mapping | Standard layer inputs. |
-| `data` | `NULL` | Table/supported object; data may be a function | Standard layer inputs. |
+| `data` | `NULL` | Layer data frame or ggplot2 data function | Standard layer inputs. |
 | `side` | `c("outside", "inside")` | Vector; choices versus multiple selection below | Side of the backbone on which the primer callout is arranged. "inside" retains the inner label layout, including when exterior restriction or feature labels share the map. The default is "outside". |
 | `show_location` | `TRUE` | Logical | Include the binding range in the label. |
 | `colour` | `"#A020F0"` | Character/enum; choices below | Primer arc colour. |
@@ -456,7 +456,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `position` | `NULL` | Position object or documented string | Standard layer arguments. |
 | `show.legend` | `FALSE` | Logical | Standard layer arguments. |
 | `inherit.aes` | `FALSE` | Logical | Standard layer arguments. |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Additional parameters passed to geom_feature(). |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Additional parameters passed to geom_feature(). |
 
 </details>
 
@@ -470,12 +470,12 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
 | `mapping` | `NULL` | aes mapping | Standard ggplot2 layer mapping and data. Required aesthetics are x, y and label. Ordinary colour, fill, alpha, size, family and fontface mappings/scales are supported. size is in mm. |
-| `data` | `NULL` | Table/supported object; data may be a function | Standard ggplot2 layer mapping and data. Required aesthetics are x, y and label. Ordinary colour, fill, alpha, size, family and fontface mappings/scales are supported. size is in mm. |
+| `data` | `NULL` | Layer data frame or ggplot2 data function | Standard ggplot2 layer mapping and data. Required aesthetics are x, y and label. Ordinary colour, fill, alpha, size, family and fontface mappings/scales are supported. size is in mm. |
 | `overflow` | `c("tile", "error")` | Vector; choices versus multiple selection below | "tile" (default) or "error" when letters do not fit. |
 | `position` | `"identity"` | Character/enum; choices below | Standard ggplot2 layer arguments. |
 | `show.legend` | `NA` | R object; constraints below | Standard ggplot2 layer arguments. |
 | `inherit.aes` | `TRUE` | Logical | Standard ggplot2 layer arguments. |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Fixed text/cell aesthetics and na.rm, passed to the layer. |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Fixed text/cell aesthetics and na.rm, passed to the layer. |
 
 </details>
 
@@ -489,7 +489,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
 | `mapping` | `NULL` | aes mapping | Standard layer inputs. |
-| `data` | `NULL` | Table/supported object; data may be a function | Standard layer inputs. |
+| `data` | `NULL` | Layer data frame or ggplot2 data function | Standard layer inputs. |
 | `label` | `TRUE` | Logical | Draw labels. |
 | `label_style` | `c("enzyme_position", "enzyme", "position")` | Vector; choices versus multiple selection below | Label enzyme and position, enzyme only, or position only. |
 | `label_order` | `c("auto", "enzyme_position", "position_enzyme")` | Vector; choices versus multiple selection below | Automatic mirrored label order, enzyme first, or position first. |
@@ -506,7 +506,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `position` | `"identity"` | Character/enum; choices below | Standard layer arguments. |
 | `show.legend` | `FALSE` | Logical | Standard layer arguments. |
 | `inherit.aes` | `FALSE` | Logical | Standard layer arguments. |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Additional geom parameters. |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Additional geom parameters. |
 
 </details>
 
@@ -520,7 +520,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
 | `mapping` | `NULL` | aes mapping | Default NULL (uses pre-computed data) |
-| `data` | `NULL` | Table/supported object; data may be a function | Default NULL (retrieved automatically from the layout) |
+| `data` | `NULL` | Layer data frame or ggplot2 data function | Default NULL (retrieved automatically from the layout) |
 | `seq_order` | `NULL` | Geometry number/vector/documented formats | Source IDs in display order. Repeats create display instances; use names such as c(A_high='A', B='B', A_low='A') for stable instance IDs. Repeated-entity HSPs require a unique between route on each link layer. |
 | `seq_orientation` | `NULL` | Geometry number/vector/documented formats | Optional numeric (1 or -1). Sequence orientation, default 1 |
 | `seq_gap` | `NULL` | Geometry number/vector/documented formats | Optional numeric. Gap proportion between sequences, default 0.03 in chord coordinates. A named vector can set the gap after each sequence; omitted IDs use the coordinate default. In coord_collinear(), a positive distance between consecutive backbones as a proportion of the longest backbone's width, default 0.3. The final sequence's gap is unused in linear layouts. Segmented linear displays measure it against the longest display row; windows in one row must request the same gap, and only gaps between rows affect vertical placement. |
@@ -534,7 +534,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `show.legend` | `TRUE` | Logical | Standard ggplot2 layer arguments. |
 | `inherit.aes` | `FALSE` | Logical | Standard ggplot2 layer arguments. |
 | `length_mode` | `c("proportional", "equal")` | Vector; choices versus multiple selection below | "proportional" (default) retains source-length ratios; "equal" gives each displayed sequence the same angular allocation or linear span without modifying source lengths. Shared absolute scale bars are unavailable in multi-sequence equal mode; local axes retain source units. |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Additional fixed path aesthetics. colour (or color) sets seq_colour. Explicit fixed values take precedence over matching mappings; omit fixed arguments to retain mapped styles. |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Additional fixed path aesthetics. colour (or color) sets seq_colour. Explicit fixed values take precedence over matching mappings; omit fixed arguments to retain mapped styles. |
 
 </details>
 
@@ -548,7 +548,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
 | `mapping` | `NULL` | aes mapping | Standard layer mapping and sequence data. By default, use the plot's sequence table. Truncation is read from .truncated_left/.truncated_right, with source interval and length metadata as fallback when available. |
-| `data` | `NULL` | Table/supported object; data may be a function | Standard layer mapping and sequence data. By default, use the plot's sequence table. Truncation is read from .truncated_left/.truncated_right, with source interval and length metadata as fallback when available. |
+| `data` | `NULL` | Layer data frame or ggplot2 data function | Standard layer mapping and sequence data. By default, use the plot's sequence table. Truncation is read from .truncated_left/.truncated_right, with source interval and length metadata as fallback when available. |
 | `break_width` | `0.02` | Numeric/integer; range in description | Width and height of the complete break mark in linear layout units. These are layout distances, not millimetres. |
 | `break_height` | `0.04` | Numeric/integer; range in description | Width and height of the complete break mark in linear layout units. These are layout distances, not millimetres. |
 | `linewidth` | `0.4` | Numeric/integer; range in description | Fixed line appearance. Ordinary visual aesthetics can also be mapped and controlled by their ggplot2 scales. |
@@ -556,7 +556,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `position` | `"identity"` | Character/enum; choices below | Standard ggplot2 layer arguments. |
 | `show.legend` | `FALSE` | Logical | Standard ggplot2 layer arguments. |
 | `inherit.aes` | `FALSE` | Logical | Standard ggplot2 layer arguments. |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Additional parameters passed to ggplot2::geom_path(). |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Additional parameters passed to ggplot2::geom_path(). |
 
 </details>
 
@@ -570,7 +570,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
 | `mapping` | `NULL` | aes mapping | Standard layer inputs. |
-| `data` | `NULL` | Table/supported object; data may be a function | Standard layer inputs. |
+| `data` | `NULL` | Layer data frame or ggplot2 data function | Standard layer inputs. |
 | `name` | `TRUE` | Logical | Show the sequence name. A character value overrides the name. |
 | `length` | `TRUE` | Logical | Show the formatted sequence length. |
 | `separator` | `"\n"` | Character/enum; choices below | Separator between name and length. |
@@ -578,7 +578,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `length_style` | `list()` | Named list | Named lists of fixed text-style overrides for the name and length grobs. Supported fields are colour, size, family, fontface, and lineheight. |
 | `show.legend` | `FALSE` | Logical | Standard ggplot2 layer arguments. |
 | `inherit.aes` | `FALSE` | Logical | Standard ggplot2 layer arguments. |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Additional arguments passed to geom_text(). |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Additional arguments passed to geom_text(). |
 
 </details>
 
@@ -592,7 +592,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
 | `mapping` | `NULL` | aes mapping | Default NULL (uses pre-computed data) |
-| `data` | `NULL` | Table/supported object; data may be a function | Default NULL (retrieved automatically from the layout) |
+| `data` | `NULL` | Layer data frame or ggplot2 data function | Default NULL (retrieved automatically from the layout) |
 | `seq_label_radius` | `1` | Numeric/integer; range in description | Optional numeric/vector. Radial position of the labels as a multiplier of the sequence arc radius: 1 is on the arc, > 1 places the label outside (away from the chord center) and < 1 places it inside, default 1 Explicit values are incompatible with coord_collinear(), which places sequence labels beside the left endpoint of each horizontal track. |
 | `seq_label_rotation` | `NULL` | Nullable R object; type/inheritance below | Optional numeric/vector. Additional label rotation (degrees) on top of the arc-aligned orientation, default NULL (0). Ignored when seq_label_orientation = "horizontal". |
 | `labels` | `NULL` | Nullable R object; type/inheritance below | Optional character vector. Override the label texts (defaults to the sequence labels from geom_seq() or the sequence IDs) |
@@ -603,7 +603,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `position` | `"identity"` | Character/enum; choices below | Standard ggplot2 layer arguments. |
 | `show.legend` | `FALSE` | Logical | Standard ggplot2 layer arguments. |
 | `inherit.aes` | `FALSE` | Logical | Standard ggplot2 layer arguments. |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Additional arguments passed to geom_text() |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Additional arguments passed to geom_text() |
 
 </details>
 
@@ -617,7 +617,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
 | `mapping` | `NULL` | aes mapping | Default NULL (uses pre-computed data) |
-| `data` | `NULL` | Table/supported object; data may be a function | data.frame with at least accver, start, end; optional label, category and color. Factor start/end columns use their numeric labels, not level codes. |
+| `data` | `NULL` | Layer data frame or ggplot2 data function | data.frame with at least accver, start, end; optional label, category and color. Factor start/end columns use their numeric labels, not level codes. |
 | `fill` | `"#F59E0B"` | Character/enum; choices below | Character. Default fill colour for regions, default "#F59E0B". |
 | `colour` | `"#B45309"` | Character/enum; choices below | Outline colour, default "#B45309". |
 | `alpha` | `0.25` | Numeric/integer; range in description | Numeric (0-1). Region alpha, default 0.25. |
@@ -627,7 +627,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `position` | `"identity"` | Character/enum; choices below | Standard ggplot2 layer arguments. |
 | `show.legend` | `FALSE` | Logical | Standard ggplot2 layer arguments. |
 | `inherit.aes` | `FALSE` | Logical | Standard ggplot2 layer arguments. |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Additional arguments passed to geom_polygon() |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Additional arguments passed to geom_polygon() |
 
 </details>
 
@@ -641,7 +641,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
 | `mapping` | `NULL` | aes mapping | Standard ggplot2 layer inputs. Optional scale_length maps one positive integer length per bar, in the sequence unit; label supplies its text. Multiple bars require explicit x and y layout positions in data (or their role mappings), to avoid accidental overprinting. |
-| `data` | `NULL` | Table/supported object; data may be a function | Standard ggplot2 layer inputs. Optional scale_length maps one positive integer length per bar, in the sequence unit; label supplies its text. Multiple bars require explicit x and y layout positions in data (or their role mappings), to avoid accidental overprinting. |
+| `data` | `NULL` | Layer data frame or ggplot2 data function | Standard ggplot2 layer inputs. Optional scale_length maps one positive integer length per bar, in the sequence unit; label supplies its text. Multiple bars require explicit x and y layout positions in data (or their role mappings), to avoid accidental overprinting. |
 | `length` | `NULL` | Nullable R object; type/inheritance below | Optional fixed positive integer length in the sequence unit. Cannot be combined with a scale_length mapping. NULL uses input lengths or an automatic reference length. |
 | `label` | `NULL` | Nullable R object; type/inheritance below | Optional fixed character label, or a function receiving the chosen lengths. NULL uses input labels or formatted bp/aa text. |
 | `location` | `c("bottomleft", "bottomright", "topleft", "topright")` | Vector; choices versus multiple selection below | Corner of the sequence envelope used for automatic placement. |
@@ -654,7 +654,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `position` | `"identity"` | Character/enum; choices below | Standard ggplot2 layer arguments. |
 | `show.legend` | `FALSE` | Logical | Standard ggplot2 layer arguments. |
 | `inherit.aes` | `FALSE` | Logical | Standard ggplot2 layer arguments. |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Additional fixed aesthetics passed to ggplot2::layer(). |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Additional fixed aesthetics passed to ggplot2::layer(). |
 
 </details>
 
@@ -668,7 +668,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
 | `mapping` | `NULL` | aes mapping | Standard layer input. Supply accver and source positions through x/pos, or interval start/end. Map y/track_value for identity values. |
-| `data` | `NULL` | Table/supported object; data may be a function | Standard layer input. Supply accver and source positions through x/pos, or interval start/end. Map y/track_value for identity values. |
+| `data` | `NULL` | Layer data frame or ggplot2 data function | Standard layer input. Supply accver and source positions through x/pos, or interval start/end. Map y/track_value for identity values. |
 | `geom` | `"point"` | Character/enum; choices below | Native geometry/statistic names. bar defaults to count; col and other geoms default to identity. |
 | `stat` | `NULL` | Nullable R object; type/inheritance below | Native geometry/statistic names. bar defaults to count; col and other geoms default to identity. |
 | `track` | `NULL` | Nullable R object; type/inheritance below | A physical position_track() declaration. |
@@ -677,7 +677,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `baseline` | `0` | Numeric/integer; range in description | Numeric identity-column baseline. Nonzero baselines require position='identity' so stacking does not change their meaning. |
 | `show.legend` | `NA` | R object; constraints below | Standard layer controls. |
 | `inherit.aes` | `FALSE` | Logical | Standard layer controls. |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Native geom/stat parameters and fixed styles. |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Native geom/stat parameters and fixed styles. |
 
 </details>
 
@@ -691,9 +691,9 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
 | `mapping` | `NULL` | aes mapping | Standard layer input. Supply accver and source positions through x/pos, or interval start/end. Map y/track_value for identity values. |
-| `data` | `NULL` | Table/supported object; data may be a function | Standard layer input. Supply accver and source positions through x/pos, or interval start/end. Map y/track_value for identity values. |
+| `data` | `NULL` | Layer data frame or ggplot2 data function | Standard layer input. Supply accver and source positions through x/pos, or interval start/end. Map y/track_value for identity values. |
 | `position` | `NULL` | Position object or documented string | Data position such as identity, stack, dodge. The legacy position=position_track(...) spelling still declares the physical band. |
-| `baseline` | `0` | Numeric/integer; range in description | Numeric identity-column baseline. Nonzero baselines require position='identity' so stacking does not change their meaning. |
+| `baseline` | `0` | Numeric/integer; range in description | Count bars require baseline 0; every nonzero value is rejected. Use geom_track_col() for supplied values and nonzero baselines. |
 | `fill` | `"#86AFB9"` | Character/enum; choices below | Fixed styles for the count shortcut. |
 | `colour` | `NA` | R object; constraints below | Fixed styles for the count shortcut. |
 | `alpha` | `1` | Numeric/integer; range in description | Fixed styles for the count shortcut. |
@@ -702,7 +702,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `bounds` | `c("error", "clip")` | Vector; choices versus multiple selection below | Coordinate error/clip policy. |
 | `show.legend` | `NA` | R object; constraints below | Standard layer controls. |
 | `inherit.aes` | `FALSE` | Logical | Standard layer controls. |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Native geom/stat parameters and fixed styles. |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Native geom/stat parameters and fixed styles. |
 
 </details>
 
@@ -716,10 +716,10 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
 | `mapping` | `NULL` | aes mapping | Standard layer input. Supply accver and source positions through x/pos, or interval start/end. Map y/track_value for identity values. |
-| `data` | `NULL` | Table/supported object; data may be a function | Standard layer input. Supply accver and source positions through x/pos, or interval start/end. Map y/track_value for identity values. |
+| `data` | `NULL` | Layer data frame or ggplot2 data function | Standard layer input. Supply accver and source positions through x/pos, or interval start/end. Map y/track_value for identity values. |
 | `position` | `NULL` | Position object or documented string | Data position such as identity, stack, dodge. The legacy position=position_track(...) spelling still declares the physical band. |
 | `track` | `NULL` | Nullable R object; type/inheritance below | A physical position_track() declaration. |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Native geom/stat parameters and fixed styles. |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Native geom/stat parameters and fixed styles. |
 | `show.legend` | `NA` | R object; constraints below | Standard layer controls. |
 | `inherit.aes` | `FALSE` | Logical | Standard layer controls. |
 
@@ -735,8 +735,8 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
 | `mapping` | `NULL` | aes mapping | Standard ggplot2 mapping and layer input. |
-| `data` | `NULL` | Table/supported object; data may be a function | Standard ggplot2 mapping and layer input. |
-| `position` | `Required/alternative entry; see description` | Position object or documented string | A position_track() declaration. Every layer requires one. |
+| `data` | `NULL` | Layer data frame or ggplot2 data function | Standard ggplot2 mapping and layer input. |
+| `position` | `No formal default; requiredness follows the contract` | Position object or documented string | A position_track() declaration. Every layer requires one. |
 | `colour` | `"#387D88"` | Character/enum; choices below | Fixed styles; fill and colour mappings use the dedicated track roles and scoped scales. |
 | `alpha` | `1` | Numeric/integer; range in description | Fixed styles; fill and colour mappings use the dedicated track roles and scoped scales. |
 | `linewidth` | `0.4` | Numeric/integer; range in description | Fixed styles; fill and colour mappings use the dedicated track roles and scoped scales. |
@@ -745,7 +745,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `bounds` | `c("error", "clip")` | Vector; choices versus multiple selection below | "error" (default) or "clip" for genomic coordinates. Clipping is reported and never changes source values. |
 | `show.legend` | `NA` | R object; constraints below | Standard layer arguments. |
 | `inherit.aes` | `FALSE` | Logical | Standard layer arguments. |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Extra geom parameters. |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Extra geom parameters. |
 
 </details>
 
@@ -759,8 +759,8 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
 | `mapping` | `NULL` | aes mapping | Standard ggplot2 mapping and layer input. |
-| `data` | `NULL` | Table/supported object; data may be a function | Standard ggplot2 mapping and layer input. |
-| `position` | `Required/alternative entry; see description` | Position object or documented string | A position_track() declaration. Every layer requires one. |
+| `data` | `NULL` | Layer data frame or ggplot2 data function | Standard ggplot2 mapping and layer input. |
+| `position` | `No formal default; requiredness follows the contract` | Position object or documented string | A position_track() declaration. Every layer requires one. |
 | `fill` | `"#86AFB9"` | Character/enum; choices below | Fixed styles; fill and colour mappings use the dedicated track roles and scoped scales. |
 | `colour` | `NA` | R object; constraints below | Fixed styles; fill and colour mappings use the dedicated track roles and scoped scales. |
 | `alpha` | `1` | Numeric/integer; range in description | Fixed styles; fill and colour mappings use the dedicated track roles and scoped scales. |
@@ -769,7 +769,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `bounds` | `c("error", "clip")` | Vector; choices versus multiple selection below | "error" (default) or "clip" for genomic coordinates. Clipping is reported and never changes source values. |
 | `show.legend` | `NA` | R object; constraints below | Standard layer arguments. |
 | `inherit.aes` | `FALSE` | Logical | Standard layer arguments. |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Extra geom parameters. |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Extra geom parameters. |
 
 </details>
 
@@ -826,7 +826,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `track` | `Required/alternative entry; see description` | R object; constraints below | One stable nonempty character ID. |
+| `track` | `No formal default; requiredness follows the contract` | R object; constraints below | One stable nonempty character ID. |
 | `side` | `c("outside", "inside")` | Vector; choices versus multiple selection below | "outside" or "inside". |
 | `order` | `1` | Numeric/integer; range in description | Finite ordering priority, nearest band first. Ties use ID order. |
 | `width` | `grid::unit(4, "mm")` | grid physical-unit object | Positive band width and nonnegative preceding gap. Absolute grid units (mm, cm, inches or points) are resolved against the render context. Numeric values retain native layout units. Numeric per-sequence vectors/lists follow the usual sequence parameter formats. |
@@ -847,7 +847,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
 | `mapping` | `NULL` | aes mapping | Standard layer mapping and data arguments. |
-| `data` | `NULL` | Table/supported object; data may be a function | Standard layer mapping and data arguments. |
+| `data` | `NULL` | API-specific data input; see the contract | Standard layer mapping and data arguments. |
 | `bins` | `80L` | Numeric/integer; range in description | Passed to bundle_ggchord_ribbons(). |
 | `min_bundle` | `2L` | Numeric/integer; range in description | Passed to bundle_ggchord_ribbons(). |
 | `weight` | `c("length", "count", "pident")` | Vector; choices versus multiple selection below | Passed to bundle_ggchord_ribbons(). |
@@ -855,7 +855,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `position` | `"identity"` | Character/enum; choices below | Standard ggplot2 layer arguments. |
 | `show.legend` | `TRUE` | Logical | Standard ggplot2 layer arguments. |
 | `inherit.aes` | `FALSE` | Logical | Standard ggplot2 layer arguments. |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Ribbon geometry and appearance arguments passed to geom_link_ribbon(). |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Ribbon geometry and appearance arguments passed to geom_link_ribbon(). |
 
 </details>
 
@@ -869,14 +869,14 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
 | `mapping` | `NULL` | aes mapping | Standard layer mapping and data arguments. |
-| `data` | `NULL` | Table/supported object; data may be a function | Standard layer mapping and data arguments. |
+| `data` | `NULL` | API-specific data input; see the contract | Standard layer mapping and data arguments. |
 | `bins` | `80L` | Numeric/integer; range in description | Positive integer number of normalized midpoint bins per sequence. |
 | `weight` | `c("length", "count", "pident")` | Vector; choices versus multiple selection below | Density weight: "length", "count", or "pident". |
 | `group_by` | `NULL` | Nullable R object; type/inheritance below | Optional columns that define independent density groups. |
 | `position` | `"identity"` | Character/enum; choices below | Standard ggplot2 layer arguments. |
 | `show.legend` | `TRUE` | Logical | Standard ggplot2 layer arguments. |
 | `inherit.aes` | `FALSE` | Logical | Standard ggplot2 layer arguments. |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Ribbon geometry and appearance arguments passed to geom_link_ribbon(). |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Ribbon geometry and appearance arguments passed to geom_link_ribbon(). |
 
 </details>
 
@@ -892,8 +892,8 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Arguments passed to ggplot2::scale_fill_manual(). |
-| `values` | `Required/alternative entry; see description` | Vector/scale rule; interpreted by scale type | A set of fill values to map data values to. |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Arguments passed to ggplot2::scale_fill_manual(). |
+| `values` | `No formal default; requiredness follows the contract` | Vector/scale rule; interpreted by scale type | A set of fill values to map data values to. |
 | `limits` | `NULL` | Vector/scale rule; interpreted by scale type | Optional display order. Named feature values use their name order by default. |
 
 </details>
@@ -907,7 +907,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Additional scale arguments. |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Additional scale arguments. |
 | `limits` | `NULL` | Vector/scale rule; interpreted by scale type | Optional feature-type order. |
 
 </details>
@@ -921,8 +921,8 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Arguments passed to ggplot2::discrete_scale(). |
-| `values` | `Required/alternative entry; see description` | Vector/scale rule; interpreted by scale type | A named or unnamed character vector of feature geometry names. |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Arguments passed to ggplot2::discrete_scale(). |
+| `values` | `No formal default; requiredness follows the contract` | Vector/scale rule; interpreted by scale type | A named or unnamed character vector of feature geometry names. |
 | `name` | `"Feature"` | Character/enum; choices below | Scale and guide title, default "Feature". |
 | `limits` | `NULL` | Vector/scale rule; interpreted by scale type | Optional category order. Named values use their name order by default so shape and fill guides can merge cleanly. |
 | `guide` | `"none"` | Character/enum; choices below | Guide specification. The default is "none" because geom_feature() combines shape silhouettes into its fill legend when both aesthetics describe the same feature categories. Supply guide_ggchord_legend() for a separate shape guide. |
@@ -938,7 +938,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Additional scale arguments. |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Additional scale arguments. |
 | `limits` | `NULL` | Vector/scale rule; interpreted by scale type | Optional feature-type order. |
 | `guide` | `"none"` | Character/enum; choices below | Guide used by the shape preset. |
 
@@ -953,8 +953,8 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Arguments passed to ggplot2::scale_fill_manual(). |
-| `values` | `Required/alternative entry; see description` | Vector/scale rule; interpreted by scale type | A set of fill values to map data values to. |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Arguments passed to ggplot2::scale_fill_manual(). |
+| `values` | `No formal default; requiredness follows the contract` | Vector/scale rule; interpreted by scale type | A set of fill values to map data values to. |
 
 </details>
 
@@ -967,7 +967,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Arguments passed to the corresponding ggplot2 scale. |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Arguments passed to the corresponding ggplot2 scale. |
 
 </details>
 
@@ -980,8 +980,8 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Arguments passed to the corresponding ggplot2 scale. |
-| `values` | `Required/alternative entry; see description` | Vector/scale rule; interpreted by scale type | Manual aesthetic values. |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Arguments passed to the corresponding ggplot2 scale. |
+| `values` | `No formal default; requiredness follows the contract` | Vector/scale rule; interpreted by scale type | Manual aesthetic values. |
 
 </details>
 
@@ -994,7 +994,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Arguments passed to the corresponding ggplot2 scale. |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Arguments passed to the corresponding ggplot2 scale. |
 
 </details>
 
@@ -1007,8 +1007,8 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Arguments passed to the corresponding ggplot2 scale. |
-| `values` | `Required/alternative entry; see description` | Vector/scale rule; interpreted by scale type | Manual aesthetic values. |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Arguments passed to the corresponding ggplot2 scale. |
+| `values` | `No formal default; requiredness follows the contract` | Vector/scale rule; interpreted by scale type | Manual aesthetic values. |
 
 </details>
 
@@ -1021,7 +1021,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Arguments passed to the corresponding ggplot2 scale. |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Arguments passed to the corresponding ggplot2 scale. |
 
 </details>
 
@@ -1034,8 +1034,8 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Arguments passed to the corresponding ggplot2 scale. |
-| `values` | `Required/alternative entry; see description` | Vector/scale rule; interpreted by scale type | Manual aesthetic values. |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Arguments passed to the corresponding ggplot2 scale. |
+| `values` | `No formal default; requiredness follows the contract` | Vector/scale rule; interpreted by scale type | Manual aesthetic values. |
 
 </details>
 
@@ -1048,8 +1048,8 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Arguments passed to the corresponding ggplot2 scale. |
-| `values` | `Required/alternative entry; see description` | Vector/scale rule; interpreted by scale type | Manual aesthetic values. |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Arguments passed to the corresponding ggplot2 scale. |
+| `values` | `No formal default; requiredness follows the contract` | Vector/scale rule; interpreted by scale type | Manual aesthetic values. |
 
 </details>
 
@@ -1062,7 +1062,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Arguments passed to the corresponding ggplot2 scale. |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Arguments passed to the corresponding ggplot2 scale. |
 
 </details>
 
@@ -1075,8 +1075,8 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Arguments passed to the corresponding ggplot2 scale. |
-| `values` | `Required/alternative entry; see description` | Vector/scale rule; interpreted by scale type | Manual aesthetic values. |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Arguments passed to the corresponding ggplot2 scale. |
+| `values` | `No formal default; requiredness follows the contract` | Vector/scale rule; interpreted by scale type | Manual aesthetic values. |
 
 </details>
 
@@ -1089,8 +1089,8 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Arguments passed to ggplot2::scale_fill_manual(). |
-| `values` | `Required/alternative entry; see description` | Vector/scale rule; interpreted by scale type | A set of fill values to map data values to. |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Arguments passed to ggplot2::scale_fill_manual(). |
+| `values` | `No formal default; requiredness follows the contract` | Vector/scale rule; interpreted by scale type | A set of fill values to map data values to. |
 
 </details>
 
@@ -1103,7 +1103,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Arguments passed to the corresponding ggplot2 scale. |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Arguments passed to the corresponding ggplot2 scale. |
 | `range` | `NULL` | Vector/scale rule; interpreted by scale type | Output alpha range for a continuous scale. NULL uses the corresponding ggplot2 scale's default range. |
 
 </details>
@@ -1117,8 +1117,8 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Arguments passed to the corresponding ggplot2 scale. |
-| `values` | `Required/alternative entry; see description` | Vector/scale rule; interpreted by scale type | Manual aesthetic values. |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Arguments passed to the corresponding ggplot2 scale. |
+| `values` | `No formal default; requiredness follows the contract` | Vector/scale rule; interpreted by scale type | Manual aesthetic values. |
 
 </details>
 
@@ -1131,8 +1131,8 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Arguments passed to the corresponding ggplot2 scale. |
-| `values` | `Required/alternative entry; see description` | Vector/scale rule; interpreted by scale type | Manual aesthetic values. |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Arguments passed to the corresponding ggplot2 scale. |
+| `values` | `No formal default; requiredness follows the contract` | Vector/scale rule; interpreted by scale type | Manual aesthetic values. |
 
 </details>
 
@@ -1145,8 +1145,8 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Arguments passed to the corresponding ggplot2 scale. |
-| `values` | `Required/alternative entry; see description` | Vector/scale rule; interpreted by scale type | Manual aesthetic values. |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Arguments passed to the corresponding ggplot2 scale. |
+| `values` | `No formal default; requiredness follows the contract` | Vector/scale rule; interpreted by scale type | Manual aesthetic values. |
 
 </details>
 
@@ -1159,10 +1159,10 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Arguments passed to the corresponding ggplot2 scale. |
-| `colours` | `Required/alternative entry; see description` | Vector/scale rule; interpreted by scale type | Gradient colours. |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Arguments passed to the corresponding ggplot2 scale. |
+| `colours` | `No formal default; requiredness follows the contract` | Vector/scale rule; interpreted by scale type | Gradient colours. |
 | `values` | `NULL` | Vector/scale rule; interpreted by scale type | Manual values, or positions for gradient colours where supported by the corresponding ggplot2 scale. |
-| `colors` | `Required/alternative entry; see description` | Vector/scale rule; interpreted by scale type | Gradient colours. |
+| `colors` | `No formal default; requiredness follows the contract` | Vector/scale rule; interpreted by scale type | Gradient colours. |
 | `guide` | `ggplot2::guide_colourbar(available_aes = "ribbon_fill")` | Guide object or name | A guide object; defaults accept the ribbon_fill aesthetic. |
 
 </details>
@@ -1176,7 +1176,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Arguments passed to the corresponding ggplot2 scale. |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Arguments passed to the corresponding ggplot2 scale. |
 
 </details>
 
@@ -1189,8 +1189,8 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Arguments passed to the corresponding ggplot2 scale. |
-| `values` | `Required/alternative entry; see description` | Vector/scale rule; interpreted by scale type | Manual values, or positions for gradient colours where supported by the corresponding ggplot2 scale. |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Arguments passed to the corresponding ggplot2 scale. |
+| `values` | `No formal default; requiredness follows the contract` | Vector/scale rule; interpreted by scale type | Manual values, or positions for gradient colours where supported by the corresponding ggplot2 scale. |
 
 </details>
 
@@ -1203,10 +1203,10 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Arguments passed to the corresponding ggplot2 scale. |
-| `colours` | `Required/alternative entry; see description` | Vector/scale rule; interpreted by scale type | Gradient colours. |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Arguments passed to the corresponding ggplot2 scale. |
+| `colours` | `No formal default; requiredness follows the contract` | Vector/scale rule; interpreted by scale type | Gradient colours. |
 | `values` | `NULL` | Vector/scale rule; interpreted by scale type | Manual values, or positions for gradient colours where supported by the corresponding ggplot2 scale. |
-| `colors` | `Required/alternative entry; see description` | Vector/scale rule; interpreted by scale type | Gradient colours. |
+| `colors` | `No formal default; requiredness follows the contract` | Vector/scale rule; interpreted by scale type | Gradient colours. |
 | `guide` | `ggplot2::guide_coloursteps(available_aes = "ribbon_fill")` | Guide object or name | A guide object; defaults accept the ribbon_fill aesthetic. |
 
 </details>
@@ -1220,8 +1220,8 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Arguments passed to the corresponding ggplot2 scale. |
-| `values` | `Required/alternative entry; see description` | Vector/scale rule; interpreted by scale type | Manual aesthetic values. |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Arguments passed to the corresponding ggplot2 scale. |
+| `values` | `No formal default; requiredness follows the contract` | Vector/scale rule; interpreted by scale type | Manual aesthetic values. |
 
 </details>
 
@@ -1234,8 +1234,8 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Arguments passed to ggplot2::scale_colour_manual(). |
-| `values` | `Required/alternative entry; see description` | Vector/scale rule; interpreted by scale type | A set of aesthetic values to map data values to. |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Arguments passed to ggplot2::scale_colour_manual(). |
+| `values` | `No formal default; requiredness follows the contract` | Vector/scale rule; interpreted by scale type | A set of aesthetic values to map data values to. |
 
 </details>
 
@@ -1248,8 +1248,8 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Arguments passed to ggplot2::scale_colour_manual(). |
-| `values` | `Required/alternative entry; see description` | Vector/scale rule; interpreted by scale type | A set of aesthetic values to map data values to. |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Arguments passed to ggplot2::scale_colour_manual(). |
+| `values` | `No formal default; requiredness follows the contract` | Vector/scale rule; interpreted by scale type | A set of aesthetic values to map data values to. |
 
 </details>
 
@@ -1273,7 +1273,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `n.breaks` | `6` | Numeric/integer; range in description | Standard continuous-scale controls. |
 | `coordinates` | `c("relative", "source")` | Vector; choices versus multiple selection below | In linear layouts, use relative locus coordinates or original source coordinates retained by focus_ggchord_data(). This affects axis breaks and labels, not the underlying genomic geometry. Breaks returned in transformed scale space are converted back to genomic positions in every coordinate mode. Explicit breaks = NULL and minor_breaks = NULL suppress the corresponding ticks. |
 | `sequences` | `NULL` | Nullable R object; type/inheritance below | Optional character vector selecting sequence axes by their displayed accver. NULL keeps all axes; character() hides every axis. Focused or segmented views use window IDs, not parent source accessions. Unknown or undisplayed identifiers produce an error. This controls axis lines, ticks and labels together without dropping sequence geometry. |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Additional arguments passed to ggplot2::continuous_scale(). |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Additional arguments passed to ggplot2::continuous_scale(). |
 
 </details>
 
@@ -1286,8 +1286,8 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Arguments passed to ggplot2::discrete_scale(). |
-| `values` | `Required/alternative entry; see description` | Vector/scale rule; interpreted by scale type | A named or unnamed numeric vector of positive radii. |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Arguments passed to ggplot2::discrete_scale(). |
+| `values` | `No formal default; requiredness follows the contract` | Vector/scale rule; interpreted by scale type | A named or unnamed numeric vector of positive radii. |
 | `name` | `"Ring"` | Character/enum; choices below | Scale title. The guide is hidden by default because the scale controls geometry rather than a visible legend aesthetic. |
 | `limits` | `NULL` | Vector/scale rule; interpreted by scale type | Optional ring order. |
 | `guide` | `"none"` | Character/enum; choices below | Guide specification, default "none". |
@@ -1303,9 +1303,9 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `track` | `Required/alternative entry; see description` | R object; constraints below | Track ID. |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Standard ggplot2 scale arguments. |
-| `colours` | `Required/alternative entry; see description` | Vector/scale rule; interpreted by scale type | Gradient colours. |
+| `track` | `No formal default; requiredness follows the contract` | R object; constraints below | Track ID. |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Standard ggplot2 scale arguments. |
+| `colours` | `No formal default; requiredness follows the contract` | Vector/scale rule; interpreted by scale type | Gradient colours. |
 | `guide` | `NULL` | Guide object or name | Optional standard guide for the fill/colour scale. |
 
 </details>
@@ -1319,9 +1319,9 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `track` | `Required/alternative entry; see description` | R object; constraints below | Track ID. |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Standard ggplot2 scale arguments. |
-| `values` | `Required/alternative entry; see description` | Vector/scale rule; interpreted by scale type | Manual category colours. |
+| `track` | `No formal default; requiredness follows the contract` | R object; constraints below | Track ID. |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Standard ggplot2 scale arguments. |
+| `values` | `No formal default; requiredness follows the contract` | Vector/scale rule; interpreted by scale type | Manual category colours. |
 
 </details>
 
@@ -1334,9 +1334,9 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `track` | `Required/alternative entry; see description` | R object; constraints below | Track ID. |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Standard ggplot2 scale arguments. |
-| `colours` | `Required/alternative entry; see description` | Vector/scale rule; interpreted by scale type | Gradient colours. |
+| `track` | `No formal default; requiredness follows the contract` | R object; constraints below | Track ID. |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Standard ggplot2 scale arguments. |
+| `colours` | `No formal default; requiredness follows the contract` | Vector/scale rule; interpreted by scale type | Gradient colours. |
 | `guide` | `NULL` | Guide object or name | Optional standard guide for the fill/colour scale. |
 
 </details>
@@ -1350,9 +1350,9 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `track` | `Required/alternative entry; see description` | R object; constraints below | Track ID. |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Standard ggplot2 scale arguments. |
-| `values` | `Required/alternative entry; see description` | Vector/scale rule; interpreted by scale type | Manual category colours. |
+| `track` | `No formal default; requiredness follows the contract` | R object; constraints below | Track ID. |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Standard ggplot2 scale arguments. |
+| `values` | `No formal default; requiredness follows the contract` | Vector/scale rule; interpreted by scale type | Manual category colours. |
 
 </details>
 
@@ -1365,7 +1365,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `track` | `Required/alternative entry; see description` | R object; constraints below | Track ID from position_track(). |
+| `track` | `No formal default; requiredness follows the contract` | R object; constraints below | Track ID from position_track(). |
 | `name` | `track` | R object; constraints below | Axis title, default the track ID. |
 | `limits` | `NULL` | Vector/scale rule; interpreted by scale type | Standard continuous-scale controls. |
 | `breaks` | `ggplot2::waiver()` | Vector/scale rule; interpreted by scale type | Standard continuous-scale controls. |
@@ -1374,7 +1374,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `oob` | `scales::censor` | R object; constraints below | Standard continuous-scale controls. |
 | `unit` | `NULL` | Nullable R object; type/inheritance below | Optional data-unit label retained in track exports. |
 | `guide` | `c("axis", "none")` | Vector; choices versus multiple selection below | "axis" or "none" for the numerical track axis, or a native ggplot2::guide_axis() with local theme (axis.line/text/title), angle and check.overlap. Other guide_axis options fail explicitly because this sequence-local numerical reference is not a Cartesian panel axis. Local guide styling overrides global ggchord.track.axis.* theme elements. |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Additional ggplot2 continuous-scale arguments. |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Additional ggplot2 continuous-scale arguments. |
 
 </details>
 
@@ -1404,7 +1404,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `order` | `0` | Numeric/integer; range in description | Guide order. |
 | `available_aes` | `c("colour", "color", "fill", "ribbon_fill", "gene_fill", "feature_fill",      "region_fill")` | Vector; choices versus multiple selection below | Aesthetics accepted by the guide. |
 | `size_scale` | `1` | Numeric/integer; range in description | Positive multiplier for keys, spacing and typography. ggchord's automatically generated guides derive this from the active export device; direct calls default to 1. |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Additional arguments passed to the corresponding ggplot2 guide. |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Additional arguments passed to the corresponding ggplot2 guide. |
 
 </details>
 
@@ -1431,7 +1431,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `order` | `0` | Numeric/integer; range in description | Guide order. |
 | `available_aes` | `c("colour", "color", "fill", "ribbon_fill", "gene_fill", "feature_fill",      "region_fill")` | Vector; choices versus multiple selection below | Aesthetics accepted by the guide. |
 | `size_scale` | `1` | Numeric/integer; range in description | Positive multiplier for keys, spacing and typography. ggchord's automatically generated guides derive this from the active export device; direct calls default to 1. |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Additional arguments passed to the corresponding ggplot2 guide. |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Additional arguments passed to the corresponding ggplot2 guide. |
 
 </details>
 
@@ -1454,7 +1454,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `reverse` | `FALSE` | Logical | Whether to reverse the key order. |
 | `order` | `0` | Numeric/integer; range in description | Guide order. |
 | `size_scale` | `1` | Numeric/integer; range in description | Positive multiplier for keys, spacing and typography. ggchord's automatically generated guides derive this from the active export device; direct calls default to 1. |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Additional arguments passed to the corresponding ggplot2 guide. |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Additional arguments passed to the corresponding ggplot2 guide. |
 
 </details>
 
@@ -1578,7 +1578,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `legend.region.title.position` | `NULL` | Nullable R object; type/inheritance below | Per-role title positions. |
 | `legend.region.margin` | `NULL` | Nullable R object; type/inheritance below | Per-role margins. |
 | `legend.region.spacing` | `NULL` | Nullable R object; type/inheritance below | Per-role spacing. |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Standard ggplot2 theme arguments, including common text, plot and legend settings. Common legend settings also supply role inheritance. Removed underscore-style arguments produce a migration error. |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Standard ggplot2 theme arguments, including common text, plot and legend settings. Common legend settings also supply role inheritance. Removed underscore-style arguments produce a migration error. |
 
 </details>
 
@@ -1699,7 +1699,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `legend.region.title.position` | `NULL` | Nullable R object; type/inheritance below | Per-role title positions. |
 | `legend.region.margin` | `NULL` | Nullable R object; type/inheritance below | Per-role margins. |
 | `legend.region.spacing` | `NULL` | Nullable R object; type/inheritance below | Per-role spacing. |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Standard ggplot2 theme arguments, including common text, plot and legend settings. Common legend settings also supply role inheritance. Removed underscore-style arguments produce a migration error. |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Standard ggplot2 theme arguments, including common text, plot and legend settings. Common legend settings also supply role inheritance. Removed underscore-style arguments produce a migration error. |
 
 </details>
 
@@ -1820,7 +1820,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `legend.region.title.position` | `NULL` | Nullable R object; type/inheritance below | Per-role title positions. |
 | `legend.region.margin` | `NULL` | Nullable R object; type/inheritance below | Per-role margins. |
 | `legend.region.spacing` | `NULL` | Nullable R object; type/inheritance below | Per-role spacing. |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Standard ggplot2 theme arguments, including common text, plot and legend settings. Common legend settings also supply role inheritance. Removed underscore-style arguments produce a migration error. |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Standard ggplot2 theme arguments, including common text, plot and legend settings. Common legend settings also supply role inheritance. Removed underscore-style arguments produce a migration error. |
 
 </details>
 
@@ -1941,7 +1941,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `legend.region.title.position` | `NULL` | Nullable R object; type/inheritance below | Per-role title positions. |
 | `legend.region.margin` | `NULL` | Nullable R object; type/inheritance below | Per-role margins. |
 | `legend.region.spacing` | `NULL` | Nullable R object; type/inheritance below | Per-role spacing. |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Standard ggplot2 theme arguments, including common text, plot and legend settings. Common legend settings also supply role inheritance. Removed underscore-style arguments produce a migration error. |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Standard ggplot2 theme arguments, including common text, plot and legend settings. Common legend settings also supply role inheritance. Removed underscore-style arguments produce a migration error. |
 
 </details>
 
@@ -2062,7 +2062,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `legend.region.title.position` | `NULL` | Nullable R object; type/inheritance below | Per-role title positions. |
 | `legend.region.margin` | `NULL` | Nullable R object; type/inheritance below | Per-role margins. |
 | `legend.region.spacing` | `NULL` | Nullable R object; type/inheritance below | Per-role spacing. |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Standard ggplot2 theme arguments, including common text, plot and legend settings. Common legend settings also supply role inheritance. Removed underscore-style arguments produce a migration error. |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Standard ggplot2 theme arguments, including common text, plot and legend settings. Common legend settings also supply role inheritance. Removed underscore-style arguments produce a migration error. |
 
 </details>
 
@@ -2094,8 +2094,8 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `sequences` | `Required/alternative entry; see description` | R object; constraints below | Named character vector of aligned strings, or a data frame with unique accver and character sequence. All strings must have the same positive width and each record must contain a nongap symbol. |
-| `alphabet` | `Required/alternative entry; see description` | R object; constraints below | Explicit "DNA", "RNA" or "AA". IUPAC nucleotide ambiguity codes and protein ambiguity/rare-residue codes are accepted; * is accepted only for AA. The alphabet is never guessed. |
+| `sequences` | `No formal default; requiredness follows the contract` | R object; constraints below | Named character vector of aligned strings, or a data frame with unique accver and character sequence. All strings must have the same positive width and each record must contain a nongap symbol. |
+| `alphabet` | `No formal default; requiredness follows the contract` | R object; constraints below | Explicit "DNA", "RNA" or "AA". IUPAC nucleotide ambiguity codes and protein ambiguity/rare-residue codes are accepted; * is accepted only for AA. The alphabet is never guessed. |
 | `source_data` | `NULL` | Nullable R object; type/inheritance below | Optional data frame with one row per alignment accver, start (first nongap source coordinate) and strand ("+" or "-"). Optional source_accver declares a different source ID; optional character sequence supplies the full forward source for verification. Coordinates must remain positive exact integers. Input metadata is retained in the ggchord_conversion attribute. |
 | `circular` | `FALSE` | Logical | Explicit logical declaration that every source is circular, default FALSE. Requires source_data with full source_length or full sequence. Coordinates wrap at that length in the declared strand direction; nongap characters may cover at most one complete tour. Adds source_circular and source_length columns. A circular plot never activates this conversion. |
 
@@ -2110,7 +2110,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `x` | `Required/alternative entry; see description` | R object; constraints below | A data frame or GRanges object. |
+| `x` | `No formal default; requiredness follows the contract` | R object; constraints below | A data frame or GRanges object. |
 | `mapping` | `NULL` | aes mapping | Optional named character vector mapping output roles to source columns, as in as_ggchord_seq(). |
 
 </details>
@@ -2124,7 +2124,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `x` | `Required/alternative entry; see description` | R object; constraints below | A data frame or GInteractions object. |
+| `x` | `No formal default; requiredness follows the contract` | R object; constraints below | A data frame or GInteractions object. |
 | `mapping` | `NULL` | aes mapping | Optional named character vector mapping canonical link roles to source columns, as in as_ggchord_seq(). |
 
 </details>
@@ -2138,7 +2138,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `x` | `Required/alternative entry; see description` | R object; constraints below | A data frame, GRanges, Seqinfo, GInteractions, or a Biostrings XStringSet/XString object. |
+| `x` | `No formal default; requiredness follows the contract` | R object; constraints below | A data frame, GRanges, Seqinfo, GInteractions, or a Biostrings XStringSet/XString object. |
 | `mapping` | `NULL` | aes mapping | Optional named character vector output_role = "input_column" for data-frame inputs. For example c(accver = "chrom", length = "size"). |
 | `lengths` | `NULL` | Nullable R object; type/inheritance below | Optional named numeric vector of known sequence lengths. Fills unknown lengths and must agree with any known source lengths. |
 | `ids` | `NULL` | Character path/identifier/vector; see constraints | Optional character vector of explicit identifiers for unnamed XStringSet/XString inputs only. Existing source names must agree. |
@@ -2154,7 +2154,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `cds_data` | `Required/alternative entry; see description` | R object; constraints below | Data frame with feature_id, accver, ordered one-based inclusive start/end, strand (+/-) and GFF3 phase (0–2, numeric or literal text as returned by read_gff3()). . remains unknown; unknown initial phase requires explicit codon_start for nested CDS. If type is present, select CDS rows explicitly before building a map. Alternatively supply one row per CDS with a segments list-column and explicit initial phase or codon_start (1–3). Nested genomic pieces retain explicit segment_order when supplied and are never replaced by the parent's outer envelope. |
+| `cds_data` | `No formal default; requiredness follows the contract` | R object; constraints below | Data frame with feature_id, accver, ordered one-based inclusive start/end, strand (+/-) and GFF3 phase (0–2, numeric or literal text as returned by read_gff3()). . remains unknown; unknown initial phase requires explicit codon_start for nested CDS. If type is present, select CDS rows explicitly before building a map. Alternatively supply one row per CDS with a segments list-column and explicit initial phase or codon_start (1–3). Nested genomic pieces retain explicit segment_order when supplied and are never replaced by the parent's outer envelope. |
 | `genetic_code` | `NULL` | Nullable R object; type/inheritance below | Optional positive integer code ID, scalar or named by CDS feature_id. Must agree with a supplied genetic_code column. Missing IDs remain unknown; they do not prevent coordinate-only projection. |
 | `partial` | `c("error", "trim")` | Vector; choices versus multiple selection below | "error" (default) or explicit "trim". |
 
@@ -2169,8 +2169,8 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `ribbon_data` | `Required/alternative entry; see description` | Table/supported object; data may be a function | Alignment data in ggchord ribbon format. |
-| `seq_data` | `Required/alternative entry; see description` | Table/supported object; data may be a function | Sequence data containing accver and length. |
+| `ribbon_data` | `No formal default; requiredness follows the contract` | API-specific table/supported object; see the contract | Alignment data in ggchord ribbon format. |
+| `seq_data` | `No formal default; requiredness follows the contract` | API-specific table/supported object; see the contract | Sequence data containing accver and length. |
 | `bins` | `80L` | Numeric/integer; range in description | Positive integer number of normalized midpoint bins per sequence, default 80. |
 | `min_bundle` | `2L` | Numeric/integer; range in description | Minimum number of rows required for aggregation, default 2. Smaller groups remain as individual ribbons. |
 | `weight` | `c("length", "count", "pident")` | Vector; choices versus multiple selection below | Bundle weight: "length", "count", or "pident". Identity weight is aligned length multiplied by identity proportion. |
@@ -2187,16 +2187,16 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `seq_data` | `Required/alternative entry; see description` | Table/supported object; data may be a function | data.frame/tibble, required. Must contain accver and length; used as the coordinate reference for clipping. Reference IDs must always be non-missing, non-empty and unique, regardless of unknown_id. |
-| `ribbon_data` | `NULL` | Table/supported object; data may be a function | data.frame/tibble or NULL, optional. Alignment results. Other input types are rejected rather than treated as absent. |
-| `gene_data` | `NULL` | Table/supported object; data may be a function | data.frame/tibble or NULL, optional. Gene annotation data. Other input types are rejected rather than treated as absent. |
+| `seq_data` | `No formal default; requiredness follows the contract` | API-specific table/supported object; see the contract | data.frame/tibble, required. Must contain accver and length; used as the coordinate reference for clipping. Reference IDs must always be non-missing, non-empty and unique, regardless of unknown_id. |
+| `ribbon_data` | `NULL` | API-specific table/supported object; see the contract | data.frame/tibble or NULL, optional. Alignment results. Other input types are rejected rather than treated as absent. |
+| `gene_data` | `NULL` | API-specific table/supported object; see the contract | data.frame/tibble or NULL, optional. Gene annotation data. Other input types are rejected rather than treated as absent. |
 | `unknown_id` | `c("drop", "error", "keep")` | Vector; choices versus multiple selection below | Character, default "drop". Policy for rows whose sequence ID in ribbon_data or gene_data is missing, empty or unknown: "drop" removes them, "error" stops with a message, "keep" leaves them unchanged. A kept row without a reference sequence is reported, but its coordinates and annotations are not cleaned and it is not guaranteed to be drawable. IDs are never guessed or replaced. Other structural checks, including finite numeric coordinates and valid gene strands, still apply. |
 | `out_of_range` | `c("clip", "drop", "error", "keep")` | Vector; choices versus multiple selection below | Character, default "clip". Policy for coordinates outside [1, sequence length]: "clip" clamps them, "drop" removes the row, "error" stops, "keep" leaves them unchanged. Coordinates are one-based inclusive, so start == end is a valid single-base interval and is retained. With "clip", intervals wholly outside their sequence are removed and reported; partially overlapping intervals retain their intersection, even a single base. |
 | `reversed_interval` | `c("sort", "drop", "error", "keep")` | Vector; choices versus multiple selection below | Character, default "sort". Policy for intervals with start > end: "sort" swaps the endpoints so the feature draws stably (the original direction is recorded in the report), "drop" removes the row, "error" stops, "keep" leaves them unchanged. |
 | `invalid_pident` | `c("clip", "drop", "error", "keep")` | Vector; choices versus multiple selection below | Character, default "clip". Policy for pident outside [0, 100]: "clip" clamps them, "drop" removes the row, "error" stops, "keep" leaves them unchanged. |
 | `empty_annotation` | `c("keep", "drop", "replace")` | Vector; choices versus multiple selection below | Character, default "keep". Policy for missing/empty anno in gene data: "replace" fills them with replacement_annotation, "drop" removes the row, "keep" leaves them unchanged. |
 | `replacement_annotation` | `"unannotated"` | Character/enum; choices below | Character, default "unannotated". Replacement annotation used when empty_annotation = "replace". |
-| `feature_data` | `NULL` | Table/supported object; data may be a function | Unified annotation input; mutually exclusive with gene_data. |
+| `feature_data` | `NULL` | API-specific table/supported object; see the contract | Unified annotation input; mutually exclusive with gene_data. |
 
 </details>
 
@@ -2209,7 +2209,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `ribbon_data` | `Required/alternative entry; see description` | Table/supported object; data may be a function | data.frame in ribbon_data format. |
+| `ribbon_data` | `No formal default; requiredness follows the contract` | API-specific table/supported object; see the contract | data.frame in ribbon_data format. |
 | `tolerance` | `0` | Numeric/integer; range in description | Numeric, default 0. Maximum absolute difference (in bp) allowed on each of qstart/qend/sstart/send for two rows to count as coordinate duplicates (used with by = "coordinates"). |
 | `by` | `c("exact", "coordinates", "overlap")` | Vector; choices versus multiple selection below | Character, default "exact". "exact" removes rows with identical pair and coordinates; "coordinates" additionally treats rows within tolerance bp as duplicates; "overlap" treats blocks whose reciprocal overlap is at least min_reciprocal_overlap on both sequences as duplicates. Each interval must meet the threshold, not only the shorter one. Opposite relative endpoint directions are kept as distinct relationships by all methods. Single-base endpoints use supplied strand/direction evidence; otherwise their direction is unknown. |
 | `keep` | `c("best_pident", "longest", "first")` | Vector; choices versus multiple selection below | Character, default "best_pident". Which representative to keep: "best_pident" (highest pident), "longest" (longest length) or "first" (first occurrence in the input). |
@@ -2226,7 +2226,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `plot` | `Required/alternative entry; see description` | R object; constraints below | A ggchord plot. |
+| `plot` | `No formal default; requiredness follows the contract` | R object; constraints below | A ggchord plot. |
 | `width` | `7` | Numeric/integer; range in description | Positive target canvas dimensions. |
 | `height` | `5` | Numeric/integer; range in description | Positive target canvas dimensions. |
 | `units` | `c("in", "cm", "mm", "px")` | Vector; choices versus multiple selection below | Dimensions in "in", "cm", "mm", or "px". |
@@ -2247,7 +2247,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `plot` | `Required/alternative entry; see description` | R object; constraints below | A Fusion object. |
+| `plot` | `No formal default; requiredness follows the contract` | R object; constraints below | A Fusion object. |
 | `width` | `10` | Numeric/integer; range in description | Positive canvas dimensions in inches. |
 | `height` | `8` | Numeric/integer; range in description | Positive canvas dimensions in inches. |
 
@@ -2262,7 +2262,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `plot` | `Required/alternative entry; see description` | R object; constraints below | A ggchord plot. |
+| `plot` | `No formal default; requiredness follows the contract` | R object; constraints below | A ggchord plot. |
 | `include` | `c("seq", "ribbon", "gene", "feature", "labels", "axis", "track")` | Vector; choices versus multiple selection below | Character vector selecting any of "seq", "ribbon", "gene", "feature", "labels", "alignment", "link", "restriction", "track", and "axis". Point links and restriction sites require explicit selection. Dotplots default to alignment and axis; axis_layout contains reversible axis offsets, directions and source origins. Alignment exports retain all four endpoints, layer identity and source row; omissions appear in connection_report. |
 | `original_data` | `FALSE` | Logical | Logical. Include the resolved per-layer input tables under original_data, default FALSE. |
 
@@ -2277,7 +2277,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `ribbon_data` | `Required/alternative entry; see description` | Table/supported object; data may be a function | data.frame with at least qaccver and saccver columns (normally the full ribbon_data format). |
+| `ribbon_data` | `No formal default; requiredness follows the contract` | API-specific table/supported object; see the contract | data.frame with at least qaccver and saccver columns (normally the full ribbon_data format). |
 | `seq_ids` | `NULL` | Nullable R object; type/inheritance below | Optional character vector. Keep only rows where both the query and the subject are in seq_ids. |
 | `min_pident` | `NULL` | Nullable R object; type/inheritance below | Optional numeric. Lower/upper bounds on pident. |
 | `max_pident` | `NULL` | Nullable R object; type/inheritance below | Optional numeric. Lower/upper bounds on pident. |
@@ -2301,7 +2301,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `sites` | `Required/alternative entry; see description` | R object; constraints below | Result from find_restriction_sites(). |
+| `sites` | `No formal default; requiredness follows the contract` | R object; constraints below | Result from find_restriction_sites(). |
 | `set` | `c("all", "unique", "unique_dual", "six_plus", "unique_6plus",      "commercial", "reference")` | Vector; choices versus multiple selection below | Display preset. "reference" reuses the enzyme-set profile stored for an exactly recognized reference sequence. It errors when no such profile is available. A saved "None" profile returns no sites. |
 | `enzymes` | `NULL` | Nullable R object; type/inheritance below | Additional filters. |
 | `min_site_length` | `NULL` | Nullable R object; type/inheritance below | Additional filters. |
@@ -2321,7 +2321,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `sequence` | `Required/alternative entry; see description` | Sequence object/string/complete-sequence table; see description | DNA text, a named character vector, or a data frame with accver and sequence. |
+| `sequence` | `No formal default; requiredness follows the contract` | Sequence object/string/complete-sequence table; see description | DNA text, a named character vector, or a data frame with accver and sequence. |
 | `database` | `NULL` | Nullable R object; type/inheritance below | Optional normalized database list or custom data frame. |
 | `types` | `NULL` | Nullable R object; type/inheritance below | Optional feature-type and feature-name/ID filters. |
 | `features` | `NULL` | Nullable R object; type/inheritance below | Optional feature-type and feature-name/ID filters. |
@@ -2342,9 +2342,9 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `seq_data` | `Required/alternative entry; see description` | Table/supported object; data may be a function | Sequence table containing unique accver and positive integer length values. Optional genome and genome_id columns are retained in the returned windows. |
-| `feature_data` | `Required/alternative entry; see description` | Table/supported object; data may be a function | Feature table containing feature_id, accver, start, end, and optionally strand. Missing strand means unknown. |
-| `targets` | `Required/alternative entry; see description` | R object; constraints below | Non-empty character vector of distinct feature_id values. Selection is exact; no annotation text or accession versions are guessed. |
+| `seq_data` | `No formal default; requiredness follows the contract` | API-specific table/supported object; see the contract | Sequence table containing unique accver and positive integer length values. Optional genome and genome_id columns are retained in the returned windows. |
+| `feature_data` | `No formal default; requiredness follows the contract` | API-specific table/supported object; see the contract | Feature table containing feature_id, accver, start, end, and optionally strand. Missing strand means unknown. |
+| `targets` | `No formal default; requiredness follows the contract` | R object; constraints below | Non-empty character vector of distinct feature_id values. Selection is exact; no annotation text or accession versions are guessed. |
 | `upstream` | `0` | Numeric/integer; range in description | Single non-negative integer numbers of bases added before and after each target in its biological direction. |
 | `downstream` | `0` | Numeric/integer; range in description | Single non-negative integer numbers of bases added before and after each target in its biological direction. |
 
@@ -2359,7 +2359,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `sequence` | `Required/alternative entry; see description` | Sequence object/string/complete-sequence table; see description | DNA text, a named character vector, or a data frame with accver and sequence. |
+| `sequence` | `No formal default; requiredness follows the contract` | Sequence object/string/complete-sequence table; see description | DNA text, a named character vector, or a data frame with accver and sequence. |
 | `primers` | `NULL` | Nullable R object; type/inheritance below | Optional custom primers with sequence and optional name and primer_id (one ID per distinct sequence), or a named character vector. |
 | `set` | `c("universal", "all", "reference")` | Vector; choices versus multiple selection below | Bundled catalogue subset. reference returns authoritative primer annotations from a recognized bundled reference plasmid. |
 | `match` | `c("exact", "three_prime")` | Vector; choices versus multiple selection below | Full exact matching or longest exact 3-prime annealing. |
@@ -2378,7 +2378,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `sequence` | `Required/alternative entry; see description` | Sequence object/string/complete-sequence table; see description | DNA text, a named character vector, or a data frame with accver and sequence. |
+| `sequence` | `No formal default; requiredness follows the contract` | Sequence object/string/complete-sequence table; see description | DNA text, a named character vector, or a data frame with accver and sequence. |
 | `enzymes` | `NULL` | Nullable R object; type/inheritance below | Optional enzyme names. A data frame is a compatibility spelling for patterns. |
 | `patterns` | `NULL` | Nullable R object; type/inheritance below | Optional custom definitions. |
 | `circular` | `TRUE` | Logical | Allow recognition and cleavage coordinates to wrap origin. |
@@ -2396,13 +2396,13 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `seq_data` | `Required/alternative entry; see description` | Table/supported object; data may be a function | Sequence table containing accver and length. |
-| `ribbon_data` | `NULL` | Table/supported object; data may be a function | Optional ggchord alignment table. |
-| `gene_data` | `NULL` | Table/supported object; data may be a function | Optional gene or feature table. |
-| `loci` | `Required/alternative entry; see description` | Explicit window/anchor table or documented equivalent | Data frame containing accver, start, and end, and optionally locus_id. |
+| `seq_data` | `No formal default; requiredness follows the contract` | API-specific table/supported object; see the contract | Sequence table containing accver and length. |
+| `ribbon_data` | `NULL` | API-specific table/supported object; see the contract | Optional ggchord alignment table. |
+| `gene_data` | `NULL` | API-specific table/supported object; see the contract | Optional gene or feature table. |
+| `loci` | `No formal default; requiredness follows the contract` | Explicit window/anchor table or documented equivalent | Data frame containing accver, start, and end, and optionally locus_id. |
 | `expand` | `0` | Numeric/integer; range in description | Non-negative number of bases added on both sides, scalar or one value per locus. |
 | `boundary` | `c("trim", "drop")` | Vector; choices versus multiple selection below | Boundary policy. "trim" clips partially overlapping genes and alignments; "drop" keeps only rows fully contained in selected loci. |
-| `feature_data` | `NULL` | Table/supported object; data may be a function | Unified annotation input; mutually exclusive with gene_data. |
+| `feature_data` | `NULL` | API-specific table/supported object; see the contract | Unified annotation input; mutually exclusive with gene_data. |
 
 </details>
 
@@ -2415,9 +2415,9 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `data` | `Required/alternative entry; see description` | Table/supported object; data may be a function | Quantitative input table. Metadata and mapped values are retained. |
-| `seq_data` | `Required/alternative entry; see description` | Table/supported object; data may be a function | Sequence reference table. |
-| `loci` | `Required/alternative entry; see description` | Explicit window/anchor table or documented equivalent | Explicit accver, start, end and optional locus_id, as in focus_ggchord_data(). |
+| `data` | `No formal default; requiredness follows the contract` | API-specific data input; see the contract | Quantitative input table. Metadata and mapped values are retained. |
+| `seq_data` | `No formal default; requiredness follows the contract` | API-specific table/supported object; see the contract | Sequence reference table. |
+| `loci` | `No formal default; requiredness follows the contract` | Explicit window/anchor table or documented equivalent | Explicit accver, start, end and optional locus_id, as in focus_ggchord_data(). |
 | `type` | `c("point", "interval")` | Vector; choices versus multiple selection below | "point" requires pos; "interval" requires start/end. |
 | `boundary` | `c("trim", "drop")` | Vector; choices versus multiple selection below | "trim" (default) or "drop" for partly retained intervals. |
 
@@ -2432,8 +2432,8 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `plot` | `Required/alternative entry; see description` | R object; constraints below | An independent ggchord genomic plot, another Fusion, or a Cartesian detail from register_ggchord_alignment(). Dotplot, facets and unregistered external ggplots are not yet registered here. Character panels require explicit cross-panel fill; backbone-colour gradient is unavailable. |
-| `id` | `Required/alternative entry; see description` | R object; constraints below | Unique nonempty panel name; "center" is reserved. |
+| `plot` | `No formal default; requiredness follows the contract` | R object; constraints below | An independent ggchord genomic plot, another Fusion, or a Cartesian detail from register_ggchord_alignment(). Dotplot, facets and unregistered external ggplots are not yet registered here. Character panels require explicit cross-panel fill; backbone-colour gradient is unavailable. |
+| `id` | `No formal default; requiredness follows the contract` | R object; constraints below | Unique nonempty panel name; "center" is reserved. |
 | `side` | `c("right", "top", "left", "bottom")` | Vector; choices versus multiple selection below | One of right, top, left, bottom, topright, topleft, bottomright or bottomleft (one panel per named side), or auto for a bounded clockwise perimeter layout with any number of distinct panels that fit the canvas. Auto preserves explicit sizes and all fixed allocations; unlocked default containers may adapt with a 15 mm floor. Placement does not rescale fonts or rotate the child Coord. If no placement is feasible, the build fails explicitly. |
 | `size` | `NULL` | Nullable R object; type/inheritance below | Optional fractional width and height. Out-of-frame allocations fail; overlap fails unless explicitly allowed by the composition. |
 | `box` | `NULL` | Nullable R object; type/inheritance below | Optional explicit rectangle (xmin, xmax, ymin, ymax), optionally named in any order. Numeric values are fractions of the content area after native outer plot decorations and Guides; absolute grid units retain their physical size within that same frame. Use instead of side/size/angle/distance. Out-of-frame boxes fail at build. |
@@ -2451,7 +2451,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `data` | `Required/alternative entry; see description` | Table/supported object; data may be a function | A relationship data frame, preserving original endpoints. |
+| `data` | `No formal default; requiredness follows the contract` | API-specific data input; see the contract | A relationship data frame, preserving original endpoints. |
 | `mapping` | `NULL` | aes mapping | Standard ggplot2 aesthetic mapping: fill, colour, alpha, linewidth and linetype. With pident and no explicit fill, Identity is mapped by default with 0/50/80/90/95/100 breaks. Composition uses ordinary scale_fill_* etc.; panel role scales remain local to each panel. |
 | `qpanel` | `NULL` | Nullable R object; type/inheritance below | Optional fixed panel IDs. Do not also supply their columns. |
 | `spanel` | `NULL` | Nullable R object; type/inheritance below | Optional fixed panel IDs. Do not also supply their columns. |
@@ -2479,7 +2479,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `plot` | `Required/alternative entry; see description` | R object; constraints below | A ggchord plot. |
+| `plot` | `No formal default; requiredness follows the contract` | R object; constraints below | A ggchord plot. |
 | `build` | `TRUE` | Logical | Logical. Build the layout when it is not cached, default TRUE. |
 
 </details>
@@ -2493,13 +2493,13 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `seq_data` | `Required/alternative entry; see description` | Table/supported object; data may be a function | data.frame/tibble with accver and length, or a GRanges, Seqinfo or GInteractions object with known full sequence lengths, or a named nucleotide or protein Biostrings XStringSet. Unnamed sequence objects must first use as_ggchord_seq() with explicit ids. Optional S4 inputs use as_ggchord_seq(). The sequence_unit column is "bp" (default when omitted) or "aa". All rows use the same unit. Protein lengths come from complete proteins. Native aa plots accept links and generic features; gene, primer and restriction layers require bp. Arbitrary character widths are not biological sequence lengths. |
-| `ribbon_data` | `NULL` | Table/supported object; data may be a function | Optional alignment table with qaccver, saccver, qstart, qend, sstart and send. length and pident are optional unless requested by a mapping, filter or statistic. A GInteractions object uses as_ggchord_link() without inventing identity or alignment length. |
-| `gene_data` | `NULL` | Table/supported object; data may be a function | Compatible legacy annotation input. The third positional argument retains its meaning. Use feature_data in new code; a non-NULL legacy input emits one message at construction, never during rendering. Untyped legacy tables retain their directional gene semantics. No removal version is scheduled. Do not supply both annotation inputs. |
+| `seq_data` | `No formal default; requiredness follows the contract` | API-specific table/supported object; see the contract | data.frame/tibble with accver and length, or a GRanges, Seqinfo or GInteractions object with known full sequence lengths, or a named nucleotide or protein Biostrings XStringSet. Unnamed sequence objects must first use as_ggchord_seq() with explicit ids. Optional S4 inputs use as_ggchord_seq(). The sequence_unit column is "bp" (default when omitted) or "aa". All rows use the same unit. Protein lengths come from complete proteins. Native aa plots accept links and generic features; gene, primer and restriction layers require bp. Arbitrary character widths are not biological sequence lengths. |
+| `ribbon_data` | `NULL` | API-specific table/supported object; see the contract | Optional alignment table with qaccver, saccver, qstart, qend, sstart and send. length and pident are optional unless requested by a mapping, filter or statistic. A GInteractions object uses as_ggchord_link() without inventing identity or alignment length. |
+| `gene_data` | `NULL` | API-specific table/supported object; see the contract | Compatible legacy annotation input. The third positional argument retains its meaning. Use feature_data in new code; a non-NULL legacy input emits one message at construction, never during rendering. Untyped legacy tables retain their directional gene semantics. No removal version is scheduled. Do not supply both annotation inputs. |
 | `debug` | `FALSE` | Logical | Logical. Whether to output debug information, default FALSE |
 | `validate` | `c("warn", "error", "none")` | Vector; choices versus multiple selection below | Character, default "warn". How to run the structured input-data validation (see validate_ggchord_data): "warn" emits a single summary warning when the data has problems and caches the full report on the plot object (p$ggchord$validation); "error" stops on severe problems; "none" skips the diagnostic validation (the cheap structural checks that prevent crashes are still performed). |
-| `feature_data` | `NULL` | Table/supported object; data may be a function | Optional unified annotation table or GRanges. Requires accver, start, end; absent strand becomes unknown ("."). Generic feature layers use the full table. Default gene layers select gene/CDS from feature_class, type, or role (in that priority order), and require known strands. tRNA/rRNA remain generic features. Explicit layer data overrides the constructor input. Use disjoint subsets when combining gene and feature layers; each layer keeps its own data independently. |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Reserved for clear migration errors from removed constructor arguments. Use labs(), coord_chord() and theme() for presentation. |
+| `feature_data` | `NULL` | API-specific table/supported object; see the contract | Optional unified annotation table or GRanges. Requires accver, start, end; absent strand becomes unknown ("."). Generic feature layers use the full table. Default gene layers select gene/CDS from feature_class, type, or role (in that priority order), and require known strands. tRNA/rRNA remain generic features. Explicit layer data overrides the constructor input. Use disjoint subsets when combining gene and feature layers; each layer keeps its own data independently. |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Reserved for clear migration errors from removed constructor arguments. Use labs(), coord_chord() and theme() for presentation. |
 
 </details>
 
@@ -2512,7 +2512,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `center` | `Required/alternative entry; see description` | R object; constraints below | A ggchord genomic plot (Circular, Chord, Collinear, Sankey or Radial), or another Fusion. Nested biological endpoints use full panel paths. |
+| `center` | `No formal default; requiredness follows the contract` | R object; constraints below | A ggchord genomic plot (Circular, Chord, Collinear, Sankey or Radial), or another Fusion. Nested biological endpoints use full panel paths. |
 | `center_size` | `NULL` | Nullable R object; type/inheritance below | Optional width and height as fractions of the composition content area, excluding native outer plot decorations and cross-panel Guides. NULL allocates available space. |
 | `layout` | `c("fixed", "adaptive")` | Vector; choices versus multiple selection below | "fixed" uses fixed panel allocations; "adaptive" also adjusts the central allocation to the physical aspect ratio and jointly measures native cross-panel Guide candidates against panel allocations. Unlocked Guide positions/direction/rows may adapt; explicit native settings and absolute boxes stay fixed. Multiple outside Guide positions are allowed. Both rebuild labels and guides at actual panel sizes without shrinking explicit fonts. Impossible space constraints fail rather than dropping keys. |
 | `allow_overlap` | `FALSE` | Logical | Explicitly allow container overlap. Default FALSE fails on overlap. When TRUE, later panels paint over earlier panels. Connections use disjoint native grid clips to avoid accumulating translucent fills. Ordinary child margins do not break links; later containers still cover earlier content. This is deliberate placement, not global collision avoidance. |
@@ -2529,9 +2529,9 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `feature_data` | `Required/alternative entry; see description` | Table/supported object; data may be a function | Feature data frame with feature_id, accver, start, end, and optional strand, accepted by as_ggchord_feature(). |
-| `membership` | `Required/alternative entry; see description` | R object; constraints below | Data frame with feature_id and cluster_id. A feature can belong to one cluster; extra columns are retained in the report. |
-| `pairs` | `Required/alternative entry; see description` | R object; constraints below | Data frame with explicit qaccver and saccver comparisons. |
+| `feature_data` | `No formal default; requiredness follows the contract` | API-specific table/supported object; see the contract | Feature data frame with feature_id, accver, start, end, and optional strand, accepted by as_ggchord_feature(). |
+| `membership` | `No formal default; requiredness follows the contract` | R object; constraints below | Data frame with feature_id and cluster_id. A feature can belong to one cluster; extra columns are retained in the report. |
+| `pairs` | `No formal default; requiredness follows the contract` | R object; constraints below | Data frame with explicit qaccver and saccver comparisons. |
 | `paralogs` | `c("drop", "all")` | Vector; choices versus multiple selection below | How to handle multiple members per cluster and sequence: "drop" (default) or explicit "all". |
 | `segment_policy` | `c("error", "span")` | Vector; choices versus multiple selection below | "error" (default) rejects repeated feature IDs; "span" explicitly uses a validated discontinuous feature's outer bounds. |
 | `max_links` | `10000` | Numeric/integer; range in description | Positive integer upper limit for generated rows, default 10000. Exceeding it stops before Cartesian products are allocated. |
@@ -2547,9 +2547,9 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `plot` | `Required/alternative entry; see description` | R object; constraints below | A registered ggchord genomic source plot or nested Fusion. |
-| `region` | `Required/alternative entry; see description` | R object; constraints below | Nonempty data frame with accver, start, end in original one-based inclusive source coordinates. Bounds must be ordered positive integers. Optional instance and detail_instance select exact display instances in the source and detail panels for every row. Ambiguity fails. Explicit wrap = TRUE permits start > end across a circular source origin. Both selected leaves must declare matching full source lengths; character sources require as_ggchord_alignment(circular = TRUE). The interval is drawn as two pieces with only its two external boundary leaders. With a list of details, a detail_panel column selects the named target for each row. Nested leaves use full paths, for example detail/center; optional source_panel similarly selects a source leaf under center. Ambiguous container selection fails. |
-| `detail_plot` | `Required/alternative entry; see description` | R object; constraints below | An explicit registered ggchord genomic plot, nested Fusion, a character plot from register_ggchord_alignment(), or a uniquely named list of such plots. Every panel must have at least one source region; the name center is reserved. The selected source interval must be fully visible in both panels, in the same bp/aa unit. Character plots require explicit source/column registration; ordinary unregistered plots are rejected. |
+| `plot` | `No formal default; requiredness follows the contract` | R object; constraints below | A registered ggchord genomic source plot or nested Fusion. |
+| `region` | `No formal default; requiredness follows the contract` | R object; constraints below | Nonempty data frame with accver, start, end in original one-based inclusive source coordinates. Bounds must be ordered positive integers. Optional instance and detail_instance select exact display instances in the source and detail panels for every row. Ambiguity fails. Explicit wrap = TRUE permits start > end across a circular source origin. Both selected leaves must declare matching full source lengths; character sources require as_ggchord_alignment(circular = TRUE). The interval is drawn as two pieces with only its two external boundary leaders. With a list of details, a detail_panel column selects the named target for each row. Nested leaves use full paths, for example detail/center; optional source_panel similarly selects a source leaf under center. Ambiguous container selection fails. |
+| `detail_plot` | `No formal default; requiredness follows the contract` | R object; constraints below | An explicit registered ggchord genomic plot, nested Fusion, a character plot from register_ggchord_alignment(), or a uniquely named list of such plots. Every panel must have at least one source region; the name center is reserved. The selected source interval must be fully visible in both panels, in the same bp/aa unit. Character plots require explicit source/column registration; ordinary unregistered plots are rejected. |
 | `side` | `c("right", "top", "left", "bottom")` | Vector; choices versus multiple selection below | A named side from fusion_panel(), including diagonal sides. For a list of plots, supply a character vector named by panel ID, with distinct fixed sides or repeated auto values for automatic perimeter allocation. Every input region still explicitly selects its detail panel. |
 | `center_size` | `NULL` | Nullable R object; type/inheritance below | Optional panel width/height fractions, following ggchord_fusion() and fusion_panel(). Defaults reserve a smaller source panel and a wider detail container for a single detail plot. With multiple details, use a named list of sizes or NULL for Fusion defaults; center_size also follows Fusion defaults. Out-of-frame allocations fail; overlap requires explicit allow_overlap. |
 | `detail_size` | `NULL` | Nullable R object; type/inheritance below | Optional panel width/height fractions, following ggchord_fusion() and fusion_panel(). Defaults reserve a smaller source panel and a wider detail container for a single detail plot. With multiple details, use a named list of sizes or NULL for Fusion defaults; center_size also follows Fusion defaults. Out-of-frame allocations fail; overlap requires explicit allow_overlap. |
@@ -2575,9 +2575,9 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `data` | `Required/alternative entry; see description` | Table/supported object; data may be a function | Long alignment frame from as_ggchord_alignment(). |
-| `accver` | `Required/alternative entry; see description` | R object; constraints below | One alignment-row ID, even if its source_accver differs. |
-| `position` | `Required/alternative entry; see description` | Position object or documented string | Numeric positions, positive integral or NA. |
+| `data` | `No formal default; requiredness follows the contract` | API-specific data input; see the contract | Long alignment frame from as_ggchord_alignment(). |
+| `accver` | `No formal default; requiredness follows the contract` | R object; constraints below | One alignment-row ID, even if its source_accver differs. |
+| `position` | `No formal default; requiredness follows the contract` | Positive integers or NA; source positions or alignment columns | Numeric positions, positive integral or NA. |
 | `inverse` | `FALSE` | Logical | FALSE maps alignment columns to source positions; TRUE maps source positions to alignment columns. |
 
 </details>
@@ -2591,9 +2591,9 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `plot` | `Required/alternative entry; see description` | R object; constraints below | A ggchord plot using coord_collinear(), coord_radial_synteny() or coord_dotplot(). |
-| `accver` | `Required/alternative entry; see description` | R object; constraints below | Sequence identifiers, scalar or one per position. |
-| `position` | `Required/alternative entry; see description` | Position object or documented string | Numeric genomic positions, or layout x when inverse = TRUE. Radial inverse mapping instead requires a matrix/data frame with x and y columns on the specified backbone. Off-backbone positions are rejected. |
+| `plot` | `No formal default; requiredness follows the contract` | R object; constraints below | A ggchord plot using coord_collinear(), coord_radial_synteny() or coord_dotplot(). |
+| `accver` | `No formal default; requiredness follows the contract` | R object; constraints below | Sequence identifiers, scalar or one per position. |
+| `position` | `No formal default; requiredness follows the contract` | Numeric positions; Radial inverse uses an x/y matrix or data frame | Numeric genomic positions, or layout x when inverse = TRUE. Radial inverse mapping instead requires a matrix/data frame with x and y columns on the specified backbone. Off-backbone positions are rejected. |
 | `inverse` | `FALSE` | Logical | Convert layout x back to native sequence positions. |
 | `source` | `FALSE` | Logical | Use original source coordinates after focusing. |
 | `axis` | `NULL` | Nullable R object; type/inheritance below | Dotplot axis to map, either "x" (query) or "y" (subject). Required for Dotplots; omitted for linear and radial layouts. Dotplot gaps return NA on inverse mapping, with the chosen axis recorded in the result. |
@@ -2609,7 +2609,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `ribbon_data` | `Required/alternative entry; see description` | Table/supported object; data may be a function | data.frame in ribbon_data format. |
+| `ribbon_data` | `No formal default; requiredness follows the contract` | API-specific table/supported object; see the contract | data.frame in ribbon_data format. |
 | `max_gap` | `0` | Numeric/integer; range in description | Numeric, default 0. Maximum gap (in bp) allowed between two blocks on both sequences for them to be merged. |
 | `min_pident_difference` | `0` | Numeric/integer; range in description | Numeric, default 0. When > 0, two blocks are only merged when their pident difference is <= this value. |
 | `require_same_orientation` | `TRUE` | Logical | Logical, default TRUE. Only merge blocks with the same relative query/subject direction and compatible progression of their bounds. Reversing both endpoints preserves relative direction. FALSE explicitly permits a coarser mixed-direction summary. |
@@ -2627,8 +2627,8 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `seq_data` | `Required/alternative entry; see description` | Table/supported object; data may be a function | Sequence data containing accver and length. |
-| `ribbon_data` | `Required/alternative entry; see description` | Table/supported object; data may be a function | Alignment data in ggchord ribbon format. |
+| `seq_data` | `No formal default; requiredness follows the contract` | API-specific table/supported object; see the contract | Sequence data containing accver and length. |
+| `ribbon_data` | `No formal default; requiredness follows the contract` | API-specific table/supported object; see the contract | Alignment data in ggchord ribbon format. |
 | `seq_order` | `NULL` | Geometry number/vector/documented formats | Optional initial complete sequence order. The default uses the row order of seq_data. |
 | `seq_orientation` | `NULL` | Geometry number/vector/documented formats | Optional initial orientation (1 or -1), scalar, complete vector, or named vector. |
 | `optimize` | `c("order", "orientation")` | Vector; choices versus multiple selection below | Any of "order" and "orientation". |
@@ -2646,14 +2646,14 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `seq_data` | `Required/alternative entry; see description` | Table/supported object; data may be a function | Sequence input accepted by as_ggchord_seq(). |
-| `ribbon_data` | `NULL` | Table/supported object; data may be a function | Optional paired intervals accepted by as_ggchord_link(). |
-| `gene_data` | `NULL` | Table/supported object; data may be a function | Optional directional gene input accepted by as_ggchord_feature(). Nondirectional intervals belong in features. |
+| `seq_data` | `No formal default; requiredness follows the contract` | API-specific table/supported object; see the contract | Sequence input accepted by as_ggchord_seq(). |
+| `ribbon_data` | `NULL` | API-specific table/supported object; see the contract | Optional paired intervals accepted by as_ggchord_link(). |
+| `gene_data` | `NULL` | API-specific table/supported object; see the contract | Optional directional gene input accepted by as_ggchord_feature(). Nondirectional intervals belong in features. |
 | `features` | `list()` | Named list | Named lists of feature or paired-interval inputs. |
 | `links` | `list()` | Named list | Named lists of feature or paired-interval inputs. |
 | `mapping` | `list()` | aes mapping | Named list with optional seq, ribbon, gene column mappings, and features/links lists of mappings named like the respective collections. Each column mapping is a named character vector. |
 | `steps` | `list()` | Named list | Named list of explicit helper argument lists. Supported names: clean, filter, deduplicate, merge, bundle, optimize. Data arguments are supplied by preparation and cannot be overridden. |
-| `feature_data` | `NULL` | Table/supported object; data may be a function | Unified annotation table, mutually exclusive with gene_data. |
+| `feature_data` | `NULL` | API-specific table/supported object; see the contract | Unified annotation table, mutually exclusive with gene_data. |
 
 </details>
 
@@ -2680,8 +2680,8 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `feature_data` | `Required/alternative entry; see description` | Table/supported object; data may be a function | Domain/feature data frame with feature_id, parent_id (or a single-valued parent_ids list-column), start and end. |
-| `cds` | `Required/alternative entry; see description` | R object; constraints below | A map from build_ggchord_cds(). |
+| `feature_data` | `No formal default; requiredness follows the contract` | API-specific table/supported object; see the contract | Domain/feature data frame with feature_id, parent_id (or a single-valued parent_ids list-column), start and end. |
+| `cds` | `No formal default; requiredness follows the contract` | R object; constraints below | A map from build_ggchord_cds(). |
 | `from` | `c("protein", "genome")` | Vector; choices versus multiple selection below | "protein" (default) or "genome". |
 | `codon_boundary` | `c("error", "expand")` | Vector; choices versus multiple selection below | Inverse projection policy: "error" or "expand". |
 
@@ -2696,8 +2696,8 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `link_data` | `Required/alternative entry; see description` | R object; constraints below | Data frame with qfeature_id, sfeature_id identifying CDS models and ordered inclusive protein qstart, qend, sstart, send. Query and subject residue spans must be equal. If present, gapopen must be zero and source length must equal this residue span. |
-| `cds` | `Required/alternative entry; see description` | R object; constraints below | A map from build_ggchord_cds(). |
+| `link_data` | `No formal default; requiredness follows the contract` | R object; constraints below | Data frame with qfeature_id, sfeature_id identifying CDS models and ordered inclusive protein qstart, qend, sstart, send. Query and subject residue spans must be equal. If present, gapopen must be zero and source length must equal this residue span. |
+| `cds` | `No formal default; requiredness follows the contract` | R object; constraints below | A map from build_ggchord_cds(). |
 | `ungapped` | `FALSE` | Logical | Must explicitly be TRUE, confirming an ungapped residue correspondence rather than inferring it from equal endpoint spans. |
 
 </details>
@@ -2711,8 +2711,8 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `file` | `Required/alternative entry; see description` | Character path/identifier/vector; see constraints | A single local aligned FASTA path; no multi-alignment concatenation. |
-| `alphabet` | `Required/alternative entry; see description` | R object; constraints below | Explicit "DNA", "RNA" or "AA". IUPAC nucleotide ambiguity codes and protein ambiguity/rare-residue codes are accepted; * is accepted only for AA. The alphabet is never guessed. |
+| `file` | `No formal default; requiredness follows the contract` | Character path/identifier/vector; see constraints | A single local aligned FASTA path; no multi-alignment concatenation. |
+| `alphabet` | `No formal default; requiredness follows the contract` | R object; constraints below | Explicit "DNA", "RNA" or "AA". IUPAC nucleotide ambiguity codes and protein ambiguity/rare-residue codes are accepted; * is accepted only for AA. The alphabet is never guessed. |
 | `source_data` | `NULL` | Nullable R object; type/inheritance below | Optional data frame with one row per alignment accver, start (first nongap source coordinate) and strand ("+" or "-"). Optional source_accver declares a different source ID; optional character sequence supplies the full forward source for verification. Coordinates must remain positive exact integers. Input metadata is retained in the ggchord_conversion attribute. |
 | `source_file` | `FALSE` | Logical | Logical. Also retain .source_file on each character row. |
 | `circular` | `FALSE` | Logical | Explicit logical declaration that every source is circular, default FALSE. Requires source_data with full source_length or full sequence. Coordinates wrap at that length in the declared strand direction; nongap characters may cover at most one complete tour. Adds source_circular and source_length columns. A circular plot never activates this conversion. |
@@ -2796,7 +2796,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `col_names` | `NULL` | Nullable R object; type/inheritance below | Optional character vector naming the columns in the file, used with format = "custom" or to override auto-detection. |
 | `comment` | `"#"` | Character/enum; choices below | Character comment character, default "#" (BLAST outfmt 7 header lines start with #). |
 | `source_file` | `FALSE` | Logical | Logical. Add a .source_file column when reading one or more files, default FALSE. |
-| `...` | `Required/alternative entry; see description` | Forwarded arguments | Additional arguments passed to utils::read.table() (e.g. na.strings). |
+| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Additional arguments passed to utils::read.table() (e.g. na.strings). |
 
 </details>
 
@@ -2867,7 +2867,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `file` | `NULL` | Character path/identifier/vector; see constraints | Optional local paths or patterns, read before files. |
 | `files` | `NULL` | Character path/identifier/vector; see constraints | Optional additional local paths or patterns. |
 | `format` | `c("pairs", "named_groups", "groups")` | Vector; choices versus multiple selection below | Explicit schema: "pairs" (default), "named_groups", or "groups". |
-| `feature_data` | `NULL` | Table/supported object; data may be a function | Optional data frame with unique character feature_id, character accver and numeric start/end in declared source coordinates. Original columns remain in report$feature_data; optional strand is retained. |
+| `feature_data` | `NULL` | API-specific table/supported object; see the contract | Optional data frame with unique character feature_id, character accver and numeric start/end in declared source coordinates. Original columns remain in report$feature_data; optional strand is retained. |
 | `unmatched` | `c("error", "report")` | Vector; choices versus multiple selection below | "error" (default) rejects IDs absent from supplied feature_data; "report" retains incomplete rows with mapping flags and reports each missing ID. Without feature_data all rows stay unplaced. |
 | `source_file` | `FALSE` | Logical | Add .source_file to pairs, membership and mapped links. |
 
@@ -2984,8 +2984,8 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `plot` | `Required/alternative entry; see description` | R object; constraints below | A single-panel Cartesian ggplot with geom_residue layers mapping x = alignment_column, y = accver, label = symbol. Identity/reverse x scales and a discrete y scale are supported. Additional independent annotations are allowed. Facets, nonlinear scales, flipped coordinates and position adjustments moving registered cells are rejected. |
-| `data` | `Required/alternative entry; see description` | Table/supported object; data may be a function | The displayed rows of as_ggchord_alignment(), read_aligned_fasta() or translate_ggchord_cds()$nucleotides/residues. One cell per accver/alignment_column; source coordinates must be unique within each row. Keep original columns when filtering a window. Every selected source base must be present; split spliced regions explicitly. Origin-wrapping magnify regions require explicit circular source metadata. Gap columns remain visible but have no source coordinate. |
+| `plot` | `No formal default; requiredness follows the contract` | R object; constraints below | A single-panel Cartesian ggplot with geom_residue layers mapping x = alignment_column, y = accver, label = symbol. Identity/reverse x scales and a discrete y scale are supported. Additional independent annotations are allowed. Facets, nonlinear scales, flipped coordinates and position adjustments moving registered cells are rejected. |
+| `data` | `No formal default; requiredness follows the contract` | API-specific data input; see the contract | The displayed rows of as_ggchord_alignment(), read_aligned_fasta() or translate_ggchord_cds()$nucleotides/residues. One cell per accver/alignment_column; source coordinates must be unique within each row. Keep original columns when filtering a window. Every selected source base must be present; split spliced regions explicitly. Origin-wrapping magnify regions require explicit circular source metadata. Gap columns remain visible but have no source coordinate. |
 
 </details>
 
@@ -2998,14 +2998,14 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `seq_data` | `Required/alternative entry; see description` | Table/supported object; data may be a function | Full sequence table with unique accver and integer lengths. |
-| `ribbon_data` | `NULL` | Table/supported object; data may be a function | Optional paired interval table. |
-| `gene_data` | `NULL` | Table/supported object; data may be a function | Optional gene or generic feature table, including segments. |
-| `windows` | `Required/alternative entry; see description` | R object; constraints below | Table with accver, start, end, unique locus_id, optional row_id (defaults to source accver) and orientation (1 or -1, defaults to 1). Bounds must be ordered, integral and within the sequence. |
+| `seq_data` | `No formal default; requiredness follows the contract` | API-specific table/supported object; see the contract | Full sequence table with unique accver and integer lengths. |
+| `ribbon_data` | `NULL` | API-specific table/supported object; see the contract | Optional paired interval table. |
+| `gene_data` | `NULL` | API-specific table/supported object; see the contract | Optional gene or generic feature table, including segments. |
+| `windows` | `No formal default; requiredness follows the contract` | R object; constraints below | Table with accver, start, end, unique locus_id, optional row_id (defaults to source accver) and orientation (1 or -1, defaults to 1). Bounds must be ordered, integral and within the sequence. |
 | `point_data` | `NULL` | Nullable R object; type/inheritance below | Optional point links with qaccver, saccver, qpos, spos. |
 | `cross_gap` | `c("split", "drop")` | Vector; choices versus multiple selection below | How to handle interval links clipped by selected windows. |
 | `max_links` | `10000` | Numeric/integer; range in description | Positive integer upper bound on candidate ribbon/point copies. Increase explicitly for larger, intentionally overlapping views. |
-| `feature_data` | `NULL` | Table/supported object; data may be a function | Unified annotation input; mutually exclusive with gene_data. |
+| `feature_data` | `NULL` | API-specific table/supported object; see the contract | Unified annotation input; mutually exclusive with gene_data. |
 
 </details>
 
@@ -3018,8 +3018,8 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `cds` | `Required/alternative entry; see description` | R object; constraints below | A map from build_ggchord_cds(). |
-| `sequences` | `Required/alternative entry; see description` | R object; constraints below | Named character vector of complete forward source strings, or a data frame with unique accver and sequence (e.g. read_fasta_lengths() with keep_sequence = TRUE). DNAStringSet/RNAStringSet are also accepted. Every CDS source must exist and contain its declared intervals. |
+| `cds` | `No formal default; requiredness follows the contract` | R object; constraints below | A map from build_ggchord_cds(). |
+| `sequences` | `No formal default; requiredness follows the contract` | R object; constraints below | Named character vector of complete forward source strings, or a data frame with unique accver and sequence (e.g. read_fasta_lengths() with keep_sequence = TRUE). DNAStringSet/RNAStringSet are also accepted. Every CDS source must exist and contain its declared intervals. |
 | `alphabet` | `c("DNA", "RNA")` | Vector; choices versus multiple selection below | Explicit "DNA" (default) or "RNA"; ungapped IUPAC only. |
 | `initiation` | `c("literal", "start")` | Vector; choices versus multiple selection below | "literal" (default) translates every codon literally. "start" uses the genetic code's alternative initiation codons for the first codon only; it requires a complete biological 5-prime end. |
 | `ambiguous` | `c("error", "solve")` | Vector; choices versus multiple selection below | "error" (default) rejects ambiguous codons; "solve" uses Biostrings to resolve them, emitting X when not uniquely resolvable. |
@@ -3035,14 +3035,14 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `seq_data` | `Required/alternative entry; see description` | Table/supported object; data may be a function | data.frame/tibble, required. Basic sequence information (columns accver, length). |
-| `ribbon_data` | `NULL` | Table/supported object; data may be a function | data.frame/tibble, optional. Alignment results (columns qaccver, saccver, qstart, qend, sstart, send). |
-| `gene_data` | `NULL` | Table/supported object; data may be a function | data.frame/tibble, optional. Gene annotation data (columns accver, start, end, strand; anno is optional). |
+| `seq_data` | `No formal default; requiredness follows the contract` | API-specific table/supported object; see the contract | data.frame/tibble, required. Basic sequence information (columns accver, length). |
+| `ribbon_data` | `NULL` | API-specific table/supported object; see the contract | data.frame/tibble, optional. Alignment results (columns qaccver, saccver, qstart, qend, sstart, send). |
+| `gene_data` | `NULL` | API-specific table/supported object; see the contract | data.frame/tibble, optional. Gene annotation data (columns accver, start, end, strand; anno is optional). |
 | `strict` | `FALSE` | Logical | Logical. When TRUE, collect issues and then stop if any severe problem is found. When FALSE (default), return the full diagnostic report without stopping. |
 | `check_coordinates` | `TRUE` | Logical | Logical, default TRUE. Whether to check that ribbon/gene coordinates stay inside [1, sequence length]. |
 | `check_duplicates` | `TRUE` | Logical | Logical, default TRUE. Whether to look for fully duplicated, near-duplicated and highly overlapping records. Reciprocal overlap requires the intersection to cover at least 90 percent of each interval, including descending ribbon endpoints. Reversed feature bounds may cross a circular origin and are excluded from linear overlap diagnostics; exact duplicates are still reported. |
 | `check_self_links` | `TRUE` | Logical | Logical, default TRUE. Whether to flag alignment rows where qaccver == saccver. |
-| `feature_data` | `NULL` | Table/supported object; data may be a function | Unified annotation table, mutually exclusive with gene_data. Requires accver, start, end. Missing strand is unknown; +, -, ., and +/- are accepted. Reports use table "feature" and data_summary$n_feature; the input is never modified. |
+| `feature_data` | `NULL` | API-specific table/supported object; see the contract | Unified annotation table, mutually exclusive with gene_data. Requires accver, start, end. Missing strand is unknown; +, -, ., and +/- are accepted. Reports use table "feature" and data_summary$n_feature; the input is never modified. |
 
 </details>
 
@@ -3055,8 +3055,8 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `seq_data` | `Required/alternative entry; see description` | Table/supported object; data may be a function | A data frame containing accver and genome foreign keys. |
-| `genomes` | `Required/alternative entry; see description` | R object; constraints below | A data frame containing a unique genome primary key. |
+| `seq_data` | `No formal default; requiredness follows the contract` | API-specific table/supported object; see the contract | A data frame containing accver and genome foreign keys. |
+| `genomes` | `No formal default; requiredness follows the contract` | R object; constraints below | A data frame containing a unique genome primary key. |
 | `strict` | `FALSE` | Logical | Logical. Stop if relational errors are present; warnings about genomes without contigs do not cause failure. |
 
 </details>
@@ -3093,9 +3093,9 @@ Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
 
 | Parameter | Signature default | Type/contract |
 | --- | --- | --- |
-| `x` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `y` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `...` | `Required/alternative entry` | Forwarded arguments; Follow upstream help for types, units and accepted values. |
+| `x` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `y` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `...` | `No formal default; see upstream contract` | Forwarded arguments; Follow upstream help for types, units and accepted values. |
 
 </details>
 
@@ -3106,7 +3106,7 @@ Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
 
 | Parameter | Signature default | Type/contract |
 | --- | --- | --- |
-| `x` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `x` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
 
 </details>
 
@@ -3117,7 +3117,7 @@ Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
 
 | Parameter | Signature default | Type/contract |
 | --- | --- | --- |
-| `x` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `x` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
 
 </details>
 
@@ -3128,7 +3128,7 @@ Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
 
 | Parameter | Signature default | Type/contract |
 | --- | --- | --- |
-| `geom` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `geom` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
 | `x` | `NULL` | Nullable R object; type/inheritance below; Follow upstream help for types, units and accepted values. |
 | `y` | `NULL` | Nullable R object; type/inheritance below; Follow upstream help for types, units and accepted values. |
 | `xmin` | `NULL` | Nullable R object; type/inheritance below; Follow upstream help for types, units and accepted values. |
@@ -3137,7 +3137,7 @@ Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
 | `ymax` | `NULL` | Nullable R object; type/inheritance below; Follow upstream help for types, units and accepted values. |
 | `xend` | `NULL` | Nullable R object; type/inheritance below; Follow upstream help for types, units and accepted values. |
 | `yend` | `NULL` | Nullable R object; type/inheritance below; Follow upstream help for types, units and accepted values. |
-| `...` | `Required/alternative entry` | Forwarded arguments; Follow upstream help for types, units and accepted values. |
+| `...` | `No formal default; see upstream contract` | Forwarded arguments; Follow upstream help for types, units and accepted values. |
 | `na.rm` | `FALSE` | Logical; Follow upstream help for types, units and accepted values. |
 
 </details>
@@ -3183,7 +3183,7 @@ Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
 | `arrow.fill` | `NULL` | Nullable R object; type/inheritance below; Follow upstream help for types, units and accepted values. |
 | `inherit.blank` | `FALSE` | Logical; Follow upstream help for types, units and accepted values. |
 | `size` | `deprecated()` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `...` | `Required/alternative entry` | Forwarded arguments; Follow upstream help for types, units and accepted values. |
+| `...` | `No formal default; see upstream contract` | Forwarded arguments; Follow upstream help for types, units and accepted values. |
 
 </details>
 
@@ -3202,7 +3202,7 @@ Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
 | `linejoin` | `NULL` | Nullable R object; type/inheritance below; Follow upstream help for types, units and accepted values. |
 | `inherit.blank` | `FALSE` | Logical; Follow upstream help for types, units and accepted values. |
 | `size` | `deprecated()` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `...` | `Required/alternative entry` | Forwarded arguments; Follow upstream help for types, units and accepted values. |
+| `...` | `No formal default; see upstream contract` | Forwarded arguments; Follow upstream help for types, units and accepted values. |
 
 </details>
 
@@ -3225,7 +3225,7 @@ Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
 | `margin` | `NULL` | Nullable R object; type/inheritance below; Follow upstream help for types, units and accepted values. |
 | `debug` | `NULL` | Nullable R object; type/inheritance below; Follow upstream help for types, units and accepted values. |
 | `inherit.blank` | `FALSE` | Logical; Follow upstream help for types, units and accepted values. |
-| `...` | `Required/alternative entry` | Forwarded arguments; Follow upstream help for types, units and accepted values. |
+| `...` | `No formal default; see upstream contract` | Forwarded arguments; Follow upstream help for types, units and accepted values. |
 
 </details>
 
@@ -3248,7 +3248,7 @@ Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
 
 | Parameter | Signature default | Type/contract |
 | --- | --- | --- |
-| `filename` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `filename` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
 | `plot` | `get_last_plot()` | R object; constraints below; Follow upstream help for types, units and accepted values. |
 | `device` | `NULL` | Nullable R object; type/inheritance below; Follow upstream help for types, units and accepted values. |
 | `path` | `NULL` | Nullable R object; type/inheritance below; Follow upstream help for types, units and accepted values. |
@@ -3260,7 +3260,7 @@ Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
 | `limitsize` | `TRUE` | Logical; Follow upstream help for types, units and accepted values. |
 | `bg` | `NULL` | Nullable R object; type/inheritance below; Follow upstream help for types, units and accepted values. |
 | `create.dir` | `FALSE` | Logical; Follow upstream help for types, units and accepted values. |
-| `...` | `Required/alternative entry` | Forwarded arguments; Follow upstream help for types, units and accepted values. |
+| `...` | `No formal default; see upstream contract` | Forwarded arguments; Follow upstream help for types, units and accepted values. |
 
 </details>
 
@@ -3271,7 +3271,7 @@ Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
 
 | Parameter | Signature default | Type/contract |
 | --- | --- | --- |
-| `label` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `label` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
 | `subtitle` | `waiver()` | R object; constraints below; Follow upstream help for types, units and accepted values. |
 
 </details>
@@ -3283,7 +3283,7 @@ Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
 
 | Parameter | Signature default | Type/contract |
 | --- | --- | --- |
-| `...` | `Required/alternative entry` | Forwarded arguments; Follow upstream help for types, units and accepted values. |
+| `...` | `No formal default; see upstream contract` | Forwarded arguments; Follow upstream help for types, units and accepted values. |
 
 </details>
 
@@ -3294,7 +3294,7 @@ Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
 
 | Parameter | Signature default | Type/contract |
 | --- | --- | --- |
-| `...` | `Required/alternative entry` | Forwarded arguments; Follow upstream help for types, units and accepted values. |
+| `...` | `No formal default; see upstream contract` | Forwarded arguments; Follow upstream help for types, units and accepted values. |
 | `title` | `waiver()` | R object; constraints below; Follow upstream help for types, units and accepted values. |
 | `subtitle` | `waiver()` | R object; constraints below; Follow upstream help for types, units and accepted values. |
 | `caption` | `waiver()` | R object; constraints below; Follow upstream help for types, units and accepted values. |
@@ -3327,7 +3327,7 @@ Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
 | `b` | `0` | Numeric/integer; range in description; Follow upstream help for types, units and accepted values. |
 | `l` | `0` | Numeric/integer; range in description; Follow upstream help for types, units and accepted values. |
 | `unit` | `"pt"` | Character/enum; choices below; Follow upstream help for types, units and accepted values. |
-| `...` | `Required/alternative entry` | Forwarded arguments; Follow upstream help for types, units and accepted values. |
+| `...` | `No formal default; see upstream contract` | Forwarded arguments; Follow upstream help for types, units and accepted values. |
 
 </details>
 
@@ -3358,7 +3358,7 @@ Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
 
 | Parameter | Signature default | Type/contract |
 | --- | --- | --- |
-| `x` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `x` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
 
 </details>
 
@@ -3369,151 +3369,151 @@ Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
 
 | Parameter | Signature default | Type/contract |
 | --- | --- | --- |
-| `...` | `Required/alternative entry` | Forwarded arguments; Follow upstream help for types, units and accepted values. |
-| `line` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `rect` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `text` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `title` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `point` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `polygon` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `geom` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `spacing` | `Required/alternative entry` | Geometry number/vector/documented formats; Follow upstream help for types, units and accepted values. |
-| `margins` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `aspect.ratio` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.title` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.title.x` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.title.x.top` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.title.x.bottom` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.title.y` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.title.y.left` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.title.y.right` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.text` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.text.x` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.text.x.top` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.text.x.bottom` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.text.y` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.text.y.left` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.text.y.right` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.text.theta` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.text.r` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.ticks` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.ticks.x` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.ticks.x.top` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.ticks.x.bottom` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.ticks.y` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.ticks.y.left` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.ticks.y.right` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.ticks.theta` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.ticks.r` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.minor.ticks.x.top` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.minor.ticks.x.bottom` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.minor.ticks.y.left` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.minor.ticks.y.right` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.minor.ticks.theta` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.minor.ticks.r` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.ticks.length` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.ticks.length.x` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.ticks.length.x.top` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.ticks.length.x.bottom` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.ticks.length.y` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.ticks.length.y.left` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.ticks.length.y.right` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.ticks.length.theta` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.ticks.length.r` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.minor.ticks.length` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.minor.ticks.length.x` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.minor.ticks.length.x.top` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.minor.ticks.length.x.bottom` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.minor.ticks.length.y` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.minor.ticks.length.y.left` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.minor.ticks.length.y.right` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.minor.ticks.length.theta` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.minor.ticks.length.r` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.line` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.line.x` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.line.x.top` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.line.x.bottom` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.line.y` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.line.y.left` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.line.y.right` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.line.theta` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.line.r` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.background` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.margin` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.spacing` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.spacing.x` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.spacing.y` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.key` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.key.size` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.key.height` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.key.width` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.key.spacing` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.key.spacing.x` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.key.spacing.y` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.key.justification` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.frame` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.ticks` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.ticks.length` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.axis.line` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.text` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.text.position` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.title` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.title.position` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.position` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.position.inside` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.direction` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.byrow` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.justification` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.justification.top` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.justification.bottom` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.justification.left` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.justification.right` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.justification.inside` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.location` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.box` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.box.just` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.box.margin` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.box.background` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.box.spacing` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `panel.background` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `panel.border` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `panel.spacing` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `panel.spacing.x` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `panel.spacing.y` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `panel.grid` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `panel.grid.major` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `panel.grid.minor` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `panel.grid.major.x` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `panel.grid.major.y` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `panel.grid.minor.x` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `panel.grid.minor.y` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `panel.ontop` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `panel.widths` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `panel.heights` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `plot.background` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `plot.title` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `plot.title.position` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `plot.subtitle` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `plot.caption` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `plot.caption.position` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `plot.tag` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `plot.tag.position` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `plot.tag.location` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `plot.margin` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `strip.background` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `strip.background.x` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `strip.background.y` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `strip.clip` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `strip.placement` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `strip.text` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `strip.text.x` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `strip.text.x.bottom` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `strip.text.x.top` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `strip.text.y` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `strip.text.y.left` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `strip.text.y.right` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `strip.switch.pad.grid` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `strip.switch.pad.wrap` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `...` | `No formal default; see upstream contract` | Forwarded arguments; Follow upstream help for types, units and accepted values. |
+| `line` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `rect` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `text` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `title` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `point` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `polygon` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `geom` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `spacing` | `No formal default; see upstream contract` | Geometry number/vector/documented formats; Follow upstream help for types, units and accepted values. |
+| `margins` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `aspect.ratio` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `axis.title` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `axis.title.x` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `axis.title.x.top` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `axis.title.x.bottom` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `axis.title.y` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `axis.title.y.left` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `axis.title.y.right` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `axis.text` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `axis.text.x` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `axis.text.x.top` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `axis.text.x.bottom` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `axis.text.y` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `axis.text.y.left` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `axis.text.y.right` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `axis.text.theta` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `axis.text.r` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `axis.ticks` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `axis.ticks.x` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `axis.ticks.x.top` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `axis.ticks.x.bottom` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `axis.ticks.y` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `axis.ticks.y.left` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `axis.ticks.y.right` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `axis.ticks.theta` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `axis.ticks.r` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `axis.minor.ticks.x.top` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `axis.minor.ticks.x.bottom` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `axis.minor.ticks.y.left` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `axis.minor.ticks.y.right` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `axis.minor.ticks.theta` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `axis.minor.ticks.r` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `axis.ticks.length` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `axis.ticks.length.x` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `axis.ticks.length.x.top` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `axis.ticks.length.x.bottom` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `axis.ticks.length.y` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `axis.ticks.length.y.left` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `axis.ticks.length.y.right` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `axis.ticks.length.theta` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `axis.ticks.length.r` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `axis.minor.ticks.length` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `axis.minor.ticks.length.x` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `axis.minor.ticks.length.x.top` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `axis.minor.ticks.length.x.bottom` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `axis.minor.ticks.length.y` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `axis.minor.ticks.length.y.left` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `axis.minor.ticks.length.y.right` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `axis.minor.ticks.length.theta` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `axis.minor.ticks.length.r` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `axis.line` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `axis.line.x` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `axis.line.x.top` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `axis.line.x.bottom` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `axis.line.y` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `axis.line.y.left` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `axis.line.y.right` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `axis.line.theta` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `axis.line.r` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `legend.background` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `legend.margin` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `legend.spacing` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `legend.spacing.x` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `legend.spacing.y` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `legend.key` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `legend.key.size` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `legend.key.height` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `legend.key.width` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `legend.key.spacing` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `legend.key.spacing.x` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `legend.key.spacing.y` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `legend.key.justification` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `legend.frame` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `legend.ticks` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `legend.ticks.length` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `legend.axis.line` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `legend.text` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `legend.text.position` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `legend.title` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `legend.title.position` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `legend.position` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `legend.position.inside` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `legend.direction` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `legend.byrow` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `legend.justification` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `legend.justification.top` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `legend.justification.bottom` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `legend.justification.left` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `legend.justification.right` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `legend.justification.inside` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `legend.location` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `legend.box` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `legend.box.just` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `legend.box.margin` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `legend.box.background` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `legend.box.spacing` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `panel.background` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `panel.border` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `panel.spacing` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `panel.spacing.x` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `panel.spacing.y` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `panel.grid` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `panel.grid.major` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `panel.grid.minor` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `panel.grid.major.x` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `panel.grid.major.y` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `panel.grid.minor.x` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `panel.grid.minor.y` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `panel.ontop` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `panel.widths` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `panel.heights` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `plot.background` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `plot.title` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `plot.title.position` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `plot.subtitle` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `plot.caption` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `plot.caption.position` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `plot.tag` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `plot.tag.position` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `plot.tag.location` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `plot.margin` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `strip.background` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `strip.background.x` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `strip.background.y` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `strip.clip` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `strip.placement` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `strip.text` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `strip.text.x` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `strip.text.x.bottom` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `strip.text.x.top` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `strip.text.y` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `strip.text.y.left` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `strip.text.y.right` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `strip.switch.pad.grid` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `strip.switch.pad.wrap` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
 | `complete` | `FALSE` | Logical; Follow upstream help for types, units and accepted values. |
 | `validate` | `TRUE` | Logical; Follow upstream help for types, units and accepted values. |
 
@@ -3526,9 +3526,9 @@ Upstream entry reference: [Rd](reference/grid-helpers.html)
 
 | Parameter | Signature default | Type/contract |
 | --- | --- | --- |
-| `x` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `units` | `Required/alternative entry` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `data` | `NULL` | Table/supported object; data may be a function; Follow upstream help for types, units and accepted values. |
+| `x` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `units` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `data` | `NULL` | API-specific data input; see the contract; Follow upstream help for types, units and accepted values. |
 
 </details>
 

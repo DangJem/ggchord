@@ -111,7 +111,7 @@ focus_geometry$leaders
 ```r
 library(dplyr)
 seqs <- seq_data_example |> select(accver, length)
-features <- gene_data_example |> mutate(type = 'gene')
+features <- gene_data_example |> mutate(strand = source_strand, type = 'CDS')
 hsp <- ribbon_data_example |> slice(1)
 regions <- bind_rows(
   transmute(hsp, accver = qaccver, start = pmin(qstart, qend), end = pmax(qstart, qend)),

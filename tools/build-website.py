@@ -170,10 +170,18 @@ def main():
     routes={'index.html':'en/index.html','articles/ggchord_vignette.html':'en/real-data.html',
         'articles/ggchord_guide_hans.html':'zh/real-data.html','reference/index.html':'en/reference/index.html','news/index.html':'assets/NEWS.md'}
     routes.update({'reference/'+s+'.html':'en/reference/'+s+'.html' for s in topics})
+    aliases={a:p.stem for p in (ROOT/'man').glob('*.Rd')
+             for a in re.findall(r'\\alias\{([^}]+)\}',p.read_text())}
+    for rel in json.loads((WEB/'historical-pages.json').read_text()):
+        if rel.startswith('reference/') and Path(rel).stem in aliases:
+            routes[rel]='en/reference/'+aliases[Path(rel).stem]+'.html#ref-usage'
+    routes.update({name:'en/'+name for name in ['authors.html','LICENSE.html','LICENSE-text.html']})
     for old,target in routes.items():
         path=out/old;path.parent.mkdir(parents=True,exist_ok=True);dest=os.path.relpath(out/target,path.parent)
         extra='<script>try{if(localStorage.getItem("ggchord-language")==="zh")location.replace("zh/index.html");else location.replace("en/index.html")}catch(e){location.replace("en/index.html")}</script>' if old=='index.html' else f'<meta http-equiv="refresh" content="0;url={dest}">'
         path.write_text(f'<!doctype html><html lang="en"><head><meta charset="utf-8"><title>ggchord</title>{extra}</head><body><a href="{dest}">English</a> · <a href="{os.path.relpath(out/"zh/index.html",path.parent)}">现代汉语</a></body></html>')
+    (out/'404.html').write_text('<!doctype html><html lang="en"><meta charset="utf-8"><title>Page not found / 未找到页面</title><h1>Page not found / 未找到页面</h1><p><a href="en/index.html">English home</a> · <a href="zh/index.html">现代汉语首页</a></p></html>')
+    routes['404.html']='404.html'
     retired=[]
     for rel in json.loads((WEB/'historical-pages.json').read_text()):
         if rel in routes:continue

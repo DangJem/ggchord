@@ -12,8 +12,10 @@ In a fresh R session, run the code below, then follow this page in order. Colour
 Genomic coordinates are **one-based, inclusive bp**. BED/PAF readers convert their
 source conventions; do not convert twice. Gene endpoints are ordered with
 strand stored separately; link endpoint order may encode direction. A one-bp
-link without direction evidence stays unknown. Unknown strand is never silently
-changed to `+`; use `geom_feature()` instead of the strict gene layer.
+link without direction evidence stays unknown. Generic features retain unknown
+strand. The legacy `read_gff3()` default is an exception: `unstranded = "plus"`
+converts it to `+` while retaining `source_strand`. Use explicit
+`unstranded = "keep"` and `geom_feature()` to retain unknown strand.
 
 Protein backbones use native aa coordinates; see [protein alignments](protein-alignments.html). Use [CDS projection](projection.html) to place protein intervals on nucleotide backbones.
 Native Cartesian layout units, genomic bp, angles in degrees, physical mm and

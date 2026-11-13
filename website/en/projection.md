@@ -21,8 +21,10 @@ names or maximum feature endpoints cannot supply missing evidence.
 
 ## Segments, phase and partial regions {#boundaries}
 `build_ggchord_cds()` constructs a segment map; `project_ggchord_features()` then
-splits amino-acid intervals through it. Crossing a boundary can return several
-rows; multiplying coordinates by three is insufficient. Inspect policies/reports
+projects amino-acid intervals through it. Each input feature returns one row;
+its genomic pieces are retained in the `segments` list-column. Two-ended link
+projection can instead split into several paired rows. Multiplying coordinates
+by three is insufficient. Inspect policies/reports
 for partial CDS, phase and truncation. DNA matching, interval projection and
 actual translation/alignment are distinct operations.
 
@@ -34,7 +36,7 @@ actual translation/alignment are distinct operations.
 This ungapped case relies on [verified identical coding DNA](homology.html).
 Real BLASTp HSPs may contain gaps: query spans can still be projected, but paired
 links need the subject CDS and justified ungapped correspondence. See
-[real BLASTp import/projection](alignments.html#protein). Genomic plots use the projected bp coordinates.
+[real BLASTp import/projection](protein-alignments.html#projection). Genomic plots use the projected bp coordinates.
 
 ## Check your result {#check-result}
 Check parent CDS IDs, projection reports and returned segments. The selected residue range is a display example, not a detected domain.

@@ -44,6 +44,13 @@ for(lang in c('en','zh')) {
   main<-xml2::xml_find_first(doc,'//main')
   xml2::xml_set_attr(main,'tabindex','-1')
   slug <- sub('\\.html$','',basename(relative))
+  if(slug=='LICENSE') {
+    label <- if(lang=='zh') 'MIT 许可' else 'MIT License'
+    xml2::xml_set_text(xml2::xml_find_first(main,'.//h1'),label)
+    xml2::xml_set_text(xml2::xml_find_first(doc,'//title'),paste(label,'• ggchord'))
+  }
+  if(slug=='404' && lang=='zh') for(node in xml2::xml_find_all(main,'.//p'))
+    xml2::xml_set_text(node,'未找到页面。请从首页、学习总览或搜索找回所需内容。')
   xml2::xml_set_attr(xml2::xml_find_first(doc,'//body'),'data-page',if(startsWith(relative,'reference/')) 'reference' else slug)
   if(slug=='index' && length(xml2::xml_find_all(main,'.//h1'))>1L) xml2::xml_remove(xml2::xml_find_first(main,'./h1'))
   layout <- xml2::xml_parent(main)

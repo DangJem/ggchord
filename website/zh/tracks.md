@@ -24,7 +24,7 @@
 ## 同一 ID 共享同一条轨道 {#sharing}
 同名轨道上的各层共享数值域，bar 的基线也参与范围计算；它们必须声明一致的宽度和
 放置方式。颜色标度按轨道 ID 独立设置。tile 表示区间类别，line 连接观测位置，
-bar 表示相对基线的区间值。不要把相同数值域误认为必须位于同一条轨道。
+`geom_track_col()` 表示给定区间值；`geom_track_bar()` 计数同位置观测，基线仅允许 0。bin 统计才要求显式 binwidth/breaks。不要把相同数值域误认为必须位于同一条轨道。
 
 ## 检查裁剪和数值范围 {#diagnostics}
 `export_ggchord_layout()` 的 `track_registry` 与 `track_diagnostics` 记录值域、

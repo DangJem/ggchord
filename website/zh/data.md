@@ -11,7 +11,9 @@
 ## 坐标契约 {#coordinates}
 基因组坐标采用 **一基、闭区间 bp**。BED/PAF 读取器已转换源坐标约定，不要重复转换。
 基因起止坐标有序，链单独存储；连接端点的次序可表达方向。没有方向证据的单 bp
-连接保持未知。未知链不会被静默改成 `+`；应使用 `geom_feature()`，而非严格的基因层。
+连接保持未知。通用 feature 保留未知链。兼容例外是 `read_gff3()` 默认
+`unstranded = "plus"` 会转为 `+`，但保留 `source_strand`。要保留未知链，读取时
+显式使用 `unstranded = "keep"`，绘制时使用 `geom_feature()`。
 
 蛋白骨架使用原生 aa 坐标，见[蛋白比对](protein-alignments.html)。显示在核酸骨架上时需要[CDS 投影](projection.html)。笛卡尔布局单位、基因组 bp、角度、
 物理 mm 和轨道数值单位是不同的域。详见完整的[数据格式说明](reference/ggchord_data_contract.html)。

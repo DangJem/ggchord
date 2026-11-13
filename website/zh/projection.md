@@ -19,7 +19,8 @@
 
 ## 分段、phase 和部分区域 {#boundaries}
 `build_ggchord_cds()` 先建立 CDS 分段映射，`project_ggchord_features()` 再将氨基酸
-区间按映射切分。跨剪接边界可能返回多行；不要简单把坐标乘以 3。
+每个输入 feature 返回一行，跨剪接片段放在 `segments` 列表列；
+`project_ggchord_links()` 才按双方边界拆成配对行。不要简单把坐标乘以 3。
 不完整 CDS、phase、截断或不支持的位置必须按文档策略处理并检查报告。
 DNA 匹配、氨基酸区间投影和真实翻译/比对是不同步骤，绘图库不会代为推断缺失证据。
 
@@ -30,7 +31,7 @@ DNA 匹配、氨基酸区间投影和真实翻译/比对是不同步骤，绘图
 
 这个无缺口例子依赖[同源专题](homology.html)中已核对的相同编码序列。
 真实 BLASTp 输入可以有 gap；查询区间仍能投影，但双端连接还需要 subject 的 CDS
-和无缺口对应证据。请阅读[真实 BLASTp 读取与投影](alignments.html#protein)。
+和无缺口对应证据。请阅读[真实 BLASTp 读取与投影](protein-alignments.html#projection)。
 绘制以 bp 为轴的图时，应使用投影后的基因组端点。
 
 ## 完成后检查 {#check-result}
