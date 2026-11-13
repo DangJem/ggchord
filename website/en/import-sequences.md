@@ -15,6 +15,7 @@ bundled source-backed sequences, links and genes; they do not invent alignments.
 Adapters return ordinary frames with `ggchord_conversion` provenance. IDs remain
 unchanged. Supply reliable full lengths rather than using maximum feature ends.
 See [alignment input](alignments.html) for minimal fields and coordinate units.
+
 ## GenBank: retain record identity {#genbank}
 {{code:genbank}}
 {{console:genbank}}

@@ -9,6 +9,7 @@
 {{figure:frontorientation}}
 
 `seq_orientation = -1` 反转该序列的显示方向。对照默认图，这条骨架的 0 刻度和箭头端互换。输入坐标和基因的生物学链仍来自数据表。三个向量都按序列 ID 命名，修改 `seq_order` 重排时仍能找到对应序列。
+
 ## 顺序：指定骨架的排列 {#order}
 
 {{code:frontorder}}

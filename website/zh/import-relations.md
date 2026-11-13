@@ -15,6 +15,7 @@ VCF 需要可选 **VariantAnnotation**，显式结构变异解码另外需要 **
 结构解码需显式启用，保留置信区间，关闭缺失 mate 推断；每个互惠对生成一条连接，包含两个原始记录索引。警告标明解码器未配对的记录，报告保留全部记录。`.plottable = FALSE` 标记超出已知参考边界的断点，相关配对保留在 `unplaced_links`。精确单碱基断点可显式选取位置后用于 `geom_link_line()`；不确定区间适合区间几何。`q_breakend_orientation`、`s_breakend_orientation` 描述衍生序列，不是相对同源链。不能制造比对 Identity 为这些连接配色。
 
 现代 BCF（`.bcf` 或 `.bcf.gz`）通过 `python` 指定已安装可选 **pysam** 的现有解释器，例如 `read_vcf("calls.bcf", python = "/path/to/environment/bin/python")`。仅 BCF 会调用它，经 HTSlib 转临时 VCF，并记录解码器、版本和消息。虚拟环境解释器路径保留其环境。原记录顺序、数值及基因型保留；转码文本不是原始 BCF 物理行。不会安装任何软件。本读取器将选定本地文件加载到内存，大数据应在上游选取或子集化。
+
 ## 基因组对齐块：MAF 与 chain {#genome-alignments}
 
 使用已有 Python 环境，其中须安装支持 MAF/chain 的可选 **Biopython Bio.Align**，已直接验证 1.85。课程可通过 `ALIGNMENT_PYTHON` 选择该解释器。源码 checkout/输入包须包含 `examples/genome-alignments/`；两个未改动的固定上游版本文件有哈希、许可归属及验证脚本，不运行 aligner。可选解析器不可用意味着跳过示例，不是成功导入。
@@ -26,6 +27,7 @@ MAF 保留实际带 gap 字符和声明的完整源长度，负链分量映射�
 Chain 示例显式选择源块 1，即有来源的 NR_046654.1/chr3 关系；上游 `_modified` 格式对照仍在未改动输入中，不冒充新生物学观测。三个 exon 对齐块保留中间缺口。Chain 不提供错配或字符单元，chain 分数不是 Identity。Query 映射 qaccver，target 映射 saccver，原 ID 独立可追溯。默认 bp 不适用时应显式声明 `sequence_unit`。
 
 两套组装都叫 `chr1` 时须声明身份，例如 `query_ids = c(chr1 = "assemblyB.chr1")`、`subject_ids = c(chr1 = "assemblyA.chr1")`。默认保留 ID，并拒绝跨角色歧义，不自动加前缀或合并组装。完整长度冲突明确失败；最终共享 ID 要求两侧显式且一致地声明。这是源身份，与显示实例分开。两种格式都不会仅由端点推断 pident、支持计数或完整源字符串。
+
 ## 已有 delta 比对 {#delta}
 
 `read_delta()` 需要已有 **show-coords** 程序；本课程可通过 `DELTA_DECODER` 选择其可执行文件。读取的是已有 NUCMER/PROMER 结果，不调用 aligner，也不打开序言中的历史 FASTA 路径。未改动的上游 Drosophila 示例、固定版本、原始许可及哈希保留在 `examples/genome-alignments/`。程序缺失时跳过可选示例，不代表成功解码。
@@ -39,6 +41,7 @@ Chain 示例显式选择源块 1，即有来源的 NR_046654.1/chr3 关系；上
 来源输入包还包含 `arabidopsis-first-pair.delta`：保留原序言及首个完整拟南芥序列对块的全部 39 条记录，字节为原文件的未改动前缀。`arabidopsis-source.json` 记录固定提交的原始压缩文件、解压哈希、完整块规则及产物哈希，并保留作者的 MIT 许可原文。它提供独立于翻译比对示例的真实核酸比对验证，不重新运行比对，也不认证剩余源块。复用同一个已有解码器：
 
 {{code:courseblockbd}}
+
 ## 已有蛋白 signature {#protein-signatures}
 
 安装包内的输入为从 InterPro API 缓存的两个普通人类蛋白的已有 Pfam 注释。原 JSON 字节、获取日期、URL、CC0 归属及哈希在 `inst/extdata/signature-sources.json` 中。`data-raw/prepare-signature-inputs.py` 将相同已观测片段显式重编码为 TSV，供坐标往返核对；不运行 InterProScan，缺失的 MD5、状态、运行日期及整合描述保持 `-`。TSV 是派生格式示例，不是新分析结果。
@@ -50,6 +53,7 @@ Chain 示例显式选择源块 1，即有来源的 NR_046654.1/chr3 关系；上
 每个缓存 JSON location 为一个 feature，实际片段存入 `segments`，start/end 仅包围其 footprint。现有 Feature 几何保留坐标空隙，并维持一个源命中。代表性标志是元数据，不自动筛选。原 entry/protein/location 索引及文件内 `.source_match` 可追溯，多文件须结合 `.source_input`。TSV 没有 JSON 分组证据，不按模型 ID 自动合并。分数保留原生列表列：JSON 数字、TSV 字符串和缺失值保留各自来源类型。不同库的 score/e-value 不能当作一种通用置信度比较，也不制造 identity/read support。若要使用数值标度，应先选择所需成员库并明确其分数含义。
 
 JSON 需要可选 **jsonlite**，只读提供的本地缓存。后续页 URL 和声明计数留在报告中，绘图时不获取数据。质量/上下文元数据、原始字段及完整源对象可供核对。这些位置注释不提供完整蛋白字符，也不构成独立字符核验。[官方格式说明](https://interproscan-docs.readthedocs.io/en/v5/OutputFormats.html)及[分数解释](https://interpro-documentation.readthedocs.io/en/latest/faq.html#why-are-there-no-e-values-associated-with-interpro-entries)说明其底层约定。
+
 ## 已有 feature 关系 {#feature-relations}
 
 `read_feature_relations()` 离线读取已有成对关系或组成员。安装包中的植物子集保留固定源提交中 MCScanX 数据的完整原始行。许可、原 URL、哈希及抽样物理行号见 `inst/extdata/feature-relation-sources.json`；`data-raw/prepare-feature-relations.py` 可重现输入，不运行分析。
@@ -61,6 +65,7 @@ JSON 需要可选 **jsonlite**，只读提供的本地缓存。后续页 URL 和
 `pairs` 接受两个 ID 及可选分数；`named_groups` 将第一列保留为原生字符组 ID，包括数字状 ID；`groups` 将全部字段作为成员，仅记录文件内组索引。成员关系不会展开为全体两两连接。重复、单成员组、成员顺序、原字段及物理行均保留。
 
 可选 `feature_data` 按唯一 `feature_id` 精确匹配，不修改大小写、版本或前缀。成对示例与组示例有不同原始命名空间及配套位置表。缺失 ID 默认报错，`unmatched = "report"` 保留原行并标记不完整映射；重复 feature ID 的歧义始终报错。没有位置时仍返回全部关系，不生成映射连接。注释链向单独保留，不据此赋予比对方向；分段注释需要显式连续锚点表。不推断完整长度、Identity、支持度或源字符。
+
 ## 图路径：探索性子集 {#graph-paths}
 
 GFA 图边表达邻接/重叠，不自动提供整基因组间 HSP。已有显式路径步骤在坐标构建有据时，可用普通 sequence/feature 表展示。节点 ID 可在同一路径重复，须保留路径、源步骤索引、出现次序及遍历方向，不能连接所有出现位置，也不能把节点/边数当作直系同源、Identity 或 read support。

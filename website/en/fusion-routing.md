@@ -61,6 +61,7 @@ for explicitly renamed focus windows via their retained source origins.
 Repeated `source_hsp_id` display requires `allow_repeated=TRUE` in every
 participating layer. Without IDs, source rows remain layer-local; identical
 values are not treated as a shared biological identity.
+
 ## Export and inspect anchors {#export}
 
 {{code:fusionexport}}
@@ -95,6 +96,7 @@ links, Dotplot, facets and unregistered external plots remain unsupported.
 `direct`, `avoid` and `bundle` route against their documented measured obstacles;
 they do not guarantee a global optimum. Explicit derived views and placement are described below. Links may cross or pass through panel interiors; foreground
 annotations are retained, but arbitrary layouts are not guaranteed collision-free.
+
 ## Measured routes and display corridors {#routing}
 
 `fusion_ribbon(route = "avoid")` keeps both complete interval fronts and their

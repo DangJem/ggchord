@@ -13,6 +13,7 @@
 bedGraph 为四列制表符分隔数据，使用零基半开坐标及有限的有符号数值。导入仅转换一次坐标；原始端点、值、物理行号和不解释样式的显示表头均可追溯。每文件一条信号，多个 track 定义应拆分。字面序列 ID `track`、`browser` 合法，表头不设置图形样式。重叠行保留，不隐式采用末行覆盖规则。
 
 矩形以 `start - 1` 和 `end` 为单元边界，不在缺失区间插值连线。BigWig 需要可选 **rtracklayer**，其解码器不支持 Windows；该平台使用已有 bedGraph 文件。二进制导入的 GRanges 已是一基闭区间。区段值保留二进制浮点精度，区段数量不代表原始测量次数。完整长度来自文件表头。查询采用无链区间并集，结果裁切至并集，空选区返回零行。缺失区间仍缺失，与存储的零不同；不制造 coverage、identity、support、单位或裁切前观测 ID。各 Track 的映射、数值域、单位和 Guide 仍显式配置。
+
 ## 已比对 reads：可选覆盖度桥接 {#aligned-reads}
 
 使用可选 **GenomicAlignments**、**Rsamtools** 和 **GenomicRanges** 读取已有 BAM，显式选择过滤与计数口径，再由 ggchord 绘制信号。本例使用依赖包中未改动的果蝇 RNA-seq 子集，原 BAM header 保留 TopHat、参考及 SRR 来源；固定源 URL 和校验和见 `tools/long-term-audit/v0.27.0-read-coverage-results.json`。不运行 read 比对或变异检测。

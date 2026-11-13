@@ -1,9 +1,11 @@
 ## Interfaces and compatibility {#compatibility}
 
 The function reference describes current arguments, return values and boundaries. For an existing script, consult the [migration notes](../assets/MIGRATION.md). Check sequence IDs, units and full lengths, and record the package version, inputs and code when exporting.
+
 ## Reporting problems {#feedback}
 
 Include minimal input, runnable code, the package version and target figure size. For a display issue, include the `view_ggchord()` preview. See [troubleshooting](faq.html) for common questions.
+
 ## Design and asset provenance {#sources}
 The grammar follows [ggplot2](https://ggplot2.tidyverse.org/): mappings, scales,
 geometry, positions, coordinates and themes retain distinct responsibilities.

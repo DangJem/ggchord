@@ -7,6 +7,7 @@ Prepared annotations need only lengths and tables. DNA is used here to prepare t
 Run independently in a fresh R session with optional dplyr. `finish_features` retains the first six recognition rows without changing intervals or strands. `finish_labels` appends actual coordinates to source names for label-fitting demonstrations; the original table remains separate.
 
 {{code:comparefinishcircle}}
+
 ## Backbone styles and double-line spacing {#backbones}
 
 In single circular mode, `seq_style = "auto"` selects double. Single draws one backbone and double draws two. Keep the same sequence and 9 × 8 inch size, changing only style or double-line spacing. `seq_backbone_gap` defaults to 0.025; band width `seq_backbone_width` defaults to 0.035. Neither is stroke `linewidth`.
@@ -17,6 +18,7 @@ In single circular mode, `seq_style = "auto"` selects double. Single draws one b
 {{figure:comparebonesingle}}
 {{code:comparebonegap}}
 {{figure:comparebonegap}}
+
 ## Band backbone {#band-rendering}
 
 Band represents the complete backbone with a filled polygon. seq_backbone_width controls its width, default 0.035. This is actual band geometry; only seq_style changes from the double baseline.
@@ -28,6 +30,7 @@ From the band baseline, double only band width while retaining other settings.
 
 {{code:comparebandwidth}}
 {{figure:comparebandwidth}}
+
 ## Circular direction, rotation, opening and fit {#coordinates}
 
 The zero origin is at 12 o’clock with clockwise coordinates. Positive rotation turns the complete plot counterclockwise. Relative to double above, each example changes only direction or gap. See the [rotation contrast](circular-layout.html#rotation).
@@ -47,6 +50,7 @@ Automatic fitting may change overall scale and the readable subset of tick label
 {{figure:comparecirclecounter}}
 {{code:comparecirclegap}}
 {{figure:comparecirclegap}}
+
 ## Style centre name and length separately {#center}
 
 Centre text is separate from labels along the backbone. `name = TRUE` and `length = TRUE` are separated by a newline by default; name also accepts a display string. Empty name_style/length_style lists accept fixed colour, size, family, fontface and lineheight. First hide only length. Then return to baseline and change only name_style size, retaining the length text style.

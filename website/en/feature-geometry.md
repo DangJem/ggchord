@@ -14,6 +14,7 @@ Combine source accession/endpoints into a workflow target ID, not a claimed data
 
 {{code:comparefindloci}}
 {{console:comparefindloci}}
+
 ## Three arrow constructions {#arrow-heads}
 
 All figures use 9 × 4 inches and identical input, window and layers. To expose shoulders, all three explicitly use `arrow_head_width = 1.6` (default 1). Only `arrow_head_style` changes.

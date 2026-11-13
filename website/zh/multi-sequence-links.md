@@ -15,6 +15,7 @@
 {{figure:frontroute}}
 
 控制点用旋转前的布局坐标。默认旋转为 0°，所以 (0, 0.8) 沿图的正上方牵引连接带。改变整图旋转后，控制点也随图一起转动。贝塞尔曲线由控制点牵引，曲线一般不经过该点。
+
 ## 用一个真实 CDS 比较避障 {#clearance}
 
 取 `MT108731.1` 上的 48,053–49,111 bp CDS。它在这条比对的查询区间内。这里明确把正链箭头向内移 `0.05` 个布局单位，使箭头落在连接带一侧。
@@ -30,6 +31,7 @@
 {{figure:frontsmooth}}
 
 `link_avoid = "smooth"` 在 CDS 附近平滑增大间距。沿同一段`MT108731.1` 骨架看，带的边缘局部缩进去，给箭头腾出空间。默认的 `"uniform"` 会让同一个端点区间采用一致的避让间距。如果指定数值 `link_gap`，就直接使用该间距。
+
 ## 用线连两个位置，用色带标区间 {#point-markers}
 
 {{code:frontmarkers}}
@@ -39,6 +41,7 @@
 外侧色带标出查询序列的完整比对区间。 `region_side = "outside"` 将它放在骨架外侧。直线只连接两个区间的中点，`arrow` 指向目标端。需要看两端各覆盖多长时，使用比对带。
 
 下一节[放置序列和基因标签](multi-sequence-labels.html#sequence-labels)。
+
 ## 分支、筛选与固定样式的边界 {#branch-contract}
 
 | 参数 | 当前默认 | 什么时候改变与注意事项 |
@@ -68,6 +71,7 @@
 相邻带默认使用细实线，非相邻行之间的带默认使用较粗虚线。普通线宽由 `linewidth` 控制；跨行线宽由 `nonadjacent_linewidth` 单独控制，默认 0.4。
 
 第二个连接层只接收一条第一行到第三行的比对。`adjacent_only = FALSE` 让这条带可见，默认虚线轮廓提示它跨过中间一行。原来第一、二行的连接仍由第一个层绘制。
+
 ## 单独设置跨行边框 {#width}
 
 {{code:frontcrosswidth}}
@@ -87,6 +91,7 @@
 {{code:comparebranchdata}}
 
 三条示意序列各为 1000 bp。两条连接共用 query 的 200–600 bp，分别到两个 target 的不同区间。所有坐标为一基闭区间。每张图固定 9 × 7 英寸；不为改变分支重写端点。
+
 ## 独立带与共享 query 主干 {#branches}
 
 {{code:comparebranchnone}}
@@ -98,6 +103,7 @@
 {{figure:comparebranchquery}}
 
 只改成 `"query"`，完全相同的 query 端点可形成共享主干。仅仅区间有重叠不等于端点完全相同；真实数据若没有合适组，启用分支也可能不改变图。`"subject"` 则以相同 subject 端点分组。
+
 ## 改变主干比例 {#fraction}
 
 {{code:comparebranchfraction}}
@@ -111,6 +117,7 @@
 | `link_branch_fraction` | `0.15` | 范围 (0, 0.5]；none 时不产生共享主干 |
 | `link_ctrl_point` | `NULL` | 分支时影响远端形状，接合点由主干确定 |
 | `pairs` | `NULL` | qaccver/saccver 表选择已有序列对，不生成比对 |
+
 ## 用点代替区间 {#point-links}
 
 点连接要显式提供 `qpos/spos`，不能把区间表直接当作点表。本例选择两个区间的中点；这项选择会丢失带宽所表达的区间长度，因此先说明选点依据。
@@ -125,6 +132,7 @@
 {{figure:comparelinkstraight}}
 
 只改为 `"straight"`；位置、输入和尺寸相同。需要有向箭头时另加 `arrow = grid::arrow()`，其方向表达 query 到 subject 的绘图约定，不能单独作为基因链或转录证据。
+
 ## 真实数据、模式与练习 {#adapt}
 
 真实比对必须保留自己的 q/s 端点。若没有完全相同的端点，不要为了形成主干而改写坐标。筛选与聚束见[连接处理](ribbons.html)，几何分支不会自动完成这些统计操作。

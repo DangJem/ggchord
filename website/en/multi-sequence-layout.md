@@ -9,6 +9,7 @@
 {{figure:frontorientation}}
 
 `seq_orientation = -1` reverses the sequence's display direction. Compared with the default, this backbone’s zero tick and arrow swap ends. Input coordinates and biological strands still come from the tables. The three vectors are named by sequence ID, so they still match if you reorder the sequences with `seq_order`.
+
 ## Order: arrange the backbones {#order}
 
 {{code:frontorder}}

@@ -233,7 +233,7 @@
   "workflow-tools.html": {
     "input": "workflows.html#tools",
     "catalog": "recognition.html#catalog",
-    "diagnostics": "diagnostics.html#diagnostics",
+    "diagnostics": "diagnostics.html#target-size",
     "track-focus": "tracks-statistics.html#track-focus",
     "tools": "workflows.html#tools",
     "adapt": "workflows.html#tools",
@@ -297,5 +297,9 @@
   "ribbons.html": {
     "points": "multi-sequence-links.html#interval-points",
     "": "ribbons.html"
+  },
+  "reference.html": {
+    "": "reference/index.html",
+    "about": "reference/index.html"
   }
 }

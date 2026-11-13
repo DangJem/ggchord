@@ -19,6 +19,7 @@ PAF 提供两端全长和区间。先选出 mapq ≥ 30 的比对，再由两端
 {{figure:paf}}
 
 反向比对用递减的 subject 端点表达。绘图使用读取器转换后的坐标。
+
 ## 可选的区间对象 {#ranges}
 
 第一段把序列 a 上的 10–30 bp 转成特征表。第二段把 a 上的 10–30 bp 与 b 上的 40–60 bp 连成一条记录。GRanges 表示一个区间，GInteractions 表示一对区间。先安装 GenomicRanges 和 InteractionSet，完整序列长度由 seqlengths 提供。
@@ -30,6 +31,7 @@ PAF 提供两端全长和区间。先选出 mapq ≥ 30 的比对，再由两端
 {{code:frontimportgi}}
 
 {{output:frontimportgi}}
+
 ## BED双端区间 {#bedpe}
 
 `read_bedpe()`读取六个必填的制表符分隔字段，以及可选name、score、两条链和额外元数据。第一端保持query、第二端保持subject；score保留为字符串，不推断Identity或测序支持度。格式依据[BEDPE说明](https://bedtools.readthedocs.io/en/latest/content/general-usage.html#bedpe-format)。

@@ -13,6 +13,7 @@
 `composition_id` 与 `region_row` 将派生选区、front和引线关联到 `focus_region_data_by_composition` 的各层原始选区。顶层 `focus_region_data` 仍是原始外层输入。叶面板用 `detail/center`、`detail/detail` 等路径命名，组合容器不会被当作单一基因组轴。来源在多个叶面板重复时，应指定完整路径与准确实例；`source_panel` 可选择 `center` 下的源叶面板。导出保留实际毫米边界和原始box/angle请求。
 
 各子图保留独立图层、Scale和统计总体，组合器不会暗中复制图层或重算统计。跨原点区间采用后文的显式完整源长度声明。完整负链CDS→基因组focus→真实字符示例见 `examples/m3-nested.R`。字符保留按物理尺寸的tile/error策略，较小嵌套区域不能仅凭增加DPI容纳60个字母。完整多设备发布验收与更广泛的联合布局优化属于独立工作。
+
 ## 显式跨原点选区 {#origin-detail}
 
 圆形排版不是环状来源的证据。在 `start > end` 的选区上设置 `wrap = TRUE`。

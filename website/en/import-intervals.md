@@ -19,6 +19,7 @@ PAF gives the full sequence lengths and alignment spans. Select alignments with 
 {{figure:paf}}
 
 A reverse alignment has descending subject coordinates. Use the converted coordinates directly for plotting.
+
 ## Optional interval objects {#ranges}
 
 Convert one interval and then an interval pair. Full lengths come from `seqlengths`. Install GenomicRanges for the first example and InteractionSet for the second.
@@ -30,6 +31,7 @@ Convert one interval and then an interval pair. Full lengths come from `seqlengt
 {{code:frontimportgi}}
 
 {{output:frontimportgi}}
+
 ## Paired BED intervals {#bedpe}
 
 `read_bedpe()` reads six required tab-separated fields, optional name/score/two strands and additional metadata. The first anchor stays query and the second stays subject. Scores remain strings; neither Identity nor read support is inferred. The format follows the [BEDPE description](https://bedtools.readthedocs.io/en/latest/content/general-usage.html#bedpe-format).

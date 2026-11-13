@@ -14,6 +14,7 @@
 
 {{code:comparefindloci}}
 {{console:comparefindloci}}
+
 ## 三种箭头构造 {#arrow-heads}
 
 三图均为 9 × 4 英寸，使用相同输入、窗口和图层。为了看清肩部，三图共同显式设置 `arrow_head_width = 1.6`（默认 1），每次只改变 `arrow_head_style`。

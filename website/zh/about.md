@@ -1,9 +1,11 @@
 ## 接口与兼容性 {#compatibility}
 
 函数参考说明当前参数、返回值及支持边界。需要维护已有脚本时，可查阅[迁移说明](../assets/MIGRATION-Hans.md)。绘图前核对序列 ID、坐标单位和完整长度，导出时记录包版本、输入和代码。
+
 ## 问题反馈 {#feedback}
 
 描述问题时附上最小输入、可运行代码、包版本及目标图像尺寸。显示结果的问题可同时附上 `view_ggchord()` 的预览。常见问题见[排错说明](faq.html)。
+
 ## 设计与资产来源 {#sources}
 语法参考 [ggplot2](https://ggplot2.tidyverse.org/)，映射、标度、几何、位置、坐标与主题
 分别承担不同职责。紧凑的 query/subject 字段参考 BLAST 风格表格，ggchord 绘图时

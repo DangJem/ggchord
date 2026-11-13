@@ -3,6 +3,7 @@ In a fresh R session, run the code below, then follow this page in order. Colour
 
 {{code:frontlinearbase}}
 {{figure:frontlinearbase}}
+
 ## Save the intended size {#size}
 The example uses `p_linear_base` from this page. If you already have a plot, use your plot object in its place.
 
@@ -19,5 +20,6 @@ The website, README and vignettes share PNG previews generated with
 `view_ggchord()` at sizes listed in the [gallery](gallery.html). They do not capture an
 interactively resized panel. Use your intended PDF/SVG device explicitly for
 final vector output; font availability and embedding remain device-dependent.
+
 ## Check your result {#check-result}
 Use matching dimensions for preview and saving. Inspect text, guides and warnings; a successful measurement does not certify fonts or release quality across devices.

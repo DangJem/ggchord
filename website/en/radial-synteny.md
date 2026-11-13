@@ -38,6 +38,7 @@ Ribbons can select nonneighbors with explicit `pairs` or
 instances use the same unambiguous [routing contract](instances.html#instances).
 User control points use final x/y coordinates. Endpoint gradients and subject
 tips remain explicit options; default ribbons retain Identity fills.
+
 ## Export and reverse-map {#export}
 
 {{code:radialmap}}

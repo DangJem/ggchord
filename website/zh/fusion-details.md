@@ -17,6 +17,7 @@
 虚线是装饰性的聚焦引线，与生物学 `connections`、`relationship_data` 分开导出；添加真实 `fusion_ribbon()` 仍须提供真实关系数据。`focus_region_data` 保留原始选区及任意元数据，`focus_regions` 记录解析出的实例、源原点和采样物理路径长度比。细节容器较小时，该比值可能小于 1，这不改变生物学长度。
 
 细节图拥有自己的数据、标度、图层和统计。若使用 count/bin/coverage 轨道，请自行准备并说明局部或全局统计总体；组合器只记录 `explicit_detail_plot`，不会静默选择口径。它不复制任意源图层、不推断比对，也不接收未注册的 Cartesian 字符面板。当前使用一个有序区间；同一 accession 重复时显式指定 `instance`/`detail_instance`，跨原点选区按后文显式声明 `wrap = TRUE`。下节提供独立细节；后文进一步介绍显式嵌套与自由区域分配，实测障碍路由见后文。
+
 ## 保留真实 HSP 的成对源窗口 {#paired-detail}
 
 本例的 `region` 每行选择一个原始源区间，所有行共享一个显式细节面板。本例从四序列数据中选取一条真实 HSP 的两个端点窗口，基因方向和局部 HSP 均来自聚焦后的输入表。派生区域、前缘和装饰引线通过 `region_row` 对应输入行；任意原始元数据保留在 `focus_region_data`。
@@ -26,6 +27,7 @@
 ![HSP 两端共享细节图](../assets/coursepaireddetail.png)
 
 这仍然只有一个细节面板，不推断逐碱基比对。每个区间须在两个面板完整可见；实例选择按行独立解析。
+
 ## 独立细节面板 {#multiple-details}
 
 将一条真实 HSP 的两端分别绘为独立局部图。命名列表提供细节图，`detail_panel`
@@ -39,6 +41,7 @@
 源/目标实例选择相互独立。`detail_size` 接受按面板命名的宽高比例列表，NULL 使用
 Fusion 默认分配；区域重叠会报错。标准保存按目标尺寸重建面板和引线。小画布需要
 检查标签并适当增大尺寸。引线可能穿过主图或相互交叉，全局避障是独立策略；显式嵌套与矩形区域分配见后文。
+
 ## 精确关联源坐标的字符细节 {#character-detail}
 
 普通 Cartesian 字符图通过 `register_ggchord_alignment()` 可成为独立细节面板。注册实际显示的字符行：x为原始对齐列/编码列，y为对齐行ID，label为真实字符。源映射与普通 ggplot 标度保持独立。以下真实60列片段保留上游 gap 和 mismatch；宏观长度表示**去gap后的对齐片段**，不是完整基因组。

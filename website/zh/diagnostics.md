@@ -11,6 +11,7 @@
 已记录布局，两者都未弃用。选择字段名，不依赖固定列位置。
 `source_row` 指已解析图层输入行，ID 是构建期资源，不是永久生物学标识。
 详见完整[布局结果说明](reference/ggchord_layout_contract.html)。
+
 ## 理解诊断证据 {#diagnostics}
 `diagnose_ggchord()` 区分面板已测量与几何收敛。面板已测量不表示文字无碰撞、字体
 已嵌入或跨应用表现已认证。应检查警告、文字/图例测量及放置原因。
@@ -19,9 +20,11 @@
 `optimize_ggchord_layout()` 按文档执行主动选择的调整，应保留副本并查看结果。
 预览和诊断使用独立渲染副本。直接改动共享 ggproto 图层环境仍遵循普通 ggplot2
 引用语义，不会自动隔离为一次独立编辑。
+
 ## 完整布局、表格与主动选择的排序 {#consumption}
 
 前面的结果表已足够追踪骨架图层。需要附上原始输入行时，给 `export_ggchord_layout()` 加 `original_data = TRUE`。需要查看完整布局或改变顺序时，分别查阅 [布局契约](reference/ggchord_layout_contract.html) 与 [排序和方向](reference/optimize_ggchord_layout.html)。
+
 ## 测量标签接触 {#label-quality}
 
 `diagnose_ggchord(p, width = 10, height = 8)$label_quality` 报告实测面板文字对象、注释引线、文字框接触及物理引线长度。`summary` 区分图层策略保留/隐藏的源标签、文字对象和字形框；`conflicts`、`text` 和 `leaders` 定位每个接触。`measurement` 条目分别记录面板测量、几何收敛和物理重建次数。圆图可在两次测量后试一次有界的尺度预测，`refinement_acceleration` 记录结果；只有重新构建并通过原实测收敛门槛才接受。拒绝后保留通常的重建序列，不能计为通过。普通重建在各视图使用同一有界预算。弧形字符串内部字形共享文字对象身份，折线共享端点不算交叉。检查表格时也应查看实际 PNG。

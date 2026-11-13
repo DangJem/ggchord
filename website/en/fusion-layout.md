@@ -21,6 +21,7 @@ panel retains its own guides; different scale meanings are not automatically
 merged. Use `show.legend=FALSE` or local `theme()` deliberately where appropriate.
 Composition `guides()` configures cross-panel Guides; `theme()` also styles the native outer plot furniture described below. Required
 guide space is measured; a canvas too small for it fails with a diagnostic.
+
 ## Eight directions and independent physical placement {#advanced-placement}
 
 `fusion_panel()` supports the four cardinal sides plus `topright`, `topleft`, `bottomright` and `bottomleft`. Default corner layouts reserve space for all eight; side names remain unique. For other arrangements use `angle`/`distance` or an explicit `box`. There is no fixed panel-count limit for explicit boxes/angles: every allocation must still fit. Placement changes the container, not the child's Coord or text orientation. Angles describe physical directions on rectangular exports; distance is a fraction of half the shorter allocation dimension, measured from the centre allocation.
@@ -32,6 +33,7 @@ guide space is measured; a canvas too small for it fails with a diagnostic.
 A numeric box uses xmin, xmax, ymin, ymax fractions; an absolute-unit box keeps its physical dimensions. Coordinates refer to the composition content area after native outer plot decorations and cross-panel Guides. Do not combine box with side/size/angle/distance, or center_box with center_size. Physical allocations are checked at every target size; they are never silently clamped. Explicit `allow_overlap = TRUE` on `ggchord_fusion()` or `magnify_ggchord()` permits deliberate overlays. Later panels cover earlier panels, using vector grid clipping rather than PNG crops; translucent connections are not repainted twice in the same area. The export's `overlaps` table records covering order. This permits intentional masks and does not promise automatic obstacle avoidance.
 
 Sankey source IDs occur in both mirrored columns. Choose an exact `q_instance`/`s_instance` from `get_chord_layout(plot)$display_instances`; omission fails when ambiguous. Radial and Chord use their own registered backbone frames. All q/s intervals, units and source records remain unchanged. If a declared `source_hsp_id` appears repeatedly, every participating Fusion layer must opt into `allow_repeated = TRUE`, including layers inside nested compositions. `source_observations` distinguishes explicit evidence IDs from display counts. This does not infer identity by comparing equal table values. Dotplot has independent axes and is not yet a registered Fusion endpoint.
+
 ## Outer Guides and the panel budget {#outer-guides}
 
 Keep each panel's local scales and Guides independent. Composition scales and
@@ -57,6 +59,7 @@ Impossible constraints fail explicitly. `theme(legend.position = "none")`
 hides composition Guides using native ggplot2 semantics. Inside composition
 Guides remain unsupported; each independent panel can still own local Guides.
 This is a bounded physical-space search, not a claim of global optimality.
+
 ## Automatic perimeter panels {#auto-perimeter}
 
 Set `fusion_panel(..., side = "auto")` to place more than eight independent
@@ -79,6 +82,7 @@ Multiple magnify details can use repeated named `"auto"` sides, with explicit
 `detail_panel` selections. If no packing is feasible, the build fails with a clear diagnostic;
 no panel is discarded. The search is deterministic and conservative, not a
 global optimum or a promise that any count fits every canvas.
+
 ## Native outer plot furniture {#plot-furniture}
 
 Use ordinary `labs()` and plot Theme elements for the composition's title,

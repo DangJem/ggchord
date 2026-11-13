@@ -15,6 +15,7 @@
 转换返回普通数据框，并记录 `ggchord_conversion` 信息。标识原样保留；缺少完整
 序列长度时应补充可靠来源，不能把最大注释端点当作全长。核酸与蛋白比对的最小列
 和单位见[导入比对结果](alignments.html)。
+
 ## GenBank：保留记录身份 {#genbank}
 {{code:genbank}}
 {{console:genbank}}
