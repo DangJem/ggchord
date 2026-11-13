@@ -17,7 +17,6 @@ ggchord_label_feature_quality <- function(layout, text, boxes, to_mm) {
       source <- if (length(source) == 1L) source else NA_integer_
       key <- paste(id, group, sep = '/')
       is_polygon <- if ('.component' %in% names(part)) is.na(part$.component) | part$.component %in% 'polygon' else rep(TRUE, nrow(part))
-      if ('feature_shape' %in% names(part)) is_polygon <- is_polygon & !part$feature_shape %in% 'capped_line'
       if (any(!is_polygon)) skipped[[length(skipped)+1L]] <- data.frame(polygon_id = key,
         layer_id = id, source_row = source, reason = 'non_polygon_components')
       part <- part[is_polygon, , drop = FALSE]

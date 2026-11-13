@@ -26,8 +26,10 @@ if (point_mode) {
 detector <- ggchord_label_feature_quality
 lines <- deparse(body(detector), width.cutoff = 500L)
 at <- grep('is_polygon <- is_polygon & !part\\$feature_shape', lines)
-stopifnot(length(at) == 1L, grepl('if \\("feature_shape"', lines[at - 1L]))
-body(detector) <- parse(text = paste(lines[-c(at - 1L, at)], collapse = '\n'))[[1L]]
+if (length(at)) {
+  stopifnot(length(at) == 1L, grepl('if \\("feature_shape"', lines[at - 1L]))
+  body(detector) <- parse(text = paste(lines[-c(at - 1L, at)], collapse = '\n'))[[1L]]
+}
 
 observe <- function(shape) {
   position <- if (point_mode) position_identity() else

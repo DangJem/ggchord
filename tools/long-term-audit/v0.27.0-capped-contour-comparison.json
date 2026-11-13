@@ -1,0 +1,80 @@
+{
+  "scope": "Same measured pUC19 inputs and display settings; prior retained JSON at a0b998c vs actual new diagnostics",
+  "before_commit": "a0b998c",
+  "before_json_sha256": "d900c567fdc97096ec42a52f81dff317edc1a3da8d32e52fe60aa7038036a8b1",
+  "after_json_sha256": "d86c127e4372f9506a15c0662bded14bbc1646d8259f16280203210b21529dba",
+  "source_label_and_text_counts_preserved": true,
+  "measurement_records_preserved": true,
+  "changes": {
+    "preset": {
+      "n_feature_polygons": [
+        9,
+        9
+      ],
+      "n_feature_parts_unchecked": [
+        12,
+        12
+      ],
+      "n_text_on_own_feature": [
+        3,
+        3
+      ],
+      "n_text_over_feature": [
+        0,
+        0
+      ],
+      "n_text_feature_unresolved": [
+        0,
+        0
+      ]
+    },
+    "capped_line": {
+      "n_feature_polygons": [
+        0,
+        27
+      ],
+      "n_feature_parts_unchecked": [
+        39,
+        12
+      ],
+      "n_text_on_own_feature": [
+        0,
+        3
+      ],
+      "n_text_over_feature": [
+        0,
+        0
+      ],
+      "n_text_feature_unresolved": [
+        0,
+        0
+      ]
+    },
+    "lollipop": {
+      "n_feature_polygons": [
+        18,
+        18
+      ],
+      "n_feature_parts_unchecked": [
+        12,
+        12
+      ],
+      "n_text_on_own_feature": [
+        3,
+        3
+      ],
+      "n_text_over_feature": [
+        0,
+        0
+      ],
+      "n_text_feature_unresolved": [
+        0,
+        0
+      ]
+    }
+  },
+  "not_checked": [
+    "pixel identity, exact ink, stroke thickness, occlusion",
+    "arbitrary layouts and release device matrix"
+  ]
+}

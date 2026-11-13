@@ -1,5 +1,10 @@
 # ggchord 0.27.0 (development)
 
+- Label diagnostics include the closed `capped_line` feature contours in their
+  conservative polygon envelopes, including transparent interiors. Own-source
+  contacts remain separate. Stroke thickness, path markers and occlusion remain
+  outside this check; the correction does not change annotation placement.
+
 - The progressive linear gallery examples share a measured 12 × 8 inch export
   canvas, with their original data, labels and guide settings. Gallery cards
   link separately to the related lesson and the shared plotting source.

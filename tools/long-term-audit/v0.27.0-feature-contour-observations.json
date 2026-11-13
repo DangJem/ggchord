@@ -83,7 +83,7 @@
     "R/helpers-label-routing.R": "d9c336cf0901ebc7eb108dc3214834299f96ae5c4c9b16b6ae34a4788fc7ae8f",
     "R/helpers-ordered-packing.R": "962c2926a2b1da42a9cc90aee2c0ef2158925c9863a403b839d7bfaee60608b2",
     "R/helpers-plot.R": "5a1d038f10bf11667cbfde73f4f00460f329d0346bfa52042a067dbfb8a37325",
-    "R/label-feature-quality.R": "c3a11e972bf8859dca09d84456c61898f0bf4f6090265fa52d9b081bb965bf8f",
+    "R/label-feature-quality.R": "b90fb4d4b0067dba43fbb3937953c3e20448787310f6dd154ae5fbf1f227ccb8",
     "R/label-quality.R": "d783c309068c85fd01e05088eb3f9a99b3e75cee8330b85e21c2413742d7167e",
     "R/label-visibility.R": "53305e83f6fef9c4587c04e16c0b4d11632215dc5c30e3c49af33810dbcd64df",
     "R/layout-annotation.R": "06b7b9e473484b8686507a3b794de675cba346bce787c38aa7cbb96aeb2edfc0",
@@ -214,7 +214,7 @@
     "R/helpers-label-routing.R": "d9c336cf0901ebc7eb108dc3214834299f96ae5c4c9b16b6ae34a4788fc7ae8f",
     "R/helpers-ordered-packing.R": "962c2926a2b1da42a9cc90aee2c0ef2158925c9863a403b839d7bfaee60608b2",
     "R/helpers-plot.R": "5a1d038f10bf11667cbfde73f4f00460f329d0346bfa52042a067dbfb8a37325",
-    "R/label-feature-quality.R": "c3a11e972bf8859dca09d84456c61898f0bf4f6090265fa52d9b081bb965bf8f",
+    "R/label-feature-quality.R": "b90fb4d4b0067dba43fbb3937953c3e20448787310f6dd154ae5fbf1f227ccb8",
     "R/label-quality.R": "d783c309068c85fd01e05088eb3f9a99b3e75cee8330b85e21c2413742d7167e",
     "R/label-visibility.R": "53305e83f6fef9c4587c04e16c0b4d11632215dc5c30e3c49af33810dbcd64df",
     "R/layout-annotation.R": "06b7b9e473484b8686507a3b794de675cba346bce787c38aa7cbb96aeb2edfc0",
@@ -261,7 +261,7 @@
     "R/viewer.R": "f482af4be44c1892b2bc14616014eb237a4de4a16e341bc87e2293e6ef917960",
     "R/zzz.R": "74c43333d322fb8ef8e5c5a4364b9f6fcb3717695cda1c7c169d834dceddab12",
     "tools/audit-source-snapshot.R": "4470517ec5577acef2ee132d9c757167df76f53962a51d9a427e31a9d940d420",
-    "tools/long-term-audit/observe-feature-contours.R": "9606f58a1690d455afea02ee0fdbe5a10510cbdf118263a905154a9579aef57d"
+    "tools/long-term-audit/observe-feature-contours.R": "d8d3c28ae37d12cfefc18363d64b26ea6c5d208bbc0e57c8b645008e026640de"
   },
   "source_records": {},
   "source_sequence_lengths": {},
@@ -549,11 +549,11 @@
         "n_label_outside_canvas": 0,
         "mean_leader_length_mm": 5.8828,
         "max_leader_length_mm": 7.0121,
-        "n_feature_polygons": 0,
-        "n_feature_parts_unchecked": 39,
+        "n_feature_polygons": 27,
+        "n_feature_parts_unchecked": 12,
         "n_text_over_feature": 0,
         "n_text_feature_unresolved": 0,
-        "n_text_on_own_feature": 0
+        "n_text_on_own_feature": 3
       },
       "measurement": {
         "panel_status": "measured",
@@ -567,114 +567,6 @@
       },
       "retained_png": {},
       "production_skipped": [
-        {
-          "polygon_id": "layer-0002/101",
-          "layer_id": "layer-0002",
-          "source_row": 1,
-          "reason": "non_polygon_components"
-        },
-        {
-          "polygon_id": "layer-0002/102",
-          "layer_id": "layer-0002",
-          "source_row": 1,
-          "reason": "non_polygon_components"
-        },
-        {
-          "polygon_id": "layer-0002/103",
-          "layer_id": "layer-0002",
-          "source_row": 1,
-          "reason": "non_polygon_components"
-        },
-        {
-          "polygon_id": "layer-0002/201",
-          "layer_id": "layer-0002",
-          "source_row": 2,
-          "reason": "non_polygon_components"
-        },
-        {
-          "polygon_id": "layer-0002/202",
-          "layer_id": "layer-0002",
-          "source_row": 2,
-          "reason": "non_polygon_components"
-        },
-        {
-          "polygon_id": "layer-0002/203",
-          "layer_id": "layer-0002",
-          "source_row": 2,
-          "reason": "non_polygon_components"
-        },
-        {
-          "polygon_id": "layer-0002/301",
-          "layer_id": "layer-0002",
-          "source_row": 3,
-          "reason": "non_polygon_components"
-        },
-        {
-          "polygon_id": "layer-0002/302",
-          "layer_id": "layer-0002",
-          "source_row": 3,
-          "reason": "non_polygon_components"
-        },
-        {
-          "polygon_id": "layer-0002/303",
-          "layer_id": "layer-0002",
-          "source_row": 3,
-          "reason": "non_polygon_components"
-        },
-        {
-          "polygon_id": "layer-0002/401",
-          "layer_id": "layer-0002",
-          "source_row": 4,
-          "reason": "non_polygon_components"
-        },
-        {
-          "polygon_id": "layer-0002/402",
-          "layer_id": "layer-0002",
-          "source_row": 4,
-          "reason": "non_polygon_components"
-        },
-        {
-          "polygon_id": "layer-0002/403",
-          "layer_id": "layer-0002",
-          "source_row": 4,
-          "reason": "non_polygon_components"
-        },
-        {
-          "polygon_id": "layer-0002/501",
-          "layer_id": "layer-0002",
-          "source_row": 5,
-          "reason": "non_polygon_components"
-        },
-        {
-          "polygon_id": "layer-0002/502",
-          "layer_id": "layer-0002",
-          "source_row": 5,
-          "reason": "non_polygon_components"
-        },
-        {
-          "polygon_id": "layer-0002/503",
-          "layer_id": "layer-0002",
-          "source_row": 5,
-          "reason": "non_polygon_components"
-        },
-        {
-          "polygon_id": "layer-0002/601",
-          "layer_id": "layer-0002",
-          "source_row": 6,
-          "reason": "non_polygon_components"
-        },
-        {
-          "polygon_id": "layer-0002/602",
-          "layer_id": "layer-0002",
-          "source_row": 6,
-          "reason": "non_polygon_components"
-        },
-        {
-          "polygon_id": "layer-0002/603",
-          "layer_id": "layer-0002",
-          "source_row": 6,
-          "reason": "non_polygon_components"
-        },
         {
           "polygon_id": "layer-0002/604",
           "layer_id": "layer-0002",
@@ -724,42 +616,6 @@
           "reason": "non_polygon_components"
         },
         {
-          "polygon_id": "layer-0002/701",
-          "layer_id": "layer-0002",
-          "source_row": 7,
-          "reason": "non_polygon_components"
-        },
-        {
-          "polygon_id": "layer-0002/702",
-          "layer_id": "layer-0002",
-          "source_row": 7,
-          "reason": "non_polygon_components"
-        },
-        {
-          "polygon_id": "layer-0002/703",
-          "layer_id": "layer-0002",
-          "source_row": 7,
-          "reason": "non_polygon_components"
-        },
-        {
-          "polygon_id": "layer-0002/801",
-          "layer_id": "layer-0002",
-          "source_row": 8,
-          "reason": "non_polygon_components"
-        },
-        {
-          "polygon_id": "layer-0002/802",
-          "layer_id": "layer-0002",
-          "source_row": 8,
-          "reason": "non_polygon_components"
-        },
-        {
-          "polygon_id": "layer-0002/803",
-          "layer_id": "layer-0002",
-          "source_row": 8,
-          "reason": "non_polygon_components"
-        },
-        {
           "polygon_id": "layer-0002/804",
           "layer_id": "layer-0002",
           "source_row": 8,
@@ -781,24 +637,6 @@
           "polygon_id": "layer-0002/807",
           "layer_id": "layer-0002",
           "source_row": 8,
-          "reason": "non_polygon_components"
-        },
-        {
-          "polygon_id": "layer-0002/901",
-          "layer_id": "layer-0002",
-          "source_row": 9,
-          "reason": "non_polygon_components"
-        },
-        {
-          "polygon_id": "layer-0002/902",
-          "layer_id": "layer-0002",
-          "source_row": 9,
-          "reason": "non_polygon_components"
-        },
-        {
-          "polygon_id": "layer-0002/903",
-          "layer_id": "layer-0002",
-          "source_row": 9,
           "reason": "non_polygon_components"
         }
       ],
