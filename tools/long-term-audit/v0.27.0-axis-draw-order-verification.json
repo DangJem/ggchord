@@ -542,5 +542,6 @@
     "Exact glyph ink, stroke widths and transparency occlusion certification",
     "Package testthat/build/check, publication device/platform matrix",
     "Full 13-profile device redraw after this painter-order-only patch"
-  ]
+  ],
+  "hidden_and_empty_axis": "Direct complete axis element_blank and a line-only axis with NULL breaks/minor_breaks both built successfully"
 }
