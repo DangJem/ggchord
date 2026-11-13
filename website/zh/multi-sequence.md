@@ -6,10 +6,10 @@
 
 ## 学习路线 {#path}
 
-- [绘制序列骨架](chord-start.html)
-- [绘制共线性骨架](collinear-start.html)
-- [HSP点阵图与径向共线性](view-expansion.html)
-- [来源实例、轨道与新视图](foundation.html)
+- [绘制序列骨架](multi-sequence-start.html)
+- [绘制共线性骨架](multi-sequence-views.html)
+- [HSP点阵图与径向共线性](radial-synteny.html)
+- [来源实例、轨道与新视图](sankey.html)
 - [四序列综合案例](chord.html)
 - [四基因组共线性案例](collinear.html)
 

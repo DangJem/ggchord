@@ -41,7 +41,7 @@ def render_source_snapshot():
     files.update(ROOT/name for name in [
         'DESCRIPTION','NAMESPACE','LICENSE','_pkgdown.yml',
         'tools/build-website.py','tools/documentation_lib.py','tools/site_search.py',
-        'tools/render-website.R','tools/finalize-website.R',
+        'tools/render-website.R','tools/finalize-website.R','tools/site-course-examples.R',
         'tools/reference-translations.py','tools/documentation-examples.R',
         'tools/documentation-plots.R','tools/audit-source-snapshot.R',
         'tools/render-teaching-comparisons.R','tools/documentation-fingerprints.py'])
@@ -80,6 +80,8 @@ def main():
     complete_examples(assets)
     for p in (ROOT/'man/figures').iterdir():
         if p.is_file() and (p.stem in CAPTIONS or p.stem=='logo'):shutil.copy2(p,assets/p.name)
+    for row in json.loads((WEB/'course-figures.json').read_text()):
+        shutil.copy2(ROOT/row['file'],assets/Path(row['file']).name)
     for name in ['documentation-examples.R','documentation-plots.R']:
         shutil.copy2(ROOT/'tools'/name,assets/name)
     shutil.copy2(ROOT/'NEWS.md',assets/'NEWS.md')

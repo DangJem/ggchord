@@ -12,6 +12,7 @@ RECIPES = json.loads((WEB / 'showcase-recipes.json').read_text())
 
 def snippets():
     text = (ROOT / 'tools/documentation-examples.R').read_text()
+    text += '\n' + (ROOT / 'tools/site-course-examples.R').read_text()
     return dict((name, code.strip()) for name, code in re.findall(
         r'^# ---- (\w+) ----\n(.*?)(?=^# ---- \w+ ----)', text, re.M | re.S))
 

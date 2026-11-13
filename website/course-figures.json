@@ -1,0 +1,123 @@
+[
+  {
+    "id": "coursechord",
+    "object": "p_coursechord",
+    "snippets": [
+      "radialdata",
+      "coursecomparison"
+    ],
+    "width": 10,
+    "height": 8,
+    "dpi": 110,
+    "file": "man/figures/coursechord.png",
+    "caption": {
+      "zh": "chord：同源数据全对关系",
+      "en": "Chord: same source tables and all-pair links"
+    },
+    "source": "Bundled source-backed lengths/HSPs/CDS, with biological source_strand restored; explicit selection recorded in preparation."
+  },
+  {
+    "id": "courselinear",
+    "object": "p_courselinear",
+    "snippets": [
+      "radialdata",
+      "coursecomparison"
+    ],
+    "width": 10,
+    "height": 8,
+    "dpi": 110,
+    "file": "man/figures/courselinear.png",
+    "caption": {
+      "zh": "linear：同源数据全对关系",
+      "en": "Linear: same source tables and all-pair links"
+    },
+    "source": "Bundled source-backed lengths/HSPs/CDS, with biological source_strand restored; explicit selection recorded in preparation."
+  },
+  {
+    "id": "courseradial",
+    "object": "p_courseradial",
+    "snippets": [
+      "radialdata",
+      "coursecomparison"
+    ],
+    "width": 10,
+    "height": 8,
+    "dpi": 110,
+    "file": "man/figures/courseradial.png",
+    "caption": {
+      "zh": "radial：同源数据全对关系",
+      "en": "Radial: same source tables and all-pair links"
+    },
+    "source": "Bundled source-backed lengths/HSPs/CDS, with biological source_strand restored; explicit selection recorded in preparation."
+  },
+  {
+    "id": "coursesankey",
+    "object": "p_coursesankey",
+    "snippets": [
+      "radialdata",
+      "coursecomparison"
+    ],
+    "width": 10,
+    "height": 8,
+    "dpi": 110,
+    "file": "man/figures/coursesankey.png",
+    "caption": {
+      "zh": "sankey：同源数据全对关系",
+      "en": "Sankey: same source tables and all-pair links"
+    },
+    "source": "Bundled source-backed lengths/HSPs/CDS, with biological source_strand restored; explicit selection recorded in preparation."
+  },
+  {
+    "id": "coursesankeygap",
+    "object": "p_coursesankeygap",
+    "snippets": [
+      "foundationdata",
+      "foundationsankey",
+      "coursesankeygap"
+    ],
+    "width": 10,
+    "height": 8,
+    "dpi": 110,
+    "file": "man/figures/coursesankeygap.png",
+    "caption": {
+      "zh": "仅改变左右列间距",
+      "en": "Change only the column gap"
+    },
+    "source": "Bundled source-backed lengths/HSPs/CDS, with biological source_strand restored; explicit selection recorded in preparation."
+  },
+  {
+    "id": "courseradialangle",
+    "object": "p_courseradialangle",
+    "snippets": [
+      "radialdata",
+      "coursecomparison",
+      "courseradialangle"
+    ],
+    "width": 10,
+    "height": 8,
+    "dpi": 110,
+    "file": "man/figures/courseradialangle.png",
+    "caption": {
+      "zh": "仅改变首辐条角度",
+      "en": "Change only the first-spoke angle"
+    },
+    "source": "Bundled source-backed lengths/HSPs/CDS, with biological source_strand restored; explicit selection recorded in preparation."
+  },
+  {
+    "id": "coursefusion",
+    "object": "p_coursefusion",
+    "snippets": [
+      "fusiondata",
+      "coursefusion"
+    ],
+    "width": 12,
+    "height": 8,
+    "dpi": 110,
+    "file": "man/figures/coursefusion.png",
+    "caption": {
+      "zh": "两个独立面板与一条真实关系",
+      "en": "Two independent panels and one real relationship"
+    },
+    "source": "Bundled source-backed lengths/HSPs/CDS, with biological source_strand restored; explicit selection recorded in preparation."
+  }
+]

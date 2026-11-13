@@ -17,7 +17,11 @@
     ],
     "apis": [],
     "recipe_ids": [],
-    "figure_ids": [],
+    "figure_ids": [
+      "showcasechord",
+      "showcasecollinear",
+      "showcaseplasmid"
+    ],
     "translation_key": "index",
     "aliases": []
   },
@@ -34,9 +38,7 @@
     "parent": "learn",
     "module": "start",
     "prerequisites": [],
-    "next_steps": [
-      "modes"
-    ],
+    "next_steps": [],
     "apis": [],
     "recipe_ids": [],
     "figure_ids": [],
@@ -56,9 +58,7 @@
     "parent": "learn",
     "module": "start",
     "prerequisites": [],
-    "next_steps": [
-      "data"
-    ],
+    "next_steps": [],
     "apis": [
       "geom_seq",
       "geom_feature",
@@ -86,14 +86,12 @@
     },
     "group": "article",
     "id": "chord-start",
-    "kind": "tutorial",
-    "canonical_path": "chord-start.html",
+    "kind": "alias",
+    "canonical_path": "multi-sequence-start.html",
     "parent": "multi-sequence",
     "module": "multi-sequence",
     "prerequisites": [],
-    "next_steps": [
-      "chord-build"
-    ],
+    "next_steps": [],
     "apis": [
       "geom_seq",
       "geom_seq_label",
@@ -114,8 +112,8 @@
     },
     "group": "article",
     "id": "chord-data",
-    "kind": "tutorial",
-    "canonical_path": "chord-data.html",
+    "kind": "alias",
+    "canonical_path": "data.html",
     "parent": "formats",
     "module": "data",
     "prerequisites": [],
@@ -156,14 +154,12 @@
     },
     "group": "article",
     "id": "chord-build",
-    "kind": "tutorial",
-    "canonical_path": "chord-build.html",
+    "kind": "alias",
+    "canonical_path": "multi-sequence-start.html",
     "parent": "multi-sequence",
     "module": "multi-sequence",
     "prerequisites": [],
-    "next_steps": [
-      "collinear-start"
-    ],
+    "next_steps": [],
     "apis": [
       "geom_link_ribbon",
       "geom_gene_label"
@@ -278,7 +274,7 @@
     "module": "multi-sequence",
     "prerequisites": [],
     "next_steps": [
-      "collinear-data"
+      "ribbons"
     ],
     "apis": [
       "geom_gene_label_repel"
@@ -376,14 +372,12 @@
     },
     "group": "article",
     "id": "collinear-start",
-    "kind": "tutorial",
-    "canonical_path": "collinear-start.html",
+    "kind": "alias",
+    "canonical_path": "multi-sequence-start.html",
     "parent": "multi-sequence",
     "module": "multi-sequence",
     "prerequisites": [],
-    "next_steps": [
-      "collinear-build"
-    ],
+    "next_steps": [],
     "apis": [
       "geom_seq_label"
     ],
@@ -402,14 +396,12 @@
     },
     "group": "article",
     "id": "collinear-data",
-    "kind": "tutorial",
-    "canonical_path": "collinear-data.html",
+    "kind": "alias",
+    "canonical_path": "multi-sequence-views.html",
     "parent": "multi-sequence",
     "module": "multi-sequence",
     "prerequisites": [],
-    "next_steps": [
-      "ribbons"
-    ],
+    "next_steps": [],
     "apis": [],
     "recipe_ids": [],
     "figure_ids": [],
@@ -424,14 +416,12 @@
     },
     "group": "article",
     "id": "collinear-build",
-    "kind": "tutorial",
-    "canonical_path": "collinear-build.html",
+    "kind": "alias",
+    "canonical_path": "multi-sequence-start.html",
     "parent": "multi-sequence",
     "module": "multi-sequence",
     "prerequisites": [],
-    "next_steps": [
-      "chord-geometry"
-    ],
+    "next_steps": [],
     "apis": [
       "geom_gene_label"
     ],
@@ -1732,7 +1722,10 @@
     "next_steps": [],
     "apis": [],
     "recipe_ids": [],
-    "figure_ids": [],
+    "figure_ids": [
+      "fusionview",
+      "fusionfour"
+    ],
     "translation_key": "fusion",
     "aliases": []
   },
@@ -1749,9 +1742,7 @@
     "parent": "index",
     "module": "start",
     "prerequisites": [],
-    "next_steps": [
-      "installation"
-    ],
+    "next_steps": [],
     "apis": [],
     "recipe_ids": [],
     "figure_ids": [],
@@ -1772,11 +1763,13 @@
     "module": "multi-sequence",
     "prerequisites": [],
     "next_steps": [
-      "chord-start"
+      "multi-sequence-start"
     ],
     "apis": [],
     "recipe_ids": [],
-    "figure_ids": [],
+    "figure_ids": [
+      "viewradial"
+    ],
     "translation_key": "multi-sequence",
     "aliases": []
   },
@@ -1798,7 +1791,9 @@
     ],
     "apis": [],
     "recipe_ids": [],
-    "figure_ids": [],
+    "figure_ids": [
+      "showcaseplasmid"
+    ],
     "translation_key": "circular",
     "aliases": []
   },
@@ -1820,8 +1815,142 @@
     ],
     "apis": [],
     "recipe_ids": [],
-    "figure_ids": [],
+    "figure_ids": [
+      "viewdotplot"
+    ],
     "translation_key": "dotplot",
+    "aliases": []
+  },
+  {
+    "slug": "multi-sequence-start",
+    "title": {
+      "zh": "第一张多序列关系图",
+      "en": "First multi-sequence relationship plot"
+    },
+    "group": "article",
+    "id": "multi-sequence-start",
+    "kind": "tutorial",
+    "canonical_path": "multi-sequence-start.html",
+    "parent": "multi-sequence",
+    "module": "multi-sequence",
+    "prerequisites": [
+      "installation"
+    ],
+    "next_steps": [
+      "multi-sequence-views"
+    ],
+    "apis": [],
+    "recipe_ids": [],
+    "figure_ids": [
+      "frontbackbone",
+      "frontribbon",
+      "frontfeature",
+      "frontgenelabels"
+    ],
+    "translation_key": "multi-sequence-start",
+    "aliases": []
+  },
+  {
+    "slug": "multi-sequence-views",
+    "title": {
+      "zh": "同一数据选择四种视图",
+      "en": "Choose four views with the same data"
+    },
+    "group": "article",
+    "id": "multi-sequence-views",
+    "kind": "tutorial",
+    "canonical_path": "multi-sequence-views.html",
+    "parent": "multi-sequence",
+    "module": "multi-sequence",
+    "prerequisites": [
+      "multi-sequence-start"
+    ],
+    "next_steps": [
+      "sankey"
+    ],
+    "apis": [],
+    "recipe_ids": [],
+    "figure_ids": [
+      "foundationequal",
+      "foundationarrow"
+    ],
+    "translation_key": "multi-sequence-views",
+    "aliases": []
+  },
+  {
+    "slug": "sankey",
+    "title": {
+      "zh": "镜像区间关系与 Sankey",
+      "en": "Mirrored interval relationships with Sankey"
+    },
+    "group": "article",
+    "id": "sankey",
+    "kind": "tutorial",
+    "canonical_path": "sankey.html",
+    "parent": "multi-sequence",
+    "module": "multi-sequence",
+    "prerequisites": [
+      "multi-sequence-start"
+    ],
+    "next_steps": [
+      "radial-synteny"
+    ],
+    "apis": [],
+    "recipe_ids": [],
+    "figure_ids": [
+      "foundationsankey"
+    ],
+    "translation_key": "sankey",
+    "aliases": []
+  },
+  {
+    "slug": "radial-synteny",
+    "title": {
+      "zh": "径向共线性与源位置反查",
+      "en": "Radial synteny and source-position mapping"
+    },
+    "group": "article",
+    "id": "radial-synteny",
+    "kind": "tutorial",
+    "canonical_path": "radial-synteny.html",
+    "parent": "multi-sequence",
+    "module": "multi-sequence",
+    "prerequisites": [
+      "multi-sequence-start"
+    ],
+    "next_steps": [
+      "instances"
+    ],
+    "apis": [],
+    "recipe_ids": [],
+    "figure_ids": [
+      "viewradial"
+    ],
+    "translation_key": "radial-synteny",
+    "aliases": []
+  },
+  {
+    "slug": "instances",
+    "title": {
+      "zh": "重复显示来源与实例路由",
+      "en": "Repeated source instances and routing"
+    },
+    "group": "article",
+    "id": "instances",
+    "kind": "tutorial",
+    "canonical_path": "instances.html",
+    "parent": "multi-sequence",
+    "module": "multi-sequence",
+    "prerequisites": [],
+    "next_steps": [
+      "chord-geometry"
+    ],
+    "apis": [],
+    "recipe_ids": [],
+    "figure_ids": [
+      "foundationvertical"
+    ],
+    "translation_key": "instances",
     "aliases": []
   }
 ]

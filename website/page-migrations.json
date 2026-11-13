@@ -1,0 +1,53 @@
+{
+  "chord-start.html": {
+    "": "multi-sequence-start.html#draw",
+    "draw": "multi-sequence-start.html#draw",
+    "read": "multi-sequence-start.html#read",
+    "try": "multi-sequence-start.html#try",
+    "adapt": "multi-sequence-start.html#adapt"
+  },
+  "chord-build.html": {
+    "": "multi-sequence-start.html#draw",
+    "bundled": "multi-sequence-start.html#bundled",
+    "backbones": "multi-sequence-start.html#draw",
+    "links": "multi-sequence-start.html#links",
+    "add-genes": "multi-sequence-start.html#add-genes",
+    "prepare": "multi-sequence-start.html#prepare",
+    "inspect-genes": "multi-sequence-start.html#inspect-genes",
+    "genes": "multi-sequence-start.html#genes",
+    "labels": "multi-sequence-start.html#labels"
+  },
+  "collinear-start.html": {
+    "": "multi-sequence-start.html#collinear",
+    "draw": "multi-sequence-start.html#draw",
+    "read": "multi-sequence-start.html#read",
+    "try": "multi-sequence-start.html#try",
+    "adapt": "multi-sequence-start.html#adapt"
+  },
+  "collinear-build.html": {
+    "": "multi-sequence-start.html#collinear",
+    "bundled": "multi-sequence-start.html#bundled",
+    "prepare": "multi-sequence-start.html#prepare",
+    "switch": "multi-sequence-start.html#collinear",
+    "backbones": "multi-sequence-start.html#collinear",
+    "links": "multi-sequence-start.html#links",
+    "inspect-genes": "multi-sequence-start.html#inspect-genes",
+    "add-genes": "multi-sequence-start.html#add-genes",
+    "labels": "multi-sequence-start.html#labels"
+  },
+  "chord-data.html": {
+    "": "data.html#tables",
+    "tables": "data.html#tables",
+    "inspect": "data.html#inspect",
+    "names": "data.html#names",
+    "coordinates": "data.html#coordinates",
+    "protein-unit": "data.html#protein-unit"
+  },
+  "collinear-data.html": {
+    "": "multi-sequence-views.html#direction-and-adjacency",
+    "tables": "multi-sequence-views.html#tables",
+    "example": "multi-sequence-views.html#example",
+    "import": "multi-sequence-views.html#import",
+    "contract": "multi-sequence-views.html#contract"
+  }
+}

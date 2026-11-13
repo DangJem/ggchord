@@ -6,10 +6,10 @@ Use Chord, Collinear, Radial or Sankey with the same source tables. Compatible l
 
 ## Learning route {#path}
 
-- [Draw sequence backbones](chord-start.html)
-- [Draw your first collinear plot](collinear-start.html)
-- [HSP Dotplots and radial synteny](view-expansion.html)
-- [Source instances, tracks and new views](foundation.html)
+- [Draw sequence backbones](multi-sequence-start.html)
+- [Draw your first collinear plot](multi-sequence-views.html)
+- [HSP Dotplots and radial synteny](radial-synteny.html)
+- [Source instances, tracks and new views](sankey.html)
 - [Four-sequence case study](chord.html)
 - [Four-genome collinear case study](collinear.html)
 

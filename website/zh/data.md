@@ -5,8 +5,9 @@
 
 {{prepare:setup}}
 
-## 输入表 {#tables}
-[基本数据表](chord-data.html#tables)展示序列、连接和特征的字段与实际数据。接下来用这些字段校验导入结果。
+## 蛋白序列的单位 {#protein-unit}
+
+核酸表可省略单位列，默认使用 bp。完整蛋白长度表应声明 `sequence_unit = "aa"`，同一图使用一个单位。[蛋白比对示例](alignments.html#protein)展示完整输入和配图。
 
 ## 坐标契约 {#coordinates}
 基因组坐标采用 **一基、闭区间 bp**。BED/PAF 读取器已转换源坐标约定，不要重复转换。

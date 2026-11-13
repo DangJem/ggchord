@@ -5,8 +5,9 @@ In a fresh R session, run the code below, then follow this page in order. Colour
 
 {{prepare:setup}}
 
-## Tables {#tables}
-[Basic input tables](chord-data.html#tables) shows the fields and actual rows for sequences, links and features. Use those fields to validate imported records below.
+## Protein sequence units {#protein-unit}
+
+Nucleotide tables may omit the unit column and use bp. A complete protein length table declares `sequence_unit = "aa"`. A plot uses one unit. See [protein alignments](alignments.html#protein) for full inputs and figures.
 
 ## Coordinate contract {#coordinates}
 Genomic coordinates are **one-based, inclusive bp**. BED/PAF readers convert their
