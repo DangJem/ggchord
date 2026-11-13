@@ -1,5 +1,15 @@
 # ggchord 0.27.0 (development)
 
+- Circular origin/end coordinate strings take priority over intermediate
+  ticks and adjustable leader-exit channels. Endpoint text is retained;
+  unresolved nearby placement is reported as `endpoint_unresolved` rather
+  than hiding the endpoint or pushing it towards the centre. Explicit
+  positions keep their placement. External feature routes retain their
+  straight or single-bend geometry while now honouring the existing
+  fade/clip/show text-overlap appearance after perimeter coordination.
+  Segment clipping drops numerical zero-length fragments; contour audits
+  distinguish exact closed-edge contacts from points genuinely outside.
+
 - Feature segment-boundary marks are clipped to the actual arrow contour,
   including tapered and compressed heads, instead of spanning the nominal
   feature width. Isolated, centred internal names omit unnecessary short
@@ -16,7 +26,7 @@
   backbone. Movable strings reach measured clearance before overlap hiding,
   rather than disappearing based on their pre-clearance positions. Crowded
   automatic strings stay near the backbone; when overlap hiding is enabled,
-  an unavailable nearby slot hides only the text and records
+  an unavailable nearby slot hides only ordinary intermediate text and records
   `hidden_near_backbone` instead of pushing the text far towards the centre.
   Hidden axis records use an empty display string so the renderer cannot
   print a literal `NA`; original values and the hidden status remain in diagnostics.

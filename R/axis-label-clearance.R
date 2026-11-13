@@ -3,7 +3,11 @@
 ggchord_clear_circular_axis_text <- function(text, layout) {
   required <- c('.axis_automatic_breaks', '.axis_offset_explicit', '.axis_allow_clearance')
   if (!all(required %in% names(text)) || !length(layout$layer_geometry)) return(text)
+  critical <- rep(FALSE,nrow(text))
+  for(field in intersect(c('is_origin','is_endpoint','.axis_seam_combined'),names(text)))
+    critical <- critical | text[[field]] %in% TRUE
   at <- which(text$.axis_automatic_breaks %in% TRUE)
+  at <- at[order(!critical[at],at)]
   if (!length(at)) return(text)
   polygons <- list()
   for (owner in layout$layer_geometry) {
@@ -21,11 +25,12 @@ ggchord_clear_circular_axis_text <- function(text, layout) {
   # path here would move text again after its obstacle was already routed.
   roots <- ggchord_annotation_leader_roots(layout$layer_geometry)
   if (!length(polygons) && !nrow(roots)) return(text)
+  active_roots <- roots
   root_hit <- function(boxes) {
-    if (!nrow(roots) || !nrow(boxes)) return(FALSE)
+    if (!nrow(active_roots) || !nrow(boxes)) return(FALSE)
     boxes$ow <- boxes$ow+2*.3*units/25.4
     boxes$oh <- boxes$oh+2*.3*units/25.4
-    ggchord_inner_leader_hits(roots, boxes)
+    ggchord_inner_leader_hits(active_roots, boxes)
   }
   backbone_radii <- unlist(lapply(layout$layer_geometry, function(owner) {
     d <- owner[['seq']]
@@ -61,8 +66,14 @@ ggchord_clear_circular_axis_text <- function(text, layout) {
   }
   for (i in at) {
     original <- text[i, , drop = FALSE]
+    active_roots <- if (critical[i]) roots[
+      roots$x0==roots$x1 & roots$y0==roots$y1,,drop=FALSE] else roots
     boxes <- boxes_for(original)
-    others <- ggchord_rbind_fill(list(static, boxes_for(text[-i, , drop = FALSE]))) %||% data.frame()
+    other_rows <- setdiff(seq_len(nrow(text)),i)
+    if (critical[i]) other_rows <- other_rows[critical[other_rows] |
+      !(text$.axis_automatic_breaks[other_rows] %in% TRUE)]
+    others <- ggchord_rbind_fill(list(static,
+      boxes_for(text[other_rows, , drop = FALSE]))) %||% data.frame()
     text_hit <- function(candidate) nrow(others) > 0L && any(vapply(
       seq_len(nrow(candidate)), function(k) any(ggchord_oriented_box_overlaps(
         candidate[k, , drop = FALSE], others)), logical(1)))
@@ -131,7 +142,9 @@ ggchord_clear_circular_axis_text <- function(text, layout) {
       break
     }
     unresolved <- grepl("unresolved$",text$.axis_clearance_status[i])
-    if (unresolved && isTRUE(layout$axis_label_hide_overlaps)) {
+    if (unresolved && critical[i]) {
+      text$.axis_clearance_status[i] <- "endpoint_unresolved"
+    } else if (unresolved && isTRUE(layout$axis_label_hide_overlaps)) {
       text$text[i] <- NA_character_
       text$.axis_clearance_status[i] <- "hidden_near_backbone"
     }

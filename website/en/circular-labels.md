@@ -175,3 +175,17 @@ Segment boundaries clip to the actual arrow contour without editing source
 segments. Wrapped internal labels use a separate concentric baseline for each
 line. Automatic coordinate text retains a small physical backbone gap;
 explicit offsets keep their contract.
+
+
+Automatic coordinate text searches only a bounded channel near the backbone.
+With `axis.text.check.overlap` enabled, an unavailable nearby slot may hide
+ordinary intermediate text while retaining its tick. Origin/end and combined
+seam strings take priority and remain visible. Diagnostics report `hidden_near_backbone` and
+keep the original value in `.axis_label`. Hidden text uses an empty display
+string so missing-value markers cannot appear as literal “NA”.
+
+
+Unresolved endpoint clearance reports `endpoint_unresolved` while retaining
+its text. External feature leaders also honour `label_segment_overlap`:
+fade reduces opacity under text, clip removes covered portions, and show
+keeps the full route. Clipping splits existing legs without adding bends.

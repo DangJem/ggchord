@@ -23,6 +23,9 @@ ggchord_layout_finalize_step <- function(
         !(axis_ticks$.axis_offset_explicit %in% TRUE) &
         axis_ticks$.axis_allow_clearance %in% TRUE
     }
+    if (isTRUE(circular)) for(field in intersect(c("is_origin","is_endpoint",
+        ".axis_seam_combined"),names(axis_ticks)))
+      movable <- movable | axis_ticks[[field]] %in% TRUE
     # Measured contour clearance runs later, after every layer owns its
     # geometry. Do not delete movable strings using pre-clearance positions.
     if (any(!movable)) axis_ticks[!movable,] <- ggchord_hide_text_overlaps(

@@ -79,8 +79,10 @@ ggchord_simple_feature_leaders <- function(registry, layout) {
       if (row$feature_label_mode %in% "external") {
         # The shared perimeter has already ordered and attached this route.
         # Reconnecting its endpoints can undo that ordering and cross callouts.
-        parts[[length(parts)+1L]] <- geometry[segments[
-          geometry$source_row[segments] == source], , drop=FALSE]
+        own <- boxes$owner == owner & !is.na(boxes$source_row) & boxes$source_row==source
+        parts[[length(parts)+1L]] <- ggchord_feature_route_occlusion(
+          geometry[segments[geometry$source_row[segments]==source],,drop=FALSE],
+          row,boxes[!own,,drop=FALSE])
         next
       }
       own <- boxes$owner == owner & !is.na(boxes$source_row) & boxes$source_row == source
@@ -159,4 +161,36 @@ ggchord_feature_short_attachment <- function(row, boxes, registry, units) {
     }
   }
   TRUE
+}
+
+# Preserve an already ordered external route and apply the requested text
+# overlap appearance to each original leg. Splitting a leg adds no bends.
+ggchord_feature_route_occlusion <- function(rows, text, boxes) {
+  policy <- as.character(text$.leader_overlap %||% "fade")[1L]
+  if (!nrow(rows) || !nrow(boxes) || identical(policy,"show")) return(rows)
+  fade <- as.numeric(text$.leader_overlap_alpha %||% .18)[1L]
+  nominal <- if(any(is.finite(rows$alpha))) max(rows$alpha,na.rm=TRUE) else 1
+  parts <- list()
+  for(i in seq_len(nrow(rows))) {
+    row <- rows[i,,drop=FALSE]
+    route <- data.frame(x0=row$x,y0=row$y,x1=row$xend,y1=row$yend)
+    cuts <- ggchord_inner_leader_intervals(route,boxes)
+    times <- sort(unique(c(0,1,cuts$start,cuts$end)))
+    for(k in seq_len(length(times)-1L)) {
+      a<-times[k];b<-times[k+1L];middle<-(a+b)/2
+      covered<-any(middle>cuts$start & middle<cuts$end)
+      if(b-a<1e-10 || (covered && identical(policy,"clip")))next
+      part<-row
+      part$x<-route$x0+a*(route$x1-route$x0)
+      part$y<-route$y0+a*(route$y1-route$y0)
+      part$xend<-route$x0+b*(route$x1-route$x0)
+      part$yend<-route$y0+b*(route$y1-route$y0)
+      for(pair in list(c('x0','x'),c('y0','y'),c('x1','xend'),c('y1','yend')))
+        if(pair[1L] %in% names(part))part[[pair[1L]]]<-part[[pair[2L]]]
+      part$occluded<-covered
+      part$alpha<-nominal*if(covered && identical(policy,"fade"))fade else 1
+      parts[[length(parts)+1L]]<-part
+    }
+  }
+  ggchord_rbind_fill(parts) %||% rows[0,,drop=FALSE]
 }

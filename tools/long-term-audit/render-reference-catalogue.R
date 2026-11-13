@@ -43,10 +43,21 @@ for(id in ids) {
   warnings<<-c(warnings,conditionMessage(w));invokeRestart('muffleWarning')})
  grid::grid.newpage();grid::grid.draw(table)
  l<-attr(table,'ggchord_render_layout')
+ axis <- ggchord_axis_geometry(l)
+ axis_rows <- axis$.component %in% 'text' & !is.na(axis$.axis_label)
+ axis_labels <- do.call(rbind,lapply(unique(axis$.axis_label[axis_rows]),function(value) {
+   at <- axis_rows & axis$.axis_label %in% value
+   data.frame(label=value,visible=any(!is.na(axis$label[at]) & nzchar(trimws(axis$label[at]))),
+     endpoint=any(axis$is_origin[at] %in% TRUE | axis$is_endpoint[at] %in% TRUE |
+       axis$.axis_seam_combined[at] %in% TRUE),
+     status=paste(unique(axis$.axis_clearance_status[at]),collapse=';'))
+ }))
+ stopifnot(is.data.frame(axis_labels),any(axis_labels$endpoint),
+   all(axis_labels$visible[axis_labels$endpoint]))
  results[[id]]<-list(file=path,site_policy=policy,selected_sites=nrow(sites),
   selected_positions=length(unique(sites$position)),source_features=nrow(f),source_primers=nrow(primers),
   visibility=ggchord_label_visibility(l),converged=attr(table,'ggchord_render_context')$converged,
-  warnings=warnings,quality=association_text_quality(table)$summary,
+  warnings=warnings,axis_labels=axis_labels,quality=association_text_quality(table)$summary,
   association=association_metrics(l)$summary,
   feature_exterior_from_inside=sum(vapply(l$layer_geometry,function(owner) {
     d<-owner$gene_label_repel

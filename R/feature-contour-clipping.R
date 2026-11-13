@@ -18,6 +18,9 @@ ggchord_feature_line_intervals <- function(a, b, polygons) {
   times <- sort(unique(times))
   if (length(times)<2L) return(matrix(numeric(),ncol=2L))
   intervals <- cbind(head(times,-1L),tail(times,-1L))
+  tolerance <- 64*.Machine$double.eps*max(1,abs(c(a,b)))
+  intervals <- intervals[(intervals[,2L]-intervals[,1L])*sqrt(sum(delta^2))>
+    tolerance,,drop=FALSE]
   keep <- vapply(rowMeans(intervals),function(t) {
     point <- a+t*delta
     any(vapply(polygons,function(p) ggchord_point_in_polygon(

@@ -70,15 +70,36 @@ box<-data.frame(cx=0,cy=.85,ow=.08,oh=.02,angle=0,xmin=-.04,xmax=.04,ymin=.84,ym
 stopifnot(ggchord_feature_short_attachment(row,box,list(),.35))
 row$x<-.1;row$text_x<-.1
 stopifnot(!ggchord_feature_short_attachment(row,box,list(),.35))
-# A cramped source retains its tick, never trades clearance for a deep label.
+# A cramped endpoint remains visible near its tick; intermediate text may hide.
 axis_layout <- readRDS('/tmp/v0.27.0-compact-control-pSB1C3.rds')
 axis_layout$axis_label_hide_overlaps <- TRUE
 axis_data <- ggchord_axis_geometry(axis_layout)
 status <- unique(axis_data[axis_data$.component %in% 'text',
  c('.axis_label','.axis_clearance_status'),drop=FALSE])
-hidden <- axis_data$.component %in% 'text' &
- axis_data$.axis_clearance_status %in% 'hidden_near_backbone'
-stopifnot(any(hidden),all(axis_data$label[hidden]==''))
+endpoint <- axis_data$.component %in% 'text' & axis_data$is_endpoint %in% TRUE
+stopifnot(any(endpoint),any(nzchar(axis_data$label[endpoint])),
+ !any(axis_data$.axis_clearance_status[endpoint] %in% 'hidden_near_backbone'))
+ordinary_layout <- axis_layout
+ordinary_layout$axis_ticks$is_origin <- FALSE
+ordinary_layout$axis_ticks$is_endpoint <- FALSE
+ordinary_layout$axis_ticks$.axis_seam_combined <- FALSE
+ordinary_axis <- ggchord_axis_geometry(ordinary_layout)
+hidden <- ordinary_axis$.component %in% 'text' &
+ ordinary_axis$.axis_clearance_status %in% 'hidden_near_backbone'
+stopifnot(any(hidden),all(ordinary_axis$label[hidden]==''))
+# An ordered two-leg route keeps its geometry when portions cross glyphs.
+legs<-data.frame(x=c(0,1),y=c(0,0),xend=c(1,1),yend=c(0,1),alpha=1)
+mask<-data.frame(cx=.5,cy=0,ow=.2,oh=.2,angle=0)
+policy<-data.frame(.leader_overlap='clip',.leader_overlap_alpha=.18)
+clipped<-ggchord_feature_route_occlusion(legs,policy,mask)
+probe<-data.frame(x0=clipped$x,y0=clipped$y,x1=clipped$xend,y1=clipped$yend)
+stopifnot(!ggchord_inner_leader_hits(probe,mask),
+ all(abs(clipped$x-clipped$xend)<1e-10 | abs(clipped$y-clipped$yend)<1e-10))
+policy$.leader_overlap<-'fade'
+faded<-ggchord_feature_route_occlusion(legs,policy,mask)
+stopifnot(any(faded$alpha<1))
+policy$.leader_overlap<-'show'
+stopifnot(identical(ggchord_feature_route_occlusion(legs,policy,mask),legs))
 # Explicit offsets keep their supplied anchors even when a near channel is full.
 original <- axis_layout$axis_ticks
 original <- original[!is.na(original$label),,drop=FALSE]
