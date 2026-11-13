@@ -1,0 +1,6130 @@
+{
+  "audit_date": "2026-11-13",
+  "source_commit": "0f5dd96da57876da74cd1234c7de9cf5579c80b8",
+  "package_version": "0.27.0.9000",
+  "sources": {
+    "ggchord-site-audit.docx": "c026aef9a92cbf189c1af93ac4fe713262251e7cdd808c65251b163f8204857e",
+    "ggchord-codex-brief.txt": "ea9b1bdcb7704a5566b9f123c741e4c17573ad9f07a1ac3a3b6da0386b706ebc",
+    "ggchord-page-audit.xlsx": "b01dac0af1329426ea1da2e32fbdb078d14895a2c4c17cbfe0824102ec761fe4"
+  },
+  "validation_scope": "Desktop only; no mobile or package release checks",
+  "pages": [
+    {
+      "id": "P01",
+      "old": "index",
+      "priority": "P1",
+      "action": "重写入口，保留图与可运行最小例",
+      "targets": "index.html",
+      "issues": "1）首页仍把三种独立首课和三张展示图当作产品全貌；未向新用户建立四模块和第一模块内四视图的选择关系。\n2）首页快速开始只给Chord，然后说同一序列表可复用；没有说明切换时默认关系选择会变化。",
+      "preserve": "保留快速得到骨架、随包数据和真实图形预览；首页不承担完整参数教学。",
+      "kind": "首页",
+      "status": "pending"
+    },
+    {
+      "id": "P02",
+      "old": "installation",
+      "priority": "P0",
+      "action": "重写稳定版/开发版两条闭合安装路径",
+      "targets": "installation.html",
+      "issues": "1）先推荐CRAN安装，随后声明网站为0.27.0.9000而正式版0.16.6；开发路径从“对应checkout”开始，源码下载小节仍只给0.16.6。",
+      "preserve": "已经诚实区分正式版与开发版，应保留并把可执行路径补齐；不要删除版本信息。",
+      "kind": "安装",
+      "status": "pending"
+    },
+    {
+      "id": "P03",
+      "old": "modes",
+      "priority": "P1",
+      "action": "改写为四模块入口与职责总览",
+      "targets": "modes.html",
+      "issues": "1）布局选择正文只介绍Chord、Collinear、Circular；coords概念也只说弧形、横行、单环。\n2）页尾fit/clip默认表笼统写“各坐标”；Dotplot不使用相同接口且clip默认不同。",
+      "preserve": "三个方向的区分与概念表清楚，作为基础页主体保留。",
+      "kind": "教程／专题",
+      "status": "pending"
+    },
+    {
+      "id": "P04",
+      "old": "chord-start",
+      "priority": "P1",
+      "action": "合并共同首课，保留弦图练习锚点",
+      "targets": "multi-sequence-start.html#backbones",
+      "issues": "1）与collinear-start使用同四条数据、同添加骨架/标签步骤及去掉标签练习，主要差别只有coord。",
+      "preserve": "5行核心绘图代码、明确的长度读图和单一练习都适合作为新首课素材。",
+      "kind": "教程／专题",
+      "status": "pending"
+    },
+    {
+      "id": "P05",
+      "old": "chord-data",
+      "priority": "P1",
+      "action": "升为公共数据基础，与data去重",
+      "targets": "data.html#tables",
+      "issues": "1）内容是全包共享序列/连接/特征契约，却使用chord-data路径，被所有布局反复引用。\n2）length与坐标在前表直接写bp，末尾才补aa例外。",
+      "preserve": "真实行输出、必需/可选列和query/subject解释均应保留。",
+      "kind": "教程／专题",
+      "status": "pending"
+    },
+    {
+      "id": "P06",
+      "old": "chord-import",
+      "priority": "P1",
+      "action": "迁移公共导入，拆开基础文件与Bioconductor选修",
+      "targets": "import-sequences.html#fasta-gff3-blast",
+      "issues": "1）FASTA/GFF3/BLAST的基础读取与GRanges/GInteractions高级对象转换放在同一短课，且未把三个读取结果汇成一次最小验证与绘图。",
+      "preserve": "逐格式查看head输出值得保留；已提供输入包链接。",
+      "kind": "教程／专题",
+      "status": "pending"
+    },
+    {
+      "id": "P07",
+      "old": "chord-build",
+      "priority": "P1",
+      "action": "合并共同首课",
+      "targets": "multi-sequence-start.html#links-and-features",
+      "issues": "1）再次完整重建骨架，随后同一个HSP和同一个CDS在collinear-build再教一次。",
+      "preserve": "已有区间端点和颜色的具体读图解释，不应简化成只有代码。",
+      "kind": "教程／专题",
+      "status": "pending"
+    },
+    {
+      "id": "P08",
+      "old": "chord-tuning",
+      "priority": "P2",
+      "action": "合并Chord专属布局课",
+      "targets": "chord-geometry.html#rotation-and-gaps",
+      "issues": "1）全页仅旋转与gap两个设置，仍重新展示默认图，与下一页半径/曲率/方向/顺序形成过细拆分。",
+      "preserve": "只改一个设置且说明默认值的对照方式是可保留的良好教学结构。",
+      "kind": "教程／专题",
+      "status": "pending"
+    },
+    {
+      "id": "P09",
+      "old": "chord-geometry",
+      "priority": "P2",
+      "action": "保留专属几何并迁出公共排序/方向",
+      "targets": "chord-geometry.html",
+      "issues": "1）Chord特有radius/curvature与跨视图共有order/orientation同页，且入口前一页已教另一半布局设置。\n2）正文引用“0刻度”而基础输入为一基闭区间，没有就地说明显示轴零刻度不等同合法输入0坐标。",
+      "preserve": "按ID命名向量、源数据不变的说明完整。",
+      "kind": "教程／专题",
+      "status": "pending"
+    },
+    {
+      "id": "P10",
+      "old": "chord-routing",
+      "priority": "P1",
+      "action": "拆分混合主题并重写同一目标路径",
+      "targets": "multi-sequence-links.html#routing\nannotations.html#regions",
+      "issues": "1）一页混合路径控制、端点避障、点连接、区间高亮、分支参数与固定美学；末尾又追加4幅高亮参数图。\n2）中间“下一节标签”之后又出现分支课和高亮内容，学习出口不唯一。",
+      "preserve": "真实局部避障前后对照和控制点不在曲线上的解释很有价值，应保留。",
+      "kind": "教程／专题",
+      "status": "pending"
+    },
+    {
+      "id": "P11",
+      "old": "chord-branches",
+      "priority": "P2",
+      "action": "保留为多序列连接进阶小节",
+      "targets": "multi-sequence-links.html#branches-and-points",
+      "issues": "1）讲解本身清楚，但只按旧Chord/Collinear/Circular三模式说明兼容，未告诉用户Radial/Sankey当前不支持shared branches。",
+      "preserve": "明确合成数据、真实端点不得为布局改写、区间与点的语义差别都应保留。",
+      "kind": "教程／专题",
+      "status": "pending"
+    },
+    {
+      "id": "P12",
+      "old": "chord-labels",
+      "priority": "P2",
+      "action": "整合多序列标签，Chord专属控制收为小节",
+      "targets": "multi-sequence-labels.html#chord",
+      "issues": "1）先以两个控制合改的序列标签例开场，后半又补三图参数对照；与labels及参数图谱重复，缺少“序列名/基因名/通用feature名”入口决策。",
+      "preserve": "有具体对象位置的读图指导和固定/自动标签链接。",
+      "kind": "教程／专题",
+      "status": "pending"
+    },
+    {
+      "id": "P13",
+      "old": "ribbons",
+      "priority": "P1",
+      "action": "合并处理与统计课程，点连接移连接页",
+      "targets": "ribbons.html",
+      "issues": "1）从筛选去重merge跳到density再跳到point links；下一页ribbon-statistics重复density/bundle，核心“选哪种操作”缺少一览决策表。\n2）中文标题“选择区间区间连接”重复，双语下一步名称不同。",
+      "preserve": "四种转换的科学含义分开解释，是该页主要资产。",
+      "kind": "教程／专题",
+      "status": "pending"
+    },
+    {
+      "id": "P14",
+      "old": "ribbon-statistics",
+      "priority": "P2",
+      "action": "与处理课合并为进阶统计部分",
+      "targets": "ribbons.html#statistics",
+      "issues": "1）与ribbons重复统计定义和示例；文中“连接统计用于弦图或共线性图”延续旧两模式口径。",
+      "preserve": "四箱/八箱、权重和density公式已说明，应保留而非删去。",
+      "kind": "教程／专题",
+      "status": "pending"
+    },
+    {
+      "id": "P15",
+      "old": "real-data",
+      "priority": "P1",
+      "action": "保留为唯一共享端到端基础案例，去重通用说明",
+      "targets": "real-data.html",
+      "issues": "1）与chord/collinear完整案例使用同组源记录，却采用另一套阈值和选CDS规则，页面之间缺少明确难度/用途区分。\n2）准备段只说解压输入；realimport代码仅library(dplyr)，没有显式加载ggchord；页末重复证据检查，且开头引入与本案例无关的EMALE许可说明。",
+      "preserve": "从文件→检查→筛选→两种视图→保存的完整闭环很好。",
+      "kind": "教程／专题",
+      "status": "pending"
+    },
+    {
+      "id": "P16",
+      "old": "chord",
+      "priority": "P2",
+      "action": "保留进阶案例，改为解释式构图步骤",
+      "targets": "chord.html",
+      "issues": "1）准备由source脚本承载，核心图层一次性组合大量radius/curvature/orientation/Position/labels/scales；正文主要事后参数表，难看见每一步带来的改进。\n2）中文可选依赖说明提到GC轨道而本案例不画GC；末尾重复通用证据/许可文字。",
+      "preserve": "原始数据、抽样规则、曲率和半径读图解释丰富，保持案例而不把它当首课。",
+      "kind": "教程／专题",
+      "status": "pending"
+    },
+    {
+      "id": "P17",
+      "old": "collinear-start",
+      "priority": "P1",
+      "action": "合并共享首课，保留线性布局锚点",
+      "targets": "multi-sequence-start.html#collinear",
+      "issues": "1）与chord-start相同数据、标签操作和删除标签练习，只换coord。",
+      "preserve": "共同bp尺度读长度的说明清楚。",
+      "kind": "教程／专题",
+      "status": "pending"
+    },
+    {
+      "id": "P18",
+      "old": "collinear-data",
+      "priority": "P1",
+      "action": "迁移共有字段，方向与邻接并入模式课",
+      "targets": "data.html#tables\nmulti-sequence-views.html#direction-and-adjacency",
+      "issues": "1）引用chord-data又重复三表和同一HSP，独有方向/邻接内容散在小节。\n2）“蛋白坐标则先做CDS投影”没有限定目标为基因组坐标图。",
+      "preserve": "保留端点递增/递减与显示翻转分开的实际记录。",
+      "kind": "教程／专题",
+      "status": "pending"
+    },
+    {
+      "id": "P19",
+      "old": "collinear-build",
+      "priority": "P1",
+      "action": "合并共同首课",
+      "targets": "multi-sequence-start.html#links-and-features",
+      "issues": "1）与chord-build重复骨架、首行HSP和同一CDS；标题含坐标轴却没有独立轴步骤。",
+      "preserve": "表格与第三行位置对应的读图说明保留。",
+      "kind": "教程／专题",
+      "status": "pending"
+    },
+    {
+      "id": "P20",
+      "old": "collinear-tuning",
+      "priority": "P1",
+      "action": "合并布局和轴课，修复学习回路",
+      "targets": "collinear-layout.html#row-spacing",
+      "issues": "1）单页只有行距和标尺，再次初始化骨架/HSP，内容拆得过细。\n2）结尾下一节跳回侧栏更早的collinear-data。",
+      "preserve": "10kb标尺与短序列的比例解释有效。",
+      "kind": "教程／专题",
+      "status": "pending"
+    },
+    {
+      "id": "P21",
+      "old": "collinear-layout",
+      "priority": "P2",
+      "action": "保留第一模块布局进阶，区分通用和专属",
+      "targets": "collinear-layout.html",
+      "issues": "1）与collinear-data重复方向，与views重复segments边界；尚未按四布局组织。\n2）锚点示例用全序列中点，结果与center相同。",
+      "preserve": "基线、单变量、读图、边界、练习齐全，属于较成熟课程。",
+      "kind": "教程／专题",
+      "status": "pending"
+    },
+    {
+      "id": "P22",
+      "old": "collinear-routing",
+      "priority": "P1",
+      "action": "并入多序列连接，线性专属作小节",
+      "targets": "multi-sequence-links.html#cross-row",
+      "issues": "1）标题含路由/避障/比例尺，主要四图讲边框线宽，真正侧绕控制点仅跳往复杂案例。\n2）结尾“首页为标签和连接留空间”是维护备注。",
+      "preserve": "默认邻接与跨行虚线解释必须保留。",
+      "kind": "教程／专题",
+      "status": "pending"
+    },
+    {
+      "id": "P23",
+      "old": "views",
+      "priority": "P1",
+      "action": "重写局部视图工作流，迁出同源/统计综述",
+      "targets": "views.html",
+      "issues": "1）focus→segment→同源/统计概述→又回focus坐标映射，任务线不连续。\n2）英文mapping标题写back to source，代码实际从源位置映射到Cartesian x/y。\n3）中文省略区间20,000–40,000与保留窗口[1,20000]和[40000,55000]边界含糊。",
+      "preserve": "source轴、可逆映射、断点与报告保留。",
+      "kind": "教程／专题",
+      "status": "pending"
+    },
+    {
+      "id": "P24",
+      "old": "homology",
+      "priority": "P2",
+      "action": "保留进阶邻域案例，投影迁专页",
+      "targets": "homology.html",
+      "issues": "1）从DNA一致性检查到成员表、paralog策略、focus，再加蛋白投影，任务跨度大。",
+      "preserve": "名称相同不证明同源、源坐标与局部显示分开很必要。",
+      "kind": "教程／专题",
+      "status": "pending"
+    },
+    {
+      "id": "P25",
+      "old": "collinear",
+      "priority": "P2",
+      "action": "保留高级案例，补侧绕控制点小步推导",
+      "targets": "collinear.html",
+      "issues": "1）66行组合代码一次呈现，控制点依赖布局计算，但基础路由课没有最小侧绕步骤。\n2）旧模块二编号、一行GC章节、重复证据/许可段是维护残留。",
+      "preserve": "局部避障并非全局路由器的限制应保留。",
+      "kind": "教程／专题",
+      "status": "pending"
+    },
+    {
+      "id": "P26",
+      "old": "plasmid-start",
+      "priority": "P1",
+      "action": "合并Circular首图、特征和基本布局",
+      "targets": "circular-start.html#backbone",
+      "issues": "1）仅骨架与中心名，build与tuning再次完整重建同图。\n2）结尾直进build，侧栏下一项却是data。",
+      "preserve": "12点钟原点、坐标方向和拥挤刻度读法简明。",
+      "kind": "教程／专题",
+      "status": "pending"
+    },
+    {
+      "id": "P27",
+      "old": "plasmid-data",
+      "priority": "P1",
+      "action": "重写Circular输入指南，链接公共契约",
+      "targets": "circular-data.html",
+      "issues": "1）骨架与特征列较具体，引物/位点必需项却写“对应geom要求”，无法独立看懂所需输入。\n2）中英细节不同：英文追加pUC19c alias同例说明，其他案例却用不能改名混同来警示。",
+      "preserve": "两列即可画骨架、已有注释不必再识别的区分应成为Circular入口核心。",
+      "kind": "教程／专题",
+      "status": "pending"
+    },
+    {
+      "id": "P28",
+      "old": "plasmid-build",
+      "priority": "P1",
+      "action": "合并Circular首课并修正标题承诺",
+      "targets": "circular-start.html#features-and-labels",
+      "issues": "1）页面标题宣称添加特征、标签、引物和位点，正文只加一条复制起点及名称，引物/位点仅跳综合案例。\n2）重建骨架造成与start重复。",
+      "preserve": "表中区间与新色带及anno文字一一对照，继续保留。",
+      "kind": "教程／专题",
+      "status": "pending"
+    },
+    {
+      "id": "P29",
+      "old": "plasmid-tuning",
+      "priority": "P1",
+      "action": "并Circular首课练习与布局页",
+      "targets": "circular-layout.html#style-and-rotation",
+      "issues": "1）只有single样式与90度旋转，重复基线，与circular-layers再次介绍同内容。\n2）结束跳回plasmid-data，与侧栏顺序及build主线形成回路。",
+      "preserve": "旋转与源区间不变的解释正确。",
+      "kind": "教程／专题",
+      "status": "pending"
+    },
+    {
+      "id": "P30",
+      "old": "recognition",
+      "priority": "P2",
+      "action": "改为可选识别概览，避免充当绘图必经课",
+      "targets": "recognition.html",
+      "issues": "1）搜索、位点解读、通用注释识别、目录边界堆在一页；多为限制说明而少有用户入口决策。\n2）认知重点与primers/restriction-sites及plasmids重复。",
+      "preserve": "计算结果与实验验证分开、来源方法诚实说明必须保留。",
+      "kind": "教程／专题",
+      "status": "pending"
+    },
+    {
+      "id": "P31",
+      "old": "plasmid-catalog",
+      "priority": "P2",
+      "action": "保留图库，改为可筛选案例卡与可复用脚本",
+      "targets": "gallery.html#circular-catalog",
+      "issues": "1）13个独立大图连续堆叠，代码除数据对象外基本相同，少有针对每图的绘图难点解释。\n2）“原文件None而旧PNG显示位点”等历史导出备注出现在末尾主文。",
+      "preserve": "已有非必修图库定位正确；不同密度图形覆盖丰富，应保留资产。",
+      "kind": "教程／专题",
+      "status": "pending"
+    },
+    {
+      "id": "P32",
+      "old": "plasmids",
+      "priority": "P1",
+      "action": "拆为基础完整图与密集图两个案例，公共边界集中",
+      "targets": "plasmids.html\ncircular-dense-case.html",
+      "issues": "1）pUC19完整流程、搜索目录解释、内侧文字限制、保存后又追加独立pETDuet密集案例，两条任务线混在同一长页。\n2）文案同时称自动适配和“显式视野固定尺寸”，未区分viewport范围与导出设备尺寸；重复对齐端点检查也不专属圆图。\n3）有关pUC19c不能靠改名变pUC19与数据页英文alias同例说明需统一。",
+      "preserve": "完整结果与显示子集分开、共享Position以及密集图最终尺寸说明值得保留。",
+      "kind": "教程／专题",
+      "status": "pending"
+    },
+    {
+      "id": "P33",
+      "old": "circular-layers",
+      "priority": "P1",
+      "action": "重组为Circular布局与注释两条任务，控制图量",
+      "targets": "circular-layout.html\ncircular-features.html",
+      "issues": "1）15幅图覆盖骨架样式、band宽度、方向gap、中心文字、形状、stacking，职责跨越多个任务。\n2）开头声称需要完整DNA，而plasmid-data明确已有注释只需长度和表即可。",
+      "preserve": "明确preset同时变多个默认以及共享Position的说明质量很好。",
+      "kind": "教程／专题",
+      "status": "pending"
+    },
+    {
+      "id": "P34",
+      "old": "circular-labels",
+      "priority": "P1",
+      "action": "重写为标签决策课，拆出诊断/实现附录",
+      "targets": "circular-labels.html",
+      "issues": "1）12幅固定/自动/fit对照后，在“练习与自备注释”后继续追加多段实现与修复说明；隐藏刻度、空字符串避免NA、端点未解冲突等没有独立学习层级。\n2）fit/wrap/ellipsis段说从label_wrap=14基线只改label_fit，需明确显式wrap与fit的优先级；正文宣称只变一个设置应与示例执行效果核验。",
+      "preserve": "固定与自动入口区分、相同数据/尺寸对照以及隐藏不等于源缺失都需保留。",
+      "kind": "教程／专题",
+      "status": "pending"
+    },
+    {
+      "id": "P35",
+      "old": "primers",
+      "priority": "P2",
+      "action": "保留可选几何专题，搜索边界迁识别概览",
+      "targets": "primers.html",
+      "issues": "1）八图逐个side/offset/width/label显示，对照完整但重复重绘整张底图；搜索目录/匹配边界又与recognition重复。\n2）页末把完整API导向巨大parameter-atlas，而不是对应函数参考。",
+      "preserve": "真实输入字段、几何量单位、显示子集不等于完整结果的说明保留。",
+      "kind": "教程／专题",
+      "status": "pending"
+    },
+    {
+      "id": "P36",
+      "old": "restriction-sites",
+      "priority": "P2",
+      "action": "保留位点显示专题，拆搜索与绘制责任",
+      "targets": "restriction-sites.html",
+      "issues": "1）七图讲引线/内容/顺序/侧向，随后再次说明搜索与甲基化条件，和recognition/完整案例重复。\n2）min_label_gap默认设备测量、显式基因组比例的不同单位仅表中短句，练习直接让用户增大。",
+      "preserve": "计算切点与绘图位置、全长计数与筛选结果明确区分应保留。",
+      "kind": "教程／专题",
+      "status": "pending"
+    },
+    {
+      "id": "P37",
+      "old": "data",
+      "priority": "P1",
+      "action": "保留并重写为共享数据契约入口",
+      "targets": "data.html",
+      "issues": "1）‘未知链不会被静默改成 +’没有说明 read_gff3() 的 legacy 默认 unstranded='plus'。导入器默认会转换未知链，source_strand 仍保留。\n2）标题承诺表格字段，却把输入表完全外链到 chord-data；最小输入在第64行、校验和修复之后出现；统一 feature_data 的解释隐藏在 foundation。",
+      "preserve": "已有坐标、真实缺失、校验报告、层级键和最小输入意识，是各模块应共享的基础。",
+      "kind": "教程／专题",
+      "status": "pending"
+    },
+    {
+      "id": "P38",
+      "old": "formats",
+      "priority": "P1",
+      "action": "保留格式选择总览，拆出按任务组织的导入食谱",
+      "targets": "formats.html\nimport-sequences.html\nimport-intervals.html\nimport-signals.html\naligned-sequences.html\nimport-relations.html",
+      "issues": "1）字符层段落仍说不附着 Fusion 面板，但同页后续及 Fusion 页已教 register_ggchord_alignment() 后的字符细节。\n2）‘完成后检查’和‘继续’在103–106行；109–497行又加入真实字符、对齐、翻译、信号、VCF、MAF/chain、delta、signature、feature关系、reads桥接及图路径探索。\n3）后半多数格式有代码和重要限制，但输出观察点与下一任务不统一；GFA探索性子集与正式读取接口同在主流程尾部。",
+      "preserve": "真实外部文件、一次坐标转换、来源追溯和可选依赖边界都值得保留。",
+      "kind": "教程／专题",
+      "status": "pending"
+    },
+    {
+      "id": "P39",
+      "old": "alignments",
+      "priority": "P1",
+      "action": "保留为输入选择课，按单位与任务分流",
+      "targets": "alignments.html",
+      "issues": "1）仍引导‘了解三种绘图布局’，未把HSP Dotplot纳入同一类输入的明确出口。\n2）页末无条件进入蛋白→基因组投影；projection又返回alignments。",
+      "preserve": "标准BLAST 12列、绘图6端点、bp/aa单位选择和不代跑比对的说明有用。",
+      "kind": "教程／专题",
+      "status": "pending"
+    },
+    {
+      "id": "P40",
+      "old": "projection",
+      "priority": "P0",
+      "action": "保留，补返回结构与可视化前后对照",
+      "targets": "projection.html",
+      "issues": "1）project_ggchord_features() 跨边界‘可能返回多行’与实现不符：每个输入feature保留一行，切分片段在 segments 列表列。project_ggchord_links() 才按边界拆配对行。\n2）‘真实 BLASTp 读取与投影’链接到 alignments#protein 单位选择表，实际案例是 protein-alignments#projection；本页主要显示表，缺分段图。",
+      "preserve": "强调phase、partial CDS、真实比对证据、投影不等于重新比对是正确的。",
+      "kind": "教程／专题",
+      "status": "pending"
+    },
+    {
+      "id": "P41",
+      "old": "annotations",
+      "priority": "P2",
+      "action": "保留共享特征课，合并重复预设说明",
+      "targets": "annotations.html",
+      "issues": "1）position_plasmid() ‘不构成第四类坐标模式’是三模式时代编号；应说Position不新增Coord。\n2）未先讲统一feature_data、gene/CDS选择、未知链与显式图层data的关系；统一模型另在foundation。",
+      "preserve": "保留真实链、形状语义与局部Position分工；同输入堆叠对照有价值。",
+      "kind": "教程／专题",
+      "status": "pending"
+    },
+    {
+      "id": "P42",
+      "old": "labels",
+      "priority": "P2",
+      "action": "保留弦图标签专题，共享原则去重后纳入模块课",
+      "targets": "labels.html",
+      "issues": "1）通用标题实际主要教弦图；与chord-labels、circular-labels和output标签诊断并存。\n2）完成检查偏概念提醒；缺少‘标签缺失→查目标尺寸/隐藏原因→减少内容或改布局’的实操链。",
+      "preserve": "四条真实CDS的三布局对照、固定/自动位置和隐藏策略解释值得保留。",
+      "kind": "教程／专题",
+      "status": "pending"
+    },
+    {
+      "id": "P43",
+      "old": "tracks",
+      "priority": "P1",
+      "action": "保留真实GC主课，拆计数/统计和高级估计",
+      "targets": "tracks.html\ntracks-statistics.html",
+      "issues": "1）说明仍写bar为相对基线区间值；当前geom_track_bar=count，geom_track_col=identity。主图代码已用col，不能称示例不能运行。\n2）完成检查/继续在75–78行，之后还有保存、独立轨道、窗口边界与源空间估计。\n3）count/identity、物理track与数据position分工在foundation。",
+      "preserve": "从真实DNA计算GC、叠加滑动均值、独立tile band和值域检查形成好实例。",
+      "kind": "教程／专题",
+      "status": "pending"
+    },
+    {
+      "id": "P44",
+      "old": "styling",
+      "priority": "P2",
+      "action": "作为共享样式主课，吸收adjustments并与scale-families分工",
+      "targets": "styling.html",
+      "issues": "1）主讲职责与标度后又链接adjustments重讲；77行继续之后，81–135追加native theme和track覆盖。\n2）query配色很快进入adaptive与track主题大表；scale-families又列完整角色族。",
+      "preserve": "角色aes、固定属性优先、图例/theme责任、目标尺寸策略正确且有对照。",
+      "kind": "教程／专题",
+      "status": "pending"
+    },
+    {
+      "id": "P45",
+      "old": "parameters",
+      "priority": "P2",
+      "action": "保留并改名为按序列与按链设置参数",
+      "targets": "parameters.html",
+      "issues": "1）标题过宽，实际是特定几何参数的向量化/命名覆盖规则。\n2）适用表应连当前Coord契约，尤其自动布局/新Coord限制。",
+      "preserve": "scalar、命名向量、顺序向量与真实双链CDS对照比纯参数表更易学。",
+      "kind": "教程／专题",
+      "status": "pending"
+    },
+    {
+      "id": "P46",
+      "old": "adjustments",
+      "priority": "P2",
+      "action": "合并进共享语法与样式主课，保留旧URL锚点重定向",
+      "targets": "styling.html#mapping",
+      "issues": "1）29行短课重述styling职责与映射，再进parameters；parameters进styling，styling又进adjustments。",
+      "preserve": "geom/coord/position/scale/theme分工和pident映射可作为最小例子。",
+      "kind": "教程／专题",
+      "status": "pending"
+    },
+    {
+      "id": "P47",
+      "old": "output",
+      "priority": "P2",
+      "action": "拆短的输出主课与诊断进阶页",
+      "targets": "output.html\ndiagnostics.html",
+      "issues": "1）主标题保存图片，却混geometry schema、排序优化、碰撞指标、渲染精修预算。\n2）完成检查/下一步之后追加label-quality；部分精修与审核措辞像更新日志。",
+      "preserve": "按物理尺寸构建、按字段名消费公共几何、区分警告与数据事实必要。",
+      "kind": "教程／专题",
+      "status": "pending"
+    },
+    {
+      "id": "P48",
+      "old": "faq",
+      "priority": "P2",
+      "action": "保留，按读者故障任务重写条目与出口",
+      "targets": "faq.html",
+      "issues": "1）‘诊断等于发布认证吗’强调授权发布流程，属于维护治理。\n2）多数答案解释性质，缺能复制的检查命令及结果解读。",
+      "preserve": "尺寸影响标签、gene未知链、非相邻连接和外部分析边界是实际问题。",
+      "kind": "常见问题",
+      "status": "pending"
+    },
+    {
+      "id": "P49",
+      "old": "protein-alignments",
+      "priority": "P2",
+      "action": "保留真实输入课，连接多序列关系/Dotplot并修正入口",
+      "targets": "protein-alignments.html",
+      "issues": "1）此页承担实际案例，但projection回链去单位总览；应成为原生aa与投影分支的例题入口。\n2）可让同输入自选Chord/Collinear/Dotplot之一并保存，验证隐藏非相邻关系没有从表中删除。",
+      "preserve": "真实BLASTp、aa单位、全对关系/邻接显示差异和投影边界已讲清。",
+      "kind": "教程／专题",
+      "status": "pending"
+    },
+    {
+      "id": "P50",
+      "old": "task-index",
+      "priority": "P0",
+      "action": "保留统一任务索引，改由课程manifest生成",
+      "targets": "learn.html#tasks",
+      "issues": "1）segment_ggchord_data() 关键参数写loci，当前为windows；loci属于focus工作流。\n2）A/B/C与三条路线仍是主结构，新Sankey/Dotplot/Radial/Fusion只追加表尾；magnify范围仍Circular/Chord+Collinear。\n3）长表混模式缩写、基础/进阶与参数，没有输入类型/输出目标/前置。",
+      "preserve": "按意图选API与关键参数比字母排序实用，应保留检索价值。",
+      "kind": "任务索引",
+      "status": "pending"
+    },
+    {
+      "id": "P51",
+      "old": "compatibility",
+      "priority": "P1",
+      "action": "重建当前支持入口，保留有范围的旧验证矩阵",
+      "targets": "compatibility.html",
+      "issues": "1）主体三Coord×23层；Dotplot/Radial追加表仅1行，Sankey没有并列总览。\n2）69组/59成功/10拒绝明确限定三模式与有限合成输入，且声明非全部参数。\n3）Fusion注册基因组/字符面板说明已正确，应成为其他页范围摘要的统一事实。",
+      "preserve": "区分实现支持与穷举验收、条件支持、真实验证记录的严谨性应保留。",
+      "kind": "支持矩阵",
+      "status": "pending"
+    },
+    {
+      "id": "P52",
+      "old": "feature-geometry",
+      "priority": "P2",
+      "action": "保留共享几何专题，更新适用范围",
+      "targets": "feature-geometry.html",
+      "issues": "1）末尾只列Chord/Collinear/Circular，未连Radial/Sankey；应分开箭头共性与坐标限制。\n2）箭头构造前先讲ID选邻域，可保留为准备折叠区。",
+      "preserve": "真实局部CDS、三箭头、短特征fallback同输入对照很适合学习。",
+      "kind": "教程／专题",
+      "status": "pending"
+    },
+    {
+      "id": "P53",
+      "old": "scale-families",
+      "priority": "P2",
+      "action": "保留进阶角色查找与配色食谱，和styling去重",
+      "targets": "scale-families.html",
+      "issues": "1）11节涵盖所有scale、别名、staged mapping和theme；与主课职责重叠。\n2）部分家族只列代码/名称，无统一选择规则与对照；末尾练习未逐食谱绑定输出。",
+      "preserve": "统计identity/颜色identity、用户scale优先、角色范围与native guide语义有价值。",
+      "kind": "教程／专题",
+      "status": "pending"
+    },
+    {
+      "id": "P54",
+      "old": "parameter-atlas",
+      "priority": "P0",
+      "action": "保留完整覆盖，修生成元数据并改为可检索基类+差异视图",
+      "targets": "parameter-atlas.html",
+      "issues": "1）geom_track_bar baseline沿用identity列规则，错误允许identity下非零baseline；wrapper明确拒绝任何非零baseline。\n2）map_alignment_position/map_ggchord_position的position被标Position对象/字符串，同一行右侧却说数值。\n3）kind()只看参数名/默认；表格参数一律带‘data可为函数’，空formals都标‘必需/互斥’，包括可选...与theme。\n4）五theme各109参数共545行，占1671约32.6%；另上游theme147行。",
+      "preserve": "157 API条目、1671参数行已逐条结构核对；非空默认表达式与当前signature snapshot一致。它是参考工具，不因3544行就判无用。",
+      "kind": "参数检索",
+      "status": "pending"
+    },
+    {
+      "id": "P55",
+      "old": "workflow-tools",
+      "priority": "P2",
+      "action": "改轻量路由，实质内容归对应主课",
+      "targets": "workflows.html\ndiagnostics.html",
+      "issues": "1）primer目录、尺寸诊断、顺序优化、聚焦轨道和helper总表缺统一目标。\n2）‘完整辅助入口学习位置’只含部分helper，新多格式与字符/CDS流程在formats。",
+      "preserve": "目录不等于搜索结果、focus不跨省略窗口、显式排序优化等边界正确。",
+      "kind": "教程／专题",
+      "status": "pending"
+    },
+    {
+      "id": "P56",
+      "old": "api-curriculum",
+      "priority": "P1",
+      "action": "保留覆盖审计兼索引，由manifest与能力事实生成",
+      "targets": "api-curriculum.html",
+      "issues": "1）export_fusion/fusion_ribbon限制Circular/Chord中心+1–4 Collinear；同表fusion_panel/ggchord_fusion已支持注册图/字符、八方位与嵌套。\n2）geom_track_bar仍要求区间箱；ggchord和多层/scale仍说三坐标，部分补Radial却漏Sankey。\n3）L2/L3及‘综合案例’要核查确实含API可观察效果，通用Chord链接不能替代每个专属API例题。",
+      "preserve": "157项提供主讲/参数/案例关系，且说明等级不保证所有组合，值得保留。",
+      "kind": "API课程索引",
+      "status": "pending"
+    },
+    {
+      "id": "P57",
+      "old": "foundation",
+      "priority": "P1",
+      "action": "拆分重归属，旧URL作迁移与能力地图",
+      "targets": "data.html#feature-data\ninstances.html\nsankey.html\ntracks-statistics.html\nmulti-sequence-views.html#scale",
+      "issues": "1）一页混统一feature_data、A–B–A副本、Sankey、native track、等显示长度、subject tip、legend。\n2）feature_data与gene_data互斥、旧位置参数兼容这段当前正确。",
+      "preserve": "feature_data、source/instance、bar/col正是当前核心，应提升至学习主线。",
+      "kind": "教程／专题",
+      "status": "pending"
+    },
+    {
+      "id": "P58",
+      "old": "view-expansion",
+      "priority": "P1",
+      "action": "拆Dotplot独立模块与多序列Radial课程",
+      "targets": "dotplot.html\nradial-synteny.html",
+      "issues": "1）Dotplot专用geom与Radial复用feature/track是不同数据/显示契约，却作为新增视图混页。\n2）‘复杂Fusion和精细比对轨迹属于后续阶段’太宽；现有Fusion已八方位/嵌套/跨原点/实测路由/自动多面板。",
+      "preserve": "HSP四端点/独立轴、Radial比例、反向映射、支持矩阵都有价值。",
+      "kind": "教程／专题",
+      "status": "pending"
+    },
+    {
+      "id": "P59",
+      "old": "fusion",
+      "priority": "P1",
+      "action": "提升独立模块，拆渐进课程与高级食谱",
+      "targets": "fusion.html\nfusion-start.html\nfusion-routing.html\nfusion-layout.html\nfusion-details.html\nfusion-advanced.html",
+      "issues": "1）402行15节从最小组合到多细节/字符/八方位/嵌套/跨原点/路由/guide/12面板auto/furniture。\n2）前段有渲染例，后半先进布局主要长代码，命名空间/物理预算需要配图读结果。\n3）本页注册字符、8方向/free box/嵌套/auto正确，其它索引仍1–4 Collinear。\n4）成对源窗口段称基因方向来自真实输入，但features只对gene_data_example添加type，未把source_strand恢复到strand；生成脚本明确fixture的strand被交替改写用于展示。\n5）英文前段仍把cross-origin wrapping列为接口外，中文改为显式拆分并指向实测路由；英文章节后面又教wrap=TRUE。magnify导语中文只说Collinear细节，英文多了registered character，但两者都未覆盖已注册/嵌套图的完整范围。",
+      "preserve": "来源区间、独立面板、同单位锚点、细节重建、字符注册、嵌套命名空间与物理导出都应保留。",
+      "kind": "教程／专题",
+      "status": "pending"
+    },
+    {
+      "id": "P60",
+      "old": "about",
+      "priority": "P1",
+      "action": "拆learn唯一课程总览与about项目信息；#modules/#path-*精确迁到四模块。",
+      "targets": "about.html\nlearn.html\nmigration.html",
+      "issues": "1）课程/项目/资产维护混合\n2）父栏目指output.html\n3）三模块概览滞后",
+      "preserve": null,
+      "kind": "项目信息",
+      "status": "pending"
+    },
+    {
+      "id": "P61",
+      "old": "gallery",
+      "priority": "P1",
+      "action": "四模块+任务/类型/难度筛选，默认精选且首屏有图；保留全部图和ID，hash显露目标；案例/脚本/原图分开。",
+      "targets": "gallery.html",
+      "issues": "1）178卡片线性罗列；首屏无图，任务表仅8项\n2）案例/步骤/参数对照未按用途分组\n3）已有lazy loading；HTML目录不等同实际可见目录",
+      "preserve": null,
+      "kind": "图库",
+      "status": "pending"
+    },
+    {
+      "id": "P62",
+      "old": "reference",
+      "priority": "P2",
+      "action": "reference.html明确声明alias；介绍放canonical索引；保留有效旧URL/anchor。",
+      "targets": "reference/index.html",
+      "issues": "1）reference.md正文生成后被redirect覆盖\n2）alias被计为正文页",
+      "preserve": null,
+      "kind": "兼容跳转",
+      "status": "pending"
+    }
+  ],
+  "reference": [
+    {
+      "id": "R001",
+      "topic": "adapt_ggchord",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/adapt_ggchord.html",
+      "status": "pending"
+    },
+    {
+      "id": "R002",
+      "topic": "as.data.frame.ggchord_validation",
+      "kind": "方法",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留资料类型/canonical URL；无examples不自动判缺陷；提供来源或对应工作流/上游文档。",
+      "target": "reference/as.data.frame.ggchord_validation.html",
+      "status": "pending"
+    },
+    {
+      "id": "R003",
+      "topic": "as_ggchord_alignment",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/as_ggchord_alignment.html",
+      "status": "pending"
+    },
+    {
+      "id": "R004",
+      "topic": "as_ggchord_feature",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/as_ggchord_feature.html",
+      "status": "pending"
+    },
+    {
+      "id": "R005",
+      "topic": "as_ggchord_link",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/as_ggchord_link.html",
+      "status": "pending"
+    },
+    {
+      "id": "R006",
+      "topic": "as_ggchord_seq",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/as_ggchord_seq.html",
+      "status": "pending"
+    },
+    {
+      "id": "R007",
+      "topic": "build_ggchord_cds",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/build_ggchord_cds.html",
+      "status": "pending"
+    },
+    {
+      "id": "R008",
+      "topic": "bundle_ggchord_ribbons",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/bundle_ggchord_ribbons.html",
+      "status": "pending"
+    },
+    {
+      "id": "R009",
+      "topic": "clean_ggchord_data",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/clean_ggchord_data.html",
+      "status": "pending"
+    },
+    {
+      "id": "R010",
+      "topic": "coord_chord",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/coord_chord.html",
+      "status": "pending"
+    },
+    {
+      "id": "R011",
+      "topic": "coord_circular",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。\n3）Rd没有examples；按家族补最小例或直接引用共享已验证例，不为每个alias复制。\n4）核心模式仅签名/参数；description重复标题，无最小例或定向课。",
+      "action": "补单序列最小例/结果、原点方向、支持层及Circular模块链接。",
+      "target": "reference/coord_circular.html",
+      "status": "pending"
+    },
+    {
+      "id": "R012",
+      "topic": "coord_collinear",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/coord_collinear.html",
+      "status": "pending"
+    },
+    {
+      "id": "R013",
+      "topic": "coord_dotplot",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/coord_dotplot.html",
+      "status": "pending"
+    },
+    {
+      "id": "R014",
+      "topic": "coord_radial_synteny",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/coord_radial_synteny.html",
+      "status": "pending"
+    },
+    {
+      "id": "R015",
+      "topic": "coord_sankey",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/coord_sankey.html",
+      "status": "pending"
+    },
+    {
+      "id": "R016",
+      "topic": "deduplicate_ggchord_ribbons",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/deduplicate_ggchord_ribbons.html",
+      "status": "pending"
+    },
+    {
+      "id": "R017",
+      "topic": "diagnose_ggchord",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/diagnose_ggchord.html",
+      "status": "pending"
+    },
+    {
+      "id": "R018",
+      "topic": "export_ggchord_fusion",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/export_ggchord_fusion.html",
+      "status": "pending"
+    },
+    {
+      "id": "R019",
+      "topic": "export_ggchord_layout",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/export_ggchord_layout.html",
+      "status": "pending"
+    },
+    {
+      "id": "R020",
+      "topic": "filter_ggchord_ribbons",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/filter_ggchord_ribbons.html",
+      "status": "pending"
+    },
+    {
+      "id": "R021",
+      "topic": "filter_restriction_sites",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/filter_restriction_sites.html",
+      "status": "pending"
+    },
+    {
+      "id": "R022",
+      "topic": "find_common_features",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。\n3）Rd没有examples；按家族补最小例或直接引用共享已验证例，不为每个alias复制。",
+      "action": "保留API/URL，补家族最小例或已验证recipe，完善直接教程/支持范围回链。",
+      "target": "reference/find_common_features.html",
+      "status": "pending"
+    },
+    {
+      "id": "R023",
+      "topic": "find_ggchord_loci",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/find_ggchord_loci.html",
+      "status": "pending"
+    },
+    {
+      "id": "R024",
+      "topic": "find_primer_bindings",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/find_primer_bindings.html",
+      "status": "pending"
+    },
+    {
+      "id": "R025",
+      "topic": "find_restriction_sites",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。\n3）Rd没有examples；按家族补最小例或直接引用共享已验证例，不为每个alias复制。",
+      "action": "保留API/URL，补家族最小例或已验证recipe，完善直接教程/支持范围回链。",
+      "target": "reference/find_restriction_sites.html",
+      "status": "pending"
+    },
+    {
+      "id": "R026",
+      "topic": "focus_ggchord_data",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。\n3）Rd没有examples；按家族补最小例或直接引用共享已验证例，不为每个alias复制。",
+      "action": "保留API/URL，补家族最小例或已验证recipe，完善直接教程/支持范围回链。",
+      "target": "reference/focus_ggchord_data.html",
+      "status": "pending"
+    },
+    {
+      "id": "R027",
+      "topic": "focus_ggchord_track",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/focus_ggchord_track.html",
+      "status": "pending"
+    },
+    {
+      "id": "R028",
+      "topic": "fusion_panel",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/fusion_panel.html",
+      "status": "pending"
+    },
+    {
+      "id": "R029",
+      "topic": "fusion_ribbon",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/fusion_ribbon.html",
+      "status": "pending"
+    },
+    {
+      "id": "R030",
+      "topic": "gene_data_example",
+      "kind": "数据集",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留资料类型/canonical URL；无examples不自动判缺陷；提供来源或对应工作流/上游文档。",
+      "target": "reference/gene_data_example.html",
+      "status": "pending"
+    },
+    {
+      "id": "R031",
+      "topic": "geom_alignment_segment",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/geom_alignment_segment.html",
+      "status": "pending"
+    },
+    {
+      "id": "R032",
+      "topic": "geom_feature",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/geom_feature.html",
+      "status": "pending"
+    },
+    {
+      "id": "R033",
+      "topic": "geom_feature_label",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。\n3）Rd没有examples；按家族补最小例或直接引用共享已验证例，不为每个alias复制。",
+      "action": "保留API/URL，补家族最小例或已验证recipe，完善直接教程/支持范围回链。",
+      "target": "reference/geom_feature_label.html",
+      "status": "pending"
+    },
+    {
+      "id": "R034",
+      "topic": "geom_feature_label_repel",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/geom_feature_label_repel.html",
+      "status": "pending"
+    },
+    {
+      "id": "R035",
+      "topic": "geom_feature_plasmid",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。\n3）Rd没有examples；按家族补最小例或直接引用共享已验证例，不为每个alias复制。",
+      "action": "保留API/URL，补家族最小例或已验证recipe，完善直接教程/支持范围回链。",
+      "target": "reference/geom_feature_plasmid.html",
+      "status": "pending"
+    },
+    {
+      "id": "R036",
+      "topic": "geom_gene",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/geom_gene.html",
+      "status": "pending"
+    },
+    {
+      "id": "R037",
+      "topic": "geom_gene_label",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。\n3）概览仅chord且例子用旧gene_data入口。",
+      "action": "按当前支持更新概览及feature_data例子；旧入口留迁移段，不删兼容。",
+      "target": "reference/geom_gene_label.html",
+      "status": "pending"
+    },
+    {
+      "id": "R038",
+      "topic": "geom_gene_label_repel",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/geom_gene_label_repel.html",
+      "status": "pending"
+    },
+    {
+      "id": "R039",
+      "topic": "geom_link_line",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/geom_link_line.html",
+      "status": "pending"
+    },
+    {
+      "id": "R040",
+      "topic": "geom_link_ribbon",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/geom_link_ribbon.html",
+      "status": "pending"
+    },
+    {
+      "id": "R041",
+      "topic": "geom_primer",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/geom_primer.html",
+      "status": "pending"
+    },
+    {
+      "id": "R042",
+      "topic": "geom_primer_label_repel",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。\n3）Rd没有examples；按家族补最小例或直接引用共享已验证例，不为每个alias复制。",
+      "action": "保留API/URL，补家族最小例或已验证recipe，完善直接教程/支持范围回链。",
+      "target": "reference/geom_primer_label_repel.html",
+      "status": "pending"
+    },
+    {
+      "id": "R043",
+      "topic": "geom_residue",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/geom_residue.html",
+      "status": "pending"
+    },
+    {
+      "id": "R044",
+      "topic": "geom_restriction_site",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。\n3）Rd没有examples；按家族补最小例或直接引用共享已验证例，不为每个alias复制。",
+      "action": "保留API/URL，补家族最小例或已验证recipe，完善直接教程/支持范围回链。",
+      "target": "reference/geom_restriction_site.html",
+      "status": "pending"
+    },
+    {
+      "id": "R045",
+      "topic": "geom_seq",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。\n3）标题/概览仍称arc/chord；通用与视图专属参数需自行推断。",
+      "action": "概览改为序列骨架，按通用/视图专属参数分组，引用唯一兼容矩阵。",
+      "target": "reference/geom_seq.html",
+      "status": "pending"
+    },
+    {
+      "id": "R046",
+      "topic": "geom_seq_break",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/geom_seq_break.html",
+      "status": "pending"
+    },
+    {
+      "id": "R047",
+      "topic": "geom_seq_center_label",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。\n3）Rd没有examples；按家族补最小例或直接引用共享已验证例，不为每个alias复制。",
+      "action": "保留API/URL，补家族最小例或已验证recipe，完善直接教程/支持范围回链。",
+      "target": "reference/geom_seq_center_label.html",
+      "status": "pending"
+    },
+    {
+      "id": "R048",
+      "topic": "geom_seq_label",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。\n3）概览仅描述arc midpoint，但参数已有collinear例外。",
+      "action": "按模式解释放置语义，直连标签教程，保留参数。",
+      "target": "reference/geom_seq_label.html",
+      "status": "pending"
+    },
+    {
+      "id": "R049",
+      "topic": "geom_seq_region",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/geom_seq_region.html",
+      "status": "pending"
+    },
+    {
+      "id": "R050",
+      "topic": "geom_seq_scale",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/geom_seq_scale.html",
+      "status": "pending"
+    },
+    {
+      "id": "R051",
+      "topic": "geom_track",
+      "kind": "函数家族",
+      "priority": "P1",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。\n3）多个入口共用baseline说明；给定值柱可非零不表示geom_track_bar可非零，后者源码直接拒绝。",
+      "action": "按bar/col/通用geom_track分清适用约束，明确bar baseline只能0；保留正确统计/物理band解释。",
+      "target": "reference/geom_track.html",
+      "status": "pending"
+    },
+    {
+      "id": "R052",
+      "topic": "geom_track_tile",
+      "kind": "函数家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/geom_track_tile.html",
+      "status": "pending"
+    },
+    {
+      "id": "R053",
+      "topic": "get_chord_layout",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/get_chord_layout.html",
+      "status": "pending"
+    },
+    {
+      "id": "R054",
+      "topic": "ggchord",
+      "kind": "函数／家族",
+      "priority": "P1",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。\n3）入口description只引Chord/Circular/Collinear，未完整反映六Coord。",
+      "action": "改为当前全局入口概览，链接兼容矩阵和四模块，保持constructor与Fusion容器区别。",
+      "target": "reference/ggchord.html",
+      "status": "pending"
+    },
+    {
+      "id": "R055",
+      "topic": "ggchord_api_contract",
+      "kind": "概念／契约",
+      "priority": "P1",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。\n3）当前canonical契约仍以v0.16.4为范围且仅列三Coord；英文bp-only，汉语已bp或aa，双语语义冲突。",
+      "action": "分离历史冻结记录，核定六Coord/Fusion及bp-aa表述；改roxygen与译文后生成。",
+      "target": "reference/ggchord_api_contract.html",
+      "status": "pending"
+    },
+    {
+      "id": "R056",
+      "topic": "ggchord_data_contract",
+      "kind": "概念／契约",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留资料类型/canonical URL；无examples不自动判缺陷；提供来源或对应工作流/上游文档。",
+      "target": "reference/ggchord_data_contract.html",
+      "status": "pending"
+    },
+    {
+      "id": "R057",
+      "topic": "ggchord_fusion",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/ggchord_fusion.html",
+      "status": "pending"
+    },
+    {
+      "id": "R058",
+      "topic": "ggchord_layout_contract",
+      "kind": "概念／契约",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留资料类型/canonical URL；无examples不自动判缺陷；提供来源或对应工作流/上游文档。",
+      "target": "reference/ggchord_layout_contract.html",
+      "status": "pending"
+    },
+    {
+      "id": "R059",
+      "topic": "ggplot2-helpers",
+      "kind": "上游再导出",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留资料类型/canonical URL；无examples不自动判缺陷；提供来源或对应工作流/上游文档。",
+      "target": "reference/ggplot2-helpers.html",
+      "status": "pending"
+    },
+    {
+      "id": "R060",
+      "topic": "grid-helpers",
+      "kind": "上游再导出",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留资料类型/canonical URL；无examples不自动判缺陷；提供来源或对应工作流/上游文档。",
+      "target": "reference/grid-helpers.html",
+      "status": "pending"
+    },
+    {
+      "id": "R061",
+      "topic": "guide_ggchord_legend",
+      "kind": "函数家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。\n3）Rd没有examples；按家族补最小例或直接引用共享已验证例，不为每个alias复制。",
+      "action": "保留API/URL，补家族最小例或已验证recipe，完善直接教程/支持范围回链。",
+      "target": "reference/guide_ggchord_legend.html",
+      "status": "pending"
+    },
+    {
+      "id": "R062",
+      "topic": "link_ggchord_clusters",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/link_ggchord_clusters.html",
+      "status": "pending"
+    },
+    {
+      "id": "R063",
+      "topic": "magnify_ggchord",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/magnify_ggchord.html",
+      "status": "pending"
+    },
+    {
+      "id": "R064",
+      "topic": "map_alignment_position",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/map_alignment_position.html",
+      "status": "pending"
+    },
+    {
+      "id": "R065",
+      "topic": "map_ggchord_position",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/map_ggchord_position.html",
+      "status": "pending"
+    },
+    {
+      "id": "R066",
+      "topic": "merge_ggchord_ribbons",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/merge_ggchord_ribbons.html",
+      "status": "pending"
+    },
+    {
+      "id": "R067",
+      "topic": "optimize_ggchord_layout",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/optimize_ggchord_layout.html",
+      "status": "pending"
+    },
+    {
+      "id": "R068",
+      "topic": "plasmid_example_pUC19",
+      "kind": "数据集",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留资料类型/canonical URL；无examples不自动判缺陷；提供来源或对应工作流/上游文档。",
+      "target": "reference/plasmid_example_pUC19.html",
+      "status": "pending"
+    },
+    {
+      "id": "R069",
+      "topic": "plus-.ggchord",
+      "kind": "方法",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留资料类型/canonical URL；无examples不自动判缺陷；提供来源或对应工作流/上游文档。",
+      "target": "reference/plus-.ggchord.html",
+      "status": "pending"
+    },
+    {
+      "id": "R070",
+      "topic": "position_feature_stack",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。\n3）Rd没有examples；按家族补最小例或直接引用共享已验证例，不为每个alias复制。",
+      "action": "保留API/URL，补家族最小例或已验证recipe，完善直接教程/支持范围回链。",
+      "target": "reference/position_feature_stack.html",
+      "status": "pending"
+    },
+    {
+      "id": "R071",
+      "topic": "position_plasmid",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。\n3）Rd没有examples；按家族补最小例或直接引用共享已验证例，不为每个alias复制。",
+      "action": "保留API/URL，补家族最小例或已验证recipe，完善直接教程/支持范围回链。",
+      "target": "reference/position_plasmid.html",
+      "status": "pending"
+    },
+    {
+      "id": "R072",
+      "topic": "position_strand",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。\n3）Rd没有examples；按家族补最小例或直接引用共享已验证例，不为每个alias复制。",
+      "action": "保留API/URL，补家族最小例或已验证recipe，完善直接教程/支持范围回链。",
+      "target": "reference/position_strand.html",
+      "status": "pending"
+    },
+    {
+      "id": "R073",
+      "topic": "position_track",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/position_track.html",
+      "status": "pending"
+    },
+    {
+      "id": "R074",
+      "topic": "prepare_ggchord_data",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/prepare_ggchord_data.html",
+      "status": "pending"
+    },
+    {
+      "id": "R075",
+      "topic": "primer_catalog",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/primer_catalog.html",
+      "status": "pending"
+    },
+    {
+      "id": "R076",
+      "topic": "print.ggchord_clean",
+      "kind": "方法",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留资料类型/canonical URL；无examples不自动判缺陷；提供来源或对应工作流/上游文档。",
+      "target": "reference/print.ggchord_clean.html",
+      "status": "pending"
+    },
+    {
+      "id": "R077",
+      "topic": "project_ggchord_features",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/project_ggchord_features.html",
+      "status": "pending"
+    },
+    {
+      "id": "R078",
+      "topic": "project_ggchord_links",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/project_ggchord_links.html",
+      "status": "pending"
+    },
+    {
+      "id": "R079",
+      "topic": "protein_ribbon_data_example",
+      "kind": "数据集",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留资料类型/canonical URL；无examples不自动判缺陷；提供来源或对应工作流/上游文档。",
+      "target": "reference/protein_ribbon_data_example.html",
+      "status": "pending"
+    },
+    {
+      "id": "R080",
+      "topic": "protein_seq_data_example",
+      "kind": "数据集",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留资料类型/canonical URL；无examples不自动判缺陷；提供来源或对应工作流/上游文档。",
+      "target": "reference/protein_seq_data_example.html",
+      "status": "pending"
+    },
+    {
+      "id": "R081",
+      "topic": "read_aligned_fasta",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/read_aligned_fasta.html",
+      "status": "pending"
+    },
+    {
+      "id": "R082",
+      "topic": "read_bed",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/read_bed.html",
+      "status": "pending"
+    },
+    {
+      "id": "R083",
+      "topic": "read_bedgraph",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/read_bedgraph.html",
+      "status": "pending"
+    },
+    {
+      "id": "R084",
+      "topic": "read_bedpe",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/read_bedpe.html",
+      "status": "pending"
+    },
+    {
+      "id": "R085",
+      "topic": "read_bigwig",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/read_bigwig.html",
+      "status": "pending"
+    },
+    {
+      "id": "R086",
+      "topic": "read_blast",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/read_blast.html",
+      "status": "pending"
+    },
+    {
+      "id": "R087",
+      "topic": "read_chain",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/read_chain.html",
+      "status": "pending"
+    },
+    {
+      "id": "R088",
+      "topic": "read_delta",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/read_delta.html",
+      "status": "pending"
+    },
+    {
+      "id": "R089",
+      "topic": "read_fasta_lengths",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/read_fasta_lengths.html",
+      "status": "pending"
+    },
+    {
+      "id": "R090",
+      "topic": "read_feature_relations",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/read_feature_relations.html",
+      "status": "pending"
+    },
+    {
+      "id": "R091",
+      "topic": "read_genbank",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/read_genbank.html",
+      "status": "pending"
+    },
+    {
+      "id": "R092",
+      "topic": "read_gff3",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/read_gff3.html",
+      "status": "pending"
+    },
+    {
+      "id": "R093",
+      "topic": "read_maf",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/read_maf.html",
+      "status": "pending"
+    },
+    {
+      "id": "R094",
+      "topic": "read_paf",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/read_paf.html",
+      "status": "pending"
+    },
+    {
+      "id": "R095",
+      "topic": "read_signature_matches",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/read_signature_matches.html",
+      "status": "pending"
+    },
+    {
+      "id": "R096",
+      "topic": "read_vcf",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/read_vcf.html",
+      "status": "pending"
+    },
+    {
+      "id": "R097",
+      "topic": "register_ggchord_alignment",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/register_ggchord_alignment.html",
+      "status": "pending"
+    },
+    {
+      "id": "R098",
+      "topic": "restriction_site_example",
+      "kind": "数据集",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留资料类型/canonical URL；无examples不自动判缺陷；提供来源或对应工作流/上游文档。",
+      "target": "reference/restriction_site_example.html",
+      "status": "pending"
+    },
+    {
+      "id": "R099",
+      "topic": "ribbon_data_example",
+      "kind": "数据集",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留资料类型/canonical URL；无examples不自动判缺陷；提供来源或对应工作流/上游文档。",
+      "target": "reference/ribbon_data_example.html",
+      "status": "pending"
+    },
+    {
+      "id": "R100",
+      "topic": "scale_feature_fill_plasmid",
+      "kind": "函数家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。\n3）Rd没有examples；按家族补最小例或直接引用共享已验证例，不为每个alias复制。",
+      "action": "保留API/URL，补家族最小例或已验证recipe，完善直接教程/支持范围回链。",
+      "target": "reference/scale_feature_fill_plasmid.html",
+      "status": "pending"
+    },
+    {
+      "id": "R101",
+      "topic": "scale_feature_shape_manual",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。\n3）Rd没有examples；按家族补最小例或直接引用共享已验证例，不为每个alias复制。",
+      "action": "保留API/URL，补家族最小例或已验证recipe，完善直接教程/支持范围回链。",
+      "target": "reference/scale_feature_shape_manual.html",
+      "status": "pending"
+    },
+    {
+      "id": "R102",
+      "topic": "scale_gene_fill_manual",
+      "kind": "函数家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。\n3）Rd没有examples；按家族补最小例或直接引用共享已验证例，不为每个alias复制。",
+      "action": "保留API/URL，补家族最小例或已验证recipe，完善直接教程/支持范围回链。",
+      "target": "reference/scale_gene_fill_manual.html",
+      "status": "pending"
+    },
+    {
+      "id": "R103",
+      "topic": "scale_link",
+      "kind": "函数家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。\n3）Rd没有examples；按家族补最小例或直接引用共享已验证例，不为每个alias复制。",
+      "action": "保留API/URL，补家族最小例或已验证recipe，完善直接教程/支持范围回链。",
+      "target": "reference/scale_link.html",
+      "status": "pending"
+    },
+    {
+      "id": "R104",
+      "topic": "scale_ribbon_alpha_continuous",
+      "kind": "函数家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。\n3）Rd没有examples；按家族补最小例或直接引用共享已验证例，不为每个alias复制。",
+      "action": "保留API/URL，补家族最小例或已验证recipe，完善直接教程/支持范围回链。",
+      "target": "reference/scale_ribbon_alpha_continuous.html",
+      "status": "pending"
+    },
+    {
+      "id": "R105",
+      "topic": "scale_ribbon_fill_stepsn",
+      "kind": "函数家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。\n3）Rd没有examples；按家族补最小例或直接引用共享已验证例，不为每个alias复制。",
+      "action": "保留API/URL，补家族最小例或已验证recipe，完善直接教程/支持范围回链。",
+      "target": "reference/scale_ribbon_fill_stepsn.html",
+      "status": "pending"
+    },
+    {
+      "id": "R106",
+      "topic": "scale_seq_colour_manual",
+      "kind": "函数家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。\n3）Rd没有examples；按家族补最小例或直接引用共享已验证例，不为每个alias复制。",
+      "action": "保留API/URL，补家族最小例或已验证recipe，完善直接教程/支持范围回链。",
+      "target": "reference/scale_seq_colour_manual.html",
+      "status": "pending"
+    },
+    {
+      "id": "R107",
+      "topic": "scale_seq_position_continuous",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/scale_seq_position_continuous.html",
+      "status": "pending"
+    },
+    {
+      "id": "R108",
+      "topic": "scale_seq_ring_manual",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。\n3）Rd没有examples；按家族补最小例或直接引用共享已验证例，不为每个alias复制。",
+      "action": "保留API/URL，补家族最小例或已验证recipe，完善直接教程/支持范围回链。",
+      "target": "reference/scale_seq_ring_manual.html",
+      "status": "pending"
+    },
+    {
+      "id": "R109",
+      "topic": "scale_track_fill_gradientn",
+      "kind": "函数家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/scale_track_fill_gradientn.html",
+      "status": "pending"
+    },
+    {
+      "id": "R110",
+      "topic": "scale_track_value_continuous",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/scale_track_value_continuous.html",
+      "status": "pending"
+    },
+    {
+      "id": "R111",
+      "topic": "segment_ggchord_data",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/segment_ggchord_data.html",
+      "status": "pending"
+    },
+    {
+      "id": "R112",
+      "topic": "seq_data_example",
+      "kind": "数据集",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留资料类型/canonical URL；无examples不自动判缺陷；提供来源或对应工作流/上游文档。",
+      "target": "reference/seq_data_example.html",
+      "status": "pending"
+    },
+    {
+      "id": "R113",
+      "topic": "single_gene_example",
+      "kind": "数据集",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留资料类型/canonical URL；无examples不自动判缺陷；提供来源或对应工作流/上游文档。",
+      "target": "reference/single_gene_example.html",
+      "status": "pending"
+    },
+    {
+      "id": "R114",
+      "topic": "single_genome_example",
+      "kind": "数据集",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留资料类型/canonical URL；无examples不自动判缺陷；提供来源或对应工作流/上游文档。",
+      "target": "reference/single_genome_example.html",
+      "status": "pending"
+    },
+    {
+      "id": "R115",
+      "topic": "stat_ribbon_bundle",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。\n3）Rd没有examples；按家族补最小例或直接引用共享已验证例，不为每个alias复制。",
+      "action": "保留API/URL，补家族最小例或已验证recipe，完善直接教程/支持范围回链。",
+      "target": "reference/stat_ribbon_bundle.html",
+      "status": "pending"
+    },
+    {
+      "id": "R116",
+      "topic": "stat_ribbon_density",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。\n3）Rd没有examples；按家族补最小例或直接引用共享已验证例，不为每个alias复制。",
+      "action": "保留API/URL，补家族最小例或已验证recipe，完善直接教程/支持范围回链。",
+      "target": "reference/stat_ribbon_density.html",
+      "status": "pending"
+    },
+    {
+      "id": "R117",
+      "topic": "theme_ggchord",
+      "kind": "函数家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。\n3）Rd没有examples；按家族补最小例或直接引用共享已验证例，不为每个alias复制。\n4）五预设重复109参数签名；说明以chord为中心且无最小例。",
+      "action": "保留全部参数/alias，基类设置组+预设差异表；补一个共享最小示例与技巧课链接。",
+      "target": "reference/theme_ggchord.html",
+      "status": "pending"
+    },
+    {
+      "id": "R118",
+      "topic": "translate_ggchord_cds",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/translate_ggchord_cds.html",
+      "status": "pending"
+    },
+    {
+      "id": "R119",
+      "topic": "validate_ggchord_data",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/validate_ggchord_data.html",
+      "status": "pending"
+    },
+    {
+      "id": "R120",
+      "topic": "validate_ggchord_hierarchy",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/validate_ggchord_hierarchy.html",
+      "status": "pending"
+    },
+    {
+      "id": "R121",
+      "topic": "view_ggchord",
+      "kind": "函数／家族",
+      "priority": "P2",
+      "issues": "1）参考父导航指task-index而非canonical参考总览。\n2）通用教程回链指about，应按API直接绑定。",
+      "action": "保留API/URL和已有示例，完善直接教程/支持范围回链。",
+      "target": "reference/view_ggchord.html",
+      "status": "pending"
+    },
+    {
+      "id": "R122",
+      "topic": "index",
+      "kind": "索引",
+      "priority": "P2",
+      "issues": "父导航错误地指向任务索引，通用教程回链指向 about；应明确参考索引角色。",
+      "action": "保留唯一API索引及完整职责家族；父导航修正，reference.html只做别名；索引介绍采用明确单一来源。",
+      "target": "reference/index.html",
+      "status": "pending"
+    }
+  ],
+  "conflicts": [
+    {
+      "id": "V01",
+      "priority": "P0",
+      "topic": "feature投影返回行数",
+      "old": "projection把project_ggchord_features跨段描述为返回多行。",
+      "contract": "每个输入feature生成一行，分段在segments列表列；project_ggchord_links才按双方CDS边界拆连接行。",
+      "action": "分别写两函数返回模型；加入跨段feature一行+segments和link多行对照，校验source_row/parent身份。",
+      "status": "pending"
+    },
+    {
+      "id": "V02",
+      "priority": "P0",
+      "topic": "segment参数写错",
+      "old": "task-index给segment_ggchord_data的关键参数写loci。",
+      "contract": "正式签名是windows；focus工作流用loci。",
+      "action": "更改任务索引来源元数据为windows；索引关键参数验证需和每个API正式签名对应。",
+      "status": "pending"
+    },
+    {
+      "id": "V03",
+      "priority": "P1",
+      "topic": "Fusion被写成最多四个Collinear面板",
+      "old": "api-curriculum的export_ggchord_fusion和fusion_ribbon行限定Circular/Chord中心+1–4横纵Collinear；task-index的magnify范围也只列旧组合。",
+      "contract": "fusion_panel接受注册基因组图、嵌套Fusion与注册Cartesian字符；支持八方位、box/angle与auto，auto受物理空间限制而非固定四个。Dotplot/facet/未注册外部图仍不支持。",
+      "action": "统一能力事实，以‘支持的面板类型+布局条件+明确拒绝’描述；把1–4仅保留在明确最小示例范围，不当全局上限。",
+      "status": "pending"
+    },
+    {
+      "id": "V04",
+      "priority": "P1",
+      "topic": "字符细节被笼统排除Fusion",
+      "old": "formats称geom_residue不把字符附着到骨架Coord或Fusion面板。",
+      "contract": "geom_residue仍为Cartesian层，不直接投射到骨架Coord；有来源映射的Cartesian字符图可通过register_ggchord_alignment注册后用于Fusion/magnify。",
+      "action": "拆开两句说明直接骨架投影限制与显式注册工作流，链接字符细节课，不承诺未注册自动适配。",
+      "status": "pending"
+    },
+    {
+      "id": "V05",
+      "priority": "P1",
+      "topic": "未知链保留声明缺GFF3默认例外",
+      "old": "data绝对表述未知链不会静默改为+。",
+      "contract": "read_gff3默认unstranded=c('plus','drop','keep')的首项plus，确会转换；source_strand保留；完整数据契约已说明legacy例外并推荐keep。",
+      "action": "入门数据契约明确这一例外，所有教学GFF3读取显式unstranded='keep'；不擅自更改兼容默认。",
+      "status": "pending"
+    },
+    {
+      "id": "V06",
+      "priority": "P0",
+      "topic": "bar非零baseline被错误允许",
+      "old": "atlas geom_track_bar baseline描述非零值只需position='identity'，复用了给定数值柱约束。",
+      "contract": "geom_track_bar wrapper对任何baseline!=0直接报错，并指向geom_track_col；general geom_track的identity列基线规则并非全错。",
+      "action": "在共享文档中明确bar零基线例外，保留identity列正确规则；为别名/快捷层增加API上下文约束，不只改生成HTML。",
+      "status": "pending"
+    },
+    {
+      "id": "V07",
+      "priority": "P0",
+      "topic": "数值position误标成ggplot Position",
+      "old": "atlas两个map函数的position类型栏写Position对象或字符串。",
+      "contract": "map_alignment_position接受正整数或NA；map_ggchord_position接受数值坐标，Radial逆映射接受x/y矩阵/框；右侧Rd说明本来正确。",
+      "action": "修generate-parameter-atlas.kind以(api,parameter)为键或显式类型元数据，保留正确Rd说明；反例应覆盖同名不同义的position。",
+      "status": "pending"
+    },
+    {
+      "id": "V08",
+      "priority": "P2",
+      "topic": "空formals一律标必需/互斥",
+      "old": "atlas把没有形式默认表达式都标成必需/互斥，包含可选...及上游theme大量可省略参数。",
+      "contract": "空的formal expression不能单独确定requiredness；R函数可检查missing或省略参数，...也可以为空。审计未发现非空默认表达式与snapshot不符。",
+      "action": "分开formal default与requiredness，明确‘无形式默认’；按API定义required/optional/alternative/forwarded。不能把330个空表达式说成330个默认值错误。",
+      "status": "pending"
+    },
+    {
+      "id": "V09",
+      "priority": "P2",
+      "topic": "表格形参套用layer data函数输入规则",
+      "old": "atlas feature_data/seq_data等行统一带‘data还可为函数’，没有函数上下文。",
+      "contract": "geom层data可有ggplot2函数语义，但project_ggchord_features明确只接受data.frame；该行右侧仍有正确data.frame说明，因此判为类型栏歧义。",
+      "action": "仅对真的支持data函数的图层参数显示这一类型；统一表格输入也需区分GRanges/Seqinfo等API特定允许类型。",
+      "status": "pending"
+    },
+    {
+      "id": "V10",
+      "priority": "P1",
+      "topic": "旧三模式教学框架压住新能力",
+      "old": "alignments/api-curriculum/task-index仍三模式；annotations说不构成第四种；compatibility主矩阵三种，另小表补Dotplot/Radial而缺Sankey。",
+      "contract": "NAMESPACE公开六Coord；用户接受的教学架构是多序列关系四Coord、单序列Circular、HSP Dotplot、Fusion四模块。Fusion是组合体系，不是第七Coord。",
+      "action": "更新当前总览/路径/能力摘要；‘Position不是Coord’替代编号；69组旧三模式验证保留限定范围与日期，不能当错误删除。",
+      "status": "pending"
+    },
+    {
+      "id": "V11",
+      "priority": "P1",
+      "topic": "bar=count与col=identity解释不同步",
+      "old": "tracks仍把bar说成给定区间值；api-curriculum虽用Count标题，却要求区间箱。",
+      "contract": "geom_track_bar默认count计同位置观测；geom_track_col identity画给定值；bin才要求binwidth/breaks。当前tracks实际示例已用col，代码不能据此判错。",
+      "action": "统一给定值称col，计数称bar；以两行事件数据对照，不要求count事先分箱；保留bar外观作为普通名词时明确无关API。",
+      "status": "pending"
+    },
+    {
+      "id": "V12",
+      "priority": "P2",
+      "topic": "复杂Fusion属于后续阶段",
+      "old": "view-expansion仍笼统称复杂Fusion和精细比对轨迹为后续阶段。",
+      "contract": "当前已实现八方位/box、嵌套、跨原点、实测路由和auto；Dotplot未注册Fusion端点等具体限制依旧有效。‘复杂’没有可校验范围。",
+      "action": "改为确切未支持项及其版本；将路线图置于有日期的开发页，当前教程不使用无边界未来承诺。",
+      "status": "pending"
+    },
+    {
+      "id": "V13",
+      "priority": "P1",
+      "topic": "Fusion成对窗口例子未恢复真实源链",
+      "old": "fusion#paired-detail声称基因方向来自真实输入，但features <- gene_data_example |> mutate(type='gene')，随后直接geom_gene。",
+      "contract": "项目生成脚本把源链另存source_strand后交替改写fixture.strand；其它正确教程用strand=source_strand。该literal示例未做恢复。",
+      "action": "准备feature_data时显式strand=source_strand并使用明确type='CDS'或适当真实分类；恢复来源数据后重渲染例子与导出；例子准备阶段断言strand与source_strand一致。",
+      "status": "pending"
+    },
+    {
+      "id": "V14",
+      "priority": "P1",
+      "topic": "Fusion英文旧限制与后文新能力不一致",
+      "old": "EN#export仍把cross-origin wrapping列为接口外，ZH对应段改为明确拆分并链接实测路由；EN#origin-detail已解释wrap=TRUE。magnify导语ZH仅Collinear细节，EN含registered character，但均列旧的源图类型。",
+      "contract": "magnify接受registered genomic plot或nested Fusion；region可显式wrap=TRUE、两选定叶须匹配完整源长度，派生为两片并保留原始行。注册字符细节已支持。普通Fusion ribbon输入与magnify的wrap helper应分别说明。",
+      "action": "从当前精确契约同步两语；前段说清‘普通连接需要预备连续区间；跨原点选区见magnify wrap’；路由按direct/avoid/bundle区分，而非暗示已有全局最优/任意避障。",
+      "status": "pending"
+    },
+    {
+      "id": "MIG-14",
+      "priority": "P1",
+      "topic": "仍存在的公开别名被错误退役",
+      "old": "14 个旧参考网址被标为无精确等价的历史页面。",
+      "contract": "这些名字仍在当前 Rd alias 中，有明确 canonical API 家族页。",
+      "action": "逐个恢复到当前家族页；优先映射到 alias 的稳定 usage 锚点。",
+      "status": "pending"
+    }
+  ],
+  "urls": [
+    {
+      "path": "404.html",
+      "kind": "历史说明",
+      "target": "https://dangjem.github.io/ggchord/404.html",
+      "action": "保留根404作为双语恢复页，不跳转到函数索引；旧地址与随机不存在地址分别检查。",
+      "status": "pending"
+    },
+    {
+      "path": "articles/ggchord_guide_hans.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/zh/real-data.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "articles/ggchord_vignette.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/real-data.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "articles/index.html",
+      "kind": "历史说明",
+      "target": null,
+      "action": "保留历史说明及替代路线；不计为当前教程。",
+      "status": "pending"
+    },
+    {
+      "path": "authors.html",
+      "kind": "历史说明",
+      "target": "https://dangjem.github.io/ggchord/en/authors.html",
+      "action": "直接映射当前同名规范页面；不要保留退役声明。 authors#citation保留；其他旧锚点从历史表精确映射。",
+      "status": "pending"
+    },
+    {
+      "path": "DESIGN-ROADMAP.html",
+      "kind": "历史说明",
+      "target": null,
+      "action": "保留历史说明及替代路线；不计为当前教程。",
+      "status": "pending"
+    },
+    {
+      "path": "en/404.html",
+      "kind": "辅助页",
+      "target": null,
+      "action": "设置project/utility类型和显式父级；从页脚/关于可达。 显示当前语言的找回提示、搜索及主要入口；未知地址HTTP状态另作运行验收。",
+      "status": "pending"
+    },
+    {
+      "path": "en/about.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/adjustments.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/alignments.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/annotations.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/api-curriculum.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/authors.html",
+      "kind": "辅助页",
+      "target": null,
+      "action": "设置project/utility类型和显式父级；从页脚/关于可达。 保留引用与BibTeX；中文本地化导航标题、小标题和作者角色，不改正式书目信息。",
+      "status": "pending"
+    },
+    {
+      "path": "en/chord-branches.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/chord-build.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/chord-data.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/chord-geometry.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/chord-import.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/chord-labels.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/chord-routing.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/chord-start.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/chord-tuning.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/chord.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/circular-labels.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/circular-layers.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/collinear-build.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/collinear-data.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/collinear-layout.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/collinear-routing.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/collinear-start.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/collinear-tuning.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/collinear.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/compatibility.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/data.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/faq.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/feature-geometry.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/formats.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/foundation.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/fusion.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/gallery.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/homology.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/index.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/installation.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/labels.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/LICENSE-text.html",
+      "kind": "辅助页",
+      "target": null,
+      "action": "设置project/utility类型和显式父级；从页脚/关于可达。 标明版权元信息角色并双向链接完整许可；本地化页面外壳。",
+      "status": "pending"
+    },
+    {
+      "path": "en/LICENSE.html",
+      "kind": "辅助页",
+      "target": null,
+      "action": "设置project/utility类型和显式父级；从页脚/关于可达。 将title/H1修为MIT License（英文）或MIT许可（中文）；法律原文保持完整。",
+      "status": "pending"
+    },
+    {
+      "path": "en/modes.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/output.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/parameter-atlas.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/parameters.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/plasmid-build.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/plasmid-catalog.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/plasmid-data.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/plasmid-start.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/plasmid-tuning.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/plasmids.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/primers.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/projection.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/protein-alignments.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/real-data.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/recognition.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference.html",
+      "kind": "参考兼容入口",
+      "target": "https://dangjem.github.io/ggchord/en/reference/index.html",
+      "action": "明确声明为 alias，保留旧 URL／锚点。",
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/adapt_ggchord.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/as_ggchord_alignment.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/as_ggchord_feature.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/as_ggchord_link.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/as_ggchord_seq.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/as.data.frame.ggchord_validation.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/build_ggchord_cds.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/bundle_ggchord_ribbons.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/clean_ggchord_data.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/coord_chord.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/coord_circular.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/coord_collinear.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/coord_dotplot.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/coord_radial_synteny.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/coord_sankey.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/deduplicate_ggchord_ribbons.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/diagnose_ggchord.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/export_ggchord_fusion.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/export_ggchord_layout.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/filter_ggchord_ribbons.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/filter_restriction_sites.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/find_common_features.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/find_ggchord_loci.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/find_primer_bindings.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/find_restriction_sites.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/focus_ggchord_data.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/focus_ggchord_track.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/fusion_panel.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/fusion_ribbon.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/gene_data_example.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/geom_alignment_segment.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/geom_feature_label_repel.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/geom_feature_label.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/geom_feature_plasmid.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/geom_feature.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/geom_gene_label_repel.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/geom_gene_label.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/geom_gene.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/geom_link_line.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/geom_link_ribbon.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/geom_primer_label_repel.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/geom_primer.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/geom_residue.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/geom_restriction_site.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/geom_seq_break.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/geom_seq_center_label.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/geom_seq_label.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/geom_seq_region.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/geom_seq_scale.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/geom_seq.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/geom_track_tile.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/geom_track.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/get_chord_layout.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/ggchord_api_contract.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/ggchord_data_contract.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/ggchord_fusion.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/ggchord_layout_contract.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/ggchord.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/ggplot2-helpers.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/grid-helpers.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/guide_ggchord_legend.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/index.html",
+      "kind": "参考索引",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/link_ggchord_clusters.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/magnify_ggchord.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/map_alignment_position.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/map_ggchord_position.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/merge_ggchord_ribbons.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/optimize_ggchord_layout.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/plasmid_example_pUC19.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/plus-.ggchord.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/position_feature_stack.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/position_plasmid.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/position_strand.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/position_track.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/prepare_ggchord_data.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/primer_catalog.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/print.ggchord_clean.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/project_ggchord_features.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/project_ggchord_links.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/protein_ribbon_data_example.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/protein_seq_data_example.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/read_aligned_fasta.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/read_bed.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/read_bedgraph.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/read_bedpe.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/read_bigwig.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/read_blast.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/read_chain.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/read_delta.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/read_fasta_lengths.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/read_feature_relations.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/read_genbank.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/read_gff3.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/read_maf.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/read_paf.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/read_signature_matches.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/read_vcf.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/register_ggchord_alignment.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/restriction_site_example.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/ribbon_data_example.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/scale_feature_fill_plasmid.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/scale_feature_shape_manual.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/scale_gene_fill_manual.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/scale_link.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/scale_ribbon_alpha_continuous.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/scale_ribbon_fill_stepsn.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/scale_seq_colour_manual.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/scale_seq_position_continuous.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/scale_seq_ring_manual.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/scale_track_fill_gradientn.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/scale_track_value_continuous.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/segment_ggchord_data.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/seq_data_example.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/single_gene_example.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/single_genome_example.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/stat_ribbon_bundle.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/stat_ribbon_density.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/theme_ggchord.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/translate_ggchord_cds.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/validate_ggchord_data.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/validate_ggchord_hierarchy.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/reference/view_ggchord.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/restriction-sites.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/ribbon-statistics.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/ribbons.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/scale-families.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/styling.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/task-index.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/tracks.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/view-expansion.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/views.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "en/workflow-tools.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "index.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/index.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "LICENSE-text.html",
+      "kind": "历史说明",
+      "target": "https://dangjem.github.io/ggchord/en/LICENSE-text.html",
+      "action": "直接映射当前同名规范页面；不要保留退役声明。 逐项核旧锚点；无锚点路径直接映射。",
+      "status": "pending"
+    },
+    {
+      "path": "LICENSE.html",
+      "kind": "历史说明",
+      "target": "https://dangjem.github.io/ggchord/en/LICENSE.html",
+      "action": "直接映射当前同名规范页面；不要保留退役声明。 逐项核旧锚点；无锚点路径直接映射。",
+      "status": "pending"
+    },
+    {
+      "path": "news/index.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/assets/NEWS.md",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "README-Hans.html",
+      "kind": "历史说明",
+      "target": "https://dangjem.github.io/ggchord/zh/index.html",
+      "action": "若不建立完整README镜像则不声称精确等价；说明旧内容来源，给中文教程首页和固定版本README链接。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/adapt_ggchord.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/adapt_ggchord.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/add_validation_issue.html",
+      "kind": "历史说明",
+      "target": null,
+      "action": "保留历史说明及替代路线；不计为当前教程。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/as_ggchord_alignment.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/as_ggchord_alignment.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/as_ggchord_feature.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/as_ggchord_feature.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/as_ggchord_link.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/as_ggchord_link.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/as_ggchord_seq.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/as_ggchord_seq.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/as.data.frame.ggchord_validation.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/as.data.frame.ggchord_validation.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/attach_ggchord_scales.html",
+      "kind": "历史说明",
+      "target": null,
+      "action": "保留历史说明及替代路线；不计为当前教程。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/bezier_pts.html",
+      "kind": "历史说明",
+      "target": null,
+      "action": "保留历史说明及替代路线；不计为当前教程。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/breakPointsFunc.html",
+      "kind": "历史说明",
+      "target": null,
+      "action": "保留历史说明及替代路线；不计为当前教程。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/build_ggchord_cds.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/build_ggchord_cds.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/bundle_ggchord_ribbons.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/bundle_ggchord_ribbons.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/chord_default_palette.html",
+      "kind": "历史说明",
+      "target": null,
+      "action": "保留历史说明及替代路线；不计为当前教程。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/chord_palette_set1.html",
+      "kind": "历史说明",
+      "target": null,
+      "action": "保留历史说明及替代路线；不计为当前教程。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/chordPlotFunc.html",
+      "kind": "历史说明",
+      "target": null,
+      "action": "保留历史说明及替代路线；不计为当前教程。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/classify_ggchord_layers.html",
+      "kind": "历史说明",
+      "target": null,
+      "action": "保留历史说明及替代路线；不计为当前教程。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/clean_ggchord_data.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/clean_ggchord_data.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/clear_chord_env.html",
+      "kind": "历史说明",
+      "target": null,
+      "action": "保留历史说明及替代路线；不计为当前教程。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/compute_chord_layout.html",
+      "kind": "历史说明",
+      "target": null,
+      "action": "保留历史说明及替代路线；不计为当前教程。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/coord_chord.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/coord_chord.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/coord_circular.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/coord_circular.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/coord_collinear.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/coord_collinear.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/coord_dotplot.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/coord_dotplot.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/coord_radial_synteny.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/coord_radial_synteny.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/coord_sankey.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/coord_sankey.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/deduplicate_ggchord_ribbons.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/deduplicate_ggchord_ribbons.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/diagnose_ggchord.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/diagnose_ggchord.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/dot-chord_env.html",
+      "kind": "历史说明",
+      "target": null,
+      "action": "保留历史说明及替代路线；不计为当前教程。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/draw_key_gene_arrow.html",
+      "kind": "历史说明",
+      "target": null,
+      "action": "保留历史说明及替代路线；不计为当前教程。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/export_ggchord_fusion.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/export_ggchord_fusion.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/export_ggchord_layout.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/export_ggchord_layout.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/extract_gff3_attr.html",
+      "kind": "历史说明",
+      "target": null,
+      "action": "保留历史说明及替代路线；不计为当前教程。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/extract_ggchord_layer_data.html",
+      "kind": "历史说明",
+      "target": null,
+      "action": "保留历史说明及替代路线；不计为当前教程。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/filter_ggchord_ribbons.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/filter_ggchord_ribbons.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/filter_restriction_sites.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/filter_restriction_sites.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/find_common_features.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/find_common_features.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/find_ggchord_loci.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/find_ggchord_loci.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/find_primer_bindings.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/find_primer_bindings.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/find_restriction_sites.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/find_restriction_sites.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/focus_ggchord_data.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/focus_ggchord_data.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/focus_ggchord_track.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/focus_ggchord_track.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/fusion_panel.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/fusion_panel.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/fusion_ribbon.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/fusion_ribbon.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/gene_data_example.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/gene_data_example.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/generate_curvature_path.html",
+      "kind": "历史说明",
+      "target": null,
+      "action": "保留历史说明及替代路线；不计为当前教程。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/geom_alignment_segment.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/geom_alignment_segment.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/geom_axis.html",
+      "kind": "历史说明",
+      "target": null,
+      "action": "保留历史说明及替代路线；不计为当前教程。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/geom_feature_label_repel.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/geom_feature_label_repel.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/geom_feature_label.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/geom_feature_label.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/geom_feature_plasmid.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/geom_feature_plasmid.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/geom_feature.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/geom_feature.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/geom_gene_label_repel.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/geom_gene_label_repel.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/geom_gene_label.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/geom_gene_label.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/geom_gene.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/geom_gene.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/geom_link_line.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/geom_link_line.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/geom_link_ribbon.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/geom_link_ribbon.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/geom_primer_label_repel.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/geom_primer_label_repel.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/geom_primer.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/geom_primer.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/geom_residue.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/geom_residue.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/geom_restriction_site.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/geom_restriction_site.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/geom_ribbon_highlight.html",
+      "kind": "历史说明",
+      "target": null,
+      "action": "保留历史说明及替代路线；不计为当前教程。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/geom_ribbon.html",
+      "kind": "历史说明",
+      "target": null,
+      "action": "保留历史说明及替代路线；不计为当前教程。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/geom_seq_break.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/geom_seq_break.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/geom_seq_center_label.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/geom_seq_center_label.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/geom_seq_label.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/geom_seq_label.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/geom_seq_region.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/geom_seq_region.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/geom_seq_scale.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/geom_seq_scale.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/geom_seq.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/geom_seq.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/geom_track_tile.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/geom_track_tile.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/geom_track.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/geom_track.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/get_chord_data.html",
+      "kind": "历史说明",
+      "target": null,
+      "action": "保留历史说明及替代路线；不计为当前教程。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/get_chord_layout.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/get_chord_layout.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/get_plot_extremes.html",
+      "kind": "历史说明",
+      "target": null,
+      "action": "保留历史说明及替代路线；不计为当前教程。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/gff3_percent_decode.html",
+      "kind": "历史说明",
+      "target": null,
+      "action": "保留历史说明及替代路线；不计为当前教程。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/ggchord_adaptive_limits.html",
+      "kind": "历史说明",
+      "target": null,
+      "action": "保留历史说明及替代路线；不计为当前教程。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/ggchord_api_contract.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/ggchord_api_contract.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/ggchord_data_contract.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/ggchord_data_contract.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/ggchord_device_units_per_inch.html",
+      "kind": "历史说明",
+      "target": null,
+      "action": "保留历史说明及替代路线；不计为当前教程。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/ggchord_fusion.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/ggchord_fusion.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/ggchord_hide_text_overlaps.html",
+      "kind": "历史说明",
+      "target": null,
+      "action": "保留历史说明及替代路线；不计为当前教程。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/ggchord_label_deoverlap.html",
+      "kind": "历史说明",
+      "target": null,
+      "action": "保留历史说明及替代路线；不计为当前教程。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/ggchord_label_pad.html",
+      "kind": "历史说明",
+      "target": null,
+      "action": "保留历史说明及替代路线；不计为当前教程。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/ggchord_label_wrap_text.html",
+      "kind": "历史说明",
+      "target": null,
+      "action": "保留历史说明及替代路线；不计为当前教程。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/ggchord_layer_data.html",
+      "kind": "历史说明",
+      "target": null,
+      "action": "保留历史说明及替代路线；不计为当前教程。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/ggchord_layout_contract.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/ggchord_layout_contract.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/ggchord_legend_positions.html",
+      "kind": "历史说明",
+      "target": null,
+      "action": "保留历史说明及替代路线；不计为当前教程。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/ggchord_repel_labels_final.html",
+      "kind": "历史说明",
+      "target": null,
+      "action": "保留历史说明及替代路线；不计为当前教程。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/ggchord_repel_points.html",
+      "kind": "历史说明",
+      "target": null,
+      "action": "保留历史说明及替代路线；不计为当前教程。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/ggchord_repel_segments.html",
+      "kind": "历史说明",
+      "target": null,
+      "action": "保留历史说明及替代路线；不计为当前教程。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/ggchord_ribbon_key_dims.html",
+      "kind": "历史说明",
+      "target": null,
+      "action": "保留历史说明及替代路线；不计为当前教程。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/ggchord_text_boxes.html",
+      "kind": "历史说明",
+      "target": null,
+      "action": "保留历史说明及替代路线；不计为当前教程。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/ggchord_text_obstacle_boxes.html",
+      "kind": "历史说明",
+      "target": null,
+      "action": "保留历史说明及替代路线；不计为当前教程。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/ggchord.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/ggchord.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/ggplot2-helpers.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/ggplot2-helpers.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/grid-helpers.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/grid-helpers.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/guide_ggchord_colourbar.html",
+      "kind": "历史说明",
+      "target": "https://dangjem.github.io/ggchord/en/reference/guide_ggchord_legend.html",
+      "action": "P1：当前仍存在的public alias被列为无精确等价历史页。 转当前canonical家族页；优先到该alias稳定usage锚点，未建锚点前可转#ref-usage。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/guide_ggchord_legend.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/guide_ggchord_legend.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/if_null_else.html",
+      "kind": "历史说明",
+      "target": null,
+      "action": "保留历史说明及替代路线；不计为当前教程。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/index.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/index.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/interval_recip_overlap.html",
+      "kind": "历史说明",
+      "target": null,
+      "action": "保留历史说明及替代路线；不计为当前教程。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/key_glyph_feature.html",
+      "kind": "历史说明",
+      "target": null,
+      "action": "保留历史说明及替代路线；不计为当前教程。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/key_glyph_gene.html",
+      "kind": "历史说明",
+      "target": null,
+      "action": "保留历史说明及替代路线；不计为当前教程。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/key_glyph_ribbon.html",
+      "kind": "历史说明",
+      "target": null,
+      "action": "保留历史说明及替代路线；不计为当前教程。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/key_glyph_seq.html",
+      "kind": "历史说明",
+      "target": null,
+      "action": "保留历史说明及替代路线；不计为当前教程。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/link_ggchord_clusters.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/link_ggchord_clusters.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/magnify_ggchord.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/magnify_ggchord.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/make_ggchord_lazy_data.html",
+      "kind": "历史说明",
+      "target": null,
+      "action": "保留历史说明及替代路线；不计为当前教程。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/make_ggchord_scales.html",
+      "kind": "历史说明",
+      "target": null,
+      "action": "保留历史说明及替代路线；不计为当前教程。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/map_alignment_position.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/map_alignment_position.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/map_ggchord_position.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/map_ggchord_position.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/merge_ggchord_ribbons.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/merge_ggchord_ribbons.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/normalize_keep_pairs.html",
+      "kind": "历史说明",
+      "target": null,
+      "action": "保留历史说明及替代路线；不计为当前教程。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/null-coalescing-operator.html",
+      "kind": "历史说明",
+      "target": null,
+      "action": "保留历史说明及替代路线；不计为当前教程。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/optimize_ggchord_layout.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/optimize_ggchord_layout.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/plasmid_example_pUC19.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/plasmid_example_pUC19.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/plus-.ggchord.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/plus-.ggchord.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/position_feature_stack.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/position_feature_stack.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/position_plasmid.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/position_plasmid.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/position_strand.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/position_strand.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/position_track.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/position_track.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/prepare_ggchord_data.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/prepare_ggchord_data.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/prepare_ggchord_plot.html",
+      "kind": "历史说明",
+      "target": null,
+      "action": "保留历史说明及替代路线；不计为当前教程。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/primer_catalog.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/primer_catalog.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/print.ggchord_clean.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/print.ggchord_clean.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/process_axis_orientation.html",
+      "kind": "历史说明",
+      "target": null,
+      "action": "保留历史说明及替代路线；不计为当前教程。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/process_gene_param.html",
+      "kind": "历史说明",
+      "target": null,
+      "action": "保留历史说明及替代路线；不计为当前教程。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/process_manual_colors.html",
+      "kind": "历史说明",
+      "target": null,
+      "action": "保留历史说明及替代路线；不计为当前教程。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/process_panel_margin.html",
+      "kind": "历史说明",
+      "target": null,
+      "action": "保留历史说明及替代路线；不计为当前教程。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/process_sequence_param.html",
+      "kind": "历史说明",
+      "target": null,
+      "action": "保留历史说明及替代路线；不计为当前教程。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/process_strand_colors.html",
+      "kind": "历史说明",
+      "target": null,
+      "action": "保留历史说明及替代路线；不计为当前教程。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/project_ggchord_features.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/project_ggchord_features.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/project_ggchord_links.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/project_ggchord_links.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/protein_ribbon_data_example.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/protein_ribbon_data_example.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/protein_seq_data_example.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/protein_seq_data_example.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/read_aligned_fasta.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/read_aligned_fasta.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/read_bed.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/read_bed.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/read_bedgraph.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/read_bedgraph.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/read_bedpe.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/read_bedpe.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/read_bigwig.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/read_bigwig.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/read_blast.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/read_blast.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/read_chain.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/read_chain.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/read_delta.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/read_delta.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/read_fasta_lengths.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/read_fasta_lengths.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/read_feature_relations.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/read_feature_relations.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/read_genbank.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/read_genbank.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/read_gff3.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/read_gff3.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/read_maf.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/read_maf.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/read_paf.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/read_paf.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/read_signature_matches.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/read_signature_matches.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/read_vcf.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/read_vcf.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/reconstruct_layer.html",
+      "kind": "历史说明",
+      "target": null,
+      "action": "保留历史说明及替代路线；不计为当前教程。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/register_ggchord_alignment.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/register_ggchord_alignment.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/rename_ribbon_layers.html",
+      "kind": "历史说明",
+      "target": null,
+      "action": "保留历史说明及替代路线；不计为当前教程。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/restriction_site_example.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/restriction_site_example.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/ribbon_data_example.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/ribbon_data_example.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/scale_feature_fill_manual.html",
+      "kind": "历史说明",
+      "target": "https://dangjem.github.io/ggchord/en/reference/scale_gene_fill_manual.html",
+      "action": "P1：当前仍存在的public alias被列为无精确等价历史页。 转当前canonical家族页；优先到该alias稳定usage锚点，未建锚点前可转#ref-usage。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/scale_feature_fill_plasmid.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/scale_feature_fill_plasmid.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/scale_feature_shape_manual.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/scale_feature_shape_manual.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/scale_gene_fill_manual.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/scale_gene_fill_manual.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/scale_link.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/scale_link.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/scale_region_fill_manual.html",
+      "kind": "历史说明",
+      "target": "https://dangjem.github.io/ggchord/en/reference/scale_gene_fill_manual.html",
+      "action": "P1：当前仍存在的public alias被列为无精确等价历史页。 转当前canonical家族页；优先到该alias稳定usage锚点，未建锚点前可转#ref-usage。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/scale_ribbon_alpha_continuous.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/scale_ribbon_alpha_continuous.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/scale_ribbon_alpha_manual.html",
+      "kind": "历史说明",
+      "target": "https://dangjem.github.io/ggchord/en/reference/scale_ribbon_alpha_continuous.html",
+      "action": "P1：当前仍存在的public alias被列为无精确等价历史页。 转当前canonical家族页；优先到该alias稳定usage锚点，未建锚点前可转#ref-usage。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/scale_ribbon_color_manual.html",
+      "kind": "历史说明",
+      "target": "https://dangjem.github.io/ggchord/en/reference/scale_ribbon_alpha_continuous.html",
+      "action": "P1：当前仍存在的public alias被列为无精确等价历史页。 转当前canonical家族页；优先到该alias稳定usage锚点，未建锚点前可转#ref-usage。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/scale_ribbon_colour_manual.html",
+      "kind": "历史说明",
+      "target": "https://dangjem.github.io/ggchord/en/reference/scale_ribbon_alpha_continuous.html",
+      "action": "P1：当前仍存在的public alias被列为无精确等价历史页。 转当前canonical家族页；优先到该alias稳定usage锚点，未建锚点前可转#ref-usage。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/scale_ribbon_fill_gradientn.html",
+      "kind": "历史说明",
+      "target": "https://dangjem.github.io/ggchord/en/reference/scale_ribbon_fill_stepsn.html",
+      "action": "P1：当前仍存在的public alias被列为无精确等价历史页。 转当前canonical家族页；优先到该alias稳定usage锚点，未建锚点前可转#ref-usage。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/scale_ribbon_fill_identity.html",
+      "kind": "历史说明",
+      "target": "https://dangjem.github.io/ggchord/en/reference/scale_ribbon_fill_stepsn.html",
+      "action": "P1：当前仍存在的public alias被列为无精确等价历史页。 转当前canonical家族页；优先到该alias稳定usage锚点，未建锚点前可转#ref-usage。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/scale_ribbon_fill_manual.html",
+      "kind": "历史说明",
+      "target": "https://dangjem.github.io/ggchord/en/reference/scale_ribbon_fill_stepsn.html",
+      "action": "P1：当前仍存在的public alias被列为无精确等价历史页。 转当前canonical家族页；优先到该alias稳定usage锚点，未建锚点前可转#ref-usage。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/scale_ribbon_fill_stepsn.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/scale_ribbon_fill_stepsn.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/scale_ribbon_linetype_manual.html",
+      "kind": "历史说明",
+      "target": "https://dangjem.github.io/ggchord/en/reference/scale_ribbon_alpha_continuous.html",
+      "action": "P1：当前仍存在的public alias被列为无精确等价历史页。 转当前canonical家族页；优先到该alias稳定usage锚点，未建锚点前可转#ref-usage。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/scale_seq_color_manual.html",
+      "kind": "历史说明",
+      "target": "https://dangjem.github.io/ggchord/en/reference/scale_seq_colour_manual.html",
+      "action": "P1：当前仍存在的public alias被列为无精确等价历史页。 转当前canonical家族页；优先到该alias稳定usage锚点，未建锚点前可转#ref-usage。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/scale_seq_colour_manual.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/scale_seq_colour_manual.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/scale_seq_position_continuous.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/scale_seq_position_continuous.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/scale_seq_ring_manual.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/scale_seq_ring_manual.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/scale_track_fill_gradientn.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/scale_track_fill_gradientn.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/scale_track_value_continuous.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/scale_track_value_continuous.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/segment_ggchord_data.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/segment_ggchord_data.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/seq_data_example.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/seq_data_example.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/set_chord_data.html",
+      "kind": "历史说明",
+      "target": null,
+      "action": "保留历史说明及替代路线；不计为当前教程。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/set_chord_layout.html",
+      "kind": "历史说明",
+      "target": null,
+      "action": "保留历史说明及替代路线；不计为当前教程。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/set_ggchord_coord.html",
+      "kind": "历史说明",
+      "target": null,
+      "action": "保留历史说明及替代路线；不计为当前教程。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/single_gene_example.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/single_gene_example.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/single_genome_example.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/single_genome_example.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/stat_ribbon_bundle.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/stat_ribbon_bundle.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/stat_ribbon_density.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/stat_ribbon_density.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/theme_ggchord_dark.html",
+      "kind": "历史说明",
+      "target": "https://dangjem.github.io/ggchord/en/reference/theme_ggchord.html",
+      "action": "P1：当前仍存在的public alias被列为无精确等价历史页。 转当前canonical家族页；优先到该alias稳定usage锚点，未建锚点前可转#ref-usage。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/theme_ggchord_minimal.html",
+      "kind": "历史说明",
+      "target": "https://dangjem.github.io/ggchord/en/reference/theme_ggchord.html",
+      "action": "P1：当前仍存在的public alias被列为无精确等价历史页。 转当前canonical家族页；优先到该alias稳定usage锚点，未建锚点前可转#ref-usage。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/theme_ggchord_publication.html",
+      "kind": "历史说明",
+      "target": "https://dangjem.github.io/ggchord/en/reference/theme_ggchord.html",
+      "action": "P1：当前仍存在的public alias被列为无精确等价历史页。 转当前canonical家族页；优先到该alias稳定usage锚点，未建锚点前可转#ref-usage。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/theme_ggchord.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/theme_ggchord.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/translate_ggchord_cds.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/translate_ggchord_cds.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/validate_gene_segment_linetype.html",
+      "kind": "历史说明",
+      "target": null,
+      "action": "保留历史说明及替代路线；不计为当前教程。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/validate_ggchord_data.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/validate_ggchord_data.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/validate_ggchord_hierarchy.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/validate_ggchord_hierarchy.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/view_ggchord.html",
+      "kind": "旧 redirect",
+      "target": "https://dangjem.github.io/ggchord/en/reference/view_ggchord.html",
+      "action": "保留兼容入口；随 canonical 页迁移同步维护 path 与 fragment 映射。",
+      "status": "pending"
+    },
+    {
+      "path": "reference/wire_ggchord_layer.html",
+      "kind": "历史说明",
+      "target": null,
+      "action": "保留历史说明及替代路线；不计为当前教程。",
+      "status": "pending"
+    },
+    {
+      "path": "zh/404.html",
+      "kind": "辅助页",
+      "target": null,
+      "action": "设置project/utility类型和显式父级；从页脚/关于可达。 显示当前语言的找回提示、搜索及主要入口；未知地址HTTP状态另作运行验收。",
+      "status": "pending"
+    },
+    {
+      "path": "zh/about.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/adjustments.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/alignments.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/annotations.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/api-curriculum.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/authors.html",
+      "kind": "辅助页",
+      "target": null,
+      "action": "设置project/utility类型和显式父级；从页脚/关于可达。 保留引用与BibTeX；中文本地化导航标题、小标题和作者角色，不改正式书目信息。",
+      "status": "pending"
+    },
+    {
+      "path": "zh/chord-branches.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/chord-build.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/chord-data.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/chord-geometry.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/chord-import.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/chord-labels.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/chord-routing.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/chord-start.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/chord-tuning.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/chord.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/circular-labels.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/circular-layers.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/collinear-build.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/collinear-data.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/collinear-layout.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/collinear-routing.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/collinear-start.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/collinear-tuning.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/collinear.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/compatibility.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/data.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/faq.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/feature-geometry.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/formats.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/foundation.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/fusion.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/gallery.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/homology.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/index.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/installation.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/labels.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/LICENSE-text.html",
+      "kind": "辅助页",
+      "target": null,
+      "action": "设置project/utility类型和显式父级；从页脚/关于可达。 标明版权元信息角色并双向链接完整许可；本地化页面外壳。",
+      "status": "pending"
+    },
+    {
+      "path": "zh/LICENSE.html",
+      "kind": "辅助页",
+      "target": null,
+      "action": "设置project/utility类型和显式父级；从页脚/关于可达。 将title/H1修为MIT License（英文）或MIT许可（中文）；法律原文保持完整。",
+      "status": "pending"
+    },
+    {
+      "path": "zh/modes.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/output.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/parameter-atlas.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/parameters.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/plasmid-build.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/plasmid-catalog.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/plasmid-data.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/plasmid-start.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/plasmid-tuning.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/plasmids.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/primers.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/projection.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/protein-alignments.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/real-data.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/recognition.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference.html",
+      "kind": "参考兼容入口",
+      "target": "https://dangjem.github.io/ggchord/zh/reference/index.html",
+      "action": "明确声明为 alias，保留旧 URL／锚点。",
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/adapt_ggchord.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/as_ggchord_alignment.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/as_ggchord_feature.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/as_ggchord_link.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/as_ggchord_seq.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/as.data.frame.ggchord_validation.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/build_ggchord_cds.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/bundle_ggchord_ribbons.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/clean_ggchord_data.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/coord_chord.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/coord_circular.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/coord_collinear.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/coord_dotplot.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/coord_radial_synteny.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/coord_sankey.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/deduplicate_ggchord_ribbons.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/diagnose_ggchord.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/export_ggchord_fusion.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/export_ggchord_layout.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/filter_ggchord_ribbons.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/filter_restriction_sites.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/find_common_features.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/find_ggchord_loci.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/find_primer_bindings.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/find_restriction_sites.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/focus_ggchord_data.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/focus_ggchord_track.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/fusion_panel.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/fusion_ribbon.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/gene_data_example.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/geom_alignment_segment.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/geom_feature_label_repel.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/geom_feature_label.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/geom_feature_plasmid.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/geom_feature.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/geom_gene_label_repel.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/geom_gene_label.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/geom_gene.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/geom_link_line.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/geom_link_ribbon.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/geom_primer_label_repel.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/geom_primer.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/geom_residue.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/geom_restriction_site.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/geom_seq_break.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/geom_seq_center_label.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/geom_seq_label.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/geom_seq_region.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/geom_seq_scale.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/geom_seq.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/geom_track_tile.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/geom_track.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/get_chord_layout.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/ggchord_api_contract.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/ggchord_data_contract.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/ggchord_fusion.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/ggchord_layout_contract.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/ggchord.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/ggplot2-helpers.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/grid-helpers.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/guide_ggchord_legend.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/index.html",
+      "kind": "参考索引",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/link_ggchord_clusters.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/magnify_ggchord.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/map_alignment_position.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/map_ggchord_position.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/merge_ggchord_ribbons.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/optimize_ggchord_layout.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/plasmid_example_pUC19.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/plus-.ggchord.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/position_feature_stack.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/position_plasmid.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/position_strand.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/position_track.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/prepare_ggchord_data.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/primer_catalog.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/print.ggchord_clean.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/project_ggchord_features.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/project_ggchord_links.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/protein_ribbon_data_example.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/protein_seq_data_example.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/read_aligned_fasta.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/read_bed.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/read_bedgraph.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/read_bedpe.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/read_bigwig.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/read_blast.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/read_chain.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/read_delta.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/read_fasta_lengths.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/read_feature_relations.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/read_genbank.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/read_gff3.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/read_maf.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/read_paf.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/read_signature_matches.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/read_vcf.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/register_ggchord_alignment.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/restriction_site_example.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/ribbon_data_example.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/scale_feature_fill_plasmid.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/scale_feature_shape_manual.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/scale_gene_fill_manual.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/scale_link.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/scale_ribbon_alpha_continuous.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/scale_ribbon_fill_stepsn.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/scale_seq_colour_manual.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/scale_seq_position_continuous.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/scale_seq_ring_manual.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/scale_track_fill_gradientn.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/scale_track_value_continuous.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/segment_ggchord_data.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/seq_data_example.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/single_gene_example.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/single_genome_example.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/stat_ribbon_bundle.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/stat_ribbon_density.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/theme_ggchord.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/translate_ggchord_cds.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/validate_ggchord_data.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/validate_ggchord_hierarchy.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/reference/view_ggchord.html",
+      "kind": "参考主题",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/restriction-sites.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/ribbon-statistics.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/ribbons.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/scale-families.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/styling.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/task-index.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/tracks.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/view-expansion.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/views.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    },
+    {
+      "path": "zh/workflow-tools.html",
+      "kind": "正文",
+      "target": null,
+      "action": null,
+      "status": "pending"
+    }
+  ]
+}
