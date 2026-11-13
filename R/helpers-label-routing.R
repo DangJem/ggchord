@@ -272,20 +272,32 @@ ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
   order_rows <- order(!(gl$feature_label_inside %in% TRUE),
     !(seq_len(n) %in% priority_rows),
     -gl$lane, -all_metrics$w, gl$source_row, seq_len(n))
+  if (concentric_circle) {
+    # Keep neighbouring sources in circular order; width-first greedy placement
+    # let a later source jump past an earlier one and reverse leader order.
+    angle <- (atan2(gl$anchor_y, gl$anchor_x) + 2*pi) %% (2*pi)
+    sorted <- sort(angle)
+    gap <- which.max(diff(c(sorted, sorted[1L] + 2*pi)))
+    origin <- sorted[if (gap == length(sorted)) 1L else gap + 1L]
+    local_angle <- (angle-origin+2*pi) %% (2*pi)
+    order_rows <- order(!(gl$feature_label_inside %in% TRUE),
+      !(seq_len(n) %in% priority_rows), -gl$lane, local_angle,
+      gl$source_row, seq_len(n))
+  }
   grouped_external <- rep(FALSE, n)
   if (concentric_circle && isTRUE(allow_external)) {
     same_label <- split(seq_len(n), paste(gl$accver, gl$lane, gl$text,
       sep = "\r"))
     for (members in same_label) {
       if (length(members) < 4L ||
-          any(!is.finite(gl$lane[members]) | gl$lane[members] != 0L) ||
+          any(!is.finite(gl$lane[members])) ||
           any(is.na(gl$text[members])) ||
           !nzchar(gl$text[members[1L]])) next
       angles <- sort((atan2(gl$anchor_y[members],
         gl$anchor_x[members]) + 2 * pi) %% (2 * pi))
       angular_span <- 2 * pi - max(diff(c(angles, angles[1L] + 2 * pi)))
-      if (is.finite(angular_span) && angular_span < .45) {
-        # A compact run of repeated, short outer-band features is one visual
+      if (is.finite(angular_span) && angular_span < .8) {
+        # A compact run of repeated, short features is one visual
         # annotation cluster.  Send the complete run to the shared exterior
         # solver; greedy per-label inner placement gives a half-inside,
         # half-outside ladder even though neither form is readable as a set.
@@ -466,9 +478,15 @@ ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
           leader <- ggchord_inner_label_leader(candidate, box,
             units_per_inch)
         }
-        # Text placement is constrained by glyph/feature boxes, not by a
-        # previous leader. Direct leaders can cross; overlap appearance is
-        # handled after final text placement, without moving a name far away.
+        # Choose another legal text slot rather than bending the line around
+        # a previous name. Check both directions so late words cannot cover
+        # an already accepted leader. Feature crossings remain allowed.
+        probe <- if (track_index > 0L) ggchord_inner_label_leader(candidate,
+          box, units_per_inch) else leader
+        if (track_index > 0L) leader <- probe
+        leader_collision <- ggchord_inner_leader_hits(probe, placed) ||
+          ggchord_inner_leader_hits(placed_leaders, box) ||
+          ggchord_inner_leaders_cross(probe, placed_leaders)
 
       }
       if (!label_collision && !feature_collision && !central_collision &&

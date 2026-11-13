@@ -1,5 +1,14 @@
 # ggchord 0.27.0 (development)
 
+- Dense circular feature labels retain source-angle order rather than
+  width-first placement. Candidate slots check both new leaders against
+  existing glyphs and existing leaders against new glyphs, and reject
+  crossing leaders without multi-bend detours. Compact repeated annotation
+  clusters can share the exterior queue from any feature band when external
+  labels are enabled. Final text-edge clipping now preserves the exterior
+  queue's already arranged simple leaders instead of reconnecting endpoints
+  and undoing its order. Source rows and internal arc text remain unchanged.
+
 - Circular feature labels compare angular displacement with actual radial
   travel rather than forcing ordered neighbours onto the nearest shared
   track. Free inner tracks can keep long names closer to their own features.

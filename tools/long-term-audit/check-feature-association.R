@@ -3,7 +3,7 @@ source('tools/audit-source-snapshot.R')
 source('tools/long-term-audit/feature-association-metrics.R')
 arguments <- commandArgs(trailingOnly = TRUE)
 stage <- if (length(arguments)) arguments[1L] else 'before'
-stopifnot(stage %in% c('before', 'after', 'prototype', 'control', 'reverse', 'lanes', 'balanced'))
+stopifnot(stage %in% c('before', 'after', 'prototype', 'control', 'reverse', 'lanes', 'balanced', 'cluster', 'ordered', 'coordinated', 'mirror'))
 audit_session <- audit_source_snapshot(additional = c(
   'tools/long-term-audit/check-feature-association.R',
   'tools/long-term-audit/feature-association-metrics.R'))
@@ -28,8 +28,8 @@ for (id in ids) {
     geom_seq(seq_style = 'double') + geom_feature_plasmid(position = position) +
     geom_feature_label_repel(position = position, external = TRUE, label_fit = 'shrink',
       label_min_size = 2.5) + geom_restriction_site(data = sites[nearest, ], label_size = 2.5) +
-    coord_circular(rotation = if (stage == 'reverse') 48 else 0,
-      direction = if (stage == 'reverse') 'counterclockwise' else 'clockwise') + theme_ggchord_plasmid()
+    coord_circular(rotation = if (stage %in% c('reverse','mirror')) 48 else 0,
+      direction = if (stage %in% c('reverse','mirror')) 'counterclockwise' else 'clockwise') + theme_ggchord_plasmid()
   path <- paste0('tools/long-term-audit/v0.27.0-association-', stage, '-', id, '.png')
   ggchord_diagnostic_device(path, 'png', 10, 8, 110)
   conditions <- character()

@@ -108,3 +108,11 @@ nearest track. Dotted arrow boundaries can come from source segments or
 cleavage markers. Inspect `segments`, `segment_name` and `cleavage_arrows`;
 a boundary is not necessarily an independent feature. Top-level feature
 labels do not automatically add text for every named subsegment.
+
+
+Dense inner annotations retain source-angle order. Candidate slots check
+text and leaders together. Leaders may cross features, but do not acquire
+multi-bend detours around text. With external placement enabled, compact
+repeated annotations can use the exterior queue as a group. This bounded
+search does not guarantee every density fits inside; inspect visibility,
+convergence and conflict diagnostics at export dimensions.

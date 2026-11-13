@@ -1,0 +1,14 @@
+id,source_labels,visible_labels,before_crossings,after_crossings,before_through_text,after_through_text,before_converged,after_converged,png_sha256
+pUC19,48,48,0,0,2,0,True,True,d07197a689e7d706a0470ac80a9538161ca7526156a4d5d8a8264074b8d11556
+pBR322,53,53,0,0,0,0,True,True,fdde7b815d4099e2e6b103e390a51994ae51490ba52c8db56fedd55f521267d2
+pSB1C3,47,47,0,0,5,1,True,True,6732e6a20465350a9dd52cfc43a4912e784df848ba5b6a3ba91544c5376875c9
+pBluescript_II_SK_plus,62,62,1,0,3,0,True,True,54c6e02ba58b4a5b7ca1bd8ff8ca79c782010b1023adcbd70aa2422ef0d029ed
+pET_28a_plus,67,67,9,0,17,0,False,True,97a6def556c663419d98afc85b81796954f39a46a7ef9be003e390aa431419ba
+pETDuet_1,83,83,1,0,12,2,True,True,5b513e6b25722a7be3e322f5d3815dfb633f45cb29e1fee55d1f3e735f37c9d7
+pcDNA3_1_plus,64,64,0,0,0,0,True,True,139362dfbf956785e0e8aab51c2eb90f871324a5292c58adb2dbb07044b2d32a
+pDONR221,58,58,0,0,1,0,True,True,b42f96c85bbea7802490b5aeb7ad92717ed3497efae2e37099ad63904369b02b
+pCAMBIA1300,59,59,2,0,8,1,True,True,52fd418924f0c400837ee9e39d4ae730fa4f3b96c0a3649aeee3d28032fcf1e6
+pTRE_Tight_BI,62,62,2,0,9,10,True,True,f222d7664583f3771fa70dd5733e2eec8e88013b7ceb1e8dc976d092cef53a2d
+pEarleyGate_201,60,60,1,0,9,0,True,True,aac99d3b115261f36ffe7d41cc2798bb9cfc76f1c03aee89c6e800ed93ac016c
+pTRIPZ,71,71,1,0,3,0,True,True,b77eb78b1f6c9b3c2f29d44b06b30041f8ea2da899baca30c5e0f3c4f086d93e
+pSpCas9_BB_2A_GFP_PX458,23,23,1,0,10,0,True,True,c2d36e4768e30d72c3a5ee6b41f3d3f78a654e951246c1868d81d542a98c602b

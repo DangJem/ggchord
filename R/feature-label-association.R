@@ -61,6 +61,13 @@ ggchord_simple_feature_leaders <- function(registry, layout) {
     for (source in unique(geometry$source_row[segments])) {
       row <- texts[texts$source_row %in% source, , drop = FALSE]
       if (nrow(row) != 1L || is.na(row$label) || !nzchar(row$label)) next
+      if (row$feature_label_mode %in% "external") {
+        # The shared perimeter has already ordered and attached this route.
+        # Reconnecting its endpoints can undo that ordering and cross callouts.
+        parts[[length(parts)+1L]] <- geometry[segments[
+          geometry$source_row[segments] == source], , drop=FALSE]
+        next
+      }
       own <- boxes$owner == owner & !is.na(boxes$source_row) & boxes$source_row == source
       route <- data.frame(x0 = row$anchor_x, y0 = row$anchor_y,
         x1 = row$x, y1 = row$y)
