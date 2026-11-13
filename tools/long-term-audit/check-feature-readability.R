@@ -70,6 +70,23 @@ box<-data.frame(cx=0,cy=.85,ow=.08,oh=.02,angle=0,xmin=-.04,xmax=.04,ymin=.84,ym
 stopifnot(ggchord_feature_short_attachment(row,box,list(),.35))
 row$x<-.1;row$text_x<-.1
 stopifnot(!ggchord_feature_short_attachment(row,box,list(),.35))
+# A cramped source retains its tick, never trades clearance for a deep label.
+axis_layout <- readRDS('/tmp/v0.27.0-compact-control-pSB1C3.rds')
+axis_layout$axis_label_hide_overlaps <- TRUE
+axis_data <- ggchord_axis_geometry(axis_layout)
+status <- unique(axis_data[axis_data$.component %in% 'text',
+ c('.axis_label','.axis_clearance_status'),drop=FALSE])
+hidden <- axis_data$.component %in% 'text' &
+ axis_data$.axis_clearance_status %in% 'hidden_near_backbone'
+stopifnot(any(hidden),all(axis_data$label[hidden]==''))
+# Explicit offsets keep their supplied anchors even when a near channel is full.
+original <- axis_layout$axis_ticks
+original <- original[!is.na(original$label),,drop=FALSE]
+original$text<-original$label;original$text_x<-original$label_x;original$text_y<-original$label_y
+original$text_angle<-original$label_angle;original$hjust<-original$label_hjust;original$vjust<-original$label_vjust
+original$.axis_offset_explicit <- TRUE
+fixed<-ggchord_clear_circular_axis_text(original,axis_layout)
+stopifnot(identical(fixed$text_x,original$text_x),identical(fixed$text_y,original$text_y))
 # Actual-size wrapped control; source feature records and coordinates unchanged.
 wrapped_plot <- base+geom_feature_label_repel(position=pos,label_wrap=10,
  label_fit='wrap',label_max_lines=3)

@@ -490,7 +490,12 @@ ggchord_axis_label_geometry <- function(layout, labels) {
     glyph$label_angle <- glyph$text_angle
     glyph$label_hjust <- .5; glyph$label_vjust <- .5
   }
-  ggchord_rbind_fill(list(labels[!curved, , drop = FALSE], glyph))
+  hidden <- text[is.na(text$text),,drop=FALSE]
+  if (nrow(hidden)) {
+    hidden$label <- ""
+    hidden$label_x <- hidden$text_x; hidden$label_y <- hidden$text_y
+  }
+  ggchord_rbind_fill(list(labels[!curved, , drop = FALSE], glyph, hidden))
 }
 
 #' Combine axis components for GeomChordAxis

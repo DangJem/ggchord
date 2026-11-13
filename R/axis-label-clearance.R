@@ -52,6 +52,13 @@ ggchord_clear_circular_axis_text <- function(text, layout) {
   static <- ggchord_annotation_text_obstacles(layout$layer_geometry, layout, include_axis = FALSE)
   text$.axis_clearance_mm <- 0
   text$.axis_clearance_status <- NA_character_
+  near_backbone <- function(boxes) {
+    if (!length(band) || !nrow(boxes)) return(TRUE)
+    radii <- sqrt(rowSums(ggchord_boxes_corners(boxes)^2))
+    gap <- if (max(radii)<band[1L]) band[1L]-max(radii) else
+      if (min(radii)>band[2L]) min(radii)-band[2L] else -Inf
+    is.finite(gap) && gap>=.5*units/25.4 && gap<=2*units/25.4
+  }
   for (i in at) {
     original <- text[i, , drop = FALSE]
     boxes <- boxes_for(original)
@@ -81,7 +88,9 @@ ggchord_clear_circular_axis_text <- function(text, layout) {
     }
     feature_collision <- feature_hit(boxes)
     anchor_collision <- !feature_collision && root_hit(boxes)
-    if (!feature_collision && !anchor_collision) {
+    if (!feature_collision && !anchor_collision &&
+        (isTRUE(original$.axis_offset_explicit) || !isTRUE(original$.axis_allow_clearance) ||
+          near_backbone(boxes))) {
       text$.axis_clearance_status[i] <- 'clear'
       next
     }
@@ -95,7 +104,7 @@ ggchord_clear_circular_axis_text <- function(text, layout) {
     step <- max(height/4, .15*units/25.4)
     limit <- max(2*height, .8*units/25.4)
     amounts <- seq(step, limit, by = step)
-    amounts <- c(amounts, -seq(step, max(8*height, 3*units/25.4), by = step))
+    amounts <- c(amounts, -seq(step, max(2*height, 2*units/25.4), by = step))
     # A narrow inner channel may not fit even at the font floor. One bounded
     # outer lane can clear the backbone without shrinking or deleting text.
     outer <- if (length(band)) band[2L]+height-radius else NA_real_
@@ -110,7 +119,8 @@ ggchord_clear_circular_axis_text <- function(text, layout) {
       candidate$text_x <- original$text_x*(radius+amount)/radius
       candidate$text_y <- original$text_y*(radius+amount)/radius
       moved <- boxes_for(candidate)
-      if (feature_hit(moved) || backbone_hit(moved) || root_hit(moved)) next
+      if (feature_hit(moved) || backbone_hit(moved) || root_hit(moved) ||
+          !near_backbone(moved)) next
       hits_text <- nrow(others) > 0L && any(vapply(seq_len(nrow(moved)), function(k)
         any(ggchord_oriented_box_overlaps(moved[k, , drop = FALSE], others)), logical(1)))
       if (hits_text) next
@@ -119,6 +129,11 @@ ggchord_clear_circular_axis_text <- function(text, layout) {
       text$.axis_clearance_mm[i] <- text$.axis_clearance_mm[i]+amount*25.4/units
       text$.axis_clearance_status[i] <- if (feature_collision) 'feature_clearance' else 'anchor_clearance'
       break
+    }
+    unresolved <- grepl("unresolved$",text$.axis_clearance_status[i])
+    if (unresolved && isTRUE(layout$axis_label_hide_overlaps)) {
+      text$text[i] <- NA_character_
+      text$.axis_clearance_status[i] <- "hidden_near_backbone"
     }
   }
   text

@@ -82,3 +82,16 @@ readability-style-candidate（complete=false），改为从最终所属text按so
 圈内线不受该默认影响、显式颜色/线型及自定义主题优先均通过直接绘制控制。
 pTRE实际PNG已确认灰色虚线，并在built数据中保留对应分类。
 完整13图仍在运行，最终质量数字以完成后的报告为准。
+
+
+轴近环边界修正：actual pSB1C3原点文字因根部/feature拥挤被旧搜索深推13mm，
+已拒绝axis-deep-candidate（complete=false），不能以几何无交叉替代适中距离。
+最终自动候选限于骨架保护带外0.5–2mm；打开原有axis.text.check.overlap时，
+没有近环槽位就只隐藏该轴文字，刻度保留，并在axis_clearance中报告
+hidden_near_backbone。隐藏关闭或显式offset/breaks时保留原契约。
+
+
+隐藏记录的NA绘制回归：axis-hidden-candidate中的代理行以label=NA返回，native
+text grob绘成字面NA。改为label空字符串，原始.axis_label和hidden原因保留。
+`check-feature-readability.R`增补对应断言并已退出0。axis-gap-control-pSB1C3新图
+已实际查看，无NA，47/47来源标签保留、收敛/无警告；完整13最终复核从当前源重跑。

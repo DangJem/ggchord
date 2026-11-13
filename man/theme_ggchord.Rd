@@ -594,7 +594,9 @@ Automatically positioned circular parallel labels, including combined seam
 strings, can receive bounded inward or outward radial clearance around
 feature polygons and fixed annotation-leader roots. Internal and exterior
 annotation leaders route around the resolved axis text; mutable shoulders
-do not feed back into axis placement.
+do not feed back into axis placement. Automatic strings stay in a near-
+backbone channel; when this cannot fit, overlap checking may hide the text
+while keeping its tick, with \code{hidden_near_backbone} in diagnostics.
 Explicit \code{axis.text.offset} values and explicit scale breaks stay fixed.}
 
 \item{seq.label, gene.label, feature.label, restriction.label, seq.center.label, seq.center.name, seq.center.length}{Text elements for sequence, gene, feature, restriction-site and circular

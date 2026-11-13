@@ -14,7 +14,12 @@
   baseline, using the same glyph geometry for placement, clipping and display.
   Automatic plasmid coordinate strings retain a small physical gap from the
   backbone. Movable strings reach measured clearance before overlap hiding,
-  rather than disappearing based on their pre-clearance positions.
+  rather than disappearing based on their pre-clearance positions. Crowded
+  automatic strings stay near the backbone; when overlap hiding is enabled,
+  an unavailable nearby slot hides only the text and records
+  `hidden_near_backbone` instead of pushing the text far towards the centre.
+  Hidden axis records use an empty display string so the renderer cannot
+  print a literal `NA`; original values and the hidden status remain in diagnostics.
 
 - Matched circular feature geometry and label owners now share one font-size
   measurement context before dependency layouts and obstacle collection.

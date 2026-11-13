@@ -66,6 +66,7 @@ ggchord_layout_finalize_step <- function(
     seq_labels_df  = seq_labels_df,
     axis_lines     = axis_lines,
     axis_ticks     = axis_ticks,
+    axis_label_hide_overlaps = axis_label_hide_overlaps,
 
     # Extremes
     extremes       = extremes,

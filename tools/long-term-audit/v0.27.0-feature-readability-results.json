@@ -16,7 +16,7 @@
     "R/annotation-leader-barriers.R": "9c5731d3b8a47bc8f5e09bbe26ff22f5b47e1e16099311765a61dc895024d570",
     "R/annotation-leader-routing.R": "eba6b30646552a7b123552b532c242c782f420a7712728e7ac83f5eae0aa7ee6",
     "R/api-contract.R": "66782560fd5043b7511c485cf44e4a4f69346c46cbce652668c76922b38adb67",
-    "R/axis-label-clearance.R": "7f7be69767fa1c49e2d46dbb589b139d25426676eeeacdd7d15e1d020f5f0480",
+    "R/axis-label-clearance.R": "d1919b61b2ad6ef59bbb085c4a6afc099fb81e2cc9fae1f0cd170c3485228d94",
     "R/clean.R": "45e76390aab1f352b3f547cc57f96a7903e512c76c42909f28f78ffa00b36d15",
     "R/collinear-utils.R": "48b4672eaa2bdc4b183d83e363f58356c88aa1973b3bf71cdf39639d3b1d467e",
     "R/common-features.R": "c63f3ebf214e0950fb78d9ee7bbf022310b7fc315f125d5d230156cc754e94b2",
@@ -77,7 +77,7 @@
     "R/ggchord-build.R": "00ebb588f2e6e6dbd2ddb4217cddf0d82bec653165948fdc0454f1c30252e18c",
     "R/ggchord-frame.R": "f48c581fa66b187bafc7e493cd1c2b2316eff4bf3f5e8e4105f1210fca24f9e1",
     "R/ggchord-scales.R": "ec84da03ed4e9d9d8c8dc6227196a007a932b5aeca302d5d6e54d7a06d7e014a",
-    "R/ggchord.R": "98bdbb608c21082c12ab88438137a6b5a8bf5efb91f0e8a4a18133e9de5c29a7",
+    "R/ggchord.R": "ba965f90eab0eb79ae90f6cd1e5e04b14b6842425b9bd8d8635db0769956e22b",
     "R/guide-layout.R": "72716a0f1b34e7077f16652204d4ce732ef0fd45c4d462779fd77bc7a263bf17",
     "R/guide-measure.R": "0cf17edf1f0d23ae44b67411c7414841f84cadc11de271738216434a57737676",
     "R/guides.R": "bbf83282912e8595444bd9efc810b5064a53fe2030a540f0fc99ab7d1c7482dc",
@@ -105,7 +105,7 @@
     "R/layout-contract.R": "09cca6b412fa4fc6b70544b97f52263f1c2c98b50713f1e50c5c9c9059d93967",
     "R/layout-export.R": "62a4e9c8505a27771af76648b6d13051e1bc46782949a0a755575b94b8279858",
     "R/layout-external-annotation.R": "7e23aca6a6cf96a13a4e52034d46753e447b5466cca1b5b5d23135862bf4b4bf",
-    "R/layout-finalize.R": "5a9be1cb2d920da9ceaff9ead4cf438cece2082198e557768486d21ca6025c83",
+    "R/layout-finalize.R": "21cac2125d16965689632d8ca3fab87d6b99b7a54ab4b9c45d755dc9327bc5eb",
     "R/layout-label.R": "66b1f0dd4f0545f337176953355c8be00a78e4c7dd29ce91ffb42280b571bcf2",
     "R/layout-perimeter.R": "3ab0faa344b229d80b2002f82d2953d6a4060553b93b57acfcee4f319e33e7b5",
     "R/layout-ribbon-step.R": "fec04dba090d1dde037e4e55da6b7fbe40e7b3a2a4d714cd980932f757ac0617",
@@ -132,12 +132,12 @@
     "R/site-label-metrics.R": "7b4986c89586894e1ac5d6ad486fb6af4d8a67a9212430577305ef6672a5591c",
     "R/source-parser.R": "b7259fd640588b1263cf6c0f39d3340ab28ba815b5a3738d7c587cfab47c7df5",
     "R/stat-ribbon.R": "2692b308087d2bf72ecef9d510ba2a41ebd72b39ebe65554413094baee300403",
-    "R/theme.R": "903d5c1724768d90de8404839053e2981946cf8db2a84f4ce9f0e9cff0a755f7",
+    "R/theme.R": "06cb50fd5786bed8c6dda08d5454ee6c31225f837c6971e9a87b0c43c21595d2",
     "R/track-grammar.R": "a7885c6e20640c229c49f736089182d110f9d6eddc3da41ed3c60775fa45f829",
     "R/track-theme.R": "904cad903de62dca669ac1cece38a5c0f0c44f6eb0e3a8568a45d5ded721c9ee",
     "R/validate.R": "e80446a0f633f4160f524a920933e550e85fca5b3e7fc3a239ca0d7f1dbd8ed6",
     "R/view-projection.R": "af38488dff2a56f2f986a38e9fbcde86126da45a749f04ce6186dd342d8bf167",
     "R/viewer.R": "f482af4be44c1892b2bc14616014eb237a4de4a16e341bc87e2293e6ef917960",
-    "R/zzz.R": "5b2159159ded54207bf571e7c4449c5b249446650659a5c787a9c9d2c7da8437"
+    "R/zzz.R": "aa04d644f325abfbba310c066761f93597d60bc76522e7e0d4af4746842064c8"
   }
 }
