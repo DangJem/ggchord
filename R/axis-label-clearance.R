@@ -57,6 +57,8 @@ ggchord_clear_circular_axis_text <- function(text, layout) {
   static <- ggchord_annotation_text_obstacles(layout$layer_geometry, layout, include_axis = FALSE)
   text$.axis_clearance_mm <- 0
   text$.axis_clearance_status <- NA_character_
+  text$.axis_label_side <- "following"
+  text$.axis_tangent_gap_mm <- text$label_gap*25.4/units
   near_backbone <- function(boxes) {
     if (!length(band) || !nrow(boxes)) return(TRUE)
     radii <- sqrt(rowSums(ggchord_boxes_corners(boxes)^2))
@@ -66,6 +68,7 @@ ggchord_clear_circular_axis_text <- function(text, layout) {
   }
   for (i in at) {
     original <- text[i, , drop = FALSE]
+    initial <- original
     active_roots <- if (critical[i]) roots[
       roots$x0==roots$x1 & roots$y0==roots$y1,,drop=FALSE] else roots
     boxes <- boxes_for(original)
@@ -95,6 +98,52 @@ ggchord_clear_circular_axis_text <- function(text, layout) {
         text$text_x[i] <- candidate$text_x; text$text_y[i] <- candidate$text_y
         text$.axis_clearance_mm[i] <- shift*25.4/units
         boxes <- close_boxes
+      }
+    }
+    # A seam string can occupy either readable side of its unchanged tick.
+    # Reserve fixed source exit rays here, before the outer queue is routed;
+    # using mutable elbows would create a text/leader positioning cycle.
+    # Only automatic, unlocked endpoints may acquire another nearby slot.
+    exit_hit <- function(candidate) {
+      if (!nrow(roots)) return(FALSE)
+      candidate$ow <- candidate$ow + .6*units/25.4
+      candidate$oh <- candidate$oh + .6*units/25.4
+      ggchord_inner_leader_hits(roots, candidate)
+    }
+    if (critical[i] && length(band) && !isTRUE(initial$.axis_offset_explicit) &&
+        isTRUE(initial$.axis_allow_clearance) && exit_hit(boxes)) {
+      direction <- c(cos(initial$text_angle*pi/180), sin(initial$text_angle*pi/180))
+      tick <- c(initial$text_x, initial$text_y) - direction*initial$label_gap
+      gaps <- unique(c(initial$label_gap*25.4/units, .8, 1.2, 1.6, 2, 2.5, 3, 3.5, 4))
+      slots <- expand.grid(side = c(0, 1), gap = gaps, radial = c(.65, 1, 1.5, 2))
+      slots$cost <- abs(slots$gap-initial$label_gap*25.4/units) +
+        slots$radial-.65 + .2*slots$side
+      slots <- slots[order(slots$cost, slots$side, slots$gap), , drop = FALSE]
+      for (slot in seq_len(nrow(slots))) {
+        option <- slots[slot, ]
+        candidate <- initial
+        candidate$hjust <- option$side
+        point <- tick + direction*(1-2*option$side)*option$gap*units/25.4
+        radius <- sqrt(sum(point^2))
+        if (!is.finite(radius) || radius <= 0) next
+        candidate$text_x <- point[1L]; candidate$text_y <- point[2L]
+        moved <- boxes_for(candidate)
+        shift <- band[1L]-option$radial*units/25.4 -
+          max(sqrt(rowSums(ggchord_boxes_corners(moved)^2)))
+        candidate$text_x <- point[1L]*(radius+shift)/radius
+        candidate$text_y <- point[2L]*(radius+shift)/radius
+        moved <- boxes_for(candidate)
+        if (feature_hit(moved) || backbone_hit(moved) || exit_hit(moved) ||
+            text_hit(moved) || !near_backbone(moved)) next
+        original <- candidate
+        text$text_x[i] <- candidate$text_x; text$text_y[i] <- candidate$text_y
+        text$hjust[i] <- candidate$hjust
+        text$.axis_clearance_mm[i] <- (sqrt(candidate$text_x^2+candidate$text_y^2)-
+          sqrt(initial$text_x^2+initial$text_y^2))*25.4/units
+        text$.axis_label_side[i] <- if (option$side == 1) "preceding" else "following"
+        text$.axis_tangent_gap_mm[i] <- option$gap
+        boxes <- moved
+        break
       }
     }
     feature_collision <- feature_hit(boxes)

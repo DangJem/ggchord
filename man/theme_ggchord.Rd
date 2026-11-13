@@ -596,7 +596,9 @@ feature polygons and fixed annotation-leader roots. Internal and exterior
 annotation leaders route around the resolved axis text; mutable shoulders
 do not feed back into axis placement. Automatic strings stay in a near-
 backbone channel. Origin/end strings take priority and remain visible;
-unresolved endpoint clearance is reported as \code{endpoint_unresolved}.
+an automatic endpoint may use either readable side of its tick, with a
+bounded tangential gap up to 4 mm, to clear fixed feature exit rays.
+Unresolved endpoint clearance is reported as \code{endpoint_unresolved}.
 Overlap checking may hide ordinary intermediate text while keeping its
 tick, with \code{hidden_near_backbone} in diagnostics.
 Explicit \code{axis.text.offset} values and explicit scale breaks stay fixed.}

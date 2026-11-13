@@ -1,5 +1,11 @@
 # ggchord 0.27.0 (development)
 
+- Automatic circular endpoint strings can use either readable side of their
+  unchanged tick and a bounded gap (up to 4 mm) when fixed feature exits would
+  cross the string. Explicit breaks and axis offsets retain their positions.
+  Axis diagnostics report the chosen side and tangential gap separately from
+  radial clearance; no source label or endpoint string is removed.
+
 - Non-circular feature-label layers receive an explicit false value for the
   inside-to-outside style marker, fixing a linear-view aesthetic evaluation
   error. Empty label tables retain their complete drawing schema and use

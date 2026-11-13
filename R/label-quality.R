@@ -118,7 +118,8 @@ ggchord_label_quality <- function(layout, text, built, context) {
     at <- axis$.component %in% 'text' & !is.na(axis$.axis_clearance_status)
     axis_clearance <- unique(data.frame(accver = axis$accver[at], label = axis$.axis_label[at],
       automatic_breaks = axis$.axis_automatic_breaks[at], explicit_offset = axis$.axis_offset_explicit[at],
-      status = axis$.axis_clearance_status[at], radial_shift_mm = axis$.axis_clearance_mm[at]))
+      status = axis$.axis_clearance_status[at], radial_shift_mm = axis$.axis_clearance_mm[at],
+      label_side = axis$.axis_label_side[at], tangent_gap_mm = axis$.axis_tangent_gap_mm[at]))
   }
   list(summary = summary, measurement = list(panel_status = context$status %||% 'unknown',
     geometry_metric_status = context$geometry_metric_status %||% 'unknown',
