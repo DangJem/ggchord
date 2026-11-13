@@ -542,8 +542,11 @@ ggchord_axis_geometry <- function(layout) {
 
 #' Internal automatic sequence-axis layer
 #' @noRd
-ggchord_axis_layer <- function(layout) {
+ggchord_axis_layer <- function(layout, components = NULL) {
   data <- ggchord_axis_geometry(layout)
+  if (!is.null(components)) {
+    data <- data[data$.component %in% components, , drop = FALSE]
+  }
   mapping <- ggplot2::aes(
     x = x, y = y, xend = xend, yend = yend, label = label,
     group = group, size = I(size), angle = angle,

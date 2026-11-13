@@ -19,6 +19,24 @@ test_that("transformed axis breaks retain their genomic anchors", {
   expect_equal(logged[c("x0", "y0")], plain[c("x0", "y0")])
 })
 
+test_that("automatic tick marks draw behind feature arrows", {
+  plot <- ggchord(data.frame(accver = "format", length = 5000),
+    feature_data = data.frame(accver = "format", start = 500, end = 2000,
+      strand = "+", anno = "feature")) +
+    geom_seq() + geom_feature() + coord_circular()
+  layers <- ggplot2::ggplot_build(plot)$plot$layers
+  marks <- which(vapply(layers, function(layer)
+    inherits(layer$geom, "GeomChordAxis") &&
+      any(layer$data$.component %in% c("major_tick", "minor_tick")), logical(1)))
+  features <- which(vapply(layers, function(layer)
+    identical(layer$ggchord_type, "gene_poly"), logical(1)))
+  text <- which(vapply(layers, function(layer)
+    inherits(layer$geom, "GeomChordAxis") &&
+      any(layer$data$.component %in% "text"), logical(1)))
+  expect_lt(max(marks), min(features))
+  expect_gt(min(text), max(features))
+})
+
 test_that("central text is not treated as a sequence backbone obstacle", {
   # Format control: the feature forces nontrivial automatic text clearance.
   seqs <- data.frame(accver = "format", length = 5000)

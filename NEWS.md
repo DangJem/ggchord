@@ -1,5 +1,10 @@
 # ggchord 0.27.0 (development)
 
+- Automatic sequence-axis lines and major/minor ticks now draw before the
+  first gene, feature or primer layer, so marks no longer paint over feature
+  arrows. Measured axis text remains in front. User layer order, source
+  coordinates, tick positions and explicit scale-bar placement are preserved.
+
 - The same bounded straight/single-elbow exit check also covers exterior
   restriction-site leaders. Fixed cut positions, text entries, labels and
   source rows remain unchanged; a collided restriction fan is not exempt from

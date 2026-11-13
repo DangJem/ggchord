@@ -297,7 +297,20 @@ prepare_ggchord_plot <- function(plot) {
   if (!isTRUE(ggchord_plot_settings(plot)$axis$hidden) &&
       (nrow(layout$axis_lines %||% data.frame()) > 0L ||
        nrow(layout$axis_ticks %||% data.frame()) > 0L)) {
-    plot$layers[[length(plot$layers) + 1L]] <- ggchord_axis_layer(layout)
+    feature_layers <- which(vapply(plot$layers, function(layer)
+      identical(layer$ggchord_type, "gene_poly"), logical(1)))
+    if (length(feature_layers)) {
+      # Automatic marks are background decoration. Keep the user's layers in
+      # their declared order, but let features cover ticks that meet them.
+      marks <- ggchord_axis_layer(layout, c("line", "major_tick", "minor_tick"))
+      if (nrow(marks$data)) plot$layers <- append(
+        plot$layers, list(marks), after = feature_layers[1L] - 1L)
+      # Text has its own measured clearance and remains in the foreground.
+      text <- ggchord_axis_layer(layout, "text")
+      if (nrow(text$data)) plot$layers[[length(plot$layers) + 1L]] <- text
+    } else {
+      plot$layers[[length(plot$layers) + 1L]] <- ggchord_axis_layer(layout)
+    }
   }
   plot <- set_ggchord_coord(plot, layout)
   plot <- ggchord_apply_theme_styles(plot)
