@@ -99,7 +99,7 @@ jsonlite::write_json(list(pages=execution,
   shared_code_sha256=unname(audit_session$inputs[["tools/documentation-examples.R"]]),
   engine_sha256=as.list(audit_session$engine),
   scope="Shared preparations and raw constructors in page order; preview/save calls do not write files. Installation commands are not executed. Actual PNG exports are recorded separately.",
-  optional_genbank="Biopython enabled through the documentation-only Python environment"),
+  optional_genbank="Conditional optional parser; NULL is a skip, not successful GenBank import"),
   if (length(selected)) paste0("/tmp/ggchord-lesson-",selected,".json") else "tools/teaching-audit/lesson-execution.json",auto_unbox=TRUE,pretty=TRUE)
 cat(length(pages),'page preparations completed; no package checks or rendered exports.\n')
 if(length(selected) && '--update-outputs' %in% commandArgs(trailingOnly=TRUE)) {

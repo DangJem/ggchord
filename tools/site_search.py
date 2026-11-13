@@ -28,7 +28,7 @@ def search_records(out,lang,page_records):
     records=[]
     for page in page_records:
         kind=page_kind(page['url'])
-        page['kind']='faq' if page['url']=='faq.html' else 'function' if kind=='api' else 'course' if kind in ['tutorial','module','case','index'] else 'tool'
+        page['kind']='tool' if page['url']=='reference/index.html' else 'faq' if page['url']=='faq.html' else 'function' if kind=='api' else 'course' if kind in ['tutorial','module','case','index'] else 'tool'
         page['keywords']=page['url'].removesuffix('.html')
         page['summary']=page['text'][:240]
         records.append(page)

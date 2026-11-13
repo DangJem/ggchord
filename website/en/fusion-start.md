@@ -11,6 +11,10 @@ library(dplyr)
 
 {{code:coursefusion}}
 
+![Independent center plot](../assets/coursefusioncenter.png)
+
+![Independent detail plot](../assets/coursefusiondetail.png)
+
 ![Two panels and one source relationship](../assets/coursefusion.png)
 
 ## Check intervals, panels and instances {#intervals}

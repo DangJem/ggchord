@@ -5,10 +5,18 @@ options(sass.cache = FALSE)
 pkgload::load_all(quiet = TRUE)
 payload <- jsonlite::fromJSON('.site/page-content.json', simplifyVector = FALSE)
 page_index <- jsonlite::fromJSON('website/pages.json', simplifyVector = FALSE)
-languages <- commandArgs(trailingOnly=TRUE)
+arguments <- commandArgs(trailingOnly=TRUE)
+option <- function(key, default) {
+  value <- grep(paste0('^--',key,'='),arguments,value=TRUE)
+  if(length(value)) sub('^[^=]+=','',value[[1]]) else default
+}
+part <- match.arg(option('part','all'),c('all','reference','articles'))
+offset <- as.integer(option('offset','0'))
+count <- as.integer(option('count','10000'))
+languages <- arguments[!startsWith(arguments,'--')]
 if(!length(languages)) languages <- c('en','zh')
 stopifnot(all(languages %in% c('en','zh')))
-if('zh' %in% languages) {
+if('zh' %in% languages && part!='articles') {
  status <- system2('python3',c('tools/reference-translations.py','--output','.site/reference-zh'))
  if(status != 0L) stop('Han reference translations are incomplete or stale')
 }
@@ -69,6 +77,7 @@ for (lang in languages) {
       pkg$topics$title[i] <- paste(unlist(title),collapse='')
     }
   }
+  if(part!='articles') {
   pkgdown::init_site(pkg)
   pkgdown::build_home(pkg, preview=FALSE)
   # build_home also converts development Markdown from the repository root.
@@ -77,11 +86,17 @@ for (lang in languages) {
   generated <- list.files(pkg$dst_path, '\\.html$', full.names=TRUE)
   unlink(generated[!basename(generated) %in% auxiliary])
   pkgdown::build_reference(pkg,examples=FALSE,lazy=FALSE,preview=FALSE)
-  for(page in payload[[lang]]) {
+  }
+  selected <- if(part=='reference') list() else payload[[lang]]
+  if(length(selected)) selected <- selected[seq.int(offset+1L,min(length(selected),offset+count))]
+  for(page in selected) {
     cat('Article:',lang,page$slug,'\n')
-    pkgdown::render_page(pkg,'home',list(pagetitle=page$title,
+    tryCatch(pkgdown::render_page(pkg,'home',list(pagetitle=page$title,
       index=paste0('<h1>',htmltools::htmlEscape(page$title),'</h1>',page$body),
-      sidebar=page$sidebar),path=paste0(page$slug,'.html'),quiet=TRUE)
+      sidebar=page$sidebar),path=paste0(page$slug,'.html'),quiet=TRUE),
+      error=function(e) {cat('FAILED:',lang,page$slug,conditionMessage(e),'\n');stop(e)})
+    cat('Completed article:',lang,page$slug,'\n')
+    invisible(gc())
   }
 }
 cat('pkgdown templates and reference rendered for en and zh. No examples or vignettes executed.\n')

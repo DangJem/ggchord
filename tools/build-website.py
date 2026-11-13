@@ -10,6 +10,7 @@ import shutil
 import subprocess
 import zipfile
 from datetime import datetime, timezone
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from site_search import complete_examples, search_records
 from documentation_lib import ROOT, WEB, PAGES, CAPTIONS, RECIPES, expand, snippets, localize_r_comments
@@ -140,19 +141,29 @@ def main():
             payload[lang].append(dict(slug=page['slug'],title=page['title'][lang],body=body,sidebar=sidebar))
     (out/'page-content.json').write_text(json.dumps(payload,ensure_ascii=False)+'\n')
     # Locales write separate destinations and share only immutable source files.
-    statuses = {}
     languages = ['en', 'zh']
-    for start in range(0, len(languages), args.render_jobs):
-        jobs = []
-        for lang in languages[start:start + args.render_jobs]:
-            with (out/(lang+'-build.log')).open('w') as log:
-                jobs.append((lang, subprocess.Popen(
-                    ['Rscript','tools/render-website.R',lang],cwd=ROOT,
-                    stdout=log,stderr=subprocess.STDOUT)))
-        for lang, job in jobs:
-            statuses[lang] = job.wait()
-        (out/'render-processes.json').write_text(json.dumps(dict(
-            render_jobs=args.render_jobs, return_codes=statuses),indent=2)+'\n')
+    def render_locale(lang):
+        # Independent bounded R workers avoid accumulating a whole site's
+        # template state in one process. Every actual return code is retained.
+        jobs=[['--part=reference']]+[['--part=articles','--offset='+str(i),'--count=12']
+              for i in range(0,len(payload[lang]),12)]
+        results=[];logs=[]
+        for index, options in enumerate(jobs):
+            assert_render_source_snapshot(render_snapshot,input_hashes)
+            logfile=out/(lang+'-worker-'+str(index)+'.log')
+            with logfile.open('w') as log:
+                result=subprocess.run(['Rscript','--vanilla','tools/render-website.R',lang,*options],cwd=ROOT,
+                    stdout=log,stderr=subprocess.STDOUT)
+            logs.append(logfile.read_text())
+            results.append(dict(options=options,return_code=result.returncode,log=logfile.name))
+            (out/(lang+'-workers.json')).write_text(json.dumps(results,indent=2)+'\n')
+            (out/(lang+'-build.log')).write_text('\n'.join(logs))
+            if result.returncode:break
+        return lang,0 if len(results)==len(jobs) and all(r['return_code']==0 for r in results) else 1
+    with ThreadPoolExecutor(max_workers=args.render_jobs) as pool:
+        statuses=dict(pool.map(render_locale,languages))
+    (out/'render-processes.json').write_text(json.dumps(dict(
+        render_jobs=args.render_jobs, return_codes=statuses),indent=2)+'\n')
     combined='\n'.join((out/(lang+'-build.log')).read_text() for lang in languages)
     (out/'build.log').write_text(combined)
     if any(statuses.values()):

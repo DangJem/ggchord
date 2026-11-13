@@ -231,12 +231,12 @@
     "check-result": "output.html#check-result"
   },
   "workflow-tools.html": {
-    "input": "workflows.html#input",
+    "input": "workflows.html#tools",
     "catalog": "recognition.html#catalog",
     "diagnostics": "diagnostics.html#diagnostics",
     "track-focus": "tracks-statistics.html#track-focus",
     "tools": "workflows.html#tools",
-    "adapt": "workflows.html#adapt",
+    "adapt": "workflows.html#tools",
     "": "workflows.html#tools"
   },
   "adjustments.html": {
@@ -270,7 +270,16 @@
     "": "about.html",
     "compatibility": "about.html#compatibility",
     "feedback": "about.html#feedback",
-    "sources": "about.html#sources"
+    "sources": "about.html#sources",
+    "path-techniques": "learn.html#foundations",
+    "path-chord": "multi-sequence.html#path",
+    "path-collinear": "multi-sequence.html#path",
+    "path-plasmid": "circular.html#path",
+    "path-shared-techniques": "styling.html#roles",
+    "path-data": "formats.html#choose-format",
+    "path-cases": "gallery.html",
+    "path-reference": "reference/index.html",
+    "path-information": "about.html#compatibility"
   },
   "task-index.html": {
     "": "learn.html#tasks",

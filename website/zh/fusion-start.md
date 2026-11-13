@@ -11,6 +11,10 @@ library(dplyr)
 
 {{code:coursefusion}}
 
+![独立中心图](../assets/coursefusioncenter.png)
+
+![独立细节图](../assets/coursefusiondetail.png)
+
 ![Two panels and one source relationship](../assets/coursefusion.png)
 
 ## 核对区间、面板和实例 {#intervals}

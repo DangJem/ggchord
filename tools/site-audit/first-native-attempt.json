@@ -1,0 +1,8 @@
+{
+  "status": "incomplete; not passed",
+  "observations": {
+    ".site/render-processes.json": "{\n  \"render_jobs\": 1,\n  \"return_codes\": {\n    \"en\": 1,\n    \"zh\": -15\n  }\n}\n",
+    "/tmp/ggchord-native-probe.log": "Article: en scale-families \n[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.\n[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.\npkgdown templates and reference rendered for en and zh. No examples or vignettes executed.\n"
+  },
+  "scope": "English locale returned 1 without an R condition; the isolated scale-families page returned 0; remaining owned Han worker deliberately terminated to switch to bounded workers. No OOM or timeout cause inferred."
+}

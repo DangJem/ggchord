@@ -361,6 +361,10 @@ view_ggchord(p_coursefusion)
 ```
 
 
+![Independent center plot](../man/figures/coursefusioncenter.png)
+
+![Independent detail plot](../man/figures/coursefusiondetail.png)
+
 ![Two panels and one source relationship](../man/figures/coursefusion.png)
 
 ### Check intervals, panels and instances {#fusion-start-intervals}

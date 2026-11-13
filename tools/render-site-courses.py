@@ -39,11 +39,14 @@ for(job in jobs) {
     if snapshot()!=before:raise SystemExit('Source changed while rendering; results not certified')
     path=ROOT/'tools/site-audit/course-rendering.json'
     previous=json.loads(path.read_text()) if path.exists() else {'figures':{}}
+    for record in previous['figures'].values():
+        record.setdefault('rendered_source_sha256',previous.get('source_sha256',{}))
     for job in jobs:
         row=job['row'];previous['figures'][row['id']]=dict(
             file=row['file'],width=row['width'],height=row['height'],dpi=row['dpi'],
             sha256=hashlib.sha256((ROOT/row['file']).read_bytes()).hexdigest(),
-            code_sha256=hashlib.sha256(job['code'].encode()).hexdigest(),status='rendered PNG')
+            code_sha256=hashlib.sha256(job['code'].encode()).hexdigest(),status='rendered PNG',
+            rendered_source_sha256=before)
     previous.update(source_sha256=before,scope='Registered course PNGs at normal sizes; no package checks or release device matrix')
     path.write_text(json.dumps(previous,indent=2)+'\n')
 

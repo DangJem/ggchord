@@ -373,5 +373,39 @@
       "en": "Explicit display corridors and obstacles"
     },
     "source": "Exact shared code extracted from the audited Fusion example; actual source inputs and selection remain in the registered snippets."
+  },
+  {
+    "id": "coursefusioncenter",
+    "object": "course_center",
+    "snippets": [
+      "fusiondata",
+      "coursefusion"
+    ],
+    "width": 6,
+    "height": 6,
+    "dpi": 110,
+    "file": "man/figures/coursefusioncenter.png",
+    "caption": {
+      "zh": "独立中心图",
+      "en": "Independent center plot"
+    },
+    "source": "The independently valid child plot from the same one-HSP Fusion preparation; no screenshot cropping."
+  },
+  {
+    "id": "coursefusiondetail",
+    "object": "course_detail",
+    "snippets": [
+      "fusiondata",
+      "coursefusion"
+    ],
+    "width": 6,
+    "height": 8,
+    "dpi": 110,
+    "file": "man/figures/coursefusiondetail.png",
+    "caption": {
+      "zh": "独立细节图",
+      "en": "Independent detail plot"
+    },
+    "source": "The independently valid child plot from the same one-HSP Fusion preparation; no screenshot cropping."
   }
 ]

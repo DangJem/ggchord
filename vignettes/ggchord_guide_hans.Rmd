@@ -353,6 +353,10 @@ view_ggchord(p_coursefusion)
 ```
 
 
+![独立中心图](../man/figures/coursefusioncenter.png)
+
+![独立细节图](../man/figures/coursefusiondetail.png)
+
 ![Two panels and one source relationship](../man/figures/coursefusion.png)
 
 ### 核对区间、面板和实例 {#fusion-start-intervals}
