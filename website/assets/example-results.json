@@ -55,7 +55,7 @@
     "projected_regions": 1
   },
   "optional": {
-    "genbank": "SKIP: Biopython unavailable",
+    "genbank": "PASS",
     "ranges": "PASS",
     "interactions": "PASS"
   }
