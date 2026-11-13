@@ -101,6 +101,25 @@ ggchord_physical_requested <- function(plot) {
 
 ggchord_base_gtable <- function(built) {
   class(built) <- setdiff(class(built), "ggchord_built")
+  # Split only already-trained drawing data: retain each layer's mapping,
+  # scale results, fixed styles and source ownership. Text keeps user order.
+  # The original built object remains intact for diagnostics and exports.
+  leaders <- list(); leader_layers <- list()
+  for (i in seq_along(built$plot$layers)) {
+    layer <- built$plot$layers[[i]]
+    if (!identical(layer$ggchord_params$label_segment_layer, "below")) next
+    data <- built$data[[i]]
+    if (!is.data.frame(data) || !".component" %in% names(data)) next
+    at <- data$.component %in% "segment"
+    if (!any(at)) next
+    leaders[[length(leaders) + 1L]] <- data[at, , drop = FALSE]
+    leader_layers[[length(leader_layers) + 1L]] <- layer
+    built$data[[i]] <- data[!at, , drop = FALSE]
+  }
+  if (length(leaders)) {
+    built$data <- c(leaders, built$data)
+    built$plot$layers <- c(leader_layers, built$plot$layers)
+  }
   ggplot2::ggplot_gtable(built)
 }
 

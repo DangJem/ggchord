@@ -68,6 +68,10 @@ ggchord_detour_annotation_leaders <- function(registry, layout) {
   for (owner in names(registry)) {
     geometry <- registry[[owner]]$gene_label_repel
     if (!is.data.frame(geometry) || !nrow(geometry)) next
+    # Feature-track labels retain their direct / single-shoulder route.
+    # Crossing a feature is allowed; graph detours obscure source association.
+    if ("label_layout" %in% names(geometry) &&
+        any(geometry$label_layout %in% "feature")) next
     external <- unique(geometry$source_row[geometry$.component %in% 'text' & ggchord_outer_callouts(geometry)])
     for (source in external[!is.na(external)]) {
       row <- which(geometry$.component %in% 'text' & geometry$source_row == source)[1L]

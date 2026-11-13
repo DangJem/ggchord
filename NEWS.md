@@ -1,5 +1,19 @@
 # ggchord 0.27.0 (development)
 
+- Closed circular features remain continuous across the genomic origin,
+  with arrowheads only at biological ends. Open/gapped views keep their
+  display split. Wrapped segment tables retain real gaps and colours; only
+  adjacent equally coloured runs join across the seam using the source length.
+  Compact arrows on gapped views retain heads only at real ends.
+  Feature labels measure the feature band's circumference. Internal arc
+  glyphs must remain within their own feature; displaced adjacent labels gain
+  a short source attachment. Internal labels retain curved track text.
+  Feature-layout leaders now take direct routes instead of multi-bend detours;
+  glyph overlap still follows `label_segment_overlap`. Leaders default to
+  drawing below data layers, with `label_segment_layer = "above"` restoring
+  their label layer's order. Transparent fills keep their transparency.
+
+
 - Label diagnostics include the closed `capped_line` feature contours in their
   conservative polygon envelopes, including transparent interiors. Own-source
   contacts remain separate. Stroke thickness, path markers and occlusion remain

@@ -21,6 +21,7 @@ geom_feature_label_repel(
   label_segment_overlap = "fade",
   label_segment_overlap_alpha = 0.18,
   label_segment_linetype = "auto",
+  label_segment_layer = c("below", "above"),
   ...
 )
 }
@@ -32,8 +33,9 @@ geom_feature_label_repel(
 text is tried inside first, then assigned to a fixed-radius internal
 track. All non-external text is laid out character by character along its
 selected track radius rather than rotated as one straight string. A light
-leader appears when one or more intervening tracks separate the feature
-and its label.
+leader appears when tracks separate the feature and its label or a
+visible angular displacement could obscure ownership. Circular feature
+layouts retain direct leaders instead of multi-bend detours.
 Choose another mode for unrestricted external callouts.}
 
 \item{label_wrap, label_fit, label_max_lines}{Text fitting controls.
@@ -87,6 +89,11 @@ that were moved to the other side of their arc, which are drawn dashed.
 Any other valid ggplot2 linetype (e.g. \code{"solid"}, \code{"dashed"},
 \code{"dotted"}, or a numeric dash pattern) is used for all leader lines.}
 
+\item{label_segment_layer}{Draw leaders \code{"below"} all data layers (default),
+or \code{"above"} at this label layer's normal position. Text always stays at
+this layer's position. Filled features can cover leaders drawn below;
+transparent features retain their normal transparency.}
+
 \item{...}{Additional text parameters.}
 }
 \value{
@@ -115,6 +122,7 @@ features <- features |>
 ggchord(seq_data = seqs) +
   geom_seq() +
   geom_feature(data = features, position = position_plasmid()) +
-  geom_feature_label_repel(data = features, position = position_plasmid()) +
+  geom_feature_label_repel(data = features, position = position_plasmid(),
+    label_segment_layer = "below") +
   coord_circular()
 }

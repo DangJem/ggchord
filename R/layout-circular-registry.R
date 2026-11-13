@@ -598,6 +598,7 @@ ggchord_resolve_circular_annotation_registry <- function(
   inner <- ggchord_resolve_inner_tracks(layer_geometry, layout)
   routed <- ggchord_detour_annotation_leaders(inner$layer_geometry, layout)
   outer <- ggchord_resolve_outer_annotations(routed, layout)
+  outer$layer_geometry <- ggchord_simple_feature_leaders(outer$layer_geometry, layout)
   backbone <- inner$registry[
     inner$registry$kind == "backbone" &
       inner$registry$component == "resource", , drop = FALSE

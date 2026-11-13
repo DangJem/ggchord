@@ -81,8 +81,9 @@ geom_feature_label <- function(
 #'   text is tried inside first, then assigned to a fixed-radius internal
 #'   track. All non-external text is laid out character by character along its
 #'   selected track radius rather than rotated as one straight string. A light
-#'   leader appears when one or more intervening tracks separate the feature
-#'   and its label.
+#'   leader appears when tracks separate the feature and its label or a
+#'   visible angular displacement could obscure ownership. Circular feature
+#'   layouts retain direct leaders instead of multi-bend detours.
 #'   Choose another mode for unrestricted external callouts.
 #' @param label_side One of `"inside"`, `"outside"`, or `"auto"`.
 #' @param label_wrap,label_fit,label_max_lines Text fitting controls.
@@ -94,6 +95,10 @@ geom_feature_label <- function(
 #'   default 1.5. Must not exceed the requested text size. Original text,
 #'   requested/final sizes and fitting reason are exported with the label.
 #' @param max_overlaps Maximum unresolved overlaps.
+#' @param label_segment_layer Draw leaders `"below"` all data layers (default),
+#'   or `"above"` at this label layer's normal position. Text always stays at
+#'   this layer's position. Filled features can cover leaders drawn below;
+#'   transparent features retain their normal transparency.
 #' @details
 #' Manual label rotation, offsets, orientation and overlap policy belong to
 #' [geom_feature_label()]. Their `label_*` controls are rejected by automatic
@@ -125,7 +130,8 @@ geom_feature_label <- function(
 #' ggchord(seq_data = seqs) +
 #'   geom_seq() +
 #'   geom_feature(data = features, position = position_plasmid()) +
-#'   geom_feature_label_repel(data = features, position = position_plasmid()) +
+#'   geom_feature_label_repel(data = features, position = position_plasmid(),
+#'     label_segment_layer = "below") +
 #'   coord_circular()
 geom_feature_label_repel <- function(
     mapping = NULL, data = NULL,
@@ -139,11 +145,13 @@ geom_feature_label_repel <- function(
     position = "identity",
     show.legend = FALSE, inherit.aes = FALSE,
     label_min_size = 1.5, label_segment_overlap = "fade",
-    label_segment_overlap_alpha = .18, label_segment_linetype = "auto", ...) {
+    label_segment_overlap_alpha = .18, label_segment_linetype = "auto",
+    label_segment_layer = c("below", "above"), ...) {
   position_explicit <- !missing(position)
   dots <- list(...)
   ggchord_reject_label_prefix(dots, "geom_feature_label_repel()")
   ggchord_reject_manual_label_args(dots, "geom_feature_label_repel()")
+  label_segment_layer <- match.arg(label_segment_layer)
   label_layout <- match.arg(label_layout)
   label_fit <- match.arg(label_fit)
   label_side <- match.arg(label_side)
@@ -168,6 +176,7 @@ geom_feature_label_repel <- function(
     # fit inside first, nudge only nearby labels, and emit leaders only when a
     # real radial gap separates the curved glyph envelope from its feature.
     lyr$ggchord_params$gene_label_layout <- "feature"
+    lyr$ggchord_params$label_segment_layer <- label_segment_layer
     lyr$ggchord_params$is_feature_label <- TRUE
     lyr$ggchord_params$position_explicit <- position_explicit
     lyr$ggchord_params$label_side_requested <- label_side
@@ -211,6 +220,7 @@ geom_feature_label_repel <- function(
     show.legend = show.legend, inherit.aes = inherit.aes, ...
   )
   lyr$ggchord_params$gene_label_layout <- if (label_fit == "shrink") "feature" else label_layout
+  lyr$ggchord_params$label_segment_layer <- label_segment_layer
   lyr$ggchord_params$is_feature_label <- TRUE
   lyr$ggchord_params$position_explicit <- position_explicit
   lyr$ggchord_params$feature_label_external <- external

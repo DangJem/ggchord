@@ -75,6 +75,8 @@ ggchord_detour_crossing_leaders <- function(registry, layout) {
   for (owner in names(registry)) for (component in c('gene_label_repel', 'restriction_site')) {
     geometry <- registry[[owner]][[component]]
     if (!is.data.frame(geometry) || !nrow(geometry)) next
+    if (component == "gene_label_repel" && "label_layout" %in% names(geometry) &&
+        any(geometry$label_layout %in% "feature")) next
     sources <- if (component == 'gene_label_repel')
       unique(geometry$source_row[geometry$.component %in% 'text']) else
       unique(geometry$source_row[geometry$restriction_component %in% 'leader'])

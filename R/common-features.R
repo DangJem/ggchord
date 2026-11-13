@@ -875,26 +875,35 @@ ggchord_expand_feature_segments <- function(data) {
       value <- data$cleavage_arrows[[i]]
       as.numeric(value[is.finite(as.numeric(value))])
     } else numeric()
-    # Origin-crossing features stay one biological and geometric interval.
-    # Segment tables are still retained on the source row, but flattening
-    # them with pmin()/pmax() would turn the circular seam into a false gap.
+    # Keep circular segment endpoints as provided. Flattening start/end with
+    # min/max would fill real gaps or turn the display seam into a false gap.
+    # Contiguous same-colour runs are joined later, with the real source length.
     if (is.finite(data$start[i]) && is.finite(data$end[i]) &&
         data$start[i] > data$end[i]) {
       row <- data[i, , drop = FALSE]
       row$.biological_source_row <- i
-      run <- data.frame(
-        start = data$start[i], end = data$end[i],
-        segment_index = min(segments$segment_index),
-        color = as.character(segments$color[which.max(
-          !is.na(segments$color) & nzchar(as.character(segments$color))
-        )]),
-        draw_head = data$strand[i] != ".",
-        draw_start_head = data$strand[i] == "+/-",
-        stringsAsFactors = FALSE
-      )
-      run$boundaries <- I(list(cleavage_arrows))
-      run$boundary_styles <- I(list(rep("dotted", length(cleavage_arrows))))
-      row$.feature_runs <- I(list(run))
+      visible <- segments[segments$segment_type != "gap", , drop = FALSE]
+      if (!nrow(visible)) next
+      runs <- lapply(seq_len(nrow(visible)), function(j) {
+        segment <- visible[j, , drop = FALSE]
+        direction <- as.character(data$strand[i])
+        at_start <- segment$start == data$start[i]
+        at_end <- segment$end == data$end[i]
+        colour <- as.character(segment$color %||% NA_character_)
+        if (!is.na(colour) && tolower(colour) == "nocolor") colour <- "#FFFFFF"
+        run <- data.frame(start=segment$start,end=segment$end,
+          segment_index=segment$segment_index,color=colour,
+          draw_head=if (direction == "-") at_start else direction != "." && at_end,
+          draw_start_head=direction == "+/-" && at_start,
+          stringsAsFactors=FALSE)
+        inside <- if (segment$start > segment$end) {
+          cleavage_arrows > segment$start | cleavage_arrows < segment$end
+        } else cleavage_arrows > segment$start & cleavage_arrows < segment$end
+        run$boundaries <- I(list(cleavage_arrows[inside]))
+        run$boundary_styles <- I(list(rep("dotted", sum(inside))))
+        run
+      })
+      row$.feature_runs <- I(list(ggchord_rbind_fill(runs)))
       rows[[length(rows) + 1L]] <- row
       next
     }
@@ -1002,7 +1011,8 @@ ggchord_expand_feature_segments <- function(data) {
 
 # Expand renderer runs only after track assignment. The layout and label
 # stages continue to see one row per biological feature.
-ggchord_expand_feature_render_runs <- function(data) {
+ggchord_expand_feature_render_runs <- function(data, lengths = NULL,
+                                               circular = FALSE) {
   if (!".feature_runs" %in% names(data) || !is.list(data$.feature_runs) ||
       !nrow(data)) return(data)
   rows <- list()
@@ -1011,6 +1021,11 @@ ggchord_expand_feature_render_runs <- function(data) {
     if (!is.data.frame(runs) || !nrow(runs)) {
       rows[[length(rows) + 1L]] <- data[i, , drop = FALSE]
       next
+    }
+    if (isTRUE(circular) && data$start[i] > data$end[i]) {
+      length <- unname(lengths[as.character(data$accver[i])])
+      if (length(length) == 1L && is.finite(length))
+        runs <- ggchord_join_circular_feature_runs(runs, length)
     }
     for (j in seq_len(nrow(runs))) {
       row <- data[i, , drop = FALSE]
@@ -1032,4 +1047,31 @@ ggchord_expand_feature_render_runs <- function(data) {
   out <- ggchord_rbind_fill(rows)
   rownames(out) <- NULL
   out
+}
+
+# Join only truly adjacent, equally coloured pieces. Source gaps and colour
+# boundaries remain visible; the source length is never inferred from segments.
+ggchord_join_circular_feature_runs <- function(runs, sequence_length) {
+  repeat {
+    pair <- NULL
+    for (i in seq_len(nrow(runs))) {
+      if (!is.null(pair)) break
+      for (j in setdiff(seq_len(nrow(runs)), i)) {
+        adjacent <- runs$end[i] + 1 == runs$start[j] ||
+          (runs$end[i] == sequence_length && runs$start[j] == 1)
+        same_colour <- identical(tolower(runs$color[i]), tolower(runs$color[j]))
+        if (adjacent && same_colour) { pair <- c(i,j); break }
+      }
+    }
+    if (is.null(pair)) break
+    i <- pair[1L]; j <- pair[2L]
+    join <- runs$end[i]
+    runs$end[i] <- runs$end[j]
+    runs$draw_head[i] <- runs$draw_head[i] || runs$draw_head[j]
+    runs$draw_start_head[i] <- runs$draw_start_head[i] || runs$draw_start_head[j]
+    runs$boundaries[[i]] <- c(runs$boundaries[[i]], join, runs$boundaries[[j]])
+    runs$boundary_styles[[i]] <- c(runs$boundary_styles[[i]], "dotted", runs$boundary_styles[[j]])
+    runs <- runs[-j, , drop=FALSE]
+  }
+  runs
 }

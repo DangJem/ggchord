@@ -27,11 +27,6 @@ ggchord_inner_label_preferences <- function(gl, metrics, feature_bands,
     if (length(bounds) == 2L) radii <- radii[
       radii + clearance <= bounds["min"] + 1e-9
     ]
-    bands <- feature_bands[[sid]]
-    own <- which(bands$lane == gl$lane[i])
-    if (length(own) && own[1L] < nrow(bands)) radii <- radii[
-      radii - clearance >= bands$max[own[1L] + 1L] - 1e-9
-    ]
     if (length(radii)) nearest[i] <- max(radii)
   }
   eligible <- adjacent[is.finite(nearest[adjacent])]
@@ -144,8 +139,9 @@ ggchord_inner_leader_hits <- function(routes, boxes) {
 
 ggchord_inner_leaders_cross <- function(route, placed) {
   if (!nrow(route) || !nrow(placed)) return(FALSE)
-  any(ggchord_segments_cross(route$x0, route$y0, route$x1, route$y1,
-    placed$x0, placed$y0, placed$x1, placed$y1))
+  any(vapply(seq_len(nrow(route)), function(i)
+    any(ggchord_segments_cross(route$x0[i], route$y0[i], route$x1[i], route$y1[i],
+      placed$x0, placed$y0, placed$x1, placed$y1)), logical(1)))
 }
 
 ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
@@ -179,6 +175,7 @@ ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
   placed <- ggchord_text_boxes(data.frame())
   placed_leaders <- data.frame(x0 = numeric(), y0 = numeric(),
     x1 = numeric(), y1 = numeric())
+  selected_routes <- list()
   result <- gl
   mode <- ifelse(gl$feature_label_inside %in% TRUE, "inside", "adjacent")
   tracks <- integer(n)
@@ -341,17 +338,8 @@ ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
           track_radii + measured$h / 2 + .012 <= bounds["min"] + 1e-9
         ]
       }
-      # A feature may use its own band or the gutter immediately below it,
-      # never the next feature's band or a still deeper label-only track.
-      # Deep tracks remain available to the innermost feature band.
-      bands <- feature_bands[[as.character(gl$accver[i])]]
-      own <- which(bands$lane == gl$lane[i])
-      if (length(own) && own[1L] < nrow(bands)) {
-        inner_edge <- bands$max[own[1L] + 1L]
-        track_radii <- track_radii[
-          track_radii - measured$h / 2 - .012 >= inner_edge - 1e-9
-        ]
-      }
+      # Intervening feature bands may be crossed by a short leader drawn
+      # below them. Text itself must still clear every foreign polygon.
       track_radii <- unique(track_radii)
       track_radii <- track_radii[order(abs(track_radii - feature_radius),
         -track_radii)]
@@ -429,6 +417,8 @@ ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
             tangent[2] * tangent_index * tangent_step
         }
       }
+      if (concentric_circle && track_index > 0L) candidate <-
+        ggchord_feature_label_attachment(candidate, polygons, FALSE, units_per_inch)
       box <- if (concentric_circle &&
           !grepl("\n", candidate$text, fixed = TRUE)) {
         ggchord_arc_text_layout(
@@ -442,6 +432,11 @@ ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
         box, polygons, source_row = gl$source_row[i],
         allow_own = starts_inside && track_index == 0L
       )
+      if (concentric_circle && starts_inside && track_index == 0L &&
+          !ggchord_feature_contains_label(ggchord_arc_text_layout(candidate,
+            units_per_inch = units_per_inch, box_padding = 0)$boxes,
+            polygons, gl$source_row[i]))
+        feature_collision <- TRUE
       corners <- ggchord_boxes_corners(box)
       central_collision <- nrow(corners) > 0L && length(seq_arcs) == 1L &&
         min(sqrt(rowSums(corners^2))) < .20
@@ -449,6 +444,7 @@ ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
         !(starts_inside && track_index == 0L) &&
         is.finite(sequence_radius) &&
         max(sqrt(rowSums(corners^2))) > sequence_radius - .018
+      if (label_collision || feature_collision || central_collision || backbone_collision) next
       leader <- placed_leaders[0, , drop = FALSE]
       leader_collision <- FALSE
       if (concentric_circle) {
@@ -459,15 +455,15 @@ ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
           label_track_ids[[sid]][match(target_radius, sid_tracks)]
         } else source_track
         if (length(source_track) && length(target_track) &&
-            target_track > source_track + 1L) {
+            (target_track > source_track + 1L ||
+              (track_index > 0L && ggchord_feature_label_shifted(candidate, measured$h)))) {
           leader <- ggchord_inner_label_leader(candidate, box,
             units_per_inch)
         }
-        # Check both directions: an older line must not be allowed through
-        # this new word merely because the line was accepted first.
-        leader_collision <- ggchord_inner_leader_hits(leader, placed) ||
-          ggchord_inner_leader_hits(placed_leaders, box) ||
-          ggchord_inner_leaders_cross(leader, placed_leaders)
+        # Text placement is constrained by glyph/feature boxes, not by a
+        # previous leader. Direct leaders can cross; overlap appearance is
+        # handled after final text placement, without moving a name far away.
+
       }
       if (!label_collision && !feature_collision && !central_collision &&
           !backbone_collision && !leader_collision) {
@@ -483,6 +479,7 @@ ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
     }
     if (is.null(chosen) && grouped_external[i]) {
       candidate <- gl[i, , drop = FALSE]
+      candidate <- ggchord_feature_label_attachment(candidate, polygons, TRUE, units_per_inch)
       candidate$text_x <- frame$curve_x[i] + outward[1] *
         max(.09, measured$h * 1.5)
       candidate$text_y <- frame$curve_y[i] + outward[2] *
@@ -506,6 +503,8 @@ ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
     if (is.null(chosen) && isTRUE(allow_external)) {
       for (external_index in 1:5) {
         candidate <- gl[i, , drop = FALSE]
+        if (concentric_circle) candidate <- ggchord_feature_label_attachment(
+          candidate, polygons, TRUE, units_per_inch)
         external_gap <- max(.035, measured$h * .58)
         candidate$text_x <- frame$curve_x[i] + outward[1] *
           (external_gap + external_index * radial_step)
@@ -542,6 +541,7 @@ ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
       # The shared perimeter owns outer-space feasibility. A failed local
       # corridor must become a candidate, not disappear before coordination.
       chosen <- gl[i, , drop=FALSE]
+      chosen <- ggchord_feature_label_attachment(chosen, polygons, TRUE, units_per_inch)
       chosen$text_x <- frame$curve_x[i] + outward[1] * .15
       chosen$text_y <- frame$curve_y[i] + outward[2] * .15
       chosen$text_angle <- 0; chosen$hjust <- .5; chosen$vjust <- .5
@@ -561,8 +561,14 @@ ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
     result$text_angle[i] <- chosen$text_angle
     result$hjust[i] <- chosen$hjust
     result$vjust[i] <- chosen$vjust
+    result$anchor_x[i] <- chosen$anchor_x
+    result$anchor_y[i] <- chosen$anchor_y
     placed <- rbind(placed, chosen_box)
     placed_leaders <- rbind(placed_leaders, chosen_leader)
+    if (chosen_track >= 0L && nrow(chosen_leader)) {
+      chosen_leader$group <- i
+      selected_routes[[length(selected_routes)+1L]] <- chosen_leader
+    }
     displacement <- sqrt(
       (result$text_x[i] - gl$text_x[i])^2 +
       (result$text_y[i] - gl$text_y[i])^2
@@ -601,11 +607,14 @@ ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
     moved[i] <- identical(mode[i], "external") ||
       (identical(mode[i], "adjacent") &&
         (if (concentric_circle) {
-          tracks[i] > feature_tracks[i] + 1L
+          tracks[i] > feature_tracks[i] + 1L ||
+            ggchord_feature_label_shifted(chosen, measured$h)
         } else {
           radial_gap >= .012 ||
             displacement >= max(.05, measured$h * 1.2)
         }))
+    if (starts_inside && mode[i] != "inside" && "feature_label_colour" %in% names(result))
+      result$feature_label_colour[i] <- "#202020"
     delta <- c(result$text_x[i] - gl$anchor_x[i],
       result$text_y[i] - gl$anchor_y[i])
     directions[i] <- if (abs(delta[1]) >= abs(delta[2])) {
@@ -622,6 +631,7 @@ ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
     lanes = paste(result$accver, mode, tracks, sep = "\r"),
     directions = directions, tracks = tracks, draw_segment = moved
   )
+  layout$leader_segments <- ggchord_rbind_fill(selected_routes) %||% data.frame()
   if (concentric_circle && !length(priority_rows)) {
     visible <- !is.na(result$text) & nzchar(result$text)
     hidden <- which(!visible & !is.na(gl$text) & nzchar(gl$text))

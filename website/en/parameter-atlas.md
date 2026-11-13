@@ -237,6 +237,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `label_min_size` | `1.5` | Numeric/integer; range in description | Minimum text size in millimetres for explicit shrink, default 1.5. Must not exceed the requested text size. Original text, requested/final sizes and fitting reason are exported with the label. |
 | `label_segment_overlap` | `"fade"` | Character/enum; choices below | Character, default "fade". How portions of a leader line covered by another label are drawn: "fade" keeps them at reduced opacity, "clip" removes them, and "show" leaves the complete leader visible. This does not affect text wrapping, ellipsis or label hiding. |
 | `label_segment_overlap_alpha` | `0.18` | Numeric/integer; range in description | Numeric in [0, 1], default 0.18. Relative opacity applied only to covered leader-line portions when label_segment_overlap = "fade". |
+| `label_segment_layer` | `c("below", "above")` | Character/enum | Draw feature-label leaders below data layers, or at the label layer position; text keeps its layer order. |
 | `label_segment_linetype` | `"auto"` | Character/enum; choices below | Character or numeric, default "auto". Leader-line linetype. "auto" draws solid lines, except for labels that were moved to the other side of their arc, which are drawn dashed. Any other valid ggplot2 linetype (e.g. "solid", "dashed", "dotted", or a numeric dash pattern) is used for all leader lines. |
 | `...` | `Required/alternative entry; see description` | Forwarded arguments | Additional text parameters. |
 

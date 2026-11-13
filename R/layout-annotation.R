@@ -98,7 +98,8 @@ ggchord_layout_annotation_step <- function(
     valid_gene_rows <- which(gene_data$accver %in% seqs)
     valid_genes <- gene_data[valid_gene_rows, , drop = FALSE]
     valid_genes$.source_row <- valid_gene_rows
-    geometry_genes <- ggchord_expand_feature_render_runs(valid_genes)
+    geometry_genes <- ggchord_expand_feature_render_runs(valid_genes,
+      lengths = lens, circular = circular)
 
     # Process gene colors
     gene_pal <- NULL
@@ -144,6 +145,7 @@ ggchord_layout_annotation_step <- function(
       sequence_length <- lens[sid]
       if (!is.finite(gene$start) || !is.finite(gene$end)) next
       ref <- seq_refs[[sid]]
+      ref$periodic <- isTRUE(circular) && ggchord_closed_reference(ref)
       feature_shape <- if (".feature_shape" %in% names(gene)) {
         as.character(gene[[".feature_shape"]])
       } else {
@@ -182,10 +184,11 @@ ggchord_layout_annotation_step <- function(
       }
       pieces <- ggchord_feature_intervals(
         gene$start, gene$end, sequence_length, strand,
-        circular = circular
+        circular = circular, continuous = isTRUE(ref$periodic)
       )
       part_index <- 0L
-      for (piece in pieces) {
+      for (piece_index in seq_along(pieces)) {
+        piece <- pieces[[piece_index]]
         interval <- ggchord_feature_angle_interval(
           piece, sequence_length, orientation[sid], starts[sid], ends[sid]
         )
@@ -202,7 +205,7 @@ ggchord_layout_annotation_step <- function(
           draw_head = piece$draw_head && isTRUE(
             gene$.feature_draw_head %||% TRUE
           ),
-          draw_start_head = isTRUE(
+          draw_start_head = piece_index == 1L && isTRUE(
             gene$.feature_draw_start_head %||% identical(
               as.character(gene$.feature_biological_strand %||% strand), "+/-"
             )
@@ -252,9 +255,10 @@ ggchord_layout_annotation_step <- function(
           as.character(gene$.feature_boundary_styles[[1L]])
         } else rep(NA_character_, length(boundaries))
         if (length(boundaries) && length(pieces) == 1L) {
-          keep_boundaries <-
-            boundaries > min(gene$start, gene$end) &
-              boundaries < max(gene$start, gene$end)
+          keep_boundaries <- if (isTRUE(circular) && gene$start > gene$end) {
+            boundaries > gene$start | boundaries < gene$end
+          } else boundaries > min(gene$start, gene$end) &
+            boundaries < max(gene$start, gene$end)
           boundaries <- boundaries[keep_boundaries]
           boundary_styles <- boundary_styles[keep_boundaries]
           for (boundary_index in seq_along(boundaries)) {
@@ -422,6 +426,10 @@ ggchord_layout_annotation_step <- function(
           feature_arc_length <- feature_fraction * sum(sqrt(
             diff(ref$path$x)^2 + diff(ref$path$y)^2
           ))
+          # Circular feature bands have their own circumference, smaller than
+          # the backbone used by ref$path.
+          if (isTRUE(circular)) feature_arc_length <- feature_arc_length *
+            sqrt(sum(center_pt^2)) / max(sqrt(ref$path$x^2 + ref$path$y^2))
           measured_label <- ggchord_text_boxes(data.frame(
             text = label_text_resolved, text_x = 0, text_y = 0,
             text_angle = 0, hjust = .5, vjust = .5,
@@ -439,6 +447,8 @@ ggchord_layout_annotation_step <- function(
           } else if (shape == "primer_arrow") {
             arrow_head_length * .60
           } else 0
+          if (identical(as.character(gene$.feature_biological_strand %||% strand), "+/-"))
+            head_reserve <- 2 * head_reserve
           body_padding <- max(.008, measured_label$h * .24)
           available_length <- max(0,
             feature_arc_length - head_reserve - 2 * body_padding)

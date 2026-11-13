@@ -137,6 +137,8 @@ ggchord_layout_label_step <- function(
       label_directions <- layout_result$directions
       draw_segment <- layout_result$draw_segment
       gene_labels$label_layout <- gene_label_layout
+      gene_labels$.leader_overlap <- gene_label_segment_overlap
+      gene_labels$.leader_overlap_alpha <- gene_label_segment_overlap_alpha
       gene_labels$label_track <- layout_result$tracks
       final_obstacles <- ggchord_text_obstacle_boxes(
         seq_labels_df, axis_ticks, show_axis,
@@ -181,6 +183,11 @@ ggchord_layout_label_step <- function(
           group = rows,
           stringsAsFactors = FALSE
         )
+        inner_routes <- layout_result$leader_segments
+        if (is.data.frame(inner_routes) && nrow(inner_routes)) gene_label_segments <- rbind(
+          gene_label_segments[!gene_label_segments$group %in% inner_routes$group, , drop = FALSE],
+          inner_routes)
+
       } else {
         gene_label_segments <- ggchord_repel_segments(
           gene_labels, min_segment_length = layout_min_segment

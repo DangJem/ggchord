@@ -83,10 +83,19 @@ From the 14-character wrap example, change only label_fit to ellipsis. Then retu
 | label_segment_overlap | fade | Appearance of conflicting leaders |
 | label_segment_overlap_alpha | 0.18 | Faded leader opacity |
 | label_segment_linetype | auto | Automatic leader line type |
+| label_segment_layer | below | below/above; text retains the label layer position |
 
 Read exported label placement and fit diagnostics before changing dimensions, label subsets, layout or wrapping. Keep original full names rather than retaining only truncated figure text.
 
 
+
+
+Feature layout uses direct leaders, allowing them to cross features without
+multi-bend detours. Filled features cover leaders drawn below; transparent
+fills keep their transparency. Internal single-line names follow circular
+tracks. Wrapped sources keep one annotation and a continuous glyph on closed
+circles; a visible coordinate gap retains separate display pieces. A shifted adjacent name receives a short attachment. To restore the
+label layer's drawing order, use `geom_feature_label_repel(label_segment_layer = "above")`.
 
 ## Exercises and your annotations {#adapt}
 

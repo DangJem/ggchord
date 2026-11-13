@@ -58,9 +58,10 @@ ggchord_arrow_display_interval <- function(a_start, a_end, r0, width,
 }
 
 ggchord_feature_intervals <- function(start, end, length, strand,
-                                      circular = FALSE) {
+                                      circular = FALSE, continuous = FALSE) {
   if (isTRUE(circular) && start > end) {
-    pieces <- list(c(start, length), c(1, end))
+    pieces <- if (isTRUE(continuous)) list(c(start, end + length)) else
+      list(c(start, length), c(1, end))
   } else {
     pieces <- list(c(min(start, end), max(start, end)))
   }
@@ -300,6 +301,12 @@ ggchord_feature_geometry <- function(shape, a_start, a_end, r0, width,
         head_width = compact_head_width,
         short_feature = short_feature
       ))
+    }
+    if (isTRUE(draw_start_head) && !isTRUE(draw_head)) {
+      # An open display seam is not a biological end. The first fragment
+      # retains only its real start head, including compact glyphs.
+      swap <- a_start; a_start <- a_end; a_end <- swap
+      draw_head <- TRUE
     }
     interval <- if (identical(short_feature, "auto") && isTRUE(draw_head)) {
       ggchord_arrow_display_interval(

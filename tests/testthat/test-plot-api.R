@@ -137,3 +137,27 @@ test_that("Fusion retains source intervals across independently measured panels"
   expect_equal(nrow(magnified$leaders), 4L)
   expect_equal(nrow(magnified$connections), 0L)
 })
+
+
+test_that("a wrapped circular feature has no artificial seam or extra source", {
+  d <- data.frame(accver = "circle", start = 900, end = 120,
+    strand = "+/-", anno = "wrapped")
+  p <- ggchord(data.frame(accver = "circle", length = 1000)) + geom_seq() +
+    geom_feature(data = d, shape = "promoter_arrow", position = position_plasmid()) +
+    coord_circular()
+  geometry <- get_chord_layout(p)$gene_polys
+  expect_length(unique(geometry$group), 1L)
+  expect_setequal(unique(geometry$source_row), 1L)
+  d$segments <- I(list(data.frame(segment_index = 1:3,
+    segment_type = c("standard", "gap", "standard"),
+    start = c(900, 951, 20), end = c(950, 19, 120), color = "#ffffff")))
+  gapped <- ggchord(data.frame(accver = "circle", length = 1000)) + geom_seq() +
+    geom_feature(data = d, shape = "promoter_arrow", position = position_plasmid()) +
+    coord_circular()
+  geometry <- get_chord_layout(gapped)$gene_polys
+  polygons <- split(geometry[geometry$.component == "polygon", ],
+    geometry$group[geometry$.component == "polygon"])
+  expect_false(any(vapply(polygons, function(poly)
+    ggchord_point_in_polygon(0, .9, poly), logical(1))))
+
+})

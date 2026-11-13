@@ -83,10 +83,18 @@ feature 默认先尝试内部，再尝试相邻与外部；radial、auto、callo
 | label_segment_overlap | fade | 冲突引线的显示策略，默认淡化 |
 | label_segment_overlap_alpha | 0.18 | 淡化后的透明度 |
 | label_segment_linetype | auto | 自动选择引线线型 |
+| label_segment_layer | below | below 置于数据层下方；above 恢复标签层顺序，文字位置不变 |
 
 诊断表在 export_ggchord_layout 的标签记录中。先读隐藏/适配原因，再调整输出尺寸、标签子集、布局或换行。需要完整源名称时不要只保存截断后的图。
 
 
+
+
+feature 布局使用直接引线，允许穿过特征，不再多折绕路。默认 below 时，正常特征
+填充覆盖下方引线；透明填充仍保持透明。内部单行文字沿圆轨道排布，跨原点来源
+只保留一条注释，闭合圆上的特征保持连续；有可见开口的坐标仍保留显示分片。相邻标签有明显角向位移时补短引线。
+要恢复引线在标签层原有的绘制顺序，可使用
+`geom_feature_label_repel(label_segment_layer = "above")`。
 
 ## 练习与自备注释 {#adapt}
 
