@@ -44,6 +44,8 @@
 默认轴显示 1 与真实末位，中间刻度按可用物理空间选择；闭圆接缝合并两端。
 显式 breaks 和 labels 优先。
 
+{{prepare:foundationdata}}
+
 {{code:foundationequal}}
 
 {{figure:foundationequal}}

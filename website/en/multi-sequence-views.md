@@ -46,6 +46,8 @@ multi-sequence displays. Default axes show 1 and the final source position;
 intermediate ticks use available physical space. Closed circular seams combine
 the two endpoints. Explicit breaks and labels take priority.
 
+{{prepare:foundationdata}}
+
 {{code:foundationequal}}
 
 {{figure:foundationequal}}
