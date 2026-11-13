@@ -1,0 +1,54 @@
+{
+  "scope": "Actual final native site using aaa730c R engine; 2 representative pages at 1440 and 320 pixels",
+  "states": [
+    {
+      "gallerySource": "../assets/documentation-examples.R",
+      "h1": [
+        "1. 示例图集"
+      ],
+      "scrollWidth": 1440,
+      "url": "http://127.0.0.1:8776/zh/gallery.html#linearlabels",
+      "visibleBrokenImages": [],
+      "width": 1440
+    },
+    {
+      "gallerySource": "../assets/documentation-examples.R",
+      "h1": [
+        "1. 示例图集"
+      ],
+      "scrollWidth": 320,
+      "url": "http://127.0.0.1:8776/zh/gallery.html#linearlabels",
+      "visibleBrokenImages": [],
+      "width": 320
+    },
+    {
+      "h1": [
+        "Inspect one target-size render without changing the plot"
+      ],
+      "scrollWidth": 320,
+      "url": "http://127.0.0.1:8776/en/reference/diagnose_ggchord.html",
+      "visibleBrokenImages": [],
+      "width": 320
+    },
+    {
+      "h1": [
+        "Inspect one target-size render without changing the plot"
+      ],
+      "scrollWidth": 1440,
+      "url": "http://127.0.0.1:8776/en/reference/diagnose_ggchord.html",
+      "visibleBrokenImages": [],
+      "width": 1440
+    }
+  ],
+  "modal": {
+    "page": "zh/gallery.html#linearlabels",
+    "open_close": true,
+    "source_href": "../assets/documentation-examples.R"
+  },
+  "not_checked": [
+    "full 12-state or 868-state rerun",
+    "theme/language menus and printing",
+    "all lazy images/scroll positions",
+    "exact figure ink and cross-platform fonts"
+  ]
+}
