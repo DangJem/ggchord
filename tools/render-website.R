@@ -4,6 +4,7 @@ Sys.setenv(CI = 'true') # init_site must use the local favicon, not its optional
 options(sass.cache = FALSE)
 pkgload::load_all(quiet = TRUE)
 payload <- jsonlite::fromJSON('.site/page-content.json', simplifyVector = FALSE)
+page_index <- jsonlite::fromJSON('website/pages.json', simplifyVector = FALSE)
 languages <- commandArgs(trailingOnly=TRUE)
 if(!length(languages)) languages <- c('en','zh')
 stopifnot(all(languages %in% c('en','zh')))
@@ -14,21 +15,34 @@ if('zh' %in% languages) {
 for (lang in languages) {
   is_han <- lang == 'zh'
   Sys.setenv(LANGUAGE=if(is_han)'zh_CN' else 'en')
-  nav_names <- if(is_han) c('首页','开始使用','绘图章节','专题','函数参考') else
-    c('Home','Get started','Plot chapters','Topics','Reference')
-  keys <- c('home','start','plots','articles','reference')
+  nav_names <- if(is_han) c('开始使用','绘图教程','绘图技巧','数据与工作流','案例图库','函数参考') else
+    c('Get started','Plot tutorials','Plotting techniques','Data & workflows','Gallery','Reference')
+  keys <- c('start','plots','techniques','data','gallery','reference')
   components <- setNames(lapply(seq_along(keys),function(i) list(text=nav_names[i])),keys)
-  # The three task modules are shared by the top menu and the full site navigation.
+  # Every primary menu opens useful teaching directly; the project page remains
+  # an auxiliary index rather than a required intermediate navigation step.
   groups <- jsonlite::fromJSON('website/navigation.json', simplifyVector=FALSE)
+  page_menu <- function(slugs) lapply(slugs, function(slug) {
+    page <- Filter(function(x) identical(x$slug, slug), page_index)[[1L]]
+    list(text = page$title[[lang]], href = paste0(slug, '.html'))
+  })
   modules <- Filter(function(x) x$id %in% c('chord','collinear','plasmid'),groups)
   components$plots$menu <- lapply(modules,function(group) list(
     text=group$title[[lang]],href=paste0(group$pages[[1]],'.html')))
-  topics <- Filter(function(x) x$id %in% c('data','techniques','shared-techniques','cases'), groups)
-  components$articles$menu <- c(list(list(
-    text=if(is_han) '章节目录' else 'Chapter index', href='about.html#modules')),
-    lapply(topics, function(group) list(text=group$title[[lang]], href=paste0('about.html#path-',group$id))))
+  components$plots$menu <- c(components$plots$menu, list(
+    list(text = if(is_han) '镜像 Sankey' else 'Mirrored Sankey', href = 'foundation.html#sankey'),
+    list(text = 'Dotplot', href = 'view-expansion.html#dotplot'),
+    list(text = if(is_han) '径向辐条' else 'Radial spokes', href = 'view-expansion.html#radial')))
+  shared <- Filter(function(x) x$id == 'shared-techniques', groups)[[1L]]
+  data <- Filter(function(x) x$id == 'data', groups)[[1L]]
+  components$techniques$menu <- page_menu(c(unlist(shared$pages), 'output'))
+  components$data$menu <- page_menu(c('chord-data', 'alignments', unlist(data$pages)))
+  components$start$href <- 'installation.html'
+  components$gallery$href <- 'gallery.html'
+  components$reference$href <- 'reference/index.html'
   cfg <- list(destination=paste0('.site/',lang),lang=if(is_han)'zh_CN' else 'en',
-    navbar=list(components=components))
+    navbar=list(structure = list(left = keys, right = c('github', 'lightswitch')),
+      components=components))
   # Localized category titles; topic bindings remain the exact source names.
   source <- yaml::read_yaml('_pkgdown.yml')
   cfg$url <- paste0(source$url,lang,'/')
@@ -43,8 +57,8 @@ for (lang in languages) {
   # utils::modifyList does not replace the unnamed reference section list.
   # Assign the reviewed localized sections before the public reference builder.
   if(is_han) pkg$meta$reference <- cfg$reference
-  pkg$meta$navbar$components$plots$menu <- components$plots$menu
-  pkg$meta$navbar$components$articles <- components$articles
+  pkg$meta$navbar$structure <- cfg$navbar$structure
+  for(key in keys) pkg$meta$navbar$components[[key]] <- components[[key]]
   if(is_han) {
     for(i in seq_len(nrow(pkg$topics))) {
       path <- file.path('.site/reference-zh',pkg$topics$file_in[i])

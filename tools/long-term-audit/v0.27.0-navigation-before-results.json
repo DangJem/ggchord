@@ -1,0 +1,19 @@
+{
+  "status": "confirmed navigation requirement not met before fix",
+  "observed_browser": "Native Chrome desktop screenshot and accessibility tree; old Plot chapters/Topics menu still routes to project index",
+  "previous_render_return_codes": {
+    "render_jobs": 1,
+    "return_codes": {
+      "en": 0,
+      "zh": 0
+    }
+  },
+  "previous_source_snapshot_sha256": "a227b19d7eda2dbc2674586c2b7fc4e2008849d9717abb5bd5811e16a9cb77da",
+  "previous_build_manifest_sha256": "c17a7ac9852c6e5784dd0e4f3eefaecd4baf63df77021ed43e48d1c7dd7f0f9a",
+  "earlier_checker": "Full links, anchors, search and source/assets had passed; it did not inspect primary menu labels/direct targets",
+  "new_negative_control": "Not reached: the first updated checker run stopped at the expected stale CSS contrast record before inspecting HTML menus; this is not a navigation-check result",
+  "negative_check_log_sha256": "72cf3d26ce4e86f70745e0400b8f0cd7fa2b279a0e4a4c7fbe4064455a6acb3a",
+  "missing_primary_menu_observations": 0,
+  "not_claimed": "No current browser functionality or full local development completion marked passed at this point",
+  "navigation_defect_evidence": "Actual native Chrome screenshot and complete accessibility tree of old final site; renderer source also constructs Topics links to about.html#path-*"
+}

@@ -36,6 +36,8 @@ button,summary {touch-action:manipulation}
 .navbar .nav-text {font: .7rem/1.4 ui-monospace,monospace;color:var(--text-muted)}
 .navbar .dropdown-item {padding:10px 14px;min-height:44px;color:var(--text-main)}
 .navbar .dropdown-item:hover {background:var(--surface-soft)}
+.navbar .dropdown-menu {max-width:min(28rem,calc(100vw - 24px));max-height:min(75vh,36rem);overflow-y:auto}
+.navbar .dropdown-item {white-space:normal}
 .navbar-collapse {order:2}
 .navbar-toggler {order:4;min-width:44px;min-height:44px}
 .language-control {position:relative;order:3;flex-shrink:0;font-size:.86rem}

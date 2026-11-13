@@ -32,9 +32,16 @@ class Document(HTMLParser):
         self.headings = []
         self._heading = None
         self._heading_parts = []
+        self.navbar_links = []
+        self.navbar_text = []
+        self._navbar_depth = 0
         self.feed(path.read_text())
     def handle_starttag(self, tag, attrs):
         a = dict(attrs)
+        if tag == 'div' and (a.get('id') == 'navbar' or self._navbar_depth):
+            self._navbar_depth += 1
+        if self._navbar_depth and tag == 'a' and a.get('href'):
+            self.navbar_links.append(a['href'])
         self.classes.update(a.get('class','').split())
         if tag in ['h1','h2','h3']:
             self._heading = tag
@@ -48,10 +55,12 @@ class Document(HTMLParser):
                 if a.get(key): self.links.append(a[key])
         if tag == 'img': self.images.append(a)
     def handle_data(self, data):
+        if self._navbar_depth and data.strip(): self.navbar_text.append(data.strip())
         if self._heading is not None: self._heading_parts.append(data)
         if self._in_main: self.main_text.append(data)
         if self._code_parts is not None: self._code_parts.append(data)
     def handle_endtag(self, tag):
+        if tag == 'div' and self._navbar_depth: self._navbar_depth -= 1
         if tag == self._heading:
             self.headings.append(''.join(self._heading_parts).strip())
             self._heading = None
@@ -262,6 +271,16 @@ def main():
                     require('site-language' in doc.ids and 'site-search' in doc.ids,f'{rel}: missing language/search navigation')
                     require({'chapter-nav','chapter-drawer','language-control'} <= doc.classes,
                             f'{rel}: missing site guide or language dropdown')
+                    titles = ('开始使用','绘图教程','绘图技巧','数据与工作流','案例图库','函数参考') if rel.startswith('zh/') else (
+                        'Get started','Plot tutorials','Plotting techniques','Data & workflows','Gallery','Reference')
+                    require(set(titles) <= set(doc.navbar_text), f'{rel}: missing task-oriented primary menu')
+                    require({'site-visualizations','site-techniques','site-data'} <= set(doc.ids),
+                            f'{rel}: missing direct tutorial menus')
+                    targets = {urlsplit(url).path.rsplit('/',1)[-1] for url in doc.navbar_links}
+                    require({'installation.html','gallery.html','index.html','styling.html','parameters.html',
+                             'output.html','formats.html','foundation.html','view-expansion.html'} <= targets,
+                            f'{rel}: primary menus must link directly to teaching pages')
+                    require('about.html' not in targets, f'{rel}: primary menu uses project page as an intermediate index')
                     if Path(rel).parent == Path('zh/reference'):
                         for heading in doc.headings:
                             if heading in aliases: continue

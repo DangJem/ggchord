@@ -31,8 +31,9 @@ for(lang in c('en','zh')) {
   # Native dropdown IDs derive from translated text; keep paired URLs/ARIA stable.
   for(menu in xml2::xml_find_all(doc,'//*[@data-bs-toggle="dropdown"]')) {
     title <- trimws(xml2::xml_text(menu))
-    id <- if(title %in% c('绘图章节', 'Plot chapters')) 'site-visualizations'
-      else if(title %in% c('专题', 'Topics')) 'site-topics' else NULL
+    id <- if(title %in% c('绘图教程', 'Plot tutorials')) 'site-visualizations'
+      else if(title %in% c('绘图技巧', 'Plotting techniques')) 'site-techniques'
+      else if(title %in% c('数据与工作流', 'Data & workflows')) 'site-data' else NULL
     if(is.null(id)) next
     old_id <- xml2::xml_attr(menu,'id')
     xml2::xml_set_attr(menu,'id',id)

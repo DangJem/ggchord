@@ -1,0 +1,45 @@
+{
+  "status": "passed observed desktop controls",
+  "method": "Native Chrome accessibility and screenshots through CUA; no DOM-only browser connection available",
+  "site_source_snapshot_sha256": "adf56b97b7de44de2bcaf67a0a3744cafc1325f427cf8791ca2f88968d9d8751",
+  "site_manifest_sha256": "e079a5ed941559765a9e4dfb5becd97e380f67d73b21c0dd10b596e5a2fe9045",
+  "desktop_screenshot_window_px": [
+    1920,
+    1050
+  ],
+  "device_emulation": "Disabled before all final checks; DevTools closed; no phone or tablet acceptance per current user instruction",
+  "pages": [
+    "zh/index.html",
+    "zh/parameters.html",
+    "zh/foundation.html#tracks",
+    "zh/gallery.html",
+    "en/gallery.html",
+    "en/output.html",
+    "zh/output.html"
+  ],
+  "checks": {
+    "six_primary_menu_labels_visible": true,
+    "techniques_menu_direct_to_parameters": true,
+    "english_plot_menu_has_six_views": true,
+    "search_geom_track_results_visible": true,
+    "search_keyboard_opened_foundation_tracks": true,
+    "gallery_actual_image_opened": true,
+    "gallery_original_size_button_changed_to_fit": true,
+    "gallery_escape_closed_viewer": true,
+    "gallery_code_href": "/assets/documentation-examples.R",
+    "language_switch_zh_gallery_to_en_gallery": true,
+    "language_switch_en_output_to_zh_output": true,
+    "updated_axis_drawing_order_prose_visible_in_both_languages": true
+  },
+  "search_observation": "geom_track produced 94 matches, displaying first 20; Down/Return opened zh/foundation.html#tracks",
+  "screenshots": "Inline CUA captures in this chat; no separate screenshot files asserted",
+  "cleanup": "Temporary task tab closed; Chrome returned to the pre-existing new-tab window. Device emulation and DevTools already disabled. Light theme was retained.",
+  "earlier_ui_note": "One initial Mac-lock interruption resolved after the user manually unlocked; pre-navigation gallery observation is not counted as the final new-navigation revision",
+  "not_checked": [
+    "every generated page in GUI",
+    "all lazy images and scroll positions",
+    "clipboard copying in this pass",
+    "other browsers, fonts, printing or full WCAG certification"
+  ],
+  "legacy_evidence": "Earlier 868/12/4-state scans retain their own historical baselines; not relabelled as this desktop pass"
+}
